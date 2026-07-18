@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 8: Deployment — Sovereign AI 101</title>
+<meta name="description" content="1-command install. Docker, pip, npm. 9 open-weights models. 4 SDKs (Python, JS, Swift, Flutter).">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.85rem; margin-bottom: 1rem; }
+  .breadcrumb a { color: #60a5fa; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.2rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .module-tag { display: inline-block; background: #fbbf24; color: #000; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+  pre { background: #0a0a0a; color: #10b981; padding: 1.25rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; white-space: pre; overflow-x: auto; border: 1px solid #2d1b4e; max-width: 900px; margin: 1rem auto; line-height: 1.5; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; font-family: monospace; }
+  .models { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; max-width: 1100px; margin: 1.5rem auto; }
+  .model { background: #1a1a1a; padding: 1.25rem; border-radius: 8px; border-left: 4px solid #10b981; }
+  .model h4 { color: #fbbf24; margin-bottom: 0.4rem; }
+  .model .specs { color: #aaa; font-size: 0.8rem; font-family: monospace; }
+  .model p { color: #aaa; font-size: 0.85rem; }
+  .sdks { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; max-width: 1100px; margin: 1.5rem auto; }
+  .sdk { background: #1a1a1a; padding: 1.25rem; border-radius: 8px; border-left: 4px solid #60a5fa; }
+  .sdk h4 { color: #60a5fa; }
+  .sdk p { color: #aaa; font-size: 0.85rem; }
+  .sdk code { font-size: 0.8rem; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .quiz { background: #111; padding: 1.5rem; border-radius: 12px; max-width: 900px; margin: 1.5rem auto; border: 1px solid #fbbf24; }
+  .quiz h3 { color: #fbbf24; margin-bottom: 1rem; }
+  .question { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.75rem 0; }
+  .question p { color: #10b981; font-weight: bold; margin-bottom: 0.5rem; }
+  .question label { display: block; color: #ccc; padding: 0.25rem 0; cursor: pointer; }
+  .question input { margin-right: 0.5rem; }
+  .question .answer { color: #fbbf24; margin-top: 0.5rem; font-style: italic; display: none; }
+  .question.show .answer { display: block; }
+  .reveal-btn { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+  .nav-bottom { display: flex; justify-content: space-between; margin: 3rem 0; gap: 1rem; flex-wrap: wrap; }
+  .nav-bottom a { display: inline-block; background: #2d1b4e; color: #fbbf24; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid #fbbf24; }
+  .nav-bottom a.next { background: #fbbf24; color: #000; font-weight: bold; }
+  table { width: 100%; max-width: 900px; margin: 1rem auto; border-collapse: collapse; }
+  th { background: #2d1b4e; color: #fbbf24; padding: 0.6rem; text-align: left; }
+  td { background: #1a1a1a; color: #ccc; padding: 0.6rem; border-bottom: 1px solid #222; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="index.html">Sov AI 101</a>
+  <a href="07-dorado.html">M7</a>
+  <a href="09-certification.html">M9 →</a>
+</div>
+
+<p class="breadcrumb"><a href="index.html">Sovereign AI 101</a> / <strong>Module 8</strong></p>
+
+<h1>🚀 Module 8: Deployment</h1>
+<p style="text-align: center;"><span class="module-tag">MODULE 8 OF 10</span> · ⏱ 25 minutes</p>
+
+<h2>⚡ 1-Command Install</h2>
+<p>The CSOAI sovereign stack is designed for <strong>1-command installation</strong>. Whether you prefer Docker, Python pip, or npm, you can have a fully sovereign AI deployment running in under 60 seconds.</p>
+
+<p>Choose your path — all three produce an identical sovereign stack with the same SOV3 model, the same Care Floor, the same BFT council, and the same SIGIL chain.</p>
+
+<h2>🐳 Docker</h2>
+<pre>
+# Pull and run the sovereign stack in one command
+docker run -d --name sov3-sovereign \
+  -p 3101:3101 -p 3200:3200 \
+  -v ~/.sov3:/data \
+  -e SOV_REGION=EAST \
+  -e SOV_CARE_FLOOR=0.95 \
+  csoai/sov3:latest
+
+# Verify it's running
+curl http://localhost:3101/health
+# → {"status":"sovereign","care_floor":0.95,"bft":"12-around-1","sigils":42}
+</pre>
+
+<p>Docker is the recommended path for production deployments. The image is signed (cosign), runs as non-root, supports GPU passthrough, and ships with the 9 open-weights models pre-loaded.</p>
+
+<h2>🐍 Python pip</h2>
+<pre>
+# Install the SOV3 Python package
+pip install sov3-sovereign
+
+# Initialise and start the local sovereign stack
+sov3 init --region EAST --care-floor 0.95
+sov3 start
+
+# You now have a sovereign AI running on localhost:3101
+# with the full SIGIL chain + Care Floor + BFT council.
+</pre>
+
+<p>The Python path is ideal for data scientists, ML engineers, and notebook users. It includes the Python SDK, Jupyter integration, and the full sovereign stack as a Python package.</p>
+
+<h2>📦 npm</h2>
+<pre>
+# Install the SOV3 JavaScript SDK + sovereign runtime
+npm install -g @csoai/sov3
+
+# Start the local sovereign stack
+npx sov3 init --region EAST
+npx sov3 start
+
+# Use the JS SDK in your code
+const { Sov3 } = require('@csoai/sov3');
+const sov = new Sov3({ region: 'EAST' });
+const answer = await sov.ask('What is sovereign AI?');
+// → answer.text + answer.sigil (Ed25519 + PQC signed)
+</pre>
+
+<p>The npm path is for web developers, Node.js backends, and full-stack applications. It includes the JS SDK, React hooks, Next.js middleware, and the sovereign runtime as an npm package.</p>
+
+<h2>⚙️ Configuration</h2>
+<p>The sovereign stack is configured via environment variables, a YAML file, or the CLI. The most important settings:</p>
+
+<table>
+  <tr><th>Variable</th><th>Default</th><th>Purpose</th></tr>
+  <tr><td>SOV_REGION</td><td>EAST</td><td>DORADO region (EAST or WEST)</td></tr>
+  <tr><td>SOV_CARE_FLOOR</td><td>0.95</td><td>Care Floor threshold (load-bearing)</td></tr>
+  <tr><td>SOV_BFT_QUORUM</td><td>12</td><td>BFT council size (do not lower)</td></tr>
+  <tr><td>SOV_SIGIL_CHAIN</td><td>sqlite:///./sigils.db</td><td>SIGIL chain storage backend</td></tr>
+  <tr><td>SOV_ED25519_KEY</td><td>auto-generated</td><td>Classical signing key</td></tr>
+  <tr><td>SOV_PQC_KEY</td><td>auto-generated</td><td>Post-quantum signing key (ML-DSA-65)</td></tr>
+  <tr><td>SOV_LISTEN_PORT</td><td>3101</td><td>MCP server port</td></tr>
+  <tr><td>SOV_COUNCIL_PORT</td><td>3200</td><td>BFT council port</td></tr>
+  <tr><td>SOV_ARTICLE50_MODE</td><td>auto</td><td>EU passport auto-issuance (auto / off)</td></tr>
+  <tr><td>SOV_MODEL</td><td>sov3-base</td><td>Default model (see 9 models below)</td></tr>
+</table>
+
+<h2>🤖 The 9 Open-Weights Models</h2>
+<p>The sovereign stack ships with 9 open-weights models. All are MIT or Apache-2.0 licensed, all run locally, all preserve the sovereign properties (Care Floor + BFT + SIGIL).</p>
+
+<div class="models">
+  <div class="model"><h4>sov3-base</h4><p class="specs">7B · MIT · general-purpose</p><p>The default model. Best balance of capability, speed, and resource use. Recommended for most deployments.</p></div>
+  <div class="model"><h4>sov3-pro</h4><p class="specs">13B · MIT · reasoning</p><p>Stronger reasoning, slower inference. Best for compliance audit, legal analysis, complex multi-step tasks.</p></div>
+  <div class="model"><h4>sov3-edge</h4><p class="specs">1.5B · MIT · edge</p><p>Quantised for edge devices (Jetson Orin, Raspberry Pi 5, M2 MacBook). Care Floor still enforced.</p></div>
+  <div class="model"><h4>sov3-coder</h4><p class="specs">7B · Apache-2.0 · code</p><p>Specialised for code generation, review, and refactoring. Trained on sovereign-licensed corpora only.</p></div>
+  <div class="model"><h4>sov3-legal</h4><p class="specs">13B · MIT · legal</p><p>Trained on EU AI Act, GDPR, UK GDPR, ISO 42001, NIST AI RMF. The Article 50 reference model.</p></div>
+  <div class="model"><h4>sov3-medical</h4><p class="specs">13B · MIT · clinical</p><p>Trained on PubMed Central + NICE guidelines + MHRA. Care Floor biased to safety dimension.</p></div>
+  <div class="model"><h4>sov3-embed</h4><p class="specs">0.3B · MIT · embedding</p><n>Vector embeddings. Sovereign RAG. Compatible with pgvector, Qdrant, Milvus.</p></div>
+  <div class="model"><h4>sov3-vision</h4><p class="specs">7B · MIT · multimodal</p><p>Image understanding + Article 50 visual watermarking. C2PA-compatible output.</p></div>
+  <div class="model"><h4>sov3-tts</h4><p class="specs">0.5B · MIT · speech</p><p>Text-to-speech for voice sovereignty. On-device. Care Floor enforced on output text.</p></div>
+</div>
+
+<h2>📚 The 4 SDKs</h2>
+<p>Four official SDKs cover the major platforms. All SDKs are open-source (MIT) and emit SIGILs by default.</p>
+
+<div class="sdks">
+  <div class="sdk">
+    <h4>🐍 Python SDK</h4>
+    <p>pip install sov3-sovereign</p>
+    <p>Async + sync APIs. Type hints throughout. Pydantic models. AsyncIO-friendly.</p>
+    <code>from sov3 import Sov3</code>
+  </div>
+  <div class="sdk">
+    <h4>📜 JavaScript SDK</h4>
+    <p>npm install @csoai/sov3</p>
+    <p>Browser + Node.js + Deno. TypeScript types. React hooks. Next.js middleware.</p>
+    <code>import { Sov3 } from '@csoai/sov3'</code>
+  </div>
+  <div class="sdk">
+    <h4>🍎 Swift SDK</h4>
+    <p>Swift Package Manager</p>
+    <p>iOS / iPadOS / macOS / visionOS. Native async/await. Care Floor on-device.</p>
+    <code>import Sov3</code>
+  </div>
+  <div class="sdk">
+    <h4>🦋 Flutter SDK</h4>
+    <p>flutter pub add sov3</p>
+    <p>Android + iOS + Web + Windows + macOS + Linux. One codebase, six platforms.</p>
+    <code>import 'package:sov3/sov3.dart';</code>
+  </div>
+</div>
+
+<h2>🎯 5 Key Takeaways</h2>
+<div class="takeaway"><h4>1. 1-command install via Docker, pip, or npm</h4><p>All three paths produce the same sovereign stack. Choose your preferred package manager.</p></div>
+<div class="takeaway"><h4>2. 9 open-weights models, all MIT/Apache-2.0</h4><p>General, pro, edge, coder, legal, medical, embed, vision, TTS — all sovereign, all local.</p></div>
+<div class="takeaway"><h4>3. 4 SDKs cover Python, JavaScript, Swift, Flutter</h4><p>Web, server, mobile, desktop, edge — sovereign everywhere, SIGIL everywhere.</p></div>
+<div class="takeaway"><h4>4. Configuration via env vars, YAML, or CLI</h4><p>SOV_REGION, SOV_CARE_FLOOR, SOV_BFT_QUORUM — load-bearing defaults, but every value is configurable.</p></div>
+<div class="takeaway"><h4>5. Sovereignty is operational, not aspirational</h4><p>The Care Floor, BFT council, and SIGIL chain run by default. Sovereignty is what you get out of the box.</p></div>
+
+<h2>📝 Module 8 Quiz</h2>
+<div class="quiz">
+  <h3>3 Questions</h3>
+
+  <div class="question">
+    <p>1. Which Docker command starts the sovereign stack?</p>
+    <label><input type="radio" name="q1"> A. docker run csoai/sov3:latest</label>
+    <label><input type="radio" name="q1"> B. docker run -d --name sov3-sovereign -p 3101:3101 csoai/sov3:latest</label>
+    <label><input type="radio" name="q1"> C. docker pull csoai/sov3 && ./start.sh</label>
+    <label><input type="radio" name="q1"> D. docker compose up -d && sov-cli init</label>
+    <div class="answer">✓ <strong>Answer: B.</strong> The simplest 1-command path: <code>docker run -d --name sov3-sovereign -p 3101:3101 csoai/sov3:latest</code>. The full version includes the SOV_REGION env var and persistent volume mount.</div>
+  </div>
+
+  <div class="question">
+    <p>2. How many open-weights models ship with the sovereign stack?</p>
+    <label><input type="radio" name="q2"> A. 4</label>
+    <label><input type="radio" name="q2"> B. 7</label>
+    <label><input type="radio" name="q2"> C. 9</label>
+    <label><input type="radio" name="q2"> D. 12</label>
+    <div class="answer">✓ <strong>Answer: C. 9.</strong> base, pro, edge, coder, legal, medical, embed, vision, tts — covering general, reasoning, edge, code, legal, medical, RAG, multimodal, and TTS.</div>
+  </div>
+
+  <div class="question">
+    <p>3. Which of these is NOT one of the 4 official SDKs?</p>
+    <label><input type="radio" name="q3"> A. Python</label>
+    <label><input type="radio" name="q3"> B. JavaScript</label>
+    <label><input type="radio" name="q3"> C. Ruby</label>
+    <label><input type="radio" name="q3"> D. Flutter</label>
+    <div class="answer">✓ <strong>Answer: C. Ruby.</strong> The 4 official SDKs are Python, JavaScript, Swift, and Flutter. (A Ruby SDK is on the 12-month roadmap but not yet shipped.)</div>
+  </div>
+
+  <button class="reveal-btn" onclick="document.querySelectorAll('.question').forEach(q => q.classList.add('show')); this.style.display='none';">Show Answers</button>
+</div>
+
+<div class="nav-bottom">
+  <a href="07-dorado.html">← Module 7</a>
+  <a href="09-certification.html" class="next">Module 9: Certification Exam →</a>
+</div>
+
+<footer>
+  <p><strong>🐉 Sovereign AI 101 — Module 8: Deployment</strong></p>
+  <p>CSOAI Ltd (UK 16939677) · MIT license · 4 Jul 2026</p>
+  <p><a href="index.html">Course Overview</a> · <a href="/">csoai.org</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">1-command install. 9 models. 4 SDKs. Sovereign by construction.</p>
+</footer>
+
+</body>
+</html>

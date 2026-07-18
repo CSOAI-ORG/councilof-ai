@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Sovereign Facts Live — SOV-720</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px}
+h1{color:#7dd3fc;margin:0 0 4px 0}
+.sub{color:#9ca3af;font-size:12px;margin-bottom:24px}
+.fact{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;margin-top:12px;display:grid;grid-template-columns:200px 1fr;gap:16px}
+.fact .key{color:#a78bfa;font-size:13px;font-weight:700}
+.fact .val{color:#c5cdd9;font-size:14px;line-height:1.5}
+.fact .ts{color:#9ca3af;font-size:10px;margin-top:6px}
+.tag{background:#1e3a8a;color:#7dd3fc;padding:2px 6px;border-radius:3px;font-size:10px;margin-right:4px}
+.hard{background:#1f1208;border:1px dashed #f59e0b;border-radius:8px;padding:12px;margin-top:16px;color:#fbbf24;font-size:11px;line-height:1.5}
+</style>
+</head>
+<body>
+<h1>📚 Sovereign Facts Live</h1>
+<div class="sub">Source: sibling-shipped <code>/api/rag/facts</code> · 34 sovereign facts · RAG-augmented OWEM ground truth</div>
+<div id="facts"></div>
+<div class="hard">
+⚠️ HONEST REGISTER: Facts served from sibling-shipped RAG substrate. Style is local; facts are ground truth. Care Floor 0.95 still enforced on any consumer.
+</div>
+<script>
+async function load() {
+  try {
+    const r = await fetch('/api/rag/facts').then(r => r.json());
+    const facts = r.facts || r;
+    document.getElementById('facts').innerHTML = Object.entries(facts).map(([k, v]) => `
+      <div class="fact">
+        <div><div class="key">${k}</div><div class="ts">${typeof v === 'object' ? JSON.stringify(Object.keys(v||{})) : ''}</div></div>
+        <div class="val">${typeof v === 'object' ? (v.text || v.value || v.fact || JSON.stringify(v)) : v}</div>
+      </div>`).join('');
+  } catch (e) { document.getElementById('facts').innerHTML = '<div class="hard">'+e.message+'</div>'; }
+}
+load(); setInterval(load, 60000);
+</script>
+</body></html>

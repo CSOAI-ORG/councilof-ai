@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Anchor — sovereign.wiki</title>
+  <style>body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}ul{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}</style>
+</head>
+<body>
+  <div class="container">
+    <div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/cryptography/">cryptography</a> / anchor</div>
+    <h1>The Anchor</h1>
+    <p class="tagline">The sovereign keymaster — every signature passes through here.</p>
+    <div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+    <h2>What the Anchor Is</h2>
+    <p>The Anchor is the master process that holds the <a href="ed25519.html">Ed25519</a> signing key and the <a href="pqc-ml-dsa-65.html">ML-DSA-65</a> signing key. It lives inside <a href="citadel.html">Citadel</a>, never on disk in plain text, never reachable from outside the sovereign VM.</p>
+
+    <h2>Why a Keymaster?</h2>
+    <p>A single process that brokers every signature is auditable, recoverable and rotate-able. Distributing signing across many components is the path to compromise. Concentrating signing in one well-defended component is the path to sovereignty.</p>
+
+    <h2>The Magician's Table</h2>
+    <p>The Anchor is the <a href="../hieroglyphs/1-magician.html">Magician</a>'s table — private key on the inside, public key on the outside, every action signed. See the <a href="../lineage/hermetic-corpus.html">Hermetic tradition</a> for the deeper etymology.</p>
+
+    <h2>Recovery</h2>
+    <p>The Anchor's keys are backed up to a sovereign HSM (Hardware Security Module) using a 2-of-3 Shamir secret-share. Recovery requires two operators + the BFT Council majority.</p>
+
+    <h2>Rotation</h2>
+    <p>Every 90 days the Anchor rotates its keys. See <a href="rotation.html">90-day rotation</a>.</p>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="ed25519.html">Ed25519</a></li>
+      <li><a href="pqc-ml-dsa-65.html">ML-DSA-65</a></li>
+      <li><a href="pqc-ml-kem-768.html">ML-KEM-768</a></li>
+      <li><a href="rotation.html">Rotation</a></li>
+      <li><a href="citadel.html">Citadel</a></li>
+      <li><a href="../hieroglyphs/1-magician.html">The Magician</a></li>
+    </ul>
+    <div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+  </div>
+</body>
+</html>

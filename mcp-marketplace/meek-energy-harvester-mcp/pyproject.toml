@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_energy_harvester_mcp"
+version = "1.0.0"
+description = "MEEK Energy Harvester MCP — capillary streaming potential + triboelectric + piezoelectric + thermoelectric energy harvesting for the AURUM-II energy-autonomous orb. CRITICAL for the sovereign device. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = [
+    "mcp", "energy-harvesting", "capillary", "streaming-potential", "triboelectric",
+    "piezoelectric", "thermoelectric", "bi2te3", "defoneos", "project-aurum",
+    "sovereign", "uk", "open-source", "mit-licensed", "energy-autonomous",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-energy-harvester-mcp"
+
+[project.scripts]
+meek-energy-harvester-mcp = "meek_energy_harvester_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_energy_harvester_mcp"]

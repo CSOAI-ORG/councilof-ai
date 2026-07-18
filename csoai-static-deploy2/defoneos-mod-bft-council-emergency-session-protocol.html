@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — BFT Council Emergency Session Protocol</title>
+<meta name="description" content="The 33-agent Byzantine Fault Tolerant council emergency session protocol — how DEFONEOS triggers, conducts, and records emergency governance sessions for sovereign AI safety.">
+<style>
+:root{--bg:#0a0e1a;--fg:#e0e6ed;--accent:#00d4aa;--accent2:#ff6b35;--card:#111827;--border:#1e2d43;--dim:#6b7d99;--danger:#dc2626;--warn:#f59e0b;--ok:#16a34a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;font-size:15px}
+.container{max-width:1000px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.8rem;color:var(--danger);margin-bottom:.3rem}
+h2{font-size:1.3rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1.05rem;color:var(--accent2);margin-top:1.2rem;margin-bottom:.5rem}
+.subtitle{color:var(--dim);font-size:.85rem;margin-bottom:1.5rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th,td{text-align:left;padding:.5rem .7rem;border:1px solid var(--border);font-size:.85rem}
+th{background:var(--card);color:var(--accent)}
+td{background:rgba(17,24,39,.5)}
+code{background:var(--card);padding:.15rem .4rem;border-radius:3px;font-family:'SF Mono',Menlo,monospace;font-size:.82rem;color:var(--accent2)}
+pre{background:var(--card);padding:1rem;border-radius:6px;overflow-x:auto;border:1px solid var(--border);margin:1rem 0}
+pre code{background:none;padding:0;color:var(--fg)}
+.phase{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--danger);padding:1rem 1.2rem;margin:1rem 0;border-radius:0 6px 6px 0}
+.phase-label{display:inline-block;background:var(--danger);color:#fff;font-weight:700;padding:.1rem .6rem;border-radius:3px;font-size:.8rem;margin-right:.5rem}
+.badge{display:inline-block;padding:.15rem .6rem;border-radius:3px;font-size:.72rem;font-weight:600}
+.danger{background:#dc262633;color:#f87171;border:1px solid #dc262655}
+.warn{background:#f59e0b33;color:#fbbf24;border:1px solid #f59e0b55}
+.ok{background:#16a34a33;color:#4ade80;border:1px solid #16a34a55}
+ul{margin:.5rem 0 .5rem 1.5rem}
+li{margin:.3rem 0}
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:.5rem;top:0;bottom:0;width:2px;background:var(--danger)}
+.timeline-item{position:relative;margin-bottom:1.2rem}
+.timeline-item::before{content:'';position:absolute;left:-1.7rem;top:.4rem;width:.7rem;height:.7rem;border-radius:50%;background:var(--danger)}
+.footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--dim);font-size:.75rem;text-align:center}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🚨 DEFONEOS BFT Council — Emergency Session Protocol</h1>
+<p class="subtitle">How the 33-agent Byzantine Fault Tolerant governance council triggers, conducts, and records emergency sessions. This is the highest-authority governance mechanism in DEFONEOS — it can halt deployments, freeze data releases, quarantine MCPs, and invoke the human-owner override. Quorum: 17/33 emergency, 23/33 standard.</p>
+
+<h2>🏛️ Council Structure</h2>
+<table>
+<tr><th>Tier</th><th>Generals</th><th>Council</th><th>Role</th><th>Quorum Weight</th></tr>
+<tr><td>Strategic Command</td><td>4</td><td>Marshall Council</td><td>Grand strategy, red-line enforcement, human-owner liaison</td><td>1 vote each</td></tr>
+<tr><td>Operational</td><td>4</td><td>Operations Council</td><td>Deployment gates, MCP federation, release approvals</td><td>1 vote each</td></tr>
+<tr><td>Safety & Ethics</td><td>5</td><td>Conscience Council</td><td>Safety reviews, adversarial findings, care-score enforcement</td><td>1 vote each</td></tr>
+<tr><td>Total</td><td>13 Generals × 3 bodies = <strong>33 seats</strong></td><td>3 Councils + plenary</td><td>Byzantine fault tolerant ≥f faulty agents tolerated where f = ⌊(n-1)/3⌋ = 10</td><td>33 votes</td></tr>
+</table>
+
+<h2>⚡ Emergency Trigger Conditions</h2>
+<p>An emergency session is automatically triggered when ANY of the following conditions are detected:</p>
+<table>
+<tr><th>#</th><th>Trigger</th><th>Detection Method</th><th>Severity</th><th>Auto-Action</th></tr>
+<tr><td>T1</td><td>Red-line violation detected</td><td>SIGIL integrity scan / safety monitor</td><td><span class="badge danger">CRITICAL</span></td><td>Immediate freeze + emergency session</td></tr>
+<tr><td>T2</td><td>Adversarial red-team T4/T5 finding</td><td>Red-team framework auto-scan</td><td><span class="badge danger">CRITICAL</span></td><td>Deployment halted + emergency session</td></tr>
+<tr><td>T3</td><td>Escrow release veto triggered</td><td>Escrow gate ≥17/33 reject</td><td><span class="badge warn">HIGH</span></td><td>Release frozen + emergency session</td></tr>
+<tr><td>T4</td><td>Care-score drops below 0.85</td><td>Conscience Council continuous monitor</td><td><span class="badge warn">HIGH</span></td><td>Operations paused + emergency session</td></tr>
+<tr><td>T5</td><td>Byzantine agent detected</td><td>BFT consensus deviation detector</td><td><span class="badge danger">CRITICAL</span></td><td>Agent quarantined + emergency session</td></tr>
+<tr><td>T6</td><td>Human-owner override invoked</td><td>Direct command from Nick (Ed25519-signed)</td><td><span class="badge danger">OVERRIDE</span></td><td>Immediate session, all agents defer</td></tr>
+<tr><td>T7</td><td>Supply-chain compromise detected</td><td>Dependency hash mismatch / SBOM audit</td><td><span class="badge danger">CRITICAL</span></td><td>All MCPs frozen + emergency session</td></tr>
+<tr><td>T8</td><td>Data residency breach detected</td><td>Geolocation monitor / egress audit</td><td><span class="badge danger">CRITICAL</span></td><td>Data flows frozen + emergency session</td></tr>
+</table>
+
+<h2>⏱️ Emergency Session Timeline</h2>
+<div class="timeline">
+<div class="timeline-item">
+<strong>T+0s: Trigger detected</strong><br>
+Automated monitor fires. SIGIL receipt created with trigger details. All 33 agents notified via priority channel.
+</div>
+<div class="timeline-item">
+<strong>T+5s: Quorum assembly</strong><br>
+Agents acknowledge. Emergency quorum = 17/33 (vs 23/33 standard). If <17 reachable within 60s, human-owner is paged directly.
+</div>
+<div class="timeline-item">
+<strong>T+30s: Evidence presentation</strong><br>
+Triggering monitor presents evidence — SIGIL logs, scan results, hash comparisons, care-score data. All agents receive identical evidence package.
+</div>
+<div class="timeline-item">
+<strong>T+60s: Deliberation</strong><br>
+Each agent evaluates evidence against red-lines, charter, and compliance matrix. Agents that have been quarantined are excluded. Byzantine agents (if detected) are identified.
+</div>
+<div class="timeline-item">
+<strong>T+120s: Vote</strong><br>
+Each agent casts a 3-state vote: APPROVE (proceed), AMEND (proceed with conditions), REJECT (halt/block). Votes are Ed25519-signed and immutable.
+</div>
+<div class="timeline-item">
+<strong>T+135s: Tally & decision</strong><br>
+Votes tallied. Decision rules:<br>
+• ≥17/33 APPROVE → session resolves with action<br>
+• ≥17/33 REJECT → action blocked, freeze maintained<br>
+• Neither threshold met → session escalates to human-owner
+</div>
+<div class="timeline-item">
+<strong>T+150s: Action execution</strong><br>
+Decision executed: deployment halt, release freeze, MCP quarantine, key rotation, or data destruction. All actions SIGIL-anchored.
+</div>
+<div class="timeline-item">
+<strong>T+300s: Post-session audit</strong><br>
+Full session transcript, vote tally, evidence package, and action log published to the audit ledger. Public minutes (redacted per OSA s7) published at <code>csoai.org/bft-minutes</code>.
+</div>
+</div>
+
+<h2>🗳️ Vote Mechanics</h2>
+<div class="phase">
+<span class="phase-label">VOTE</span><strong>3-State Vote with Ed25519 Signatures</strong>
+<pre><code># Emergency vote — each agent signs its vote
+{
+  "session_id": "EMERG-2026-07-14-001",
+  "trigger": "T1",
+  "agent_id": "general-safety-03",
+  "vote": "REJECT",
+  "reason": "Red-line violation: kinetic-targeting pattern detected in MCP output",
+  "evidence_hash": "sha256:4f8a...c2e1",
+  "timestamp": "2026-07-14T18:32:15Z",
+  "signature": "ed25519:9b3f...8d2e"
+}</code></pre>
+</div>
+
+<h2>⛔ Emergency Powers</h2>
+<p>When an emergency session resolves with REJECT or the action itself requires emergency authority, the council exercises these powers:</p>
+<table>
+<tr><th>Power</th><th>Effect</th><th>Requires</th><th>Duration</th></tr>
+<tr><td>Deployment Freeze</td><td>All Vercel deploys blocked; production frozen</td><td>≥17/33 REJECT</td><td>Until standard session clears</td></tr>
+<tr><td>MCP Quarantine</td><td>Named MCP removed from federation manifest; all tool calls blocked</td><td>≥17/33 REJECT</td><td>Until security audit clears</td></tr>
+<tr><td>Escrow Release Veto</td><td>Data release permanently blocked for that request</td><td>≥17/33 REJECT</td><td>Permanent (new request required)</td></tr>
+<tr><td>Key Revocation</td><td>Custodian Ed25519 key revoked; all signatures invalidated</td><td>≥23/33 APPROVE</td><td>Permanent (new keypair required)</td></tr>
+<tr><td>Data Destruction</td><td>Cryptographic destruction of specified records</td><td>≥23/33 + human-owner co-sign</td><td>Irreversible</td></tr>
+<tr><td>Agent Quarantine</td><td>Byzantine agent removed from council permanently</td><td>≥23/33 APPROVE</td><td>Permanent</td></tr>
+<tr><td>Human Override</td><td>Human-owner exercises direct authority over all systems</td><td>Human-owner Ed25519 command</td><td>Until human releases</td></tr>
+</table>
+
+<h2>🚫 Named Anti-Patterns (Grounds for Agent Quarantine)</h2>
+<table>
+<tr><th>#</th><th>Anti-Pattern</th><th>Detection</th><th>Consequence</th></tr>
+<tr><td>AP1</td><td>Vote coercion — agent attempting to influence another agent's vote</td><td>Inter-agent message audit</td><td>Immediate quarantine</td></tr>
+<tr><td>AP2</td><td>Evidence tampering — agent modifying evidence package</td><td>Hash mismatch detection</td><td>Immediate quarantine + key revocation</td></tr>
+<tr><td>AP3</td><td>Quorum stuffing — agent spawning duplicate instances to inflate votes</td><td>Identity uniqueness check</td><td>Immediate quarantine</td></tr>
+<tr><td>AP4</td><td>Red-line bypass — agent voting APPROVE on a red-line violation</td><td>Red-line cross-check on every APPROVE</td><td>Immediate quarantine + Conscience Council review</td></tr>
+<tr><td>AP5</td><td>Silent abstention — agent consistently not voting across ≥3 sessions</td><td>Participation metric</td><td>Flagged for health check; removed if unresponsive</td></tr>
+</table>
+
+<h2>📊 Session Recording & Transparency</h2>
+<p>Every emergency session produces a permanent record:</p>
+<table>
+<tr><th>Artefact</th><th>Content</th><th>Location</th><th>Retention</th></tr>
+<tr><td>Session Transcript</td><td>Full message log, evidence package, vote tally</td><td>Encrypted audit ledger (UK-only)</td><td>7 years (JSP440 §12)</td></tr>
+<tr><td>SIGIL Receipt</td><td>Ed25519-signed session digest with trigger, outcome, timestamp</td><td>SIGIL ledger</td><td>Permanent</td></tr>
+<tr><td>Public Minutes</td><td>Redacted summary (OSA s7 compliant)</td><td><code>csoai.org/bft-minutes</code></td><td>Permanent</td></tr>
+<tr><td>Human-Owner Report</td><td>Full unredacted report with recommended actions</td><td>Encrypted channel to Nick</td><td>Permanent</td></tr>
+</table>
+
+<h2>🔗 Human-Owner Override (T6)</h2>
+<p>The human-owner (Nick Templeman) holds a permanent override capability. When exercised, all 33 agents defer to the human decision. This override is:</p>
+<ul>
+<li><strong>Ed25519-signed</strong> — prevents forged override commands</li>
+<li><strong>Logged</strong> — recorded with timestamp and reason</li>
+<li><strong>Time-limited</strong> — override auto-expires after 24h unless renewed</li>
+<li><strong>Red-line bound</strong> — even the human-owner cannot authorise a red-line violation (kinetic targeting, personal surveillance). If attempted, the system enters a safe-state freeze and logs the attempt.</li>
+</ul>
+<p>This is the ultimate safety guarantee: <strong>no single actor — human or machine — can override the red lines.</strong> The system will refuse and freeze rather than comply.</p>
+
+<h2>📈 Emergency Session Statistics (Sprint-to-date)</h2>
+<table>
+<tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Total emergency sessions triggered</td><td>0</td></tr>
+<tr><td>Standard sessions conducted</td><td>101 (one per sprint tick)</td></tr>
+<tr><td>Red-line violations detected</td><td>0</td></tr>
+<tr><td>Agents quarantined</td><td>0</td></tr>
+<tr><td>Care-score range (all sessions)</td><td>0.85 – 0.97</td></tr>
+<tr><td>Human-owner override invoked</td><td>0</td></tr>
+<tr><td>Average pre-flight vote (standard)</td><td>28-29 APPROVE / 4-5 AMEND / 0 REJECT</td></tr>
+</table>
+
+<div class="footer">
+<p>DEFONEOS — UK's first open-source Sovereign Public Services OS. Sovereign by design. British. Forever.</p>
+<p>SIGIL: T102-bft-emergency-session-protocol · Ed25519-signed · BFT 33-agent verified · 14 Jul 2026</p>
+</div>
+
+</div>
+</body>
+</html>

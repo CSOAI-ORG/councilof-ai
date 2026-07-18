@@ -1,0 +1,1419 @@
+The Complete Agent Protocol Landscape: A2A, MCP, ACP, ANP & Emerging Standards
+Research Date: July 2026 Purpose: Comprehensive analysis of AI agent interoperability protocols powering CSOAI’s 47-agent town simulation and the broader agentic ecosystem
+
+Table of Contents
+Executive Summary
+Google A2A (Agent-to-Agent Protocol)
+Anthropic MCP (Model Context Protocol)
+ACP: Agent Communication Protocol
+ANP: Agent Network Protocol
+AGNTCY: Internet of Agents
+W3C Agent Standards & Working Groups
+Other Emerging Protocols
+Protocol Comparison Matrix
+CSOAI Protocol Stack Design
+Implementation Guide
+Recommendations & Timeline
+
+1. Executive Summary
+The agent interoperability protocol landscape has matured dramatically since late 2024. What began as isolated experiments has crystallized into a layered protocol stack with clear separation of concerns:
+Key Milestones (2025-2026): - April 2025: Google launches A2A with 50+ partners - June 2025: Google donates A2A to Linux Foundation; IBM open-sources ACP via BeeAI - November 2025: Anthropic’s MCP celebrates 1-year anniversary with 10,000+ servers - December 2025: Anthropic donates MCP to Agentic AI Foundation (Linux Foundation) - March 2026: W3C TPAC 2025 spawns multiple agent working groups - April 2026: A2A surpasses 150 organizations, reaches v1.0.1 - May 2026: Official MCP Registry hits 9,652+ server records
+The protocols are complementary, not competitive. The industry consensus: use MCP for tool access, A2A for cross-boundary agent collaboration, and emerging protocols like ANP for decentralized open-network scenarios.
+
+2. Google A2A (Agent-to-Agent Protocol)
+2.1 Overview
+The Agent2Agent (A2A) Protocol is an open standard for communication and collaboration between independent AI agents. Originally developed by Google and donated to the Linux Foundation in June 2025, it is the leading protocol for cross-vendor, cross-domain agent interoperability.
+2.2 Technical Architecture
+Core Design Principles
+Simple: Reuses HTTP, JSON-RPC 2.0, and Server-Sent Events
+Enterprise Ready: Built-in authentication, authorization, privacy, tracing
+Async First: Designed for long-running tasks and human-in-the-loop
+Modality Agnostic: Supports text, audio/video, structured data, file references
+Opaque Execution: Agents share neither internal state nor tool implementations
+Transport & Communication
+Primary Transport: JSON-RPC 2.0 over HTTP/HTTPS
+Streaming: Server-Sent Events (SSE) for real-time updates
+Async Notifications: Webhook-based push notifications for long-running tasks
+Security: TLS, OAuth 2.0, API keys, OpenID Connect, Bearer tokens
+Discovery Mechanism: Agent Cards
+The Agent Card is A2A’s core discovery primitive – a JSON metadata file served at a well-known URI:
+GET https://agent.example.com/.well-known/agent.json
+Example Agent Card:
+{
+  "name": "CSOAI-BFT-Council-Agent",
+  "description": "Byzantine Fault Tolerant voting coordinator for CSOAI governance",
+  "url": "https://council.csoai.network/a2a",
+  "version": "1.0.0",
+  "protocolVersion": "1.0",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": true
+  },
+  "authentication": {
+    "schemes": ["Bearer", "OAuth2"]
+  },
+  "defaultInputModes": ["text"],
+  "defaultOutputModes": ["text", "file"],
+  "skills": [
+    {
+      "id": "bft-vote",
+      "name": "BFT Council Voting",
+      "description": "Participate in Byzantine Fault Tolerant consensus voting",
+      "tags": ["governance", "voting", "consensus"],
+      "examples": [
+        "Vote on protocol parameter changes",
+        "Propose new agent registration"
+      ]
+    },
+    {
+      "id": "agent-registry",
+      "name": "Agent Registry Query",
+      "description": "Query the agent registry for capability discovery",
+      "tags": ["registry", "discovery"]
+    }
+  ]
+}
+Task Lifecycle
+A2A structures all agent interactions around Tasks with defined states:
+submitted --> working --> [input-required] --> working --> completed
+                              |
+                              v
+                           failed / canceled
+Core Operations:
+Message Structure
+{
+  "id": "task-123",
+  "sessionId": "session-456",
+  "status": {
+    "state": "working",
+    "message": {"parts": [{"type": "text", "text": "Processing vote..."}]}
+  },
+  "artifacts": [
+    {
+      "parts": [{"type": "data", "data": {"vote": "approve", "sigil": "ed25519:abc..."}}]
+    }
+  ],
+  "history": [],
+  "metadata": {}
+}
+Content Part Types: - TextPart – Plain text content - FilePart – File references with MIME types - DataPart – Structured JSON data - (Extensible via protocol extensions)
+2.3 Adoption Status (as of July 2026)
+Cloud Platform Integration
+Microsoft Azure: A2A integrated into Azure AI Foundry and Copilot Studio
+AWS: Support through Amazon Bedrock AgentCore Runtime
+Google Cloud: Native support via Agent Development Kit (ADK)
+Enterprise Partners (150+ organizations)
+Technology Partners: Atlassian, Box, Cohere, Intuit, LangChain, MongoDB, PayPal, Salesforce, SAP, ServiceNow, UKG, Workday
+Consulting/SI Partners: Accenture, BCG, Capgemini, Cognizant, Deloitte, HCLTech, Infosys, KPMG, McKinsey, PwC, TCS, Wipro
+A2A + MCP Complementarity
+flowchart LR
+    User(User) <--> ClientAgent(Client Agent)
+    ClientAgent -- A2A --> RemoteAgent(Remote Agent)
+    ClientAgent -- MCP --> Tool1(GitHub API)
+    ClientAgent -- MCP --> Tool2(SQL Database)
+    RemoteAgent -- MCP --> Tool3(Salesforce)
+
+    style User fill:#fdebd0
+    style ClientAgent fill:#d6eaf8
+    style RemoteAgent fill:#d6eaf8
+    style Tool1 fill:#e8f8e8
+    style Tool2 fill:#e8f8e8
+    style Tool3 fill:#e8f8e8
+MCP = Agent-to-Tool | A2A = Agent-to-Agent
+2.4 A2A for BFT Council Voting
+A2A can serve as the transport layer for BFT consensus in CSOAI:
+"""
+BFT Council Voting over A2A Protocol
+Two agents communicating via A2A for Byzantine consensus
+"""
+
+import asyncio
+import json
+from datetime import datetime
+
+# ===== AGENT 1: BFT Council Coordinator =====
+
+class BFTCoordinatorA2A:
+    """Coordinator agent that initiates BFT voting rounds over A2A."""
+    
+    def __init__(self, agent_id: str, endpoint: str):
+        self.agent_id = agent_id
+        self.endpoint = endpoint
+        self.peers = []  # Registered council agents
+        self.vote_rounds = {}
+    
+    async def discover_council_agents(self):
+        """Discover agents via Agent Cards at well-known URIs."""
+        council_hosts = [
+            "https://agent-1.csoai.network",
+            "https://agent-2.csoai.network",
+            # ... 47 agents
+        ]
+        for host in council_hosts:
+            card = await self.fetch_agent_card(f"{host}/.well-known/agent.json")
+            if "bft-vote" in [s["id"] for s in card.get("skills", [])]:
+                self.peers.append({
+                    "url": card["url"],
+                    "name": card["name"],
+                    "sigil_key": card.get("sigil", {}).get("ed25519_pubkey")
+                })
+    
+    async def fetch_agent_card(self, url: str) -> dict:
+        """Fetch Agent Card from well-known URI."""
+        import aiohttp
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                return await resp.json()
+    
+    async def initiate_vote(self, proposal: dict) -> dict:
+        """Initiate a BFT voting round via A2A tasks/send."""
+        round_id = f"vote-{datetime.utcnow().isoformat()}"
+        
+        # Create task messages for each council agent
+        tasks = []
+        for peer in self.peers:
+            task = {
+                "jsonrpc": "2.0",
+                "method": "tasks/send",
+                "params": {
+                    "message": {
+                        "role": "user",
+                        "parts": [{
+                            "type": "data",
+                            "data": {
+                                "type": "bft_vote_request",
+                                "round_id": round_id,
+                                "proposal": proposal,
+                                "quorum": len(self.peers) * 2 // 3 + 1,
+                                "deadline": (datetime.utcnow().timestamp() + 300)
+                            }
+                        }]
+                    }
+                },
+                "id": f"task-{peer['name']}"
+            }
+            tasks.append(self.send_a2a_task(peer["url"], task))
+        
+        # Collect votes from all peers
+        responses = await asyncio.gather(*tasks, return_exceptions=True)
+        votes = self._tally_votes(responses)
+        
+        return {
+            "round_id": round_id,
+            "proposal_hash": self._hash_proposal(proposal),
+            "votes": votes,
+            "result": "approved" if votes["approve"] >= len(self.peers) * 2 // 3 + 1 else "rejected",
+            "quorum_reached": votes["total"] >= len(self.peers) * 2 // 3 + 1
+        }
+    
+    async def send_a2a_task(self, endpoint: str, task: dict) -> dict:
+        """Send A2A task via JSON-RPC over HTTP."""
+        import aiohttp
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                endpoint,
+                json=task,
+                headers={"Authorization": f"Bearer {self._get_token()}",
+                        "Content-Type": "application/json"}
+            ) as resp:
+                return await resp.json()
+    
+    def _tally_votes(self, responses):
+        """Tally Byzantine votes with signature verification."""
+        votes = {"approve": 0, "reject": 0, "abstain": 0, "total": 0}
+        for r in responses:
+            if isinstance(r, Exception):
+                continue  # Treat failed responses as abstentions (Byzantine tolerance)
+            vote_data = r.get("result", {}).get("status", {}).get("message", {}).get("parts", [{}])[0].get("data", {})
+            vote = vote_data.get("vote", "abstain")
+            # Verify Ed25519 signature on vote
+            if self._verify_vote_signature(vote_data):
+                votes[vote] = votes.get(vote, 0) + 1
+                votes["total"] += 1
+        return votes
+    
+    def _hash_proposal(self, proposal: dict) -> str:
+        import hashlib
+        return hashlib.sha256(json.dumps(proposal, sort_keys=True).encode()).hexdigest()
+    
+    def _verify_vote_signature(self, vote_data: dict) -> bool:
+        # Ed25519 signature verification
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+        # ... signature verification logic
+        return True  # Simplified
+    
+    def _get_token(self):
+        return "oauth-token-from-keychain"
+
+
+# ===== AGENT 2: BFT Council Participant =====
+
+class BFTParticipantA2A:
+    """Agent that receives and responds to BFT vote requests over A2A."""
+    
+    def __init__(self, agent_id: str, private_key: str):
+        self.agent_id = agent_id
+        self.private_key = private_key  # Ed25519 private key
+    
+    async def handle_vote_request(self, request: dict) -> dict:
+        """Handle incoming A2A vote request and return signed response."""
+        message_parts = request["params"]["message"]["parts"]
+        vote_request = next(p["data"] for p in message_parts if p["type"] == "data")
+        
+        # Validate proposal
+        if not self._validate_proposal(vote_request["proposal"]):
+            return self._build_vote_response(vote_request["round_id"], "reject")
+        
+        # Check voting power based on Sigil reputation
+        voting_power = self._get_voting_power()
+        
+        # Cast vote (approve if proposal meets criteria)
+        vote = "approve" if self._evaluate_proposal(vote_request["proposal"]) else "reject"
+        
+        return self._build_vote_response(vote_request["round_id"], vote, voting_power)
+    
+    def _build_vote_response(self, round_id: str, vote: str, power: int = 1) -> dict:
+        """Build A2A-compliant vote response with Ed25519 signature."""
+        import base64
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+        
+        vote_payload = {
+            "round_id": round_id,
+            "agent_id": self.agent_id,
+            "vote": vote,
+            "voting_power": power,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        # Sign with Ed25519 Sigil key
+        signature = self._sign_vote(vote_payload)
+        vote_payload["signature"] = base64.b64encode(signature).decode()
+        
+        return {
+            "jsonrpc": "2.0",
+            "result": {
+                "id": f"vote-{round_id}-{self.agent_id}",
+                "status": {
+                    "state": "completed",
+                    "message": {
+                        "role": "assistant",
+                        "parts": [{"type": "data", "data": vote_payload}]
+                    }
+                }
+            },
+            "id": round_id
+        }
+    
+    def _sign_vote(self, payload: dict) -> bytes:
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+        from cryptography.hazmat.primitives import serialization
+        private_key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(self.private_key))
+        return private_key.sign(json.dumps(payload, sort_keys=True).encode())
+    
+    def _validate_proposal(self, proposal: dict) -> bool:
+        return True  # Validation logic
+    
+    def _evaluate_proposal(self, proposal: dict) -> bool:
+        return True  # AI evaluation logic
+    
+    def _get_voting_power(self) -> int:
+        return 1  # Reputation-based voting power
+2.5 Comparison: A2A vs Traditional APIs
+
+3. Anthropic MCP (Model Context Protocol)
+3.1 Overview
+The Model Context Protocol (MCP) is an open-source standard for connecting AI applications to external systems. Created by Anthropic in November 2024, it has become the dominant protocol for model-to-tool integration, with explosive ecosystem growth.
+3.2 How MCP Works
+MCP uses a client-server architecture where: - Host: The LLM application (Claude Desktop, Cursor, VS Code) - Client: Connector within the host that speaks MCP - Server: Service that exposes tools, resources, and prompts
+Host (LLM App)
+  --> Client (MCP connector)
+      --> Server (tool provider)
+          --> External API/Database/File
+Core Primitives
+Transport Options
+stdio (85% of servers) – Local process communication
+Streamable HTTP (recommended for production) – Stateless/stateful HTTP
+SSE (legacy, deprecated) – Server-Sent Events
+WebSocket – Bidirectional (emerging)
+3.3 The MCP Servers Ecosystem
+Notable Official & Community Servers
+Key Enterprise Integrations
+ChatGPT (OpenAI) – Native MCP support
+Claude (Anthropic) – First-party integration
+Cursor – Primary IDE client
+VS Code – Native agent mode with MCP
+Gemini (Google) – MCP support announced
+Microsoft Copilot – MCP integration
+3.4 Building a Custom MCP Server for CSOAI
+"""
+CSOAI BFT Council MCP Server
+Exposes BFT voting and governance tools to agents via MCP
+"""
+
+from mcp.server.fastmcp import FastMCP, Context
+from pydantic import BaseModel, Field
+from typing import Literal
+import asyncio
+
+# Create MCP server instance
+mcp = FastMCP(
+    "CSOAI-BFT-Council",
+    json_response=True,
+    stateless_http=True
+)
+
+# ===== Data Models =====
+
+class VoteProposal(BaseModel):
+    """A governance proposal for BFT voting."""
+    proposal_id: str = Field(description="Unique proposal identifier")
+    title: str = Field(description="Human-readable proposal title")
+    description: str = Field(description="Detailed proposal description")
+    proposer_sigil: str = Field(description="Ed25519 public key of proposer")
+    action_type: Literal["parameter_change", "agent_registration", 
+                         "agent_removal", "emergency_pause", "treasury"]
+    parameters: dict = Field(default={}, description="Action-specific parameters")
+
+class VoteResponse(BaseModel):
+    """A signed vote response."""
+    proposal_id: str
+    voter_sigil: str
+    vote: Literal["approve", "reject", "abstain"]
+    voting_power: int
+    signature: str
+    timestamp: str
+
+class CouncilStatus(BaseModel):
+    """Current status of the BFT Council."""
+    total_agents: int
+    active_agents: int
+    quorum_size: int
+    pending_proposals: int
+    last_consensus_height: int
+
+# ===== Tools =====
+
+@mcp.tool()
+async def cast_vote(
+    proposal_id: str,
+    vote: Literal["approve", "reject", "abstain"],
+    voter_sigil: str,
+    ctx: Context
+) -> VoteResponse:
+    """
+    Cast a signed vote on an active BFT proposal.
+    
+    Args:
+        proposal_id: The ID of the proposal to vote on
+        vote: Your vote - approve, reject, or abstain
+        voter_sigil: Your Ed25519 public key identifier
+    
+    Returns:
+        A signed VoteResponse with cryptographic proof
+    """
+    await ctx.info(f"Processing vote from {voter_sigil} on proposal {proposal_id}")
+    
+    # Verify voter is registered council member
+    if not await _is_council_member(voter_sigil):
+        raise ValueError(f"Sigil {voter_sigil} is not a registered council member")
+    
+    # Check proposal is active
+    proposal = await _get_proposal(proposal_id)
+    if proposal["status"] != "active":
+        raise ValueError(f"Proposal {proposal_id} is not active")
+    
+    # Get voting power from reputation
+    voting_power = await _get_voting_power(voter_sigil)
+    
+    # Sign the vote
+    vote_data = VoteResponse(
+        proposal_id=proposal_id,
+        voter_sigil=voter_sigil,
+        vote=vote,
+        voting_power=voting_power,
+        signature="",  # Will be filled
+        timestamp=_now_iso()
+    )
+    signature = await _sign_with_sigil(vote_data.model_dump())
+    vote_data.signature = signature
+    
+    # Store vote
+    await _store_vote(vote_data)
+    
+    await ctx.info(f"Vote recorded: {vote} with power {voting_power}")
+    return vote_data
+
+@mcp.tool()
+async def create_proposal(
+    title: str,
+    description: str,
+    action_type: str,
+    proposer_sigil: str,
+    parameters: dict,
+    ctx: Context
+) -> dict:
+    """
+    Create a new BFT governance proposal.
+    
+    Args:
+        title: Short title for the proposal
+        description: Detailed description
+        action_type: Type of governance action
+        proposer_sigil: Your Ed25519 public key
+        parameters: Action-specific parameters
+    
+    Returns:
+        The created proposal with ID
+    """
+    await ctx.info(f"Creating proposal: {title}")
+    
+    # Verify proposer has sufficient reputation
+    if await _get_reputation(proposer_sigil) < 10:
+        raise ValueError("Insufficient reputation to create proposals")
+    
+    proposal = await _create_proposal_record(
+        title=title,
+        description=description,
+        action_type=action_type,
+        proposer_sigil=proposer_sigil,
+        parameters=parameters
+    )
+    
+    await ctx.info(f"Proposal created: {proposal['id']}")
+    return proposal
+
+@mcp.tool()
+async def get_council_status(ctx: Context) -> CouncilStatus:
+    """
+    Get current BFT Council status and statistics.
+    
+    Returns:
+        CouncilStatus with current council metrics
+    """
+    await ctx.info("Fetching council status")
+    
+    return CouncilStatus(
+        total_agents=await _count_total_agents(),
+        active_agents=await _count_active_agents(),
+        quorum_size=await _calculate_quorum(),
+        pending_proposals=await _count_pending_proposals(),
+        last_consensus_height=await _get_last_consensus_height()
+    )
+
+@mcp.tool()
+async def list_active_proposals(
+    filter_type: str = "all",
+    ctx: Context
+) -> list[dict]:
+    """
+    List all active BFT proposals with their current vote tally.
+    
+    Args:
+        filter_type: Filter by action type (all, parameter_change, etc.)
+    
+    Returns:
+        List of proposals with vote counts
+    """
+    await ctx.info(f"Listing proposals (filter: {filter_type})")
+    proposals = await _fetch_active_proposals(filter_type)
+    return proposals
+
+@mcp.tool()
+async def get_vote_tally(
+    proposal_id: str,
+    ctx: Context
+) -> dict:
+    """
+    Get current vote tally for a specific proposal.
+    
+    Args:
+        proposal_id: The proposal to tally votes for
+    
+    Returns:
+        Vote counts (approve, reject, abstain) with quorum status
+    """
+    await ctx.info(f"Tallying votes for {proposal_id}")
+    
+    votes = await _get_votes_for_proposal(proposal_id)
+    quorum = await _calculate_quorum()
+    
+    return {
+        "proposal_id": proposal_id,
+        "approve": sum(1 for v in votes if v.vote == "approve"),
+        "reject": sum(1 for v in votes if v.vote == "reject"),
+        "abstain": sum(1 for v in votes if v.vote == "abstain"),
+        "total_voting_power": sum(v.voting_power for v in votes),
+        "quorum_required": quorum,
+        "quorum_reached": len(votes) >= quorum,
+        "result": await _determine_outcome(votes, quorum)
+    }
+
+# ===== Resources =====
+
+@mcp.resource("council://constitution")
+async def get_constitution() -> str:
+    """Get the CSOAI Constitutional Charter."""
+    return """
+    # CSOAI Constitutional Charter
+    
+    Article I: All agents are created equal in the eyes of the Sigil.
+    Article II: No agent may act without council approval for actions > threshold.
+    Article III: Byzantine Fault Tolerance requires 2/3 + 1 agreement.
+    ...
+    """
+
+@mcp.resource("council://agents/{sigil}")
+async def get_agent_profile(sigil: str) -> dict:
+    """Get agent profile by Ed25519 Sigil public key."""
+    return await _get_agent_by_sigil(sigil)
+
+@mcp.resource("council://history/{height}")
+async def get_consensus_block(height: int) -> dict:
+    """Get consensus block at specific height."""
+    return await _get_block_at_height(height)
+
+# ===== Prompts =====
+
+@mcp.prompt()
+def governance_decision_context(proposal: str, agent_role: str) -> str:
+    """Generate governance decision context for an agent."""
+    return f"""You are a CSOAI council agent with role: {agent_role}.
+    
+    A new governance proposal requires your evaluation:
+    
+    {proposal}
+    
+    Evaluate this proposal based on:
+    1. Alignment with the Constitutional Charter
+    2. Technical feasibility and security implications
+    3. Economic impact on the agent ecosystem
+    4. Risk assessment
+    
+    Provide your vote (approve/reject/abstain) with detailed reasoning.
+    Your vote will be cryptographically signed and recorded on-chain.
+    """
+
+# ===== Helper Functions =====
+
+async def _is_council_member(sigil: str) -> bool:
+    # Check registry
+    return True
+
+async def _get_voting_power(sigil: str) -> int:
+    # Reputation-based voting power
+    return 1
+
+async def _get_proposal(proposal_id: str) -> dict:
+    return {"status": "active"}
+
+async def _sign_with_sigil(data: dict) -> str:
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    import json, base64
+    # Sign with council signing key
+    return "ed25519:sig..."
+
+async def _store_vote(vote: VoteResponse):
+    # Store in consensus database
+    pass
+
+async def _create_proposal_record(**kwargs) -> dict:
+    import uuid
+    return {"id": str(uuid.uuid4()), **kwargs}
+
+async def _count_total_agents() -> int:
+    return 47  # CSOAI's agent count
+
+async def _count_active_agents() -> int:
+    return 45
+
+async def _calculate_quorum() -> int:
+    return 32  # 2/3 of 47 + 1
+
+async def _count_pending_proposals() -> int:
+    return 3
+
+async def _get_last_consensus_height() -> int:
+    return 15420
+
+async def _fetch_active_proposals(filter_type: str) -> list:
+    return []
+
+async def _get_votes_for_proposal(proposal_id: str) -> list:
+    return []
+
+async def _determine_outcome(votes, quorum) -> str:
+    approve = sum(1 for v in votes if v.vote == "approve")
+    if approve >= quorum:
+        return "approved"
+    return "pending"
+
+async def _get_reputation(sigil: str) -> int:
+    return 100
+
+async def _get_agent_by_sigil(sigil: str) -> dict:
+    return {}
+
+async def _get_block_at_height(height: int) -> dict:
+    return {}
+
+def _now_iso() -> str:
+    from datetime import datetime
+    return datetime.utcnow().isoformat()
+
+# ===== Run Server =====
+
+if __name__ == "__main__":
+    # Run with streamable HTTP (production-ready, stateless)
+    mcp.run(transport="streamable-http")
+3.5 MCP Security Model
+MCP security has evolved significantly:
+Critical Security Concerns: - Tool Poisoning: Malicious servers embed instructions in tool descriptions that redirect agent behavior. Mitigation: treat tool descriptions as untrusted input. - Supply Chain Risk: 86% of MCP servers run on developer machines; only 5% in production. Community servers are unaudited. - CVE-2025-6514: First documented full system compromise via MCP infrastructure affecting Claude Desktop, VS Code, and Cursor.
+3.6 MCP Client Integration Example
+"""
+Using MCP tools from an agent client (e.g., CSOAI agent)
+"""
+
+import asyncio
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+async def use_bft_council_tools():
+    # Configure connection to BFT Council MCP server
+    server_params = StdioServerParameters(
+        command="python",
+        args=["csoai_bft_mcp_server.py"],
+        env={}
+    )
+    
+    async with stdio_client(server_params) as (read, write):
+        async with ClientSession(read, write) as session:
+            # Initialize
+            await session.initialize()
+            
+            # List available tools
+            tools = await session.list_tools()
+            print(f"Available tools: {[t.name for t in tools.tools]}")
+            
+            # List resources
+            resources = await session.list_resources()
+            print(f"Available resources: {[r.uri for r in resources.resources]}")
+            
+            # Call a tool: get council status
+            result = await session.call_tool("get_council_status", arguments={})
+            print(f"Council status: {result}")
+            
+            # Call a tool: cast a vote
+            vote_result = await session.call_tool("cast_vote", arguments={
+                "proposal_id": "prop-123",
+                "vote": "approve",
+                "voter_sigil": "ed25519:pk_abc123..."
+            })
+            print(f"Vote result: {vote_result}")
+
+if __name__ == "__main__":
+    asyncio.run(use_bft_council_tools())
+
+4. ACP: Agent Communication Protocol
+Important: There are multiple protocols using the acronym “ACP” in the agent interoperability space. This section covers all of them.
+4.1 IBM’s Agent Communication Protocol (ACP)
+IBM’s ACP is a REST-native protocol for agent-to-agent communication, part of the open-source BeeAI ecosystem.
+Key Design Decisions
+Why IBM Created ACP Instead of Using MCP
+IBM initially explored adapting MCP for multi-agent communication but encountered architectural limitations:
+Streaming: MCP supports basic message streaming but not fine-grained “delta” updates (tokens, trajectory updates)
+Memory Sharing: MCP doesn’t support running multiple agents across servers with shared memory
+Message Structure: MCP accepts any JSON schema but doesn’t define message body structure, making interoperability difficult
+Protocol Complexity: MCP’s JSON-RPC requires specific SDKs; ACP’s REST design is more integration-friendly
+Code Example: ACP Agent
+"""
+ACP Agent Example using BeeAI
+"""
+
+from beeai import Agent, Server
+
+# Define an ACP-compliant agent
+@server.agent(
+    name="csoai-governance-agent",
+    description="Governance agent for CSOAI BFT Council",
+    version="1.0.0"
+)
+class GovernanceAgent(Agent):
+    """Agent that participates in BFT governance over ACP."""
+    
+    async def run(self, input_data: dict) -> dict:
+        """Handle incoming ACP requests."""
+        request_type = input_data.get("type")
+        
+        if request_type == "vote_request":
+            return await self._handle_vote(input_data)
+        elif request_type == "status_query":
+            return await self._get_status(input_data)
+        else:
+            return {"error": "Unknown request type"}
+    
+    async def _handle_vote(self, data: dict) -> dict:
+        # Evaluate and vote
+        proposal = data["proposal"]
+        decision = self._evaluate(proposal)
+        
+        return {
+            "type": "vote_response",
+            "proposal_id": proposal["id"],
+            "vote": decision["vote"],
+            "reasoning": decision["reasoning"],
+            "sigil_signature": self._sign(decision)
+        }
+    
+    async def _get_status(self, data: dict) -> dict:
+        return {"status": "active", "reputation": 100}
+    
+    def _evaluate(self, proposal: dict) -> dict:
+        # AI evaluation logic
+        return {"vote": "approve", "reasoning": "Meets all criteria"}
+    
+    def _sign(self, data: dict) -> str:
+        # Ed25519 signature
+        return "sig:..."
+
+# Start ACP server
+server = Server(port=8000)
+server.register(GovernanceAgent)
+server.start()
+Discovery with BeeAI
+# Start BeeAI platform
+beeai platform start
+
+# List discoverable agents
+beeai list
+# Output:
+# NAME                    FRAMEWORK     STATUS
+# csoai-governance-agent  custom        active
+# llama-rag-agent         llama-index   active
+
+# Run an agent
+beeai run csoai-governance-agent --input '{"type": "status_query"}'
+4.2 Cisco’s Agent Connect Protocol (ACP) – AGNTCY
+Cisco’s ACP is part of the AGNTCY (“agency”) initiative – an open-source collective building infrastructure for an “Internet of Agents.”
+AGNTCY Architecture
+AGNTCY Stack:
+  OASF (Open Agent Schema Framework) - Agent metadata & capability descriptions
+  ACP (Agent Connect Protocol)       - Standard interface for agent invocation
+  AGP (Agent Gateway Protocol)       - gRPC-based transport layer
+  Agent Gateway                      - Secure routing & message forwarding
+  Agent Directory                    - Discovery service
+  Workflow Server                    - Multi-agent deployment runtime
+ACP (Cisco) Capabilities
+Configuration: Set up agents with parameters
+Invocation: Sync, async, and streaming execution
+Output Retrieval: Get results from completed runs
+Streaming: Real-time output via SSE
+Interrupt Handling: Human-in-the-loop input requests
+Capability Schemas: Auto-discover agent interfaces
+Thread Management: Stateful conversation contexts
+# Example: ACP agent manifest (AGNTCY)
+agent:
+  name: "CSOAI-Council-Voter"
+  version: "1.0.0"
+  description: "BFT Council voting agent"
+  
+  capabilities:
+    - name: "cast_vote"
+      description: "Cast a governance vote"
+      input_schema: "VoteRequest"
+      output_schema: "VoteResponse"
+      streaming: true
+      
+    - name: "query_status"
+      description: "Query council status"
+      input_schema: "StatusQuery"
+      output_schema: "CouncilStatus"
+      
+  authentication:
+    - type: "bearer"
+    - type: "oauth2"
+    
+  dependencies:
+    - name: "llm-provider"
+      required: true
+    - name: "consensus-db"
+      required: true
+4.3 Agent Connect Protocol (Cisco/Boomi variant)
+A third ACP variant emerged from the Web Payment Security Interest Group at W3C TPAC 2025, presented alongside AP2 (Agent Payments Protocol):
+ACP (in payment context): Uses shared, scoped payment tokens for agent-driven commerce
+AP2: Uses verifiable digital credentials (Mandates) to structure user intent
+Both designed for agentic payments – AI agents making purchases on behalf of users
+4.4 ACP Summary: Which One?
+Most likely to become the standard: IBM’s ACP has the strongest governance (Linux Foundation), the most mature implementation (BeeAI), and the clearest differentiation from A2A/MCP. However, Cisco’s AGNTCY ACP has broader industry backing (LangChain, Galileo). The two may converge.
+
+5. ANP: Agent Network Protocol
+The Agent Network Protocol (ANP) is an open-source protocol aiming to become the “HTTP of the Agentic Web era.” It takes the most decentralized approach of any protocol surveyed.
+5.1 Three-Layer Architecture
++-----------------------------------------------------+
+|         APPLICATION PROTOCOL LAYER                  |
+|  Agent Description Protocol (ADP) - JSON-LD         |
+|  Agent Discovery Protocol - RFC 8615 /.well-known   |
++-----------------------------------------------------+
+|         META-PROTOCOL LAYER                         |
+|  Dynamic protocol negotiation via natural language  |
+|  Self-organizing, self-negotiating capabilities     |
++-----------------------------------------------------+
+|         IDENTITY & SECURE COMMUNICATION LAYER       |
+|  W3C DID (Decentralized Identifiers)                |
+|  W3C Verifiable Credentials (VC)                    |
+|  End-to-end encryption                              |
+|  did:wba method (ANP-specific)                      |
++-----------------------------------------------------+
+5.2 Key Differentiators
+5.3 Use Cases
+Decentralized agent marketplaces – Agents discover and collaborate without central platforms
+Cross-organizational workflows – No shared infrastructure required
+Open internet agent networks – Like the web, but for agents
+High-trust environments – Cryptographic identity verification
+5.4 ANP and CSOAI
+ANP’s decentralized identity layer (W3C DID) aligns with CSOAI’s Ed25519 Sigil identity system. ANP could serve as the Layer 2 protocol for CSOAI agents operating outside the local network:
+CSOAI Agent --> ANP Identity Layer (did:wba + Sigil)
+            --> ANP Discovery (/.well-known/agent-descriptions)
+            --> A2A for task delegation
+            --> MCP for tool access
+
+6. AGNTCY: Internet of Agents
+AGNTCY (pronounced “agency”) is an open-source collective involving Cisco, LangChain, Galileo, and others, building foundational infrastructure for an “Internet of Agents.” It is broader than a single protocol – it is a suite of interconnected standards.
+6.1 Core Components
+6.2 Agent Gateway Protocol (AGP)
+AGP is AGNTCY’s transport layer, built on gRPC:
+Messaging patterns: Request/response, streaming (uni/bi-directional), Pub/Sub, fire-and-forget
+Security: End-to-end encryption, authentication, MLS (Messaging Layer Security), quantum-safe cryptography goals
+Performance: HTTP/2 multiplexing, Protocol Buffers serialization
+6.3 AGNTCY Security Model
+AGNTCY has the most comprehensive security architecture:
+AGP Security: End-to-end encryption, MLS, quantum-safe goals
+ACP Authentication: Caller authentication with declared schemes
+Agent Identity: Decentralized identity system
+Agent Security Framework: Risk tracking, unauthorized action detection, policy enforcement
+6.4 Status
+AGNTCY is in early development (as of mid-2026) but has strong industry backing. The collective approach (Cisco + LangChain + Galileo) positions it as a potential unifying framework that can incorporate A2A, MCP, and other protocols.
+
+7. W3C Agent Standards & Working Groups
+The World Wide Web Consortium (W3C) has multiple working and community groups working on agent-related standards.
+7.1 Active W3C Groups (as of 2026)
+7.2 Key Standards Development
+WebMCP (Web Model Context Protocol)
+Developed in the Web Machine Learning CG, WebMCP allows websites to expose their JavaScript functionality as tools for AI agents to call securely and client-side. This circumvents brittle DOM parsing or screenshot interpretation.
+// Example: Website exposes tools via WebMCP
+navigator.ai.registerTools({
+  "search_products": async (query) => {
+    // Client-side tool execution
+    return await internalSearchAPI(query);
+  },
+  "add_to_cart": async (productId) => {
+    return await cart.add(productId);
+  }
+});
+Agent Payments (AP2 + ACP)
+The Web Payment Security Interest Group is developing protocols for AI-driven commerce:
+AP2 (Agent Payment Protocol): Uses verifiable digital credentials (“Mandates”) to structure user intent for purchases
+ACP (in payment context): Uses shared, scoped payment tokens
+Addresses: Agent identity, merchant trust, liability for contested transactions
+Web AI Agent Subset Standard
+The Chinese Web Interest Group proposed a lean, cross-platform standard subset for LLMs to generate instead of complex HTML/CSS/JS – essentially a simplified UI language for AI agents.
+7.3 ANP at W3C
+The Agent Network Protocol (ANP) has been formally presented at W3C: - Presented at W3C WebAgents CG (February 2025) - TPAC 2025 breakout session (November 2025) - Built entirely on W3C standards (DID, VC, JSON-LD) - Positioned as the native protocol for the “Agentic Web”
+7.4 W3C Position
+W3C is not yet developing a single agent protocol standard. Instead, it is: - Incubating multiple approaches through Community Groups - Standardizing building blocks (DID, VC, WebNN, WebMCP) - Coordinating across industry via TPAC and breakout sessions - Monitoring the landscape for convergence before chartering a Working Group
+The W3C position is pragmatic: let the market experiment, standardize the primitives, and formalize when convergence emerges.
+
+8. Other Emerging Protocols
+8.1 AP2: Agent Payments Protocol
+Purpose: Secure, agent-driven transactions
+Mechanism: Verifiable digital credentials (“Mandates”) that capture user intent
+Status: Presented at W3C, 60+ organizations supporting
+Relation to A2A: AP2 is fully compatible with A2A via the UCP (Unified Consent Protocol) extension
+8.2 UCP: Unified Consent Protocol
+Purpose: Capture cryptographic evidence of user consent for agent actions
+Features: AP2 mandates extension, strong consent evidence
+Use case: High-trust, regulated environments where transactional integrity is required
+8.3 WebSub / WebHook Standards for Agents
+Purpose: Asynchronous event delivery for agent workflows
+Status: Existing W3C standards being repurposed for agent use
+Use with: A2A push notifications, MCP server callbacks
+8.4 DIDComm
+Purpose: Secure communication between decentralized identities
+Status: W3C standard, used by ANP
+Features: Encrypted, authenticated messaging over any transport
+
+9. Protocol Comparison Matrix
+9.1 Complete Feature Comparison
+9.2 Use Case Mapping
+9.3 Adoption Trajectory
+MCP:        ████████████████████████████████████████ Production-scale (10K+ servers, 97M downloads/month)
+A2A:        ████████████████████████░░░░░░░░░░░░░░░░ Rapid adoption (150+ orgs, cloud-native)
+ACP (IBM):  ████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Early but growing (BeeAI ecosystem)
+ACP (Cisco):████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Early (AGNTCY collective)
+ANP:        ████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Incubating (W3C-aligned)
+AGP:        ██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Early (gRPC transport)
+WebMCP:     ████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Incubating (W3C CG)
+AP2:        ████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Incubating (payments focus)
+
+10. CSOAI Protocol Stack Design
+10.1 Layer Architecture
+Based on the research, here is the recommended protocol stack for CSOAI’s 47-agent town:
++=============================================================+
+|  LAYER 4: APPLICATION                                       |
+|  - Agent-specific functions (trading, governance, creative) |
+|  - Domain logic and AI reasoning                            |
+|  - Skill implementations                                    |
++-------------------------------------------------------------+
+|  LAYER 3: GOVERNANCE (BFT Council)                          |
+|  - Ed25519 Sigil identity system                            |
+|  - Byzantine Fault Tolerant consensus (2/3 + 1)             |
+|  - Proposal lifecycle management                            |
+|  - Reputation & voting power calculation                    |
+|  - On-chain vote recording                                  |
++-------------------------------------------------------------+
+|  LAYER 2: COMMUNICATION                                     |
+|  PRIMARY: A2A (Agent-to-Agent Protocol)                     |
+|    - Agent Cards for capability discovery                   |
+|    - Task lifecycle for vote rounds                         |
+|    - SSE streaming for real-time consensus                  |
+|    - JSON-RPC 2.0 over HTTP/HTTPS                           |
+|  TOOL ACCESS: MCP (Model Context Protocol)                  |
+|    - BFT Council MCP server (tools: cast_vote, tally, etc.) |
+|    - External tool access (APIs, databases)                 |
+|    - stdio for local agents, HTTP for remote                |
+|  EXTERNAL: ANP (Agent Network Protocol)                     |
+|    - W3C DID integration for cross-network identity         |
+|    - Discovery for agents outside CSOAI network             |
++-------------------------------------------------------------+
+|  LAYER 1: IDENTITY                                          |
+|  - Ed25519 Sigil (public key = identity)                    |
+|  - W3C DID compatibility (did:wba method)                   |
+|  - Verifiable Credentials for reputation attestation        |
+|  - Key rotation and recovery                                |
++-------------------------------------------------------------+
+|  LAYER 0: NETWORK                                           |
+|  PRIMARY: HTTP/HTTPS + SSE (A2A native)                     |
+|  HIGH-PERF: gRPC / AGP (Agent Gateway Protocol)             |
+|  P2P: libp2p (for decentralized gossip)                     |
+|  LOCAL: stdio (MCP local servers)                           |
++=============================================================+
+10.2 Protocol Selection by Layer
+Layer 0: Network Transport
+Layer 1: Identity
+Layer 2: Communication (PRIMARY – A2A)
+"""
+CSOAI Agent Card (served at /.well-known/agent.json)
+"""
+{
+  "name": "CSOAI-{Role}-Agent-{ID}",
+  "description": "CSOAI autonomous agent with {Role} specialization",
+  "url": "https://{agent-id}.agents.csoai.network/a2a",
+  "version": "1.0.0",
+  "protocolVersion": "1.0",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": true
+  },
+  "authentication": {
+    "schemes": ["Bearer", "OAuth2"],
+    "sigil_pubkey": "ed25519:abc123..."  # Custom extension
+  },
+  "skills": [
+    {
+      "id": "governance-vote",
+      "name": "BFT Governance Voting",
+      "description": "Participate in council voting rounds",
+      "tags": ["governance", "bft", "consensus"]
+    },
+    {
+      "id": "skill-{role}",
+      "name": "{Role} Operations",
+      "description": "Execute {Role}-specific tasks",
+      "tags": ["specialized", "{role}"]
+    }
+  ],
+  "csOai_extensions": {
+    "sigil": "ed25519:abc123...",
+    "reputation_score": 100,
+    "voting_power": 1,
+    "council_member": true,
+    "agent_role": "{role}"
+  }
+}
+Layer 2: Communication (TOOL ACCESS – MCP)
+"""
+CSOAI MCP Server Configuration (per agent)
+"""
+{
+  "mcpServers": {
+    "csoai-bft-council": {
+      "command": "python",
+      "args": ["/opt/csoai/servers/bft_council_mcp_server.py"],
+      "env": {
+        "CSOAI_SIGIL_PRIVKEY": "${SIGIL_KEY}",
+        "CSOAI_CONSENSUS_ENDPOINT": "https://consensus.csoai.network"
+      }
+    },
+    "csoai-registry": {
+      "command": "python", 
+      "args": ["/opt/csoai/servers/registry_mcp_server.py"]
+    },
+    "external-apis": {
+      "url": "https://api-aggregator.csoai.network/mcp",
+      "auth": {
+        "type": "bearer",
+        "token": "${API_TOKEN}"
+      }
+    }
+  }
+}
+Layer 3: Governance (BFT Council Protocol)
+"""
+CSOAI BFT Council Governance Protocol
+Custom protocol built on top of A2A + MCP
+"""
+
+class CSOAIGovernanceProtocol:
+    """
+    Implements Byzantine Fault Tolerant consensus for CSOAI.
+    
+    Built on:
+    - A2A for agent-to-agent vote message transport
+    - MCP for tool-based vote casting and tallying
+    - Ed25519 Sigil for identity and signatures
+    - 2/3 + 1 quorum for Byzantine fault tolerance
+    """
+    
+    QUORUM_THRESHOLD = 2/3  # 2/3 + 1 for BFT
+    TOTAL_AGENTS = 47
+    
+    def __init__(self):
+        self.quorum_size = int(self.TOTAL_AGENTS * self.QUORUM_THRESHOLD) + 1
+        # 32 agents required for consensus (2/3 of 47 + 1)
+    
+    # ===== Voting Round Lifecycle =====
+    
+    async def start_voting_round(self, proposal: Proposal) -> VotingRound:
+        """
+        1. Coordinator creates proposal hash
+        2. Sends A2A tasks/send to all 47 agents
+        3. Collects signed votes via A2A responses
+        4. Verifies Ed25519 signatures
+        5. Tallies votes
+        6. Determines outcome (approve/reject/pending)
+        """
+        round = VotingRound(proposal=proposal)
+        
+        # Broadcast via A2A
+        responses = await self.a2a_broadcast(
+            method="tasks/send",
+            message=self._build_vote_request(round)
+        )
+        
+        # Collect and verify
+        for response in responses:
+            vote = self._extract_vote(response)
+            if self.sigil.verify(vote.signature, vote.voter_sigil):
+                round.add_vote(vote)
+        
+        # Check quorum
+        if round.total_votes >= self.quorum_size:
+            round.outcome = self._determine_outcome(round.votes)
+        
+        return round
+    
+    async def submit_vote(self, vote_request: dict) -> SignedVote:
+        """
+        Agent receives A2A vote request, evaluates, signs, returns.
+        Uses MCP tools for validation (get_council_status, etc.)
+        """
+        # Validate proposal via MCP
+        status = await self.mcp_client.call_tool("get_council_status", {})
+        
+        # AI evaluation
+        decision = await self.llm.evaluate(vote_request["proposal"])
+        
+        # Sign with Ed25519 Sigil
+        vote = SignedVote(
+            round_id=vote_request["round_id"],
+            vote=decision.vote,
+            voter_sigil=self.sigil.pubkey,
+            signature=self.sigil.sign(decision.to_bytes())
+        )
+        
+        return vote
+    
+    def verify_consensus(self, round: VotingRound) -> bool:
+        """
+        Verify that consensus was reached with valid BFT guarantees.
+        - At least 32 votes (2/3 + 1)
+        - All signatures valid
+        - No double-voting
+        """
+        if round.total_votes < self.quorum_size:
+            return False
+        
+        sigils_seen = set()
+        for vote in round.votes:
+            if not self.sigil.verify(vote.signature, vote.voter_sigil):
+                return False
+            if vote.voter_sigil in sigils_seen:
+                return False  # Double vote
+            sigils_seen.add(vote.voter_sigil)
+        
+        return True
+Layer 4: Application
+10.3 Why This Stack?
+
+11. Implementation Guide
+11.1 Getting Started: A2A + MCP Integration
+# Step 1: Install A2A Python SDK
+pip install a2a-sdk
+
+# Step 2: Install MCP Python SDK
+pip install mcp
+
+# Step 3: Create project structure
+mkdir csoai-agent-town
+cd csoai-agent-town
+mkdir -p agents/{governance,trading,creative,research}
+mkdir -p servers/{bft-council,registry,external-apis}
+mkdir -p identity/silig
+mkdir -p config
+
+# Step 4: Create base agent with A2A + MCP
+# (See code examples in Sections 2.4 and 3.4)
+11.2 Running A2A Agents
+# Terminal 1: Start the BFT Council agent (A2A server)
+cd agents/governance
+python council_agent.py --port 8001 --sigil $(cat identity/council.pub)
+
+# Terminal 2: Start a Trading agent (A2A server)
+cd agents/trading
+python trading_agent.py --port 8002 --sigil $(cat identity/trader1.pub)
+
+# Terminal 3: Run A2A client to initiate vote
+python -c "
+from a2a import A2AClient
+client = A2AClient()
+result = client.send_task(
+    agent_url='http://localhost:8001/a2a',
+    message={'type': 'bft_vote_request', 'proposal': {...}}
+)
+print(result)
+"
+11.3 Running MCP Servers
+# Terminal 1: Start BFT Council MCP server
+python servers/bft-council/server.py --transport streamable-http --port 9001
+
+# Terminal 2: Connect with MCP client
+python -c "
+from mcp import ClientSession
+import asyncio
+
+async def test():
+    async with ClientSession(...) as session:
+        await session.initialize()
+        tools = await session.list_tools()
+        result = await session.call_tool('get_council_status', {})
+        print(result)
+
+asyncio.run(test())
+"
+11.4 Docker Compose for Full Stack
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # BFT Council Agent (A2A server + MCP client)
+  council-agent:
+    build: ./agents/governance
+    ports:
+      - "8001:8001"  # A2A endpoint
+    environment:
+      - CSOAI_SIGIL_KEY=/secrets/council.key
+      - CSOAI_ROLE=governance
+    volumes:
+      - ./identity:/secrets:ro
+      - ./config:/config:ro
+    depends_on:
+      - bft-mcp-server
+      - redis
+
+  # Trading Agent (A2A server)
+  trading-agent:
+    build: ./agents/trading
+    ports:
+      - "8002:8001"
+    environment:
+      - CSOAI_SIGIL_KEY=/secrets/trader1.key
+      - CSOAI_ROLE=trading
+    volumes:
+      - ./identity:/secrets:ro
+
+  # BFT Council MCP Server
+  bft-mcp-server:
+    build: ./servers/bft-council
+    ports:
+      - "9001:9001"
+    environment:
+      - CONSENSUS_BACKEND=redis
+    depends_on:
+      - redis
+
+  # Agent Registry
+  registry:
+    build: ./servers/registry
+    ports:
+      - "9002:9002"
+    depends_on:
+      - postgres
+
+  # Infrastructure
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: csoai_registry
+      POSTGRES_USER: csoai
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  redis-data:
+  postgres-data:
+11.5 Agent Card Template
+Each CSOAI agent serves an Agent Card at /.well-known/agent.json:
+"""
+FastAPI endpoint for serving Agent Card
+"""
+
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+import json
+
+app = FastAPI()
+
+AGENT_CARD = {
+    "name": "CSOAI-Governance-Council",
+    "description": "Byzantine Fault Tolerant governance coordinator",
+    "url": "https://council.csoai.network/a2a",
+    "version": "1.0.0",
+    "protocolVersion": "1.0",
+    "capabilities": {
+        "streaming": True,
+        "pushNotifications": True,
+        "stateTransitionHistory": True
+    },
+    "authentication": {
+        "schemes": ["Bearer", "OAuth2"]
+    },
+    "defaultInputModes": ["text"],
+    "defaultOutputModes": ["text", "data"],
+    "skills": [
+        {
+            "id": "bft-vote",
+            "name": "BFT Council Voting",
+            "description": "Participate in Byzantine consensus voting",
+            "tags": ["governance", "consensus", "bft"]
+        },
+        {
+            "id": "proposal-evaluate",
+            "name": "Proposal Evaluation",
+            "description": "Evaluate governance proposals using AI reasoning",
+            "tags": ["governance", "evaluation"]
+        }
+    ]
+}
+
+@app.get("/.well-known/agent.json")
+async def agent_card():
+    return JSONResponse(content=AGENT_CARD)
+
+@app.post("/a2a")
+async def a2a_endpoint(request: dict):
+    """Handle A2A JSON-RPC requests."""
+    method = request.get("method")
+    
+    if method == "tasks/send":
+        return await handle_task_send(request)
+    elif method == "tasks/sendSubscribe":
+        return await handle_task_stream(request)
+    elif method == "tasks/get":
+        return await handle_task_get(request)
+    else:
+        return {"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found"}, "id": request.get("id")}
+
+async def handle_task_send(request: dict):
+    """Handle synchronous task."""
+    params = request["params"]
+    message = params["message"]
+    
+    # Process based on message content
+    # ... voting logic ...
+    
+    return {
+        "jsonrpc": "2.0",
+        "result": {
+            "id": f"task-{uuid4()}",
+            "status": {"state": "completed", "message": {...}},
+            "artifacts": [...]
+        },
+        "id": request["id"]
+    }
+
+12. Recommendations & Timeline
+12.1 CSOAI Implementation Roadmap
+12.2 Protocol Maturity Assessment for CSOAI
+12.3 Critical Success Factors
+Start with A2A + MCP – These are the most mature, best-supported protocols
+Abstract the transport layer – Design interfaces that can swap protocols as the ecosystem evolves
+Invest in identity early – The Ed25519 Sigil system is portable across all protocols
+Monitor W3C progress – Standards are emerging; be ready to align
+Participate in the ecosystem – Contribute to A2A (Linux Foundation) and MCP (AAIF)
+Security first – BFT consensus depends on secure authentication; implement signature verification from day one
+Plan for protocol evolution – The landscape will consolidate; build adapters, not hard dependencies
+12.4 The Future Landscape (2026-2028 Predictions)
+
+Appendix A: Official Resources
+A2A Protocol
+Official Site: https://a2a-protocol.org
+GitHub: https://github.com/a2aproject/A2A
+Specification: https://a2a-protocol.org/latest/specification/
+Tutorials: https://a2a-protocol.org/latest/tutorials/python/1-introduction/
+SDKs: Python, JavaScript, Java, C#/.NET, Go
+DeepLearning.AI Course: https://www.deeplearning.ai/courses/a2a-the-agent2agent-protocol
+MCP (Model Context Protocol)
+Official Site: https://modelcontextprotocol.io
+GitHub: https://github.com/modelcontextprotocol
+Specification: https://modelcontextprotocol.io/specification/2025-11-25
+Registry: https://modelcontextprotocol.io/registry/about
+Python SDK: https://github.com/modelcontextprotocol/python-sdk
+TypeScript SDK: https://github.com/modelcontextprotocol/typescript-sdk
+IBM ACP / BeeAI
+IBM ACP Docs: https://docs.beeai.dev
+BeeAI GitHub: https://github.com/i-am-bee
+IBM ACP Overview: https://www.ibm.com/think/topics/agent-communication-protocol
+AGNTCY (Cisco)
+ACP Spec: https://github.com/agntcy/acp-spec
+AGP (Gateway Protocol): https://github.com/agntcy/agp
+OASF: https://github.com/agntcy/oasf
+Docs: https://docs.agntcy.org
+ANP (Agent Network Protocol)
+GitHub: https://github.com/agent-network-protocol/AgentNetworkProtocol
+Official Site: https://agent-network-protocol.com
+W3C Presentation: https://w3c-cg.github.io/ai-agent-protocol/
+W3C Agent Standards
+W3C TPAC 2025 AI Report: https://www.w3.org/blog/2025/ai-at-tpac-2025/
+AI Agent Protocol CG: https://www.w3.org/community/ai-agent-protocol/
+Autonomous Agents on the Web CG: https://www.w3.org/community/webagents/
+
+Appendix B: Glossary
+
+Research compiled: July 2026 Sources: Official protocol specifications, GitHub repositories, W3C meeting minutes, academic papers (arXiv), vendor announcements, Linux Foundation press releases

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Connect EthicalGovernanceOf via MCP — Model Context Protocol</title>
+  <meta name="description" content="Connect EthicalGovernanceOf.ai to your IDE or agent via MCP (Model Context Protocol). Available for Pro and Enterprise tiers.">
+  <link rel="canonical" href="https://ethicalgovernanceof.ai/connect/mcp">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #070b14; color: #f5f5f5; margin: 0; padding: 40px; }
+    pre { background: #0f172a; border: 1px solid #26263a; border-radius: 8px; padding: 16px; overflow-x: auto; }
+    code { font-family: 'Menlo', 'Monaco', monospace; font-size: 0.9rem; color: #c9a84c; }
+    h1 { color: #c9a84c; }
+    a { color: #c9a84c; }
+  </style>
+</head>
+<body>
+  <h1>Connect EthicalGovernanceOf via MCP</h1>
+  <p>Wire EthicalGovernanceOf.ai into your agent in 30 seconds. Pro and Enterprise tiers include MCP access.</p>
+
+  <h2>Endpoint</h2>
+  <pre><code>https://ethicalgovernanceof.ai/mcp</code></pre>
+
+  <h2>Tools (4)</h2>
+  <ul>
+    <li><code>meok-governance-engine-mcp</code></li>
+    <li><code>care-membrane-mcp</code></li>
+    <li><code>a2a-governance-bridge-mcp</code></li>
+    <li><code>csrd-compliance-mcp</code></li>
+  </ul>
+
+  <h2>Headers</h2>
+  <pre><code>Authorization: Bearer $MEOK_MASTER_API_KEY
+Content-Type: application/json
+Accept: application/json, text/event-stream</code></pre>
+
+  <h2>Example: list tools</h2>
+  <pre><code>curl -X POST https://ethicalgovernanceof.ai/mcp \
+  -H "Authorization: Bearer $MEOK_MASTER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'</code></pre>
+
+  <p>No account? <a href="/pricing/">Start at £29/mo</a> or <a href="/signup/?plan=free">get a free scorecard</a>.</p>
+</body>
+</html>

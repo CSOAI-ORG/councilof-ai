@@ -1,0 +1,32 @@
+{
+  "$comment": "Canonical CSOAI governance map — single source of truth for the relevance topology. Consumed by M2's /map + /temples (csoai-v2-app) and M4's meok-town-view globe. Kills the hardcoded-in-two-places drift. Version-dated.",
+  "version": "2026-06-25",
+  "core": { "id": "csoai", "name": "CSOAI · SOV3 core", "city": "London", "lon": -0.12, "lat": 51.5 },
+  "bridges": [
+    { "id": "cobol", "name": "COBOL / Mainframe", "sector": "Banking cores", "lon": -74.0, "lat": 40.71, "repo": "io.github.CSOAI-ORG/cobol-bridge-mcp", "frameworks": ["sox"] },
+    { "id": "iso20022", "name": "ISO 20022 / SWIFT", "sector": "Payments", "lon": 4.45, "lat": 50.66, "repo": "io.github.CSOAI-ORG/iso20022-bridge-mcp", "frameworks": ["dora", "nis2"] },
+    { "id": "hl7", "name": "HL7 / FHIR", "sector": "Healthcare", "lon": -71.06, "lat": 42.36, "repo": "io.github.CSOAI-ORG/hl7-fhir-bridge-mcp", "frameworks": ["hipaa", "euaiact"] },
+    { "id": "as400", "name": "IBM AS/400", "sector": "Enterprise i", "lon": -92.46, "lat": 44.02, "repo": "io.github.CSOAI-ORG/as400-bridge-mcp", "frameworks": ["sox"] },
+    { "id": "sap", "name": "SAP IDoc", "sector": "ERP", "lon": 8.64, "lat": 49.29, "repo": "io.github.CSOAI-ORG/sap-bridge-mcp", "frameworks": ["sox"] },
+    { "id": "oracle", "name": "Oracle PL/SQL", "sector": "Databases", "lon": -97.74, "lat": 30.27, "repo": "io.github.CSOAI-ORG/oracle-bridge-mcp", "frameworks": ["gdpr", "sox"] },
+    { "id": "scada", "name": "SCADA / OT", "sector": "Industrial / energy", "lon": -95.37, "lat": 29.76, "repo": "io.github.CSOAI-ORG/scada-bridge-mcp", "frameworks": ["nis2"] },
+    { "id": "edi", "name": "EDI / EDIFACT", "sector": "Supply chain", "lon": 4.48, "lat": 51.92, "repo": "io.github.CSOAI-ORG/edi-bridge-mcp", "frameworks": ["sox"] },
+    { "id": "fix", "name": "FIX trading", "sector": "Markets", "lon": -87.63, "lat": 41.88, "repo": "io.github.CSOAI-ORG/fix-bridge-mcp", "frameworks": ["dora"] },
+    { "id": "cics", "name": "CICS transactions", "sector": "Mainframe TX", "lon": -80.84, "lat": 35.23, "repo": "io.github.CSOAI-ORG/cics-bridge-mcp", "frameworks": ["sox"] },
+    { "id": "mqtt", "name": "MQTT / IoT", "sector": "Devices / OT", "lon": 114.06, "lat": 22.54, "repo": "io.github.CSOAI-ORG/mqtt-bridge-mcp", "frameworks": ["nis2"] },
+    { "id": "acord", "name": "ACORD insurance", "sector": "Insurance", "lon": -72.69, "lat": 41.76, "repo": "io.github.CSOAI-ORG/acord-bridge-mcp", "frameworks": ["solvency", "gdpr"] },
+    { "id": "nacha", "name": "NACHA / ACH", "sector": "US payments", "lon": -77.39, "lat": 38.97, "repo": "io.github.CSOAI-ORG/nacha-bridge-mcp", "frameworks": ["sox"] },
+    { "id": "iso8583", "name": "ISO 8583 cards", "sector": "Card networks", "lon": -122.27, "lat": 37.56, "repo": "io.github.CSOAI-ORG/iso8583-bridge-mcp", "frameworks": ["dora"] },
+    { "id": "sip", "name": "SIP telephony", "sector": "Telecom", "lon": -77.49, "lat": 39.04, "repo": "io.github.CSOAI-ORG/sip-bridge-mcp", "frameworks": ["nis2"] }
+  ],
+  "frameworks": [
+    { "id": "euaiact", "name": "EU AI Act", "regulator": "European Commission", "city": "Brussels", "lon": 4.36, "lat": 50.84, "summary": "Risk-tiered AI law; Annex III high-risk; Art. 50 transparency. In force from 2 Aug 2026." },
+    { "id": "gdpr", "name": "GDPR", "regulator": "EDPB", "city": "Brussels", "lon": 4.37, "lat": 50.85, "summary": "EU data protection; lawful basis, special-category data, DPIAs." },
+    { "id": "nis2", "name": "NIS2", "regulator": "ENISA", "city": "Athens", "lon": 23.73, "lat": 37.98, "summary": "EU cybersecurity for essential/important entities + critical infrastructure." },
+    { "id": "dora", "name": "DORA / MiFID II", "regulator": "ESMA", "city": "Paris", "lon": 2.35, "lat": 48.86, "summary": "Financial operational resilience (DORA) + markets conduct (MiFID II/MAR)." },
+    { "id": "nist", "name": "NIST AI RMF", "regulator": "NIST", "city": "Gaithersburg", "lon": -77.2, "lat": 39.14, "summary": "US voluntary AI risk-management framework (Govern/Map/Measure/Manage)." },
+    { "id": "hipaa", "name": "HIPAA", "regulator": "HHS", "city": "Washington DC", "lon": -77.04, "lat": 38.89, "summary": "US health data privacy + security (PHI)." },
+    { "id": "iso42001", "name": "ISO 42001", "regulator": "ISO", "city": "Geneva", "lon": 6.14, "lat": 46.21, "summary": "AI management system standard — the ISO baseline for governed AI." },
+    { "id": "solvency", "name": "Solvency II", "regulator": "EIOPA", "city": "Frankfurt", "lon": 8.68, "lat": 50.11, "summary": "EU insurance capital + governance regime." }
+  ]
+}

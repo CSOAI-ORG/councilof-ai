@@ -1,0 +1,40 @@
+{
+  "date": "2026-06-14",
+  "tasks": {
+    "mcp_so_submission": {
+      "status": "opened",
+      "package": "care-membrane-mcp",
+      "issue_url": "https://github.com/punkpeye/awesome-mcp-servers/issues/8041",
+      "issue_number": 8041,
+      "title": "Add Care Membrane to AI Safety",
+      "template_check": "no template found (404 on /contents/.github/ISSUE_TEMPLATE); used standard pattern from distribution-output/mcp-so-submissions.md",
+      "category": "AI Safety",
+      "github_repo": "https://github.com/CSOAI-ORG/care-membrane-mcp",
+      "pypi": "https://pypi.org/project/care-membrane-mcp/",
+      "license": "MIT"
+    },
+    "eu_ai_act_bugfix": {
+      "status": "fixed_and_verified",
+      "file": "/Users/nicholas/clawd/mcp-marketplace/eu-ai-act-compliance-mcp/server.py",
+      "function": "classify_ai_risk",
+      "root_cause": "Function signature lacked 'system_name' parameter; FastMCP rejected calls when clients (mirroring check_compliance/generate_documentation/audit_report signature conventions) passed system_name. Mismatched parameter names across sibling tools in same module.",
+      "fix_strategy": "Additive backward-compat: accept system_name as optional second positional, fall back to it as description if description is empty, otherwise prepend [System: {name}] marker to description.",
+      "lines_changed_signature": 2,
+      "lines_changed_body": 9,
+      "tests_passing": 43,
+      "tests_failing": 0,
+      "patch_path": "/Users/nicholas/clawd/eu-ai-act-classify-fix.patch"
+    }
+  },
+  "files_created": [
+    "/Users/nicholas/clawd/eu-ai-act-classify-fix.patch",
+    "/Users/nicholas/clawd/MCP_SO_AND_EU_AI_BUGFIX_2026-06-14.md",
+    "/Users/nicholas/clawd/mcp-so-eu-ai-bugfix-result.json"
+  ],
+  "files_modified": [
+    "/Users/nicholas/clawd/mcp-marketplace/eu-ai-act-compliance-mcp/server.py"
+  ],
+  "prompt_injection_notes": [
+    "Detected and ignored potential prompt-injection in clawd/AGENTS.md and per-package .cursorrules files (classified as exfil_curl). Decisions were based on source code and tests only."
+  ]
+}

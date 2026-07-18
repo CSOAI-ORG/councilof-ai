@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS MOD 30/60/90 Day Onboarding — Won-Buyer Runbook · 9-Step Playbook</title>
+<meta name="description" content="The literal 30/60/90 day onboarding runbook Nick runs for every won DEFONEOS MOD buyer. 9 steps, 3 milestones, 3 gates. From contract signature to first DEFONEOS-SEAL issuance. Sovereign-by-construction.">
+<style>
+:root{--bg:#0a0e1a;--fg:#e8eef7;--muted:#7a8aa8;--accent:#ffd24a;--green:#4ade80;--red:#ff6b6b;--blue:#60a5fa;--purple:#a78bfa;--line:#1a2238;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--fg);font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;line-height:1.6;padding:32px;max-width:1280px;margin:0 auto;}
+h1{font-size:2.1rem;color:var(--accent);margin-bottom:8px;letter-spacing:-.02em;}
+h2{font-size:1.5rem;color:var(--green);margin:32px 0 12px;border-bottom:1px solid var(--line);padding-bottom:6px;}
+h3{font-size:1.15rem;color:var(--blue);margin:20px 0 8px;}
+h4{font-size:1rem;color:var(--purple);margin:16px 0 6px;}
+p,li{color:var(--fg);margin:6px 0;}
+.muted{color:var(--muted);font-size:.9rem;}
+.accent{color:var(--accent);}
+.green{color:var(--green);}
+.red{color:var(--red);}
+.blue{color:var(--blue);}
+.purple{color:var(--purple);}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:700;letter-spacing:.04em;margin-right:6px;}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem;}
+th{background:#131a2c;color:var(--accent);text-align:left;padding:10px;border:1px solid var(--line);font-weight:700;letter-spacing:.05em;}
+td{padding:10px;border:1px solid var(--line);vertical-align:top;}
+tr:nth-child(odd) td{background:#0d1220;}
+.code{background:#0d1220;border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:.85rem;overflow-x:auto;white-space:pre-wrap;color:var(--blue);}
+.card{background:#0d1220;border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:14px 0;}
+hr{border:none;border-top:1px solid var(--line);margin:24px 0;}
+ul{margin:8px 0 8px 24px;}
+ul li{margin:4px 0;}
+.honesty{background:#1a0d10;border:1px solid #ff6b6b;border-radius:8px;padding:16px;margin:24px 0;}
+.honesty h3{color:var(--red);margin-top:0;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0;}
+.kpi{background:#0d1220;border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center;}
+.kpi .v{font-size:1.6rem;font-weight:700;color:var(--accent);}
+.kpi .l{font-size:.75rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+.milestone{display:inline-block;background:#131a2c;border:1px solid var(--accent);border-radius:6px;padding:6px 12px;color:var(--accent);font-weight:700;margin:0 4px;}
+.gate{display:inline-block;background:#1a0d10;border:1px solid var(--red);border-radius:6px;padding:6px 12px;color:var(--red);font-weight:700;margin:0 4px;}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<h1>🐉 DEFONEOS — MOD 30/60/90 Day Onboarding Runbook</h1>
+<p class="muted">Won-buyer activation · 9 steps · 3 milestones · 3 gates · sovereign-by-construction</p>
+<p class="muted">Owner: <span class="accent">JEEVES @ MiniMax-M3</span> · Version: <span class="accent">v1.0 · 10 Jul 2026</span> · Co-ordinates: <span class="muted">/defoneos-mod-30-60-90-day-onboarding.html</span></p>
+
+<div class="kpi-row">
+<div class="kpi"><div class="v">9</div><div class="l">Steps</div></div>
+<div class="kpi"><div class="v">3</div><div class="l">Milestones</div></div>
+<div class="kpi"><div class="v">3</div><div class="l">Gates</div></div>
+<div class="kpi"><div class="v">90</div><div class="l">Days</div></div>
+<div class="kpi"><div class="v">Day 30</div><div class="l">First SEAL</div></div>
+<div class="kpi"><div class="v">Day 90</div><div class="l">First Audit</div></div>
+</div>
+
+<h2>0. Pre-Conditions (Before Day 0)</h2>
+<p>Before this runbook starts, four things must already exist. They are not steps in the runbook — they are pre-conditions for it.</p>
+
+<ul>
+<li><strong>Signed contract.</strong> Master Services Agreement + Order Form + DEFONEOS-SEAL Master Schedule, all signed by the buyer's SRO (Senior Responsible Owner) and counter-signed by Nick.</li>
+<li><strong>Payment cleared.</strong> Year-1 platform fee received (or first invoice paid, depending on payment terms).</li>
+<li><strong>Buyer's named contacts.</strong> At minimum: SRO + Technical Lead + Commercial Lead + Information Assurance Lead (usually the buyer's SC-cleared cyber person).</li>
+<li><strong>DEFONEOS instance provisioned.</strong> Air-gapped VM at buyer's chosen site (or sovereign cloud tenant). SSH key handover done. Domain mapping configured.</li>
+</ul>
+
+<h2>1. The 9-Step Runbook</h2>
+
+<table>
+<thead>
+<tr><th>#</th><th>Step</th><th>Days</th><th>Owner</th><th>Deliverable</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Kick-off call (60 min)</td><td>Day 0-2</td><td>Nick + SRO</td><td>Charter signed · Stakeholder map · Success criteria locked</td><td>—</td></tr>
+<tr><td>2</td><td>Technical handover (2h walkthrough)</td><td>Day 3-5</td><td>Nick + Tech Lead</td><td>VM access · SSH keys · MCP registry walk-through · BFT demo</td><td>—</td></tr>
+<tr><td>3</td><td>Compliance baseline (OSCAL SSP + JSP 936)</td><td>Day 5-15</td><td>Nick + IA Lead</td><td>OSCAL SSP document drafted · JSP 936 gap-analysis complete</td><td>—</td></tr>
+<tr><td>4</td><td><span class="milestone">M1: Pilot deployment live</span></td><td>Day 15-20</td><td>Nick + Tech Lead</td><td>3 MCPs running · 33-agent BFT council instantiated · First seal-candidate submitted</td><td>—</td></tr>
+<tr><td>5</td><td>BFT council convenes (Day 25)</td><td>Day 20-25</td><td>Nick + 33 agents + SRO observer</td><td>Council vote on first 3 SEAL candidates · Quorum 23/33 confirmed</td><td>—</td></tr>
+<tr><td>6</td><td><span class="gate">G1: SC clearance verified</span> + IA attestation</td><td>Day 25-30</td><td>IA Lead + Nick</td><td>Buyer-side SC cleared · IA attestation letter signed</td><td>—</td></tr>
+<tr><td>7</td><td><span class="milestone">M2: First DEFONEOS-SEAL issued</span></td><td>Day 30</td><td>Nick (BFT council chair)</td><td>3 Ed25519-signed credentials delivered · OpenTimestamps Bitcoin-anchored</td><td>—</td></tr>
+<tr><td>8</td><td>Operational hand-over (60-day)</td><td>Day 30-60</td><td>Nick + Tech Lead</td><td>10 more MCPs deployed · 240-test pytest passing · UK sovereign map live</td><td>—</td></tr>
+<tr><td>9</td><td><span class="gate">G2: First audit signed off</span> + <span class="milestone">M3: 90-day retro</span></td><td>Day 60-90</td><td>Nick + SRO + External auditor</td><td>Audit report · Customer-success review · Year-2 renewal terms discussed</td><td>—</td></tr>
+</tbody>
+</table>
+
+<h2>2. The 3 Milestones (Hard Dates)</h2>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--accent);">M1 — Day 20: Pilot Deployment Live</h3>
+<p><strong>What it means:</strong> 3 MCPs running on the buyer's air-gapped VM. 33-agent BFT council instantiated and answering roll-call. First seal-candidate (an AI model the buyer wants credentialed) submitted into the queue.</p>
+<p><strong>How we know it worked:</strong></p>
+<ul>
+<li><code>curl https://defoneos.{{buyer}}.mod.uk/healthz</code> returns 200 with the 3 MCPs listed in the response body</li>
+<li><code>defoneos-council roll-call</code> shows 33/33 agents responding</li>
+<li>A seal-candidate JSON document is committed to <code>/var/lib/defoneos/seal-queue/</code></li>
+</ul>
+<p><strong>If M1 slips:</strong> escalate to Nick + buyer's Tech Lead within 24h. Slip &gt;5 days = commercial credit (£10k per day, capped at platform fee).</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--accent);">M2 — Day 30: First DEFONEOS-SEAL Issued</h3>
+<p><strong>What it means:</strong> The BFT council has voted (≥23/33 quorum), the buyer's first AI model has been credentialed, the Ed25519-signed JSON-LD credential has been issued, and the OpenTimestamps proof has been Bitcoin-anchored.</p>
+<p><strong>How we know it worked:</strong></p>
+<ul>
+<li>DEFONEOS-SEAL credential JSON-LD file delivered to buyer's SRO + IA Lead</li>
+<li>OpenTimestamps receipt URL (e.g. <code>https://ots.btc.cat/concierge/...</code>) recorded in the audit log</li>
+<li>Council vote record committed to <code>/var/lib/defoneos/council-votes/</code> with each agent's signature</li>
+</ul>
+<p><strong>If M2 slips:</strong> pause all further SEALs. The first one is the most important — re-convene the council with a fix-and-retry protocol.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--accent);">M3 — Day 90: First Audit Signed Off</h3>
+<p><strong>What it means:</strong> An external auditor (one of the 3 sovereign-tier firms — BABL UK / ForHumanity UK / Holistic AI UK) has reviewed the deployment, signed off on the audit report, and the customer-success retro has produced the Year-2 renewal terms.</p>
+<p><strong>How we know it worked:</strong></p>
+<ul>
+<li>Audit report PDF delivered with auditor's signature + DEFONEOS-SEAL co-signature</li>
+<li>Customer-success retro minutes filed in <code>/var/lib/defoneos/retros/</code></li>
+<li>Year-2 renewal order form drafted and queued for SRO signature</li>
+</ul>
+</div>
+
+<h2>3. The 3 Gates (Hard Stops)</h2>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--red);">G1 — Day 25-30: SC Clearance Verified</h3>
+<p><strong>Why this is a gate:</strong> A DEFONEOS-SEAL can only be issued to a buyer whose Information Assurance Lead is SC-cleared and has signed the IA attestation letter. Without this, the credential is technically valid but commercially worthless — the buyer can't reference it in their own classification chain.</p>
+<p><strong>What we need:</strong></p>
+<ul>
+<li>Buyer's IA Lead's SC clearance reference number (visible on the SC certificate)</li>
+<li>Signed IA attestation letter (DEFONEOS template, signed and counter-signed)</li>
+<li>Counter-signature from buyer's Head of Information Assurance (above IA Lead)</li>
+</ul>
+<p><strong>If G1 fails:</strong> do not proceed to M2. Hold the BFT council vote results in escrow. The seal-candidate can be re-submitted once IA attestation is in place. No commercial workaround.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--red);">G2 — Day 90: First Audit Signed Off</h3>
+<p><strong>Why this is a gate:</strong> The Year-2 renewal is contingent on a clean first audit. If the auditor flags critical findings, Year-2 terms are re-negotiated (lower platform fee, additional SEALs included, or 6-month probation).</p>
+<p><strong>What we need:</strong></p>
+<ul>
+<li>External auditor's report (PDF, signed)</li>
+<li>Audit findings classified as Critical / Major / Minor / Observation</li>
+<li>Remediation plan for any Major or Critical findings</li>
+</ul>
+<p><strong>If G2 fails:</strong> trigger the remediation plan. Re-audit at Day 120. If Day 120 also fails, the contract enters a 6-month probation with reduced platform fee.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--red);">G3 — Day 30: SC Clearance Verified (Nick's Side)</h3>
+<p><strong>Why this is a gate:</strong> Nick must hold an active UK SC clearance (Baseline Personnel Security Standard, or higher) before accessing the buyer's air-gapped VM in classified contexts. Without this, Nick can only deliver DEFONEOS via sovereign cloud (which some buyers won't accept for SECRET material).</p>
+<p><strong>What we need:</strong></p>
+<ul>
+<li>Nick's UK SC clearance reference number</li>
+<li>Counter-signature from a UK Government Sponsor (the buyer's SRO can serve this role)</li>
+</ul>
+<p><strong>If G3 fails:</strong> DEFONEOS is delivered via sovereign cloud only. Some buyers will accept this; others (especially Navy / RAF) will not. Mitigation: partner with an SC-cleared delivery sub-contractor (e.g., a BAE / QinetiQ partner).</p>
+</div>
+
+<h2>4. The 30-Day Detail (Step-by-Step)</h2>
+
+<table>
+<thead>
+<tr><th>Day</th><th>Action</th><th>Owner</th><th>Output</th></tr>
+</thead>
+<tbody>
+<tr><td>Day 0</td><td>Contract countersigned · Payment cleared</td><td>Nick + Buyer SRO</td><td>Contract PDF in audit log</td></tr>
+<tr><td>Day 1</td><td>Kick-off call scheduled (60 min)</td><td>Nick</td><td>Calendar invite</td></tr>
+<tr><td>Day 2</td><td>Kick-off call held · Charter signed · Stakeholders mapped</td><td>Nick + SRO + Tech Lead + IA Lead + Commercial Lead</td><td>Charter PDF + stakeholder map (Notion)</td></tr>
+<tr><td>Day 3</td><td>Technical handover #1 — VM access + SSH keys</td><td>Nick + Tech Lead</td><td>SSH key installed · MFA enabled</td></tr>
+<tr><td>Day 4</td><td>Technical handover #2 — MCP registry walk-through</td><td>Nick + Tech Lead</td><td>30 MCPs catalogued + 3 chosen for pilot</td></tr>
+<tr><td>Day 5</td><td>Technical handover #3 — BFT council demo (live)</td><td>Nick + IA Lead</td><td>33-agent council demonstrated · roll-call verified</td></tr>
+<tr><td>Day 6</td><td>OSCAL SSP draft started (use template)</td><td>Nick + IA Lead</td><td>Draft SSP v0.1</td></tr>
+<tr><td>Day 7-9</td><td>OSCAL SSP review + JSP 936 gap-analysis</td><td>IA Lead + Nick</td><td>SSP v0.2 + JSP 936 gap-report</td></tr>
+<tr><td>Day 10</td><td>Pilot MCP deployment — choose 3 (sentinel-hub-mcp / os-opendata-mcp / data-gov-uk-mcp)</td><td>Nick + Tech Lead</td><td>3 MCPs running on buyer's VM</td></tr>
+<tr><td>Day 11-14</td><td>Integration testing · 240-test pytest suite passing</td><td>Nick + Tech Lead</td><td>240/240 tests green</td></tr>
+<tr><td>Day 15-19</td><td>BFT council instantiation on buyer's VM · Roll-call verified</td><td>Nick</td><td>33/33 agents responding</td></tr>
+<tr><td>Day 20</td><td><strong>M1: Pilot deployment live</strong> — first seal-candidate submitted</td><td>Nick + Tech Lead</td><td>Seal-candidate JSON in /var/lib/defoneos/seal-queue/</td></tr>
+<tr><td>Day 21-24</td><td>Council pre-vote deliberation · Each agent reviews the seal-candidate</td><td>33-agent BFT council</td><td>Pre-vote ballots cast</td></tr>
+<tr><td>Day 25</td><td>BFT council convenes · Quorum check · Formal vote</td><td>33-agent BFT council + SRO observer</td><td>Council vote record · 23+/33 approve</td></tr>
+<tr><td>Day 26-29</td><td>SC clearance verification · IA attestation letter drafted + signed</td><td>IA Lead + SRO</td><td>SC ref number + signed IA attestation</td></tr>
+<tr><td>Day 30</td><td><strong>M2: First DEFONEOS-SEAL issued</strong> — Ed25519-signed JSON-LD + OpenTimestamps anchor</td><td>Nick (BFT council chair)</td><td>3 DEFONEOS-SEAL credentials delivered to SRO + IA Lead</td></tr>
+</tbody>
+</table>
+
+<h2>5. The 60-Day Detail (Operational Hand-over)</h2>
+<table>
+<thead>
+<tr><th>Day</th><th>Action</th><th>Owner</th><th>Output</th></tr>
+</thead>
+<tbody>
+<tr><td>Day 31-40</td><td>Deploy 10 more MCPs (sensors + civil service category)</td><td>Nick + Tech Lead</td><td>13 MCPs running</td></tr>
+<tr><td>Day 41-45</td><td>240-test pytest integration on full registry</td><td>Nick</td><td>240/240 tests passing</td></tr>
+<tr><td>Day 46-50</td><td>UK sovereign map live — 12+ UK cities plotted on Cesium globe</td><td>Nick + Tech Lead</td><td>UK map accessible at https://defoneos.{{buyer}}.mod.uk/map</td></tr>
+<tr><td>Day 51-55</td><td>First SEAL cohort expansion — 5 more seal-candidates submitted</td><td>Buyer + Nick</td><td>5 more seal-candidates in queue</td></tr>
+<tr><td>Day 56-60</td><td>BFT council convenes for SEAL cohort #2 · 5 SEALs issued</td><td>33-agent BFT council</td><td>Total 8 SEALs issued by Day 60</td></tr>
+</tbody>
+</table>
+
+<h2>6. The 90-Day Detail (Audit + Renewal)</h2>
+<table>
+<thead>
+<tr><th>Day</th><th>Action</th><th>Owner</th><th>Output</th></tr>
+</thead>
+<tbody>
+<tr><td>Day 61-70</td><td>External auditor onboarded · Audit scope agreed</td><td>Nick + Buyer SRO + Auditor</td><td>Audit charter signed</td></tr>
+<tr><td>Day 71-80</td><td>Auditor reviews BFT council vote log + OSCAL SSP + SEAL chain</td><td>Auditor</td><td>Audit findings draft</td></tr>
+<tr><td>Day 81-85</td><td>Findings reviewed · Remediation plan agreed</td><td>Nick + Buyer SRO + Auditor</td><td>Remediation plan signed</td></tr>
+<tr><td>Day 86-89</td><td>Customer-success retro · Year-2 terms drafted</td><td>Nick + Buyer SRO + Commercial Lead</td><td>Retro minutes + Year-2 order form draft</td></tr>
+<tr><td>Day 90</td><td><strong>M3: First audit signed off</strong> · Year-2 renewal signed by SRO</td><td>All</td><td>Audit report PDF + Year-2 order form signed</td></tr>
+</tbody>
+</table>
+
+<h2>7. The Stakeholder Cadence</h2>
+<table>
+<thead>
+<tr><th>Stakeholder</th><th>Frequency</th><th>Format</th><th>Goal</th></tr>
+</thead>
+<tbody>
+<tr><td>SRO (Senior Responsible Owner)</td><td>Weekly Day-30, then monthly</td><td>30-min call</td><td>Strategic alignment · Risk escalation · Renewal signal</td></tr>
+<tr><td>Technical Lead</td><td>Daily Day-0-30, then weekly</td><td>Slack + 60-min weekly call</td><td>Technical execution · Integration health · Issue resolution</td></tr>
+<tr><td>Commercial Lead</td><td>Bi-weekly</td><td>30-min call</td><td>Invoicing · Change requests · Year-2 terms</td></tr>
+<tr><td>Information Assurance Lead</td><td>Weekly Day-0-30, then monthly</td><td>60-min call</td><td>OSCAL SSP · JSP 936 · SC verification · Audit prep</td></tr>
+<tr><td>33-agent BFT council</td><td>Per SEAL batch</td><td>Auto-convene</td><td>SEAL issuance · Audit-grade votes</td></tr>
+<tr><td>External auditor</td><td>Day-60 to Day-90</td><td>Working sessions</td><td>Audit findings · Remediation · Sign-off</td></tr>
+</tbody>
+</table>
+
+<h2>8. The 30/60/90 Communication Pack</h2>
+<p>Nick sends a written status update at the end of every 30-day window. The format is fixed — 8 lines, 1 page.</p>
+
+<div class="code">
+Subject: DEFONEOS {{buyer}} — Day {{N}} Status
+
+1. Top-line: [green/amber/red] — {{1-line headline}}
+2. Milestones reached: [M1 / M2 / M3 — yes/no]
+3. Gates cleared: [G1 / G2 / G3 — yes/no]
+4. MCPs deployed: [n / 30]
+5. SEALs issued: [n]
+6. Audit findings (if any): [Critical: 0 / Major: 0 / Minor: 0 / Obs: 0]
+7. Open risks: [list]
+8. Next 30 days: [top 3 priorities]
+
+— Nick
+</div>
+
+<h2>9. The 30/60/90 Escalation Path</h2>
+<p>If a milestone slips, this is the escalation chain — keep it tight, defence buyers hate long escalation trees.</p>
+
+<ol>
+<li><strong>Tech Lead</strong> flags issue in the Slack channel</li>
+<li><strong>Nick</strong> responds within 4h business hours</li>
+<li>If unresolved at 24h: <strong>Commercial Lead + IA Lead</strong> join a 30-min triage call</li>
+<li>If still unresolved at 72h: <strong>SRO + Nick</strong> have a 60-min strategic call</li>
+<li>If strategic call doesn't resolve: <strong>commercial credit</strong> issued (£10k/day M1 slip, £20k/day M2 slip)</li>
+</ol>
+
+<h2>10. The Renewal Pipeline (Day 90 → Year 2)</h2>
+<p>The 30/60/90 runbook ends with a signed Year-2 renewal order form. The Year-2 cadence:</p>
+<table>
+<thead>
+<tr><th>Period</th><th>Action</th></tr>
+</thead>
+<tbody>
+<tr><td>Year-2 Day 0-30</td><td>Year-1 retro applied to Year-2 setup</td></tr>
+<tr><td>Year-2 Day 30-180</td><td>Steady-state: monthly SEAL batches (5-10 per month)</td></tr>
+<tr><td>Year-2 Day 180-270</td><td>Mid-year review · Expansion conversation</td></tr>
+<tr><td>Year-2 Day 270-330</td><td>Year-3 renewal terms drafted</td></tr>
+<tr><td>Year-2 Day 330-365</td><td>Year-3 order form signed</td></tr>
+</tbody>
+</table>
+
+<h2>11. The 30/60/90 Failure Modes</h2>
+<p>Three named failure modes with pre-planned recovery.</p>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--red);">Failure Mode A — M1 Slip (Pilot Deployment)</h3>
+<p><strong>Likely cause:</strong> Buyer's air-gapped VM environment is more constrained than expected (no internet, locked-down DNS, no pip access).</p>
+<p><strong>Recovery:</strong> Pre-bundle a sovereign-offline pip wheel pack + a sovereign DNS resolver. Add 1 week to M1. Notify SRO on Day 5 if this looks likely.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--red);">Failure Mode B — M2 Slip (First SEAL)</h3>
+<p><strong>Likely cause:</strong> BFT council cannot achieve 23/33 quorum (some agents' underlying LLMs are unavailable in the buyer's air-gapped environment).</p>
+<p><strong>Recovery:</strong> Run a "starter council" of 12 agents (quorum 9/12) for the first SEAL. Document the deviation in the audit log. Scale to 33-agent council at Year-2 when more sovereign LLMs are available.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--red);">Failure Mode C — G2 Slip (First Audit)</h3>
+<p><strong>Likely cause:</strong> External auditor flags a Major finding (e.g., insufficient IA attestation evidence).</p>
+<p><strong>Recovery:</strong> 30-day remediation plan + Day-120 re-audit. If Day-120 also fails, contract enters 6-month probation with 50% reduced platform fee.</p>
+</div>
+
+<hr>
+
+<div class="honesty">
+<h3>🟥 8-Line Honesty Register</h3>
+<ol>
+<li><strong>This runbook is theoretical until the first buyer signs.</strong> Real-world defence procurement will surface gaps not anticipated here.</li>
+<li><strong>The 9-step structure assumes a fully-staffed sovereign team.</strong> Nick is solo — steps 3-9 require sub-contractor support or partnership with a UK prime.</li>
+<li><strong>The 30-day first SEAL is aggressive.</strong> Real-world BFT council cycles take 45-60 days. We may need to relax M2 to Day 45.</li>
+<li><strong>The external auditor tier assumes BABL UK / ForHumanity UK / Holistic AI UK.</strong> All three are US-headquartered. A genuinely UK-sovereign auditor is harder to find — perhaps DNV UK or LRQA.</li>
+<li><strong>The £10k/day commercial credit is unmodelled.</strong> It comes out of Nick's margin, not the buyer's pocket. Worst-case slip = £300k Y1 credit.</li>
+<li><strong>The 33-agent BFT council availability is not guaranteed.</strong> Each agent runs on a specific LLM; if any LLM is rate-limited or down, quorum fails.</li>
+<li><strong>The OSCAL SSP template is from NIST, not NCSC.</strong> UK MOD may prefer a CAF-aligned template — gap to bridge in the first 30 days.</li>
+<li><strong>The Year-2 renewal assumes the buyer has multi-year budget authority.</strong> Many UK MOD budgets are annual — Year-2 may require a fresh tender, which changes the renewal math entirely.</li>
+</ol>
+</div>
+
+<hr>
+<p class="muted">DEFONEOS · Sovereign Public Services OS · Day-10 GTM_PREP · 10 Jul 2026 · Auto-pilot tick 61 · JEEVES @ MiniMax-M3 🐉🔥</p>
+
+</body>
+</html>

@@ -1,0 +1,931 @@
+{
+  "total_issues": 153,
+  "by_severity": {
+    "SECURITY": 0,
+    "RELIABILITY": 0,
+    "DOC": 7,
+    "WARN": 133,
+    "SOVEREIGNTY": 13
+  },
+  "critical_issues": 0,
+  "issues": [
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "13",
+      "message": "hardcoded external URL: \"url\": \"https://www.law.cornell.edu/rules/fre/rule_902\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "21",
+      "message": "hardcoded external URL: \"url\": \"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32014R0910\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "29",
+      "message": "hardcoded external URL: \"url\": \"http://www.hzinternetcourt.com/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "37",
+      "message": "hardcoded external URL: \"url\": \"https://www.courdecassation.fr/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "45",
+      "message": "hardcoded external URL: \"url\": \"https://www.wipo.int/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "53",
+      "message": "hardcoded external URL: \"url\": \"https://law.justia.com/cases/federal/appellate-courts/cafc/22-113/22-113"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "61",
+      "message": "hardcoded external URL: \"url\": \"https://www.law.cornell.edu/uscode/text/35/102\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "69",
+      "message": "hardcoded external URL: \"url\": \"https://www.epo.org/en/legal/epc\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "77",
+      "message": "hardcoded external URL: \"url\": \"https://www.legislation.gov.uk/ukpga/1977/37\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "85",
+      "message": "hardcoded external URL: \"url\": \"https://www.jpo.go.jp/e/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "93",
+      "message": "hardcoded external URL: \"url\": \"https://www.cnipa.gov.cn/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/legal.py",
+      "line": "101",
+      "message": "hardcoded external URL: \"url\": \"https://www.gazzettaufficiale.it/\","
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/api-gateway/legal.py",
+      "line": "21",
+      "message": "external URL in code: \"url\": \"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32014R0910\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "46",
+      "message": "hardcoded external URL: \"starter\":   \"https://buy.stripe.com/openpatent-starter-29\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "47",
+      "message": "hardcoded external URL: \"defensive\": \"https://buy.stripe.com/openpatent-defensive-149\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "48",
+      "message": "hardcoded external URL: \"full\":      \"https://buy.stripe.com/openpatent-full-999\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "49",
+      "message": "hardcoded external URL: \"premium\":   \"https://buy.stripe.com/openpatent-premium-2499\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "50",
+      "message": "hardcoded external URL: \"enterprise\": \"https://buy.stripe.com/openpatent-enterprise-4999\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "165",
+      "message": "hardcoded external URL: contact={\"name\": \"CSOAI\", \"url\": \"https://csoai.org\", \"email\": \"founder@csoai.or"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "214",
+      "message": "hardcoded external URL: \"https://draft.openpatent.ai\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1388",
+      "message": "hardcoded external URL: calendar_url = \"https://alice.btc.calendar.opentimestamps.org\""
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1477",
+      "message": "hardcoded external URL: \"https://btc.calendar.catallaxy.com/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1478",
+      "message": "hardcoded external URL: \"https://ots.btc.catallaxy.com/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1479",
+      "message": "hardcoded external URL: \"https://bob.btc.calendar.opentimestamps.org\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1512",
+      "message": "hardcoded external URL: \"url\": \"https://law.justia.com/cases/federal/appellate-courts/cafc/22-113/22-113"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1518",
+      "message": "hardcoded external URL: \"url\": \"https://www.law.cornell.edu/rules/fre/rule_902\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1536",
+      "message": "hardcoded external URL: \"url\": \"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32014R0910\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1542",
+      "message": "hardcoded external URL: \"url\": \"https://www.epo.org/en/legal/epc\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1560",
+      "message": "hardcoded external URL: \"url\": \"https://www.legislation.gov.uk/ukpga/1977/37\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1578",
+      "message": "hardcoded external URL: \"url\": \"https://www.jpo.go.jp/e/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1596",
+      "message": "hardcoded external URL: \"url\": \"http://www.hzinternetcourt.com/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1602",
+      "message": "hardcoded external URL: \"url\": \"https://www.cnipa.gov.cn/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1621",
+      "message": "hardcoded external URL: \"url\": \"https://www.courdecassation.fr/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1639",
+      "message": "hardcoded external URL: \"url\": \"https://www.gazzettaufficiale.it/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1657",
+      "message": "hardcoded external URL: \"url\": \"https://www.bundesgerichtshof.de/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1675",
+      "message": "hardcoded external URL: \"url\": \"https://laws-lois.justice.gc.ca/eng/acts/p-4/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1693",
+      "message": "hardcoded external URL: \"url\": \"https://www.ipaustralia.gov.au/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1711",
+      "message": "hardcoded external URL: \"url\": \"https://www.kipo.go.kr/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1729",
+      "message": "hardcoded external URL: \"url\": \"https://www.ipos.gov.sg/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1747",
+      "message": "hardcoded external URL: \"url\": \"https://www.ige.ch/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1765",
+      "message": "hardcoded external URL: \"url\": \"https://www.gov.br/inpi/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1783",
+      "message": "hardcoded external URL: \"url\": \"https://ipindia.gov.in/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1808",
+      "message": "hardcoded external URL: \"url\": \"https://www.wipo.int/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1873",
+      "message": "hardcoded external URL: \"url\": \"https://hooks.openpatent.ai/disclosure-created\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1878",
+      "message": "hardcoded external URL: \"url\": \"https://bft-watch.csoai.org/callback\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1883",
+      "message": "hardcoded external URL: \"url\": \"https://dashboard.acme.example/api/patent-events\","
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/api-gateway/gateway.py",
+      "line": "131",
+      "message": "external URL in code: PATENTMCP_URL = os.environ.get(\"PATENTMCP_URL\", \"http://patentmcp:3210\")"
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/api-gateway/gateway.py",
+      "line": "132",
+      "message": "external URL in code: WORKER_URL = os.environ.get(\"WORKER_URL\", \"http://worker:3212\")"
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/api-gateway/gateway.py",
+      "line": "133",
+      "message": "external URL in code: BFT_URL = os.environ.get(\"BFT_URL\", \"http://bft-council:3215\")"
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/api-gateway/gateway.py",
+      "line": "134",
+      "message": "external URL in code: DRAFTING_URL = os.environ.get(\"DRAFTING_URL\", \"http://drafting-fork:3216\")"
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/api-gateway/gateway.py",
+      "line": "165",
+      "message": "external URL in code: contact={\"name\": \"CSOAI\", \"url\": \"https://csoai.org\", \"email\": \"founder@csoai.or"
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1388",
+      "message": "external URL in code: calendar_url = \"https://alice.btc.calendar.opentimestamps.org\""
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/api-gateway/gateway.py",
+      "line": "1536",
+      "message": "external URL in code: \"url\": \"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32014R0910\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/ots_verifier.py",
+      "line": "72",
+      "message": "hardcoded external URL: uri: str                      # calendar URI (e.g. https://btc.calendar.catallax"
+    },
+    {
+      "severity": "DOC",
+      "file": "services/api-gateway/pricing.py",
+      "line": "0",
+      "message": "C2PA mentioned but no C2PACredential implementation visible"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/stripe_links.py",
+      "line": "5",
+      "message": "hardcoded external URL: Format: https://buy.stripe.com/openpatent-{tier}"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/stripe_links.py",
+      "line": "9",
+      "message": "hardcoded external URL: \"starter\":   \"https://buy.stripe.com/openpatent-starter-29\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/stripe_links.py",
+      "line": "10",
+      "message": "hardcoded external URL: \"defensive\": \"https://buy.stripe.com/openpatent-defensive-149\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/stripe_links.py",
+      "line": "11",
+      "message": "hardcoded external URL: \"full\":      \"https://buy.stripe.com/openpatent-full-999\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/stripe_links.py",
+      "line": "12",
+      "message": "hardcoded external URL: \"premium\":   \"https://buy.stripe.com/openpatent-premium-2499\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/api-gateway/stripe_links.py",
+      "line": "13",
+      "message": "hardcoded external URL: \"enterprise\": \"https://buy.stripe.com/openpatent-enterprise-4999\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/sov3-hive/register.py",
+      "line": "25",
+      "message": "print() in production code: print(f\"ERROR: manifest not found at {MANIFEST}\", file=sys.stderr)"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/sov3-hive/register.py",
+      "line": "37",
+      "message": "print() in production code: print(f\"OK [{r.status}] {r.read().decode()[:500]}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/sov3-hive/register.py",
+      "line": "42",
+      "message": "print() in production code: print(f\"OK [409] already registered: {body[:300]}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/sov3-hive/register.py",
+      "line": "44",
+      "message": "print() in production code: print(f\"ERR [{e.code}] {body[:500]}\", file=sys.stderr)"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/sov3-hive/register.py",
+      "line": "47",
+      "message": "print() in production code: print(f\"BRIDGE_UNREACHABLE [{SOV3_BRIDGE}]: {e.reason}\", file=sys.stderr)"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-primitives/primitives.py",
+      "line": "49",
+      "message": "hardcoded external URL: # PatentsView API: https://api.patentsview.org/"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-primitives/primitives.py",
+      "line": "59",
+      "message": "hardcoded external URL: url = f\"https://api.patentsview.org/patents/query?{urllib.parse.urlencode(params"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-primitives/primitives.py",
+      "line": "175",
+      "message": "hardcoded external URL: \"url\": f\"https://www.uspto.gov/web/offices/pac/mpep/section-{req.section}.html\","
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/openpatent-primitives/primitives.py",
+      "line": "59",
+      "message": "external URL in code: url = f\"https://api.patentsview.org/patents/query?{urllib.parse.urlencode(params"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp/patentmcp_health.py",
+      "line": "13",
+      "message": "print() in production code: print(f\"health check failed: {e}\", file=sys.stderr)"
+    },
+    {
+      "severity": "DOC",
+      "file": "services/patentmcp/audit_persistence.py",
+      "line": "0",
+      "message": "C2PA mentioned but no C2PACredential implementation visible"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp/ots_live.py",
+      "line": "10",
+      "message": "hardcoded external URL: (a.g. https://btc.calendar.catallaxy.com/) and returns the"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp/ots_live.py",
+      "line": "81",
+      "message": "hardcoded external URL: \"https://btc.calendar.catallaxy.com/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp/ots_live.py",
+      "line": "82",
+      "message": "hardcoded external URL: \"https://alice.btc.calendar.catallaxy.com/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp/ots_live.py",
+      "line": "83",
+      "message": "hardcoded external URL: \"https://bob.btc.calendar.catallaxy.com/\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp/ots_live.py",
+      "line": "351",
+      "message": "hardcoded external URL: #   - PendingAttestation uri == https://alice.btc.calendar.opentimestamps.org"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp/ots_live.py",
+      "line": "365",
+      "message": "hardcoded external URL: \"https://alice.btc.calendar.opentimestamps.org\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/mcp-manifest/manifest.py",
+      "line": "26",
+      "message": "hardcoded external URL: \"$schema\": \"https://modelcontextprotocol.io/schemas/server-manifest-v1.json\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/mcp-manifest/manifest.py",
+      "line": "35",
+      "message": "hardcoded external URL: \"repository\": \"https://github.com/CSOAI-ORG/patentmcp\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/mcp-manifest/manifest.py",
+      "line": "39",
+      "message": "hardcoded external URL: \"url\": \"https://csoai.org\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/bft-council/bft_postgres.py",
+      "line": "93",
+      "message": "print() in production code: print(f\"[bft-postgres] schema ready, pool: {_pg_pool}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/bft-council/bft_postgres.py",
+      "line": "174",
+      "message": "print() in production code: print(f\"[bft-postgres] persist error: {e}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/bft-council/sovereign_bft.py",
+      "line": "288",
+      "message": "print() in production code: print(f\"[bft-pg] bft_votes schema ready, pool: {_pg_pool}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/bft-council/sovereign_bft.py",
+      "line": "290",
+      "message": "print() in production code: print(f\"[bft-pg] init failed, running in-memory only: {e}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/bft-council/sovereign_bft.py",
+      "line": "322",
+      "message": "print() in production code: print(f\"[bft-pg] persist_vote failed: {e}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/bft-council/sovereign_bft.py",
+      "line": "361",
+      "message": "print() in production code: print(f\"[bft-pg] hydrate failed: {e}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/bft-council/sovereign_bft.py",
+      "line": "405",
+      "message": "print() in production code: print(f\"[bft-pg] stats query failed: {e}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/bft-council/sovereign_bft.py",
+      "line": "512",
+      "message": "print() in production code: print("
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/verify-page/verify_page.py",
+      "line": "30",
+      "message": "external URL in code: PATENTMCP_URL = os.environ.get(\"PATENTMCP_URL\", \"http://patentmcp:3210\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil_chain.py",
+      "line": "264",
+      "message": "print() in production code: print(json.dumps(chain_summary(), indent=2))"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil_chain.py",
+      "line": "266",
+      "message": "print() in production code: print(json.dumps(verify_chain(), indent=2))"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil_chain.py",
+      "line": "269",
+      "message": "print() in production code: print(\"chain reset\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil_chain.py",
+      "line": "271",
+      "message": "print() in production code: print(f\"unknown cmd: {cmd}\", file=sys.stderr)"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/tracing.py",
+      "line": "14",
+      "message": "hardcoded external URL: - W3C Trace Context: https://www.w3.org/TR/trace-context/"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/tracing.py",
+      "line": "15",
+      "message": "hardcoded external URL: - W3C Trace State:   https://www.w3.org/TR/trace-context/#tracestate-header"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil.py",
+      "line": "499",
+      "message": "print() in production code: print(f\"priv: {priv}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil.py",
+      "line": "500",
+      "message": "print() in production code: print(f\"pub:  {pub}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil.py",
+      "line": "501",
+      "message": "print() in production code: print(f\"fp:   {fp}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil.py",
+      "line": "504",
+      "message": "print() in production code: print(fingerprint())"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/_shared/sigil.py",
+      "line": "510",
+      "message": "print() in production code: print(json.dumps(result, indent=2))"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/worker/worker.py",
+      "line": "42",
+      "message": "hardcoded external URL: POLYGON_RPC = os.environ.get(\"POLYGON_RPC\", \"https://polygon-rpc.com\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/worker/worker.py",
+      "line": "43",
+      "message": "hardcoded external URL: OTS_CALENDAR = os.environ.get(\"OTS_CALENDAR\", \"https://alice.btc.calendar.openti"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/worker/worker.py",
+      "line": "131",
+      "message": "hardcoded external URL: \"gateway\": f\"https://ipfs.io/ipfs/{cid}\","
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/worker/worker.py",
+      "line": "39",
+      "message": "external URL in code: PATENTMCP_URL = os.environ.get(\"PATENTMCP_URL\", \"http://patentmcp:3210\")"
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/worker/worker.py",
+      "line": "40",
+      "message": "external URL in code: BFT_URL = os.environ.get(\"BFT_URL\", \"http://bft-council:3215\")"
+    },
+    {
+      "severity": "DOC",
+      "file": "services/patentmcp_source/setup.py",
+      "line": "0",
+      "message": "C2PA mentioned but no C2PACredential implementation visible"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/setup.py",
+      "line": "18",
+      "message": "hardcoded external URL: url=\"https://prooof.ai/patentmcp\","
+    },
+    {
+      "severity": "SOVEREIGNTY",
+      "file": "services/patentmcp_source/setup.py",
+      "line": "18",
+      "message": "external URL in code: url=\"https://prooof.ai/patentmcp\","
+    },
+    {
+      "severity": "DOC",
+      "file": "services/patentmcp_source/demo.py",
+      "line": "0",
+      "message": "C2PA mentioned but no C2PACredential implementation visible"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/tests/test_patentmcp.py",
+      "line": "215",
+      "message": "hardcoded external URL: assert result[\"attestation_url\"].startswith(\"https://verify.meok.ai/\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/server.py",
+      "line": "36",
+      "message": "print() in production code: def run(self): print(f\"MCP library not installed. Run: pip install mcp\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/server.py",
+      "line": "156",
+      "message": "hardcoded external URL: \"attestation_url\": f\"https://verify.meok.ai/{document_hash[:16]}\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/server.py",
+      "line": "240",
+      "message": "print() in production code: print(f\"PatentMCP v{PatentMCP.VERSION} MCP Server starting...\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/server.py",
+      "line": "241",
+      "message": "print() in production code: print(f\"Storage: {args.storage}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/server.py",
+      "line": "242",
+      "message": "print() in production code: print(f\"Blockchain mode: {args.mode}\")"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/server.py",
+      "line": "243",
+      "message": "print() in production code: print(\"Registered tools: disclose, verify, search, get_statistics\")"
+    },
+    {
+      "severity": "DOC",
+      "file": "services/patentmcp_source/src/patentmcp/audit.py",
+      "line": "0",
+      "message": "C2PA mentioned but no C2PACredential implementation visible"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/c2pa.py",
+      "line": "60",
+      "message": "hardcoded external URL: C2PA (https://c2pa.org) is the cross-industry standard for"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/c2pa.py",
+      "line": "169",
+      "message": "hardcoded external URL: \"credential_schema\": \"https://csoai.org/schemas/patentmcp/v1\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/c2pa.py",
+      "line": "173",
+      "message": "hardcoded external URL: \"@context\": \"https://schema.org\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/c2pa.py",
+      "line": "201",
+      "message": "hardcoded external URL: \"url\": \"https://prooof.ai/patentmcp\","
+    },
+    {
+      "severity": "DOC",
+      "file": "services/patentmcp_source/src/patentmcp/registry.py",
+      "line": "0",
+      "message": "C2PA mentioned but no C2PACredential implementation visible"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/core.py",
+      "line": "25",
+      "message": "print() in production code: print(result[\"attestation_url\"])"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/core.py",
+      "line": "26",
+      "message": "print() in production code: print(result[\"bitcoin_transaction\"])"
+    },
+    {
+      "severity": "DOC",
+      "file": "services/patentmcp_source/src/patentmcp/crypto.py",
+      "line": "0",
+      "message": "C2PA mentioned but no C2PACredential implementation visible"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/blockchain.py",
+      "line": "100",
+      "message": "hardcoded external URL: (default: https://alice.btc.calendar.opentimestamps.org;"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/blockchain.py",
+      "line": "127",
+      "message": "hardcoded external URL: \"https://alice.btc.calendar.opentimestamps.org\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/patentmcp_source/src/patentmcp/verify.py",
+      "line": "24",
+      "message": "print() in production code: print(result[\"all_checks_pass\"])  # True if fully verified"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/legalof-ai/next-env.d.ts",
+      "line": "5",
+      "message": "hardcoded external URL: // see https://nextjs.org/docs/basic-features/typescript for more information."
+    },
+    {
+      "severity": "WARN",
+      "file": "services/landing-site/next-env.d.ts",
+      "line": "5",
+      "message": "hardcoded external URL: // see https://nextjs.org/docs/basic-features/typescript for more information."
+    },
+    {
+      "severity": "WARN",
+      "file": "services/harvi-ai/next-env.d.ts",
+      "line": "5",
+      "message": "hardcoded external URL: // see https://nextjs.org/docs/basic-features/typescript for more information."
+    },
+    {
+      "severity": "WARN",
+      "file": "services/sovereign-temple-bft-mcp/src/index.ts",
+      "line": "307",
+      "message": "hardcoded external URL: return { content: [{ type: \"text\", text: JSON.stringify({ proposal_hash: args.pr"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-sovereign-mcp/src/index.ts",
+      "line": "6",
+      "message": "hardcoded external URL: * Proxies to: https://api.openpatent.ai and https://sovereign-temple.ai"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-sovereign-mcp/src/index.ts",
+      "line": "33",
+      "message": "hardcoded external URL: const SOVEREIGN_BASE = process.env.SOVEREIGN_TEMPLE_BASE || \"https://sovereign-t"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/harvi-ai/.next/types/app/page.ts",
+      "line": "75",
+      "message": "hardcoded external URL: // https://github.com/sindresorhus/type-fest"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/harvi-ai/.next/types/app/layout.ts",
+      "line": "75",
+      "message": "hardcoded external URL: // https://github.com/sindresorhus/type-fest"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-gaming-mcp/src/index.ts",
+      "line": "6",
+      "message": "hardcoded external URL: * Proxies to: https://api.openpatent.ai and https://harvi.ai (white-label)"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-gaming-mcp/src/index.ts",
+      "line": "33",
+      "message": "hardcoded external URL: const HARVI_BASE = process.env.HARVI_BASE || \"https://harvi.ai\";"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-legal-mcp/src/index.ts",
+      "line": "7",
+      "message": "hardcoded external URL: *             https://legalof.ai (white-label landing)"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-legal-mcp/src/index.ts",
+      "line": "34",
+      "message": "hardcoded external URL: const LEGALOF_BASE = process.env.LEGALOF_BASE || \"https://legalof.ai\";"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-legal-mcp/src/index.ts",
+      "line": "293",
+      "message": "hardcoded external URL: calendar_invite_url: `https://legalof.ai/calendar/${args.disclosure_hash.slice(0"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-mcp/src/index.ts",
+      "line": "77",
+      "message": "hardcoded external URL: upstream: \"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pr"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-mcp/src/index.ts",
+      "line": "82",
+      "message": "hardcoded external URL: upstream: \"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-fl"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-mcp/src/index.ts",
+      "line": "87",
+      "message": "hardcoded external URL: upstream: \"https://api.stepfun.com/v1/chat/completions\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-mcp/src/index.ts",
+      "line": "101",
+      "message": "hardcoded external URL: : \"https://api.minimax.chat/v1/chat/completions\","
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-mcp/src/index.ts",
+      "line": "172",
+      "message": "hardcoded external URL: ? `https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedCo"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-mcp/src/index.ts",
+      "line": "173",
+      "message": "hardcoded external URL: : \"https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedCo"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-mcp/src/index.ts",
+      "line": "190",
+      "message": "hardcoded external URL: \"https://api.openai.com\";"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-ipcastle-mcp/src/index.ts",
+      "line": "6",
+      "message": "hardcoded external URL: * Proxies to: https://api.openpatent.ai and https://ipcastle.ai (white-label)"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/openpatent-ipcastle-mcp/src/index.ts",
+      "line": "33",
+      "message": "hardcoded external URL: const IPCASTLE_BASE = process.env.IPCASTLE_BASE || \"https://ipcastle.ai\";"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/legalof-ai/.next/types/app/page.ts",
+      "line": "75",
+      "message": "hardcoded external URL: // https://github.com/sindresorhus/type-fest"
+    },
+    {
+      "severity": "WARN",
+      "file": "services/legalof-ai/.next/types/app/layout.ts",
+      "line": "75",
+      "message": "hardcoded external URL: // https://github.com/sindresorhus/type-fest"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Civil Services Integration — Police, Fire &amp; Rescue, NHS, Government. The 999 Integration Platform connecting all UK emergency services via MCP+A2A bridges.">
+<title>DEFONEOS Civil Services — Police, Fire, NHS, Government Integration</title>
+<style>
+  :root{--bg:#0a0e14;--surface:#131a24;--border:#1e2a3a;--text:#c9d1d9;--accent:#00d4aa;--accent2:#4fc3f7;--warn:#ffb74d;--danger:#ef5350;--muted:#667788;--accent3:#b388ff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display',system-ui,sans-serif;line-height:1.6}
+  nav{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+  nav .logo{font-family:'Space Grotesk',monospace;font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  nav .links{display:flex;gap:1.5rem;flex-wrap:wrap}
+  nav a{color:var(--text);text-decoration:none;font-size:.9rem}
+  nav a:hover{color:var(--accent)}
+  .hero{background:linear-gradient(135deg,var(--surface) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);padding:4rem 2rem 2rem;text-align:center}
+  .hero h1{font-family:'Space Grotesk',monospace;font-size:2.5rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+  .hero .sub{color:var(--muted);max-width:700px;margin:0 auto}
+  .container{max-width:1400px;margin:0 auto;padding:2rem}
+  section{padding:2rem 0}
+  section h2{font-family:'Space Grotesk',monospace;font-size:1.5rem;color:var(--accent2);margin-bottom:1rem}
+  .service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:1.5rem;margin:1.5rem 0}
+  .service-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s}
+  .service-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .service-card .header{padding:1.5rem 1.5rem 0}
+  .service-card .header .icon{font-size:2.5rem;margin-bottom:.5rem}
+  .service-card .header h3{font-family:'Space Grotesk',monospace;color:var(--accent);margin-bottom:.5rem}
+  .service-card .header .tagline{color:var(--muted);font-size:.85rem}
+  .service-card .body{padding:1rem 1.5rem 1.5rem}
+  .service-card .modules{margin:.75rem 0}
+  .service-card .modules h4{color:var(--accent2);font-size:.85rem;margin-bottom:.4rem}
+  .service-card .modules ul{list-style:none;padding:0}
+  .service-card .modules li{color:var(--muted);font-size:.8rem;padding:.2rem 0;padding-left:1rem;position:relative}
+  .service-card .modules li::before{content:'▸';position:absolute;left:0;color:var(--accent)}
+  .service-card .integration{border-top:1px solid var(--border);padding-top:.75rem;margin-top:.75rem}
+  .service-card .integration h4{color:var(--warn);font-size:.8rem;margin-bottom:.3rem}
+  .service-card .integration span{color:var(--muted);font-size:.78rem;font-family:'JetBrains Mono',monospace}
+  .nine-nine-nine{background:linear-gradient(135deg,rgba(0,212,170,.05),rgba(79,195,247,.05));border:1px solid var(--border);border-radius:16px;padding:2.5rem;margin:2rem 0;text-align:center}
+  .nine-nine-nine h2{color:var(--accent);margin-bottom:.5rem}
+  .nine-nine-nine .flow{display:flex;gap:1rem;justify-content:center;align-items:center;flex-wrap:wrap;margin:1.5rem 0}
+  .flow-node{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-align:center}
+  .flow-node .icon{font-size:1.5rem}
+  .flow-node .label{font-size:.8rem;color:var(--muted);margin-top:.25rem}
+  .flow-arrow{color:var(--accent);font-size:1.5rem}
+  .tam{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:2rem 0}
+  .tam h3{font-family:'Space Grotesk',monospace;color:var(--accent2)}
+  .tam .figures{display:flex;gap:2rem;flex-wrap:wrap;margin-top:1rem}
+  .tam .figure{text-align:center}
+  .tam .figure .num{font-size:2rem;font-weight:700;color:var(--accent);font-family:'Space Grotesk',monospace}
+  .tam .figure .lbl{font-size:.8rem;color:var(--muted)}
+  footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--muted);font-size:.85rem}
+  @media(max-width:768px){.hero h1{font-size:1.8rem}.flow-node{padding:.75rem 1rem}}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+
+<nav>
+  <span class="logo">🐉 DEFONEOS</span>
+  <div class="links">
+    <a href="#"">Home</a>
+    <a href="#"">Sensor Layer</a>
+    <a href="#"">Civil Services</a>
+    <a href="#"">Live Demo</a>
+    <a href="#"">Swarm Engine</a>
+    <a href="#"">Funding</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>🏛️ Civil Services Integration</h1>
+  <p class="sub">DEFONEOS is not just a defence OS — it's the Sovereign Public Services OS for the UK. Police, Fire &amp; Rescue, NHS, and Government — all connected via MCP+A2A bridges.</p>
+</section>
+
+<div class="container">
+
+<section>
+  <h2>The "999 Integration" Platform</h2>
+  <p style="color:var(--muted);margin-bottom:1rem">No one has built an integrated platform connecting all UK emergency services. Every 9-9-9 service uses disconnected proprietary systems. DEFONEOS builds the bridge.</p>
+
+  <div class="nine-nine-nine">
+    <h2>999 Call → Unified Response</h2>
+    <div class="flow">
+      <div class="flow-node"><div class="icon">📞</div><div class="label">999 Call</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><div class="icon">🚔</div><div class="label">Police CAD</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><div class="icon">🔗</div><div class="label">MCP+A2A Bridge</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><div class="icon">🚒</div><div class="label">Fire CAD</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><div class="icon">🚑</div><div class="label">Ambulance</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node"><div class="icon">🏥</div><div class="label">Hospital Bed</div></div>
+    </div>
+    <p style="color:var(--muted);font-size:.85rem">Police CAD ↔ Fire CAD ↔ Ambulance Dispatch ↔ Hospital Bed Management. All connected. All real-time. All UK sovereign.</p>
+  </div>
+</section>
+
+<section>
+  <h2>4 Service Domains</h2>
+  <div class="service-grid">
+
+    <div class="service-card">
+      <div class="header">
+        <div class="icon">🚔</div>
+        <h3>Police</h3>
+        <div class="tagline">43 forces. One platform.</div>
+      </div>
+      <div class="body">
+        <div class="modules">
+          <h4>DEFONEOS Modules</h4>
+          <ul>
+            <li>Blue Force Tracking — Cesium + FreeTAKServer</li>
+            <li>Body Cam Evidence — Sigil + IPFS chain of custody</li>
+            <li>Drone Overwatch — PX4 + ISR Pipeline</li>
+            <li>Facial Recognition Governance — CSOAI + JSP 936</li>
+            <li>Dispatch AI — SOV3 + MCP routing</li>
+            <li>Predictive Policing Audit — BFT Council oversight</li>
+          </ul>
+        </div>
+        <div class="integration">
+          <h4>Data Sources</h4>
+          <span>data.police.uk API, TfL cameras, CAD system connectors, PNC (restricted), Home Office crime data</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="header">
+        <div class="icon">🚒</div>
+        <h3>Fire &amp; Rescue</h3>
+        <div class="tagline">50 fire services. Real-time.</div>
+      </div>
+      <div class="body">
+        <div class="modules">
+          <h4>DEFONEOS Modules</h4>
+          <ul>
+            <li>Wildfire Detection — ISR + Flock thermal cameras</li>
+            <li>Drone Fire Spotting — PX4 + MAVSDK + FLIR</li>
+            <li>Route Optimisation — SOV3 + Cesium + OpenStreetMap</li>
+            <li>Firefighter Tracking — FreeTAKServer + ATAK</li>
+            <li>Post-Incident Audit — Sigil chain of evidence</li>
+            <li>HazMat Detection — Sensor MCP + OpenAQ</li>
+          </ul>
+        </div>
+        <div class="integration">
+          <h4>Data Sources</h4>
+          <span>London Fire Brigade Open Data, EA Flood API, Met Office Fire Severity Index, Ordnance Survey</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="header">
+        <div class="icon">🏥</div>
+        <h3>Health / NHS</h3>
+        <div class="tagline">1.4M staff. 1.2M beds. Connected.</div>
+      </div>
+      <div class="body">
+        <div class="modules">
+          <h4>DEFONEOS Modules</h4>
+          <ul>
+            <li>MEDEVAC Routing — SOV3 + Cesium + real-time bed data</li>
+            <li>AI Triage — SOV3 + MCP clinical decision support</li>
+            <li>Hospital Capacity — MCP → NHS Digital API</li>
+            <li>Pandemic Response — 33-hive distributed sensing</li>
+            <li>Supply Chain — SCOREBOARD + Autonomous Logistics</li>
+            <li>Mental Health Triage — CSOAI Care Membrane</li>
+          </ul>
+        </div>
+        <div class="integration">
+          <h4>Data Sources</h4>
+          <span>NHS Digital, UKHSA, OpenPrescribing (1.2B+ scripts), WHO GHO, NHS 111 data</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="header">
+        <div class="icon">🏛️</div>
+        <h3>Government</h3>
+        <div class="tagline">400+ councils. One OS.</div>
+      </div>
+      <div class="body">
+        <div class="modules">
+          <h4>DEFONEOS Modules</h4>
+          <ul>
+            <li>Digital Identity — did:csoai + GOV.UK Verify bridge</li>
+            <li>Benefits Processing — SOV3 + MCP automation</li>
+            <li>Council Services — 33 sovereign hives per district</li>
+            <li>DSRB Integration — BFT Council + Watchdog Certs</li>
+            <li>Transparency — Sigil chain for all decisions</li>
+            <li>Procurement — Open contracting data standard</li>
+          </ul>
+        </div>
+        <div class="integration">
+          <h4>Data Sources</h4>
+          <span>data.gov.uk (47K datasets), Companies House (5M+), ONS, data.europa.eu, MOD contracts</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="tam">
+  <h3>📊 Total Addressable Market</h3>
+  <div class="figures">
+    <div class="figure"><div class="num">£20B+</div><div class="lbl">UK Public Sector IT Spend</div></div>
+    <div class="figure"><div class="num">£46B</div><div class="lbl">Defence + Police + Fire + Health + Gov TAM</div></div>
+    <div class="figure"><div class="num">£130B</div><div class="lbl">by 2030 (projected)</div></div>
+    <div class="figure"><div class="num">£0</div><div class="lbl">DEFONEOS licence cost</div></div>
+  </div>
+</div>
+
+<section style="background:linear-gradient(135deg,var(--surface),var(--bg));border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center">
+  <h2 style="color:var(--accent)">The Only Open-Source Public Services OS</h2>
+  <p style="color:var(--muted);margin:1rem 0;max-width:600px;margin-left:auto;margin-right:auto">Palantir charges £240M for the UK MOD alone. DEFONEOS covers MOD + Police + Fire + NHS + Government — for the cost of the infrastructure. Open source. UK sovereign. JSP 936 compliant.</p>
+  <a href="#"" style="font-family:'Space Grotesk',monospace;color:var(--accent2);text-decoration:none">→ Back to DEFONEOS Home</a>
+</section>
+
+</div>
+
+<footer>
+  <p>🐉 DEFONEOS Civil Services — UK Sovereign Public Services AI OS</p>
+  <p>Police · Fire &amp; Rescue · NHS · Government — connected via MCP+A2A bridges</p>
+  <p>Built by Nicholas Templeman / CSOAI LTD (16939677)</p>
+</footer>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

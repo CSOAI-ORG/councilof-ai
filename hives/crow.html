@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crow · MEOK Hive</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:#0d0c18;color:#e8e4d8;line-height:1.6;min-height:100vh}
+.container{max-width:820px;margin:0 auto;padding:2rem 1.5rem 4rem}
+h1{font-size:2.6rem;font-weight:700;color:#c9a84c;letter-spacing:-0.02em;margin-bottom:.3rem;line-height:1.2}
+.subtitle{font-size:1.15rem;color:#a09888;margin-bottom:2.2rem;border-left:3px solid #c9a84c;padding-left:1rem}
+.badge{display:inline-block;padding:.35rem .9rem;border-radius:4px;font-size:.8rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:1.8rem}
+.badge.live{background:#1a3a2a;color:#4ade80;border:1px solid #4ade80}
+.badge.pending{background:#3a2a1a;color:#fbbf24;border:1px solid #fbbf24}
+.badge.staging{background:#1a1a3a;color:#93c5fd;border:1px solid #93c5fd}
+.section{margin-bottom:2.2rem}
+.section h2{font-size:1.1rem;color:#c9a84c;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem;padding-bottom:.4rem;border-bottom:1px solid #2a2840}
+.section p,.section ul{font-size:.98rem;color:#d0ccc0}
+.section ul{list-style:none;padding:0}
+.section ul li{padding:.35rem 0 .35rem 1.2rem;position:relative}
+.section ul li::before{content:"▸";position:absolute;left:0;color:#c9a84c}
+.frameworks{display:flex;flex-wrap:wrap;gap:.5rem}
+.frameworks span{background:#1a1930;border:1px solid #2a2840;border-radius:4px;padding:.3rem .7rem;font-size:.82rem;color:#c9a84c}
+.link-block{margin-top:2.5rem;padding:1.2rem;background:#1a1930;border:1px solid #2a2840;border-radius:6px;text-align:center}
+.link-block a{color:#c9a84c;text-decoration:none;font-weight:600}
+.link-block a:hover{text-decoration:underline}
+.footer{margin-top:3rem;text-align:center;font-size:.82rem;color:#6a6480}
+.footer a{color:#c9a84c;text-decoration:none}
+.footer a:hover{text-decoration:underline}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.5rem}
+.meta-item{padding:.8rem;background:#121020;border:1px solid #2a2840;border-radius:4px}
+.meta-item .label{font-size:.72rem;text-transform:uppercase;color:#6a6480;letter-spacing:.06em}
+.meta-item .value{font-size:1rem;color:#e8e4d8;font-weight:500;margin-top:.2rem}
+@media(max-width:600px){h1{font-size:2rem}.container{padding:1.5rem 1rem 3rem}.meta-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Crow</h1>
+  <div class="subtitle">Crowd-Sourced Compliance Intelligence</div>
+  <span class="badge live">LIVE</span>
+
+  <div class="meta-grid">
+    <div class="meta-item"><span class="label">Status</span><div class="value">LIVE · Sovereign</div></div>
+    <div class="meta-item"><span class="label">Data Size</span><div class="value">3.2 TB+ · Crowd-Sourced</div></div>
+    <div class="meta-item"><span class="label">BFT Council</span><div class="value">Council of · Seat #B-05</div></div>
+    <div class="meta-item"><span class="label">COAI Manifest</span><div class="value"><a href="#manifest" style="color:#c9a84c">manifest/crow.coai</a></div></div>
+  </div>
+
+  <div class="section">
+    <h2>Purpose</h2>
+    <p>Crow aggregates, validates, and attests crowd-sourced compliance intelligence — whistle-blower reports, field-safety observations, regulatory breaches from public sources, and community-verified compliance events. Each submission is BFT-attested and chain-anchored to prevent tampering.</p>
+  </div>
+
+  <div class="section">
+    <h2>Data Sources &amp; Size</h2>
+    <ul>
+      <li>Whistle-blower submissions — 240K+ attested reports</li>
+      <li>Public regulatory databases (EPA, HSE, OSHA, ECHA) — 3.1M+ entries</li>
+      <li>Community-verified field observations — 890K+ geotagged</li>
+      <li>Social-media compliance signals — NLP-screened, 1.2B+ posts</li>
+      <li>Freedom of Information responses — 78K+ documents</li>
+      <li><strong>Total:</strong> ~3.2 TB structured + 1.1 TB raw submissions</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Compliance Frameworks</h2>
+    <div class="frameworks">
+      <span>EU Whistleblowing Directive</span><span>UK PIDA 1998</span><span>DORA</span><span>GDPR Art 14</span>
+      <span>SOX 806</span><span>EU AI Act Art 13</span><span>ISO 37002</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>BFT Council Reference</h2>
+    <p>Crow holds Seat #B-05 in the <strong>Council of</strong> (councilof.ai). Provides crowd-verification attestation signals to council deliberations. Each crowd-sourced report is independently verified by a minimum of 7 BFT council validators before acceptance.</p>
+  </div>
+
+  <div class="section">
+    <h2>COAI Manifest</h2>
+    <p>COAI compliance manifest: <code>manifest/crow.coai</code> — Ed25519-signed, covering submission provenance chain, validator identities (hashed), whistle-blower privacy protections, and submission integrity proofs.</p>
+  </div>
+
+  <div class="link-block">
+    <a href="https://meok.ai/fleet">← Back to MEOK Fleet</a> &nbsp;·&nbsp; <a href="index.html">Fleet Overview</a>
+  </div>
+  <div class="footer">
+    <p>MEOK Sovereign AI · <a href="https://meok.ai">meok.ai</a></p>
+  </div>
+</div>
+</body>
+</html>

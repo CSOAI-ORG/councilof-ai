@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Press Release \u2014 MEOK AI Labs Launches the 32-Server MCP Compliance Fleet",
+    "version": "1.0.0",
+    "description": "FOR IMMEDIATE RELEASE: MEOK AI Labs (CSOAI Ltd, UK 16939677) launches the 32-server MCP compliance fleet ahead of the EU AI Act Article 50 cliff (2 Aug 2026). 4-day signed Ed25519 attestation. \u00a34,950. Sovereign UK.",
+    "contact": {
+      "url": "https://meok.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://meok.ai/press"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Landing page",
+        "responses": {
+          "200": {
+            "description": "HTML landing page"
+          }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "LLM discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain LLM context"
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "summary": "Robots discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain robots rules"
+          }
+        }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "summary": "Sitemap",
+        "responses": {
+          "200": {
+            "description": "application/xml sitemap"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "pipeline": "sov3-training-kimi-50b",
+  "kimi_workspace": "/Users/nicholas/Documents/kimi/workspace",
+  "total_md_files": 1465,
+  "docs_processed": 100,
+  "features_per_doc": 29,
+  "categories": {
+    "governance": 72,
+    "compliance": 64,
+    "ai_tech": 58,
+    "bft": 47,
+    "mind": 42,
+    "healthcare": 37,
+    "quantum": 31,
+    "audit": 22,
+    "regulation": 22,
+    "ai_governance": 16,
+    "finance": 15,
+    "defence": 12,
+    "cyber": 8
+  },
+  "models_trained": 3,
+  "models": [
+    {
+      "model_name": "kimi_sovereign_categorizer",
+      "state": "trained",
+      "algorithm": "centroid-classifier on sovereign features",
+      "training_docs": 100,
+      "categories": [
+        "healthcare",
+        "mind",
+        "governance",
+        "bft",
+        "ai_governance",
+        "audit",
+        "compliance",
+        "regulation",
+        "finance",
+        "defence",
+        "cyber",
+        "ai_tech",
+        "quantum"
+      ],
+      "features_per_doc": 29,
+      "accuracy": 0.9,
+      "trained_at": 1782458426.241052
+    },
+    {
+      "model_name": "kimi_compliance_predictor",
+      "state": "trained",
+      "algorithm": "centroid-classifier on sovereign features",
+      "training_docs": 67,
+      "categories": [
+        "compliance"
+      ],
+      "features_per_doc": 29,
+      "accuracy": 1.0,
+      "trained_at": 1782458426.2412958
+    },
+    {
+      "model_name": "kimi_sovereign_topic_classifier",
+      "state": "trained",
+      "algorithm": "centroid-classifier on sovereign features",
+      "training_docs": 100,
+      "categories": [
+        "healthcare",
+        "mind",
+        "governance",
+        "bft",
+        "ai_governance",
+        "audit",
+        "compliance",
+        "regulation",
+        "finance",
+        "defence",
+        "cyber",
+        "ai_tech",
+        "quantum"
+      ],
+      "features_per_doc": 29,
+      "accuracy": 0.9,
+      "trained_at": 1782458426.244477
+    }
+  ]
+}

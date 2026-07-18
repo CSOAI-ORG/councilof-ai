@@ -1,0 +1,97 @@
+{
+  "name": "Weekly EU AI Compliance Brief — auto-draft Sunday, send Monday 8am UK",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{"field": "cronExpression", "expression": "0 14 * * 0"}]
+        }
+      },
+      "id": "cron-sunday-2pm",
+      "name": "Cron — Sunday 14:00 UK",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://eur-lex.europa.eu/search.html?qid={{$json.timestamp}}&text=ai%20act%20delegated%20OR%20implementing&type=advanced",
+        "options": {"timeout": 15000}
+      },
+      "id": "fetch-eur-lex",
+      "name": "Fetch EUR-Lex AI Act updates",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://www.gov.uk/government/news.atom?departments[]=department-for-science-innovation-and-technology",
+        "options": {"timeout": 15000}
+      },
+      "id": "fetch-dsit",
+      "name": "Fetch DSIT news (UK)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 400]
+    },
+    {
+      "parameters": {
+        "url": "https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/feed/",
+        "options": {"timeout": 15000}
+      },
+      "id": "fetch-ico",
+      "name": "Fetch ICO news",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 600]
+    },
+    {
+      "parameters": {
+        "modelId": {"__rl": true, "value": "claude-3-5-sonnet-20241022", "mode": "id"},
+        "messages": {
+          "values": [{
+            "content": "=You are Nicholas Templeman writing the EU AI Compliance Brief #N. Style: dry, factual, no hype, no emojis. Audience: UK + EU compliance officers, AI startup founders.\n\nThis week's regulatory inputs:\n\nEUR-Lex AI Act updates:\n{{$node['Fetch EUR-Lex AI Act updates'].json.text || $node['Fetch EUR-Lex AI Act updates'].json}}\n\nUK DSIT news:\n{{$node['Fetch DSIT news (UK)'].json.text || $node['Fetch DSIT news (UK)'].json}}\n\nICO news:\n{{$node['Fetch ICO news'].json.text || $node['Fetch ICO news'].json}}\n\nWrite the issue with this exact structure:\n\nLine 1: 'EU AI Compliance Brief #N — Monday DD Month YYYY'\nLine 2: blank\nLine 3-5: One-paragraph TL;DR (≤50 words)\nLine 6: blank\nLine 7: '## What changed this week'\nLine 8-12: 3 bullet points, each (a) what changed, (b) which Article/regulation, (c) what to do (1 sentence)\nLine 13: blank\nLine 14: '## This week's practical tip'\nLine 15-18: One concrete this-week action (≤80 words)\nLine 19: blank\nLine 20: '## One resource'\nLine 21-22: One paid MEOK resource link with 1-sentence relevance\n\nKeep total length 300-400 words. No fluff. No marketing tone.",
+            "role": "user"
+          }]
+        },
+        "options": {"maxTokens": 1200, "temperature": 0.4}
+      },
+      "id": "claude-draft-brief",
+      "name": "Claude — draft this week's brief",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [700, 400]
+    },
+    {
+      "parameters": {
+        "fromEmail": "nicholas@csoai.org",
+        "toEmail": "nicholas@csoai.org",
+        "subject": "📰 EU AI Compliance Brief — Sunday draft for Monday send",
+        "html": "=<h2>This week's brief — review + edit before Monday 8am UK</h2>\n<p><strong>Action required:</strong> review below, edit if needed, paste into Buttondown by Monday 7:30am UK.</p>\n<hr>\n<pre style=\"white-space: pre-wrap; font-family: Georgia, serif; font-size: 15px; line-height: 1.6; padding: 16px; background: #f8f6f0; border-radius: 8px;\">{{$json.draft}}</pre>\n<hr>\n<p>To paste into Buttondown: <a href=\"https://buttondown.email/emails/new\">buttondown.email/emails/new</a> → newsletter dropdown → 'EU AI Compliance Brief'</p>"
+      },
+      "id": "email-draft-sunday",
+      "name": "Email Sunday draft to Nick for edit",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1000, 400]
+    }
+  ],
+  "connections": {
+    "Cron — Sunday 14:00 UK": {"main": [[
+      {"node": "Fetch EUR-Lex AI Act updates", "type": "main", "index": 0},
+      {"node": "Fetch DSIT news (UK)", "type": "main", "index": 0},
+      {"node": "Fetch ICO news", "type": "main", "index": 0}
+    ]]},
+    "Fetch EUR-Lex AI Act updates": {"main": [[{"node": "Claude — draft this week's brief", "type": "main", "index": 0}]]},
+    "Fetch DSIT news (UK)": {"main": [[{"node": "Claude — draft this week's brief", "type": "main", "index": 0}]]},
+    "Fetch ICO news": {"main": [[{"node": "Claude — draft this week's brief", "type": "main", "index": 0}]]},
+    "Claude — draft this week's brief": {"main": [[{"node": "Email Sunday draft to Nick for edit", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "_meok_notes": {
+    "purpose": "Auto-draft the weekly EU AI Compliance Brief every Sunday afternoon. Email lands in Nick's inbox by Sunday evening — he reviews/edits/sends on Monday 8am UK.",
+    "Buttondown_send": "Manual paste step on Monday morning (~10 min). Could fully automate via Buttondown API if Nick wants a fully-hands-off newsletter, but founder-edit step strongly recommended for first ~10 issues.",
+    "expected_outcome": "Compounding subscriber base + topical authority on EU AI compliance. Net new subs of 20-50/week once distribution is established."
+  }
+}

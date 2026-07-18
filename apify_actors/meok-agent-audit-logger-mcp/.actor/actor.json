@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "meok-agent-audit-logger-mcp",
+  "title": "Agent Audit Logger",
+  "description": "Hash-chained HMAC-signed audit log for A2A calls.",
+  "version": "1.0",
+  "input": "./input_schema.json",
+  "output": "./output_schema.json",
+  "dockerfile": "../Dockerfile",
+  "categories": [
+    "AI",
+    "COMPLIANCE"
+  ],
+  "httpMcpServer": {
+    "transport": "streamable-http",
+    "url": "https://meok-agent-audit-logger-mcp.apify.actor/mcp"
+  }
+}

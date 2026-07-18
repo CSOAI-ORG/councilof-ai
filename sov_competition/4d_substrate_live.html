@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>4D Sovereign Substrate — Live Simulation</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'JetBrains Mono', monospace;
+         background: #000; color: #e5e5e5; padding: 1rem; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+           gap: 1rem; margin: 1rem 0; }
+  .card { background: #1a1a1a; padding: 1rem; border-radius: 8px;
+          border-left: 4px solid #fbbf24; }
+  .card h3 { color: #60a5fa; margin: 0 0 0.5rem; font-size: 1rem; }
+  .stat-value { font-size: 1.8rem; color: #fbbf24; font-weight: bold; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+  th, td { padding: 0.4rem; text-align: left; border-bottom: 1px solid #333; }
+  th { color: #fbbf24; }
+  .doctrine { background: linear-gradient(135deg, #2d1b4e 0%, #1a1a2e 100%);
+              padding: 2rem; border-radius: 12px; text-align: center; margin: 2rem 0; }
+  .doctrine h3 { color: #fbbf24; }
+</style>
+</head>
+<body>
+
+<h1>🜏 4D Sovereign Substrate — Live</h1>
+
+<div class="grid">
+  <div class="card">
+    <h3>Generals</h3>
+    <div class="stat-value">12</div>
+    <p>Each = 1 GCP VM, each = own QOwm</p>
+  </div>
+  <div class="card">
+    <h3>Hives</h3>
+    <div class="stat-value">33</div>
+    <p>Across 5 continents · sovereign + enterprise + smb</p>
+  </div>
+  <div class="card">
+    <h3>Sigils</h3>
+    <div class="stat-value">60</div>
+    <p>Ed25519-signed in this run</p>
+  </div>
+  <div class="card">
+    <h3>BFT</h3>
+    <div class="stat-value">5.33</div>
+    <p>Avg voters (size 3/5/7)</p>
+  </div>
+  <div class="card">
+    <h3>MoE</h3>
+    <div class="stat-value">1.36 TB</div>
+    <p>8 BIG BRAIM winners</p>
+  </div>
+  <div class="card">
+    <h3>Mindsets</h3>
+    <div class="stat-value">12</div>
+    <p>× 8 MoE = 96 combinations</p>
+  </div>
+</div>
+
+<h2>12 Generals</h2>
+<table>
+<tr><th>#</th><th>Name</th><th>Role</th><th>BFT</th><th>Sephirah</th><th>QOwm</th></tr>
+<tr><td>1</td><td>Argus</td><td>watchdog</td><td>balanced</td><td>Binah</td><td>vision-spatial-wavelet</td></tr><tr><td>2</td><td>Scribe</td><td>compliance</td><td>secure</td><td>Auxiliary</td><td>text-logical-wavelet</td></tr><tr><td>3</td><td>Shield</td><td>safety</td><td>secure</td><td>Gevurah</td><td>reasoning-safety-quantum</td></tr><tr><td>4</td><td>Builder</td><td>architect</td><td>balanced</td><td>Chesed</td><td>longctx-architectural</td></tr><tr><td>5</td><td>Abacus</td><td>quant</td><td>fast</td><td>Malkuth</td><td>quant-temporal-wavelet</td></tr><tr><td>6</td><td>Lex</td><td>legal</td><td>secure</td><td>Hod</td><td>longctx-legal-quantum</td></tr><tr><td>7</td><td>Scale</td><td>ethics</td><td>balanced</td><td>Tiferet</td><td>multilingual-care-wavelet</td></tr><tr><td>8</td><td>Crow</td><td>risk</td><td>balanced</td><td>Da'at</td><td>fast-prediction-temporal</td></tr><tr><td>9</td><td>Gear</td><td>operations</td><td>fast</td><td>Yesod</td><td>operational-temporal-quantum</td></tr><tr><td>10</td><td>Voice</td><td>comms</td><td>fast</td><td>Netzach</td><td>audio-temporal-wavelet</td></tr><tr><td>11</td><td>Owl</td><td>research</td><td>secure</td><td>Chokhmah</td><td>longctx-research-quantum</td></tr><tr><td>12</td><td>Dragon</td><td>sovereign</td><td>secure</td><td>Keter</td><td>sovereign-meta-quantum</td></tr>
+</table>
+
+<h2>33 Hives</h2>
+<table>
+<tr><th>ID</th><th>Hive</th><th>Tier</th><th>General</th><th>Coordinates</th></tr>
+<tr><td>1</td><td>London</td><td>sovereign</td><td>Dragon</td><td>51.51, -0.13</td></tr><tr><td>2</td><td>Cambridge</td><td>enterprise</td><td>Scribe</td><td>52.21, 0.12</td></tr><tr><td>3</td><td>NYC</td><td>enterprise</td><td>Scribe</td><td>40.71, -74.01</td></tr><tr><td>4</td><td>SF</td><td>enterprise</td><td>Owl</td><td>37.77, -122.42</td></tr><tr><td>5</td><td>Tokyo</td><td>sovereign</td><td>Dragon</td><td>35.68, 139.65</td></tr><tr><td>6</td><td>Berlin</td><td>enterprise</td><td>Shield</td><td>52.52, 13.40</td></tr><tr><td>7</td><td>Paris</td><td>enterprise</td><td>Lex</td><td>48.86, 2.35</td></tr><tr><td>8</td><td>Sydney</td><td>enterprise</td><td>Builder</td><td>-33.87, 151.21</td></tr><tr><td>9</td><td>Singapore</td><td>enterprise</td><td>Shield</td><td>1.35, 103.82</td></tr><tr><td>10</td><td>Toronto</td><td>enterprise</td><td>Builder</td><td>43.65, -79.38</td></tr><tr><td>11</td><td>Mumbai</td><td>enterprise</td><td>Abacus</td><td>19.08, 72.88</td></tr><tr><td>12</td><td>Dubai</td><td>enterprise</td><td>Voice</td><td>25.20, 55.27</td></tr><tr><td>13</td><td>HongKong</td><td>enterprise</td><td>Scribe</td><td>22.32, 114.17</td></tr><tr><td>14</td><td>Madrid</td><td>enterprise</td><td>Scale</td><td>40.42, -3.70</td></tr><tr><td>15</td><td>Amsterdam</td><td>smb</td><td>Crow</td><td>52.37, 4.90</td></tr><tr><td>16</td><td>Edinburgh</td><td>enterprise</td><td>Builder</td><td>55.95, -3.19</td></tr><tr><td>17</td><td>Stockholm</td><td>smb</td><td>Argus</td><td>59.33, 18.07</td></tr><tr><td>18</td><td>Dublin</td><td>smb</td><td>Voice</td><td>53.35, -6.26</td></tr><tr><td>19</td><td>Mexico</td><td>smb</td><td>Crow</td><td>19.43, -99.13</td></tr><tr><td>20</td><td>CapeTown</td><td>smb</td><td>Scale</td><td>-33.92, 18.42</td></tr><tr><td>21</td><td>Helsinki</td><td>smb</td><td>Abacus</td><td>60.17, 24.94</td></tr><tr><td>22</td><td>Rome</td><td>smb</td><td>Gear</td><td>41.90, 12.50</td></tr><tr><td>23</td><td>Seoul</td><td>smb</td><td>Lex</td><td>37.57, 126.98</td></tr><tr><td>24</td><td>Vienna</td><td>smb</td><td>Owl</td><td>48.21, 16.37</td></tr><tr><td>25</td><td>Buenos</td><td>smb</td><td>Scale</td><td>-34.60, -58.38</td></tr><tr><td>26</td><td>Nairobi</td><td>smb</td><td>Gear</td><td>-1.29, 36.82</td></tr><tr><td>27</td><td>Bogota</td><td>smb</td><td>Voice</td><td>4.71, -74.07</td></tr><tr><td>28</td><td>Lima</td><td>smb</td><td>Lex</td><td>-12.05, -77.04</td></tr><tr><td>29</td><td>Cairo</td><td>smb</td><td>Shield</td><td>30.04, 31.24</td></tr><tr><td>30</td><td>Santiago</td><td>smb</td><td>Abacus</td><td>-33.45, -70.67</td></tr><tr><td>31</td><td>Lagos</td><td>smb</td><td>Argus</td><td>6.52, 3.38</td></tr><tr><td>32</td><td>Jakarta</td><td>smb</td><td>Crow</td><td>-6.21, 106.85</td></tr><tr><td>33</td><td>Reykjavik</td><td>smb</td><td>Owl</td><td>64.15, -21.94</td></tr>
+</table>
+
+<div class="doctrine">
+  <h3>The Doctrine</h3>
+  <p>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</p>
+  <p>"The dragon runs itself. No Ollama needed. Sovereign by construction."</p>
+  <p>"12 Generals × 5 Dimensions × AB Uno = the sovereign substrate."</p>
+</div>
+
+<p style="text-align: center; color: #888;">
+  Generated by sov_4d_substrate_sim.py · 2026-06-29T11:46:51.561855+00:00Z
+</p>
+
+</body>
+</html>

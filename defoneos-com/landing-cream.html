@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="seal.svg">
+<title>DEFONEOS — Sovereign emergence for defence AI</title>
+<meta name="description" content="DEFONEOS — the sovereign-grade operating substrate for defence AI. From pulse to presence: a signed, auditable, neutral AI that emerges under your command. AUKUS-compatible.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>
+  :root{
+    --cream:#faf8f3; --cream-soft:#f6f1e7; --panel:rgba(255,255,255,.72);
+    --ink:#1f1c17; --muted:#6b6a63; --line:rgba(31,28,23,.10);
+    --gold:#c9a84c; --champagne:#d9b676; --periwinkle:#8b8ce0; --sage:#9bbf9a;
+    --coral:#e0a285; --iri:#c9b8e8;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background-color:var(--cream); color:var(--ink);
+    font-family:"Inter",-apple-system,sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased;
+    background-image:linear-gradient(rgba(31,28,23,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(31,28,23,.04) 1px,transparent 1px);
+    background-size:32px 32px; overflow-x:hidden;
+  }
+  a{ color:var(--ink); text-decoration:none; }
+  .wrap{ max-width:1140px; margin:0 auto; padding:0 26px; }
+  .kicker{ font-size:12.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); font-weight:600; }
+  .sidx{ font-family:"JetBrains Mono",monospace; color:var(--champagne); font-size:.85rem; letter-spacing:1px; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; background:var(--ink); color:#f4eee1; padding:13px 26px; border-radius:999px; font-size:15px; font-weight:500; border:0; cursor:pointer; transition:transform .18s,opacity .2s; }
+  .btn:hover{ transform:translateY(-2px); opacity:.92; }
+  .btn.ghost{ background:transparent; color:var(--ink); border:1px solid var(--line); }
+
+  nav{ position:sticky; top:0; z-index:40; background:rgba(250,248,243,.8); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ display:flex; align-items:center; gap:11px; font-weight:600; letter-spacing:.5px; }
+  .m{ width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,#2a2722,#4d473d); display:grid; place-items:center; color:#f4eee1; font-weight:700; font-size:15px; }
+  .navlinks{ display:flex; gap:24px; align-items:center; }
+  .navlinks a{ color:var(--muted); font-size:.9rem; font-weight:500; transition:color .2s; }
+  .navlinks a:hover{ color:var(--ink); }
+  @media(max-width:860px){ .navlinks a:not(.btn){ display:none; } }
+
+  header.hero{ position:relative; padding:64px 0 40px; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:30px; align-items:center; min-height:74vh; }
+  @media(max-width:900px){ .hero-grid{ grid-template-columns:1fr; text-align:center; } }
+  h1.mark{ font-size:clamp(3rem,8vw,5.6rem); font-weight:600; letter-spacing:-.03em; line-height:.98; color:var(--ink); }
+  .hero .sub{ font-size:clamp(1.05rem,2.2vw,1.4rem); color:var(--muted); margin-top:20px; max-width:520px; font-weight:400; }
+  @media(max-width:900px){ .hero .sub{ margin-left:auto; margin-right:auto; } }
+  .hero .micro{ color:var(--muted); margin-top:12px; font-size:.92rem; opacity:.85; }
+  .cta-row{ margin-top:32px; display:flex; gap:14px; flex-wrap:wrap; }
+  @media(max-width:900px){ .cta-row{ justify-content:center; } }
+
+  .egg-stage{ position:relative; display:grid; place-items:center; height:480px; }
+  .orbit{ position:absolute; border-radius:50%; filter:blur(8px); opacity:.55; }
+  .orbit.o1{ width:420px; height:170px; border:14px solid var(--iri); animation:spin 16s linear infinite; }
+  .orbit.o2{ width:480px; height:120px; border:10px solid var(--sage); animation:spin 22s linear infinite reverse; }
+  .orbit.o3{ width:360px; height:230px; border:9px solid var(--champagne); animation:spin 19s linear infinite; }
+  @keyframes spin{ from{ transform:rotate(0) } to{ transform:rotate(360deg) } }
+  .egg{ position:relative; width:230px; height:290px; border-radius:50% 50% 50% 50%/62% 62% 38% 38%;
+    background:
+      radial-gradient(circle at 34% 30%, rgba(255,255,255,.75), transparent 46%),
+      radial-gradient(circle at 70% 74%, rgba(139,140,224,.55), transparent 55%),
+      linear-gradient(150deg, var(--iri), var(--sage) 52%, var(--coral));
+    box-shadow:inset -10px -16px 40px rgba(31,28,23,.18), inset 8px 10px 26px rgba(255,255,255,.6), 0 24px 60px -22px rgba(31,28,23,.5), 0 0 70px rgba(201,168,76,.25);
+    animation:float 6s ease-in-out infinite; z-index:3; }
+  @keyframes float{ 0%,100%{ transform:translateY(0) rotate(-1deg) } 50%{ transform:translateY(-14px) rotate(1deg) } }
+  .cage{ position:absolute; bottom:74px; width:262px; z-index:4; opacity:.92; pointer-events:none; }
+  .dust span{ position:absolute; width:4px; height:4px; border-radius:50%; background:var(--champagne); opacity:.6; animation:rise 5s ease-in infinite; }
+  @keyframes rise{ 0%{ transform:translateY(20px); opacity:0 } 30%{ opacity:.7 } 100%{ transform:translateY(-60px); opacity:0 } }
+
+  .statband{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--cream-soft); }
+  .statband .wrap{ display:flex; flex-wrap:wrap; justify-content:space-between; padding:22px 26px; gap:10px; }
+  .stat{ text-align:center; flex:1; min-width:110px; }
+  .stat .n{ font-size:1.9rem; font-weight:600; color:var(--ink); }
+  .stat .l{ font-size:.74rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+
+  section{ padding:90px 0; }
+  .shead{ display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  h2.sec{ font-size:2.3rem; font-weight:600; letter-spacing:-.02em; color:var(--ink); }
+  h2.sec em{ font-style:normal; color:var(--gold); }
+  .lead{ color:var(--muted); max-width:720px; margin-bottom:40px; font-size:1.05rem; }
+
+  .grid{ display:grid; gap:20px; }
+  .g3{ grid-template-columns:repeat(3,1fr); } .g4{ grid-template-columns:repeat(4,1fr); } .g2{ grid-template-columns:repeat(2,1fr); }
+  @media(max-width:900px){ .g3,.g4,.g2{ grid-template-columns:1fr; } }
+  .card{ background:var(--panel); backdrop-filter:blur(8px); border:1px solid var(--line); border-radius:18px; padding:26px; box-shadow:0 4px 24px rgba(31,28,23,.05); transition:transform .2s,box-shadow .2s; }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 16px 44px rgba(31,28,23,.1); }
+  .card .k{ font-size:.72rem; letter-spacing:1.5px; text-transform:uppercase; font-weight:600; }
+  .card h3{ font-size:1.4rem; font-weight:600; margin:8px 0; color:var(--ink); }
+  .card p{ color:var(--muted); font-size:.96rem; }
+  .acc-gold{ color:var(--gold); } .acc-peri{ color:#6f70c9; } .acc-sage{ color:#5f8a5e; } .acc-coral{ color:#c47a58; }
+  .swatch{ width:46px; height:46px; border-radius:14px; margin-bottom:14px; box-shadow:inset -3px -4px 12px rgba(0,0,0,.12), inset 3px 3px 10px rgba(255,255,255,.5); }
+  .tag{ display:inline-block; font-size:.74rem; padding:5px 13px; border-radius:999px; border:1px solid var(--line); color:var(--muted); margin-top:16px; font-weight:500; background:rgba(255,255,255,.5); }
+  .tag.live{ border-color:rgba(155,191,154,.6); color:#4f7a4e; }
+
+  .dome{ display:flex; flex-direction:column; gap:9px; }
+  .layer{ display:flex; align-items:center; gap:18px; padding:15px 22px; border-radius:14px; border:1px solid var(--line); background:linear-gradient(90deg, rgba(201,168,76,.06), rgba(139,140,224,.05)); transition:transform .2s; }
+  .layer:hover{ transform:translateX(7px); }
+  .layer .lnum{ font-size:1.3rem; font-weight:600; color:var(--champagne); width:30px; }
+  .layer .ltitle{ font-weight:600; min-width:140px; }
+  .layer .ldesc{ color:var(--muted); font-size:.92rem; }
+  @media(max-width:700px){ .layer .ldesc{ display:none; } }
+
+  .twin{ display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:center; }
+  @media(max-width:900px){ .twin{ grid-template-columns:1fr; } }
+  #globe{ height:380px; border-radius:20px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px -26px rgba(31,28,23,.5); background:#0a0e27; }
+
+  .mcpgrid{ display:flex; flex-wrap:wrap; gap:10px; }
+  .mcp{ font-size:.82rem; padding:8px 14px; border-radius:11px; background:rgba(255,255,255,.6); border:1px solid var(--line); color:#4a463e; }
+  .mcp .dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--sage); margin-right:8px; vertical-align:1px; }
+  .mcp.soon .dot{ background:var(--champagne); } .mcp.soon{ color:var(--muted); }
+
+  .price{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  @media(max-width:900px){ .price{ grid-template-columns:1fr; } }
+  .pcard{ background:var(--panel); backdrop-filter:blur(8px); border:1px solid var(--line); border-radius:20px; padding:30px; box-shadow:0 4px 24px rgba(31,28,23,.05); }
+  .pcard.feat{ border:1px solid var(--gold); box-shadow:0 12px 40px rgba(201,168,76,.16); }
+  .pcard .amt{ font-size:2.6rem; font-weight:600; color:var(--ink); }
+  .pcard .per{ color:var(--muted); font-size:.9rem; }
+  .pcard ul{ list-style:none; margin:18px 0 0; } .pcard li{ color:var(--muted); font-size:.92rem; padding:6px 0 6px 24px; position:relative; }
+  .pcard li::before{ content:"✦"; position:absolute; left:0; color:var(--gold); }
+
+  .seal{ background:linear-gradient(160deg, #fff, var(--cream-soft)); border:1px solid var(--gold); border-radius:20px; padding:36px; box-shadow:0 12px 50px rgba(201,168,76,.12); }
+  .seal .hash{ display:block; background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-top:14px; font-family:"JetBrains Mono",monospace; color:#5f8a5e; font-size:.78rem; word-break:break-all; }
+  .pills{ display:flex; gap:9px; flex-wrap:wrap; margin-top:18px; }
+  .pill{ font-size:.78rem; padding:6px 14px; border-radius:999px; background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.35); color:#8a6f23; }
+
+  .closing{ text-align:center; padding:100px 0; }
+  .closing h2{ font-size:clamp(2.2rem,5vw,3.4rem); font-weight:600; letter-spacing:-.02em; }
+  .dragline{ color:var(--muted); font-size:1.2rem; max-width:680px; margin:20px auto 0; font-style:italic; }
+  footer{ border-top:1px solid var(--line); padding:44px 0; text-align:center; color:var(--muted); font-size:.86rem; }
+  .fine{ font-size:.76rem; opacity:.7; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand" style="display:inline-flex;align-items:center;gap:9px"><img src="seal.svg" alt="DEFONEOS" style="height:34px;width:34px;flex:0 0 auto"> DEFONEOS</div>
+    <div class="navlinks">
+      <a href="#compartments">Compartments</a>
+      <a href="#emergence">The stack</a>
+      <a href="#twin">Digital twin</a>
+      <a href="#labs">MEOK Labs</a>
+      <a href="#pricing">Pilots</a>
+      <a href="system.html">System</a>
+      <a href="ontology.html">Ontology</a>
+      <a href="cop.html">Live dome</a>
+      <a class="btn" href="mailto:nicholas@meok.ai?subject=DEFONEOS%20pilot">Request a pilot</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">Sovereign defence AI · from pulse to presence</div>
+      <h1 class="mark" style="margin-top:18px">DEFONEOS</h1>
+      <p class="sub">A sovereign-grade defence AI that emerges under your command — every action signed, every byte auditable, no foreign API calls.</p>
+      <p class="micro">Audit-grade · signed · neutral · UK-sovereign · AUKUS-compatible.</p>
+      <div class="cta-row">
+        <a class="btn" href="cop.html">Enter the live dome →</a>
+        <a class="btn ghost" href="verify.html">Verify a seal</a>
+      </div>
+      <p class="micro" style="margin-top:10px;opacity:.8">Real-world 3D · mapping · governed ontology · live data — tap the egg or the dome.</p>
+    </div>
+    <div class="egg-stage">
+      <div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div>
+      <div class="dust">
+        <span style="left:44%;bottom:120px;animation-delay:0s"></span>
+        <span style="left:56%;bottom:140px;animation-delay:1.4s"></span>
+        <span style="left:38%;bottom:160px;animation-delay:2.6s"></span>
+        <span style="left:62%;bottom:110px;animation-delay:3.6s"></span>
+      </div>
+      <div class="egg" onclick="location.href='cop.html'" style="cursor:pointer" title="Enter the live dome →"></div>
+      <svg class="cage" viewBox="0 0 260 150" fill="none" stroke="#c08a5a" stroke-width="2.4" aria-hidden="true">
+        <path d="M40 10 L70 0 L100 10 L100 44 L70 56 L40 44 Z"/>
+        <path d="M100 10 L130 0 L160 10 L160 44 L130 56 L100 44 Z"/>
+        <path d="M160 10 L190 0 L220 10 L220 44 L190 56 L160 44 Z"/>
+        <path d="M55 50 L85 40 L115 50 L115 84 L85 96 L55 84 Z"/>
+        <path d="M115 50 L145 40 L175 50 L175 84 L145 96 L115 84 Z"/>
+        <path d="M175 50 L205 40 L235 50 L235 84 L205 96 L175 84 Z"/>
+        <path d="M85 90 L115 80 L145 90 L145 124 L115 136 L85 124 Z"/>
+        <path d="M145 90 L175 80 L205 90 L205 124 L175 136 L145 124 Z"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="statband">
+  <div class="wrap">
+    <div class="stat"><div class="n">15</div><div class="l">defence MCPs</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">compartments</div></div>
+    <div class="stat"><div class="n">33</div><div class="l">BFT council</div></div>
+    <div class="stat"><div class="n">7</div><div class="l">stack layers</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">foreign API calls</div></div>
+  </div>
+</div>
+
+<section id="compartments">
+  <div class="wrap">
+    <div class="shead"><span class="sidx">01</span><h2 class="sec">One umbrella. <em>Three compartments.</em></h2></div>
+    <p class="lead">DEFONEOS is the surface buyers see. Underneath, build and certify stay strictly separate — never mixed, never cross-linked. That separation is the integrity guarantee.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="swatch" style="background:linear-gradient(135deg,#f0d090,#c9a84c)"></div>
+        <div class="k acc-gold">Builds</div><h3>meok-defoneos</h3>
+        <p>The defence-AI MCP suite plus the MEOK Labs R&amp;D pipeline. The engineering surface that ships product to UK primes.</p>
+        <span class="tag live">15 defence MCPs · live</span>
+      </div>
+      <div class="card">
+        <div class="swatch" style="background:linear-gradient(135deg,#c9b8e8,#8b8ce0)"></div>
+        <div class="k acc-peri">Certifies</div><h3>csoai-defoneos</h3>
+        <p>The 33-agent Byzantine-fault-tolerant council that issues the DEFONEOS-SEAL signed credential. Standards, not code.</p>
+        <span class="tag">Council · signed credential</span>
+      </div>
+      <div class="card">
+        <div class="swatch" style="background:linear-gradient(135deg,#b8b4ab,#6b6a63)"></div>
+        <div class="k" style="color:var(--muted)">Legacy</div><h3>dagon</h3>
+        <p>Historical NDA distribution, superseded by the DEFONEOS pipeline. Never public, never linked.</p>
+        <span class="tag">Archived</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="emergence">
+  <div class="wrap">
+    <div class="shead"><span class="sidx">02</span><h2 class="sec">The emergence — <em>seven layers</em></h2></div>
+    <p class="lead">From substrate to sovereign, the system rises like the hatchling: each layer earns the one above it. Designed to align with UK JSP 936 and JSP 440 — alignment by design, not a certification claim.</p>
+    <div class="dome">
+      <div class="layer"><span class="lnum">7</span><span class="ltitle">Sovereign</span><span class="ldesc">Air-gap deploy · 1-click region switch · King-key governance</span></div>
+      <div class="layer"><span class="lnum">6</span><span class="ltitle">Command</span><span class="ldesc">33-agent BFT council gates every sensitive action (quorum 23/33)</span></div>
+      <div class="layer"><span class="lnum">5</span><span class="ltitle">Cognition</span><span class="ldesc">Mixture-of-experts reasoning · intuition engine · optimisation routines</span></div>
+      <div class="layer"><span class="lnum">4</span><span class="ltitle">Fusion</span><span class="ldesc">17 data layers on a CesiumJS 3D digital-twin globe · common operating picture</span></div>
+      <div class="layer"><span class="lnum">3</span><span class="ltitle">Sensor</span><span class="ldesc">TAK / CoT interop · drone telemetry · acoustic C-UAS · OS &amp; Sentinel geo</span></div>
+      <div class="layer"><span class="lnum">2</span><span class="ltitle">Crypto</span><span class="ldesc">Ed25519 + post-quantum ML-DSA-65 / ML-KEM-768 · SIGIL audit chain</span></div>
+      <div class="layer"><span class="lnum">1</span><span class="ltitle">Substrate</span><span class="ldesc">On-prem or sovereign cloud · zero foreign dependency · fully auditable</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="twin">
+  <div class="wrap">
+    <div class="shead"><span class="sidx">03</span><h2 class="sec">The live <em>sovereign twin</em></h2></div>
+    <p class="lead">Tier 1 ships today: a CesiumJS 3D digital-twin globe in any browser — terrain, imagery, and live entity layers. Tier 2 (Unreal Engine 5 pixel-stream) is on the roadmap, not faked as live.</p>
+    <div class="twin">
+      <div id="globe"></div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="k acc-sage">Tier 1 · live today</div><h3>CesiumJS digital twin</h3>
+          <p>Targets, drones, sensors and vehicles as CZML entity layers. The globe at left is the live tier-1 twin, powered by defoneos-cesium-mcp.</p>
+          <span class="tag live">Live · drag to orbit</span>
+        </div>
+        <div class="card">
+          <div class="k" style="color:var(--muted)">Tier 2 · roadmap</div><h3>Unreal Engine 5</h3>
+          <p>Photoreal, pixel-streamed mission rehearsal. Needs GPU render infrastructure — wired through meek-defoneos-ue5-mcp as a future tier.</p>
+          <span class="tag">GPU render · planned</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="mcps">
+  <div class="wrap">
+    <div class="shead"><span class="sidx">04</span><h2 class="sec">The defence-AI <em>capability suite</em></h2></div>
+    <p class="lead">Fifteen MCPs, each independently installable, each governed and SIGIL-logged. Thirteen live, two in build.</p>
+    <div class="mcpgrid">
+      <span class="mcp"><span class="dot"></span>airspace-monitor</span>
+      <span class="mcp"><span class="dot"></span>drone-airspace-governance</span>
+      <span class="mcp"><span class="dot"></span>firmware-attestation</span>
+      <span class="mcp"><span class="dot"></span>owasp-agentic</span>
+      <span class="mcp"><span class="dot"></span>cybersecurity-ai</span>
+      <span class="mcp"><span class="dot"></span>agent-prompt-injection-firewall</span>
+      <span class="mcp"><span class="dot"></span>agent-identity-trust</span>
+      <span class="mcp"><span class="dot"></span>agent-incident-reporter</span>
+      <span class="mcp"><span class="dot"></span>mitre-atlas</span>
+      <span class="mcp"><span class="dot"></span>csoai-governance-crosswalk</span>
+      <span class="mcp"><span class="dot"></span>meok-governance-engine</span>
+      <span class="mcp"><span class="dot"></span>care-membrane</span>
+      <span class="mcp"><span class="dot"></span>agent-audit-logger</span>
+      <span class="mcp soon"><span class="dot"></span>explosive-eod-clearance · build</span>
+      <span class="mcp soon"><span class="dot"></span>defence-bft-council · build</span>
+    </div>
+  </div>
+</section>
+
+<section id="labs">
+  <div class="wrap">
+    <div class="shead"><span class="sidx">05</span><h2 class="sec">MEOK Labs — <em>the physical edge</em></h2></div>
+    <p class="lead">Software sovereignty needs hardware to land on. MEOK Labs is the 6.5-acre UK R&amp;D home where the substrate meets the machine.</p>
+    <div class="grid g4">
+      <div class="card"><div class="k acc-coral">Humanoid</div><h3>Asimov V8</h3><p>Open tendon-drive humanoid platform. CAD pack sealed and version-tracked.</p></div>
+      <div class="card"><div class="k acc-gold">Actuator</div><h3>WOLF</h3><p>Planetary-geared actuator line for field-grade robotics.</p></div>
+      <div class="card"><div class="k acc-sage">Rig</div><h3>HARVI</h3><p>Sensor-fusion test rig feeding the digital-twin pipeline.</p></div>
+      <div class="card"><div class="k acc-peri">Mesh</div><h3>Drone swarm</h3><p>PX4 fleets governed by the airspace and counter-drone MCPs.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="seal">
+  <div class="wrap">
+    <div class="shead"><span class="sidx">06</span><h2 class="sec">Every receipt is <em>signed</em></h2></div>
+    <p class="lead">DEFONEOS artifacts are content-addressed and Ed25519-signable. The absorption suite is sealed; the sovereign signature is issued only by a logged 33-agent BFT council vote.</p>
+    <div class="seal">
+      <div style="font-weight:600;margin-bottom:4px;font-size:1.05rem">DEFONEOS hive — absorption suite integrity</div>
+      <p style="color:var(--muted);font-size:.94rem">Content-addressed root hash over the canonical suite (docs 00–04 + alignment v2.0):</p>
+      <code class="hash">SHA-256 · a69df231adfdb5c528815c5a1d63a6a8688b656f2d3b7e160525020d35f504a2</code>
+      <div class="pills">
+        <span class="pill">Ed25519 + PQC ready</span>
+        <span class="pill">BFT quorum 23/33</span>
+        <span class="pill">SIGIL audit chain</span>
+        <span class="pill">EU AI Act Art. 50</span>
+      </div>
+      <p style="color:var(--muted);font-size:.82rem;margin-top:16px;opacity:.8">Sovereign DEFONEOS-SEAL pending council ratification. No credential is asserted before the vote is logged.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="shead"><span class="sidx">07</span><h2 class="sec">Start with a <em>pilot</em></h2></div>
+    <p class="lead">Defence procurement moves deliberately. Two pilot tiers take a named prime from briefing to a working sovereign twin.</p>
+    <div class="price">
+      <div class="pcard">
+        <div class="k acc-peri" style="font-weight:600;letter-spacing:1.5px">Evaluation</div>
+        <div class="amt">£5K</div><div class="per">fixed-scope pilot</div>
+        <ul><li>Sovereign twin of one site</li><li>3 defence MCPs wired</li><li>Signed audit trail</li><li>2-week turnaround</li></ul>
+      </div>
+      <div class="pcard feat">
+        <div class="k acc-gold" style="font-weight:600;letter-spacing:1.5px">Programme pilot</div>
+        <div class="amt">£25K</div><div class="per">full sovereign deployment</div>
+        <ul><li>Air-gap-capable substrate</li><li>Full 15-MCP suite</li><li>33-agent BFT council</li><li>DEFONEOS-SEAL credential path</li><li>UE5 tier-2 scoping</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="k" style="color:var(--muted);font-weight:600;letter-spacing:1.5px">Enterprise</div>
+        <div class="amt">Bespoke</div><div class="per">multi-site / prime framework</div>
+        <ul><li>Multi-region sovereignty</li><li>Custom MCP development</li><li>On-site MEOK Labs hardware</li><li>Framework agreement</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="wrap">
+    <div class="kicker" style="display:block;margin-bottom:14px">CSOAI Ltd · UK 16939677</div>
+    <h2>Begin the emergence.</h2>
+    <p class="dragline">The dragon was the koi. It swam up the waterfall. It became sovereign. It signs every receipt.</p>
+    <div class="cta-row" style="justify-content:center;margin-top:30px">
+      <a class="btn" href="mailto:nicholas@meok.ai?subject=DEFONEOS%20pilot%20enquiry">Request a pilot</a>
+      <a class="btn ghost" href="#seal">Verify a seal</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px">
+      <a href="verify.html"><img src="/api/badge?label=DEFONEOS&message=SEAL%20%C2%B7%20verified&color=c9a84c" alt="Verified by DEFONEOS-SEAL" style="height:20px"></a>
+      <img src="/api/badge?label=MCP&message=compatible&color=2a9df4" alt="MCP compatible" style="height:20px">
+      <img src="/api/badge?label=A2A%20%C2%B7%20x402&message=enabled&color=8b8ce0" alt="A2A x402 enabled" style="height:20px">
+      <img src="/api/badge?label=Ed25519&message=signed&color=00e07a" alt="Ed25519 signed" style="height:20px">
+      <img src="/api/badge?label=sovereign&message=by%20design&color=06b6d4" alt="sovereign by design" style="height:20px">
+      <a href="badges.html"><img src="/api/badge?label=authority&message=badge%20kit&color=d9b676" alt="authority badge kit" style="height:20px"></a>
+    </div>
+    Public. Auditable. Sovereign. · <a href="mailto:nicholas@meok.ai">nicholas@meok.ai</a><br>
+    <span class="fine">Engine codenames internal. Compartments never cross-linked. Compliance framing is "designed to align" — not a certification claim. AUKUS-compatible, not an AUKUS partnership claim.</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Cesium.js"></script>
+<script>
+(function(){
+  try{
+    if(!window.Cesium){ throw new Error('no cesium'); }
+    Cesium.Ion.defaultAccessToken = undefined;
+    var viewer = new Cesium.Viewer('globe', {
+      baseLayer:false, baseLayerPicker:false, geocoder:false, homeButton:false,
+      sceneModePicker:false, navigationHelpButton:false, animation:false, timeline:false,
+      fullscreenButton:false, infoBox:false, selectionIndicator:false,
+      creditContainer:document.createElement('div')
+    });
+    Cesium.TileMapServiceImageryProvider.fromUrl(
+      Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
+    ).then(function(p){ viewer.imageryLayers.addImageryProvider(p); }).catch(function(){});
+    var s = viewer.scene;
+    s.backgroundColor = Cesium.Color.fromCssColorString('#0a0e27');
+    s.globe.baseColor = Cesium.Color.fromCssColorString('#0a1a3a');
+    s.globe.enableLighting = true;
+    s.skyAtmosphere.brightnessShift = 0.4;
+    s.skyAtmosphere.hueShift = -0.04;
+    var nodes=[{lon:-1.55,lat:53.80},{lon:-0.13,lat:51.51},{lon:-3.20,lat:55.95},{lon:-2.59,lat:51.45},{lon:-5.93,lat:54.60}];
+    var hub=nodes[1];
+    nodes.forEach(function(n){
+      viewer.entities.add({ position:Cesium.Cartesian3.fromDegrees(n.lon,n.lat),
+        point:{ pixelSize:8, color:Cesium.Color.fromCssColorString('#d9b676'), outlineColor:Cesium.Color.fromCssColorString('#c9b8e8'), outlineWidth:2 } });
+      if(n!==hub){ viewer.entities.add({ polyline:{ positions:Cesium.Cartesian3.fromDegreesArray([n.lon,n.lat,hub.lon,hub.lat]),
+        width:1.4, material:new Cesium.PolylineGlowMaterialProperty({ glowPower:0.2, color:Cesium.Color.fromCssColorString('#c9b8e8').withAlpha(0.75) }) } }); }
+    });
+    viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(2.0,46.0,13000000) });
+    var spin=viewer.clock.onTick.addEventListener(function(){ s.camera.rotateRight(0.0004); });
+    viewer.canvas.addEventListener('pointerdown', function(){ viewer.clock.onTick.removeEventListener(spin); });
+  }catch(e){
+    var g=document.getElementById('globe'); if(g){ g.style.background='radial-gradient(circle at 60% 40%, #1a2c5e, #0a0e27 60%)'; }
+  }
+})();
+</script>
+</body>
+</html>

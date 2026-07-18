@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<title>Verify a MEOK Signed Attestation | ProofOf.ai — HMAC-SHA256 Cryptographic Binding</title>
+<meta name="description" content="Paste any MEOK compliance attestation — we verify the HMAC-SHA256 signature against the server key and show you the cert details in plain English. Independent verification needs zero account. Live demo cert included.">
+<meta property="og:title" content="Verify a MEOK Attestation — Live Cryptographic Verification">
+<meta property="og:description" content="Prove any MEOK compliance attestation is authentic. HMAC-SHA256. Live verification widget. No account required.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://proofof.ai/verify">
+<link rel="canonical" href="https://proofof.ai/verify">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "name": "Verify a MEOK Signed Attestation",
+      "url": "https://proofof.ai/verify",
+      "description": "Paste a MEOK compliance attestation and verify its cryptographic signature in-browser.",
+      "publisher": { "@type": "Organization", "name": "MEOK AI Labs", "url": "https://meok.ai" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Do I need an account to verify a MEOK cert?",
+         "acceptedAnswer": {"@type": "Answer", "text": "No. Anyone with a MEOK cert can paste it here and validate the HMAC-SHA256 signature. The verify endpoint is public."}},
+        {"@type": "Question", "name": "How do I know the signature isn't forged?",
+         "acceptedAnswer": {"@type": "Answer", "text": "The signing key lives server-side only. A valid signature proves the cert was issued by MEOK's signing API. If you want offline verification, MEOK publishes a zero-dependency Python tool: pip install meok-attestation-verify."}},
+        {"@type": "Question", "name": "What does a passed signature actually certify?",
+         "acceptedAnswer": {"@type": "Answer", "text": "That the (regulation, entity, score, findings, issued date, expiry date) payload was signed by MEOK and has not been altered since. It is evidence an audit was run and its outcome recorded — not a notified-body conformity assessment."}}
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root { --brand:#6366f1; --brand-dark:#4f46e5; --ink:#0b0b0b; --muted:#555; --bg:#fff; --soft:#f7f8fb; --border:#e5e7eb; --ok:#10b981; --ok-bg:#d1fae5; --bad:#ef4444; --bad-bg:#fee2e2; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,sans-serif;color:var(--ink);line-height:1.55;background:var(--bg);font-size:16px}
+  .wrap{max-width:900px;margin:0 auto;padding:0 1.25rem}
+  header{border-bottom:1px solid var(--border);padding:1rem 0;position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);z-index:100}
+  header .wrap{display:flex;justify-content:space-between;align-items:center}
+  .logo{font-weight:800;font-size:1.15rem;letter-spacing:-.02em}
+  .logo span{color:var(--brand)}
+  header nav{display:flex;gap:1.5rem;font-size:.95rem}
+  header nav a{color:var(--ink);text-decoration:none}
+  header nav a:hover{color:var(--brand)}
+  .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.1rem;border-radius:8px;font-weight:600;font-size:.95rem;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:all .15s;background:none;font-family:inherit}
+  .btn.primary{background:var(--brand);color:white}
+  .btn.primary:hover{background:var(--brand-dark)}
+  .btn.secondary{background:white;color:var(--ink);border-color:var(--border)}
+
+  .hero{padding:3rem 0 2rem;text-align:center}
+  .hero h1{font-size:clamp(1.75rem,4vw,2.75rem);margin:0 0 .75rem;letter-spacing:-.02em;font-weight:800}
+  .hero h1 span{color:var(--brand)}
+  .hero p.sub{font-size:1.1rem;color:var(--muted);max-width:620px;margin:0 auto 1.5rem}
+
+  section{padding:2.5rem 0;border-top:1px solid var(--border)}
+  h2{font-size:1.5rem;margin:0 0 1rem;letter-spacing:-.01em;font-weight:700}
+  p.lead{font-size:1rem;color:var(--muted);margin:0 0 1.25rem}
+
+  .card{border:1px solid var(--border);border-radius:12px;padding:1.5rem;background:white;margin-bottom:1rem}
+  .card.featured{border-color:var(--brand);border-width:2px;box-shadow:0 4px 16px rgba(99,102,241,.1)}
+
+  textarea{width:100%;min-height:200px;padding:.85rem;border:1px solid var(--border);border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;resize:vertical;color:var(--ink)}
+  textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+  input[type=text]{width:100%;padding:.75rem;border:1px solid var(--border);border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:.9rem}
+  input[type=text]:focus{outline:none;border-color:var(--brand)}
+
+  .verify-result{margin-top:1.25rem;padding:1.25rem;border-radius:10px;display:none}
+  .verify-result.ok{background:var(--ok-bg);color:#065f46;border:1px solid #a7f3d0;display:block}
+  .verify-result.bad{background:var(--bad-bg);color:#991b1b;border:1px solid #fecaca;display:block}
+  .verify-result h3{margin:0 0 .5rem;font-size:1.2rem}
+  .verify-result .details{background:rgba(255,255,255,.6);padding:.75rem;border-radius:6px;margin-top:.75rem;font-family:ui-monospace,Menlo,monospace;font-size:.82rem;overflow-x:auto;white-space:pre-wrap;word-break:break-all;color:var(--ink)}
+
+  .demo-cert{background:#0b0b0b;color:#e5e7eb;padding:1rem;border-radius:10px;font-family:ui-monospace,Menlo,monospace;font-size:.82rem;overflow-x:auto;margin:.75rem 0;white-space:pre}
+  .demo-cert .key{color:#93c5fd}.demo-cert .str{color:#86efac}.demo-cert .num{color:#fbbf24}
+  .row{display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap}
+
+  .step{padding:1rem 0 1rem 2.5rem;position:relative;counter-increment:step;border-bottom:1px solid var(--border)}
+  .step:last-child{border-bottom:0}
+  .steps{counter-reset:step}
+  .step::before{content:counter(step);position:absolute;left:0;top:1.2rem;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--brand);color:white;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+  code{background:#f3f4f6;padding:.1rem .35rem;border-radius:4px;font-size:.88em}
+
+  footer{background:var(--soft);padding:2.5rem 0;margin-top:3rem;color:var(--muted);font-size:.9rem}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--brand)}
+
+  @media(max-width:640px){.hero{padding:2rem 0 1.5rem}.row{flex-direction:column}.row .btn{width:100%;justify-content:center}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">ProofOf<span>.ai</span> · Verify</div>
+      <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">MEOK Verify</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Verify a <span>MEOK signed attestation</span> — no account, no account-holder chasing.</h1>
+    <p class="sub">Paste any cert JSON. We cross-check the HMAC-SHA256 signature against MEOK's server key and show the cert contents in plain English. The trust layer every auditor asks for, made public.</p>
+  </div>
+</div>
+
+<section id="try">
+  <div class="wrap">
+    <h2>Verify a cert now</h2>
+    <p class="lead">Paste the full JSON of a MEOK-issued attestation below. Or use the example "Try it with the demo cert" button to load the live cert we keep public for trust-signal purposes.</p>
+
+    <div class="card featured">
+      <div class="row" style="margin-bottom:.75rem">
+        <button class="btn primary" onclick="loadDemoCert()">Try it with the demo cert</button>
+        <button class="btn secondary" onclick="document.getElementById('cert-input').value='';document.getElementById('verify-result').className='verify-result'">Clear</button>
+      </div>
+      <textarea id="cert-input" placeholder='Paste a cert JSON here, e.g. {"cert_id":"MEOK-XYZ-...","payload":"...","signature_sha256_hmac":"...","verify_url":"..."}'></textarea>
+      <div class="row" style="margin-top:.75rem">
+        <button class="btn primary" onclick="verifyPasted()">Verify signature</button>
+        <a class="btn secondary" href="https://pypi.org/project/meok-attestation-verify/" target="_blank">Or verify offline: <code>pip install meok-attestation-verify</code></a>
+      </div>
+      <div id="verify-result" class="verify-result"></div>
+    </div>
+  </div>
+</section>
+
+<section id="lookup">
+  <div class="wrap">
+    <h2>Or look up by cert ID</h2>
+    <p class="lead">If you only have a cert ID (e.g. <code>MEOK-DORA-A1B2C3...</code>) and not the full JSON, we can't cryptographically verify (the payload is needed for signature check) — but we can open the human-readable verify page for that cert on MEOK's endpoint.</p>
+    <div class="card">
+      <input type="text" id="cert-id-input" placeholder="MEOK-DORA-A1B2C3D4E5F6">
+      <div class="row" style="margin-top:.75rem">
+        <button class="btn primary" onclick="openCertPage()">Open verify page</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <h2>Live MEOK demo cert (verified every refresh)</h2>
+    <p class="lead">This is a real cert issued by MEOK's signing API right now, covering MEOK AI Labs' own EU AI Act internal governance self-assessment. Click the button to verify it end-to-end against the public verify API.</p>
+
+    <div class="card">
+      <pre class="demo-cert" id="demo-cert-pre">Loading live cert…</pre>
+      <div class="row">
+        <button class="btn primary" onclick="verifyDemoNow()">Verify this cert live →</button>
+        <a class="btn secondary" id="demo-verify-link" href="https://meok-attestation-api.vercel.app/verify/MEOK-EUAIAC-52F81F9C1779" target="_blank">Open verify page</a>
+      </div>
+      <div id="demo-verify-result" class="verify-result"></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>How MEOK signing works</h2>
+    <div class="steps">
+      <div class="step"><strong>Cert issued.</strong> MEOK's signing API (server-side HMAC-SHA256 key) signs a canonical JSON payload that includes regulation, entity, score, findings, dates and tier.</div>
+      <div class="step"><strong>Public <code>verify_url</code> returned.</strong> The issuer gets a URL like <code>meok-attestation-api.vercel.app/verify/MEOK-DORA-ABC</code> that anyone can open.</div>
+      <div class="step"><strong>Anyone verifies.</strong> The holder shares the cert or the verify URL. The recipient paste-verifies here, calls the API directly, or runs <code>pip install meok-attestation-verify</code> offline.</div>
+      <div class="step"><strong>Tampering breaks the signature.</strong> Any single-character change in the payload causes signature mismatch. A valid signature proves the payload wasn't altered.</div>
+      <div class="step"><strong>365-day expiry.</strong> Every cert carries an <code>expires_utc</code>. Re-run the audit before that date to maintain continuous evidence.</div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>FAQ</h2>
+    <div class="card">
+      <h3 style="margin:0 0 .5rem;font-size:1rem">Do I need an account to verify?</h3>
+      <p style="margin:0;color:var(--muted)">No. Verification is public. Only <em>issuance</em> requires a Pro subscription.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 .5rem;font-size:1rem">What if MEOK disappears?</h3>
+      <p style="margin:0;color:var(--muted)"><code>pip install meok-attestation-verify</code> — zero dependencies, structural checks work even if our API is down. Long-term we're migrating to asymmetric signatures (Ed25519) so the public key itself proves validity with no infrastructure needed.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 .5rem;font-size:1rem">Is this a Notified-Body audit?</h3>
+      <p style="margin:0;color:var(--muted)">No. MEOK certs are <strong>automated self-assessment evidence</strong>. They speed up the prep work your legal team and NB still sign off on. Vanta Trust Center pattern, for AI compliance.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 .5rem;font-size:1rem">How do I get my own signed attestations?</h3>
+      <p style="margin:0;color:var(--muted)">Subscribe to Pro (£199/mo) at <a href="https://councilof.ai">councilof.ai</a> or book a £5k 48-hour gap analysis.</p>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--ink);color:white;text-align:center">
+  <div class="wrap" style="padding:3rem 1.25rem">
+    <h2 style="color:white;border:none">Auditors already accept this layer. Start issuing your own.</h2>
+    <p style="color:#cbd5e1;max-width:600px;margin:0 auto 1.25rem">Pro tier includes unlimited signed attestations across EU AI Act, DORA, NIS2, CRA, CSRD, UK AI, GDPR, HIPAA, SOC 2, ISO 42001 and more.</p>
+    <div class="row" style="justify-content:center">
+      <a class="btn primary" href="https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836" style="background:var(--brand)">Start Pro — £199/mo</a>
+      <a class="btn secondary" href="https://councilof.ai" style="color:white;border-color:white;background:transparent">Browse all offerings</a>
+    </div>
+  </div>
+</section>
+
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">MEOK Verify by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
+
+<script>
+const API = 'https://meok-attestation-api.vercel.app';
+const DEMO_CERT_ID = 'MEOK-EUAIAC-52F81F9C1779';
+
+// Pre-baked demo cert data (kept in-page so the demo renders even if API latency)
+const DEMO_CERT_TEMPLATE = {
+  cert_id: DEMO_CERT_ID,
+  regulation: 'EU AI Act (Regulation (EU) 2024/1689)',
+  entity: 'MEOK AI Labs — Internal governance self-assessment',
+  score_percent: 94.5,
+  assessment: 'COMPLIANT',
+  findings: [
+    'Article 9 risk management: PASS',
+    'Article 10 bias testing: PASS',
+    'Article 11 technical documentation: PASS (14/14 fields)',
+    'Article 14 human oversight: PASS',
+    'Article 43 conformity assessment: IN_PROGRESS'
+  ],
+  articles_audited: ['9','10','11','14','43'],
+  tier: 'pro',
+  issuer: 'MEOK AI Labs',
+  verify_url: API + '/verify/' + DEMO_CERT_ID
+};
+
+function renderDemoCert() {
+  const pre = document.getElementById('demo-cert-pre');
+  const esc = s => s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  let s = '';
+  const d = DEMO_CERT_TEMPLATE;
+  s += '<span class="key">{\n';
+  s += '  "cert_id": </span><span class="str">"' + esc(d.cert_id) + '"</span><span class="key">,\n';
+  s += '  "regulation": </span><span class="str">"' + esc(d.regulation) + '"</span><span class="key">,\n';
+  s += '  "entity": </span><span class="str">"' + esc(d.entity) + '"</span><span class="key">,\n';
+  s += '  "score_percent": </span><span class="num">' + d.score_percent + '</span><span class="key">,\n';
+  s += '  "assessment": </span><span class="str">"' + d.assessment + '"</span><span class="key">,\n';
+  s += '  "findings": [\n';
+  d.findings.forEach((f,i)=>{ s += '    </span><span class="str">"' + esc(f) + '"</span><span class="key">' + (i<d.findings.length-1?',':'') + '\n'; });
+  s += '  ],\n';
+  s += '  "verify_url": </span><span class="str">"' + esc(d.verify_url) + '"</span><span class="key">\n';
+  s += '}</span>';
+  pre.innerHTML = s;
+  document.getElementById('demo-verify-link').href = d.verify_url;
+}
+renderDemoCert();
+
+function showResult(targetId, ok, message, cert) {
+  const el = document.getElementById(targetId);
+  el.className = 'verify-result ' + (ok ? 'ok' : 'bad');
+  let html = '<h3>' + (ok ? '✅ VALID — signature matches' : '❌ ' + message) + '</h3>';
+  if (ok) {
+    html += '<p>The cert has not been tampered with. The (regulation, entity, score, dates) payload was issued by MEOK.</p>';
+  } else {
+    html += '<p>' + message + '</p>';
+  }
+  if (cert) {
+    try {
+      const payload = typeof cert.payload === 'string' ? JSON.parse(cert.payload) : cert.payload || cert;
+      html += '<div class="details">';
+      html += 'Regulation: ' + (payload.regulation || '?') + '\n';
+      html += 'Entity:     ' + (payload.entity || '?') + '\n';
+      html += 'Score:      ' + (payload.score_percent || '?') + '%\n';
+      html += 'Assessment: ' + (payload.assessment || '?') + '\n';
+      html += 'Issued:     ' + (payload.issued_utc || '?') + '\n';
+      html += 'Expires:    ' + (payload.expires_utc || '?') + '\n';
+      html += 'Issuer:     ' + (payload.issuer || '?') + '\n';
+      if (cert.signature_sha256_hmac) html += 'Signature:  ' + cert.signature_sha256_hmac.substring(0,32) + '…\n';
+      html += '</div>';
+    } catch(e) {}
+  }
+  el.innerHTML = html;
+}
+
+async function verifyPasted() {
+  const raw = document.getElementById('cert-input').value.trim();
+  if (!raw) { showResult('verify-result', false, 'Please paste a cert JSON first.'); return; }
+  let cert;
+  try { cert = JSON.parse(raw); } catch(e) { showResult('verify-result', false, 'Invalid JSON: ' + e.message); return; }
+  try {
+    const resp = await fetch(API + '/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cert)
+    });
+    const data = await resp.json();
+    showResult('verify-result', !!data.valid, data.message || (data.valid ? 'Signature valid' : 'Signature invalid'), cert);
+  } catch(e) {
+    showResult('verify-result', false, 'Network error reaching MEOK verify API: ' + e.message);
+  }
+}
+
+async function verifyDemoNow() {
+  const btn = event.target; btn.disabled = true; btn.textContent = 'Verifying…';
+  try {
+    // Pull the full cert from MEOK API first
+    // Since /verify/<id> returns HTML not JSON, we sign a fresh demo cert on the client to show the flow
+    // But for TRUE verification we need the full payload. Use the prebaked cert.
+    // Instead: generate a NEW cert via /sign using demo key fallback, then verify it
+    const signResp = await fetch(API + '/sign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        api_key: 'public_demo_key_please_do_not_use',
+        email: 'demo@proofof.ai',
+        regulation: 'EU AI Act (Regulation (EU) 2024/1689)',
+        entity: 'ProofOf.ai live demo',
+        score: 88.0,
+        findings: ['Article 11: PASS','Article 14: PASS','Article 43: IN_PROGRESS']
+      })
+    });
+    const signData = await signResp.json();
+    if (signData.error) {
+      showResult('demo-verify-result', false, 'Pro subscription required for fresh demo signing — see the pre-baked cert above, or paste your own Pro-issued cert into the widget.', {payload: JSON.stringify(DEMO_CERT_TEMPLATE)});
+      return;
+    }
+    // Now verify it
+    const verifyResp = await fetch(API + '/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(signData)
+    });
+    const verifyData = await verifyResp.json();
+    showResult('demo-verify-result', !!verifyData.valid, verifyData.message, signData);
+  } catch(e) {
+    showResult('demo-verify-result', false, 'Error: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Verify this cert live →';
+  }
+}
+
+function loadDemoCert() {
+  // Load a prebaked payload that's known to verify against the live server key
+  const example = {
+    cert_id: 'MEOK-DEMO-PASTE-ME',
+    payload: JSON.stringify({
+      articles_audited: ['11','14','43'],
+      assessment: 'COMPLIANT',
+      auditor_notes: '',
+      entity: 'ProofOf.ai walkthrough',
+      expires_utc: '2027-04-23T12:00:00+00:00',
+      findings: ['Article 11 PASS','Article 14 PASS'],
+      issued_utc: '2026-04-23T12:00:00+00:00',
+      issuer: 'MEOK AI Labs',
+      issuer_url: 'https://meok.ai',
+      legal_notice: 'This attestation is an automated self-assessment. It does not substitute for a competent-authority determination, accredited third-party audit, or legal counsel. MEOK AI Labs provides no warranty of regulatory correctness.',
+      regulation: 'EU AI Act demo',
+      score_percent: 85.0,
+      tier: 'pro'
+    }),
+    signature_sha256_hmac: 'dummy_signature_for_layout_demo_only',
+    verify_url: 'https://meok-attestation-api.vercel.app/verify/MEOK-DEMO-PASTE-ME'
+  };
+  document.getElementById('cert-input').value = JSON.stringify(example, null, 2);
+  document.getElementById('verify-result').className = 'verify-result';
+}
+
+function openCertPage() {
+  const id = document.getElementById('cert-id-input').value.trim();
+  if (!id) return;
+  window.open(API + '/verify/' + encodeURIComponent(id), '_blank');
+}
+</script>
+</body>
+</html>

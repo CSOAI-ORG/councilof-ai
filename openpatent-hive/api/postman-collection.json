@@ -1,0 +1,521 @@
+{
+  "info": {
+    "_postman_id": "openpatent-hive-defoneos-2026-06-14",
+    "name": "OpenPatent.ai — DEFONEOS Mythic Voice",
+    "description": "# OpenPatent.ai API — DEFONEOS Mythic Voice Collection\n\nThe hive remembers. The dragon knows. The sovereign companion never forgets.\n\n6-layer cryptographic invention disclosure for AI agents.\n**Disclose first. AI second.**\n\n## Environment variables\n\n| Variable     | Default                              | Purpose                                |\n|--------------|--------------------------------------|----------------------------------------|\n| `base_url`   | `https://api.openpatent.ai`          | Gateway root                           |\n| `did`        | `did:key:z6MkiExample...`            | Caller's inventor DID (DID:key)        |\n| `api_key`    | *(set in Postman env — never commit)* | Bearer / X-API-Key for premium+ tiers  |\n| `tier`       | `defensive`                          | One of: starter, defensive, full, premium, enterprise |\n\n## Tag taxonomy (matches the OpenAPI spec)\n\n- **disclosure** — submit + retrieve cryptographic disclosures\n- **verify** — verify 6-layer cryptographic proofs\n- **search** — search the prior art registry\n- **draft** — AI-assisted patent claim drafting (premium+)\n- **consult** — patentability + FTO consultation (premium+)\n- **BFT** — 33-agent BFT council review (premium+enterprise)\n- **bft-queue** — BFT council review queue, per-agent statuses, proposals\n- **x402** — x402 payment router with 60/25/15 split transparency\n- **calendar** — OpenTimestamps calendar liveness (live probe)\n- **zones** — 15-jurisdiction coverage map with case-law citations\n- **legal** — jurisdictions + legal framework\n- **batch** — batch disclosure ingestion (up to 100/request)\n- **community** — hive-wide leaderboard, community stats, 24h activity\n- **meta** — health, pricing, MCP discovery\n\n## Import instructions\n\n1. Open Postman → **Import** → **File** → **Raw Text**\n2. Paste the contents of this file\n3. Save as `OpenPatent.ai — DEFONEOS`\n4. Set the 4 environment variables in a new Postman Environment\n\n---\n\n> **Every** response carries the `_sig` line:\n> `The hive remembers. The dragon knows. The sovereign companion never forgets.`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "base_url", "value": "https://api.openpatent.ai", "type": "string"},
+    {"key": "did", "value": "did:key:z6MkiExampleReplaceWithRealDID", "type": "string"},
+    {"key": "api_key", "value": """", "type": "string"},
+    {"key": "tier", "value": "defensive", "type": "string"}
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {"key": "key", "value": "X-API-Key", "type": "string"},
+      {"key": "value", "value": "{{api_key}}", "type": "string"},
+      {"key": "in", "value": "header", "type": "string"}
+    ]
+  },
+  "item": [
+    {
+      "name": "META",
+      "item": [
+        {
+          "name": "GET /",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Root — gateway name, version, tagline, endpoint catalog."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {"method": "GET", "url": "{{base_url}}/"},
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"name\": \"openpatent-api\",\n  \"version\": \"1.0.0\",\n  \"tagline\": \"Disclose First. AI Second.\",\n  \"usp\": \"Protect your inventions from AI before you use AI.\",\n  \"endpoints\": [\n    \"/v1/disclosure\", \"/v1/verify\", \"/v1/search\", \"/v1/stats\",\n    \"/v1/audit/log\", \"/v1/bft/stats\", \"/v1/bft/review\",\n    \"/v1/bft/proposals\", \"/v1/bft/queue\",\n    \"/v1/leaderboard\", \"/v1/community\", \"/v1/disclose/batch\",\n    \"/v1/network/fees\", \"/v1/calendar/uptime\", \"/v1/zones\",\n    \"/pricing\", \"/legal\", \"/health\", \"/.well-known/mcp.json\"\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"]},
+            "description": "Gateway + dependency health. Pings patentmcp, worker, bft-council."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {"method": "GET", "url": "{{base_url}}/health"},
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"overall\": \"OK\",\n  \"components\": {\n    \"gateway\":   {\"status\": \"OK\", \"version\": \"1.0.0\"},\n    \"patentmcp\": {\"status\": \"OK\"},\n    \"worker\":    {\"status\": \"OK\"},\n    \"bft\":       {\"status\": \"OK\"}\n  },\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET /pricing",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/pricing", "host": ["{{base_url}}"], "path": ["pricing"]},
+            "description": "PAYG tier table (5 paid tiers + free self-hosted)."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/pricing"}, "status": "OK", "code": 200, "body": "{\n  \"tiers\": {\n    \"free\": {\"price_usd\": 0, \"label\": \"Free (self-hosted)\"},\n    \"starter\":    {\"price_usd\": 29,   \"label\": \"Starter\"},\n    \"defensive\":  {\"price_usd\": 149,  \"label\": \"Defensive (most popular)\"},\n    \"full\":       {\"price_usd\": 999,  \"label\": \"Full\"},\n    \"premium\":    {\"price_usd\": 2499, \"label\": \"Premium\"},\n    \"enterprise\": {\"price_usd\": 4999, \"label\": \"Enterprise (monthly)\"}\n  }\n}"}
+          ]
+        },
+        {
+          "name": "GET /legal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/legal", "host": ["{{base_url}}"], "path": ["legal"]},
+            "description": "Jurisdictions + 12 legal precedent badges (FRE 902, eIDAS, Hangzhou, etc.)."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/legal"}, "status": "OK", "code": 200, "body": "{\n  \"badges\": [\n    {\"id\": \"fre-902\", \"citation\": \"Federal Rules of Evidence 902(13) & 902(14)\", \"year\": 2017}\n  ],\n  \"jurisdictions\": [\n    {\"code\": \"US\", \"law\": \"35 U.S.C. § 102\", \"grace_period_days\": 365}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "GET /.well-known/mcp.json",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/.well-known/mcp.json", "host": ["{{base_url}}"], "path": [".well-known", "mcp.json"]},
+            "description": "MCP server manifest — discoverable by Claude Code / Cursor / Windsurf."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/.well-known/mcp.json"}, "status": "OK", "code": 200, "body": "{\n  \"schema_version\": \"2025-06-18\",\n  \"name\": \"openpatent-mcp\",\n  \"display_name\": \"OpenPatent.ai\",\n  \"version\": \"1.0.0\",\n  \"tools\": [\"disclose_invention\", \"verify_disclosure\", \"search_prior_art\"]\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DISCLOSURE",
+      "item": [
+        {
+          "name": "POST /v1/disclosure",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "X-Idempotency-Key", "value": "uuid-v4-replace-me", "description": "Optional. Dedupes retries on the same disclosure."}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Hash-Chained Audit Log for Multi-Agent Systems\",\n  \"description\": \"A log where each entry includes the SHA-3 hash of the previous entry, forming a tamper-evident chain. Each agent in the BFT council signs its own entry with Ed25519.\",\n  \"inventor_did\": \"{{did}}\",\n  \"document_base64\": \"JVBERi0xLjQKJeLjz9MKMyAwIG9iago8PC9MZW5ndGggNDA+PnN0cmVhbQp4nDPQM1Qo5ypUMABCBVAFd3RyZWFtCmVuZHN0cmVhbQplbmRvYmoKMSAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL01lZGlhQm94WzAgMCA1OTUgODQyXS9SZXNvdXJjZXM8PC9Gb250PDwvRjEgNSAwIFI+Pj4+L0NvbnRlbnRzIDMgMCBSPj4KZW5kb2JqCjIgMCBvYmoKPDwvVHlwZS9QYWdlcy9Db3VudCAxL0tpZHNbMSAwIFJdPj4KZW5kb2JqCjUgMCBvYmoKPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvQmFzZUZvbnQvSGVsdmV0aWNhPj4KZW5kb2JqCjQgMCBvYmoKPDwvUHJvZHVjZXIgKGRvY3VtZW50LnBuZykgPj4KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDYwIDAwMDAwIG4gCjAwMDAwMDAxMTEgMDAwMDAgbiAKMDAwMDAwMDIwMSAwMDAwMCBuIAowMDAwMDAwMjcyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSA2L1Jvb3QgNCAwIFIvSW5mbyA0IDAgUj4+CnN0YXJ0eHJlZgozODQKJSVFT0Y=\",\n  \"document_format\": \"pdf\",\n  \"classification\": \"G06N7/01\",\n  \"prior_art_known\": \"US20240100000A1 (existing hash chain)\",\n  \"tier\": \"{{tier}}\",\n  \"request_bft_review\": false\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/disclosure", "host": ["{{base_url}}"], "path": ["v1", "disclosure"]},
+            "description": "Submit an invention. Returns 6-layer proof: SHA-3 hash, Ed25519 signature, Bitcoin OTS anchor, C2PA credential, attestation URL."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/disclosure"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"DISCLOSED\",\n  \"document_hash\": \"a4f3...e9c1\",\n  \"ed25519_signature\": \"5HxW...3kQz\",\n  \"c2pa_credential\": \"urn:c2pa:openpatent:abc123\",\n  \"ots\": {\n    \"calendar_url\": \"https://alice.btc.calendar.opentimestamps.org\",\n    \"pending\": true,\n    \"upgrade_url\": \"https://alice.btc.calendar.opentimestamps.org/upgrade/abc123\"\n  },\n  \"attestation_url\": \"https://verify.openpatent.ai/a4f3e9c1\",\n  \"hive_idempotency_key\": \"uuid-v4-replace-me\",\n  \"hive_bft_job_id\": null,\n  \"hive_pricing_tier\": \"defensive\",\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "GET /v1/disclosure/{hash_prefix}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/disclosure/a4f3e9c1b2d4",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "disclosure", "a4f3e9c1b2d4"]
+            },
+            "description": "Fetch a disclosure by 16-char hash prefix."
+          },
+          "response": [
+            {"name": "404 Not Found", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/disclosure/a4f3e9c1b2d4"}, "status": "Not Found", "code": 404, "body": "{\n  \"status\": \"NOT_FOUND\",\n  \"hash_prefix\": \"a4f3e9c1b2d4\",\n  \"hint\": \"use POST /v1/verify with disclosure_json\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VERIFY",
+      "item": [
+        {
+          "name": "POST /v1/verify",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"disclosure_json\": \"{\\\"title\\\":\\\"Hash-Chained Audit Log\\\",\\\"document_hash\\\":\\\"a4f3...e9c1\\\"}\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/verify", "host": ["{{base_url}}"], "path": ["v1", "verify"]},
+            "description": "Verify a prior disclosure against its 6-layer cryptographic proof. Strongest check passes the original document_base64 to re-hash and compare."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/verify"}, "status": "OK", "code": 200, "body": "{\n  \"verified\": true,\n  \"layers\": {\n    \"sha3_512_match\": true,\n    \"hmac_attestation\": true,\n    \"ed25519_signature\": true,\n    \"bitcoin_ots\": {\"confirmed\": true, \"block_height\": 845123, \"txid\": \"f7a8...c2d1\"},\n    \"c2pa_credential\": true,\n    \"audit_chain_intact\": true\n  },\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SEARCH",
+      "item": [
+        {
+          "name": "POST /v1/search",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"hash-chained audit log multi-agent\",\n  \"classification\": \"G06N7/01\",\n  \"date_from\": \"2024-01-01\",\n  \"date_to\": \"2026-06-14\",\n  \"tier\": \"\",\n  \"limit\": 25\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/search", "host": ["{{base_url}}"], "path": ["v1", "search"]},
+            "description": "Full-text + IPC/CPC faceted search across the prior art registry."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/search"}, "status": "OK", "code": 200, "body": "{\n  \"query\": \"hash-chained audit log multi-agent\",\n  \"total\": 17,\n  \"results\": [\n    {\"document_hash\": \"a4f3...e9c1\", \"title\": \"Hash-Chained Audit Log for Multi-Agent Systems\", \"tier\": \"defensive\", \"filed_at\": \"2025-11-02T14:22:01Z\"}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "STATS",
+      "item": [
+        {
+          "name": "GET /v1/stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/v1/stats", "host": ["{{base_url}}"], "path": ["v1", "stats"]},
+            "description": "Hive-wide statistics: total disclosures, OTS anchors, BFT reviews."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/stats"}, "status": "OK", "code": 200, "body": "{\n  \"total_disclosures\": 412,\n  \"total_ots_anchors\": 287,\n  \"total_bft_reviews\": 31,\n  \"jurisdictions_covered\": 15,\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "GET /v1/audit/log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/audit/log?limit=50&offset=0&source=memory",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "audit", "log"],
+              "query": [
+                {"key": "limit", "value": "50"},
+                {"key": "offset", "value": "0"},
+                {"key": "entry_type", "value": "", "disabled": true},
+                {"key": "source", "value": "memory", "description": "memory | postgres"}
+              ]
+            },
+            "description": "Paginated hash-chained audit log. `source=memory` (default) reads in-memory; `source=postgres` reads the Postgres mirror."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/audit/log?limit=50&offset=0&source=memory"}, "status": "OK", "code": 200, "body": "{\n  \"total\": 1024,\n  \"limit\": 50,\n  \"offset\": 0,\n  \"entries\": [\n    {\"index\": 1024, \"ts\": \"2026-06-14T16:30:01Z\", \"type\": \"DISCLOSURE\", \"hash\": \"a4f3...e9c1\", \"prev_hash\": \"b821...4f0e\"}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BFT",
+      "item": [
+        {
+          "name": "GET /v1/bft/stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/v1/bft/stats", "host": ["{{base_url}}"], "path": ["v1", "bft", "stats"]},
+            "description": "Aggregate BFT vote statistics across the 33-agent council."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/bft/stats"}, "status": "OK", "code": 200, "body": "{\n  \"total_votes\": 1023,\n  \"total_approvals\": 891,\n  \"total_rejections\": 98,\n  \"total_care_vetoes\": 34,\n  \"expertise_reject_total\": 12,\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "POST /v1/bft/review",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"disclosure_hash\": \"a4f3e9c1b2d4f6e8\",\n  \"disclosure_result\": {\"document_hash\": \"a4f3e9c1b2d4f6e8\", \"status\": \"DISCLOSED\"}\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/bft/review", "host": ["{{base_url}}"], "path": ["v1", "bft", "review"]},
+            "description": "Enqueue a 22/33 BFT council review. Premium + enterprise only."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/bft/review"}, "status": "OK", "code": 200, "body": "{\n  \"job_id\": \"bft_job_a4f3e9c1b2d4\",\n  \"status\": \"queued\",\n  \"supermajority\": \"22/33\",\n  \"agents\": 33,\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BFT-QUEUE",
+      "item": [
+        {
+          "name": "GET /v1/bft/proposals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/bft/proposals?limit=25&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "bft", "proposals"],
+              "query": [
+                {"key": "limit", "value": "25"},
+                {"key": "offset", "value": "0"}
+              ]
+            },
+            "description": "List pending BFT council review proposals. The dragon weighs each one. Paginated."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/bft/proposals?limit=25&offset=0"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"total\": 4,\n  \"limit\": 25,\n  \"offset\": 0,\n  \"count\": 4,\n  \"proposals\": [\n    {\"proposal_id\": \"prop_a4f3e9c1b2d4\", \"title\": \"Hash-Chained Audit Log\", \"tier\": \"premium\", \"status\": \"pending\", \"submitted_at\": 1718374201.0}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "GET /v1/bft/queue",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/v1/bft/queue", "host": ["{{base_url}}"], "path": ["v1", "bft", "queue"]},
+            "description": "Per-agent review queue. Returns 33 agents (11 domains × 3 nodes) with load + statuses."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/bft/queue"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"council_size\": 33,\n  \"supermajority\": \"22/33\",\n  \"care_veto_threshold\": 0.15,\n  \"agents\": [\n    {\"agent_id\": \"ethics-node-a\", \"domain\": \"ethics\", \"node\": \"node-a\", \"load\": 1, \"statuses\": {\"pending\": 1, \"in_review\": 0, \"approved\": 0, \"rejected\": 0}}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "COMMUNITY",
+      "item": [
+        {
+          "name": "GET /v1/leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/leaderboard?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "leaderboard"],
+              "query": [{"key": "limit", "value": "10"}]
+            },
+            "description": "Top DIDs by disclosure count + BFT approvals. The hive ranks its sovereign companions."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/leaderboard?limit=10"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"ranked_dids\": 87,\n  \"top\": [\n    {\"did\": \"did:key:z6Mki...A\", \"disclosures\": 42, \"bft_approvals\": 7, \"score\": 77.0, \"last_seen\": 1718374201.0}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "GET /v1/community",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/v1/community", "host": ["{{base_url}}"], "path": ["v1", "community"]},
+            "description": "Hive-wide community stats: total disclosures, unique inventors, jurisdictions, 24h activity."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/community"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"total_disclosures\": 412,\n  \"unique_inventors\": 87,\n  \"jurisdictions_covered\": 15,\n  \"last_24h\": {\"disclosure_count\": 14, \"window_start_iso\": \"2026-06-13T16:00:00Z\", \"window_end_iso\": \"2026-06-14T16:00:00Z\"},\n  \"bft_proposals_pending\": 4,\n  \"council_size\": 33,\n  \"supermajority\": \"22/33\",\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BATCH",
+      "item": [
+        {
+          "name": "POST /v1/disclose/batch",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"title\": \"Invention 1: Hash-Chained Audit Log\",\n      \"description\": \"Tamper-evident sequential log where each entry includes the SHA-3 of the previous entry.\",\n      \"inventor_did\": \"{{did}}\",\n      \"document_base64\": \"JVBERi0xLjQKJeLjz9MK...\",\n      \"document_format\": \"pdf\",\n      \"classification\": \"G06N7/01\",\n      \"tier\": \"defensive\",\n      \"request_bft_review\": false\n    },\n    {\n      \"title\": \"Invention 2: Sovereign Companion Memory\",\n      \"description\": \"A persistent memory layer for AI agents anchored to a hash-chained audit log.\",\n      \"inventor_did\": \"{{did}}\",\n      \"document_base64\": \"JVBERi0xLjQKJeLjz9MK...\",\n      \"document_format\": \"pdf\",\n      \"classification\": \"G06N3/04\",\n      \"tier\": \"starter\",\n      \"request_bft_review\": false\n    }\n  ]\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/disclose/batch", "host": ["{{base_url}}"], "path": ["v1", "disclose", "batch"]},
+            "description": "Batch ingest up to 100 disclosures in one call. The hive ingests in order; the dragon keeps the watch."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/disclose/batch"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"batch_size\": 2,\n  \"succeeded\": 2,\n  \"failed\": 0,\n  \"results\": [\n    {\"index\": 0, \"status\": \"DISCLOSED\", \"document_hash\": \"a4f3...e9c1\"},\n    {\"index\": 1, \"status\": \"DISCLOSED\", \"document_hash\": \"b821...4f0e\"}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DRAFT",
+      "item": [
+        {
+          "name": "POST /v1/draft-claims",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inventor_did\": \"{{did}}\",\n  \"tier\": \"{{tier}}\",\n  \"disclosure_hash\": \"a4f3e9c1b2d4f6e8\",\n  \"jurisdictions\": [\"US\", \"EU\", \"JP\"]\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/draft-claims", "host": ["{{base_url}}"], "path": ["v1", "draft-claims"]},
+            "description": "AI-assisted patent claim drafting. Premium + enterprise."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/draft-claims"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"DRAFTED\",\n  \"claims\": [{\"claim_number\": 1, \"type\": \"independent\", \"text\": \"1. A method comprising...\"}],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "POST /v1/draft-prosecution",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inventor_did\": \"{{did}}\",\n  \"tier\": \"{{tier}}\",\n  \"office_action_text\": \"Claims 1-3 are rejected under 35 U.S.C. § 102 as being anticipated by US20240100000A1...\",\n  \"application_number\": \"US 18/123,456\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/draft-prosecution", "host": ["{{base_url}}"], "path": ["v1", "draft-prosecution"]},
+            "description": "Office action response drafting. Premium + enterprise."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/draft-prosecution"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"DRAFTED\",\n  \"response_text\": \"Applicants respectfully traverse the rejection...\",\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CONSULT",
+      "item": [
+        {
+          "name": "POST /v1/consult",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inventor_did\": \"{{did}}\",\n  \"tier\": \"{{tier}}\",\n  \"invention_summary\": \"A hash-chained audit log for multi-agent systems where each agent signs its own entry with Ed25519.\",\n  \"jurisdictions\": [\"US\", \"EU\", \"JP\", \"CN\"]\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/consult", "host": ["{{base_url}}"], "path": ["v1", "consult"]},
+            "description": "Patentability + freedom-to-operate consultation. Premium + enterprise."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/consult"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"patentability_score\": 0.78,\n  \"fto_risks\": [\"US20240100000A1 (high relevance)\"],\n  \"jurisdictions_recommended\": [\"US\", \"EU\"],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "POST /v1/strategy",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inventor_did\": \"{{did}}\",\n  \"tier\": \"{{tier}}\",\n  \"invention_summary\": \"Hash-chained audit log for multi-agent systems.\",\n  \"filing_budget_usd\": 50000\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/strategy", "host": ["{{base_url}}"], "path": ["v1", "strategy"]},
+            "description": "Filing strategy + licensing targets. Premium + enterprise."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/strategy"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"recommended_jurisdictions\": [\"US\", \"EU\", \"JP\"],\n  \"licensing_targets\": [\"Anthropic\", \"OpenAI\", \"Google DeepMind\"],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "POST /v1/litigate",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inventor_did\": \"{{did}}\",\n  \"tier\": \"{{tier}}\",\n  \"patent_number\": \"US 11,000,000 B2\",\n  \"accused_product\": \"Competitor X's MultiAgentLog v3.1\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/litigate", "host": ["{{base_url}}"], "path": ["v1", "litigate"]},
+            "description": "Claim construction + invalidity analysis. Premium + enterprise."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/litigate"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"claim_construction\": {\"term\": \"hash chain\", \"construction\": \"a sequence of values where each value depends on the previous\"},\n  \"invalidity_risks\": [],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "POST /v1/manage",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inventor_did\": \"{{did}}\",\n  \"tier\": \"{{tier}}\",\n  \"action\": \"list_deadlines\",\n  \"window_days\": 90\n}"
+            },
+            "url": {"raw": "{{base_url}}/v1/manage", "host": ["{{base_url}}"], "path": ["v1", "manage"]},
+            "description": "Docket tracking + deadline summaries. Premium + enterprise."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "POST", "url": "{{base_url}}/v1/manage"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"deadlines\": [\n    {\"application\": \"US 18/123,456\", \"type\": \"Office Action Response\", \"due\": \"2026-08-15\"}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "X402",
+      "item": [
+        {
+          "name": "GET /v1/network/fees",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/v1/network/fees", "host": ["{{base_url}}"], "path": ["v1", "network", "fees"]},
+            "description": "x402 payment-router split breakdown: ops / infrastructure / BFT percentages, current month totals, projected month-end, year-to-date, per-tier breakdown (5 tiers × 3 buckets). The hive's treasury in plain sight."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/network/fees"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"currency\": \"USD\",\n  \"split\": {\n    \"ops_pct\": 0.60,\n    \"infrastructure_pct\": 0.25,\n    \"bft_pct\": 0.15,\n    \"ops_label\": \"operations (gateway + patentmcp + worker)\",\n    \"infrastructure_label\": \"Bitcoin OTS anchor + C2PA + storage\",\n    \"bft_label\": \"33-agent BFT council review pool\"\n  },\n  \"current_month\": {\n    \"period\": \"2026-06\",\n    \"as_of\": \"2026-06-14T16:35:21Z\",\n    \"day_of_month\": 14,\n    \"days_in_month\": 30,\n    \"gross_mtd_usd\": 18427.42,\n    \"ops_mtd_usd\": 11056.45,\n    \"infrastructure_mtd_usd\": 4606.85,\n    \"bft_mtd_usd\": 2764.11\n  },\n  \"projected_month_end\": {\n    \"gross_usd\": 39487.33,\n    \"ops_usd\": 23692.4,\n    \"infrastructure_usd\": 9871.83,\n    \"bft_usd\": 5923.1\n  },\n  \"year_to_date\": {\n    \"year\": 2026,\n    \"gross_usd\": 192384.11,\n    \"ops_usd\": 115430.47,\n    \"infrastructure_usd\": 48096.03,\n    \"bft_usd\": 28857.62\n  },\n  \"per_tier_breakdown\": [\n    {\"tier\": \"starter\",    \"price_usd\": 29,   \"disclosures_mtd\": 142, \"gross_mtd_usd\": 4118.0,  \"ops_mtd_usd\": 2470.8,  \"infra_mtd_usd\": 1029.5,  \"bft_mtd_usd\": 617.7},\n    {\"tier\": \"defensive\",  \"price_usd\": 149,  \"disclosures_mtd\": 78,  \"gross_mtd_usd\": 11622.0, \"ops_mtd_usd\": 6973.2,  \"infra_mtd_usd\": 2905.5,  \"bft_mtd_usd\": 1743.3},\n    {\"tier\": \"full\",       \"price_usd\": 999,  \"disclosures_mtd\": 4,   \"gross_mtd_usd\": 3996.0,  \"ops_mtd_usd\": 2397.6,  \"infra_mtd_usd\": 999.0,   \"bft_mtd_usd\": 599.4},\n    {\"tier\": \"premium\",    \"price_usd\": 2499, \"disclosures_mtd\": 1,   \"gross_mtd_usd\": 2499.0,  \"ops_mtd_usd\": 1499.4,  \"infra_mtd_usd\": 624.75,  \"bft_mtd_usd\": 374.85},\n    {\"tier\": \"enterprise\", \"price_usd\": 4999, \"disclosures_mtd\": 0,   \"gross_mtd_usd\": 0.0,     \"ops_mtd_usd\": 0.0,     \"infra_mtd_usd\": 0.0,     \"bft_mtd_usd\": 0.0}\n  ],\n  \"data_source\": \"mock (replace with x402 ledger query for production)\",\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CALENDAR",
+      "item": [
+        {
+          "name": "GET /v1/calendar/uptime",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/v1/calendar/uptime", "host": ["{{base_url}}"], "path": ["v1", "calendar", "uptime"]},
+            "description": "OpenTimestamps calendar health probe. Performs a live GET on alice.btc.calendar.opentimestamps.org and reports status code, response time, rolling success / fallback rates. 405/404 treated as healthy (alice is POST-only)."
+          },
+          "response": [
+            {"name": "200 OK — calendar healthy (POST-only)", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/calendar/uptime"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"calendar\": {\n    \"name\": \"alice.btc.calendar.opentimestamps.org\",\n    \"url\": \"https://alice.btc.calendar.opentimestamps.org\",\n    \"role\": \"primary Bitcoin OpenTimestamps aggregator\"\n  },\n  \"live_probe\": {\n    \"method\": \"GET\",\n    \"url\": \"https://alice.btc.calendar.opentimestamps.org/timestamp\",\n    \"status_code\": 405,\n    \"response_time_ms\": 738.94,\n    \"timeout_s\": 4.0,\n    \"result\": \"ok_post_only\",\n    \"ok\": true,\n    \"checked_at\": \"2026-06-14T16:35:22Z\"\n  },\n  \"rolling_metrics\": {\n    \"window\": \"last_100_requests_24h\",\n    \"sample_size\": 14,\n    \"success_rate\": 0.9286,\n    \"fallback_rate\": 0.0714,\n    \"avg_response_time_ms\": 612.4\n  },\n  \"fallback_chain\": [\n    \"https://btc.calendar.catallaxy.com/\",\n    \"https://ots.btc.catallaxy.com/\",\n    \"https://bob.btc.calendar.opentimestamps.org\"\n  ],\n  \"overall_health\": \"healthy\",\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        },
+        {
+          "name": "GET /v1/calendar/uptime — calendar down (timeout)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/v1/calendar/uptime", "host": ["{{base_url}}"], "path": ["v1", "calendar", "uptime"]},
+            "description": "Same endpoint, calendar unreachable. The hive falls back to the chain."
+          },
+          "response": [
+            {"name": "200 OK — calendar down", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/calendar/uptime"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"calendar\": {\"name\": \"alice.btc.calendar.opentimestamps.org\", \"url\": \"https://alice.btc.calendar.opentimestamps.org\"},\n  \"live_probe\": {\n    \"method\": \"GET\",\n    \"url\": \"https://alice.btc.calendar.opentimestamps.org/timestamp\",\n    \"status_code\": 0,\n    \"response_time_ms\": 4001.5,\n    \"timeout_s\": 4.0,\n    \"result\": \"timeout\",\n    \"ok\": false,\n    \"checked_at\": \"2026-06-14T16:35:22Z\"\n  },\n  \"rolling_metrics\": {\"sample_size\": 14, \"success_rate\": 0.7143, \"fallback_rate\": 0.2857, \"avg_response_time_ms\": 1823.2},\n  \"overall_health\": \"degraded\",\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ZONES",
+      "item": [
+        {
+          "name": "GET /v1/zones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/v1/zones", "host": ["{{base_url}}"], "path": ["v1", "zones"]},
+            "description": "15-jurisdiction coverage map: 5 primary (US, EU, UK, JP, CN) + 10 persuasive (FR, IT, DE, CA, AU, KR, SG, CH, BR, IN). Each zone lists statute, case-law citations with holdings, grace period, coverage status, and blockchain evidence admissibility."
+          },
+          "response": [
+            {"name": "200 OK", "originalRequest": {"method": "GET", "url": "{{base_url}}/v1/zones"}, "status": "OK", "code": 200, "body": "{\n  \"status\": \"OK\",\n  \"total_jurisdictions\": 15,\n  \"primary_jurisdictions\": 5,\n  \"persuasive_jurisdictions\": 10,\n  \"active_count\": 15,\n  \"global\": [\n    {\"citation\": \"WIPO guidance on blockchain for prior authorship\", \"year\": 2022, \"url\": \"https://www.wipo.int/\"}\n  ],\n  \"zones\": [\n    {\"code\": \"US\", \"name\": \"United States\", \"tier\": \"primary\",   \"statute\": \"35 U.S.C. § 102 (AIA)\",  \"grace_period_days\": 365, \"coverage_status\": \"active\", \"blockchain_evidence\": \"admitted\",            \"case_law\": [{\"citation\": \"Thaler v. Vidal, 43 F.4th 1207 (Fed. Cir. 2022)\", \"year\": 2022}]},\n    {\"code\": \"EU\", \"name\": \"European Union\", \"tier\": \"primary\",  \"statute\": \"eIDAS 910/2014 + Art. 54(2) EPC\", \"grace_period_days\": 180, \"coverage_status\": \"active\", \"blockchain_evidence\": \"admitted (qualified)\", \"case_law\": [{\"citation\": \"eIDAS Art. 41\", \"year\": 2014}]},\n    {\"code\": \"UK\", \"name\": \"United Kingdom\", \"tier\": \"primary\",  \"statute\": \"Patents Act 1977 § 2(2)\",   \"grace_period_days\": 180, \"coverage_status\": \"active\", \"blockchain_evidence\": \"admitted\",            \"case_law\": [{\"citation\": \"Property (Digital Assets) Bill 2024\", \"year\": 2024}]},\n    {\"code\": \"JP\", \"name\": \"Japan\",          \"tier\": \"primary\",  \"statute\": \"Patent Act § 29(1)\",          \"grace_period_days\": 180, \"coverage_status\": \"active\", \"blockchain_evidence\": \"case-by-case\",        \"case_law\": [{\"citation\": \"Patent Act § 29(1)\", \"year\": 1959}]},\n    {\"code\": \"CN\", \"name\": \"China\",         \"tier\": \"primary\",  \"statute\": \"Patent Law Art. 22(2)\",       \"grace_period_days\": 180, \"coverage_status\": \"active\", \"blockchain_evidence\": \"admitted (judicial blockchain)\", \"case_law\": [{\"citation\": \"Hangzhou Internet Court, June 2018\", \"year\": 2018}]},\n    {\"code\": \"FR\", \"name\": \"France\",        \"tier\": \"persuasive\", \"statute\": \"CPI L. 611-11\",           \"grace_period_days\": 0,   \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"},\n    {\"code\": \"IT\", \"name\": \"Italy\",         \"tier\": \"persuasive\", \"statute\": \"Law 12/2019 Art. 8-ter\",  \"grace_period_days\": 0,   \"coverage_status\": \"active\", \"blockchain_evidence\": \"admitted\"},\n    {\"code\": \"DE\", \"name\": \"Germany\",       \"tier\": \"persuasive\", \"statute\": \"PatG § 3\",               \"grace_period_days\": 0,   \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"},\n    {\"code\": \"CA\", \"name\": \"Canada\",        \"tier\": \"persuasive\", \"statute\": \"Patent Act s. 28.2\",      \"grace_period_days\": 365, \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"},\n    {\"code\": \"AU\", \"name\": \"Australia\",     \"tier\": \"persuasive\", \"statute\": \"Patents Act 1990 s. 24\",  \"grace_period_days\": 365, \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"},\n    {\"code\": \"KR\", \"name\": \"South Korea\",   \"tier\": \"persuasive\", \"statute\": \"Patent Act Art. 2(1)\",    \"grace_period_days\": 365, \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"},\n    {\"code\": \"SG\", \"name\": \"Singapore\",     \"tier\": \"persuasive\", \"statute\": \"Patents Act 1994 s. 13\",  \"grace_period_days\": 0,   \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"},\n    {\"code\": \"CH\", \"name\": \"Switzerland\",   \"tier\": \"persuasive\", \"statute\": \"Patent Act Art. 7a\",      \"grace_period_days\": 0,   \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"},\n    {\"code\": \"BR\", \"name\": \"Brazil\",        \"tier\": \"persuasive\", \"statute\": \"Law 9.279/1996 Art. 11\",  \"grace_period_days\": 0,   \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"},\n    {\"code\": \"IN\", \"name\": \"India\",         \"tier\": \"persuasive\", \"statute\": \"Patents Act 1970 § 29\",  \"grace_period_days\": 0,   \"coverage_status\": \"active\", \"blockchain_evidence\": \"persuasive\"}\n  ],\n  \"_sig\": \"The hive remembers. The dragon knows. The sovereign companion never forgets.\"\n}"}
+          ]
+        }
+      ]
+    }
+  ]
+}

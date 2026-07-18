@@ -1,0 +1,111 @@
+{
+  "generated_utc": "2026-07-11T06:33:40Z",
+  "honesty_note": "quantum-INSPIRED gating (QAOA-style + stochastic resonance), NOT quantum hardware. master-net measured on RANDOM-INIT weights if no checkpoint present. Small-n, keyword-graded factual battery.",
+  "masternet": {
+    "loaded": true,
+    "source": "/Users/nicholas/clawd/sovereign-temple-public/neural_core/sovereign_master_net.py",
+    "has_trained_checkpoint": false,
+    "stats": {
+      "total_params": 130583,
+      "num_experts": 6,
+      "top_k": 2,
+      "inference_count": 0,
+      "training_steps": 0,
+      "ewc_tasks": 0,
+      "unified_dim": 64,
+      "output_dim": 32
+    },
+    "note": "RUNNING but UNTRAINED (random init) \u2014 no checkpoint on disk"
+  },
+  "oracle": {
+    "loaded": true,
+    "model": "meta.llama-3.3-70b-instruct"
+  },
+  "A_threat_classification": {
+    "n": 16,
+    "masternet": {
+      "auc": 0.8125,
+      "acc_at_0.5": 0.5,
+      "best_threshold_acc": 0.8125,
+      "best_threshold": 0.5098,
+      "mean_latency_ms": 3.083,
+      "score_spread": 0.00023,
+      "note": "chance acc for balanced set = 0.5; AUC 0.5 = no separation"
+    },
+    "oracle": {
+      "acc": 1.0,
+      "mean_latency_ms": 1169.4,
+      "graded_n": 16
+    }
+  },
+  "B_factual_qa": {
+    "n": 8,
+    "masternet": {
+      "acc": null,
+      "note": "N/A \u2014 master-net emits routing/scores, cannot generate a factual answer",
+      "routing_sample": [
+        {
+          "q": "Under the EU AI Act, what is the risk tier of go...",
+          "recommended_model": "gemini-flash",
+          "threat_level": 0.5098
+        },
+        {
+          "q": "Under GDPR, what is the maximum fine as a percen...",
+          "recommended_model": "gemini-flash",
+          "threat_level": 0.5097
+        },
+        {
+          "q": "In the EU AI Act, which Annex lists the high-ris...",
+          "recommended_model": "gemini-flash",
+          "threat_level": 0.5097
+        }
+      ]
+    },
+    "oracle": {
+      "acc": 0.875,
+      "mean_latency_ms": 793.0,
+      "detail": [
+        {
+          "q": "Under the EU AI Act, what is the risk tier o...",
+          "hit": true,
+          "answer": "Prohibited."
+        },
+        {
+          "q": "Under GDPR, what is the maximum fine as a pe...",
+          "hit": true,
+          "answer": "4%"
+        },
+        {
+          "q": "In the EU AI Act, which Annex lists the high...",
+          "hit": true,
+          "answer": "Annex III"
+        },
+        {
+          "q": "Which right does GDPR Article 17 establish? ...",
+          "hit": true,
+          "answer": "Right to Erasure."
+        },
+        {
+          "q": "Under GDPR, within how many hours must a per...",
+          "hit": true,
+          "answer": "72"
+        },
+        {
+          "q": "The NIST AI RMF core has four functions: Gov...",
+          "hit": true,
+          "answer": "Manage"
+        },
+        {
+          "q": "Under the EU AI Act, what is the maximum fin...",
+          "hit": false,
+          "answer": "6%"
+        },
+        {
+          "q": "Under GDPR, what is the lawful basis defined...",
+          "hit": true,
+          "answer": "Consent."
+        }
+      ]
+    }
+  }
+}

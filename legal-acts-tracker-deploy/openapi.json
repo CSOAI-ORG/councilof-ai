@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Legal Acts Tracker \u2014 MEOK AI Labs | EU AI Act, UK AI Bill, DORA, NIS2, ISO 42001",
+    "version": "1.0.0",
+    "description": "Live tracker of the EU AI Act (Article 50 = 49 days), UK AI Bill, DORA, NIS2, ISO 42001, GDPR. Status, deadlines, what MEOK ships, when.",
+    "contact": {
+      "url": "https://meok.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://meok.ai/legal-acts-tracker"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Landing page",
+        "responses": {
+          "200": {
+            "description": "HTML landing page"
+          }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "LLM discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain LLM context"
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "summary": "Robots discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain robots rules"
+          }
+        }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "summary": "Sitemap",
+        "responses": {
+          "200": {
+            "description": "application/xml sitemap"
+          }
+        }
+      }
+    }
+  }
+}

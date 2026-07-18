@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 7: DORADO 1-click EAST↔WEST — Sovereign AI 101</title>
+<meta name="description" content="DORADO sovereignty. EAST mode (UK / Five Eyes / AUKUS). WEST mode (BRICS / ASEAN / Commonwealth). 1-click switch.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.85rem; margin-bottom: 1rem; }
+  .breadcrumb a { color: #60a5fa; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.2rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .module-tag { display: inline-block; background: #fbbf24; color: #000; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 1100px; margin: 1.5rem auto; }
+  .compare > div { padding: 1.5rem; border-radius: 12px; }
+  .east { background: linear-gradient(135deg, #1a1a1a 0%, #1b2d4a 100%); border-left: 4px solid #60a5fa; }
+  .west { background: linear-gradient(135deg, #1a1a1a 0%, #4a1b4a 100%); border-left: 4px solid #fbbf24; }
+  .compare h3 { color: #fbbf24; }
+  .compare ul { padding-left: 1.5rem; color: #aaa; font-size: 0.9rem; }
+  .compare li { padding: 0.25rem 0; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .quiz { background: #111; padding: 1.5rem; border-radius: 12px; max-width: 900px; margin: 1.5rem auto; border: 1px solid #fbbf24; }
+  .quiz h3 { color: #fbbf24; margin-bottom: 1rem; }
+  .question { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.75rem 0; }
+  .question p { color: #10b981; font-weight: bold; margin-bottom: 0.5rem; }
+  .question label { display: block; color: #ccc; padding: 0.25rem 0; cursor: pointer; }
+  .question input { margin-right: 0.5rem; }
+  .question .answer { color: #fbbf24; margin-top: 0.5rem; font-style: italic; display: none; }
+  .question.show .answer { display: block; }
+  .reveal-btn { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+  .nav-bottom { display: flex; justify-content: space-between; margin: 3rem 0; gap: 1rem; flex-wrap: wrap; }
+  .nav-bottom a { display: inline-block; background: #2d1b4e; color: #fbbf24; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid #fbbf24; }
+  .nav-bottom a.next { background: #fbbf24; color: #000; font-weight: bold; }
+  .ascii { background: #0a0a0a; color: #10b981; padding: 1.25rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre; overflow-x: auto; border: 1px solid #2d1b4e; max-width: 800px; margin: 1rem auto; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; }
+  .switch { background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%); padding: 2rem; border-radius: 12px; text-align: center; max-width: 800px; margin: 1.5rem auto; border: 2px solid #fbbf24; }
+  .switch .label { color: #fbbf24; font-size: 1.1rem; }
+  .switch .cmd { background: #000; color: #10b981; padding: 1rem; border-radius: 8px; font-family: monospace; margin: 1rem auto; max-width: 500px; font-size: 1rem; }
+  .switch .confirm { color: #10b981; margin-top: 1rem; font-weight: bold; }
+  table { width: 100%; max-width: 900px; margin: 1rem auto; border-collapse: collapse; }
+  th { background: #2d1b4e; color: #fbbf24; padding: 0.6rem; text-align: left; }
+  td { background: #1a1a1a; color: #ccc; padding: 0.6rem; border-bottom: 1px solid #222; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="index.html">Sov AI 101</a>
+  <a href="06-article-50.html">M6</a>
+  <a href="08-deployment.html">M8 →</a>
+</div>
+
+<p class="breadcrumb"><a href="index.html">Sovereign AI 101</a> / <strong>Module 7</strong></p>
+
+<h1>🌐 Module 7: DORADO 1-click EAST↔WEST</h1>
+<p style="text-align: center;"><span class="module-tag">MODULE 7 OF 10</span> · ⏱ 20 minutes</p>
+
+<h2>🌐 What is DORADO?</h2>
+<p><strong>DORADO</strong> (Decentralised Operational Realm for Authorised Data Orchestration) is the sovereign jurisdictional layer of the SOV3 system. It is the substrate that lets a sovereign AI deployment <strong>switch its legal/governance frame in a single click</strong> — without changing the model, the data, or the substrate.</p>
+
+<p>DORADO is named after the dorado fish — a species that traverses multiple oceanic realms. Like the fish, a sovereign AI deployment can move between jurisdictional realms while remaining the same identity, the same audit trail, the same chain of SIGILs.</p>
+
+<p>DORADO has two operating modes — <strong>EAST</strong> and <strong>WEST</strong>. Each mode corresponds to a different jurisdictional frame, a different regulatory alignment, and a different set of operational defaults. The citizen or operator chooses; the switch is one click.</p>
+
+<h2>🟦 EAST Mode</h2>
+<div class="compare">
+  <div class="east">
+    <h3>🟦 EAST — Five Eyes / AUKUS / Commonwealth Realms</h3>
+    <ul>
+      <li><strong>Primary jurisdictions:</strong> UK, US, AU, CA, NZ (Five Eyes)</li>
+      <li><strong>Secondary:</strong> AUKUS partners (UK, US, AU), Crown Dependencies, Commonwealth Realms</li>
+      <li><strong>Default governance:</strong> UK GDPR / DPA 2018 / EU AI Act (UK retained) / ISO 42001 / NIST AI RMF</li>
+      <li><strong>Default audit:</strong> SIGIL chain + UK ICO + EU AI Office + NIST conformance</li>
+      <li><strong>Default crypto:</strong> Ed25519 + PQC ML-DSA-65 + ML-KEM-768 (Kyber)</li>
+      <li><strong>Default hosting:</strong> UK + EU sovereign regions (Frankfurt, Dublin, London)</li>
+      <li><strong>Article 50 mode:</strong> Full passport issuance + Annex IV technical documentation</li>
+      <li><strong>Best for:</strong> UK / EU / Five Eyes governments, defence, financial services, regulated industries</li>
+    </ul>
+  </div>
+  <div class="west">
+    <h3>🟨 WEST — BRICS / ASEAN / Commonwealth Nations</h3>
+    <ul>
+      <li><strong>Primary jurisdictions:</strong> BRICS+ (BR, RU, IN, CN, ZA, EG, ET, IR, AE, SA), ASEAN, SCO</li>
+      <li><strong>Secondary:</strong> Commonwealth Nations (non-Realm), Non-Aligned Movement, Global South</li>
+      <li><strong>Default governance:</strong> National AI policies + BRICS AI declaration + China GenAI rules + India DPDP Act 2023</li>
+      <li><strong>Default audit:</strong> SIGIL chain + national regulators + cross-border data flow agreements</li>
+      <li><strong>Default crypto:</strong> Ed25519 + PQC ML-DSA-65 + SM2/SM3 (China), GOST R 34.10 (Russia)</li>
+      <li><strong>Default hosting:</strong> National sovereign regions (São Paulo, Mumbai, Beijing, Singapore, Cape Town)</li>
+      <li><strong>Article 50 mode:</strong> EU compliance when EU-deployed; national frameworks elsewhere</li>
+      <li><strong>Best for:</strong> BRICS+ governments, ASEAN enterprises, Global South deployments, sovereign wealth funds</li>
+    </ul>
+  </div>
+</div>
+
+<p>The EAST↔WEST split is not a value judgment. It is a recognition that the world is multi-jurisdictional, and that sovereign AI must serve each jurisdiction's constitutional frame. The split allows the same SOV3 substrate to operate legally in either regime — without operator-level changes.</p>
+
+<h2>🖱️ 1-Click Switch</h2>
+<div class="switch">
+  <div class="label">⚡ THE 1-CLICK DORADO SWITCH</div>
+  <div class="cmd">sov-cli dorado switch --region WEST</div>
+  <div class="confirm">→ Sovereignty switched. All subsequent SIGILs will be anchored to the WEST jurisdictional frame. The substrate, model, weights, and audit chain remain unchanged. The switch is itself witnessed by a SIGIL.</div>
+</div>
+
+<p>The 1-click switch is more than a config change. It is a <strong>constitutional moment</strong> — and like all constitutional moments, it is witnessed. The switch itself emits a SIGIL with: timestamp, prior region, new region, operator identity, and confirmation that the Care Floor and BFT council are still operating correctly.</p>
+
+<h2>📋 What Changes When You Switch</h2>
+<table>
+  <tr><th>Layer</th><th>EAST</th><th>WEST</th></tr>
+  <tr><td>Hosting region</td><td>UK / EU / Five Eyes</td><td>BRICS / ASEAN / National</td></tr>
+  <tr><td>Default regulations</td><td>GDPR / EU AI Act / NIST</td><td>National / BRICS AI / China GenAI</td></tr>
+  <tr><td>Crypto primitives</td><td>Ed25519 / ML-DSA-65 / ML-KEM-768</td><td>+ SM2 / SM3 / GOST (optional)</td></tr>
+  <tr><td>Audit anchor</td><td>UK ICO + EU AI Office</td><td>National regulators + cross-border</td></tr>
+  <tr><td>Article 50 mode</td><td>EU passport + Annex IV</td><td>EU when EU-deployed; national elsewhere</td></tr>
+  <tr><td>Data residency</td><td>UK / EU data centres</td><td>National / regional data centres</td></tr>
+  <tr><td>Substrate / weights</td><td colspan="2" style="text-align: center; color: #10b981;">UNCHANGED — the same SOV3, the same SIGIL chain</td></tr>
+  <tr><td>Care Floor 0.95</td><td colspan="2" style="text-align: center; color: #10b981;">UNCHANGED — sovereignty is constitutional, not regional</td></tr>
+  <tr><td>BFT 12-around-1</td><td colspan="2" style="text-align: center; color: #10b981;">UNCHANGED — the council is sovereign</td></tr>
+</table>
+
+<h2>🎯 5 Key Takeaways</h2>
+<div class="takeaway"><h4>1. DORADO = jurisdictional frame, not model change</h4><p>The same SOV3 substrate. The same weights. The same SIGIL chain. Only the legal/governance frame changes.</p></div>
+<div class="takeaway"><h4>2. EAST = UK / Five Eyes / AUKUS / Commonwealth Realms</h4><p>GDPR / EU AI Act / NIST AI RMF alignment. Best for EU/UK/Five Eyes regulated industries.</p></div>
+<div class="takeaway"><h4>3. WEST = BRICS / ASEAN / Commonwealth Nations</h4><p>National AI policies / BRICS AI declaration / China GenAI rules. Best for Global South, BRICS+, ASEAN.</p></div>
+<div class="takeaway"><h4>4. 1-click switch is itself a witnessed constitutional act</h4><p>The switch emits a SIGIL. The Care Floor + BFT keep operating. The audit chain remains unbroken.</p></div>
+<div class="takeaway"><h4>5. Sovereignty is reversible</h4><p>The citizen can switch back. The citizen can audit. The citizen can revoke. This is the difference between sovereignty and captivity.</p></div>
+
+<h2>📝 Module 7 Quiz</h2>
+<div class="quiz">
+  <h3>3 Questions</h3>
+
+  <div class="question">
+    <p>1. Which jurisdictions does DORADO EAST mode primarily cover?</p>
+    <label><input type="radio" name="q1"> A. BRICS+ and ASEAN</label>
+    <label><input type="radio" name="q1"> B. UK, US, AU, CA, NZ (Five Eyes)</label>
+    <label><input type="radio" name="q1"> C. EU-27 only</label>
+    <label><input type="radio" name="q1"> D. China and Russia</label>
+    <div class="answer">✓ <strong>Answer: B.</strong> Five Eyes (UK, US, AU, CA, NZ) plus AUKUS partners (UK, US, AU) and Crown Dependencies / Commonwealth Realms.</div>
+  </div>
+
+  <div class="question">
+    <p>2. What stays unchanged when you switch DORADO EAST↔WEST?</p>
+    <label><input type="radio" name="q2"> A. The substrate, weights, SIGIL chain, Care Floor, BFT council</label>
+    <label><input type="radio" name="q2"> B. The hosting region</label>
+    <label><input type="radio" name="q2"> C. The default regulations</label>
+    <label><input type="radio" name="q2"> D. The crypto primitives</label>
+    <div class="answer">✓ <strong>Answer: A.</strong> The model, weights, substrate, SIGIL chain, Care Floor (0.95), and BFT council (12-around-1) are all unchanged. Only the jurisdictional frame changes.</div>
+  </div>
+
+  <div class="question">
+    <p>3. What is the command for the 1-click DORADO switch?</p>
+    <label><input type="radio" name="q3"> A. sov-cli switch --direction WEST</label>
+    <label><input type="radio" name="q3"> B. sov-cli dorado switch --region WEST</label>
+    <label><input type="radio" name="q3"> C. sov-cli sovereignty --set WEST</label>
+    <label><input type="radio" name="q3"> D. sov-cli regime change --west</label>
+    <div class="answer">✓ <strong>Answer: B. <code>sov-cli dorado switch --region WEST</code>.</strong> The canonical command. The switch emits a SIGIL with prior/new region + operator identity.</div>
+  </div>
+
+  <button class="reveal-btn" onclick="document.querySelectorAll('.question').forEach(q => q.classList.add('show')); this.style.display='none';">Show Answers</button>
+</div>
+
+<div class="nav-bottom">
+  <a href="06-article-50.html">← Module 6</a>
+  <a href="08-deployment.html" class="next">Module 8: Deployment →</a>
+</div>
+
+<footer>
+  <p><strong>🐉 Sovereign AI 101 — Module 7: DORADO 1-click EAST↔WEST</strong></p>
+  <p>CSOAI Ltd (UK 16939677) · MIT license · 4 Jul 2026</p>
+  <p><a href="index.html">Course Overview</a> · <a href="/">csoai.org</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">DORADO EAST↔WEST. 1-click switch. Witnessed. Reversible. Sovereign by construction.</p>
+</footer>
+
+</body>
+</html>

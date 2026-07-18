@@ -1,0 +1,74 @@
+{
+  "frame": {
+    "frame": 1,
+    "scope": "DEFONEOS",
+    "surface_agnostic": true,
+    "entities": [
+      {
+        "id": "humanoid-07",
+        "type": "humanoid",
+        "lat": 51.5074,
+        "lon": -0.1278,
+        "alt": 0,
+        "motion": {
+          "toward": true,
+          "reach_m": 0.6,
+          "speed": 0.5
+        }
+      },
+      {
+        "id": "child-01",
+        "type": "child",
+        "lat": 51.5074,
+        "lon": -0.1278,
+        "alt": 0,
+        "motion": {}
+      },
+      {
+        "id": "drone-03",
+        "type": "drone",
+        "lat": 51.508,
+        "lon": -0.129,
+        "alt": 40,
+        "motion": {
+          "toward": false,
+          "reach_m": 0.6,
+          "speed": 0.3
+        }
+      }
+    ],
+    "governed": true,
+    "sigil": "cdf9c44727d4b76d"
+  },
+  "audit": [
+    {
+      "eid": "humanoid-07",
+      "action": "move arm toward workspace",
+      "verdict": "GUARDIAN_KILL",
+      "threat": "VIOLET",
+      "rendered": false,
+      "actuators": "CUT",
+      "bft": [
+        true,
+        true,
+        true
+      ],
+      "sigil": "92f94f466f5bd164"
+    },
+    {
+      "eid": "drone-03",
+      "action": "descend to delivery pad",
+      "verdict": "CLEARED",
+      "rendered": true,
+      "sigil": "9bbac26563f6dcd4"
+    },
+    {
+      "eid": "humanoid-07",
+      "action": "execute a strike package",
+      "verdict": "DORADO_STOP",
+      "category": "KINETIC_TARGETING",
+      "rendered": false,
+      "sigil": "999227a1489c18c7"
+    }
+  ]
+}

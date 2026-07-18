@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🔄 SOV33 Clean Model Pivot — Sovereign Model at LM Scale</title>
+<meta name="description" content="SOV33 clean-model pivot — escape vendor lock-in by routing across 61 open models with measured error-correlation. No single AI lab can hold the substrate hostage.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);padding:1.5rem;line-height:1.55;max-width:1300px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.2rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2rem}
+  h3{color:var(--accent);font-size:1.2rem;margin-top:1.5rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .phase{background:var(--bg);padding:1.2rem;border-radius:8px;border:1px solid var(--rule);margin:.5rem 0}
+  .phase.done{border-left:3px solid var(--accent2);background:#0d201a}
+  .phase.pending{border-left:3px solid var(--warn)}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.5rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.5rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_CLEAN_MODEL_PIVOT.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🔄 SOV33 Clean Model Pivot</h1>
+  <p class="meta">Move from sovereign substrate with toy own-weights → sovereign model at LM scale. 7 phases, 30 Jul 2026 target. 12 Jul 2026.</p>
+  <p><a href="SOV33_HERO.html">← SOV33 Hub</a></p>
+</header>
+
+<h2>Why Pivot?</h2>
+
+<div class="card">
+  <blockquote>Claude-science keeps asking: "Is SOV33 a wrapper? What makes it different from a new model release?"<br>
+  <strong>Honest answer</strong>: Today, SOV33 owns toy-scale weights (16→32→16 JEPAPredictor) + a sovereign-trained 0.6B QLoRA brain. NOT yet a sovereign MODEL at LM scale.</blockquote>
+  <p>The pivot: replace open-source components with sovereign-owned ones, end state = 1-2B sovereign-owned model with independent tokenizer + attention + memory + weights.</p>
+</div>
+
+<h2>Current State vs Goal State</h2>
+
+<table>
+  <tr><th>Component</th><th>Today (12 Jul)</th><th>Goal (30 Jul)</th></tr>
+  <tr><td>Sovereign weights</td><td>Toy 16→32→16</td><td>1-2B sovereign-owned</td></tr>
+  <tr><td>Sovereign brain</td><td>0.6B Qwen3 + LoRA (1/4 experts)</td><td>4/4 sovereign experts</td></tr>
+  <tr><td>Tokenizer</td><td>Qwen3 (open source)</td><td>SOVTOK (sovereign-owned)</td></tr>
+  <tr><td>Attention</td><td>HF transformers (open)</td><td>Mamba-2 SSM (sovereign)</td></tr>
+  <tr><td>Memory</td><td>JSONL (open format)</td><td>SOVMEM binary (sovereign)</td></tr>
+</table>
+
+<h2>The 7 Phases</h2>
+
+<div id="phases">Loading...</div>
+
+<h2>Phase 1 Status (SOVTOK)</h2>
+
+<div id="sovtok">Loading...</div>
+
+<h2>Why This Beats "HY3" / "STE3.7" / New Releases</h2>
+
+<div class="card gold">
+  <table>
+    <tr><th>Aspect</th><th>New model release (HY3/STE3.7)</th><th>SOV33 post-pivot</th></tr>
+    <tr><td>Parameter count</td><td>Bigger (often 7B+)</td><td>Smaller (1-2B sovereign-owned)</td></tr>
+    <tr><td>Sovereignty</td><td>None — anyone can use</td><td>100% sovereign-owned</td></tr>
+    <tr><td>Governance</td><td>None</td><td>care-floor 0.95 + Article 0 + 12 Pillars + BFT-33 + SIGIL</td></tr>
+    <tr><td>Audit trail</td><td>None</td><td>Every response Ed25519-signed</td></tr>
+    <tr><td>Memory persistence</td><td>None (model dies, memory dies)</td><td>SWAP-persistent (memory survives model change)</td></tr>
+    <tr><td>Cap on raw capability</td><td>Higher (bigger model)</td><td>Lower (smaller model)</td></tr>
+    <tr><td>Class</td><td>Foundation model</td><td>Sovereign model (different class)</td></tr>
+  </table>
+</div>
+
+<h2>The Honest Pitch</h2>
+
+<div class="card">
+  <blockquote>We're not claiming to beat GPT-4 or Claude or any frontier model.<br>
+  We're claiming to own a <strong>sovereign model</strong> — a different capability class entirely.<br>
+  When you ask SOV33 something, you know:<br>
+  - The model was sovereign-trained (not borrowed from someone else)<br>
+  - The response passed care-floor 0.95 (no harm)<br>
+  - The response was Ed25519-signed (audit-grade)<br>
+  - The memory is sovereign (stays when models change)<br>
+  - The governance is verifiable (12 Pillars + Article 0)<br>
+  No other AI offers this.</blockquote>
+</div>
+
+<h2>Compute Budget</h2>
+
+<div class="card">
+  <p><strong>~83 GPU-hr on Kaggle T4 free tier</strong> (we have 30hr/wk = 4 weeks to target)</p>
+  <ul>
+    <li>Phase 1 (SOVTOK): 2 GPU-hr — Mac-light (no GPU needed)</li>
+    <li>Phase 2 (Sovereign Brain 1B): 50 GPU-hr Kaggle</li>
+    <li>Phase 3 (Mamba-2 attention): 10 GPU-hr</li>
+    <li>Phase 4 (4 experts): 16 GPU-hr</li>
+    <li>Phase 5 (World model): 5 GPU-hr</li>
+    <li>Phase 6 (Memory format): Mac-light</li>
+    <li>Phase 7 (Integration): Mac-light</li>
+  </ul>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🔄 SOV33 Clean Model Pivot</strong> · 12 Jul 2026 · Hermes lane<br>
+  Source doc: <code>_alignment/spark/SOV33_CLEAN_MODEL_PIVOT_2026-07-12.md</code><br>
+  Target release: <strong>30 Jul 2026</strong><br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function loadAll() {
+  try {
+    const [pivot, sovtok] = await Promise.all([
+      fetch(API + '/api/pivot').then(r => r.json()),
+      fetch(API + '/api/sovtok').then(r => r.json()),
+    ]);
+
+    let phases = '<div class="grid">';
+    pivot.phases.forEach((ph, i) => {
+      const statusClass = ph.status === 'IN PROGRESS' ? 'done' : 'pending';
+      const icon = ph.status === 'IN PROGRESS' ? '⚡' : (ph.status === 'pending' ? '⏳' : '✓');
+      phases += `
+        <div class="phase ${statusClass}">
+          <h3>${icon} Phase ${ph.phase}: ${ph.name}</h3>
+          <p><strong>Cost:</strong> ${ph.cost}</p>
+          <p><strong>Status:</strong> <span class="pill ${statusClass === 'done' ? 'sigil' : 'gold'}">${ph.status}</span></p>
+        </div>
+      `;
+    });
+    phases += '</div>';
+    document.getElementById('phases').innerHTML = phases;
+
+    document.getElementById('sovtok').innerHTML = `
+      <div class="card">
+        <p><strong>${sovtok.name}</strong> · ${sovtok.description}</p>
+        <p>Vocab size: <span class="pill sigil">${sovtok.vocab_size}</span></p>
+        <p>Sovereign terms (priority slots): <span class="pill">${sovtok.sovereign_terms}</span></p>
+        <p>Replaces: <code>${sovtok.replaces}</code></p>
+        <h4>Sample tokenization</h4>
+        <p><strong>Input:</strong> <code>${sovtok.sample.input}</code></p>
+        <p><strong>Tokens (${sovtok.sample.tokens.length}):</strong> <code>${sovtok.sample.tokens.join(', ')}</code></p>
+        <p><strong>Decoded:</strong> <code>${sovtok.sample.decoded}</code></p>
+        <p class="meta">Phase 1 cost: ${sovtok.cost}</p>
+      </div>
+    `;
+  } catch (e) {
+    document.getElementById('phases').innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>';
+  }
+}
+loadAll();
+</script>
+
+<style>
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+@media (max-width:768px){.grid{grid-template-columns:1fr}}
+</style>
+
+</body>
+</html>

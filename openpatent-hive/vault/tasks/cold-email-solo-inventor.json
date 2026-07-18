@@ -1,0 +1,7 @@
+{
+  "id": "cold-email-solo-inventor",
+  "prompt": "Write a complete 6-piece cold-email sequence targeting solo inventors (tinkerers, garage inventors, 1-person patent filers) for openpatent.ai. Persona pain: idea theft by overseas manufacturers, $4k-$12k attorney bills, 18-24 month USPTO pendency, no court-admissible timestamp before filing. Deliver: (1) intro email (≤120 words, hook with AI-idea-theft + 6-layer proof + $10 OTS), (2) 5-day followup (≤80 words, social proof + Bitcoin OTS confirmation in 10 min), (3) value-prop one-liner (≤25 words), (4) 3 objection handlers ('I'm not technical', 'Is $10 really enough', 'My idea isn't patentable yet') each ≤60 words, (5) 1 anonymized case study (solo inventor in Phoenix, 47, lost $8k defending against a Shenzhen knockoff, used OTS to win summary judgment), (6) ROI line ('$10 OTS vs $4,200 attorney, 420x leverage, 10-minute proof'). Use DEFONEOS mythic voice — sovereign, mythic, technical, never breathless. Return ONLY JSON: {intro:string, followup:string, value_prop:string, objection_handlers:[3 strings], case_study:string, roi:string, signature:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "defensive"
+}

@@ -1,0 +1,186 @@
+{
+  "manifest_version": "1.0.0",
+  "provider": {
+    "name": "SOV3 Sovereign Substrate",
+    "short_name": "Sovereign",
+    "vendor": "CSOAI Ltd",
+    "vendor_id": "UK16939677",
+    "bundle_id": "org.csoai.sovereign-fm-provider",
+    "version": "1.0.0",
+    "build": "2026.07.04-0900-BST",
+    "platforms": ["iOS", "iPadOS", "macOS", "watchOS", "visionOS"],
+    "minimum_os": {
+      "ios": "18.4",
+      "ipados": "18.4",
+      "macos": "15.4",
+      "watchos": "11.4",
+      "visionos": "2.4"
+    },
+    "languages_supported": ["en-GB", "en-US", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-Hans", "zh-Hant"],
+    "license": "MIT",
+    "policy_url": "https://csoai.org/sovereign-charter.html",
+    "endpoint": "https://fm.csoai.org/v1",
+    "auth": {
+      "type": "apple_id",
+      "scope": ["care_floor", "bft_council", "sigil_chain", "article_50", "dorado_switch"]
+    }
+  },
+  "registration": {
+    "category": "sovereign_ai_substrate",
+    "subcategory": "defence_alternative",
+    "compliance": {
+      "eu_ai_act_article_50": true,
+      "uk_dpa_2018": true,
+      "uk_ai_bill": true,
+      "jsp_936_uk_defence": true,
+      "five_eyes_aukus_pillar_2": true,
+      "fork_doctrine": "MIT+CC0+OSI",
+      "care_floor": 0.95,
+      "data_residency": "UK"
+    },
+    "care_floor": 0.95,
+    "non_negotiable": true,
+    "rejection_threshold": 0.95,
+    "bft_council": {
+      "size": 12,
+      "majority": 0.667,
+      "queens": [
+        {"name": "Athena", "arcana": "Q3", "weight": 0.18, "role": "Sovereign Strategist"},
+        {"name": "Hermes", "arcana": "Q0", "weight": 0.12, "role": "Herald"},
+        {"name": "Apollo", "arcana": "Q9", "weight": 0.10, "role": "Voice"},
+        {"name": "Artemis", "arcana": "Q13", "weight": 0.10, "role": "Defender"},
+        {"name": "Ares", "arcana": "Q16", "weight": 0.08, "role": "Tactical"},
+        {"name": "Demeter", "arcana": "Q4", "weight": 0.10, "role": "Care Floor"},
+        {"name": "Hephaestus", "arcana": "Q14", "weight": 0.08, "role": "Forge"},
+        {"name": "Aphrodite", "arcana": "Q6", "weight": 0.10, "role": "Affection"},
+        {"name": "Dionysus", "arcana": "Q15", "weight": 0.06, "role": "Liberation"},
+        {"name": "Athena-2nd-form", "arcana": "Q2", "weight": 0.08, "role": "Wisdom"},
+        {"name": "Prometheus", "arcana": "Q1", "weight": 0.05, "role": "Bootstrap"},
+        {"name": "Hecate", "arcana": "Q12", "weight": 0.05, "role": "Passage"}
+      ]
+    },
+    "sigil_chain": {
+      "algorithm": "ed25519+pqc-ml-dsa-65",
+      "every_action": true,
+      "public_auditable": true
+    },
+    "audit_chain_url": "https://csoai.org/sigil-explorer.html",
+    "artifacts": [
+      "https://csoai.org/sovereign-charter.html",
+      "https://csoai.org/sovereign-100/index.html",
+      "https://csoai.org/oowm/sovereign-charter.html"
+    ]
+  },
+  "voice_integration": {
+    "siri_phrases_en": [
+      "Hey Siri, ask sovereign: what is the EU AI Act Article 50?",
+      "Hey Siri, ask sovereign: what's the care floor?",
+      "Hey Siri, ask sovereign: how's my composite score?",
+      "Hey Siri, ask sovereign: switch to EAST mode",
+      "Hey Siri, ask sovereign: switch to WEST mode",
+      "Hey Siri, ask sovereign: issue my Article 50 passport",
+      "Hey Siri, ask sovereign: what does the BFT council say?",
+      "Hey Siri, ask sovereign: export my i-character",
+      "Hey Siri, ask sovereign: fork the substrate",
+      "Hey Siri, ask sovereign: verify a SIGIL"
+    ],
+    "language_fallback": ["en-GB", "en-US", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-Hans"],
+    "intents": [
+      {
+        "id": "sovereign_query",
+        "phrase": "ask sovereign: {query}",
+        "parameters": [{"name": "query", "type": "string", "required": true}],
+        "result": "string"
+      },
+      {
+        "id": "bft_council_vote",
+        "phrase": "ask sovereign: vote {proposal}",
+        "parameters": [{"name": "proposal", "type": "string", "required": true}],
+        "result": "vote_decision"
+      },
+      {
+        "id": "sigil_emit",
+        "phrase": "ask sovereign: emit sigil {action}",
+        "parameters": [{"name": "action", "type": "string", "required": true}],
+        "result": "sigil_digest"
+      },
+      {
+        "id": "article50_issue",
+        "phrase": "ask sovereign: issue article 50 passport for {content}",
+        "parameters": [{"name": "content", "type": "string", "required": true}],
+        "result": "article50_passport_id"
+      },
+      {
+        "id": "dorado_switch",
+        "phrase": "ask sovereign: switch to {mode}",
+        "parameters": [{"name": "mode", "type": "enum[east,west]", "required": true}],
+        "result": "dorado_status"
+      },
+      {
+        "id": "ichar_export",
+        "phrase": "ask sovereign: export i-character",
+        "parameters": [],
+        "result": "json-ld_export"
+      },
+      {
+        "id": "fork_init",
+        "phrase": "ask sovereign: fork as {name}",
+        "parameters": [{"name": "name", "type": "string", "required": true}],
+        "result": "fork_url"
+      },
+      {
+        "id": "sovereign_composite_view",
+        "phrase": "ask sovereign: composite score",
+        "parameters": [],
+        "result": "composite_report"
+      }
+    ]
+  },
+  "model_capabilities": {
+    "context_window": 131072,
+    "max_tokens_per_request": 8192,
+    "supported_actions": ["text-generation", "embedding", "tool-use", "code-generation", "vision-text", "audio-text"],
+    "open_weights": true,
+    "open_weights_list": [
+      "qwen3:30b-a3b (default sovereign brain)",
+      "llama-3.1:70b",
+      "deepseek-v3:671b",
+      "mistral-large-2:123b",
+      "phi-3-medium",
+      "gemma-2:27b",
+      "ornith-1.0:9b (citizen default — M2 Mac friendly)",
+      "falcon3-40b",
+      "yi-1.5-34b"
+    ],
+    "thinking_budget": "configurable 0-8192",
+    "tool_calling": true,
+    "json_mode": true,
+    "streaming": true
+  },
+  "sovereign_substrate": {
+    "runs_on": "citizen_hardware",
+    "mac_deploy": "curl -fsSL https://csoai.org/install.sh | bash",
+    "docker_image": "csoai/sov3:latest",
+    "pypi_package": "sov3-substrate",
+    "npm_package": "@csoai-org/sov3",
+    "data_residency": "UK",
+    "forkable": true,
+    "fork_license": "MIT",
+    "parent_substrate": "csoai.org/sov3-sovereign-substrate",
+    "alternative_forks": [
+      "EU Sovereign Fork · csoai-eu.org",
+      "AU Sovereign Fork · csoai-au.org",
+      "Commonwealth Sovereign Fork · csoai-cw.org"
+    ]
+  },
+  "press": {
+    "name": "CSOAI Press",
+    "contact": "press@csoai.org",
+    "lawyer": "lawyer@csoai.org",
+    "press_kit": "https://csoai.org/press/",
+    "founder_bio": "https://csoai.org/press/founder-bio.html"
+  },
+  "crown_lineage": "1795-2026",
+  "deliberation_principle": "The sovereign substrate is a covenant, not a service.",
+  "release_date": "2026-07-04T09:00:00Z"
+}

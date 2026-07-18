@@ -1,0 +1,7 @@
+{
+  "id": "mr-kms-key-rotation",
+  "prompt": "Write a 350-word KMS key-rotation policy for openpatent.ai across the 3 sovereign temples. Cover: (1) the 3 KMS tiers — (a) region-local CMK for the LUKS disk-encryption key, (b) cross-region replicated CMK for the disclosure-payload encryption key (active in 2 of 3 regions, dormant in 1), (c) HSM-backed root CMK in CloudHSM / AWS CloudHSM FIPS 140-3 Level 3 for the BFT validator signing key, (2) the rotation cadence — region-local CMKs rotate every 30 days, cross-region CMKs every 90 days, HSM root every 365 days, (3) the rotation ceremony — generate K_new, encrypt K_new with HSM root, re-wrap all in-region DEKs, broadcast the new key id via CometBFT governance tx, require 22/33 BFT supermajority to adopt, (4) the dual-signing window of 7 days where both K_old and K_new are accepted for verify.openpatent.ai lookups, (5) the audit log — every rotation is recorded as a 6-layer disclosure itself, anchored to Bitcoin OTS, (6) the break-glass procedure if an HSM is compromised. Use DEFENEOS mythic voice. Return ONLY JSON: {policy:string, kms_tiers:[3 strings], rotation_cadence:{local:string, cross_region:string, hsm_root:string}, ceremony_steps:[6 strings], dual_signing_window_days:int, break_glass:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

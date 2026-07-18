@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "meok-gdpr-compliance-ai-mcp",
+  "title": "GDPR Compliance AI",
+  "description": "DPIA + Art 33 + SCCs. AI-specific privacy compliance.",
+  "version": "1.0",
+  "input": "./input_schema.json",
+  "output": "./output_schema.json",
+  "dockerfile": "../Dockerfile",
+  "categories": [
+    "AI",
+    "COMPLIANCE"
+  ],
+  "httpMcpServer": {
+    "transport": "streamable-http",
+    "url": "https://meok-gdpr-compliance-ai-mcp.apify.actor/mcp"
+  }
+}

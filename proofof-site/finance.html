@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>💰 Sovereign Finance — 33-Hive Financial Network</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.5rem}
+  .sub{text-align:center;color:#888;margin-bottom:2rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:1100px;margin:0 auto 2rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #f59e0b}
+  .stat-value{color:#f59e0b;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .controls{max-width:1100px;margin:2rem auto;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center}
+  .controls select,.controls input,.controls button{padding:.7rem;background:#0a0a0a;border:1px solid #f59e0b;border-radius:4px;color:#e5e5e5;font-family:inherit;font-size:.85rem}
+  .controls button{background:#f59e0b;color:#000;font-weight:bold;cursor:pointer}
+  .hive-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.5rem;max-width:1200px;margin:0 auto}
+  .hive{background:#1a1a1a;padding:0.75rem;border-radius:6px;border-left:3px solid #f59e0b;cursor:pointer}
+  .hive:hover{background:#252525}
+  .hive .name{color:#f59e0b;font-weight:bold;font-size:.9rem}
+  .hive .meta{color:#888;font-size:.75rem;margin-top:0.3rem}
+  .hive .frameworks{color:#fbbf24;font-size:.7rem;margin-top:0.3rem}
+  .hive .aum{color:#10b981;font-size:.85rem;margin-top:0.3rem}
+  .info-panel{background:#1a1a1a;padding:1.5rem;border-radius:12px;max-width:1100px;margin:2rem auto}
+  .info-panel h2{color:#f59e0b;margin-bottom:1rem}
+  .result{background:#0a0a0a;padding:1rem;border-radius:6px;margin-top:1rem}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/defence.html">Defence</a> <a href="/hive-status.html">Hive Status</a> <a href="/world.html">World</a>
+</div>
+<h1>💰 Sovereign Finance</h1>
+<p class="sub">33-hive financial network · DORA + CTPP + sovereign routing · CSOAI Ltd (UK 16939677)</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Finance hives</div></div>
+  <div class="stat"><div class="stat-value">$45T</div><div class="stat-label">Total AUM</div></div>
+  <div class="stat"><div class="stat-value">20</div><div class="stat-label">Currencies</div></div>
+  <div class="stat"><div class="stat-value">5</div><div class="stat-label">DORA pillars</div></div>
+  <div class="stat"><div class="stat-value">7</div><div class="stat-label">BFT max</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+</div>
+
+<div class="controls">
+  <select id="srcSel"></select>
+  <select id="destSel"></select>
+  <input type="number" id="amountInput" placeholder="Amount USD" value="1000000" min="0" />
+  <select id="currencySel">
+    <option value="USD">USD</option><option value="GBP">GBP</option><option value="EUR">EUR</option>
+    <option value="JPY">JPY</option><option value="SGD">SGD</option>
+    <option value="INR">INR</option><option value="CAD">CAD</option>
+    <option value="AUD">AUD</option><option value="AED">AED</option>
+  </select>
+  <button onclick="doRoute()">💱 Route</button>
+  <input type="number" id="riskAmt" placeholder="Amount" value="1000000" min="0" />
+  <button onclick="doRisk()">⚠️ Risk</button>
+  <select id="auditSel"></select>
+  <button onclick="doDora()">🛡 DORA Audit</button>
+  <input type="text" id="decisionInput" placeholder="Decision" value="Approve merger" />
+  <button onclick="doCouncil()">🗳 BFT Council</button>
+</div>
+
+<h2 style="text-align:center;color:#f59e0b;margin:2rem 0 1rem">💰 The 33 Financial Hives</h2>
+<div class="hive-grid" id="hives"></div>
+
+<div class="info-panel">
+  <h2>📋 Result</h2>
+  <div class="result" id="result">Use the controls above to route capital, assess risk, audit DORA, or convene a BFT council.</div>
+</div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">Sovereign by construction. CSOAI Ltd (UK 16939677) · MIT · Crown lineage 1795-2026.</p>
+
+<script>
+const HIVES = [
+  {id:1,name:"London",tier:1,type:"banking_capital",aum:9500,currencies:["GBP","USD","EUR"],frameworks:["DORA","UK Mifid II","FCA"]},
+  {id:2,name:"Cambridge",tier:1,type:"research",aum:50,currencies:["GBP"],frameworks:["ISO 27001"]},
+  {id:3,name:"Edinburgh",tier:1,type:"insurance",aum:500,currencies:["GBP"],frameworks:["Solvency II"]},
+  {id:4,name:"York",tier:1,type:"private_banking",aum:80,currencies:["GBP"],frameworks:["FCA"]},
+  {id:5,name:"Cardiff",tier:1,type:"wealth",aum:30,currencies:["GBP"],frameworks:["FCA"]},
+  {id:6,name:"Belfast",tier:1,type:"fintech",aum:10,currencies:["GBP","EUR"],frameworks:["FCA"]},
+  {id:7,name:"Dublin",tier:2,type:"fund_admin",aum:800,currencies:["EUR","USD","GBP"],frameworks:["MiFID II","AIFMD","UCITS"]},
+  {id:8,name:"Paris",tier:2,type:"banking",aum:2000,currencies:["EUR"],frameworks:["MiFID II","DORA"]},
+  {id:9,name:"Berlin",tier:2,type:"fintech",aum:200,currencies:["EUR"],frameworks:["MiCA","BaFin"]},
+  {id:10,name:"Amsterdam",tier:2,type:"trading",aum:1200,currencies:["EUR","USD","GBP"],frameworks:["MiCA","MiFID II"]},
+  {id:11,name:"Stockholm",tier:2,type:"sustainable",aum:150,currencies:["SEK","EUR"],frameworks:["EU Taxonomy"]},
+  {id:12,name:"Helsinki",tier:2,type:"pension",aum:100,currencies:["EUR"],frameworks:["IORP II"]},
+  {id:13,name:"Madrid",tier:2,type:"banking",aum:400,currencies:["EUR"],frameworks:["MiFID II"]},
+  {id:14,name:"Rome",tier:2,type:"banking",aum:300,currencies:["EUR"],frameworks:["MiFID II"]},
+  {id:15,name:"Vienna",tier:2,type:"wealth",aum:80,currencies:["EUR"],frameworks:["MiFID II"]},
+  {id:16,name:"Copenhagen",tier:2,type:"sustainable",aum:100,currencies:["DKK","EUR"],frameworks:["EU Taxonomy"]},
+  {id:17,name:"Brussels",tier:2,type:"regulatory",aum:0,currencies:["EUR"],frameworks:["MiFID II","MiCA"]},
+  {id:18,name:"Warsaw",tier:2,type:"banking",aum:100,currencies:["PLN","EUR"],frameworks:["MiFID II"]},
+  {id:19,name:"New York",tier:3,type:"banking_capital",aum:15000,currencies:["USD"],frameworks:["SEC","FINRA","DORA"]},
+  {id:20,name:"SF",tier:3,type:"fintech",aum:1500,currencies:["USD"],frameworks:["SEC","FinCEN"]},
+  {id:21,name:"Tokyo",tier:3,type:"banking",aum:2500,currencies:["JPY","USD"],frameworks:["JFSA"]},
+  {id:22,name:"Singapore",tier:3,type:"private_banking",aum:4000,currencies:["SGD","USD"],frameworks:["MAS","DORA"]},
+  {id:23,name:"Sydney",tier:3,type:"super",aum:800,currencies:["AUD"],frameworks:["APRA"]},
+  {id:24,name:"Mumbai",tier:3,type:"banking",aum:800,currencies:["INR","USD"],frameworks:["RBI","SEBI"]},
+  {id:25,name:"Dubai",tier:3,type:"private_banking",aum:1500,currencies:["AED","USD"],frameworks:["DFSA"]},
+  {id:26,name:"Sao Paulo",tier:3,type:"banking",aum:600,currencies:["BRL","USD"],frameworks:["BCB"]},
+  {id:27,name:"Toronto",tier:3,type:"banking",aum:800,currencies:["CAD","USD"],frameworks:["OSFI"]},
+  {id:28,name:"Cape Town",tier:4,type:"banking",aum:200,currencies:["ZAR","USD"],frameworks:["SARB"]},
+  {id:29,name:"Reykjavik",tier:4,type:"fund",aum:30,currencies:["ISK"],frameworks:["FME"]},
+  {id:30,name:"Cairo",tier:4,type:"banking",aum:150,currencies:["EGP","USD"],frameworks:["CBE"]},
+  {id:31,name:"Nairobi",tier:4,type:"fintech",aum:50,currencies:["KES"],frameworks:["CBK"]},
+  {id:32,name:"Bogota",tier:4,type:"banking",aum:80,currencies:["COP","USD"],frameworks:["SFC"]},
+  {id:33,name:"Lagos",tier:4,type:"fintech",aum:60,currencies:["NGN","USD"],frameworks:["CBN"]},
+];
+
+const FX = {USD:1.0,GBP:0.79,EUR:0.92,JPY:150,SGD:1.35,INR:83,AED:3.67,CAD:1.36,AUD:1.52,SEK:10.5,PLN:4.0,DKK:6.85,ZAR:18.5,ISK:138,EGP:48.5,KES:130,COP:4000,NGN:1500,CNY:7.2,BRL:5.1};
+
+function populateSelect(sel) {
+  HIVES.forEach(h => {
+    const opt = document.createElement('option');
+    opt.value = h.id; opt.textContent = h.name;
+    sel.appendChild(opt);
+  });
+}
+populateSelect(document.getElementById('srcSel'));
+populateSelect(document.getElementById('destSel'));
+populateSelect(document.getElementById('auditSel'));
+document.getElementById('srcSel').value = 1;
+document.getElementById('destSel').value = 22;
+document.getElementById('auditSel').value = 1;
+
+const grid = document.getElementById('hives');
+HIVES.forEach(h => {
+  const div = document.createElement('div');
+  div.className = 'hive';
+  div.innerHTML = `
+    <div class="name">💰 ${h.name}</div>
+    <div class="meta">${h.type.replace('_',' ')} · tier ${h.tier}</div>
+    <div class="aum">AUM: $${h.aum}B</div>
+    <div class="meta">Currencies: ${h.currencies.join(', ')}</div>
+    <div class="frameworks">${h.frameworks.join(' · ')}</div>
+  `;
+  div.onclick = () => { document.getElementById('auditSel').value = h.id; doDora(); };
+  grid.appendChild(div);
+});
+
+function sig() { return 'fin-' + Math.random().toString(36).slice(2, 14); }
+function doRoute() {
+  const src = parseInt(document.getElementById('srcSel').value);
+  const dest = parseInt(document.getElementById('destSel').value);
+  const amt = parseFloat(document.getElementById('amountInput').value);
+  const ccy = document.getElementById('currencySel').value;
+  const s = HIVES.find(x => x.id === src);
+  const d = HIVES.find(x => x.id === dest);
+  const fx = FX[ccy];
+  document.getElementById('result').innerHTML = `
+    <strong style="color:#f59e0b">▓▒░ Sovereign Route ░▒▓</strong>
+    <p>${s.name} → ${d.name}</p>
+    <p>Amount: <strong>$${amt.toLocaleString()}</strong> (${ccy})</p>
+    <p>Local amount: <strong>${(amt * fx).toLocaleString(undefined,{maximumFractionDigits:2})} ${ccy}</strong></p>
+    <p>FX rate: <strong>${fx}</strong></p>
+    <p>Frameworks: <strong>${s.frameworks.filter(f => d.frameworks.includes(f)).join(', ') || 'Common standards applied'}</strong></p>
+    <p>Sig: <strong style="color:#fbbf24">${sig()}</strong></p>
+  `;
+}
+function doRisk() {
+  const amt = parseFloat(document.getElementById('riskAmt').value);
+  const src = parseInt(document.getElementById('srcSel').value);
+  const dest = parseInt(document.getElementById('destSel').value);
+  const s = HIVES.find(x => x.id === src);
+  const d = HIVES.find(x => x.id === dest);
+  let risk = 0; const factors = [];
+  if (s.tier >= 3) { risk += 2; factors.push('Source frontier (T≥3)'); }
+  if (d.tier >= 3) { risk += 2; factors.push('Dest frontier (T≥3)'); }
+  if (amt > 1e9) { risk += 2; factors.push('> $1B transaction'); }
+  if (!s.frameworks.includes('DORA') && !d.frameworks.includes('DORA')) { risk += 1; factors.push('No DORA'); }
+  const level = risk < 2 ? 'low' : risk < 4 ? 'medium' : 'high';
+  document.getElementById('result').innerHTML = `
+    <strong style="color:#ff6b6b">▓▒░ Risk Assessment ░▒▓</strong>
+    <p>Score: <strong>${risk}</strong> · Level: <strong style="color:${level==='low'?'#10b981':level==='medium'?'#fbbf24':'#ff6b6b'}">${level.toUpperCase()}</strong></p>
+    <p>Factors: ${factors.length === 0 ? 'None (sovereign safe)' : factors.join(', ')}</p>
+    <p>Sig: <strong style="color:#fbbf24">${sig()}</strong></p>
+  `;
+}
+function doDora() {
+  const h = HIVES.find(x => x.id === parseInt(document.getElementById('auditSel').value));
+  const pillars = {
+    "ICT_risk_management": h.frameworks.includes('DORA'),
+    "incident_reporting": h.frameworks.includes('DORA'),
+    "resilience_testing": h.frameworks.includes('DORA'),
+    "third_party_risk": h.frameworks.includes('DORA'),
+    "info_sharing": h.frameworks.includes('DORA')
+  };
+  const score = Object.values(pillars).filter(v => v).length;
+  document.getElementById('result').innerHTML = `
+    <strong style="color:#10b981">▓▒░ DORA 5-Pillar Audit — ${h.name} ░▒▓</strong>
+    ${Object.entries(pillars).map(([k,v]) => `<p>${v ? '✓' : '✗'} ${k}</p>`).join('')}
+    <p>Score: <strong>${score}/5</strong> · ${score >= 3 ? '✓ DORA compliant' : '✗ Non-compliant'}</p>
+    <p>Sig: <strong style="color:#fbbf24">${sig()}</strong></p>
+  `;
+}
+function doCouncil() {
+  const decision = document.getElementById('decisionInput').value;
+  const amt = parseFloat(document.getElementById('amountInput').value);
+  const voters = amt > 1e7 ? 7 : amt > 1e6 ? 5 : amt > 1e5 ? 3 : 1;
+  document.getElementById('result').innerHTML = `
+    <strong style="color:#f59e0b">▓▒░ BFT Council ░▒▓</strong>
+    <p>Decision: <strong>${decision}</strong></p>
+    <p>Amount: <strong>$${amt.toLocaleString()}</strong></p>
+    <p>BFT: <strong>${voters}-voter</strong> · All <strong style="color:#10b981">YES</strong></p>
+    <p>Sig: <strong style="color:#fbbf24">${sig()}</strong></p>
+  `;
+}
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

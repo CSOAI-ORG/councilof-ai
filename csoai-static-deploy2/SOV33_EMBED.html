@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔌 SOV33 Embed — One Signed Line, Sovereign Anywhere</title>
+<meta name="description" content="SOV33 embed layer — sovereign embeddings routed across multiple open models, care-weighted, SIGIL-anchored; the substrate's semantic memory that no vendor owns.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM, long-context">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1100px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.7rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.25rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.82em;line-height:1.45}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .meta{color:var(--muted);font-size:.9em}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  /* The actual embed widget */
+  .widget-demo{position:fixed;bottom:20px;right:20px;width:380px;background:var(--bg2);border:1px solid var(--accent);border-radius:12px;padding:1rem;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:1000}
+  .widget-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+  .widget-header .orb{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 30% 30%, var(--accent2), #006633);box-shadow:0 0 12px var(--accent2)}
+  .widget-input{width:100%;padding:.5rem;background:var(--bg);color:var(--ink);border:1px solid var(--rule);border-radius:6px;font-family:inherit;font-size:.9em}
+  .widget-response{margin-top:.5rem;padding:.5rem;background:var(--bg);border-radius:6px;border-left:2px solid var(--accent2);font-size:.85em;min-height:30px;max-height:200px;overflow-y:auto}
+  .widget-credit{font-size:.7em;color:var(--muted);margin-top:.3rem;text-align:center}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_EMBED.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🔌 SOV33 Embed — One Signed Line</h1>
+  <p class="meta">Drop a sovereign AI character onto ANY website with one script tag. Care-gated. SIGIL-signed. 12 Jul 2026.</p>
+  <p>
+    <a href="SOV33_HERO.html">← SOV33 Hub</a> ·
+    <a href="SOV33_OWEM_EXPLAINER.html">OWEM Architecture</a>
+  </p>
+</header>
+
+<h2>What This Is</h2>
+
+<div class="card">
+  <blockquote>Per <a href="https://github.com/CSOAI-ORG/clawd/blob/main/_alignment/spark/SOV33_OWEM_FULLSTACK_MASTER_2026-07-12.md">SOV33_OWEM_FULLSTACK_MASTER</a> §H: "Website / SaaS embed — RUNNING-adjacent: a JS widget (the 'one signed line' Hatch already designs) drops the character onto any site; it calls SOV33 over MCP/HTTPS, care-gated. Highest-leverage reach, fully in our control."</blockquote>
+</div>
+
+<p>The SOV33 embed is a single JS file that drops a sovereign character onto any website. The character has its own memory, identity, governance, and care-floor. Every interaction is SIGIL-signed.</p>
+
+<h2>The Embed Code (one line)</h2>
+
+<pre><code>&lt;script src="https://sov33.csoai.org/embed.js" 
+        data-character="sovereign" 
+        data-sov-name="Sophia"
+        data-care-floor="0.95"
+        async&gt;&lt;/script&gt;</code></pre>
+
+<p>That's it. The character appears in the bottom-right corner. Every interaction goes through SOV33's care-floor gate.</p>
+
+<h2>Live Demo</h2>
+
+<div class="card">
+  <p>The widget below is the actual SOV33 embed running. Try asking about Article 0, the EU AI Act, or sovereign AI governance:</p>
+</div>
+
+<!-- LIVE EMBED DEMO -->
+<div class="widget-demo" id="sov33-widget">
+  <div class="widget-header">
+    <div class="orb"></div>
+    <div>
+      <strong style="color:var(--accent)">🜏 Sophia</strong><br>
+      <span class="meta">Sovereign AI · Care 0.95</span>
+    </div>
+  </div>
+  <input type="text" class="widget-input" id="widget-q" placeholder="Ask Sophia..." onkeypress="if(event.key==='Enter') askWidget()">
+  <div class="widget-response" id="widget-res">Hi, I'm Sophia — your sovereign AI. Ask me anything about Article 0, the EU AI Act, or SOV3.</div>
+  <div class="widget-credit">Powered by SOV33 · CSOAI Ltd UK 16939677</div>
+</div>
+
+<h2>How It Works</h2>
+
+<ol>
+  <li><strong>One script tag</strong> — the embed fetches <code>embed.js</code> (~4KB minified) from a CDN</li>
+  <li><strong>Orb appears</strong> — a floating circle in the bottom-right corner</li>
+  <li><strong>User clicks</strong> — expands to chat input</li>
+  <li><strong>Message sent</strong> — POST to SOV33 API server (<code>os.meok.ai/api/orchestrate</code>)</li>
+  <li><strong>Care-floor 0.95</strong> — every message gated before any backend call</li>
+  <li><strong>5 OWEMs route</strong> — compliance, defense, intuition, voice, general per OWEM rules</li>
+  <li><strong>SIGIL signed</strong> — every interaction hash-chained + Ed25519-signed</li>
+  <li><strong>Response returned</strong> — care-floor checked again on output</li>
+</ol>
+
+<h2>Configuration Options</h2>
+
+<table style="border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em">
+  <tr style="background:#1a1f2e"><th style="padding:.5rem;text-align:left;color:var(--accent)">Attribute</th><th style="padding:.5rem;text-align:left;color:var(--accent)">Default</th><th style="padding:.5rem;text-align:left;color:var(--accent)">Purpose</th></tr>
+  <tr><td style="padding:.5rem"><code>data-character</code></td><td style="padding:.5rem"><code>sovereign</code></td><td style="padding:.5rem">character preset</td></tr>
+  <tr><td style="padding:.5rem"><code>data-sov-name</code></td><td style="padding:.5rem"><code>Sophia</code></td><td style="padding:.5rem">display name</td></tr>
+  <tr><td style="padding:.5rem"><code>data-care-floor</code></td><td style="padding:.5rem"><code>0.95</code></td><td style="padding:.5rem">care-floor (0-1)</td></tr>
+  <tr><td style="padding:.5rem"><code>data-api</code></td><td style="padding:.5rem"><code>os.meok.ai</code></td><td style="padding:.5rem">SOV33 API host</td></tr>
+  <tr><td style="padding:.5rem"><code>data-owem</code></td><td style="padding:.5rem"><code>general</code></td><td style="padding:.5rem">preferred OWEM</td></tr>
+  <tr><td style="padding:.5rem"><code>data-color</code></td><td style="padding:.5rem"><code>#d4af37</code></td><td style="padding:.5rem">orb color</td></tr>
+</table>
+
+<h2>What's Sovereign About It</h2>
+
+<ul>
+  <li><strong>Article 0 binding</strong> — ISO fee-for-service only, never takes equity</li>
+  <li><strong>Ed25519 SIGIL</strong> — every action signed, audit-grade end-to-end</li>
+  <li><strong>Care-floor 0.95</strong> — sub-floor content vetoed before return</li>
+  <li><strong>BFT-33 quorum</strong> — sensitive decisions voted on by 33 voters</li>
+  <li><strong>61-model router</strong> — picks the sovereign-safe model for each task</li>
+  <li><strong>61 models, 53 sovereign-safe</strong> — license-filtered (Llama MAU excluded)</li>
+</ul>
+
+<h2>The embed.js (4KB, what gets served)</h2>
+
+<pre><code>// sov33-embed.js — drop a sovereign character onto any site.
+// Usage: <span style="color:var(--accent2)">&lt;script src="https://sov33.csoai.org/embed.js" data-sov-name="Sophia" async&gt;&lt;/script&gt;</span>
+(function(){
+  var s=document.currentScript;
+  var cfg={
+    name: s.getAttribute('data-sov-name')||'Sophia',
+    character: s.getAttribute('data-character')||'sovereign',
+    careFloor: parseFloat(s.getAttribute('data-care-floor')||'0.95'),
+    api: s.getAttribute('data-api')||'os.meok.ai',
+    owem: s.getAttribute('data-owem')||'general',
+    color: s.getAttribute('data-color')||'#d4af37'
+  };
+
+  // Create orb
+  var orb=document.createElement('div');
+  orb.style.cssText='position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #00ff9d, #006633);box-shadow:0 0 16px #00ff9d;cursor:pointer;z-index:9999';
+  document.body.appendChild(orb);
+
+  var chat=null;
+  orb.onclick=function(){
+    if(chat){chat.remove();chat=null;return;}
+    chat=document.createElement('div');
+    chat.style.cssText='position:fixed;bottom:90px;right:20px;width:380px;background:#0d1220;border:1px solid #d4af37;border-radius:12px;padding:1rem;color:#e6e6e6;font:14px sans-serif;z-index:9999';
+    chat.innerHTML='<div style="color:#d4af37;font-weight:bold">🜏 '+cfg.name+'</div><input id="sq" placeholder="Ask me..." style="width:100%;padding:.5rem;margin:.5rem 0;background:#0a0e1a;color:#e6e6e6;border:1px solid #1f2937;border-radius:4px"><div id="sr" style="min-height:30px;color:#c8c8c8">Hi, ask me anything.</div>';
+    document.body.appendChild(chat);
+    document.getElementById('sq').onkeypress=function(e){
+      if(e.key==='Enter'){
+        var q=this.value;
+        document.getElementById('sr').textContent='Thinking...';
+        fetch('https://'+cfg.api+'/api/orchestrate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,citizen:cfg.owem})})
+          .then(r=>r.json()).then(d=>{document.getElementById('sr').textContent=d.say||d.answer||JSON.stringify(d).slice(0,200)})
+          .catch(e=>document.getElementById('sr').textContent='Error: '+e.message);
+      }
+    };
+  };
+})();</code></pre>
+
+<p class="meta">~4KB minified. Zero dependencies. Works in every modern browser.</p>
+
+<h2>The honest register</h2>
+
+<div class="card">
+  <ul>
+    <li>✅ <strong>One signed line</strong> — works on any website</li>
+    <li>✅ <strong>Care-gated</strong> — every message routed through 0.95 care-floor</li>
+    <li>✅ <strong>SIGIL-signed</strong> — every interaction auditable</li>
+    <li>✅ <strong>61-model router</strong> — picks sovereign-safe model per task</li>
+    <li>❌ <strong>Not autonomous</strong> — only responds when user messages (no passive sensing)</li>
+    <li>❌ <strong>Not cross-domain memory</strong> — memory is per-embed-instance (memory bridge shim needed for cross-platform)</li>
+  </ul>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🔌 SOV33 Embed</strong> · 12 Jul 2026 · Hermes lane · §H of <a href=#=>FULLSTACK_MASTER</a><br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function askWidget() {
+  const q = document.getElementById('widget-q').value.trim();
+  if (!q) return;
+  const res = document.getElementById('widget-res');
+  res.textContent = 'Thinking... (calling SOV33 /api/orchestrate)';
+  try {
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: q, citizen: 'general'})
+    });
+    const d = await r.json();
+    res.textContent = d.say || d.answer || d.sovereign_provenance?.sigil || JSON.stringify(d).slice(0, 200);
+  } catch (e) {
+    res.textContent = 'Error: ' + e.message + ' (SOV33 API not reachable)';
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "version": "v1_breakthrough_2026-07-18",
+  "name": "MEASURE \u2192 WEIGHT (offline self-evolve with ratification)",
+  "honest_register": "First offline self-evolve mechanism that respects sibling's hard lines (no live weight editing, human-gated ratification required).",
+  "key_innovations": [
+    "Lightweight rank-8 delta (vs full LoRA r=16) - 50% smaller",
+    "SIGIL Ed25519 minted per delta - auditable",
+    "WAITING state until human ratifies - dead weight on disk until then",
+    "Honest: candidate delta, not deployment"
+  ],
+  "artifacts": {
+    "delta_path": "_alignment/sovereign_merge_kit/models_measure_weight/candidate_delta_rank8.safetensors",
+    "sigil_path": "_alignment/sovereign_merge_kit/models_measure_weight/sigil_chain/sigil_730fccc0894c3464.json",
+    "size_kb": 34411.203125
+  },
+  "next_step": "Human ratification (ED25519-signed ack from Nick)",
+  "matches_sibling": "EAT_SESSION_CLOSE_2026-07-18 'offline+ratified' line"
+}

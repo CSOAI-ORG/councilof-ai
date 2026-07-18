@@ -1,0 +1,161 @@
+#!/bin/bash
+# mesh-federation: Unified ecosystem awareness
+# Discovers agents, polls their status, reports alignment
+
+set -euo pipefail
+
+FED_DIR="${HOME}/.mesh-prod/federation"
+REPORT_FILE="$FED_DIR/status-report.json"
+LOG_FILE="/tmp/mesh-federation.log"
+mkdir -p "$FED_DIR"
+
+echo "=== MESH FEDERATION SCAN $(date) ===" | tee "$LOG_FILE"
+
+# Build status report
+python3 << 'PYEOF'
+import json, subprocess, os, datetime, sys
+
+FED_DIR = os.path.expanduser("~/.mesh-prod/federation")
+REPORT_FILE = f"{FED_DIR}/status-report.json"
+
+def run_cmd(cmd, timeout=5):
+    try:
+        r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=timeout)
+        return r.stdout.strip() if r.returncode == 0 else None
+    except:
+        return None
+
+def check_process(pid):
+    if not pid:
+        return "unknown"
+    try:
+        os.kill(int(pid), 0)
+        return "running"
+    except:
+        return "stopped"
+
+# Load registry
+with open(f"{FED_DIR}/agent-registry.json") as f:
+    registry = json.load(f)
+
+report = {
+    "timestamp": datetime.datetime.now().isoformat(),
+    "host": "m2-sidekick",
+    "agents": [],
+    "mesh_nodes": [],
+    "terminals": {},
+    "openclaw": {},
+    "system": {}
+}
+
+# Check each agent
+for agent in registry.get("agents", []):
+    status = check_process(agent.get("pid"))
+    agent["live_status"] = status
+    
+    # Check port if applicable
+    if agent.get("port"):
+        port_check = run_cmd(f"nc -z localhost {agent['port']} && echo open || echo closed")
+        agent["port_status"] = port_check or "unknown"
+    
+    report["agents"].append(agent)
+
+# Check mesh nodes
+for node in registry.get("mesh_nodes", []):
+    if node.get("ip"):
+        ping = run_cmd(f"ping -c 1 -W 2 {node['ip']} >/dev/null 2>&1 && echo reachable || echo unreachable")
+        node["reachability"] = ping or "unknown"
+    report["mesh_nodes"].append(node)
+
+# Check mesh gateway health
+gateway_health = run_cmd("curl -sf --max-time 5 http://192.168.50.105:3205/health", timeout=6)
+if gateway_health:
+    try:
+        gh = json.loads(gateway_health)
+        report["mesh_gateway"] = {
+            "status": gh.get("status", "unknown"),
+            "nodes_online": gh.get("nodes_online", 0),
+            "nodes_total": gh.get("nodes_total", 0),
+            "reachable": True
+        }
+    except:
+        report["mesh_gateway"] = {"reachable": True, "raw": gateway_health[:200]}
+else:
+    report["mesh_gateway"] = {"reachable": False}
+
+# Check terminals
+for tty in ["ttys004", "ttys006", "ttys007", "ttys008"]:
+    who = run_cmd(f"who | grep {tty}")
+    if who:
+        report["terminals"][tty] = {"active": True, "user": who.split()[0] if who else "unknown"}
+    else:
+        report["terminals"][tty] = {"active": False}
+
+# Check openclaw
+openclaw_running = run_cmd("pgrep -f 'openclaw|CuaDriver' | head -1")
+report["openclaw"] = {
+    "daemon_running": openclaw_running is not None,
+    "memory_exists": os.path.exists(os.path.expanduser("~/.openclaw/memory/main.sqlite")),
+    "gateway_log_size": run_cmd("stat -f%z ~/.openclaw/logs/gateway.log 2>/dev/null || echo 0")
+}
+
+# System snapshot
+df_out = run_cmd("df -h /System/Volumes/Data | awk 'NR==2 {print $5, $4}'")
+report["system"]["disk"] = df_out or "unknown"
+
+ram_out = run_cmd("vm_stat | awk '/Pages active/ {a=$3} /Pages inactive/ {i=$3} /Pages wired/ {w=$3} END {printf \"%.1fGB\", (a+i+w)*16384/1e9}'")
+report["system"]["ram_used"] = ram_out or "unknown"
+
+swap_out = run_cmd("sysctl vm.swapusage 2>/dev/null | grep -o 'used = [0-9.]*[MG]'")
+report["system"]["swap_used"] = swap_out or "unknown"
+
+ollama_models = run_cmd("curl -sf --max-time 3 http://127.0.0.1:11434/api/tags | python3 -c 'import sys,json; print(len(json.load(sys.stdin)[\"models\"]))' 2>/dev/null")
+report["system"]["ollama_models"] = ollama_models or "0"
+
+# Save report
+with open(REPORT_FILE, "w") as f:
+    json.dump(report, f, indent=2)
+
+# Print summary
+print(f"\n🌐 FEDERATION STATUS")
+print(f"   Host: {report['host']} @ {report['timestamp']}")
+print(f"")
+print(f"   AGENTS:")
+for a in report["agents"]:
+    emoji = "🟢" if a['live_status'] == 'running' else "🔴" if a['live_status'] == 'stopped' else "⚪"
+    print(f"   {emoji} {a['name']:20s} | {a['live_status']:10s} | {a['role']}")
+
+print(f"")
+print(f"   MESH NODES:")
+for n in report["mesh_nodes"]:
+    emoji = "🟢" if n.get('reachability') == 'reachable' else "🔴"
+    print(f"   {emoji} {n['id']:20s} | {n.get('reachability', 'unknown'):12s}")
+
+print(f"")
+print(f"   MESH GATEWAY:")
+gw = report.get("mesh_gateway", {})
+emoji = "🟢" if gw.get("reachable") else "🔴"
+print(f"   {emoji} 192.168.50.105:3205 | {gw.get('status', 'unknown')} | {gw.get('nodes_online', '?')}/{gw.get('nodes_total', '?')} nodes")
+
+print(f"")
+print(f"   TERMINALS:")
+for tty, info in report["terminals"].items():
+    emoji = "🟢" if info["active"] else "⚫"
+    print(f"   {emoji} {tty} | {'active' if info['active'] else 'inactive'}")
+
+print(f"")
+print(f"   SYSTEM:")
+print(f"   💾 Disk: {report['system']['disk']}")
+print(f"   🧠 RAM: {report['system']['ram_used']}")
+print(f"   💤 Swap: {report['system']['swap_used']}")
+print(f"   🤖 Ollama: {report['system']['ollama_models']} models")
+
+print(f"")
+print(f"   OPENCLAW:")
+oc = report["openclaw"]
+print(f"   {'🟢' if oc['daemon_running'] else '🔴'} Daemon | {'🟢' if oc['memory_exists'] else '🔴'} Memory DB")
+
+PYEOF
+
+echo ""
+echo "=== Federation scan complete ===" | tee -a "$LOG_FILE"

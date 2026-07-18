@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_wifi_csi_mcp"
+version = "1.0.0"
+description = "WiFi CSI through-wall detection + drone detection (ESP32 array, ESP-CSI framework, CNN-LSTM classifier) for DEFONEOS SHIELD arm. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "defoneos", "project-aurum", "sovereign", "uk", "open-source", "mit-licensed"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-wifi-csi-mcp"
+
+[project.scripts]
+meek-wifi-csi-mcp = "meek_wifi_csi_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_wifi_csi_mcp"]

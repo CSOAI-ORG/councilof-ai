@@ -1,0 +1,406 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>DEFONEOS Knowledge Base — Architecture, API & Documentation Hub</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#f8fafc;padding:2rem;line-height:1.7;max-width:1100px;margin:0 auto}h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}h2{color:#22d3ee;margin:2rem 0 .5rem;font-size:1.5rem;border-bottom:1px solid rgba(34,211,238,.2);padding-bottom:.3rem}h3{color:#a78bfa;margin:1.2rem 0 .3rem;font-size:1.1rem}h4{color:#f59e0b;margin:.8rem 0 .2rem}p{margin:.4rem 0;color:#cbd5e1}pre{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;color:#22c55e;font-size:.85rem;margin:1rem 0;overflow-x:auto}code{background:rgba(34,211,238,.1);padding:.15rem .4rem;border-radius:4px;font-size:.85rem;color:#4ade80}.arch-layer{background:rgba(255,255,255,.03);border:1px solid rgba(34,211,238,.15);border-radius:12px;padding:1.2rem;margin:.8rem 0;position:relative;overflow:hidden}.arch-layer::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#22d3ee,#8b5cf6)}.arch-layer .layer-num{position:absolute;right:1rem;top:.5rem;font-size:3rem;font-weight:bold;color:rgba(255,255,255,.05)}.layer-title{color:#22d3ee;font-size:1.1rem;font-weight:bold;margin-bottom:.3rem}.layer-desc{color:#94a3b8;font-size:.85rem}.layer-components{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}.layer-components span{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);border-radius:4px;padding:.2rem .5rem;font-size:.75rem;color:#22d3ee}table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.6rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}td{padding:.5rem .6rem;border-bottom:1px solid rgba(255,255,255,.05);color:#cbd5e1}tr:hover td{background:rgba(34,211,238,.03)}ul{padding-left:1.5rem;margin:.5rem 0}li{margin:.2rem 0;color:#cbd5e1}.toc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1rem 1.5rem;margin:1rem 0}.toc a{color:#22d3ee;text-decoration:none;display:block;padding:.2rem 0}.toc a:hover{text-decoration:underline}.endpoint{background:rgba(0,0,0,.3);border-radius:8px;padding:.8rem 1rem;margin:.6rem 0;border-left:3px solid #8b5cf6}.endpoint .method{font-weight:bold;color:#22c55e;font-size:.8rem;text-transform:uppercase;display:inline-block;width:60px}.endpoint .path{color:#22d3ee;font-family:monospace}.endpoint .desc{color:#64748b;font-size:.8rem;margin-top:.2rem}.sparql-query{background:#0d1117;border:1px solid rgba(56,139,253,.3);border-radius:8px;padding:1rem;color:#79c0ff;font-size:.8rem;margin:1rem 0;font-family:'SF Mono',Consolas,monospace;overflow-x:auto}.badge{display:inline-block;font-size:.7rem;font-weight:bold;padding:.15rem .5rem;border-radius:4px;text-transform:uppercase}.badge.core{background:rgba(34,197,94,.15);color:#22c55e}.badge.api{background:rgba(168,85,247,.15);color:#a78bfa}.badge.data{background:rgba(234,179,8,.15);color:#eab308}.badge.gov{background:rgba(34,211,238,.15);color:#22d3ee}.graph-node{display:inline-block;margin:.3rem;padding:.4rem .8rem;border-radius:8px;font-size:.8rem}.graph-node.entity{background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);color:#22d3ee}.graph-node.relation{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);color:#a78bfa}</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS Knowledge Base — Architecture, API & Documentation"><meta property="og:description" content="Complete DEFONEOS documentation: 7-layer architecture, 30 MCP API reference, SIGIL chain spec, BFT governance, SPARQL knowledge graph, deployment guides."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS Knowledge Base — Complete architecture documentation, API reference for 30 MCPs, SIGIL chain specification, BFT governance protocol, SPARQL knowledge graph, and deployment guides."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-knowledge.html"></head><body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Index</a><a href="defoneos-100.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">100</a><a href="defoneos-knowledge.html" style="color:#22d3ee;text-decoration:none;font-size:.85rem;font-weight:bold">Knowledge</a><a href="defoneos-api-playground.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">API</a><a href="defoneos-threat-model.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Threats</a><a href="defoneos-compliance-crosswalk.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Compliance</a></nav>
+
+<h1>DEFONEOS Knowledge Base</h1>
+<p><strong>Complete architecture documentation, API reference, and developer guides for the UK's sovereign defence AI OS.</strong></p>
+
+<div class="toc">
+<strong style="color:#22d3ee">📖 Table of Contents</strong>
+<a href="#architecture">1. System Architecture (7 Layers)</a>
+<a href="#mcp-ref">2. MCP API Reference (30 Servers)</a>
+<a href="#sigil">3. SIGIL Chain Specification</a>
+<a href="#bft">4. BFT Governance Protocol</a>
+<a href="#graph">5. Knowledge Graph (SPARQL)</a>
+<a href="#deploy">6. Deployment Guide</a>
+<a href="#sdk">7. SDK & Client Libraries</a>
+<a href="#data">8. Data Sources & OGL Licensing</a>
+<a href="#events">9. Event Types & Schema</a>
+<a href="#faq">10. FAQ & Troubleshooting</a>
+</div>
+
+<h2 id="architecture">1. System Architecture — 7 Layers</h2>
+
+<p>DEFONEOS is built as a 7-layer sovereign substrate. Each layer is independently deployable, independently auditable, and communicates only through cryptographically signed MCP messages.</p>
+
+<div class="arch-layer">
+<div class="layer-num">7</div>
+<div class="layer-title">L7 — Presentation (Vercel)</div>
+<div class="layer-desc">183 static HTML pages. Dark-themed, SEO-optimized, sub-1s load. No server-side rendering — pure client-side.</div>
+<div class="layer-components"><span>Vercel CDN</span><span>183 HTML pages</span><span>CesiumJS</span><span>Chart.js</span><span>OAuth2 login</span></div>
+</div>
+
+<div class="arch-layer">
+<div class="layer-num">6</div>
+<div class="layer-title">L6 — Application (SOV3 Hub :3101)</div>
+<div class="layer-desc">The sovereign inference hub. Routes queries, manages state, runs the OLM router, exposes 188+ tools via MCP protocol.</div>
+<div class="layer-components"><span>FastAPI :3101</span><span>OLM Router</span><span>188+ Tools</span><span>Ollama</span><span>Zamba (Mamba+Transformer)</span><span>Intuition Engine</span></div>
+</div>
+
+<div class="arch-layer">
+<div class="layer-num">5</div>
+<div class="layer-title">L5 — Governance (BFT Council :3200)</div>
+<div class="layer-desc">33-agent Byzantine Fault Tolerant council. 22-of-33 quorum. HotStuff consensus. Ed25519-signed votes on every significant decision.</div>
+<div class="layer-components"><span>BFT 33 agents</span><span>HotStuff consensus</span><span>Quorum: 22/33</span><span>Ed25519 votes</span><span>Veto powers</span><span>Charter enforcement</span></div>
+</div>
+
+<div class="arch-layer">
+<div class="layer-num">4</div>
+<div class="layer-title">L4 — Audit (SIGIL Chain)</div>
+<div class="layer-desc">Hash-chained, Ed25519-signed append-only ledger. Every action, every tool call, every vote, every compliance assertion. 49K+ entries. 100-year chain integrity.</div>
+<div class="layer-components"><span>SHA-256 hash chain</span><span>Ed25519 signatures</span><span>49K+ receipts</span><span>OrgKernel 3-Layer</span><span>L1 Identity</span><span>L2 Execution</span><span>L3 Compliance</span></div>
+</div>
+
+<div class="arch-layer">
+<div class="layer-num">3</div>
+<div class="layer-title">L3 — Security (DORADO)</div>
+<div class="layer-desc">Foreign-access detection, quantum-safe key rotation, bot detector, SOC dashboard, customer audit export. NIST PQC-ready.</div>
+<div class="layer-components"><span>DORADO</span><span>ML-DSA-65 (Dilithium)</span><span>ML-KEM-768 (Kyber)</span><span>90-day rotation</span><span>SOC dashboard</span><span>Bot detector</span><span>HORUS monitoring</span></div>
+</div>
+
+<div class="arch-layer">
+<div class="layer-num">2</div>
+<div class="layer-title">L2 — Sensor (30 MCPs)</div>
+<div class="layer-desc">30 MCP servers across 12 domains. Each pip-installable, Apache 2.0, sovereign. The data ingestion and tool execution layer.</div>
+<div class="layer-components"><span>ISR (10)</span><span>Cyber (5)</span><span>Compliance (5)</span><span>Governance (5)</span><span>UK Open Data (5)</span></div>
+</div>
+
+<div class="arch-layer">
+<div class="layer-num">1</div>
+<div class="layer-title">L1 — Substrate (GCP VM + Edge)</div>
+<div class="layer-desc">GCP VM (49GB data moat, 38 cron jobs, King hive). M2 Edge (Ollama 24/7). M4 (inference). ORION (task capture). SSH tunnels between nodes.</div>
+<div class="layer-components"><span>GCP VM</span><span>PostgreSQL</span><span>SQLite</span><span>49 GB data</span><span>38 cron jobs</span><span>M2 Edge</span><span>M4 Inference</span><span>SSH tunnels</span></div>
+</div>
+
+<h2 id="mcp-ref">2. MCP API Reference — 30 Servers</h2>
+
+<h3>Core Compliance & Governance MCPs</h3>
+<table>
+<tr><th>Server</th><th>Package</th><th>Tools</th><th>Badge</th><th>Description</th></tr>
+<tr><td><code>eu-ai-act-compliance</code></td><td>eu-ai-act-compliance-mcp</td><td>12</td><td><span class="badge core">CORE</span></td><td>EU AI Act article-by-article compliance: risk classification, Article 50 watermarking, high-risk audit, prohibited practices</td></tr>
+<tr><td><code>meok-governance-engine</code></td><td>meok-governance-engine-mcp</td><td>15</td><td><span class="badge gov">GOV</span></td><td>30-framework governance audit, crosswalks, charter enforcement, policy lab</td></tr>
+<tr><td><code>meok-king</code></td><td>meok-king-mcp</td><td>3</td><td><span class="badge gov">GOV</span></td><td>28-hive king router, MoE+BFT, fan-out queen queries</td></tr>
+<tr><td><code>sov3-bridge</code></td><td>sov3-bridge-mcp</td><td>8</td><td><span class="badge core">CORE</span></td><td>Multi-persona deliberation, cross-synthesis, strategic verdict</td></tr>
+<tr><td><code>article-50-watermarking</code></td><td>article-50-watermarking-mcp</td><td>3</td><td><span class="badge core">CORE</span></td><td>EU Digital Omnibus Act watermarking passport issuance + HMAC/Ed25519 verification</td></tr>
+<tr><td><code>meok-mcp-injection-scan</code></td><td>meok-mcp-injection-scan-mcp</td><td>4</td><td><span class="badge api">SEC</span></td><td>Prompt injection detection, supply-chain risk, Morris-II worm scan</td></tr>
+<tr><td><code>meok-compliance-passport</code></td><td>meok-compliance-passport-mcp</td><td>5</td><td><span class="badge gov">GOV</span></td><td>Signed, portable compliance credential with Ed25519 attestation</td></tr>
+<tr><td><code>federation-compliance-only</code></td><td>federation-compliance-only-mcp</td><td>6</td><td><span class="badge gov">GOV</span></td><td>EU AI Act, GDPR, HIPAA, SOC2, PCI-DSS, ISO 27001 compliance checks</td></tr>
+</table>
+
+<h3>Sensor & ISR MCPs</h3>
+<table>
+<tr><th>Server</th><th>Package</th><th>Tools</th><th>Badge</th><th>Description</th></tr>
+<tr><td><code>sentinel-hub</code></td><td>sentinel-hub-mcp</td><td>6</td><td><span class="badge data">DATA</span></td><td>Sentinel-1/2/3 satellite imagery, NDVI, flood detection, change analysis</td></tr>
+<tr><td><code>os-opendata</code></td><td>os-opendata-mcp</td><td>5</td><td><span class="badge data">DATA</span></td><td>Ordnance Survey Open Names, Open Rivers, Open Roads, Boundaries</td></tr>
+<tr><td><code>data-gov-uk</code></td><td>data-gov-uk-mcp</td><td>4</td><td><span class="badge data">DATA</span></td><td>data.gov.uk 60K+ datasets search, download, metadata</td></tr>
+<tr><td><code>companies-house</code></td><td>companies-house-mcp</td><td>6</td><td><span class="badge data">DATA</span></td><td>UK company registry: search, filing history, officers, PSC</td></tr>
+<tr><td><code>ons-statistics</code></td><td>ons-statistics-mcp</td><td>4</td><td><span class="badge data">DATA</span></td><td>ONS census, economic indicators, population, employment data</td></tr>
+<tr><td><code>aisstream-maritime</code></td><td>aisstream-maritime-mcp</td><td>5</td><td><span class="badge data">DATA</span></td><td>Live AIS vessel tracking, port arrivals, maritime anomaly detection</td></tr>
+<tr><td><code>openaq-air</code></td><td>openaq-air-mcp</td><td>4</td><td><span class="badge data">DATA</span></td><td>Global air quality monitoring, PM2.5/NO2/O3, CBRN detection</td></tr>
+<tr><td><code>gdelt-news</code></td><td>gdelt-news-mcp</td><td>5</td><td><span class="badge data">DATA</span></td><td>GDELT OSINT: global news events, conflict tracking, sentiment</td></tr>
+<tr><td><code>rtsp-camera</code></td><td>rtsp-camera-mcp</td><td>4</td><td><span class="badge data">DATA</span></td><td>RTSP IP camera capture, frame extraction, YOLOv8 object detection</td></tr>
+<tr><td><code>mqtt-bridge</code></td><td>mqtt-bridge-mcp</td><td>4</td><td><span class="badge data">DATA</span></td><td>MQTT IoT bridge: sensor pub/sub, device management, telemetry</td></tr>
+</table>
+
+<h3>Security & Threat Detection MCPs</h3>
+<table>
+<tr><th>Server</th><th>Package</th><th>Tools</th><th>Badge</th><th>Description</th></tr>
+<tr><td><code>dorado-foreign-access</code></td><td>dorado-foreign-access-mcp</td><td>5</td><td><span class="badge api">SEC</span></td><td>Foreign-access attempt detection, IP geolocation, block list</td></tr>
+<tr><td><code>dorado-pqc</code></td><td>dorado-pqc-mcp</td><td>4</td><td><span class="badge api">SEC</span></td><td>NIST PQC key generation, rotation, verification (ML-DSA, ML-KEM)</td></tr>
+<tr><td><code>dorado-audit</code></td><td>dorado-audit-mcp</td><td>6</td><td><span class="badge api">SEC</span></td><td>SIGIL chain audit, replay tool, customer report export</td></tr>
+<tr><td><code>dorado-soc</code></td><td>dorado-soc-mcp</td><td>5</td><td><span class="badge api">SEC</span></td><td>SOC dashboard, bot detector, shift handoff, CISO escalation matrix</td></tr>
+</table>
+
+<h2 id="sigil">3. SIGIL Chain Specification</h2>
+
+<p>The SIGIL chain is DEFONEOS's append-only, hash-chained, Ed25519-signed audit ledger. Every action by every agent is recorded.</p>
+
+<h4>Entry Format</h4>
+<pre>
+&lt;OP&gt;|&lt;actor&gt;|&lt;target&gt;|&lt;message&gt;|&lt;timestamp&gt;|&lt;prev_hash&gt;|&lt;signature&gt;
+</pre>
+
+<h4>Operations (OP codes)</h4>
+<table>
+<tr><th>Code</th><th>Operation</th><th>Use Case</th></tr>
+<tr><td><code>C</code></td><td>Command</td><td>Direct instruction to an agent</td></tr>
+<tr><td><code>P</code></td><td>Proposal</td><td>BFT council proposal submission</td></tr>
+<tr><td><code>V</code></td><td>Vote</td><td>BFT council vote (for/against/abstain)</td></tr>
+<tr><td><code>M</code></td><td>Memory</td><td>Memory write/recall</td></tr>
+<tr><td><code>Q</code></td><td>Query</td><td>Information request</td></tr>
+<tr><td><code>H</code></td><td>Handoff</td><td>Inter-agent task handoff</td></tr>
+<tr><td><code>S</code></td><td>State</td><td>System state change</td></tr>
+<tr><td><code>A</code></td><td>Assertion</td><td>Compliance assertion (L3 OrgKernel)</td></tr>
+</table>
+
+<h4>Chain Integrity</h4>
+<pre>
+hash(n) = SHA-256(entry_n || hash(n-1))
+signature = Ed25519.sign(private_key, hash(n))
+</pre>
+
+<p>Each entry's hash includes the previous entry's hash, making the chain tamper-evident. Any modification to a historical entry invalidates all subsequent hashes. Signatures are verifiable by anyone with the agent's public key (L1 identity registration).</p>
+
+<h4>Verification</h4>
+<div class="endpoint">
+<span class="method">POST</span><span class="path">/mcp → sigil_verify_chain</span>
+<div class="desc">Re-compute every hash, verify every signature, detect tampering across the entire chain.</div>
+</div>
+
+<h2 id="bft">4. BFT Governance Protocol</h2>
+
+<h4>Council Composition</h4>
+<ul>
+<li><strong>33 agents</strong> — each with unique Ed25519 keypair (L1 registered)</li>
+<li><strong>Quorum: 22 of 33</strong> (67%) — required for any binding decision</li>
+<li><strong>Fault tolerance: f &lt; n/3</strong> — tolerates up to 11 Byzantine (malicious) agents</li>
+<li><strong>Consensus: HotStuff</strong> — 3-chain BFT, leader rotation, O(n) message complexity</li>
+</ul>
+
+<h4>Vote Types</h4>
+<table>
+<tr><th>Type</th><th>Threshold</th><th>Scope</th></tr>
+<tr><td>Standard</td><td>22/33 (67%)</td><td>Normal operational decisions, tool calls above risk threshold</td></tr>
+<tr><td>Supermajority</td><td>27/33 (82%)</td><td>Charter amendments, red-line overrides (never used — red lines are immutable)</td></tr>
+<tr><td>Unanimous</td><td>33/33 (100%)</td><td>DEFONEOS-SEAL credential issuance, new agent admission</td></tr>
+<tr><td>Veto</td><td>1 agent</td><td>Any single agent can veto a red-line violation. Veto is cryptographic and non-overridable.</td></tr>
+</table>
+
+<h4>Agent Roster (12 Domains)</h4>
+<p>Compliance · Security · ISR · Swarm · Cyber · Logistics · Medical · Space · Maritime · Land · Air · Civil Resilience — each domain has 2-3 council agents, ensuring no single domain dominates.</p>
+
+<h2 id="graph">5. Knowledge Graph (SPARQL)</h2>
+
+<p>DEFONEOS includes a defence-grade semantic knowledge graph. RDF/OWL-compatible. SPARQL-queryable. Entities, relationships, actions, and rules.</p>
+
+<h4>Graph Structure</h4>
+<p><strong>Entities (Objects):</strong></p>
+<div>
+<span class="graph-node entity">Vessel</span>
+<span class="graph-node entity">Aircraft</span>
+<span class="graph-node entity">Vehicle</span>
+<span class="graph-node entity">Personnel</span>
+<span class="graph-node entity">Facility</span>
+<span class="graph-node entity">Cyber Asset</span>
+<span class="graph-node entity">Satellite</span>
+<span class="graph-node entity">Drone</span>
+<span class="graph-node entity">Sensor</span>
+<span class="graph-node entity">Threat</span>
+</div>
+
+<p><strong>Relationships (Links):</strong></p>
+<div>
+<span class="graph-node relation">tracks</span>
+<span class="graph-node relation">communicates-with</span>
+<span class="graph-node relation">owned-by</span>
+<span class="graph-node relation">located-at</span>
+<span class="graph-node relation">part-of</span>
+<span class="graph-node relation">targets</span>
+<span class="graph-node relation">escorts</span>
+<span class="graph-node relation">detected-by</span>
+<span class="graph-node relation">classified-as</span>
+<span class="graph-node relation">responded-to-by</span>
+</div>
+
+<h4>SPARQL Query: Dark Vessel Detection</h4>
+<div class="sparql-query">
+PREFIX def: &lt;https://defoneos.com/ontology#&gt;<br>
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;<br><br>
+SELECT ?vessel ?threat ?confidence ?sensor<br>
+WHERE {<br>
+&nbsp;&nbsp;?vessel rdf:type def:Vessel .<br>
+&nbsp;&nbsp;?vessel def:hasAIS false .<br>
+&nbsp;&nbsp;?vessel def:detectedBy ?sensor .<br>
+&nbsp;&nbsp;?vessel def:threatLevel ?threat .<br>
+&nbsp;&nbsp;?vessel def:confidence ?confidence .<br>
+&nbsp;&nbsp;FILTER(?confidence &gt; 0.85)<br>
+}<br>
+ORDER BY DESC(?confidence)
+</div>
+
+<h4>SPARQL Query: Multi-Sensor Fusion Track</h4>
+<div class="sparql-query">
+PREFIX def: &lt;https://defoneos.com/ontology#&gt;<br><br>
+SELECT ?target ?sensor1 ?sensor2 ?sensor3 ?fused_confidence<br>
+WHERE {<br>
+&nbsp;&nbsp;?target def:detectedBy ?sensor1, ?sensor2, ?sensor3 .<br>
+&nbsp;&nbsp;?sensor1 rdf:type def:RadarSensor .<br>
+&nbsp;&nbsp;?sensor2 rdf:type def:EOIRSensor .<br>
+&nbsp;&nbsp;?sensor3 rdf:type def:RFReceiver .<br>
+&nbsp;&nbsp;?target def:fusedConfidence ?fused_confidence .<br>
+&nbsp;&nbsp;FILTER(?fused_confidence &gt; 0.90)<br>
+}
+</div>
+
+<h4>Business Rules Engine</h4>
+<ul>
+<li><code>IF confidence &gt; 0.85 AND BFT_quorum = true THEN escalate</code></li>
+<li><code>IF vessel.hasAIS = false AND RF_detected = true THEN classify(threat)</code></li>
+<li><code>IF drone.distance &lt; 500m AND restricted_airspace = true THEN alert(security)</code></li>
+<li><code>IF cyber.threat_level = critical THEN activate(incident_response) + notify(BFT_council)</code></li>
+<li><code>IF red_line.violated = true THEN veto(agent) + log(SIGIL) + halt(operation)</code></li>
+</ul>
+
+<h2 id="deploy">6. Deployment Guide</h2>
+
+<h3>Quick Start (5 Minutes)</h3>
+<pre>
+# 1. Clone
+git clone https://github.com/CSOAI-ORG/defoneos.git
+cd defoneos
+
+# 2. Install
+pip install -r requirements.txt
+
+# 3. Generate Ed25519 keypair (L1 Identity)
+python -c "from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey; k=Ed25519PrivateKey.generate(); print(k.private_bytes_raw().hex(), k.public_key().public_bytes_raw().hex())"
+
+# 4. Start SOV3 hub
+python -m sov3.hub --port 3101 --host 0.0.0.0
+
+# 5. Verify
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+</pre>
+
+<h3>Deployment Modes</h3>
+<table>
+<tr><th>Mode</th><th>Network</th><th>Use Case</th><th>Components</th></tr>
+<tr><td>Local Development</td><td>localhost</td><td>Dev, testing, demos</td><td>SOV3 hub + Ollama + 5 core MCPs</td></tr>
+<tr><td>Production (Cloud)</td><td>Internet</td><td>SaaS, commercial</td><td>Full stack + Vercel + GCP VM + 30 MCPs</td></tr>
+<tr><td>Air-Gapped</td><td>No internet</td><td>Classified, SCIF</td><td>Full stack + local models + USB data diode</td></tr>
+<tr><td>Coalition</td><td>Secure WAN</td><td>Five Eyes, NATO</td><td>Federated BFT + A2A protocol + STANAG</td></tr>
+<tr><td>Edge (Field)</td><td>Mesh radio</td><td>Tactical edge</td><td>M2 Mac + Ollama + essential MCPs + DIL</td></tr>
+</table>
+
+<h3>Environment Variables</h3>
+<pre>
+SOV3_HOST=0.0.0.0
+SOV3_PORT=3101
+BFT_COUNCIL_PORT=3200
+SIGIL_CHAIN_PATH=/var/defoneos/sigil.jsonl
+ED25519_PRIVATE_KEY=&lt;hex&gt;
+ED25519_PUBLIC_KEY=&lt;hex&gt;
+BFT_QUORUM=22
+OLLAMA_HOST=http://localhost:11434
+VERCEL_TOKEN=&lt;optional&gt;
+DATABASE_URL=postgresql://...
+</pre>
+
+<h2 id="sdk">7. SDK & Client Libraries</h2>
+
+<h3>Python</h3>
+<pre>
+from defoneos import DEFONEOSClient
+
+client = DEFONEOSClient(host="localhost", port=3101)
+
+# List all tools
+tools = client.list_tools()
+print(f"{len(tools)} tools available")
+
+# Call a tool
+result = client.call("sigil_emit", {
+    "line": "C|operator|sov3|begin ISR scan sector alpha-7"
+})
+
+# Query the knowledge graph
+tracks = client.call("sparql_query", {
+    "query": "SELECT ?v WHERE { ?v rdf:type def:Vessel . ?v def:hasAIS false }"
+})
+
+# BFT vote
+vote = client.call("bft_vote", {
+    "proposal": "deploy-counter-drone-jammer-sector-7",
+    "choice": "for"
+})
+</pre>
+
+<h3>JavaScript</h3>
+<pre>
+import { DEFONEOSClient } from '@defoneos/sdk';
+
+const client = new DEFONEOSClient('http://localhost:3101');
+
+// List tools
+const tools = await client.listTools();
+
+// Call a tool
+const result = await client.call('sigil_emit', {
+  line: 'C|operator|sov3|begin ISR scan sector alpha-7'
+});
+
+// Subscribe to SIGIL stream
+client.subscribe('sigil', (entry) => {
+  console.log('New SIGIL:', entry);
+});
+</pre>
+
+<h3>curl</h3>
+<pre>
+# List tools
+curl -X POST localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+
+# Call a tool
+curl -X POST localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"threat_detect","arguments":{"text":"suspicious payload"}}}'
+</pre>
+
+<h2 id="data">8. Data Sources & OGL Licensing</h2>
+
+<p>DEFONEOS uses exclusively Open Government Licence (OGL) data. No proprietary data, no foreign-sourced classified data, no data without provenance.</p>
+
+<table>
+<tr><th>Source</th><th>Type</th><th>Licence</th><th>Volume</th></tr>
+<tr><td>Ordnance Survey Open Names</td><td>Geographic</td><td>OGL v3</td><td>~3 GB</td></tr>
+<tr><td>Companies House</td><td>Business registry</td><td>OGL v3</td><td>~12 GB</td></tr>
+<tr><td>ONS Statistics</td><td>Demographics</td><td>OGL v3</td><td>~4 GB</td></tr>
+<tr><td>data.gov.uk</td><td>Multi-domain</td><td>OGL v3</td><td>60K+ datasets</td></tr>
+<tr><td>Sentinel Hub</td><td>Satellite imagery</td><td>Copernicus (free)</td><td>On-demand</td></tr>
+<tr><td>AIS Stream</td><td>Maritime tracking</td><td>aisstream.io (free tier)</td><td>Real-time</td></tr>
+<tr><td>GDELT Project</td><td>OSINT</td><td>CC-BY</td><td>~500 GB</td></tr>
+<tr><td>Met Office</td><td>Weather</td><td>OGL v3</td><td>On-demand</td></tr>
+<tr><td>OpenAQ</td><td>Air quality</td><td>CC-BY</td><td>Global</td></tr>
+</table>
+
+<p><strong>Total data moat: 49 GB on GCP VM. All OGL/CC-BY. No lock-in.</strong></p>
+
+<h2 id="events">9. Event Types & Schema</h2>
+
+<table>
+<tr><th>Event</th><th>Trigger</th><th>SIGIL OP</th><th>Consumer</th></tr>
+<tr><td><code>vessel_detected</code></td><td>AIS gap + RF detection</td><td>S (State)</td><td>Cesium COP, ISR pipeline</td></tr>
+<tr><td><code>drone_intrusion</code></td><td>RF signature + distance &lt; 500m</td><td>S (State)</td><td>Counter-drone module, alert</td></tr>
+<tr><td><code>cyber_threat</code></td><td>IDS/SIEM alert</td><td>S (State)</td><td>DORADO, incident response</td></tr>
+<tr><td><code>bft_proposal</code></td><td>Action above risk threshold</td><td>P (Proposal)</td><td>BFT council</td></tr>
+<tr><td><code>bft_vote_cast</code></td><td>Agent votes</td><td>V (Vote)</td><td>BFT tally, consensus engine</td></tr>
+<tr><td><code>sigil_chain_append</code></td><td>Any action</td><td>All</td><td>Audit chain</td></tr>
+<tr><td><code>red_line_violation</code></td><td>Red-line pattern detected</td><td>A (Assertion, compliant=false)</td><td>Veto, halt, alert</td></tr>
+<tr><td><code>compliance_assertion</code></td><td>Action completed</td><td>A (Assertion)</td><td>OrgKernel L3, audit export</td></tr>
+<tr><td><code>key_rotation</code></td><td>90-day timer</td><td>S (State)</td><td>DORADO PQC</td></tr>
+<tr><td><code>foreign_access_attempt</code></td><td>Non-sovereign IP</td><td>S (State)</td><td>DORADO SOC</td></tr>
+</table>
+
+<h2 id="faq">10. FAQ & Troubleshooting</h2>
+
+<h4>Q: How is DEFONEOS different from Palantir Gotham?</h4>
+<p>A: DEFONEOS is open-source (Apache 2.0), costs £0-£9,999/mo vs Palantir's $50M/year, runs air-gapped, has BFT governance built-in, and every action is cryptographically signed. Palantir is a black box; DEFONEOS is a glass box.</p>
+
+<h4>Q: Can DEFONEOS run without internet?</h4>
+<p>A: Yes. The air-gapped deployment mode runs entirely offline — local Ollama models, local PostgreSQL, local MCPs. Data is transferred via USB with Ed25519 signature verification and quarantine VM processing.</p>
+
+<h4>Q: What happens if the BFT council can't reach quorum?</h4>
+<p>A: The action is deferred. The system enters a safe state — defensive posture, no new actions, existing operations continue with cached parameters. Quorum can be re-established by waking dormant agents or through human override (logged as a SIGIL entry with supermajority requirement).</p>
+
+<h4>Q: Is the SIGIL chain quantum-safe?</h4>
+<p>A: The chain itself uses SHA-256 + Ed25519. DORADO PQC module provides ML-DSA-65 (Dilithium) and ML-KEM-768 (Kyber) for quantum-resistant signatures. The 90-day key rotation ensures forward secrecy even against future quantum adversaries.</p>
+
+<h4>Q: Can I contribute an MCP server?</h4>
+<p>A: Yes. Fork the repo, build your MCP following the <a href="defoneos-integrate.html" style="color:#22d3ee">integration guide</a>, submit a PR. Every contribution is SIGIL-signed and goes through BFT review.</p>
+
+<h4>Q: What's the maximum scale?</h4>
+<p>A: Tested with 33 agents, 30 MCPs, 188+ tools, 49 GB data. The architecture is horizontally scalable — more agents = more fault tolerance, more MCPs = more sensor coverage, more VMs = more compute. Coalition mode supports cross-organization federation.</p>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a> · <a href="defoneos-threat-model.html" style="color:#22d3ee;text-decoration:none">Threat Model</a> · <a href="defoneos-compliance-crosswalk.html" style="color:#22d3ee;text-decoration:none">Compliance</a> · <a href="defoneos-api-playground.html" style="color:#22d3ee;text-decoration:none">API Playground</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

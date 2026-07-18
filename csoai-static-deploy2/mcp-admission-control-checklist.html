@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS MCP Admission Control Checklist — 9-point checklist for new MCP servers joining the federation. BFT 23/33 quorum required. Red-line compliance, data flow, SIGIL integration, UK sovereignty.">
+<meta property="og:title" content="DEFONEOS · MCP Admission Control Checklist">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · MCP Admission Control Checklist</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4.5vw,3rem);background:linear-gradient(135deg,#22d3ee 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1rem 0}
+.spec-doc th{background:rgba(34,211,238,.08);color:var(--cyan);padding:.7rem .8rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}
+.spec-doc td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.checklist-item{background:rgba(20,24,31,.4);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.5rem;margin:.8rem 0;position:relative;overflow:hidden}
+.checklist-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),#4fc3f7)}
+.checklist-item .num{display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;background:rgba(34,211,238,.12);color:var(--cyan);border:1px solid rgba(34,211,238,.3);border-radius:50%;font-weight:900;font-family:'Space Grotesk',sans-serif;margin-right:.5rem;font-size:.85rem}
+.checklist-item h3{margin:0 0 .3rem;color:var(--cyan);font-size:1rem;display:inline}
+.checklist-item .gate{font-size:.78rem;color:#fbbf24;margin-top:.5rem;font-weight:600}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:1.8rem;font-weight:900;color:var(--cyan)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="mcp-federation-architecture.html">Federation</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>MCP Admission Control Checklist</h1>
+  <p class="tagline">9-point checklist for new MCP servers joining the DEFONEOS federation. Every check must pass. BFT 23/33 quorum required for admission.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">9</div><div class="lbl">Checks</div></div>
+    <div class="stat"><div class="num">23/33</div><div class="lbl">BFT Quorum</div></div>
+    <div class="stat"><div class="num">12</div><div class="lbl">Red-Team Vectors</div></div>
+    <div class="stat"><div class="num">100%</div><div class="lbl">Pass Required</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2>1. Purpose</h2>
+<p>Before any new MCP server can join the DEFONEOS MCP Federation, it must pass all 9 admission control checks. The 33-agent BFT governance council reviews and votes on admission (23/33 quorum required). This ensures that every MCP in the federation meets the same sovereignty, security, and integrity standards.</p>
+<div class="note"><strong>No exceptions:</strong> An MCP that fails even one check is denied admission. It can be resubmitted after remediation, but partial admission is never granted.</div>
+</section>
+
+<section>
+<h2>2. The 9-Point Checklist</h2>
+
+<div class="checklist-item">
+<span class="num">1</span><h3>Source Provenance</h3>
+<p>All code dependencies must be traced to their source and hash-verified. No unverified dependencies. PyPI packages must have SIGIL-anchored integrity proofs. Git commits must have valid GPG/Ed25519 signatures.</p>
+<div class="gate">GATE: <code>defoneos-admission --check provenance --mcp <name></code> — all dependencies verified ✓</div>
+</div>
+
+<div class="checklist-item">
+<span class="num">2</span><h3>Red-Line Compliance</h3>
+<p>The MCP must contain NO kinetic-targeting patterns (strike package, find-fix-finish, kill order). NO personal-surveillance patterns (track individual, face-rec, locate phone). Automated scan confirms zero red-line proximity.</p>
+<div class="gate">GATE: <code>defoneos-admission --check redline --mcp <name></code> — 0 red-line violations ✓</div>
+</div>
+
+<div class="checklist-item">
+<span class="num">3</span><h3>Data Flow Classification</h3>
+<p>The MCP must enforce inward-only data flow. Data enters from external sources and flows inward toward the core. No outbound data exfiltration paths. Network analysis confirms no unexpected outbound connections.</p>
+<div class="gate">GATE: <code>defoneos-admission --check dataflow --mcp <name></code> — inward-only confirmed ✓</div>
+</div>
+
+<div class="checklist-item">
+<span class="num">4</span><h3>Ring Assignment</h3>
+<p>The MCP must be assigned to the correct trust ring based on data sensitivity. Ring 0 = governance/escrow. Ring 1 = defence sensors. Ring 2 = civil open-data. BFT council reviews and confirms the assignment.</p>
+<div class="gate">GATE: BFT vote on ring assignment — 23/33 approval ✓</div>
+</div>
+
+<div class="checklist-item">
+<span class="num">5</span><h3>SIGIL Integration</h3>
+<p>Every tool invocation in the MCP must generate a valid SIGIL receipt. Receipts must include: Ed25519 signature, RFC3161 timestamp, SHA-256 data hash, Bitcoin OTS anchor. No SIGIL = no admission.</p>
+<div class="gate">GATE: <code>defoneos-admission --check sigil --mcp <name></code> — all tools SIGIL-enabled ✓</div>
+</div>
+
+<div class="checklist-item">
+<span class="num">6</span><h3>UK Sovereignty Verification</h3>
+<p>Ring 0 MCPs: zero external API calls confirmed by code analysis and runtime monitoring. Ring 1 MCPs: external API calls limited to AUKUS-compatible providers on BFT-approved allowlist. Ring 2 MCPs: no restrictions (public data).</p>
+<div class="gate">GATE: Ring 0: <code>grep -r "http.*external" --include="*.py" | wc -l</code> == 0 ✓</div>
+</div>
+
+<div class="checklist-item">
+<span class="num">7</span><h3>Supply Chain Integrity</h3>
+<p>All PyPI dependencies must be SIGIL-anchored and hash-verified. No dependencies from unverified publishers. Known vulnerabilities (CVE database) must be patched or mitigated. Docker images must be built from trusted base images.</p>
+<div class="gate">GATE: <code>defoneos-admission --check supply-chain --mcp <name></code> — 0 vulnerabilities, all deps verified ✓</div>
+</div>
+
+<div class="checklist-item">
+<span class="num">8</span><h3>Adversarial Red-Team Pass</h3>
+<p>The MCP must pass all 12 adversarial red-team vectors (see <a href="adversarial-red-team-framework.html">Adversarial Red-Team Framework</a>). No T1 (critical) or T2 (high) findings. T3 (moderate) findings must be documented with mitigations.</p>
+<div class="gate">GATE: <code>defoneos-admission --check redteam --mcp <name></code> — 0 T1/T2 findings ✓</div>
+</div>
+
+<div class="checklist-item">
+<span class="num">9</span><h3>Escrow Compatibility</h3>
+<p>Any data stored by the MCP must be escrow-compatible: AES-256-GCM encryption at rest, per-record DEK, Shamir KEK wrapping, RFC3161 timestamps, 4-eyes release gate, BFT veto. See <a href="sovereign-data-escrow-protocol.html">Sovereign Data Escrow Protocol</a>.</p>
+<div class="gate">GATE: <code>defoneos-admission --check escrow --mcp <name></code> — all stored data escrow-compatible ✓</div>
+</div>
+
+</section>
+
+<section>
+<h2>3. Admission Workflow</h2>
+<table>
+<tr><th>Step</th><th>Action</th><th>Responsible</th></tr>
+<tr><td>1</td><td>MCP developer runs all 9 checks locally</td><td>MCP developer</td></tr>
+<tr><td>2</td><td>Admission pack generated: check results, SIGIL proofs, red-team report</td><td>Automated (defoneos-admission CLI)</td></tr>
+<tr><td>3</td><td>Admission pack submitted to BFT council</td><td>MCP developer</td></tr>
+<tr><td>4</td><td>BFT council reviews (target: 5 minutes)</td><td>33-agent BFT council</td></tr>
+<tr><td>5</td><td>BFT vote: APPROVE / AMEND / REJECT</td><td>33 agents (Ed25519-signed votes)</td></tr>
+<tr><td>6</td><td>If APPROVE ≥ 23/33: MCP admitted to federation</td><td>BFT tally</td></tr>
+<tr><td>7</td><td>SIGIL receipt generated for admission record</td><td>SIGIL ledger</td></tr>
+<tr><td>8</td><td>MCP registered in /.well-known/defoneos-manifest.json</td><td>Federation discovery</td></tr>
+</table>
+</section>
+
+<section>
+<h2>4. Current Fleet Status</h2>
+<table>
+<tr><th>Ring</th><th>MCPs Admitted</th><th>Checks Passing</th><th>BFT Vote</th></tr>
+<tr><td>Ring 0 (Core Sovereign)</td><td>7</td><td>9/9 each</td><td>Unanimous (33/33)</td></tr>
+<tr><td>Ring 1 (Defence Sensors)</td><td>11</td><td>9/9 each</td><td>≥28/33 each</td></tr>
+<tr><td>Ring 2 (Civil Open-Data)</td><td>12</td><td>9/9 each</td><td>≥25/33 each</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>30</strong></td><td><strong>270/270 checks</strong></td><td><strong>All admitted</strong></td></tr>
+</table>
+</section>
+
+<section>
+<h2>5. Post-Admission Monitoring</h2>
+<p>Once admitted, every MCP is continuously monitored:</p>
+<ul>
+<li><strong>SIGIL verification:</strong> Every tool invocation verified (every 15 minutes).</li>
+<li><strong>Red-team continuous:</strong> 12 vectors tested against every MCP (every 15 minutes).</li>
+<li><strong>Supply chain scan:</strong> Dependencies re-scanned for new vulnerabilities (daily).</li>
+<li><strong>BFT health check:</strong> MCP health reported to BFT council (every tick).</li>
+<li><strong>Quarantine protocol:</strong> If any check fails post-admission, MCP is quarantined (see <a href="bft-council-emergency-session-protocol.html">BFT Emergency Session Protocol</a>).</li>
+</ul>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="sig">SIGIL · DEFONEOS|mcp-admission-control-checklist|0.1.0|sovereign|british|forever · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  <div>🐉 DEFONEOS — UK Sovereign Defence AI Operating System<br>
+  Built by <strong>Nicholas Templeman / CSOAI LTD (16939677)</strong>. Crown use permitted under UK MOD terms.<br>
+  Apache 2.0 · © 2026 · <a href="mailto:crown@csoai.org">crown@csoai.org</a></div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — proofof.ai | MEOK Compliance Suite</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0d0c18;color:#e0dcd5;line-height:1.6}
+a{color:#c9a84c;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+/* Nav */
+nav{background:#0d0c18;border-bottom:1px solid rgba(201,168,76,0.2);padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+nav .logo{font-size:22px;font-weight:700;color:#c9a84c;letter-spacing:-0.5px}
+nav .logo span{color:#e0dcd5}
+nav .nav-links{display:flex;gap:28px;align-items:center}
+nav .nav-links a{color:#b0aca8;font-size:14px;font-weight:500;transition:color .2s}
+nav .nav-links a:hover{color:#c9a84c}
+/* Hero */
+.hero{text-align:center;padding:80px 0 40px}
+.hero h1{font-size:48px;font-weight:700;color:#fff;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:#c9a84c}
+.hero p{font-size:18px;color:#b0aca8;max-width:640px;margin:0 auto}
+/* Metrics row */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:48px 0 60px}
+.metric-card{background:linear-gradient(135deg,#131124,#0d0c18);border:1px solid rgba(201,168,76,0.12);border-radius:12px;padding:32px 16px;text-align:center;transition:border-color .3s}
+.metric-card:hover{border-color:rgba(201,168,76,0.4)}
+.metric-card .num{font-size:42px;font-weight:800;color:#c9a84c;letter-spacing:-1px}
+.metric-card .label{font-size:14px;color:#b0aca8;margin-top:6px}
+.metric-card .sub-label{font-size:12px;color:#6a6878;margin-top:2px}
+/* Content sections */
+.content{margin:0 0 60px}
+.content .grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin:40px 0}
+.content h2{font-size:28px;font-weight:700;color:#fff;margin-bottom:8px}
+.content h2 em{font-style:normal;color:#c9a84c}
+.content p{color:#b0aca8;font-size:16px;line-height:1.8;margin-bottom:16px}
+.content p strong{color:#e0dcd5}
+/* Company card */
+.company-card{background:#131124;border:1px solid rgba(201,168,76,0.12);border-radius:12px;padding:32px;margin:24px 0}
+.company-card .row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.company-card .row:last-child{border-bottom:none}
+.company-card .row .key{color:#b0aca8;font-size:14px}
+.company-card .row .val{color:#fff;font-size:14px;font-weight:500;text-align:right}
+/* Honest box */
+.honest-box{background:rgba(255,85,85,0.06);border:1px solid rgba(255,85,85,0.2);border-radius:12px;padding:28px;margin:40px 0;text-align:center}
+.honest-box h3{font-size:22px;font-weight:700;color:#ff5555;margin-bottom:8px}
+.honest-box p{color:#b0aca8;font-size:15px;max-width:520px;margin:0 auto}
+.honest-box .big{font-size:48px;font-weight:800;color:#fff;margin:16px 0 4px}
+.honest-box .big-sub{color:#6a6878;font-size:14px}
+/* Team */
+.team{margin:48px 0}
+.team-card{display:flex;align-items:center;gap:24px;background:#131124;border:1px solid rgba(201,168,76,0.1);border-radius:12px;padding:28px}
+.team-card .avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#0d0c18);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;flex-shrink:0}
+.team-card .info h3{font-size:20px;font-weight:700;color:#fff;margin-bottom:2px}
+.team-card .info .role{color:#c9a84c;font-size:14px;font-weight:600;margin-bottom:4px}
+.team-card .info p{color:#b0aca8;font-size:14px;line-height:1.6;margin:0}
+/* Footer */
+footer{background:rgba(255,255,255,0.02);border-top:1px solid rgba(201,168,76,0.1);padding:40px 0;margin-top:60px;text-align:center}
+footer p{color:#6a6878;font-size:13px}
+footer a{color:#c9a84c}
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:32px}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .content .grid{grid-template-columns:1fr}
+  .team-card{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="index.html" class="logo">proof<span>.</span>of<span>.ai</span></a>
+    <div class="nav-links">
+      <a href="frameworks.html">Frameworks</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api.html">API</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>Building the <em>trust layer</em> for the AI economy</h1>
+    <p>proofof.ai is the MEOK Compliance MCP marketplace — the first platform to turn regulatory frameworks into machine-enforceable attestations, powered by cryptographic keystone certificates.</p>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Key Metrics -->
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="num">218</div>
+      <div class="label">MCP Servers</div>
+      <div class="sub-label">Automated compliance agents</div>
+    </div>
+    <div class="metric-card">
+      <div class="num">15</div>
+      <div class="label">Frameworks</div>
+      <div class="sub-label">Regulatory mappings</div>
+    </div>
+    <div class="metric-card">
+      <div class="num">35 GB</div>
+      <div class="label">Data Processed</div>
+      <div class="sub-label">Evidence &amp; attestations</div>
+    </div>
+    <div class="metric-card">
+      <div class="num">32</div>
+      <div class="label">Hives</div>
+      <div class="sub-label">MoE knowledge domains</div>
+    </div>
+  </div>
+
+  <!-- Company Info -->
+  <section class="content">
+    <h2>Company <em>information</em></h2>
+    <div class="company-card">
+      <div class="row"><span class="key">Legal name</span><span class="val">CSOAI Ltd</span></div>
+      <div class="row"><span class="key">Company number</span><span class="val">UK 16939677</span></div>
+      <div class="row"><span class="key">Founded</span><span class="val">2026</span></div>
+      <div class="row"><span class="key">Jurisdiction</span><span class="val">England &amp; Wales</span></div>
+      <div class="row"><span class="key">Product</span><span class="val">proofof.ai — MEOK Compliance Suite</span></div>
+    </div>
+  </section>
+
+  <!-- Mission -->
+  <section class="content">
+    <h2>Our <em>mission</em></h2>
+    <p>We believe that trust in AI should be <strong>verifiable, not declarative</strong>. Every claim about compliance should be backed by a cryptographic attestation that anyone can verify independently — without relying on screenshots, PDFs, or trust-me statements.</p>
+    <p>proofof.ai bridges the gap between regulatory frameworks and the MCP ecosystem. Our hive of 32 domain-specialised queens (MoE language models) maps every compliance obligation to machine-enforceable policies, continuously monitors MCP servers for evidence, and produces keystone-signed attestations that carry legal weight.</p>
+    <p>The result: compliance that's <strong>continuous, automated, and cryptographically verifiable</strong> — not a once-a-year checkbox exercise.</p>
+  </section>
+
+  <!-- Team -->
+  <section class="content">
+    <h2>Our <em>team</em></h2>
+    <div class="team">
+      <div class="team-card">
+        <div class="avatar">NT</div>
+        <div class="info">
+          <h3>Nicholas Templeman</h3>
+          <div class="role">Founder &amp; CEO</div>
+          <p>Building the trust layer for AI. Previously founded in the compliance and data infrastructure space. Deep expertise in AI regulation, MCP architecture, and distributed systems. Designing the MEOK protocol and leading the technical vision.</p>
+        </div>
+      </div>
+    </div>
+    <p style="color:#6a6878;font-size:14px;margin-top:16px;">We're a small, focused team. As we grow, we'll add compliance engineers, framework analysts, and MCP specialists. <a href="contact.html">Get in touch</a> if you'd like to join us.</p>
+  </section>
+
+  <!-- Honest Accounting -->
+  <section class="content">
+    <h2>Honest <em>accounting</em></h2>
+    <p>We believe in radical transparency — especially about where we are. No investor-pitch gloss, no "pre-product market fit" euphemisms. Just the numbers.</p>
+    <div class="honest-box">
+      <h3>💀 Pre-Revenue Reality</h3>
+      <div class="big">£0</div>
+      <div class="big-sub">Monthly Recurring Revenue</div>
+      <p style="margin-top:24px;">We're building in public, pre-revenue, pre-launch. The compliance suite is live, the MCP marketplace is operational, and the first keystone attestations have been signed — but we have not yet processed a single paid transaction. Every feature you see was built on conviction, not customer dollars.</p>
+      <p style="margin-top:12px;">When we do start charging, you'll see it here first, updated monthly. No fabricated traction, no vanity metrics.</p>
+    </div>
+  </section>
+
+  <section class="content">
+    <h2>Why <em>proofof.ai</em>?</h2>
+    <p>The name says it all. In cryptography, a proof is a statement you can verify without trusting the prover. That's the principle behind keystone attestations — you don't have to take our word that an AI system is compliant. The <strong>proof of AI</strong> compliance is in the cryptographic signature, verifiable by anyone, anywhere, at any time.</p>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 <a href="https://proofof.ai">proofof.ai</a> — a product of CSOAI Ltd (UK 16939677). All rights reserved. <a href="contact.html">Contact</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

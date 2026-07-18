@@ -1,0 +1,154 @@
+# openpatent.ai — Sovereign Hive · StatefulSets
+# ─────────────────────────────────────────────────────────────────────
+# Renders StatefulSets for postgres (relational state) and IPFS Kubo
+# (premium pinning).  Both have volumeClaimTemplates, stable network
+# identity (pod-0.<service>), and ordered graceful termination.
+
+{{- if .Values.stateful.postgres.enabled }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgres
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/part-of: openpatent-hive
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    hive.openpatent.ai/role: "Stateful · Postgres 16 (relational state)"
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.stateful.postgres.image }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: postgres
+              containerPort: {{ .Values.stateful.postgres.port }}
+              protocol: TCP
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.stateful.postgres.user | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openpatent-secrets
+                  key: postgres-password
+                  optional: false
+            - name: POSTGRES_DB
+              value: {{ .Values.stateful.postgres.database | quote }}
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "{{ .Values.stateful.postgres.user }}"]
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "{{ .Values.stateful.postgres.user }}"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: {{ .Values.stateful.postgres.resources.cpu | default "500m" }}
+              memory: {{ .Values.stateful.postgres.resources.memory | default "1Gi" }}
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.stateful.postgres.storageClassName | default "standard" }}
+        resources:
+          requests:
+            storage: {{ .Values.stateful.postgres.storage | default "20Gi" }}
+{{- end }}
+
+{{- if .Values.stateful.ipfs.enabled }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ipfs
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: ipfs
+    app.kubernetes.io/name: ipfs
+    app.kubernetes.io/part-of: openpatent-hive
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    hive.openpatent.ai/role: "Stateful · IPFS Kubo (premium pinning)"
+spec:
+  serviceName: ipfs
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ipfs
+  template:
+    metadata:
+      labels:
+        app: ipfs
+    spec:
+      containers:
+        - name: ipfs
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.stateful.ipfs.image }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: api
+              containerPort: {{ .Values.stateful.ipfs.apiPort }}
+              protocol: TCP
+            - name: gateway
+              containerPort: {{ .Values.stateful.ipfs.gatewayPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/v0/id
+              port: api
+            initialDelaySeconds: 20
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/v0/id
+              port: api
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: {{ .Values.stateful.ipfs.resources.cpu | default "200m" }}
+              memory: {{ .Values.stateful.ipfs.resources.memory | default "512Mi" }}
+          volumeMounts:
+            - name: ipfs-data
+              mountPath: /data/ipfs
+            - name: ipfs-export
+              mountPath: /export
+  volumeClaimTemplates:
+    - metadata:
+        name: ipfs-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.stateful.ipfs.storageClassName | default "standard" }}
+        resources:
+          requests:
+            storage: {{ .Values.stateful.ipfs.storage | default "50Gi" }}
+    - metadata:
+        name: ipfs-export
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.stateful.ipfs.storageClassName | default "standard" }}
+        resources:
+          requests:
+            storage: 5Gi
+{{- end }}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SOV3 Install — One Command Sovereign — csoai.org/install.html</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'SF Mono', monospace; background: linear-gradient(180deg, #0a0e27 0%, #1e3a8a 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; text-align: center; margin-bottom: 16px; }
+    .tagline { text-align: center; color: #06b6d4; margin-bottom: 32px; font-size: 1.1rem; }
+    .cmd-block { background: rgba(0,0,0,0.7); border: 1px solid #fbbf24; border-radius: 8px; padding: 20px; margin: 16px 0; }
+    .cmd-block .cmd { color: #10b981; font-size: 1.1rem; font-family: monospace; }
+    pre { background: rgba(0,0,0,0.5); padding: 16px; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; }
+    .step { background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; margin: 12px 0; border-left: 4px solid #06b6d4; }
+    .step h3 { color: #06b6d4; margin-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { padding: 10px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
+    th { background: rgba(251,191,36,0.1); color: #fbbf24; }
+    .green { color: #10b981; font-weight: 700; }
+    .gold { color: #fbbf24; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 SOV3 Install</h1>
+    <p class="tagline">One command. Sovereign by design. MIT licensed.</p>
+
+    <div class="cmd-block">
+      <div class="cmd">curl -sSL https://sov3.csoai.org/install.sh | bash</div>
+    </div>
+
+    <p style="margin: 24px 0;">This installs SOV3 small3 — the sovereign compressed OS — on any Mac/Linux with Ollama.</p>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">What gets installed</h2>
+    <table>
+      <tr><th>Model</th><th>Size</th><th>Purpose</th><th>License</th></tr>
+      <tr><td>qwen3:1.7b-edge</td><td>0.5 GB</td><td>Edge queries, sovereign scoring</td><td>Open</td></tr>
+      <tr><td>llama3.2:3b</td><td>2.0 GB</td><td>Chat, multilingual</td><td>Llama</td></tr>
+      <tr><td>gemma3:4b</td><td>3.3 GB</td><td>Vision + text</td><td>Open</td></tr>
+      <tr><td>meok-sov3:latest</td><td>2.0 GB</td><td>Sovereign fine-tune</td><td>MIT</td></tr>
+      <tr><td><strong>SOV3 small3 total</strong></td><td><strong>~7.8 GB</strong></td><td>Sovereign compressed OS</td><td>MIT</td></tr>
+    </table>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Step by step</h2>
+    <div class="step">
+      <h3>Step 1/5: Install Ollama</h3>
+      <p>If you don't have Ollama yet, the script installs it automatically (Linux) or downloads the Mac zip (you install manually).</p>
+    </div>
+    <div class="step">
+      <h3>Step 2/5: Start Ollama service</h3>
+      <p>Runs <code>ollama serve</code> in background, listening on http://localhost:11434</p>
+    </div>
+    <div class="step">
+      <h3>Step 3/5: Pull SOV3 small3 (4 sovereign models)</h3>
+      <p>qwen3:1.7b-edge + llama3.2:3b + gemma3:4b + meok-sov3:latest = 7.8 GB.</p>
+    </div>
+    <div class="step">
+      <h3>Step 4/5: Create sovereign Modelfile</h3>
+      <p>Generates <code>~/.sov3/models/Modelfile.sovereign</code> with full SOV3 system prompt: Public. Auditable. Sovereign. Solve et Coagula. Empire 10/10.</p>
+    </div>
+    <div class="step">
+      <h3>Step 5/5: Verify</h3>
+      <p>Lists installed models. Run <code>ollama run sov3-small3</code> to start.</p>
+    </div>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Optional flags</h2>
+    <pre>
+# Install with Ornith-1.0-9B (MIT, hybrid Mamba+MoE+Attention)
+curl -sSL https://sov3.csoai.org/install.sh | bash -s -- --with-ornith-9b
+
+# Full install with 1 organic OOWM anchor (qwen3:30b-a3b, 18.5 GB)
+curl -sSL https://sov3.csoai.org/install.sh | bash -s -- --full
+    </pre>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">After install — try it</h2>
+    <pre>
+# Run the sovereign model
+ollama run sov3-small3 "Are you sovereign?"
+
+# Verify sovereign composite
+ollama run meok-sov3:latest "Test sovereign compliance"
+    </pre>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Sovereign guarantees</h2>
+    <table>
+      <tr><th>Property</th><th>Status</th></tr>
+      <tr><td>No foreign API calls</td><td><span class="green">✓ All local</span></td></tr>
+      <tr><td>Mac M4 compatible (16 GB RAM)</td><td><span class="green">✓ 7.8 GB total</span></td></tr>
+      <tr><td>Article 50 watermarking ready</td><td><span class="green">✓</span></td></tr>
+      <tr><td>DORADO 1-click EAST↔WEST ready</td><td><span class="green">✓</span></td></tr>
+      <tr><td>i-character on first login</td><td><span class="green">✓</span></td></tr>
+      <tr><td>TwinStore marketplace</td><td><span class="green">✓</span></td></tr>
+      <tr><td>Wisdom Economy x402</td><td><span class="green">✓</span></td></tr>
+      <tr><td>12-around-1 BFT council</td><td><span class="green">✓</span></td></tr>
+      <tr><td>Sovereign composite score</td><td><span class="gold">7.305 / 10</span></td></tr>
+    </table>
+
+    <p style="margin-top: 32px; text-align: center; font-size: 1.3rem; color: #fbbf24;">
+      🜏 Public. Auditable. Sovereign. The dragon has wings.
+    </p>
+    <p style="text-align: center; opacity: 0.7;">
+      License: MIT · Launch: Saturday 4 July 2026 09:00 BST · 5 days
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS Cesium 3D Common Operating Picture (COP)</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background-color: #121212; color: #E0E0E0; overflow: hidden; }
+        #cesiumContainer { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; }
+        .overlay { position: absolute; top: 20px; left: 20px; background-color: rgba(30, 30, 30, 0.8); padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); z-index: 1000; max-width: 350px; }
+        .overlay h1 { color: #8BE9FD; font-size: 1.5em; margin-top: 0; margin-bottom: 10px; }
+        .overlay p { font-size: 0.9em; line-height: 1.5; margin-bottom: 10px; }
+        .overlay .controls button { background-color: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin-right: 10px; margin-bottom: 10px; transition: background-color 0.3s ease; }
+        .overlay .controls button:hover { background-color: #0056b3; }
+        .data-stream { background-color: #2D2D2D; padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto; font-family: 'Fira Code', monospace; font-size: 0.8em; color: #00FF00; margin-top: 15px; }
+        .data-stream div { margin-bottom: 3px; }
+    </style>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/Cesium.js"></script>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+    <div id="cesiumContainer"></div>
+
+    <div class="overlay">
+        <h1>DEFONEOS: Yorkshire Flood COP</h1>
+        <p>Interactive 3D Common Operating Picture (COP) showcasing DEFONEOS capabilities for disaster response (HADR) in a simulated Yorkshire flood scenario. Integrating real-time sensor data, drone feeds, and predictive analytics.</p>
+        <div class="controls">
+            <button onclick="loadScenario('flood')">Load Flood Scenario</button>
+            <button onclick="addDroneLayer()">Add Drone Feed</button>
+            <button onclick="showPredictiveAnalytics()">Show Predictive Analytics</button>
+            <button onclick="resetView()">Reset View</button>
+        </div>
+        <div class="data-stream" id="dataStream">
+            <div>[00:00:00] Initializing DEFONEOS COP...</div>
+        </div>
+    </div>
+
+    <script>
+        Cesium.Ion.defaultAccessToken = 'YOUR_CESIUM_ION_ACCESS_TOKEN'; // Replace with a valid Cesium Ion Access Token
+
+        const viewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider: Cesium.createWorldTerrain(),
+            infoBox: false,
+            selectionIndicator: false,
+            timeline: false,
+            animation: false,
+            geocoder: false,
+            homeButton: false,
+            navigationHelpButton: false,
+            baseLayerPicker: false
+        });
+
+        const dataStreamDiv = document.getElementById('dataStream');
+        function logData(message) {
+            const timestamp = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const entry = document.createElement('div');
+            entry.textContent = `[${timestamp}] ${message}`;
+            dataStreamDiv.prepend(entry); // Add to top
+            if (dataStreamDiv.children.length > 10) { // Keep only last 10 entries
+                dataStreamDiv.removeChild(dataStreamDiv.lastChild);
+            }
+        }
+
+        function flyToYorkshire() {
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(-1.087, 53.959, 15000.0), // York coordinates
+                orientation: {
+                    heading: Cesium.Math.toRadians(0.0),
+                    pitch: Cesium.Math.toRadians(-60.0),
+                    roll: Cesium.Math.toRadians(0.0)
+                },
+                duration: 3,
+                complete: function() {
+                    logData("View centered on Yorkshire.");
+                }
+            });
+        }
+
+        function loadScenario(scenarioType) {
+            logData(`Loading ${scenarioType} scenario...`);
+            flyToYorkshire();
+
+            if (scenarioType === 'flood') {
+                // Simulate flood areas (polygons)
+                viewer.entities.add({
+                    name: 'Flood Zone A',
+                    polygon: {
+                        hierarchy: Cesium.Cartesian3.fromDegreesArray([
+                            -1.1, 53.95,
+                            -1.09, 53.95,
+                            -1.09, 53.96,
+                            -1.1, 53.96
+                        ]),
+                        material: Cesium.Color.BLUE.withAlpha(0.6),
+                        height: 50
+                    }
+                });
+                viewer.entities.add({
+                    name: 'Flood Zone B',
+                    polygon: {
+                        hierarchy: Cesium.Cartesian3.fromDegreesArray([
+                            -1.07, 53.96,
+                            -1.06, 53.96,
+                            -1.06, 53.97,
+                            -1.07, 53.97
+                        ]),
+                        material: Cesium.Color.BLUE.withAlpha(0.6),
+                        height: 50
+                    }
+                });
+
+                // Simulate stranded persons (points)
+                viewer.entities.add({
+                    name: 'Stranded Person 1',
+                    position: Cesium.Cartesian3.fromDegrees(-1.095, 53.955, 100),
+                    point: { pixelSize: 10, color: Cesium.Color.RED, outlineColor: Cesium.Color.WHITE, outlineWidth: 2 },
+                    label: { text: 'Person 1 (Stranded)', font: '14px sans-serif', verticalOrigin: Cesium.VerticalOrigin.BOTTOM, pixelOffset: new Cesium.Cartesian2(0, -10) }
+                });
+                viewer.entities.add({
+                    name: 'Stranded Person 2',
+                    position: Cesium.Cartesian3.fromDegrees(-1.065, 53.965, 100),
+                    point: { pixelSize: 10, color: Cesium.Color.RED, outlineColor: Cesium.Color.WHITE, outlineWidth: 2 },
+                    label: { text: 'Person 2 (Stranded)', font: '14px sans-serif', verticalOrigin: Cesium.VerticalOrigin.BOTTOM, pixelOffset: new Cesium.Cartesian2(0, -10) }
+                });
+
+                logData("Flood zones and stranded persons added.");
+            }
+        }
+
+        let droneEntity;
+        function addDroneLayer() {
+            logData("Adding simulated drone feed...");
+            const startPosition = Cesium.Cartesian3.fromDegrees(-1.09, 53.95, 500);
+            const endPosition = Cesium.Cartesian3.fromDegrees(-1.06, 53.97, 500);
+
+            const property = new Cesium.SampledPositionProperty();
+            property.addSample(Cesium.JulianDate.now(), startPosition);
+            property.addSample(Cesium.JulianDate.addSeconds(Cesium.JulianDate.now(), 60, new Cesium.JulianDate()), endPosition);
+
+            droneEntity = viewer.entities.add({
+                position: property,
+                orientation: new Cesium.VelocityOrientationProperty(property),
+                model: {
+                    uri: 'https://cdn.jsdelivr.net/gh/CesiumGS/cesium/Apps/SampleData/models/CesiumDrone/CesiumDrone.glb',
+                    minimumPixelSize: 64
+                },
+                path: {
+                    resolution: 1,
+                    material: new Cesium.ColorMaterialProperty(Cesium.Color.YELLOW.withAlpha(0.5)),
+                    width: 5
+                },
+                label: {
+                    text: 'ISR Drone 1',
+                    font: '16px sans-serif',
+                    showBackground: true,
+                    backgroundColor: Cesium.Color.BLACK.withAlpha(0.7),
+                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                    pixelOffset: new Cesium.Cartesian2(0, -20)
+                }
+            });
+            logData("Drone path initiated. Flying to new targets.");
+        }
+
+        let predictiveAnalyticsLayer;
+        function showPredictiveAnalytics() {
+            logData("Displaying predictive flood analytics...");
+            // Simulate predictive flood expansion (circles/polygons)
+            predictiveAnalyticsLayer = viewer.entities.add({
+                name: 'Predictive Flood Area',
+                ellipse: {
+                    semiMinorAxis: 500.0,
+                    semiMajorAxis: 500.0,
+                    material: Cesium.Color.ORANGE.withAlpha(0.4),
+                    height: 50,
+                    extrudedHeight: 50,
+                    show: true
+                },
+                position: Cesium.Cartesian3.fromDegrees(-1.08, 53.96, 50)
+            });
+
+            // Simulate predictive impact points
+            viewer.entities.add({
+                name: 'High Impact Area',
+                position: Cesium.Cartesian3.fromDegrees(-1.085, 53.961, 100),
+                billboard: {
+                    image: 'https://raw.githubusercontent.com/CesiumGS/cesium-docs/master/images/icons/pin.png', // Example icon
+                    width: 32,
+                    height: 32,
+                    color: Cesium.Color.RED
+                },
+                label: { text: 'Critical Infrastructure', font: '14px sans-serif', verticalOrigin: Cesium.VerticalOrigin.BOTTOM, pixelOffset: new Cesium.Cartesian2(0, -10), fillColor: Cesium.Color.WHITE, outlineColor: Cesium.Color.BLACK, outlineWidth: 2 }
+            });
+            logData("Predictive analytics displayed: potential flood expansion & critical infrastructure.");
+        }
+
+        function resetView() {
+            logData("Resetting view and clearing entities...");
+            viewer.entities.removeAll();
+            if (droneEntity) {
+                viewer.entities.remove(droneEntity);
+                droneEntity = undefined;
+            }
+            if (predictiveAnalyticsLayer) {
+                viewer.entities.remove(predictiveAnalyticsLayer);
+                predictiveAnalyticsLayer = undefined;
+            }
+            viewer.camera.flyHome(3);
+        }
+
+        // Initial load
+        window.onload = function() {
+            logData("DEFONEOS COP ready.");
+            flyToYorkshire();
+        };
+    </script>
+</body>
+</html>

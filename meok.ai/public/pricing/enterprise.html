@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK Compliance Enterprise — £1,499/mo | MEOK Empire</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #0a1628;
+    color: #e0e6ed;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: #d4a843; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .header {
+    background: linear-gradient(135deg, #0d1f3c 0%, #0a1628 100%);
+    border-bottom: 2px solid #d4a84333;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .header .logo { font-size: 1.25rem; font-weight: 700; color: #d4a843; letter-spacing: 0.05em; }
+  .header .logo span { color: #e0e6ed; font-weight: 300; }
+  .header .back-link { font-size: 0.875rem; padding: 0.4rem 1rem; border: 1px solid #d4a84355; border-radius: 6px; transition: 0.2s; }
+  .header .back-link:hover { background: #d4a84315; text-decoration: none; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .hero {
+    text-align: center;
+    padding: 3rem 0 2rem;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: #d4a84320;
+    color: #d4a843;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0.3rem 0.9rem;
+    border-radius: 100px;
+    border: 1px solid #d4a84344;
+    margin-bottom: 1rem;
+  }
+  .hero .badge.premium { background: #ffd70015; border-color: #ffd70044; color: #ffd700; }
+  .hero h1 { font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 .gold { color: #d4a843; }
+  .hero .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #d4a843;
+    margin: 0.75rem 0;
+  }
+  .hero .price span { font-size: 1rem; font-weight: 400; color: #8899aa; }
+  .hero .subtitle { font-size: 1.1rem; color: #8899aa; max-width: 650px; margin: 0 auto 1.5rem; }
+
+  .btn-stripe {
+    display: inline-block;
+    background: #d4a843;
+    color: #0a1628;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.9rem 2.5rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-stripe:hover { background: #e0b85a; transform: translateY(-1px); box-shadow: 0 6px 20px #d4a84333; text-decoration: none; }
+  .btn-stripe-secondary {
+    display: inline-block;
+    background: transparent;
+    color: #d4a843;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    border: 1.5px solid #d4a84366;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-stripe-secondary:hover { background: #d4a84315; text-decoration: none; }
+
+  .section { padding: 2.5rem 0; }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+  }
+  .section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 3px;
+    background: #d4a843;
+    border-radius: 2px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .feature-card {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    transition: 0.2s;
+  }
+  .feature-card:hover { border-color: #d4a84344; }
+  .feature-card .check { color: #2ecc71; font-weight: 700; margin-right: 0.6rem; }
+  .feature-card strong { color: #fff; display: block; margin-bottom: 0.25rem; font-size: 1.05rem; }
+  .feature-card p { color: #8899aa; font-size: 0.9rem; }
+
+  .comparison {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #1a2d4a;
+  }
+  .comparison th, .comparison td {
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid #1a2d4a;
+  }
+  .comparison th {
+    background: #0d1f3c;
+    color: #d4a843;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .comparison th:first-child { width: 36%; }
+  .comparison td:first-child { color: #c0c8d4; font-weight: 500; }
+  .comparison tr:last-child td { border-bottom: none; }
+  .comparison .yes { color: #2ecc71; font-weight: 700; }
+  .comparison .no { color: #555; }
+  .comparison .highlight { background: #d4a8430a; }
+  .comparison tr:hover td { background: #0d1f3c55; }
+  .comparison-wrap { overflow-x: auto; }
+
+  .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .faq-item {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+  .faq-item summary {
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    color: #d4a843;
+    font-size: 1.3rem;
+    font-weight: 700;
+    transition: 0.2s;
+  }
+  .faq-item[open] summary::after { content: '−'; }
+  .faq-item .answer {
+    margin-top: 0.75rem;
+    color: #8899aa;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .faq-item .answer a { color: #d4a843; }
+
+  .cta-section {
+    text-align: center;
+    padding: 3rem 0;
+    border-top: 1px solid #1a2d4a;
+    border-bottom: 1px solid #1a2d4a;
+    margin: 1rem 0;
+  }
+  .cta-section h2 { font-size: 1.75rem; color: #fff; margin-bottom: 0.5rem; }
+  .cta-section p { color: #8899aa; margin-bottom: 1.5rem; }
+  .cta-section .btn-stripe { font-size: 1.15rem; padding: 1rem 3rem; }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #4a5a6a;
+    font-size: 0.85rem;
+    border-top: 1px solid #0d1f3c;
+  }
+  .footer a { color: #6a7a8a; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.75rem; }
+    .hero .price { font-size: 1.5rem; }
+    .container { padding: 1.5rem 1rem; }
+    .header { padding: 1rem; flex-direction: column; text-align: center; }
+    .comparison th, .comparison td { padding: 0.7rem 0.8rem; font-size: 0.85rem; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">MEOK <span>Empire</span></div>
+  <a href="index.html" class="back-link">← All Plans</a>
+</header>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="badge premium">Enterprise</div>
+    <h1>MEOK Compliance <span class="gold">Enterprise</span></h1>
+    <div class="price">£1,499 <span>/ month</span></div>
+    <p class="subtitle">The full compliance suite with custom integrations, dedicated support, SLAs, and organisation-wide deployment for regulated enterprises.</p>
+    <a href="https://buy.stripe.com/YOUR_LINK_HERE" class="btn-stripe" target="_blank" rel="noopener">Subscribe — £1,499/mo</a>
+    <br><br>
+    <a href="mailto:sales@meok.ai" class="btn-stripe-secondary">Or contact Sales →</a>
+  </section>
+
+  <!-- Features -->
+  <section class="section">
+    <h2 class="section-title">Everything in Enterprise</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Full Compliance Suite</strong>
+        <p>End-to-end compliance management: attestations, audits, reporting, and team governance in one platform.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Priority Support & SLA</strong>
+        <p>Dedicated support channel with 1-hour response SLA, onboarding call, and a named account manager.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Custom Integrations</strong>
+        <p>Tailored integrations with your existing GRC tools, SIEMs, identity providers, and data pipelines.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Organisation Management</strong>
+        <p>Multi-team, multi-workspace management with RBAC, audit trails, and consolidated billing.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Custom Branding</strong>
+        <p>White-labelled attestation pages, branded reports, and custom certificate templates.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> SSO / SAML / OIDC</strong>
+        <p>Single sign-on integration with any SAML 2.0 or OIDC-compliant identity provider.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> API Rate Limit: Unlimited</strong>
+        <p>No throttling on API calls. Enterprise-grade rate limits for large-scale batch operations.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Annual Audit Reports</strong>
+        <p>Pre-built annual compliance summary reports with executive dashboards for board reviews.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="section">
+    <h2 class="section-title">Enterprise vs Pro</h2>
+    <div class="comparison-wrap">
+      <table class="comparison">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Pro (£199/mo)</th>
+            <th>Enterprise (£1,499/mo)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Signed attestations</td>
+            <td class="yes">✓</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Email support</td>
+            <td class="yes">Priority</td>
+            <td class="yes">1h SLA + Account Manager</td>
+          </tr>
+          <tr>
+            <td>Custom integrations</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Organisation management</td>
+            <td class="no">Single workspace</td>
+            <td class="yes">Multi-team + RBAC</td>
+          </tr>
+          <tr>
+            <td>SSO / SAML / OIDC</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Custom branding</td>
+            <td class="no">—</td>
+            <td class="yes">✓ White-label</td>
+          </tr>
+          <tr>
+            <td>API rate limit</td>
+            <td class="yes">100 req/min</td>
+            <td class="yes">Unlimited</td>
+          </tr>
+          <tr>
+            <td>Annual audit reports</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Onboarding call</td>
+            <td class="no">Self-serve</td>
+            <td class="yes">Dedicated</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>Price</strong></td>
+            <td><strong>£199/mo</strong></td>
+            <td><strong>£1,499/mo</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>How is Enterprise different from Pro?</summary>
+        <div class="answer">Enterprise adds custom integrations, organisation-wide management with RBAC, SSO, dedicated support with SLA, white-labelling, and unlimited API rate limits. It is designed for regulated companies with multiple teams and bespoke compliance workflows.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can we start on Pro and upgrade to Enterprise?</summary>
+        <div class="answer">Yes. Migrate at any time. We'll pro-rate your billing and set up your Enterprise workspace within one business day. Email <a href="mailto:sales@meok.ai">sales@meok.ai</a> to initiate the upgrade.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Do you support invoicing / purchase orders?</summary>
+        <div class="answer">Yes. Enterprise customers can be invoiced on net-30 terms. We accept purchase orders and can work with your procurement team on documentation requirements.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What kind of custom integrations do you offer?</summary>
+        <div class="answer">We integrate with your existing GRC platforms (e.g. OneTrust, ServiceNow), SIEMs (Splunk, Elastic), identity providers (Okta, Azure AD, Keycloak), and data pipelines via custom webhooks or direct API bridges.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is there a minimum commitment?</summary>
+        <div class="answer">Enterprise requires a 6-month minimum commitment. Annual billing is available at a 15% discount (£15,289/yr vs £17,988/yr).</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready for enterprise-grade compliance?</h2>
+    <p>Deploy MEOK Compliance Enterprise across your entire organisation.</p>
+    <a href="https://buy.stripe.com/YOUR_LINK_HERE" class="btn-stripe" target="_blank" rel="noopener">Subscribe — £1,499/mo</a>
+    <br><br>
+    <a href="pro.html" class="btn-stripe-secondary">Compare with Pro →</a>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>MEOK Empire · <a href="https://meok.ai">meok.ai</a> · <a href="mailto:sales@meok.ai">sales@meok.ai</a></p>
+  <p style="margin-top:0.4rem;">© 2026 MEOK Empire Ltd. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

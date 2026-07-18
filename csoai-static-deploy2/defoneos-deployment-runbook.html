@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Deployment Runbook</title>
+<meta name="description" content="Step-by-step deployment runbook for DEFONEOS sovereign defence AI on MOD Cloud or on-premise.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:600;margin:0 2px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.75rem;overflow-x:auto;white-space:pre;color:var(--green)}
+.step{display:flex;gap:1rem;margin:.75rem 0;padding:1rem;background:var(--bg3);border-radius:8px;border-left:4px solid var(--gold)}
+.step .num{font-size:1.5rem;font-weight:700;color:var(--gold);min-width:40px}
+.step .body h3{margin:0 0 .25rem;color:var(--cyan)}
+.step .body p{font-size:.8rem;margin-bottom:.25rem}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.timeline-phase{border-left:3px solid var(--cyan);padding-left:1rem;margin:1rem 0}
+.timeline-phase .phase-name{color:var(--gold);font-weight:600;font-size:.9rem}
+.timeline-phase .phase-duration{font-size:.75rem;color:var(--cyan)}
+.check{color:var(--green)}
+.cross{color:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Deployment Runbook</h1>
+<p style="font-size:.8rem;color:var(--cyan)">DEFONEOS — 90-day deployment on MOD Cloud or on-premise — v1.0</p></div>
+</div>
+<div><span class="badge badge-green">90 DAYS</span> <span class="badge badge-gold">DOCKER</span></div>
+</div>
+
+<h2>📋 Prerequisites</h2>
+<div class="section">
+<table>
+<tr><th>Requirement</th><th>Specification</th><th>Status</th></tr>
+<tr><td>Cloud Account</td><td>MOD Cloud, AWS London, Azure UK South, or GCP London</td><td>☐ Provision</td></tr>
+<tr><td>Compute (Minimum)</td><td>4 VMs: 8 vCPU, 32GB RAM each + 1 GPU (T4/A10G) for YOLOv8</td><td>☐ Provision</td></tr>
+<tr><td>Storage</td><td>500GB SSD per VM + 2TB object storage for ISR data</td><td>☐ Provision</td></tr>
+<tr><td>Network</td><td>VPC with public subnet (API) + private subnet (data) + NAT gateway</td><td>☐ Configure</td></tr>
+<tr><td>DNS</td><td>defoneos.your-domain (A record → load balancer)</td><td>☐ Configure</td></tr>
+<tr><td>TLS Certificate</td><td>Let's Encrypt or MOD PKI certificate</td><td>☐ Provision</td></tr>
+<tr><td>Cyber Essentials</td><td>Valid certificate (required for MOD deployment)</td><td><span class="badge badge-red">HUMAN GATE</span></td></tr>
+<tr><td>SC Clearance</td><td>For at least 1 team member (for classified work)</td><td><span class="badge badge-red">HUMAN GATE</span></td></tr>
+</table>
+</div>
+
+<h2>🏗️ Architecture — What We're Deploying</h2>
+<div class="section">
+<div class="code-block">┌─────────────────────────────────────────────────────┐
+│                   LOAD BALANCER (443)                 │
+│              (NGINX / AWS ALB / Azure App GW)          │
+├──────────────┬──────────────┬──────────────┬──────────┤
+│   API GW     │  Cesium COP  │  SIGIL Chain │  Admin   │
+│   :8080      │  :3000       │  :9091       │  :4000   │
+├──────────────┼──────────────┼──────────────┼──────────┤
+│              │              │              │          │
+│  ┌─────────┐ │ ┌──────────┐ │ ┌──────────┐ │ ┌──────┐ │
+│  │ ISR     │ │ │ Fusion   │ │ │ SIGIL    │ │ │ Auth │ │
+│  │ Engine  │ │ │ Engine   │ │ │ Ledger   │ │ │ OIDC │ │
+│  │ :9090   │ │ │ :3001    │ │ │ :9091    │ │ │:4000 │ │
+│  └────┬────┘ │ └────┬─────┘ │ └──────────┘ │ └──────┘ │
+│       │      │      │                     │          │
+│  ┌────┴────┐ │ ┌────┴─────┐         ┌─────┴────┐     │
+│  │  30 MCP │ │ │ C2 FTS   │         │ BFT      │     │
+│  │  Servers│ │ │ :8087    │         │ Council  │     │
+│  │ :5001-  │ │ │          │         │ :9092    │     │
+│  │ :5030   │ │ └──────────┘         └──────────┘     │
+│  └─────────┘ │                                        │
+│              │              ┌──────────────────────┐  │
+│  ┌─────────┐ │              │  GPU NODE            │  │
+│  │ Swarm   │ │              │  YOLOv8 :8500        │  │
+│  │ Engine  │ │              │  (T4 / A10G)         │  │
+│  │ :3002   │ │              └──────────────────────┘  │
+│  └─────────┘ │                                        │
+├──────────────┴──────────────┴────────────────────────┤
+│              POSTGRESQL (SIGIL + Missions)             │
+│              REDIS (Cache + Pub/Sub)                   │
+│              MINIO / S3 (ISR Data Lake)               │
+└───────────────────────────────────────────────────────┘</div>
+</div>
+
+<h2>🚀 Phase 1: Infrastructure (Days 1-14)</h2>
+<div class="section">
+<div class="step">
+<div class="num">1</div>
+<div class="body">
+<h3>Provision Cloud Resources</h3>
+<p>Create 4 VMs + 1 GPU instance via Terraform.</p>
+<div class="code-block"># Clone DEFONEOS infra repo
+git clone https://github.com/csoai-org/defoneos-infra.git
+cd defoneos-infra/terraform
+
+# Configure variables
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars: set cloud_provider, region, domain, certs
+
+# Deploy
+terraform init
+terraform plan -out defoneos.plan
+terraform apply defoneos.plan
+
+# Output: 4 VM IPs + GPU IP + LB DNS</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">2</div>
+<div class="body">
+<h3>Configure Network Security</h3>
+<p>Set up VPC, security groups, mTLS certificates.</p>
+<div class="code-block"># Generate SPIFFE certificates for each service
+./scripts/gen-spiffe-certs.sh
+
+# Configure firewall rules
+# Allow: 443 (LB), 8080-8090 (internal API), 9090-9092 (gRPC)
+# Deny: All external except 443
+# Internal: mTLS only (SPIFFE verified)
+
+# Verify
+./scripts/verify-network.sh</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">3</div>
+<div class="body">
+<h3>Deploy Database Layer</h3>
+<p>PostgreSQL for SIGIL chain + mission data. Redis for cache. MinIO for ISR data lake.</p>
+<div class="code-block"># Deploy via Docker Compose (Phase 1)
+cd defoneos-infra/docker
+docker compose -f docker-compose.db.yml up -d
+
+# Verify
+docker compose -f docker-compose.db.yml ps
+# Expected: postgres (healthy), redis (healthy), minio (healthy)
+
+# Initialize SIGIL chain
+./scripts/init-sigil-chain.sh
+# Output: SIGIL genesis entry created. Chain ID: defoneos-001</div>
+</div>
+</div>
+</div>
+
+<h2>🔧 Phase 2: Core Services (Days 15-45)</h2>
+<div class="section">
+<div class="step">
+<div class="num">4</div>
+<div class="body">
+<h3>Deploy API Gateway + Auth</h3>
+<div class="code-block">cd defoneos-infra/docker
+
+# Configure OAuth2 / OIDC
+export OIDC_ISSUER=https://auth.your-domain
+export OIDC_CLIENT_ID=defoneos-api
+export OIDC_CLIENT_SECRET=<secret>
+
+# Deploy API gateway
+docker compose -f docker-compose.api.yml up -d
+
+# Verify
+curl -k https://localhost/api/v1/health
+# Expected: {"status":"healthy","version":"1.0","sigil_chain":"valid"}</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">5</div>
+<div class="body">
+<h3>Deploy 30 MCP Sensor Servers</h3>
+<div class="code-block"># Deploy all 30 MCPs via federation script
+./scripts/deploy-mcp-fleet.sh
+
+# Output:
+# [1/30] sentinel-hub-mcp..... ✓ deployed on :5001
+# [2/30] os-opendata-mcp...... ✓ deployed on :5002
+# [3/30] data-gov-uk-mcp...... ✓ deployed on :5003
+# ...
+# [30/30] mqtt-bridge-mcp..... ✓ deployed on :5030
+# All 30 MCPs online. Federation healthy.
+
+# Verify each MCP
+./scripts/verify-mcp-fleet.sh
+# Expected: 30/30 ONLINE, 0/30 OFFLINE</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">6</div>
+<div class="body">
+<h3>Deploy Fusion Engine + Cesium COP</h3>
+<div class="code-block"># Deploy fusion engine
+docker compose -f docker-compose.fusion.yml up -d
+
+# Deploy Cesium 3D globe frontend
+docker compose -f docker-compose.cesium.yml up -d
+
+# Verify fusion
+curl -k https://localhost/api/v1/isr/fusion/cop?bbox=53.8,-1.5,53.9,-1.4
+# Expected: JSON with satellite, maritime, air_quality, osint, iot layers
+
+# Open COP in browser
+echo "COP available at: https://cop.your-domain"</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">7</div>
+<div class="body">
+<h3>Deploy C2 Backbone (FreeTAKServer)</h3>
+<div class="code-block"># Deploy FreeTAKServer
+docker compose -f docker-compose.c2.yml up -d
+
+# Configure CoT endpoints
+./scripts/configure-c2.sh
+
+# Verify C2
+curl -k https://localhost/api/v1/c2/cot
+# Expected: {"events":[],"status":"online","protocol":"CoT v1.0"}</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">8</div>
+<div class="body">
+<h3>Deploy BFT Council + SIGIL</h3>
+<div class="code-block"># Deploy 33 BFT agents
+./scripts/deploy-bft-council.sh
+
+# Output:
+# [1/33] Agent council-001....... ✓ online
+# [2/33] Agent council-002....... ✓ online
+# ...
+# [33/33] Agent council-033...... ✓ online
+# Quorum: 23/33. Council ready.
+
+# Verify BFT
+curl -k https://localhost/api/v1/govern/bft/status
+# Expected: {"agents_online":33,"quorum":23,"pending_votes":0}</div>
+</div>
+</div>
+</div>
+
+<h2>🤖 Phase 3: AI/ML Layer (Days 46-70)</h2>
+<div class="section">
+<div class="step">
+<div class="num">9</div>
+<div class="body">
+<h3>Deploy YOLOv8 ISR Pipeline</h3>
+<div class="code-block"># Deploy on GPU node
+cd defoneos-infra/docker
+docker compose -f docker-compose.gpu.yml up -d
+
+# Load DEFONEOS-trained YOLOv8 model
+docker exec defoneos-gpu python3 -c "
+from ultralytics import YOLO
+model = YOLO('models/yolov8-defoneos-v3.pt')
+print(f'Model loaded: {model.info()}')
+print(f'Classes: vehicle, person, structure, vessel, aircraft, animal')
+"
+
+# Verify inference
+curl -k -X POST -F "image=@test_recon.jpg" \
+  https://localhost/api/v1/isr/anomaly/detect
+# Expected: {"detections":[...],"inference_ms":132}</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">10</div>
+<div class="body">
+<h3>Deploy Swarm Engine (Mava + PX4)</h3>
+<div class="code-block"># Deploy PX4 SITL (simulation) first
+docker compose -f docker-compose.swarm-sim.yml up -d
+
+# Load Mava RL-trained policy
+docker exec defoneos-swarm python3 -c "
+from mava import SwarmPolicy
+policy = SwarmPolicy.load('models/swarm-isr-v3.xml')
+print(f'Policy loaded. Drones: {policy.num_drones}')
+print(f'Scenario: {policy.scenario}')
+"
+
+# Verify simulation
+curl -k -X POST -d '{"mission_type":"isr_recon","num_drones":4}' \
+  https://localhost/api/v1/swarm/launch
+# Expected: {"mission_id":"msn-test-001","status":"bft_pending"}</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">11</div>
+<div class="body">
+<h3>Deploy JSP 936 Compliance Generator</h3>
+<div class="code-block"># Deploy compliance service
+docker compose -f docker-compose.compliance.yml up -d
+
+# Generate first compliance report
+curl -k -X POST -d '{"model_id":"yolov8-defoneos-v3"}' \
+  https://localhost/api/v1/govern/jsp936/report/generate
+
+# Expected: {"report_id":"jsp936-001","model":"yolov8-defoneos-v3",
+#   "status":"compliant","frameworks":["jsp936","uk_ai_bill","eu_ai_act","iso42001"]}</div>
+</div>
+</div>
+</div>
+
+<h2>✅ Phase 4: Integration Testing & Demo (Days 71-90)</h2>
+<div class="section">
+<div class="step">
+<div class="num">12</div>
+<div class="body">
+<h3>End-to-End System Test</h3>
+<div class="code-block"># Run full E2E test suite
+./scripts/e2e-test.sh
+
+# Expected output:
+# [PASS] MCP Federation: 30/30 servers responding
+# [PASS] ISR Fusion: COP generation < 5 sec
+# [PASS] YOLOv8: Detection latency < 150 ms
+# [PASS] Swarm: 4-drone sim launch + RTL
+# [PASS] C2: CoT publish/receive
+# [PASS] BFT Council: Quorum reached in < 10 sec
+# [PASS] SIGIL Chain: Integrity verified (15432 entries)
+# [PASS] JSP 936: Report generated for all deployed models
+# [PASS] Auth: OAuth2 token issuance + validation
+# [PASS] Rate Limits: Throttling active
+# Result: 10/10 PASS</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">13</div>
+<div class="body">
+<h3>Live Demo Scenario — Yorkshire Flood Response</h3>
+<div class="code-block"># Trigger flood scenario
+./scripts/demo-flood-scenario.sh
+
+# This will:
+# 1. Load Yorkshire Digital Twin on Cesium COP
+# 2. Simulate flood water rise (River Aire, Leeds)
+# 3. Launch 4-drone swarm for ISR coverage
+# 4. Fuse satellite imagery + drone feeds + IoT sensors
+# 5. Detect stranded vehicles/persons via YOLOv8
+# 6. Publish CoT events to C2 for emergency services
+# 7. Log everything to SIGIL chain
+# 8. Generate JSP 936 compliance report
+# Duration: ~8 minutes
+# Output: Live COP + mission replay + audit trail</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">14</div>
+<div class="body">
+<h3>Generate Deployment Audit Package</h3>
+<div class="code-block"># Generate full audit package
+./scripts/gen-audit-package.sh
+
+# Output: /opt/defoneos/audit-package/
+#   ├── sigil-chain-export.jsonl    (Full SIGIL chain export)
+#   ├── jsp936-reports/             (Compliance reports for all models)
+#   ├── sbom/                       (Software Bill of Materials per container)
+#   ├── pentest-report.pdf          (Security scan results)
+#   ├── network-topology.pdf        (Architecture diagram)
+#   └── deployment-manifest.yaml    (Full deployment config)</div>
+</div>
+</div>
+
+<div class="step">
+<div class="num">15</div>
+<div class="body">
+<h3>Handover to MOD Operator</h3>
+<div class="code-block"># Create operator accounts
+./scripts/create-operators.sh --role=c2_operator --count=3
+./scripts/create-operators.sh --role=analyst --count=5
+./scripts/create-operators.sh --role=swarm_commander --count=2
+./scripts/create-operators.sh --role=auditor --count=2
+
+# Print deployment summary
+./scripts/deployment-summary.sh
+
+# ==========================================
+# DEFONEOS DEPLOYMENT COMPLETE
+# ==========================================
+# Platform:    https://cop.your-domain
+# API:         https://api.your-domain
+# SIGIL Chain: 15432+ entries (verified)
+# MCP Servers: 30/30 ONLINE
+# BFT Council: 33/33 ONLINE (quorum 23)
+# YOLOv8:      mAP50 0.9234, 132ms inference
+# Swarm:       Mava RL v3, PX4 SITL ready
+# C2:          FreeTAKServer online (CoT)
+# Compliance:  JSP 936 compliant
+# Deploy time: 90 days
+# ==========================================</div>
+</div>
+</div>
+</div>
+
+<h2>🔄 Operational Maintenance</h2>
+<div class="section">
+<table>
+<tr><th>Task</th><th>Frequency</th><th>Automated</th></tr>
+<tr><td>SIGIL chain backup</td><td>Daily (02:00)</td><td><span class="check">✅ Cron</span></td></tr>
+<tr><td>MCP health check</td><td>Every 5 min</td><td><span class="check">✅ Auto</span></td></tr>
+<tr><td>Container vulnerability scan</td><td>Daily (03:00)</td><td><span class="check">✅ Trivy</span></td></tr>
+<tr><td>Key rotation (Ed25519 + PQC)</td><td>Every 90 days</td><td><span class="check">✅ Auto</span></td></tr>
+<tr><td>BFT agent health</td><td>Every 1 min</td><td><span class="check">✅ Auto</span></td></tr>
+<tr><td>JSP 936 report refresh</td><td>Per model deploy</td><td><span class="check">✅ Auto</span></td></tr>
+<tr><td>Database backup</td><td>Daily (01:00)</td><td><span class="check">✅ Auto</span></td></tr>
+<tr><td>ISR data archival</td><td>Weekly</td><td><span class="check">✅ Auto</span></td></tr>
+<tr><td>Security patch review</td><td>Weekly</td><td><span class="cross">❌ Manual</span></td></tr>
+<tr><td>MOD compliance review</td><td>Quarterly</td><td><span class="cross">❌ Manual</span></td></tr>
+</table>
+</div>
+
+<h2>🚨 Troubleshooting</h2>
+<div class="section">
+<table>
+<tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
+<tr><td>MCP server offline</td><td>Upstream API down or rate limited</td><td><code>./scripts/restart-mcp.sh sentinel-hub-mcp</code></td></tr>
+<tr><td>BFT quorum not reached</td><td>Too many agents offline (>10)</td><td><code>./scripts/check-bft-agents.sh</code> + restart failed agents</td></tr>
+<tr><td>YOLOv8 latency > 200ms</td><td>GPU memory contention</td><td><code>nvidia-smi</code> → kill stale processes → restart inference server</td></tr>
+<tr><td>Cesium COP blank</td><td>Fusion engine down or tile server offline</td><td><code>docker logs defoneos-fusion</code> + check Redis</td></tr>
+<tr><td>SIGIL chain invalid</td><td>Tampering or storage corruption</td><td><span class="cross">CRITICAL</span> → halt all ops → restore from backup → investigate</td></tr>
+<tr><td>Swarm won't launch</td><td>BFT veto or geofence misconfiguration</td><td>Check <code>/api/v1/govern/bft/status</code> + verify geofence polygon</td></tr>
+<tr><td>Drone not responding</td><td>DTLS handshake failure or EM interference</td><td>Check CoT connectivity → verify pre-shared key → switch to MQTT fallback</td></tr>
+</table>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — 90-Day Deployment Runbook — v1.0</p>
+<p>CSOAI Ltd (16939677) · MIT + CC0 · Docker Compose · Terraform · SIGIL Verified</p>
+</footer>
+</div>
+</body>
+</html>

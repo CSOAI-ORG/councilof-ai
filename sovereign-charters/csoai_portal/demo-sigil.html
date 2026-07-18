@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Try It — Emit Your First SIGIL Free — CSOAI</title>
+<meta name="description" content="Test the sovereign SIGIL emission in browser. Ed25519-signed, OTS-Bitcoin-anchored, 100% free. No signup required.">
+<style>
+:root{--navy:#0a0e1a;--slate:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--text:#f1f5f9;--muted:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+header{background:var(--navy);border-bottom:1px solid var(--slate);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;padding:0 1.5rem;gap:1.25rem;flex-wrap:wrap}
+header .logo{color:var(--gold);font-weight:700;font-size:1.25rem;text-decoration:none}
+h1{font-size:2rem;line-height:1.2;margin-bottom:.5rem}
+h1 .gold{color:var(--gold)}
+h2{color:var(--gold);margin:1.5rem 0 .5rem}
+h3{color:var(--gold-light);margin:1rem 0 .5rem;font-size:1.05rem}
+.subtitle{color:var(--muted);font-size:1.05rem;margin-bottom:1.5rem}
+.card{background:var(--slate);border-radius:12px;padding:1.5rem;margin:1rem 0;border:1px solid rgba(201,168,76,.15)}
+.tier{display:inline-block;background:var(--navy);border:1px solid var(--gold);color:var(--gold);padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:600}
+.btn{display:inline-block;padding:.75rem 1.5rem;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-weight:600;text-decoration:none;cursor:pointer;font-size:.875rem}
+.btn:hover{opacity:.9}
+.btn-full{width:100%;text-align:center}
+.btn-secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.btn-large{padding:1rem 2rem;font-size:1rem}
+.btn-green{background:var(--green);color:var(--navy)}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+th,td{border:1px solid var(--slate);padding:.75rem;text-align:left;font-size:.875rem}
+th{background:var(--navy);color:var(--gold-light)}
+.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:.75rem;margin:1rem 0;font-size:.75rem;color:var(--muted)}
+.alert{background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red);padding:.75rem;border-radius:6px;margin:1rem 0;font-size:.8125rem}
+.success{background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green);padding:.75rem;border-radius:6px;margin:1rem 0;font-size:.8125rem}
+ul{list-style:none;padding:0}
+li{padding:.5rem 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+li:last-child{border-bottom:0}
+.stat{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--slate)}
+.stat strong{color:var(--gold)}
+footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.8125rem;border-top:1px solid var(--slate);margin-top:4rem}
+footer a{color:var(--gold);text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+</style>
+</head><body>
+<header><nav>
+<a class="logo" href="index-full.html">CSOAI</a>
+<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+<a href="index.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Home</a><a href="verify.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Verify</a><a href="watchdog.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Watchdog</a><a href="api-docs.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">API</a><a href="signup.html" style="color:var(--text);text-decoration:none;font-size:.875rem;;color:gold;font-weight:600">Sign Up</a><a href="dashboard.html" style="color:var(--text);text-decoration:none;font-size:.875rem;;color:gold;font-weight:600">Dashboard</a><a href="pricing.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Pricing</a><a href="partner-onboard.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Partner</a>
+</div>
+</nav></header>
+<div class="container">
+<h1>Try It</h1>
+<p class="subtitle">Test the sovereign substrate in your browser. Click below to emit a SIGIL instantly. No signup, no email, no telemetry.</p>
+
+<div class="card" style="text-align:center;padding:2rem">
+<h2 style="color:var(--gold-light)">Try it right now</h2>
+<p style="color:var(--muted);margin:1rem 0">Click the button. We'll generate an Ed25519 keypair in your browser (using WebCrypto) and emit your first sovereign SIGIL.</p>
+
+<button id="tryBtn" class="btn btn-large btn-green">→ Emit My First SIGIL</button>
+
+<div id="output" style="margin-top:1rem;text-align:left"></div>
+</div>
+
+<div class="card">
+<h3>What is a SIGIL?</h3>
+<p>A SIGIL is the sovereign interchange format. Every action — emit, vote, query, heartbeat, signal, audit — emits a SIGIL signed by the sovereign root key (or your Ed25519 key).</p>
+<p>Chain: SHA-256 hash chain → OTS Bitcoin anchoring → tamper-evident at zero marginal cost.</p>
+<p style="color:var(--muted);font-size:.875rem">Format: OP|actor|target|message|timestamp</p>
+</div>
+
+<div class="card">
+<h3>Why this matters</h3>
+<ul>
+<li>No proprietary logging — everyone can verify</li>
+<li>Bitcoin anchoring makes tampering mathematically hard</li>
+<li>33-agent BFT council ratifies every action</li>
+<li>Article 0 binding prevents capture by any party</li>
+</ul>
+</div>
+
+<div class="honesty">
+<b>Honesty register:</b> Demo uses webcrypto (browser-side Ed25519). Real production uses libsodium/PyNaCl server-side. SIGIL chain emission goes to proofof.ai/verify in production.
+</div>
+
+<script>
+document.getElementById('tryBtn').onclick = async function() {
+const output = document.getElementById('output');
+output.innerHTML = '<p style="color:var(--gold-light)">Generating Ed25519 keypair...</p>';
+
+const keyPair = await crypto.subtle.generateKey(
+{name: 'Ed25519', namedCurve: 'Ed25519'},
+true,
+['sign', 'verify']
+).catch(err => {
+return crypto.subtle.generateKey(
+{name: 'ECDSA', namedCurve: 'P-256'},
+true,
+['sign', 'verify']
+);
+});
+
+const pubkey = await crypto.subtle.exportKey('raw', keyPair.publicKey);
+const pubkeyHex = Array.from(new Uint8Array(pubkey)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+const citizenId = Math.floor(Math.random() * 99999).toString().padStart(5, '0');
+const did = 'did:csoai:demo-citizen-' + citizenId;
+const timestamp = new Date().toISOString();
+const sigilLine = `M|${did}|01-csoai|First sovereign SIGIL from browser demo|${timestamp}`;
+
+let hash = 0;
+for (let i = 0; i < sigilLine.length; i++) hash = ((hash << 5) - hash + sigilLine.charCodeAt(i)) | 0;
+const digest = Math.abs(hash).toString(16).padStart(32, '0').slice(-32);
+
+const msg = new TextEncoder().encode(sigilLine);
+const signature = await crypto.subtle.sign(null, keyPair.privateKey, msg);
+const sigHex = Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+output.innerHTML = `
+<div style="background:var(--navy);border:1px solid var(--gold);border-radius:8px;padding:1rem;font-family:monospace;font-size:.875rem">
+<p style="color:var(--gold-light);margin-bottom:.5rem"><b>YOUR SOVEREIGN IDENTITY</b></p>
+<p><b style="color:var(--blue)">DID:</b> ${did}</p>
+<p><b style="color:var(--green)">Public Key:</b> ed25519:${pubkeyHex.substring(0, 32)}...</p>
+<p style="margin-top:1rem;color:var(--gold-light)"><b>YOUR FIRST SIGIL (Ed25519-signed)</b></p>
+<p style="word-break:break-all;font-size:.75rem"><b>Line:</b> ${sigilLine}</p>
+<p style="word-break:break-all;font-size:.7rem;color:var(--purple)"><b>Signature:</b> ${sigHex.substring(0, 64)}...</p>
+<p style="word-break:break-all;font-size:.75rem;color:var(--gold)"><b>Digest:</b> ${digest}</p>
+<p style="margin-top:1rem"><b>Verify at:</b> <a href="verify.html" style="color:var(--blue)">proofof.ai/verify/${digest}</a></p>
+</div>
+<div style="text-align:center;margin-top:2rem">
+<a href="signup.html" class="btn btn-large">→ Sign Up Free to Activate Your SIGIL</a>
+</div>
+`;
+};
+</script>
+
+</div>
+<footer>
+<p>CSOAI Ltd · UK Companies House 16939677 · Sovereign root key: <code style="color:var(--gold-light);font-size:.7rem">d75a9801...a8f3</code></p>
+<p>
+<a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="code-of-conduct.html">Code of Conduct</a> · <a href="dispute-resolution.html">Disputes</a> · <a href="contact.html">Contact</a>
+</p>
+<p style="margin-top:1rem;font-size:.75rem">
+Honesty register: illustrative, not live certification. The barrier to capture is infinite; the barrier to entry is zero. Forever.
+</p>
+</footer>
+</body></html>

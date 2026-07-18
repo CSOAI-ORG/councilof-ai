@@ -1,0 +1,7 @@
+{
+  "id": "mr-cometbft-replication-spec",
+  "prompt": "Write a 400-word technical spec for CometBFT cross-VM consensus across 3 sovereign temples (UK-london, EU-frankfurt, US-east1). Cover: (1) the Tendermint BFT state machine that notarizes each disclosure's 6-layer proof across all 3 regions, (2) the validator set — which 11 of 33 BFT agents sign per region, and the 22/33 supermajority threshold required for a disclosure to be considered regionally-canonical, (3) the ABCI application interface (CheckTx → DeliverTx → Commit) and how each transaction carries the SHA-3/512 hash + Bitcoin OTS receipt + Ed25519 signature, (4) the block time target (1s), the mempool gossip protocol, and the evidence-based slashing for double-sign, (5) the light-client verification path so that verify.openpatent.ai in any region can prove inclusion without trusting any single temple. Use DEFENEOS mythic voice. Return ONLY JSON: {sections:[{name:string, body:string}], validator_set:{uk:[11 names], eu:[11 names], us:[11 names]}, threshold:string, block_time_sec:int, slashing_conditions:[3 strings]}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

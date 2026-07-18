@@ -1,0 +1,242 @@
+/* Use Cases Page Styling */
+
+.use-cases-page {
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.uc-hero {
+  padding: 6rem 2rem 4rem;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.1) 0%, transparent 100%);
+}
+
+.uc-hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.uc-hero .subtitle {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.industry-selector {
+  padding: 2rem;
+  background: rgba(139, 92, 246, 0.05);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.industry-tabs {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.industry-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 2rem;
+  background: var(--card-bg);
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 150px;
+}
+
+.industry-tab:hover {
+  border-color: var(--primary-purple);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(139, 92, 246, 0.2);
+}
+
+.industry-tab.active {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+  border-color: var(--primary-purple);
+  color: var(--text-primary);
+}
+
+.tab-icon {
+  font-size: 2rem;
+}
+
+.tab-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.industry-content {
+  padding: 5rem 2rem;
+}
+
+.industry-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.industry-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.industry-icon {
+  font-size: 3rem;
+}
+
+.industry-description {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.use-cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.use-case-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.3s;
+}
+
+.use-case-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-purple);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+}
+
+.use-case-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary-purple);
+}
+
+.uc-section {
+  margin-bottom: 1.5rem;
+}
+
+.uc-section h4 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.uc-section p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.results-list li {
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.results-list li::before {
+  content: "✓";
+  color: var(--primary-purple);
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+
+.companies-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.company-tag {
+  padding: 0.5rem 1rem;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: var(--primary-purple);
+}
+
+.use-case-card .btn {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.cta-section {
+  padding: 5rem 2rem;
+  text-align: center;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .uc-hero h1 {
+    font-size: 2rem;
+  }
+
+  .uc-hero .subtitle {
+    font-size: 1.125rem;
+  }
+
+  .industry-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .use-cases-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .industry-header h2 {
+    font-size: 1.75rem;
+    flex-direction: column;
+  }
+}
+

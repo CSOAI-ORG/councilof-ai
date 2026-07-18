@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo — COBOL Bridge</title>
+  <meta name="description" content="Reverse-engineer, refactor, and migrate COBOL, mainframe JCL, and RPG to cloud-native services. Trusted by banks, insurers, and government agencies.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Demo — COBOL Bridge">
+  <meta property="og:description" content="Reverse-engineer, refactor, and migrate COBOL, mainframe JCL, and RPG to cloud-native services. Trusted by banks, insurers, and government agencies.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cobolbridge.ai/demo">
+  <link rel="canonical" href="https://cobolbridge.ai/demo">
+  <link rel="llms-txt" href="/llms.txt">
+  <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css"></script>
+  <style>
+    body { background:#050510; color:#e8e4dc; }
+    .meok-gold { color:#c9a84c; }
+    .bg-meok-gold { background-color:#c9a84c; }
+    .border-meok-gold { border-color:#c9a84c; }
+    .btn-primary { background:#c9a84c; color:#050510; padding:0.75rem 1.5rem; border-radius:0.5rem; font-weight:700; display:inline-block; transition:opacity .2s; }
+    .btn-primary:hover { opacity:.9; }
+    .btn-secondary { border:1px solid #c9a84c; color:#c9a84c; padding:0.75rem 1.5rem; border-radius:0.5rem; font-weight:600; display:inline-block; }
+    .btn-secondary:hover { background:rgba(201,168,76,0.1); }
+    .card { background:#0f0f1a; border:1px solid #1f1f2e; border-radius:0.75rem; padding:1.5rem; }
+  </style>
+  
+</head>
+<body>
+<nav class="border-b border-slate-800 bg-[#050510]/90 backdrop-blur sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+    <a href="/" class="text-xl font-bold meok-gold tracking-tight">MEOK</a>
+    <div class="flex flex-wrap gap-6"><a href="/" class="hover:text-amber-400 transition text-sm">Home</a><a href="/demo" class="hover:text-amber-400 transition text-sm">Demo</a><a href="/pricing" class="hover:text-amber-400 transition text-sm">Pricing</a><a href="/signup" class="hover:text-amber-400 transition text-sm">Signup</a><a href="/partner" class="hover:text-amber-400 transition text-sm">Partner</a><a href="/enterprise" class="hover:text-amber-400 transition text-sm">Enterprise</a></div>
+  </div>
+</nav>
+<section class="py-20 px-6">
+  <div class="max-w-4xl mx-auto text-center">
+    <h1 class="text-3xl font-bold mb-4">Book a demo</h1>
+    <p class="text-slate-400 mb-10">See cobolbridge.ai in action with your own data. No sales pressure, no spam.</p>
+    <form class="max-w-xl mx-auto mt-8 space-y-4" onsubmit="event.preventDefault(); alert('Demo request captured for cobolbridge.ai. Sales will follow up.');">
+  <div class="grid sm:grid-cols-2 gap-4">
+    <input type="text" required placeholder="Name" class="w-full px-4 py-3 rounded-lg bg-[#0f0f1a] border border-slate-700 text-white focus:border-amber-400 focus:outline-none">
+    <input type="text" required placeholder="Company" class="w-full px-4 py-3 rounded-lg bg-[#0f0f1a] border border-slate-700 text-white focus:border-amber-400 focus:outline-none">
+  </div>
+  <input type="email" required placeholder="Work email" class="w-full px-4 py-3 rounded-lg bg-[#0f0f1a] border border-slate-700 text-white focus:border-amber-400 focus:outline-none">
+  <textarea rows="4" placeholder="Tell us about your project" class="w-full px-4 py-3 rounded-lg bg-[#0f0f1a] border border-slate-700 text-white focus:border-amber-400 focus:outline-none"></textarea>
+  <button type="submit" class="btn-primary w-full">Request demo</button>
+</form>
+  </div>
+</section>
+<footer class="border-t border-slate-800 mt-20 py-10 text-slate-500 text-sm">
+  <div class="max-w-6xl mx-auto px-6">
+    <nav class="flex flex-wrap justify-center gap-4 mb-6">
+      <a href="https://meok.ai" class="hover:text-amber-400 transition">MEOK.ai</a>
+      <a href="https://csoai.org" class="hover:text-amber-400 transition">CSOAI</a>
+      <a href="https://proofof.ai" class="hover:text-amber-400 transition">ProofOf.AI</a>
+      <a href="https://meok.ai/privacy" class="hover:text-amber-400 transition">Privacy</a>
+      <a href="https://meok.ai/terms" class="hover:text-amber-400 transition">Terms</a>
+    </nav>
+    <p class="text-center">© 2026 MEOK AI Labs · CSOAI Ltd · UK Companies House <strong>16939677</strong></p>
+    <p class="text-center mt-2">Part of the MEOK sovereign AI hive.</p>
+  </div>
+</footer>
+</body>
+</html>

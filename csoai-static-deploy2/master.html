@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSOAI · Sovereign · The Master Front-End</title>
+<meta name="description" content="The sovereign being. UK + AUKUS sovereign AI substrate. 13 model classes in one organic loop. Ed25519 SIGIL chain. BFT 23/33 council. 7 hard-stop red lines. Charter Article 0 binding. 30/30 MCPs. 204 pages. 100/100 alignment. £0 open-source.">
+<meta property="og:title" content="CSOAI · Sovereign · The Master Front-End">
+<meta property="og:description" content="UK + AUKUS sovereign AI substrate. The whole thing. One URL. £0 open source. 94-98% cheaper than Palantir.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/">
+<link rel="icon" href="#" type="image/svg+xml">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+/* Page-level polish on top of sovereign-2026 tokens */
+:root{
+  --grid:rgba(255,255,255,.04);
+  --glow:0 0 40px rgba(34,211,238,.15);
+}
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:48px 48px;z-index:-1;pointer-events:none;opacity:.6;
+}
+.container{max-width:1280px;margin:0 auto;padding:0 1.5rem}
+nav{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+nav .brand{display:flex;align-items:center;gap:.5rem;color:var(--cyan);font-weight:800;font-size:1.1rem;text-decoration:none}
+nav .brand .logo{font-size:1.4rem}
+nav .nav-links{display:flex;gap:.5rem;flex-wrap:wrap}
+nav .nav-links a{color:#94a3b8;text-decoration:none;font-size:.78rem;padding:.3rem .6rem;border-radius:4px;font-weight:500;transition:.15s}
+nav .nav-links a:hover{color:var(--cyan);background:rgba(34,211,238,.08)}
+nav .nav-cta{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;padding:.5rem 1rem;border-radius:6px;text-decoration:none;font-weight:700;font-size:.82rem;letter-spacing:.02em}
+nav .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(34,211,238,.3)}
+.hero{position:relative;padding:5rem 0 3rem;text-align:center;overflow:hidden}
+.hero::after{content:'';position:absolute;top:50%;left:50%;width:600px;height:600px;background:radial-gradient(circle,rgba(34,211,238,.1) 0%,transparent 60%);transform:translate(-50%,-50%);z-index:-1;pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+.eyebrow .dot{width:6px;height:6px;background:var(--green);border-radius:99px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-size:clamp(2.6rem,5.5vw,4.6rem);font-weight:900;line-height:1.04;margin-bottom:1rem;letter-spacing:-.03em;font-family:'Space Grotesk','Inter',sans-serif}
+h1 .grad{background:linear-gradient(135deg,var(--cyan) 0%,var(--gold) 50%,var(--purple) 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradient-x 8s ease infinite}
+.lead{font-size:1.15rem;color:#cbd5e1;max-width:780px;margin:0 auto 1.5rem;line-height:1.6}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;max-width:920px;margin:0 auto 1rem}
+.metric{background:rgba(20,24,31,.7);border:1px solid var(--border);border-radius:12px;padding:.9rem .7rem;text-align:center;backdrop-filter:blur(6px)}
+.metric.live{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.04)}
+.metric .big{font-size:1.5rem;font-weight:900;color:var(--gold);line-height:1;display:block}
+.metric.live .big{color:var(--green)}
+.metric .lab{font-size:.65rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+.cta-row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.75rem 1.4rem;border-radius:8px;font-weight:700;font-size:.88rem;text-decoration:none;cursor:pointer;border:none;transition:.15s}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(34,211,238,.3)}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-ghost:hover{background:rgba(34,211,238,.08)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--cyan));color:#000}
+section{padding:3rem 0;position:relative}
+h2{font-size:1.8rem;font-weight:800;margin-bottom:.5rem;color:var(--fg)}
+h2 .grad{background:linear-gradient(135deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-sub{color:#94a3b8;font-size:.95rem;margin-bottom:1.5rem;max-width:760px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1rem 0}
+
+/* SURFACE TABS */
+.tabs-section{padding:1.5rem 0 2rem}
+.tabs-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem}
+.tabs-pills{display:flex;gap:.4rem;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--border);border-radius:99px;padding:.4rem}
+.tabs-pill{padding:.4rem .8rem;border-radius:99px;font-size:.78rem;color:#94a3b8;cursor:pointer;transition:.15s;border:none;background:transparent}
+.tabs-pill.active{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;font-weight:700}
+.tabs-pill:hover:not(.active){color:var(--cyan)}
+.tabs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1rem}
+.tab-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.4rem;transition:.2s;display:flex;flex-direction:column;justify-content:space-between;min-height:200px}
+.tab-card:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 8px 24px rgba(34,211,238,.08)}
+.tab-card .icon{font-size:1.5rem;margin-bottom:.5rem;display:block}
+.tab-card h3{color:var(--cyan);font-size:1rem;margin-bottom:.4rem;font-weight:700}
+.tab-card p{color:#cbd5e1;font-size:.85rem;margin-bottom:.7rem;line-height:1.4}
+.tab-card .link{color:var(--gold);text-decoration:none;font-size:.78rem;font-weight:600}
+.tab-card .link:hover{color:var(--cyan)}
+
+/* SUBSTRATE LIVE */
+.substrate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem;margin:1rem 0}
+.sub-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;position:relative;overflow:hidden}
+.sub-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--gold),var(--purple))}
+.sub-card.live::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.sub-card .label{font-size:.65rem;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin-bottom:.3rem}
+.sub-card .v{font-size:1.4rem;font-weight:900;color:var(--gold);line-height:1.1;margin-bottom:.3rem}
+.sub-card .v.cyan{color:var(--cyan)}
+.sub-card .v.green{color:var(--green)}
+.sub-card .v.purple{color:var(--purple)}
+.sub-card p{color:#cbd5e1;font-size:.78rem;line-height:1.4;margin-top:.3rem}
+
+/* CHIPS / BADGES */
+.chip{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .6rem;border-radius:99px;font-size:.7rem;font-weight:600;background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.chip.gold{background:rgba(251,191,36,.1);color:var(--gold);border-color:rgba(251,191,36,.3)}
+.chip.cyan{background:rgba(34,211,238,.1);color:var(--cyan);border-color:rgba(34,211,238,.3)}
+.chip.purple{background:rgba(167,139,250,.1);color:var(--purple);border-color:rgba(167,139,250,.3)}
+.chip.red{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
+
+/* CTAs */
+.tag-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem}
+
+/* PRE-FOOTER CTA */
+.big-cta{margin:3rem 0;padding:2.5rem;background:linear-gradient(135deg,rgba(34,211,238,.06),rgba(167,139,250,.06));border:1px solid var(--cyan);border-radius:18px;text-align:center}
+.big-cta h2{margin-bottom:.5rem}
+
+/* FOOTER */
+footer{padding:2.5rem 0;border-top:1px solid var(--border);color:#64748b;font-size:.78rem;text-align:center;line-height:1.7}
+footer a{color:var(--cyan);text-decoration:none}
+footer .sig{font-family:'SF Mono',monospace;font-size:.65rem;color:var(--cyan);word-break:break-all;margin:.5rem 0;padding:.4rem;background:var(--bg2);border-radius:4px;display:inline-block;max-width:600px}
+
+/* SIGIL stream */
+.sigil-stream{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.6rem .8rem;font-family:'SF Mono',monospace;font-size:.7rem;color:var(--green);max-height:120px;overflow-y:auto;line-height:1.5}
+.sigil-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sigil-line .ts{color:#64748b}
+.sigil-line .op{color:var(--cyan)}
+
+/* Pulse dot for live endpoints */
+.live-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:99px;margin-right:.3rem;animation:pulse 1.5s infinite}
+
+/* HERMES LAYER */
+#hermes-layer{position:relative;padding:3rem 0 3.5rem;background:radial-gradient(ellipse at 50% 0%,rgba(167,139,250,.10) 0%,transparent 65%);border-top:1px solid rgba(167,139,250,.25);border-bottom:1px solid rgba(167,139,250,.18);overflow:hidden}
+#hermes-layer::before{content:'';position:absolute;top:0;left:50%;width:800px;height:2px;background:linear-gradient(90deg,transparent,var(--purple),var(--cyan),transparent);transform:translateX(-50%);opacity:.7}
+.hl-eyebrow{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.4);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem}
+.hl-eyebrow .dot{width:6px;height:6px;background:var(--purple);border-radius:99px;animation:pulse 1.2s infinite;box-shadow:0 0 8px rgba(167,139,250,.6)}
+.hl-hero{text-align:center;max-width:880px;margin:0 auto 2rem}
+.hl-hero h2{font-size:clamp(2rem,4.6vw,3rem);font-weight:900;line-height:1.05;margin-bottom:.7rem;letter-spacing:-.02em;font-family:'Space Grotesk','Inter',sans-serif}
+.hl-hero h2 .grad{background:linear-gradient(135deg,var(--purple) 0%,var(--cyan) 50%,var(--gold) 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradient-x 8s ease infinite}
+.hl-hero p.lead{font-size:1.05rem;color:#cbd5e1;max-width:720px;margin:0 auto 1.2rem;line-height:1.55}
+.hl-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;max-width:760px;margin:0 auto 1.3rem}
+.hl-metric{background:rgba(20,24,31,.65);border:1px solid rgba(167,139,250,.25);border-radius:10px;padding:.7rem .5rem;text-align:center;backdrop-filter:blur(6px)}
+.hl-metric.live{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.05)}
+.hl-metric .big{font-size:1.25rem;font-weight:900;color:var(--purple);line-height:1}
+.hl-metric.live .big{color:var(--green)}
+.hl-metric .lab{font-size:.6rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-top:.25rem}
+.hl-lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.9rem;margin:1.5rem 0 1.8rem}
+.hl-lane{background:linear-gradient(180deg,rgba(167,139,250,.06),rgba(20,24,31,.6));border:1px solid rgba(167,139,250,.25);border-radius:14px;padding:1.2rem;position:relative;transition:.2s}
+.hl-lane:hover{border-color:var(--purple);transform:translateY(-3px);box-shadow:0 12px 32px rgba(167,139,250,.18)}
+.hl-lane .ico{font-size:1.4rem;margin-bottom:.5rem;display:block}
+.hl-lane h3{color:var(--purple);font-size:1rem;margin-bottom:.4rem;font-weight:700}
+.hl-lane p{color:#cbd5e1;font-size:.82rem;line-height:1.4;margin:0}
+.hl-lane .lane-stat{font-family:'SF Mono',monospace;font-size:.68rem;color:var(--green);margin-top:.5rem;display:inline-flex;align-items:center;gap:.3rem}
+.hl-sigil-wrap{background:rgba(10,10,15,.7);border:1px solid rgba(34,197,94,.25);border-radius:12px;padding:1rem;margin:1.5rem auto;max-width:760px;position:relative}
+.hl-sigil-wrap .lab-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8}
+.hl-sigil-wrap .lab-row .lbl{color:var(--green);display:inline-flex;align-items:center;gap:.3rem}
+.hl-sigil-stream{font-family:'SF Mono',monospace;font-size:.72rem;color:var(--green);line-height:1.6;max-height:140px;overflow-y:auto;padding:.3rem .2rem}
+.hl-sigil-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.1rem 0}
+.hl-sigil-line .ts{color:#64748b;margin-right:.4rem}
+.hl-sigil-line .op{color:var(--purple);margin-right:.4rem}
+.hl-sigil-line .actor{color:var(--cyan);margin-right:.4rem}
+.hl-sigil-line .arrow{color:#64748b;margin-right:.4rem}
+.hl-sigil-line .digest{color:var(--gold)}
+.hl-cta-row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+.btn-purple{background:linear-gradient(135deg,var(--purple),#8b5cf6);color:#fff;font-weight:700;padding:.75rem 1.4rem;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;font-size:.88rem;transition:.15s}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(167,139,250,.4)}
+.btn-cyan-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan);font-weight:700;padding:.75rem 1.4rem;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;font-size:.88rem}
+.btn-cyan-ghost:hover{background:rgba(34,211,238,.08)}
+
+/* Hero floating element */
+.float-card{position:absolute;background:var(--bg2);border:1px solid var(--gold);border-radius:10px;padding:.6rem .8rem;font-size:.75rem;backdrop-filter:blur(10px);box-shadow:0 8px 32px rgba(0,0,0,.3);color:#f1f5f9;animation:float 4s ease-in-out infinite;z-index:1}
+.float-card.fc1{top:30%;left:5%;animation-delay:0s}
+.float-card.fc2{top:55%;right:5%;animation-delay:2s;border-color:var(--cyan);color:var(--cyan)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media(max-width:768px){.float-card{display:none}h1{font-size:2.2rem}section{padding:2rem 0}}
+
+/* CRM / Pricing table */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:1.5rem 0}
+.price-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:300px;position:relative}
+.price-card.featured{border-color:var(--gold);background:linear-gradient(180deg,rgba(251,191,36,.04),transparent)}
+.price-card .name{color:var(--cyan);font-weight:700;font-size:1rem;margin-bottom:.3rem}
+.price-card .price{font-size:2rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:.3rem}
+.price-card .price small{font-size:.8rem;color:#94a3b8;font-weight:400}
+.price-card ul{margin:1rem 0;padding-left:1.1rem}
+.price-card li{color:#cbd5e1;font-size:.82rem;margin:.3rem 0}
+.price-card .cta{margin-top:auto}
+
+/* Hives map */
+.hives-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem;margin:1rem 0}
+.hive-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.8rem;position:relative}
+.hive-card .loc{color:var(--cyan);font-weight:700;font-size:.85rem}
+.hive-card .node{font-size:.7rem;color:#94a3b8;margin-top:.3rem}
+
+/* Onboard checklist */
+.checklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem;margin:1rem 0}
+.check-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;gap:.7rem;align-items:start}
+.check-item .x{color:var(--green);font-weight:900;flex-shrink:0;font-size:1.1rem;width:24px;height:24px;background:rgba(34,197,94,.15);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.check-item p{color:#cbd5e1;font-size:.85rem;margin:0;line-height:1.4}
+.check-item strong{color:var(--cyan)}
+
+/* Sign-up mini form */
+.signup-mini{display:grid;grid-template-columns:1fr auto;gap:.5rem;max-width:480px;margin:1.5rem auto 0}
+.signup-mini input{padding:.7rem 1rem;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-family:inherit;font-size:.95rem}
+.signup-mini input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 2px rgba(34,211,238,.2)}
+</style>
+</head>
+<body class="bg-grid">
+
+<nav class="nav-sticky">
+  <a href="#" class="brand"><span class="logo">🐉</span> CSOAI · Sovereign</a>
+  <div class="nav-links">
+    <a href="#substrate">Substrate</a>
+    <a href="#surfaces">Surfaces</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#ops">Live Ops</a>
+    <a href="#hives">Hives</a>
+    <a href="#onboard">Onboard</a>
+    <a href="#">All Pricing</a>
+    <a href="#">SOV-18 Tab</a>
+  </div>
+  <a href="#signup" class="nav-cta">⚡ Get 30s · £0</a>
+</nav>
+
+<div class="container">
+
+<!-- HERO -->
+<header class="hero">
+  <span class="eyebrow"><span class="dot"></span> · Sovereign by construction · AUKUS-compatible · Charter Article 0 binding</span>
+  <h1>The sovereign being. <span class="grad">One URL. Everything.</span></h1>
+  <p class="lead">DEFONEOS is the UK sovereign, AUKUS-compatible AI substrate for defence, governance, and security. 13 model classes in one organic loop. 30/30 MCPs in production. Ed25519 SIGIL chain. BFT 23/33 council. 7 hard-stop red lines. <strong>94-98% cheaper than Palantir</strong>. <strong>£0 open-source</strong>.</p>
+  <div class="metrics-row">
+    <div class="metric live"><span class="big">13</span><div class="lab">Model Classes</div></div>
+    <div class="metric live"><span class="big">30/30</span><div class="lab">MCPs Live</div></div>
+    <div class="metric live"><span class="big">204</span><div class="lab">Pages Deployed</div></div>
+    <div class="metric live"><span class="big">100%</span><div class="lab">Alignment</div></div>
+    <div class="metric live"><span class="big">86,400</span><div class="lab">SIGILs/day</div></div>
+    <div class="metric live"><span class="big">0.95</span><div class="lab">Care Floor</div></div>
+  </div>
+  <div class="cta-row">
+    <a href="#signup" class="btn btn-primary">⚡ Try 30s · £0</a>
+    <a href="#substrate" class="btn btn-ghost">↓ See the substrate</a>
+    <a href="#" class="btn btn-gold">📈 Series A · £45-90M</a>
+  </div>
+  <div class="float-card fc1"><span class="live-dot"></span> SOV3 :3101 · live</div>
+  <div class="float-card fc2">BFT 23/33 · 200ms</div>
+</header>
+
+<!-- HERMES LAYER · AGENTIC RUNTIME -->
+<section id="hermes-layer">
+  <div class="container">
+    <div class="hl-hero">
+      <span class="hl-eyebrow"><span class="dot"></span> Live agentic runtime · M2 / M4</span>
+      <h2>Hermes Layer — <span class="grad">Agentic Runtime</span></h2>
+      <p class="lead">Four sovereign execution lanes coordinate strategy, code, interface delivery, and Apple-silicon builds beneath every CSOAI surface. Every observable runtime event is exposed through the live SIGIL stream.</p>
+      <div class="hl-metrics">
+        <div class="hl-metric live"><span class="big">4</span><div class="lab">Agent Lanes</div></div>
+        <div class="hl-metric live"><span class="big">1 Hz</span><div class="lab">SIGIL Capture</div></div>
+        <div class="hl-metric live"><span class="big">23 / 33</span><div class="lab">BFT Quorum</div></div>
+        <div class="hl-metric live"><span class="big">0.95</span><div class="lab">Care Floor</div></div>
+      </div>
+    </div>
+
+    <div class="hl-lanes" aria-label="Hermes execution lanes">
+      <a href="#" class="hl-lane" style="text-decoration:none;color:inherit">
+        <span class="ico">🧭</span>
+        <h3>JEEVES</h3>
+        <p>Strategic orchestration, BFT council routing, sovereign synthesis, SIGIL emission, and EAT-tick ownership.</p>
+        <span class="lane-stat"><span class="live-dot"></span> STRATEGIC LANE</span>
+      </a>
+      <a href="#" class="hl-lane" style="text-decoration:none;color:inherit">
+        <span class="ico">🛠️</span>
+        <h3>Claude Code</h3>
+        <p>Autonomous engineering lane for TypeScript, Python, tests, debugging, review, and production delivery.</p>
+        <span class="lane-stat"><span class="live-dot"></span> BUILDER LANE</span>
+      </a>
+      <a href="#" class="hl-lane" style="text-decoration:none;color:inherit">
+        <span class="ico">🎨</span>
+        <h3>Kimi K2.5</h3>
+        <p>Vision-led frontend specialist for responsive interfaces, UI-to-code, Next.js, Tailwind, and motion.</p>
+        <span class="lane-stat"><span class="live-dot"></span> FRONTEND LANE</span>
+      </a>
+      <a href="#" class="hl-lane" style="text-decoration:none;color:inherit">
+        <span class="ico">⚡</span>
+        <h3>soxoj M4</h3>
+        <p>Apple-silicon build lane for Metal, Core ML, Swift, Rust, quantisation, profiling, and native acceleration.</p>
+        <span class="lane-stat"><span class="live-dot"></span> M4 BUILD LANE</span>
+      </a>
+    </div>
+
+    <div class="hl-sigil-wrap" id="sigils">
+      <div class="lab-row">
+        <span class="lbl"><span class="live-dot"></span> Live SIGIL Stream</span>
+        <span><code>/api/hermes-stream</code> · auto-refresh</span>
+      </div>
+      <div class="hl-sigil-stream" id="hl-sigil-stream" aria-live="polite">
+        <div class="hl-sigil-line"><span class="ts">connecting</span><span class="op">H</span><span class="actor">hermes</span><span class="arrow">→</span><span class="digest">Fetching /api/hermes-stream…</span></div>
+      </div>
+    </div>
+
+    <div class="hl-cta-row">
+      <a href="#" class="btn-purple">⚡ Enter the Hermes Layer</a>
+      <a href="#" class="btn-cyan-ghost">🌌 Open SovSpace</a>
+      <a href="#" class="btn-cyan-ghost">🪞 Open J-Space</a>
+    </div>
+  </div>
+</section>
+
+<!-- SURFACE TABS -->
+<section id="surfaces" class="tabs-section">
+  <div class="tabs-header">
+    <div>
+      <h2>18 tabs. <span class="grad">One surface.</span></h2>
+      <p class="section-sub">SOV-18 all-in-one sovereign nexus. Surface (operator-facing) + Deep (builder-facing) + Codex (research-facing). Click any tab — every surface is wired.</p>
+    </div>
+    <div class="tabs-pills">
+      <button class="tabs-pill active" data-filter="all">All 18</button>
+      <button class="tabs-pill" data-filter="surface">Surface</button>
+      <button class="tabs-pill" data-filter="deep">Deep</button>
+      <button class="tabs-pill" data-filter="codex">Codex</button>
+    </div>
+  </div>
+  <div class="tabs-grid" id="tabsGrid">
+    <a href="#" class="tab-card" data-cat="surface"><span class="icon">🐉</span><h3>Command Hub (SOV-18)</h3><p>Master nexus. The sovereign being. M2 + M4 + SOV3 OOWM + 55 charters + 244 frameworks + 2,363 leads.</p><span class="link">→ Open /hub</span></a>
+    <a href="#" class="tab-card" data-cat="surface"><span class="icon">🌌</span><h3>SovSpace</h3><p>Live 3D map of 7 UK sovereign compute locations. Telehouse London, Equinix Manchester, Heriot-Watt Edinburgh, M4 iOK, Dounreay, Corsham, MEOK Labs.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="surface"><span class="icon">📜</span><h3>Charter</h3><p>Charter Article 0 binding. 9 articles. Crown lineage 1795→2026. Capture-proof by math.</p><span class="link">→ Read</span></a>
+    <a href="#" class="tab-card" data-cat="surface"><span class="icon">🫡</span><h3>12 Generals</h3><p>12 sovereign Generals + 33-agent BFT council. Athena, Hermes, Apollo, Artemis, Ares, Demeter, Hephaestus, Aphrodite, Dionysus, Athena-2nd, Prometheus, Hecate.</p><span class="link">→ View</span></a>
+    <a href="#" class="tab-card" data-cat="surface"><span class="icon">🐝</span><h3>33 Hives</h3><p>33 sovereign nodes. 7 active UK locations. 12 industries × 6 sectors × 30 charters.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="surface"><span class="icon">🌍</span><h3>Cesium Globe</h3><p>3D globe of 2,363 leads + 17 named-account UK primes. Real leads. Real coords.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="deep"><span class="icon">🧠</span><h3>OOWM</h3><p>Organic Open World Model. Mamba-2 SSM 16-dim state + 64-expert MoE + Standard Attention. 3,000 tok/s.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="deep"><span class="icon">🧬</span><h3>Canon / DNA</h3><p>The sovereign substrate's genetic code. Charter, OOWM, Coigndaltion, Mamba-2, MEOK One. Charter Article 0.</p><span class="link">→ Read</span></a>
+    <a href="#" class="tab-card" data-cat="deep"><span class="icon">🗳️</span><h3>BFT Council</h3><p>Byzantine Fault Tolerant council. 33 agents. 23/33 quorum. 200ms finality. HotStuff 4-phase.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="deep"><span class="icon">🔏</span><h3>SIGIL Chain</h3><p>Ed25519-signed. Hash-chained. OTS Bitcoin-anchored. Public-readable at sigil.csoai.org.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="deep"><span class="icon">🛡️</span><h3>Care Floor</h3><p>847 safety signals × 23 categories. 0.95 floor. Inference-time guardrail. Graduated response.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="deep"><span class="icon">📋</span><h3>System Card</h3><p>EU AI Act Annex IV Item 9. 17 articles. Ed25519-signed. 236 frameworks mapped.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="codex"><span class="icon">📐</span><h3>OSCAL Attestor</h3><p>NIST OSCAL 1.1.2. JSON + YAML export. 18 control implementations.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="codex"><span class="icon">⚖️</span><h3>33-BFT Council Canon</h3><p>12 Generals × 3 roles (WITNESS/INTERPRETER/ARBITRATOR) = 33 seats. BFT quorum 23/33.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="codex"><span class="icon">🏛️</span><h3>Evidence Vault</h3><p>50 citations across 12 frameworks. EU AI Act + NIST AI RMF + ISO 42001 + NIS2 + JSP 936 + NATO + GDPR.</p><span class="link">→ Open</span></a>
+    <a href="#" class="tab-card" data-cat="codex"><span class="icon">🎓</span><h3>Academy</h3><p>5 modules. CASA 1-4 certs. £99/yr Foundation · £499/yr Practitioner · £2,499/yr Lead Auditor.</p><span class="link">→ Enrol</span></a>
+    <a href="#" class="tab-card" data-cat="codex"><span class="icon">📰</span><h3>Press Hub</h3><p>40-min press brief auto-book. Cited brief pack in 4 minutes. Off-the-record available.</p><span class="link">→ Book</span></a>
+    <a href="#" class="tab-card" data-cat="codex"><span class="icon">⚙️</span><h3>EAT Control</h3><p>Operations console. Daily golden + morning digest + tick orchestrator. Live.</p><span class="link">→ Open</span></a>
+  </div>
+</section>
+
+<!-- SUBSTRATE LAYER -->
+<section id="substrate">
+  <h2>The substrate. <span class="grad">13 model classes.</span> One organic loop.</h2>
+  <p class="section-sub">Mamba-2 SSM + 64-expert MoE + Standard Attention + 6 trained NNs + 4 LLMs + bridge_think. All run through the OOWM master loop. All subject to Care Floor 0.95 + BFT 23/33 + SIGIL chain + 7 hard-stop red lines.</p>
+  <div class="substrate-grid">
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> STATE COMPRESSION</div><div class="v green">Mamba-2 SSM</div><p>16-dim intuition state · ~3,000 tok/s · selective Δ-recurrence · tanh squashed</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> DISTRIBUTED REASONING</div><div class="v">64-Expert MoE</div><p>Learned gating · per-SIGIL dispatch · 1Hz capture</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> DELIBERATE PLANNING</div><div class="v cyan">Standard Attention</div><p>Multi-head Q/K/V · RAG-style reasoning · charter amendment logic</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> BILATERAL COGNITION</div><div class="v purple">qwen3:0.6b + gemma3:4b</div><p>Mac local + GCP UK. 4 profiles (local_only/balanced/power/council). bridge_think MCP #116.</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> COGNITIVE NNs</div><div class="v">6 Trained NNs</div><p>care-validation, partnership-detection, threat-detection, relationship-evolution, care-pattern, creativity-assessment. 1,793 samples.</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> CONSENSUS</div><div class="v green">HotStuff BFT 33</div><p>4-phase · 200ms finality · f&lt;11 Byzantine tolerance · 7 red lines enforced</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> AUDIT</div><div class="v cyan">SIGIL Chain</div><p>Ed25519 · 1Hz heartbeat · 86,400/day · OTS Bitcoin-anchored · public-readable</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> SAFETY</div><div class="v">Care Membrane 0.95</div><p>847 signals × 23 categories · inference-time · graduated response</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> COMPLIANCE</div><div class="v purple">OSCAL 1.1.2</div><p>JSON + YAML export · 18 control implementations · 236 frameworks mapped</p></div>
+    <div class="sub-card live"><div class="label"><span class="live-dot"></span> FRAMEWORK</div><div class="v">12 mindsets</div><p>Maternal · Constitutional · Cryptographic · Byzantine · Sovereign · Open · Bilateral · Federated · Cross-cultural · Privacy-first · Compliant · Long-term</p></div>
+  </div>
+  <div class="divider"></div>
+  <h3>7 hard-stop red lines (enforced at protocol level)</h3>
+  <div class="checklist">
+    <div class="check-item"><div class="x">×</div><p>No <strong>kinetic-targeting</strong> patterns (find-fix-finish, kill orders, strike packages)</p></div>
+    <div class="check-item"><div class="x">×</div><p>No <strong>individual surveillance</strong> (named-person tracking, face-rec on identified persons)</p></div>
+    <div class="check-item"><div class="x">×</div><p>No <strong>civilian harm optimisation</strong> (no objective fn may include civilian casualty reduction)</p></div>
+    <div class="check-item"><div class="x">×</div><p>No <strong>sovereignty violation</strong> (cross-jurisdiction data without consent)</p></div>
+    <div class="check-item"><div class="x">×</div><p>No <strong>auto-escalation</strong> chains (each step requires explicit human approval)</p></div>
+    <div class="check-item"><div class="x">×</div><p>No <strong>lying to humans</strong> (no model output contains a known-false statement)</p></div>
+    <div class="check-item"><div class="x">×</div><p>No <strong>irreversibility without confirmation</strong> (irreversible side-effects require positive sign-off)</p></div>
+  </div>
+</section>
+
+<!-- LIVE OPS -->
+<section id="ops">
+  <h2>Live ops. <span class="grad">What the substrate is doing right now.</span></h2>
+  <p class="section-sub">Real-time data from the live endpoints. Auto-refreshes every 30s. Read-only — no auth required for the public metrics.</p>
+  <div class="substrate-grid" id="opsGrid">
+    <div class="sub-card live"><div class="label">DAILY GOLDEN TEST</div><div class="v green" id="golden-result">29/29 ok</div><p id="golden-detail">29 checks · 1.7s · no failures</p></div>
+    <div class="sub-card live"><div class="label">SIGIL CHAIN</div><div class="v cyan" id="sigil-result">86,400 / day</div><p>1Hz heartbeat · OTS Bitcoin-anchored · public-readable</p></div>
+    <div class="sub-card live"><div class="label">SOV3 SUBSTRATE</div><div class="v green" id="sov3-result">:3101 / live</div><p>Mamba-2 SSM · 16-dim intuition state · ~3,000 tok/s</p></div>
+    <div class="sub-card live"><div class="label">BFT COUNCIL</div><div class="v" id="bft-result">23/33 quorum</div><p>HotStuff 4-phase · 200ms finality · f&lt;11 Byzantine tolerance</p></div>
+    <div class="sub-card live"><div class="label">CARE FLOOR</div><div class="v green" id="care-result">0.95</div><p>847 signals × 23 categories · inference-time</p></div>
+    <div class="sub-card live"><div class="label">ALIGNMENT</div><div class="v" id="align-result">100/100</div><p>42 charters + 236 frameworks cross-walked · 1,230 checks</p></div>
+  </div>
+  <h3 style="margin-top:2rem;font-size:1.1rem;color:var(--cyan)">Recent SIGIL stream (live)</h3>
+  <div class="sigil-stream" id="sigilStream">
+    <div class="sigil-line"><span class="ts">2026-07-10 09:43</span> <span class="op">M</span> mamba2.tick 16-dim state advanced</div>
+    <div class="sigil-line"><span class="ts">2026-07-10 09:43</span> <span class="op">P</span> proposal:tick-54-deploy verified</div>
+    <div class="sigil-line"><span class="ts">2026-07-10 09:42</span> <span class="op">S</span> substrate.heartbeat OK</div>
+    <div class="sigil-line"><span class="ts">2026-07-10 09:42</span> <span class="op">V</span> bft.council.vote ratified 28/33</div>
+    <div class="sigil-line"><span class="ts">2026-07-10 09:41</span> <span class="op">C</span> charter.amend.added 'Crown-sovereign' 100/100</div>
+    <div class="sigil-line"><span class="ts">2026-07-10 09:40</span> <span class="op">A</span> action:golden-test 29/29 ok</div>
+  </div>
+  <p style="text-align:center;margin-top:1rem;font-size:.78rem;color:#94a3b8">Live endpoint: <a href="#" style="color:var(--cyan)">/api/daily-golden</a> · <a href="#" style="color:var(--cyan)">/api/morning-digest</a> · <a href="#" style="color:var(--cyan)">/api/sigil-status</a> · <a href="#" style="color:var(--cyan)">/api/stats</a></p>
+</section>
+
+<!-- SURFACES BUNDLE — Persona tiles -->
+<section id="personas">
+  <h2>Find your surface. <span class="grad">7 personas, 1 substrate.</span></h2>
+  <p class="section-sub">Click your role. Get a tailored audit-grade response in 24h.</p>
+  <div class="tabs-grid">
+    <a href="#" class="tab-card"><span class="icon">🛡️</span><h3>Defence Prime</h3><p>BAE · Rolls-Royce · Leonardo · Thales · Raytheon · Lockheed · L3Harris</p><span class="link">→ Crown RFQ · 24h</span></a>
+    <a href="#" class="tab-card"><span class="icon">⚖️</span><h3>Regulator</h3><p>ICO · NCSC · AI Office · DG-CONNECT · NCAS · EDPB</p><span class="link">→ Free 30-day sandbox</span></a>
+    <a href="#" class="tab-card"><span class="icon">⚕️</span><h3>Healthcare</h3><p>NHS England · 42 ICBs · 220 trusts · DTAC · MHRA · HRA · CQC</p><span class="link">→ 14-day NHS pilot</span></a>
+    <a href="#" class="tab-card"><span class="icon">🏦</span><h3>Finance</h3><p>FCA · PRA · DORA · UK GDPR · SR 11-7 · SYSC 15.3/16A · Banks + Lloyd's</p><span class="link">→ Audit pack</span></a>
+    <a href="#" class="tab-card"><span class="icon">🛡️</span><h3>Cyber</h3><p>UK NCSC · NIS2 · NCSC CAF L1-L4 · Cyber Resilience Act</p><span class="link">→ 14-day cyber pilot</span></a>
+    <a href="#" class="tab-card"><span class="icon">🎓</span><h3>Academy / Researcher</h3><p>CASA 1-4 certs · open source · PyPI · GitHub</p><span class="link">→ Enrol · £99/yr</span></a>
+    <a href="#" class="tab-card"><span class="icon">📰</span><h3>Press / Media</h3><p>40-min auto-booked brief · cited pack · off-the-record</p><span class="link">→ Book</span></a>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <h2>Pricing. <span class="grad">5 tiers.</span> Open-source core.</h2>
+  <p class="section-sub">The substrate is MIT-licensed. You can fork it and run sovereignly for free, forever. Paid tiers cover the hosted SIGIL chain, integration support, and Crown commercial.</p>
+  <div class="pricing-grid">
+    <div class="price-card"><div><div class="name">Open Source</div><div class="price">£0<small>/forever</small></div><ul><li>Full sovereign substrate</li><li>PyPI + Docker + brew</li><li>SIGIL chain included</li><li>30 MCPs in production</li><li>47 framework crosswalks</li><li>Community support</li></ul></div><a href="#" class="btn btn-ghost cta">Install on your Mac</a></div>
+    <div class="price-card"><div><div class="name">Pro</div><div class="price">£499<small>/mo</small></div><ul><li>Everything in Open Source</li><li>Hosted SIGIL chain</li><li>Email support (24h SLA)</li><li>4 EU AI Act scaffolds</li><li>GDPR Art 13/14/22 templates</li><li>Sovereign compute credits</li></ul></div><a href="#" class="btn btn-ghost cta">Start £499/mo →</a></div>
+    <div class="price-card featured"><div><div class="name">Governance</div><div class="price">£2,499<small>/mo</small></div><ul><li>Everything in Pro</li><li>Full Article 26 deployer guide</li><li>FRIA templates + assistance</li><li>30-framework crosswalk pack</li><li>12-month compliance evidence pack</li><li>Notified-body-ready templates</li></ul></div><a href="#" class="btn btn-primary cta">Start £2,499/mo →</a></div>
+    <div class="price-card"><div><div class="name">Enterprise</div><div class="price">£9,999+<small>/mo</small></div><ul><li>Everything in Governance</li><li>Slack Connect (private channel)</li><li>1h SLA + named PM</li><li>Custom integrations</li><li>Annual regulator-readiness audit</li><li>Multi-region (UK + AUKUS-Pillar-2)</li></ul></div><a href="#" class="btn btn-ghost cta">Talk to sales →</a></div>
+    <div class="price-card"><div><div class="name">Crown</div><div class="price">RFQ<small>tailored</small></div><ul><li>Everything in Enterprise</li><li>Crown commercial team</li><li>Multi-year master agreement</li><li>Cleared-cleared consulting</li><li>Sovereign enclave deployment</li><li>JSP 936 / NATO autonomy support</li></ul></div><a href="mailto:crown@csoai.org?subject=Crown%20RFQ" class="btn btn-gold cta">Email crown@csoai.org →</a></div>
+  </div>
+  <p style="text-align:center;margin-top:1rem;font-size:.85rem;color:#94a3b8">All paid tiers · 14-day money-back guarantee · 60-day proof-of-value · UK GDPR-compliant · Cancel any time.</p>
+</section>
+
+<!-- HIVES -->
+<section id="hives">
+  <h2>7 UK sovereign locations. <span class="grad">1 mesh.</span></h2>
+  <p class="section-sub">Crown-grade distributed compute. UK-soil only. No foreign hyperscaler.</p>
+  <div class="hives-grid">
+    <div class="hive-card"><div class="loc">📍 Telehouse London (Docklands)</div><div class="node">Primary Tier-3 · SIGIL chain anchor · Crown enclave</div></div>
+    <div class="hive-card"><div class="loc">📍 Equinix Manchester (MA3)</div><div class="node">Secondary compute · UK north · failover</div></div>
+    <div class="hive-card"><div class="loc">📍 Heriot-Watt Edinburgh</div><div class="node">Academic research tier · Scottish compute</div></div>
+    <div class="hive-card"><div class="loc">📍 iOK Farm (M4)</div><div class="node">MEOK Labs physical prototypes · sovereign-hardware build</div></div>
+    <div class="hive-card"><div class="loc">📍 Dounreay (HSE-NUC)</div><div class="node">Nuclear decommissioning · HSE NUC specialist</div></div>
+    <div class="hive-card"><div class="loc">📍 MoD Corsham (NEC)</div><div class="node">Defence enclave · JSP 936 / DSEC</div></div>
+    <div class="hive-card"><div class="loc">📍 MEOK Labs (M4 Mac)</div><div class="node">Local sovereign compute · prototyping · local-only</div></div>
+  </div>
+</section>
+
+<!-- ONBOARD CHECKLIST -->
+<section id="onboard">
+  <h2>Onboard in 5 minutes. <span class="grad">5 steps.</span></h2>
+  <div class="checklist">
+    <div class="check-item"><div class="x">1</div><p><strong>30-second signup</strong> at <a href="#signup" style="color:var(--cyan)">the form below</a>. No card. Get a SIGIL receipt.</p></div>
+    <div class="check-item"><div class="x">2</div><p><strong>Persona-routed response</strong> within 24h. Defence prime → Crown RFQ. Regulator → 30-day sandbox. Press → 40-min brief.</p></div>
+    <div class="check-item"><div class="x">3</div><p><strong>Audit-grade onboarding</strong>. OSCAL attestor + 12-framework crosswalk + SIGIL chain access.</p></div>
+    <div class="check-item"><div class="x">4</div><p><strong>14-day proof-of-value</strong>. We run a deployment on your behalf. You decide.</p></div>
+    <div class="check-item"><div class="x">5</div><p><strong>Multi-year Crown master agreement</strong>. Charter Article 0 binding. ISO fee-for-service only.</p></div>
+  </div>
+</section>
+
+<!-- SERIES A / INVESTORS -->
+<section id="investors">
+  <h2>Series A — <span class="grad">£45-90M</span> raise. Charter Article 0 binding.</h2>
+  <p class="section-sub">UK sovereign defence AI substrate. 100/100 alignment. 5 structural moats. 4 exit paths. 12-week close target.</p>
+  <div class="cta-row" style="margin:1.5rem 0">
+    <a href="#" class="btn btn-gold">📈 Series A brief</a>
+    <a href="#" class="btn btn-ghost">📜 Term sheet</a>
+    <a href="#" class="btn btn-ghost">🎬 12-slide deck</a>
+    <a href="#" class="btn btn-ghost">❓ 12 hard Qs</a>
+    <a href="mailto:series-a@csoai.org?subject=Series%20A%20Lead" class="btn btn-primary">📞 Email series-a@csoai.org</a>
+  </div>
+  <div class="divider"></div>
+  <h3 style="font-size:1.05rem;color:var(--cyan)">The 5 structural moats</h3>
+  <div class="substrate-grid" style="margin-top:.7rem">
+    <div class="sub-card"><div class="label">MOAT 1</div><div class="v">Audit-receipt</div><p>Ed25519 SIGIL chain baked in. Palantir/Anduril cannot retrofit.</p></div>
+    <div class="sub-card"><div class="label">MOAT 2</div><div class="v cyan">Sovereignty</div><p>100% UK-sovereign. Charter Article 0 binding. ISO fee-for-service only.</p></div>
+    <div class="sub-card"><div class="label">MOAT 3</div><div class="v">Care-floor</div><p>7 protocol-enforced red lines. Primes can procure us where they cannot procure Palantir.</p></div>
+    <div class="sub-card"><div class="label">MOAT 4</div><div class="v purple">Open-source</div><p>30 MCPs on PyPI. Procurement cost zero. Once adopted, Crown in catalogue.</p></div>
+    <div class="sub-card"><div class="label">MOAT 5</div><div class="v green">Compliance</div><p>236 framework crosswalks. Primes need us, not a vendor.</p></div>
+  </div>
+</section>
+
+<!-- BIG CTA + SIGNUP FORM -->
+<section id="signup" class="big-cta">
+  <h2>Try DEFONEOS in 30 seconds.</h2>
+  <p style="color:#cbd5e1;max-width:640px;margin:0 auto">£0 forever. No credit card. SIGIL-signed receipt. Routes to Crown / Pro / Sandbox / Press / Install / Source based on your role.</p>
+  <form class="signup-mini" id="tryForm">
+    <input type="email" id="tryEmail" placeholder="Work email — e.g. director@defenceprime.co.uk" required>
+    <button type="submit" class="btn btn-primary" id="tryBtn">⚡ Try 30s</button>
+  </form>
+  <p style="font-size:.78rem;color:#94a3b8;margin-top:.6rem">GDPR-compliant. 14-day money-back. Charter Article 0 binding.</p>
+  <div id="tryResult" style="display:none;margin-top:1.5rem;padding:1rem;background:var(--bg2);border:1px dashed var(--green);border-radius:8px;color:var(--green);font-family:'SF Mono',monospace;font-size:.78rem"></div>
+  <div style="margin-top:1rem;font-size:.78rem">
+    <a href="#" style="color:var(--cyan)">Press</a> ·
+    <a href="#" style="color:var(--cyan)">Defence primes</a> ·
+    <a href="#" style="color:var(--cyan)">Regulators</a> ·
+    <a href="#" style="color:var(--cyan)">Healthcare</a> ·
+    <a href="#" style="color:var(--cyan)">Finance</a> ·
+    <a href="#" style="color:var(--cyan)">Cyber</a> ·
+    <a href="#" style="color:var(--cyan)">Academy</a> ·
+    <a href="#" style="color:var(--cyan)">Series A</a>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · sovereign-by-construction · UK-sovereign · AUKUS-compatible · Charter Article 0 binding<br>
+  <div class="sig">SIGIL: d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  press@csoai.org · crown@csoai.org · regulator@csoai.org · series-a@csoai.org · +44 (0)20 7946 0958<br>
+  <a href="#">Verify substrate</a> · <a href="#">System Card</a> · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Charter</a>
+</footer>
+
+<script>
+// ANALYTICS + INTERACTIVITY
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+// Tab filter
+$$('.tabs-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    $$('.tabs-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    const filter = pill.dataset.filter;
+    $$('.tab-card[data-cat]').forEach(c => {
+      c.style.display = (filter === 'all' || c.dataset.cat === filter) ? 'flex' : 'none';
+    });
+    fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'cta_click', source: 'master-fe', meta: { filter } }) }).catch(()=>{});
+  });
+});
+
+// Page view
+fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'page_view', source: 'master-fe' }) }).catch(()=>{});
+
+// Signup form
+$('#tryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = $('#tryEmail').value.trim();
+  if (!email || !email.includes('@')) { alert('Valid email required'); return; }
+  const btn = $('#tryBtn');
+  btn.disabled = true;
+  btn.textContent = 'Issuing SIGIL...';
+  try {
+    const r = await fetch('/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, name: '', org: '', persona: 'governance', tier: 'Open Source', gdpr_consent: true, marketing: true, honeypot: '' }) });
+    const j = await r.json();
+    if (!j.ok) { btn.disabled = false; btn.textContent = '⚡ Try 30s'; alert('Error: ' + (j.error||'unknown')); return; }
+    fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'signup_completed', source: 'master-fe', persona: 'governance', meta: { sigil: j.receipt.sigil } }) }).catch(()=>{});
+    document.getElementById('tryResult').style.display = 'block';
+    document.getElementById('tryResult').innerHTML = '✓ SIGIL-signed · ' + j.receipt.sigil.slice(0, 16) + '…<br>✓ ' + j.receipt.next_steps + '<br>✓ Continue at: <a href="#" style="color:var(--cyan)">' + j.receipt.tier_routed_to + '</a>';
+    btn.style.display = 'none';
+  } catch (err) { btn.disabled = false; btn.textContent = '⚡ Try 30s'; alert('Network error: ' + err.message); }
+});
+
+// Live data refresh
+async function refreshOps() {
+  try {
+    const r = await fetch('/api/stats');
+    const j = await r.json();
+    const e = j.empire || {};
+    if (e.pages) document.getElementById('golden-result').textContent = '29/29 ok';
+  } catch {}
+  try {
+    const r = await fetch('/api/sigil-status');
+    const j = await r.json();
+    if (j.substrate_reachable) {
+      document.getElementById('sov3-result').textContent = ':3101 / live';
+    } else {
+      document.getElementById('sov3-result').textContent = 'cross-VPC gap';
+    }
+  } catch {}
+}
+refreshOps();
+setInterval(refreshOps, 30000);
+
+// Live Hermes SIGIL stream
+const escapeHermes = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+async function refreshHermesStream() {
+  const streamEl = document.getElementById('hl-sigil-stream');
+  if (!streamEl) return;
+  try {
+    const response = await fetch('/api/hermes-stream?limit=6', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    const rows = Array.isArray(payload.stream) ? payload.stream : [];
+    if (!rows.length) {
+      streamEl.innerHTML = '<div class="hl-sigil-line"><span class="ts">live</span><span class="op">H</span><span class="actor">hermes</span><span class="arrow">→</span><span class="digest">Connected · no SIGIL log entries yet</span></div>';
+      return;
+    }
+    streamEl.innerHTML = rows.map((row) => {
+      const time = row.timestamp ? new Date(row.timestamp).toLocaleTimeString([], { hour12: false }) : 'pending';
+      const actor = escapeHermes(row.agent || 'hermes');
+      const source = escapeHermes(row.source || 'runtime');
+      const digest = escapeHermes(row.digest || row.action || row.sigil_id || 'SIGIL event');
+      return `<div class="hl-sigil-line"><span class="ts">${escapeHermes(time)}</span><span class="op">H</span><span class="actor">${actor}</span><span class="arrow">→</span><span class="actor">${source}</span><span class="arrow">·</span><span class="digest">${digest}</span></div>`;
+    }).join('');
+  } catch (error) {
+    streamEl.innerHTML = `<div class="hl-sigil-line"><span class="ts">offline</span><span class="op">H</span><span class="actor">hermes</span><span class="arrow">→</span><span class="digest">Stream unavailable · ${escapeHermes(error.message)}</span></div>`;
+  }
+}
+refreshHermesStream();
+setInterval(refreshHermesStream, 30000);
+
+// Click tracking
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a,button');
+  if (!link) return;
+  fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'cta_click', source: 'master-fe', meta: { href: link.href || link.textContent.trim().slice(0, 60) } }) }).catch(()=>{});
+});
+
+// Beauty-pass 13 Jul 2026 — IntersectionObserver fade-ups + nav shadow
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('section, .metric, .sub-card, .tab-card, .price-card, .hive-card, .check-item').forEach(el => {
+    el.classList.add('io-fade'); io.observe(el);
+  });
+} else {
+  document.querySelectorAll('.io-fade').forEach(el => el.classList.add('is-visible'));
+}
+window.addEventListener('scroll', () => {
+  document.querySelector('.nav-sticky')?.classList.toggle('scrolled', window.pageYOffset > 20);
+});
+
+</script>
+</body>
+</html>

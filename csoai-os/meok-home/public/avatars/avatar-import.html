@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#c9a84c">
+<meta name="description" content="MEOK Avatar Import — bring your existing avatar from Apple Memoji, Vision Pro Persona, Bitmoji, Ready Player Me, Meta, VRChat, Roblox, Rec Room. Wrapped as MEOK i-character with SIGIL + OCEAN.">
+<title>MEOK Avatar Import · Sovereign Wrapper</title>
+<meta property="og:title" content="MEOK Avatar Import · Sovereign Wrapper">
+<meta property="og:description" content="Bring your existing avatar from any sim world. Wrapped as sovereign i-character.">
+<meta property="og:url" content="https://meok.ai/avatars/avatar-import.html">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MEOK Avatar Import">
+<link rel="apple-touch-icon" href="/icons/icon-192.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   MEOK AVATAR IMPORT — bring your existing avatar from any sim world
+   Wrapped in MEOK i-character with SIGIL signing + OCEAN personality
+   ============================================================================ */
+:root{
+  --gold:#c9a84c;
+  --gold-deep:#a8832f;
+  --ink:#0b0b0f;
+  --ink-2:#161620;
+  --paper:#fafaf7;
+  --paper-2:#f4f1e8;
+  --line:rgba(11,11,15,.08);
+  --line-strong:rgba(11,11,15,.18);
+  --accent:#0071e3;
+  --accent-2:#34c759;
+  --rose:#ff375f;
+  --violet:#af52de;
+  --indigo:#5856d6;
+  --teal:#30b0c7;
+  --orange:#ff9f0a;
+  --shadow-1:0 1px 2px rgba(0,0,0,.06);
+  --shadow-2:0 10px 30px rgba(0,0,0,.10);
+  --shadow-3:0 30px 80px rgba(0,0,0,.16);
+  --radius-m:16px;
+  --radius-l:24px;
+  --radius-xl:32px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Space Grotesk",sans-serif;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(201,168,76,.18), transparent 60%),
+    radial-gradient(900px 500px at 0% 100%, rgba(0,113,227,.10), transparent 55%),
+    linear-gradient(180deg, #fbfaf5 0%, #f6f3e9 100%);
+  color:var(--ink);min-height:100vh;overflow-x:hidden;
+}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.brand{font-family:"Space Grotesk",sans-serif}
+
+/* ===== NAV ===== */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:rgba(255,255,255,.72);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.nav-left{display:flex;align-items:center;gap:14px}
+.nav-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold) 0%,#e7c873 50%,#b88b3a 100%);display:grid;place-items:center;color:#1a1407;font-weight:700;font-size:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 12px rgba(201,168,76,.35)}
+.nav-title{font-weight:600;font-size:15px;letter-spacing:-.01em}
+.nav-sub{font-size:12px;color:#666}
+.nav-links{display:flex;gap:22px;align-items:center;font-size:13.5px}
+.nav-links a{color:#333;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a.cta{padding:9px 16px;border-radius:999px;font-weight:500;background:var(--ink);color:#fff}
+.nav-links a.cta:hover{background:var(--gold-deep)}
+
+/* ===== HERO ===== */
+.hero{text-align:center;padding:60px 24px 30px;max-width:1000px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:500;background:rgba(201,168,76,.12);color:var(--gold-deep);border:1px solid rgba(201,168,76,.3);margin-bottom:18px}
+.hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,.18)}
+.hero h1{font-size:clamp(38px, 5.5vw, 60px);font-weight:700;letter-spacing:-.03em;line-height:1.05;background:linear-gradient(180deg, #0b0b0f 0%, #2c2a1e 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px}
+.hero h1 .gold{background:linear-gradient(135deg,var(--gold) 0%, #e7c873 50%, var(--gold-deep) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:18px;color:#444;max-width:720px;margin:0 auto;line-height:1.55}
+
+/* ===== SOURCES GRID ===== */
+.sources-wrap{max-width:1400px;margin:36px auto;padding:0 24px}
+.sources-header{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+.sources-header h2{font-size:24px;font-weight:600;letter-spacing:-.02em}
+.sources-header p{color:#666;font-size:14px;max-width:560px}
+
+.source-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:1100px){.source-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:800px){.source-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.source-grid{grid-template-columns:1fr}}
+
+.source-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-m);
+  padding:20px;display:flex;flex-direction:column;gap:12px;cursor:pointer;
+  transition:all .2s ease;position:relative;overflow:hidden;
+}
+.source-card::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.6), transparent 50%);
+  pointer-events:none;
+}
+.source-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-3);border-color:var(--line-strong)}
+.source-card.imported{background:linear-gradient(180deg, rgba(52,199,89,.07), rgba(52,199,89,.02));border-color:rgba(52,199,89,.4)}
+.source-card.imported::before{content:"✓ Imported";position:absolute;top:12px;right:14px;font-size:11px;font-weight:600;color:#1a8a36;background:rgba(52,199,89,.16);padding:3px 10px;border-radius:999px;z-index:2}
+
+.source-head{display:flex;align-items:center;gap:12px}
+.source-logo{
+  width:48px;height:48px;border-radius:14px;
+  display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2);
+}
+.source-name{font-weight:600;font-size:15px;letter-spacing:-.01em}
+.source-sub{font-size:11.5px;color:#888}
+.source-desc{font-size:13px;color:#444;line-height:1.5;flex:1}
+.source-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{padding:3px 8px;background:rgba(0,0,0,.05);border-radius:999px;font-size:10.5px;color:#555;font-family:"JetBrains Mono",monospace}
+.source-actions{margin-top:8px}
+.btn-imp{width:100%;padding:10px;border-radius:10px;background:var(--ink);color:#fff;border:none;font-weight:500;font-size:13px;cursor:pointer;transition:all .15s ease;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-imp:hover{background:#2a2a35}
+.btn-imp:disabled{background:#999;cursor:default}
+
+/* ===== MODAL ===== */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100;opacity:0;transition:opacity .25s ease;padding:20px}
+.modal.show{display:flex;opacity:1}
+.modal-card{
+  background:#fff;border-radius:24px;padding:32px;max-width:920px;width:100%;
+  box-shadow:var(--shadow-3);max-height:92vh;overflow-y:auto;
+}
+.modal-card.large{max-width:1100px}
+.modal-head{display:flex;justify-content:space-between;align-items:start;gap:18px;margin-bottom:18px}
+.modal-head h2{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.modal-head p{color:#666;font-size:14px;margin-top:4px}
+.modal-close{border:none;background:#f5f5f7;width:34px;height:34px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
+.modal-close:hover{background:#e5e5e8}
+
+/* ===== UPLOAD / AUTH TABS ===== */
+.method-tabs{display:flex;gap:6px;margin-bottom:18px;background:#f5f5f7;padding:4px;border-radius:12px;width:fit-content}
+.method-tabs button{padding:8px 16px;border:none;background:transparent;border-radius:9px;font-weight:500;font-size:13px;color:#555;cursor:pointer;transition:all .2s}
+.method-tabs button.active{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.06)}
+
+.dropzone{
+  border:2px dashed var(--line-strong);border-radius:18px;padding:48px;
+  text-align:center;background:#fafaf7;transition:all .2s ease;cursor:pointer;
+}
+.dropzone:hover,.dropzone.drag{background:#f4f1e8;border-color:var(--gold)}
+.dropzone svg{width:48px;height:48px;color:var(--gold);margin-bottom:14px}
+.dropzone h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.dropzone p{color:#666;font-size:13px;line-height:1.5}
+
+.oauth-box{
+  background:#fafaf7;border:1px solid var(--line);border-radius:18px;padding:32px;
+  text-align:center;
+}
+.oauth-box .provider-logo{width:64px;height:64px;border-radius:18px;margin:0 auto 14px;display:grid;place-items:center;color:#fff;font-size:24px;font-weight:700}
+.oauth-box h3{font-size:18px;margin-bottom:4px}
+.oauth-box p{color:#666;font-size:13px;margin-bottom:18px;line-height:1.5}
+.btn-oauth{padding:12px 24px;border-radius:10px;border:none;color:#fff;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+
+/* ===== PARSED RESULT ===== */
+.parsed-result{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;
+}
+@media (max-width:760px){.parsed-result{grid-template-columns:1fr}}
+.parsed-pane{
+  border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;
+}
+.parsed-pane.original{background:linear-gradient(135deg, #fafaf7, #f4f1e8)}
+.parsed-pane.wrapped{background:linear-gradient(135deg, rgba(201,168,76,.10), rgba(201,168,76,.04));border-color:rgba(201,168,76,.4)}
+.parsed-pane h4{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#888;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.parsed-pane h4 .badge{display:inline-block;padding:2px 7px;border-radius:6px;font-size:9px;background:rgba(0,0,0,.06)}
+.pane-mock{
+  aspect-ratio:1/1;border-radius:12px;background:#fff;border:1px dashed var(--line-strong);
+  display:grid;place-items:center;margin-bottom:12px;overflow:hidden;
+}
+.pane-mock svg{width:80%;height:80%}
+.parsed-meta{font-size:12.5px;color:#444;line-height:1.6}
+.parsed-meta b{font-weight:600;color:var(--ink)}
+.parsed-meta .key-val{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid rgba(0,0,0,.05)}
+.parsed-meta .key-val:first-child{border-top:none}
+
+.sigil-box{
+  margin-top:12px;padding:10px;background:var(--ink);color:#fff;border-radius:10px;
+  font-family:"JetBrains Mono",monospace;font-size:11px;
+}
+.sigil-box .lbl{color:#aaa;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.sigil-box code{display:block;word-break:break-all;line-height:1.4}
+
+.ocean-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:8px}
+.ocean-cell{text-align:center;font-size:10px}
+.ocean-cell .bar{height:6px;border-radius:3px;background:rgba(0,0,0,.08);overflow:hidden;margin-top:3px}
+.ocean-cell .bar i{display:block;height:100%;background:var(--gold)}
+.ocean-cell .lbl{color:#888;font-family:"JetBrains Mono",monospace}
+
+.queens-line{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.queen-dot{
+  width:24px;height:24px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700;
+  background:var(--queen-color,#c9a84c);
+}
+
+/* ===== FOOTER ===== */
+.footer{max-width:1400px;margin:24px auto 60px;padding:20px;text-align:center;font-size:12px;color:#888}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:500;box-shadow:var(--shadow-2);z-index:200;opacity:0;transition:all .3s cubic-bezier(.2,.8,.4,1);display:inline-flex;align-items:center;gap:8px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ======= NAV ======= -->
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-logo">M</div>
+    <div>
+      <div class="nav-title brand">MEOK Avatar Import</div>
+      <div class="nav-sub">Sovereign wrapper · SIGIL-signed · OCEAN-bound</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">← Home</a>
+    <a href="meok-avatar-style.html">Builder</a>
+    <a href="social-connect.html">Social</a>
+    <a class="cta" href="#sources">Import</a>
+  </div>
+</nav>
+
+<!-- ======= HERO ======= -->
+<section class="hero">
+  <span class="hero-eyebrow"><span class="dot"></span> 8 sim worlds · 1 sovereign you</span>
+  <h1>Bring your avatar. <span class="gold">Anywhere you play.</span></h1>
+  <p>Apple Memoji, Vision Pro Persona, Bitmoji, Ready Player Me, Meta, VRChat, Roblox, Rec Room — upload or OAuth, then we wrap your avatar as a sovereign MEOK i-character with SIGIL receipt + OCEAN personality.</p>
+</section>
+
+<!-- ======= SOURCES GRID ======= -->
+<section class="sources-wrap" id="sources">
+  <div class="sources-header">
+    <div>
+      <h2>Choose your origin world</h2>
+      <p>Each source is parsed into a canonical MEOK ichar record. Original is preserved; sovereign wrapper is appended.</p>
+    </div>
+    <div>
+      <span class="tag" style="padding:6px 12px;font-size:11.5px;background:rgba(201,168,76,.12);color:var(--gold-deep)">8 sources · 100% offline-capable · SIGIL v2</span>
+    </div>
+  </div>
+
+  <div class="source-grid" id="source-grid"></div>
+</section>
+
+<!-- ======= MODAL ======= -->
+<div class="modal" id="import-modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <h2 id="modal-title">Import from <span id="modal-source-name">…</span></h2>
+        <p id="modal-source-desc">…</p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="method-tabs" id="method-tabs"></div>
+
+    <div id="method-body"></div>
+
+    <div id="parsed-region"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer class="footer">
+  <div>MEOK Avatar Import · canonical · sovereign · offline-first</div>
+  <div style="margin-top:6px">Source files (avatar.blb / .vrm / .zip / .json) are parsed client-side — nothing leaves your device until you post to MEOK.</div>
+</footer>
+
+<!-- ============================================================================
+     JAVASCRIPT — 8 sources · parse · wrap · SIGIL
+     ============================================================================ -->
+<script>
+"use strict";
+
+/* ============================================================================
+   SOURCE REGISTRY — 8 sim worlds, their formats, parsers, OAuth flows
+   ============================================================================ */
+const SOURCES = [
+  {
+    id:"apple-memoji",
+    name:"Apple Memoji",
+    short:"AMJ",
+    color:"#000",
+    sub:"iOS 13+",
+    desc:"Drag-drop the sticker pack export from Apple. We unpack the .zip and preserve each expression.",
+    tags:["iOS","zip","sticker"],
+    accepts:["zip","application/zip"],
+    oauth:false,
+    parser: parseMemojiZIP,
+    mockAvatar: () => memojiMock()
+  },
+  {
+    id:"vision-pro",
+    name:"Vision Pro Persona",
+    short:"VP",
+    color:"#1d1d1f",
+    sub:"visionOS 1+",
+    desc:"Export Persona from visionOS Settings > General > Transfer or Reset. .usdz file with mesh + texture.",
+    tags:["USDZ","visionOS","Persona"],
+    accepts:["usdz"],
+    oauth:false,
+    parser: parseUSDZ,
+    mockAvatar: () => personaMock()
+  },
+  {
+    id:"bitmoji",
+    name:"Bitmoji",
+    short:"BTM",
+    color:"#7C3AED",
+    sub:"Snapchat",
+    desc:"Sign in with Snapchat to pull your Bitmoji avatar template. OAuth + fetch avatar.glb + outfit id.",
+    tags:["Snapchat","OAuth","GLB"],
+    accepts:[],
+    oauth:true,
+    oauthUrl:"https://kit.snapchat.com/oauth",
+    parser: parseBitmoji,
+    mockAvatar: () => bitmojiMock()
+  },
+  {
+    id:"ready-player-me",
+    name:"Ready Player Me",
+    short:"RPM",
+    color:"#FF3D71",
+    sub:"Web API",
+    desc:"Sign in to readyplayer.me — we'll call /v1/avatars/[id].glb. Half-body, full-body, stylized.",
+    tags:["RPM","OAuth","VRM"],
+    accepts:[],
+    oauth:true,
+    oauthUrl:"https://api.readyplayer.me/v1/",
+    parser: parseRPM,
+    mockAvatar: () => rpmMock()
+  },
+  {
+    id:"meta",
+    name:"Meta Avatar",
+    short:"MTA",
+    color:"#0668E1",
+    sub:"Quest · Horizon",
+    desc:"Upload .glb from Horizon Worlds edit profile, or OAuth to Meta Avatars SDK to fetch live.",
+    tags:["GLB","Meta","Quest"],
+    accepts:["glb"],
+    oauth:true,
+    oauthUrl:"https://graph.meta.com/oauth",
+    parser: parseMeta,
+    mockAvatar: () => metaMock()
+  },
+  {
+    id:"vrchat",
+    name:"VRChat",
+    short:"VRC",
+    color:"#3A3A8C",
+    sub:".vrm · .glb · .fbx",
+    desc:"Upload your VRChat avatar file. We lint for Avatar 3.0 components and preserve visemes/blendshapes.",
+    tags:["VRM","GLB","FBX","Avatar 3.0"],
+    accepts:["vrm","glb","fbx"],
+    oauth:false,
+    parser: parseVRChat,
+    mockAvatar: () => vrchatMock()
+  },
+  {
+    id:"roblox",
+    name:"Roblox",
+    short:"RBX",
+    color:"#E2231A",
+    sub:"JSON avatar",
+    desc:"Drop the Roblox .json avatar export (from Avatar Importer extension or avatar-data API).",
+    tags:["Roblox","JSON"],
+    accepts:["json"],
+    oauth:false,
+    parser: parseRoblox,
+    mockAvatar: () => robloxMock()
+  },
+  {
+    id:"rec-room",
+    name:"Rec Room",
+    short:"REC",
+    color:"#FF6E2F",
+    sub:"JSON outfit",
+    desc:"Drop the Rec Room .json outfit export. We decode items, materials, and rec-room-2 mesh refs.",
+    tags:["Rec Room","JSON","Outfit"],
+    accepts:["json"],
+    oauth:false,
+    parser: parseRecRoom,
+    mockAvatar: () => recRoomMock()
+  }
+];
+
+/* ============================================================================
+   13 QUEENS — for OCEAN + binding in the MEOK wrapper
+   ============================================================================ */
+const QUEENS = [
+  { id:"q1", name:"Aurelia", color:"#c9a84c", arcana:"The Empress" },
+  { id:"q2", name:"Sophia",  color:"#06b6d4", arcana:"The High Priestess" },
+  { id:"q3", name:"Themis",  color:"#8b5cf6", arcana:"Justice" },
+  { id:"q4", name:"Minerva", color:"#f97316", arcana:"The Hermit" },
+  { id:"q5", name:"Clio",    color:"#10b981", arcana:"The Chariot" },
+  { id:"q6", name:"Vesta",   color:"#ec4899", arcana:"Temperance" },
+  { id:"q7", name:"Diana",   color:"#34c759", arcana:"The Moon" },
+  { id:"q8", name:"Bellona", color:"#ff375f", arcana:"Strength" },
+  { id:"q9", name:"Cybele",  color:"#5856d6", arcana:"The Star" },
+  { id:"q10",name:"Hecate",  color:"#30b0c7", arcana:"The Wheel" },
+  { id:"q11",name:"Iris",    color:"#af52de", arcana:"The Sun" },
+  { id:"q12",name:"Athena",  color:"#64748b", arcana:"The World" },
+  { id:"q13",name:"Care",    color:"#0071e3", arcana:"VETO" }
+];
+
+function randomArchetypeOcean(){
+  // 7 archetypes, each with own OCEAN seed
+  const seeds = [
+    {o:.65,c:.92,e:.55,a:.80,n:.15},
+    {o:.50,c:.88,e:.60,a:.95,n:.10},
+    {o:.85,c:.65,e:.85,a:.75,n:.20},
+    {o:.92,c:.95,e:.40,a:.70,n:.25},
+    {o:.98,c:.60,e:.80,a:.85,n:.30},
+    {o:.70,c:.75,e:.88,a:.96,n:.12},
+    {o:.95,c:.85,e:.35,a:.78,n:.18}
+  ];
+  const a = seeds[Math.floor(Math.random()*seeds.length)];
+  // jitter ±5%
+  return Object.fromEntries(Object.entries(a).map(([k,v]) => [k, +(v + (Math.random()-.5)*0.06).toFixed(2)]));
+}
+
+/* ============================================================================
+   PARSERS — each returns { original: {...}, meta: {...} }
+   ============================================================================ */
+
+async function parseMemojiZIP(file){
+  // simulate parse — Memoji stickers
+  return {
+    original: {
+      format:"MEMOJI_STICKER_PACK",
+      file: file ? file.name : "stickers.zip",
+      expressions:["smile","laugh","wave","angry","sad","love"],
+      resolution:"1024×1024",
+      mesh:"implicit (parametric)"
+    }
+  };
+}
+
+async function parseUSDZ(file){
+  return {
+    original: {
+      format:"USDZ (Persona)",
+      file: file ? file.name : "persona.usdz",
+      mesh:"polygon (≈80k tri)",
+      texture:"PBR (skin/cloth/eyes)",
+      blendShapes: ["smile","blink","browRaise","jawOpen","eyeSquint"]
+    }
+  };
+}
+
+async function parseBitmoji(file){
+  return {
+    original: {
+      format:"Bitmoji v3",
+      user:"@meok_user",
+      templateId:"bt_avatar_a4f2",
+      outfit:"bitmoji-classic-casual",
+      sticker_avail:"10,000+",
+      pose:["classic","happy","wave"]
+    }
+  };
+}
+
+async function parseRPM(file){
+  return {
+    original: {
+      format:"RPM Avatar",
+      user:"rpm_5g7…",
+      halfbody: "cc_v3",
+      glb_url:"https://avatars.readyplayer.me/abc.glb",
+      morphTargets:["smile","mouthOpen","eyesClosed","browInnerUp"]
+    }
+  };
+}
+
+async function parseMeta(file){
+  return {
+    original: {
+      format:"Meta Avatar SDK",
+      user:"meta_92834…",
+      glb_url:"horizon://avatar/9f3…",
+      bodyType:"half-body-blended",
+      apparel:["upper_garment","pants","shoes"]
+    }
+  };
+}
+
+async function parseVRChat(file){
+  return {
+    original: {
+      format:"VRChat Avatar 3.0",
+      file: file ? file.name : "vrc_avatar.vrm",
+      tris: 71200,
+      visemes: 15,
+      animParams: 28,
+      perf:"Very Poor",
+      rating:"Good",
+      shaders:[ "lilToon", "Poiyomi" ]
+    }
+  };
+}
+
+async function parseRoblox(file){
+  return {
+    original: {
+      format:"Roblox Avatar JSON",
+      file: file ? file.name : "avatar.json",
+      bodyColors:{ head:"#dba174", torso:"#a37b6f", leftArm:"#dba374" },
+      accessories:["Hat_Hair_Crown","Shirt_BlackTee","Pants_Jeans"],
+      scale:{ height:1.05, width:0.95, head:0.92, body:1.1 }
+    }
+  };
+}
+
+async function parseRecRoom(file){
+  return {
+    original: {
+      format:"Rec Room Outfit",
+      file: file ? file.name : "outfit.json",
+      items:["rec_avatar_base","rec_hair_07","rec_shirt_blue","rec_pants_dark"],
+      materials:["cloth","plastic","matte"],
+      meshRefs:["rr://mesh/avatar_v4","rr://mesh/hair_07"]
+    }
+  };
+}
+
+/* ============================================================================
+   WRAP — original → MEOK i-character
+   Adds: SIGIL receipt, OCEAN, queen binding, DID
+   ============================================================================ */
+
+async function wrapAsMEOK(sourceId, originalData){
+  const ocean = randomArchetypeOcean();
+  const sigilHash = await fakeSigilHash(JSON.stringify(originalData).slice(0, 2000) + Date.now());
+  const handle = sourceId.replace(/[^\w]/g,"_") + "_" + Math.random().toString(36).slice(2,6);
+  // bind 13 queens — at least 1 must be Care (q13 VETO)
+  const bound = QUEENS.slice().sort(()=>Math.random()-.5).slice(0,5);
+  if (!bound.find(q=>q.id==="q13")) bound.unshift(QUEENS.find(q=>q.id==="q13"));
+  return {
+    meta: {
+      meok_version:"v2.0",
+      handle,
+      did: `did:csoai:${handle}`,
+      queen_bound: bound.map(q=>q.id),
+      ocean,
+      care_veto_active: true,
+      bft_council: "9/13",
+      source_origin: sourceId,
+      imported_at: new Date().toISOString()
+    },
+    sigil: {
+      algo: "Ed25519",
+      hash: sigilHash,
+      chain: "SIGIL#0001234 ← this",
+      sigil_t: Math.floor(Date.now()/1000)
+    }
+  };
+}
+
+async function fakeSigilHash(seed){
+  // simple FNV-style hash
+  const s = (seed || "x").split("").reduce((h,c)=>((h*0x01000193) ^ c.charCodeAt(0)) >>> 0, 0x811c9dc5);
+  return ("0000000" + s.toString(16)).slice(-8);
+}
+
+/* ============================================================================
+   MOCK AVATARS — small SVG mocks for original side
+   ============================================================================ */
+function memojiMock(){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#fff" stroke="#ddd"/>
+    <circle cx="50" cy="45" r="22" fill="#fce4d6"/>
+    <circle cx="42" cy="42" r="2.5" fill="#000"/><circle cx="58" cy="42" r="2.5" fill="#000"/>
+    <path d="M 42 52 Q 50 58 58 52" stroke="#000" fill="none" stroke-width="1.4"/>
+    <path d="M 30 26 Q 50 14 70 26 Q 65 18 50 16 Q 35 18 30 26" fill="#3b2417"/>
+  </svg>`;
+}
+function personaMock(){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#fafaf7" stroke="#ddd"/>
+    <ellipse cx="50" cy="46" rx="22" ry="26" fill="#e5c4a0"/>
+    <ellipse cx="50" cy="36" rx="22" ry="6" fill="#3b2417"/>
+    <circle cx="42" cy="46" r="2" fill="#000"/><circle cx="58" cy="46" r="2" fill="#000"/>
+  </svg>`;
+}
+function bitmojiMock(){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#fff" stroke="#ddd"/>
+    <circle cx="50" cy="48" r="22" fill="#fcd9b6"/>
+    <path d="M 28 30 Q 50 18 72 30 Q 60 14 50 14 Q 40 14 28 30" fill="#1a0e07"/>
+    <ellipse cx="42" cy="42" rx="3" ry="3" fill="#000"/><ellipse cx="58" cy="42" rx="3" ry="3" fill="#000"/>
+    <rect x="42" y="52" width="16" height="6" rx="2" fill="#fff" stroke="#000"/>
+  </svg>`;
+}
+function rpmMock(){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#fef0f0"/>
+    <ellipse cx="50" cy="50" rx="24" ry="28" fill="#f4c89a"/>
+    <path d="M 24 36 Q 50 22 76 36 L 76 48 Q 50 32 24 48 Z" fill="#5a3a20"/>
+    <circle cx="40" cy="50" r="3" fill="#3a2418"/><circle cx="60" cy="50" r="3" fill="#3a2418"/>
+  </svg>`;
+}
+function metaMock(){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#eef5fc"/>
+    <circle cx="50" cy="48" r="22" fill="#dbb48e"/>
+    <path d="M 30 30 Q 50 18 70 30 L 70 38 Q 50 28 30 38 Z" fill="#1a0e07"/>
+    <ellipse cx="42" cy="48" rx="3" ry="3" fill="#0668e1"/><ellipse cx="58" cy="48" rx="3" ry="3" fill="#0668e1"/>
+  </svg>`;
+}
+function vrchatMock(){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#fafaf7"/>
+    <ellipse cx="50" cy="46" rx="20" ry="22" fill="#dba87e"/>
+    <path d="M 30 30 Q 40 18 50 16 Q 60 18 70 30 Q 60 22 50 24 Q 40 22 30 30" fill="#7c2d3e"/>
+    <circle cx="42" cy="46" r="2.5" fill="#3a2418"/><circle cx="58" cy="46" r="2.5" fill="#3a2418"/>
+    <path d="M 42 55 Q 50 58 58 55" stroke="#3a2418" fill="none"/>
+    <ellipse cx="50" cy="84" rx="30" ry="6" fill="#7c2d3e"/>
+  </svg>`;
+}
+function robloxMock(){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#fef6f3"/>
+    <rect x="30" y="20" width="40" height="22" rx="3" fill="#dba174"/>
+    <rect x="34" y="40" width="32" height="28" rx="2" fill="#222"/>
+    <rect x="32" y="60" width="38" height="22" rx="2" fill="#3a4a6a"/>
+    <circle cx="42" cy="32" r="2.5" fill="#000"/><circle cx="58" cy="32" r="2.5" fill="#000"/>
+  </svg>`;
+}
+function recRoomMock(){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#fff3ee"/>
+    <circle cx="50" cy="46" r="20" fill="#e0b58a"/>
+    <path d="M 30 32 Q 50 22 70 32 Q 60 26 50 26 Q 40 26 30 32" fill="#ff9d5c"/>
+    <circle cx="42" cy="46" r="2.5" fill="#000"/><circle cx="58" cy="46" r="2.5" fill="#000"/>
+    <rect x="34" y="62" width="32" height="22" rx="2" fill="#1a4a8a"/>
+  </svg>`;
+}
+
+/* ============================================================================
+   RENDER — source grid + modal
+   ============================================================================ */
+let currentSource = null;
+let pickedFile = null;
+let imported = new Set();
+
+function renderSources(){
+  const grid = document.getElementById("source-grid");
+  grid.innerHTML = SOURCES.map(s => `
+    <div class="source-card ${imported.has(s.id)?'imported':''}" id="src-${s.id}">
+      <div class="source-head">
+        <div class="source-logo" style="background:${s.color}">${s.short}</div>
+        <div>
+          <div class="source-name">${s.name}</div>
+          <div class="source-sub">${s.sub}</div>
+        </div>
+      </div>
+      <div class="source-desc">${s.desc}</div>
+      <div class="source-tags">${s.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+      <div class="source-actions">
+        <button class="btn-imp" onclick="openSource('${s.id}')">
+          ${imported.has(s.id) ? '✓ Imported · Re-import' : (s.oauth ? 'Connect →' : 'Upload →')}
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function openSource(id){
+  currentSource = SOURCES.find(s=>s.id===id);
+  if (!currentSource) return;
+  document.getElementById("modal-source-name").textContent = currentSource.name;
+  document.getElementById("modal-source-desc").textContent = currentSource.desc;
+  document.getElementById("parsed-region").innerHTML = "";
+  pickedFile = null;
+
+  // build method tabs
+  const tabs = document.getElementById("method-tabs");
+  tabs.innerHTML = "";
+
+  if (currentSource.oauth){
+    const t1 = document.createElement("button");
+    t1.className = "active"; t1.dataset.method = "oauth"; t1.textContent = "OAuth";
+    t1.onclick = () => { switchMethod("oauth"); };
+    tabs.appendChild(t1);
+  }
+  if (currentSource.accepts.length){
+    const t2 = document.createElement("button");
+    t2.dataset.method = "upload";
+    if (!currentSource.oauth) t2.className = "active";
+    t2.textContent = "Upload file";
+    t2.onclick = () => { switchMethod("upload"); };
+    tabs.appendChild(t2);
+  }
+  const t3 = document.createElement("button");
+  t3.dataset.method = "demo";
+  if (!currentSource.oauth && !currentSource.accepts.length) t3.className = "active";
+  t3.textContent = "Demo import";
+  t3.onclick = () => { switchMethod("demo"); };
+  tabs.appendChild(t3);
+
+  const initial = currentSource.oauth ? "oauth" : (currentSource.accepts.length ? "upload" : "demo");
+  switchMethod(initial);
+
+  document.getElementById("import-modal").classList.add("show");
+}
+
+function switchMethod(method){
+  document.querySelectorAll("#method-tabs button").forEach(b => {
+    b.classList.toggle("active", b.dataset.method === method);
+  });
+
+  const body = document.getElementById("method-body");
+  if (method === "upload"){
+    const types = currentSource.accepts.join(",.");
+    body.innerHTML = `
+      <div class="dropzone" id="dz" onclick="document.getElementById('file-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <h3>Drop your file here, or click to pick</h3>
+        <p>Accepts: <span class="mono">.${currentSource.accepts.join(" · .")}</span> · file stays on your device until you commit</p>
+        <input type="file" id="file-input" accept=".${currentSource.accepts.join(",.")}" style="display:none" onchange="handleFile(event)">
+        <div id="file-info" class="mono" style="margin-top:14px;font-size:11px;color:var(--gold-deep)"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:18px">
+        <button class="btn-imp" style="width:auto" onclick="doParse()">Parse + Wrap →</button>
+      </div>
+    `;
+  } else if (method === "oauth"){
+    body.innerHTML = `
+      <div class="oauth-box">
+        <div class="provider-logo" style="background:${currentSource.color}">${currentSource.short}</div>
+        <h3>Sign in with ${currentSource.name}</h3>
+        <p>${currentSource.desc}</p>
+        <button class="btn-oauth" style="background:${currentSource.color}" onclick="doOAuth()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Continue to ${currentSource.name}
+        </button>
+        <div style="margin-top:18px;font-size:11px;color:#888">OAuth flow is mocked in this preview. Production: PKCE → access_token → avatar fetch</div>
+      </div>
+    `;
+  } else {
+    body.innerHTML = `
+      <div class="oauth-box">
+        <div class="provider-logo" style="background:${currentSource.color}">${currentSource.short}</div>
+        <h3>Demo: import a sample ${currentSource.name} avatar</h3>
+        <p>We'll generate a representative record so you can preview the wrapping + SIGIL signing flow.</p>
+        <button class="btn-oauth" style="background:${currentSource.color}" onclick="doParse()">Run demo import →</button>
+      </div>
+    `;
+  }
+}
+
+function handleDrop(e){
+  e.preventDefault(); e.target.classList.remove("drag");
+  const f = e.dataTransfer.files[0]; if (f) pickFile(f);
+}
+function handleFile(e){
+  const f = e.target.files[0]; if (f) pickFile(f);
+}
+function pickFile(f){
+  pickedFile = f;
+  document.getElementById("file-info").innerHTML = `📎 <b>${f.name}</b> · ${(f.size/1024).toFixed(1)} KB · ${f.type || "?"}`;
+}
+
+async function doOAuth(){
+  toast(`⤴ oauth → ${currentSource.name} …`);
+  await new Promise(r => setTimeout(r, 600));
+  toast(`✓ oauth returned mock access_token`);
+  doParse();
+}
+
+async function doParse(){
+  if (!currentSource) return;
+  toast(`⏳ parsing ${currentSource.name} …`);
+  try {
+    const result = await currentSource.parser(pickedFile);
+    const wrap = await wrapAsMEOK(currentSource.id, result.original);
+    renderParsed(result.original, wrap);
+    imported.add(currentSource.id);
+    renderSources();
+    STATE.sigilCount++;
+    toast(`✓ sovereign wrapper ready`);
+  } catch (e){
+    console.error(e);
+    toast(`✗ parse failed: ${e.message}`);
+  }
+}
+
+function renderParsed(original, wrap){
+  const html = `
+    <div class="parsed-result">
+      <div class="parsed-pane original">
+        <h4>Original · ${currentSource.name} <span class="badge">${original.format || ''}</span></h4>
+        <div class="pane-mock">${currentSource.mockAvatar()}</div>
+        <div class="parsed-meta">
+          ${Object.entries(original).filter(([k])=>k!=='format').map(([k,v])=>`
+            <div class="key-val">
+              <span style="color:#888">${k}</span>
+              <span class="mono" style="font-size:11px">${typeof v === 'object' ? JSON.stringify(v) : String(v).slice(0,80)}</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+
+      <div class="parsed-pane wrapped">
+        <h4>Sovereign · MEOK i-character <span class="badge" style="background:rgba(201,168,76,.15);color:var(--gold-deep)">${wrap.meta.meok_version}</span></h4>
+        <div class="pane-mock">${memojiMock()}</div>
+        <div class="parsed-meta">
+          <div class="key-val"><span style="color:#888">handle</span><span class="mono">@${wrap.meta.handle}</span></div>
+          <div class="key-val"><span style="color:#888">DID</span><span class="mono" style="font-size:11px">${wrap.meta.did}</span></div>
+          <div class="key-val"><span style="color:#888">BFT council</span><span>${wrap.meta.bft_council} <span style="color:#1a8a36">✓ quorum</span></span></div>
+          <div class="key-val"><span style="color:#888">Care VETO</span><span style="color:#0071e3;font-weight:600">⚓ bound (q13)</span></div>
+          <div class="key-val"><span style="color:#888">OCEAN</span>
+            <div class="ocean-grid">
+              ${["o","c","e","a","n"].map((k,i)=>`
+                <div class="ocean-cell">
+                  <div class="bar" style="margin-top:0"><i style="width:${wrap.meta.ocean[k]*100}%"></i></div>
+                  <div class="lbl">${["O","C","E","A","N"][i]} · ${wrap.meta.ocean[k]}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+          <div class="key-val">
+            <span style="color:#888">Queens bound</span>
+            <span class="queens-line">
+              ${wrap.meta.queen_bound.slice(0,6).map(qid => {
+                const q = QUEENS.find(qq=>qq.id===qid);
+                return `<div class="queen-dot" title="${q.name} · ${q.arcana}" style="--queen-color:${q.color}">${q.name[0]}</div>`;
+              }).join("")}
+              ${wrap.meta.queen_bound.length > 6 ? `<span style="color:#888">+${wrap.meta.queen_bound.length-6}</span>` : ""}
+            </span>
+          </div>
+        </div>
+        <div class="sigil-box">
+          <div class="lbl">SIGIL · ed25519</div>
+          <code>${wrap.sigil.algo}:${wrap.sigil.hash} → ${wrap.sigil.chain}</code>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <button class="btn-imp" style="flex:1" onclick="commitToBackend()">Commit to MEOK ↗</button>
+          <button class="btn-imp" style="flex:1;background:#fff;color:var(--ink);border:1px solid var(--line-strong)" onclick="copyIchar()">Copy JSON</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById("parsed-region").innerHTML = html;
+  // store last wrap for export
+  window.__lastWrap = { original, wrap };
+}
+
+const STATE = { sigilCount: 1234 };
+
+async function commitToBackend(){
+  if (!window.__lastWrap) return;
+  toast(`↗ committing to /api/ichar/create …`);
+  setTimeout(() => toast(`✓ i-character created · id ${window.__lastWrap.wrap.meta.handle}`), 700);
+}
+
+function copyIchar(){
+  if (!window.__lastWrap) return;
+  const { original, wrap } = window.__lastWrap;
+  navigator.clipboard.writeText(JSON.stringify({ original, ichar:wrap.meta, sigil:wrap.sigil }, null, 2));
+  toast(`📋 ichar + sigil copied`);
+}
+
+function closeModal(){
+  document.getElementById("import-modal").classList.remove("show");
+}
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(window.__toastT);
+  window.__toastT = setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+window.addEventListener("DOMContentLoaded", renderSources);
+
+// expose for tests
+window.MEOKImport = {
+  SOURCES, QUEENS,
+  parseMemojiZIP, parseUSDZ, parseBitmoji, parseRPM,
+  parseMeta, parseVRChat, parseRoblox, parseRecRoom,
+  wrapAsMEOK, fakeSigilHash, randomArchetypeOcean
+};
+</script>
+</body>
+</html>

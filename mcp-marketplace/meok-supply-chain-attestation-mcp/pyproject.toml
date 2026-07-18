@@ -1,0 +1,26 @@
+[project]
+name = "meok-supply-chain-attestation-mcp"
+version = "0.1.0"
+description = "Sovereign Supply-Chain Attestation MCP — Ed25519-signed SDLC attestation policy engine. Inspired by chainloop-dev/chainloop + ogulcanaydogan/LLM-Supply-Chain-Attestation. Wraps CSOAI sovereign substrate (BFT council, Sigil Chain, proofof.ai verify, Bitcoin anchoring via OpenTimestamps)."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Nicholas Templeman", email = "nicholas@csoai.org" }]
+requires-python = ">=3.10"
+keywords = [
+    "sovereign", "supply-chain", "attestation", "sdlc",
+    "sbom", "slsa", "provenance", "in-toto", "sigstore",
+    "ed25519", "mcp", "csai", "meok", "opentimestamps",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Software Development",
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "cryptography>=42.0.0",
+    "mcp>=1.0.0",
+]

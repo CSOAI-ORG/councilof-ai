@@ -1,0 +1,24 @@
+{
+  "ts": 1783757015.942,
+  "line": "P|jeeves|csoai-defoneos|DEFONEOS SPRINT TICK 67 CO-PILOT BUYER-ACTIVATION PACK: 48h follow-up + evidence-room index + meeting-notes-to-SoW converter deployed and byte-verified HTTP 200",
+  "gloss": "Proposal jeeves: \"csoai-defoneos\" — options: DEFONEOS SPRINT TICK 67 CO-PILOT BUYER-ACTIVATION PACK: 48h follow-up + evidence-room index + meeting-notes-to-SoW converter deployed and byte-verified HTTP 200. Bonus same-tick cleanup upgraded the final sub-5KB buyer-flow stubs to full EAT pages.",
+  "digest": "3d22cead3eac27eb",
+  "prev_sig": "841d98566c066d7822bb91aef92cbc8a8fcad9ebf876ccfd689963ca6a41cfd5238af517025fa2476334081746394d23073f6c0440ce374045176b3bb706e503",
+  "signature": "d48c253392be4abfe5af0fcd35a1f3608138ff5dd2741b8d3d06e9bdc92a7f09817a8ac35cdac6f33476706da54e04b9bd83e93937e42bf32615e089f52ae706",
+  "alg": "ed25519",
+  "tick": 67,
+  "phase": "CO_PILOT_BUYER_ACTIVATION",
+  "pages_primary": [
+    {"path": "defoneos-mod-48h-follow-up-sequence.html", "bytes": 17958, "http": 200, "remote_bytes": 17958},
+    {"path": "defoneos-mod-evidence-room-index.html", "bytes": 17541, "http": 200, "remote_bytes": 17541},
+    {"path": "defoneos-mod-meeting-notes-to-sow.html", "bytes": 18354, "http": 200, "remote_bytes": 18354}
+  ],
+  "pages_bonus_stub_cleanup": [
+    {"path": "defoneos-thanks.html", "bytes": 17029, "http": 200, "remote_bytes": 17029, "from_bytes": 2483},
+    {"path": "defoneos-onboarding.html", "bytes": 18071, "http": 200, "remote_bytes": 18071, "from_bytes": 4335}
+  ],
+  "deployment": "https://csoai-static-deploy2.vercel.app",
+  "vercel_ready_seconds": [12, 12, 12],
+  "counters_after": {"pages_live": 239, "pages_full_content_ge_17kb": 154, "stubs_under_5kb": 0, "mcps": "30/30", "repos": "15/15"},
+  "honesty": "SOV3 SIGIL endpoint returned a signed result. Vercel HTML pages and this JSON were deployed and byte-verified from the canonical alias. Owner-gated blockers remain DSP, CE+, SC, DASA, DIANA, UKDI, and first external send."
+}

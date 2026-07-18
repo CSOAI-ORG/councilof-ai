@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Sovereign Open-Source Tech Register — Sovereign Physical Stack | CSOAI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root { --gold:#c9a84c; --green:#16a34a; --cyan:#06b6d4; --bg:#04020a; --paper:#0f0f15; --red:#dc2626; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:#e0e0e0; font-family:-apple-system,sans-serif; padding:20px; }
+h1 { color:var(--gold); font-size:32px; text-align:center; margin-bottom:4px; }
+.sub { text-align:center; color:#888; margin-bottom:24px; font-size:13px; }
+.summary { max-width:800px; margin:0 auto 32px; text-align:center; font-size:15px; line-height:1.8; color:#ccc; }
+.kingdom { max-width:900px; margin:0 auto 24px; }
+.kingdom h2 { color:var(--cyan); font-size:20px; margin-bottom:12px; border-bottom:1px solid var(--cyan); padding-bottom:4px; }
+.gem { background:var(--paper); border:1px solid #222; border-radius:8px; padding:16px; margin-bottom:12px; display:grid; grid-template-columns:1fr auto; gap:16px; align-items:start; }
+.gem-info h3 { color:var(--gold); font-size:16px; }
+.gem-info .desc { font-size:13px; color:#aaa; margin-top:4px; }
+.gem-info .play { font-size:12px; color:var(--green); margin-top:8px; }
+.gem-cost { text-align:right; white-space:nowrap; }
+.gem-cost .commercial { text-decoration:line-through; color:#666; font-size:11px; }
+.gem-cost .ours { color:var(--gold); font-size:20px; font-weight:900; }
+.gem-cost .status { display:inline-block; padding:2px 8px; border-radius:100px; font-size:10px; font-weight:800; margin-top:4px; }
+.status-software { background:var(--green); color:#000; }
+.status-hardware { background:var(--gold); color:#000; }
+.status-research { background:var(--cyan); color:#000; }
+.priority-table { max-width:900px; margin:0 auto; }
+.priority-table table { width:100%; border-collapse:collapse; font-size:13px; }
+.priority-table th { background:#000; color:var(--gold); padding:8px; text-align:left; border-bottom:2px solid var(--gold); }
+.priority-table td { padding:8px; border-bottom:1px solid #222; }
+.priority-table .p0 { color:var(--red); font-weight:900; }
+.priority-table .p1 { color:#f59e0b; font-weight:800; }
+.priority-table .p2 { color:var(--gold); }
+footer { text-align:center; margin-top:40px; padding:20px; border-top:1px solid var(--gold); font-size:12px; color:#666; }
+.total-box { max-width:600px; margin:24px auto; background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(22,163,74,0.1)); border:1px solid var(--gold); padding:20px; border-radius:8px; text-align:center; }
+.total-box .big { font-size:36px; color:var(--gold); font-weight:900; }
+.total-box .label { font-size:12px; color:#888; }
+</style>
+</head>
+<body>
+<h1>🐉 The Sovereign Open-Source Tech Register</h1>
+<p class="sub">Sovereign Physical Stack · 19 Crown Jewels · £15K total bootstrap · All open-source · DEFONEOS approved</p>
+
+<div class="summary">
+<p>This is the open-source blueprint for a sovereign civilization — verified across CERN, NASA, Berkeley, Stanford, Los Alamos, Oxford Nanopore, and the underground. Every tool listed here is <strong>defensive, sovereign, and legal</strong>. The offensive cyber tools (Pegasus, NSO, malware) have been excluded per DEFONEOS doctrine. The physical stack remains.</p>
+</div>
+
+<div class="total-box">
+  <div class="big">£15,000</div>
+  <div class="label">Total cost to bootstrap all 10 domains (vs £15M+ commercial equivalent)</div>
+</div>
+
+<!-- KINGDOM 1: PHYSICAL -->
+<div class="kingdom">
+<h2>⚛️ Category 1: Physical Tooling</h2>
+<div class="gem">
+  <div class="gem-info">
+    <h3>NanoMi — Open-Source Electron Microscope</h3>
+    <div class="desc">Full TEM by Canada NRC. See individual atoms. Python control + 3D visualizer. Soil microbiology, material characterization, 3D-print defect inspection.</div>
+    <div class="play">Farm lab: analyze soil, inspect robot gearboxes, characterize materials</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£500,000</div>
+    <div class="ours">£3,000</div>
+    <div class="status status-hardware">HARDWARE</div>
+  </div>
+</div>
+<div class="gem">
+  <div class="gem-info">
+    <h3>OpenReactor — Desktop Fusion Control System</h3>
+    <div class="desc">IEC fusor control: vacuum, HV, deuterium, neutron detection. Docker + Grafana. Not a toy — real fusion neutron source.</div>
+    <div class="play">Sovereign energy research, radiation-hardened electronics testing</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£500,000+</div>
+    <div class="ours">£5,000</div>
+    <div class="status status-hardware">HARDWARE</div>
+  </div>
+</div>
+<div class="gem">
+  <div class="gem-info">
+    <h3>OpenExo — £500 Exoskeleton</h3>
+    <div class="desc">Modular exo frame (hip/ankle/elbow). Tested on cerebral palsy patients. Teensy 4.1 + Arduino BLE.</div>
+    <div class="play">Farm labor augmentation, rehabilitation, humanoid control algorithms</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£50,000</div>
+    <div class="ours">£500</div>
+    <div class="status status-hardware">HARDWARE</div>
+  </div>
+</div>
+<div class="gem">
+  <div class="gem-info">
+    <h3>2AxisLaserCutter — £200 CNC Laser</h3>
+    <div class="desc">Arduino CNC with safety interlocks, homing, G-code from SketchUp.</div>
+    <div class="play">Cut acrylic sensor enclosures, robot chassis parts, prototype hardware</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£50,000</div>
+    <div class="ours">£200</div>
+    <div class="status status-hardware">HARDWARE</div>
+  </div>
+</div>
+</div>
+
+<!-- KINGDOM 2: BIOLOGICAL -->
+<div class="kingdom">
+<h2>🧬 Category 2: Bio Tooling</h2>
+<div class="gem">
+  <div class="gem-info">
+    <h3>OpenCRISPR-1 — AI-Designed Gene Editor</h3>
+    <div class="desc">Profluent-AI's AI-generated Cas9 (Nature 2025). Hundreds of mutations from natural CRISPR. Free commercial use with ethical terms.</div>
+    <div class="play">Crop optimization, koi disease resistance, rapid biotech prototyping</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£1M+ license</div>
+    <div class="ours">£0</div>
+    <div class="status status-software">SOFTWARE</div>
+  </div>
+</div>
+<div class="gem">
+  <div class="gem-info">
+    <h3>Nanopore Sequencing — £100 Genome</h3>
+    <div class="desc">MinION (£900) + Minimap2/Raven/Shasta/Medaka/DeepVariant/Clair. £100K sequencing facility in a USB stick.</div>
+    <div class="play">Koi strain breeding, pathogen detection, soil microbiome analysis</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£100,000</div>
+    <div class="ours">£900</div>
+    <div class="status status-hardware">HARDWARE</div>
+  </div>
+</div>
+</div>
+
+<!-- KINGDOM 3: SPATIAL -->
+<div class="kingdom">
+<h2>🚀 Category 3: Spatial Tooling</h2>
+<div class="gem">
+  <div class="gem-info">
+    <h3>KENSAT — LLM in Space (CubeSat)</h3>
+    <div class="desc">2U CubeSat with NVIDIA Jetson Orin Nano. Edge-AI in orbit. UHF downlink to amateur ground stations.</div>
+    <div class="play">Sovereign satellite constellation architecture. MEOK-1 in orbit within 2 years.</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£5M</div>
+    <div class="ours">£50,000</div>
+    <div class="status status-research">RESEARCH</div>
+  </div>
+</div>
+<div class="gem">
+  <div class="gem-info">
+    <h3>AgriCruiser — Precision Farm Robot</h3>
+    <div class="desc">UCLA/USDA funded. T-slot aluminum chassis (no welding). ESP32 + RoboClaw. Adjustable track width.</div>
+    <div class="play">Farm automation backbone for microgreens tunnels, precision spraying</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£100,000</div>
+    <div class="ours">£2,000</div>
+    <div class="status status-hardware">HARDWARE</div>
+  </div>
+</div>
+</div>
+
+<!-- KINGDOM 4: INTELLIGENCE -->
+<div class="kingdom">
+<h2>🧠 Category 4: Intelligence Tooling</h2>
+<div class="gem">
+  <div class="gem-info">
+    <h3>SpiderFoot — OSINT God (200+ modules)</h3>
+    <div class="desc">Automated recon + attack surface mapping + threat intel. One command maps an entire organization.</div>
+    <div class="play">Competitive intelligence on every AI safety company. Legal cyber-recon for business intel.</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£500K/yr (Palantir)</div>
+    <div class="ours">£0</div>
+    <div class="status status-software">FORK NOW</div>
+  </div>
+</div>
+<div class="gem">
+  <div class="gem-info">
+    <h3>PRISM — Self-Hosted OSINT Platform</h3>
+    <div class="desc">22+ modules. Domains, IPs, emails, breach DBs, threat intel, OPSEC scores, entity graphs.</div>
+    <div class="play">Due diligence engine for evaluating partners, competitors, and threats</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£200K/yr</div>
+    <div class="ours">£0</div>
+    <div class="status status-software">FORK NOW</div>
+  </div>
+</div>
+</div>
+
+<!-- KINGDOM 5: ENERGY -->
+<div class="kingdom">
+<h2>⚡ Kingdom 5: Energy & Physics</h2>
+<div class="gem">
+  <div class="gem-info">
+    <h3>CERN Xsuite — Particle Accelerator Simulation</h3>
+    <div class="desc">CERN official. GPU-accelerated beam dynamics. The same tools used to design the LHC.</div>
+    <div class="play">Simulate plasma dynamics for OpenReactor. Model EM fields for radar/sensors.</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£10M+</div>
+    <div class="ours">£0</div>
+    <div class="status status-software">FORK NOW</div>
+  </div>
+</div>
+<div class="gem">
+  <div class="gem-info">
+    <h3>WarpX — Exascale Plasma Simulation (Los Alamos)</h3>
+    <div class="desc">DOE Exascale Computing Project. Laser-plasma accelerators, fusion reactors. LANL-grade physics.</div>
+    <div class="play">Simulate fusion reactor before building. Model EM wave propagation.</div>
+  </div>
+  <div class="gem-cost">
+    <div class="commercial">£10M+</div>
+    <div class="ours">£0</div>
+    <div class="status status-software">FORK NOW</div>
+  </div>
+</div>
+</div>
+
+<!-- PRIORITY TABLE -->
+<div class="priority-table">
+<h2 style="color:var(--gold); text-align:center; margin-bottom:16px;">⚡ Acquisition Priority Matrix</h2>
+<table>
+<tr><th>Priority</th><th>Action</th><th>Domain</th><th>Cost</th><th>Status</th></tr>
+<tr><td class="p0">P0</td><td>Download SpiderFoot + PRISM</td><td>Intel</td><td>£0</td><td>SOFTWARE</td></tr>
+<tr><td class="p0">P0</td><td>Download CERN Xsuite + WarpX</td><td>Physics</td><td>£0</td><td>SOFTWARE</td></tr>
+<tr><td class="p0">P0</td><td>Download OpenCRISPR-1</td><td>Biology</td><td>£0</td><td>SOFTWARE</td></tr>
+<tr><td class="p1">P1</td><td>Order FLIR Lepton 3.5 + ESP32 thermal node</td><td>Thermal</td><td>£60</td><td>HARDWARE</td></tr>
+<tr><td class="p1">P1</td><td>Order ADS1299 + ESP32 BCI dev kit</td><td>BCI</td><td>£40</td><td>HARDWARE</td></tr>
+<tr><td class="p1">P1</td><td>Install Nerfstudio (farm 3D scan)</td><td>3D</td><td>£0</td><td>SOFTWARE</td></tr>
+<tr><td class="p1">P1</td><td>Install Voicebox (local ElevenLabs killer)</td><td>Voice</td><td>£0</td><td>SOFTWARE</td></tr>
+<tr><td class="p2">P2</td><td>Build 2AxisLaserCutter</td><td>Manufacturing</td><td>£200</td><td>HARDWARE</td></tr>
+<tr><td class="p2">P2</td><td>Request NanoMi blueprints from NRC</td><td>Microscopy</td><td>£3,000</td><td>HARDWARE</td></tr>
+<tr><td class="p2">P2</td><td>Order MinION Mk1B</td><td>Biology</td><td>£900</td><td>HARDWARE</td></tr>
+<tr><td class="p3">P3</td><td>Study OpenReactor docs</td><td>Energy</td><td>£5,000</td><td>HARDWARE</td></tr>
+<tr><td class="p3">P3</td><td>Fork AgriCruiser</td><td>Agriculture</td><td>£2,000</td><td>HARDWARE</td></tr>
+</table>
+</div>
+
+<footer>
+  🐉 The Sovereign Open-Source Tech Register · CSOAI Ltd (UK 16939677) · MEOK AI Labs · DEFONEOS<br>
+  Public. Auditable. Sovereign. · 100% UK Soil · Defensive + Sovereign Physical Stack Only<br>
+  Offensive cyber capabilities (Pegasus / NSO / malware) excluded per DEFONEOS doctrine
+</footer>
+</body>
+</html>

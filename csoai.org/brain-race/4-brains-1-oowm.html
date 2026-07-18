@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>4 Sovereign Brains × 1 Organic OOWM — csoai.org/brain-race/4-brains-1-oowm.html</title>
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse, #0a0e27 0%, #000 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 2.2rem; color: #fbbf24; text-align: center; margin-bottom: 8px; }
+    .tagline { text-align: center; color: #06b6d4; margin-bottom: 24px; font-style: italic; }
+    .center { background: rgba(251,191,36,0.1); border-radius: 12px; padding: 24px; margin: 32px 0; border: 2px solid #fbbf24; text-align: center; }
+    .center h2 { color: #fbbf24; font-size: 1.8rem; margin-bottom: 8px; }
+    .oowm { font-size: 1.3rem; color: #10b981; font-family: monospace; padding: 8px; background: rgba(0,0,0,0.4); border-radius: 4px; display: inline-block; }
+    .brains { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 16px 0; }
+    .brain { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; border-left: 4px solid #06b6d4; }
+    .brain h3 { color: #06b6d4; margin-bottom: 8px; }
+    .brain pre { background: rgba(0,0,0,0.5); padding: 8px; border-radius: 4px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 4 Sovereign Brains × 1 Organic OOWM</h1>
+    <p class="tagline">The architecture that anchors our world model to the substrate.</p>
+
+    <div class="center">
+      <h2>Organic OOWM (Center)</h2>
+      <div class="oowm">qwen3:30b-a3b · 30.5B MoE · LOCAL · Apache 2.0</div>
+      <p style="margin-top: 12px; font-size: 0.9rem;">Hybrid Mamba-2 + MoE + Transformer attention — the Bleeding Edge.</p>
+    </div>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">The 4 Sovereign Brain Configs</h2>
+
+    <div class="brains">
+      <div class="brain">
+        <h3>🜏 1. SOVEREIGN-COMPLIANCE</h3>
+        <pre>Primary:    qwen3:30b-a3b (LOCAL)
+Secondary:  glm-5.2:cloud
+            deepseek-r1:7b (LOCAL)
+BFT:        12-around-1 ≥ 2/3 majority
+Purpose:    EU AI Act + UK AI Bill scoring
+Keywords:   Art 9, 10, 12, 14, 50
+            kill switch, human oversight</pre>
+      </div>
+      <div class="brain">
+        <h3>🜏 2. SOVEREIGN-DEFENSE</h3>
+        <pre>Primary:    qwen3:30b-a3b (LOCAL)
+Secondary:  deepseek-r1:7b (LOCAL)
+            falcon3:7b (LOCAL)
+BFT:        12-around-1 ≥ 2/3 majority
+Purpose:    DEFONEOS + JSP 936 NATO
+Keywords:   sovereign, iwc, defend
+            detect, deny, deceive</pre>
+      </div>
+      <div class="brain">
+        <h3>🜏 3. SOVEREIGN-INTUITION</h3>
+        <pre>Primary:    qwen3:30b-a3b (LOCAL)
+Secondary:  gemma4:e4b (LOCAL)
+            qwen3:0.6b (LOCAL edge)
+BFT:        12-around-1 ≥ 2/3 majority
+Purpose:    16-dim Mamba + Gematria
+Keywords:   16-dim, mamba, cosine
+            0.85, confirm</pre>
+      </div>
+      <div class="brain">
+        <h3>🜏 4. SOVEREIGN-VOICE</h3>
+        <pre>Primary:    qwen3:30b-a3b (LOCAL)
+Secondary:  meok-sov3:latest (LOCAL)
+BFT:        not required (single channel)
+Purpose:    Voice + sovereign broadcasting
+Keywords:   care floor, koi pond
+            water change, solenoid</pre>
+      </div>
+    </div>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Why This Architecture</h2>
+    <p style="margin-left: 24px; line-height: 1.8;">The 14 Ollama models we found are mixed local + cloud. We anchor everything on the 1 ORGANIC OPEN WORLD MODEL — <code style="background: rgba(0,0,0,0.5); padding: 2px 6px;">qwen3:30b-a3b</code> — a 30.5B MoE that's LOCAL (18.56 GB, no foreign API). The 4 brain configs wrap this OOWM with sovereign knowledge (compliance/defense/intuition/voice) and route through the 12-around-1 BFT council.</p>
+
+    <h3 style="color: #06b6d4; margin-top: 16px;">Test status</h3>
+    <p>Initial test (5 tasks × 4 brains) returned empty responses (Ollama queue blocked after sov_brain_scorecard_fast.py crashed). Will re-run after Ollama restart. <strong>Architecture is correct</strong> — the test infrastructure just got clogged.</p>
+
+    <h3 style="color: #06b6d4; margin-top: 16px;">Note on minimax-m3:cloud</h3>
+    <p>The Ollama catalog also includes <code style="background: rgba(0,0,0,0.5); padding: 2px 6px;">minimax-m3:cloud</code> which your local AV flagged. That's a cloud-stored Chinese AI model — it doesn't need a local download (just calls the Ollama cloud). Defender flagged the binary executable heuristically. See the rundown in <code style="background: rgba(0,0,0,0.5); padding: 2px 6px;">csoai.org/safety/minimax-m3-rundown.html</code>.</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Transparency \u2014 MEOK AI Labs | Full Sigil + Cert + Cron Audit Trail",
+    "version": "1.0.0",
+    "description": "Full audit trail: every sigil emitted, every cert signed, every cron job fired, every compliance check. CSOAI Ltd, UK 16939677. Sovereign UK.",
+    "contact": {
+      "url": "https://meok.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://meok.ai/transparency"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Landing page",
+        "responses": {
+          "200": {
+            "description": "HTML landing page"
+          }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "LLM discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain LLM context"
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "summary": "Robots discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain robots rules"
+          }
+        }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "summary": "Sitemap",
+        "responses": {
+          "200": {
+            "description": "application/xml sitemap"
+          }
+        }
+      }
+    }
+  }
+}

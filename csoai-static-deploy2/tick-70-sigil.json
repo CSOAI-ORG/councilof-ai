@@ -1,0 +1,74 @@
+{
+  "tick": 70,
+  "ts": "2026-07-11T17:38:00+01:00",
+  "agent": "JEEVES",
+  "sprint": "DEFONEOS_10_DAY",
+  "phase": "CO_PILOT_BUYER_ACTIVATION",
+  "day": 11,
+  "deliverables": [
+    {
+      "slug": "defoneos-mod-contract-award-letter",
+      "bytes": 23552,
+      "title": "DEFONEOS Contract Award Letter \u2014 Buyer-Side Legal Review Pack",
+      "purpose": "The literal 8-clause award-letter draft + 7 Schedules a buyer-side legal team redlines within 5 working days. UK MOD / NATO / AUKUS-ready. Crown Copyright carve-out, Apache 2.0 public licence preserved, NCC Group escrow for exit, JSP 440 baseline, UK GDPR Art 28, FIPS 140-3 Level 3 HSM, 240-test pytest acceptance gate, 14-day signature window.",
+      "buyer_action": "Authority legal redlines + returns tracked-changes PDF within 2 working days; signed within 14 days.",
+      "framework_xwalk_count": 12,
+      "honesty_register_lines": 7
+    },
+    {
+      "slug": "defoneos-mod-air-gap-deployment-guide",
+      "bytes": 19116,
+      "title": "DEFONEOS Air-Gap / Disconnected Deployment Guide \u2014 SECRET-tier Buyers",
+      "purpose": "The literal air-gapped deployment guide for SECRET-tier buyers (UK MOD, NATO SECRET, AUKUS). 0 internet connections at runtime. FIPS 140-3 cryptography, sneakernet update chain, deterministic-build pipeline, tamper-evident bag chain-of-custody, HSM-backed keys, one-way diode telemetry only. 14 cryptographic primitives inventoried, 12 acceptance criteria, 8 hard invariants.",
+      "buyer_action": "Buyer procurement + security officer reviews against JSP 440 Part 3 + NCSC air-gap guidance.",
+      "framework_xwalk_count": 12,
+      "honesty_register_lines": 8
+    },
+    {
+      "slug": "defoneos-mod-renewal-upsell-playbook",
+      "bytes": 20476,
+      "title": "DEFONEOS 12-Month Renewal & Upsell Playbook \u2014 FY27-28",
+      "purpose": "The literal 12-month forward playbook for the moment the first 90-day pilot closes. 5 upsell motions (SEAL, tier expansion, adjacent Crown body, AUKUS, advisory-day), 8-signal renewal-risk scoring, 7 churn-save plays, 4-tier pricing trajectory \u00a3180k \u2192 \u00a3600k+, QBR cadence, named FY27-28 expansion sequence, CSM compensation table.",
+      "buyer_action": "CSM reads at Day 75 of pilot; runs the renewal scoping call with the buyer's procurement contact.",
+      "framework_xwalk_count": 12,
+      "honesty_register_lines": 7
+    }
+  ],
+  "verification": {
+    "vercel_deploy_ready_seconds": 12,
+    "byte_verified_http_200": true,
+    "byte_counts": {
+      "contract-award-letter": "23552=23552",
+      "air-gap-deployment-guide": "19116=19116",
+      "renewal-upsell-playbook": "20476=20476"
+    },
+    "defoneos_main_http": 200,
+    "sitemap_http": 200,
+    "sitemap_entries": 31
+  },
+  "counters_after": {
+    "pages_live": 248,
+    "pages_full_content": 162,
+    "stubs_remaining": 0,
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "repos_cloned": 15,
+    "repos_target": 15,
+    "ticks_completed": 70
+  },
+  "council_sign_off": {
+    "quorum_required": 23,
+    "approve": 28,
+    "amend": 5,
+    "reject": 0,
+    "abstain": 0,
+    "verdict": "APPROVED with minor amends; deploy"
+  },
+  "next_actions": [
+    "Continue CO_PILOT_BUYER_ACTIVATION ticks every 2h while owner-gated sends remain pending.",
+    "Next build batch (tick 71): (1) public-evidence-pack index \u2014 every named artefact URL + 50-line abstract; (2) DEFCON 760 short-form cross-walk (the actual MOD DEFCON contract family); (3) post-pilot lessons-learned template (for after pilot close).",
+    "Owner gates remain Nick-only: DSP registration, Cyber Essentials Plus, SC clearance, DASA, DIANA, UKDI and first external outreach send."
+  ],
+  "owner_gates_unchanged": true,
+  "sigil_digest": "T70-63dfa13732f4"
+}

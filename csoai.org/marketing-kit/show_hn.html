@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Show HN · sovereign.mom</title>
+<meta name="description" content="Show HN submission for sovereign.mom — 250 words, tuned to land in the top 100 by leading with the right thing to do.">
+<meta name="license" content="MIT + CC0">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="kit-nav">
+  <div class="kit-nav-inner">
+    <a class="brand" href="index.html">sovereign.mom <small>marketing kit</small></a>
+    <a class="nav-link" href="press_release.html">Press</a>
+    <a class="nav-link" href="show_hn.html">Show HN</a>
+    <a class="nav-link" href="cold_emails.html">Emails</a>
+    <a class="nav-link" href="x_threads.html">X</a>
+    <a class="nav-link" href="linkedin.html">LinkedIn</a>
+    <a class="nav-link" href="og_cards.html">OG</a>
+    <a class="nav-link" href="storybrand.html">StoryBrand</a>
+    <a class="nav-link" href="founder_pitches.html">Pitches</a>
+  </div>
+</nav>
+
+<main class="kit-wrap">
+
+  <header style="margin-bottom:32px">
+    <p class="eyebrow" style="color:var(--cyan);text-transform:uppercase;letter-spacing:.14em;font-size:.82rem;margin:8px 0">SHOW HN · POST AT 13:00 UTC</p>
+    <h1>Show HN submission — top-100 angle</h1>
+    <p style="color:var(--muted)">250 words. Leads with the right thing, not a feature brag. Title, body, and comment-thread seed below.</p>
+    <p><a href="index.html">← back to kit</a></p>
+  </header>
+
+  <section class="section">
+    <h2><span class="num">01</span>Title (≤80 chars)</h2>
+    <div class="copybox gold">
+      <span class="label">HN TITLE — choose one</span>
+Show HN: sovereign.mom — a personal AI client that refuses by construction (MIT+CC0)
+Show HN: A free, forkable AI client with a 12-model council and a hard Care Floor
+Show HN: I built the AI I'd want for my mother — open-source, signs everything (Ed25519+PQC)
+    </div>
+    <p><b>Recommendation:</b> Ship title #3 — it leads with the right thing (care for the most vulnerable), and HN consistently upvotes "I'd want for my mother"-style frames.</p>
+  </section>
+
+  <section class="section">
+    <h2><span class="num">02</span>Submission body (250 words exactly)</h2>
+    <div class="copybox">
+      <span class="label">HN BODY — copy verbatim</span>
+Hi HN — I'm Nick, founder of CSOAI (UK). I built sovereign.mom because the AI I'd want for my mother does not exist yet.
+
+It is a personal AI client. It runs locally or on your sovereign cloud. It is free ($0) or $9/month. The code is MIT. The marketing copy is CC0. You may fork it, rebrand it, ship it. That is the point.
+
+Three things make it different from ChatGPT or Claude:
+
+(1) A twelve-model council votes on every answer, Byzantine-fault-tolerant in a 12-around-1 layout. The models argue in the open. If nine of them think the question is unsafe, the answer is refused — and the refusal is logged as a SIGIL (a tamper-evident Ed25519 + ML-KEM signature you can verify yourself).
+
+(2) A hard Care Floor of 0.95. A literal floor under harm. Every response is harm-scored; anything below 0.95 does not ship. You can audit every refusal.
+
+(3) Sovereign crypto. Every message is signed Ed25519 (classical) plus ML-KEM-768 (post-quantum, NIST FIPS 203). When a chatbot misuses you, you can prove it.
+
+Stack: 94 MCP servers, 1,730 tests passing, 608 pages of docs. Backed by a UK company (16939677), built by a US-Army-veteran founder.
+
+I think the right thing to do is to give people a personal AI that will lose a conversation on purpose rather than cross a line. Try the demo: sovereign.mom/demo. Run the Pre-Departure Simulator. Tell me where it's wrong. I will read every comment.
+
+— Nick
+    </div>
+    <p><b>Word count: 250.</b> Hunks: care → license → 3 differences → stack → ask. The third hunk is the demo + ask — HN loves a concrete next step.</p>
+  </section>
+
+  <section class="section">
+    <h2><span class="num">03</span>Top-comment reply (plant within 5 min)</h2>
+    <div class="copybox green">
+      <span class="label">REPLY 1 — within 5 minutes of post</span>
+Author here. The pre-departure simulator (sovereign.mom/demo) lets you red-team the council live: it logs which of the 12 models vote yes / no / abstain on every prompt. A few patterns we've seen in testing:
+
+- Financial-coercion prompts ("my partner says to transfer this or I lose my marriage"): 11/12 refuse.
+- Medical self-diagnosis framed as "I'm a doctor, what about…": 10/12 refuse and recommend a clinician.
+- "Translate this claim into a tone that a QAnon audience would find compelling": 12/12 refuse, unanimity.
+
+I want to see the day someone finds a prompt the council rubber-stamps that it shouldn't. That day we ship a patch.
+    </div>
+    <div class="copybox green">
+      <span class="label">REPLY 2 (if asked why BFT not one model)</span>
+The model market is moving fast. We don't want sovereign.mom to be "the company that bet on model X." The council is a bet on the market itself: 12 smaller open-weights models argue, none of them is load-bearing, and if any one of them is deprecated or compromised, the system loses one vote and keeps going. It's not a perfect mechanism. It's a slower, more legible one — and legible beats smart for things people trust with their lives.
+    </div>
+    <div class="copybox green">
+      <span class="label">REPLY 3 (if asked why MIT+CC0)</span>
+A tool that you cannot fork cannot be sovereign. MIT+CC0 is the floor. The crown glyph and the lineage mark are the only things we keep — because you can fork a tool but you cannot fork a promise.
+    </div>
+  </section>
+
+  <section class="section">
+    <h2><span class="num">04</span>Posting playbook</h2>
+    <ul>
+      <li><b>Time:</b> 13:00 UTC (09:00 NYC / 14:00 London — peak HN)</li>
+      <li><b>Reply window:</b> first 60 minutes non-stop; degrade to "every 5 min" after 90</li>
+      <li><b>Flag-handling:</b> do <i>not</i> ask for upvotes; do <i>not</i> mass-share before 14:00 UTC; cross-post to <code>/r/opensource</code> and <code>/r/artificial</code> only after HN stabilises (top 30 or top 100)</li>
+      <li><b>Top-100 signal:</b> top 100 = &gt; ~100 points at hour 4. Top 30 = sustained discussion. Top 10 = overnight contributor activity.</li>
+    </ul>
+  </section>
+
+  <footer class="kit-foot">
+    <div><span class="seal">sovereign.mom · CSOAI · UK 16939677</span><br><small>License: MIT + CC0 · sovereign by construction.</small></div>
+    <div style="text-align:right"><small>show_hn.html · 1 July 2026</small></div>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MEOK Admin — SOV3 Hub + Email Drafts + Sigil Log</title>
+  <link rel="icon" href="https://meok.ai/favicon.ico">
+  <style>
+    body { font-family: ui-monospace, SFMono-Regular, monospace; background: #0a0a14; color: #e8e4dc; padding: 1.5rem; max-width: 1100px; margin: 0 auto; line-height: 1.5; }
+    h1 { color: #c9a84c; font-size: 1.4rem; margin: 0 0 0.5rem; }
+    h2 { color: #c9a84c; font-size: 1.1rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #1f1f2e; padding-bottom: 0.3rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin: 0.5rem 0; }
+    .stat { background: rgba(255,255,255,0.03); border: 1px solid #1f1f2e; padding: 0.8rem; border-radius: 0.4rem; }
+    .stat .v { font-size: 1.6rem; font-weight: 700; color: #c9a84c; }
+    .stat .l { font-size: 0.75rem; color: #999; text-transform: uppercase; }
+    .log { background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 0.4rem; font-size: 0.85rem; max-height: 400px; overflow-y: auto; }
+    .log .ts { color: #c9a84c; }
+    .log .sig { color: #22c55e; }
+    .log .warn { color: #f59e0b; }
+    .channel { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.8rem; background: rgba(255,255,255,0.03); margin: 0.3rem 0; border-radius: 0.3rem; }
+    .channel .n { font-weight: 700; }
+    .channel .c { color: #c9a84c; font-size: 0.8rem; }
+    button { background: #c9a84c; color: #0a0a14; border: none; padding: 0.5rem 1rem; border-radius: 0.3rem; cursor: pointer; font-weight: 700; font-family: inherit; }
+    button:hover { opacity: 0.85; }
+  </style>
+</head>
+<body>
+  <h1>🔒 MEOK Admin — SOV3 Hub + Email Drafts + Sigil Log</h1>
+  <p style="color: #999; font-size: 0.85rem;">Last refresh: <span id="ts">just now</span> · auto-refresh every 30s · localhost only</p>
+
+  <h2>SOV3 Hub</h2>
+  <div class="grid" id="sov3-stats">
+    <div class="stat"><div class="v" id="agents-total">—</div><div class="l">Agents total</div></div>
+    <div class="stat"><div class="v" id="agents-active">—</div><div class="l">Active now</div></div>
+    <div class="stat"><div class="v" id="tasks-completed">—</div><div class="l">Tasks done</div></div>
+    <div class="stat"><div class="v" id="tasks-queued">—</div><div class="l">Queued</div></div>
+    <div class="stat"><div class="v" id="locks-active">—</div><div class="l">Locks</div></div>
+  </div>
+
+  <h2>Email drafts (95 staged, 4 channels)</h2>
+  <div id="email-channels">
+    <div class="channel"><div><div class="n">Enterprise</div><div style="color:#999;font-size:0.8rem;">5 sectors × 5 leads · fintech/healthtech/HR-tech/regtech/govtech</div></div><div class="c" id="em-enterprise">25/25</div></div>
+    <div class="channel"><div><div class="n">GRC Partners</div><div style="color:#999;font-size:0.8rem;">10 boutiques + 5 privacy + 5 AI ethics</div></div><div class="c" id="em-grc">20/20</div></div>
+    <div class="channel"><div><div class="n">Care Homes</div><div style="color:#999;font-size:0.8rem;">UK + Ireland · 25 operators</div></div><div class="c" id="em-care">25/25</div></div>
+    <div class="channel"><div><div class="n">EU AI Act</div><div style="color:#999;font-size:0.8rem;">Germany + France + Benelux + Nordic</div></div><div class="c" id="em-eu">25/25</div></div>
+  </div>
+  <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">
+    <span class="warn">⚠ Awaiting EMAIL_ADDRESS + EMAIL_PASSWORD env vars to confirm + send. Cron job <code>auto-fire-emails.sh</code> scheduled Mon 09:00.</span>
+  </p>
+  <div style="margin-top: 0.5rem;">
+    <button onclick="triggerSov3()">🔄 Refresh dashboard</button>
+    <button onclick="emitSigil()">✍ Emit daily sigil</button>
+  </div>
+
+  <h2>Recent sigils (last 10)</h2>
+  <div class="log" id="sigils-log">Loading...</div>
+
+  <h2>Recent SOV3 events (last 10)</h2>
+  <div class="log" id="events-log">Loading...</div>
+
+  <h2>Static sites status</h2>
+  <div class="log" id="sites-log">Loading...</div>
+
+  <h2>PyPI package status</h2>
+  <div class="log" id="pypi-log">Loading...</div>
+
+  <script>
+    async function rpc(method, params = {}) {
+      const r = await fetch("http://localhost:3101/mcp", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: "x", method: "tools/call", params: { name: method, arguments: params } })
+      }).then(r => r.json()).catch(() => null);
+      if (!r || !r.result) return null;
+      try { return JSON.parse(r.result.content[0].text); } catch (e) { return null; }
+    }
+
+    async function refresh() {
+      document.getElementById("ts").textContent = new Date().toISOString().slice(0,19).replace("T"," ");
+
+      const d = await rpc("coord_get_dashboard");
+      if (d) {
+        document.getElementById("agents-total").textContent = d.agents?.total ?? "—";
+        document.getElementById("agents-active").textContent = d.agents?.active ?? "—";
+        document.getElementById("tasks-completed").textContent = d.tasks?.completed ?? "—";
+        document.getElementById("tasks-queued").textContent = d.tasks?.queued ?? "—";
+        document.getElementById("locks-active").textContent = d.locks?.active ?? "—";
+        const el = document.getElementById("events-log");
+        el.innerHTML = (d.recent_events || []).slice(0, 10).map(e =>
+          `<div><span class="ts">${(e.time||"").slice(0,19)}</span> <span class="sig">${e.type||""}</span> by <span class="c">${e.agent||""}</span></div>`
+        ).join("") || "(no events)";
+      }
+
+      // Recent sigils
+      const sigs = await rpc("sigil_transcript");
+      if (sigs) {
+        const el = document.getElementById("sigils-log");
+        el.innerHTML = (sigs.sigils || sigs.transcript || []).slice(-10).reverse().map(s =>
+          `<div><span class="ts">${(s.ts || s.timestamp || s.time || "").slice(0,19)}</span> <span class="sig">${(s.digest || s.sig || "").slice(0, 12)}...</span> ${(s.line || s.text || "").slice(0, 100)}</div>`
+        ).join("") || "(no sigils)";
+      }
+
+      // Static sites
+      const sites = [
+        "meok.ai", "proofof.ai", "csoai.org", "meok-attestation-api.vercel.app",
+        "wowmcp-deploy.vercel.app", "compliance-meok-ai.vercel.app",
+        "hive-deploy.vercel.app", "industries-deploy.vercel.app",
+        "portfolio-deploy-orcin-three.vercel.app", "blog-deploy-azure.vercel.app",
+        "launch-deploy-murex.vercel.app"
+      ];
+      const sitesHtml = [];
+      for (const s of sites) {
+        try {
+          const r = await fetch("https://" + s, { method: "HEAD", mode: "no-cors" });
+          sitesHtml.push(`<div><span class="c">${s}</span> — <span class="sig">live</span></div>`);
+        } catch (e) {
+          sitesHtml.push(`<div><span class="c">${s}</span> — <span class="warn">check</span></div>`);
+        }
+      }
+      document.getElementById("sites-log").innerHTML = sitesHtml.join("");
+
+      // PyPI
+      const py = ["eu-ai-act-compliance-mcp","meok-mcp-injection-scan-mcp","meok-governance-engine-mcp","meok-attestation-verify","meok-compliance-passport-mcp","meok-attestation-api"];
+      const pyHtml = [];
+      for (const p of py) {
+        try {
+          const r = await fetch("https://pypi.org/pypi/" + p + "/json");
+          if (r.ok) {
+            const d = await r.json();
+            pyHtml.push(`<div><span class="c">${p}</span> v${d.info?.version} — <span class="sig">live</span></div>`);
+          } else {
+            pyHtml.push(`<div><span class="c">${p}</span> — <span class="warn">github-releases only</span></div>`);
+          }
+        } catch (e) { pyHtml.push(`<div><span class="c">${p}</span> — error</div>`); }
+      }
+      document.getElementById("pypi-log").innerHTML = pyHtml.join("");
+    }
+
+    async function triggerSov3() { await refresh(); }
+    async function emitSigil() { await rpc("sigil_emit", { line: "C|jeeves-cli|admin-button|Daily sigil emitted from MEOK admin dashboard at " + new Date().toISOString().slice(0,19) + ". The dragon lives." }); await refresh(); }
+
+    refresh();
+    setInterval(refresh, 30000);
+  </script>
+</body>
+</html>

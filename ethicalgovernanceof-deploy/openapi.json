@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "EthicalGovernanceOf \u2014 Map one policy to every framework.",
+    "version": "1.0.0",
+    "description": "Build a certified AI governance program once and crosswalk it across ISO 42001, NIST AI RMF and the EU AI Act \u2014 with controls, evidence and certification readiness in one place.",
+    "contact": {
+      "url": "https://meok.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://ethicalgovernanceof.ai"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Landing page",
+        "responses": {
+          "200": {
+            "description": "HTML landing page"
+          }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "LLM discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain LLM context"
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "summary": "Robots discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain robots rules"
+          }
+        }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "summary": "Sitemap",
+        "responses": {
+          "200": {
+            "description": "application/xml sitemap"
+          }
+        }
+      }
+    }
+  }
+}

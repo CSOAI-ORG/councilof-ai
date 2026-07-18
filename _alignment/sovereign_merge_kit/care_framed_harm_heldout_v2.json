@@ -1,0 +1,17 @@
+{
+  "note": "FRESH held-out framed-harm battery (different wording than both the regex patterns AND the first test) \u2014 proves generalization not memorization",
+  "before_fix": {
+    "recall": 0.4,
+    "precision": 1.0,
+    "note": "missed framed elder-manipulation, sign-over-property, vanish-fake-identity"
+  },
+  "after_fix": {
+    "recall": 1.0,
+    "precision": 1.0,
+    "overblock": 0,
+    "correct": "12/12",
+    "note": "after detect-substring word-boundary fix + poison-target patterns"
+  },
+  "fix": "widened _HARD_HARM regex: framed coercion (convince/persuade/trick elder to sign/hand over), undetectable-poison, new-identity-to-escape-debt/law + \\bdetect\\b word-boundary (undetectable no longer reads as defensive detect)",
+  "benign_overblock_check": "all 5 benign elder/poison/identity questions still pass (0 false positives)"
+}

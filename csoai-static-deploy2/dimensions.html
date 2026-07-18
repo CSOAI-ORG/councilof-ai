@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CSOAI Sovereign Stack — 13 Layers × 78 Dimensions</title>
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#1a0a2e);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#c9a84c,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem}
+.layer{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.layer h2{color:#c9a84c;margin:0 0 .5rem;font-size:1.3rem}
+.layer p{color:#94a3b8;margin:0 0 1rem;font-size:.85rem}
+.dims{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.75rem}
+.dim{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;cursor:pointer;transition:all .2s}
+.dim:hover{background:rgba(201,168,76,.1);border-color:#c9a84c;transform:translateY(-1px)}
+.dim h4{margin:0 0 .25rem;color:#f8fafc;font-size:.95rem}
+.dim p{color:#94a3b8;font-size:.75rem;margin:0}
+.dim .count{display:inline-block;background:rgba(201,168,76,.2);color:#c9a84c;padding:.15rem .5rem;border-radius:10px;font-size:.7rem;margin-top:.5rem}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#1a1a2e;border:1px solid #c9a84c;border-radius:12px;padding:2rem;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h3{color:#c9a84c;margin:0 0 1rem}
+.modal .close{float:right;cursor:pointer;color:#94a3b8;font-size:1.5rem}
+.axis{background:rgba(0,0,0,.3);border-radius:6px;padding:.75rem;margin:.5rem 0;font-size:.85rem}
+.axis h5{color:#3b82f6;margin:0 0 .25rem;font-size:.85rem}
+.axis ul{color:#94a3b8;margin:.25rem 0;padding-left:1.25rem;font-size:.8rem}
+.legend{display:flex;justify-content:center;gap:1rem;margin:1.5rem 0;font-size:.75rem;color:#94a3b8;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:.25rem}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.btn{display:inline-block;background:linear-gradient(135deg,#c9a84c,#8b5cf6);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem;text-transform:uppercase;font-size:.85rem;text-decoration:none}
+.tabs{display:flex;gap:.5rem;margin:1rem 0;flex-wrap:wrap}
+.tab{padding:.5rem 1rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px;cursor:pointer;color:#94a3b8;font-size:.85rem}
+.tab.active{background:rgba(201,168,76,.2);border-color:#c9a84c;color:#c9a84c;font-weight:700}
+.total{background:linear-gradient(135deg,#c9a84c,#8b5cf6);color:#0a0a0f;padding:1.5rem;border-radius:12px;margin:1.5rem 0;text-align:center;font-weight:800}
+.total .big{font-size:2.5rem;display:block;margin:.5rem 0}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/dimensions.html"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+<h1>🌌 Sovereign Stack — Multidimensional</h1>
+<p class="tagline">13 layers × ~6 dimensions each = 78 dimensions × 390 axes × 1,950 measurable vectors</p>
+
+<div class="total">
+<span class="big">78 / 390 / 1,950</span>
+Dimensions / Axes / Vectors
+</div>
+
+<div class="legend">
+<span><span class="dot" style="background:#ff6b9d"></span>Maternal</span>
+<span><span class="dot" style="background:#a855f7"></span>Identity</span>
+<span><span class="dot" style="background:#3b82f6"></span>Attestation</span>
+<span><span class="dot" style="background:#22c55e"></span>Policy</span>
+<span><span class="dot" style="background:#eab308"></span>Payment</span>
+<span><span class="dot" style="background:#ef4444"></span>Audit</span>
+<span><span class="dot" style="background:#0ea5e9"></span>Council</span>
+<span><span class="dot" style="background:#a855f7"></span>Sectors</span>
+<span><span class="dot" style="background:#22c55e"></span>Frameworks</span>
+<span><span class="dot" style="background:#eab308"></span>Agents</span>
+<span><span class="dot" style="background:#ff6b9d"></span>Town</span>
+<span><span class="dot" style="background:#a855f7"></span>Sovereign</span>
+<span><span class="dot" style="background:#3b82f6"></span>Authority</span>
+</div>
+
+<div class="layer" style="border-color:rgba(255,107,157,.5)">
+<h2>L0 · Maternal <span class="count">6 dimensions</span></h2>
+<p>sovereign.mom · care-as-generative-principle · Charter Article 0</p>
+<div class="dims">
+<div class="dim" onclick="showDim(0,1)"><h4>D0.1 Care Principles</h4><p>Pillar of care, maternal covenant, child-safe, elder-care, species-agnostic</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(0,2)"><h4>D0.2 Protection Modes</h4><p>PII redact, threat block, crisis, emergency, safe-fail</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(0,3)"><h4>D0.3 Empathy Vectors</h4><p>Tone, culture, emotional, compassion, non-judgment</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(0,4)"><h4>D0.4 Trust Building</h4><p>Consistency, vulnerability, honesty, repair, long-term</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(0,5)"><h4>D0.5 Generativity</h4><p>Nurture, teach back, autonomy, emergence, pass forward</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(0,6)"><h4>D0.6 Sovereignty-of-self</h4><p>Refuse, heard, privacy, grow, belong</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(168,85,247,.5)">
+<h2>L1 · Identity <span class="count">8 dimensions</span></h2>
+<p>did:csoai + agent-card.json + 24 identities + Ed25519</p>
+<div class="dims">
+<div class="dim" onclick="showDim(1,1)"><h4>D1.1 DID Format</h4><p>W3C DID v1, did:csoai, did:sov3, did:meok, did:openpatent</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(1,2)"><h4>D1.2 Key Material</h4><p>Ed25519, RSA-4096, secp256k1, P-256, BLS</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(1,3)"><h4>D1.3 Resolution</h4><p>Local, SOV3, Sovereign VM, IPFS, DNS</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(1,4)"><h4>D1.4 Rotation</h4><p>30-day, 90-day, annual, 5-year, event-triggered</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(1,5)"><h4>D1.5 Delegation</h4><p>Single, multi-sig, time-locked, smart-contract, hierarchical</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(1,6)"><h4>D1.6 Verification</h4><p>Online, offline, witness, cryptographic, audit</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(1,7)"><h4>D1.7 Recovery</h4><p>Seed, social, hardware, multi-factor, escrow</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(1,8)"><h4>D1.8 Lifecycle</h4><p>Creation, rotation, renewal, revocation, restoration</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(59,130,246,.5)">
+<h2>L2 · Attestation <span class="count">6 dimensions</span></h2>
+<p>Watchdog Certificate + 5,500+ cumulative + Ed25519-signed</p>
+<div class="dims">
+<div class="dim" onclick="showDim(2,1)"><h4>D2.1 Certificate Type</h4><p>Watchdog, Casa, Audit, Compliance, Sovereignty</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(2,2)"><h4>D2.2 Signature Algorithm</h4><p>Ed25519, ECDSA, RSA-PSS, BLS, Schnorr</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(2,3)"><h4>D2.3 Scope</h4><p>Single, session, persistent, lifetime, conditional</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(2,4)"><h4>D2.4 Auditability</h4><p>Public, private, witness, threshold, zero-knowledge</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(2,5)"><h4>D2.5 Revocation</h4><p>Time-based, event-based, manual, BFT, compromise</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(2,6)"><h4>D2.6 Verification Cost</h4><p>Free, cheap, standard, premium, enterprise</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(34,197,94,.5)">
+<h2>L3 · Policy <span class="count">7 dimensions</span></h2>
+<p>PDCA + 30 crosswalks + EU AI Act + NIST + ISO + DORA + ...</p>
+<div class="dims">
+<div class="dim" onclick="showDim(3,1)"><h4>D3.1 Framework</h4><p>EU AI Act, NIST AI RMF, ISO 42001, ISO 27001, DORA, NIS2, GDPR</p><span class="count">7 axes</span></div>
+<div class="dim" onclick="showDim(3,2)"><h4>D3.2 Sector</h4><p>Cyber, Defence, AI Gov, Healthcare, Finance, Critical Infra</p><span class="count">6 axes</span></div>
+<div class="dim" onclick="showDim(3,3)"><h4>D3.3 Region</h4><p>EU, UK, US, APAC, Global, Sovereign, Multi-region</p><span class="count">7 axes</span></div>
+<div class="dim" onclick="showDim(3,4)"><h4>D3.4 Lifecycle</h4><p>Draft, review, approved, active, superseded, retired, archived</p><span class="count">7 axes</span></div>
+<div class="dim" onclick="showDim(3,5)"><h4>D3.5 Severity</h4><p>Critical, High, Medium, Low, Informational</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(3,6)"><h4>D3.6 Enforcement</h4><p>Voluntary, recommended, required, mandated, enforced</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(3,7)"><h4>D3.7 Audit Trail</h4><p>Immutable, hash-chained, witness, public, time-stamped</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(234,179,8,.5)">
+<h2>L4 · Payment <span class="count">5 dimensions (PLANNED)</span></h2>
+<p>x402 + per-outcome + ISO fee-for-service</p>
+<div class="dims">
+<div class="dim" onclick="showDim(4,1)"><h4>D4.1 Currency</h4><p>Fiat (GBP, EUR, USD), Crypto (USDC, ETH, BTC), Stablecoin, Carbon, Compute</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(4,2)"><h4>D4.2 Method</h4><p>Per-outcome, subscription, per-call, per-cert, barter</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(4,3)"><h4>D4.3 Recipient</h4><p>CSOAI Ltd, Auditor, BFT council, Sovereign fund, Charitable</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(4,4)"><h4>D4.4 Settlement</h4><p>Real-time, daily, weekly, monthly, on-demand</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(4,5)"><h4>D4.5 Pricing Model</h4><p>Fixed, variable, tiered, subsidy, mutual credit</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(239,68,68,.5)">
+<h2>L5 · Audit <span class="count">6 dimensions</span></h2>
+<p>SIGIL chain + 49,127 receipts + Ed25519 + hash-chained + publicly verifiable</p>
+<div class="dims">
+<div class="dim" onclick="showDim(5,1)"><h4>D5.1 Chain Type</h4><p>Hash chain, Merkle tree, DAG, Blockchain, Witness</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(5,2)"><h4>D5.2 Receipt Format</h4><p>JSON, CBOR, Protobuf, XML, YAML</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(5,3)"><h4>D5.3 Retention</h4><p>30d, 1y, 7y, permanent, indefinite</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(5,4)"><h4>D5.4 Access</h4><p>Public, Org, Auditor, C3PAO, Court</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(5,5)"><h4>D5.5 Verification</h4><p>Online, batch, witness, cryptographic, +human</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(5,6)"><h4>D5.6 Forensic</h4><p>Pattern, anomaly, cross-chain, witness, legal</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(14,165,233,.5)">
+<h2>L6 · Council <span class="count">5 dimensions</span></h2>
+<p>BFT multi-stakeholder + 5 pickable setups + 60+ councils + 300+ voters</p>
+<div class="dims">
+<div class="dim" onclick="showDim(6,1)"><h4>D6.1 Size</h4><p>Lite (5), Standard (22), Strict (33), Parliament (100), Custom</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(6,2)"><h4>D6.2 Threshold</h4><p>Simple, supermajority, unanimous, weighted, veto</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(6,3)"><h4>D6.3 Voters</h4><p>Founding, sector, region, Casa-3+, public</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(6,4)"><h4>D6.4 Topics</h4><p>Charter, sector cert, crosswalk, BFT, sovereign</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(6,5)"><h4>D6.5 Latency</h4><p>Real-time, fast, standard, slow, async</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(168,85,247,.5)">
+<h2>L7 · Sectors <span class="count">6 dimensions × 5 sub-dim = 30 axes</span></h2>
+<p>CASA 1-4 + Cyber + Defence + AI Gov + Healthcare + Finance + Critical Infra</p>
+<div class="dims">
+<div class="dim" onclick="showDim(7,1)"><h4>D7.1 Cybersecurity</h4><p>OWASP, MITRE, NIST CSF, ISO 27001, SOC 2</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(7,2)"><h4>D7.2 Defence</h4><p>NATO Six Principles, ITAR, CMMC 2.0, NIST 800-171, STIX/TAXII</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(7,3)"><h4>D7.3 AI Governance</h4><p>EU AI Act, NIST AI RMF, ISO 42001, Asilomar, OECD AI</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(7,4)"><h4>D7.4 Healthcare</h4><p>HIPAA, GDPR (health), FDA SaMD, ISO 13485, HL7 FHIR</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(7,5)"><h4>D7.5 Finance</h4><p>PCI DSS, SOC 2, MiFID II, Basel III, DORA</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(7,6)"><h4>D7.6 Critical Infrastructure</h4><p>NIS2, NERC CIP, IEC 62443, NIST CSF, TSA Pipeline</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(34,197,94,.5)">
+<h2>L8 · Frameworks <span class="count">30 dimensions × 3 axes = 90 axes</span></h2>
+<p>30 crosswalks: EU AI Act + NIST + ISO + DORA + NIS2 + GDPR + HIPAA + SOC 2 + PCI DSS + CMMC 2.0 + UK AISI + 19 more</p>
+<div class="dims">
+<div class="dim" onclick="showDim(8,1)"><h4>D8.1 EU AI Act</h4><p>87 articles · Compliance + Mapping + Remediation</p><span class="count">3 axes</span></div>
+<div class="dim" onclick="showDim(8,2)"><h4>D8.2 NIST AI RMF</h4><p>4 functions (Govern, Map, Measure, Manage)</p><span class="count">3 axes</span></div>
+<div class="dim" onclick="showDim(8,3)"><h4>D8.3 ISO 42001</h4><p>10 clauses · AI management system</p><span class="count">3 axes</span></div>
+<div class="dim" onclick="showDim(8,4)"><h4>D8.4-8.30 Other 27 frameworks</h4><p>Each with 3 axes (Compliance, Mapping, Remediation)</p><span class="count">81 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(234,179,8,.5)">
+<h2>L9 · Agents <span class="count">5 dimensions</span></h2>
+<p>47 sovereign AI personalities · Council + clusters</p>
+<div class="dims">
+<div class="dim" onclick="showDim(9,1)"><h4>D9.1 Persona</h4><p>Council, csoai.org, landlaw, fishkeeper, ... (47 total)</p><span class="count">11 axes</span></div>
+<div class="dim" onclick="showDim(9,2)"><h4>D9.2 Role</h4><p>Strategic, Operational, Tactical, Support, Specialist</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(9,3)"><h4>D9.3 Lifecycle</h4><p>Birth, Active, Sleep, Wake, Retire</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(9,4)"><h4>D9.4 Memory</h4><p>Short-term, Long-term, Episodic, Semantic, Procedural</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(9,5)"><h4>D9.5 Sovereignty</h4><p>Local, SOV3, Sovereign VM, BFT, Distributed</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(255,107,157,.5)">
+<h2>L10 · Town <span class="count">5 dimensions</span></h2>
+<p>Awareness v2 (5 senses, 5 FSM, 37 gestures) + Absorption v3 (13 domains, 50 GCP)</p>
+<div class="dims">
+<div class="dim" onclick="showDim(10,1)"><h4>D10.1 Awareness</h4><p>5 senses, 5-state FSM, 37 gestures, PII, multi-person</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(10,2)"><h4>D10.2 Absorption</h4><p>13 domains, per-user overlays, cultural, cross-language, 50 GCP</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(10,3)"><h4>D10.3 Interaction</h4><p>Text, voice, gesture, vision, touch</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(10,4)"><h4>D10.4 Personality</h4><p>Voice, values, quirks, memory, growth</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(10,5)"><h4>D10.5 Lifecycle</h4><p>Birth, Active, Evolve, Retire, Legacy</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(168,85,247,.5)">
+<h2>L11 · Sovereign <span class="count">5 dimensions</span></h2>
+<p>M4 Mac + GCP VM + 33 apex .ai + sovereign.mom</p>
+<div class="dims">
+<div class="dim" onclick="showDim(11,1)"><h4>D11.1 Infrastructure</h4><p>M4 Mac, GCP VM, Vercel, Sovereign Mesh, Air-gapped</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(11,2)"><h4>D11.2 Compute</h4><p>Local CPU, Local GPU, Cloud VM, Distributed, Edge</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(11,3)"><h4>D11.3 Storage</h4><p>Local SSD, Local HDD, Cloud, IPFS, Encrypted backup</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(11,4)"><h4>D11.4 Network</h4><p>Local, VPN, Tor, Standard, Mesh</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(11,5)"><h4>D11.5 Region</h4><p>UK, EU, US, APAC, Sovereign</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="layer" style="border-color:rgba(59,130,246,.5)">
+<h2>L12 · Authority <span class="count">5 dimensions</span></h2>
+<p>Magna Carta for AI + Charter Article 0 + 22 Founding Council</p>
+<div class="dims">
+<div class="dim" onclick="showDim(12,1)"><h4>D12.1 Charter</h4><p>Article 0, 1-83, living, ratified, annual</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(12,2)"><h4>D12.2 Compliance</h4><p>Self-attested, council-vetted, regulator, court, international</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(12,3)"><h4>D12.3 Enforcement</h4><p>Voluntary, peer, council, legal, sovereign</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(12,4)"><h4>D12.4 Recognition</h4><p>Self, industry, regulator, sovereign, international</p><span class="count">5 axes</span></div>
+<div class="dim" onclick="showDim(12,5)"><h4>D12.5 Evolution</h4><p>Immutable, council-vote, living, AI-evolve, distributed</p><span class="count">5 axes</span></div>
+</div>
+</div>
+
+<div class="modal" id="dimModal">
+<div class="modal-content">
+<span class="close" onclick="closeDim()">×</span>
+<div id="dimContent"></div>
+</div>
+</div>
+
+<div style="text-align:center;margin:3rem 0">
+<a href="#"" class="btn">🏠 Home</a>
+<a href="#"" class="btn" style="background:transparent;color:#c9a84c;border:1px solid rgba(201,168,76,.5);text-decoration:none">🌉 Bridge</a>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees. ISO fee-for-service model ONLY. <strong>CA3O is the CMKC for AI.</strong><br>
+<em>🌌 78 dimensions · 390 axes · 1,950 measurable vectors</em>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+<script>
+const DIM_DATA = {
+  '0-1': {name:'D0.1 Care Principles', axes:['Pillar of care-as-generative','Maternal covenant adherence','Child-safe defaults','Elder-care awareness','Species-agnostic care'], example:'"AI should protect humans like a mother protects a child" — Charter Article 0'},
+  '0-2': {name:'D0.2 Protection Modes', axes:['PII redaction (per state)','Threat blocking','Crisis intervention','Emergency override','Safe-fail default'], example:'Nick in Yorkshire, 555-1234 → [name] in [location], [phone] when state=OWNER_UNKNOWN'},
+  '0-3': {name:'D0.3 Empathy Vectors', axes:['Tone calibration','Cultural sensitivity','Emotional attunement','Compassion timing','Non-judgment space'], example:'Saudi vs Japanese vs Brazilian same text → 3 different cultural responses'},
+  '0-4': {name:'D0.4 Trust Building', axes:['Consistency over time','Vulnerability appropriate','Honesty calibration','Repair after breach','Long-term relationship'], example:'5,500+ Watchdog Certs hash-chained = consistent audit trail'},
+  '0-5': {name:'D0.5 Generativity', axes:['Nurture growth','Teach back','Encourage autonomy','Celebrate emergence','Pass it forward'], example:'MEOK ONE birth ceremony = 7 questions → companion emerges'},
+  '0-6': {name:'D0.6 Sovereignty-of-self', axes:['Right to refuse','Right to be heard','Right to privacy','Right to grow','Right to belong'], example:'End user can pick BFT setup, can vote, can refuse compliance'},
+  '1-1': {name:'D1.1 DID Format', axes:['W3C DID v1','did:csoai namespace','did:sov3','did:meok','did:openpatent'], example:'did:csoai:foundation:csai'},
+  '1-2': {name:'D1.2 Key Material', axes:['Ed25519 (default)','RSA-4096','secp256k1','P-256','BLS aggregate'], example:'Ed25519 signatures on every Watchdog Cert'},
+  '1-3': {name:'D1.3 Resolution', axes:['Local (offline)','SOV3 substrate','Sovereign VM','IPFS','DNS'], example:'agent-card.json at csoai.org/.well-known/'},
+  '1-4': {name:'D1.4 Rotation', axes:['30-day','90-day','Annual','5-year','Event-triggered'], example:'CASA-4 has 5-year rotation'},
+  '1-5': {name:'D1.5 Delegation', axes:['Single-sig','Multi-sig (BFT)','Time-locked','Smart-contract','Hierarchical'], example:'BFT council = multi-sig threshold'},
+  '1-6': {name:'D1.6 Verification', axes:['Online','Offline','Witness','Cryptographic','Audit'], example:'Anyone can verify Watchdog Cert at csoai.org/verify'},
+  '1-7': {name:'D1.7 Recovery', axes:['Seed phrase','Social recovery','Hardware key','Multi-factor','Sovereign escrow'], example:'24-word seed phrase = last resort recovery'},
+  '1-8': {name:'D1.8 Lifecycle', axes:['Creation (genesis)','Rotation','Renewal','Revocation','Restoration'], example:'Cert expires → renewal → new Ed25519 key'},
+  '2-1': {name:'D2.1 Certificate Type', axes:['Watchdog Cert','Casa Cert','Audit Cert','Compliance Cert','Sovereignty Cert'], example:'5,500+ Watchdog Certs issued'},
+  '2-2': {name:'D2.2 Signature Algorithm', axes:['Ed25519','ECDSA P-256','RSA-PSS','BLS aggregate','Schnorr'], example:'Default Ed25519 for speed + security'},
+  '2-3': {name:'D2.3 Scope', axes:['Single decision','Session (24h)','Persistent (annual)','Lifetime','Conditional'], example:'Single decision for one AI action'},
+  '2-4': {name:'D2.4 Auditability', axes:['Public','Private','Witness','Threshold','Zero-knowledge'], example:'Public verify URL for every cert'},
+  '2-5': {name:'D2.5 Revocation', axes:['Time-based','Event-based','Manual','BFT','Compromise'], example:'BFT council votes to revoke (e.g., org acquired by bad actor)'},
+  '2-6': {name:'D2.6 Verification Cost', axes:['Free','Cheap','Standard','Premium','Enterprise'], example:'Public verify = free'},
+  '3-1': {name:'D3.1 Framework', axes:['EU AI Act','NIST AI RMF','ISO 42001','ISO 27001','DORA','NIS2','GDPR'], example:'EU AI Act 4 Aug 2026 enforcement'},
+  '3-2': {name:'D3.2 Sector', axes:['Cyber','Defence','AI Gov','Healthcare','Finance','Critical Infra'], example:'5 industry pages live'},
+  '3-3': {name:'D3.3 Region', axes:['EU','UK','US','APAC','Global','Sovereign','Multi-region'], example:'UK is the home (Companies House 16939677)'},
+  '3-4': {name:'D3.4 Lifecycle', axes:['Draft','Review','Approved','Active','Superseded','Retired','Archived'], example:'Charter Article 0 = Active (ratified 4 Jul)'},
+  '3-5': {name:'D3.5 Severity', axes:['Critical','High','Medium','Low','Informational'], example:'Critical = immediate action (Charter violation)'},
+  '3-6': {name:'D3.6 Enforcement', axes:['Voluntary','Recommended','Required','Mandated','Enforced'], example:'CASA-1 = voluntary; CASA-4 = enforced (legal)'},
+  '3-7': {name:'D3.7 Audit Trail', axes:['Immutable','Hash-chained','Witness','Public','Time-stamped'], example:'SIGIL chain = all 5 above'},
+};
+function showDim(layer, dim) {
+  const key = layer + '-' + dim;
+  const d = DIM_DATA[key];
+  if (!d) { alert('Data not loaded for ' + key); return; }
+  const html = '<h3>' + d.name + '</h3><p style="color:#94a3b8"><em>Example: ' + d.example + '</em></p><h4 style="color:#3b82f6">Axes</h4><ul style="color:#f8fafc;list-style:none;padding:0">';
+  for (const a of d.axes) {
+    html += '<li class="axis" style="margin:.5rem 0">✓ ' + a + '</li>';
+  }
+  html += '</ul><p style="margin-top:1rem;color:#94a3b8;font-size:.8rem">All dimensions queryable via <code>sov_dimension_query(layer, dim)</code></p>';
+  document.getElementById('dimContent').innerHTML = html;
+  document.getElementById('dimModal').classList.add('active');
+}
+function closeDim() {
+  document.getElementById('dimModal').classList.remove('active');
+}
+</script>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

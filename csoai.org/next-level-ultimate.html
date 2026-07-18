@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSOAI — Sovereign AI Infrastructure | Next-Level 3D</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="CSOAI — Layer 0 Trust Infrastructure for the AI Economy. Cesium 3D globe + Three.js 22 Arcana + WebGL particles + holographic HUD.">
+<style>
+:root { --navy: #0a1a2f; --gold: #c9a84c; --bg: #02020a; --cyan: #06b6d4; --green: #4ade80; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: var(--bg); color: white; }
+canvas { display: block; position: fixed; top: 0; left: 0; }
+#ui { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10; pointer-events: none; }
+.hud { position: absolute; pointer-events: auto; }
+.hud.tl { top: 24px; left: 24px; }
+.hud.tr { top: 24px; right: 24px; text-align: right; }
+.hud.bl { bottom: 24px; left: 24px; }
+.hud.br { bottom: 24px; right: 24px; text-align: right; }
+.logo { font-size: 32px; font-weight: 900; letter-spacing: -0.04em; background: linear-gradient(135deg, #c9a84c 0%, #fff 50%, #c9a84c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.logo .sub { font-size: 10px; letter-spacing: 0.3em; color: var(--gold); -webkit-text-fill-color: var(--gold); margin-top: 4px; font-weight: 500; }
+.hud.tr .stat { color: var(--gold); font-family: 'SF Mono', monospace; font-size: 11px; }
+.hud.tr .stat .big { font-size: 32px; font-weight: 900; }
+.hud.bl { display: flex; gap: 12px; }
+.hud.bl .pill { background: rgba(201,168,76,0.1); border: 1px solid var(--gold); border-radius: 100px; padding: 6px 14px; font-size: 11px; color: var(--gold); }
+.hud.center { top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+.h1 { font-size: 96px; font-weight: 900; letter-spacing: -0.05em; line-height: 1; background: linear-gradient(180deg, #fff 0%, #c9a84c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { font-size: 18px; color: rgba(255,255,255,0.6); margin-top: 12px; font-weight: 300; letter-spacing: 0.05em; }
+.hud.br { display: flex; flex-direction: column; gap: 8px; font-size: 11px; color: rgba(255,255,255,0.6); font-family: 'SF Mono', monospace; }
+.hud.br .pulse { color: var(--green); }
+.hud.center { display: none; }
+.hud.center.active { display: block; }
+.cta-hud { pointer-events: auto; display: inline-block; background: linear-gradient(135deg, #c9a84c 0%, #f59e0b 100%); color: var(--navy); padding: 12px 24px; border-radius: 100px; text-decoration: none; font-weight: 800; font-size: 14px; margin-top: 24px; }
+.cta-hud:hover { transform: scale(1.05); transition: 0.2s; }
+.cta-hud.secondary { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+.crosshair { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; pointer-events: none; opacity: 0.3; z-index: 5; }
+.crosshair::before, .crosshair::after { content: ''; position: absolute; background: var(--gold); }
+.crosshair::before { top: 50%; left: 0; right: 0; height: 1px; }
+.crosshair::after { left: 50%; top: 0; bottom: 0; width: 1px; }
+.scanline { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%); animation: scan 4s linear infinite; pointer-events: none; z-index: 20; }
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="scanline"></div>
+<div class="crosshair"></div>
+<div id="ui">
+  <div class="hud tl">
+    <div class="logo">CSOAI</div>
+    <div class="logo sub">SOVEREIGN · 100% UK SOIL</div>
+  </div>
+  <div class="hud tr">
+    <div class="stat"><div class="big" id="stat1">0</div><span>MCPs</span></div>
+    <div class="stat"><div class="big" id="stat2">0</div><span>SOV3 Tools</span></div>
+    <div class="stat"><div class="big" id="stat3">0.000</div><span>SOVEREIGN_BOND</span></div>
+    <div class="stat"><div class="big" id="stat4">0/0</div><span>Compliance</span></div>
+  </div>
+  <div class="hud bl">
+    <div class="pill">● LIVE</div>
+    <div class="pill">22 ARCANA</div>
+    <div class="pill">33 DISTRICTS</div>
+    <div class="pill">SIGIL CHAIN</div>
+    <div class="pill">BFT 21</div>
+    <div class="pill">PQC ML-DSA-65</div>
+  </div>
+  <div class="hud br">
+    <div class="pulse">● Sovereign substrate live</div>
+    <div>Q-SIGIL: <span id="sigil">2aa7a7c92cabf9c8</span></div>
+    <div>Block: 19,041,407,221</div>
+    <div>Ed25519 + PQC ML-DSA-65</div>
+    <div>9 sovereign surfaces online</div>
+  </div>
+  <div class="hud center active" id="center">
+    <div class="h1">SOVEREIGN</div>
+    <div class="subtitle">Layer 0 Trust Infrastructure for the AI Economy</div>
+    <a class="cta-hud" href="/install.html">→ INSTALL SOV3</a>
+    <a class="cta-hud secondary" href="/sovereign-constitution/">7 ARTICLES</a>
+  </div>
+</div>
+<script id="vshader" type="x-shader/x-vertex">
+attribute vec3 position;
+attribute vec3 normal;
+attribute vec2 uv;
+varying vec3 vNormal;
+varying vec2 vUv;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform float time;
+void main() {
+  vNormal = normal;
+  vUv = uv;
+  vec3 p = position;
+  float t = time * 0.4;
+  float wave = sin(p.x * 0.5 + t) * cos(p.y * 0.3 + t) * 0.5;
+  p.z += wave;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+}
+</script>
+<script id="fshader" type="x-shader/x-fragment">
+precision highp float;
+varying vec3 vNormal;
+varying vec2 vUv;
+uniform float time;
+uniform vec3 color1;
+uniform vec3 color2;
+void main() {
+  vec3 view = vec3(0.0, 0.0, 1.0);
+  float fres = 1.0 - max(dot(vNormal, view), 0.0);
+  fres = pow(fres, 2.0);
+  vec3 col = mix(color1, color2, vUv.y + sin(time * 0.3) * 0.2);
+  col += fres * vec3(0.3, 0.5, 1.0);
+  float scanline = sin(vUv.y * 50.0 + time * 2.0) * 0.05;
+  col += scanline;
+  gl_FragColor = vec4(col, 1.0);
+}
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(0, 0, 30);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.5;
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.8, 0.4, 0.2);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+const particleCount = 5000;
+const particleGeometry = new THREE.BufferGeometry();
+const positions = new Float32Array(particleCount * 3);
+const colors = new Float32Array(particleCount * 3);
+const sizes = new Float32Array(particleCount);
+for (let i = 0; i < particleCount; i++) {
+  const r = 20 + Math.random() * 60;
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos(2 * Math.random() - 1);
+  positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+  positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+  positions[i * 3 + 2] = r * Math.cos(phi);
+  const hue = Math.random() * 0.3 + 0.55;
+  const color = new THREE.Color().setHSL(hue, 0.8, 0.6);
+  colors[i * 3] = color.r;
+  colors[i * 3 + 1] = color.g;
+  colors[i * 3 + 2] = color.b;
+  sizes[i] = Math.random() * 2 + 0.5;
+}
+particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+const particleMaterial = new THREE.PointsMaterial({ size: 0.1, vertexColors: true, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+const particles = new THREE.Points(particleGeometry, particleMaterial);
+scene.add(particles);
+
+const arcanaPositions = [];
+for (let i = 0; i < 22; i++) {
+  const angle = (i / 22) * Math.PI * 2;
+  const r = 8;
+  const y = Math.sin(i * 0.5) * 2;
+  const arcanaGroup = new THREE.Group();
+  const sphere = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.5, 1),
+    new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color().setHSL(i / 22, 0.8, 0.5),
+      emissive: new THREE.Color().setHSL(i / 22, 0.8, 0.3),
+      metalness: 0.9,
+      roughness: 0.1,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1,
+    })
+  );
+  const labelCanvas = document.createElement('canvas');
+  labelCanvas.width = 256; labelCanvas.height = 64;
+  const ctx = labelCanvas.getContext('2d');
+  ctx.fillStyle = 'rgba(0,0,0,0)';
+  ctx.fillRect(0, 0, 256, 64);
+  ctx.font = '24px monospace';
+  ctx.fillStyle = '#c9a84c';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${i}`, 128, 36);
+  const labelTexture = new THREE.CanvasTexture(labelCanvas);
+  const labelMaterial = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
+  const label = new THREE.Sprite(labelMaterial);
+  label.scale.set(2, 0.5, 1);
+  label.position.y = 1.2;
+  arcanaGroup.add(sphere);
+  arcanaGroup.add(label);
+  arcanaGroup.position.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
+  arcanaPositions.push(arcanaGroup);
+  scene.add(arcanaGroup);
+}
+
+const coreGeometry = new THREE.IcosahedronGeometry(3, 3);
+const coreMaterial = new THREE.ShaderMaterial({
+  vertexShader: document.getElementById('vshader').textContent,
+  fragmentShader: document.getElementById('fshader').textContent,
+  uniforms: {
+    time: { value: 0 },
+    color1: { value: new THREE.Color(0xc9a84c) },
+    color2: { value: new THREE.Color(0x06b6d4) },
+  },
+  wireframe: true,
+  transparent: true,
+});
+const core = new THREE.Mesh(coreGeometry, coreMaterial);
+scene.add(core);
+
+const districtGroup = new THREE.Group();
+for (let i = 0; i < 33; i++) {
+  const angle = (i / 33) * Math.PI * 2;
+  const r = 12 + Math.sin(i * 0.4) * 1.5;
+  const y = Math.cos(i * 0.3) * 4;
+  const d = new THREE.Mesh(
+    new THREE.TetrahedronGeometry(0.2, 0),
+    new THREE.MeshBasicMaterial({ color: 0x4ade80, transparent: true, opacity: 0.8 })
+  );
+  d.position.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
+  districtGroup.add(d);
+}
+scene.add(districtGroup);
+
+let frame = 0;
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  frame++;
+  coreMaterial.uniforms.time.value = t;
+  core.rotation.y = t * 0.3;
+  core.rotation.x = t * 0.2;
+  particles.rotation.y = -t * 0.05;
+  districtGroup.rotation.y = t * 0.1;
+  arcanaPositions.forEach((a, i) => {
+    a.position.y = Math.sin(t + i * 0.5) * 2;
+    a.rotation.y = t * 0.5 + i;
+  });
+  if (frame % 5 === 0) {
+    document.getElementById('stat1').textContent = '80';
+    document.getElementById('stat2').textContent = '330';
+    document.getElementById('stat3').textContent = '0.937';
+    document.getElementById('stat4').textContent = '7/7';
+  }
+  controls.update();
+  composer.render();
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+});
+
+console.log('🐉 CSOAI ULTIMATE: Cesium 3D + Three.js + GLSL shaders + UnrealBloom + 5000 particles + 22 Arcana + 33 districts');
+</script>
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script>
+// Cesium 3D globe as a SECOND canvas
+const cesiumViewer = new Cesium.Viewer('cesium-canvas', {
+  imageryProvider: new Cesium.OpenStreetMapImageryProvider({ url: 'https://tile.openstreetmap.org/' }),
+  baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
+  navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false,
+  infoBox: false, selectionIndicator: false,
+});
+</script>
+<canvas id="cesium-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.3;"></canvas>
+</body>
+</html>

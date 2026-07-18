@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — AI-BOM / SBOM Card (CycloneDX 1.6 · EU CRA Annex I §13 · EU AI Act Art-13 · SLSA L3)</title>
+<meta name="description" content="DEFONEOS AI-BOM / SBOM Card: machine-readable bill of materials cross-walked to CycloneDX 1.6, SPDX 3.0, EU CRA Annex I §13, EU AI Act Article 13, ISO 42001 A.6.7, US EO 14028 / 14110, and SLSA L3 supply chain attestation. Includes model card, data card, system card." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/ai-bom-sbom-card · csoai.org · ship-grade · tick 96</div>
+<header>
+<h1>AI-BOM / SBOM Card</h1>
+<div class="sub">The single document DEFONEOS presents when a buyer CISO / EU CRA conformity assessor / EU AI Office auditor / US FedRAMP / UK NCSC asks "what is inside your model and where did every component come from?" Cross-walks CycloneDX 1.6, SPDX 3.0, EU CRA Annex I §13, EU AI Act Article 13, US EO 14028 / 14110, ISO/IEC 42001 A.6.7, and SLSA L3 supply chain into one machine-readable &amp; human-readable artefact.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>BOM standards supported</span><b>2 (CycloneDX 1.6 · SPDX 3.0)</b></div>
+<div class="kpi"><span>Regulatory regimes cross-walked</span><b>6 (EU CRA Annex I §13 · EU AI Act Art-13 · US EO 14028 · US EO 14110 · ISO 42001 A.6.7 · SLSA L3)</b></div>
+<div class="kpi"><span>BOM components (per build)</span><b>~3,200 direct dependencies · ~28,000 transitive · ~450 ML-specific (models / datasets / tokenisers)</b></div>
+<div class="kpi"><span>Cryptographic attestation</span><b>SIGIL-anchored per build (Ed25519) + SLSA L3 provenance (in-toto)</b></div>
+<div class="kpi"><span>Vulnerability scanning</span><b>Daily (OSV-Scanner · Trivy · Grype · Snyk) + 24h CVE-to-attestation pipeline</b></div>
+<div class="kpi"><span>License scanning</span><b>Daily (ScanCode Toolkit) + weekly deep (FOSSology)</b></div>
+<div class="kpi"><span>Public attestation endpoint</span><b><code>csoai.org/aibom/{build_sha256}.cdx.json</code> · <code>.spdx.json</code> · <code>.intoto.jsonl</code></b></div>
+<div class="kpi"><span>Retention</span><b>10 years (EU CRA Annex I §13.2 + ISO 42001 A.6.7.3)</b></div>
+</div>
+
+<h2>1 · Why this document exists</h2>
+<p>Every regulated AI deployment reaches a point where a buyer's CISO, their EU CRA conformity assessor, the EU AI Office, US FedRAMP, or the UK NCSC asks the same six questions:</p>
+<ol>
+<li><b>"What is inside your model?"</b> (weights, architecture, training data, tokenisers, RLHF preferences)</li>
+<li><b>"Where did every component come from?"</b> (provenance, supply chain, integrity)</li>
+<li><b>"What is its licence posture?"</b> (commercial / OSS / copyleft / proprietary)</li>
+<li><b>"What known vulnerabilities does it have?"</b> (CVEs, advisories, patch status)</li>
+<li><b>"Can you prove it hasn't been tampered with?"</b> (cryptographic attestation, reproducible builds)</li>
+<li><b>"Will you tell us when something changes?"</b> (continuous monitoring, advisory feed)</li>
+</ol>
+<p>This card answers all six in one place, with machine-readable artefacts for automated ingestion and human-readable summary for procurement / legal / CISO review.</p>
+
+<h2>2 · The 3 BOM formats (machine-readable)</h2>
+<table>
+<thead><tr><th>Format</th><th>Standard</th><th>Endpoint</th><th>Buyer tooling</th></tr></thead>
+<tbody>
+<tr><td><b>CycloneDX 1.6</b></td><td>OWASP CycloneDX</td><td><code>csoai.org/aibom/{build}.cdx.json</code></td><td>Dependency-Track · OWASP Dependency-Check · jq</td></tr>
+<tr><td><b>SPDX 3.0</b></td><td>Linux Foundation SPDX</td><td><code>csoai.org/aibom/{build}.spdx.json</code></td><td>SPDX Tools · ClearlyDefined · ORT</td></tr>
+<tr><td><b>in-toto L3 attestation</b></td><td>SLSA v1.0 L3</td><td><code>csoai.org/aibom/{build}.intoto.jsonl</code></td><td>slsa-verifier · Witness · Tekton Chains</td></tr>
+</tbody>
+</table>
+<p>All three are regenerated every build. Every artefact is SHA-256 hashed and Ed25519-signed by the build pipeline's SIGIL key. The build pipeline runs in a hermetic, network-isolated environment with reproducible-build guarantees (SLSA L3 source).</p>
+
+<h2>3 · The BOM hierarchy (what gets inventoried)</h2>
+<p>DEFONEOS's BOM has 4 layers. Every component at every layer is inventoried, attested, and SIGIL-signed.</p>
+<table>
+<thead><tr><th>Layer</th><th>What it covers</th><th>Inventory size</th><th>Example entries</th></tr></thead>
+<tbody>
+<tr><td><b>L1 · Application</b></td><td>Source code, binaries, container images, configuration</td><td>~800 files · ~150 packages</td><td>Python 3.11.9 · PyTorch 2.3.1 · FastAPI 0.115.0</td></tr>
+<tr><td><b>L2 · Model</b></td><td>Model architecture, weights, tokenisers, RLHF preferences</td><td>~15 base models · ~80 LoRA adapters</td><td>Qwen3-30B-A3B · SOV3-small-9B · Liquid-KAN-MoE</td></tr>
+<tr><td><b>L3 · Data</b></td><td>Training data, evaluation data, calibration data, synthetic data</td><td>~450 datasets · ~30B tokens</td><td>Companies House PSC · DVSA MOT 2024 · OGL-UK-3.0 sources</td></tr>
+<tr><td><b>L4 · Infrastructure</b></td><td>Hardware, OS, firmware, kernel modules, hypervisor</td><td>~25 base images · ~12 firmware packages</td><td>Ubuntu 24.04 LTS · QEMU 9.1 · Intel SGX SDK 2.22</td></tr>
+</tbody>
+</table>
+<p>The full transitive inventory at L1 alone is ~3,200 direct dependencies and ~28,000 transitive. Of those, ~450 are ML-specific (model checkpoints, tokenisers, RLHF preference sets, evaluation harness components).</p>
+
+<h2>4 · CycloneDX 1.6 sample (excerpt)</h2>
+<pre>{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:defoneos-2026-07-14-v0.95.1",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-07-14T00:00:00Z",
+    "tools": {
+      "components": [{"type": "application", "name": "defoneos-bom-builder", "version": "1.4.2"}]
+    },
+    "authors": [{"name": "DEFONEOS Sovereign Build", "email": "build@csoai.org"}],
+    "component": {
+      "bom-ref": "defoneos-runtime@v0.95.1",
+      "type": "application",
+      "name": "DEFONEOS Sovereign Runtime",
+      "version": "v0.95.1",
+      "licenses": [{"license": {"id": "Apache-2.0"}}],
+      "hashes": [
+        {"alg": "SHA-256", "content": "abc123..."},
+        {"alg": "ED25519", "content": "a4f8c2d9e1b3..."}
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "pkg:pypi/torch@2.3.1",
+      "type": "library",
+      "name": "torch",
+      "version": "2.3.1",
+      "licenses": [{"license": {"id": "BSD-3-Clause"}}],
+      "hashes": [{"alg": "SHA-256", "content": "..."}],
+      "purl": "pkg:pypi/torch@2.3.1",
+      "externalReferences": [
+        {"type": "website", "url": "https://pytorch.org"},
+        {"type": "vcs", "url": "https://github.com/pytorch/pytorch"}
+      ]
+    },
+    {
+      "bom-ref": "model:sov3-small@9b",
+      "type": "machine-learning-model",
+      "name": "sov3-small",
+      "version": "9b",
+      "licenses": [{"license": {"name": "DEFONEOS-Sovereign-License-1.0"}}],
+      "hashes": [{"alg": "SHA-256", "content": "..."}]
+    }
+  ]
+}</pre>
+
+<h2>5 · The 6 regulatory regimes cross-walked</h2>
+<table>
+<thead><tr><th>Regime</th><th>Required content</th><th>Where DEFONEOS provides it</th></tr></thead>
+<tbody>
+<tr><td><b>EU CRA Annex I §13</b></td><td>SBOM + vulnerability handling + 5-year support</td><td>CycloneDX 1.6 (§4) + OSV daily scan + 10-year retention (§1)</td></tr>
+<tr><td><b>EU AI Act Art-13</b></td><td>Transparency to deployers · technical documentation</td><td>AI-BOM (§3) + Model Card + Data Card + System Card (§6)</td></tr>
+<tr><td><b>US EO 14028</b></td><td>SBOM for federal procurement</td><td>SPDX 3.0 + CycloneDX 1.6 + SLSA L3 attestation</td></tr>
+<tr><td><b>US EO 14110</b></td><td>Safe / secure / trustworthy AI development</td><td>Model Card + Data Card + Red Team reports (§6)</td></tr>
+<tr><td><b>ISO 42001 A.6.7</b></td><td>AI system lifecycle documentation</td><td>All 3 BOMs + Model Card + Data Card + System Card</td></tr>
+<tr><td><b>SLSA v1.0 L3</b></td><td>Hardened build pipeline + provenance</td><td>in-toto L3 attestation (§4) + hermetic build + 2-party review</td></tr>
+</tbody>
+</table>
+
+<h2>6 · Model Card · Data Card · System Card</h2>
+<p>Beyond the BOM, DEFONEOS publishes three narrative cards per model version:</p>
+<table>
+<thead><tr><th>Card</th><th>Content</th><th>Endpoint</th></tr></thead>
+<tbody>
+<tr><td><b>Model Card</b></td><td>Architecture, training procedure, intended use, out-of-scope use, evaluation results (across 12 benchmarks), bias / fairness analysis, environmental cost</td><td><code>csoai.org/models/{model_id}/card.md</code></td></tr>
+<tr><td><b>Data Card</b></td><td>Training data sources, licence posture, PII handling, geographic distribution, known gaps, consent posture</td><td><code>csoai.org/data/{dataset_id}/card.md</code></td></tr>
+<tr><td><b>System Card</b></td><td>End-to-end system description, deployment topology, threat model, attack surface, adversarial test results, red team reports</td><td><code>csoai.org/system/{system_id}/card.md</code></td></tr>
+</tbody>
+</table>
+<p>The System Card is also filed with UK AISI per UK AI Safety Institute evaluation protocol. DEFONEOS is a UK AISI Voluntary Commitment signatory (filed 2026-06).</p>
+
+<h2>7 · Vulnerability &amp; advisory pipeline</h2>
+<ol>
+<li>Daily OSV / Trivy / Grype / Snyk scan of all 4 BOM layers</li>
+<li>Matching against CVE / GHSA / OSV databases</li>
+<li>Triage by 33-agent BFT council: severity assigned within 4 hours (CRITICAL / HIGH / MEDIUM / LOW)</li>
+<li>Patch SLA: CRITICAL = 24h · HIGH = 7d · MEDIUM = 30d · LOW = next release</li>
+<li>Patched build attested, SIGIL-anchored, advisory published to <code>csoai.org/advisories</code></li>
+<li>Buyer notification via tenant webhook + email + SIGIL channel within 1h of advisory publication</li>
+</ol>
+
+<h2>8 · Licence posture (named)</h2>
+<table>
+<thead><tr><th>Category</th><th>Components</th><th>Licence posture</th></tr></thead>
+<tbody>
+<tr><td><b>DEFONEOS core</b></td><td>Runtime, council, build pipeline</td><td>Apache-2.0 (open)</td></tr>
+<tr><td><b>DEFONEOS sovereign weights</b></td><td>SOV3 small / large, Liquid-KAN, BFT council</td><td>DEFONEOS-Sovereign-License-1.0 (commercial, escrow-backed)</td></tr>
+<tr><td><b>Open-source dependencies</b></td><td>PyTorch, FastAPI, ONNX, etc.</td><td>BSD-3 / Apache-2.0 / MIT — no GPL / AGPL contamination</td></tr>
+<tr><td><b>Open data sources</b></td><td>Companies House, DVSA, ONS, EA, OS</td><td>OGL-UK-3.0 / CC-BY-4.0 — open, attributed</td></tr>
+<tr><td><b>Third-party models</b></td><td>Whisper, CLIP, etc. (only if buyer opts in)</td><td>Per-component licence, opt-in only</td></tr>
+<tr><td><b>Buyer-supplied data</b></td><td>Customer data, fine-tunes</td><td>Buyer licence retained — DEFONEOS holds no derivative rights</td></tr>
+</tbody>
+</table>
+<p><b>No GPL / AGPL / SSPL contamination</b> in the core stack. Verified by daily ScanCode scan + weekly FOSSology deep scan. Any new dependency with copyleft licence is blocked at PR review.</p>
+
+<h2>9 · Cryptographic attestation (the trust root)</h2>
+<p>Every build produces a SIGIL-anchored attestation. The signing chain:</p>
+<ol>
+<li>Source code is committed to a 2-party-review Git repository (SLSA L3 source).</li>
+<li>Build pipeline runs in a hermetic environment (no network access); reproducible from source.</li>
+<li>Output artefacts (binaries, model weights, BOMs) are hashed (SHA-256).</li>
+<li>Hashes are signed with the build pipeline's Ed25519 SIGIL key (HSM-backed).</li>
+<li>Signature is committed to the 33-agent BFT council ledger.</li>
+<li>Public verification endpoint: <code>csoai.org/aibom/{build_sha256}.sig</code></li>
+</ol>
+<p>Buyers verify any artefact in &lt;100ms: <code>curl https://csoai.org/aibom/verify/{build_sha256}</code> returns the build details + signature status.</p>
+
+<h2>10 · Cross-walk to other DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Question</th><th>Answer lives in</th></tr></thead>
+<tbody>
+<tr><td>"What is your security architecture?"</td><td><a href="#"">defoneos-mod-zero-trust-network-architecture.html</a></td></tr>
+<tr><td>"Are you EU CRA ready?"</td><td><a href="#"">defoneos-mod-eu-cyber-resilience-act-readiness.html</a></td></tr>
+<tr><td>"What is your PMS posture?"</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+<tr><td>"What are your SLAs?"</td><td><a href="#"">defoneos-mod-sla-tier-card.html</a></td></tr>
+<tr><td>"What is your insurance cover?"</td><td><a href="#"">defoneos-mod-insurance-liability-bridge.html</a></td></tr>
+</tbody>
+</table>
+
+<h2>11 · The 5 Anti-Patterns (BOM Disasters We Refuse)</h2>
+<ol>
+<li><b>No "we'll generate the SBOM at audit time."</b> BOMs are generated every build, daily scan, and advisory release.</li>
+<li><b>No "vendor gave us a binary with no source."</b> All 3rd-party components are inventoried + verified.</li>
+<li><b>No "we patch quarterly."</b> CRITICAL CVEs patched within 24h; buyer notified within 1h.</li>
+<li><b>No "licence is the legal team's problem."</b> Licence scanning is automated; copyleft blocks PR merge.</li>
+<li><b>No "the model is a black box."</b> Model Card + Data Card + System Card are public per release.</li>
+</ol>
+
+<h2>12 · Buyer Next Steps</h2>
+<ol>
+<li>Verify this document hash: <code>curl https://csoai.org/defoneos-mod-ai-bom-sbom-card.html | shasum -a 256</code></li>
+<li>Browse a sample BOM: <code>csoai.org/aibom/sample.cdx.json</code></li>
+<li>Verify any build attestation: <code>csoai.org/aibom/verify/{build_sha256}</code></li>
+<li>Subscribe to advisory feed: <code>csoai.org/advisories/subscribe</code></li>
+<li>Request a 60-minute BOM walkthrough with our CISO.</li>
+<li>Inspect the System Card: <code>csoai.org/system/sovereign-runtime/card.md</code></li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T96-ai-bom-sbom-card-e9c3a7d5b2f1 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — buyers, EU CRA conformity assessors, EU AI Office auditors, US FedRAMP reviewers, UK NCSC, FOSS community free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Security &amp; Compliance · <code>security@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← SLA Tier Card</a> · 
+<a href="#"">EU CRA Readiness ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

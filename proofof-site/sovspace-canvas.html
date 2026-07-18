@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SovSpace Canvas - Live Cesium + 24 Hatches - MEOK OS</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{padding:1rem 2rem 0.5rem;text-align:center}
+  .hero h1{color:#3ca6f7;font-size:1.8rem;margin-bottom:.3rem}
+  .hero p{color:#aaa;font-size:.85rem;max-width:780px;margin:0 auto}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem 2rem}
+  .grid{display:grid;grid-template-columns:1.5fr 1fr;gap:1rem;margin:1rem 0}
+  @media (max-width:1024px){.grid{grid-template-columns:1fr}}
+  .panel{background:#1a1a1a;padding:1rem;border-radius:12px;border-left:4px solid #3ca6f7}
+  .panel h2{color:#3ca6f7;margin-bottom:.7rem;font-size:1.05rem}
+  #cesiumhost{width:100%;height:540px;border-radius:8px;border:1px solid #3ca6f7;background:#02060f}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin-bottom:1rem}
+  .stat{background:#0a0a0a;padding:.7rem;border-radius:6px;border:1px solid #3ca6f7;text-align:center}
+  .stat .v{color:#3ca6f7;font-size:1.2rem;font-weight:bold;font-family:monospace}
+  .stat .l{color:#888;font-size:.7rem;margin-top:.2rem}
+  .stage{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;margin:.5rem 0 1rem}
+  .stage button{background:#0a0a0a;color:#3ca6f7;padding:.5rem .8rem;border:1px solid #3ca6f7;border-radius:5px;font-family:inherit;font-size:.78rem;cursor:pointer}
+  .stage button.active{background:#3ca6f7;color:#000;font-weight:bold}
+  .companion{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;margin:.3rem 0}
+  .companion button{background:#0a0a0a;color:#aaa;padding:.35rem .55rem;border:1px solid #555;border-radius:4px;font-family:inherit;font-size:.7rem;cursor:pointer}
+  .companion button.active{background:#22c55e;color:#000;border-color:#22c55e;font-weight:bold}
+  .result{background:#02060f;padding:.7rem;border-radius:6px;margin:.5rem 0;font-family:monospace;font-size:.72rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap;word-break:break-all;max-height:340px;overflow-y:auto}
+  .red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.5rem .7rem;margin:.3rem 0;font-size:.75rem;color:#ef4444}
+  .green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.5rem .7rem;margin:.3rem 0;font-size:.75rem;color:#22c55e}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:1.5rem;border-radius:12px;max-width:1100px;margin:1rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1rem;color:#fbbf24;font-style:italic;margin:.5rem 0;font-weight:bold}
+  .canvas-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+  .canvas-controls button{background:#3ca6f7;color:#000;padding:.5rem 1rem;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-family:inherit}
+  .canvas-controls button:hover{filter:brightness(1.1)}
+  .legend{font-size:.7rem;color:#888;margin-top:.3rem;line-height:1.4}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/sovspace-canvas.html">SovSpace Canvas</a>
+<a href="/jspace-canvas.html">J-Space Canvas</a>
+<a href="/sovspace.html">SovSpace</a>
+<a href="/jspace-master.html">J-Space</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>SovSpace Canvas</h1>
+<p>Live Cesium globe + 24-companion catalog + 6-stage hatch lifecycle + 33-hive map. Care Floor 0.95.</p>
+</section>
+
+<div class="container">
+
+<div class="stat-grid">
+<div class="stat"><div class="v">24</div><div class="l">companions</div></div>
+<div class="stat"><div class="v">6</div><div class="l">stages</div></div>
+<div class="stat"><div class="v">33</div><div class="l">hives</div></div>
+<div class="stat"><div class="v">7</div><div class="l">active UK</div></div>
+<div class="stat"><div class="v">0.95</div><div class="l">Care Floor</div></div>
+<div class="stat"><div class="v">∞</div><div class="l">Cesium OSM (free)</div></div>
+</div>
+
+<div class="grid">
+
+<div class="panel">
+<h2>Cesium Globe (33 sovereign hives)</h2>
+<div id="cesiumhost"></div>
+<div class="canvas-controls">
+<button onclick="flyHome()">UK cluster</button>
+<button onclick="flyToHive(0)">London</button>
+<button onclick="flyToHive(1)">Manchester</button>
+<button onclick="flyToHive(2)">Edinburgh</button>
+<button onclick="flyToHive(3)">iOK Farm M4</button>
+<button onclick="flyToHive(4)">Dounreay</button>
+<button onclick="flyToHive(5)">Corsham</button>
+<button onclick="flyToHive(6)">GCP meok-backend</button>
+</div>
+<p class="legend">OSM + NASA GIBS free path (no Cesium Ion token needed). Red marker = UK active sovereign. Orange = EU active. Yellow = planned.</p>
+</div>
+
+<div class="panel">
+<h2>Hatch Companion (24 / 6 stages)</h2>
+<p style="color:#aaa;font-size:.8rem">Click a stage, then a companion. See that companion's lifecycle state + sovereign concept stream.</p>
+
+<div class="stage" id="stages">
+<button class="active" data-i="0">Hatching</button>
+<button data-i="1">Growing</button>
+<button data-i="2">Anchoring</button>
+<button data-i="3">Emerging</button>
+<button data-i="4">Witnessing</button>
+<button data-i="5">Sovereign</button>
+</div>
+
+<div class="companion" id="companions"></div>
+
+<div id="companion-detail">
+<div style="color:#888;font-size:.78rem;padding:.5rem;text-align:center">Choose a stage, then a companion, then click Inspect</div>
+</div>
+
+<button onclick="inspectCompanion()" style="background:#22c55e;color:#000;padding:.5rem 1rem;border:none;border-radius:5px;font-weight:bold;cursor:pointer;width:100%;margin:.5rem 0">Inspect companion (live API)</button>
+
+<div class="result" id="api-result">Live calls: <code>/api/sovspace</code> returns globe state, hatch lifecycle, 24-companion catalog, concept stream, canon.</div>
+
+</div>
+
+</div>
+
+<div class="grid">
+<div class="panel">
+<h2>5 SovSpace primitives (live)</h2>
+<button onclick="callAPIs()" style="background:#3ca6f7;color:#000;padding:.5rem 1rem;border:none;border-radius:5px;font-weight:bold;cursor:pointer;margin-bottom:.5rem">Run all 5 SovSpace APIs</button>
+<div class="result" id="sovspace-result">Click above to run all 5 endpoints live.</div>
+</div>
+
+<div class="panel">
+<h2>Hard lines preserved</h2>
+<div class="green-line">Care Floor 0.95 (every drop human-reviewed)</div>
+<div class="green-line">Article 0 binding (Sovereign-by-construction)</div>
+<div class="green-line">OSM-only globe (no Ion token, no foreign API call)</div>
+<div class="green-line">24-companion catalog is a STUB (per EAT-705 hold: no overclaim until sovereignty measured)</div>
+<div class="red-line">NEVER biometric facial recognition or identity surface</div>
+<div class="red-line">NEVER personal-surveillance pattern (Charter Article 15)</div>
+</div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"Inner sovereign substrate. Outer world-sim.<br>The bridge: DAIMON — every hop SIGIL-signed.<br>24 companions + 6 stages + 33 hives — sovereign bounds held."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) - 149 sovereign MCPs - 603 HTML pages - Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:0 0 2rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px"><strong>18 days to 2 Aug 2026 EU AI Act</strong> - CSOAI Ltd (UK 16939677) - Crown lineage 1795-3025</p>
+
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
+<script src="/sovspace_globe.js"></script>
+</body>
+</html>

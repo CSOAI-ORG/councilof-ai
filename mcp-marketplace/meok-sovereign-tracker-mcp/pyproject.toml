@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-tracker-mcp"
+version = "1.0.0"
+description = "Sovereign Tracker MCP - GitHub-style PR + issue tracker for cross-team coordination. 12 Generals as contributors. PR merge requires 3 BFT approvals."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,80 @@
+:root {
+  --bg: #0b0f14;
+  --card: #11161d;
+  --line: #1d2530;
+  --ink: #e6edf3;
+  --muted: #8b95a3;
+  --accent: #5eead4;
+  --green: #10b981;
+  --red: #ef4444;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+/* Header */
+.hdr { padding: 20px 0; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(11,15,20,0.85); backdrop-filter: blur(10px); z-index: 10; }
+.hdr-inner { display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
+.brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.nav { display: flex; gap: 24px; }
+.nav a { color: var(--muted); font-size: 14px; }
+.nav a:hover { color: var(--ink); text-decoration: none; }
+
+/* Hero */
+.hero { padding: 120px 0 80px; }
+.tag { display: inline-block; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+h1 { font-size: 72px; line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 24px; }
+h1 .accent { color: var(--accent); }
+.lede { font-size: 22px; color: var(--muted); max-width: 720px; margin: 0 0 40px; }
+.cta-row { display: flex; gap: 16px; }
+.btn { padding: 16px 28px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; border: 0; }
+.btn-primary { background: var(--accent); color: #001210; }
+.btn-primary:hover { filter: brightness(1.05); text-decoration: none; }
+.btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn-secondary:hover { border-color: var(--accent); text-decoration: none; }
+
+/* Sections */
+section { padding: 80px 0; }
+section h2 { font-size: 44px; letter-spacing: -0.02em; margin: 0 0 16px; }
+section .lede { font-size: 18px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 40px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+.card h3 { margin: 0 0 8px; font-size: 17px; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; }
+.card .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: rgba(94,234,212,0.12); color: var(--accent); font-size: 11px; font-weight: 600; margin-bottom: 8px; }
+
+/* Pricing */
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 40px; }
+.price-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+.price-card.featured { border-color: var(--accent); box-shadow: 0 0 30px rgba(94,234,212,0.1); }
+.price-card h3 { margin: 0 0 4px; font-size: 18px; }
+.price-card .price { font-size: 32px; font-weight: 700; margin: 12px 0; }
+.price-card .price small { color: var(--muted); font-size: 14px; font-weight: 400; }
+.price-card ul { list-style: none; padding: 0; margin: 16px 0 0; }
+.price-card li { font-size: 13px; color: var(--muted); padding: 4px 0; padding-left: 16px; position: relative; }
+.price-card li:before { content: "✓"; position: absolute; left: 0; color: var(--accent); }
+
+/* Trust */
+.badges { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.badge { padding: 8px 16px; border: 1px solid var(--line); border-radius: 8px; font-size: 12px; color: var(--muted); }
+
+/* Footer */
+.ftr { padding: 40px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+.ftr-inner { display: flex; justify-content: space-between; align-items: center; }
+.ftr a { color: var(--muted); }
+
+/* Hero live verify demo */
+.verify-demo { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin-top: 48px; max-width: 720px; }
+.verify-demo input { width: 100%; padding: 12px 16px; background: #0a0e13; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; font-family: ui-monospace, monospace; font-size: 13px; }
+.verify-demo .actions { display: flex; gap: 12px; margin-top: 12px; }
+.verify-demo .out { margin-top: 16px; padding: 16px; background: #0a0e13; border-radius: 8px; font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); white-space: pre-wrap; word-break: break-all; }

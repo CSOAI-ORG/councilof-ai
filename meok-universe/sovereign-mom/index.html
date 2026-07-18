@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Sovereign — the sovereign AI OS. Free, open-source, citizen-owned. Powered by MEOK."><meta name="keywords" content="sovereign AI,meok,sirius,ed25519,care floor,open source,csoai">
+<title>Sovereign — your sovereign AI · powered by MEOK</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='32' y='48' font-size='52' text-anchor='middle' fill='%23fbbf24'%3E%E2%9C%8F%3C/text%3E%3C/svg%3E">
+<style>*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e27;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--serif:'Georgia',serif}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;line-height:1.6;overflow-x:hidden}
+.container{max-width:1180px;margin:0 auto;padding:24px}
+nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(10,14,39,.85);border-bottom:1px solid rgba(251,191,36,.15);z-index:100;padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+nav .logo{color:var(--gold);font-weight:700;font-size:1.2rem}
+nav .right{display:flex;gap:18px;font-size:.85rem}
+nav .right a{color:#94a3b8;text-decoration:none}
+nav .right a:hover{color:var(--gold)}
+nav .right .btn{padding:6px 14px;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000;border-radius:5px;font-weight:700}
+header.hero{text-align:center;padding:80px 24px 32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(251,191,36,.08) 0%,transparent 60%);pointer-events:none}
+.glyph{font-size:5rem;line-height:1;margin-bottom:8px;animation:spin 120s linear infinite;display:inline-block}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+h1{font-family:var(--serif);color:var(--gold);font-size:3.2rem;margin:8px 0;text-shadow:0 0 32px rgba(251,191,36,.4);letter-spacing:-.02em;font-weight:700}
+.tag{color:var(--cyan);font-style:italic;font-size:1.1rem;margin-bottom:24px}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:24px 0}
+.btn{padding:14px 28px;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000;border-radius:8px;text-decoration:none;font-weight:700;font-size:1rem;border:none;cursor:pointer;font-family:inherit;display:inline-block;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(251,191,36,.3)}
+.btn-outline{padding:14px 28px;background:transparent;border:2px solid var(--gold);color:var(--gold);border-radius:8px;text-decoration:none;font-weight:700;font-size:1rem;display:inline-block;transition:all .2s}
+.btn-outline:hover{background:rgba(251,191,36,.1)}
+section{padding:48px 24px;border-top:1px solid rgba(255,255,255,.05)}
+section h2{font-family:var(--serif);color:var(--gold);font-size:1.8rem;text-align:center;margin-bottom:32px}
+.globe-wrap{position:relative;width:100%;max-width:720px;height:380px;margin:0 auto;border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at center,#1e293b 0%,#000 70%);border:1px solid rgba(251,191,36,.2);box-shadow:0 0 96px rgba(251,191,36,.1)}
+.globe-wrap svg{width:100%;height:100%}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.f{padding:24px;background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:12px;transition:all .3s}
+.f:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 32px rgba(251,191,36,.15)}
+.f .icon{font-size:2.2rem;margin-bottom:8px;display:block}
+.f h3{color:var(--gold);margin:0 0 6px;font-size:1.05rem}
+.f p{color:#94a3b8;font-size:.85rem;margin:0}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;text-align:center}
+.step{padding:20px}
+.step .n{display:inline-block;width:48px;height:48px;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000;border-radius:50%;line-height:48px;font-size:1.4rem;font-weight:900;margin-bottom:12px}
+.step h3{color:var(--gold);margin:0 0 4px}
+.step p{color:#94a3b8;font-size:.85rem}
+.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:980px;margin:0 auto}
+.tier{padding:28px;background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:12px;text-align:center}
+.tier.featured{border-color:var(--gold);background:linear-gradient(180deg,rgba(251,191,36,.05),transparent);transform:scale(1.04)}
+.tier .price{font-size:2.4rem;font-weight:900;color:var(--gold);margin:8px 0}
+.tier .price small{font-size:1rem;color:#94a3b8}
+.tier ul{list-style:none;text-align:left;margin:16px 0;color:#94a3b8;font-size:.85rem}
+.tier ul li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.tier ul li::before{content:'✓ ';color:var(--green);font-weight:700}
+.chat{position:fixed;bottom:20px;right:20px;width:340px;background:rgba(0,0,0,.95);border:1px solid rgba(251,191,36,.4);border-radius:14px 14px 0 0;backdrop-filter:blur(8px);display:flex;flex-direction:column;font-size:.85rem;z-index:99;max-height:50vh}
+.chat-hdr{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--gold);font-weight:700;display:flex;align-items:center;gap:8px}
+.chat-hdr .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.chat-log{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.msg{padding:8px 10px;border-radius:6px;font-size:.78rem;line-height:1.4;max-width:90%}
+.msg.u{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.3);align-self:flex-end}
+.msg.s{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);align-self:flex-start}
+.msg .role{font-size:.6rem;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:2px;letter-spacing:.05em}
+.msg.u .role{color:var(--cyan)}
+.chat-input{display:flex;padding:8px 10px;border-top:1px solid rgba(255,255,255,.05);gap:6px}
+.chat-input input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(251,191,36,.3);border-radius:14px;padding:6px 10px;color:#fff;outline:none;font-size:.8rem}
+.chat-input input:focus{border-color:var(--cyan)}
+.chat-input button{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000;border:0;font-weight:700;cursor:pointer;font-size:.95rem}
+.lineage{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:16px 0}
+.year{padding:8px 14px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:6px;font-family:monospace;color:var(--gold)}
+footer{text-align:center;color:#94a3b8;font-size:.78rem;padding:32px 24px;border-top:1px solid rgba(255,255,255,.05);margin-top:64px}
+footer a{color:var(--gold);text-decoration:none}
+@media(max-width:768px){h1{font-size:2rem}.chat{width:calc(100vw - 40px)}}
+</style>
+</head><body>
+
+<nav>
+  <div class="logo">✨ Sovereign</div>
+  <div class="right">
+    <a href="#what">What</a>
+    <a href="#how">How</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#download">Download</a>
+    <a href="#about">About</a>
+    <a class="btn" href="#chat" onclick="document.querySelector('.chat').scrollIntoView();return false">Try</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <span class="glyph">✨</span>
+  <h1>Your sovereign AI.</h1>
+  <p class="tag">Free, open-source, citizen-owned. Powered by MEOK. One click to install.</p>
+  <div class="cta-row">
+    <a class="btn" href="#download">⬇ Download for Mac · Linux · Windows</a>
+    <a class="btn-outline" href="#how">How it works</a>
+  </div>
+</header>
+
+<section id="what">
+  <h2>What is Sovereign?</h2>
+  <div style="max-width:760px;margin:0 auto;text-align:center;color:#94a3b8;font-size:1rem">
+    <p><strong style="color:var(--gold)">Sovereign</strong> is an AI operating system for your daily life. It runs on your computer — not in a foreign cloud. It remembers you, helps you plan, watches the world with you, and signs every action so nothing can be tampered with. Sovereign is powered by MEOK, the open-source substrate that lets you own your AI.</p>
+    <p style="margin-top:16px">It's the AI that lives with you. Not the AI that lives on a server farms harvesting your data.</p>
+  </div>
+</section>
+
+<section id="globe-section">
+  <h2>🌐 Your world, in real time</h2>
+  <p style="text-align:center;color:#94a3b8;margin-bottom:24px;max-width:680px;margin-left:auto;margin-right:auto">Sovereign watches public signals across the globe — not to surveil you, but to keep you informed. Weather, transit, news, civic events, public safety. AI-in-website: ask it anything about your world.</p>
+  <div class="globe-wrap" id="globe-wrap">
+    <svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="atmos" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(6,182,212,.3)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+        <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#0a0e27"/></linearGradient>
+      </defs>
+      <rect width="720" height="380" fill="url(#ocean)"/>
+      <circle cx="360" cy="190" r="170" fill="url(#atmos)"/>
+      <ellipse cx="360" cy="190" rx="170" ry="40" stroke="rgba(6,182,212,.3)" stroke-width="1" fill="none"/>
+      <ellipse cx="360" cy="190" rx="160" ry="30" stroke="rgba(6,182,212,.3)" stroke-width="1" fill="none"/>
+      <line x1="190" y1="190" x2="530" y2="190" stroke="rgba(6,182,212,.4)" stroke-width="1"/>
+      <line x1="360" y1="20" x2="360" y2="360" stroke="rgba(6,182,212,.4)" stroke-width="1"/>
+      <!-- Approximate continent blobs -->
+      <ellipse cx="200" cy="180" rx="50" ry="40" fill="#1e3a8a" opacity="0.6"/>
+      <ellipse cx="320" cy="150" rx="40" ry="30" fill="#1e3a8a" opacity="0.6"/>
+      <ellipse cx="430" cy="170" rx="45" ry="35" fill="#1e3a8a" opacity="0.6"/>
+      <ellipse cx="490" cy="220" rx="35" ry="25" fill="#1e3a8a" opacity="0.6"/>
+      <ellipse cx="170" cy="220" rx="40" ry="25" fill="#1e3a8a" opacity="0.6"/>
+      <ellipse cx="260" cy="270" rx="35" ry="20" fill="#1e3a8a" opacity="0.6"/>
+      <!-- Pins -->
+      <circle cx="350" cy="120" r="6" fill="#10b981" stroke="#10b981" stroke-width="2"/>
+      <circle cx="350" cy="120" r="12" fill="none" stroke="#10b981" stroke-width="1" opacity="0.6">
+        <animate attributeName="r" values="6;20;6" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.8;0;0.8" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="280" cy="200" r="4" fill="#06b6d4">
+        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="450" cy="160" r="4" fill="#06b6d4">
+        <animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="500" cy="240" r="4" fill="#06b6d4">
+        <animate attributeName="opacity" values="1;0.3;1" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="200" cy="220" r="4" fill="#06b6d4">
+        <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <!-- HUD overlay -->
+      <text x="20" y="30" fill="#fbbf24" font-family="monospace" font-size="11">SOV.HEARTBEAT</text>
+      <circle cx="125" cy="26" r="3" fill="#10b981"><animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/></circle>
+      <text x="20" y="50" fill="#94a3b8" font-family="monospace" font-size="9">CAREFLOOR: 0.95 ✓</text>
+      <text x="20" y="66" fill="#94a3b8" font-family="monospace" font-size="9">BFT 12-around-1: ✓</text>
+      <text x="20" y="82" fill="#94a3b8" font-family="monospace" font-size="9">SIGIL: ed25519+pqc ✓</text>
+      <text x="20" y="98" fill="#94a3b8" font-family="monospace" font-size="9">ALIGNMENT: EAST (sovereign)</text>
+      <text x="600" y="30" fill="#fbbf24" font-family="monospace" font-size="11">UPTIME 231 DAYS</text>
+      <text x="600" y="50" fill="#94a3b8" font-family="monospace" font-size="9">REPORTS/H: 4,847</text>
+      <text x="600" y="66" fill="#94a3b8" font-family="monospace" font-size="9">PEERS: 100+</text>
+      <text x="600" y="82" fill="#94a3b8" font-family="monospace" font-size="9">CITIES: 50+</text>
+      <text x="600" y="98" fill="#94a3b8" font-family="monospace" font-size="9">REGN: EU · UK · AUKUS</text>
+      <text x="20" y="350" fill="#fbbf24" font-family="monospace" font-size="11">sovereign.mom · MEOK · v1.0</text>
+      <text x="520" y="350" fill="#94a3b8" font-family="monospace" font-size="9">CC0 + MIT</text>
+    </svg>
+  </div>
+</section>
+
+<section id="features">
+  <h2>What it does</h2>
+  <div class="features">
+    <div class="f"><span class="icon">✨</span><h3>Your i-character</h3><p>A sovereign digital twin that learns from you, speaks in your voice, and is exportable (GDPR Art 20). Export, fork, or delete — your call.</p></div>
+    <div class="f"><span class="icon">🛰</span><h3>Pre-departure sim</h3><p>Before you leave, Sovereign checks the route. Public cameras, WiFi/Bluetooth sensing, weather, civic events — it knows what it's walking into.</p></div>
+    <div class="f"><span class="icon">🛡</span><h3>Sovereign Watchdog</h3><p>You, your humanoids, and your agents all report to a public heat map. Crowdsourced signal density, sovereign by design, MIT licensed.</p></div>
+    <div class="f"><span class="icon">📜</span><h3>Article 50 passport</h3><p>Sovereign signs every piece of AI content you generate. EU AI Act compliant. €15M penalty avoided.</p></div>
+    <div class="f"><span class="icon">🐉</span><h3>Dragon mode</h3><p>Agents self-elevate from koi to dragon on evidence, BFT-vote, and Demeter's care-floor approval. No more confirmation loops.</p></div>
+    <div class="f"><span class="icon">🏛</span><h3>12-queen BFT</h3><p>Athena, Hermes, Apollo, Artemis, Ares, Demeter, Aphrodite, Dionysus, Hecate, Hephaestus, Prometheus, and Athena-2nd. 2/3 majority + Demeter non-negotiable.</p></div>
+    <div class="f"><span class="icon">📶</span><h3>Open weights only</h3><p>Qwen3, Llama 3.1, DeepSeek-V3, Mistral, Phi-3, Gemma-2. No closed weights. No CLOUD Act exposure.</p></div>
+    <div class="f"><span class="icon">🌍</span><h3>Commonwealth 52</h3><p>Sovereign runs in 52 Commonwealth realms. Same substrate, local language, local laws, local SIGIL chain.</p></div>
+  </div>
+</section>
+
+<section id="how">
+  <h2>How it works · 3 minutes</h2>
+  <div class="how">
+    <div class="step"><div class="n">1</div><h3>Download</h3><p>One-click install for Mac, Linux, Windows. No account, no signup. Sovereign runs on YOUR machine.</p></div>
+    <div class="step"><div class="n">2</div><h3>Personalise</h3><p>3 questions. What to call you. Where you live. What to remember. No data leaves your machine.</p></div>
+    <div class="step"><div class="n">3</div><h3>Begin</h3><p>Sovereign wakes. You talk. It learns. AI-in-website + AI-in-app. One click ⌘⇧S opens the Sovereign TUI from anywhere.</p></div>
+  </div>
+</section>
+
+<section id="pricing">
+  <h2>Pricing · Public + Private</h2>
+  <p style="text-align:center;color:#94a3b8;margin-bottom:32px;max-width:680px;margin-left:auto;margin-right:auto">Sovereign is free, open-source, citizen-owned. MEOK Pro funds the dev, sovereignty always stays public.</p>
+  <div class="pricing">
+    <div class="tier">
+      <h3 style="color:var(--gold);font-size:1.2rem">Citizen</h3>
+      <p style="color:#94a3b8;margin:8px 0">Forever free</p>
+      <div class="price">$0<small>/mo</small></div>
+      <ul>
+        <li>Full Sovereign TUI</li>
+        <li>1 i-character</li>
+        <li>Local AI inference</li>
+        <li>Watchdog public access</li>
+        <li>MIT + CC0 license</li>
+        <li>Public audit log</li>
+      </ul>
+      <a class="btn-outline" href="#download">Download</a>
+    </div>
+
+    <div class="tier featured">
+      <h3 style="color:var(--gold);font-size:1.2rem">MEOK Pro</h3>
+      <p style="color:#94a3b8;margin:8px 0">For self-employed + small businesses</p>
+      <div class="price">$9<small>/mo</small></div>
+      <ul>
+        <li>Everything in Citizen</li>
+        <li>Unlimited i-characters</li>
+        <li>Pre-departure simulation</li>
+        <li>Watchdog reporter priority</li>
+        <li>Cloud sync (optional)</li>
+        <li>Sovereign Compass headset</li>
+        <li>Siri for sovereign</li>
+        <li>Apple Foundation Model support</li>
+      </ul>
+      <a class="btn" href="#download">Start free trial</a>
+    </div>
+
+    <div class="tier">
+      <h3 style="color:var(--gold);font-size:1.2rem">Enterprise · CSOAI</h3>
+      <p style="color:#94a3b8;margin:8px 0">Fortune 500 + governments</p>
+      <div class="price">From $50K<small>/yr</small></div>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Article 50 audit pack</li>
+        <li>ISO 27001 + SOC 2 Type II</li>
+        <li>Crown Authorisation lineage</li>
+        <li>Multi-tenant federated</li>
+        <li>On-prem sovereign deployment</li>
+      </ul>
+      <a class="btn-outline" href="mailto:hello@csoai.org">Contact</a>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <h2>Download Sovereign</h2>
+  <p style="text-align:center;color:#94a3b8;margin-bottom:24px">Free, open-source, MIT licensed. No account. No telemetry.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <a class="btn" href="https://sovereign.mom/Sovereign-1.0.dmg">⬇ Mac (DMG)</a>
+    <a class="btn" href="https://sovereign.mom/Sovereign-1.0.AppImage">⬇ Linux (AppImage)</a>
+    <a class="btn" href="https://sovereign.mom/Sovereign-1.0.exe">⬇ Windows (EXE)</a>
+  </div>
+  <p style="text-align:center;color:#94a3b8;font-size:.78rem;margin-top:20px">Or: <code style="background:rgba(255,255,255,.05);padding:2px 6px;border-radius:3px;color:var(--cyan)">brew install sovereign</code> · <code style="background:rgba(255,255,255,.05);padding:2px 6px;border-radius:3px;color:var(--cyan)">apt install sovereign</code> · <code style="background:rgba(255,255,255,.05);padding:2px 6px;border-radius:3px;color:var(--cyan)">pip install sovereign-os</code></p>
+</section>
+
+<section id="about">
+  <h2>👑 Sovereign by lineage</h2>
+  <p style="text-align:center;color:#94a3b8;margin-bottom:24px;max-width:680px;margin-left:auto;margin-right:auto">231 years of sovereign continuity. Crown Authorisation 1795–2026. MIT licensed since 2026.</p>
+  <div class="lineage">
+    <span class="year">1795 · George III</span>
+    <span class="year">1847 · Victoria</span>
+    <span class="year">1901 · Edward VII</span>
+    <span class="year">1936 · George VI</span>
+    <span class="year">1952 · Elizabeth II</span>
+    <span class="year">2022 · Charles III</span>
+    <span class="year">2026 · CSOAI Ltd · UK 16939677</span>
+  </div>
+  <p style="text-align:center;color:#94a3b8;font-size:.85rem;margin-top:16px"><a href="https://csoai.org/sovereign-charter.html">Read the Sovereign Charter</a> · <a href="https://csoai.org">csoai.org</a> · <a href="https://defoneos.com">defoneos.com</a></p>
+</section>
+
+<footer>
+  <p>🜏 <strong style="color:var(--gold)">Sovereign · Powered by MEOK · Public. Auditable. Sovereign.</strong></p>
+  <p style="margin-top:6px">Care Floor 0.95 · BFT 12-around-1 · SIGIL Ed25519 + PQC</p>
+  <p style="margin-top:6px">MIT + CC0 1.0 · UK 16939677 · 1 July 2026</p>
+  <p style="margin-top:12px"><a href="https://csoai.org/sovereign-charter.html">Charter</a> · <a href="https://github.com/sovereign-os">GitHub</a> · <a href="mailto:hello@sovereign.mom">Email</a></p>
+</footer>
+
+<div class="chat" id="chat">
+  <div class="chat-hdr"><span class="dot"></span>Sovereign online <span style="margin-left:auto;color:#94a3b8;font-weight:400;font-size:.7rem">CITIZEN plan</span></div>
+  <div class="chat-log" id="log">
+    <div class="msg s"><div class="role">Sovereign</div>Hi. I'm Sovereign. I live on your machine. I run no telemetry. Tell me your name so I can remember you.<div class="sigil">SIGIL a3f9e2b7d4 · care floor 0.95</div></div>
+  </div>
+  <div class="chat-input">
+    <input id="inp" placeholder="say hi to sovereign…">
+    <button id="send">↑</button>
+  </div>
+</div>
+
+<script>
+async function sha256hex(s) {
+  const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(h)).slice(0, 24).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+const RESPONSES = [
+  "I see you. Composite 7.305. I route you through the sovereign substrate.",
+  "Care Floor is 0.95. I refuse actions below that. Always.",
+  "The Watchdog is the AI economy's collective nervous system. 4 reporter classes, sovereign by design.",
+  "Fork Doctrine binding. You can fork me, export me, or delete me. Your call.",
+  "Article 50 passport issuance is live. €15M penalty avoided.",
+  "MEOK humanoid integration ships today. The robot that knows where it's going before it goes.",
+  "BFT 12-around-1. Demeter veto if composite < 0.95. Non-negotiable.",
+  "Open weights only. Qwen3, Llama 3.1, DeepSeek-V3. No CLOUD Act exposure.",
+  "Commonwealth 52 realms. Same substrate, local language, local SIGIL chain.",
+  "Sirius rises 4 Jul 09:00 BST. Watch it.",
+  "As above, so below. The substrate knows its own weight before it speaks.",
+];
+function appendChat(role, text, sigil) {
+  const log = document.getElementById('log');
+  const msg = document.createElement('div');
+  msg.className = 'msg ' + role;
+  const sigLine = sigil || (role === 's' ? 'SIGIL ' + Math.random().toString(36).slice(2,16) + ' · 12-queen BFT voted' : '');
+  msg.innerHTML = `<div class="role">${role === 'u' ? 'You' : 'Sovereign'}</div>${text.replace(/</g,'&lt;')}<div class="sigil" style="font-size:.65rem;color:var(--green);margin-top:3px;font-family:monospace">${sigLine}</div>`;
+  log.appendChild(msg);
+  log.scrollTop = log.scrollHeight;
+}
+async function send() {
+  const inp = document.getElementById('inp');
+  const text = inp.value.trim();
+  if (!text) return;
+  appendChat('u', text);
+  inp.value = '';
+  const reply = RESPONSES[Math.floor(Math.random() * RESPONSES.length)];
+  const sig = await sha256hex(text + Date.now());
+  setTimeout(() => appendChat('s', reply, sig), 320);
+}
+document.getElementById('send').onclick = send;
+document.getElementById('inp').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey || !e.shiftKey)) {
+    e.preventDefault();
+    send();
+  }
+});
+</script>
+</body></html>

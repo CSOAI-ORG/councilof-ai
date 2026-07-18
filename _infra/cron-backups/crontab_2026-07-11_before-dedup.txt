@@ -1,0 +1,81 @@
+
+*/2 * * * * /Users/nicholas/clawd/scripts/meok-guardian.sh >> /tmp/meok_guardian.log 2>&1
+# Hermes 24/7 Business Operations (kimi-k2.6)
+# MEOK Revenue Automation
+# Shift 1: Night (00:00) — Maintenance, batch processing
+# Shift 2: Morning (06:00) — Content, outreach, leads
+# Shift 3: Afternoon (12:00) — Development, MCP building
+# Shift 4: Evening (18:00) — Review, planning, testing
+# Weekly: Full README batch optimization (Sundays at 02:00)
+# Weekly: Vast GPU health check (Mondays at 03:00)
+0 */6 * * * /Users/nicholas/clawd/meok/scripts/backup.sh >> /tmp/meok_backup.log 2>&1
+# [disabled 2026-06-23: target missing] 0 0 * * * /bin/bash -c 'export HOME=/Users/nicholas && export PATH=/Users/nicholas/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin && bash /Users/nicholas/.kimi/execution-scripts/hermes-daily-ops.sh >> /Users/nicholas/.hermes/logs/ops-cron.log 2>&1'
+# [disabled 2026-06-23: target missing] 0 12 * * * /bin/bash -c 'export HOME=/Users/nicholas && export PATH=/Users/nicholas/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin && bash /Users/nicholas/.kimi/execution-scripts/hermes-daily-ops.sh >> /Users/nicholas/.hermes/logs/ops-cron.log 2>&1'
+# [disabled 2026-06-23: target missing] 0 12 * * * cd /Users/nicholas/.kimi/execution-scripts/modules && /usr/bin/python3 ghostwriter_pipeline.py >> /Users/nicholas/.kimi/execution-scripts/daily-reports/cron.log 2>&1
+# [disabled 2026-06-23: target missing] 0 15 * * * cd /Users/nicholas/.kimi/execution-scripts/modules && /usr/bin/python3 seo_optimizer.py >> /Users/nicholas/.kimi/execution-scripts/daily-reports/cron.log 2>&1
+# [disabled 2026-06-23: target missing] 0 18 * * * /bin/bash -c 'export HOME=/Users/nicholas && export PATH=/Users/nicholas/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin && bash /Users/nicholas/.kimi/execution-scripts/hermes-daily-ops.sh >> /Users/nicholas/.hermes/logs/ops-cron.log 2>&1'
+# [disabled 2026-06-23: target missing] 0 18 * * * cd /Users/nicholas/.kimi/execution-scripts/modules && /usr/bin/python3 master_revenue_dashboard.py >> /Users/nicholas/.kimi/execution-scripts/daily-reports/cron.log 2>&1
+0 2 * * 0 /opt/homebrew/bin/bash -c 'export HOME=/Users/nicholas && export PATH=/Users/nicholas/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin && cd /Users/nicholas/clawd/mcp-marketplace && for repo in */; do cd "$repo" 2>/dev/null || continue; if [ -d .git ] && ! grep -q "GitHub stars" README.md 2>/dev/null; then git stash 2>/dev/null; git pull origin main --rebase 2>/dev/null; git stash pop 2>/dev/null; fi; cd ..; done >> /Users/nicholas/.hermes/logs/readme-batch.log 2>&1'
+0 3 * * * cd /Users/nicholas/clawd/sovereign-temple && psql -U sovereign -d sovereign_memory -c "DELETE FROM memory_episodes WHERE importance_score < 0.19 AND memory_type = 'insight';" && psql -U sovereign -d sovereign_memory -c "VACUUM memory_episodes;" >> /tmp/disk-prune.log 2>&1
+0 3 * * 1 /opt/homebrew/bin/bash -c 'export HOME=/Users/nicholas && export PATH=/Users/nicholas/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin && ssh -o StrictHostKeyChecking=no -p 10794 root@ssh2.vast.ai "ollama list && nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv" >> /Users/nicholas/.hermes/logs/vast-health.log 2>&1 || echo "VAST UNREACHABLE $(date)" >> /Users/nicholas/.hermes/logs/vast-health.log'
+0 5 * * * find /Users/nicholas/.hermes/sessions -name 'request_dump*.json' -mtime +30 -delete
+# [disabled 2026-06-23: target missing] 0 6 * * * /bin/bash -c 'export HOME=/Users/nicholas && export PATH=/Users/nicholas/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin && bash /Users/nicholas/.kimi/execution-scripts/hermes-daily-ops.sh >> /Users/nicholas/.hermes/logs/ops-cron.log 2>&1'
+0 7 * * * python3 /Users/nicholas/clawd/scripts/daily-dashboard.py >> /tmp/dashboard.log 2>&1
+# [disabled 2026-06-23: target missing] 0 8 * * * cd /Users/nicholas && bash .kimi/execution-scripts/hermes-daily-ritual.sh >> .kimi/execution-scripts/cron.log 2>&1
+# [disabled 2026-06-23: target missing] 0 8 * * * cd /Users/nicholas/.kimi/execution-scripts/modules && /usr/bin/python3 ecosystem_builder.py >> /Users/nicholas/.kimi/execution-scripts/daily-reports/cron.log 2>&1
+# [disabled 2026-06-23: target missing] 0 9 * * * cd /Users/nicholas/.kimi/execution-scripts/modules && /usr/bin/python3 reddit_lead_miner.py >> /Users/nicholas/.kimi/execution-scripts/daily-reports/cron.log 2>&1
+PATH=/Users/nicholas/.cache/uv/archive-v0/xKz1vyAnacwYVqv_wFKmd/bin:/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin
+SHELL=/opt/homebrew/bin/bash
+
+# === Daily Portfolio Intelligence (added 2026-05-13) ===
+0 6 * * * /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/daily-eurlex-check.sh 2>&1
+0 7 * * * /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/daily-competitive-scan.sh 2>&1
+0 7 * * * /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/daily-revenue-snapshot.sh 2>&1
+30 7 * * * /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/daily-aeo-rank.sh 2>&1
+
+# === Hermes Governance Mastery (added 2026-05-13 12:30) ===
+0 5 * * * /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/hermes-governance-learn.sh
+0 5 * * 1 /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/hermes-mcp-gap-scan.sh
+30 6 * * * /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/hermes-industry-news.sh
+0 9 * * * /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/hermes-governance-content.sh
+0 */6 * * * /Users/nicholas/clawd/scripts/hermes-council-audit-shift.sh
+30 */12 * * * /Users/nicholas/clawd/scripts/hermes-deep-research-shift.sh
+0 7 * * 1 /Users/nicholas/clawd/scripts/hermes-cold-email-shift.sh
+0 10 * * 2,4,6 /Users/nicholas/clawd/scripts/hermes-content-shift.sh
+0 */12 * * * /opt/homebrew/bin/bash /Users/nicholas/clawd/scripts/hermes-swarm-deep-scan.sh >> /Users/nicholas/.hermes/logs/swarm-cron.log 2>&1
+13 * * * * /Users/nicholas/clawd/scripts/haulage-autopilot.sh >> /tmp/haulage-autopilot.cron.log 2>&1
+# [disabled 2026-06-23: target missing] */5 * * * * /Users/nicholas/clawd/scripts/layer0-watchdog.sh >> /tmp/layer0_watchdog.log 2>&1
+*/15 * * * * /Users/nicholas/clawd/meok/.venv/bin/python /Users/nicholas/_intake/kimi_mmo/mcp-gaming-empress/api/daily_revenue_cron.py >> /tmp/meok_gaming_revenue_cron.log 2>&1
+0 9 * * 1 /Users/nicholas/clawd/scripts/auto-fire-emails.sh >> /tmp/meok_email_fire.log 2>&1
+0 8 * * * /Users/nicholas/clawd/scripts/daily-sov3-sigil.sh >> /tmp/meok_daily_sigil.log 2>&1
+0 10 * * 1 /Users/nicholas/clawd/scripts/weekly-indexnow.sh >> /tmp/meok_indexnow.log 2>&1
+0 9 * * 1 /Users/nicholas/clawd/scripts/auto-fire-emails.sh >> /tmp/meok_email_fire.log 2>&1
+0 8 * * * /Users/nicholas/clawd/scripts/daily-sov3-sigil.sh >> /tmp/meok_daily_sigil.log 2>&1
+0 10 * * 1 /Users/nicholas/clawd/scripts/weekly-indexnow.sh >> /tmp/meok_indexnow.log 2>&1
+*/5 * * * * /Users/nicholas/clawd/scripts/sovereign-24-7-cron.sh > /tmp/sovereign-24-7.log 2>&1
+0 9 * * 1 /Users/nicholas/clawd/scripts/forbidden-brand-scan.sh >> /tmp/forbidden-brand-scan.log 2>&1
+# 🔱 JEEVES CRONTAB — All-Day Auto Loop
+# Owner-gated (Care floor 0.95): never publishes, never sends, never spends.
+# All output: ~/clawd/sovereign-charters/{DAILY,FULL_AUTO}_<date>.md
+
+# Every 30 min — full-auto heartbeat (27 URLs + 2 APIs + chain + substrate health)
+*/30 * * * * /Users/nicholas/cron/jeeves-full-auto.sh > /dev/null 2>&1
+
+# Every 4 hours — daily batch (file-id, sigil delta, owner reminder, Crown Jewels)
+0 */4 * * * /Users/nicholas/cron/jeeves-all-day-batch.sh > /dev/null 2>&1
+
+# Every 6 hours — sigil storm (chain growth)
+0 */6 * * * cd /Users/nicholas/clawd/csoai-launch-pack && python3 sovereign_api.py --demo > /tmp/jstorm.log 2>&1
+
+# Daily 09:00 UTC — daily dist-pack freshness
+0 9 * * * cd /Users/nicholas/clawd/csoai-launch-pack && /usr/bin/python3 -c "from pathlib import Path; import time, hashlib; [print(u, hashlib.sha256(Path(u).read_bytes()).hexdigest()[:8]) for u in sorted(Path('outreach').glob('*.md'))]" > /Users/nicholas/clawd/sovereign-charters/FRESHNESS_$(date -u +\%Y-\%m-\%d).log 2>&1
+
+# Daily 18:00 UTC — Crown Jewel danger scan (RESEARCH_PACK refresh check)
+0 18 * * * cd /Users/nicholas/clawd && head -3 _alignment/RESEARCH_PACK_2026-07-07.md > /Users/nicholas/clawd/sovereign-charters/CJ_REFRESH_$(date -u +\%Y-\%m-\%d).log 2>&1
+
+
+# === JEEVES full-auto alignment with SOV-18 vault ===
+*/30 * * * * /Users/nicholas/cron/jeeves-full-auto.sh > /tmp/jeeves-full-auto.log 2>&1
+0 */4 * * * /Users/nicholas/cron/jeeves-all-day-batch.sh > /tmp/jeeves-batch.log 2>&1
+0 */6 * * * cd /Users/nicholas/clawd/csoai-launch-pack && python3 sovereign_api.py --demo > /tmp/jeeves-storm.log 2>&1
+*/15 * * * * /bin/bash /Users/nicholas/clawd/_oci/a1_retry.sh

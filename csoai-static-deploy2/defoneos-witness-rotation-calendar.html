@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS: Witness Rotation Calendar</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #1a1a2e; color: #e0e0e0; }
+        .container { max-width: 900px; margin: auto; background-color: #16213e; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); }
+        h1, h2, h3 { color: #e94560; margin-bottom: 15px; }
+        h1 { font-size: 2.5em; border-bottom: 2px solid #e94560; padding-bottom: 10px; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; }
+        p { margin-bottom: 10px; }
+        ul { list-style-type: disc; margin-left: 20px; margin-bottom: 10px; }
+        li { margin-bottom: 5px; }
+        code { background-color: #0f3460; padding: 2px 4px; border-radius: 4px; color: #e0e0e0; }
+        pre { background-color: #0f3460; padding: 15px; border-radius: 6px; overflow-x: auto; margin-bottom: 15px; }
+        a { color: #533483; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .footer { margin-top: 40px; border-top: 1px solid #e94560; padding-top: 20px; font-size: 0.9em; text-align: center; color: #999; }
+        .sigil { font-family: 'Courier New', monospace; font-size: 0.8em; color: #888; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #0f3460; padding: 8px; text-align: left; }
+        th { background-color: #533483; color: #e0e0e0; }
+        .status-fresh { color: #28a745; font-weight: bold; }
+        .status-stale { color: #ffc107; font-weight: bold; }
+        .status-tampered { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DEFONEOS: Witness Rotation Calendar</h1>
+        <p>The DEFONEOS Witness Rotation Calendar outlines the deterministic, VRF-seeded rotation policy for BFT Council witnesses, ensuring continuous freshness, security, and integrity of the defence council's operations.</p>
+
+        <h2>Witness Rotation Policy</h2>
+        <p>Witnesses in Rings 2, 3, 4, and 5 undergo regular rotation, ensuring a dynamic and resilient council. Ring 1 (Owner) is always present due to its foundational role. The rotation schedule is as follows:</p>
+        <ul>
+            <li><strong>Ring 1 (Owner):</strong> Always Present.</li>
+            <li><strong>Ring 2 (Defence Primes):</strong> Quarterly Rotation.</li>
+            <li><strong>Ring 3 (Compliance & Legal):</strong> Quarterly Rotation.</li>
+            <li><strong>Ring 4 (Operators & Engineers):</strong> Monthly Rotation.</li>
+            <li><strong>Ring 5 (Public & Research):</strong> Semi-Annual Rotation.</li>
+        </ul>
+        <p>The selection of new witnesses is a deterministic process, seeded by a combination of the global SIGIL digest and a motion nonce, ensuring verifiability and preventing manipulation. A reference Python VRF implementation (libsodium + BLAKE3) is publicly available for audit.</p>
+
+        <h2>Current Rotation Snapshot (2026-Q3)</h2>
+        <p>Below is the current snapshot of the witness rotation, effective 2026-07-01. All 33 seats are active and fresh.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ring</th>
+                    <th>Rotation Frequency</th>
+                    <th>Next Rotation</th>
+                    <th>Witnesses (Partial Fingerprint)</th>
+                    <th>Freshness</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>R1</td>
+                    <td>Always Present</td>
+                    <td>N/A</td>
+                    <td>Owner-01, Owner-02</td>
+                    <td class="status-fresh">FRESH</td>
+                </tr>
+                <tr>
+                    <td>R2</td>
+                    <td>Quarterly</td>
+                    <td>2026-10-01</td>
+                    <td>Def-01, Def-02, Def-03</td>
+                    <td class="status-fresh">FRESH</td>
+                </tr>
+                <tr>
+                    <td>R3</td>
+                    <td>Quarterly</td>
+                    <td>2026-10-01</td>
+                    <td>Comp-01, Comp-02, Comp-03</td>
+                    <td class="status-fresh">FRESH</td>
+                </tr>
+                <tr>
+                    <td>R4</td>
+                    <td>Monthly</td>
+                    <td>2026-08-01</td>
+                    <td>Ops-01, Ops-02, Ops-03</td>
+                    <td class="status-fresh">FRESH</td>
+                </tr>
+                <tr>
+                    <td>R5</td>
+                    <td>Semi-Annual</td>
+                    <td>2027-01-01</td>
+                    <td>Pub-01, Pub-02, Pub-03</td>
+                    <td class="status-fresh">FRESH</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Red-Line Invariants & Emergency Rotation</h2>
+        <p>The witness rotation adheres to 7 ring-specific invariants (e.g., R1 always-present, 3-distinct ring duty, R5 on red-line, no US IdP, 24h seed pre-publish). In case of key compromise or emergency, an expedited R3-witness rotation procedure is activated.</p>
+
+        <div class="footer">
+            <p>DEFONEOS Sovereign AI OS - A CSOAI.org Initiative</p>
+            <p class="sigil">SIGIL: WITNESS-ROTATION-CALENDAR-V1.0-20260717-T119-BUILD</p>
+            <p>For detailed information, refer to the <a href="defoneos-witness-list-rotation-policy.html">Witness List Rotation Policy</a> and <a href="defoneos-witness-list-live-snapshot.html">Live Witness List Snapshot</a>.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "name": "@openpatent/ipcastle-mcp",
+  "version": "1.0.0",
+  "description": "openpatent-ipcastle-mcp — IP Castle Power Pack. 8 IP-counsel tools wrapped on top of openpatent-mcp. 6-layer cryptographic disclosure for patents, trademarks, trade secrets, and droit d'auteur. The hive remembers. The dragon knows. The sovereign companion never forgets.",
+  "homepage": "https://openpatent.ai/ipcastle",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CSOAI-ORG/openpatent-hive.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "openpatent",
+    "ip",
+    "ipcastle",
+    "patent",
+    "trademark",
+    "trade-secret",
+    "droit-auteur",
+    "copyright",
+    "disclosure",
+    "csoai"
+  ],
+  "type": "module",
+  "bin": {
+    "openpatent-ipcastle-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0",
+    "tsx": "^4.19.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "CSOAI <founder@csoai.org>",
+  "publisher": "csoai-org"
+}

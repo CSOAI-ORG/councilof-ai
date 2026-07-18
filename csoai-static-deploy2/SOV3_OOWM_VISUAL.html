@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SOV3³ + OOWM — Visual Architecture Map</title>
+<meta name="description" content="SOV3 OOWM visual layer — the sovereign substrate visualizations: 3D Tree of Life, 22 Arcana, 33 district map, SIGIL chain explorer, EU AI Act compliance dashboards.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --bg-0: #050810;
+  --bg-1: #0c1119;
+  --bg-2: #151c28;
+  --bg-3: #1f2937;
+  --line: #2a3441;
+  --fg-0: #e8edf2;
+  --fg-1: #a8b3c1;
+  --fg-2: #6b7888;
+  --accent: #4f9cff;
+  --green: #34d399;
+  --orange: #fbbf24;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+  --cyan: #22d3ee;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: radial-gradient(ellipse at top, #0d1623 0%, var(--bg-0) 60%);
+  color: var(--fg-0);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  min-height: 100vh;
+  padding: 0;
+}
+.container { max-width: 1280px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.hero { text-align: center; padding: 0 0 40px; border-bottom: 1px solid var(--line); margin-bottom: 40px; }
+.hero h1 { font-size: 42px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--purple), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1px; margin-bottom: 12px; }
+.hero p { color: var(--fg-2); font-size: 15px; max-width: 720px; margin: 0 auto; line-height: 1.6; }
+.hero .badges { display: flex; gap: 8px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-2); color: var(--fg-1); }
+.badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+.badge.warn .dot { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+.badge.crit .dot { background: var(--red); box-shadow: 0 0 8px var(--red); }
+@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.5 } }
+
+h2 { font-size: 24px; margin: 50px 0 20px; display: flex; align-items: center; gap: 10px; }
+h2::before { content: ""; width: 4px; height: 24px; background: linear-gradient(180deg, var(--accent), var(--purple)); border-radius: 2px; }
+h3 { font-size: 14px; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin: 20px 0 12px; font-weight: 600; }
+
+/* === SANDWICH DIAGRAM === */
+.sandwich {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+.layer {
+  padding: 24px 28px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.layer-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+.layer-tag .icon { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 14px; }
+.layer.online { background: linear-gradient(90deg, rgba(96,165,250,0.08), transparent); border-bottom: 1px solid var(--line); }
+.layer.online .icon { background: rgba(96,165,250,0.2); color: var(--accent); }
+.layer.middle { background: linear-gradient(90deg, rgba(167,139,250,0.12), rgba(244,114,182,0.08)); border-bottom: 1px solid var(--line); padding: 40px 28px; }
+.layer.middle .icon { background: rgba(167,139,250,0.3); color: var(--purple); }
+.layer.offline { background: linear-gradient(90deg, rgba(251,191,36,0.06), transparent); }
+.layer.offline .icon { background: rgba(251,191,36,0.2); color: var(--orange); }
+
+.layer-content { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: "SF Mono", "Monaco", monospace;
+  font-size: 12.5px;
+  color: var(--fg-0);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 110px;
+}
+.chip.small { min-width: auto; padding: 6px 10px; font-size: 11px; }
+.chip .name { color: var(--fg-0); font-weight: 600; }
+.chip .meta { font-size: 10px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 1px; }
+.chip.hl { border-color: var(--green); background: rgba(52,211,153,0.08); }
+.chip.hl .meta { color: var(--green); }
+.chip.dim { opacity: 0.65; }
+
+.sigil-arrows {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  background: var(--bg-0);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: "SF Mono", monospace;
+  font-size: 12px;
+  color: var(--green);
+  letter-spacing: 2px;
+  position: relative;
+}
+.sigil-arrows::before, .sigil-arrows::after { content: "◆"; color: var(--green); margin: 0 16px; text-shadow: 0 0 6px var(--green); }
+
+/* === 4-BRAIN GRID === */
+.brains { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+@media (max-width: 900px) { .brains { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .brains { grid-template-columns: 1fr; } }
+.brain {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.brain:hover { transform: translateY(-2px); border-color: var(--accent); }
+.brain::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--purple)); }
+.brain.b-blue::before { background: linear-gradient(90deg, var(--accent), var(--cyan)); }
+.brain.b-purple::before { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+.brain.b-orange::before { background: linear-gradient(90deg, var(--orange), var(--red)); }
+.brain.b-green::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+.brain h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; color: var(--accent); }
+.brain.b-blue h4 { color: var(--accent); }
+.brain.b-purple h4 { color: var(--purple); }
+.brain.b-orange h4 { color: var(--orange); }
+.brain.b-green h4 { color: var(--green); }
+.brain .brain-name { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+.brain .brain-stack { font-family: "SF Mono", monospace; font-size: 12px; color: var(--fg-1); line-height: 1.7; }
+.brain .brain-purpose { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px; color: var(--fg-2); }
+.brain .frozen { position: absolute; top: 12px; right: 12px; background: rgba(248,113,113,0.15); color: var(--red); font-size: 9px; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; border: 1px solid rgba(248,113,113,0.3); }
+
+/* === MODEL TYPE GRID === */
+.types { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.type {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+  position: relative;
+}
+.type .type-name { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--accent); }
+.type .type-full { font-size: 11px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.type ul { list-style: none; padding: 0; }
+.type li { font-size: 13px; padding: 4px 0; color: var(--fg-1); display: flex; justify-content: space-between; gap: 8px; }
+.type li code { background: var(--bg-2); padding: 1px 6px; border-radius: 3px; font-size: 12px; color: var(--fg-0); }
+.type .type-foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 11px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 1px; }
+.live-dot { color: var(--green); }
+.live-dot.warn { color: var(--orange); }
+
+/* === NN SCORECARD === */
+.scorecard { background: var(--bg-1); border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin: 16px 0; }
+.nn-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr auto; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.nn-row:last-child { border-bottom: none; }
+.nn-row.header { color: var(--fg-2); font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; padding-bottom: 8px; }
+.nn-name { font-family: "SF Mono", monospace; font-size: 13px; color: var(--accent); }
+.nn-metric { font-size: 14px; font-weight: 600; }
+.nn-metric .u { color: var(--fg-2); font-weight: 400; font-size: 11px; margin-left: 4px; }
+.nn-verdict { font-size: 12px; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.nn-verdict.ok { background: rgba(52,211,153,0.15); color: var(--green); }
+.nn-verdict.tiny { background: rgba(251,191,36,0.15); color: var(--orange); }
+.nn-verdict.weak { background: rgba(248,113,113,0.15); color: var(--red); }
+
+/* === ROUTING ROUTES === */
+.route-flow { background: var(--bg-1); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+.routes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 14px; }
+.route { background: var(--bg-2); padding: 14px; border-radius: 8px; border-left: 3px solid var(--accent); }
+.route .r-cat { font-size: 13px; font-weight: 700; color: var(--accent); font-family: "SF Mono", monospace; margin-bottom: 4px; }
+.route .r-bm { font-size: 12px; color: var(--fg-1); font-family: "SF Mono", monospace; line-height: 1.6; }
+.route .r-rationale { font-size: 12px; color: var(--fg-2); margin-top: 6px; }
+
+/* === HONESTY CARDS === */
+.honesty-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.h-card {
+  background: var(--bg-1);
+  border: 1px solid var(--red);
+  border-left: 4px solid var(--red);
+  border-radius: 8px;
+  padding: 16px;
+}
+.h-card.warn { border-color: var(--orange); border-left-color: var(--orange); }
+.h-card .h-num { font-size: 11px; color: var(--red); font-weight: 700; letter-spacing: 1px; }
+.h-card.warn .h-num { color: var(--orange); }
+.h-card h4 { font-size: 14px; margin: 6px 0 8px; color: var(--fg-0); }
+.h-card p { font-size: 12.5px; color: var(--fg-1); line-height: 1.5; }
+.h-card code { font-size: 11.5px; }
+
+/* === FINAL ONE-LINER === */
+.one-liner {
+  background: linear-gradient(135deg, rgba(79,156,255,0.1), rgba(167,139,250,0.08));
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin: 40px 0 20px;
+  text-align: center;
+}
+.one-liner p { font-size: 17px; line-height: 1.6; max-width: 820px; margin: 0 auto; }
+.one-liner em { color: var(--accent); font-style: normal; font-weight: 700; }
+
+/* === METRICS === */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 20px 0; }
+.metric { background: var(--bg-1); border: 1px solid var(--line); border-radius: 10px; padding: 16px; text-align: center; }
+.metric .v { font-size: 28px; font-weight: 800; color: var(--accent); background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1; }
+.metric .l { font-size: 11px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; }
+
+footer { border-top: 1px solid var(--line); padding: 30px; margin-top: 60px; text-align: center; color: var(--fg-2); font-size: 12px; }
+footer .lin { font-family: "SF Mono", monospace; font-size: 11px; margin-top: 4px; }
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV3_OOWM_VISUAL.html">
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>SOV3³ + OOWM</h1>
+    <p>The sovereign sandwich. Open-weight models wrapped in a signed, evolving substrate — eight distinct model classes, four governed brains, every hop Ed25519-signed.</p>
+    <div class="badges">
+      <span class="badge"><span class="dot"></span> SOV3 running on VM</span>
+      <span class="badge"><span class="dot"></span> 207 tools live</span>
+      <span class="badge warn"><span class="dot"></span> 4 of 7 NNs need retraining</span>
+      <span class="badge crit"><span class="dot"></span> handle_oowm_status = stub</span>
+    </div>
+  </div>
+
+  <!-- ====== SANDWICH ARCHITECTURE ====== -->
+  <h2>① The Sovereign Sandwich</h2>
+  <p style="color:var(--fg-2);font-size:14px;margin-bottom:14px;">Every request flows: <strong style="color:var(--orange);">OFFLINE</strong> ⟶ SIGIL ⟶ <strong style="color:var(--purple);">SOV3 MIDDLE</strong> ⟶ SIGIL ⟶ <strong style="color:var(--accent);">ONLINE</strong>. Both halves Ed25519-signed.</p>
+
+  <div class="sandwich">
+    <div class="layer online">
+      <div class="layer-tag"><div class="icon">☁</div>ONLINE</div>
+      <div class="layer-content">
+        <div class="chip"><span class="name">OpenAI / Claude</span><span class="meta">frontier · API</span></div>
+        <div class="chip"><span class="name">GLM-5.2</span><span class="meta">Chinese cloud</span></div>
+        <div class="chip"><span class="name">Groq</span><span class="meta">vote / fallback</span></div>
+        <div class="chip"><span class="name">275+ MCPs</span><span class="meta">federated external</span></div>
+      </div>
+    </div>
+
+    <div class="sigil-arrows">S I G I L · E D 2 5 5 1 9 · S I G I L</div>
+
+    <div class="layer middle">
+      <div class="layer-tag"><div class="icon">🧠</div>SOV3 MIDDLE</div>
+      <div class="layer-content">
+        <div class="chip hl"><span class="name">207 MCP tools</span><span class="meta">live</span></div>
+        <div class="chip hl"><span class="name">Mamba-2 SSM</span><span class="meta">16-dim state</span></div>
+        <div class="chip hl"><span class="name">7 trained NNs</span><span class="meta">3 strong · 4 weak</span></div>
+        <div class="chip hl"><span class="name">Traibgle voting</span><span class="meta">BFT</span></div>
+        <div class="chip hl"><span class="name">BFT council</span><span class="meta">33 nodes · 22 quorum</span></div>
+        <div class="chip hl"><span class="name">Ed25519 SIGIL</span><span class="meta">every hop</span></div>
+        <div class="chip hl"><span class="name">qwen3:30b-a3b</span><span class="meta">MoE-LARGE (when loaded)</span></div>
+      </div>
+    </div>
+
+    <div class="sigil-arrows">S I G I L · E D 2 5 5 1 9 · S I G I L</div>
+
+    <div class="layer offline">
+      <div class="layer-tag"><div class="icon">🔒</div>OFFLINE</div>
+      <div class="layer-content">
+        <div class="chip"><span class="name">qwen3:30b-a3b</span><span class="meta">MoE · deep reason</span></div>
+        <div class="chip"><span class="name">qwen2.5:3b</span><span class="meta">MoE · fast route</span></div>
+        <div class="chip"><span class="name">moondream</span><span class="meta">vision</span></div>
+        <div class="chip"><span class="name">deepseek-r1:7b</span><span class="meta">CoT reasoning</span></div>
+        <div class="chip"><span class="name">BGE-M3</span><span class="meta">embedding</span></div>
+        <div class="chip"><span class="name">Kokoro-82M</span><span class="meta">TTS</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SOV3³ — 4 BRAINS ====== -->
+  <h2>② SOV3³ — Four Sovereign Brains</h2>
+  <p style="color:var(--fg-2);font-size:14px;margin-bottom:14px;">Same base OOWM, reconfigured as four governed brains. Live on the VM.</p>
+
+  <div class="brains">
+    <div class="brain b-blue">
+      <h4>Brain 01</h4>
+      <div class="brain-name">🛡 SOVEREIGN-COMPLIANCE</div>
+      <div class="brain-stack">
+        qwen3:30b-a3b<br>
+        + GLM-5.2<br>
+        + <strong>BFT vote</strong>
+      </div>
+      <div class="brain-purpose">EU AI Act, UK AI Bill, GDPR Art 22. <em>The live revenue brain.</em></div>
+    </div>
+
+    <div class="brain b-orange" style="opacity:0.65;">
+      <span class="frozen">⚠ EAT FROZEN</span>
+      <h4>Brain 02</h4>
+      <div class="brain-name">🛡 SOVEREIGN-DEFENSE</div>
+      <div class="brain-stack">
+        qwen3:30b-a3b<br>
+        + DeepSeek-R1
+      </div>
+      <div class="brain-purpose">JSP 936 defensive doctrine. <em>Designed, not firing.</em></div>
+    </div>
+
+    <div class="brain b-purple">
+      <h4>Brain 03</h4>
+      <div class="brain-name">🧠 SOVEREIGN-INTUITION</div>
+      <div class="brain-stack">
+        qwen3:30b-a3b<br>
+        + Gematria<br>
+        + <strong>16-dim Mamba</strong>
+      </div>
+      <div class="brain-purpose">Fast intuition. Pattern recognition. Signal early-warning.</div>
+    </div>
+
+    <div class="brain b-green">
+      <h4>Brain 04</h4>
+      <div class="brain-name">🗣 SOVEREIGN-VOICE</div>
+      <div class="brain-stack">
+        qwen3:30b-a3b<br>
+        + Kokoro TTS
+      </div>
+      <div class="brain-purpose">The spoken voice. MEOK OS voice dock uses this.</div>
+    </div>
+  </div>
+
+  <!-- ====== ALL MODEL TYPES ====== -->
+  <h2>③ Eight Model Types — Every Class in the Estate</h2>
+  <p style="color:var(--fg-2);font-size:14px;margin-bottom:14px;">All distinct model architectures, all open-weight or open-source. No foundation model from scratch.</p>
+
+  <div class="types">
+
+    <div class="type">
+      <div class="type-name">MoE</div>
+      <div class="type-full">Mixture-of-Experts</div>
+      <ul>
+        <li>Reasoning <code>qwen3:30b-a3b</code></li>
+        <li>Fast route <code>qwen2.5</code></li>
+      </ul>
+      <div class="type-foot"><span>Apache 2.0</span><span class="live-dot">● Live</span></div>
+    </div>
+
+    <div class="type">
+      <div class="type-name">MoM</div>
+      <div class="type-full">Mixture-of-Models</div>
+      <ul>
+        <li>Vision <code>moondream</code></li>
+        <li>Spatial <code>zamba-large</code></li>
+        <li>VL <code>qwen-vl</code></li>
+      </ul>
+      <div class="type-foot"><span>Open</span><span class="live-dot">● Live</span></div>
+    </div>
+
+    <div class="type">
+      <div class="type-name">SSM</div>
+      <div class="type-full">State-Space Model</div>
+      <ul>
+        <li>Long mem <code>Mamba-2</code></li>
+        <li>State-dim <code>16</code></li>
+      </ul>
+      <div class="type-foot"><span>Open</span><span class="live-dot">● Live</span></div>
+    </div>
+
+    <div class="type">
+      <div class="type-name">Reasoning</div>
+      <div class="type-full">Chain-of-thought LLM</div>
+      <ul>
+        <li><code>deepseek-r1:7b</code></li>
+      </ul>
+      <div class="type-foot"><span>MIT</span><span class="live-dot">● Live</span></div>
+    </div>
+
+    <div class="type">
+      <div class="type-name">TTS</div>
+      <div class="type-full">Text-to-Speech</div>
+      <ul>
+        <li><code>Kokoro-82M</code></li>
+        <li>Fallback <code>Piper</code></li>
+      </ul>
+      <div class="type-foot"><span>Apache/MIT</span><span class="live-dot">● Live</span></div>
+    </div>
+
+    <div class="type">
+      <div class="type-name">Embedding</div>
+      <div class="type-full">Vector retrieval</div>
+      <ul>
+        <li>Primary <code>BGE-M3</code></li>
+        <li>Rerank <code>BGE-reranker</code></li>
+      </ul>
+      <div class="type-foot"><span>MIT</span><span class="live-dot">● Live</span></div>
+    </div>
+
+    <div class="type">
+      <div class="type-name" style="color:var(--green);">Trained NN (ours)</div>
+      <div class="type-full">Governance signals</div>
+      <ul>
+        <li>7 models</li>
+        <li>3 strong · 4 weak</li>
+      </ul>
+      <div class="type-foot"><span>CSOAI own</span><span class="live-dot warn">◐ Mixed</span></div>
+    </div>
+
+    <div class="type">
+      <div class="type-name">Cloud ensemble</div>
+      <div class="type-full">Vote / fallback</div>
+      <ul>
+        <li><code>GLM-5.2</code> · <code>Claude</code></li>
+        <li><code>Groq</code></li>
+      </ul>
+      <div class="type-foot"><span>API</span><span class="live-dot">● Live</span></div>
+    </div>
+
+  </div>
+
+  <!-- ====== TRAINED NN SCORECARD ====== -->
+  <h2>④ Seven Trained NNs — Honest Scorecard</h2>
+  <p style="color:var(--fg-2);font-size:14px;margin-bottom:14px;">Verified on MEOK MCP v3.0.0. No "best-of" cherry-picking — all 7 listed.</p>
+
+  <div class="scorecard">
+    <div class="nn-row header">
+      <div>Model</div><div>Metric</div><div>Samples</div><div>Verdict</div>
+    </div>
+    <div class="nn-row">
+      <div class="nn-name">creativity_assessment_nn</div>
+      <div class="nn-metric">r² <strong style="color:var(--green);">0.91</strong></div>
+      <div>350</div>
+      <div class="nn-verdict ok">✓ strong</div>
+    </div>
+    <div class="nn-row">
+      <div class="nn-name">care_pattern_analyzer</div>
+      <div class="nn-metric">mae <strong style="color:var(--green);">0.037</strong></div>
+      <div>600</div>
+      <div class="nn-verdict ok">✓ strong</div>
+    </div>
+    <div class="nn-row">
+      <div class="nn-name">relationship_evolution_nn</div>
+      <div class="nn-metric">mae <strong style="color:var(--green);">0.071</strong></div>
+      <div>500</div>
+      <div class="nn-verdict ok">✓ strong</div>
+    </div>
+    <div class="nn-row">
+      <div class="nn-name">care_validation_nn</div>
+      <div class="nn-metric">mae <strong style="color:var(--orange);">0.19</strong></div>
+      <div style="color:var(--orange);">19 ⚠</div>
+      <div class="nn-verdict tiny">⚠ tiny sample</div>
+    </div>
+    <div class="nn-row">
+      <div class="nn-name">partnership_detection_ml</div>
+      <div class="nn-metric">mae <strong style="color:var(--orange);">0.22</strong></div>
+      <div style="color:var(--orange);">19 ⚠</div>
+      <div class="nn-verdict tiny">⚠ tiny sample</div>
+    </div>
+    <div class="nn-row">
+      <div class="nn-name">threat_detection_nn</div>
+      <div class="nn-metric">acc <strong style="color:var(--red);">0.45</strong></div>
+      <div>33</div>
+      <div class="nn-verdict weak">✗ weak — retrain</div>
+    </div>
+    <div class="nn-row">
+      <div class="nn-name">dependency_detection_nn</div>
+      <div class="nn-metric">acc <strong style="color:var(--red);">0.22</strong></div>
+      <div>50</div>
+      <div class="nn-verdict weak">✗ weak — retrain</div>
+    </div>
+  </div>
+
+  <!-- ====== 13 TASK ROUTING ====== -->
+  <h2>⑤ Thirteen Task Categories — SOV3 OOWM Router</h2>
+  <p style="color:var(--fg-2);font-size:14px;margin-bottom:14px;">Each task gets routed to the optimal (brain, model, mindset) triple.</p>
+
+  <div class="route-flow">
+    <div class="routes-grid">
+      <div class="route"><div class="r-cat">compliance</div><div class="r-bm">hybrid_sovereign · deepseek-r1:7b · <em>wise</em></div><div class="r-rationale">Reasoning wins on EU AI Act / GDPR</div></div>
+      <div class="route"><div class="r-cat">defence</div><div class="r-bm">hybrid_sovereign · qwen3:30b-a3b · <em>bold</em></div><div class="r-rationale">MoE-LARGE on JSP 936</div></div>
+      <div class="route"><div class="r-cat">sov3</div><div class="r-bm">hybrid_sovereign · deepseek-r1:7b · <em>logical</em></div><div class="r-rationale">BFT council + Traibgle voting</div></div>
+      <div class="route"><div class="r-cat">world</div><div class="r-bm">mom_large_offline · moondream · <em>curious</em></div><div class="r-rationale">Multi-modal for geo / sensor</div></div>
+      <div class="route"><div class="r-cat">physical</div><div class="r-bm">mom_large_offline · moondream · <em>creative</em></div><div class="r-rationale">Capillary + muscle simulation</div></div>
+      <div class="route"><div class="r-cat">sovereign</div><div class="r-bm">moe_large_online · qwen3:30b-a3b · <em>careful</em></div><div class="r-rationale">Ed25519 + crypto decisions</div></div>
+      <div class="route"><div class="r-cat">sovtown</div><div class="r-bm">mom_large_offline · moondream · <em>diplomatic</em></div><div class="r-rationale">NPC / agent interactions</div></div>
+      <div class="route"><div class="r-cat">deploy</div><div class="r-bm">moe_large_online · qwen3:30b-a3b · <em>decisive</em></div><div class="r-rationale">Vercel + PyPI deployments</div></div>
+      <div class="route"><div class="r-cat">ethics</div><div class="r-bm">hybrid_sovereign · deepseek-r1:7b · <em>wise</em></div><div class="r-rationale">Care principles + bias checks</div></div>
+      <div class="route"><div class="r-cat">companion</div><div class="r-bm">mom_large_offline · moondream · <em>diplomatic</em></div><div class="r-rationale">Orb HP + bond</div></div>
+      <div class="route"><div class="r-cat">reasoning</div><div class="r-bm">hybrid_sovereign · deepseek-r1:7b · <em>logical</em></div><div class="r-rationale">Explicit reasoning tasks</div></div>
+      <div class="route"><div class="r-cat">speed</div><div class="r-bm">mom_large_offline · qwen3:0.6b · <em>focused</em></div><div class="r-rationale">Sub-second real-time</div></div>
+      <div class="route"><div class="r-cat">default</div><div class="r-bm">hybrid_sovereign · qwen3:30b-a3b · <em>wise</em></div><div class="r-rationale">Safe default for unknown</div></div>
+    </div>
+  </div>
+
+  <!-- ====== LIVE METRICS ====== -->
+  <h2>⑥ Live Deployment</h2>
+  <div class="metrics">
+    <div class="metric"><div class="v">207</div><div class="l">MCP tools</div></div>
+    <div class="metric"><div class="v">330</div><div class="l">SOV3 tools</div></div>
+    <div class="metric"><div class="v">275+</div><div class="l">external MCPs</div></div>
+    <div class="metric"><div class="v">33</div><div class="l">BFT nodes</div></div>
+    <div class="metric"><div class="v">49 GB</div><div class="l">data moat</div></div>
+    <div class="metric"><div class="v">3,000</div><div class="l">tok/s OLM</div></div>
+    <div class="metric"><div class="v">13d</div><div class="l">VM uptime</div></div>
+    <div class="metric"><div class="v">8</div><div class="l">model classes</div></div>
+    <div class="metric"><div class="v">4</div><div class="l">sovereign brains</div></div>
+    <div class="metric"><div class="v">7</div><div class="l">trained NNs</div></div>
+    <div class="metric"><div class="v">13</div><div class="l">task routes</div></div>
+    <div class="metric"><div class="v">661</div><div class="l">MCP pkgs shipped</div></div>
+  </div>
+
+  <!-- ====== HONESTY FLAGS ====== -->
+  <h2>⑦ Honesty Flags — Do Not Overclaim</h2>
+  <div class="honesty-grid">
+
+    <div class="h-card">
+      <div class="h-num">FLAG 01 · CRITICAL</div>
+      <h4>handle_oowm_status is a stub</h4>
+      <p>Returns <code>True</code> for <code>mamba_warm</code>, <code>moe_loaded</code>, <code>moe_connected</code> — hardcoded, not a live probe. Never cite as proof the OOWM is "running."</p>
+    </div>
+
+    <div class="h-card warn">
+      <div class="h-num">FLAG 02 · WARNING</div>
+      <h4>qwen3:30b-a3b is DESIGNED, not loaded here</h4>
+      <p>On this Mac, <code>ollama list</code> is empty. King-hive only carries <code>llama3.2:1b/3b</code>. 30B base is designed for the 192 GB M4 Mac — confirm there before claiming "live."</p>
+    </div>
+
+    <div class="h-card warn">
+      <div class="h-num">FLAG 03 · WARNING</div>
+      <h4>4 of 7 trained NNs need retraining</h4>
+      <p><code>creativity</code> (r² 0.91), <code>care_pattern</code> (mae 0.037), <code>relationship</code> (mae 0.071) are strong. <strong>threat_detection</strong> (acc 0.45) and <strong>dependency_detection</strong> (acc 0.22) need real labelled data.</p>
+    </div>
+
+    <div class="h-card warn">
+      <div class="h-num">FLAG 04 · WARNING</div>
+      <h4>"Bitcoin anchor" / "consciousness 0.775" are labels</h4>
+      <p>Metaphor, not literal. Keep out of investor copy and the Series A deck.</p>
+    </div>
+
+    <div class="h-card">
+      <div class="h-num">FLAG 05 · CRITICAL</div>
+      <h4>SOVEREIGN-DEFENSE brain is EAT-frozen</h4>
+      <p>Per EAT directive 2026-07-02: no offensive / defence-capability work. Only ASSURANCE / GOVERNANCE / CYBER firing today.</p>
+    </div>
+
+  </div>
+
+  <!-- ====== ONE LINER ====== -->
+  <div class="one-liner">
+    <p>
+      <em>A sovereign sandwich around open-weight models</em>
+      (qwen3-MoE + Mamba-2 + vision MoM),
+      every hop Ed25519-signed,
+      reconfigurable into four governed brains —
+      plus seven small trained governance NNs (<em>three strong, four honest</em>).
+    </p>
+    <p style="margin-top:14px;color:var(--accent);">
+      <strong>The moat is the signed-governed substrate — not a from-scratch foundation model.</strong>
+    </p>
+  </div>
+
+  <footer>
+    <div>🐉 SOV3³ + OOWM — Visual Architecture Tab · 2026-07-07</div>
+    <div class="lin">Sources: sovereign-temple/sov3_oowm.py · sov3_4_brains_1_oowm.py · _alignment/SOV3_OOWM_MODEL_STACK_2026-07-07.md · MEOK MCP v3.0.0</div>
+    <div class="lin" style="margin-top:4px;">SIGIL: SOV3-OOWM-VISUAL-TAB Ed25519</div>
+  </footer>
+
+</div>
+</body>
+</html>

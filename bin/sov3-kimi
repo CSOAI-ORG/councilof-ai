@@ -1,0 +1,253 @@
+#!/bin/bash
+# SOV3-Kimi-OpenClaw Unified Launcher
+# Usage: sov3-kimi <command> [options]
+
+CLAWD_DIR="/Users/nicholas/clawd"
+INTEGRATION_SCRIPT="$CLAWD_DIR/sov3_kimi_integration.py"
+
+show_help() {
+    cat << 'EOF'
+🌙 SOV3-Kimi-OpenClaw Unified Stack
+
+Commands:
+  run <task>          Execute a task (auto-routes to best agent)
+  kimi <task>         Execute via Kimi CLI
+  claude <task>       Execute via Claude Code
+  jarvis <task>       Execute via JARVIS
+  sov <task>          Execute via Sovereign
+  meok <task>         Execute via Meok
+  swarm <task>        Execute via multiple agents
+  
+  mcp-start           Start MCP servers
+  mcp-status          Check MCP server status
+  install-claude      Install MCP config for Claude Desktop
+  
+  status              Show full stack status
+  doctor              Run diagnostics
+
+Options:
+  -f, --files <files>  Include context files
+  -t, --thinking       Enable thinking mode
+  --agent <agent>      Force specific agent
+
+Examples:
+  sov3-kimi run "Review this code" -f src/main.py
+  sov3-kimi swarm "Design an API"
+  sov3-kimi kimi "Debug this error" -t
+
+EOF
+}
+
+run_task() {
+    local task="$1"
+    shift
+    local agent=""
+    local files=""
+    local thinking="false"
+    
+    # Parse options
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -a|--agent)
+                agent="$2"
+                shift 2
+                ;;
+            -f|--files)
+                files="$2"
+                shift 2
+                ;;
+            -t|--thinking)
+                thinking="true"
+                shift
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+    
+    # Build command
+    local cmd=("$INTEGRATION_SCRIPT" "$task")
+    
+    if [ -n "$agent" ]; then
+        cmd+=("--agent" "$agent")
+    fi
+    
+    if [ -n "$files" ]; then
+        cmd+=("--files" "$files")
+    fi
+    
+    if [ "$thinking" = "true" ]; then
+        cmd+=("--thinking")
+    fi
+    
+    python3 "${cmd[@]}"
+}
+
+start_mcp() {
+    echo "🚀 Starting MCP servers..."
+    
+    # Check if SOV3 is running
+    if ! curl -s http://localhost:3200/health > /dev/null 2>&1; then
+        echo "  Starting SOV3 MCP server..."
+        cd "$CLAWD_DIR/sovereign-temple" && \
+            python3 sovereign-mcp-server.py > /tmp/sov3-mcp.log 2>&1 &
+        sleep 3
+    else
+        echo "  ✓ SOV3 MCP already running"
+    fi
+    
+    echo "  MCP servers ready"
+}
+
+check_status() {
+    echo "🔍 Stack Status"
+    echo "==============="
+    
+    # Kimi CLI
+    if which kimi > /dev/null 2>&1; then
+        echo "✓ Kimi CLI: Available"
+    else
+        echo "✗ Kimi CLI: Not found"
+    fi
+    
+    # OpenClaw
+    if which openclaw > /dev/null 2>&1; then
+        echo "✓ OpenClaw: Available"
+        openclaw gateway status 2>/dev/null | grep -E "Runtime:|Dashboard:" || true
+    else
+        echo "✗ OpenClaw: Not found"
+    fi
+    
+    # SOV3
+    if curl -s http://localhost:3200/health > /dev/null 2>&1; then
+        echo "✓ SOV3 MCP: Running on port 3200"
+    else
+        echo "✗ SOV3 MCP: Not running"
+    fi
+    
+    # Gateway
+    if curl -s http://localhost:18789 > /dev/null 2>&1; then
+        echo "✓ OpenClaw Gateway: Running on port 18789"
+    else
+        echo "✗ OpenClaw Gateway: Not running"
+    fi
+}
+
+install_claude_config() {
+    local config_dir="$HOME/Library/Application Support/Claude"
+    local config_file="$config_dir/claude_desktop_config.json"
+    
+    echo "📦 Installing Claude Desktop MCP config..."
+    
+    mkdir -p "$config_dir"
+    
+    # Backup existing
+    if [ -f "$config_file" ]; then
+        cp "$config_file" "$config_file.backup.$(date +%Y%m%d)"
+    fi
+    
+    # Install new config
+    cp "$CLAWD_DIR/mcp-claude-desktop-config.json" "$config_file"
+    
+    echo "✓ Installed to: $config_file"
+    echo "  Restart Claude Desktop to apply changes"
+}
+
+doctor() {
+    echo "🔧 Running diagnostics..."
+    
+    # Check Python
+    python3 --version || echo "✗ Python 3 not found"
+    
+    # Check Node
+    node --version || echo "✗ Node.js not found"
+    
+    # Check Kimi
+    if which kimi > /dev/null; then
+        echo "✓ Kimi CLI: $(which kimi)"
+    else
+        echo "✗ Kimi CLI not in PATH"
+    fi
+    
+    # Check OpenClaw
+    if which openclaw > /dev/null; then
+        echo "✓ OpenClaw: $(which openclaw)"
+    else
+        echo "✗ OpenClaw not in PATH"
+    fi
+    
+    # Test connections
+    echo ""
+    echo "Testing connections..."
+    
+    if curl -s http://localhost:3200/health > /dev/null 2>&1; then
+        echo "✓ SOV3 MCP (port 3200)"
+    else
+        echo "✗ SOV3 MCP (port 3200) - Run: sov3-kimi mcp-start"
+    fi
+    
+    if curl -s http://localhost:18789 > /dev/null 2>&1; then
+        echo "✓ OpenClaw Gateway (port 18789)"
+    else
+        echo "✗ OpenClaw Gateway (port 18789) - Run: openclaw gateway start"
+    fi
+}
+
+# Main
+case "${1:-}" in
+    run)
+        shift
+        run_task "$@"
+        ;;
+    kimi|k)
+        shift
+        run_task "$*" --agent kimi "$@"
+        ;;
+    claude|c)
+        shift
+        run_task "$*" --agent claude-code "$@"
+        ;;
+    jarvis|j)
+        shift
+        run_task "$*" --agent jarvis "$@"
+        ;;
+    sov|s)
+        shift
+        run_task "$*" --agent sov "$@"
+        ;;
+    meok|m)
+        shift
+        run_task "$*" --agent meok "$@"
+        ;;
+    swarm|sw)
+        shift
+        run_task "$*" --agent swarm "$@"
+        ;;
+    mcp-start)
+        start_mcp
+        ;;
+    mcp-status)
+        echo "SOV3 MCP: $(curl -s http://localhost:3200/health 2>/dev/null | grep -o '"status":"[^"]*"' || echo 'DOWN')"
+        ;;
+    install-claude)
+        install_claude_config
+        ;;
+    status)
+        check_status
+        ;;
+    doctor)
+        doctor
+        ;;
+    -h|--help|help)
+        show_help
+        ;;
+    *)
+        if [ $# -eq 0 ]; then
+            show_help
+        else
+            # Default: auto-route
+            run_task "$@"
+        fi
+        ;;
+esac

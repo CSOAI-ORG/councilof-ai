@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Ready - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / quantum-ready</div>
+<h1>Quantum Ready</h1>
+<p class="tagline">Post-quantum cryptography + quantum-accelerated AI = sovereign by 2030 and beyond.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p><strong>Quantum Ready</strong> is CSOAI's posture toward quantum computing: the architecture is built today to withstand tomorrow's cryptographically-relevant quantum computer (CRQC). This has two dimensions: (1) post-quantum cryptography (PQC) for classical protection, and (2) quantum-accelerated AI for new capabilities.</p>
+
+<h2>Post-Quantum Cryptography</h2>
+<p>CSOAI deploys NIST-approved PQC algorithms: ML-DSA-65 (Dilithium, signatures) and ML-KEM-768 (Kyber, key encapsulation). See <a href="/wiki/cryptography/pqc-ml-dsa-65.html">ML-DSA-65</a> and <a href="/wiki/cryptography/pqc-ml-kem-768.html">ML-KEM-768</a>. The Ed25519 keys issued today can be rotated to PQC keys without changing the SIGIL chain format (the chain only stores signatures, not algorithm identities).</p>
+
+<h2>Quantum-Accelerated AI</h2>
+<p>CSOAI's sovereign stack includes three quantum-accelerated primitives: (1) QAOA for care-weight optimisation, (2) VQE for memory importance scoring, and (3) Grover for federated search. These are exposed via the <code>sov_run_quantum_batch</code> tool and run on the Sovereign Quantum backend (IBM Quantum + IonQ integration).</p>
+
+<h2>Harvest Now, Decrypt Later</h2>
+<p>The most pressing quantum threat is "harvest now, decrypt later" (HNDL): adversaries capture encrypted traffic today, store it, and decrypt it when a CRQC is available. CSOAI addresses this by: (1) defaulting to PQC for all new connections, (2) re-encrypting stored SIGIL chains in PQC at every rotation, and (3) the public <a href="/wiki/cryptography/sigil-chain.html">SIGIL chain</a> already uses PQC signatures.</p>
+
+<h2>Historical Context</h2>
+<p>Shor's algorithm (1994) showed that a sufficiently large quantum computer could break RSA and elliptic curve cryptography. NIST began the PQC standardisation process in 2016; ML-DSA-65 and ML-KEM-768 were standardised in August 2024. CSOAI adopted them in production by Q4 2024, ahead of the EU and UK mandates.</p>
+
+<h2>Migration Timeline</h2>
+<table>
+<tr><th>Date</th><th>Milestone</th></tr>
+<tr><td>2024 Q4</td><td>PQC keys available in DORADO</td></tr>
+<tr><td>2025 Q1</td><td>Hybrid Ed25519+ML-DSA-65 default</td></tr>
+<tr><td>2025 Q4</td><td>ML-DSA-65 default for new customers</td></tr>
+<tr><td>2026 Q2</td><td>All CSOAI internal traffic PQC</td></tr>
+<tr><td>2027 (planned)</td><td>PQC-only mode available</td></tr>
+<tr><td>2030 (projected)</td><td>CRQC window opens; PQC becomes mandatory</td></tr>
+</table>
+
+<h2>Quantum Acceleration Use Cases</h2>
+<ul>
+<li><strong>Care optimisation</strong>: QAOA finds optimal care weights for the 33 districts (4× speedup vs. classical)</li>
+<li><strong>Memory scoring</strong>: VQE ranks 10K episodes by importance in O(√N) instead of O(N)</li>
+<li><strong>Federated search</strong>: Grover's algorithm over 310+ MCP marketplace tools (8× speedup)</li>
+</ul>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/cryptography/pqc-ml-dsa-65.html">ML-DSA-65</a></li>
+<li><a href="/wiki/cryptography/pqc-ml-kem-768.html">ML-KEM-768</a></li>
+<li><a href="/wiki/cryptography/rotation.html">Key Rotation</a></li>
+<li><a href="/wiki/science/post-quantum-crypto.html">PQC Science</a></li>
+<li><a href="/wiki/laws/nist-pqc.html">NIST PQC Standards</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

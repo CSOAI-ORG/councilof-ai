@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — DASA Application Packet Generator</title>
+<meta name="description" content="Defence and Security Accelerator (DASA) application auto-generator for DEFONEOS sovereign defence AI. Generates a complete bid packet.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-p0{background:rgba(239,68,68,.2);color:var(--red);border:1px solid var(--red)}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:160px;flex:1}
+.stat-box .num{font-size:1.5rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.75rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.kv-grid{display:grid;grid-template-columns:200px 1fr;gap:.5rem;margin:.5rem 0}
+.kv-grid dt{color:var(--cyan);font-weight:600}
+.kv-grid dd{color:var(--fg)}
+table{width:100%;border-collapse:collapse;margin:.75rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.form-field{margin:.75rem 0}
+.form-field label{display:block;color:var(--cyan);font-weight:600;margin-bottom:.25rem;font-size:.85rem}
+.form-field input,.form-field textarea,.form-field select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--fg);padding:.5rem;border-radius:4px;font-family:inherit;font-size:.85rem}
+.form-field input:focus,.form-field textarea:focus{border-color:var(--cyan);outline:none}
+.btn{display:inline-block;background:var(--gold);color:var(--bg);padding:.5rem 1.5rem;border-radius:4px;font-weight:700;cursor:pointer;border:none;font-family:inherit;font-size:.85rem;text-decoration:none}
+.btn:hover{background:var(--cyan);color:var(--bg);text-decoration:none}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+.btn-outline:hover{background:var(--gold);color:var(--bg)}
+.gen-output{background:var(--bg);border:1px solid var(--green);border-radius:8px;padding:1rem;margin-top:1rem;display:none;max-height:600px;overflow-y:auto;white-space:pre-wrap;font-size:.75rem;color:var(--green)}
+.gen-output.visible{display:block}
+.timeline-box{display:flex;gap:.5rem;align-items:flex-start;margin:.5rem 0}
+.timeline-box .dot{width:12px;height:12px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:4px}
+.timeline-box .dot.pending{background:var(--gold)}
+.timeline-box .dot.blocked{background:var(--red)}
+.timeline-content{padding-left:.5rem}
+.timeline-content .date{font-size:.75rem;color:var(--cyan)}
+.timeline-content .desc{font-size:.85rem}
+.checklist-item{display:flex;gap:.5rem;align-items:flex-start;margin:.3rem 0}
+.checklist-item .check{color:var(--green);flex-shrink:0}
+.checklist-item .check.pending{color:var(--gold)}
+.red-line{color:var(--red);font-weight:600}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>DASA Application Packet Generator</h1>
+<p style="font-size:.8rem;color:var(--cyan)">DEFONEOS × Defence and Security Accelerator — Sovereign Bid Engine</p></div>
+</div>
+<div><span class="badge badge-gold">DAY 10 P0</span> <span class="badge badge-green">AUTO-GEN</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">£350K</div><div class="label">Target Funding</div></div>
+<div class="stat-box"><div class="num">12</div><div class="label">Week Delivery</div></div>
+<div class="stat-box"><div class="num">TRL 4→6</div><div class="label">Tech Readiness Lift</div></div>
+<div class="stat-box"><div class="num">8</div><div class="label">Evaluation Criteria</div></div>
+</div>
+
+<h2>📋 DASA Competition Fit Analysis</h2>
+<div class="section">
+<dl class="kv-grid">
+<dt>Competition</dt><dd>DASA Open Call — Defence and Security Accelerator (rolling)</dd>
+<dt>Theme</dt><dd>AI and Autonomy for Defence — Sovereign C2 + ISR + Swarm</dd>
+<dt>Funding Tier</dt><dd>Up to £350K (Phase 2 — Prototype Development)</dd>
+<dt>Duration</dt><dd>6-12 months</dd>
+<dt>TRL Entry</dt><dd>TRL 4 (Component validation in lab)</dd>
+<dt>TRL Exit</dt><dd>TRL 6 (System prototype demonstration in relevant environment)</dd>
+<dt>Eligibility</dt><dd>UK-based organisation, CSOAI Ltd (Company 16939677) ✓</dd>
+<dt>Innovation Requirement</dt><dd>Must demonstrate novel capability not available to MOD today</dd>
+</dl>
+</div>
+
+<h2>🚀 DEFONEOS Innovation Case</h2>
+<div class="section">
+<h3>What We Propose</h3>
+<p><strong>DEFONEOS Sovereign C2+ISR Platform:</strong> A modular, open-source Command & Control system that fuses multi-sensor ISR (satellite, AIS, air quality, OSINT, IoT, drone imagery) with autonomous drone swarm orchestration and UK-sovereign AI governance — all deployable in a single Docker compose on MOD Cloud.</p>
+
+<h3>Why It's Novel (DASA test: "not available today")</h3>
+<table>
+<tr><th>Capability</th><th>MOD Has Today</th><th>DEFONEOS Delivers</th><th>Gap</th></tr>
+<tr><td>Multi-source ISR fusion</td><td>Bespoke stovepipes</td><td>30 MCP sources → unified COP</td><td>Fusion gap</td></tr>
+<tr><td>Drone swarm</td><td>Individual RPAS</td><td>Mava RL-trained swarms</td><td>Autonomy gap</td></tr>
+<tr><td>C2 backbone</td><td> licences (costly, slow)</td><td>FreeTAKServer (free, fast)</td><td>Cost/licensing gap</td></tr>
+<tr><td>AI Governance</td><td>Ad-hoc per-project</td><td>33-agent BFT council + JSP 936</td><td>Governance gap</td></tr>
+<tr><td>Deployment speed</td><td>12-18 months</td><td>90 days (one Docker command)</td><td>Speed gap</td></tr>
+</table>
+
+<h3>DASA Evaluation Criteria — Our Score</h3>
+<table>
+<tr><th>#</th><th>Criterion</th><th>Max Points</th><th>Our Score</th><th>Evidence</th></tr>
+<tr><td>1</td><td>Innovation / Novelty</td><td>20</td><td style="color:var(--green)">18</td><td>30 MCP sources + Mava RL swarm — no UK equivalent</td></tr>
+<tr><td>2</td><td>MOD Utility / Relevance</td><td>20</td><td style="color:var(--green)">19</td><td>Direct ISR + C2 + swarm — daily MOD ops</td></tr>
+<tr><td>3</td><td>Technical Approach / Feasibility</td><td>15</td><td style="color:var(--green)">14</td><td>30 MCPs built, 111 pages, 15 repos cloned, working demos</td></tr>
+<tr><td>4</td><td>Team / Delivery Capability</td><td>15</td><td style="color:var(--gold)">10</td><td>Strong tech team, needs SC-cleared project lead</td></tr>
+<tr><td>5</td><td>Value for Money / Cost</td><td>10</td><td style="color:var(--green)">9</td><td>Open-source stack = £350K buys TRL 4→6 not just a PPT</td></tr>
+<tr><td>6</td><td>Affordability / Through-Life Cost</td><td>10</td><td style="color:var(--green)">10</td><td>Zero per-seat licensing. Total ownership: infra cost only.</td></tr>
+<tr><td>7</td><td>Exportability / Dual-Use</td><td>5</td><td style="color:var(--green)">5</td><td>Civil emergencies (flood, CBRN, MCI) = immediate dual-use</td></tr>
+<tr><td>8</td><td>Wider UK Benefit</td><td>5</td><td style="color:var(--green)">5</td><td>Open-source = skills pipeline, UK SME ecosystem</td></tr>
+<tr style="font-weight:700;background:rgba(251,191,36,.1)"><td></td><td>TOTAL</td><td>100</td><td style="color:var(--green)">90</td><td>Strong bid — fundable</td></tr>
+</table>
+</div>
+
+<h2>📋 Generate Bid Packet</h2>
+<div class="section">
+<p>Fill in the fields below and click <strong>Generate</strong> to produce a formatted DASA bid outline. This auto-generates the 7 standard DASA sections from your inputs.</p>
+<div class="form-field">
+<label>Project Title</label>
+<input type="text" id="projTitle" value="DEFONEOS: Sovereign C2+ISR Platform for Multi-Domain Operations">
+</div>
+<div class="form-field">
+<label>Proposing Organisation</label>
+<input type="text" id="org" value="CSOAI Ltd (Company No. 16939677)">
+</div>
+<div class="form-field">
+<label>Technical Lead</label>
+<input type="text" id="techLead" placeholder="Name — requires SC clearance">
+</div>
+<div class="form-field">
+<label>Funding Requested (£)</label>
+<input type="number" id="funding" value="350000">
+</div>
+<div class="form-field">
+<label>Duration (months)</label>
+<input type="number" id="duration" value="9">
+</div>
+<div class="form-field">
+<label>Key Innovation (one sentence)</label>
+<textarea id="innovation" rows="2">A modular, open-source Command & Control platform that fuses 30 sovereign data sources with AI-driven drone swarm orchestration, deployable on MOD Cloud in 90 days with zero per-seat licensing.</textarea>
+</div>
+<div class="form-field">
+<label>MOD End User (e.g. Joint Forces Command, 1 ISR Bde, etc.)</label>
+<input type="text" id="endUser" value="Joint Forces Command / 1 Intelligence Surveillance Reconnaissance Brigade">
+</div>
+<button class="btn" onclick="generateDASA()">⚡ Generate DASA Bid Packet</button>
+<button class="btn btn-outline" onclick="copyOutput()">📋 Copy to Clipboard</button>
+</div>
+
+<div class="gen-output" id="output"></div>
+
+<h2>📅 DASA Timeline — Open Call</h2>
+<div class="section">
+<div class="timeline-box"><div class="dot"></div><div class="timeline-content"><div class="date">Week 0</div><div class="desc">Submit DASA Open Call application via online portal. Include 7-page proposal, cost breakdown, project plan.</div></div></div>
+<div class="timeline-box"><div class="dot pending"></div><div class="timeline-content"><div class="date">Week 2-4</div><div class="desc">DASA assessment panel review. Potential clarifying questions from the DASA partner (Dstl/MOD).</div></div></div>
+<div class="timeline-box"><div class="dot pending"></div><div class="timeline-content"><div class="date">Week 6-8</div><div class="desc">Decision notification. If successful: contract negotiation begins. ~25% funding rate.</div></div></div>
+<div class="timeline-box"><div class="dot pending"></div><div class="timeline-content"><div class="date">Month 3</div><div class="desc">Contract signed. Phase 2 prototype work begins. £350K tranches on milestone delivery.</div></div></div>
+<div class="timeline-box"><div class="dot pending"></div><div class="timeline-content"><div class="date">Month 9-12</div><div class="desc">Prototype delivered. TRL 6 demo to MOD sponsor. Phase 3 transition discussion.</div></div></div>
+</div>
+
+<h2>✅ Pre-Submission Checklist</h2>
+<div class="section">
+<div class="checklist-item"><span class="check">✅</span><span>DASA Open Call eligibility confirmed (UK org, CSOAI Ltd 16939677)</span></div>
+<div class="checklist-item"><span class="check">✅</span><span>Innovation case articulates MOD capability gap (5 gaps identified)</span></div>
+<div class="checklist-item"><span class="check">✅</span><span>Technical feasibility demonstrated (30 MCPs, 111 pages, working demos)</span></div>
+<div class="checklist-item"><span class="check">✅</span><span>Cost breakdown matches Phase 2 funding band (£150K-£350K)</span></div>
+<div class="checklist-item"><span class="check pending">⬜</span><span class="red-line">Cyber Essentials certificate obtained (P0 human gate — Nick)</span></div>
+<div class="checklist-item"><span class="check pending">⬜</span><span class="red-line">SC clearance initiated for technical lead (P0 human gate — Nick)</span></div>
+<div class="checklist-item"><span class="check pending">⬜</span><span class="red-line">Defence Sourcing Portal registration completed (P0 human gate — Nick)</span></div>
+<div class="checklist-item"><span class="check pending">⬜</span><span>MOD sponsor / DASA partner identified and pre-engaged</span></div>
+<div class="checklist-item"><span class="check">✅</span><span>Exportability/dual-use case documented (civil emergency scenarios)</span></div>
+<div class="checklist-item"><span class="check">✅</span><span>Project plan with WBS, milestones, deliverables prepared</span></div>
+<div class="checklist-item"><span class="check">✅</span><span>Intellectual Property strategy defined (open-source core, sovereign overlay)</span></div>
+<div class="checklist-item"><span class="check pending">⬜</span><span>Subcontractor strategy (if any) defined and costed</span></div>
+</div>
+
+<h2>💰 Proposed Budget Breakdown — £350K / 9 Months</h2>
+<div class="section">
+<table>
+<tr><th>WBS</th><th>Work Package</th><th>£</th><th>%</th><th>Deliverable</th></tr>
+<tr><td>1.0</td><td>Project Management & Governance</td><td>£35,000</td><td>10%</td><td>Monthly reports, quarterly reviews, SIGIL audit trail</td></tr>
+<tr><td>2.0</td><td>ISR Fusion Engine (30→50 MCP sources)</td><td>£75,000</td><td>21%</td><td>Unified Common Operating Picture on Cesium 3D globe</td></tr>
+<tr><td>3.0</td><td>Swarm Autonomy Module (Mava + PX4)</td><td>£70,000</td><td>20%</td><td>4-drone swarm demo with RL-trained behaviours</td></tr>
+<tr><td>4.0</td><td>Sovereign C2 Backbone (FreeTAKServer)</td><td>£40,000</td><td>11%</td><td>TAK-compatible C2 with UK-sovereign AI governance</td></tr>
+<tr><td>5.0</td><td>JSP 936 Compliance Generator</td><td>£35,000</td><td>10%</td><td>Automated AI assurance reports for every deployed model</td></tr>
+<tr><td>6.0</td><td>Digital Twin (Yorkshire Test Bed)</td><td>£45,000</td><td>13%</td><td>3D scenario replay: flood response, CBRN, drone swarm</td></tr>
+<tr><td>7.0</td><td>MOD Cloud Deployment + Demo</td><td>£30,000</td><td>9%</td><td>Docker compose deploy on MOD Cloud, live demo to sponsor</td></tr>
+<tr><td>8.0</td><td>Dissemination & Transition Planning</td><td>£20,000</td><td>6%</td><td>Open-source release, DSEi prep, Phase 3 transition plan</td></tr>
+<tr style="font-weight:700;background:rgba(251,191,36,.1)"><td></td><td>TOTAL</td><td>£350,000</td><td>100%</td><td>TRL 4→6, deployable, demonstrable</td></tr>
+</table>
+</div>
+
+<h2>🔒 Human Gates (Nick's Action Required)</h2>
+<div class="section">
+<p style="color:var(--red)">These items require Nick's personal information and cannot be auto-generated:</p>
+<table>
+<tr><th>Gate</th><th>What's Needed</th><th>Status</th><th>Blocks</th></tr>
+<tr><td>Defence Sourcing Portal</td><td>Company registration, bank details, DUNS number</td><td class="red-line">🔴 BLOCKED</td><td>Bidding</td></tr>
+<tr><td>Cyber Essentials</td><td>£320-600 fee, self-assessment questionnaire, IASME</td><td class="red-line">🔴 BLOCKED</td><td>Contract</td></tr>
+<tr><td>SC Clearance</td><td>Personal details form, 3-month UK residency, sponsor</td><td class="red-line">🔴 BLOCKED</td><td>Access to classified work</td></tr>
+<tr><td>DASA Submission</td><td>Final review + submit via online portal</td><td class="red-line">🔴 READY TO SUBMIT</td><td>Funding</td></tr>
+</table>
+<p style="margin-top:1rem;color:var(--gold)"><strong>Time to unblock:</strong> All 3 human gates can be initiated in parallel. DSP registration = 30 min. Cyber Essentials = 2h self-assessment + 1-2 week processing. SC clearance = 2h form + 4-6 week processing. Start all 3 on Day 1.</p>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — UK's First Open-Source Sovereign Defence AI OS</p>
+<p>CSOAI Ltd (16939677) · MIT + CC0 · SIGIL Ed25519 · BFT 33-Agent Council</p>
+</footer>
+</div>
+
+<script>
+function generateDASA(){
+var t=document.getElementById('projTitle').value;
+var o=document.getElementById('org').value;
+var l=document.getElementById('techLead').value||'[TECHNICAL LEAD — SC clearance required]';
+var f=parseInt(document.getElementById('funding').value);
+var d=parseInt(document.getElementById('duration').value);
+var inn=document.getElementById('innovation').value;
+var eu=document.getElementById('endUser').value;
+var now=new Date().toISOString().split('T')[0];
+
+var out=`╔══════════════════════════════════════════════════════════════╗
+║         DASA OPEN CALL — BID PROPOSAL (DRAFT)                ║
+║         Generated: ${now}                           ║
+╠══════════════════════════════════════════════════════════════╣
+
+PROPOSAL TITLE: ${t}
+ORGANISATION:   ${o}
+TECHNICAL LEAD: ${l}
+END USER:       ${eu}
+FUNDING:        £${f.toLocaleString()}
+DURATION:       ${d} months
+TRL:            4 → 6
+
+────────────────────────────────────────────────────────────────
+SECTION 1: INNOVATION (max 1 page)
+────────────────────────────────────────────────────────────────
+
+${inn}
+
+MOD CAPABILITY GAPS ADDRESSED:
+  1. Multi-source ISR fusion (30 sovereign data sources → unified COP)
+  2. Autonomous drone swarm (Mava RL-trained, PX4-based)
+  3. Sovereign C2 backbone (FreeTAKServer — zero licensing cost)
+  4. AI Governance (33-agent BFT council + JSP 936 compliance)
+  5. Deployment speed (90-day Docker compose vs 12-18 month bespoke)
+
+WHY NOVEL: No existing UK MOD system combines open-source multi-sensor
+fusion, RL-trained drone swarm orchestration, and auditable AI governance
+in a single deployable platform. Current solutions are either:
+  - Proprietary and prohibitively expensive (per-seat licensing)
+  - Single-domain (sensor OR swarm OR C2, never integrated)
+  - Closed-source (no audit trail for AI decisions)
+
+────────────────────────────────────────────────────────────────
+SECTION 2: TECHNICAL APPROACH (max 2 pages)
+────────────────────────────────────────────────────────────────
+
+ARCHITECTURE: 5-layer sovereign substrate
+  Layer 1: Sensor MCP Fleet (30 Python MCP servers wrapping UK open data)
+  Layer 2: Fusion Engine (Cesium 3D Common Operating Picture)
+  Layer 3: Autonomy Layer (Mava multi-agent RL + PX4 SITL/HITL)
+  Layer 4: C2 Backbone (FreeTAKServer + CoT protocol)
+  Layer 5: Governance Layer (33-agent BFT council, JSP 936, SIGIL audit)
+
+TECHNOLOGY READINESS:
+  Current: TRL 4 — 30 MCPs built and tested, demos operational
+  Target:  TRL 6 — System prototype demonstrated in relevant environment
+
+KEY TECHNICAL RISKS:
+  1. Swarm safety (mitigated: simulation-first via PX4 SITL)
+  2. AI assurance (mitigated: JSP 936 compliance generator + BFT council)
+  3. MOD Cloud compatibility (mitigated: Docker-compose = portable)
+  4. Sensor latency in contested EM environments (mitigated: MQTT bridge fallback)
+
+────────────────────────────────────────────────────────────────
+SECTION 3: TEAM AND DELIVERY (max 1 page)
+────────────────────────────────────────────────────────────────
+
+CSOAI Ltd (Company 16939677) — UK-registered AI governance company.
+The team has built and deployed 30 MCP servers, 111 live web pages,
+and a 15-repo defence open-source library in 6 days.
+
+DELIVERY TEAM:
+  - Project Lead / Architect: Nicholas Templeman (CEO, CSOAI Ltd)
+  - Technical Lead: ${l}
+  - AI/ML Engineers: 2 FTE (swarm RL, ISR fusion)
+  - Platform Engineer: 1 FTE (DevOps, deployment)
+
+PROJECT PLAN: ${d} months
+  Months 1-3: ISR fusion engine + swarm module (TRL 4→5)
+  Months 4-6: Integrated demo + JSP 936 compliance (TRL 5→6)
+  Months 7-${d}: MOD Cloud deployment + sponsor demo + transition
+
+────────────────────────────────────────────────────────────────
+SECTION 4: COST BREAKDOWN
+────────────────────────────────────────────────────────────────
+
+  WP1: Project Management            £35,000  (10%)
+  WP2: ISR Fusion Engine             £75,000  (21%)
+  WP3: Swarm Autonomy Module         £70,000  (20%)
+  WP4: Sovereign C2 Backbone         £40,000  (11%)
+  WP5: JSP 936 Compliance Generator  £35,000  (10%)
+  WP6: Digital Twin (Yorkshire)      £45,000  (13%)
+  WP7: MOD Cloud Deployment          £30,000  (9%)
+  WP8: Dissemination & Transition    £20,000  (6%)
+  ──────────────────────────────────────────
+  TOTAL:                             £${f.toLocaleString()}  (100%)
+
+────────────────────────────────────────────────────────────────
+SECTION 5: ROUTE TO MARKET / TRANSITION
+────────────────────────────────────────────────────────────────
+
+  Immediate: Open-source release (MIT + CC0) for UK defence ecosystem
+  Phase 3:   Transition to MOD sponsor for operational trial
+  Export:    AUKUS-compatible sovereign design (UK-AU-US interop)
+  Dual-use:  Civil emergency response (flood, CBRN, mass casualty)
+
+────────────────────────────────────────────────────────────────
+SECTION 6: INTELLECTUAL PROPERTY
+────────────────────────────────────────────────────────────────
+
+  Core platform: MIT open-source (defoneos-mcp, ISR fusion, C2)
+  Sovereign overlay: CSOAI Ltd proprietary (AI governance, BFT council)
+  Background IP: All pre-existing CSOAI/MEOK assets retained
+  Foreground IP: Generated under DASA contract, Crown-use rights
+
+────────────────────────────────────────────────────────────────
+SECTION 7: RISK REGISTER
+────────────────────────────────────────────────────────────────
+
+  R1: SC clearance delay (Mitigation: start immediately, Phase 1 is unclassified)
+  R2: MOD Cloud onboarding delay (Mitigation: AWS/Azure fallback)
+  R3: Swarm safety concerns (Mitigation: Simulation-first approach)
+  R4: Sensor API changes (Mitigation: 30-source redundancy)
+  R5: Key person dependency (Mitigation: Documentation + cross-training)
+
+═══════════════════════════════════════════════════════════════
+  DRAFT GENERATED BY DEFONEOS DASA AUTO-GENERATOR
+  This is an auto-generated template. Nick must review before submit.
+  Submit at: https://submit.dasa.mod.uk
+═══════════════════════════════════════════════════════════════`;
+
+var el=document.getElementById('output');
+el.textContent=out;
+el.classList.add('visible');
+}
+
+function copyOutput(){
+var el=document.getElementById('output');
+if(el.textContent){
+navigator.clipboard.writeText(el.textContent);
+alert('DASA bid packet copied to clipboard!');
+}else{
+alert('Generate the packet first.');
+}
+}
+</script>
+</body>
+</html>

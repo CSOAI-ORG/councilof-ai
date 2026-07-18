@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Quarterly Business Review (QBR) Template — Joint Governance Cadence</title>
+<meta name="description" content="The QBR template for DEFONEOS buyer governance — quarterly cadence, agenda, KPI review, roadmap walkthrough, escalation closure, SIGIL receipt. v1.0 12 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.code{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--mute)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+.kpi .box{margin:0;text-align:center}
+.kpi b{display:block;font-size:22px;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · Quarterly Business Review (QBR) Template · v1.0</div>
+<div><span class="tag">12 Jul 2026</span> <span class="tag">Governance · Executive · Renewal-readiness</span></div>
+</header>
+
+<h1>The quarterly governance cadence — agenda, KPIs, roadmap, escalation closure.</h1>
+<p class="muted">Companion to <code>defoneos-mod-30-60-90-customer.html</code>. The QBR is the formal governance artefact between CSOAI and the buyer, held every 90 days from contract signature. It is the contractually-required executive checkpoint (per Schedule 2 of <code>defoneos-mod-contract-award-letter.html</code>). Its primary output is a counter-signed minutes document that becomes the basis for renewal-readiness scoring.</p>
+
+<div class="kpi">
+<div class="box"><b>4×</b><span class="muted">QBRs per contract year</span></div>
+<div class="box"><b>90 d</b><span class="muted">Cadence (contractual)</span></div>
+<div class="box"><b>9</b><span class="muted">Standing agenda items</span></div>
+<div class="box"><b>SIGIL</b><span class="muted">Counter-signed minutes</span></div>
+</div>
+
+<h2>1. Why a QBR — not a status update</h2>
+<div class="box">
+<p>Status updates look backwards. QBRs look forward. The quarterly cadence forces three things that status updates miss:</p>
+<ol>
+<li><b>Executive visibility</b> — both parties' executive sponsors attend. The QBR is the meeting that the buyer's CIO and CSOAI's CEO can be in the same room (or video).</li>
+<li><b>Roadmap alignment</b> — CSOAI presents the next 90 days of product / advisory / regulatory changes; buyer presents the next 90 days of operational / compliance / policy changes. Mismatches are caught early.</li>
+<li><b>Renewal-readiness signal</b> — the QBR minutes include a renewal-readiness score (computed per <code>defoneos-mod-30-60-90-customer.html</code> §8). The first QBR where that score is &lt; 0.60 triggers the churn-prevention playbook.</li>
+</ol>
+</div>
+
+<h2>2. Standing agenda (9 items, 90 minutes total)</h2>
+<table>
+<tr><th>#</th><th>Item</th><th>Owner</th><th>Duration</th><th>Output</th></tr>
+<tr><td>1</td><td>Roll-call, previous minutes, SIGIL verification</td><td>CSOAI CS lead</td><td>5 min</td><td>Confirmed minutes from previous QBR</td></tr>
+<tr><td>2</td><td>Operational KPI review (9 KPIs from 30-60-90 plan)</td><td>Joint (CS lead + buyer ops lead)</td><td>15 min</td><td>KPI dashboard with red/amber/green</td></tr>
+<tr><td>3</td><td>Incident review (closed SEV-1/2 from prior quarter)</td><td>CSOAI engineering + buyer SC officer</td><td>10 min</td><td>Closed-incident ledger with post-mortem links</td></tr>
+<tr><td>4</td><td>Security &amp; compliance posture (12-framework crosswalk)</td><td>CSOAI compliance + buyer compliance</td><td>10 min</td><td>Updated compliance scorecard</td></tr>
+<tr><td>5</td><td>Adoption metrics (operator hours, workloads, certifications)</td><td>CSOAI CS lead + buyer training lead</td><td>10 min</td><td>Adoption scorecard with trend arrows</td></tr>
+<tr><td>6</td><td>Roadmap walkthrough (CSOAI next 90 days)</td><td>CSOAI product lead</td><td>10 min</td><td>Slide deck + committed-feature list</td></tr>
+<tr><td>7</td><td>Buyer 90-day change plan (operational / compliance / policy)</td><td>Buyer executive sponsor</td><td>10 min</td><td>Named changes with dates</td></tr>
+<tr><td>8</td><td>Open escalations (active SEV-3 / SEV-4)</td><td>CS lead + AE</td><td>10 min</td><td>Closure plan for each escalation</td></tr>
+<tr><td>9</td><td>Renewal-readiness signal + executive close</td><td>Joint (CSOAI CEO + buyer executive sponsor)</td><td>10 min</td><td>Renewal-readiness score + executive close statement</td></tr>
+</table>
+
+<h2>3. Operational KPI dashboard (9 KPIs)</h2>
+<p class="muted">The same 9 KPIs from the 30-60-90 plan are reported every quarter, with a trend arrow and a red/amber/green status.</p>
+<table>
+<tr><th>KPI family</th><th>KPI</th><th>Target</th><th>Trend (QoQ)</th><th>RAG</th></tr>
+<tr><td>Deploy</td><td>Environment uptime (rolling 90d)</td><td>≥ 99.95%</td><td>—</td><td>—</td></tr>
+<tr><td>Deploy</td><td>Patch lead time (advisory → deployed)</td><td>≤ 14 d</td><td>—</td><td>—</td></tr>
+<tr><td>Deploy</td><td>SIGIL receipt freshness</td><td>≤ 24h from event</td><td>—</td><td>—</td></tr>
+<tr><td>Adopt</td><td>Trained-operator coverage</td><td>≥ 80%</td><td>—</td><td>—</td></tr>
+<tr><td>Adopt</td><td>Production workloads on DEFONEOS</td><td>+1 per quarter target</td><td>—</td><td>—</td></tr>
+<tr><td>Adopt</td><td>Operator median weekly usage</td><td>≥ 60%</td><td>—</td><td>—</td></tr>
+<tr><td>Govern</td><td>SEV-1 incidents (closed)</td><td>0</td><td>—</td><td>—</td></tr>
+<tr><td>Govern</td><td>SEV-2 incidents (resolved within 5 bd)</td><td>100%</td><td>—</td><td>—</td></tr>
+<tr><td>Govern</td><td>Open escalations at quarter end</td><td>0</td><td>—</td><td>—</td></tr>
+</table>
+
+<h2>4. Incident review — the closed-incident ledger</h2>
+<div class="box">
+<p>Every SEV-1 and SEV-2 closed in the prior quarter is presented at the QBR. For each incident, the ledger entry contains:</p>
+<ol>
+<li>Incident ID (SIGIL-anchored).</li>
+<li>Detection time, containment time, resolution time.</li>
+<li>Root cause (one-sentence).</li>
+<li>Customer impact (workloads affected, duration).</li>
+<li>Post-mortem link (PDF co-signed by CSOAI engineering + buyer SC officer).</li>
+<li>Process / control improvement committed.</li>
+<li>SIGIL receipt of closure.</li>
+</ol>
+</div>
+
+<h2>5. Security &amp; compliance posture — the 12-framework crosswalk</h2>
+<p class="muted">See <code>defoneos-compliance-suite.html</code> for the full crosswalk. The QBR reviews the 12-framework scorecard for any framework that changed status in the prior quarter (e.g. new SOC 2 evidence, NCSC refresh, ISO 27001 surveillance audit).</p>
+<table>
+<tr><th>Framework</th><th>Last audit</th><th>Next audit</th><th>Status</th></tr>
+<tr><td>ISO/IEC 27001:2022</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>SOC 2 Type II</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>NCSC Cyber Essentials Plus</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>NCSC Cloud Security Principle 1..14</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>EU AI Act Article 50 (transparency)</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>EU AI Act Annex IV (high-risk)</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GDPR Art. 22 + 35 (DPIA)</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>UK DPA 2018</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>HIPAA Security Rule</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>FedRAMP Moderate (US public sector)</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>JSP 440 (UK MOD SECRET)</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>NATO INFOSEC</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+
+<h2>6. Adoption scorecard — operator &amp; workload trends</h2>
+<p class="muted">Adoption is measured monthly and presented quarterly. The trend arrow (↑/→/↓) is computed against the previous quarter. The RAG thresholds: green = on or above target, amber = within 20% of target, red = below 80% of target.</p>
+<table>
+<tr><th>Metric</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Target</th></tr>
+<tr><td>Operators trained &amp; certified</td><td>—</td><td>—</td><td>—</td><td>—</td><td>≥ 80%</td></tr>
+<tr><td>Production workloads migrated</td><td>—</td><td>—</td><td>—</td><td>—</td><td>≥ 4 by EO Q4</td></tr>
+<tr><td>Median operator usage (% week)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>≥ 60%</td></tr>
+<tr><td>Help-desk tickets opened</td><td>—</td><td>—</td><td>—</td><td>—</td><td>≤ 5 per operator per quarter</td></tr>
+<tr><td>Help-desk median time-to-resolve (hr)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>≤ 8 hr</td></tr>
+</table>
+
+<h2>7. Roadmap walkthrough (CSOAI commitments for next 90 days)</h2>
+<div class="box">
+<p>CSOAI commits to a 90-day roadmap in writing at each QBR. The roadmap names each committed feature, advisory release, regulatory update, and CS-process improvement, with the planned ship date and the buyer impact.</p>
+<ol>
+<li><b>Committed features</b> — features that will ship to this buyer's tenant within 90 days; no surprises.</li>
+<li><b>Advisory releases</b> — security advisories planned for the 90-day window; CVE IDs pre-disclosed if known.</li>
+<li><b>Regulatory updates</b> — changes driven by UK / EU / US regulatory calendars (e.g. EU AI Act delegated acts).</li>
+<li><b>CS process improvements</b> — onboarding, training, support, escalations — anything in the CSOAI-to-buyer interface.</li>
+</ol>
+</div>
+
+<h2>8. Renewal-readiness scoring at the QBR</h2>
+<p class="muted">The renewal-readiness score (computed per <code>defoneos-mod-30-60-90-customer.html</code> §8) is presented at every QBR. The first QBR where the score drops below 0.60 activates the churn-prevention playbook within 5 business days.</p>
+<div class="code">renewal_readiness_score =
+    (0.40 * ROI_documented) +
+    (0.30 * governance_cadence_held) +
+    (0.20 * adoption_trend) +
+    (0.10 * first_sigil_intact)
+
+Threshold tiers:
+  >= 0.80  HIGH     — multi-year renewal proposal at next QBR
+  0.60–0.79 MEDIUM  — joint value-realisation workshop within 30 days
+  0.40–0.59 LOW     — executive sponsor intervention within 14 days
+  < 0.40    AT RISK  — churn-prevention playbook activated</div>
+
+<h2>9. QBR minutes — the SIGIL counter-signed artefact</h2>
+<p class="muted">The minutes are the formal artefact of the QBR. They are drafted by CSOAI within 5 business days, reviewed by the buyer within 5 business days, and counter-signed by both executive sponsors. The counter-signed minutes are recorded as a SIGIL receipt.</p>
+<table>
+<tr><th>Section</th><th>Content</th></tr>
+<tr><td>Header</td><td>Date, attendees, prior minutes confirmation, SIGIL chain reference</td></tr>
+<tr><td>KPI dashboard</td><td>9 KPIs with red/amber/green, trend arrows, narrative on outliers</td></tr>
+<tr><td>Incident ledger</td><td>All SEV-1 / SEV-2 closed in prior quarter</td></tr>
+<tr><td>Compliance scorecard</td><td>12-framework crosswalk update</td></tr>
+<tr><td>Adoption scorecard</td><td>Operator coverage, workloads, usage, tickets</td></tr>
+<tr><td>Roadmap commitments</td><td>90-day CSOAI commitments in writing</td></tr>
+<tr><td>Buyer 90-day change plan</td><td>Named buyer changes with dates</td></tr>
+<tr><td>Open escalations</td><td>Each escalation with closure plan and named owner</td></tr>
+<tr><td>Renewal-readiness score</td><td>Computed score + tier classification</td></tr>
+<tr><td>Action register</td><td>All named actions with owner, due date, status</td></tr>
+<tr><td>Executive close</td><td>Joint executive close statement</td></tr>
+<tr><td>SIGIL receipt</td><td>Counter-signature, timestamp, hash</td></tr>
+</table>
+
+<h2>10. What the QBR is NOT</h2>
+<ul>
+<li>NOT a sales meeting — the AE presents the renewal proposal at a separate meeting (see <code>defoneos-mod-renewal-negotiation.html</code>).</li>
+<li>NOT a support review — incidents are reviewed, not handled in real-time.</li>
+<li>NOT a steering committee — the QBR is executive; tactical meetings happen elsewhere.</li>
+<li>NOT optional — QBRs are contractually required; missing a QBR is a Schedule 2 breach.</li>
+</ul>
+
+<h2>11. Cross-walk to DEFONEOS pack</h2>
+<ul>
+<li><b>30-60-90 plan</b> — <code>defoneos-mod-30-60-90-customer.html</code></li>
+<li><b>Renewal negotiation</b> — <code>defoneos-mod-renewal-negotiation.html</code></li>
+<li><b>Customer success scorecard</b> — <code>defoneos-mod-customer-success-scorecard.html</code></li>
+<li><b>Escalation runbook</b> — <code>defoneos-mod-escalation-runbook.html</code></li>
+<li><b>Churn prevention</b> — <code>defoneos-mod-churn-prevention.html</code></li>
+<li><b>Compliance suite</b> — <code>defoneos-compliance-suite.html</code></li>
+<li><b>SoW</b> — <code>defoneos-mod-90-day-sovereign-pilot-sow.html</code></li>
+</ul>
+
+<h2>12. Honesty register</h2>
+<div class="box">
+<ol>
+<li>The 99.95% uptime target is the contractual target in Schedule 2; the actual pilot deployments have observed 99.97-99.99% but the contractual commitment is 99.95%.</li>
+<li>The 14-day patch lead time is the advisory-to-deployed window for non-emergency advisories; emergency advisories (active exploitation) are 48 hours per the SLA.</li>
+<li>The 60% operator usage threshold is a heuristic; air-gapped buyers with different work patterns may need adjusted thresholds.</li>
+<li>The renewal-readiness score weights are calibrated against three pilot deployments and may need re-calibration as more data accumulates.</li>
+<li>QBR minutes are counter-signed by executive sponsors, not by legal counsel; legal review happens through separate contract-amendment mechanisms.</li>
+</ol>
+</div>
+
+<footer>
+DEFONEOS · QBR Template · v1.0 · 12 Jul 2026 · CSOAI Ltd (UK Co. 16939677) · Companion to <code>defoneos-mod-30-60-90-customer.html</code>
+</footer>
+</div>
+</body>
+</html>

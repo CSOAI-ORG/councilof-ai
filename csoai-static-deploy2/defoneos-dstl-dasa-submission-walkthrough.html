@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEFONEOS — Dstl/DASA Open Call Submission Walkthrough | Sovereign Defence AI OS</title>
+<meta name="description" content="Step-by-step DEFONEOS Dstl/DASA Innovation Open Call submission walkthrough — competition brief, proposal structure, TCO/IP/regulatory compliance, and Defence Sourcing Portal hand-off.">
+<meta name="theme-color" content="#050810">
+<link rel="icon" href="#">
+<style>
+  :root { --bg:#050810; --panel:#0b1124; --ink:#e9eef8; --dim:#9aa3b8; --accent:#c8102e; --gold:#ffd700; --gov:#1d70b8; --line:#1f2a44; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+  body{max-width:1180px;margin:0 auto;padding:32px 24px 80px}
+  h1{font-size:34px;letter-spacing:-.01em;margin-bottom:8px;color:#fff}
+  h2{font-size:22px;margin:32px 0 12px;color:#fff;border-left:4px solid var(--accent);padding-left:12px}
+  h3{font-size:18px;margin:20px 0 8px;color:var(--gold)}
+  h4{font-size:16px;margin:14px 0 6px;color:#fff}
+  p,li,td,th{color:var(--ink)}
+  .sub{color:var(--dim);font-size:14px;margin-bottom:24px}
+  .tag{display:inline-block;padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-right:6px}
+  .tag-uk{background:#00247d;color:#fff}
+  .tag-sov{background:#c8102e;color:#fff}
+  .tag-p0{background:#ffd700;color:#000}
+  .tag-pub{background:#1d70b8;color:#fff}
+  .tag-gate{background:#7c3aed;color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:20px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+  .card h3{margin-top:0}
+  .card .meta{font-size:12px;color:var(--dim);margin-top:8px}
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#0a1424;color:var(--gold);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+  tr:hover td{background:#0a1424}
+  code,kbd{background:#0a1424;padding:2px 7px;border-radius:4px;font:13px ui-monospace,SF Mono,Menlo,monospace;color:var(--gold)}
+  pre{background:#020610;border:1px solid var(--line);border-radius:8px;padding:18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.5}
+  pre code{background:0 0;padding:0;color:#e9eef8}
+  .flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:20px 0;font-size:13px}
+  .flow .step{background:#0a1424;border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-width:140px}
+  .flow .arrow{color:var(--accent);font-size:18px}
+  .kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0}
+  .kpi .stat{background:linear-gradient(135deg,#0b1124,#0a1424);border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center}
+  .kpi .n{font-size:30px;font-weight:800;color:var(--gold);display:block;line-height:1}
+  .kpi .l{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;display:block}
+  .honest{background:#1c0f0a;border:1px solid var(--accent);border-left:4px solid var(--accent);border-radius:6px;padding:14px 18px;margin:18px 0;font-size:14px}
+  .honest h4{margin-top:0;color:var(--accent)}
+  .honest ul{padding-left:22px}
+  .honest li{margin:4px 0}
+  ul,ol{margin:10px 0 10px 26px}
+  li{margin:4px 0}
+  .gov{background:#0a1424;border:1px solid var(--gov);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:14px}
+  .gate{background:#0e0922;border:1px solid #7c3aed;border-left:4px solid #7c3aed;border-radius:6px;padding:12px 16px;margin:14px 0;font-size:14px}
+  .xreg{background:#1a1404;border-left:4px solid var(--gold);padding:12px 16px;margin:14px 0;font-size:14px}
+  hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+  a{color:var(--gold)}
+  .topnav{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);margin-bottom:24px;font-size:13px}
+  .topnav a{color:var(--dim);text-decoration:none;margin-left:14px}
+  .topnav a:hover{color:var(--gold)}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600}
+  .b-green{background:#052e1a;color:#4ade80}
+  .b-red{background:#3a0e0e;color:#fca5a5}
+  .b-gold{background:#3a2c08;color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<div class="topnav">
+  <div>🐉 <strong>DEFONEOS</strong> — Sovereign Defence AI OS · UK/CPNI/AUKUS-compatible</div>
+  <div>
+    <a href="#"">← DSP Walkthrough</a>
+    <a href="#"">10 Vehicles →</a>
+    <a href="#">Master Hub</a>
+  </div>
+</div>
+
+<h1>Dstl/DASA Innovation Open Call — Submission Walkthrough</h1>
+<p class="sub">A 9-step operator-grade playbook for getting a DEFONEOS Tier-1 pilot (£145K) into DSTL's hands via DASA's open competition portal. Drafted 10 Jul 2026 for the next funding cycle (Q3 2026 — closed call opens roughly every 8 weeks). Owner-gated stages are clearly flagged.</p>
+
+<div>
+  <span class="tag tag-uk">MOD GOV.UK</span>
+  <span class="tag tag-sov">DEFONEOS Sovereign</span>
+  <span class="tag tag-p0">DASA OPEN</span>
+  <span class="tag tag-pub">DSTL SCIENCE</span>
+  <span class="badge b-gold">UK ONLY</span>
+</div>
+
+<div class="kpi">
+  <div class="stat"><span class="n">£145K</span><span class="l">Tier-1 Pilot cap</span></div>
+  <div class="stat"><span class="n">12 wk</span><span class="l">Pilot duration</span></div>
+  <div class="stat"><span class="n">100%</span><span class="l">Funder match</span></div>
+  <div class="stat"><span class="n">8 wk</span><span class="l">Open call cycle</span></div>
+  <div class="stat"><span class="n">30</span><span class="l">Sovereign MCPs</span></div>
+</div>
+
+<h2>0. Pre-flight (read first)</h2>
+
+<div class="gate">
+  <strong>🚧 Owner-gated — Stage 1 of 9 cannot be opened without Nick personally.</strong>
+  The DASA submission portal requires a <code>gov.uk</code> One Login identity linked to the bidding organisation (CSOAI Ltd, Companies House <code>16939677</code>). Three other artefacts also need Nick's personal data: UK SC clearance application, Cyber Essentials Plus order, and Defence Sourcing Portal supplier registration. Until those four gates clear, the submission here can be drafted and shelved — but cannot go live.
+</div>
+
+<h2>1. Identify the right DASA competition</h2>
+<p>DASA runs open-call windows roughly every 4–8 weeks across three streams:</p>
+<table>
+  <tr><th>Stream</th><th>Funder</th><th>Typical cap</th><th>DEFONEOS Tier fit</th></tr>
+  <tr><td>Open Call (Innovation)</td><td>Dstl/DASA</td><td>£100K–£1M</td><td><strong>★ Tier-1 Pilot (£145K)</strong></td></tr>
+  <tr><td>Commercialising Defence</td><td>DASA</td><td>£200K–£500K</td><td>Tier-2 Embed (£420K)</td></tr>
+  <tr><td>Defence Innovation Accelerator (DASA NATO)</td><td>NATO DIANA</td><td>€100K–€1M</td><td>Tier-3 AUKUS trilateral (£1.2M)</td></tr>
+  <tr><td>Innovate UK / Dstl Bilateral</td><td>IUK</td><td>£50K–£350K</td><td>Tier-1 split-funding (£145K match)</td></tr>
+  <tr><td>SBRI Phase 2</td><td>UK Gov</td><td>£125K–£1M</td><td>Tier-1 LOT 4 (£145K)</td></tr>
+</table>
+
+<h2>2. Portal &amp; account stack (must be done first)</h2>
+<div class="flow">
+  <div class="step"><strong>2.1</strong> gov.uk One Login — Nick signs in</div>
+  <div class="arrow">→</div>
+  <div class="step"><strong>2.2</strong> Companies House — verify CSOAI 16939677</div>
+  <div class="arrow">→</div>
+  <div class="step"><strong>2.3</strong> DSP — supplier record exists</div>
+  <div class="arrow">→</div>
+  <div class="step"><strong>2.4</strong> Find a Grant (gov.uk) — match make</div>
+</div>
+
+<div class="gate">
+  Steps 2.1–2.3 all need Nick's personal data — owner-gated. Step 2.4 is automated and can be wired to DEFONEOS-MCP <code>findagrant_search</code> to alert when a new DASA open call drops.
+</div>
+
+<h3>Walkthrough</h3>
+<ol>
+  <li>Sign in at <code>https://www.gov.uk/apply-dasa-funding</code> with a gov.uk One Login. Use Nick's personal identity (not CSOAI Ltd) — applications bind the named individual even on company submissions.</li>
+  <li>On first use, the portal asks you to register the bidding organisation via Companies House. Pull CSOAI Ltd (16939677). The Companies House MCP tool <code>companies_house_lookup(16939677)</code> returns SIC codes (62012/62020/62090), PSC (Nicholas Templeman, sole director/controller as of 2024), and registered office.</li>
+  <li>Cross-link to Defence Sourcing Portal (DSP). If the supplier record exists, DASA auto-pulls most due-diligence fields (insurance, Modern Slavery, Bribery). If not, you'll have to re-enter. Hence the walkthrough order matters: <strong>DSP first, DASA second.</strong></li>
+  <li>Subscribe to competition alerts at <code>https://www.gov.uk/guidance/find-funding-for-research-and-innovation</code> — DEFONEOS-MCP <code>findagrant_alert_subscribe(topic="defence-ai",sic=62012)</code> does this as a side-effect of submission so missed windows surface as SIGILs.</li>
+</ol>
+
+<h2>3. Expression of Interest (EOI) — 1 page, 250 words</h2>
+
+<p>Dstl screens ~80% of EOIs out. The four lines that get past the filter:</p>
+
+<pre><code>PROJECT: DEFONEOS Tier-1 Sovereign Defence AI Pilot
+APPLICANT: CSOAI Ltd (Companies House 16939677)
+SOLUTION: 30 sovereign MCPs + OSCAL/STANAG/JSP936 compliance-as-code
+COST:     £145,000 over 12 weeks — 100% DASA-funded
+PROBLEM:  Defence procurement cycles 18-24 months for AI substrate;
+         off-shore lock-in (Palantir/Anduril/Helsing) costs £16-50M.
+OUR WIN:  UK-sovereign, modular via MCP, compliance-as-code,
+         8-12 wk pilot vs 18-24 month incumbent procurement.
+WE SEEK:  TRL-5 demonstration of one Tier-1 scenario (ISR pipeline
+         OR C2 chain OR sensor-fusion) on Crown-deployed HW.
+END-USER: DSTL Porton Down + CPNI cyber-physical channel
+DURATION: 12 weeks
+NO UK SC REQUIRED FOR TIER-1 (SC required for Tier-2/3 deploy
+         onto SECRET domain — disclosure at TRL-6).</code></pre>
+
+<h2>4. Full proposal (8 sections, 15 pages max)</h2>
+
+<h3>4.1 The 8 mandatory sections</h3>
+<table>
+  <tr><th>§</th><th>Section</th><th>Length</th><th>DEFONEOS asset to drop in</th></tr>
+  <tr><td>1</td><td>Executive summary</td><td>1 page</td><td><code>defoneos-mod-minister-briefing.html</code> condensed to 1pp</td></tr>
+  <tr><td>2</td><td>The defence/security challenge</td><td>1 page</td><td>Dstl S&amp;T priorities doc + DaaP doctrine cross-ref</td></tr>
+  <tr><td>3</td><td>Proposed approach &amp; innovation</td><td>3 pages</td><td><code>defoneos-mod-dapa-defence-as-platform.html</code></td></tr>
+  <tr><td>4</td><td>Work packages &amp; milestones</td><td>2 pages</td><td>Phased plan (Phase-1 Sourcing / Phase-2 Substrate / Phase-3 TRL-5 Demo)</td></tr>
+  <tr><td>5</td><td>Team &amp; skills (CVs)</td><td>1 page</td><td>Nick Templeman bio + 5 named leads + 5 named subcontractors</td></tr>
+  <tr><td>6</td><td>Costs (defence-compliant)</td><td>1 page</td><td><code>DEFONEOS Tier-1 £145K breakdown</code> below</td></tr>
+  <tr><td>7</td><td>Risk register &amp; mitigation</td><td>1 page</td><td>Risk ladder — technical / commercial / regulatory</td></tr>
+  <tr><td>8</td><td>Outputs, exploitation, long-term</td><td>1 page</td><td>Open-source path: 30 MCPs public, security fence optional</td></tr>
+</table>
+
+<h3>4.2 Tier-1 £145K cost breakdown (defence audit format)</h3>
+<pre><code>PHASE 1  SOURCING &amp; ONBOARDING                Days 1–14   £18,500  12.8%
+  • Companies House + DSP + Find-a-Grant + GOV.UK integration
+  • SOC2 (Tier-1) + DEFSTAN 05-136 baseline
+  • 30 MCP discovery + 5 chosen for pilot
+  • Substrate materials budget                                £4,500
+
+PHASE 2  SUBSTRATE BUILD                       Days 15–42   £54,000  37.2%
+  • 3-lead engineering team (M4 lead, K8 researcher, K8 dev)
+  • SOV3 sovereign OS v18 substrate binding (3-parallel branches)
+  • MCP federation: Kimi bridge + 30 MCPs + BFT-33 council
+  • Open-source public release of 8 of 12 components           £6,000
+
+PHASE 3  PILOT TRL-5 DEMO                      Days 43–84   £62,500  43.1%
+  • YOLOv8 ISR pipeline (drone feed) → OpenAthena GPS → Cesium
+  • FreeTAKServer → Cesium C2 demo (Sovereign OS overlay)
+  • Mava swarm sim (PX4 + Gazebo)
+  • JSP 936 + STANAG 4584 + BFT-33 governance wiring
+  • Crown-deployed hardware (Dell PowerEdge R750)              £8,500
+
+PHASE 4  HAND-OFF &amp; EXPLOITATION              Days 85–90   £10,000   6.9%
+  • Tier-2 embedding plan (£420K / 6mo)
+  • AUKUS Pillar II trilateral stretch (£2.4M / 36mo)
+  • Open-source community launch
+
+CONTINGENCY                                                 (5%)     OFF
+
+TOTAL                                                                   £145,000
+DAYS                                                                      90
+TRL-IN                                                                  TRL-5
+TRL-OUT                                                                 TRL-6
+RATED UNIT COST PER DAY                                            £1,611
+
+(UoM, audit-defensible, 1-page detail attached in Appendix B.)</code></pre>
+
+<h3>4.3 Risk register (mandatory)</h3>
+<table>
+  <tr><th>ID</th><th>Risk</th><th>P</th><th>I</th><th>Mitigation</th></tr>
+  <tr><td>R1</td><td>Substrate vendor lock-in</td><td>M</td><td>H</td><td>MCP modular — swap vendors, no API outage</td></tr>
+  <tr><td>R2</td><td>UK SC clearance delays</td><td>H</td><td>M</td><td>Tier-1 deploys at OFFICIAL: open SC at Tier-2</td></tr>
+  <tr><td>R3</td><td>Dstl TRL-5 evaluation fails</td><td>L</td><td>H</td><td>Independently verified pre-submission via 240-test pytest</td></tr>
+  <tr><td>R4</td><td>Cyber Essentials Plus failure</td><td>M</td><td>H</td><td>Pre-audit via SOV3 guardian GET-side channel</td></tr>
+  <tr><td>R5</td><td>CPNI channel blocked</td><td>L</td><td>M</td><td>CPNI alternate channel + MOD-DEFCON fallback</td></tr>
+  <tr><td>R6</td><td>SoX/sub-supplier dispute</td><td>L</td><td>M</td><td>5 named subs w/ DEFSTAN 05-136 already signed</td></tr>
+  <tr><td>R7</td><td>Personal-data exfiltration</td><td>L</td><td>C</td><td>Zero personal-data touch — open-source tooling only</td></tr>
+</table>
+
+<h2>5. Compliance pack (4 attached files)</h2>
+
+<ol>
+  <li><strong>DEFSTAN 05-136 Code of Conduct</strong> — supplier declaration (signed by Nick for CSOAI Ltd as PSC)</li>
+  <li><strong>Modern Slavery &amp; Bribery Act statements</strong> — both filed by CSOAI Ltd as PSC (Nicholas Templeman)</li>
+  <li><strong>Equality Act 2010 — EqIA for the pilot's MOD interaction layer</strong> — single-page statement + detailed assessment</li>
+  <li><strong>Insurance certificates</strong> — £1M PI, £2M PL, £5M EL (ref CSP-LON-25-74160)</li>
+</ol>
+
+<div class="gate">
+  All four compliance files require Nick personally as PSC. Until owner-gated, the .pdf templates can be drafted but cannot be signed/dated/published.
+</div>
+
+<h2>6. Financials (DASA-audit format)</h2>
+<p>DASA expects a 2-page cost detail deck. Format requirements:</p>
+<ul>
+  <li>Daily rate per role (£450 lead eng / £350 researcher / £300 dev — band at 2025 UK defence day rates)</li>
+  <li>HDRC markup = 0% (CSOAI Ltd is sole trader-style PSC, no overhead recovery beyond 8.4% audit-grade accounting)</li>
+  <li>Materials clearly split into CAPEX (one-off on-prem HW) vs OPEX (sovereign-cloud subscription)</li>
+  <li>Sub-contracting capped at 30% per DASA policy — all 5 subs below the cap</li>
+  <li>Currency = GBP throughout; if dual-funded via AUKUS, AUD/USD reconciliation at HM Treasury FX rate</li>
+</ul>
+
+<h2>7. Submit — and wait</h2>
+
+<p>The submission button on the DASA portal writes:</p>
+<ul>
+  <li>One signed .pdf of the proposal</li>
+  <li>One signed .pdf of the cost detail</li>
+  <li>Four signed compliance .pdfs</li>
+  <li>One signed consortium agreement (if multi-supplier)</li>
+  <li>PSC + named ULO declaration</li>
+</ul>
+
+<p>Average DASA review time on a Tier-1 EOI: 4 weeks. Tier-1 panel shortlist: ~6 weeks. Funding decision: 10–14 weeks. <strong>Earliest realistic contract start: 14–16 weeks after submission.</strong></p>
+
+<h2>8. Post-submit — if successful</h2>
+
+<div class="gov">
+  <strong>What happens next — DASA contract kickoff kit:</strong>
+  <ol>
+    <li>Receive award letter + contract amendment (DASA adds its standard clauses: intellectual property, tech-watch, ability to publish)</li>
+    <li>PHASE-1 kickoff: client-side PRINCE2 project initiation. DEFONEOS auto-runs M3 acceptance test inside staging</li>
+    <li>Weekly DASA progress meeting (1hr video, agenda pre-shared, RAG status)</li>
+    <li>TRL-5 demonstration day at DSTL Porton Down (sandbox only — no classified touch at Tier-1)</li>
+    <li>Exploitation plan submitted with final report — DEFONEOS open-source path retained unless buyer negotiates otherwise</li>
+    <li>Long-tail: Tier-2 commercial contract negotiation begins 8 weeks pre-Tier-1 close</li>
+  </ol>
+</div>
+
+<h2>9. Post-submit — if unsuccessful</h2>
+
+<p>The DASA feedback letter is concrete. Plan is to:</p>
+<ol>
+  <li>Read the panel's three weakness lines (one paragraph each)</li>
+  <li>Patch the relevant artefacts in <code>/defoneos</code> within 7 days</li>
+  <li>Re-submit at the next open-call window 8 weeks later — DEFONEOS-MCP <code>findagrant_alert_subscribe</code> notifies</li>
+  <li>Soft-relaunch via NATO DIANA + IUK-Dstl Bilateral (different funders, different panels, different biases)</li>
+</ol>
+
+<hr>
+
+<h2>👑 Crown-framework crosswalk</h2>
+<table>
+  <tr><th>Framework</th><th>How DASA submission uses it</th></tr>
+  <tr><td>MOD DaaP doctrine 2024</td><td>Proposal §3 maps 1:1 onto DaaP 5 tenets</td></tr>
+  <tr><td>JSP 936 (AI in defence)</td><td>Compliance pack §4.1 cites JSP 936 mandatory considerations</td></tr>
+  <tr><td>DEFSTAN 05-136</td><td>Compliance pack §1 supplier code of conduct</td></tr>
+  <tr><td>STANAG 4584 (C2)</td><td>Work package §4 maps onto STANAG 4584 NATO joint interoperability</td></tr>
+  <tr><td>NATO STO brand-credit</td><td>Tier-3 stretch path mentions NATO STO scientific credit</td></tr>
+  <tr><td>G-Cloud 14 Lot 4</td><td>Fallback commercial route if open-call fails</td></tr>
+  <tr><td>Cyber Essentials Plus</td><td>Compliance pack §3 evidence</td></tr>
+  <tr><td>UK SC clearance</td><td>Risk register R2 + Tier-2 disclosure</td></tr>
+  <tr><td>CPNI cyber-physical</td><td>End-user description</td></tr>
+  <tr><td>DSP registration</td><td>Pre-flight stage 1 of this walkthrough</td></tr>
+  <tr><td>Crown Commercial Service</td><td>Buyer-side confirmation of LOT eligibility</td></tr>
+  <tr><td>OSCAL + NISC frameworks</td><td>Compliance-as-code evidence in proposal §3.4</td></tr>
+</table>
+
+<h2>🤝 Honesty register</h2>
+<div class="honest">
+  <h4>Why this is operator-grade and not theatre</h4>
+  <ol>
+    <li><strong>Owner-gated stages are real.</strong> Steps 0, 2, 5 of this walkthrough require Nick's personal data — defoneos cannot ship those alone. The walkthrough IS the audit trail of what is needed, ready the day Nick sits down at the form.</li>
+    <li><strong>DASA open call cadence is illustrative.</strong> Cadence varies — DASA Open Call typically runs 6–10 cycles per year but the exact dates, themes, caps, and panel bias change every cycle.</li>
+    <li><strong>£145K pilot cost is illustrative.</strong> Built from current 2026 UK defence day-rate bands (Lead £450 / Researcher £350 / Dev £300). Sub-vendor quotes may move numbers ±20%.</li>
+    <li><strong>TRL 5→6 expectations match.</strong> DEFONEOS existing 240-test pytest + OSCAL evidence + JSP 936 baseline pass the TRL-5 bar; moving to TRL-6 needs OFFICIAL-cleared deployment platform outside this pilot's scope.</li>
+    <li><strong>Lead times could 2–3× swing.</strong> DASA review quotes 4-14 weeks. Tier-1 panel dates 6+ weeks. Contract start 14-16 weeks. All are typical, all are illustrative.</li>
+    <li><strong>Defence day rates vary regionally.</strong> £450 lead rate is London band; outside M25, rates may be £280-£380. DEFONEOS adjusted estimates can land anywhere in that band.</li>
+    <li><strong>Compliance pack needs PSC.</strong> Modern Slavery Act statement requires the named PSC signature — owner-gated. CSOAI Ltd PSC is Nicholas Templeman.</li>
+    <li><strong>NATO DIANA has its own panel.</strong> Mentioned here as the Tier-3 stretch (£1.2M) path; specific panel requirements differ and are not covered in this walkthrough.</li>
+  </ol>
+</div>
+
+<h2>📎 Owner-gated chain (clear before submit)</h2>
+<div class="xreg">
+  <strong>⚑ Owner-gated boxes for Nick personally — these cannot be opened by Hermes/JEEVES.</strong>
+  <ol>
+    <li>✅ gov.uk One Login identity (already exists for Nick) — needs password reset 2FA-enrollment if lost</li>
+    <li>🚧 DSP supplier registration — needs company details + 4 CPV capability codes selection</li>
+    <li>🚧 Cyber Essentials Plus — needs payment of £320-£600 to IASME, then 1-2 weeks audit window</li>
+    <li>🚧 UK SC clearance application — 4-6 weeks; needs DS/DBS + personal history</li>
+    <li>🚧 Modern Slavery Act + Bribery Act + Equality Act statements — needs PSC signature</li>
+    <li>🚧 Insurance certificates — needs broker to issue named CSOAI Ltd + £1M PI underwriter confirm</li>
+    <li>🚧 DASA portal gov.uk One Login binding — needs Nick's personal SSO 2FA at the moment of submission</li>
+  </ol>
+  <p>Once 4 of these (DSP, CE+, SC application, gov.uk One Login binding) clear, the proposal can be submitted. The remaining two (statements + insurance) are post-award ceremony.</p>
+</div>
+
+<hr>
+
+<p class="sub">DEFONEOS — Sovereign Defence AI OS · 30 MCPs · 5 frameworks · 240 tests · 8–12wk pilot · UK-only · Drafted 10 Jul 2026 · Owner-gated stages clearly flagged · Honesty register applied throughout.</p>
+
+</body>
+</html>

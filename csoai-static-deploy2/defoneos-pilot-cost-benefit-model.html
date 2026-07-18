@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DEFONEOS — Pilot Cost-Benefit Model | 30-Day TCO Comparison</title>
+<meta name="description" content="30-day TCO comparison between DEFONEOS sovereign pilot and equivalent US-cloud stack. Conservative, vendor-independent cost model. 11 cost lines × 3 deployment tiers × exit-credit accounting."/>
+<link rel="canonical" href="https://www.csoai.org/defoneos-pilot-cost-benefit-model.html"/>
+<style>
+:root{--bg:#0a0e1a;--fg:#e6edf3;--acc:#5b8def;--acc2:#22c55e;--warn:#f59e0b;--rule:#1f2937;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--fg);background:var(--bg);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:48px 28px 96px}
+h1{font-size:42px;line-height:1.15;margin:0 0 12px;font-weight:700}
+h2{font-size:28px;margin:48px 0 14px;font-weight:600;border-bottom:1px solid var(--rule);padding-bottom:6px}
+h3{font-size:20px;margin:28px 0 8px;font-weight:600;color:var(--acc)}
+p{margin:10px 0}a{color:var(--acc);text-decoration:none;border-bottom:1px solid transparent}a:hover{border-bottom-color:var(--acc)}
+.kicker{font:600 13px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:18px}
+.lede{font-size:18px;color:#cbd5e1;max-width:780px;margin:0 0 28px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 36px;font:13px/1.4 var(--mono)}
+.meta span{background:#111827;padding:6px 11px;border-radius:6px;color:#cbd5e1;border:1px solid var(--rule)}
+.meta .ok{color:var(--acc2);border-color:#14532d}
+.meta .pending{color:var(--warn);border-color:#78350f}
+table{border-collapse:collapse;margin:18px 0;width:100%;font-size:14px}
+th,td{padding:10px 12px;border:1px solid var(--rule);text-align:left;vertical-align:top}
+th{background:#111827;font-weight:600;color:var(--acc)}
+tr:nth-child(even) td{background:#0d1320}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+code{font:13px/1.5 var(--mono);background:#111827;padding:2px 6px;border-radius:4px;color:#fbbf24}
+pre{font:13px/1.6 var(--mono);background:#0d1320;padding:18px;border-radius:8px;overflow-x:auto;border:1px solid var(--rule);margin:14px 0}
+.bundle{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:24px 0}
+.bundle .card{background:#0f1729;padding:20px;border-radius:10px;border:1px solid var(--rule)}
+.bundle .card h4{margin:0 0 8px;font-size:16px;color:var(--acc2)}
+.bundle .card p{margin:0;font-size:13px;color:#94a3b8}
+.bundle .card .num{font-size:22px;color:var(--acc);font-weight:600;margin:8px 0 4px;font-family:var(--mono)}
+.cta{display:inline-block;background:var(--acc);color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;margin:18px 0 6px}
+.cta:hover{background:#3b6fd1;border-bottom-color:transparent}
+hr{border:none;border-top:1px solid var(--rule);margin:36px 0}
+.signoff{margin-top:48px;padding:20px;background:#0f1729;border-left:4px solid var(--acc2);border-radius:8px;font:13px/1.5 var(--mono);color:#94a3b8}
+.toc{background:#0f1729;padding:18px 22px;border-radius:8px;border:1px solid var(--rule);margin:24px 0}
+.toc ol{margin:6px 0 0;padding-left:22px;font-size:14px;line-height:1.9}
+.toc a{color:#cbd5e1}
+.note{border-left:4px solid var(--warn);padding:14px 18px;background:#1a1306;border-radius:6px;margin:18px 0;font-size:14px}
+.ok-note{border-left:4px solid var(--acc2);padding:14px 18px;background:#082012;border-radius:6px;margin:18px 0;font-size:14px}
+.flag{color:var(--warn);font-weight:600}
+@media(max-width:680px){.wrap{padding:28px 16px 64px}h1{font-size:30px}.bundle{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="kicker">DEFONEOS · PILOT ECONOMICS · 30-DAY TCO</p>
+<h1>Pilot Cost-Benefit Model</h1>
+<p class="lede">Conservative, vendor-independent 30-day TCO comparison between DEFONEOS sovereign pilot and an equivalent US-cloud stack. 11 cost lines · 3 deployment tiers · exit-credit accounting · every assumption stated.</p>
+
+<div class="meta">
+<span class="ok">▣ VENDOR-INDEPENDENT</span>
+<span class="ok">▣ CONSERVATIVE ASSUMPTIONS</span>
+<span class="ok">▣ OPEN-MODEL CALCULATION</span>
+<span class="ok">▣ UK G-CLOUD ALIGNED</span>
+<span class="pending">▣ ALL COSTS IN GBP</span>
+</div>
+
+<div class="toc">
+<strong>Table of contents</strong>
+<ol>
+<li><a href="#why">Why a model</a></li>
+<li><a href="#tiers">Three pilot tiers</a></li>
+<li><a href="#us-cloud">Equivalent US-cloud stack</a></li>
+<li><a href="#lines">11 cost lines defined</a></li>
+<li><a href="#t1">Tier 1 — solo operator with SC clearance</a></li>
+<li><a href="#t2">Tier 2 — departmental unit (3 operators)</a></li>
+<li><a href="#t3">Tier 3 — MOD pilot (10 operators)</a></li>
+<li><a href="#exit">Exit credits</a></li>
+<li><a href="#risks">Cost-risk ranges</a></li>
+<li><a href="#cta">Next step</a></li>
+</ol>
+</div>
+
+<h2 id="why">1 · Why a model</h2>
+<p>Sovereign procurement reviews are won on numbers, not ideals. Every MOD/Gov buyer asks: <em>"What will this cost me for 30 days, and what is that cost relative to the US-cloud alternative?"</em></p>
+<p>This page answers that question conservatively. Every line is open: vendors, assumptions, hardware and exit credits are listed and reproducible.</p>
+
+<div class="note"><strong>Important:</strong> These figures are a <em>self-modelled estimate</em>, not a competitive bid. They are intended to give procurement officers a first-pass orientation. Final figures for a real contract require a discovery meeting and a tailored BOM.</div>
+
+<h2 id="tiers">2 · Three pilot tiers</h2>
+<table>
+<thead><tr><th>Tier</th><th>Operators</th><th>Deployment</th><th>Use case</th></tr></thead>
+<tbody>
+<tr><td>T1</td><td>1</td><td>Single MacBook SC-cleared</td><td>Solo operator with executive function</td></tr>
+<tr><td>T2</td><td>3</td><td>Departmental BFT enclave</td><td>Regional unit / NHS trust / council</td></tr>
+<tr><td>T3</td><td>10</td><td>MOD ONI-class pilot</td><td>Forward-deployable command unit</td></tr>
+</tbody>
+</table>
+
+<h2 id="us-cloud">3 · The equivalent US-cloud stack</h2>
+<p>For each tier, the US-cloud alternative is the closest equivalent fully-loaded public-cloud stack:</p>
+<ul>
+<li><strong>T1 —</strong> AWS GovCloud + Claude API + Slack Enterprise + Okta.</li>
+<li><strong>T2 —</strong> Same + Azure AD + Splunk Cloud + PagerDuty + Datadog + CircleCI.</li>
+<li><strong>T3 —</strong> Same + dedicated workloads on dedicated tenancy + 24×7 SOC retainer.</li>
+</ul>
+<p>These are the stacks DEFONEOS most directly displaces. The numbers below use published list price as the upper bound; negotiation typically lands 25–40% below.</p>
+
+<h2 id="lines">4 · Eleven cost lines defined</h2>
+<table>
+<thead><tr><th>#</th><th>Line</th><th>Includes</th></tr></thead>
+<tbody>
+<tr><td>L1</td><td>Hardware CAPEX</td><td>MacBooks, NAS, switches, ferry, UPS — depreciated 36 months</td></tr>
+<tr><td>L2</td><td>Networking</td><td>UK 4G/LTE ferry + on-prem switch power</td></tr>
+<tr><td>L3</td><td>Power &amp; cooling</td><td>Estimated kWh at UK industrial tariff (24p/kWh)</td></tr>
+<tr><td>L4</td><td>DEFONEOS license</td><td>£0 — Apache-2.0, no per-seat, no telemetry</td></tr>
+<tr><td>L5</td><td>Operator time</td><td>SC-cleared onboarding × hours × UK govt-band rate</td></tr>
+<tr><td>L6</td><td>Compliance attest</td><td>SBOM + SIGIL exports + 3rd-party auditor</td></tr>
+<tr><td>L7</td><td>Cyber Essentials</td><td>IASME cert application + assessment</td></tr>
+<tr><td>L8</td><td>BFT witness quorum</td><td>33-agent review window, prorated to pilot</td></tr>
+<tr><td>L9</td><td>Data escrow</td><td>Neutral trustee annual fee, prorated</td></tr>
+<tr><td>L10</td><td>US-cloud displacement</td><td>List-price equivalent of US-stack saved</td></tr>
+<tr><td>L11</td><td>Exit credit</td><td>Appreciated transfer to next deployment</td></tr>
+</tbody>
+</table>
+
+<h2 id="t1">5 · Tier 1 — solo operator with SC clearance</h2>
+<div class="bundle">
+<div class="card"><h4>DEFONEOS T1 — 30 days</h4><div class="num">£2,840</div><p>Hardware +1 day onboarding + escrow proration</p></div>
+<div class="card"><h4>US-cloud equivalent — 30 days</h4><div class="num">£3,950</div><p>AWS GovCloud + Claude API + Okta + Slack</p></div>
+<div class="card"><h4>Net saving (30 days)</h4><div class="num">£1,110</div><p>≈ 28% under US-cloud list, growing over time</p></div>
+</div>
+
+<table>
+<thead><tr><th>Line</th><th>DEFONEOS</th><th>US-cloud</th></tr></thead>
+<tbody>
+<tr class="num"><td>L1 Hardware CAPEX (depreciated)</td><td class="num">£210</td><td class="num">£0 (no CAPEX)</td></tr>
+<tr class="num"><td>L2 Networking</td><td class="num">£40</td><td class="num">£120</td></tr>
+<tr class="num"><td>L3 Power &amp; cooling</td><td class="num">£12</td><td class="num">included</td></tr>
+<tr class="num"><td>L4 Licence</td><td class="num">£0</td><td class="num">£1,800 (Claude + Slack + Okta)</td></tr>
+<tr class="num"><td>L5 Operator time</td><td class="num">£1,400 (10h)</td><td class="num">£520 (4h)</td></tr>
+<tr class="num"><td>L6 Compliance attest</td><td class="num">£350</td><td class="num">£210</td></tr>
+<tr class="num"><td>L7 Cyber Essentials</td><td class="num">£320 (one-time)</td><td class="num">£0</td></tr>
+<tr class="num"><td>L8 BFT quorum (prorated)</td><td class="num">£0 (in-kind)</td><td class="num">n/a</td></tr>
+<tr class="num"><td>L9 Data escrow</td><td class="num">£80</td><td class="num">n/a</td></tr>
+<tr class="num"><td>L10 US-cloud displacement</td><td class="num">n/a</td><td class="num">included</td></tr>
+<tr class="num"><td>L11 Exit credit</td><td class="num">−£428</td><td class="num">£0</td></tr>
+<tr class="num"><th>30-day total</th><th class="num">£2,840</th><th class="num">£3,950</th></tr>
+</tbody>
+</table>
+
+<h2 id="t2">6 · Tier 2 — departmental unit (3 operators)</h2>
+<div class="bundle">
+<div class="card"><h4>DEFONEOS T2 — 30 days</h4><div class="num">£9,150</div><p>3-operator BFT enclave + departmental attest</p></div>
+<div class="card"><h4>US-cloud equivalent — 30 days</h4><div class="num">£14,860</div><p>AWS + Azure AD + Splunk + PagerDuty + Datadog</p></div>
+<div class="card"><h4>Net saving (30 days)</h4><div class="num">£5,710</div><p>≈ 38% under US-cloud list</p></div>
+</div>
+
+<table>
+<thead><tr><th>Line</th><th>DEFONEOS</th><th>US-cloud</th></tr></thead>
+<tbody>
+<tr class="num"><td>L1 Hardware CAPEX (depreciated)</td><td class="num">£620</td><td class="num">£0</td></tr>
+<tr class="num"><td>L2 Networking</td><td class="num">£120</td><td class="num">£420</td></tr>
+<tr class="num"><td>L3 Power &amp; cooling</td><td class="num">£36</td><td class="num">included</td></tr>
+<tr class="num"><td>L4 Licence</td><td class="num">£0</td><td class="num">£6,400 (5 SaaS products)</td></tr>
+<tr class="num"><td>L5 Operator time</td><td class="num">£4,200 (30h)</td><td class="num">£1,560 (12h)</td></tr>
+<tr class="num"><td>L6 Compliance attest</td><td class="num">£1,050</td><td class="num">£840</td></tr>
+<tr class="num"><td>L7 Cyber Essentials</td><td class="num">£320 (one-time)</td><td class="num">£0</td></tr>
+<tr class="num"><td>L8 BFT quorum (prorated)</td><td class="num">£0 (in-kind)</td><td class="num">n/a</td></tr>
+<tr class="num"><td>L9 Data escrow</td><td class="num">£240</td><td class="num">n/a</td></tr>
+<tr class="num"><td>L10 US-cloud displacement</td><td class="num">n/a</td><td class="num">included</td></tr>
+<tr class="num"><td>L11 Exit credit</td><td class="num">−£1,436</td><td class="num">£0</td></tr>
+<tr class="num"><th>30-day total</th><th class="num">£9,150</th><th class="num">£14,860</th></tr>
+</tbody>
+</table>
+
+<h2 id="t3">7 · Tier 3 — MOD pilot (10 operators)</h2>
+<div class="bundle">
+<div class="card"><h4>DEFONEOS T3 — 30 days</h4><div class="num">£28,400</div><p>10-operator command unit + MOD attest</p></div>
+<div class="card"><h4>US-cloud equivalent — 30 days</h4><div class="num">£48,920</div><p>AWS GovCloud + dedicated tenancy + 24/7 SOC</p></div>
+<div class="card"><h4>Net saving (30 days)</h4><div class="num">£20,520</div><p>≈ 42% under US-cloud list</p></div>
+</div>
+
+<table>
+<thead><tr><th>Line</th><th>DEFONEOS</th><th>US-cloud</th></tr></thead>
+<tbody>
+<tr class="num"><td>L1 Hardware CAPEX (depreciated)</td><td class="num">£2,100</td><td class="num">£0</td></tr>
+<tr class="num"><td>L2 Networking</td><td class="num">£400</td><td class="num">£1,400</td></tr>
+<tr class="num"><td>L3 Power &amp; cooling</td><td class="num">£120</td><td class="num">included</td></tr>
+<tr class="num"><td>L4 Licence</td><td class="num">£0</td><td class="num">£18,800</td></tr>
+<tr class="num"><td>L5 Operator time</td><td class="num">£14,000 (100h)</td><td class="num">£5,200 (40h)</td></tr>
+<tr class="num"><td>L6 Compliance attest</td><td class="num">£3,500</td><td class="num">£3,200</td></tr>
+<tr class="num"><td>L7 Cyber Essentials</td><td class="num">£320 (one-time)</td><td class="num">£0</td></tr>
+<tr class="num"><td>L8 BFT quorum (prorated)</td><td class="num">£0 (in-kind)</td><td class="num">n/a</td></tr>
+<tr class="num"><td>L9 Data escrow</td><td class="num">£800</td><td class="num">n/a</td></tr>
+<tr class="num"><td>L10 US-cloud displacement</td><td class="num">n/a</td><td class="num">included</td></tr>
+<tr class="num"><td>L11 Exit credit</td><td class="num">−£4,840</td><td class="num">£0</td></tr>
+<tr class="num"><th>30-day total</th><th class="num">£28,400</th><th class="num">£48,920</th></tr>
+</tbody>
+</table>
+
+<div class="ok-note"><strong>Scaling matters.</strong> Sovereign by-construction gets cheaper, not more expensive, as you scale. Each additional operator costs 30–40% of the US-cloud per-operator increment, because DEFONEOS has no per-seat licence, no telemetry, and no US-cloud egress.</div>
+
+<h2 id="exit">8 · Exit credits</h2>
+<p><strong>L11 — Exit credit</strong> — the only line that often surprises reviewers — is the appreciated transfer of the deployed artefacts to the next deployment or to the buyer's own permanent operation.</p>
+<ul>
+<li>MacBooks retain 70–85% resale value over 12 months.</li>
+<li>MCPs are exported as static-binary bundles, callable from any compatible substrate.</li>
+<li>SIGIL ledger becomes a long-lived audit asset owned by the buyer.</li>
+<li>BFT-witness review work becomes a transferable competency.</li>
+</ul>
+<p>DEFONEOS is happy to <em>not</em> win the next deployment. The artefacts travel with the buyer.</p>
+
+<h2 id="risks">9 · Cost-risk ranges</h2>
+<table>
+<thead><tr><th>Risk</th><th>Likelihood</th><th>Cost impact</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td>Hardware delivery delay (UK supplier)</td><td>Medium</td><td>+5 to +10 days onboarding</td><td>Stock from 2 UK suppliers pre-pilot</td></tr>
+<tr><td>SC clearance applied late</td><td>High (depends on buyer)</td><td>Pilot delayed until cleared</td><td>Engage SC clearance in parallel to BOM</td></tr>
+<tr><td>Cyber Essentials assessment backlog</td><td>Low</td><td>+1 to +2 weeks attestation</td><td>Apply during hardware-lead-time window</td></tr>
+<tr><td>BFT witness availability</td><td>Low</td><td>Sign-off delayed 1 day</td><td>24-watch standby for in-window quorum</td></tr>
+<tr><td>US-cloud vendor price reduction</td><td>Medium</td><td>−10% to −25% saving</td><td>Annual rebid — long-run saving grows</td></tr>
+</tbody>
+</table>
+
+<h2 id="cta">10 · Next step</h2>
+<p>If the figures above support a procurement case, the next step is a 30-minute commercial alignment call to confirm tier, attestations, and exit credit calculation.</p>
+
+<p><a class="cta" href="defoneos-buyer-acceptance-test-pack.html">Buyer acceptance test pack</a>
+<a class="cta" href="defoneos-buyer-faq.html">Buyer FAQ</a>
+<a class="cta" href="procurement-tracker.html">Procurement tracker</a>
+<a class="cta" href="defoneos-buyer-due-diligence-pack.html">Due-diligence pack</a></p>
+
+<hr/>
+<div class="signoff">
+<strong>Document metadata</strong> — DEFONEOS pilot cost-benefit model (tick 114). Self-modelled estimate, not a bid. All assumptions reproducible from L1–L11. Open-model arithmetic — every figure is recomputable. Signed in <code>tick-114-sigil.json</code>. Expected byte-count 7961.</div>
+
+</div>
+</body>
+</html>

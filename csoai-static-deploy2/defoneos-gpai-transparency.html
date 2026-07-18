@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — GPAI Transparency (EU AI Act Art 50)</title>
+<meta name="description" content="DEFONEOS Article 50 GPAI transparency obligations: provider identification, training-data summary, downstream-provider compliance, AI-generated content marking, EU database registration. EAT Directive aligned.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:150px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.check{color:var(--green)} .cross{color:var(--red)} .partial{color:var(--gold)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.7rem;overflow-x:auto;color:var(--green);white-space:pre}
+.process{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.process .p-num{font-size:1.5rem;color:var(--gold);font-weight:700;float:left;margin-right:1rem;line-height:1}
+.process .p-title{font-size:1rem;color:var(--cyan);font-weight:600;margin-bottom:.3rem}
+.honesty{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>GPAI Transparency Obligations</h1>
+<p style="font-size:.8rem;color:var(--cyan)">EU AI Act Art 50 + Art 52 · Transparency for general-purpose AI · AI-generated content marking · EU database registration · Provider-of-GPAI summary template · EAT Directive aligned</p></div>
+</div>
+<div><span class="badge badge-purple">EU AI ACT ART 50+52</span> <span class="badge badge-gold">PROVIDER OBLIGATION</span> <span class="badge badge-green">ACTIVE</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">8</div><div class="label">Transparency Pillars</div></div>
+<div class="stat-box"><div class="num">7</div><div class="label">Content Marking Modes</div></div>
+<div class="stat-box"><div class="num">10</div><div class="label">Disclosure Categories</div></div>
+<div class="stat-box"><div class="num">14d</div><div class="label">EU DB Registration SLA</div></div>
+<div class="stat-box"><div class="num">100%</div><div class="label">AI-Output Marking</div></div>
+<div class="stat-box"><div class="num">5</div><div class="label">Audiences</div></div>
+</div>
+
+<div class="section">
+<h3>What Art 50 + Art 52 Require</h3>
+<p>Articles 50 and 52 of the EU AI Act establish two overlapping but distinct transparency regimes:</p>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>Article 50 — Providers and Deployers of Certain AI Systems</strong> require transparency obligations: AI systems intended to interact directly with natural persons must disclose that they are AI; emotion-recognition or biometric-categorisation must inform exposed persons; deepfake content must be marked; AI-generated content must be marked in a machine-readable way; and providers must design for detectability.</li>
+<li><strong>Article 52 — Provider Obligations for General-Purpose AI (GPAI)</strong> requires the technical documentation needed for downstream providers to comply; public summary of training content per template; copyright-compliance policy; and for "systemic-risk" GPAI models: model evaluation, adversarial testing, serious-incident reporting, and cybersecurity protection.</li>
+</ul>
+<p>DEFONEOS is a <strong>sovereign AI substrate that includes GPAI capabilities</strong> (the MEOK brain, the SOV3 BFT council, the SIGIL chain, and various MCPs that wrap open-source general-purpose LLMs). The substrate therefore has both kinds of obligations: as a deployer of AI systems that interact with persons, and as a provider of a GPAI model/scaffold to downstream providers.</p>
+<p>This page documents the <strong>8 transparency pillars, 10 disclosure categories, 7 content-marking modes, and the EU database registration process</strong> that DEFONEOS implements to comply with both articles.</p>
+</div>
+
+<h2>8 Transparency Pillars</h2>
+
+<div class="process">
+<div class="p-num">1</div>
+<div class="p-title">Pillar 1 — AI-Identity Disclosure (at every interaction)</div>
+<p style="font-size:.85rem">Every interaction with a DEFONEOS-operated AI begins with a <strong>clear AI-identity disclosure</strong>: the user knows they are talking to a sovereign AI substrate. The disclosure is visible at the start of every session, persistent throughout, and surfaced at the start of every distinct task. The disclosure is in plain language ("You are now working with DEFONEOS, a sovereign AI system operated under CSOAI LTD UK 16939677") and includes the deployment-level identity, contact for redress, and link to the System Card.</p>
+</div>
+
+<div class="process">
+<div class="p-num">2</div>
+<div class="p-title">Pillar 2 — Training Data Public Summary</div>
+<p style="font-size:.85rem">DEFONEOS publishes a public summary of training data per the EU AI Act Article 53(1)(b) template: "the main groups of data elements, types of data, sources, and modalities the model was trained on." The current published summary covers ~190 GB of training corpus across 16+ datasets, organised by data group (government open-data, scientific literature, synthetic telemetry, federated industry data, partner-provided datasets), type (numeric, text, image, signal, geospatial, biometric), source (national open-data portals, OGL-UK-3.0 releases, partner signed agreements, federated ingest), and modality. The summary is reviewed annually and updated when training corpus changes materially.</p>
+</div>
+
+<div class="process">
+<div class="p-num">3</div>
+<div class="p-title">Pillar 3 — Copyright Compliance Policy</div>
+<p style="font-size:.85rem">DEFONEOS publishes a copyright-compliance policy per Article 53(1)(c). The policy states the opt-out mechanism (robots.txt + ai.txt standard), the data-licensing policy (OGL-UK-3.0 / CC-BY only by default, signed-partner-only for proprietary corpora), the rights-respecting pipeline (rights-of-first-publication respected; pre-2029 publicly-cited source sets preferred), the credits-attribution standard, and the takedown procedure. The policy is reviewed quarterly by an external copyright counsel.</p>
+</div>
+
+<div class="process">
+<div class="p-num">4</div>
+<div class="p-title">Pillar 4 — AI-Generated Content Marking</div>
+<p style="font-size:.85rem">Every piece of text, image, audio, video, or structured output produced by a DEFONEOS substrate AI carries a <strong>machine-readable mark</strong> — a C2PA-style provenance manifest + a Watermark-Resistant Sign (per C2PA 2.0 spec) + the SIGIL chain hash. The mark is tamper-evident: any attempt to strip it breaks verification. The mark does not replace human-readable disclosure; it complements it.</p>
+</div>
+
+<div class="process">
+<div class="p-num">5</div>
+<div class="p-title">Pillar 5 — Deepfake Disclosure</div>
+<p style="font-size:.85rem">Any synthetic likeness (face, voice, gait, biometric signal) used in DEFONEOS-produced content triggers a deepfake disclosure per Article 50(4). The disclosure appears as both a label in the metadata and a human-readable annotation visible at the point of consumption: "This content includes synthetic likeness of [person]; generated by DEFONEOS substrate." The disclosure is required even when the content is later transformed by human editing or downstream processing.</p>
+</div>
+
+<div class="process">
+<div class="p-num">6</div>
+<div class="p-title">Pillar 6 — Emotion-Recognition Disclosure</div>
+<p style="font-size:.85rem">Where emotion-recognition or biometric-categorisation is used (subject monitoring, fatigue detection, stress indicator recognition), the affected persons are informed in plain language at the point of data capture. The disclosure includes: what is being measured, what categories are recognised, how the data is used, where it is stored, who has access, and how long it is retained. Sensitive contexts (workplaces, schools, healthcare) require affirmative consent.</p>
+</div>
+
+<div class="process">
+<div class="p-num">7</div>
+<div class="p-title">Pillar 7 — Provider Identification</div>
+<p style="font-size:.85rem">Every DEFONEOS output includes a "Made by" / "Generated by" line that identifies the provider (CSOAI LTD, UK Companies House registration 16939677), the deployment (e.g., "DEFONEOS BFT Council v2.4"), the version (e.g., "v4.7.2 substrate"), and the date. The identification is verifiable: it carries a SIGIL hash that anyone can validate against the public SIGIL registry at <code>sigil.csoai.org</code>.</p>
+</div>
+
+<div class="process">
+<div class="p-num">8</div>
+<div class="p-title">Pillar 8 — Detectability-By-Design</div>
+<p style="font-size:.85rem">DEFONEOS substrate outputs are designed to be machine-detectable as AI-produced: the watermarking is robust to common transformations (crop, resize, compression, OCR), the metadata manifest is embedded redundantly (in-band + side-band + SIGIL hash), and the system supports external detector API access. This is the "design for detectability" requirement per Article 50(2).</p>
+</div>
+
+<h2>10 Disclosure Categories</h2>
+
+<table>
+<tr><th>#</th><th>Disclosure Category</th><th>Audience</th><th>Channel</th><th>Frequency</th></tr>
+<tr><td>1</td><td>AI identity at point of interaction</td><td>User</td><td>Banner + footer + manifest</td><td>Per session</td></tr>
+<tr><td>2</td><td>System Card / model description</td><td>Public</td><td>Hosted page + manifest</td><td>Per version release</td></tr>
+<tr><td>3</td><td>Training data summary</td><td>Regulators + public</td><td>EU DB + hosted page</td><td>Annually + on material change</td></tr>
+<tr><td>4</td><td>Copyright compliance policy</td><td>Regulators + content owners</td><td>EU DB + hosted page</td><td>Quarterly review</td></tr>
+<tr><td>5</td><td>Energy / environmental footprint</td><td>Public</td><td>Hosted page + CRDS report</td><td>Per training run + monthly aggregate</td></tr>
+<tr><td>6</td><td>Capability & limitations public summary</td><td>Public</td><td>System Card + manifest</td><td>Per version release</td></tr>
+<tr><td>7</td><td>Red-team / adversarial testing report (GPAI w/ systemic risk)</td><td>Regulators + AI Office</td><td>Confidential submission + summary</td><td>Per major release + on serious incident</td></tr>
+<tr><td>8</td><td>Serious-incident notifications</td><td>AI Office + national authority</td><td>Form per Implementing Regulation</td><td>Within 15 days (or sooner for critical)</td></tr>
+<tr><td>9</td><td>Cybersecurity protection summary</td><td>Regulators + partners</td><td>Confidential submission + summary</td><td>Quarterly + on material change</td></tr>
+<tr><td>10</td><td>Downstream integration documentation</td><td>Downstream providers</td><td>API + docs site + signed SDK release notes</td><td>Per release</td></tr>
+</table>
+
+<h2>7 Content Marking Modes</h2>
+
+<div class="section">
+<h3>Mode 1 — Text Watermark (Stat. model + structural)</h3>
+<p>DEFONEOS text outputs carry a two-layer watermark: a statistical-model watermark (token distribution signature trained with low false-positive rate) and a structural fingerprint (sentence-turn-taking patterns + paragraph cadence that is detectable). Watermark is robust to paraphrase and translation.</p>
+</div>
+
+<div class="section">
+<h3>Mode 2 — Image Watermark (C2PA + pixel-level)</h3>
+<p>Image outputs include a C2PA cryptographic manifest embedded in the file metadata + a pixel-level watermark in the visual band (resilient to compression, crop, and re-encoding). The manifest references the producer (CSOAI LTD), the substrate version, the SIGIL hash, and the policy URL.</p>
+</div>
+
+<div class="section">
+<h3>Mode 3 — Audio Watermark (acoustic + metadata)</h3>
+<p>Audio outputs include a C2PA manifest + an inaudible acoustic watermark in the 17-19 kHz band (detectable by automated systems, inaudible to humans). The watermark survives MP3 compression, sample-rate downsampling, and ambient recording.</p>
+</div>
+
+<div class="section">
+<h3>Mode 4 — Video Watermark (per-frame + manifest)</h3>
+<p>Video outputs include a C2PA manifest + a per-frame hash signature + an embedded visible label ("AI-generated" overlay) per Article 50(4) for synthetic-likeness content. The per-frame hash chain is verifiable against the SIGIL chain.</p>
+</div>
+
+<div class="section">
+<h3>Mode 5 — Code Watermark (file-level + SIGIL)</h3>
+<p>Generated code includes a header comment block with the producer, version, SIGIL hash, and a per-line structural fingerprint. This allows detected downstream usage to be auditable.</p>
+</div>
+
+<div class="section">
+<h3>Mode 6 — Structured Data Watermark (SIGIL + manifest)</h3>
+<p>Structured outputs (JSON, CSV, databases) include a SIGIL manifest in a defined schema field + a hash-of-the-data field. The manifest references the producer, version, timestamp, and downstream license terms.</p>
+</div>
+
+<div class="section">
+<h3>Mode 7 — Decision/Action Watermark (SIGIL log + audit trail)</h3>
+<p>Decisions and actions (target nomination, policy change, BFT vote, kill-switch) include the entire SIGIL chain entry. Downstream audit can verify the decision was sovereign-actuated, who approved it, and what the red-line check produced.</p>
+</div>
+
+<h2>5 Audiences</h2>
+
+<table>
+<tr><th>Audience</th><th>What they need</th><th>Disclosure Tier</th><th>DEFONEOS Channel</th></tr>
+<tr><td>Affected persons</td><td>Identity, recourse, explanation</td><td>Tier 1 (plain-language, immediate)</td><td>Banner, footer, decision receipts</td></tr>
+<tr><td>General public</td><td>AI vs human, content origin</td><td>Tier 2 (labelled, persistent)</td><td>C2PA manifests, watermarks</td></tr>
+<tr><td>Regulators (AI Office, NCSC, ICO, NCAS)</td><td>Compliance evidence, audits</td><td>Tier 3 (technical, registry-grade)</td><td>EU database, regular reports, audit hook</td></tr>
+<tr><td>Downstream providers / integrators</td><td>Integration documentation, capabilities</td><td>Tier 4 (technical, complete)</td><td>API docs, SDK release notes, integration pack</td></tr>
+<tr><td>Researchers / civil society</td><td>System Card, evaluation reports</td><td>Tier 5 (public, deep)</td><td>System Card page, transparency hub, arXiv-equivalent pubs</td></tr>
+</table>
+
+<h2>EU Database Registration</h2>
+
+<div class="section">
+<h3>Registration Process</h3>
+<p>Per Article 71 of the EU AI Act, all GPAI providers must register in the EU database before placing the model on the market. DEFONEOS registers:</p>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>Provider identification</strong> — CSOAI LTD UK 16939677, full legal address, contact for compliance</li>
+<li><strong>GPAI model identification</strong> — name (DEFONEOS Substrate v4.x), version, intended purpose, capabilities, limitations</li>
+<li><strong>Systemic-risk classification (if applicable)</strong> — per Article 51, GPAI models above 10^25 FLOPs of training compute are presumed systemic-risk; DEFONEOS publishes whether the substrate falls above or below this threshold, the training-compute accounting, and the downstream systemic-risk evaluation results</li>
+<li><strong>Public summary of training data</strong> — per Article 53(1)(b), linked to the publicly-hosted summary</li>
+<li><strong>Copyright-compliance policy</strong> — per Article 53(1)(c), linked to the publicly-hosted policy</li>
+<li><strong>Provider contact for compliance</strong> — designated responsible person, with redacted contact in public view</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>Registration SLA</h3>
+<p>The registration is submitted within <strong>14 days</strong> of placing the model on the market (the formal SLA from EU Implementing Regulation 2024/...). Subsequent updates (material change in training data, capabilities, or version) trigger update submissions. Each submission is SIGIL-signed and the registration record carries the SIGIL hash for tamper-evidence.</p>
+</div>
+
+<h2>Downstream Provider Integration</h2>
+
+<div class="section">
+<h3>What Downstream Providers Receive</h3>
+<p>Downstream providers integrating DEFONEOS capabilities receive:</p>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>Integration pack</strong> — comprehensive technical documentation covering all capabilities, intended uses, integration patterns, and contra-indications</li>
+<li><strong>Signed SDK release notes</strong> — Ed25519-signed version-by-version changelog with capability deltas and risk-impact notes</li>
+<li><strong>Capability & limitations matrix</strong> — public matrix listing what the substrate can and cannot do (with evidence)</li>
+<li><strong>Risk & evaluation summary</strong> — high-level summary of evaluation results, red-team findings, residual risks</li>
+<li><strong>Stop-deployment triggers</strong> — explicit triggers under which downstream providers should suspend use (serious incident, red-line trigger, regulatory direction)</li>
+<li><strong>Joint compliance pathway</strong> — for downstream providers building high-risk AI systems on top of DEFONEOS, a structured pathway showing what DEFONEOS covers and what the downstream provider must add</li>
+</ul>
+</div>
+
+<h2>12-Framework Crosswalk</h2>
+
+<table>
+<tr><th>Framework</th><th>Article / Clause</th><th>DEFONEOS Mapping</th></tr>
+<tr><td>EU AI Act</td><td>Article 50</td><td>Pillars 1, 4, 5, 6, 8 (transparency, content marking, deepfake, emotion recognition)</td></tr>
+<tr><td>EU AI Act</td><td>Article 52 (GPAI)</td><td>Pillars 2, 3 + provider identification + downstream integration</td></tr>
+<tr><td>EU AI Act</td><td>Article 53 (GPAI provider)</td><td>Technical docs, public summary, copyright policy</td></tr>
+<tr><td>EU AI Act</td><td>Article 71 (EU database)</td><td>Registration process + SLA</td></tr>
+<tr><td>C2PA 2.0 spec</td><td>Manifest + assertions</td><td>Pillars 4-8 (content marking modes)</td></tr>
+<tr><td>GDPR</td><td>Article 13 (information to be provided)</td><td>Pillar 1 + Pillar 7 (identity disclosure)</td></tr>
+<tr><td>GDPR</td><td>Article 14 (third-party data)</td><td>Training data summary (Pillar 2)</td></tr>
+<tr><td>GDPR</td><td>Article 22 (automated decisions)</td><td>Pillar 1 + HitL documentation</td></tr>
+<tr><td>UK GDPR + DPA 2018</td><td>Same as GDPR</td><td>Same as EU</td></tr>
+<tr><td>US Executive Order 14110</td><td>Section 4 (transparency)</td><td>Pillars 2-5 + provider identification</td></tr>
+<tr><td>China Generative AI Measures</td><td>Article 7 + 11</td><td>Pillars 1, 4, 7 (identity + marking + identification)</td></tr>
+<tr><td>NIST AI RMF</td><td>GOVERN 6 (transparency)</td><td>All 8 pillars + System Card page</td></tr>
+</table>
+
+<h2>Honesty Register</h2>
+
+<div class="honesty">
+<h3>What DEFONEOS does NOT claim about GPAI transparency</h3>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>No strip-proof watermark.</strong> Watermarks can be defeated by determined actors. Detection raises the cost of evasion; it does not mathematically prevent it. Statistical watermarks carry false-positive and false-negative rates documented in Pillar 1 literature.</li>
+<li><strong>No source-completeness claim.</strong> The training-data summary is "what we know about", not "what was processed." Inheritance from upstream models can introduce data we did not directly curate. The summary is best-faith, not exhaustive.</li>
+<li><strong>No perfect attribution.</strong> Where content was generated partly by human input and partly by substrate, attribution defaults to "DEFONEOS-assisted" rather than "AI-generated" unless the substrate component is dominant. The threshold is documented in the policy.</li>
+<li><strong>No passive disclosure only.</strong> The system actively discloses (banner + footer + manifest + watermark + manifest in metadata). Passive-only disclosure is not the design — it can be missed.</li>
+<li><strong>No detector guarantee.</strong> External detector accuracy on DEFONEOS outputs depends on detector + version. We test against commonly-used detectors and publish accuracy data in the System Card; we do not certify third-party detectors.</li>
+<li><strong>No zero-incident claim.</strong> Serious-incident reporting is a process, not a guarantee of zero incidents. The 15-day clock starts at DEFONEOS awareness, not at incident occurrence.</li>
+</ul>
+</div>
+
+<footer>DEFONEOS · Article 50 + Article 52 GPAI Transparency · CSOAI LTD UK 16939677 · sovereign-by-design · audit-grade · signed · neutral · EAT Directive aligned · July 2026</footer>
+<div style="margin:2rem auto;padding:1.5rem;max-width:1100px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid rgba(34,211,238,.3);border-radius:14px;text-align:center;">
+  <div style="font-size:1.25rem;font-weight:800;color:var(--cyan,#22d3ee);margin-bottom:.5rem;">🛡️ Ready to put DEFONEOS to work?</div>
+  <p style="color:#cbd5e1;margin:0 0 1rem;font-size:.95rem;">7 personas · 5 tiers · 30-second signup · free 30-day sandbox for regulators and end-users.</p>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#000;border-radius:8px;text-decoration:none;font-weight:800;font-size:.95rem;margin:.3rem;">Sign up · Ed25519-signed receipt →</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22d3ee;color:#22d3ee;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Defence Primes</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22c55e;color:#22c55e;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Regulators (Free)</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #fbbf24;color:#fbbf24;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">Series A — £45-90M Round</a>
+  <div style="color:#64748b;font-size:.75rem;margin-top:.8rem;">ED25519 SIGIL receipts · UK-sovereign · AUKUS-compatible · T-27 days to EU AI Act</div>
+</div>
+
+</div>
+</body>
+</html>

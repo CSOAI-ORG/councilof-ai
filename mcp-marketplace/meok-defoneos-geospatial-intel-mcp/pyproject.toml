@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meok_defoneos_geospatial_intel_mcp"
+version = "1.0.0"
+description = "DEFONEOS — sovereign UK defence-AI geospatial intelligence surface (Copernicus Sentinel-1/2/3/5p + OS UK + OpenStreetMap + INSPIRE + sovereignty checks + care-membrane + 33-agent BFT audit chain)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "MEOK AI Labs", email = "nicholas@csoai.org"},
+]
+keywords = [
+    "mcp", "defence", "defense", "sovereign", "uk", "geospatial",
+    "intelligence", "geoint", "copernicus", "sentinel-1", "sentinel-2",
+    "sentinel-3", "sentinel-5p", "sar", "multispectral",
+    "ordnance-survey", "openstreetmap", "overture-maps", "inspire-eu",
+    "defra-uk", "daic", "aukus", "pillar-2", "dstl",
+    "care-membrane", "33-agent-bft", "sovereignty-check", "us-supply-chain",
+    "babcock", "bae", "qinetiq",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: GIS",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "gods-eye-geospatial-mcp>=1.2.9",  # wraps Copernicus Sentinel-1/2/3/5p + OSM + Overture + OS UK
+    "care-membrane-mcp>=1.0.0",
+    "meok-governance-engine-mcp>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://meok.ai/defoneos"
+Repository = "https://github.com/CSOAI-ORG/meok-defoneos-geospatial-intel-mcp"
+Documentation = "https://docs.meok.ai/defoneos"
+"Copernicus Open Access Hub" = "https://scihub.copernicus.eu/"
+"Ordnance Survey UK" = "https://www.ordnancesurvey.co.uk/"
+"DSTL SAPIENT" = "https://github.com/dstl/SAPIENT-Proto-Files"
+
+[project.scripts]
+meok-defoneos-geospatial-intel-mcp = "meok_defoneos_geospatial_intel_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meok_defoneos_geospatial_intel_mcp"]

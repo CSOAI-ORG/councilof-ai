@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-bft-council-mcp"
+version = "1.0.0"
+description = "Sovereign BFT Council MCP - 12-around-1 voting with 3/5/7 voter modes (EAT-12 tuned). Smaller councils vote better (53.20 vs 39.43 consensus)."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

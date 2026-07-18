@@ -1,0 +1,228 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [80, 30, 200, 24]
+    content:
+      style: "$label"
+      fontSize: 12
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>THE PROBLEM</p>
+
+  - elementId: page-title
+    elementType: text
+    bounds: [80, 60, 900, 50]
+    content:
+      style: "$title"
+      fontSize: 32
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>AI Infrastructure Has No Data Layer</strong></p>
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [80, 115, 60, 3]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: card1-bg
+    elementType: shape
+    bounds: [80, 160, 540, 220]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: card1-icon
+    elementType: icon
+    bounds: [110, 185, 36, 36]
+    iconName: "fas:trash"
+    fill:
+      type: solid
+      color: "$secondary"
+
+  - elementId: card1-title
+    elementType: text
+    bounds: [160, 185, 430, 36]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Data is Discarded</strong></p>
+
+  - elementId: card1-body
+    elementType: text
+    bounds: [110, 240, 480, 110]
+    content:
+      style: "$body"
+      fontSize: 18
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>AI governance tools process <strong>millions of compliance queries</strong> daily, but the structured data is thrown away. No one captures the signal.</p>
+
+  - elementId: card2-bg
+    elementType: shape
+    bounds: [660, 160, 540, 220]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: card2-icon
+    elementType: icon
+    bounds: [690, 185, 36, 36]
+    iconName: "fas:coins"
+    fill:
+      type: solid
+      color: "$secondary"
+
+  - elementId: card2-title
+    elementType: text
+    bounds: [740, 185, 430, 36]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>$2.5M to Rebuild</strong></p>
+
+  - elementId: card2-body
+    elementType: text
+    bounds: [690, 240, 480, 110]
+    content:
+      style: "$body"
+      fontSize: 18
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>Regtech companies spend <strong>$2.5M+ and 18-24 months</strong> recreating datasets that MEOK already generates organically.</p>
+
+  - elementId: card3-bg
+    elementType: shape
+    bounds: [80, 410, 540, 220]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: card3-icon
+    elementType: icon
+    bounds: [110, 435, 36, 36]
+    iconName: "fas:link-slash"
+    fill:
+      type: solid
+      color: "$secondary"
+
+  - elementId: card3-title
+    elementType: text
+    bounds: [160, 435, 430, 36]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Domains Are Siloed</strong></p>
+
+  - elementId: card3-body
+    elementType: text
+    bounds: [110, 490, 480, 110]
+    content:
+      style: "$body"
+      fontSize: 18
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>No platform connects <strong>healthcare FHIR, financial services,</strong> and governance compliance into unified intelligence.</p>
+
+  - elementId: card4-bg
+    elementType: shape
+    bounds: [660, 410, 540, 220]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$cardBg"
+    border:
+      style: solid
+      width: 1
+      color: "#e2e8f0"
+
+  - elementId: card4-icon
+    elementType: icon
+    bounds: [690, 435, 36, 36]
+    iconName: "fas:puzzle-piece"
+    fill:
+      type: solid
+      color: "$secondary"
+
+  - elementId: card4-title
+    elementType: text
+    bounds: [740, 435, 430, 36]
+    content:
+      fontSize: 20
+      fontFamily: "Liter"
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Fragmented Outputs</strong></p>
+
+  - elementId: card4-body
+    elementType: text
+    bounds: [690, 490, 480, 110]
+    content:
+      style: "$body"
+      fontSize: 18
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>Organizations need <strong>structured, verifiable data</strong> but only get fragmented tool outputs with no API access.</p>
+
+  - elementId: stat-bar
+    elementType: shape
+    bounds: [0, 680, 1280, 40]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: stat-text
+    elementType: text
+    bounds: [80, 680, 1120, 40]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>The global AI governance market is <strong>$85B by 2030</strong> — but the data layer powering it is completely unmonetized</p>

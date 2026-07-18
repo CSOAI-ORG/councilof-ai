@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — API Reference — 30 MCP Servers, 188+ Tools</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#f8fafc;padding:2rem;line-height:1.6;max-width:1200px;margin:0 auto}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+h2{color:#22d3ee;margin:1.5rem 0 .5rem;font-size:1.5rem;border-bottom:1px solid rgba(34,211,238,.2);padding-bottom:.3rem}
+h3{color:#8b5cf6;margin:1rem 0 .3rem}
+p{margin:.5rem 0;color:#cbd5e1}
+code{background:rgba(34,211,238,.1);color:#22d3ee;padding:2px 6px;border-radius:3px;font-size:.9rem}
+pre{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;overflow-x:auto;color:#e2e8f0;font-size:.85rem;margin:1rem 0}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.6rem;text-align:left;font-size:.85rem}
+td{padding:.5rem;border-bottom:1px solid rgba(255,255,255,.05);color:#94a3b8;font-size:.85rem}
+.cta{display:inline-block;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;padding:.8rem 2rem;border-radius:8px;text-decoration:none;font-weight:bold;margin:1rem 0}
+.note{background:rgba(139,92,246,.1);border-left:3px solid #8b5cf6;padding:1rem;margin:1rem 0;border-radius:0 8px 8px 0}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-api.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+
+<h1>DEFONEOS API Reference</h1>
+<p><strong>30 MCP Servers · 188+ Tools · JSON-RPC 2.0 over HTTP</strong></p>
+
+<div class="note">
+<p>DEFONEOS exposes all capabilities through the Model Context Protocol (MCP). Every tool is callable via HTTP POST to <code>http://localhost:3101/mcp</code> using JSON-RPC 2.0 format. No authentication required for local deployments. Bearer token required for cloud.</p>
+</div>
+
+<h2>Quick Start</h2>
+<p>Call any DEFONEOS tool in 3 lines of Python:</p>
+<pre>
+import requests
+
+response = requests.post("http://localhost:3101/mcp", json={
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+        "name": "sigil_emit",
+        "arguments": {
+            "line": "C|test|hello-world|Hello from DEFONEOS API"
+        }
+    }
+})
+print(response.json()["result"]["content"][0]["text"])
+</pre>
+
+<h2>List All Available Tools</h2>
+<pre>
+curl -X POST http://localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+</pre>
+
+<h2>MCP Server Catalog</h2>
+
+<h3>1. SOV3 Core (188+ tools)</h3>
+<p>The sovereign AI substrate. All governance, SIGIL, bridge, and council tools.</p>
+<table>
+<tr><th>Tool</th><th>Category</th><th>Description</th></tr>
+<tr><td><code>sigil_emit</code></td><td>Audit</td><td>Emit Ed25519-signed SIGIL receipt</td></tr>
+<tr><td><code>sigil_verify</code></td><td>Audit</td><td>Verify SIGIL chain integrity</td></tr>
+<tr><td><code>sov_a2a_agent_card</code></td><td>Federation</td><td>Get A2A agent card for federation</td></tr>
+<tr><td><code>mcp_federation_stats</code></td><td>Federation</td><td>Get MCP federation catalog stats</td></tr>
+<tr><td><code>bridge_think</code></td><td>AI Bridge</td><td>Cross-model reasoning (left+right brain)</td></tr>
+<tr><td><code>sov_sovereign_builder_status</code></td><td>Builder</td><td>Get sovereign builder training status</td></tr>
+<tr><td><code>article50_passport_issue</code></td><td>Compliance</td><td>Issue EU AI Act Article 50 passport</td></tr>
+</table>
+
+<h3>2. defoneos-cesium-mcp</h3>
+<p>3D globe visualization with Cesium. 350M buildings, real terrain.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>cesium_add_entity</code></td><td>Add entity (drone, ship, vehicle) to globe</td></tr>
+<tr><td><code>cesium_set_camera</code></td><td>Move camera to coordinates</td></tr>
+<tr><td><code>cesium_add_overlay</code></td><td>Add data overlay (weather, flood, satellite)</td></tr>
+<tr><td><code>cesium_export_scene</code></td><td>Export scene as JSON for UE5</td></tr>
+</table>
+
+<h3>3. defoneos-isr-mcp</h3>
+<p>Intelligence, Surveillance, Reconnaissance pipeline.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>isr_ingest_feed</code></td><td>Ingest ISR data feed (camera, RF, satellite)</td></tr>
+<tr><td><code>isr_detect_objects</code></td><td>Run object detection on ISR feed</td></tr>
+<tr><td><code>isr_track_entity</code></td><td>Track detected entity across frames</td></tr>
+<tr><td><code>isr_classify_threat</code></td><td>Classify threat level of detected entity</td></tr>
+</table>
+
+<h3>4. defoneos-swarm-mcp</h3>
+<p>Bio-cyber swarm coordination. Worms, hornets, killer bees.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>swarm_deploy</code></td><td>Deploy swarm agents to target zone</td></tr>
+<tr><td><code>swarm_emit_pheromone</code></td><td>Emit SIGIL-signed pheromone marker</td></tr>
+<tr><td><code>swarm_status</code></td><td>Get all active swarm agents</td></tr>
+<tr><td><code>swarm_recall</code></td><td>Recall swarm agents to hive</td></tr>
+</table>
+
+<h3>5. defoneos-cyber-mcp</h3>
+<p>Cyber operations. Pentest, red team, network defence.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>cyber_scan</code></td><td>Scan target network for vulnerabilities</td></tr>
+<tr><td><code>cyber_pentest</code></td><td>Launch autonomous pentest (PentestGPT)</td></tr>
+<tr><td><code>cyber_report</code></td><td>Generate compliance-ready pentest report</td></tr>
+</table>
+
+<h3>6. defoneos-counterdrone-mcp</h3>
+<p>Counter-UAS. Detection, tracking, mitigation.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>c_uas_detect</code></td><td>Acoustic + RF drone detection</td></tr>
+<tr><td><code>c_uas_track</code></td><td>Track detected drone trajectory</td></tr>
+<tr><td><code>c_uas_classify</code></td><td>Classify drone type and payload</td></tr>
+<tr><td><code>c_uas_jam</code></td><td>RF jamming command (authorized use only)</td></tr>
+</table>
+
+<h3>7. defoneos-jsp936-mcp</h3>
+<p>JSP 936 AI governance audit. MOD compliance.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>jsp936_audit</code></td><td>Run full JSP 936 compliance audit</td></tr>
+<tr><td><code>jsp936_report</code></td><td>Generate JSP 936 compliance certificate</td></tr>
+</table>
+
+<h3>8. defoneos-tak-mcp</h3>
+<p>FreeTAKServer C2 integration. TAK Protocol, CoT messages.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>tak_send_cot</code></td><td>Send Cursor on Target message</td></tr>
+<tr><td><code>tak_get_units</code></td><td>Get all active TAK units</td></tr>
+<tr><td><code>tak_create_event</code></td><td>Create tactical event on map</td></tr>
+</table>
+
+<h3>9. defoneos-compliance-mcp</h3>
+<p>Multi-framework compliance automation.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>compliance_check</code></td><td>Check compliance against framework (EU AI Act, ISO 42001, NIST RMF)</td></tr>
+<tr><td><code>compliance_report</code></td><td>Generate compliance report PDF</td></tr>
+<tr><td><code>compliance_crosswalk</code></td><td>Crosswalk controls across 13 frameworks</td></tr>
+</table>
+
+<h3>10. defoneos-medevac-mcp</h3>
+<p>Medical evacuation routing and coordination.</p>
+<table>
+<tr><th>Tool</th><th>Description</th></tr>
+<tr><td><code>medevac_route</code></td><td>Calculate optimal MEDEVAC route</td></tr>
+<tr><td><code>medevac_dispatch</code></td><td>Dispatch MEDEVAC asset</td></tr>
+<tr><td><code>medevac_track</code></td><td>Track MEDEVAC asset in real-time</td></tr>
+</table>
+
+<h3>11-30. Additional MCP Servers</h3>
+<table>
+<tr><th>MCP Server</th><th>Tools</th><th>Domain</th></tr>
+<tr><td>defoneos-ospd-mcp</td><td>3</td><td>Open Source Procurement Data</td></tr>
+<tr><td>meok-defoneos-geospatial-intel-mcp</td><td>5</td><td>Geospatial Intelligence</td></tr>
+<tr><td>meok-defoneos-mcp</td><td>4</td><td>Core DEFONEOS orchestration</td></tr>
+<tr><td>meek-defoneos-audit-logging-mcp</td><td>3</td><td>Immutable audit logging</td></tr>
+<tr><td>meek-defoneos-backup-restore-mcp</td><td>3</td><td>Backup and disaster recovery</td></tr>
+<tr><td>meek-defoneos-cdn-edge-mcp</td><td>2</td><td>CDN edge deployment</td></tr>
+<tr><td>meek-defoneos-cold-email-mcp</td><td>2</td><td>Outreach automation</td></tr>
+<tr><td>meek-defoneos-knowledge-pack-mcp</td><td>3</td><td>Knowledge base management</td></tr>
+<tr><td>meek-defoneos-load-balancer-mcp</td><td>2</td><td>Traffic load balancing</td></tr>
+<tr><td>meek-defoneos-monitoring-mcp</td><td>4</td><td>System monitoring and alerting</td></tr>
+<tr><td>meek-defoneos-pagerduty-mcp</td><td>2</td><td>Incident management integration</td></tr>
+<tr><td>meek-defoneos-pricing-mcp</td><td>3</td><td>Dynamic pricing engine</td></tr>
+<tr><td>meek-defoneos-pypi-publish-mcp</td><td>2</td><td>Package publishing automation</td></tr>
+<tr><td>meek-defoneos-seal-card-mcp</td><td>2</td><td>Digital identity cards</td></tr>
+<tr><td>meek-defoneos-secret-rotation-mcp</td><td>2</td><td>Credential rotation automation</td></tr>
+<tr><td>meek-defoneos-smithery-mcp</td><td>2</td><td>Smithery marketplace integration</td></tr>
+<tr><td>meek-defoneos-ue5-mcp</td><td>3</td><td>Unreal Engine 5 control bridge</td></tr>
+<tr><td>meek-defoneos-uk-pilots-tracker-mcp</td><td>2</td><td>UK pilot programme tracking</td></tr>
+<tr><td>meek-defoneos-vercel-deploy-mcp</td><td>2</td><td>Vercel deployment automation</td></tr>
+<tr><td>csoai-defoneos-mcp</td><td>4</td><td>CSOAI certification bridge</td></tr>
+</table>
+
+<h2>JSON-RPC Request Format</h2>
+<pre>
+{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+        "name": "&lt;tool_name&gt;",
+        "arguments": {
+            "&lt;param&gt;": "&lt;value&gt;"
+        }
+    }
+}
+</pre>
+
+<h2>JSON-RPC Response Format</h2>
+<pre>
+{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+        "content": [
+            {
+                "type": "text",
+                "text": "{ \"status\": \"ok\", \"data\": {...} }"
+            }
+        ]
+    }
+}
+</pre>
+
+<h2>WebSocket Events</h2>
+<p>DEFONEOS also supports real-time WebSocket connections for live data:</p>
+<pre>
+wss://defoneos.local:3101/ws
+
+// Subscribe to SIGIL events
+{"action":"subscribe","channel":"sigil"}
+
+// Subscribe to BFT council votes
+{"action":"subscribe","channel":"bft"}
+
+// Subscribe to swarm updates
+{"action":"subscribe","channel":"swarm"}
+</pre>
+
+<h2>Rate Limits</h2>
+<table>
+<tr><th>Tier</th><th>Requests/min</th><th>Concurrent</th></tr>
+<tr><td>Local (no auth)</td><td>Unlimited</td><td>10</td></tr>
+<tr><td>Cloud (Bearer)</td><td>1,000</td><td>50</td></tr>
+<tr><td>Enterprise</td><td>10,000</td><td>200</td></tr>
+</table>
+
+<h2>Error Codes</h2>
+<table>
+<tr><th>Code</th><th>Meaning</th></tr>
+<tr><td>-32700</td><td>Parse error (malformed JSON)</td></tr>
+<tr><td>-32600</td><td>Invalid request</td></tr>
+<tr><td>-32601</td><td>Method not found</td></tr>
+<tr><td>-32602</td><td>Invalid params</td></tr>
+<tr><td>-32603</td><td>Internal error</td></tr>
+</table>
+
+<p><a class="cta" href="defoneos-index.html">← Back to Index</a></p>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

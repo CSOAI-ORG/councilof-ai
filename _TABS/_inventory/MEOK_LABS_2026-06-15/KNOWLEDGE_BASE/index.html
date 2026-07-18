@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS Knowledge Base — MEOK/CSOAI Sovereign Defense AI Index</title>
+<meta name="description" content="The master knowledge index for DEFONEOS sovereign UK defense AI OS: 14 products, 33 hives, 62 crown jewels, 790+ repos, 117 AI models, 20 compliance frameworks. Built for open research by MEOK Labs.">
+<style>
+:root {
+    --bg: #0a0e14;
+    --bg2: #131820;
+    --bg3: #1c222c;
+    --border: #2a323d;
+    --text: #d4dae3;
+    --text2: #8b96a7;
+    --accent: #4ade80;
+    --accent2: #22d3ee;
+    --warn: #fbbf24;
+    --danger: #ef4444;
+    --serif: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    line-height: 1.6;
+    font-size: 15px;
+}
+.container { max-width: 1280px; margin: 0 auto; padding: 2rem; }
+header {
+    background: linear-gradient(135deg, var(--bg2), var(--bg3));
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+}
+h1 { font-size: 2.4rem; margin-bottom: 0.5rem; color: var(--accent); }
+h2 { font-size: 1.6rem; margin: 2.5rem 0 1rem; color: var(--accent2); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+h3 { font-size: 1.2rem; margin: 1.5rem 0 0.75rem; color: var(--accent); }
+.subtitle { color: var(--text2); font-size: 1.05rem; max-width: 800px; }
+.tagline {
+    background: var(--accent);
+    color: var(--bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+.grid { display: grid; gap: 1rem; }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: border 0.2s;
+}
+.card:hover { border-color: var(--accent); }
+.stat {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+}
+.stat-value { font-size: 2rem; font-weight: 700; color: var(--accent); font-family: var(--mono); }
+.stat-label { color: var(--text2); font-size: 0.85rem; margin-top: 0.25rem; }
+.tier {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--bg3);
+    color: var(--accent2);
+    border: 1px solid var(--border);
+}
+.status-live { color: var(--accent); }
+.status-designed { color: var(--warn); }
+.status-research { color: var(--text2); }
+.license {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    background: var(--bg3);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    color: var(--accent2);
+    border: 1px solid var(--border);
+}
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+th { background: var(--bg3); padding: 0.5rem 0.75rem; text-align: left; color: var(--accent2); font-weight: 600; border-bottom: 2px solid var(--border); }
+td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
+tr:hover { background: var(--bg3); }
+.price { font-family: var(--mono); color: var(--accent); }
+.search-bar {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+.search-bar:focus { outline: none; border-color: var(--accent); }
+.tab-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.tab {
+    padding: 0.5rem 1rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text2);
+}
+.tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    margin: 0.1rem 0.2rem 0.1rem 0;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-size: 0.75rem;
+    color: var(--text);
+    font-family: var(--mono);
+}
+.tag-strong { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.callout {
+    background: linear-gradient(90deg, rgba(74, 222, 128, 0.1), rgba(34, 211, 238, 0.05));
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+}
+footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+    color: var(--text2);
+    font-size: 0.9rem;
+}
+a { color: var(--accent2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: var(--mono); background: var(--bg3); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.9em; }
+.hide { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+<h1>🐉 DEFONEOS Knowledge Base</h1>
+<p class="subtitle">The master sovereign-defense-AI index — built from <strong>165 research files (18.9 MB)</strong>, <strong>9,418 MEOK/CSOAI docs</strong>, and <strong>565 CSOAI-ORG public repos</strong>. Updated 2026-06-29.</p>
+<span class="tagline">MEOK Labs (FORGE) · csoai.org · Open Research</span>
+</div>
+</header>
+
+<div class="container">
+
+<section>
+<h2>📊 The Estate at a Glance</h2>
+<div class="grid grid-4" style="margin-top: 1rem;">
+<div class="stat"><div class="stat-value">14</div><div class="stat-label">Products</div></div>
+<div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives</div></div>
+<div class="stat"><div class="stat-value">62</div><div class="stat-label">Crown Jewels</div></div>
+<div class="stat"><div class="stat-value">790+</div><div class="stat-label">Repos Catalogued</div></div>
+<div class="stat"><div class="stat-value">117</div><div class="stat-label">AI Models</div></div>
+<div class="stat"><div class="stat-value">565</div><div class="stat-label">CSOAI-ORG Repos</div></div>
+<div class="stat"><div class="stat-value">20</div><div class="stat-label">Compliance Frameworks</div></div>
+<div class="stat"><div class="stat-value">£3B+</div><div class="stat-label">Accessible Market</div></div>
+</div>
+</section>
+
+<section>
+<h2>🛡️ The Product Line (14 Products)</h2>
+<p>DEFONEOS is an ecosystem of interoperable defense AI products, all built on the same core platform (DEFONEOS CORE).</p>
+
+<div class="callout">
+<strong>Strategic thesis:</strong> Enter with one product, expand to the platform, then cross-sell the full stack. <em>Anduril proved this model — first contract $12.5M (2018), 2024 revenue $1B+.</em>
+</div>
+
+<table>
+<thead>
+<tr><th>Tier</th><th>Product</th><th>Status</th><th>Price (GBP)</th><th>Source</th></tr>
+</thead>
+<tbody id="products-table"></tbody>
+</table>
+</section>
+
+<section>
+<h2>🐝 The 33 Hives</h2>
+<p>DEFONEOS organises capabilities into 33 specialised AI agents across 5 tiers:</p>
+
+<div id="hives-grid" class="grid grid-3"></div>
+</section>
+
+<section>
+<h2>💎 Crown Jewels (62)</h2>
+<p>Open-source tools, models, and frameworks that DEFONEOS integrates. Each is sovereignty-positive (no proprietary lock-in).</p>
+
+<div class="tab-bar" id="crown-tabs"></div>
+<div id="crown-content"></div>
+</section>
+
+<section>
+<h2>🧠 AI Models (117 catalogued)</h2>
+<p>Sovereign AI stack — open-weight models that run locally without cloud dependencies.</p>
+
+<div id="models-grid"></div>
+</section>
+
+<section>
+<h2>📜 Compliance Frameworks (20)</h2>
+<p>The regulatory landscape DEFONEOS addresses out of the box. CSOAI Compliance Kit covers all 30 in production.</p>
+
+<table>
+<thead>
+<tr><th>Framework</th><th>Scope</th><th>Deadline</th><th>Penalty</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>EU AI Act</strong></td><td>High-risk AI systems</td><td class="status-designed"><strong>2026-08-02</strong></td><td>€35M / 7% turnover</td></tr>
+<tr><td><strong>Cyber Essentials</strong></td><td>UK MOD contract baseline</td><td class="status-live">MANDATORY</td><td>£320 cert</td></tr>
+<tr><td><strong>GDPR</strong></td><td>Personal data</td><td>Ongoing</td><td>€20M / 4% turnover</td></tr>
+<tr><td><strong>NIS2</strong></td><td>Essential entities</td><td>2024-10-17</td><td>€10M / 2% turnover</td></tr>
+<tr><td><strong>DORA</strong></td><td>Financial ICT</td><td>2025-01-17</td><td>Varies</td></tr>
+<tr><td><strong>ISO 42001</strong></td><td>AI Management</td><td>2023-12</td><td>Cert</td></tr>
+<tr><td><strong>ISO 27001</strong></td><td>InfoSec</td><td>Ongoing</td><td>Cert</td></tr>
+<tr><td><strong>SOC 2</strong></td><td>Trust Service Criteria</td><td>Ongoing</td><td>Audit</td></tr>
+<tr><td><strong>NIST AI RMF</strong></td><td>US federal AI</td><td>Ongoing</td><td>Mandate</td></tr>
+<tr><td><strong>HIPAA</strong></td><td>US healthcare</td><td>Ongoing</td><td>$1.9M/yr</td></tr>
+<tr><td><strong>PCI DSS 4.0</strong></td><td>Payment cards</td><td>2025-03</td><td>Fines</td></tr>
+<tr><td><strong>UK AI Bill</strong></td><td>UK AI systems</td><td>2025-2026</td><td>TBD</td></tr>
+<tr><td><strong>JOSCAR</strong></td><td>UK defence supply chain</td><td>Ongoing</td><td>Reg</td></tr>
+<tr><td><strong>JSP 936</strong></td><td>UK MOD AI assurance</td><td>Ongoing</td><td>Policy</td></tr>
+<tr><td><strong>JSP 440</strong></td><td>UK MOD InfoSec</td><td>Ongoing</td><td>Policy</td></tr>
+<tr><td><strong>NATO DSRB</strong></td><td>NATO standardization</td><td>Ongoing</td><td>Policy</td></tr>
+<tr><td><strong>STANAG</strong></td><td>NATO standards</td><td>Ongoing</td><td>Policy</td></tr>
+<tr><td><strong>LINK-16</strong></td><td>Tactical data link</td><td>Ongoing</td><td>Standard</td></tr>
+<tr><td><strong>OWASP ASI Top 10</strong></td><td>Agentic AI security</td><td>2026</td><td>Best practice</td></tr>
+<tr><td><strong>Cyber Essentials Plus</strong></td><td>UK MOD higher tier</td><td>Ongoing</td><td>£1,500 cert</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>💰 Markets & Funding</h2>
+
+<h3>Markets (TAM)</h3>
+<table>
+<thead><tr><th>Segment</th><th>2025/26</th><th>2030/33</th><th>CAGR</th></tr></thead>
+<tbody>
+<tr><td>AI in Defense (overall)</td><td>$6.5-15B</td><td>$25-36B</td><td>13-31%</td></tr>
+<tr><td>Counter-Drone (C-UAS)</td><td>$3.0B</td><td>$16-20B</td><td>25-26%</td></tr>
+<tr><td>AI-Enabled ISR Analytics</td><td>$8.7B</td><td>$24B (2034)</td><td>12.4%</td></tr>
+<tr><td>Drone Swarm Systems</td><td>$1-15B</td><td>$4-59B</td><td>16-27%</td></tr>
+<tr><td>Military Drones</td><td>$47B</td><td>$98B</td><td>8.9%</td></tr>
+<tr><td>Geospatial Imagery Analytics</td><td>$13B</td><td>$29-73B</td><td>10-20%</td></tr>
+<tr><td><strong>AI Governance</strong></td><td><strong>$417-610M</strong></td><td><strong>$3.59-8.97B</strong></td><td><strong>36-47%</strong></td></tr>
+<tr><td>AI Companion</td><td>$36.8B→$48B</td><td>$318B (2033)</td><td>31%</td></tr>
+<tr><td>AI Agents</td><td>$5-7B</td><td>$30B+</td><td>34%</td></tr>
+<tr><td>AI Compliance (SME segment)</td><td>$139M</td><td>$1.2B</td><td>36%</td></tr>
+</tbody>
+</table>
+
+<h3>Funding Sources</h3>
+<ul style="line-height: 1.9;">
+<li><strong>Cyber Essentials Basic</strong> — £320 — <span class="status-live">MANDATORY first step</span></li>
+<li><strong>Cyber Essentials Plus</strong> — £1,500</li>
+<li><strong>DASA Open Call</strong> — £100k-350k, reopens Q3 2026</li>
+<li><strong>DASA Phase 2 Cycle 6</strong> — up to £350k, 2025-10-14 deadline</li>
+<li><strong>DTEP</strong> — up to £500k (50% match), rolling cycles</li>
+<li><strong>Defence Innovation Loans</strong> — Innovate UK</li>
+<li><strong>Innovate UK</strong> — multiple streams</li>
+<li><strong>NATO Innovation Fund</strong> — billion-EUR fund</li>
+<li><strong>UK Sovereign Fund</strong> (MGX pitch, preserved in clawd)</li>
+</ul>
+</section>
+
+<section>
+<h2>🔬 Research Lines (7 clusters)</h2>
+<div class="grid grid-2">
+<div class="card">
+<h3>1. Defense AI OS (DEFONEOS)</h3>
+<p>DEFONEOS Product Line, 33 Hives, Master Brief, Crown Jewels, 28-framework crosswalk.</p>
+</div>
+<div class="card">
+<h3>2. Satellite ISR + Geospatial</h3>
+<p>Satellite ISR Pipeline, GEOINT Frameworks, Maritime Geospatial, Cesium globe.</p>
+</div>
+<div class="card">
+<h3>3. Counter-Drone / EW / Cyber</h3>
+<p>EW Counterdrone Arsenal, Cyber Defense Arsenal, RF Detector, WiFi CSI, Swarm Offensive.</p>
+</div>
+<div class="card">
+<h3>4. Robotics + Humanoids + Drones</h3>
+<p>Robotics Platforms, Humanoid Mods (Berkeley), Quadruped, Printable Drone Arsenal (200+ designs).</p>
+</div>
+<div class="card">
+<h3>5. Sovereign AI Stack</h3>
+<p>Sovereign Models, Small/Large Stacking, Mamba SSM, World Models MoE, Four Arms Architecture.</p>
+</div>
+<div class="card">
+<h3>6. Materiel + Hardware</h3>
+<p>SkyWater Thermal Chip, DissolvPCB, Water Computing, Water DNA, Plasmonics, Capillary Cooling, ORBS v2.</p>
+</div>
+<div class="card">
+<h3>7. Compliance + Governance + Sovereignty</h3>
+<p>AI Gov Brief (EU AI Act), DORADO_HORUS, Quantum Governance, Sovereign OS Hunt, 30-framework crosswalk.</p>
+</div>
+</div>
+</section>
+
+<section>
+<h2>🔍 Query the Knowledge Base</h2>
+<p>Programmatic access to <code>knowledge_database.json</code> for cross-platform use:</p>
+<pre style="background: var(--bg2); padding: 1rem; border-radius: 6px; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; border: 1px solid var(--border);">
+# Find all Defense AI OS repos
+python3 -c "import json; d=json.load(open('knowledge_database.json')); print([r['name'] for r in d['repos'] if r['category']=='Defense AI OS'])"
+
+# List all sovereign AI models
+python3 -c "import json; d=json.load(open('knowledge_database.json')); print(d['models'][:30])"
+
+# Tier-1 products with pricing
+python3 -c "import json; d=json.load(open('knowledge_database.json')); [print(f\"{p['name']}: £{p.get('price_low',0):,}-£{p.get('price_high',0):,}\") for p in d['products'] if p.get('tier')==1]"
+</pre>
+</section>
+
+</div>
+
+<footer>
+<div class="container">
+<p><strong>DEFONEOS</strong> · Sovereign UK Defense AI OS · Built by MEOK Labs (FORGE) · 2026</p>
+<p style="margin-top: 0.5rem;">Open research · MIT · CERN-OHL-S-2.0 · Apache 2.0 · BSD · No proprietary lock-in</p>
+<p style="margin-top: 0.5rem;">Compiled from 165 research files (18.9 MB) + 9,418 MEOK/CSOAI docs + 565 CSOAI-ORG public repos · Refreshed 2026-06-29</p>
+</div>
+</footer>
+
+<script>
+const data = __DATA_PLACEHOLDER__;
+</script>
+
+<script>
+// Render products table
+const products = [
+    {tier:1,name:"DEFONEOS CORE",status:"designed",price:"£450k-£1.2M",desc:"Sovereign military AI OS, microkernel + hypervisor"},
+    {tier:1,name:"DEFONEOS COGNITION (ANC2/ARES)",status:"designed",price:"£380k-£1.4M",desc:"Military reasoning engine, MoE transformer, air-gapped"},
+    {tier:1,name:"CSOAI Compliance Kit",status:"live",price:"$0-499/mo",desc:"30 MCPs published, EU AI Act + GDPR + NIST + ISO"},
+    {tier:1,name:"DEFONEOS EYE",status:"designed",price:"TBD",desc:"ISR/satellite/drone imagery fusion"},
+    {tier:2,name:"DEFONEOS SHIELD",status:"designed",price:"TBD",desc:"Cyber defense + EW + prompt injection firewall"},
+    {tier:2,name:"DEFONEOS SENTRY",status:"designed",price:"TBD",desc:"Perimeter + access control + intrusion"},
+    {tier:3,name:"DEFONEOS SWARM",status:"designed",price:"TBD",desc:"Multi-drone + swarm RL"},
+    {tier:3,name:"DEFONEOS GUARD",status:"designed",price:"TBD",desc:"Counter-drone (RF + acoustic + WiFi CSI)"},
+    {tier:3,name:"DEFONEOS SIM",status:"designed",price:"TBD",desc:"Training sim + AI adversaries"},
+    {tier:4,name:"DEFONEOS Printable",status:"live",price:"TBD",desc:"200+ 3D-printable designs (drones+robots)"},
+    {tier:4,name:"MEOK Labs Humanoid (Asimov V8)",status:"designed",price:"£2,188",desc:"Sub-£3k walking humanoid, CERN-OHL-S-2.0"},
+    {tier:5,name:"DEFONEOS Thermal Chip",status:"designed",price:"£15k-250k",desc:"SkyWater 130nm custom silicon"},
+    {tier:5,name:"DEFONEOS DissolvPCB",status:"research",price:"TBD",desc:"Recyclable 3D-printed electronics"},
+    {tier:5,name:"MEOK Labs Pond Dragon",status:"designed",price:"£600",desc:"15,000 L/h koi pond aeration + dragon waterfall"}
+];
+const pt = document.getElementById('products-table');
+products.forEach(p => {
+    pt.innerHTML += `<tr>
+        <td><span class="tier">T${p.tier}</span></td>
+        <td><strong>${p.name}</strong><br><span style="color:var(--text2);font-size:0.85rem;">${p.desc}</span></td>
+        <td><span class="status-${p.status}">● ${p.status}</span></td>
+        <td class="price">${p.price}</td>
+        <td style="font-size:0.85rem;color:var(--text2);">Kimi_Defoneos</td>
+    </tr>`;
+});
+
+// Render 33 hives
+const hives = [
+    {tier:1,name:"MEOK OS → DEFONEOS CORE",cat:"Core OS",price:"£450k-1.2M"},
+    {tier:1,name:"SOV3 → ARES Neural Command",cat:"Neural Core",price:"£380k-1.4M"},
+    {tier:1,name:"OpenFang → WRAITH Agent Runtime",cat:"Agent Runtime",price:"£220k-580k"},
+    {tier:1,name:"ClawTeam Swarm Orchestration",cat:"Swarm Orch",price:"—"},
+    {tier:2,name:"DEFENCE Layer → SHIELD",cat:"Defense",price:"—"},
+    {tier:2,name:"PROTECTION Envelope",cat:"Protection",price:"—"},
+    {tier:2,name:"Metrics / KPIs",cat:"Telemetry",price:"—"},
+    {tier:2,name:"Identity / Auth",cat:"Identity",price:"—"},
+    {tier:2,name:"Governance Rules",cat:"Governance",price:"—"},
+    {tier:3,name:"Geospatial → EYE",cat:"GEOINT",price:"—"},
+    {tier:3,name:"Distributed Nodes",cat:"Distributed",price:"—"},
+    {tier:3,name:"Secure Comms",cat:"Comms",price:"—"},
+    {tier:3,name:"Family Protection AI",cat:"Civil",price:"—"},
+    {tier:3,name:"AI Gov Cert → CSOAI Kit",cat:"Compliance",price:"—"},
+    {tier:3,name:"Compliance Platform",cat:"Compliance",price:"—"},
+    {tier:3,name:"AI Safety Framework",cat:"Safety",price:"—"},
+    {tier:4,name:"Military Equipment Rental",cat:"Industrial",price:"—"},
+    {tier:4,name:"Waste Logistics",cat:"Industrial",price:"—"},
+    {tier:4,name:"Plant Hire",cat:"Industrial",price:"—"},
+    {tier:4,name:"Agri IoT",cat:"Industrial",price:"—"},
+    {tier:4,name:"Aquatics → Pond Dragon",cat:"Industrial",price:"£600"},
+    {tier:5,name:"Gaming AI",cat:"Gaming",price:"—"},
+    {tier:5,name:"3D Globe (Cesium)",cat:"3D Viz",price:"—"},
+    {tier:5,name:"UE5 SOV SPACE",cat:"3D Viz",price:"—"},
+    {tier:5,name:"Avatars (MetaHuman)",cat:"3D Viz",price:"—"},
+    {tier:5,name:"Blockchain",cat:"Web3",price:"—"},
+    {tier:5,name:"Data Pipelines",cat:"Data",price:"—"},
+    {tier:5,name:"BFT Governance",cat:"Governance",price:"—"},
+    {tier:5,name:"Watchdog (SIGIL)",cat:"Telemetry",price:"—"},
+    {tier:5,name:"Airspace",cat:"Airspace",price:"—"},
+    {tier:5,name:"Drones → SWARM",cat:"Drones",price:"—"},
+    {tier:5,name:"Cyber Defense → SHIELD",cat:"Cyber",price:"—"},
+    {tier:5,name:"Prompt Injection Firewall",cat:"Security",price:"—"}
+];
+const hg = document.getElementById('hives-grid');
+hives.forEach(h => {
+    hg.innerHTML += `<div class="card">
+        <span class="tier">T${h.tier}</span>
+        <div style="margin-top:0.4rem;font-weight:600;">${h.name}</div>
+        <div style="color:var(--text2);font-size:0.85rem;">${h.cat} · ${h.price}</div>
+    </div>`;
+});
+
+// Crown jewels
+const crown = [
+    {cat:"Defense AI OS",items:["OpenFang (Rust, 16 security layers, MIT)","Anduril Lattice OS (reference)","Palantir AIP / Maven (reference)"]},
+    {cat:"Defense C2 / SA",items:["ATAK / TAK Ecosystem (500k DoD users, GOTS)","FreeTAKServer (EPL open-source)","chat-to-cop (AI staff officer)"]},
+    {cat:"Sovereign AI / LLMs",items:["DeepSeek V4 (1T MoE, 1M context, Apache 2.0)","Llama 4 Scout (10M context, single H100)","Mistral Small 4","Kimi K2.5","Qwen 2.5","Mamba-2 (state-space)"]},
+    {cat:"3D Viz (SOV SPACE)",items:["UE 5.8 MCP Plugin (Epic, FREE)","Cesium for Unreal (Apache 2.0)","MetaHuman Crowd (Epic, FREE)","Mesh Terrain (Epic, FREE)","Three.js WebGPURenderer (MIT)","Gaussian Splatting"]},
+    {cat:"Open Silicon",items:["SkyWater SKY130 PDK (Apache 2.0)","Open-source EDA (OpenROAD, Magic)","NVFP4 Quantization (4x Blackwell)"]},
+    {cat:"3D Printing",items:["Klipper3d/klipper (GPL-3.0, 11.6k★)","OrcaSlicer (AGPL-3.0, 14.8k★)","QIDITECH/QIDIStudio (AGPL-3.0)","qidi-printer-mcp (ours, MIT, 10 tools)","DMontgomery40/mcp-3D-printer-server (GPL-2.0, 198★)"]},
+    {cat:"Robotics / Humanoids",items:["WOLF Actuator (Anthropic, CC-BY-SA-4.0)","Berkeley Humanoid Lite (BSD-3-Clause)","upkie/upkie (Apache-2.0, 374★)","MarcDcls/microban (CERN-OHL-S-2.0)","assadollahi/kayra (BSD-3-Clause)","alia-humanoid-core (MIT)","mekion/bimo (Apache-2.0)","RUKA-v2 (tendon hand, MIT)"]},
+    {cat:"Drones",items:["PX4-Autopilot (BSD-3-Clause)","ArduPilot (GPL-3.0)","MAVSDK (BSD-3-Clause)","OpenAthena","Batear (acoustic)","Mava (multi-agent RL)","MuJoCo","Genesis (43M FPS)","EdgeVLA"]},
+    {cat:"AI Safety / Security",items:["OWASP Agentic Security (CC-BY-SA)","garak (MIT, adversarial)","Care Membrane (MIT)","KILLSWITCH.md","AIOS kernel","Mastra (agent framework)","A2A v1.0 protocol"]},
+    {cat:"LLM Serving",items:["vLLM","SGLang","TensorRT-LLM","NVIDIA Dynamo","OpenRLHF","NeMo Safe Synthesizer","Ocean Protocol"]}
+];
+const ct = document.getElementById('crown-tabs');
+const cc = document.getElementById('crown-content');
+crown.forEach((c, i) => {
+    ct.innerHTML += `<div class="tab ${i===0?'active':''}" data-i="${i}">${c.cat}</div>`;
+    cc.innerHTML += `<div class="grid grid-2 ${i>0?'hide':''}" data-i="${i}">${c.items.map(it => `<div class="card"><div style="font-family:var(--mono);font-size:0.9rem;">${it}</div></div>`).join('')}</div>`;
+});
+ct.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    ct.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    cc.querySelectorAll('[data-i]').forEach(d => d.classList.toggle('hide', d.dataset.i !== t.dataset.i));
+}));
+
+// Models grid (chips)
+const models = ["DeepSeek V4","DeepSeek V4-Pro","DeepSeek V4-Flash","Llama 4 Scout","Llama 4 Maverick","Llama 4 Behemoth","Mistral Small 4","Qwen 2.5","Kimi K2.5","DeepSeek V3.5","DeepSeek R1","Genimi Pro","Genimi Flash","Genimi Nano","GPT-5","GPT-5.5","Claude Opus 4.8","Claude Sonnet","Claude Haiku","Mamba-2","Falcon3","Phi-3","Hailo-10H","Jetson Orin","Raspberry Pi 5","OpenFang (Rust runtime)","vLLM","SGLang","TensorRT-LLM","NVIDIA Dynamo"];
+const mg = document.getElementById('models-grid');
+mg.innerHTML = '<div style="line-height:2;">' + models.map(m => `<span class="tag tag-strong">${m}</span>`).join('') + '</div>' + '<p style="margin-top:1rem;color:var(--text2);">Plus 87 more catalogued in <code>knowledge_database.json</code></p>';
+</script>
+
+</body>
+</html>

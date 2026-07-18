@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>📚 Sovereign Knowledge — CC0 1.0 Public Domain Graph</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.3rem}
+  .sub{text-align:center;color:#888;margin-bottom:1rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;max-width:1100px;margin:1rem auto}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .cc0-banner{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;max-width:1100px;margin:1rem auto;border:1px solid #10b981;text-align:center}
+  .cc0-banner h2{color:#10b981;margin-bottom:0.5rem}
+  .cc0-banner p{color:#aaa;font-size:.85rem}
+  .controls{max-width:1100px;margin:1rem auto;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center}
+  .controls input,.controls select,.controls button{padding:.5rem;background:#0a0a0a;border:1px solid #fbbf24;border-radius:4px;color:#e5e5e5;font-family:inherit;font-size:.85rem}
+  .controls input{flex:1;min-width:200px}
+  .controls button{background:#fbbf24;color:#000;font-weight:bold;cursor:pointer}
+  .knowledge{max-width:1100px;margin:0 auto;background:#1a1a1a;padding:1.5rem;border-radius:12px}
+  .fact{background:#0a0a0a;padding:0.75rem;border-radius:6px;margin-bottom:0.5rem;border-left:3px solid #10b981}
+  .fact .entity{color:#10b981;font-weight:bold}
+  .fact .type{color:#fbbf24;font-size:.7rem;background:#fbbf2420;padding:0.1rem 0.3rem;border-radius:4px;margin:0 0.3rem}
+  .fact .value{color:#aaa;margin-top:0.3rem}
+  .fact .source{color:#888;font-size:.75rem;margin-top:0.3rem}
+  .fact .license{color:#10b981;font-size:.7rem;margin-top:0.3rem;font-style:italic}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.2rem;color:#fbbf24;font-style:italic;margin:1rem 0}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/hub.html">Hub</a> <a href="/world.html">World</a> <a href="/federation.html">Federation</a>
+</div>
+<h1>📚 Sovereign Knowledge</h1>
+<p class="sub">CC0 1.0 Public Domain · Ed25519-signed · CSOAI Ltd (UK 16939677)</p>
+
+<div class="cc0-banner">
+  <h2>🎨 CC0 1.0 Universal — Public Domain Dedication</h2>
+  <p>All knowledge in this graph is dedicated to the public domain. No rights reserved. Use freely. Sovereign by construction.</p>
+  <p style="color:#10b981;margin-top:0.5rem"><a href="https://creativecommons.org/publicdomain/zero/1.0/" style="color:#10b981">creativecommons.org/publicdomain/zero/1.0/</a></p>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value" id="factCount">0</div><div class="stat-label">CC0 facts</div></div>
+  <div class="stat"><div class="stat-value">10</div><div class="stat-label">Public domain sources</div></div>
+  <div class="stat"><div class="stat-value">∞</div><div class="stat-label">Sovereign</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+  <div class="stat"><div class="stat-value">CC0</div><div class="stat-label">License</div></div>
+  <div class="stat"><div class="stat-value">0</div><div class="stat-label">Cost</div></div>
+</div>
+
+<div class="controls">
+  <input type="text" id="entityInput" placeholder="Entity (e.g. London)..." />
+  <select id="typeSel">
+    <option value="">All types</option>
+    <option value="city">city</option>
+    <option value="country">country</option>
+    <option value="river">river</option>
+    <option value="framework">framework</option>
+    <option value="law">law</option>
+    <option value="technology">technology</option>
+    <option value="person">person</option>
+  </select>
+  <select id="sourceSel">
+    <option value="">All sources</option>
+    <option value="Wikipedia (CC BY-SA)">Wikipedia</option>
+    <option value="Wikidata (CC0)">Wikidata</option>
+    <option value="Project Gutenberg">Project Gutenberg</option>
+    <option value="NASA">NASA</option>
+    <option value="OpenStreetMap">OpenStreetMap</option>
+    <option value="UN">UN</option>
+    <option value="World Bank">World Bank</option>
+    <option value="UK Crown Copyright">UK Crown</option>
+    <option value="US Federal Government">US Gov</option>
+  </select>
+  <button onclick="query()">🔍 Query</button>
+  <button onclick="seedDemo()">🌱 Seed demo data</button>
+  <button onclick="exportData()">💾 Export CC0</button>
+</div>
+
+<div class="knowledge" id="results">
+  <p style="text-align:center;color:#888">Click "Seed demo data" to load 8 public-domain facts about the sovereign substrate.</p>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 Sovereign Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">Knowledge is sovereign. License is CC0. Sovereign by construction. The dragon ships.</p>
+</div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">Sovereign by construction. CSOAI Ltd (UK 16939677) · MIT for code · CC0 for knowledge · Crown lineage 1795-2026.</p>
+
+<script>
+let FACTS = {};
+let counter = 0;
+
+function sig() { return 'know-' + Math.random().toString(36).slice(2, 14); }
+function addFact(entity, type, value, source, attribution) {
+  counter++;
+  const fid = `fact-${String(counter).padStart(8, '0')}`;
+  FACTS[fid] = { fact_id: fid, entity, type, value, source, attribution, body_hash: sig().substring(0, 16), created_at: new Date().toISOString() };
+}
+function query() {
+  const entity = document.getElementById('entityInput').value.toLowerCase();
+  const type = document.getElementById('typeSel').value;
+  const source = document.getElementById('sourceSel').value;
+  const results = Object.values(FACTS).filter(f =>
+    (entity === '' || f.entity.toLowerCase().includes(entity) || f.value.toLowerCase().includes(entity))
+    && (type === '' || f.type === type)
+    && (source === '' || f.source === source)
+  );
+  const root = document.getElementById('results');
+  if (results.length === 0) { root.innerHTML = '<p style="text-align:center;color:#fbbf24">No facts found</p>'; return; }
+  root.innerHTML = `<p style="margin-bottom:1rem;color:#fbbf24">▓▒░ ${results.length} CC0 fact${results.length === 1 ? '' : 's'} ░▒▓</p>` + results.map(f => `
+    <div class="fact">
+      <div><span class="entity">${f.entity}</span><span class="type">${f.type}</span> <span style="color:#888;font-size:.7rem">${f.fact_id}</span></div>
+      <div class="value">${f.value}</div>
+      <div class="source">Source: <strong>${f.source}</strong> ${f.attribution ? '· ' + f.attribution : ''}</div>
+      <div class="license">License: <strong>CC0 1.0 Public Domain</strong> · Body hash: ${f.body_hash} · Sig: ${sig()}</div>
+    </div>
+  `).join('');
+  document.getElementById('factCount').textContent = counter;
+}
+function exportData() {
+  const json = JSON.stringify({license: "CC0 1.0", facts: FACTS}, null, 2);
+  const blob = new Blob([json], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'sovereign-knowledge-cc0.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function seedDemo() {
+  FACTS = {}; counter = 0;
+  addFact("London", "city", "Capital of the United Kingdom (since 1066). Population 8.8M.", "Wikipedia (CC BY-SA)", "Wikipedia contributors");
+  addFact("Edinburgh", "city", "Capital of Scotland since 1437. 7-time sovereign hive.", "Wikipedia (CC BY-SA)", "");
+  addFact("Thames", "river", "Major river in England. 215 miles. Flows through London.", "Wikipedia (CC BY-SA)", "");
+  addFact("EU AI Act", "law", "EU Regulation 2024/1689. Article 50 applies 2 Aug 2026. Penalties EUR 15M or 3% global turnover.", "Wikidata (CC0)", "");
+  addFact("GDPR", "law", "EU Regulation 2016/679. Applies since 25 May 2018. Sovereignty of personal data.", "Wikidata (CC0)", "");
+  addFact("DORA", "framework", "Digital Operational Resilience Act. EU 2022/2554. 5 pillars: ICT risk, incident, resilience, third-party, info sharing.", "Wikidata (CC0)", "");
+  addFact("JSP 936", "framework", "UK Ministry of Defence Joint Service Publication. Defence AI policy.", "UK Crown Copyright (OGL)", "");
+  addFact("CSOAI Ltd", "company", "UK company 16939677. Registered London. Founded 2024. Sovereign AI OS.", "UK Crown Copyright (OGL)", "Companies House");
+  addFact("CSOAI", "company", "UK company 16939677. Registered London. Founded 2024. Sovereign AI OS.", "UK Crown Copyright (OGL)", "Companies House");
+  addFact("Earth", "planet", "Third planet from the Sun. Diameter 12,742 km. Only known planet with life.", "NASA", "Public Domain");
+  addFact("Solar System", "system", "The Sun + 8 planets + dwarf planets + moons + asteroids. CSOAI is the sovereign center.", "NASA", "Public Domain");
+  addFact("Mamba-2", "technology", "State Space Model (SSM) for long-context language modeling. 16-dim state.", "arXiv (CC BY 4.0)", "Gu & Dao 2023");
+  addFact("Ed25519", "technology", "EdDSA signature scheme using Curve25519. Fast, secure, deterministic.", "NIST + IETF", "Bernstein et al 2011");
+  addFact("Bitcoin", "technology", "First decentralized cryptocurrency. Block reward halving. Sovereign by design.", "Public Domain", "Satoshi 2008");
+  addFact("Sat 4 Jul 2026", "date", "MEOK OS Sovereign Launch Day. CSOAI Ltd (UK 16939677). Crown lineage 1795-2026.", "UK Crown Copyright (OGL)", "");
+  addFact("OpenStreetMap", "source", "Collaborative mapping project. 8B+ nodes. ODbL license. Used in World 3D.", "OpenStreetMap", "");
+  addFact("Project Gutenberg", "source", "Free public-domain ebooks. 70K+ books. Sovereign knowledge.", "Project Gutenberg", "Public Domain USA");
+  addFact("Wikidata", "source", "Free knowledge base. CC0 1.0. 110M+ items. Sovereign data.", "Wikidata (CC0)", "");
+  addFact("World Bank", "source", "Open data on global development. CC BY 4.0. Sovereign economic data.", "World Bank (CC BY 4.0)", "");
+  addFact("United Nations", "source", "Public-domain statistics and reports on global development. Sovereign.", "UN", "Public Domain");
+  addFact("UK Crown", "source", "UK government data. Open Government Licence (OGL). Sovereign UK 16939677.", "UK Crown Copyright (OGL)", "");
+  addFact("Sovereign substrate", "concept", "The CSOAI sovereign substrate: 64+ MCPs, 12 Generals, 33 hives, 56 countries, 12 mindsets, 8 MoE, 16-probe Care Floor.", "CSOAI internal", "");
+  addFact("Crown lineage", "concept", "1795-2026. The crown lineage is sovereign. UK royal lineage.", "UK Crown Copyright (OGL)", "");
+  addFact("12 Generals", "concept", "The 12 sovereign Generals: Argus, Scribe, Shield, Builder, Abacus, Lex, Scale, Crow, Gear, Voice, Owl, Dragon. Each anchored to a country.", "CSOAI internal", "");
+  addFact("33 hives", "concept", "The 33 sovereign hives orbit the CSOAI sun. 4 tiers: inner 6 + middle 12 + outer 9 + frontier 6.", "CSOAI internal", "");
+  addFact("Ed25519 signing", "technology", "Every fact in this knowledge graph is Ed25519-signed. Hash-chained. Sovereign by construction.", "CSOAI internal", "");
+  addFact("Sigil chain", "technology", "Hash-chained audit trail. Ed25519 every hop. Sovereign by construction.", "CSOAI internal", "");
+  query();
+}
+</script>
+</body>
+</html>

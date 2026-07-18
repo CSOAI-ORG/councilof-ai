@@ -1,0 +1,168 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# openpatent.ai — Sovereign Hive
+# Helm chart values
+# ─────────────────────────────────────────────────────────────────────────────
+# 8 stateless Python FastAPI services → Deployment
+# 2 stateful infra services           → StatefulSet (postgres, ipfs)
+# 1 Node.js landing site              → Deployment
+#
+# Install:
+#   helm install hive ./deploy/k8s \
+#     --namespace openpatent --create-namespace \
+#     --set global.domain=openpatent.ai
+# ─────────────────────────────────────────────────────────────────────────────
+
+global:
+  domain: openpatent.ai
+  imageRegistry: ghcr.io/openpatent
+  imagePullPolicy: IfNotPresent
+  # Sovereign VM IP (for documentation / fallback). Production: use the
+  # in-cluster Service DNS names.
+  sovereignVM: 35.242.143.249
+
+# ── Image tags (override per service) ──────────────────────────────────────
+images:
+  patentmcp:             "patentmcp:0.4.0"
+  apiGateway:            "api-gateway:0.4.0"
+  worker:                "worker:0.4.0"
+  verifyPage:            "verify-page:0.4.0"
+  mcpManifest:           "mcp-manifest:0.4.0"
+  bftCouncil:            "bft-council:0.4.0"
+  draftingFork:          "drafting-fork:0.4.0"
+  x402Router:            "x402-router:0.4.0"
+  openpatentPrimitives:  "openpatent-primitives:0.4.0"
+  landingSite:           "landing-site:0.4.0"
+  postgres:              "postgres:16-alpine"
+  ipfs:                  "ipfs/kubo:latest"
+
+# ── Service definitions (port + role + kind) ───────────────────────────────
+# kind: stateless → Deployment,  stateful → StatefulSet
+services:
+  - name: patentmcp
+    kind: stateless
+    port: 3210
+    role: "Internal core — 6-layer crypto + audit chain"
+    replicas: 1
+    resources: { cpu: "500m", memory: "1Gi" }
+
+  - name: api-gateway
+    kind: stateless
+    port: 3211
+    role: "Public API · api.openpatent.ai"
+    replicas: 2
+    resources: { cpu: "300m", memory: "768Mi" }
+
+  - name: worker
+    kind: stateless
+    port: 3212
+    role: "Background · OTS upgrade + Polygon + IPFS pin"
+    replicas: 1
+    resources: { cpu: "500m", memory: "1Gi" }
+
+  - name: verify-page
+    kind: stateless
+    port: 3213
+    role: "Verify renderer · verify.openpatent.ai"
+    replicas: 2
+    resources: { cpu: "200m", memory: "512Mi" }
+
+  - name: mcp-manifest
+    kind: stateless
+    port: 3214
+    role: "MCP manifest · mcp.openpatent.ai"
+    replicas: 1
+    resources: { cpu: "100m", memory: "256Mi" }
+
+  - name: bft-council
+    kind: stateless
+    port: 3215
+    role: "33-agent BFT council"
+    replicas: 1
+    resources: { cpu: "1000m", memory: "2Gi" }
+
+  - name: drafting-fork
+    kind: stateless
+    port: 3216
+    role: "Drafting fork (TypeScript OpenPatent)"
+    replicas: 1
+    resources: { cpu: "300m", memory: "768Mi" }
+
+  - name: x402-router
+    kind: stateless
+    port: 3217
+    role: "x402 payment router · 60/25/15 split"
+    replicas: 1
+    resources: { cpu: "200m", memory: "512Mi" }
+
+  - name: openpatent-primitives
+    kind: stateless
+    port: 3218
+    role: "7 patent-primitive tools"
+    replicas: 1
+    resources: { cpu: "300m", memory: "768Mi" }
+
+  - name: landing-site
+    kind: stateless
+    port: 3000
+    role: "Landing site · openpatent.ai / draft.openpatent.ai"
+    replicas: 2
+    resources: { cpu: "200m", memory: "512Mi" }
+
+# ── Stateful services ──────────────────────────────────────────────────────
+stateful:
+  postgres:
+    enabled: true
+    image: "postgres:16-alpine"
+    port: 5432
+    storage: 20Gi
+    storageClassName: standard
+    user: openpatent
+    password: "REPLACE_ME"          # use a Secret in production
+    database: openpatent
+    resources: { cpu: "500m", memory: "1Gi" }
+
+  ipfs:
+    enabled: true
+    image: "ipfs/kubo:latest"
+    apiPort: 5001
+    gatewayPort: 8080
+    storage: 50Gi
+    storageClassName: standard
+    resources: { cpu: "200m", memory: "512Mi" }
+
+# ── Prometheus scrape config (annotated pods) ──────────────────────────────
+# Each Python service is annotated so kube-prometheus-stack picks it up.
+# This mirrors the /metrics endpoint exposed by services/_shared/metrics.py.
+prometheus:
+  enabled: true
+  scrapeInterval: 15s
+  # metricRelabelings / relabelConfigs intentionally omitted — default is fine.
+
+# ── Ingress (TLS via cert-manager) ─────────────────────────────────────────
+ingress:
+  enabled: true
+  className: nginx
+  tlsSecretName: openpatent-tls
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: api.openpatent.ai
+      service: api-gateway
+      port: 3211
+    - host: verify.openpatent.ai
+      service: verify-page
+      port: 3213
+    - host: mcp.openpatent.ai
+      service: mcp-manifest
+      port: 3214
+    - host: openpatent.ai
+      service: landing-site
+      port: 3000
+    - host: draft.openpatent.ai
+      service: landing-site
+      port: 3000
+
+# ── Secrets (override with --set or a values-secret.yaml) ──────────────────
+secrets:
+  polygonRpc: "https://polygon-rpc.com"
+  hiveKey: "REPLACE_ME_HIVE_KEY"

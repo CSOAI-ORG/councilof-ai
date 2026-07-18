@@ -1,0 +1,7 @@
+{
+  "id": "sa-competitive-4-quadrant",
+  "prompt": "Write a 4-quadrant competitive map for openpatent.ai vs the 7 named competitors (PatentBolt, Anaqua, CPA Global, Clarivate, Wolters Kluwer, LexisNexis PatentSight, WIPO PROSE). Plot on X-axis: 'AI-asset-aware' (low → high). Y-axis: 'Cryptographically-anchored' (low → high). Quadrants: Q1 (top-right, AI + crypto = the WIN) where only openpatent.ai sits, Q2 (top-left, crypto-only = legal/regulatory incumbents who anchor but don't understand AI assets), Q3 (bottom-left, neither = traditional patent prosecution tools), Q4 (bottom-right, AI-only = model-registry startups without the 6-layer proof). For each competitor, give: 1-line description, 1-line weakness openpatent.ai exploits, plot position. Use DEFENEOS mythic voice. Return ONLY JSON: {axes:{x:string, y:string}, quadrants:[{name:string, position:string, occupants:[strings]}], competitors:[{name:string, description:string, weakness:string, x:float, y:float}]}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

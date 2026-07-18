@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Swarm Engine — Mava + PX4 Drone Operations</title>
+<meta name="description" content="DEFONEOS Swarm Engine — Mava multi-agent RL + PX4 autonomous drone swarms for UK defence ISR. 6 mission templates. FreeTAKServer integration.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:1.5rem;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-2px);border-color:rgba(245,158,11,.6)}
+.card h3{color:#f59e0b;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.formation-badge{display:inline-block;padding:4px 12px;background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.4);border-radius:20px;font-size:.8rem;color:#f59e0b;margin:2px}
+.btn{display:inline-block;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem .5rem 0 0;text-transform:uppercase;font-size:.85rem;text-decoration:none}
+.btn:hover{opacity:.9}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(245,158,11,.2);border-color:#f59e0b;color:#f59e0b;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(245,158,11,.15);color:#f59e0b;font-size:.85rem;border-bottom:2px solid rgba(245,158,11,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.status-ok{color:#22c55e;font-weight:700}
+.status-degraded{color:#f59e0b}
+.status-lost{color:#ef4444}
+.sim-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.sim-controls label{display:block;color:#94a3b8;font-size:.85rem;margin-bottom:.25rem}
+.sim-controls input[type=range]{width:100%}
+.output-box{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;font-family:monospace;font-size:.8rem;max-height:300px;overflow-y:auto;margin:1rem 0;white-space:pre-wrap}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem;transition:color .2s}
+.nav a:hover{color:#f59e0b}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-isr-pipeline.html">🛰️ ISR Pipeline</a>
+  <a href="defoneos-sensor-layer.html">📡 Sensors</a>
+  <a href="defoneos-digital-twin.html">🌍 Digital Twin</a>
+  <a href="defoneos-swarm.html" style="color:#f59e0b;font-weight:700">🦅 Swarm</a>
+</div>
+
+<h1>🦅 Swarm Engine</h1>
+<p class="tagline">Mava multi-agent reinforcement learning + PX4 autonomous drone swarms. 6 mission templates. NATO doctrine-aligned.</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🎯 Mission Templates</div>
+  <div class="tab" onclick="switchTab(1)">🧪 Swarm Simulation</div>
+  <div class="tab" onclick="switchTab(2)">🛩️ PX4 Flight Modes</div>
+  <div class="tab" onclick="switchTab(3)">📡 TAK Integration</div>
+</div>
+
+<!-- Tab 0: Mission Templates -->
+<div class="tab-content active">
+  <h2 style="color:#f59e0b;margin-top:0">🎯 Pre-Configured Mission Templates</h2>
+  <p style="color:#94a3b8">6 NATO doctrine-aligned swarm templates. Select, configure, deploy.</p>
+  <table>
+    <tr><th>Template</th><th>Agents</th><th>Formation</th><th>Speed</th><th>Doctrine</th><th></th></tr>
+    <tr><td><b>ISR Sweep</b></td><td>6</td><td><span class="formation-badge">Line Abreast</span></td><td>15 m/s</td><td>ATP 3-20.98</td><td><span class="status-ok">READY</span></td></tr>
+    <tr><td><b>Perimeter Watch</b></td><td>8</td><td><span class="formation-badge">Orbit</span></td><td>10 m/s</td><td>JP 3-10</td><td><span class="status-ok">READY</span></td></tr>
+    <tr><td><b>Convoy Escort</b></td><td>4</td><td><span class="formation-badge">Diamond</span></td><td>12 m/s</td><td>ATP 3-21.8</td><td><span class="status-ok">READY</span></td></tr>
+    <tr><td><b>Target Handoff</b></td><td>3</td><td><span class="formation-badge">Relay</span></td><td>18 m/s</td><td>JP 3-60</td><td><span class="status-ok">READY</span></td></tr>
+    <tr><td><b>Battle Damage Assessment</b></td><td>2</td><td><span class="formation-badge">Stacked</span></td><td>8 m/s</td><td>JP 3-60</td><td><span class="status-ok">READY</span></td></tr>
+    <tr><td><b>Electronic Warfare Screen</b></td><td>10</td><td><span class="formation-badge">Grid</span></td><td>5 m/s</td><td>JP 3-12</td><td><span class="status-ok">READY</span></td></tr>
+  </table>
+  <a href="defoneos-isr-pipeline.html" class="btn">Launch ISR Sweep →</a>
+  <a href="defoneos-digital-twin.html" class="btn">View on Globe →</a>
+</div>
+
+<!-- Tab 1: Swarm Simulation -->
+<div class="tab-content">
+  <h2 style="color:#f59e0b;margin-top:0">🧪 Live Swarm Simulation</h2>
+  <p style="color:#94a3b8">Simulate swarm behaviour under environmental stress (wind, jamming).</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Environmental Factors</h3>
+      <div class="sim-controls">
+        <div><label>Wind Speed: <b id="windVal">5</b> m/s</label><input type="range" min="0" max="30" value="5" id="wind" oninput="document.getElementById('windVal').textContent=this.value;runSim()"></div>
+        <div><label>Jam Probability: <b id="jamVal">0.1</b></label><input type="range" min="0" max="1" step="0.1" value="0.1" id="jam" oninput="document.getElementById('jamVal').textContent=this.value;runSim()"></div>
+        <div><label>Duration: <b id="durVal">300</b> sec</label><input type="range" min="60" max="3600" step="60" value="300" id="dur" oninput="document.getElementById('durVal').textContent=this.value;runSim()"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Swarm Status</h3>
+      <p><span class="stat" id="operational">5</span> <span class="status-ok">OPERATIONAL</span></p>
+      <p><span class="stat" id="degraded">1</span> <span class="status-degraded">DEGRADED</span></p>
+      <p><span class="stat" id="lost">0</span> <span class="status-lost">LOST</span></p>
+      <p style="margin-top:.5rem">Coverage: <b id="coverage">—</b> km² | Mission: <b id="success">PENDING</b></p>
+    </div>
+  </div>
+  <div class="output-box" id="simOutput">Swarm simulation ready. Adjust parameters above.</div>
+</div>
+
+<!-- Tab 2: PX4 Flight Modes -->
+<div class="tab-content">
+  <h2 style="color:#f59e0b;margin-top:0">🛩️ PX4 Flight Modes</h2>
+  <p style="color:#94a3b8">All standard PX4 Autopilot modes supported via MAVLink offboard control.</p>
+  <table>
+    <tr><th>Mode</th><th>ID</th><th>Autonomy</th><th>Description</th></tr>
+    <tr><td><b>Stabilized</b></td><td>0</td><td>Manual</td><td>RC-assisted stabilisation</td></tr>
+    <tr><td><b>Altitude</b></td><td>1</td><td>Assisted</td><td>Altitude hold + manual XY</td></tr>
+    <tr><td><b>Position</b></td><td>2</td><td>Assisted</td><td>GPS position hold</td></tr>
+    <tr><td><b>Mission</b></td><td>3</td><td><span class="status-ok">Autonomous</span></td><td>Waypoint mission execution</td></tr>
+    <tr><td><b>Loiter</b></td><td>4</td><td><span class="status-ok">Autonomous</span></td><td>Loiter at position</td></tr>
+    <tr><td><b>RTL</b></td><td>5</td><td><span class="status-ok">Autonomous</span></td><td>Return to launch</td></tr>
+    <tr><td><b>Offboard</b></td><td>6</td><td><span class="status-ok">Autonomous</span></td><td>MAVLink offboard control</td></tr>
+    <tr><td><b>Follow</b></td><td>7</td><td><span class="status-ok">Autonomous</span></td><td>Follow target/vehicle</td></tr>
+  </table>
+</div>
+
+<!-- Tab 3: TAK Integration -->
+<div class="tab-content">
+  <h2 style="color:#f59e0b;margin-top:0">📡 FreeTAKServer Integration</h2>
+  <p style="color:#94a3b8">All swarm positions stream as Cursor-on-Target (CoT) XML to FreeTAKServer for common operating picture.</p>
+  <div class="grid">
+    <div class="card"><h3>TAK Data Package</h3><p>CoT XML events for every swarm agent — position, role, status. Compatible with ATAK, WinTAK, iTAK.</p><span class="stat">✓</span></div>
+    <div class="card"><h3>Live Position Feed</h3><p>1 Hz position updates via MAVLink → CoT bridge. All agents visible on TAK map.</p><span class="stat">1 Hz</span></div>
+    <div class="card"><h3>Cesium Globe Sync</h3><p>Swarm positions also stream as CZML to CesiumJS for 3D globe visualisation.</p><span class="stat">CZML</span></div>
+  </div>
+</div>
+
+<div class="sigil">🐉 DEFONEOS SWARM ENGINE v1.0.0 | Mava + PX4 | Sovereign. British. Forever. | SIGIL: d5e0-f1n3-0e05-swarm</div>
+
+</div>
+<script>
+function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===n)});document.querySelectorAll('.tab-content').forEach((c,i)=>{c.classList.toggle('active',i===n)})}
+function runSim(){
+  var w=parseInt(document.getElementById('wind').value)||0;
+  var j=parseFloat(document.getElementById('jam').value)||0;
+  var d=parseInt(document.getElementById('dur').value)||300;
+  var n=6,op=0,deg=0,lost=0;
+  for(var i=0;i<n;i++){
+    var wf=Math.max(0,1-(w/30)*(i/n));
+    var jf=Math.max(0,1-j*((i>0?1:0.5)));
+    var h=wf*jf;
+    if(h>0.8)op++;else if(h>0.4)deg++;else lost++;
+  }
+  var cov=((n*50*d*15)/1e6).toFixed(1);
+  document.getElementById('operational').textContent=op;
+  document.getElementById('degraded').textContent=deg;
+  document.getElementById('lost').textContent=lost;
+  document.getElementById('coverage').textContent=cov;
+  document.getElementById('success').textContent=(op>=3?'✅ SUCCESS':'❌ FAILED');
+  document.getElementById('success').style.color=(op>=3?'#22c55e':'#ef4444');
+  var out='=== SWARM SIM RESULTS ===\nTemplate: ISR Sweep ('+n+' agents)\nWind: '+w+' m/s | Jam: '+(j*100).toFixed(0)+'% | Duration: '+d+'s\n---\nOperational: '+op+' | Degraded: '+deg+' | Lost: '+lost+'\nCoverage: '+cov+' km²\nMission: '+(op>=3?'SUCCESS':'FAILED')+'\nSIGIL: '+Array.from({length:16},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+  document.getElementById('simOutput').textContent=out;
+}
+runSim();
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

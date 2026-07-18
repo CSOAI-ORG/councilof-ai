@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Plans — Free, Citizen, Pro, Enterprise</title>
+<meta name="description" content="Sovereign plans. Free $0 · Citizen $9 · Pro $29 · Enterprise $99+. 74 MCPs. 12 Generals. 33 hives. Apple-ready.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.json">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem;text-shadow:0 0 20px #fbbf24}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a1f3a 50%,#02060f 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:3rem;margin-bottom:1rem;text-shadow:0 0 30px #fbbf24}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;max-width:1100px;margin:1.5rem auto;padding:0 1rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.75rem}
+  .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin:3rem auto;max-width:1200px}
+  .plan{background:#1a1a1a;padding:2rem;border-radius:12px;border:2px solid #fbbf24;position:relative;display:flex;flex-direction:column}
+  .plan.featured{border-color:#fbbf24;background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);box-shadow:0 0 30px rgba(251,191,36,0.3)}
+  .plan .badge{position:absolute;top:-12px;right:1rem;background:#fbbf24;color:#000;padding:.3rem .8rem;border-radius:6px;font-size:.7rem;font-weight:bold}
+  .plan h2{color:#fbbf24;margin-bottom:0.3rem}
+  .plan .price{font-size:2.5rem;color:#10b981;font-weight:bold;margin:0.5rem 0}
+  .plan .price small{color:#888;font-size:.8rem;font-weight:normal}
+  .plan .desc{color:#888;font-size:.8rem;margin-bottom:1rem}
+  .plan ul{padding-left:1.2rem;margin:1rem 0;flex:1;color:#aaa;font-size:.85rem;line-height:1.6}
+  .plan ul li{margin-bottom:0.3rem}
+  .plan button{width:100%;background:#fbbf24;color:#000;padding:.8rem;border:none;border-radius:6px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:.9rem;margin-top:auto}
+  .plan button:hover{background:#f59e0b}
+  .plan.featured button{background:#10b981}
+  .compare{max-width:1200px;margin:2rem auto;padding:0 1rem}
+  .compare h2{color:#fbbf24;text-align:center;margin-bottom:1rem}
+  .compare table{width:100%;border-collapse:collapse;font-size:.8rem;background:#1a1a1a;border-radius:8px;overflow:hidden}
+  .compare th{background:#0a0a0a;color:#fbbf24;padding:.75rem;text-align:left;border-bottom:1px solid #333}
+  .compare td{padding:.6rem;border-bottom:1px solid #222;color:#aaa}
+  .compare .check{color:#10b981;font-weight:bold}
+  .compare .dash{color:#666}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/sov-os.html">SOV OS</a>
+  <a href="/world.html">World 3D</a>
+  <a href="/graph.html">Graph</a>
+  <a href="/plans.html">Plans</a>
+  <a href="/commons.html">Commons</a>
+  <a href="/status.html">Status</a>
+  <span class="spacer"></span>
+  <a class="btn-primary" href="/start.html">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>💎 Sovereign Plans</h1>
+  <p>Free $0 · Citizen $9 · Pro $29 · Enterprise $99+. 74 sovereign MCPs. 12 Generals. 33 hives. Apple-ready.</p>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">$0</div><div class="stat-label">Free tier</div></div>
+  <div class="stat"><div class="stat-value">$9</div><div class="stat-label">Citizen</div></div>
+  <div class="stat"><div class="stat-value">$29</div><div class="stat-label">Pro</div></div>
+  <div class="stat"><div class="stat-value">$99+</div><div class="stat-label">Enterprise</div></div>
+  <div class="stat"><div class="stat-value">74</div><div class="stat-label">MCPs</div></div>
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives</div></div>
+</div>
+
+<div class="container">
+  <div class="plans">
+    <div class="plan">
+      <h2>🌱 Free</h2>
+      <div class="price">$0<small>/mo</small></div>
+      <p class="desc">Forever free. No card. Sovereign by construction.</p>
+      <ul>
+        <li>✓ Sovereign identity (W3C DID + Ed25519)</li>
+        <li>✓ 16-probe Care Floor 0.95</li>
+        <li>✓ 1 sovereign hive</li>
+        <li>✓ 5 sovereign MCPs (entry tier)</li>
+        <li>✓ CC0 1.0 knowledge</li>
+        <li>✓ MIT-licensed code</li>
+        <li>✓ Public sovereign dock</li>
+        <li>✓ Email support</li>
+      </ul>
+      <button onclick="alert('Free tier — start free at /start.html')">Start free →</button>
+    </div>
+
+    <div class="plan featured">
+      <div class="badge">MOST POPULAR</div>
+      <h2>🏛️ Citizen</h2>
+      <div class="price">$9<small>/mo</small></div>
+      <p class="desc">For sovereign citizens. More power. Care Floor.</p>
+      <ul>
+        <li>✓ Everything in Free</li>
+        <li>✓ 30 sovereign MCPs</li>
+        <li>✓ 3 sovereign hives (cross-hive routing)</li>
+        <li>✓ Care Floor with full audit</li>
+        <li>✓ BFT 3-voter council</li>
+        <li>✓ 12 mindsets × 8 MoE = 96 combinations</li>
+        <li>✓ Sovereign Wallet (BFT 3-voter >$10k)</li>
+        <li>✓ Apple ↔ SOV3 partner</li>
+        <li>✓ Priority support</li>
+      </ul>
+      <button onclick="alert('Citizen $9/mo — click to upgrade')">Upgrade to Citizen</button>
+    </div>
+
+    <div class="plan">
+      <h2>🛡️ Pro</h2>
+      <div class="price">$29<small>/mo</small></div>
+      <p class="desc">For sovereign businesses. 12 Generals. 33 hives.</p>
+      <ul>
+        <li>✓ Everything in Citizen</li>
+        <li>✓ All 74 sovereign MCPs</li>
+        <li>✓ 33 sovereign hives (full solar system)</li>
+        <li>✓ 12 Generals (full BFT 12-around-1)</li>
+        <li>✓ Multi-tenant isolation</li>
+        <li>✓ Sovereign deploy + monitor + billing + secret</li>
+        <li>✓ JARVIS embodiment</li>
+        <li>✓ Sovereign AI OS / SovSpace</li>
+        <li>✓ Phone support</li>
+      </ul>
+      <button onclick="alert('Pro $29/mo — click to upgrade')">Upgrade to Pro</button>
+    </div>
+
+    <div class="plan">
+      <h2>👑 Enterprise</h2>
+      <div class="price">$99+<small>/mo</small></div>
+      <p class="desc">For sovereign states, defense, banks. White glove.</p>
+      <ul>
+        <li>✓ Everything in Pro</li>
+        <li>✓ Unlimited hives + tenants</li>
+        <li>✓ BFT 7-voter (largest)</li>
+        <li>✓ Post-quantum crypto (ML-DSA-65)</li>
+        <li>✓ Air-gap deploy option</li>
+        <li>✓ White-label sovereign substrate</li>
+        <li>✓ Dedicated Sovereign Engineer</li>
+        <li>✓ SLA 99.99%</li>
+        <li>✓ On-site sovereign training</li>
+      </ul>
+      <button onclick="alert('Enterprise $99+/mo — contact us')">Contact us</button>
+    </div>
+  </div>
+</div>
+
+<div class="compare">
+  <h2>📊 Plan Comparison</h2>
+  <table>
+    <thead>
+      <tr><th>Feature</th><th>Free</th><th>Citizen</th><th>Pro</th><th>Enterprise</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Price</strong></td><td>$0</td><td>$9</td><td>$29</td><td>$99+</td></tr>
+      <tr><td><strong>Sovereign MCPs</strong></td><td>5</td><td>30</td><td>74</td><td>All + custom</td></tr>
+      <tr><td><strong>Sovereign Hives</strong></td><td>1</td><td>3</td><td>33</td><td>Unlimited</td></tr>
+      <tr><td><strong>12 Generals (BFT 12-around-1)</strong></td><td><span class="dash">—</span></td><td>3</td><td>12</td><td>All</td></tr>
+      <tr><td><strong>Care Floor 0.95</strong></td><td>1 probe</td><td>8</td><td>16</td><td>16 + custom</td></tr>
+      <tr><td><strong>12 Mindsets × 8 MoE</strong></td><td>1 combo</td><td>10</td><td>96</td><td>Unlimited</td></tr>
+      <tr><td><strong>Sovereign Wallet</strong></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td><strong>JARVIS embodiment</strong></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td><strong>Apple ↔ SOV3</strong></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td><strong>SovSpace UE5 (3D)</strong></td><td>Read-only</td><td>Read-only</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td><strong>World 3D (56 countries)</strong></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td><strong>White-label</strong></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td><strong>Post-quantum crypto</strong></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td><strong>Air-gap deploy</strong></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td><strong>Support</strong></td><td>Email</td><td>Priority</td><td>Phone</td><td>Dedicated engineer</td></tr>
+      <tr><td><strong>SLA</strong></td><td>—</td><td>99%</td><td>99.9%</td><td>99.99%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 Sovereign Doctrine of Pricing</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">No vendor lock-in. CC0 + MIT. Apple-developer-friendly. Cancel any time. Crown lineage 1795-2026.</p>
+  <p style="color:#10b981;margin-top:1rem">Sat 4 Jul 2026 09:00 BST · CSOAI Ltd (UK 16939677) · 74 sovereign MCPs</p>
+</div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">Sovereign by construction. CSOAI Ltd (UK 16939677) · MIT License · Crown 1795-2026</p>
+
+</body>
+</html>

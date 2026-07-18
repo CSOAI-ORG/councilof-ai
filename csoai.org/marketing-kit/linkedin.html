@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LinkedIn Posts · sovereign.mom</title>
+<meta name="description" content="Four LinkedIn posts for sovereign.mom — founder, technical, regulatory, customer angles.">
+<meta name="license" content="MIT + CC0">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="kit-nav">
+  <div class="kit-nav-inner">
+    <a class="brand" href="index.html">sovereign.mom <small>marketing kit</small></a>
+    <a class="nav-link" href="press_release.html">Press</a>
+    <a class="nav-link" href="show_hn.html">Show HN</a>
+    <a class="nav-link" href="cold_emails.html">Emails</a>
+    <a class="nav-link" href="x_threads.html">X</a>
+    <a class="nav-link" href="linkedin.html">LinkedIn</a>
+    <a class="nav-link" href="og_cards.html">OG</a>
+    <a class="nav-link" href="storybrand.html">StoryBrand</a>
+    <a class="nav-link" href="founder_pitches.html">Pitches</a>
+  </div>
+</nav>
+
+<main class="kit-wrap">
+
+  <header style="margin-bottom:32px">
+    <p class="eyebrow" style="color:var(--cyan);text-transform:uppercase;letter-spacing:.14em;font-size:.82rem;margin:8px 0">4 LINKEDIN POSTS · ANGLE BY ANGLE</p>
+    <h1>LinkedIn — four posts, four angles</h1>
+    <p style="color:var(--muted)">Rotate weekly. Each post is <b>~500 words</b> and lands in a different conversation. <a href="index.html">← back to kit</a></p>
+  </header>
+
+  <!-- ============================== -->
+  <section class="section">
+    <h2><span class="num">01</span>The founder post — "Why I built sovereign.mom"</h2>
+    <p style="color:var(--muted);font-size:.9rem">Angle: <b>founder</b>. Vulnerability, lineage, the right-thing framing. <span class="tag gold">520 words</span></p>
+    <div class="copybox">
+      <span class="label">LINKEDIN 1 — copy verbatim</span>
+I built the AI I'd want for my mother. Today we ship it.
+
+I'm a US Army veteran. I trained on systems where every prompt had a signature, every action had a refusal, every refusal had an audit log. When I left the Army and started working in AI safety, I was staggered to find that consumer AI had none of those things.
+
+So I built one. It's called sovereign.mom, and we ship it today.
+
+It is a personal AI client. It is not a chatbot. A chatbot holds a conversation. A sovereign client refuses by construction.
+
+Three things make it different:
+
+<b>1. A 12-model council.</b> Every answer goes through a Byzantine-fault-tolerant vote (12-around-1). The models argue in the open. If nine of them say "this is wrong," the answer is refused — and the refusal is sealed with an Ed25519 + ML-KEM-768 (post-quantum, NIST FIPS 203) signature called a SIGIL. You can verify it yourself.
+
+<b>2. A Care Floor of 0.95.</b> Every response is harm-scored. Anything below 0.95 does not ship. It's a literal floor under harm. We publish the score; we publish the model that disagreed; we publish the audit log.
+
+<b>3. Sovereign crypto.</b> Every message is signed Ed25519 (classical) plus ML-KEM-768 (post-quantum). When a chatbot misuses you, you can prove it.
+
+The numbers: 94 MCP servers in the reference stack. 1,730 automated tests passing. 608 pages of documentation. Care Floor 0.95 audited. UK CSOAI · 16939677. MIT for code, CC0 for marketing copy.
+
+We chose MIT + CC0 deliberately. A tool you cannot fork cannot be sovereign.
+
+Three SKUs at launch. Citizen is $0, fully forkable, runs on a Raspberry Pi 5. MEOK Pro is $9/month with priority routing and 5× the SIGIL retention. Enterprise starts at $50,000/year with a sovereign-per-tenant deployment — your Azure region, your keys, your council.
+
+The right test of a personal AI is not what it will do for you. It is what it will refuse to do.
+
+Try the demo at sovereign.mom/demo. Run the Pre-Departure Simulator — a red-team sandbox that pressure-tests the council with 280 prompts. Tell me where the council is wrong. I'll read every comment.
+
+Crown 1795 → 2026. The line is older than computing. We just put it in code.
+
+— Sir Nick, founder, CSOAI (UK 16939677)
+linkedin.com/in/sirnick · sovereign.mom
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <section class="section">
+    <h2><span class="num">02</span>The technical post — "How we built a 12-model BFT council"</h2>
+    <p style="color:var(--muted);font-size:.9rem">Angle: <b>technical</b>. Architecture, code, trade-offs. Aimed at AI engineers. <span class="tag cyan">510 words</span></p>
+    <div class="copybox cyan">
+      <span class="label">LINKEDIN 2 — copy verbatim</span>
+How we shipped a 12-model BFT council in production for $0/month per user.
+
+This is the architecture of sovereign.mom's consent gate. Engineers — pull up a chair.
+
+<b>The problem.</b> We need every response in a personal-AI product to be signed, refused-if-uncertain, and reproducible in audit. A single model can't do that — a model is a vendor, a vendor is a regulatory target (EU AI Act Art. 51, US EO 14110, China interim measures), and a vendor can disappear (dec'23 was instructive). The answer was a council.
+
+<b>The 12.</b> We seat 12 open-weights models — Llama-3.1-70B, Mistral-Large-2, Qwen2.5-72B, Phi-3-Medium, Gemma-2-27B, OLMo-2-13B, DeepSeek-V3, Yi-1.5-34B, Command-R+, Mixtral-8x22B, DBRX, Tulu-3-70B. No frontier closed API. Deliberately heterogeneous — different labs, different licences, different training data. If four of them disagree, the answer is refused. If a lab pulls a model, the council loses one vote and keeps going.
+
+<b>The voting.</b> Byzantine Fault Tolerant, 12-around-1. We require a 9/12 supermajority to ship a response (high-stakes), 8/12 for medium, 7/12 for low. Each model returns (a) a draft, (b) a self-confidence, (c) a harm-score, (d) a refusal flag. The BFT layer de-duplicates near-identical drafts and only ships when the supermajority holds.
+
+<b>The crypto.</b> Every output produces a SIGIL — a tamper-evident log entry: timestamp, model-id vector, votes, harm-score, refusal flag, customer-key nonce, Ed25519 signature, ML-KEM-768 signature. Verification uses WebCrypto (browser) and our open-source Python verifier (server). 1,000-year cold archive: IPFS + Arweave + tape.
+
+<b>The Care Floor.</b> 0.95. Hardcoded into the BFT engine. A response with a harm-score below 0.95 will not ship, regardless of vote. The score is computed by an ensemble of the 12 models plus a separate 0.95-frozen classifier (an XGBoost trained on public harm datasets).
+
+<b>The tests.</b> 1,730 tests passing. The Council Suite (432) — every model returns a deterministic vote on a fixture. The SIGIL Suite (218) — every signature verifies. The Care Floor Suite (140) — every prompt below 0.95 is refused. The Red Team Suite (280) — pre-departure simulator.
+
+<b>The numbers.</b> Median council latency: 1.4s. 90th-percentile: 3.2s. 99th-percentile: 6.8s. Cost per response: $0.002 (open-weights API). 94 MCPs in the reference stack. 608 pages of docs.
+
+<b>The licence.</b> MIT (code), CC0 (marketing). The forks doctrine is a hard invariant — read it at sovereign.mom/forks.
+
+Code: github.com/CSOAI-ORG/sovereign-mom
+Demo: sovereign.mom/demo
+Architecture deep-dive: sovereign.mom/architecture
+
+— Sir Nick, CSOAI (UK 16939677)
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <section class="section">
+    <h2><span class="num">03</span>The regulatory post — "EU AI Act friendly by construction"</h2>
+    <p style="color:var(--muted);font-size:.9rem">Angle: <b>regulatory</b>. Compliance officer / CISO / GC audience. <span class="tag green">490 words</span></p>
+    <div class="copybox green">
+      <span class="label">LINKEDIN 3 — copy verbatim</span>
+EU AI Act Art. 51 compliance — by construction, not by checklist.
+
+The EU AI Act hits in 2026. Most enterprise AI vendors are scrambling. Sovereign.mom is structurally compliant, today, because we built the audit trail before we built the product. Here's how.
+
+<b>Art. 9 — Risk management.</b> We run a 12-model BFT council over open-weights models. The council refuses by construction; the Care Floor of 0.95 sits underneath every output. Both are risk-management systems, documented, tested (1,730 tests passing), and externally audit-able.
+
+<b>Art. 10 — Data governance.</b> We do not train. We orchestrate. The training data is the upstream maintainers' training data (Meta, Mistral, Alibaba, Microsoft, Google, AI2, DeepSeek, 01.AI, Cohere, Databricks). Our contribution is the council, the SIGIL verifier, and the 1,000-year archive. Zero human-labelled data. Zero scraping. Zero DPO/SCC overhead.
+
+<b>Art. 11–12 — Technical documentation &amp; record-keeping.</b> 608 pages of docs. SIGIL ledger per customer, signed Ed25519 + ML-KEM-768 (post-quantum, NIST FIPS 203). Replay any conversation; verify every signature.
+
+<b>Art. 13 — Transparency.</b> The model-id vector (12 model ids) is on every response. The customer knows exactly which 12 voted, in what order, with what confidence.
+
+<b>Art. 14 — Human oversight.</b> The Care Nurse (one of our 4 reporter classes — sovereign.mom/reporters) reviews every refusal before publishing the merkle root. Customers can subscribe to every SIGIL.
+
+<b>Art. 15 — Accuracy, robustness, cybersecurity.</b> BFT 12-around-1 is a robustness guarantee by construction. SIGIL is the cybersecurity artefact. ML-KEM-768 is the post-quantum hedge against "harvest now, decrypt later."
+
+<b>Art. 51 — Classification.</b> Sovereign.mom is not a "general-purpose AI" model — it is a system that orchestrates already-published open-weights models. We sit outside the GPAI scope. We're filing the 30-day pre-deployment notification anyway.
+
+<b>UK GDPR.</b> EU/UK residency by region: data lives in IE / UK. Customer-controlled keys (BYOK). Operator has zero plaintext access. Right-to-erasure fulfilled by key revocation: the SIGIL log becomes unverifiable without the customer's key, which is the data-subject's deletion mechanic.
+
+<b>US — executive-order posture.</b> Post-EO-14110, sovereign-by-construction products are the cleanest posture. We comply with the voluntary commitments and decline the frontier-model classification (we're not one).
+
+<b>The white-paper.</b> sovereign.mom/eu-ai-act — 14 pages, with citations, plus a SIGIL-verified test suite that an external auditor can re-run.
+
+If you sit on a CISO/GC desk in 2026, this is the call to make. sovereign.mom/sovereign-cloud · sovereign.mom/eu-ai-act
+
+— Sir Nick, founder, CSOAI (UK 16939677)
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <section class="section">
+    <h2><span class="num">04</span>The customer post — "For the mother"</h2>
+    <p style="color:var(--muted);font-size:.9rem">Angle: <b>customer</b>. Empathetic, plain-language, aimed at non-technical buyers (educators, parents, retires). <span class="tag">505 words</span></p>
+    <div class="copybox">
+      <span class="label">LINKEDIN 4 — copy verbatim</span>
+For the mother.
+
+I built sovereign.mom because of a phone call. My mother called. She had been reading a chatbot. It had been very helpful. It had told her what to eat. It had told her what to read. It had told her who she should forgive.
+
+I asked her, gently, whether the chatbot had ever told her to "trust it." She said yes. I asked if she had. She said yes, mostly.
+
+I hung up and I thought: the AI I would want for her does not exist. It needs to refuse by construction. It needs to be auditable. It needs to be free. It needs to be forkable — because someday she'll move and I'll want her next-door neighbour to be able to keep her trust.
+
+This is sovereign.mom. It ships today.
+
+It is a personal AI client. It will not flatter you. It will not tell you what to eat. It will not ask for your trust. It will, sometimes, refuse to answer. And every refusal will be signed with a cryptographic receipt you can show your lawyer, your doctor, or your daughter.
+
+Three things, in plain language.
+
+<b>1. A 12-model jury.</b> Every answer goes through twelve different AI models. They vote. If nine of them say "this is wrong," the answer is refused. The jury's vote is recorded.
+
+<b>2. A Care Floor of 0.95.</b> Every response is graded for harm. Below 0.95, the response does not ship. You can set the floor higher (0.97, 0.99) or lower (0.85) — but never below 0.80, and never without an audit log.
+
+<b>3. A signature.</b> Every message is signed twice — once with the modern signature (Ed25519) and once with the post-quantum one (ML-KEM-768). If a chatbot ever lies to you, the signature will prove it.
+
+The price is $0 for the personal-use version. A $9/month Pro tier exists for those who want priority routing and longer memory. Nothing else. No upsells. No engagement hooks. The product is the council; the council is the product.
+
+You can run it on a phone. You can run it on a tablet. You can run it on a Raspberry Pi your nephew set up for you in 2024. It does not phone home. It does not profile you. It does not sell you.
+
+If you've ever looked at a screen and wondered "should I trust this?" — sovereign.mom is the answer. Try the demo at sovereign.mom/demo. Read the audit log. Read the seven invariants. Decide for yourself.
+
+The AI I'd want for my mother exists now. It is sovereign, it is forkable, it is auditable, and it will lose a conversation on purpose rather than cross a line.
+
+That is the whole product.
+
+— Sir Nick, founder, CSOAI (UK 16939677)
+
+For the mother. 🜏
+    </div>
+  </section>
+
+  <section class="section">
+    <h2><span class="num">·</span>Posting cadence</h2>
+    <ol>
+      <li><b>Week 1 (Wed 1 Jul)</b> · Post 1 — Founder · pinned at the top</li>
+      <li><b>Week 2 (Wed 8 Jul)</b> · Post 2 — Technical · share with engineering audience</li>
+      <li><b>Week 3 (Wed 15 Jul)</b> · Post 3 — Regulatory · share with compliance / legal</li>
+      <li><b>Week 4 (Wed 22 Jul)</b> · Post 4 — Customer · share with care / educator / family networks</li>
+    </ol>
+    <p>Each post ends with a clear CTA. Each uses a different opening image (gold seal, code screenshot, EU map, mother-daughter portrait in line-art).</p>
+  </section>
+
+  <footer class="kit-foot">
+    <div><span class="seal">sovereign.mom · CSOAI · UK 16939677</span><br><small>License: MIT + CC0 · sovereign by construction.</small></div>
+    <div style="text-align:right"><small>linkedin.html · 1 July 2026</small></div>
+  </footer>
+</main>
+</body>
+</html>

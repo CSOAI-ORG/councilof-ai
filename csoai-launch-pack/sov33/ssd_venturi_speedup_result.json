@@ -1,0 +1,20 @@
+{
+  "ts": "2026-07-14T06:41:22.121054+00:00",
+  "measures": {
+    "baseline_full_moe_load_ms": 232.0,
+    "ssd_stream_only_active_ms": 5.2,
+    "peer_prediction_ms": 33.4,
+    "venturi_batch_4_ms": 4.0,
+    "venturi_batch_8_ms": 3.8,
+    "sigil_inline_ms": 5.2,
+    "expert_lru_cache_hit50_ms": 3.4,
+    "expert_lru_cache_hit75_ms": 2.5,
+    "async_prefetch_acc70_ms": 2.02,
+    "combined_pipeline_ms": 9.22,
+    "baseline_vs_combined_speedup_x": 25.16,
+    "ssd_stream_only_speedup_x": 44.62
+  },
+  "charter": "df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054",
+  "care_floor": 0.95,
+  "design": "SSD expert-streaming + 6-lever speedup stack"
+}

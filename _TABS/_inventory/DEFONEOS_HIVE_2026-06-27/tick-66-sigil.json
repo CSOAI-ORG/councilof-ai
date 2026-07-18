@@ -1,0 +1,70 @@
+{
+  "tick": 66,
+  "timestamp": "2026-07-11T06:55:00+01:00",
+  "type": "DEFONEOS_POST_SPRINT_CO_PILOT_TAKEOVER",
+  "pages_built": 3,
+  "page_list": [
+    {
+      "filename": "defoneos-email-deliverability-auto-verifier.html",
+      "bytes": 24098,
+      "sha512_prefix": "e106ed30eca49833",
+      "deploy_url": "https://csoai-static-deploy2.vercel.app/defoneos-email-deliverability-auto-verifier.html",
+      "purpose": "60-second pre-send auto-verifier — single Python script, 6 checks (SPF/DKIM/DMARC/MX/blacklist/SMTP-time), GREEN/AMBER/RED verdict, exit code 0 = send on Mon. Run Sun 13 Jul 18:00 BST."
+    },
+    {
+      "filename": "defoneos-90-day-commercial-calculator.html",
+      "bytes": 31980,
+      "sha512_prefix": "51c1cac998560e92",
+      "deploy_url": "https://csoai-static-deploy2.vercel.app/defoneos-90-day-commercial-calculator.html",
+      "purpose": "Live pricing engine — pick products, term, options. Real invoice-grade quote in GBP. Discounts stacked up to 25% hard cap. Auto-disable JSP936/OWASP if no Platform. 3 worked examples (UK MOD prime £255k / UK SME consortium £327k+£65.4k VAT / AUKUS ally £275.4k). Use in 2nd-meeting live. Negotiation hard-limits documented."
+    },
+    {
+      "filename": "defoneos-co-pilot-takeover-script.html",
+      "bytes": 24998,
+      "sha512_prefix": "fb8506902a7d6067",
+      "deploy_url": "https://csoai-static-deploy2.vercel.app/defoneos-co-pilot-takeover-script.html",
+      "purpose": "Post-sprint operating mode — 4 lanes (Revenue/Substrate/Content/Compliance) with autonomy %, BFT auto-execute whitelist (12 motions), 12 hard-stops JEEVES must NEVER do, 5 failure-mode recovery protocols, daily rhythm, monthly revenue targets Jul-Dec 2026. The single most important post-sprint document."
+    }
+  ],
+  "sitemap_count_before": 309,
+  "sitemap_count_after": 312,
+  "vercel_deployment": {
+    "url": "https://csoai-static-deploy2-gsgco2g2z-niks-projects-0a2ef942.vercel.app",
+    "alias": "https://csoai-static-deploy2.vercel.app",
+    "build_duration_ms": 599,
+    "ready_in_s": 12,
+    "status": "Ready"
+  },
+  "verification": {
+    "all_3_pages_http_200": true,
+    "all_3_pages_byte_exact": true,
+    "sitemap_includes_all_3": true,
+    "sha512_chain_recorded": true
+  },
+  "sprint_counters": {
+    "pages": 233,
+    "pages_target": 50,
+    "pages_over_target": 183,
+    "mcps": 30,
+    "mcps_target": 30,
+    "mcps_over_target": 0,
+    "repos": 15,
+    "repos_target": 15,
+    "stubs": 0
+  },
+  "phase_transition": {
+    "from": "sprint-execution-mode",
+    "to": "co-pilot-operating-mode",
+    "trigger": "tick 66 (post-sprint day-1)",
+    "effective_from": "2026-07-14T09:01:01+01:00"
+  },
+  "owner_gates_unchanged": [
+    "DSP / SC / Cyber Essentials registration — needs Nick's personal info",
+    "11 first-MOD emails Mon 14 Jul 09:00 BST — Nick must press send",
+    "BFT SEAL issuance — requires 23/33 quorum",
+    "PyPI publish — needs Nick's token",
+    "www.csoai.org binding fix — Vercel dashboard"
+  ],
+  "next_tick_67": "operating-mode health check + CRM row population + first-meeting slots proposal (if buyer replies Mon) + content tick: build 1-2 buyer-facing pages from W3 spec queue",
+  "honesty_register_2line": "All 4 sprint targets MET + exceeded. Tick 66 closes the post-sprint reinforcement phase. Tick 67 begins co-pilot operating mode."
+}

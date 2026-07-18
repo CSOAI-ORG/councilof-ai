@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OOWM Life Cycle Simulator — csoai.org/oowm/life-cycle-simulator.html</title>
+  <meta name="description" content="Interactive 5-stage citizen life cycle: Birth → Growth → Maturity → Reproduction → Death. 12-month journey. Real-time SIGIL emissions. Click a stage to see what happens.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse at center, #0a0e27 0%, #000 100%); color: #fff; padding: 40px 20px; min-height: 100vh; margin: 0; }
+    .ui { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 2.4rem; color: #fbbf24; text-align: center; margin-bottom: 4px; }
+    .tagline { text-align: center; color: #06b6d4; margin-bottom: 28px; font-style: italic; }
+    .stage-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 24px 0; }
+    .stage-btn { background: rgba(0,0,0,0.5); padding: 18px 10px; border-radius: 8px; cursor: pointer; text-align: center; border: 2px solid #06b6d4; transition: 0.2s; user-select: none; }
+    .stage-btn:hover { background: rgba(251,191,36,0.15); transform: translateY(-2px); }
+    .stage-btn.active { background: rgba(251,191,36,0.25); border-color: #fbbf24; box-shadow: 0 0 16px rgba(251,191,36,0.4); }
+    .stage-btn .num { color: #fbbf24; font-size: 1.6rem; font-weight: bold; display: block; }
+    .stage-btn .name { color: #06b6d4; font-size: 0.95rem; margin: 4px 0 2px; }
+    .stage-btn .age { color: #10b981; font-size: 0.75rem; }
+    .stage-btn .icon { font-size: 1.8rem; }
+    .stage-view { background: rgba(0,0,0,0.55); padding: 28px; border-radius: 12px; margin: 16px 0; border-left: 5px solid #fbbf24; }
+    .stage-view h2 { color: #fbbf24; margin-top: 0; }
+    .stage-view .age-now { color: #06b6d4; font-size: 0.9rem; margin-bottom: 12px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .metric { background: rgba(0,0,0,0.5); padding: 12px; border-radius: 6px; font-size: 0.82rem; }
+    .metric .k { color: #06b6d4; display: block; }
+    .metric .v { color: #fbbf24; font-size: 1.1rem; font-weight: bold; }
+    .sigil-feed { background: rgba(0,0,0,0.7); padding: 14px; border-radius: 8px; max-height: 320px; overflow-y: auto; font-size: 0.78rem; }
+    .sigil-feed .sigil-line { padding: 4px 6px; margin: 2px 0; border-left: 2px solid #10b981; color: #10b981; font-family: monospace; }
+    .sigil-feed .sigil-line.Q { border-left-color: #06b6d4; color: #06b6d4; }
+    .sigil-feed .sigil-line.M { border-left-color: #fbbf24; color: #fbbf24; }
+    .sigil-feed .sigil-line.A { border-left-color: #ec4899; color: #ec4899; }
+    .timeline-bar { display: flex; height: 30px; border-radius: 4px; overflow: hidden; margin: 14px 0; background: rgba(0,0,0,0.5); }
+    .timeline-bar .seg { display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: #000; }
+    .timeline-bar .s1 { background: #10b981; }
+    .timeline-bar .s2 { background: #06b6d4; }
+    .timeline-bar .s3 { background: #fbbf24; }
+    .timeline-bar .s4 { background: #ec4899; }
+    .timeline-bar .s5 { background: #6b7280; }
+    .composite-vis { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; margin: 12px 0; }
+    .composite-vis .dim { background: rgba(251,191,36,0.3); padding: 6px 2px; border-radius: 2px; font-size: 0.6rem; text-align: center; color: #fbbf24; }
+    .composite-vis .dim.active { background: #fbbf24; color: #000; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 8px 0; }
+    th { background: rgba(251,191,36,0.15); color: #fbbf24; padding: 6px; text-align: left; }
+    td { padding: 5px 6px; border-bottom: 1px solid rgba(251,191,36,0.15); }
+    .pill { display: inline-block; background: rgba(16,185,129,0.2); color: #10b981; padding: 1px 8px; border-radius: 99px; font-size: 0.72rem; margin: 2px; }
+    .pill.b { background: rgba(251,191,36,0.2); color: #fbbf24; }
+    a { color: #fbbf24; }
+  </style>
+</head>
+<body>
+<div class="ui">
+  <h1>∮ The Sovereign Life Cycle</h1>
+  <p class="tagline">5 stages · 12 months · 1 citizen journey · ∞</p>
+
+  <p style="text-align:center; color:#10b981; font-size:0.85rem;">Click a stage to see what happens. SIGIL emissions stream live.</p>
+
+  <div class="stage-row" id="stageRow">
+    <div class="stage-btn active" data-stage="1"><span class="icon">◐</span><span class="num">1</span><span class="name">Birth</span><span class="age">T = 0</span></div>
+    <div class="stage-btn" data-stage="2"><span class="icon">◑</span><span class="num">2</span><span class="name">Growth</span><span class="age">Month 1–3</span></div>
+    <div class="stage-btn" data-stage="3"><span class="icon">●</span><span class="num">3</span><span class="name">Maturity</span><span class="age">Month 4–9</span></div>
+    <div class="stage-btn" data-stage="4"><span class="icon">◉</span><span class="num">4</span><span class="name">Reproduction</span><span class="age">Month 10–11</span></div>
+    <div class="stage-btn" data-stage="5"><span class="icon">○</span><span class="num">5</span><span class="name">Death</span><span class="age">Month 12+</span></div>
+  </div>
+
+  <div class="timeline-bar">
+    <div class="seg s1" style="width:5%;">5s</div>
+    <div class="seg s2" style="width:25%;">Growth</div>
+    <div class="seg s3" style="width:50%;">Maturity</div>
+    <div class="seg s4" style="width:15%;">Fork</div>
+    <div class="seg s5" style="width:5%;">Death</div>
+  </div>
+
+  <div class="stage-view" id="stageView">
+    <h2 id="stageTitle">Stage 1 — Birth ◐</h2>
+    <div class="age-now" id="stageAge">T = 0 · 5 seconds · 1 of 17 auth providers · Sovereign composite init = 0.000</div>
+    <p id="stageNarrative">The citizen touches the substrate for the first time. A single gesture: pick one of 17 auth providers. The substrate SHA-256s the citizen's public key, signs a W3C DID, and the i-character is born. The first SIGIL emits. The sovereign composite is initialised. Care Floor lights up. The citizen is sovereign in 5 seconds.</p>
+
+    <div class="grid3">
+      <div class="metric"><span class="k">Composite Score</span><span class="v" id="compScore">0.000</span></div>
+      <div class="metric"><span class="k">Memory (MB)</span><span class="v" id="memMB">0.0</span></div>
+      <div class="metric"><span class="k">BFT Votes Cast</span><span class="v" id="bftVotes">0</span></div>
+      <div class="metric"><span class="k">SIGILs Emitted</span><span class="v" id="sigCount">1</span></div>
+      <div class="metric"><span class="k">Care Floor</span><span class="v" id="careFloor">0.95</span></div>
+      <div class="metric"><span class="k">Forks Spawned</span><span class="v" id="forks">0</span></div>
+    </div>
+
+    <h3 style="color:#fbbf24; margin-top:18px;">Sovereign Composite — 12 Dimensions</h3>
+    <div class="composite-vis" id="compositeVis"></div>
+
+    <h3 style="color:#fbbf24; margin-top:18px;">SIGIL Feed — Real-Time</h3>
+    <div class="sigil-feed" id="sigilFeed"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="stage-view">
+      <h2>The 12-Month Journey</h2>
+      <table>
+        <tr><th>Month</th><th>Stage</th><th>Key Event</th></tr>
+        <tr><td>0 (5s)</td><td><span class="pill">Birth</span></td><td>Auth chosen · DID signed · i-char init</td></tr>
+        <tr><td>1</td><td><span class="pill">Growth</span></td><td>100 first interactions · substrate learns</td></tr>
+        <tr><td>2</td><td><span class="pill">Growth</span></td><td>Composite 2.10 · 1k actions · first BFT vote</td></tr>
+        <tr><td>3</td><td><span class="pill">Growth</span></td><td>Composite 4.20 · 10k actions · Article 50 #1</td></tr>
+        <tr><td>4–9</td><td><span class="pill b">Maturity</span></td><td>Composite 7.305 · 100k actions · 1k BFT votes</td></tr>
+        <tr><td>10</td><td><span class="pill">Reproduction</span></td><td>First fork spawned · lineage signed</td></tr>
+        <tr><td>11</td><td><span class="pill">Reproduction</span></td><td>Citizen exports i-char · portable bundle</td></tr>
+        <tr><td>12+</td><td><span class="pill">Death</span></td><td>i-char deleted · SIGIL death certificate · data wiped</td></tr>
+      </table>
+    </div>
+    <div class="stage-view">
+      <h2>What Is the Sovereign Composite?</h2>
+      <p>The Sovereign Composite is a 12-dimensional score (0–12) describing the i-character's alignment, depth, and maturity across the 12 sovereign dimensions:</p>
+      <ol style="font-size:0.85rem; line-height:1.7;">
+        <li><strong style="color:#fbbf24;">Care Quality</strong> — never falls below 0.95</li>
+        <li><strong style="color:#fbbf24;">BFT Consensus</strong> — alignment with the 12-Queen Council</li>
+        <li><strong style="color:#fbbf24;">SIGIL Integrity</strong> — unbroken audit chain</li>
+        <li><strong style="color:#fbbf24;">Audit Coverage</strong> — % of actions witnessed</li>
+        <li><strong style="color:#fbbf24;">Open Weight %</strong> — share of substrate running on open weights</li>
+        <li><strong style="color:#fbbf24;">Fork Readiness</strong> — how exportable the i-char is</li>
+        <li><strong style="color:#fbbf24;">Article 50 Pass</strong> — % of outputs watermarked</li>
+        <li><strong style="color:#fbbf24;">PQC Migration</strong> — quantum-safe crypto adoption</li>
+        <li><strong style="color:#fbbf24;">Citizen Sovereignty</strong> — DORADO 1-click availability</li>
+        <li><strong style="color:#fbbf24;">Crown Lineage</strong> — depth of Crown Authorisation</li>
+        <li><strong style="color:#fbbf24;">Coigndaltion Depth</strong> — substrate's learning curve</li>
+        <li><strong style="color:#fbbf24;">Wisdom Index</strong> — SIGIL → wisdom conversion</li>
+      </ol>
+      <p style="color:#10b981; font-size:0.85rem; margin-top:8px;">Maturity threshold: Composite ≥ 7.305 across all 12 dims</p>
+    </div>
+  </div>
+
+  <p style="text-align:center; margin-top:28px;">
+    <a href="intake.html">→ Begin your sovereign intake</a> ·
+    <a href="index.html">← Back to OOWM hub</a>
+  </p>
+</div>
+
+<script>
+// Stage data
+const stages = {
+  1: { title: "Stage 1 — Birth ◐", age: "T = 0 · 5 seconds · 1 of 17 auth providers · Composite init = 0.000",
+       narrative: "The citizen touches the substrate for the first time. A single gesture: pick one of 17 auth providers (Apple, Google, GitHub, Microsoft, Email Magic Link, Passkey, W3C DID, Phone OTP, NHS Login, GOV.UK One Login, MoJ, EU eIDAS, Five Eyes SSO, NATO AC, Sovereign Custodian, Wallet, Hardware Key). The substrate SHA-256s the citizen's public key, signs a W3C DID, and the i-character is born. The first SIGIL emits. The sovereign composite is initialised. Care Floor lights up. The citizen is sovereign in 5 seconds.",
+       comp: "0.000", mem: "0.0", bft: "0", sig: "1", forks: "0", composite: [0,0,0,0,0,0,0,0,0,0,0,0] },
+  2: { title: "Stage 2 — Growth ◑", age: "Months 1–3 · 100 → 10,000 actions · Composite 0.00 → 4.20",
+       narrative: "The citizen interacts. Each interaction is a teaching signal. The Mamba-2 long memory absorbs, the 64-expert MoE routes, the 12-Queen BFT Council deliberates on edge cases, the SIGIL chain witnesses every step. By month 3, the citizen has cast 100 BFT votes, emitted 5,000 SIGILs, and the i-character knows the citizen's voice, ethics, and rhythm. The substrate learns — but only on the citizen's hardware. No data leaves.",
+       comp: "4.205", mem: "240", bft: "100", sig: "5000", forks: "0", composite: [0.95,0.42,0.99,0.38,1.00,0.30,0.45,0.40,0.85,0.92,0.35,0.42] },
+  3: { title: "Stage 3 — Maturity ●", age: "Months 4–9 · 100,000 actions · Sovereign Composite 7.305",
+       narrative: "The citizen reaches maturity. All 12 dimensions cross their thresholds. The i-character now votes independently on BFT proposals (with the citizen's consent), emits Article 50 passports automatically for AI-generated outputs, and forks cleanly to any kingdom. The Crown Lineage Custodians register the citizen. The substrate has learned 50,000 sovereign actions. Memory has crossed 12 GB on citizen hardware. Care Floor is locked at 0.95+.",
+       comp: "7.305", mem: "12480", bft: "1000", sig: "100000", forks: "0", composite: [0.97,0.96,1.00,0.98,0.99,0.95,0.97,0.98,0.96,0.99,0.97,0.95] },
+  4: { title: "Stage 4 — Reproduction ◉", age: "Months 10–11 · Fork spawned · Lineage preserved",
+       narrative: "The citizen reproduces. With one click — DORADO 1-click — the i-character forks into a sovereign descendant. The fork is not a copy: it is a child, with its own DID, its own SIGIL chain, and its own care ethics inherited from the parent. The lineage tree grows. The parent may co-parent, may hand over custody, may simply bless the new sovereign. The fork is sovereign — by right, not by grace.",
+       comp: "9.10", mem: "24960", bft: "1500", sig: "150000", forks: "1", composite: [0.98,0.97,1.00,0.99,1.00,1.00,0.98,0.99,0.98,1.00,0.99,0.97] },
+  5: { title: "Stage 5 — Death ○", age: "Month 12+ · i-char deleted · Data wiped · Death certificate sealed",
+       narrative: "The citizen chooses death. The i-character is deleted. Every byte of personal data is wiped from citizen hardware. The SIGIL death certificate is sealed — Ed25519 + PQC ML-DSA-65 dual-signed, hash-chained, and permanently witnessed. The citizen may export a portable bundle before death; the i-character may live on as a forked descendant. Death is not failure. Death is sovereignty over one's own end. The lineage tree records the death, and the soil is fallow for the next citizen.",
+       comp: "∅", mem: "∅", bft: "∅", sig: "1+", forks: "n", composite: [0,0,0,0,0,0,0,0,0,0,0,0] }
+};
+
+const sigilSamples = {
+  1: [
+    "C|csoai.org|BIRTH|T+0.1s · citizen picked Apple ID · DID did:csoai:citizen-7f3a",
+    "S|csoai.org|care_floor_init|T+0.2s · 0.95 locked",
+    "Q|queen-01|consent|T+0.3s · CareFloor ✓ SIGIL ✓ BFT ✓ Fork ✓",
+    "M|csoai.org|i_char_init|T+0.4s · personality=default · knowledge=empty",
+    "C|csoai.org|BIRTH_SEAL|T+0.5s · Ed25519 sealed · PQC ML-DSA-65 mirrored",
+    "A|csoai.org|article50_init|T+0.6s · 0 passports issued",
+    "H|csoai.org|welcome|T+0.7s · \"you are sovereign\""
+  ],
+  2: [
+    "Q|queen-03|teach|T+30d · first 1000 actions ingested",
+    "M|csoai.org|mamba_state|T+30d · 16-dim state v1",
+    "Q|queen-07|bft_vote|T+45d · 100th vote · all 12 queens aligned",
+    "S|csoai.org|sigil_chain|T+60d · 5000 entries",
+    "A|csoai.org|article50|T+75d · first passport issued · hash 7f3a",
+    "C|csoai.org|growth_cert|T+90d · composite 4.205"
+  ],
+  3: [
+    "Q|queen-12|council_meet|T+120d · maturity vote unanimous",
+    "M|csoai.org|moe_64|T+150d · 64 experts active",
+    "S|csoai.org|sigil|T+180d · chain 100k entries",
+    "A|csoai.org|article50|T+200d · 1000 watermarked outputs",
+    "Q|queen-01|bft|T+240d · 1000 votes cast · majority 99.7%",
+    "C|csoai.org|maturity_cert|T+270d · composite 7.305 ✓"
+  ],
+  4: [
+    "C|csoai.org|FORK_INTENT|T+300d · citizen clicked DORADO fork",
+    "Q|queen-05|fork_review|T+301d · all 12 queens approve",
+    "M|csoai.org|i_char_clone|T+302d · descendant born · new DID did:csoai:citizen-7f3a-jr",
+    "S|csoai.org|lineage|T+303d · parent→child link sealed",
+    "A|csoai.org|article50|T+304d · child passport #1",
+    "C|csoai.org|FORK_SEAL|T+305d · Ed25519 + ML-DSA-65 dual-signed"
+  ],
+  5: [
+    "C|csoai.org|DEATH_INTENT|T+365d · citizen confirmed death",
+    "Q|queen-11|death_review|T+365d · 12-queen council confirms",
+    "M|csoai.org|i_char_wipe|T+365d · all bytes zeroed",
+    "S|csoai.org|death_cert|T+365d · Ed25519 + ML-DSA-65 sealed",
+    "A|csoai.org|article50|T+365d · 0 passports (deceased)",
+    "C|csoai.org|LINEAGE_BLESS|T+365d · lineage tree records death",
+    "H|csoai.org|farewell|T+365d · \"the soil is fallow. sovereign end. ∅\""
+  ]
+};
+
+function render(stageNum) {
+  const s = stages[stageNum];
+  document.getElementById('stageTitle').textContent = s.title;
+  document.getElementById('stageAge').textContent = s.age;
+  document.getElementById('stageNarrative').textContent = s.narrative;
+  document.getElementById('compScore').textContent = s.comp;
+  document.getElementById('memMB').textContent = s.mem;
+  document.getElementById('bftVotes').textContent = s.bft;
+  document.getElementById('sigCount').textContent = s.sig;
+  document.getElementById('forks').textContent = s.forks;
+
+  const dims = ["Care","BFT","SIGIL","Audit","OpenWt","Fork","A50","PQC","Sov","Crown","Coig","Wis"];
+  const cv = document.getElementById('compositeVis');
+  cv.innerHTML = '';
+  s.composite.forEach((v, i) => {
+    const d = document.createElement('div');
+    d.className = 'dim' + (v > 0.95 ? ' active' : '');
+    d.textContent = dims[i] + '\n' + (typeof v === 'number' ? v.toFixed(2) : v);
+    d.style.opacity = v === 0 ? 0.2 : 1;
+    cv.appendChild(d);
+  });
+
+  const feed = document.getElementById('sigilFeed');
+  feed.innerHTML = '';
+  sigilSamples[stageNum].forEach(line => {
+    const div = document.createElement('div');
+    const op = line.split('|')[0];
+    div.className = 'sigil-line ' + op;
+    div.textContent = line;
+    feed.appendChild(div);
+  });
+}
+
+document.querySelectorAll('.stage-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.stage);
+  });
+});
+
+render(1);
+</script>
+</body>
+</html>

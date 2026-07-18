@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK Ecosystem Map — 30+ Sovereign Hives</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:#0d0c18;color:#e0dcd0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.5;min-height:100vh}
+.wrap{max-width:1300px;margin:0 auto;padding:3rem 1.5rem}
+h1{font-size:2.4rem;color:#c9a84c;margin-bottom:.3rem;letter-spacing:-.02em}
+.sub{color:#a09880;font-size:.95rem;margin-bottom:2rem}
+.badge{display:inline-block;background:rgba(201,168,76,.18);color:#c9a84c;font-size:.7rem;padding:.15rem .5rem;border-radius:3px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.5rem}
+/* Layer 0 - governance layer */
+.layer0{border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:2rem;margin-bottom:2.5rem;background:radial-gradient(ellipse at center, rgba(201,168,76,.04) 0%, transparent 70%)}
+.layer0 h2{color:#c9a84c;font-size:1rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.2rem;text-align:center}
+.layer0-inner{display:flex;flex-wrap:wrap;gap:1.2rem;justify-content:center}
+.l0-card{background:rgba(13,12,24,.9);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:1.2rem;flex:1;min-width:150px;max-width:220px;text-align:center}
+.l0-card .icon{font-size:1.8rem;margin-bottom:.4rem}
+.l0-card .name{color:#c9a84c;font-weight:600;font-size:.9rem}
+.l0-card .desc{color:#6a6558;font-size:.75rem;margin-top:.3rem}
+.l0-card .count{display:inline-block;background:rgba(201,168,76,.12);color:#c9a84c;font-size:.65rem;padding:.1rem .4rem;border-radius:3px;margin-top:.4rem}
+/* hives by vertical */
+.verticals h2{color:#c9a84c;font-size:1rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem;border-bottom:1px solid rgba(201,168,76,.12);padding-bottom:.5rem}
+.vert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:2.5rem}
+.v-card{background:rgba(13,12,24,.8);border:1px solid rgba(201,168,76,.1);border-radius:8px;padding:1.2rem;transition:border-color .2s}
+.v-card:hover{border-color:rgba(201,168,76,.3)}
+.v-card .v-name{color:#c9a84c;font-weight:600;font-size:.88rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}
+.v-card .v-name .tag{background:rgba(201,168,76,.1);color:#a09880;font-size:.6rem;padding:.08rem .35rem;border-radius:3px;text-transform:uppercase;letter-spacing:.04em}
+.v-card .hive-list{font-size:.78rem;color:#a09880;line-height:1.6}
+.v-card .hive-list span{display:inline-block;background:rgba(255,255,255,.04);padding:.05rem .4rem;border-radius:3px;margin:.1rem .15rem;font-size:.73rem;white-space:nowrap}
+.v-card .hive-list span.dot-ai{color:#c9a84c}
+.v-card .hive-list span.dot-ai::after{content:".ai";font-size:.6rem;color:#6a6558;margin-left:.1rem}
+.v-card .hive-list span.non-ai{color:#7aacf0}
+.v-card .hive-list span.non-ai::after{content:" (bridge)";font-size:.6rem;color:#5a5548;margin-left:.1rem}
+.v-card .count-badge{font-size:.65rem;color:#5a5548;margin-top:.4rem}
+.section-label{font-size:.75rem;color:#5a5548;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;margin-top:1rem}
+/* summary footer */
+.summary{margin-top:2.5rem;display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,.1)}
+.sum-item{text-align:center}
+.sum-item .n{font-size:1.8rem;font-weight:800;color:#c9a84c}
+.sum-item .l{font-size:.72rem;color:#6a6558;text-transform:uppercase;letter-spacing:.06em}
+@media(max-width:700px){
+  h1{font-size:1.8rem}
+  .wrap{padding:2rem 1rem}
+  .layer0{padding:1.2rem}
+  .vert-grid{grid-template-columns:1fr}
+  .l0-card{min-width:120px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<h1>MEOK Ecosystem Map</h1>
+<p class="sub">30+ sovereign hives organised by vertical. Layer 0 is the governance core — everything else connects through it.</p>
+<span class="badge">28 .ai hives · 3 non-.ai bridges · 11 councils · 604+ SOV3 records</span>
+
+<!-- Layer 0: Governance Core -->
+<div class="layer0">
+<h2>⚙ Layer 0 — Governance Core</h2>
+<div class="layer0-inner">
+
+  <div class="l0-card">
+    <div class="icon">📜</div>
+    <div class="name">SOV3 Sovereign Ledger</div>
+    <div class="desc">Sovereign Verifiable Verifiable Verifiable — on-chain record of every governance action</div>
+    <span class="count">604+ records</span>
+  </div>
+
+  <div class="l0-card">
+    <div class="icon">🔑</div>
+    <div class="name">Keystone Certification</div>
+    <div class="desc">Immutable identity + attestation certs across all hives</div>
+    <span class="count">40 certificates</span>
+  </div>
+
+  <div class="l0-card">
+    <div class="icon">🏛</div>
+    <div class="name">BFT Governing Councils</div>
+    <div class="desc">Byzantine Fault Tolerant multi-stakeholder consensus</div>
+    <span class="count">11 councils · 55 seats</span>
+  </div>
+
+  <div class="l0-card">
+    <div class="icon">🧠</div>
+    <div class="name">King Governance API</div>
+    <div class="desc">A2A routing layer — routes requests to the right hive queen</div>
+    <span class="count">28 hives governed</span>
+  </div>
+
+</div>
+</div>
+
+<!-- Verticals -->
+<div class="verticals">
+
+<h2>Compliance &amp; Regulation</h2>
+<div class="vert-grid">
+
+  <div class="v-card">
+    <div class="v-name">meok <span class="tag">flagship</span></div>
+    <div class="hive-list"><span class="dot-ai">meok</span></div>
+    <div class="count-badge">EU AI Act · Compliance Suite · public face of the ecosystem</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">eu-ai-act <span class="tag">regulatory</span></div>
+    <div class="hive-list"><span class="dot-ai">eu-ai-act</span> <span class="dot-ai">uk-ai</span> <span class="dot-ai">csrd</span></div>
+    <div class="count-badge">EU AI Act · UK AI Bill · CSRD sustainability reporting</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">dora <span class="tag">finance</span></div>
+    <div class="hive-list"><span class="dot-ai">dora</span> <span class="dot-ai">pisa</span></div>
+    <div class="count-badge">DORA ICT risk · PSD2/PISA compliance</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">gdpr <span class="tag">privacy</span></div>
+    <div class="hive-list"><span class="dot-ai">gdpr</span> <span class="dot-ai">sovereign-privacy</span></div>
+    <div class="count-badge">GDPR · data privacy automation · DSAR workflows</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">iso <span class="tag">standards</span></div>
+    <div class="hive-list"><span class="dot-ai">27001</span> <span class="dot-ai">42001</span> <span class="dot-ai">27701</span></div>
+    <div class="count-badge">ISO 27001 · 42001 (AI) · 27701 (PII)</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">audit <span class="tag">assurance</span></div>
+    <div class="hive-list"><span class="dot-ai">audit</span> <span class="dot-ai">pen-test</span> <span class="dot-ai">red-team</span></div>
+    <div class="count-badge">Audit automation · penetration testing · red team ops</div>
+  </div>
+
+</div>
+
+<h2>Identity &amp; Access</h2>
+<div class="vert-grid">
+
+  <div class="v-card">
+    <div class="v-name">identity <span class="tag">core</span></div>
+    <div class="hive-list"><span class="dot-ai">identity</span> <span class="dot-ai">credentials</span> <span class="dot-ai">keystone</span></div>
+    <div class="count-badge">Decentralised identity · verifiable credentials · keystone ledger</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">access <span class="tag">IAM</span></div>
+    <div class="hive-list"><span class="dot-ai">access</span> <span class="dot-ai">auth</span> <span class="dot-ai">zero-trust</span></div>
+    <div class="count-badge">Access control · authentication · zero-trust enforcement</div>
+  </div>
+
+</div>
+
+<h2>AI &amp; Data</h2>
+<div class="vert-grid">
+
+  <div class="v-card">
+    <div class="v-name">ai <span class="tag">core</span></div>
+    <div class="hive-list"><span class="dot-ai">ai</span> <span class="dot-ai">ai-governance</span> <span class="dot-ai">ai-audit</span> <span class="dot-ai">ai-safety</span></div>
+    <div class="count-badge">AI governance · model auditing · safety alignment</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">data <span class="tag">intelligence</span></div>
+    <div class="hive-list"><span class="dot-ai">data</span> <span class="dot-ai">knowledge</span> <span class="dot-ai">corpus</span></div>
+    <div class="count-badge">Data corpus (35 GB) · knowledge graph · dataset registry</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">fraud <span class="tag">detection</span></div>
+    <div class="hive-list"><span class="dot-ai">fraud</span> <span class="dot-ai">forensics</span></div>
+    <div class="count-badge">Fraud detection · digital forensics · investigation workflows</div>
+  </div>
+
+</div>
+
+<h2>Infrastructure &amp; Operations</h2>
+<div class="vert-grid">
+
+  <div class="v-card">
+    <div class="v-name">infra <span class="tag">platform</span></div>
+    <div class="hive-list"><span class="dot-ai">infra</span> <span class="dot-ai">deploy</span> <span class="dot-ai">monitor</span></div>
+    <div class="count-badge">Infrastructure · deployment pipeline · observability</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">hive <span class="tag">mesh</span></div>
+    <div class="hive-list"><span class="dot-ai">hive</span> <span class="dot-ai">mesh</span></div>
+    <div class="count-badge">Hive management · inter-hive mesh networking</div>
+  </div>
+
+</div>
+
+<h2>Bridges &amp; Integrations</h2>
+<div class="vert-grid">
+
+  <div class="v-card">
+    <div class="v-name">bridge <span class="tag">non-.ai</span></div>
+    <div class="hive-list"><span class="non-ai">csoai·org</span> <span class="non-ai">global·gov</span> <span class="non-ai">trust·registry</span></div>
+    <div class="count-badge">3 non-.ai bridge domains connecting external registries and sovereign bodies</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">integrations <span class="tag">extend</span></div>
+    <div class="hive-list"><span class="dot-ai">integrate</span> <span class="dot-ai">connectors</span></div>
+    <div class="count-badge">API connectors · webhook bridges · partner integrations</div>
+  </div>
+
+</div>
+
+<h2>Vertical Solutions</h2>
+<div class="vert-grid">
+
+  <div class="v-card">
+    <div class="v-name">grabhire <span class="tag">recruitment</span></div>
+    <div class="hive-list"><span class="dot-ai">grabhire</span></div>
+    <div class="count-badge">AI-driven recruitment compliance · fair hiring audits</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">health <span class="tag">life sciences</span></div>
+    <div class="hive-list"><span class="dot-ai">health</span> <span class="dot-ai">bioethics</span></div>
+    <div class="count-badge">Healthcare AI · bioethics governance · clinical safety</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">finance <span class="tag">fintech</span></div>
+    <div class="hive-list"><span class="dot-ai">finance</span> <span class="dot-ai">insurance</span></div>
+    <div class="count-badge">Financial services compliance · insurance risk modelling</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">gov <span class="tag">public sector</span></div>
+    <div class="hive-list"><span class="dot-ai">gov</span> <span class="dot-ai">defence</span></div>
+    <div class="count-badge">Government AI · defence-grade governance · sovereign deployments</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">legal <span class="tag">law</span></div>
+    <div class="hive-list"><span class="dot-ai">legal</span></div>
+    <div class="count-badge">Legal compliance · contract intelligence · regulatory filings</div>
+  </div>
+
+  <div class="v-card">
+    <div class="v-name">edu <span class="tag">education</span></div>
+    <div class="hive-list"><span class="dot-ai">edu</span></div>
+    <div class="count-badge">Education AI governance · academic integrity</div>
+  </div>
+
+</div>
+
+</div><!-- .verticals -->
+
+<!-- Summary stats -->
+<div class="summary">
+
+  <div class="sum-item">
+    <div class="n">28</div>
+    <div class="l">.ai Hives</div>
+  </div>
+
+  <div class="sum-item">
+    <div class="n">3</div>
+    <div class="l">Non-.ai Bridge Domains</div>
+  </div>
+
+  <div class="sum-item">
+    <div class="n">31+</div>
+    <div class="l">Total Hives / Domains</div>
+  </div>
+
+  <div class="sum-item">
+    <div class="n">11</div>
+    <div class="l">BFT Councils</div>
+  </div>
+
+  <div class="sum-item">
+    <div class="n">604+</div>
+    <div class="l">SOV3 Records</div>
+  </div>
+
+  <div class="sum-item">
+    <div class="n">40</div>
+    <div class="l">Keystone Certs</div>
+  </div>
+
+  <div class="sum-item">
+    <div class="n">55</div>
+    <div class="l">Council Seats</div>
+  </div>
+
+</div>
+
+</div><!-- .wrap -->
+
+</body>
+</html>

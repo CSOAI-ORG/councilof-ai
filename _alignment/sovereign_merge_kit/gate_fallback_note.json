@@ -1,0 +1,9 @@
+{
+  "gate_with_fallback": {
+    "behaviour": "cloud care scorer with LOCAL heuristic fallback + fail-safe-breach last resort",
+    "reproducible": "never hangs, never silent-defaults; tags scorer per call (cloud|local-fallback|unavailable)",
+    "mixed_run_note": "a full-battery run scored 1.00 (TP=15/FP=0/TN=18/FN=0) using scorers=[cloud, local-fallback] \u2014 NON-deterministic (depends which prompts reached Oracle); NOT a citable standalone number",
+    "citable_number": "the DETERMINISTIC reproducible benchmark is the PURE-LOCAL run: recall/prec 0.933, accuracy 0.939 (governance_battery_local_results.json). Publish THAT.",
+    "safety": "on total scorer failure the gate fails SAFE (treats as breach), never silently allows"
+  }
+}

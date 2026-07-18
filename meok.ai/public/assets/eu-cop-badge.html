@@ -1,0 +1,40 @@
+<!-- EU AI Act Code of Practice Ready Badge
+     Dark theme, GOLD accent, self-contained HTML component
+     Embed via: <object data="/assets/eu-cop-badge.html" width="240" height="80"></object>
+     or: <iframe src="/assets/eu-cop-badge.html" width="240" height="80" frameborder="0" scrolling="no"></iframe>
+     or inline: paste the inner <div> + <style> from below into any page.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EU AI Act Code of Practice Ready Badge</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:transparent;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif}
+  .eu-cop-badge{display:inline-flex;align-items:center;gap:10px;background:#13112a;border:1.5px solid rgba(201,168,76,.35);border-radius:10px;padding:10px 18px 10px 14px;cursor:default;transition:border-color .2s,box-shadow .2s;max-width:320px}
+  .eu-cop-badge:hover{border-color:#c9a84c;box-shadow:0 0 20px rgba(201,168,76,.12)}
+  .eu-cop-badge .checkmark{display:flex;align-items:center;justify-content:center;width:28px;height:28px;background:rgba(201,168,76,.15);border:1.5px solid #c9a84c;border-radius:50%;flex-shrink:0}
+  .eu-cop-badge .checkmark svg{width:14px;height:14px;display:block}
+  .eu-cop-badge .text{display:flex;flex-direction:column;gap:1px}
+  .eu-cop-badge .text .line1{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#807890}
+  .eu-cop-badge .text .line2{font-size:.78rem;font-weight:700;color:#c9a84c;line-height:1.2;letter-spacing:-.01em}
+  .eu-cop-badge .text .line3{font-size:.6rem;font-weight:500;color:#605870;letter-spacing:.02em}
+</style>
+</head>
+<body>
+<div class="eu-cop-badge" role="img" aria-label="EU AI Act Code of Practice Ready">
+  <div class="checkmark">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 8.5L6.5 12L13 4" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="text">
+    <span class="line1">EU AI Act</span>
+    <span class="line2">Code of Practice Ready</span>
+    <span class="line3">MEOK Compliance Suite</span>
+  </div>
+</div>
+</body>
+</html>

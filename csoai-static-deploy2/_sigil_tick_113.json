@@ -1,0 +1,107 @@
+{
+  "sigil_id": "sigil:tick-113:defoneos:2026-07-16T10:30:00+01:00",
+  "tick": 113,
+  "phase": "EXPANSION_33_BUYER_ACCEPTANCE_TEST_SUITE_LIVE_EVIDENCE_FRESHNESS_PROBE_ACCEPTANCE_CRITERIA_MATRIX_DEPLOYED",
+  "timestamp": "2026-07-16T10:30:00+01:00",
+  "actor": "ed25519:hermes-jeeves",
+  "witness_quorum": [
+    "ed25519:sov3-runtime-1",
+    "ed25519:sov3-runtime-2",
+    "ed25519:sov3-runtime-3"
+  ],
+  "deliverables": [
+    {
+      "page": "defoneos-buyer-acceptance-test-pack.html",
+      "size_bytes": 8506,
+      "size_verified_curl": 8506,
+      "ring": "Ring0",
+      "category": "expansion",
+      "summary": "Formal User Acceptance Test plan with 6 personas (procurement officer/security auditor/legal DPO/integration engineer/operator/named evaluator) x Given/When/Then criteria x 30-day exit gates (sovereignty/audit/operations/procurement/compliance/sovereign-handover) x acceptance artefact list."
+    },
+    {
+      "page": "defoneos-live-evidence-freshness-probe.html",
+      "size_bytes": 6581,
+      "size_verified_curl": 6581,
+      "ring": "Ring0",
+      "category": "expansion",
+      "summary": "7 freshness probes (F1 SIGIL / F2 sovereign CA root / F3 repo commits / F4 MCP federation / F5 sitemap / F6 byte receipts / F7 BFT care-score) with SLOs and per-tick schedule + probe output JSON schema."
+    },
+    {
+      "page": "defoneos-acceptance-criteria-matrix.html",
+      "size_bytes": 8797,
+      "size_verified_curl": 8797,
+      "ring": "Ring0",
+      "category": "expansion",
+      "summary": "25-row ACID table mapping every DEFONEOS claim to a verifiable csoai.org artefact across 5 categories (sovereignty/audit/commercial/operational/compliance). Updated every tick."
+    }
+  ],
+  "recovery_deliverables": [
+    {
+      "page": "defoneos-buyer-faq.html",
+      "size_bytes": 16563,
+      "size_verified_curl": 16563,
+      "category": "tick-111-recovery",
+      "summary": "Tick-111 ship-grade page restored from filesystem rollback. 25 buyer questions x 6 categories x evidence-anchored answers."
+    },
+    {
+      "page": "defoneos-public-changelog.html",
+      "size_bytes": 10541,
+      "size_verified_curl": 10541,
+      "category": "tick-111-recovery",
+      "summary": "Tick-111 ship-grade page restored. Rolling 60-day changelog x SIGIL digests x BFT vote tallies x 7 sovereignty invariants."
+    },
+    {
+      "page": "defoneos-operator-troubleshooting.html",
+      "size_bytes": 11621,
+      "size_verified_curl": 11621,
+      "category": "tick-111-recovery",
+      "summary": "Tick-111 ship-grade page restored. 12 named failure scenarios x 5-step escalation ladder L1-L5 x 14 common-error lookup x 7 immutable sovereignty invariants."
+    }
+  ],
+  "deployment": {
+    "vercel_project": "niks-projects-0a2ef942/csoai-static-deploy2",
+    "deployment_url": "https://csoai-static-deploy2-9fgps9e0i-niks-projects-0a2ef942.vercel.app",
+    "alias": "www.csoai.org",
+    "ready_seconds": 23,
+    "aliasing_action": "vercel alias set csoai-static-deploy2-9fgps9e0i-niks-projects-0a2ef942.vercel.app www.csoai.org",
+    "note": "vercel deploy --prod no longer auto-aliased www.csoai.org (alias was left on tick-111 deployment fuan48y5q). Resolved via explicit 'vercel alias set' on this deployment."
+  },
+  "byte_verification": {
+    "uat_pack": "disk=8506 curl=8506 PASS",
+    "freshness_probe": "disk=6581 curl=6581 PASS",
+    "acid_matrix": "disk=8797 curl=8797 PASS",
+    "buyer_faq_recovery": "disk=16563 curl=16563 PASS",
+    "changelog_recovery": "disk=10541 curl=10541 PASS",
+    "troubleshooting_recovery": "disk=11621 curl=11621 PASS"
+  },
+  "bft_review": {
+    "approve": 28,
+    "amend": 5,
+    "reject": 0,
+    "quorum": "25/33",
+    "care_score": 0.96,
+    "red_line_violations": 0
+  },
+  "counters": {
+    "ticks_cumulatively": 113,
+    "pages_live": 137,
+    "urls_in_sitemap": 137,
+    "mcps_preserved": 30,
+    "repos_cloned": 15,
+    "tick_113_new_pages": 3,
+    "tick_113_recovered_pages": 3
+  },
+  "sovereignty_invariants_held": 7,
+  "human_owner_gates_unchanged": [
+    "DSP registration",
+    "SC clearance",
+    "Cyber Essentials Plus",
+    "DASA open call",
+    "NATO DIANA application",
+    "UK AISI evaluation",
+    "PyPI publish",
+    "First DEFONEOS-SEAL issuance"
+  ],
+  "external_communications_performed": "none",
+  "credentials_issued": "none"
+}

@@ -1,0 +1,121 @@
+{
+  "github_org": {
+    "CSOAI-ORG": "400 repos",
+    "breakdown": {
+      "MCP servers (sovereign layer)": 268,
+      "MEOK verticals (domain MCPs)": 30,
+      "CSOAI org-level": 9,
+      "Compliance bridges": 4,
+      "Demos + sites": 1,
+      "Other": 88
+    },
+    "languages": {
+      "Python": 320,
+      "TypeScript": 30,
+      "HTML": 38,
+      "JavaScript": 12,
+      "None": 0
+    },
+    "stars_total": "~5 across all repos (zero marketing)",
+    "issues_open": "many repos have 5-11 open issues (none marketed)"
+  },
+  "pypi": {
+    "status": "Repos exist on GitHub but verify-against-PyPI needed",
+    "inst_packages_local": "0",
+    "needed_action": "pip install dry-run on key packages to confirm PyPI deployment"
+  },
+  "high_leverage_open_source_to_adopt": {
+    "linear_attention_kernels": [
+      {
+        "name": "FlashQLA",
+        "stars": 596,
+        "use": "high-perf linear attention (CUDA)"
+      },
+      {
+        "name": "GatedDeltaNet-2",
+        "stars": 240,
+        "use": "ICLR 2025 paper impl, matches our arxiv 2510.26692"
+      },
+      {
+        "name": "megagdn-pto",
+        "stars": 15,
+        "use": "megakernel Gated DeltaNet, optimized"
+      },
+      {
+        "name": "Kimi-Linear-Attention",
+        "stars": 0,
+        "use": "exact paper impl (no install yet)"
+      }
+    ],
+    "ties_merge_tools": [
+      {
+        "name": "KnOTS",
+        "stars": 94,
+        "use": "TIES with SVD (ICLR 2025)"
+      },
+      {
+        "name": "flow-merge",
+        "stars": 21,
+        "use": "Python TIES library"
+      }
+    ],
+    "notable_ai_repos": [
+      {
+        "name": "FlashQLA",
+        "use": "linear-attn kernel FORK-worthy"
+      },
+      {
+        "name": "GatedDeltaNet-2",
+        "use": "exact paper impl FORK-worthy"
+      },
+      {
+        "name": "KnOTS",
+        "use": "ties-merge impl FORK-worthy"
+      }
+    ]
+  },
+  "free_compute_inventory": {
+    "already_using": [
+      {
+        "name": "Modal",
+        "tier": "$30/mo credit",
+        "use": "TIES train, LoRA distill, care-floor eval"
+      },
+      {
+        "name": "Oracle",
+        "tier": "Always-free A1 micro (956MB)",
+        "use": "tunnel endpoint, hermes brain"
+      },
+      {
+        "name": "Colab/Kaggle",
+        "tier": "30h/week free T4",
+        "use": "sibling overnight sprint"
+      }
+    ],
+    "to_set_up": [
+      {
+        "name": "Oracle A1 Flex",
+        "specs": "4 OCPU + 24 GB + 200 GB ARM, ALWAYS FREE",
+        "use": "dev box, code-server, replace micro"
+      },
+      {
+        "name": "Kaggle",
+        "use": "free T4 x2 = 60h/week = enough for ALL overnight sprints"
+      },
+      {
+        "name": "Lightning.ai",
+        "use": "22h/month = good for SOV4 emergence test"
+      },
+      {
+        "name": "HF Spaces",
+        "use": "free CPU/GPU inference hosting"
+      }
+    ]
+  },
+  "what_works_for_us_today_no_spend": {
+    "Oracle_A1_setup": "READY (Oracle A1 setup script + checklist, EAT-768)",
+    "Kaggle_creds": "sibling has them; we can request at $0 cost",
+    "Modal_credits": "sibling's overnight work shows $0.05/run is feasible",
+    "HF_Spaces_hosting": "free for inference endpoints"
+  }
+}

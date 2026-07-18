@@ -1,0 +1,22 @@
+# sandbox Telegram bot config
+# Generated 2026-06-16 by jeeves (D19 Hermes gateway)
+bot:
+  name: "@sandbox_ai_bot"
+  hive: sandbox.ai
+  type: hermes_sub
+  gateway:
+    type: telegram
+    token_env: TELEGRAM_BOT_TOKEN_SANDBOX
+    webhook: https://meok.ai/webhooks/telegram/sandbox
+  routing:
+    king_url: http://localhost:8077/mcp
+    king_method: king_ask
+    fallback_message: "Hi! I'm the sandbox.ai sovereign assistant. Ask me anything."
+  pricing:
+    free: 5-min scorecard
+    pro: £29/mo
+    enterprise: £199/mo
+  stripe:
+    sovereign: https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S
+    pro: https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T
+  status: staged_for_4jul_launch

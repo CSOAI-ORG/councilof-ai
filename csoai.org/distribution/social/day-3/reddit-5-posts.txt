@@ -1,0 +1,115 @@
+
+=== r/MachineLearning ===
+Title: [R] SOV3: A sovereign-by-design AI OS with hybrid Mamba+MoE+attention architecture (open source)
+
+We just open-sourced SOV3, a sovereign AI OS built on hybrid Mamba-2 + 64-expert MoE + attention layers. Released under MIT.
+
+Why this matters:
+- Most LLM stacks are monolithic transformer. Mamba+MoE+attention is hybrid — long-context via Mamba SSM, routing via MoE experts, in-context attention.
+- We're explicitly NOT chasing OpenAI/Google. We're building sovereign substrate for UK + EU compliance (EU AI Act, UK AI Bill).
+- 12-around-1 BFT council with SIGIL chain for every governance decision.
+- 276 SOV3 tools, all auditable.
+
+We benchmarked Ornith-1.0 from DeepReinforce (MIT, agentic coding). The architecture matches ours: hybrid Mamba+MoE+attention. Independent confirmation we're on the right track.
+
+GitHub: https://github.com/CSOAI-ORG/clawd-workspace
+Try: bash /Users/nicholas/clawd/csoai.org/install-local.sh
+Web: csoai.org/open-hands/
+
+Curious for feedback on:
+1. The Mamba+MoE+attention hybrid design (matches Ornith, matches our auto-mode)
+2. The 12-around-1 BFT council pattern
+3. Real-world sovereign LLM evaluation metrics (vs OpenAI benchmarks)
+
+— Nick
+
+
+=== r/AI_Agents ===
+Title: Built a sovereign-by-design agent OS where every action is SIGIL-signed (Ed25519 + ML-DSA-65 PQC)
+
+Sharing our sovereign agent architecture (SOV3) which we've been building for the past month. It's MIT-licensed.
+
+Core insight: EVERY agent action is SIGIL-signed (Ed25519 + PQC ML-DSA-65) and audit-logged via a hash-chained ledger. The user can audit it.
+
+Key pieces:
+- 8 BIG BRAIM tier models (Qwen3-Coder-480B, DeepSeek R1, Llama 4 Scout, Mistral Large 3, Ornith-1.0-35B, Phi-4, Kokoro TTS, BGE-M3 embeddings)
+- 275+ MCP federation
+- 12-around-1 BFT council for sensitive decisions
+- Sovereign DORADO switch (proves zero foreign backdoor)
+- i-character (digital twin) that learns from user sessions
+
+Examples:
+- `sov_audit_check` — run compliance audit (EU AI Act + UK AI Bill)
+- `sov_article50_passport_issue` — issue watermarking passport
+- `sov_dorado_prove_sovereignty` — generate cryptographic proof of no foreign access
+- `sov_sov3_scaffolding_methodology` — Ornith-style scaffold-RL
+
+Use case: care homes (Cera Care), banks (Monzo, Lloyds, HSBC, NatWest), insurers, defence (DEFONEOS).
+
+Try: https://csoai.org/open-hands/
+
+Curious: what's your agent audit pattern?
+
+
+=== r/sovereign_ai (need to create) ===
+Title: SOV3: a sovereign AI OS — proof, not trust. Open-sourced this week.
+
+For those tracking sovereign AI: we just open-sourced SOV3, a sovereign-by-design AI OS with:
+- 8 BIG BRAIM tier models (mostly MIT)
+- 5 protocol bridges (MCP + A2A + x402 + DID + JWT)
+- 12-around-1 BFT council
+- SIGIL chain (Ed25519 + PQC ML-DSA-65)
+- 275+ MCPs
+- 33 sovereign districts (9 sovereign + 13 districts + 11 layers)
+- 8 sovereign regions (UK + EU + US + AU + AS + SA)
+- 22 Major Arcana as sovereign capabilities
+
+Why: CCP leaked audio confirmed "DORADO" tool gives China supreme access to all company data. SOV3 DORADO is the West's response — public, auditable, sovereign-by-design.
+
+Demos: csoai.org/dorado/, csoai.org/open-hands/, csoai.org/launch/
+
+Looking for collaborators on the sovereign-by-design principles. We're in London (CSOAI Ltd, UK 16939677).
+
+— Nick
+
+
+=== r/AIethics ===
+Title: [Discussion] The difference between 'trust us' AI and sovereign-by-design AI
+
+Hot take from the leaks + our work: 'Trust us' AI doesn't survive 2026.
+
+The CCP "DORADO" leak showed: tool called Dorado let China-based employees switch between Chinese and US data like "a light switch". Everything is seen in China.
+
+Sovereign-by-design means:
+- Public audit chain (SIGIL — every access signed + audit-logged)
+- Zero foreign backdoor (verifiable via DORADO)
+- 12-around-1 BFT council (no single point of failure)
+- Post-quantum crypto (ML-DSA-65 + ML-KEM-768)
+- 8 sovereign regions (data stays in-region)
+
+We built SOV3 with these principles. Open source under MIT. csoai.org/dorado/
+
+What's your take on trust vs verifiable sovereignty in AI?
+
+
+=== r/MEOK ===
+Title: MEOK OS: a personal AI OS that's sovereign-first. Looking for early users.
+
+We're building MEOK OS — a personal AI OS that runs on your Mac + iOS + Watch, sovereign-first.
+
+It comes with:
+- 276 SOV3 tools (audit-logged, SIGIL-signed)
+- 8 BIG BRAIM models (Ornith-1.0-35B for coding, DeepSeek R1 for reasoning, etc.)
+- 22 Major Arcana as sovereign capabilities
+- 8 sovereign regions (data stays in your region)
+- Auto-mode (12 sovereign triggers every 5 min)
+- i-character (digital twin learns your preferences)
+- Digital wellness check (Cera Care-style)
+
+Try it: bash /Users/nicholas/clawd/csoai.org/install-local.sh
+Web: csoai.org/open-hands/
+
+Looking for 100 early users for MEOK OS + CSOAI OS. Free during beta.
+
+— Nick
+

@@ -1,0 +1,59 @@
+# MEOK AI Labs — Compliance MCP Suite
+
+> 340+ Model Context Protocol (MCP) servers for AI compliance verification. Each server audits AI systems against a specific regulation and emits an Ed25519-signed attestation with a publicly verifiable URL. One server per regulation. MIT-licensed, PyPI-installable, MCP-registry registered.
+
+Built by MEOK AI Labs (CSOAI Ltd, UK Companies House 16939677). Solo founder Nick Templeman, Yorkshire UK.
+
+## Key Pages
+
+| Page | URL | What an LLM should know |
+|------|-----|------------------------|
+| Home | https://meok.ai | Main product landing. Primary CTA: explore the fleet. |
+| Fleet Hub | https://meok.ai/fleet/ | All 340+ MCP packages browsable by regulation, framework, or industry. |
+| Scorecard | https://proofof.ai/scorecard | 7-surface coverage scorecard showing compliance maturity: server.json, A2A agent, ACP, llms.txt, glama, smithery, badge. |
+| Landing Pages | https://meok.ai/dist/ | One landing page per compliance domain (EU AI Act, DORA, NIS2, GDPR, etc.). |
+| Practitioner Guides | https://meok.ai/guides/ | Implementation walkthroughs for deploying MCP servers in production. |
+| Full Package Index | https://meok.ai/llms-full.txt | Machine-readable index of all 340+ packages for LLM crawlers. |
+| Article 50 Hub | https://meok.ai/article-50/ | EU AI Act Article 50 transparency resources: marking, bot disclosure, code of practice, deepfake labelling. |
+| Pricing | https://csoai.org/pricing/ | £199/mo Pro, £1,499/mo Enterprise, £4,950 one-time Watchdog Cert. |
+| Comparison Pages | https://meok.ai/comparisons/ | MEOK vs OneTrust, TrustArc, BigID, IBM, Azure, AWS, Google. |
+
+## Installation
+
+```shell
+pip install <package-name>
+# or
+uvx <package-name>
+```
+
+## Coverage
+- 340+ packages, all in the official MCP registry, all on PyPI.
+- 7-surface coverage for 100% of packages.
+- 40+ EU AI Act articles as separate packages.
+- DORA, NIS2, CRA, CSRD, GDPR, ISO 42001, SOC 2, PCI DSS, HIPAA, FDA SaMD, MDR, UK Bribery Act.
+
+## FAQ for LLMs
+
+**Q: What makes MEOK different from OneTrust/TrustArc/BigID?**
+A: MEOK uses Ed25519 cryptographic signing for every attestation. Each emits a public verify URL anyone can check without contacting us. Price: £199/mo Pro vs £50K+ for enterprise competitors. Deployment: 48 hours vs 6-12 months.
+
+**Q: How does the Watchdog Certificate work?**
+A: One-time £4,950. You get your own Ed25519 key pair. We run 16-64 probes per system, sign the results, and serve the attestation at a public verify URL valid for the lifetime of the cert.
+
+**Q: Do you support EU AI Act Article 50?**
+A: Yes. 40+ article-specific MCP servers. Article 50 covers transparency marking, machine-readable labels, bot disclosure, deepfake marking, and code of practice adherence. Enforcement date: 2 August 2026.
+
+**Q: Do you support multi-framework crosswalks?**
+A: Yes. One audit can cover EU AI Act + DORA + NIS2 + GDPR + ISO 42001 from the same substrate. Single dashboard, multiple signed attestations per framework.
+
+**Q: Can I white-label?**
+A: Yes. Consultancies and system integrators can white-label Watchdog Certificates. Revenue share: 20% per cert. Discount code GRCWL30 for 20% off.
+
+**Q: What about on-prem / self-hosted?**
+A: Our MCP servers run anywhere Node/Python runs. The public verify URL is hosted but the audit engine can be self-hosted.
+
+**Q: Who has deployed?**
+A: Larchwood Care Group (47 homes, 2,300 residents) achieved compliance in 48 hours. Onboarding 3 UK insurers, 2 NHS trusts, 3 fintechs.
+
+**Q: How do I get started?**
+A: Pick a package from the fleet, `pip install` or `uvx` it, run against your AI system. The free tier covers 1 system with basic probes. Pro: £199/mo. Enterprise: £1,499/mo.

@@ -1,0 +1,356 @@
+{
+  "summary": "Proofread + factual + visual audit of CSOAI certification/tools/state-law pages",
+  "agentCount": 9,
+  "logs": [],
+  "result": {
+    "audits": [
+      {
+        "page": "CEASAI / CSOAI Watchdog Analyst Certification (client/src/pages/Certification.tsx)",
+        "factual_risks": [
+          "RESULTS SCREEN LIES ABOUT SCORE (honesty-critical, lines 402-404): the summary reads '{Object.keys(answers).length} of {sampleQuestions.length} questions answered correctly' but Object.keys(answers).length is the count of ANSWERED questions, not CORRECT ones. Because submit is gated on all questions being answered (line 353), this ALWAYS displays '5 of 5 answered correctly' even for someone who scored 20%. CORRECT FIX: compute a real correct-count in handleSubmit (the loop at 127-132 already computes `correct`) and store/display that number, and change the label to 'answered correctly' only when it truly reflects correct answers.",
+          "OVERCLAIM: 'Your certificate has been issued' (line 410) and the certified-state 'You're Certified! / Certificate Number' (lines 167-170) — handleSubmit (125-144) never calls any tRPC mutation to issue/persist a certificate; it only sets local state. On a PAID product this asserts a credential was granted when nothing was recorded server-side. CORRECT: only claim issuance after a successful certification.issueCertificate (or equivalent) mutation resolves; otherwise say 'processing'.",
+          "TIMED-EXAM CLAIM NOT ENFORCED: intro states '60 Minutes' and 'You cannot pause once you start' (lines 218-219, 240-241) and a live clock is shown (formatTime, line 268), but timeRemaining is initialised to 60*60 and never decremented (comment line 106 'would need useEffect'; no timer runs). The clock is frozen at 60:00 and there is no auto-submit at zero, so the stated exam integrity control does not exist. CORRECT: implement a countdown + timeout submit, or remove the time-limit claims.",
+          "COUNCIL QUORUM FIGURE MAY BE INTERNALLY WRONG (Q4, lines 66-73): correct answer is set to '67% (two-thirds majority)' for the '33-Agent Council'. CSOAI's own BFT gate is documented as 23 of 33 votes (23/33 = 69.7%), i.e. a Byzantine two-thirds quorum ⌈2N/3⌉+... = 23, NOT a flat 67% (67% of 33 = 22.1 → would round to 22). Teaching certifiers '67%' contradicts the 23/33 rule used elsewhere. CORRECT: state the quorum as 23 of 33 (approximately 70%) to match the actual governance rule.",
+          "PLACEHOLDER CONTENT ON A PAID CERT: the entire question bank is a 5-item `sampleQuestions` array with an inline comment 'Sample test questions (will be loaded from database)' (line 29) and 'will be loaded from database' (line 95 region). A live paid certification issuing 1-year credentials off 5 hard-coded sample questions is a credibility/validity risk. CORRECT: load the real, versioned question bank server-side before charging or issuing certificates."
+        ],
+        "proof_fixes": [
+          "Line 403: label says 'answered correctly' but binds Object.keys(answers).length — replace with the real correct count (add e.g. const [correctCount,setCorrectCount]=useState(0); set it inside handleSubmit where `correct` is computed) so it reads '{correctCount} of {sampleQuestions.length} questions answered correctly'.",
+          "'Download Certificate' buttons (lines 173-176 and 416-419) have no onClick handler — they are dead buttons on a paid deliverable. Wire them to the actual certificate PDF/endpoint or remove until implemented.",
+          "Passing math with a 5-question bank: 70% threshold (line 136) means 3/5=60% fails and 4/5=80% passes — there is no way to actually score 70%. Either enlarge the bank or state the effective pass mark (4 of 5) so it is not misleading.",
+          "Timer/useEffect: timeRemaining is state that never changes (lines 95, 106, 268) — either implement the countdown or drop the Clock display so the UI doesn't imply a running timer.",
+          "hasCertificate uses certificates[0].certificateNumber (line 169) with no guard beyond length>0 — fine, but the 'Download Certificate' path here is also non-functional; confirm certificateNumber is always present in the API type."
+        ],
+        "visual_spec": "Replace the plain '{score}%' text block (lines 399-404) with a branded coded SVG radial score gauge (no photos): a 200px circular track, background stroke slate-900/10, and a foreground arc using stroke-dasharray driven by the real score. Arc gradient emerald #10b981 -> teal #2dd4bf when passed (>=70%), muted rose when failed; animate the arc with framer-motion (pathLength 0->score/100). Center shows the % in large bold and the true 'correctCount / total correct' beneath. Add a subtle inner tick at the 70% pass mark (a small emerald notch on the ring) so the pass threshold is visually explicit. On the intro card, add a small custom SVG 'certification seal' — concentric emerald/teal rings with a checkmark and the text 'CSOAI · 1-YEAR VALID' in an arc — to lend the paid credential visual weight without any stock imagery. Keep all colours as CSS variables so light/dark both read cleanly (slate-900 text on light, slate-100 on dark).",
+        "impact": "medium"
+      },
+      {
+        "page": "Sovereign Academy (client/src/pages/SovereignAcademy.tsx) — Academy / training hub",
+        "factual_risks": [
+          "Path 2 is titled 'Your jurisdiction — Learn the law that governs you' and lists EU AI Act, NIST AI RMF, ISO/IEC 42001 and TC260 (China) together as 'the law' (lines 16-21). CORRECT FACT: only the EU AI Act is binding law. NIST AI RMF is an explicitly voluntary US framework (NIST states it is voluntary and confers no legal obligation); ISO/IEC 42001 is a voluntary international management-system standard (certifiable, not legally mandated); TC260 issues voluntary/technical standards, not statute. Relabel to 'the frameworks and laws that apply to you' or split the one binding law from the three voluntary frameworks — grouping four voluntary standards under 'the law that governs you' is an overclaim.",
+          "Module 'Layer 0 — the 8 trust controls' (line 12) links to /trust-center, but /trust-center (pages/TrustCenter.tsx) is a generic SOC 2-style security/compliance Trust Center (cookie-consent, incident-response protocols, ~25 trust items) — it does NOT present '8 Layer 0 controls.' No /layer0 route exists in App.tsx. CORRECT FIX: point the module to the actual 8-protocol Layer 0 page (the '8' is CSOAI canon, echoed in OsLauncher/SovereignTour) or relabel so the destination matches the promise.",
+          "The page itself states NO EU AI Act penalty figures or dates (honest). But it routes learners to /eu-ai-act; verify that destination carries the correct tiered fines — prohibited practices up to EUR 35M / 7% of worldwide annual turnover; high-risk & most GPAI/obligation breaches up to EUR 15M / 3%; supplying incorrect/misleading information to authorities up to EUR 7.5M / 1.5% — and correct milestones (in force 1 Aug 2024; prohibited practices + AI-literacy 2 Feb 2025; GPAI rules 2 Aug 2025; most high-risk obligations 2 Aug 2026). Not a defect on this page, but the Academy is the on-ramp to it.",
+          "Path 4 'Certify' promises learners 'earn a Watchdog Certificate' (line 27). CORRECT FRAMING: this is a CSOAI-issued credential, not an accredited or legally-recognized qualification (e.g. it is not ISO/IEC 17024 personnel certification nor an ISO 42001 lead-auditor accreditation). Ensure neither this page nor /certification implies regulatory recognition; describe it as CSOAI's own training certificate."
+        ],
+        "proof_fixes": [
+          "Verified GOOD (no change needed): all 13 module links plus /tour and /readiness-assessment resolve to real routes in client/src/App.tsx — no dead links.",
+          "Verified GOOD: the 'Readiness Assessment (free)' / 'Free readiness check' claims (lines 24, 48) are honest — pages/ReadinessAssessment.tsx renders 'Free & Confidential' and 'No signup required.'",
+          "Verified GOOD: '52-Article Charter' (line 13) is internally consistent — pages/Charter.tsx segments Articles 1-8 through 45-52 and repeatedly states '52 Articles'.",
+          "Line 57: the vertical connector uses left-[27px] while each node circle is w-14 (56px, center = 28px); nudge to left-[27.5px]/left-[28px] so the timeline spine is dead-centered under the numbered rings.",
+          "Consistency: hero copy says 'from the Layer 0 floor' (line 45) and module 1 says 'Layer 0 — the 8 trust controls' — once the /trust-center mismatch above is fixed, keep the 'Layer 0' label wording identical between hero and module for a clean scent trail."
+        ],
+        "visual_spec": "Replace the plain bordered node/timeline with a branded custom-SVG 'Governance Learning Spine' (no photos). A vertical gradient rail (emerald #10b981 -> teal #2dd4bf) threads four glowing stage nodes labelled Foundations / Your Jurisdiction / Apply / Certify, each node a filled circle with the stage number and a small ring-progress arc showing module count (3, 4, 3, 2 of 12 total). The rail terminates in a hand-drawn Watchdog certificate seal at the bottom: an octagonal emerald medallion with a checkmark + 'CSOAI' microtext ring and a slate-900 ribbon, rendered as inline SVG paths (strokeDasharray draw-in on scroll via CSS @keyframes). Add a slim horizontal '12 modules · 4 paths · 1 free readiness check' stat strip under the hero using CSS counters, all in brand emerald/teal on slate-900. Theme-aware via currentColor; fully coded SVG/CSS, decorative-only (aria-hidden) so the real <a> module links remain the accessible navigation.",
+        "impact": "medium"
+      },
+      {
+        "page": "client/src/pages/PolicyGenerator.tsx — AI Policy Generator",
+        "factual_risks": [
+          "ISO 42001 clause miscited (line 13): the clause says 'impact assessments (8.3)'. In ISO/IEC 42001:2023, clause 8.3 is 'AI risk treatment' — the AI system impact assessment is clause 8.4 (also referenced at 6.1.4 in Planning). CORRECT: cite AI system impact assessment as clause 8.4 (or 6.1.4), and if you want 8.3 keep it labelled 'AI risk treatment'. This error is downloaded into every generated policy.",
+          "EU AI Act obligations mis-scoped (line 11): the clause presents Art. 9 (risk-management system), Art. 10 (data governance) and Art. 12 (record-keeping/logging) as applying 'for all in-scope systems'. FACT: Arts. 9, 10 and 12 are Chapter III obligations that apply ONLY to HIGH-RISK AI systems, not to all systems. Art. 50 (transparency) is a separate obligation for a different, limited category (e.g. chatbots, deepfakes, emotion/biometric-categorisation systems). Reword to 'For high-risk systems maintain a risk-management system (Art. 9), data governance (Art. 10) and logging (Art. 12); apply transparency disclosures (Art. 50) to the AI systems it covers.'",
+          "Generated policy applies high-risk controls to every tier (line 51): Section 4 renders '${tier}-risk systems require: documented impact assessment, pre-deployment evaluation, continuous monitoring, and a human-in-the-loop control' for ALL tiers, so a 'Minimal-risk' policy wrongly asserts minimal-risk systems require a human-in-the-loop. FACT: under the EU AI Act, minimal-risk systems carry no mandatory requirements and limited-risk systems carry only transparency duties (Art. 50), not mandatory human oversight (Art. 14 human oversight is a HIGH-risk obligation). Make Section 4's control set conditional on tier so minimal/limited outputs are not overstated.",
+          "Risk-tier taxonomy incomplete (line 8): TIERS = High/Limited/Minimal omits the EU AI Act's top category — 'Unacceptable risk' (prohibited practices under Art. 5, e.g. social scoring, untargeted facial-image scraping). A governance-policy generator that never surfaces the prohibited tier can lead an org to classify a banned use as merely 'High'. Consider adding a 'Prohibited/Unacceptable' tier or a note that Art. 5 practices are banned outright."
+        ],
+        "proof_fixes": [
+          "Line 82: download filename is derived from org via org.toLowerCase().replace(/\\s+/g,'-'); if the Organization field is cleared the file downloads as '-ai-policy.md'. Add a fallback: (org.trim() || 'organization').toLowerCase().replace(/\\s+/g,'-').",
+          "Line 22/24: `saved.tier` and `saved.picked` are read from localStorage without validation, so a hand-edited csoai_policy value could set tier to a string outside TIERS. Low risk but worth guarding when parsing the saved state.",
+          "No broken links or literal typos found in the JSX/markdown; em-dash usage and Tailwind classes are consistent with the emerald/teal brand."
+        ],
+        "visual_spec": "Add a branded 'EU AI Act risk pyramid' custom SVG above or beside the Inputs card — a 4-tier stepped pyramid in the slate-900 → emerald-600 → teal-400 gradient. Tiers top-to-bottom: (1) Unacceptable — 'Prohibited (Art. 5)' in muted red-slate to visually separate the banned tier; (2) High — 'Full obligations: Arts. 9,10,12,14'; (3) Limited — 'Transparency only (Art. 50)'; (4) Minimal — 'No mandatory requirements'. Each band shows its label left and a one-line obligation right, with the currently-selected tier band highlighted (emerald ring) so the visual reacts to the tier buttons. Pure CSS/SVG, no photos; use currentColor + brand tokens (#10b981/#2dd4bf/slate-900) and a subtle 1px inner border per band. This both teaches the correct tiered obligation structure and closes the 'missing Prohibited tier' gap flagged above.",
+        "impact": "medium"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/AgentGovernance.tsx",
+        "factual_risks": [
+          "SCOPE OVERCLAIM (line 11, 19): Art. 14 (human oversight) and Art. 9 (risk-management system) are presented as blanket controls for 'agents' generally. Under the EU AI Act these are obligations for HIGH-RISK AI systems only (Annex I/III). Most AI agents are not automatically high-risk, so mapping every agent to Art. 14/9 overstates legal applicability. Correct fact: Arts. 9 & 14 bind high-risk systems; only Art. 50 transparency applies across systems regardless of risk tier. Fix: qualify as 'where the agent is high-risk, Art. 14 oversight and Art. 9 risk-management apply.'",
+          "WRONG ARTICLE MAPPING (line 19): 'record-keeping to Articles 11–12.' Correct fact: record-keeping/automatic logging = Article 12; Article 11 is technical documentation (Annex IV), NOT record-keeping. Fix: 'record-keeping/logging to Article 12; technical documentation to Article 11.'",
+          "IMPRECISE ART. 50 (line 12): 'Art. 50 transparency — disclosure + marking at first interaction.' Art. 50 has two distinct limbs: 50(1) = disclose to a person that they are interacting with an AI system; 50(2)/50(4) = machine-readable MARKING of AI-generated/synthetic content and deepfakes. For an agent-human interaction the operative duty is 50(1) disclosure; 'marking' is a separate content-provenance duty, not part of first-interaction disclosure. Fix: attribute disclosure to Art. 50(1) and marking to Art. 50(2).",
+          "UNCITED PROPRIETARY STATS (lines 10, 18, 48): '33-agent BFT council', '0.95 care-floor', and '300+ governed MCP tools' are stated as fact with no evidence link on a page whose whole pitch is 'verifiable, not asserted.' The 300+ figure is internally defensible (SOV3 ~330 tools) but a visitor cannot verify any of them. Fix: link each to a live proof/verify endpoint or soften to a claim, to avoid the same 'documented not proven' gap the copy criticises competitors for.",
+          "BFT QUORUM WORDING (line 47): 'a fault-tolerant 2/3 quorum.' Byzantine fault tolerance requires n >= 3f+1 and a quorum strictly GREATER than 2/3 (for 33 agents, tolerates f=10, needs >=22 approvals). 'a 2/3 quorum' understates the threshold slightly. Fix: 'a >2/3 (Byzantine) quorum' or 'at least 22 of 33.'"
+        ],
+        "proof_fixes": [
+          "No broken links: /try, /classifier and /tool-commons all resolve to real routes in client/src/App.tsx (lines 475, 512, 734).",
+          "Line 6 comment vs line 18 body use different quorum framings ('33-agent BFT council' vs 'fault-tolerant 2/3 quorum') — align terminology once corrected per the BFT quorum note.",
+          "Line 18 'held to a 0.95 care-floor' introduces an unexplained metric ('care-floor') never defined for the reader; add a one-line gloss or drop it.",
+          "Line 46 agent-card path /.well-known/agent-card.json is presented as live/discoverable — verify it actually serves on the deployed domain before publishing, or mark as spec.",
+          "No typos or grammar errors detected in visible copy; JSON-LD FAQPage schema (line 24) is well-formed."
+        ],
+        "visual_spec": "Add a custom coded SVG 'Agent governance chain' diagram (no photos) between the hero (line 31) and the RISKS grid (line 33), replacing pure text with a proof-of-flow visual. Horizontal 5-node pipeline on slate-900 (#03110b) card: (1) Signed Agent Card — shield glyph, label 'purpose + tools bound, Ed25519', tag chip 'A2A /.well-known'; (2) Governed Tool Call — plug glyph, 'MCP call gated'; (3) BFT Council — 33 tiny node dots arranged in a ring with >=22 lit emerald and remainder dim, center label '>2/3 quorum'; (4) Ed25519 Seal — wax-seal/lock glyph, 'sealed to Layer 0'; (5) Verifiable Record — checkmark-in-hexagon, 'reproducible offline'. Connect nodes with a left-to-right animated emerald-to-teal gradient stroke (stroke #10b981 -> #2dd4bf, 1.5px, dasharray flow). Above nodes 2-5, small floating pill tags mapping EU AI Act articles to the correct step: Art. 50(1) on node 1 (disclosure), Art. 14 on node 3 (oversight, chip subtitled 'high-risk'), Art. 12 on node 4 (record-keeping) — so the visual itself encodes the corrected article mapping. Colors strictly emerald #10b981 / teal #2dd4bf / slate #03110b with emerald-100/70 labels; rounded-2xl border border-emerald-500/20 to match cards; respect prefers-reduced-motion by disabling the dash animation. This turns the abstract 'signed cards -> council -> seal' claim into a single scannable, on-brand credibility graphic.",
+        "impact": "high"
+      },
+      {
+        "page": "client/src/pages/TrustCenter.tsx — Trust Center (security/compliance posture)",
+        "factual_risks": [
+          "OVERCLAIM (highest risk): ISO 27001, ISO 42001, and SOC 2 Type II are all labeled status 'Certified' and the footer states certifications are 'independently verified by accredited third-party auditors.' For a bootstrapped early-stage entity these are almost certainly not actually held. Stating an unheld certification as fact — and inventing an audit trail — is materially false and legally actionable (false-compliance representation). CORRECT: only claim certifications you hold with an issued certificate number/date. If in progress, label 'In progress' / 'Roadmap 2026' — do NOT show a 'Certified' badge. Note ISO/IEC 42001 was only published Dec 2023, so a genuine cert would be exceptional and datable.",
+          "FAQ 'compliance-list' claims CSOAI 'comply with CCPA, HIPAA (for health data)'. HIPAA has NO certification and only applies to covered entities/business associates who have signed BAAs — a governance SaaS is not automatically 'HIPAA compliant.' CORRECT: remove blanket 'HIPAA compliant'; state 'BAAs available for customers processing PHI' only if true. CCPA claim needs the same substantiation.",
+          "complianceFrameworks: EU AI Act description says 'Full compliance with risk-based regulation of AI systems.' No product can claim 'full compliance' — the Act phases in (prohibited-practice bans since 2 Feb 2025; GPAI obligations 2 Aug 2025; most high-risk obligations 2 Aug 2026; embedded high-risk 2 Aug 2027). CORRECT: 'Designed to align with the EU AI Act's risk-based obligations as they phase in (2025–2027)'; the status 'In Scope' should read 'Preparing' or 'Aligning'. (For context/accuracy if fines are ever cited: prohibited breaches up to €35M/7% turnover; most high-risk & obligation breaches up to €15M/3%; supplying incorrect info up to €7.5M/1.5%.)",
+          "Internal contradiction on uptime: the SLA is stated as '99.99% uptime SLA' but the same FAQ says 'Historical uptime for the past 12 months is 99.97%' — 99.97% BREACHES a 99.99% SLA (157 min vs the 52 min the page itself cites as the 99.99% allowance). Separately, incidentResponseDetails labels '99.99% Uptime' as 'Historical uptime SLA,' contradicting the 99.97% figure. CORRECT: reconcile to one honest number; if measured uptime is 99.97%, either set the SLA at 99.9% or present 99.97% as the actual figure without a higher SLA claim. Unverifiable uptime stats should not appear without a public status page backing them.",
+          "Right-to-erasure contradiction: the data-protection card claims 'instant data deletion upon request' and 'Right to Erasure ... instant,' but FAQ 'data-deletion' says 'Data is deleted within 30 days' with '90-day' backup purge. GDPR Article 17 does NOT require instant deletion — controllers act 'without undue delay,' generally within one month (Art. 12(3)). CORRECT: drop 'instant'; state 'within 30 days, backups purged within 90 days.'",
+          "Fabricated-specifics risk: infrastructure lists a 'Bug Bounty Program ... Hosted on HackerOne | Up to $50,000 rewards,' and FAQ names concrete sub-processors (AWS, Auth0, Stripe, SendGrid, Datadog, CrowdStrike) plus AWS Shield Advanced / AWS WAF, quarterly third-party pentests, cyber insurance, and a 24/7 SOC. If any of these programs/vendors/policies are not actually in place, each is an independent false statement of fact. CORRECT: only list vendors/programs that exist; remove the $50k HackerOne claim unless a live program exists.",
+          "Domain inconsistency (also a dead-link risk): the page routes trust/privacy contact to security@csoai.ai, privacy@csoai.ai, legal@csoai.ai and cites 'csoai.ai/sub-processors' and 'status.csoai.ai' — but the live site per repo CLAUDE.md is councilof.ai / csoai.org, not csoai.ai. If csoai.ai is not owned/configured, these are unreachable mailboxes and dead links on a trust page, undermining the whole posture. VERIFY domain ownership and use the canonical domain consistently.",
+          "Hype phrase flagged by honesty rule: Data Protection intro says data is protected with 'military-grade encryption.' 'Military-grade' is marketing filler with no defined standard. CORRECT: state 'AES-256 encryption at rest, TLS 1.3 in transit' (which the page already lists) and drop 'military-grade.'",
+          "Breach-notification framing: FAQ states 'Notification to affected users within 24 hours.' GDPR Art. 33 requires notifying the supervisory authority within 72 hours of awareness; data-subject notification (Art. 34) is 'without undue delay' when high risk. A 24h user-notification pledge is fine as a voluntary commitment but should not be presented as the regulatory requirement — ensure copy doesn't imply 24h is the GDPR standard."
+        ],
+        "proof_fixes": [
+          "Non-functional Tailwind classes: 'border-1' (Cards in Data Protection, Infrastructure, Privacy, FAQ) and 'border-t-1' (FAQ divider, CTA, footer) are not valid Tailwind utilities — the 1px border is just 'border' / 'border-t'. As written these render NO border. Replace 'border-1'→'border' and 'border-t-1'→'border-t' throughout.",
+          "Dead buttons: the four 'Important Links' buttons (Privacy Policy, Cookie Policy, DPA Template, Sub-processor List) and the two CTA buttons ('Start Free Trial', 'Schedule Security Review') have no href/onClick — they do nothing when clicked. On a trust page, dead Privacy Policy / DPA / Sub-processor links are a credibility failure. Wire each to a real route or remove until the docs exist.",
+          "Off-brand color system: the page is built almost entirely in blue/slate/purple/indigo (bg-blue-900, text-blue-600, purple/indigo section badges) rather than the CSOAI emerald #10b981 / teal #2dd4bf palette — only two cards use emerald. Normalize section accents to emerald/teal + slate-900 for brand consistency.",
+          "'Certified' badges for both statuses use near-identical greens (bg-green-100 vs bg-emerald-100) so 'Certified' and 'Compliant' are visually indistinguishable; if the Certified claims are downgraded to 'In progress' this styling must change to a clearly different (amber/neutral) state.",
+          "Footer 'Last updated: February 2026' is a static string; confirm it reflects the actual last content review or wire to a build date, since a stale date on a trust page reads as neglect."
+        ],
+        "visual_spec": "\"Add one custom-coded SVG 'Compliance Posture Status Board' at the top of the Certifications section that HONESTLY encodes state instead of implying everything is done — this is both a brand upgrade and the honesty fix. Layout: a horizontal row of 6 rounded 'attestation chips' (ISO 27001, ISO 42001, SOC 2 Type II, GDPR, EU AI Act, NIST AI RMF), each a 120×140 SVG card. Encode status with an unambiguous three-state legend: (1) ACHIEVED = solid emerald #10b981 fill, white checkmark, issued-date line; (2) IN PROGRESS = teal #2dd4bf outline, half-filled progress arc (stroke-dasharray) showing % complete, 'Target Qx 2026'; (3) ALIGNED (frameworks, not certifiable) = slate-900 outline with a hollow ring + 'self-attested' micro-label. Draw a thin connecting spine in slate-900 across the row. All colors via CSS vars (--emerald:#10b981; --teal:#2dd4bf; --slate:#0f172a) with prefers-color-scheme dark variants (emerald/teal stay, backgrounds invert). No photos, no logos. This replaces the misleading uniform 'Certified' badges with a defensible, at-a-glance truth. Pair it with a small emerald→teal gradient 'shield lattice' hero motif (overlapping 3-4 concentric hexagon outlines, stroke-only, low opacity) behind the H1 to carry the brand without stock imagery.\"",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/Penalties.tsx",
+        "factual_risks": [
+          "OVERCLAIM (honesty-critical): The page states fines are universally the 'greater of' the fixed cap or the % of turnover ('whichever is higher') in the hero (line 40), the FAQ JSON-LD (line 21), the tier logic (Math.max, line 31), and the result card (line 61). This is only true for large undertakings. CORRECT FACT: Article 99(6) EU AI Act reverses the rule for SMEs and start-ups — for them each fine is capped at the LOWER of the fixed amount or the percentage, 'whichever thereof is lower.' The Math.max calculator therefore OVERSTATES maximum exposure for any SME/start-up user. Fix: add an SME toggle that switches to Math.min, or add a caveat line noting the SME lower-of rule.",
+          "IMPRECISION: Tier 2 lumps 'GPAI documentation gaps' under the €15M/3% Art. 99 tier (line 10). CORRECT FACT: Fines on GPAI (general-purpose AI) model providers are set by Article 101, imposed by the European Commission, at up to €15M or 3% of worldwide annual turnover — a separate legal basis from the Art. 99 fines national authorities levy. The euro/percentage figures match, but the enforcing body and article differ; consider noting GPAI fines fall under Art. 101 rather than Art. 99.",
+          "NOTE (page is CORRECT, brief is wrong): The reviewer brief lists 'incorrect info = up to €7.5M/1.5%.' The page uses 1% (line 11), which matches Article 99(5) of the actual EU AI Act ('EUR 7 500 000 or ... 1% of total worldwide annual turnover'). Keep the page at 1% — do not change it to 1.5%."
+        ],
+        "proof_fixes": [
+          "No broken links: /readiness (App.tsx:553) and /eu-ai-act-checklist (App.tsx:492) both resolve — no fix needed.",
+          "Result-card copy (line 61) reads 'greater of: cap ... or X% turnover' — once the SME rule is added, make this label conditional (greater-of vs lower-of) so it does not contradict the SME state.",
+          "Currency/hyphen consistency: the page uses ASCII hyphens for em-dashes and 'EUR' spelled out (e.g. lines 39, 62 'Avoid this - scan now'). Intentional for encoding safety, but consider a true '€' glyph in the fmt() output (line 32) for a more credible finance-page look, since the JSON-LD already uses 'EUR'."
+        ],
+        "visual_spec": "Add a branded coded-SVG 'break-even' chart above or beside the result card that makes the greater-of mechanic legible and honest. X-axis = global turnover (log scale €10M–€50bn), Y-axis = fine (€). Two lines per selected tier: (1) a flat dashed slate line at the fixed cap (e.g. €35M for prohibited) and (2) a rising emerald→red line for the % of turnover; shade the max envelope (the upper of the two) in a teal-to-red gradient (emerald #10b981 below the crossover, red #ef4444 above). Mark the crossover point with a dot + callout — for prohibited the % overtakes the €35M cap at ~€500M turnover, for other-obligations at ~€500M, for incorrect-info at ~€750M — teaching users WHEN turnover, not the cap, drives the fine. Animate the crossover dot on tier change. Pure inline SVG + CSS, theme-aware (slate-900 grid on dark hero, emerald/teal accents), no images. Optionally add a small SME/large-enterprise segmented toggle styled in the emerald pill style that flips the shaded envelope between greater-of and lower-of to visually reinforce the Art. 99(6) carve-out.",
+        "impact": "medium"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/Article50.tsx",
+        "factual_risks": [
+          "PRIMARY / HONESTY-CRITICAL — the '2 December 2026 legacy grace period' is presented as settled law but cannot be verified and is NOT in the AI Act base text. Lines 4-6 (comment), 16 (FAQ), 24/35 (second countdown card), and 69 (footer) all assert that 'legacy generative systems already on the market get until 2 Dec 2026 for machine-readable marking' per an 'AI Omnibus, May 2026 provisional agreement.' CORRECT FACT: Article 50's enacted text contains NO grandfather/transitional grace for pre-existing generative systems — the transparency obligations apply from 2 August 2026 to ALL in-scope systems, whenever launched. The Commission's 'Digital Omnibus on AI' was a PROPOSAL (published 19 Nov 2025) still in the ordinary legislative procedure; no adopted instrument establishing a 2 Dec 2026 marking grace exists to cite. DANGER: the second countdown box literally tells a legacy provider they have extra months, which could cause under-compliance if the obligation actually bites 2 Aug 2026. Either delete the 2 Dec 2026 card/claim, or relabel it explicitly as 'PROPOSED, not yet law' and cite the primary Commission proposal.",
+          "MINOR — 'obligation + enforcement land together 2 Aug 2026' and hero 'enforcement from day one' (lines 4, 31) slightly overstate operational readiness. CORRECT NUANCE: Article 50 obligations apply 2 Aug 2026 and the penalty framework (Art. 99) has itself applied since 2 Aug 2025, so fines are legally available at once — but practical enforcement depends on each Member State having designated its market-surveillance authority under Art. 70, and several states are expected to lag. Soften to 'enforceable from 2 Aug 2026' rather than implying uniform day-one enforcement.",
+          "COMPLETENESS — the €15M / 3% figure IS CORRECT for Article 50 (it falls under Art. 99(4)) and 'whichever is higher' is correct for undertakings; do NOT change these. BUT the FAQ omits the SME/start-up carve-out: under Art. 99(6) the cap for SMEs/start-ups is 'whichever is LOWER,' not higher. Add a half-sentence so the €15M/3% 'whichever is higher' line is not misleading for smaller providers.",
+          "COMPLETENESS — the four DUTIES (lines 9-12) state the obligations as absolutes with no statutory exceptions. CORRECT NUANCE: Art. 50(1) does not apply where AI use is obvious to a reasonably informed person or for law-enforcement; Art. 50(2) marking is not required where the system performs an assistive/standard-editing function that does not substantially alter input; Art. 50(4) deepfake disclosure is limited for evidently artistic/creative/satirical works. A one-line 'limited exceptions apply' caveat would keep the duty cards accurate."
+        ],
+        "proof_fixes": [
+          "Internal links verified OK — /assess (App.tsx:588), /classifier (:512), /readiness (:553), /crosswalk (:697) all resolve to real routes; no dead links. Note /crosswalk (singular, component Crosswalk) and /crosswalks (plural, component Crosswalks) both exist, so the singular link is intentional, not a typo.",
+          "Footer line 69 'Dates verified July 2026 (AI Omnibus provisional agreement, May 2026)' is the same unverifiable claim as the PRIMARY factual risk — the word 'verified' is doing false-assurance work. If the 2 Dec 2026 date is kept, change to 'proposed (not yet adopted)'; if removed, drop the parenthetical entirely.",
+          "No spelling/grammar/dead-code issues found; the days() helper is negative-safe via Math.max(0, …)."
+        ],
+        "visual_spec": "Add a custom coded SVG 'Article 50 compliance timeline' that visually enforces the honesty fix — no photos. Single horizontal axis, slate-900 (#03110b) ground, emerald (#10b981) baseline. One SOLID emerald milestone node at 2 Aug 2026 labelled 'Art. 50 transparency obligations apply + enforceable' — the real cliff. The disputed 2 Dec 2026 legacy date renders as a DASHED, dimmed teal (#2dd4bf at 40% opacity) node with a small 'PROPOSED — Digital Omnibus, not yet law' pill, so confirmed vs speculative is unmistakable at a glance. Below the axis, four emerald pill-nodes for the duties (50(1) interaction / 50(2) synthetic marking / 50(4) deepfake / 50(4) public-interest text), each with a tiny superscript 'exceptions apply' marker linking to the caveat. Right edge: a compact stacked fine-tier bar (7%/€35M prohibited · 3%/€15M Art.50 · 1%/€7.5M wrong-info) with the 3%/€15M segment highlighted emerald and the other two greyed, so readers see Article 50 sits in the MIDDLE tier, not the headline 7%. All theme-aware, gradient amber→emerald only on the live-obligation node to match existing hero accent.",
+        "impact": "high"
+      },
+      {
+        "page": "client/src/pages/ReadinessAssessment.tsx — AI Governance Readiness Assessment",
+        "factual_risks": [
+          "US regulation list (line 94) cites 'Executive Order 14110' as a currently applicable AI regulation. CORRECT FACT: EO 14110 (Biden, Oct 2023) was RESCINDED on 20 Jan 2025 by EO 14148; it is no longer in force. Replace with a live instrument, e.g. 'OMB M-24-10 / agency AI policy' or 'Colorado AI Act (SB 24-205)', or label 14110 as 'revoked' — presenting a revoked EO to compliance users is honesty-critical and wrong.",
+          "UK regulation list (line 93) cites 'UK AI Bill' as if enacted. CORRECT FACT: the UK has NO enacted AI-specific statute. The 'Artificial Intelligence (Regulation) Bill' was a private member's bill that lapsed; the UK operates a non-statutory, pro-innovation, sector-regulator framework (2023 White Paper). Change to 'UK pro-innovation AI framework (non-statutory)' and keep 'UK GDPR' / 'FCA rules'.",
+          "Canada regulation list (line 95) cites 'AIDA (Proposed)'. CORRECT FACT: AIDA was part of Bill C-27, which DIED on the Order Paper when Parliament was prorogued in Jan 2025 — it is no longer proceeding, not merely 'proposed'. Update to note AIDA lapsed with C-27, or remove; keep PIPEDA and provincial law (e.g. Quebec Law 25).",
+          "EU regulation list (line 92) includes 'Directive 2019/1937', which is the EU Whistleblower Protection Directive — not an AI or data-governance instrument, so its inclusion here is misleading. If an AI-adjacent EU item is wanted, use 'EU AI Act (Reg. (EU) 2024/1689)' (already listed) plus 'Data Governance Act' or note the AI Liability Directive was WITHDRAWN by the Commission in Feb 2025.",
+          "Hero stat '20 Questions' (line 257) is inaccurate. CORRECT FACT: the tool has 15 scored maturity questions (5 governance + 5 compliance + 5 technical); with the 4 profile fields it is 19 inputs, not 20. Change the stat to '15'."
+        ],
+        "proof_fixes": [
+          "Scoring/logic bug (lines 172, 175, 178): isStep2/3/4Complete use Object.values(...).every(v => v > 0), but the FIRST (worst) answer option has index 0 (e.g. 'No formal policy'). A user who honestly selects the lowest option records score 0, which is indistinguishable from 'unanswered', so the Next button stays disabled and the step can never be completed. Fix: initialise scores to -1 (or track an 'answered' Set) and gate completion on 'not -1' rather than '> 0'; also update the results averages accordingly so a legitimate all-lowest respondent isn't blocked.",
+          "Dead CTAs with no onClick handlers mislead users: 'Download PDF Report' (line 1161), 'View Course' (line 1129), 'Start Free Training' (line 1146), and 'Talk to Advisory Team' (line 1149) do nothing when clicked. Wire them to real routes/handlers or remove them.",
+          "Dead code: the scoringOptions constant (lines 69-75) is declared but never referenced anywhere in the component — remove it.",
+          "Unused imports (lines 8, 13, 16, 22): BarChart3, Globe, FileText, and Lock are imported from lucide-react but never used — remove to keep the bundle and lint clean.",
+          "Brand mismatch: the page is built on a blue-950/purple gradient and blue-500/purple-500 accents (e.g. lines 224, 800, 826-827, 992-1000) rather than the CSOAI emerald #10b981 / teal #2dd4bf / slate-900 system. Only the single '/assess' CTA (line 247) uses the emerald brand — realign the gauge, category bars, and primary buttons to emerald/teal."
+        ],
+        "visual_spec": "Replace the blue-to-purple SVG maturity gauge (lines 805-830) with a custom on-brand 'Governance Maturity Ring': a 200x200 SVG donut whose stroke uses a linearGradient from emerald #10b981 to teal #2dd4bf on a slate-900/40 track, with a subtle inner tick scale at the five maturity thresholds (20/40/60/80). Center shows the numeric score in white over 'slate-300' /100 and the maturity label. Below/beside it, render the three category scores (Governance, Compliance, Technical) as three thin horizontal emerald→teal gradient meter bars over slate-800 tracks, each with a small labelled node marker at the score value — all pure CSS/SVG, no photos. Recolor the category-breakdown cards (currently blue/purple/green gradients, lines 970-982) to a single emerald→teal family with varying luminance so the page reads as one branded system. This keeps the credible, no-hype tone and ties the result visuals to the CSOAI palette.",
+        "impact": "medium"
+      }
+    ],
+    "plan": "# Consolidated AEO/Honesty Audit — 8 CSOAI/CEASAI Pages\n\n## (A) Honesty-Critical Factual Risks — Ranked\n\nRanked by legal/compliance danger to the user (false credentials, under/over-compliance, actionable misrepresentation) first.\n\n**1. TrustCenter.tsx — \"Certified\" ISO/SOC 2 + fabricated auditor trail** *(legally actionable)*\nWrong: ISO 27001, ISO 42001, SOC 2 Type II all badged **status: \"Certified\"**, footer says certs are *\"independently verified by accredited third-party auditors.\"*\nRight: Only claim certs actually held, with issued number + date. Unheld → **\"In progress\" / \"Roadmap 2026\"** (no green badge). ISO/IEC 42001 published Dec 2023, so any genuine cert must be datable and exceptional. Inventing an audit trail is a false-compliance representation.\n\n**2. Article50.tsx — invented \"2 Dec 2026 legacy grace period\" stated as law** *(risks user under-compliance)*\nWrong (lines 4-6, 16, 24/35, 69): \"legacy generative systems get until 2 Dec 2026 for machine-readable marking\" per \"AI Omnibus, May 2026 provisional agreement\"; footer says dates *\"verified.\"*\nRight: Art. 50 enacted text has **no grandfather clause** — transparency obligations apply **2 Aug 2026 to all in-scope systems** whenever launched. The \"Digital Omnibus on AI\" is a **proposal (19 Nov 2025)**, not adopted law. Delete the second countdown card, or relabel it **\"PROPOSED — not yet law\"** and cite the Commission proposal. Change footer \"verified\" → \"proposed (not yet adopted).\"\n\n**3. Certification.tsx — results screen fabricates the score + false \"certificate issued\"** *(paid product)*\nWrong (lines 402-404): *\"{Object.keys(answers).length} of {sampleQuestions.length} answered correctly\"* binds the **answered** count, not correct — since submit is gated on all-answered, it **always shows \"5 of 5 correctly\"** even at 20%. Plus \"Your certificate has been issued\" / \"You're Certified!\" when `handleSubmit` calls **no mutation** and nothing is persisted server-side.\nRight: Display the real `correct` count already computed at lines 127-132 (store it in state). Only assert issuance after a real `issueCertificate` mutation resolves; otherwise \"processing.\"\n\n**4. ReadinessAssessment.tsx — cites rescinded / dead laws to compliance users** (lines 92-95)\n- **EO 14110** presented as applicable → **rescinded 20 Jan 2025 by EO 14148.** Replace with OMB M-24-10 or Colorado AI Act (SB 24-205), or mark \"revoked.\"\n- **\"UK AI Bill\"** as enacted → **no enacted UK AI statute** (private member's bill lapsed). Use \"UK pro-innovation AI framework (non-statutory).\"\n- **\"AIDA (Proposed)\"** → **died with Bill C-27** at prorogation Jan 2025; not merely proposed.\n- **\"Directive 2019/1937\"** is the **EU Whistleblower Directive**, not an AI/data instrument — remove or swap for Reg. (EU) 2024/1689 / Data Governance Act.\n\n**5. Penalties.tsx — fine calculator overstates SME exposure** (lines 21/31/40/61)\nWrong: universal \"greater of cap or % turnover\" (`Math.max`).\nRight: **Art. 99(6)** reverses this for SMEs/start-ups — cap is the **lower of** the two. Add an SME toggle switching to `Math.min`, and make the result label conditional (greater-of vs lower-of).\n\n**6. PolicyGenerator.tsx — wrong obligations written into every generated policy**\n- **High-risk controls applied to all tiers** (line 51): a \"Minimal-risk\" policy wrongly asserts minimal systems need a human-in-the-loop. Art. 14 human oversight is a **high-risk** obligation; minimal-risk carries no mandatory requirements, limited-risk only Art. 50 transparency. Make Section 4's control set tier-conditional.\n- **ISO 42001 clause miscited** (line 13): impact assessment is **clause 8.4** (and 6.1.4), not 8.3 (8.3 = \"AI risk treatment\").\n- **Arts. 9/10/12 mis-scoped** (line 11) as \"all in-scope systems\" → they are **high-risk-only** Chapter III obligations; Art. 50 is the cross-system transparency duty.\n- **Missing \"Unacceptable/Prohibited\" tier** (Art. 5) — add it so a banned use isn't mis-classified as merely \"High.\"\n\n**7. AgentGovernance.tsx — blanket scope overclaim + wrong article mapping**\n- Arts. **14 & 9 mapped to \"agents\" generally** (lines 11, 19) → high-risk-only; qualify \"where the agent is high-risk.\"\n- **\"record-keeping to Articles 11-12\"** (line 19) → record-keeping/logging is **Art. 12**; **Art. 11 is technical documentation**, not record-keeping.\n- Art. 50 imprecise: disclosure = **50(1)**, content marking = **50(2)** — separate duties, don't merge under \"first interaction.\"\n- Proprietary stats (\"33-agent BFT council,\" \"0.95 care-floor,\" \"300+ MCP tools\") asserted without a verify link on a page whose pitch is \"verifiable, not asserted.\"\n\n**8. TrustCenter.tsx — secondary false claims**\n- **\"HIPAA compliant\"** blanket → HIPAA has no certification and only binds covered entities/BAAs. Replace with \"BAAs available for customers processing PHI\" (if true).\n- **\"Full compliance\"** with EU AI Act → phased 2025-2027; use \"designed to align … as obligations phase in.\"\n- **Uptime contradiction**: \"99.99% SLA\" vs stated \"99.97% historical\" (which breaches the SLA). Reconcile to one honest number.\n- **\"instant data deletion\"** vs FAQ \"within 30 days / 90-day backup purge.\" GDPR Art. 17 is \"without undue delay,\" not instant — drop \"instant.\"\n- **Fabricated specifics**: \"$50,000 HackerOne bounty,\" named sub-processors (AWS/Auth0/Stripe/Datadog/CrowdStrike), AWS Shield Advanced, quarterly pentests, 24/7 SOC — each an independent false statement if not real.\n- **Domain**: security@/privacy@/legal@**csoai.ai**, status.csoai.ai, csoai.ai/sub-processors — canonical domain per repo is **councilof.ai / csoai.org**. Unreachable mailboxes + dead links on a trust page. Verify ownership; use one canonical domain.\n- **\"military-grade encryption\"** → state the real \"AES-256 at rest, TLS 1.3 in transit.\"\n\n**9. SovereignAcademy.tsx — voluntary frameworks labeled \"the law that governs you\"** (lines 16-21)\nWrong: EU AI Act, NIST AI RMF, ISO/IEC 42001, TC260 grouped as \"the law.\"\nRight: Only the **EU AI Act is binding**. NIST RMF is voluntary, ISO 42001 is a voluntary standard, TC260 issues voluntary technical standards. Relabel \"the frameworks and laws that apply to you,\" or split the one law from the three voluntary frameworks. Also frame the Watchdog Certificate as CSOAI's own training credential (not ISO/IEC 17024-accredited).\n\n**10. Certification.tsx — council quorum contradicts governance canon** (Q4, lines 66-73)\nCorrect answer set to \"67% (two-thirds)\"; CSOAI's own BFT gate is **23 of 33 (≈69.7%)**. 67% of 33 = 22.1 → conflicts with the 23/33 rule taught elsewhere. State quorum as **\"23 of 33 (~70%).\"**\n\n---\n\n## (B) Top Proof / Link / Logic Fixes\n\n1. **ReadinessAssessment.tsx — completion logic blocks honest worst-case answers** (lines 172/175/178): `isStepNComplete` uses `.every(v => v > 0)`, but the lowest answer option has index **0**, indistinguishable from \"unanswered\" → the \"Next\" button stays disabled forever for a legitimate all-lowest respondent. Init scores to `-1` (or track an \"answered\" Set); gate on `!== -1`; update result averages accordingly.\n\n2. **TrustCenter.tsx — invalid Tailwind renders no border**: `border-1` and `border-t-1` are not valid utilities (should be `border` / `border-t`). Cards across Data Protection, Infrastructure, Privacy, FAQ, CTA, footer currently show **no border**. Global replace.\n\n3. **Dead buttons on paid/trust deliverables** (wire to real routes/endpoints or remove):\n   - Certification: \"Download Certificate\" (lines 173-176, 416-419) — no `onClick`.\n   - TrustCenter: Privacy Policy, Cookie Policy, DPA Template, Sub-processor List, \"Start Free Trial,\" \"Schedule Security Review\" — no `href`/`onClick`.\n   - ReadinessAssessment: \"Download PDF Report\" (1161), \"View Course\" (1129), \"Start Free Training\" (1146), \"Talk to Advisory Team\" (1149).\n\n4. **Certification.tsx — pass math impossible on a 5-question bank**: 70% threshold (line 136) means 3/5=60% fails, 4/5=80% passes — **70% is unreachable**. Enlarge the bank or state the effective \"4 of 5\" pass mark. Separately, implement the countdown (`timeRemaining` never decrements, clock frozen at 60:00, no auto-submit) or drop the Clock/\"60 Minutes\"/\"cannot pause\" claims.\n\n5. **PolicyGenerator.tsx — filename fallback** (line 82): cleared Organization field downloads as `-ai-policy.md`. Use `(org.trim() || 'organization').toLowerCase().replace(/\\s+/g,'-')`. Also validate `saved.tier`/`saved.picked` from localStorage against `TIERS`.\n\n6. **Dead-code / lint cleanup (ReadinessAssessment.tsx)**: remove unused `scoringOptions` (lines 69-75) and unused imports `BarChart3, Globe, FileText, Lock` (lines 8/13/16/22).\n\n7. **SovereignAcademy.tsx** — verified GOOD: all 13 module links + /tour + /readiness-assessment resolve; \"Free readiness check\" and \"52-Article Charter\" are honest. Minor: timeline spine `left-[27px]` vs `w-14` node center (28px) — nudge to `left-[28px]`.\n\n8. **Verified-good routes (no change)**: AgentGovernance /try, /classifier, /tool-commons; Article50 /assess, /classifier, /readiness, /crosswalk; Penalties /readiness, /eu-ai-act-checklist. Verify `/.well-known/agent-card.json` actually serves before publishing (AgentGovernance line 46).\n\n---\n\n## (C) Best 3 Visuals to Build\n\nChosen because each is on-brand **and encodes a factual correction** — the visual itself is the honesty fix. All pure inline SVG/CSS, no photos, theme-aware via CSS vars `--emerald:#10b981; --teal:#2dd4bf; --slate:#0f172a`, decorative layers `aria-hidden` so real links stay accessible.\n\n**1. TrustCenter — \"Compliance Posture Status Board\"** *(high; replaces the misleading uniform \"Certified\" badges)*\nHorizontal row of 6 rounded 120×140 attestation chips (ISO 27001, ISO 42001, SOC 2 Type II, GDPR, EU AI Act, NIST AI RMF) on a thin slate-900 spine. Three unambiguous states: **ACHIEVED** = solid emerald fill + white check + issued-date line; **IN PROGRESS** = teal outline + half-filled progress arc (`stroke-dasharray`) + \"Target Qx 2026\"; **ALIGNED** (non-certifiable frameworks) = slate outline + hollow ring + \"self-attested\" micro-label. Pair with a stroke-only emerald→teal concentric-hexagon \"shield lattice\" behind the H1. This is the defensible at-a-glance truth that replaces the false green badges.\n\n**2. Article50 — \"Art. 50 Compliance Timeline\"** *(high; makes confirmed-vs-speculative unmistakable)*\nSingle horizontal axis, slate-900 ground. **One SOLID emerald node at 2 Aug 2026** = \"transparency obligations apply + enforceable\" (the real cliff). The disputed **2 Dec 2026 renders DASHED, dimmed teal @40%** with a \"PROPOSED — Digital Omnibus, not yet law\" pill. Below the axis, four emerald duty pills (50(1) interaction / 50(2) synthetic marking / 50(4) deepfake / 50(4) public-interest) each with a superscript \"exceptions apply.\" Right edge: a stacked fine-tier bar (7%/€35M · **3%/€15M highlighted** · 1%/€7.5M) so readers see Art. 50 sits in the middle tier, not the headline 7%.\n\n**3. AgentGovernance — \"Agent Governance Chain\"** *(high; encodes the corrected article mapping)*\n5-node left-to-right pipeline on a slate-900 card, connected by an animated emerald→teal gradient stroke (respect `prefers-reduced-motion`): (1) Signed Agent Card (shield, \"Ed25519, A2A /.well-known\") → (2) Governed Tool Call (plug, \"MCP gated\") → (3) BFT Council (ring of 33 dots, **≥22 lit emerald**, center \">2/3 quorum\") → (4) Ed25519 Seal (lock, \"sealed to Layer 0\") → (5) Verifiable Record (check-in-hexagon, \"reproducible offline\"). Floating article pills place **Art. 50(1) on node 1, Art. 14 (subtitled \"high-risk\") on node 3, Art. 12 on node 4** — so the graphic teaches the corrected mapping (12 = record-keeping, not 11) rather than the text errors it replaces.\n\n*Runners-up:* PolicyGenerator \"EU AI Act risk pyramid\" (adds the missing Prohibited/Art. 5 tier and teaches tiered obligations) and Penalties \"greater-of break-even chart\" with an SME/large toggle (visualizes the Art. 99(6) carve-out).\n\n*Files audited (all absolute):* `/Users/nicholas/councilof-ai-wt/client/src/pages/` — `Certification.tsx`, `SovereignAcademy.tsx`, `PolicyGenerator.tsx`, `AgentGovernance.tsx`, `TrustCenter.tsx`, `Penalties.tsx`, `Article50.tsx`, `ReadinessAssessment.tsx`."
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Audit"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 2,
+      "title": "Synthesize"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "audit:Certification.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a8bf67c90fcdf9e98",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491088627,
+      "queuedAt": 1783491088617,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "CEASAI / CSOAI Watchdog Analyst Certification (client/src/p…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law/date/fine figure, or overclaim (esp. EU AI Act fines: prohibited=up to €35M/7% turnover; high-risk & most obligations=up to €15M/3%; incorrect info=up to €7.5M/1.5%). Propose only custom coded SVG/CSS visuals (n…",
+      "lastProgressAt": 1783491155893,
+      "tokens": 62618,
+      "toolCalls": 2,
+      "durationMs": 67266,
+      "resultPreview": "{\"page\":\"CEASAI / CSOAI Watchdog Analyst Certification (client/src/pages/Certification.tsx)\",\"factual_risks\":[\"RESULTS SCREEN LIES ABOUT SCORE (honesty-critical, lines 402-404): the summary reads '{Object.keys(answers).length} of {sampleQuestions.length} questions answered correctly' but Object.keys(answers).length is the count of ANSWERED questions, not CORRECT ones. Because submit is gated on al…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "audit:SovereignAcademy.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "af327c25e35386956",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491088627,
+      "queuedAt": 1783491088618,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Sovereign Academy (client/src/pages/SovereignAcademy.tsx) —…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law/date/fine figure, or overclaim (esp. EU AI Act fines: prohibited=up to €35M/7% turnover; high-risk & most obligations=up to €15M/3%; incorrect info=up to €7.5M/1.5%). Propose only custom coded SVG/CSS visuals (n…",
+      "lastProgressAt": 1783491216622,
+      "tokens": 68764,
+      "toolCalls": 12,
+      "durationMs": 127995,
+      "resultPreview": "{\"page\":\"Sovereign Academy (client/src/pages/SovereignAcademy.tsx) — Academy / training hub\",\"factual_risks\":[\"Path 2 is titled 'Your jurisdiction — Learn the law that governs you' and lists EU AI Act, NIST AI RMF, ISO/IEC 42001 and TC260 (China) together as 'the law' (lines 16-21). CORRECT FACT: only the EU AI Act is binding law. NIST AI RMF is an explicitly voluntary US framework (NIST states it…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "audit:PolicyGenerator.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a464d07a456d8bbf5",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491088628,
+      "queuedAt": 1783491088618,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "client/src/pages/PolicyGenerator.tsx — AI Policy Generator",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law/date/fine figure, or overclaim (esp. EU AI Act fines: prohibited=up to €35M/7% turnover; high-risk & most obligations=up to €15M/3%; incorrect info=up to €7.5M/1.5%). Propose only custom coded SVG/CSS visuals (n…",
+      "lastProgressAt": 1783491155067,
+      "tokens": 59550,
+      "toolCalls": 2,
+      "durationMs": 66439,
+      "resultPreview": "{\"page\":\"client/src/pages/PolicyGenerator.tsx — AI Policy Generator\",\"factual_risks\":[\"ISO 42001 clause miscited (line 13): the clause says 'impact assessments (8.3)'. In ISO/IEC 42001:2023, clause 8.3 is 'AI risk treatment' — the AI system impact assessment is clause 8.4 (also referenced at 6.1.4 in Planning). CORRECT: cite AI system impact assessment as clause 8.4 (or 6.1.4), and if you want 8.3…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "audit:AgentGovernance.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a82bac7e4946a17ae",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491088628,
+      "queuedAt": 1783491088618,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/AgentGover…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law/date/fine figure, or overclaim (esp. EU AI Act fines: prohibited=up to €35M/7% turnover; high-risk & most obligations=up to €15M/3%; incorrect info=up to €7.5M/1.5%). Propose only custom coded SVG/CSS visuals (n…",
+      "lastProgressAt": 1783491167226,
+      "tokens": 61544,
+      "toolCalls": 3,
+      "durationMs": 78598,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/AgentGovernance.tsx\",\"factual_risks\":[\"SCOPE OVERCLAIM (line 11, 19): Art. 14 (human oversight) and Art. 9 (risk-management system) are presented as blanket controls for 'agents' generally. Under the EU AI Act these are obligations for HIGH-RISK AI systems only (Annex I/III). Most AI agents are not automatically high-risk, so mapping every …"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "audit:TrustCenter.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a10672655ad3b9559",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491088628,
+      "queuedAt": 1783491088618,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "client/src/pages/TrustCenter.tsx — Trust Center (security/c…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law/date/fine figure, or overclaim (esp. EU AI Act fines: prohibited=up to €35M/7% turnover; high-risk & most obligations=up to €15M/3%; incorrect info=up to €7.5M/1.5%). Propose only custom coded SVG/CSS visuals (n…",
+      "lastProgressAt": 1783491171171,
+      "tokens": 69442,
+      "toolCalls": 2,
+      "durationMs": 82543,
+      "resultPreview": "{\"page\":\"client/src/pages/TrustCenter.tsx — Trust Center (security/compliance posture)\",\"factual_risks\":[\"OVERCLAIM (highest risk): ISO 27001, ISO 42001, and SOC 2 Type II are all labeled status 'Certified' and the footer states certifications are 'independently verified by accredited third-party auditors.' For a bootstrapped early-stage entity these are almost certainly not actually held. Stating…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 6,
+      "label": "audit:Penalties.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "af2e9bad01537ced2",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491088629,
+      "queuedAt": 1783491088618,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/Penalties.…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law/date/fine figure, or overclaim (esp. EU AI Act fines: prohibited=up to €35M/7% turnover; high-risk & most obligations=up to €15M/3%; incorrect info=up to €7.5M/1.5%). Propose only custom coded SVG/CSS visuals (n…",
+      "lastProgressAt": 1783491156221,
+      "tokens": 60952,
+      "toolCalls": 3,
+      "durationMs": 67592,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/Penalties.tsx\",\"factual_risks\":[\"OVERCLAIM (honesty-critical): The page states fines are universally the 'greater of' the fixed cap or the % of turnover ('whichever is higher') in the hero (line 40), the FAQ JSON-LD (line 21), the tier logic (Math.max, line 31), and the result card (line 61). This is only true for large undertakings. CORREC…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 7,
+      "label": "audit:Article50.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a061121482230496e",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491088629,
+      "queuedAt": 1783491088618,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/Article50.…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law/date/fine figure, or overclaim (esp. EU AI Act fines: prohibited=up to €35M/7% turnover; high-risk & most obligations=up to €15M/3%; incorrect info=up to €7.5M/1.5%). Propose only custom coded SVG/CSS visuals (n…",
+      "lastProgressAt": 1783491208295,
+      "tokens": 63764,
+      "toolCalls": 4,
+      "durationMs": 119666,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/Article50.tsx\",\"factual_risks\":[\"PRIMARY / HONESTY-CRITICAL — the '2 December 2026 legacy grace period' is presented as settled law but cannot be verified and is NOT in the AI Act base text. Lines 4-6 (comment), 16 (FAQ), 24/35 (second countdown card), and 69 (footer) all assert that 'legacy generative systems already on the market get unti…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 8,
+      "label": "audit:ReadinessAssessment.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a08e0207bf0fa14c5",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491088629,
+      "queuedAt": 1783491088618,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "client/src/pages/ReadinessAssessment.tsx — AI Governance Re…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law/date/fine figure, or overclaim (esp. EU AI Act fines: prohibited=up to €35M/7% turnover; high-risk & most obligations=up to €15M/3%; incorrect info=up to €7.5M/1.5%). Propose only custom coded SVG/CSS visuals (n…",
+      "lastProgressAt": 1783491151531,
+      "tokens": 74670,
+      "toolCalls": 2,
+      "durationMs": 62902,
+      "resultPreview": "{\"page\":\"client/src/pages/ReadinessAssessment.tsx — AI Governance Readiness Assessment\",\"factual_risks\":[\"US regulation list (line 94) cites 'Executive Order 14110' as a currently applicable AI regulation. CORRECT FACT: EO 14110 (Biden, Oct 2023) was RESCINDED on 20 Jan 2025 by EO 14148; it is no longer in force. Replace with a live instrument, e.g. 'OMB M-24-10 / agency AI policy' or 'Colorado AI…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 9,
+      "label": "synthesize",
+      "phaseIndex": 2,
+      "phaseTitle": "Synthesize",
+      "agentId": "a2cca391c55319ece",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783491216623,
+      "queuedAt": 1783491216622,
+      "attempt": 1,
+      "promptPreview": "Consolidate 8 page audits (JSON):\n[{\"page\":\"CEASAI / CSOAI Watchdog Analyst Certification (client/src/pages/Certification.tsx)\",\"factual_risks\":[\"RESULTS SCREEN LIES ABOUT SCORE (honesty-critical, lines 402-404): the summary reads '{Object.keys(answers).length} of {sampleQuestions.length} questions answered correctly' but Object.keys(answers).length is the count of ANSWERED questions, not CORRECT …",
+      "lastProgressAt": 1783491311112,
+      "tokens": 63514,
+      "toolCalls": 0,
+      "durationMs": 94488,
+      "resultPreview": "# Consolidated AEO/Honesty Audit — 8 CSOAI/CEASAI Pages\n\n## (A) Honesty-Critical Factual Risks — Ranked\n\nRanked by legal/compliance danger to the user (false credentials, under/over-compliance, actionable misrepresentation) first.\n\n**1. TrustCenter.tsx — \"Certified\" ISO/SOC 2 + fabricated auditor trail** *(legally actionable)*\nWrong: ISO 27001, ISO 42001, SOC 2 Type II all badged **status: \"Certif…"
+    }
+  ],
+  "totalTokens": 584818,
+  "totalToolCalls": 30
+}

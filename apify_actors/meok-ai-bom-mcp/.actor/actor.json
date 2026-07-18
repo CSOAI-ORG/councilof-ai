@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "meok-ai-bom-mcp",
+  "title": "AI Bill of Materials",
+  "description": "CycloneDX AI BOM. EU AI Act Article 13 transparency.",
+  "version": "1.0",
+  "input": "./input_schema.json",
+  "output": "./output_schema.json",
+  "dockerfile": "../Dockerfile",
+  "categories": [
+    "AI",
+    "COMPLIANCE"
+  ],
+  "httpMcpServer": {
+    "transport": "streamable-http",
+    "url": "https://meok-ai-bom-mcp.apify.actor/mcp"
+  }
+}

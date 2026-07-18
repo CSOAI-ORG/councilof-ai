@@ -1,0 +1,27 @@
+Subject: EU AI Act Article 50 — 28 days. One curl call = signed compliance proof.
+
+Hi {first_name},
+
+The August 2 deadline is 28 days away. Article 50 of the EU AI Act requires every AI company to watermark and trace AI-generated content. Penalties: €15M or 3% of global turnover (whichever is higher).
+
+For a DPO, this means:
+1. Every chatbot response needs provenance metadata
+2. Every AI-generated image needs C2PA watermarking
+3. Every decision needs to be auditable (GDPR Art 22 + EU AI Act Art 13/14)
+
+We've built the simplest possible compliance proof: one API call, one Ed25519-signed passport, one verify URL your regulator can check.
+
+Try it now (free, no signup):
+```bash
+curl -X POST https://csoai-org-v2.vercel.app/api/assess \
+  -H "Content-Type: application/json" \
+  -d '{"system":"Your chatbot","purpose":"customer service","domain":"general","human_oversight":true}'
+```
+
+Returns a cryptographically signed passport with verdict, risk score, gaps, and a public verify URL. You can hand this URL to your data protection authority.
+
+For full Article 50 + GDPR + ISO 42001 audit: £499/mo. Setup: 24 hours.
+
+— Nicholas Templeman
+CSOAI Ltd (UK 16939677)
+os.meok.ai

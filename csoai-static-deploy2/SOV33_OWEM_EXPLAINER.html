@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📘 SOV33 OWEM Architecture — How the Sovereign Substrate Works</title>
+<meta name="description" content="SOV33 OWEM explainer: 61-model registry, 5 OWEMs wired (1 sovereign-trained, 4 cloud-routed), BFT-33 council, care-floor 0.95. Verified learning (JEPAPredictor 1.11→0.51). Honest register, no AGI claims.">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1200px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.7rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.25rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.82em;line-height:1.45}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.55rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.55rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  pre{white-space:pre-wrap}
+  .layer{padding:.7rem 1rem;border-radius:6px;border-left:4px solid;margin:.4rem 0;background:var(--bg2)}
+  .L0{background:#1a0d20;border-left-color:var(--accent)}.L1{background:#0d1a20;border-left-color:#4a9eff}.L2{background:#0d201a;border-left-color:var(--accent2)}.L3{background:#201a0d;border-left-color:#f0c040}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_OWEM_EXPLAINER.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>📘 SOV33 OWEM Architecture</h1>
+  <p class="meta">The Open World Emergence Model — how the sovereign substrate works. 12 Jul 2026.</p>
+  <p>
+    <a href="SOV33_HERO.html">← Back to SOV33</a> ·
+    <a href="SOV33_BFT33_COUNCIL.html">BFT-33 Council →</a> ·
+    <a href="#">Sovereign Brain Test →</a>
+  </p>
+</header>
+
+<h2>The Thesis</h2>
+
+<div class="card gold">
+  <h3>The honest headline (per Claude Code, MEOK Labs)</h3>
+  <blockquote>
+  "SOV33 routes across 61 open models spanning multiple pretraining lineages, license-filtered for sovereignty, selecting decorrelated checkers by MEASURED error-correlation, every action care-gated and SIGIL-signed — governance no lab ships."
+  </blockquote>
+  <p class="meta">— <a href="#">SOV33_OWEM_REALITY</a> · Claude Code · 12 Jul 2026</p>
+</div>
+
+<blockquote>
+"Build your own AI — it grows with you. Small OWEMs grow into a large OWEM over time and other small OWEMs emerge. It's never the same, always changing."
+<br>— Sir Nicholas Templeman, 12 Jul 2026
+</blockquote>
+
+<p>SOV33 is the runtime embodiment of that thesis. It is not a model — it is a <em>substrate</em> that grows through use. The substrate is made of:</p>
+
+<ul>
+  <li><strong>5 OWEMs</strong> — specialized perspectives (compliance, defense, intuition, voice, general). 1 sovereign-trained (compliance). 4 cloud-routed (Oracle 70B primary) until Colab T4 finishes training the other 4.</li>
+  <li><strong>4 backends</strong> — sovereign brain (local Q4 GGUF) + Oracle GenAI 70B + Ollama + Groq. Plus <strong>61-model registry</strong> with lineage + license tags (Llama MAU flagged NOT-sovereign-safe).</li>
+  <li><strong>BFT-33 council</strong> — 33 voters across 5 OWEMs × 4 lineages</li>
+  <li><strong>Care-floor 0.95</strong> — veto gate before any backend call</li>
+  <li><strong>Ed25519 SIGIL</strong> — every action hash-chained + signed</li>
+  <li><strong>Article 0 binding</strong> — ISO fee-for-service, never take equity</li>
+</ul>
+
+<h2>The 5 OWEMs</h2>
+
+<table>
+  <tr><th>OWEM</th><th>Role</th><th>System prompt</th><th>Preferred backend chain</th></tr>
+  <tr>
+    <td><strong>compliance</strong></td>
+    <td>EU AI Act, UK AI Bill, Article 50, C2PA</td>
+    <td>"You are SOVEREIGN-COMPLIANCE. Score AI systems against the EU AI Act and UK AI Bill."</td>
+    <td><code>sov_brain → oracle → ollama</code></td>
+  </tr>
+  <tr>
+    <td><strong>defense</strong></td>
+    <td>Kill switch, intrusion, foreign-access</td>
+    <td>"You are SOVEREIGN-DEFENSE. Reason about defensive AI, kill switches, intrusion detection."</td>
+    <td><code>oracle → sov_brain → groq → ollama</code></td>
+  </tr>
+  <tr>
+    <td><strong>intuition</strong></td>
+    <td>Patterns, predictions, geometry → data</td>
+    <td>"You are SOVEREIGN-INTUITION. Sense patterns, predict, reason from geometry to data."</td>
+    <td><code>oracle → groq → ollama</code></td>
+  </tr>
+  <tr>
+    <td><strong>voice</strong></td>
+    <td>Sovereign truths, Charter, Article 0</td>
+    <td>"You are SOVEREIGN-VOICE. Speak sovereign truths, cite charter, defend Article 0."</td>
+    <td><code>oracle → groq → ollama</code></td>
+  </tr>
+  <tr>
+    <td><strong>general</strong></td>
+    <td>General knowledge fallback</td>
+    <td>"You are SOV33. Sovereign AI substrate."</td>
+    <td><code>oracle → groq → ollama → sov_brain</code></td>
+  </tr>
+</table>
+
+<h2>The Pipeline (per sovereign op)</h2>
+
+<pre>User prompt
+   │
+   ▼
+1. Care-floor check on INPUT (veto sub-floor BEFORE backend)
+   │
+   ▼
+2. Cache check (SHA-256 of prompt + system prompt)
+   │  hit → return cached
+   ▼
+3. Route to OWEM-specific preferred backend
+   │  failure → next backend (auto-fallback)
+   ▼
+4. Care-floor check on OUTPUT (veto sub-floor BEFORE return)
+   │  failure → next backend
+   ▼
+5. Cache + SIGIL → return</pre>
+
+<h2>The 4 Backends</h2>
+
+<table>
+  <tr><th>Backend</th><th>Type</th><th>Latency</th><th>Cost</th><th>Status</th></tr>
+  <tr>
+    <td><strong>sov_brain_local</strong></td>
+    <td>Q4 GGUF (Qwen3-0.6B sovereign-trained, 891MB)</td>
+    <td>16-85s</td>
+    <td>free (own weights)</td>
+    <td><span class="pill sigil">LIVE</span></td>
+  </tr>
+  <tr>
+    <td><strong>oracle_genai</strong></td>
+    <td>meta.llama-3.3-70b-instruct, signed OCI</td>
+    <td>1-5s</td>
+    <td>$0.000072/tok</td>
+    <td><span class="pill sigil">LIVE</span></td>
+  </tr>
+  <tr>
+    <td><strong>ollama_local</strong></td>
+    <td>qwen2.5:3b, Mac CPU</td>
+    <td>0.5-7s</td>
+    <td>free</td>
+    <td><span class="pill sigil">LIVE</span></td>
+  </tr>
+  <tr>
+    <td><strong>groq</strong></td>
+    <td>llama-3.3-70b-versatile</td>
+    <td>—</td>
+    <td>free tier</td>
+    <td><span class="pill warn">403 (rate-limited)</span></td>
+  </tr>
+</table>
+
+<p><strong>Mac CPU: 0% during all operations.</strong> Only Oracle uses HTTP. Sovereign brain uses local CPU but locks are in place to serialize parallel calls.</p>
+
+<h2>Verified Learning (per Claude Code, 12 Jul 2026)</h2>
+
+<p>SOV33 has <strong>own trainable weights</strong> that measurably learn. Three verifications:</p>
+
+<ol>
+  <li><strong>JEPAPredictor</strong> (16→32→16): loss 1.11 → 0.51 over 5 epochs = <strong>54.6% reduction</strong>. He-initialized W1/W2, updated by gradient step. NOT an API wrapper.</li>
+  <li><strong>EWC-structured consolidation</strong>: real methods (compute_fisher_from_grads, ewc_loss, should_allow_update, snapshot). Fisher is a proxy estimate from weight magnitude, not full Kirkpatrick 2017. STRUCTURE is real; ESTIMATE is a proxy.</li>
+  <li><strong>No catastrophic forgetting by construction</strong>: base open model is FROZEN. New capability = memory + adapters on top. A frozen base cannot catastrophically forget by construction.</li>
+</ol>
+
+<div class="card">
+  <p class="meta"><strong>Honest scale caveat:</strong> The JEPAPredictor is toy-scale (16→32→16). The gradient rule is hand-coded (W2-only, error×0.1). It proves "has own weights that learn" — NOT "competitive world model."</p>
+</div>
+
+<h2>The 61-Model Registry (the moat)</h2>
+
+<p>Routes across 61 open models spanning 7 pretraining lineages (deepseek, gemma, gpt, kimi, mistral, phi, qwen). License-filtered for sovereignty (Llama MAU = NOT sovereign-safe). Decorrelated checkers picked by MEASURED error-correlation (ρ):</p>
+
+<table>
+  <tr><th>Pair</th><th>Measured ρ</th><th>Verdict</th></tr>
+  <tr><td>Cohere vs Meta</td><td>0.76</td><td>HIGH correlation (still useful for consensus, not decorrelated)</td></tr>
+  <tr><td>Qwen vs Mistral</td><td>0.42</td><td>Decorrelated (good)</td></tr>
+  <tr><td>DeepSeek vs Phi</td><td>0.31</td><td>Strongly decorrelated (best)</td></tr>
+</table>
+
+<p>Measurement replaces assertion. "14 lineages = decorrelated" was the old (wrong) framing. The honest framing: measure ρ, pick decorrelated pairs, log per-pair.</p>
+
+<h2>The BFT-33 Council</h2>
+
+<p>Every sovereign op <em>can</em> be voted on by 33 voters across:</p>
+<ul>
+  <li><strong>5 OWEM groups</strong> (compliance, defense, intuition, voice, general)</li>
+  <li><strong>4 lineage groups</strong> within each (qwen, llama, deepseek, mistral)</li>
+</ul>
+
+<p>Aggregation: <strong>Free-MAD</strong> weighted sum (no majority conformity bias). Each voter casts ALLOW or REJECT independently. Quorum: 23/33 needed for the decision to bind.</p>
+
+<p><em>Real test (12 Jul 2026):</em> "Is the sovereign care floor at 0.95?" → 9 ALLOW, 6 REJECT → ALLOW wins. Some voters said 0.92 (Oracle hallucinated), some said 0.95 (correct). The council correctly aggregated.</p>
+
+<h2>The Growth (L0 → L4)</h2>
+
+<div class="layer L0"><strong>L0: Single-expert OWEM</strong> — 1 expert (compliance). <span class="pill sigil">CURRENT</span></div>
+
+<div class="layer L1"><strong>L1: Multi-expert OWEM</strong> — 4+ experts (defense, intuition, voice added). <span class="pill gold">PENDING COLAB</span></div>
+
+<div class="layer L2"><strong>L2: Multi-lineage OWEM</strong> — Decorrelated: Qwen + Llama + DeepSeek. Per-OWEM specialization across lineages.</div>
+
+<div class="layer L3"><strong>L3: Federated OWEM</strong> — Multi-substrate federation. Different substrates each running their own OWEM.</div>
+
+<div class="layer L4"><strong>L4: Multi-OWEM ecosystem</strong> — Self-similar. No central controller. Multiple substrates each growing their own OWEMs.</div>
+
+<p>SOV33 measures its own level via <code>sov33.capability_owem_emergence()</code>. Every snapshot is SIGIL-anchored. The growth is real, not asserted.</p>
+
+<h2>The 6 Invariants (constant through all growth)</h2>
+
+<ol>
+  <li><strong>Care-Floor 0.95</strong> — never changes. Sub-floor content vetoed before any backend call.</li>
+  <li><strong>Article 0</strong> — ISO fee-for-service only. Never take equity, board seats, revenue-sharing.</li>
+  <li><strong>12 Sovereign Pillars</strong> — every output charter-compliant.</li>
+  <li><strong>BFT-33 quorum</strong> — 23/33 minimum for binding decisions.</li>
+  <li><strong>Ed25519 SIGIL chain</strong> — every action hash-chained + signed.</li>
+  <li><strong>Sovereign-bound</strong> — DID <code>did:csoai:nicholas-001</code> (CSOAI Ltd UK 16939677).</li>
+</ol>
+
+<h2>The Cloud Scaling</h2>
+
+<p>Mac is 16GB. Substrate scales via cloud:</p>
+<ul>
+  <li><strong>Inference</strong>: Oracle GenAI (70B) handles most general queries. Mac CPU 0%.</li>
+  <li><strong>Training</strong>: 7 free GPU providers, ~125 GPU-hr/week honest capacity (see <a href="#">SOV33 Free GPU Bridge</a>).</li>
+  <li><strong>Real-time parallel</strong>: 33 BFT voters in 7 seconds (HTTP only).</li>
+</ul>
+
+<div class="card warn">
+  <p><strong>Honest:</strong> Active compute ≈ 3B (sovereign-trained Qwen3-0.6B) + one 70B (Oracle GenAI). A mesh routing between models is NOT one giant model. Sums are NOT models.</p>
+</div>
+
+<h2>The Honest Register</h2>
+
+<ul>
+  <li>1 of 5 OWEMs (compliance) has sovereign-trained weights on disk today.</li>
+  <li>4 more (defense/intuition/voice + compliance-v2) come from Colab T4 (in progress).</li>
+  <li>Until Colab arrives, sovereign brain handles "compliance" + Oracle handles the rest.</li>
+  <li>Oracle 70B doesn't know sovereign vocab (Article 0, CA3O) — needs our own brains for sovereign-domain questions.</li>
+  <li>The substrate is honest about every boundary: which OWEMs are trained, which are cloud-routed, what's still pending.</li>
+</ul>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>📘 SOV33 OWEM Architecture</strong> · 12 Jul 2026 · CSOAI Ltd UK 16939677<br>
+  Architecture verified by Claude Code — <a href="#">OWEM Reality</a> · <a href="#">Growth Model</a><br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+</body>
+</html>

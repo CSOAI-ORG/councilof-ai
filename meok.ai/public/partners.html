@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Program — MEOK | EU AI Act Compliance</title>
+  <meta name="description" content="Join the MEOK partner program. GRC White-Label partnerships with up to 30% margins. Three tiers: Referral, Implementation, White-Label.">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#0d0c18;color:#e0dcd0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,sans-serif;line-height:1.6}
+    a{color:#c9a84c;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+
+    /* Hero */
+    .hero{text-align:center;padding:4rem 1.5rem 2rem;background:radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 70%)}
+    .hero h1{font-size:3rem;font-weight:700;color:#c9a84c;margin-bottom:0.75rem;letter-spacing:-0.02em}
+    .hero p{font-size:1.15rem;color:#a09888;max-width:680px;margin:0 auto 1.5rem}
+    .hero .badge{display:inline-block;background:rgba(201,168,76,0.12);color:#c9a84c;border:1px solid rgba(201,168,76,0.25);padding:0.4rem 1.2rem;border-radius:20px;font-size:0.9rem;font-weight:500;margin-bottom:1.5rem}
+    .hero .back{display:inline-block;font-size:0.95rem;color:#c9a84c;border:1px solid rgba(201,168,76,0.3);padding:0.5rem 1.5rem;border-radius:6px;transition:all .2s;margin-bottom:1rem}
+    .hero .back:hover{background:rgba(201,168,76,0.08);text-decoration:none}
+
+    /* Intro */
+    .intro{text-align:center;padding:2rem 1.5rem;max-width:800px;margin:0 auto}
+    .intro h2{font-size:1.8rem;color:#c9a84c;margin-bottom:1rem}
+    .intro p{color:#a09888;font-size:1.05rem}
+    .intro strong{color:#e0dcd0}
+
+    /* Highlight */
+    .highlight{text-align:center;padding:2rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:12px;margin:2rem auto;max-width:700px}
+    .highlight .num{font-size:3.5rem;font-weight:700;color:#c9a84c;line-height:1}
+    .highlight p{color:#a09888;font-size:1rem;margin-top:0.5rem}
+
+    /* Tiers */
+    .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;padding:2rem 0}
+    .tier{background:rgba(255,255,255,0.03);border:1px solid rgba(201,168,76,0.15);border-radius:12px;padding:2rem;text-align:center;transition:all .25s ease;display:flex;flex-direction:column}
+    .tier.featured{border-color:#c9a84c;background:rgba(201,168,76,0.06);transform:scale(1.03);box-shadow:0 8px 32px rgba(201,168,76,0.12)}
+    .tier:hover{border-color:#c9a84c;transform:translateY(-3px);box-shadow:0 8px 32px rgba(201,168,76,0.08)}
+    .tier.featured:hover{transform:scale(1.03) translateY(-3px)}
+    .tier .tier-name{font-size:1.1rem;text-transform:uppercase;letter-spacing:0.08em;color:#706858;margin-bottom:0.5rem}
+    .tier .margin{font-size:3rem;font-weight:700;color:#c9a84c;margin:0.5rem 0}
+    .tier .margin-label{color:#a09888;font-size:0.9rem;margin-bottom:1.5rem}
+    .tier ul{list-style:none;text-align:left;margin:0 auto 1.5rem;padding:0;color:#b0a898;font-size:0.92rem}
+    .tier ul li{padding:0.45rem 0;padding-left:1.5rem;position:relative}
+    .tier ul li::before{content:"\2713";color:#c9a84c;position:absolute;left:0}
+    .tier .cta{display:inline-block;background:transparent;color:#c9a84c;border:1px solid #c9a84c;padding:0.75rem 2rem;border-radius:6px;font-size:1rem;font-weight:500;transition:all .2s;margin-top:auto}
+    .tier .cta:hover{background:#c9a84c;color:#0d0c18;text-decoration:none}
+    .tier.featured .cta{background:#c9a84c;color:#0d0c18}
+    .tier.featured .cta:hover{background:#d4b55a}
+
+    /* Why Partner */
+    .why{padding:3rem 1.5rem}
+    .why h2{text-align:center;font-size:1.8rem;color:#c9a84c;margin-bottom:2rem}
+    .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
+    .why-card{background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.1);border-radius:10px;padding:1.5rem;text-align:center}
+    .why-card .why-icon{font-size:2rem;margin-bottom:0.75rem}
+    .why-card h3{color:#c9a84c;font-size:1.1rem;margin-bottom:0.5rem}
+    .why-card p{color:#a09888;font-size:0.92rem}
+
+    /* CTA */
+    .cta-section{text-align:center;padding:3rem 1.5rem;border-top:1px solid rgba(201,168,76,0.1);margin-top:1rem}
+    .cta-section h2{font-size:2rem;color:#c9a84c;margin-bottom:1rem}
+    .cta-section p{color:#a09888;margin-bottom:1.5rem;font-size:1.05rem}
+    .cta-section .button{display:inline-block;background:#c9a84c;color:#0d0c18;padding:1rem 3rem;border-radius:8px;font-size:1.1rem;font-weight:600;transition:all .2s}
+    .cta-section .button:hover{background:#d4b55a;transform:translateY(-2px);text-decoration:none}
+    .cta-section .sub{color:#706858;font-size:0.85rem;margin-top:1rem}
+
+    /* Footer */
+    footer{text-align:center;padding:2rem 1.5rem;border-top:1px solid rgba(201,168,76,0.1);color:#706858;font-size:0.85rem}
+    footer a{color:#c9a84c}
+
+    @media(max-width:768px){
+      .hero h1{font-size:2.2rem}
+      .tiers{grid-template-columns:1fr}
+      .tier.featured{transform:none}
+      .tier.featured:hover{transform:translateY(-3px)}
+      .highlight .num{font-size:2.5rem}
+    }
+    @media(max-width:480px){
+      .hero h1{font-size:1.8rem}
+      .container{padding:1rem}
+      .cta-section .button{padding:0.8rem 2rem;font-size:1rem}
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="container">
+      <a href="./" class="back">&larr; Back to MEOK</a>
+      <h1>Partner Program</h1>
+      <div class="badge">Now Accepting Applications</div>
+      <p>Join the MEOK partner ecosystem. Deliver sovereign AI governance and EU AI Act compliance through GRC White-Label partnerships with industry-leading margins.</p>
+    </div>
+  </section>
+
+  <section class="intro">
+    <h2>GRC White-Label Partnership</h2>
+    <p>MEOK's governance, risk, and compliance (GRC) engine is available as a fully white-label platform. Your brand, our infrastructure. <strong>The fastest path to EU AI Act advisory revenue.</strong></p>
+  </section>
+
+  <div class="container">
+    <div class="highlight">
+      <div class="num">30%</div>
+      <p>White-Label partner margins — the highest in the EU AI compliance space.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="tiers">
+
+      <!-- Referral -->
+      <div class="tier">
+        <div class="tier-name">Referral Partner</div>
+        <div class="margin">10%</div>
+        <div class="margin-label">Referral Commission</div>
+        <ul>
+          <li>Refer clients to MEOK</li>
+          <li>10% of first-year contract value</li>
+          <li>No onboarding fee</li>
+          <li>Co-branded marketing materials</li>
+          <li>Partner portal access</li>
+          <li>Quarterly business reviews</li>
+        </ul>
+        <a href="#signup" class="cta">Become a Referral Partner</a>
+      </div>
+
+      <!-- Implementation -->
+      <div class="tier">
+        <div class="tier-name">Implementation Partner</div>
+        <div class="margin">20%</div>
+        <div class="margin-label">Implementation Margin</div>
+        <ul>
+          <li>Deploy &amp; configure MEOK for clients</li>
+          <li>20% margin on implementation services</li>
+          <li>Certified implementation training</li>
+          <li>Dedicated solutions engineer</li>
+          <li>Early access to new features</li>
+          <li>Joint case study development</li>
+        </ul>
+        <a href="#signup" class="cta">Become an Implementation Partner</a>
+      </div>
+
+      <!-- White-Label -->
+      <div class="tier featured">
+        <div class="tier-name">White-Label Partner</div>
+        <div class="margin">30%</div>
+        <div class="margin-label">White-Label Margin</div>
+        <ul>
+          <li>Full GRC platform under your brand</li>
+          <li><strong>30% margin</strong> on all sales</li>
+          <li>Custom domain &amp; branding</li>
+          <li>Priority feature requests</li>
+          <li>Executive sponsor &amp; SLAs</li>
+          <li>Invitation to BFT council observer</li>
+        </ul>
+        <a href="#signup" class="cta">Become a White-Label Partner</a>
+      </div>
+
+    </div>
+  </div>
+
+  <section class="why">
+    <div class="container">
+      <h2>Why Partner with MEOK?</h2>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">&#9881;</div>
+          <h3>Sovereign Infrastructure</h3>
+          <p>Your clients' data never leaves sovereign control. No vendor lock-in, no third-party dependencies.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">&#9733;</div>
+          <h3>BFT Attestation</h3>
+          <p>Every compliance claim is backed by BFT-attested audit trails. Verifiable, transparent, defensible.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">&#9742;</div>
+          <h3>Dedicated Support</h3>
+          <p>White-Label partners get a dedicated solutions engineer and priority technical support.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">&#36;</div>
+          <h3>Recurring Revenue</h3>
+          <p>EU AI Act compliance is not a one-time sale. Build a recurring revenue stream with annual renewals.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section" id="signup">
+    <div class="container">
+      <h2>Ready to Partner?</h2>
+      <p>Complete the partner application form. We'll get back to you within 48 hours.</p>
+      <a href="https://proofof.ai/partner" class="button">Apply Now</a>
+      <p class="sub">No upfront fees. No minimum commitments. Honest accounting from day one.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 CSOAI Ltd. All rights reserved. MEOK is a sovereign AI platform by CSOAI Ltd.</p>
+      <p><a href="https://proofof.ai">proofof.ai</a> &middot; <a href="./">MEOK Home</a> &middot; <a href="./press-kit.html">Press Kit</a></p>
+    </div>
+  </footer>
+</body>
+</html>

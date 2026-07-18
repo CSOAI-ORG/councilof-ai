@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "meok-cqc-compliance-mcp",
+  "title": "Cqc Compliance Mcp",
+  "description": "MCP server for cqc-compliance-mcp (MEOK AI Labs compliance fleet)",
+  "version": "1.0",
+  "input": "./input_schema.json",
+  "output": "./output_schema.json",
+  "dockerfile": "../Dockerfile",
+  "categories": [
+    "AI",
+    "COMPLIANCE"
+  ],
+  "httpMcpServer": {
+    "transport": "streamable-http",
+    "url": "https://meok-cqc-compliance-mcp.apify.actor/mcp"
+  }
+}

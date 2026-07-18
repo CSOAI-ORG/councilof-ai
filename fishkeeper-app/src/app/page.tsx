@@ -1,0 +1,119 @@
+'use client';
+
+import { Sparkles, ArrowRight } from 'lucide-react';
+import { vertical } from '@/lib/vertical';
+
+export default function HomePage() {
+  return (
+    <div className="relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "WebSite",
+                "@id": `${vertical.domain}/#website`,
+                url: vertical.domain,
+                name: vertical.name,
+                description: vertical.description,
+              },
+              {
+                "@type": "WebApplication",
+                name: vertical.name,
+                url: vertical.domain,
+                applicationCategory: "LifestyleApplication",
+                description: vertical.description,
+                offers: {
+                  "@type": "Offer",
+                  price: "0",
+                  priceCurrency: "GBP",
+                  availability: "https://schema.org/InStock",
+                },
+              },
+            ],
+          }),
+        }}
+      />
+      <section className="relative overflow-hidden py-20">
+        <div className="absolute inset-0 gradient-mesh" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-sm font-medium mb-8">
+              <Sparkles className="w-3.5 h-3.5" />
+              🐠 AI-powered aquarium care, verified by CSOAI
+            </div>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6">
+              <span className="text-foreground">{vertical.tagline}</span>
+            </h1>
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+              {vertical.description}
+            </p>
+            <p className="text-sm text-muted-foreground/70 max-w-xl mx-auto -mt-6 mb-10">
+              Trusted by aquarists worldwide for freshwater, tropical and marine tanks.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a href={vertical.ctaPrimary.href} className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl gradient-brand text-white font-semibold text-base hover:opacity-90 transition-opacity shadow-lg shadow-brand-500/25">
+                {vertical.ctaPrimary.text}
+                <ArrowRight className="w-4 h-4" />
+              </a>
+              <a href={vertical.ctaSecondary.href} className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-card border border-border text-foreground font-semibold text-base hover:bg-accent transition-colors">
+                {vertical.ctaSecondary.text}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" className="py-20 border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-center">
+            Built for <span className="text-brand-400">{vertical.name.split('.')[0]}</span>
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {vertical.features.map((feature) => (
+              <div key={feature.title} className="rounded-xl bg-card border border-border p-6 hover:border-brand-500/30 transition-colors">
+                <h3 className="font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-card border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            Part of the <span className="text-brand-400">CSOAI</span> ecosystem
+          </h2>
+          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+            FishKeeper.ai runs on the CSOAI governance stack — every diagnosis, water analysis and stocking recommendation is attested and traceable.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {vertical.ecosystem.map((domain) => (
+              <span key={domain} className="px-3 py-1 rounded-full bg-brand-500/10 text-brand-400 text-xs font-mono">
+                {domain}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 border-t border-border">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            Keep your tank thriving
+          </h2>
+          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+            Get instant AI help for fish health, water quality and tank stocking. Verified by CSOAI.
+          </p>
+          <a href={vertical.ctaPrimary.href} className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl gradient-brand text-white font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-brand-500/25">
+            {vertical.ctaPrimary.text}
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      </section>
+    </div>
+  );
+}

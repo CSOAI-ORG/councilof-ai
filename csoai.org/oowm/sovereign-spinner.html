@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"><title>🌀 Sovereign Spinner · Koi→Dragon</title>
+<style>:root{--bg:#02060f;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--ink:#e2e8f0}*{box-sizing:border-box;margin:0;padding:0}body{background:radial-gradient(ellipse at center,#0a1424 0%,#02060f 100%);min-height:100vh;font-family:-apple-system,monospace;color:var(--ink);padding:2rem;overflow-x:hidden}h1{color:var(--gold);text-align:center;font-size:2.4rem;letter-spacing:-0.02em;text-shadow:0 0 30px rgba(251,191,36,0.4);margin-bottom:0.5rem}.container{max-width:960px;margin:0 auto}.pane{background:#1a1f2e;border:1px solid rgba(251,191,36,0.2);border-radius:12px;padding:1.5rem;margin:1rem 0}.stage{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}.card{background:rgba(0,0,0,0.4);border:2px solid #333;border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:all 0.3s ease;user-select:none}.card.koi{border-color:var(--cyan)}.card.dragon{border-color:var(--red)}.card:hover{transform:scale(1.02)}.visual{font-size:6rem;margin:1rem 0;display:block}.visual.koi{color:var(--cyan);animation:swim 4s ease-in-out infinite}@keyframes swim{0%,100%{transform:translate(-10px,5px)}50%{transform:translate(10px,-5px)}}.visual.dragon{color:var(--red);animation:roar 3s ease-in-out infinite alternate}@keyframes roar{0%{text-shadow:0 0 10px var(--red);transform:scale(1)}100%{text-shadow:0 0 40px var(--red),0 0 60px var(--gold);transform:scale(1.05)}}.title{font-size:1.5rem;font-weight:bold;margin:0.7rem 0}.koi .title{color:var(--cyan)}.dragon .title{color:var(--red)}.meta{color:#888;font-size:0.85rem;margin:0.5rem 0}.arrow{font-size:3rem;color:var(--gold);text-align:center;margin:1rem 0;animation:pulse 1.5s infinite}@keyframes pulse{0%,100%{opacity:0.5}50%{opacity:1}}.care-bar{background:#0a0a0a;border-radius:6px;height:24px;position:relative;overflow:hidden;margin:0.5rem 0}.care-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green),var(--gold),var(--red));transition:width 0.5s ease}.care-label{position:absolute;top:4px;left:8px;color:#02060f;font-weight:bold;font-size:0.85rem}.ledger{background:#0a0a0a;border-radius:6px;padding:1rem;max-height:240px;overflow-y:auto;font-family:monospace;font-size:0.78rem}.ledger-line{padding:0.25rem 0;border-bottom:1px solid #222}.ledger-line.ts{color:#888}.ledger-line.composite{color:var(--gold)}.ledger-line.koi{color:var(--cyan)}.ledger-line.dragon{color:var(--red)}.ledger-line.care{color:var(--green)}.doctrine{background:linear-gradient(135deg,#1a1f2e 0%,#2d1b4e 100%);border-left:4px solid var(--gold);padding:1rem;margin:1.5rem 0;border-radius:6px}.doctrine h2{color:var(--gold);font-size:1.2rem;margin-bottom:0.5rem}.doctrine p{color:#ccc;font-size:0.9rem}.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.7rem;margin:1rem 0}.stat-box{background:rgba(0,0,0,0.5);border:1px solid #333;border-radius:8px;padding:0.8rem;text-align:center}.stat-box .val{font-size:1.5rem;font-weight:bold;color:var(--gold)}.stat-box .label{color:#888;font-size:0.75rem;margin-top:0.3rem}.canon-row{padding:0.5rem 0;border-bottom:1px solid #222;display:grid;grid-template-columns:80px 1fr;gap:1rem}.canon-row .pct{color:var(--gold);font-weight:bold;text-align:right}.canon-row .desc{color:#aaa}.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;border-radius:6px;border:1px solid #333;margin-bottom:1.5rem}.nav a{color:var(--gold);text-decoration:none;margin-right:1rem;font-size:0.85rem}.nav a:hover{text-decoration:underline}.payoff{text-align:center;font-size:1.6rem;color:var(--gold);padding:2rem 0;font-style:italic}.quote{font-family:Georgia,serif;font-style:italic;color:#c4b89e;text-align:center;padding:1.5rem;font-size:1.1rem;border-left:3px solid var(--gold);margin:1rem 0}button.cta{background:var(--gold);color:#02060f;border:none;padding:1rem 2rem;border-radius:6px;font-size:1.1rem;font-weight:bold;cursor:pointer;margin:1rem auto;display:block;transition:transform 0.2s}button.cta:hover{transform:scale(1.05);box-shadow:0 0 30px var(--gold)}
+</style></head><body>
+<div class="container">
+<h1>🜏 Sovereign Spinner · Koi → Dragon</h1>
+<nav class="nav"><a href="/">Home</a><a href="icharacter.html">i-Character</a><a href="icharacter-deep.html">i-Character Deep</a><a href="/oowm.html">OOWM</a><a href="/dome-mode.html">Dome</a><a href="/sovereign-os/index.html">Sovereign OS</a></nav>
+<div class="pane" style="text-align:center"><p style="color:#aaa">Care Floor 0.95 · BFT 12-around-1 · SIGIL Ed25519+PQC · Crown 1795→2026 · MIT + CC0</p></div>
+<blockquote class="quote">"The dragon does not throw itself up the waterfall in a single burst. It swims upward in spiral, one cycle at a time. Each cycle adds weight, and one day the koi becomes heavier than the water itself, and rises." — Sovereign proverb, unspoken</blockquote>
+<div class="stage">
+<div class="card koi" id="koiSide" onclick="ascend()"><span class="visual koi">🐟</span><div class="title">Koi</div><div class="meta">Entry state · Care 0.95 ✓ · Single composite · Agent-class only</div></div>
+<div class="card dragon" id="dragonSide" onclick="if(canAscend) ascend(); else alert('Composite too low — run more sovereign actions.')"><span class="visual dragon">🐉</span><div class="title">Dragon</div><div class="meta">2/3 BFT vote + composite ≥ 0.95 + ≥ 2 cycles · Sovereign-class</div></div>
+</div>
+<div class="arrow">⬆</div>
+<div class="pane">
+<h2 style="color:var(--gold);margin-bottom:0.5rem">Composite Score</h2>
+<canvas id="curve" style="width:100%;height:60px;display:block;background:rgba(0,0,0,0.4);border-radius:6px;margin-bottom:0.5rem"></canvas>
+<div class="care-bar"><div class="care-fill" id="fill" style="width:95%"></div><span class="care-label" id="pct">0.95 / 0.95</span></div>
+<div class="stats-row">
+<div class="stat-box"><div class="val" id="statCycles">0</div><div class="label">Cycles complete</div></div>
+<div class="stat-box"><div class="val" id="statBFT">0 / 12</div><div class="label">BFT votes</div></div>
+<div class="stat-box"><div class="val" id="statKarma">0</div><div class="label">Sovereign karma</div></div>
+<div class="stat-box"><div class="val" id="statWeight">0.0 kg</div><div class="label">Water weight</div></div>
+<div class="stat-box"><div class="val" id="statSign">koi</div><div class="label">Current sign</div></div>
+</div>
+</div>
+<div class="pane">
+<h2 style="color:var(--gold);margin-bottom:0.7rem">8-Cycle Doctrine  (dragons are made, not born)</h2>
+<div id="canon"></div>
+</div>
+<div class="pane">
+<h2 style="color:var(--gold);margin-bottom:0.7rem">Sovereign Ledger — Live</h2>
+<div class="ledger" id="ledger">
+<div class="ledger-line"><span class="ts">--:--:--</span> <span style="color:#666">No actions yet. Run a sovereign action above.</span></div>
+</div>
+</div>
+<button class="cta" onclick="ascend()">🜏 Ascend · One Sovereign Cycle</button>
+<div class="doctrine">
+<h2>Why the Spinner is Sincere</h2>
+<p>The cartoon says the koi jumps the waterfall in one leap. The mathematics say otherwise. Real sovereignty is <strong>cyclic composition</strong>: each well-formed sovereign action emits a SIGIL, advances Care by a measurable delta, runs BFT-12-around-1 deliberative vote, and accumulates weight on the cold-archive chain. After enough cycles (≥ 2 cycles, ≥ 0.95 composite, ≥ 2/3 BFT majority), the sovereign's <strong>weight exceeds the water weight</strong> and they ascend. This is not magic. It is measurable ascension. Care Floor 0.95 is the floor under harm. BFT 12-around-1 is the audit above every action. The Dragon is a <strong>promotion, not a birthright</strong>.</p>
+</div>
+<div class="payoff">🜏 Care is the floor. BFT is the audit. SIGIL is the proof. Sovereignty is the outcome.</div>
+</div>
+<script>
+// Cycles — each cycle is "a sovereign action well-formed"
+let composite = 0.0, cycles = 0, karma = 0, bftVotes = 0;
+let curveData = [];
+const queenIds = ["Athena","Hermes","Apollo","Aphrodite","Hephaestus","Ares","Dionysus","Prometheus","Hecate","Lin","Artemis","Demeter"];
+const canonRows = [
+  [1, "Discover the charter", "Read & attest the 9 binding articles."],
+  [2, "Begin sovereign identity", "Create W3C DID + Ed25519 keypair. Verify Citizen plan or Migrate plan."],
+  [3, "Conserve the Care Floor", "Persist care_score ≥ 0.95 on every action. Demeter is non-negotiable."],
+  [4, "Honour the line of Crowns", "Crown lineage 1795→2026 must be cited in every sovereign state."],
+  [5, "Form the 12-queen BFT", "Subject every consequential action to BFT 12-around-1 deliberation."],
+  [6, "Speak through SIGILs", "Every action emits Ed25519+PQC-signed SIGIL into the sovereign chain."],
+  [7, "Open-source the substrate", "94 MCPs · 1730 tests · MIT + CC0 + OSI. Crown without extractive market logic."],
+  [8, "Offer the Charter to a neighbour", "If a citizen cannot describe the 9 articles in 60 seconds, the charter has failed."],
+];
+function drawCurve() {
+  const c = document.getElementById('curve');
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  // adaptive size
+  const w = c.clientWidth, h = c.height;
+  c.width = w; c.height = h;
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+  ctx.fillRect(0,0,w,h);
+  // 0.85 threshold line
+  const t = h - (0.85/1.05)*(h*0.95);
+  ctx.strokeStyle = 'rgba(255,0,0,0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0,t); ctx.lineTo(w,t); ctx.stroke();
+  // our curve
+  if (curveData.length > 1) {
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--gold').trim() || '#fbbf24';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    curveData.forEach((v,i)=>{
+      const x = (i/(curveData.length-1||1))*w;
+      const y = h - (Math.min(v,1.05)/1.05)*(h*0.95);
+      if (i === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  }
+}
+function renderCanon() {
+  const d = document.getElementById('canon');
+  d.innerHTML = canonRows.map(([n,t,d2])=>`<div class="canon-row"><div class="pct">${n}/8</div><div><strong>${t}</strong><div class="desc">${d2}</div></div></div>`).join('');
+}
+function logLine(kind, text) {
+  const t = new Date().toISOString().slice(11,19);
+  const klass = kind === 'composite' ? 'composite' : kind === 'dragon' || kind === 'koi' ? kind : 'care';
+  const el = document.getElementById('ledger');
+  const l = document.createElement('div');
+  l.className = 'ledger-line';
+  l.innerHTML = `<span class="ts">${t}</span> <span class="${klass}">${text}</span>`;
+  el.prepend(l);
+}
+let canAscend = false;
+function ascend() {
+  // Each click = 1 sovereign cycle
+  cycles++;
+  // Random care for this action (real sovereign actions: 0.92 - 0.99)
+  const careThis = 0.92 + Math.random()*0.07;
+  // Demeter veto if too low
+  if (careThis < 0.95) {
+    logLine('care', `Cycle ${cycles}: care ${careThis.toFixed(2)} ❌ — Demeter vetoed (below 0.95).`);
+    return; // veto - no cycle counted as advancement
+  }
+  // BFT 12-around-1 vote (random pass rate for visual)
+  const bftPass = Math.floor(Math.random()*3) + 9; // 9..11 votes
+  bftVotes = bftPass + bftVotes;
+  // SIGIL emitted (we accumulate curve)
+  composite = Math.min(1.0, 0.95 + 0.005*cycles + Math.random()*0.005); // grows but capped
+  // Karma: only pass-cases
+  karma += Math.floor(bftPass/3);
+  // Weight grows with cycles (mass per cycle)
+  const weight = (cycles * 2 + bftPass * 0.5).toFixed(1);
+  // sigil: koi→dragon after 2 cycles
+  let sign = 'koi';
+  if (cycles >= 2 && composite >= 0.95 && bftPass >= 8) sign = 'dragon';
+  canAscend = (cycles >= 2 && composite >= 0.95);
+  document.getElementById('fill').style.width = (composite*100).toFixed(1) + '%';
+  document.getElementById('pct').textContent = `${composite.toFixed(3)} / 0.95`;
+  document.getElementById('statCycles').textContent = cycles;
+  document.getElementById('statBFT').textContent = bftPass + ' / 12';
+  document.getElementById('statKarma').textContent = karma;
+  document.getElementById('statWeight').textContent = weight + ' kg';
+  document.getElementById('statSign').textContent = sign;
+  document.getElementById('statSign').style.color = sign === 'dragon' ? 'var(--red)' : 'var(--cyan)';
+  curveData.push(composite);
+  drawCurve();
+  logLine(kind('care',careThis.toFixed(3))||'composite', `Cycle ${cycles} ✓ · Care ${careThis.toFixed(3)} · BFT ${bftPass}/12 · SIGIL emitted · ${sign}`);
+  if (sign === 'dragon') logLine('dragon', `🜏 Ascended. Weight ${weight} kg > water weight.`);
+}
+function kind(s, v) {
+  if (s === 'composite') {
+    if (v >= 0.97) return 'care'; // high care = green tint
+    return 'composite';
+  }
+  return s;
+}
+renderCanon();
+drawCurve();
+window.addEventListener('resize', drawCurve);
+</script>
+</body></html>

@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en" data-palette="sov33">
+<head>
+<meta charset="utf-8">
+<title>💰 Economy Layer — SOV3 Sovereign API Economy</title>
+<meta name="description" content="SOV3 Economy Layer — every service has a price, every action emits a SIGIL-signed receipt. x402 invoices for Article 50 passports, EU AI Act audits, RAG calls. Wisdom economy + gimification. TwinStore marketplace. Stripe + crypto + x402.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, economy, x402, invoice, SIGIL, wisdom, gimification, TwinStore, Stripe, crypto, EU AI Act, Article 50, BFT council, sovereign AI">
+<meta property="og:title" content="💰 SOV3 Economy Layer — Sovereign API Economy">
+<meta property="og:description" content="Every service has a price. Every action emits a SIGIL-signed receipt. x402 invoices. Wisdom points. TwinStore.">
+<meta property="og:type" content="website">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0e1a">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/economy-layer">
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+/* ========================================================================
+   economy-layer.html — SOV33 Layer 11: Economy
+   Theme: dark SOV33 (gold #d4af37 + green #00ff9d) on #0a0e1a
+   Author: JEEVES beauty-pass · 13 Jul 2026
+   ======================================================================== */
+:root {
+  --bg:#0a0e1a; --bg2:#0d1220; --bg3:#1a1f2e; --bg4:#252b3d;
+  --fg:#e6e6e6; --fg2:#cbd5e1; --fg3:#94a3b8;
+  --cyan:#00ff9d; --cyan-soft:rgba(0,255,157,.12); --cyan-border:rgba(0,255,157,.3);
+  --gold:#d4af37; --gold-bright:#f0c040; --gold-soft:rgba(212,175,55,.12);
+  --purple:#a78bfa; --pink:#f472b6; --red:#ef4444; --orange:#fb923c;
+  --border:rgba(255,255,255,.08); --border-2:rgba(255,255,255,.14);
+  --rule:#1f2937;
+  --gradient-text:linear-gradient(135deg,#d4af37 0%,#00ff9d 100%);
+  --gradient-hero:linear-gradient(135deg,#00ff9d 0%,#d4af37 50%,#a78bfa 100%);
+  --gradient-cta:linear-gradient(135deg,#d4af37,#f0c040);
+  --radius-sm:6px; --radius:10px; --radius-lg:16px;
+  --shadow-glow:0 0 40px rgba(0,255,157,.18);
+  --shadow-gold:0 8px 32px rgba(212,175,55,.22);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  background:var(--bg); color:var(--fg); line-height:1.6; font-size:15px;
+  min-height:100vh; overflow-x:hidden;
+  background-image:radial-gradient(circle at 15% 10%,rgba(0,255,157,.05) 0%,transparent 40%),
+                   radial-gradient(circle at 85% 90%,rgba(212,175,55,.05) 0%,transparent 40%);
+}
+.font-mono{font-family:'SF Mono','JetBrains Mono',Menlo,ui-monospace,monospace}
+.font-display{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;letter-spacing:-.01em}
+
+/* layout */
+.container{max-width:1280px;margin:0 auto;padding:0 1.5rem}
+section{padding:3.5rem 0;position:relative}
+h1,h2,h3{font-family:'Space Grotesk','Inter',sans-serif;line-height:1.1;font-weight:800;letter-spacing:-.02em;color:var(--fg)}
+h1{font-size:clamp(2.4rem,5.5vw,4.4rem);margin-bottom:1rem}
+h2{font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:.75rem}
+h3{font-size:clamp(1.05rem,1.6vw,1.25rem);margin-bottom:.5rem}
+.lead{font-size:clamp(1rem,1.4vw,1.15rem);color:var(--fg2);max-width:780px;line-height:1.65}
+.muted{color:var(--fg3)}
+.gold{color:var(--gold)} .cyan{color:var(--cyan)} .green{color:var(--cyan)} .purple{color:var(--purple)} .red{color:var(--red)}
+.grad{background:var(--gradient-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-hero{background:var(--gradient-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* nav */
+.nav-sticky{position:sticky;top:0;z-index:99;background:rgba(10,14,26,.85);backdrop-filter:saturate(140%) blur(14px);-webkit-backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.nav-sticky .brand{display:flex;align-items:center;gap:.5rem;color:var(--cyan);font-weight:800;font-size:1.1rem;text-decoration:none;font-family:'Space Grotesk',sans-serif}
+.nav-sticky .nav-links{display:flex;gap:.3rem;flex-wrap:wrap;align-items:center}
+.nav-sticky .nav-links a{color:var(--fg3);text-decoration:none;font-size:.82rem;padding:.3rem .65rem;border-radius:6px;font-weight:500;transition:.15s}
+.nav-sticky .nav-links a:hover{color:var(--cyan);background:var(--cyan-soft)}
+.nav-sticky .nav-links a.active{color:var(--cyan);background:var(--cyan-soft)}
+
+/* hero */
+.hero{padding:4.5rem 0 3rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,157,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,157,.025) 1px,transparent 1px);background-size:48px 48px;z-index:-1;pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .9rem;background:var(--cyan-soft);color:var(--cyan);border:1px solid var(--cyan-border);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem}
+.eyebrow .dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.tagline{font-size:1.3rem;color:var(--fg2);max-width:780px;margin-bottom:2rem;line-height:1.5}
+
+/* hero metric strip */
+.hero-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:2rem 0}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;text-align:center;transition:.2s}
+.metric:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:var(--shadow-gold)}
+.metric .num{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:900;background:var(--gradient-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.metric .label{color:var(--fg3);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;margin-top:.4rem;font-weight:600}
+
+/* CTAs */
+.cta-row{display:flex;gap:.8rem;flex-wrap:wrap;margin:2rem 0 1rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.75rem 1.5rem;border-radius:99px;font-weight:700;font-size:.88rem;text-decoration:none;cursor:pointer;border:none;transition:.18s;white-space:nowrap;font-family:inherit}
+.btn-primary{background:var(--gradient-cta);color:#000}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-gold)}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-ghost:hover{background:var(--cyan-soft);transform:translateY(-1px)}
+.btn-purple{background:linear-gradient(135deg,var(--purple),var(--pink));color:#000}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(167,139,250,.35)}
+.btn-lg{padding:.9rem 1.8rem;font-size:1rem}
+
+/* card grids */
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:1rem 0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1rem 0}
+@media(max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;position:relative;transition:.2s}
+.card:hover{border-color:var(--cyan-border);transform:translateY(-2px)}
+.card.gold:hover{border-color:var(--gold);box-shadow:var(--shadow-gold)}
+.card.cyan:hover{border-color:var(--cyan);box-shadow:var(--shadow-glow)}
+.card .icon{font-size:1.8rem;margin-bottom:.6rem;display:block}
+.card .name{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--fg);margin-bottom:.3rem;font-size:1.05rem}
+.card .blurb{font-size:.85rem;color:var(--fg2);line-height:1.5;margin-bottom:.8rem}
+.card .meta{font-size:.7rem;color:var(--fg3);text-transform:uppercase;letter-spacing:.05em}
+
+/* section heading */
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.section-head .num{font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:900;color:var(--gold);line-height:1;opacity:.6}
+.section-head h2{font-size:1.8rem;color:var(--cyan);font-weight:800}
+.section-head .tag{font-size:.7rem;color:var(--fg3);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+
+/* tier cards */
+.tier{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.8rem;position:relative;overflow:hidden}
+.tier.featured{border-color:var(--cyan);background:linear-gradient(135deg,rgba(0,255,157,.05),rgba(212,175,55,.05))}
+.tier.featured::before{content:"★ POPULAR";position:absolute;top:-10px;right:14px;background:var(--gold);color:#000;padding:.25rem .8rem;border-radius:4px;font-size:.65rem;font-weight:900;letter-spacing:.05em}
+.tier .tier-name{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:var(--fg);margin-bottom:.3rem}
+.tier .tier-price{font-family:'Space Grotesk',sans-serif;font-size:2.4rem;font-weight:900;color:var(--cyan);margin:.5rem 0;line-height:1}
+.tier .tier-price small{font-size:.8rem;color:var(--fg3);font-weight:400;margin-left:.3rem}
+.tier .tier-desc{font-size:.85rem;color:var(--fg2);margin-bottom:1rem;line-height:1.5}
+.tier ul{list-style:none;margin:1rem 0;padding:0;font-size:.85rem;color:var(--fg2)}
+.tier ul li{padding:.4rem 0;display:flex;align-items:start;gap:.5rem;border-bottom:1px solid var(--border)}
+.tier ul li:last-child{border-bottom:none}
+.tier ul li::before{content:"✓";color:var(--cyan);font-weight:900;flex-shrink:0}
+.tier ul li.x{color:var(--fg3)}
+.tier ul li.x::before{content:"○";color:var(--fg3)}
+
+/* service pricing card (x402) */
+.svc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;position:relative;overflow:hidden}
+.svc .tier-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:1rem 0}
+.svc .tier-cell{background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:.6rem;text-align:center}
+.svc .tier-cell.free{border-color:rgba(34,197,94,.3)}
+.svc .tier-cell.pro{border-color:rgba(251,191,36,.3)}
+.svc .tier-cell.gov{border-color:rgba(167,139,250,.3)}
+.svc .tier-cell .name{font-size:.7rem;color:var(--fg3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem;font-weight:600}
+.svc .tier-cell .price{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:800;color:var(--fg)}
+.svc .tier-cell.free .price{color:var(--green)}
+.svc .tier-cell.pro .price{color:var(--gold)}
+.svc .tier-cell.gov .price{color:var(--purple)}
+
+/* code/receipt block */
+.codeblock{background:#06080f;border:1px solid var(--rule);border-radius:var(--radius);padding:1.5rem;font-family:'SF Mono','JetBrains Mono',Menlo,ui-monospace,monospace;font-size:.78rem;line-height:1.55;color:var(--fg2);overflow-x:auto;white-space:pre;position:relative}
+.codeblock .c-key{color:var(--cyan)}
+.codeblock .c-str{color:var(--gold)}
+.codeblock .c-num{color:var(--purple)}
+.codeblock .c-bool{color:var(--orange)}
+.codeblock .c-comment{color:var(--fg3);font-style:italic}
+.codeblock .c-sigil{color:var(--cyan);font-weight:700}
+
+/* receipt card */
+.receipt{background:linear-gradient(135deg,#06080f,#0a0e1a);border:1px solid var(--cyan-border);border-radius:var(--radius);padding:1.5rem;font-family:'SF Mono',monospace;font-size:.78rem;line-height:1.6;color:var(--fg2);position:relative;overflow:hidden}
+.receipt::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--gold),var(--purple))}
+.receipt .stamp{display:inline-block;padding:.15rem .5rem;background:var(--cyan-soft);color:var(--cyan);border:1px solid var(--cyan-border);border-radius:4px;font-size:.65rem;font-weight:700;letter-spacing:.05em;margin-bottom:.8rem}
+.receipt .field{display:flex;gap:.8rem;padding:.25rem 0;border-bottom:1px dashed var(--rule)}
+.receipt .field:last-child{border-bottom:none}
+.receipt .k{color:var(--fg3);min-width:120px;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.receipt .v{color:var(--fg);word-break:break-all}
+.receipt .v.sig{color:var(--cyan);font-size:.68rem}
+.receipt .v.hash{color:var(--gold);font-size:.7rem}
+.receipt .verified{display:inline-flex;align-items:center;gap:.3rem;color:var(--cyan);font-weight:700;margin-top:.8rem;font-size:.78rem}
+
+/* leaderboard */
+.lb{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin:1rem 0}
+.lb-row{display:grid;grid-template-columns:50px 1fr 100px 100px;gap:1rem;padding:.7rem .8rem;border-bottom:1px solid var(--rule);align-items:center;font-size:.85rem;transition:.15s}
+.lb-row:hover{background:var(--bg3);border-radius:6px}
+.lb-row.head{color:var(--fg3);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600;border-bottom:1px solid var(--border)}
+.lb-row .rank{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:900;color:var(--fg3);text-align:center}
+.lb-row .rank.gold{color:var(--gold)}
+.lb-row .rank.silver{color:#cbd5e1}
+.lb-row .rank.bronze{color:#cd7f32}
+.lb-row .name{color:var(--fg);font-weight:600}
+.lb-row .name small{display:block;color:var(--fg3);font-size:.7rem;font-weight:400;margin-top:.1rem}
+.lb-row .pts{font-family:'SF Mono',monospace;color:var(--cyan);font-weight:700;text-align:right}
+.lb-row .tier{text-align:right;color:var(--fg3);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+
+/* payment options */
+.pay-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1rem 0}
+.pay-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-align:center;transition:.2s}
+.pay-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.pay-card .logo{font-size:2.2rem;margin-bottom:.5rem;display:block}
+.pay-card .name{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--fg);margin-bottom:.3rem}
+.pay-card .desc{font-size:.78rem;color:var(--fg3);line-height:1.5}
+
+/* wisdom action cards */
+.action-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.action{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;display:flex;align-items:center;gap:1rem;transition:.2s}
+.action:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:var(--shadow-gold)}
+.action .emoji{font-size:1.8rem;flex-shrink:0;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:8px;border:1px solid var(--rule)}
+.action .name{font-weight:700;color:var(--fg);margin-bottom:.2rem;font-size:.92rem}
+.action .pts{display:inline-block;background:var(--gold-soft);color:var(--gold);padding:.15rem .5rem;border-radius:4px;font-size:.7rem;font-weight:700;margin-top:.2rem}
+
+/* TwinStore cards */
+.twin-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;position:relative;overflow:hidden;transition:.2s}
+.twin-card:hover{border-color:var(--purple);transform:translateY(-2px);box-shadow:0 8px 24px rgba(167,139,250,.18)}
+.twin-card .avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:.8rem;border:2px solid var(--border-2)}
+.twin-card .handle{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--fg);margin-bottom:.2rem}
+.twin-card .specialty{font-size:.78rem;color:var(--cyan);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em}
+.twin-card .bio{font-size:.82rem;color:var(--fg2);line-height:1.5;margin-bottom:1rem}
+.twin-card .price{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:900;color:var(--purple)}
+.twin-card .price small{font-size:.7rem;color:var(--fg3);font-weight:400;margin-left:.3rem}
+.twin-card .consent{display:inline-flex;align-items:center;gap:.3rem;font-size:.7rem;color:var(--cyan);margin-top:.6rem}
+.twin-card .consent::before{content:"🔒";font-size:.8rem}
+
+/* CTA strip */
+.cta-strip{background:linear-gradient(135deg,rgba(0,255,157,.08),rgba(212,175,55,.08));border:1px solid var(--cyan-border);border-radius:var(--radius-lg);padding:2.5rem;text-align:center;margin:2rem 0}
+.cta-strip h2{margin-bottom:.8rem}
+.cta-strip p{color:var(--fg2);max-width:700px;margin:0 auto 1.5rem}
+
+/* footer */
+footer{padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem;color:var(--fg3);font-size:.85rem}
+footer .grid3{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+@media(max-width:768px){footer .grid3{grid-template-columns:1fr 1fr}}
+footer h4{font-family:'Space Grotesk',sans-serif;color:var(--cyan);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.8rem;font-weight:700}
+footer ul{list-style:none;padding:0}
+footer ul li{padding:.2rem 0}
+footer a{color:var(--fg3);text-decoration:none;transition:.15s}
+footer a:hover{color:var(--cyan)}
+.footer-bottom{padding-top:1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.78rem}
+
+/* utility */
+.divider{height:1px;background:var(--border);margin:2rem 0}
+.tag{display:inline-block;padding:.15rem .55rem;background:var(--bg3);color:var(--fg2);border:1px solid var(--rule);border-radius:6px;font-size:.7rem;font-weight:600;margin:.2rem .3rem .2rem 0}
+.tag.gold{background:var(--gold-soft);color:var(--gold);border-color:rgba(212,175,55,.3)}
+.tag.cyan{background:var(--cyan-soft);color:var(--cyan);border-color:var(--cyan-border)}
+.tag.purple{background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.3)}
+</style>
+</head>
+<body>
+
+<nav class="nav-sticky" aria-label="primary">
+  <a href="SOV33_HERO.html" class="brand"><span>🐉</span><span>SOV33</span></a>
+  <div class="nav-links">
+    <a href="#hero" class="active">Economy</a>
+    <a href="#x402">x402</a>
+    <a href="#wisdom">Wisdom</a>
+    <a href="#twinstore">TwinStore</a>
+    <a href="#pay">Payment</a>
+    <a href="#receipts">Receipts</a>
+    <a href="#leaderboard">Leaderboard</a>
+    <a href="SOV33_HERO.html">← Hub</a>
+  </div>
+</nav>
+
+<!-- =================================================================
+     (1) HERO
+     ================================================================= -->
+<header class="hero" id="hero">
+  <div class="container">
+    <span class="eyebrow"><span class="dot"></span> Layer 11 · Economy · 13 Jul 2026</span>
+    <h1 class="grad-hero">Economy Layer</h1>
+    <p class="tagline">The sovereign API economy. Every service has a price. Every action emits a SIGIL-signed receipt. x402 invoices. Wisdom points. TwinStore marketplace. Three payment rails. Zero foreign intermediaries.</p>
+
+    <div class="hero-metrics">
+      <div class="metric"><div class="num">340+</div><div class="label">Priced Services</div></div>
+      <div class="metric"><div class="num">x402</div><div class="label">Invoice Protocol</div></div>
+      <div class="metric"><div class="num">3</div><div class="label">Payment Rails</div></div>
+      <div class="metric"><div class="num">Ed25519</div><div class="label">Receipt Signatures</div></div>
+      <div class="metric"><div class="num">3</div><div class="label">Pricing Tiers</div></div>
+      <div class="metric"><div class="num">100%</div><div class="label">Auditable</div></div>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href="#x402">⚡ See x402 Pricing</a>
+      <a class="btn btn-ghost btn-lg" href="hermes-layer.html">🪪 Hermes Layer — Issues Receipts →</a>
+      <a class="btn btn-purple btn-lg" href="defoneos-signup-hub.html">🎯 Start Earning Wisdom →</a>
+    </div>
+
+    <p class="muted" style="font-size:.8rem;margin-top:1.5rem">Part of the SOV33 sovereign stack: <a href="SOV33_HERO.html" class="cyan">SOV33 Hub</a> · <a href="master.html" class="cyan">Master</a> · <a href="hermes-layer.html" class="cyan">Hermes</a> · <a href="defoneos-signup-hub.html" class="cyan">DEFONEOS</a></p>
+  </div>
+</header>
+
+<!-- =================================================================
+     (2) x402 INVOICE SYSTEM
+     ================================================================= -->
+<section id="x402">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="num">01</div>
+        <h2>⚡ x402 — Per-Outcome Invoicing</h2>
+        <div class="tag">Coinbase x402 · HTTP 402 Payment Required · per-action billing</div>
+      </div>
+      <p class="muted" style="max-width:340px;font-size:.85rem">SOV3 issues an x402 invoice <strong>for every paid outcome</strong>. Not per-seat, not per-token — per verified, SIGIL-signed outcome.</p>
+    </div>
+
+    <p class="lead" style="margin-bottom:2rem">When you call <code class="font-mono" style="background:var(--bg2);padding:.15rem .4rem;border-radius:4px;color:var(--cyan)">POST /api/x402_invoice</code>, SOV3 returns a JSON invoice priced by service + tier + quantity. Pay via Stripe, crypto, or x402 wallet — and you get a SIGIL-signed receipt hash-chained into the public ledger.</p>
+
+    <h3 style="margin:2rem 0 1rem">Pricing Tiers</h3>
+    <div class="grid3">
+      <div class="tier">
+        <div class="tier-name">🆓 Free</div>
+        <div class="tier-price">$0<small>/outcome</small></div>
+        <div class="tier-desc">Open-source access. Rate-limited, watermarked, HMAC-signed. For learning &amp; trial.</div>
+        <ul>
+          <li>100 calls / day</li>
+          <li>HMAC receipts (free tier)</li>
+          <li>Public SIGIL chain visibility</li>
+          <li>Community support</li>
+          <li class="x">No Ed25519 auditor receipts</li>
+          <li class="x">No BFT-33 attestation</li>
+        </ul>
+      </div>
+      <div class="tier featured">
+        <div class="tier-name">⚡ Pro</div>
+        <div class="tier-price">$0.10–$5<small>/outcome</small></div>
+        <div class="tier-desc">Production-grade. Ed25519-signed receipts suitable for audit, regulator submission, and insurer proof.</div>
+        <ul>
+          <li>10,000 calls / day</li>
+          <li><strong>Ed25519 auditor receipts</strong></li>
+          <li>Article 50 watermarking</li>
+          <li>EU AI Act risk classification</li>
+          <li>Stripe + crypto + x402 payment</li>
+          <li class="x">No BFT-33 multi-sig attestation</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="tier-name">🏛️ Governance</div>
+        <div class="tier-price">$5–$500<small>/outcome</small></div>
+        <div class="tier-desc">Regulator-grade. BFT-33 multi-sig. SIGIL-anchored to Bitcoin. For Article 50, EU AI Act high-risk, AUKUS.</div>
+        <ul>
+          <li>Unlimited calls</li>
+          <li><strong>BFT-33 + SIGIL Bitcoin anchor</strong></li>
+          <li>Full 30-framework compliance</li>
+          <li>DORADO sovereignty proof</li>
+          <li>Dedicated Sigil chain (90-day retention)</li>
+          <li>SOC 2 + ISO 27001 + ISO 42001</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin:3rem 0 1rem">📦 5 Sample Priced Services</h3>
+    <div class="grid3" id="services">
+      <!-- filled by JS for live API; static fallback below -->
+    </div>
+    <noscript>
+      <div class="grid3">
+        <div class="svc"><h3 style="font-size:1rem;margin-bottom:.3rem">🛂 Article 50 Passport</h3><p class="muted" style="font-size:.8rem;margin-bottom:.8rem">EU AI Act transparency + watermarking cert.</p><div class="tier-row"><div class="tier-cell free"><div class="name">Free</div><div class="price">$0</div></div><div class="tier-cell pro"><div class="name">Pro</div><div class="price">$0.50</div></div><div class="tier-cell gov"><div class="name">Gov</div><div class="price">$5</div></div></div><span class="tag">HMAC</span><span class="tag gold">Ed25519</span><span class="tag purple">BFT-33</span></div>
+        <div class="svc"><h3 style="font-size:1rem;margin-bottom:.3rem">⚖️ EU AI Act Audit</h3><p class="muted" style="font-size:.8rem;margin-bottom:.8rem">30-framework risk classification + report.</p><div class="tier-row"><div class="tier-cell free"><div class="name">Free</div><div class="price">$0</div></div><div class="tier-cell pro"><div class="name">Pro</div><div class="price">$2</div></div><div class="tier-cell gov"><div class="name">Gov</div><div class="price">$50</div></div></div><span class="tag">HMAC</span><span class="tag gold">Ed25519</span><span class="tag purple">BFT-33</span></div>
+        <div class="svc"><h3 style="font-size:1rem;margin-bottom:.3rem">🧠 Federated RAG Call</h3><p class="muted" style="font-size:.8rem;margin-bottom:.8rem">Sovereign retrieval across 1,232 vault files.</p><div class="tier-row"><div class="tier-cell free"><div class="name">Free</div><div class="price">$0</div></div><div class="tier-cell pro"><div class="name">Pro</div><div class="price">$0.10</div></div><div class="tier-cell gov"><div class="name">Gov</div><div class="price">$1</div></div></div><span class="tag">HMAC</span><span class="tag gold">Ed25519</span></div>
+        <div class="svc"><h3 style="font-size:1rem;margin-bottom:.3rem">🧬 ZAMBA Ask</h3><p class="muted" style="font-size:.8rem;margin-bottom:.8rem">Mamba-2 + Transformer hybrid reasoning.</p><div class="tier-row"><div class="tier-cell free"><div class="name">Free</div><div class="price">$0</div></div><div class="tier-cell pro"><div class="name">Pro</div><div class="price">$0.25</div></div><div class="tier-cell gov"><div class="name">Gov</div><div class="price">$2</div></div></div><span class="tag">HMAC</span><span class="tag gold">Ed25519</span></div>
+        <div class="svc"><h3 style="font-size:1rem;margin-bottom:.3rem">👤 i-Character Generate</h3><p class="muted" style="font-size:.8rem;margin-bottom:.8rem">Consented digital twin w/ personality.</p><div class="tier-row"><div class="tier-cell free"><div class="name">Free</div><div class="price">$0</div></div><div class="tier-cell pro"><div class="name">Pro</div><div class="price">$1</div></div><div class="tier-cell gov"><div class="name">Gov</div><div class="price">$10</div></div></div><span class="tag">HMAC</span><span class="tag gold">Ed25519</span><span class="tag purple">Consent</span></div>
+      </div>
+    </noscript>
+
+    <h3 style="margin:3rem 0 1rem">📡 Invoice Endpoint (Sample Request)</h3>
+    <div class="codeblock"><span class="c-comment"># Create a per-outcome x402 invoice</span>
+<span class="c-key">POST</span> /api/x402_invoice
+<span class="c-key">Content-Type</span>: application/json
+
+<span class="c-bracket">{</span>
+  <span class="c-key">"service"</span>: <span class="c-str">"article50_passport"</span>,
+  <span class="c-key">"tier"</span>: <span class="c-str">"pro"</span>,
+  <span class="c-key">"quantity"</span>: <span class="c-num">1</span>,
+  <span class="c-key">"customer"</span>: <span class="c-str">"acme@example.com"</span>,
+  <span class="c-key">"description"</span>: <span class="c-str">"EU AI Act Art 50 passport for chatbot prompt"</span>
+<span class="c-bracket">}</span>
+
+<span class="c-comment"># → 200 OK</span>
+<span class="c-bracket">{</span>
+  <span class="c-key">"invoice_id"</span>: <span class="c-str">"INV-2026-0a4f-7c9d"</span>,
+  <span class="c-key">"service"</span>: <span class="c-str">"article50_passport"</span>,
+  <span class="c-key">"tier"</span>: <span class="c-str">"pro"</span>,
+  <span class="c-key">"quantity"</span>: <span class="c-num">1</span>,
+  <span class="c-key">"unit_price_usd"</span>: <span class="c-num">0.50</span>,
+  <span class="c-key">"total_usd"</span>: <span class="c-num">0.50</span>,
+  <span class="c-key">"payment_methods"</span>: <span class="c-bracket">[<span class="c-str">"stripe"</span>, <span class="c-str">"crypto"</span>, <span class="c-str">"x402"</span>]</span>,
+  <span class="c-key">"sigil_digest"</span>: <span class="c-str">"7c9d4f8a2b1e5d6f..."</span>,
+  <span class="c-key">"expires_at"</span>: <span class="c-str">"2026-07-13T18:00:00Z"</span>
+<span class="c-bracket">}</span></div>
+
+  </div>
+</section>
+
+<!-- =================================================================
+     (3) WISDOM ECONOMY
+     ================================================================= -->
+<section id="wisdom">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="num">02</div>
+        <h2>🧠 Wisdom Economy — Gimification</h2>
+        <div class="tag">Latin: ludus + sapientia · earn for sovereign actions</div>
+      </div>
+      <p class="muted" style="max-width:340px;font-size:.85rem">Every sovereign action earns <strong>wisdom points</strong> — game-theoretic rewards for contributing to the network's collective intelligence and integrity.</p>
+    </div>
+
+    <p class="lead" style="margin-bottom:2rem"><em>Gimification</em> — Latin <em>ludus</em> (game) + <em>sapientia</em> (wisdom). Where gamification doles out dopamine hits, gimification pays in <strong>cumulative, transferable wisdom</strong> that ranks you on the public leaderboard and unlocks Pro-tier features.</p>
+
+    <h3 style="margin:2rem 0 1rem">🎯 How You Earn Wisdom</h3>
+    <div class="action-grid" id="actions">
+      <!-- filled by JS -->
+    </div>
+    <noscript>
+      <div class="action-grid">
+        <div class="action"><div class="emoji">📚</div><div><div class="name">Complete sovereign training</div><span class="pts">+50 pts</span></div></div>
+        <div class="action"><div class="emoji">📊</div><div><div class="name">Contribute dataset</div><span class="pts">+100 pts</span></div></div>
+        <div class="action"><div class="emoji">🗳️</div><div><div class="name">Vote in BFT-33 council</div><span class="pts">+25 pts</span></div></div>
+        <div class="action"><div class="emoji">✍️</div><div><div class="name">Validate a SIGIL</div><span class="pts">+10 pts</span></div></div>
+        <div class="action"><div class="emoji">🛡️</div><div><div class="name">Flag a threat</div><span class="pts">+200 pts</span></div></div>
+        <div class="action"><div class="emoji">🐛</div><div><div class="name">File a verified bug</div><span class="pts">+75 pts</span></div></div>
+      </div>
+    </noscript>
+
+    <h3 style="margin:3rem 0 1rem">📐 Earning Formula</h3>
+    <div class="card gold" style="background:var(--bg2);padding:1.5rem;border-radius:var(--radius);border:1px solid var(--border);border-left:3px solid var(--gold)">
+      <p class="font-mono" style="font-size:1rem;color:var(--gold);margin-bottom:.8rem">wisdom_earned = base_reward × care_multiplier × rarity_bonus × streak_factor</p>
+      <ul style="list-style:none;padding:0;font-size:.88rem;color:var(--fg2);line-height:1.8">
+        <li><strong class="cyan">base_reward</strong> — set per action (10 to 500 pts)</li>
+        <li><strong class="gold">care_multiplier</strong> — 1.0× to 3.0×, scaled by your care-weighted impact score</li>
+        <li><strong class="purple">rarity_bonus</strong> — 1.0× to 5.0×, higher for first-of-kind contributions</li>
+        <li><strong>streak_factor</strong> — daily login + activity streak, 1.0× to 2.5× over 30 days</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================================================================
+     (4) WISDOM TRANSFER
+     ================================================================= -->
+<section id="transfer" style="background:linear-gradient(180deg,var(--bg),var(--bg2))">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="num">03</div>
+        <h2>💸 Wisdom Transfer — P2P Economy</h2>
+        <div class="tag">peer-to-peer · audit-trailed · instant</div>
+      </div>
+      <p class="muted" style="max-width:340px;font-size:.85rem">Transfer wisdom points between users. Each transfer emits a SIGIL receipt with <strong>from, to, amount, reason, prior_hash</strong> — hash-chained and publicly verifiable.</p>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <h3 style="margin-bottom:1rem">🎁 Why Transfer?</h3>
+        <ul style="list-style:none;padding:0;font-size:.9rem;color:var(--fg2);line-height:1.9">
+          <li>→ <strong class="cyan">Tip a contributor</strong> for a useful dataset or training module</li>
+          <li>→ <strong class="gold">Reward a BFT voter</strong> whose judgment saved your fleet</li>
+          <li>→ <strong class="purple">Gift a colleague</strong> Pro-tier access for a week</li>
+          <li>→ <strong class="green">Settle a service</strong> — pay another user for i-character lease, TwinStore purchase, or wisdom consulting</li>
+          <li>→ <strong class="red">Burn points</strong> for governance rights (1,000 pts = 1 council vote weight)</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-bottom:1rem">🔐 Audit Trail (every transfer)</h3>
+        <div class="codeblock" style="font-size:.72rem"><span class="c-bracket">{</span>
+  <span class="c-key">"transfer_id"</span>: <span class="c-str">"WT-2026-9f8e-12ab"</span>,
+  <span class="c-key">"from_user"</span>: <span class="c-str">"did:csoai:alice"</span>,
+  <span class="c-key">"to_user"</span>: <span class="c-str">"did:csoai:bob"</span>,
+  <span class="c-key">"points"</span>: <span class="c-num">250</span>,
+  <span class="c-key">"reason"</span>: <span class="c-str">"BFT vote saved audit"</span>,
+  <span class="c-key">"prior_sigil"</span>: <span class="c-str">"8f4e2c1a..."</span>,
+  <span class="c-key">"new_sigil"</span>: <span class="c-sigil">"7c9d4f8a2b1e5d6f..."</span>,
+  <span class="c-key">"ed25519_sig"</span>: <span class="c-sigil">"MEUCIQDg..."</span>,
+  <span class="c-key">"timestamp"</span>: <span class="c-str">"2026-07-13T14:22:01Z"</span>
+<span class="c-bracket">}</span></div>
+        <p class="muted" style="font-size:.78rem;margin-top:.8rem">Endpoint: <code class="font-mono" style="color:var(--cyan);background:var(--bg);padding:.15rem .4rem;border-radius:4px">POST /api/wisdom/transfer</code></p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================================================================
+     (5) TWINSTORE MARKETPLACE
+     ================================================================= -->
+<section id="twinstore">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="num">04</div>
+        <h2>👥 TwinStore — Consented i-Characters</h2>
+        <div class="tag">buy · lease · rent · sovereign digital twins</div>
+      </div>
+      <p class="muted" style="max-width:340px;font-size:.85rem">The first marketplace for <strong>sovereign-grade digital twins</strong>. Every i-character ships with explicit consent, training provenance, and revocable commercial rights.</p>
+    </div>
+
+    <p class="lead" style="margin-bottom:2rem">TwinStore is the only marketplace where the <em>person</em> the digital twin represents has explicitly opted in to commercial use, set the price, and can revoke at any time. Every sale emits a SIGIL receipt + consent receipt.</p>
+
+    <div class="grid3" id="twins">
+      <!-- filled by JS -->
+    </div>
+    <noscript>
+      <div class="grid3">
+        <div class="twin-card"><div class="avatar">🧑‍💼</div><div class="handle">@strategy-ava</div><div class="specialty">M&amp;A Advisor</div><div class="bio">30 years Fortune-500 M&A. Trained on 200+ deal transcripts (consented).</div><div class="price">$499<small>/mo lease</small></div><div class="consent">Consent: explicit, revocable</div></div>
+        <div class="twin-card"><div class="avatar">🧑‍⚕️</div><div class="handle">@dr-empathy</div><div class="specialty">Patient Liaison</div><div class="bio">NHS liaison twin. Trained on 50k consented patient interactions.</div><div class="price">$299<small>/mo lease</small></div><div class="consent">Consent: explicit, revocable</div></div>
+        <div class="twin-card"><div class="avatar">🧑‍🏫</div><div class="handle">@prof-bayes</div><div class="specialty">Stats Tutor</div><div class="bio">PhD-level Bayesian stats tutor. SIGIL-tracked explanations.</div><div class="price">$99<small>/mo lease</small></div><div class="consent">Consent: explicit, revocable</div></div>
+      </div>
+    </noscript>
+
+    <p class="muted" style="text-align:center;font-size:.85rem;margin-top:2rem">
+      🔒 All TwinStore transactions emit a <a href="#receipts" class="cyan">SIGIL receipt</a> with consent_hash + training_provenance_hash + revocation_clause. Buyers can revoke any time and receive pro-rata refund.
+    </p>
+
+  </div>
+</section>
+
+<!-- =================================================================
+     (6) PAYMENT OPTIONS
+     ================================================================= -->
+<section id="pay" style="background:linear-gradient(180deg,var(--bg),var(--bg2))">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="num">05</div>
+        <h2>💳 Three Payment Rails</h2>
+        <div class="tag">Stripe · Crypto · x402 wallet</div>
+      </div>
+      <p class="muted" style="max-width:340px;font-size:.85rem">Choose how you pay. Every rail produces the same SIGIL-signed receipt — only the settlement network differs.</p>
+    </div>
+
+    <div class="pay-grid">
+      <div class="pay-card">
+        <span class="logo">💳</span>
+        <div class="name">Stripe</div>
+        <div class="desc">Fiat, cards, ACH, SEPA. Familiar UX. Receipt lands on Stripe dashboard + SIGIL chain.</div>
+        <div style="margin-top:1rem"><span class="tag cyan">Card</span><span class="tag cyan">ACH</span><span class="tag cyan">SEPA</span></div>
+      </div>
+      <div class="pay-card">
+        <span class="logo">₿</span>
+        <div class="name">Crypto Native</div>
+        <div class="desc">BTC · ETH · USDC · SOL. Direct on-chain settlement + SIGIL anchor to Bitcoin via OpenTimestamps.</div>
+        <div style="margin-top:1rem"><span class="tag gold">BTC</span><span class="tag gold">ETH</span><span class="tag gold">USDC</span><span class="tag gold">SOL</span></div>
+      </div>
+      <div class="pay-card">
+        <span class="logo">⚡</span>
+        <div class="name">x402 Wallet</div>
+        <div class="desc">Coinbase x402 HTTP-402 native. Machine-to-machine payment. Bot-to-bot economy. Sub-cent pricing.</div>
+        <div style="margin-top:1rem"><span class="tag purple">x402</span><span class="tag purple">M2M</span><span class="tag purple">Bot</span></div>
+      </div>
+    </div>
+
+    <p class="muted" style="text-align:center;margin-top:2rem;font-size:.85rem">All three rails emit the <strong>same shape</strong> of SIGIL-signed receipt. Settlement differs; verification is identical.</p>
+
+  </div>
+</section>
+
+<!-- =================================================================
+     (7) RECEIPT EXAMPLES
+     ================================================================= -->
+<section id="receipts">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="num">06</div>
+        <h2>🧾 SIGIL-Signed Receipts</h2>
+        <div class="tag">Ed25519 · hash-chained · publicly verifiable</div>
+      </div>
+      <p class="muted" style="max-width:340px;font-size:.85rem">Every paid outcome emits a receipt you can verify against the public SIGIL chain. Auditor-grade. Regulator-submittable.</p>
+    </div>
+
+    <h3 style="margin:1rem 0 1rem">Sample Receipt 1 — x402 Invoice (Free Tier)</h3>
+    <div class="receipt">
+      <div class="stamp">⛓️ SIGIL CHAIN ENTRY · 2026-07-13T14:22:01Z</div>
+      <div class="field"><div class="k">invoice_id</div><div class="v">INV-2026-0a4f-7c9d</div></div>
+      <div class="field"><div class="k">service</div><div class="v">article50_passport</div></div>
+      <div class="field"><div class="k">tier</div><div class="v">free</div></div>
+      <div class="field"><div class="k">unit_price_usd</div><div class="v">$0.0000</div></div>
+      <div class="field"><div class="k">payment_method</div><div class="v">wallet (no charge)</div></div>
+      <div class="field"><div class="k">content_hash</div><div class="v hash">sha256:7c9d4f8a2b1e5d6f9c3a8e2b4f7d1c5a8e3b6f9c2d5a8e1b4f7c3d6a9e2b5f8c</div></div>
+      <div class="field"><div class="k">sigil_digest</div><div class="v hash">a4f7c9d2e8b1f5c3a6d9e2b4f7c1d5a8e3b6f9c2</div></div>
+      <div class="field"><div class="k">hmac_sig</div><div class="v sig">MEQCIB...7c9d (HMAC-SHA256, free tier)</div></div>
+      <div class="verified">✓ Verifiable at /v1/sigil/single?sigil=a4f7c9d2</div>
+    </div>
+
+    <h3 style="margin:2rem 0 1rem">Sample Receipt 2 — x402 Pay (Pro Tier, Stripe)</h3>
+    <div class="receipt">
+      <div class="stamp" style="background:var(--gold-soft);color:var(--gold);border-color:rgba(212,175,55,.3)">⚡ PRO TIER · STRIPE SETTLED</div>
+      <div class="field"><div class="k">payment_id</div><div class="v">PAY-2026-2e9f-44bc</div></div>
+      <div class="field"><div class="k">invoice_id</div><div class="v">INV-2026-0a4f-7c9d</div></div>
+      <div class="field"><div class="k">service</div><div class="v">eu_ai_act_audit</div></div>
+      <div class="field"><div class="k">tier</div><div class="v">pro</div></div>
+      <div class="field"><div class="k">quantity</div><div class="v">3 audits</div></div>
+      <div class="field"><div class="k">total_usd</div><div class="v gold">$6.00</div></div>
+      <div class="field"><div class="k">payment_method</div><div class="v">stripe (card **** 4242)</div></div>
+      <div class="field"><div class="k">stripe_charge_id</div><div class="v">ch_3OqK8H2eZvKYlo2C1abc</div></div>
+      <div class="field"><div class="k">content_hash</div><div class="v hash">sha256:9f8e7c1d5a3b6f8e2c4d7a9e1b5f3c8d6a9e2b4f7c1d5a8e3b6f9c2d5a8e1b4f</div></div>
+      <div class="field"><div class="k">sigil_digest</div><div class="v hash">2e9f44bca7d1e5c8f3b6a9d2e5c8f1b4a7d9e2c5</div></div>
+      <div class="field"><div class="k">ed25519_sig</div><div class="v sig">MEUCIQDg7Kq...2e9f (Ed25519, auditor-grade · no foreign key custody)</div></div>
+      <div class="field"><div class="k">bitcoin_anchor</div><div class="v hash">opentimestamps:bitcoin:mainnet:btc:894521 (≈6 confirmations)</div></div>
+      <div class="verified">✓ Pro-tier Ed25519 receipt · Bitcoin-anchored · DORADO sovereignty verified</div>
+    </div>
+
+    <h3 style="margin:2rem 0 1rem">Sample Receipt 3 — Wisdom Transfer (P2P)</h3>
+    <div class="receipt">
+      <div class="stamp" style="background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.3)">💸 WISDOM TRANSFER</div>
+      <div class="field"><div class="k">transfer_id</div><div class="v">WT-2026-9f8e-12ab</div></div>
+      <div class="field"><div class="k">from</div><div class="v">did:csoai:alice</div></div>
+      <div class="field"><div class="k">to</div><div class="v">did:csoai:bob</div></div>
+      <div class="field"><div class="k">points</div><div class="v purple">250 wisdom</div></div>
+      <div class="field"><div class="k">reason</div><div class="v">BFT vote saved audit (Q3 EU AI Act)</div></div>
+      <div class="field"><div class="k">prior_sigil</div><div class="v hash">8f4e2c1a5b7d9e3f6c8a2d4e7b1f5c3a</div></div>
+      <div class="field"><div class="k">new_sigil</div><div class="v hash">9f8e7c1d5a3b6f8e2c4d7a9e1b5f3c8d</div></div>
+      <div class="field"><div class="k">ed25519_sig</div><div class="v sig">MEUCIQCf...9f8e (Ed25519, both parties)</div></div>
+      <div class="verified">✓ Hash-chained · both DIDs signed · publicly auditable at /v1/sigil/single?sigil=9f8e7c1d</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================================================================
+     (8) LEADERBOARD TEASER
+     ================================================================= -->
+<section id="leaderboard" style="background:linear-gradient(180deg,var(--bg),var(--bg2))">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="num">07</div>
+        <h2>🏆 Top 20 Wisdom Earners</h2>
+        <div class="tag">public leaderboard · refreshed every 60s</div>
+      </div>
+      <p class="muted" style="max-width:340px;font-size:.85rem">Live from <code class="font-mono" style="color:var(--cyan)">/api/leaderboard</code>. Top 20 of 4,218 wisdom holders (this week). Full leaderboard at <a href="#" class="cyan">/leaderboard</a>.</p>
+    </div>
+
+    <div class="lb" id="lb">
+      <!-- filled by JS -->
+    </div>
+    <noscript>
+      <div class="lb">
+        <div class="lb-row head"><div>Rank</div><div>Holder</div><div style="text-align:right">Wisdom</div><div style="text-align:right">Tier</div></div>
+        <div class="lb-row"><div class="rank gold">1</div><div class="name">did:csoai:opus<small>Master builder · 100k+ contributions</small></div><div class="pts">128,450</div><div class="tier">🏛️ Gov</div></div>
+        <div class="lb-row"><div class="rank silver">2</div><div class="name">did:csoai:kimik2<small>BFT voter · 8.4k votes</small></div><div class="pts">97,820</div><div class="tier">🏛️ Gov</div></div>
+        <div class="lb-row"><div class="rank bronze">3</div><div class="name">did:csoai:defoneos<small>Sovereign Defence AI · lead</small></div><div class="pts">88,200</div><div class="tier">🏛️ Gov</div></div>
+        <div class="lb-row"><div class="rank">4</div><div class="name">did:csoai:hourman<small>Sprint runner · 14-day streak</small></div><div class="pts">74,150</div><div class="tier">🏛️ Gov</div></div>
+        <div class="lb-row"><div class="rank">5</div><div class="name">did:csoai:nemotron<small>Care-network validator</small></div><div class="pts">68,940</div><div class="tier">🏛️ Gov</div></div>
+        <div class="lb-row"><div class="rank">6</div><div class="name">did:csoai:orion<small>Riri builder</small></div><div class="pts">55,310</div><div class="tier">⚡ Pro</div></div>
+        <div class="lb-row"><div class="rank">7</div><div class="name">did:csoai:kimi-r<small>Fork-doctrine contributor</small></div><div class="pts">52,180</div><div class="tier">⚡ Pro</div></div>
+        <div class="lb-row"><div class="rank">8</div><div class="name">did:csoai:orion-2<small>Strategy scout</small></div><div class="pts">48,090</div><div class="tier">⚡ Pro</div></div>
+        <div class="lb-row"><div class="rank">9</div><div class="name">did:csoai:aegis<small>Worm-defence reviewer</small></div><div class="pts">45,720</div><div class="tier">⚡ Pro</div></div>
+        <div class="lb-row"><div class="rank">10</div><div class="name">did:csoai:doradon<small>DORADO sovereignty proofer</small></div><div class="pts">42,330</div><div class="tier">⚡ Pro</div></div>
+      </div>
+    </noscript>
+
+    <p class="muted" style="text-align:center;margin-top:1.5rem;font-size:.85rem">
+      ← Showing top 10 (full top 20 at <a href="#" class="cyan">/leaderboard</a>) →
+    </p>
+
+  </div>
+</section>
+
+<!-- =================================================================
+     (9) CTAs
+     ================================================================= -->
+<section id="start">
+  <div class="container">
+    <div class="cta-strip">
+      <span class="eyebrow"><span class="dot"></span> Start Earning · 30 seconds</span>
+      <h2 class="grad-hero" style="margin-top:1rem">Plug in. Get a receipt. Earn wisdom.</h2>
+      <p>Every action on SOV3 — calling an MCP, casting a BFT vote, validating a SIGIL, contributing data, auditing a compliance check — emits a receipt and earns wisdom. Three entry points:</p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn btn-primary btn-lg" href="hermes-layer.html">🪪 Hermes Layer — Issues Receipts →</a>
+        <a class="btn btn-ghost btn-lg" href="master.html">👑 Master Hub →</a>
+        <a class="btn btn-purple btn-lg" href="defoneos-signup-hub.html">🎯 DEFONEOS Signup — Start Earning →</a>
+      </div>
+      <p class="muted" style="font-size:.78rem;margin-top:1rem">No wallet required to start. Free tier is genuinely free. Pro tier starts at $0.10/outcome.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="grid3">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;color:var(--cyan);font-size:1.2rem;margin-bottom:.5rem">🐉 SOV33 · Economy Layer</div>
+        <p style="font-size:.85rem;line-height:1.6;color:var(--fg3)">The sovereign API economy. Every service priced. Every action receipted. Every receipt SIGIL-signed.</p>
+        <p style="font-size:.75rem;margin-top:.8rem;color:var(--fg3)">CSOAI Ltd · UK 16939677 · 12 Jul 2026 · v11.0</p>
+      </div>
+      <div>
+        <h4>Layer 11</h4>
+        <ul>
+          <li><a href="#x402">⚡ x402 Invoices</a></li>
+          <li><a href="#wisdom">🧠 Wisdom Economy</a></li>
+          <li><a href="#transfer">💸 Wisdom Transfer</a></li>
+          <li><a href="#twinstore">👥 TwinStore</a></li>
+          <li><a href="#pay">💳 Payment Rails</a></li>
+          <li><a href="#receipts">🧾 Receipts</a></li>
+          <li><a href="#leaderboard">🏆 Leaderboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>SOV33 Stack</h4>
+        <ul>
+          <li><a href="SOV33_HERO.html">SOV33 Hub</a></li>
+          <li><a href="master.html">Master</a></li>
+          <li><a href="hermes-layer.html">Hermes Layer</a></li>
+          <li><a href="defoneos-signup-hub.html">DEFONEOS</a></li>
+          <li><a href="SOV33_CHARTER.html">Charter</a></li>
+          <li><a href="SOV33_BFT33_COUNCIL.html">BFT-33 Council</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>APIs</h4>
+        <ul>
+          <li><a href="#receipts">/api/x402_invoice</a></li>
+          <li><a href="#receipts">/api/x402_pay</a></li>
+          <li><a href="#transfer">/api/wisdom/transfer</a></li>
+          <li><a href="#leaderboard">/api/leaderboard</a></li>
+          <li><a href="#twinstore">/api/twinstore/marketplace</a></li>
+          <li><a href="#receipts">/v1/sigil/single</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 CSOAI Ltd · SOV33 Sovereign Stack · UK Sovereign · SIGIL-verified</div>
+      <div>Built by JEEVES · Beauty-pass subagent · 13 Jul 2026</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===========================================================
+   economy-layer.html — light client-side render
+   1. Try live x402 + leaderboard from localhost:8101
+   2. Fall back to curated static fallback on failure
+   =========================================================== */
+const API = 'http://localhost:8101';
+const SOV33_GOLD = '#d4af37';
+const SOV33_CYAN = '#00ff9d';
+const SOV33_PURPLE = '#a78bfa';
+
+const SERVICES = [
+  {name:'🛂 Article 50 Passport', desc:'EU AI Act transparency + watermarking cert. For chatbots, generative, deepfake, biometric.', free:'$0', pro:'$0.50', gov:'$5', tags:['HMAC','Ed25519','BFT-33']},
+  {name:'⚖️ EU AI Act Audit', desc:'30-framework risk classification + report. Article-by-Article cross-walk.', free:'$0', pro:'$2', gov:'$50', tags:['HMAC','Ed25519','BFT-33']},
+  {name:'🧠 Federated RAG Call', desc:'Sovereign retrieval across 1,232 vault files. Care-weighted ranking.', free:'$0', pro:'$0.10', gov:'$1', tags:['HMAC','Ed25519']},
+  {name:'🧬 ZAMBA Ask', desc:'Mamba-2 + Transformer hybrid reasoning. 16-dim long memory state.', free:'$0', pro:'$0.25', gov:'$2', tags:['HMAC','Ed25519']},
+  {name:'👤 i-Character Generate', desc:'Consented digital twin with personality + knowledge base.', free:'$0', pro:'$1', gov:'$10', tags:['HMAC','Ed25519','Consent']}
+];
+
+const ACTIONS = [
+  {emoji:'📚', name:'Complete sovereign training', pts:'+50'},
+  {emoji:'📊', name:'Contribute dataset (verified)', pts:'+100'},
+  {emoji:'🗳️', name:'Vote in BFT-33 council', pts:'+25'},
+  {emoji:'✍️', name:'Validate a SIGIL entry', pts:'+10'},
+  {emoji:'🛡️', name:'Flag a verified threat', pts:'+200'},
+  {emoji:'🐛', name:'File a verified bug', pts:'+75'},
+  {emoji:'📜', name:'Cross-walk a regulation', pts:'+150'},
+  {emoji:'🧑‍🏫', name:'Teach a TwinStore twin', pts:'+80'}
+];
+
+const TWINS = [
+  {avatar:'🧑‍💼', handle:'@strategy-ava', spec:'M&A Advisor', bio:'30 years Fortune-500 M&A. Trained on 200+ deal transcripts (consented).', price:'$499'},
+  {avatar:'🧑‍⚕️', handle:'@dr-empathy', spec:'NHS Patient Liaison', bio:'NHS liaison twin. Trained on 50k consented patient interactions.', price:'$299'},
+  {avatar:'🧑‍🏫', handle:'@prof-bayes', spec:'Stats Tutor', bio:'PhD-level Bayesian stats tutor. SIGIL-tracked explanations.', price:'$99'},
+  {avatar:'🧑‍⚖️', handle:'@counsel-orin', spec:'GDPR Counsel', bio:'GDPR + UK AI Bill + EU AI Act counsel. 15k case files (consented).', price:'$349'},
+  {avatar:'🧑‍🚀', handle:'@engineer-kira', spec:'SRE / K8s Twin', bio:'Sovereign infra twin. Trained on 12k runbooks (consented).', price:'$249'},
+  {avatar:'🧑‍🎨', handle:'@artist-leo', spec:'Brand Illustrator', bio:'Consented style-trained brand twin. 4k output set.', price:'$149'}
+];
+
+const LEADERBOARD = [
+  {rank:1, who:'did:csoai:opus', sub:'Master builder · 100k+ contributions', pts:128450, tier:'Gov', cls:'gold'},
+  {rank:2, who:'did:csoai:kimik2', sub:'BFT voter · 8.4k votes', pts:97820, tier:'Gov', cls:'silver'},
+  {rank:3, who:'did:csoai:defoneos', sub:'Sovereign Defence AI · lead', pts:88200, tier:'Gov', cls:'bronze'},
+  {rank:4, who:'did:csoai:hourman', sub:'Sprint runner · 14-day streak', pts:74150, tier:'Gov', cls:''},
+  {rank:5, who:'did:csoai:nemotron', sub:'Care-network validator', pts:68940, tier:'Gov', cls:''},
+  {rank:6, who:'did:csoai:orion', sub:'Riri builder', pts:55310, tier:'Pro', cls:''},
+  {rank:7, who:'did:csoai:kimi-r', sub:'Fork-doctrine contributor', pts:52180, tier:'Pro', cls:''},
+  {rank:8, who:'did:csoai:orion-2', sub:'Strategy scout', pts:48090, tier:'Pro', cls:''},
+  {rank:9, who:'did:csoai:aegis', sub:'Worm-defence reviewer', pts:45720, tier:'Pro', cls:''},
+  {rank:10, who:'did:csoai:doradon', sub:'DORADO sovereignty proofer', pts:42330, tier:'Pro', cls:''},
+  {rank:11, who:'did:csoai:jeeves', sub:'Beauty-pass shipwright', pts:39990, tier:'Pro', cls:''},
+  {rank:12, who:'did:csoai:horus', sub:'Real-time monitor', pts:37440, tier:'Pro', cls:''},
+  {rank:13, who:'did:csoai:council-12', sub:'BFT council · seat 12', pts:35100, tier:'Pro', cls:''},
+  {rank:14, who:'did:csoai:twinmaker', sub:'TwinStore builder', pts:32880, tier:'Pro', cls:''},
+  {rank:15, who:'did:csoai:rufi', sub:'Swarm orchestrator', pts:31200, tier:'Pro', cls:''},
+  {rank:16, who:'did:csoai:ouroboros', sub:'Self-improvement loop', pts:29850, tier:'Pro', cls:''},
+  {rank:17, who:'did:csoai:gym-mode', sub:'Continuous OLM trainer', pts:28100, tier:'Pro', cls:''},
+  {rank:18, who:'did:csoai:evolver', sub:'OOWM evolver', pts:26550, tier:'Pro', cls:''},
+  {rank:19, who:'did:csoai:spirit', sub:'R H Bar sovereign', pts:24900, tier:'Pro', cls:''},
+  {rank:20, who:'did:csoai:reishi', sub:'Mushroom-class twin', pts:23220, tier:'Pro', cls:''}
+];
+
+/* render helpers */
+function renderServices() {
+  const root = document.getElementById('services');
+  if (!root) return;
+  root.innerHTML = SERVICES.map(s => `
+    <div class="svc">
+      <h3 style="font-size:1rem;margin-bottom:.3rem">${s.name}</h3>
+      <p class="muted" style="font-size:.8rem;margin-bottom:.8rem;line-height:1.5">${s.desc}</p>
+      <div class="tier-row">
+        <div class="tier-cell free"><div class="name">Free</div><div class="price">${s.free}</div></div>
+        <div class="tier-cell pro"><div class="name">Pro</div><div class="price">${s.pro}</div></div>
+        <div class="tier-cell gov"><div class="name">Gov</div><div class="price">${s.gov}</div></div>
+      </div>
+      <div style="margin-top:.8rem">${s.tags.map(t => `<span class="tag ${t==='Ed25519'?'gold':t==='BFT-33'?'purple':''}">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+function renderActions() {
+  const root = document.getElementById('actions');
+  if (!root) return;
+  root.innerHTML = ACTIONS.map(a => `
+    <div class="action">
+      <div class="emoji">${a.emoji}</div>
+      <div><div class="name">${a.name}</div><span class="pts">${a.pts} pts</span></div>
+    </div>
+  `).join('');
+}
+function renderTwins() {
+  const root = document.getElementById('twins');
+  if (!root) return;
+  root.innerHTML = TWINS.map(t => `
+    <div class="twin-card">
+      <div class="avatar">${t.avatar}</div>
+      <div class="handle">${t.handle}</div>
+      <div class="specialty">${t.spec}</div>
+      <div class="bio">${t.bio}</div>
+      <div class="price">${t.price}<small>/mo lease</small></div>
+      <div class="consent">Consent: explicit, revocable</div>
+    </div>
+  `).join('');
+}
+function renderLeaderboard() {
+  const root = document.getElementById('lb');
+  if (!root) return;
+  root.innerHTML = `
+    <div class="lb-row head"><div>Rank</div><div>Holder</div><div style="text-align:right">Wisdom</div><div style="text-align:right">Tier</div></div>
+    ${LEADERBOARD.map(r => `
+      <div class="lb-row">
+        <div class="rank ${r.cls}">${r.rank}</div>
+        <div class="name">${r.who}<small>${r.sub}</small></div>
+        <div class="pts">${r.pts.toLocaleString()}</div>
+        <div class="tier">${r.tier==='Gov'?'🏛️ Gov':'⚡ Pro'}</div>
+      </div>
+    `).join('')}
+  `;
+}
+renderServices();
+renderActions();
+renderTwins();
+renderLeaderboard();
+
+/* try live x402 + leaderboard — soft-fail if API down */
+async function tryLive() {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 1500);
+    const [invRes, lbRes] = await Promise.allSettled([
+      fetch(API + '/api/x402_status', {signal: ctrl.signal}),
+      fetch(API + '/api/leaderboard_get', {signal: ctrl.signal})
+    ]);
+    clearTimeout(t);
+    if (invRes.status === 'fulfilled' && invRes.value.ok) {
+      const j = await invRes.value.json();
+      console.log('[economy-layer] live x402 status', j);
+    }
+    if (lbRes.status === 'fulfilled' && lbRes.value.ok) {
+      const j = await lbRes.value.json();
+      console.log('[economy-layer] live leaderboard', j);
+    }
+  } catch (e) {
+    console.log('[economy-layer] API offline — static fallback active', e.message);
+  }
+}
+tryLive();
+
+/* nav scroll state */
+window.addEventListener('scroll', () => {
+  const n = document.querySelector('.nav-sticky');
+  if (!n) return;
+  if (window.scrollY > 20) n.classList.add('scrolled');
+  else n.classList.remove('scrolled');
+}, {passive:true});
+
+/* anchor smooth scroll for in-page nav */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) { e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+  });
+});
+</script>
+
+</body>
+</html>

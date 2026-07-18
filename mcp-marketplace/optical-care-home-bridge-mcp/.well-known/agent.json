@@ -1,0 +1,68 @@
+{
+  "name": "optical-care-home-bridge-mcp",
+  "description": "Bridge between domiciliary optometry visits + care-home governance. Handles consent capacity",
+  "url": "https://proofof.ai/scorecard/optical-care-home-bridge-mcp.html",
+  "version": "1.0.2",
+  "protocolVersion": "0.2.0",
+  "provider": {
+    "organization": "MEOK AI Labs",
+    "url": "https://meok.ai"
+  },
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false
+  },
+  "defaultInputModes": [
+    "text"
+  ],
+  "defaultOutputModes": [
+    "text"
+  ],
+  "skills": [
+    {
+      "id": "mca_capacity_check",
+      "name": "Mca Capacity Check",
+      "description": "mca_capacity_check via optical-care-home-bridge-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "gos6_visit_eligibility",
+      "name": "Gos6 Visit Eligibility",
+      "description": "gos6_visit_eligibility via optical-care-home-bridge-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "post_visit_care_plan_sync",
+      "name": "Post Visit Care Plan Sync",
+      "description": "post_visit_care_plan_sync via optical-care-home-bridge-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "safeguarding_red_flags",
+      "name": "Safeguarding Red Flags",
+      "description": "safeguarding_red_flags via optical-care-home-bridge-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "registered_optometrist_audit",
+      "name": "Registered Optometrist Audit",
+      "description": "registered_optometrist_audit via optical-care-home-bridge-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    }
+  ]
+}

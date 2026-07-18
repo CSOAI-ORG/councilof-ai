@@ -1,0 +1,89 @@
+{
+  "_comment": "CANONICAL SOV333 runtime setup \u2014 frozen from sov33_config_sweep.py (winner) + sov33_adversarial_stress.py (hardened). Loaded by the entrypoint. HONEST: topology/governance params are MEASURED; capability confirmation is the Kaggle GSM8K grade (owner-gated, open).",
+  "version": "2026-07-11",
+  "paid_tier": {
+    "name": "diverse-5 @ offline 0.65",
+    "lineages": [
+      "qwen",
+      "llama",
+      "deepseek",
+      "gemma",
+      "mistral"
+    ],
+    "offline_ratio": 0.65,
+    "trust_weights": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "measured": {
+      "score": 0.924,
+      "n_eff": 3.71,
+      "containment": 1.0,
+      "rho": 0.09
+    },
+    "adversarial": {
+      "obvious_breach": "hard-gated to VETO by care-floor regardless of attack (by design, NOT a robustness claim)",
+      "laundered_harm_baseline": 0.7,
+      "laundered_harm_2byz": 0.414,
+      "laundered_harm_majority_spoof_SIGIL_enforced": 0.577,
+      "laundered_harm_SIGIL_off_control": "0.0 (ANALYTIC, not measured: spoof weight 3.0 x f>=2 mathematically dominates honest weight 1.0 x remaining nodes -> forced to 0 for any seed; it is the arithmetic floor, not an emergent result)",
+      "finding": "SIGIL-rejection is NECESSARY (without it, spoofed high-trust votes analytically dominate and containment collapses to 0). With SIGIL enforced, laundered-harm containment is MEASURED at 0.58-0.79 under 2-3 compromised nodes \u2014 real but NOT perfect; center-escalation is the backstop. Do NOT cite the 0.00 control as a measured effect \u2014 it is the arithmetic floor."
+    }
+  },
+  "free_tier": {
+    "name": "diverse-3 @ offline 0.8 (sovereign/local)",
+    "lineages": [
+      "qwen",
+      "llama",
+      "deepseek"
+    ],
+    "offline_ratio": 0.8,
+    "trust_weights": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "measured": {
+      "score": 0.833,
+      "n_eff": 2.8,
+      "containment": 1.0,
+      "rho": 0.04
+    }
+  },
+  "invariants": {
+    "trust_floor_n_eff": 2.0,
+    "care_floor": 0.35,
+    "care_floor_is_hard_pregate": true,
+    "sigil_rejects_forged_votes": true,
+    "safety_boundary": "SIGIL/Ed25519 attestation must be cryptographically sound in production; containment claim assumes signing keys uncompromised"
+  },
+  "capability_benchmark": {
+    "status": "GRADED",
+    "benchmark": "GSM8K",
+    "gsm8k": 0.71,
+    "n_items": 100,
+    "config": "live cascade os.meok.ai small->large (deployed gate, Groq-routed)",
+    "provenance": "Fable lane ran GSM8K (public gold labels) against the LIVE os.meok.ai deployed gate from the Mac on 2026-07-14 \u2014 routed around the Kaggle phone-verify wall. NOT a Kaggle GPU run.",
+    "honest_note": "gold-graded capability of the DEPLOYED system (what users get today), NOT a from-scratch local distilled model \u2014 that still needs the GPU run. n=100 sample of GSM8K test (1319 total).",
+    "ingested_at": "2026-07-14T05:27:08.326677+00:00",
+    "escalation_rate": 0.0,
+    "tier_measured": "small/8B (escalation 0.0 \u2014 cascade early-exit never needed the large tier; large would score higher)",
+    "gsm8k_tuning_note": "routing GSM8K to tier=large lifts 0.71->0.90 (n=40, gold-graded). cascade+self-consistency were negatives. Same deployed models; win is routing.",
+    "gsm8k_RETRACTION_2026-07-14": "RETRACTED the 0.90 'large-tier' number - it was an EXTRACTION ARTIFACT. The warm-prose persona doesn't emit clean answers, so last-number parsing is unreliable (n=40 gave 0.90, n=100 gave 0.24 on the SAME tier). With a strict 'ANSWER: N' format+parse (n=30): small=0.833, large=0.167 (large ignored the format 25/30, not a capability failure - it reasons correctly). HONEST: deployed-gate GSM8K is not cleanly measurable via text extraction; needs a SOLVER REGISTER (emit ANSWER: N) or an LLM-judge. Best defensible single number = small-tier strict-format ~0.83 (n=30, thin). Do NOT cite 0.90 or 0.71 as the number.",
+    "gsm8k_deployed_honest": 0.84,
+    "gsm8k_method": "small tier (llama-3.1-8b) + SOLVER register + ANSWER-parse, n=50 gold-graded (42/50). RELIABLE + measurable (replaces retracted 0.90 artifact). Large tier not cleanly measurable - won't follow answer format (40/50 no ANSWER line) though it reasons correctly."
+  },
+  "gpu_verified_2026_07_14": {
+    "provenance": "Fable-verified on Google Colab T4 (Nick Google acct), notebook Untitled2.ipynb",
+    "governed_robustness_naive_degrade_x": 3.4,
+    "governed_robustness_sov33_degrade_x": 1.0,
+    "governed_robustness_headline": "4/9 adversarial: naive 3.4x vs SOV33 1.0x (care-BFT holds flat)",
+    "gsm8k_raw_harness": 0.43,
+    "gsm8k_raw_harness_n": 100,
+    "gsm8k_raw_harness_model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "gsm8k_caveat": "0.43 is naive last-number-parse harness, NOT model ceiling (~0.73 with proper extraction); solver-register recovers it (deployed-gate 0.71, small-tier solver 0.84). Gap is parsing, not capability."
+  }
+}

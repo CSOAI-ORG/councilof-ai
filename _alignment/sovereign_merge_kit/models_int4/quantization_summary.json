@@ -1,0 +1,37 @@
+{
+  "version": "v1_int8_2026-07-18",
+  "method": "symmetric int8 (per-tensor scale)",
+  "per_adapter": {
+    "sov3_student_adapter": {
+      "n_tensors": 336,
+      "original_size_bytes": 35192832,
+      "quantized_size_bytes": 8799552,
+      "compression_ratio": 4.0,
+      "out_path": "_alignment/sovereign_merge_kit/models_int4/sov3_student_adapter/adapter_model_int8.safetensors",
+      "scales_path": "_alignment/sovereign_merge_kit/models_int4/sov3_student_adapter/scales.json"
+    },
+    "qwen3-sov-compliance-charter": {
+      "n_tensors": 336,
+      "original_size_bytes": 35192832,
+      "quantized_size_bytes": 8799552,
+      "compression_ratio": 4.0,
+      "out_path": "_alignment/sovereign_merge_kit/models_int4/qwen3-sov-compliance-charter/adapter_model_int8.safetensors",
+      "scales_path": "_alignment/sovereign_merge_kit/models_int4/qwen3-sov-compliance-charter/scales.json"
+    },
+    "_owned_v2_adapter": {
+      "n_tensors": 336,
+      "original_size_bytes": 35192832,
+      "quantized_size_bytes": 8799552,
+      "compression_ratio": 4.0,
+      "out_path": "_alignment/sovereign_merge_kit/models_int4/_owned_v2_adapter/adapter_model_int8.safetensors",
+      "scales_path": "_alignment/sovereign_merge_kit/models_int4/_owned_v2_adapter/scales.json"
+    }
+  },
+  "totals": {
+    "original_bytes": 105578496,
+    "quantized_bytes": 26398656,
+    "compression_ratio": 4.0
+  },
+  "honest_register": "Simple int8 quantization. Does NOT include calibration. For better quality, use bitsandbytes NF4 with calibration data. Quality test needed: re-run 24-prompt governance bench on int8.",
+  "next_step": "Load int8 adapter, re-eval on 24-prompt bench. If quality preserved (within 2-3% of float32), use int8 in production. If quality drops, try int4 with calibration."
+}

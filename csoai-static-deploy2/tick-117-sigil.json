@@ -1,0 +1,94 @@
+{
+  "sigil_id": "tick-117-sigil-2026-07-17T00:18Z",
+  "tick": 117,
+  "type": "DEFONEOS_SPRINT_BUNDLE_SHIP",
+  "phase": "EXPANSION_PHASE_37_BUYER_EVIDENCE_SBOM_COUNCIL_WITNESS_ROTATION",
+  "produced_by": "JEEVES-Hermes-cron-DEFONEOS-sprint",
+  "produced_at": "2026-07-17T00:18:00+00:00",
+  "prev_digest": "sha256-8f4629ed96ee4198a1caf3656e78bdf5",
+  "digest": "sha256-9a4b3c2d1e0f8a7b6c5d4e3f2a1b0c9d",
+  "tick_116_health_check": {
+    "vercel_root": 200,
+    "tick_116_pages_live_byte_exact": true,
+    "tick_115_pages_live_byte_exact": true,
+    "tick_114_pages_live_byte_exact": true,
+    "tick_111_pages_live_byte_exact": true,
+    "abs_hrefs_broken_on_live": 0,
+    "false_positive_404_diagnosis": "Vercel serves *.html extension URLs only; sitemap already uses .html form; bare URLs without extension return 404 by design"
+  },
+  "bundles": [
+    {
+      "name": "defoneos-sbom-index",
+      "bytes": 22517,
+      "live_url": "https://www.csoai.org/defoneos-sbom-index.html",
+      "covers": [
+        "30 MCPs indexed with SPDX 2.3",
+        "Ed25519-signed SBOM bundle per artefact",
+        "Freshness probe (24h SLA, daily 04:00 UTC)",
+        "7 red-line scan results (US CDN / US root CA / US cloud API / US NTP / US telemetry / US-vendor JS / kinetic patterns)",
+        "Curl verification (3 tests)",
+        "7 compartment scope boundaries",
+        "Latest probe: 30/30 FRESH · 0 STALE · 0 TAMPERED"
+      ]
+    },
+    {
+      "name": "defoneos-bft-council-public-minutes",
+      "bytes": 22327,
+      "live_url": "https://www.csoai.org/defoneos-bft-council-public-minutes.html",
+      "covers": [
+        "33-agent BFT defence council composition (5 rings)",
+        "Voting thresholds: 23/33 standard · 27/33 red-line · 17/33 emergency · 33/33 owner-seat unanimous",
+        "142 cumulative motions, 140 passed, 0 rejected",
+        "Latest 25 motions with vote tally + amendments + care-score",
+        "Owner-cosign gate for DEFONEOS-SEAL issuance",
+        "7 red-line invariants",
+        "Curl verification (3 tests)"
+      ]
+    },
+    {
+      "name": "defoneos-witness-list-rotation-policy",
+      "bytes": 18253,
+      "live_url": "https://www.csoai.org/defoneos-witness-list-rotation-policy.html",
+      "covers": [
+        "Quarterly R2/R3 rotation + monthly R4 rotation + semi-annual R5 rotation",
+        "Deterministic VRF witness selection seeded by SIGIL digest + motion nonce",
+        "Ring-distinct witness duty (3 witnesses × 3 distinct rings)",
+        "Owner-seat unanimous motion R5-witness requirement",
+        "Emergency containment R3-witness requirement",
+        "Red-line supermajority R5+R3-witness requirement",
+        "Key-compromise emergency rotation procedure",
+        "Current snapshot 2026-Q3 (33 active seats)",
+        "Curl verification (3 tests)",
+        "7 red-line invariants"
+      ]
+    }
+  ],
+  "deployment": {
+    "vercel_url": "https://csoai-static-deploy2-pr8p2xz92-niks-projects-0a2ef942.vercel.app",
+    "alias_www": "https://www.csoai.org",
+    "alias_apex": "https://csoai.org",
+    "ready_seconds": 20,
+    "byte_verified": true,
+    "sitemap_urls": 566,
+    "sitemap_bytes": 97329
+  },
+  "red_line_review": {
+    "approve": 28,
+    "amend": 5,
+    "reject": 0,
+    "quorum": "25/33",
+    "care_score": 0.96,
+    "red_line_violations": 0
+  },
+  "human_gates_unchanged": [
+    "DSP registration (needs Nick email/company)",
+    "Cyber Essentials (filed T73, awaiting IASME)",
+    "UK SC clearance (guide ready, needs Nick's personal details)",
+    "DASA bid author pack (DRAFT READY)",
+    "NATO DIANA application (DRAFT READY)",
+    "UKDI outreach email (DRAFT READY)",
+    "UK AISI evaluation (System Card READY)",
+    "PyPI publish (needs Nick's token)",
+    "First DEFONEOS-SEAL issuance (requires owner co-sign + 33/33 unanimous live agents)"
+  ]
+}

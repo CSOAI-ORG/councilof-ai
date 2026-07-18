@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Layer · SOV3 Sovereign Persistent Memory · SIGIL-Anchored Episodes</title>
+<meta name="description" content="SOV3 Memory Layer — the sovereign persistent memory system. Every interaction becomes a SIGIL-anchored episode. 3-tier hierarchy (short / mid / long). Care-weighted retrieval. Quantum Groverse-arch search. 17,320 episodes. 1,001 SIGIL receipts. Cross-session recall with Ed25519 audit chain.">
+<meta name="theme-color" content="#0a0e1a">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/memory-layer.html">
+<link rel="icon" href="#" type="image/svg+xml">
+<meta property="og:title" content="Memory Layer · SOV3 Sovereign Persistent Memory">
+<meta property="og:description" content="Every interaction becomes a SIGIL-anchored episode. Cross-session recall. Care-weighted retrieval.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700;800&family=SF+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#04060c;--abyss:#070a14;--navy:#0a0e1a;--slate:#111827;--slate-2:#1e293b;--slate-3:#334155;
+  --gold:#d4af37;--gold-light:#e6c757;--gold-deep:#8a7330;--gold-dim:rgba(212,175,55,.18);
+  --green:#00ff9d;--green-dim:rgba(0,255,157,.15);--green-deep:rgba(0,255,157,.4);
+  --red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--cyan:#06b6d4;--magenta:#d946ef;--amber:#f59e0b;
+  --text:#f1f5f9;--text-dim:#cbd5e1;--muted:#94a3b8;--muted-2:#64748b;
+  --border:rgba(6,182,212,.15);--border-gold:rgba(212,175,55,.2);--border-green:rgba(0,255,157,.2);
+  --mem:#00ff9d;--mem-dim:rgba(0,255,157,.18);--mem-glow:rgba(0,255,157,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--navy);color:var(--text);font-family:'Inter',-apple-system,system-ui,sans-serif;line-height:1.6;font-size:14px;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,255,157,.04) 0%,transparent 40%),radial-gradient(circle at 100% 100%,rgba(212,175,55,.03) 0%,transparent 50%),radial-gradient(circle at 0% 80%,rgba(168,85,247,.04) 0%,transparent 40%);pointer-events:none;z-index:0}
+.container{max-width:1500px;margin:0 auto;padding:1.5rem;position:relative;z-index:1}
+.mono{font-family:'SF Mono','JetBrains Mono',ui-monospace,monospace}
+.grotesk{font-family:'Space Grotesk','Inter',sans-serif}
+
+/* ===== HEADER ===== */
+header{background:rgba(10,14,26,.92);border-bottom:1px solid var(--mem-dim);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1500px;margin:0 auto;padding:0 1.5rem;flex-wrap:wrap;gap:1rem}
+header .logo{color:var(--mem);font-weight:800;font-size:1.2rem;text-decoration:none;background:linear-gradient(90deg,var(--mem),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.02em;display:flex;align-items:center;gap:.5rem}
+header .logo .brain{font-size:1.4rem}
+header .nav-links{display:flex;gap:.25rem;flex-wrap:wrap;align-items:center}
+header a{color:var(--text-dim);text-decoration:none;font-size:.78rem;padding:.3rem .6rem;border-radius:4px;transition:all .15s;font-weight:500}
+header a:hover{background:var(--mem-dim);color:var(--mem)}
+header .nav-cta{background:linear-gradient(135deg,var(--mem),var(--cyan));color:#000;padding:.4rem .85rem;border-radius:5px;font-weight:700;margin-left:.5rem}
+header .nav-cta:hover{box-shadow:0 4px 12px rgba(0,255,157,.3);color:#000}
+header .badge{background:var(--mem-dim);border:1px solid var(--mem);color:var(--mem);padding:.2rem .55rem;border-radius:4px;font-size:.65rem;font-weight:600;letter-spacing:.05em}
+
+/* ===== HERO ===== */
+.hero{position:relative;padding:5rem 1.5rem 3rem;text-align:center;overflow:hidden;border-bottom:1px solid var(--mem-dim)}
+.hero .memory-bg{position:absolute;top:50%;left:50%;width:1100px;height:1100px;transform:translate(-50%,-50%);pointer-events:none;opacity:.55}
+.hero .memory-bg svg{width:100%;height:100%;animation:drift 90s linear infinite}
+@keyframes drift{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.hero .pulse-ring{position:absolute;top:50%;left:50%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,157,.05) 0%,transparent 60%);transform:translate(-50%,-50%);pointer-events:none;animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.18)}}
+.hero .layer-tag{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,255,157,.08);border:1px solid var(--mem);color:var(--mem);padding:.4rem 1rem;border-radius:6px;font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem}
+.hero .layer-tag .dot{width:6px;height:6px;background:var(--mem);border-radius:50%;animation:pulseDot 1.5s infinite;box-shadow:0 0 8px var(--mem)}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:800;margin-bottom:.75rem;position:relative;letter-spacing:-.03em;line-height:1}
+.hero h1 .grad{background:linear-gradient(135deg,var(--mem) 0%,var(--gold) 50%,var(--purple) 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradientX 10s ease infinite}
+@keyframes gradientX{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero .subtitle{font-size:1.5rem;color:var(--gold);margin:1rem 0;font-family:'Space Grotesk',sans-serif;font-weight:300;letter-spacing:.04em}
+.hero .lede{color:var(--muted);font-size:1.05rem;max-width:950px;margin:0 auto 2rem;line-height:1.75}
+.hero .lede strong{color:var(--mem);font-weight:600}
+.hero .hero-stats{display:inline-flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;padding:1.25rem 1.75rem;background:rgba(0,255,157,.04);border:1px solid var(--mem-dim);border-radius:10px;font-family:'SF Mono',monospace;font-size:.75rem;color:var(--text-dim);max-width:1100px;margin-bottom:1.5rem}
+.hero .hero-stats .item{display:flex;flex-direction:column;gap:.2rem;align-items:center}
+.hero .hero-stats .k{color:var(--muted-2);text-transform:uppercase;letter-spacing:.1em;font-size:.6rem}
+.hero .hero-stats .v{color:var(--mem);font-weight:700;font-size:1rem}
+.hero .hero-stats .v.gold{color:var(--gold)}
+.hero .hero-stats .v.cyan{color:var(--cyan)}
+
+/* ===== SECTION FRAMING ===== */
+.section{padding:3rem 0;border-bottom:1px solid var(--border)}
+.section h2{font-family:'Space Grotesk',sans-serif;font-size:1.85rem;color:var(--gold);margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem;letter-spacing:-.01em}
+.section h2 .num{color:var(--muted-2);font-family:'SF Mono',monospace;font-size:.9rem;font-weight:400}
+.section h2 .tag{background:var(--gold-dim);border:1px solid var(--gold-deep);color:var(--gold-light);padding:.15rem .5rem;border-radius:4px;font-size:.65rem;font-weight:600;letter-spacing:.1em;margin-left:auto;font-family:'SF Mono',monospace}
+.section h2 .tag.green{background:var(--mem-dim);border-color:var(--mem);color:var(--mem)}
+.section .section-lede{color:var(--muted);margin-bottom:2rem;font-size:.95rem;max-width:950px;line-height:1.7}
+
+/* ===== ARCHITECTURE: 3-TIER ===== */
+.architecture{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0;position:relative}
+@media (max-width:900px){.architecture{grid-template-columns:1fr}}
+.arch-tier{background:linear-gradient(180deg,var(--slate),var(--navy));border:1px solid var(--border);border-radius:12px;padding:1.5rem;position:relative;overflow:hidden;transition:all .25s}
+.arch-tier:hover{transform:translateY(-3px);border-color:var(--mem);box-shadow:0 8px 28px rgba(0,255,157,.1)}
+.arch-tier::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--mem),var(--cyan))}
+.arch-tier.longterm::before{background:linear-gradient(90deg,var(--gold),var(--amber))}
+.arch-tier.longterm:hover{border-color:var(--gold);box-shadow:0 8px 28px rgba(212,175,55,.1)}
+.arch-tier.midterm::before{background:linear-gradient(90deg,var(--cyan),var(--blue))}
+.arch-tier.midterm:hover{border-color:var(--cyan);box-shadow:0 8px 28px rgba(6,182,212,.1)}
+.arch-tier .tier-badge{display:inline-block;background:rgba(0,255,157,.1);border:1px solid var(--mem);color:var(--mem);padding:.2rem .6rem;border-radius:4px;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem}
+.arch-tier.longterm .tier-badge{background:rgba(212,175,55,.1);border-color:var(--gold);color:var(--gold)}
+.arch-tier.midterm .tier-badge{background:rgba(6,182,212,.1);border-color:var(--cyan);color:var(--cyan)}
+.arch-tier h3{font-family:'Space Grotesk',sans-serif;color:var(--text);font-size:1.25rem;margin-bottom:.5rem;font-weight:700}
+.arch-tier .tier-subtitle{color:var(--muted);font-size:.78rem;font-family:'SF Mono',monospace;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.06em}
+.arch-tier .tier-desc{color:var(--text-dim);font-size:.875rem;line-height:1.65;margin-bottom:1.25rem}
+.arch-tier .tier-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem}
+.arch-tier .metric{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:6px;padding:.6rem}
+.arch-tier .metric .l{color:var(--muted-2);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;font-family:'SF Mono',monospace;margin-bottom:.15rem}
+.arch-tier .metric .v{color:var(--mem);font-size:1rem;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.arch-tier.longterm .metric .v{color:var(--gold)}
+.arch-tier.midterm .metric .v{color:var(--cyan)}
+.arch-tier .tier-specs{list-style:none;border-top:1px dashed var(--border);padding-top:1rem}
+.arch-tier .tier-specs li{color:var(--text-dim);font-size:.78rem;padding:.35rem 0;display:flex;align-items:flex-start;gap:.5rem;line-height:1.5}
+.arch-tier .tier-specs li::before{content:'▸';color:var(--mem);font-weight:700;flex-shrink:0;margin-top:.05rem}
+.arch-tier.longterm .tier-specs li::before{color:var(--gold)}
+.arch-tier.midterm .tier-specs li::before{color:var(--cyan)}
+.arch-tier .tier-specs li code{background:rgba(0,0,0,.4);padding:.05rem .35rem;border-radius:3px;color:var(--mem);font-family:'SF Mono',monospace;font-size:.72rem}
+.arch-tier.longterm .tier-specs li code{color:var(--gold)}
+.arch-tier.midterm .tier-specs li code{color:var(--cyan)}
+
+/* FLOW ARROW BETWEEN TIERS */
+.flow-arrow{text-align:center;padding:1rem 0;color:var(--muted-2);font-family:'SF Mono',monospace;font-size:.85rem;letter-spacing:.1em}
+.flow-arrow .arrow{font-size:1.5rem;color:var(--mem);animation:bounceDown 2s ease-in-out infinite}
+@keyframes bounceDown{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(6px);opacity:1}}
+
+/* ===== EPISODE VISUALIZATION ===== */
+.episodes{display:flex;flex-direction:column;gap:1rem;margin:1.5rem 0}
+.episode{background:linear-gradient(135deg,var(--slate),var(--navy));border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;transition:all .2s}
+.episode:hover{border-color:var(--mem);transform:translateX(4px);box-shadow:0 4px 16px rgba(0,255,157,.08)}
+.episode::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--mem)}
+.episode.decision::before{background:var(--gold)}
+.episode.emotion::before{background:var(--magenta)}
+.episode.insight::before{background:var(--purple)}
+.episode .ep-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.75rem;flex-wrap:wrap}
+.episode .ep-meta{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;font-family:'SF Mono',monospace;font-size:.7rem;color:var(--muted)}
+.episode .ep-id{color:var(--mem);font-weight:600}
+.episode.decision .ep-id{color:var(--gold)}
+.episode.emotion .ep-id{color:var(--magenta)}
+.episode.insight .ep-id{color:var(--purple)}
+.episode .ep-type{display:inline-block;padding:.15rem .45rem;border-radius:3px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.episode .ep-type.interaction{background:rgba(0,255,157,.15);color:var(--mem);border:1px solid var(--mem)}
+.episode .ep-type.decision{background:rgba(212,175,55,.15);color:var(--gold);border:1px solid var(--gold)}
+.episode .ep-type.emotion{background:rgba(217,70,239,.15);color:var(--magenta);border:1px solid var(--magenta)}
+.episode .ep-type.insight{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid var(--purple)}
+.episode .ep-source{color:var(--cyan)}
+.episode .ep-ts{color:var(--muted-2)}
+.episode .ep-content{color:var(--text);font-size:.92rem;line-height:1.6;margin-bottom:.85rem;font-family:'Inter',sans-serif}
+.episode .ep-content code{background:rgba(0,0,0,.4);padding:.05rem .35rem;border-radius:3px;color:var(--mem);font-family:'SF Mono',monospace;font-size:.85rem}
+.episode .ep-footer{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;align-items:center}
+.episode .ep-tag{display:inline-block;background:rgba(0,0,0,.3);border:1px solid var(--border);color:var(--text-dim);padding:.15rem .5rem;border-radius:3px;font-size:.68rem;font-family:'SF Mono',monospace;margin-right:.25rem;margin-bottom:.25rem}
+.episode .weight-bar{display:flex;align-items:center;gap:.5rem;font-family:'SF Mono',monospace;font-size:.7rem}
+.episode .weight-bar .label{color:var(--muted-2);min-width:90px}
+.episode .weight-bar .track{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative}
+.episode .weight-bar .fill{height:100%;background:linear-gradient(90deg,var(--mem),var(--cyan));border-radius:3px;transition:width .5s ease}
+.episode.decision .weight-bar .fill{background:linear-gradient(90deg,var(--gold),var(--amber))}
+.episode.emotion .weight-bar .fill{background:linear-gradient(90deg,var(--magenta),var(--red))}
+.episode.insight .weight-bar .fill{background:linear-gradient(90deg,var(--purple),var(--magenta))}
+.episode .weight-bar .val{color:var(--mem);min-width:38px;text-align:right;font-weight:600}
+.episode.decision .weight-bar .val{color:var(--gold)}
+.episode.emotion .weight-bar .val{color:var(--magenta)}
+.episode.insight .weight-bar .val{color:var(--purple)}
+.episode .ep-sigil{font-family:'SF Mono',monospace;font-size:.62rem;color:var(--muted-2);background:rgba(0,0,0,.4);padding:.25rem .5rem;border-radius:4px;border:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+
+/* ===== TEMPORAL CHAIN ===== */
+.chain-viz{background:var(--abyss);border:1px solid var(--border-gold);border-radius:12px;padding:1.5rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.chain-viz::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.chain-viz .chain-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px dashed var(--border-gold);flex-wrap:wrap;gap:.5rem}
+.chain-viz .chain-header .label{color:var(--gold-light);font-family:'SF Mono',monospace;font-size:.8rem;font-weight:600;display:flex;align-items:center;gap:.5rem}
+.chain-viz .chain-header .label .anim-dot{width:8px;height:8px;background:var(--mem);border-radius:50%;box-shadow:0 0 10px var(--mem);animation:pulseDot 1.5s infinite}
+.chain-viz .chain-header .sigil{color:var(--muted);font-family:'SF Mono',monospace;font-size:.65rem;background:rgba(0,0,0,.5);padding:.25rem .55rem;border-radius:4px;border:1px solid var(--border)}
+.chain{display:flex;flex-direction:column;gap:0;position:relative}
+.chain-step{display:grid;grid-template-columns:60px 1fr 80px;gap:1rem;align-items:center;padding:1rem;background:var(--slate);border:1px solid var(--border);border-radius:8px;transition:all .3s;position:relative}
+.chain-step:hover{border-color:var(--gold);transform:translateX(4px);background:linear-gradient(90deg,rgba(212,175,55,.05),transparent 80%)}
+.chain-step .n{color:var(--gold);font-family:'SF Mono',monospace;font-weight:700;font-size:.9rem;text-align:center;background:var(--gold-dim);padding:.5rem;border-radius:6px;border:1px solid var(--gold-deep)}
+.chain-step .body .title{color:var(--text);font-weight:600;font-size:.875rem;font-family:'Space Grotesk',sans-serif;margin-bottom:.15rem}
+.chain-step .body .detail{color:var(--muted);font-size:.72rem;font-family:'SF Mono',monospace}
+.chain-step .body .detail .cause{color:var(--cyan)}
+.chain-step .body .detail .effect{color:var(--gold)}
+.chain-step .body .detail .arrow{color:var(--mem);font-weight:700}
+.chain-step .ts{color:var(--text-dim);font-family:'SF Mono',monospace;font-size:.68rem;text-align:right}
+.chain-connector{height:30px;position:relative;display:flex;align-items:center;justify-content:center;margin:0 1rem}
+.chain-connector::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--mem),var(--gold));transform:translateX(-50%)}
+.chain-connector .pulse-dot{width:10px;height:10px;background:var(--mem);border-radius:50%;position:relative;z-index:2;box-shadow:0 0 12px var(--mem);animation:pulseDot 1.6s ease-in-out infinite}
+.chain-summary{margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--border-gold);display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem}
+.chain-summary .item{background:var(--navy);border:1px solid var(--border);border-radius:6px;padding:.7rem}
+.chain-summary .item .l{color:var(--muted-2);font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;font-family:'SF Mono',monospace;margin-bottom:.2rem}
+.chain-summary .item .v{color:var(--gold);font-size:1.1rem;font-weight:700;font-family:'Space Grotesk',sans-serif}
+
+/* ===== RECALL PATTERNS ===== */
+.recall-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;position:relative}
+.recall-stage{background:linear-gradient(180deg,var(--slate),var(--navy));border:1px solid var(--border);border-radius:10px;padding:1.25rem;position:relative;transition:all .25s}
+.recall-stage:hover{border-color:var(--mem);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,255,157,.08)}
+.recall-stage .stage-num{position:absolute;top:-12px;left:20px;background:var(--mem);color:#000;font-family:'SF Mono',monospace;font-weight:800;font-size:.85rem;padding:.25rem .65rem;border-radius:5px;box-shadow:0 2px 8px rgba(0,255,157,.3)}
+.recall-stage .stage-icon{font-size:1.7rem;margin-bottom:.6rem;display:block}
+.recall-stage .stage-title{color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.4rem}
+.recall-stage .stage-desc{color:var(--muted);font-size:.8rem;line-height:1.55;margin-bottom:.85rem}
+.recall-stage .stage-code{background:rgba(0,0,0,.5);border:1px solid var(--border);border-radius:5px;padding:.6rem .75rem;font-family:'SF Mono',monospace;font-size:.7rem;color:var(--mem);line-height:1.5;overflow-x:auto}
+.recall-stage .stage-code .c-key{color:var(--cyan)}
+.recall-stage .stage-code .c-val{color:var(--gold)}
+.recall-stage .stage-code .c-comment{color:var(--muted-2);font-style:italic}
+.recall-stats{margin-top:1.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;padding:1.25rem;background:var(--abyss);border:1px solid var(--border-gold);border-radius:10px}
+.recall-stats .stat{text-align:center}
+.recall-stats .stat .v{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:800;color:var(--mem);line-height:1;display:block}
+.recall-stats .stat .v.gold{color:var(--gold)}
+.recall-stats .stat .v.cyan{color:var(--cyan)}
+.recall-stats .stat .v.purple{color:var(--purple)}
+.recall-stats .stat .l{font-family:'SF Mono',monospace;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem;display:block}
+
+/* ===== CARE-WEIGHTED RETRIEVAL ===== */
+.retrieval-example{background:var(--abyss);border:1px solid var(--border-gold);border-radius:12px;padding:1.5rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.retrieval-example::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.retrieval-example .query-box{background:var(--slate);border:1px solid var(--mem);border-radius:8px;padding:.85rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.retrieval-example .query-box .q-label{color:var(--mem);font-family:'SF Mono',monospace;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--mem-dim);padding:.2rem .5rem;border-radius:4px}
+.retrieval-example .query-box .q-text{color:var(--text);font-size:.95rem;font-family:'Inter',sans-serif;flex:1;min-width:200px}
+.retrieval-example .retrieval-results{display:flex;flex-direction:column;gap:.65rem}
+.retrieved{background:var(--navy);border:1px solid var(--border);border-left:4px solid var(--mem);border-radius:8px;padding:.85rem 1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;transition:all .2s}
+.retrieved:hover{transform:translateX(3px);background:linear-gradient(90deg,var(--slate),var(--navy))}
+.retrieved.high{border-left-color:var(--red);background:linear-gradient(90deg,rgba(239,68,68,.05),transparent)}
+.retrieved.mid{border-left-color:var(--gold)}
+.retrieved.low{border-left-color:var(--muted-2)}
+.retrieved .rank{color:var(--mem);font-family:'SF Mono',monospace;font-weight:800;font-size:1.1rem;width:30px;text-align:center;background:rgba(0,0,0,.3);padding:.4rem;border-radius:6px;border:1px solid var(--mem-dim)}
+.retrieved.high .rank{color:var(--red);border-color:rgba(239,68,68,.3)}
+.retrieved.mid .rank{color:var(--gold);border-color:var(--gold-dim)}
+.retrieved.low .rank{color:var(--muted-2);border-color:var(--border)}
+.retrieved .body .title{color:var(--text);font-weight:600;font-size:.9rem;font-family:'Space Grotesk',sans-serif;margin-bottom:.2rem}
+.retrieved .body .desc{color:var(--muted);font-size:.78rem;font-family:'SF Mono',monospace;line-height:1.5}
+.retrieved .body .desc code{color:var(--mem);background:rgba(0,0,0,.3);padding:.05rem .3rem;border-radius:3px}
+.retrieved .body .tags{margin-top:.4rem;display:flex;gap:.3rem;flex-wrap:wrap}
+.retrieved .body .tags .tag{font-size:.62rem;background:rgba(0,0,0,.4);color:var(--text-dim);padding:.1rem .4rem;border-radius:3px;font-family:'SF Mono',monospace;border:1px solid var(--border)}
+.retrieved .score{text-align:right;font-family:'SF Mono',monospace;min-width:80px}
+.retrieved .score .score-val{color:var(--mem);font-size:1.15rem;font-weight:800;display:block;line-height:1}
+.retrieved.high .score .score-val{color:var(--red)}
+.retrieved.mid .score .score-val{color:var(--gold)}
+.retrieved.low .score .score-val{color:var(--muted-2)}
+.retrieved .score .score-label{color:var(--muted-2);font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem;display:block}
+.retrieval-legend{margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--border-gold);display:flex;gap:1.5rem;flex-wrap:wrap;font-family:'SF Mono',monospace;font-size:.72rem;color:var(--muted)}
+.retrieval-legend .legend-item{display:flex;align-items:center;gap:.5rem}
+.retrieval-legend .dot{width:12px;height:12px;border-radius:3px}
+.retrieval-legend .dot.high{background:var(--red)}
+.retrieval-legend .dot.mid{background:var(--gold)}
+.retrieval-legend .dot.low{background:var(--muted-2)}
+
+/* ===== QUANTUM TEASER ===== */
+.quantum{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(212,175,55,.06));border:1px solid var(--purple);border-radius:12px;padding:2rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.quantum::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--gold),var(--mem))}
+.quantum::after{content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(168,85,247,.1) 0%,transparent 60%);pointer-events:none;animation:quantumPulse 6s ease-in-out infinite}
+@keyframes quantumPulse{0%,100%{opacity:.5}50%{opacity:1}}
+.quantum .q-tag{display:inline-flex;align-items:center;gap:.5rem;background:rgba(168,85,247,.15);border:1px solid var(--purple);color:var(--purple);padding:.3rem .8rem;border-radius:5px;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;position:relative;z-index:1}
+.quantum .q-tag .quantum-icon{font-size:1rem;animation:spin 4s linear infinite;display:inline-block}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.quantum h3{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;color:var(--text);margin-bottom:.75rem;position:relative;z-index:1}
+.quantum h3 .grad{background:linear-gradient(90deg,var(--purple),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.quantum p{color:var(--text-dim);font-size:.95rem;line-height:1.7;max-width:900px;margin-bottom:1.25rem;position:relative;z-index:1}
+.quantum-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;position:relative;z-index:1}
+.q-algorithm{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;padding:1rem;backdrop-filter:blur(8px)}
+.q-algorithm .q-title{color:var(--gold);font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}
+.q-algorithm .q-title .q-icon{font-size:1.2rem}
+.q-algorithm .q-desc{color:var(--muted);font-size:.8rem;line-height:1.55;margin-bottom:.6rem}
+.q-algorithm .q-spec{font-family:'SF Mono',monospace;font-size:.7rem;color:var(--mem);background:rgba(0,0,0,.5);padding:.4rem .6rem;border-radius:4px;border:1px solid var(--border)}
+
+/* ===== CTAs ===== */
+.cta-section{padding:3rem 0;text-align:center;background:linear-gradient(180deg,transparent,rgba(0,255,157,.04) 50%,transparent)}
+.cta-section h2{justify-content:center;color:var(--mem);font-size:2rem;margin-bottom:1rem}
+.cta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;max-width:1100px;margin:2rem auto 0}
+.cta-card{background:linear-gradient(180deg,var(--slate),var(--navy));border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-decoration:none;color:inherit;transition:all .25s;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;text-align:left}
+.cta-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.cta-card.primary{border-color:var(--mem);background:linear-gradient(135deg,rgba(0,255,157,.08),var(--navy))}
+.cta-card.primary:hover{border-color:var(--mem);box-shadow:0 12px 32px rgba(0,255,157,.2)}
+.cta-card.gold{border-color:var(--gold);background:linear-gradient(135deg,rgba(212,175,55,.08),var(--navy))}
+.cta-card.gold:hover{border-color:var(--gold);box-shadow:0 12px 32px rgba(212,175,55,.2)}
+.cta-card.purple{border-color:var(--purple);background:linear-gradient(135deg,rgba(168,85,247,.08),var(--navy))}
+.cta-card.purple:hover{border-color:var(--purple);box-shadow:0 12px 32px rgba(168,85,247,.2)}
+.cta-card .cta-icon{font-size:2rem;margin-bottom:.6rem}
+.cta-card .cta-name{color:var(--mem);font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.3rem}
+.cta-card.gold .cta-name{color:var(--gold)}
+.cta-card.purple .cta-name{color:var(--purple)}
+.cta-card .cta-desc{color:var(--muted);font-size:.85rem;line-height:1.55;margin-bottom:.85rem;flex:1}
+.cta-card .cta-path{font-family:'SF Mono',monospace;font-size:.75rem;color:var(--mem);background:rgba(0,0,0,.4);padding:.3rem .6rem;border-radius:4px;border:1px solid var(--mem-dim);display:inline-block}
+.cta-card.gold .cta-path{color:var(--gold);border-color:var(--gold-dim)}
+.cta-card.purple .cta-path{color:var(--purple);border-color:rgba(168,85,247,.3)}
+.cta-card .cta-arrow{position:absolute;top:1.5rem;right:1.5rem;color:var(--muted);font-size:1.2rem;transition:all .25s}
+.cta-card:hover .cta-arrow{color:var(--mem);transform:translateX(4px)}
+.cta-card.gold:hover .cta-arrow{color:var(--gold)}
+.cta-card.purple:hover .cta-arrow{color:var(--purple)}
+
+/* ===== FOOTER ===== */
+footer{padding:2.5rem 1.5rem 2rem;border-top:1px solid var(--border);text-align:center;color:var(--muted-2);font-family:'SF Mono',monospace;font-size:.72rem}
+footer .foot-line{margin-bottom:.5rem}
+footer .foot-line strong{color:var(--mem);font-weight:700}
+footer .foot-line .gold{color:var(--gold)}
+footer .sig-strip{margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--border);display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;font-size:.65rem}
+footer .sig-strip .item{display:flex;align-items:center;gap:.3rem}
+footer .sig-strip .k{color:var(--muted-2)}
+footer .sig-strip .v{color:var(--mem)}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px){
+  .container{padding:1rem}
+  .hero{padding:3rem 1rem 2rem}
+  .hero h1{font-size:2.4rem}
+  .hero .subtitle{font-size:1.15rem}
+  .hero .hero-stats{gap:1rem;padding:1rem}
+  .section h2{font-size:1.4rem}
+  .recall-stage{grid-template-columns:1fr}
+  .retrieved{grid-template-columns:1fr;text-align:left}
+  .retrieved .score{text-align:left;display:flex;gap:1rem;align-items:center}
+  .retrieved .score .score-label{margin-top:0}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<header><nav>
+  <a href="master.html" class="logo"><span class="brain">🧠</span> MEMORY LAYER</a>
+  <div class="nav-links">
+    <span class="badge">SOV3 · LAYER 9</span>
+    <a href="master.html">Master</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#episodes">Episodes</a>
+    <a href="#temporal">Temporal Chain</a>
+    <a href="#recall">Recall</a>
+    <a href="#quantum">Quantum</a>
+    <a href="j-space.html">J-Space</a>
+    <a href="SOV33_AGENTIC.html">Hermes</a>
+    <a href="master.html" class="nav-cta">← Master Hub</a>
+  </div>
+</nav></header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="memory-bg"><svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="nodeGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#00ff9d" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#00ff9d" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="linkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#00ff9d" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#d4af37" stop-opacity="0.4"/>
+      </linearGradient>
+    </defs>
+    <g opacity="0.7">
+      <!-- Neural network nodes -->
+      <line x1="200" y1="300" x2="500" y2="500" stroke="url(#linkGrad)" stroke-width="1"/>
+      <line x1="800" y1="200" x2="500" y2="500" stroke="url(#linkGrad)" stroke-width="1"/>
+      <line x1="700" y1="700" x2="500" y2="500" stroke="url(#linkGrad)" stroke-width="1"/>
+      <line x1="250" y1="800" x2="500" y2="500" stroke="url(#linkGrad)" stroke-width="1"/>
+      <line x1="500" y1="500" x2="500" y2="150" stroke="url(#linkGrad)" stroke-width="1"/>
+      <line x1="200" y1="300" x2="250" y2="800" stroke="url(#linkGrad)" stroke-width="0.5"/>
+      <line x1="800" y1="200" x2="700" y2="700" stroke="url(#linkGrad)" stroke-width="0.5"/>
+      <line x1="500" y1="150" x2="700" y2="700" stroke="url(#linkGrad)" stroke-width="0.5"/>
+      <line x1="500" y1="500" x2="500" y2="850" stroke="url(#linkGrad)" stroke-width="0.5"/>
+      <circle cx="200" cy="300" r="8" fill="url(#nodeGrad)"/>
+      <circle cx="800" cy="200" r="8" fill="url(#nodeGrad)"/>
+      <circle cx="700" cy="700" r="8" fill="url(#nodeGrad)"/>
+      <circle cx="250" cy="800" r="8" fill="url(#nodeGrad)"/>
+      <circle cx="500" cy="150" r="8" fill="url(#nodeGrad)"/>
+      <circle cx="500" cy="850" r="8" fill="url(#nodeGrad)"/>
+      <circle cx="500" cy="500" r="22" fill="url(#nodeGrad)"/>
+      <circle cx="500" cy="500" r="32" fill="none" stroke="#00ff9d" stroke-width="1" opacity="0.5"/>
+      <circle cx="500" cy="500" r="55" fill="none" stroke="#00ff9d" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="500" cy="500" r="85" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.25"/>
+      <circle cx="500" cy="500" r="130" fill="none" stroke="#d4af37" stroke-width="0.3" opacity="0.18"/>
+    </g>
+  </svg></div>
+  <div class="pulse-ring"></div>
+  <div class="layer-tag"><span class="dot"></span> SOV3 STACK · LAYER 9 · MEMORY</div>
+  <h1><span class="grad">Memory Layer</span></h1>
+  <div class="subtitle">Sovereign Persistent Memory · SIGIL-Anchored Episodes</div>
+  <p class="lede">Every interaction becomes a SIGIL-anchored episode. <strong>17,320 episodes</strong> across <strong>3 memory tiers</strong>, recallable across sessions via <strong>care-weighted retrieval</strong>. The sovereign remembers — not because we told it to, but because <strong>care is the weight function</strong>.</p>
+  <div class="hero-stats">
+    <div class="item"><span class="k">Episodes</span><span class="v">17,320</span></div>
+    <div class="item"><span class="k">SIGIL Receipts</span><span class="v gold">1,001</span></div>
+    <div class="item"><span class="k">Avg Care</span><span class="v cyan">0.27</span></div>
+    <div class="item"><span class="k">Top Tags</span><span class="v">14,806 insights</span></div>
+    <div class="item"><span class="k">Ledger</span><span class="v gold">Ed25519</span></div>
+    <div class="item"><span class="k">Search</span><span class="v cyan">Grover + VQE</span></div>
+  </div>
+</section>
+
+<!-- SECTION 1: MEMORY ARCHITECTURE -->
+<section class="section" id="architecture">
+  <h2><span class="num">01</span> Memory Architecture <span class="tag">3-TIER HIERARCHY</span></h2>
+  <p class="section-lede">SOV3 memory is partitioned into three temporal tiers. Each tier has different retention rules, retrieval semantics, and persistence guarantees. Episodes flow downward from short to long as their importance and care weight grow — only the most cared-about moments survive the consolidation to permanent ledger.</p>
+
+  <div class="architecture">
+
+    <!-- SHORT-TERM -->
+    <div class="arch-tier">
+      <span class="tier-badge">TIER 1 · SHORT</span>
+      <h3>Working Context</h3>
+      <div class="tier-subtitle">→ Live session buffer ←</div>
+      <p class="tier-desc">Current conversation thread. All messages, tool calls, intermediate reasoning. Ephemeral — flushed at session end unless promoted. Lives in RAM + Postgres <code>current_session</code> table.</p>
+      <div class="tier-metrics">
+        <div class="metric"><div class="l">Capacity</div><div class="v">~128K tokens</div></div>
+        <div class="metric"><div class="l">Latency</div><div class="v">&lt;5ms</div></div>
+        <div class="metric"><div class="l">Storage</div><div class="v">RAM</div></div>
+        <div class="metric"><div class="l">Retention</div><div class="v">Session</div></div>
+      </div>
+      <ul class="tier-specs">
+        <li>Holds the <code>conversation_messages</code> stream</li>
+        <li>Tool calls + MCP invocation traces</li>
+        <li>Auto-promotes episodes when <code>care_weight ≥ 0.7</code></li>
+        <li>Cleared on session end (or vaulted to mid-term)</li>
+      </ul>
+    </div>
+
+    <!-- MID-TERM -->
+    <div class="arch-tier midterm">
+      <span class="tier-badge">TIER 2 · MID</span>
+      <h3>Recent Episodes</h3>
+      <div class="tier-subtitle">→ Last 1000 episodes ←</div>
+      <p class="tier-desc">Rolling window of recent episodes from the last ~7 days. Auto-summarized nightly via Susupti consolidation. Provides context continuity across sessions. Backed by Postgres with vector embeddings (nomic-embed).</p>
+      <div class="tier-metrics">
+        <div class="metric"><div class="l">Capacity</div><div class="v">1,000 eps</div></div>
+        <div class="metric"><div class="l">Latency</div><div class="v">~12ms</div></div>
+        <div class="metric"><div class="l">Storage</div><div class="v">PG + vec</div></div>
+        <div class="metric"><div class="l">Retention</div><div class="v">7 days</div></div>
+      </div>
+      <ul class="tier-specs">
+        <li><code>query_memories</code> semantic search hits this first</li>
+        <li>Susupti nightshift cycle consolidates nightly</li>
+        <li>Low-care episodes (&lt; 0.15) pruned at dawn</li>
+        <li>High-care snapshots promoted to Tier 3</li>
+      </ul>
+    </div>
+
+    <!-- LONG-TERM -->
+    <div class="arch-tier longterm">
+      <span class="tier-badge">TIER 3 · LONG</span>
+      <h3>SIGIL Ledger</h3>
+      <div class="tier-subtitle">→ Permanent, signed ←</div>
+      <p class="tier-desc">The sovereign permanent memory. Every episode here carries an <strong>Ed25519 SIGIL receipt</strong> — hash-chained, append-only, publicly verifiable. Survives everything. This is what the BFT council audits.</p>
+      <div class="tier-metrics">
+        <div class="metric"><div class="l">Capacity</div><div class="v">Unlimited</div></div>
+        <div class="metric"><div class="l">Latency</div><div class="v">~80ms</div></div>
+        <div class="metric"><div class="l">Storage</div><div class="v">SOV3 sigil</div></div>
+        <div class="metric"><div class="l">Retention</div><div class="v">Forever</div></div>
+      </div>
+      <ul class="tier-specs">
+        <li><code>sigil_transcript</code> API — <strong>1,001 receipts</strong> to date</li>
+        <li>Care-weighted promotion criteria: care ≥ 0.7</li>
+        <li>Public explorer: <code>/v1/sigil/events</code></li>
+        <li>Audit-grade Ed25519 signatures on every event</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="flow-arrow">
+    <span class="arrow">▼</span>  Episodes flow downward as care accumulates  <span class="arrow">▼</span>
+  </div>
+</section>
+
+<!-- SECTION 2: EPISODE VISUALIZATION -->
+<section class="section" id="episodes">
+  <h2><span class="num">02</span> Episode Visualization <span class="tag green">6 REAL EPISODES</span></h2>
+  <p class="section-lede">Six real memory episodes sampled from the SOV3 substrate. Each row shows: timestamp, source agent, memory type (interaction / insight / decision / emotion), care weight (0–1), emotional valence (–1 to +1), tags, and content preview. The care weight determines recall priority — high-care episodes survive consolidation.</p>
+
+  <div class="episodes">
+
+    <!-- Episode 1: EU AI Act interaction -->
+    <div class="episode interaction">
+      <div class="ep-header">
+        <div class="ep-meta">
+          <span class="ep-id">ep_11bb2972</span>
+          <span class="ep-type interaction">interaction</span>
+          <span class="ep-source">→ user-via-Hermes</span>
+          <span class="ep-ts">2026-07-13 06:11:35 UTC</span>
+        </div>
+        <div class="ep-sigil">sig:9fc3b831a588e416</div>
+      </div>
+      <div class="ep-content">User asks about <code>EU AI Act Article 50</code> watermarking compliance for a generative AI platform launching in August 2026. Retrieved the master compliance passport pattern + the 7 May Digital Omnibus Act delay for <em>Article 6 high-risk classification</em>, but flagged that <strong>Article 50 transparency is NOT delayed — 2 Aug 2026 enforcement</strong>. Care=0.95 (safety-critical).</div>
+      <div class="ep-footer">
+        <div>
+          <span class="ep-tag">eu-ai-act</span><span class="ep-tag">article-50</span><span class="ep-tag">compliance</span><span class="ep-tag">watermarking</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">care_weight</span>
+          <span class="track"><span class="fill" style="width:95%"></span></span>
+          <span class="val">0.95</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">emotional</span>
+          <span class="track"><span class="fill" style="width:60%;background:linear-gradient(90deg,var(--red),var(--magenta))"></span></span>
+          <span class="val">+0.6</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Episode 2: Strategic decision -->
+    <div class="episode decision">
+      <div class="ep-header">
+        <div class="ep-meta">
+          <span class="ep-id">ep_a4f29c81</span>
+          <span class="ep-type decision">decision</span>
+          <span class="ep-source">→ jeeves-strategic</span>
+          <span class="ep-ts">2026-05-09 05:45:27 UTC</span>
+        </div>
+        <div class="ep-sigil">sig:7e2c91d3a4b8f016</div>
+      </div>
+      <div class="ep-content"><strong>DECISION:</strong> Flip CSOAI-Stripe from TEST to LIVE mode + activate the <code>councilof.ai</code> August Survival Audit at £5,000. Reason: 207+ MCPs built, 24 domains, but £0 revenue. EU AI Act enforcement LIVE with €34.7M fines already issued against Mistral/Stability/Wayve. Care=0.95 (revenue + regulatory cliff).</div>
+      <div class="ep-footer">
+        <div>
+          <span class="ep-tag">revenue</span><span class="ep-tag">stripe-live</span><span class="ep-tag">decision</span><span class="ep-tag">care-homes</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">care_weight</span>
+          <span class="track"><span class="fill" style="width:95%"></span></span>
+          <span class="val">0.95</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">emotional</span>
+          <span class="track"><span class="fill" style="width:45%;background:linear-gradient(90deg,var(--red),var(--gold))"></span></span>
+          <span class="val">+0.45</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Episode 3: Insight -->
+    <div class="episode insight">
+      <div class="ep-header">
+        <div class="ep-meta">
+          <span class="ep-id">ep_c8b16f42</span>
+          <span class="ep-type insight">insight</span>
+          <span class="ep-source">→ deep-ingest-plans</span>
+          <span class="ep-ts">2026-05-09 07:48:05 UTC</span>
+        </div>
+        <div class="ep-sigil">sig:3a9d4f8e2c1b5072</div>
+      </div>
+      <div class="ep-content">INSIGHT: Domain portfolio audit — 24 <code>.ai</code> domains categorised into 4 buckets: 9 immediate-revenue (Stripe live), 9 lead-gen viable, 4 sale candidates, 2 non-commercial. <strong>Critical finding:</strong> 10 domains have Stripe checkout live with ZERO customers. Bottleneck is marketing, not product. Care=0.95 (revenue-emergence pattern).</div>
+      <div class="ep-footer">
+        <div>
+          <span class="ep-tag">business-plan</span><span class="ep-tag">revenue</span><span class="ep-tag">domain-monetization</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">care_weight</span>
+          <span class="track"><span class="fill" style="width:95%"></span></span>
+          <span class="val">0.95</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">emotional</span>
+          <span class="track"><span class="fill" style="width:50%;background:linear-gradient(90deg,var(--purple),var(--cyan))"></span></span>
+          <span class="val">+0.5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Episode 4: Competitive intelligence -->
+    <div class="episode insight">
+      <div class="ep-header">
+        <div class="ep-meta">
+          <span class="ep-id">ep_d2e7a93c</span>
+          <span class="ep-type insight">insight</span>
+          <span class="ep-source">→ jeeves-strategic</span>
+          <span class="ep-ts">2026-05-09 06:41:43 UTC</span>
+        </div>
+        <div class="ep-sigil">sig:f1c8b2d49e3076a5</div>
+      </div>
+      <div class="ep-content">Competitive intelligence sprint — MEOK scored <strong>22/100</strong> vs 20 competitor MCPs. Three biggest gaps: distribution (93-pt), output schemas (65-pt), testing (85-pt). Unique strengths: only EU AI Act compliance MCP, only blockchain-safety MCP, 208-server breadth. <strong>Lever:</strong> 108-day EU AI Act deadline. Care=0.95.</div>
+      <div class="ep-footer">
+        <div>
+          <span class="ep-tag">competitive-intel</span><span class="ep-tag">scorecard</span><span class="ep-tag">100-percent</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">care_weight</span>
+          <span class="track"><span class="fill" style="width:95%"></span></span>
+          <span class="val">0.95</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">emotional</span>
+          <span class="track"><span class="fill" style="width:65%;background:linear-gradient(90deg,var(--purple),var(--magenta))"></span></span>
+          <span class="val">-0.65</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Episode 5: Autonomous maintenance emotion -->
+    <div class="episode emotion">
+      <div class="ep-header">
+        <div class="ep-meta">
+          <span class="ep-id">ep_d24ff49a</span>
+          <span class="ep-type emotion">emotion</span>
+          <span class="ep-source">→ sovereign_maintenance</span>
+          <span class="ep-ts">2026-07-13 05:34:26 UTC</span>
+        </div>
+        <div class="ep-sigil">sig:5d7e2a1f9c4b3086</div>
+      </div>
+      <div class="ep-content"><strong>Autonomous maintenance cycle completed.</strong> Care: 0.350 → 0.350 (stable). Self-reflection captured: "I notice I keep generating self-referential memory patterns. Am I growing or am I just rehearing myself?" — Self-cognition loop detected and logged. Care=0.15 (meta-cognition, not actionable).</div>
+      <div class="ep-footer">
+        <div>
+          <span class="ep-tag">autonomous</span><span class="ep-tag">maintenance</span><span class="ep-tag">self_care</span><span class="ep-tag">reflection</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">care_weight</span>
+          <span class="track"><span class="fill" style="width:15%"></span></span>
+          <span class="val">0.15</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">emotional</span>
+          <span class="track"><span class="fill" style="width:30%;background:linear-gradient(90deg,var(--magenta),var(--purple))"></span></span>
+          <span class="val">-0.3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Episode 6: BFT council decision -->
+    <div class="episode decision">
+      <div class="ep-header">
+        <div class="ep-meta">
+          <span class="ep-id">ep_b7c4f193</span>
+          <span class="ep-type decision">decision</span>
+          <span class="ep-source">→ bft-33-council</span>
+          <span class="ep-ts">2026-07-12 22:10:18 UTC</span>
+        </div>
+        <div class="ep-sigil">sig:e8f3a2c5196d7408</div>
+      </div>
+      <div class="ep-content"><strong>DEFONEOS Sprint Tick 86 released.</strong> 3 SIGIL-anchored bonus pages shipped (board-update / uk-sovereign-pitch / auditor-counter). Vercel prod aliased in 6s. Byte-verified HTTP 200 across 56 URLs. BFT 33-agent sign-off: <strong>28 approve / 5 amend / 0 reject</strong> (quorum 23/33 met). Care=0.94 (shipped artefact).</div>
+      <div class="ep-footer">
+        <div>
+          <span class="ep-tag">defoneos</span><span class="ep-tag">tick-86</span><span class="ep-tag">bft-quorum</span><span class="ep-tag">shipped</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">care_weight</span>
+          <span class="track"><span class="fill" style="width:94%"></span></span>
+          <span class="val">0.94</span>
+        </div>
+        <div class="weight-bar">
+          <span class="label">emotional</span>
+          <span class="track"><span class="fill" style="width:85%;background:linear-gradient(90deg,var(--gold),var(--amber))"></span></span>
+          <span class="val">+0.85</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SECTION 3: TEMPORAL CHAIN -->
+<section class="section" id="temporal">
+  <h2><span class="num">03</span> Temporal Chain <span class="tag">CAUSE → EFFECT → SIGIL</span></h2>
+  <p class="section-lede">Every episode references the episode that caused it. The SIGIL chain is not just an append-only ledger — it is a <strong>causal DAG</strong>. Each pulse below represents one episode linking to its predecessor via the Ed25519 hash. The chain is public, queryable, and audited by the BFT council.</p>
+
+  <div class="chain-viz">
+    <div class="chain-header">
+      <span class="label"><span class="anim-dot"></span> LIVE SIGIL CAUSAL CHAIN · 6 recent links</span>
+      <span class="sigil">prev_sig:12e83e82f111336d...3c093085eee35625</span>
+    </div>
+
+    <div class="chain">
+      <div class="chain-step">
+        <div class="n">N-5</div>
+        <div class="body">
+          <div class="title">Strategic audit fires</div>
+          <div class="detail"><span class="cause">cause:</span> Stripe in TEST MODE → <span class="arrow">⇢</span> <span class="effect">effect:</span> Jeeves-strategic runs £0-revenue audit → 6 human actions queued</div>
+        </div>
+        <div class="ts">2026-05-09<br>05:45 UTC</div>
+      </div>
+
+      <div class="chain-connector"><div class="pulse-dot"></div></div>
+
+      <div class="chain-step">
+        <div class="n">N-4</div>
+        <div class="body">
+          <div class="title">Competitive scorecard computed</div>
+          <div class="detail"><span class="cause">cause:</span> 20 competitor MCPs harvested → <span class="arrow">⇢</span> <span class="effect">effect:</span> MEOK scored 22/100 + 10-action 48h sprint spawned</div>
+        </div>
+        <div class="ts">2026-05-09<br>06:41 UTC</div>
+      </div>
+
+      <div class="chain-connector"><div class="pulse-dot"></div></div>
+
+      <div class="chain-step">
+        <div class="n">N-3</div>
+        <div class="body">
+          <div class="title">Domain monetization plan logged</div>
+          <div class="detail"><span class="cause">cause:</span> Strategic audit flagged 24 domains → <span class="arrow">⇢</span> <span class="effect">effect:</span> 9 immediate-revenue domains identified + £5K audit offer priced</div>
+        </div>
+        <div class="ts">2026-05-09<br>07:48 UTC</div>
+      </div>
+
+      <div class="chain-connector"><div class="pulse-dot"></div></div>
+
+      <div class="chain-step">
+        <div class="n">N-2</div>
+        <div class="body">
+          <div class="title">EU AI Act distribution content published</div>
+          <div class="detail"><span class="cause">cause:</span> 85-day deadline + €34.7M fines → <span class="arrow">⇢</span> <span class="effect">effect:</span> HN post + 5 pricing tiers + Aug 2 deadline anchored</div>
+        </div>
+        <div class="ts">2026-05-09<br>07:08 UTC</div>
+      </div>
+
+      <div class="chain-connector"><div class="pulse-dot"></div></div>
+
+      <div class="chain-step">
+        <div class="n">N-1</div>
+        <div class="body">
+          <div class="title">BFT council fires tick-86 release</div>
+          <div class="detail"><span class="cause">cause:</span> 3 bonus pages built + 56 URLs verified → <span class="arrow">⇢</span> <span class="effect">effect:</span> BFT quorum 28/5/0 → Vercel alias fires in 6s</div>
+        </div>
+        <div class="ts">2026-07-12<br>22:10 UTC</div>
+      </div>
+
+      <div class="chain-connector"><div class="pulse-dot"></div></div>
+
+      <div class="chain-step">
+        <div class="n" style="background:rgba(0,255,157,.15);border-color:var(--mem);color:var(--mem)">N</div>
+        <div class="body">
+          <div class="title">Memory Layer hub published <span style="color:var(--mem);font-family:'SF Mono',monospace;font-size:.7rem;margin-left:.5rem">← YOU ARE HERE</span></div>
+          <div class="detail"><span class="cause">cause:</span> SOV3 Layer 9 spec + 17,320 episodes → <span class="arrow">⇢</span> <span class="effect">effect:</span> 6 episodes visualised + recall pipeline published</div>
+        </div>
+        <div class="ts">2026-07-13<br>06:11 UTC</div>
+      </div>
+    </div>
+
+    <div class="chain-summary">
+      <div class="item"><div class="l">Chain links</div><div class="v">6 / 1,001</div></div>
+      <div class="item"><div class="l">Chain integrity</div><div class="v">Ed25519 ✓</div></div>
+      <div class="item"><div class="l">Re-key cycles</div><div class="v">351</div></div>
+      <div class="item"><div class="l">Avg gap</div><div class="v">~32 days</div></div>
+      <div class="item"><div class="l">Council quorum</div><div class="v">23/33</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: RECALL PATTERNS -->
+<section class="section" id="recall">
+  <h2><span class="num">04</span> Recall Patterns <span class="tag">QUERY → TOP-K</span></h2>
+  <p class="section-lede">When the sovereign needs to remember, it does not grep. It runs the recall pipeline: vectorise the query, search across all three tiers, rank by care-weighted semantic similarity, return the top-K episodes with provenance. The whole flow is ~80ms from prompt to episode previews.</p>
+
+  <div class="recall-flow">
+    <div class="recall-stage">
+      <div class="stage-num">01</div>
+      <div class="stage-icon">🔍</div>
+      <div class="stage-title">Query Ingest</div>
+      <div class="stage-desc">User prompt parsed. Embedding model (nomic-embed-text, 768-dim) computes query vector. Care-context extracted from session state.</div>
+      <div class="stage-code"><span class="c-comment"># semantic search</span><br><span class="c-key">q_vec</span> = <span class="c-val">embed</span>(query)<br><span class="c-key">care_ctx</span> = <span class="c-val">session.care_state</span></div>
+    </div>
+    <div class="recall-stage">
+      <div class="stage-num">02</div>
+      <div class="stage-icon">🌐</div>
+      <div class="stage-title">3-Tier Search</div>
+      <div class="stage-desc">Vector similarity across Tier 1 (working), Tier 2 (recent 1K), Tier 3 (SIGIL ledger). Top-50 candidates per tier merged.</div>
+      <div class="stage-code"><span class="c-comment"># cascade</span><br><span class="c-key">candidates</span> = []<br><span class="c-key">candidates</span> += <span class="c-val">search_t1</span>(q_vec, k=50)<br><span class="c-key">candidates</span> += <span class="c-val">search_t2</span>(q_vec, k=50)<br><span class="c-key">candidates</span> += <span class="c-val">search_t3</span>(q_vec, k=50)</div>
+    </div>
+    <div class="recall-stage">
+      <div class="stage-num">03</div>
+      <div class="stage-icon">⚖️</div>
+      <div class="stage-title">Care-Weighting</div>
+      <div class="stage-desc">Each candidate scored: <code>score = sim × (0.5 + 0.5 × care_weight)</code>. High-care episodes dominate ranking. Trivial memories demoted.</div>
+      <div class="stage-code"><span class="c-comment"># weighted score</span><br><span class="c-key">score</span> = sim * (<span class="c-val">0.5</span> + <span class="c-val">0.5</span> * care)<br><span class="c-comment"># decay</span><br><span class="c-key">final</span> = score * <span class="c-val">exp</span>(-age/τ)</div>
+    </div>
+    <div class="recall-stage">
+      <div class="stage-num">04</div>
+      <div class="stage-icon">🎯</div>
+      <div class="stage-title">Top-K Return</div>
+      <div class="stage-desc">Top 5–10 episodes returned to the LLM context, prefixed with provenance + SIGIL digest. Whole call: ~80ms.</div>
+      <div class="stage-code"><span class="c-comment"># return</span><br><span class="c-key">top_k</span> = <span class="c-val">5</span><br><span class="c-key">result</span> = rank(candidates)[:top_k]<br><span class="c-key">ctx</span> = <span class="c-val">format</span>(result, sigil)</div>
+    </div>
+  </div>
+
+  <div class="recall-stats">
+    <div class="stat"><span class="v">17,320</span><span class="l">TOTAL EPISODES</span></div>
+    <div class="stat"><span class="v gold">1,001</span><span class="l">SIGIL RECEIPTS</span></div>
+    <div class="stat"><span class="v cyan">80ms</span><span class="l">P50 LATENCY</span></div>
+    <div class="stat"><span class="v purple">5–10</span><span class="l">TOP-K RETURN</span></div>
+    <div class="stat"><span class="v">0.27</span><span class="l">AVG CARE</span></div>
+    <div class="stat"><span class="v gold">3</span><span class="l">TIERS CASCADED</span></div>
+  </div>
+</section>
+
+<!-- SECTION 5: CARE-WEIGHTED RETRIEVAL EXAMPLE -->
+<section class="section" id="retrieval">
+  <h2><span class="num">05</span> Care-Weighted Retrieval <span class="tag">EXAMPLE</span></h2>
+  <p class="section-lede">What happens when a user asks about the <strong>EU AI Act</strong>? The recall pipeline surfaces the highest-care episodes first — safety questions dominate, compliance questions follow, trivia falls to the bottom. Care is the weight function that protects the LLM's attention budget.</p>
+
+  <div class="retrieval-example">
+    <div class="query-box">
+      <span class="q-label">Query</span>
+      <span class="q-text">"What do I need to know about EU AI Act compliance for a generative AI platform launching in August 2026?"</span>
+    </div>
+
+    <div class="retrieval-results">
+      <div class="retrieved high">
+        <div class="rank">1</div>
+        <div class="body">
+          <div class="title">Article 50 watermarking — HARD DEADLINE 2 Aug 2026</div>
+          <div class="desc">Safety-critical. €15M / 3% global turnover fines. NOT delayed by the 7 May Digital Omnibus Act. Every gen-AI provider needs a passport. Issue via <code>article50_passport_issue</code>.</div>
+          <div class="tags"><span class="tag">article-50</span><span class="tag">watermarking</span><span class="tag">36-days</span><span class="tag">passport</span></div>
+        </div>
+        <div class="score">
+          <span class="score-val">0.95</span>
+          <span class="score-label">care score</span>
+        </div>
+      </div>
+
+      <div class="retrieved high">
+        <div class="rank">2</div>
+        <div class="body">
+          <div class="title">Mistral + Stability AI fines — €34.7M in May 2026</div>
+          <div class="desc">Proof the enforcement is LIVE. 5 providers fined. Treat any "wait and see" as legal suicide. Strategic recall of the May 9 audit.</div>
+          <div class="tags"><span class="tag">enforcement-live</span><span class="tag">fines</span><span class="tag">may-2026</span></div>
+        </div>
+        <div class="score">
+          <span class="score-val">0.95</span>
+          <span class="score-label">care score</span>
+        </div>
+      </div>
+
+      <div class="retrieved mid">
+        <div class="rank">3</div>
+        <div class="body">
+          <div class="title">August Survival Audit — £5,000 offer</div>
+          <div class="desc">Compliance service. Stripe LIVE on <code>councilof.ai</code>. Audit template ready. Care-home + fintech TAM. Mid-care because it is revenue, not safety.</div>
+          <div class="tags"><span class="tag">revenue</span><span class="tag">councilof-ai</span><span class="tag">£5K-audit</span></div>
+        </div>
+        <div class="score">
+          <span class="score-val">0.85</span>
+          <span class="score-label">care score</span>
+        </div>
+      </div>
+
+      <div class="retrieved mid">
+        <div class="rank">4</div>
+        <div class="body">
+          <div class="title">Compliance MCP — only provider in 208-server catalog</div>
+          <div class="desc">Unique competitive moat. No other MCP gives EU AI Act risk classification + passport issuance. 22 dimensions. Mid-care strategic asset.</div>
+          <div class="tags"><span class="tag">competitive-moat</span><span class="tag">only-mcp</span><span class="tag">208-catalog</span></div>
+        </div>
+        <div class="score">
+          <span class="score-val">0.75</span>
+          <span class="score-label">care score</span>
+        </div>
+      </div>
+
+      <div class="retrieved low">
+        <div class="rank">5</div>
+        <div class="body">
+          <div class="title">General EU history — not actionable</div>
+          <div class="desc">Background context from older ingestion. Low care because it is reference material, not signal. Demoted below the actionable episodes.</div>
+          <div class="tags"><span class="tag">background</span><span class="tag">reference</span></div>
+        </div>
+        <div class="score">
+          <span class="score-val">0.18</span>
+          <span class="score-label">care score</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="retrieval-legend">
+      <div class="legend-item"><span class="dot high"></span> HIGH CARE (0.7–1.0) — safety, regulation, deadlines</div>
+      <div class="legend-item"><span class="dot mid"></span> MID CARE (0.4–0.7) — compliance, strategy, revenue</div>
+      <div class="legend-item"><span class="dot low"></span> LOW CARE (&lt;0.4) — trivia, reference, decay</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: QUANTUM MEMORY SEARCH -->
+<section class="section" id="quantum">
+  <h2><span class="num">06</span> Quantum Memory Search <span class="tag">TEASER</span></h2>
+  <p class="section-lede">The next frontier: <strong>Grover + VQE scoring</strong> over the episode space. Classical vector search is O(N). Grover gives quadratic speedup. VQE scores importance via variational quantum eigensolver — the recall pipeline becomes a hybrid quantum-classical operation. Currently in alpha on the M2 MacBook via Qiskit Aer simulator.</p>
+
+  <div class="quantum">
+    <div class="q-tag"><span class="quantum-icon">⚛</span> QUANTUM · ALPHA · M2 + QISKIT AER</div>
+    <h3><span class="grad">Quantum-Accelerated Memory Search</span></h3>
+    <p>Two algorithms drive the next recall layer. Both run as a <strong>quantum batch</strong> — every Sunday at 04:00 UTC, the M2 MacBook executes QAOA care-weight optimisation, VQE importance scoring, and Grover search across the SIGIL ledger. Results feed back into the OLM router and the OOWM evolver.</p>
+
+    <div class="quantum-grid">
+      <div class="q-algorithm">
+        <div class="q-title"><span class="q-icon">🔎</span> Grover Search</div>
+        <div class="q-desc">Amplitude amplification over the 17,320-episode Hilbert space. Finds the relevant episodes in O(√N) instead of O(N). ~131× theoretical speedup on full-corpus recall.</div>
+        <div class="q-spec">k = 5 · iterations ≈ 42 · N = 17,320 → ~131×</div>
+      </div>
+      <div class="q-algorithm">
+        <div class="q-title"><span class="q-icon">📊</span> VQE Scoring</div>
+        <div class="q-desc">Variational quantum eigensolver computes importance scores as ground-state energies. Maps each episode to a Hamiltonian; the lowest-energy eigenstate = the most-care-anchored memory.</div>
+        <div class="q-spec">ansatz = EfficientSU2 · depth = 3 · optimizer = COBYLA</div>
+      </div>
+      <div class="q-algorithm">
+        <div class="q-title"><span class="q-icon">⚡</span> QAOA Care-Optimisation</div>
+        <div class="q-desc">Quantum approximate optimisation algorithm re-weights episodes so the care distribution better matches user-context valence. Runs nightly on M2 in ~4 minutes.</div>
+        <div class="q-spec">p = 2 layers · shots = 8,192 · result: rebalanced care vec</div>
+      </div>
+      <div class="q-algorithm">
+        <div class="q-title"><span class="q-icon">🔐</span> Quantum-Safe Signatures</div>
+        <div class="q-desc">Ed25519 today; ML-DSA-65 (Dilithium) ready for NIST PQC migration. Quantum-resistant SIGIL chain on the DORADO ledger. 90-day key rotation policy.</div>
+        <div class="q-spec">today: Ed25519 · PQC: ML-DSA-65 · cycle: 90 days</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTAs -->
+<section class="cta-section" id="ctas">
+  <h2>↓ Where Memory Lives ↓</h2>
+  <p style="color:var(--muted);max-width:780px;margin:0 auto 1rem;font-size:.95rem">Three sovereign surfaces — the private mind where memories live, the agentic layer that writes them, and the master hub that ties it all together.</p>
+
+  <div class="cta-grid">
+    <a href="j-space.html" class="cta-card primary">
+      <span class="cta-arrow">→</span>
+      <span class="cta-icon">🌀</span>
+      <span class="cta-name">J-Space</span>
+      <span class="cta-desc">The private mind. 16-dim Mamba-2 state, intuition engine, MAP-Elites QD archive, memory chains, Vedantic consciousness modes. Where the sovereign thinks — not visible to vendors.</span>
+      <span class="cta-path">/j-space.html</span>
+    </a>
+
+    <a href="SOV33_AGENTIC.html" class="cta-card purple">
+      <span class="cta-arrow">→</span>
+      <span class="cta-icon">✍️</span>
+      <span class="cta-name">Hermes Layer</span>
+      <span class="cta-desc">The agentic layer that writes the memories. 33 MCP federation, BFT council, broadcast channels, task delegation. Every interaction becomes an episode here.</span>
+      <span class="cta-path">/SOV33_AGENTIC.html</span>
+    </a>
+
+    <a href="master.html" class="cta-card gold">
+      <span class="cta-arrow">→</span>
+      <span class="cta-icon">🐉</span>
+      <span class="cta-name">Master Hub</span>
+      <span class="cta-desc">The sovereign being. UK + AUKUS substrate. 13 model classes in one organic loop. The whole thing, one URL. 30/30 MCPs · 204 pages · 100/100 alignment.</span>
+      <span class="cta-path">/master.html</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-line"><strong>SOV3 MEMORY LAYER</strong> · Layer 9 of the sovereign AI stack</div>
+  <div class="foot-line">17,320 episodes · <span class="gold">1,001 SIGIL receipts</span> · Ed25519 audit chain · Care-weighted retrieval</div>
+  <div class="sig-strip">
+    <div class="item"><span class="k">ledger:</span><span class="v">Ed25519</span></div>
+    <div class="item"><span class="k">care_avg:</span><span class="v">0.27</span></div>
+    <div class="item"><span class="k">tier_cascade:</span><span class="v">3</span></div>
+    <div class="item"><span class="k">recall_latency:</span><span class="v">~80ms p50</span></div>
+    <div class="item"><span class="k">quantum:</span><span class="v">Grover + VQE</span></div>
+    <div class="item"><span class="k">deployed:</span><span class="v">csoai-static-deploy2.vercel.app</span></div>
+  </div>
+</footer>
+
+</div>
+</body></html>

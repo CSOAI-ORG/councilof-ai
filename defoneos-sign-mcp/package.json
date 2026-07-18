@@ -1,0 +1,11 @@
+{
+  "name": "defoneos-sign-mcp",
+  "version": "1.0.0",
+  "description": "DEFONEOS signing MCP — sign any AI/scientific output into an offline-verifiable Ed25519 artifact (the sovereign assurance layer on top). Verifies at defoneos.vercel.app/verify.html, no server.",
+  "license": "MIT",
+  "bin": { "defoneos-sign-mcp": "server.js" },
+  "type": "commonjs",
+  "scripts": { "start": "node server.js", "test": "node test.js" },
+  "keywords": ["mcp", "ed25519", "provenance", "assurance", "defoneos", "csoai", "signing", "reproducibility"],
+  "engines": { "node": ">=18" }
+}

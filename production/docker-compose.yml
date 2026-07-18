@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # Core Services
+  sov3-core:
+    build: ./sov3
+    ports:
+      - "3101:3101"
+    networks:
+      - sov3
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3101/mcp"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  councilof:
+    build: ./councilof
+    ports:
+      - "3103:3103"
+    networks:
+      - sov3
+    depends_on:
+      - sov3-core
+    restart: unless-stopped
+
+  moe-council:
+    build: ./moe
+    ports:
+      - "3104:3104"
+    networks:
+      - sov3
+    restart: unless-stopped
+
+  # Breakthrough Layer
+  quantum-council:
+    build: ./quantum
+    ports:
+      - "3111:3111"
+    networks:
+      - sov3
+    restart: unless-stopped
+
+  meok-bridge:
+    build: ./meok
+    ports:
+      - "3112:3112"
+    networks:
+      - sov3
+    depends_on:
+      - sov3-core
+      - councilof
+      - moe-council
+    restart: unless-stopped
+
+  certification:
+    build: ./certification
+    ports:
+      - "3110:3110"
+    networks:
+      - sov3
+    restart: unless-stopped
+
+  # Tools
+  search-agent:
+    build: ./search
+    ports:
+      - "3108:3108"
+    networks:
+      - sov3
+    restart: unless-stopped
+
+  health-dashboard:
+    build: ./health
+    ports:
+      - "3109:3109"
+    networks:
+      - sov3
+    restart: unless-stopped
+
+  # Nginx Load Balancer
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    networks:
+      - sov3
+    depends_on:
+      - meok-bridge
+      - certification
+    restart: unless-stopped
+
+networks:
+  sov3:
+    driver: bridge

@@ -1,0 +1,50 @@
+{
+  "A_apex_unblock": {
+    "strategy": "A_apex_unblock",
+    "P_1k_mrr_by_aug20": 0.6058,
+    "mean_mrr_final": 1552.7576,
+    "median_mrr_final": 1299.0,
+    "p90_mrr_final": 3159.2000000000007,
+    "p10_mrr_final": 237.0,
+    "max_mrr_final": 9667.0,
+    "mean_path_day_28": 714.0396,
+    "mean_path_day_56": 1296.5567,
+    "mean_path_day_84": 1552.7576
+  },
+  "B_tui_momentum": {
+    "strategy": "B_tui_momentum",
+    "P_1k_mrr_by_aug20": 0.5897,
+    "mean_mrr_final": 2299.052,
+    "median_mrr_final": 1605.0,
+    "p90_mrr_final": 5580.0,
+    "p10_mrr_final": 20.0,
+    "max_mrr_final": 19500.0,
+    "mean_path_day_28": 1266.3883,
+    "mean_path_day_56": 1837.3327,
+    "mean_path_day_84": 2299.052
+  },
+  "C_partnership_pivot": {
+    "strategy": "C_partnership_pivot",
+    "P_1k_mrr_by_aug20": 0.0007,
+    "mean_mrr_final": 1.3489,
+    "median_mrr_final": 0.0,
+    "p90_mrr_final": 0.0,
+    "p10_mrr_final": 0.0,
+    "max_mrr_final": 1499.0,
+    "mean_path_day_28": 0.4996,
+    "mean_path_day_56": 0.9992,
+    "mean_path_day_84": 1.3489
+  }
+}
+
+======================================================================
+RANKING by P(£1k MRR by Aug 20):
+1. A_apex_unblock: P(>=£1k)=60.6%  median£1299/mo  p90£3159/mo  mean£1553/mo
+2. B_tui_momentum: P(>=£1k)=59.0%  median£1605/mo  p90£5580/mo  mean£2299/mo
+3. C_partnership_pivot: P(>=£1k)=0.1%  median£0/mo  p90£0/mo  mean£1/mo
+
+Combined (all 3 in parallel, lower bound):  P(>=£1k)≈83.8%
+Combined median (sum of medians, rough):    £2904/mo
+
+Quantum batch ran end-to-end in 0.042s (classical simulator confirmed).
+Engagement score from BFT council: 0.6575 'building' phase, 70 agents, 46 active.

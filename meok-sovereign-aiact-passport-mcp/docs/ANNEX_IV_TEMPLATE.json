@@ -1,0 +1,102 @@
+{
+  "_provenance": "EU AI Act Regulation (EU) 2024/1689, Annex IV — Technical documentation referred to in Article 11(1), high-risk AI systems.",
+  "_template_v": "0.1.0",
+  "_template_date": "2026-07-08",
+  "_cite": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689 — Annex IV items 1-9",
+  "items": [
+    {
+      "item": 1,
+      "title": "General description of the AI system",
+      "fields": [
+        {"name": "intended_purpose", "type": "string", "required": true},
+        {"name": "provider_name",    "type": "string", "required": true},
+        {"name": "system_id",         "type": "string", "required": true},
+        {"name": "version",           "type": "string", "required": true},
+        {"name": "release_date",      "type": "iso_date", "required": false},
+        {"name": "deployment_geography", "type": "string", "required": false}
+      ]
+    },
+    {
+      "item": 2,
+      "title": "Description of the elements of the AI system",
+      "fields": [
+        {"name": "components",         "type": "list[string]", "required": false},
+        {"name": "data_inputs",        "type": "list[string]", "required": false},
+        {"name": "data_outputs",       "type": "list[string]", "required": false},
+        {"name": "model_architecture", "type": "string", "required": false}
+      ]
+    },
+    {
+      "item": 3,
+      "title": "Description of the data processing",
+      "fields": [
+        {"name": "training_data_summary",        "type": "string", "required": false},
+        {"name": "validation_data_summary",      "type": "string", "required": false},
+        {"name": "data_quality_assessment",      "type": "string", "required": false},
+        {"name": "personal_data_involved",       "type": "bool",   "required": true},
+        {"name": "lawful_basis_gdpr",            "type": "enum[consent|contract|legal_obligation|vital_interest|public_task|legitimate_interests]", "required": false}
+      ]
+    },
+    {
+      "item": 4,
+      "title": "Description of the capabilities and limitations",
+      "fields": [
+        {"name": "intended_users",        "type": "list[string]", "required": false},
+        {"name": "use_cases_covered",     "type": "list[string]", "required": false},
+        {"name": "known_limitations",     "type": "list[string]", "required": false},
+        {"name": "accuracy_metrics",      "type": "object", "required": false},
+        {"name": "robustness_metrics",    "type": "object", "required": false},
+        {"name": "performance_benchmarks", "type": "list[object]", "required": false}
+      ]
+    },
+    {
+      "item": 5,
+      "title": "Description of the intended purposes",
+      "fields": [
+        {"name": "primary_purpose",   "type": "string", "required": true},
+        {"name": "secondary_purposes","type": "list[string]", "required": false},
+        {"name": "foreseeable_misuse","type": "list[string]", "required": false}
+      ]
+    },
+    {
+      "item": 6,
+      "title": "Description of the operational monitoring",
+      "fields": [
+        {"name": "monitoring_signals",  "type": "list[string]", "required": false},
+        {"name": "alert_thresholds",    "type": "object", "required": false},
+        {"name": "incident_response",   "type": "string", "required": false},
+        {"name": "post_market_plan",    "type": "url", "required": false}
+      ]
+    },
+    {
+      "item": 7,
+      "title": "Description of the risk-management measures",
+      "fields": [
+        {"name": "risk_register",       "type": "object", "required": false},
+        {"name": "controls_in_place",   "type": "list[string]", "required": false},
+        {"name": "residual_risk",       "type": "enum[low|medium|high]", "required": false}
+      ]
+    },
+    {
+      "item": 8,
+      "title": "Description of the changes made",
+      "fields": [
+        {"name": "version_log",   "type": "list[object]", "required": false},
+        {"name": "change_history","type": "url", "required": false},
+        {"name": "current_version","type": "string", "required": false}
+      ]
+    },
+    {
+      "item": 9,
+      "title": "Description of the human oversight measures (Art 14)",
+      "fields": [
+        {"name": "oversight_level",      "type": "enum[human-in-the-loop|human-on-the-loop|human-out-of-the-loop]", "required": true},
+        {"name": "oversight_role",       "type": "string", "required": false},
+        {"name": "override_mechanism",   "type": "string", "required": false},
+        {"name": "kill_switch",          "type": "bool", "required": true},
+        {"name": "explainability_layer", "type": "string", "required": false}
+      ]
+    }
+  ],
+  "_honesty_register": "Annex IV technical documentation is what you, the provider, produce and maintain. This template is a scaffolder; you fill every required field with evidence. The CSOAI signed passport — issued separately — proves that the documented posture was attested at a point in time. It does not validate the content."
+}

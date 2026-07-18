@@ -1,0 +1,159 @@
+{
+  "version": "1.0",
+  "date": "2026-06-25",
+  "source": "CASA-CA3O Complete Intelligence Package (CSOAI-CORP)",
+  "description": "CASA = CSOAI AI Safety & Assurance, 4-level certification. CA3O = Certified AI Agent Assessment Officer. Maps to MEOK OS Layer 0 buses + 47-agent town roles.",
+  "casa_levels": [
+    {
+      "level": 1,
+      "name": "CASA-1: Foundation",
+      "color": "blue",
+      "audience": "Individual developers, students, hobbyists",
+      "duration": "8 hours self-paced",
+      "exam": "50-question multiple choice",
+      "pass": "70%",
+      "price": "£99",
+      "covers": ["AI literacy", "basic risk classification", "Watchdog Cert basics"],
+      "bft_role": "Observer (non-voting)",
+      "meok_town_role": "Apprentice (1 of 47)"
+    },
+    {
+      "level": 2,
+      "name": "CASA-2: Practitioner",
+      "color": "gold",
+      "audience": "AI/ML engineers, data scientists",
+      "duration": "40 hours + project",
+      "exam": "100-question + 1 EU AI Act compliance project",
+      "pass": "75% + project review",
+      "price": "£499",
+      "covers": ["EU AI Act Article-by-Article", "13-framework crosswalk", "Watchdog Cert issuance", "DPIA generation"],
+      "bft_role": "Voter (1 of 7 per council)",
+      "meok_town_role": "Practitioner (5 of 47)"
+    },
+    {
+      "level": 3,
+      "name": "CASA-3: Lead Auditor",
+      "color": "navy",
+      "audience": "Senior engineers, compliance officers, partners",
+      "duration": "80 hours + 3 audits",
+      "exam": "200-question + 3 real audit reports + viva",
+      "pass": "80% + audit pass + viva",
+      "price": "£2,499",
+      "covers": ["BFT Council chair", "30-framework crosswalk", "audit methodology", "Sovereign Substrate admin"],
+      "bft_role": "Chair (1 of 1 per council)",
+      "meok_town_role": "Master (1 of 47)"
+    },
+    {
+      "level": 4,
+      "name": "CASA-4: C3PAO Director",
+      "color": "red",
+      "audience": "Authorized assessment organizations",
+      "duration": "120 hours + org accreditation",
+      "exam": "Org application + 27-month ISO 17020 accreditation + CCAs on staff",
+      "pass": "Org + ISO + 3 CCAs",
+      "price": "£15,000 + £3,000/yr",
+      "covers": ["C3PAO equivalent for AI", "Authorization to assess CASA-2/3 holders", "Quarterly conformance reports"],
+      "bft_role": "Council Founder (lifetime)",
+      "meok_town_role": "Mayor (1 of 47, runs the town)"
+    }
+  ],
+  "casa_sectors": [
+    {
+      "id": "sector-cyber",
+      "name": "Cybersecurity",
+      "icon": "🛡️",
+      "frameworks": ["NIST CSF 2.0", "ISO 27001", "SOC 2", "FedRAMP"],
+      "hive": "csoai-cyber",
+      "towns": ["SF Bay", "London Watch"],
+      "agents": ["Compliance-15", "Compliance-16", "Compliance-17", "Compliance-18", "Compliance-19"],
+      "role_in_moat": "First-mover on DoD AI certification (CMMC equivalent)",
+      "key_authority": "CDAO + Cyber AB",
+      "estimated_market": "$2.3B US DoD AI compliance"
+    },
+    {
+      "id": "sector-defence",
+      "name": "Defence",
+      "icon": "⚔️",
+      "frameworks": ["CMMC 2.0", "NIST 800-171", "CDAO Memo 9 Jan 2026", "NDAA FY2026"],
+      "hive": "agisafe",
+      "towns": ["DC Pentagon", "Norfolk"],
+      "agents": ["Sentinel", "Forge", "Minerva", "Oracle", "Nomad"],
+      "role_in_moat": "Direct CMMC equivalent for AI agents in defence",
+      "key_authority": "CDAO (Cameron Stanley)",
+      "estimated_market": "$850M DoD AI agent compliance"
+    },
+    {
+      "id": "sector-governance",
+      "name": "AI Governance",
+      "icon": "⚖️",
+      "frameworks": ["EU AI Act", "NIST AI RMF", "ISO 42001", "Council of Europe AI Convention"],
+      "hive": "councilof",
+      "towns": ["Brussels", "London Watch", "SF Bay"],
+      "agents": ["Sovereign", "Editor", "Councilor-03", "Councilor-04", "Councilor-05", "Compliance-20", "Compliance-21", "Archivist"],
+      "role_in_moat": "The BFT council = multi-stakeholder governance = Article 14 human oversight",
+      "key_authority": "European AI Office + AISI + NIST",
+      "estimated_market": "$1.4B EU AI Act compliance"
+    },
+    {
+      "id": "sector-healthcare",
+      "name": "Healthcare",
+      "icon": "🏥",
+      "frameworks": ["HIPAA", "FDA SaMD", "EU MDR", "21 CFR Part 11", "GxP"],
+      "hive": "care-mcp",
+      "towns": ["Boston", "London", "Singapore"],
+      "agents": ["Koi-Keeper (revised for care)", "Compliance-15", "Compliance-16", "Councilor-06", "Councilor-07"],
+      "role_in_moat": "Care Membrane MCP = §4 sensitive data, EU AI Act high-risk (Annex III §5)",
+      "key_authority": "FDA + MHRA + EMA",
+      "estimated_market": "$640M healthcare AI compliance"
+    },
+    {
+      "id": "sector-finance",
+      "name": "Finance",
+      "icon": "💰",
+      "frameworks": ["DORA", "GDPR", "PCI DSS", "SR 11-7", "MiCA", "Basel III"],
+      "hive": "meok-finance",
+      "towns": ["Frankfurt Prime", "London Watch", "Singapore"],
+      "agents": ["Minerva", "Forge", "Oracle", "Sentinel", "Nomad"],
+      "role_in_moat": "Frankfurt Prime is the active demo town (5 agents live)",
+      "key_authority": "ESAs (EBA, ESMA, EIOPA) + FCA + MAS",
+      "estimated_market": "$1.8B financial AI compliance"
+    },
+    {
+      "id": "sector-infrastructure",
+      "name": "Critical Infrastructure",
+      "icon": "🏗️",
+      "frameworks": ["NIS2", "TSA Pipeline", "FERC", "IEC 62443", "NERC CIP"],
+      "hive": "infra-mcp",
+      "towns": ["Frankfurt Prime", "DC"],
+      "agents": ["Forge", "Sentinel", "Councilor-08", "Councilor-09", "Councilor-10"],
+      "role_in_moat": "EU NIS2 + US critical infrastructure = high-stakes AI governance",
+      "key_authority": "ENISA + CISA + TSA",
+      "estimated_market": "$720M infra AI compliance"
+    }
+  ],
+  "mapping_to_meok_os": {
+    "identity_bus": "CASA-1+ holders get did:csoai identity (read-only at L1, full at L4)",
+    "attestation_bus": "CASA-2+ can issue Watchdog Certs. CASA-3+ can verify. CASA-4+ can authorize issuers.",
+    "policy_bus": "CASA-3+ admin access to Layer 0 compliance MCP. CASA-4+ can write new policy modules.",
+    "payment_bus": "CASA-2+ can issue paid attestations via x402. CASA-3+ can verify paid attestations. CASA-4+ can configure x402 routes.",
+    "audit_bus": "CASA-3+ can read SIGIL chain. CASA-4+ can issue SIGILs. All CASA levels see public audit trail.",
+    "council_bus": "CASA-2 = Voter, CASA-3 = Chair, CASA-4 = Founder. CASA-1 = Observer."
+  },
+  "revenue_model": {
+    "CASA-1": "£99 × 100,000 learners = £9.9M Year 1",
+    "CASA-2": "£499 × 10,000 practitioners = £4.99M Year 1",
+    "CASA-3": "£2,499 × 1,000 lead auditors = £2.499M Year 1",
+    "CASA-4": "£15K × 50 organizations = £750K Year 1",
+    "Total Year 1 ARR target": "£18.1M (calibrated against CMMC trajectory)",
+    "Target Series A": "$5M @ $20M post-money = 25% dilution",
+    "Path to Series B": "£30M ARR + 1 regulator design partner = $50M"
+  },
+  "leverage_against_competitors": {
+    "Vanta": "Has certifications, has no CASA authority, has no BFT governance, has no sovereign substrate",
+    "Drata": "Same as Vanta but smaller",
+    "Credo AI": "Risk dashboard, no CASA authority, no Layer 0",
+    "Holistic AI": "Same as Credo",
+    "IBM watsonx": "Big Tech lock-in (anti-sovereign)",
+    "CSOAI": "ONLY ONE with: CASA authority + BFT + sovereign substrate + Layer 0 + 47-agent town + 30 crosswalks + 6 sector specializations"
+  }
+}

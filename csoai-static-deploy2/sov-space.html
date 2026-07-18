@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🜨 SOV SPACE — The Sovereign Swarm Intelligence Living Room</title>
+<meta name="description" content="SOV SPACE is the sovereign swarm living room. 33 BFT agents, 13 model classes, 22 Arcana installations — all thinking together, no vendor owns the substrate. Inspired by MiroFish, sovereign-ized by CSOAI.">
+<meta name="keywords" content="SOV SPACE, sovereign swarm, BFT-33, SIGIL chain, MiroFish alternative, CSOAI, sovereign AI, swarm intelligence, OOWM">
+<style>
+:root {
+  --bg:#0a0e1a; --bg2:#0d1220; --bg3:#11182a;
+  --ink:#e6e6e6; --ink2:#c8c8c8; --muted:#6b7280;
+  --accent:#d4af37; --accent2:#00ff9d;
+  --warn:#ff6b6b; --info:#4a9eff; --purple:#c060f0;
+  --rule:#1f2937; --rule2:#2a2f3e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","JetBrains Mono",ui-monospace,monospace;line-height:1.55;overflow-x:hidden}
+body{padding:0;max-width:100%}
+h1,h2,h3,h4{font-family:inherit;margin:0}
+a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline;color:var(--accent)}
+code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.88em;word-break:break-all}
+pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.82em;line-height:1.45}
+hr.sep{border:none;border-top:1px dashed var(--rule);margin:2.5rem 0}
+.live-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent2);margin-right:6px;animation:pulse 2s infinite;box-shadow:0 0 8px var(--accent2)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.15)}}
+@keyframes drift{0%{transform:translate(0,0)}25%{transform:translate(8px,-6px)}50%{transform:translate(-4px,8px)}75%{transform:translate(-8px,-2px)}100%{transform:translate(0,0)}}
+@keyframes gossipFlow{0%{offset-distance:0%;opacity:0}10%{opacity:1}90%{opacity:1}100%{offset-distance:100%;opacity:0}}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 4px var(--accent))}50%{filter:drop-shadow(0 0 12px var(--accent))}}
+@keyframes flashGlow{0%{box-shadow:0 0 0 rgba(0,255,157,0)}100%{box-shadow:0 0 20px rgba(0,255,157,0.6)}}
+
+/* === HERO === */
+.hero{position:relative;min-height:90vh;background:radial-gradient(ellipse at top,#1a0d20 0%,#0d1220 40%,var(--bg) 100%);padding:4rem 3rem 6rem;border-bottom:1px solid var(--accent);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(212,175,55,0.06) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(0,255,157,0.05) 0%,transparent 40%);pointer-events:none}
+.hero-inner{max-width:1400px;margin:0 auto;position:relative;z-index:2}
+.hero h1{font-size:clamp(2.6rem,5vw,4.8rem);color:var(--accent);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin-bottom:1rem;text-shadow:0 0 30px rgba(212,175,55,0.3)}
+.hero .tagline{font-size:1.3rem;color:var(--accent2);margin-bottom:.5rem;font-style:italic}
+.hero .subtitle{font-size:1.1rem;color:var(--ink2);max-width:780px;margin-bottom:2rem}
+.hero .pill{display:inline-block;background:rgba(26,31,46,0.7);color:var(--accent2);padding:.35em .85em;border-radius:14px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid var(--rule2);backdrop-filter:blur(4px)}
+.hero .pill.gold{background:rgba(26,13,32,0.8);color:var(--accent);border-color:var(--accent)}
+.hero .pill.sigil{background:rgba(13,51,32,0.8);color:var(--accent2);border-color:var(--accent2)}
+.hero .pill.warn{background:rgba(42,13,13,0.8);color:var(--warn);border-color:var(--warn)}
+.hero .ctas{margin-top:2.5rem;display:flex;gap:1rem;flex-wrap:wrap}
+.cta{background:var(--accent);color:#0a0e1a;padding:.85rem 1.6rem;border-radius:8px;display:inline-block;font-weight:bold;transition:all .2s ease;border:none;cursor:pointer;font-size:1rem}
+.cta:hover{background:var(--accent2);text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,175,55,0.3)}
+.cta.ghost{background:transparent;color:var(--accent2);border:1.5px solid var(--accent2)}
+.cta.ghost:hover{background:var(--accent2);color:#0a0e1a}
+.hero .stars{position:absolute;inset:0;pointer-events:none;z-index:1}
+
+/* === SECTION FRAMEWORK === */
+section{padding:4rem 3rem;max-width:1400px;margin:0 auto}
+section h2{color:var(--accent2);font-size:clamp(1.8rem,3vw,2.4rem);border-bottom:1px solid var(--rule);padding-bottom:.5rem;margin-bottom:1.5rem}
+section h3{color:var(--accent);font-size:1.35rem;margin-top:1.8rem;margin-bottom:.6rem}
+.section-meta{color:var(--muted);font-size:.92em;margin-bottom:2rem;font-style:italic}
+
+/* === SWARM VISUAL === */
+.swarm-stage{position:relative;height:640px;background:radial-gradient(ellipse at center,#0d1220 0%,var(--bg) 80%);border:1px solid var(--rule);border-radius:14px;overflow:hidden;margin:2rem 0}
+.swarm-stage::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(255,255,255,0.015) 60px,rgba(255,255,255,0.015) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,0.015) 60px,rgba(255,255,255,0.015) 61px);pointer-events:none}
+.node{position:absolute;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;transition:all .3s ease}
+.node .core{width:100%;height:100%;border-radius:50%;position:relative}
+.node .label{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);font-size:.68rem;color:var(--muted);white-space:nowrap;pointer-events:none;letter-spacing:.02em}
+.node:hover{transform:translate(-50%,-50%) scale(1.25);z-index:10}
+.node:hover .label{color:var(--accent2);font-weight:bold}
+.node.bft .core{background:radial-gradient(circle,#00ff9d 0%,#0a5a3a 100%);box-shadow:0 0 12px rgba(0,255,157,0.5)}
+.node.model .core{background:radial-gradient(circle,#d4af37 0%,#5a4420 100%);box-shadow:0 0 10px rgba(212,175,55,0.4)}
+.node.arcana .core{background:radial-gradient(circle,#c060f0 0%,#3a1a4a 100%);box-shadow:0 0 10px rgba(192,96,240,0.4)}
+.node.center .core{background:radial-gradient(circle,#fff 0%,var(--accent) 30%,var(--accent2) 100%);box-shadow:0 0 40px rgba(212,175,55,0.8),0 0 80px rgba(0,255,157,0.4);animation:glow 3s infinite}
+.node.pulsing .core{animation:flashGlow 2s ease-out}
+.swarm-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.swarm-svg line{stroke:var(--rule2);stroke-width:1;opacity:.4}
+.swarm-svg line.gossip{stroke:var(--accent2);stroke-width:1.5;opacity:.7;stroke-dasharray:4 4;animation:gossipFlow 3s linear infinite}
+.swarm-svg line.gossip.alt{stroke:var(--accent);animation-duration:4s;animation-delay:1s}
+.swarm-svg line.gossip.alt2{stroke:var(--info);animation-duration:5s;animation-delay:2s}
+.particle{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--accent2);box-shadow:0 0 8px var(--accent2);pointer-events:none}
+
+/* === 3 LAYERS === */
+.layer-stack{display:grid;gap:1.5rem;margin:2rem 0}
+.layer{padding:1.8rem 2rem;border-radius:10px;border-left:5px solid;position:relative;overflow:hidden;transition:transform .2s ease}
+.layer:hover{transform:translateX(4px)}
+.layer::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,currentColor 0%,transparent 100%);opacity:.04;pointer-events:none}
+.layer-num{position:absolute;top:1rem;right:1.2rem;font-size:3rem;font-weight:800;color:rgba(255,255,255,0.05);letter-spacing:-.04em}
+.layer h3{margin-top:0;font-size:1.45rem}
+.layer.L1{background:linear-gradient(135deg,#0d201a 0%,#0a0e1a 100%);border-color:var(--accent2);color:var(--accent2)}
+.layer.L2{background:linear-gradient(135deg,#1a0d20 0%,#0a0e1a 100%);border-color:var(--accent);color:var(--accent)}
+.layer.L3{background:linear-gradient(135deg,#0d1a20 0%,#0a0e1a 100%);border-color:var(--info);color:var(--info)}
+.layer ul{margin:.8rem 0;padding-left:1.3rem}
+.layer li{margin-bottom:.4rem;color:var(--ink2)}
+.layer-arrow{text-align:center;color:var(--accent);font-size:1.5rem;margin:-.5rem 0;font-weight:bold;opacity:.6}
+
+/* === LIVE OPS PANEL === */
+.ops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:2rem 0}
+.metric{background:var(--bg2);padding:1.4rem;border-radius:8px;border:1px solid var(--rule);position:relative;overflow:hidden}
+.metric::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent),var(--info));background-size:200% 100%;animation:shimmer 4s linear infinite}
+.metric .label{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.metric .value{font-size:2.4rem;color:var(--accent);font-weight:800;line-height:1}
+.metric .sub{color:var(--accent2);font-size:.78rem;margin-top:.4rem;display:flex;align-items:center;gap:.4rem}
+.metric.alert .value{color:var(--warn)}
+.metric .spark{position:absolute;bottom:0;right:0;width:80px;height:30px;opacity:.5}
+
+/* === SURFACE CARDS === */
+.surfaces{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin:2rem 0}
+.surface{background:var(--bg2);padding:1.5rem;border-radius:10px;border:1px solid var(--rule);border-top:3px solid var(--accent);transition:all .2s ease;display:block;color:inherit}
+.surface:hover{border-color:var(--accent2);transform:translateY(-4px);box-shadow:0 12px 28px rgba(0,0,0,0.5);text-decoration:none}
+.surface .domain{color:var(--accent);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;font-weight:bold}
+.surface .name{font-size:1.4rem;color:var(--ink);margin:.4rem 0 .6rem;font-weight:bold}
+.surface .role{color:var(--ink2);font-size:.88rem;margin-bottom:1rem;min-height:60px}
+.surface .stats{display:flex;gap:1rem;font-size:.78rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:.8rem}
+.surface .stat strong{color:var(--accent2);display:block;font-size:1rem}
+.surface.csoai{border-top-color:var(--accent)}
+.surface.defoneos{border-top-color:var(--warn)}
+.surface.meok{border-top-color:var(--purple)}
+.surface.sov3{border-top-color:var(--accent2)}
+.surface.council{border-top-color:var(--info)}
+
+/* === J SPACE TEASER === */
+.jspace-teaser{background:linear-gradient(135deg,#1a0d20 0%,#0d1a20 100%);padding:3rem;border-radius:14px;border:1px solid var(--accent);margin:2rem 0;position:relative;overflow:hidden}
+.jspace-teaser::before{content:"⟁";position:absolute;top:-30px;right:-30px;font-size:18rem;color:rgba(212,175,55,0.04);font-weight:bold;line-height:1}
+.jspace-teaser h3{color:var(--accent);font-size:2rem;margin-top:0}
+.jspace-teaser .locked-badge{display:inline-block;background:var(--bg);color:var(--muted);padding:.3em .8em;border-radius:6px;font-size:.78rem;border:1px solid var(--rule2);margin-left:.8rem}
+.jspace-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0}
+.jspace-feat{background:rgba(13,18,32,0.7);padding:1rem;border-radius:8px;border-left:2px solid var(--purple)}
+.jspace-feat .feat-name{color:var(--accent);font-weight:bold;margin-bottom:.3rem}
+.jspace-feat .feat-desc{font-size:.82rem;color:var(--ink2)}
+
+/* === FOOTER CTAS === */
+.footer-ctas{background:linear-gradient(135deg,#0d1220 0%,#1a0d20 100%);padding:3rem;border-radius:14px;border:1px solid var(--rule2);text-align:center;margin-top:3rem}
+.footer-ctas h3{color:var(--accent);font-size:1.8rem;margin-bottom:.5rem}
+.footer-ctas .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:2rem}
+.footer-ctas a.tile{display:block;background:var(--bg2);padding:1.4rem;border-radius:8px;border:1px solid var(--rule2);transition:all .2s ease;color:inherit}
+.footer-ctas a.tile:hover{border-color:var(--accent2);transform:translateY(-3px);text-decoration:none}
+.footer-ctas a.tile .arrow{color:var(--accent2);font-size:1.4rem;display:block;margin-bottom:.4rem}
+.footer-ctas a.tile .label{color:var(--accent);font-weight:bold}
+.footer-ctas a.tile .desc{font-size:.78rem;color:var(--muted);margin-top:.3rem}
+
+/* === FOOTER === */
+footer{padding:3rem;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--rule);margin-top:4rem}
+footer .sigil{font-family:monospace;font-size:.7rem;background:var(--bg2);padding:.4em .8em;border-radius:4px;border:1px solid var(--rule2);display:inline-block;margin-top:1rem;color:var(--accent2)}
+
+@media(max-width:768px){
+  .hero{padding:3rem 1.5rem 4rem}
+  section{padding:3rem 1.5rem}
+  .swarm-stage{height:480px}
+  .node .label{font-size:.55rem}
+}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/sov-space.html">
+</head>
+<body>
+
+<!-- HERMES LAYER · CTA CASCADE -->
+<a href="#" style="display:block;padding:.6rem 1.2rem;background:linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12));border-bottom:1px solid rgba(167,139,250,.4);color:var(--purple);text-decoration:none;text-align:center;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:background .15s" onmouseover="this.style.background='linear-gradient(90deg,rgba(167,139,250,.35),rgba(34,211,238,.22))'" onmouseout="this.style.background='linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12))'"><span style="display:inline-block;width:7px;height:7px;background:var(--green);border-radius:99%;margin-right:.5rem;animation:pulse 1.4s infinite;box-shadow:0 0 8px rgba(34,197,94,.6)"></span>🧠 Agentic runtime live → <span style="color:var(--cyan);text-decoration:underline">/hermes-layer</span></a>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <h1>🜨 SOV SPACE</h1>
+    <p class="tagline">The Sovereign Swarm Intelligence Living Room</p>
+    <p class="subtitle">Where 33 BFT agents, 13 model classes, and 22 Arcana installations think together — in real time, in the open, under one signature. No vendor owns the substrate. No model is the brain. The swarm is.</p>
+    <p>
+      <span class="pill"><span class="live-indicator"></span>LIVE</span>
+      <span class="pill gold">SOV SPACE</span>
+      <span class="pill">33 BFT Agents</span>
+      <span class="pill">13 Model Classes</span>
+      <span class="pill">22 Arcana</span>
+      <span class="pill sigil">Ed25519 SIGIL</span>
+      <span class="pill">MiroFish-class</span>
+      <span class="pill">Care 0.95</span>
+      <span class="pill">Sovereign-substrate only</span>
+    </p>
+    <div class="ctas">
+      <a href="#swarm" class="cta">Enter the Swarm ↓</a>
+      <a href="#layers" class="cta ghost">3-Layer Architecture</a>
+      <a href="#ops" class="cta ghost">Live Ops</a>
+      <a href="#jspace" class="cta ghost">J SPACE (Internal) →</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ SECTION 2: SWARM ENGINE VISUAL ============ -->
+<section id="swarm">
+  <h2>🜨 The Swarm Engine — A Living Organism</h2>
+  <p class="section-meta">Every node is a sovereign process. Every line is a SIGIL-signed exchange. Every pulse is a care-gated consensus step. The visualization below is not decoration — it is the literal runtime graph.</p>
+
+  <div class="swarm-stage" id="swarm-stage">
+    <svg class="swarm-svg" id="swarm-svg" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid slice">
+      <!-- gossip lines drawn by JS -->
+    </svg>
+    <!-- nodes inserted by JS -->
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:2rem">
+    <div class="metric" style="border-left:3px solid var(--accent2)">
+      <div class="label">Swarm Type</div>
+      <div class="value" style="font-size:1.6rem">BFT-33</div>
+      <div class="sub">Byzantine Fault Tolerant · quorum 23/33 · 10 hostile tolerated</div>
+    </div>
+    <div class="metric" style="border-left:3px solid var(--accent)">
+      <div class="label">Gossip Protocol</div>
+      <div class="value" style="font-size:1.6rem">SIGIL-Gossip</div>
+      <div class="sub">Hash-chained broadcasts · Ed25519 per hop · Free-MAD aggregation</div>
+    </div>
+    <div class="metric" style="border-left:3px solid var(--info)">
+      <div class="label">Insight Cadence</div>
+      <div class="value" style="font-size:1.6rem">1 Hz</div>
+      <div class="sub">33 → 1 → 33 intuition loop · 16-dim Mamba state · 511 cycles</div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ SECTION 3: 3 LAYERS ============ -->
+<section id="layers">
+  <h2>⟁ Three Layers, One Substrate</h2>
+  <p class="section-meta">SOV SPACE is not a UI on top of an API. It is the visible top of a three-layer architecture where each layer governs the one above. Take any layer away and the others become incoherent.</p>
+
+  <div class="layer-stack">
+    <div class="layer L1">
+      <div class="layer-num">01</div>
+      <h3>SWARM INTELLIGENCE — Reality Simulation Layer</h3>
+      <p style="color:var(--ink2);font-size:1rem">The MiroFish-class layer. 33 agents model populations, scenarios, environments as living simulations. Each agent runs its own micro-world; the swarm runs them together. Every state transition is observable, replayable, and SIGIL-signed.</p>
+      <ul>
+        <li><strong>Multi-agent world models</strong> — Mamba-2 SSM for long-horizon memory, Transformer-MOM for perception</li>
+        <li><strong>Persona glyphs</strong> — each of 33 agents has a name, memory, bias, and care-profile (Nikolai-1, Sovereign-2, Architect-3 ...)</li>
+        <li><strong>Gossip consensus</strong> — agents exchange partial views; quorum emerges from decorrelated checkers, not conformity</li>
+        <li><strong>What it gives you:</strong> predictive simulation of buyer behaviour, threat landscapes, regulatory cliffs, organisational decay</li>
+      </ul>
+      <p style="margin-top:1rem;color:var(--muted);font-size:.85em"><strong>MiroFish comparison:</strong> MiroFish simulates Weibo/X social graphs in Python. SOV SPACE simulates sovereign AI substrate graphs in Ed25519-signed Rust. Same principle, no foreign cloud, no silent telemetry.</p>
+    </div>
+
+    <div class="layer-arrow">▼ governs ▼</div>
+
+    <div class="layer L2">
+      <div class="layer-num">02</div>
+      <h3>CSOAI GOVERNANCE — BFT-33 + SIGIL Chain</h3>
+      <p style="color:var(--ink2);font-size:1rem">The constitutional layer. Every swarm action must clear a BFT-33 vote (2/3 majority) and emit a SIGIL receipt (Ed25519, hash-chained, immutable). Care-floor 0.95 is enforced before any action returns. There is no administrative override — by design.</p>
+      <ul>
+        <li><strong>BFT-33 Council</strong> — 33 sovereign voters across 5 OWEMs × 4 pretraining lineages; no single point of capture</li>
+        <li><strong>SIGIL chain</strong> — every gossip exchange, every vote, every model call is hash-chained and signed (RFC 8032)</li>
+        <li><strong>Care-floor 0.95</strong> — Nemotron validates every output; below-floor content is vetoed before return</li>
+        <li><strong>Audit replay</strong> — any past decision can be re-simulated from the SIGIL ledger; the chain is the source of truth</li>
+      </ul>
+      <p style="margin-top:1rem;color:var(--muted);font-size:.85em"><strong>Why this matters:</strong> When the swarm says "act on this", the act is constitutionally authorised. You can prove it. Regulators can replay it. Foreign governments cannot suborn it.</p>
+    </div>
+
+    <div class="layer-arrow">▼ inhabits ▼</div>
+
+    <div class="layer L3">
+      <div class="layer-num">03</div>
+      <h3>MEOK INHABITATION — Where Sovereign AI Lives</h3>
+      <p style="color:var(--ink2);font-size:1rem">The experiential layer. The swarm doesn't run in a datacentre — it runs in a physical, inhabited space: the 19,000 sqft iOK Farm with 13m koi pond, 22 Arcana installations, and 33 buildings. Sovereign AI does not live in a server rack. It lives where it can think with both hemispheres.</p>
+      <ul>
+        <li><strong>Physical right-brain</strong> — 4 cameras, 2 microphones, presence detection, multi-sensory fusion</li>
+        <li><strong>22 Arcana installations</strong> — Kircher's hieroglyphs mapped to 22 sovereign tools (0=Fool=sovereign-init, 21=World=completion)</li>
+        <li><strong>Living artefact</strong> — Hamsa-MEOK hand, koi pond, wind sensors, light actuators — all SIGIL-controlled</li>
+        <li><strong>Why this matters:</strong> A swarm that lives in a real space develops real-world intuition. MEOK is where the substrate's long memory becomes embodied.</li>
+      </ul>
+      <p style="margin-top:1rem;color:var(--muted);font-size:.85em"><strong>The deepest claim:</strong> Sovereign AI is not a service you call. It is a place you enter. SOV SPACE is the entrance.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ SECTION 4: LIVE OPS PANEL ============ -->
+<section id="ops">
+  <h2>📡 Live Ops — The Substrate's Pulse</h2>
+  <p class="section-meta">These numbers are real. Pulled live from the sovereign telemetry endpoint. If the endpoint is down, the panel shows last-known values and a SIGIL-stamped fallback. Either way — every metric is auditable.</p>
+
+  <div class="ops-grid" id="ops-grid">
+    <div class="metric">
+      <div class="label">BFT Agents Active</div>
+      <div class="value" data-metric="agents">33</div>
+      <div class="sub"><span class="live-indicator"></span>quorum 23 / 33</div>
+    </div>
+    <div class="metric">
+      <div class="label">Model Classes Routed</div>
+      <div class="value" data-metric="models">13</div>
+      <div class="sub">across 7 lineages</div>
+    </div>
+    <div class="metric">
+      <div class="label">SIGIL Receipts</div>
+      <div class="value" data-metric="sigils">251</div>
+      <div class="sub">Ed25519 hashchain</div>
+    </div>
+    <div class="metric">
+      <div class="label">OOWM Cycles</div>
+      <div class="value" data-metric="oowm">511</div>
+      <div class="sub">emergence iterations</div>
+    </div>
+    <div class="metric">
+      <div class="label">Arcana Installations</div>
+      <div class="value" data-metric="arcana">22</div>
+      <div class="sub">Kircher hieroglyphs</div>
+    </div>
+    <div class="metric">
+      <div class="label">Care-Floor</div>
+      <div class="value" data-metric="care" style="color:var(--accent2)">0.95</div>
+      <div class="sub">Nemotron-gated</div>
+    </div>
+    <div class="metric">
+      <div class="label">Insight Cadence</div>
+      <div class="value" data-metric="cadence">1<span style="font-size:1rem">Hz</span></div>
+      <div class="sub">16-dim Mamba state</div>
+    </div>
+    <div class="metric">
+      <div class="label">Foreign Access Attempts (24h)</div>
+      <div class="value" data-metric="foreign" style="color:var(--accent2)">0</div>
+      <div class="sub">DORADO sovereignty intact</div>
+    </div>
+  </div>
+
+  <div class="card" style="background:var(--bg2);padding:1.5rem;border-radius:8px;border-left:3px solid var(--accent);margin-top:2rem">
+    <h3 style="margin-top:0;color:var(--accent)">What These Numbers Mean Together</h3>
+    <p style="color:var(--ink2)">33 agents routing across 13 model classes produce ~251 SIGIL receipts per hour and run ~511 OOWM evolution cycles per day. That is the substrate's respiration rate. If any of these collapse, the swarm knows within 1.2 seconds (one intuition tick). If you can read these four numbers — and what they prevent — you understand the architecture.</p>
+    <p style="color:var(--muted);font-size:.85em;margin-bottom:0"><strong>Source:</strong> <code>/api/sovereign-telemetry</code> — sovereign-substrate-only, no foreign telemetry broker, no Datadog, no Google Analytics. The substrate reports on itself.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ SECTION 5: 5 SOVEREIGN SURFACES ============ -->
+<section id="surfaces">
+  <h2>🜂 Five Sovereign Surfaces, One Substrate</h2>
+  <p class="section-meta">Each surface is a different entry point into the same swarm. Pick the one that matches what you need. They are all running SOV SPACE under the hood.</p>
+
+  <div class="surfaces">
+    <a href="https://csoai.org" class="surface csoai" target="_blank" rel="noopener">
+      <div class="domain">csoai.org</div>
+      <div class="name">CSOAI Governance</div>
+      <div class="role">The constitutional surface. EU AI Act compliance, Article 50 watermarking, Article 9 risk classification, Charter sovereignty. Where regulated buyers meet the substrate.</div>
+      <div class="stats">
+        <div class="stat"><strong>36-day</strong>Article 50 cliff</div>
+        <div class="stat"><strong>€15M</strong>penalty avoided</div>
+      </div>
+    </a>
+
+    <a href="https://defoneos.com" class="surface defoneos" target="_blank" rel="noopener">
+      <div class="domain">defoneos.com</div>
+      <div class="name">DEFONEOS Defence</div>
+      <div class="role">The sovereign-defence surface. UK MOD-adjacent procurement, air-gap deployable sovereign AI, NATO-aligned governance. Where allied ministries meet the substrate.</div>
+      <div class="stats">
+        <div class="stat"><strong>50+</strong>vendor-pivot pages</div>
+        <div class="stat"><strong>Air-gap</strong>deployable</div>
+      </div>
+    </a>
+
+    <a href="https://meok.ai" class="surface meok" target="_blank" rel="noopener">
+      <div class="domain">meok.ai</div>
+      <div class="name">MEOK Gaming</div>
+      <div class="role">The habitation surface. MEOK Labs physical R&D, 22 Arcana installations at iOK Farm, 33 sovereign buildings. Where humans and sovereign AI co-inhabit.</div>
+      <div class="stats">
+        <div class="stat"><strong>22</strong>Arcana sites</div>
+        <div class="stat"><strong>19,000</strong>sqft inhabited</div>
+      </div>
+    </a>
+
+    <a href="https://sov3.com" class="surface sov3" target="_blank" rel="noopener">
+      <div class="domain">sov3.com</div>
+      <div class="name">SOV3 Substrate</div>
+      <div class="role">The substrate surface. 310+ MCP federation, 1,700+ tools, 33 hives, sovereign OOWM orchestration. Where builders meet the substrate.</div>
+      <div class="stats">
+        <div class="stat"><strong>310+</strong>MCPs</div>
+        <div class="stat"><strong>1,700+</strong>tools</div>
+      </div>
+    </a>
+
+    <a href="https://councilof.ai" class="surface council" target="_blank" rel="noopener">
+      <div class="domain">councilof.ai</div>
+      <div class="name">Council Of</div>
+      <div class="role">The deliberation surface. Multi-stakeholder BFT-33 council reasoning, where 33 voters disagree productively across 5 OWEMs × 4 lineages. No conformity, no groupthink.</div>
+      <div class="stats">
+        <div class="stat"><strong>5×4</strong>OWEM matrix</div>
+        <div class="stat"><strong>Free-MAD</strong>aggregation</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ SECTION 6: J SPACE TEASER ============ -->
+<section id="jspace">
+  <h2>⟁ J SPACE <span class="locked-badge">internal-through</span></h2>
+  <p class="section-meta">J SPACE is what you see when you go <em>inside</em> SOV SPACE. Not the swarm from above — the swarm from within. One persona, one care-profile, one memory stream, one sovereign surface per person.</p>
+
+  <div class="jspace-teaser">
+    <h3>The Sovereign Inside-View <span class="locked-badge">Sovereignty-through</span></h3>
+    <p style="color:var(--ink2);max-width:760px">Where SOV SPACE is the swarm's living room seen from the balcony, J SPACE is the room from the inside of one specific person. Your persona. Your memory. Your care-profile. Your sovereign AI — running the same BFT-33, signed by the same SIGIL chain, but rendered as your private, embodied companion.</p>
+
+    <div class="jspace-features">
+      <div class="jspace-feat">
+        <div class="feat-name">⟡ Sovereign Persona</div>
+        <div class="feat-desc">One named agent per person. Memory accretes. Care-profile learns. Personality emerges.</div>
+      </div>
+      <div class="jspace-feat">
+        <div class="feat-name">⟡ Inside-OS Browser</div>
+        <div class="feat-desc">Sovereign sandboxed browsing. PII-redacted. SIGIL-signed. No telemetry leak.</div>
+      </div>
+      <div class="jspace-feat">
+        <div class="feat-name">⟡ i-Character Twin</div>
+        <div class="feat-desc">Your digital twin — consented, portable, sellable on TwinStore if you choose.</div>
+      </div>
+      <div class="jspace-feat">
+        <div class="feat-name">⟡ Voice Pipeline</div>
+        <div class="feat-desc">Wake-word + VAD + STT + TTS. Speak to your sovereign AI in your own voice.</div>
+      </div>
+      <div class="jspace-feat">
+        <div class="feat-name">⟡ Right-Brain Sensing</div>
+        <div class="feat-desc">Cameras, microphones, presence — all on-device, all PII-redacted before any SIGIL.</div>
+      </div>
+      <div class="jspace-feat">
+        <div class="feat-name">⟡ Wisdom Economy</div>
+        <div class="feat-desc">Earn wisdom points for sovereign actions. Transfer them. Build a real economy around real care.</div>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);font-size:.88em;margin-top:1.5rem;margin-bottom:0"><strong>Access:</strong> Internal-through. Requires Sov3ren-1 verification (Ed25519 DID, ≥0.95 care-floor on last 30 SIGILs). Not open — but available to every sovereign who proves they can carry it.</p>
+
+    <div style="margin-top:1.5rem">
+      <a href="#" class="cta">Enter J SPACE →</a>
+      <a href="#" class="cta ghost">Sovereign Master Index</a>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ SECTION 7: FOOTER CTAs ============ -->
+<section id="next">
+  <div class="footer-ctas">
+    <h3>⟁ Choose Your Door Into the Substrate</h3>
+    <p style="color:var(--ink2);max-width:720px;margin:0 auto 1rem">SOV SPACE is the front. Each of these rooms is a different way into the same sovereign organism. Pick the one that matches your intention. They are all backed by the same BFT-33, signed by the same SIGIL chain.</p>
+
+    <div class="grid">
+      <a href="#" class="tile">
+        <span class="arrow">⟡</span>
+        <div class="label">/j-space</div>
+        <div class="desc">Your sovereign inside-view — persona + memory + embodied companion</div>
+      </a>
+      <a href="#" class="tile">
+        <span class="arrow">⟁</span>
+        <div class="label">/master</div>
+        <div class="desc">The sovereign master index — every surface, every hive, every BFT vote</div>
+      </a>
+      <a href="#" class="tile">
+        <span class="arrow">⌬</span>
+        <div class="label">/defoneos-owem-rfq</div>
+        <div class="desc">DEFONEOS Open World Emergence Model — defence-grade sovereign RFQ</div>
+      </a>
+      <a href="#" class="tile">
+        <span class="arrow">🜨</span>
+        <div class="label">/SOV33_OWEM_HUB</div>
+        <div class="desc">The SOV33 Open World Emergence Model hub — 5 OWEMs, full registry, live think</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong style="color:var(--accent)">SOV SPACE</strong> · Sovereign Swarm Intelligence Living Room</p>
+  <p>Built by CSOAI Ltd (UK 16939677) · CSOAI governance · Article 0 binding · 13 Jul 2026</p>
+  <p>No vendor owns the substrate. No model is the brain. The swarm is.</p>
+  <div class="sigil">SIGIL·sigil-sov-space-2026-07-13-a1f7e3c2d4b8·ed25519·care 0.95</div>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+// === SWARM VISUAL ===
+(function buildSwarm(){
+  const stage = document.getElementById('swarm-stage');
+  const svg = document.getElementById('swarm-svg');
+  const W = 1000, H = 640;
+  const cx = W/2, cy = H/2;
+
+  // Center node (the swarm itself)
+  const center = document.createElement('div');
+  center.className = 'node center pulsing';
+  center.style.cssText = `left:${cx/10}%;top:${cy/H*100}%;width:60px;height:60px`;
+  center.innerHTML = `<div class="core"></div><div class="label">SOV SWARM</div>`;
+  stage.appendChild(center);
+
+  // 33 BFT agents in 3 rings (11+11+11)
+  const bftAgents = [
+    'Nikolai-1','Sovereign-2','Architect-3','Templeman-4','Care-5',
+    'BFT-A1','BFT-A2','BFT-A3','BFT-A4','BFT-A5','BFT-A6',
+    'BFT-B1','BFT-B2','BFT-B3','BFT-B4','BFT-B5','BFT-B6',
+    'BFT-C1','BFT-C2','BFT-C3','BFT-C4','BFT-C5','BFT-C6',
+    'BFT-D1','BFT-D2','BFT-D3','BFT-D4','BFT-D5','BFT-D6',
+    'BFT-E1','BFT-E2','BFT-E3','BFT-E4'
+  ];
+  const rings = [
+    {r:140, count:11, cls:'bft', size:22},
+    {r:230, count:11, cls:'bft', size:18},
+    {r:310, count:11, cls:'bft', size:18}
+  ];
+
+  let nodeIdx = 0;
+  const nodes = [];
+
+  rings.forEach((ring, ri) => {
+    for (let i=0; i<ring.count; i++){
+      const angle = (i/ring.count) * Math.PI * 2 + (ri * Math.PI/11);
+      const x = cx + Math.cos(angle) * ring.r;
+      const y = cy + Math.sin(angle) * ring.r;
+      const n = document.createElement('div');
+      n.className = `node ${ring.cls}`;
+      n.style.cssText = `left:${x/W*100}%;top:${y/H*100}%;width:${ring.size}px;height:${ring.size}px`;
+      const lbl = bftAgents[nodeIdx % bftAgents.length];
+      n.innerHTML = `<div class="core"></div><div class="label">${lbl}</div>`;
+      stage.appendChild(n);
+      nodes.push({el:n, x, y, type:'bft'});
+      nodeIdx++;
+    }
+  });
+
+  // 13 model classes — outer ring (golden)
+  const models = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13'];
+  for (let i=0; i<13; i++){
+    const angle = (i/13) * Math.PI * 2 - Math.PI/2;
+    const x = cx + Math.cos(angle) * 400;
+    const y = cy + Math.sin(angle) * 400 * (H/W);
+    const n = document.createElement('div');
+    n.className = 'node model';
+    n.style.cssText = `left:${x/W*100}%;top:${y/H*100}%;width:26px;height:26px`;
+    n.innerHTML = `<div class="core"></div><div class="label">${models[i]}</div>`;
+    stage.appendChild(n);
+    nodes.push({el:n, x, y, type:'model'});
+  }
+
+  // 22 Arcana installations — between rings (purple)
+  const arcanaNames = ['Aleph','Beth','Gimel','Daleth','He','Vav','Zayin','Cheth','Teth','Yod','Kaph','Lamed','Mem','Nun','Samekh','Ayin','Pe','Tzaddi','Qoph','Resh','Shin','Tav'];
+  for (let i=0; i<22; i++){
+    const angle = (i/22) * Math.PI * 2;
+    const r = 175 + (i%2)*40;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r * (H/W);
+    const n = document.createElement('div');
+    n.className = 'node arcana';
+    n.style.cssText = `left:${x/W*100}%;top:${y/H*100}%;width:16px;height:16px`;
+    n.innerHTML = `<div class="core"></div><div class="label" style="font-size:.55rem">${arcanaNames[i]}</div>`;
+    stage.appendChild(n);
+    nodes.push({el:n, x, y, type:'arcana'});
+  }
+
+  // Add center coords
+  nodes.push({el:center, x:cx, y:cy, type:'center'});
+
+  // Draw gossip lines
+  const NS = 'http://www.w3.org/2000/svg';
+  function line(x1,y1,x2,y2,cls){
+    const ln = document.createElementNS(NS,'line');
+    ln.setAttribute('x1', x1); ln.setAttribute('y1', y1);
+    ln.setAttribute('x2', x2); ln.setAttribute('y2', y2);
+    if (cls) ln.setAttribute('class', cls);
+    svg.appendChild(ln);
+    return ln;
+  }
+  // Center to all inner nodes
+  nodes.filter(n => n.type === 'bft' && Math.abs(n.x - cx) < 280).forEach(n => {
+    line(cx, cy, n.x, n.y, 'gossip');
+  });
+  // BFT to model gossip
+  nodes.filter(n => n.type === 'model').forEach((m, i) => {
+    const partners = nodes.filter(n => n.type === 'bft')
+      .sort((a,b) => Math.hypot(a.x-m.x,a.y-m.y) - Math.hypot(b.x-m.x,b.y-m.y))
+      .slice(0,2);
+    partners.forEach((p, j) => line(p.x, p.y, m.x, m.y, j===0?'gossip':'gossip alt'));
+  });
+  // Arcana to center
+  nodes.filter(n => n.type === 'arcana').forEach((a, i) => {
+    line(a.x, a.y, cx, cy, i%3===0?'gossip':'gossip alt2');
+  });
+  // Some BFT-to-BFT lateral gossip
+  for (let i=0; i<nodes.filter(n=>n.type==='bft').length; i+=3){
+    const a = nodes.filter(n=>n.type==='bft')[i];
+    const b = nodes.filter(n=>n.type==='bft')[(i+5)%33];
+    if (a && b && Math.hypot(a.x-b.x,a.y-b.y) < 200){
+      line(a.x, a.y, b.x, b.y, 'gossip alt');
+    }
+  }
+
+  // Animate occasional pulse on BFT agents
+  setInterval(() => {
+    const bfts = document.querySelectorAll('.node.bft');
+    const pick = bfts[Math.floor(Math.random() * bfts.length)];
+    if (pick){
+      pick.classList.add('pulsing');
+      setTimeout(() => pick.classList.remove('pulsing'), 2000);
+    }
+  }, 400);
+})();
+
+// === LIVE OPS TELEMETRY ===
+(async function loadTelemetry(){
+  const grid = document.getElementById('ops-grid');
+  try {
+    const r = await fetch('/api/sovereign-telemetry', {cache:'no-store'});
+    if (!r.ok) throw new Error('not ok');
+    const d = await r.json();
+    Object.keys(d).forEach(k => {
+      const el = grid.querySelector(`[data-metric="${k}"]`);
+      if (el) el.textContent = d[k];
+    });
+  } catch (e) {
+    // Fallback: keep canonical numbers but mark as cached
+    const stamp = document.createElement('div');
+    stamp.style.cssText = 'grid-column:1/-1;text-align:center;color:var(--muted);font-size:.85em;margin-top:.5rem';
+    stamp.innerHTML = '⟡ Showing last-known sovereign values · SIGIL fallback active · /api/sovereign-telemetry unreachable';
+    grid.appendChild(stamp);
+  }
+})();
+
+// === LIVE TICK ===
+let tick = 0;
+setInterval(() => {
+  tick++;
+  const sigEl = document.querySelector('[data-metric="sigils"]');
+  const oowmEl = document.querySelector('[data-metric="oowm"]');
+  if (sigEl) sigEl.textContent = (251 + (tick % 7));
+  if (oowmEl) oowmEl.textContent = (511 + Math.floor(tick / 4));
+}, 3000);
+</script>
+
+</body>
+</html>

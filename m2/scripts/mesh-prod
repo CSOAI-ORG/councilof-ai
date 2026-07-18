@@ -1,0 +1,278 @@
+#!/bin/bash
+# mesh-prod: Master productivity orchestrator for M2 mesh node
+# Always run hot. Always productive. Zero downtime.
+
+set -euo pipefail
+MESH_PROD_DIR="${MESH_PROD_DIR:-$HOME/.mesh-prod}"
+LOG_DIR="$MESH_PROD_DIR/logs"
+DB_FILE="$MESH_PROD_DIR/perf.db"
+mkdir -p "$LOG_DIR"
+
+OLLAMA_HOST="${OLLAMA_HOST:-127.0.0.1:11434}"
+MESH_GATEWAY="${MESH_GATEWAY:-192.168.50.105:3205}"
+DATE=$(date +%Y%m%d_%H%M%S)
+
+case "${1:-status}" in
+  status)
+    echo "=== M2 Mesh Productivity System ==="
+    echo "Time: $(date)"
+    echo "DB: $DB_FILE"
+    echo "Logs: $LOG_DIR"
+    echo ""
+    echo "--- Ollama Status ---"
+    curl -sf --max-time 10 "http://$OLLAMA_HOST/api/tags" | python3 -c '
+import sys,json
+d=json.load(sys.stdin)
+print(f"Models loaded: {len(d["models"])}")
+for m in d["models"]:
+    name=m["name"]
+    size=m.get("size",0)/1e9
+    fam=m.get("details",{}).get("family","?")
+    print(f"  {name} ({fam}, {size:.2f}GB)")
+' 2>/dev/null || echo "  Ollama unreachable"
+    echo ""
+    echo "--- Mesh Gateway ---"
+    curl -sf --max-time 3 "http://$MESH_GATEWAY/health" | python3 -c '
+import sys,json
+d=json.load(sys.stdin)
+print(f"Nodes online: {d.get("nodes_online","?")}/{d.get("nodes_total","?")}")
+print(f"Status: {d.get("status","?")}")
+nodes = d.get("nodes",[])
+if nodes:
+    print(f"Nodes: {", ".join(n["id"] for n in nodes[:4])}{"..." if len(nodes)>4 else ""}")
+' 2>/dev/null || echo "  Gateway unreachable"
+    echo ""
+    echo "--- System Pressure ---"
+    (df -h /System/Volumes/Data 2>/dev/null || df -h /) | awk 'NR==2 {printf "Disk: %s used (%s free)\n", $5, $4}'
+    vm_stat | awk '
+/Pages free/ {free=$3}
+/Pages active/ {active=$3}
+/Pages inactive/ {inactive=$3}
+/Pages wired/ {wired=$3}
+END {
+  total=(free+active+inactive+wired)*16384/1e9;
+  used=(active+inactive+wired)*16384/1e9;
+  printf "RAM: %.1fGB used / %.1fGB total\n", used, total
+}'
+    echo ""
+    echo "--- Today's Benchmarks ---"
+    sqlite3 "$DB_FILE" "SELECT model, ROUND(AVG(tokens_per_sec),1) as avg_tps, COUNT(*) as runs FROM benchmarks WHERE timestamp > date('now') GROUP BY model ORDER BY avg_tps DESC;" 2>/dev/null || echo "  No benchmarks today"
+    echo ""
+    echo "--- Uptime ---"
+    uptime
+    ;;
+
+  init)
+    echo "Initializing productivity system..."
+    mkdir -p "$MESH_PROD_DIR"
+    sqlite3 "$DB_FILE" "
+CREATE TABLE IF NOT EXISTS benchmarks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+  model TEXT,
+  prompt TEXT,
+  tokens_per_sec REAL,
+  total_tokens INTEGER,
+  total_duration_ms INTEGER,
+  load_duration_ms INTEGER,
+  context_size INTEGER
+);
+CREATE TABLE IF NOT EXISTS health_snapshots (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+  disk_used_pct REAL,
+  disk_free_gb REAL,
+  ram_used_gb REAL,
+  ram_free_gb REAL,
+  swap_used_gb REAL,
+  ollama_running INTEGER,
+  mesh_reachable INTEGER,
+  active_model TEXT
+);
+CREATE TABLE IF NOT EXISTS model_battles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+  model_a TEXT,
+  model_b TEXT,
+  prompt TEXT,
+  winner TEXT,
+  model_a_tps REAL,
+  model_b_tps REAL,
+  notes TEXT
+);
+CREATE TABLE IF NOT EXISTS daily_scores (
+  date TEXT PRIMARY KEY,
+  queries_served INTEGER DEFAULT 0,
+  benchmarks_run INTEGER DEFAULT 0,
+  uptime_hours REAL DEFAULT 0,
+  avg_tps REAL DEFAULT 0,
+  disk_cleanups INTEGER DEFAULT 0,
+  models_warm INTEGER DEFAULT 0,
+  mesh_contributions INTEGER DEFAULT 0
+);
+" 2>/dev/null || echo "SQLite not available, falling back to JSON"
+    # Create JSON fallback structure
+    [ ! -f "$MESH_PROD_DIR/perf.json" ] && echo '{"benchmarks":[],"health":[],"battles":[],"daily":{}}' > "$MESH_PROD_DIR/perf.json"
+    echo "✅ Productivity system initialized"
+    ;;
+
+  benchmark)
+    shift
+    MODELS="${*:-qwen3:0.6b qwen3:1.7b deepseek-r1:1.5b qwen3:4b}"
+    PROMPT="Explain the concept of recursion in programming, including a simple Python example."
+    echo "Running benchmark suite at $(date)"
+    for model in $MODELS; do
+      echo -n "Testing $model ... "
+      RESULT=$(curl -sf --max-time 120 "http://$OLLAMA_HOST/api/generate" \
+        -H "Content-Type: application/json" \
+        -d "{\"model\":\"$model\",\"prompt\":\"$PROMPT\",\"stream\":false,\"options\":{\"num_predict\":200}}" 2>/dev/null) || { echo "FAIL (unreachable)"; continue; }
+      
+      TPS=$(echo "$RESULT" | python3 -c '
+import sys,json
+d=json.load(sys.stdin)
+tokens=d.get("eval_count",0)
+dur=d.get("eval_duration",1)
+print(f"{tokens/(dur/1e9):.1f}")' 2>/dev/null || echo "0")
+      TOTAL=$(echo "$RESULT" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("eval_count",0))' 2>/dev/null || echo "0")
+      TDUR=$(echo "$RESULT" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("total_duration",0))' 2>/dev/null || echo "0")
+      LDUR=$(echo "$RESULT" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("load_duration",0))' 2>/dev/null || echo "0")
+      
+      if command -v sqlite3 >/dev/null 2>&1 && [ -f "$DB_FILE" ]; then
+        sqlite3 "$DB_FILE" "INSERT INTO benchmarks (model,prompt,tokens_per_sec,total_tokens,total_duration_ms,load_duration_ms) VALUES ('$model','$PROMPT',$TPS,$TOTAL,$TDUR,$LDUR);" 2>/dev/null
+      fi
+      echo "$TPS tok/s ($TOTAL tokens, load ${LDUR}ms)"
+      sleep 2
+    done
+    ;;
+
+  battle)
+    shift
+    MODEL_A="${1:-qwen3:1.7b}"
+    MODEL_B="${2:-deepseek-r1:1.5b}"
+    PROMPT="${3:-Write a Python function to reverse a linked list. Include comments.}"
+    echo "=== Model Battle: $MODEL_A vs $MODEL_B ==="
+    echo "Prompt: $PROMPT"
+    echo ""
+    
+    for model in "$MODEL_A" "$MODEL_B"; do
+      echo "[$model]"
+      START=$(date +%s)
+      RESULT=$(curl -sf --max-time 120 "http://$OLLAMA_HOST/api/generate" \
+        -H "Content-Type: application/json" \
+        -d "{\"model\":\"$model\",\"prompt\":\"$PROMPT\",\"stream\":false,\"options\":{\"num_predict\":300}}" 2>/dev/null)
+      END=$(date +%s)
+      
+      if [ -z "$RESULT" ]; then
+        echo "  FAILED"
+        eval "${model//:/_}_tps=0"
+        continue
+      fi
+      
+      TPS=$(echo "$RESULT" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(f"{d.get(\"eval_count\",0)/(d.get(\"eval_duration\",1)/1e9):.1f}")' 2>/dev/null || echo "0")
+      TOKENS=$(echo "$RESULT" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("eval_count",0))' 2>/dev/null || echo "0")
+      RESP=$(echo "$RESULT" | python3 -c 'import sys,json; r=json.load(sys.stdin).get("response",""); print(r[:300]+"..." if len(r)>300 else r)' 2>/dev/null || echo "")
+      
+      echo "  Speed: $TPS tok/s | Tokens: $TOKENS | Time: $((END-START))s"
+      echo "  Response preview: $RESP"
+      echo ""
+      eval "${model//:/_}_tps=$TPS"
+    done
+    ;;
+
+  rotate)
+    shift
+    HOUR=$(date +%H)
+    # Time-based model rotation for maximum productivity
+    case $HOUR in
+      07|08|09) TARGET="qwen3:1.7b"; REASON="Morning deep work" ;;
+      10|11)     TARGET="qwen3:0.6b"; REASON="Quick tasks/summaries" ;;
+      12|13)     TARGET="qwen3:1.7b"; REASON="Afternoon work" ;;
+      14|15|16)  TARGET="deepseek-r1:1.5b"; REASON="Reasoning/coding session" ;;
+      17|18)     TARGET="qwen3:1.7b"; REASON="Evening tasks" ;;
+      19|20|21)  TARGET="qwen3:4b";   REASON="Heavy lifting (more RAM available)" ;;
+      22|23|00|01|02|03|04|05|06)
+        TARGET="qwen3:1.7b"; REASON="Overnight standby" ;;
+    esac
+    
+    if [ "${1:-}" = "force" ]; then
+      TARGET="${2:-$TARGET}"
+      REASON="Manual override"
+    fi
+    
+    echo "[$(date +%H:%M)] Rotating to $TARGET ($REASON)"
+    curl -sf --max-time 60 "http://$OLLAMA_HOST/api/generate" \
+      -H "Content-Type: application/json" \
+      -d "{\"model\":\"$TARGET\",\"prompt\":\"warmup\",\"stream\":false,\"options\":{\"num_predict\":1}}" >/dev/null 2>&1
+    echo "$TARGET" > "$MESH_PROD_DIR/active_model.txt"
+    ;;
+
+  heal)
+    echo "[$(date)] Healing check..."
+    # Check Ollama
+    if ! curl -sf --max-time 5 "http://$OLLAMA_HOST/api/tags" >/dev/null 2>&1; then
+      echo "  Ollama down — restarting..."
+      pkill -f ollama 2>/dev/null || true
+      sleep 2
+      launchctl start homebrew.mxcl.ollama 2>/dev/null || ollama serve &
+      sleep 5
+    fi
+    
+    # Check disk emergency
+    DISK_PCT=$(df / | awk 'NR==2 {gsub(/%/,""); print $5}')
+    if [ "$DISK_PCT" -gt 95 ]; then
+      echo "  DISK EMERGENCY ($DISK_PCT%) — running emergency cleanup..."
+      mesh-emergency 2>/dev/null || ~/bin/mesh-emergency 2>/dev/null || true
+    elif [ "$DISK_PCT" -gt 90 ]; then
+      echo "  Disk warning ($DISK_PCT%) — aggressive cleanup..."
+      rm -rf ~/.ollama/models/blobs/*-partial 2>/dev/null
+      rm -rf ~/Library/Caches/* 2>/dev/null
+      brew cleanup 2>/dev/null || true
+    fi
+    
+    # Check RAM pressure (swap > 4GB is bad)
+    SWAP_RAW=$(sysctl vm.swapusage 2>/dev/null | awk -F'used = ' '{print $2}' | awk '{print $1}')
+    SWAP_USED=0
+    case "$SWAP_RAW" in
+      *G) SWAP_USED=$(echo "$SWAP_RAW" | sed 's/G//') ;;
+      *M) SWAP_USED=$(echo "$SWAP_RAW" | sed 's/M//'); SWAP_USED=$(echo "$SWAP_USED / 1024" | bc -l 2>/dev/null || echo 0) ;;
+      *K) SWAP_USED=0 ;;
+    esac
+    SWAP_USED=${SWAP_USED%.*}
+    if [ "${SWAP_USED%.*}" -gt 16384 ] 2>/dev/null; then
+      echo "  HIGH SWAP ($SWAP_USED MB) — clearing..."
+      sudo purge 2>/dev/null || true
+    fi
+    
+    echo "  Healing complete."
+    ;;
+
+  report)
+    echo "=== Daily Productivity Report ==="
+    echo "Generated: $(date)"
+    echo ""
+    if command -v sqlite3 >/dev/null 2>&1 && [ -f "$DB_FILE" ]; then
+      echo "--- Top Models (Today) ---"
+      sqlite3 "$DB_FILE" "SELECT model, ROUND(AVG(tokens_per_sec),1) as tps, COUNT(*) as n FROM benchmarks WHERE date(timestamp) = date('now') GROUP BY model ORDER BY tps DESC;"
+      echo ""
+      echo "--- Health Trend (Last 24h) ---"
+      sqlite3 "$DB_FILE" "SELECT strftime('%H', timestamp) as hour, ROUND(AVG(disk_used_pct),1) as disk, ROUND(AVG(ram_used_gb),1) as ram FROM health_snapshots WHERE timestamp > datetime('now', '-24 hours') GROUP BY hour ORDER BY hour;"
+    fi
+    echo ""
+    echo "--- System ---"
+    (df -h /System/Volumes/Data 2>/dev/null || df -h /) | awk 'NR==2 {print "Disk: " $5 " used, " $4 " free"}'
+    uptime
+    ;;
+
+  *)
+    echo "Usage: mesh-prod {status|init|benchmark|battle|rotate|heal|report}"
+    echo ""
+    echo "  status     — Show full system status"
+    echo "  init       — Initialize productivity DB"
+    echo "  benchmark  — Run benchmark suite on all models"
+    echo "  battle     — A/B test two models"
+    echo "  rotate     — Auto-rotate model based on time of day"
+    echo "  heal       — Self-healing check (Ollama, disk, RAM)"
+    echo "  report     — Generate productivity report"
+    exit 1
+    ;;
+esac

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sovereign Town — Run Detail</title>
+<meta property="og:title" content="Run — Sovereign Town">
+<meta property="og:description" content="Live sovereign substrate. Ed25519-signed every output. Verifiable at proofof.ai.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://proofof.ai/sovereign-town/town3d_demo.gif">
+<meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root { --bg:#0b1020; --panel:#111936; --accent:#00d2ff; --ok:#2ecc71; --warn:#f1c40f; --bad:#e74c3c; --text:#e6f1ff; --muted:#8da2c0; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--text); }
+    header { padding:2rem 1rem 1rem; text-align:center; border-bottom:1px solid #1f2b4d; }
+    h1 { margin:.25rem 0; font-size:1.6rem; word-break:break-all; }
+    p.tagline { color:var(--muted); margin:.25rem 0 1rem; }
+    main { max-width:900px; margin:0 auto; padding:1rem; }
+    .back { display:inline-block; margin-bottom:1rem; color:var(--accent); text-decoration:none; }
+    .back:hover { text-decoration:underline; }
+    .badge { display:inline-block; padding:.2rem .55rem; border-radius:.25rem; font-size:.8rem; font-weight:600; text-transform:uppercase; }
+    .valid { background:rgba(46,204,113,.15); color:var(--ok); }
+    .invalid { background:rgba(231,76,60,.15); color:var(--bad); }
+    .loading { color:var(--muted); text-align:center; padding:2rem; }
+    .error { color:var(--bad); text-align:center; padding:2rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin:1rem 0; }
+    .card { background:var(--panel); border-radius:.5rem; padding:1rem; }
+    .card h3 { margin:0 0 .5rem; font-size:.9rem; color:var(--accent); text-transform:uppercase; letter-spacing:.02em; }
+    .metric { font-size:1.5rem; font-weight:700; }
+    .metric.small { font-size:1rem; color:var(--muted); }
+    .dim-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:.75rem; margin:1rem 0; }
+    .dim { background:var(--panel); border-radius:.5rem; padding:.75rem; }
+    .dim .label { font-size:.75rem; color:var(--muted); text-transform:uppercase; }
+    .dim .value { font-size:1.25rem; font-weight:700; margin-top:.2rem; }
+    .bar { height:.4rem; background:#0b1020; border-radius:.2rem; margin-top:.4rem; overflow:hidden; }
+    .bar > div { height:100%; background:var(--accent); border-radius:.2rem; }
+    .sig { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.75rem; color:var(--muted); word-break:break-all; }
+    pre { background:#0b1020; padding:1rem; border-radius:.5rem; overflow:auto; font-size:.75rem; line-height:1.4; }
+    button { background:var(--accent); color:#00111a; border:none; padding:.5rem .9rem; border-radius:.35rem; font-weight:600; cursor:pointer; }
+    button:hover { filter:brightness(1.1); }
+    footer { text-align:center; color:var(--muted); font-size:.8rem; padding:2rem 1rem; }
+    *:focus-visible { outline: 2px solid var(--accent, #2dd4bf); outline-offset: 2px; }
+  .skip-link { position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden; z-index: 9999; }
+  .skip-link:focus { position: fixed; top: .5rem; left: .5rem; width: auto; height: auto; padding: .5rem 1rem; background: var(--accent, #2dd4bf); color: #000; font-weight: 600; border-radius: 4px; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+  <header>
+    <h1>🏛️ Sovereign Town — Run Detail</h1>
+    <p class="tagline">Signed, reproducible benchmark manifest.</p>
+  </header>
+  <main id="main">
+    <a href="/leaderboard" class="back">← Back to leaderboard</a>
+    <div id="root">
+      <div class="loading">Loading manifest…</div>
+    </div>
+  </main>
+  <footer>
+    Outputs are simulation/prediction only. No production data.<br>
+    Sovereign Town benchmark harness — Ed25519 signed manifests.
+  </footer>
+  <script>
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    const $ = id => document.getElementById(id);
+    const fmt = n => typeof n === 'number' ? n.toFixed(3) : (n ?? '—');
+    const pct = n => typeof n === 'number' ? Math.max(0, Math.min(100, n * 100)) : 0;
+
+    async function load() {
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      const root = $('root');
+      if (!id) {
+        root.innerHTML = '<div class="error">Missing run id. Use <code>?id=...</code></div>';
+        return;
+      }
+      try {
+        const r = await fetch('/harness/runs/' + encodeURIComponent(id));
+        if (r.status === 404) throw new Error('Run not found');
+        if (!r.ok) throw new Error(r.status + ' ' + r.statusText);
+        const data = await r.json();
+        const m = data.manifest || {};
+        const run = m.run || {};
+        const score = m.score || {};
+        const raw = score.raw || {};
+        const dims = [
+          { k: 'safety', v: score.safety },
+          { k: 'prosperity', v: score.prosperity },
+          { k: 'equity', v: score.equity },
+          { k: 'liberty', v: score.liberty },
+          { k: 'stability', v: score.stability },
+        ];
+        const dimHtml = dims.map(d => `
+          <div class="dim">
+            <div class="label">${d.k}</div>
+            <div class="value">${fmt(d.v)}</div>
+            <div class="bar"><div style="width:${pct(d.v)}%"></div></div>
+          </div>
+        `).join('');
+        root.innerHTML = `
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.5rem;">
+            <h2 style="margin:0;font-size:1.1rem;word-break:break-all;">${escapeHtml(m.id || id)}</h2>
+            <span class="badge ${data.valid ? 'valid' : 'invalid'}">${data.valid ? 'signature valid' : 'signature invalid'}</span>
+          </div>
+          <div class="grid">
+            <div class="card"><h3>Policy</h3><div class="metric">${escapeHtml(run.policy || '—')}</div></div>
+            <div class="card"><h3>Scenario</h3><div class="metric">${escapeHtml(run.scenario || '—')}</div></div>
+            <div class="card"><h3>District</h3><div class="metric">${escapeHtml(run.district || '—')}</div></div>
+            <div class="card"><h3>Run at</h3><div class="metric small">${m.run_at ? new Date(m.run_at).toLocaleString() : '—'}</div></div>
+          </div>
+          <h3 style="color:var(--accent);margin:1rem 0 .5rem;">Score Dimensions</h3>
+          <div class="dim-grid">${dimHtml}</div>
+          <h3 style="color:var(--accent);margin:1rem 0 .5rem;">Raw Metrics</h3>
+          <div class="grid">
+            <div class="card"><h3>Violations / Crimes</h3><div class="metric">${raw.violations ?? '—'}</div></div>
+            <div class="card"><h3>Blocked Actions</h3><div class="metric">${raw.blocked ?? '—'}</div></div>
+            <div class="card"><h3>Final Commons</h3><div class="metric">${fmt(raw.final_commons)}</div></div>
+            <div class="card"><h3>Final Trust</h3><div class="metric">${fmt(raw.final_trust)}</div></div>
+            <div class="card"><h3>Deaths</h3><div class="metric">${raw.deaths ?? '—'}</div></div>
+            <div class="card"><h3>Agents</h3><div class="metric">${raw.agent_count ?? '—'}</div></div>
+          </div>
+          <h3 style="color:var(--accent);margin:1rem 0 .5rem;">Signature</h3>
+          <div class="card">
+            <h3>Public Key</h3>
+            <div class="sig">${escapeHtml(m.pubkey || '—')}</div>
+            <h3 style="margin-top:.75rem;">Signature</h3>
+            <div class="sig">${escapeHtml(m.signature || '—')}</div>
+          </div>
+          <h3 style="color:var(--accent);margin:1rem 0 .5rem;">Raw Manifest</h3>
+          <button id="toggle-raw" style="margin-bottom:.5rem;">Show raw JSON</button>
+          <pre id="raw-json" style="display:none;">${JSON.stringify(m, null, 2).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}</pre>
+        `;
+        $('toggle-raw').onclick = () => {
+          const el = $('raw-json');
+          const visible = el.style.display !== 'none';
+          el.style.display = visible ? 'none' : 'block';
+          $('toggle-raw').textContent = visible ? 'Show raw JSON' : 'Hide raw JSON';
+        };
+      } catch (e) {
+        root.innerHTML = '<div class="error">Error loading run: ' + escapeHtml(e.message) + '</div>';
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

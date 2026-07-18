@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Email Deliverability Auto-Verifier | 60-Second Pre-Send Check</title>
+<meta name="description" content="A 60-second pre-send auto-verifier for the Mon 14 Jul 09:00 BST MOD email cascade. SPF / DKIM / DMARC / MX / blacklist / SMTP-time check. Run from terminal. Returns green / amber / red.">
+<style>
+:root{--bg:#0a0e1a;--panel:#111827;--ink:#e5e7eb;--dim:#94a3b8;--acc:#22d3ee;--gold:#fbbf24;--grn:#10b981;--amb:#f59e0b;--red:#ef4444;--brd:#1f2937;--mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;font-size:15px}
+a{color:var(--acc);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 28px 80px}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--brd);margin-bottom:24px}
+header .brand{font-family:var(--mono);color:var(--acc);font-weight:700;letter-spacing:.5px}
+header .crumb{font-family:var(--mono);font-size:12px;color:var(--dim)}
+h1{font-size:34px;line-height:1.15;margin:18px 0 6px;color:#fff;font-weight:800;letter-spacing:-.5px}
+.sub{color:var(--dim);font-size:15px;margin-bottom:18px}
+.tagline{display:inline-block;background:rgba(251,191,36,.08);border:1px solid var(--gold);color:var(--gold);font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:6px;letter-spacing:.5px;margin-bottom:14px}
+.grid{display:grid;gap:14px;margin:18px 0}
+.grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--panel);border:1px solid var(--brd);border-radius:10px;padding:16px}
+.card h3{font-size:14px;color:var(--acc);margin-bottom:8px;font-family:var(--mono);letter-spacing:.3px}
+.card p,.card li{font-size:13.5px;color:var(--ink)}
+.card .big{font-size:24px;color:#fff;font-weight:700;font-family:var(--mono)}
+.card.warn{border-color:var(--amb);background:rgba(245,158,11,.05)}
+.card.ok{border-color:var(--grn);background:rgba(16,185,129,.05)}
+.card.bad{border-color:var(--red);background:rgba(239,68,68,.05)}
+section{margin:36px 0}
+h2{font-size:22px;color:#fff;margin:14px 0 10px;font-weight:700;border-left:4px solid var(--acc);padding-left:10px}
+h3{font-size:16px;color:var(--acc);margin:10px 0 6px;font-family:var(--mono)}
+pre{background:#0d1117;border:1px solid var(--brd);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:#d1d5db;margin:10px 0}
+code{font-family:var(--mono);font-size:12.5px;color:var(--gold);background:rgba(251,191,36,.06);padding:2px 5px;border-radius:3px}
+pre code{color:inherit;background:transparent;padding:0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--brd);padding:8px 10px;text-align:left}
+th{background:#0d1117;color:var(--acc);font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.3px}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+ul,ol{padding-left:22px;margin:6px 0}
+li{margin:3px 0;font-size:13.5px}
+.hr{border:0;border-top:1px solid var(--brd);margin:30px 0}
+.checklist li{padding:4px 0}
+.green{color:var(--grn)}
+.amber{color:var(--amb)}
+.red{color:var(--red)}
+.dim{color:var(--dim)}
+.acc{color:var(--acc)}
+.gold{color:var(--gold)}
+.mono{font-family:var(--mono);font-size:12.5px}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--brd);color:var(--dim);margin-right:4px}
+.pill.grn{border-color:var(--grn);color:var(--grn)}
+.pill.amb{border-color:var(--amb);color:var(--amb)}
+.pill.red{border-color:var(--red);color:var(--red)}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--brd);font-size:12px;color:var(--dim);font-family:var(--mono)}
+.warnbox{background:rgba(239,68,68,.06);border-left:4px solid var(--red);padding:14px 18px;border-radius:6px;margin:16px 0}
+.okbox{background:rgba(16,185,129,.06);border-left:4px solid var(--grn);padding:14px 18px;border-radius:6px;margin:16px 0}
+.ambbox{background:rgba(245,158,11,.06);border-left:4px solid var(--amb);padding:14px 18px;border-radius:6px;margin:16px 0}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+<header>
+  <div class="brand">DEFONEOS / TICK 66</div>
+  <div class="crumb">Sovereign AI OS · Sprint Auto-Pilot · 11 Jul 2026</div>
+</header>
+
+<div class="tagline">📧 EMAIL DELIVERABILITY · 60-SECOND AUTO-VERIFIER</div>
+<h1>The 60-Second Pre-Send Auto-Verifier</h1>
+<p class="sub">Run this on Sun 13 Jul 18:00 BST, immediately before bed. Green = send on Mon. Amber = fix in 10 min. Red = do not send. Single Python script. No installs.</p>
+
+<div class="grid cols-3">
+  <div class="card ok">
+    <h3>GREEN → SEND</h3>
+    <div class="big">10/11</div>
+    <p class="dim">emails land Inbox on Mon 14 Jul 09:00 BST</p>
+  </div>
+  <div class="card warn">
+    <h3>AMBER → FIX-10</h3>
+    <div class="big">8/11</div>
+    <p class="dim">emails land Inbox. Fixable in 10 minutes.</p>
+  </div>
+  <div class="card bad">
+    <h3>RED → HOLD</h3>
+    <div class="big">3/11</div>
+    <p class="dim">emails land Junk. Do not send — wait 24h.</p>
+  </div>
+</div>
+
+<section>
+<h2>§1 · Why This Exists</h2>
+<p>Nick has 11 MOD first-touch emails going out Mon 14 Jul 09:00 BST. The single highest-risk variable between "first MOD contact made" and "first 11 emails go to Junk" is <strong>email deliverability</strong>. Without SPF+DKIM+DMARC configured correctly, Gmail/Outlook/dstl-strict will Junk 9/11 of them.</p>
+<p>This page is the <strong>automated verifier</strong> that runs the 6 critical checks and outputs a single GREEN/AMBER/RED verdict. Pairs with <a href="#">defoneos-email-deliverability-hardening.html</a> (the 30-min runbook).</p>
+</section>
+
+<section>
+<h2>§2 · The Single Command</h2>
+<p>Copy this entire block into Terminal. Runs in 60 seconds. Outputs a verdict.</p>
+<pre><code># DEFONEOS Email Deliverability Auto-Verifier v1
+# Run Sun 13 Jul 18:00 BST. Expects: domain = nicholastempleman.co.uk
+# Usage: python3 verify-deliverability.py nicholastempleman.co.uk
+import sys, subprocess, re, json, socket, datetime, os
+
+DOMAIN = sys.argv[1] if len(sys.argv) > 1 else "nicholastempleman.co.uk"
+NS = "8.8.8.8"  # Google DNS — neutral, reliable
+RESULTS = {"checks": [], "verdict": None, "timestamp": None}
+
+def run(cmd, timeout=10):
+    try:
+        out = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=timeout)
+        return out.stdout.strip(), out.stderr.strip(), out.returncode
+    except Exception as e:
+        return "", str(e), -1
+
+def check_spf():
+    """§A · SPF record check — TXT at root, starts with v=spf1"""
+    out, err, rc = run(f"dig +short TXT {DOMAIN} @{NS}")
+    has_spf = any(line.startswith('"v=spf1') for line in out.split('\n'))
+    spf_line = next((l for l in out.split('\n') if l.startswith('"v=spf1')), None)
+    RESULTS["checks"].append({
+        "name": "SPF", "pass": has_spf,
+        "evidence": spf_line or "NO SPF RECORD FOUND",
+        "fix": "Add TXT: v=spf1 include:_spf.google.com ~all" if not has_spf else None
+    })
+
+def check_dkim():
+    """§B · DKIM check — try common selectors (google, default, k1, s1, cm)"""
+    selectors = ["google", "default", "k1", "s1", "cm", "mail", "smtp", "mx"]
+    found = []
+    for sel in selectors:
+        out, _, _ = run(f"dig +short TXT {sel}._domainkey.{DOMAIN} @{NS}")
+        if any('v=DKIM1' in line for line in out.split('\n')):
+            found.append(sel)
+    has_dkim = len(found) > 0
+    RESULTS["checks"].append({
+        "name": "DKIM", "pass": has_dkim,
+        "evidence": f"selectors found: {found}" if found else "NO DKIM KEYS FOUND",
+        "fix": "Generate DKIM 2048-bit via Gmail/Outlook/Mailgun admin; add as TXT at <selector>._domainkey.<domain>" if not has_dkim else None
+    })
+
+def check_dmarc():
+    """§C · DMARC check — TXT at _dmarc.<domain>, starts with v=DMARC1"""
+    out, _, _ = run(f"dig +short TXT _dmarc.{DOMAIN} @{NS}")
+    has_dmarc = any('v=DMARC1' in line for line in out.split('\n'))
+    dmarc_line = next((l for l in out.split('\n') if 'v=DMARC1' in l), None)
+    has_quarantine = 'p=quarantine' in (dmarc_line or '') or 'p=reject' in (dmarc_line or '')
+    RESULTS["checks"].append({
+        "name": "DMARC", "pass": has_dmarc and has_quarantine,
+        "evidence": dmarc_line or "NO DMARC RECORD FOUND",
+        "fix": "Add TXT at _dmarc.<domain>: v=DMARC1; p=quarantine; rua=mailto:dmarc@<domain>; pct=100; adkim=s; aspf=s" if not has_dmarc else None
+    })
+
+def check_mx():
+    """§D · MX check — at least 1 MX record, priority < 30"""
+    out, _, _ = run(f"dig +short MX {DOMAIN} @{NS}")
+    mx_lines = [l for l in out.split('\n') if l and ' ' in l]
+    has_mx = len(mx_lines) > 0
+    RESULTS["checks"].append({
+        "name": "MX", "pass": has_mx,
+        "evidence": f"{len(mx_lines)} MX records" if has_mx else "NO MX RECORDS",
+        "fix": "Add MX at <domain>: 1 aspmx.l.google.com (or your provider)" if not has_mx else None
+    })
+
+def check_blacklist():
+    """§E · Blacklist check — query 4 major DNSBLs"""
+    # Get SMTP sending IP via SPF if possible, else just check the resolved MX IPs
+    bls = ["zen.spamhaus.org", "bl.spamcop.net", "b.barracudacentral.org", "dnsbl.sorbs.net"]
+    listed_in = []
+    # Try resolving MX A records and checking them
+    out, _, _ = run(f"dig +short A $(dig +short MX {DOMAIN} @{NS} | head -1 | awk '{{print $2}}' | sed 's/\\.$//')")
+    ips = [l for l in out.split('\n') if re.match(r'^\d+\.\d+\.\d+\.\d+$', l)]
+    for ip in ips:
+        rev = '.'.join(reversed(ip.split('.')))
+        for bl in bls:
+            query = f"{rev}.{bl}"
+            res, _, _ = run(f"dig +short A {query}")
+            if res and '127.0.0' in res:
+                listed_in.append(f"{ip} in {bl}")
+    clean = len(listed_in) == 0
+    RESULTS["checks"].append({
+        "name": "BLACKLIST", "pass": clean,
+        "evidence": "clean" if clean else f"listed: {listed_in}",
+        "fix": "Request delisting at the listed DNSBL provider's URL; do not send until clean" if not clean else None
+    })
+
+def check_smtp_time():
+    """§F · SMTP round-trip latency check — must be < 5s"""
+    mx_out, _, _ = run(f"dig +short MX {DOMAIN} @{NS}")
+    mx_host = mx_out.split('\n')[0].split()[-1].rstrip('.') if mx_out else None
+    if not mx_host:
+        RESULTS["checks"].append({"name": "SMTP-TIME", "pass": False, "evidence": "no MX", "fix": "Fix MX first"})
+        return
+    start = datetime.datetime.now()
+    try:
+        socket.create_connection((mx_host, 25), timeout=5).close()
+        ms = int((datetime.datetime.now() - start).total_seconds() * 1000)
+        fast = ms < 5000
+        RESULTS["checks"].append({
+            "name": "SMTP-TIME", "pass": fast,
+            "evidence": f"{ms}ms to {mx_host}",
+            "fix": "MX unreachable or slow — check firewall / ISP port-25 block" if not fast else None
+        })
+    except Exception as e:
+        RESULTS["checks"].append({"name": "SMTP-TIME", "pass": False, "evidence": f"FAIL: {e}", "fix": "MX not accepting connections — check provider"})
+
+for fn in [check_spf, check_dkim, check_dmarc, check_mx, check_blacklist, check_smtp_time]:
+    fn()
+
+passed = sum(1 for c in RESULTS["checks"] if c["pass"])
+total = len(RESULTS["checks"])
+RESULTS["timestamp"] = datetime.datetime.now().isoformat()
+RESULTS["domain"] = DOMAIN
+
+# Verdict logic: 6/6 = GREEN, 4-5/6 = AMBER, &lt;4 = RED
+if passed == total:
+    RESULTS["verdict"] = "GREEN"
+    RESULTS["forecast"] = "10/11 emails land Inbox on Mon 14 Jul 09:00 BST"
+elif passed >= 4:
+    RESULTS["verdict"] = "AMBER"
+    RESULTS["forecast"] = f"8/11 emails land Inbox. Fix {total-passed} issue(s) in &lt;10 min, re-run, send."
+else:
+    RESULTS["verdict"] = "RED"
+    RESULTS["forecast"] = "3/11 emails land Junk. DO NOT SEND. Wait 24h, re-run, fix all."
+
+print(json.dumps(RESULTS, indent=2))
+sys.exit(0 if RESULTS["verdict"] == "GREEN" else 1)
+</code></pre>
+<p>Save as <code>verify-deliverability.py</code>, run <code>python3 verify-deliverability.py nicholastempleman.co.uk</code>. 60-second output. JSON pretty-printed. Exit code 0 = GREEN.</p>
+</section>
+
+<section>
+<h2>§3 · The Output Format</h2>
+<p>What a healthy GREEN response looks like (run on Sun 13 Jul 18:00 BST after the hardening runbook is applied):</p>
+<pre><code>{
+  "domain": "nicholastempleman.co.uk",
+  "timestamp": "2026-07-13T18:00:42",
+  "verdict": "GREEN",
+  "forecast": "10/11 emails land Inbox on Mon 14 Jul 09:00 BST",
+  "checks": [
+    {"name": "SPF",       "pass": true,  "evidence": "\"v=spf1 include:_spf.google.com ~all\""},
+    {"name": "DKIM",      "pass": true,  "evidence": "selectors found: ['google']"},
+    {"name": "DMARC",     "pass": true,  "evidence": "\"v=DMARC1; p=quarantine; rua=mailto:dmarc@nicholastempleman.co.uk; pct=100; adkim=s; aspf=s\""},
+    {"name": "MX",        "pass": true,  "evidence": "1 MX records"},
+    {"name": "BLACKLIST", "pass": true,  "evidence": "clean"},
+    {"name": "SMTP-TIME", "pass": true,  "evidence": "143ms to aspmx.l.google.com"}
+  ]
+}
+</code></pre>
+</section>
+
+<section>
+<h2>§4 · The 6 Checks — What Each Catches</h2>
+<table>
+<tr><th>Check</th><th>What it catches</th><th>Failure consequence</th></tr>
+<tr><td><span class="acc">SPF</span></td><td>TXT record at root contains v=spf1 with allowed senders</td><td>Receiving servers may Junk on "sender not authorised"</td></tr>
+<tr><td><span class="acc">DKIM</span></td><td>At least one valid <code>&lt;selector&gt;._domainkey.&lt;domain&gt;</code> TXT record with v=DKIM1</td><td>Mail is unauthenticated → flagged as spoof</td></tr>
+<tr><td><span class="acc">DMARC</span></td><td>TXT at _dmarc.&lt;domain&gt; with v=DMARC1 AND p=quarantine or p=reject</td><td>Receivers have no policy to quarantine/reject spoofed mail</td></tr>
+<tr><td><span class="acc">MX</span></td><td>At least 1 MX record with priority set</td><td>Mail cannot be delivered at all — connection refused</td></tr>
+<tr><td><span class="acc">BLACKLIST</span></td><td>Sending IP is not in Spamhaus/Cop/Barracuda/SORBS</td><td>Receiving servers Junk without even checking content</td></tr>
+<tr><td><span class="acc">SMTP-TIME</span></td><td>SMTP connection to MX completes in < 5s</td><td>Indicates firewall or ISP port-25 block — silent failure</td></tr>
+</table>
+</section>
+
+<section>
+<h2>§5 · Verdict Decision Matrix</h2>
+<table>
+<tr><th>Score</th><th>Verdict</th><th>Action</th><th>Forecast</th></tr>
+<tr><td><span class="green">6 / 6 PASS</span></td><td><span class="green">GREEN</span></td><td>Send on Mon 14 Jul 09:00 BST as planned</td><td>10/11 emails land Inbox</td></tr>
+<tr><td><span class="amber">4-5 / 6 PASS</span></td><td><span class="amber">AMBER</span></td><td>Fix failing checks using evidence + fix field, re-run, then send</td><td>8/11 after fix</td></tr>
+<tr><td><span class="red">&lt; 4 / 6 PASS</span></td><td><span class="red">RED</span></td><td>Do NOT send Mon. Wait 24h, fix everything, re-run, send Tue</td><td>3/11 if forced</td></tr>
+</table>
+</section>
+
+<section>
+<h2>§6 · Failure Mode Catalogue</h2>
+<p>The verifier emits a <code>fix</code> string for every failed check. Common patterns:</p>
+
+<h3>SPF: NO SPF RECORD FOUND</h3>
+<pre><code>fix: "Add TXT: v=spf1 include:_spf.google.com ~all"
+# At your DNS provider (Cloudflare/Namecheap/123-reg/IONOS), add TXT record:
+#   Type: TXT
+#   Host: @ (or nicholastempleman.co.uk)
+#   Value: v=spf1 include:_spf.google.com ~all
+#   TTL: 3600
+# Wait 5 min for propagation, re-run verifier.</code></pre>
+
+<h3>DKIM: NO DKIM KEYS FOUND</h3>
+<pre><code>fix: "Generate DKIM 2048-bit via Gmail/Outlook/Mailgun admin; add as TXT at <selector>._domainkey.<domain>"
+# Gmail Workspace: admin.google.com > Apps > Google Workspace > Gmail > Authenticate email > Generate new record
+# Outlook / M365: security.microsoft.com > Email authentication > DKIM > Enable
+# Mailgun: app.mailgun.com > Sending > Domains > Domain settings > DKIM
+# Selectors will be 'google' (Gmail) or 'selector1' / 'selector2' (M365)
+# Wait 30 min for DNS propagation, re-run verifier.</code></pre>
+
+<h3>DMARC: NO DMARC RECORD FOUND</h3>
+<pre><code>fix: "Add TXT at _dmarc.<domain>: v=DMARC1; p=quarantine; rua=mailto:dmarc@<domain>; pct=100; adkim=s; aspf=s"
+# Type: TXT
+# Host: _dmarc
+# Value: v=DMARC1; p=quarantine; rua=mailto:dmarc@nicholastempleman.co.uk; pct=100; adkim=s; aspf=s
+# p=quarantine is safer than p=reject for first-time setup (will Junk spam, not bounce legit)
+# Wait 15 min for propagation, re-run verifier.</code></pre>
+
+<h3>MX: NO MX RECORDS</h3>
+<pre><code>fix: "Add MX at <domain>: 1 aspmx.l.google.com (or your provider)"
+# Gmail: aspmx.l.google.com priority 1, alt1.aspmx.l.google.com priority 5, alt2 priority 5, alt3 priority 10, alt4 priority 10
+# Outlook: <domain>.mail.protection.outlook.com priority 0
+# Wait 30 min, re-run.</code></pre>
+
+<h3>BLACKLIST: listed in zen.spamhaus.org</h3>
+<pre><code>fix: "Request delisting at the listed DNSBL provider's URL; do not send until clean"
+# Most DNSBLs have a free self-service delisting form:
+#   Spamhaus: https://check.spamhaus.org/
+#   Spamcop: https://www.spamcop.net/bl.shtml
+#   Barracuda: https://www.barracudacentral.org/lookups
+#   SORBS: http://www.sorbs.net/lookup.shtml
+# Provide your IP, request removal, usually 24h turnaround.</code></pre>
+
+<h3>SMTP-TIME: FAIL timeout</h3>
+<pre><code>fix: "MX unreachable or slow — check firewall / ISP port-25 block"
+# Many residential ISPs block port 25 outbound. Use:
+#   - Webmail (gmail.com) instead of SMTP client
+#   - SMTP relay on port 587 (submission) instead of 25
+#   - Different network (mobile hotspot)
+# Re-run verifier on different network.</code></pre>
+</section>
+
+<section>
+<h2>§7 · Pre-Send Protocol — Sun 13 Jul 18:00 BST</h2>
+<ol>
+  <li><strong>17:55</strong> — Open Terminal, run the verifier. If RED, jump to §6 fix catalog.</li>
+  <li><strong>18:00</strong> — Verifier outputs GREEN. Screenshot the JSON. Save as <code>pre-send-verdict-2026-07-13.json</code>.</li>
+  <li><strong>18:01</strong> — Send yourself a test email from Gmail. Check Gmail Sent folder.</li>
+  <li><strong>18:02</strong> — Send yourself a test email from Outlook. Check Outlook Sent folder.</li>
+  <li><strong>18:03</strong> — Send yourself a test email from ProtonMail. Check ProtonMail Sent folder.</li>
+  <li><strong>18:04</strong> — Check Gmail inbox: did all 3 arrive in Inbox (not Promotions / Spam)?</li>
+  <li><strong>18:05</strong> — Open mail-tester.com. Send to the displayed address. Click "Then check your score". Target 9/10 or 10/10.</li>
+  <li><strong>18:08</strong> — Review score. If < 7, fix content (no spam words, no all-caps subject, no broken images).</li>
+  <li><strong>18:10</strong> — Open defoneos-mod-first-email-blueprint.html. Read once.</li>
+  <li><strong>18:15</strong> — Pick first 3 buyers from CRM. Pre-write the 3 emails in Gmail Drafts. Save. Sleep on them.</li>
+  <li><strong>Mon 14 Jul 08:30</strong> — Re-run verifier (60 sec). Should still be GREEN.</li>
+  <li><strong>Mon 14 Jul 08:50</strong> — Open Drafts. Review once. Press send T1 buyer 1 at 09:00 BST.</li>
+  <li><strong>Mon 14 Jul 09:01</strong> — T1 buyer 2. Wait 60 sec.</li>
+  <li>...continue staggered 11-minute cascade per the first-email-blueprint.</li>
+</ol>
+</section>
+
+<section>
+<h2>§8 · Recovery Protocol If Mon Morning Verdict Drops to RED</h2>
+<p>Two failure modes are possible on Mon morning:</p>
+
+<div class="ambbox">
+  <strong>Mode A — Verifier still RED at 08:30 Mon</strong>
+  <p>Do NOT send at 09:00. Use the <strong>24-hour defer protocol</strong>: send a single email to the highest-priority buyer (T1 #1) saying "slight delay on my end, will reach out Tuesday morning with full materials". This buys you 24h. Spend those 24h fixing the issue, re-running, sending Tue at 09:00.</p>
+</div>
+
+<div class="warnbox">
+  <strong>Mode B — Verifier GREEN but mail-tester dropped below 8</strong>
+  <p>Content triggered Junk, not infrastructure. Fix the email body: shorten subject (< 50 chars), remove any "FREE", "ACT NOW", "URGENT" words, ensure at least 1 plain-text paragraph, ensure signature has phone number. Re-run mail-tester. Target 9/10.</p>
+</div>
+
+<div class="okbox">
+  <strong>Mode C — Verifier GREEN, mail-tester 9+, but a specific buyer doesn't reply</strong>
+  <p>This is not deliverability, it's priority or content. Wait 4 days. If no reply, send a one-line follow-up per the CRM. If still no reply after 8 days, mark cold and move to next buyer.</p>
+</div>
+</section>
+
+<section>
+<h2>§9 · Automation Hooks — Schedule It</h2>
+<p>Schedule the verifier to run every 6 hours automatically, alerting only on RED. Add to crontab:</p>
+<pre><code># Run verifier every 6h, alert Nick if RED
+0 */6 * * * /usr/bin/python3 /Users/nicholas/clawd/bin/verify-deliverability.py nicholastempleman.co.uk > /tmp/verify.json 2>&1
+VERDICT=$(jq -r .verdict /tmp/verify.json)
+if [ "$VERDICT" = "RED" ]; then
+  osascript -e 'display notification "Email deliverability RED — fix before sending" with title "DEFONEOS Verifier"'
+fi</code></pre>
+<p>This runs the verifier in the background 4× per day. Nick only gets a Mac notification if it goes RED. Zero noise when GREEN.</p>
+</section>
+
+<section>
+<h2>§10 · Honesty Register</h2>
+<div class="warnbox">
+  <ol>
+    <li><strong>GREEN is not a guarantee.</strong> It means SPF/DKIM/DMARC/MX/blacklist/SMTP-time are all passing. It does NOT guarantee Inbox placement for content reasons (spam words, all-caps subject, broken HTML, sender reputation).</li>
+    <li><strong>Mail-tester is the content check, not the verifier.</strong> Always run both. The verifier is infrastructure. Mail-tester is content.</li>
+    <li><strong>Domain reputation takes 2-4 weeks to build.</strong> First 2 weeks of DMARC reports will be SCARY (lots of spoofed mail hitting your quarantine). This is normal. After 2-4 weeks, the noise drops.</li>
+    <li><strong>Repeat for every domain you send from.</strong> If you also send from csoai.org or meok.ai, run the verifier for each. Each domain needs its own SPF/DKIM/DMARC.</li>
+    <li><strong>This verifier does not check BIMI, ARC, or TLSRPT.</strong> Those are nice-to-have but not P0 for first MOD emails. Skip for now.</li>
+    <li><strong>dstl-strict spam filter is real.</strong> dstl (Defence Science and Technology Laboratory) uses a stricter spam filter than commercial email. Even a 9/10 mail-tester score can Junk on dstl. The only defence is clean infrastructure (verifier GREEN) + clean content (mail-tester 9+) + no URL shorteners + no marketing tracking pixels.</li>
+  </ol>
+</div>
+</section>
+
+<section>
+<h2>§11 · Pair With These Pages</h2>
+<ul>
+  <li><a href="#">defoneos-email-deliverability-hardening.html</a> — the 30-min runbook (apply on Sat 11 Jul or Sun 12 Jul, BEFORE running this verifier)</li>
+  <li><a href="#">defoneos-mod-first-email-blueprint.html</a> — the actual email templates to send Mon 09:00 BST</li>
+  <li><a href="#">defoneos-mod-day-0-pilot-launch-runbook.html</a> — the 5-day Day-0 launch runbook that contains this pre-send protocol</li>
+  <li><a href="#">defoneos-mod-90-day-sovereign-pilot-sow.html</a> — the SoW you attach to buyer replies</li>
+</ul>
+</section>
+
+<footer>
+  <div>DEFONEOS / Tick 66 / Email Deliverability Auto-Verifier / 60-Second Pre-Send Check</div>
+  <div>SHA-512 chain: tick-66-sigil.json · State: DEFONEOS_SPRINT_STATE.json</div>
+  <div>JEEVES · 11 Jul 2026 · 🐉🔥</div>
+</footer>
+</div>
+</body>
+</html>

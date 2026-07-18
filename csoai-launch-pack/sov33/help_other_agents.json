@@ -1,0 +1,146 @@
+{
+  "ts": "2026-07-14T06:55:14.430982+00:00",
+  "adopted": [
+    {
+      "name": "MergeKit",
+      "owner": "Arcee",
+      "url": "https://www.mergekit.com",
+      "license": "Apache-2.0",
+      "purpose": "SLERP/TIES/DARE/Passthrough model souping",
+      "replaces": "our 4brain soup implementation (CPU proxy)",
+      "tier": "1"
+    },
+    {
+      "name": "Mergenetic",
+      "owner": "arXiv 2505.11427",
+      "url": "https://arxiv.org/pdf/2505.11427",
+      "license": "MIT",
+      "purpose": "Evolutionary merge-recipe search vs GSM8K/HumanEval (our ratio-sweep, at scale)",
+      "replaces": "our fluid-ratio-sweep proxy",
+      "tier": "1"
+    },
+    {
+      "name": "MoE-Infinity",
+      "owner": "EfficientMoE",
+      "url": "https://github.com/EfficientMoE/MoE-Infinity",
+      "license": "MIT",
+      "purpose": "JIT expert fetch + activation-aware cache + prefetch (= our 6-lever speedup)",
+      "replaces": "our ssd_venturi_speedup.py proxy",
+      "tier": "2"
+    },
+    {
+      "name": "FlashMoE",
+      "owner": "arXiv 2601.17063",
+      "url": "https://arxiv.org/abs/2601.17063",
+      "license": "MIT",
+      "purpose": "SSD + ML cache (= our LRU+prefetch, published)",
+      "replaces": "our expert_lru_cache proxy",
+      "tier": "2"
+    },
+    {
+      "name": "ssd-moe/deepseek-v4-flash-mlx",
+      "owner": "ssd-moe",
+      "url": "https://github.com/ssd-moe/deepseek-v4-flash-mlx",
+      "license": "MIT (engine) + MIT (GLM-5.2 weights, derivative)",
+      "purpose": "Production SSD expert-streaming on Apple Silicon (~4.5-5 tok/s on 48GB)",
+      "replaces": "our Colibri path",
+      "tier": "3"
+    }
+  ],
+  "run_order_16gb": [
+    {
+      "step": 1,
+      "cmd": "ollama pull qwen3:4b",
+      "why": "small/reflex tier \u2014 Apache-2.0",
+      "size_GB": 2.5
+    },
+    {
+      "step": 2,
+      "cmd": "ollama pull qwen3:8b",
+      "why": "larger local ceiling on 16GB",
+      "size_GB": 5.0
+    },
+    {
+      "step": 3,
+      "cmd": "pip install mergekit",
+      "why": "soup two same-base Qwen3-4B fine-tunes",
+      "size_GB": 0.1
+    },
+    {
+      "step": 4,
+      "cmd": "pip install mergenetic",
+      "why": "evolutionary merge-recipe search",
+      "size_GB": 0.1
+    },
+    {
+      "step": 5,
+      "cmd": "wrap with sovereign governance",
+      "why": "care-gate + SIGIL + signed memory + OSCAL (already built, this repo)",
+      "size_GB": 0.0
+    }
+  ],
+  "run_order_48gb": [
+    {
+      "step": 1,
+      "cmd": "hf download mlx-community/DeepSeek-V4-Flash-4bit --local-dir mlx-ckpt",
+      "why": "the daily-driver T-base",
+      "size_GB": 80
+    },
+    {
+      "step": 2,
+      "cmd": "python oracle/build_dense_companion.py",
+      "why": "make the dense companion (the ~17B resident part)",
+      "size_GB": 9.9
+    },
+    {
+      "step": 3,
+      "cmd": "pip install -r requirements.txt (from ssd-moe repo)",
+      "why": "install the SSD expert-streaming engine",
+      "size_GB": 0.5
+    },
+    {
+      "step": 4,
+      "cmd": "./scripts/serve-http.sh",
+      "why": "start the OpenAI-compatible server",
+      "size_GB": 0.0
+    },
+    {
+      "step": 5,
+      "cmd": "curl localhost:18091/v1/chat/completions -d '{\"model\":\"deepseek-v4-flash\",...}'",
+      "why": "verify it works",
+      "size_GB": 0.0
+    }
+  ],
+  "corrections": [
+    {
+      "field": "DeepSeek V4-Pro sizes",
+      "before": "1.6T deployed (aggregators)",
+      "after": "1.6T BASE / 862B DEPLOYED (verified via HF model list + ssd-moe repo)",
+      "honest_register": "T is real as a base; the served model is 862B.",
+      "source": "PRIMARY-VERIFIED CORRECTION in SOVEREIGN_REAL_MODELS_SHOPPING_LIST_2026-07-14.md"
+    },
+    {
+      "field": "DeepSeek V4-Flash size",
+      "before": "284B / 13B active (aggregators)",
+      "after": "158B / 13B active (HF model list)",
+      "honest_register": "Aggregators [S] conflated base\u2194deployed \u2014 verified against HF primary.",
+      "source": "PRIMARY-VERIFIED CORRECTION in SOVEREIGN_REAL_MODELS_SHOPPING_LIST_2026-07-14.md"
+    },
+    {
+      "field": "Qwen2.5-3B license",
+      "before": "treated as commercial-safe default",
+      "after": "Qwen Research License \u2014 NOT commercial; use Qwen3+ (Apache-2.0)",
+      "honest_register": "Our 16GB workhorse (qwen2.5:3b) is RESEARCH-ONLY. The commercial build uses Qwen3-4B/8B.",
+      "source": "M4_SOVEREIGN_RUN_ORDER_2026-07-14.md \u00a7 'Licensing catch (real)'"
+    },
+    {
+      "field": "GLM-5.2 active params",
+      "before": "40B active (Claude grep = 0 hits on 256-experts/8+1/40B)",
+      "after": "RETRACTED to headline only (744B total) \u2014 Claude `033fc14b` correction",
+      "honest_register": "Architecture specifics need measurement, not proxy. Confirmed by the agent's own grep.",
+      "source": "Claude Science correction `033fc14b`, mirrored in LEDGERBOARD-V2"
+    }
+  ],
+  "charter": "df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054",
+  "care_floor": 0.95
+}

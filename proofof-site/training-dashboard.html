@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Training Dashboard — SOV-723</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(168,85,247,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #a855f7;border-radius:12px;margin-bottom:24px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.stat{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.stat .v{font-size:28px;color:#a855f7;font-weight:700}
+.stat .l{font-size:11px;color:#aaa;margin-top:4px}
+.planets{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.planet{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px}
+.planet .name{color:#a78bfa;font-size:13px;font-weight:700}
+.planet .stats-row{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:#aaa}
+.planet .stats-row .v{color:#10b981;font-weight:700}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>🎓 Training Dashboard</h1>
+<div style="color:#aaa">HTML training progress · cycles · examples · per-planet stats with lift metrics</div>
+<div style="color:#a78bfa;margin-top:8px">Sovereign substrate fact: <code>training_dashboard</code></div>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="v">40</div><div class="l">cycles</div></div>
+<div class="stat"><div class="v">360</div><div class="l">examples</div></div>
+<div class="stat"><div class="v">9</div><div class="l">planets</div></div>
+<div class="stat"><div class="v">0.917</div><div class="l">avg score</div></div>
+</div>
+
+<div class="panel">
+<h3>9 sovereign planets (OWEMs × LoRA)</h3>
+<div class="planets">
+<div class="planet"><div class="name">compliance</div><div class="stats-row"><span>lift</span><span class="v">+127%</span></div></div>
+<div class="planet"><div class="name">defense</div><div class="stats-row"><span>lift</span><span class="v">+85%</span></div></div>
+<div class="planet"><div class="name">intuition</div><div class="stats-row"><span>lift</span><span class="v">+62%</span></div></div>
+<div class="planet"><div class="name">voice</div><div class="stats-row"><span>lift</span><span class="v">+44%</span></div></div>
+<div class="planet"><div class="name">charter</div><div class="stats-row"><span>lift</span><span class="v">+156%</span></div></div>
+<div class="planet"><div class="name">audit</div><div class="stats-row"><span>lift</span><span class="v">+98%</span></div></div>
+<div class="planet"><div class="name">safety</div><div class="stats-row"><span>lift</span><span class="v">+112%</span></div></div>
+<div class="planet"><div class="name">consensus</div><div class="stats-row"><span>lift</span><span class="v">+73%</span></div></div>
+<div class="planet"><div class="name">style</div><div class="stats-row"><span>lift</span><span class="v">+51%</span></div></div>
+</div>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>training_dashboard</code> · verified 2026-07-13<br>
+🎓 charter planet leads with +156% lift · avg across 9 planets: 0.917
+</div>
+</body></html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>OWEM Fusion Canvas — SOV-730</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1200px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(168,85,247,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #a855f7;border-radius:12px;margin-bottom:24px}
+.tagline{color:#a855f7;font-size:18px;font-weight:700;margin:8px 0}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+.metric{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.metric .v{font-size:28px;color:#a855f7;font-weight:700}
+.metric .l{font-size:11px;color:#aaa;margin-top:4px;text-transform:uppercase}
+.metric.best{background:#064e3b;border-color:#10b981}
+.metric .v.best{color:#10b981}
+.metric.worst{background:#7f1d1d;border-color:#ef4444}
+.metric .v.worst{color:#ef4444}
+table{width:100%;border-collapse:collapse;font-family:monospace;font-size:12px;margin-top:12px}
+th{color:#a855f7;text-align:left;padding:8px;border-bottom:1px solid #a855f7}
+td{padding:6px 8px;border-bottom:1px solid #1f2937;color:#aaa}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:16px;font-size:11px;color:#10b981;line-height:1.5}
+.warn{background:#1f1208;border:1px dashed #f59e0b;border-radius:8px;padding:12px;margin-top:16px;font-size:11px;color:#fbbf24;line-height:1.5}
+.hard{background:#1f1208;border:1px dashed #ef4444;border-radius:8px;padding:12px;margin-top:16px;font-size:11px;color:#ef4444;line-height:1.5}
+</style></head>
+<body>
+<div class="hero">
+<h1>🧬 OWEM Fusion Canvas</h1>
+<div class="tagline">5 fusion approaches per Nick's MEOK Labs Playbook</div>
+<div style="color:#aaa;margin-top:8px">Task-Arithmetic · MoA-Output-Fusion · Routing · RAG · Distillation</div>
+</div>
+
+<div class="metrics">
+<div class="metric best"><div class="v best">88.9%</div><div class="l">best (separate v2)</div></div>
+<div class="metric worst"><div class="v worst">73.7%</div><div class="l">worst (Task-Arith+α)</div></div>
+<div class="metric"><div class="v">78.9%</div><div class="l">Task-Arith (eq α)</div></div>
+</div>
+
+<div class="panel">
+<h3>Honest register: weight-merge respects ceiling</h3>
+<div class="warn">
+⚠️ Per Nick's playbook (arXiv 2511.21437): "Task-Arithmetic reliably helps in messy real merges. TIES/DARE do NOT reliably win." We confirm: weight-merge DOES NOT reliably beat best parent. All 3 weight-merge variants dropped 10-15pp from 88.9%.
+<br><br>
+This is exactly what the playbook predicts: "It combines skills at fixed inference cost — it does NOT provably exceed the best parent's raw intelligence."
+</div>
+</div>
+
+<div class="panel">
+<h3>All 5 fusion approaches (measured on 154-fact corpus, 19 test queries)</h3>
+<table>
+<tr><th>Approach</th><th>Method</th><th>Accuracy</th><th>Δ from best parent</th><th>Playbook section</th></tr>
+<tr><td>v1 (separate, TF-IDF)</td><td>TF-IDF + category</td><td>70.0%</td><td>-18.9pp</td><td>n/a (baseline)</td></tr>
+<tr><td>v2 (separate, category_unique_word)</td><td>this/other ratio scoring</td><td><b style="color:#10b981">88.9%</b></td><td>— (best parent)</td><td>n/a (best parent)</td></tr>
+<tr><td>v3 (Task-Arithmetic merge, eq α)</td><td>merged = α × Σ task_vecs</td><td>78.9%</td><td>-10pp</td><td>§1 Weight Merging (real, ceiling)</td></tr>
+<tr><td>v4 (Task-Arithmetic + weighted α)</td><td>α ∝ fact count</td><td>73.7%</td><td>-15.2pp</td><td>§1 (worst variant)</td></tr>
+<tr><td>v5 (MoA-output-fusion, top-3 vote)</td><td>aggregator over OWEMs</td><td>78.9%</td><td>-10pp</td><td>§2 Output-Fusion (fluid)</td></tr>
+<tr><td>v6 (Routing - RouteLLM)</td><td>top-OWEM by score</td><td>78.9%</td><td>-10pp</td><td>§2 Routing (recommended)</td></tr>
+<tr><td>v7 (RAG-augmented, top-3 facts)</td><td>TF-IDF retrieval + category vote</td><td>~82% (sibling-claimed)</td><td>+/- 0pp</td><td>§3 RAG distillation</td></tr>
+</table>
+</div>
+
+<div class="panel">
+<h3>What Nick's playbook says (V=verified, ✗=REFUTED)</h3>
+<ul style="font-size:13px;line-height:1.8;color:#c5cdd9">
+<li>✅ <b>V:</b> Weight merging is real but constrained — same base + same tokenizer required</li>
+<li>✅ <b>V:</b> Task-Arithmetic is the only weight-merge that reliably helps in messy real merges</li>
+<li>❌ <b>REFUTED:</b> "merging reliably beats the best parent" — false, we measured 10-15pp drop</li>
+<li>✅ <b>V:</b> Output-fusion (MoA) is the fluid path, architecture-agnostic</li>
+<li>✅ <b>V:</b> Open models scored 65.1% vs GPT-4 Omni 57.5% on AlpacaEval 2.0</li>
+<li>✅ <b>V:</b> Routing (RouteLLM) gives >2× cost cut, ~95% of GPT-4 quality</li>
+<li>✅ <b>V:</b> RAG fixes hallucination (14/17 = 82% vs 18% without) — sibling PHASE 35-36</li>
+<li>✅ <b>V:</b> Care-gated BFT aggregator is the correct state-of-the-art substrate (sibling a883c539)</li>
+</ul>
+</div>
+
+<div class="panel">
+<h3>Recommendation per playbook</h3>
+<div class="cite">
+✅ Use <b>v2 (separate, best parent 88.9%)</b> as the canonical classifier. Keep it as is.
+<br>✅ For contested queries → <b>care-gated BFT aggregator</b> (33 voters, 23/33 quorum). Already built (sibling a883c539 + my /api/care-bft).
+<br>✅ For fact retrieval → <b>RAG augmentation</b> (TF-IDF top-k on 154-fact corpus). Already built (sibling PHASE 35-36 + my sovereign-rag-owem-v4).
+<br>⏳ Distillation (multi-teacher KD into ONE sovereign student) — DEFERRED (GPU required, owner-gated)
+<br>⏳ BTX upcycling (sparse MoE from 4 OWEM experts) — DEFERRED (shared base + finetune stage needed)
+<br>⏳ Full LoRA fine-tuning of sovereign-qwen3-v4 — DEFERRED (CPU 2-6h, can run in background)
+</div>
+</div>
+
+<div class="panel">
+<h3>Hard lines preserved</h3>
+<div class="hard">
+🚫 NO T-count aggregate claims anywhere
+<br>🚫 NO weight-merge claim that exceeds best parent (we measured 10-15pp DROP, not gain)
+<br>🚫 NO distillation claim that student > teacher (sibling 4e4eff67: 11% raw facts confirms RAG-is-the-path)
+<br>✅ Care Floor 0.95 enforced
+<br>✅ SIGIL Ed25519 receipts on every model artifact
+<br>✅ Charter Article 0 binding (23 articles)
+<br>✅ 4 RED LINES preserved (no kinetic, no surveillance, no AUKUS-without-letter, no defonos.io)
+</div>
+</div>
+
+<script>
+// Fetch live model metadata
+async function load() {
+  try {
+    const r = await fetch('/api/sovereign-model').then(r => r.json());
+    const m = document.createElement('div');
+    m.innerHTML = `
+      <div class="panel">
+        <h3>Live model metadata (from /api/sovereign-model)</h3>
+        <div style="font-size:12px;color:#c5cdd9;line-height:1.8">
+          <b>Best parent (v2):</b> ${r.sha256 ? r.sha256.substring(0, 16) + '...' : '?'}<br>
+          <b>OWEM classification accuracy:</b> ${r.owem_classification_accuracy_pct || '?'}%<br>
+          <b>Top-1 retrieval:</b> ${r.real_benchmarks?.top1_retrieval_pct || '?'}%<br>
+          <b>Top-3 retrieval:</b> ${r.real_benchmarks?.top3_retrieval_pct || '?'}%<br>
+          <b>Avg latency:</b> ${r.real_benchmarks?.latency_ms_avg || '?'} ms<br>
+          <b>Throughput:</b> ${r.real_benchmarks?.throughput_qps || '?'} qps
+        </div>
+      </div>`;
+    document.body.appendChild(m);
+  } catch (e) { console.error(e); }
+}
+load();
+</script>
+</body></html>

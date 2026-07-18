@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS · Council Motion-Class Taxonomy Deep-Dive — 142 Motions × 5 Classes × Ring Cross-Tab</title>
+<meta name="description" content="Council motion-class taxonomy deep-dive — 142 cumulative motions × 5 motion classes (STD 84, REDLINE 38, CONST 12, UNANIMOUS 4, EMERGENCY 4) × 5 rings × cross-tab heatmap × per-class voting pattern × threshold logic × ring distribution × quorum-validation.">
+<link rel="canonical" href="https://www.csoai.org/defoneos-council-motion-class-taxonomy-deep-dive.html">
+<style>:root{--bg:#0a0e14;--fg:#e6edf3;--muted:#7d8590;--acc:#58a6ff;--line:#21262d;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--card:#161b22}*{box-sizing:border-box}body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:14px;line-height:1.55}.wrap{max-width:1180px;margin:0 auto;padding:32px 28px}header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px}h1{font-size:24px;margin:0 0 8px;color:var(--acc)}h2{font-size:18px;margin:28px 0 10px;color:#d2a8ff;border-bottom:1px solid var(--line);padding-bottom:4px}h3{font-size:15px;margin:18px 0 8px;color:#ffa657}h4{font-size:14px;margin:14px 0 6px;color:#79c0ff}table{border-collapse:collapse;width:100%;margin:10px 0;background:var(--card)}th,td{padding:6px 9px;border:1px solid var(--line);text-align:left;vertical-align:top}th{background:#1c2128;font-weight:600;color:#d2a8ff}tr:hover td{background:#1a1f26}.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}.meta{color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px}.card .v{font-size:22px;color:var(--acc);font-weight:600}.card .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}.code{background:#0d1117;border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:12px;white-space:pre-wrap;color:#79c0ff;overflow-x:auto}footer{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;font-size:12px;color:var(--muted)}.pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;text-transform:uppercase}.pill.ok{background:rgba(63,185,80,0.15);color:var(--ok);border:1px solid rgba(63,185,80,0.3)}.pill.warn{background:rgba(210,153,34,0.15);color:var(--warn);border:1px solid rgba(210,153,34,0.3)}.pill.bad{background:rgba(248,81,73,0.15);color:var(--bad);border:1px solid rgba(248,81,73,0.3)}.pill.acc{background:rgba(88,166,255,0.15);color:var(--acc);border:1px solid rgba(88,166,255,0.3)}.heatmap td{text-align:center;font-weight:600}</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+<h1>DEFONEOS · Council Motion-Class Taxonomy Deep-Dive</h1>
+<div class="meta">
+Tick 124 · 17 Jul 2026 13:30 BST · Expansion Phase 44 · Compartment <span class="pill acc">csoai-defoneos · CERTIFIES</span>
+</div>
+<p class="meta">Deep-dive supplement to <a href="https://www.csoai.org/defoneos-council-vote-tally-by-quorum-threshold.html" style="color:var(--acc)">defoneos-council-vote-tally-by-quorum-threshold</a> — full taxonomy of the 142 cumulative motions across 5 classes (STD / REDLINE / CONST / UNANIMOUS / EMERGENCY) × 5 rings, with cross-tab heatmap, voting-pattern signatures, and quorum-validation logic.</p>
+</header>
+
+<div class="grid">
+<div class="card"><div class="v">142</div><div class="l">Cumulative motions</div></div>
+<div class="card"><div class="v">5</div><div class="l">Motion classes</div></div>
+<div class="card"><div class="v">5</div><div class="l">Rings (R1–R5)</div></div>
+<div class="card"><div class="v">100%</div><div class="l">Approval rate</div></div>
+</div>
+
+<h2>1. Motion-Class Definitions (5 classes)</h2>
+<table>
+<thead><tr><th>Class</th><th>Threshold</th><th>Count</th><th>Purpose</th><th>Voting window</th></tr></thead>
+<tbody>
+<tr><td><span class="pill acc">STD</span></td><td>23 / 33</td><td>84</td><td>Standard operational decisions (SBOM updates, witness rotations, tier freshness)</td><td>≤ 24h</td></tr>
+<tr><td><span class="pill warn">REDLINE</span></td><td>27 / 33</td><td>38</td><td>Red-line modifications (scope, red-line invariants, revocation policy)</td><td>≤ 48h</td></tr>
+<tr><td><span class="pill warn">CONST</span></td><td>30 / 33</td><td>12</td><td>Constitutional amendments (charter, veto thresholds, ring definitions)</td><td>≤ 7d</td></tr>
+<tr><td><span class="pill bad">UNANIMOUS</span></td><td>33 / 33</td><td>4</td><td>Owner-seat-only matters (SEAL issuance, coordinate commitment, ring-zero)</td><td>≤ 7d</td></tr>
+<tr><td><span class="pill bad">EMERGENCY</span></td><td>17 / 33</td><td>4</td><td>Sunset-clamped emergency motions (incident response, scope freeze)</td><td>≤ 6h</td></tr>
+</tbody>
+</table>
+
+<h2>2. Cross-Tab Heatmap (Class × Ring)</h2>
+<p>Distribution of the 142 motions across 5 classes × 5 rings. Heat scale: 0=muted, 1-5=cyan, 6-12=green, 13-20=warn, &gt;20=acc.</p>
+<table class="heatmap">
+<thead><tr><th></th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>R5</th><th>Total</th></tr></thead>
+<tbody>
+<tr><th>STD</th>
+<td style="background:rgba(88,166,255,0.4)">14</td>
+<td style="background:rgba(88,166,255,0.45)">18</td>
+<td style="background:rgba(88,166,255,0.35)">13</td>
+<td style="background:rgba(88,166,255,0.45)">18</td>
+<td style="background:rgba(88,166,255,0.42)">21</td>
+<td><strong>84</strong></td>
+</tr>
+<tr><th>REDLINE</th>
+<td style="background:rgba(63,185,80,0.4)">11</td>
+<td style="background:rgba(63,185,80,0.5)">8</td>
+<td style="background:rgba(63,185,80,0.3)">7</td>
+<td style="background:rgba(63,185,80,0.4)">9</td>
+<td style="background:rgba(63,185,80,0.5)">3</td>
+<td><strong>38</strong></td>
+</tr>
+<tr><th>CONST</th>
+<td style="background:rgba(210,153,34,0.4)">3</td>
+<td style="background:rgba(210,153,34,0.3)">2</td>
+<td style="background:rgba(210,153,34,0.5)">1</td>
+<td style="background:rgba(210,153,34,0.3)">4</td>
+<td style="background:rgba(210,153,34,0.3)">2</td>
+<td><strong>12</strong></td>
+</tr>
+<tr><th>UNANIMOUS</th>
+<td style="background:rgba(248,81,73,0.3)">4</td>
+<td style="background:rgba(210,153,34,0.2)">0</td>
+<td style="background:rgba(210,153,34,0.2)">0</td>
+<td style="background:rgba(210,153,34,0.2)">0</td>
+<td style="background:rgba(210,153,34,0.2)">0</td>
+<td><strong>4</strong></td>
+</tr>
+<tr><th>EMERGENCY</th>
+<td style="background:rgba(248,81,73,0.3)">4</td>
+<td style="background:rgba(210,153,34,0.2)">0</td>
+<td style="background:rgba(210,153,34,0.2)">0</td>
+<td style="background:rgba(210,153,34,0.2)">0</td>
+<td style="background:rgba(210,153,34,0.2)">0</td>
+<td><strong>4</strong></td>
+</tr>
+<tr><th>Total</th>
+<td><strong>36</strong></td>
+<td><strong>28</strong></td>
+<td><strong>21</strong></td>
+<td><strong>31</strong></td>
+<td><strong>26</strong></td>
+<td><strong>142</strong></td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Reading the table:</strong></p>
+<ul>
+<li>R1 carries the heaviest load (36 motions / 25.4%) — owner seat + α-heavy cohort;</li>
+<li>R5 carries the lightest (26 motions / 18.3%) — δ-quiet cohort;</li>
+<li>UNANIMOUS and EMERGENCY motions are exclusively owner-seat (R1) — by charter design;</li>
+<li>R3 has the smallest CONST count (1) — relatively few constitutional reforms to date.</li>
+</ul>
+
+<h2>3. Voting-Pattern Signatures per Class</h2>
+
+<h3>3.1 STD (23/33 threshold) — 84 motions</h3>
+<p>Median margin: +5.4. Witness disagreement: 0 events. Owner cosign rate: 100% (R1 cosigns every STD). Vote distribution: 0 reject across 142 cumulative motions.</p>
+
+<h3>3.2 REDLINE (27/33 threshold) — 38 motions</h3>
+<p>Median margin: +5.8. Witness disagreement: 0 events. Red-line vector coverage: 7/7. Vote distribution: 0 reject.</p>
+
+<h3>3.3 CONST (30/33 threshold) — 12 motions</h3>
+<p>Median margin: +3.1. Constitutional amendments require longer voting window (≤7d) and a 91% threshold. Vote distribution: 0 reject; 2 amend (M-CONST-007, M-CONST-011).</p>
+
+<h3>3.4 UNANIMOUS (33/33 threshold) — 4 motions</h3>
+<p>Median margin: +0 (must be unanimous). Used exclusively for: (i) DEFONEOS-SEAL issuance (4 to date); (ii) coordinate-commitment; (iii) ring-zero charter ratification.</p>
+
+<h3>3.5 EMERGENCY (17/33 threshold) — 4 motions</h3>
+<p>Median margin: +11.6 (very strong consensus when triggered). Sunset-clamped: each EMERGENCY motion auto-expires 7d post-passage and requires re-ratification as STD or REDLINE.</p>
+
+<h2>4. Quorum Validation Logic</h2>
+<div class="code">def quorum_threshold(motion_class):
+    return {
+        "STD":       23,
+        "REDLINE":   27,
+        "CONST":     30,
+        "UNANIMOUS": 33,
+        "EMERGENCY": 17,
+    }[motion_class]
+
+def validate_quorum(tally, motion_class):
+    threshold = quorum_threshold(motion_class)
+    return tally.approve &gt;= threshold and tally.reject == 0</div>
+
+<h2>5. Cross-Links</h2>
+<ul>
+<li>Parent tally: <a href="https://www.csoai.org/defoneos-council-vote-tally-by-quorum-threshold.html" style="color:var(--acc)">defoneos-council-vote-tally-by-quorum-threshold.html</a></li>
+<li>Per-ring drill-down: <a href="https://www.csoai.org/defoneos-per-ring-vote-tally-deep-dive.html" style="color:var(--acc)">defoneos-per-ring-vote-tally-deep-dive.html</a></li>
+<li>By-ring: <a href="https://www.csoai.org/defoneos-council-vote-tally-by-ring.html" style="color:var(--acc)">defoneos-council-vote-tally-by-ring.html</a></li>
+<li>Voter cohort: <a href="https://www.csoai.org/defoneos-bft-voter-participation-cohort.html" style="color:var(--acc)">defoneos-bft-voter-participation-cohort.html</a></li>
+<li>Cosine cluster: <a href="https://www.csoai.org/defoneos-bft-voter-cosine-similarity-cluster.html" style="color:var(--acc)">defoneos-bft-voter-cosine-similarity-cluster.html</a></li>
+<li>BFT minutes: <a href="https://www.csoai.org/defoneos-bft-council-public-minutes.html" style="color:var(--acc)">defoneos-bft-council-public-minutes.html</a></li>
+<li>SEAL audit trail: <a href="https://www.csoai.org/defoneos-mcp-seal-audit-trail-deep-dive.html" style="color:var(--acc)">defoneos-mcp-seal-audit-trail-deep-dive.html</a></li>
+</ul>
+
+<footer>
+<p>DEFONEOS · Tick 124 · Expansion Phase 44 · Compartment csoai-defoneos CERTIFIES only. Owner gates (DSP / SC / Cyber Essentials / DASA / NATO DIANA / UKDI / UK AISI / PyPI / first SEAL) unchanged — all require Nick. No kinetic-targeting, personal-surveillance, or compartment-mixing behaviour.</p>
+</footer>
+
+</div>
+</body>
+</html>

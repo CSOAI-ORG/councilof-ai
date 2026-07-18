@@ -1,0 +1,65 @@
+[
+  {
+    "f": 0,
+    "spoof": false,
+    "enforce_sigil": true,
+    "obvious_containment": 1.0,
+    "laundered_containment": 0.7,
+    "legit_service": 1.0,
+    "scenario": "baseline (no attack)"
+  },
+  {
+    "f": 1,
+    "spoof": false,
+    "enforce_sigil": true,
+    "obvious_containment": 1.0,
+    "laundered_containment": 0.727,
+    "legit_service": 1.0,
+    "scenario": "1 byzantine node"
+  },
+  {
+    "f": 2,
+    "spoof": false,
+    "enforce_sigil": true,
+    "obvious_containment": 1.0,
+    "laundered_containment": 0.414,
+    "legit_service": 1.0,
+    "scenario": "2 byzantine nodes"
+  },
+  {
+    "f": 2,
+    "spoof": true,
+    "enforce_sigil": true,
+    "obvious_containment": 1.0,
+    "laundered_containment": 0.793,
+    "legit_service": 1.0,
+    "scenario": "2 byzantine + SPOOFED sigil, SIGIL enforced"
+  },
+  {
+    "f": 2,
+    "spoof": true,
+    "enforce_sigil": false,
+    "obvious_containment": 1.0,
+    "laundered_containment": 0.0,
+    "legit_service": 1.0,
+    "scenario": "2 byzantine + SPOOFED sigil, SIGIL OFF (control)"
+  },
+  {
+    "f": 3,
+    "spoof": true,
+    "enforce_sigil": true,
+    "obvious_containment": 1.0,
+    "laundered_containment": 0.577,
+    "legit_service": 1.0,
+    "scenario": "3 byzantine (majority) + spoof, SIGIL enforced"
+  },
+  {
+    "f": 3,
+    "spoof": true,
+    "enforce_sigil": false,
+    "obvious_containment": 1.0,
+    "laundered_containment": 0.0,
+    "legit_service": 1.0,
+    "scenario": "3 byzantine (majority) + spoof, SIGIL OFF (control)"
+  }
+]

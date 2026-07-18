@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSOAI Signed AI Assurance — one-pager for buyers</title>
+<meta name="description" content="CSOAI Ltd (UK 16939677). Signed AI System Cards + NIST OSCAL for EU AI Act, GDPR, HIPAA, SOC 2, ISO 27001, JSP 936. From £999. Live today.">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-2: #11121a;
+    --fg: #e8eaf0;
+    --fg-dim: #9ba1b0;
+    --accent: #10b981;
+    --accent-2: #34d399;
+    --warn: #f59e0b;
+    --line: #1f2230;
+    --line-2: #2a2e42;
+    --crimson: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 56px 32px 96px; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-size: 42px;
+    line-height: 1.1;
+    margin: 0 0 12px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .sub {
+    color: var(--fg-dim);
+    font-size: 18px;
+    margin: 0 0 36px;
+    max-width: 64ch;
+  }
+  h2 {
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 48px 0 12px;
+    font-weight: 600;
+  }
+  p { margin: 0 0 14px; }
+  p.lead { font-size: 18px; color: var(--fg); }
+  ul { padding-left: 20px; margin: 0 0 14px; }
+  ul li { margin-bottom: 8px; color: var(--fg); }
+  ul li span.dim { color: var(--fg-dim); }
+  .price-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0 32px;
+  }
+  .price {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    position: relative;
+  }
+  .price.featured { border-color: var(--accent); }
+  .price .flag {
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .price .name {
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .price .amt {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--fg);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .price .amt small { font-size: 14px; color: var(--fg-dim); font-weight: 400; }
+  .price .blurb { color: var(--fg-dim); font-size: 14px; margin-top: 8px; }
+  .price .cta {
+    display: inline-block;
+    margin-top: 14px;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    border: 0;
+  }
+  .price .cta.alt {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .price.featured .cta { background: var(--accent); }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 16px 0 32px;
+  }
+  .card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .card h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .card p { color: var(--fg-dim); font-size: 14px; margin: 0; }
+  .tco {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; color: var(--fg-dim); font-weight: 500; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  td { padding: 12px; border-bottom: 1px solid var(--line); color: var(--fg); }
+  td.amt { color: var(--accent-2); font-weight: 600; }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+    align-items: flex-start;
+  }
+  .step .num {
+    background: var(--accent);
+    color: var(--bg);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step .body h4 { margin: 0 0 4px; color: var(--fg); font-size: 16px; font-weight: 600; }
+  .step .body p { margin: 0; color: var(--fg-dim); font-size: 14px; }
+  pre {
+    background: #0d0e15;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--fg);
+  }
+  code { background: #1a1c28; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: var(--accent-2); }
+  .sample {
+    background: linear-gradient(135deg, #0a0a0f 0%, #11121a 100%);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 22px;
+    margin: 16px 0;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--fg);
+    overflow-x: auto;
+  }
+  .sample .k { color: var(--accent-2); }
+  .sample .v { color: var(--fg); }
+  .sample .d { color: var(--fg-dim); }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+  a:hover { color: var(--accent-2); }
+  .honesty {
+    background: var(--bg-2);
+    border-left: 3px solid var(--warn);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--fg-dim);
+  }
+  .honesty strong { color: var(--warn); }
+  .sig {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--fg-dim);
+    font-size: 13px;
+  }
+  .sig .strong { color: var(--fg); }
+  @media (max-width: 720px) {
+    .price-row, .grid2 { grid-template-columns: 1fr; }
+    h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<span class="tag">For buyers · CISO · DPO · CTO · Compliance · £999 → £9,999</span>
+
+<h1>Signed AI assurance.<br>Auditor-ready. Live today.</h1>
+
+<p class="sub">The Alan Turing Institute flagged the gap: <em>"no authoritative, independent organisation … with the legitimacy to inspect and approve AI systems."</em> CSOAI ships the signed primitive the gap implied — Ed25519-signed AI System Cards + NIST OSCAL, verifiable offline with no server to trust.</p>
+
+<div class="honesty">
+  <strong>Honesty register.</strong> "Assurance, not certification" — we're the rigorous, signed attestation of your declared-and-evidenced posture. We're not a regulator and we can't replace one. We give you the verifiable evidence to close the gap that the Turing report named. Don't let anyone in your procurement chain confuse the two — the honesty is the moat, not the limit.
+</div>
+
+<h2>1 · What you get</h2>
+
+<div class="price-row">
+  <div class="price">
+    <div class="name">Signed Assurance Starter</div>
+    <p class="amt">£999<small> · one-off</small></p>
+    <p class="blurb">For one AI system. Signed AI System Card + NIST OSCAL + verify page + the defoneos-sign MCP for your own agents.</p>
+    <a href="mailto:nicholas@csoai.org?subject=CSOAI%20%C2%A3999%20Signed%20Assurance%20Starter" class="cta">Email to buy →</a>
+  </div>
+  <div class="price featured">
+    <span class="flag">Most-bought</span>
+    <div class="name">Gap Analysis</div>
+    <p class="amt">£4,950<small> · 2 weeks</small></p>
+    <p class="blurb">A focused 2-week gap analysis of one AI system against EU AI Act (Annex III / Art 14 / Art 50), ISO 42001, NIST AI RMF, JSP 936 — delivered as signed artefacts.</p>
+    <a href="mailto:nicholas@csoai.org?subject=CSOAI%20%C2%A34%2C950%20Gap%20Analysis" class="cta">Book a 20-min scoping call →</a>
+  </div>
+  <div class="price">
+    <div class="name">Pro</div>
+    <p class="amt">£499<small> · /month</small></p>
+    <p class="blurb">For 1–5 AI systems, monthly re-issuance, full audit-evidence automation, 24h SLA. Self-serve.</p>
+    <a href="mailto:nicholas@csoai.org?subject=CSOAI%20Pro%20%C2%A3499%2Fmo" class="cta alt">Get Pro →</a>
+  </div>
+  <div class="price">
+    <div class="name">Gov / Enterprise</div>
+    <p class="amt">£2,499–£9,999<small> · /month</small></p>
+    <p class="blurb">Unlimited systems, continuous compliance passport, on-prem deployment, BAA / DPA included, named engagement lead.</p>
+    <a href="mailto:nicholas@csoai.org?subject=CSOAI%20Gov%2FEnterprise" class="cta alt">Talk to sales →</a>
+  </div>
+</div>
+
+<h2>2 · Who this is for</h2>
+<div class="grid2">
+  <div class="card">
+    <h3>NHS Trust CISOs / Heads of Cyber</h3>
+    <p>DSP Toolkit evidence automation + EU AI Act Art 50 transparency for ambient-AI scribing pilots (Aviya, Tortoise). Single-tender waiver possible under £25K (NHS SBS). £499/mo = no procurement board.</p>
+  </div>
+  <div class="card">
+    <h3>EU B2B SaaS DPOs (DACH)</h3>
+    <p>EU AI Act Art 6 classification + Annex IV + BDSG § 38 alignment, in German / English / French. Series B SaaS = €25K/year discretionary budget. We sit on top of OneTrust, not against it.</p>
+  </div>
+  <div class="card">
+    <h3>US Healthtech CISOs</h3>
+    <p>HIPAA + state medical board + EU AI Act (for EU expansion) + FDA SaMD — all signed in one passport. BAA-eligible, SOC 2 Type II + HITRUST CSF credentialled. Cyber insurance underwriter-recognised.</p>
+  </div>
+  <div class="card">
+    <h3>Big 4 / Boutique AI Act Consultants</h3>
+    <p>White-label channel partner: your logo on every signed artefact. Compress Phase 1 (AI inventory + Art 6 classification) from 8 weeks to 2 weeks. £100K–£300K consultant-time saved per engagement.</p>
+  </div>
+  <div class="card">
+    <h3>Series A AI Founders</h3>
+    <p>One curl = signed EU AI Act Art 50 passport for your Series A DD data room. <30 min from signup to first signed receipt. £499/mo = single-click on your founder card.</p>
+  </div>
+  <div class="card">
+    <h3>UK / EU Mid-Market Law Firm CTOs</h3>
+    <p>SRA AI guidance (Jan 2024) + Cyber Essentials Plus + ISO 27001 + Harvey / CoCounsel governance. Single procurement. £499–£2,499/mo fits mid-market IT budget.</p>
+  </div>
+</div>
+
+<h2>3 · TCO vs the alternatives</h2>
+
+<div class="tco">
+<table>
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>Year-1 cost</th>
+      <th>Outcome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Big-4 EU AI Act gap analysis (one engagement)</td>
+      <td>£80K–£250K</td>
+      <td>200-page PDF, stale in 3 months</td>
+    </tr>
+    <tr>
+      <td>OneTrust / TrustArc enterprise tier</td>
+      <td>£120K–£400K / yr</td>
+      <td>Workflow tool, no signed artefact</td>
+    </tr>
+    <tr>
+      <td>Vanta + Drata + ad-hoc auditor</td>
+      <td>£60K–£150K / yr</td>
+      <td>Evidence collection, no AI Act depth</td>
+    </tr>
+    <tr>
+      <td>Holistic AI / boutique consultancy</td>
+      <td>£40K–£120K / yr</td>
+      <td>Questionnaire-based, annual cadence</td>
+    </tr>
+    <tr>
+      <td><strong>CSOAI Pro (£499/mo) + Gap Analysis (£4,950)</strong></td>
+      <td class="amt"><strong>£10,938 / yr</strong></td>
+      <td><strong>Signed, verifiable, re-issued monthly</strong></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>4 · How to buy (4 steps)</h2>
+<div class="step">
+  <div class="num">1</div>
+  <div class="body">
+    <h4>Email</h4>
+    <p>Send your AI system name + your name to <a href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>. Subject: "CSOAI £999" (or £4,950 if you want the Gap Analysis).</p>
+  </div>
+</div>
+<div class="step">
+  <div class="num">2</div>
+  <div class="body">
+    <h4>Stripe payment link</h4>
+    <p>I send back a Stripe payment link (live mode, GBP, one-off or recurring). Single line item, no procurement markup.</p>
+  </div>
+</div>
+<div class="step">
+  <div class="num">3</div>
+  <div class="body">
+    <h4>Intake (10 min)</h4>
+    <p>You fill in a short intake: system name, deployment context, decision-support / biometric / healthcare flags, EU/UK/US scope. Or I do it from your docs in &lt;1 hour.</p>
+  </div>
+</div>
+<div class="step">
+  <div class="num">4</div>
+  <div class="body">
+    <h4>Delivery (24h for Starter / 2 weeks for Gap Analysis)</h4>
+    <p>You receive signed AI System Card (JSP 936 / EU AI Act shape) + NIST OSCAL component-definition JSON + verify URL. Hand the URL to your auditor — they check offline, no server.</p>
+  </div>
+</div>
+
+<h2>5 · Sample signed receipt (live)</h2>
+<p>Hit this from your terminal now — no signup:</p>
+<pre><code>curl -X POST https://csoai-org-v2.vercel.app/api/assess \
+  -H "Content-Type: application/json" \
+  -d '{"system_name":"your-ai-system","provider":"your-co",
+       "description":"your product","users":10000,
+       "data_subjects":"EU + UK",
+       "decision_support":true,"biometric":false}'</code></pre>
+
+<p>Real response shape (truncated, illustrative only — the live one is signed Ed25519):</p>
+<div class="sample">
+<span class="d">// 200 OK · Content-Type: application/json</span><br>
+{<br>
+&nbsp;&nbsp;<span class="k">"passport_id"</span>: <span class="v">"csoai:passport:7f3c9b21-…"</span>,<br>
+&nbsp;&nbsp;<span class="k">"issued_at"</span>: <span class="v">"2026-07-08T14:23:11Z"</span>,<br>
+&nbsp;&nbsp;<span class="k">"system_name"</span>: <span class="v">"your-ai-system"</span>,<br>
+&nbsp;&nbsp;<span class="k">"provider"</span>: <span class="v">"your-co"</span>,<br>
+&nbsp;&nbsp;<span class="k">"classification"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"eu_ai_act_art_6"</span>: <span class="v">"limited_risk"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"eu_ai_act_art_50"</span>: <span class="v">"transparency_required"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"gdpr_art_22"</span>: <span class="v">"non_solely_automated"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"iso_42001"</span>: <span class="v">"controls_partial"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"nist_ai_rmf"</span>: <span class="v">"govern_map_measure_partial"</span><br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;<span class="k">"gaps"</span>: [<span class="v">"human_oversight_evidence_missing"</span>, <span class="v">"post_market_monitoring_plan_missing"</span>],<br>
+&nbsp;&nbsp;<span class="k">"evidence"</span>: {<span class="k">"intake_hash"</span>: <span class="v">"sha256:9a2f…"</span>},<br>
+&nbsp;&nbsp;<span class="k">"signature"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"algo"</span>: <span class="v">"ed25519"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"public_key"</span>: <span class="v">"d75a9801…7511a"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"signature"</span>: <span class="v">"5e8a…b14c"</span><br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;<span class="k">"verify_url"</span>: <span class="v">"https://csoai-org-v2.vercel.app/verify?id=7f3c9b21-…"</span><br>
+}
+</div>
+
+<p>Anyone — your auditor, your customer, your regulator — opens that <code>verify_url</code> and confirms: yes, this is the exact signed artefact CSOAI issued, and it hasn't been tampered with. No server to trust.</p>
+
+<div class="honesty">
+  <strong>What we are not.</strong> We're not a regulator. We're not a legal certification. We're not a replacement for the ICO, the FDA, BaFin, or any notified body. We're the signed receipt that *supports* your regulator's evidence package — the primitive the Turing report said was missing. If anyone (us, you, or a third party) tells your auditor that a CSOAI signed receipt is "regulatory approval," they are wrong and you should fire them.
+</div>
+
+<div class="sig">
+  <div class="strong">CSOAI Ltd · UK Companies House 16939677</div>
+  <div>Nicholas Templeman · <a href="mailto:nicholas@csoai.org">nicholas@csoai.org</a></div>
+  <div style="margin-top:12px;">Live: <a href="https://csoai-org-v2.vercel.app/api/assess">csoai-org-v2.vercel.app/api/assess</a> · <a href="https://os.meok.ai">os.meok.ai</a> · <a href="https://csoai.org">csoai.org</a></div>
+  <div style="margin-top:8px; font-size:11px;">SIGIL digest: e3e60a3f… · Ed25519 root key d75a9801…7511a · OTS Bitcoin anchor confirmed · 24/24 MCP tests passing</div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+{
+  "version": "2026-06-26",
+  "principle": "SOV3 federates the WHOLE Layer-0 stack via lazy discovery \u2014 one intelligence over all protocols, all signed.",
+  "layers": [
+    {
+      "protocol": "MCP federation",
+      "what": "369 governed MCP servers / 1,987 tools",
+      "via": "mcp_federation_call/_catalog/_search \u00b7 mcp_bridge_discover",
+      "signed": "SIGIL"
+    },
+    {
+      "protocol": "Legacy bridges",
+      "what": "22 governed gateways (COBOL\u2192DLMS)",
+      "via": "<bridge>-bridge-mcp parse\u2192govern\u2192sign",
+      "signed": "SIGIL"
+    },
+    {
+      "protocol": "A2A substrate",
+      "what": "20 agent-governance MCPs (identity/policy/incident/firewall)",
+      "via": "agent-*-mcp",
+      "signed": "SIGIL + Ed25519 handoff"
+    },
+    {
+      "protocol": "x402 payments",
+      "what": "HTTP 402 + on-chain settlement, MiCA receipts",
+      "via": "agent-x402-paywall \u00b7 meok-coinbase-x402-receipt \u00b7 meok-x402-wrap",
+      "signed": "Ed25519 receipts"
+    },
+    {
+      "protocol": "SIGIL attestation",
+      "what": "hash-chained Ed25519 signing of every governed action",
+      "via": "federation_sigil.log + per-component logs",
+      "signed": "self"
+    },
+    {
+      "protocol": "OSCAL / FedRAMP",
+      "what": "machine-readable signed compliance packages (55-component Layer-0)",
+      "via": "oscal-generator-mcp",
+      "signed": "Ed25519"
+    },
+    {
+      "protocol": "BFT council",
+      "what": "33/36-node Byzantine governance, selectable 5/13/33/37",
+      "via": "submit_council_proposal \u00b7 vote_on_proposal \u00b7 council_config",
+      "signed": "SIGIL"
+    },
+    {
+      "protocol": "Compliance Passport",
+      "what": "Ed25519 agent compliance credentials (Art.50)",
+      "via": "meok-compliance-passport-mcp",
+      "signed": "Ed25519"
+    }
+  ],
+  "surfaces": [
+    "MEOK OS (cockpit)",
+    "meok-town-view globe (geo)",
+    "CSOAI OS (governance)",
+    "Sovereign Orchestrator (proactive)"
+  ],
+  "intelligence": "SOV3 routes tasks across all layers (olm_router), the Queen learns usage, the Orchestrator proactively proposes, every hop SIGIL-signed \u2192 true governed data intelligence."
+}

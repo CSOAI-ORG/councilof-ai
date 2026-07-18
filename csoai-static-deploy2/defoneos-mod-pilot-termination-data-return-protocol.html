@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — Pilot Termination &amp; Data Return Protocol (Day-90 Closeout · Data Return · Weight Reset · Escrow Verification)</title>
+<meta name="description" content="DEFONEOS Pilot Termination &amp; Data Return Protocol: Day-90 closeout sequence · 6 named artefacts returned to buyer · model weight reset · BFT council audit closeout · escrow verification · 30-day post-pilot support window · SIGIL-anchored per-step evidence." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/pilot-termination-data-return-protocol · csoai.org · ship-grade · tick 97</div>
+<header>
+<h1>Pilot Termination &amp; Data Return Protocol</h1>
+<div class="sub">The single document that defines what happens at pilot end (Day 90) — whether the buyer proceeds to contract award, transitions to a different vendor, or terminates without follow-on. 12-step Day-90 closeout sequence, 6 named artefacts returned to buyer, model weight reset, BFT council audit closeout, escrow verification, 30-day post-pilot support window. Every step SIGIL-anchored and audit-grade.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Closeout steps</span><b>12 (each SIGIL-anchored with named owner + 24h SLA)</b></div>
+<div class="kpi"><span>Buyer artefacts returned</span><b>6 (data · logs · evaluations · model card · incident record · post-pilot report)</b></div>
+<div class="kpi"><span>Closeout SLA (full sequence)</span><b>5 business days from termination notice</b></div>
+<div class="kpi"><span>Data deletion verification</span><b>SIGIL-anchored SHA-256 hash of empty-volume attestation + 33-agent BFT vote</b></div>
+<div class="kpi"><span>Post-pilot support window</span><b>30 days (read-only access to artefacts + email support)</b></div>
+<div class="kpi"><span>Renewal window</span><b>90 days from termination notice (preferred-vendor pricing honoured)</b></div>
+<div class="kpi"><span>Escrow verification on termination</span><b>Mandatory if buyer was Sovereign / Sovereign-Air-Gap tier</td></tr>
+</tbody>
+</table>
+
+<h2>1 · Why this protocol exists</h2>
+<p>Every DEFONEOS pilot reaches Day 90 with one of three outcomes:</p>
+<ol>
+<li><b>Award:</b> buyer signs the MSA + 12-month contract; pilot transitions to production.</li>
+<li><b>Transition:</b> buyer chooses a different vendor; DEFONEOS returns all buyer artefacts and deletes pilot-specific data.</li>
+<li><b>Terminate without follow-on:</b> buyer ends the pilot with no contract; same data return + deletion.</li>
+</ol>
+<p>Outcomes (2) and (3) require a precise, auditable closeout. The buyer needs assurance that:</p>
+<ul>
+<li>All their data is returned in a portable, documented format.</li>
+<li>All pilot-specific model weights / adapters / preferences are deleted.</li>
+<li>All inference logs are deleted.</li>
+<li>The deletion is verified, SIGIL-anchored, and BFT-council-approved.</li>
+<li>If Sovereign / Sovereign-Air-Gap tier, source code + weights in escrow are verified.</li>
+<li>30 days of read-only post-pilot support is available to the buyer.</li>
+</ul>
+<p>This protocol is the contractual reference. It is invoked automatically on any pilot termination event; the 12 steps run sequentially with named owners and 24-hour SLAs per step.</p>
+
+<h2>2 · The 12-step Day-90 closeout sequence</h2>
+<table>
+<thead><tr><th>Step</th><th>Name</th><th>Owner</th><th>SLA</th><th>Output</th><th>SIGIL?</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>Termination notice received</td><td>Buyer (or auto-trigger Day 90)</td><td>Day 0</td><td>Notice record + BFT kickoff vote</td><td>✓</td></tr>
+<tr><td><b>2</b></td><td>Closeout kickoff call (60 min)</td><td>VP Customer Success + Buyer CISO</td><td>Day 0 + 24h</td><td>Minutes + decision record</td><td>✓</td></tr>
+<tr><td><b>3</b></td><td>Snapshot tenant state (full)</td><td>Principal Engineer</td><td>Day 1</td><td>Tenant snapshot SHA-256 + manifest</td><td>✓</td></tr>
+<tr><td><b>4</b></td><td>Generate buyer artefact pack (§3)</td><td>Principal Engineer</td><td>Day 2</td><td>6 named artefacts (§3) in buyer-portable format</td><td>✓</td></tr>
+<tr><td><b>5</b></td><td>Transfer artefacts to buyer (signed URL)</td><td>VP Customer Success</td><td>Day 3</td><td>Transfer receipt + buyer signature</td><td>✓</td></tr>
+<tr><td><b>6</b></td><td>Delete inference logs (all regions)</td><td>Site Reliability Engineer</td><td>Day 3</td><td>Empty-volume attestation + SHA-256</td><td>✓</td></tr>
+<tr><td><b>7</b></td><td>Delete pilot-specific weights / adapters / preferences</td><td>ML Platform Engineer</td><td>Day 3</td><td>Empty-volume attestation + SHA-256</td><td>✓</td></tr>
+<tr><td><b>8</b></td><td>Delete calibration data (if any)</td><td>Data Engineer</td><td>Day 4</td><td>Empty-volume attestation + SHA-256</td><td>✓</td></tr>
+<tr><td><b>9</b></td><td>33-agent BFT council deletion verification</td><td>BFT council</td><td>Day 4</td><td>BFT vote record (≥23/33 quorum)</td><td>✓</td></tr>
+<tr><td><b>10</b></td><td>Escrow verification (if Sovereign tier)</td><td>NCC Group + DEFONEOS</td><td>Day 4</td><td>Escrow agent receipt + buyer notification</td><td>✓</td></tr>
+<tr><td><b>11</b></td><td>Post-pilot report delivered to buyer</td><td>VP Customer Success</td><td>Day 5</td><td>PDF + JSON + SIGIL receipt</td><td>✓</td></tr>
+<tr><td><b>12</b></td><td>Closeout complete — 30-day support window opens</td><td>Customer Success</td><td>Day 5</td><td>Closeout certificate + support window start</td><td>✓</td></tr>
+</tbody>
+</table>
+<p>Total elapsed time: 5 business days. Each step has a named owner, a 24-hour SLA, and a SIGIL-anchored output. The 33-agent BFT council signs the final closeout (§9).</p>
+
+<h2>3 · The 6 buyer artefacts returned</h2>
+<table>
+<thead><tr><th>#</th><th>Artefact</th><th>Format</th><th>Size estimate</th><th>What's in it</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>Buyer data export</td><td>Parquet (data) + JSON Lines (metadata)</td><td>1 GB – 10 TB depending on tier</td><td>All data the buyer uploaded / generated during pilot, including inference inputs (where stored)</td></tr>
+<tr><td><b>2</b></td><td>Inference logs export</td><td>JSON Lines, gzip-compressed</td><td>100 MB – 1 GB / month of pilot</td><td>All inference request/response pairs, timestamps, model versions, with PII pseudonymised at source</td></tr>
+<tr><td><b>3</b></td><td>Evaluation results</td><td>JSON + Markdown</td><td>50 MB</td><td>All 12 benchmark results + buyer-specific evaluations + drift reports</td></tr>
+<tr><td><b>4</b></td><td>Model Card (pilot version)</td><td>Markdown + JSON</td><td>5 MB</td><td>Architecture, training, intended use, out-of-scope, evaluation, bias / fairness, environmental cost</td></tr>
+<tr><td><b>5</b></td><td>Incident record (pilot period)</td><td>JSON Lines + Markdown summary</td><td>10 MB</td><td>All P1-P4 incidents, root causes, remediations, BFT votes</td></tr>
+<tr><td><b>6</b></td><td>Post-pilot report</td><td>PDF + Markdown</td><td>20 MB</td><td>Executive summary · outcomes vs SOW · technical performance · security posture · recommendations for production · SLA performance · 12-month forward plan</td></tr>
+</tbody>
+</table>
+<p>All artefacts are returned via signed URL (24h expiry, 1 re-download max). Each artefact is SHA-256 hashed and SIGIL-signed. The buyer verifies any artefact via <code>csoai.org/artefact/verify/{artefact_id}</code>.</p>
+
+<h2>4 · The deletion chain (steps 6-9)</h2>
+<p>Steps 6-9 are the data deletion chain. Each step produces an empty-volume attestation:</p>
+<pre>{
+  "deletion_id": "DEL-2026-07-14-MEGACORP",
+  "tenant_id": "megacorp-pilot",
+  "step": 6,
+  "category": "inference_logs",
+  "regions_deleted": ["uk-south-1", "eu-west-1"],
+  "volume_before_bytes": 536870912,
+  "volume_after_bytes": 0,
+  "method": "secure_erase_crypto_shred",
+  "verification": "sha256('') = e3b0c44...",
+  "executed_at": "2026-07-14T15:00:00Z",
+  "executed_by": "SRE-on-call (named)",
+  "witnessed_by": "Buyer DPO (optional)",
+  "ed25519_sig": "..."
+}</pre>
+<p>Steps 6, 7, 8 each produce one of these. Step 9 is the BFT council verification vote (≥23/33 quorum required to approve deletion).</p>
+
+<h2>5 · Escrow verification (Sovereign tiers only)</h2>
+<p>For Sovereign / Sovereign-Air-Gap pilots, step 10 verifies that the buyer's source code + weights remain in escrow:</p>
+<ol>
+<li>NCC Group (UK escrow agent) confirms deposit integrity via SHA-256 hash check.</li>
+<li>NCC Group confirms the canary release test passes.</li>
+<li>DEFONEOS provides a SIGIL-anchored escrow verification receipt to buyer.</li>
+<li>Buyer may (with NCC Group's permission) attend the verification.</li>
+</ol>
+<p>If verification fails, DEFONEOS has 5 business days to remediate. Failure to remediate triggers buyer rights under the escrow agreement (release of source code + weights to buyer).</p>
+
+<h2>6 · The 30-day post-pilot support window</h2>
+<p>After closeout (§12), buyer has 30 days of read-only access to:</p>
+<ul>
+<li>All 6 returned artefacts (re-download via signed URL, max 3 attempts)</li>
+<li>Email support (24h response, business hours)</li>
+<li>1 hour of named-TAM consultation (Platinum / Sovereign only)</li>
+<li>The post-pilot report walkthrough call (60 min, with VP Customer Success)</li>
+</ul>
+<p>No new inference, no new data, no new training. Read-only. After 30 days, the buyer-side tenant is permanently archived (read-only, no support) for 7 years (HMRC retention), then permanently deleted.</p>
+
+<h2>7 · The 90-day renewal window</h2>
+<p>After termination (any outcome except award), the buyer has 90 days to invoke the renewal window:</p>
+<ul>
+<li>Sign the production MSA at the preferred-vendor pricing (last quoted before termination)</li>
+<li>Re-deploy within 30 days of MSA signature (data retention preserved if same tenant ID)</li>
+<li>Pilot artefacts retained and re-used (with buyer consent)</li>
+</ul>
+<p>After 90 days, preferred-vendor pricing expires and the buyer must re-quote.</p>
+
+<h2>8 · BFT council audit closeout (the §9 vote)</h2>
+<p>The 33-agent BFT council votes on the closeout at step 9. The vote confirms:</p>
+<ol>
+<li>All buyer data deleted (steps 6, 7, 8 verified)</li>
+<li>All pilot-specific weights / adapters deleted</li>
+<li>Buyer artefact pack delivered (step 5 verified)</li>
+<li>SLA performance during pilot attested (§7 above)</li>
+<li>No outstanding buyer disputes</li>
+</ol>
+<p>The vote requires ≥23/33 quorum. If approved, the council signs a single SIGIL-anchored closeout certificate. If rejected, closeout pauses until the rejection reason is remediated.</p>
+
+<h2>9 · Edge cases (the 5 named scenarios)</h2>
+<table>
+<thead><tr><th>Scenario</th><th>What happens</th></tr></thead>
+<tbody>
+<tr><td><b>Buyer insolvency during pilot</b></td><td>Closeout triggered by administrator; artefacts returned to administrator; data deleted per §4; escrow release triggered if Sovereign tier</td></tr>
+<tr><td><b>DEFONEOS insolvency during pilot</b></td><td>Escrow release triggered for Sovereign tiers; NCC Group delivers source + weights to buyer; non-Sovereign tiers enter receivership with buyer claims ranked per MSA</td></tr>
+<tr><td><b>Regulatory injunction during pilot</b></td><td>Closeout paused; artefacts held under regulatory hold; data not deleted; BFT vote on hold status</td></tr>
+<tr><td><b>Force majeure (war, pandemic, natural disaster)</b></td><td>Closeout SLA extended by force majeure duration; buyer + DEFONEOS agree on amended timeline; BFT vote on extension</td></tr>
+<tr><td><b>Buyer wants partial data return (not full closeout)</b></td><td>Not standard; requires 60-day notice + MSA amendment + separate SIGIL-anchored partial-return protocol + additional fee</td></tr>
+</tbody>
+</table>
+
+<h2>10 · Cross-walk to existing DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Question</th><th>Answer lives in</th></tr></thead>
+<tbody>
+<tr><td>"What's the pilot SOW template?"</td><td><a href="#"">defoneos-mod-90-day-sovereign-pilot-sow.html</a></td></tr>
+<tr><td>"What's the day-0 launch runbook?"</td><td><a href="#"">defoneos-mod-day-0-pilot-launch-runbook.html</a></td></tr>
+<tr><td>"What's the renewal / upsell playbook?"</td><td><a href="#">defoneos-mod-renewal-upsell-playbook.html</a></td></tr>
+<tr><td>"What's the insurance / liability posture?"</td><td><a href="#"">defoneos-mod-insurance-liability-bridge.html</a></td></tr>
+<tr><td>"What's the SLA tier card?"</td><td><a href="#"">defoneos-mod-sla-tier-card.html</a></td></tr>
+<tr><td>"What's the AI-BOM?"</td><td><a href="#"">defoneos-mod-ai-bom-sbom-card.html</a></td></tr>
+<tr><td>"What's the PMS plan?"</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+</tbody>
+</table>
+
+<h2>11 · The 5 Anti-Patterns (Pilot Closeout Disasters We Refuse)</h2>
+<ol>
+<li><b>No "we'll get to it next quarter."</b> Closeout is 5 business days. No extensions without BFT vote.</li>
+<li><b>No "we keep data for analytics."</b> Pilot data is deleted at closeout, period. Re-deployment requires new consent.</li>
+<li><b>No "buyer can't verify deletion."</b> Empty-volume attestation + SIGIL receipt + optional DPO witnessing.</li>
+<li><b>No "escrow is symbolic."</b> Escrow verification is mandatory at closeout for Sovereign tiers.</li>
+<li><b>No "no BFT vote."</b> §9 vote is mandatory; no closeout without 23/33 quorum.</li>
+</ol>
+
+<h2>12 · Buyer Next Steps</h2>
+<ol>
+<li>Verify this protocol hash: <code>curl https://csoai.org/defoneos-mod-pilot-termination-data-return-protocol.html | shasum -a 256</code></li>
+<li>Browse a sample closeout report: <code>csoai.org/closeout/sample/{tenant_id}</code></li>
+<li>Verify any deletion attestation: <code>csoai.org/deletion/verify/{deletion_id}</code></li>
+<li>Subscribe to closeout-related advisories: <code>csoai.org/advisories/subscribe</code></li>
+<li>Schedule a 60-minute closeout walkthrough with our VP Customer Success.</li>
+<li>Inspect the post-pilot report template: <code>csoai.org/closeout/template.md</code></li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T97-pilot-termination-data-return-protocol-f5b9d3c7e2a4 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — buyers, GCs, DPOs, auditors, NCC Group, EU AI Office, UK ICO, ISO 42001 cert bodies free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Customer Success · <code>success@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Cross-Border Data Transfer Playbook</a> · 
+<a href="#">Renewal &amp; Upsell Playbook ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

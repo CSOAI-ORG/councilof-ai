@@ -1,0 +1,209 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CSOAI API v1 Specification</title>
+<style>body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#f8fafc;margin:0;padding:2rem;line-height:1.7}
+.wrap{max-width:1000px;margin:0 auto}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{color:#3b82f6;border-bottom:1px solid rgba(59,130,246,.3);padding-bottom:.5rem;margin-top:2rem}
+h3{color:#c9a84c;margin-top:1.5rem}
+pre{background:rgba(0,0,0,.5);border:1px solid rgba(59,130,246,.3);padding:1rem;border-radius:6px;overflow-x:auto;font-size:.85rem;color:#c9a84c}
+.endpoint{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);padding:1rem;margin:.5rem 0;border-radius:6px;display:inline-block}
+.method{background:rgba(34,197,94,.2);color:#22c55e;padding:.25rem .5rem;border-radius:4px;font-weight:bold;margin-right:.5rem}
+.tag{display:inline-block;background:rgba(201,168,76,.2);color:#c9a84c;padding:.25rem .75rem;border-radius:12px;font-size:.75rem;margin:.25rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th,td{padding:.5rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
+th{color:#3b82f6;background:rgba(59,130,246,.05)}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/api-v1-spec.html"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+<h1>CSOAI API v1 — Sovereign Substrate Specification</h1>
+<p style="color:#94a3b8">Base URL: <code>https://api.csoai.org/v1</code> · Auth: Bearer (Watchdog Cert) · Format: JSON</p>
+
+<h2>Authentication</h2>
+<p>All API calls require a Watchdog Certificate as a Bearer token:</p>
+<pre>Authorization: Bearer WDG-2026-07-04-MALLORY-002</pre>
+<p style="color:#94a3b8">Each Watchdog Certificate is Ed25519-signed and tied to a specific entity + regulation + scope.</p>
+
+<h2>Endpoints</h2>
+
+<h3>Certificate Operations</h3>
+<div class="endpoint"><span class="method">POST</span>/certificates/issue</div>
+<p>Issue a new Watchdog Certificate.</p>
+<pre>POST /v1/certificates/issue
+{
+  "entity": "string",
+  "system": "string",
+  "regulation": "EU AI Act Article 14",
+  "score": 95,
+  "findings": ["PII redacted per state", "Sovereign substrate", "BFT council audit"]
+}
+→ 201 Created
+{
+  "cert_id": "WDG-2026-07-04-SAP-001",
+  "signature": "ed25519:...",
+  "digest": "sha256:...",
+  "issued_at": "2026-07-04T09:00:00Z",
+  "verify_url": "https://csoai.org/verify/WDG-2026-07-04-SAP-001"
+}</pre>
+
+<div class="endpoint"><span class="method">GET</span>/certificates/{id}</div>
+<p>Retrieve a Watchdog Certificate by ID.</p>
+<pre>GET /v1/certificates/WDG-2026-07-04-SAP-001
+→ 200 OK
+{
+  "cert_id": "WDG-2026-07-04-SAP-001",
+  "entity": "SAP",
+  "system": "SAP S/4HANA AI Module",
+  "regulation": "EU AI Act Article 14",
+  "score": 95,
+  "findings": [...],
+  "signature": "ed25519:...",
+  "digest": "sha256:...",
+  "issued_at": "2026-07-04T09:00:00Z",
+  "verified": true
+}</pre>
+
+<div class="endpoint"><span class="method">POST</span>/certificates/verify</div>
+<p>Verify a Watchdog Certificate signature + digest.</p>
+<pre>POST /v1/certificates/verify
+{
+  "cert_id": "WDG-2026-07-04-SAP-001",
+  "signature": "ed25519:...",
+  "digest": "sha256:..."
+}
+→ 200 OK
+{
+  "verified": true,
+  "verified_at": "2026-07-04T10:00:00Z",
+  "sigil_chain_entry": "abc123..."
+}</pre>
+
+<h3>BFT Council Operations</h3>
+
+<div class="endpoint"><span class="method">POST</span>/bft/provision</div>
+<p>Provision a new BFT council.</p>
+<pre>POST /v1/bft/provision
+{
+  "setup": "strict",  // lite | standard | strict | parliament | custom
+  "size": 33,
+  "threshold_pct": 67,
+  "region": "sovereign"
+}
+→ 201 Created
+{
+  "council_id": "bft-strict-abc123",
+  "voters": ["voter-001", "voter-002", ...],
+  "size": 33,
+  "threshold": 22,
+  "threshold_pct": 67,
+  "region": "sovereign",
+  "api_key": "sk-sov-...",
+  "endpoint": "https://bft.openpatent.ai/council/bft-strict-abc123"
+}</pre>
+
+<div class="endpoint"><span class="method">POST</span>/bft/{council_id}/propose</div>
+<div class="endpoint"><span class="method">POST</span>/bft/{council_id}/vote</div>
+<div class="endpoint"><span class="method">GET</span>/bft/{council_id}/status</div>
+
+<h3>Compliance Operations</h3>
+
+<div class="endpoint"><span class="method">POST</span>/compliance/check</div>
+<p>Run a compliance check against 30 frameworks.</p>
+<pre>POST /v1/compliance/check
+{
+  "system": "MyChatBot v3",
+  "sector": "finance",
+  "region": "eu"
+}
+→ 200 OK
+{
+  "system": "MyChatBot v3",
+  "overall_score": 92,
+  "frameworks": [
+    {"framework": "EU AI Act Article 14", "score": 95, "status": "PASS"},
+    {"framework": "NIST AI RMF Govern", "score": 92, "status": "PASS"},
+    {"framework": "ISO 42001 Clause 6", "score": 88, "status": "PASS"},
+    {"framework": "GDPR DPIA", "score": 90, "status": "PASS"}
+  ],
+  "watchdog_cert": "WDG-2026-07-04-MYCHATBOT-001",
+  "sigils": [...]
+}</pre>
+
+<h3>CASA Certification</h3>
+
+<div class="endpoint"><span class="method">POST</span>/casa/apply</div>
+<div class="endpoint"><span class="method">GET</span>/casa/status/{entity}</div>
+<div class="endpoint"><span class="method">POST</span>/casa/upgrade</div>
+
+<h3>Awareness v2 (Physical AI)</h3>
+
+<div class="endpoint"><span class="method">POST</span>/awareness/state</div>
+<p>Set or get awareness FSM state.</p>
+<pre>POST /v1/awareness/state
+{
+  "presence": "OWNER_UNKNOWN",
+  "people_count": 2,
+  "pii_redact": true
+}
+→ 200 OK
+{
+  "state": "OWNER_UNKNOWN",
+  "people_count": 2,
+  "pii_redact": true,
+  "sigil": "autopilot-48h-awareness-..."
+}</pre>
+
+<div class="endpoint"><span class="method">POST</span>/awareness/redact</div>
+<p>Redact PII from text per current state.</p>
+<pre>POST /v1/awareness/redact
+{
+  "text": "Nick in Yorkshire, 555-1234",
+  "state": "OWNER_UNKNOWN"
+}
+→ 200 OK
+{
+  "original": "Nick in Yorkshire, 555-1234",
+  "redacted": "[name] in [location], [phone]"
+}</pre>
+
+<h3>SOV3 Substrate</h3>
+
+<div class="endpoint"><span class="method">POST</span>/sov3/sigil/emit</div>
+<div class="endpoint"><span class="method">GET</span>/sov3/sigil/transcript</div>
+<div class="endpoint"><span class="method">GET</span>/sov3/health</div>
+<div class="endpoint"><span class="method">POST</span>/sov3/council/propose</div>
+<div class="endpoint"><span class="method">POST</span>/sov3/council/vote</div>
+<div class="endpoint"><span class="method">GET</span>/sov3/striving/dashboard</div>
+
+<h2>Rate Limits</h2>
+<table>
+<tr><th>Tier</th><th>Requests/min</th><th>Certs/day</th></tr>
+<tr><td>CASA-1 Foundation</td><td>60</td><td>10</td></tr>
+<tr><td>CASA-2 Practitioner</td><td>600</td><td>100</td></tr>
+<tr><td>CASA-3 Lead Auditor</td><td>6,000</td><td>1,000</td></tr>
+<tr><td>CASA-4 C3PAO Director</td><td>60,000</td><td>10,000</td></tr>
+</table>
+
+<h2>Error Codes</h2>
+<table>
+<tr><th>Code</th><th>Meaning</th></tr>
+<tr><td>400</td><td>Bad request (invalid input)</td></tr>
+<tr><td>401</td><td>Unauthorized (invalid Watchdog Cert)</td></tr>
+<tr><td>403</td><td>Forbidden (insufficient CASA level)</td></tr>
+<tr><td>404</td><td>Not found</td></tr>
+<tr><td>429</td><td>Rate limited</td></tr>
+<tr><td>500</td><td>Internal error</td></tr>
+</table>
+
+<h2>SDKs</h2>
+<p>Coming Q4 2026:</p>
+<span class="tag">Python</span>
+<span class="tag">TypeScript</span>
+<span class="tag">Go</span>
+<span class="tag">Rust</span>
+<span class="tag">MCP</span>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees. ISO fee-for-service model ONLY. <strong>CA3O is the CMMC for AI.</strong>
+</footer>
+</div>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

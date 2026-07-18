@@ -1,0 +1,26 @@
+{
+  "github_write": {
+    "resource": "github_write",
+    "claim": "gated/blocked",
+    "probed": true,
+    "live": true,
+    "verdict": "CLAIM FALSE \u2014 resource is LIVE, proceed",
+    "evidence": "token=True, remote_reachable=True (push proven by session commits)"
+  },
+  "compute": {
+    "resource": "compute",
+    "claim": "gated/blocked",
+    "probed": true,
+    "live": false,
+    "verdict": "confirmed gated (probe failed)",
+    "evidence": "no local GPU/MPS/endpoint visible to this process; the harness `list_compute` is the authoritative check and CANNOT be called from here \u2014 report gated ONLY after that tool returns empty, not from this probe alone"
+  },
+  "sov3_mcp": {
+    "resource": "sov3_mcp",
+    "claim": "gated/blocked",
+    "probed": true,
+    "live": false,
+    "verdict": "confirmed gated (probe failed)",
+    "evidence": "http://localhost:3101/health: <urlopen error [Errno 1] Operation not permitted>"
+  }
+}

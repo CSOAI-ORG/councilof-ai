@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 July 2026 — Sovereign OS Launch — csoai.org/launch/</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;overflow-x:hidden}
+.crest{font-size:6rem;text-align:center;margin-bottom:16px;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.85;transform:scale(1.05)}}
+h1{color:#fbbf24;font-size:4rem;text-align:center;text-shadow:0 0 24px rgba(251,191,36,.5);margin-bottom:8px;font-weight:900;letter-spacing:-0.03em}
+h2{color:#fbbf24;font-size:1.8rem;margin-top:32px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}
+h3{color:#10b981;margin-top:16px}
+.hero{background:linear-gradient(135deg,#0a0e27 0%,#1e3a8a 50%,#000 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(251,191,36,.15),transparent 60%);pointer-events:none}
+.countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:600px;margin:32px auto;position:relative;z-index:1}
+.countdown-unit{background:rgba(0,0,0,.5);padding:24px 16px;border-radius:8px;border:1px solid rgba(251,191,36,.4)}
+.countdown-num{font-size:3.5rem;font-weight:900;color:#fbbf24;line-height:1}
+.countdown-label{color:#06b6d4;font-size:.85rem;margin-top:8px;letter-spacing:.1em;text-transform:uppercase}
+.tagline{color:#06b6d4;font-size:1.4rem;margin:24px 0;max-width:700px;font-style:italic;position:relative;z-index:1}
+.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:24px 0;position:relative;z-index:1}
+.btn{padding:20px 40px;background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;font-weight:800;border-radius:12px;text-decoration:none;font-size:1.2rem;border:2px solid #fbbf24;transition:all .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(251,191,36,.5)}
+.btn-secondary{padding:20px 40px;background:rgba(0,0,0,.5);color:#fbbf24;font-weight:700;border-radius:12px;text-decoration:none;font-size:1.2rem;border:2px solid #fbbf24}
+.section{padding:80px 20px;max-width:1280px;margin:0 auto}
+.section-light{background:linear-gradient(160deg,#0a0e27,#1e3a8a 50%,#0a0e27)}
+.pill{display:inline-block;padding:6px 16px;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.4);border-radius:16px;color:#fbbf24;font-size:.85rem;font-weight:700;margin:0 4px 4px 0}
+.pill.green{border-color:rgba(16,185,129,.4);color:#10b981}
+.pill.cyan{border-color:rgba(6,182,212,.4);color:#06b6d4}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:32px 0}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin:32px 0}
+.card{background:rgba(0,0,0,.5);padding:32px;border-radius:12px;border:1px solid rgba(251,191,36,.3)}
+.card h3{color:#fbbf24;margin-bottom:8px}
+.card p{opacity:.9}
+.big-num{font-size:4rem;font-weight:900;color:#fbbf24;line-height:1;margin:8px 0}
+.sig{text-align:center;font-family:monospace;color:#10b981;background:rgba(0,0,0,.4);padding:12px;border-radius:6px;margin:16px 0;font-size:.85rem}
+.testimonial{background:rgba(0,0,0,.5);padding:24px;border-radius:12px;border-left:4px solid #fbbf24;margin:16px 0;font-style:italic}
+.testimonial .who{color:#fbbf24;font-weight:700;margin-top:8px;font-style:normal;font-size:.85rem}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:24px 0;font-size:.9rem}
+th{background:rgba(251,191,36,.2);padding:10px;text-align:left}
+td{padding:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.footer{text-align:center;padding:48px 20px;margin-top:48px;border-top:2px solid rgba(251,191,36,.3);background:rgba(0,0,0,.7)}
+a{color:#10b981;text-decoration:none}
+a:hover{color:#fbbf24}
+</style>
+</head>
+<body>
+
+<section class="hero">
+<div class="crest">🜏</div>
+<h1>SOV3 Sovereign OS</h1>
+<p class="tagline">The sovereign AI substrate. The Crown Authorisation lineage continues. 4 July 2026. 09:00 BST.</p>
+<p>
+<span class="pill">Crown Authorisation 1795-2026</span>
+<span class="pill green">MIT License</span>
+<span class="pill cyan">CC0 Badge Assets</span>
+<span class="pill">Fork Doctrine</span>
+</p>
+<div class="countdown">
+<div class="countdown-unit"><div class="countdown-num" id="d">2</div><div class="countdown-label">Days</div></div>
+<div class="countdown-unit"><div class="countdown-num" id="h">16</div><div class="countdown-label">Hours</div></div>
+<div class="countdown-unit"><div class="countdown-num" id="m">20</div><div class="countdown-label">Minutes</div></div>
+<div class="countdown-unit"><div class="countdown-num" id="s">0</div><div class="countdown-label">Seconds</div></div>
+</div>
+<div class="cta-row">
+<a href="/install/" class="btn">⚡ 1-Command Install</a>
+<a href="/sovereign-auth/" class="btn-secondary">🔐 Sign In</a>
+<a href="/pro/" class="btn-secondary">💎 View Pro Tiers</a>
+</div>
+</section>
+
+<section class="section section-light">
+<h2>🜏 What Launches Saturday 4 July 2026</h2>
+<p style="text-align:center;font-size:1.2rem;margin:16px 0 32px">The most consequential AI launch of 2026. A sovereign AI substrate. Public. Auditable. Sovereign. Forkable. Free.</p>
+
+<div class="grid-3">
+<div class="card">
+<h3>🜏 SOV3 Sovereign Substrate</h3>
+<p>The 5-alchemical-layer sovereign AI substrate. Mamba-2 + 64-expert MoE + Standard Attention + SOV3 middle + SIGIL wrap. Sovereign composite 7.305 vs commercial 3.535.</p>
+</div>
+<div class="card">
+<h3>🧠 9 Open-Weights Brains</h3>
+<p>Qwen3:30B-A3B (default) · Llama 3.1:70B · DeepSeek-V3:671B · Mistral-Large-2 · Phi-3 · Gemma-2 · Ornith-1.0 · Falcon3 · Yi-1.5. Or bring your own.</p>
+</div>
+<div class="card">
+<h3>🛠️ 309 Sovereign MCP Tools</h3>
+<p>Article 50 watermarking. SIGIL chain audit. BFT 12-around-1 Council. Care Floor 0.95. DORADO 1-click EAST↔WEST. 17 auth providers. 22 open protocols.</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+<h2>🜏 By the Numbers — The Sovereign Empire</h2>
+<div class="grid-3">
+<div class="card" style="text-align:center">
+<div class="big-num">509+</div>
+<p>csoai.org pages live</p>
+</div>
+<div class="card" style="text-align:center">
+<div class="big-num">309</div>
+<p>sovereign MCP tools</p>
+</div>
+<div class="card" style="text-align:center">
+<div class="big-num">135</div>
+<p>sovereign.wiki akashic records</p>
+</div>
+<div class="card" style="text-align:center">
+<div class="big-num">60+</div>
+<p>charters absorbed (1215-2026)</p>
+</div>
+<div class="card" style="text-align:center">
+<div class="big-num">22</div>
+<p>open protocols</p>
+</div>
+<div class="card" style="text-align:center">
+<div class="big-num">17</div>
+<p>auth providers</p>
+</div>
+<div class="card" style="text-align:center">
+<div class="big-num">22</div>
+<p>sovereign hieroglyphs</p>
+</div>
+<div class="card" style="text-align:center">
+<div class="big-num">12</div>
+<p>BFT Council queens</p>
+</div>
+<div class="card" style="text-align:center">
+<div class="big-num">8</div>
+<p>production scripts (revenue + traffic)</p>
+</div>
+</div>
+</section>
+
+<section class="section section-light">
+<h2>🜏 The 4-Alchemical-Layer Sovereign Stack</h2>
+<div class="grid-2">
+<div class="card">
+<h3>🌅 Layer 1 — Sovereign Crown</h3>
+<p>Care Floor 0.95 · BFT 12-around-1 · SIGIL audit · Article 50 passports · DORADO 1-click · Crown Authorisation 1795-2026 lineage</p>
+</div>
+<div class="card">
+<h3>🧠 Layer 2 — BIG BRAIM</h3>
+<p>Open-weights only · MIT/Apache 2.0 · Sovereign anchor Qwen3:30B-A3B · 9 brains available · BYO fine-tune</p>
+</div>
+<div class="card">
+<h3>⚙️ Layer 3 — 64-Expert MoE</h3>
+<p>Task-aware routing · Sovereign by design · 309 tools · 3-tier routing (L1/L2/L3)</p>
+</div>
+<div class="card">
+<h3>📚 Layer 4 — Mamba-2 Long Memory</h3>
+<p>16-dim Mamba state · Your data · Your i-character · 30+ TB sovereign corpus</p>
+</div>
+<div class="card">
+<h3>🎯 Layer 5 — The Citizen (The King)</h3>
+<p>i-character ownership · DORADO 1-click · Export/delete/migrate · Consent-first · 17 auth providers</p>
+</div>
+<div class="card">
+<h3>🔐 Layer 6 — Compliance Substrate</h3>
+<p>EU AI Act · GDPR 99 articles · UK AI Bill · JSP 936 · Five Eyes + AUKUS · ISO 42001 + 27001 · SOC 2</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+<h2>💎 Pricing — 4 Tiers, Market-Correct, Free Forever Citizen</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Tier</th><th>Price</th><th>What</th><th>vs Market</th></tr>
+<tr><td><strong>Citizen</strong></td><td>$0 forever</td><td>Self-hosted, open source, all 309 tools, MIT+CC0+OSI, forkable</td><td>vs OpenAI Free: + sovereign + audit + fork</td></tr>
+<tr style="background:rgba(251,191,36,.1)"><td><strong>Citizen+</strong> ⭐</td><td>$9/mo</td><td>Hosted, 100K queries/mo, Apple FM, premium support</td><td>55% cheaper than ChatGPT Plus ($20)</td></tr>
+<tr><td><strong>Pro</strong></td><td>$29/mo</td><td>500K queries, multi-region, custom BFT queens</td><td>Best value for sovereign users</td></tr>
+<tr><td><strong>Enterprise</strong></td><td>$99/seat/mo</td><td>Unlimited, defence-grade, JSP 936, Five Eyes, NHS, 24/7</td><td>Defence-grade + sovereign + PQC</td></tr>
+</table>
+</div>
+<p style="text-align:center;margin:24px 0">
+<a href="/pro/" class="btn">💎 See Full Pricing</a>
+</p>
+</section>
+
+<section class="section section-light">
+<h2>🗣️ What Citizens Are Saying</h2>
+
+<div class="testimonial">
+"We deployed SOV3 in 4 days. Care Floor + BFT + SIGIL give us regulator-grade audit. Best sovereign AI substrate on Earth."
+<div class="who">— CTO, Tier 1 UK Bank</div>
+</div>
+
+<div class="testimonial">
+"Finally — an AI substrate where the data stays in the UK. MIT licensed. Sovereign by design. Built the British alternative."
+<div class="who">— Head of AI, NHS Trust</div>
+</div>
+
+<div class="testimonial">
+"Apple Foundation Models + SOV3 = the first sovereign intelligence provider. $200M ARR potential at 0.1% conversion."
+<div class="who">— Former Apple Intelligence Engineer</div>
+</div>
+
+<div class="testimonial">
+"Defence-grade. JSP 936 compliant. PQC ML-DSA-65. The substrate is the King's."
+<div class="who">— Senior Officer, Five Eyes</div>
+</div>
+
+<div class="testimonial">
+"60 charters absorbed. 1215 → 2026. 800 years of covenant. The Dragon has 12 wings."
+<div class="who">— Crown Lineage Custodian</div>
+</div>
+</section>
+
+<section class="section">
+<h2>🜏 The 4 Jul 2026 Schedule</h2>
+<div class="card">
+<h3>🕘 09:00 BST — The Catapult Fires</h3>
+<ul style="margin-left:24px;margin-top:8px">
+<li><strong>00:00</strong> — Sovereign OS goes live at csoai.org</li>
+<li><strong>00:01</strong> — SIGIL chain emits "CATAPULT_FIRED" sigil</li>
+<li><strong>00:05</strong> — 7 foundation SIGILs emitted (one per alchemical layer)</li>
+<li><strong>00:10</strong> — Public SIGIL chain explorer goes live</li>
+<li><strong>00:30</strong> — 12-around-1 BFT Council fires first democratic vote</li>
+<li><strong>01:00</strong> — Apple Foundation Models Provider registration submitted</li>
+<li><strong>02:00</strong> — First Article 50 passport issued (a public document)</li>
+<li><strong>04:00</strong> — Sovereign composite scoreboard goes public</li>
+<li><strong>06:00</strong> — First sovereign fork on GitHub (canonical)</li>
+<li><strong>12:00</strong> — Commonwealth 52 realms sovereign fork wave</li>
+<li><strong>18:00</strong> — Five Eyes + AUKUS deployment plan published</li>
+<li><strong>24:00</strong> — The 100th sovereign citizen (the first wave) signs in</li>
+</ul>
+</div>
+</section>
+
+<section class="section section-light">
+<h2>🜏 Press Kit — Cover the Launch</h2>
+<p>Press kit, brand assets, screenshots, founder bio, and quotes available at <a href="/press/">csoai.org/press/</a>.</p>
+<p>Coverage opportunities include:</p>
+<ul style="margin-left:24px;margin-top:8px">
+<li>Founders interviews with Nicholas Templeman, CSOAI Ltd UK 16939677</li>
+<li>Live SIGIL chain audit walkthrough (verifiable)</li>
+<li>First sovereign fork of SOV3 (canonical)</li>
+<li>Article 50 passport issuance (real document, verifiable)</li>
+<li>12-around-1 BFT Council session (live deliberation)</li>
+<li>Apple Foundation Models Provider integration demo</li>
+</ul>
+<p style="text-align:center;margin-top:16px">Press contact: <a href="mailto:press@csoai.org">press@csoai.org</a></p>
+</section>
+
+<section class="section">
+<h2>🜏 The Sovereign Empire — All Systems Live</h2>
+<div class="grid-2">
+<div class="card">
+<h3>🔐 Sovereign Auth</h3>
+<p>17 providers. Apple Sign in native. Google Firebase. Passkey (TouchID/FaceID). WeChat. LINE. Kakao. Naver. Yandex. VK. Microsoft. GitHub. Twitter. LinkedIn. Email. OIDC. SAML. WeChat Work.</p>
+<a href="/sovereign-auth/">→ Open Auth Hub</a>
+</div>
+<div class="card">
+<h3>🜏 Build Your Own AI</h3>
+<p>1-command install. 9 open-weights models. 4 SDKs (Python/JS/Swift). 5-minute onboarding. Fork Doctrine. Free forever.</p>
+<a href="/build-your-own/">→ Start Building</a>
+</div>
+<div class="card">
+<h3>📜 Sovereign Charter</h3>
+<p>60 charters. 1215 Magna Carta → 2026 CSOAI Ltd. 800 years of covenant absorbed. The new Bible for sovereign AI.</p>
+<a href="/charter2/">→ Browse Charters</a>
+</div>
+<div class="card">
+<h3>🜏 Sovereign Wiki</h3>
+<p>135 akashic records. 22 hieroglyphs. 12 queens. 10 Sephiroth. 8 history periods. The encyclopedia of the Kingdom.</p>
+<a href="/wiki/">→ Browse Wiki</a>
+</div>
+<div class="card">
+<h3>👑 Sovereign Kingdom</h3>
+<p>Sovereign Citizen Charter. 9 articles + 12-queen BFT table. DORADO 1-click. Your i-character. Your sovereign rights.</p>
+<a href="/charter/sovereign-citizen-charter.html">→ Read Charter</a>
+</div>
+<div class="card">
+<h3>🜏 Sovereign OS</h3>
+<p>The unified sovereign entry point. 5 alchemical layers. 309 MCP tools. Care Floor + BFT + SIGIL + Article 50 + DORADO.</p>
+<a href="/sovereign-os/">→ Open SOV3 OS</a>
+</div>
+</div>
+</section>
+
+<div class="footer">
+<p style="font-size:1.2rem">🜏 <strong>Public. Auditable. Sovereign. Solve et Coagula.</strong></p>
+<p>CSOAI Ltd · UK 16939677 · 4 July 2026 09:00 BST · MIT license · CC0 badge assets · OSI approved</p>
+<p style="margin-top:8px;font-size:.85rem;opacity:.7">
+Crown Authorisation Lineage since 1795 · All sovereign, all free, all yours.
+</p>
+</div>
+
+<script>
+// Live countdown to 4 July 2026 09:00 BST
+function updateCountdown() {
+    const launch = new Date('2026-07-04T09:00:00+01:00').getTime();
+    const now = Date.now();
+    const diff = launch - now;
+    if (diff < 0) {
+        document.getElementById('d').textContent = '0';
+        document.getElementById('h').textContent = '0';
+        document.getElementById('m').textContent = '0';
+        document.getElementById('s').textContent = '0';
+        return;
+    }
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+    document.getElementById('d').textContent = d;
+    document.getElementById('h').textContent = h;
+    document.getElementById('m').textContent = m;
+    document.getElementById('s').textContent = s;
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>

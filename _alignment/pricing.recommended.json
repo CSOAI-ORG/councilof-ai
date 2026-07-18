@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "status": "RECOMMENDATION — awaiting owner ratification (do NOT deploy until Nick says 'ratify')",
+    "date": "2026-07-12",
+    "insight": "The £12.99-vs-£499 'conflict' is a taxonomy problem, not a price war: they are DIFFERENT product lines. One pricing.json, three clearly-separated lines. Ratify or edit the numbers, then this becomes the single source every surface reads via usePricing().",
+    "currency": "GBP",
+    "invariant": "Article 0 — fee-for-service only; never equity/board/revenue-share from certified institutions."
+  },
+
+  "consumer": {
+    "product": "MEOK OS — your sovereign AI companion (os.meok.ai)",
+    "tiers": {
+      "free":  { "price": 0,     "period": null,    "blurb": "open-source characters + Pearl finish · data never leaves · sovereign, forever free" },
+      "pro":   { "price": 12.99, "period": "month", "blurb": "premium model stack (Claude/GPT auto-routed) · 13-queen council · 3D character · priority compute" },
+      "payg":  { "price": 0,     "period": "usage", "blurb": "no subscription · premium models metered at cost + a little · never expires" }
+    }
+  },
+
+  "sme": {
+    "product": "CSOAI governed-SaaS / SMB compliance (csoai.org)",
+    "tiers": {
+      "starter": { "price": 79,  "period": "month", "blurb": "one governed workspace · signed audit trail · core frameworks" },
+      "growth":  { "price": 199, "period": "month", "blurb": "multi-workspace · full framework set · council governance · badges" }
+    },
+    "note": "resolves the £79 vs £199 report conflict → they are the SME line's two tiers, not rivals."
+  },
+
+  "enterprise": {
+    "product": "CSOAI / DEFONEOS assurance + governance (enterprise & defence)",
+    "tiers": {
+      "compliance_pack": { "price": 499,   "period": "one-off", "blurb": "a signed compliance/assurance pack (e.g. EU AI Act, Article 50)" },
+      "sector_pack":     { "price": 1499,  "period": "one-off", "blurb": "sector-deep pack (finance/health/defence bridges)" },
+      "enterprise":      { "price": 1999,  "period": "month",   "blurb": "full governed platform · SLA · signed attestations · multi-region" },
+      "defence":         { "price": null,  "period": "quote",   "blurb": "JSP-936 / ASGARD assurance — bespoke, contact" }
+    }
+  },
+
+  "_ratify": "Say 'ratify' (or edit the numbers) → I move this to the canonical pricing.json path and wire every surface (consumer OS, csoai-org-v2, decks) to read it via usePricing(). Stripe reconciles to THESE prices."
+}

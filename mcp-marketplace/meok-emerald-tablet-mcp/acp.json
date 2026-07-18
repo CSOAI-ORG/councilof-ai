@@ -1,0 +1,47 @@
+{
+  "name": "meok-emerald-tablet-mcp",
+  "display_name": "Emerald Tablet MCP — Hermes Trismegistus × MEOK Attestation",
+  "version": "1.0.0",
+  "description": "The 13 sentences of Hermes Trismegistus (Tabula Smaragdina) as the MEOK sovereign attestation protocol. Each sentence is a tool, mapping the canonical hermetic text to the 13-step sigil emission chain (hash → ts → agent → payload → parent → sig → kid → scope → verdict → proof → council → sig_chain → anchor).",
+  "author": {
+    "name": "MEOK AI Labs",
+    "email": "nicholas@meok.ai",
+    "url": "https://meok.ai"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/CSOAI-ORG/meok-emerald-tablet-mcp",
+  "keywords": [
+    "mcp", "hermetic", "emerald-tablet", "tabula-smaragdina", "hermes-trismegistus",
+    "attestation", "sovereign", "alchemy", "magic", "philosophy",
+    "sigil", "ed25519", "bft-council", "compliance"
+  ],
+  "tools": [
+    {"name": "tablet_01_verify",   "description": "Sentence 1 — As above, so below: scope ↔ claim microcosm-macrocosm equivalence"},
+    {"name": "tablet_02_one",      "description": "Sentence 2 — All from One, by mediation of One: single sigil key + parent chain"},
+    {"name": "tablet_03_four",     "description": "Sentence 3 — Sun/Moon/Wind/Earth: kid, ts, payload, scope (the four sigil fields)"},
+    {"name": "tablet_04_anchor",   "description": "Sentence 4 — Father of all perfection: root anchor (canonical keystore)"},
+    {"name": "tablet_05_sig",      "description": "Sentence 5 — Force entire if converted into earth: sig → concrete signed artifact"},
+    {"name": "tablet_06_validate", "description": "Sentence 6 — Separate subtle from gross: validation gate"},
+    {"name": "tablet_07_two",      "description": "Sentence 7 — Ascends and descends: two-way ingest/audit flow"},
+    {"name": "tablet_08_public",   "description": "Sentence 8 — Glory of whole world: public verify URL"},
+    {"name": "tablet_09_ed25519",  "description": "Sentence 9 — Strong fortitude: Ed25519 + BFT council"},
+    {"name": "tablet_10_sovereign","description": "Sentence 10 — One Craftsman: sovereign single signer per action"},
+    {"name": "tablet_11_three",    "description": "Sentence 11 — Trismegistus three parts: King + Queen + Witness"},
+    {"name": "tablet_12_coagulatio","description": "Sentence 12 — Sun operation complete: coagulatio = signed release"},
+    {"name": "tablet_13_genesis",  "description": "Sentence 13 — So the world was created: genesis release"},
+    {"name": "tablet_list_all",    "description": "List all 13 sentences with MEOK attestation mappings"},
+    {"name": "tablet_full_text",   "description": "Return the full canonical text of all 13 sentences"}
+  ],
+  "categories": ["philosophy", "hermetic", "alchemy", "attestation", "sovereign", "compliance"],
+  "pricing": {
+    "free_tier": "13 calls/day (one per sentence)",
+    "pro": "https://buy.stripe.com/meok-emerald-tablet-pro",
+    "payg_enabled": "via MEOK_PAYG_KEY env var"
+  },
+  "lineage": {
+    "text_source": "Tabula Smaragdina — Latin ~800 CE (Hortulanus translation of older Greek/Arabic original)",
+    "canonical_english": "Isaac Newton (1690s, posthumously published 1936+)",
+    "text_license": "public domain",
+    "mcp_implementation": "© 2026 MEOK AI Labs"
+  }
+}

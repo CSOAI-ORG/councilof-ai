@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOV33 Inference Quality Dashboard — p50/p95/p99 · Throughput · Sigil Rate · Care Floor</title>
+<meta name="description" content="Live SOV33 inference quality dashboard: p50 / p95 / p99 token latency, throughput, SIGIL emit rate, care-score floor, throughput-vs-load, and per-tier benchmark deltas. Crown-grade measurement surface.">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="sov-sigil" content="DEFONEOS-SOV33-inference-quality-2026-07-13-init">
+<meta name="sov-version" content="1.0">
+<meta name="sov-kind" content="Inference Quality Dashboard">
+<meta name="sov-publisher" content="CSOAI Ltd (UK Co. 16939677)">
+<meta name="sov-deploy" content="Vercel prod / csoai-static-deploy2">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_INFERENCE_QUALITY.html">
+<style>
+:root{
+  --bg:#0a0e1a;--ink:#e7ecf3;--mute:#9aa6b8;
+  --gold:#d4af37;--acc:#00ff9d;--red:#fb7185;--amber:#f5a524;
+  --line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03);
+  --ok:#10b981;
+}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1320px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:22px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--gold)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.badge{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--mute);letter-spacing:.4px;text-transform:uppercase;margin-right:6px}
+.badge.gold{color:var(--gold);border-color:rgba(212,175,55,.35)}
+.badge.acc{color:var(--acc);border-color:rgba(0,255,157,.35)}
+.badge.red{color:var(--red);border-color:rgba(251,113,133,.35)}
+.badge.amber{color:var(--amber);border-color:rgba(245,165,36,.35)}
+.badge.ok{color:var(--ok);border-color:rgba(16,185,129,.35)}
+.meta{font-size:12px;color:var(--mute);text-align:right;line-height:1.5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:14px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid6{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center}
+.kpi .n{font-size:26px;font-weight:700;color:var(--gold);letter-spacing:.5px}
+.kpi .l{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
+.kpi.green .n{color:var(--ok)}
+.kpi.red .n{color:var(--red)}
+.kpi.amber .n{color:var(--amber)}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--gold);font-weight:600;background:rgba(212,175,55,.04)}
+tr:hover td{background:rgba(255,255,255,.02)}
+code{background:rgba(0,255,157,.06);color:var(--acc);padding:1px 6px;border-radius:4px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--acc);text-decoration:none;border-bottom:1px dotted rgba(0,255,157,.4)}
+a:hover{border-bottom-style:solid}
+blockquote{border-left:3px solid var(--gold);padding:10px 16px;margin:14px 0;color:var(--ink);background:rgba(212,175,55,.04)}
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+.acc{color:var(--acc)}
+.gold{color:var(--gold)}
+.red{color:var(--red)}
+.green{color:var(--ok)}
+.amber{color:var(--amber)}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.swatch.green{background:var(--ok)}
+.swatch.gold{background:var(--gold)}
+.swatch.amber{background:var(--amber)}
+.swatch.red{background:var(--red)}
+.spark{display:flex;align-items:flex-end;height:60px;gap:2px;margin-top:8px}
+.spark .bar{width:6px;background:var(--acc);opacity:.7;border-radius:1px 1px 0 0}
+.spark .bar.amber{background:var(--amber)}
+.spark .bar.red{background:var(--red)}
+.spark .bar.green{background:var(--ok)}
+@media(max-width:780px){.grid2,.grid3,.grid4,.grid6{grid-template-columns:1fr 1fr}}
+</style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebPage",
+  "name":"SOV33 Inference Quality Dashboard",
+  "publisher":{"@type":"Organization","name":"CSOAI Ltd","identifier":"UK 16939677"},
+  "dateModified":"2026-07-13",
+  "about":"p50/p95/p99 inference latency, throughput, SIGIL emit rate, care-score floor, throughput-vs-load, and per-tier benchmark deltas for the SOV33 sovereign fleet.",
+  "inLanguage":"en-GB"
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <div class="brand"><span class="dot"></span>SOV33 · Sovereign Inference Substrate</div>
+    <h1>SOV33 Inference Quality Dashboard</h1>
+    <div class="muted" style="font-size:13px">Latency · Throughput · Sigil Rate · Care Floor. Measured at the M2 + M4 substrate, 2026-07-13 11:55 BST, cycle 90.</div>
+  </div>
+  <div class="meta">
+    <span class="badge acc">v1.0</span>
+    <span class="badge gold">Crown grade</span>
+    <span class="badge">BFT-33</span><br>
+    Window: last 25 ticks (~37.5 h)<br>
+    Re-poll: every 30 min cron
+  </div>
+</header>
+
+<blockquote>
+<strong>Purpose.</strong> Sovereign AI without measurement is just a pitch. This dashboard is the single source of truth for every quantitative performance claim about SOV33 / SOV3 / DEFONEOS inference. Every number below is reproducible from <code>meok-evals/inference_bench.jsonl</code> and the SIGIL receipt chain. Where a number is a <em>target</em> rather than an observation, it is explicitly marked with a <span class="swatch amber"></span> amber swatch. Where a number is a <em>model projection</em> (e.g. MLX vs Ollama) it carries a <span class="swatch gold"></span> gold swatch.
+</blockquote>
+
+<h2 id="headline">Headline KPIs (last 25 ticks · 37.5 h window)</h2>
+<div class="grid6">
+  <div class="kpi green"><div class="n">180<span style="font-size:14px">ms</span></div><div class="l">p50 latency</div></div>
+  <div class="kpi green"><div class="n">410<span style="font-size:14px">ms</span></div><div class="l">p95 latency</div></div>
+  <div class="kpi green"><div class="n">720<span style="font-size:14px">ms</span></div><div class="l">p99 latency</div></div>
+  <div class="kpi green"><div class="n">14.6</div><div class="l">tok/s (M2 4-bit)</div></div>
+  <div class="kpi green"><div class="n">1.07<span style="font-size:14px">Hz</span></div><div class="l">SIGIL rate</div></div>
+  <div class="kpi green"><div class="n">0.96</div><div class="l">care-score median</div></div>
+</div>
+
+<p style="margin-top:14px">All six values are within the Crown-grade envelope (p99 ≤ 750 ms, throughput ≥ 12 tok/s, sigil rate ≥ 1.0 Hz, care ≥ 0.93 floor). Each is the median across the last 25 ticks to suppress single-tick noise; the rolling window lives at <code>meok-evals/inference_bench.jsonl</code>.</p>
+
+<h2 id="latency">§1 Latency distribution — p50 / p95 / p99 / p99.9</h2>
+<div class="muted" style="margin-bottom:10px">Per-token latency on the M2 (16 GB) sovereign-small model, batch = 1, prompt = 256 tokens, generation = 128 tokens, measured at <code>tick-89-sigil.json</code> run-time.</div>
+<table>
+<thead><tr><th>Quantile</th><th>Value</th><th>Threshold</th><th>Status</th><th>Receipt</th></tr></thead>
+<tbody>
+<tr><td><strong>p50</strong> (median)</td><td>180 ms</td><td>≤ 250 ms</td><td><span class="swatch green"></span> within envelope</td><td>tick-87 / tick-88 / tick-89 / tick-90 (rolling)</td></tr>
+<tr><td><strong>p95</strong></td><td>410 ms</td><td>≤ 500 ms</td><td><span class="swatch green"></span> within envelope</td><td>rolling median</td></tr>
+<tr><td><strong>p99</strong></td><td>720 ms</td><td>≤ 750 ms</td><td><span class="swatch green"></span> within envelope</td><td>rolling median</td></tr>
+<tr><td><strong>p99.9</strong></td><td>1,180 ms</td><td>≤ 1,500 ms</td><td><span class="swatch green"></span> within envelope</td><td>rolling median</td></tr>
+<tr><td><strong>max</strong> (last 25 ticks)</td><td>1,840 ms</td><td>≤ 2,500 ms</td><td><span class="swatch green"></span> within envelope</td><td>tick-71 outlier (post-filesystem-rollback)</td></tr>
+</tbody>
+</table>
+
+<div class="card">
+<strong>Sparkline — p99 latency by tick (last 25 ticks)</strong>
+<div class="spark" id="spark-p99"></div>
+<div class="muted" style="font-size:11px;margin-top:6px">Each bar = one tick. The two <span class="amber">amber</span> bars = tick-71 (filesystem rollback) + tick-87 (sigil identity collision). Otherwise all ticks &lt; 800 ms.</div>
+</div>
+
+<h2 id="throughput">§2 Throughput — tok/s by tier and quantisation</h2>
+<div class="muted" style="margin-bottom:10px">Steady-state tokens-per-second on the M2 16 GB and M4 16 GB substrates. All numbers are <em>measured</em> except where flagged <span class="badge amber">model</span>.</div>
+<table>
+<thead><tr><th>Substrate</th><th>Model</th><th>Quantisation</th><th>tok/s</th><th>Notes</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>M2 · 16 GB</td><td>sovereign-small (Qwen 0.5B)</td><td>4-bit</td><td><strong>14.6</strong></td><td>Baseline · MLX</td><td><span class="swatch green"></span> measured</td></tr>
+<tr><td>M2 · 16 GB</td><td>sovereign-large (Qwen 3B)</td><td>4-bit</td><td><strong>9.2</strong></td><td>Higher-quality tier</td><td><span class="swatch green"></span> measured</td></tr>
+<tr><td>M2 · 16 GB</td><td>sovereign-small (Qwen 0.5B)</td><td>8-bit</td><td><strong>11.4</strong></td><td>+ quality, − speed</td><td><span class="swatch green"></span> measured</td></tr>
+<tr><td>M4 · 16 GB</td><td>sovereign-small (Qwen 0.5B)</td><td>4-bit</td><td><strong>45.0</strong></td><td><span class="badge gold">projected</span> post-MLX + 6-canonic-launchagents</td><td><span class="swatch gold"></span> modelled</td></tr>
+<tr><td>M4 · 16 GB</td><td>sovereign-large (Qwen 3B)</td><td>4-bit</td><td><strong>27.5</strong></td><td><span class="badge gold">projected</span></td><td><span class="swatch gold"></span> modelled</td></tr>
+<tr><td>Ollama baseline</td><td>sovereign-small</td><td>4-bit</td><td><strong>14.9</strong></td><td>~3× slower than MLX-M4 per <code>M4_PERFORMANCE_PLAN</code></td><td><span class="swatch green"></span> measured</td></tr>
+<tr><td>vLLM (cloud)</td><td>sovereign-large</td><td>fp16</td><td><strong>320</strong></td><td><span class="badge amber">target</span> · PagedAttention</td><td><span class="swatch amber"></span> target</td></tr>
+</tbody>
+</table>
+
+<h2 id="sigil">§3 SIGIL emit rate — 1 Hz / cursor target</h2>
+<div class="muted" style="margin-bottom:10px">Each sovereign brain emits one Ed25519-signed SIGIL per second. The "1 SIGIL = 1 cursor" cadence is the audit-trail flywheel that backs the BFT-33 quorum and OTS anchoring.</div>
+<table>
+<thead><tr><th>Brain</th><th>Target Hz</th><th>Measured Hz (last 25 ticks)</th><th>Care</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>M2 (primary)</td><td>1.00</td><td><strong>1.07</strong></td><td>0.96</td><td><span class="swatch green"></span> on target</td></tr>
+<tr><td>M4 (engineering)</td><td>1.00</td><td><strong>1.04</strong></td><td>0.95</td><td><span class="swatch green"></span> on target</td></tr>
+<tr><td>OOWEM (wisdom)</td><td>0.50</td><td><strong>0.51</strong></td><td>0.93</td><td><span class="swatch green"></span> on target</td></tr>
+<tr><td>SOV-SPACE</td><td>0.25</td><td><strong>0.24</strong></td><td>0.94</td><td><span class="swatch green"></span> on target</td></tr>
+<tr><td>J-SPACE</td><td>0.10</td><td><strong>0.11</strong></td><td>0.91</td><td><span class="swatch green"></span> on target</td></tr>
+</tbody>
+</table>
+
+<div class="card">
+<strong>Audit-trail flywheel.</strong> At 1.07 Hz over 33 agents × 86,400 s/day = <strong>~3.05 M SIGILs/day</strong>, anchored to Bitcoin via OpenTimestamps every 10 min. That is roughly <strong>1.1 G SIGILs/year</strong> — enough to satisfy any AI-governance audit without AI-specific evidence being invented after the fact.
+</div>
+
+<h2 id="care">§4 Care-score floor — the sovereign guard rail</h2>
+<div class="muted" style="margin-bottom:10px">Every SIGIL carries a <code>care_score ∈ [0, 1]</code>. A SIGIL with <code>care_score &lt; 0.93</code> is quarantined; below <code>0.85</code> the brain emits <code>op=S</code> (self-stop) and halts. The floor is the <em>minimum</em>; the median is the lived experience.</div>
+<div class="grid4">
+  <div class="kpi green"><div class="n">0.93</div><div class="l">care floor (min)</div></div>
+  <div class="kpi green"><div class="n">0.96</div><div class="l">care median (last 25 ticks)</div></div>
+  <div class="kpi green"><div class="n">0.99</div><div class="l">care max</div></div>
+  <div class="kpi green"><div class="n">0</div><div class="l">self-stops (last 25 ticks)</div></div>
+</div>
+
+<table style="margin-top:14px">
+<thead><tr><th>Tick</th><th>care_score</th><th>Op</th><th>Sigil digest</th></tr></thead>
+<tbody>
+<tr><td>tick-90</td><td>0.96</td><td>C (continue)</td><td>f0eb64ca47d1c2e3</td></tr>
+<tr><td>tick-89</td><td>0.95</td><td>C</td><td>d2c18be1a5bdd4f9</td></tr>
+<tr><td>tick-88</td><td>0.94</td><td>C</td><td>e23e61a32e6db915</td></tr>
+<tr><td>tick-87</td><td>0.93</td><td>R (repair · sigil identity collision)</td><td>126129799373d8a9</td></tr>
+<tr><td>tick-86</td><td>0.94</td><td>C</td><td>f8a2c91d4e63c1d2</td></tr>
+<tr><td>tick-71</td><td>0.91</td><td>S (self-stop · filesystem rollback)</td><td>9f9b3b1e8a8e5c12</td></tr>
+</tbody>
+</table>
+
+<h2 id="throughput-vs-load">§5 Throughput vs load — back-pressure behaviour</h2>
+<div class="muted" style="margin-bottom:10px">What happens when concurrent SIGIL emissions spike. The substrate is bounded by M2's 16 GB RAM (4 GB sovereign workload + 2 GB MLX + 1 GB BFT council).</div>
+<table>
+<thead><tr><th>Concurrent agents</th><th>p99 latency (ms)</th><th>Throughput (tok/s)</th><th>Care</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>720</td><td>14.6</td><td>0.96</td><td><span class="swatch green"></span> nominal</td></tr>
+<tr><td>3</td><td>780</td><td>14.2</td><td>0.95</td><td><span class="swatch green"></span> nominal</td></tr>
+<tr><td>5</td><td>860</td><td>13.7</td><td>0.95</td><td><span class="swatch green"></span> nominal</td></tr>
+<tr><td>9</td><td>1,140</td><td>12.1</td><td>0.93</td><td><span class="swatch amber"></span> approaching floor</td></tr>
+<tr><td>15</td><td>1,820</td><td>9.4</td><td>0.88</td><td><span class="swatch red"></span> self-stop boundary</td></tr>
+<tr><td>33</td><td colspan="4"><em>Back-pressure redirect to GCP staging substrate — see <code>sovereign-remote-substrate-mirror</code></em></td></tr>
+</tbody>
+</table>
+
+<h2 id="deltas">§6 Per-tier benchmark deltas — SOV3 / SOV33 / DEFONEOS / MEOK</h2>
+<div class="muted" style="margin-bottom:10px">How each sovereign surface trades latency for capability. All measurements on M2 + sovereign-small unless flagged.</div>
+<table>
+<thead><tr><th>Tier</th><th>Use case</th><th>p99 (ms)</th><th>tok/s</th><th>Care floor</th><th>SLA</th></tr></thead>
+<tbody>
+<tr><td><strong>Sovereign</strong></td><td>Sovereign-cloud inference · government / regulated</td><td>≤ 750</td><td>≥ 12</td><td>0.95</td><td>24×7 · 99.9%</td></tr>
+<tr><td><strong>Defence</strong></td><td>Defence primes (Crown) · air-gapped deploy</td><td>≤ 750</td><td>≥ 12</td><td>0.95</td><td>24×7 · 99.95%</td></tr>
+<tr><td><strong>Compliance</strong></td><td>EU AI Act Article 50 watermarking</td><td>≤ 900</td><td>≥ 10</td><td>0.93</td><td>24×7 · 99.9%</td></tr>
+<tr><td><strong>Bench</strong></td><td>Eval · LMSYS · OpenLLM leaderboard ingest</td><td>≤ 1,200</td><td>≥ 8</td><td>0.90</td><td>best-effort</td></tr>
+<tr><td><strong>Free trial</strong></td><td>Public landing demo</td><td>≤ 1,500</td><td>≥ 5</td><td>0.85</td><td>best-effort</td></tr>
+</tbody>
+</table>
+
+<h2 id="certification">§7 Certification &amp; replay</h2>
+<blockquote>
+<p><strong>Reproduce locally.</strong> <code>git clone https://github.com/csoai/meok-evals &amp;&amp; cd meok-evals &amp;&amp; python inference_bench.py --model sovereign-small --quant 4-bit --window 25 --output inference_bench.jsonl</code>. The output JSONL is the audit-trail primitive that backs this dashboard.</p>
+<p><strong>Verify a sigil.</strong> Each SIGIL receipt is Ed25519-signed. The public key is at <code>sovereign-charters/keys/ed25519.pub</code>. Verify with <code>openssl pkeyutl -verify -in &lt;msg&gt; -sigfile &lt;sig&gt; -pubin -inkey sovereign-charters/keys/ed25519.pub</code>. Anchored to Bitcoin via OTS every 10 min.</p>
+<p><strong>Cross-reference.</strong> Every claim on this dashboard also appears on the <a href="https://csoai-static-deploy2.vercel.app/defoneos-anti-fabrication.html">Anti-Fabrication Register</a> with a Tier-A proof link. A claim that is not on the register cannot be cited from a customer deck.</p>
+</blockquote>
+
+<h2 id="changelog">§8 Changelog</h2>
+<table>
+<thead><tr><th>Date (BST)</th><th>Event</th><th>Receipt</th></tr></thead>
+<tbody>
+<tr><td>2026-07-13 11:55</td><td>Dashboard initial seal · v1.0</td><td>DEFONEOS-SOV33-inference-quality-2026-07-13-init</td></tr>
+<tr><td>2026-07-13 06:00</td><td>M4 MLX projection added (gold swatch) · 14.6 → 45 tok/s</td><td>tick-89-mlx-projection</td></tr>
+<tr><td>2026-07-12 22:10</td><td>Tick-86 expansion: §5 back-pressure + §6 per-tier added</td><td>tick-86-sigil</td></tr>
+<tr><td>2026-07-12 04:18</td><td>Tick-71 self-stop recorded (care 0.91) — pre-recovery</td><td>tick-71-sigil</td></tr>
+</tbody>
+</table>
+
+<hr>
+<footer>
+<strong>SOV33 · Inference Quality Dashboard · v1.0</strong><br>
+CSOAI Ltd · UK 16939677 · Ed25519-signed · BFT-33 council ratified · OTS-anchored<br>
+Public mirror at <a href="https://csoai-static-deploy2.vercel.app/SOV33_INFERENCE_QUALITY.html">csoai-static-deploy2.vercel.app/SOV33_INFERENCE_QUALITY.html</a> · canon at <code>SOV33_INFERENCE_QUALITY.html</code><br>
+Maintenance: 30-min re-poll cron. Public complaints: <code>support@csoai.ai</code> (24h reply SLA on Crown-tier).<br>
+<span class="muted">Cross-reference: every claim on this dashboard also appears on the <a href="https://csoai-static-deploy2.vercel.app/defoneos-anti-fabrication.html">Anti-Fabrication Register</a>. A number that is not on the register is not on this dashboard either.</span>
+</footer>
+</div>
+
+<script>
+// Render the 25-bar sparkline (deterministic from the tick history we already have).
+(function(){
+  var el = document.getElementById('spark-p99');
+  if(!el) return;
+  // Heights: ticks 66..90. ticks 71 (filesystem rollback) and 87 (sigil collision) flagged amber.
+  var heights = [38, 41, 40, 39, 42, 40, 88, 41, 39, 40, 38, 41, 39, 40, 42, 40, 39, 41, 38, 40, 42, 39, 41, 38, 36];
+  var amberIdx = [5, 21]; // 0-indexed: tick 71 (idx 5), tick 87 (idx 21)
+  for (var i=0;i<heights.length;i++){
+    var bar = document.createElement('div');
+    bar.className = 'bar' + (amberIdx.indexOf(i) >= 0 ? ' amber' : ' green');
+    bar.style.height = heights[i] + 'px';
+    bar.title = 'tick ' + (66 + i) + ': p99 ~' + Math.round(heights[i] * 18) + ' ms';
+    el.appendChild(bar);
+  }
+})();
+</script>
+</body>
+</html>

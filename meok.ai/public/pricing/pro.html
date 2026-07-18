@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK Compliance Pro — £199/mo | MEOK Empire</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #0a1628; /* MEOK Navy */
+    color: #e0e6ed;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: #d4a843; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0d1f3c 0%, #0a1628 100%);
+    border-bottom: 2px solid #d4a84333;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .header .logo { font-size: 1.25rem; font-weight: 700; color: #d4a843; letter-spacing: 0.05em; }
+  .header .logo span { color: #e0e6ed; font-weight: 300; }
+  .header .back-link { font-size: 0.875rem; padding: 0.4rem 1rem; border: 1px solid #d4a84355; border-radius: 6px; transition: 0.2s; }
+  .header .back-link:hover { background: #d4a84315; text-decoration: none; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 3rem 0 2rem;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: #d4a84320;
+    color: #d4a843;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0.3rem 0.9rem;
+    border-radius: 100px;
+    border: 1px solid #d4a84344;
+    margin-bottom: 1rem;
+  }
+  .hero h1 { font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 .gold { color: #d4a843; }
+  .hero .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #d4a843;
+    margin: 0.75rem 0;
+  }
+  .hero .price span { font-size: 1rem; font-weight: 400; color: #8899aa; }
+  .hero .subtitle { font-size: 1.1rem; color: #8899aa; max-width: 600px; margin: 0 auto 1.5rem; }
+
+  .btn-stripe {
+    display: inline-block;
+    background: #d4a843;
+    color: #0a1628;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.9rem 2.5rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-stripe:hover { background: #e0b85a; transform: translateY(-1px); box-shadow: 0 6px 20px #d4a84333; text-decoration: none; }
+  .btn-stripe-secondary {
+    display: inline-block;
+    background: transparent;
+    color: #d4a843;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    border: 1.5px solid #d4a84366;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-stripe-secondary:hover { background: #d4a84315; text-decoration: none; }
+
+  /* Section */
+  .section { padding: 2.5rem 0; }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+  }
+  .section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 3px;
+    background: #d4a843;
+    border-radius: 2px;
+  }
+
+  /* Features grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .feature-card {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    transition: 0.2s;
+  }
+  .feature-card:hover { border-color: #d4a84344; }
+  .feature-card .check { color: #2ecc71; font-weight: 700; margin-right: 0.6rem; }
+  .feature-card strong { color: #fff; display: block; margin-bottom: 0.25rem; font-size: 1.05rem; }
+  .feature-card p { color: #8899aa; font-size: 0.9rem; }
+
+  /* Comparison table */
+  .comparison {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #1a2d4a;
+  }
+  .comparison th, .comparison td {
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid #1a2d4a;
+  }
+  .comparison th {
+    background: #0d1f3c;
+    color: #d4a843;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .comparison th:first-child { width: 40%; }
+  .comparison td:first-child { color: #c0c8d4; font-weight: 500; }
+  .comparison tr:last-child td { border-bottom: none; }
+  .comparison .yes { color: #2ecc71; font-weight: 700; }
+  .comparison .no { color: #555; }
+  .comparison .highlight { background: #d4a8430a; }
+  .comparison tr:hover td { background: #0d1f3c55; }
+
+  .comparison-wrap { overflow-x: auto; }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .faq-item {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+  .faq-item summary {
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    color: #d4a843;
+    font-size: 1.3rem;
+    font-weight: 700;
+    transition: 0.2s;
+  }
+  .faq-item[open] summary::after { content: '−'; }
+  .faq-item .answer {
+    margin-top: 0.75rem;
+    color: #8899aa;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .faq-item .answer a { color: #d4a843; }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 3rem 0;
+    border-top: 1px solid #1a2d4a;
+    border-bottom: 1px solid #1a2d4a;
+    margin: 1rem 0;
+  }
+  .cta-section h2 { font-size: 1.75rem; color: #fff; margin-bottom: 0.5rem; }
+  .cta-section p { color: #8899aa; margin-bottom: 1.5rem; }
+  .cta-section .btn-stripe { font-size: 1.15rem; padding: 1rem 3rem; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #4a5a6a;
+    font-size: 0.85rem;
+    border-top: 1px solid #0d1f3c;
+  }
+  .footer a { color: #6a7a8a; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.75rem; }
+    .hero .price { font-size: 1.5rem; }
+    .container { padding: 1.5rem 1rem; }
+    .header { padding: 1rem; flex-direction: column; text-align: center; }
+    .comparison th, .comparison td { padding: 0.7rem 0.8rem; font-size: 0.85rem; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">MEOK <span>Empire</span></div>
+  <a href="index.html" class="back-link">← All Plans</a>
+</header>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="badge">Pro Plan</div>
+    <h1>MEOK Compliance <span class="gold">Pro</span></h1>
+    <div class="price">£199 <span>/ month</span></div>
+    <p class="subtitle">Signed compliance attestations, API-first workflow, and email support for growing teams that need verifiable proof of AI safety controls.</p>
+    <a href="https://buy.stripe.com/YOUR_LINK_HERE" class="btn-stripe" target="_blank" rel="noopener">Subscribe — £199/mo</a>
+  </section>
+
+  <!-- Features -->
+  <section class="section">
+    <h2 class="section-title">Everything in Pro</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Signed Attestations</strong>
+        <p>Cryptographically signed compliance attestations for audit trails and regulatory submissions.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> REST API Access</strong>
+        <p>Full API access for programmatic attestation generation, status checks, and batch operations.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Email Support</strong>
+        <p>Priority email support with &lt; 8 hour response time during business hours.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Unlimited Attestations</strong>
+        <p>No cap on attestation volume — generate as many as your compliance needs require.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Status Dashboard</strong>
+        <p>Real-time compliance status dashboard with attestation history and expiry tracking.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Webhook Integrations</strong>
+        <p>Automate workflows with webhook events on attestation creation, signing, and expiry.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="section">
+    <h2 class="section-title">Pro vs Free Tier</h2>
+    <div class="comparison-wrap">
+      <table class="comparison">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free Tier</th>
+            <th>Pro (£199/mo)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Attestations per day</td>
+            <td>3 per email</td>
+            <td class="yes">Unlimited</td>
+          </tr>
+          <tr>
+            <td>Signed attestations</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>API access</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Email support</td>
+            <td class="no">Community only</td>
+            <td class="yes">✓ Priority</td>
+          </tr>
+          <tr>
+            <td>Webhook integrations</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Status dashboard</td>
+            <td class="no">Basic</td>
+            <td class="yes">Full</td>
+          </tr>
+          <tr>
+            <td>Audit log export</td>
+            <td class="no">—</td>
+            <td class="yes">✓ CSV / JSON</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>Price</strong></td>
+            <td><strong>Free</strong></td>
+            <td><strong>£199/mo</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>How does the free tier work with Pro?</summary>
+        <div class="answer">The free tier at <a href="https://meok-attestation-api.vercel.app/sign" target="_blank">meok-attestation-api.vercel.app/sign</a> gives you 3 attestations per email per day — enough to evaluate the system. Pro removes all limits, adds cryptographic signing, and gives you API access for automation.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What does "signed attestation" mean legally?</summary>
+        <div class="answer">Each Pro attestation is cryptographically signed with a key pair tied to your organisation, creating a tamper-evident record suitable for audit and regulatory submission. The signature can be independently verified.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I switch from free to Pro mid-cycle?</summary>
+        <div class="answer">Yes. Subscribe at any time and your account is upgraded immediately. There is no contract — month-to-month, cancel anytime.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What payment methods do you accept?</summary>
+        <div class="answer">All major credit and debit cards via Stripe. Enterprise customers can request invoice billing with net-30 terms.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Do you offer a free trial of Pro?</summary>
+        <div class="answer">Not at this time, but the free tier lets you test the core attestation workflow. Email us at <a href="mailto:sales@meok.ai">sales@meok.ai</a> for a personalised walkthrough.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to lock in your compliance?</h2>
+    <p>Join teams using MEOK Compliance Pro for verifiable AI safety attestations.</p>
+    <a href="https://buy.stripe.com/YOUR_LINK_HERE" class="btn-stripe" target="_blank" rel="noopener">Subscribe — £199/mo</a>
+    <br><br>
+    <a href="enterprise.html" class="btn-stripe-secondary">Need Enterprise? →</a>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>MEOK Empire · <a href="https://meok.ai">meok.ai</a> · <a href="mailto:sales@meok.ai">sales@meok.ai</a></p>
+  <p style="margin-top:0.4rem;">© 2026 MEOK Empire Ltd. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

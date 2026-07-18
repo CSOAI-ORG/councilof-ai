@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "kind": "sov-sovereign-hybrid-retrieval",
+  "trained_at": "2026-07-13T13:27:56.547571+00:00",
+  "examples": 14550,
+  "vocab": 230901,
+  "bm25_index": "built",
+  "tfidf_index": "built",
+  "vectors": 14550,
+  "best_alpha": 0.0,
+  "best_accuracy": 88.0,
+  "bm25_only_accuracy": 72.0,
+  "hybrid_50_50_accuracy": 88.0,
+  "commands": {
+    "train": "python3 sov_train.py",
+    "train_v2": "python3 sov_train_v2.py",
+    "ask": "python3 sov_ask.py"
+  },
+  "honest_register": [
+    "Hybrid BM25 + TF-IDF cosine (no LLM).",
+    "TF-IDF vector index built at training time, cached in JSON.",
+    "alpha=0.5 default. Tunable per query.",
+    "Stdlib only."
+  ]
+}

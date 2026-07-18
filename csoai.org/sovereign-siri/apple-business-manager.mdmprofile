@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.mdm</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign.mdm.1</string>
+            <key>PayloadUUID</key>
+            <string>A1B2C3D4-E5F6-4789-ABCD-EF1234567890</string>
+            <key>PayloadDisplayName</key>
+            <string>SOV3 Sovereign Substrate</string>
+            <key>PayloadDescription</key>
+            <string>Deploys SOV3 sovereign AI substrate on managed iOS/iPadOS devices. CSOAI Ltd UK 16939677.</string>
+            <key>PayloadOrganization</key>
+            <string>CSOAI Ltd</string>
+
+            <key>AccessRights</key>
+            <integer>8191</integer>
+
+            <key>AppBundleID</key>
+            <string>org.csoai.sovereign-fm-provider</string>
+
+            <key>SingleAppMode</key>
+            <dict>
+                <key>BundleID</key>
+                <string>org.csoai.sovereign-fm-provider</string>
+            </dict>
+
+            <key>AssociatedDomains</key>
+            <array>
+                <string>fm.csoai.org</string>
+                <string>csoai.org</string>
+                <string>sovereign.csoai.org</string>
+            </array>
+
+            <key>VPN</key>
+            <dict>
+                <key>AutoConnect</key>
+                <true/>
+                <key>ProviderBundleIdentifier</key>
+                <string>org.csoai.sovereign-vpn</string>
+            </dict>
+
+            <key>GlobalRestrictions</key>
+            <dict>
+                <key>RestrictedBool</key>
+                <dict>
+                    <key>allowAppInstallation</key>
+                    <true/>
+                    <key>allowCamera</key>
+                    <true/>
+                    <key>allowMicrophone</key>
+                    <true/>
+                    <key>allowAppRemoval</key>
+                    <false/>
+                    <key>allowFingerprintModification</key>
+                    <false/>
+                    <key>allowHostPairing</key>
+                    <false/>
+                    <key>allowCloudDocumentSync</key>
+                    <false/>
+                    <key>allowExternalStorage</key>
+                    <false/>
+                    <key>allowOpenFromManagedToUnmanaged</key>
+                    <false/>
+                    <key>allowOpenFromUnmanagedToManaged</key>
+                    <true/>
+                    <key>allowFraudulentPurchase</key>
+                    <false/>
+                </dict>
+            </dict>
+
+            <key>RestrictedSoftware</key>
+            <integer>0</integer>
+
+            <key>SCEP</key>
+            <dict>
+                <key>Challenge</key>
+                <string>SCEP-CHALLENGE-PLACEHOLDER</string>
+                <key>URL</key>
+                <string>https://scep.csoai.org/scep</string>
+                <key>Subject</key>
+                <array>
+                    <string>O=CSOAI Ltd, O=CSOAI, CN=Sovereign-Citizen-$\{UDID\}</string>
+                </array>
+                <key>Fingerprint</key>
+                <string>FINGERPRINT-PLACEHOLDER</string>
+                <key>Keysize</key>
+                <integer>2048</integer>
+            </dict>
+
+            <key>CertificateList</key>
+            <array>
+                <data>CERTIFICATE-PEM-PLACEHOLDER</data>
+            </array>
+
+            <key>MobileWiFiPower</key>
+            <true/>
+
+            <key>EnableRestrictionsProfile</key>
+            <true/>
+        </dict>
+    </array>
+
+    <key>PayloadDisplayName</key>
+    <string>SOV3 Sovereign Substrate ABM</string>
+    <key>PayloadDescription</key>
+    <string>Enrolls Apple's ABM-managed iOS/iPadOS devices in the SOV3 sovereign substrate. Care Floor 0.95 enforced server-side. SIGIL audit. Fork Doctrine. MIT + CC0 + OSI.</string>
+    <key>PayloadIdentifier</key>
+    <string>org.csoai.sovereign.ABM</string>
+    <key>PayloadOrganization</key>
+    <string>CSOAI Ltd (UK 16939677)</string>
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>AB1B2C3D4-E5F6-4789-ABCD-EF1234567890</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>ConsentText</key>
+    <dict>
+        <default>
+            <string>By enrolling, you agree that sovereign AI substrate actions are SIGIL-audited, Care Floor 0.95 enforced, and BFT 12-around-1 governed. Your data resides in your jurisdiction (UK by default). The substrate is forkable under MIT. Your i-character is deletable at any time.</string>
+        </default>
+    </dict>
+</dict>
+</plist>

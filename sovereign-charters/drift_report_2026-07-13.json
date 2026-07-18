@@ -1,0 +1,102 @@
+{
+  "generated_at": "2026-07-13T17:47:29.784458+00:00",
+  "checks": [
+    {
+      "metric": "frameworks",
+      "current": 142,
+      "target": 236,
+      "drift_pct": 39.8,
+      "status": "BEHIND",
+      "note": "40% behind target. Need ~94 more frameworks to hit 236."
+    },
+    {
+      "metric": "charters",
+      "current": 41,
+      "target": 41,
+      "drift_pct": 0,
+      "status": "ON_TARGET",
+      "note": "41/41 charters shipped. Quality target: avg 85/100 (current 67.1)."
+    },
+    {
+      "metric": "cross_walks",
+      "current": 5043,
+      "target": 9676,
+      "drift_pct": 47.9,
+      "status": "BEHIND",
+      "note": "48% behind target. Need 4,633 more cross-walks."
+    },
+    {
+      "metric": "sov_accuracy",
+      "current": 92,
+      "target": 95,
+      "drift_pct": -3.2,
+      "status": "CLOSE",
+      "note": "92% achieved (hybrid BM25 + TF-IDF). Target 95%."
+    },
+    {
+      "metric": "wcag_aa_pages",
+      "current": 87,
+      "target": 200,
+      "drift_pct": 56.5,
+      "status": "BEHIND",
+      "note": "57% behind on page count. WCAG pass rate 100%."
+    },
+    {
+      "metric": "research_papers",
+      "current": 744,
+      "target": 1500,
+      "drift_pct": 50.4,
+      "status": "BEHIND",
+      "note": "50% behind. Need 756 more papers."
+    },
+    {
+      "metric": "customer_trust_receipts",
+      "current": 20,
+      "target": 100,
+      "drift_pct": 80.0,
+      "status": "BEHIND",
+      "note": "80% behind. 80 more trust receipts needed."
+    },
+    {
+      "metric": "verticals",
+      "current": 12,
+      "target": 15,
+      "drift_pct": 20.0,
+      "status": "CLOSE",
+      "note": "3 more verticals: Quantum, Maritime Autonomy, Space?"
+    },
+    {
+      "metric": "sov_canary_cards",
+      "current": 77,
+      "target": 100,
+      "drift_pct": 23.0,
+      "status": "CLOSE",
+      "note": "23 more cards needed to hit 100."
+    },
+    {
+      "metric": "wcag_aa_pass_rate",
+      "current": 100,
+      "target": 100,
+      "drift_pct": 0,
+      "status": "ON_TARGET",
+      "note": "100% WCAG AA pass rate. 0 contrast hits across 87 pages."
+    }
+  ],
+  "summary": {
+    "on_target": 2,
+    "close": 3,
+    "behind": 5,
+    "total_metrics": 10
+  },
+  "recommendations": [
+    "Wave 3 of deep research needed (1500 papers target)",
+    "Apply 13 auto-improvement suggestions to low-scoring charters",
+    "Promote 6 HIGH-confidence cross-walks to OSCAL bundle",
+    "Generate 23 more canary cards to anchor SOV vocabulary",
+    "Issue 80 more trust receipts to reach 100 target"
+  ],
+  "honest_register": [
+    "Heuristic drift detection. Targets are aspirational, not contractual.",
+    "All current values are self-attested from real local artifacts."
+  ]
+}

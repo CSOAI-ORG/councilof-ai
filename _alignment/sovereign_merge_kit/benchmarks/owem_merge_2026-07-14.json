@@ -1,0 +1,24 @@
+{
+  "ts": "2026-07-15T04:59:38Z",
+  "base": "Qwen/Qwen3-0.6B",
+  "merged_adapters": [
+    "compliance",
+    "defense",
+    "intuition",
+    "voice"
+  ],
+  "method": "task-arithmetic (PEFT add_weighted_adapter, combination_type=linear)",
+  "weights": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "output_adapter": "/Users/nicholas/.sovereign/models/sovereign-omni-0.6b",
+  "probes": {
+    "compliance": "overe SIG SIG SIG SIG SIG SIG SIG SIG SIG SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SIG.SI",
+    "defense": "overeovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovere",
+    "voice": "overeovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovereovere"
+  },
+  "honest_note": "Combines the 4 OWEM SKILLS into one 0.6B adapter (real). Does NOT increase model capacity/IQ; facts still require RAG. Task-arithmetic = the merge method shown reliable in-the-wild (arXiv 2511.21437)."
+}

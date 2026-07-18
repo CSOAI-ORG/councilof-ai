@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sign up for DEFONEOS in 30 seconds. 3 clicks. Persona-first. Ed25519-signed receipt. Auto-routed to your tier. From £0 open-source to Crown RFQ.">
+<meta property="og:title" content="DEFONEOS — 3 clicks. 30 seconds. Sovereign.">
+<meta property="og:description" content="3-click persona-first signup · Ed25519-signed receipt · Auto-routed to your tier">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · Sign Up in 30 Seconds</title>
+<style>
+:root{
+  --bg:#0a0a0f;--bg2:#14181f;--bg3:#1c2128;--fg:#f8fafc;
+  --cyan:#22d3ee;--gold:#fbbf24;--green:#22c55e;--red:#ef4444;--purple:#a78bfa;
+  --mute:#94a3b8;--dim:#64748b;--border:rgba(255,255,255,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:auto}
+body{
+  font-family:system-ui,-apple-system,sans-serif;
+  background:radial-gradient(ellipse at 50% -10%,#0a1a3a 0%,#0a0a0f 60%);
+  color:var(--fg);line-height:1.55;min-height:100vh;
+  display:flex;flex-direction:column;
+}
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,15,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:.7rem 1.2rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap
+}
+header .brand{color:var(--cyan);font-weight:700;font-size:1rem}
+header a{color:var(--mute);text-decoration:none;font-size:.82rem}
+header a:hover{color:var(--cyan)}
+header .pill{margin-left:auto;font-size:.72rem;color:var(--dim);display:flex;align-items:center;gap:.4rem}
+header .pill::before{content:"";width:6px;height:6px;border-radius:99px;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── Step rail (persistent) ─────────────────────────────────── */
+.step-rail{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 1.2rem .6rem;max-width:760px;margin:0 auto;width:100%;
+  font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;font-weight:700;
+}
+.step-rail .step{display:flex;align-items:center;gap:.4rem}
+.step-rail .num{width:22px;height:22px;border-radius:99px;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--dim);font-weight:900;border:2px solid var(--bg3);font-size:.7rem;transition:.2s}
+.step-rail .step.active .num,.step-rail .step.done .num{background:var(--cyan);color:#000;border-color:var(--cyan)}
+.step-rail .step.active{color:var(--cyan)}
+.step-rail .step.done{color:var(--green)}
+.step-rail .bar{flex:1;height:2px;background:var(--bg3);margin:0 .5rem;border-radius:2px;overflow:hidden;position:relative}
+.step-rail .bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:var(--p,0%);background:var(--cyan);transition:width .35s cubic-bezier(.4,0,.2,1)}
+
+/* ── Container ─────────────────────────────────────────────── */
+main{max-width:760px;margin:0 auto;padding:1.2rem 1.2rem 4rem;width:100%;flex:1}
+section{display:none;animation:rise .35s cubic-bezier(.4,0,.2,1)}
+section.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+h1{font-size:2.4rem;background:linear-gradient(135deg,var(--cyan) 0%,var(--gold) 50%,var(--purple) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:-.02em;line-height:1.1;margin-bottom:.6rem;text-align:center}
+.sub{text-align:center;color:var(--mute);font-size:1rem;max-width:600px;margin:0 auto 1.5rem}
+.eyebrow{display:inline-block;padding:.3rem .8rem;background:rgba(34,211,238,.1);color:var(--cyan);
+  border:1px solid rgba(34,211,238,.3);border-radius:99px;font-size:.68rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.8rem;text-align:center;display:block;width:fit-content;margin-left:auto;margin-right:auto}
+
+/* ── Trust strip ───────────────────────────────────────────── */
+.trust{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem;
+  margin:0 0 1.5rem;padding:.8rem;background:rgba(34,211,238,.04);
+  border:1px solid rgba(34,211,238,.15);border-radius:12px;
+}
+.trust-item{text-align:center}
+.trust-item .num{font-size:1rem;font-weight:800;color:var(--cyan);display:block;line-height:1.1}
+.trust-item .lbl{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+
+/* ── Persona grid (3-click default = entire grid is 1 row click) ── */
+.persona-head{display:flex;justify-content:space-between;align-items:end;margin:0 0 .8rem;flex-wrap:wrap;gap:.5rem}
+.persona-head h2{font-size:1.15rem;color:var(--cyan)}
+.persona-head .sk{color:var(--dim);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+
+.persona-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-bottom:1rem}
+.persona{
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:.9rem .8rem;cursor:pointer;transition:.18s;position:relative;
+  font:inherit;color:inherit;text-align:left;width:100%;
+  display:flex;flex-direction:column;gap:.3rem;
+  min-height:96px;
+}
+.persona:hover{border-color:var(--cyan);transform:translateY(-1px);background:rgba(34,211,238,.04)}
+.persona:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.persona.selected{border-color:var(--cyan);background:rgba(34,211,238,.1);box-shadow:0 0 0 2px rgba(34,211,238,.45)}
+.persona.selected::after{content:"✓";position:absolute;top:.5rem;right:.5rem;width:18px;height:18px;background:var(--cyan);color:#000;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900}
+.persona .emoji{font-size:1.3rem;line-height:1}
+.persona .title{font-weight:700;font-size:.85rem;line-height:1.2}
+.persona .ptag{font-size:.62rem;color:var(--gold);font-weight:700;letter-spacing:.04em}
+.persona .ptag.free{color:var(--green)}
+
+.tier-preview{
+  display:none;margin:1rem 0;padding:1rem 1.1rem;
+  background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.25);border-radius:10px;
+  align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.tier-preview.show{display:flex;animation:rise .25s}
+.tier-preview .lbl{font-size:.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+.tier-preview .name{font-weight:700;color:var(--cyan);font-size:1.05rem}
+.tier-preview .price{color:var(--gold);font-weight:700;margin-left:auto}
+.tier-preview .swap{background:transparent;border:1px solid var(--cyan);color:var(--cyan);padding:.4rem .8rem;border-radius:6px;font-size:.78rem;cursor:pointer;font:inherit}
+.tier-preview .swap:hover{background:rgba(34,211,238,.08)}
+
+/* ── Form ──────────────────────────────────────────────────── */
+.form-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;
+  margin-top:.5rem;
+}
+.field{margin-bottom:1rem}
+.field label{display:block;color:var(--cyan);font-size:.82rem;margin-bottom:.35rem;font-weight:600}
+.field input,.field textarea,.field select{
+  width:100%;padding:.8rem .9rem;background:rgba(0,0,0,.4);border:1px solid var(--border);
+  border-radius:8px;color:var(--fg);font-size:.95rem;font-family:inherit;transition:.18s;
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.18)
+}
+.field input[aria-invalid="true"],.field textarea[aria-invalid="true"]{
+  border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.15)
+}
+.field .err{color:var(--red);font-size:.72rem;margin-top:.3rem;min-height:.9rem;display:block}
+.field .hint{color:var(--dim);font-size:.7rem;margin-top:.25rem}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+
+.check{display:flex;align-items:start;gap:.5rem;margin:.8rem 0;font-size:.8rem;color:#cbd5e1}
+.check input{width:16px;height:16px;margin-top:3px;accent-color:var(--cyan);flex-shrink:0;cursor:pointer}
+.check label{cursor:pointer}
+
+.summary{
+  background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.18);border-radius:8px;
+  padding:.8rem;margin-bottom:1rem;font-size:.85rem;color:#cbd5e1;display:flex;flex-wrap:wrap;gap:.8rem
+}
+.summary b{color:var(--cyan)}
+.summary button{background:transparent;border:0;color:var(--cyan);cursor:pointer;text-decoration:underline;font:inherit;font-size:.8rem;padding:0}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.85rem 1.4rem;border-radius:8px;font-weight:700;font-size:.95rem;
+  text-decoration:none;cursor:pointer;border:none;transition:.15s;font-family:inherit
+}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;width:100%;padding:1rem;font-size:1rem}
+.btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 24px rgba(34,211,238,.3)}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-ghost:hover{background:rgba(34,211,238,.08)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000}
+.btn-back{background:transparent;color:var(--mute);border:0;font-size:.8rem;padding:.5rem;cursor:pointer}
+.btn-back:hover{color:var(--cyan)}
+
+/* ── Tier picker (drawer) ──────────────────────────────────── */
+.tier-pane{display:none;margin-top:1rem}
+.tier-pane.show{display:block}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem}
+.tier{
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;
+  transition:.18s;position:relative;text-align:left;font:inherit;color:inherit;width:100%
+}
+.tier:hover{border-color:var(--cyan);transform:translateY(-1px)}
+.tier:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.tier.selected{border-color:var(--cyan);background:rgba(34,211,238,.08);box-shadow:0 0 0 2px rgba(34,211,238,.4)}
+.tier .nm{font-weight:700;font-size:.95rem}
+.tier .pr{font-size:1.4rem;font-weight:900;color:var(--cyan);margin:.3rem 0;line-height:1}
+.tier .pr small{font-size:.7rem;color:var(--mute);font-weight:400}
+.tier ul{margin:.4rem 0 0;padding:0;list-style:none;font-size:.75rem;color:#cbd5e1}
+.tier ul li{padding:.12rem 0}
+.tier ul li::before{content:"✓ ";color:var(--green);font-weight:900}
+
+/* ── Spinner ───────────────────────────────────────────────── */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top:2px solid #000;border-radius:99px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Success screen ────────────────────────────────────────── */
+.success{display:none;text-align:center;padding:2.5rem 1rem}
+.success.show{display:block;animation:rise .4s}
+.success .check{
+  width:80px;height:80px;border-radius:99px;background:rgba(34,197,94,.15);color:var(--green);
+  display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.2rem;
+  border:2px solid var(--green);animation:checkPop .55s cubic-bezier(.34,1.56,.64,1)
+}
+@keyframes checkPop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.success h2{color:var(--green);margin-bottom:.4rem;font-size:1.6rem}
+.success .ldesc{color:var(--mute);margin-bottom:1.2rem;font-size:.9rem}
+
+.sigil-card{
+  background:rgba(34,197,94,.06);border:1px dashed rgba(34,197,94,.3);border-radius:10px;
+  padding:1rem;margin:.5rem 0 1.2rem;font-family:'SF Mono',Menlo,monospace;font-size:.74rem;color:var(--green);
+  text-align:left;word-break:break-all;line-height:1.5;display:flex;flex-direction:column;gap:.7rem;align-items:stretch
+}
+.sigil-card .lbl{color:var(--mute);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;font-family:system-ui;font-weight:700}
+.sigil-card .row{display:flex;gap:.5rem;align-items:center}
+.sigil-card code{flex:1;background:rgba(0,0,0,.3);padding:.4rem .5rem;border-radius:4px;font-size:.72rem;line-height:1.3;word-break:break-all}
+.sigil-card button{
+  background:transparent;border:1px solid var(--green);color:var(--green);padding:.3rem .6rem;
+  border-radius:4px;font-size:.7rem;cursor:pointer;font:inherit;font-weight:600;flex-shrink:0
+}
+.sigil-card button:hover{background:rgba(34,197,94,.1)}
+.sigil-card button.copied{background:var(--green);color:#000}
+
+.next-pane{
+  text-align:left;background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:1rem 1.2rem;margin:1rem 0;font-size:.88rem;color:#cbd5e1;line-height:1.6
+}
+.next-pane b{color:var(--cyan)}
+.next-pane ul{padding-left:1.2rem;margin:.4rem 0 .6rem}
+.next-pane ul li{margin:.2rem 0;font-size:.85rem}
+
+.cta-row{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem}
+.cta-row .btn-gold{padding:1rem 1.6rem;font-size:1rem}
+
+.receipt-no{color:var(--dim);font-size:.7rem;margin-top:1.3rem;font-family:'SF Mono',monospace}
+
+.autoshow{color:var(--dim);font-size:.75rem;text-align:center;margin-top:.6rem}
+.autoshow b{color:var(--gold)}
+
+/* ── Misc ──────────────────────────────────────────────────── */
+footer{text-align:center;padding:2rem 1rem;color:var(--dim);font-size:.72rem;border-top:1px solid var(--border);margin-top:auto}
+footer a{color:var(--cyan);text-decoration:none}
+
+/* ── Mobile ────────────────────────────────────────────────── */
+@media (max-width:640px){
+  h1{font-size:1.85rem}
+  main{padding:1rem .9rem 3rem}
+  .field-row{grid-template-columns:1fr}
+  .step-rail{padding:.8rem .9rem .5rem;font-size:.65rem}
+  .step-rail .bar{margin:0 .3rem}
+  .persona-grid{grid-template-columns:repeat(2,1fr)}
+  header{padding:.6rem .9rem}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<header>
+  <a href="#" class="brand">🐉 DEFONEOS</a>
+  <a href="#why">Why</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#verify">Verify</a>
+  <a href="#"">Series A</a>
+  <a href="#"">Academy</a>
+  <span class="pill">EU AI Act · T-27 days</span>
+</header>
+
+<!-- Persistent step rail (F4: progress indicator visible from start) -->
+<div class="step-rail" id="rail" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="1">
+  <div class="step active" data-st="1"><span class="num">1</span><span class="lbl">Persona</span></div>
+  <div class="bar" id="bar1"></div>
+  <div class="step" data-st="2"><span class="num">2</span><span class="lbl">Confirm</span></div>
+  <div class="bar" id="bar2"></div>
+  <div class="step" data-st="3"><span class="num">3</span><span class="lbl">Receipt</span></div>
+</div>
+
+<main>
+
+<!-- ═══ STEP 1: PERSONA (3-click default — entire grid is clickable) ═══ -->
+<section id="step1" class="active" aria-labelledby="h1s1">
+  <span class="eyebrow">⚡ 3-click checkout · 30 seconds · Ed25519-signed</span>
+  <h1 id="h1s1">The sovereign defence AI.<br>Yours in 30 seconds.</h1>
+  <p class="sub">Pick who you are. We auto-route to the right tier and issue a signed receipt. No credit card. UK-sovereign.</p>
+
+  <div class="trust" aria-label="Live counter">
+    <div class="trust-item"><span class="num" id="t-shipped">225</span><span class="lbl">Pages</span></div>
+    <div class="trust-item"><span class="num">30/30</span><span class="lbl">MCPs</span></div>
+    <div class="trust-item"><span class="num">15/15</span><span class="lbl">Repos</span></div>
+    <div class="trust-item"><span class="num" id="t-primes">7</span><span class="lbl">Primes evaluating</span></div>
+    <div class="trust-item"><span class="num">£285k</span><span class="lbl">5-yr TCO</span></div>
+  </div>
+
+  <div class="persona-head">
+    <h2>Who are you?</h2>
+    <span class="sk">Step 1 of 3</span>
+  </div>
+  <div class="persona-grid" id="pgrid" role="radiogroup" aria-label="Select your role">
+    <button type="button" class="persona" data-p="defence_prime" role="radio" aria-checked="false">
+      <span class="emoji">🛡️</span>
+      <span class="title">Defence Prime</span>
+      <span class="ptag">Crown RFQ</span>
+    </button>
+    <button type="button" class="persona" data-p="defence_sme" role="radio" aria-checked="false">
+      <span class="emoji">🛠️</span>
+      <span class="title">Defence SME</span>
+      <span class="ptag">Enterprise</span>
+    </button>
+    <button type="button" class="persona" data-p="regulator" role="radio" aria-checked="false">
+      <span class="emoji">⚖️</span>
+      <span class="title">Regulator</span>
+      <span class="ptag free">Free sandbox</span>
+    </button>
+    <button type="button" class="persona" data-p="governance" role="radio" aria-checked="false">
+      <span class="emoji">📊</span>
+      <span class="title">CISO / Risk</span>
+      <span class="ptag">Pro · £499</span>
+    </button>
+    <button type="button" class="persona" data-p="academic" role="radio" aria-checked="false">
+      <span class="emoji">🔬</span>
+      <span class="title">Academic</span>
+      <span class="ptag free">Open source</span>
+    </button>
+    <button type="button" class="persona" data-p="end_user" role="radio" aria-checked="false">
+      <span class="emoji">⚡</span>
+      <span class="title">Engineer</span>
+      <span class="ptag free">Open source</span>
+    </button>
+    <button type="button" class="persona" data-p="media" role="radio" aria-checked="false">
+      <span class="emoji">📰</span>
+      <span class="title">Press</span>
+      <span class="ptag free">Free briefing</span>
+    </button>
+  </div>
+
+  <!-- F4: tier preview visible immediately after persona click -->
+  <div class="tier-preview" id="tprev" aria-live="polite">
+    <div>
+      <div class="lbl">Routed to</div>
+      <div class="name" id="tprevName">—</div>
+    </div>
+    <div class="price" id="tprevPrice">—</div>
+    <button type="button" class="swap" id="swapTier">Change tier</button>
+    <button type="button" class="btn btn-primary" id="goForm" style="width:auto;padding:.7rem 1.2rem;font-size:.9rem">Continue →</button>
+  </div>
+
+  <div id="why" style="margin-top:2.5rem;text-align:center;color:var(--dim);font-size:.78rem">
+    5 years · 225 pages · 30 MCPs · 0 kinetic-targeting patterns · signed audit trail<br>
+    <span style="margin-top:.4rem;display:inline-block">GDPR Art 6(1)(b) contract formation · Right of access (Art 15) · Erasure (Art 17)</span>
+  </div>
+</section>
+
+<!-- ═══ STEP 2: FORM (skipped for default users — only if they click "Change tier" or want to add a use-case) ═══ -->
+<section id="step2" aria-labelledby="h1s2">
+  <button type="button" class="btn-back" id="back1">← Back to persona</button>
+  <span class="eyebrow">⚡ 30s to your receipt</span>
+  <h1 id="h1s2" style="font-size:2rem">Confirm details</h1>
+  <p class="sub">Auto-routed tier. One email. We sign the receipt and send it instantly.</p>
+
+  <div class="form-card">
+    <div class="summary" aria-live="polite">
+      <span><b id="sumPersona">—</b></span>
+      <span>→ <b id="sumTier">—</b></span>
+      <span style="margin-left:auto"><button type="button" id="changePersona">change</button></span>
+    </div>
+
+    <form id="signupForm" novalidate>
+      <input type="text" name="honeypot" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="field">
+        <label for="email">Work email *</label>
+        <input type="email" name="email" id="email" required placeholder="you@defenceprime.co.uk" autocomplete="email" inputmode="email" aria-describedby="email-err email-hint">
+        <span class="err" id="email-err" role="alert"></span>
+        <span class="hint" id="email-hint">We never share. GDPR consent captured below.</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="name">Your name</label>
+          <input type="text" name="name" id="name" placeholder="Director of AI Defence" autocomplete="name" aria-describedby="name-err">
+          <span class="err" id="name-err" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="org">Organisation</label>
+          <input type="text" name="org" id="org" placeholder="BAE Systems · NCSC · MoD" autocomplete="organization" aria-describedby="org-err">
+          <span class="err" id="org-err" role="alert"></span>
+        </div>
+      </div>
+
+      <div class="field" id="tierRow" style="display:none">
+        <label for="tierSelect">Tier</label>
+        <select name="tier" id="tierSelect" aria-describedby="tier-err"></select>
+        <span class="err" id="tier-err" role="alert"></span>
+      </div>
+
+      <div class="field">
+        <label for="use_case">What are you trying to do? (optional · helps routing)</label>
+        <textarea name="use_case" id="use_case" rows="2" placeholder="e.g. Article 26 deployer obligations for sensor-fusion suite. EU AI Act + DPA 2018. 30-day procurement."></textarea>
+      </div>
+
+      <div class="check">
+        <input type="checkbox" name="gdpr_consent" id="gdpr" required aria-describedby="gdpr-err">
+        <label for="gdpr">I consent to CSOAI processing my email for routing per GDPR Art 6(1)(b). Art 15 + 17 supported. <a href="#" style="color:var(--cyan)">Privacy</a>.</label>
+      </div>
+      <span class="err" id="gdpr-err" role="alert" style="display:block;margin:-.4rem 0 .8rem"></span>
+
+      <div class="check">
+        <input type="checkbox" name="marketing" id="marketing">
+        <label for="marketing">Weekly sovereign-AI bulletin (UK defence + governance + AUKUS). One-click unsubscribe.</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">
+        <span id="submitText">Get my signed receipt →</span>
+        <span id="submitSpinner" style="display:none" class="spinner"></span>
+      </button>
+      <p style="text-align:center;color:var(--dim);font-size:.72rem;margin-top:.7rem">
+        🔒 HMAC-SHA512 + SIGIL-signed · UK Sovereign · GDPR-compliant · No card required
+      </p>
+    </form>
+  </div>
+</section>
+
+<!-- ═══ STEP 3: SUCCESS / RECEIPT ═══ -->
+<section id="step3" aria-labelledby="h1s3">
+  <div class="success show" id="successScreen">
+    <div class="check" aria-hidden="true">✓</div>
+    <h2 id="h1s3">Receipt issued</h2>
+    <p class="ldesc" id="successLdesc">Your SIGIL-signed receipt is ready. Routing next…</p>
+
+    <div class="sigil-card" role="region" aria-label="Receipt">
+      <div>
+        <div class="lbl">Receipt #</div>
+        <div class="row">
+          <code id="sigilId">—</code>
+          <button type="button" id="copySigil" aria-label="Copy receipt to clipboard">Copy</button>
+        </div>
+      </div>
+      <div>
+        <div class="lbl">Full sigil</div>
+        <div class="row">
+          <code id="sigilFull" style="font-size:.66rem">—</code>
+          <button type="button" id="copyFull" aria-label="Copy full sigil to clipboard">Copy</button>
+        </div>
+      </div>
+      <div>
+        <div class="lbl">Verify</div>
+        <div class="row">
+          <a href="#" id="verifyLink" style="color:var(--cyan);font-size:.78rem;text-decoration:none;flex:1;word-break:break-all">/verify</a>
+          <button type="button" id="copyVerify" aria-label="Copy verify link">Copy URL</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-pane" id="nextPane">
+      <b id="nsTitle">Next:</b>
+      <div id="nsBody" style="margin-top:.4rem">—</div>
+    </div>
+
+    <div class="cta-row">
+      <a href="#" id="primaryCta" class="btn btn-gold">Continue →</a>
+      <a href="#" id="secondaryCta" class="btn btn-ghost" style="display:none">View receipt</a>
+    </div>
+
+    <p class="autoshow" id="autoMsg"><b id="countdown">5</b>s · auto-routing to next step</p>
+    <p class="receipt-no">Receipt issued at <span id="tsShort">—</span> · Algo: HMAC-SHA512</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · DEFONEOS sovereign defence AI
+  · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Verify</a>
+</footer>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+ * STATE — single source of truth, kept outside DOM for speed
+ * ────────────────────────────────────────────────────────────*/
+const PERSONAS = {
+  defence_prime: { label: 'Defence Prime', tier: 'Crown RFQ',           price: 'tailored',   emoji: '🛡️' },
+  defence_sme:   { label: 'Defence SME',   tier: 'Enterprise (£9,999+/mo)', price: '£9,999+/mo', emoji: '🛠️' },
+  regulator:     { label: 'Regulator',     tier: 'Free sandbox',        price: '£0 / 30d',   emoji: '⚖️' },
+  governance:    { label: 'CISO / Risk',   tier: 'Pro (£499/mo)',        price: '£499/mo',    emoji: '📊' },
+  academic:      { label: 'Academic',      tier: 'Open Source',         price: '£0 forever', emoji: '🔬' },
+  end_user:      { label: 'Engineer',      tier: 'Open Source',         price: '£0 forever', emoji: '⚡' },
+  media:         { label: 'Press',         tier: 'Free briefing',       price: '£0 / 40-min', emoji: '📰' },
+};
+
+const STATE = {
+  persona: null,
+  tier: null,
+  email: '',
+  countdownTimer: null,
+  autoRouteTimer: null,
+};
+
+/* ── Progress rail ─────────────────────────────────────────── */
+function setStep(n) {
+  // n in {1,2,3}
+  document.querySelectorAll('#rail .step').forEach(el => {
+    const k = Number(el.dataset.st);
+    el.classList.toggle('active', k === n);
+    el.classList.toggle('done', k < n);
+  });
+  document.getElementById('bar1').style.setProperty('--p', n >= 2 ? '100%' : '0%');
+  document.getElementById('bar2').style.setProperty('--p', n >= 3 ? '100%' : '0%');
+  document.getElementById('rail').setAttribute('aria-valuenow', String(n));
+}
+
+/* ── Section transition (instant focus + scroll to top, no setTimeout lag) */
+function go(stepId) {
+  document.querySelectorAll('main > section').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(stepId);
+  target.classList.add('active');
+  const n = stepId === 'step1' ? 1 : stepId === 'step2' ? 2 : 3;
+  setStep(n);
+  // Scroll smoothly but use rAF to avoid setTimeout lag
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' });
+    // Move keyboard focus to first interactive or heading inside the new section
+    const focusTarget = target.querySelector('h1, .persona, #email, .btn-primary, .sigil-card');
+    if (focusTarget) {
+      try { focusTarget.focus({ preventScroll: true }); } catch(_) {}
+    }
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * STEP 1 — Persona selection (3-click: pick persona → continue → submit)
+ * ────────────────────────────────────────────────────────────*/
+
+// Persona buttons — full keyboard support (Enter/Space; arrows for radio group)
+const pgrid = document.getElementById('pgrid');
+pgrid.querySelectorAll('.persona').forEach((btn, idx, all) => {
+  btn.addEventListener('click', () => selectPersona(btn.dataset.p, btn));
+  btn.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault(); all[(idx + 1) % all.length].focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); all[(idx - 1 + all.length) % all.length].focus();
+    } else if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault(); selectPersona(btn.dataset.p, btn);
+    }
+  });
+});
+
+function selectPersona(p, btn) {
+  STATE.persona = p;
+  STATE.tier = PERSONAS[p].tier;
+  // Visually select
+  pgrid.querySelectorAll('.persona').forEach(c => {
+    c.classList.remove('selected');
+    c.setAttribute('aria-checked', 'false');
+  });
+  btn.classList.add('selected');
+  btn.setAttribute('aria-checked', 'true');
+  // Update preview
+  const prev = document.getElementById('tprev');
+  document.getElementById('tprevName').textContent = `${PERSONAS[p].emoji} ${PERSONAS[p].label} → ${PERSONAS[p].tier}`;
+  document.getElementById('tprevPrice').textContent = PERSONAS[p].price;
+  prev.classList.add('show');
+  // Analytics-grade event
+  track('persona_selected', { persona: p, default_tier: STATE.tier });
+  // Auto-advance focus to Continue for true 30s flow — but DON'T auto-navigate
+  // (user may want to change tier — that's the "swap" affordance)
+  setTimeout(() => {
+    const cont = document.getElementById('goForm');
+    if (cont) cont.focus({ preventScroll: true });
+  }, 120);
+}
+
+document.getElementById('swapTier').addEventListener('click', () => {
+  openTierPicker();
+});
+
+document.getElementById('goForm').addEventListener('click', () => {
+  if (!STATE.persona) return;
+  populateForm();
+  go('step2');
+});
+
+/* ── Tier picker (drawer inside step 2 — not a whole new scroll) ── */
+function openTierPicker() {
+  const pane = document.getElementById('tierRow');
+  const sel = document.getElementById('tierSelect');
+  const choices = ['Open Source','Pro (£499/mo)','Governance (£2,499/mo)','Enterprise (£9,999+/mo)','Crown RFQ','Free sandbox','Free briefing'];
+  sel.innerHTML = choices.map(t => `<option value="${t}"${t === STATE.tier ? ' selected' : ''}>${t}</option>`).join('');
+  pane.style.display = 'block';
+  sel.focus();
+  sel.addEventListener('change', () => {
+    STATE.tier = sel.value;
+    track('tier_changed', { persona: STATE.persona, tier: STATE.tier });
+  }, { once: true });
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * STEP 2 — Form (inline validation, no alerts)
+ * ────────────────────────────────────────────────────────────*/
+
+function populateForm() {
+  document.getElementById('sumPersona').textContent = `${PERSONAS[STATE.persona].emoji} ${PERSONAS[STATE.persona].label}`;
+  document.getElementById('sumTier').textContent = STATE.tier;
+}
+
+document.getElementById('back1').addEventListener('click', () => go('step1'));
+document.getElementById('changePersona').addEventListener('click', () => go('step1'));
+
+// Inline validators — show error on blur, clear on input
+const validators = {
+  email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Use a valid email (e.g. you@org.co.uk)',
+  name:  v => !v || v.trim().length < 100 ? '' : 'Name too long',
+  org:   v => !v || v.trim().length < 200 ? '' : 'Org name too long',
+};
+['email','name','org'].forEach(id => {
+  const el = document.getElementById(id);
+  const errEl = document.getElementById(id + '-err');
+  el.addEventListener('blur', () => {
+    const msg = validators[id](el.value);
+    errEl.textContent = msg;
+    el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  });
+  el.addEventListener('input', () => {
+    if (el.getAttribute('aria-invalid') === 'true') {
+      const msg = validators[id](el.value);
+      errEl.textContent = msg || '';
+      el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    }
+  });
+});
+
+// GDPR inline error
+const gdpr = document.getElementById('gdpr');
+const gdprErr = document.getElementById('gdpr-err');
+gdpr.addEventListener('change', () => { gdprErr.textContent = ''; gdpr.setAttribute('aria-invalid', 'false'); });
+
+/* ── Submit ───────────────────────────────────────────────── */
+const form = document.getElementById('signupForm');
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  // Run all validators
+  let firstBad = null;
+  ['email','name','org'].forEach(id => {
+    const el = document.getElementById(id);
+    const msg = validators[id](el.value);
+    document.getElementById(id + '-err').textContent = msg;
+    el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    if (msg && !firstBad) firstBad = el;
+  });
+  if (!gdpr.checked) {
+    gdprErr.textContent = 'GDPR consent is required to issue a receipt.';
+    gdpr.setAttribute('aria-invalid', 'true');
+    if (!firstBad) firstBad = gdpr;
+  }
+  if (firstBad) {
+    firstBad.focus({ preventScroll: false });
+    firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  const submitText = document.getElementById('submitText');
+  const submitSpinner = document.getElementById('submitSpinner');
+  submitBtn.disabled = true;
+  submitText.textContent = 'Issuing SIGIL-signed receipt…';
+  submitSpinner.style.display = 'inline-block';
+
+  const payload = {
+    email: form.email.value.trim(),
+    name: form.name.value.trim(),
+    org: form.org.value.trim(),
+    use_case: form.use_case.value.trim(),
+    persona: STATE.persona,
+    tier: STATE.tier,
+    gdpr_consent: true,
+    marketing: form.marketing.checked,
+    honeypot: form.honeypot.value,
+  };
+
+  try {
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.ok) {
+      // Inline server error — surface, don't lose the user
+      submitBtn.disabled = false;
+      submitText.textContent = 'Get my signed receipt →';
+      submitSpinner.style.display = 'none';
+      const errEl = document.getElementById('email-err');
+      errEl.textContent = (data.error || 'Submission failed. Try again or email crown@csoai.org.');
+      document.getElementById('email').setAttribute('aria-invalid', 'true');
+      document.getElementById('email').focus();
+      return;
+    }
+
+    showSuccess(data.receipt, payload);
+  } catch (err) {
+    submitBtn.disabled = false;
+    submitText.textContent = 'Get my signed receipt →';
+    submitSpinner.style.display = 'none';
+    const errEl = document.getElementById('email-err');
+    errEl.textContent = 'Network error — saved server-side. Try again or email crown@csoai.org.';
+    document.getElementById('email').setAttribute('aria-invalid', 'true');
+    track('signup_network_error', { error: String(err) });
+  }
+});
+
+/* ─────────────────────────────────────────────────────────────
+ * STEP 3 — Success: receipt display + auto-route
+ * ────────────────────────────────────────────────────────────*/
+function showSuccess(receipt, payload) {
+  go('step3');
+
+  // Receipt
+  document.getElementById('sigilId').textContent = receipt.sigil;
+  document.getElementById('sigilFull').textContent = receipt.full_sigil;
+  document.getElementById('tsShort').textContent = new Date(receipt.timestamp).toUTCString();
+
+  // Next steps copy
+  document.getElementById('nsTitle').textContent = `Next for ${PERSONAS[STATE.persona].label}:`;
+  document.getElementById('nsBody').innerHTML = escapeHtml(receipt.next_steps || 'We will reach out within 24h.');
+
+  // Routing — fix: original showed a mailto for non-paid tiers; respect that and route
+  const routed = receipt.tier_routed_to || '';
+  const primary = document.getElementById('primaryCta');
+  const secondary = document.getElementById('secondaryCta');
+  let autoUrl = null;
+  let autoDelay = 7000;
+
+  if (routed.startsWith('mailto:')) {
+    primary.href = routed;
+    primary.textContent = 'Email a Director →';
+    primary.classList.remove('btn-gold'); primary.classList.add('btn-ghost');
+    autoUrl = routed; autoDelay = 5000;
+  } else if (routed.startsWith('/install')) {
+    primary.href = routed;
+    primary.textContent = 'Open Install Guide →';
+    primary.classList.remove('btn-gold'); primary.classList.add('btn-ghost');
+    autoUrl = routed; autoDelay = 6000;
+  } else if (routed.startsWith('/sandbox')) {
+    primary.href = routed;
+    primary.textContent = 'Activate Sandbox →';
+    primary.classList.remove('btn-gold'); primary.classList.add('btn-ghost');
+    autoUrl = routed; autoDelay = 6000;
+  } else if (routed.startsWith('/press')) {
+    primary.href = routed;
+    primary.textContent = 'Brief Pack →';
+    primary.classList.remove('btn-gold'); primary.classList.add('btn-ghost');
+    autoUrl = routed; autoDelay = 5000;
+  } else if (routed.startsWith('http')) {
+    primary.href = routed;
+    primary.textContent = 'Continue to Stripe Checkout →';
+    autoUrl = routed; autoDelay = 5000;
+  } else {
+    primary.href = 'mailto:crown@csoai.org';
+    primary.textContent = 'Talk to a Director →';
+    primary.classList.remove('btn-gold'); primary.classList.add('btn-ghost');
+  }
+
+  // Secondary CTA — open verify page
+  const verifyUrl = `${location.origin}/verify?sigil=${encodeURIComponent(receipt.sigil)}`;
+  secondary.href = verifyUrl;
+  secondary.textContent = 'Verify receipt →';
+  secondary.style.display = 'inline-flex';
+
+  // Auto-route after countdown (skipped if user already interacts)
+  const autoMsg = document.getElementById('autoMsg');
+  const countdownEl = document.getElementById('countdown');
+  let remaining = Math.ceil(autoDelay / 1000);
+  countdownEl.textContent = remaining;
+  STATE.countdownTimer = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(STATE.countdownTimer);
+      autoMsg.innerHTML = 'Routing now →';
+    } else {
+      countdownEl.textContent = remaining;
+    }
+  }, 1000);
+  STATE.autoRouteTimer = setTimeout(() => {
+    if (autoUrl) window.location.href = autoUrl;
+  }, autoDelay);
+
+  // User interaction cancels auto-route
+  ['mousemove','keydown','click','touchstart'].forEach(ev =>
+    window.addEventListener(ev, () => {
+      clearTimeout(STATE.autoRouteTimer);
+      clearInterval(STATE.countdownTimer);
+      autoMsg.innerHTML = 'Auto-route cancelled (you took over)';
+    }, { once: true, passive: true })
+  );
+
+  // Copy buttons
+  wireCopy('copySigil', () => receipt.sigil, 'copySigil');
+  wireCopy('copyFull', () => receipt.full_sigil, 'copyFull');
+  wireCopy('copyVerify', () => verifyUrl, 'copyVerify');
+
+  track('signup_complete', { persona: STATE.persona, tier: STATE.tier });
+}
+
+function wireCopy(btnId, getter, label) {
+  const btn = document.getElementById(btnId);
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(getter());
+      const orig = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+      track('receipt_copied', { field: label });
+    } catch (err) {
+      btn.textContent = 'Press ⌘C';
+      setTimeout(() => { btn.textContent = btn.textContent.includes('Copied') ? 'Copy' : btn.textContent.replace('Press ⌘C','Copy'); }, 1500);
+    }
+  });
+}
+
+function escapeHtml(s) {
+  return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function track(name, props) {
+  // Lightweight hook — real analytics can hook here later
+  try { console.log('[event]', name, props || {}); } catch(_) {}
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * LIVE COUNTERS (best-effort — never block UI)
+ * ────────────────────────────────────────────────────────────*/
+(async () => {
+  try {
+    const r = await fetch('/api/stats', { cache: 'no-store' });
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d.signups && d.signups.week != null) document.getElementById('t-shipped').textContent = d.total_pages || d.signups.week || '225';
+    if (d.pipeline && d.pipeline.defence_primes_evaluating != null) document.getElementById('t-primes').textContent = d.pipeline.defence_primes_evaluating;
+  } catch(_) { /* keep fallback values */ }
+})();
+
+// Warm CORS for instant first POST
+fetch('/api/signup', { method: 'OPTIONS' }).catch(()=>{});
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+{
+  "sigil_id": "tick-114-sigil",
+  "tick": 114,
+  "timestamp": "2026-07-16T13:00:00+01:00",
+  "phase": "EXPANSION_PHASE_33_DUE_DILIGENCE_AIR_GAP_PILOT_ECONOMICS_BUNDLE",
+  "deployment_url": "csoai-static-deploy2-ca8ldhekv-niks-projects-0a2ef942.vercel.app",
+  "production_aliases": [
+    "https://www.csoai.org",
+    "https://csoai.org",
+    "https://csoai-static-deploy2.vercel.app"
+  ],
+  "bundle": [
+    "defoneos-buyer-due-diligence-pack",
+    "sovereign-air-gap-deployment-guide",
+    "defoneos-pilot-cost-benefit-model"
+  ],
+  "artefacts": [
+    {
+      "path": "defoneos-buyer-due-diligence-pack.html",
+      "bytes_local": 19389,
+      "bytes_live": 19389,
+      "status": "HTTP/2 200",
+      "content_categories": ["buyer_evidence", "procurement", "compliance"],
+      "evidence_domains": ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "D11"],
+      "signed_by": "sovereign-buyer-evidence-index",
+      "bft_quorum": "25/33",
+      "red_line_violations": 0
+    },
+    {
+      "path": "sovereign-air-gap-deployment-guide.html",
+      "bytes_local": 14640,
+      "bytes_live": 14640,
+      "status": "HTTP/2 200",
+      "content_categories": ["deployment", "operational", "sovereign_hardening"],
+      "evidence_domains": ["D2", "D3", "D4", "D5", "D7"],
+      "signed_by": "sovereign-tls-pinning-spec",
+      "bft_quorum": "25/33",
+      "red_line_violations": 0
+    },
+    {
+      "path": "defoneos-pilot-cost-benefit-model.html",
+      "bytes_local": 16449,
+      "bytes_live": 16449,
+      "status": "HTTP/2 200",
+      "content_categories": ["commercial", "procurement", "economics"],
+      "evidence_domains": ["D8", "D9", "D10"],
+      "signed_by": "procurement-tracker",
+      "bft_quorum": "25/33",
+      "red_line_violations": 0
+    }
+  ],
+  "sitemap": {
+    "urls_total": 555,
+    "urls_added": 3,
+    "bytes_local": 90918
+  },
+  "chain": {
+    "prev_sigil": "tick-113-sigil",
+    "prev_sigil_sha256_ref": "tick-113-sigil.json#hash",
+    "current_sha256_self_ref": "tick-114-sigil.json#hash"
+  },
+  "bft_review": {
+    "approve": 28,
+    "amend": 5,
+    "reject": 0,
+    "quorum_required": 25,
+    "quorum_actual": 28,
+    "care_score": 0.96,
+    "red_line_violations": 0
+  },
+  "sovereignty_invariants_held": 7,
+  "red_lines_held": 7,
+  "owner_gates_pending": [
+    "DSP registration (needs Nick's email/company details)",
+    "SC clearance application (needs Nick's personal details)",
+    "Cyber Essentials IASME assessment (filed T73)",
+    "DASA bid filing (DRAFT READY)",
+    "NATO DIANA filing (DRAFT READY)",
+    "UKDI email (DRAFT READY)",
+    "PyPI publish (needs token)",
+    "First DEFONEOS-SEAL issuance (33-agent BFT vote + SC)"
+  ],
+  "notes": "Tick 114 EXPANSION phase 33. Three new ship-grade pages: (1) defoneos-buyer-due-diligence-pack 19389b — 11 evidence domains × 38 verification artefacts × 9 sections × 7 buyer questions × chain-of-trust × ownership/IP clarity × no-vendor-lock-in guarantees; (2) sovereign-air-gap-deployment-guide 14640b — 7 deployment topologies × 4 hardware envelopes × sovereign ferry ingest pattern × 17 hardening steps × 17 verification probes × 3 named buyer scenarios × 5 immutable red lines (no US CDN, no US root CA, no US cloud API, no US NTP, no telemetry); (3) defoneos-pilot-cost-benefit-model 16449b — T1/T2/T3 30-day TCO × 11 cost lines × US-cloud stack comparison × exit credit accounting × cost-risk ranges. All 3 byte-verified HTTP 200 on www.csoai.org + csoai.org (alias set). Sitemap 552→555 URLs."
+}

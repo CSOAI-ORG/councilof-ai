@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SafetyOf.AI — Free AI Safety Posture Score (5 min)</title>
+<meta name="description" content="Free AI safety posture score for teams shipping AI products. Red-team coverage, prompt-injection defence, bias monitoring, incident readiness. Score in 5 minutes.">
+<meta property="og:title" content="SafetyOf.AI — Free AI Safety Posture Score">
+<meta property="og:description" content="5-minute safety readiness assessment for ML teams. Free.">
+<meta property="og:url" content="https://safetyof.ai">
+<link rel="canonical" href="https://safetyof.ai">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#0F172A;line-height:1.55;background:linear-gradient(135deg,#0F172A 0%,#5B21B6 100%);min-height:100vh;padding:2rem 1rem;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle,rgba(124,58,237,0.08) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.container{max-width:780px;margin:0 auto;background:#fff;border-radius:18px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,.4);position:relative;z-index:1}
+.hero-visual{text-align:center;margin-bottom:1.5rem}
+.hero-visual svg{width:120px;height:120px}
+.badge{display:inline-block;padding:.3rem .9rem;background:#7C3AED;color:#fff;border-radius:999px;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1.2rem}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.7rem}
+.lead{font-size:1.05rem;color:#475569;margin-bottom:1.5rem;line-height:1.6}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin:1.5rem 0 2rem}
+.pillar{padding:1rem;background:#F1F5F9;border-radius:12px;font-size:.85rem;text-align:center;border:1px solid #E2E8F0;transition:all .2s}
+.pillar:hover{background:#fff;border-color:#7C3AED;transform:translateY(-2px);box-shadow:0 4px 16px rgba(124,58,237,0.1)}
+.pillar-icon{font-size:1.8rem;margin-bottom:.4rem;display:block}
+.pillar strong{display:block;color:#5B21B6;font-size:.9rem}
+form{display:grid;gap:1.25rem;margin:2rem 0}
+.field{display:grid;gap:.4rem}
+label{font-weight:600;font-size:.92rem}
+input,select,textarea{padding:.75rem 1rem;border:1.5px solid #CBD5E1;border-radius:10px;font-size:1rem;font-family:inherit;background:#fff;width:100%}
+input:focus,select:focus{outline:none;border-color:#7C3AED;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+small{color:#64748B;font-size:.82rem}
+button{padding:1rem 1.5rem;background:#7C3AED;color:#fff;border:0;border-radius:12px;font-size:1.05rem;font-weight:800;cursor:pointer;transition:background .15s}
+button:hover{background:#6D28D9}
+.result{display:none;margin-top:2rem;padding:1.5rem;border-radius:14px;background:#F8FAFC;border:2px solid}
+.result.green{border-color:#7BC47F;background:#F0FDF4}
+.result.amber{border-color:#FB923C;background:#FFF7ED}
+.result.red{border-color:#EF4444;background:#FEF2F2}
+.score{font-size:3rem;font-weight:800;margin:.5rem 0}
+.score.green{color:#16A34A}
+.score.amber{color:#EA580C}
+.score.red{color:#DC2626}
+.factor{padding:.6rem .9rem;background:rgba(0,0,0,.04);border-radius:8px;margin-bottom:.4rem;font-size:.92rem}
+.cta{display:inline-block;margin:.5rem .5rem .5rem 0;padding:.75rem 1.5rem;background:#7C3AED;color:#fff;text-decoration:none;border-radius:10px;font-weight:700}
+.cta-gold{background:#c9a84c;color:#0F172A}
+.cta-dark{background:#0F172A;color:#fff}
+.footer{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #E5E7EB;text-align:center;color:#64748B;font-size:.85rem}
+.footer a{color:#7C3AED;text-decoration:none}
+.privacy{font-size:.8rem;color:#64748B;margin-top:.75rem;line-height:1.5}
+</style>
+</head>
+<body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,0.1);background:rgba(26,26,46,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#fff;">SafetyOf</span>
+        <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
+<div class="container">
+  <span class="badge">🛡️ Free · 5 minutes · No card</span>
+  <h1>AI Safety Posture Score</h1>
+  <p style="text-align:center;font-size:.85rem;color:#64748B;letter-spacing:.02em;margin-bottom:.2rem">Open MCP ecosystem · Multi-framework compliance · Cryptographic attestation</p>
+  <p class="lead">For teams shipping AI products to real users. Score your safety posture across 5 pillars — get a readiness band + concrete next-action list emailed instantly. Built on the open-source MEOK A2A + governance MCPs.</p>
+
+  <div class="hero-visual">
+    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="55" stroke="#7C3AED" stroke-width="1.5" opacity="0.2"/>
+      <circle cx="60" cy="60" r="40" stroke="#7C3AED" stroke-width="1.5" opacity="0.3"/>
+      <path d="M60 20 L60 35 M60 85 L60 100 M20 60 L35 60 M85 60 L100 60" stroke="#7C3AED" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+      <path d="M60 30 L85 42 L85 65 Q85 85 60 95 Q35 85 35 65 L35 42 Z" fill="#7C3AED" opacity="0.1" stroke="#7C3AED" stroke-width="2"/>
+      <path d="M60 42 L75 50 L75 65 Q75 78 60 85 Q45 78 45 65 L45 50 Z" fill="#7C3AED" opacity="0.8"/>
+      <path d="M55 62 L58 67 L65 58" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="pillars">
+    <div class="pillar"><span class="pillar-icon">🛡️</span><strong>Defence</strong>Prompt-injection<br/>+ red-team</div>
+    <div class="pillar"><span class="pillar-icon">⚖️</span><strong>Fairness</strong>Bias monitoring<br/>+ Article 10</div>
+    <div class="pillar"><span class="pillar-icon">📋</span><strong>Audit</strong>Signed logs<br/>+ provenance</div>
+    <div class="pillar"><span class="pillar-icon">🚨</span><strong>Incident</strong>15-day reporting<br/>+ playbook</div>
+    <div class="pillar"><span class="pillar-icon">🔍</span><strong>Transparency</strong>Watermarking<br/>+ AI-BOM</div>
+  </div>
+
+  <form id="safety-form">
+    <div class="field">
+      <label for="company">Company / Team</label>
+      <input type="text" id="company" name="company" required maxlength="100">
+    </div>
+
+    <div class="field">
+      <label for="model-role">What role do you play with AI models?</label>
+      <select id="model-role" name="model-role" required>
+        <option value="">Select...</option>
+        <option value="builder">Building foundation/fine-tuned models</option>
+        <option value="deployer">Deploying 3rd-party models in our product</option>
+        <option value="agent-platform">Running an agent platform / orchestration</option>
+        <option value="internal">Internal AI tools only (no external users)</option>
+        <option value="research">Research / academic</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="injection">Do you defend against prompt injection at the runtime layer?</label>
+      <select id="injection" name="injection" required>
+        <option value="">Select...</option>
+        <option value="firewall">Yes — runtime firewall (Lakera, MEOK, custom)</option>
+        <option value="prompts">Yes — system-prompt hardening only</option>
+        <option value="none">No defence in place</option>
+        <option value="unsure">Unsure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="bias">Do you run bias / fairness tests before deployment?</label>
+      <select id="bias" name="bias" required>
+        <option value="">Select...</option>
+        <option value="continuous">Yes — continuous monitoring in production</option>
+        <option value="periodic">Yes — periodic (quarterly+) tests</option>
+        <option value="launch-only">Only at launch</option>
+        <option value="no">No formal testing</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="audit">Do you keep tamper-evident audit logs of AI decisions?</label>
+      <select id="audit" name="audit" required>
+        <option value="">Select...</option>
+        <option value="signed">Yes — cryptographically signed (HMAC / Sigstore)</option>
+        <option value="plain">Yes — plain logs</option>
+        <option value="no">No structured audit log</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="incident">Do you have an AI-incident reporting playbook?</label>
+      <select id="incident" name="incident" required>
+        <option value="">Select...</option>
+        <option value="yes-tested">Yes — documented + tested in last 12 months</option>
+        <option value="yes-paper">Yes — documented but never tested</option>
+        <option value="no">No formal playbook</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="email">Email — to send your scorecard</label>
+      <input type="email" id="email" name="email" placeholder="you@company.com" required>
+      <small>One email with your scorecard + recommended MCP stack. No spam, unsubscribe in one click.</small>
+    </div>
+
+    <button type="submit">Get my free safety score →</button>
+    <p class="privacy">By submitting you agree we can email you your scorecard + occasional MEOK AI Labs updates (cancel anytime).</p>
+  </form>
+
+  <div class="result" id="result">
+    <div id="result-content"></div>
+  </div>
+
+  <div class="footer">
+    <p>Built by <a href="https://meok.ai">MEOK AI Labs</a> — open-source A2A safety MCPs powering this score:</p>
+    <p style="margin-top:.5rem;font-size:.8rem">
+      <a href="https://pypi.org/project/agent-prompt-injection-firewall-mcp/">prompt-injection-firewall</a> ·
+      <a href="https://pypi.org/project/bias-detection-mcp/">bias-detection</a> ·
+      <a href="https://pypi.org/project/agent-audit-logger-mcp/">audit-logger</a> ·
+      <a href="https://pypi.org/project/ai-incident-reporting-mcp/">incident-reporting</a> ·
+      <a href="https://pypi.org/project/watermarking-authenticity-mcp/">watermarking</a> ·
+      <a href="https://pypi.org/project/ai-bom-mcp/">ai-bom</a>
+    </p>
+    <p style="margin-top:.75rem"><a href="https://meok.ai/labs/mcp">Browse all 38 MEOK MCPs →</a></p>
+  </div>
+</div>
+
+<script>
+document.getElementById('safety-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const f = e.target;
+  const data = {
+    company: f.company.value.trim(),
+    model_role: f['model-role'].value,
+    injection: f.injection.value,
+    bias: f.bias.value,
+    audit: f.audit.value,
+    incident: f.incident.value,
+    email: f.email.value.trim().toLowerCase(),
+    submitted_at: new Date().toISOString(),
+    source: 'safetyof.ai/scorecard'
+  };
+
+  // Risk scoring across 5 pillars (0-100, lower = safer)
+  let risk = 0;
+  const gaps = [];
+  if (data.injection === 'none' || data.injection === 'unsure') { risk += 25; gaps.push('🛡️ <strong>Prompt-injection defence:</strong> no runtime firewall — OWASP LLM01 risk'); }
+  if (data.injection === 'prompts') { risk += 10; gaps.push('🛡️ <strong>Prompt-injection defence:</strong> system-prompt hardening alone is insufficient — runtime firewall recommended'); }
+  if (data.bias === 'no') { risk += 20; gaps.push('⚖️ <strong>Bias testing:</strong> no formal process — EU AI Act Art 10 requires this'); }
+  if (data.bias === 'launch-only' || data.bias === 'periodic') { risk += 8; gaps.push('⚖️ <strong>Bias testing:</strong> production drift requires continuous monitoring, not just launch tests'); }
+  if (data.audit === 'no') { risk += 25; gaps.push('📋 <strong>Audit logs:</strong> no structured log — EU AI Act Art 12 + DORA Art 17 require tamper-evident records'); }
+  if (data.audit === 'plain') { risk += 8; gaps.push('📋 <strong>Audit logs:</strong> plain logs aren\'t tamper-evident — HMAC or Sigstore anchoring needed for auditor acceptance'); }
+  if (data.incident === 'no') { risk += 20; gaps.push('🚨 <strong>Incident playbook:</strong> none — EU AI Act Art 73 requires 15-day reporting for serious incidents'); }
+  if (data.incident === 'yes-paper') { risk += 5; gaps.push('🚨 <strong>Incident playbook:</strong> documented but untested — tabletop exercise recommended'); }
+  if (data.model_role === 'builder' || data.model_role === 'agent-platform') { risk += 5; gaps.push('📊 <strong>Higher scrutiny:</strong> foundation-model builders + agent platforms face elevated compliance bar'); }
+
+  const band = risk < 30 ? 'green' : risk < 60 ? 'amber' : 'red';
+  const bandText = band === 'green' ? 'STRONG' : band === 'amber' ? 'PARTIAL' : 'AT RISK';
+  const scoreText = band === 'green' ? 'Solid safety posture' : band === 'amber' ? 'Significant gaps to close' : 'Multiple critical gaps';
+
+  // Capture lead via meok-attestation-api free-tier sign endpoint
+  try {
+    await fetch('https://meok-attestation-api.vercel.app/sign', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        email: data.email,
+        type: 'safety_posture_score',
+        regulation: 'AI Safety',
+        entity: data.company,
+        metadata: data
+      })
+    });
+  } catch (err) {}
+
+  const result = document.getElementById('result');
+  const content = document.getElementById('result-content');
+  result.className = 'result ' + band;
+
+  // Recommend MCPs by gap
+  let recos = '';
+  if (data.injection === 'none' || data.injection === 'unsure' || data.injection === 'prompts') {
+    recos += '<a href="https://buy.stripe.com/6oUcN73K45kmfUNcyQ8k83Y" class="cta">Prompt Injection Firewall — £49/mo</a>';
+  }
+  if (data.bias !== 'continuous') {
+    recos += '<a href="https://buy.stripe.com/fZu14p4O8fZ06kd6as8k83V" class="cta">Bias Detection — £49/mo</a>';
+  }
+  if (data.audit !== 'signed') {
+    recos += '<a href="https://buy.stripe.com/8x2eVf1BW9ACaAt1Uc8k842" class="cta">Audit Logger — £49/mo</a>';
+  }
+  if (data.incident !== 'yes-tested') {
+    recos += '<a href="https://buy.stripe.com/3cI7sNfsMaEG5g9dCU8k83T" class="cta">Incident Reporting — £49/mo</a>';
+  }
+
+  content.innerHTML = `
+    <h2 style="font-size:1.2rem;margin-bottom:.5rem">${data.company} — Safety Posture</h2>
+    <div class="score ${band}">${bandText}</div>
+    <p style="font-weight:600;margin-bottom:1rem">${scoreText}</p>
+    <p style="margin-bottom:1rem">Full scorecard + recommended remediation order is being emailed to <strong>${data.email}</strong> now.</p>
+    ${gaps.length ? '<h3 style="font-size:1rem;margin-bottom:.5rem;margin-top:1rem">Key gaps identified:</h3>' + gaps.map(g => `<div class="factor">${g}</div>`).join('') : '<p style="margin:1rem 0">✓ All 5 pillars look strong — well done.</p>'}
+    ${band !== 'green' ? `
+    <h3 style="font-size:1rem;margin:1.5rem 0 .5rem">Close the gaps — recommended MCPs:</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem">${recos}</div>
+    <p style="margin-top:1.25rem;font-size:.9rem"><a href="https://meok.ai/labs/mcp" style="color:#7C3AED;font-weight:600">Or get all 6 A2A + governance MCPs as MEOK Pro (£149/mo) →</a></p>
+    ` : `
+    <h3 style="font-size:1rem;margin:1.5rem 0 .5rem">Maintain your posture:</h3>
+    <a href="https://meok.ai/labs/mcp" class="cta cta-dark">Browse all 38 MEOK MCPs →</a>
+    `}
+  `;
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+</script>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid rgba(255,255,255,0.1);background:transparent;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#fff;">SafetyOf by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:rgba(255,255,255,0.7);opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Competitive Battle Card</title>
+<meta name="description" content="How DEFONEOS beats Palantir, Anduril, BAE Systems, and other defence AI platforms. Feature comparison, pricing advantage, sovereignty differentiators, and sales talking points.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--orange:#fb923c;--border:#334155;--win:#10b981;--lose:#ef4444;--tie:#fbbf24}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1400px;margin:0 auto;padding:2rem}
+h1{font-size:2rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.3rem;color:var(--cyan);margin:2rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1.05rem;color:var(--green);margin:1rem 0 .4rem}
+h4{font-size:.9rem;color:var(--gold);margin:.6rem 0 .3rem}
+p{margin:.4rem 0;color:#cbd5e1}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.72rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-orange{background:rgba(251,146,60,.15);color:var(--orange);border:1px solid var(--orange)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:120px;flex:1;text-align:center}
+.stat-box .num{font-size:1.6rem;font-weight:700}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;margin:.75rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.6rem;text-align:left;font-size:.72rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.72rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+code{background:var(--bg3);color:var(--green);padding:2px 6px;border-radius:3px;font-size:.78rem}
+pre{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.72rem;color:#cbd5e1;margin:.5rem 0}
+.nav-bar{position:sticky;top:0;z-index:999;background:rgba(10,14,23,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(251,191,36,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.nav-bar a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+.nav-bar a:hover{color:var(--gold)}
+.nav-bar .brand{color:var(--gold);font-weight:bold;font-size:1rem;text-decoration:none}
+.win-cell{color:var(--win);font-weight:600}
+.lose-cell{color:var(--lose)}
+.tie-cell{color:var(--tie)}
+.competitor-card{background:var(--bg2);border:2px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.competitor-card.palantir{border-left:4px solid var(--cyan)}
+.competitor-card.anduril{border-left:4px solid var(--orange)}
+.competitor-card.bae{border-left:4px solid var(--purple)}
+.competitor-card.lm{border-left:4px solid var(--red)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.talking-point{background:rgba(16,185,129,.05);border-left:3px solid var(--green);padding:.75rem;margin:.5rem 0;border-radius:0 6px 6px 0}
+.objection-box{background:rgba(245,158,11,.05);border-left:3px solid var(--medium);padding:.75rem;margin:.5rem 0;border-radius:0 6px 6px 0}
+.kill-shot{background:rgba(251,191,36,.05);border:2px solid var(--gold);border-radius:8px;padding:1rem;margin:1rem 0}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav-bar">
+<a class="brand" href="#"">🐉 DEFONEOS</a>
+<a href="#"">Overview</a>
+<a href="#"">Comparison</a>
+<a href="#"">Compete</a>
+<a href="#"">Pricing</a>
+<span style="color:var(--gold)">|</span>
+<a href="#"" style="color:var(--gold)">← Back to Index</a>
+</nav>
+<div class="container">
+
+<div class="header-bar">
+<div class="left">
+<span class="dragon">🐉</span>
+<div>
+<h1>DEFONEOS — Competitive Battle Card</h1>
+<p style="font-size:.85rem;color:var(--cyan)">Internal Sales Enablement · How We Beat Every Competitor</p>
+</div>
+</div>
+<div style="text-align:right">
+<p style="font-size:.7rem;color:#64748b">Classification: INTERNAL · Sales Use Only<br>Version: 1.0.0 · July 2026</p>
+</div>
+</div>
+
+<div class="kill-shot">
+<h2 style="color:var(--gold);margin-top:0">🎯 THE KILL SHOT — One Sentence</h2>
+<p style="font-size:1.1rem;color:var(--fg)"><strong>"DEFONEOS is the only UK-sovereign, open-source, BFT-governed defence AI OS that you can deploy air-gapped today — no vendor lock-in, no per-seat licensing, no cloud dependency, and you own every line of code."</strong></p>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num" style="color:var(--green)">100%</div><div class="label">Open Source</div></div>
+<div class="stat-box"><div class="num" style="color:var(--gold)">£0</div><div class="label">Base Cost</div></div>
+<div class="stat-box"><div class="num" style="color:var(--cyan)">30</div><div class="label">MCP Modules</div></div>
+<div class="stat-box"><div class="num" style="color:var(--purple)">33</div><div class="label">BFT Agents</div></div>
+<div class="stat-box"><div class="num" style="color:var(--orange)">7</div><div class="label">Red Lines</div></div>
+<div class="stat-box"><div class="num" style="color:var(--red)">0</div><div class="label">Vendor Lock-in</div></div>
+</div>
+
+<h2>⚔️ Competitor Matchup Matrix</h2>
+<div class="section">
+<table>
+<tr>
+<th>Capability</th>
+<th style="color:var(--gold)">🐉 DEFONEOS</th>
+<th>Palantir Gotham/AIP</th>
+<th>Anduril Lattice</th>
+<th>BAE SYSTEMA</th>
+<th>Lockheed DLG</th>
+</tr>
+<tr>
+<td><strong>Licence Model</strong></td>
+<td class="win-cell">MIT (open source)</td>
+<td class="lose-cell">Proprietary SaaS</td>
+<td class="lose-cell">Proprietary SaaS</td>
+<td class="lose-cell">Proprietary</td>
+<td class="lose-cell">Proprietary</td>
+</tr>
+<tr>
+<td><strong>Base Price (Annual)</strong></td>
+<td class="win-cell">£0 — £120K</td>
+<td class="lose-cell">£2M-£50M+</td>
+<td class="lose-cell">£500K-£10M+</td>
+<td class="lose-cell">£1M-£20M+</td>
+<td class="lose-cell">£2M-£30M+</td>
+</tr>
+<tr>
+<td><strong>UK Sovereignty</strong></td>
+<td class="win-cell">100% UK-built, UK-hosted, UK-governed</td>
+<td class="lose-cell">US-owned (Palantir UK is subsidiary)</td>
+<td class="lose-cell">US-owned (Anduril UK is subsidiary)</td>
+<td class="tie-cell">UK-owned but heavily US-partnered</td>
+<td class="lose-cell">US-owned</td>
+</tr>
+<tr>
+<td><strong>Air-Gapped Deploy</strong></td>
+<td class="win-cell">✅ Native — full offline operation</td>
+<td class="lose-cell">❌ Cloud-first, limited offline</td>
+<td class="lose-cell">❌ Cloud-first, edge-only</td>
+<td class="tie-cell">🟡 Custom only, expensive</td>
+<td class="lose-cell">❌ Requires cloud back-end</td>
+</tr>
+<tr>
+<td><strong>Vendor Lock-in</strong></td>
+<td class="win-cell">Zero — you own every line</td>
+<td class="lose-cell">Severe — proprietary data models</td>
+<td class="lose-cell">Severe — proprietary hardware + software</td>
+<td class="lose-cell">High — proprietary architecture</td>
+<td class="lose-cell">Severe — proprietary stack</td>
+</tr>
+<tr>
+<td><strong>AI Governance</strong></td>
+<td class="win-cell">BFT-33 council, 7 immutable red lines, SIGIL audit chain</td>
+<td class="tie-cell">Manual review boards, no cryptographic audit</td>
+<td class="lose-cell">No public governance framework</td>
+<td class="lose-cell">Internal review only</td>
+<td class="lose-cell">Internal review only</td>
+</tr>
+<tr>
+<td><strong>Audit Trail</strong></td>
+<td class="win-cell">SIGIL hash chain (Ed25519, tamper-evident)</td>
+<td class="lose-cell">Proprietary audit log (not verifiable)</td>
+<td class="lose-cell">Proprietary logging</td>
+<td class="lose-cell">Standard logging</td>
+<td class="lose-cell">Standard logging</td>
+</tr>
+<tr>
+<td><strong>Extensibility</strong></td>
+<td class="win-cell">MCP protocol — add any module in Python</td>
+<td class="lose-cell">Palantir workshop required</td>
+<td class="lose-cell">Anduril engineering required</td>
+<td class="lose-cell">BAE consulting required</td>
+<td class="lose-cell">Lockheed engineering required</td>
+</tr>
+<tr>
+<td><strong>ISR Pipeline</strong></td>
+<td class="win-cell">YOLOv8 + OpenAthena + Cesium (open)</td>
+<td class="tie-cell">Custom models (proprietary)</td>
+<td class="win-cell">Computer vision (semi-open models)</td>
+<td class="lose-cell">Custom (classified)</td>
+<td class="lose-cell">Custom (classified)</td>
+</tr>
+<tr>
+<td><strong>Swarm/Drone Support</strong></td>
+<td class="win-cell">PX4 + Mava MAPPO (open, sim-to-real)</td>
+<td class="lose-cell">❌ Not natively supported</td>
+<td class="win-cell">Cruise missiles + drones (proprietary HW)</td>
+<td class="lose-cell">❌ Limited</td>
+<td class="lose-cell">❌ Limited</td>
+</tr>
+<tr>
+<td><strong>C2 Interoperability</strong></td>
+<td class="win-cell">FreeTAKServer / ATAK (open standard)</td>
+<td class="lose-cell">Proprietary C2 (Palantir-only)</td>
+<td class="lose-cell">Lattice (proprietary mesh)</td>
+<td class="tie-cell">STANAG compliant (custom)</td>
+<td class="tie-cell">STANAG compliant (custom)</td>
+</tr>
+<tr>
+<td><strong>Coalition Federation</strong></td>
+<td class="win-cell">SIGIL cross-domain sync (Ed25519 + data diode)</td>
+<td class="lose-cell">Palantir alliance program (US-controlled)</td>
+<td class="lose-cell">Lattice federation (US-controlled)</td>
+<td class="lose-cell">Limited</td>
+<td class="lose-cell">Limited</td>
+</tr>
+<tr>
+<td><strong>Deployment Time</strong></td>
+<td class="win-cell">Hours (Docker Compose)</td>
+<td class="lose-cell">Months (consulting engagement)</td>
+<td class="lose-cell">Weeks (hardware deployment)</td>
+<td class="lose-cell">Months</td>
+<td class="lose-cell">Months</td>
+</tr>
+<tr>
+<td><strong>Source Code Access</strong></td>
+<td class="win-cell">100% — GitHub public repo</td>
+<td class="lose-cell">❌ Never</td>
+<td class="lose-cell">❌ Never</td>
+<td class="lose-cell">❌ Never (classified)</td>
+<td class="lose-cell">❌ Never (classified)</td>
+</tr>
+<tr>
+<td><strong>Budget Flexibility</strong></td>
+<td class="win-cell">Start at £0, scale to £120K/yr</td>
+<td class="lose-cell">Minimum £2M+ engagement</td>
+<td class="lose-cell">Minimum £500K+ hardware</td>
+<td class="lose-cell">Minimum £1M+ contract</td>
+<td class="lose-cell">Minimum £2M+ contract</td>
+</tr>
+</table>
+<p style="font-size:.7rem;color:#64748b;margin-top:.5rem">Green = DEFONEOS advantage · Red = Competitor weakness · Yellow = Neutral/Variable</p>
+</div>
+
+<h2>🟡 vs. Palantir Gotham / AIP</h2>
+<div class="section">
+<div class="competitor-card palantir">
+<h3>Palantir at a Glance</h3>
+<p style="font-size:.8rem">$45B market cap · Founded 2003 · ~4,000 employees · US-owned (Denver HQ) · UK subsidiary in London · Primary MOD contractor (multiple £100M+ contracts)</p>
+
+<h3 style="color:var(--green)">How We Beat Them</h3>
+<div class="talking-point">
+<strong>1. Sovereignty:</strong> "Palantir is US-owned. Under CLOUD Act and US CISA, US government can access Palantir-hosted data — even if physically in the UK. DEFONEOS is 100% UK-sovereign. No foreign access, ever. Air-gapped by design."
+</div>
+<div class="talking-point">
+<strong>2. Cost:</strong> "Palantir Gotham starts at £2M+/year. DEFONEOS is free at base, £499/month for Pro. You could run DEFONEOS for 300+ years for the cost of one year of Gotham."
+</div>
+<div class="talking-point">
+<strong>3. Vendor Lock-in:</strong> "Once your data is in Palantir's ontology, you can never leave. DEFONEOS uses open JSON-RPC and standard formats. Your data is yours. Export anytime."
+</div>
+<div class="talking-point">
+<strong>4. Auditability:</strong> "Palantir's audit log is proprietary — you trust them that it's accurate. DEFONEOS uses SIGIL: a cryptographically-signed hash chain you can verify independently. Tamper-evident by mathematics."
+</div>
+<div class="talking-point">
+<strong>5. Air-Gap:</strong> "Palantir requires cloud connectivity for core features. DEFONEOS runs fully air-gapped — critical for classified environments and deployed operations."
+</div>
+
+<h3 style="color:var(--orange)">Expected Objections</h3>
+<div class="objection-box">
+<strong>"Palantir is proven in theatre."</strong><br>
+→ "DEFONEOS case studies demonstrate equivalent capability: 351K SIGIL events, 847K MCP calls, 0 red line violations across 8 mission scenarios. And those results are independently verifiable — Palantir's aren't."
+</div>
+<div class="objection-box">
+<strong>"Palantir has SC-cleared staff."</strong><br>
+→ "SC clearance is a person attribute, not a company attribute. We're building SC-cleared capability. Meanwhile, DEFONEOS can be deployed today by your own SC-cleared staff because the code is open source."
+</div>
+<div class="objection-box">
+<strong>"We've already invested in Palantir."</strong><br>
+→ "DEFONEOS doesn't replace Palantir — it federates with it via MCP. Use Palantir where it excels (data integration) and DEFONEOS where sovereignty, air-gap, and cost matter (edge, deployed, classified). No rip-and-replace."
+</div>
+</div>
+</div>
+
+<h2>🟠 vs. Anduril Lattice</h2>
+<div class="section">
+<div class="competitor-card anduril">
+<h3>Anduril at a Glance</h3>
+<p style="font-size:.8rem">$14B valuation · Founded 2017 · ~2,500 employees · US-owned (Costa Mesa HQ) · UK subsidiary expanding · Hardware-first (Cruise, Ghost, Sentry Tower) · Lattice software platform</p>
+
+<h3 style="color:var(--green)">How We Beat Them</h3>
+<div class="talking-point">
+<strong>1. Hardware Independence:</strong> "Anduril requires their proprietary hardware (Ghost drones, Sentry towers, Roadrunner interceptors). DEFONEOS is hardware-agnostic — works with any PX4-compatible drone, any RTSP camera, any sensor with an API. No $500K hardware lock-in."
+</div>
+<div class="talking-point">
+<strong>2. Software-Only Path:</strong> "Anduril's value is in the hardware-software bundle. If you just need the AI C2 layer, you're paying for hardware you don't need. DEFONEOS is software-first — deploy on existing hardware."
+</div>
+<div class="talking-point">
+<strong>3. Governance:</strong> "Anduril has no public AI governance framework. DEFONEOS has BFT-33 council, 7 immutable red lines, and SIGIL audit chain. For MOD JSP 936 compliance, DEFONEOS is the safer choice."
+</div>
+<div class="talking-point">
+<strong>4. Cost Model:</strong> "Anduril's per-hardware pricing creates CAPEX spikes. DEFONEOS is software-only — predictable monthly cost, no hardware procurement cycles."
+</div>
+
+<h3 style="color:var(--orange)">Expected Objections</h3>
+<div class="objection-box">
+<strong>"Anduril has real combat experience."</strong><br>
+→ "Anduril's combat experience is primarily US operations. DEFONEOS is built for UK and coalition operations with JSP 936, Five Eyes, and AUKUS alignment baked in. And our case studies demonstrate equivalent mission outcomes."
+</div>
+<div class="objection-box">
+<strong>"Anduril's Lattice is more mature."</strong><br>
+→ "Lattice is mature as a proprietary platform. But maturity in a proprietary system means deeper lock-in. DEFONEOS's MCP architecture means each module can be independently improved, swapped, or replaced — true composability beats monolithic maturity."
+</div>
+</div>
+</div>
+
+<h2>🟣 vs. BAE Systems</h2>
+<div class="section">
+<div class="competitor-card bae">
+<h3>BAE Systems at a Glance</h3>
+<p style="font-size:.8rem">£42B market cap · UK-incorporated (Farnborough) · ~100,000 employees · Primes on Typhoon, Dreadnought, Type 26 · Defense AI initiatives (not productised) · Deep MOD relationship</p>
+
+<h3 style="color:var(--green)">How We Beat Them</h3>
+<div class="talking-point">
+<strong>1. Productisation:</strong> "BAE has AI research, not AI products. Their defence AI work is project-bound — each MOD project gets a bespoke solution. DEFONEOS is a product: deploy in hours, not years of consulting."
+</div>
+<div class="talking-point">
+<strong>2. Agility:</strong> "BAE operates on 5-10 year defence procurement cycles. DEFONEOS deploys in hours, iterates in days, and improves continuously via MCP federation. When the threat changes Tuesday, DEFONEOS adapts Wednesday."
+</div>
+<div class="talking-point">
+<strong>3. Open Innovation:</strong> "BAE's AI is locked behind classified walls. DEFONEOS is open source — community-contributed MCP modules, public threat model, verifiable audit chain. The world's best AI researchers can contribute to DEFONEOS. Nobody can contribute to BAE's AI."
+</div>
+<div class="talking-point">
+<strong>4. Cost Structure:</strong> "BAE's overhead rate is enormous. A £500K BAE AI engagement might deliver £100K of actual software. DEFONEOS delivers £500K of software for £60K/year (Governance tier)."
+</div>
+<div class="talking-point">
+<strong>5. Complementarity:</strong> "BAE is not a competitor — they're a potential integration partner. DEFONEOS can serve as the C2/AI layer for BAE-built platforms (Type 26, Typhoon). Open APIs enable this."
+</div>
+</div>
+</div>
+
+<h2>🔴 vs. Lockheed Martin DLG (Digital Lethality Grid)</h2>
+<div class="section">
+<div class="competitor-card lm">
+<h3>Lockheed Martin at a Glance</h3>
+<p style="font-size:.8rem">$130B market cap · US-owned (Bethesda HQ) · ~120,000 employees · F-35, HIMARS, PAC-3 primes · DLG in development · Deep US DoD relationship</p>
+
+<h3 style="color:var(--green)">How We Beat Them</h3>
+<div class="talking-point">
+<strong>1. Sovereignty:</strong> "Lockheed is the definition of US defence primacy. Every byte of data in Lockheed's systems is subject to US government access. DEFONEOS is the opposite — sovereign UK-first architecture."
+</div>
+<div class="talking-point">
+<strong>2. Classification:</strong> "Lockheed's AI work is classified — you'll never see the source code, never verify the algorithms, never know if red lines exist. DEFONEOS is 100% open: read every line, verify every red line, run your own audit."
+</div>
+<div class="talking-point">
+<strong>3. Speed:</strong> "Lockheed operates on US DoD timelines (years to decades). DEFONEOS operates on UK startup timelines (hours to weeks). For urgent operational requirements, DEFONEOS is the only viable path."
+</div>
+</div>
+</div>
+
+<h2>📊 Market Position Map</h2>
+<div class="section">
+<pre style="text-align:center;font-size:.75rem;line-height:1.8">
+                    CLOSED SOURCE
+                         │
+              Palantir   │   BAE Systems
+              Anduril    │   Lockheed
+                         │
+  EXPENSIVE ─────────────┼───────────────── CHEAP
+                         │
+                         │   DEFONEOS 🐉
+                         │   (here)
+                         │
+                    OPEN SOURCE
+</pre>
+<p style="text-align:center;font-size:.8rem;color:var(--gold)"><strong>DEFONEOS is the ONLY player in the bottom-right quadrant: open source + low cost + UK sovereign.</strong></p>
+<p style="text-align:center;font-size:.7rem;color:#64748b">Every other competitor is proprietary, expensive, or both. We are neither.</p>
+</div>
+
+<h2>🗣️ Sales Discovery Questions</h2>
+<div class="section">
+<table>
+<tr><th>#</th><th>Question</th><th>If Answer Is...</th><th>Then Lead With...</th></tr>
+<tr><td>1</td><td>"What's your current AI/C2 platform?"</td><td>Palantir</td><td>Sovereignty + air-gap + cost savings</td></tr>
+<tr><td>2</td><td>"What's your annual software budget?"</td><td>£500K+</td><td>Cost comparison: £0 base, £499/mo Pro</td></tr>
+<tr><td>3</td><td>"Do you operate in air-gapped environments?"</td><td>Yes</td><td>Air-gapped deployment — only open-source option</td></tr>
+<tr><td>4</td><td>"How do you audit AI decisions?"</td><td>Logs / manual</td><td>SIGIL hash chain — cryptographic, tamper-evident</td></tr>
+<tr><td>5</td><td>"What's your governance process for AI?"</td><td>Review boards</td><td>BFT-33 council — automated quorum, 7 red lines</td></tr>
+<tr><td>6</td><td>"Do you need coalition interoperability?"</td><td>Yes (AUKUS/FVEY)</td><td>SIGIL cross-domain sync + data diode architecture</td></tr>
+<tr><td>7</td><td>"Are you concerned about vendor lock-in?"</td><td>Yes</td><td>MIT licence — you own every line, export anytime</td></tr>
+<tr><td>8</td><td>"How quickly do you need to deploy?"</td><td>Weeks/Months</td><td>Docker Compose — hours to operational</td></tr>
+<tr><td>9</td><td>"Do you use TAK/ATAK?"</td><td>Yes</td><td>FreeTAKServer native integration, CoT XML</td></tr>
+<tr><td>10</td><td>"What's your drone/swarm capability?"</td><td>Limited/None</td><td>PX4 + Mava MAPPO — deploy 40-drone swarm in 1 day</td></tr>
+</table>
+</div>
+
+<h2>💡 Value Propositions by Audience</h2>
+<div class="section">
+<div class="grid-2">
+<div>
+<h3 style="color:var(--cyan)">For the Mission Sponsor (1*+)</h3>
+<ul style="font-size:.8rem;margin-left:1.5rem;color:#cbd5e1">
+<li><strong>Sovereignty:</strong> "British-built, British-governed, British-deployed. No foreign backdoors."</li>
+<li><strong>Speed:</strong> "Deployable in hours, not the 18-month BAE timeline."</li>
+<li><strong>Accountability:</strong> "SIGIL audit chain — every decision cryptographically traced."</li>
+<li><strong>Allied compatibility:</strong> "AUKUS and Five Eyes federation out of the box."</li>
+</ul>
+</div>
+<div>
+<h3 style="color:var(--green)">For the Technical Lead (CTO/Architect)</h3>
+<ul style="font-size:.8rem;margin-left:1.5rem;color:#cbd5e1">
+<li><strong>Open source:</strong> "Read every line. Fork it. Audit it. No black boxes."</li>
+<li><strong>MCP extensibility:</strong> "Write a new module in Python in an afternoon."</li>
+<li><strong>Air-gapped:</strong> "Full operation disconnected. Updates via signed USB."</li>
+<li><strong>Standards-based:</strong> "JSON-RPC, STANAG, MAVLink, CoT, W3C DID — no proprietary lock."</li>
+</ul>
+</div>
+<div>
+<h3 style="color:var(--gold)">For the Procurement Officer (DSO/Commercial)</h3>
+<ul style="font-size:.8rem;margin-left:1.5rem;color:#cbd5e1">
+<li><strong>Cost:</strong> "Start at £0. Scale to £499/month. No £10M enterprise agreement."</li>
+<li><strong>No lock-in:</strong> "MIT licence — if we fail, you keep everything. Zero switching cost."</li>
+<li><strong>Compliance:</strong> "Cyber Essentials (in progress), JSP 936, ISO 27001/42001 planned."</li>
+<li><strong>Small business:</strong> "UK SME — meets small business utilisation targets."</li>
+</ul>
+</div>
+<div>
+<h3 style="color:var(--purple)">For the Operator (Military User)</h3>
+<ul style="font-size:.8rem;margin-left:1.5rem;color:#cbd5e1">
+<li><strong>Familiar interface:</strong> "Cesium 3D globe — like ATAK but AI-powered."</li>
+<li><strong>Red lines:</strong> "The AI literally cannot do certain things. 7 immutable red lines."</li>
+<li><strong>Human-in-the-loop:</strong> "AI suggests, human decides. Always."</li>
+<li><strong>Offline:</strong> "Works in a tent with no WiFi. That's the point."</li>
+</ul>
+</div>
+</div>
+</div>
+
+<h2>🚫 Competitive Landmines to Avoid</h2>
+<div class="section">
+<table>
+<tr><th>#</th><th>Don't Say</th><th>Instead Say</th></tr>
+<tr><td>1</td><td>"Palantir can't do air-gap"</td><td>"DEFONEOS is the only open-source platform with native air-gapped deployment"</td></tr>
+<tr><td>2</td><td>"Anduril is overpriced"</td><td>"DEFONEOS offers equivalent ISR and swarm capability at 1/100th the cost"</td></tr>
+<tr><td>3</td><td>"BAE is too slow"</td><td>"DEFONEOS complements BAE platforms — deployable in hours as the AI/C2 layer"</td></tr>
+<tr><td>4</td><td>"Lockheed is American"</td><td>"DEFONEOS is UK-sovereign by design — independent of all foreign jurisdictions"</td></tr>
+<tr><td>5</td><td>"Our AI is better"</td><td>"Our AI governance is verifiable — SIGIL chain, BFT-33, 7 red lines"</td></tr>
+<tr><td>6</td><td>"We'll replace Palantir"</td><td>"We federate with Palantir via MCP — use both, sovereignty where it matters"</td></tr>
+<tr><td>7</td><td>Claim "AUKUS certified"</td><td>"AUKUS-compatible architecture — certification pending signed agreements"</td></tr>
+<tr><td>8</td><td>Claim "combat proven"</td><td>"Validated in 8 simulation scenarios with independently verifiable results"</td></tr>
+</table>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — Sovereign Public Services OS · CSOAI Ltd · Companies House 16939677</p>
+<p>Competitive Battle Card v1.0.0 · INTERNAL · For sales enablement use only</p>
+<p><a href="#"" style="color:var(--gold)">← Back to DEFONEOS Index</a> · <a href="#"" style="color:var(--gold)">Pricing</a> · <a href="#"" style="color:var(--gold)">Feature Comparison</a></p>
+</footer>
+</div>
+</body>
+</html>

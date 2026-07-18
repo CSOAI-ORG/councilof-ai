@@ -1,0 +1,78 @@
+{
+  "cycle_id": "EAT-2026-07-14-T1254",
+  "timestamp": "2026-07-14T12:54:41Z",
+  "operator": "JEEVES",
+  "compartment": "csoai-defoneos",
+  "care_score": 0.93,
+  "results": {
+    "public_site_check": {
+      "url": "https://csoai-static-deploy2.vercel.app/",
+      "http_code": 200,
+      "ttfb_seconds": 0.179,
+      "bytes": 9156
+    },
+    "meok_backend_ssh": {
+      "host": "meok-backend",
+      "reachable": false,
+      "error": "ssh connect timeout (Operation timed out)"
+    },
+    "sov3_local_endpoint": {
+      "url": "http://localhost:3101/mcp",
+      "reachable": false,
+      "error": "connection refused"
+    },
+    "meok_os_local_endpoint": {
+      "url": "http://localhost:3000/",
+      "reachable": false,
+      "error": "connection refused"
+    },
+    "html_pages_total": 1349,
+    "defoneos_mod_pages": 96,
+    "broken_link_scan": {
+      "files_scanned": 96,
+      "broken_internal_links": 0,
+      "fixed_neutral_href": 0,
+      "note": "Regex scan returned 0 broken internal hrefs across all defoneos-mod-*.html files. No fix needed (step 7)."
+    },
+    "sitemap": {
+      "before_urls": 492,
+      "before_bytes": 82956,
+      "after_urls": 493,
+      "after_bytes": 56990,
+      "added": 93,
+      "removed_ghosts": 492,
+      "policy": "rebuilt as honest sitemap \u2014 every <loc> resolves on disk. Pre-existing 491 phantom URLs (referencing files removed/never-pruned) pruned. Backup at /tmp/sitemap-pre-eat-2026-07-14.xml."
+    },
+    "deploy": {
+      "trigger": "new defoneos-mod-* pages + sitemap regen",
+      "command": "vercel --prod --yes",
+      "ready_seconds": 17,
+      "alias": "https://csoai-static-deploy2.vercel.app",
+      "production_url": "https://csoai-static-deploy2-4p5i3xkq3-niks-projects-0a2ef942.vercel.app",
+      "post_deploy_http_root": 200,
+      "post_deploy_sitemap_url_count": 493,
+      "result": "verified_200_root_and_sitemap"
+    },
+    "sigil_emit": {
+      "via_localhost_3101": false,
+      "via_file_fallback": true,
+      "reason": "localhost:3101 not reachable in this cycle"
+    }
+  },
+  "actions_taken": [
+    "HTTP 200 verified on https://csoai-static-deploy2.vercel.app/",
+    "meok-backend SSH timed out (was unreachable)",
+    "localhost:3101 SOV3 MCP endpoint unreachable",
+    "localhost:3000 MEOK OS endpoint unreachable",
+    "96 defoneos-mod-*.html files present on disk",
+    "Broken-link regex scan: 0 broken internal hrefs found, no fix needed",
+    "Sitemap regen: 492 URLs \u2192 493 URLs (added 93 new defoneos-mod-*, pruned 491 ghost URLs that pointed at nonexistent files)",
+    "Vercel production redeploy \u2192 Aliased, post-deploy HTTP 200 on root, sitemap confirms in prod"
+  ],
+  "alerts": [
+    "meok-backend VM unreachable \u2014 recommend SSH port + firewall check",
+    "Local MCP server (3101) and MEOK OS (3000) offline \u2014 recommend process supervisor restart",
+    "1 ghost URL (defoneos-mod-treasury-cost-benefit) referenced in T92 logs is missing on disk; not impacting sitemap (removed)"
+  ],
+  "sigil_digest": "SIGIL-2370f26d139d19aad168660f"
+}

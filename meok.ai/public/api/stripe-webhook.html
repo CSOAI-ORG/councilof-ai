@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stripe Webhook — MEOK AI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0d0c18; color: #e0dcc8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; padding: 2rem; }
+    .container { max-width: 880px; margin: 0 auto; }
+    h1 { color: #c9a84c; font-size: 2rem; margin-bottom: 0.5rem; }
+    h2 { color: #c9a84c; font-size: 1.35rem; margin: 2rem 0 0.75rem; border-bottom: 1px solid #2a2838; padding-bottom: 0.4rem; }
+    h3 { color: #c9a84c; font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+    p, li { color: #c8c4b4; }
+    a { color: #c9a84c; }
+    .badge { display: inline-block; background: #c9a84c; color: #0d0c18; font-weight: 700; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 3px; margin-right: 0.4rem; }
+    pre { background: #14132a; border: 1px solid #2a2838; border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.5; margin: 0.75rem 0; }
+    code { font-family: 'SF Mono', 'Fira Code', monospace; color: #d4d0b8; }
+    pre code { color: inherit; }
+    .http-method { font-weight: 700; color: #c9a84c; }
+    .str { color: #b5a95c; }
+    .kwd { color: #c9a84c; }
+    .num { color: #a89050; }
+    table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; }
+    th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid #2a2838; }
+    th { color: #c9a84c; font-weight: 600; background: #14132a; }
+    td { color: #c8c4b4; }
+    .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #2a2838; font-size: 0.85rem; color: #6a6880; }
+    .note { background: #14132a; border-left: 3px solid #c9a84c; padding: 0.75rem 1rem; margin: 0.5rem 0; border-radius: 0 6px 6px 0; font-size: 0.9rem; }
+    .alert { background: #2a2030; border-left: 3px solid #e06060; padding: 0.75rem 1rem; margin: 0.5rem 0; border-radius: 0 6px 6px 0; font-size: 0.9rem; }
+    @media (max-width: 600px) { body { padding: 1rem; } pre { font-size: 0.75rem; } }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <span class="badge">Webhook</span>
+  <span class="badge" style="background:#2a2838;color:#c9a84c;">Stripe</span>
+  <h1>Stripe Webhook Endpoint</h1>
+  <p>MEOK AI uses Stripe to process payments for MCP tool access (x402 Payment Required flow). This document describes the webhook endpoint, events handled, response format, and security configuration.</p>
+
+  <h2>Endpoint</h2>
+  <table>
+    <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code class="http-method">POST</code></td><td><code>/api/stripe/webhook</code></td><td>Stripe webhook event receiver</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <strong>Production URL:</strong> <code>https://api.meok.ai/api/stripe/webhook</code><br>
+    <strong>Test mode:</strong> <code>https://api.meok.ai/api/stripe/webhook?test=true</code>
+  </div>
+
+  <h2>Events Handled</h2>
+  <table>
+    <thead>
+      <tr><th>Event Type</th><th>Handler</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>payment_intent.succeeded</code></td>
+        <td><code>handle_payment_success</code></td>
+        <td>Issue Ed25519 attestation tokens to the buyer. Update attestation balance. Send confirmation to buyer email.</td>
+      </tr>
+      <tr>
+        <td><code>payment_intent.payment_failed</code></td>
+        <td><code>handle_payment_failure</code></td>
+        <td>Log failure reason. Send failure notification to buyer. No attestation issued.</td>
+      </tr>
+      <tr>
+        <td><code>checkout.session.completed</code></td>
+        <td><code>handle_checkout_completed</code></td>
+        <td>Confirm session metadata (tier, project ID). Trigger attestation issuance on payment confirmation.</td>
+      </tr>
+      <tr>
+        <td><code>customer.subscription.updated</code></td>
+        <td><code>handle_subscription_update</code></td>
+        <td>Sync subscription plan changes (e.g. per-batch → per-project). Update attestation pool.</td>
+      </tr>
+      <tr>
+        <td><code>customer.subscription.deleted</code></td>
+        <td><code>handle_subscription_deleted</code></td>
+        <td>Revoke project-tier attestations. Notify customer of access expiry.</td>
+      </tr>
+      <tr>
+        <td><code>invoice.paid</code></td>
+        <td><code>handle_invoice_paid</code></td>
+        <td>Confirm recurring payment. Replenish attestation balance for the period.</td>
+      </tr>
+      <tr>
+        <td><code>invoice.payment_failed</code></td>
+        <td><code>handle_invoice_failed</code></td>
+        <td>Flag account for dunning. Throttle attestation issuance until resolved.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Request Format</h2>
+  <p>Stripe sends POST requests with <code>Content-Type: application/json</code>. The body contains a standard Stripe Event object:</p>
+
+  <pre><code>{
+  <span class="str">"id"</span>: <span class="str">"evt_3P..."</span>,
+  <span class="str">"object"</span>: <span class="str">"event"</span>,
+  <span class="str">"type"</span>: <span class="str">"payment_intent.succeeded"</span>,
+  <span class="str">"created"</span>: 1718612345,
+  <span class="str">"data"</span>: {
+    <span class="str">"object"</span>: {
+      <span class="str">"id"</span>: <span class="str">"pi_3P..."</span>,
+      <span class="str">"amount"</span>: 100,
+      <span class="str">"currency"</span>: <span class="str">"gbp"</span>,
+      <span class="str">"status"</span>: <span class="str">"succeeded"</span>,
+      <span class="str">"metadata"</span>: {
+        <span class="str">"tier"</span>: <span class="str">"per_attestation"</span>,
+        <span class="str">"customer_id"</span>: <span class="str">"cus_..."</span>,
+        <span class="str">"project_id"</span>: <span class="str">"proj_..."</span>
+      }
+    }
+  }
+}</code></pre>
+
+  <h2>Response Format</h2>
+  <p>The webhook endpoint responds with a simple confirmation. Stripe expects a <code>2xx</code> within 30 seconds, otherwise it retries.</p>
+
+  <h3>Success Response (200)</h3>
+  <pre><code><span class="http-method">HTTP/1.1</span> 200 OK
+Content-Type: application/json
+
+{
+  <span class="str">"status"</span>: <span class="str">"received"</span>,
+  <span class="str">"event_id"</span>: <span class="str">"evt_3P..."</span>,
+  <span class="str">"handled_by"</span>: <span class="str">"handle_payment_success"</span>,
+  <span class="str">"attestation_issued"</span>: true,
+  <span class="str">"token"</span>: <span class="str">"ed25519:MEoCAkYwEAYHKoZIzj0CAQYFK4EEAAYDOgAE..."</span>
+}</code></pre>
+
+  <h3>Ignored Event Response (200)</h3>
+  <pre><code><span class="http-method">HTTP/1.1</span> 200 OK
+Content-Type: application/json
+
+{
+  <span class="str">"status"</span>: <span class="str">"ignored"</span>,
+  <span class="str">"event_id"</span>: <span class="str">"evt_3P..."</span>,
+  <span class="str">"reason"</span>: <span class="str">"unhandled_event_type"</span>
+}</code></pre>
+
+  <h3>Error Response (4xx/5xx)</h3>
+  <pre><code><span class="http-method">HTTP/1.1</span> 400 Bad Request
+Content-Type: application/json
+
+{
+  <span class="str">"status"</span>: <span class="str">"error"</span>,
+  <span class="str">"event_id"</span>: <span class="str">"evt_3P..."</span>,
+  <span class="str">"error"</span>: <span class="str">"invalid_signature"</span>,
+  <span class="str">"message"</span>: <span class="str">"Webhook signature verification failed. Check your signing secret."</span>
+}</code></pre>
+
+  <h2>Security</h2>
+
+  <div class="alert">
+    <strong>⚠ Critical:</strong> Always verify the Stripe webhook signature before processing events. Failure to do so exposes your endpoint to forged event attacks.
+  </div>
+
+  <h3>Signing Secret Verification</h3>
+  <p>Stripe signs each webhook request with a signing secret. The signature is sent in the <code>Stripe-Signature</code> header.</p>
+
+  <pre><code><span class="kwd">Stripe-Signature</span>: t=1718612345,v1=abc123...,v0=...</code></pre>
+
+  <p><strong>Verification steps (backend):</strong></p>
+  <ol>
+    <li>Extract the timestamp (<code>t</code>) and signature (<code>v1</code>) from the <code>Stripe-Signature</code> header.</li>
+    <li>Concatenate the timestamp, a period (<code>.</code>), and the raw JSON payload.</li>
+    <li>Compute an HMAC-SHA256 of this string using your <strong>webhook signing secret</strong>.</li>
+    <li>Compare the computed HMAC to the <code>v1</code> signature using a constant-time comparison.</li>
+    <li>Reject if mismatch, old timestamps >5 minutes, or no <code>Stripe-Signature</code> header.</li>
+  </ol>
+
+  <p><strong>Environment:</strong> The signing secret is stored in environment variables — never hard-coded or exposed in client-side code.</p>
+
+  <table>
+    <thead><tr><th>Variable</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td>Stripe webhook signing secret (whsec_...)</td></tr>
+      <tr><td><code>STRIPE_SECRET_KEY</code></td><td>Stripe API secret key (sk_live_... / sk_test_...)</td></tr>
+      <tr><td><code>STRIPE_PUBLISHABLE_KEY</code></td><td>Stripe publishable key (pk_live_... / pk_test_...)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>IP Allowlisting</h3>
+  <p>Stripe webhook requests originate from Stripe's IP range. Recommended: validate source IP and <code>User-Agent</code> matches <code>Stripe/1.0</code>. See <a href="https://stripe.com/docs/webhooks#ip-addresses" target="_blank">Stripe IP Addresses</a> for the current CIDR list.</p>
+
+  <h3>Idempotency</h3>
+  <p>Stripe may deliver the same event multiple times. The webhook handler uses the <code>event.id</code> as an idempotency key. Duplicate events return <code>200 OK</code> with <code>"status": "duplicate"</code> and do not issue additional attestations.</p>
+
+  <h2>Testing</h2>
+  <p>Use the Stripe CLI to forward events to your local development endpoint:</p>
+  <pre><code>stripe listen --forward-to localhost:3101/api/stripe/webhook
+stripe trigger payment_intent.succeeded</code></pre>
+  <p>The endpoint also accepts the <code>?test=true</code> query parameter to enable verbose logging without consuming real attestation balance.</p>
+
+  <div class="footer">
+    <p><strong>MEOK AI</strong> — CSOAI Ltd · UK Company 16939677 · <a href="mailto:support@meok.ai">support@meok.ai</a></p>
+    <p>Documentation v1.0 · Updated 17 June 2026</p>
+  </div>
+
+</div>
+</body>
+</html>

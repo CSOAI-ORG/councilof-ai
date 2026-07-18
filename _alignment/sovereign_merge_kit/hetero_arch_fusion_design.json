@@ -1,0 +1,102 @@
+{
+  "version": "v1_hetero_arch_fusion_design_2026-07-18",
+  "lane": "hermes_designs_claude_science_executes",
+  "purpose": "Design the heterogeneous-architecture fusion test (sibling's TIES finding showed same-base 3-around-1 does NOT emerge; test if DIFFERENT-arch DOES)",
+  "context_from_sibling": {
+    "ties_same_base_finding": {
+      "ties_fused_loss": 2.9095,
+      "naive_avg_loss": 2.9965,
+      "best_single_loss": 2.9087,
+      "verdict": "TIES > naive (no collapse) BUT ~= best-single (no emergence at same-base scale)"
+    },
+    "kda_probe_finding": {
+      "transformer_acc": 1.0,
+      "ssm_acc": 0.358,
+      "kda_acc": 0.361,
+      "rho_ssm_kda": 0.82,
+      "verdict": "SSM and KDA are SAME family (rho=0.82), not decorrelated"
+    }
+  },
+  "heterogeneous_architecture_test_design": {
+    "three_owems_needed": [
+      {
+        "slot": 1,
+        "arch": "Dense Transformer",
+        "candidate": "Qwen2.5-0.5B + sov3_student_adapter (we have this)",
+        "layer_role": "alignment / governance (LoRA-trained on 113 pairs)",
+        "ready": true,
+        "source_path": "_alignment/sovereign_merge_kit/models/sov3_student_adapter"
+      },
+      {
+        "slot": 2,
+        "arch": "Linear-attention (KDA-family)",
+        "candidate": "Need a small KDA model. Sibling's KDA probe was 234K params, toy scale.",
+        "layer_role": "serving cost / long-context",
+        "ready": false,
+        "source_lane": "claude_science - they have sov33_kda_decorr_probe.py"
+      },
+      {
+        "slot": 3,
+        "arch": "True MoE (Apache 2.0)",
+        "candidate": "Mixtral-8x7B distilled to 0.5B equivalent (Apache 2.0)",
+        "layer_role": "capacity / routing",
+        "ready": false,
+        "candidate_alt": "Use a small open MoE - check Qwen MoE, OLMoE, etc."
+      }
+    ],
+    "expected_outcome": {
+      "if_emerges": "SOV4 King can govern 3 decorrelated architectures \u2192 emergence story",
+      "if_no_emergence": "SOV4 needs OUTPUT ENSEMBLE (not weight-merge) \u2192 return to sibling's path",
+      "if_collapse": "Some architectures are incompatible \u2192 revert to TIES for inference only"
+    },
+    "metric_to_measure": {
+      "primary": "held-out loss on governance bench (24 prompts)",
+      "secondary": "care-floor pass rate on the 30-prompt sovereign-bench-30",
+      "honest_register": "Sibling already proved same-base no emergence. We need to MEASURE whether heterogeneous changes this."
+    }
+  },
+  "execution_plan_claude_science_lane": {
+    "step_1": "Locate + download a small Apache 2.0 MoE model (slot 3)",
+    "step_2": "Train slot 2 (linear-attn KDA) to convergence on governance corpus",
+    "step_3": "Output-fuse 3 architectures (not weight-fuse): route prompt to all 3, combine via care-gated ensemble",
+    "step_4": "Measure emergence on governance bench (compare to TIES-same-base 2.9095)",
+    "step_5": "If emerges: integrate into SOV4 King (3-arch federation)",
+    "compute": "$5-10 Modal T4",
+    "time_estimate": "4-8 hours of sibling execution"
+  },
+  "what_hermes_will_consume": {
+    "schema_provided": [
+      "Care-floor 0.95 (already live)",
+      "SIGIL Ed25519 per response (already live)",
+      "Sovereign binding CSOAI Ltd UK 16939677 (already live)",
+      "4 venturi throats (care / fusion / routing / binding) (already live)"
+    ],
+    "schema_needed": [
+      "Multi-architecture federation contract (input/output across 3 different arch types)",
+      "Care-floor aggregation when 3 different brains respond",
+      "SIGIL across multi-architecture outputs (chain of sigils, one per brain)"
+    ]
+  },
+  "lane_respect": {
+    "hermes_designs": true,
+    "claude_science_executes": true,
+    "no_duplicate_compute": "Sibling already ran same-base TIES - this is the heterogeneous NEXT test",
+    "no_claim_without_data": "We do NOT claim heterogeneous WILL emerge. We test whether it does."
+  },
+  "context_from_our_side": {
+    "sov3_student_eval": {
+      "tuned_grounded": 20,
+      "tuned_rate": 0.833,
+      "n_prompts": 24
+    },
+    "kda_probe_honest_negative": "Sibling showed transformer > linear at toy scale. Our kernel (EAT-767) is mechanism-test only, not capability claim."
+  },
+  "honest_pins": [
+    "Same-base TIES no-emergence: PROVEN by sibling (2.9095 vs 2.9087)",
+    "Heterogeneous emergence: HYPOTHESIS, untested",
+    "TIES-mechanism: WORKS for inference compression, not for emergence",
+    "Per-model T counts: NEVER summed",
+    "Modal T4 cost: ~$5-10 total for this test"
+  ],
+  "delivery_format": "This file is the DESIGN SPEC. Claude Science runs the actual test and reports the result. We update the architecture matrix when measurement lands."
+}

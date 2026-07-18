@@ -1,0 +1,120 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEOK — one sovereign world</title>
+<meta name="description" content="Scroll to fly from deep space down into your own governed world — real 3D, on your GPU, signed on your device. Free, no paid tiles.">
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.123/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>
+ :root{ --ink:#f4ecdd; --soft:#c9bd9e; --gold:#e6c766; --glass:rgba(10,13,22,.42); --line:rgba(201,168,76,.26); }
+ *{box-sizing:border-box} html{scroll-behavior:auto}
+ html,body{margin:0;background:#01030a;color:var(--ink);font-family:"Geist","Inter",-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+ /* pinned live world behind everything */
+ #sky{position:fixed;inset:0;z-index:0;background:radial-gradient(120% 90% at 50% -10%,#0a1330 0%,#01030a 60%)}
+ #c{position:fixed;inset:0;z-index:1;width:100vw;height:100vh}
+ .cesium-widget-credits,.cesium-viewer-bottom{display:none!important}
+ #veil{position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(120% 120% at 50% 40%,transparent 42%,rgba(1,3,10,.55) 100%)}
+ /* scroll track — gives the flight its distance */
+ #track{position:relative;z-index:3}
+ .scene{height:100vh;display:flex;align-items:center;pointer-events:none}
+ .scene.right{justify-content:flex-end}
+ .panel{pointer-events:auto;margin:0 6vw;max-width:440px;padding:26px 28px;border-radius:18px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)}
+ .panel.in{opacity:1;transform:none}
+ .panel::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,transparent,#e6c766,#8fd0c0,#c7a8e0,transparent);opacity:.6}
+ .eyebrow{font:700 11.5px ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+ .panel h2{margin:0 0 10px;font-size:29px;line-height:1.08;letter-spacing:-.01em;background:linear-gradient(96deg,#f0e6cf,#e6c766 40%,#9fd6c4 70%,#f0e6cf);-webkit-background-clip:text;background-clip:text;color:transparent}
+ .panel p{margin:0;font-size:15px;line-height:1.55;color:var(--soft)}
+ .panel .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+ .btn{pointer-events:auto;text-decoration:none;font:700 13.5px inherit;padding:11px 18px;border-radius:999px;cursor:pointer;transition:.15s;border:1px solid var(--line)}
+ .btn.p{background:var(--gold);color:#1a1410;border-color:var(--gold)}.btn.p:hover{filter:brightness(1.06)}
+ .btn.s{background:rgba(255,255,255,.06);color:var(--ink)}.btn.s:hover{border-color:var(--gold)}
+ /* fixed chrome */
+ #brand{position:fixed;top:18px;left:22px;z-index:6;font:800 16px inherit;letter-spacing:.02em;color:var(--ink);text-decoration:none}
+ #brand b{background:linear-gradient(96deg,#e6c766,#9fd6c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+ #enter{position:fixed;top:15px;right:20px;z-index:6}
+ #hint{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:6;font:600 12px ui-monospace,monospace;letter-spacing:.14em;color:var(--soft);opacity:.85;transition:opacity .4s;pointer-events:none}
+ #hint.gone{opacity:0}
+ #prog{position:fixed;left:0;top:0;height:3px;z-index:7;background:linear-gradient(90deg,#e6c766,#8fd0c0,#c7a8e0);width:0}
+ #load{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:#01030a;color:var(--gold);font:600 14px ui-monospace,monospace;letter-spacing:.12em;transition:opacity .8s}
+ #load.hide{opacity:0;pointer-events:none}
+ @media(max-width:720px){ .panel{margin:0 5vw;max-width:88vw;padding:20px 20px} .panel h2{font-size:24px} }
+</style></head><body>
+<div id="load">🜏 waking the sovereign world…</div>
+<div id="sky"></div>
+<div id="c"></div>
+<div id="veil"></div>
+<div id="prog"></div>
+<a id="brand" href="/"><b>MEOK</b> · sovereign</a>
+<a id="enter" class="btn p" href="/">◉ Enter the OS</a>
+<div id="hint">scroll to fly in ↓</div>
+
+<div id="track">
+ <section class="scene"><div class="panel" data-k="0">
+   <p class="eyebrow">One governed world</p>
+   <h2>Your sovereign,<br>from space to street.</h2>
+   <p>A real 3D world that runs on <b>your</b> GPU — free, no paid tiles, no foreign server. Scroll, and it flies for you.</p>
+ </div></section>
+ <section class="scene right"><div class="panel" data-k="1">
+   <p class="eyebrow">On your device</p>
+   <h2>Signed, and yours.</h2>
+   <p>Every governed action is <b>Ed25519-signed</b> to a ledger you can verify offline. Your data never leaves without consent. No single vendor can revoke it.</p>
+ </div></section>
+ <section class="scene"><div class="panel" data-k="2">
+   <p class="eyebrow">It flies for you</p>
+   <h2>Just talk.<br>It takes you there.</h2>
+   <p>Say <b>“take me to Tokyo”</b> and your Sovereign flies the world, opens the right tools, and narrates — one continuous flight, no cuts.</p>
+ </div></section>
+ <section class="scene right"><div class="panel" data-k="3">
+   <p class="eyebrow">Ready for you</p>
+   <h2>Step inside<br>your world.</h2>
+   <p>Governed by the Sovereign, Partnership &amp; CSOAI charters — care-first, council-adjudicated, signed. Free to start, yours forever.</p>
+   <div class="cta"><a class="btn p" href="/">◉ Enter the OS</a><a class="btn s" href="/sovspace3d.html">🌐 Explore the world</a></div>
+ </div></section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.123/Build/Cesium/Cesium.js"></script>
+<script>
+// ── MEOK epic scroll-world: the oso95/scroll-world "fly through the world" feel, but driving a LIVE
+//    Cesium globe by scroll position (free, real 3D — no Higgsfield video, no paid tiles). Scroll
+//    interpolates the camera through waypoints: deep space → continent → city → street. ──
+window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.123/Build/Cesium/';
+Cesium.Ion.defaultAccessToken='';
+let viewer, scene;
+const opts={ baseLayer:false, baseLayerPicker:false, geocoder:false, timeline:false, animation:false,
+  homeButton:false, sceneModePicker:false, navigationHelpButton:false, fullscreenButton:false,
+  infoBox:false, selectionIndicator:false, requestRenderMode:false };
+try{ viewer=new Cesium.Viewer('c', opts); }catch(e){ try{ opts.imageryProvider=false; viewer=new Cesium.Viewer('c',opts);}catch(e2){ document.getElementById('load').textContent='globe failed — '+e2.message; } }
+scene=viewer.scene;
+try{ scene.imageryLayers.addImageryProvider(new Cesium.OpenStreetMapImageryProvider({url:'https://tile.openstreetmap.org/'})); }catch(e){}
+scene.skyAtmosphere.show=true; scene.globe.showGroundAtmosphere=true; scene.globe.enableLighting=false;
+scene.backgroundColor=Cesium.Color.TRANSPARENT; scene.globe.baseColor=Cesium.Color.fromCssColorString('#12203f');
+viewer.scene.screenSpaceCameraController.enableInputs=false;   // the page owns the camera; scroll drives it
+
+// waypoints the camera flies through as you scroll (lon, lat, height m, pitch°)
+const WP=[
+  {lon:12,  lat:22, h:24000000, p:-90},   // 0 · deep space over Earth
+  {lon:2,   lat:46, h:5200000,  p:-72},   // 1 · dive toward Europe
+  {lon:-0.12,lat:51.35,h:180000, p:-55},  // 2 · London from the sky
+  {lon:-0.122,lat:51.507,h:2600, p:-32}   // 3 · street level, the City
+];
+function lerp(a,b,t){return a+(b-a)*t;}
+function place(f){ // f: 0..1 over the whole scroll
+  const seg=Math.min(WP.length-2, Math.floor(f*(WP.length-1)));
+  const t=(f*(WP.length-1))-seg; const e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; // easeInOut
+  const a=WP[seg], b=WP[seg+1];
+  viewer.camera.setView({ destination:Cesium.Cartesian3.fromDegrees(lerp(a.lon,b.lon,e),lerp(a.lat,b.lat,e),lerp(a.h,b.h,e)),
+    orientation:{ heading:Cesium.Math.toRadians(lerp(0,18,f)), pitch:Cesium.Math.toRadians(lerp(a.p,b.p,e)), roll:0 } });
+  scene.requestRender();
+}
+place(0);
+const panels=[...document.querySelectorAll('.panel')];
+const prog=document.getElementById('prog'), hint=document.getElementById('hint');
+function onScroll(){ const max=document.body.scrollHeight-innerHeight; const f=max>0?Math.min(1,Math.max(0,scrollY/max)):0;
+  place(f); prog.style.width=(f*100)+'%'; if(f>0.02) hint.classList.add('gone');
+  // reveal each panel while its scene is centred
+  const vh=innerHeight; panels.forEach(p=>{ const r=p.getBoundingClientRect(); const c=r.top+r.height/2; p.classList.toggle('in', c>vh*0.12 && c<vh*0.92); });
+}
+addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll);
+// keep tiles flowing even when the tab throttles rAF (also paints the first frame)
+let ticks=0; const pump=setInterval(()=>{ try{scene.render();}catch(e){} if(++ticks>240) clearInterval(pump); },40);
+(function wait(t){ const l=document.getElementById('load'); if(scene.globe.tilesLoaded||t>30){ l.classList.add('hide'); onScroll(); return; } setTimeout(()=>wait(t+1),250); })(0);
+</script>
+</body></html>

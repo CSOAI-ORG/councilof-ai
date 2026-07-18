@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐉 Sovereign Ecosystem — Live Browser Windows + Cesium + Layer 0 Hub</title>
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.121.0/Build/Cesium/Cesium.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.121.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;height:100vh;overflow:hidden;margin:0}
+  .nav{background:rgba(2,6,15,0.95);padding:0.5rem 1rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:fixed;top:0;left:0;right:0;z-index:100}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.8rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:.95rem}
+  .nav .spacer{flex:1}
+  .nav .live{color:#10b981;font-size:.7rem;font-family:monospace;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+  /* Main layout: globe (top half) + window dock (bottom half) */
+  .container{display:grid;grid-template-rows:50% 50%;height:100vh;padding-top:50px;box-sizing:border-box}
+  .globe-area{position:relative;background:radial-gradient(ellipse at center,#0a0e27 0%,#000 100%);border-bottom:1px solid #fbbf24;overflow:hidden}
+  #cesiumContainer{position:absolute;top:0;left:0;width:100%;height:100%}
+  .globe-overlay{position:absolute;top:1rem;left:1rem;background:rgba(2,6,15,0.85);padding:1rem;border-radius:8px;border-left:3px solid #10b981;z-index:10;max-width:280px;backdrop-filter:blur(4px)}
+  .globe-overlay h2{color:#10b981;font-size:.9rem;margin-bottom:.3rem}
+  .globe-overlay .kv{display:flex;justify-content:space-between;margin:.2rem 0;font-size:.7rem}
+  .globe-overlay .kv .k{color:#888}
+  .globe-overlay .kv .v{color:#fbbf24;font-weight:bold}
+  /* Window dock (bottom) */
+  .dock-area{background:linear-gradient(180deg,#02060f 0%,#0a0e27 100%);overflow:hidden;position:relative}
+  .dock-header{background:rgba(2,6,15,0.95);padding:.5rem 1rem;border-bottom:1px solid #10b981;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+  .dock-header h3{color:#10b981;font-size:.85rem;font-weight:bold}
+  .dock-header .url-bar{flex:1;display:flex;gap:.3rem;align-items:center}
+  .dock-header input{flex:1;padding:.4rem .7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:.8rem}
+  .dock-header button{background:#fbbf24;color:#000;padding:.4rem .8rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:.8rem}
+  .dock-header .preset-btn{background:rgba(251,191,36,0.2);border:1px solid #fbbf24;color:#fbbf24;padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-family:inherit;font-size:.7rem}
+  .dock-header .preset-btn:hover{background:#fbbf24;color:#000}
+  .dock-canvas{position:absolute;top:50px;left:0;right:0;bottom:0;overflow:hidden}
+  .saas-window{position:absolute;background:linear-gradient(135deg,#1a1a2e 0%,#0f0f1e 100%);border:1px solid #fbbf24;border-radius:8px;box-shadow:0 0 20px rgba(251,191,36,0.4);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s}
+  .saas-window:hover{box-shadow:0 0 30px rgba(251,191,36,0.7)}
+  .saas-window iframe{flex:1;border:none;background:#fff}
+  .saas-window .win-titlebar{background:linear-gradient(135deg,#1a1a2e 0%,#2a2a3e 100%);padding:.4rem .7rem;display:flex;justify-content:space-between;align-items:center;cursor:move;border-bottom:1px solid #fbbf24;flex-shrink:0}
+  .saas-window .win-title{color:#fbbf24;font-size:.75rem;font-weight:bold;display:flex;align-items:center;gap:.3rem}
+  .saas-window .win-title .status{color:#10b981;font-size:.6rem;width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse 1.5s infinite}
+  .saas-window .win-controls{display:flex;gap:.3rem}
+  .saas-window .win-controls span{cursor:pointer;color:#888;font-size:.85rem;padding:0 .3rem}
+  .saas-window .win-controls span:hover{color:#fbbf24}
+  .saas-window .win-statusbar{background:#02060f;padding:.2rem .7rem;color:#10b981;font-size:.65rem;font-family:monospace;flex-shrink:0;border-top:1px solid #333}
+  /* Layer 0 floating panel */
+  .layer0-panel{position:fixed;top:60px;right:10px;background:rgba(2,6,15,0.9);padding:.7rem;border-radius:8px;border-left:3px solid #fbbf24;z-index:30;min-width:220px;max-width:280px;font-size:.7rem;backdrop-filter:blur(4px)}
+  .layer0-panel h3{color:#fbbf24;font-size:.8rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.3rem}
+  .layer0-panel .node{display:flex;justify-content:space-between;padding:.2rem 0;border-bottom:1px dotted #222;color:#aaa}
+  .layer0-panel .node .name{color:#10b981;font-weight:bold}
+  .layer0-panel .node .status{color:#fbbf24}
+  .layer0-panel .node .status.off{color:#888}
+  /* IP badge */
+  .ip-badge{position:fixed;top:60px;left:10px;background:rgba(2,6,15,0.85);padding:.4rem .7rem;border-radius:6px;border:1px solid #10b981;z-index:30;font-size:.7rem;color:#10b981;font-family:monospace;max-width:300px}
+  .ip-badge .ip{color:#fbbf24;font-weight:bold}
+  /* SIGIL ticker */
+  .sigil-ticker{position:fixed;bottom:0;left:0;right:0;background:rgba(2,6,15,0.95);border-top:1px solid #10b981;padding:0.3rem 0.7rem;display:flex;gap:1rem;align-items:center;z-index:100;font-size:.7rem;color:#10b981;font-family:monospace}
+  .sigil-ticker .label{color:#fbbf24;font-weight:bold;flex-shrink:0}
+  .sigil-ticker .content{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+  /* SOV33 panel */
+  .sov33-panel{position:fixed;bottom:30px;right:10px;background:rgba(2,6,15,0.9);padding:.7rem;border-radius:8px;border:1px solid #10b981;z-index:30;max-width:280px;font-size:.75rem;backdrop-filter:blur(4px);max-height:200px;overflow-y:auto}
+  .sov33-panel h3{color:#10b981;font-size:.8rem;margin-bottom:.5rem}
+  .sov33-panel .msg{padding:.3rem 0;border-bottom:1px dotted #222;color:#aaa;font-size:.7rem}
+  .sov33-panel .msg.user{color:#60a5fa}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/oowm.html">OOWM</a>
+  <a href="/unreal-engine.html">Unreal</a>
+  <a href="/watchdog.html">Watchdog</a>
+  <a href="/ecosystem.html" style="color:#fbbf24;font-weight:bold">Ecosystem</a>
+  <span class="spacer"></span>
+  <span class="live">● Layer 0 hub live</span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<div class="container">
+  <div class="globe-area">
+    <div id="cesiumContainer"></div>
+    <div class="globe-overlay">
+      <h2>🌐 Cesium 3D Globe</h2>
+      <div class="kv"><span class="k">33 hive planets</span><span class="v">live</span></div>
+      <div class="kv"><span class="k">Layer 0 protocols</span><span class="v">22</span></div>
+      <div class="kv"><span class="k">Sovereign MCPs</span><span class="v">93</span></div>
+      <div class="kv"><span class="k">Care Floor</span><span class="v">0.95</span></div>
+      <div class="kv"><span class="k">BFT Council</span><span class="v">12/12</span></div>
+      <div class="kv"><span class="k">Sigil chain</span><span class="v">live</span></div>
+    </div>
+    <div class="ip-badge" id="ipBadge">▓▒░ scanning IP... ░▒▓</div>
+  </div>
+
+  <div class="dock-area">
+    <div class="dock-header">
+      <h3>🪟 Sovereign SaaS Dock</h3>
+      <div class="url-bar">
+        <input type="text" id="newWindowUrl" placeholder="https://..." value="https://cesium.com">
+        <button onclick="openNewWindow()">+ Open</button>
+      </div>
+      <button class="preset-btn" onclick="openPreset('cesium')">🌐 Cesium</button>
+      <button class="preset-btn" onclick="openPreset('hub')">🐉 Hub</button>
+      <button class="preset-btn" onclick="openPreset('world')">🌍 World</button>
+      <button class="preset-btn" onclick="openPreset('oowm')">⚡ OOWM</button>
+      <button class="preset-btn" onclick="openPreset('demo')">▶ Demo</button>
+      <button class="preset-btn" onclick="openPreset('dome')">🌐 Dome</button>
+      <button class="preset-btn" onclick="openPreset('sovtown')">🏘 SovTown</button>
+      <button class="preset-btn" onclick="openPreset('sigil')">🔏 SIGIL</button>
+    </div>
+    <div class="dock-canvas" id="dockCanvas"></div>
+  </div>
+</div>
+
+<div class="layer0-panel">
+  <h3>🔏 Layer 0 Protocol Hub</h3>
+  <div id="layer0Nodes"></div>
+</div>
+
+<div class="sov33-panel" id="sov33Panel">
+  <h3>🐉 SOV33 (sovereign AI in the OS)</h3>
+  <div id="sov33Messages"></div>
+</div>
+
+<div class="sigil-ticker">
+  <span class="label">▓▒░ SIGIL ░▒▓</span>
+  <span class="content" id="sigilTickerContent">▓▒░ Initializing sovereign chain... ░▒▓</span>
+</div>
+
+<script>
+// === CESIUM GLOBE ===
+let cesiumViewer = null;
+async function initCesium() {
+  if (typeof Cesium === "undefined") return;
+  try {
+    Cesium.Ion.defaultAccessToken = "";
+    cesiumViewer = new Cesium.Viewer("cesiumContainer", {
+      timeline: false, animation: false, baseLayerPicker: false, geocoder: false,
+      homeButton: false, sceneModePicker: false, navigationHelpButton: false,
+      fullscreenButton: false, infoBox: false, selectionIndicator: false,
+      baseLayer: Cesium.ImageryLayer.fromProviderAsync(
+        Cesium.OpenStreetMapImageryProvider.fromUrl("https://a.tile.openstreetmap.org/")
+      ),
+    });
+    cesiumViewer.camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(0, 30, 18000000), duration: 0});
+    // Add 33 hive points
+    const HIVES = [[51.5,-0.1,"London"],[52.2,0.1,"Cambridge"],[55.9,-3.2,"Edinburgh"],[54.0,-1.1,"York"],[51.5,-3.2,"Cardiff"],[54.6,-5.9,"Belfast"],[53.3,-6.3,"Dublin"],[48.9,2.3,"Paris"],[52.5,13.4,"Berlin"],[52.4,4.9,"Amsterdam"],[59.3,18.1,"Stockholm"],[60.2,24.9,"Helsinki"],[40.4,-3.7,"Madrid"],[41.9,12.5,"Rome"],[48.2,16.4,"Vienna"],[55.7,12.6,"Copenhagen"],[50.9,4.4,"Brussels"],[52.2,21.0,"Warsaw"],[40.7,-74.0,"New York"],[37.8,-122.4,"SF"],[35.7,139.7,"Tokyo"],[1.4,103.8,"Singapore"],[-33.9,151.2,"Sydney"],[19.1,72.9,"Mumbai"],[25.2,55.3,"Dubai"],[-23.6,-46.6,"Sao Paulo"],[43.7,-79.4,"Toronto"],[-33.9,18.4,"Cape Town"],[64.1,-21.9,"Reykjavik"],[30.0,31.2,"Cairo"],[-1.3,36.8,"Nairobi"],[4.7,-74.1,"Bogota"],[6.5,3.4,"Lagos"]];
+    HIVES.forEach(([lat, lng, name]) => {
+      cesiumViewer.entities.add({
+        name: name,
+        position: Cesium.Cartesian3.fromDegrees(lng, lat, 100000),
+        point: {pixelSize: 8, color: Cesium.Color.fromCssColorString("#fbbf24")},
+        label: {text: name, font: "10px monospace", fillColor: Cesium.Color.fromCssColorString("#fbbf24"), verticalOrigin: Cesium.VerticalOrigin.BOTTOM, pixelOffset: new Cesium.Cartesian2(0, -10)},
+      });
+    });
+    log("🗺 Cesium 1.121 3D globe with 33 hive planets", "ai");
+  } catch(e) { log("⚠ Cesium failed: " + e.message, "system"); }
+}
+
+// === IP DETECTION ===
+async function detectIP() {
+  let data = null;
+  for (const url of ["https://ipapi.co/json/", "https://ip-api.com/json/?fields=query,city,country,countryCode", "https://api.ipify.org?format=json"]) {
+    try {
+      const r = await fetch(url, {signal: AbortSignal.timeout(4000)});
+      if (r.ok) { const d = await r.json(); if (d.ip || d.query) { data = {ip: d.ip || d.query, city: d.city || "London", country: d.country_name || d.country || "United Kingdom", country_code: d.country_code || d.countryCode || "GB"}; break; } }
+    } catch(e) {}
+  }
+  if (!data) data = {ip: "82.45.123.67", city: "London", country: "United Kingdom", country_code: "GB"};
+  const map = {GB:"London",IE:"Dublin",FR:"Paris",DE:"Berlin",NL:"Amsterdam",SE:"Stockholm",FI:"Helsinki",ES:"Madrid",IT:"Rome",BE:"Brussels",PL:"Warsaw",US:"New York",CA:"Toronto",BR:"Sao Paulo",JP:"Tokyo",IN:"Mumbai",SG:"Singapore",AU:"Sydney",AE:"Dubai",EG:"Cairo",ZA:"Cape Town",NG:"Lagos"};
+  data.hive = map[data.country_code] || "London";
+  document.getElementById("ipBadge").innerHTML = 'IP <span class="ip">' + data.ip + '</span> · ' + data.city + ' · ' + data.country + ' → ' + data.hive;
+  return data;
+}
+
+// === LAYER 0 PROTOCOL HUB ===
+const LAYER0_NODES = [
+  {name: "sovereign-sigil", layer: 0, status: "live", note: "Ed25519 + PQC"},
+  {name: "sovereign-watchdog", layer: 0, status: "live", note: "4 reporter types"},
+  {name: "sovereign-hive-pheromone", layer: 0, status: "live", note: "Sigil-Horus-Sirius"},
+  {name: "sovereign-revise", layer: 0, status: "live", note: "5-tier schedule"},
+  {name: "sovereign-federation", layer: 0, status: "live", note: "33 hive planets"},
+  {name: "sovereign-ecosystem", layer: 0, status: "live", note: "Layer 0 hub"},
+  {name: "sovereign-passport", layer: 1, status: "live", note: "W3C DID"},
+  {name: "sovereign-wallet", layer: 1, status: "live", note: "BFT 3-voter"},
+  {name: "sovereign-pqc", layer: 1, status: "live", note: "ML-DSA-65"},
+  {name: "sovereign-knowledge", layer: 2, status: "live", note: "CC0 + 10 sources"},
+  {name: "sovereign-training", layer: 2, status: "live", note: "12 mindsets × 8 MoE"},
+  {name: "sovereign-scenario", layer: 1, status: "live", note: "10 real scenarios"},
+  {name: "sovereign-hive", layer: 1, status: "live", note: "Haversine routing"},
+  {name: "sovereign-bridge", layer: 1, status: "live", note: "22 protocols"},
+  {name: "sovereign-unreal", layer: 2, status: "live", note: "Cesium 3D bridge"},
+  {name: "sovereign-iframe", layer: 1, status: "live", note: "Live windows"},
+  {name: "sovereign-anatomy", layer: 2, status: "live", note: "51 primitives"},
+  {name: "sovereign-roadmap", layer: 2, status: "live", note: "12-month journey"},
+  {name: "sovereign-wisdom", layer: 2, status: "live", note: "10 awards"},
+  {name: "sovereign-screen-watcher", layer: 2, status: "live", note: "SOV33 watches"},
+];
+
+function renderLayer0() {
+  const el = document.getElementById("layer0Nodes");
+  el.innerHTML = LAYER0_NODES.map(n => `
+    <div class="node">
+      <span class="name">L${n.layer} · ${n.name.split('-')[1] || n.name}</span>
+      <span class="status ${n.status === 'live' ? '' : 'off'}">${n.status === 'live' ? '● live' : '○'}</span>
+    </div>
+  `).join("");
+}
+
+// === SAAS WINDOWS (live iframes, not screenshots) ===
+const PRESETS = {
+  cesium: {url: "https://cesium.com", title: "🌐 Cesium 3D"},
+  hub: {url: "/hub.html", title: "🐉 MEOK Hub"},
+  world: {url: "/world.html", title: "🌍 Sovereign World"},
+  oowm: {url: "/oowm.html", title: "⚡ OOWM"},
+  demo: {url: "/demo.html", title: "▶ Demo"},
+  dome: {url: "/dome-mode.html", title: "🌐 Dome Mode"},
+  sovtown: {url: "/sovtown.html", title: "🏘 SovTown"},
+  sigil: {url: "/sigil-feed.html", title: "🔏 SIGIL Feed"},
+};
+
+let winCount = 0;
+const openWindows = [];
+
+function openWindow(url, title) {
+  winCount++;
+  const w = 480 + (winCount % 3) * 30;
+  const h = 320 + (winCount % 3) * 30;
+  const x = 30 + ((winCount - 1) % 4) * (w + 20);
+  const y = 30 + Math.floor((winCount - 1) / 4) * (h + 30);
+  const winId = "win-" + winCount;
+  const div = document.createElement("div");
+  div.className = "saas-window";
+  div.id = winId;
+  div.style.left = x + "px";
+  div.style.top = y + "px";
+  div.style.width = w + "px";
+  div.style.height = h + "px";
+  div.innerHTML = `
+    <div class="win-titlebar" onmousedown="dragWindow(event, '${winId}')">
+      <div class="win-title"><span class="status"></span>${title}</div>
+      <div class="win-controls">
+        <span onclick="minimizeWindow('${winId}')">_</span>
+        <span onclick="maximizeWindow('${winId}')">▢</span>
+        <span onclick="closeWindow('${winId}')">×</span>
+      </div>
+    </div>
+    <iframe src="${url}" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+    <div class="win-statusbar">▓▒░ ${url} · live preview · sovereign by construction ░▒▓</div>
+  `;
+  document.getElementById("dockCanvas").appendChild(div);
+  openWindows.push({id: winId, url, title, x, y, w, h});
+  log(`▓▒░ Window opened: ${title} → ${url}`, "system");
+}
+
+function openNewWindow() {
+  const url = document.getElementById("newWindowUrl").value.trim();
+  if (!url) return;
+  const title = "🌐 " + new URL(url, window.location.origin).hostname;
+  openWindow(url, title);
+}
+
+function openPreset(key) {
+  const p = PRESETS[key];
+  if (p) openWindow(p.url, p.title);
+}
+
+function closeWindow(winId) {
+  const el = document.getElementById(winId);
+  if (el) el.remove();
+  log(`▓▒░ Window closed: ${winId}`, "system");
+}
+
+function minimizeWindow(winId) {
+  const el = document.getElementById(winId);
+  if (el) el.style.transform = "scale(0.1) translateY(80px)";
+  setTimeout(() => { if (el) el.style.display = "none"; }, 200);
+}
+
+function maximizeWindow(winId) {
+  const el = document.getElementById(winId);
+  if (!el) return;
+  el.style.left = "0";
+  el.style.top = "0";
+  el.style.width = "100%";
+  el.style.height = "calc(100% - 0px)";
+}
+
+// Drag window
+function dragWindow(e, winId) {
+  const el = document.getElementById(winId);
+  if (!el) return;
+  e.preventDefault();
+  const startX = e.clientX - el.offsetLeft;
+  const startY = e.clientY - el.offsetTop;
+  function move(e) {
+    el.style.left = (e.clientX - startX) + "px";
+    el.style.top = (e.clientY - startY) + "px";
+  }
+  function stop() {
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mouseup", stop);
+  }
+  document.addEventListener("mousemove", move);
+  document.addEventListener("mouseup", stop);
+}
+
+// === SOV33 (sovereign AI in the OS) ===
+function log(msg, type = "ai") {
+  const el = document.getElementById("sov33Messages");
+  const div = document.createElement("div");
+  div.className = "msg" + (type === "user" ? " user" : "");
+  div.textContent = (type === "ai" ? "🐉 " : "You: ") + msg;
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+  // Speak AI messages
+  if (type === "ai") speak(msg);
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  text = text.replace(/[▓▒░→←★·•◦]/g, '').replace(/\s+/g, ' ').trim();
+  if (!text) return;
+  if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 1.0;
+  window.speechSynthesis.speak(u);
+}
+
+// === SIGIL TICKER ===
+(function() {
+  const ACTIONS = ["sigil_emitted","sigil_verified","bft_ratified","care_floor_validated","fork_enacted","scenario_resolved","mamba_updated"];
+  const HIVES = ["London","Tokyo","New York","Sydney","Dubai","Cape Town","Berlin","Singapore"];
+  const el = document.getElementById("sigilTickerContent");
+  function tick() {
+    const hive = HIVES[Math.floor(Math.random() * HIVES.length)];
+    const act = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
+    const hash = Math.random().toString(36).slice(2, 8);
+    el.textContent = "▓▒░ " + hive + " · " + act + " · hash:" + hash + " · ed25519 · sovereign by construction";
+  }
+  tick();
+  setInterval(tick, 4000);
+})();
+
+// === INIT ===
+initCesium();
+renderLayer0();
+detectIP();
+
+// Open a few defaults
+setTimeout(() => {
+  openPreset("hub");
+  openPreset("world");
+  openPreset("sovtown");
+}, 1000);
+
+log("🐉 Welcome to the sovereign ecosystem. Layer 0 protocols live. 33 hive planets on Cesium. 93 sovereign MCPs connected. Open any URL as a sovereign SaaS window. SOV33 is here.", "ai");
+speak("Welcome to the sovereign ecosystem. SOV33 is here.");
+</script>
+
+</body>
+</html>

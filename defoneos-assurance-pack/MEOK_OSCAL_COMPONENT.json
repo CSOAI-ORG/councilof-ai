@@ -1,0 +1,1102 @@
+{
+  "component-definition": {
+    "uuid": "d565e89f-1e9b-4ebd-a925-c551ff1df37f",
+    "metadata": {
+      "title": "MEOK Sovereign OS v1.4.0 \u2014 Component Definition (declared posture)",
+      "published": "2026-07-05T06:15:28.880325+00:00",
+      "last-modified": "2026-07-05T06:15:28.880325+00:00",
+      "version": "1.4.0",
+      "oscal-version": "1.1.2",
+      "csOAI_protocol_version": "defoneos-sign/1.0",
+      "remarks": "Declared posture \u2014 SIGNED attestation, NOT certification. The Ed25519 signature proves a declaration was made and binds its exact content; it does NOT prove the declaration is true. Buyer / regulator assessment remains required.",
+      "roles": [
+        {
+          "id": "provider",
+          "title": "Provider / Authorising Official"
+        },
+        {
+          "id": "key-custodian",
+          "title": "Key Custodian"
+        },
+        {
+          "id": "auditor",
+          "title": "Internal Auditor"
+        },
+        {
+          "id": "council-operator",
+          "title": "Council Operator"
+        },
+        {
+          "id": "transparency-officer",
+          "title": "Transparency Officer (Art 50)"
+        },
+        {
+          "id": "authorising-official",
+          "title": "Authorising Official"
+        },
+        {
+          "id": "governance-lead",
+          "title": "Governance Lead"
+        },
+        {
+          "id": "ml-owner",
+          "title": "ML Owner"
+        },
+        {
+          "id": "ml-evaluator",
+          "title": "ML Evaluator"
+        },
+        {
+          "id": "security-engineer",
+          "title": "Security Engineer"
+        },
+        {
+          "id": "ciso",
+          "title": "CISO"
+        },
+        {
+          "id": "compliance-monitor",
+          "title": "Compliance Monitor"
+        },
+        {
+          "id": "cryptographer",
+          "title": "Cryptographer"
+        },
+        {
+          "id": "dpo",
+          "title": "Data Protection Officer"
+        }
+      ],
+      "parties": [
+        {
+          "uuid": "fabe139c-6538-4ae3-a55e-3dd5b71ec9df",
+          "type": "organization",
+          "name": "CSOAI Ltd (UK Companies House 16939677)",
+          "short-name": "CSOAI",
+          "email-addresses": [
+            "nicholas@csoai.org",
+            "security@csoai.org",
+            "dpo@csoai.org"
+          ]
+        }
+      ],
+      "responsible-parties": [
+        {
+          "role-id": "provider",
+          "party-uuids": [
+            "fabe139c-6538-4ae3-a55e-3dd5b71ec9df"
+          ]
+        }
+      ],
+      "props": [
+        {
+          "name": "care_floor",
+          "value": "0.95"
+        },
+        {
+          "name": "honesty_register",
+          "value": "attestation_not_certification"
+        },
+        {
+          "name": "issued_by",
+          "value": "CSOAI Ltd (UK Companies House 16939677)"
+        },
+        {
+          "name": "verify_command",
+          "value": "verify_command.py"
+        },
+        {
+          "name": "signing_library",
+          "value": "cryptography (Python) \u00b7 RFC 8032 \u00b7 FIPS 186-5"
+        }
+      ]
+    },
+    "components": [
+      {
+        "uuid": "d7c3cebb-a80b-4848-ba67-ac99d16fb035",
+        "type": "software",
+        "title": "MEOK Core (sovereign orchestration kernel)",
+        "description": "The orchestration kernel of the MEOK Sovereign OS. Routes governed actions through the BFT council, applies the Maternal Covenant, and enforces the care-floor (0.95) as a Layer-0 hard stop.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "language",
+            "value": "Python 3.11"
+          },
+          {
+            "name": "license",
+            "value": "MIT"
+          },
+          {
+            "name": "repo",
+            "value": "https://github.com/CSOAI-ORG/meok"
+          },
+          {
+            "name": "version",
+            "value": "1.4.0"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "provider",
+            "party-uuids": [
+              "a3a38af9-9616-4b2f-9691-823b2986b018"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "2a9ef1e7-a812-48a5-aef7-fba7ab764046",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Core (sovereign orchestration kernel) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "997764c2-e386-4bcd-835b-f7361dc9b4a8",
+                "control-id": "eu-ai-act/art-14",
+                "description": "Human oversight \u2014 every high-risk action gated by human review (EU AI Act Art. 14)."
+              },
+              {
+                "uuid": "0e074040-e73b-4168-96c3-070bcb84c139",
+                "control-id": "eu-ai-act/art-15",
+                "description": "Accuracy, robustness, cybersecurity \u2014 documented evals + drift monitoring."
+              },
+              {
+                "uuid": "9bbb049d-99d3-47b1-9877-d86240cbe238",
+                "control-id": "nist-ai-rmf/GOVERN-4.1",
+                "description": "Risk tolerance enforced as a care-floor (0.95) hard-stop."
+              },
+              {
+                "uuid": "d160e1ee-7e09-47a0-b86e-ec724ca64039",
+                "control-id": "iso-42001/A.9.3",
+                "description": "AI system logging via SIGIL chain."
+              },
+              {
+                "uuid": "353bea81-9653-41db-9a70-3043a6a4b8a1",
+                "control-id": "nist-800-53/SI-7",
+                "description": "Software/firmware/information integrity \u2014 SIGIL chain + OTS anchoring."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "bf2adeab-f948-4eea-9b5f-6827ef8b9779",
+        "type": "software",
+        "title": "MEOK Keystone (sovereign key + secret manager)",
+        "description": "Manages Ed25519 signing keys, future ML-DSA-65 PQC keys, and runtime secrets. Keys are stored in the OS keychain with 0600 permissions; never committed to source.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "algorithm",
+            "value": "Ed25519 (RFC 8032) \u00b7 ML-DSA-65 (FIPS 204) roadmap"
+          },
+          {
+            "name": "storage",
+            "value": "OS keychain + 0600 file"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "key-custodian",
+            "party-uuids": [
+              "dcd1ffaa-a54f-40fa-bc2d-181180d67b82"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "c105b9b4-29f8-4ed1-9d31-63bbe7d5dfd3",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Keystone (sovereign key + secret manager) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "b7324ec6-e00e-42f4-b9fd-e80903ccae1d",
+                "control-id": "nist-800-53/SC-12",
+                "description": "Cryptographic key establishment + management."
+              },
+              {
+                "uuid": "300dfb7e-399b-4390-b8e1-a6bd3a7139cb",
+                "control-id": "nist-800-53/IA-5",
+                "description": "Authenticator management \u2014 sovereign keys at rest."
+              },
+              {
+                "uuid": "9dbd106b-f2e2-456c-af44-ecdad0b94b91",
+                "control-id": "nist-800-53/SC-13",
+                "description": "Use of FIPS-validated cryptographic primitives."
+              },
+              {
+                "uuid": "0f80fac0-0eff-4793-b41e-dd18d6a8f5d2",
+                "control-id": "iso-42001/A.7.2",
+                "description": "Cryptographic protection of AI training/inference data."
+              },
+              {
+                "uuid": "965be083-6d1a-409e-b373-34ef196e74b2",
+                "control-id": "gdpr/art-32",
+                "description": "Security of processing \u2014 encryption at rest + transit."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "9b35bf9c-37e6-4cc5-b50e-343edcb1540e",
+        "type": "service",
+        "title": "MEOK SIGIL (hash-chained audit ledger)",
+        "description": "Append-only, Ed25519-signed, hash-linked audit ledger. Every governed action emits a SIGIL; the chain head hash anchors to Bitcoin via OpenTimestamps every 1,000 receipts.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "scheme",
+            "value": "ed25519 + sha256 hash chain"
+          },
+          {
+            "name": "anchor",
+            "value": "OpenTimestamps (Bitcoin) every 1k receipts"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "auditor",
+            "party-uuids": [
+              "1ed71949-b7ad-4b03-a3d7-a96c827198e6"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "245a9da1-7a89-41eb-b79c-54865e5b6953",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK SIGIL (hash-chained audit ledger) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "ed5bc1bf-abfc-4952-92fd-8e9b937959bf",
+                "control-id": "nist-800-53/AU-2",
+                "description": "Audit events \u2014 every governed action logged."
+              },
+              {
+                "uuid": "d88c6d19-5a91-45eb-a1eb-bba60b3242cc",
+                "control-id": "nist-800-53/AU-10",
+                "description": "Non-repudiation \u2014 Ed25519 signed."
+              },
+              {
+                "uuid": "6d992151-b724-4438-ad0a-4dd546fe608d",
+                "control-id": "nist-800-53/AU-9",
+                "description": "Protection of audit information \u2014 append-only + hash-linked."
+              },
+              {
+                "uuid": "c83766b0-c978-4935-8e25-524e9ec56de6",
+                "control-id": "eu-ai-act/art-12",
+                "description": "Record-keeping \u2014 logs enable traceability."
+              },
+              {
+                "uuid": "ab0f8698-6bf5-4a6f-acf8-a3c834f27192",
+                "control-id": "iso-42001/A.9.3",
+                "description": "AI system logging."
+              },
+              {
+                "uuid": "54d82201-2db4-4bc4-9fa7-b1fd770f3d21",
+                "control-id": "iso-42001/A.10.2",
+                "description": "AI incident management."
+              },
+              {
+                "uuid": "8381032a-27cb-4d03-a52e-47a7e68a9004",
+                "control-id": "nist-ai-rmf/MANAGE-4.1",
+                "description": "Post-deployment monitoring plan executed."
+              },
+              {
+                "uuid": "19329777-a3df-468c-a690-8b868d775181",
+                "control-id": "gdpr/art-30",
+                "description": "Records of processing activities (RoPA)."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "ee5bd948-5936-49c4-9318-c69addf5cfbf",
+        "type": "service",
+        "title": "MEOK BFT Council (33-agent Byzantine Fault Tolerant)",
+        "description": "33-agent council that gates every high-risk action; 22-of-33 quorum required. Each agent is a registered identity (Ed25519 pubkey) that casts signed votes. Decisions are SIGIL-emitted and tamper-evident.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "council_size",
+            "value": "33"
+          },
+          {
+            "name": "quorum",
+            "value": "22-of-33 (67%)"
+          },
+          {
+            "name": "voting_scheme",
+            "value": "Ed25519-signed ballots over JSON-RPC"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "council-operator",
+            "party-uuids": [
+              "362ee4b1-9305-480a-a94c-05469d21a10e"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "bd24f6cc-a768-4cc8-b911-fe54467ed741",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK BFT Council (33-agent Byzantine Fault Tolerant) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "6127826a-eba5-4851-b042-0b4d4c1e7d79",
+                "control-id": "eu-ai-act/art-14",
+                "description": "Human oversight \u2014 multi-agent council is a human-oversight mechanism."
+              },
+              {
+                "uuid": "af8dbfd8-5fcd-4919-8665-2da5237ff572",
+                "control-id": "iso-42001/A.6.1.2",
+                "description": "Roles/responsibilities defined per agent."
+              },
+              {
+                "uuid": "88f26342-d355-4787-9701-f82b75f0782a",
+                "control-id": "nist-800-53/AC-2",
+                "description": "Account management \u2014 every agent identity is registered."
+              },
+              {
+                "uuid": "4e55e3db-f09a-43ca-8f76-11c0163d8f9d",
+                "control-id": "nist-ai-rmf/GOVERN-2.1",
+                "description": "Roles/responsibilities/elines of authority."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "c7d11cbb-4c59-4487-a2f9-301e82c9de4d",
+        "type": "service",
+        "title": "MEOK Watermarking (EU AI Act Article 50 passport issuer)",
+        "description": "Issues Article 50 watermarking passports for AI-generated content. HMAC-signed free tier for casual verification; Ed25519-signed Pro tier for auditor-grade attestation.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "free_scheme",
+            "value": "HMAC-SHA256"
+          },
+          {
+            "name": "pro_scheme",
+            "value": "Ed25519"
+          },
+          {
+            "name": "verify_url",
+            "value": "https://proofof.ai/verify"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "transparency-officer",
+            "party-uuids": [
+              "cb442cef-eca0-4c98-aa5f-59f0d720da35"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "d1e04896-ef44-42cc-8f01-f354d414a49d",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Watermarking (EU AI Act Article 50 passport issuer) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "6c207938-3b86-4fb0-870f-09ccab357ca8",
+                "control-id": "eu-ai-act/art-50(1)",
+                "description": "AI-interaction disclosure \u2014 users informed."
+              },
+              {
+                "uuid": "4db81ffe-2ac6-482d-8fd3-7b2c69377775",
+                "control-id": "eu-ai-act/art-50(2)",
+                "description": "Generative content marking \u2014 machine-readable."
+              },
+              {
+                "uuid": "feb672ad-1ebf-456c-9585-1affea27caff",
+                "control-id": "eu-ai-act/art-50(3)",
+                "description": "Deepfake marking."
+              },
+              {
+                "uuid": "5b46616c-f665-4f40-a2ce-ed564bd0f45b",
+                "control-id": "eu-ai-act/art-50(4)",
+                "description": "Emotion-recognition disclosure."
+              },
+              {
+                "uuid": "91617c5d-0504-4ab7-b871-e0846cfdd39b",
+                "control-id": "iso-42001/A.9.4",
+                "description": "Communication to affected persons."
+              },
+              {
+                "uuid": "dd91928a-796b-4771-b34c-f1c6f7b80339",
+                "control-id": "nist-ai-rmf/GOVERN-1.1",
+                "description": "Legal requirements understood \u2014 Art 50 effective 2 Aug 2026."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "14e883d3-d82d-42db-a7db-e7dc32972acd",
+        "type": "documentation",
+        "title": "MEOK OSCAL Component Definition (this artefact)",
+        "description": "The signed OSCAL 1.1.2 component-definition describing the MEOK surface for regulator ingestion. Generated by the OSCAL generator MCP and Ed25519-signed by defoneos-sign core.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "schema",
+            "value": "OSCAL 1.1.2 component-definition"
+          },
+          {
+            "name": "size_target_kb",
+            "value": "20-50"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "authorising-official",
+            "party-uuids": [
+              "3d9e6219-cc5e-40bf-9d8f-b1e23810c1af"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "cd3e48ef-016f-4e7e-aca7-4cd8ee652c3e",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK OSCAL Component Definition (this artefact) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "ff6e2256-f313-4d62-bd79-7f4a9100279f",
+                "control-id": "eu-ai-act/art-11",
+                "description": "Technical documentation \u2014 OSCAL is the audit format."
+              },
+              {
+                "uuid": "18fc7ab6-24ec-431d-a9bc-af48982b1ed8",
+                "control-id": "eu-ai-act/annex-iv",
+                "description": "Annex IV documentation (subset \u2014 full pack at /oscal)."
+              },
+              {
+                "uuid": "73b73870-cd49-443e-813f-7d367b79652c",
+                "control-id": "iso-42001/A.5.1",
+                "description": "AI policies defined at board level."
+              },
+              {
+                "uuid": "f726e6e9-c141-41d5-969a-95106cd304aa",
+                "control-id": "nist-800-53/CM-2",
+                "description": "Baseline configuration \u2014 pinned OSCAL schema version."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "446819db-9c3a-49a8-b72e-2f58ae28b7d3",
+        "type": "service",
+        "title": "MEOK Governance Engine (cross-framework audit)",
+        "description": "Produces a full cross-framework governance report (EU AI Act, DORA, GDPR, JSP 936, UK AI Bill, NIST AI RMF, ISO 42001) in one call. Backed by the EU AI Act Compliance MCP, GDPR Compliance MCP, ISO 27001 AI MCP, ISO 42001 AI MCP, NIST AI RMF MCP, and the JSP 936 MCP.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "frameworks_audited",
+            "value": "eu-ai-act, dora, gdpr, jsp-936, uk-ai, nist-ai-rmf, iso-42001"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "governance-lead",
+            "party-uuids": [
+              "223dbe56-2814-40a2-9364-4eb94349aa67"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "7273fa55-5cf9-4e4f-9f68-a0bcdee62e8f",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Governance Engine (cross-framework audit) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "3fb92806-10cf-45ab-9a24-a295c5addf65",
+                "control-id": "iso-42001/A.8.3",
+                "description": "AI risk treatment plan maintained."
+              },
+              {
+                "uuid": "9843d364-3b40-41fb-8d35-59b2438ada92",
+                "control-id": "iso-42001/A.8.5",
+                "description": "AI system impact assessment \u2014 FRIA-lite."
+              },
+              {
+                "uuid": "bf416943-e1d8-4aa1-839b-358ac6127933",
+                "control-id": "nist-ai-rmf/MEASURE-2.5",
+                "description": "Trustworthy characteristics evaluated."
+              },
+              {
+                "uuid": "d9c873c0-df2f-4e1b-9e53-8617b4429b05",
+                "control-id": "nist-ai-rmf/MEASURE-3.1",
+                "description": "Risk monitored continuously."
+              },
+              {
+                "uuid": "5c450c25-7d2c-495c-8391-c113632ec56a",
+                "control-id": "nist-800-53/CA-7",
+                "description": "Continuous monitoring."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "b2fdf909-cdce-4020-93f4-c86593fe9148",
+        "type": "software",
+        "title": "MEOK LLM Proxy (substrate wrapper over third-party LLMs)",
+        "description": "Sits between the application and the underlying LLM (Anthropic, OpenAI, Gemini, etc.). Records model + seed + prompt hash + reply hash; applies PII redaction; enforces policy templates; never sends raw PII unless explicitly authorised.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "supported_models",
+            "value": "anthropic-claude, openai-gpt, google-gemini, meta-llama, mistral"
+          },
+          {
+            "name": "redaction",
+            "value": "PII strip + prompt-injection scan"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "ml-owner",
+            "party-uuids": [
+              "c92f764c-8a9d-461e-a09d-7ed9006aadad"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "2732ff77-b84b-4ba4-90fd-f5d828071017",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK LLM Proxy (substrate wrapper over third-party LLMs) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "5d1229a9-549c-4809-8eb0-a947688b7cdf",
+                "control-id": "gdpr/art-25",
+                "description": "Data protection by design \u2014 PII minimisation at proxy."
+              },
+              {
+                "uuid": "a27671f5-5235-4611-bfa6-df4fd15d3f02",
+                "control-id": "gdpr/art-32",
+                "description": "Security of processing."
+              },
+              {
+                "uuid": "8a93b1b2-e568-4f08-8917-4f2637c87be4",
+                "control-id": "nist-800-53/SC-8",
+                "description": "Transmission confidentiality + integrity \u2014 TLS 1.3."
+              },
+              {
+                "uuid": "74e0dda8-d7bd-4691-868e-3d077bee23ff",
+                "control-id": "eu-ai-act/art-10",
+                "description": "Data and data governance \u2014 training/inference data quality."
+              },
+              {
+                "uuid": "9e88632c-ac89-47e6-addd-6d59bd5e869b",
+                "control-id": "iso-42001/A.7.2",
+                "description": "Data quality for AI systems."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "b9cff562-e34c-485f-a74c-870d6620f10b",
+        "type": "service",
+        "title": "MEOK Prompt Guard (input sanitisation + injection scan)",
+        "description": "Sanitises inbound prompts: strips PII per gdpr proxy, scans for known prompt-injection patterns (Morris-II worm signatures, OWASP Agentic Top 10), and routes high-risk prompts to the BFT council.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "scan_coverage",
+            "value": "OWASP Agentic Top 10 + Morris-II defensive"
+          },
+          {
+            "name": "redaction_coverage",
+            "value": "PII + secrets + injection patterns"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "security-engineer",
+            "party-uuids": [
+              "a7e3ed15-c737-4cd5-933f-939591c7cc09"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "b3ef60b2-04c1-494d-9e77-bdf16497ae15",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Prompt Guard (input sanitisation + injection scan) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "66a63385-3331-41d1-abec-0855bdaa71ee",
+                "control-id": "nist-800-53/SI-10",
+                "description": "Information input validation \u2014 prompt sanitisation."
+              },
+              {
+                "uuid": "9e3e1898-0e37-4708-86c3-db4ee0a36499",
+                "control-id": "owasp-agentic/llm01",
+                "description": "Prompt injection defence (OWASP Agentic Top 10)."
+              },
+              {
+                "uuid": "1b6fbbdd-7058-477e-b3ea-635455ee7ff7",
+                "control-id": "owasp-agentic/llm06",
+                "description": "Excessive agency \u2014 rate-limited tool calls."
+              },
+              {
+                "uuid": "275398eb-4026-4db4-a35e-f6bfe5774e12",
+                "control-id": "iso-42001/A.8.5",
+                "description": "AI impact assessment covers adversarial inputs."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "ea0506f7-d294-4890-ab69-0c87cd5c3548",
+        "type": "service",
+        "title": "MEOK Output Watermark (machine-readable content marking)",
+        "description": "Marks every MEOK-produced output with an Article-50 compliant watermark + a verification URL. The watermark survives copy-paste, format conversion, and most transformations (proof-of-ai C2PA flow).",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "watermark_scheme",
+            "value": "C2PA-compatible + Ed25519 signed manifest"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "transparency-officer",
+            "party-uuids": [
+              "7317be3e-524f-48f3-b957-e6438b01d35f"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "f4600dfa-b5c6-4357-8307-2f03584d8665",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Output Watermark (machine-readable content marking) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "8fef9cac-ce31-4dd6-a5cb-0a01d8d2b67f",
+                "control-id": "eu-ai-act/art-50(2)",
+                "description": "Generative content marking \u2014 machine-readable."
+              },
+              {
+                "uuid": "0f8402fb-1599-400f-a556-d590e37bce78",
+                "control-id": "eu-ai-act/art-50(3)",
+                "description": "Deepfake marking \u2014 synthetic audio/image/video."
+              },
+              {
+                "uuid": "94fcf4b0-648d-467d-a65b-4a65518ccf1a",
+                "control-id": "nist-ai-rmf/GOVERN-1.1",
+                "description": "Legal requirement understood."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "4eae1522-a178-4a8a-9aa0-c1cef7d451f5",
+        "type": "service",
+        "title": "MEOK Evals (continuous accuracy/bias/robustness monitoring)",
+        "description": "Continuous evaluation harness for all MEOK subsystems. Tracks accuracy on golden sets, demographic parity, equalised-odds, and adversarial robustness probes. Alerts on >5% drift over 7 days.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "metrics",
+            "value": "accuracy, demographic_parity, equalised_odds, adv_robustness"
+          },
+          {
+            "name": "alert_threshold",
+            "value": "5% drift over 7 days"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "ml-evaluator",
+            "party-uuids": [
+              "9b306c7f-6b4a-44ac-a3aa-089c71af2242"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "4da1e576-8646-4bce-b1a6-60e602235e0c",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Evals (continuous accuracy/bias/robustness monitoring) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "dec43fc3-8ce7-461e-8b8a-101edbd9508b",
+                "control-id": "eu-ai-act/art-15",
+                "description": "Accuracy, robustness, cybersecurity \u2014 documented evals."
+              },
+              {
+                "uuid": "d48fc4d7-29af-4a95-9c0b-a6b62799e5b5",
+                "control-id": "nist-ai-rmf/MEASURE-2.5",
+                "description": "Trustworthy characteristics evaluated."
+              },
+              {
+                "uuid": "3151bf65-c0b9-48c7-a572-7175bed41747",
+                "control-id": "nist-ai-rmf/MEASURE-3.1",
+                "description": "Risk monitored continuously."
+              },
+              {
+                "uuid": "454893fe-a1fe-4df8-a35f-0e51a58123eb",
+                "control-id": "nist-800-53/CA-7",
+                "description": "Continuous monitoring."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "4c32b529-7794-4209-a4fe-e5e03a6a195d",
+        "type": "service",
+        "title": "MEOK Incident Response (72-hour regulator notification)",
+        "description": "Incident response pipeline: SIGIL-fed alerting, automatic BFT deliberation on critical incidents, GDPR Art 33 72-hour notification path, EU AI Act post-market monitoring integration.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "notification_deadline_hours",
+            "value": "72 (GDPR Art 33)"
+          },
+          {
+            "name": "post_market_monitoring",
+            "value": "EU AI Act Art 72"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "ciso",
+            "party-uuids": [
+              "65f45796-4fa4-4d85-998a-d9b9eda36b38"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "293d6029-3528-4f4a-8d1d-dc9dfd666a3a",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Incident Response (72-hour regulator notification) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "533577f3-550f-4fc7-80c2-8929573016a9",
+                "control-id": "gdpr/art-33",
+                "description": "Breach notification to supervisory authority."
+              },
+              {
+                "uuid": "efefe71a-e20c-4a1b-bfc8-aaa137d8a28f",
+                "control-id": "gdpr/art-34",
+                "description": "Communication of personal data breach to data subject."
+              },
+              {
+                "uuid": "8cb79dab-5299-4f2c-8d74-de97c5dfda9d",
+                "control-id": "eu-ai-act/art-72",
+                "description": "Post-market monitoring by providers."
+              },
+              {
+                "uuid": "36a7ada3-826a-4bf9-9fa0-6948b79e41cb",
+                "control-id": "iso-42001/A.10.2",
+                "description": "AI incident management."
+              },
+              {
+                "uuid": "a08deef9-681e-45fc-ab19-05827bf8e611",
+                "control-id": "nist-800-53/IR-4",
+                "description": "Incident handling."
+              },
+              {
+                "uuid": "3491a5cc-de4f-4442-a404-eea043760582",
+                "control-id": "nist-800-53/IR-6",
+                "description": "Incident reporting."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "e0efba65-7a47-40f1-98d2-5191eb92d64a",
+        "type": "service",
+        "title": "MEOK FedRAMP-style Control Monitor (NIST 800-53)",
+        "description": "Continuous-monitor for the NIST 800-53 controls in this OSCAL doc. Produces weekly evidence packages; flags deviations for remediation.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "framework",
+            "value": "NIST SP 800-53 rev5"
+          },
+          {
+            "name": "cadence",
+            "value": "weekly evidence + monthly report"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "compliance-monitor",
+            "party-uuids": [
+              "f3a93121-5bae-4cc4-8bf0-243c9db4b266"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "d96236fc-2b73-4d0d-9933-070e4a79d898",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK FedRAMP-style Control Monitor (NIST 800-53) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "40fdd6c2-7888-41a3-a1a7-4c4be5c0a729",
+                "control-id": "nist-800-53/CA-2",
+                "description": "Control assessments."
+              },
+              {
+                "uuid": "c2e20a0d-ff9e-45cd-baaa-7a07512ccf80",
+                "control-id": "nist-800-53/CA-7",
+                "description": "Continuous monitoring."
+              },
+              {
+                "uuid": "ceed9dad-5e7c-4cb9-b45c-2c6a1e38e70d",
+                "control-id": "nist-800-53/PM-6",
+                "description": "Measures of performance."
+              },
+              {
+                "uuid": "ed46d662-ac4e-47b4-85d2-ff63cf12e3d1",
+                "control-id": "nist-800-53/PM-9",
+                "description": "Risk management strategy."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "6ece27cf-1c66-4041-a792-146b8cf5726a",
+        "type": "software",
+        "title": "MEOK PQC Migration (Ed25519 \u2192 ML-DSA-65 + ML-KEM-768)",
+        "description": "Post-quantum migration path: NIST FIPS 203 (ML-KEM-768) for key encapsulation and FIPS 204 (ML-DSA-65) for signatures. Hybrid mode (Ed25519 + ML-DSA-65) is supported during the transition; the sovereign ledger will switch once the PQC suite is fully validated.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "kem_algorithm",
+            "value": "ML-KEM-768 (FIPS 203)"
+          },
+          {
+            "name": "sig_algorithm",
+            "value": "ML-DSA-65 (FIPS 204)"
+          },
+          {
+            "name": "mode",
+            "value": "hybrid (Ed25519 + ML-DSA-65) during transition"
+          }
+        ],
+        "status": {
+          "state": "in_development"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "cryptographer",
+            "party-uuids": [
+              "3f90565d-56ee-4861-b65c-a1c08a45543a"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "f98cf88f-b9df-4169-ae42-a3bc24c100e7",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK PQC Migration (Ed25519 \u2192 ML-DSA-65 + ML-KEM-768) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "58b8ed77-e0b4-4892-856b-d6f0d08f71af",
+                "control-id": "nist-800-53/SC-13",
+                "description": "Use of FIPS-validated crypto \u2014 PQC roadmap."
+              },
+              {
+                "uuid": "1da880fa-6cae-4732-8faf-a51cec06879c",
+                "control-id": "eu-ai-act/art-15",
+                "description": "Cybersecurity \u2014 PQC for long-lived signatures."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "5861d844-1349-4d0e-b13d-8d0d1c79bb90",
+        "type": "service",
+        "title": "MEOK Data Residency (per-region sovereign deployment)",
+        "description": "Sovereign deployment per region. UK / EU / US / AU / AS / SA regions each run their own instance on their own soil. No cross-border data movement without explicit DPO sign-off and SCC + TIA.",
+        "purpose": "Implements one or more AI governance controls per the OSCAL control-implementations block below.",
+        "props": [
+          {
+            "name": "regions",
+            "value": "UK, EU, US, AU, AS, SA"
+          },
+          {
+            "name": "transfer_basis",
+            "value": "SCC + TIA per Art 44-49 GDPR"
+          }
+        ],
+        "status": {
+          "state": "operational"
+        },
+        "responsible-roles": [
+          {
+            "role-id": "dpo",
+            "party-uuids": [
+              "31b2c07f-24ad-40ff-8031-e3ef0ae7889f"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "c9f5fa06-1eb2-4443-b663-a85d7dc6562e",
+            "source": "https://csoai.org/oscal#frameworks",
+            "description": "Implementation of the listed framework controls in the MEOK Data Residency (per-region sovereign deployment) component. Each control-implementation is verified by an OSCAL assessment + a weekly evidence package produced by the MEOK FedRAMP-style Control Monitor.",
+            "implemented-requirements": [
+              {
+                "uuid": "cc811f8f-7094-469a-8baf-7b0abb1b1984",
+                "control-id": "gdpr/art-44",
+                "description": "International transfers \u2014 lawful basis per region."
+              },
+              {
+                "uuid": "748ae7be-3da0-4578-9e14-091f463b949a",
+                "control-id": "gdpr/art-45",
+                "description": "Adequacy decision."
+              },
+              {
+                "uuid": "3f4dd1f5-7a87-465c-a631-a7eabaf9e499",
+                "control-id": "gdpr/art-46",
+                "description": "SCC + TIA for non-adequate jurisdictions."
+              },
+              {
+                "uuid": "4a89bf48-d2b4-47d6-ad3c-616085d1de5a",
+                "control-id": "gdpr/art-47",
+                "description": "Binding corporate rules where applicable."
+              },
+              {
+                "uuid": "9a46ec51-1313-4076-a57d-20e06774a380",
+                "control-id": "iso-42001/A.7.4",
+                "description": "Data management \u2014 regional isolation."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "back-matter": {
+      "resources": [
+        {
+          "uuid": "e1d8a9cc-13c3-4ae4-931e-a174e707d7cf",
+          "title": "MEOK System Card v1.4.0",
+          "rlinks": [
+            {
+              "href": "https://csoai.org/system-cards/meok.html"
+            }
+          ],
+          "remarks": "Human-readable System Card (Markdown, Ed25519-signed)."
+        },
+        {
+          "uuid": "e95e5c9e-5d79-4bf1-a0e4-290c29238199",
+          "title": "EU AI Act Compliance MCP",
+          "rlinks": [
+            {
+              "href": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp"
+            }
+          ]
+        },
+        {
+          "uuid": "2ed84fa1-5158-4986-b997-57a1c9319150",
+          "title": "GDPR Compliance AI MCP",
+          "rlinks": [
+            {
+              "href": "https://github.com/CSOAI-ORG/gdpr-compliance-ai-mcp"
+            }
+          ]
+        },
+        {
+          "uuid": "1a76ed48-15e7-4d46-a8c5-8b740f8ef951",
+          "title": "ISO 42001 AI MCP",
+          "rlinks": [
+            {
+              "href": "https://github.com/CSOAI-ORG/iso-42001-ai-mcp"
+            }
+          ]
+        },
+        {
+          "uuid": "6d0b06f4-9b87-4567-9fff-cd4f662fd3f1",
+          "title": "NIST AI RMF MCP",
+          "rlinks": [
+            {
+              "href": "https://github.com/CSOAI-ORG/nist-rmf-ai-mcp"
+            }
+          ]
+        },
+        {
+          "uuid": "1aa40c0c-05a8-4e39-9354-9a2197512169",
+          "title": "OSCAL Generator MCP",
+          "rlinks": [
+            {
+              "href": "https://github.com/CSOAI-ORG/oscal-generator-mcp"
+            }
+          ]
+        },
+        {
+          "uuid": "af82d332-5d5b-417b-b9a0-0b0b7d5b7b93",
+          "title": "defoneos-sign MCP (signed assurance)",
+          "rlinks": [
+            {
+              "href": "https://github.com/CSOAI-ORG/defoneos-sign-mcp"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

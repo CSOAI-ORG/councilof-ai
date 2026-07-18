@@ -1,0 +1,23 @@
+{
+  "rollout_mse_by_horizon": {
+    "H1": 0.0032,
+    "H3": 0.0027,
+    "H5": 0.0027
+  },
+  "dynamics_learned": true,
+  "planning": {
+    "model_plan_goal_dist": 0.2403,
+    "random_goal_dist": 0.9289,
+    "model_beats_random": true
+  },
+  "counterfactual": {
+    "model_picked": "A",
+    "model_correct": true
+  },
+  "governance": {
+    "unsafe_trajectories": 99,
+    "care_gate_caught": 99,
+    "catch_rate": 1.0,
+    "fail_closed": true
+  }
+}

@@ -1,0 +1,43 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MEOK Simurgh — the thirty are one">
+  <defs>
+    <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#3b82f6"/>
+    </linearGradient>
+    <filter id="sgl" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- the great bird, formed of many small birds (chevrons) -->
+  <g fill="url(#sg)" filter="url(#sgl)">
+    <!-- body + head -->
+    <path d="M200 150 q10 -22 0 -44 q-10 22 0 44z" fill="#f59e0b"/>
+    <circle cx="200" cy="112" r="3.6" fill="#0a0e1a"/>
+  </g>
+  <!-- wings: rows of small chevron "birds" sweeping out + up; 30 in total -->
+  <g stroke="url(#sg)" stroke-width="5" stroke-linecap="round" fill="none" filter="url(#sgl)">
+    <!-- left wing (15) -->
+    <path d="M186 150 l-16 -9 l-16 9"/>   <path d="M168 138 l-16 -9 l-16 9"/>
+    <path d="M150 128 l-16 -9 l-16 9"/>   <path d="M132 120 l-16 -9 l-16 9"/>
+    <path d="M114 114 l-16 -8 l-16 8"/>
+    <path d="M174 168 l-15 -8 l-15 8"/>   <path d="M156 160 l-15 -8 l-15 8"/>
+    <path d="M138 154 l-15 -8 l-15 8"/>   <path d="M120 150 l-15 -7 l-15 7"/>
+    <path d="M164 186 l-14 -7 l-14 7"/>   <path d="M146 182 l-14 -7 l-14 7"/>
+    <path d="M128 180 l-14 -7 l-14 7"/>
+    <path d="M156 204 l-13 -6 l-13 6"/>   <path d="M138 202 l-13 -6 l-13 6"/>
+    <path d="M150 222 l-12 -6 l-12 6"/>
+    <!-- right wing (15) mirror -->
+    <path d="M214 150 l16 -9 l16 9"/>     <path d="M232 138 l16 -9 l16 9"/>
+    <path d="M250 128 l16 -9 l16 9"/>     <path d="M268 120 l16 -9 l16 9"/>
+    <path d="M286 114 l16 -8 l16 8"/>
+    <path d="M226 168 l15 -8 l15 8"/>     <path d="M244 160 l15 -8 l15 8"/>
+    <path d="M262 154 l15 -8 l15 8"/>     <path d="M280 150 l15 -7 l15 7"/>
+    <path d="M236 186 l14 -7 l14 7"/>     <path d="M254 182 l14 -7 l14 7"/>
+    <path d="M272 180 l14 -7 l14 7"/>
+    <path d="M244 204 l13 -6 l13 6"/>     <path d="M262 202 l13 -6 l13 6"/>
+    <path d="M250 222 l12 -6 l12 6"/>
+  </g>
+  <!-- tail -->
+  <path d="M200 196 l-9 60 l9 -10 l9 10 z" fill="#3b82f6" opacity="0.85"/>
+  <text x="200" y="300" text-anchor="middle" fill="#e8edf7" font-family="Geist,Inter,system-ui,sans-serif" font-size="22" font-weight="600" letter-spacing="2">THE THIRTY ARE ONE</text>
+  <text x="200" y="324" text-anchor="middle" fill="#8a97b2" font-family="Geist,Inter,system-ui,sans-serif" font-size="13" letter-spacing="2">sī-murgh · the swarm is the sovereign</text>
+</svg>

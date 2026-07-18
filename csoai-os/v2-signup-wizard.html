@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK OS — Create i-character</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #08060c;
+  --surface: #0d0a14;
+  --surface-2: #120e1c;
+  --gold: #d4a853;
+  --gold-dim: #8a7035;
+  --gold-glow: rgba(212, 168, 83, 0.3);
+  --green: #22c55e;
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --red: #ef4444;
+  --cyan: #22d3ee;
+  --text: #f0ede6;
+  --text-dim: rgba(255, 255, 255, 0.45);
+  --border: rgba(212, 168, 83, 0.12);
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Space Grotesk', sans-serif;
+  --radius: 12px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background:
+    radial-gradient(ellipse at top, rgba(212, 168, 83, 0.04), transparent 50%),
+    var(--bg);
+}
+
+.wizard {
+  max-width: 720px;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+.wizard-header {
+  padding: 32px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+}
+
+.wizard-header h1 {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.wizard-header h1 .accent { color: var(--gold); font-weight: 500; }
+.wizard-header p { color: var(--text-dim); font-size: 14px; }
+
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 0 32px;
+}
+
+.step {
+  width: 32px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+.step.active { background: var(--gold); }
+.step.done { background: var(--green); }
+
+.wizard-body {
+  padding: 32px;
+  min-height: 400px;
+}
+
+.wizard-step { display: none; }
+.wizard-step.active { display: block; }
+
+.wizard-step h2 {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.wizard-step p { color: var(--text-dim); font-size: 13px; margin-bottom: 20px; }
+
+.form-group { margin-bottom: 16px; }
+
+.form-group label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.option {
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.option:hover { border-color: var(--gold); }
+.option.selected {
+  border-color: var(--gold);
+  background: rgba(212, 168, 83, 0.1);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.option .opt-emoji { font-size: 24px; display: block; margin-bottom: 4px; }
+.option .opt-name { color: var(--text); font-weight: 600; }
+.option .opt-meta { color: var(--text-dim); font-size: 10px; margin-top: 4px; }
+
+.option.queen.selected { box-shadow: 0 0 12px currentColor; }
+
+.wizard-footer {
+  padding: 20px 32px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  background: var(--surface-2);
+}
+.save-status {
+  margin: 16px auto;
+  text-align: center;
+  font: 500 13px/1.4 'Space Grotesk', system-ui, sans-serif;
+  padding: 10px 16px;
+  border-radius: 8px;
+  max-width: 480px;
+  transition: opacity 0.6s ease;
+}
+.save-status--saving {
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--gold, #c9a84c);
+}
+.save-status--success {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #10b981;
+}
+.save-status--warning {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+.save-status--error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+.save-status--fade { opacity: 0.3; }
+
+.btn {
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn:hover { border-color: var(--gold); color: var(--gold); }
+.btn.primary {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+  font-weight: 600;
+}
+.btn.primary:hover { background: #e8b85f; }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/── Step 1: Welcome / region detection ─/
+.region-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.region-flag { font-size: 48px; margin-bottom: 8px; }
+.region-name { font-size: 18px; color: var(--text); }
+.region-meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+/── Step 5: confirmation / ichar card ─/
+.ichar-card {
+  background: var(--surface-2);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 0 30px var(--gold-glow);
+}
+
+.ichar-emoji {
+  font-size: 64px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  border: 1px solid var(--gold);
+}
+
+.ichar-name { font-size: 20px; color: var(--text); font-weight: 500; }
+.ichar-archetype { font-family: var(--font-mono); font-size: 12px; color: var(--gold); margin-top: 4px; }
+.ichar-motto { font-style: italic; color: var(--text-dim); font-size: 14px; margin-top: 12px; }
+.ichar-sigil { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim-2); margin-top: 8px; }
+</style>
+</head>
+<body>
+<!-- CSOAI Layer-0 banner (8 protocols · 100/100 A+++++) -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:10002;background:linear-gradient(90deg,#fbbf24,#f97316);color:#000;text-align:center;padding:8px;font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif;border-bottom:2px solid #000">
+  <span style="font-size:16px;vertical-align:middle">🐉</span>
+  CSOAI Layer-0: <b>8 protocols · 100/100 A+++++ · bleeding edge · world-leading</b> ·
+  <a href="oscal-verifier.html" style="color:#000;text-decoration:underline">verify the 554-component OSCAL proof</a> ·
+  <a href="catapult.html" style="color:#000;text-decoration:underline">book the 30-min pilot call</a>
+</div>
+<style>body { padding-top: 46px !important; }</style>
+
+<!-- CSOAI Layer-0 banner (8 protocols · 100/100 A+++++) -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:10002;background:linear-gradient(90deg,#fbbf24,#f97316);color:#000;text-align:center;padding:8px;font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif;border-bottom:2px solid #000">
+  <span style="font-size:16px;vertical-align:middle">🐉</span>  <!-- 🐉 -->
+  CSOAI Layer-0: <b>8 protocols · 100/100 A+++++ · bleeding edge · world-leading</b> ·
+  <a href="oscal-verifier.html" style="color:#000;text-decoration:underline">verify the 554-component OSCAL proof</a> ·
+  <a href="catapult.html" style="color:#000;text-decoration:underline">book the 30-min pilot call</a>
+</div>
+<style>body { padding-top: 46px !important; }</style>
+
+
+<div class="wizard">
+  <div class="wizard-header">
+    <h1>Welcome to <span class="accent">MEOK OS</span></h1>
+    <p>Create your sovereign <span class="accent">i-character</span> (digital twin) in 5 steps.</p>
+    <div class="steps">
+      <div class="step active" data-step="0"></div>
+      <div class="step" data-step="1"></div>
+      <div class="step" data-step="2"></div>
+      <div class="step" data-step="3"></div>
+      <div class="step" data-step="4"></div>
+    </div>
+  </div>
+
+  <div class="wizard-body">
+    <!-- Step 1: Detect region -->
+    <div class="wizard-step active" data-step="0">
+      <h2>Step 1 · Your Region</h2>
+      <p>Detecting your IP region to zoom the globe to your local regulations.</p>
+      <div class="region-card" id="regionCard">
+        <div class="region-flag">🌍</div>
+        <div class="region-name">Detecting...</div>
+        <div class="region-meta" id="regionMeta">—</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Name + email -->
+    <div class="wizard-step" data-step="1">
+      <h2>Step 2 · Your Name</h2>
+      <p>What should your i-character be called? This is your digital twin.</p>
+      <div class="form-group">
+        <label>Display name</label>
+        <input type="text" id="icharName" placeholder="e.g. Sovereign Nick" maxlength="64" autofocus>
+      </div>
+      <div class="form-group">
+        <label>Email (for account)</label>
+        <input type="email" id="icharEmail" placeholder="nick@meok.ai">
+      </div>
+      <div class="form-group">
+        <label>Initial message (your first words as i-character)</label>
+        <textarea id="icharInitial" rows="2" placeholder="e.g. Welcome to the empire. I have heard the 12." maxlength="500"></textarea>
+      </div>
+    </div>
+
+    <!-- Step 3: Pick a queen archetype -->
+    <div class="wizard-step" data-step="2">
+      <h2>Step 3 · Choose Your Archetype</h2>
+      <p>Each i-character is modeled on one of the 12-Queen + King council. Pick the queen whose personality fits you best.</p>
+      <div class="option-grid" id="queenGrid">
+        <!-- Queens injected by JS -->
+      </div>
+    </div>
+
+    <!-- Step 4: Pick an arcana lens -->
+    <div class="wizard-step" data-step="3">
+      <h2>Step 4 · Choose Your Arcana Lens</h2>
+      <p>Pick a Major Arcana — this is the lens your i-character sees the world through. 22 options.</p>
+      <div class="option-grid" id="arcanaGrid">
+        <!-- Arcanas injected by JS -->
+      </div>
+      <div style="margin-top: 16px;">
+        <div class="form-group">
+          <label>Voice</label>
+          <select id="icharVoice">
+            <option value="warm">Warm (default)</option>
+            <option value="direct">Direct</option>
+            <option value="scholarly">Scholarly</option>
+            <option value="playful">Playful</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cognition</label>
+          <select id="icharCognition">
+            <option value="balanced">Balanced (default)</option>
+            <option value="fast">Fast</option>
+            <option value="deep">Deep</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: Confirmation -->
+    <div class="wizard-step" data-step="4">
+      <h2 data-i18n="wizard.step_5_title">Step 5 · i-character Created</h2>
+      <p data-i18n="wizard.step_5_subtitle">Your digital twin is live. The globe is auto-zoomed to your region.</p>
+      <div class="ichar-card" id="icharCard">
+        <div class="ichar-emoji" id="cardEmoji">🐉</div>
+        <div class="ichar-name" id="cardName">—</div>
+        <div class="ichar-archetype" id="cardArchetype">—</div>
+        <div class="ichar-motto" id="cardMotto">—</div>
+        <div class="ichar-sigil" id="cardSigil">—</div>
+      </div>
+      <div id="saveStatus" class="save-status" role="status" aria-live="polite"></div>
+      <p style="text-align: center; color: var(--gold);">
+        Next: open <a href="v2-temple-os.html" style="color: var(--gold); text-decoration: underline;" data-i18n="wizard.enter_os">Enter the OS →</a> to enter your sovereign world.
+      </p>
+    </div>
+  </div>
+
+  <div class="wizard-footer">
+    <button class="btn" id="btnBack" onclick="step(-1)" disabled>← Back</button>
+    <button class="btn primary" id="btnNext" onclick="step(1)" disabled>Next →</button>
+  </div>
+</div>
+
+<script>
+// ─── State ───
+let currentStep = 0;
+let state = {
+  user_id: 'nick-' + Math.random().toString(36).slice(2, 8),
+  region: null,
+  name: '',
+  email: '',
+  initial_message: '',
+  queen_model: null,
+  arcana_lens: null,
+  voice: 'warm',
+  cognition: 'balanced',
+  ichar: null,
+};
+
+// ─── Queens + Arcanas (mirroring ichar.py) ───
+const QUEEN_ARCHETYPES = {
+  'queen-king':        { name: 'Sovereign King',  emoji: '👑', archetype: 'The Sovereign Coordinator', best_for: 'executives, founders', color: '#fbbf24' },
+  'queen-strategy':   { name: 'Aurelian',        emoji: '♑', archetype: 'The Long-Term Strategist',   best_for: 'CTOs, VPs Strategy', color: '#10b981' },
+  'queen-care':       { name: 'Sophia Care',     emoji: '💗', archetype: 'The Caretaker',              best_for: 'HR, healthcare',     color: '#06b6d4' },
+  'queen-compliance': { name: 'Justitia',        emoji: '⚖',  archetype: 'The Auditor',                best_for: 'CCOs, legal',        color: '#3b82f6' },
+  'queen-finance':    { name: 'Asteria',         emoji: '⭐',  archetype: 'The Optimist-Operator',      best_for: 'CFOs',               color: '#fbbf24' },
+  'queen-domain':     { name: 'Dominion',        emoji: '🛞',  archetype: 'The Territorial Chariot',    best_for: 'BDs, sales',         color: '#ef4444' },
+  'queen-arcana':     { name: 'Aleph',           emoji: '✨',  archetype: 'The Mysterious Fool',       best_for: 'designers',          color: '#a855f7' },
+  'queen-brain':      { name: 'Brain',           emoji: '🧠',  archetype: 'The Hermit Scholar',         best_for: 'researchers',        color: '#3b82f6' },
+  'queen-proactive':  { name: 'Proactive',       emoji: '⚡',  archetype: 'The Wheel of Fortune',       best_for: 'ops, automation',    color: '#10b981' },
+  'queen-bridge':     { name: 'Bridge',          emoji: '🌉',  archetype: 'The Lovers Integrator',     best_for: 'integration',        color: '#ec4899' },
+  'queen-distribution': { name: 'Distribution',  emoji: '☀️',  archetype: 'The Generous Sun',           best_for: 'marketers',          color: '#facc15' },
+  'queen-council':    { name: 'Council',         emoji: '🦁',  archetype: 'The Strength-Tamer',         best_for: 'managers, PMs',      color: '#dc2626' },
+  'queen-watch':      { name: 'Watch',           emoji: '🗼',  archetype: 'The Vigilant Tower',         best_for: 'security, SRE',      color: '#991b1b' },
+};
+
+const ARCANA = [
+  ['The Fool', 0], ['The Magician', 1], ['The High Priestess', 2], ['The Empress', 3],
+  ['The Emperor', 4], ['The Hierophant', 5], ['The Lovers', 6], ['The Chariot', 7],
+  ['Strength', 8], ['The Hermit', 9], ['Wheel of Fortune', 10], ['Justice', 11],
+  ['The Hanged Man', 12], ['Death', 13], ['Temperance', 14], ['The Devil', 15],
+  ['The Tower', 16], ['The Star', 17], ['The Moon', 18], ['The Sun', 19],
+  ['Judgement', 20], ['The World', 21],
+];
+const ARCANA_EMOJI = ['🃏', '🎩', '🌙', '👑', '⚖', '📜', '💕', '🛞', '🦁', '🕯', '☸', '⚖', '🙃', '💀', '🕊', '⛓', '🗼', '⭐', '🌙', '☀️', '📯', '🌍'];
+
+// ─── Step navigation ───
+function showStep(n) {
+  currentStep = n;
+  document.querySelectorAll('.wizard-step').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.step) === n);
+  });
+  document.querySelectorAll('.step').forEach((el, i) => {
+    el.classList.toggle('active', i === n);
+    el.classList.toggle('done', i < n);
+  });
+  document.getElementById('btnBack').disabled = n === 0;
+  updateNextButton();
+  if (n === 2) renderQueens();
+  if (n === 3) renderArcanas();
+}
+
+function updateNextButton() {
+  const btn = document.getElementById('btnNext');
+  if (currentStep === 0) {
+    btn.disabled = !state.region;
+    btn.textContent = 'Next →';
+  } else if (currentStep === 1) {
+    btn.disabled = !state.name || !state.email;
+    btn.textContent = 'Next →';
+  } else if (currentStep === 2) {
+    btn.disabled = !state.queen_model;
+    btn.textContent = 'Next →';
+  } else if (currentStep === 3) {
+    btn.disabled = !state.arcana_lens;
+    btn.textContent = 'Create i-character';
+  } else if (currentStep === 4) {
+    btn.disabled = true;
+    btn.textContent = 'Done';
+  }
+}
+
+async function step(dir) {
+  if (dir > 0 && currentStep === 0) {
+    showStep(1);
+  } else if (dir > 0 && currentStep === 1) {
+    state.name = document.getElementById('icharName').value.trim();
+    state.email = document.getElementById('icharEmail').value.trim();
+    state.initial_message = document.getElementById('icharInitial').value.trim();
+    if (!state.name || !state.email) return;
+    showStep(2);
+  } else if (dir > 0 && currentStep === 2) {
+    if (!state.queen_model) return;
+    showStep(3);
+  } else if (dir > 0 && currentStep === 3) {
+    if (!state.arcana_lens && state.arcana_lens !== 0) return;
+    state.voice = document.getElementById('icharVoice').value;
+    state.cognition = document.getElementById('icharCognition').value;
+    await createIchar();
+    showStep(4);
+  } else if (dir < 0 && currentStep > 0) {
+    showStep(currentStep - 1);
+  }
+}
+
+// ─── Step 1: Detect region (mock) ───
+async function detectRegion() {
+  // In production: hit /api/geo with the user's IP
+  // Mock: fetch from a public IP API
+  try {
+    const r = await fetch('https://ipapi.co/json/');
+    if (r.ok) {
+      const j = await r.json();
+      // Map country to a temple
+      const map = {
+        'GB': { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', region: 'eu', x: 47, y: 28 },
+        'US': { code: 'US', name: 'United States', flag: '🇺🇸', region: 'us', x: 22, y: 38 },
+        'DE': { code: 'EU', name: 'European Union', flag: '🇪🇺', region: 'eu', x: 50, y: 32 },
+        'FR': { code: 'EU', name: 'France', flag: '🇫🇷', region: 'eu', x: 49, y: 34 },
+        'JP': { code: 'JP', name: 'Japan', flag: '🇯🇵', region: 'apac', x: 85, y: 36 },
+        'CN': { code: 'CN', name: 'China', flag: '🇨🇳', region: 'apac', x: 78, y: 38 },
+        'CA': { code: 'CA', name: 'Canada', flag: '🇨🇦', region: 'us', x: 22, y: 30 },
+        'SG': { code: 'SG', name: 'Singapore', flag: '🇸🇬', region: 'apac', x: 80, y: 56 },
+        'AU': { code: 'UN', name: 'Australia', flag: '🇦🇺', region: 'apac', x: 88, y: 70 },
+      };
+      const country = j.country_code || j.country || 'GB';
+      state.region = map[country] || { code: 'UK', name: j.country_name || 'United Kingdom', flag: '🌍', region: 'eu', x: 47, y: 28 };
+    } else {
+      throw new Error('geo api failed');
+    }
+  } catch (e) {
+    // Fallback for localhost
+    state.region = { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', region: 'eu', x: 47, y: 28 };
+  }
+  document.querySelector('.region-flag').textContent = state.region.flag;
+  document.querySelector('.region-name').textContent = state.region.name;
+  document.getElementById('regionMeta').textContent = `IP-based detection · ${state.region.code} · x=${state.region.x}, y=${state.region.y}`;
+  updateNextButton();
+}
+
+// ─── Step 3: Render queen grid ───
+function renderQueens() {
+  const grid = document.getElementById('queenGrid');
+  grid.innerHTML = '';
+  Object.entries(QUEEN_ARCHETYPES).forEach(([slug, q]) => {
+    const opt = document.createElement('div');
+    opt.className = 'option queen';
+    opt.style.color = q.color;
+    opt.innerHTML = `
+      <span class="opt-emoji">${q.emoji}</span>
+      <span class="opt-name">${q.name}</span>
+      <span class="opt-meta">${q.archetype}</span>
+    `;
+    opt.onclick = () => {
+      document.querySelectorAll('#queenGrid .option').forEach(x => x.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.queen_model = slug;
+      updateNextButton();
+    };
+    grid.appendChild(opt);
+  });
+}
+
+// ─── Step 4: Render arcana grid ───
+function renderArcanas() {
+  const grid = document.getElementById('arcanaGrid');
+  grid.innerHTML = '';
+  ARCANA.forEach(([name, num], i) => {
+    const opt = document.createElement('div');
+    opt.className = 'option arcana';
+    opt.innerHTML = `
+      <span class="opt-emoji">${ARCANA_EMOJI[i]}</span>
+      <span class="opt-name">${name}</span>
+      <span class="opt-meta">${num}</span>
+    `;
+    opt.onclick = () => {
+      document.querySelectorAll('#arcanaGrid .option').forEach(x => x.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.arcana_lens = num;
+      updateNextButton();
+    };
+    grid.appendChild(opt);
+  });
+}
+
+// ─── Step 5: Create i-character ───
+const BACKEND_BASE = (window.location.hostname === 'localhost' || window.location.hostname.startsWith('127.'))
+  ? ''  // same-origin on dev
+  : ''; // same-origin on production; swap to absolute URL if backend is on a different host
+
+function setSaveStatus(state, msg) {
+  const el = document.getElementById('saveStatus');
+  if (!el) return;
+  el.className = 'save-status save-status--' + state;
+  el.textContent = msg || '';
+  if (state === 'success') {
+    setTimeout(() => { el.classList.add('save-status--fade'); }, 4000);
+  } else {
+    el.classList.remove('save-status--fade');
+  }
+}
+
+async function createIchar() {
+  // Build the optimistic preview from local state (so the UI feels instant)
+  const local = {
+    ichar_id: 'ich-' + Math.random().toString(36).slice(2, 14),
+    name: state.name,
+    queen_model: state.queen_model,
+    archetype: QUEEN_ARCHETYPES[state.queen_model].archetype,
+    motto: QUEEN_ARCHETYPES[state.queen_model].best_for,
+    color: QUEEN_ARCHETYPES[state.queen_model].color,
+    arcana_lens: { number: state.arcana_lens, name: ARCANA[state.arcana_lens][0] },
+    initial_message: state.initial_message,
+    sigil_hash: Math.random().toString(36).slice(2, 18),
+    created_at: new Date().toISOString(),
+    _status: 'saving',
+  };
+  state.ichar = local;
+
+  // Render the confirmation card immediately (so the user sees progress)
+  document.getElementById('cardEmoji').textContent = QUEEN_ARCHETYPES[state.queen_model].emoji;
+  document.getElementById('cardName').textContent = local.name;
+  document.getElementById('cardArchetype').textContent = `${local.archetype} · ${local.arcana_lens.name}`;
+  document.getElementById('cardMotto').textContent = state.initial_message || `"${local.motto}"`;
+  document.getElementById('cardSigil').textContent = `sigil: ${local.sigil_hash} · ${local.ichar_id} · saving…`;
+  setSaveStatus('saving', '⏳ Sealing your i-character in the sovereign registry…');
+
+  // Persist locally so the OS can pick it up immediately (offline-safe)
+  localStorage.setItem('meok_ichar', JSON.stringify(local));
+  localStorage.setItem('meok_region', JSON.stringify(state.region));
+
+  // POST to the real backend
+  const payload = {
+    user_id: state.user_id,
+    name: state.name,
+    queen_model: state.queen_model,
+    arcana_lens: state.arcana_lens,
+    voice: state.voice,
+    cognition: state.cognition,
+    initial_message: state.initial_message,
+  };
+
+  let saved = null;
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const ctrl = new AbortController();
+      const timeoutId = setTimeout(() => ctrl.abort(), 8000);
+      const r = await fetch(BACKEND_BASE + '/api/ichar/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: ctrl.signal,
+      });
+      clearTimeout(timeoutId);
+      if (!r.ok) {
+        const text = await r.text().catch(() => '');
+        lastErr = `HTTP ${r.status} ${text.slice(0, 120)}`;
+        continue;
+      }
+      saved = await r.json();
+      break;
+    } catch (err) {
+      lastErr = err && err.message ? err.message : String(err);
+    }
+  }
+
+  if (saved && saved.ichar_id) {
+    // Upgrade the local copy with the real IDs the server minted
+    local.ichar_id = saved.ichar_id;
+    local.sigil_hash = saved.sigil_hash || local.sigil_hash;
+    local._status = 'saved';
+    state.ichar = local;
+    localStorage.setItem('meok_ichar', JSON.stringify(local));
+    document.getElementById('cardSigil').textContent =
+      `sigil: ${local.sigil_hash} · ${local.ichar_id} · ✓ saved`;
+    setSaveStatus('success', (window.MEOK_I18N && window.MEOK_I18N.t)
+      ? window.MEOK_I18N.t('wizard.saved_success', '✓ Your i-character is saved')
+      : '✓ Your i-character is saved');
+  } else {
+    // Backend unreachable — keep the local copy but mark it as unsynced so the
+    // OS can offer a retry when it next has connectivity.
+    local._status = 'unsynced';
+    local._save_error = lastErr;
+    state.ichar = local;
+    localStorage.setItem('meok_ichar', JSON.stringify(local));
+    document.getElementById('cardSigil').textContent =
+      `sigil: ${local.sigil_hash} · ${local.ichar_id} · ⚠ saved locally (offline)`;
+    setSaveStatus('warning',
+      `⚠ Saved locally — backend unreachable (${(lastErr || 'unknown').slice(0, 80)}). Will retry when online.`);
+  }
+}
+
+// ─── Boot ───
+detectRegion();
+</script>
+
+</body>
+</html>

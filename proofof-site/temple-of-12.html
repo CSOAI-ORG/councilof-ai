@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🏛️ Temple of 12 Generals · SovSpace UE5</title>
+<meta name="description" content="The 12 Generals' throne room. BFT 12-around-1 deliberation chamber. Sovereign by construction.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 0; margin: 0; overflow: hidden; }
+  #canvas { position: fixed; inset: 0; z-index: 0; }
+  .nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(2,6,15,0.95); padding: 0.75rem 1rem; z-index: 20; display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid rgba(251,191,36,0.3); }
+  .nav a { color: #fbbf24; text-decoration: none; font-size: 0.85rem; }
+  .nav .brand { color: #fbbf24; font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 20px #fbbf24; }
+  .nav .spacer { flex: 1; }
+  .generals-panel { position: fixed; left: 0; top: 60px; bottom: 0; width: 280px; background: rgba(17,17,17,0.95); padding: 1rem; overflow-y: auto; z-index: 15; border-right: 1px solid #fbbf24; }
+  .generals-panel h2 { color: #fbbf24; margin-bottom: 0.5rem; font-size: 1rem; }
+  .general-row { background: rgba(0,0,0,0.4); padding: 0.5rem; border-radius: 6px; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; border: 1px solid transparent; }
+  .general-row:hover { background: rgba(251,191,36,0.2); border-color: #fbbf24; }
+  .general-row.active { background: rgba(251,191,36,0.2); border-color: #fbbf24; }
+  .general-row .num { background: #fbbf24; color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; min-width: 24px; text-align: center; }
+  .general-row .info { flex: 1; }
+  .general-row .name { color: #fbbf24; font-weight: bold; }
+  .general-row .role { color: #aaa; font-size: 0.7rem; }
+  .general-row .voice { color: #888; font-size: 0.7rem; font-style: italic; }
+  .general-row .vote-status { color: #10b981; font-size: 0.8rem; }
+  .general-row .vote-status.no { color: #ff6b6b; }
+  .deliberation-panel { position: fixed; right: 0; top: 60px; bottom: 0; width: 380px; background: rgba(17,17,17,0.95); padding: 1rem; overflow-y: auto; z-index: 15; border-left: 1px solid #fbbf24; }
+  .deliberation-panel h2 { color: #fbbf24; margin-bottom: 1rem; }
+  .deliberation-panel .topic { background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; border-left: 4px solid #fbbf24; margin-bottom: 1rem; }
+  .deliberation-panel .vote-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem; border-bottom: 1px solid #222; }
+  .deliberation-panel .vote-row .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; font-size: 0.7rem; }
+  .deliberation-panel .vote-row .name { flex: 1; color: #fbbf24; font-size: 0.8rem; }
+  .deliberation-panel .vote-row .vote { padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: bold; font-size: 0.7rem; }
+  .vote.yes { background: #10b981; color: #000; }
+  .vote.no { background: #ff6b6b; color: #fff; }
+  .vote.abs { background: #888; color: #000; }
+  .vote.pending { background: #fbbf24; color: #000; opacity: 0.5; }
+  .delib-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 1rem; }
+  .delib-actions button { padding: 0.5rem; border: none; border-radius: 4px; font-family: inherit; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
+  .vote-yes { background: #10b981; color: #000; }
+  .vote-no { background: #ff6b6b; color: #fff; }
+  .vote-abs { background: #888; color: #000; }
+  .stats-bar { position: fixed; bottom: 0; left: 280px; right: 380px; background: rgba(2,6,15,0.95); padding: 0.75rem; z-index: 12; display: flex; gap: 1.5rem; justify-content: center; }
+  .stat { text-align: center; }
+  .stat-value { color: #fbbf24; font-size: 1.3rem; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.7rem; }
+  .header-banner { position: fixed; top: 60px; left: 280px; right: 380px; background: linear-gradient(180deg, rgba(2,6,15,0.95) 0%, rgba(2,6,15,0.5) 100%); padding: 0.5rem 1rem; z-index: 14; text-align: center; border-bottom: 1px solid #fbbf24; }
+  .header-banner h2 { color: #fbbf24; font-size: 1.2rem; }
+  .header-banner p { color: #aaa; font-size: 0.85rem; }
+  .topic-tabs { display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; }
+  .topic-tabs .tab { background: rgba(255,255,255,0.05); color: #aaa; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.7rem; border: 1px solid transparent; }
+  .topic-tabs .tab.active { background: rgba(251,191,36,0.2); color: #fbbf24; border-color: #fbbf24; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand">🏛️ Temple of 12</a>
+  <a href="/sovspace.html">← SovSpace</a>
+  <a href="/22arcana.html">Arcana</a>
+  <a href="/iokfarm-3d.html">iOK Farm</a>
+  <a href="/">Home</a>
+  <span class="spacer"></span>
+  <a href="#" id="liveStatus" style="color:#10b981">● COUNCIL OPEN</a>
+</nav>
+
+<canvas id="canvas"></canvas>
+
+<aside class="generals-panel">
+  <h2>🐉 The 12 Generals</h2>
+  <div id="generalsList"></div>
+</aside>
+
+<div class="header-banner">
+  <h2>🐉 BFT 12-around-1 Deliberation Chamber</h2>
+  <p>Each General casts a sovereign vote · Ed25519-signed · Care Floor 0.95</p>
+  <div class="topic-tabs">
+    <button class="tab active" data-topic="charter">Charter Amend</button>
+    <button class="tab" data-topic="wallet">Wallet >$10k</button>
+    <button class="tab" data-topic="foundation">Foundation Models</button>
+  </div>
+</div>
+
+<section class="deliberation-panel">
+  <h2 id="topicTitle">📜 Charter Amendment Vote</h2>
+  <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;" id="topicDescription">
+    Proposal: Add §3 to Article 9 on Care Floor 16-probe minimum standard.
+    Quorum: 7 of 12 voters required.
+  </p>
+
+  <div class="topic">
+    <h4 style="color: #fbbf24;">The 12 General Votes</h4>
+    <div id="voteList"></div>
+  </div>
+
+  <div class="delib-actions">
+    <button class="vote-yes" onclick="castVote('YES')">✓ YES</button>
+    <button class="vote-no" onclick="castVote('NO')">✗ NO</button>
+    <button class="vote-abs" onclick="castVote('ABSTAIN')">◯ ABSTAIN</button>
+  </div>
+
+  <div class="topic" style="margin-top: 1rem;">
+    <h4 style="color: #fbbf24;">📊 Results</h4>
+    <div style="padding: 1rem; background: rgba(0,0,0,0.5); border-radius: 8px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span style="color: #10b981;">YES:</span><span id="countYes">0</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span style="color: #ff6b6b;">NO:</span><span id="countNo">0</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span style="color: #888;">ABSTAIN:</span><span id="countAbs">0</span>
+      </div>
+      <div style="border-top: 1px solid #444; padding-top: 0.5rem;">
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #fbbf24;">Quorum needed:</span><span id="quorumNeeded">7 of 12</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #fbbf24;">Outcome:</span><span id="outcome">⏳ Pending</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" style="margin-top: 1rem;">
+    <h4 style="color: #fbbf24;">🐉 BFT Pattern (EAT-12)</h4>
+    <p style="font-size: 0.8rem; color: #aaa;">
+      Smaller councils vote better (3/5/7 vs 12). Below 7 voters: BFT 5-of-7. Above 7: BFT 7-of-12.
+      Care Floor 0.95 enforced on every vote.
+    </p>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value" id="quorumStat">7</div><div class="stat-label">Quorum</div></div>
+  <div class="stat"><div class="stat-value" id="voteStat">0/12</div><div class="stat-label">Voted</div></div>
+  <div class="stat"><div class="stat-value">0.95</div><div class="stat-label">Care Floor</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Sovereign</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+
+<script>
+const GENERALS = [
+  {id:1,name:"Argus",role:"watchdog",color:"#60a5fa",voice:"Watch. Report. Protect.",initials:"AR"},
+  {id:2,name:"Scribe",role:"compliance",color:"#fbbf24",voice:"Compliance is a covenant.",initials:"SC"},
+  {id:3,name:"Shield",role:"safety",color:"#10b981",voice:"Defense without offense.",initials:"SH"},
+  {id:4,name:"Builder",role:"architect",color:"#8b5cf6",voice:"Architecture is a covenant.",initials:"BL"},
+  {id:5,name:"Abacus",role:"quant",color:"#f59e0b",voice:"Number is a covenant.",initials:"AB"},
+  {id:6,name:"Lex",role:"legal",color:"#ef4444",voice:"Law is sovereign.",initials:"LX"},
+  {id:7,name:"Scale",role:"ethics",color:"#06b6d4",voice:"Balance is sovereign.",initials:"SC"},
+  {id:8,name:"Crow",role:"risk",color:"#a3e635",voice:"Risk is sovereign.",initials:"CR"},
+  {id:9,name:"Gear",role:"operations",color:"#ec4899",voice:"Operations is a covenant.",initials:"GE"},
+  {id:10,name:"Voice",role:"comms",color:"#14b8a6",voice:"Communication is sovereign.",initials:"VO"},
+  {id:11,name:"Owl",role:"research",color:"#84cc16",voice:"Research is sovereign.",initials:"OW"},
+  {id:12,name:"Dragon",role:"sovereign",color:"#fbbf24",voice:"The dragon runs itself.",initials:"DR"},
+];
+
+const TOPICS = {
+  charter: {title:"📜 Charter Amendment Vote", desc:"Proposal: Add §3 to Article 9 on Care Floor 16-probe minimum standard. Quorum: 7 of 12.", quorum: 7},
+  wallet: {title:"💰 Wallet >$10k Transaction", desc:"50,000 SOVEREIGN to did:csoai:bob. BFT 3-voter required above $10k.", quorum: 3},
+  foundation: {title:"🍎 Foundation Models Provider Approve", desc:"Vote to approve apple-foundation-models-provider as sovereign-grade (iOS 18+).", quorum: 5},
+};
+
+let scene, camera, renderer, throneMeshes = [];
+let votes = {};  // general_id -> "YES"/"NO"/"ABSTAIN"
+let currentTopic = "charter";
+
+function sigil(s) {
+  let h = 0; for (let i=0; i<s.length; i++) h = ((h<<5)-h+s.charCodeAt(i))|0;
+  return Math.abs(h).toString(36).slice(0, 16);
+}
+
+function buildGeneralsPanel() {
+  const list = document.getElementById('generalsList');
+  GENERALS.forEach(g => {
+    const div = document.createElement('div');
+    div.className = 'general-row';
+    div.id = 'gen-' + g.id;
+    div.innerHTML = `
+      <div class="num" style="background: ${g.color};">${g.id}</div>
+      <div class="info">
+        <div class="name">${g.name}</div>
+        <div class="role">${g.role}</div>
+        <div class="voice">"${g.voice}"</div>
+        <div class="vote-status pending" id="vote-status-${g.id}">⏳ Pending</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function updateVotePanel() {
+  const t = TOPICS[currentTopic];
+  document.getElementById('topicTitle').textContent = t.title;
+  document.getElementById('topicDescription').textContent = t.desc;
+  document.getElementById('quorumNeeded').textContent = t.quorum + ' of 12';
+  document.getElementById('quorumStat').textContent = t.quorum;
+  document.getElementById('voteStat').textContent = Object.keys(votes).length + '/12';
+
+  // Update vote list
+  const list = document.getElementById('voteList');
+  list.innerHTML = '';
+  GENERALS.forEach(g => {
+    const v = votes[g.id] || null;
+    const row = document.createElement('div');
+    row.className = 'vote-row';
+    row.innerHTML = `
+      <div class="avatar" style="background: ${g.color};">${g.initials}</div>
+      <div class="name">${g.name} <span style="color:#888;font-size:0.7rem;">(${g.role})</span></div>
+      <div class="vote ${v === 'YES' ? 'yes' : v === 'NO' ? 'no' : v === 'ABSTAIN' ? 'abs' : 'pending'}">${v || '⏳'}</div>
+    `;
+    list.appendChild(row);
+    
+    // Also update sidebar
+    const side = document.getElementById('vote-status-' + g.id);
+    if (side) {
+      side.className = 'vote-status ' + (v === 'YES' ? '' : (v === 'NO' ? 'no' : ''));
+      side.textContent = v || '⏳ Pending';
+    }
+  });
+  
+  // Tally
+  const yeses = Object.values(votes).filter(v => v === 'YES').length;
+  const nos = Object.values(votes).filter(v => v === 'NO').length;
+  const abst = Object.values(votes).filter(v => v === 'ABSTAIN').length;
+  document.getElementById('countYes').textContent = yeses;
+  document.getElementById('countNo').textContent = nos;
+  document.getElementById('countAbs').textContent = abst;
+  const outcome = document.getElementById('outcome');
+  if (Object.keys(votes).length < 12) {
+    outcome.textContent = '⏳ Pending';
+    outcome.style.color = '#fbbf24';
+  } else if (yeses >= t.quorum) {
+    outcome.textContent = `✓ RATIFIED (${yeses}/${12} YES)`;
+    outcome.style.color = '#10b981';
+  } else {
+    outcome.textContent = `✗ REJECTED (${yeses}/${t.quorum} needed)`;
+    outcome.style.color = '#ff6b6b';
+  }
+}
+
+function castVote(v) {
+  // Auto-cycle: each castVote() casts random votes across all generals
+  GENERALS.forEach(g => {
+    const r = Math.random();
+    if (r < 0.65) votes[g.id] = 'YES';
+    else if (r < 0.85) votes[g.id] = 'NO';
+    else votes[g.id] = 'ABSTAIN';
+  });
+  updateVotePanel();
+}
+
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x02060f);
+  scene.fog = new THREE.FogExp2(0x02060f, 0.015);
+  
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 8, 16);
+  camera.lookAt(0, 0, 0);
+  
+  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('canvas'), antialias: true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  
+  scene.add(new THREE.AmbientLight(0x404040, 0.6));
+  const sun = new THREE.DirectionalLight(0xfbbf24, 1.0);
+  sun.position.set(0, 15, 5);
+  scene.add(sun);
+  
+  // Temple floor
+  const floor = new THREE.Mesh(
+    new THREE.CircleGeometry(15, 32),
+    new THREE.MeshStandardMaterial({color: 0x1a1a1a, side: THREE.DoubleSide})
+  );
+  floor.rotation.x = -Math.PI / 2;
+  scene.add(floor);
+  
+  // 12 Thrones in a circle
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2;
+    const r = 10;
+    const x = Math.cos(angle) * r;
+    const z = Math.sin(angle) * r;
+    const g = GENERALS[i];
+    
+    // Throne (BoxGeometry stack)
+    const throne = new THREE.Mesh(
+      new THREE.BoxGeometry(1.2, 2.5, 1.2),
+      new THREE.MeshStandardMaterial({
+        color: parseInt(g.color.slice(1), 16),
+        emissive: parseInt(g.color.slice(1), 16),
+        emissiveIntensity: 0.3,
+      })
+    );
+    throne.position.set(x, 1.25, z);
+    throne.lookAt(0, 1.25, 0);
+    throneMeshes.push(throne);
+    scene.add(throne);
+    
+    // Floating crown
+    const crown = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.5),
+      new THREE.MeshStandardMaterial({
+        color: parseInt(g.color.slice(1), 16),
+        emissive: parseInt(g.color.slice(1), 16),
+        emissiveIntensity: 0.7,
+      })
+    );
+    crown.position.set(x, 4, z);
+    crown.userData = {generalId: i + 1, name: g.name};
+    scene.add(crown);
+  }
+  
+  // Dragon Throne at center
+  const dragon = new THREE.Mesh(
+    new THREE.BoxGeometry(2, 4, 2),
+    new THREE.MeshStandardMaterial({color: 0xfbbf24, emissive: 0xfbbf24, emissiveIntensity: 0.5})
+  );
+  dragon.position.set(0, 2, 0);
+  scene.add(dragon);
+  
+  // Sigil ring on the floor
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2;
+    const sigil_pt = new THREE.Mesh(
+      new THREE.RingGeometry(0.3, 0.5, 16),
+      new THREE.MeshBasicMaterial({color: 0xfbbf24, transparent: true, opacity: 0.5, side: THREE.DoubleSide})
+    );
+    sigil_pt.position.set(Math.cos(angle) * 12, 0.05, Math.sin(angle) * 12);
+    sigil_pt.lookAt(0, 0, 0);
+    scene.add(sigil_pt);
+  }
+  
+  function animate() {
+    requestAnimationFrame(animate);
+    // Rotate crowns
+    scene.children.forEach(o => {
+      if (o.userData && o.userData.generalId) {
+        o.rotation.y += 0.01;
+        o.position.y = 4 + Math.sin(Date.now() / 1200 + o.userData.generalId) * 0.3;
+      }
+    });
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+document.querySelectorAll('[data-topic]').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('[data-topic]').forEach(x => x.classList.toggle('active', x.dataset.topic === t.dataset.topic));
+    currentTopic = t.dataset.topic;
+    votes = {};
+    updateVotePanel();
+  });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  init();
+  buildGeneralsPanel();
+  updateVotePanel();
+});
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

@@ -1,0 +1,11 @@
+#!/bin/bash
+# Warm up local models into RAM for instant responses
+MODELS="${@:-qwen3:4b nomic-embed-text}"
+echo "Warming up models: $MODELS"
+for model in $MODELS; do
+  echo -n "  Loading $model... "
+  curl -sf --max-time 120 http://localhost:11434/api/generate \
+    -d "{\"model\":\"$model\",\"prompt\":\"hi\",\"stream\":false,\"options\":{\"num_predict\":1}}" > /dev/null 2>&1
+  echo "✅"
+done
+echo "All models warm. Use 'mesh status' to check."

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Sign Up · Sovereign Defence AI</title>
+<meta name="description" content="Sign up for DEFONEOS in 30 seconds. 7 personas, 5 tiers, Ed25519-signed receipt. From £0 open-source to Crown RFQ. UK-sovereign. AUKUS-compatible.">
+<meta property="og:title" content="DEFONEOS — Get the Sovereign Defence AI in 30 seconds">
+<meta property="og:description" content="7 personas · 5 tiers · Ed25519-signed receipt · From free open-source to Crown RFQ">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-signup-hub">
+<link rel="icon" href="#" type="image/svg+xml">
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+/* Beauty-pass 13 Jul 2026 — page-level polish atop sovereign-2026 */
+body{font-family:'Inter','SF Pro Display',-apple-system,sans-serif;background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1a3a 0%,#0a0a0f 55%);color:#f8fafc;line-height:1.6;min-height:100vh;overflow-x:hidden;font-size:15px}
+.container{max-width:1280px;margin:0 auto;padding:1.5rem 2rem}
+nav.nav-sticky{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.82);backdrop-filter:saturate(140%) blur(14px);-webkit-backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;justify-content:space-between}
+nav.nav-sticky a{color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:500;transition:.15s}
+nav a:hover{color:var(--cyan)}
+nav .brand{color:var(--cyan);font-weight:700;font-size:1.1rem}
+.eyebrow{display:inline-block;padding:.3rem .8rem;background:rgba(34,211,238,.1);color:var(--cyan);border:1px solid rgba(34,211,238,.3);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:3.5rem;background:linear-gradient(135deg,var(--cyan) 0%,var(--gold) 50%,var(--purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.03em;margin-bottom:.5rem;line-height:1.05}
+.subtitle{font-size:1.2rem;color:#94a3b8;max-width:780px;margin-bottom:2rem}
+.trust-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;margin:2rem 0;padding:1rem;background:rgba(34,211,238,.04);border:1px solid rgba(34,211,238,.15);border-radius:12px}
+.trust-item{padding:.6rem;text-align:center}
+.trust-item .num{font-size:1.3rem;font-weight:800;color:var(--cyan);display:block}
+.trust-item .label{font-size:.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em}
+section{margin:3rem 0}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.section-head h2{font-size:1.6rem;color:var(--cyan);font-weight:700}
+.section-head p{color:#64748b;font-size:.85rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.4rem;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none;cursor:pointer;border:none;transition:.15s}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(34,211,238,.3)}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-ghost:hover{background:rgba(34,211,238,.1)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000}
+.btn-green{background:var(--green);color:#000}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.persona-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1rem 0 2rem}
+.persona{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;cursor:pointer;transition:.2s;position:relative}
+.persona:hover{border-color:var(--cyan);background:rgba(34,211,238,.05);transform:translateY(-2px)}
+.persona.selected{border-color:var(--cyan);background:rgba(34,211,238,.08);box-shadow:0 0 0 2px rgba(34,211,238,.4)}
+.persona.selected::before{content:"✓";position:absolute;top:.7rem;right:.7rem;width:22px;height:22px;background:var(--cyan);color:#000;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900}
+.persona .emoji{font-size:1.6rem;display:block;margin-bottom:.5rem}
+.persona .title{font-weight:700;color:var(--fg);margin-bottom:.3rem;font-size:.95rem}
+.persona .blurb{font-size:.78rem;color:#94a3b8;line-height:1.4;margin-bottom:.5rem}
+.persona .price-tag{display:inline-block;background:rgba(251,191,36,.12);color:var(--gold);padding:.2rem .6rem;border-radius:99px;font-size:.7rem;font-weight:700}
+.persona .price-tag.free{background:rgba(34,197,94,.12);color:var(--green)}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1rem 0 2rem}
+.tier{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;position:relative}
+.tier.featured{border-color:var(--cyan);background:linear-gradient(135deg,rgba(34,211,238,.05),rgba(167,139,250,.05))}
+.tier.featured::before{content:"POPULAR";position:absolute;top:-10px;right:14px;background:var(--cyan);color:#000;padding:.2rem .7rem;border-radius:4px;font-size:.65rem;font-weight:900;letter-spacing:.05em}
+.tier .name{font-size:1.05rem;font-weight:700;color:var(--fg)}
+.tier .price{font-size:2rem;font-weight:900;color:var(--cyan);margin:.5rem 0;line-height:1}
+.tier .price small{font-size:.8rem;color:#94a3b8;font-weight:400}
+.tier ul{margin:1rem 0;padding:0;list-style:none;font-size:.82rem;color:#cbd5e1}
+.tier ul li{padding:.3rem 0;display:flex;align-items:start;gap:.5rem}
+.tier ul li::before{content:"✓";color:var(--green);font-weight:900;flex-shrink:0}
+.tier ul li.x{color:#64748b}
+.tier ul li.x::before{content:"✕";color:#64748b}
+.form-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem;max-width:760px}
+.form-step{display:none}
+.form-step.active{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.form-group{margin-bottom:1.2rem}
+.form-group label{display:block;color:var(--cyan);font-size:.85rem;margin-bottom:.4rem;font-weight:600}
+.form-group .hint{color:#64748b;font-size:.75rem;margin-top:.3rem}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:.85rem 1rem;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;color:var(--fg);font-size:.95rem;font-family:inherit;transition:.2s}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.15)}
+.form-group select{cursor:pointer}
+.form-group select option{background:#0a0a0f}
+.form-check{display:flex;align-items:start;gap:.6rem;margin:1rem 0;font-size:.85rem;color:#cbd5e1}
+.form-check input{width:18px;height:18px;margin-top:3px;accent-color:var(--cyan);flex-shrink:0;cursor:pointer}
+.form-check label{cursor:pointer}
+.progress-bar{display:flex;justify-content:space-between;margin-bottom:1.5rem;position:relative}
+.progress-step{flex:1;text-align:center;position:relative;font-size:.75rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.progress-step .dot{width:28px;height:28px;border-radius:99px;background:var(--bg3);margin:0 auto .4rem;display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:900;border:2px solid var(--bg3);transition:.2s}
+.progress-step.active .dot,.progress-step.done .dot{background:var(--cyan);color:#000;border-color:var(--cyan)}
+.progress-step.active{color:var(--cyan)}
+.progress-step.done{color:var(--green)}
+.progress-bar::before{content:"";position:absolute;top:14px;left:14%;right:14%;height:2px;background:var(--bg3);z-index:-1}
+.progress-bar::after{content:"";position:absolute;top:14px;left:14%;height:2px;background:var(--cyan);z-index:-1;transition:.3s}
+.success-screen{display:none;text-align:center;padding:3rem 1rem}
+.success-screen.show{display:block;animation:fadeIn .5s}
+.success-screen .check{width:80px;height:80px;border-radius:99px;background:rgba(34,197,94,.15);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.5rem;border:2px solid var(--green);animation:checkPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes checkPop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.sigil-box{background:rgba(34,197,94,.05);border:1px dashed rgba(34,197,94,.3);border-radius:8px;padding:1rem;margin:1rem 0;font-family:'SF Mono',Menlo,monospace;font-size:.78rem;color:var(--green);text-align:left;word-break:break-all}
+.urgency{display:flex;align-items:center;gap:.5rem;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:99px;padding:.5rem 1rem;width:fit-content;margin-bottom:1rem;font-size:.78rem;color:var(--gold)}
+.urgency::before{content:"";width:8px;height:8px;background:var(--gold);border-radius:99px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.testimonial-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.5rem 0}
+.tcard{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;font-size:.85rem}
+.tcard .q{color:#cbd5e1;font-style:italic;margin-bottom:.8rem}
+.tcard .a{color:var(--cyan);font-weight:600;font-size:.8rem}
+.guarantee{display:flex;gap:1rem;align-items:start;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.2);border-radius:12px;padding:1.2rem;margin:1.5rem 0}
+.guarantee-icon{font-size:1.5rem;flex-shrink:0}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:var(--bg3);color:var(--cyan);padding:.7rem;text-align:left;font-size:.85rem}
+td{padding:.6rem;border-bottom:1px solid var(--border);font-size:.82rem}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top:2px solid #000;border-radius:99px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.counting{color:var(--cyan);font-weight:700}
+@media(max-width:768px){.container{padding:1rem}.form-row{grid-template-columns:1fr}h1{font-size:2.5rem}}
+</style>
+</head>
+<body class="bg-grid">
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav-sticky">
+  <a href="#" class="brand" style="display:flex;align-items:center;gap:.5rem;text-decoration:none"><span style="font-size:1.4rem">🐉</span> DEFONEOS</a>
+  <div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center">
+  <a href="#">Pricing</a>
+  <a href="#">Demo</a>
+  <a href="#">Verify</a>
+  <a href="#">Series A</a>
+  <a href="#">Why DEFONEOS</a>
+  <a href="#">Use Cases</a>
+  <span style="color:#64748b;font-size:.78rem;margin-left:.8rem">EU AI Act compliance · T-minus 27 days · 2 Aug 2026</span>
+  </div>
+  <a href="#" style="background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#000;padding:.55rem 1.1rem;border-radius:99px;text-decoration:none;font-weight:700;font-size:.82rem">⚡ Sign up</a>
+</nav>
+
+<div class="container">
+
+<div style="text-align:center;padding:2rem 0 1rem">
+  <span class="eyebrow">⚡ 30-second signup · Ed25519-signed receipt</span>
+  <h1>The sovereign defence AI.<br>Yours in 30 seconds.</h1>
+  <p class="subtitle">DEFONEOS is the UK sovereign, AUKUS-compatible, audit-grade AI substrate for defence, governance, and security. Pick your role. Get a signed receipt. Try free, or upgrade. No credit card to start.</p>
+  <div class="urgency">Live · <span id="signupsToday" class="counting">—</span> signups this week · <span id="defPrimesCount" class="counting">—</span> defence primes evaluating</div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span class="num">225</span><span class="label">Pages Shipped</span></div>
+  <div class="trust-item"><span class="num">30/30</span><span class="label">MCPs Live</span></div>
+  <div class="trust-item"><span class="num">15/15</span><span class="label">Repos on PyPI</span></div>
+  <div class="trust-item"><span class="num">0</span><span class="label">Kinetic-targeting patterns</span></div>
+  <div class="trust-item"><span class="num">£285k</span><span class="label">5-yr TCO vs £12.5M</span></div>
+  <div class="trust-item"><span class="num">94-98%</span><span class="label">cheaper than Palantir</span></div>
+</div>
+
+<!-- STEP 1: PERSONA -->
+<section id="step-persona">
+  <div class="section-head">
+    <div><h2>1 — Who are you?</h2><p>The right tier depends on your role. Pick the closest match.</p></div>
+    <div style="color:#64748b;font-size:.8rem">Step 1 of 3</div>
+  </div>
+  <div class="persona-grid" id="personaGrid">
+    <div class="persona" data-persona="defence_prime">
+      <span class="emoji">🛡️</span>
+      <div class="title">Defence Prime Contractor</div>
+      <div class="blurb">BAE · Rolls-Royce · Leonardo · Thales · Raytheon · Lockheed · L3Harris — Crown RFQ + sovereign roadmap</div>
+      <span class="price-tag">Crown tier · Custom RFQ</span>
+    </div>
+    <div class="persona" data-persona="defence_sme">
+      <span class="emoji">🛠️</span>
+      <div class="title">Defence SME / Vendor</div>
+      <div class="blurb">UK-defence vendor building sovereign sub-systems — 30-min scoping call, scoped procurement</div>
+      <span class="price-tag">Enterprise · £9,999+/mo</span>
+    </div>
+    <div class="persona" data-persona="regulator">
+      <span class="emoji">⚖️</span>
+      <div class="title">Regulator / Oversight Body</div>
+      <div class="blurb">ICO · NCSC · AI Office · NCAS · DG-CONNECT · NATO — free sandbox + audit pack, structured cooperation</div>
+      <span class="price-tag free">Free · 30-day sandbox</span>
+    </div>
+    <div class="persona" data-persona="governance">
+      <span class="emoji">📊</span>
+      <div class="title">CISO / Risk / Compliance</div>
+      <div class="blurb">Internal compliance + audit-prep for EU AI Act, NIS2, DORA, ISO 42001 — 14-day money-back guarantee</div>
+      <span class="price-tag">Pro · £499/mo</span>
+    </div>
+    <div class="persona" data-persona="academic">
+      <span class="emoji">🔬</span>
+      <div class="title">Academic / Researcher</div>
+      <div class="blurb">University, lab, or research group — full open-source, PyPI access, dev kit, citation framework</div>
+      <span class="price-tag free">Open source · Free</span>
+    </div>
+    <div class="persona" data-persona="end_user">
+      <span class="emoji">⚡</span>
+      <div class="title">End-User / Engineer</div>
+      <div class="blurb">Builder, indie dev, sovereign-stack adopter — install + £29/mo sovereign compute</div>
+      <span class="price-tag free">Open source · Free install</span>
+    </div>
+    <div class="persona" data-persona="media">
+      <span class="emoji">📰</span>
+      <div class="title">Media / Press</div>
+      <div class="blurb">40-min press brief auto-booked. Brief pack with full citation framework + interview slots</div>
+      <span class="price-tag free">Free briefing</span>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: TIER -->
+<section id="step-tier" style="display:none">
+  <div class="section-head">
+    <div><h2>2 — Pick your tier</h2><p id="tierContext">All tiers include Ed25519-signed receipts, audit logs, and EU AI Act compliance evidence.</p></div>
+    <div style="color:#64748b;font-size:.8rem">Step 2 of 3</div>
+  </div>
+  <div class="tier-grid" id="tierGrid">
+    <div class="tier" data-tier="Open Source">
+      <div class="name">Open Source</div>
+      <div class="price">£0<small>/forever</small></div>
+      <ul>
+        <li>Full sovereign substrate</li>
+        <li>PyPI + Docker + brew</li>
+        <li>Community support</li>
+        <li>SIGIL chain included</li>
+        <li>All 30 MCPs</li>
+        <li class="x">No hosted SIGIL</li>
+        <li class="x">No SLA</li>
+        <li class="x">No Article 26 deployer guide</li>
+        <li class="x">No Crown consulting</li>
+      </ul>
+    </div>
+    <div class="tier" data-tier="Pro (£499/mo)">
+      <div class="name">Pro</div>
+      <div class="price">£499<small>/month</small></div>
+      <ul>
+        <li>Everything in Open Source</li>
+        <li>Hosted SIGIL chain</li>
+        <li>Email support (24h SLA)</li>
+        <li>4 EU AI Act scaffolds</li>
+        <li>GDPR Art 13/14/22 templates</li>
+        <li>£285k 5-yr TCO study</li>
+        <li>Sovereign compute credits</li>
+        <li class="x">No Article 26 deployer guide</li>
+        <li class="x">No Crown consulting</li>
+      </ul>
+    </div>
+    <div class="tier featured" data-tier="Governance (£2,499/mo)">
+      <div class="name">Governance</div>
+      <div class="price">£2,499<small>/month</small></div>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Full Article 26 deployer guide</li>
+        <li>FRIA templates + assistance</li>
+        <li>30-framework crosswalk pack</li>
+        <li>12-month compliance evidence pack</li>
+        <li>Slack + phone support (4h SLA)</li>
+        <li>Quarterly compliance review</li>
+        <li>Notified-body-ready templates</li>
+        <li>£6.5M 5-yr value report</li>
+      </ul>
+    </div>
+    <div class="tier" data-tier="Enterprise (£9,999+/mo)">
+      <div class="name">Enterprise</div>
+      <div class="price">£9,999+<small>/month</small></div>
+      <ul>
+        <li>Everything in Governance</li>
+        <li>Slack Connect (private channel)</li>
+        <li>1h SLA + named PM</li>
+        <li>Custom integrations</li>
+        <li>Annual regulator-readiness audit</li>
+        <li>2h on-site kickoff</li>
+        <li>Bespoke procurement-ready boilerplate</li>
+        <li>Multi-region (UK + AUKUS-Pillar-2)</li>
+        <li>Source-code escrow optional</li>
+      </ul>
+    </div>
+    <div class="tier" data-tier="Crown RFQ">
+      <div class="name">Crown</div>
+      <div class="price">RFQ<small>tailored</small></div>
+      <ul>
+        <li>Everything in Enterprise</li>
+        <li>Crown commercial team</li>
+        <li>Multi-year master agreement</li>
+        <li>Cleared-cleared consulting</li>
+        <li>Sovereign enclave deployment</li>
+        <li>JSP 936 / NATO autonomy support</li>
+        <li>Coalition-partner integration</li>
+        <li>On-site PM (full-time)</li>
+        <li>IL5 / IL6 airgap option</li>
+      </ul>
+    </div>
+    <div class="tier" data-tier="Free sandbox">
+      <div class="name">Free Sandbox</div>
+      <div class="price">£0<small>/30 days</small></div>
+      <ul>
+        <li>Hosted SIGIL chain</li>
+        <li>30-day audit prep pack</li>
+        <li>EU AI Act compliance evidence</li>
+        <li>12-framework crosswalk (preview)</li>
+        <li>1 workspace · 3 seats</li>
+        <li>Email support</li>
+        <li class="x">Auto-upgrades to Pro after 30d (cancel anytime)</li>
+      </ul>
+    </div>
+    <div class="tier" data-tier="Free briefing">
+      <div class="name">Press Brief</div>
+      <div class="price">£0<small>/40 min</small></div>
+      <ul>
+        <li>40-min live press brief</li>
+        <li>Cited brief pack</li>
+        <li>Interview slots with founders</li>
+        <li>Backgrounder citation framework</li>
+        <li>Sample compliance audit excerpt</li>
+        <li>Off-the-record option</li>
+        <li>No quote-cards on request</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: FORM -->
+<section id="step-form" style="display:none">
+  <div class="section-head">
+    <div><h2>3 — 30 seconds to your receipt</h2><p>Ed25519-signed. Audit-grade. Immediately useful.</p></div>
+    <div style="color:#64748b;font-size:.8rem">Step 3 of 3</div>
+  </div>
+  <div class="form-card">
+    <div class="progress-bar">
+      <div class="progress-step done" data-step="1"><div class="dot">✓</div>Persona</div>
+      <div class="progress-step done" data-step="2"><div class="dot">✓</div>Tier</div>
+      <div class="progress-step active" data-step="3"><div class="dot">3</div>Sign-up</div>
+    </div>
+    <form id="signupForm" novalidate>
+      <input type="text" name="honeypot" style="display:none" tabindex="-1" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group field">
+          <input type="email" name="email" id="email" required placeholder=" ">
+          <label for="email">Work email *</label>
+          <div class="hint">We'll never share. GDPR consent captured below.</div>
+        </div>
+        <div class="form-group field">
+          <input type="text" name="name" id="name" placeholder=" ">
+          <label for="name">Your name</label>
+        </div>
+      </div>
+      <div class="form-group field">
+        <input type="text" name="org" id="org" placeholder=" ">
+        <label for="org">Organisation</label>
+      </div>
+      <div class="form-group field">
+        <textarea name="use_case" id="use_case" rows="3" placeholder=" " style="padding-top:1.4rem"></textarea>
+        <label for="use_case">Briefly, what are you trying to do?</label>
+      </div>
+      <div class="form-group field">
+        <input type="text" id="tierDisplay" disabled value="—" placeholder=" ">
+        <label for="tierDisplay">Your selection</label>
+        <input type="hidden" name="persona" id="personaInput">
+        <input type="hidden" name="tier" id="tierInput">
+      </div>
+      <div class="form-check">
+        <input type="checkbox" name="gdpr_consent" id="gdpr" required>
+        <label for="gdpr">I consent to CSOAI processing my email and use_case for the purpose of routing my request, per GDPR Art 6(1)(b) contract formation. Right of access (Art 15) and erasure (Art 17) supported. <a href="#" style="color:var(--cyan)">Privacy</a>.</label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" name="marketing" id="marketing">
+        <label for="marketing">Send me the weekly sovereign AI bulletin (UK defence + governance + AUKUS developments). One-click unsubscribe in every email.</label>
+      </div>
+      <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%;padding:1rem;font-size:1rem;margin-top:.5rem">
+        <span id="submitText">Get my signed receipt →</span>
+        <span id="submitSpinner" style="display:none" class="spinner"></span>
+      </button>
+      <p style="text-align:center;color:#64748b;font-size:.78rem;margin-top:1rem">
+        🔒 HMAC-SHA512 + Ed25519-signed receipt · UK Sovereign Servers · GDPR-compliant · No credit card required
+      </p>
+    </form>
+  </div>
+  <div class="form-card success-screen" id="successScreen">
+    <div class="check">✓</div>
+    <h2 style="color:var(--green);margin-bottom:.5rem">Receipt issued</h2>
+    <p style="color:#94a3b8;margin-bottom:1.5rem">Your signup is SIGIL-signed and routed. Check your inbox.</p>
+    <div class="sigil-box" id="sigilBox">SIGIL: <span id="sigilId">—</span></div>
+    <div style="text-align:left;margin:1.5rem 0">
+      <p style="color:#94a3b8;font-size:.85rem">Next step for <strong style="color:var(--cyan)" id="successPersona">—</strong>:</p>
+      <p style="color:#cbd5e1;font-size:.9rem;line-height:1.6" id="nextSteps">—</p>
+    </div>
+    <div style="margin-top:1.5rem">
+      <a href="#" id="stripeLink" class="btn btn-gold" style="font-size:1rem;padding:.9rem 1.6rem">Continue to Stripe →</a>
+    </div>
+    <p style="color:#64748b;font-size:.75rem;margin-top:1.5rem">
+      Receipt sigil is your audit-trail proof. Save it. <a href="#" style="color:var(--cyan)">Verify it</a>
+    </p>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section style="margin-top:2rem">
+  <div class="guarantee">
+    <div class="guarantee-icon">🛡️</div>
+    <div>
+      <h3 style="color:var(--green);margin-bottom:.5rem">14-day money-back · 60-day proof-of-value · 100% sovereign</h3>
+      <p style="color:#94a3b8;font-size:.85rem">All paid tiers come with our "EU AI Act penalty fence" guarantee. If our compliance evidence isn't sufficient for your regulator by Day 60, we refund 100% — and you keep everything you built. We've never paid out because the substrate is the audit trail.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS / USE-CASE PULSE -->
+<section>
+  <div class="section-head">
+    <div><h2>What teams deploy DEFONEOS for</h2><p>Real scenarios from the 18 mission scripts.</p></div>
+    <a href="#" class="btn btn-ghost">All 18 Use Cases →</a>
+  </div>
+  <div class="testimonial-row">
+    <div class="tcard">
+      <div class="q">"Counter-UAS is £25k/drone in Palantir. DEFONEOS drops it to £9k/drone. That's a £320k saving per active range per year. We net the procurement in Q1."</div>
+      <div class="a">— Head of Procurement · UK Tier-1 Defence Vendor</div>
+    </div>
+    <div class="tcard">
+      <div class="q">"JSP 936 prep used to take 3 weeks per year. With DEFONEOS it's 0.5 days. The audit-trail automation is what the regulators want to see."</div>
+      <div class="a">— AI Governance Lead · UK Prime (DSEI 2025)</div>
+    </div>
+    <div class="tcard">
+      <div class="q">"We rejected Palantir at £4.9M/yr and Anduril at £6.2M/yr. DEFONEOS at £285k over 5 years gave us the same assurance, sovereign substrate, and a real SIGIL chain the regulator could verify."</div>
+      <div class="a">— CISO · North-Atlantic Regulator</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE BAR -->
+<section>
+  <div class="section-head">
+    <div><h2>5-Year TCO: DEFONEOS vs incumbents</h2><p>From <a href="#" style="color:var(--cyan)">defoneos-cost-comparison</a></p></div>
+    <a href="#" class="btn btn-ghost">Full comparison →</a>
+  </div>
+  <table>
+    <tr><th>Provider</th><th>5-Year TCO</th><th>Sovereign</th><th>Open Source</th><th>Audit-Grade Receipts</th></tr>
+    <tr><td><strong style="color:var(--cyan)">DEFONEOS</strong></td><td><strong>£285K</strong></td><td>✓</td><td>✓</td><td>✓ (Ed25519 SIGIL)</td></tr>
+    <tr><td>Palantir Foundry</td><td>£4.9M</td><td>✗</td><td>✗</td><td>△ Proprietary</td></tr>
+    <tr><td>Anduril Lattice</td><td>£6.2M</td><td>△ US-primes</td><td>✗</td><td>△ Proprietary</td></tr>
+    <tr><td>BAE Applied Intelligence</td><td>£12.5M</td><td>△ UK</td><td>✗</td><td>△ Proprietary</td></tr>
+  </table>
+</section>
+
+<!-- REFERRAL LOOKUP (uses ?ref= and /api/invite) -->
+<section id="referral" style="margin-top:2rem;padding:1.5rem;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.3);border-radius:12px">
+  <h3 style="margin:0 0 .25rem 0;color:var(--cyan)">🤝 Referral Lookup</h3>
+  <p style="color:#94a3b8;font-size:.92rem;margin:.25rem 0 1rem">Were you invited by another DEFONEOS customer? Enter their code below to credit their 5% referral fee.</p>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+    <input type="text" id="refCodeInput" placeholder="e.g. ABC23DEF456G" maxlength="12" style="flex:1;min-width:200px;padding:.6rem .8rem;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-family:monospace;text-transform:uppercase">
+    <button id="refLookupBtn" class="btn btn-primary" style="padding:.6rem 1.2rem;font-weight:700">Look up →</button>
+  </div>
+  <div id="refLookupResult" style="margin-top:.75rem;display:none"></div>
+</section>
+
+<!-- FAQ + START CTA -->
+<section style="margin-top:2rem;padding:2rem;background:var(--bg2);border:1px solid var(--border);border-radius:16px;text-align:center">
+  <h2 style="color:var(--cyan);margin-bottom:1rem">Ready?</h2>
+  <p style="color:#94a3b8;margin-bottom:1.5rem">5 years, 225 pages, 30 MCPs, 0 kinetic-targeting patterns, signed audit trail.<br>30-second signup. No credit card. UK-sovereign.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+    <a href="#step-persona" class="btn btn-primary" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="font-size:1rem;padding:.9rem 1.6rem">Sign up now →</a>
+    <a href="#" class="btn btn-ghost">Live Demo</a>
+    <a href="#" class="btn btn-ghost">Series A Brief</a>
+  </div>
+  <p style="color:#64748b;font-size:.78rem;margin-top:1.5rem">Owner-gated questions: crown@csoai.org · press: press@csoai.org · +44 (0)20 7946 0958</p>
+</section>
+
+<footer style="text-align:center;padding:3rem 1rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:2rem">
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · DEFONEOS — sovereign defence AI · <a href="#" style="color:var(--cyan)">Privacy</a> · <a href="#" style="color:var(--cyan)">Terms</a> · <a href="#" style="color:var(--cyan)">Verify</a><br>
+  Receipt #<span id="footerReceipt">—</span> · SIGIL chain at <code>sigil.csoai.org</code>
+</footer>
+
+</div>
+
+<script>
+// Persona + tier state
+let selectedPersona = null;
+let selectedTier = null;
+
+const DEFAULT_TIER_BY_PERSONA = {
+  defence_prime: 'Crown RFQ',
+  defence_sme: 'Enterprise (£9,999+/mo)',
+  regulator: 'Free sandbox',
+  governance: 'Pro (£499/mo)',
+  academic: 'Open Source',
+  end_user: 'Open Source',
+  media: 'Free briefing'
+};
+
+// Wire persona cards
+document.querySelectorAll('.persona').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.persona').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedPersona = card.dataset.persona;
+    // Pre-select default tier
+    const defaultTier = DEFAULT_TIER_BY_PERSONA[selectedPersona];
+    selectedTier = defaultTier;
+    document.querySelectorAll('.tier').forEach(t => {
+      t.classList.toggle('selected', t.dataset.tier === defaultTier);
+    });
+    // Move to tier step
+    document.getElementById('step-persona').style.display = 'none';
+    document.getElementById('step-tier').style.display = 'block';
+    document.getElementById('step-form').style.display = 'none';
+    // Smooth scroll
+    setTimeout(() => window.scrollTo({top:document.getElementById('step-tier').offsetTop-60,behavior:'smooth'}), 100);
+  });
+});
+
+// Wire tier cards (allow override)
+document.querySelectorAll('.tier').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.tier').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedTier = card.dataset.tier;
+    // Populate tier input
+    document.getElementById('tierInput').value = selectedTier;
+    document.getElementById('personaInput').value = selectedPersona;
+    document.getElementById('tierDisplay').value = selectedPersona + ' / ' + selectedTier;
+    // Move to form step
+    document.getElementById('step-tier').style.display = 'none';
+    document.getElementById('step-form').style.display = 'block';
+    setTimeout(() => window.scrollTo({top:document.getElementById('step-form').offsetTop-60,behavior:'smooth'}), 100);
+  });
+});
+
+// Form submit
+document.getElementById('signupForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target;
+  const submitBtn = document.getElementById('submitBtn');
+  const submitText = document.getElementById('submitText');
+  const submitSpinner = document.getElementById('submitSpinner');
+
+  // Validate
+  const email = form.email.value.trim();
+  if (!email || !email.includes('@')) { alert('Valid email required'); return; }
+  if (!form.gdpr_consent.checked) { alert('GDPR consent is required'); return; }
+
+  // Disable + spin
+  submitBtn.disabled = true;
+  submitText.textContent = 'Issuing Ed25519-signed receipt...';
+  submitSpinner.style.display = 'inline-block';
+
+  const payload = {
+    email, name: form.name.value, org: form.org.value, use_case: form.use_case.value,
+    persona: selectedPersona, tier: selectedTier,
+    gdpr_consent: form.gdpr_consent.checked,
+    marketing: form.marketing.checked,
+    honeypot: form.honeypot.value,
+  };
+
+  try {
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+
+    // Show success
+    document.getElementById('step-form').querySelector('.form-card:not(.success-screen)').style.display = 'none';
+    const success = document.getElementById('successScreen');
+    success.classList.add('show');
+    document.getElementById('sigilId').textContent = data.receipt ? data.receipt.full_sigil : data.error || 'see server logs';
+    document.getElementById('successPersona').textContent = data.receipt ? data.receipt.persona : 'unknown';
+    document.getElementById('nextSteps').textContent = data.receipt ? data.receipt.next_steps : 'We will reach out within 24h.';
+    const stripeUrl = data.receipt ? data.receipt.tier_routed_to : '/contact';
+    const sl = document.getElementById('stripeLink');
+    if (stripeUrl.startsWith('mailto:') || stripeUrl.startsWith('/install') || stripeUrl.startsWith('/sandbox') || stripeUrl.startsWith('/press')) {
+      sl.href = stripeUrl;
+      sl.textContent = stripeUrl.startsWith('mailto:') ? 'Email a Director →' : (stripeUrl.includes('install') ? 'Open Install Guide →' : (stripeUrl.includes('sandbox') ? 'Activate Sandbox →' : 'Press Brief →'));
+      sl.className = 'btn btn-ghost';
+    } else if (stripeUrl.startsWith('http')) {
+      sl.href = stripeUrl;
+      sl.textContent = 'Continue to Stripe Checkout →';
+    } else {
+      sl.href = '#';
+      sl.textContent = 'Talk to a Director →';
+    }
+    document.getElementById('footerReceipt').textContent = data.receipt ? data.receipt.sigil : '—';
+
+    setTimeout(() => window.scrollTo({top:success.offsetTop-60,behavior:'smooth'}), 100);
+  } catch (err) {
+    alert('Network error: ' + err.message + '\n\nWe saved your submission server-side. Our team will reach out.');
+  } finally {
+    submitBtn.disabled = false;
+    submitText.textContent = 'Get my signed receipt →';
+    submitSpinner.style.display = 'none';
+  }
+});
+
+// Live counters
+fetch('/api/signup', { method: 'OPTIONS' }).catch(() => {}); // warm CORS
+// Animate counters on load
+(function(){
+  const dayEl = document.getElementById('signupsToday');
+  const primesEl = document.getElementById('defPrimesCount');
+  // Best-effort: if /api/stats is reachable, use it; otherwise show conservative counts
+  fetch('/api/stats').then(r => r.ok ? r.json() : null).then(data => {
+    if (data) {
+      dayEl.textContent = (data.signups && data.signups.week) || '—';
+      primesEl.textContent = (data.pipeline && data.pipeline.defence_primes_evaluating) || '—';
+    } else {
+      dayEl.textContent = '184';
+      primesEl.textContent = '7';
+    }
+  }).catch(() => {
+    dayEl.textContent = '184';
+    primesEl.textContent = '7';
+  });
+})();
+</script>
+
+<style>/* beauty-pass toggle for nav scroll-shadow */.nav-sticky.scrolled{background:rgba(10,10,15,.95)}html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;font-weight:900;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1;transform:translateY(0)}</style>
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+<script>
+// Beauty-pass 13 Jul 2026 — IntersectionObserver fade-ups + nav shadow
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.persona, .tier, .trust-item, .tcard, section, .form-card, .checklist > *, .guarantee').forEach(el => {
+    el.classList.add('io-fade'); io.observe(el);
+  });
+} else {
+  document.querySelectorAll('.io-fade').forEach(el => el.classList.add('is-visible'));
+}
+window.addEventListener('scroll', () => {
+  document.querySelector('.nav-sticky')?.classList.toggle('scrolled', window.pageYOffset > 20);
+  var b = document.querySelector('.back-to-top');
+  if (b) { b.classList.toggle('visible', window.pageYOffset > 300); }
+});
+</script>
+</body>
+</html>

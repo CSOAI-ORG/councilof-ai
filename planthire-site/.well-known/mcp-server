@@ -1,0 +1,34 @@
+{
+  "mcpVersion": "1.0.0",
+  "serverInfo": {
+    "name": "csoai-org",
+    "version": "1.0.0"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true
+  },
+  "tools": [
+    {
+      "name": "compliance-audit",
+      "description": "Run a CSOAI 52-Article Charter compliance audit on an AI system",
+      "inputSchema": {
+        "type:": "object",
+        "properties": {
+          "system": { "type": "string", "description": "Name or identifier of the AI system" },
+          "frameworks": { "type": "array", "items": { "type": "string" }, "description": "Frameworks to check (e.g., eu-ai-act, iso-42001, nist-ai-rmf)" }
+        },
+        "required": ["system"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "audit://report/{id}",
+      "name": "CSOAI Audit Report",
+      "description": "HMAC-signed compliance report",
+      "mimeType": "application/json"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "meok-iso-42001-ai-mcp",
+  "title": "ISO 42001 AI",
+  "description": "ISO/IEC 42001 AI Management System (AIMS).",
+  "version": "1.0",
+  "input": "./input_schema.json",
+  "output": "./output_schema.json",
+  "dockerfile": "../Dockerfile",
+  "categories": [
+    "AI",
+    "COMPLIANCE"
+  ],
+  "httpMcpServer": {
+    "transport": "streamable-http",
+    "url": "https://meok-iso-42001-ai-mcp.apify.actor/mcp"
+  }
+}

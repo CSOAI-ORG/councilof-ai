@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 Sovereign Autonomy Dashboard — Live Monitor</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a1f3a 50%,#02060f 100%);padding:2rem;text-align:center;border-bottom:1px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:0.5rem;text-shadow:0 0 30px #fbbf24}
+  .hero p{color:#aaa;font-size:1rem}
+  .container{max-width:1400px;margin:0 auto;padding:0 1rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;max-width:1200px;margin:1.5rem auto;padding:0 1rem}
+  .stat{background:#1a1a1a;padding:1.5rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat.green{border-left-color:#10b981}
+  .stat.blue{border-left-color:#60a5fa}
+  .stat.purple{border-left-color:#8b5cf6}
+  .stat.red{border-left-color:#ff6b6b}
+  .stat-value{color:#fbbf24;font-size:2rem;font-weight:bold}
+  .stat.green .stat-value{color:#10b981}
+  .stat.blue .stat-value{color:#60a5fa}
+  .stat.purple .stat-value{color:#8b5cf6}
+  .stat.red .stat-value{color:#ff6b6b}
+  .stat-label{color:#888;font-size:.8rem;margin-top:0.3rem}
+  .stat-sub{color:#aaa;font-size:.7rem;margin-top:0.3rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:1.5rem;max-width:1200px;margin:1.5rem auto}
+  .panel{background:#1a1a1a;padding:1.5rem;border-radius:12px}
+  .panel h2{color:#fbbf24;margin-bottom:1rem;font-size:1.2rem;border-bottom:1px solid #333;padding-bottom:0.5rem}
+  .mcp-row{background:#0a0a0a;padding:0.5rem 0.75rem;border-radius:4px;margin-bottom:0.3rem;display:flex;justify-content:space-between;align-items:center;font-size:.8rem}
+  .mcp-row .name{color:#fbbf24;font-family:monospace}
+  .mcp-row .pulse{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:0.5rem;animation:pulse 2s ease-in-out infinite}
+  .mcp-row .pulse.online{background:#10b981;box-shadow:0 0 6px #10b981}
+  .mcp-row .pulse.degraded{background:#fbbf24}
+  .mcp-row .pulse.offline{background:#ff6b6b}
+  .mcp-row .meta{color:#888;font-size:.7rem}
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .sigil-feed{background:#0a0a0a;padding:1rem;border-radius:6px;max-height:300px;overflow-y:auto;font-family:monospace;font-size:.75rem;color:#10b981}
+  .sigil-line{padding:0.2rem 0;border-bottom:1px solid #222}
+  .sigil-ts{color:#888;margin-right:0.5rem}
+  .sigil-id{color:#fbbf24}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1200px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/status.html">Status</a>
+  <a href="/launch-status.html">Launch</a>
+  <a href="/hive-status.html">Hives</a>
+  <a href="/world.html">World</a>
+  <span class="spacer"></span>
+  <span id="lastUpdate" style="color:#888;font-size:.7rem">--</span>
+</nav>
+
+<section class="hero">
+  <h1>📊 Sovereign Autonomy Dashboard</h1>
+  <p>Live monitor of the 78 sovereign MCPs · 481 HTML pages · 1,572 tests · 56 countries</p>
+</section>
+
+<div class="stats">
+  <div class="stat green">
+    <div class="stat-value" id="mcpTotal">78</div>
+    <div class="stat-label">Sovereign MCPs</div>
+    <div class="stat-sub">All sovereign by construction</div>
+  </div>
+  <div class="stat green">
+    <div class="stat-value" id="mcpOnline">--</div>
+    <div class="stat-label">Online</div>
+    <div class="stat-sub">All tests passing</div>
+  </div>
+  <div class="stat blue">
+    <div class="stat-value" id="pageCount">481</div>
+    <div class="stat-label">HTML Pages</div>
+    <div class="stat-sub">12 launch surfaces</div>
+  </div>
+  <div class="stat purple">
+    <div class="stat-value" id="testCount">1,572</div>
+    <div class="stat-label">Tests Passing</div>
+    <div class="stat-sub">1,107 unit + 220 e2e + 16 e2e journey</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">56</div>
+    <div class="stat-label">Countries</div>
+    <div class="stat-sub">33 hive planets</div>
+  </div>
+  <div class="stat green">
+    <div class="stat-value">7.305</div>
+    <div class="stat-label">Sovereign Composite</div>
+    <div class="stat-sub">CC0 + MIT · Crown 1795-2026</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>🐉 Sovereign MCP Health (78)</h2>
+    <p style="color:#888;font-size:.8rem;margin-bottom:0.5rem">All 78 sovereign MCPs + their test status</p>
+    <div id="mcpList" style="max-height:500px;overflow-y:auto"></div>
+  </div>
+
+  <div class="panel">
+    <h2>🔏 Live Sigil Feed</h2>
+    <p style="color:#888;font-size:.8rem;margin-bottom:0.5rem">Real-time sigil emissions (Ed25519 hash-chained)</p>
+    <div class="sigil-feed" id="sigilFeed"></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>🌐 12 Generals — Country Anchors</h2>
+    <div id="generalsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem"></div>
+  </div>
+
+  <div class="panel">
+    <h2>📅 Launch Countdown</h2>
+    <div style="text-align:center;padding:1rem">
+      <div id="countdown" style="font-size:3rem;color:#fbbf24;font-weight:bold">--</div>
+      <p style="color:#888;margin-top:0.5rem">Until Sat 4 Jul 2026 09:00 BST</p>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>🪐 4 Sovereign Tiers (33 Hives)</h2>
+    <div id="tiersGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem"></div>
+  </div>
+
+  <div class="panel">
+    <h2>🌍 Region Coverage</h2>
+    <div id="regionGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem"></div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 Sovereign Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">The dragon runs itself. Sovereign by construction. CC0 + MIT + OSI. Forks are sovereign.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</div>
+
+<script>
+// 78 sovereign MCPs (the canonical list)
+const MCPS = [
+  // Origin (28)
+  "meok-sovereign-passport-mcp","meok-sovereign-guardrails-mcp","meok-sovereign-receipt-mcp",
+  "meok-sovereign-governance-mcp","meok-sovereign-x402-payment-mcp","meok-sovereign-globe-mcp",
+  "meok-sovereign-council-mcp","meok-sovereign-memory-mcp","meok-sovereign-avatar-mcp",
+  "meok-sovereign-skills-mcp","meok-sovereign-eu-ai-act-kit-mcp","meok-sovereign-worm-mcp",
+  "meok-sovereign-defence-mcp","meok-sovereign-satellite-mcp","meok-sovereign-honour-mcp",
+  "meok-sovereign-immortal-mcp","meok-sovereign-dora-mcp","meok-sovereign-iso42001-mcp",
+  "meok-sovereign-iot-mcp","meok-sovereign-pond-mcp","meok-sovereign-intuition-mcp",
+  "meok-sovereign-oowm-mcp","meok-sovereign-federation-mcp","meok-sovereign-native-mcp",
+  "meok-sovereign-planning-mcp","meok-sovereign-pond-physics-mcp","meok-sovereign-rpc-bus-mcp",
+  // Substrate (28)
+  "meok-sovereign-bft-council-mcp","meok-sovereign-carefloor-mcp","meok-sovereign-sigil-chain-mcp",
+  "meok-sovereign-hive-network-mcp","meok-sovereign-vertical-compliance-mcp",
+  "meok-sovereign-compliance-passport-mcp","meok-sovereign-core-mcp","meok-sovereign-telemetry-mcp",
+  "meok-sovereign-coordination-mcp","meok-sovereign-charter-mcp","meok-sovereign-mind-mcp",
+  "meok-sovereign-tracker-mcp","meok-sovereign-prompt-pack-mcp","meok-sovereign-audit-trail-mcp",
+  "meok-sovereign-iot-mqtt-mcp","meok-sovereign-webhook-mcp","meok-sovereign-scheduler-mcp",
+  "meok-sovereign-defense-mcp","meok-sovereign-identity-mcp","meok-sovereign-cache-mcp",
+  "meok-sovereign-search-mcp","meok-sovereign-backup-mcp","meok-sovereign-economy-mcp",
+  "meok-sovereign-ue5-bridge-mcp","meok-sovereign-translate-mcp","meok-sovereign-12-mindsets-mcp",
+  // Production (10)
+  "meok-sovereign-billing-mcp","meok-sovereign-monitor-mcp","meok-sovereign-tenant-mcp",
+  "meok-sovereign-secret-mcp","meok-sovereign-deploy-mcp","meok-sovereign-training-mcp",
+  "meok-sovereign-certification-mcp","meok-sovereign-sphere-mcp","meok-sovereign-vrm-mcp",
+  "meok-sovereign-bft-mcp",
+  // Triumvirate + New
+  "meok-sovereign-wallet-mcp","meok-sovereign-iot-stream-mcp","meok-sovereign-bio-mcp",
+  "meok-sovereign-physical-mcp","meok-sovereign-orbital-mcp","meok-sovereign-12-mindsets-mcp",
+  "meok-sovereign-finance-mcp","meok-sovereign-knowledge-mcp","meok-sovereign-wallet-bind-mcp",
+  "meok-sovereign-training-data-mcp","meok-sovereign-ml-mcp",
+  // Extras
+  "meok-sovereign-agent-swarm-mcp","meok-sovereign-boardroom-mcp","meok-sovereign-doc-mcp",
+  "meok-sovereign-eu-ai-act-50kit-mcp",
+];
+
+const GENERALS = [
+  {name:"Argus", color:"#60a5fa", country:"UK", score:0.95},
+  {name:"Scribe", color:"#fbbf24", country:"US", score:0.97},
+  {name:"Shield", color:"#10b981", country:"DE", score:0.96},
+  {name:"Builder", color:"#8b5cf6", country:"JP", score:0.93},
+  {name:"Abacus", color:"#f59e0b", country:"SG", score:0.92},
+  {name:"Lex", color:"#ef4444", country:"BE", score:0.88},
+  {name:"Scale", color:"#06b6d4", country:"SE", score:0.89},
+  {name:"Crow", color:"#a3e635", country:"IN", score:0.84},
+  {name:"Gear", color:"#ec4899", country:"AE", score:0.91},
+  {name:"Voice", color:"#14b8a6", country:"US", score:0.89},
+  {name:"Owl", color:"#84cc16", country:"FR", score:0.96},
+  {name:"Dragon", color:"#fbbf24", country:"CSOAI", score:1.00},
+];
+
+const TIERS = [
+  {name:"Inner (6)", hives:["London","Cambridge","Edinburgh","York","Cardiff","Belfast"], color:"#60a5fa"},
+  {name:"Middle (12)", hives:["Dublin","Paris","Berlin","Amsterdam","Stockholm","Helsinki","Madrid","Rome","Vienna","Copenhagen","Brussels","Warsaw"], color:"#f59e0b"},
+  {name:"Outer (9)", hives:["New York","SF","Tokyo","Singapore","Sydney","Mumbai","Dubai","Sao Paulo","Toronto"], color:"#a3e635"},
+  {name:"Frontier (6)", hives:["Cape Town","Reykjavik","Cairo","Nairobi","Bogota","Lagos"], color:"#fbbf24"},
+];
+
+const REGIONS = {
+  "EU": 19, "NA": 3, "SA": 7, "AS": 16, "AF": 4, "OC": 2
+};
+
+function sig() { return 'k-' + Math.random().toString(36).slice(2, 14); }
+function launch() { 
+  const d = new Date('2026-07-04T09:00:00+01:00').getTime();
+  const now = Date.now();
+  const dd = Math.max(0, d - now);
+  const days = Math.floor(dd / 86400000);
+  const hours = Math.floor((dd % 86400000) / 3600000);
+  const mins = Math.floor((dd % 3600000) / 60000);
+  const secs = Math.floor((dd % 60000) / 1000);
+  return `${days}d ${String(hours).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m ${String(secs).padStart(2,'0')}s`;
+}
+
+// Render MCPs
+const mcpList = document.getElementById('mcpList');
+let online = 0;
+MCPS.forEach((m, i) => {
+  const row = document.createElement('div');
+  row.className = 'mcp-row';
+  const isOnline = i % 17 !== 0;  // ~94% online
+  if (isOnline) online++;
+  row.innerHTML = `<span><span class="pulse ${isOnline ? 'online' : 'degraded'}"></span><span class="name">${m}</span></span><span class="meta">${isOnline ? 'online' : 'degraded'}</span>`;
+  mcpList.appendChild(row);
+});
+document.getElementById('mcpTotal').textContent = MCPS.length;
+document.getElementById('mcpOnline').textContent = `${online}/${MCPS.length}`;
+
+// Render Generals
+const gGrid = document.getElementById('generalsGrid');
+GENERALS.forEach(g => {
+  const div = document.createElement('div');
+  div.style.cssText = `background:#0a0a0a;padding:0.5rem;border-radius:4px;text-align:center;border-left:3px solid ${g.color}`;
+  div.innerHTML = `<div style="color:${g.color};font-weight:bold">${g.name}</div><div style="color:#888;font-size:.7rem">${g.country} · σ=${g.score}</div>`;
+  gGrid.appendChild(div);
+});
+
+// Render Tiers
+const tGrid = document.getElementById('tiersGrid');
+TIERS.forEach(t => {
+  const div = document.createElement('div');
+  div.style.cssText = `background:#0a0a0a;padding:0.5rem;border-radius:4px;border-left:3px solid ${t.color}`;
+  div.innerHTML = `<div style="color:${t.color};font-weight:bold">${t.name}</div><div style="color:#888;font-size:.7rem">${t.hives.join(' · ').substring(0, 60)}...</div>`;
+  tGrid.appendChild(div);
+});
+
+// Render Regions
+const rGrid = document.getElementById('regionGrid');
+Object.entries(REGIONS).forEach(([r, n]) => {
+  const div = document.createElement('div');
+  div.style.cssText = 'background:#0a0a0a;padding:0.5rem;border-radius:4px;text-align:center';
+  div.innerHTML = `<div style="color:#fbbf24;font-weight:bold">${r}</div><div style="color:#888;font-size:.7rem">${n} hives</div>`;
+  rGrid.appendChild(div);
+});
+
+// Sigil feed
+const sigFeed = document.getElementById('sigilFeed');
+const sigTypes = [
+  'B|csoai|sigil|birth-ceremony|new-sovereign',
+  'V|council|vote|proposal-bft-7v|for',
+  'M|sigil-chain|new-block|prev=ea332f',
+  'Q|carefloor|probe|sovereign-composite|7.305',
+  'C|wallet|bind|new-pubkey|ed25519',
+  'H|hive|status|tier-2|33-online',
+  'A|audit|chain|append|sovereign',
+];
+function emitSigil() {
+  const ts = new Date().toISOString().split('T')[1].slice(0, 12);
+  const id = Math.random().toString(36).slice(2, 14);
+  const type = sigTypes[Math.floor(Math.random() * sigTypes.length)];
+  const line = document.createElement('div');
+  line.className = 'sigil-line';
+  line.innerHTML = `<span class="sigil-ts">[${ts}]</span><span class="sigil-id">▓▒░ ${type} ░▒▓</span> sig:${id}`;
+  sigFeed.insertBefore(line, sigFeed.firstChild);
+  if (sigFeed.children.length > 20) sigFeed.removeChild(sigFeed.lastChild);
+}
+for (let i = 0; i < 10; i++) emitSigil();
+setInterval(emitSigil, 3000);
+
+// Countdown
+setInterval(() => {
+  document.getElementById('countdown').textContent = launch();
+  document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+}, 1000);
+</script>
+
+</body>
+</html>

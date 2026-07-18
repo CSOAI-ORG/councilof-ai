@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_silica_memory_mcp"
+version = "1.0.0"
+description = "MEEK Silica Memory MCP — 5D fused silica memory (femtosecond laser, 360 TB per disc, 13.8B year stability) + the silica-capillary merger with the Project AURUM orb. CRITICAL for the L1.5 layer. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "MEOK AI Labs", email = "nicholas@csoai.org"},
+]
+keywords = [
+    "mcp", "silica", "5d-memory", "fused-silica", "femtosecond-laser",
+    "defoneos", "project-aurum", "sovereign", "uk", "capillary",
+    "long-term-storage", "archive", "13-billion-years",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "numpy>=1.24",
+]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-silica-memory-mcp"
+
+[project.scripts]
+meek-silica-memory-mcp = "meek_silica_memory_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_silica_memory_mcp"]

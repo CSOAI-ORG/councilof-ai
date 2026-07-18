@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_simulation_mcp"
+version = "1.0.0"
+description = "MEEK Simulation MCP — multi-physics simulation (FEM, CFD, EM) for Project AURUM. Wraps OpenFOAM (CFD), MEEP (electromagnetic FDTD), Basilisk (microfluidic VOF), FreeFEM, CalculiX. CRITICAL for capillary + DNA-orb sim. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "MEOK AI Labs", email = "nicholas@csoai.org"},
+]
+keywords = [
+    "mcp", "simulation", "fem", "cfd", "fdtd", "openfoam", "meep", "basilisk",
+    "defoneos", "project-aurum", "capillary", "dna-orb", "gold-spiral",
+    "sovereign", "uk", "open-source", "mit-licensed",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "numpy>=1.24",
+    "scipy>=1.11",
+]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-simulation-mcp"
+Documentation = "https://docs.meok.ai/simulation"
+
+[project.scripts]
+meek-simulation-mcp = "meek_simulation_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_simulation_mcp"]

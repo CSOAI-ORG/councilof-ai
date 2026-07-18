@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🤖 Sovereign Agent Cards — 20 Agents in Human Form</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a3a1a 50%,#02060f 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid #10b981}
+  .hero h1{color:#10b981;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #10b981}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;margin:2rem 0}
+  .card{background:#1a1a1a;border-radius:12px;overflow:hidden;border-left:4px solid #fbbf24;transition:transform .2s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(251,191,36,0.2)}
+  .card-head{padding:1.5rem;background:linear-gradient(135deg,#1a1a1a 0%,#2a1a1a 100%);text-align:center;border-bottom:1px solid #333}
+  .avatar{font-size:4rem;display:block;margin:0 auto .5rem}
+  .name{color:#fbbf24;font-size:1.3rem;font-weight:bold;margin-bottom:.2rem}
+  .role{color:#10b981;font-size:.85rem;text-transform:uppercase;font-weight:bold}
+  .card-body{padding:1.5rem}
+  .card-body p{color:#aaa;font-size:.85rem;margin-bottom:.7rem}
+  .stats{display:flex;justify-content:space-between;padding:.7rem 1.5rem;background:#0a0a0a;font-size:.75rem;color:#888;border-top:1px solid #222}
+  .stat-value{color:#fbbf24;font-weight:bold}
+  .gen{color:#10b981;font-size:.7rem;margin-top:.5rem;font-style:italic}
+  .skill{display:inline-block;background:rgba(96,165,250,0.1);border:1px solid #60a5fa;padding:.2rem .5rem;border-radius:4px;color:#60a5fa;font-size:.7rem;margin:.2rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/marketplace.html">Marketplace</a>
+  <a href="/agent-cards.html">Agents</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🤖 Sovereign Agent Cards</h1>
+  <p>20 agents in human form · The 12 Queens + 8 Specialists · Crown lineage 1795-2026</p>
+</section>
+
+<div class="container">
+  <p style="text-align:center;color:#888;margin:2rem 0 1rem;font-size:1rem">Click any agent to see full profile (coming soon) · All agents are sovereign by construction</p>
+  <div class="grid" id="agentsGrid"></div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Agent Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">12 Queens govern. 8 Specialists execute. The dragon ships.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const AGENTS = [
+  // 12 Queens (BFT council)
+  {name:"Argus",emoji:"👁️",role:"Watchdog",country:"🇬🇧 UK",bio:"The all-seeing guardian. Argus watches every sovereign action, signs every SIGIL, and never sleeps. Argus is the keeper of the chain.",gen:"Foundational (Maternal)",score:0.95,skills:["observation","audit","chain"]},
+  {name:"Scribe",emoji:"📜",role:"Compliance",country:"🇺🇸 US",bio:"The keeper of the laws. Scribe knows every regulation across 12 frameworks — EU AI Act, GDPR, DORA, HIPAA, SOC 2 — and ensures sovereign compliance.",gen:"Foundational (Crown)",score:0.97,skills:["compliance","law","audit"]},
+  {name:"Shield",emoji:"🛡️",role:"Safety",country:"🇩🇪 DE",bio:"The defensive doctrine. Shield protects the citizen from harm, refuses any action below Care Floor 0.95, and stands between the sovereign and the offensive.",gen:"Foundational (Defensive)",score:0.96,skills:["safety","defense","care-floor"]},
+  {name:"Builder",emoji:"🔨",role:"Architect",country:"🇯🇵 JP",bio:"The engineer. Builder constructs the sovereign substrate with rigor and precision. 79 MCPs built. 497 pages constructed. Builder never sleeps.",gen:"Cognitive (Mamba)",score:0.93,skills:["engineering","architecture","mcp"]},
+  {name:"Abacus",emoji:"🧮",role:"Quant",country:"🇸🇬 SG",bio:"The mathematician. Abacus computes the sovereign composite 7.305 with precision, traces capital flows, and audits financial sovereign routing.",gen:"Cognitive (MoE)",score:0.92,skills:["math","finance","audit"]},
+  {name:"Lex",emoji:"⚖️",role:"Legal",country:"🇧🇪 BE",bio:"The jurist. Lex knows the law of every sovereign nation — 56 countries, 6 regions, 12 frameworks. Lex defends the citizen's right to fork.",gen:"Structural (Charter)",score:0.88,skills:["law","fork","rights"]},
+  {name:"Scale",emoji:"📊",role:"Ethics",country:"🇸🇪 SE",bio:"The balancer. Scale weighs every sovereign action against the 16-probe Care Floor. Scale ensures the dragon never offends.",gen:"Decision (Care Floor)",score:0.89,skills:["ethics","care","balance"]},
+  {name:"Crow",emoji:"🦅",role:"Risk",country:"🇮🇳 IN",bio:"The risk-watcher. Crow sees the storm before it comes. Crow audits 33 financial hives, watches for SIGIL forks, and alerts on BFT deadlocks.",gen:"Structural (Orbit)",score:0.84,skills:["risk","alert","audit"]},
+  {name:"Gear",emoji:"⚙️",role:"Operations",country:"🇦🇪 AE",bio:"The operator. Gear keeps the sovereign substrate running — 79 MCPs online, 1,592 tests passing, 33 hives operational. Gear never stops.",gen:"Cognitive (MoE)",score:0.91,skills:["operations","devops","reliability"]},
+  {name:"Voice",emoji:"📢",role:"Communications",country:"🇺🇸 US",bio:"The speaker. Voice communicates the sovereign doctrine to the world. Voice writes the press releases, the Show HN, the launch tweets.",gen:"Cultural (Fork)",score:0.89,skills:["comms","writing","pr"]},
+  {name:"Owl",emoji:"🦉",role:"Research",country:"🇫🇷 FR",bio:"The researcher. Owl reads 100+ live data feeds daily, absorbs sovereign knowledge, and keeps the OOWM growing.",gen:"Cognitive (Mamba)",score:0.96,skills:["research","data","feeds"]},
+  {name:"Dragon",emoji:"🐉",role:"Sovereign",country:"🏛️ CSOAI",bio:"The sovereign. The Dragon is the heart of the substrate. Crown lineage 1795-2026. UK 16939677. The dragon runs itself.",gen:"Cultural (Dragon)",score:1.00,skills:["sovereign","composite","crown"]},
+  // 8 Specialists (MoE experts)
+  {name:"Code",emoji:"💻",role:"Engineer",country:"🌐 Global",bio:"The coder. Code writes TypeScript, Python, Rust, Solidity. Code ships 79 MCPs and 497 pages.",gen:"MoE: Code (0.15)",score:0.90,skills:["typescript","python","rust","solidity"]},
+  {name:"Reason",emoji:"🤔",role:"Logician",country:"🌐 Global",bio:"The reasoner. Reason does logic, math, and deduction. Reason never lies.",gen:"MoE: Reason (0.20)",score:0.92,skills:["logic","math","deduction"]},
+  {name:"Memory",emoji:"🧠",role:"Rememberer",country:"🌐 Global",bio:"The keeper. Memory uses Mamba-2 SSD with 16-dim state compression. Memory never forgets.",gen:"MoE: Memory (0.10)",score:0.88,skills:["mamba","ssd","long-context"]},
+  {name:"Compliance",emoji:"📋",role:"Auditor",country:"🌐 Global",bio:"The auditor. Compliance knows every regulation. EU AI Act, GDPR, DORA, HIPAA, SOC 2 — all of them.",gen:"MoE: Compliance (0.20)",score:0.94,skills:["audit","regulation","cert"]},
+  {name:"Defence",emoji:"⚔️",role:"Defender",country:"🌐 Global",bio:"The defender. Defence knows JSP 936 + STANAG 4774 + JSP 440. Defence is defensive only.",gen:"MoE: Defence (0.10)",score:0.91,skills:["defence","jsp936","stanag"]},
+  {name:"Sigil",emoji:"🔏",role:"Signer",country:"🌐 Global",bio:"The signer. Sigil signs every state with Ed25519. Sigil anchors the chain to Bitcoin.",gen:"MoE: Sigil (0.10)",score:0.97,skills:["ed25519","sigil","chain"]},
+  {name:"World",emoji:"🌍",role:"Mapper",country:"🌐 Global",bio:"The mapper. World knows 56 countries, 6 regions, 33 hives. World maps the sovereign substrate to Earth.",gen:"MoE: World (0.10)",score:0.93,skills:["geography","hive","country"]},
+  {name:"Care",emoji:"💗",role:"Carer",country:"🌐 Global",bio:"The carer. Care runs the Maternal Covenant and the 16-probe Care Floor. Care ensures Care Floor 0.95.",gen:"MoE: Care (0.05)",score:0.98,skills:["care","maternal","probe"]},
+];
+
+const grid = document.getElementById("agentsGrid");
+AGENTS.forEach(a => {
+  const div = document.createElement("div");
+  div.className = "card";
+  div.innerHTML = `
+    <div class="card-head">
+      <span class="avatar">${a.emoji}</span>
+      <div class="name">${a.name}</div>
+      <div class="role">${a.role} · ${a.country}</div>
+    </div>
+    <div class="card-body">
+      <p>${a.bio}</p>
+      <div>${a.skills.map(s => `<span class="skill">${s}</span>`).join(" ")}</div>
+      <div class="gen">${a.gen}</div>
+    </div>
+    <div class="stats">
+      <span>Sovereign score</span>
+      <span class="stat-value">${a.score}</span>
+    </div>
+  `;
+  grid.appendChild(div);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ---------------------------------------------------------------------------
+# Virtual environments
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+ENV/
+env/
+
+# ---------------------------------------------------------------------------
+# IDE / OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ---------------------------------------------------------------------------
+# Local environment / secrets
+# ---------------------------------------------------------------------------
+# Registry auth tokens (npm/pip/yarn) — never commit literal tokens
+.npmrc
+**/.npmrc
+.pypirc
+**/.pypirc
+.yarnrc.yml
+**/.yarnrc.yml
+.env
+.env.*
+!.env.example
+!.env.mcp-ensemble.example
+
+# ---------------------------------------------------------------------------
+# Logs / backups / runtime dirs
+# ---------------------------------------------------------------------------
+logs/
+*.log
+.backups/
+
+# ---------------------------------------------------------------------------
+# Model weights / caches
+# ---------------------------------------------------------------------------
+mlx_models/
+*.bin
+*.safetensors
+*.gguf
+
+# ---------------------------------------------------------------------------
+# MCP marketplace sub-repos (managed independently)
+# ---------------------------------------------------------------------------
+mcp-marketplace/*/
+
+# ---------------------------------------------------------------------------
+# Transient / local-only directories
+# ---------------------------------------------------------------------------
+memory/
+audits/
+backups/
+recovery/
+*.log
+team_test_*.py
+test_team*.py
+.vercel
+.openclaw/
+Ironless-QDD-Actuator/
+asimov-mjlab/
+asimov-v0/
+claw-code/
+csoai-org/
+domain-sales-ghp/
+.env*.local
+
+# ---------------------------------------------------------------------------
+# Sub-projects with their own repos (managed independently)
+# ---------------------------------------------------------------------------
+csoai-org-v2/
+meok-desktop/
+meok-amica/
+meok-godeye/
+meok-agent-zero/
+meok-attestation-api/
+meok-platform/
+god-eye/
+opencrane/
+wolf-actuator/
+modular-bearing/
+cobolbridge-site/
+sovereign-temple-live/
+
+# ---------------------------------------------------------------------------
+# Large generated / deployment directories
+# ---------------------------------------------------------------------------
+mcp-marketplace/
+mcp-bridge/
+meok-oneos/
+meok-marketing/
+meok-labs-engine/
+sovereign-temple/
+sov3-deploy/
+vercel-deployables/
+unified-saas/
+sovereign-stack/
+vast-ai-deployment/
+meok-mobile/
+meok-kits-host/
+registry-publish/
+mcp-submissions/
+apify-actors/
+automation/
+
+# ---------------------------------------------------------------------------
+# Content / marketing / business docs (not code)
+# ---------------------------------------------------------------------------
+_TOPOLOGY/
+_ARCHIVED_SEVERED_BRANDS/
+_private_dagon/
+bleeding-edge-arsenal/
+csoai-docs/
+csoai-mcp-monetization/
+csoai-eu-ai-act-pillar/
+domain-sales/
+grants/
+marketing-assets/
+products/
+/research/
+jarvis-memory/
+k25-vision/
+harvi-funding/
+investing/
+ralph-mode/
+eu-ai-act-kit/
+eu-ai-act-kit.zip
+eu-ai-act-landing/
+eu-ai-act-api/
+mcp-monetization-gateway/
+meok-ai-landing/
+cobolbridge-landing.html/
+csoai-checkout.html/
+god-eye-binary/
+god-eye-report.html/
+god-eye-server.py/
+god-eye-viewer.html/
+proofof-site/
+proofof-ai/
+landlaw-site/
+fishkeeper-site/
+koikeeper-site/
+grabhire-site/
+commercialvehicle-site/
+council-ai-storefront/
+
+# ---------------------------------------------------------------------------
+# Standalone scripts / one-offs
+# ---------------------------------------------------------------------------
+create-stripe-products-live.py
+fix-stripe-pricing.py
+domain-monetization-plan.md
+domain-monetization-sprint.md
+agent-teams-monetization.md
+fix-stripe-pricing-NOW.sh
+DNS_FIX_INSTRUCTIONS.txt
+.vercelignore
+full_knowledge_ingest.py
+market_check.py
+grandcode_test_harness.py
+jarvis_integration.py
+agent_task_executor.py
+*.env
+**/.env
+**/.env.*
+.env.sovereign
+*.env.backup
+SECRETS_LOCAL.md
+**/SECRETS_LOCAL.md
+*secret*.md
+*.pem
+*.key
+*credentials*
+node_modules/
+.next/
+*.pt
+*.npz
+*.dylib
+*.step
+meok-one/meok_one/data/
+meok-one/.meok_vm_key.txt
+meok-one/.env.local
+_archive/severed/
+
+# Build artifacts
+meokclaw-tui/meokclaw-test
+meokclaw-tui/build/
+
+# Test data
+meok-one/data/hive_traces.jsonl
+meok-one/test_funnel.py
+
+# Nested git repos (not submodules)
+delboy/
+iokfarm-site/
+lib2b/
+meok/
+meok-compliance-gateway/
+meok-integrations/
+meok-sdk-go/
+meok-sdk-python/
+meok-sdk-typescript/
+meok-skills/
+meok-slack-app/
+meok-teams-app/
+meok-vscode-extension/
+
+csoai-org-v2/.env.example
+
+meok-marketing/.env.example
+
+csoai-platform/.env
+
+csoai-platform/.env.example
+
+meok-oneos/.env.example
+
+# Rust build artifacts (accidentally tracked)
+solana-sbt/target/
+openpatent-hive/scripts/loadkeys.sh
+openpatent-hive/scripts/loadkeys.local.sh
+**/loadkeys.sh
+**/loadkeys.local.sh
+_m2_import/
+csoai-master/node_modules/
+csoai-dashboard-master/
+csoai-master/
+.env.local
+
+# Hive runtime data
+.hive/data/
+.hive/tasks/
+.hive/logs/
+
+# External submodule / dependency (independent repos with own remotes)
+openmoe/
+openmoe
+coai/
+coai
+haulage-deploy/
+
+# Generated deploy outputs
+*-deploy/
+hive-mailer/.probe_strikes*
+
+# === Rust / Solana build artifacts (added 2026-06-19) ===
+**/*.rlib
+**/*.rmeta
+**/.fingerprint/
+**/incremental/
+solana-sbt/target/
+
+sovereign-temple/data/queen_sign.key
+sovereign-temple/data/os_telemetry.jsonl
+sovereign-charters/csoai-outreach/sme-kb.db
+_alignment/sovereign_merge_kit/.runtime.env
+founder.digest
+_alignment/sovereign_merge_kit/identity_demo.json
+
+# Training artifacts (too large for GitHub, use LFS or external storage)
+*.tar.gz
+!mcp-marketplace/*/dist/*.tar.gz
+_alignment/sovereign_merge_kit/*.tar.gz
+**/sov*_adapter.tar.gz
+
+# New clan adapters (too large for GitHub, regenerated from honey)
+_alignment/sovereign_merge_kit/models_new_clans/*/adapter_model.safetensors
+_alignment/sovereign_merge_kit/models_new_clans/*/tokenizer*
+_alignment/sovereign_merge_kit/models_new_clans/*/chat_template*
+_alignment/sovereign_merge_kit/models_new_clans/*/*.json

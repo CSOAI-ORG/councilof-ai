@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoE-64 - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / moe-64</div>
+<h1>MoE-64 — Mixture of 64 Experts</h1>
+<p class="tagline">Right brain, 64 expert sub-models, sparse activation, sovereign reasoning.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p><strong>MoE-64</strong> is CSOAI's right-brain reasoning layer: a Mixture-of-Experts model with 64 specialised sub-models, of which 4 are activated per inference. It is the perception/intuition half of the OOWM Sandwich (see <a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a>), complementing the Mamba long-context layer.</p>
+
+<h2>Architecture</h2>
+<p>Each of the 64 experts is a 7B-parameter transformer fine-tuned on a domain: legal (UK, EU, US), scientific (physics, biology, chemistry), creative (writing, art, music), operational (council voting, SIGIL analysis), defensive (threat detection), and 56 others. A learned router selects the top-4 experts per query based on the input's embedding.</p>
+
+<h2>Sparse Activation</h2>
+<p>Only 4 of 64 experts fire per token — total active parameters is 28B, not 448B. This gives 16× the representational capacity of a dense 28B model at the same compute cost. The trade-off is router accuracy: if the router is wrong, the wrong expert handles the query. CSOAI's router is itself an MoE-8 with its own training signal from council verdicts.</p>
+
+<h2>Sovereign Alignment</h2>
+<p>MoE-64 is sovereign because: (1) all 64 expert weights are open-source, (2) the router is auditable, (3) experts can be swapped in/out without retraining the whole model, enabling per-jurisdiction customisation (UK legal expert vs. EU legal expert), and (4) the model runs on sovereign data centres without contacting external APIs.</p>
+
+<h2>Historical Context</h2>
+<p>MoE was introduced by Shazeer et al. in 2017 ("Outrageously Large Neural Networks"). Google's GShard (2020) scaled it to 600B parameters. Mixtral (2024) popularised open-source MoE. CSOAI's MoE-64 adapts this lineage to the sovereign-AI use case by making every expert auditable and swappable.</p>
+
+<h2>Role in OOWM</h2>
+<p>In the OOWM Sandwich, MoE-64 receives the Mamba state as context and produces the reasoning trace. The output is wrapped by SIGIL (signed) and either accepted by the council (Tier 0/1 actions) or routed to a human (Tier 2). The <a href="/wiki/council/council-mechanics.html">Council Mechanics</a> page describes the routing in detail.</p>
+
+<h2>Modern Usage</h2>
+<p>MoE-64 is exposed via <code>sov_oowm_think(use_left_brain=True)</code>. Customers can route specific queries to specific experts via <code>sov_big_braim_route</code> with the <code>category</code> parameter. The full ensemble of 64 experts totals 448B parameters; only 28B are active per query.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a></li>
+<li><a href="/wiki/architecture/mamba-ssm.html">Mamba SSM</a></li>
+<li><a href="/wiki/architecture/big-braim.html">Big Braim</a></li>
+<li><a href="/wiki/science/mixture-of-experts.html">Science: MoE</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

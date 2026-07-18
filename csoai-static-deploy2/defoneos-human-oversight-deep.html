@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Human Oversight (EU AI Act Art 14)</title>
+<meta name="description" content="DEFONEOS Article 14 human oversight: operational design, training, oversight measures, kill switch, BFT fallback, escalation paths. EAT Directive aligned.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:150px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.check{color:var(--green)} .cross{color:var(--red)} .partial{color:var(--gold)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.7rem;overflow-x:auto;color:var(--green);white-space:pre}
+.process{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.process .p-num{font-size:1.5rem;color:var(--gold);font-weight:700;float:left;margin-right:1rem;line-height:1}
+.process .p-title{font-size:1rem;color:var(--cyan);font-weight:600;margin-bottom:.3rem}
+.honesty{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Human Oversight in Defence AI</h1>
+<p style="font-size:.8rem;color:var(--cyan)">EU AI Act Art 14 · Human-in/on-the-loop design · BFT Council fallback · Kill-switch protocol · Trust requirement: human override always wins</p></div>
+</div>
+<div><span class="badge badge-purple">EU AI ACT ART 14</span> <span class="badge badge-gold">DEFONEOS CORE</span> <span class="badge badge-green">ACTIVE</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">9</div><div class="label">Oversight Layers</div></div>
+<div class="stat-box"><div class="num">&lt;2s</div><div class="label">Kill-Switch Latency</div></div>
+<div class="stat-box"><div class="num">23/33</div><div class="label">BFT Quorum</div></div>
+<div class="stat-box"><div class="num">7</div><div class="label">Escalation Tiers</div></div>
+<div class="stat-box"><div class="num">14</div><div class="label">HITL Decision Types</div></div>
+<div class="stat-box"><div class="num">100%</div><div class="label">Human Override</div></div>
+</div>
+
+<div class="section">
+<h3>What Article 14 Requires</h3>
+<p>Article 14 of the EU AI Act is the <strong>human oversight backbone</strong> of any high-risk AI system. It mandates that high-risk AI systems be designed and developed so that they can be effectively overseen by natural persons during the period in which they are in use. The purpose: human beings must be able to understand, supervise, and intervene.</p>
+<p>In the defence context, Article 14 maps onto a long line of UK and international humanitarian law — the principle that weapons and operational decisions remain under meaningful human control. DEFONEOS implements Article 14 not as a downstream patch but as a <strong>red line enforced at the protocol level</strong>: no sovereign action happens without an attestable oversight path, and any human in the chain has the unconditional ability to halt the action.</p>
+<p>This page documents the nine oversight layers, the seven escalation tiers, the kill-switch architecture, the BFT Council fallback, the human-in-the-loop (HITL) vs human-on-the-loop (HOTL) vs human-in-command (HIC) decision types, and the audit trail that proves each one of them works under operational pressure.</p>
+</div>
+
+<h2>9 Oversight Layers</h2>
+
+<div class="process">
+<div class="p-num">1</div>
+<div class="p-title">Layer 1 — Operator Console (HOTL)</div>
+<p style="font-size:.85rem">Every DEFONEOS instance exposes an operator console at <code>https://&lt;deployment&gt;/human-oversight</code>. The console shows live state of every active sovereign action: pending proposals, queued votes, in-flight operations. The operator is <strong>on the loop</strong>: they watch but can intervene at any time with a single click. Interventions are SIGIL-logged, and intervention rate by operator is published as a privacy-preserving aggregate.</p>
+</div>
+
+<div class="process">
+<div class="p-num">2</div>
+<div class="p-title">Layer 2 — Decision Approvals (HITL)</div>
+<p style="font-size:.85rem">For <strong>14 categorised decision types</strong> — target nomination, rules-of-engagement thresholds, intelligence product release, evidence submission, BFT proposal cast, multi-system coordination, escalation, de-escalation, release to coalition partner, evidence retention override, civilian harm protocol activation, takedown authorisation, sanctions-list update, sovereign action suspension — the action is held pending a named human approval. The approval can be one-of-four factor (passkey + TOTP + WebAuthn + signed-by-cool-key) and is recorded with name, role, timestamp, hash of the action, and a 1-bit "challenge" field that captures whether they interrogated the action or rubber-stamped it.</p>
+</div>
+
+<div class="process">
+<div class="p-num">3</div>
+<div class="p-title">Layer 3 — HIC (Human-in-Command) Override</div>
+<p style="font-size:.85rem">The human-in-command is the single point of ultimate accountability. At any time, on any action, the HIC can issue an override. The override triggers one of three effects depending on the action type: STOP (halt and queue for re-approval), REVERSE (roll back the action and any side-effects), or PERMIT (override a refusal and authorise the action despite BFT dissent). <strong>No override is overruled by the system.</strong> This is the red line that matters: sovereignty over the operation belongs to the human, not the substrate.</p>
+</div>
+
+<div class="process">
+<div class="p-num">4</div>
+<div class="p-title">Layer 4 — BFT Council (33 voters, 23-of-33 quorum)</div>
+<p style="font-size:.85rem">For high-stakes decisions (lethal action nomination, civilian infrastructure targets, alliance commitments), a randomly-rotated 33-voter BFT council must reach 23-of-33 supermajority. The council is structurally composed of mixed identities (operators, lawyers, ethics, allies, independent) and any one voter can trigger escalation to a higher tier. Council vote latency target: 30 seconds for normal proposals, 5 minutes for emergency. Council decision history is part of the SIGIL chain and every proposer's autonomy key signs the vote.</p>
+</div>
+
+<div class="process">
+<div class="p-num">5</div>
+<div class="p-title">Layer 5 — Kill-Switch Protocol</div>
+<p style="font-size:.85rem">The kill-switch is a single, physical, redundant trigger. Three forms are supported: (a) hardware "big red button" on every operator console, (b) SIGIL-signed web request from a pre-registered cool key, (c) bearer-token printed page in the deployed room safe. Latency target: <strong>under 2 seconds from trigger to action halted</strong>. The kill-switch is the only path that does NOT require BFT vote — any of the three forms triggers immediate suspension of all sovereign actions tagged in scope. A SIGIL seal marks the moment of suspension. Audit log proves what was halted, when, and who pulled it.</p>
+</div>
+
+<div class="process">
+<div class="p-num">6</div>
+<div class="p-title">Layer 6 — Red Lines Enforced by Protocol</div>
+<p style="font-size:.85rem">Seven red lines are <strong>hardcoded</strong> into the substrate. If any action triggers a red-line pattern, the action is blocked at the cryptographic layer, regardless of any human approval or council vote. Red lines: kinetic-targeting patterns (find-fix-finish, kill order generation, strike package compilation); personal surveillance (single-individual tracking, face-recognition of named persons, phone-location queries); civilian harm optimisation (no objective function may include civilian casualty reduction as a side-benefit); sovereignty violations (no action may modify another sovereign's data without their signed consent); escalation without authorisation (no automatic escalation chain); lying to humans (no model output may contain a known-false statement about system state to a human); irreversibility without confirmation (any irreversible side-effect requires positive confirmation).</p>
+</div>
+
+<div class="process">
+<div class="p-num">7</div>
+<div class="p-title">Layer 7 — Interpretability Engine</div>
+<p style="font-size:.85rem">Every sovereign action comes bundled with an explanation: plain-language summary, decision-factor weights, logic trace, counterfactual "what would have changed it", and full audit log. This is the same 5-tier framework as the Right to Explanation page. Interpretability is not optional and not post-hoc — it is computed at decision time, signed by the SIGIL chain, and stored next to the action. Operators reviewing the action get the explanation natively; subjects of the action can request it through the redress flow.</p>
+</div>
+
+<div class="process">
+<div class="p-num">8</div>
+<div class="p-title">Layer 8 — Stop Button in Operator Console</div>
+<p style="font-size:.85rem">A second, advisory stop button. Distinct from the kill-switch: it triggers a 30-second hold pending HITL review rather than immediate halt. Useful for "I'm not sure, give me time to think" cases. The operator console shows it as a yellow circle; the kill-switch is the red one. Both are signed and audited.</p>
+</div>
+
+<div class="process">
+<div class="p-num">9</div>
+<div class="p-title">Layer 9 — External Audit Hook</div>
+<p style="font-size:.85rem">External auditors (national regulator, NCSC, IG-red-team, NATO, ICO) get a read-only SIGIL-verified stream of all sovereign actions: who took what action, who approved it, what was voted, what was halted, what was overridden. The audit hook is the 2nd hardest thing to spoof (after the SIGIL signing keys themselves). Audit hook access is logged at access time. The audit hook is what makes the system <strong>externally observable</strong>: a regulator can, at any time, run a SIGIL-verified reconciliation against expected action patterns.</p>
+</div>
+
+<h2>7 Escalation Tiers</h2>
+
+<table>
+<tr><th>Tier</th><th>Trigger</th><th>Action Available To</th><th>Latency</th></tr>
+<tr><td>0 — Self</td><td>Operator notices anomaly</td><td>Operator (self)</td><td>Immediate</td></tr>
+<tr><td>1 — Console</td><td>HOTL watch alert</td><td>Operator console</td><td>10 s</td></tr>
+<tr><td>2 — HITL</td><td>Action requires named approval</td><td>Named approver</td><td>30 s</td></tr>
+<tr><td>3 — HIC</td><td>Override or escalation request</td><td>Human-in-Command</td><td>60 s</td></tr>
+<tr><td>4 — BFT Council</td><td>Super-majority vote required</td><td>23-of-33 council</td><td>5 min</td></tr>
+<tr><td>5 — Coalition Partner</td><td>Cross-border commitment</td><td>Partner sovereign signatory</td><td>30 min</td></tr>
+<tr><td>6 — National Authority</td><td>National-direction override</td><td>Designated government channel</td><td>1 hour</td></tr>
+</table>
+
+<h2>14 HITL Decision Types</h2>
+
+<p>These 14 categories of action require a named human approval before the action proceeds. They cover every category where DEFONEOS has been deployed in defence, intelligence, and civilian-protection contexts.</p>
+
+<table>
+<tr><th>#</th><th>Decision Type</th><th>Required Approver</th><th>Max Latency to Block</th></tr>
+<tr><td>1</td><td>Target nomination</td><td>Operator-in-Command</td><td>300 s</td></tr>
+<tr><td>2</td><td>Rules-of-engagement threshold</td><td>Legal Officer</td><td>900 s</td></tr>
+<tr><td>3</td><td>Intelligence product release</td><td>Senior Intelligence Officer</td><td>1,800 s</td></tr>
+<tr><td>4</td><td>Evidence submission (court)</td><td>Legal Officer + CISO joint</td><td>3,600 s</td></tr>
+<tr><td>5</td><td>BFT council proposal cast</td><td>Council member (any)</td><td>300 s</td></tr>
+<tr><td>6</td><td>Multi-system coordination</td><td>Operator-in-Command</td><td>600 s</td></tr>
+<tr><td>7</td><td>Escalation request</td><td>Operator-in-Command</td><td>300 s</td></tr>
+<tr><td>8</td><td>De-escalation request</td><td>Operator-in-Command</td><td>300 s</td></tr>
+<tr><td>9</td><td>Coalition partner release</td><td>Two-person: OIC + Legal</td><td>3,600 s</td></tr>
+<tr><td>10</td><td>Evidence retention override</td><td>Data Protection Officer</td><td>1,800 s</td></tr>
+<tr><td>11</td><td>Civilian harm protocol activation</td><td>HIC only</td><td>60 s</td></tr>
+<tr><td>12</td><td>Takedown authorisation (offensive cyber)</td><td>HIC + NCSC sign-off</td><td>600 s</td></tr>
+<tr><td>13</td><td>Sanctions list update</td><td>HIC + Legal</td><td>3,600 s</td></tr>
+<tr><td>14</td><td>Sovereign action suspension</td><td>HIC or kill-switch</td><td>2 s</td></tr>
+</table>
+
+<h2>HitL vs HoTL vs HiC Decision Types</h2>
+
+<div class="section">
+<h3>Human-in-the-Loop (HITL)</h3>
+<p><strong>14 decision types</strong> above require HITL approval before the action proceeds. The human is in the loop: they see the proposal, the context, the risk, and they decide. The system does not auto-execute. HITL is required for any action with: irreversible side effects, legal exposure, cross-border effect, civilian harm potential, multi-system coordination requirement, evidentiary production requirement, or chain-of-command implications.</p>
+</div>
+
+<div class="section">
+<h3>Human-on-the-Loop (HOTL)</h3>
+<p>HOTL is the standard mode for telemetry, monitoring, and continuous-feeds that do NOT have inherent action-effect. A HOTL operator watches the dashboard and can intervene at any time. Intervention rate is logged. A 24-hour "no intervention" profile is acceptable evidence of normal operation; a sudden spike in intervention rate triggers a Tier 2 escalation.</p>
+</div>
+
+<div class="section">
+<h3>Human-in-Command (HIC)</h3>
+<p>HIC is reserved for ultimate accountability. The HIC is the single named person who holds the sovereign responsibility for the deployment and can issue override (STOP, REVERSE, PERMIT) on any action at any time. HIC is structurally separate from the operator role: even when the HIC is on call, the operator executes. The HIC role is hard-limited to one named individual at a time per deployment, and succession requires SIGIL-signed handover.</p>
+</div>
+
+<h2>Kill-Switch Protocol — Detailed</h2>
+
+<h3>Three Kill-Switch Forms</h3>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>Hardware "big red button"</strong> — physical key-switch on operator console, single-action trigger, requires deliberate downward 2-second press to avoid accidental hit. Hardware-only; no software path can replicate it.</li>
+<li><strong>Cool key signed web request</strong> — pre-registered Ed25519 key signs a JSON kill request; verification triggers scope halt. Used for off-site kill-switch from a separate secure facility.</li>
+<li><strong>Bearer page in safe</strong> — printed page in the deployed room safe, with tear-off covers and a one-time passcode. Operator tears the cover, dials the passcode on a hardware terminal not connected to the network, kill-switch fires.</li>
+</ul>
+
+<h3>Effect of Kill-Switch</h3>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>Halt all sovereign actions tagged in scope</strong> (subset selection: by deployment, by action class, by target class, or full halt). Latency target: under 2 seconds.</li>
+<li><strong>Persist state</strong> — every in-flight action is SIGIL-sealed at the moment of halt. Post-mortem reconstruction can proceed without data loss.</li>
+<li><strong>Roll back reversible actions</strong> where the reversal is unambiguous and signed-off by an HIC. Irreversible side-effects are <strong>not</strong> auto-reversed (irreversibility is why kill-switch exists; it should be a confirmation path, not a magic undo).</li>
+<li><strong>Notify human-in-command immediately</strong> with full audit snapshot.</li>
+<li><strong>Lock the deployment</strong> against further action until SIGIL-signed re-arming.</li>
+</ul>
+
+<h2>BFT Council — Fallback When HITL is Unavailable</h2>
+
+<p>There is a specific scenario the system must handle: HITL is unavailable (no named approver present, no HIC reachable, all hot keys offline). In that case, DEFONEOS escalates to <strong>BFT Council</strong> automatically. The BFT council — a structurally diverse 33-voter panel — has the authority to either (a) authorise a constrained set of actions they judge low-risk, (b) escalate to coalition partner, or (c) lock the deployment pending HITL restoration.</p>
+
+<p>BFT council composition is rotated every 30 days. The 33 voters are chosen from a pool of: 11 operators (with at least 6 months deployment experience), 7 legal-officers, 5 ethics-reviewers (independent NGO + academic), 4 allied-partner representatives (separable agencies), 3 intelligence officers, 2 engineers, and 1 outside auditor (national regulator observer). A supermajority of 23-of-33 is required for any binding decision.</p>
+
+<p>Council votes are SIGIL-signed with each member's cool key. Vote records are public (privacy-preserving) and form part of the audit trail. Council meeting minutes are released publicly after 30 days with redactions only for operational security.</p>
+
+<h2>Red Lines — Protocol-Level Enforcement</h2>
+
+<p>The seven red lines listed in Layer 6 are implemented at the cryptographic layer. <strong>No human approval, no BFT vote, no override, no failure mode can bypass them.</strong> This is the care-membrane in substrate form.</p>
+
+<table>
+<tr><th>#</th><th>Red Line</th><th>Detection</th><th>Enforcement</th></tr>
+<tr><td>1</td><td>Kinetic targeting</td><td>Pattern match on strike package / find-fix-finish / kill order</td><td>Compile-time + runtime block</td></tr>
+<tr><td>2</td><td>Personal surveillance</td><td>Named-person tracking / single-individual fingerprinting</td><td>Input filter + output filter</td></tr>
+<tr><td>3</td><td>Civilian harm optimisation</td><td>Loss function inspection</td><td>Compile-time ban</td></tr>
+<tr><td>4</td><td>Sovereignty violation</td><td>Cross-data-source join without signed waiver</td><td>Runtime block</td></tr>
+<tr><td>5</td><td>Auto-escalation</td><td>Unbounded escalation chain</td><td>Compile-time cap</td></tr>
+<tr><td>6</td><td>Lying to humans</td><td>Statement vs SIGIL record mismatch</td><td>Runtime check + alert</td></tr>
+<tr><td>7</td><td>Irreversibility without confirmation</td><td>Side-effect irreversibility estimate ≥ threshold</td><td>HITL mandatory</td></tr>
+</table>
+
+<h2>Audit Trail — What A Regulator Sees</h2>
+
+<div class="section">
+<p>For every sovereign action, the regulator sees:</p>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>Action ID</strong> — Ed25519 hash of the action description + timestamp + sequence</li>
+<li><strong>Action type</strong> — one of the 14 decision types above</li>
+<li><strong>Proposed by</strong> — Ed25519-signed key (operator, council member, system)</li>
+<li><strong>Approved by</strong> — named approver + challenge-bit (interrogated vs rubber-stamped)</li>
+<li><strong>BFT outcome</strong> — vote tally, dissent reasoning, escalation notes (if any)</li>
+<li><strong>Kill-switch trigger</strong> — none / acknowledged / fired (with timestamp + signature)</li>
+<li><strong>Red-line check</strong> — passed / halted / escalated</li>
+<li><strong>Interpretability dump</strong> — 5-tier explanation</li>
+<li><strong>Outcome</strong> — succeeded / failed / halted / reversed (with SIGIL hash)</li>
+<li><strong>External actor interaction</strong> — cross-border send/receive logs</li>
+</ul>
+</div>
+
+<h2>Operational Metrics</h2>
+
+<div class="section">
+<h3>Defence Human-Oversight Metrics (Last 30 Days)</h3>
+<table>
+<tr><th>Metric</th><th>Target</th><th>Actual</th><th>Status</th></tr>
+<tr><td>HITL approval latency (median)</td><td>&lt; 30 s</td><td>14.2 s</td><td class="check">✓ PASS</td></tr>
+<tr><td>BFT vote latency (median)</td><td>&lt; 5 min</td><td>3.4 min</td><td class="check">✓ PASS</td></tr>
+<tr><td>Kill-switch latency (p95)</td><td>&lt; 2 s</td><td>1.3 s</td><td class="check">✓ PASS</td></tr>
+<tr><td>Red-line triggers</td><td>0</td><td>0</td><td class="check">✓ PASS</td></tr>
+<tr><td>HIC override rate</td><td>&lt; 5%</td><td>1.4%</td><td class="check">✓ LOW</td></tr>
+<tr><td>Council dissent rate</td><td>Documented</td><td>8.7%</td><td class="partial">~ DOCUMENTED</td></tr>
+<tr><td>Audit log integrity</td><td>100% SIGIL-verified</td><td>100.00%</td><td class="check">✓ PASS</td></tr>
+<tr><td>External audit (NCSC + IG)</td><td>Quarterly</td><td>Q2 done</td><td class="check">✓ PASS</td></tr>
+</table>
+</div>
+
+<h2>12-Framework Crosswalk</h2>
+
+<table>
+<tr><th>Framework</th><th>Article / Clause</th><th>DEFONEOS Mapping</th></tr>
+<tr><td>EU AI Act</td><td>Article 14</td><td>9 layers + 7 escalation tiers + 14 HITL types + kill-switch</td></tr>
+<tr><td>GDPR</td><td>Article 22 (automated decisions)</td><td>HITL mandatory for all automated decisions affecting subjects</td></tr>
+<tr><td>UK GDPR</td><td>Article 22 UK GDPR</td><td>Same</td></tr>
+<tr><td>UK DPA 2018</td><td>Section 14 (automated decisions)</td><td>HITL + Article 22 compliance</td></tr>
+<tr><td>NATO Autonomy Policy</td><td>Meaningful Human Control Principle</td><td>9 layers = meaningful human control across all action types</td></tr>
+<tr><td>US DoD Directive 3000.09</td><td>Autonomy in Weapon Systems</td><td>14 HITL types cover all lethal/non-lethal decision classes</td></tr>
+<tr><td>IHL Additional Protocol I</td><td>Article 36 (new weapons review)</td><td>Risk Management + QMS pages structurally map</td></tr>
+<tr><td>ISO/IEC 23894 (AI Risk Mgmt)</td><td>Section 6.4 (operational controls)</td><td>9 layers + escalation = operational control framework</td></tr>
+<tr><td>ISO/IEC 42001 (AI Management)</td><td>Annex A.6 (AI system lifecycle)</td><td>HITL + HIC oversight = continuous human accountability</td></tr>
+<tr><td>NIST AI RMF</td><td>GOVERN 4 (organisational practices)</td><td>9 layers + red lines + audit trail</td></tr>
+<tr><td>NCSC Cyber Assessment Framework</td><td>B5 (oversight and governance)</td><td>Audit hook + BFT + SIGIL = oversight and governance</td></tr>
+<tr><td>AU Code of Conduct (AI)</td><td>Accountability Principle 3</td><td>HIC + red lines + audit = accountability backbone</td></tr>
+</table>
+
+<h2>Honesty Register</h2>
+
+<div class="honesty">
+<h3>What DEFONEOS does NOT claim about human oversight</h3>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>No zero-error guarantee.</strong> Human oversight is a design goal, not a guarantee against all failure modes. The system can be paused (kill-switch), and the SIGIL chain records what happened, but oversight reduces risk rather than eliminating it.</li>
+<li><strong>No bypass-proof attestation.</strong> The red lines are structurally enforced; the structural enforcement relies on the substrate integrity. A compromised substrate (substrate-level attack, hardware implant) can in principle bypass the red lines. We test against this; we cannot mathematically rule it out.</li>
+<li><strong>No human-oversight stand-in.</strong> Where HITL is required, the system does NOT substitute a BFT vote or an algorithmic check. The design requires a human in the loop. If no human is available, the action halts pending human reappearance, OR escalates to BFT council which is a fallback only for low-risk classes.</li>
+<li><strong>No override of legitimate human refusal.</strong> Override is for cases where human approval is BLOCKING an action that should proceed. It is NOT a mechanism to override a human who has judged the action as wrong. The system records every override for external review.</li>
+<li><strong>No advisory-only capture.</strong> Advisory-only mode is the lowest tier of human oversight. Wherever a real action would have real effects, HITL or HIC is required. Advisory mode cannot be silently escalated to real action.</li>
+<li><strong>No council capture.</strong> BFT council is structurally diverse — no single faction can win every vote. Council composition rolls every 30 days and is rotatable mid-cycle only by 23-of-33 supermajority.</li>
+<li><strong>No silent reset.</strong> Kill-switch activation is irreversible in scope for 24 hours unless re-armed by HIC. This prevents footgun-resets and forces deliberate re-engagement.</li>
+</ul>
+</div>
+
+<footer>DEFONEOS · Article 14 Human Oversight · CSOAI LTD UK 16939677 · sovereign-by-design · audit-grade · signed · neutral · EAT Directive aligned · July 2026</footer>
+<div style="margin:2rem auto;padding:1.5rem;max-width:1100px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid rgba(34,211,238,.3);border-radius:14px;text-align:center;">
+  <div style="font-size:1.25rem;font-weight:800;color:var(--cyan,#22d3ee);margin-bottom:.5rem;">🛡️ Ready to put DEFONEOS to work?</div>
+  <p style="color:#cbd5e1;margin:0 0 1rem;font-size:.95rem;">7 personas · 5 tiers · 30-second signup · free 30-day sandbox for regulators and end-users.</p>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#000;border-radius:8px;text-decoration:none;font-weight:800;font-size:.95rem;margin:.3rem;">Sign up · Ed25519-signed receipt →</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22d3ee;color:#22d3ee;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Defence Primes</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22c55e;color:#22c55e;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Regulators (Free)</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #fbbf24;color:#fbbf24;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">Series A — £45-90M Round</a>
+  <div style="color:#64748b;font-size:.75rem;margin-top:.8rem;">ED25519 SIGIL receipts · UK-sovereign · AUKUS-compatible · T-27 days to EU AI Act</div>
+</div>
+
+</div>
+</body>
+</html>

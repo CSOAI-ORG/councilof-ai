@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "csoai_defoneos_mcp"
+version = "1.0.0"
+description = "CSOAI DEFONEOS — sovereign UK defence-AI CERTIFICATION surface (33-agent BFT council + DEFONEOS-SEAL signed credential + MITRE ATLAS + governance crosswalk + audit chain)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "MEOK AI Labs", email = "nicholas@csoai.org"},
+]
+keywords = [
+    "mcp", "defence", "defense", "sovereign", "uk", "certification",
+    "csoai", "csd", "watchdog", "bft-council", "defoneos-seal",
+    "mitre-atlas", "csoai-governance-crosswalk", "audit-chain",
+    "owasp", "nist-ai-rmf", "aiact", "dora", "nis2", "cra",
+    "bababock", "bae", "qinetiq", "thales-uk", "leonardo-uk", "aukus",
+    "dstl", "daic",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "mitre-atlas-mcp>=1.0.0",
+    "csoai-governance-crosswalk-mcp>=1.0.0",
+    "agent-audit-logger-mcp>=1.0.0",
+    "meok-governance-engine-mcp>=1.0.0",
+    "care-membrane-mcp>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://csoai.org/defoneos"
+Repository = "https://github.com/CSOAI-ORG/csoai-defoneos-mcp"
+Documentation = "https://docs.csoai.org/defoneos"
+"DEFONEOS-SEAL Verify" = "https://meok.ai/verify?seal="
+"Watchdog Cert" = "https://proofof.ai"
+
+[project.scripts]
+csoai-defoneos-mcp = "csoai_defoneos_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["csoai_defoneos_mcp"]

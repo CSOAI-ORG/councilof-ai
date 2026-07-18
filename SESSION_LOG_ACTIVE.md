@@ -1,0 +1,1 @@
+/Users/nicholas/clawd/_SESSION_LOGS/JEEVES_2026-06-20_SOV3_TUI_AUTONOMY.md

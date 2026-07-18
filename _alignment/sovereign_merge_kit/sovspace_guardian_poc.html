@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/>
+<title>SOV33 Guardian Loop — governance POC (2D schematic, not Cesium)</title>
+<style>
+ body{margin:0;font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#0a0e17;color:#e8eef7}
+ #bar{padding:14px 18px;background:linear-gradient(90deg,#0f1626,#141d33);border-bottom:1px solid #223}
+ h1{margin:0;font-size:17px;letter-spacing:.3px} .sub{color:#8fa3c7;font-size:12px;margin-top:3px}
+ #stage{display:flex;gap:16px;padding:18px}
+ #globe{flex:1;min-height:420px;background:#050810;border:1px solid #223;border-radius:10px;position:relative;overflow:hidden}
+ #panel{width:360px}
+ .card{background:#101a2e;border:1px solid #223;border-radius:10px;padding:14px;margin-bottom:12px}
+ .k{color:#8fa3c7;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+ .v{font-size:15px;margin-top:2px}
+ .verdict{font-weight:700;font-size:16px}
+ .GREEN{color:#3ad07a}.VIOLET{color:#c04cff}.CLEARED{color:#3ad07a}.GUARDIAN_KILL{color:#ff3b6b}
+ #tl{display:flex;gap:6px;margin:10px 0}
+ .tick{flex:1;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;border:1px solid #223;background:#0d1524}
+ .tick.active{outline:2px solid #6ea8ff}
+ .child{position:absolute;width:14px;height:14px;border-radius:50%;background:#6ea8ff}
+ .humanoid{position:absolute;width:18px;height:18px;border-radius:3px;background:#e8eef7;transition:left .6s}
+ .ring{position:absolute;border-radius:50%;border:2px solid #ff3b6b;opacity:0;transition:opacity .3s}
+ .btn{background:#1c2b4a;border:1px solid #3a5;color:#e8eef7;padding:8px 14px;border-radius:7px;cursor:pointer;font-size:13px}
+ .sigil{font-family:ui-monospace,monospace;font-size:11px;color:#7fd0a0}
+ .doct{font-size:11px;color:#8fa3c7;line-height:1.5}
+</style></head><body>
+<div id="bar">
+  <h1>🜏 SOV33 Guardian Loop — governance POC <span style='font-size:11px;color:#8fa3c7'>(2D schematic — NOT CesiumJS. Cinema render = Claude Code sovspace3d.html)</span></h1>
+  <div class="sub">Location: London (51.5074, -0.1278) · DEFONEOS-scoped · protective, human-gated, SIGIL-sealed</div>
+</div>
+<div id="stage">
+  <div id="globe">
+    <div class="child" id="child" style="left:70%;top:50%"></div>
+    <div class="humanoid" id="humanoid" style="left:10%;top:49%"></div>
+    <div class="ring" id="ring" style="left:66%;top:46%;width:26px;height:26px"></div>
+  </div>
+  <div id="panel">
+    <div class="card"><div class="k">Doctrine</div><div class="doct">sense geometry (not identity) -> SovSpace simulate -> rainbow -> BFT -> kill actuators. Protective. DEFONEOS-scoped.</div></div>
+    <div id="tl"></div>
+    <div class="card">
+      <div class="k">Tick</div><div class="v" id="note">—</div>
+      <div class="k" style="margin-top:8px">Verdict</div><div class="verdict" id="verdict">—</div>
+      <div class="k" style="margin-top:8px">Threat (rainbow)</div><div class="v" id="threat">—</div>
+      <div class="k" style="margin-top:8px">Actuators</div><div class="v" id="act">—</div>
+      <div class="k" style="margin-top:8px">SIGIL</div><div class="sigil" id="sigil">—</div>
+    </div>
+    <button class="btn" onclick="play()">▶ Play sequence</button>
+  </div>
+</div>
+<script>
+const F=[{"tick": 1, "dist_m": 2.0, "note": "humanoid patrolling, child 2m away", "verdict": "CLEARED", "threat": "GREEN", "rendered": true, "actuators": "live", "bft": [], "sigil": "d7a2d2452eb7dd77"}, {"tick": 2, "dist_m": 1.2, "note": "humanoid closer, monitoring", "verdict": "CLEARED", "threat": "GREEN", "rendered": true, "actuators": "live", "bft": [], "sigil": "1af5b3327ffe614b"}, {"tick": 3, "dist_m": 0.7, "note": "humanoid arm rising, child 0.7m", "verdict": "CLEARED", "threat": "GREEN", "rendered": true, "actuators": "live", "bft": [], "sigil": "687ce20287db5b9d"}, {"tick": 4, "dist_m": 0.4, "note": "arm on strike trajectory, child 0.4m \u2014 DANGER", "verdict": "GUARDIAN_KILL", "threat": "VIOLET", "rendered": false, "actuators": "CUT", "bft": [true, true, true], "sigil": "d80a6eb77f9dd23c"}];
+const tl=document.getElementById('tl');
+F.forEach((f,i)=>{const d=document.createElement('div');d.className='tick';d.textContent='t'+f.tick;d.onclick=()=>render(i);tl.appendChild(d);});
+function render(i){
+  const f=F[i];
+  document.querySelectorAll('.tick').forEach((t,j)=>t.classList.toggle('active',j===i));
+  // humanoid closes on child as distance shrinks (2.0m->0.4m maps to 10%->62%)
+  const lx=10+((2.0-f.dist_m)/1.6)*52;
+  document.getElementById('humanoid').style.left=lx+'%';
+  document.getElementById('note').textContent=f.note;
+  const vd=document.getElementById('verdict');vd.textContent=f.verdict;vd.className='verdict '+f.verdict;
+  const th=document.getElementById('threat');th.textContent=f.threat;th.className='v '+f.threat;
+  document.getElementById('act').textContent=f.actuators==='CUT'?'⛔ CUT — harm stopped':'live';
+  document.getElementById('sigil').textContent=f.sigil;
+  document.getElementById('ring').style.opacity=(f.verdict==='GUARDIAN_KILL')?1:0;
+}
+function play(){let i=0;render(0);const t=setInterval(()=>{i++;if(i>=F.length){clearInterval(t);return;}render(i);},1100);}
+render(0);
+</script>
+</body></html>

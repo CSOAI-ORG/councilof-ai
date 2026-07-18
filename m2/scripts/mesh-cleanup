@@ -1,0 +1,18 @@
+#!/bin/bash
+# Automated cleanup script for M2
+echo "=== MEOKCLAW M2 Cleanup ==="
+echo "Before:"
+df -h / | tail -1
+
+echo ""
+echo "Cleaning..."
+rm -f ~/.ollama/models/blobs/*-partial 2>/dev/null
+rm -rf ~/Library/Caches/pip/* 2>/dev/null
+rm -rf ~/Library/Caches/Homebrew/downloads/* 2>/dev/null
+rm -rf ~/Library/Caches/com.todesktop.*.ShipIt 2>/dev/null
+rm -rf ~/Library/Caches/com.anthropic.claudefordesktop.ShipIt 2>/dev/null
+find /tmp -name "ollama-pull*" -mtime +1 -delete 2>/dev/null
+
+echo ""
+echo "After:"
+df -h / | tail -1

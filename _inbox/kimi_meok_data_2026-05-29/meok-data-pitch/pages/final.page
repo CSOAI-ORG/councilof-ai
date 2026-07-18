@@ -1,0 +1,115 @@
+pageType: final
+background:
+  type: solid
+  color: "$primary"
+elements:
+  - elementId: grid-overlay
+    elementType: shape
+    bounds: [0, 0, 1280, 720]
+    shapeName: custom
+    path: "1280,720;M0 0 L1280 0 L1280 720 L0 720 Z"
+    fill:
+      type: image
+      src: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1280&h=720&fit=crop"
+      fit: {mode: cover}
+      mask:
+        type: gradient
+        gradientType: radial
+        stops:
+          - {position: 0, color: "#0f1923e0"}
+          - {position: 1, color: "#0f1923f5"}
+
+  - elementId: hex-decoration
+    elementType: shape
+    bounds: [1050, 100, 160, 160]
+    opacity: 0.06
+    shapeName: custom
+    path: "100,100;M50 5 L95 27.5 L95 72.5 L50 95 L5 72.5 L5 27.5 Z"
+    fill:
+      type: solid
+      color: "$accent"
+    border:
+      style: solid
+      width: 2
+      color: "$accent"
+
+  - elementId: title
+    elementType: text
+    bounds: [240, 220, 800, 90]
+    content:
+      fontSize: 72
+      fontFamily: "Liter"
+      color: "$textLight"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong>MEOK DATA</strong></p>
+
+  - elementId: subtitle
+    elementType: text
+    bounds: [240, 320, 800, 40]
+    content:
+      fontSize: 24
+      fontFamily: "QuattrocentoSans"
+      color: "$accent"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>The Data Layer for Sovereign AI</p>
+
+  - elementId: divider
+    elementType: shape
+    bounds: [540, 390, 200, 1]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#00788860"
+
+  - elementId: contact1
+    elementType: text
+    bounds: [240, 420, 800, 30]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "#a0b0c0"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>meok.ai</p>
+
+  - elementId: contact2
+    elementType: text
+    bounds: [240, 460, 800, 30]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "#a0b0c0"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>nicholas@meok.ai</p>
+
+  - elementId: contact3
+    elementType: text
+    bounds: [240, 500, 800, 30]
+    content:
+      fontSize: 18
+      fontFamily: "QuattrocentoSans"
+      color: "$muted"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p>London, UK</p>
+
+  - elementId: bottom-bar
+    elementType: shape
+    bounds: [0, 710, 1280, 10]
+    shapeName: rect
+    fill:
+      type: gradient
+      gradientType: linear
+      angle: 0
+      stops:
+        - {position: 0, color: "$accent"}
+        - {position: 0.5, color: "$secondary"}
+        - {position: 1, color: "$primary"}

@@ -1,0 +1,65 @@
+{
+  "name": "MEOK WORLD",
+  "short_name": "MEOK",
+  "description": "The sovereign AI operating system. 218 MCPs, 33 sovereign VMs, 12-Queen council, 4-tier cascade. The world is at your feet.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#c9a84c",
+  "background_color": "#08060c",
+  "lang": "en-GB",
+  "categories": ["productivity", "developer", "business", "utilities", "education"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Enter MEOK WORLD",
+      "short_name": "OS",
+      "url": "/csoai-os/v2-temple-os.html",
+      "description": "Open the sovereign OS single-pane"
+    },
+    {
+      "name": "Create i-character",
+      "short_name": "i-character",
+      "url": "/csoai-os/v2-signup-wizard.html",
+      "description": "5-step wizard to create your digital twin"
+    },
+    {
+      "name": "Council",
+      "short_name": "Council",
+      "url": "/council",
+      "description": "The 12-Queen + King council"
+    },
+    {
+      "name": "Temples",
+      "short_name": "Temples",
+      "url": "/temples",
+      "description": "Every regulation, on the globe"
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "start_url": "/",
+  "prefer_related_applications": false
+}

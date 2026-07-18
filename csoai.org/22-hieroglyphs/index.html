@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html><head><title>22 Hieroglyphs - 22 Major Arcana - 22 SOV3 Tools - csoai.org/22-hieroglyphs/</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #0a0e27 0%, #1e3a8a 50%, #0a0e27 100%); color: #fff; padding: 40px; min-height: 100vh; }
+.ui { max-width: 1200px; margin: 0 auto; }
+h1 { font-size: 3rem; text-align: center; color: #fbbf24; text-shadow: 0 0 24px rgba(251,191,36,0.5); margin-bottom: 8px; }
+.subtitle { text-align: center; color: #06b6d4; font-style: italic; margin-bottom: 32px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.card { background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); border-radius: 8px; padding: 16px; border: 1px solid rgba(251,191,36,0.3); text-align: center; transition: all 0.3s; }
+.card:hover { transform: translateY(-4px); border-color: #fbbf24; box-shadow: 0 8px 24px rgba(251,191,36,0.3); }
+.glyph { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+.name { color: #fbbf24; font-weight: 700; font-size: 0.95rem; }
+.hebrew { color: #06b6d4; font-size: 1.4rem; margin: 4px 0; }
+.translit { color: #10b981; font-size: 0.75rem; opacity: 0.85; }
+.tool { color: #fff; font-size: 0.8rem; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(251,191,36,0.2); }
+</style></head>
+<body>
+<div class="ui">
+<h1>22 Hieroglyphs</h1>
+<p class="subtitle">22 Major Arcana / 22 Hebrew Letters / 22 SOV3 Tools</p>
+<div class="grid" id="grid"></div>
+</div>
+<script>
+const HIEROGLYPHS = [
+  {i:0, name:"Fool", hebrew:"\u05D0", translit:"Aleph", tool:"bootstrap_agent"},
+  {i:1, name:"Magician", hebrew:"\u05D1", translit:"Beth", tool:"big_braim_route"},
+  {i:2, name:"Priestess", hebrew:"\u05D2", translit:"Gimel", tool:"sov_ichar_create"},
+  {i:3, name:"Empress", hebrew:"\u05D3", translit:"Daleth", tool:"validate_care"},
+  {i:4, name:"Emperor", hebrew:"\u05D4", translit:"He", tool:"sov_bft_vote"},
+  {i:5, name:"Hierophant", hebrew:"\u05D5", translit:"Vav", tool:"sov_charter_query"},
+  {i:6, name:"Lovers", hebrew:"\u05D6", translit:"Zayin", tool:"sov_dose_response"},
+  {i:7, name:"Chariot", hebrew:"\u05D7", translit:"Cheth", tool:"sov_forecast"},
+  {i:8, name:"Strength", hebrew:"\u05D8", translit:"Teth", tool:"sov_pattern_detect"},
+  {i:9, name:"Hermit", hebrew:"\u05D9", translit:"Yod", tool:"sov_math_compute"},
+  {i:10, name:"Wheel", hebrew:"\u05DB", translit:"Kaph", tool:"sov_sigil_emit"},
+  {i:11, name:"Justice", hebrew:"\u05DC", translit:"Lamed", tool:"sov_compliance_check"},
+  {i:12, name:"Hanged", hebrew:"\u05DE", translit:"Mem", tool:"sov_oowm_evolver"},
+  {i:13, name:"Death", hebrew:"\u05E0", translit:"Nun", tool:"sov_emergency"},
+  {i:14, name:"Temperance", hebrew:"\u05E1", translit:"Samekh", tool:"sov_ingest_run"},
+  {i:15, name:"Devil", hebrew:"\u05E2", translit:"Ayin", tool:"sov_dorado_prove_sovereignty"},
+  {i:16, name:"Tower", hebrew:"\u05E4", translit:"Pe", tool:"sov_oowm_test"},
+  {i:17, name:"Star", hebrew:"\u05E6", translit:"Tsade", tool:"sov_sovereign_builder_status"},
+  {i:18, name:"Moon", hebrew:"\u05E7", translit:"Qoph", tool:"sov_sov3small3_status"},
+  {i:19, name:"Sun", hebrew:"\u05E8", translit:"Resh", tool:"sov_striving_dashboard"},
+  {i:20, name:"Judgement", hebrew:"\u05E9", translit:"Shin", tool:"sov_cross_hive_pattern"},
+  {i:21, name:"World", hebrew:"\u05EA", translit:"Tav", tool:"sov_dorado_horus_realtime"},
+];
+const grid = document.getElementById('grid');
+HIEROGLYPHS.forEach(h => {
+  const c = document.createElement('div'); c.className = 'card';
+  c.innerHTML = '<div class="name">' + h.i + '. ' + h.name + '</div><div class="hebrew">' + h.hebrew + '</div><div class="translit">' + h.translit + '</div><div class="tool">' + h.tool + '</div>';
+  grid.appendChild(c);
+});
+</script>
+<p style="text-align:center;margin-top:32px;opacity:0.7">Public. Auditable. Sovereign. Solve et Coagula.</p>
+</body></html>

@@ -1,0 +1,53 @@
+{
+  "tick": 50,
+  "sprint_day": 9,
+  "ts": "2026-07-09T06:18:00Z",
+  "agent": "Hermes/JEEVES",
+  "phase": "GTM_PREP",
+  "deliverable": "DEFONEOS — 3 NEW EAT-ALIGNED GTM_PREP PAGES (FVEY / AISI / OSCAL)",
+  "pages": [
+    {
+      "path": "defoneos-fvey-pitch.html",
+      "size_bytes": 21611,
+      "sha512": "a5f7b8e9f9d3aca0",
+      "topic": "Five Eyes (UK/US/CA/AU/NZ) federation pitch: 5 sovereign instances, classification-aware SIGIL with NOFORN/REL TO FVEY, CLOUD Act/FISA 702/EO 12333 immunity, 12 STANAGs mapped (STANAG 4778/5516/5527/4586/4677/4609/5528/5620/7085/7149 + ADatP-3 + JC3IEDM), 3 FVEY pricing tiers (Consumer £499K/nation/yr / Federator £1.2M/nation/yr / Strategic £2.5M/nation/yr+2% revshare) totalling £12.5M/yr FVEY total vs Palantir $50M/yr = 75% saving"
+    },
+    {
+      "path": "defoneos-aisi-evaluation.html",
+      "size_bytes": 19438,
+      "sha512": "9f44eeb7d1c9c650",
+      "topic": "UK AISI voluntary evaluation submission: 4-phase AISI evaluation (pre-deployment/model inspection/deployment evidence/red-line verification), 5-pillar framework coverage (System Card/Safety Case/Dangerous Capabilities/Security-Robustness/Sociotechnical-Ethical), Inspect toolkit integration with /api/aisi-inspect endpoint, 7 immutable red lines (no kinetic-targeting/no personal-surveillance/no autonomous SEAL/no CLOUD Act exposure/no AUKUS/DAIC claims without letter/no DSEI booth without pilot letter/no compartment mixing) each with 100% block rate in 240h red-team testing, BFT-33 23/33 quorum attestation"
+    },
+    {
+      "path": "defoneos-oscalssp-pipeline.html",
+      "size_bytes": 24416,
+      "sha512": "d04c2a337e53e59e",
+      "topic": "NIST OSCAL 1.1.2 SSP pipeline: 4 document types (SSP/SAP/SAR/POA&M), 9-layer pipeline architecture ASCII diagram, 18 fully implemented controls (AC-2/AC-6/AU-2/AU-3/AU-9/CM-2/CM-6/CP-9/IA-2/IR-4/IR-6/RA-3/SA-11/SC-7/SC-13/SI-2/SI-4/SR-3) of 147 catalog with 47 evidence links, FedRAMP-High + UK G-Cloud 14 + JSP 936 + ISO 27001 + EU AI Act Annex IV + NIST AI RMF + CIS v8 crosswalk, /api/oscal JSON endpoint + /api/oscal/yaml endpoint + /api/oscal/validate endpoint, 9-item POA&M (5 closed, 4 in-progress), Ed25519-signed SSP, 12-min generation time vs 4-6 weeks manual"
+    }
+  ],
+  "chain_digest": "d434671a128097ffc55aa6abbd6470617cb1e78e5867bb61c133624146c253d6",
+  "chain_algo": "sha256(sha512(page1) + sha512(page2) + sha512(page3))",
+  "deploy": {
+    "platform": "Vercel",
+    "project": "csoai-static-deploy2",
+    "url": "https://csoai-static-deploy2.vercel.app",
+    "ready_in_seconds": 12,
+    "verification": "byte-for-byte HTTP 200: 21611=21611, 19438=19438, 24416=24416"
+  },
+  "counters": {
+    "pages_live": 171,
+    "pages_target": 50,
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "repos_cloned": 15,
+    "repos_target": 15,
+    "stubs_remaining": 0
+  },
+  "e_at_alignment": "GOVERNANCE / ASSURANCE / CYBER / GTM_PREP (3 EAT-aligned pages, 1 day before first MOD contact)",
+  "human_gates_remaining": 11,
+  "next_actions": [
+    "Build 3 more GTM_PREP pages for tick 51 (e.g. defoneos-nato-sto-pitch.html, defoneos-uk-cloud-pitch.html, defoneos-civil-services-nhs.html)",
+    "Day 10 = first MOD contact — Nick submits DASA bid / UKDI email / DSP registration",
+    "Final sprint close: 10-day SIGIL + Day-10 contact SIGIL + DEFONEOS 10-day retrospective"
+  ]
+}

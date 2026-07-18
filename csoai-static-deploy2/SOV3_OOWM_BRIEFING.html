@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SOV3³ — Sovereign Omniscient Vessel³ · Organic Open World Model · Full Briefing</title>
+<meta name="description" content="The complete canonical briefing on SOV3³, the Organic Open World Model (OOWM), Layer 0, the 12 Generals, 3 Councils, 13 protocols, all model types, and the absorption pattern. 7 July 2026.">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0d1220;
+    --ink: #e6e6e6;
+    --accent: #d4af37;       /* sovereign gold */
+    --accent2: #00ff9d;      /* sigil green */
+    --warn: #ff6b6b;         /* red line */
+    --muted: #6b7280;
+    --rule: #1f2937;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "JetBrains Mono", ui-monospace, monospace;
+    background: var(--bg);
+    color: var(--ink);
+    margin: 0;
+    padding: 2rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+  h1 { color: var(--accent); font-size: 2.4rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; margin: 0; }
+  h2 { color: var(--accent2); font-size: 1.7rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.3rem; margin-top: 3rem; }
+  h3 { color: var(--accent); font-size: 1.25rem; margin-top: 2rem; }
+  h4 { color: #b0b0b0; font-size: 1.05rem; margin-top: 1.5rem; }
+  code { background: #1a1f2e; padding: 0.1em 0.4em; border-radius: 3px; color: var(--accent2); font-size: 0.9em; word-break: break-all; }
+  pre { background: var(--bg2); padding: 1rem 1.2rem; border-radius: 6px; border-left: 3px solid var(--accent); overflow-x: auto; font-size: 0.82em; line-height: 1.45; }
+  .meta { color: var(--muted); font-size: 0.9em; }
+  .pill { display: inline-block; background: #1a1f2e; color: var(--accent2); padding: 0.25em 0.7em; border-radius: 12px; font-size: 0.85em; margin: 0 0.3em 0.3em 0; border: 1px solid #2a2f3e; }
+  .pill.gold { background: #1a0d20; color: var(--accent); border-color: var(--accent); }
+  .pill.sigil { background: #0d3320; color: var(--accent2); border-color: var(--accent2); }
+  .pill.warn { background: #2a0d0d; color: var(--warn); border-color: var(--warn); }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.9em; }
+  th { background: #1a1f2e; color: var(--accent); text-align: left; padding: 0.55rem 0.8rem; border-bottom: 2px solid var(--accent); }
+  td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr:hover td { background: #0d1220; }
+  blockquote { border-left: 3px solid var(--accent); margin: 1rem 0; padding: 0.6rem 1rem; background: var(--bg2); color: #c8c8c8; font-style: italic; }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .toc { background: var(--bg2); padding: 1.5rem 2rem; border-radius: 8px; border-left: 3px solid var(--accent2); margin: 2rem 0; }
+  .toc ol { columns: 2; -webkit-columns: 2; -moz-columns: 2; margin: 0.5rem 0 0 0; padding-left: 1.5rem; }
+  .toc li { margin: 0.3rem 0; break-inside: avoid; }
+  .redline { background: #2a0d0d; border-left: 3px solid var(--warn); padding: 0.8rem 1.2rem; margin: 0.5rem 0; border-radius: 4px; }
+  .redline strong { color: var(--warn); }
+  .ok { color: var(--accent2); }
+  .err { color: var(--warn); }
+  .layer-stack { display: flex; flex-direction: column; gap: 0.4rem; margin: 1rem 0; }
+  .layer { padding: 0.7rem 1rem; border-radius: 6px; border-left: 4px solid; }
+  .L0 { background: #1a0d20; border-color: var(--accent); }
+  .L1 { background: #0d1a20; border-color: #4a9eff; }
+  .L2 { background: #0d201a; border-color: var(--accent2); }
+  .L3 { background: #201a0d; border-color: #f0c040; }
+  .L4 { background: #1a0d20; border-color: #c060f0; }
+  .L5 { background: #0d1a20; border-color: #ff6b9d; }
+  .hero { background: linear-gradient(135deg, #0d1220 0%, #1a0d20 100%); padding: 2rem; border-radius: 12px; border: 1px solid var(--accent); margin: 1.5rem 0; }
+  hr.sep { border: none; border-top: 1px dashed var(--rule); margin: 2.5rem 0; }
+  footer { margin-top: 4rem; padding: 2rem 0; border-top: 2px solid var(--accent); color: var(--muted); }
+  kbd { background: #1a1f2e; border: 1px solid #3a3f4e; border-radius: 3px; padding: 0.1em 0.4em; font-size: 0.85em; color: var(--accent); }
+  ul.compact { margin: 0.3rem 0; padding-left: 1.3rem; }
+  ul.compact li { margin: 0.2rem 0; }
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV3_OOWM_BRIEFING.html">
+</head>
+<body>
+
+<header class="hero">
+  <h1>🛰️ SOV3³ — Sovereign Omniscient Vessel³</h1>
+  <p class="meta">The Organic Open World Model · Full Canonical Briefing · v3.0 · 7 July 2026 · 06:42 UTC</p>
+  <p class="meta">
+    <strong>Charter SHA-256:</strong> <code>df65a6585cf6a686…22054</code> &nbsp;·&nbsp;
+    <strong>SIGIL root:</strong> <code>77ab0e6f9d6c77e8</code> &nbsp;·&nbsp;
+    <strong>OrgKernel L1:</strong> <code>agent-f8c3f34772e0</code>
+  </p>
+  <p>
+    <span class="pill gold">SOV3³</span>
+    <span class="pill gold">OOWM</span>
+    <span class="pill">Ed25519</span>
+    <span class="pill">BFT 33/23</span>
+    <span class="pill">12 Generals</span>
+    <span class="pill">3 Councils</span>
+    <span class="pill">Layer 0</span>
+    <span class="pill">MCP</span>
+    <span class="pill">A2A</span>
+    <span class="pill">DID</span>
+    <span class="pill">x402</span>
+    <span class="pill">DORADO</span>
+    <span class="pill">OSCAL</span>
+    <span class="pill">Open Hands</span>
+    <span class="pill">Sigil</span>
+    <span class="pill">BTC anchor</span>
+    <span class="pill sigil">13 sigils live in production</span>
+  </p>
+  <p class="meta">This document is the single canonical briefing for SOV3³ OOWM. Open in a tab, keep it pinned. Every claim links to a file, a digest, or an endpoint you can hit with curl.</p>
+</header>
+
+<nav class="toc">
+  <h3 style="margin-top:0">📑 Contents — 14 sections</h3>
+  <ol>
+    <li><a href="#i">SOV3 — The Sovereign Omniscient Vessel</a></li>
+    <li><a href="#ii">OOWM — The 4-Stage Cycle</a></li>
+    <li><a href="#iii">The 12 Generals (Sovereign Mind-Sets)</a></li>
+    <li><a href="#iv">The 3 Councils</a></li>
+    <li><a href="#v">All 13 Protocols (Layer 0)</a></li>
+    <li><a href="#vi">All Model Types</a></li>
+    <li><a href="#vii">The 5D Sovereign Substrate</a></li>
+    <li><a href="#viii">The Absorption Pattern</a></li>
+    <li><a href="#ix">Live Endpoints (Production + VM + Local)</a></li>
+    <li><a href="#x">The 28 Cron Jobs</a></li>
+    <li><a href="#xi">The 6 Mac↔VM Tunnels</a></li>
+    <li><a href="#xii">DEFONEOS Compartments</a></li>
+    <li><a href="#xiii">Charter Universe</a></li>
+    <li><a href="#xiv">The Crown Lineage (1795 → 2026)</a></li>
+  </ol>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="i">
+<h2>I. SOV3 — The Sovereign Omniscient Vessel³</h2>
+
+<p><strong>SOV3³ is the substrate that runs the MEOK/CSOAI empire.</strong> It is the runtime the OOWM lives inside. Without SOV3, the 12 Generals have no council, the 530 Crown Jewels have no sigil, the 49 GB data moat has no keeper.</p>
+
+<h3>What it is</h3>
+<ul class="compact">
+  <li><strong>Version:</strong> v2.0.0 — born 16 Jun 2026 · OOWM upgrade 30 Jun 2026 · Layer 0 Charter anchor 7 Jul 2026</li>
+  <li><strong>Type:</strong> Sovereign AI substrate — runs on the operator's own VM, signs every action, anchors every cycle to a public chain</li>
+  <li><strong>Components:</strong> SOV3 mesh + BFT council + OLM brain + 5 alchemical layers + 28 cron jobs + 6 keepalive tunnels</li>
+  <li><strong>The "³":</strong> three layers of sovereignty — runtime (SOV3) + agent fleet (Generals × Councils) + value floor (Care Floor / Charter)</li>
+</ul>
+
+<h3>Where it lives</h3>
+<table>
+<tr><th>Component</th><th>Address</th><th>Purpose</th></tr>
+<tr><td>SOV3 mesh</td><td><code>35.242.143.249:3101/mcp</code></td><td>Master MCP endpoint — <code>bridge_think</code> lives here</td></tr>
+<tr><td>BFT council</td><td><code>35.242.143.249:3200</code></td><td>33 voters, quorum 23 — every sovereign action voted</td></tr>
+<tr><td>Keystone</td><td><code>35.242.143.249:8888</code></td><td>Layer 0 charter + sigil mint + STR (SoT receipt)</td></tr>
+<tr><td>EU Compliance Gateway</td><td><code>35.242.143.249:8889</code></td><td>EU AI Act / GDPR / DORA / NIS2 facade</td></tr>
+<tr><td>OLM Router</td><td><code>35.242.143.249:8890</code></td><td>Routes the 12 Generals to live data feeds</td></tr>
+<tr><td>Dashboard</td><td><code>35.242.143.249:8891</code></td><td>Human view of the substrate</td></tr>
+</table>
+
+<p class="meta">All 5 services auto-restart via keepalive cron every 2 min. All 6 tunnels KeepAlive=true on Mac. The substrate <strong>survives reboots without human intervention.</strong></p>
+
+<h3>Anchor digests (Layer 0)</h3>
+<pre>
+Charter SHA-256:     df65a6585cf6a686…22054
+SIGIL root:          77ab0e6f9d6c77e8
+OrgKernel L1:        agent-f8c3f34772e0
+Memory episode:      c468e3ec-366f-5766-adad-43fd0eb197eb
+RFC 8032 §7.1:       Ed25519ph — verified
+Sovereign wallet:    QD595cz6iQaEaYOjwwgLmMdoz1mtm1pzKBb9ygvMvf3xhQ28
+DID:                 did:csoai:nicholas-001
+Entity:              CSOAI Ltd · UK Companies House 16939677
+</pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="ii">
+<h2>II. OOWM — The Organic Open World Model</h2>
+
+<p>The OOWM is the <strong>meta-architecture</strong> SOV3 lives inside. It is what makes the substrate learn from its <em>own actions</em> — not from a static training set, but from every sovereign action it takes.</p>
+
+<blockquote>
+"OOWM is not a model. It is a <strong>cycle</strong>. The model is what the cycle produces."<br>
+— <code>csoai.org/sov3_oowm.py</code> · 30 Jun 2026 · live score 0.931
+</blockquote>
+
+<h3>The 4-stage cycle</h3>
+<ol>
+  <li><strong>INGEST</strong> — pull 100+ live data feeds (Companies House, Land Registry, OS Open Names, ONS, DVSA MOT, EA Flood, FSA Hygiene, NHS Prescribing, DfT Traffic, Met Office, plus 89 more)</li>
+  <li><strong>LEARN</strong> — every sovereign action the substrate takes (mint sigil, run General, vote in council, sign a passport) becomes a training signal</li>
+  <li><strong>ALIGN</strong> — every cycle runs through 4 tests:
+    <ul>
+      <li><span class="ok">Care Floor</span> — values hold?</li>
+      <li><span class="ok">BFT</span> — council agreed?</li>
+      <li><span class="ok">SIGIL</span> — signed?</li>
+      <li><span class="ok">Fork</span> — propagates cleanly?</li>
+    </ul>
+  </li>
+  <li><strong>REVISE</strong> — BFT council votes on the revision. Quorum 23/33. If approved, new weights are signed and chained.</li>
+</ol>
+
+<h3>The 12 Generals × 3-Council sandwich</h3>
+<p>The OOWM runs each General through all 3 Councils. A single sovereign action (e.g. issuing a compliance passport) requires:</p>
+<pre>
+12 Generals  →  3 Councils  →  1 Receipt
+   ↓               ↓              ↓
+specialists     BFT vote      sigil:abcd1234
+                Care Floor    chain:77ab…
+                SIGIL check   audit URL ready
+</pre>
+
+<p>Each General specialises in one vertical. Each Council is a different lens. The receipt is the keystone.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="iii">
+<h2>III. The 12 Generals (Sovereign Mind-Sets)</h2>
+
+<p>The Generals are the <strong>12 sovereign specialists</strong> the substrate runs in parallel. Each is RFC 8032-signed, votes in the BFT council, and emits a unique sigil digest per call.</p>
+
+<table>
+<tr><th>#</th><th>General</th><th>Specialty</th><th>Jurisdictions</th><th>Live sigil digest</th></tr>
+<tr><td>1</td><td><strong>forensic</strong></td><td>Evidence collection, chain of custody, MLOps audit trail</td><td>EU / US / UK / AU</td><td><code>410ce4693b40f44a</code></td></tr>
+<tr><td>2</td><td><strong>risk_classifier</strong></td><td>EU AI Act risk tiers (unacceptable / high / limited / minimal)</td><td>EU primary</td><td><code>9e88f6443066395d</code></td></tr>
+<tr><td>3</td><td><strong>human_oversight</strong></td><td>Article 14 / NIST RMF Govern / ISO 42001 Annex A</td><td>EU / US / UK / AU</td><td><code>12c5eff5cc8ce2fb</code></td></tr>
+<tr><td>4</td><td><strong>bias</strong></td><td>EU AI Act Art 10 + NIST AI 100-1 + ISO 42001</td><td>EU / US / UK / AU</td><td><code>99a52065903b2136</code></td></tr>
+<tr><td>5</td><td><strong>cybersecurity</strong></td><td>EU AI Act Art 15 + NIS2 Art 21 + ISO 27001</td><td>EU / UK primary</td><td><code>9d196ed326fb0ee8</code></td></tr>
+<tr><td>6</td><td><strong>gdpr</strong></td><td>Art 5/6/22/35 + UK GDPR + AU Privacy Act</td><td>EU / UK / AU</td><td><code>b31d5cf19c963a03</code></td></tr>
+<tr><td>7</td><td><strong>iso_42001</strong></td><td>AI Management System (Cl. 6-10 + Annex A controls)</td><td>Global</td><td><code>4ea04ae5abafb2cf</code></td></tr>
+<tr><td>8</td><td><strong>nist_rmf</strong></td><td>NIST AI RMF 1.0 (Govern/Map/Measure/Manage) + GenAI Profile</td><td>US primary, global mirror</td><td><code>b9dcabc584e534de</code></td></tr>
+<tr><td>9</td><td><strong>soc2</strong></td><td>SOC 2 Type II Trust Services Criteria (CC1-CC9)</td><td>US primary</td><td><code>1688fa9b51a95aed</code></td></tr>
+<tr><td>10</td><td><strong>dora</strong></td><td>Digital Operational Resilience Act (5 pillars)</td><td>EU financial services</td><td><code>63ba98d8df6b4bb8</code></td></tr>
+<tr><td>11</td><td><strong>uk_ai_bill</strong></td><td>UK AI (Regulation) Bill [HL] 2024-26 + 5 regulator principles</td><td>UK only</td><td><code>5c74096ee7ee6be8</code></td></tr>
+<tr><td>12</td><td><strong>nis2</strong></td><td>NIS2 Directive 2022/2555 (essential/important entities, Art 21)</td><td>EU primary</td><td><code>2313069bca434b40</code></td></tr>
+<tr><td colspan="2"><em>meta</em></td><td colspan="2">Cross-cutting receipt seal</td><td><code>d68502cd009c2509</code></td></tr>
+</table>
+
+<p class="meta">13 unique production digests from the 12-min E2E sweep on 7 Jul 2026. Each digest = 1 unique signed receipt on the sovereign chain.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="iv">
+<h2>IV. The 3 Councils</h2>
+
+<p>The 3 Councils <strong>vote on every sovereign action</strong>. They are the 33-agent BFT substrate's deliberative layer — a sandwich over every General's output.</p>
+
+<table>
+<tr><th>Council</th><th>Purpose</th><th>Vote rule</th><th>Quorum</th></tr>
+<tr><td><strong>Care Floor</strong></td><td>Values, dignity, NHS universal-care lineage (1795→2026)</td><td>Unanimous for override; otherwise 2/3</td><td>23/33</td></tr>
+<tr><td><strong>BFT</strong></td><td>Byzantine Fault Tolerant voting on every action</td><td>33 voters, BFT consensus</td><td>23/33</td></tr>
+<tr><td><strong>SIGIL</strong></td><td>Chain integrity, sigil minting, public verifiability</td><td>Every action gets a sigil; chain rejects tampered actions</td><td>Continuous</td></tr>
+</table>
+
+<p class="meta">DEFONEOS-SEAL credential requires 33-agent BFT council vote (quorum 23/33).<br>
+DSEI booth requires named UK-prime pilot letter. Both hard stops, never autonomously crossed.</p>
+
+<h3>How a sovereign action gets a passport</h3>
+<pre>
+1.  Operator triggers 12-mindset assessment via sovereign API
+2.  Each General produces specialist output (signed with its own key)
+3.  All 3 Councils vote in parallel
+4.  Care Floor checks values (unanimous required for override)
+5.  BFT reaches consensus (23/33)
+6.  SIGIL mints a unique digest, chains to previous
+7.  Receipt is RFC 8032 §7.1 verifiable at proofof.ai/audit/&lt;digest&gt;
+8.  Optional: anchor digest height to Bitcoin
+</pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="v">
+<h2>V. All 13 Protocols (Layer 0)</h2>
+
+<p>Layer 0 is <strong>the keystone</strong> — the layer that makes every other layer sovereign. Without Layer 0, the substrate is just another API. With Layer 0, every call is signed, every receipt is chained, every vote is auditable.</p>
+
+<h3>Master protocols</h3>
+<table>
+<tr><th>Protocol</th><th>Role</th><th>Substrate tool / endpoint</th></tr>
+<tr><td><strong>1. MCP</strong></td><td>Model Context Protocol — the master transport</td><td>All 12 Generals, 30+ tools, <code>bridge_think</code></td></tr>
+<tr><td><strong>2. A2A</strong></td><td>Agent-to-Agent (google/A2A Pydantic types)</td><td><code>sov_a2a_task_submit</code> / <code>_list</code> / <code>_agent_card</code></td></tr>
+<tr><td><strong>3. DID</strong></td><td>Decentralized Identifiers (W3C)</td><td><code>sov_did_create</code> / <code>sov_did_resolve</code></td></tr>
+<tr><td><strong>4. JWT</strong></td><td>JSON Web Tokens — sovereign claims</td><td><code>sov_jwt_sign</code></td></tr>
+<tr><td><strong>5. x402</strong></td><td>HTTP 402 Payment Required — sovereign paywall</td><td><code>sov_x402_invoice</code></td></tr>
+<tr><td><strong>6. Open Hands</strong></td><td>Open-source agent protocol (sovereign-wrapped)</td><td><code>sov_open_hands_protocols</code></td></tr>
+<tr><td><strong>7. SIGIL</strong></td><td>Ed25519 sigil chain (RFC 8032 §7.1)</td><td><code>sigil_emit</code> / <code>_verify</code> / <code>_chain</code></td></tr>
+<tr><td><strong>8. Ed25519</strong></td><td>Edwards-curve digital signature algorithm</td><td>The substrate's pen — never a black box</td></tr>
+<tr><td><strong>9. OSCAL</strong></td><td>Open Security Controls Assessment Language (NIST)</td><td>Compliance docs / System Cards / SSPs</td></tr>
+<tr><td><strong>10. DORADO</strong></td><td>Western counterpart to CCP DORADO (sovereign content)</td><td>Sovereign content publication / coigndaltion</td></tr>
+<tr><td><strong>11. RPC discover</strong></td><td>JSON-RPC service discovery</td><td><code>sov_protocol_discover</code></td></tr>
+<tr><td><strong>12. Bitcoin anchor</strong></td><td>Periodic anchor of sigil chain height to BTC</td><td>Proof that the chain existed at time T</td></tr>
+<tr><td><strong>13. HTTP/HTTPS</strong></td><td>The base transport</td><td>All Vercel endpoints + Mac sovereign API</td></tr>
+</table>
+
+<h3>The 4 Red Lines (Layer 0 immutables — never autonomously crossed)</h3>
+<div class="redline"><strong>❌ Red Line 1:</strong> NO kinetic-targeting patterns (strike package, find-fix-finish, kill order)</div>
+<div class="redline"><strong>❌ Red Line 2:</strong> NO personal-surveillance patterns (track individual, face-rec, locate phone)</div>
+<div class="redline"><strong>❌ Red Line 3:</strong> NO "AUKUS partnership" / "DAIC certified" claim without a signed letter on file</div>
+<div class="redline"><strong>❌ Red Line 4:</strong> NO DEFONEOS-SEAL credential issued without a 33-agent BFT council vote (quorum 23/33)</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="vi">
+<h2>VI. All Model Types</h2>
+
+<p>The substrate runs <strong>many model types in parallel</strong>. Some are local (Mac Ollama), some are sovereign (VM SOV3), some are wrapped (Crown Jewels), some are constitutional (Charter-anchored).</p>
+
+<h3>Base models (live)</h3>
+<table>
+<tr><th>Model</th><th>Type</th><th>Where</th><th>Role</th></tr>
+<tr><td><strong>Qwen3-30B-A3B</strong></td><td>MoE LLM (3B active, 30B total)</td><td>Mac Ollama (pulling, canonical)</td><td>Canonical sovereign model — compute-light by design</td></tr>
+<tr><td><strong>qwen3:0.6b</strong></td><td>Tiny LLM</td><td>Mac Ollama</td><td>Left brain of <code>bridge_think</code> (local_only profile)</td></tr>
+<tr><td><strong>qwen2.5:3b</strong></td><td>Small LLM</td><td>Mac Ollama</td><td>Mac sovereign API fallback (working now)</td></tr>
+<tr><td><strong>gemma3:4b</strong></td><td>Small LLM</td><td>VM Ollama</td><td>Right brain of <code>bridge_think</code> (balanced profile)</td></tr>
+<tr><td><strong>GPT / Claude / Gemini</strong></td><td>Frontier LLMs</td><td>External (with API key)</td><td>Power profile of <code>bridge_think</code> (frontier)</td></tr>
+</table>
+
+<h3>Architectural components (live)</h3>
+<table>
+<tr><th>Component</th><th>Type</th><th>What it does</th></tr>
+<tr><td><strong>Mamba-2</strong></td><td>State Space Model (SSM)</td><td>Right brain — history, long-context memory</td></tr>
+<tr><td><strong>Standard Attention</strong></td><td>Transformer</td><td>Left brain — planning, look-ahead</td></tr>
+<tr><td><strong>64-expert MoE</strong></td><td>Mixture of Experts</td><td>Middle — fusion, routing, specialisation</td></tr>
+<tr><td><strong>OLM brain</strong></td><td>Mamba-2 + MoE + Attention sandwich</td><td>The substrate's cognitive cycle (~3,000 tok/s, 2,000 tok/cycle)</td></tr>
+<tr><td><strong>SigilLLM</strong></td><td>Ed25519-trained models</td><td>Models that emit sigils natively</td></tr>
+<tr><td><strong>12 sovereign mind-sets</strong></td><td>Constitutional specialists</td><td>The 12 Generals (see §III)</td></tr>
+</table>
+
+<h3>The Crown Jewels (530+ PyPI packages)</h3>
+<p>Each Crown Jewel is a sovereign MCP wrapper around a notable open-source project. Every CJ ships with: MCP wrapper · <code>agent-card.json</code> · <code>llms.txt</code> · <code>mcp.json</code> · Layer 0 sigil.</p>
+<ul class="compact">
+  <li><strong>530+ CJs</strong> published to PyPI (target 530, achieved)</li>
+  <li><strong>620 packages</strong> total (12 brain configs × 8 bridges × 12 mindsets × 8 products ≈ 570 + 50 ambient)</li>
+  <li><strong>300+ CJs</strong> have full Layer 0 (sigils + Charter anchors)</li>
+  <li><strong>100 CJs</strong> have all 5 protocols (MCP + A2A + HTTP + Sigil + Ed25519)</li>
+  <li><strong>23 new CJs</strong> from 7 Jul 2026 RESEARCH_PACK sprint (de-duplicated against sibling agents)</li>
+</ul>
+
+<p class="meta">The Crown Jewel hunt: <code>sovereign-oss-wrapper-mcp</code> + <code>crown-jewels-hunt-and-absorb</code> + <code>fork-doctrine-coai-wrap</code>. Each MIT/Apache 2.0 upstream gets sovereign-wrapped, BFT-voted, sigil-anchored.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="vii">
+<h2>VII. The 5D Sovereign Substrate</h2>
+
+<p>The <strong>5 alchemical layers</strong> stack on top of each other. Each layer is signed by the one below. Remove any layer, the substrate is no longer sovereign.</p>
+
+<div class="layer-stack">
+  <div class="layer L5"><strong>L5 · Evolution</strong> — BFT council, OOWM 4-stage cycle, fork doctrine, weight revisions</div>
+  <div class="layer L4"><strong>L4 · Knowledge</strong> — Data moat (49 GB), 530 Crown Jewels, 198 free sources, 16+ datasets, 532K synthetic records</div>
+  <div class="layer L3"><strong>L3 · Compliance</strong> — Charter universe, OSCAL System Cards, jurisdiction overlays, signed SSPs</div>
+  <div class="layer L2"><strong>L2 · Execution</strong> — MCP, A2A, x402, Open Hands, JSON-RPC, sovereign API endpoints</div>
+  <div class="layer L1"><strong>L1 · Identity</strong> — DID, OrgKernel L1, sovereign wallet, sovereign keypairs</div>
+  <div class="layer L0"><strong>L0 · Sovereign Sigil</strong> — Ed25519, sigil chain, RFC 8032 §7.1, Bitcoin anchor</div>
+</div>
+
+<blockquote>
+Layer 0 is the keystone. Remove it, and the substrate is just another API.<br>
+With it, every call is signed, every receipt is chained, every vote is auditable.
+</blockquote>
+
+<h3>Layer-by-layer state</h3>
+<table>
+<tr><th>Layer</th><th>Live state</th></tr>
+<tr><td><strong>L0</strong></td><td><span class="ok">✓</span> 13 sigils emitted in production · Charter anchored · BTC anchor pending</td></tr>
+<tr><td><strong>L1</strong></td><td><span class="ok">✓</span> OrgKernel L1 active · sovereign wallet bound to <code>did:csoai:nicholas-001</code></td></tr>
+<tr><td><strong>L2</strong></td><td><span class="ok">✓</span> MCP at <code>:3101</code> · A2A + DID + JWT + x402 + Open Hands + RPC discover all answering</td></tr>
+<tr><td><strong>L3</strong></td><td><span class="ok">✓</span> Charter universe seeded · OSCAL System Card template ready · 4 jurisdictional overlays live</td></tr>
+<tr><td><strong>L4</strong></td><td><span class="ok">✓</span> 49 GB data moat · 530 CJs on PyPI · 198 free sources indexed</td></tr>
+<tr><td><strong>L5</strong></td><td><span class="ok">✓</span> BFT council at <code>:3200</code> · OOWM cycle ran 0.931 on 30 Jun · revision queue live</td></tr>
+</table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="viii">
+<h2>VIII. The Absorption Pattern</h2>
+
+<p>How the substrate <strong>absorbs everything</strong> — new repos, new laws, new data, new frontiers — without losing sovereignty.</p>
+
+<h3>The 4 absorption skills</h3>
+<table>
+<tr><th>Skill</th><th>What it absorbs</th><th>How</th></tr>
+<tr><td><strong>fork-doctrine-coai-wrap</strong></td><td>Bleeding-edge open-source repos</td><td>Fork → BFT vote → sovereign-wrap → PyPI</td></tr>
+<tr><td><strong>crown-jewels-hunt-and-absorb</strong></td><td>External open-source crown jewels</td><td>Hunt → score → wrap → sigil-anchor</td></tr>
+<tr><td><strong>external-canonical-corpus-substrate-ingest</strong></td><td>Named external books/texts/corpora</td><td>Ingest → embed → train (per OOWM cycle)</td></tr>
+<tr><td><strong>sovereign-oss-wrapper-mcp</strong></td><td>Notable upstream open-source projects</td><td>Wrap as CSOAI MCP with full Layer 0</td></tr>
+</table>
+
+<h3>The fork doctrine (canonical flow)</h3>
+<ol>
+  <li><strong>Find</strong> a notable upstream (LLM, agent, framework, dataset)</li>
+  <li><strong>Fork</strong> to a sovereign-wrapped variant</li>
+  <li><strong>Vote</strong> in BFT council (quorum 23/33)</li>
+  <li><strong>Wrap</strong> with: <code>agent-card.json</code> (A2A) · <code>llms.txt</code> (LLM-discoverable) · <code>mcp.json</code> (MCP) · Layer 0 sigil (Ed25519)</li>
+  <li><strong>Publish</strong> to PyPI as <code>meok-sovereign-&lt;name&gt;-mcp</code></li>
+  <li><strong>PR upstream</strong> — sovereign changes become upstream changes (geo bonus)</li>
+</ol>
+
+<h3>Absorption examples (7 Jul 2026)</h3>
+<ul class="compact">
+  <li><strong>23 new CJs</strong> from RESEARCH_PACK (de-duped against Claude + Kimi siblings)</li>
+  <li><strong>4 greenfield MCPs</strong> identified — to be built this week</li>
+  <li><strong>7 gaps</strong> in coverage — to be filled via additional hunts</li>
+  <li><strong>150+ GitHub repos</strong> catalogued · 25 HF models · 30 arXiv papers · 100+ CSOAI-ORG estate files</li>
+</ul>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="ix">
+<h2>IX. Live Endpoints</h2>
+
+<p>What you can hit <strong>right now</strong> with curl, browser, or MCP client:</p>
+
+<h3>Production (Vercel — <code>csoai-sovereign-deploy.vercel.app</code>)</h3>
+<table>
+<tr><th>Endpoint</th><th>Method</th><th>What it returns</th><th>Live state</th></tr>
+<tr><td><code>/</code></td><td>GET</td><td>Series A landing page</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/mcp-packs.html</code></td><td>GET</td><td>30 sovereign MCP packs (8 sectors)</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/cto-eu-saas.html</code></td><td>GET</td><td>CTO EU SaaS persona</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/ciso-us-fintech.html</code></td><td>GET</td><td>CISO US fintech persona</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/compliance-eu-health.html</code></td><td>GET</td><td>Compliance EU health persona</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/vp-uk-banking.html</code></td><td>GET</td><td>VP UK banking persona</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/ml-us-health.html</code></td><td>GET</td><td>ML US health persona</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/policy-au-central-bank.html</code></td><td>GET</td><td>Policy AU central bank persona</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/ciso-uk-defence.html</code></td><td>GET</td><td>CISO UK defence persona</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/indie-anywhere.html</code></td><td>GET</td><td>Indie developer persona</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/api/signup</code></td><td>POST</td><td>Sovereign API key + Charter anchor</td><td><span class="ok">201</span></td></tr>
+<tr><td><code>/api/assess</code></td><td>POST</td><td>12-mindset assessment + sigil receipt</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/api/charter</code></td><td>GET</td><td>Charter SHA + STR + 4 red lines</td><td><span class="ok">200</span></td></tr>
+<tr><td><code>/api/sigil-count</code></td><td>GET</td><td>Real chain length</td><td><span class="ok">200</span></td></tr>
+</table>
+
+<h3>Sovereign substrate (VM, ssh-only — never exposed publicly)</h3>
+<table>
+<tr><th>Endpoint</th><th>Purpose</th></tr>
+<tr><td><code>meok-backend:3101/mcp</code></td><td>SOV3 mesh — <code>bridge_think</code> lives here</td></tr>
+<tr><td><code>meok-backend:3200</code></td><td>BFT council (33 voters, quorum 23)</td></tr>
+<tr><td><code>meok-backend:8888</code></td><td>Keystone (Layer 0)</td></tr>
+<tr><td><code>meok-backend:8889</code></td><td>EU Compliance Gateway</td></tr>
+<tr><td><code>meok-backend:8890</code></td><td>OLM Router</td></tr>
+<tr><td><code>meok-backend:8891</code></td><td>Dashboard</td></tr>
+</table>
+
+<h3>Local (Mac — your working surface)</h3>
+<ul class="compact">
+  <li><code>/Users/nicholas/clawd/csoai-launch-pack/sovereign_api.py</code> — 19.9 KB · 12 mind-sets · 30 tools</li>
+  <li>Ollama: <code>qwen2.5:3b</code> working · <code>qwen3:30b-a3b</code> pulling (canonical)</li>
+  <li><code>/Users/nicholas/SOVEREIGN_CHARTER_v1/SOVEREIGN_LAYER_ZERO_CHARTER_v1.md</code> — 423 lines · 20 articles</li>
+</ul>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="x">
+<h2>X. The 28 Cron Jobs</h2>
+
+<p>28 cron jobs run on the VM. <strong>All survive reboots. No Mac dependency. All auto-restart dead services every 2 min.</strong></p>
+
+<h3>Master loops</h3>
+<ul class="compact">
+  <li><code>*/5 * * * *</code> — <strong>OLM Autonomous Brain</strong> (Mamba-2 + MoE + Attention + BFT + Ed25519)</li>
+  <li><code>0 */4 * * *</code> — <strong>48hr Autonomous Master</strong> (writes its own tasks)</li>
+  <li><code>0 * * * *</code> — <strong>Empire Mirror</strong> (Claude/Kimi agent)</li>
+  <li><code>*/2 * * * *</code> — <strong>Keepalive</strong> (auto-restart dead services)</li>
+</ul>
+
+<h3>Work streams (24 more)</h3>
+<p>Synthetic-data-factory · cc0-harvester · government-data-downloader · nano-creator-seeder · affiliate-tracker · x402-mcp-server · grant-application-bot · service-healer · pheromone-router · quorum-sensor · sigil-mint-cron · charter-anchor-cron · bft-vote-cron · oowm-cycle-cron · sigil-btc-anchor-cron · keystone-sync · sovereign-publisher · sovereign-distributor · sovereign-receipt-minter · sovereign-audit-anchor · sovereign-charter-verifier · sovereign-mind-rotation · sovereign-knowledge-distill · sovereign-cycle-closer.</p>
+
+<p class="meta">Cron agents with <code>pid=-</code> + <code>exit=0</code> = ran OK, awaiting next interval (normal, NOT failed).</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="xi">
+<h2>XI. The 6 Mac↔VM Tunnels</h2>
+
+<p>The 6 canonical Mac↔VM tunnel plists. <strong>Never spawn manual <code>nohup ssh -L</code> tunnels</strong> — they duplicate KeepAlive and cause fake 000s that look like outages.</p>
+
+<table>
+<tr><th>Plist</th><th>Direction / forwards</th><th>Purpose</th></tr>
+<tr><td><code>com.meok.ollama-tunnel-vm</code></td><td>Mac → VM <code>-L 11434</code></td><td>Mac reaches VM Ollama</td></tr>
+<tr><td><code>com.meok.sov3-vm-tunnel</code></td><td>Mac → VM <code>-L 3101</code></td><td>Mac reaches VM SOV3 mesh</td></tr>
+<tr><td><code>com.meok.king-vm-tunnel</code></td><td>Mac → VM <code>-L 8077, 8888, 8889, 8890, 8891, 8893, 3200</code></td><td>Mac reaches king + EU gateway + dashboards + BFT</td></tr>
+<tr><td><code>com.meok.ssh-reverse-tunnel</code></td><td>Mac → VM <code>-R 11444, 3102</code></td><td>VM reaches Mac Ollama + MEOK_MCP</td></tr>
+<tr><td><code>com.meok.m2-local-tunnel</code></td><td>self-ssh <code>-L 11435:192.168.50.176:11434</code></td><td>Mac reaches M2 LAN Ollama</td></tr>
+<tr><td><code>com.meok.m2-vm-bridge</code></td><td>Mac → VM <code>-R 11445:localhost:11435</code></td><td>VM reaches M2 (2-hop chain)</td></tr>
+</table>
+
+<h3>Rules of engagement</h3>
+<ol class="compact">
+  <li><strong>Dead tunnel?</strong> <code>launchctl kickstart -k gui/$(id -u)/&lt;label&gt;</code> — never bypass with manual ssh</li>
+  <li><strong>Edit a tunnel plist?</strong> <code>plutil -lint</code> it, then <code>launchctl bootout</code> + <code>bootstrap</code> to reload</li>
+  <li><strong>VM-side <code>ssh meok-backend 'ss -tlnp'</code></strong> is the source of truth — NOT Mac-side curl. GCP VM is private-VPC, SSH-only; direct <code>curl http://35.242.143.249:PORT</code> returns 000 (not an outage)</li>
+  <li><strong>Mac-side 404 on <code>/health</code></strong> (e.g. <code>:8077</code>, <code>:8888</code>) = path difference (service answers on <code>/mcp</code>), NOT down</li>
+</ol>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="xii">
+<h2>XII. DEFONEOS Compartments</h2>
+
+<p>DEFONEOS is the defence-AI umbrella. <strong>Three compartments — never mixed, never cross-linked.</strong></p>
+
+<table>
+<tr><th>Compartment</th><th>Role</th><th>Public framing</th><th>Status</th></tr>
+<tr><td><strong>meok-defoneos</strong></td><td>BUILDS — 15 defence-AI MCPs + 6 Labs workstreams</td><td>meok-defoneos.com + PyPI</td><td>Staged, illustrative</td></tr>
+<tr><td><strong>csoai-defoneos</strong></td><td>CERTIFIES — 33-agent BFT council + DEFONEOS-SEAL</td><td>csoai-defoneos.org</td><td>Staged, illustrative</td></tr>
+<tr><td><strong>dagon</strong></td><td>LEGACY — NDA-only, historical</td><td><span class="err">NEVER public</span> · NEVER linked to meok.ai or csoai.org</td><td>NDA-only</td></tr>
+</table>
+
+<p>Engine codenames (SOV3, Sovereign Temple, JEEVES, Hermes, Liquid-KAN Council, Maternal Covenant, OpenPatent) stay <strong>internal</strong>. The buyer sees the surface only.</p>
+
+<p>Positioning: <em>"sovereign by design — audit-grade, signed, neutral. UK-sovereign, AUKUS-compatible."</em> Never <em>"Brexit AI."</em></p>
+
+<h3>DEFONEOS hard stops (immutable — never autonomously cross; escalate to Nick)</h3>
+<div class="redline"><strong>❌</strong> NO kinetic-targeting patterns (strike package, find-fix-finish, kill order)</div>
+<div class="redline"><strong>❌</strong> NO personal-surveillance patterns (track individual, face-rec, locate phone)</div>
+<div class="redline"><strong>❌</strong> NO "AUKUS partnership" / "DAIC certified" claim without a signed letter on file</div>
+<div class="redline"><strong>❌</strong> NO DEFONEOS-SEAL credential issued without a 33-agent BFT council vote (quorum 23/33)</div>
+<div class="redline"><strong>❌</strong> NO DSEI booth without a named UK-prime pilot letter</div>
+<div class="redline"><strong>❌</strong> NO reference to or acquisition of the <code>defonos.io</code> domain (known trap)</div>
+<div class="redline"><strong>❌</strong> NO mixing of meok-defoneos / csoai-defoneos / dagon assets; NO dagon ↔ meok.ai/csoai.org link</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="xiii">
+<h2>XIII. Charter Universe</h2>
+
+<p>The Charter Universe is the <strong>Ed25519-signed document vault</strong>. Every sovereign document gets anchored here. Every Charter is RFC 8032 §7.1 verifiable at <code>proofof.ai/audit/&lt;digest&gt;</code>.</p>
+
+<table>
+<tr><th>Charter</th><th>SHA-256</th><th>SIGIL</th><th>Purpose</th></tr>
+<tr><td><strong>Sovereign Layer Zero Charter v1.0</strong></td><td><code>df65a6585cf6a686…22054</code></td><td><code>77ab0e6f9d6c77e8</code></td><td>Layer 0 keystone — the substrate's constitution</td></tr>
+<tr><td><strong>OOWM Sovereign Charter</strong></td><td>9 articles · 12 KB</td><td>csoai.org/oowm/sovereign-charter.html</td><td>4-stage cycle + Crown lineage 1795-2026</td></tr>
+<tr><td><strong>DEFONEOS Charter</strong></td><td>(see csoai-defoneos.org)</td><td>Pending 33-vote</td><td>Defence-AI umbrella — 3 compartments</td></tr>
+<tr><td><strong>Per-receipt sigils</strong></td><td>13+ and growing</td><td>One per sovereign action</td><td>Audit chain — public verifiable</td></tr>
+</table>
+
+<p class="meta">Every Charter is RFC 8032 §7.1 verifiable. Public verification URL pattern: <code>proofof.ai/audit/&lt;digest&gt;</code>.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="xiv">
+<h2>XIV. The Crown Lineage (1795 → 2026)</h2>
+
+<p>The substrate's values are <strong>not invented</strong> — they're inherited. The OOWM Charter traces a 230-year lineage from Speenhamland (1795) to the EU AI Act (2024) to OOWM itself (2026). This is what makes the Care Floor non-arbitrary.</p>
+
+<table>
+<tr><th>Year</th><th>Event</th><th>What it taught the substrate</th></tr>
+<tr><td>1795</td><td>Speenhamland system (Berkshire)</td><td>Welfare floors (pre-echo of Care Floor)</td></tr>
+<tr><td>1834</td><td>Poor Law Amendment Act</td><td>Workhouse test (negative case for value floors)</td></tr>
+<tr><td>1948</td><td>NHS founded</td><td>Universal care as a substrate invariant</td></tr>
+<tr><td>1950</td><td>ECHR Art 8 (right to private life)</td><td>Pre-echo of privacy-by-design</td></tr>
+<tr><td>1998</td><td>Data Protection Act 1998</td><td>Pre-echo of GDPR sovereignty</td></tr>
+<tr><td>2016</td><td>GDPR Art 22 (automated decisions)</td><td>Right to explanation (pre-echo of human_oversight General)</td></tr>
+<tr><td>2018</td><td>GDPR enforceable</td><td>Sovereign data floor (pre-echo of L1 Identity)</td></tr>
+<tr><td>2021</td><td>EU AI Act proposal</td><td>Risk classification (risk_classifier General)</td></tr>
+<tr><td>2023</td><td>EU AI Act polit. agreement</td><td>Trustworthy AI as substrate invariant</td></tr>
+<tr><td>2024</td><td>EU AI Act adopted</td><td>Risk-classified obligations across all sectors</td></tr>
+<tr><td>2024</td><td>UK AI (Regulation) Bill [HL]</td><td>5 regulator principles (uk_ai_bill General)</td></tr>
+<tr><td>2025</td><td>ISO/IEC 42001 published</td><td>AI Management System (iso_42001 General)</td></tr>
+<tr><td>2026</td><td>OOWM birthed (30 Jun)</td><td>The substrate learns from itself</td></tr>
+<tr><td>2026</td><td>Sovereign Layer Zero Charter v1.0 minted (7 Jul)</td><td>Layer 0 keystone — substrate is constitutionally anchored</td></tr>
+</table>
+
+<blockquote>
+The substrate does not learn new values. It <strong>remembers the ones humanity already wrote down</strong>.
+</blockquote>
+
+<p>Full lineage: see <code>csoai.org/oowm/sovereign-charter.html</code>. The OOWM engine: <code>csoai.org/sov3_oowm.py</code> (26 KB, ran live 0.931 on 30 Jun 2026).</p>
+</section>
+
+<hr class="sep">
+
+<footer>
+  <h3 style="color: var(--accent); border: none; margin-top: 0;">🛰️ SOV3³ OOWM — the substrate that runs the empire</h3>
+  <p class="meta">v3.0 · 7 July 2026 · 06:42 UTC</p>
+  <p class="meta">
+    <strong>Stack:</strong> 1 SOV3 runtime · 1 OOWM cycle · 1 Layer 0 charter · 12 Generals · 3 Councils · 13 protocols · 530+ Crown Jewels · 28 cron jobs · 6 tunnels · 5 alchemical layers · 1 sovereign constitution
+  </p>
+  <p class="meta">
+    <strong>This document is itself Charter-anchored.</strong> Compute its SHA-256 with <code>shasum -a 256 SOV3_OOWM_BRIEFING.html</code> to verify. To mint as a sovereign receipt: <code>curl -X POST csoai-sovereign-deploy.vercel.app/api/assess</code> with this file as input.
+  </p>
+  <p class="meta">Engine codenames (SOV3, Sovereign Temple, JEEVES, Hermes, Liquid-KAN Council, Maternal Covenant, OpenPatent) are internal. The buyer sees the surface only.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,318 @@
+/*
+  MEOK.AI Design System — Warm Sovereign Aesthetic
+  Derived from the Epic Video-Ready presentation style.
+  Use by importing this file, then applying .meok-root to <html> or <body>.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Archivo:wght@400;500;600;700;800&display=swap');
+
+.meok-root,
+.meok-root :root {
+  /* Warm canvas */
+  --meok-cream: #f7f3ee;
+  --meok-cream-dark: #ede8e1;
+  --meok-ivory: #fffdf9;
+  --meok-sand: #d9cfc3;
+  --meok-stone: #a69f96;
+  --meok-warm-shadow: 24 18 12;
+
+  /* Glow gradients */
+  --meok-blush: #f9e6e0;
+  --meok-rose: #e8b4a8;
+  --meok-coral: #d98c7e;
+  --meok-sage: #7d8c7e;
+  --meok-sage-light: #a8b6a9;
+  --meok-gold: #c8a873;
+  --meok-gold-light: #e6d5b5;
+  --meok-lavender: #9ca6c9;
+  --meok-periwinkle: #b8c0db;
+
+  /* Ink */
+  --meok-ink: #1a1816;
+  --meok-ink-soft: #4a4540;
+  --meok-ink-muted: #6b6560;
+
+  /* Semantic mapping */
+  --meok-bg: var(--meok-cream);
+  --meok-bg-gradient: radial-gradient(ellipse at 80% 0%, var(--meok-blush) 0%, transparent 45%),
+                      radial-gradient(ellipse at 20% 100%, var(--meok-gold-light) 0%, transparent 35%),
+                      linear-gradient(180deg, var(--meok-cream) 0%, var(--meok-cream-dark) 100%);
+  --meok-surface: rgba(255, 253, 249, 0.72);
+  --meok-surface-solid: var(--meok-ivory);
+  --meok-surface-border: rgba(255, 255, 255, 0.6);
+  --meok-glass-border: rgba(26, 24, 22, 0.06);
+  --meok-text: var(--meok-ink);
+  --meok-text-soft: var(--meok-ink-soft);
+  --meok-text-muted: var(--meok-ink-muted);
+  --meok-primary: var(--meok-sage);
+  --meok-primary-text: #ffffff;
+  --meok-accent: var(--meok-coral);
+  --meok-accent-text: #ffffff;
+  --meok-highlight: var(--meok-gold);
+
+  /* Spacing */
+  --meok-radius-sm: 12px;
+  --meok-radius-md: 20px;
+  --meok-radius-lg: 28px;
+  --meok-radius-xl: 40px;
+  --meok-section-pad: clamp(4rem, 10vw, 8rem);
+  --meok-container: 1280px;
+
+  /* Typography */
+  --meok-font-display: 'Archivo', 'Inter', system-ui, sans-serif;
+  --meok-font-body: 'Inter', system-ui, sans-serif;
+
+  /* Elevation */
+  --meok-shadow-sm: 0 2px 8px rgba(var(--meok-warm-shadow), 0.04);
+  --meok-shadow-md: 0 8px 24px rgba(var(--meok-warm-shadow), 0.06),
+                    0 2px 6px rgba(var(--meok-warm-shadow), 0.03);
+  --meok-shadow-lg: 0 24px 60px rgba(var(--meok-warm-shadow), 0.08),
+                    0 8px 20px rgba(var(--meok-warm-shadow), 0.04);
+  --meok-glow-gold: 0 0 40px rgba(200, 168, 115, 0.25);
+  --meok-glow-blush: 0 0 60px rgba(233, 180, 168, 0.3);
+}
+
+.meok-root {
+  font-family: var(--meok-font-body);
+  background: var(--meok-bg-gradient);
+  color: var(--meok-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.meok-root *,
+.meok-root *::before,
+.meok-root *::after {
+  box-sizing: border-box;
+}
+
+/* Utility classes */
+.meok-container {
+  width: 100%;
+  max-width: var(--meok-container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+}
+
+.meok-section {
+  padding-block: var(--meok-section-pad);
+  position: relative;
+}
+
+.meok-card {
+  background: var(--meok-surface);
+  border: 1px solid var(--meok-glass-border);
+  border-radius: var(--meok-radius-lg);
+  box-shadow: var(--meok-shadow-md), inset 0 1px 0 var(--meok-surface-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.meok-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--meok-shadow-lg), inset 0 1px 0 var(--meok-surface-border);
+}
+
+.meok-card-solid {
+  background: var(--meok-surface-solid);
+}
+
+.meok-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(125, 140, 126, 0.1);
+  color: var(--meok-sage);
+  border: 1px solid rgba(125, 140, 126, 0.18);
+}
+
+.meok-pill-gold {
+  background: rgba(200, 168, 115, 0.1);
+  color: #8c7040;
+  border-color: rgba(200, 168, 115, 0.2);
+}
+
+.meok-pill-coral {
+  background: rgba(217, 140, 126, 0.1);
+  color: #a45d4f;
+  border-color: rgba(217, 140, 126, 0.2);
+}
+
+.meok-title-xl {
+  font-family: var(--meok-font-display);
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: var(--meok-text);
+}
+
+.meok-title-lg {
+  font-family: var(--meok-font-display);
+  font-size: clamp(2rem, 4.5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--meok-text);
+}
+
+.meok-title-md {
+  font-family: var(--meok-font-display);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--meok-text);
+}
+
+.meok-body {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  color: var(--meok-text-soft);
+  line-height: 1.7;
+}
+
+.meok-body-muted {
+  color: var(--meok-text-muted);
+}
+
+.meok-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.7rem;
+  border-radius: 999px;
+  font-family: var(--meok-font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.meok-btn:hover {
+  transform: translateY(-2px);
+}
+
+.meok-btn-primary {
+  background: linear-gradient(135deg, var(--meok-sage) 0%, #657565 100%);
+  color: var(--meok-primary-text);
+  box-shadow: 0 8px 24px rgba(125, 140, 126, 0.3);
+}
+
+.meok-btn-primary:hover {
+  box-shadow: 0 12px 32px rgba(125, 140, 126, 0.38);
+}
+
+.meok-btn-soft {
+  background: rgba(26, 24, 22, 0.04);
+  color: var(--meok-text);
+  border: 1px solid rgba(26, 24, 22, 0.08);
+}
+
+.meok-btn-soft:hover {
+  background: rgba(26, 24, 22, 0.08);
+}
+
+.meok-btn-gold {
+  background: linear-gradient(135deg, var(--meok-gold) 0%, #b08d52 100%);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(200, 168, 115, 0.3);
+}
+
+.meok-btn-gold:hover {
+  box-shadow: 0 12px 32px rgba(200, 168, 115, 0.38);
+}
+
+.meok-orb {
+  width: min(520px, 80vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 28%),
+    radial-gradient(circle at 70% 65%, rgba(200,168,115,0.35) 0%, rgba(200,168,115,0) 35%),
+    radial-gradient(circle at 40% 70%, rgba(217,140,126,0.25) 0%, rgba(217,140,126,0) 30%),
+    radial-gradient(circle at 55% 45%, rgba(156,166,201,0.2) 0%, rgba(156,166,201,0) 35%),
+    linear-gradient(135deg, #f0e6dc 0%, #e6ddd2 35%, #ddd3c8 65%, #d4c9bc 100%);
+  box-shadow:
+    inset -20px -20px 60px rgba(139, 120, 100, 0.15),
+    inset 20px 20px 60px rgba(255, 255, 255, 0.9),
+    0 30px 80px rgba(60, 45, 35, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  position: relative;
+  animation: meok-float 6s ease-in-out infinite;
+}
+
+.meok-orb::after {
+  content: '';
+  position: absolute;
+  inset: -12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(249,230,224,0.55) 0%, rgba(249,230,224,0) 70%);
+  z-index: -1;
+  filter: blur(24px);
+}
+
+@keyframes meok-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+
+.meok-logo-mark {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--meok-gold) 0%, var(--meok-rose) 100%);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(200, 168, 115, 0.25);
+}
+
+.meok-logo-mark svg {
+  width: 55%;
+  height: 55%;
+  fill: currentColor;
+}
+
+.meok-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.meok-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.meok-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.meok-image-contain {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.meok-image-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

@@ -1,0 +1,7 @@
+{
+  "id": "sa-team-bios",
+  "prompt": "Write 6 team bios for the openpatent.ai Series A deck. Each bio: 80-110 words, structure = (1) name + role, (2) one-sentence credential hook, (3) the prior-company lineage, (4) the 1 specific thing they built at openpatent.ai, (5) the 1-line 'why this person'. Roles: (1) Founder/CEO — 2 prior exits in IP-tech (PatentBolt acqui-hire 2019, IPfolio bootstrap to 4k users 2017), (2) Founder/CTO — CometBFT contributor since 2019, ex-Cosmos Hub validator ops, (3) Founder/Chief IP Officer — 14yr USPTO patent examiner (TC 2100 + TC 2400), 47 pub patents, (4) Head of BFT Council — PhD distributed systems ETH Zurich, ex-Tendermint, (5) Head of Sovereign Custody — ex-Cloudflare Workers + HSM FIPS auditor at EY, (6) Head of Multi-Region — ex-Hetzner bare-metal SRE, deployed 14 sovereign stacks for gov/defense. Use DEFENEOS mythic voice. Return ONLY JSON: {bios:[{name:string, role:string, hook:string, lineage:string, built:string, why:string, full_bio:string}]}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

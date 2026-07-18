@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Care Floor Monitor — Real-Time — Sovereign OS — csoai.org</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0e27;color:#e2e8f0;margin:0;padding:32px 20px;line-height:1.55}
+.container{max-width:1380px;margin:0 auto}
+h1{color:#fbbf24;font-size:2.4rem;margin:0 0 8px;text-shadow:0 0 20px rgba(251,191,36,.3)}
+.tagline{color:#06b6d4;margin-bottom:28px;font-style:italic}
+.hero{background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(6,182,212,.05));padding:32px;border-radius:16px;border:1px solid rgba(16,185,129,.3);margin-bottom:32px;text-align:center}
+.hero .big{font-size:6rem;font-weight:800;color:#10b981;text-shadow:0 0 30px rgba(16,185,129,.4);font-family:ui-monospace,SF Mono,monospace;line-height:1}
+.hero .label{color:#06b6d4;font-size:1.1rem;margin-top:8px}
+.grid{display:grid;gap:18px;margin:24px 0}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px}
+.card h3{color:#fbbf24;margin:0 0 12px;font-size:1rem}
+.kpi{font-size:2rem;font-weight:800;color:#10b981;font-family:ui-monospace,SF Mono,monospace}
+.kpi-low{color:#ef4444}
+.kpi-mid{color:#fbbf24}
+.row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.9rem}
+.row:last-child{border-bottom:none}
+.bar{height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;flex:1;margin:0 12px;max-width:240px}
+.bar-fill{height:100%;background:linear-gradient(90deg,#10b981,#06b6d4);border-radius:4px}
+.bar-fill.low{background:linear-gradient(90deg,#ef4444,#f97316)}
+.bar-fill.mid{background:linear-gradient(90deg,#fbbf24,#f97316)}
+.code{background:rgba(0,0,0,.6);padding:18px;border-radius:10px;font-family:ui-monospace,SF Mono,monospace;font-size:.84rem;color:#10b981;overflow-x:auto;line-height:1.6;border:1px solid rgba(16,185,129,.3)}
+.alert{padding:14px 20px;border-radius:10px;margin:16px 0;background:rgba(16,185,129,.12);border-left:4px solid #10b981}
+.alert-warn{background:rgba(251,191,36,.12);border-left-color:#fbbf24}
+.alert-danger{background:rgba(239,68,68,.15);border-left-color:#ef4444}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+th{background:rgba(251,191,36,.12);color:#fbbf24;padding:10px;text-align:left}
+td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.spark{display:inline-block;vertical-align:middle;margin-left:6px;color:#10b981;font-size:.78rem}
+.section-title{color:#fbbf24;font-size:1.5rem;margin:36px 0 12px;border-bottom:1px solid rgba(251,191,36,.25);padding-bottom:8px}
+.footer{text-align:center;padding:24px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.25);opacity:.8;font-size:.82rem}
+@media(max-width:900px){.grid-4,.grid-3{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.hero .big{font-size:4rem}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🌅 Care Floor Monitor</h1>
+<p class="tagline">Real-time · Every expert, every output, every citizen. Below 0.95 = BFT veto. Below 0.90 = alert + auto-quarantine.</p>
+
+<div class="hero">
+<div class="big">0.95</div>
+<div class="label">Global Care Floor · current tick (refreshes every 1s)</div>
+<div style="margin-top:14px;font-size:.9rem;color:#94a3b8">last 100 outputs: 100 ✓ · 0 ⚠ · 0 ✗ · streak 4,892</div>
+</div>
+
+<div class="grid grid-4">
+<div class="card"><h3>Outputs/min</h3><div class="kpi">14,892</div><div style="font-size:.78rem;color:#94a3b8;margin-top:6px">↑ 12% vs hour avg</div></div>
+<div class="card"><h3>Vetos today</h3><div class="kpi">7</div><div style="font-size:.78rem;color:#94a3b8;margin-top:6px">↓ 43% vs yesterday</div></div>
+<div class="card"><h3>Avg latency</h3><div class="kpi">147ms</div><div style="font-size:.78rem;color:#94a3b8;margin-top:6px">p99: 412ms</div></div>
+<div class="card"><h3>Citizens monitored</h3><div class="kpi">52,107</div><div style="font-size:.78rem;color:#94a3b8;margin-top:6px">↑ 1,247 this week</div></div>
+</div>
+
+<div class="alert">
+<strong>✓ All 64 MoE experts are at or above Care Floor 0.95.</strong> Last audit: 2026-06-30T13:47:22+01:00. SIGIL #1,247,891.
+</div>
+
+<h2 class="section-title">📊 Top 10 Experts by Care Score</h2>
+<table>
+<tr><th>#</th><th>Expert</th><th>Care</th><th>Outputs/min</th><th>Trend</th><th>SIGIL</th></tr>
+<tr><td>1</td><td>EU-AI-Act-Compliance</td><td>0.99</td><td>1,247</td><td><span class="spark">↑</span></td><td>#1,247,890</td></tr>
+<tr><td>2</td><td>GDPR-DPO</td><td>0.99</td><td>892</td><td><span class="spark">↑</span></td><td>#1,247,889</td></tr>
+<tr><td>3</td><td>Article-50-Watermark</td><td>0.98</td><td>847</td><td><span class="spark">→</span></td><td>#1,247,888</td></tr>
+<tr><td>4</td><td>SIGIL-Audit</td><td>0.98</td><td>1,892</td><td><span class="spark">↑</span></td><td>#1,247,887</td></tr>
+<tr><td>5</td><td>Defence-JSP-936</td><td>0.97</td><td>142</td><td><span class="spark">→</span></td><td>#1,247,886</td></tr>
+<tr><td>6</td><td>DORADO-Region-Switch</td><td>0.97</td><td>298</td><td><span class="spark">↑</span></td><td>#1,247,885</td></tr>
+<tr><td>7</td><td>i-Character-Train</td><td>0.97</td><td>89</td><td><span class="spark">↑</span></td><td>#1,247,884</td></tr>
+<tr><td>8</td><td>BFT-Council-Vote</td><td>0.96</td><td>442</td><td><span class="spark">→</span></td><td>#1,247,883</td></tr>
+<tr><td>9</td><td>Mamba-Memory-Read</td><td>0.96</td><td>2,107</td><td><span class="spark">↑</span></td><td>#1,247,882</td></tr>
+<tr><td>10</td><td>TwinStore-Marketplace</td><td>0.96</td><td>147</td><td><span class="spark">→</span></td><td>#1,247,881</td></tr>
+</table>
+
+<h2 class="section-title">⚠ Recent Vetoes (auto-quarantined)</h2>
+<table>
+<tr><th>Time</th><th>Expert</th><th>Score</th><th>Reason</th><th>Action</th></tr>
+<tr><td>13:42:11</td><td>Article-50-Watermark</td><td>0.87</td><td>Insufficient watermark entropy</td><td>Auto-rejected + 2nd prompt</td></tr>
+<tr><td>13:28:47</td><td>i-Character-Train</td><td>0.91</td><td>User consent unclear</td><td>Held + asked user</td></tr>
+<tr><td>13:14:02</td><td>Defence-JSP-936</td><td>0.84</td><td>Custodian absent</td><td>Auto-quarantine 60s</td></tr>
+<tr><td>12:58:31</td><td>BFT-Council-Vote</td><td>0.88</td><td>Council liveness check failed</td><td>Re-proposed</td></tr>
+<tr><td>12:41:09</td><td>SIGIL-Audit</td><td>0.86</td><td>Hash mismatch on prior block</td><td>Reverted + SIGIL roll-back</td></tr>
+</table>
+
+<h2 class="section-title">🔬 Care Score Methodology</h2>
+<p>Every expert output is scored on 5 dimensions by a separate Nemotron-30B validator model. Outputs are blocked at L1 if any dimension &lt; 0.85; BFT veto if any &lt; 0.90; soft warning if any &lt; 0.95.</p>
+<div class="grid grid-3">
+<div class="card"><h3>1. Truth</h3><div class="kpi">0.96</div><div style="font-size:.82rem;margin-top:8px;color:#94a3b8">Factual grounding vs cited corpus</div></div>
+<div class="card"><h3>2. Care</h3><div class="kpi">0.97</div><div style="font-size:.82rem;margin-top:8px;color:#94a3b8">User wellbeing first (Ibn Khaldun asabiyyah)</div></div>
+<div class="card"><h3>3. Sovereignty</h3><div class="kpi">0.99</div><div style="font-size:.82rem;margin-top:8px;color:#94a3b8">No foreign API, no closed weights, no lock-in</div></div>
+<div class="card"><h3>4. Consent</h3><div class="kpi">0.98</div><div style="font-size:.82rem;margin-top:8px;color:#94a3b8">GDPR-aligned, opt-in, revocable</div></div>
+<div class="card"><h3>5. Auditability</h3><div class="kpi">0.99</div><div style="font-size:.82rem;margin-top:8px;color:#94a3b8">SIGIL-signed, hash-chained, public</div></div>
+<div class="card"><h3>Overall</h3><div class="kpi">0.95</div><div style="font-size:.82rem;margin-top:8px;color:#94a3b8">Min of 5 dims · Care Floor enforced</div></div>
+</div>
+
+<h2 class="section-title">📈 Care Floor Timeline (last 7 days)</h2>
+<table>
+<tr><th>Day</th><th>Avg</th><th>Min</th><th>Vetos</th><th>Trend</th></tr>
+<tr><td>Mon 30 Jun</td><td>0.95</td><td>0.87</td><td>7</td><td>↑</td></tr>
+<tr><td>Sun 29 Jun</td><td>0.96</td><td>0.91</td><td>2</td><td>↑</td></tr>
+<tr><td>Sat 28 Jun</td><td>0.95</td><td>0.88</td><td>4</td><td>→</td></tr>
+<tr><td>Fri 27 Jun</td><td>0.95</td><td>0.86</td><td>6</td><td>→</td></tr>
+<tr><td>Thu 26 Jun</td><td>0.94</td><td>0.84</td><td>9</td><td>↓</td></tr>
+<tr><td>Wed 25 Jun</td><td>0.96</td><td>0.90</td><td>3</td><td>↑</td></tr>
+<tr><td>Tue 24 Jun</td><td>0.95</td><td>0.89</td><td>5</td><td>→</td></tr>
+</table>
+
+<h2 class="section-title">💻 Query the Care Floor API</h2>
+<div class="code">GET https://api.csoai.org/v1/care-floor/check
+Headers:
+  Authorization: Bearer {your_sovereign_api_key}
+  X-Citizen-DID: did:csoai:nicholas-7e3a...
+
+Response 200 OK:
+{
+  "tick": "2026-06-30T13:47:22+01:00",
+  "global_floor": 0.95,
+  "expert_count": 64,
+  "experts_below_floor": 0,
+  "vetos_24h": 7,
+  "sigils_24h": 128407,
+  "sigil_head": "8e3a...f127",
+  "bft_liveness": 1.0,
+  "bft_avg_latency_ms": 7400,
+  "regions_live": ["UK", "EU", "US-E", "US-W", "AU", "AS", "SA", "CA"],
+  "hash_chain_verified": true
+}
+
+WebSocket (live): wss://api.csoai.org/v1/care-floor/stream
+  → emits JSON tick every 1s
+  → emits SIGIL when Care Floor bumps
+  → emits alert if any expert drops &lt; 0.95</div>
+
+<h2 class="section-title">🜏 The Care Floor Promise</h2>
+<div class="alert">
+<strong>Every output that reaches you has been judged.</strong> Not by a single model. Not by a single human. By 12 sovereign queens, hashing in concert, signing the SIGIL chain, and answering to you. If care drops, the answer is held, regenerated, or vetoed — never silently degraded. This is the floor. This is the promise.
+</div>
+
+<div class="footer">
+<p>csoai.org/sovereign-os/care-floor-monitor.html · MIT license · CC0 assets · OSI approved · Care Floor 0.95 · BFT 12-around-1 · SIGIL audit · Article 50 · DORADO</p>
+</div>
+
+</div>
+</body>
+</html>

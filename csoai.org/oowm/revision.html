@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>C. OOWM Revision — csoai.org/oowm/revision.html</title>
+  <meta name="description" content="The sovereign revision engine. Daily, weekly, monthly, quarterly, annual revision cycles. Triggers, outputs, governance.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse, #0a0e27 0%, #000 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2rem; color: #fbbf24; }
+    h2 { color: #06b6d4; margin-top: 32px; border-bottom: 1px solid #06b6d4; padding-bottom: 4px; }
+    h3 { color: #10b981; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 24px; }
+    .panel { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #06b6d4; }
+    .timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0; }
+    .tick { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 6px; text-align: center; border-top: 3px solid #fbbf24; }
+    .tick h4 { color: #fbbf24; margin: 4px 0; font-size: 0.95rem; }
+    .tick .when { color: #06b6d4; font-size: 0.8rem; }
+    .tick p { font-size: 0.78rem; margin-top: 6px; }
+    .trigger { background: rgba(239,68,68,0.1); padding: 10px; border-radius: 4px; margin: 6px 0; border-left: 3px solid #ef4444; font-size: 0.9rem; }
+    .output { background: rgba(16,185,129,0.1); padding: 10px; border-radius: 4px; margin: 6px 0; border-left: 3px solid #10b981; font-size: 0.9rem; }
+    pre { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 C. OOWM Revision Engine</h1>
+    <p class="tagline">The substrate evolves — 5 revision cycles, 5 triggers, 5 outputs.</p>
+
+    <div class="panel">
+      <h2>The 5 Revision Cycles</h2>
+      <div class="timeline">
+        <div class="tick">
+          <h4>Daily</h4>
+          <div class="when">03:00 UTC cron</div>
+          <p>Auto-revision. Composite recompute. OLM retrain. MoE expert prune/synth. Mamba state snapshot.</p>
+        </div>
+        <div class="tick">
+          <h4>Weekly</h4>
+          <div class="when">Sun 04:00 UTC</div>
+          <p>BFT-major revision. Council weight rebalance. Charter citation refresh. Open-weight ingest.</p>
+        </div>
+        <div class="tick">
+          <h4>Monthly</h4>
+          <div class="when">1st 05:00 UTC</div>
+          <p>Fork-ledger revision. Citizen composite aggregation. Industry vertical audit. Wisdom economy reset.</p>
+        </div>
+        <div class="tick">
+          <h4>Quarterly</h4>
+          <div class="when">1st of Q 06:00 UTC</div>
+          <p>Full audit. Sovereign composite re-benchmarked. 100-criteria evaluation. Care Floor SLA check.</p>
+        </div>
+        <div class="tick">
+          <h4>Annual</h4>
+          <div class="when">Jan 1 09:00 UTC</div>
+          <p>Crown Lineage Custodian review. Reauthorisation. 230+ year lineage audit. Charter amendments.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Revision Triggers (5 events that fire revision immediately)</h2>
+      <div class="trigger"><strong>1. Composite drops below 7.0</strong> — Sovereign quality regressed. Emergency revision. All agents notified via SIGIL.</div>
+      <div class="trigger"><strong>2. Care Floor violation</strong> — Any output &lt; 0.95. Immediate BFT convening. Affected token stream quarantined.</div>
+      <div class="trigger"><strong>3. BFT deadlock (&gt; 2 weeks)</strong> — Council cannot reach 2/3 majority. Escalate to Crown Lineage Custodian.</div>
+      <div class="trigger"><strong>4. SIGIL chain fork</strong> — Hash-chain split detected. Auto-replay from last valid anchor. Affected events tombstoned.</div>
+      <div class="trigger"><strong>5. Citizen request</strong> — Any citizen with valid DID can request revision. Free for citizens; $99 invoice for enterprises via x402.</div>
+    </div>
+
+    <div class="panel">
+      <h2>Revision Outputs (5 things produced each cycle)</h2>
+      <div class="output"><strong>1. Updated sovereign composite</strong> — 12-dimension score. New value committed to SIGIL chain. Public on /oowm/evaluation.html.</div>
+      <div class="output"><strong>2. Updated BFT council weights</strong> — Each of 12 queens' vote weight rebalanced by past accuracy. Logged on-chain.</div>
+      <div class="output"><strong>3. Updated SIGIL chain anchors</strong> — Daily checkpoint. Hourly micro-anchor. Quarter-end sealed anchor. Replay-verifiable.</div>
+      <div class="output"><strong>4. New sovereign tools</strong> — Synthesised from MoE expert pruning. Forked from Apple FM feedback + DEFONEOS sensor gaps.</div>
+      <div class="output"><strong>5. Archived sovereign patterns</strong> — High-quality MAP-Elites cells. BFT dissent resolutions. Crown Lineage rulings. Frozen to git-lfs.</div>
+    </div>
+
+    <div class="panel">
+      <h2>Revision Procedure (the daily cron)</h2>
+      <pre>
+# /etc/cron.d/oowm-revision (excerpt)
+0 3 * * *  sov3  /opt/sov3/bin/oowm-revision daily    >> /var/log/sov3/daily.log
+0 4 * * 0  sov3  /opt/sov3/bin/oowm-revision weekly   >> /var/log/sov3/weekly.log
+0 5 1 * *  sov3  /opt/sov3/bin/oowm-revision monthly  >> /var/log/sov3/monthly.log
+0 6 1 1,4,7,10 *  sov3  /opt/sov3/bin/oowm-revision quarterly  >> /var/log/sov3/quarterly.log
+0 9 1 1 *  sov3  /opt/sov3/bin/oowm-revision annual   >> /var/log/sov3/annual.log
+
+# Each cycle:
+#  1. Snapshot Mamba-2 state to /var/sov3/snapshots/&lt;timestamp&gt;.mamba
+#  2. Re-compute sovereign composite (12-dim)
+#  3. Re-weight BFT council
+#  4. Seal SIGIL chain anchor
+#  5. Synthesise new MoE experts from gaps
+#  6. Archive MAP-Elites cells
+#  7. Emit 'C|REVISION_&lt;CYCLE&gt;|...' SIGIL
+#  8. Re-train OLM router (only on weekly+)
+      </pre>
+    </div>
+
+    <div class="panel">
+      <h2>Revision Invariants (what MUST hold across every revision)</h2>
+      <ul>
+        <li>SIGIL chain integrity = 100% (zero chain forks permitted in production)</li>
+        <li>Care Floor SLA = 99.99% (output &lt; 0.95 triggers immediate review)</li>
+        <li>Sovereign composite monotonic non-decreasing on 12-month rolling window</li>
+        <li>Fork Doctrine preserved: every revision can be forked at any prior anchor</li>
+        <li>Article 50: every revision output watermarked + passport-issued</li>
+        <li>DORADO 8-region continuity: switching regions mid-revision does not break the chain</li>
+        <li>PQC key rotation cycle (90 days) integrated into the quarterly cycle</li>
+      </ul>
+    </div>
+
+    <p style="text-align:center; margin-top:32px; color:#10b981;">
+      🜏 The substrate revises. The composite grows. The lineage continues.
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Security — MEOK AI Labs</title>
+<meta name="description" content="MEOK AI Labs security policy. Responsible disclosure, OpenSSF Best Practices, signed releases, vulnerability reporting.">
+<link rel="canonical" href="https://meok.ai/security/">
+<style>
+body{font:16px/1.6 system-ui,sans-serif;background:#0a0a14;color:#e8e8f0;margin:0;padding:0}
+.container{max-width:920px;margin:0 auto;padding:48px 32px}
+h1{font-size:42px;margin:0 0 16px;background:linear-gradient(135deg,#5b21b6,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{margin-top:32px;margin-bottom:12px;color:#7c3aed}
+a{color:#7c3aed}
+pre{background:#13132a;border:1px solid #1a1a2e;border-radius:6px;padding:16px 20px;overflow-x:auto;font:13px/1.5 monospace;color:#22c55e}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Security</h1>
+
+<h2>Reporting a vulnerability</h2>
+<p>Email <a href="mailto:security@meok.ai">security@meok.ai</a> with:</p>
+<ul>
+<li>Description of the vulnerability</li>
+<li>Steps to reproduce</li>
+<li>Affected package + version</li>
+<li>Your contact (optional, for follow-up)</li>
+</ul>
+<p>Response within 48h. Fix within 14 days for P0/P1, 30 days for P2/P3.</p>
+
+<h2>Disclosure timeline</h2>
+<ol>
+<li>T+0: Report received</li>
+<li>T+48h: Acknowledgement + triage</li>
+<li>T+14d: Patch for P0/P1 (CVE assigned)</li>
+<li>T+30d: Public disclosure + advisory</li>
+<li>T+90d: Hall of fame</li>
+</ol>
+
+<h2>OpenSSF Best Practices</h2>
+<p>All 340+ MEOK MCP packages are enrolled in the OpenSSF Best Practices self-attestation program. Target tier: silver. Coverage: 99.4% license, 98.8% SECURITY.md, 98.2% CI, 34.9% dependabot, 34.9% CodeQL, 38.1% Scorecard workflow.</p>
+
+<h2>Signed releases</h2>
+<p>All wheels are published with PyPI SHA-256 hashes (PEP 740). For higher assurance, Sigstore cosign signatures are available for the 14/14 Apify actors and 3/341 PyPI packages (work in progress: cosign-sign.yaml in 130/341 workflows).</p>
+
+<h2>SLSA provenance</h2>
+<p>All builds use GitHub Actions with pinned actions. SLSA Level 3 provenance is generated automatically for all releases (cyclonedx-py SBOM + pypi-publish workflow).</p>
+
+<h2>Bug bounty</h2>
+<p>Coming soon — <a href="https://meok.ai/enterprise">enterprise tier</a> customers get pre-disclosure on advisories. Independent bounty program planned for 2027.</p>
+
+<h2>security.txt</h2>
+<p>RFC 9116 compliant security.txt at <a href="/.well-known/security.txt">/.well-known/security.txt</a>.</p>
+
+</div>
+</body>
+</html>

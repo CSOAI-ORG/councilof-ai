@@ -1,0 +1,28 @@
+name: optical-care-home-bridge-mcp
+description: 'MCP server: optical-care-home-bridge-mcp'
+version: 1.0.5
+author: MEOK AI Labs
+homepage: https://safetyof.ai
+repository: https://github.com/CSOAI-ORG/optical-care-home-bridge-mcp
+license: MIT
+categories:
+- compliance
+- governance
+tools:
+- name: mca_capacity_check
+  description: Mental Capacity Act 2005 assessment template.
+- name: gos6_visit_eligibility
+  description: GOS 6 domiciliary visit eligibility check.
+- name: post_visit_care_plan_sync
+  description: Update care plan after optical visit (vision-related adjustments).
+- name: safeguarding_red_flags
+  description: Adult safeguarding red-flag detection from visit notes.
+- name: registered_optometrist_audit
+  description: GOC registration check for visiting optometrist.
+build:
+  type: python
+  entrypoint: server.py
+  dependencies:
+  - mcp>=1.0.0
+runtime:
+  python: '>=3.10'

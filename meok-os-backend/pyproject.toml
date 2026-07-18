@@ -1,0 +1,23 @@
+[project]
+name = "meok-os-backend"
+version = "1.0.0"
+description = "MEOK OS Backend — the full sovereign AI OS API. 30+ endpoints covering all 22 sovereign MCPs + 12 Generals + 33 Hives + 8 BIG BRAIM winners. No Ollama for the 5 sovereign tasks."
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.27.0",
+]
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

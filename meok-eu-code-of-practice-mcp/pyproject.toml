@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meok-eu-code-of-practice-mcp"
+version = "1.0.1"
+description = "MCP wrapping C2PA + watermarking as an EU Code of Practice on AI content marking (draft 2, June 2026) ready two-layer attestation manifest with public verify URLs."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "MEOK AI Labs CSOAI LTD" }]
+requires-python = ">=3.10"
+dependencies = [
+    "cryptography>=42.0.0",
+    "mcp>=1.0.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0.0"]
+
+[project.scripts]
+meok-eu-code-of-practice-mcp = "meok_eu_code_of_practice_mcp.server:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["meok_eu_code_of_practice_mcp*"]
+exclude = ["tests*"]

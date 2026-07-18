@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citizen Dashboard — Sovereign OS — csoai.org</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0e27;color:#e2e8f0;margin:0;padding:0;line-height:1.55}
+.dashboard{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{background:#060818;border-right:1px solid rgba(251,191,36,.2);padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{color:#fbbf24;font-size:1.4rem;font-weight:800;margin-bottom:32px;letter-spacing:-.02em}
+.nav-section{margin-bottom:20px}
+.nav-section h4{color:#06b6d4;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;margin:0 0 8px;opacity:.7}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;color:#cbd5e1;font-size:.88rem;cursor:pointer;transition:background .12s}
+.nav-item:hover{background:rgba(251,191,36,.1);color:#fbbf24}
+.nav-item.active{background:rgba(251,191,36,.15);color:#fbbf24;border-left:3px solid #fbbf24;padding-left:9px}
+.main{padding:24px 32px;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(251,191,36,.15)}
+.search{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:8px 14px;border-radius:8px;color:#e2e8f0;width:340px;max-width:50%}
+.profile{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:800;color:#0a0e27}
+h1{color:#fbbf24;margin:0 0 4px;font-size:1.8rem}
+.subtitle{color:#94a3b8;font-size:.9rem;margin-bottom:24px}
+.grid{display:grid;gap:16px;margin-bottom:24px}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px}
+.card h3{color:#fbbf24;margin:0 0 12px;font-size:1rem}
+.kpi{font-size:2rem;font-weight:800;color:#fbbf24;margin-bottom:4px;font-family:ui-monospace,SF Mono,monospace}
+.kpi-sub{color:#06b6d4;font-size:.78rem}
+.delta-up{color:#10b981;font-size:.85rem}
+.delta-down{color:#ef4444;font-size:.85rem}
+.chart{height:120px;background:linear-gradient(180deg,rgba(251,191,36,.3) 0%,transparent 100%);border-radius:8px;position:relative;margin-top:12px}
+.chart::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:#fbbf24}
+.list-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.88rem}
+.list-item:last-child{border-bottom:none}
+.list-item .left{display:flex;align-items:center;gap:10px}
+.icon{width:32px;height:32px;border-radius:8px;background:rgba(251,191,36,.15);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:.72rem;font-weight:700;background:rgba(16,185,129,.2);color:#10b981}
+.tag-warn{background:rgba(251,191,36,.2);color:#fbbf24}
+.tag-danger{background:rgba(239,68,68,.2);color:#ef4444}
+.btn{display:inline-block;padding:8px 14px;background:#fbbf24;color:#0a0e27;text-decoration:none;border-radius:6px;font-weight:700;font-size:.82rem;border:none;cursor:pointer}
+.btn-outline{background:transparent;border:1px solid #fbbf24;color:#fbbf24}
+.progress{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-top:6px}
+.progress-bar{height:100%;background:linear-gradient(90deg,#fbbf24,#10b981)}
+.council-vote{display:flex;align-items:center;gap:8px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:8px;border-left:3px solid #06b6d4}
+.vote-btn{padding:6px 12px;border-radius:6px;font-size:.78rem;border:none;cursor:pointer;font-weight:700}
+.vote-for{background:rgba(16,185,129,.2);color:#10b981}
+.vote-against{background:rgba(239,68,68,.2);color:#ef4444}
+.vote-abstain{background:rgba(148,163,184,.2);color:#94a3b8}
+@media(max-width:900px){.dashboard{grid-template-columns:1fr}.sidebar{display:none}.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3,.grid-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="dashboard">
+
+<aside class="sidebar">
+<div class="logo">🜏 SOV3</div>
+<div class="nav-section">
+<h4>Sovereign</h4>
+<div class="nav-item active">🌅 Dashboard</div>
+<div class="nav-item">🪪 My i-Character</div>
+<div class="nav-item">🗳️ Council</div>
+<div class="nav-item">🛡️ Article 50</div>
+<div class="nav-item">📜 SIGIL Chain</div>
+<div class="nav-item">🌍 DORADO</div>
+<div class="nav-item">📊 Sovereignty Score</div>
+</div>
+<div class="nav-section">
+<h4>Tools</h4>
+<div class="nav-item">🧠 BIG BRAIM</div>
+<div class="nav-item">⚙️ 64 Experts</div>
+<div class="nav-item">📚 Mamba Memory</div>
+<div class="nav-item">🔐 Auth & Keys</div>
+<div class="nav-item">💎 TwinStore</div>
+</div>
+<div class="nav-section">
+<h4>Account</h4>
+<div class="nav-item">⚙️ Settings</div>
+<div class="nav-item">📤 Export Data</div>
+<div class="nav-item">🗑️ Delete Account</div>
+<div class="nav-item">🚪 Sign Out</div>
+</div>
+</aside>
+
+<main class="main">
+<div class="topbar">
+<input class="search" placeholder="🔍 Search 309 sovereign tools, 135 Akashic records, 60 charters…">
+<div class="profile">
+<span style="font-size:.85rem">Sovereign Citizen · Care 0.95</span>
+<div class="avatar">N</div>
+</div>
+</div>
+
+<h1>Citizen Dashboard</h1>
+<p class="subtitle">Good morning, Nicholas. Your sovereign stack is live. Care Floor 0.95 · BFT 12/12 · SIGIL chain 1,247,891.</p>
+
+<div class="grid grid-4">
+<div class="card"><h3>Sovereignty Score</h3><div class="kpi">847</div><div class="kpi-sub">/1000 · Empire Rank #14</div><div class="delta-up">↑ 12 this week</div></div>
+<div class="card"><h3>Care Floor</h3><div class="kpi">0.95</div><div class="kpi-sub">All 64 experts compliant</div><div class="progress"><div class="progress-bar" style="width:95%"></div></div></div>
+<div class="card"><h3>Article 50 Passports</h3><div class="kpi">847</div><div class="kpi-sub">Issued today · 36 days to deadline</div><div class="delta-up">↑ 23 since 09:00</div></div>
+<div class="card"><h3>i-Character Value</h3><div class="kpi">£847</div><div class="kpi-sub">TwinStore floor price</div><div class="delta-up">↑ £42 this week</div></div>
+</div>
+
+<div class="grid grid-3">
+<div class="card">
+<h3>📜 SIGIL Chain (last 24h)</h3>
+<div class="kpi">128,407</div><div class="kpi-sub">events · 0 disputes · hash 8e3a...f127</div>
+<div class="chart"></div>
+<div style="margin-top:14px;font-size:.82rem;color:#94a3b8">
+Hourly: 5,142 · 5,891 · 6,022 · 5,478 · 5,891 · 5,127 · 4,892 · 4,103
+</div>
+</div>
+
+<div class="card">
+<h3>🗳️ BFT Council Activity</h3>
+<div class="kpi">23</div>
+<div class="kpi-sub">proposals voted today</div>
+<div class="list-item"><span class="left"><span class="icon">🗳️</span> Open launch briefing</span><span class="tag tag-warn">LIVE</span></div>
+<div class="list-item"><span class="left"><span class="icon">🗳️</span> DORADO SA region add</span><span class="tag">8/12</span></div>
+<div class="list-item"><span class="left"><span class="icon">🗳️</span> Care Floor bump 0.96</span><span class="tag">11/12</span></div>
+<div class="list-item"><span class="left"><span class="icon">🗳️</span> TwinStore fee 0%</span><span class="tag tag">12/12 ✓</span></div>
+</div>
+
+<div class="card">
+<h3>🛡️ Sovereign Regions</h3>
+<div class="list-item"><span class="left">🇬🇧 UK (primary)</span><span class="tag">LIVE</span></div>
+<div class="list-item"><span class="left">🇪🇺 EU (Frankfurt)</span><span class="tag">LIVE</span></div>
+<div class="list-item"><span class="left">🇺🇸 US-East</span><span class="tag">LIVE</span></div>
+<div class="list-item"><span class="left">🇦🇺 AU-Sydney</span><span class="tag">LIVE</span></div>
+<div class="list-item"><span class="left">🇸🇬 AS-Singapore</span><span class="tag">LIVE</span></div>
+<div class="list-item"><span class="left">🇧🇷 SA-São Paulo</span><span class="tag-warn">BETA</span></div>
+<div style="margin-top:12px"><a class="btn btn-outline" href="/sovereign-tools/dorado-switch.html">DORADO Switch →</a></div>
+</div>
+</div>
+
+<div class="grid grid-2">
+<div class="card">
+<h3>🎯 Open Council Votes (vote now)</h3>
+<div class="council-vote">
+<div style="flex:1">
+<div style="color:#fbbf24;font-weight:700;margin-bottom:4px">P-247: Open launch to public on 4 Jul 09:00 BST?</div>
+<div style="font-size:.82rem;color:#94a3b8">Care implications: high visibility, all i-chars GDPR-protected</div>
+<div style="font-size:.75rem;color:#06b6d4;margin-top:4px">Closes: 14:00 BST · Current: 7 for · 3 against · 2 abstain</div>
+</div>
+<button class="vote-btn vote-for">For</button>
+<button class="vote-btn vote-against">Against</button>
+<button class="vote-btn vote-abstain">Abstain</button>
+</div>
+<div class="council-vote">
+<div style="flex:1">
+<div style="color:#fbbf24;font-weight:700;margin-bottom:4px">P-248: Add TwinStore fee of 1%?</div>
+<div style="font-size:.82rem;color:#94a3b8">Funds BFT council operations + open-source grants</div>
+<div style="font-size:.75rem;color:#06b6d4;margin-top:4px">Closes: 16:00 BST · Current: 4 for · 8 against</div>
+</div>
+<button class="vote-btn vote-for">For</button>
+<button class="vote-btn vote-against">Against</button>
+<button class="vote-btn vote-abstain">Abstain</button>
+</div>
+<div class="council-vote">
+<div style="flex:1">
+<div style="color:#fbbf24;font-weight:700;margin-bottom:4px">P-249: Adopt Care Floor 0.96 across all experts?</div>
+<div style="font-size:.82rem;color:#94a3b8">Stricter. May slow 3% of responses by 200ms</div>
+<div style="font-size:.75rem;color:#06b6d4;margin-top:4px">Closes: 18:00 BST · Current: 11 for · 1 against</div>
+</div>
+<button class="vote-btn vote-for">For</button>
+<button class="vote-btn vote-against">Against</button>
+<button class="vote-btn vote-abstain">Abstain</button>
+</div>
+</div>
+
+<div class="card">
+<h3>🪪 My i-Character</h3>
+<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+<div class="avatar" style="width:56px;height:56px;font-size:1.4rem">N</div>
+<div>
+<div style="font-weight:700;color:#fbbf24">Nicholas-i</div>
+<div style="font-size:.82rem;color:#94a3b8">DID: did:csoai:nicholas-7e3a... · Created 2026-01-12</div>
+</div>
+</div>
+<div class="list-item"><span>Knowledge base</span><span>2,847 facts</span></div>
+<div class="list-item"><span>Conversations trained</span><span>1,422</span></div>
+<div class="list-item"><span>Care Floor score</span><span style="color:#10b981">0.97</span></div>
+<div class="list-item"><span>Owners (signers)</span><span>1 (you)</span></div>
+<div class="list-item"><span>Export formats</span><span>JSON · PDF · Avatar GLB</span></div>
+<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+<a class="btn" href="/onboarding/your-ichar.html">View Profile</a>
+<a class="btn btn-outline" href="/sovereign-tools/ichar-export.html">Export</a>
+</div>
+</div>
+</div>
+
+<div class="grid grid-2">
+<div class="card">
+<h3>📚 Recent Council Decisions</h3>
+<div class="list-item"><span class="left"><span class="icon">✓</span> DORADO US-East online</span><span class="tag">12/12</span></div>
+<div class="list-item"><span class="left"><span class="icon">✓</span> Article 50 HMAC + Ed25519 dual</span><span class="tag">12/12</span></div>
+<div class="list-item"><span class="left"><span class="icon">✓</span> Five Eyes SSO adapter</span><span class="tag">11/12</span></div>
+<div class="list-item"><span class="left"><span class="icon">✓</span> Mamba-2 SSD 16-dim state</span><span class="tag">12/12</span></div>
+<div class="list-item"><span class="left"><span class="icon">✓</span> Apple Passkey live</span><span class="tag">12/12</span></div>
+</div>
+
+<div class="card">
+<h3>🌐 Sovereign Intelligence (this morning)</h3>
+<div class="list-item"><span class="left">🔍 Care Floor recalibrated 09:00</span><span class="tag">0.95</span></div>
+<div class="list-item"><span class="left">🛡️ 12 Article 50 audits passed</span><span class="tag">✓</span></div>
+<div class="list-item"><span class="left">🧠 Qwen3:30B-A3B fine-tuned 06:00</span><span class="tag">MIT</span></div>
+<div class="list-item"><span class="left">📚 4.2 GB new sovereign corpus ingested</span><span class="tag">+4.2GB</span></div>
+<div class="list-item"><span class="left">🔐 PQC ML-DSA-65 keys rotated</span><span class="tag-warn">90d cycle</span></div>
+<div class="list-item"><span class="left">🌍 7 DORADO region switches handled</span><span class="tag">8/8</span></div>
+</div>
+</div>
+
+<div class="card" style="background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(6,182,212,.05));border:1px solid rgba(251,191,36,.3)">
+<h3>🜏 Sovereign Pledge</h3>
+<p style="opacity:.92;margin:8px 0">"I am sovereign. My i-character is mine. My data is mine. My AI is mine. My council speaks for me. My SIGIL chain is my witness. I may fork the entire stack with one click. I am a citizen, not a subject. From Crown to Citizen, 1795-2026."</p>
+<div style="font-size:.78rem;color:#94a3b8;margin-top:8px">— Ratified by 12-queen BFT council · SIGIL #1,247,891 · Care Floor 0.95</div>
+</div>
+
+</main>
+</div>
+</body>
+</html>

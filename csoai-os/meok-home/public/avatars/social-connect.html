@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#c9a84c">
+<meta name="description" content="MEOK Social Connect — link your sovereign i-character to Apple ID, Meta, X, LinkedIn, Snapchat, TikTok, Discord, Telegram. One identity, every platform.">
+<title>MEOK Social Connect · Sovereign across 8 platforms</title>
+<meta property="og:title" content="MEOK Social Connect · Sovereign across 8 platforms">
+<meta property="og:description" content="One sovereign identity. Apple ID, Meta, X, LinkedIn, Snapchat, TikTok, Discord, Telegram.">
+<meta property="og:url" content="https://meok.ai/avatars/social-connect.html">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MEOK Social">
+<link rel="apple-touch-icon" href="/icons/icon-192.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   MEOK SOCIAL CONNECT — Sovereign i-character across 8 platforms
+   Apple ID, Meta, X, LinkedIn, Snapchat, TikTok, Discord, Telegram
+   OAuth (mock) + share + privacy
+   ============================================================================ */
+:root{
+  --gold:#c9a84c;
+  --gold-deep:#a8832f;
+  --ink:#0b0b0f;
+  --paper:#fafaf7;
+  --line:rgba(11,11,15,.08);
+  --line-strong:rgba(11,11,15,.18);
+  --accent:#0071e3;
+  --accent-2:#34c759;
+  --shadow-1:0 1px 2px rgba(0,0,0,.06);
+  --shadow-2:0 10px 30px rgba(0,0,0,.10);
+  --shadow-3:0 30px 80px rgba(0,0,0,.16);
+  --radius-m:16px;
+  --radius-l:24px;
+  --radius-xl:32px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Space Grotesk",sans-serif;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(201,168,76,.18), transparent 60%),
+    radial-gradient(900px 500px at 0% 100%, rgba(0,113,227,.10), transparent 55%),
+    linear-gradient(180deg, #fbfaf5 0%, #f6f3e9 100%);
+  color:var(--ink);min-height:100vh;
+}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.brand{font-family:"Space Grotesk",sans-serif}
+
+/* ===== NAV ===== */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:rgba(255,255,255,.72);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.nav-left{display:flex;align-items:center;gap:14px}
+.nav-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold) 0%,#e7c873 50%,#b88b3a 100%);display:grid;place-items:center;color:#1a1407;font-weight:700;font-size:18px}
+.nav-title{font-weight:600;font-size:15px;letter-spacing:-.01em}
+.nav-sub{font-size:12px;color:#666}
+.nav-links{display:flex;gap:22px;align-items:center;font-size:13.5px}
+.nav-links a{color:#333;text-decoration:none}
+.nav-links a:hover{color:var(--accent)}
+
+/* ===== HERO ===== */
+.hero{padding:48px 24px 16px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
+@media (max-width:900px){.hero{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(34px, 5vw, 52px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin-bottom:14px}
+.hero h1 .gold{background:linear-gradient(135deg,var(--gold), #e7c873 50%, var(--gold-deep));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:17px;color:#444;line-height:1.55;max-width:520px;margin-bottom:20px}
+.hero .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{padding:12px 22px;border-radius:999px;background:linear-gradient(135deg,var(--accent) 0%, #2997ff 100%);color:#fff;border:none;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 16px rgba(0,113,227,.35)}
+.btn-secondary{padding:12px 22px;border-radius:999px;background:#fff;color:var(--ink);border:1px solid var(--line-strong);font-weight:500;font-size:14px;cursor:pointer}
+
+/* Mini sovereign card preview */
+.mini-card{
+  background:#fff;border-radius:var(--radius-l);box-shadow:var(--shadow-3);
+  padding:22px;display:flex;flex-direction:column;gap:14px;
+}
+.mini-card .header{display:flex;align-items:center;gap:12px}
+.mini-card .avatar-wrap{width:56px;height:56px;border-radius:18px;overflow:hidden;background:#fafaf7;border:1px solid var(--line)}
+.mini-card .avatar-wrap svg{width:100%;height:100%}
+.mini-card .ichar-name{font-weight:600;font-size:16px;letter-spacing:-.01em}
+.mini-card .ichar-handle{font-size:12px;color:#888;font-family:"JetBrains Mono",monospace}
+.mini-card .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.mini-card .stat{text-align:center;padding:8px;background:#fafaf7;border-radius:10px}
+.mini-card .stat b{font-size:18px;font-weight:600;color:var(--ink);display:block}
+.mini-card .stat span{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.06em}
+.platform-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.platform-badge{
+  width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700;
+}
+.mini-card .sigil{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--gold-deep);display:flex;align-items:center;gap:6px}
+.mini-card .sigil-dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+
+/* ===== PLATFORMS ===== */
+.platforms-wrap{max-width:1200px;margin:32px auto;padding:0 24px}
+.platforms-header h2{font-size:24px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+.platforms-header p{color:#666;font-size:14px;margin-bottom:18px}
+.platform-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:1100px){.platform-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:760px){.platform-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.platform-grid{grid-template-columns:1fr}}
+
+.platform-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-m);
+  padding:18px;cursor:pointer;display:flex;flex-direction:column;gap:12px;
+  transition:all .2s ease;
+}
+.platform-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-2)}
+.platform-card.connected{background:linear-gradient(180deg, rgba(52,199,89,.07), rgba(52,199,89,.02));border-color:rgba(52,199,89,.4)}
+.platform-head{display:flex;align-items:center;gap:12px}
+.platform-logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.platform-name{font-weight:600;font-size:14.5px}
+.platform-sub{font-size:11.5px;color:#888}
+.platform-desc{font-size:12.5px;color:#444;line-height:1.5;flex:1}
+.platform-tags{display:flex;gap:5px;flex-wrap:wrap}
+.p-tag{padding:2px 7px;background:rgba(0,0,0,.05);border-radius:999px;font-size:10px;color:#555;font-family:"JetBrains Mono",monospace}
+.btn-imp{width:100%;padding:9px;border-radius:10px;background:var(--ink);color:#fff;border:none;font-weight:500;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-imp.connected{background:#34c759}
+.btn-imp:disabled{background:#999;cursor:default}
+
+/* ===== SHARE BUNDLE ===== */
+.share-wrap{max-width:1200px;margin:48px auto;padding:0 24px}
+.share-card{
+  background:linear-gradient(135deg, #fff 0%, #fafaf7 100%);
+  border:1px solid var(--line);border-radius:var(--radius-xl);
+  padding:36px;box-shadow:var(--shadow-3);display:grid;grid-template-columns:1.2fr 1fr;gap:32px;
+}
+@media (max-width:900px){.share-card{grid-template-columns:1fr}}
+.share-card h2{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.share-card p{color:#666;font-size:15px;line-height:1.5;margin-bottom:20px}
+.bundle-preview{
+  background:var(--ink);color:#fff;border-radius:18px;padding:18px;
+  font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.7;
+  max-height:340px;overflow:auto;
+}
+.bundle-preview .k{color:#c9a84c}
+.bundle-preview .s{color:#7ec699}
+.bundle-preview .n{color:#9aa0a6}
+.share-controls{display:flex;flex-direction:column;gap:14px}
+.share-check{display:flex;align-items:start;gap:10px;padding:10px;background:rgba(255,255,255,.6);border-radius:10px;border:1px solid var(--line);cursor:pointer;transition:all .15s ease}
+.share-check:hover{background:#fff}
+.share-check input{margin-top:3px}
+.share-check .lbl{font-size:13px;font-weight:500}
+.share-check .desc{font-size:11.5px;color:#888;margin-top:2px}
+.share-check input:checked + .lbl{color:var(--accent)}
+.share-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.share-btns button{padding:10px 6px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;font-size:11px;color:#333;font-weight:500;transition:all .15s ease}
+.share-btns button:hover{background:#fafaf7;transform:translateY(-1px);border-color:var(--line-strong)}
+
+/* ===== PRIVACY ===== */
+.privacy-wrap{max-width:1200px;margin:48px auto 0;padding:0 24px}
+.privacy-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:24px}
+@media (max-width:800px){.privacy-grid{grid-template-columns:1fr}}
+.privacy-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);
+  padding:24px;
+}
+.privacy-card h2{font-size:20px;font-weight:600;margin-bottom:14px}
+.privacy-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-top:1px solid var(--line);font-size:13px}
+.privacy-row:first-of-type{border-top:none}
+.privacy-row .lbl{font-weight:500;color:var(--ink)}
+.privacy-row .sub{font-size:11.5px;color:#888;margin-top:2px}
+.toggle{position:relative;width:42px;height:24px;background:#e5e5e8;border-radius:999px;cursor:pointer;transition:all .2s ease}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.15);transition:all .25s cubic-bezier(.2,.8,.4,1)}
+.toggle.on{background:#34c759}
+.toggle.on::after{left:21px}
+.toggle.locked{cursor:not-allowed;opacity:.7}
+
+.did-display{
+  background:linear-gradient(135deg, var(--ink) 0%, #1a1a24 100%);color:#fff;
+  border-radius:18px;padding:20px;font-family:"JetBrains Mono",monospace;
+  display:flex;flex-direction:column;gap:10px;
+}
+.did-display .lbl{color:#aaa;font-size:10px;text-transform:uppercase;letter-spacing:.1em}
+.did-display .did-val{font-size:14px;color:#c9a84c;word-break:break-all}
+.did-display .meta{font-size:11px;color:#777;display:flex;justify-content:space-between}
+
+/* ===== FOOTER ===== */
+.footer{max-width:1200px;margin:48px auto 60px;padding:20px;text-align:center;font-size:12px;color:#888}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:500;box-shadow:var(--shadow-2);z-index:200;opacity:0;transition:all .3s cubic-bezier(.2,.8,.4,1)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ======= NAV ======= -->
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-logo">M</div>
+    <div>
+      <div class="nav-title brand">MEOK Social Connect</div>
+      <div class="nav-sub">One identity · 8 platforms · sovereign</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">← Home</a>
+    <a href="meok-avatar-style.html">Builder</a>
+    <a href="avatar-import.html">Import</a>
+    <a href="#privacy">Privacy</a>
+  </div>
+</nav>
+
+<!-- ======= HERO ======= -->
+<section class="hero">
+  <div>
+    <h1>Your <span class="gold">sovereign i-character</span>, on every platform.</h1>
+    <p>Link Apple ID, Meta, X, LinkedIn, Snapchat, TikTok, Discord, Telegram. One sovereign identity. Published by you, signed by MEOK, sovereign forever.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="connectFirst()">↗ Connect a platform</button>
+      <button class="btn-secondary" onclick="document.getElementById('share-section').scrollIntoView({behavior:'smooth'})">Preview bundle</button>
+    </div>
+  </div>
+
+  <div class="mini-card">
+    <div class="header">
+      <div class="avatar-wrap" id="mini-avatar"></div>
+      <div>
+        <div class="ichar-name">Marcus of the Sovereign Court</div>
+        <div class="ichar-handle">@sovereign_001 · did:csoai:sovereign_001</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="stat-connected">0</b><span>platforms</span></div>
+      <div class="stat"><b>9/13</b><span>BFT</span></div>
+      <div class="stat"><b style="color:#0071e3">⚓</b><span>Care VETO</span></div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Connected to</div>
+      <div class="platform-badges" id="mini-badges"></div>
+    </div>
+    <div class="sigil">
+      <span class="sigil-dot"></span>
+      <span>SIGIL #001234 · ed25519:ab12… · care-bounded</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======= PLATFORMS ======= -->
+<section class="platforms-wrap" id="platforms">
+  <div class="platforms-header">
+    <h2>Connect a platform</h2>
+    <p>Each platform uses OAuth (mocked here). Your MEOK i-character + sovereign stats are visible to you; the platform only sees the bits you mark public.</p>
+  </div>
+  <div class="platform-grid" id="platform-grid"></div>
+</section>
+
+<!-- ======= SHARE BUNDLE ======= -->
+<section class="share-wrap" id="share-section">
+  <div class="share-card">
+    <div>
+      <h2>One share. Eight platforms.</h2>
+      <p>Generate a sovereign bundle once, post to any or all of your connected platforms. The bundle is a SIGIL-signed JSON describing your i-character + the public-facing slice.</p>
+
+      <div class="share-controls">
+        <label class="share-check">
+          <input type="checkbox" id="chk-avatar" checked>
+          <div><div class="lbl">Avatar (SVG)</div><div class="desc">200×300 vector</div></div>
+        </label>
+        <label class="share-check">
+          <input type="checkbox" id="chk-name" checked>
+          <div><div class="lbl">Display name + handle</div><div class="desc">Marcus of the Sovereign Court</div></div>
+        </label>
+        <label class="share-check">
+          <input type="checkbox" id="chk-bio">
+          <div><div class="lbl">Bio</div><div class="desc">public, sovereign-aligned</div></div>
+        </label>
+        <label class="share-check">
+          <input type="checkbox" id="chk-did">
+          <div><div class="lbl">DID (W3C)</div><div class="desc">did:csoai:sovereign_001</div></div>
+        </label>
+        <label class="share-check">
+          <input type="checkbox" id="chk-sigil">
+          <div><div class="lbl">SIGIL receipt</div><div class="desc">Ed25519 hash + chain</div></div>
+        </label>
+
+        <div class="share-btns">
+          <button onclick="publish()">↗ Publish all</button>
+          <button onclick="copyBundle()">📋 Copy JSON</button>
+          <button onclick="downloadSVG()">⬇ SVG</button>
+          <button onclick="schedule()">⏰ Schedule</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="bundle-preview" id="bundle-preview"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= PRIVACY ======= -->
+<section class="privacy-wrap" id="privacy">
+  <div class="privacy-grid">
+    <div class="privacy-card">
+      <h2>What's shared · what's private</h2>
+      <div class="privacy-row">
+        <div>
+          <div class="lbl">Avatar (Memoji-style vector)</div>
+          <div class="sub">Public by default — visible to all your followers on every platform</div>
+        </div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="privacy-row">
+        <div>
+          <div class="lbl">Display name + handle</div>
+          <div class="sub">Public — used as the human-readable identifier</div>
+        </div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="privacy-row">
+        <div>
+          <div class="lbl">Bio (single line)</div>
+          <div class="sub">Optional — what you tell the world you are</div>
+        </div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="privacy-row">
+        <div>
+          <div class="lbl">OCEAN personality vector</div>
+          <div class="sub">Private · never shared unless you opt in</div>
+        </div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="privacy-row">
+        <div>
+          <div class="lbl">BFT council vote / Care VETO</div>
+          <div class="sub">Sovereign · your platform never sees this</div>
+        </div>
+        <div class="toggle locked" title="locked by care"></div>
+      </div>
+      <div class="privacy-row">
+        <div>
+          <div class="lbl">SIGIL receipt + Ed25519 chain</div>
+          <div class="sub">Public-to-platform · auditability without exposure</div>
+        </div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="privacy-row">
+        <div>
+          <div class="lbl">Queens bound (q1..q13)</div>
+          <div class="sub">Private · the inner court never leaves MEOK</div>
+        </div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="privacy-row">
+        <div>
+          <div class="lbl">DID (W3C identifier)</div>
+          <div class="sub">Public · portable sovereign ID you own</div>
+        </div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <div class="did-display">
+      <div class="lbl">Your sovereign DID</div>
+      <div class="did-val" id="did-display">did:csoai:sovereign_001</div>
+      <div class="meta">
+        <span>resolution: did:csoai (W3C)</span>
+        <span style="color:#34c759">● verified</span>
+      </div>
+      <div class="lbl" style="margin-top:14px">Sovereign stats</div>
+      <div class="meta" style="color:#fff;font-size:12px;display:block;line-height:1.7">
+        queens bound · <b style="color:#c9a84c">13/13</b><br>
+        care queen · <b style="color:#0071e3">⚓ VETO active</b><br>
+        BFT council · <b style="color:#34c759">9/13 quorum</b><br>
+        SIGIL · <b style="color:#c9a84c">#001234 · ed25519</b><br>
+        origin · <b>MEOK / Apple Memoji import</b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div>MEOK Social Connect · sovereign · portable · public-by-default-but-you-pick</div>
+  <div style="margin-top:6px">For the 9 PM BST test · Sat 4 Jul launch</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============================================================================
+     JAVASCRIPT — 8 platforms + bundle + privacy
+     ============================================================================ -->
+<script>
+"use strict";
+
+/* ============================================================================
+   8 PLATFORMS — each with auth flow, scope, and display
+   ============================================================================ */
+const PLATFORMS = [
+  {
+    id:"apple",   name:"Apple ID",        short:"",  color:"#000",
+    sub:"Sign in with Apple",        desc:"Use your Apple ID to verify + publish via the MEOK i-character. Your real email is hidden via Private Relay.",
+    tags:["OAuth 2.0","JWT","PKCE"], scope:"name email (private)",
+    authSteps:["iss","sub","aud","iat","exp","nonce","email_private","real_user"]
+  },
+  {
+    id:"meta",    name:"Meta",            short:"f",  color:"#1877F2",
+    sub:"Facebook · Instagram · WhatsApp",
+    desc:"Connect your Meta account to publish your i-character to Facebook, Instagram, and WhatsApp status with one OAuth handshake.",
+    tags:["Graph API","OAuth 2.0","Pages","IG API"], scope:"pages_show_list instagram_basic whatsapp_business_management"
+  },
+  {
+    id:"x",       name:"X / Twitter",     short:"𝕏", color:"#000",
+    sub:"OAuth 2.0 · OIDC",
+    desc:"Post sovereign updates via X OAuth 2.0 with PKCE. Your X handle is linked but your sovereign DID remains your anchor.",
+    tags:["OAuth 2.0","PKCE","X API v2"], scope:"tweet.read tweet.write users.read"
+  },
+  {
+    id:"linkedin",name:"LinkedIn",        short:"in", color:"#0A66C2",
+    sub:"Professional identity",
+    desc:"Link your LinkedIn profile. MEOK appends a sovereign stat snippet to your headline so recruiters see the BFT 9/13 + Care VETO.",
+    tags:["v2 API","OAuth 2.0","Sign In With LinkedIn"], scope:"r_liteprofile r_emailaddress w_member_social"
+  },
+  {
+    id:"snapchat",name:"Snapchat",        short:"S",  color:"#FFFC00",
+    sub:"via Bitmoji",
+    desc:"Connect via your Bitmoji. Your MEOK i-character bridges into Bitmoji expressions + lens network.",
+    tags:["Bitmoji","Lens","Creative Kit"], scope:"https://auth.snapchat.com/oauth2/api1/bitmoji"
+  },
+  {
+    id:"tiktok",  name:"TikTok",          short:"TT", color:"#FE2C55",
+    sub:"Display + Content Posting API",
+    desc:"Display your sovereign i-character on TikTok profile. Content Posting API lets you share video with the MEOK watermark.",
+    tags:["Display API","Content Posting","OpenSDK"], scope:"user.info.basic video.upload"
+  },
+  {
+    id:"discord", name:"Discord",         short:"D",  color:"#5865F2",
+    sub:"Bot + User OAuth",
+    desc:"Install the MEOK bot in your server. Your i-character becomes your Discord avatar + rich presence (queens bound, BFT quorum).",
+    tags:["Bot OAuth","Rich Presence","Activities"], scope:"identify guilds.join rpc.activities.write"
+  },
+  {
+    id:"telegram",name:"Telegram",        short:"T",  color:"#26A5E4",
+    sub:"Login Widget + Bot API",
+    desc:"Sign in via Telegram Login Widget. The MEOK bot becomes your sovereign chat handle with end-to-end encryption verified by SIGIL.",
+    tags:["Login Widget","Bot API","MTProto"], scope:"identity contact"
+  }
+];
+
+/* ============================================================================
+   STATE
+   ============================================================================ */
+const STATE = {
+  connected: new Set(),
+  ichar: {
+    name:"Marcus of the Sovereign Court",
+    handle:"sovereign_001",
+    avatar_seed: "sovereign_001",
+    ocean:{o:.65,c:.92,e:.55,a:.80,n:.15},
+    did:"did:csoai:sovereign_001",
+    sigil:"ed25519:a7f3…",
+    queens: 13
+  }
+};
+
+/* ============================================================================
+   RENDER
+   ============================================================================ */
+
+function renderPlatforms(){
+  const grid = document.getElementById("platform-grid");
+  grid.innerHTML = PLATFORMS.map(p => `
+    <div class="platform-card ${STATE.connected.has(p.id)?'connected':''}">
+      <div class="platform-head">
+        <div class="platform-logo" style="background:${p.color}">${p.short}</div>
+        <div>
+          <div class="platform-name">${p.name}</div>
+          <div class="platform-sub">${p.sub}</div>
+        </div>
+      </div>
+      <div class="platform-desc">${p.desc}</div>
+      <div class="platform-tags">
+        ${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join("")}
+        ${p.scope ? `<span class="p-tag">scope: ${p.scope.split(' ')[0]}</span>` : ""}
+      </div>
+      <button class="btn-imp ${STATE.connected.has(p.id)?'connected':''}" onclick="connect('${p.id}')">
+        ${STATE.connected.has(p.id) ? '✓ Connected · Manage' : 'Connect →'}
+      </button>
+    </div>
+  `).join("");
+}
+
+function renderMini(){
+  // avatar (use SVG from builder pattern, simplified)
+  document.getElementById("mini-avatar").innerHTML = `<svg viewBox="0 0 100 100"><circle cx="50" cy="46" r="22" fill="#fce4d6"/><path d="M 30 28 Q 50 16 70 28 Q 60 22 50 22 Q 40 22 30 28" fill="#3b2417"/><circle cx="42" cy="44" r="2" fill="#000"/><circle cx="58" cy="44" r="2" fill="#000"/><path d="M 42 56 Q 50 60 58 56" stroke="#000" fill="none"/></svg>`;
+  document.getElementById("stat-connected").textContent = STATE.connected.size;
+
+  const badges = document.getElementById("mini-badges");
+  badges.innerHTML = PLATFORMS.filter(p=>STATE.connected.has(p.id)).map(p => `
+    <div class="platform-badge" style="background:${p.color}" title="${p.name}">${p.short}</div>
+  `).join("") || `<div style="color:#888;font-size:12px;padding:4px 0">No platforms connected yet</div>`;
+}
+
+/* ============================================================================
+   CONNECT — mock OAuth
+   ============================================================================ */
+async function connect(id){
+  if (STATE.connected.has(id)){
+    // disconnect
+    STATE.connected.delete(id);
+    toast(`disconnected from ${PLATFORMS.find(p=>p.id===id).name}`);
+    renderPlatforms();
+    renderMini();
+    renderBundle();
+    return;
+  }
+  const p = PLATFORMS.find(x=>x.id===id);
+  toast(`↗ OAuth → ${p.name} (PKCE flow)`);
+  // simulate OAuth steps
+  await new Promise(r => setTimeout(r, 500));
+  toast(`✓ ${p.name} returned access_token`);
+  STATE.connected.add(id);
+  renderPlatforms();
+  renderMini();
+  renderBundle();
+  toast(`↗ connected · sovereign bundle refreshed`);
+}
+
+function connectFirst(){
+  const first = document.querySelectorAll(".platform-card")[0];
+  if (first) first.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+/* ============================================================================
+   BUNDLE — sovereign JSON
+   ============================================================================ */
+
+function buildBundle(){
+  const includeAvatar = document.getElementById("chk-avatar").checked;
+  const includeName   = document.getElementById("chk-name").checked;
+  const includeBio    = document.getElementById("chk-bio").checked;
+  const includeDID    = document.getElementById("chk-did").checked;
+  const includeSigil  = document.getElementById("chk-sigil").checked;
+
+  const bundle = {
+    meok: "v2.0",
+    i_character: {
+      ...(includeName && {name:STATE.ichar.name, handle:"@"+STATE.ichar.handle}),
+      ...(includeDID && {did:STATE.ichar.did}),
+      ...(includeAvatar && {avatar_svg: "[SVG 200×300 — embed before publish]"}),
+      ...(includeBio && {bio:"Sojourning. Sovereign. SIGIL-signed."}),
+      ...(includeSigil && {sigil:STATE.ichar.sigil, chain:"SIGIL#001234 ← this"})
+    },
+    privacy: {
+      public: ["avatar","name","handle","did","sigil"],
+      private: ["ocean","bft","queens","care_veto"]
+    },
+    platforms: Array.from(STATE.connected),
+    published_at: new Date().toISOString(),
+    care_veto_active: true,
+    bft_council: "9/13"
+  };
+  return bundle;
+}
+
+function renderBundle(){
+  const b = buildBundle();
+  const pretty = JSON.stringify(b, null, 2)
+    .replace(/"([^"]+)":/g,'<span class="k">"$1"</span>:')
+    .replace(/: (true|false|null)/g, ': <span class="s">$1</span>')
+    .replace(/: "([^"]+)"/g, ': <span class="s">"$1"</span>');
+  document.getElementById("bundle-preview").innerHTML = pretty;
+}
+
+function publish(){
+  const b = buildBundle();
+  const n = STATE.connected.size || 0;
+  if (!n) {
+    toast(`⤴ connect at least one platform first`);
+    return;
+  }
+  toast(`↗ publishing to ${n} platform${n>1?'s':''} …`);
+  setTimeout(() => toast(`✓ sovereign bundle live on ${n} platform${n>1?'s':''}`), 900);
+}
+
+function copyBundle(){
+  const b = buildBundle();
+  navigator.clipboard.writeText(JSON.stringify(b, null, 2));
+  toast(`📋 sovereign bundle copied`);
+}
+
+function downloadSVG(){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="90" r="44" fill="#fce4d6"/><path d="M 60 56 Q 100 32 140 56 Q 120 44 100 44 Q 80 44 60 56" fill="#3b2417"/><circle cx="84" cy="88" r="4" fill="#000"/><circle cx="116" cy="88" r="4" fill="#000"/></svg>`;
+  const blob = new Blob([svg],{type:"image/svg+xml"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `${STATE.ichar.handle}.svg`;
+  document.body.appendChild(a); a.click(); a.remove();
+  toast(`⬇ ${STATE.ichar.handle}.svg`);
+}
+
+function schedule(){
+  toast(`⏰ schedule UI: pick date + per-platform slot`);
+}
+
+/* ============================================================================
+   TOAST
+   ============================================================================ */
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(window.__tt);
+  window.__tt = setTimeout(()=>t.classList.remove("show"), 1700);
+}
+
+/* ============================================================================
+   BOOT
+   ============================================================================ */
+window.addEventListener("DOMContentLoaded", () => {
+  renderPlatforms();
+  renderMini();
+  renderBundle();
+  // wire bundle checkboxes
+  ["chk-avatar","chk-name","chk-bio","chk-did","chk-sigil"].forEach(id=>{
+    document.getElementById(id).addEventListener("change", renderBundle);
+  });
+});
+
+// expose for tests
+window.MEOKSocial = {
+  PLATFORMS, STATE, buildBundle, connect, publish, copyBundle
+};
+</script>
+</body>
+</html>

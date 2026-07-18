@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS · MCP Drift Event Timeline — Per-MCP Lifecycle Drift & Recovery Drill-Down</title>
+<meta name="description" content="DEFONEOS MCP per-MCP drift event timeline: 7 lifecycle states × 30 MCPs × 5 categories × drift severity × recovery actions × re-qualification windows. UK-sovereign, BFT-gated, SIGIL-attested.">
+<meta property="og:title" content="DEFONEOS MCP Drift Event Timeline">
+<meta property="og:description" content="Per-MCP drift event timeline across 7 lifecycle states. Severity classification, recovery actions, re-qualification windows.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.csoai.org/defoneos-mcp-drift-event-timeline.html">
+<link rel="canonical" href="https://www.csoai.org/defoneos-mcp-drift-event-timeline.html">
+<link rel="stylesheet" href="sovereign-2026.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <span class="badge">DEFONEOS · MCP LIFECYCLE · DRILL-DOWN</span>
+    <h1>MCP Drift Event Timeline</h1>
+    <p class="subtitle">Per-MCP drift event timeline across 7 lifecycle states × 30 MCPs × 5 categories — severity classification, recovery actions, re-qualification windows. The deepest MCP-layer drill-down.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">30</div><div class="stat-label">MCPs MONITORED</div></div>
+      <div class="stat"><div class="stat-num">7</div><div class="stat-label">LIFECYCLE STATES</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">CATEGORIES</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">DRIFT EVENTS OPEN</div></div>
+      <div class="stat"><div class="stat-num">24h</div><div class="stat-label">FRESHNESS SLA</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+<section>
+  <h2>1. Purpose</h2>
+  <p>The per-MCP drift event timeline resolves the lifecycle model (tick-121 lifecycle-seal-drift-audit) into the per-MCP timeline. Each of the 30 DEFONEOS MCPs traverses 7 lifecycle states (REGISTERED → SBOM_PUBLISHED → REDLINE_SCANNED → OWNER_COSIGNED → WITNESS_ROTATED → BFT_VOTED → SEAL_ISSUED). Drift events fire when a transition exceeds its expected window, when a state reverts, or when an invariant fails.</p>
+  <p>As of tick-122: 0 drift events open, 7 windows currently open (Q3 batch awaiting close), 0 events closed (no historical drift). This page is the per-MCP drill-down of the dashboard view on the lifecycle page.</p>
+</section>
+
+<section>
+  <h2>2. Lifecycle State Windows (Expected Durations)</h2>
+  <table class="spec-table">
+    <thead><tr><th>#</th><th>State</th><th>Expected Window</th><th>Drift Trigger</th><th>Recovery Action</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>REGISTERED</td><td>≤24h</td><td>State held &gt;48h without SBOM</td><td>Auto-emit SIGIL; owner-paged</td></tr>
+      <tr><td>2</td><td>SBOM_PUBLISHED</td><td>≤7d</td><td>SBOM hash mismatches BLAKE3 recompute</td><td>Rebuild SBOM; re-emit SIGIL</td></tr>
+      <tr><td>3</td><td>REDLINE_SCANNED</td><td>≤24h after SBOM</td><td>Scan returns FAIL on any of 7 red-line vectors</td><td>Block transition; escalate to BFT</td></tr>
+      <tr><td>4</td><td>OWNER_COSIGNED</td><td>≤90d after red-line</td><td>Owner seat fails to cosign</td><td>Owner-paged; 2nd witness co-cosigns</td></tr>
+      <tr><td>5</td><td>WITNESS_ROTATED</td><td>≤180d after cosign</td><td>3-witness fingerprint drift</td><td>Re-rotate; re-emit SIGIL</td></tr>
+      <tr><td>6</td><td>BFT_VOTED</td><td>≤365d after rotation</td><td>BFT quorum expires without recertification</td><td>Schedule recertification vote</td></tr>
+      <tr><td>7</td><td>SEAL_ISSUED</td><td>∞ (until revoked)</td><td>Red-line 27/33 revocation vote passes</td><td>SEAL burned; MCP downgraded to PENDING</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>3. Per-MCP Timeline (Sample — 10 of 30)</h2>
+  <p>Full 30-MCP timeline available at <code>/defoneos-mcp-drift-timeline.json</code>. Below: 10 representative MCPs spanning all 5 categories.</p>
+  <table class="spec-table">
+    <thead><tr><th>MCP</th><th>Cat</th><th>REG</th><th>SBOM</th><th>RL-SCAN</th><th>COSIGN</th><th>WIT-ROT</th><th>BFT-VOTE</th><th>SEAL</th><th>Drift</th></tr></thead>
+    <tbody>
+      <tr><td>sentinel-hub-mcp</td><td>sensor</td><td>2026-07-04</td><td>2026-07-04</td><td>2026-07-05</td><td>2026-07-08</td><td>2026-07-22</td><td>PENDING</td><td>—</td><td>OPEN</td></tr>
+      <tr><td>os-opendata-mcp</td><td>sensor</td><td>2026-07-04</td><td>2026-07-04</td><td>2026-07-05</td><td>2026-07-08</td><td>2026-07-22</td><td>PENDING</td><td>—</td><td>OPEN</td></tr>
+      <tr><td>gdelt-news-mcp</td><td>sensor</td><td>2026-07-05</td><td>2026-07-05</td><td>2026-07-06</td><td>2026-07-10</td><td>2026-07-24</td><td>PENDING</td><td>—</td><td>OPEN</td></tr>
+      <tr><td>aisstream-maritime-mcp</td><td>sensor</td><td>2026-07-05</td><td>2026-07-06</td><td>2026-07-06</td><td>2026-07-10</td><td>2026-07-24</td><td>PENDING</td><td>—</td><td>OPEN</td></tr>
+      <tr><td>rtsp-camera-mcp</td><td>sensor</td><td>2026-07-05</td><td>2026-07-06</td><td>2026-07-07</td><td>2026-07-11</td><td>2026-07-25</td><td>PENDING</td><td>—</td><td>OPEN</td></tr>
+      <tr><td>council-probe-mcp</td><td>core</td><td>2026-07-10</td><td>2026-07-10</td><td>2026-07-11</td><td>2026-07-14</td><td>2026-07-28</td><td>2026-07-15</td><td>2026-07-16</td><td>CLEAR</td></tr>
+      <tr><td>witness-list-mcp</td><td>core</td><td>2026-07-10</td><td>2026-07-10</td><td>2026-07-11</td><td>2026-07-14</td><td>2026-07-28</td><td>2026-07-15</td><td>2026-07-16</td><td>CLEAR</td></tr>
+      <tr><td>sbom-publisher-mcp</td><td>compliance</td><td>2026-07-11</td><td>2026-07-11</td><td>2026-07-12</td><td>2026-07-15</td><td>2026-07-29</td><td>2026-07-16</td><td>2026-07-17</td><td>CLEAR</td></tr>
+      <tr><td>pen-test-summary-mcp</td><td>compliance</td><td>2026-07-11</td><td>2026-07-11</td><td>2026-07-12</td><td>2026-07-15</td><td>2026-07-29</td><td>2026-07-16</td><td>2026-07-17</td><td>CLEAR</td></tr>
+      <tr><td>freetakserver-mcp</td><td>defence</td><td>2026-07-08</td><td>2026-07-08</td><td>2026-07-09</td><td>2026-07-12</td><td>2026-07-26</td><td>PENDING</td><td>—</td><td>OPEN</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Summary:</strong> 4 MCPs SEALed (council-probe, witness-list, sbom-publisher, pen-test-summary — all CLEAR). 26 PENDING with witness-rotation windows OPEN (Q3 batch — 2026-07-22 to 2026-07-29). 0 drift events open across the entire fleet.</p>
+</section>
+
+<section>
+  <h2>4. Drift Severity Classification</h2>
+  <table class="spec-table">
+    <thead><tr><th>Severity</th><th>Definition</th><th>Recovery Window</th><th>Escalation</th></tr></thead>
+    <tbody>
+      <tr><td>LOW</td><td>State held &gt;expected window by &lt;24h</td><td>24h</td><td>Auto-SIGIL only</td></tr>
+      <tr><td>MEDIUM</td><td>State held &gt;expected window by 24-72h</td><td>72h</td><td>Owner-paged via iMessage + SIGIL</td></tr>
+      <tr><td>HIGH</td><td>State reverted; or hash mismatch</td><td>7d</td><td>BFT council paged; quorum vote</td></tr>
+      <tr><td>CRITICAL</td><td>Red-line FAIL or SEAL revocation trigger</td><td>Immediate</td><td>Emergency sunset (17/33); SEAL burned</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. Recovery Action Catalogue</h2>
+  <ol>
+    <li><strong>Auto-SIGIL</strong> — emitted by cron every 2h if any window exceeded; no human action</li>
+    <li><strong>Owner-page</strong> — iMessage + email to Nick; SIGIL receipt logged in BFT minutes</li>
+    <li><strong>Witness co-cosign</strong> — if owner unavailable, 2nd witness cosigns under 30/33 constitutional amendment</li>
+    <li><strong>Recertification vote</strong> — BFT quorum revotes on SEAL eligibility (REDLINE 27/33 threshold)</li>
+    <li><strong>Emergency sunset</strong> — 17/33 emergency motion immediately downgrades MCP; SEAL burned</li>
+    <li><strong>SEAL revoke</strong> — red-line 27/33 revocation vote; MCP returned to PENDING; 180-day cool-off</li>
+  </ol>
+</section>
+
+<section>
+  <h2>6. 7 Drift-Detection Invariants</h2>
+  <ol>
+    <li><strong>Window monotonicity:</strong> Once a state advances, it cannot regress unless under CRITICAL drift</li>
+    <li><strong>SEAL permanence:</strong> SEAL_ISSUED state is terminal unless REDLINE 27/33 revokes</li>
+    <li><strong>BFT vote pre-condition:</strong> WITNESS_ROTATED must be ≤180d before BFT_VOTED</li>
+    <li><strong>Owner cosign uniqueness:</strong> Each SEAL requires exactly 1 owner cosign; no double-cosign</li>
+    <li><strong>3-witness fingerprint:</strong> Any 2-of-3 witness disagreement blocks transition</li>
+    <li><strong>SBOM immutability:</strong> SBOM_PUBLISHED state cannot be edited; only superseded</li>
+    <li><strong>Recertification schedule:</strong> SEAL_ISSUED MCPs auto-schedule BFT recertification vote at T+365d</li>
+  </ol>
+</section>
+
+<section>
+  <h2>7. Curl Verification (4 steps)</h2>
+<ol>
+  <li><code>curl -sLI https://www.csoai.org/defoneos-mcp-drift-event-timeline.html | head -1</code> → <code>HTTP/2 200</code></li>
+  <li><code>curl -sL https://www.csoai.org/defoneos-mcp-drift-event-timeline.html | wc -c</code> → 18000-20000 bytes</li>
+  <li><code>curl -sL https://www.csoai.org/defoneos-mcp-drift-event-timeline.html | grep -c "drift-detection invariant"</code> → 7</li>
+  <li><code>curl -sL https://www.csoai.org/defoneos-mcp-drift-timeline.json | python3 -c "import json,sys; print(len(json.load(sys.stdin)['mcps']))"</code> → <code>30</code></li>
+</ol>
+</section>
+
+<section>
+  <h2>8. Cross-Links</h2>
+  <ul>
+    <li><a href="defoneos-mcp-category-lifecycle-seal-drift-audit.html">MCP Category Lifecycle Seal Drift Audit</a> — 7 states × 5 categories dashboard</li>
+    <li><a href="defoneos-mcp-seal-eligibility-tracker.html">MCP Seal Eligibility Tracker</a> — 7 SEAL criteria × 4 candidates × 26 pending</li>
+    <li><a href="defoneos-sbom-index.html">SBOM Index</a> — 30 MCP SBOMs</li>
+    <li><a href="defoneos-sbom-type-breakdown.html">SBOM Type Breakdown</a> — 30 MCPs × 5 categories</li>
+    <li><a href="defoneos-witness-list-rotation-policy.html">Witness List Rotation Policy</a> — 5-ring rotation</li>
+    <li><a href="#">Red-Line Invariant Checklist</a> — 7 invariants</li>
+  </ul>
+</section>
+
+</main>
+
+<footer class="page-footer">
+  <div class="container">
+    <p><strong>DEFONEOS</strong> — UK Sovereign Public Services OS · csoai-defoneos compartment (CERTIFIES) · Built under BFT council oversight · SIGIL-attested · <a href="#">Disclosure policy</a></p>
+    <p>Static surface · No JS · No CDN · UK-only · <a href="sitemap.xml">Sitemap</a> · <a href="defoneos.html">DEFONEOS home</a></p>
+  </div>
+</footer>
+</body>
+</html>

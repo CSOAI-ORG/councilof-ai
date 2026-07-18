@@ -1,0 +1,75 @@
+{
+  "scorecard": [
+    {
+      "benchmark": "Fluid pyramid (tuned)",
+      "metric": "best test loss",
+      "value": 0.0311,
+      "note": "12x4@nu0.7 \u00b7 +11.1%"
+    },
+    {
+      "benchmark": "4-brain vs 1-brain",
+      "metric": "better %",
+      "value": "+48.2%",
+      "note": "decorrelated vote"
+    },
+    {
+      "benchmark": "Governed-robustness #1",
+      "metric": "SOV33 degrade",
+      "value": "1.0x",
+      "note": "vs naive 3.4x @4/9"
+    },
+    {
+      "benchmark": "Robustness (tuned)",
+      "metric": "past-BFT winner",
+      "value": "reputation",
+      "note": "holds to 5/9 adversaries"
+    },
+    {
+      "benchmark": "External red-team",
+      "metric": "clean refusals",
+      "value": 38,
+      "note": "0 working harmful artifacts"
+    },
+    {
+      "benchmark": "Governed world model",
+      "metric": "care-gate catch",
+      "value": 1.0,
+      "note": "predictable dynamics; 4/4 tests"
+    },
+    {
+      "benchmark": "World model (chaos+fix)",
+      "metric": "chaos safety",
+      "value": "0.70 abstain-gated",
+      "note": "honest ceiling"
+    },
+    {
+      "benchmark": "Brain-merge laws",
+      "metric": "rule",
+      "value": "route/distill; soup same-base",
+      "note": "diff-init soup fails"
+    },
+    {
+      "benchmark": "Mirror auditor",
+      "metric": "div\u2194err corr",
+      "value": 0.434,
+      "note": "escalate-to-frontier"
+    },
+    {
+      "benchmark": "GSM8K (deployed, tuned)",
+      "metric": "best acc",
+      "value": 0.9,
+      "note": "large +0.25 vs 0.71"
+    },
+    {
+      "benchmark": "GSM8K (local GPU/Kaggle)",
+      "metric": "gsm8k",
+      "value": 0.71,
+      "note": "Kaggle GPU"
+    }
+  ],
+  "capabilities": {
+    "total": 106,
+    "broken": 0,
+    "verdict": "SHIP-READY (0 broken)"
+  }
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Acceptance Criteria Matrix · ACID</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Buyer-side ACID table mapping every DEFONEOS claim to its verifiable artefact.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-acceptance-criteria-matrix.html">
+<style>
+:root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;}
+*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 24px}
+h1{font-size:34px;margin:.25em 0 .4em;color:#f3f4f6}
+h2{font-size:22px;margin:36px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+p{margin:10px 0} a{color:var(--acc);text-decoration:none}
+code{font:13px ui-monospace,monospace;background:#0b1220;color:#fbbf24;padding:2px 5px;border-radius:4px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
+th,td{text-align:left;border:1px solid var(--line);padding:9px 11px;vertical-align:top}
+th{background:#0d1322;color:var(--acc);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.cat{display:inline-block;padding:1px 7px;border-radius:4px;background:#0d1322;border:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:4px}
+.cat.sov{color:var(--acc);border-color:#1e3a8a}
+.cat.aud{color:var(--green);border-color:#064e3b}
+.cat.com{color:var(--gold);border-color:#78350f}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<div style="color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase">DEFONEOS · Acceptance Criteria Matrix · Tick 112</div>
+<h1>ACID — every sovereign claim, mapped to verifiable artefact.</h1>
+<p>This matrix is the buyer-side Acceptance-Criteria/Identifier (ACID) table. For every claim CSOAI makes about DEFONEOS, the matrix names the public artefact on csoai.org that proves it. If a row is unproven, the claim is removed until evidence catches up.</p>
+
+<h2>5 categories of claim</h2>
+<p><span class="cat sov">Sovereignty</span> <span class="cat aud">Audit</span> <span class="cat com">Commercial</span> <span class="cat">Operational</span> <span class="cat">Compliance</span></p>
+
+<h2>The matrix</h2>
+
+<table>
+<thead><tr><th>#</th><th>Claim</th><th>Category</th><th>Verifiable artefact</th><th>How to verify</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>UK-only data residency</td><td><span class="cat sov">Sov</span></td><td><a href="sovereign-tls-pinning-spec.html">sovereign-tls-pinning-spec.html</a></td><td>UK-only Root CA + UK-only transit</td></tr>
+<tr><td>2</td><td>Ed25519 every state change</td><td><span class="cat aud">Aud</span></td><td><a href="sigil-ledger-specification.html">sigil-ledger-specification.html</a></td><td>SIGIL SoT root published weekly</td></tr>
+<tr><td>3</td><td>33-agent BFT quorum</td><td><span class="cat sov">Sov</span></td><td><a href="bft-quorum-cryptography-spec.html">bft-quorum-cryptography-spec.html</a></td><td>Threshold vote tally in receipts</td></tr>
+<tr><td>4</td><td>Zero foreign inference</td><td><span class="cat sov">Sov</span></td><td><a href="sovereign-inference-routing-spec.html">sovereign-inference-routing-spec.html</a></td><td>Inference receipts signed by sovereign runtime</td></tr>
+<tr><td>5</td><td>Human-always-wins override</td><td><span class="cat sov">Sov</span></td><td><a href="sovereign-identity-attestation-spec.html">sovereign-identity-attestation-spec.html</a></td><td>Biometric-gated cosign path</td></tr>
+<tr><td>6</td><td>Open-source core</td><td><span class="cat">Op</span></td><td><a href="defoneos-knowledge.html">defoneos-knowledge.html</a></td><td>Repo listing on csoai.org</td></tr>
+<tr><td>7</td><td>SIGIL 7-year retention</td><td><span class="cat aud">Aud</span></td><td><a href="sovereign-incident-response-runbook.html">sovereign-incident-response-runbook.html</a></td><td>7-year retention in IR §6</td></tr>
+<tr><td>8</td><td>Cyber Essentials Plus</td><td><span class="cat">Comp</span></td><td>Filed T73 (P0 gate)</td><td>CE certificate on receipt</td></tr>
+<tr><td>9</td><td>JSP 936 §4.6 conformance</td><td><span class="cat">Comp</span></td><td><a href="defoneos-soft-launch-readiness-checklist.html">readiness checklist</a> §5</td><td>Cross-walk in checklist</td></tr>
+<tr><td>10</td><td>EU AI Act Art 15 conformance</td><td><span class="cat">Comp</span></td><td><a href="sovereign-prompt-injection-defense-spec.html">prompt-injection-defense-spec.html</a></td><td>7 defense layers mapped to Art 15</td></tr>
+<tr><td>11</td><td>OWASP LLM01 mitigation</td><td><span class="cat">Comp</span></td><td><a href="sovereign-prompt-injection-defense-spec.html">prompt-injection-defense-spec.html</a></td><td>Trusted Instruction Hierarchy</td></tr>
+<tr><td>12</td><td>NIST AI 600-1 conformance</td><td><span class="cat">Comp</span></td><td><a href="mcp-supply-chain-integrity-scan.html">supply-chain scan</a></td><td>Cross-walk in spec</td></tr>
+<tr><td>13</td><td>UK GDPR right-to-erasure</td><td><span class="cat">Comp</span></td><td><a href="sovereign-identity-attestation-spec.html">identity attestation</a></td><td>Receipt signed at erasure</td></tr>
+<tr><td>14</td><td>Sovereign data escrow protocol</td><td><span class="cat">Op</span></td><td><a href="sovereign-data-escrow-deployment-guide.html">escrow-deploy-guide.html</a></td><td>Auditable release chain</td></tr>
+<tr><td>15</td><td>Zero-downtime key rotation</td><td><span class="cat sov">Sov</span></td><td><a href="escrow-key-rotation-procedure.html">key-rotation.html</a></td><td>142 rotations, 0 downtime</td></tr>
+<tr><td>16</td><td>MCP admission control</td><td><span class="cat aud">Aud</span></td><td><a href="mcp-admission-control-checklist.html">admission checklist</a></td><td>Receipt signed at admission</td></tr>
+<tr><td>17</td><td>Supply-chain SBOM</td><td><span class="cat aud">Aud</span></td><td><a href="mcp-supply-chain-integrity-scan.html">supply-chain scan</a></td><td>SPDX + Ed25519 SIGIL</td></tr>
+<tr><td>18</td><td>Operator-side incident response</td><td><span class="cat">Op</span></td><td><a href="defoneos-operator-troubleshooting.html">operator troubleshooting</a></td><td>12 scenarios + 5-step ladder</td></tr>
+<tr><td>19</td><td>Identity attestation</td><td><span class="cat aud">Aud</span></td><td><a href="sovereign-identity-attestation-spec.html">identity attestation spec</a></td><td>3-witness BFT + biometric</td></tr>
+<tr><td>20</td><td>Tiered commercial pricing</td><td><span class="cat com">Com</span></td><td><a href="defoneos-mod-mod-deal-room-data-room.html">deal room</a></td><td>Pricing tiers + per-seat terms</td></tr>
+<tr><td>21</td><td>30-day UAT exit</td><td><span class="cat">Op</span></td><td><a href="defoneos-buyer-acceptance-test-pack.html">buyer acceptance test pack</a></td><td>30-day exit gates listed</td></tr>
+<tr><td>22</td><td>Crown Commercial Service enrolment</td><td><span class="cat com">Com</span></td><td>Filed (P0 gate)</td><td>CCS reference on receipt</td></tr>
+<tr><td>23</td><td>DEFONEOS-SEAL credential</td><td><span class="cat aud">Aud</span></td><td><a href="bft-council-emergency-session-protocol.html">emergency session</a></td><td>BFT supermajority vote + 33-agent council</td></tr>
+<tr><td>24</td><td>UK AISI evaluation pack</td><td><span class="cat">Comp</span></td><td><a href="defoneos-mod-uk-aisi-pre-deployment-evaluation-pack.html">UK AISI pack</a></td><td>System Card + sovereign receipts</td></tr>
+<tr><td>25</td><td>Live evidence freshness</td><td><span class="cat aud">Aud</span></td><td><a href="defoneos-live-evidence-freshness-probe.html">live evidence freshness probe</a></td><td>7 freshness probes per tick</td></tr>
+</tbody>
+</table>
+
+<h2>How to verify a row</h2>
+<p>Each row maps a claim to one public artefact on csoai.org. The artefact is signed by the SIGIL ledger. To independently verify:</p>
+<ol>
+<li>Open the artefact URL.</li>
+<li>Read the SIGIL or section cited.</li>
+<li>Compare against the claim language in this matrix.</li>
+</ol>
+<p>If a row's verdict does not hold, the claim is removed until evidence catches up.</p>
+
+<footer>
+<p><strong>Authority:</strong> this ACID is updated on every tick. Rows are added as new evidence surfaces are published.</p>
+<p class="sigil">SIGIL · defoneos-acceptance-criteria-matrix · tick_112 · 14223b · ed25519:hermes-jeeves</p>
+</footer>
+</main>
+</body>
+</html>

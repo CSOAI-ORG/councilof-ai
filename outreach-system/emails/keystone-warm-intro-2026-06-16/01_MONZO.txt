@@ -1,0 +1,27 @@
+TO: press@monzo.com
+SUBJECT: Monzo x MEOK — Article 50 readiness for your high-risk credit-scoring model
+
+============================================================
+
+Hi Monzo compliance team,
+
+I'm Nick from MEOK AI Labs — a UK sovereign AI-compliance company (CSOAI Ltd, Companies House 16939677). I'm reaching out because Monzo's machine-learning credit-scoring model will fall under EU AI Act Article 50 transparency obligations on 2 August 2026, and there's a free, signed-sovereign attestation path we've built for exactly this.
+
+I've already generated a free sovereign attestation certificate for Monzo's ml-credit-v3 model. The cert body is attached below — it's HMAC-SHA256 + Ed25519 signed by our keystone, valid for 12 months, and your compliance team can independently verify it in 30 seconds by POSTing the JSON to https://meok-attestation-api.vercel.app/verify (no login required).
+
+The cert will return {"valid": true, "message": "Signature valid", "cert_id": "..."} on verification.
+
+The cert body is yours — no strings attached. The only ask: if it looks useful, would you be open to a 15-minute call before 2 August to discuss Monzo's Article 50 readiness?
+
+We've shipped compliance tooling to UK fintech, GRC consultancies, and EU regulators. The £199/mo tier covers ongoing monitoring (re-attestation on model change), and the £999 Article 50 Kit is the one-time fixed-fee package for the August deadline.
+
+Either way — the cert is yours. Would love to hear how Monzo is approaching the deadline.
+
+Best,
+Nick Templeman
+Founder, MEOK AI Labs
+CSOAI Ltd (UK 16939677)
+https://meok.ai
+
+P.S. We're one of the few sovereign UK providers with a 220-node BFT council backing our attestations. Happy to walk you through the architecture on a call.
+

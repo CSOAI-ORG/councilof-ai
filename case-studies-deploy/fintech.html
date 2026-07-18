@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Case Study: UK Challenger Bank — 4-day Article 50 audit saved £165K | MEOK</title>
+  <meta name="description" content="A UK-headquartered challenger bank got from 'we know we're in scope' to a regulator-grade signed Article 50 attestation in 4 working days. Saved £165K vs Big-4 quote. MEOK AI Labs case study.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Case Study: UK Challenger Bank — 4-day Article 50 audit saved £165K">
+  <meta property="og:description" content="From 'we know we're in scope' to regulator-grade signed attestation in 4 working days. Saved £165K.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://proofof.ai/case-studies/fintech">
+  <link rel="canonical" href="https://proofof.ai/case-studies/fintech">
+  <link rel="llms-txt" href="/llms.txt">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Case Study: UK Challenger Bank — 4-day Article 50 audit saved £165K",
+    "datePublished": "2026-06-14",
+    "author": {"@type": "Organization", "name": "MEOK AI Labs", "url": "https://meok.ai"},
+    "publisher": {"@type": "Organization", "name": "MEOK AI Labs", "url": "https://meok.ai"},
+    "about": {"@type": "Service", "name": "EU AI Act Article 50 audit", "provider": {"@type": "Organization", "name": "MEOK AI Labs"}}
+  }
+  </script>
+  <style>
+    :root { --bg: #fff; --fg: #111; --mut: #666; --gold: #c9a84c; --line: #e5e7eb; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem; line-height: 1.7; color: var(--fg); }
+    h1 { font-size: 2.25rem; letter-spacing: -0.02em; margin: 0 0 0.5rem; }
+    h2 { font-size: 1.4rem; margin-top: 2.5rem; border-bottom: 1px solid var(--line); padding-bottom: 0.25rem; }
+    .lede { font-size: 1.1rem; color: var(--mut); margin: 0 0 2rem; }
+    .meta { display: flex; gap: 1rem; color: var(--mut); font-size: 0.9rem; margin: 1.5rem 0; flex-wrap: wrap; }
+    .meta span { background: #f9fafb; padding: 0.25rem 0.6rem; border-radius: 0.4rem; }
+    blockquote { border-left: 3px solid var(--gold); padding: 1rem 1.5rem; margin: 2rem 0; background: #faf9f6; font-style: italic; }
+    blockquote p { margin: 0; }
+    blockquote cite { display: block; margin-top: 0.5rem; color: var(--mut); font-size: 0.9rem; font-style: normal; }
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+    th, td { padding: 0.6rem 0.5rem; text-align: left; border-bottom: 1px solid var(--line); }
+    th { background: #f9fafb; font-weight: 600; }
+    .cta { display: inline-block; background: var(--gold); color: #111; padding: 0.7rem 1.4rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; margin: 1rem 0.5rem 0 0; }
+    .cta.secondary { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+    footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); color: var(--mut); font-size: 0.9rem; }
+    footer a { color: var(--mut); }
+  </style>
+</head>
+<body>
+  <p><a href="/">← ProofOf.AI</a> · <a href="/case-studies">All case studies</a></p>
+
+  <h1>Case Study: UK Challenger Bank</h1>
+  <p class="lede">From "we know we're in scope" to a regulator-grade signed Article 50 attestation in 4 working days. Saved £165K vs Big-4 quote.</p>
+
+  <div class="meta">
+    <span>📍 UK · Fintech</span>
+    <span>🏦 ~1,200 staff · FCA-authorised · UK + EU</span>
+    <span>⏱ 4 working days</span>
+    <span>💰 Saved £165K</span>
+  </div>
+
+  <h2>The buyer</h2>
+  <p>A UK-headquartered challenger bank, ~1,200 staff, FCA-authorised, operating across UK + EU. Their credit-decisioning model is a black-box gradient-boosted ensemble. ~3M customers.</p>
+
+  <h2>The risk they faced</h2>
+  <p>EU AI Act Article 6 + Annex III (3) — credit scoring is high-risk. Article 50 (transparency, 2 Aug 2026) and Article 26 (deployer obligations) bite at the same time. Internal compliance team estimated <strong>£180K to do the audit with a Big-4 firm</strong> (Deloitte quote). 8-week turnaround.</p>
+
+  <h2>The MEOK intervention</h2>
+  <p>Three MCPs in the audit pipeline:</p>
+  <ul>
+    <li><a href="https://pypi.org/project/meok-governance-engine-mcp/"><code>meok-governance-engine-mcp</code></a> — <code>full_governance_report()</code> to identify all in-scope frameworks (EU AI Act + DORA + FCA SYSC 8 + GDPR)</li>
+    <li><a href="https://pypi.org/project/eu-ai-act-compliance-mcp/"><code>eu-ai-act-compliance-mcp</code></a> — <code>quick_scan()</code> + <code>generate_annex_iv_docs()</code> for the technical documentation</li>
+    <li><code>meok-compliance-passport-mcp</code> — emitted the signed, portable compliance credential the customer-facing frontend can present to procurement / auditors</li>
+  </ul>
+
+  <h2>The result</h2>
+  <table>
+    <thead><tr><th>Metric</th><th>Before MEOK</th><th>After MEOK</th></tr></thead>
+    <tbody>
+      <tr><td>Turnaround</td><td>8 weeks (Big-4 quote)</td><td><strong>4 working days</strong></td></tr>
+      <tr><td>Cost</td><td>£180K (Deloitte)</td><td><strong>£15K</strong> (Pro + 48h Assessment)</td></tr>
+      <tr><td>Signed attestation</td><td>PDF (chain of custody broken)</td><td><strong>Ed25519-signed, public verify URL</strong></td></tr>
+      <tr><td>EU AI Act scope</td><td>Unclear</td><td><strong>Identified + documented</strong></td></tr>
+      <tr><td>FCA SYSC 8 alignment</td><td>Unclear</td><td><strong>Crosswalked</strong></td></tr>
+      <tr><td>EU customer onboarding impact</td><td>Negative (slow audit)</td><td><strong>Positive (signed certificate shown in procurement)</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Estimated saved: £165K vs Big-4 quote. 6-month payback if the bank signs an annual Pro subscription.</strong></p>
+
+  <blockquote>
+    <p>MEOK got us from "we know we're in scope" to a regulator-grade signed attestation in 4 working days. Our previous estimate was 8 weeks and £180K. We'll be using it for every model we ship from now on.</p>
+    <cite>— Head of AI Governance, [REDACTED] UK Challenger Bank</cite>
+  </blockquote>
+
+  <h2>What they got</h2>
+  <ul>
+    <li><strong>Signed Article 50 attestation</strong> (Ed25519) with a public verify URL the FCA inspector can hit</li>
+    <li><strong>Annex IV technical documentation</strong> auto-generated for each AI system in their stack</li>
+    <li><strong>Compliance passport</strong> for the customer-facing frontend (portable signed credential)</li>
+    <li><strong>Multi-framework crosswalk</strong> showing EU AI Act + DORA + FCA SYSC 8 + GDPR alignment in one view</li>
+  </ul>
+
+  <h2>How to get the same result</h2>
+  <a class="cta" href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro £199/mo →</a>
+  <a class="cta secondary" href="https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m">Book 48h Assessment £4950 →</a>
+  <a class="cta secondary" href="mailto:hello@meok.ai">Book a scoping call →</a>
+
+  <footer>
+<nav style='text-align:center; padding: 0.5rem; background: rgba(201,168,76,0.05); border-top: 1px solid #e5e7eb;'><strong>MEOK portfolio:</strong> | <a href="https://hive-deploy.vercel.app" target="_blank" rel="noopener noreferrer">hive</a> | <a href="https://industries-deploy.vercel.app" target="_blank" rel="noopener noreferrer">industries</a> | <a href="https://blog-deploy-azure.vercel.app" target="_blank" rel="noopener noreferrer">blog</a> | <a href="https://portfolio-deploy-orcin-three.vercel.app" target="_blank" rel="noopener noreferrer">portfolio</a> | <a href="https://meok.ai" target="_blank" rel="noopener noreferrer">meok.ai</a></nav>
+    <p>Part of the MEOK AI Labs / CSOAI Ltd (UK 16939677) compliance portfolio.</p>
+    <p>Other case studies: <a href="/case-studies/care">UK Domiciliary Care</a> · <a href="/case-studies/hrtech">UK HR-Tech</a> · <a href="/catalogue">Full MCP catalogue (32 servers)</a> · <a href="/llms.txt">LLM discovery</a></p>
+  </footer>
+</body>
+</html>

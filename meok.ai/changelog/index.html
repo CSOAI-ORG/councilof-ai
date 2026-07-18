@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Changelog — MEOK AI Labs</title>
+<meta name="description" content="Full MEOK changelog. Daily ship logs, weekly summaries, monthly releases.">
+<link rel="canonical" href="https://meok.ai/changelog/">
+<style>
+body{font:16px/1.6 system-ui,sans-serif;background:#0a0a14;color:#e8e8f0;margin:0;padding:0}
+.container{max-width:920px;margin:0 auto;padding:48px 32px}
+h1{font-size:42px;margin:0 0 16px;background:linear-gradient(135deg,#5b21b6,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{margin-top:32px;margin-bottom:12px;color:#7c3aed;border-bottom:1px solid #1a1a2e;padding-bottom:4px}
+h3{margin-top:20px;margin-bottom:8px;color:#22c55e}
+ul{padding-left:24px}
+li{margin-bottom:6px}
+.stat{display:inline-block;background:#13132a;border:1px solid #1a1a2e;border-radius:4px;padding:4px 10px;margin:0 4px;font-family:monospace;font-size:13px}
+a{color:#7c3aed;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Changelog</h1>
+<p>Solo founder (Nick Templeman, Yorkshire UK) shipping daily. All packages MIT-licensed.</p>
+
+<h2>2026-06-14 — morning, full paywall stack + 4 new Apify actors</h2>
+<ul>
+<li>🆕 <strong>Pricing</strong>: <a href="/pricing">meok.ai/pricing</a> — Free / Teams $99/mo / Enterprise. Live calculator, volume comparison.</li>
+<li>🆕 <strong>Enterprise</strong>: <a href="/enterprise">meok.ai/enterprise</a> — Yorkshire Building Society case study, on-prem docker.</li>
+<li>🆕 <strong>Verify Dashboard</strong>: <a href="/verify-dashboard">meok.ai/verify-dashboard</a> — Self-service quota + get API key.</li>
+<li>🆕 <strong>Verify API reference</strong>: <a href="/verify-api">meok.ai/verify-api</a> — POST spec, Python + Node.js examples.</li>
+<li>🆕 <strong>Partner / Reseller</strong>: 20% / 30% lifetime commission tiers.</li>
+<li>🆕 <strong>Sitemap visual</strong>: <a href="/sitemap-visual">meok.ai/sitemap-visual</a> — all 90+ pages mapped.</li>
+<li>🆕 <strong>Security</strong>: <a href="/security">meok.ai/security</a> + <a href="/.well-known/security.txt">security.txt</a></li>
+<li>✅ Apify: <span class="stat">20/20</span> actors deployed (added mdr-medical-device, cqc-compliance, mitre-attack, meok-council).</li>
+<li>✅ E2E audit: 337 packages total, 299 in both PyPI+registry (phantom-correct).</li>
+</ul>
+
+<h2>2026-06-13 — 14-hour sprint, 299 packages to MCP registry</h2>
+
+<h3>04:00–06:00 BST — JWT sprint (5-min TTL × 13 device-flow clicks)</h3>
+<ul>
+<li>✅ 299/338 CSOAI-ORG packages → official MCP registry</li>
+<li>✅ Fixed 179 <code>server.json</code> <code>repository</code> fields</li>
+<li>✅ Fixed 156 READMEs (<code>mcp-name</code> needs <code>io.github.</code> prefix)</li>
+<li>✅ Fixed 12 <code>server.json</code> version mismatches with PyPI latest</li>
+</ul>
+
+<h3>06:00–08:00 BST — wire, ship, audit</h3>
+<ul>
+<li>✅ 341/341 <code>server.py</code> files wired with <code>_server_meter_check</code></li>
+<li>✅ Phantom-correction: <code>/v0/servers?search=</code> returns 20 versions per name. Switched to <code>/v0.1/servers</code> full list.</li>
+<li>✅ PyPI: 336/336 packages republished with correct mcp-name</li>
+</ul>
+
+<h3>08:00–11:00 BST — Apify + verticals + sectors</h3>
+<ul>
+<li>✅ 14/14 Apify Actors deployed (knowing_yucca/, streamable-http MCP transport)</li>
+<li>✅ 43+ dist landing pages + EU AI Act Article 50 cliff with live 60-day countdown</li>
+<li>✅ 17 sector landing pages</li>
+<li>✅ Compliance whitepaper: <code>compliance-whitepaper.md</code> + HTML + <code>compliance-whitepaper.pdf</code> (138KB)</li>
+</ul>
+
+<h3>11:00–16:30 BST — round 2 (no auth, all offline EAT)</h3>
+<ul>
+<li>✅ 8 more verticals (risk-classification, fria, rms, ifu, ai-bom, audit-logging, open-source, compliance-as-code)</li>
+<li>✅ JSON-LD <code>schema.org/SoftwareApplication</code> on 50 dist pages</li>
+<li>✅ 5 OpenSSF Best Practices submission texts</li>
+<li>✅ 1 Anthropic Cookbook PR draft</li>
+<li>✅ 20 Homebrew formulas</li>
+<li>✅ proofof.ai/ + csoai.org/ landing pages</li>
+<li>✅ Renamed <code>credential-manager-mcp</code> → <code>meok-credential-manager-mcp</code> (mclamee@ squat)</li>
+<li>✅ Renamed <code>meok-nis2-nl-register-mcp</code> → <code>meok-nis2-de-register-mcp</code></li>
+<li>✅ Archived 2 empty dirs</li>
+</ul>
+
+<h2>Pre-2026-06-13</h2>
+<p>See <a href="https://github.com/CSOAI-ORG">github.com/CSOAI-ORG</a> for git history. The 2026-06-13 sprint was the first day MEOK had 100+ packages in production; before that, the fleet was building up gradually since 2025-11.</p>
+
+</div>
+</body>
+</html>

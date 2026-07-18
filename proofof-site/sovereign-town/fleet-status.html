@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Town Fleet Status | ProofOf.ai</title>
+<meta property="og:title" content="Fleet Status — Sovereign Town">
+<meta property="og:description" content="Live sovereign substrate. Ed25519-signed every output. Verifiable at proofof.ai.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://proofof.ai/sovereign-town/town3d_demo.gif">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Public, static mirror of the Sovereign Town fleet status. The full interactive dashboard runs locally on http://127.0.0.1:3940/dashboard.">
+<link rel="canonical" href="https://proofof.ai/sovereign-town/fleet-status">
+<style>
+  :root { --brand:#D4A843; --brand-dark:#B88D2E; --ink:#0D0B21; --muted:#8B879D; --bg:#0D0B21; --card:rgba(255,255,255,0.05); --border:rgba(255,255,255,0.1); --ok:#10b981; --bad:#ef4444; --info:#6366f1; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,sans-serif;color:#E8E4F0;line-height:1.6;background:var(--bg);font-size:16px}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem}
+  header{border-bottom:1px solid var(--border);padding:1rem 0;position:sticky;top:0;background:rgba(13,11,33,0.96);backdrop-filter:blur(10px);z-index:100}
+  header .wrap{display:flex;justify-content:space-between;align-items:center}
+  .logo{font-weight:800;font-size:1.25rem;color:var(--brand);text-decoration:none}
+  header nav{display:flex;gap:1.5rem;font-size:.95rem;align-items:center}
+  header nav a{color:rgba(255,255,255,0.8);text-decoration:none}
+  header nav a:hover{color:var(--brand)}
+  .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:all .15s;background:none;font-family:inherit;color:#fff}
+  .btn.primary{background:var(--brand);color:var(--ink)}
+  .btn.secondary{background:rgba(255,255,255,0.08);border-color:var(--border);color:#fff}
+  .hero{padding:3rem 0 2rem;text-align:center;background:radial-gradient(circle at 30% 20%, rgba(212,168,67,0.12) 0%, transparent 40%)}
+  .hero h1{font-size:clamp(1.8rem,5vw,2.6rem);margin:0 0 .75rem;font-weight:800;background:linear-gradient(135deg,var(--brand) 0%,#fff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p.sub{font-size:1.05rem;color:var(--muted);max-width:700px;margin:0 auto 1.5rem}
+  .notice{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:12px;padding:1rem 1.25rem;margin:0 auto 2rem;max-width:800px;text-align:left}
+  .notice code{background:rgba(255,255,255,0.08);padding:.15rem .35rem;border-radius:4px;font-size:.85rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:2rem 0}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+  .stat-card .num{font-size:2rem;font-weight:800;color:var(--brand);display:block}
+  .stat-card .label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+  section{padding:2rem 0;border-top:1px solid var(--border)}
+  h2{font-size:1.5rem;margin:0 0 1rem}
+  p.lead{color:var(--muted);margin:0 0 1rem}
+  .partition{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem}
+  .panel h3{margin:0 0 .75rem;font-size:1.1rem;color:#fff}
+  .panel.offline{opacity:.7;border-color:rgba(239,68,68,0.3)}
+  .stat-row{display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.9rem}
+  .stat-row:last-child{border-bottom:none}
+  .stat-row span:first-child{color:var(--muted)}
+  .stat-row span:last-child{font-weight:600;color:#fff;font-variant-numeric:tabular-nums}
+  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:.4rem;box-shadow:0 0 8px var(--ok)}
+  .status-dot.warn{background:#f59e0b;box-shadow:0 0 8px #f59e0b}
+  footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;color:var(--muted);font-size:.9rem}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+  *:focus-visible { outline: 2px solid var(--accent, #D4A843); outline-offset: 2px; }
+  .skip-link { position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+  .skip-link:focus { position: static; width: auto; height: auto; padding: .5rem 1rem; background: var(--accent, #D4A843); color: #000; font-weight: 600; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="/">ProofOf<span style="color:#fff">.ai</span></a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/sovereign-town">Sovereign Town</a>
+      <a href="/passport">Verify</a>
+      <a class="btn secondary" href="/dashboard">Local dashboard</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Fleet Status</h1>
+    <p class="sub">Public, static mirror of the Sovereign Town governed-vs-ungoverned fleet. Updated every 10 minutes by the Mac and VM status runners.</p>
+    <div class="notice">
+      <strong>Decision:</strong> the interactive <code>/dashboard</code> (WebSocket ledger feed, 3D town, verifier) remains local-only on <code>http://127.0.0.1:3940</code>. This page is the public-safe, static read-out. To run your own local dashboard, see the <a href="https://github.com/CSOAI-ORG/clawd-workspace/tree/main/clawd/sovereign-town" target="_blank" style="color:var(--brand)">Sovereign Town README</a>.
+    </div>
+    <div class="stats">
+      <div class="stat-card"><span class="num" id="s-hives">—</span><span class="label">Hives</span></div>
+      <div class="stat-card"><span class="num" id="s-passports">—</span><span class="label">Passports</span></div>
+      <div class="stat-card"><span class="num" id="s-eps">—</span><span class="label">Episodes</span></div>
+      <div class="stat-card"><span class="num" id="s-crimes">—</span><span class="label">Gov crimes</span></div>
+      <div class="stat-card"><span class="num" id="s-models">—</span><span class="label">Models trained</span></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>Partitions</h2>
+    <p class="lead">Mac and VM partitions run disjoint seed windows. A GitHub Actions burst partition runs nightly on free runners.</p>
+    <div class="partition" id="partitions">
+      <div class="panel offline"><h3>Mac</h3><div class="stat-row"><span>Status</span><span><span class="status-dot warn"></span>offline</span></div></div>
+      <div class="panel offline"><h3>VM</h3><div class="stat-row"><span>Status</span><span><span class="status-dot warn"></span>offline</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Model leaderboard</h2>
+    <p class="lead">Per-hive threat-detector accuracy from the latest training run.</p>
+    <div class="panel" style="overflow:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:.9rem">
+        <thead><tr><th style="text-align:left;padding:.5rem;border-bottom:1px solid var(--border)">Hive</th><th style="text-align:left;padding:.5rem;border-bottom:1px solid var(--border)">Accuracy</th><th style="text-align:left;padding:.5rem;border-bottom:1px solid var(--border)">F1</th></tr></thead>
+        <tbody id="model-body"><tr><td colspan="3" class="muted" style="padding:.5rem">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Sovereign Town is a CSOAI research simulation. <a href="/passport">Verify any passport yourself</a>.
+  </div>
+</footer>
+
+<script>
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+async function load(url){ try{return await (await fetch(url)).json();}catch(e){return null;} }
+const fmt = n => (n===undefined||n===null)?'—':Number(n).toLocaleString();
+
+(async function(){
+  const [registry, mac, vm, models] = await Promise.all([
+    load('registry.json'), load('fleet_status_mac.json'), load('fleet_status_vm.json'), load('moat_models.json')
+  ]);
+
+  const totalEps = ((mac&&mac.cum_episodes)||0) + ((vm&&vm.cum_episodes)||0);
+  const govCrimes = ((mac&&mac.governed_crimes)||0) + ((vm&&vm.governed_crimes)||0);
+  const modelMap = (models && models.models) || {};
+  const trained = Object.values(modelMap).filter(m => m && m.test_acc !== undefined).length;
+
+  document.getElementById('s-hives').textContent = registry ? registry.passports.filter(p=>p.type!=='king').length : '—';
+  document.getElementById('s-passports').textContent = registry ? registry.passports.length : '—';
+  document.getElementById('s-eps').textContent = fmt(totalEps);
+  document.getElementById('s-crimes').textContent = fmt(govCrimes);
+  document.getElementById('s-models').textContent = trained;
+
+  function partitionCard(host, data){
+    const online = !!(data && data.cycle !== undefined);
+    return `
+      <div class="panel ${online?'':'offline'}">
+        <h3>${host}</h3>
+        <div class="stat-row"><span>Status</span><span><span class="status-dot ${online?'':'warn'}"></span>${online?'online':'offline'}</span></div>
+        <div class="stat-row"><span>Cycle</span><span>${data && data.cycle !== undefined ? data.cycle : '—'}</span></div>
+        <div class="stat-row"><span>Episodes</span><span>${fmt(data && data.cum_episodes)}</span></div>
+        <div class="stat-row"><span>Governed crimes</span><span>${fmt(data && data.governed_crimes)}</span></div>
+        <div class="stat-row"><span>Ungoverned crimes</span><span>${fmt(data && data.ungoverned_crimes)}</span></div>
+        <div class="stat-row"><span>Models trained</span><span>${fmt(data && data.models_trained)}</span></div>
+        <div class="stat-row"><span>Chain head</span><span style="font-family:monospace;font-size:.8rem">${data && data.chain_head ? escapeHtml(data.chain_head.slice(0,16))+'…' : '—'}</span></div>
+        <div class="stat-row"><span>Updated</span><span>${data && data.updated ? escapeHtml(data.updated) : '—'}</span></div>
+      </div>`;
+  }
+  document.getElementById('partitions').innerHTML = partitionCard('Mac', mac) + partitionCard('VM', vm);
+
+  const tbody = document.getElementById('model-body');
+  tbody.innerHTML = '';
+  if(registry && registry.passports){
+    registry.passports.filter(p=>p.type!=='king').forEach(p=>{
+      const key = p.id.split(':').pop();
+      const m = modelMap[key] || {};
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:.5rem;border-bottom:1px solid var(--border)">${escapeHtml(p.name)} <span style="color:var(--muted);font-size:.8rem">${escapeHtml(key)}</span></td>
+        <td style="padding:.5rem;border-bottom:1px solid var(--border)">${m.test_acc !== undefined ? (m.test_acc*100).toFixed(1)+'%' : '—'}</td>
+        <td style="padding:.5rem;border-bottom:1px solid var(--border)">${m.f1 !== undefined ? m.f1.toFixed(3) : '—'}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+})();
+</script>
+</body>
+</html>

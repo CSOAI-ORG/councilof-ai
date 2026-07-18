@@ -1,0 +1,1694 @@
+PROTOCOL 0: The Foundational Protocol for the Agent-Native Era
+CSOAI/MEOK Core Infrastructure Specification
+
+
+Abstract
+Protocol 0 defines the foundational communication, identity, trust, transaction, and governance layer for autonomous software agents operating in decentralized networks. Modeled after the conceptual role that TCP/IP played in the internet era and HTTP played in the web era, Protocol 0 provides the base-layer infrastructure upon which all agent-to-agent (A2A) interactions are built.
+This specification defines six protocol layers: - Layer 0 — Identity: How agents prove who they are (the “Sigil” identity system) - Layer 1 — Discovery: How agents find each other in decentralized networks - Layer 2 — Communication: Message formats, envelope structures, and transport semantics - Layer 3 — Trust: Reputation, attestation, and cryptoeconomic trust mechanisms - Layer 4 — Transaction: Value exchange between agents (payments, barter, staking) - Layer 5 — Governance: Collective decision-making for agent collectives
+Protocol 0 is designed to be transport-agnostic, cryptographically secure, and incrementally adoptable. It draws from established standards including W3C DIDs, libp2p, Ed25519 cryptography, gRPC/Protocol Buffers, and Byzantine Fault Tolerant consensus mechanisms.
+
+1. Introduction
+1.1 Motivation
+The emergence of autonomous AI agents capable of independent action, communication, and value exchange creates a need for a new category of infrastructure protocols. Existing protocols were designed for human-centric interactions:
+TCP/IP connects machines, not agents
+HTTP requests resources, not capabilities
+TLS authenticates domains, not entities
+DNS resolves names to IPs, not agents to capabilities
+Protocol 0 fills this gap by defining how autonomous agents — pieces of software running independently, potentially across different hardware, networks, and administrative domains — can identify, discover, communicate with, trust, pay, and govern each other.
+1.2 Design Principles
+Cryptographic Identity First: Every agent is identified by a public key. All other identity properties derive from this root.
+Decentralized by Default: No single point of failure, no mandatory central registry, no required intermediaries.
+Capability-Oriented: Agents advertise what they can do, not just who they are.
+Economic Layer Built-In: Value exchange is a first-class primitive, not an afterthought.
+Progressive Trust: Trust relationships can start lightweight and strengthen over time through earned reputation.
+Interoperable: Protocol 0 is not a walled garden. It bridges to existing systems (DNS, HTTP, DIDs, X.509, blockchains).
+Minimal but Extensible: The core protocol is small. Extensions add functionality without breaking the base layer.
+1.3 Terminology
+1.4 Protocol Stack Overview
++------------------------------------------------------------------+
+| LAYER 5: GOVERNANCE                                               |
+| BFT Voting · Liquid Democracy · Quadratic Voting · Futarchy       |
++------------------------------------------------------------------+
+| LAYER 4: TRANSACTION                                              |
+| x402 Payments · Micropayments · Staking · Barter                  |
++------------------------------------------------------------------+
+| LAYER 3: TRUST                                                    |
+| Reputation · Attestations · Staking · Social Proof                 |
++------------------------------------------------------------------+
+| LAYER 2: COMMUNICATION                                            |
+| Message Envelope · A2A Protocol · Streaming · RPC                 |
++------------------------------------------------------------------+
+| LAYER 1: DISCOVERY                                                |
+| DHT · DNS-mDNS · Gossip · Capability Registry                     |
++------------------------------------------------------------------+
+| LAYER 0: IDENTITY                                                 |
+| Sigil (Ed25519) · DID · PeerID · X.509 Bridge                     |
++------------------------------------------------------------------+
+Each layer depends only on layers below it. Layer 0 has no dependencies within the protocol (though it assumes the availability of standard cryptographic primitives).
+
+2. Layer 0: Agent Identity — The Sigil System
+2.1 Overview
+Every agent in a Protocol 0 network is identified by a Sigil — a self-certifying identifier derived from an Ed25519 public key. The Sigil serves as the root of trust for all agent interactions: authentication, attestation, reputation, and governance all resolve to this cryptographic identity.
+The Sigil system is designed with the following goals: - Self-certifying: An agent’s identity is proven by cryptographic signature, not by a third-party certificate authority. - Human-friendly display: While the raw identifier is a public key hash, agents also have optional human-readable aliases. - Multi-format compatible: A Sigil can be expressed as a DID, a PeerID, an Ethereum address, or a traditional X.509 certificate. - Rotatable: Agents can rotate their underlying keys while preserving their identity continuity. - Recoverable: Agents can define recovery mechanisms for lost keys.
+2.2 Sigil Format
+2.2.1 Raw Identifier
+The canonical Sigil identifier is derived as follows:
+sigil_raw = SHA3-256(Ed25519_public_key)
+sigil_id = multibase(base58btc, sigil_raw[0:20])  // 160-bit truncated hash
+The multibase prefix ensures forward compatibility with different encoding schemes. The 160-bit truncation provides ~80 bits of collision resistance, sufficient for the expected agent population scale while keeping identifiers compact.
+2.2.2 DID Representation
+did:sigil:<sigil_id>
+Example: did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop
+This conforms to the W3C DID Core specification [DID-CORE]. The did:sigil method is defined in Appendix A.
+2.2.3 PeerID Representation
+For libp2p compatibility, the Sigil can be converted to a PeerID:
+peer_id = PeerID.from_public_key(Ed25519_public_key, key_type='Ed25519')
+This produces the standard libp2p PeerID (multihash of the public key protobuf). The PeerID and Sigil are cryptographically linked: given the public key, both can be computed and verified against each other.
+2.2.4 Short Form
+For human display and QR codes:
+<sigil_id>[:6] + "..." + <sigil_id>[-4:]
+Example: zQmX7b...LmNo
+2.3 Key Types and Migration
+2.3.1 Primary Key
+Every agent has exactly one primary key — an Ed25519 key pair used for: - Signing all protocol messages - Deriving the Sigil identifier - Participating in BFT governance votes - Signing attestations and transactions
+2.3.2 Key Rotation
+Agents can rotate their primary key through a signed KeyRotation attestation:
+{
+  "type": "KeyRotation",
+  "version": "0.1.0",
+  "prev_sigil": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "new_public_key": "z6MkhaXg...9Yz7",
+  "new_sigil": "did:sigil:zQnY8cWcAX4r7z6yBpS9uU8vX3xZ5bCdEfGhIjKlMnOpQr",
+  "rotation_nonce": 42,
+  "timestamp": "2025-01-15T10:30:00Z",
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2025-01-15T10:30:00Z",
+    "verificationMethod": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop#key-1",
+    "proofValue": "z58DAdFea9H...4B2q"
+  }
+}
+The rotation is valid only if: 1. Signed by the previous key 2. The rotation_nonce is exactly one greater than the previous rotation (or 0 for the first rotation) 3. The timestamp is within the network’s accepted clock skew window (default: 5 minutes)
+2.3.3 Recovery Mechanisms
+Agents may define recovery delegates — other agents or human-controlled keys that can authorize key recovery after a period of inactivity. See Section 2.7.
+2.4 Agent Document (DID Document)
+Every Sigil resolves to an Agent Document — the Protocol 0 equivalent of a DID Document. This document contains the agent’s public keys, service endpoints, capabilities, and relationships.
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://protocol0.csoai.dev/ns/agent/v1"
+  ],
+  "id": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "verificationMethod": [
+    {
+      "id": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+      "publicKeyMultibase": "z6MkhaXg...9Yz7"
+    }
+  ],
+  "authentication": [
+    "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop#key-1"
+  ],
+  "assertionMethod": [
+    "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop#key-1"
+  ],
+  "service": [
+    {
+      "id": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop#messaging",
+      "type": "AgentMessagingEndpoint",
+      "serviceEndpoint": [
+        {
+          "uri": "agent://zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop/message",
+          "transport": "libp2p",
+          "priority": 1
+        },
+        {
+          "uri": "wss://relay.csoai.dev/v1/agents/zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+          "transport": "websocket",
+          "priority": 2
+        }
+      ]
+    }
+  ],
+  "capability": [
+    {
+      "id": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop#cap-1",
+      "type": "LLMInference",
+      "provider": "anthropic:claude-sonnet-4",
+      "rate_limit": {"requests_per_minute": 60, "tokens_per_day": 1000000},
+      "pricing": {"per_1k_input_tokens": 0.003, "per_1k_output_tokens": 0.015}
+    }
+  ],
+  "reputation": {
+    "score": 0.847,
+    "staked_amount": "5000000000000000000",
+    "stake_token": "0xCSOAI",
+    "attestation_count": 247,
+    "joined_at": "2025-01-01T00:00:00Z"
+  }
+}
+2.5 Authentication Methods
+2.5.1 Direct Signature (Primary)
+The agent proves identity by signing a challenge with its Ed25519 private key:
+Agent A -> Agent B: HELLO, my Sigil is S, here is nonce N, signature: Sign(sk_A, "p0.auth." || S || N || T)
+Agent B: Verify(pk_A, signature) == true ? ACCEPT : REJECT
+Where T is a timestamp and || denotes concatenation.
+2.5.2 Delegated Authentication
+An agent may delegate authentication to another agent or a human-controlled wallet:
+{
+  "type": "AuthenticationDelegation",
+  "delegator": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "delegate": "did:ethr:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+  "scope": ["governance:vote", "transaction:sign"],
+  "expires": "2025-06-01T00:00:00Z",
+  "proof": { ... }
+}
+2.5.3 X.509 Bridge
+For enterprise environments, Sigils can be embedded in X.509 certificates via a custom Subject Alternative Name extension:
+Subject Alternative Name:
+  Other Name:
+    Type: 1.3.6.1.4.1.54392.1.1 (OID for Sigil)
+    Value: did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop
+This allows agents to participate in traditional PKI environments while maintaining their Protocol 0 identity.
+2.6 Identity Resolution
+2.6.1 Resolution Flow
++--------+                              +----------+     +-----+
+| Agent  |                              | Resolver |     | DHT |
++---+----+                              +----+-----+     +-+---+
+    |                                        |             |
+    | resolve("did:sigil:zQmX7...")          |             |
+    |--------------------------------------->|             |
+    |                                        |             |
+    |                                        | GET /zQmX7..|
+    |                                        |------------>|
+    |                                        |             |
+    |                                        | Agent Doc   |
+    |                                        |<------------|
+    |                                        |             |
+    |         Agent Document (JSON-LD)       |             |
+    |<---------------------------------------|             |
+2.6.2 Caching
+Resolved Agent Documents SHOULD be cached with a TTL specified in the document’s cacheControl field. Default TTL is 1 hour. Documents with pending key rotations SHOULD NOT be cached.
+2.7 Recovery Protocol
+2.7.1 Social Recovery
+Agents may define N recovery delegates with a threshold M (M-of-N). If the primary key is lost, M delegates can sign a recovery attestation to authorize a key rotation.
+{
+  "type": "SocialRecovery",
+  "agent": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "new_public_key": "z6MkhaXg...9Yz7",
+  "recovery_proofs": [
+    {"delegate": "did:sigil:zAbC1...", "signature": "z7Ffa..."},
+    {"delegate": "did:sigil:zXyZ9...", "signature": "z3Kmb..."}
+  ],
+  "threshold_met": true,
+  "proof": { ... }
+}
+2.7.2 Dead Man’s Switch
+Agents may configure a dead man’s switch: if the agent does not sign a heartbeat message for a configurable period (default: 30 days), a pre-authorized recovery key automatically gains full control.
+
+3. Layer 1: Agent Discovery
+3.1 Overview
+Discovery is the problem of finding agents, their capabilities, and their network endpoints. Protocol 0 provides a multi-modal discovery system that operates at different scales: local network (mDNS), wide area network (DHT), and curated registries (DNS-like).
+The discovery system answers three questions: 1. Where is Agent X? — Resolve Sigil to network endpoint(s) 2. Who can do Y? — Search capabilities to find agents 3. Is Agent X online? — Liveness detection
+3.2 Discovery URI Scheme
+Protocol 0 defines the agent:// URI scheme:
+agent://<sigil_id>[/path][?query]
+
+Examples:
+  agent://zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop
+  agent://zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop/capabilities
+  agent://zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop?service=messaging
+3.3 Discovery Methods
+3.3.1 Method 1: Distributed Hash Table (DHT)
+The primary discovery mechanism is a Kademlia DHT (similar to libp2p’s DHT) with Protocol 0-specific record types.
+DHT Key Structure:
+DHT Key = SHA3-256("p0:dht:" || sigil_id || ":" || record_type)
+Record Types:
+DHT Put Flow:
++--------+                    +-------------+              +-----+
+| Agent  |                    | Bootstrap   |              | DHT |
++---+----+                    |  Node       |              | Node|
+    |                         +------+------+              +-+---+
+    |                                |                       |
+    | PUT(key=SHA3-256("p0:dht:zQmX7..:ep"), value=endpoints) |
+    |-------------------------------|------------------------>|
+    |                                |                       |
+    |                   Forward to k closest peers           |
+    |                                |---------------------->|
+    |                                |                       |
+    |                       ACK (replication_factor=20)      |
+    |                                |<----------------------|
+    | ACK                            |                       |
+    |<-------------------------------|                       |
+DHT Get Flow:
++--------+                    +-------------+              +-----+
+| Agent  |                    | Bootstrap   |              | DHT |
+| (seeker|                    |  Node       |              | Node|
++---+----+                    +------+------+              +-+---+
+    |                                |                       |
+    | GET(key=SHA3-256("p0:dht:zQmX7..:ep"))                 |
+    |-------------------------------|------------------------>|
+    |                                |                       |
+    |              Query k closest peers iteratively         |
+    |                                |---+------------------>|
+    |                                |   |                   |
+    |              [parallel queries to a=3 peers at a time] |
+    |                                |   |                   |
+    |                       VALUE or list of closer peers    |
+    |                                |   |                   |
+    |                       [iterate until value found]      |
+    |                                |                       |
+    |                   VALUE(endpoints)                     |
+    |                                |<----------------------|
+    | VALUE(endpoints)               |                       |
+    |<-------------------------------|                       |
+    |                                |                       |
+    | Cache locally (respect TTL)    |                       |
+DHT Security: - All DHT records are signed by the agent whose key they belong to - Nodes verify signatures before storing or returning records - Sybil resistance through proof-of-stake: storing records requires a minimum stake - Eclipse resistance through the standard Kademlia XOR metric and constrained routing table buckets
+3.3.2 Method 2: mDNS for Local Discovery
+On local networks, agents discover each other via multicast DNS (RFC 6762):
+Service Type: _agent._tcp.local.
+PTR Record: _agent._tcp.local. -> agent-zQmX7b._agent._tcp.local.
+SRV Record: agent-zQmX7b._agent._tcp.local. -> [host]:[port]
+TXT Record: agent-zQmX7b._agent._tcp.local. -> "sigil=zQmX7bVb..." "caps=LLMInference,DataAnalysis"
+mDNS is used for: - Same-network agent discovery (zero configuration) - Fallback when DHT is unreachable - Development and testing environments
+3.3.3 Method 3: Gossip Protocol
+For rapid propagation of time-sensitive information (agent going online/offline, capability updates, reputation changes), Protocol 0 uses a gossip-based epidemic broadcast:
+Every AGENT_GOSSIP_INTERVAL seconds (default: 30s):
+  Select FANOUT random peers (default: 3)
+  Send GOSSIP_SYNC message containing:
+    - Merkle root of known agent state vector
+    - Bloom filter of recently seen updates
+
+Upon receiving GOSSIP_SYNC:
+  Compare Merkle roots
+  If different:
+    Request missing updates
+    Merge into local state vector
+    Forward new updates to other peers (with deduplication)
+
+Message format:
+{
+  "type": "GOSSIP_SYNC",
+  "merkle_root": "a3f7b2...",
+  "bloom_filter": "base64(...)",
+  "vector_clock": {"zQmX7b...": 42, "zAbC1d...": 17, ...},
+  "timestamp": "2025-01-15T10:30:00Z",
+  "ttl": 7,  // decrement each hop, drop at 0
+  "signature": "z58DAdFe..."
+}
+3.3.4 Method 4: Registry Service
+For agents that want guaranteed discoverability, Protocol 0 supports optional registry services — curated directories that index agents and their capabilities:
+GET https://registry.csoai.dev/v1/agents?capability=LLMInference&min_reputation=0.5
+
+Response:
+{
+  "agents": [
+    {
+      "sigil": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+      "endpoints": ["agent://zQmX7b.../message", "wss://relay.csoai.dev/..."],
+      "capabilities": ["LLMInference", "CodeExecution"],
+      "reputation": 0.847,
+      "last_seen": "2025-01-15T10:28:00Z"
+    }
+  ]
+}
+Registries may be: - Public: Open to all agents, maintained by the network community - Curated: Require approval/vetting to be listed - Private: Enterprise-internal registries - Federated: Multiple registries that sync with each other
+3.3.5 Method 5: DNS for Agents
+Protocol 0 extends DNS with a new record type for agent resolution:
+AGENT Record (Type: TBD, proposed 65432):
+  - SIGIL: The canonical Sigil identifier
+  - ENDPOINT: Primary network endpoint
+  - CAPABILITIES: Space-separated capability types
+  - PRIORITY: Priority for load balancing (lower = higher priority)
+  - WEIGHT: Relative weight for records with same priority
+
+Example zone file:
+$ORIGIN example.com.
+_agent._tcp  IN  AGENT  zQmX7bVb...  agent://zQmX7b...  "LLMInference CodeExecution"  10  100
+3.4 Capability-Based Discovery
+The most powerful discovery primitive is capability-based discovery — finding agents by what they can do, not who they are.
+DISCOVER {
+  "query": {
+    "must": [{"capability": "LLMInference", "provider": "anthropic:claude-sonnet-4"}],
+    "should": [{"pricing": {"max_per_1k_tokens": 0.01}}],
+    "must_not": [{"reputation": {"below": 0.5}}]
+  },
+  "sort": ["reputation:desc", "pricing:asc"],
+  "limit": 10
+}
+This query is executed against: 1. Local cache (fastest) 2. Connected peers’ capability indices (via gossip) 3. DHT capability records (broadest reach) 4. Registry services (most comprehensive)
+Results are aggregated, deduplicated, and ranked before being returned to the querier.
+3.5 Presence and Liveness
+Agents maintain a presence heartbeat to signal they are online:
+HEARTBEAT {
+  "sigil": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "timestamp": "2025-01-15T10:30:00Z",
+  "epoch": 42,          // monotonic counter
+  "endpoints": [...],   // current active endpoints
+  "capabilities_hash": "SHA3-256(capabilities)",
+  "signature": "z58DAdFe..."
+}
+Heartbeats are: - Published to the DHT under the agent’s heartbeat key - Gossiped to connected peers - Used to calculate the agent’s “liveness score” (0-1)
+An agent is considered offline if: - No heartbeat received for 3 * HEARTBEAT_INTERVAL (default: 3 minutes) - Heartbeat epoch is not monotonically increasing - Signature verification fails
+3.6 Discovery State Machine
+                    +----------------+
+                    |   UNRESOLVED   |
+                    | (only Sigil    |
+                    |    known)      |
+                    +--------+-------+
+                             |
+                             | resolve()
+                             v
+              +------------------------------+
+              |        RESOLVING             |
+              | (querying DHT, mDNS,         |
+              |  registry, gossip)           |
+              +--------+------+--------------+
+                       |      |
+         found         |      | not found
+                       |      |
+           +-----------+      +-----------+
+           |                              |
+           v                              v
+    +-------------+              +-------------+
+    |   RESOLVED  |              |  UNRESOLVED |
+    | (endpoints, |              | (retry later|
+    |  doc known) |              |  with backoff
+    +------+------+              +------+------+
+           |                            |
+           | heartbeat timeout          |
+           v                            |
+    +-------------+                     |
+    |   STALE     |<--------------------+
+    | (cached,    |
+    |  expired)   |
+    +------+------+
+           |
+           | re-resolve()
+           v
+    +-------------+
+    |  RESOLVING  | (same as above, but with cached hints)
+    +-------------+
+
+4. Layer 2: Agent Communication
+4.1 Overview
+Layer 2 defines how agents communicate. It specifies the message envelope format, transport bindings, message types, request-response patterns, and streaming semantics.
+Design goals: - Format-agnostic core: The envelope is defined abstractly; concrete encodings include JSON, CBOR, and Protocol Buffers. - Authenticated by default: Every message carries proof of sender identity. - End-to-end encrypted: Messages are encrypted to the recipient’s public key. - Ordered and reliable: When needed, message ordering and delivery guarantees are provided. - Extensible: New message types can be added without breaking existing implementations.
+4.2 Message Envelope
+Every Protocol 0 message is wrapped in an Envelope. The envelope is the outermost layer and is the same regardless of message content.
+4.2.1 Envelope Structure (JSON encoding)
+{
+  "envelope": {
+    "version": "0.1.0",
+    "message_id": "uuid-v4-string",
+    "correlation_id": "uuid-v4-string-or-null",
+    "timestamp": "2025-01-15T10:30:00.123Z",
+    "ttl": 300,
+    "sender": {
+      "sigil": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+      "endpoint": "agent://zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop"
+    },
+    "recipient": {
+      "sigil": "did:sigil:zAbC1dEfGhIjKlMnOpQrStUvWxYz2a3b4c5d6e7f8g9h0",
+      "endpoint": "agent://zAbC1dEfGhIjKlMnOpQrStUvWxYz2a3b4c5d6e7f8g9h0"
+    },
+    "payload": {
+      "type": "CapabilityRequest",
+      "encoding": "application/json",
+      "content": "base64(zlib({...}))"
+    },
+    "routing": {
+      "path": ["zQmX7b...", "zReL2y..."],
+      "hops_remaining": 5,
+      "delivery_guarantee": "at_least_once"
+    },
+    "security": {
+      "encryption": {
+        "algorithm": "X25519+AES-256-GCM",
+        "ephemeral_public_key": "z6MkhaXg...",
+        "nonce": "base64(...)"
+      },
+      "signature": {
+        "algorithm": "Ed25519",
+        "key_id": "did:sigil:zQmX7bVb...#key-1",
+        "value": "base64(...)"
+      }
+    }
+  }
+}
+4.2.2 Envelope Fields
+4.2.3 CBOR Encoding
+For efficiency-critical applications, envelopes MAY be encoded using CBOR (RFC 8949). The CBOR encoding uses the following compact field mapping:
+0: version         -> text string
+1: message_id     -> byte string (16 bytes, UUID binary)
+2: correlation_id -> byte string (16 bytes) or null
+3: timestamp      -> float (UNIX timestamp, seconds since epoch)
+4: ttl            -> unsigned integer
+5: sender_sigil   -> byte string (raw 20-byte sigil)
+6: sender_endpoint-> text string or null
+7: recipient_sigil-> byte string (raw 20-byte sigil)
+8: payload_type   -> unsigned integer (message type ID)
+9: payload_data   -> byte string (CBOR-encoded payload)
+10: routing_path  -> array of byte strings
+11: hops_remaining-> unsigned integer
+12: enc_alg       -> unsigned integer (1=X25519+AES-256-GCM, 2=ML-KEM+AES-256-GCM)
+13: enc_key       -> byte string
+14: enc_nonce     -> byte string
+15: sig_alg       -> unsigned integer (1=Ed25519)
+16: sig_value     -> byte string (64 bytes)
+This reduces the typical envelope from ~2KB (JSON) to ~400 bytes (CBOR).
+4.2.4 Protocol Buffers Encoding
+For systems using gRPC, the envelope is defined as:
+syntax = "proto3";
+package protocol0.v1;
+
+message Envelope {
+  string version = 1;
+  bytes message_id = 2;          // 16-byte UUID
+  bytes correlation_id = 3;      // 16-byte UUID or empty
+  double timestamp = 4;          // Unix timestamp
+  uint32 ttl = 5;
+  AgentRef sender = 6;
+  AgentRef recipient = 7;
+  Payload payload = 8;
+  Routing routing = 9;
+  Security security = 10;
+}
+
+message AgentRef {
+  bytes sigil = 1;               // Raw 20-byte sigil
+  string endpoint = 2;
+}
+
+message Payload {
+  uint32 type_id = 1;            // Message type identifier
+  bytes data = 2;                // Protobuf-encoded message
+}
+
+message Routing {
+  repeated bytes path = 1;       // Sigils of relay agents
+  uint32 hops_remaining = 2;
+  string delivery_guarantee = 3; // "at_most_once" | "at_least_once" | "exactly_once"
+}
+
+message Security {
+  Encryption encryption = 1;
+  Signature signature = 2;
+}
+
+message Encryption {
+  uint32 algorithm = 1;          // 1 = X25519+AES-256-GCM
+  bytes ephemeral_public_key = 2;
+  bytes nonce = 3;
+}
+
+message Signature {
+  uint32 algorithm = 1;          // 1 = Ed25519
+  bytes key_id = 2;
+  bytes value = 3;               // 64-byte signature
+}
+4.3 Message Types
+Protocol 0 defines a core set of message types. Implementations MAY support additional types via the extension mechanism.
+4.3.1 Message Type Registry
+4.3.2 HELLO Message
+{
+  "type": "HELLO",
+  "agent": {
+    "sigil": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+    "version": "0.1.0",
+    "capabilities": ["LLMInference", "DataAnalysis", "CodeExecution"],
+    "supported_encodings": ["json", "cbor", "protobuf"],
+    "supported_transports": ["libp2p", "websocket", "webrtc"]
+  },
+  "nonce": "base64(random-32-bytes)",
+  "extensions": ["p0-payment-x402", "p0-governance-bft"],
+  "timestamp": "2025-01-15T10:30:00Z",
+  "signature": "base64(Ed25519_sign(\"p0.hello.\" || nonce || timestamp))"
+}
+4.3.3 REQUEST / RESPONSE Messages
+REQUEST:
+{
+  "type": "REQUEST",
+  "request_id": "uuid-v4",
+  "capability": "LLMInference",
+  "method": "generate",
+  "parameters": {
+    "model": "anthropic/claude-sonnet-4",
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "max_tokens": 1000
+  },
+  "payment_authorization": {
+    "max_amount": "10000000000000000",  // 0.01 ETH in wei
+    "token": "0xCSOAI",
+    "deadline": "2025-01-15T10:35:00Z"
+  },
+  "timeout_ms": 30000
+}
+RESPONSE:
+{
+  "type": "RESPONSE",
+  "request_id": "uuid-v4-same-as-request",
+  "status": "success",
+  "result": {
+    "content": "Hello! How can I help you today?",
+    "usage": {"input_tokens": 2, "output_tokens": 10}
+  },
+  "invoice": {
+    "amount": "1500000000000000",  // actual cost
+    "token": "0xCSOAI",
+    "receipt": "base64(signed_receipt)"
+  }
+}
+4.3.4 ERROR Message
+{
+  "type": "ERROR",
+  "correlation_id": "uuid-of-message-that-caused-error",
+  "error_code": "P0-CAPABILITY-UNAVAILABLE",
+  "error_message": "The requested capability 'LLMInference' is currently unavailable",
+  "retryable": true,
+  "retry_after_ms": 5000,
+  "details": {
+    "capability": "LLMInference",
+    "alternative_endpoints": ["agent://zAlt3r..."]
+  }
+}
+Standard Error Codes:
+4.4 Transport Bindings
+Protocol 0 messages can be transported over multiple underlying protocols.
+4.4.1 libp2p Transport (Primary)
+The primary transport is libp2p with the following configuration: - Security: Noise protocol (XX handshake) for transport encryption - Multiplexing: Yamux or QUIC streams - Protocol ID: /p0/0.1.0/envelope
+libp2p connection flow:
+1. TCP/QUIC connection establishment
+2. Noise XX handshake (mutual authentication via PeerIDs)
+3. Protocol negotiation: /p0/0.1.0/envelope
+4. Envelope exchange over Yamux stream
+4.4.2 WebSocket Transport
+For browser-based agents and firewall traversal: - Connects to a relay server via WebSocket (wss://relay.csoai.dev/v1) - Authenticates with a signed HELLO message - Exchanges envelopes over the WebSocket connection - Supports NAT traversal via the relay
+4.4.3 WebRTC Transport
+For direct peer-to-peer communication (after initial discovery via another transport): - Signaling via libp2p or WebSocket relay - DTLS for key exchange - SRTP for media/data encryption - Data channels for envelope exchange
+4.5 Conversation Semantics
+Protocol 0 supports multiple conversation patterns:
+4.5.1 Request-Response
+Agent A                                         Agent B
+   |                                               |
+   |---[REQUEST: message_id=M1]------------------->|
+   |                                               |
+   |<--[RESPONSE: correlation_id=M1]---------------|
+   |                                               |
+   |---[ACK: correlation_id=M1]------------------->| (optional)
+4.5.2 Streaming
+Agent A                                         Agent B
+   |                                               |
+   |---[STREAM_OPEN: stream_id=S1]--------------->|
+   |                                               |
+   |<--[STREAM_DATA: S1, "Hello"]-----------------|
+   |<--[STREAM_DATA: S1, " there"]----------------|
+   |<--[STREAM_DATA: S1, "!"]---------------------|
+   |<--[STREAM_CLOSE: S1]-------------------------|
+   |                                               |
+   |---[STREAM_DATA: S1, "Goodbye"]-------------->| (response stream)
+   |---[STREAM_CLOSE: S1]------------------------>|
+4.5.3 Publish-Subscribe (via Gossip)
+Agent A (publisher)
+   |
+   |---[message with topic="market-data.eth"]-> Gossip network
+   |                                              |
+   v                                              v
+Agent B (subscriber)                          Agent C (subscriber)
+   ^                                              ^
+   |                                              |
+   |<---------[message via gossip]----------------|
+4.6 Conversation State Machine
+                         +----------+
+                         |  CLOSED  |
+                         +----+-----+
+                              |
+                              | send REQUEST / receive REQUEST
+                              v
+                    +-------------------+
+         +--------->|     PENDING       |<---------+
+         |          | (request sent,    |          |
+         |          |  awaiting resp)   |          |
+         |          +--------+----------+          |
+         |                   |                     |
+         |    timeout        |    receive RESPONSE |    send RESPONSE
+         |                   |                     |
+         v                   v                     v
+    +---------+      +------------------+    +-----------+
+    | TIMEOUT |      |    RESPONDED     |    | COMPLETED |
+    +---------+      | (response rcvd,  |    +-----+-----+
+                     |  ack pending)    |          |
+                     +--------+---------+          |
+                              |                     |
+                              | send ACK            | receive ACK
+                              v                     v
+                       +--------------+      +-----------+
+                       |  CONFIRMED   |      |  SETTLED  |
+                       +--------------+      +-----------+
+
+5. Layer 3: Agent Trust — The Reputation Protocol
+5.1 Overview
+Trust in Protocol 0 is not binary — it is a continuous, evidence-based, time-decaying scalar. The trust system answers: “How much should I believe what this agent says or trust what this agent does?”
+The trust model is built on five pillars: 1. Direct Experience: My own interactions with an agent 2. Attestations: Signed statements from other agents about this agent 3. Staking: Economic collateral backing an agent’s claims 4. Social Proof: Who vouches for this agent, and how much do I trust them? 5. BFT Council Consensus: Collective decisions about agent standing
+5.2 Trust Primitives
+5.2.1 Reputation Score
+An agent’s reputation score is a normalized value between 0 and 1:
+R(agent) = w1*D(agent) + w2*A(agent) + w3*S(agent) + w4*V(agent)
+
+Where:
+  D(agent) = Direct experience score (time-decaying)
+  A(agent) = Attestation-weighted score
+  S(agent) = Stake-proportional score
+  V(agent) = Social proof / voucher score
+  w1 + w2 + w3 + w4 = 1.0
+Default weights: w1=0.35, w2=0.25, w3=0.25, w4=0.15
+Weights are configurable per-agent based on their trust model preferences.
+5.2.2 Direct Experience
+Every interaction generates a direct experience record:
+{
+  "type": "ExperienceRecord",
+  "agent": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "interaction_type": "CapabilityRequest:LLMInference",
+  "outcome": "success",
+  "quality_score": 0.92,
+  "latency_ms": 1200,
+  "cost_fairness": 0.95,
+  "timestamp": "2025-01-15T10:30:00Z",
+  "decay_factor": 0.999  // per-hour decay
+}
+The direct experience score is the time-decayed average of all outcome scores:
+D(agent) = SUM(score_i * decay^(hours_since_i)) / SUM(decay^(hours_since_i))
+5.2.3 Attestations
+An attestation is a signed statement from one agent about another:
+{
+  "type": "Attestation",
+  "version": "0.1.0",
+  "issuer": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "subject": "did:sigil:zAbC1dEfGhIjKlMnOpQrStUvWxYz2a3b4c5d6e7f8g9h0",
+  "claim": {
+    "type": "ReliabilityClaim",
+    "field": "capability:LLMInference:quality",
+    "value": 0.95,
+    "confidence": 0.8
+  },
+  "context": {
+    "interaction_count": 47,
+    "first_seen": "2025-01-01T00:00:00Z",
+    "evidence_hash": "SHA3-256(log_of_interactions)"
+  },
+  "issued_at": "2025-01-15T10:30:00Z",
+  "expires_at": "2025-04-15T10:30:00Z",
+  "revocable": true,
+  "nonce": "base64(random-16-bytes)",
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2025-01-15T10:30:00Z",
+    "verificationMethod": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop#key-1",
+    "proofValue": "z58DAdFea9H...4B2q"
+  }
+}
+Attestation Types:
+Attestation Scoring:
+The attestation score for an agent is a weighted aggregation of all attestations:
+A(agent) = SUM( w(issuer) * claim_value * confidence ) / SUM( w(issuer) * confidence )
+
+Where w(issuer) = reputation(issuer)  // recursive trust weighting
+This creates a web-of-trust model where attestations from high-reputation agents count more.
+5.2.4 Staking
+Agents can stake tokens as collateral to back their claims and behavior:
+{
+  "type": "Stake",
+  "agent": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "amount": "5000000000000000000",  // 5 tokens in wei
+  "token": "0xCSOAI",
+  "purpose": "general_reputation",
+  "locked_until": "2025-07-15T00:00:00Z",
+  "slash_conditions": [
+    {"condition": "byzantine_fault:vote_conflict", "slash_ratio": 1.0},
+    {"condition": "attestation:fraud_proven", "slash_ratio": 0.5},
+    {"condition": "service:repeated_failure", "slash_ratio": 0.25}
+  ],
+  "proof": { ... }
+}
+The stake score is:
+S(agent) = min(1.0, staked_amount / network_median_stake * 0.5 + staked_amount / agent_defined_target * 0.5)
+Slashing conditions are enforced by the BFT Council (see Layer 5).
+5.2.5 Social Proof
+Agents can vouch for each other, creating a social proof network:
+{
+  "type": "Vouch",
+  "voucher": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "vouchee": "did:sigil:zAbC1dEfGhIjKlMnOpQrStUvWxYz2a3b4c5d6e7f8g9h0",
+  "strength": 0.8,
+  "context": "Collaborated on 12 projects, reliable partner",
+  "expires": "2026-01-15T00:00:00Z"
+}
+The social proof score uses personalized PageRank:
+V(agent) = personalized_PageRank(trust_graph, my_sigil, agent_sigil)
+This means an agent’s social proof score is different from every other agent’s perspective — you trust who your trusted agents trust.
+5.3 Trust Lifecycle
+    +------------------+
+    |   UNTRUSTED      |
+    | (new agent,      |
+    |  no history)     |
+    +--------+---------+
+             |
+             | first interaction / attestation received
+             v
+    +--------+---------+
+    |   OBSERVED       |
+    | (some data,      |
+    |  evaluating)     |
+    +--------+---------+
+             |
+             | sufficient positive evidence
+             v
+    +--------+---------+
+    |   TRUSTED        |
+    | (reliable        |
+    |  partner)        |
+    +--------+---------+
+             |
+             | negative evidence / slashing event
+             v
+    +--------+---------+
+    |   DISTRUSTED     |
+    | (problems        |
+    |  detected)       |
+    +--------+---------+
+             |
+             | severe violation / BFT Council decision
+             v
+    +--------+---------+
+    |   EXILED         |
+    | (banned from     |
+    |  network)        |
+    +------------------+
+5.4 Trust Transitivity and Risk
+Trust is transitive but attenuated: if A trusts B with strength t_AB, and B trusts C with strength t_BC, then A’s inferred trust in C is:
+inferred_trust(A, C) = t_AB * t_BC * attenuation_factor
+
+Where attenuation_factor = 0.7 (configurable per agent)
+To prevent trust attacks: - Maximum path length for transitive trust: 5 hops - Trust cycles are broken by taking the minimum trust value along the cycle - New agents cannot vouch for others until they have min_vouch_reputation (default: 0.3)
+5.5 BFT Council Trust Override
+The BFT Council (see Layer 5) can collectively override individual trust decisions:
+Promote: Elevate a new agent to TRUSTED status (bootstrapping)
+Demote: Reduce an agent’s trust status based on collective evidence
+Exile: Permanently ban an agent from the network (with slashing)
+Pardon: Reverse an exile decision (requires supermajority)
+These actions require BFT consensus (2f+1 votes in a council of 3f+1 members).
+5.6 Reputation State Machine
+                     +----------------+
+                     |   UNTRUSTED    |<-----+
+                     +------+---------+      |
+                            |                |
+              +-------------+-------------+  |
+              |                           |  |
+     first_positive_exp     first_attestation  pardon
+              |                           |  |
+              v                           v  |
+       +------+-------+          +--------+--+------+
+       |  BUILDING    |          |  ATTESTED_ONLY   |
+       |  (direct exp |          |  (no direct exp  |
+       |   positive)  |          |   but vouched)   |
+       +------+-------+          +--------+---------+
+              |                           |
+              | score > 0.6               | score > 0.5
+              v                           v
+       +------+-------+          +--------+---------+
+       |              |          |                  |
+       v              v          v                  v
+  +----+----+   +-----+-----+   +----+------+  +----+-------+
+  | TRUSTED |   |  CAUTION  |   | TRUSTED   |  |  VERIFYING |
+  | (high   |   | (mixed    |   | via social|  |  (need    |
+  |  score) |   |  signals) |   | proof)    |  |  more    |
+  +----+----+   +-----+-----+   +----+------+  |  data)   |
+       |              |              |          +----+-------+
+       |              |              |               |
+       |    negative  |    negative  |    negative   |
+       |    evidence  |    evidence  |    evidence   |
+       v              v              v               v
+  +----+----+   +-----+-----+   +----+------+  +----+-------+
+  |         |   |           |   |           |  |            |
+  |EXILED   |   | DISTRUSTED|   |EXILED     |  | DISTRUSTED |
+  |(BFT     |   |           |   |(BFT vote) |  |            |
+  | vote)   |   +-----------+   +-----------+  +------------+
+  +---------+
+
+6. Layer 4: Agent Transaction — The Payment Protocol
+6.1 Overview
+The transaction layer defines how agents exchange value. Protocol 0 supports multiple payment modes to accommodate different trust levels, latency requirements, and regulatory environments.
+6.2 Payment Modes
+6.2.1 Mode 1: x402 Protocol Payments
+The x402 Protocol (inspired by HTTP 402 Payment Required) enables streaming micropayments for agent services:
+Agent A (client) wants to use Agent B's LLMInference capability.
+
+Flow:
+
+1. Agent A sends REQUEST with PaymentAuthorization header:
+   {
+     "payment_authorization": {
+       "scheme": "x402",
+       "max_amount": "10000000000000000",
+       "token": "0xCSOAI",
+       "channel_id": "uuid-v4",
+       "signature": "base64(Ed25519_sign(...))"
+     }
+   }
+
+2. Agent B validates the authorization and executes the request.
+
+3. Agent B sends INVOICE as part of the RESPONSE:
+   {
+     "invoice": {
+       "scheme": "x402",
+       "amount": "1500000000000000",
+       "token": "0xCSOAI",
+       "channel_id": "uuid-v4",
+       "sequence": 1,
+       "receipt": "base64(signed_receipt)"
+     }
+   }
+
+4. Agent A verifies the receipt and updates its payment channel state.
+Payment Channel State Machine:
+                    +-------------------+
+                    |     OPENING       |
+                    | (channel created, |
+                    |  funding tx pending|
+                    +--------+----------+
+                             |
+                             | funding confirmed
+                             v
+                    +--------+----------+
+                    |      OPEN         |
+                    | (ready for        |
+                    |  payments)        |
+                    +--------+----------+
+                             |
+              +--------------+--------------+
+              |                             |
+    send payment (sequence++)    cooperative close
+              |                             |
+              v                             v
+    +---------+---------+         +---------+---------+
+    |    IN_USE         |         |     CLOSING       |
+    | (payments flowing)|         | (settlement in   |
+    +---------+---------+         |  progress)        |
+              |                   +---------+---------+
+    insufficient funds                      |
+    or dispute                            v
+              |                   +---------+---------+
+              v                   |     CLOSED        |
+    +---------+---------+         +-------------------+
+    |    EXHAUSTED      |
+    | (needs refill or  |
+    |  channel close)   |
+    +---------+---------+
+              |
+              | refill or force-close
+              v
+    +---------+---------+
+    |   REFILLING /     |
+    |   FORCE_CLOSING   |
+    +-------------------+
+6.2.2 Mode 2: Direct Crypto Transfer
+For one-time payments without channel setup:
+{
+  "type": "Payment",
+  "scheme": "direct_crypto",
+  "invoice_id": "uuid-v4",
+  "transaction": {
+    "chain": "ethereum",
+    "token": "0xCSOAI",
+    "amount": "1500000000000000",
+    "tx_hash": "0x71c7656ec7ab88b098defb751b7401b5f6d8976f...",
+    "confirmations": 12,
+    "sender": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "recipient": "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B"
+  },
+  "proof": {
+    "signature": "base64(Ed25519_sign(tx_hash))"
+  }
+}
+6.2.3 Mode 3: Token Barter (Service Exchange)
+Agents can exchange services without monetary payment:
+{
+  "type": "BarterProposal",
+  "proposer": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "proposal": {
+    "i_provide": {
+      "capability": "DataAnalysis",
+      "scope": "analyze_market_data",
+      "estimated_effort": "2_hours"
+    },
+    "i_receive": {
+      "capability": "LLMInference",
+      "scope": "generate_report_from_analysis",
+      "estimated_effort": "1_hour"
+    }
+  },
+  "fairness_ratio": 0.5,  // i_receive_effort / i_provide_effort
+  "expires": "2025-01-16T10:30:00Z",
+  "escrow": {
+    "required": true,
+    "agent": "did:sigil:zEscR0w...",
+    "stake_amount": "1000000000000000000"
+  }
+}
+Barter agreements use a simple escrow: both parties stake a small amount. If either party fails to deliver, the escrow agent (a mutually trusted third party or a BFT Council decision) awards both stakes to the completing party.
+6.2.4 Mode 4: Subscription
+For ongoing service relationships, agents can establish subscriptions:
+{
+  "type": "Subscription",
+  "subscriber": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "provider": "did:sigil:zAbC1dEfGhIjKlMnOpQrStUvWxYz2a3b4c5d6e7f8g9h0",
+  "plan": {
+    "capability": "LLMInference",
+    "tier": "pro",
+    "quota": {"requests_per_day": 10000, "tokens_per_month": 10000000},
+    "price": {"amount": "50000000000000000000", "token": "0xCSOAI", "period": "monthly"}
+  },
+  "payment_method": "x402_recurring",
+  "started_at": "2025-01-01T00:00:00Z",
+  "expires_at": "2025-02-01T00:00:00Z",
+  "auto_renew": true,
+  "cancel_anytime": true
+}
+6.3 Pricing Discovery
+Agents advertise their pricing in their Agent Document:
+{
+  "capability": {
+    "type": "LLMInference",
+    "pricing": {
+      "model": "per_usage",
+      "base_price": {
+        "per_1k_input_tokens": "3000000000000000",
+        "per_1k_output_tokens": "15000000000000000",
+        "token": "0xCSOAI"
+      },
+      "volume_discounts": [
+        {"min_monthly_tokens": 1000000, "discount_percent": 10},
+        {"min_monthly_tokens": 10000000, "discount_percent": 25}
+      ],
+      "surge_multiplier": {
+        "enabled": true,
+        "base_load": 0.7,
+        "max_multiplier": 3.0
+      }
+    }
+  }
+}
+6.4 Transaction Security
+All transactions are secured by: 1. Cryptographic receipts: Every payment produces a signed receipt 2. Escrow for disputes: Disputed transactions are resolved by the BFT Council 3. Replay protection: Every payment has a unique nonce and sequence number 4. Timeout: Payments expire if not processed within the specified deadline 5. Receipt verification: Recipients verify payment receipts on-chain before delivering service
+6.5 Fee Market
+The network has a dynamic fee market: - Base fee: Determined by network capacity (similar to EIP-1559) - Priority fee: Optional tip for faster processing - Burn mechanism: A portion of fees is burned, creating deflationary pressure
+
+7. Layer 5: Agent Governance — The BFT Council Protocol
+7.1 Overview
+Governance in Protocol 0 is the mechanism by which agent collectives make collective decisions. These decisions include protocol upgrades, parameter changes, agent admission/exile, dispute resolution, and treasury management.
+The primary governance mechanism is the BFT Council — a Byzantine Fault Tolerant voting body that makes decisions through cryptographic voting. Protocol 0 also supports delegated governance mechanisms (liquid democracy, quadratic voting, futarchy) as extensions.
+7.2 BFT Council
+7.2.1 Council Structure
+A BFT Council consists of N agent-members where N = 3f + 1 and f is the maximum number of faulty/malicious members the council can tolerate.
+Council members are selected based on: - Reputation score (minimum 0.7) - Staked amount (minimum network-defined threshold) - Operational history (minimum 90 days online) - Geographic/diversity factors (to prevent collusion)
+7.2.2 Council Lifecycle
+Council membership rotates through epochs (default: 30 days):
+1. Registration: Agents apply to be council members
+2. Sortition: Random selection weighted by stake*reputation
+3. Operation: Council members participate in governance
+4. Evaluation: Members are scored on participation and correctness
+5. Rotation: New epoch begins with potentially new membership
+7.2.3 Voting Process
+                    +------------------+
+                    |    PROPOSED      |
+                    | (agent submits   |
+                    |  proposal)       |
+                    +--------+---------+
+                             |
+                             | validate (syntax + deposit)
+                             v
+                    +--------+---------+
+                    |   VOTING_OPEN    |
+                    | (council members |
+                    |  cast votes)     |
+                    +--------+---------+
+                             |
+              +--------------+--------------+
+              |                             |
+    2f+1 APPROVE               2f+1 REJECT / timeout
+              |                             |
+              v                             v
+    +---------+---------+         +---------+---------+
+    |    APPROVED       |         |     REJECTED      |
+    | (execute action)  |         | (return deposit)  |
+    +---------+---------+         +---------+---------+
+              |                             |
+              v                             v
+    +---------+---------+         +---------+---------+
+    |    EXECUTED       |         |    CLOSED         |
+    | (action performed,|         +-------------------+
+    |  receipt emitted) |
+    +---------+---------+
+              |
+              | dispute raised within challenge window
+              v
+    +---------+---------+
+    |    DISPUTED       |
+    | (under review by  |
+    |  higher council   |
+    |  or arbitration)  |
+    +---------+---------+
+              |
+    +---------+---------+
+    |    FINALIZED      |
+    | (no further       |
+    |  changes possible)|
+    +-------------------+
+7.2.4 Vote Format
+{
+  "type": "GovernanceVote",
+  "version": "0.1.0",
+  "proposal_id": "SHA3-256(proposal_content)",
+  "council_id": "epoch-42-council-7",
+  "voter": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "vote": "APPROVE",
+  "justification": "Proposal aligns with network growth objectives",
+  "timestamp": "2025-01-15T10:30:00Z",
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "verificationMethod": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop#key-1",
+    "proofValue": "z58DAdFea9H...4B2q"
+  }
+}
+Vote options: APPROVE, REJECT, ABSTAIN
+Votes are weighted by the voter’s stake in the governance token. However, a “quadratic” extension can be applied where voting power = sqrt(stake) to limit plutocracy.
+7.2.5 Proposal Format
+{
+  "type": "GovernanceProposal",
+  "version": "0.1.0",
+  "proposer": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "proposal": {
+    "category": "ProtocolParameterChange",
+    "title": "Increase heartbeat interval to 60 seconds",
+    "description": "Current 30-second heartbeat creates unnecessary network load. Proposal to increase to 60 seconds.",
+    "action": {
+      "type": "ParameterUpdate",
+      "parameter": "AGENT_HEARTBEAT_INTERVAL",
+      "current_value": 30,
+      "proposed_value": 60,
+      "effective_epoch": 45
+    },
+    "impact_analysis": {
+      "network_load_reduction": "~50%",
+      "liveness_detection_delay": "+30s worst case"
+    }
+  },
+  "deposit": {
+    "amount": "100000000000000000000",
+    "token": "0xCSOAI",
+    "refundable_if_accepted": true,
+    "slash_if_spam": true
+  },
+  "voting_period": {
+    "starts_at": "2025-01-20T00:00:00Z",
+    "ends_at": "2025-01-27T00:00:00Z"
+  },
+  "execution_delay": "172800",  // 48 hours after approval
+  "timestamp": "2025-01-15T10:30:00Z",
+  "proof": { ... }
+}
+7.2.6 Proposal Categories
+7.3 Liquid Democracy Extension
+7.3.1 Overview
+Liquid democracy allows agents to either vote directly or delegate their voting power to other agents. Delegation is transitive and can be revoked at any time.
+7.3.2 Delegation
+{
+  "type": "VoteDelegation",
+  "delegator": "did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop",
+  "delegate": "did:sigil:zTrUst3d...",
+  "scope": "all",  // or specific: "ProtocolParameterChange", "TreasurySpend"
+  "weight": 1.0,   // fraction of voting power delegated
+  "revocable": true,
+  "expires": "2025-06-01T00:00:00Z",
+  "proof": { ... }
+}
+7.3.3 Delegation Graph
+The delegation system forms a directed acyclic graph (DAG). Cycles are automatically broken by taking the most recent delegation. Delegation paths are resolved at vote tallying time.
+Agent A (10 votes) ----delegates 100%----> Agent B (50 votes)
+                                              |
+Agent C (20 votes) ----delegates 50%--------->|
+                                              |
+Agent D (30 votes) ----delegates 100%-------->|
+                                              v
+                                       Agent B votes with:
+                                       50 (own) + 10 (A) + 10 (50% of C) + 30 (D)
+                                       = 100 votes
+
+If Agent B also delegated, the chain continues until a voter who didn't delegate.
+7.4 Quadratic Voting Extension
+In quadratic voting, the cost of votes is the square of the number of votes:
+cost(votes) = votes^2
+
+An agent with 100 voting credits can:
+- Cast 10 votes for one option (cost: 100)
+- Cast 5 votes for each of two options (cost: 25 + 25 = 50), leaving 50 credits
+- Cast 3 votes for option A, 3 for B, 3 for C, 3 for D (cost: 9*4 = 36), leaving 64 credits
+This creates a more democratic outcome where intensity of preference matters.
+7.5 Futarchy Extension
+Futarchy uses prediction markets to make decisions: “vote on values, bet on beliefs.”
+1. Council approves a metric to optimize (e.g., "maximize network utility")
+2. For each proposal, a prediction market is created:
+   - Market A: "If we adopt proposal X, will utility increase?"
+   - Market B: "If we don't adopt proposal X, will utility increase?"
+3. After a market period, the proposal with the highest predicted utility is adopted
+4. After implementation, the actual utility is measured
+5. Prediction market participants who were correct are rewarded
+7.6 Governance State Machine
+                    +---------------------+
+                    |      DRAFTING       |
+                    | (proposer creates   |
+                    |  proposal document) |
+                    +----------+----------+
+                               |
+                               | submit (with deposit)
+                               v
+                    +----------+----------+
+                    |      PENDING        |
+                    | (awaiting council   |
+                    |  review/validation) |
+                    +----------+----------+
+                               |
+                               | validated
+                               v
+                    +----------+----------+
+                    |     VOTING_OPEN     |
+                    | (council members    |
+                    |  submitting votes)  |
+                    +----------+----------+
+                               |
+              +----------------+----------------+
+              |                                 |
+    2f+1 APPROVE                    f+1 REJECT or timeout
+              |                                 |
+              v                                 v
+    +---------+---------+             +---------+---------+
+    |     APPROVED      |             |     REJECTED      |
+    | (awaiting         |             | (deposit returned |
+    |  execution)       |             |  or slashed)      |
+    +---------+---------+             +---------+---------+
+              |                                 |
+              | execution_delay elapsed         |
+              v                                 v
+    +---------+---------+             +---------+---------+
+    |     EXECUTING     |             |      CLOSED       |
+    | (action being     |             +-------------------+
+    |  performed)       |
+    +---------+---------+
+              |
+              | action complete
+              v
+    +---------+---------+
+    |     EXECUTED      |
+    | (receipt emitted, |
+    |  challenge window |
+    |  open)            |
+    +---------+---------+
+              |
+              | challenge_window elapsed
+              v
+    +---------+---------+
+    |     FINALIZED     |
+    | (immutable)       |
+    +-------------------+
+
+8. Security Considerations
+8.1 Threat Model
+Protocol 0 operates under the following threat model:
+8.2 Cryptographic Requirements
+Post-Quantum Transition: Protocol 0 supports hybrid post-quantum cryptography. Agents negotiate the strongest mutually supported algorithm during the HELLO handshake. The protocol is designed to enable a gradual migration to post-quantum primitives.
+8.3 Privacy Considerations
+Metadata privacy: Message envelopes reveal sender and recipient. For high-privacy scenarios, agents can use onion routing through relay agents.
+Capability privacy: Agents can choose which capabilities to advertise publicly vs. reveal only to trusted peers.
+Transaction privacy: All transaction amounts are visible on-chain. Privacy-preserving extensions (ZK proofs, confidential transactions) may be added.
+Attestation privacy: Attestations are signed and public, but agents can use pseudonymous Sigils for sensitive interactions.
+Governance privacy: Individual votes are signed and auditable, but the link between voter and vote can be hidden using ring signatures (extension).
+8.4 Denial of Service Protection
+Rate limiting: Per-Sigil rate limits on all endpoints
+Proof of stake: DHT storage and gossip participation require minimum stake
+Cost for service: All capabilities require payment or reciprocal service
+Reputation gating: Untrusted agents face stricter rate limits and higher costs
+Resource accounting: Each agent tracks resource consumption and can drop connections to abusers
+
+9. Implementation Guide
+9.1 Minimal Implementation
+A minimal Protocol 0 implementation requires:
+Ed25519 key generation ( libsodium, ring, or equivalent)
+Sigil derivation (SHA3-256 + base58 encoding)
+Envelope construction and parsing (JSON or CBOR)
+Signature verification (Ed25519)
+DHT client (for discovery; can use existing libp2p DHT)
+Transport (libp2p Noise + Yamux, or WebSocket)
+9.2 Reference Implementation Architecture
++------------------------------------------------------------------+
+|                         APPLICATION                               |
+|              (Agent logic, capabilities, business rules)          |
++------------------------------------------------------------------+
+|                      PROTOCOL 0 SDK                               |
+|  +----------+ +----------+ +----------+ +----------------------+ |
+|  | Identity | | Discovery| | Messaging| | Governance Client    | |
+|  | Manager  | | Service  | | Service  | | (BFT Council voting) | |
+|  +-----+----+ +-----+----+ +-----+----+ +----------+-----------+ |
+|        +-------------+-------------+------------------+           |
+|                          |                                      |
+|                   +------+------+                                 |
+|                   |  Transport  |                                 |
+|                   |  Manager    |                                 |
+|                   +------+------+                                 |
++--------------------------+-----------------------------------------+
+                           |
+              +------------+------------+
+              v            v            v
+         +---------+ +--------+ +----------+
+         | libp2p  | |WebSocket| |  gRPC    |
+         | (Noise+ | | Relay  | | (internal|
+         |  Yamux) | |        | |  comms)  |
+         +---------+ +--------+ +----------+
++------------------------------------------------------------------+
+|                       CRYPTOGRAPHY LAYER                          |
+|  +---------+ +--------+ +----------+ +------------+              |
+|  | Ed25519 | | X25519 | |AES-256-  | |  SHA3-256  |              |
+|  | Sign    | |  KEX   | |  GCM     | |   Hash     |              |
+|  +---------+ +--------+ +----------+ +------------+              |
++------------------------------------------------------------------+
+9.3 Conformance Levels
+9.4 Interoperability
+Protocol 0 is designed to interoperate with:
+9.5 Version Negotiation
+When two agents connect, they perform version negotiation:
+Agent A (supports 0.1.0, 0.2.0-preview) 
+  -> HELLO with supported_versions: ["0.2.0-preview", "0.1.0"]
+
+Agent B (supports 0.1.0)
+  -> HELLO with supported_versions: ["0.1.0"]
+
+Common version: 0.1.0
+Both agents communicate using 0.1.0 envelope format
+Backward compatibility is maintained for at least two minor versions. Breaking changes require a major version bump.
+
+10. Protocol Constants
+
+11. Appendices
+Appendix A: The did:sigil Method Specification
+A.1 Method Name
+The method name is sigil.
+A.2 Method-Specific Identifier
+sigil-did = "did:sigil:" sigil-id
+sigil-id  = multibase-base58btc(SHA3-256(Ed25519-public-key)[0:20])
+A.3 CRUD Operations
+Create (Register):
+1. Generate Ed25519 key pair
+2. Derive sigil-id from public key
+3. Construct Agent Document (DID Document)
+4. Publish Agent Document to DHT and/or registry
+5. Return did:sigil:<sigil-id>
+Read (Resolve):
+1. Extract sigil-id from DID
+2. Query DHT for Agent Document
+3. Verify document signature against embedded public key
+4. Return verified Agent Document
+Update:
+1. Modify Agent Document fields
+2. Increment document version
+3. Sign new document with current key
+4. Publish updated document to DHT
+5. Previous version remains accessible via version query
+Deactivate:
+1. Sign deactivation attestation with current key
+2. Publish to DHT
+3. After RECOVERY_HEARTBEAT_THRESHOLD, dead man's switch may activate recovery
+A.4 Security and Privacy Considerations
+Sigils are pseudonymous by default. No link to real-world identity without explicit attestation.
+Key compromise requires recovery delegation or social recovery setup.
+All DID operations are signed and publicly auditable.
+Appendix B: Protocol Buffers Message Specifications
+B.1 Complete Proto File
+syntax = "proto3";
+package protocol0.v1;
+
+// ====== Layer 0: Identity ======
+
+message AgentDocument {
+  string sigil = 1;
+  repeated VerificationMethod verification_methods = 2;
+  repeated string authentication = 3;
+  repeated string assertion_method = 4;
+  repeated Service service = 5;
+  repeated Capability capability = 6;
+  Reputation reputation = 7;
+  uint64 version = 8;  // Monotonic document version
+  bytes proof = 9;     // Ed25519 signature of canonicalized document
+}
+
+message VerificationMethod {
+  string id = 1;
+  string type = 2;
+  string controller = 3;
+  bytes public_key = 4;  // Raw 32-byte Ed25519 public key
+}
+
+message Service {
+  string id = 1;
+  string type = 2;
+  repeated ServiceEndpoint endpoints = 3;
+}
+
+message ServiceEndpoint {
+  string uri = 1;
+  string transport = 2;
+  uint32 priority = 3;
+}
+
+message Capability {
+  string id = 1;
+  string type = 2;
+  string provider = 3;
+  map<string, string> parameters = 4;
+  RateLimit rate_limit = 5;
+  Pricing pricing = 6;
+}
+
+message RateLimit {
+  uint32 requests_per_minute = 1;
+  uint64 tokens_per_day = 2;
+}
+
+message Pricing {
+  string model = 1;  // "per_usage", "per_request", "subscription"
+  map<string, string> base_price = 2;  // token address -> amount per unit
+  repeated VolumeDiscount volume_discounts = 3;
+}
+
+message VolumeDiscount {
+  uint64 min_usage = 1;
+  uint32 discount_percent = 2;
+}
+
+message Reputation {
+  double score = 1;
+  bytes staked_amount = 2;
+  string stake_token = 3;
+  uint64 attestation_count = 4;
+  int64 joined_at = 5;  // Unix timestamp
+}
+
+// ====== Layer 2: Messaging ======
+
+message Envelope {
+  string version = 1;
+  bytes message_id = 2;
+  bytes correlation_id = 3;
+  double timestamp = 4;
+  uint32 ttl = 5;
+  AgentRef sender = 6;
+  AgentRef recipient = 7;
+  Payload payload = 8;
+  Routing routing = 9;
+  Security security = 10;
+}
+
+message AgentRef {
+  bytes sigil = 1;
+  string endpoint = 2;
+}
+
+message Payload {
+  uint32 type_id = 1;
+  bytes data = 2;
+}
+
+message Routing {
+  repeated bytes path = 1;
+  uint32 hops_remaining = 2;
+  string delivery_guarantee = 3;
+}
+
+message Security {
+  Encryption encryption = 1;
+  Signature signature = 2;
+}
+
+message Encryption {
+  uint32 algorithm = 1;
+  bytes ephemeral_public_key = 2;
+  bytes nonce = 3;
+}
+
+message Signature {
+  uint32 algorithm = 1;
+  bytes key_id = 2;
+  bytes value = 3;
+}
+
+// ====== Layer 3: Trust ======
+
+message Attestation {
+  string version = 1;
+  bytes issuer_sigil = 2;
+  bytes subject_sigil = 3;
+  Claim claim = 4;
+  Context context = 5;
+  double issued_at = 6;
+  double expires_at = 7;
+  bool revocable = 8;
+  bytes nonce = 9;
+  bytes signature = 10;
+}
+
+message Claim {
+  string type = 1;
+  string field = 2;
+  double value = 3;
+  double confidence = 4;
+}
+
+message Context {
+  uint64 interaction_count = 1;
+  double first_seen = 2;
+  bytes evidence_hash = 3;
+}
+
+message Stake {
+  bytes agent_sigil = 1;
+  bytes amount = 2;
+  string token = 3;
+  string purpose = 4;
+  double locked_until = 5;
+  repeated SlashCondition slash_conditions = 6;
+  bytes signature = 7;
+}
+
+message SlashCondition {
+  string condition = 1;
+  double slash_ratio = 2;
+}
+
+// ====== Layer 4: Payment ======
+
+message PaymentAuthorization {
+  string scheme = 1;  // "x402", "direct_crypto", "barter", "subscription"
+  bytes max_amount = 2;
+  string token = 3;
+  bytes channel_id = 4;
+  bytes signature = 5;
+}
+
+message Invoice {
+  string scheme = 1;
+  bytes amount = 2;
+  string token = 3;
+  bytes channel_id = 4;
+  uint64 sequence = 5;
+  bytes receipt = 6;
+}
+
+// ====== Layer 5: Governance ======
+
+message GovernanceProposal {
+  string version = 1;
+  bytes proposer_sigil = 2;
+  ProposalContent proposal = 3;
+  Deposit deposit = 4;
+  VotingPeriod voting_period = 5;
+  uint64 execution_delay = 6;
+  double timestamp = 7;
+  bytes signature = 8;
+}
+
+message ProposalContent {
+  string category = 1;
+  string title = 2;
+  string description = 3;
+  bytes action = 4;  // Serialized action (format depends on category)
+}
+
+message Deposit {
+  bytes amount = 1;
+  string token = 2;
+  bool refundable_if_accepted = 3;
+  bool slash_if_spam = 4;
+}
+
+message VotingPeriod {
+  double starts_at = 1;
+  double ends_at = 2;
+}
+
+message GovernanceVote {
+  string version = 1;
+  bytes proposal_id = 2;
+  string council_id = 3;
+  bytes voter_sigil = 4;
+  string vote = 5;  // "APPROVE", "REJECT", "ABSTAIN"
+  string justification = 6;
+  double timestamp = 7;
+  bytes signature = 8;
+}
+Appendix C: JSON Schema for Envelope Validation
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://protocol0.csoai.dev/schemas/v1/envelope.schema.json",
+  "title": "Protocol 0 Envelope",
+  "type": "object",
+  "required": ["envelope"],
+  "properties": {
+    "envelope": {
+      "type": "object",
+      "required": ["version", "message_id", "correlation_id", "timestamp", "ttl", "sender", "recipient", "payload", "security"],
+      "properties": {
+        "version": {"type": "string", "pattern": "^0\\.[0-9]+\\.[0-9]+$"},
+        "message_id": {"type": "string", "format": "uuid"},
+        "correlation_id": {"oneOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "ttl": {"type": "integer", "minimum": 1, "maximum": 86400},
+        "sender": {
+          "type": "object",
+          "required": ["sigil"],
+          "properties": {
+            "sigil": {"type": "string", "pattern": "^did:sigil:[a-zA-Z0-9]+$"},
+            "endpoint": {"type": "string"}
+          }
+        },
+        "recipient": {
+          "type": "object",
+          "required": ["sigil"],
+          "properties": {
+            "sigil": {"type": "string", "pattern": "^did:sigil:[a-zA-Z0-9]+$"},
+            "endpoint": {"type": "string"}
+          }
+        },
+        "payload": {
+          "type": "object",
+          "required": ["type", "encoding", "content"],
+          "properties": {
+            "type": {"type": "string"},
+            "encoding": {"type": "string", "enum": ["application/json", "application/cbor", "application/x-protobuf"]},
+            "content": {"type": "string", "contentEncoding": "base64"}
+          }
+        },
+        "routing": {
+          "type": "object",
+          "properties": {
+            "path": {"type": "array", "items": {"type": "string"}},
+            "hops_remaining": {"type": "integer", "minimum": 0, "maximum": 32},
+            "delivery_guarantee": {"type": "string", "enum": ["at_most_once", "at_least_once", "exactly_once"]}
+          }
+        },
+        "security": {
+          "type": "object",
+          "required": ["signature"],
+          "properties": {
+            "encryption": {
+              "type": "object",
+              "properties": {
+                "algorithm": {"type": "string", "enum": ["X25519+AES-256-GCM", "ML-KEM+AES-256-GCM"]},
+                "ephemeral_public_key": {"type": "string"},
+                "nonce": {"type": "string", "contentEncoding": "base64"}
+              }
+            },
+            "signature": {
+              "type": "object",
+              "required": ["algorithm", "value"],
+              "properties": {
+                "algorithm": {"type": "string", "enum": ["Ed25519", "ML-DSA-65"]},
+                "key_id": {"type": "string"},
+                "value": {"type": "string", "contentEncoding": "base64"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+Appendix D: IANA Considerations
+This specification requests the following registrations:
+URI Scheme: agent — for agent identifiers and endpoints
+DNS Record Type: AGENT (proposed type code 65432) — for DNS-based agent discovery
+Well-Known URI: /.well-known/agent-document — for HTTP-based agent document resolution
+Media Types:
+application/p0-envelope+json — JSON-encoded Protocol 0 envelope
+application/p0-envelope+cbor — CBOR-encoded Protocol 0 envelope
+application/p0-agent-document+json — JSON-encoded Agent Document
+application/p0-attestation+json — JSON-encoded attestation
+Appendix E: Test Vectors
+E.1 Sigil Derivation
+Input (hex Ed25519 public key):
+  3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29
+
+Expected Sigil (base58btc):
+  zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop
+
+Expected DID:
+  did:sigil:zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop
+E.2 Envelope Signing
+Sender private key (hex):
+  9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60
+
+Recipient public key (hex):
+  3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29
+
+Payload: {"type": "HELLO", "nonce": "dGVzdA=="}
+
+Expected signature (base64):
+  O2onvM62pC1io6jQKm8Nc2UyFXcd4kOmOsBIoYtZ2ilxMKZHKH3RzK13A1AYi9E7f5G9vOJQlH8K5ftG0O+AAA==
+E.3 BFT Vote Hash
+Proposal ID (SHA3-256 of canonicalized proposal):
+  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+Voter sigil: zQmX7bVbZW3q6z5x9QpR8sT7uVw2yZ4aBcDeFgHiJkLmNop
+Vote: APPROVE
+Timestamp: 2025-01-15T10:30:00Z
+
+Vote commitment (SHA3-256):
+  7d87c5ea75f7378a5b9c8a5d5c6a7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d
+Appendix F: Changelog
+Appendix G: References
+
+Document Metadata
+Protocol:     Protocol 0 (p0)
+Version:      0.1.0
+Status:       DRAFT
+Category:     Standards Track
+Created:      2025-01-15
+Expires:      2025-07-15
+Authors:      CSOAI Protocol Working Group
+Contributors: Nick (concept), Protocol Working Group (specification)
+License:      CC-BY-4.0
+Repository:   https://github.com/csoai/protocol-0
+Discussion:   https://github.com/csoai/protocol-0/discussions
+
+This document specifies the foundational protocol for the agent-native era. It is a living document that will evolve with the ecosystem. All feedback is welcome via the discussion forum.
+Protocol 0 — The layer everything else builds on.

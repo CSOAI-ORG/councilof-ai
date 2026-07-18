@@ -1,0 +1,164 @@
+.blog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+.blog-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.blog-header h1 {
+  font-size: 3rem;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+.blog-header p {
+  font-size: 1.25rem;
+  color: #666;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 32px;
+  margin-bottom: 80px;
+}
+
+.blog-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.blog-card-content {
+  padding: 32px;
+}
+
+.blog-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.blog-date, .blog-read-time {
+  display: flex;
+  align-items: center;
+}
+
+.blog-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.blog-card h2 a {
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.blog-card h2 a:hover {
+  color: #0066cc;
+}
+
+.blog-description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.blog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.blog-author {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.read-more {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.read-more:hover {
+  color: #0052a3;
+}
+
+.blog-cta {
+  text-align: center;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  color: white;
+}
+
+.blog-cta h3 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.blog-cta p {
+  font-size: 1.125rem;
+  margin-bottom: 32px;
+  opacity: 0.9;
+}
+
+.subscribe-btn {
+  padding: 16px 48px;
+  font-size: 1.125rem;
+  background: white;
+  color: #667eea;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.subscribe-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+  .blog-header h1 {
+    font-size: 2rem;
+  }
+  
+  .blog-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .blog-card-content {
+    padding: 24px;
+  }
+  
+  .blog-cta {
+    padding: 40px 24px;
+  }
+  
+  .blog-cta h3 {
+    font-size: 1.5rem;
+  }
+}
+

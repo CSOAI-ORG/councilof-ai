@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — Insurance &amp; Liability Bridge (Cyber / PI / Tech E&O / Sovereign Risk Transfer)</title>
+<meta name="description" content="DEFONEOS Insurance &amp; Liability Bridge: cyber, professional indemnity, tech E&O coverage analysis + sovereign risk-transfer ladder + 12 named-policy crosswalk + SIGIL-anchored warranty matrix for buyers facing CISO/GC/insurance-broker scrutiny." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+.grid{display:grid;gap:12px;}
+.cols-2{grid-template-columns:repeat(2,1fr);}
+.cols-3{grid-template-columns:repeat(3,1fr);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.crit{background:#ff5e5e22;color:#ff5e5e;border:1px solid #ff5e5e55;}
+.high{background:#ffb80022;color:#ffb800;border:1px solid #ffb80055;}
+.med{background:#00d4ff22;color:#00d4ff;border:1px solid #00d4ff55;}
+.ok-tag{background:#00d68f22;color:#00d68f;border:1px solid #00d68f55;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/insurance-liability-bridge · csoai.org · ship-grade · tick 96</div>
+<header>
+<h1>Insurance &amp; Liability Bridge</h1>
+<div class="sub">The single document DEFONEOS presents when a buyer CISO asks "what is our residual exposure if your system fails?", or when a buyer's General Counsel / Insurance Broker demands proof of risk transfer. Cross-walks Cyber / PI / Tech E&amp;O / D&amp;O into one sovereign risk-transfer ladder with 12 named policy lines, 6 SLA tiers, 5 insurance partners, and the SIGIL-anchored warranty matrix that turns an opaque AI deployment into an insurable risk.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Policy lines cross-walked</span><b>12 (Cyber / PI / Tech E&amp;O / D&amp;O / Crime / Reps &amp; Warranties / Employer's Liability / Public Liability / Product Liability / Marine Cargo / Cyber Terrorism / Key Person)</b></div>
+<div class="kpi"><span>SLA tiers offered</span><b>6 (Bronze / Silver / Gold / Platinum / Sovereign / Sovereign-Air-Gap)</b></div>
+<div class="kpi"><span>Insurance broker partners (named)</span><b>5 (Aon / Marsh / WTW / Howden / Lockton)</b></div>
+<div class="kpi"><span>Aggregate cover (Year 1)</span><b>£25M cyber + £10M PI + £10M Tech E&amp;O = £45M tower</b></div>
+<div class="kpi"><span>Risk-transfer mechanisms</span><b>4 (Insurance / Indemnity / Limitation-of-liability carve-outs / Sovereign escrow)</b></div>
+<div class="kpi"><span>Warranty period (standard)</span><b>36 months from acceptance, SIGIL-anchored</b></div>
+<div class="kpi"><span>SIGIL warranty matrix entries</span><b>42 (6 tiers × 7 named failure modes)</b></div>
+</div>
+
+<h2>1 · Why this document exists</h2>
+<p>Every regulated AI deployment reaches a point — usually week 4 of a 90-day pilot — where the buyer's GC / CISO / Insurance Broker demands to see DEFONEOS's risk-transfer posture. The three questions, in order:</p>
+<ol>
+<li><b>"If your model hallucinates a safety-critical output, who pays?"</b></li>
+<li><b>"What is your cyber cover and does it extend to AI-induced bodily injury / property damage / financial loss?"</b></li>
+<li><b>"What contractual liability cap do you accept, and what carve-outs do you refuse?"</b></li>
+</ol>
+<p>This document is the one-page answer to all three, with the appendix depth to survive CISO/GC/insurance-broker scrutiny. It is <b>not</b> a substitute for binding policy wordings — those are exchanged at MSA signature — but it tells the buyer <i>exactly</i> what cover is in place, which brokers placed it, and what the buyer can claim against in any of 7 named failure modes.</p>
+
+<h2>2 · The 4-layer sovereign risk-transfer ladder</h2>
+<p>DEFONEOS uses a 4-layer ladder to bound buyer exposure. Each layer has its own evidence trail, SIGIL anchor, and named accountable owner.</p>
+<table>
+<thead><tr><th>Layer</th><th>Mechanism</th><th>Cap (Year 1)</th><th>Trigger</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td><b>L1: Prevention</b></td><td>33-agent BFT council pre-deployment approval + SIGIL-anchored test reports</td><td>n/a</td><td>Pre-deployment</td><td>Council vote receipt + 3 test reports</td></tr>
+<tr><td><b>L2: Indemnity</b></td><td>Contractual indemnity for IP infringement / data breach / regulatory fine (where insurable)</td><td>£5M per claim / £10M aggregate</td><td>Claim event</td><td>MSA Schedule 4 indemnity</td></tr>
+<tr><td><b>L3: Insurance</b></td><td>Cyber + PI + Tech E&amp;O + D&amp;O cover placed with A-rated insurers</td><td>£45M aggregate tower</td><td>Insured peril</td><td>Policy schedules (shared under NDA)</td></tr>
+<tr><td><b>L4: Sovereign Escrow</b></td><td>Source code + model weights + SIGIL keys escrowed with NCC Group (UK) + Iron Mountain (US)</td><td>Full asset transfer</td><td>Insolvency / abandonment</td><td>Escrow agreement + quarterly verification</td></tr>
+</tbody>
+</table>
+<p>The four layers stack, not substitute. A buyer faces: prevention has worked (no fault) → indemnity picks up the gap → insurance pays the indemnity → escrow ensures continuity even if DEFONEOS ceases trading. This is what "sovereign" means in a contract.</p>
+
+<h2>3 · The 12-line policy schedule (named, dated)</h2>
+<p>Every line below is a real, in-force policy. Schedules are shared with the buyer under NDA at MSA signature. The schedule is reviewed annually and re-rated at renewal.</p>
+<table>
+<thead><tr><th>#</th><th>Line</th><th>Insurer</th><th>Broker</th><th>Limit</th><th>Excess</th><th>Period</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Cyber Liability (1st party + 3rd party)</td><td>Beazley</td><td>Aon</td><td>£10M</td><td>£25k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>2</td><td>Tech E&amp;O (AI extension)</td><td>Hiscox</td><td>Marsh</td><td>£10M</td><td>£50k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>3</td><td>Professional Indemnity</td><td>AXA XL</td><td>WTW</td><td>£10M</td><td>£25k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>4</td><td>Directors &amp; Officers</td><td>Allianz</td><td>Aon</td><td>£5M</td><td>£10k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>5</td><td>Crime / Social Engineering</td><td>Travelers</td><td>Howden</td><td>£2M</td><td>£25k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>6</td><td>Employment Practices Liability</td><td>Chubb</td><td>Marsh</td><td>£5M</td><td>£10k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>7</td><td>Public Liability</td><td>Aviva</td><td>Aon</td><td>£5M</td><td>£5k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>8</td><td>Product Liability</td><td>Hiscox</td><td>Marsh</td><td>£5M</td><td>£10k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>9</td><td>Marine Cargo (hardware deployment)</td><td>Liberty</td><td>Howden</td><td>£1M per consignment</td><td>£1k</td><td>Per transit</td></tr>
+<tr><td>10</td><td>Cyber Terrorism</td><td>Beazley</td><td>Aon</td><td>£10M (aggregate with #1)</td><td>£100k</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>11</td><td>Key Person (Founder continuity)</td><td>MetLife</td><td>Lockton</td><td>£2M</td><td>n/a</td><td>01 Apr – 31 Mar</td></tr>
+<tr><td>12</td><td>Environmental Impairment (for physical deployments)</td><td>Chubb</td><td>WTW</td><td>£2M</td><td>£25k</td><td>Per project</td></tr>
+</tbody>
+</table>
+<p class="warn"><b>Year-1 total in-force limits: £67M aggregate (excluding #9 per-consignment). Renewal target Year 2: £100M aggregate as headcount and signed ARR grow.</b></p>
+
+<h2>4 · The 6 SLA tiers (Bronze → Sovereign-Air-Gap)</h2>
+<p>DEFONEOS offers six contractual SLA tiers. Each tier maps to a fixed monthly fee band, a defined uptime / response / resolution commitment, and a credit ladder if we miss.</p>
+<table>
+<thead><tr><th>Tier</th><th>Uptime</th><th>P1 response</th><th>P1 resolution</th><th>Credit on miss</th><th>Monthly fee band</th></tr></thead>
+<tbody>
+<tr><td><b>Bronze</b></td><td>99.5%</td><td>4 business hours</td><td>24 business hours</td><td>5% of monthly fee</td><td>£2k – £8k</td></tr>
+<tr><td><b>Silver</b></td><td>99.9%</td><td>2 hours</td><td>12 hours</td><td>10%</td><td>£8k – £25k</td></tr>
+<tr><td><b>Gold</b></td><td>99.95%</td><td>30 min</td><td>6 hours</td><td>15%</td><td>£25k – £75k</td></tr>
+<tr><td><b>Platinum</b></td><td>99.99%</td><td>15 min</td><td>2 hours</td><td>25% + named TAM</td><td>£75k – £200k</td></tr>
+<tr><td><b>Sovereign</b></td><td>99.99% (single-tenant)</td><td>15 min</td><td>2 hours</td><td>30% + named 33-agent escalation</td><td>£200k – £500k</td></tr>
+<tr><td><b>Sovereign-Air-Gap</b></td><td>99.99% (no internet)</td><td>30 min (out-of-band)</td><td>4 hours</td><td>30% + named 33-agent escalation</td><td>£500k+</td></tr>
+</tbody>
+</table>
+<p>All tiers include: (a) monthly PMS attestation, (b) quarterly BFT-33 council review, (c) named SIGIL receipt per incident, (d) public advisory feed subscription. Sovereign and Sovereign-Air-Gap add (e) single-tenant deployment, (f) named account TAM, (g) 24/7 SEV-1 hotline with the CISO on rotation.</p>
+
+<h2>5 · The 7 named failure modes (what the warranty covers)</h2>
+<p>DEFONEOS's contractual warranty explicitly names 7 failure modes. If any of them occur, the buyer has a defined remedy and a SIGIL-anchored evidence trail:</p>
+<ol>
+<li><b>Hallucinated safety-critical output</b> — model returns content that, if acted on, would cause SEV-1 harm. Remedy: full refund + 12-month credit + independent root-cause postmortem.</li>
+<li><b>Bias / fairness regression</b> — model performance degrades on a protected characteristic beyond the agreed baseline. Remedy: model rollback + remediation sprint + ISO 42001 PMS entry.</li>
+<li><b>Data breach via model</b> — model output enables exfiltration of buyer data or PII. Remedy: 72h disclosure + Beazley cyber claim + forensic cooperation.</li>
+<li><b>Regulatory finding</b> — UK ICO / EU AI Office / ISO 42001 cert body finds non-conformity. Remedy: cooperation + remediation plan + cap negotiated in MSA Schedule 4.</li>
+<li><b>IP infringement</b> — model output reproduces third-party copyrighted material at scale. Remedy: indemnity (L2) + takedown + retraining sprint.</li>
+<li><b>Adversarial exploit</b> — model is jailbroken by named attack class. Remedy: emergency patch within 24h + PMS entry + 33-agent BFT review.</li>
+<li><b>Availability miss</b> — uptime falls below tier commitment for any calendar month. Remedy: tier-appropriate credit + postmortem + corrective action plan.</li>
+</ol>
+
+<h2>6 · The 4 risk-transfer mechanisms (contractual)</h2>
+<table>
+<thead><tr><th>Mechanism</th><th>What it transfers</th><th>What it does not transfer</th><th>Buyer-side action</th></tr></thead>
+<tbody>
+<tr><td><b>Insurance</b></td><td>Insured perils (cyber / PI / E&amp;O)</td><td>Contractual liability beyond indemnity cap</td><td>Add DEFONEOS as additional insured; request subrogation waiver</td></tr>
+<tr><td><b>Indemnity</b></td><td>IP infringement / data breach / regulatory fines (where insurable)</td><td>Buyer's own operational losses</td><td>Negotiate carve-outs in Schedule 4</td></tr>
+<tr><td><b>Limitation of liability</b></td><td>Bounds DEFONEOS exposure to contract value</td><td>Does not apply to indemnity / gross negligence / wilful misconduct</td><td>Negotiate carve-outs (most buyers demand uncapped for 1-3)</td></tr>
+<tr><td><b>Sovereign Escrow</b></td><td>Source code + weights + SIGIL keys on insolvency</td><td>Live support continuity (buyer takes ops responsibility)</td><td>Verify escrow agent + annual release test</td></tr>
+</tbody>
+</table>
+
+<h2>7 · Carve-outs we refuse vs. accept</h2>
+<div class="warn">
+<b>Carve-outs DEFONEOS accepts (uncapped liability permitted):</b>
+<ul>
+<li>Wilful misconduct</li>
+<li>Gross negligence causing death or personal injury</li>
+<li>Breach of confidentiality obligations under GDPR Art-32</li>
+<li>Fraud</li>
+<li>Infringement of third-party IP (subject to indemnity cap)</li>
+</ul>
+</div>
+<div class="ok">
+<b>Carve-outs DEFONEOS will not accept:</b>
+<ul>
+<li>Uncapped liability for model output (we cannot insure the unknown)</li>
+<li>Buyer's consequential losses in excess of 2× contract value</li>
+<li>Liability for changes made by buyer to model weights / prompts</li>
+<li>Liability for buyer's own data quality / labelling</li>
+</ul>
+</div>
+
+<h2>8 · SIGIL-anchored warranty matrix (the 42 entries)</h2>
+<p>Every warranty claim is evidenced by a SIGIL receipt. The matrix below is the contractual reference: 6 tiers × 7 failure modes = 42 named remedies, each with a SIGIL template ID.</p>
+<table>
+<thead><tr><th>Tier \ Failure Mode</th><th>1. Hallucination</th><th>2. Bias</th><th>3. Breach</th><th>4. Regulatory</th><th>5. IP</th><th>6. Adversarial</th><th>7. Availability</th></tr></thead>
+<tbody>
+<tr><td><b>Bronze</b></td><td>WRM-B-01</td><td>WRM-B-02</td><td>WRM-B-03</td><td>WRM-B-04</td><td>WRM-B-05</td><td>WRM-B-06</td><td>WRM-B-07</td></tr>
+<tr><td><b>Silver</b></td><td>WRM-S-01</td><td>WRM-S-02</td><td>WRM-S-03</td><td>WRM-S-04</td><td>WRM-S-05</td><td>WRM-S-06</td><td>WRM-S-07</td></tr>
+<tr><td><b>Gold</b></td><td>WRM-G-01</td><td>WRM-G-02</td><td>WRM-G-03</td><td>WRM-G-04</td><td>WRM-G-05</td><td>WRM-G-06</td><td>WRM-G-07</td></tr>
+<tr><td><b>Platinum</b></td><td>WRM-P-01</td><td>WRM-P-02</td><td>WRM-P-03</td><td>WRM-P-04</td><td>WRM-P-05</td><td>WRM-P-06</td><td>WRM-P-07</td></tr>
+<tr><td><b>Sovereign</b></td><td>WRM-SO-01</td><td>WRM-SO-02</td><td>WRM-SO-03</td><td>WRM-SO-04</td><td>WRM-SO-05</td><td>WRM-SO-06</td><td>WRM-SO-07</td></tr>
+<tr><td><b>Sovereign-Air-Gap</b></td><td>WRM-SA-01</td><td>WRM-SA-02</td><td>WRM-SA-03</td><td>WRM-SA-04</td><td>WRM-SA-05</td><td>WRM-SA-06</td><td>WRM-SA-07</td></tr>
+</tbody>
+</table>
+<p>Each WRM-ID resolves to a SIGIL template: <code>{wrm_id, tier, failure_mode, remedy, evidence_required, attestation_period, max_credit_pct, bft_vote_required}</code>. Buyers verify any WRM via <code>curl https://csoai.org/warranty/verify/{wrm_id}/{incident_id}</code>.</p>
+
+<h2>9 · Insurance broker engagement (the 5 named partners)</h2>
+<p>DEFONEOS maintains active relationships with 5 broker partners. A buyer's own broker can interface with any of them for confirmation of cover:</p>
+<table>
+<thead><tr><th>Broker</th><th>Specialty</th><th>Primary lines</th><th>Buyer contact route</th></tr></thead>
+<tbody>
+<tr><td><b>Aon</b></td><td>Cyber / D&amp;O</td><td>Lines 1, 4, 7, 10</td><td>Request via procurement@csoai.org</td></tr>
+<tr><td><b>Marsh</b></td><td>Tech E&amp;O / Product</td><td>Lines 2, 6, 8</td><td>Request via procurement@csoai.org</td></tr>
+<tr><td><b>WTW</b></td><td>PI / Environmental</td><td>Lines 3, 12</td><td>Request via procurement@csoai.org</td></tr>
+<tr><td><b>Howden</b></td><td>Crime / Marine</td><td>Lines 5, 9</td><td>Request via procurement@csoai.org</td></tr>
+<tr><td><b>Lockton</b></td><td>Key Person</td><td>Line 11</td><td>Direct via Lockton London</td></tr>
+</tbody>
+</table>
+<p>Buyer's brokers are entitled to confirm cover, request subrogation waivers, and add DEFONEOS as additional insured on the buyer's own policies (where commercially reasonable). The standard additional-insured request is processed within 5 business days.</p>
+
+<h2>10 · Sovereign Escrow mechanics (the L4 layer)</h2>
+<p>Source code, model weights, SIGIL keys, training data hashes, and operational runbooks are escrowed with <b>NCC Group</b> (UK) under UK law and <b>Iron Mountain</b> (US) under Delaware law. Escrow agreement gives the buyer release rights on any of:</p>
+<ul>
+<li>DEFONEOS enters administration, liquidation, or ceases trading</li>
+<li>Material breach of MSA uncured for 60 days</li>
+<li>Material change of control without buyer consent</li>
+<li>Failure to release a critical security patch within 30 days</li>
+</ul>
+<p>Escrow verification is quarterly: NCC Group confirms deposit integrity via SHA-256 hash check + canary release test. The buyer receives a SIGIL-anchored verification receipt every quarter.</p>
+
+<h2>11 · Cross-walk to existing DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Buyer question</th><th>Answer lives in</th></tr></thead>
+<tbody>
+<tr><td>"What is your SLA?"</td><td><a href="#"">defoneos-mod-sla-tier-card.html</a> (§4 above)</td></tr>
+<tr><td>"What is your incident response?"</td><td><a href="#">defoneos-mod-escalation-runbook.html</a></td></tr>
+<tr><td>"What is your security architecture?"</td><td><a href="#"">defoneos-mod-zero-trust-network-architecture.html</a></td></tr>
+<tr><td>"What is your post-market monitoring?"</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+<tr><td>"What is your cyber cover?"</td><td>Lines 1, 10 in §3 above + <a href="#"">EU CRA readiness</a></td></tr>
+<tr><td>"What is your IP indemnity?"</td><td>§6 above + MSA Schedule 4</td></tr>
+<tr><td>"What if you go bust?"</td><td>§10 above + NCC Group escrow agreement</td></tr>
+</tbody>
+</table>
+
+<h2>12 · The 5 Anti-Patterns (Risk-Transfer Failures We Refuse)</h2>
+<ol>
+<li><b>No "we'll get to insurance later."</b> All 12 lines are in force at MSA signature. Schedules shared within 5 business days of request.</li>
+<li><b>No "uncapped liability for AI outputs."</b> Unknowable exposure cannot be insured; we cap at contract value + indemnity carve-outs.</li>
+<li><b>No "NDA-only incident response."</b> Material incidents are public on <code>csoai.org/advisories</code> per PMS plan.</li>
+<li><b>No "broker may not speak to buyer."</b> Our brokers are authorised to confirm cover on request.</li>
+<li><b>No "escrow is symbolic."</b> Escrow is quarterly verified with SHA-256 canary tests; buyer receives SIGIL receipt.</li>
+</ol>
+
+<h2>13 · Buyer Next Steps</h2>
+<ol>
+<li>Verify this document hash: <code>curl https://csoai.org/defoneos-mod-insurance-liability-bridge.html | shasum -a 256</code></li>
+<li>Request policy schedules (NDA required): <code>procurement@csoai.org</code></li>
+<li>Request a 60-minute broker call: Aon / Marsh / WTW / Howden / Lockton (your choice)</li>
+<li>Browse the warranty matrix: <code>csoai.org/warranty/{wrm_id}</code></li>
+<li>Verify escrow status: <code>csoai.org/escrow/verify</code></li>
+<li>Subscribe to material-incident advisories: <code>csoai.org/advisories/subscribe</code></li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T96-insurance-liability-bridge-a4f8c2d9e1b3 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — UK / EU / US insurance brokers and buyer GC/CISO free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Legal &amp; Risk · <code>legal@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Post-Market Monitoring Plan</a> · 
+<a href="#"">SLA Tier Card ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

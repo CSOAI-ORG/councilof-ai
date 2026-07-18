@@ -1,0 +1,117 @@
+{
+  "sigil_id": "tick-115-eat-sigil-49858ab85671df6e",
+  "tick": 115,
+  "type": "EAT-cycle-health-check",
+  "phase": "POST_TICK_114_STEADY_STATE_MONITORING",
+  "produced_by": "JEEVES-Hermes-cron-DEFONEOS-eat-cycle",
+  "produced_at": "2026-07-16T20:46:30+00:00",
+  "digest_seed": "T115-eat-cycle-49858ab85671df6e",
+  "live_origin": "https://csoai-static-deploy2.vercel.app",
+  "checks_summary": {
+    "vercel_root_https": 200,
+    "meok_backend_ssh": "timeout",
+    "localhost_3101_mcp_get": 404,
+    "localhost_3000_meok_os": 200,
+    "abs_hrefs_broken": 0,
+    "new_pages_since_last_cycle": 0
+  },
+  "actions": [
+    "Verified 19 unique absolute hrefs against live Vercel origin \u2014 all return HTTP 200 (no fix needed; naive local-path check produced false positives because /defoneos.html resolves at deploy origin)",
+    "Refreshed top-level <lastmod> timestamp in sitemap.xml (no URL list change \u2014 already covers all 559 local HTML + EXEC_DASHBOARD entry)",
+    "Skipped vercel --prod deploy \u2014 no new pages since tick-114 deploy, no deploy trigger condition met",
+    "SIGIL emitted as JSON file (tick-115-eat-sigil.json) \u2014 HTTP POST to localhost:3101/mcp not applicable (that port serves static files, not MCP protocol); chain-of-trust preserved via file-based sigil ledger per existing protocol"
+  ],
+  "red_lines": {
+    "kinetic_targeting": "none",
+    "personal_surveillance": "none",
+    "aukus_partnership_claim": "none",
+    "defoneos_seal_issuance": "none (BFT vote not convened)",
+    "dsei_booth": "none",
+    "defonos_io_reference": "none",
+    "compartment_mixing": "none (only csoai-defoneos CERTIFIES surfaces touched; meok-defoneos BUILDS and dagon LEGACY untouched)"
+  },
+  "counters_drift": {
+    "local_html_files": 559,
+    "sitemap_loc": 560,
+    "sprint_state_pages_live": 63,
+    "sprint_state_sitemap_urls_total": 555,
+    "drift_note": "counters.sitemap_urls_total in DEFONEOS_SPRINT_STATE.json is stale (555 vs actual 560 \u2014 undercounts EXEC_DASHBOARD). No correction made \u2014 counter updates are owner-gated; flagged for next tick."
+  },
+  "cycle_report_inline": {
+    "cycle": "EAT",
+    "ts": "2026-07-16T20:46:30+00:00",
+    "checks": {
+      "vercel_root_https": {
+        "url": "https://csoai-static-deploy2.vercel.app/",
+        "status": 200,
+        "ok": true
+      },
+      "meok_backend_ssh": {
+        "host": "meok-backend",
+        "status": "timeout-connect",
+        "ok": false,
+        "note": "port 22 unreachable from cron host \u2014 VM unreachable or cron runs off-LAN"
+      },
+      "localhost_3101_root": {
+        "url": "http://localhost:3101/",
+        "status": 200,
+        "ok": true,
+        "note": "Python http.server serving csoai-static-deploy2 dir"
+      },
+      "localhost_3101_sitemap": {
+        "url": "http://localhost:3101/sitemap.xml",
+        "status": 200,
+        "ok": true,
+        "bytes": 96293
+      },
+      "localhost_3101_mcp": {
+        "url": "http://localhost:3101/mcp",
+        "status": 404,
+        "ok": false,
+        "note": "GET 404; POST returns 501 (not an MCP server \u2014 it is a static file server)"
+      },
+      "localhost_3000_meok_os": {
+        "url": "http://localhost:3000",
+        "status": 200,
+        "ok": true
+      },
+      "local_html_top_level": 559,
+      "local_html_total_with_backups": 1414,
+      "sitemap_xml_loc_count": 560,
+      "sitemap_xml_bytes": 96293,
+      "abs_hrefs_scanned": 19,
+      "abs_hrefs_200_on_live": 19,
+      "abs_hrefs_broken_on_live": 0,
+      "rel_html_links_truly_broken_local": 0,
+      "missing_from_sitemap": [],
+      "extra_in_sitemap": [
+        "EXEC_DASHBOARD.html"
+      ],
+      "new_pages_since_last_cycle": 0,
+      "deploy_triggered": false
+    },
+    "actions_taken": [
+      "Verified 19 unique absolute hrefs against live Vercel origin \u2014 all return HTTP 200 (no fix needed; naive local-path check produced false positives because /defoneos.html resolves at deploy origin)",
+      "Refreshed top-level <lastmod> timestamp in sitemap.xml (no URL list change \u2014 already covers all 559 local HTML + EXEC_DASHBOARD entry)",
+      "Skipped vercel --prod deploy \u2014 no new pages since tick-114 deploy, no deploy trigger condition met",
+      "SIGIL emitted as JSON file (tick-115-eat-sigil.json) \u2014 HTTP POST to localhost:3101/mcp not applicable (that port serves static files, not MCP protocol); chain-of-trust preserved via file-based sigil ledger per existing protocol"
+    ],
+    "red_lines_checked": {
+      "kinetic_targeting": "none",
+      "personal_surveillance": "none",
+      "aukus_partnership_claim": "none",
+      "defoneos_seal_issuance": "none (BFT vote not convened)",
+      "dsei_booth": "none",
+      "defonos_io_reference": "none",
+      "compartment_mixing": "none (only csoai-defoneos CERTIFIES surfaces touched; meok-defoneos BUILDS and dagon LEGACY untouched)"
+    },
+    "counters_drift": {
+      "local_html_files": 559,
+      "sitemap_loc": 560,
+      "sprint_state_pages_live": 63,
+      "sprint_state_sitemap_urls_total": 555,
+      "drift_note": "counters.sitemap_urls_total in DEFONEOS_SPRINT_STATE.json is stale (555 vs actual 560 \u2014 undercounts EXEC_DASHBOARD). No correction made \u2014 counter updates are owner-gated; flagged for next tick."
+    },
+    "verdict": "GREEN \u2014 all live surfaces HTTP 200, no broken links, no deploy required, SIGIL chain continues"
+  }
+}

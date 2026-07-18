@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SOV33 Sovereign AI OS API",
+    "version": "3.0.0",
+    "description": "28 endpoints · SIGIL-anchored · Rate-limited · Care Floor 0.95 gated",
+    "contact": {"name": "CSOAI Ltd", "url": "https://csoai.org", "email": "sovereign@csoai.org"},
+    "license": {"name": "MIT / CC0", "url": "https://opensource.org/licenses/MIT"}
+  },
+  "servers": [{"url": "https://proofof-site.vercel.app", "description": "Production"}],
+  "paths": {
+    "/api/health": {"get": {"summary": "Health check", "tags": ["system"], "responses": {"200": {"description": "sigil_mint + charter_sha256 + ts"}}}},
+    "/api/nexus": {"get": {"summary": "Nexus manifest (55 surfaces)", "tags": ["system"], "responses": {"200": {"description": "tabs array + trio distribution"}}}},
+    "/api/bft33": {
+      "get": {"summary": "BFT-33 council status", "tags": ["council"], "responses": {"200": {"description": "33 voters, 23/33 quorum, 5 lineages"}}},
+      "post": {"summary": "Propose or vote", "tags": ["council"], "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"action": {"type": "string", "enum": ["propose", "vote"]}, "proposal": {"type": "string"}, "vote_id": {"type": "string"}, "choice": {"type": "string", "enum": ["for", "against"]}, "voter": {"type": "string"}}}}}}, "responses": {"200": {"description": "SIGIL receipt"}, "429": {"description": "Rate limited"}}}
+    },
+    "/api/bft33/tally/{vid}": {"get": {"summary": "Vote tally", "tags": ["council"], "parameters": [{"name": "vid", "in": "path", "required": true, "schema": {"type": "string"}}], "responses": {"200": {"description": "votes_for, votes_against, passed, sigil"}}}},
+    "/api/owem5x4x3": {"get": {"summary": "5x4x3 topology", "tags": ["topology"], "responses": {"200": {"description": "60 voters, 40 sovereign, 96% OK"}}}},
+    "/api/intake": {"get": {"summary": "12-question sovereign readiness", "tags": ["intake"], "responses": {"200": {"description": "questions array + 4 grades"}}}},
+    "/api/intake/score": {"post": {"summary": "Score intake answers", "tags": ["intake"], "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"answers": {"type": "object", "description": "Map of question_id to 1-5"}}}}}}, "responses": {"200": {"description": "grade + pct + sigil"}, "400": {"description": "Invalid answers"}, "429": {"description": "Rate limited"}}}},
+    "/api/benchmarks/standard": {"get": {"summary": "Standard benchmarks (13/55 baseline)", "tags": ["benchmarks"], "responses": {"200": {"description": "results array + sovereign overlay"}}}},
+    "/api/sovspace": {"get": {"summary": "SovSpace status", "tags": ["sovspace"], "responses": {"200": {"description": "thesis, actions, discipline"}}}},
+    "/api/sovspace/spawn": {"post": {"summary": "Spawn world", "tags": ["sovspace"], "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"title": {"type": "string"}, "world_kind": {"type": "string"}, "axiom": {"type": "string"}, "creator": {"type": "string"}}}}}}, "responses": {"201": {"description": "world_id + sigil_spawn"}}}},
+    "/api/sovspace/observe": {"post": {"summary": "Observe world", "tags": ["sovspace"], "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"world_id": {"type": "string"}, "observer": {"type": "string"}}}}}}, "responses": {"200": {"description": "deltas + sigil chain"}}}},
+    "/api/sovspace/state": {"get": {"summary": "World registry", "tags": ["sovspace"], "responses": {"200": {"description": "world_count + world_ids"}}}},
+    "/api/jspace-instrument": {"get": {"summary": "J-Space consciousness score", "tags": ["jspace"], "responses": {"200": {"description": "score + sigil"}}}},
+    "/api/jspace/read": {"get": {"summary": "J-Space state read", "tags": ["jspace"], "responses": {"200": {"description": "reading + state"}}}},
+    "/api/jspace/write": {"post": {"summary": "Write concept weight", "tags": ["jspace"], "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"concept": {"type": "string"}, "weight": {"type": "number"}}}}}}, "responses": {"200": {"description": "state_changed"}}}},
+    "/api/jspace/ask": {"post": {"summary": "Ask J-Space", "tags": ["jspace"], "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"question": {"type": "string"}}}}}}, "responses": {"200": {"description": "answer + dominant concept"}}}},
+    "/api/jspace/detect": {"get": {"summary": "Drift detection", "tags": ["jspace"], "responses": {"200": {"description": "detection + state"}}}},
+    "/api/signup": {"post": {"summary": "Sovereign signup", "tags": ["funnel"], "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"name": {"type": "string"}, "email": {"type": "string"}, "tier": {"type": "string"}, "org": {"type": "string"}}}}}}, "responses": {"200": {"description": "SIGIL receipt"}, "429": {"description": "Rate limited"}}}},
+    "/api/waitlist": {"post": {"summary": "BFT observer waitlist", "tags": ["funnel"], "responses": {"200": {"description": "SIGIL receipt"}}}},
+    "/api/stats": {"get": {"summary": "Funnel stats", "tags": ["stats"], "responses": {"200": {"description": "signups, conversions"}}}},
+    "/api/topology": {"get": {"summary": "Measured topology", "tags": ["topology"], "responses": {"200": {"description": "pyramid, diversity, score"}}}},
+    "/api/world-models": {"get": {"summary": "61-model registry", "tags": ["registry"], "responses": {"200": {"description": "models array, lineages, reach"}}}},
+    "/api/bft-council": {"get": {"summary": "BFT-13 local council (Fast Council)", "tags": ["council"], "responses": {"200": {"description": "13 members, 9/13 quorum"}}}},
+    "/api/tabs": {"get": {"summary": "Tab count", "tags": ["system"], "responses": {"200": {"description": "count"}}}},
+    "/api/trio": {"get": {"summary": "Trio distribution", "tags": ["system"], "responses": {"200": {"description": "surface/deep/codex counts"}}}},
+    "/api/charter": {"get": {"summary": "Charter info", "tags": ["system"], "responses": {"200": {"description": "articles, sha256, sigil"}}}}
+  },
+  "components": {
+    "schemas": {
+      "SIGILReceipt": {
+        "type": "object",
+        "properties": {
+          "sigil": {"type": "string", "description": "Ed25519 signature hash"},
+          "charter_sha256": {"type": "string"},
+          "ts": {"type": "string", "format": "date-time"}
+        }
+      }
+    },
+    "securitySchemes": {
+      "rateLimit": {"type": "apiKey", "in": "header", "name": "X-Rate-Limit", "description": "10 requests per 5-min window per IP"}
+    }
+  },
+  "security": [{"rateLimit": []}]
+}

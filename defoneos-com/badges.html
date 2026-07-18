@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="seal.svg">
+<title>DEFONEOS — Authority badges</title>
+<meta name="description" content="Embeddable, verifiable DEFONEOS authority badges. Open-protocol, signed, sovereign-by-design. Copy-paste HTML or Markdown.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#070a12; --panel:#0f1320; --ink:#e8ecf6; --dim:#8a93b2; --line:rgba(120,140,190,.16); --gold:#c9a84c; --green:#00e07a; }
+  *{ margin:0; box-sizing:border-box; }
+  body{ background:var(--bg); color:var(--ink); font-family:"Inter",system-ui,sans-serif; line-height:1.6; }
+  .wrap{ max-width:880px; margin:0 auto; padding:56px 24px 80px; }
+  .mark{ display:flex; align-items:center; gap:12px; }
+  .m{ width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,#2a2722,#4d473d); display:grid; place-items:center; color:#f4eee1; font-weight:700; }
+  h1{ font-size:1.9rem; font-weight:600; letter-spacing:-.02em; }
+  .sub{ color:var(--dim); margin:8px 0 34px; max-width:620px; }
+  h2{ font-size:1.05rem; font-weight:600; margin:34px 0 4px; }
+  .h-note{ color:var(--dim); font-size:.9rem; margin-bottom:16px; }
+  .row{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:12px 0; }
+  .row .top{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .row img{ height:20px; }
+  .row .nm{ font-size:.9rem; color:var(--dim); }
+  .embed{ margin-top:12px; display:grid; gap:8px; }
+  .embed .lbl{ font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); }
+  .codeline{ display:flex; gap:8px; align-items:center; }
+  code{ flex:1; font-family:"JetBrains Mono",monospace; font-size:.72rem; background:#05070f; border:1px solid var(--line); border-radius:8px; padding:9px 11px; color:#9fd0ff; overflow-x:auto; white-space:nowrap; }
+  button{ background:var(--gold); color:#1d1505; border:0; border-radius:8px; padding:9px 14px; font-weight:600; cursor:pointer; font-size:.8rem; white-space:nowrap; }
+  button:active{ transform:scale(.97); }
+  .feat{ border-color:var(--gold); box-shadow:0 0 40px rgba(201,168,76,.12); }
+  .grid{ display:flex; flex-wrap:wrap; gap:10px; }
+  .honest{ background:rgba(0,224,122,.06); border:1px solid rgba(0,224,122,.3); border-radius:12px; padding:14px 16px; font-size:.88rem; color:var(--dim); margin-top:24px; }
+  .honest b{ color:var(--green); }
+  a{ color:var(--gold); } .foot{ color:var(--dim); font-size:.82rem; margin-top:32px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mark"><span class="m">M</span><h1>Authority badges</h1></div>
+  <p class="sub">Self-hosted, on-brand, verifiable. Every badge is rendered by our own endpoint and the seal links to a live verification. Copy-paste onto any repo, site, or front end.</p>
+
+  <h2>🛡 The verifiable seal — embed this everywhere</h2>
+  <p class="h-note">The flagship. Renders live from our endpoint; clicking it opens a real verification page backed by <code style="display:inline;padding:2px 6px">/api/verify-seal</code>.</p>
+  <div class="row feat">
+    <div class="top"><a href="verify.html"><img id="b-seal" src="/api/badge?label=DEFONEOS&message=SEAL%20%C2%B7%20verifiable&color=c9a84c" alt="Verifiable DEFONEOS-SEAL"></a><span class="nm">Verifiable DEFONEOS-SEAL → links to /verify.html</span></div>
+    <div class="embed">
+      <div><div class="lbl">HTML</div><div class="codeline"><code id="c-seal-html"></code><button onclick="cp('c-seal-html')">Copy</button></div></div>
+      <div><div class="lbl">Markdown</div><div class="codeline"><code id="c-seal-md"></code><button onclick="cp('c-seal-md')">Copy</button></div></div>
+    </div>
+  </div>
+
+  <h2>Open-protocol badges</h2>
+  <p class="h-note">Your real differentiator — you speak every open protocol.</p>
+  <div class="grid" id="proto"></div>
+
+  <h2>Social proof — real numbers only</h2>
+  <p class="h-note">Self-proving counts. We badge what's true.</p>
+  <div class="grid" id="proof"></div>
+
+  <h2>Trust &amp; compliance — honestly framed</h2>
+  <p class="h-note">"designed to align" / "compatible" — never "certified" or "partner" without a signed letter.</p>
+  <div class="grid" id="trust"></div>
+
+  <div class="honest">⚠️ <b>The rule:</b> a badge only builds authority if it's true and verifiable. These render live from our endpoint, the seal links to a real check, and the compliance badges say "designed to align" — not "certified". Fake authority destroys credibility with the exact buyers we want.</div>
+
+  <p style="text-align:center;margin-top:26px;font-size:.9rem"><b>Got a signed artifact?</b> Drop a DEFONEOS <b>receipt</b>, <b>ledger</b>, or <b>situational brief</b> into the <a href="verify.html">independent verifier ↗</a> — every Ed25519 signature is re-checked in your browser, offline, no server.</p>
+  <p class="foot">DEFONEOS · Powered by CSOAI · <a href="verify.html">verify</a> · <a href="index.html">the OS</a> · <a href="cop.html">the dome</a></p>
+</div>
+<script>
+const ORIGIN = location.origin;
+function badgeUrl(label,message,color){ return ORIGIN+'/api/badge?label='+encodeURIComponent(label)+'&message='+encodeURIComponent(message)+'&color='+color; }
+function chip(label,message,color){ return '<img src="'+badgeUrl(label,message,color)+'" alt="'+label+' '+message+'" style="height:20px">'; }
+// featured seal embeds
+document.getElementById('c-seal-html').textContent = '<a href="'+ORIGIN+'/verify.html"><img src="'+ORIGIN+'/api/badge?label=DEFONEOS&message=SEAL%20%C2%B7%20verifiable&color=c9a84c" alt="Verifiable DEFONEOS-SEAL"></a>';
+document.getElementById('c-seal-md').textContent = '[![Verifiable DEFONEOS-SEAL]('+ORIGIN+'/api/badge?label=DEFONEOS&message=SEAL%20%C2%B7%20verifiable&color=c9a84c)]('+ORIGIN+'/verify.html)';
+// galleries
+const PROTO=[['MCP','compatible','2a9df4'],['A2A','enabled','8b8ce0'],['x402','payments','00e07a'],['Ed25519','signed','c9a84c'],['SIGIL','audit chain','d9b676'],['Layer-0','8 protocols','06b6d4'],['Apache-2.0','license','5f8a5e']];
+const PROOF=[['PyPI','313 live','c9a84c'],['MCP registry','listed','2a9df4'],['legacy bridges','22','d9b676'],['open source','public','5f8a5e']];
+const TRUST=[['EU AI Act','Art 50 · designed to align','d9b676'],['JSP 936/440','aligned','c9a84c'],['ISO 42001','aligned','8b8ce0'],['AUKUS','compatible','e0a285'],['sovereign','by design','06b6d4']];
+function fill(id,arr){ document.getElementById(id).innerHTML = arr.map(b=>chip(b[0],b[1],b[2])).join(''); }
+fill('proto',PROTO); fill('proof',PROOF); fill('trust',TRUST);
+function cp(id){ const t=document.getElementById(id).textContent; navigator.clipboard.writeText(t).then(()=>{ const b=event.target; const o=b.textContent; b.textContent='Copied'; setTimeout(()=>b.textContent=o,1200); }); }
+</script>
+</body>
+</html>

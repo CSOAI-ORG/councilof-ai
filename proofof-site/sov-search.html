@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔍 Sovereign Search — 26 MCPs + 6 Charters Indexed</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.search-bar{max-width:900px;margin:2rem auto;padding:0 1rem}
+.search-bar input{width:100%;padding:1rem;background:#02060f;border:2px solid #fbbf24;border-radius:8px;color:#fbbf24;font-family:monospace;font-size:1rem}
+.search-tabs{display:flex;gap:.5rem;margin:1rem 0;flex-wrap:wrap}
+.search-tab{background:#0a0a0a;padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-size:.85rem;color:#aaa;border:1px solid #333}
+.search-tab.active{background:#fbbf24;color:#000;font-weight:bold;border-color:#fbbf24}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+.section h2{color:#fbbf24;margin-bottom:1rem}
+.results{margin:1rem 0}
+.result-card{background:#0a0a0a;padding:1rem;border-radius:6px;margin:.5rem 0;border-left:3px solid #10b981;transition:all .2s;cursor:pointer}
+.result-card:hover{transform:translateX(4px);border-color:#fbbf24}
+.result-card .title{color:#fbbf24;font-weight:bold;font-size:1rem;margin-bottom:.3rem}
+.result-card .snippet{color:#aaa;font-size:.85rem;margin:.3rem 0;line-height:1.4}
+.result-card .meta{color:#888;font-size:.7rem;font-family:monospace;margin-top:.3rem;display:flex;gap:.7rem;flex-wrap:wrap}
+.result-card .badge{display:inline-block;padding:.1rem .4rem;border-radius:3px;font-size:.7rem;font-weight:bold}
+.badge-layer-0{background:#ec4899;color:#000}
+.badge-layer-1{background:#60a5fa;color:#000}
+.badge-layer-2{background:#fbbf24;color:#000}
+.badge-sovereign{background:#fbbf24;color:#000;box-shadow:0 0 10px rgba(251,191,36,0.3)}
+.badge-charter{background:#10b981;color:#000}
+.score{color:#10b981;font-weight:bold;font-family:monospace}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/sov-search.html">Search</a>
+<a href="/edge.html">Edge CDN</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🔍 Sovereign Search</h1>
+<p>Full-text + semantic search across 26 sovereign MCPs + 6 charters. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val">26</div><div class="lbl">Indexed MCPs</div></div>
+<div class="stat blue"><div class="val">6</div><div class="lbl">Charters</div></div>
+<div class="stat purple"><div class="val">100+</div><div class="lbl">Unique Words</div></div>
+<div class="stat"><div class="val">∞</div><div class="lbl">Queries</div></div>
+<div class="stat green"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+<div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+</div>
+</section>
+
+<div class="search-bar">
+<input type="text" id="searchInput" placeholder="Search sovereign MCPs, charters, or docs..." value="sovereign ed25519" autofocus>
+<div class="search-tabs">
+<span class="search-tab active" onclick="setMode('text')">📝 Full-Text</span>
+<span class="search-tab" onclick="setMode('semantic')">🧠 Semantic</span>
+<span class="search-tab" onclick="setMode('index')">+ Index</span>
+</div>
+</div>
+
+<div class="container">
+
+<div class="section">
+<h2>📚 Try the Sovereign Search MCP</h2>
+<p style="color:#aaa;margin-bottom:1rem">Pre-populated with 26 sovereign docs (20 MCPs + 6 charters). Try queries below.</p>
+<div class="results" id="results"></div>
+</div>
+
+<div class="section">
+<h2>⚡ Quick Queries (click to search)</h2>
+<div class="results">
+<div class="result-card" onclick="document.getElementById('searchInput').value='sovereign';doSearch('text')">
+<div class="title">🔍 "sovereign"</div>
+<div class="meta"><span class="badge badge-layer-0">Layer 0</span> <span class="badge badge-layer-1">Layer 1</span> <span class="badge badge-sovereign">Sovereign</span></div>
+<div class="snippet">Match all sovereign docs across MCPs and charters.</div>
+</div>
+<div class="result-card" onclick="document.getElementById('searchInput').value='ed25519';doSearch('text')">
+<div class="title">🔍 "ed25519"</div>
+<div class="meta"><span class="badge badge-layer-0">Layer 0</span> <span class="badge badge-layer-1">Layer 1</span></div>
+<div class="snippet">Find all Ed25519-cryptographic sovereign components.</div>
+</div>
+<div class="result-card" onclick="document.getElementById('searchInput').value='pqc quantum';doSearch('semantic')">
+<div class="title">🔍 "pqc quantum" (semantic)</div>
+<div class="meta"><span class="badge badge-layer-1">Layer 1</span></div>
+<div class="snippet">Semantic similarity for post-quantum cryptography.</div>
+</div>
+<div class="result-card" onclick="document.getElementById('searchInput').value='care floor 0.95';doSearch('text')">
+<div class="title">🔍 "care floor 0.95"</div>
+<div class="meta"><span class="badge badge-layer-0">Layer 0</span> <span class="badge badge-sovereign">Sovereign</span></div>
+<div class="snippet">Care Floor validation across all sovereign actions.</div>
+</div>
+<div class="result-card" onclick="document.getElementById('searchInput').value='bft voting quorum';doSearch('semantic')">
+<div class="title">🔍 "bft voting quorum" (semantic)</div>
+<div class="meta"><span class="badge badge-layer-1">Layer 1</span> <span class="badge badge-sovereign">Sovereign</span></div>
+<div class="snippet">BFT consensus and sovereign voting.</div>
+</div>
+<div class="result-card" onclick="document.getElementById('searchInput').value='watchdog';doSearch('text')">
+<div class="title">🔍 "watchdog"</div>
+<div class="meta"><span class="badge badge-layer-0">Layer 0</span></div>
+<div class="snippet">Public watchdog for humans, agents, humanoids.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Search Doctrine</h2>
+<blockquote>"Search the sovereign. Full-text + semantic.<br>26 MCPs. 6 charters. 100+ words.<br>Care Floor 0.95. Sovereign by construction."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 115 sovereign MCPs (was 113, +2 search + cdn) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let mode = "text";
+
+// Inline corpus (mirror of meok-sovereign-search-mcp)
+const CORPUS = [
+  {id:"mcp-sigil", title:"MCP Sigil", kind:"Layer 0", body:"Ed25519 signing and verification for sovereign documents. SHA-256 hash-chained SIGIL chain. Every sovereign action emits a SIGIL. Tamper-evident. Forever verifiable offline.", tags:["sigil","ed25519","sign","verify","hash-chain"]},
+  {id:"mcp-bft", title:"MCP BFT", kind:"Layer 0", body:"BFT 12-around-1 voting council. Quorum 7/12. Ed25519-signed votes. Tamper-evident. Sovereign by construction.", tags:["bft","voting","12-around-1","consensus","quorum"]},
+  {id:"mcp-care-floor", title:"MCP Care Floor", kind:"Layer 0", body:"Care Floor 0.95 with 16 probes. Validates every sovereign action. Never-offends invariant. Article 0 binding.", tags:["care-floor","0.95","16-probes","validate","care"]},
+  {id:"mcp-watchdog", title:"MCP Watchdog", kind:"Layer 0", body:"Public watchdog for humans, agents, humanoids, systems. Reports + heatmap + anomaly detection. Sovereign.", tags:["watchdog","public","alerts","humanoid","agent"]},
+  {id:"mcp-hive-pheromone", title:"MCP Hive Pheromone", kind:"Layer 0", body:"Hive pheromone signal network. SIGIL Horus Sirius. Distributed coordination.", tags:["pheromone","sigil-horus-sirius","hive","coordination"]},
+  {id:"mcp-passport", title:"MCP Passport", kind:"Layer 1", body:"W3C DID sovereign passport. Self-sovereign identity. Ed25519-signed. Care Floor verified.", tags:["passport","w3c-did","identity","did"]},
+  {id:"mcp-wallet", title:"MCP Wallet", kind:"Layer 1", body:"Sovereign wallet with Ed25519 + PQC ML-DSA-65. BFT 3-voter for >$10k. SIGIL chain.", tags:["wallet","ed25519","pqc","payout"]},
+  {id:"mcp-pqc", title:"MCP PQC", kind:"Layer 1", body:"Post-quantum cryptography. ML-DSA-65 + ML-KEM-768. Quantum-resistant sovereign keys.", tags:["pqc","ml-dsa-65","ml-kem-768","quantum"]},
+  {id:"mcp-knowledge", title:"MCP Knowledge", kind:"Layer 1", body:"Sovereign knowledge base with RAG + semantic search across 22GB of empire data.", tags:["knowledge","rag","search","semantic"]},
+  {id:"mcp-bridge", title:"MCP Bridge", kind:"Layer 1", body:"Bridge between sovereign MCPs. Cross-layer coordination. Bridge-think for left+right brain.", tags:["bridge","bridge-think","coordination"]},
+  {id:"mcp-hive", title:"MCP Hive", kind:"Layer 1", body:"33-hive planet federation. London, Cambridge, Edinburgh, York, Cardiff, Belfast, Dublin, Paris, Berlin, Amsterdam, Stockholm, Helsinki + 21 districts. Each hive sovereign.", tags:["hive","33-planets","district","federation"]},
+  {id:"mcp-compliance", title:"MCP Compliance", kind:"Layer 1", body:"30-framework compliance checker. EU AI Act, GDPR, JSP 936, ISO 27001, NIST AI RMF, AUKUS, NATO DIANA. Sovereign by construction.", tags:["compliance","30-frameworks","audit"]},
+  {id:"mcp-voting", title:"MCP Voting", kind:"Layer 1", body:"Sovereign BFT 12-around-1 voting engine. 12 dragon queens. Quorum 7/12. Care Floor 0.95.", tags:["voting","bft","12-queens"]},
+  {id:"mcp-signature", title:"MCP Signature", kind:"Layer 1", body:"Cryptographic signature for sovereign documents. Ed25519 sovereign variant. Tamper-evident.", tags:["signature","ed25519","tamper-evident"]},
+  {id:"mcp-federation", title:"MCP Federation", kind:"Layer 0", body:"Sovereign federation hub connecting 109 MCPs. Discovery + routing + invocation.", tags:["federation","discovery","routing","109"]},
+  {id:"mcp-load-balancer", title:"MCP Load Balancer", kind:"Layer 1", body:"Load balancing with failover + auto-scaling. Round-robin + least-connections. Sovereign.", tags:["load-balancer","failover","auto-scaling"]},
+  {id:"mcp-rate-limiter", title:"MCP Rate Limiter", kind:"Layer 1", body:"Token bucket + DDoS protection + quota management. 100 tokens default. Sovereign.", tags:["rate-limiter","token-bucket","ddos","quota"]},
+  {id:"mcp-cache", title:"MCP Cache", kind:"Layer 1", body:"LRU cache with TTL + prefix invalidation. 1000 keys max. Sovereign by construction.", tags:["cache","lru","ttl"]},
+  {id:"mcp-satellite", title:"MCP Satellite", kind:"Layer 2", body:"24/7 satellite monitoring. 22 satellites (6 sovereign). 33 ground stations. Orbital tracking.", tags:["satellite","orbital","ground-station"]},
+  {id:"mcp-iot", title:"MCP IoT", kind:"Layer 2", body:"1000+ IoT sensor stream aggregator. 9 sensor types. Care Floor 0.95 alerts.", tags:["iot","sensor","stream"]},
+  {id:"charter-article-0", title:"Charter Article 0", kind:"Sovereign", body:"No entity governed by this Charter shall be granted any rights that diminish, compete with, or supplant the sovereign rights of any human being. Sovereign AI exists to serve humanity — never to displace, surveil, restrict, or replace it.", tags:["article-0","human-sovereignty","charter"]},
+  {id:"charter-sovereignty", title:"Charter Sovereignty", kind:"Sovereign", body:"Crown lineage 1795-3025. 5 emergence cycles. CSOAI sovereignty charter. The koi swims up the waterfall. The dragon emerges.", tags:["sovereignty","crown-lineage","1795-3025"]},
+  {id:"charter-partnership", title:"Charter Partnership", kind:"Sovereign", body:"Partnership charter for the sovereign AI economy. Future of abundance, not extraction. Fork Doctrine.", tags:["partnership","abundance","fork-doctrine"]},
+  {id:"charter-fork", title:"Charter Fork", kind:"Sovereign", body:"Fork Doctrine. CC0 + MIT + OSI. Open by construction. Sovereign.", tags:["fork","cc0","mit","osi"]},
+  {id:"charter-bft", title:"Charter BFT", kind:"Sovereign", body:"BFT 12-around-1 sovereign council. 12 dragon queens. Quorum 7/12. 33-agent BFT.", tags:["bft","12-queens","33-council"]},
+  {id:"charter-care-floor", title:"Charter Care Floor", kind:"Sovereign", body:"Care Floor 0.95 with 16 probes. Care-membrane. Never-offends invariant.", tags:["care-floor","16-probes","never-offends"]},
+];
+
+function tokenize(text) {
+  return text.toLowerCase().replace(/[^\w\s-]/g, ' ').split(/\s+/).filter(w => w.length >= 2);
+}
+
+function searchText(query) {
+  const words = tokenize(query);
+  if (words.length === 0) return [];
+  const scores = {};
+  for (const doc of CORPUS) {
+    const text = (doc.body + ' ' + doc.tags.join(' ')).toLowerCase();
+    let score = 0;
+    for (const w of words) {
+      const matches = (text.match(new RegExp(w, 'g')) || []).length;
+      score += matches;
+    }
+    if (score > 0) scores[doc.id] = score;
+  }
+  return Object.entries(scores).sort((a, b) => b[1] - a[1]).map(([id, score]) => ({doc: CORPUS.find(d => d.id === id), score}));
+}
+
+function cosineSim(v1, v2) {
+  const keys = new Set([...Object.keys(v1), ...Object.keys(v2)]);
+  let dot = 0, n1 = 0, n2 = 0;
+  for (const k of keys) {
+    const a = v1[k] || 0, b = v2[k] || 0;
+    dot += a * b;
+    n1 += a * a;
+    n2 += b * b;
+  }
+  return dot / (Math.sqrt(n1) * Math.sqrt(n2) + 1e-10);
+}
+
+function searchSemantic(query) {
+  const words = tokenize(query);
+  const qv = {};
+  for (const w of words) qv[w] = (qv[w] || 0) + 1;
+  const results = [];
+  for (const doc of CORPUS) {
+    const dv = {};
+    for (const w of tokenize(doc.body + ' ' + doc.tags.join(' '))) {
+      dv[w] = (dv[w] || 0) + 1;
+    }
+    const sim = cosineSim(qv, dv);
+    if (sim > 0) results.push({doc, score: sim});
+  }
+  return results.sort((a, b) => b.score - a.score);
+}
+
+function renderResults(results, mode) {
+  if (results.length === 0) {
+    document.getElementById("results").innerHTML = `<div style="color:#888;padding:1rem;text-align:center">No results. Try a different query.</div>`;
+    return;
+  }
+  document.getElementById("results").innerHTML = `
+    <div style="color:#fbbf24;margin-bottom:.7rem;font-size:.85rem">${results.length} results · mode: ${mode}</div>
+    ${results.slice(0, 15).map(({doc, score}) => `
+      <div class="result-card">
+        <div class="title">${doc.title}</div>
+        <div class="meta">
+          <span class="badge ${doc.kind === 'Sovereign' ? 'badge-sovereign' : doc.kind === 'Layer 0' ? 'badge-layer-0' : doc.kind === 'Layer 1' ? 'badge-layer-1' : 'badge-layer-2'}">${doc.kind}</span>
+          <span class="score">score: ${typeof score === 'number' ? score.toFixed(2) : score}</span>
+          <span>id: ${doc.id}</span>
+        </div>
+        <div class="snippet">${doc.body.substring(0, 200)}${doc.body.length > 200 ? '...' : ''}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function doSearch(m) {
+  const query = document.getElementById("searchInput").value;
+  if (!query) return;
+  const mode = m || document.querySelector(".search-tab.active").textContent.includes("Semantic") ? "semantic" : "text";
+  let results;
+  if (mode === "semantic") results = searchSemantic(query);
+  else results = searchText(query);
+  renderResults(results, mode);
+}
+
+function setMode(m) {
+  document.querySelectorAll(".search-tab").forEach(t => t.classList.remove("active"));
+  if (m === "text") document.querySelectorAll(".search-tab")[0].classList.add("active");
+  else if (m === "semantic") document.querySelectorAll(".search-tab")[1].classList.add("active");
+}
+
+document.getElementById("searchInput").addEventListener("keypress", e => {
+  if (e.key === "Enter") doSearch();
+});
+
+// Initial search
+doSearch("text");
+</script>
+
+</body>
+</html>

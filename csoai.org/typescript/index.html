@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeScript SDK — SOV3 Sovereign — csoai.org/typescript/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0e27; color: #fff; padding: 40px 20px; line-height: 1.7; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 { color: #fbbf24; font-size: 2.4rem; margin-bottom: 8px; text-shadow: 0 0 16px rgba(251,191,36,0.3); }
+    h2 { color: #06b6d4; margin-top: 24px; margin-bottom: 8px; border-bottom: 1px solid rgba(6,182,212,0.3); padding-bottom: 4px; }
+    h3 { color: #fbbf24; margin-top: 16px; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 32px; font-size: 1.05rem; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 24px 0; }
+    .card { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; border: 1px solid rgba(251,191,36,0.3); }
+    .card h3 { color: #fbbf24; margin-bottom: 8px; }
+    .pill { display: inline-block; padding: 4px 12px; background: rgba(251,191,36,0.2); border: 1px solid rgba(251,191,36,0.4); border-radius: 12px; color: #fbbf24; font-size: 0.85rem; font-weight: 700; margin: 0 4px 4px 0; }
+    .pill.cyan { border-color: rgba(6,182,212,0.4); color: #06b6d4; }
+    .pill.green { border-color: rgba(16,185,129,0.4); color: #10b981; }
+    code { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; color: #10b981; font-family: monospace; }
+    pre { background: #000; border: 1px solid rgba(251,191,36,0.3); padding: 16px; border-radius: 6px; overflow-x: auto; line-height: 1.4; font-family: monospace; }
+    pre code { background: transparent; padding: 0; color: #10b981; }
+    .footer { text-align: center; padding: 32px 0; margin-top: 32px; border-top: 1px solid rgba(251,191,36,0.3); opacity: 0.7; font-size: 0.85rem; }
+    a { color: #10b981; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sovereign TypeScript SDK</h1>
+    <p class="tagline">Type-safe bindings for the SOV3 sovereign MCP substrate. MIT. Sovereign by default.</p>
+    <span class="pill">@sov3/sdk v2.0.0</span>
+    <span class="pill cyan">MIT licensed</span>
+    <span class="pill green">sends no foreign data</span>
+
+    <h2>Install</h2>
+    <pre><code>npm install @sov3/sdk
+# or
+yarn add @sov3/sdk
+# or
+pnpm add @sov3/sdk</code></pre>
+
+    <h2>Quickstart</h2>
+    <pre><code>import { SovereignClient, SIGIL, Article50Passport } from '@sov3/sdk';
+
+// 1. Create your sovereign client
+const client = new SovereignClient({
+  sov3McpUrl: 'http://localhost:3101/mcp',
+  meokBackendUrl: 'http://localhost:8000',
+  apiKey: process.env.SOV3_API_KEY,
+});
+
+// 2. Run a sovereign audit
+const audit = await client.audit({
+  system: 'Production AI',
+  frameworks: ['EU AI Act', 'UK AI Bill', 'ISO 42001'],
+});
+console.log(`Sovereign composite: ${audit.composite}`); // 7.305
+
+// 3. Issue an Article 50 passport
+const passport = await client.articles50.issue({
+  contentHash: 'sha256-of-content',
+  watermarked: true,
+});
+console.log(`Passport ID: ${passport.id}`); // art50-72384578499f
+
+// 4. Emit a sovereign SIGIL
+const sigil = await client.sigil.emit({
+  line: 'C|production|T2026-07-04T09_00_BST. eu_ai_act_compliant.',
+  op: 'C',
+});
+console.log(`SIGIL: ${sigil.digest}`);</code></pre>
+
+    <h2>The SovereignClient API</h2>
+    <p>Three core sub-clients, all type-safe:</p>
+    <div class="grid">
+      <div class="card">
+        <h3>client.substrate</h3>
+        <p>The SOV3 MCP substrate. Discover 330 tools, invoke any with full TypeScript types.</p>
+        <pre><code>await client.substrate.listTools();
+await client.substrate.invoke('sovereign_compliance_check', {
+  system: 'AI',
+  frameworks: ['EU AI Act'],
+});</code></pre>
+      </div>
+      <div class="card">
+        <h3>client.sigil</h3>
+        <p>Immutable SIGIL chain. Every action recorded with Ed25519 + PQC ML-DSA-65.</p>
+        <pre><code>await client.sigil.emit({ line, op });
+await client.sigil.verify(digest);
+const chain = await client.sigil.recent(10);</code></pre>
+      </div>
+      <div class="card">
+        <h3>client.cascade</h3>
+        <p>4-tier sovereign cascade. Routes queries across 33 sovereign districts.</p>
+        <pre><code>await client.cascade.routeQuery({
+  query: 'EU AI Act audit for fintech',
+  taskType: 'compliance',
+});</code></pre>
+      </div>
+      <div class="card">
+        <h3>client.articles50</h3>
+        <p>EU AI Act Article 50 watermarking. Passport issuance + verification.</p>
+        <pre><code>await client.articles50.issue({...});
+await client.articles50.verify(passportId);</code></pre>
+      </div>
+      <div class="card">
+        <h3>client.iCharacter</h3>
+        <p>Consent-first digital twin. Create, evolve, trade on TwinStore.</p>
+        <pre><code>await client.iCharacter.create({...});
+await client.iCharacter.evolve(icharId, msg);</code></pre>
+      </div>
+      <div class="card">
+        <h3>client.council</h3>
+        <p>12-around-1 BFT council. Vote on sovereign proposals. 2/3 majority.</p>
+        <pre><code>await client.council.vote({
+  proposal: 'switch EAST',
+  choice: 'for',
+});</code></pre>
+      </div>
+    </div>
+
+    <h2>Sovereign TypeScript types</h2>
+    <pre><code>import type {
+  // 12 Alchemical Layers
+  SovereignLayer,
+  MambaSSMLayer,
+  MoE64Layer,
+  StandardAttentionLayer,
+  OOWMSandwichLayer,
+  DORADOLayer,
+
+  // 22 Hieroglyphs (Major Arcana)
+  Hieroglyph,
+  TheFool,
+  TheMagician,
+  ThePriestess,
+  TheEmpress,
+  TheEmperor,
+  // ... 17 more
+
+  // 12 Queens
+  CouncilQueen,
+  Athena,
+  Hermes,
+  Apollo,
+
+  // Composite
+  SovereignComposite,
+  SovereignDimension,
+} from '@sov3/sdk/types';</code></pre>
+
+    <h2>Why TypeScript for SOV3?</h2>
+    <ul>
+      <li><strong>Type safety</strong> · Compile-time guarantee on 309 sovereign tools</li>
+      <li><strong>Zero foreign deps</strong> · Bundled to ESM for clean tree-shaking</li>
+      <li><strong>Tree-shakable</strong> · Only ship the sovereign sub-clients you use</li>
+      <li><strong>Strict mode</strong> · TypeScript 5.6 strict; no <code>any</code></li>
+      <li><strong>MIT licensed</strong> · Public, auditable, sovereign</li>
+    </ul>
+
+    <h2>Tier compatibility</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr style="border-bottom: 1px solid rgba(251,191,36,0.3);">
+        <th style="text-align: left; padding: 8px;">Tier</th>
+        <th style="text-align: left; padding: 8px;">Type</th>
+        <th style="text-align: left; padding: 8px;">License</th>
+      </tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);"><td>Tier 1 · MEOK</td><td>@sov3/sdk</td><td>MIT</td></tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);"><td>Tier 2 · SOV3</td><td>@sov3/core</td><td>MIT</td></tr>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);"><td>Tier 3 · DEFONEOS</td><td>@sov3/defence</td><td>MIT (gov't check)</td></tr>
+    </table>
+
+    <h2>Errors</h2>
+    <pre><code>import { SovereignError, SIGILFailedError, DORADORefusedError } from '@sov3/sdk';
+
+try {
+  await client.substrate.invoke('sovereign_action', args);
+} catch (e) {
+  if (e instanceof DORADORefusedError) {
+    console.error('Sovereignty switch refused:', e.reason);
+  } else if (e instanceof SIGILFailedError) {
+    console.error('SIGIL chain error:', e.chainStatus);
+  }
+}</code></pre>
+
+    <div class="footer">
+      🜏 Public. Auditable. Sovereign. Solve et Coagula.<br>
+      CSOAI Ltd · UK 16939677 · T-4 days to launch 4 Jul 2026 09:00 BST<br>
+      <a href="/">csoai.org home</a> · <a href="/charter/">Charter</a> · <a href="/sovereign-constitution/">Constitution</a> · <a href="/manifesto/">Manifesto</a>
+    </div>
+  </div>
+</body>
+</html>

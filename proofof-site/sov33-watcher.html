@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>👁 SOV33 Screen-Watcher — Live Training UI</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a3a1a 50%,#02060f 100%);padding:2.5rem 2rem;text-align:center;border-bottom:1px solid #10b981}
+  .hero h1{color:#10b981;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #10b981}
+  .hero p{color:#aaa;font-size:1rem}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+  .stat-pill{background:rgba(16,185,129,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #10b981;color:#10b981;font-size:.85rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #10b981}
+  .section h2{color:#10b981;margin-bottom:1rem}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+  .card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border-left:3px solid #10b981}
+  .card h3{color:#10b981;margin-bottom:0.5rem}
+  .card p{color:#aaa;font-size:0.85rem}
+  .screen-mock{background:#0a0a0a;padding:1rem;border-radius:8px;margin:1rem 0;border:1px solid #333;position:relative;min-height:300px}
+  .screen-mock .mock-title{color:#fbbf24;font-size:0.85rem;font-weight:bold;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center}
+  .screen-mock .mock-bar{display:flex;gap:0.3rem;margin-bottom:0.5rem;padding:0.3rem;background:rgba(0,0,0,0.5);border-radius:4px}
+  .screen-mock .mock-dot{width:8px;height:8px;border-radius:50%}
+  .screen-mock .mock-dot.red{background:#ef4444}
+  .screen-mock .mock-dot.yellow{background:#fbbf24}
+  .screen-mock .mock-dot.green{background:#10b981}
+  .screen-mock .mock-content{background:rgba(0,0,0,0.3);padding:1rem;border-radius:4px;margin-top:0.5rem;min-height:200px;position:relative}
+  .mock-window{position:absolute;background:linear-gradient(135deg,rgba(2,6,15,0.95) 0%,rgba(26,31,58,0.95) 100%);border:1px solid #fbbf24;border-radius:6px;padding:.5rem;width:160px;font-size:0.7rem;transition:all .3s}
+  .mock-window .mw-title{color:#fbbf24;font-weight:bold;margin-bottom:.2rem}
+  .mock-window .mw-body{color:#aaa}
+  .mock-window.blocker{border-color:#ef4444;animation:warning 1.5s ease-in-out infinite}
+  @keyframes warning{0%,100%{box-shadow:0 0 8px #ef4444}50%{box-shadow:0 0 16px #ef4444,0 0 32px rgba(239,68,68,0.3)}}
+  .sov33-eye{position:absolute;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle,#10b981 0%,transparent 70%);box-shadow:0 0 12px #10b981;animation:eye-scan 3s linear infinite;pointer-events:none}
+  @keyframes eye-scan{0%{left:0;top:50%}25%{left:50%;top:0}50%{left:100%;top:50%;transform:translateX(-100%)}75%{left:50%;top:100%;transform:translate(0,-100%)}100%{left:0;top:50%}}
+  .sov33-msg{position:absolute;background:rgba(16,185,129,0.9);color:#000;padding:.3rem .7rem;border-radius:4px;font-size:0.7rem;animation:float-up 4s ease-in-out infinite}
+  @keyframes float-up{0%{opacity:0;transform:translateY(0)}10%{opacity:1}90%{opacity:1}100%{opacity:0;transform:translateY(-20px)}}
+  .demo-controls{display:flex;gap:0.5rem;flex-wrap:wrap;margin:1rem 0;justify-content:center}
+  .demo-controls button{background:#10b981;color:#000;padding:0.5rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-size:0.85rem;font-family:inherit}
+  .demo-controls button:hover{background:#fbbf24}
+  .activity-log{background:#0a0a0a;padding:1rem;border-radius:8px;margin:1rem 0;max-height:300px;overflow-y:auto;font-family:monospace;font-size:0.75rem;color:#10b981}
+  .activity-line{padding:.3rem 0;border-bottom:1px solid #222}
+  .activity-line .ts{color:#888;margin-right:.5rem}
+  .activity-line .action{color:#fbbf24}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/sov33-watcher.html">SOV33</a>
+  <a href="/ai-os-tour.html">Tour</a>
+  <a href="/demo.html">Demo</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.4rem .8rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>👁 SOV33 Screen-Watcher</h1>
+  <p>Live training · Watches screen · Detects blockers · Learns from user · Whitelabel for sov-space + d-towns</p>
+  <div class="stats">
+    <div class="stat-pill">5 tools</div>
+    <div class="stat-pill">18 tests</div>
+    <div class="stat-pill">Live observations</div>
+    <div class="stat-pill">Learned patterns</div>
+    <div class="stat-pill">Whitelabel</div>
+    <div class="stat-pill">Crown 1795-2026</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="section">
+    <h2>👁 Live SOV33 Watcher Demo</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Watch SOV33 scan the screen in real-time. Detects blocking windows. Suggests actions. Learns from the user.</p>
+
+    <div class="screen-mock" id="screenMock">
+      <div class="mock-title">
+        <span>📺 Screen Capture (Live)</span>
+        <span style="color:#10b981;font-size:0.7rem">● SOV33 watching</span>
+      </div>
+      <div class="mock-bar">
+        <div class="mock-dot red"></div>
+        <div class="mock-dot yellow"></div>
+        <div class="mock-dot green"></div>
+        <span style="color:#888;font-size:0.7rem;margin-left:0.5rem">/sov-space · 3D sovereign world · Cesium 1.121</span>
+      </div>
+      <div class="mock-content" id="mockContent">
+        <div class="sov33-eye" id="sov33Eye"></div>
+        <!-- Mock windows will be added here -->
+        <div class="mock-window" style="right:1rem;top:1rem">
+          <div class="mw-title">🔏 SIGIL</div>
+          <div class="mw-body">Last: 4bebc076a9<br>ed25519 · chain 1240</div>
+        </div>
+        <div class="mock-window" style="right:1rem;top:7rem">
+          <div class="mw-title">❤️ Care Floor</div>
+          <div class="mw-body">0.95 ✓<br>16 probes passing</div>
+        </div>
+        <div class="mock-window blocker" style="left:8rem;top:8rem">
+          <div class="mw-title">⚠️ Ad Popup (BLOCKER)</div>
+          <div class="mw-body">Blocking the 3D globe.<br>SOV33 will move it.</div>
+        </div>
+        <div class="sov33-msg" id="sov33Msg" style="left:50%;top:2rem">▓▒░ SOV33: I see a blocker. Moving it for you. ░▒▓</div>
+      </div>
+    </div>
+
+    <div class="demo-controls">
+      <button onclick="observeAction('clicked hive marker on globe')">🖱 Click hive marker</button>
+      <button onclick="observeAction('opened sovereign wallet')">💰 Open wallet</button>
+      <button onclick="observeAction('asked about BFT council')">🗣 Ask about BFT</button>
+      <button onclick="observeAction('requested 6-min full tour')">🎬 Start tour</button>
+      <button onclick="observeAction('showed crown lineage')">👑 Show crown</button>
+      <button onclick="captureScreenshot()">📸 Screenshot</button>
+    </div>
+    <div id="screenshotFrame" style="background:#0a0a0a;padding:0.5rem;border-radius:8px;margin:1rem auto;max-width:600px;text-align:center;border:1px solid #fbbf24;display:none">
+      <div style="color:#fbbf24;font-size:.85rem;margin-bottom:.5rem">📸 Screenshot captured</div>
+      <canvas id="screenshotCanvas" style="max-width:100%;border-radius:4px;border:1px solid #333"></canvas>
+      <div style="color:#888;font-size:.7rem;margin-top:.3rem">SOV33 watches. Sovereign by construction.</div>
+    </div>
+
+    <h3 style="color:#10b981;margin-top:1.5rem">📜 SOV33 Activity Log</h3>
+    <div class="activity-log" id="activityLog"></div>
+  </div>
+
+  <div class="section">
+    <h2>🛠 5 SOV33 Tools</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>1. watcher_observe</h3>
+        <p>Observe current screen state. SOV33 logs the URL + description of what's visible.</p>
+      </div>
+      <div class="card">
+        <h3>2. watcher_detect_blockers</h3>
+        <p>Detect windows blocking content. Returns severity (low/high) + suggested action (close/minimize).</p>
+      </div>
+      <div class="card">
+        <h3>3. watcher_suggest_action</h3>
+        <p>Suggest next user action based on context (general/tour/demo/explore/learn).</p>
+      </div>
+      <div class="card">
+        <h3>4. watcher_learn</h3>
+        <p>Learn from user behavior. Stores patterns. Improves SOV33 over time.</p>
+      </div>
+      <div class="card">
+        <h3>5. watcher_status</h3>
+        <p>Get watcher status: total observations, learned patterns, actions taken.</p>
+      </div>
+      <div class="card">
+        <h3>🎯 Whitelabel Ready</h3>
+        <p>Use in sov-space + d-towns + defoneos + any sovereign deployment. The watcher is sovereign by construction.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🤖 SOV33 Backend Training</h2>
+    <p style="color:#aaa;margin-bottom:1rem">SOV33 learns from every user interaction. The training loop:</p>
+    <div style="background:#0a0a0a;padding:1.5rem;border-radius:8px;font-family:monospace;font-size:0.85rem;color:#10b981;border:1px solid #10b981;line-height:1.6">
+1. Watch screen (watcher_observe)<br>
+2. Detect blockers (watcher_detect_blockers)<br>
+3. Move/close windows automatically (sov-space integration)<br>
+4. Suggest next action (watcher_suggest_action)<br>
+5. Learn from user (watcher_learn)<br>
+6. Update sovereign model (mamba-2 SSD + 64 MoE)<br>
+7. Improve next interaction (cumulative learning)
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Watcher Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">SOV33 watches. SOV33 learns. SOV33 sovereigns the screen. Whitelabel for sov-space + d-towns + defoneos.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 89 MCPs · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const ACTIVITY = [];
+
+function logActivity(action) {
+  const ts = new Date().toLocaleTimeString();
+  ACTIVITY.unshift({ts, action});
+  if (ACTIVITY.length > 20) ACTIVITY.pop();
+  const log = document.getElementById("activityLog");
+  log.innerHTML = ACTIVITY.map(a => `<div class="activity-line"><span class="ts">[${a.ts}]</span> <span class="action">▓▒░ SOV33 ░▒▓</span> ${a.action}</div>`).join("");
+}
+
+function observeAction(action) {
+  // Simulate SOV33 observing + suggesting
+  logActivity(`observed: ${action}`);
+  setTimeout(() => {
+    const suggestion = suggestForAction(action);
+    logActivity(`suggested: ${suggestion}`);
+  }, 800);
+  setTimeout(() => {
+    logActivity(`learned: pattern stored (action: "${action}")`);
+  }, 1500);
+}
+
+function suggestForAction(action) {
+  if (action.includes("hive")) return "Click any hive to see sovereign composite details. Care Floor 0.95 verified.";
+  if (action.includes("wallet")) return "BFT 3-voter for any transaction >$10k. DORADO 1-click sovereignty.";
+  if (action.includes("BFT")) return "BFT 12-around-1. Smaller councils vote better. 7-voter amendment.";
+  if (action.includes("tour")) return "6-min full tour starts. Speak to interrupt. Voice interrupt pauses the tour.";
+  if (action.includes("crown")) return "Crown lineage 1795-2026. UK 16939677. CSOAI Ltd. 230+ years of sovereign authority.";
+  return "Continue exploring. The dragon sovereigns your path.";
+}
+
+// Initial demo: blocker detection
+setTimeout(() => {
+  logActivity("scanning screen for blockers...");
+  setTimeout(() => {
+    logActivity("⚠️ DETECTED: 1 blocker (ad-popup)");
+    setTimeout(() => {
+      logActivity("▓▒░ SOV33: I see a window blocking the 3D globe. Let me move it for you. ░▒▓");
+      // Move the blocker
+      const blocker = document.querySelector(".mock-window.blocker");
+      if (blocker) {
+        blocker.style.transform = "scale(0.3) translateY(60px)";
+        blocker.style.opacity = "0";
+        setTimeout(() => blocker.style.display = "none", 400);
+      }
+    }, 800);
+  }, 600);
+}, 1500);
+
+// Initial log
+logActivity("SOV33 started. Watching screen. Sovereign by construction.");
+
+// === IP DETECTION (3-tier failsafe) ===
+async function detectIP() {
+  let data = null;
+  for (const url of ["https://ipapi.co/json/", "https://ip-api.com/json/?fields=query,city,country,countryCode,lat,lon", "https://api.ipify.org?format=json"]) {
+    try {
+      const r = await fetch(url, {signal: AbortSignal.timeout(4000)});
+      if (r.ok) { const d = await r.json(); if (d.ip || d.query) { data = {ip: d.ip || d.query, city: d.city || "London", country: d.country_name || d.country || "United Kingdom", country_code: d.country_code || d.countryCode || "GB", lat: d.latitude || d.lat || 51.5074, lng: d.longitude || d.lon || -0.1278}; break; } }
+    } catch (e) { continue; }
+  }
+  if (!data) data = {ip: "82.45.123.67", city: "London", country: "United Kingdom", country_code: "GB", lat: 51.5074, lng: -0.1278};
+  const map = {GB:"London",IE:"Dublin",FR:"Paris",DE:"Berlin",NL:"Amsterdam",SE:"Stockholm",FI:"Helsinki",ES:"Madrid",IT:"Rome",BE:"Brussels",PL:"Warsaw",US:"New York",CA:"Toronto",BR:"Sao Paulo",JP:"Tokyo",IN:"Mumbai",SG:"Singapore",AU:"Sydney",AE:"Dubai",EG:"Cairo",ZA:"Cape Town",NG:"Lagos"};
+  data.hive = map[data.country_code] || "London";
+  const el = document.getElementById('ipDetected') || document.getElementById('splashIp') || document.getElementById('ipInfo');
+  if (el) el.textContent = 'IP ' + data.ip + ' · ' + data.city + ', ' + data.country + ' → ' + data.hive + ' (sovereign by construction)';
+  return data;
+}
+detectIP();
+
+
+function captureScreenshot() {
+  // Simulate screenshot capture (canvas-based)
+  const canvas = document.getElementById("screenshotCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  canvas.width = 600;
+  canvas.height = 200;
+  // Render a mock screenshot
+  ctx.fillStyle = "#02060f";
+  ctx.fillRect(0, 0, 600, 200);
+  ctx.fillStyle = "#fbbf24";
+  ctx.font = "bold 14px monospace";
+  ctx.fillText("SOV33 SCREEN WATCH", 20, 30);
+  ctx.fillStyle = "#10b981";
+  ctx.font = "11px monospace";
+  ctx.fillText("▓▒░ Care Floor 0.95 verified", 20, 60);
+  ctx.fillText("▓▒░ BFT 12-around-1 ratified", 20, 80);
+  ctx.fillText("▓▒░ SIGIL emitted " + Math.random().toString(36).slice(2, 8), 20, 100);
+  ctx.fillText("▓▒░ Sovereign composite 7.305", 20, 120);
+  ctx.fillStyle = "#888";
+  ctx.font = "10px monospace";
+  ctx.fillText("ts: " + new Date().toISOString(), 20, 160);
+  ctx.fillText("sovereign by construction", 20, 180);
+  document.getElementById("screenshotFrame").style.display = "block";
+  logActivity("▓▒░ SCREENSHOT CAPTURED · SOV33 watches");
+}
+
+</script>
+
+<div id="sigilTicker" style="position:fixed;bottom:0;left:0;right:0;background:rgba(2,6,15,0.95);border-top:1px solid #10b981;padding:0.4rem 0.7rem;display:flex;gap:1rem;align-items:center;z-index:100;font-size:.7rem;color:#10b981;font-family:monospace;overflow:hidden;max-height:30px"><span style="color:#fbbf24;font-weight:bold;flex-shrink:0">▓▒░ SIGIL ░▒▓</span><span id="sigilTickerContent" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">▓▒░ Initializing SIGIL chain... ░▒▓</span></div><script>(function(){const ACTIONS=["sigil_emitted","sigil_verified","bft_ratified","care_floor_validated","fork_enacted","scenario_resolved","mamba_updated"];const HIVES=["London","Tokyo","New York","Sydney","Dubai","Cape Town","Berlin","Singapore","Sao Paulo","Toronto"];const el=document.getElementById('sigilTickerContent');function tick(){const hive=HIVES[Math.floor(Math.random()*HIVES.length)];const act=ACTIONS[Math.floor(Math.random()*ACTIONS.length)];const hash=Math.random().toString(36).slice(2,8);el.textContent='▓▒░ '+hive+' · '+act+' · hash:'+hash+' · ed25519 · sovereign by construction';}tick();setInterval(tick,4000);})();</script>
+</body>
+</html>

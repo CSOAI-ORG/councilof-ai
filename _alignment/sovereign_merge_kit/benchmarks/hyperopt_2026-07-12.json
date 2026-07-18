@@ -1,0 +1,137 @@
+{
+  "search_id": "sov33-hyperopt-20260712",
+  "ts": "2026-07-12T08:40:17.368317+00:00",
+  "search_space_size": 324,
+  "top_10_configs": [
+    {
+      "learning_rate": 0.0005,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "lora_r": 16,
+      "num_epochs": 2,
+      "estimated_minutes": 30.0,
+      "predicted_score": 1.0,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.0005,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "lora_r": 16,
+      "num_epochs": 3,
+      "estimated_minutes": 45.0,
+      "predicted_score": 1.0,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.002,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "lora_r": 16,
+      "num_epochs": 2,
+      "estimated_minutes": 30.0,
+      "predicted_score": 0.9500000000000001,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.002,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "lora_r": 16,
+      "num_epochs": 3,
+      "estimated_minutes": 45.0,
+      "predicted_score": 0.9500000000000001,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.0005,
+      "lora_alpha": 32,
+      "lora_dropout": 0.0,
+      "lora_r": 16,
+      "num_epochs": 2,
+      "estimated_minutes": 30.0,
+      "predicted_score": 0.95,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.0005,
+      "lora_alpha": 32,
+      "lora_dropout": 0.0,
+      "lora_r": 16,
+      "num_epochs": 3,
+      "estimated_minutes": 45.0,
+      "predicted_score": 0.95,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.0005,
+      "lora_alpha": 32,
+      "lora_dropout": 0.1,
+      "lora_r": 16,
+      "num_epochs": 2,
+      "estimated_minutes": 30.0,
+      "predicted_score": 0.95,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.0005,
+      "lora_alpha": 32,
+      "lora_dropout": 0.1,
+      "lora_r": 16,
+      "num_epochs": 3,
+      "estimated_minutes": 45.0,
+      "predicted_score": 0.95,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.0005,
+      "lora_alpha": 64,
+      "lora_dropout": 0.05,
+      "lora_r": 32,
+      "num_epochs": 2,
+      "estimated_minutes": 60.0,
+      "predicted_score": 0.95,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    },
+    {
+      "learning_rate": 0.0005,
+      "lora_alpha": 64,
+      "lora_dropout": 0.05,
+      "lora_r": 32,
+      "num_epochs": 3,
+      "estimated_minutes": 90.0,
+      "predicted_score": 0.95,
+      "sovereign_bound": true,
+      "care_floor": 0.95
+    }
+  ],
+  "sigil_digest": "c4f0edf8f2c219c1",
+  "best_config_recommended": {
+    "learning_rate": 0.0005,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_r": 16,
+    "num_epochs": 2,
+    "estimated_minutes": 30.0,
+    "predicted_score": 1.0,
+    "sovereign_bound": true,
+    "care_floor": 0.95
+  },
+  "estimated_total_compute_minutes": 450.0,
+  "care_floor": 0.95,
+  "article_0_bound": true,
+  "honest_register": {
+    "method": "Heuristic proxy score (not real eval). For real evals, run sov33_real_evals.py.",
+    "best_in_production": "lora_r=16, lora_alpha=32, lr=5e-4, epochs=2 (per sov33_train_own.py proven config)",
+    "why_this_matters": "Hyperparameter tuning reduces training time + improves final accuracy"
+  }
+}

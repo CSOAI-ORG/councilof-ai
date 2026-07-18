@@ -1,0 +1,205 @@
+# OpenPatent.ai Hive — full docker-compose stack
+# Run from the sovereign VM (35.242.143.249) or any GCP VM.
+#
+#   docker compose up -d
+#   docker compose ps
+#   curl http://localhost:3211/health
+#
+# All 7 services spin up. Public ports (3211, 3213, 3214, 3000) are
+# exposed on the host. Internal ports (3210, 3212, 3215) are not.
+#
+# For GCP, front this with nginx/caddy + Cloudflare. The hive design
+# assumes a TLS-terminating reverse proxy.
+
+version: "3.9"
+
+name: openpatent-hive
+
+x-python-base: &python-base
+  build:
+    context: .
+    dockerfile: services/patentmcp/Dockerfile
+  restart: unless-stopped
+  environment: &python-env
+    - PATENTMCP_STORAGE=/var/lib/patentmcp
+    - PATENTMCP_BLOCKCHAIN_MODE=development
+  volumes:
+    - patentmcp_data:/var/lib/patentmcp
+
+services:
+  # ── Internal core: 6-layer crypto + audit chain + registry ──────────────
+  patentmcp:
+    <<: *python-base
+    container_name: openpatent-patentmcp
+    build:
+      context: .
+      dockerfile: services/patentmcp/Dockerfile
+    ports:
+      - "127.0.0.1:3210:3210"  # internal-only
+    environment:
+      - PATENTMCP_STORAGE=/var/lib/patentmcp
+      - PATENTMCP_BLOCKCHAIN_MODE=development
+      # Real OTS calendar — alice is the canonical replacement for the
+      # deprecated calendar.opentimestamps.org endpoint. Operators can
+      # override here (e.g. to a private calendar) without touching code.
+      - PATENTMCP_OTS_CALENDAR=https://alice.btc.calendar.opentimestamps.org
+      - POSTGRES_URL=postgres://openpatent:openpatent_sirius_2026@postgres:5432/openpatent
+      - POSTGRES_PASSWORD=openpatent_sirius_2026      - POSTGRES_DB=openpatent
+    volumes:
+      - patentmcp_data:/var/lib/patentmcp
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "python", "patentmcp_health.py"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── Background worker: OTS upgrade + Polygon + IPFS pin ──────────────────
+  worker:
+    build:
+      context: .
+      dockerfile: services/worker/Dockerfile
+    container_name: openpatent-worker
+    restart: unless-stopped
+    depends_on:
+      - patentmcp
+      - bft-council
+    environment:
+      - PATENTMCP_URL=http://patentmcp:3210
+      - BFT_URL=http://bft-council:3215
+      - IPFS_API=http://ipfs:5001
+      - POLYGON_RPC=https://polygon-rpc.com
+    ports:
+      - "127.0.0.1:3212:3212"  # internal-only
+
+  # ── 33-agent BFT council ───────────────────────────────────────────────
+  bft-council:
+    build:
+      context: .
+      dockerfile: services/bft-council/Dockerfile
+    container_name: openpatent-bft
+    restart: unless-stopped
+    environment:
+      - POSTGRES_URL=postgres://openpatent:openpatent_sirius_2026@postgres:5432/openpatent
+    depends_on:
+      - postgres
+    ports:
+      - "127.0.0.1:3215:3215"  # internal-only
+
+  # ── Drafting fork (TypeScript OpenPatent integration) ─────────────────────
+  drafting-fork:
+    build:
+      context: .
+      dockerfile: services/drafting-fork/Dockerfile
+    container_name: openpatent-drafting-fork
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3216:3216"  # internal-only
+
+  # ── x402 payment router (60/25/15 split) ──────────────────────────────────
+  x402-router:
+    build:
+      context: .
+      dockerfile: services/x402-router/Dockerfile
+    container_name: openpatent-x402
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3217:3217"  # internal-only
+
+  # ── 7 patent-primitive tools (claim-parser, mpep-lookup, etc.) ───────────
+  openpatent-primitives:
+    build:
+      context: .
+      dockerfile: services/openpatent-primitives/Dockerfile
+    container_name: openpatent-primitives
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3218:3218"  # internal-only
+
+  # ── Public API gateway (api.openpatent.ai) ─────────────────────────────
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/api-gateway/Dockerfile
+    container_name: openpatent-api
+    restart: unless-stopped
+    depends_on:
+      - patentmcp
+      - worker
+      - bft-council
+      - drafting-fork
+    environment:
+      - PATENTMCP_URL=http://patentmcp:3210
+      - WORKER_URL=http://worker:3212
+      - BFT_URL=http://bft-council:3215
+      - DRAFTING_URL=http://drafting-fork:3216
+    ports:
+      - "3211:3211"  # public via reverse proxy
+
+  # ── Verify page renderer (verify.openpatent.ai) ────────────────────────
+  verify-page:
+    build:
+      context: .
+      dockerfile: services/verify-page/Dockerfile
+    container_name: openpatent-verify
+    restart: unless-stopped
+    depends_on:
+      - patentmcp
+    environment:
+      - PATENTMCP_URL=http://patentmcp:3210
+    ports:
+      - "3213:3213"  # public via reverse proxy
+
+  # ── MCP manifest (mcp.openpatent.ai) ───────────────────────────────────
+  mcp-manifest:
+    build:
+      context: .
+      dockerfile: services/mcp-manifest/Dockerfile
+    container_name: openpatent-mcp-manifest
+    restart: unless-stopped
+    ports:
+      - "3214:3214"  # public via reverse proxy
+
+  # ── Landing site (openpatent.ai + draft.openpatent.ai) ─────────────────
+  landing-site:
+    build:
+      context: .
+      dockerfile: services/landing-site/Dockerfile
+    container_name: openpatent-landing
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PATENTMCP_API=http://api-gateway:3211
+    ports:
+      - "3000:3000"  # public via reverse proxy
+
+  # ── Postgres — for production, this replaces the in-memory state ──────
+  # Note: 5432 may already be in use on the host (meok-keystone uses it).
+  # We expose on a non-conflicting port OR run without host networking.
+  postgres:
+    image: postgres:16-alpine
+    container_name: openpatent-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=openpatent
+      - POSTGRES_PASSWORD=openpatent_sirius_2026      - POSTGRES_DB=openpatent
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # No host port mapping — only the docker network can reach it.
+    # If you need host access, uncomment and pick a non-conflicting port:
+    # ports:
+    #   - "127.0.0.1:5433:5432"
+
+  # ── IPFS — for premium tier pinning (optional) ────────────────────────
+  ipfs:
+    image: ipfs/kubo:latest
+    container_name: openpatent-ipfs
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5001:5001"  # internal-only
+      - "127.0.0.1:8080:8080"  # IPFS gateway (optional public)
+
+volumes:
+  patentmcp_data:
+  postgres_data:

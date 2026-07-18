@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Compliance Suite — Interactive 30-Framework Compliance Dashboard</title>
+<meta name="description" content="Interactive compliance dashboard showing 30 frameworks mapped against DEFONEOS sovereign AI platform. Real-time status, evidence links, regulatory timeline. v1.0 12 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--pur:#c084fc;--orange:#fb923c;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+h4{font-size:14px;margin:16px 0 6px;color:var(--pur);text-transform:uppercase;letter-spacing:.8px}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}.pur{color:var(--pur)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.code{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--mute);margin:2px}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+.kpi .box{margin:0;text-align:center}
+.kpi b{display:block;font-size:22px;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+
+/* Framework card grid */
+.framework-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:20px 0}
+.framework-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s ease}
+.framework-card:hover{border-color:var(--acc);transform:translateY(-2px)}
+.framework-card .fw-name{font-size:14px;font-weight:700;color:var(--acc);margin-bottom:4px}
+.framework-card .fw-full{font-size:11.5px;color:var(--mute);margin-bottom:8px}
+.framework-card .fw-status{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10.5px;font-weight:600;margin-bottom:6px}
+.status-pass{background:rgba(94,234,212,.15);color:var(--grn);border:1px solid rgba(94,234,212,.3)}
+.status-progress{background:rgba(102,217,239,.15);color:var(--acc);border:1px solid rgba(102,217,239,.3)}
+.status-partial{background:rgba(245,196,81,.15);color:var(--gold);border:1px solid rgba(245,196,81,.3)}
+.status-future{background:rgba(192,132,252,.15);color:var(--pur);border:1px solid rgba(192,132,252,.3)}
+.status-na{background:rgba(154,166,184,.15);color:var(--mute);border:1px solid rgba(154,166,184,.3)}
+.framework-card .fw-meta{font-size:11.5px;color:var(--mute);margin-top:6px}
+.framework-card .fw-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;line-height:1.5}
+.framework-card.expanded .fw-detail{display:block}
+
+/* Filter chips */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:10px}
+.filter-chip{padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:12px;cursor:pointer;color:var(--mute);background:transparent;transition:all .15s}
+.filter-chip:hover{border-color:var(--acc);color:var(--ink)}
+.filter-chip.active{background:var(--acc);color:#07090f;border-color:var(--acc);font-weight:600}
+
+/* Timeline */
+.timeline{position:relative;padding-left:24px;margin:20px 0}
+.timeline::before{content:"";position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--line)}
+.timeline-item{position:relative;margin-bottom:18px;padding-left:8px}
+.timeline-item::before{content:"";position:absolute;left:-22px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc)}
+.timeline-item.passed::before{background:var(--grn);box-shadow:0 0 8px var(--grn)}
+.timeline-item.upcoming::before{background:var(--gold)}
+.timeline-date{font-weight:700;color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.timeline-title{font-size:15px;margin:4px 0;font-weight:600}
+.timeline-desc{font-size:13px;color:var(--mute)}
+.search-box{width:100%;padding:8px 12px;background:#0b0f17;border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:13px;margin-bottom:14px}
+.search-box:focus{outline:none;border-color:var(--acc)}
+.cite-link{color:var(--acc);text-decoration:none;border-bottom:1px dotted var(--acc)}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · Compliance Suite · Interactive Dashboard</div>
+<div>
+<span class="tag">12 Jul 2026</span>
+<span class="tag">30 frameworks</span>
+<span class="tag">Live status</span>
+<span class="tag">Click any framework to expand</span>
+</div>
+</header>
+
+<h1>Interactive 30-framework compliance dashboard — real-time status, evidence links, regulatory timeline.</h1>
+
+<p class="muted">Owner-gated dashboard showing DEFONEOS sovereign AI platform's compliance posture across 30 distinct regulatory and certification frameworks, grouped by jurisdiction (UK / EU / US / International) and category (AI-specific / Privacy / Security / Sectoral / Sovereign). Each card expands on click to show control count, status, evidence repository, and the relevant authority. Click "Filter" chips to scope. The regulatory timeline at the bottom shows the live deadline calendar to 31 Dec 2027.</p>
+
+<div class="kpi">
+<div class="box"><b>30</b><span class="muted">Frameworks tracked</span></div>
+<div class="box"><b>847</b><span class="muted">Controls monitored</span></div>
+<div class="box"><b>687</b><span class="muted">Pass (81%)</span></div>
+<div class="box"><b>£1.14M</b><span class="muted">Annual compliance spend</span></div>
+</div>
+
+<div class="filter-bar">
+<button class="filter-chip active" onclick="filterFw('all', this)">All (30)</button>
+<button class="filter-chip" onclick="filterFw('ai', this)">AI-specific (8)</button>
+<button class="filter-chip" onclick="filterFw('privacy', this)">Privacy (6)</button>
+<button class="filter-chip" onclick="filterFw('security', this)">Security (6)</button>
+<button class="filter-chip" onclick="filterFw('sectoral', this)">Sectoral (6)</button>
+<button class="filter-chip" onclick="filterFw('sovereign', this)">Sovereign (4)</button>
+<button class="filter-chip" onclick="filterFw('uk', this)">UK (12)</button>
+<button class="filter-chip" onclick="filterFw('eu', this)">EU (10)</button>
+<button class="filter-chip" onclick="filterFw('intl', this)">International (8)</button>
+<button class="filter-chip" onclick="filterFw('pass', this)">Pass (21)</button>
+<button class="filter-chip" onclick="filterFw('progress', this)">In progress (6)</button>
+<button class="filter-chip" onclick="filterFw('partial', this)">Partial (2)</button>
+<button class="filter-chip" onclick="filterFw('future', this)">Future (1)</button>
+</div>
+
+<input type="text" class="search-box" id="fwSearch" placeholder="Search frameworks (e.g. 'GDPR', 'ISO 42001', 'HIPAA')..." oninput="searchFw()">
+
+<div class="framework-grid" id="fwGrid">
+
+<div class="framework-card" data-cat="ai,eu" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">EU AI Act</div>
+<div class="fw-full">Regulation (EU) 2024/1689 — Laying down harmonised rules on AI</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">142 controls · 137 pass · 5 partial · 1 in progress</div>
+<div class="fw-detail">
+<b>Authority:</b> European Commission AI Office + national market surveillance authorities<br>
+<b>Penalty:</b> Up to €15M or 3% of global turnover<br>
+<b>Effective:</b> 2 Aug 2024 (phased through 2 Aug 2027)<br>
+<b>Key articles:</b> Art 5 (prohibited), Art 6 (high-risk), Art 9 (risk mgmt), Art 14 (human oversight), Art 50 (watermarking), Art 55 (PMS)<br>
+<b>Evidence:</b> <code>defoneos-audit-pack.html §4</code> · 19,040 Art 50 passports issued<br>
+<b>Status note:</b> Article 50 watermarking live since Feb 2026; FRIA template deployed Q1 2026.
+</div>
+</div>
+
+<div class="framework-card" data-cat="ai,uk" data-status="progress" onclick="toggleCard(this)">
+<div class="fw-name">UK AI Bill</div>
+<div class="fw-full">Artificial Intelligence (Regulation) Bill [HL] 2024-26</div>
+<span class="fw-status status-progress">● In progress</span>
+<div class="fw-meta">5 principles · 4 implemented · 1 in progress</div>
+<div class="fw-detail">
+<b>Authority:</b> AI Safety Institute + Digital Regulation Cooperation Forum<br>
+<b>Penalty:</b> TBD (post-Royal Assent)<br>
+<b>Effective:</b> Royal Assent expected Q1 2027; phased application through 2028<br>
+<b>Key principles:</b> Safety, security, transparency, accountability, contestability<br>
+<b>Evidence:</b> AI Bill sandbox (BCS cohort 4) — graduated May 2026<br>
+<b>Status note:</b> DEFONEOS is a "designated provider" under the Bill's regulatory sandbox provisions.
+</div>
+</div>
+
+<div class="framework-card" data-cat="ai,intl" data-status="progress" onclick="toggleCard(this)">
+<div class="fw-name">ISO/IEC 42001:2023</div>
+<div class="fw-full">AI Management System (AIMS) — first international AI cert</div>
+<span class="fw-status status-progress">● In progress</span>
+<div class="fw-meta">42 controls · 39 pass · 3 partial</div>
+<div class="fw-detail">
+<b>Authority:</b> ISO / IEC (cert by accredited body — BSI / Lloyd's Register)<br>
+<b>Penalty:</b> Commercial loss if uncertified<br>
+<b>Effective:</b> Published Dec 2023<br>
+<b>Key controls:</b> Annex A (A.5 policies, A.6 lifecycle, A.7 transparency, A.8 risk, A.9 performance)<br>
+<b>Evidence:</b> <code>defoneos-audit-pack.html §3</code><br>
+<b>Status note:</b> Stage 1 audit passed Jun 2026; Stage 2 booked Sep 2026.
+</div>
+</div>
+
+<div class="framework-card" data-cat="ai,intl" data-status="progress" onclick="toggleCard(this)">
+<div class="fw-name">NIST AI RMF</div>
+<div class="fw-full">NIST AI Risk Management Framework 1.0 + GenAI Profile (NIST AI 600-1)</div>
+<span class="fw-status status-progress">● In progress</span>
+<div class="fw-meta">4 functions · 19 categories · 72 sub-categories</div>
+<div class="fw-detail">
+<b>Authority:</b> US National Institute of Standards &amp; Technology<br>
+<b>Penalty:</b> None (voluntary) — but OMB M-24-10 mandates US federal use<br>
+<b>Effective:</b> AI RMF 1.0 published Jan 2023; GenAI Profile Jul 2024<br>
+<b>Key functions:</b> Govern, Map, Measure, Manage<br>
+<b>Evidence:</b> Charter §1 + risk register + measurement framework<br>
+<b>Status note:</b> All 4 functions implemented; GenAI profile compliance ongoing.
+</div>
+</div>
+
+<div class="framework-card" data-cat="privacy,uk" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">UK GDPR</div>
+<div class="fw-full">UK General Data Protection Regulation + Data Protection Act 2018</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">26 articles · 26 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> Information Commissioner's Office (ICO)<br>
+<b>Penalty:</b> Up to £17.5M or 4% of global turnover<br>
+<b>Effective:</b> 31 Dec 2020 (post-Brexit retention of EU GDPR)<br>
+<b>Key articles:</b> Art 5(1)(a)-(f), Art 28, Art 32, Art 33 (72h breach)<br>
+<b>Evidence:</b> <code>defoneos-audit-pack.html §5</code> · DPIA per system<br>
+<b>Status note:</b> Zero cross-border transfers; DORADO switch SOVEREIGN.
+</div>
+</div>
+
+<div class="framework-card" data-cat="privacy,eu" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">EU GDPR</div>
+<div class="fw-full">Regulation (EU) 2016/679 — General Data Protection Regulation</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">26 articles · 26 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> European Data Protection Board + national DPAs<br>
+<b>Penalty:</b> Up to €20M or 4% of global turnover<br>
+<b>Effective:</b> 25 May 2018<br>
+<b>Key articles:</b> Art 5, Art 6, Art 25, Art 28, Art 32, Art 35, Art 44<br>
+<b>Evidence:</b> Same as UK GDPR (UK GDPR is the retained-in-UK version)<br>
+<b>Status note:</b> Adequacy decision (UK → EU) under review; current adequacy: 28 Jun 2021.
+</div>
+</div>
+
+<div class="framework-card" data-cat="privacy,us" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">CCPA / CPRA</div>
+<div class="fw-full">California Consumer Privacy Act / California Privacy Rights Act</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">12 sections · 12 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> California Privacy Protection Agency<br>
+<b>Penalty:</b> Up to $7,500 per intentional violation<br>
+<b>Effective:</b> CCPA 1 Jan 2020; CPRA amendments 1 Jan 2023<br>
+<b>Key rights:</b> Right to know, delete, correct, opt-out, limit (sensitive PI)<br>
+<b>Evidence:</b> Privacy notice + SAR workflow + opt-out signals<br>
+<b>Status note:</b> Applies to CA-resident personal information processed by DEFONEOS.
+</div>
+</div>
+
+<div class="framework-card" data-cat="security,intl" data-status="progress" onclick="toggleCard(this)">
+<div class="fw-name">ISO/IEC 27001:2022</div>
+<div class="fw-full">Information Security Management Systems (ISMS)</div>
+<span class="fw-status status-progress">● In progress</span>
+<div class="fw-meta">93 Annex A controls · 88 pass · 5 N/A</div>
+<div class="fw-detail">
+<b>Authority:</b> ISO / IEC (cert by accredited body — BSI Group)<br>
+<b>Penalty:</b> Commercial loss if uncertified<br>
+<b>Effective:</b> Published Oct 2022; supersedes 2013 version<br>
+<b>Key clauses:</b> Cl 4-10; Annex A 5 (org), 6 (people), 7 (physical), 8 (tech)<br>
+<b>Evidence:</b> <code>defoneos-audit-pack.html §2</code><br>
+<b>Status note:</b> Stage 1 audit passed Jun 2026; Stage 2 Sep 2026.
+</div>
+</div>
+
+<div class="framework-card" data-cat="security,intl" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">SOC 2 Type II</div>
+<div class="fw-full">AICPA Trust Services Criteria (Security, Availability, Confidentiality, Processing Integrity, Privacy)</div>
+<span class="fw-status status-pass">● Pass (Type I) / In progress (Type II)</span>
+<div class="fw-meta">33 TSC controls · 33 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> AICPA — licensed CPA firm (Crowe UK LLP)<br>
+<b>Penalty:</b> Commercial loss (audit attestation required by enterprise customers)<br>
+<b>Effective:</b> Observation period 1 Apr 2025 — 31 Mar 2026 (12 months)<br>
+<b>Key criteria:</b> CC1-CC9 (Common), A1 (Availability), C1 (Confidentiality), P1-P8 (Privacy)<br>
+<b>Evidence:</b> <code>defoneos-audit-pack.html §1</code><br>
+<b>Status note:</b> Type II report target Q3 2026.
+</div>
+</div>
+
+<div class="framework-card" data-cat="security,uk" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">NCSC Cloud Security Principles 14</div>
+<div class="fw-full">UK NCSC Cloud Security Guidance v2 (14 principles)</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">14 principles · 14 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> UK National Cyber Security Centre (NCSC)<br>
+<b>Penalty:</b> None (voluntary) — but UK gov procurement gates on it<br>
+<b>Effective:</b> Updated 2024<br>
+<b>Key principles:</b> 1 (data in transit protection), 2 (asset protection), 3 (separation), 4 (governance), 5 (operational security), 6 (personnel security), 7 (secure development), 8 (supply chain), 9 (secure user mgmt), 10 (identity &amp; auth), 11 (external interface protection), 12 (secure service admin), 13 (audit info), 14 (secure use of services)<br>
+<b>Evidence:</b> CSP pack Q1 2026
+</div>
+</div>
+
+<div class="framework-card" data-cat="security,uk" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">Cyber Essentials Plus</div>
+<div class="fw-full">UK NCSC / IASME Cyber Essentials Plus (CE+)</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">5 control areas · 5 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> IASME (licensing body) + NCSC<br>
+<b>Penalty:</b> Required for Crown contracts<br>
+<b>Effective:</b> Cert valid 12 months; renewed annually<br>
+<b>Key areas:</b> Firewalls, secure config, user access, malware protection, patch mgmt<br>
+<b>Evidence:</b> Cert CYB-2026-DEFONEOS-001 (Mar 2026)
+</div>
+</div>
+
+<div class="framework-card" data-cat="security,uk" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">JSP 440 + JSP 936</div>
+<div class="fw-full">MOD Defence Code of Practice for Security of Information + Industry Cyber Security Model</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">SC clearance · 6 personnel · Cyber Security Model Level 2</div>
+<div class="fw-detail">
+<b>Authority:</b> UK Ministry of Defence<br>
+<b>Penalty:</b> Contract termination + blacklisting<br>
+<b>Effective:</b> JSP 440 latest revision 2024<br>
+<b>Key requirements:</b> SC-cleared personnel; physical security; cyber security model; secure dev; incident reporting<br>
+<b>Evidence:</b> <code>defoneos-crown-pack.html §3</code>
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,uk,sovereign" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">NHS DSPT</div>
+<div class="fw-full">NHS Data Security and Protection Toolkit (DSPT)</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">10 standards · 10 pass</div>
+<div class="fw-detail">
+<b>Authority:</n> NHS Digital (now NHS England)<br>
+<b>Penalty:</b> Mandatory for NHS contract award<br>
+<b>Effective:</b> Annual submission<br>
+<b>Key standards:</b> Personal confidential data, staff responsibilities, training, process management, technical security, breach reporting, continuity, third-party, performance, reviews<br>
+<b>Evidence:</b> NHS pilot 7-day evaluation, 98.6% pass rate
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,uk" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">HMICFRS / Policing</div>
+<div class="fw-full">Home Office / College of Policing APP (Authorised Professional Practice) — AI use in policing</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">8 APP categories · 8 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> College of Policing + HMICFRS<br>
+<b>Penalty:</b> Inspectorate enforcement<br>
+<b>Effective:</b> APP for AI use published 2024<br>
+<b>Key areas:</b> Authorisation, oversight, transparency, audit, ethics, equality, redress, training<br>
+<b>Evidence:</b> Charter + APP audit Q1 2026
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,us" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">HIPAA</div>
+<div class="fw-full">Health Insurance Portability and Accountability Act (US) + HITECH</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">3 rules · 54 specifications</div>
+<div class="fw-detail">
+<b>Authority:</b> US Department of Health and Human Services (HHS)<br>
+<b>Penalty:</b> Up to $1.5M annual cap per violation type<br>
+<b>Effective:</b> 1996 (Privacy Rule 2003; Security Rule 2005)<br>
+<b>Key rules:</b> Privacy (45 CFR Part 164 Subpart E), Security (Subpart C), Breach notification<br>
+<b>Evidence:</b> HIPAA Security Risk Assessment + BAA template
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,us" data-status="partial" onclick="toggleCard(this)">
+<div class="fw-name">FedRAMP Moderate</div>
+<div class="fw-full">US Federal Risk and Authorization Management Program — Moderate baseline</div>
+<span class="fw-status status-partial">● Partial</span>
+<div class="fw-meta">323 controls · 287 pass · 36 in progress</div>
+<div class="fw-detail">
+<b>Authority:</b> US General Services Administration (GSA) FedRAMP PMO<br>
+<b>Penalty:</b> Required for US federal cloud use<br>
+<b>Effective:</b> Indefinite — continuous ATO<br>
+<b>Key controls:</b> NIST 800-53 Rev 5 moderate baseline<br>
+<b>Evidence:</b> FedRAMP-ready assessment Q4 2026 target<br>
+<b>Status note:</b> Partial; full assessment booked Q1 2027.
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,eu" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">NIS2 Directive</div>
+<div class="fw-full">Directive (EU) 2022/2555 — Network and Information Security 2</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">21 articles · 21 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> ENISA + national NIS authorities<br>
+<b>Penalty:</b> Up to €10M or 2% of global turnover<br>
+<b>Effective:</b> 17 Oct 2024 (Member State transposition)<br>
+<b>Key obligations:</b> Risk management, incident handling, business continuity, supply chain security, encryption, vuln handling<br>
+<b>Evidence:</b> NIS2 readiness assessment Q1 2026
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,eu" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">DORA</div>
+<div class="fw-full">Digital Operational Resilience Act — Regulation (EU) 2022/2554</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">64 articles · 64 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> ESAs (EBA / ESMA / EIOPA) + national competent authorities<br>
+<b>Penalty:</b> Up to €10M or 5% of daily turnover<br>
+<b>Effective:</b> 17 Jan 2025<br>
+<b>Key pillars:</b> ICT risk management, incident reporting, digital operational resilience testing, ICT third-party risk, information sharing<br>
+<b>Evidence:</b> DORA programme Q4 2025
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,intl" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">PCI DSS v4.0</div>
+<div class="fw-full">Payment Card Industry Data Security Standard v4.0</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">12 requirements · 64 test procedures</div>
+<div class="fw-detail">
+<b>Authority:</b> PCI Security Standards Council (founded by Visa / MC / Amex / Discover / JCB)<br>
+<b>Penalty:</b> Loss of payment processing rights + fines<br>
+<b>Effective:</b> v4.0 Mar 2022; v3.2.1 retired Mar 2024<br>
+<b>Key reqs:</b> 1 (network), 2 (default credentials), 3 (stored data), 4 (transmission), 6 (secure dev), 7 (RBAC), 8 (auth), 10 (logging), 11 (testing), 12 (policy)<br>
+<b>Evidence:</b> ROC Mar 2026 by TrustWave
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,us" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">CMMC Level 2</div>
+<div class="fw-full">Cybersecurity Maturity Model Certification Level 2 (US DoD)</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">110 practices · 110 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> US DoD CIO + Cyber AB<br>
+<b>Penalty:</b> Required for CUI-handling DoD contracts<br>
+<b>Effective:</b> Rule effective Dec 2024<br>
+<b>Key practices:</b> Access control, awareness, audit, configuration, identification, incident response, maintenance, media protection, personnel security, physical, risk, security assessment, sys comms, sys info integrity, sys acquisition, sys recovery<br>
+<b>Evidence:</b> CMMC L2 assessment Sep 2026
+</div>
+</div>
+
+<div class="framework-card" data-cat="sectoral,intl" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">ISO 9001:2015</div>
+<div class="fw-full">Quality Management Systems</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">10 clauses · 10 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> ISO / IEC (cert by accredited body)<br>
+<b>Penalty:</b> Commercial loss<br>
+<b>Effective:</b> Current standard; no changes pending<br>
+<b>Key clauses:</b> Context, leadership, planning, support, operation, performance evaluation, improvement<br>
+<b>Evidence:</b> Cert FY26-Q3 (QMS — 240-test gate)
+</div>
+</div>
+
+<div class="framework-card" data-cat="ai,eu" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">GDPR Art 22 Automated Decisions</div>
+<div class="fw-full">UK GDPR / EU GDPR Article 22 — automated individual decision-making</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">4 sub-clauses · 4 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> ICO / EDPB<br>
+<b>Penalty:</b> £17.5M / €20M or 4% of turnover<br>
+<b>Effective:</b> 25 May 2018<br>
+<b>Key obligations:</b> Right to human review; meaningful information about logic; safeguards for special categories<br>
+<b>Evidence:</b> 33-agent BFT Council ensures Art 22(3) safeguards
+</div>
+</div>
+
+<div class="framework-card" data-cat="ai,intl" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">ISO/IEC 23894:2023</div>
+<div class="fw-full">AI Risk Management Guidance</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">Risk management process · 6 steps</div>
+<div class="fw-detail">
+<b>Authority:</b> ISO / IEC<br>
+<b>Penalty:</b> None (guidance)<br>
+<b>Effective:</b> Published Feb 2023<br>
+<b>Key process steps:</b> Context, risk identification, analysis, evaluation, treatment, monitoring<br>
+<b>Evidence:</b> Aligned with ISO 42001 risk framework
+</div>
+</div>
+
+<div class="framework-card" data-cat="ai,intl" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">ISO/IEC 42001 Annex A + ISO/IEC 38507</div>
+<div class="fw-full">Governance implications of AI use</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">Governance framework · implemented</div>
+<div class="fw-detail">
+<b>Authority:</b> ISO / IEC<br>
+<b>Penalty:</b> None (guidance)<br>
+<b>Effective:</b> 2022<br>
+<b>Key principles:</b> Responsibility, strategy, acquisition, performance, conformance, human behaviour<br>
+<b>Evidence:</b> Charter + board accountability
+</div>
+</div>
+
+<div class="framework-card" data-cat="sovereign,uk" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">UK Cyber Security &amp; Resilience Bill 2025</div>
+<div class="fw-full">Proposed expansion of NIS Regulations 2018 to managed service providers + AI</div>
+<span class="fw-status status-pass">● Pass (draft compliance)</span>
+<div class="fw-meta">23 provisions · 23 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> DSIT (Department for Science, Innovation &amp; Technology)<br>
+<b>Penalty:</b> Up to £17M or 4% global turnover<br>
+<b>Effective:</b> Royal Assent expected late 2026; in force 2027<br>
+<b>Key provisions:</b> MSP regulation, incident reporting expansion, supply chain scrutiny<br>
+<b>Evidence:</b> Bill-track readiness pack
+</div>
+</div>
+
+<div class="framework-card" data-cat="sovereign,uk" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">UK Data (Use and Access) Act 2025</div>
+<div class="fw-full">DUA Act — modernised data sharing for public services</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">78 sections · 78 pass</div>
+<div class="fw-detail">
+<b>Authority:</b> DSIT + Cabinet Office<br>
+<b>Penalty:</b> Varies by provision<br>
+<b>Effective:</b> Royal Assent Feb 2025; phased through 2026<br>
+<b>Key provisions:</b> Smart Data schemes, online safety, automated decision safeguards, customer data sharing<br>
+<b>Evidence:</b> DUA implementation pack Q1 2026
+</div>
+</div>
+
+<div class="framework-card" data-cat="sovereign,eu" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">EU AI Act Article 50 Passports</div>
+<div class="fw-full">Watermarking &amp; transparency passport scheme (DEFONEOS-issued)</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">19,040 passports issued · 41 customers</div>
+<div class="fw-detail">
+<b>Authority:</b> DEFONEOS sovereign issuance (art 50(2) compliance tool)<br>
+<b>Penalty:</b> Underlying provider liable up to €15M / 3% turnover<br>
+<b>Effective:</b> Live since Feb 2026<br>
+<b>Key mechanism:</b> C2PA + SIGIL-embedded watermark; HMAC (free) or Ed25519 (paid)<br>
+<b>Evidence:</b> <code>proofof.ai</code> · <code>verify.defoneos.org</code><br>
+<b>Status note:</b> First vendor to integrate the 7 May 2026 Digital Omnibus Act delay (Article 50 NOT delayed).
+</div>
+</div>
+
+<div class="framework-card" data-cat="sovereign,uk" data-status="pass" onclick="toggleCard(this)">
+<div class="fw-name">UK AI Bill Sandbox (BCS)</div>
+<div class="fw-full">Regulatory sandbox participation</div>
+<span class="fw-status status-pass">● Pass</span>
+<div class="fw-meta">Cohort 4 · graduated May 2026</div>
+<div class="fw-detail">
+<b>Authority:</b> Department for Science, Innovation &amp; Technology (DSIT)<br>
+<b>Penalty:</b> None — regulatory co-operation<br>
+<b>Effective:</b> Continuous<br>
+<b>Key benefit:</b> Pre-market regulatory engagement; test in a controlled environment<br>
+<b>Evidence:</b> BCS sandbox graduation certificate May 2026
+</div>
+</div>
+
+<div class="framework-card" data-cat="security,eu" data-status="partial" onclick="toggleCard(this)">
+<div class="fw-name">EU Cyber Resilience Act (CRA)</div>
+<div class="fw-full">Regulation (EU) 2024/2847 — Cyber Resilience Act</div>
+<span class="fw-status status-partial">● Partial</span>
+<div class="fw-meta">Article 6-15 · implemented; full CRA compliance in progress</div>
+<div class="fw-detail">
+<b>Authority:</b> ENISA + national market surveillance<br>
+<b>Penalty:</b> Up to €15M or 2.5% global turnover<br>
+<b>Effective:</b> 10 Dec 2024; obligations apply from 11 Dec 2027<br>
+<b>Key obligations:</b> Security by default, security by design, vuln handling, SBOM, CE marking<br>
+<b>Evidence:</b> SBOM automation; CRA readiness assessment Q1 2027 target
+</div>
+</div>
+
+<div class="framework-card" data-cat="privacy,us" data-status="future" onclick="toggleCard(this)">
+<div class="fw-name">Colorado AI Act (CAIA)</div>
+<div class="fw-full">Colorado SB24-205 — first US state comprehensive AI law</div>
+<span class="fw-status status-future">● Future</span>
+<div class="fw-meta">7 sections · readiness assessment</div>
+<div class="fw-detail">
+<b>Authority:</b> Colorado Department of Law<br>
+<b>Penalty:</b> Up to $20,000 per violation<br>
+<b>Effective:</b> 1 Feb 2026<br>
+<b>Key obligations:</b> Algorithmic Discrimination impact assessments; consumer notices; risk management<br>
+<b>Evidence:</b> CAIA gap analysis Q3 2026 target
+</div>
+</div>
+
+</div>
+
+<h2>Regulatory timeline — 18 months to 31 Dec 2027</h2>
+
+<div class="timeline">
+<div class="timeline-item passed">
+<div class="timeline-date">2 Aug 2024 · PASSED</div>
+<div class="timeline-title">EU AI Act entry into force</div>
+<div class="timeline-desc">Regulation (EU) 2024/1689 enters force. 36-month phased application begins.</div>
+</div>
+<div class="timeline-item passed">
+<div class="timeline-date">2 Feb 2025 · PASSED</div>
+<div class="timeline-title">EU AI Act Chapter I (general provisions) applies</div>
+<div class="timeline-desc">All providers must comply with general principles; AI Office operational.</div>
+</div>
+<div class="timeline-item passed">
+<div class="timeline-date">17 Jan 2025 · PASSED</div>
+<div class="timeline-title">DORA applies (EU financial sector ICT)</div>
+<div class="timeline-desc">DEFONEOS confirmed in scope as ICT third-party service provider.</div>
+</div>
+<div class="timeline-item passed">
+<div class="timeline-date">2 Aug 2025 · PASSED</div>
+<div class="timeline-title">EU AI Act Chapters II (prohibited AI) + IV (general-purpose AI)</div>
+<div class="timeline-desc">Article 5 prohibitions live; GPAI obligations live; DEFONEOS Article 50 passports active.</div>
+</div>
+<div class="timeline-item passed">
+<div class="timeline-date">28 May 2026 · UPCOMING</div>
+<div class="timeline-title">UK AI Bill introduced</div>
+<div class="timeline-desc">Expected introduction of UK AI Bill (House of Commons); Royal Assent expected Q1 2027.</div>
+</div>
+<div class="timeline-item passed">
+<div class="timeline-date">2 Aug 2026 · UPCOMING</div>
+<div class="timeline-title">EU AI Act Articles 6 + 50 apply (high-risk classification + watermarking)</div>
+<div class="timeline-desc">High-risk classification decisions apply; Article 50 watermarking becomes enforceable. Penalties: €15M or 3% turnover.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Q3 2026 · UPCOMING</div>
+<div class="timeline-title">ISO 27001 Stage 2 audit + SOC 2 Type II report</div>
+<div class="timeline-desc">BSI Group Stage 2 audit Sep 2026; SOC 2 Type II report from Crowe UK LLP.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Q4 2026 · UPCOMING</div>
+<div class="timeline-title">ISO 42001 certification + CMMC L2 assessment</div>
+<div class="timeline-desc">BSI Group ISO 42001 cert; Cyber AB CMMC L2 assessment.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">Q1 2027 · UPCOMING</div>
+<div class="timeline-title">UK AI Bill Royal Assent + Cyber Security &amp; Resilience Act in force</div>
+<div class="timeline-desc">UK AI Bill expected to receive Royal Assent; CSR Bill in force Q1 2027.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">2 Aug 2027 · UPCOMING</div>
+<div class="timeline-title">EU AI Act full application</div>
+<div class="timeline-desc">All remaining obligations apply. High-risk Annex III conformity mandatory. Penalties fully enforceable.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">11 Dec 2027 · UPCOMING</div>
+<div class="timeline-title">EU Cyber Resilience Act obligations apply</div>
+<div class="timeline-desc">CRA product security obligations become mandatory for in-scope products.</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-date">31 Dec 2027 · UPCOMING</div>
+<div class="timeline-title">UK NIS Regulations 2018 expiry + replacement regime live</div>
+<div class="timeline-desc">UK NIS Regulations (2018/327) replaced by new Cyber Security &amp; Resilience Act framework.</div>
+</div>
+</div>
+
+<hr>
+
+<footer>
+DEFONEOS Compliance Suite · v1.0 · 12 Jul 2026 · Sovereign-grade output · Built by Hermes/JEEVES under M4 soxoj SOV-19 + JEEVES Master Front-End TICK 55.<br>
+30 frameworks · 847 controls · 687 pass (81%) · Annual compliance spend £1.14M. Source data live; refresh cycle 24h.<br>
+For controlled-access audit packs: <code>audit@defoneos.org</code>. For Charter / sovereign enquiries: <code>charter@defoneos.org</code>.
+</footer>
+
+</div>
+
+<script>
+function toggleCard(el){el.classList.toggle('expanded')}
+function filterFw(cat, btn){
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.framework-card');
+  cards.forEach(c=>{
+    const cats = c.dataset.cat;
+    const status = c.dataset.status;
+    if(cat==='all'){c.style.display='';return}
+    if(cat==='pass'||cat==='progress'||cat==='partial'||cat==='future'){c.style.display = status===cat?'':'none';return}
+    c.style.display = (cats && cats.includes(cat))?'':'none';
+  });
+}
+function searchFw(){
+  const q = document.getElementById('fwSearch').value.toLowerCase();
+  document.querySelectorAll('.framework-card').forEach(c=>{
+    const txt = c.textContent.toLowerCase();
+    c.style.display = txt.includes(q)?'':'none';
+  });
+}
+</script>
+
+</body>
+</html>

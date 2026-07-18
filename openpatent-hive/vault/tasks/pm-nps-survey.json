@@ -1,0 +1,7 @@
+{
+  "id": "pm-nps-survey",
+  "prompt": "Write a 250-word NPS survey design for openpatent.ai sent to paying customers 30 days after their 3rd disclosure. Cover: (1) the survey flow — 5 questions max, ≤90 seconds total, mobile-friendly, (2) Q1 the NPS itself (0-10), (3) Q2 the open-text 'What's the #1 reason for your score?', (4) Q3 a 4-option multi-select 'Which 6-layer element mattered most?' (Bitcoin OTS, BFT council, C2PA manifest, sovereign custody, MCP tooling, multi-region), (5) Q4 the use-case tagger 'Which best describes you?' (IP boutique, AI startup, solo inventor, gov/defense, corporate R&D, other), (6) Q5 the optional 'Anything we should build?' free-text, (7) the trigger logic — NPS ≥9 → ask for a G2 review + referral code, NPS 7-8 → ask for a case-study quote, NPS ≤6 → fire save-play sequence + page CSM, (8) the 90-day cadence — repeat the survey quarterly per customer, (9) the 2 baselines — current NPS 42, target 60 by Q4, (10) the 1 anti-bias rule — never show the score before the open-text to avoid priming. Use DEFENEOS mythic voice. Return ONLY JSON: {survey:{questions:[5 strings]}, trigger_logic:[3 strings], cadence:string, baseline_nps:int, target_nps:int, anti_bias_rule:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

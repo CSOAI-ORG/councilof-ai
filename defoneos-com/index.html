@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="seal.svg">
+<title>DEFONEOS — The Governed Globe · Sovereign Defence Intelligence</title>
+<meta name="description" content="DEFONEOS — the governed globe. A sovereign defence-AI common operating picture that fuses every public live feed onto one real-world 3D earth. Every action Ed25519-signed on-device, BFT-council-adjudicated, SIGIL-verifiable. AUKUS-compatible. No foreign API calls.">
+<meta property="og:title" content="DEFONEOS — The Governed Globe">
+<meta property="og:description" content="Sovereign defence intelligence, alive and accountable. A live 3D common operating picture where every action is signed, verifiable, and governed.">
+<meta property="og:type" content="website">
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/';</script>
+<style>
+  :root{
+    --bg:#05070f; --bg2:#0a1226; --navy:#0a1226;
+    --panel:rgba(255,255,255,.035); --panel2:rgba(255,255,255,.055);
+    --line:rgba(201,168,76,.18); --line2:rgba(255,255,255,.08);
+    --ink:#eef1fb; --dim:#97a0bd; --faint:#6b7290;
+    --gold:#c9a84c; --gold2:#e7cf8e; --cream:#faf8f3;
+    --cyan:#3ef0ff; --red:#ff4d4d; --green:#00e07a;
+  }
+  *{ margin:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ background:var(--bg); color:var(--ink); font-family:Inter,system-ui,sans-serif; line-height:1.6; overflow-x:hidden;
+    background-image:radial-gradient(1100px 700px at 80% -5%, rgba(62,240,255,.06), transparent 60%), radial-gradient(900px 600px at -5% 30%, rgba(201,168,76,.07), transparent 55%); }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 26px; }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+
+  /* ---------- NAV ---------- */
+  nav{ position:fixed; top:0; left:0; right:0; z-index:80; backdrop-filter:blur(18px); background:linear-gradient(180deg,rgba(5,7,15,.9),rgba(5,7,15,.45)); border-bottom:1px solid var(--line); }
+  nav .wrap{ display:flex; align-items:center; gap:22px; height:66px; }
+  .brand{ display:flex; align-items:center; gap:11px; font-weight:800; letter-spacing:1.5px; font-size:18px; }
+  .brand img{ height:38px; width:38px; filter:drop-shadow(0 0 10px rgba(201,168,76,.35)); }
+  .nlinks{ display:flex; gap:22px; margin-left:16px; font-size:13.5px; color:var(--dim); }
+  .nlinks a{ transition:.15s; } .nlinks a:hover{ color:var(--gold); }
+  .spacer{ flex:1; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:999px; font-weight:600; font-size:14px; cursor:pointer; transition:.16s; border:1px solid var(--line); color:var(--ink); white-space:nowrap; }
+  .btn.gold{ background:linear-gradient(180deg,var(--gold2),var(--gold)); color:#1d1505; border-color:var(--gold); box-shadow:0 6px 22px -10px rgba(201,168,76,.7); }
+  .btn.gold:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+  .btn.ghost:hover{ border-color:var(--cyan); color:var(--cyan); }
+  .btn.lg{ padding:14px 26px; font-size:15.5px; }
+
+  .chip{ display:inline-flex; align-items:center; gap:7px; padding:6px 13px; border-radius:999px; background:var(--panel); border:1px solid var(--line); font-size:12.5px; color:var(--dim); backdrop-filter:blur(6px); }
+  .chip .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse{ 50%{ opacity:.4; } }
+  .kicker{ font-size:12px; letter-spacing:3.5px; text-transform:uppercase; color:var(--gold); font-weight:700; font-family:'JetBrains Mono',monospace; }
+
+  h1{ font-size:clamp(46px,7.4vw,92px); font-weight:900; line-height:.98; letter-spacing:-.025em; margin:18px 0 0; }
+  h1 .g{ background:linear-gradient(115deg,#fff 10%,var(--cyan) 52%,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  h2{ font-size:clamp(30px,4.4vw,50px); font-weight:800; letter-spacing:-.025em; line-height:1.05; }
+  h2 .g{ background:linear-gradient(115deg,#fff,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .lead{ font-size:clamp(17px,2vw,21px); color:var(--dim); max-width:680px; margin-top:20px; }
+  section{ padding:96px 0; border-top:1px solid rgba(255,255,255,.04); position:relative; }
+
+  /* ---------- HERO ---------- */
+  .hero{ position:relative; min-height:100vh; display:flex; align-items:center; padding:120px 0 70px; overflow:hidden; border:none; }
+  #cesiumHero{ position:absolute; inset:0; z-index:0; opacity:0; transition:opacity 1.6s ease; }
+  #cesiumHero.ready{ opacity:.92; }
+  .cesium-widget-credits,.cesium-viewer-bottom,.cesium-viewer-toolbar{ display:none !important; }
+  #cesiumHero canvas{ outline:none; }
+  .hero-veil{ position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(120% 90% at 18% 50%, rgba(5,7,15,.92) 0%, rgba(5,7,15,.7) 34%, rgba(5,7,15,.15) 62%, transparent 78%),
+    linear-gradient(180deg, rgba(5,7,15,.55), transparent 22%, transparent 70%, rgba(5,7,15,.85)); }
+  .hero-grid{ position:relative; z-index:2; display:grid; grid-template-columns:1fr; max-width:760px; }
+  .hero .seal-mini{ height:64px; width:64px; filter:drop-shadow(0 0 26px rgba(201,168,76,.4)); margin-bottom:6px; }
+  .hero .badges{ display:flex; flex-wrap:wrap; gap:9px; margin-top:24px; }
+  .cta-row{ display:flex; flex-wrap:wrap; gap:13px; margin-top:34px; }
+  .stat-strip{ display:flex; flex-wrap:wrap; gap:30px; margin-top:46px; padding-top:28px; border-top:1px solid var(--line); }
+  .stat b{ display:block; font-size:28px; font-weight:800; color:var(--gold); font-family:'JetBrains Mono',monospace; line-height:1; }
+  .stat span{ font-size:12px; color:var(--dim); letter-spacing:.4px; }
+  .scroll-cue{ position:absolute; bottom:22px; left:50%; transform:translateX(-50%); z-index:3; color:var(--faint); font-size:11px; letter-spacing:2px; text-transform:uppercase; font-family:'JetBrains Mono',monospace; animation:bob 2.4s ease-in-out infinite; }
+  @keyframes bob{ 50%{ transform:translate(-50%,7px); } }
+
+  /* ---------- AUTHORITY BAND ---------- */
+  .authband{ padding:30px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:linear-gradient(180deg,rgba(201,168,76,.04),transparent); }
+  .authband .wrap{ display:flex; align-items:center; justify-content:center; gap:14px 34px; flex-wrap:wrap; }
+  .authband .lbl{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--faint); text-transform:uppercase; }
+  .authband .std{ font-size:13px; color:var(--dim); font-weight:600; display:inline-flex; align-items:center; gap:7px; }
+  .authband .std::before{ content:'◆'; color:var(--gold); font-size:9px; }
+
+  /* ---------- GRIDS / CARDS ---------- */
+  .grid{ display:grid; gap:16px; margin-top:42px; }
+  .g3{ grid-template-columns:repeat(3,1fr); } .g2{ grid-template-columns:repeat(2,1fr); } .g4{ grid-template-columns:repeat(4,1fr); }
+  @media(max-width:860px){ .g3,.g4{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:560px){ .g3,.g4,.g2{ grid-template-columns:1fr; } }
+  .card{ background:var(--panel); border:1px solid var(--line2); border-radius:15px; padding:22px; transition:.18s; position:relative; overflow:hidden; }
+  .card:hover{ border-color:rgba(62,240,255,.35); transform:translateY(-3px); background:var(--panel2); }
+  .card .ic{ font-size:24px; } .card h3{ font-size:16px; font-weight:700; margin:11px 0 6px; } .card p{ font-size:13.5px; color:var(--dim); }
+  .card .tag{ position:absolute; top:14px; right:16px; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:1px; color:var(--faint); text-transform:uppercase; }
+
+  /* ---------- OS SHOWCASE ---------- */
+  .oswin{ margin-top:46px; border-radius:18px; overflow:hidden; border:1px solid var(--line); background:linear-gradient(160deg,rgba(13,18,33,.95),rgba(7,10,20,.92)); box-shadow:0 40px 110px -40px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.05); }
+  .oswin-bar{ display:flex; align-items:center; gap:10px; padding:13px 18px; border-bottom:1px solid var(--line2); background:rgba(255,255,255,.02); }
+  .oswin-bar .dots{ display:flex; gap:7px; }
+  .oswin-bar .dots i{ width:11px; height:11px; border-radius:50%; display:block; }
+  .oswin-bar .dots i:nth-child(1){ background:#ff5f57; } .oswin-bar .dots i:nth-child(2){ background:#febc2e; } .oswin-bar .dots i:nth-child(3){ background:#28c840; }
+  .oswin-bar .ttl{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--dim); display:flex; align-items:center; gap:8px; }
+  .oswin-bar .ttl img{ height:16px; width:16px; }
+  .oswin-bar .live{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--green); display:flex; align-items:center; gap:6px; }
+  .oswin-bar .live::before{ content:''; width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 2s infinite; }
+  .oswin-body{ display:grid; grid-template-columns:200px 1fr 240px; min-height:380px; }
+  @media(max-width:900px){ .oswin-body{ grid-template-columns:1fr; } .oswin-side,.oswin-right{ display:none; } }
+  .oswin-side{ border-right:1px solid var(--line2); padding:16px; display:flex; flex-direction:column; gap:6px; }
+  .oswin-side .grp{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--faint); text-transform:uppercase; margin:12px 0 4px; }
+  .oswin-side .it{ display:flex; align-items:center; gap:9px; padding:7px 9px; border-radius:8px; font-size:13px; color:var(--dim); cursor:default; transition:.14s; }
+  .oswin-side .it:hover{ background:rgba(255,255,255,.04); color:var(--ink); }
+  .oswin-side .it.on{ background:rgba(62,240,255,.1); color:var(--cyan); border:1px solid rgba(62,240,255,.25); }
+  .oswin-main{ padding:22px; display:flex; flex-direction:column; gap:12px; }
+  .chat-line{ display:flex; gap:10px; align-items:flex-start; }
+  .chat-line .av{ flex:0 0 auto; width:28px; height:28px; border-radius:8px; display:grid; place-items:center; font-size:13px; }
+  .chat-line.user .av{ background:rgba(255,255,255,.06); }
+  .chat-line.sov .av{ background:linear-gradient(160deg,var(--gold2),var(--gold)); color:#1d1505; }
+  .chat-line .bub{ font-size:13.5px; padding:10px 14px; border-radius:13px; max-width:90%; }
+  .chat-line.user .bub{ background:rgba(255,255,255,.05); color:var(--ink); }
+  .chat-line.sov .bub{ background:rgba(62,240,255,.08); border:1px solid rgba(62,240,255,.22); color:#dffaff; }
+  .chat-line .bub .sig{ display:block; margin-top:7px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); letter-spacing:.5px; }
+  .oswin-right{ border-left:1px solid var(--line2); padding:16px; }
+  .oswin-right h4{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--faint); text-transform:uppercase; margin-bottom:12px; }
+  .ledger-row{ font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:9px 0; border-bottom:1px solid var(--line2); color:var(--dim); }
+  .ledger-row .hash{ color:var(--cyan); word-break:break-all; }
+  .ledger-row .ok{ color:var(--green); }
+
+  /* ---------- DOCTRINE ---------- */
+  .doc{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:42px; }
+  @media(max-width:760px){ .doc{ grid-template-columns:1fr; } }
+  .doc .c{ border-radius:18px; padding:28px; border:1px solid var(--line); position:relative; overflow:hidden; }
+  .doc .west{ background:linear-gradient(165deg,rgba(62,240,255,.07),rgba(62,240,255,.01)); border-color:rgba(62,240,255,.3); }
+  .doc .east{ background:linear-gradient(165deg,rgba(255,77,77,.06),rgba(255,77,77,.01)); border-color:rgba(255,77,77,.28); }
+  .doc h3{ font-size:21px; font-weight:800; } .doc .west h3{ color:var(--cyan); } .doc .east h3{ color:var(--red); }
+  .doc .sub{ color:var(--dim); font-size:14px; margin-top:6px; }
+  .doc ul{ list-style:none; margin-top:16px; } .doc li{ font-size:13.5px; color:var(--dim); padding:8px 0; border-bottom:1px solid rgba(255,255,255,.05); display:flex; gap:9px; }
+  .doc .west li::before{ content:'✓'; color:var(--cyan); } .doc .east li::before{ content:'✕'; color:var(--red); }
+  .doc .flip{ position:absolute; top:24px; right:26px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; opacity:.6; }
+
+  /* ---------- MOAT / FLYWHEEL ---------- */
+  .flywheel{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:42px; align-items:center; }
+  @media(max-width:760px){ .flywheel{ grid-template-columns:1fr; } }
+  .fly-stat{ border-radius:18px; padding:34px; border:1px solid var(--line); background:linear-gradient(165deg,rgba(201,168,76,.07),transparent); }
+  .fly-stat .big{ font-family:'JetBrains Mono',monospace; font-weight:600; }
+  .fly-stat .row{ display:flex; align-items:baseline; gap:14px; padding:14px 0; border-bottom:1px solid var(--line2); }
+  .fly-stat .row b{ font-size:38px; font-weight:800; font-family:'JetBrains Mono',monospace; }
+  .fly-stat .row.gov b{ color:var(--green); } .fly-stat .row.un b{ color:var(--red); }
+  .fly-stat .row span{ font-size:13px; color:var(--dim); }
+  .fly-stat .note{ font-size:12px; color:var(--faint); margin-top:16px; line-height:1.5; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ padding:58px 0 70px; border-top:1px solid var(--line); color:var(--dim); font-size:13px; }
+  .foot-top{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:30px; margin-bottom:38px; }
+  @media(max-width:760px){ .foot-top{ grid-template-columns:1fr 1fr; gap:24px; } }
+  .foot-top h5{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:1.5px; color:var(--gold); text-transform:uppercase; margin-bottom:13px; }
+  .foot-top a{ display:block; color:var(--dim); padding:4px 0; transition:.14s; } .foot-top a:hover{ color:var(--ink); }
+  .foot-brand{ display:flex; gap:13px; align-items:flex-start; }
+  .foot-brand img{ height:54px; width:54px; }
+  .foot-bar{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding-top:26px; border-top:1px solid var(--line2); }
+
+  /* ---------- SOVEREIGN PILL ---------- */
+  .sov-pill{ position:fixed; right:22px; bottom:22px; z-index:90; display:flex; align-items:center; gap:10px; padding:12px 19px; border-radius:999px;
+    background:rgba(10,18,38,.94); backdrop-filter:blur(14px); border:1px solid var(--cyan); color:var(--cyan); font-weight:600; font-size:14px; cursor:pointer; box-shadow:0 0 28px -6px var(--cyan); transition:.18s; }
+  .sov-pill:hover{ transform:translateY(-2px); box-shadow:0 0 38px -4px var(--cyan); }
+  .sov-pill .dot{ width:9px; height:9px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:pulse 2s infinite; }
+  .sov-pill .seal{ height:22px; width:22px; }
+
+  /* ---------- REVEAL ---------- */
+  .rv{ opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  .rv.in{ opacity:1; transform:none; }
+  @media(prefers-reduced-motion:reduce){ .rv{ opacity:1; transform:none; transition:none; } .scroll-cue,.sov-pill .dot,.chip .dot{ animation:none; } }
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="/"><img src="seal.svg" alt="DEFONEOS"> DEFONEOS</a>
+  <div class="nlinks">
+    <a href="#os">The OS</a><a href="#capabilities">Capabilities</a><a href="#doctrine">Doctrine</a>
+    <a href="#governed">Governed</a><a href="godseye.html">Gods-Eye scan</a><a href="flightrecorder.html">Flight-Recorder</a><a href="architecture.html">Architecture</a><a href="verify.html">Verify</a>
+  </div>
+  <span class="spacer"></span>
+  <a class="btn ghost" href="cop.html">Enter the dome →</a>
+  <a class="btn gold" href="mailto:nicholas@meok.ai?subject=DEFONEOS%20pilot">Request a pilot</a>
+</div></nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div id="cesiumHero"></div>
+  <div class="hero-veil"></div>
+  <div class="wrap"><div class="hero-grid">
+    <img class="seal-mini" src="seal.svg" alt="DEFONEOS seal">
+    <span class="kicker">Sovereign · Defence · Intelligence</span>
+    <h1>The <span class="g">governed globe.</span></h1>
+    <p class="lead">Sovereign defence intelligence, alive and accountable. One real-world 3D earth where a Sovereign AI fuses every public live feed — and every action is Ed25519-signed on-device, council-adjudicated, and SIGIL-verifiable.</p>
+    <div class="badges">
+      <span class="chip"><span class="dot"></span> Live common operating picture</span>
+      <span class="chip"><span class="dot"></span> Every action signed &amp; verifiable</span>
+      <span class="chip"><span class="dot"></span> No foreign API calls</span>
+    </div>
+    <div class="cta-row">
+      <a class="btn gold lg" href="cop.html">▶ Launch the dome</a>
+      <a class="btn ghost lg" href="cop.html#tour">Watch the 90-sec tour</a>
+    </div>
+    <div class="stat-strip">
+      <div class="stat"><b>28</b><span>domain ontology</span></div>
+      <div class="stat"><b>371</b><span>MCP servers</span></div>
+      <div class="stat"><b>33</b><span>BFT council</span></div>
+      <div class="stat"><b>0</b><span>foreign API calls</span></div>
+    </div>
+  </div></div>
+  <div class="scroll-cue">scroll to explore ↓</div>
+</header>
+
+<!-- ============ AUTHORITY BAND ============ -->
+<div class="authband"><div class="wrap">
+  <span class="lbl">Powered by</span>
+  <a class="std" href="https://csoai.org" target="_blank" rel="noopener">CSOAI</a>
+  <span class="std">AUKUS-compatible</span>
+  <span class="std">EU AI Act Art.50</span>
+  <span class="std">NIST AI RMF</span>
+  <span class="std">ISO 42001</span>
+  <span class="std">JSP 936</span>
+  <a class="std" href="verify.html">SIGIL verifiable ↗</a>
+</div></div>
+
+<!-- ============ OS SHOWCASE ============ -->
+<section id="os"><div class="wrap rv">
+  <span class="kicker">Not a model — an operating system</span>
+  <h2>A full AI <span class="g">operating system</span> for the real world.</h2>
+  <p class="lead">The Sovereign isn't a chatbot bolted onto a map. It's the Organic Open World Model made visible — an OS that observes every public signal, reasons across a 28-domain ontology, and signs every governed action to an auditable ledger. This is live. Click to enter.</p>
+
+  <div class="oswin">
+    <div class="oswin-bar">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="ttl"><img src="seal.svg" alt=""> DEFONEOS · Common Operating Picture</div>
+      <div class="live">LIVE</div>
+    </div>
+    <div class="oswin-body">
+      <aside class="oswin-side">
+        <div class="grp">Layers</div>
+        <div class="it on">✈️ Aircraft · ADS-B</div>
+        <div class="it">⚓ Vessels · AIS</div>
+        <div class="it">🌦️ Weather radar</div>
+        <div class="it">🌐 Seismic</div>
+        <div class="it">🛰 Satellites · ISS</div>
+        <div class="grp">Intelligence</div>
+        <div class="it">📰 Region news</div>
+        <div class="it">🔥 Disasters</div>
+        <div class="it">🧿 AI-governance</div>
+        <div class="it">🏢 Local business</div>
+      </aside>
+      <main class="oswin-main">
+        <div class="chat-line user"><div class="av">N</div><div class="bub">Scan the North Sea — flights, vessels, and weather. Brief me.</div></div>
+        <div class="chat-line sov"><div class="av">◈</div><div class="bub">Flying to 56°N 3°E. 214 aircraft tracked, 38 AIS vessels, frontal system inbound from the SW. Two unidentified surface contacts flagged for review — no kinetic action taken (hard stop).<span class="sig">SIGIL · ed25519:8f3a…c91 · care-floor 0.42 · council 27/33 ✓</span></div></div>
+        <div class="chat-line user"><div class="av">N</div><div class="bub">Compare doctrines on this picture.</div></div>
+        <div class="chat-line sov"><div class="av">◈</div><div class="bub">SOVEREIGN: signed, refusable, 27/33 quorum. DORADO: same picture, one authority, no receipt. The difference is auditability.<span class="sig">SIGIL · ed25519:2bd0…77e · verifiable offline</span></div></div>
+      </main>
+      <aside class="oswin-right">
+        <h4>Signed ledger</h4>
+        <div class="ledger-row">14:02:11 · scan.region<br><span class="hash">ed25519:8f3a…c91</span> <span class="ok">✓ verified</span></div>
+        <div class="ledger-row">14:02:09 · council.vote<br><span class="hash">27/33 quorum</span> <span class="ok">✓ ratified</span></div>
+        <div class="ledger-row">14:01:58 · guardrail.refuse<br><span class="hash">kinetic.target</span> <span class="ok">✓ logged</span></div>
+        <div class="ledger-row">14:01:40 · layer.toggle<br><span class="hash">ed25519:2bd0…77e</span> <span class="ok">✓ verified</span></div>
+      </aside>
+    </div>
+  </div>
+  <div class="cta-row"><a class="btn gold" href="cop.html">Enter the live OS →</a><a class="btn ghost" href="cop.html?tour=full">Watch the full tour</a></div>
+</div></section>
+
+<!-- ============ CAPABILITIES ============ -->
+<section id="capabilities"><div class="wrap rv">
+  <span class="kicker">One earth, every public signal</span>
+  <h2>A living mirror of the <span class="g">real world.</span></h2>
+  <p class="lead">Toggle a layer or just ask the Sovereign — every signal lands on the real-world globe, fused from public feeds only, within hard guardrails (no surveillance, no kinetic targeting).</p>
+  <div class="grid g4">
+    <div class="card"><span class="tag">live</span><div class="ic">✈️</div><h3>Aircraft · ADS-B</h3><p>Live flights with projected paths, following your view.</p></div>
+    <div class="card"><span class="tag">live</span><div class="ic">⚓</div><h3>Vessels · AIS</h3><p>Marine tracks with projected courses, governed connector.</p></div>
+    <div class="card"><span class="tag">live</span><div class="ic">🌦️</div><h3>Weather radar</h3><p>Animated global precipitation + forecast, anywhere.</p></div>
+    <div class="card"><span class="tag">live</span><div class="ic">🌐</div><h3>Seismic</h3><p>Real-time earthquakes from global networks.</p></div>
+    <div class="card"><span class="tag">live</span><div class="ic">🛰</div><h3>Satellites · ISS</h3><p>Live orbit propagation from NORAD TLEs.</p></div>
+    <div class="card"><span class="tag">live</span><div class="ic">📰</div><h3>Region news</h3><p>Cited, geolocated reporting for any area you scan.</p></div>
+    <div class="card"><span class="tag">live</span><div class="ic">🔥</div><h3>Disasters</h3><p>Wildfires, storms, volcanoes — NASA EONET + GDACS.</p></div>
+    <div class="card"><span class="tag">monitor</span><div class="ic">🧿</div><h3>AI-governance</h3><p>Live monitor of agents, MCPs &amp; signed decisions.</p></div>
+    <div class="card"><span class="tag">live</span><div class="ic">🏢</div><h3>Local business</h3><p>Public points of interest, geo-placed on the globe.</p></div>
+    <div class="card"><span class="tag">28</span><div class="ic">🗂️</div><h3>Domain ontology</h3><p>28 governed domains fuse into one coherent picture.</p></div>
+    <div class="card"><span class="tag">street</span><div class="ic">🏙️</div><h3>Photoreal 3D</h3><p>Zoom to street level on real-world 3D terrain.</p></div>
+    <div class="card"><span class="tag">ask</span><div class="ic">🗣️</div><h3>Talk to it</h3><p>The Sovereign drives the map — scan, simulate, brief.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ DOCTRINE ============ -->
+<section id="doctrine"><div class="wrap rv">
+  <span class="kicker">Two faces of the Sovereign</span>
+  <h2>SOVEREIGN <span class="g">⇄</span> DORADO.</h2>
+  <p class="lead">Flip the lens on the whole globe — and watch the difference governance makes. The same action, two worlds.</p>
+  <div class="doc">
+    <div class="c west">
+      <span class="flip">West</span>
+      <h3>🛡️ SOVEREIGN · SIGIL</h3>
+      <p class="sub">The democratic answer, built on the SIGIL audit chain.</p>
+      <ul>
+        <li>33-agent Byzantine council vote (quorum 23/33)</li>
+        <li>Every decision Ed25519-signed on-device</li>
+        <li>Care-floor enforced · independently verifiable</li>
+        <li>Auditable · refusable · sovereign</li>
+      </ul>
+    </div>
+    <div class="c east">
+      <span class="flip">East</span>
+      <h3>🐉 DORADO · Centralized</h3>
+      <p class="sub">The centralized model we answer — shown as the contrast.</p>
+      <ul>
+        <li>Single authority · no council</li>
+        <li>Opaque weights · unsigned actions</li>
+        <li>No audit trail · unverifiable</li>
+        <li>Fast because no one checks</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ WHY US · WHAT OTHERS DON'T ============ -->
+<section id="whyus"><div class="wrap rv">
+  <span class="kicker">What we do that others don't</span>
+  <h2>A map is common. A map <span class="g">with a receipt</span> isn't.</h2>
+  <p class="lead">Grounded in the field, not slogans. The Alan Turing Institute (CETaS) named the gap directly: <i>"no authoritative, independent organisation … with the legitimacy to inspect and approve AI systems"</i> in defence &amp; security. That primitive — the signed receipt — is what we ship.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:26px">
+    <div style="border:1px solid var(--line,rgba(120,150,200,.16));border-radius:14px;padding:16px 18px;background:rgba(10,16,28,.5)"><b style="color:#5ff4ff">◆ Signed receipt on every action</b><div style="color:#9fb3d6;font-size:13px;margin-top:5px">Ed25519, on-device, offline-verifiable.<br><span style="color:#8a97b4">vs Palantir/Anduril — system-of-record, no independent receipt.</span></div></div>
+    <div style="border:1px solid var(--line,rgba(120,150,200,.16));border-radius:14px;padding:16px 18px;background:rgba(10,16,28,.5)"><b style="color:#5ff4ff">◆ A care-floor that refuses harm</b><div style="color:#9fb3d6;font-size:13px;margin-top:5px">Blocks kinetic-targeting, surveillance, unlawful acts.<br><span style="color:#8a97b4">vs agent platforms — they fail silently.</span></div></div>
+    <div style="border:1px solid var(--line,rgba(120,150,200,.16));border-radius:14px;padding:16px 18px;background:rgba(10,16,28,.5)"><b style="color:#5ff4ff">◆ Independent assurance</b><div style="color:#9fb3d6;font-size:13px;margin-top:5px">The signed System Card the Turing gap named.<br><span style="color:#8a97b4">vs Vanta/Drata — checkbox theatre, renewal traps.</span></div></div>
+    <div style="border:1px solid var(--line,rgba(120,150,200,.16));border-radius:14px;padding:16px 18px;background:rgba(10,16,28,.5)"><b style="color:#5ff4ff">◆ Defence interop</b><div style="color:#9fb3d6;font-size:13px;margin-top:5px">CoT + MIL-STD-2525 / APP-6, TAK-native.<br><span style="color:#8a97b4">vs OSINT dashboards — no symbology, no governance.</span></div></div>
+    <div style="border:1px solid var(--line,rgba(120,150,200,.16));border-radius:14px;padding:16px 18px;background:rgba(10,16,28,.5)"><b style="color:#5ff4ff">◆ Sovereign + open</b><div style="color:#9fb3d6;font-size:13px;margin-top:5px">Your data, no foreign API, verify it yourself.<br><span style="color:#8a97b4">vs incumbents — cloud lock-in, trust-us.</span></div></div>
+    <div style="border:1px solid var(--line,rgba(120,150,200,.16));border-radius:14px;padding:16px 18px;background:rgba(10,16,28,.5)"><b style="color:#5ff4ff">◆ Fusion, not just feeds</b><div style="color:#9fb3d6;font-size:13px;margin-top:5px">Cross-source convergence early-warning.<br><span style="color:#8a97b4">vs dashboards — many maps, no correlation.</span></div></div>
+  </div>
+  <div class="cta-row" style="margin-top:26px"><a class="btn gold" href="cop.html">See it in the dome →</a><a class="btn ghost" href="godseye.html">🛰️ Scan your business</a></div>
+</div></section>
+
+<!-- ============ GOVERNED / MOAT ============ -->
+<section id="governed"><div class="wrap rv">
+  <span class="kicker">Governed by design — the moat</span>
+  <h2>Every byte <span class="g">auditable.</span></h2>
+  <p class="lead">DEFONEOS is the governed, sovereign, signed layer on top of the picture: Layer-0 protocols, a 33-agent Byzantine council, and a SIGIL audit chain where every governed action carries an Ed25519 signature — produced and verifiable on-device, with no foreign API calls.</p>
+
+  <div class="flywheel">
+    <div class="fly-stat">
+      <div class="row gov"><b>0</b><span>governed violations<br>across signed episodes</span></div>
+      <div class="row un"><b>54.3M</b><span>ungoverned violations<br>the council would have refused</span></div>
+      <p class="note">The flywheel: usage → telemetry → council proposals → King ratification → Ed25519 signature → on-device verification. Governed actions carry a receipt anyone can check offline. Ungoverned actions don't.</p>
+    </div>
+    <div class="grid g2" style="margin-top:0">
+      <div class="card"><div class="ic">⚖️</div><h3>BFT council</h3><p>No sensitive action ships without a logged 23/33 majority.</p></div>
+      <div class="card"><div class="ic">🔏</div><h3>SIGIL chain</h3><p>Ed25519-signed, offline-verifiable receipts.</p></div>
+      <div class="card"><div class="ic">🧿</div><h3>371 MCPs</h3><p>Governed federation — 2,016 tools across the domains.</p></div>
+      <div class="card"><div class="ic">🔌</div><h3>Legacy bridges</h3><p>COBOL · SAP · HL7-FHIR · SCADA · ISO 20022.</p></div>
+      <div class="card"><div class="ic">📜</div><h3>Crosswalked law</h3><p>EU AI Act · NIST · ISO 42001 · DORA · JSP 936.</p></div>
+      <div class="card"><div class="ic">🛡️</div><h3>Hard guardrails</h3><p>No surveillance. No kinetic targeting. Refused &amp; logged.</p></div>
+    </div>
+  </div>
+
+  <div class="cta-row" style="margin-top:40px"><a class="btn gold lg" href="cop.html">▶ Launch the dome</a><a class="btn ghost lg" href="godseye.html">🛰️ Scan your business</a><a class="btn ghost lg" href="systemcard.html">See a signed System Card</a><a class="btn ghost lg" href="verify.html">Verify a seal</a></div>
+</div></section>
+
+<!-- ============ FOOTER ============ -->
+<footer><div class="wrap">
+  <div class="foot-top">
+    <div class="foot-brand">
+      <img src="seal.svg" alt="DEFONEOS">
+      <div>
+        <div style="color:var(--ink);font-weight:800;letter-spacing:1px">DEFONEOS</div>
+        <div style="font-size:12px;color:var(--faint);margin-top:4px">Sovereign · Defence · Intelligence</div>
+        <div style="font-size:12.5px;margin-top:12px;max-width:280px">The governed globe. Public. Auditable. Sovereign. Every action signed, every byte auditable, no foreign API calls.</div>
+      </div>
+    </div>
+    <div>
+      <h5>The system</h5>
+      <a href="cop.html">The dome (COP)</a>
+      <a href="architecture.html">Architecture (live)</a>
+      <a href="ontology.html">28-domain ontology</a>
+      <a href="system.html">System status</a>
+    </div>
+    <div>
+      <h5>Assurance</h5>
+      <a href="verify.html">Verify a seal</a>
+      <a href="badges.html">Authority badges</a>
+      <a href="https://csoai.org" target="_blank" rel="noopener">CSOAI ↗</a>
+    </div>
+    <div>
+      <h5>Standards</h5>
+      <a href="verify.html">EU AI Act Art.50</a>
+      <a href="verify.html">NIST AI RMF</a>
+      <a href="verify.html">ISO 42001</a>
+      <a href="systemcard.html">JSP 936 System Card</a>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <span>© DEFONEOS · AUKUS-compatible</span>
+    <a href="mailto:nicholas@meok.ai" style="color:var(--gold)">nicholas@meok.ai</a>
+    <span class="spacer" style="flex:1"></span>
+    <a href="verify.html"><img src="/api/badge?label=DEFONEOS&message=SEAL%20%C2%B7%20verifiable&color=c9a84c" alt="verifiable seal" style="height:20px"></a>
+  </div>
+</div></footer>
+
+<a class="sov-pill" href="cop.html"><img class="seal" src="seal.svg" alt=""><span class="dot"></span> Ask the Sovereign</a>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Cesium.js"></script>
+<script>
+(function(){
+  /* ---- scroll reveals ---- */
+  try{
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold:0.12 });
+    document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  }catch(e){ document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); }); }
+
+  /* ---- hero globe: disable under 700px (show seal + veil only) ---- */
+  if(window.innerWidth < 700 || typeof Cesium === 'undefined'){ return; }
+
+  var C = Cesium, viewer, spinHandle = null;
+  try{
+    C.Ion.defaultAccessToken = undefined;
+    viewer = new C.Viewer('cesiumHero', {
+      baseLayer: new C.ImageryLayer(new C.UrlTemplateImageryProvider({
+        url:'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        maximumLevel:6, credit:'Esri, Maxar, Earthstar Geographics'
+      })),
+      baseLayerPicker:false, geocoder:false, homeButton:false, sceneModePicker:false,
+      navigationHelpButton:false, animation:false, timeline:false, fullscreenButton:false,
+      infoBox:false, selectionIndicator:false, creditContainer:document.createElement('div'),
+      requestRenderMode:false
+    });
+    var s = viewer.scene;
+    s.globe.baseColor = C.Color.fromCssColorString('#0a1226');
+    try{ s.globe.showGroundAtmosphere = true; }catch(_){}
+    s.skyAtmosphere.brightnessShift = 0.18;
+    s.skyAtmosphere.hueShift = -0.05;
+    s.globe.enableLighting = true;
+    s.globe.dynamicAtmosphereLighting = true;
+    s.fog.enabled = true;
+    s.highDynamicRange = false;
+    try{ s.skyBox.show = true; s.sun.show = true; s.moon.show = true; s.skyAtmosphere.show = true; }catch(_){}
+    // light bloom for drama, kept modest for perf
+    try{ var bl = s.postProcessStages.bloom; bl.enabled = true; bl.uniforms.glowOnly = false; bl.uniforms.contrast = 120; bl.uniforms.brightness = -0.3; bl.uniforms.delta = 1.3; bl.uniforms.sigma = 2.0; bl.uniforms.stepSize = 1.0; }catch(_){}
+    try{ s.postProcessStages.fxaa.enabled = true; }catch(_){}
+
+    // disable user interaction — purely cinematic backdrop
+    var ctrl = s.screenSpaceCameraController;
+    ctrl.enableRotate = false; ctrl.enableTranslate = false; ctrl.enableZoom = false; ctrl.enableTilt = false; ctrl.enableLook = false;
+
+    // a handful of glowing pulsing points + arcs for drama
+    var POINTS = [
+      {lat:51.5,lon:-0.12,c:'#3ef0ff'},   // London
+      {lat:38.9,lon:-77.0,c:'#c9a84c'},   // Washington
+      {lat:-35.3,lon:149.1,c:'#3ef0ff'},  // Canberra
+      {lat:35.7,lon:139.7,c:'#00e07a'},   // Tokyo
+      {lat:1.35,lon:103.8,c:'#c9a84c'},   // Singapore
+      {lat:48.85,lon:2.35,c:'#3ef0ff'},   // Paris
+      {lat:-33.9,lon:151.2,c:'#00e07a'},  // Sydney
+      {lat:25.2,lon:55.3,c:'#c9a84c'}     // Dubai
+    ];
+    POINTS.forEach(function(p){
+      viewer.entities.add({
+        position: C.Cartesian3.fromDegrees(p.lon, p.lat),
+        point:{ pixelSize:7, color:C.Color.fromCssColorString(p.c), outlineColor:C.Color.fromCssColorString(p.c).withAlpha(0.35), outlineWidth:6, disableDepthTestDistance:Number.POSITIVE_INFINITY }
+      });
+    });
+    // arcs between a few capitals
+    var ARCS = [[0,1],[0,5],[2,3],[2,6],[4,7],[1,3]];
+    ARCS.forEach(function(pair){
+      var a = POINTS[pair[0]], b = POINTS[pair[1]];
+      viewer.entities.add({
+        polyline:{
+          positions: C.Cartesian3.fromDegreesArrayHeights([a.lon,a.lat,260000, b.lon,b.lat,260000]),
+          width:1.4, arcType:C.ArcType.GEODESIC,
+          material: new C.PolylineGlowMaterialProperty({ glowPower:0.22, color:C.Color.fromCssColorString('#3ef0ff').withAlpha(0.55) })
+        }
+      });
+    });
+
+    viewer.camera.flyTo({ destination: C.Cartesian3.fromDegrees(0, 25, 26000000), duration:0 });
+
+    // gentle auto-rotation; pause when tab hidden for perf
+    function spin(){
+      if(!document.hidden){ try{ viewer.scene.camera.rotate(C.Cartesian3.UNIT_Z, -0.00038); }catch(_){} }
+    }
+    spinHandle = viewer.clock.onTick.addEventListener(spin);
+    document.addEventListener('visibilitychange', function(){
+      try{ if(document.hidden){ viewer.clock.shouldAnimate = false; } else { viewer.clock.shouldAnimate = true; } }catch(_){}
+    });
+
+    // fade in once the first frame renders
+    var el = document.getElementById('cesiumHero');
+    var once = viewer.scene.postRender.addEventListener(function(){ el.classList.add('ready'); once(); });
+    setTimeout(function(){ el.classList.add('ready'); }, 2500);
+  }catch(e){ /* globe optional — page works without it */ }
+})();
+</script>
+</body>
+</html>

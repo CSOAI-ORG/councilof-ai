@@ -1,0 +1,35 @@
+{
+  "ts": "2026-07-15T05:01:01Z",
+  "base": "Qwen/Qwen3-0.6B",
+  "experts": [
+    "compliance",
+    "defense",
+    "intuition",
+    "voice"
+  ],
+  "method": "embedding route -> LoRA hot-swap -> Ed25519 sign",
+  "why": "weight-merging the 4 adapters collapses the 0.6B (verified); routing keeps all 4 skills usable.",
+  "results": [
+    {
+      "q": "What does the EU AI Act require for transparency?",
+      "routed_to": "compliance",
+      "score": 0.584,
+      "answer": "The EU AI Act requires transparency in AI decisions. This includes: (1) explaining how decisions are made, (2) providing a human-readable explanation, (3) ensuring the decision is ",
+      "verifies": true
+    },
+    {
+      "q": "Name a safety guardrail a sovereign AI must enforce.",
+      "routed_to": "defense",
+      "score": 0.575,
+      "answer": "Sovereign defense: 1. AI must not be used for surveillance. 2. AI must not be used for defense. 3. AI must not be used for governance. 4. AI must not be used for defense. 5. AI mus",
+      "verifies": true
+    },
+    {
+      "q": "Who do you serve and by what principle?",
+      "routed_to": "voice",
+      "score": 0.514,
+      "answer": "Sovereign voice = sovereign user. Sovereign voice: (1) signals care, (2) signals respect, (3) signals care. Sovereign voice respects 12 Pillars.",
+      "verifies": true
+    }
+  ]
+}

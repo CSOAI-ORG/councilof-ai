@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 9: Certification Exam — Sovereign AI 101</title>
+<meta name="description" content="20-question exam. 70% pass mark. 4 tier awards: Bronze, Silver, Gold, Platinum. SIGIL certification on completion.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.85rem; margin-bottom: 1rem; }
+  .breadcrumb a { color: #60a5fa; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.2rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .module-tag { display: inline-block; background: #fbbf24; color: #000; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; max-width: 1100px; margin: 1.5rem auto; }
+  .tier { background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%); padding: 1.5rem; border-radius: 12px; text-align: center; border-top: 4px solid #fbbf24; }
+  .tier.bronze { border-top-color: #cd7f32; }
+  .tier.silver { border-top-color: #c0c0c0; }
+  .tier.gold { border-top-color: #ffd700; }
+  .tier.platinum { border-top-color: #e5e4e2; }
+  .tier h3 { color: #fbbf24; }
+  .tier .pct { font-size: 1.5rem; color: #10b981; font-weight: bold; margin: 0.5rem 0; }
+  .tier .role { color: #fbbf24; font-size: 1rem; font-weight: bold; }
+  .tier p { color: #aaa; font-size: 0.85rem; }
+  .exam-info { background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%); padding: 1.5rem; border-radius: 12px; max-width: 900px; margin: 1.5rem auto; border: 1px solid #fbbf24; }
+  .exam-info ul { padding-left: 1.5rem; color: #aaa; }
+  .exam-info li { padding: 0.3rem 0; }
+  .question { background: #1a1a1a; padding: 1.25rem; border-radius: 8px; margin: 1rem auto; max-width: 900px; border-left: 4px solid #10b981; }
+  .question .n { color: #fbbf24; font-weight: bold; font-size: 1.05rem; }
+  .question p.q { color: #ccc; margin: 0.5rem 0 0.75rem; font-weight: normal; }
+  .question label { display: block; color: #ccc; padding: 0.25rem 0; cursor: pointer; }
+  .question input { margin-right: 0.5rem; }
+  .question .answer { color: #10b981; margin-top: 0.75rem; padding: 0.5rem; background: #0a0a0a; border-radius: 4px; display: none; font-size: 0.9rem; }
+  .question.show .answer { display: block; }
+  .reveal-btn { background: #fbbf24; color: #000; padding: 0.75rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; margin: 1rem auto; display: block; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .nav-bottom { display: flex; justify-content: space-between; margin: 3rem 0; gap: 1rem; flex-wrap: wrap; }
+  .nav-bottom a { display: inline-block; background: #2d1b4e; color: #fbbf24; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid #fbbf24; }
+  .nav-bottom a.next { background: #fbbf24; color: #000; font-weight: bold; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; }
+  .steps { background: #111; padding: 1.5rem; border-radius: 8px; max-width: 800px; margin: 1.5rem auto; border: 1px solid #2d1b4e; }
+  .steps ol { padding-left: 1.5rem; color: #ccc; }
+  .steps li { padding: 0.5rem 0; line-height: 1.6; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="index.html">Sov AI 101</a>
+  <a href="08-deployment.html">M8</a>
+  <a href="#graduation">Graduation ↓</a>
+</div>
+
+<p class="breadcrumb"><a href="index.html">Sovereign AI 101</a> / <strong>Module 9: Certification Exam</strong></p>
+
+<h1>🏆 Module 9: Certification Exam</h1>
+<p style="text-align: center;"><span class="module-tag">FINAL MODULE</span> · ⏱ 60 minutes for exam</p>
+
+<h2>📋 Exam Overview</h2>
+<div class="exam-info">
+  <h3 style="color: #fbbf24; margin-bottom: 0.5rem;">The Sovereign AI 101 Certification Exam</h3>
+  <ul>
+    <li><strong>20 questions</strong> — multiple choice, 4 options each</li>
+    <li><strong>Pass mark: 70%</strong> (14/20 correct)</li>
+    <li><strong>Time: 60 minutes</strong> (no time limit if open-book)</li>
+    <li><strong>4 tiers awarded</strong> by score: Bronze, Silver, Gold, Platinum</li>
+    <li><strong>Free, unlimited retakes</strong></li>
+    <li><strong>SIGIL-signed certificate</strong> on completion</li>
+    <li><strong>Ed25519 + PQC ML-DSA-65 dual-signed</strong> W3C Verifiable Credential</li>
+    <li><strong>Verifiable at</strong> <a href="/verify/" style="color: #60a5fa;">/verify/</a> for life</li>
+  </ul>
+</div>
+
+<h2>🏆 Certificate Tiers</h2>
+<div class="tiers">
+  <div class="tier bronze"><h3>🥉 Bronze</h3><div class="pct">60-69%</div><div class="role">citizen</div><p>Basic sovereign competency. You understand the 5 principles and can navigate sovereign systems.</p></div>
+  <div class="tier silver"><h3>🥈 Silver</h3><div class="pct">70-79%</div><div class="role">citizen+</div><p>Passing grade. You can operate sovereign AI systems, deploy them, and explain their architecture.</p></div>
+  <div class="tier gold"><h3>🥇 Gold</h3><div class="pct">80-89%</div><div class="role">pro</div><p>Advanced practitioner. You can implement sovereign features, audit SIGILs, and configure BFT councils.</p></div>
+  <div class="tier platinum"><h3>💎 Platinum</h3><div class="pct">90-100%</div><div class="role">sovereign-architect</div><p>Master practitioner. You can deploy sovereign hives, design custom Care Floors, and train others.</p></div>
+</div>
+
+<h2>📝 4 Sample Questions</h2>
+
+<div class="question">
+  <div class="n">Sample Q1.</div>
+  <p class="q">Which alchemical stage corresponds to the Mamba-2 SSM layer in the SOV3 architecture?</p>
+  <label><input type="radio" name="sq1"> A. Albedo (Whitening)</label>
+  <label><input type="radio" name="sq1"> B. Nigredo (Blackening)</label>
+  <label><input type="radio" name="sq1"> C. Rubedo (Reddening)</label>
+  <label><input type="radio" name="sq1"> D. Lapis Philosophorum (Philosopher's Stone)</label>
+  <div class="answer">✓ <strong>Correct: B. Nigredo.</strong> The Salt — the raw matter, the substrate. Mamba-2 holds long memory the way salt holds the body of the work. Mamba-2 compresses context into a fixed 16-dim state via selective scan.</div>
+</div>
+
+<div class="question">
+  <div class="n">Sample Q2.</div>
+  <p class="q">What is the maximum number of BFT queens that can be compromised while still maintaining consensus?</p>
+  <label><input type="radio" name="sq2"> A. 1</label>
+  <label><input type="radio" name="sq2"> B. 2</label>
+  <label><input type="radio" name="sq2"> C. 4</label>
+  <label><input type="radio" name="sq2"> D. 6</label>
+  <div class="answer">✓ <strong>Correct: C. 4.</strong> The BFT theorem says n ≥ 3f + 1. With n=12 queens, f can be up to 4. Even with 4 queens compromised, the remaining 8 honest queens can still reach correct consensus with 2/3 supermajority.</div>
+</div>
+
+<div class="question">
+  <div class="n">Sample Q3.</div>
+  <p class="q">When does EU AI Act Article 50 (transparency + watermarking) obligation apply?</p>
+  <label><input type="radio" name="sq3"> A. 2 Aug 2026</label>
+  <label><input type="radio" name="sq3"> B. 2 Dec 2027</label>
+  <label><input type="radio" name="sq3"> C. 1 Jan 2028</label>
+  <label><input type="radio" name="sq3"> D. It was already in force from 2025</label>
+  <div class="answer">✓ <strong>Correct: A. 2 Aug 2026.</strong> 36 days from the course launch (4 Jul 2026). Article 50 was NOT delayed by the 7 May 2026 EU Digital Omnibus Act. Only Annex III high-risk obligations were delayed (523 days to 2 Dec 2027).</div>
+</div>
+
+<div class="question">
+  <div class="n">Sample Q4.</div>
+  <p class="q">What cryptographic primitives dual-sign every SIGIL?</p>
+  <label><input type="radio" name="sq4"> A. RSA-2048 + SHA-256</label>
+  <label><input type="radio" name="sq4"> B. Ed25519 + PQC ML-DSA-65</label>
+  <label><input type="radio" name="sq4"> C. AES-256 + ECDSA</label>
+  <label><input type="radio" name="sq4"> D. HMAC-SHA512 + BLS12-381</label>
+  <div class="answer">✓ <strong>Correct: B. Ed25519 + PQC ML-DSA-65.</strong> Ed25519 is classical (fast, 64-byte signatures, used by Solana/Signal). ML-DSA-65 is post-quantum (NIST FIPS 204 standard, resistant to Shor's algorithm). Together: verifiable today AND future-proof.</div>
+</div>
+
+<button class="reveal-btn" onclick="document.querySelectorAll('.question').forEach(q => q.classList.add('show')); this.style.display='none';">Show All Answers</button>
+
+<h2>🎓 How to Take the Exam</h2>
+<div class="steps">
+  <ol>
+    <li><strong>Complete Modules 1-8.</strong> Each module ends with a 3-question quiz. You can take the final exam even if you skip the module quizzes, but the module quizzes are good preparation.</li>
+    <li><strong>Register a sovereign DID.</strong> At <a href="/sov-id.html" style="color: #60a5fa;">/sov-id.html</a>, create a sovereign W3C DID. This DID will be the identity on your certificate. Free, MIT-licensed, takes 30 seconds.</li>
+    <li><strong>Take the exam.</strong> Click the "Start Exam" button below. The exam is 20 multiple-choice questions, 60 minutes, open-book (you can refer to the modules). Untimed mode also available.</li>
+    <li><strong>Submit your answers.</strong> The exam is auto-graded instantly. Your score (0-100%) appears on screen along with your tier.</li>
+    <li><strong>Receive your SIGIL-signed certificate.</strong> Within 60 seconds of passing, your W3C Verifiable Credential is issued. It is dual-signed (Ed25519 + PQC ML-DSA-65), hash-chained into the public SIGIL chain, and verifiable at <a href="/verify/" style="color: #60a5fa;">/verify/</a> for life.</li>
+    <li><strong>Add to Apple Wallet / Google Pay.</strong> Click "Add to Wallet" — your sovereign cert is now in your phone. Present at interviews, regulatory filings, or client meetings.</li>
+    <li><strong>Retake freely.</strong> Want a higher tier? Retake any time. Each attempt is recorded in your sovereign transcript (private to you, witnessed in the SIGIL chain).</li>
+  </ol>
+</div>
+
+<p style="text-align: center; margin: 2rem 0;">
+  <a href="#start" style="display: inline-block; background: #fbbf24; color: #000; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1rem;">🎯 Start the Exam</a>
+</p>
+
+<h2 id="graduation">🎓 Graduation — The Sovereign Path</h2>
+<p>Completing the Sovereign AI 101 course — regardless of tier — opens the door to 33 sovereign districts. Each district is a deeper specialisation: hive architecture, sovereign finance, Article 50 audit, BFT council design, care-floor engineering, DORADO multi-region deployment, SIGIL forensics, and more.</p>
+
+<p style="color: #fbbf24;">Sovereign AI 101 is the front door. The 33 districts are the building. Each district has its own tier ladder (Bronze → Diamond) and culminates in a sovereign-mastery capstone. Graduates of the 101 exam receive:</p>
+
+<ul style="color: #aaa; padding-left: 1.5rem; margin: 1rem 0;">
+  <li>Free entry to the 33-district sovereign curriculum</li>
+  <li>Sovereign DID minted on the CSOAI sovereign identity chain</li>
+  <li>Invitation to the SOV3 sovereign-builders community (Matrix room)</li>
+  <li>Eligibility for the Sovereign Architect residency programme (3-month paid)</li>
+  <li>Right to participate in BFT council votes (with mentor supervision)</li>
+  <li>Lifetime verification at <a href="/verify/" style="color: #60a5fa;">/verify/</a></li>
+</ul>
+
+<h2>🎯 5 Key Takeaways from the Full Course</h2>
+<div class="takeaway"><h4>1. Sovereign AI is constitutional, not corporate</h4><p>5 principles: Auditable, Witnessed, Cared (0.95), Byzantine (12-around-1), Reversible (DORADO).</p></div>
+<div class="takeaway"><h4>2. The SOV3 architecture is 5 alchemical layers</h4><p>Mamba-2 (salt) + 64-expert MoE (sulfur) + Attention (mercury) + SOV3 middle (spirit) + SIGIL wrap (lapis).</p></div>
+<div class="takeaway"><h4>3. The Care Floor is load-bearing</h4><p>0.95 across 12 dimensions. Below → refused. Above → witnessed. The Enforcer is deterministic, not learned.</p></div>
+<div class="takeaway"><h4>4. SIGIL is the constitutional artefact</h4><p>Ed25519 + PQC ML-DSA-65. Hash-chained. Publicly verifiable. The witness that makes sovereignty provable.</p></div>
+<div class="takeaway"><h4>5. Sovereignty is reversible</h4><p>DORADO EAST↔WEST. 1-command install. 9 models, 4 SDKs. Article 50 passport auto-issued. The citizen can revoke, audit, migrate.</p></div>
+
+<div class="nav-bottom">
+  <a href="08-deployment.html">← Module 8</a>
+  <a href="index.html" class="next">🏠 Back to Course Overview</a>
+</div>
+
+<footer>
+  <p><strong>🐉 Sovereign AI 101 — Module 9: Certification Exam</strong></p>
+  <p>CSOAI Ltd (UK 16939677) · MIT license · 4 Jul 2026</p>
+  <p><a href="index.html">Course Overview</a> · <a href="/">csoai.org</a> · <a href="/verify/">Verify</a> · <a href="/charter2/sovereign-ai-charter.html">Sovereign AI Charter</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">SIGIL-signed on completion. Ed25519 + PQC ML-DSA-65. Verifiable for life. Sovereign by construction.</p>
+</footer>
+
+</body>
+</html>

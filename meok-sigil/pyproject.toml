@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meok-sigil"
+version = "0.1.0"
+description = "SIGIL — Sovereign Inter-aGent Interchange Language: compact, deterministic, human-readable, signable agent communication."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "MEOK AI Labs / CSOAI", email = "nicholas@csoai.org" }]
+keywords = ["ai", "agents", "mcp", "protocol", "compliance", "eu-ai-act", "attestation", "multi-agent"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Developers",
+]
+dependencies = []
+
+[project.optional-dependencies]
+bench = ["tiktoken>=0.7"]
+dev = ["pytest>=7", "tiktoken>=0.7"]
+
+[project.scripts]
+sigil = "sigil.cli:main"
+
+[project.urls]
+Homepage = "https://csoai.org"
+Spec = "https://csoai.org/sigil"
+
+[tool.setuptools]
+packages = ["sigil"]

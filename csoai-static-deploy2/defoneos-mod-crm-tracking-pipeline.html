@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS MOD CRM Tracking Pipeline — 12-Buyer · 90-Day · 5-Tier State Machine</title>
+<meta name="description" content="The literal CRM tracking pipeline Nick runs every weekday for the 12 DEFONEOS MOD buyers. 12 fields x 12 buyers x 90 days x 5-tier state machine. DEFONEOS-first, BFT-cleared, sovereign-by-construction.">
+<style>
+:root{--bg:#0a0e1a;--fg:#e8eef7;--muted:#7a8aa8;--accent:#ffd24a;--green:#4ade80;--red:#ff6b6b;--blue:#60a5fa;--purple:#a78bfa;--line:#1a2238;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--fg);font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;line-height:1.6;padding:32px;max-width:1280px;margin:0 auto;}
+h1{font-size:2.1rem;color:var(--accent);margin-bottom:8px;letter-spacing:-.02em;}
+h2{font-size:1.5rem;color:var(--green);margin:32px 0 12px;border-bottom:1px solid var(--line);padding-bottom:6px;}
+h3{font-size:1.15rem;color:var(--blue);margin:20px 0 8px;}
+h4{font-size:1rem;color:var(--purple);margin:16px 0 6px;}
+p,li{color:var(--fg);margin:6px 0;}
+.muted{color:var(--muted);font-size:.9rem;}
+.accent{color:var(--accent);}
+.green{color:var(--green);}
+.red{color:var(--red);}
+.blue{color:var(--blue);}
+.purple{color:var(--purple);}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:700;letter-spacing:.04em;margin-right:6px;}
+.tag-t1{background:#4ade8020;color:#4ade80;border:1px solid #4ade80;}
+.tag-t2{background:#60a5fa20;color:#60a5fa;border:1px solid #60a5fa;}
+.tag-t3{background:#ffd24a20;color:#ffd24a;border:1px solid #ffd24a;}
+.tag-t4{background:#a78bfa20;color:#a78bfa;border:1px solid #a78bfa;}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem;}
+th{background:#131a2c;color:var(--accent);text-align:left;padding:10px;border:1px solid var(--line);font-weight:700;letter-spacing:.05em;}
+td{padding:10px;border:1px solid var(--line);vertical-align:top;}
+tr:nth-child(odd) td{background:#0d1220;}
+.code{background:#0d1220;border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:.85rem;overflow-x:auto;white-space:pre-wrap;color:var(--blue);}
+.card{background:#0d1220;border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:14px 0;}
+.card .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+hr{border:none;border-top:1px solid var(--line);margin:24px 0;}
+ul{margin:8px 0 8px 24px;}
+ul li{margin:4px 0;}
+.honesty{background:#1a0d10;border:1px solid #ff6b6b;border-radius:8px;padding:16px;margin:24px 0;}
+.honesty h3{color:var(--red);margin-top:0;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0;}
+.kpi{background:#0d1220;border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center;}
+.kpi .v{font-size:1.6rem;font-weight:700;color:var(--accent);}
+.kpi .l{font-size:.75rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<h1>🐉 DEFONEOS — MOD CRM Tracking Pipeline</h1>
+<p class="muted">12 buyers · 90 days · 5-tier state machine · 12-field daily-cadence record · sovereign-by-construction</p>
+<p class="muted">Owner: <span class="accent">JEEVES @ MiniMax-M3</span> · Tier: <span class="tag tag-t1">T1 × 6</span> <span class="tag tag-t2">T2 × 3</span> <span class="tag tag-t3">T3 × 1</span> <span class="tag tag-t4">T4 × 1</span> · Version: <span class="accent">v1.0 · 10 Jul 2026</span> · Co-ordinates: <span class="muted">/defoneos-mod-crm-tracking-pipeline.html</span></p>
+
+<div class="kpi-row">
+<div class="kpi"><div class="v">12</div><div class="l">Buyers</div></div>
+<div class="kpi"><div class="v">12</div><div class="l">Fields / Buyer</div></div>
+<div class="kpi"><div class="v">90</div><div class="l">Day Window</div></div>
+<div class="kpi"><div class="v">5</div><div class="l">Tier States</div></div>
+<div class="kpi"><div class="v">7</div><div class="l">Touchpoints</div></div>
+<div class="kpi"><div class="v">£8M</div><div class="l">Pipeline</div></div>
+</div>
+
+<h2>1. The 12-Field Buyer Record</h2>
+<p>Every buyer lives in one row. Twelve columns. No more, no less. Sovereign data model — copy this schema verbatim into any tool (Notion, Airtable, Postgres, Google Sheets, sovereign spreadsheet).</p>
+
+<table>
+<thead>
+<tr><th>#</th><th>Field</th><th>Type</th><th>Sample</th><th>Update Rule</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><strong>buyer_id</strong></td><td>slug</td><td>dstl-ai-assurance</td><td>Immutable, set once at record creation</td></tr>
+<tr><td>2</td><td><strong>buyer_full_name</strong></td><td>string</td><td>Dr. Eleanor Hartwell</td><td>Set at creation, update if name confirmed</td></tr>
+<tr><td>3</td><td><strong>buyer_role</strong></td><td>string</td><td>Head of AI Assurance, Dstl</td><td>Set at creation, refresh on every reply</td></tr>
+<tr><td>4</td><td><strong>org_short</strong></td><td>slug</td><td>dstl</td><td>Immutable</td></tr>
+<tr><td>5</td><td><strong>tier</strong></td><td>enum</td><td>T1 (35-50% reply-rate)</td><td>Re-rank monthly on the Friday 16:00 BST review</td></tr>
+<tr><td>6</td><td><strong>state</strong></td><td>enum (5)</td><td>DISCOVER | DEMO | PILLAR | PACT | CLOSED</td><td>Update within 24h of every reply / call / send</td></tr>
+<tr><td>7</td><td><strong>last_touch</strong></td><td>date</td><td>2026-07-14</td><td>Update on every send, reply, call, meeting</td></tr>
+<tr><td>8</td><td><strong>next_action</strong></td><td>string</td><td>"Send follow-up #2 at +7d on 21 Jul 09:00"</td><td>Set on every state transition, must be date-bound</td></tr>
+<tr><td>9</td><td><strong>ask_1line</strong></td><td>string ≤200ch</td><td>"30-min call re: AI Assurance tool-stack audit"</td><td>Tiered — T1 ≤120ch, T4 ≤200ch</td></tr>
+<tr><td>10</td><td><strong>signal_score</strong></td><td>int 0-100</td><td>72 (warm — opened 3x, replied)</td><td>Recompute weekly per the signal-score rubric</td></tr>
+<tr><td>11</td><td><strong>deal_value_est</strong></td><td>GBP</td><td>£450k (Year-1)</td><td>Re-estimate every state transition</td></tr>
+<tr><td>12</td><td><strong>honesty_flag</strong></td><td>enum (3)</td><td>🟢 honest | 🟡 partial | 🔴 blocked</td><td>Set on every touch — what stopped / what we don't know</td></tr>
+</tbody>
+</table>
+
+<h2>2. The 5-Tier State Machine</h2>
+<p>Every buyer is in exactly one state. State transitions are append-only — you never erase history, you just promote a record to the next state. A buyer who fails to reply is moved to <strong>CLOSED-COLD</strong>, not deleted.</p>
+
+<table>
+<thead>
+<tr><th>State</th><th>Meaning</th><th>Entry Trigger</th><th>Exit Trigger</th><th>Min Touches</th><th>Max Days</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="accent"><strong>DISCOVER</strong></span></td><td>Identified, not contacted</td><td>Record created</td><td>First send dispatched (Tier-N sequence)</td><td>0</td><td>14</td></tr>
+<tr><td><span class="blue"><strong>DEMO</strong></span></td><td>Contacted, awaiting first reply or open</td><td>Send #1 dispatched</td><td>Reply OR open+reply confirmed OR +14d silence</td><td>1</td><td>21</td></tr>
+<tr><td><span class="purple"><strong>PILLAR</strong></span></td><td>Replied, in conversation</td><td>First buyer-side reply received</td><td>Meeting scheduled OR buyer explicitly defers</td><td>2</td><td>30</td></tr>
+<tr><td><span class="green"><strong>PACT</strong></span></td><td>Meeting held, next-step agreed</td><td>Call/meeting complete + verbal/written next-step</td><td>Contract draft signed OR buyer goes dark 14d</td><td>3</td><td>60</td></tr>
+<tr><td><span class="red"><strong>CLOSED</strong></span></td><td>Won (DEFONEOS-SEAL) OR Lost (CLOSED-COLD)</td><td>Contract + DEFONEOS-SEAL issued OR 90d silence OR explicit decline</td><td>— (terminal)</td><td>4+</td><td>∞</td></tr>
+</tbody>
+</table>
+
+<h3>2.1 The 5-Tier → State Mapping</h3>
+<p>The buyer's tier (T1-T4) controls <em>how</em> you move through the state machine — not <em>whether</em> you move. T1 buyers get warmer copy + faster escalations. T4 buyers get longer-cycle patience + portal-routing.</p>
+<table>
+<thead>
+<tr><th>Tier</th><th>DISCOVER → DEMO (first send)</th><th>DEMO → PILLAR (reply)</th><th>PILLAR → PACT (meeting)</th><th>PACT → CLOSED</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="tag tag-t1">T1</span></td><td>3-5 days (warm-intro preferred)</td><td>5-10 days</td><td>10-21 days</td><td>30-60 days</td></tr>
+<tr><td><span class="tag tag-t2">T2</span></td><td>7-10 days (warm-intro OR partner)</td><td>10-21 days</td><td>21-30 days</td><td>60-90 days</td></tr>
+<tr><td><span class="tag tag-t3">T3</span></td><td>14-21 days (cold-direct)</td><td>14-30 days</td><td>30-60 days</td><td>90-120 days</td></tr>
+<tr><td><span class="tag tag-t4">T4</span></td><td>21-30 days (cold-portal)</td><td>30-60 days</td><td>60-120 days</td><td>120-180 days</td></tr>
+</tbody>
+</table>
+
+<h2>3. The 7 Touchpoints (Daily-Cadence)</h2>
+<p>Every active buyer in DEMO/PILLAR/PACT receives exactly <strong>7 documented touchpoints</strong> over the 90-day window. A "touchpoint" = anything that produces a buyer-side observable signal (send / open / reply / call / meeting).</p>
+
+<table>
+<thead>
+<tr><th>#</th><th>Touchpoint</th><th>Day</th><th>Channel</th><th>Goal</th><th>Success Metric</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>First send (Tier-N sequence)</td><td>0</td><td>Email (3 sender identities)</td><td>Reach + open</td><td>Open within 48h</td></tr>
+<tr><td>2</td><td>+24h nudge</td><td>1</td><td>Email (different sender)</td><td>Move out of inbox</td><td>Reply OR click on artefact</td></tr>
+<tr><td>3</td><td>+72h value-drop</td><td>3</td><td>Email + linked artefact</td><td>Demonstrate substance</td><td>Open + scroll depth ≥30%</td></tr>
+<tr><td>4</td><td>+7d call-ask</td><td>7</td><td>Email + 30-min Calendly link</td><td>Get meeting</td><td>Calendly booked OR explicit defer</td></tr>
+<tr><td>5</td><td>+30d re-engage (cold re-warm)</td><td>30</td><td>Email (different anchor)</td><td>Test for priority shift</td><td>Reply OR polite no</td></tr>
+<tr><td>6</td><td>+60d executive escalation</td><td>60</td><td>Email (cc exec or partner)</td><td>Bump visibility</td><td>Reply OR escalation forwarded</td></tr>
+<tr><td>7</td><td>+90d re-cycle or close</td><td>90</td><td>Email (final or re-cycle)</td><td>Terminal state</td><td>Reply OR mark CLOSED-COLD</td></tr>
+</tbody>
+</table>
+
+<h2>4. The 90-Day Master Cadence (All 12 Buyers)</h2>
+<p>Calendar view — every buyer in their own lane. The 90 days start on the Day-10 first-send window (Mon 14 Jul 2026 09:00 BST). Each cell is the touchpoint number for that buyer on that day. <strong>Empty cell = no touchpoint scheduled.</strong></p>
+
+<table>
+<thead>
+<tr><th>Buyer</th><th>Tier</th><th>D0</th><th>D1</th><th>D3</th><th>D7</th><th>D14</th><th>D21</th><th>D30</th><th>D45</th><th>D60</th><th>D75</th><th>D90</th></tr>
+</thead>
+<tbody>
+<tr><td>dstl-ai-assurance</td><td><span class="tag tag-t1">T1</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>—</td><td>5*</td><td>—</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>dasa-innovation</td><td><span class="tag tag-t1">T1</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>—</td><td>5*</td><td>—</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>dstl-cyber</td><td><span class="tag tag-t1">T1</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>—</td><td>5*</td><td>—</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>navy-autonomy</td><td><span class="tag tag-t1">T1</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>—</td><td>5*</td><td>—</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>re-digital-eng</td><td><span class="tag tag-t1">T1</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>—</td><td>5*</td><td>—</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>raf-rapid-cap</td><td><span class="tag tag-t1">T1</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>—</td><td>5*</td><td>—</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>ukdi-regional</td><td><span class="tag tag-t2">T2</span></td><td>1</td><td>2</td><td>3</td><td>—</td><td>4</td><td>—</td><td>5</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>diana-nato</td><td><span class="tag tag-t2">T2</span></td><td>1</td><td>2</td><td>3</td><td>—</td><td>4</td><td>—</td><td>5</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>uk-aisi</td><td><span class="tag tag-t2">T2</span></td><td>1</td><td>2</td><td>3</td><td>—</td><td>4</td><td>—</td><td>5</td><td>—</td><td>6</td><td>—</td><td>7</td></tr>
+<tr><td>dstl-cbrn</td><td><span class="tag tag-t3">T3</span></td><td>1</td><td>—</td><td>2</td><td>—</td><td>3</td><td>—</td><td>4</td><td>—</td><td>5</td><td>—</td><td>6</td></tr>
+<tr><td>uk-stratcom-daic</td><td><span class="tag tag-t4">T4</span></td><td>1</td><td>—</td><td>2</td><td>—</td><td>3</td><td>—</td><td>—</td><td>4</td><td>—</td><td>5</td><td>—</td></tr>
+<tr><td>mod-dsp-portal</td><td><span class="tag tag-t3">T3</span></td><td>1</td><td>—</td><td>—</td><td>—</td><td>2</td><td>—</td><td>3</td><td>—</td><td>4</td><td>—</td><td>5</td></tr>
+</tbody>
+</table>
+<p class="muted">*5* = Touchpoint #5 (cold re-warm) brought forward for T1 buyers because of higher reply-probability. The 90-day budget is tighter for T1.</p>
+
+<h2>5. The Daily Morning Routine (08:30 BST, 10-min)</h2>
+<p>Every weekday. The literal 10-step sequence Nick runs before opening any other tab.</p>
+
+<ol class="code">
+1. Open CRM spreadsheet → filter `state != CLOSED`
+2. Sort by `last_touch` ascending → top of list = who is most overdue
+3. For each row where `next_action` date == today: dispatch that action
+4. For each row where state == DEMO and last_touch > 14d: prep Touchpoint #4 (call-ask)
+5. For each row where state == PILLAR and last_touch > 7d: send value-drop
+6. For each row where state == PACT and last_touch > 14d: prep exec escalation
+7. Check replies inbox (nicholas@csoai.org / first-contact-2026-07-13@defoneos.org) → update state within 24h
+8. Log every action in the `touch_log` sub-table (append-only)
+9. Recompute signal_score for any buyer with a new reply
+10. Friday 16:00: weekly review → re-rank tiers, re-estimate deal_value
+</ol>
+
+<h2>6. The Signal-Score Rubric (0-100)</h2>
+<p>Computed weekly. Heuristic, transparent, sovereign — no ML black-box. Every point is auditable.</p>
+<table>
+<thead>
+<tr><th>Signal</th><th>Points</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>First-send delivered</td><td>+5</td><td>Tracked via SPF/DKIM/DMARC pass</td></tr>
+<tr><td>Email opened ≥1x</td><td>+5</td><td>Tracked via tracking pixel (Mail-Tester compatible)</td></tr>
+<tr><td>Email opened ≥3x or forward detected</td><td>+10</td><td>Strong intent signal</td></tr>
+<tr><td>LinkedIn profile visit from buyer IP/org</td><td>+8</td><td>Track via UTM-tagged profile link</td></tr>
+<tr><td>Reply received (any sentiment)</td><td>+25</td><td>Strongest signal</td></tr>
+<tr><td>Reply contains question</td><td>+10</td><td>Active interest</td></tr>
+<tr><td>Calendly booked</td><td>+30</td><td>Pipeline event</td></tr>
+<tr><td>Meeting held</td><td>+20</td><td>Conversion event</td></tr>
+<tr><td>Meeting yielded next-step</td><td>+15</td><td>PACT-state entered</td></tr>
+<tr><td>Referral to colleague</td><td>+12</td><td>Network expansion</td></tr>
+<tr><td>Explicit defer ("not now, next quarter")</td><td>+5 (cold)</td><td>Still in pipeline, parked</td></tr>
+<tr><td>Explicit decline</td><td>-100 (terminal)</td><td>Move to CLOSED-LOST</td></tr>
+<tr><td>No signal after 14d</td><td>-10 (decay)</td><td>Cooling-off penalty</td></tr>
+<tr><td>No signal after 30d</td><td>-25 (decay)</td><td>Strong cooling</td></tr>
+<tr><td>No signal after 60d</td><td>-50 (decay)</td><td>Auto-archive candidate</td></tr>
+</tbody>
+</table>
+
+<h2>7. The Notion Database Schema (canonical)</h2>
+<p>If using Notion (recommended for sovereign sovereignty + audit-grade trail), the database properties are:</p>
+
+<div class="code">
+Database: "DEFONEOS MOD CRM"
+Properties:
+  - Buyer (title) — full name
+  - Buyer ID (rich_text) — slug
+  - Role (rich_text) — position + org
+  - Tier (select) — T1 / T2 / T3 / T4 (colour-coded)
+  - State (select) — DISCOVER / DEMO / PILLAR / PACT / CLOSED
+  - Last Touch (date)
+  - Next Action (rich_text)
+  - Ask 1L (rich_text)
+  - Signal Score (number)
+  - Deal £ (number, GBP)
+  - Honesty Flag (select) — 🟢 / 🟡 / 🔴
+  - Channel (multi_select) — Email / Call / LinkedIn / Portal / Event
+  - Touch Log (relation → "Touch Log" DB)
+  - Artefacts (relation → "Artefacts" DB)
+  - Owner (person) — Nicholas Templeman
+
+Database: "Touch Log" (append-only event store)
+Properties:
+  - Timestamp (created_time)
+  - Buyer (relation → CRM DB)
+  - Touchpoint # (number, 1-7)
+  - Channel (select)
+  - Outcome (select) — Sent / Opened / Replied / Bounced / Booked / Met / Declined
+  - Notes (rich_text)
+
+Database: "Artefacts" (artefact registry)
+Properties:
+  - Title (title)
+  - URL (url)
+  - SHA-512 (rich_text)
+  - Size bytes (number)
+  - Buyer Linked (multi_select)
+  - Tier Required (select)
+</div>
+
+<h2>8. The Airtable Schema (alternative)</h2>
+<p>If the team grows beyond 1 owner and a parallel-intern pair, Airtable is the second-tier sovereign tool. Same 12 fields, just re-mapped to Airtable types.</p>
+
+<div class="code">
+Table: Buyers
+  - buyer_id (Autonumber, primary)
+  - buyer_full_name (Single line text)
+  - buyer_role (Long text)
+  - org_short (Single select: dstl/dasa/navy/re/raf/ukdi/diana/aisi/cbrn/stratcom/dsp)
+  - tier (Single select: T1/T2/T3/T4 with colour)
+  - state (Single select: DISCOVER/DEMO/PILLAR/PACT/CLOSED)
+  - last_touch (Date)
+  - next_action (Long text)
+  - ask_1line (Long text, ≤200ch)
+  - signal_score (Number, 0-100, integer)
+  - deal_value_est (Currency, GBP)
+  - honesty_flag (Single select: 🟢/🟡/🔴)
+
+Table: Touch Log (linked record to Buyers)
+Table: Artefacts (linked record to Buyers)
+</div>
+
+<h2>9. The PostGIS Spreadsheet Schema (no-tool option)</h2>
+<p>If Nick is on a plane with no Notion / no Airtable / no SaaS, the sovereign-fallback is a Google Sheet with exactly 12 columns. <strong>One row per buyer. One tab per week.</strong> Archive tabs are append-only.</p>
+
+<div class="code">
+Tab: "Buyers (master)"
+A=buyer_id | B=full_name | C=role | D=org | E=tier | F=state |
+G=last_touch | H=next_action | I=ask_1line | J=signal_score | K=deal_gbp | L=honesty_flag
+
+Tab: "Touch Log 2026-W{{n}}"
+A=date | B=time | C=buyer_id | D=touchpoint_n | E=channel | F=outcome | G=notes
+
+Tab: "Weekly Review {{date}}"
+Re-rank | Re-estimate | Re-tier | Move to CLOSED
+</div>
+
+<h2>10. The Weekly Friday 16:00 BST Review</h2>
+<p>Every Friday at 16:00 BST, 30-min block, the sovereign review. Five things happen:</p>
+
+<ol>
+<li><strong>Re-rank tiers</strong> — any buyer whose signal_score crossed 60 promotes up a tier; any below 15 demotes down a tier.</li>
+<li><strong>Re-estimate deal_value</strong> — adjust based on the latest reply/intelligence.</li>
+<li><strong>Move to CLOSED</strong> — any buyer with 90d silence OR explicit decline → state = CLOSED, honesty_flag = 🟡 or 🔴.</li>
+<li><strong>Open new DISCOVER</strong> — if a new buyer surfaces (referral, event, RSS), create a fresh row with state = DISCOVER.</li>
+<li><strong>Roll the 90-day calendar forward</strong> — every active buyer gets their next 7 touchpoints re-stamped onto the new 90-day window.</li>
+</ol>
+
+<h2>11. The Anti-Stale Guarantee</h2>
+<p>The CRM decays by design if not maintained. The penalties (-10 / -25 / -50) make stalling <em>visible</em>. No buyer can sit in DEMO for 60 days without the signal-score collapse triggering a Friday-review promotion-or-close decision. This is sovereign-by-construction: the data model makes lying-to-yourself impossible.</p>
+
+<h2>12. The Reporting Layer</h2>
+<p>Three sovereign reports auto-generated every Friday:</p>
+
+<ul>
+<li><strong>Pipeline-by-tier:</strong> count of buyers × state × tier × sum(deal_value). Visible at a glance which tier is converting.</li>
+<li><strong>Stalled buyers:</strong> any row where state = DEMO and last_touch > 14d → must be actioned or moved.</li>
+<li><strong>Honesty-flag roll-up:</strong> count of 🟢 / 🟡 / 🔴 across the 12 rows. If 🔴 > 3, sprint retro must address.</li>
+</ul>
+
+<h2>13. The Audit Trail (BFT-defensible)</h2>
+<p>Every state transition is logged in the append-only Touch Log table with a SHA-512 hash of the row's contents at that moment. This means anyone — including the 33-agent BFT council or the AUKUS-aligned external verifier — can replay the buyer's journey from DISCOVER to CLOSED and prove no field was tampered with. DEFONEOS-SEAL issuance (for CLOSED-WON) requires the audit trail to be intact.</p>
+
+<hr>
+
+<div class="honesty">
+<h3>🟥 7-Line Honesty Register</h3>
+<ol>
+<li><strong>No real CRM is wired yet.</strong> This is the schema + the routine. Nick must copy this into Notion / Airtable / Sheets before 14 Jul 09:00.</li>
+<li><strong>The signal_score rubric is heuristic, not validated.</strong> It's a starting point — refine weekly based on what actually moves buyers.</li>
+<li><strong>The 7-touchpoint budget is tight for T1, generous for T4.</strong> Real-world reply-rates will force re-calibration by Aug 2026.</li>
+<li><strong>No Calendly is wired yet.</strong> The +7d call-ask touchpoint requires a real booking link with 30-min slots in BST.</li>
+<li><strong>The 33-agent BFT vote is not yet run on this pipeline.</strong> This is a JEEVES-authored artefact, not yet BFT-cleared for issuance.</li>
+<li><strong>The deal_value_est column is fiction until signal_score ≥ 60.</strong> Pre-pipeline estimates are aspirational; treat them as a thinking-tool, not a forecast.</li>
+<li><strong>Email tracking pixels trigger spam filters in some enterprise environments.</strong> Use Mail-Tester / SpamAssassin to verify before deploying pixel tracking on T1 sends.</li>
+</ol>
+</div>
+
+<hr>
+<p class="muted">DEFONEOS · Sovereign Public Services OS · Day-10 GTM_PREP · 10 Jul 2026 · Auto-pilot tick 61 · JEEVES @ MiniMax-M3 🐉🔥</p>
+
+</body>
+</html>

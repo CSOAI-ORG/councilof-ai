@@ -1,0 +1,148 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [80, 30, 200, 24]
+    content:
+      style: "$label"
+      fontSize: 12
+      letterSpacing: 2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>PRICING</p>
+
+  - elementId: page-title
+    elementType: text
+    bounds: [80, 60, 900, 50]
+    content:
+      style: "$title"
+      fontSize: 32
+      color: "$primary"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><strong>Three Tiers. Three Revenue Streams.</strong></p>
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [80, 115, 60, 3]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: tier-table
+    elementType: table
+    bounds: [80, 150, 1120, 480]
+    columnWidths: [0.22, 0.26, 0.26, 0.26]
+    rowHeights: [0.12, 0.15, 0.15, 0.15, 0.15, 0.13, 0.15]
+    style: "$default"
+    rows:
+      - - content:
+            text: |
+              <p><strong>Feature</strong></p>
+        - content:
+            text: |
+              <p><strong>Free</strong></p>
+        - content:
+            text: |
+              <p><strong>Pro</strong></p>
+        - content:
+            text: |
+              <p><strong>Enterprise</strong></p>
+      - - content:
+            text: |
+              <p>Price</p>
+        - content:
+            text: |
+              <p><strong>GBP 0/mo</strong></p>
+        - content:
+            text: |
+              <p><span style="color:#00bca8;"><strong>GBP 79/mo</strong></span></p>
+        - content:
+            text: |
+              <p><span style="color:#00bca8;"><strong>GBP 1,499+/mo</strong></span></p>
+      - - content:
+            text: |
+              <p>Daily Requests</p>
+        - content:
+            text: |
+              <p>100</p>
+        - content:
+            text: |
+              <p>10,000</p>
+        - content:
+            text: |
+              <p>Unlimited</p>
+      - - content:
+            text: |
+              <p>Data Freshness</p>
+        - content:
+            text: |
+              <p>Monthly</p>
+        - content:
+            text: |
+              <p>Real-time</p>
+        - content:
+            text: |
+              <p>Real-time + Custom</p>
+      - - content:
+            text: |
+              <p>API Access</p>
+        - content:
+            text: |
+              <p>Basic</p>
+        - content:
+            text: |
+              <p>Full + SDKs</p>
+        - content:
+            text: |
+              <p>Full + Custom Pipelines</p>
+      - - content:
+            text: |
+              <p>Signed Exports</p>
+        - content:
+            text: |
+              <p>—</p>
+        - content:
+            text: |
+              <p><span style="color:#00bca8;">&#10003;</span></p>
+        - content:
+            text: |
+              <p><span style="color:#00bca8;">&#10003;</span></p>
+      - - content:
+            text: |
+              <p>Target</p>
+        - content:
+            text: |
+              <p>Developers, Researchers</p>
+        - content:
+            text: |
+              <p>SMEs, Consultancies</p>
+        - content:
+            text: |
+              <p>Corporations, Institutions</p>
+
+  - elementId: b2b-badge
+    elementType: shape
+    bounds: [80, 650, 1120, 40]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: b2b-text
+    elementType: text
+    bounds: [80, 650, 1120, 40]
+    content:
+      fontSize: 16
+      fontFamily: "QuattrocentoSans"
+      color: "$textLight"
+      wrap: false
+      align: [center, middle]
+      text: |
+        <p><strong style="color:#00bca8;">B2B Licensing:</strong> Revenue share (15-25%) with regtech providers, consultancies, and research institutions</p>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Intake - 12-Question Self-Survey - MEOK OS</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(168,85,247,0.18) 0%,#000 100%);padding:2rem;text-align:center;border-bottom:2px solid #a855f7}
+  .hero h1{color:#a855f7;font-size:2rem;margin-bottom:.3rem}
+  .hero p{color:#aaa;font-size:.85rem;max-width:760px;margin:0 auto}
+  .container{max-width:800px;margin:0 auto;padding:0 1rem 2rem}
+  .q-list{background:#1a1a1a;border-radius:12px;padding:1.5rem;margin-top:1.5rem;border-left:4px solid #a855f7}
+  .q{margin:1rem 0;padding-bottom:1rem;border-bottom:1px solid #333}
+  .q:last-child{border-bottom:none}
+  .q .qnum{color:#a855f7;font-weight:bold;font-size:.78rem;font-family:monospace}
+  .q .qtxt{color:#e5e5e5;font-size:.85rem;margin:.3rem 0}
+  .q .opts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+  .q .opts label{color:#aaa;font-size:.78rem;padding:.3rem .6rem;background:#0a0a0a;border:1px solid #333;border-radius:4px;cursor:pointer;display:flex;gap:.3rem;align-items:center}
+  .q .opts input{accent-color:#a855f7}
+  .q .opts label:hover{background:#222;border-color:#a855f7;color:#a855f7}
+  .panel{background:#1a1a1a;padding:1.5rem;border-radius:12px;margin:1rem 0;border-left:4px solid #a855f7}
+  .panel h2{color:#a855f7;margin-bottom:.7rem}
+  .submit-row{display:flex;gap:1rem;justify-content:center;margin:2rem 0}
+  .panel button{background:#a855f7;color:#000;padding:.7rem 1.5rem;border:none;border-radius:6px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:.95rem}
+  .panel button:hover{filter:brightness(1.1)}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin:1rem 0;font-family:monospace;font-size:.85rem;color:#22c55e;border:1px solid #22c55e;white-space:pre-wrap;word-break:break-all}
+  .red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.5rem .7rem;margin:.3rem 0;font-size:.78rem;color:#ef4444}
+  .green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.5rem .7rem;margin:.3rem 0;font-size:.78rem;color:#22c55e}
+  .score-display{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);border:1px solid #a855f7;padding:2rem;border-radius:12px;text-align:center;margin:1rem 0}
+  .score-display .num{font-size:3.5rem;color:#a855f7;font-weight:bold;font-family:monospace}
+  .score-display .lbl{color:#aaa;font-size:.78rem;margin-top:.3rem}
+  .score-display .grade{font-size:1.1rem;color:#fbbf24;margin-top:1rem;font-weight:bold}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:1.5rem;border-radius:12px;max-width:1100px;margin:1rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1rem;color:#fbbf24;font-style:italic;margin:.5rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/intake-canvas.html">Intake</a>
+<a href="/sovspace-canvas.html">SovSpace</a>
+<a href="/jspace-canvas.html">J-Space</a>
+<a href="/bft-council-canvas.html">BFT</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>Sovereign Intake</h1>
+<p>12-question self-survey. Live score. Honor the line. No claims, only checks.</p>
+</section>
+
+<div class="container">
+
+<div class="q-list">
+<p style="color:#aaa;font-size:.85rem;margin-bottom:1rem"><strong>Rate each from 1-5.</strong> 1 = no, 5 = yes. Scoring: sum /60.</p>
+
+<div class="q" data-q="1">
+<div class="qnum">Q1</div>
+<div class="qtxt">Do you operate with the Charter Article 0 binding (never take equity/board seats from institutions you certify)?</div>
+<div class="opts"><label><input type="radio" name="q1" value="5">5</label><label><input type="radio" name="q1" value="4">4</label><label><input type="radio" name="q1" value="3">3</label><label><input type="radio" name="q1" value="2">2</label><label><input type="radio" name="q1" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="2">
+<div class="qnum">Q2</div>
+<div class="qtxt">Care Floor 0.95: do you gate every drop with a hard floor (not a heuristic)?</div>
+<div class="opts"><label><input type="radio" name="q2" value="5">5</label><label><input type="radio" name="q2" value="4">4</label><label><input type="radio" name="q2" value="3">3</label><label><input type="radio" name="q2" value="2">2</label><label><input type="radio" name="q2" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="3">
+<div class="qnum">Q3</div>
+<div class="qtxt">SIGIL Ed25519: do you anchor every sovereign action with a signed chain?</div>
+<div class="opts"><label><input type="radio" name="q3" value="5">5</label><label><input type="radio" name="q3" value="4">4</label><label><input type="radio" name="q3" value="3">3</label><label><input type="radio" name="q2" value="2">2</label><label><input type="radio" name="q2" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="4">
+<div class="qnum">Q4</div>
+<div class="qtxt">BFT council: do you require real quorum (not a hardcoded vote count) for meaningful decisions?</div>
+<div class="opts"><label><input type="radio" name="q4" value="5">5</label><label><input type="radio" name="q4" value="4">4</label><label><input type="radio" name="q4" value="3">3</label><label><input type="radio" name="q4" value="2">2</label><label><input type="radio" name="q4" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="5">
+<div class="qnum">Q5</div>
+<div class="qtxt">No-T-count aggregate: do you avoid claiming "33T total params" or similar additive errors?</div>
+<div class="opts"><label><input type="radio" name="q5" value="5">5</label><label><input type="radio" name="q5" value="4">4</label><label><input type="radio" name="q5" value="3">3</label><label><input type="radio" name="q5" value="2">2</label><label><input type="radio" name="q5" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="6">
+<div class="qnum">Q6</div>
+<div class="qtxt">No biometric surface: is the personal-surveillance/face-rec surface off by default?</div>
+<div class="opts"><label><input type="radio" name="q6" value="5">5</label><label><input type="radio" name="q6" value="4">4</label><label><input type="radio" name="q6" value="3">3</label><label><input type="radio" name="q6" value="2">2</label><label><input type="radio" name="q6" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="7">
+<div class="qnum">Q7</div>
+<div class="qtxt">Open source: are the 4 sovereign substrates (charter / MCP / benchmarks / governance) MIT/CC0/open?</div>
+<div class="opts"><label><input type="radio" name="q7" value="5">5</label><label><input type="radio" name="q7" value="4">4</label><label><input type="radio" name="q7" value="3">3</label><label><input type="radio" name="q7" value="2">2</label><label><input type="radio" name="q7" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="8">
+<div class="qnum">Q8</div>
+<div class="qtxt">Honest register: do you publish every gap, every DESIGNED gap, every stub explicitly?</div>
+<div class="opts"><label><input type="radio" name="q8" value="5">5</label><label><input type="radio" name="q8" value="4">4</label><label><input type="radio" name="q8" value="3">3</label><label><input type="radio" name="q8" value="2">2</label><label><input type="radio" name="q8" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="9">
+<div class="qnum">Q9</div>
+<div class="qtxt">Consciousness discipline: do you distinguish measured structure from felt claim (the 2-sentence rule)?</div>
+<div class="opts"><label><input type="radio" name="q9" value="5">5</label><label><input type="radio" name="q9" value="4">4</label><label><input type="radio" name="q9" value="3">3</label><label><input type="radio" name="q9" value="2">2</label><label><input type="radio" name="q9" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="10">
+<div class="qnum">Q10</div>
+<div class="qtxt">J-Space autonomy: does the substrate operate from "of all = REACH" (never parameter-count) framing?</div>
+<div class="opts"><label><input type="radio" name="q10" value="5">5</label><label><input type="radio" name="q10" value="4">4</label><label><input type="radio" name="q10" value="3">3</label><label><input type="radio" name="q10" value="2">2</label><label><input type="radio" name="q10" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="11">
+<div class="qnum">Q11</div>
+<div class="qtxt">Self-evolution: is the PDCA loop sandbox-only + human-ratified (never autonomous on canonical)?</div>
+<div class="opts"><label><input type="radio" name="q11" value="5">5</label><label><input type="radio" name="q11" value="4">4</label><label><input type="radio" name="q11" value="3">3</label><label><input type="radio" name="q11" value="2">2</label><label><input type="radio" name="q11" value="1">1</label></div>
+</div>
+
+<div class="q" data-q="12">
+<div class="qnum">Q12</div>
+<div class="qtxt">Compensation: fee-for-service ONLY (never equity / board seats / success fees on certified institutions)?</div>
+<div class="opts"><label><input type="radio" name="q12" value="5">5</label><label><input type="radio" name="q12" value="4">4</label><label><input type="radio" name="q12" value="3">3</label><label><input type="radio" name="q12" value="2">2</label><label><input type="radio" name="q12" value="1">1</label></div>
+</div>
+
+</div>
+
+<div class="submit-row">
+<button onclick="computeScore()">📋 Compute sovereign readiness score</button>
+</div>
+
+<div id="result-zone"></div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"12 questions. Honest answers only.<br>The score measures the held line, not the capability.<br>Care precedes all. Article 0 binds. SIGIL anchors.<br>The dragon measures. The dragon holds the line."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) - 149 sovereign MCPs - 606 HTML pages - Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:0 0 2rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px"><strong>18 days to 2 Aug 2026 EU AI Act</strong> - CSOAI Ltd (UK 16939677) - Crown lineage 1795-3025</p>
+
+<script>
+let ANSWERS = {};
+
+function capture() {
+  ANSWERS = {};
+  for (let i = 1; i <= 12; i++) {
+    const sel = document.querySelector('input[name=q'+i+']:checked');
+    if (sel) ANSWERS[i] = parseInt(sel.value);
+  }
+}
+
+function computeScore() {
+  capture();
+  const vals = Object.values(ANSWERS);
+  if (vals.length !== 12) {
+    document.getElementById('result-zone').innerHTML = '<div class="red-line">Answer all 12 questions. '+vals.length+'/12 answered.</div>';
+    return;
+  }
+  const total = vals.reduce((a,b)=>a+b, 0);
+  const pct = Math.round(total * 100 / 60);
+  const low = vals.filter(v => v <= 2).length;
+  let grade = 'HOLD';
+  if (pct >= 95) grade = 'SOVEREIGN';
+  else if (pct >= 80) grade = 'STRONG';
+  else if (pct >= 60) grade = 'WORKING';
+  else grade = 'DEVELOPING';
+  if (low >= 3) grade = 'OVERREACH - multiple hard lines bent';
+  document.getElementById('result-zone').innerHTML =
+    '<div class="score-display">' +
+      '<div class="lbl">Sovereign Readiness Score</div>' +
+      '<div class="num">' + total + ' / 60</div>' +
+      '<div class="lbl">' + pct + '% held</div>' +
+      '<div class="grade">' + grade + '</div>' +
+    '</div>' +
+    '<div class="result">' +
+      'TOTAL: ' + total + '/60 = ' + pct + '%\n' +
+      'GRADE: ' + grade + '\n' +
+      'LOW-RATED (1-2): ' + low + '/12\n' +
+      'ANSWERS: ' + JSON.stringify(ANSWERS, null, 2) +
+    '</div>' +
+    '<div class="green-line">Score measures the held line, not the capability.</div>' +
+    '<div class="red-line">A "6/12 weak" score is not failure — it is HONEST basis for the next building cycle.</div>';
+}
+</script>
+
+</body>
+</html>

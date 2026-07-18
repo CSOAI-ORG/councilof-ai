@@ -1,0 +1,49 @@
+{
+  "mcpVersion": "1.0.0",
+  "serverInfo": {
+    "name": "csoai---council-for-safety-of-ai",
+    "version": "1.0.0",
+    "description": "CSOAI \u2014 Council for Safety of AI \u2014 MEOK AI Labs compliance substrate."
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "compliance-audit",
+      "description": "Run a compliance audit via CSOAI \u2014 Council for Safety of AI.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string",
+            "description": "Name or identifier of the system"
+          },
+          "framework": {
+            "type": "string",
+            "description": "Framework to check"
+          }
+        },
+        "required": [
+          "system"
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "https://csoai.org/llms.txt",
+      "name": "CSOAI \u2014 Council for Safety of AI LLMs.txt",
+      "description": "Discovery manifest.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://csoai.org/sitemap.xml",
+      "name": "CSOAI \u2014 Council for Safety of AI Sitemap",
+      "description": "Page index.",
+      "mimeType": "application/xml"
+    }
+  ]
+}

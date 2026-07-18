@@ -1,0 +1,98 @@
+{
+  "ts": 1784000998.578484,
+  "ts_iso": "2026-07-14T03:49:58.584525+00:00",
+  "owems": {
+    "compliance": {
+      "brain_paths": [
+        "~/.sovereign/models/qwen3-sov-compliance-0.6b/ (rank=16)",
+        "~/.sovereign/models/qwen3-sov-brain-0.6b/ (rank=32, sovereign)"
+      ],
+      "ollama": "qwen2.5:3b",
+      "specialty": "Article 0 + 12 Sovereign Pillars + BFT-33 + SIGIL",
+      "best_for": "sovereign compliance questions",
+      "loss_reduction_pct": 83.5
+    },
+    "defense": {
+      "brain_paths": [
+        "~/.sovereign/models/qwen3-sov-defense-0.6b/ (rank=16)"
+      ],
+      "ollama": "qwen2.5:3b",
+      "specialty": "DEFONEOS doctrine + AUKUS-compatible + hard stops",
+      "best_for": "defense AI compliance questions",
+      "loss_reduction_pct": 86.2
+    },
+    "intuition": {
+      "brain_paths": [
+        "~/.sovereign/models/qwen3-sov-intuition-0.6b/ (rank=16)"
+      ],
+      "ollama": "qwen2.5:3b",
+      "specialty": "World model + JEPA-style prediction + emergence",
+      "best_for": "world model + OOD detection questions",
+      "loss_reduction_pct": 78.6
+    },
+    "voice": {
+      "brain_paths": [
+        "~/.sovereign/models/qwen3-sov-voice-0.6b/ (rank=16)"
+      ],
+      "ollama": "qwen2.5:3b",
+      "specialty": "Sovereign voice + privacy + 12 Pillars",
+      "best_for": "voice + privacy + Alexa/Siri questions",
+      "loss_reduction_pct": 89.3
+    },
+    "general": {
+      "brain_paths": [
+        "~/.sovereign/models/qwen3-sov-brain-0.6b/ (rank=32, sovereign)"
+      ],
+      "ollama": "qwen2.5:3b",
+      "specialty": "General sovereign fallback",
+      "best_for": "general questions not covered by specialists",
+      "loss_reduction_pct": 57.7
+    }
+  },
+  "sov33_models": {
+    "sov_brain_v2": {
+      "path": "~/.sovereign/models/qwen3-sov-brain-0.6b/",
+      "rank": 32,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ],
+      "loss_reduction_pct": 57.7,
+      "trained_samples": 200,
+      "trained_steps": 50
+    },
+    "sov_brain_v1": {
+      "path": "~/.sovereign/models/qwen3-sov-{name}-0.6b/",
+      "rank": 16,
+      "target_modules": [
+        "q_proj",
+        "v_proj"
+      ],
+      "loss_reduction_pct_4owem": [
+        83.5,
+        86.2,
+        78.6,
+        89.3
+      ]
+    },
+    "sov3_small_world": {
+      "path": "~/.sovereign/models/sov3-small-world/",
+      "purpose": "sovereign world model (small)"
+    }
+  },
+  "benchmarks": {
+    "triangle_2_3x_faster": "PROVEN (10 questions)",
+    "12_around_1_189_500x_faster": "PROVEN (8 questions)",
+    "master_450x_faster": "PROVEN",
+    "sov_brain_v2_v1_57_7_pct_loss": "PROVEN (Phase 29)"
+  },
+  "registry_health": {
+    "total_adapters": 7,
+    "sov_models": 6,
+    "world_models": 1,
+    "routing_groups": 5,
+    "brain_slots": 20
+  }
+}

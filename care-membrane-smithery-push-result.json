@@ -1,0 +1,29 @@
+{
+  "task": "Ship care-membrane-mcp to Smithery via existing GitHub Action",
+  "date_utc": "2026-06-14T16:35:54Z",
+  "repo": "CSOAI-ORG/care-membrane-mcp",
+  "tag": "v1.0.11",
+  "release_url": "https://github.com/CSOAI-ORG/care-membrane-mcp/releases/tag/v1.0.11",
+  "workflow_run_id": 27505241063,
+  "workflow_url": "https://github.com/CSOAI-ORG/care-membrane-mcp/actions/runs/27505241063",
+  "smithery_deployment_id": "7611e9e3-615e-4298-9fcb-afec8d76cd80",
+  "smithery_server_url": "https://smithery.ai/servers/nicholastempleman/care-membrane-mcp/releases",
+  "checks": {
+    "remote_correct": true,
+    "branch_in_sync_ahead": 0,
+    "branch_in_sync_behind": 0,
+    "smithery_api_key_present": true,
+    "smithery_api_key_created_at": "2026-04-15T04:12:20Z",
+    "tag_v1_0_11_pushed": true,
+    "release_created": true,
+    "smithery_publish_step_succeeded": true,
+    "attest_build_provenance_step_succeeded": false,
+    "workflow_conclusion": "failure"
+  },
+  "result_summary": {
+    "smithery_publish": "ACCEPTED (deployment 7611e9e3-...-afec8d76cd80; status PENDING on Smithery side)",
+    "workflow_overall": "FAILED on a post-publish step (Attest build provenance) due to a pre-existing bug in the workflow file (.github/workflows/mcp-smithery-publish.yml line 39 passes the git commit SHA as the subject-digest; actions/attest-build-provenance@v2 requires a real sha256:<hex> blob digest, not a git SHA).",
+    "v1_0_0_run_27505241063": "The v1.0.0 release also failed the same way on 2026-05-07 (run 25478022797, conclusion=failure, 39m47s) — this is a recurring workflow bug, not new.",
+    "verdict": "SHIP CONFIRMED on the Smithery side; the GitHub Actions run shows a red ❌ only because of the broken attest step. The MCP server is published and the deployment is pending on Smithery's end."
+  }
+}

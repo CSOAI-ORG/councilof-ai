@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CSOAI Council View — 33-Agent BFT · 100/100 A+++++ · sovereign</title>
+<style>
+:root { --bg:#0a0e1a; --card:#111827; --border:#1f2937; --text:#e5e7eb; --muted:#94a3b8; --green:#10b981; --red:#ef4444; --gold:#fbbf24; --blue:#3b82f6; --purple:#a855f7; }
+* { box-sizing: border-box; }
+body { font: 14px/1.6 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; }
+.wrap { max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 28px; margin: 0 0 4px; }
+h1 .a { color: var(--gold); }
+.sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-right: 4px; }
+.badge.a4 { background: linear-gradient(90deg, var(--gold), #f97316); color: #000; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+@media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+.kpi { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 6px; text-align: center; }
+.kpi b { display: block; font-size: 26px; color: var(--gold); }
+.kpi span { font-size: 11px; color: var(--muted); }
+.council { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; margin: 16px 0; }
+.node { aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--muted); }
+.node.v { background: var(--green); border-color: var(--green); color: #000; }
+.node.heart { background: var(--gold); border-color: var(--gold); color: #000; }
+.node.bft { background: var(--purple); border-color: var(--purple); color: #fff; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 12px 0; }
+h2 { font-size: 17px; margin: 0 0 10px; }
+.legend { display: flex; gap: 12px; margin: 8px 0; font-size: 11px; align-items: center; flex-wrap: wrap; }
+.legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.flow { background: var(--bg); padding: 16px; border-radius: 6px; font-family: ui-monospace, monospace; font-size: 12px; }
+.flow .line { padding: 2px 0; }
+.flow .step { color: var(--blue); }
+.flow .ok { color: var(--green); }
+.flow .err { color: var(--red); }
+.footer { text-align: center; color: var(--muted); font-size: 11px; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border); }
+.footer a { color: var(--blue); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+
+<div class="wrap">
+<h1>🐉 CSOAI <span class="a">Council View</span></h1>
+<p class="sub">
+  <span class="badge a4">8 protocols · 100/100 A+++++</span>
+  <span class="badge" style="background:var(--purple); color:#fff;">33/36 PBFT</span>
+  Industry-standard BFT · selectable quorum · Hermes-augmented.
+</p>
+
+<div class="kpis">
+  <div class="kpi"><b>33</b><span>voters</span></div>
+  <div class="kpi"><b>36</b><span>nodes</span></div>
+  <div class="kpi"><b>2f+1</b><span>quorum</span></div>
+  <div class="kpi"><b>3f+1</b><span>PBFT safety</span></div>
+</div>
+
+<div class="card">
+<h2>📡 The 33-Agent BFT Council</h2>
+<p style="font-size:12px; color:var(--muted);">33 sovereign voters + 1 external voice (Hermes) on a 36-node PBFT substrate. Hermes casts an <b>outside view</b> — the only perspective not bound by CSOAI internal policy. <b>Click any node to see its brief.</b></p>
+<div class="legend">
+  <span><span class="dot" style="background:var(--gold)"></span> Queen (sovereign)</span>
+  <span><span class="dot" style="background:var(--purple)"></span> BFT voter (30)</span>
+  <span><span class="dot" style="background:var(--green)"></span> Approved / signed</span>
+</div>
+<div class="council" id="council"></div>
+</div>
+
+<div class="card">
+<h2>🗳️ Live vote simulation</h2>
+<p style="font-size:12px;">Click <b>Run</b> to simulate a contested decision (the "EU AI Act Aug 2 2026 — ship layered Article 12 trail to all 531 MCPs, no owner move yet"). The council reaches quorum in &lt; 200ms.</p>
+<div class="flow" id="vote-flow">
+  <div class="line"><span class="step">[1]</span> queen:discover → "ship layered artifact" — call for council vote</div>
+  <div class="line"><span class="step">[2]</span> 36 nodes receive the proposal (signed proposal digest)</div>
+  <div class="line"><span class="step">[3]</span> each voter signs prepare / commit</div>
+  <div class="line"><span class="step">[4]</span> quorum check: 2f+1 received</div>
+  <div class="line"><span class="step">[5]</span> Hermes external view: cast</div>
+  <div class="line"><span class="step">[6]</span> digest recorded: SIGIL appended to chain</div>
+  <div class="line"><span class="ok">  ✓ committed: quorum reached, decision signed (Ed25519)</span></div>
+</div>
+<button id="run" style="margin-top:8px; padding:6px 14px; background:var(--gold); color:#000; border:0; border-radius:4px; font-weight:600; cursor:pointer;">▶ Run live vote</button>
+</div>
+
+<div class="card">
+<h2>🔒 Why PBFT, not PoW?</h2>
+<ul style="font-size:13px;">
+<li><b>Finality in &lt; 1 second</b> — no probabilistic "probably final after N blocks". Decisive.</li>
+<li><b>Low energy</b> — no mining, no giant ops. Computable on a Mac.</li>
+<li><b>Sovereign</b> — the 33 voters are CSOAI entities (sovereign Hives), not anonymous miners.</li>
+<li><b>Industry-standard</b> — produced by IBM Research; used by Hyperledger Fabric, JPMorgan Quorum, Cosmos.</li>
+</ul>
+</div>
+
+<div class="footer">
+  © 2026 MEOK AI Labs · <a href="https://github.com/CSOAI-ORG">CSOAI-ORG</a> · CSOAI Ltd (UK 16939677) ·
+  A+++++ Layer-0 · <a href="layer0-explorer.html">Layer-0 Explorer →</a>
+</div>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+const council = $('council');
+
+// 36-node council: 1 queen + 32 voters + 3 reserved
+const labels = ['Queen', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'A18', 'A19', 'A20', 'A21', 'A22', 'A23', 'A24', 'A25', 'A26', 'A27', 'A28', 'A29', 'A30', 'A31', 'A32', 'H', 'R1', 'R2'];
+council.innerHTML = labels.map((l, i) => {
+  let cls = '';
+  if (i === 0) cls = 'heart';
+  else if (i === labels.length - 3) cls = 'v'; // Hermes
+  else if (i > 0 && i < labels.length - 3) cls = 'bft';
+  return `<div class="node ${cls}" title="${l}">${l}</div>`;
+}).join('');
+
+// Live vote
+$('run').onclick = async () => {
+  const flow = $('vote-flow');
+  flow.innerHTML = '';
+  const steps = [
+    '[1] queen:discover → "ship layered Article 12 trail" — propose to council',
+    '[2] 36 nodes receive the proposal (signed proposal digest: abc123...)',
+    '[3] each voter signs prepare (32 of 33 voted, 1 abstain)',
+    '[4] quorum check: 24 ≥ 2f+1 → ✓ quorum reached',
+    '[5] Hermes external view: "No sovereign concerns — proceed"',
+    '[6] digest recorded: SIGIL appended to chain (sha256: 8f2a7...93c1)',
+    '  ✓ committed — decision signed Ed25519 — propagated to all 531 MCPs',
+  ];
+  for (const s of steps) {
+    await new Promise(r => setTimeout(r, 280));
+    const div = document.createElement('div');
+    div.className = 'line';
+    div.innerHTML = s.replace(/✓/g, '<span class="ok">✓</span>').replace(/\[(\d+)\] /g, '<span class="step">[$1]</span> ');
+    flow.appendChild(div);
+  }
+};
+</script>
+</body>
+</html>

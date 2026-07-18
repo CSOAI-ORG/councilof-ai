@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SOC Bot Detector — csoai.org/soc/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: #0a0e27; color: #10b981; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .period { font-size: 0.9rem; opacity: 0.7; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    th { background: rgba(251,191,36,0.1); color: #fbbf24; }
+    .bot { color: #ef4444; font-weight: 700; background: rgba(239,68,68,0.1); }
+    .suspicious { color: #fbbf24; font-weight: 700; background: rgba(251,191,36,0.1); }
+    .human { color: #10b981; font-weight: 700; }
+    .risk-bar { display: inline-block; height: 8px; background: #10b981; vertical-align: middle; margin-right: 4px; }
+    .risk-bar.high { background: #ef4444; }
+    .risk-bar.med { background: #fbbf24; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🛡️ SOC Bot Detector</h1>
+    <div class="period">Period: 24 hours · For: SOC teams · Auto-runs every 30 min</div>
+
+    <h2 style="color: #fbbf24;">Suspicious IPs (24h)</h2>
+    <table>
+      <tr>
+        <th>IP</th><th>Attempts</th><th>Unique Actors</th><th>First Seen</th><th>Last Seen</th><th>Risk</th><th>Verdict</th>
+      </tr>
+      <tr>
+        <td>202.106.0.1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>12:11:18</td>
+        <td>12:11:18</td>
+        <td>
+          <span class="risk-bar" style="width: 30px"></span>
+          <span class="risk-bar" style="width: 30px"></span>
+          <span class="risk-bar" style="width: 30px"></span>
+        </td>
+        <td class="suspicious">SUSPICIOUS</td>
+      </tr>
+      <tr>
+        <td>203.0.113.42</td>
+        <td>1</td>
+        <td>1</td>
+        <td>12:10:30</td>
+        <td>12:10:30</td>
+        <td>
+          <span class="risk-bar" style="width: 30px"></span>
+          <span class="risk-bar" style="width: 30px"></span>
+          <span class="risk-bar" style="width: 30px"></span>
+        </td>
+        <td class="suspicious">SUSPICIOUS</td>
+      </tr>
+      <tr>
+        <td>1.2.3.4</td>
+        <td>1</td>
+        <td>1</td>
+        <td>12:09:55</td>
+        <td>12:09:55</td>
+        <td>
+          <span class="risk-bar" style="width: 30px"></span>
+          <span class="risk-bar" style="width: 30px"></span>
+          <span class="risk-bar" style="width: 30px"></span>
+        </td>
+        <td class="suspicious">SUSPICIOUS</td>
+      </tr>
+    </table>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Risk Scoring</h2>
+    <ul style="line-height: 1.8; margin-left: 24px;">
+      <li><strong>+30</strong> if attempts &gt; 5 (volume spike)</li>
+      <li><strong>+20</strong> if unique_actors &gt; 1 (distributed)</li>
+      <li><strong>+50</strong> if burst (duration &lt; 5min AND attempts &gt; 3)</li>
+    </ul>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Verdict Thresholds</h2>
+    <ul style="line-height: 1.8; margin-left: 24px;">
+      <li><strong>BOT</strong> (score ≥ 50): Block immediately, escalate to CISO</li>
+      <li><strong>SUSPICIOUS</strong> (score ≥ 30): Investigate, log for audit</li>
+      <li><strong>HUMAN</strong> (score &lt; 30): Log for audit, allow</li>
+    </ul>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Recommendation</h2>
+    <p>Block all <strong>BOT</strong> verdicts at the firewall. Investigate <strong>SUSPICIOUS</strong> with the audit trail at <a href="/sigil-explorer/" style="color: #10b981;">/sigil-explorer/</a>. Log all <strong>HUMAN</strong> access for compliance.</p>
+    <p>The West's response to DORADO is automated. SOC teams get real-time alerts. The dragon watches 24/7.</p>
+  </div>
+</body>
+</html>

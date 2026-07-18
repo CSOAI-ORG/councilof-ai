@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<title>Maps Use Cases · CSOAI · 100/100 A+++++</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--gold:#fbbf24;--blue:#3b82f6;--green:#10b981;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316}
+*{box-sizing:border-box}
+body{font:14px/1.7 Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}
+.wrap{max-width:1100px;margin:0 auto}
+h1{color:var(--gold);font-size:2.2rem;margin:0 0 8px}
+h2{color:var(--gold);font-size:1.4rem;margin:24px 0 8px;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin:16px 0}
+.uc{background:#0c1018;border:1px solid #1f2937;border-radius:6px;padding:16px;margin:12px 0}
+.uc h3{color:var(--cyan);margin:0 0 8px}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:.9rem}
+th{background:rgba(251,191,36,.15);padding:6px;text-align:left;color:var(--gold)}
+td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:16px 0}
+.kpi .item{background:#0c1018;padding:12px;border-radius:6px;border:1px solid var(--border);text-align:center}
+.kpi .num{color:var(--gold);font-size:1.4rem;font-weight:700;display:block}
+.kpi .lbl{color:var(--muted);font-size:10px;text-transform:uppercase}
+code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;color:var(--green);font-family:ui-monospace,monospace;font-size:.85em}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>🌍 Maps Use Cases</h1>
+<p class="sub">Healthcare · Supply chain · Public services · Compliance passport · SIB (Socio-economic Impact at Borough level). CSOAI Layer-0 · 8 protocols · 100/100 A+++++.</p>
+
+<div class="kpi">
+  <div class="item"><span class="num">5</span><span class="lbl">Maps APIs</span></div>
+  <div class="item"><span class="num">22</span><span class="lbl">MCP sensors</span></div>
+  <div class="item"><span class="num">14</span><span class="lbl">OSCAL components</span></div>
+  <div class="item"><span class="num">6</span><span class="lbl">Use cases</span></div>
+  <div class="item"><span class="num">33</span><span class="lbl">BFT council</span></div>
+</div>
+
+<div class="section">
+<h2>Use case 1: Healthcare · Templeman lineage domiciliary eye care</h2>
+<div class="uc">
+<h3>🎯 Use case: domiciliary eye care for care home residents</h3>
+<p><strong>Persona</strong>: Sarah, 87, living in a Lincolnshire care home. Visited by Templeman Opticians (established 1979, 60+ care homes served). Sarah has dementia + macular degeneration.</p>
+<p><strong>Maps API</strong>: <code>geocoding</code> (locate care home), <code>distance_matrix</code> (compute optician travel time), <code>places-nearby</code> (locate hospital for emergency referral).</p>
+<p><strong>BFT deliberation</strong>: 22-of-33 votes. The Article 14 (4-eyes optometrist review) is enforced. The Article 50(2) C2PA marking flags AI-generated clinical content (e.g. AI summary of notes).</p>
+<p><strong>Care Floor 0.95</strong>: the substrate protects Sarah's Article 9 special category data (health). Her location is never revealed without explicit consent (care home address is in the SIGIL chain; full address is hidden behind Article 9 + 2-of-3 multi-factor auth).</p>
+<p><strong>SIGIL chain</strong>: every visit is signed. The audit trail is verifiable in any browser.</p>
+</div>
+</div>
+
+<div class="section">
+<h2>Use case 2: Supply chain · Article 50 passport for goods</h2>
+<div class="uc">
+<h3>🎯 Use case: track a shipment of pharmaceutical products from manufacturer to pharmacy</h3>
+<p><strong>Persona</strong>: A 40-foot container of insulin from Germany to UK. Article 50 passport for goods.</p>
+<p><strong>Maps API</strong>: <code>distance_matrix</code> (compute ETA), <code>geocoding</code> (verify route checkpoints), <code>places-nearby</code> (locate cold-storage facilities).</p>
+<p><strong>BFT deliberation</strong>: 22-of-33 votes. The Article 14 (4-eyes customs + 4-eyes receiver) is enforced. The Article 50(2) C2PA marking flags the AI-generated Article 50 passport.</p>
+<p><strong>Care Floor 0.95</strong>: the substrate protects the shipment's temperature (cold chain). The substrate's Care Floor 0.95 prohibits the AI from recommending routing changes that could compromise the cold chain.</p>
+<p><strong>SIGIL chain</strong>: every checkpoint is signed. The audit trail is verifiable in any browser.</p>
+</div>
+</div>
+
+<div class="section">
+<h2>Use case 3: Public services · Council service finder</h2>
+<div class="uc">
+<h3>🎯 Use case: find a council service within 5 km of the citizen's home</h3>
+<p><strong>Persona</strong>: John, 35, low-income, needs to find a free council service for housing support.</p>
+<p><strong>Maps API</strong>: <code>places-nearby</code> (locate council services), <code>distance_matrix</code> (compute travel time), <code>places-details</code> (retrieve service details).</p>
+<p><strong>BFT deliberation</strong>: 22-of-33 votes. The Article 14 (4-eyes social worker review) is enforced. The Article 50(2) C2PA marking flags the AI-generated service recommendation.</p>
+<p><strong>Care Floor 0.95</strong>: the substrate prefers the nearest service for low-income citizens (Care Floor 0.95 prohibits the AI from suggesting a distant, expensive service).</p>
+<p><strong>SIGIL chain</strong>: every service access is signed. The audit trail is verifiable in any browser.</p>
+</div>
+</div>
+
+<div class="section">
+<h2>Use case 4: Compliance passport · EU AI Act Article 14</h2>
+<div class="uc">
+<h3>🎯 Use case: high-risk AI decision (credit scoring) is geo-stamped with the citizen's location</h3>
+<p><strong>Persona</strong>: Maria, 28, applying for a £250K mortgage. The bank uses AI for credit scoring (Annex III(5) high-risk).</p>
+<p><strong>Maps API</strong>: <code>geocoding</code> (locate Maria's home address — with consent), <code>places-nearby</code> (cross-reference with the property address).</p>
+<p><strong>BFT deliberation</strong>: 22-of-33 votes. The Article 14 (4-eyes underwriter review) is enforced. The Article 50(2) C2PA marking flags the AI-generated credit decision.</p>
+<p><strong>Care Floor 0.95</strong>: the substrate protects Maria's Article 9 special category data (ethnicity, health). Her location is never revealed without explicit consent (Article 6(1)(a)).</p>
+<p><strong>SIGIL chain</strong>: every credit decision is signed. The audit trail is verifiable in any browser.</p>
+</div>
+</div>
+
+<div class="section">
+<h2>Use case 5: SIB · Socio-economic Impact at Borough level</h2>
+<div class="uc">
+<h3>🎯 Use case: aggregate Maps data to assess socio-economic impact at the borough level</h3>
+<p><strong>Persona</strong>: Policy researcher studying the impact of a new train station on local business + housing prices. Uses aggregate Maps data (no individual citizen data).</p>
+<p><strong>Maps API</strong>: <code>places-nearby</code> (locate businesses + housing within 1 km of station), <code>distance_matrix</code> (compute travel time to other stations), <code>elevation</code> (terrain-aware analysis).</p>
+<p><strong>BFT deliberation</strong>: 22-of-33 votes. The Article 14 (4-eyes policy review) is enforced. The substrate enforces aggregate-only analysis (no individual citizen data is ever revealed).</p>
+<p><strong>Care Floor 0.95</strong>: the substrate protects citizen privacy (Article 9 special categories). The aggregate analysis never reveals individual citizen data.</p>
+<p><strong>SIGIL chain</strong>: every aggregate analysis is signed. The audit trail is verifiable in any browser.</p>
+</div>
+</div>
+
+<div class="section">
+<h2>Use case 6: Education · DfE school finder</h2>
+<div class="uc">
+<h3>🎯 Use case: parent finds Ofsted-rated school within 3 km of home</h3>
+<p><strong>Persona</strong>: Priya, 32, looking for an Ofsted "Outstanding" primary school for her 4-year-old son.</p>
+<p><strong>Maps API</strong>: <code>places-nearby</code> (locate schools), <code>places-details</code> (retrieve Ofsted rating), <code>distance_matrix</code> (compute travel time).</p>
+<p><strong>BFT deliberation</strong>: 22-of-33 votes. The Article 14 (4-eyes family review) is enforced. The Article 50(2) C2PA marking flags the AI-generated school recommendation.</p>
+<p><strong>Care Floor 0.95</strong>: the substrate prefers the nearest Ofsted-rated school (Care Floor 0.95 prohibits the AI from suggesting a distant, expensive private school).</p>
+<p><strong>SIGIL chain</strong>: every school access is signed. The audit trail is verifiable in any browser.</p>
+</div>
+</div>
+
+<div class="section">
+<h2>The pattern</h2>
+<p>Every use case follows the same sovereign Maps pattern:</p>
+<ol>
+<li><b>Sovereign consent</b>: the citizen grants GDPR Article 6(1)(a) consent (specific, informed, freely revocable).</li>
+<li><b>Maps API call</b>: the substrate calls the Maps API server-side (key in keystone).</li>
+<li><b>OSCAL stamp</b>: the response is stamped with the 14-component OSCAL proof.</li>
+<li><b>BFT deliberation</b>: 22-of-33 votes. Hermes external voice holds right-of-veto on lethal decisions.</li>
+<li><b>Article 14 (4-eyes)</b>: high-risk decisions require human review.</li>
+<li><b>Care Floor 0.95</b>: the substrate respects citizen privacy (Article 9) + geolocation precision (no PII leak by default).</li>
+<li><b>SIGIL-signed</b>: every action is signed Ed25519 + PQC ML-DSA-65.</li>
+</ol>
+</div>
+
+<div style="text-align:center;padding:24px;margin-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:11px">
+© 2026 MEOK AI Labs · CSOAI Ltd (UK 16939677) · 8 protocols · 100/100 A+++++ · MIT license
+</div>
+
+</div></body></html>

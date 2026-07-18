@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Deployment Architecture Comparison</title>
+<meta name="description" content="Side-by-side comparison of all DEFONEOS deployment architectures: Cloud, On-Prem, Edge, Air-Gapped, Containerised, Kubernetes, and Hybrid. Resource requirements, latency, sovereignty ratings, and cost analysis.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--orange:#fb923c;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1300px;margin:0 auto;padding:2rem}
+h1{font-size:2rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.3rem;color:var(--cyan);margin:2rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1.05rem;color:var(--green);margin:1rem 0 .4rem}
+h4{font-size:.9rem;color:var(--gold);margin:.6rem 0 .3rem}
+p{margin:.4rem 0;color:#cbd5e1}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-orange{background:rgba(251,146,60,.15);color:var(--orange);border:1px solid var(--orange)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:120px;flex:1;text-align:center}
+.stat-box .num{font-size:1.6rem;font-weight:700}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;margin:.75rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.6rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+code{background:var(--bg3);color:var(--green);padding:2px 6px;border-radius:3px;font-size:.8rem}
+.nav-bar{position:sticky;top:0;z-index:999;background:rgba(10,14,23,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(251,191,36,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.nav-bar a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+.nav-bar a:hover{color:var(--gold)}
+.nav-bar .brand{color:var(--gold);font-weight:bold;font-size:1rem;text-decoration:none}
+pre{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.75rem;color:#cbd5e1;margin:.5rem 0}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:1rem 0}
+.arch-card{background:var(--bg2);border:2px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;transition:border-color .3s}
+.arch-card:hover{border-color:var(--gold)}
+.arch-card h3{margin-top:0}
+.arch-card .rating{display:flex;gap:.3rem;margin:.5rem 0;align-items:center}
+.arch-card .rating-bar{height:8px;border-radius:4px;background:var(--bg3);width:100px;overflow:hidden}
+.arch-card .rating-fill{height:100%;border-radius:4px}
+.sov-100{background:var(--green)}
+.sov-80{background:var(--cyan)}
+.sov-60{background:var(--gold)}
+.sov-40{background:var(--orange)}
+.sov-20{background:var(--red)}
+.compare-table{font-size:.75rem}
+.compare-table th{font-size:.7rem;white-space:nowrap}
+.compare-table td{font-size:.72rem}
+.tag-yes{color:var(--green);font-weight:600}
+.tag-no{color:var(--red);font-weight:600}
+.tag-partial{color:var(--gold);font-weight:600}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml">
+<meta property="og:title" content="DEFONEOS — Deployment Architecture Comparison">
+<meta property="og:description" content="Complete comparison of 7 deployment architectures: Cloud, On-Prem, Edge, Air-Gapped, Containerised, Kubernetes, Hybrid.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-deployment-comparison.html">
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav-bar" role="navigation" aria-label="Main navigation">
+<a href="defoneos-index.html" class="brand">🐉 DEFONEOS</a>
+<a href="defoneos-demo.html">Demo</a>
+<a href="defoneos-architecture.html">Architecture</a>
+<a href="defoneos-deployment-comparison.html" style="color:var(--gold)">Deploy Compare</a>
+<a href="defoneos-deployment-runbook.html">Runbook</a>
+<a href="defoneos-case-studies.html">Case Studies</a>
+</nav>
+<div class="container">
+<div class="header-bar">
+<div class="left">
+<span class="dragon">🐉</span>
+<div>
+<h1>DEFONEOS — Deployment Architecture Comparison</h1>
+<p>Side-by-side analysis of all 7 DEFONEOS deployment architectures. Compare sovereignty ratings, resource requirements, latency, cost, MCP coverage, and best-fit scenarios to choose the right deployment for your mission.</p>
+</div>
+</div>
+<div style="text-align:right">
+<span class="badge badge-green">v1.0.0</span>
+<span class="badge badge-gold">7 Architectures</span>
+<span class="badge badge-cyan">15 Metrics</span>
+</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num" style="color:var(--gold)">7</div><div class="label">Architectures</div></div>
+<div class="stat-box"><div class="num" style="color:var(--green)">100%</div><div class="label">Max Sovereignty</div></div>
+<div class="stat-box"><div class="num" style="color:var(--cyan)">£0</div><div class="label">Min Cost/Day</div></div>
+<div class="stat-box"><div class="num" style="color:var(--purple)">3ms</div><div class="label">Min Latency</div></div>
+<div class="stat-box"><div class="num" style="color:var(--orange)">30/30</div><div class="label">Max MCPs</div></div>
+<div class="stat-box"><div class="num" style="color:var(--red)">4W</div><div class="label">Min Power</div></div>
+</div>
+
+<!-- MASTER COMPARISON TABLE -->
+<h2>📊 Master Comparison Matrix</h2>
+<table class="compare-table">
+<tr>
+<th style="width:140px">Metric</th>
+<th>☁️ Cloud</th>
+<th>🏢 On-Prem</th>
+<th>📡 Edge</th>
+<th>🔌 Air-Gapped</th>
+<th>🐳 Containerised</th>
+<th>☸️ Kubernetes</th>
+<th>🔄 Hybrid</th>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Sovereignty</td>
+<td><span class="tag-partial">60%</span></td>
+<td><span class="tag-yes">95%</span></td>
+<td><span class="tag-yes">95%</span></td>
+<td><span class="tag-yes">100%</span></td>
+<td><span class="tag-yes">90%</span></td>
+<td><span class="tag-yes">90%</span></td>
+<td><span class="tag-yes">85%</span></td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">MCP Coverage</td>
+<td>30/30</td>
+<td>30/30</td>
+<td>12/30</td>
+<td>8/30</td>
+<td>30/30</td>
+<td>30/30</td>
+<td>30/30</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">ISR Latency</td>
+<td>45ms</td>
+<td>12ms</td>
+<td>3ms</td>
+<td>5ms</td>
+<td>12ms</td>
+<td>15ms</td>
+<td>20ms</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">GPU Training</td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-no">No</span></td>
+<td><span class="tag-partial">Limited</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Min Hardware</td>
+<td>Cloud VM</td>
+<td>1U Server</td>
+<td>Jetson Orin</td>
+<td>Rugged PC</td>
+<td>1U Server</td>
+<td>3-node cluster</td>
+<td>Mixed</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">RAM Required</td>
+<td>64GB</td>
+<td>64GB</td>
+<td>8-16GB</td>
+<td>16GB</td>
+<td>32GB</td>
+<td>128GB/cluster</td>
+<td>64GB+</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Storage</td>
+<td>500GB SSD</td>
+<td>1TB NVMe</td>
+<td>128GB eMMC</td>
+<td>256GB SSD</td>
+<td>500GB SSD</td>
+<td>2TB (dist)</td>
+<td>1TB+</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Power Draw</td>
+<td>N/A (cloud)</td>
+<td>450W</td>
+<td>15-60W</td>
+<td>120W</td>
+<td>450W</td>
+<td>1350W (3×450)</td>
+<td>600W+</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Network</td>
+<td>Internet</td>
+<td>LAN</td>
+<td>Mesh/LTE</td>
+<td>None</td>
+<td>LAN</td>
+<td>10G LAN</td>
+<td>Mixed</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Cost/Day</td>
+<td>£45</td>
+<td>£8.20</td>
+<td>£2.10</td>
+<td>£3.50</td>
+<td>£9.80</td>
+<td>£24.60</td>
+<td>£15.40</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Cost/Year</td>
+<td>£16,425</td>
+<td>£2,993</td>
+<td>£767</td>
+<td>£1,278</td>
+<td>£3,577</td>
+<td>£8,979</td>
+<td>£5,621</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Setup Time</td>
+<td>30min</td>
+<td>4h</td>
+<td>1h</td>
+<td>8h</td>
+<td>2h</td>
+<td>6h</td>
+<td>8h</td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">SIGIL Chain Sync</td>
+<td><span class="tag-yes">Real-time</span></td>
+<td><span class="tag-yes">Real-time</span></td>
+<td><span class="tag-partial">Batch</span></td>
+<td><span class="tag-no">Manual</span></td>
+<td><span class="tag-yes">Real-time</span></td>
+<td><span class="tag-yes">Real-time</span></td>
+<td><span class="tag-partial">Mixed</span></td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">BFT-33 Active</td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-no">No</span></td>
+<td><span class="tag-partial">Local 7</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">C2 (FreeTAKServer)</td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+<td><span class="tag-yes">Yes</span></td>
+</tr>
+<tr>
+<td style="font-weight:600;color:var(--gold)">Best For</td>
+<td>Dev/Testing</td>
+<td>HQ Operations</td>
+<td>Field Teams</td>
+<td>Max Security</td>
+<td>Portable</td>
+<td>Enterprise</td>
+<td>HQ+Field</td>
+</tr>
+</table>
+
+<!-- DETAILED CARDS -->
+<h2>📋 Detailed Architecture Breakdown</h2>
+
+<div class="grid-2">
+
+<div class="arch-card" style="border-color:var(--cyan)">
+<h3>☁️ 1. Cloud Deployment</h3>
+<p style="font-size:.8rem;color:#94a3b8">DEFONEOS runs on a UK-sovereign cloud provider (AWS London, Azure UK South, or GCP London).</p>
+<div class="rating"><span style="font-size:.75rem;width:80px">Sovereignty</span><div class="rating-bar"><div class="rating-fill sov-60" style="width:60%"></div></div><span style="font-size:.7rem;color:var(--gold)">60%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Performance</span><div class="rating-bar"><div class="rating-fill sov-80" style="width:85%"></div></div><span style="font-size:.7rem;color:var(--cyan)">85%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Ease</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:95%"></div></div><span style="font-size:.7rem;color:var(--green)">95%</span></div>
+<h4>Pros</h4>
+<p style="font-size:.75rem">✅ Fastest setup (30min) · ✅ Elastic GPU scaling · ✅ Automatic updates · ✅ Zero hardware capex</p>
+<h4>Cons</h4>
+<p style="font-size:.75rem">❌ Data physically on cloud provider hardware · ❌ Internet dependency · ❌ Ongoing opex · ❌ Cloud provider can technically access</p>
+<h4>Use When</h4>
+<p style="font-size:.75rem;color:var(--cyan)">Development, testing, pilot projects, non-sensitive data processing, rapid prototyping.</p>
+<h4>Cost Breakdown</h4>
+<table style="font-size:.7rem">
+<tr><th>Item</th><th>Monthly</th><th>Annual</th></tr>
+<tr><td>VM (16 vCPU, 64GB RAM)</td><td>£580</td><td>£6,960</td></tr>
+<tr><td>GPU (T4 for YOLOv8)</td><td>£420</td><td>£5,040</td></tr>
+<tr><td>Storage (500GB SSD)</td><td>£50</td><td>£600</td></tr>
+<tr><td>Network egress</td><td>£80</td><td>£960</td></tr>
+<tr><td>Backup & DR</td><td>£95</td><td>£1,140</td></tr>
+<tr style="font-weight:600"><td>Total</td><td>£1,225</td><td>£14,700</td></tr>
+<tr><td>+ DEFONEOS license</td><td>£145</td><td>£1,740</td></tr>
+<tr style="font-weight:600;color:var(--gold)"><td>Grand Total</td><td>£1,370</td><td>£16,440</td></tr>
+</table>
+</div>
+
+<div class="arch-card" style="border-color:var(--green)">
+<h3>🏢 2. On-Premise Deployment</h3>
+<p style="font-size:.8rem;color:#94a3b8">DEFONEOS runs on dedicated UK-owned hardware in your facility. Full control, maximum practical sovereignty.</p>
+<div class="rating"><span style="font-size:.75rem;width:80px">Sovereignty</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:95%"></div></div><span style="font-size:.7rem;color:var(--green)">95%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Performance</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:92%"></div></div><span style="font-size:.7rem;color:var(--green)">92%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Ease</span><div class="rating-bar"><div class="rating-fill sov-60" style="width:55%"></div></div><span style="font-size:.7rem;color:var(--gold)">55%</span></div>
+<h4>Pros</h4>
+<p style="font-size:.75rem">✅ Data never leaves your building · ✅ No internet dependency · ✅ One-time hardware cost · ✅ Full physical control</p>
+<h4>Cons</h4>
+<p style="font-size:.75rem">❌ Hardware capex upfront · ❌ You maintain everything · ❌ Limited scaling (buy more iron) · ❌ Requires physical security</p>
+<h4>Reference Hardware</h4>
+<table style="font-size:.7rem">
+<tr><th>Component</th><th>Spec</th><th>Cost</th></tr>
+<tr><td>Server</td><td>Dell R750 (2×Xeon Gold, 64GB)</td><td>£4,200</td></tr>
+<tr><td>GPU</td><td>NVIDIA A2 (for YOLOv8)</td><td>£1,100</td></tr>
+<tr><td>Storage</td><td>1TB NVMe + 4TB HDD</td><td>£380</td></tr>
+<tr><td>UPS</td><td>APC Smart-UPS 1500VA</td><td>£520</td></tr>
+<tr><td>Switch</td><td>10GbE managed switch</td><td>£280</td></tr>
+<tr style="font-weight:600;color:var(--gold)"><td>Total (one-time)</td><td></td><td>£6,480</td></tr>
+<tr><td>Electricity/year</td><td>450W × 24/7</td><td>£1,180</td></tr>
+<tr><td>Maintenance/year</td><td>Extended warranty</td><td>£480</td></tr>
+<tr style="font-weight:600"><td>Year 1 Total</td><td></td><td>£8,140</td></tr>
+<tr style="font-weight:600"><td>Year 2+ Annual</td><td></td><td>£1,660</td></tr>
+</table>
+</div>
+
+<div class="arch-card" style="border-color:var(--purple)">
+<h3>📡 3. Edge Deployment</h3>
+<p style="font-size:.8rem;color:#94a3b8">DEFONEOS runs on Jetson Orin or ruggedised edge hardware. 12 core MCPs, optimised for field use.</p>
+<div class="rating"><span style="font-size:.75rem;width:80px">Sovereignty</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:95%"></div></div><span style="font-size:.7rem;color:var(--green)">95%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Performance</span><div class="rating-bar"><div class="rating-fill sov-80" style="width:70%"></div></div><span style="font-size:.7rem;color:var(--cyan)">70%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Mobility</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:100%"></div></div><span style="font-size:.7rem;color:var(--green)">100%</span></div>
+<h4>Pros</h4>
+<p style="font-size:.75rem">✅ Ultra-low latency (3ms ISR) · ✅ 15-60W power · ✅ Rugged (MIL-STD-810H) · ✅ Disconnected operation · ✅ Man-portable</p>
+<h4>Cons</h4>
+<p style="font-size:.75rem">❌ Only 12/30 MCPs · ❌ No GPU training (inference only) · ❌ Limited storage (128GB) · ❌ No BFT-33 (single agent)</p>
+<h4>Hardware Options</h4>
+<table style="font-size:.7rem">
+<tr><th>Platform</th><th>RAM</th><th>TOPS</th><th>Power</th><th>Cost</th></tr>
+<tr><td>Jetson Orin Nano 8GB</td><td>8GB</td><td>40</td><td>15W</td><td>£550</td></tr>
+<tr><td>Jetson Orin NX 16GB</td><td>16GB</td><td>100</td><td>25W</td><td>£890</td></tr>
+<tr><td>Jetson Orin AGX 64GB</td><td>64GB</td><td>275</td><td>60W</td><td>£1,990</td></tr>
+<tr><td>Raspberry Pi 5 + Coral</td><td>8GB</td><td>8</td><td>12W</td><td>£180</td></tr>
+<tr><td>Ruggedised PC (IP67)</td><td>32GB</td><td>GPU-dep.</td><td>150W</td><td>£2,800</td></tr>
+</table>
+</div>
+
+<div class="arch-card" style="border-color:var(--red)">
+<h3>🔌 4. Air-Gapped Deployment</h3>
+<p style="font-size:.8rem;color:#94a3b8">Maximum sovereignty. Zero network connectivity. Updates via signed physical media only.</p>
+<div class="rating"><span style="font-size:.75rem;width:80px">Sovereignty</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:100%"></div></div><span style="font-size:.7rem;color:var(--green)">100%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Performance</span><div class="rating-bar"><div class="rating-fill sov-60" style="width:60%"></div></div><span style="font-size:.7rem;color:var(--gold)">60%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Security</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:100%"></div></div><span style="font-size:.7rem;color:var(--green)">100%</span></div>
+<h4>Pros</h4>
+<p style="font-size:.75rem">✅ Impossible to remotely hack · ✅ Zero data egress · ✅ Physical control = total control · ✅ Works in SCIF environments</p>
+<h4>Cons</h4>
+<p style="font-size:.75rem">❌ No real-time SIGIL sync (batch) · ❌ Manual updates via USB · ❌ No cloud services integration · ❌ Tedious maintenance</p>
+<h4>Air-Gap Update Procedure</h4>
+<pre>
+# ON CONNECTED NODE:
+$ defoneos export-update --version v1.2.3 --output /mnt/usb/update.pkg
+$ sha256sum /mnt/usb/update.pkg > /mnt/usb/update.pkg.sha256
+$ defoneos sign-update --key ed25519.priv --file update.pkg
+# Verify: update.pkg.sig
+
+# TRANSFER USB (chain of custody)
+
+# ON AIR-GAPPED NODE:
+$ defoneos verify-update --file /mnt/usb/update.pkg --sig update.pkg.sig
+✓ Ed25519 signature valid
+✓ SHA-256 matches
+$ defoneos install-update --file /mnt/usb/update.pkg
+✓ 30 MCP servers updated
+✓ SIGIL chain continues (0 gap)
+</pre>
+</div>
+
+<div class="arch-card" style="border-color:var(--cyan)">
+<h3>🐳 5. Containerised Deployment</h3>
+<p style="font-size:.8rem;color:#94a3b8">All DEFONEOS services in Docker containers. Portable across any Linux environment.</p>
+<div class="rating"><span style="font-size:.75rem;width:80px">Sovereignty</span><div class="rating-bar"><div class="rating-fill sov-80" style="width:90%"></div></div><span style="font-size:.7rem;color:var(--cyan)">90%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Portability</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:95%"></div></div><span style="font-size:.7rem;color:var(--green)">95%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Isolation</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:90%"></div></div><span style="font-size:.7rem;color:var(--green)">90%</span></div>
+<h4>Pros</h4>
+<p style="font-size:.75rem">✅ Portable (laptop↔server↔cloud) · ✅ Easy rollback · ✅ Service isolation · ✅ Reproducible builds</p>
+<h4>Cons</h4>
+<p style="font-size:.75rem">❌ Docker overhead (~5%) · ❌ Storage double (images + data) · ❌ Container security knowledge required</p>
+<h4>Docker Compose Stack</h4>
+<pre>
+version: '3.8'
+services:
+  mcp-federation:
+    image: defoneos/mcp-federation:v1.0
+    ports: ["3101:3101"]
+    volumes: ["./sigil:/data/sigil"]
+  yolo-detect:
+    image: defoneos/yolov8-detect:v1.0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+  cesium-cop:
+    image: defoneos/cesium-cop:v1.0
+    ports: ["8080:8080"]
+  freetak-c2:
+    image: defoneos/freetak-c2:v1.0
+    ports: ["8087:8087", "8089:8089"]
+  sigil-chain:
+    image: defoneos/sigil-chain:v1.0
+    volumes: ["./sigil:/data/sigil"]
+  bft-council:
+    image: defoneos/bft-33:v1.0
+    ports: ["3200:3200"]
+</pre>
+</div>
+
+<div class="arch-card" style="border-color:var(--gold)">
+<h3>☸️ 6. Kubernetes Deployment</h3>
+<p style="font-size:.8rem;color:#94a3b8">DEFONEOS on K8s. Auto-scaling, self-healing, rolling updates. Enterprise-grade.</p>
+<div class="rating"><span style="font-size:.75rem;width:80px">Sovereignty</span><div class="rating-bar"><div class="rating-fill sov-80" style="width:90%"></div></div><span style="font-size:.7rem;color:var(--cyan)">90%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Scalability</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:100%"></div></div><span style="font-size:.7rem;color:var(--green)">100%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Complexity</span><div class="rating-bar"><div class="rating-fill sov-20" style="width:30%"></div></div><span style="font-size:.7rem;color:var(--red)">High</span></div>
+<h4>Pros</h4>
+<p style="font-size:.75rem">✅ Auto-scaling (MCP pods scale on demand) · ✅ Self-healing (failed pods restart) · ✅ Rolling zero-downtime updates · ✅ Horizontal MCP scaling</p>
+<h4>Cons</h4>
+<p style="font-size:.75rem">❌ Requires 3+ nodes minimum · ❌ K8s expertise needed · ❌ Resource overhead (~15%) · ❌ Most expensive option</p>
+<h4>Resource Requirements</h4>
+<table style="font-size:.7rem">
+<tr><th>Node</th><th>vCPU</th><th>RAM</th><th>Storage</th><th>Role</th></tr>
+<tr><td>Master × 3</td><td>4 each</td><td>8GB each</td><td>100GB each</td><td>etcd + control plane</td></tr>
+<tr><td>Worker × 4</td><td>8 each</td><td>32GB each</td><td>250GB each</td><td>MCP pods + GPU workloads</td></tr>
+<tr><td>GPU Worker × 1</td><td>8</td><td>32GB</td><td>250GB</td><td>YOLOv8 inference + training</td></tr>
+<tr style="font-weight:600"><td>Total Cluster</td><td>52 vCPU</td><td>168GB RAM</td><td>1.5TB</td><td>8 nodes</td></tr>
+</table>
+</div>
+
+<div class="arch-card" style="border-color:var(--green)">
+<h3>🔄 7. Hybrid Deployment (Recommended for Production)</h3>
+<p style="font-size:.8rem;color:#94a3b8">HQ on-prem + field edge nodes + optional cloud burst. The best of all architectures.</p>
+<div class="rating"><span style="font-size:.75rem;width:80px">Sovereignty</span><div class="rating-bar"><div class="rating-fill sov-80" style="width:85%"></div></div><span style="font-size:.7rem;color:var(--cyan)">85%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Flexibility</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:100%"></div></div><span style="font-size:.7rem;color:var(--green)">100%</span></div>
+<div class="rating"><span style="font-size:.75rem;width:80px">Resilience</span><div class="rating-bar"><div class="rating-fill sov-100" style="width:95%"></div></div><span style="font-size:.7rem;color:var(--green)">95%</span></div>
+<h4>Architecture</h4>
+<pre>
+┌─────────────────────────────────────────────────────┐
+│  HQ NODE (On-Prem, UK Data Centre)                  │
+│  • 30/30 MCP servers                               │
+│  • Full BFT-33 council                              │
+│  • SIGIL chain master (PostgreSQL)                  │
+│  • Cesium COP server                                │
+│  • FreeTAKServer (C2 master)                        │
+│  • GPU cluster (YOLOv8 training)                    │
+└──────────────┬──────────────────────────────────────┘
+               │ VPN / SD-WAN (Encrypted)
+    ┌──────────┴──────────┐
+    ▼                     ▼
+┌─────────────┐   ┌─────────────┐
+│ FIELD NODE A│   │ FIELD NODE B│
+│ (Edge,      │   │ (Edge,      │
+│  12 MCPs)   │   │  12 MCPs)   │
+│ Jetson Orin │   │ Jetson Orin │
+│ SIGIL: batch│   │ SIGIL: batch│
+└──────┬──────┘   └──────┬──────┘
+       │ Mesh/LTE        │ Mesh/LTE
+    ┌──┴──┐           ┌──┴──┐
+    ▼     ▼           ▼     ▼
+  Drone  Drone      Drone  Drone
+  Nodes  Nodes      Nodes  Nodes
+  (4 MCP)(4 MCP)    (4 MCP)(4 MCP)
+</pre>
+<h4>Pros</h4>
+<p style="font-size:.75rem">✅ HQ has full capability · ✅ Field nodes have low latency · ✅ Cloud burst for heavy compute · ✅ No single point of failure · ✅ Graceful degradation</p>
+<h4>Cons</h4>
+<p style="font-size:.75rem">❌ Most complex to set up · ❌ Requires VPN/SD-WAN expertise · ❌ Chain sync conflicts possible (resolved by SIGIL CRDT)</p>
+</div>
+
+</div><!-- end grid-2 -->
+
+<!-- DECISION MATRIX -->
+<h2>🎯 Decision Matrix — Which Architecture Should I Choose?</h2>
+<table>
+<tr><th>Your Situation</th><th>Recommended</th><th>Why</th></tr>
+<tr><td>"I'm developing/testing DEFONEOS"</td><td><span class="badge badge-cyan">Cloud</span></td><td>Fastest setup, cheapest for short-term, elastic GPU</td></tr>
+<tr><td>"I need permanent HQ operations"</td><td><span class="badge badge-green">On-Prem</span></td><td>Best sovereignty/performance balance, one-time cost</td></tr>
+<tr><td>"I'm deploying to the field"</td><td><span class="badge badge-purple">Edge</span></td><td>Ultra-low latency, low power, rugged, disconnected-capable</td></tr>
+<tr><td>"I need maximum security (SCIF)"</td><td><span class="badge badge-red">Air-Gapped</span></td><td>Zero network = zero remote attack surface. 100% sovereignty</td></tr>
+<tr><td>"I need portability between environments"</td><td><span class="badge badge-cyan">Containerised</span></td><td>Same containers run anywhere — laptop, server, cloud</td></tr>
+<tr><td>"I'm running enterprise-grade operations"</td><td><span class="badge badge-gold">Kubernetes</span></td><td>Auto-scaling, self-healing, zero-downtime updates</td></tr>
+<tr><td>"I want the best of everything"</td><td><span class="badge badge-green">Hybrid</span></td><td>HQ + field + cloud burst. Recommended for production defence deployments.</td></tr>
+</table>
+
+<!-- COST COMPARISON VISUAL -->
+<h2>💰 5-Year Total Cost of Ownership (TCO)</h2>
+<table>
+<tr><th>Architecture</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th><th style="color:var(--gold)">5yr TCO</th></tr>
+<tr><td>☁️ Cloud</td><td>£16,440</td><td>£16,440</td><td>£17,100</td><td>£17,100</td><td>£17,800</td><td style="color:var(--gold);font-weight:700">£84,880</td></tr>
+<tr><td>🏢 On-Prem</td><td>£8,140</td><td>£1,660</td><td>£1,660</td><td>£2,140</td><td>£1,660</td><td style="color:var(--gold);font-weight:700">£15,260</td></tr>
+<tr><td>📡 Edge</td><td>£2,530</td><td>£767</td><td>£767</td><td>£980</td><td>£767</td><td style="color:var(--gold);font-weight:700">£5,811</td></tr>
+<tr><td>🔌 Air-Gapped</td><td>£4,280</td><td>£1,278</td><td>£1,278</td><td>£1,580</td><td>£1,278</td><td style="color:var(--gold);font-weight:700">£9,694</td></tr>
+<tr><td>🐳 Containerised</td><td>£6,957</td><td>£3,577</td><td>£3,577</td><td>£4,057</td><td>£3,577</td><td style="color:var(--gold);font-weight:700">£21,745</td></tr>
+<tr><td>☸️ Kubernetes</td><td>£14,379</td><td>£8,979</td><td>£8,979</td><td>£9,979</td><td>£8,979</td><td style="color:var(--gold);font-weight:700">£51,295</td></tr>
+<tr><td>🔄 Hybrid</td><td>£12,821</td><td>£5,621</td><td>£5,621</td><td>£6,321</td><td>£5,621</td><td style="color:var(--gold);font-weight:700">£36,005</td></tr>
+</table>
+<p style="font-size:.75rem;color:#94a3b8;margin-top:.5rem">Note: Costs include hardware, electricity, maintenance, licenses, and cloud fees (where applicable). DEFONEOS software itself is open-source (free). Costs are for infrastructure only. Prices in GBP.</p>
+
+<!-- SOVEREIGNTY RANKING -->
+<h2>🛡️ Sovereignty Ranking</h2>
+<table>
+<tr><th>Rank</th><th>Architecture</th><th>Sovereignty Score</th><th>Key Factor</th></tr>
+<tr><td>🥇 1st</td><td>🔌 Air-Gapped</td><td style="color:var(--green);font-weight:700">100%</td><td>Zero network connectivity = zero external access</td></tr>
+<tr><td>🥈 2nd</td><td>🏢 On-Prem</td><td style="color:var(--green)">95%</td><td>UK-owned hardware, no vendor access</td></tr>
+<tr><td>🥉 3rd</td><td>📡 Edge</td><td style="color:var(--green)">95%</td><td>UK-owned hardware, disconnected-capable</td></tr>
+<tr><td>4th</td><td>🐳 Containerised</td><td style="color:var(--cyan)">90%</td><td>Runs on your hardware, but container registry dependency</td></tr>
+<tr><td>5th</td><td>☸️ Kubernetes</td><td style="color:var(--cyan)">90%</td><td>Same as containerised, but more complex attack surface</td></tr>
+<tr><td>6th</td><td>🔄 Hybrid</td><td style="color:var(--cyan)">85%</td><td>Cloud burst component reduces sovereignty slightly</td></tr>
+<tr><td>7th</td><td>☁️ Cloud</td><td style="color:var(--gold)">60%</td><td>Provider technically can access hardware</td></tr>
+</table>
+
+<div class="result-box" style="background:rgba(16,185,129,.08);border:1px solid var(--green);border-radius:6px;padding:1rem;margin-top:1rem">
+<h4 style="color:var(--green)">✅ Recommendation</h4>
+<p>For UK defence and government deployments: <strong>Hybrid (On-Prem HQ + Edge field nodes)</strong> provides the optimal balance of sovereignty (85%), capability (30/30 MCPs at HQ), field latency (3ms at edge), and resilience (graceful degradation). Air-gapped for SCIF-class operations.</p>
+<p style="margin-top:.3rem">For HADR and civilian deployments: <strong>On-Prem at emergency operations centre + Edge nodes in the field.</strong></p>
+</div>
+
+</div><!-- end container -->
+
+<footer>
+<p>🐉 DEFONEOS Deployment Comparison v1.0.0 — 7 architectures, 15 metrics, 5-year TCO. <a href="defoneos-index.html" style="color:var(--gold)">← Back to DEFONEOS</a></p>
+<p>Last updated: 6 Jul 2026 · All costs in GBP · Sovereign by Design</p>
+</footer>
+</body>
+</html>

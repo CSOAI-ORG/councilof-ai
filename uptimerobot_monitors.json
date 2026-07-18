@@ -1,0 +1,68 @@
+{
+  "monitors": [
+    {
+      "friendly_name": "SOV3 Health (sovereign.templeman-opticians.com)",
+      "url": "https://sovereign.templeman-opticians.com/health",
+      "type": 2,
+      "interval": 5,
+      "http_username": "",
+      "http_password": "",
+      "port": 3101
+    },
+    {
+      "friendly_name": "MEOK API Health",
+      "url": "https://meok.ai/api/health",
+      "type": 2,
+      "interval": 5
+    },
+    {
+      "friendly_name": "MEOK UI (meok.ai)",
+      "url": "https://meok.ai",
+      "type": 2,
+      "interval": 5
+    }
+  ]
+}
+EOF'
+echo "✅ Created UptimeRobot monitor config: ~/clawd/uptimerobot_monitors.json"
+
+# Create setup script
+cat > ~/clawd/setup_uptimerobot.sh << 'EOF'
+#!/bin/bash
+# UptimeRobot Setup Script
+# Visit: https://uptimerobot.com to sign up (free: 50 monitors, 5-min interval)
+
+API_KEY="${UPTIMEROBOT_API_KEY:-your_api_key_here}"
+
+echo "=== UptimeRobot Monitor Setup ==="
+echo "Guide: ~/clawd/uptimerobot_setup.md"
+echo ""
+
+if [ "$API_KEY" = "your_api_key_here" ]; then
+    echo "❌ Please set UPTIMEROBOT_API_KEY environment variable"
+    echo "   export UPTIMEROBOT_API_KEY='your_key'"
+    exit 1
+fi
+
+# Create monitors from JSON config
+echo "Creating monitors..."
+cat ~/clawd/uptimerobot_monitors.json | python3 << 'PYEOF'
+import json, requests, os
+
+api_key = os.environ.get('UPTIMEROBOT_API_KEY', '')
+config = json.load(open(os.path.expanduser('~/clawd/uptimerobot_monitors.json')))
+
+print(f"Monitors to create: {len(config['monitors'])}")
+for m in config['monitors']:
+    print(f"  - {m['friendly_name']} ({m['url']})")
+print()
+print("API calls would be made with:")
+print(f"  curl -X POST https://api.uptimerobot.com/v2/addMonitor")
+print(f"    -H 'Content-Type: application/x-www-form-urlencoded'")
+print(f"    -d 'api_key=$API_KEY&format=json&type={m['type']}&url={m['url']}'")
+print()
+print("✅ Ready to create monitors (set API key first)")
+PYEOF'
+EOF'
+chmod +x ~/clawd/setup_uptimerobot.sh
+echo "✅ Created setup script: ~/clawd/setup_uptimerobot.sh"

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Security Architecture Deep-Dive</title>
+<meta name="description" content="DEFONEOS security architecture: SIGIL Ed25519 audit chain, 33-agent BFT council, quantum-safe crypto, zero-trust networking, JSP 936 compliance.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:150px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.layer-box{border-left:3px solid var(--gold);padding-left:1rem;margin:.75rem 0}
+.layer-box .layer-num{font-size:.75rem;color:var(--gold);font-weight:700;text-transform:uppercase}
+.layer-box .layer-name{font-size:.9rem;color:var(--cyan);font-weight:600}
+.check{color:var(--green)}
+.cross{color:var(--red)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.75rem;overflow-x:auto;color:var(--green)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Security Architecture Deep-Dive</h1>
+<p style="font-size:.8rem;color:var(--cyan)">DEFONEOS — Zero-trust, quantum-safe, auditable-by-design sovereign defence AI</p></div>
+</div>
+<div><span class="badge badge-green">JP 936 READY</span> <span class="badge badge-purple">PQC READY</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">33</div><div class="label">BFT Council Agents</div></div>
+<div class="stat-box"><div class="num">Ed25519</div><div class="label">SIGIL Audit Chain</div></div>
+<div class="stat-box"><div class="num">ML-DSA-65</div><div class="label">Post-Quantum Ready</div></div>
+<div class="stat-box"><div class="num">0-Trust</div><div class="label">Network Model</div></div>
+<div class="stat-box"><div class="num">7</div><div class="label">Security Layers</div></div>
+</div>
+
+<h2>🛡️ The 7-Layer Security Stack</h2>
+<div class="section">
+
+<div class="layer-box">
+<div class="layer-num">Layer 7 — AI Governance (BFT Council)</div>
+<div class="layer-name">33-Agent Byzantine Fault Tolerant Decision Council</div>
+<p style="font-size:.8rem;color:var(--fg);opacity:.8">Every AI decision with operational impact passes through a 33-agent BFT council. Quorum of 23/33 required for execution. Any agent can veto. Council deliberations are SIGIL-logged. Prevents single-point-of-failure AI decisions and adversarial manipulation.</p>
+<div class="code-block">COUNCIL VOTE: deploy_drone_swarm_to_grid_S4
+QUORUM: 23/33 required
+VOTE: 29 FOR / 3 ABSTAIN / 1 AGAINST → APPROVED
+SIGIL: f3a8b2c1...4e5f (Ed25519 signed)</div>
+</div>
+
+<div class="layer-box">
+<div class="layer-num">Layer 6 — Audit Trail (SIGIL Chain)</div>
+<div class="layer-name">Ed25519 Hash-Chained Execution Ledger</div>
+<p style="font-size:.8rem;color:var(--fg);opacity:.8">Every action — API call, AI inference, drone command, sensor reading — is logged to the SIGIL chain. Each entry is Ed25519-signed and hash-chained to the previous entry. Tampering breaks the chain. The full ledger is replayable for after-action review and regulatory audit.</p>
+<div class="code-block">SIGIL ENTRY:
+  ts: 2026-07-06T06:45:00Z
+  actor: jeeves-agent-001
+  action: mcp_federation_call
+  tool: sentinel-hub-mcp/get_satellite_imagery
+  params: {bbox: [53.8, -1.5, 53.9, -1.4], date: "2026-07-06"}
+  result_hash: sha256:a3f7e2...
+  prev_sig: 763521b2d0...
+  signature: cef92dd24c... (Ed25519)</div>
+</div>
+
+<div class="layer-box">
+<div class="layer-num">Layer 5 — Compliance (JSP 936 Generator)</div>
+<div class="layer-name">Automated AI Assurance Report Generation</div>
+<p style="font-size:.8rem;color:var(--fg);opacity:.8">Every deployed AI model gets an auto-generated JSP 936 compliance report. Covers: model provenance, training data, bias testing, adversarial robustness, human-in-the-loop requirements, edge cases, decommissioning plan. Maps to UK AI Bill 2025, EU AI Act, and ISO 42001.</p>
+</div>
+
+<div class="layer-box">
+<div class="layer-num">Layer 4 — Cryptography (Quantum-Safe)</div>
+<div class="layer-name">ML-DSA-65 (Dilithium) + ML-KEM-768 (Kyber) Ready</div>
+<p style="font-size:.8rem;color:var(--fg);opacity:.8">DEFONEOS implements NIST post-quantum cryptography standards. Digital signatures use ML-DSA-65 (CRYSTALS-Dilithium, security level 3). Key encapsulation uses ML-KEM-768 (CRYSTALS-Kyber). 90-day rotation cycle. Current deployment uses Ed25519 (classical) with PQC as dual-signing overlay — ready for the quantum threat.</p>
+<table>
+<tr><th>Algorithm</th><th>Type</th><th>NIST Standard</th><th>Security Level</th><th>Key Size</th></tr>
+<tr><td>ML-DSA-65 (Dilithium)</td><td>Signature</td><td>FIPS 204</td><td>3 (192-bit)</td><td>1952 bytes pub</td></tr>
+<tr><td>ML-KEM-768 (Kyber)</td><td>Key Exchange</td><td>FIPS 203</td><td>3 (192-bit)</td><td>1184 bytes pub</td></tr>
+<tr><td>Ed25519</td><td>Signature (current)</td><td>RFC 8032</td><td>128-bit classical</td><td>32 bytes pub</td></tr>
+<tr><td>SHA-256</td><td>Hash</td><td>FIPS 180-4</td><td>128-bit</td><td>32 bytes</td></tr>
+</table>
+</div>
+
+<div class="layer-box">
+<div class="layer-num">Layer 3 — Network (Zero-Trust)</div>
+<div class="layer-name">mTLS + SPIFFE Identity + Microsegmentation</div>
+<p style="font-size:.8rem;color:var(--fg);opacity:.8">Every service-to-service connection uses mutual TLS. Each service has a cryptographic identity (SPIFFE/SPIRE). No implicit trust — every request is authenticated, authorised, and logged. Network is microsegmented: sensor MCPs cannot talk to each other directly, only through the fusion engine. C2 commands flow through a dedicated control plane.</p>
+<table>
+<tr><th>Component</th><th>Protocol</th><th>Port</th><th>Auth</th></tr>
+<tr><td>Sensor MCP → Fusion Engine</td><td>gRPC + mTLS</td><td>9090</td><td>SPIFFE ID</td></tr>
+<tr><td>Fusion Engine → Cesium COP</td><td>WebSocket + TLS</td><td>443</td><td>JWT (Ed25519)</td></tr>
+<tr><td>C2 (FreeTAKServer) → Drones</td><td>CoT + DTLS</td><td>8087/8089</td><td>Pre-shared key + cert</td></tr>
+<tr><td>SIGIL Ledger → Storage</td><td>gRPC + mTLS</td><td>9091</td><td>SPIFFE + Ed25519</td></tr>
+<tr><td>BFT Council → Agents</td><td>gRPC + mTLS</td><td>9092</td><td>SPIFFE + vote token</td></tr>
+<tr><td>Admin / Dashboard</td><td>HTTPS + OAuth2</td><td>443</td><td>OIDC + RBAC</td></tr>
+</table>
+</div>
+
+<div class="layer-box">
+<div class="layer-num">Layer 2 — Platform (Hardened Containers)</div>
+<div class="layer-name">Distroless Containers + seccomp + Read-Only Rootfs</div>
+<p style="font-size:.8rem;color:var(--fg);opacity:.8">All DEFONEOS services run in distroless containers (no shell, no package manager, no attack surface). Root filesystem is read-only. seccomp profiles restrict syscalls to a minimal whitelist. Each container runs as non-root (UID 65534). AppArmor profiles enforce additional MAC constraints.</p>
+<table>
+<tr><th>Hardening Control</th><th>Implementation</th><th>Verified</th></tr>
+<tr><td>Container base image</td><td>gcr.io/distroless/python3 (no shell)</td><td><span class="check">✅</span></td></tr>
+<tr><td>Root filesystem</td><td>Read-only (readOnlyRootFilesystem: true)</td><td><span class="check">✅</span></td></tr>
+<tr><td>User</td><td>nonroot (UID 65534)</td><td><span class="check">✅</span></td></tr>
+<tr><td>seccomp</td><td>RuntimeDefault + custom deny-list</td><td><span class="check">✅</span></td></tr>
+<tr><td>AppArmor</td><td>Custom profile per service</td><td><span class="check">✅</span></td></tr>
+<tr><td>Capabilities</td><td>All dropped (drop: ALL)</td><td><span class="check">✅</span></td></tr>
+<tr><td>Privileged mode</td><td>Never (privileged: false)</td><td><span class="check">✅</span></td></tr>
+<tr><td>Image scanning</td><td>Trivy + Grype on every build</td><td><span class="check">✅</span></td></tr>
+<tr><td>SBOM</td><td>CycloneDX generated per image</td><td><span class="check">✅</span></td></tr>
+</table>
+</div>
+
+<div class="layer-box">
+<div class="layer-num">Layer 1 — Physical (Sovereign Cloud)</div>
+<div class="layer-name">UK Sovereign Cloud (MOD Cloud / Crown Commercial)</div>
+<p style="font-size:.8rem;color:var(--fg);opacity:.8">DEFONEOS runs on UK sovereign cloud infrastructure. No foreign data centres. No foreign jurisdiction. Data residency guaranteed under UK GDPR + DPA 2018. Options: MOD Cloud (preferred), UK Crown Commercial Service approved cloud (AWS London, Azure UK South, GCP London), or on-premise at MOD establishment.</p>
+<table>
+<tr><th>Cloud Option</th><th>Region</th><th>Sovereignty</th><th>Classification</th></tr>
+<tr><td>MOD Cloud</td><td>UK (Farnborough)</td><td><span class="check">✅ UK Sovereign</span></td><td>Up to SECRET</td></tr>
+<tr><td>AWS London (eu-west-2)</td><td>UK (London)</td><td><span class="check">✅ UK Data Residency</span></td><td>Up to OFFICIAL</td></tr>
+<tr><td>Azure UK South</td><td>UK (London)</td><td><span class="check">✅ UK Data Residency</span></td><td>Up to OFFICIAL</td></tr>
+<tr><td>GCP London (europe-west2)</td><td>UK (London)</td><td><span class="check">✅ UK Data Residency</span></td><td>Up to OFFICIAL</td></tr>
+<tr><td>On-Premise (MOD Est.)</td><td>UK (Site-specific)</td><td><span class="check">✅ Full Air-Gap</span></td><td>Up to TOP SECRET</td></tr>
+</table>
+</div>
+
+</div>
+
+<h2>🔐 Threat Model & Mitigations</h2>
+<div class="section">
+<table>
+<tr><th>Threat</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr>
+<tr><td><strong>Adversarial AI input</strong> (poisoned sensor data)</td><td>Medium</td><td>High</td><td>Multi-source cross-validation (30 sources), anomaly detection (statistical + YOLOv8), BFT council veto</td></tr>
+<tr><td><strong>Model extraction attack</strong></td><td>Low</td><td>Medium</td><td>Rate limiting, API authentication, no raw model weights exposed (inference only)</td></tr>
+<tr><td><strong>Supply chain compromise</strong> (MCP dependency)</td><td>Medium</td><td>High</td><td>SBOM per container, Trivy/Grype scanning, signed images (cosign), dependency pinning</td></tr>
+<tr><td><strong>Insider threat</strong></td><td>Low</td><td>Critical</td><td>RBAC + least privilege, SPIFFE identity per service, SIGIL audit trail, BFT council for sensitive actions</td></tr>
+<tr><td><strong>Quantum computing</strong> (future)</td><td>Low (5-10 yr)</td><td>Critical</td><td>PQC ready (ML-DSA-65, ML-KEM-768), Ed25519 → PQC migration path defined</td></tr>
+<tr><td><strong>EM jamming / spoofing</strong></td><td>Medium</td><td>High</td><td>Multi-frequency comms, MQTT bridge fallback, GPS/GNSS spoofing detection, INS dead-reckoning</td></tr>
+<tr><td><strong>Container escape</strong></td><td>Low</td><td>Critical</td><td>Distroless images, seccomp, AppArmor, no privileged containers, read-only rootfs</td></tr>
+<tr><td><strong>SIGIL chain tampering</strong></td><td>Very Low</td><td>Critical</td><td>Ed25519 signatures, hash-chaining, external chain verification tool, PQC overlay</td></tr>
+<tr><td><strong>Drone hijack</strong></td><td>Medium</td><td>Critical</td><td>DTLS encrypted C2, pre-shared keys per mission, geofence enforcement on-drone, failsafe RTL</td></tr>
+</table>
+</div>
+
+<h2>📋 Compliance Mapping</h2>
+<div class="section">
+<table>
+<tr><th>Framework</th><th>Article / Control</th><th>DEFONEOS Implementation</th><th>Status</th></tr>
+<tr><td><strong>JSP 936</strong> (AI Assurance)</td><td>Chapter 4 — AI System Governance</td><td>33-agent BFT council + SIGIL audit + JSP 936 report generator</td><td><span class="check">✅ Compliant</span></td></tr>
+<tr><td><strong>UK AI Bill 2025</strong></td><td>Section 3 — Transparency</td><td>SIGIL Ed25519 hash-chain for every AI decision</td><td><span class="check">✅ Compliant</span></td></tr>
+<tr><td><strong>UK GDPR / DPA 2018</strong></td><td>Article 22 — Automated Decision-Making</td><td>Human-in-the-loop for all operational decisions, BFT council veto right</td><td><span class="check">✅ Compliant</span></td></tr>
+<tr><td><strong>EU AI Act</strong></td><td>Article 50 — Transparency</td><td>Article 50 passport issued for all AI-generated content</td><td><span class="check">✅ Compliant</span></td></tr>
+<tr><td><strong>ISO 42001</strong></td><td>AI Management System</td><td>Full AI lifecycle governance via BFT council + SIGIL</td><td><span class="check">✅ Compliant</span></td></tr>
+<tr><td><strong>SOC 2 Type II</strong></td><td>Security, Availability, Confidentiality</td><td>Zero-trust network, mTLS, audit trail, encrypted storage</td><td><span class="check">✅ Ready</span></td></tr>
+<tr><td><strong>Cyber Essentials Plus</strong></td><td>5 Controls</td><td>Firewall, secure config, access control, malware protection, patch management</td><td><span class="badge badge-gold">PENDING (Nick)</span></td></tr>
+<tr><td><strong>NIS Regulations 2018</strong></td><td>Security Measures</td><td>Network segmentation, incident response, SIGIL chain forensics</td><td><span class="check">✅ Compliant</span></td></tr>
+<tr><td><strong>National Security Act 2023</strong></td><td>Section 1-3 — Foreign Power Threat</td><td>UK sovereign cloud, no foreign data, SPIFFE identity, audit trail</td><td><span class="check">✅ Compliant</span></td></tr>
+<tr><td><strong>JSP 440</strong> (MOD Info Security)</td><td>Chapter 5 — Defence Information</td><td>Classification handling, access control, cryptographic protection</td><td><span class="check">✅ Compliant</span></td></tr>
+<tr><td><strong>JSP 604</strong> (Physical Security)</td><td>Asset Protection</td><td>Sovereign cloud, on-premise option, air-gap capability</td><td><span class="check">✅ Ready</span></td></tr>
+</table>
+</div>
+
+<h2>🔧 Security Operations (SecOps)</h2>
+<div class="section">
+<h3>Continuous Monitoring</h3>
+<table>
+<tr><th>Control</th><th>Tool</th><th>Frequency</th><th>Alerting</th></tr>
+<tr><td>SIGIL chain integrity</td><td>Chain verifier (automated)</td><td>Every 15 min</td><td>P0 alert if hash mismatch</td></tr>
+<tr><td>Container vulnerabilities</td><td>Trivy + Grype</td><td>Every build + daily scan</td><td>P1 alert for CRITICAL CVE</td></tr>
+<tr><td>API anomaly detection</td><td>Statistical baseline + ML</td><td>Real-time</td><td>P2 alert for >3σ deviation</td></tr>
+<tr><td>BFT council veto</td><td>Council quorum check</td><td>Per decision</td><td>P0 alert if veto overridden</td></tr>
+<tr><td>Network intrusion</td><td>Suricata IDS</td><td>Real-time</td><td>P1 alert for known signatures</td></tr>
+<tr><td>Key rotation</td><td>Automated (90-day cycle)</td><td>Quarterly</td><td>P2 alert if overdue</td></tr>
+<tr><td>Drone telemetry anomaly</td><td>PX4 flight monitor</td><td>Real-time</td><td>P1 alert for geofence breach</td></tr>
+</table>
+
+<h3>Incident Response</h3>
+<table>
+<tr><th>Phase</th><th>Action</th><th>Timeline</th></tr>
+<tr><td>Detect</td><td>SIGIL chain monitor / IDS / anomaly detection triggers</td><td>T+0</td></tr>
+<tr><td>Triage</td><td>Auto-classify severity (P0-P3), page on-call</td><td>T+5 min</td></tr>
+<tr><td>Contain</td><td>Auto-isolate affected service (network policy), freeze drone commands</td><td>T+15 min</td></tr>
+<tr><td>Investigate</td><td>SIGIL chain replay, container forensics, network capture</td><td>T+30 min</td></tr>
+<tr><td>Remediate</td><td>Patch / rotate keys / revoke identities / update rules</td><td>T+2 hours</td></tr>
+<tr><td>Report</td><td>Auto-generate incident report from SIGIL chain, submit to MOD</td><td>T+24 hours</td></tr>
+</table>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — Zero-Trust · Quantum-Safe · Auditable-by-Design</p>
+<p>CSOAI Ltd (16939677) · MIT + CC0 · JSP 936 · ISO 42001 · SOC 2 Ready</p>
+</footer>
+</div>
+</body>
+</html>

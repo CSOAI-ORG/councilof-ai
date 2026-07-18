@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_regulation_temple_mcp"
+version = "1.0.0"
+description = "MEEK Regulation Temple MCP — every regulation as a real temple on the globe at its correct address. CRITICAL. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "sov-space", "sovereign", "temple", "globe", "tui", "digital-twin", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org/sov-space"
+Repository = "https://github.com/CSOAI-ORG/meek-regulation-temple-mcp"
+
+[project.scripts]
+meek-regulation-temple-mcp = "meek_regulation_temple_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_regulation_temple_mcp"]

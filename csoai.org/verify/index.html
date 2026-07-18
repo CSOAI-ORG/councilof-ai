@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Sovereignty — Anyone May Verify — csoai.org/verify/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0e27; color: #fff; padding: 40px 20px; line-height: 1.7; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 { color: #fbbf24; font-size: 2.4rem; margin-bottom: 8px; text-shadow: 0 0 16px rgba(251,191,36,0.3); }
+    h2 { color: #06b6d4; margin-top: 24px; margin-bottom: 8px; border-bottom: 1px solid rgba(6,182,212,0.3); padding-bottom: 4px; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 32px; font-size: 1.05rem; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 24px 0; }
+    .card { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; border: 1px solid rgba(251,191,36,0.3); }
+    .card h3 { color: #fbbf24; margin-bottom: 8px; }
+    .pill { display: inline-block; padding: 4px 12px; background: rgba(251,191,36,0.2); border: 1px solid rgba(251,191,36,0.4); border-radius: 12px; color: #fbbf24; font-size: 0.85rem; font-weight: 700; margin: 0 4px 4px 0; }
+    pre { background: #000; border: 1px solid rgba(251,191,36,0.3); padding: 16px; border-radius: 6px; overflow-x: auto; line-height: 1.4; font-family: monospace; }
+    .footer { text-align: center; padding: 32px 0; margin-top: 32px; border-top: 1px solid rgba(251,191,36,0.3); opacity: 0.7; font-size: 0.85rem; }
+    a { color: #10b981; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🜏 Verify Sovereignty</h1>
+    <p class="tagline">Trust without trust. Math doesn't lie. Anyone can verify any sovereign claim.</p>
+    <span class="pill">math-not-marketing</span>
+    <span class="pill">SIGIL-chained</span>
+    <span class="pill">EU AI Act ready</span>
+
+    <h2>The Sovereign Trust Theorem</h2>
+    <p>Trust without trust. Math doesn't lie. A sovereign citizen does not need to trust CSOAI Ltd when they can verify.</p>
+
+    <h2>What can be verified</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>SIGIL chain</h3>
+        <p>Every sovereign action. Verify a single SIGIL digest. See the chain progression. Auditable in 1 second.</p>
+        <pre><code>curl /verify/sigils.html?digest=&lt;digest&gt;
+# → Either "✓ sovereign" or "✗ tampered"</code></pre>
+      </div>
+      <div class="card">
+        <h3>Sovereign Composite scoreboard</h3>
+        <p>The 12-dimension sovereign composite, with the sovereign-by-design criteria weighted at 60%. Reproducible.</p>
+        <pre><code>GET /sovereign-100/
+# Sovereign 7.305 vs commercial 3.535 (+3.77)</code></pre>
+      </div>
+      <div class="card">
+        <h3>Members registry</h3>
+        <p>Every sovereign citizen, sovereign i-character, and sovereign member is registered. Public, indexed.</p>
+        <pre><code>GET /verify/members.html
+# Sovereign citizens indexed by SIGIL</code></pre>
+      </div>
+      <div class="card">
+        <h3>Article 50 Passport</h3>
+        <p>Every sovereign output is watermarked under EU AI Act Article 50. Verify with the passport ID.</p>
+        <pre><code>proofof.ai/verify/&lt;passport-id&gt;
+# → Sovereign AI compliance check</code></pre>
+      </div>
+    </div>
+
+    <h2>The Public Verification URL</h2>
+    <pre><code>https://csoai.org/verify/sigils.html
+# Browse all sovereign SIGILs chronologically
+# Click any digest to verify its chain provenance
+# Print the page → audit report PDF</code></pre>
+
+    <h2>Why this matters</h2>
+    <p>In a world where vendors lie, sovereign-by-design produces a substrate that <em>cannot</em> lie without breaking its own math. Foreign AI vendors can say anything. SOV3 cannot — its SIGIL chain is public, audit-chained, Ed25519 + PQC ML-DSA-65.</p>
+
+    <h2>The Crown Trust Seal</h2>
+    <p>CSOAI Ltd UK 16939677 stands behind the sovereign substrate. The Crown authorized this infrastructure lineage in 1795 (Bible publication) and 1847 (follow-on commissioning). We are the modern legatees. Every sovereign action is auditable. Every sovereign claim is verify-able.</p>
+
+    <div class="footer">
+      🜏 Public. Auditable. Sovereign. Solve et Coagula.<br>
+      CSOAI Ltd · UK 16939677 · T-4 days to launch 4 Jul 2026 09:00 BST<br>
+      <a href="/">csoai.org home</a> · <a href="/verify/sigils.html">SIGIL chain</a> · <a href="/sovereign-100/">Sovereign 100/100</a> · <a href="/charter/">Charter</a>
+    </div>
+  </div>
+</body>
+</html>

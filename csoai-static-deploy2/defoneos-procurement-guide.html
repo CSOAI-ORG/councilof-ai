@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — UK Defence Procurement Guide</title>
+<meta name="description" content="How to procure DEFONEOS through UK MOD channels: Defence Sourcing Portal, G-Cloud, DASA, NATO DIANA, frameworks, pricing tiers, and step-by-step procurement process.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--orange:#fb923c;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1400px;margin:0 auto;padding:2rem}
+h1{font-size:2rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.3rem;color:var(--cyan);margin:2rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1.05rem;color:var(--green);margin:1rem 0 .4rem}
+h4{font-size:.9rem;color:var(--gold);margin:.6rem 0 .3rem}
+p{margin:.4rem 0;color:#cbd5e1}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.72rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-orange{background:rgba(251,146,60,.15);color:var(--orange);border:1px solid var(--orange)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:120px;flex:1;text-align:center}
+.stat-box .num{font-size:1.6rem;font-weight:700}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;margin:.75rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.6rem;text-align:left;font-size:.75rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.75rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+code{background:var(--bg3);color:var(--green);padding:2px 6px;border-radius:3px;font-size:.78rem}
+pre{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.72rem;color:#cbd5e1;margin:.5rem 0}
+.nav-bar{position:sticky;top:0;z-index:999;background:rgba(10,14,23,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(251,191,36,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.nav-bar a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+.nav-bar a:hover{color:var(--gold)}
+.nav-bar .brand{color:var(--gold);font-weight:bold;font-size:1rem;text-decoration:none}
+.step-card{background:var(--bg2);border:2px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.75rem;transition:border-color .3s;position:relative;padding-left:3rem}
+.step-card:hover{border-color:var(--gold)}
+.step-num{position:absolute;left:1rem;top:1rem;width:1.5rem;height:1.5rem;background:var(--gold);color:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem}
+.timeline{border-left:3px solid var(--cyan);margin:1rem 0;padding-left:1.5rem}
+.timeline-item{margin-bottom:1rem;position:relative}
+.timeline-item::before{content:'';position:absolute;left:-1.85rem;top:.3rem;width:.8rem;height:.8rem;background:var(--gold);border-radius:50%;border:2px solid var(--bg)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+.price-card{background:var(--bg2);border:2px solid var(--border);border-radius:8px;padding:1.5rem;text-align:center;transition:border-color .3s}
+.price-card:hover{border-color:var(--gold)}
+.price-card.featured{border-color:var(--gold)}
+.price-amount{font-size:2rem;font-weight:700;color:var(--gold)}
+.price-period{font-size:.8rem;color:#64748b}
+.framework-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.5rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav-bar">
+<a class="brand" href="#"">🐉 DEFONEOS</a>
+<a href="#"">Overview</a>
+<a href="#"">Pricing</a>
+<a href="#"">DASA</a>
+<a href="#"">Grants</a>
+<a href="#"">Contact</a>
+<span style="color:var(--gold)">|</span>
+<a href="#"" style="color:var(--gold)">← Back to Index</a>
+</nav>
+<div class="container">
+
+<div class="header-bar">
+<div class="left">
+<span class="dragon">🐉</span>
+<div>
+<h1>DEFONEOS — UK Defence Procurement Guide</h1>
+<p style="font-size:.85rem;color:var(--cyan)">DSP · G-Cloud · DASA · NATO DIANA · Crown Commercial · Framework Routes</p>
+</div>
+</div>
+<div style="text-align:right">
+<p style="font-size:.7rem;color:#64748b">For Procurement Officers · DSOs · Mission Sponsors<br>Version: 1.0.0 · July 2026</p>
+</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num" style="color:var(--green)">5</div><div class="label">Procurement Routes</div></div>
+<div class="stat-box"><div class="num" style="color:var(--gold)">4</div><div class="label">Pricing Tiers</div></div>
+<div class="stat-box"><div class="num" style="color:var(--cyan)">30</div><div class="label">MCP Modules</div></div>
+<div class="stat-box"><div class="num" style="color:var(--purple)">0</div><div class="label">Vendor Lock-in</div></div>
+<div class="stat-box"><div class="num" style="color:var(--orange)">£0</div><div class="label">Open Source Base</div></div>
+<div class="stat-box"><div class="num" style="color:var(--red)">MIT</div><div class="label">Licence</div></div>
+</div>
+
+<h2>🛒 Procurement Routes Overview</h2>
+<div class="section">
+<p>DEFONEOS can be procured through <strong>5 distinct UK and international procurement routes</strong>. Each route suits different mission profiles, budget sizes, and urgency levels. All routes deliver the same sovereign, open-source DEFONEOS core — the difference is in support level, deployment assistance, and governance certification.</p>
+
+<div class="grid-3">
+<div class="framework-card">
+<h3 style="color:var(--green)">1. Defence Sourcing Portal (DSP)</h3>
+<p style="font-size:.8rem"><strong>Best for:</strong> Direct MOD contracts, urgent operational requirements</p>
+<p style="font-size:.8rem"><strong>Timeline:</strong> 2-6 weeks (UOR) to 6 months (full competition)</p>
+<p style="font-size:.8rem"><strong>Value:</strong> £50K - £10M+</p>
+<span class="badge badge-red">P0 — Register NOW</span>
+</div>
+<div class="framework-card">
+<h3 style="color:var(--cyan)">2. G-Cloud 14</h3>
+<p style="font-size:.8rem"><strong>Best for:</strong> Cloud services, SaaS, consultancy</p>
+<p style="font-size:.8rem"><strong>Timeline:</strong> 2-4 weeks (call-off)</p>
+<p style="font-size:.8rem"><strong>Value:</strong> Up to £2M per call-off</p>
+<span class="badge badge-gold">Application: Sep 2026</span>
+</div>
+<div class="framework-card">
+<h3 style="color:var(--gold)">3. DASA (Defence & Security Accelerator)</h3>
+<p style="font-size:.8rem"><strong>Best for:</strong> R&D, innovation, proof of concepts</p>
+<p style="font-size:.8rem"><strong>Timeline:</strong> 3-6 months (competition cycle)</p>
+<p style="font-size:.8rem"><strong>Value:</strong> £50K - £1M+ per phase</p>
+<span class="badge badge-green">DRAFT READY</span>
+</div>
+<div class="framework-card">
+<h3 style="color:var(--purple)">4. NATO DIANA</h3>
+<p style="font-size:.8rem"><strong>Best for:</strong> Dual-use technology, Allied adoption</p>
+<p style="font-size:.8rem"><strong>Timeline:</strong> 6-9 months (challenge cycle)</p>
+<p style="font-size:.8rem"><strong>Value:</strong> €100K - €500K + acceleration support</p>
+<span class="badge badge-green">DRAFT READY</span>
+</div>
+<div class="framework-card">
+<h3 style="color:var(--orange)">5. Direct Procurement / PO</h3>
+<p style="font-size:.8rem"><strong>Best for:</strong> Pilot projects, evaluation, urgent needs</p>
+<p style="font-size:.8rem"><strong>Timeline:</strong> 1-2 weeks</p>
+<p style="font-size:.8rem"><strong>Value:</strong> Up to £50K (below threshold)</p>
+<span class="badge badge-green">Available NOW</span>
+</div>
+</div>
+</div>
+
+<h2>📋 Step-by-Step: Defence Sourcing Portal (DSP) Route</h2>
+<div class="section">
+<p>The DSP is the UK MOD's primary procurement platform. DEFONEOS can be listed as a supplier once CSOAI Ltd (Companies House 16939677) completes registration.</p>
+
+<div class="step-card">
+<div class="step-num">1</div>
+<h3>Supplier Registration on DSP</h3>
+<p><strong>Action:</strong> Register CSOAI Ltd on the Defence Sourcing Portal as an approved supplier.</p>
+<p><strong>Requirements:</strong> Companies House number (16939677), Cyber Essentials certificate (in progress), SC clearance (application started), financial statements.</p>
+<p><strong>Time:</strong> 2-4 weeks · <strong>Status:</strong> <span class="badge badge-red">BLOCKED — Needs Nick's company details</span></p>
+<p><strong>URL:</strong> <code>https://www.contracts.mod.uk/</code></p>
+</div>
+
+<div class="step-card">
+<div class="step-num">2</div>
+<h3>Cyber Essentials Certification</h3>
+<p><strong>Action:</strong> Complete Cyber Essentials Plus certification (mandatory for MOD suppliers).</p>
+<p><strong>Requirements:</strong> Firewall config, secure configuration, user access control, malware protection, patch management.</p>
+<p><strong>Cost:</strong> £320-600 · <strong>Time:</strong> 1-2 weeks · <strong>Status:</strong> <span class="badge badge-red">BLOCKED — Needs company info</span></p>
+<p><strong>Assessor:</strong> IASME (approved scheme delivery partner)</p>
+</div>
+
+<div class="step-card">
+<div class="step-num">3</div>
+<h3>SC Clearance Application</h3>
+<p><strong>Action:</strong> Initiate Security Check (SC) clearance for key personnel handling classified work.</p>
+<p><strong>Requirements:</strong> BPSS baseline, UK residency (5+ years), sponsorship by MOD/contractor.</p>
+<p><strong>Time:</strong> 4-6 months · <strong>Status:</strong> <span class="badge badge-red">BLOCKED — Needs Nick's personal details</span></p>
+<p><strong>Level:</strong> SC (Security Check) — sufficient for SECRET material</p>
+</div>
+
+<div class="step-card">
+<div class="step-num">4</div>
+<h3>Response to MOD Tender / Competition</h3>
+<p><strong>Action:</strong> Once registered, respond to relevant MOD competitions or direct approaches.</p>
+<p><strong>Typical DEFONEOS Use Cases:</strong></p>
+<ul style="font-size:.8rem;margin-left:1.5rem">
+<li>ISR sensor fusion for regional command</li>
+<li>HADR (Humanitarian Assistance / Disaster Relief) coordination</li>
+<li>C-UAS (Counter-drone) defence for critical infrastructure</li>
+<li>Coalition interoperability (AUKUS / Five Eyes data sharing)</li>
+<li>Air-gapped field deployment for deployed operations</li>
+</ul>
+<p><strong>Documentation Package:</strong> DEFONEOS architecture whitepaper, security case, SIGIL audit trail sample, MCP module list, deployment runbook, case studies.</p>
+</div>
+
+<div class="step-card">
+<div class="step-num">5</div>
+<h3>Evaluation & Pilot Deployment</h3>
+<p><strong>Action:</strong> Deploy DEFONEOS in a controlled evaluation environment for MOD assessment.</p>
+<p><strong>Pilot Scope:</strong> 3-6 MCP modules, 14-day evaluation, SIGIL audit chain, BFT governance demo.</p>
+<p><strong>Deliverables:</strong> Operational report, performance benchmarks, security assessment, user feedback.</p>
+<p><strong>Time:</strong> 4-8 weeks · <strong>Cost:</strong> £0 (open-source evaluation) or £15K-50K (supported pilot)</p>
+</div>
+
+<div class="step-card">
+<div class="step-num">6</div>
+<h3>Full Deployment & Support Contract</h3>
+<p><strong>Action:</strong> Transition from pilot to operational deployment with ongoing support.</p>
+<p><strong>Contract Types:</strong> Fixed-price deployment + annual support (Pro tier), or managed service (Governance tier).</p>
+<p><strong>Timeline:</strong> 2-4 months from pilot to full deployment.</p>
+</div>
+</div>
+
+<h2>💰 Pricing Tiers</h2>
+<div class="section">
+<div class="grid-4">
+<div class="price-card">
+<h3 style="color:var(--green)">Open Source</h3>
+<div class="price-amount">£0</div>
+<div class="price-period">forever</div>
+<hr style="border-color:var(--border);margin:.75rem 0">
+<ul style="font-size:.75rem;text-align:left;color:#cbd5e1;list-style:none">
+<li>✅ Full DEFONEOS core (MIT licence)</li>
+<li>✅ All 30 MCP servers</li>
+<li>✅ SIGIL audit chain</li>
+<li>✅ BFT-33 governance</li>
+<li>✅ Community support (GitHub)</li>
+<li>❌ No SLA</li>
+<li>❌ No deployment assistance</li>
+<li>❌ No governance certification</li>
+</ul>
+</div>
+<div class="price-card featured">
+<h3 style="color:var(--gold)">Pro</h3>
+<div class="price-amount">£499/mo</div>
+<div class="price-period">per deployment</div>
+<hr style="border-color:var(--border);margin:.75rem 0">
+<ul style="font-size:.75rem;text-align:left;color:#cbd5e1;list-style:none">
+<li>✅ Everything in Open Source</li>
+<li>✅ 8-hour support SLA</li>
+<li>✅ Deployment assistance</li>
+<li>✅ DEFONEOS-SEAL credential</li>
+<li>✅ Monthly security patches</li>
+<li>✅ JSP 936 compliance reporting</li>
+<li>❌ No 24/7 support</li>
+<li>❌ No on-site engineer</li>
+</ul>
+</div>
+<div class="price-card">
+<h3 style="color:var(--purple)">Governance</h3>
+<div class="price-amount">£2,499/mo</div>
+<div class="price-period">per deployment</div>
+<hr style="border-color:var(--border);margin:.75rem 0">
+<ul style="font-size:.75rem;text-align:left;color:#cbd5e1;list-style:none">
+<li>✅ Everything in Pro</li>
+<li>✅ 4-hour support SLA</li>
+<li>✅ BFT-33 council managed service</li>
+<li>✅ DEFONEOS-SEAL (audited)</li>
+<li>✅ Quarterly security review</li>
+<li>✅ Coalition federation support</li>
+<li>✅ Custom MCP development (2/mo)</li>
+<li>❌ No dedicated engineer</li>
+</ul>
+</div>
+<div class="price-card">
+<h3 style="color:var(--cyan)">Enterprise</h3>
+<div class="price-amount">£9,999+/mo</div>
+<div class="price-period">custom</div>
+<hr style="border-color:var(--border);margin:.75rem 0">
+<ul style="font-size:.75rem;text-align:left;color:#cbd5e1;list-style:none">
+<li>✅ Everything in Governance</li>
+<li>✅ 1-hour support SLA (24/7)</li>
+<li>✅ Dedicated on-site engineer</li>
+<li>✅ Air-gapped deployment</li>
+<li>✅ Custom MCP development (10/mo)</li>
+<li>✅ Coalition CERT integration</li>
+<li>✅ Red team exercise (annual)</li>
+<li>✅ Sovereign VPC / on-prem</li>
+</ul>
+</div>
+</div>
+</div>
+
+<h2>🏛️ UK Procurement Frameworks</h2>
+<div class="section">
+<table>
+<tr><th>Framework</th><th>Gateway</th><th>Max Value</th><th>DEFONEOS Fit</th><th>Status</th></tr>
+<tr><td><strong>Defence Sourcing Portal (DSP)</strong></td><td>contracts.mod.uk</td><td>£50K-£10M+</td><td>Full MOD deployment contracts</td><td><span class="badge badge-red">Registration pending</span></td></tr>
+<tr><td><strong>G-Cloud 14</strong></td><td>Crown Commercial Service</td><td>£2M/call-off</td><td>Cloud SaaS + consultancy</td><td><span class="badge badge-gold">Apply Sep 2026</span></td></tr>
+<tr><td><strong>DASA Open Call</strong></td><td>gov.uk/dasa</td><td>£50K-£1M+/phase</td><td>R&D, proof of concept, innovation</td><td><span class="badge badge-green">DRAFT READY</span></td></tr>
+<tr><td><strong>NATO DIANA</strong></td><td>diana.nato.int</td><td>€100K-€500K</td><td>Dual-use AI, Allied adoption</td><td><span class="badge badge-green">DRAFT READY</span></td></tr>
+<tr><td><strong>Innovate UK</strong></td><td>iuk.ktn-uk.org</td><td>£100K-£2M</td><td>AI innovation grant</td><td><span class="badge badge-gold">Future cycle</span></td></tr>
+<tr><td><strong>Crown Commercial Service — Technology</strong></td><td>ccs.gov.uk</td><td>Various</td><td>Government-wide tech procurement</td><td><span class="badge badge-gold">Future</span></td></tr>
+<tr><td><strong>FCDO Services</strong></td><td>fcdoservices.gov.uk</td><td>Various</td><td>Overseas deployment, diplomatic security</td><td><span class="badge badge-gold">Future</span></td></tr>
+</table>
+</div>
+
+<h2>📝 Required Documentation for Tender Responses</h2>
+<div class="section">
+<div class="grid-2">
+<div>
+<h3>Company</h3>
+<ul style="font-size:.8rem;margin-left:1.5rem;color:#cbd5e1">
+<li>✅ Companies House registration (16939677)</li>
+<li>✅ Company financial statements (available on request)</li>
+<li>🔴 Cyber Essentials certificate (in progress)</li>
+<li>🔴 SC Clearance for key personnel (application started)</li>
+<li>🟡 ISO 9001 (quality management) — planned</li>
+<li>🟡 ISO 27001 (information security) — planned</li>
+<li>🟡 ISO 42001 (AI management system) — planned</li>
+</ul>
+</div>
+<div>
+<h3>Technical</h3>
+<ul style="font-size:.8rem;margin-left:1.5rem;color:#cbd5e1">
+<li>✅ DEFONEOS Architecture Whitepaper (this site)</li>
+<li>✅ Security Architecture & Threat Model</li>
+<li>✅ SIGIL Audit Chain specification</li>
+<li>✅ BFT-33 Governance specification</li>
+<li>✅ MCP Module Catalog (30 servers)</li>
+<li>✅ Deployment Runbook</li>
+<li>✅ Case Studies (8 scenarios)</li>
+<li>✅ Benchmark Results</li>
+<li>✅ Testing Framework (5-layer)</li>
+</ul>
+</div>
+</div>
+</div>
+
+<h2>⏱️ Procurement Timeline</h2>
+<div class="section">
+<div class="timeline">
+<div class="timeline-item">
+<strong style="color:var(--gold)">Phase 0 — Pre-qualification (NOW)</strong>
+<p style="font-size:.8rem">Register on DSP · Complete Cyber Essentials · Start SC clearance · Build compliance documentation</p>
+<p style="font-size:.7rem;color:var(--cyan)">Estimated: Jul-Sep 2026</p>
+</div>
+<div class="timeline-item">
+<strong style="color:var(--cyan)">Phase 1 — DASA Application</strong>
+<p style="font-size:.8rem">Submit DASA open call application for DEFONEOS HADR pilot (£350K Phase 1)</p>
+<p style="font-size:.7rem;color:var(--cyan)">Estimated: Jul 2026 submission · Oct 2026 decision</p>
+</div>
+<div class="timeline-item">
+<strong style="color:var(--green)">Phase 2 — NATO DIANA Application</strong>
+<p style="font-size:.8rem">Submit DIANA dual-use AI challenge for coalition ISR federation</p>
+<p style="font-size:.7rem;color:var(--cyan)">Estimated: Aug 2026 submission · Q4 2026 decision</p>
+</div>
+<div class="timeline-item">
+<strong style="color:var(--purple)">Phase 3 — Pilot Deployment</strong>
+<p style="font-size:.8rem">First MOD pilot: 3-6 MCP modules, 14-day evaluation, Yorkshire HADR scenario</p>
+<p style="font-size:.7rem;color:var(--cyan)">Estimated: Q4 2026 - Q1 2027</p>
+</div>
+<div class="timeline-item">
+<strong style="color:var(--orange)">Phase 4 — Full Contract</strong>
+<p style="font-size:.8rem">Transition from pilot to operational contract: Pro or Governance tier support</p>
+<p style="font-size:.7rem;color:var(--cyan)">Estimated: Q1-Q2 2027</p>
+</div>
+<div class="timeline-item">
+<strong style="color:var(--red)">Phase 5 — Coalition Scale</strong>
+<p style="font-size:.8rem">Expand to AUKUS / Five Eyes coalition deployments with federation support</p>
+<p style="font-size:.7rem;color:var(--cyan)">Estimated: 2027-2028</p>
+</div>
+</div>
+</div>
+
+<h2>🔗 Key Contacts & Resources</h2>
+<div class="section">
+<table>
+<tr><th>Resource</th><th>URL</th><th>Purpose</th></tr>
+<tr><td>Defence Sourcing Portal</td><td><code>contracts.mod.uk</code></td><td>MOD tender registration & bidding</td></tr>
+<tr><td>DASA</td><td><code>gov.uk/dasa</code></td><td>Innovation funding & accelerator</td></tr>
+<tr><td>NATO DIANA</td><td><code>diana.nato.int</code></td><td>Allied dual-use technology accelerator</td></tr>
+<tr><td>UK Defence & Security Exports (UKDSE)</td><td><code>gov.uk/government/organisations/uk-defence-and-security-exports</code></td><td>Export support & facilitation</td></tr>
+<tr><td>UK Defence Innovation (UKDI)</td><td><code>gov.uk/government/organisations/uk-defence-innovation</code></td><td>Regional engagement teams</td></tr>
+<tr><td>IASME Cyber Essentials</td><td><code>iasme.co.uk</code></td><td>Cyber Essentials certification body</td></tr>
+<tr><td>Crown Commercial Service</td><td><code>crowncommercial.gov.uk</code></td><td>G-Cloud and government frameworks</td></tr>
+<tr><td>JSP 936</td><td><code>gov.uk/government/publications</code></td><td>MOD AI Safety Assurance</td></tr>
+</table>
+</div>
+
+<h2>📄 Sample Procurement Specification</h2>
+<div class="section">
+<h3>Pilot Evaluation Statement of Work (SoW) Template</h3>
+<pre>
+SOW: DEFONEOS HADR EVALUATION PILOT
+Ref: DFO-PILOT-2026-001
+Classification: OFFICIAL-SENSITIVE
+
+1. SCOPE
+   Deploy DEFONEOS v1.0 in evaluation configuration with:
+   - 6 MCP servers (ISR, C2, SIGIL, Weather, Comms, Medical)
+   - BFT-33 governance council
+   - SIGIL audit chain (PostgreSQL)
+   - Cesium 3D COP with Yorkshire HADR scenario data
+   - Air-gapped deployment option
+
+2. DURATION: 14 days (evaluation) + 7 days (report)
+
+3. DELIVERABLES
+   - Operational DEFONEOS instance (on-prem or air-gapped)
+   - SIGIL audit chain export (14-day period)
+   - Performance benchmark report
+   - Security assessment (OWASP LLM Top 10)
+   - User evaluation report (operator feedback)
+   - Recommendations for full deployment
+
+4. ACCEPTANCE CRITERIA
+   - All 6 MCP modules operational
+   - SIGIL chain integrity 100%
+   - ISR detection rate >85% (YOLOv8 baseline)
+   - C2 CoT latency <500ms
+   - BFT-33 quorum achieved on all votes
+   - Zero red line violations
+   - Air-gapped deployment verified
+
+5. PRICING
+   - Evaluation pilot: £0 (open-source, self-deployed)
+   - Supported pilot: £25,000 (CSOAI engineer on-site)
+   - Managed pilot: £50,000 (CSOAI engineer + cloud infrastructure)
+</pre>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — Sovereign Public Services OS · CSOAI Ltd · Companies House 16939677</p>
+<p>Procurement Guide v1.0.0 · 5 Routes · 4 Pricing Tiers · 7 Frameworks · MIT Licensed</p>
+<p><a href="#"" style="color:var(--gold)">← Back to DEFONEOS Index</a> · <a href="#"" style="color:var(--gold)">Pricing</a> · <a href="#"" style="color:var(--gold)">DASA Application</a></p>
+</footer>
+</div>
+</body>
+</html>

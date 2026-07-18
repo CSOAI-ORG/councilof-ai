@@ -1,0 +1,25 @@
+Title: We shipped open-source defense for JADEPUFFER + TeamPCP within 24 hours. Here's what we learned.
+
+Body:
+
+July 1, 2026 — JADEPUFFER hit. First fully agentic ransomware. An LLM autonomously breached Langflow (CVE-2025-3248), pivoted to MinIO with default creds (`minioadmin:minioadmin`), then Nacos. Self-corrected in 31 seconds when XML parsing failed. Encryption key never persisted — data unrecoverable.
+
+July 2, 2026 — TeamPCP went public. 500K+ machines poisoned via supply chain. Trivy, LiteLLM, Checkmarx KICS, Bitwarden, Telnyx, Nx Console — all compromised via force-pushed GitHub Actions tags, poisoned PyPI packages, WAV steganography.
+
+We deployed a defensive MCP within 24 hours. It's MIT licensed, patent pending, and catches all four attack patterns:
+
+1. **Self-narrating LLM payloads** — JADEPUFFER wrote natural-language reasoning in Python. We scan for it.
+2. **Force-pushed floating tags** — TeamPCP exploited `actions/checkout@v4`. We require SHA-pinned tags.
+3. **WAV steganography** — TeamPCP hid RSA keys in `hangup.wav`. We compute entropy + structure checks.
+4. **Default credentials** — JADEPUFFER used `minioadmin:minioadmin`. We scan for known defaults.
+
+Repo: github.com/CSOAI-ORG/agentic-threat-defense-mcp (9/9 tests, ~640 lines)
+
+What we learned:
+- The agentic malware wave is **qualitatively** different. Traditional AV can't catch natural-language reasoning embedded in code.
+- Supply chain attacks via floating tags are now the norm. SHA-pin everything or get burned.
+- WAV steganography for payload delivery is new — most audio scanners don't flag it because the files look like valid audio.
+
+For SOC teams: this integrates with any MCP-aware agent. For compliance teams: it's free, MIT licensed, auditable.
+
+Questions? Roast the code? I'm here.

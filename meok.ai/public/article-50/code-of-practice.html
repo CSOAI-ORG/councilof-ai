@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EU AI Act Code of Practice 2nd Draft — MEOK Compliance Suite</title>
+<meta name="description" content="Analysis of the EU AI Act Code of Practice 2nd draft. What changed, what it means for deployers, and how to prepare. First-mover advantage analysis.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#0d0c18;color:#f0ece4;line-height:1.7;min-height:100vh}
+a{color:#c9a84c;text-decoration:none;transition:color .2s}
+a:hover,a:focus{color:#e8d28a;text-decoration:underline}
+.container{max-width:1000px;margin:0 auto;padding:0 1.5rem}
+.header{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 100%);border-bottom:2px solid rgba(201,168,76,.2);padding:1.25rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.logo{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.logo svg{flex-shrink:0}
+.logo span{color:#c9a84c}
+.logo .navy{color:#f0ece4}
+.header nav{display:flex;gap:1.25rem;font-size:.875rem;font-weight:500}
+.header nav a{color:#a098b0}
+.header nav a:hover{color:#c9a84c;text-decoration:none}
+.hero{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 50%,#0d0c18 100%);padding:5rem 0 3.5rem;text-align:center;border-bottom:1px solid rgba(201,168,76,.15)}
+.hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.02em}
+.hero h1 span{color:#c9a84c}
+.hero p{font-size:clamp(1rem,1.8vw,1.2rem);color:#b0a8c0;max-width:720px;margin:0 auto 1.75rem}
+.badge{display:inline-block;background:rgba(201,168,76,.12);color:#c9a84c;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(201,168,76,.25);margin-bottom:1.25rem}
+.first-mover-badge{display:inline-block;background:rgba(100,255,180,.10);color:#64ffb4;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(100,255,180,.25);margin-bottom:1.25rem}
+.cta-btn{display:inline-block;background:#c9a84c;color:#0d0c18;font-weight:700;font-size:.95rem;padding:.85rem 2rem;border-radius:8px;transition:all .2s;border:none;cursor:pointer}
+.cta-btn:hover{background:#e8d28a;color:#0d0c18;text-decoration:none;transform:translateY(-1px)}
+.cta-btn-outline{display:inline-block;background:transparent;color:#c9a84c;font-weight:600;font-size:.9rem;padding:.8rem 1.75rem;border-radius:8px;border:1.5px solid #c9a84c;transition:all .2s}
+.cta-btn-outline:hover{background:rgba(201,168,76,.1);text-decoration:none;transform:translateY(-1px)}
+.cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+section{padding:3.5rem 0}
+section h2{font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:700;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.01em}
+section h2 .gold{color:#c9a84c}
+section h3{font-size:1.2rem;font-weight:600;color:#c9a84c;margin:1.5rem 0 .6rem}
+section p,section li{color:#b0a8c0;font-size:.975rem}
+section p{margin-bottom:1rem}
+.card{background:linear-gradient(135deg,#13112a 0%,#1a1730 100%);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
+.card h3{margin-top:0}
+.card ul{list-style:none;padding-left:0}
+.card ul li{padding:.3rem 0 .3rem 1.5rem;position:relative}
+.card ul li::before{content:"▸";position:absolute;left:0;color:#c9a84c;font-weight:700}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:680px){.two-col{grid-template-columns:1fr}}
+.highlight{border-left:4px solid #c9a84c;background:rgba(201,168,76,.06);padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;margin:1.5rem 0}
+.highlight p:last-child{margin-bottom:0}
+.highlight strong{color:#c9a84c}
+.changelog{border-left:4px solid #64ffb4;background:rgba(100,255,180,.06);padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;margin:1.5rem 0}
+.changelog p:last-child{margin-bottom:0}
+.changelog .change-title{color:#64ffb4;font-weight:700}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.2rem .6rem;border-radius:4px;margin-right:.4rem}
+.tag.new{background:rgba(100,255,180,.12);color:#64ffb4;border:1px solid rgba(100,255,180,.25)}
+.tag.changed{background:rgba(255,200,100,.12);color:#ffc864;border:1px solid rgba(255,200,100,.25)}
+.tag.key{background:rgba(255,100,150,.12);color:#ff8cb0;border:1px solid rgba(255,100,150,.25)}
+.footer{background:linear-gradient(135deg,#0d0c18 0%,#0a0914 100%);border-top:1px solid rgba(201,168,76,.12);padding:2.5rem 0;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;margin-bottom:2rem}
+.footer h4{color:#c9a84c;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.footer ul{list-style:none}
+.footer li{margin-bottom:.4rem}
+.footer a{color:#807890;font-size:.85rem}
+.footer a:hover{color:#c9a84c}
+.footer-bottom{text-align:center;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,.08);color:#605870;font-size:.8rem}
+@media(max-width:600px){.header .container{flex-direction:column;text-align:center}.header nav{flex-wrap:wrap;justify-content:center}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the EU AI Act Code of Practice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The EU AI Act Code of Practice is a set of detailed rules and guidelines developed by the AI Office to help providers and deployers of general-purpose AI models demonstrate compliance with the EU AI Act. It translates the high-level obligations of the Act into practical, measurable commitments. The Code is a key tool for demonstrating compliance, particularly for Article 50 transparency requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What changed in the 2nd draft of the Code of Practice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 2nd draft (released April 2026) introduced several significant changes: (1) Stronger transparency requirements for AI-generated content labelling with specific technical standards (C2PA, W3C) now referenced; (2) New obligations for deployers to verify down-stream content marking; (3) More detailed template requirements for transparency reports; (4) Expanded scope for synthetic content covering text, image, audio, and video; (5) Tighter deadlines for compliance reporting; (6) Enhanced copyright compliance measures including opt-out mechanism requirements; (7) Clarified multi-modal content handling."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the 2nd draft mean for deployers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For deployers, the 2nd draft confirms that transparency is not just a provider obligation — deployers must actively implement and verify content labelling. The draft makes clear that deployers cannot rely solely on provider-side measures. Key deployer responsibilities include: implementing both visible and machine-readable marking on all AI-generated outputs, verifying that downstream marking remains intact, maintaining compliance documentation, and preparing for regulatory audits. The draft also signals that deployers who adopt early compliance measures will benefit from regulatory good-faith considerations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does the Code of Practice take effect?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Code of Practice is being finalised through a multi-stakeholder process. The 1st draft was released in late 2025, the 2nd draft in April 2026, with the final version expected in mid-2026. While the Code itself is not directly enforceable, it serves as the primary reference for demonstrating compliance with the EU AI Act. Deployers who follow the Code's measures are presumed to be in compliance with corresponding Act obligations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the first-mover advantage for Code of Practice compliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Deployers who implement Code of Practice measures before the final enforcement dates gain several advantages: (1) Regulatory goodwill — early compliance demonstrates good faith to regulators; (2) Operational readiness — avoiding the last-minute scramble as the 2 August 2026 cliff approaches; (3) Market differentiation — being able to market 'AI Act compliant' early; (4) Lower cost — phased implementation is cheaper than emergency compliance; (5) Competitive moat — early adopters set industry standards and shape best practices."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can MEOK help with Code of Practice compliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MEOK's Compliance Suite is designed to implement the specific measures required by the Code of Practice 2nd draft. MEOK Pro (£199/mo) provides C2PA metadata embedding, W3C machine-readable marking, visible label automation, transparency report generation, content provenance verification, and compliance audit trails. MEOK actively tracks Code of Practice changes and updates compliance tooling accordingly, ensuring your deployment stays aligned with the latest draft requirements."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="28" height="28" rx="6" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
+        <path d="M10 16 L14 20 L22 12" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div><span class="navy">MEOK</span> <span>Compliance</span></div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/article-50/">Article 50</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="first-mover-badge">🏆 First-Mover Analysis</span>
+    <h1>Code of Practice <span>2nd Draft Analysis</span></h1>
+    <p>The EU AI Office's Code of Practice 2nd draft — what changed, what it means for deployers, and why acting now gives you a first-mover advantage.</p>
+    <div class="cta-group">
+      <a href="https://proofof.ai" class="cta-btn">Get Ahead of Compliance →</a>
+      <a href="#changes" class="cta-btn-outline">See What Changed</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>What Is the <span class="gold">Code of Practice?</span></h2>
+    <p>The EU AI Act Code of Practice is a detailed framework developed by the AI Office to translate the high-level obligations of the Act into practical, verifiable commitments for providers and deployers of general-purpose AI models. While not directly legally binding, it serves as the primary reference for demonstrating compliance — and following its measures creates a <strong>presumption of compliance</strong> with corresponding Act obligations.</p>
+
+    <div class="highlight">
+      <strong>Why this matters for deployers:</strong> The Code of Practice bridges the gap between "what the Act says" and "what you actually need to do." If you follow the Code, you have a strong regulatory defence. If you don't, you bear the burden of proving alternative measures are equivalent.
+    </div>
+
+    <div class="two-col" style="margin-top:2rem">
+      <div class="card">
+        <h3>Code of Practice Timeline</h3>
+        <ul>
+          <li><strong>Late 2025</strong> — 1st draft released for public consultation</li>
+          <li><strong>Q2 2026</strong> — 2nd draft (current) incorporates stakeholder feedback</li>
+          <li><strong>Mid 2026</strong> — Final version expected</li>
+          <li><strong>2 Aug 2026</strong> — Article 50 enforcement begins</li>
+          <li><strong>2027+</strong> — Phased roll-out of remaining obligations</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Who It Affects</h3>
+        <ul>
+          <li>Providers of general-purpose AI models (GPT, Claude, Gemini, etc.)</li>
+          <li>Deployers using these models to generate content for end users</li>
+          <li>Distributors making AI-generated content publicly available</li>
+          <li>Importers bringing AI-generated content into the EU market</li>
+          <li>All entities in the AI value chain touching content generation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="changes" style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>What Changed in the <span class="gold">2nd Draft</span></h2>
+    <p>The 2nd draft represents a significant evolution from the 1st draft. The AI Office has responded to industry feedback, tightening requirements in key areas while providing more technical specificity. Here are the most important changes for deployers.</p>
+
+    <div class="changelog">
+      <p><span class="change-title">🔵 NEW — Specific Technical Standards Reference</span><br>
+      The 2nd draft now explicitly references <strong>C2PA 2.1</strong> and <strong>W3C Web Annotation</strong> as recognised formats for machine-readable content marking. This removes ambiguity about what counts as "adequate" technical marking. Deployers should target C2PA compliance as the gold standard.</p>
+    </div>
+
+    <div class="changelog">
+      <p><span class="change-title">🟡 CHANGED — Deployer Verification Obligations</span><br>
+      Expanded obligations for deployers to <strong>verify that downstream content marking remains intact</strong> through distribution chains. Deployers can no longer pass responsibility upstream to providers — they must actively check and maintain markings.</p>
+    </div>
+
+    <div class="changelog">
+      <p><span class="change-title">🟢 NEW — Transparency Report Templates</span><br>
+      Detailed templates for transparency reports are now specified, including required sections on: content types generated, marking methods used, verification procedures, exception usage, and compliance metrics. MEOK Pro includes automated transparency report generation.</p>
+    </div>
+
+    <div class="changelog">
+      <p><span class="change-title">🟡 CHANGED — Multi-Modal Content Handling</span><br>
+      Clarified that content containing multiple modalities (e.g., a video with AI-generated audio track) requires <strong>separate marking for each modality</strong>. A single "AI-generated" label on the container is not sufficient — each synthetic element must be individually marked.</p>
+    </div>
+
+    <div class="changelog">
+      <p><span class="change-title">🔴 KEY — Copyright &amp; Opt-Out Requirements</span><br>
+      New section on copyright compliance requires deployers to <strong>respect machine-readable opt-out signals</strong> (e.g., robots.txt, ai.txt) when sourcing training data. While this primarily affects providers, deployers using fine-tuned models must ensure their training pipelines respect opt-out signals.</p>
+    </div>
+
+    <div class="changelog">
+      <p><span class="change-title">🔵 NEW — Synthetic Content Scope Expansion</span><br>
+      The definition of "synthetic content" has been expanded to explicitly include <strong>AI-generated code, data synthesis outputs, and structured data</strong>, not just human-readable media. This broadens the scope for deployers in technical and data-heavy domains.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>What This Means <span class="gold">for Deployers</span></h2>
+
+    <div class="card">
+      <h3>1. Transparency Is Your Responsibility</h3>
+      <p>The 2nd draft makes unequivocally clear that deployers cannot outsource transparency compliance to model providers. Even if your AI provider does not offer built-in content labelling, <strong>you must implement it yourself</strong> at the point of output delivery to end users.</p>
+    </div>
+
+    <div class="card">
+      <h3>2. Technical Standards Are Now Mandatory</h3>
+      <p>With C2PA and W3C standards now explicitly referenced, deploying non-standard marking methods carries significant regulatory risk. Adopting recognised standards like C2PA is the safest path to compliance. MEOK's C2PA integration is built for exactly this purpose.</p>
+    </div>
+
+    <div class="card">
+      <h3>3. Documentation Requirements Are Real</h3>
+      <p>The transparency report templates signal that regulators expect comprehensive, auditable documentation — not just technical measures. Deployers need systems that automatically log compliance activities, generate reports, and maintain audit trails. Manual approaches will not scale.</p>
+    </div>
+
+    <div class="card">
+      <h3>4. Act Now for First-Mover Advantage</h3>
+      <p>With the final Code of Practice expected soon and enforcement beginning 2 August 2026, deployers who act now gain significant advantages:</p>
+      <ul>
+        <li><strong>Regulatory goodwill</strong> — early compliance demonstrates good faith</li>
+        <li><strong>Operational readiness</strong> — avoid the pre-deadline scramble</li>
+        <li><strong>Market differentiation</strong> — market 'EU AI Act compliant' status</li>
+        <li><strong>Lower total cost</strong> — phased implementation vs emergency compliance</li>
+        <li><strong>Competitive moat</strong> — early adopters shape industry best practices</li>
+      </ul>
+    </div>
+
+    <div style="text-align:center;margin-top:2rem">
+      <a href="https://proofof.ai" class="cta-btn">Be a First Mover — Start Now →</a>
+    </div>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>MEOK &amp; the Code of <span class="gold">Practice</span></h2>
+    <p>MEOK's Compliance Suite is purpose-built to implement the specific measures defined in the Code of Practice 2nd draft. We track every draft change and update our tooling accordingly — so your deployment stays compliant as the Code evolves.</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>Implemented Measures</h3>
+        <ul>
+          <li>C2PA 2.1 provenance metadata generation and embedding</li>
+          <li>W3C Web Annotation machine-readable markers</li>
+          <li>Multi-modal content marking (text, image, audio, video, code)</li>
+          <li>Automated transparency report generation</li>
+          <li>Downstream marking verification and chain-of-custody</li>
+          <li>Content compliance audit logging with tamper-evident storage</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Coming in Sprint 2 (20 Jun 2026)</h3>
+        <ul>
+          <li>Opt-out signal detection and compliance enforcement</li>
+          <li>Fine-tuned model training compliance checks</li>
+          <li>Expanded multi-modal marking verification</li>
+          <li>Regulatory report export (AI Office format)</li>
+          <li>Real-time compliance monitoring dashboard</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:1rem">
+      <a href="https://proofof.ai" class="cta-btn">Get MEOK Pro — £199/mo →</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://proofof.ai">MEOK Platform</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/article-50-kit">Article 50 Kit</a></li>
+          <li><a href="/compliance-suite">Compliance Suite</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/article-50/">Article 50 Hub</a></li>
+          <li><a href="/article-50/transparency.html">Transparency Guide</a></li>
+          <li><a href="/article-50/marking.html">Marking Spec</a></li>
+          <li><a href="/article-50/deepfake.html">Deepfake Detection</a></li>
+          <li><a href="/article-50/bot.html">Bot Disclosure</a></li>
+          <li><a href="/article-50/code-of-practice.html">Code of Practice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MEOK Compliance. All rights reserved. Part of the MEOK AI Governance Platform.</p>
+      <p style="margin-top:.25rem">EU AI Act compliance solutions — Article 50, 51, 52, 53, 55, and beyond.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

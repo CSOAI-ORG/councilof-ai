@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "name": "csoai-sovereign-ai-os",
+  "alias": ["csoai.org", "www.csoai.org", "sov3.csoai.org", "open-hands.csoai.org"],
+  "builds": [
+    {
+      "src": "**/*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "install.sh",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {"src": "/install.sh", "dest": "/install.sh"},
+    {"src": "/install-local.sh", "dest": "/install-local.sh"},
+    {"src": "/", "dest": "/index.html"},
+    {"src": "/(.*)", "dest": "/$1"}
+  ],
+  "headers": [
+    {
+      "source": "/install.sh",
+      "headers": [
+        {"key": "Content-Type", "value": "application/octet-stream"},
+        {"key": "Cache-Control", "value": "public, max-age=3600"}
+      ]
+    }
+  ],
+  "github": {
+    "silent": false
+  },
+  "buildCommand": null,
+  "outputDirectory": "."
+}

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_defoneos_audit_logging_mcp"
+version = "1.0.0"
+description = "MEEK DEFONEOS Audit Logging MCP — SIEM + audit chain + compliance logs. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "defoneos", "monitoring", "cdn", "secret", "audit", "load-balancer", "production", "sovereign", "uk"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://defoneos.com"
+Repository = "https://github.com/CSOAI-ORG/meek-defoneos-audit-logging-mcp"
+
+[project.scripts]
+meek-defoneos-audit-logging-mcp = "meek_defoneos_audit_logging_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_defoneos_audit_logging_mcp"]

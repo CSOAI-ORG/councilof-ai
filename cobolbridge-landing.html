@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COBOL Bridge - Modernize Legacy Systems</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #fff;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    header {
+      text-align: center;
+      padding: 80px 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      margin-bottom: 40px;
+    }
+    h1 { font-size: 3.5rem; margin-bottom: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .tagline { font-size: 1.5rem; opacity: 0.9; margin-bottom: 30px; }
+    .sub-tagline { font-size: 1.1rem; opacity: 0.7; max-width: 600px; margin: 0 auto; }
+    .cta-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 18px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cta-button:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 60px 0; }
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .feature-card h3 { color: #667eea; margin-bottom: 15px; font-size: 1.3rem; }
+    .problem-section {
+      background: rgba(231, 76, 60, 0.1);
+      border-left: 4px solid #e74c3c;
+      padding: 40px;
+      margin: 40px 0;
+      border-radius: 0 15px 15px 0;
+    }
+    .solution-section {
+      background: rgba(46, 204, 113, 0.1);
+      border-left: 4px solid #2ecc71;
+      padding: 40px;
+      margin: 40px 0;
+      border-radius: 0 15px 15px 0;
+    }
+    .pricing { text-align: center; margin: 60px 0; }
+    .price { font-size: 4rem; font-weight: bold; color: #667eea; }
+    .price span { font-size: 1.2rem; opacity: 0.7; }
+    .stats { display: flex; justify-content: space-around; margin: 60px 0; flex-wrap: wrap; }
+    .stat { text-align: center; padding: 20px; }
+    .stat-number { font-size: 3rem; font-weight: bold; color: #667eea; }
+    .stat-label { opacity: 0.8; }
+    footer { text-align: center; padding: 60px 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 60px; }
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .tagline { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>COBOL Bridge</h1>
+      <p class="tagline">Preserve 60 Years of Business Logic. Gain Cloud Speed.</p>
+      <p class="sub-tagline">AI-powered COBOL modernization. Transpile to Python, Java, or Go. Migrate to cloud without losing the logic that runs your business.</p>
+      <a href="#pricing" class="cta-button">Start Modernizing - £199/mo</a>
+    </header>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number">220B</div>
+        <div class="stat-label">Lines of COBOL in production</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">43%</div>
+        <div class="stat-label">Of banking systems rely on COBOL</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">70%</div>
+        <div class="stat-label">Cost reduction vs rewrite</div>
+      </div>
+    </div>
+
+    <div class="problem-section">
+      <h2>🚨 The COBOL Crisis</h2>
+      <p>Your COBOL systems have run flawlessly for decades. But now:</p>
+      <ul style="margin: 20px 0; padding-left: 30px;">
+        <li>Developers who understand the code are retiring</li>
+        <li>Integration with modern APIs is painful</li>
+        <li>Cloud migration seems impossible</li>
+        <li>Technical debt grows every year</li>
+        <li>A full rewrite risks business continuity</li>
+      </ul>
+    </div>
+
+    <div class="solution-section">
+      <h2>✅ The Bridge Solution</h2>
+      <p>COBOL Bridge uses AI to understand your legacy code and generate modern equivalents:</p>
+      <ul style="margin: 20px 0; padding-left: 30px;">
+        <li>Transpile COBOL to Python, Java, or Go</li>
+        <li>Preserve exact business logic</li>
+        <li>Generate comprehensive test suites</li>
+        <li>Create API bridges for gradual migration</li>
+        <li>Document business rules automatically</li>
+      </ul>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <h3>🔄 COBOL-to-Python</h3>
+        <p>Modern, readable Python code that mirrors your COBOL logic. Perfect for data processing and integration.</p>
+      </div>
+      <div class="feature-card">
+        <h3>☕ COBOL-to-Java</h3>
+        <p>Enterprise-grade Java for Spring Boot applications. Battle-tested in financial services.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⚡ COBOL-to-Go</h3>
+        <p>High-performance Go for microservices. Ideal for high-throughput transaction processing.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔗 API Bridge</h3>
+        <p>Don't rewrite yet. Wrap COBOL in REST/GraphQL APIs and integrate with modern systems.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📝 Business Rules Extractor</h3>
+        <p>Automatically document the business logic embedded in your code. Knowledge preservation.</p>
+      </div>
+      <div class="feature-card">
+        <h3>✅ Test Generation</h3>
+        <p>Generate comprehensive test suites to verify transpiled code matches original behavior.</p>
+      </div>
+    </div>
+
+    <div class="pricing" id="pricing">
+      <h2>Simple Pricing</h2>
+      <div class="price">£199<span>/mo</span></div>
+      <p style="margin: 20px 0;">Developer License - Unlimited transpilation</p>
+      <p style="opacity: 0.7;">Enterprise plans available for teams</p>
+      <br>
+      <a href="https://buy.stripe.com/00g3dKa1B7Y5dXi7ss" class="cta-button">Get Started</a>
+    </div>
+
+    <footer>
+      <p><strong>Try the Demo</strong></p>
+      <p style="margin: 10px 0;">Upload a COBOL file and see the magic</p>
+      <p style="margin-top: 30px; opacity: 0.6;">© 2026 COBOL Bridge - Part of MEOK AI Labs</p>
+    </footer>
+  </div>
+</body>
+</html>

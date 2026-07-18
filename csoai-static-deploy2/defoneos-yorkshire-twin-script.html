@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Digital Twin of Yorkshire — 3D COP Video Script</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','SF Pro Display',system-ui,sans-serif;background:#0a0e14;color:#cbd5e1;line-height:1.6}
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,14,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid #1f2937;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;font-size:18px;background:linear-gradient(90deg,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px}
+.nav-links{display:flex;gap:20px;font-size:13px}
+.nav-links a{color:#94a3b8;text-decoration:none;font-weight:500}
+.nav-links a:hover{color:#fbbf24}
+.hero{padding:56px 24px 32px;text-align:center;background:radial-gradient(circle at 50% 0%,rgba(251,191,36,.08),transparent 60%)}
+.hero h1{font-size:clamp(28px,4vw,48px);font-weight:900;color:#f1f5f9;letter-spacing:-1px;margin-bottom:12px}
+.hero h1 span{background:linear-gradient(90deg,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:16px;color:#94a3b8;max-width:760px;margin:0 auto 24px}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.badge{background:#1f2927;border:1px solid #374151;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;color:#fbbf24}
+.badge.red{background:#1f1015;border-color:#7f1d1d;color:#fca5a5}
+.badge.green{background:#0f1f15;border-color:#14532d;color:#86efac}
+.badge.blue{background:#0f152a;border-color:#1e3a8a;color:#93c5fd}
+.video-wrap{background:#000;border:1px solid #1f2937;border-radius:16px;padding:20px;max-width:1280px;margin:32px auto 0}
+.video-frame{background:linear-gradient(180deg,#020617 0%,#0a0e14 100%);border-radius:12px;padding:24px;position:relative;min-height:380px;border:1px solid #1e293b}
+.video-overlay{position:absolute;top:24px;left:24px;right:24px;display:flex;justify-content:space-between;font-family:monospace;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px}
+.video-overlay .l-rec{display:flex;align-items:center;gap:8px}
+.video-overlay .rec-dot{width:10px;height:10px;background:#ef4444;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.video-overlay .r-time{color:#fbbf24;font-weight:700}
+.video-stage{text-align:center;padding:60px 20px;color:#cbd5e1;font-family:monospace;font-size:14px}
+.video-stage .frame-num{font-size:72px;font-weight:900;color:#fbbf24;margin-bottom:8px;font-family:monospace}
+.video-stage .frame-narration{font-size:15px;color:#cbd5e1;max-width:680px;margin:16px auto;line-height:1.7;font-family:'Inter',sans-serif;font-weight:500}
+.video-stage .frame-vfx{font-size:12px;color:#64748b;margin-top:16px;text-transform:uppercase;letter-spacing:.5px}
+.timeline{max-width:1280px;margin:32px auto;padding:0 24px}
+.timeline-bar{position:relative;height:6px;background:#1f2937;border-radius:3px;margin:60px 0 40px}
+.timeline-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#fbbf24,#f59e0b);border-radius:3px}
+.timeline-marker{position:absolute;top:-12px;width:30px;height:30px;background:#fbbf24;border:3px solid #0a0e14;border-radius:50%;transform:translateX(-50%);cursor:pointer;font-size:11px;color:#0a0e14;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:monospace}
+.timeline-marker.done{background:#22c55e}
+.timeline-label{position:absolute;top:24px;left:50%;transform:translateX(-50%);font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;font-weight:600}
+.controls{display:flex;gap:12px;justify-content:center;margin:24px 0;flex-wrap:wrap}
+.controls button{background:transparent;border:1px solid #fbbf24;color:#fbbf24;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:monospace;text-transform:uppercase;letter-spacing:.5px}
+.controls button:hover{background:rgba(251,191,36,.1)}
+.controls button.active{background:#fbbf24;color:#0a0e14}
+.container{max-width:1280px;margin:0 auto;padding:48px 24px 80px}
+h2{font-size:26px;font-weight:800;color:#f1f5f9;margin-bottom:16px;letter-spacing:-.5px}
+h3{font-size:18px;font-weight:700;color:#fbbf24;margin:24px 0 12px}
+p{margin-bottom:14px}
+pre{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:18px;overflow-x:auto;font-size:13px;color:#e2e8f0;margin:14px 0;font-family:'JetBrains Mono',monospace;line-height:1.7}
+code{background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#fbbf24;font-family:'JetBrains Mono',monospace}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:#1f2937;color:#fbbf24;text-align:left;padding:10px;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+td{padding:10px;border-bottom:1px solid #1f2937;color:#cbd5e1}
+tr:hover{background:rgba(251,191,36,.04)}
+.scene{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:20px;margin:16px 0;border-left:4px solid #fbbf24}
+.scene h3{margin-top:0}
+.scene .scene-meta{display:flex;gap:12px;margin-bottom:8px;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;font-family:monospace}
+.scene .scene-meta .badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px}
+.cta{display:inline-block;background:linear-gradient(90deg,#fbbf24,#f59e0b);color:#0a0e14;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.3px;margin:8px 8px 8px 0;text-transform:uppercase}
+.cta:hover{transform:translateY(-1px);box-shadow:0 12px 30px -10px rgba(251,191,36,.4)}
+.cta.alt{background:transparent;border:1px solid #fbbf24;color:#fbbf24}
+footer{padding:40px 24px;border-top:1px solid #1f2937;text-align:center;color:#64748b;font-size:12px}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav">
+<div class="logo">🐉 DEFONEOS</div>
+<div class="nav-links">
+<a href="#"">Index</a>
+<a href="#"">Digital Twin</a>
+<a href="#"">ISR Demo</a>
+<a href="#"">Globe</a>
+<a href="#"">News</a>
+</div>
+</nav>
+
+<section class="hero">
+<div class="badges">
+<span class="badge">🎬 Video Script</span>
+<span class="badge blue">🗺️ Yorkshire + Humber</span>
+<span class="badge green">🛰️ 30 MCPs Live</span>
+<span class="badge red">🚨 Demo: Severe Flood</span>
+</div>
+<h1>Digital Twin of <span>Yorkshire</span></h1>
+<p>The first MOD-ready sovereign 3D Common Operational Picture. Live demo video script for the 13 July MOD pitch. 4-minute walkthrough. Yorkshire + Humber. Real data. Real MCPs. Real SIGIL chain.</p>
+</div>
+
+<div class="video-wrap">
+<div class="video-frame" id="videoFrame">
+<div class="video-overlay">
+<div class="l-rec"><span class="rec-dot"></span> REC · 4K · SIGIL</div>
+<div class="r-time" id="timecode">00:00 / 04:00</div>
+</div>
+<div class="video-stage" id="stage">
+<div class="frame-num" id="frameNum">F-00</div>
+<div class="frame-narration" id="narration">Click a frame below to scrub. 9 scenes · 4 minutes · MOD demo.</div>
+<div class="frame-vfx" id="vfx">DEFONEOS · UK Sovereign Public Services OS</div>
+</div>
+</div>
+</div>
+
+<div class="timeline">
+<div class="timeline-bar">
+<div class="timeline-fill" id="tlFill" style="width:11%"></div>
+<div class="timeline-marker done" style="left:5.5%" onclick="gotoScene(0)">1<div class="timeline-label">COLD OPEN</div></div>
+<div class="timeline-marker" style="left:16.6%" onclick="gotoScene(1)">2<div class="timeline-label">GLOBE</div></div>
+<div class="timeline-marker" style="left:27.7%" onclick="gotoScene(2)">3<div class="timeline-label">FLOOD</div></div>
+<div class="timeline-marker" style="left:38.8%" onclick="gotoScene(3)">4<div class="timeline-label">DRONES</div></div>
+<div class="timeline-marker" style="left:49.9%" onclick="gotoScene(4)">5<div class="timeline-label">C2</div></div>
+<div class="timeline-marker" style="left:61.0%" onclick="gotoScene(5)">6<div class="timeline-label">COP</div></div>
+<div class="timeline-marker" style="left:72.1%" onclick="gotoScene(6)">7<div class="timeline-label">SIGIL</div></div>
+<div class="timeline-marker" style="left:83.2%" onclick="gotoScene(7)">8<div class="timeline-label">COUNCIL</div></div>
+<div class="timeline-marker" style="left:94.3%" onclick="gotoScene(8)">9<div class="timeline-label">CLOSE</div></div>
+</div>
+<div class="controls">
+<button onclick="play()">▶ PLAY</button>
+<button onclick="pause()">⏸ PAUSE</button>
+<button onclick="next()">NEXT ►</button>
+<button onclick="prev()">◄ PREV</button>
+</div>
+</div>
+
+<div class="container">
+
+<h2>9-Scene Walkthrough — Yorkshire + Humber Demo</h2>
+<p>Each scene renders live in Cesium 3D. Each scene reads from a sovereign MCP. Every frame is SIGIL-sealed. Total runtime 4:00.</p>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#7f1d1d;color:#fca5a5">SCENE 01</span>
+<span>0:00–0:30 · 30s · COLD OPEN</span>
+</div>
+<h3>Scene 1 — Cold Open: "What if Yorkshire floods at 03:00?"</h3>
+<p><strong>VFX:</strong> Black screen. Title card: "Yorkshire · 03:47 GMT · 4 July 2026". Sound: heavy rain, river rushing. Cut to: live rain radar overlay from <code>data-gov-uk-mcp</code> + EA flood warnings. Then a single line of text: "Every 30 seconds a sovereign COP updates. Every frame is signed."</p>
+<p><strong>MCPs:</strong> data-gov-uk-mcp, openaq-air-mcp, gdelt-news-mcp</p>
+<p><strong>Narration:</strong> "Yorkshire. Three forty-seven in the morning. The Ouse is rising. Police, fire, ambulance, MOD, council — all need the same picture at the same time. Tonight. DEFONEOS gives them that picture. Sovereign. UK-built. Open source."</p>
+</div>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#14532d;color:#86efac">SCENE 02</span>
+<span>0:30–0:55 · 25s · GLOBE INTRO</span>
+</div>
+<h3>Scene 2 — Cesium 3D Globe: "One picture of the UK"</h3>
+<p><strong>VFX:</strong> Smooth camera fly from space → UK → Yorkshire. OS terrain 5 DEM. Photorealistic 3D. Camera settles over Leeds at 50km altitude. Bathymetry shows. National boundaries fade in (OS BoundaryLine).</p>
+<p><strong>MCPs:</strong> os-opendata-mcp, sentinel-hub-mcp (satellite tile feed)</p>
+<p><strong>Narration:</strong> "One globe. Every sensor. Every force. Every agency. DEFONEOS renders the entire UK sovereign theatre in three dimensions — using Ordnance Survey terrain, OS MasterMap, and live Sentinel-2 imagery. Not Esri. Not Google. UK-sovereign Cesium."</p>
+</div>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#1e3a8a;color:#93c5fd">SCENE 03</span>
+<span>0:55–1:25 · 30s · FLOOD SENSOR FUSION</span>
+</div>
+<h3>Scene 3 — Flood Sensor Fusion: "Reading the Ouse"</h3>
+<p><strong>VFX:</strong> Camera zooms to river Ouse at York. Live gauge readings from EA flood-monitoring network pop in: Naburn, Skelton, Foss Barrier. Each gauge = coloured node with live value. Sentinel-2 derived water mask overlay (red = inundated). Blue pulsing for areas at risk.</p>
+<p><strong>MCPs:</strong> data-gov-uk-mcp (EA), openaq-air-mcp, os-opendata-mcp (river geometry), sentinel-hub-mcp (water mask)</p>
+<p><strong>Narration:</strong> "Environment Agency gauges live. Twenty-three stations. Plus Sentinel-2 satellite, refreshed every six hours. Plus the Met Office rainfall grid. DEFONEOS fuses them into one defensible flood extent. Updated every thirty seconds. Source-cited. Audit-signed."</p>
+</div>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#7f1d1d;color:#fca5a5">SCENE 04</span>
+<span>1:25–1:55 · 30s · DRONE SWARM</span>
+</div>
+<h3>Scene 4 — Drone Swarm: "Eyes over the water"</h3>
+<p><strong>VFX:</strong> Five drones take off from York racecourse (pre-set coords). They fly a triangular pattern over the Ouse, each one streaming 1080p video into YOLOv8 detection. Detected people (orange icons) appear live as the drones pass over them. A second hostile drone (red) approaches from the east; DEFONEOS detects it, BFT council classifies, intercept-policy Mava swarm launches.</p>
+<p><strong>MCPs:</strong> rtsp-camera-mcp, defoneos-isr-pipeline, defoneos-counterdrone, defoneos-mava-swarm</p>
+<p><strong>Narration:</strong> "Five friendly drones. One hostile. Mava-trained intercept policy. The swarm neutralises the hostile in eleven seconds. Every second is logged. Every track is signed. JSP 936 compliant. No pilot licences at risk — fully autonomous."</p>
+</div>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#14532d;color:#86efac">SCENE 05</span>
+<span>1:55–2:25 · 30s · TAK / C2 LAYER</span>
+</div>
+<h3>Scene 5 — FreeTAKServer C2: "Blue force tracking"</h3>
+<p><strong>VFX:</strong> Cursor on COP. Click on a police car icon. Pop-up: "North Yorkshire Police · Unit NP-237 · PC Sarah Greene · on patrol · last comms 14s ago · TakServer ping OK". FreeTAKServer CoT (Cursor-on-Target) stream visualisation. Multi-agency: police (blue), fire (red), ambulance (green), MOD (purple), EA (cyan), coastguard (yellow).</p>
+<p><strong>MCPs:</strong> freetak-cot-mcp, aisstream-maritime-mcp</p>
+<p><strong>Narration:</strong> "FreeTAKServer. The same C2 protocol the US Marines use, but open-sourced and sovereign. DEFONEOS runs it on a UK Linux VM. Police, fire, ambulance, MOD — all share the same blue-force picture, without giving up their operational independence."</p>
+</div>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#1e3a8a;color:#93c5fd">SCENE 06</span>
+<span>2:25–2:55 · 30s · 3D COP DETAIL</span>
+</div>
+<h3>Scene 6 — 3D COP Deep-Dive: "Every entity, every second"</h3>
+<p><strong>VFX:</strong> Camera zooms to street level in York. Cars driving along the A64. Pedestrians on Lendal Bridge. A bus stops at the station. Each entity has a click-to-inspect panel: track ID, class, confidence, source MCP, last update, SIGIL. The user clicks three entities in 8 seconds. Three SIGILs flash.</p>
+<p><strong>MCPs:</strong> defoneos-isr-pipeline, rtsp-camera-mcp, mqtt-bridge-mcp</p>
+<p><strong>Narration:</strong> "Click anything. Track. Drone. Vessel. Person. Confidence score. Source sensor. Last update. SIGIL signature. Full provenance in one click. JSP 936 chain of custody, from sensor to court. No redaction. No vendor lock."</p>
+</div>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#7f1d1d;color:#fca5a5">SCENE 07</span>
+<span>2:55–3:25 · 30s · SIGIL AUDIT CHAIN</span>
+</div>
+<h3>Scene 7 — SIGIL Chain: "Every byte signed"</h3>
+<p><strong>VFX:</strong> Sidebar opens showing the live SIGIL chain — BLAKE3-hashed, 1Hz cadence. Each block: timestamp, prev_hash, event_count, MCPs_involved, classification. Block 0: cold start. Block 1247: drone intercept. Block 1248: SIGIL audit. Block 1249: BFT council approval. The chain scrolls up at 10 blocks/sec.</p>
+<p><strong>MCPs:</strong> defoneos-sigil-mcp (audit), defoneos-bft-mcp (council)</p>
+<p><strong>Narration:</strong> "Every state change. Every audit. Every decision. Sealed. Signed. Chained. SIGIL is the audit-grade, sovereign alternative to AWS QLDB or Google Bigtable — except it runs on UK sovereign compute, costs nothing, and you can read the source."</p>
+</div>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#14532d;color:#86efac">SCENE 08</span>
+<span>3:25–3:55 · 30s · BFT COUNCIL</span>
+</div>
+<h3>Scene 8 — BFT Council: "33 agents vote"</h3>
+<p><strong>VFX:</strong> Cut to a council chamber visualisation. 33 agent avatars in a circle. A motion is tabled: "Classify T-1247 as HOSTILE_DRONE, authorise ENGAGEMENT". Vote tally appears: 23 in favour, 8 against, 2 abstain. Quorum met (23/33 ≥ 2/3). Motion passes. Cross-fade to the swarm taking the shot.</p>
+<p><strong>MCPs:</strong> defoneos-bft-mcp, defoneos-oversight-mcp</p>
+<p><strong>Narration:</strong> "Thirty-three agents. Byzantine fault tolerance. Two-thirds quorum. Sovereign decisions, sovereign voting, sovereign audit. No single human can authorise a kinetic action. The council does. This is what MOD-grade AI governance looks like."</p>
+</div>
+
+<div class="scene">
+<div class="scene-meta">
+<span class="badge" style="background:#1e3a8a;color:#93c5fd">SCENE 09</span>
+<span>3:55–4:00 · 5s · CLOSE</span>
+</div>
+<h3>Scene 9 — Close: "DEFONEOS. Sovereign by Design."</h3>
+<p><strong>VFX:</strong> Black. Logo appears. DEFONEOS. Tagline: "UK Sovereign Public Services OS. Open Source. Audit-Grade. Signed. Neutral. AUKUS-compatible." Web address: <code>meok-defoneos.com</code>. SIGIL.</p>
+<p><strong>Narration:</strong> "DEFONEOS. The UK's first open-source Sovereign Public Services OS. Thirty sovereign MCPs. One sovereign globe. One sovereign audit chain. Built in Yorkshire. Built for Britain. Built for AUKUS."</p>
+</div>
+
+<h2>Production Spec</h2>
+<table>
+<tr><th>Item</th><th>Spec</th></tr>
+<tr><td>Render engine</td><td>Cesium 1.118 + Unreal Engine 5.4 (hybrid)</td></tr>
+<tr><td>Resolution</td><td>4K (3840×2160) @ 60 FPS</td></tr>
+<tr><td>Audio</td><td>Dolby Atmos · 5.1 stem</td></tr>
+<tr><td>Narration</td><td>British male voice · EN-GB · sovereign-recorded</td></tr>
+<tr><td>Length</td><td>4:00 ± 5s</td></tr>
+<tr><td>Capture</td><td>Screen-record MacBook M4 + live UK sovereign VM</td></tr>
+<tr><td>Edit</td><td>DaVinci Resolve Studio</td></tr>
+<tr><td>Output</td><td>MP4 (H.265) + WebM (VP9) + MP4 (H.264 fallback)</td></tr>
+<tr><td>Distribution</td><td>YouTube · defoneos.org · MOD pitch deck · DASA application</td></tr>
+<tr><td>SIGIL</td><td>One per cut. BLAKE3-hashed. Verifiable in-app.</td></tr>
+</table>
+
+<h2>Cast &amp; Voice</h2>
+<table>
+<tr><th>Role</th><th>Voice</th><th>Notes</th></tr>
+<tr><td>Narrator (primary)</td><td>EN-GB male · 40s · authoritative</td><td>Sober, military-clear</td></tr>
+<tr><td>BFT Council callouts</td><td>3× EN-GB voices (rotating)</td><td>"Motion tabled…" / "23 in favour" / "Motion passes"</td></tr>
+<tr><td>Drone intercept pilot</td><td>Silent — keyboard clicks only</td><td>Tactical minimalism</td></tr>
+<tr><td>Closing</td><td>Music sting · no VO</td><td>Sovereign brass + bass motif</td></tr>
+</table>
+
+<h2>Render Pipeline (Cesium + UE5)</h2>
+<pre><code># 1. Capture Cesium globe frames in sequence (4K @ 60FPS)
+python scripts/capture_cesium_frames.py \
+    --scenario yorkshire_flood_demo \
+    --output ./frames/ \
+    --fps 60 \
+    --duration 240
+
+# 2. Composite drone-swarm passes (UE5 + Mava sim replay)
+ue5 -project=YorkshireTwin.uproject \
+    -run=RenderQueue \
+    -MoviePipeline=./config/yorkshire_twin.cfg
+
+# 3. Add SIGIL overlays (per-frame BLAKE3 of render state)
+python scripts/add_sigil_overlay.py \
+    --input ./frames/ \
+    --output ./frames_sigil/ \
+    --audit-chain ./sigil_chain_yorkshire.json
+
+# 4. Final cut in DaVinci Resolve
+# - Audio mix (Atmos)
+# - Colour grade (ACES · HLG)
+# - Export: 4K HEVC + WebM VP9 + MP4 H.264
+# - Generate BLAKE3 manifest → /defoneos.org/yorkshire-twin-manifest.json</code></pre>
+
+<a href="#"" class="cta">Digital Twin Overview →</a>
+<a href="#"" class="cta alt">ISR Cesium Demo</a>
+<a href="#"" class="cta alt">Mava Swarm Engine</a>
+
+</div>
+
+<footer>🐉 DEFONEOS · UK Sovereign Public Services OS · Digital Twin of Yorkshire · 4-min MOD pitch · 4K · SIGIL-chained · <a href="#"" style="color:#fbbf24">Sovereign by Design</a></footer>
+
+<script>
+const scenes = [
+    {id:'F-01', code:'00:00', title:'COLD OPEN', narration:'What if Yorkshire floods at 03:00? DEFONEOS gives every agency the same picture — sovereign, signed, live.', vfx:'RAIN RADAR · EA GAUGES · COLD START'},
+    {id:'F-02', code:'00:30', title:'GLOBE INTRO', narration:'One globe. Every sensor. Every force. Every agency. Ordnance Survey terrain. Sentinel-2 imagery. UK sovereign Cesium.', vfx:'ORBIT → UK → YORKSHIRE · OS TERRAIN 5'},
+    {id:'F-03', code:'00:55', title:'FLOOD FUSION', narration:'Environment Agency gauges. Sentinel-2 water mask. Met Office rainfall. DEFONEOS fuses them into one defensible flood extent.', vfx:'23 EA GAUGES · SENTINEL-2 WATER MASK · MET OFFICE RAIN'},
+    {id:'F-04', code:'01:25', title:'DRONE SWARM', narration:'Five friendlies. One hostile. Mava-trained intercept. The swarm neutralises the hostile in eleven seconds. JSP 936 compliant.', vfx:'5 FRIENDLIES · 1 HOSTILE · MAVA SWARM · YOLOv8'},
+    {id:'F-05', code:'01:55', title:'TAK / C2 LAYER', narration:'FreeTAKServer. Same protocol as US Marines, open-sourced and sovereign. Police, fire, ambulance, MOD — one blue-force picture.', vfx:'CoT STREAMS · POLICE/FIRE/AMB/MOD/EA/COASTGUARD'},
+    {id:'F-06', code:'02:25', title:'3D COP DETAIL', narration:'Click anything. Track. Drone. Vessel. Person. Confidence. Source. SIGIL. Full provenance in one click.', vfx:'STREET-LEVEL · CLICK-TO-INSPECT · PER-TRACK SIGIL'},
+    {id:'F-07', code:'02:55', title:'SIGIL CHAIN', narration:'Every state change. Every audit. Every decision. Sealed. Signed. Chained. SIGIL — the sovereign alternative to AWS QLDB.', vfx:'BLAKE3-HASHED · 1Hz · CHAIN SCROLL'},
+    {id:'F-08', code:'03:25', title:'BFT COUNCIL', narration:'Thirty-three agents. Byzantine fault tolerance. Two-thirds quorum. Sovereign decisions, sovereign voting, sovereign audit.', vfx:'33 AGENTS · 23/33 QUORUM · MOTION PASSES'},
+    {id:'F-09', code:'03:55', title:'CLOSE', narration:'DEFONEOS. The UK\'s first open-source Sovereign Public Services OS. Built in Yorkshire. Built for Britain.', vfx:'LOGO · TAGLINE · meok-defoneos.com · SIGIL'}
+];
+let current = 0;
+let playing = false;
+let timer = null;
+
+function gotoScene(i) {
+    current = i;
+    render();
+    for (let j = 0; j < 9; j++) {
+        document.querySelectorAll('.timeline-marker')[j].classList.remove('done');
+    }
+    for (let j = 0; j <= i; j++) {
+        document.querySelectorAll('.timeline-marker')[j].classList.add('done');
+    }
+    document.getElementById('tlFill').style.width = ((i+1)/9 * 100) + '%';
+}
+
+function render() {
+    const s = scenes[current];
+    document.getElementById('frameNum').textContent = s.id;
+    document.getElementById('narration').textContent = s.title + ' — ' + s.narration;
+    document.getElementById('vfx').textContent = s.vfx;
+    document.getElementById('timecode').textContent = s.code + ' / 04:00';
+}
+
+function play() {
+    if (playing) return;
+    playing = true;
+    timer = setInterval(() => {
+        current = (current + 1) % 9;
+        gotoScene(current);
+        if (current === 0) { pause(); }
+    }, 1500);
+}
+
+function pause() {
+    playing = false;
+    clearInterval(timer);
+}
+
+function next() { gotoScene((current + 1) % 9); }
+function prev() { gotoScene((current - 1 + 9) % 9); }
+
+gotoScene(0);
+</script>
+</body>
+</html>

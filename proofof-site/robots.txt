@@ -1,0 +1,51 @@
+User-agent: *
+Allow: /
+Disallow: /api/private/
+
+# Specific bot rules
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# LLM-friendly resources
+Sitemap: https://proofof.ai/sitemap.xml
+Sitemap: https://proofof.ai/llms.txt
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Host
+Host: https://proofof.ai

@@ -1,0 +1,7 @@
+{
+  "id": "imp-rate-limit-spec",
+  "prompt": "Write a Python spec for a per-DID sliding-window rate limiter: 5 tiers (free 5, starter 50, defensive 200, full 1000, premium 5000, enterprise 20000 req/min), with HMAC-signed tokens + Redis backend. Include Type hints + docstrings. Return ONLY Python code (no markdown fence).",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

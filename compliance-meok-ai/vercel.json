@@ -1,0 +1,35 @@
+{
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {"key": "X-Content-Type-Options", "value": "nosniff"},
+        {"key": "X-Frame-Options", "value": "SAMEORIGIN"},
+        {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
+        {"key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload"},
+        {"key": "X-Robots-Tag", "value": "index, follow, max-image-preview:large"}
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        {"key": "Content-Type", "value": "text/plain; charset=utf-8"}
+      ]
+    },
+    {
+      "source": "/openapi.json",
+      "headers": [
+        {"key": "Content-Type", "value": "application/json; charset=utf-8"}
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {"key": "Content-Type", "value": "application/xml; charset=utf-8"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,366 @@
+{
+  "summary": "Proofread + factual + visual audit of CSOAI charter/tools/roi/case-study pages",
+  "agentCount": 9,
+  "logs": [],
+  "result": {
+    "audits": [
+      {
+        "page": "client/src/pages/CaseStudies.tsx — Case Studies (social proof)",
+        "factual_risks": [
+          "FABRICATION (page-wide, honesty-critical): All 7 'case studies' are invented clients with specific quantitative outcomes ('Global Bank (European)', 'Regional Healthcare Network', 'Advanced Manufacturing Corp', 'International Commerce Corp', 'Emerging Fintech Startup', etc.) presented under a 'Real-World Results' badge (line 359) with zero 'illustrative/representative example' disclaimer. There are no real named references. CORRECT FIX: either replace with a real, permissioned reference (with named client or verified anonymized attribution) OR relabel the whole page 'Illustrative Scenarios' / 'Representative Use Cases' and add a visible disclaimer that figures are hypothetical, not measured client outcomes. As-is these read as attested facts and are the single biggest fabrication risk.",
+          "INVENTED TRACTION STATS (lines 333-336, 783): 'Organizations Governed 500+', 'AI Systems Monitored 12,000+', 'Countries Covered 45+', and CTA 'Join 500+ organizations' (line 783). These are uncited and inconsistent with the product's real state (no evidence of 500+ paying/governed orgs). CORRECT FIX: remove or replace with a defensible, verifiable number (e.g. frameworks/controls actually shipped) and drop 'Join 500+ organizations' until real.",
+          "FRAMEWORK-COUNT MISMATCH (line 336): stat card says 'Compliance Frameworks 8+', contradicting the canonical CSOAI figure of 26 frameworks / 1,686 controls used elsewhere on the site. CORRECT FIG: 26 frameworks / 1,686 controls. Reconcile so the number matches the rest of the site.",
+          "OVERCLAIM on EU AI Act timing (lines 56, 62-65): claims a bank 'Achieved full EU AI Act compliance in 6 months' with '100% Regulatory Readiness'. High-risk AI obligations (Annex III credit-scoring) do not fully apply until 2 Aug 2026 (GPAI 2 Aug 2025; most high-risk 2 Aug 2027), so 'full compliance achieved' is not yet possible to attest. CORRECT: reframe as 'readiness/gap-closure', not achieved full compliance; EU AI Act entered into force 1 Aug 2024, phased through 2027.",
+          "STALE / WRONG FRAMEWORK — 'Executive Orders' (line 134) listed as a live government AI framework. Biden EO 14110 on AI was revoked by Executive Order on 20 Jan 2025 and is no longer in force. CORRECT: remove 'Executive Orders' or replace with OMB M-24-10/current federal AI guidance.",
+          "WRONG FRAMEWORK — 'UK AI Bill' (line 245) presented as a compliance framework clients are governed against. There is no enacted UK AI Act/Bill; the UK uses a principles-based, regulator-led white-paper approach (the private-member 'Artificial Intelligence (Regulation) Bill' is not law). CORRECT: 'UK AI regulatory principles (DSIT pro-innovation framework)', not 'UK AI Bill'.",
+          "IMPLAUSIBLE REGULATORY METRIC (lines 116-118): 'Regulatory Approval 8 weeks — Average FDA/regulatory approval cycle' for clinical AI. FDA 510(k) clearance averages far longer and CSOAI does not grant FDA approval. CORRECT: remove or reframe as 'submission-readiness time', not FDA approval cycle.",
+          "INVENTED ROI FIGURE (lines 300-302): '$2.4M Cost Savings vs. traditional compliance consultants' — a specific dollar figure with no basis or citation. CORRECT: remove the precise figure or cite methodology.",
+          "INVENTED PRECISION METRICS presented as measured results: '99.2% Bias Detection' (line 176), '85% reduction in patient safety risks' (line 102), '92% equipment failures prevented' (line 212), '3x faster market entry' (line 297), 'Stakeholder Trust 87%' (line 185). All are fabricated precise outcomes attributed to unnamed clients. CORRECT: remove or label clearly as illustrative targets.",
+          "UNCITED ROI RANGE in FAQ (lines 873-876): 'typically see 40-80% reduction in compliance costs, 60-90% faster audit cycles... positive ROI within 6 months' — presented as typical measured results with no source. CORRECT: remove specific ranges or attribute to a methodology.",
+          "INTERNAL CONTRADICTION (line 835): 'Thousands of success stories across industries' contradicts the '500+ organizations' claim (line 783) and the 7 studies shown. CORRECT: pick one honest figure and remove 'thousands'.",
+          "MISLABELLED FRAMEWORK (line 59): 'Basel III' listed as an AI-governance framework the bank complied with via CSOAI. Basel III is a capital-adequacy standard, not an AI framework. Minor category error — keep only if scoped to model-risk (SR 11-7) rather than implying Basel III AI compliance."
+        ],
+        "proof_fixes": [
+          "Dead button: 'Read Full Case Study' (lines 622-625) has no onClick and no Link/href — it does nothing when clicked on every card. Either wire it to a real detail route or remove it until case-study detail pages exist.",
+          "Industry filter omits 'Multinational': the `industries` array (lines 315-322) has no 'multinational' entry, so the 'International Commerce Corp' study can never be filtered to and its count is hidden. Add a multinational filter pill or note it.",
+          "Filter logic bug (line 330): `regularCaseStudies` uses `!cs.featured || selectedIndustry !== 'all'`, so when a specific industry is selected the two featured studies (european-bank, hospital-network) render BOTH in the featured block is hidden AND again in the grid — verify no duplicate/omission; the condition is convoluted and should be simplified.",
+          "'Award / Proven Results — Thousands of success stories' (line 835) should be removed or corrected per the factual note above.",
+          "Add a single visible disclaimer line near the hero (after line 366), e.g. 'Scenarios below are illustrative composites, not attributed client outcomes,' to make the whole page honesty-safe in one edit."
+        ],
+        "visual_spec": "Replace the fabricated numeric stat row (lines 332-337) with a branded, honest 'Framework Coverage' visual: a custom inline-SVG concentric ring (emerald #10b981 outer arc, teal #2dd4bf inner arc on slate-900 track) whose label reads the CANONICAL, verifiable numbers — '26 frameworks / 1,686 controls' — with a small ticked list (EU AI Act, NIST AI RMF, ISO 42001, ISO 13485, HIPAA) rendered as emerald CheckCircle SVG rows. This swaps invented traction ('500+ orgs', '12,000+ systems') for a claim CSOAI can actually defend. Style: 700x220 viewBox, uses CSS vars, emerald/teal gradient stroke with rounded linecaps, slate-900 numerals, no photos, no logos. Pair each illustrative case-study card with a small slate 'Illustrative scenario' pill (SVG dot + text) in the header strip so the composite nature is visible at a glance rather than buried.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/ROICalculator.tsx (ROI Calculator)",
+        "factual_risks": [
+          "FABRICATED SAVINGS RATE: line 34 hardcodes `complianceSpend * 0.35` and line 231 labels it '35% reduction in compliance costs'. There is no cited source — this is an invented ROI multiplier applied to every user. CORRECT FACT: CSOAI has no published, verifiable 35% compliance-cost-reduction benchmark. Either cite a named third-party study/customer result or relabel as 'illustrative estimate — not based on CSOAI outcome data'.",
+          "FABRICATED RISK-REDUCTION STAT: line 35 `riskReduction = 67` and line 243 'Average improvement in AI governance' present a precise 67% figure with no source or defined metric ('risk' is never quantified on the page). CORRECT FACT: no measured 67% governance-risk-reduction figure exists; remove the hard number or replace with a defined, sourced metric.",
+          "FABRICATED AUDIT-TIME STAT: line 266 '85%' audit-prep time saved / 'Reduction in manual work' is a bare invented number with no basis. CORRECT FACT: unsupported; must be sourced or removed.",
+          "MISLEADING TIME-TO-COMPLIANCE CLAIM: lines 254-255 '3-6 months vs 12-18 months traditional' asserts a specific speed-up versus an unnamed 'traditional' baseline with no citation. CORRECT FACT: no cited benchmark for 12-18 month traditional timelines; label as illustrative or cite the source (e.g. a named framework's typical audit cycle).",
+          "MATERIALLY OVERSTATED '3-YEAR ROI' MATH: line 37 `threeYearROI = (annualSavings*3 / implementationCost) * 100`. This is gross savings ÷ one-time implementation cost — it is NOT return on investment. It (a) never subtracts the cost being recovered and (b) completely omits the CSOAI platform subscription/licence fee over 3 years. At defaults it prints 700% ROI. CORRECT FACT: ROI = (3yr net benefit − total 3yr cost) / total 3yr cost, where total cost = implementation + 3× annual platform fee. Including a realistic platform fee cuts the headline figure by roughly half or more; the current formula is not defensible as 'Return on investment'.",
+          "DEAD / DECORATIVE INPUTS create a false sense of a tailored model: the AI Systems slider (line 121-128), Industry dropdown (line 158-171) and Regulatory Frameworks slider (line 201-208) have ZERO effect on any output. Only complianceSpend (× 0.35) and an employee-count tier (line 36) change the numbers. CORRECT FACT: the calculator claims a 'personalized'/'custom' ROI (lines 100, 308) but 3 of 5 inputs are inert — either wire them into the math or remove them so the model isn't misrepresented as multi-factor.",
+          "DISCLAIMER OVERCLAIMS ITS OWN BASIS: line 332 states estimates are 'based on industry averages'. The four core figures (35%, 67%, 85%, 3-6 months) are hardcoded constants with no industry-average source in the code or page. CORRECT FACT: reword to 'illustrative estimates, not based on verified CSOAI or industry data' unless real citations are added.",
+          "'33-Agent Byzantine Council' (line 73-74): plausibly consistent with the canonical BFT council (23/33 vote) but the '33' is stated as fact on a money page — verify against canon before shipping; if the live council is the 13-queen configuration, this is a count mismatch.",
+          "CURRENCY MISMATCH vs revenue site: all figures render in USD ($, lines 47-49, 190-191) while CSOAI pricing is published in GBP (£99 / £12.99 per canonical pricing). A UK buyer comparing this calculator to /pricing sees inconsistent currencies. CORRECT FACT: align the calculator currency with the pricing page (£)."
+        ],
+        "proof_fixes": [
+          "Line 37: rename variable and label away from 'ROI' unless costs are netted out, OR fix the formula to `((annualSavings*3) - (implementationCost + platformFee*3)) / (implementationCost + platformFee*3) * 100` and introduce a platformFee input.",
+          "Lines 34-35, 231, 243, 266: move the 0.35 / 67 / 85 constants into a single clearly-commented ASSUMPTIONS block and surface them on-page as editable/labelled assumptions rather than presenting them as measured results.",
+          "Wire aiSystems, industry, and frameworks into the savings model (e.g. per-system monitoring saving, industry risk weighting) or delete those three inputs — currently they mislead by implying they drive the result.",
+          "Line 96 heading 'CSOAI ROI Calculator' + line 254 use a mix of blue/purple (blue-400, purple-400, amber-400) accents that are off-brand; the brief brand is emerald #10b981 / teal #2dd4bf. Recolour result cards and icons to the emerald/teal system for credibility and brand consistency.",
+          "Line 332 disclaimer: strengthen to explicitly state the figures are illustrative and not derived from verified customer outcomes.",
+          "Convert displayed currency to GBP (or add a currency toggle) so it matches the /pricing revenue page."
+        ],
+        "visual_spec": "Add a branded, honest 'How this is calculated' transparency panel below the result cards — a custom inline SVG horizontal stacked bar (no images) showing: full-width bar = current Annual Compliance Spend (slate-700), an emerald #10b981 segment = estimated savings, and a teal #2dd4bf segment = estimated CSOAI platform cost, so the NET saving is shown visually rather than just a headline percentage. Beneath it, a small coded assumptions legend listing each rate (savings %, platform fee, implementation cost) as labelled chips with a footnote 'illustrative assumptions — edit to model your own'. Pure CSS/SVG, emerald/teal/slate-900 palette, animated width transition on slider change. This turns the page from an unsourced number generator into a defensible, editable model and visually exposes the platform cost the current ROI formula hides.",
+        "impact": "high"
+      },
+      {
+        "page": "Charter.tsx — The 52-article CSOAI Partnership Charter",
+        "factual_risks": [
+          "HINTON QUOTE FABRICATION RISK (honesty-critical). Line 392-395 and 314 attribute a verbatim quote to 'Geoffrey Hinton's Insight (2023)': “AI should want to protect humans the way a mother wants to protect a child.” This is a paraphrase presented as a direct quotation, and the DATE IS WRONG. Correct fact: Hinton's maternal-instinct / 'mother cares for a child' framing for AI safety was delivered publicly at the Ai4 conference in Las Vegas in AUGUST 2025 (“we need to design AI to have maternal instincts… like a mother with a child”), not 2023. Fix: change (2023)→(2025), and either drop the quotation marks (it is a paraphrase) or use his actual wording with the Aug-2025 source.",
+          "OVERCLAIM SUPERLATIVE (line 269): 'The world’s first relationship-based AI governance framework.' Unverifiable and unsupportable — care/relationship-based AI-safety framings predate this (Hinton, Constitutional AI, care-ethics literature). Correct fact: it is *a* relationship-based framework, not provably the world's first. Soften to 'a relationship-based AI governance framework.'",
+          "PROVABLE-SAFETY OVERCLAIM (line 335 'Mathematical proof of safety, not just promises'; Article 2 line 57 'Mathematical and empirical safety standards'). Mathematically PROVEN safety of frontier AI is not an achieved capability today (it is an open research goal, cf. Bengio/Tegmark 'guaranteed safe AI'). Stating the Byzantine Council delivers 'mathematical proof of safety' overstates. Correct framing: 'formal safety assurance and evidence-based verification' as a goal, not a delivered guarantee.",
+          "UNVERIFIABLE THIRD-PARTY REVIEW CLAIM (line 194, FAQ 'Who wrote this Charter?'): 'It has been reviewed by legal experts, ethicists, and technical AI researchers to ensure practical implementability.' This is a concrete credibility claim with no named reviewers, dates, or affiliations. If no such external review occurred, it is fabricated authority. Fix: name the reviewers/bodies or remove the sentence.",
+          "'12 DIFFERENT PROVIDERS' NEEDS VERIFICATION (lines 210, 228, 518 '33-agent'; '33 AI agents from 12 different providers monitor… 24/7'). The 33-agent Byzantine count is internally consistent, but '12 different providers running 24/7' should be verified against the actually deployed council — internal notes indicate the live council has fallen back to a single provider (Groq) when the primary key errored. If 12 distinct providers are not concurrently live, this overstates current capability. Fix: state the number actually wired, or label as target architecture.",
+          "UBI/PROSPERITY FUND STATED AS OPERATIONAL (lines 240-241, 457): 'Mandatory contributions from AI profits fund economic redistribution, including triggered UBI' and 'AI profits fund Universal Basic Income.' Presented in the present tense as an operating mechanism, but this is a pre-launch voluntary framework with no disclosed signatories or live fund. Correct framing: describe as a proposed/contractual-upon-signature mechanism, not an active redistribution engine, to avoid implying money is already flowing."
+        ],
+        "proof_fixes": [
+          "DEAD BUTTONS — 4 download buttons promise a specific artifact but have no onClick/href: hero 'Download PDF (66 pages)' (line 273-279) and 'Download DOCX' (280-287), plus final-CTA 'Download PDF' (887) and 'Download DOCX' (891). They render but do nothing. Wire each to the real file (or remove). Also VERIFY a 66-page PDF (lines 278, 884) actually exists before offering it.",
+          "DEAD CONTACT BUTTONS — 'Contact charter@csoai.org' (line 819-822) and 'Contact founding@csoai.org' block (871-873) are <Button>/text with no mailto href. Make them real mailto: links so the email is clickable.",
+          "INCONSISTENT DASH TYPOGRAPHY — hero subtitle '52 Articles - 13 Schedules - 6 Parts' (266), badge 'Version 1.0 - Effective January 15, 2026' (260), and footer 'Effective Date… 09:00 GMT - Version 1.0 - CSOAI Limited, UK' (897) all use spaced hyphens where en/em dashes are intended. Standardise to — for a credible, polished register.",
+          "COPY POLISH — 'Mother gives child allowance - AI gives humanity prosperity' (line 453) reads as a slogan and undercuts the credible tone; either tie it directly to Article 8 mechanics or drop it."
+        ],
+        "visual_spec": "Add ONE branded custom-SVG 'Byzantine Council' consensus ring to replace the plain text description in the Enforcement/Integration section (currently only prose at lines 226-229). Draw 33 nodes evenly on a circle (r=140, viewBox 0 0 360 360). Color nodes in emerald #10b981 / teal #2dd4bf / slate-900 #0f172a to represent the 12 provider families (legend swatches beneath). Fill 23 of 33 nodes solid emerald and outline the remaining 10 in slate to visually encode the 23/33 (2/3) Byzantine quorum threshold; center label '23 / 33' with subtext 'consensus to act'. Thin connecting chords between agreeing nodes at low opacity to convey AI-to-AI cross-checking. Pure CSS/SVG, no photos, theme-aware (emerald on light, brighten to #34d399 on dark). This turns the most-repeated but unillustrated claim on the page (33 agents / Byzantine consensus) into a concrete, on-brand proof visual — and forces the '23/33' quorum to be shown honestly rather than asserted.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/ConformityAssessment.tsx (EU AI Act conformity assessment)",
+        "factual_risks": [
+          "LEGAL OVERCLAIM (line 47): 'The Council builds and signs the evidence - risk assessments, technical documentation, and the declaration' implies CSOAI signs the EU declaration of conformity. CORRECT FACT: under Art. 47 EU AI Act, the EU declaration of conformity must be drawn up and SIGNED BY THE PROVIDER itself (it is a legal self-declaration of responsibility) - a third party/vendor cannot sign it on the provider's behalf. Reword to 'prepares/assembles the evidence and drafts the declaration for the provider to sign' to avoid implying CSOAI can execute the legal act.",
+          "SOFT-VERIFY (line 47): 'keeps it audit-ready with an Ed25519 passport' is a product claim, not an EU AI Act requirement. Fine as positioning but ensure it is not read as a regulatory step - the Act requires records kept 10 years (Art. 18/47), it does not mandate or recognise any cryptographic 'passport'. Keep the product claim visually distinct from the legal steps so it isn't mistaken for a statutory requirement.",
+          "MINOR PRECISION (line 10, EU database step): 'Standalone high-risk systems are registered in the EU database before going to market' is correct for Annex III systems but note the carve-out - Art. 49(4): high-risk systems in the area of law enforcement, migration, asylum and border control (Annex III pts 1,6,7) register in a NON-public/secure section of the database. Optional nuance; current copy is not wrong, just simplified."
+        ],
+        "proof_fixes": [
+          "FAQ schema mismatch (lines 15-25): the page injects a FAQPage JSON-LD with 3 Q&As, but NONE of that FAQ content is rendered visibly on the page. Google's structured-data policy requires FAQ content to be visible on-page; invisible-only FAQ markup risks the rich result being ignored or a manual action. Fix: render the 3 Q&As as a visible <section> (e.g. a details/accordion below the CTA row) so the JSON-LD matches on-page content.",
+          "Typography: hyphen '-' used where em/en-dashes belong throughout (line 31 'CSOAI - conformity assessment', line 33 'meets the EU AI Act - before it ships', line 32 'to market', step copy lines 7/8). Replace stand-alone ' - ' with ' — ' (em dash) for a credible, non-hyphenated read.",
+          "Verify links resolve (lines 50-52): /high-risk-ai-systems, /assess, /ai-act-faq. /assess and /high-risk-ai-systems are not in the tile-route list in CLAUDE.md - confirm these routes exist and 200, or the primary CTAs are dead buttons.",
+          "CTA copy 'Run the free signed risk check' (line 51): ensure the linked /assess flow actually produces a signed artifact and is genuinely free; if the signing/free claim isn't literally true on that page, soften to avoid an unbacked claim."
+        ],
+        "visual_spec": "Add one branded custom SVG (emerald #10b981 / teal #2dd4bf / slate-900, no photos) replacing nothing but sitting between the hero and the timeline: a horizontal 'conformity route' flow diagram. Nodes: [Build QMS + risk system] -> decision diamond 'Annex III biometric / no harmonised standard?' branching into two lanes - (a) NO -> 'Internal control (Annex VI, self-assessment)' and (b) YES -> 'Notified body (Annex VII)' - both re-converging into -> [EU declaration of conformity - signed by provider, kept 10 yrs] -> [CE marking] -> [Register in EU database] -> [Post-market monitoring + incident reporting]. Use slate-900 rounded node cards, emerald connector lines, a teal-outlined decision diamond, and small Art. references (Art. 43 / 47 / 48 / 49 / 72) as monospace captions under each node for credibility. Fully responsive: stack vertically on mobile with a left emerald rail mirroring the existing <ol> timeline style. Pure SVG/CSS, inline, theme-safe.",
+        "impact": "medium"
+      },
+      {
+        "page": "Framework Catalog (client/src/pages/FrameworkCatalog.tsx)",
+        "factual_risks": [
+          "FRAMEWORK-COUNT MISMATCH vs canonical crosswalk. The FRAMEWORKS array (lines 18-45) contains 28 entries, so the hero (lines 87-88) renders '28 frameworks ... 9 deeply supported, 14 control-mapped'. Canonical is '26 frameworks / 1,686 controls'. CORRECT FACT: reconcile to 26 — either trim the array to the 26 crosswalked frameworks or update the canonical figure everywhere; a catalog page whose stated role is 'counts + names must match crosswalk' must not display 28.",
+          "SELF-CONTRADICTION / honesty breach — FedRAMP. Line 38 lists 'FedRAMP (20x / OSCAL)' as status 'Mapped' (control crosswalk available), while line 50 lists 'FedRAMP' inside PARTNER_GAPS as a regime 'handled through the partner network rather than claimed directly.' The same framework cannot be both control-mapped and an acknowledged gap. CORRECT FACT: pick one — if FedRAMP is genuinely mapped, remove it from PARTNER_GAPS; if not, downgrade the catalog entry to Planned and keep it as a gap.",
+          "SELF-CONTRADICTION / honesty breach — SOX. Line 41 lists 'SOX (ITGC)' as status 'Mapped', while line 51 lists 'GLBA / SOX' inside PARTNER_GAPS as an un-claimed regime routed to partners. SOX is simultaneously claimed and disclaimed. CORRECT FACT: remove 'SOX' from the 'GLBA / SOX' gap chip (leave GLBA) or drop the SOX (ITGC) catalog entry — do not present both.",
+          "OVERCLAIM risk on 'Mapped' entries relative to canonical controls. Supported (9) + Mapped (14) = 23 frameworks asserted to have crosswalks, but the array total is 28 and canonical coverage is 26 frameworks. Neither 23 nor 28 equals 26, so at least some displayed status labels are not backed by the 1,686-control crosswalk. CORRECT FACT: every 'Supported'/'Mapped' badge must trace to an actual entry in the 26-framework / 1,686-control crosswalk; audit each of the 23 and demote any without a real mapping to 'Planned'.",
+          "Canada AIDA (line 25, status 'Planned') is a stalled/dead bill, not merely upcoming. AIDA was part of Bill C-27, which died when Parliament was prorogued and dissolved for the 2025 federal election; there is currently no active AIDA in Parliament. CORRECT FACT: either relabel to reflect that the bill lapsed (e.g. a 'Stalled' note) or drop it, so 'Planned/roadmap' is not read as 'imminent law.'"
+        ],
+        "proof_fixes": [
+          "Hero copy (line 87) enumerates 'AI, security, privacy, financial and healthcare regimes' but the catalog also contains a 'Quality' category (ISO 9001, line 40), which surfaces as a filter chip via `cats` (line 64). Add 'quality' to the sentence or remove the ISO 9001 entry so the stated regime list matches the actual categories.",
+          "After fixing the count, the hard-coded prose numbers are safe because they are computed (`counts.total/supported/mapped`) — but verify the reconciled array still yields the intended supported/mapped split so the sentence at lines 87-88 does not read awkwardly (e.g. avoid '0 control-mapped').",
+          "mailto CTA (line 139) 'nicholas@csoai.org' — confirm this inbox is monitored for inbound partner enquiries; a bounced founder address on the primary partner-network CTA reads as an abandoned page. No code change if valid.",
+          "No status filter exists (only category + free-text search on name+region, line 70). Optional: allow filtering by Supported/Mapped/Planned so a buyer can instantly see the deeply-supported subset rather than scanning badges."
+        ],
+        "visual_spec": "Add a branded custom-SVG 'Coverage ledger' bar directly under the hero, in place of relying on prose counts. A single horizontal 100%-width stacked bar segmented by real status counts: Supported (emerald #10b981), Mapped (teal #2dd4bf), Planned (slate-400 #94a3b8), each segment width = count/total and labelled with the live number pulled from `counts` (no hard-coded values). Below it, a compact region x category coverage grid (custom CSS grid, no chart lib): rows = regions (EU/US/Global/UK/China/Korea/Canada/Singapore), columns = categories (AI/Security/Privacy/Financial/Healthcare/Quality), each cell a small rounded square whose fill intensity encodes how many frameworks sit at that intersection (emerald tints from slate-100 to emerald-600), empty cells left as slate-50 outlines. All values derived from the FRAMEWORKS array so the visual can never drift from the catalog. Slate-900 headings, emerald/teal accents only, no stock or AI imagery.",
+        "impact": "high"
+      },
+      {
+        "page": "client/src/pages/CyberScan.tsx (/cyber-scan — \"God's Eye\" cyber scan tool)",
+        "factual_risks": [
+          "PRIVACY OVERCLAIM (honesty-critical): USP line 56 says 'your data never leaves your control' and the triage box (line 114) plus the fallback (line 77) both say 'Your findings stay in your browser.' But runTriage (lines 73-74) POSTs the pasted findings (findings.slice(0,4000)) to https://os.meok.ai/api/chat. CORRECT FACT: the scanner commands run locally, but any text you paste and click 'Triage' on IS transmitted to the CSOAI/os.meok.ai server. Reword to something true, e.g. 'The tools run on your machine; only the findings text you submit for triage is sent to the Sovereign (max 4,000 chars) — nothing is stored client-side or shared further.' Do not claim findings stay in-browser while sending them off-box on a security/compliance product.",
+          "UNSUBSTANTIATED SIGNING CLAIM: Hero (line 88) 'Signed to Layer 0' and USP line 59 'Every fix signed to Layer 0 — provable evidence for auditors and regulators.' Nothing on this page signs anything — runTriage only calls chargeSovereign(10) and renders model text; there is no Ed25519 signature, no Layer 0 anchor, no evidence artifact produced here. CORRECT FACT: signing happens on a separate flow (/system-card 'Sign a proof'). Soften to 'take the triage to /system-card to sign it to Layer 0' rather than asserting every fix is already signed / is regulator-grade evidence.",
+          "ATTRIBUTION IMPRECISION (line 38): 'Checkov (Prisma)'. Checkov is authored/maintained by Bridgecrew, which Palo Alto Networks acquired and folded into Prisma Cloud. 'Prisma' alone is a PANW product brand, not the tool's maintainer. CORRECT FACT: attribute as 'Checkov (Bridgecrew / Palo Alto Networks)'.",
+          "STALE-TOOL NOTE (line 39): 'tfsec / Trivy config'. tfsec has been deprecated and merged into Trivy by Aqua Security (tfsec repo is in maintenance/EOL). Listing it as a live standalone recommendation is slightly stale; safe fix is to lead with 'Trivy config' and note tfsec is now part of Trivy."
+        ],
+        "proof_fixes": [
+          "Reword the three privacy strings (lines 56, 114, and the fallback on line 77) so they no longer claim findings 'never leave your control' / 'stay in your browser' — because clicking Triage sends them to os.meok.ai/api/chat. Make the local-vs-submitted distinction explicit.",
+          "Line 38: change 'Checkov (Prisma)' to 'Checkov (Bridgecrew / Palo Alto Networks)' for correct maintainer attribution.",
+          "All three CTA links verified live in App.tsx (/regulators -> RegulatorAtlas, /system-card -> SystemCard, /why -> WhyCSOAI) — no dead buttons; no action needed.",
+          "Line 39: reorder to 'Trivy config / tfsec' and note tfsec is now folded into Trivy, so the recommendation isn't tied to a deprecated tool."
+        ],
+        "visual_spec": "Add a custom coded SVG 'Domain x Framework coverage matrix' above the USP block — an honest, data-true visual built directly from the STACK array (no invented numbers). Render a 9-row (the nine domains: Attack surface, Vuln scanning, Web app, Cloud, Containers, IaC, Secrets & code, Dependencies/SBOM, Host) by 5-column (NIS2, DORA, CRA, ISO 27001, SOC 2) grid; fill a rounded cell in emerald #10b981 (solid) where that domain's tools actually map to that framework per the existing 'maps' strings, teal #2dd4bf (faded) for partial/adjacent (e.g. CIS-only rows), and an empty slate-900 #03110b cell with a thin emerald-500/15 border otherwise. Column headers in mono uppercase tracking-wide cyan-300/70; row labels emerald-100/80. Title it 'What you can actually cover' with subline 'Nine test domains mapped to the five regimes that bite — filled cells = tools on this page already map there.' Keep it pure inline SVG/CSS (theme-aware, transparent bg), no photos, no fabricated coverage percentages — every filled cell must be justifiable from a tool's maps field so it stays honest. This turns the long tool grid into one legible proof-of-breadth graphic in brand colors.",
+        "impact": "high"
+      },
+      {
+        "page": "RiskHeatmap.tsx (/risk-heatmap)",
+        "factual_risks": [
+          "Code comment line 3 claims Risk Heatmap is the '#1 requested enterprise GRC feature' — uncited superlative with no source. Not user-facing but violates the no-made-up-claims rule. FIX: remove the ranking or cite the survey/source; safe honest version: 'a commonly requested GRC feature'.",
+          "The 8 risks (R-01..R-08, e.g. 'Model bias in CV screening' owned by 'People Ops') are hardcoded illustrative data but carry NO 'sample/illustrative' label. A viewer can reasonably read them as CSOAI's real tracked risk register. FIX: add a visible 'Sample data — illustrative only' badge in the hero or above the register so the demo data is not mistaken for real client/production risks.",
+          "No actual factual error found in the domain claims: EU AI Act Article 50 (R-03) correctly corresponds to transparency/disclosure obligations, and the risk-scoring bands in cellColor (>=15 critical, >=9 high, >=4 moderate, else low) are internally consistent with the Legend (Low 1-3 / Moderate 4-8 / High 9-14 / Critical 15-25). No invented customer/logo/testimonial and no contradiction of the 26-framework/1,686-control canon."
+        ],
+        "proof_fixes": [
+          "Empty matrix cells render as clickable <button> elements (lines 78-91) whose onClick={() => here[0] && setSel(here[0])} does nothing when the cell is empty — dead buttons. FIX: add disabled={here.length===0} plus aria-label={`Likelihood ${likelihood}, Impact ${impact}, no risks`} so empty cells are non-interactive and screen-reader clear.",
+          "Latent multi-risk-cell bug (line 80): onClick only ever selects here[0], so if two risks ever share the same likelihood×impact cell, clicking can never select the second even though both IDs are rendered. Not currently triggered (all 8 cells are unique) but silently breaks on new data. FIX: cycle selection through the cell's risks, or make each rendered ID chip its own button that calls setSel(r).",
+          "Interactive matrix cells and register rows are <button>s with no aria-label / no focus-visible ring beyond hover (lines 78-82, 132) — keyboard users get no discernible focus state. FIX: add focus-visible:ring-2 focus-visible:ring-emerald-500 and an aria-label per cell/row."
+        ],
+        "visual_spec": "\"Add a branded custom-SVG 'Inherent to Residual risk' vector overlay on the detail card (no photos). For the selected risk, draw a small emerald/teal coded SVG (viewBox 0 0 200 60): a horizontal 5-step track with an amber/red dot at the inherent score and an emerald dot at the post-treatment residual score, joined by an arrow, labelled 'Inherent NN to Residual NN'. Colors: inherent uses the existing cellColor band, residual uses emerald #10b981, connector teal #2dd4bf, track slate-900/10. This makes the 'treatment' field quantitatively meaningful and reinforces the emerald/teal brand. Second optional visual: a slim CSS stacked bar under the register (h-2, rounded) showing the count of risks per severity band (Low emerald-200, Moderate yellow-200, High amber-400/85, Critical red-500/85) so users see the portfolio distribution at a glance — pure CSS, driven off the existing RISKS array, no fabricated numbers.\"",
+        "impact": "low"
+      },
+      {
+        "page": "client/src/pages/EnterpriseDashboard.tsx (Enterprise Dashboard)",
+        "factual_risks": [
+          "FABRICATED 'Recent Activity' feed (lines 284-313): three hardcoded events with invented system names and fake timestamps — 'Compliance assessment completed / Customer Service AI - EU AI Act' (2 hours ago), 'Risk level updated / ML Pipeline System - High Risk' (5 hours ago), 'PDCA cycle initiated / Quarterly Safety Review' (1 day ago). These read as live customer activity but are static JSX unconnected to any query. CORRECT: drive from a real activity/audit-log query, or remove the section and show an empty state until real events exist.",
+          "FABRICATED trend '+5% from last month' (line 194): hardcoded string under Overall Score with no data source or prior-month comparison. CORRECT: compute delta from real historical stats or delete the line.",
+          "INVENTED framework scores as hardcoded fallbacks (lines 50-53): EU AI Act 82, NIST AI RMF 88, TC260 75, ISO 42001 90 — the first three fall back to fixed numbers when stats are absent, and ISO 42001 90/'compliant' has NO data binding at all (always hardcoded). These flow into the exported 'Regulatory Report' PDF. CORRECT: bind every framework score to real assessment data and render 'Not assessed' when null rather than a plausible-looking number.",
+          "HARDCODED PDCA metrics presented as live (lines 41-42): activeCycles=3, completedCycles=7 shown in the Key Metrics card and written into the PDF. CORRECT: query real PDCA cycle counts.",
+          "FABRICATED incident + council figures baked into the exported regulatory PDF (lines 75-84): incidentsSummary total 8 / resolved 6 and byzantineCouncilSessions 15 are literals with no data source, yet appear in a formal 'Enterprise Compliance Dashboard Report'. Putting invented incident and Byzantine-council counts in a compliance deliverable is honesty-critical. CORRECT: source from real incident and council-session tables, or omit these fields from the report.",
+          "HARDCODED Overall Score fallback 85 (line 192): defaults to 85 when stats.overallScore is missing, so an unconfigured tenant sees a flattering score. CORRECT: show '—' / 'No data' on null instead of 85.",
+          "Framework coverage understatement / consistency: the dashboard and PDF present only 4 frameworks (EU AI Act, NIST AI RMF, TC260, ISO 42001) with no reference to the canonical 26-framework / 1,686-control library. Not a false claim, but an enterprise buyer may read '4 frameworks' as the platform's full scope. CORRECT: label this as a selected subset and link to the full 26-framework catalog."
+        ],
+        "proof_fixes": [
+          "No dead links found — /ai-systems, /pdca, /compliance, /reports all resolve in App.tsx (lines 586/626/589/598); PDFExportButton is conditionally rendered only when data exists.",
+          "Unused import: 'Users' from lucide-react (line 16) is imported but never rendered. Remove it to keep the bundle and lint clean.",
+          "Off-brand accent colors: PDCA card uses text-blue-600 (line 177) and Quick Action tiles use blue-100/blue-600 and purple-100/purple-600 (lines 222-239), plus activity icons text-yellow-500/text-blue-500 (lines 296,306). Brand palette is emerald #10b981 / teal #2dd4bf / slate-900 — replace blue/purple/yellow with emerald/teal/slate to unify the dashboard.",
+          "Compliance-rate labels 'Excellent/Good/Needs Improvement' (line 164) are hardcoded thresholds with no explanation; fine to keep but ensure the >=80/>=60 bands match how compliance is scored elsewhere so the qualitative label can't contradict a framework score card."
+        ],
+        "visual_spec": "Replace the fabricated static 'Recent Activity' list with a branded, data-bound custom-SVG 'Compliance Posture' donut + delta rail (no photos). Center: an SVG ring (r=52, stroke-width=14) whose emerald #10b981 arc fills to the REAL complianceRate, teal #2dd4bf sub-arc for 'limited/partial', and slate-200 track for the remainder; large slate-900 % in the middle with a small 'of {totalSystems} systems' caption. To its right, a vertical stack of four thin framework meters (EU AI Act / NIST AI RMF / TC260 / ISO 42001) each rendered as a rounded SVG bar with an emerald fill and a right-aligned score — but each bar shows a hollow slate outline + '—' when its score is null, so missing data is visually honest rather than defaulting to a number. Under the donut, a single delta chip that only renders when a real prior-period value exists (arrow up/down in emerald/rose), eliminating the hardcoded '+5%'. All values fed from trpc data; pure inline SVG + CSS, theme-aware via currentColor, no external assets.",
+        "impact": "high"
+      }
+    ],
+    "plan": "# CSOAI Site Audit — Consolidated Findings (8 pages)\n\n## (A) HONESTY-CRITICAL Factual Risks — Ranked\n\n**1. FABRICATED CLIENTS + OUTCOMES — CaseStudies.tsx (page-wide, worst offender)**\nAll 7 \"case studies\" are invented clients (\"Global Bank (European)\", \"Regional Healthcare Network\", \"Advanced Manufacturing Corp\", \"International Commerce Corp\", \"Emerging Fintech Startup\") with fabricated precise outcomes, presented under a **\"Real-World Results\"** badge (L359) with zero disclaimer. Invented precision metrics attributed to these fake clients: `99.2% Bias Detection` (L176), `85% reduction in patient safety risks` (L102), `92% equipment failures prevented` (L212), `3x faster market entry` (L297), `Stakeholder Trust 87%` (L185), `$2.4M Cost Savings` (L300-302), `6-month full EU AI Act compliance / 100% Regulatory Readiness` (L56, 62-65), `8-week FDA/regulatory approval` (L116-118). **Fix:** either relabel the whole page \"Illustrative Scenarios / Representative Use Cases\" with a visible hero disclaimer (add after L366: *\"Scenarios are illustrative composites, not attributed client outcomes\"*) and per-card \"Illustrative scenario\" pills, OR replace with real permissioned references.\n\n**2. INVENTED TRACTION STATS — CaseStudies.tsx (L333-336, 783, 835)**\n`Organizations Governed 500+`, `AI Systems Monitored 12,000+`, `Countries Covered 45+`, CTA `Join 500+ organizations` (L783), and `Thousands of success stories` (L835) — uncited, mutually contradictory, and inconsistent with the product's real state. **Fix:** remove; replace with a defensible number (frameworks/controls actually shipped). Pick ONE honest figure — \"thousands\" vs \"500+\" vs \"7 studies\" cannot all stand.\n\n**3. FABRICATED FIGURES BAKED INTO A FORMAL COMPLIANCE PDF — EnterpriseDashboard.tsx (L75-84)**\nInvented `incidentsSummary total 8 / resolved 6` and `byzantineCouncilSessions 15` are hardcoded literals written into an exported \"Enterprise Compliance Dashboard Report.\" Also fabricated: static \"Recent Activity\" feed with fake system names + timestamps (L284-313), `+5% from last month` (L194), hardcoded framework scores EU AI Act 82 / NIST 88 / TC260 75 / ISO 42001 90 (L50-53), PDCA `activeCycles=3 / completedCycles=7` (L41-42), Overall Score fallback `85` when null (L192). **Fix:** bind every value to real queries; render \"Not assessed\" / \"—\" on null instead of flattering defaults; source or omit the incident/council counts from the deliverable. Putting invented incident + council counts in a regulatory PDF is the honesty-critical one here.\n\n**4. FABRICATED ROI CONSTANTS + BROKEN ROI MATH — ROICalculator.tsx**\nHardcoded, uncited constants presented as measured results: `35% cost reduction` (L34, 231), `67% risk reduction` (L35, 243), `85% audit-time saved` (L266), `3-6 vs 12-18 months` (L254-255). The \"3-Year ROI\" formula (L37) is `annualSavings*3 / implementationCost` — gross savings ÷ one-time cost, never nets out cost recovered, and **omits the platform subscription fee entirely**, printing ~700% ROI at defaults. Disclaimer falsely claims figures are \"based on industry averages\" (L332). Also: 3 of 5 inputs (AI Systems slider, Industry dropdown, Frameworks slider) are **inert** yet the page claims a \"personalized/custom\" ROI. **Fix:** correct formula to `((annualSavings*3) - (implementationCost + platformFee*3)) / (implementationCost + platformFee*3) * 100`; surface the 3 constants as editable labelled assumptions; wire or delete the dead inputs; reword disclaimer to \"illustrative, not verified.\"\n\n**5. HINTON QUOTE FABRICATION + WRONG DATE — Charter.tsx (L314, 392-395)**\nVerbatim quote attributed to *\"Geoffrey Hinton's Insight (2023)\"*: *\"AI should want to protect humans the way a mother wants to protect a child.\"* It is a **paraphrase presented as a direct quote, and the date is wrong** — Hinton's maternal-instinct framing was delivered at Ai4 Las Vegas in **August 2025**. **Fix:** change (2023)→(2025); drop the quotation marks (paraphrase) or use his actual Aug-2025 wording with source.\n\n**6. LEGAL OVERCLAIM — CSOAI signs the EU Declaration of Conformity — ConformityAssessment.tsx (L47)**\n*\"The Council builds and signs the evidence — risk assessments, technical documentation, and the declaration\"* implies CSOAI signs the EU declaration. Under **Art. 47 EU AI Act the declaration must be drawn up and signed by the PROVIDER** — a third party cannot execute this legal act. **Fix:** reword to \"prepares/assembles the evidence and drafts the declaration for the provider to sign.\"\n\n**7. PRIVACY OVERCLAIM ON A SECURITY PRODUCT — CyberScan.tsx (L56, 77, 114)**\nUSP says *\"your data never leaves your control\"* / *\"Your findings stay in your browser,\"* but `runTriage` (L73-74) POSTs pasted findings (`slice(0,4000)`) to `https://os.meok.ai/api/chat`. **Fix:** *\"The tools run on your machine; only the findings text you submit for triage is sent to the Sovereign (max 4,000 chars) — nothing is stored client-side.\"* Also: hero \"Signed to Layer 0\" (L88) / \"Every fix signed to Layer 0\" (L59) — nothing on this page signs anything; soften to \"take the triage to /system-card to sign it.\"\n\n**8. FRAMEWORK-COUNT MISMATCH vs canonical 26 / 1,686 (multi-page)**\n- CaseStudies L336: `Compliance Frameworks 8+`\n- FrameworkCatalog L18-45/87-88: array has **28** entries → renders \"28 frameworks, 9 supported, 14 mapped\" (23 crosswalked). Canonical is **26 frameworks / 1,686 controls** — neither 23 nor 28 equals 26.\n- EnterpriseDashboard: presents only 4 frameworks with no link to the 26-framework library.\n**Fix:** reconcile every count to 26 / 1,686; trim the catalog array or fix canon everywhere; label the dashboard's 4 as a selected subset.\n\n**9. SELF-CONTRADICTIONS — FrameworkCatalog.tsx (FedRAMP + SOX)**\nFedRAMP is listed as status `Mapped` (L38) AND as an un-claimed `PARTNER_GAPS` regime (L50). SOX is `Mapped` (L41) AND inside the `GLBA / SOX` gap chip (L51). Same framework cannot be both control-mapped and a disclaimed gap. **Fix:** pick one per framework — remove from gaps if genuinely mapped, else downgrade catalog entry to Planned.\n\n**10. STALE / WRONG REGULATORY FRAMEWORKS (multi-page)**\n- CaseStudies L134 \"Executive Orders\" — Biden EO 14110 was **revoked 20 Jan 2025**; replace with OMB M-24-10.\n- CaseStudies L245 \"UK AI Bill\" — **no enacted UK AI Act exists**; use \"UK AI regulatory principles (DSIT pro-innovation framework).\"\n- CaseStudies L59 \"Basel III\" as an AI framework — category error (capital-adequacy standard); scope to model-risk (SR 11-7) or drop.\n- FrameworkCatalog L25 Canada AIDA marked \"Planned\" — **AIDA died with Bill C-27** on prorogation; relabel \"Stalled\" or drop.\n- CyberScan L38 \"Checkov (Prisma)\" → correct maintainer is **Bridgecrew / Palo Alto Networks**; L39 tfsec is **deprecated/merged into Trivy** — lead with Trivy.\n\n**11. PROVABLE-SAFETY + SUPERLATIVE OVERCLAIMS — Charter.tsx (L57, 269, 335)**\n*\"Mathematical proof of safety, not just promises\"* (L335) and *\"world's first relationship-based AI governance framework\"* (L269) — mathematically proven safety of frontier AI is an open research goal, and \"world's first\" is unsupportable. **Fix:** \"formal safety assurance and evidence-based verification\" (a goal); soften to \"a relationship-based framework.\" Also L194 unverifiable \"reviewed by legal experts, ethicists, technical AI researchers\" — name reviewers or remove.\n\n**12. PRESENT-TENSE / CAPABILITY OVERCLAIMS on unlaunched mechanisms**\n- Charter L240-241, 457: UBI/Prosperity Fund described in present tense as operating (\"AI profits fund UBI\") — reframe as proposed/contractual-upon-signature.\n- Charter L210/228 & ROICalc L73-74: \"33 agents from 12 providers monitor 24/7\" / \"33-Agent Byzantine Council\" stated as live fact on money/legal pages — **internal notes show the live council fell back to a single provider (Groq)**. State the number actually wired or label \"target architecture.\" Verify 33 vs the 13-queen config before shipping.\n- RiskHeatmap L3 code comment \"#1 requested enterprise GRC feature\" — uncited superlative; soften.\n\n**Lower-severity honesty items:** ROICalculator renders USD while pricing is GBP (£99/£12.99) — currency mismatch a UK buyer will catch. RiskHeatmap 8 risks (R-01..R-08) have no \"sample data\" label. ConformityAssessment \"Ed25519 passport\" product claim risks being read as a statutory step.\n\n---\n\n## (B) Top Proof / Link / Dead-Button Fixes\n\n1. **Charter.tsx — 4 dead download buttons + 2 dead contact buttons.** \"Download PDF (66 pages)\" (L273-279), \"Download DOCX\" (L280-287), final-CTA PDF (L887) / DOCX (L891) have no onClick/href. `charter@csoai.org` (L819-822) and `founding@csoai.org` (L871-873) are text, not `mailto:`. **Fix:** wire each to the real file (and verify the 66-page PDF actually exists) + make emails real `mailto:` links.\n\n2. **CaseStudies.tsx — \"Read Full Case Study\" is dead on every card** (L622-625): no onClick/Link/href. **Fix:** wire to a detail route or remove until detail pages exist. Also the filter logic bug (L330, convoluted `!cs.featured || selectedIndustry !== 'all'`) and missing \"Multinational\" industry pill (L315-322) — the \"International Commerce Corp\" study can never be filtered to.\n\n3. **ConformityAssessment.tsx — invisible FAQ schema + unverified CTAs.** FAQPage JSON-LD (L15-25) injects 3 Q&As that are **never rendered on-page** — violates Google's visible-content policy, risks a manual action. **Fix:** render the 3 Q&As as a visible accordion. Also verify CTA routes `/assess`, `/high-risk-ai-systems`, `/ai-act-faq` (L50-52) actually 200 — not in the CLAUDE.md route list.\n\n4. **RiskHeatmap.tsx — dead empty-cell buttons + a11y gaps.** Empty matrix cells (L78-91) render as clickable `<button>` that do nothing; multi-risk cells only ever select `here[0]` (L80, latent bug on new data); no focus-visible ring. **Fix:** `disabled={here.length===0}`, per-cell `aria-label`, `focus-visible:ring-2 focus-visible:ring-emerald-500`, and make each risk-ID chip its own button.\n\n5. **Typography + brand consistency (cross-page).** Spaced hyphens where em-dashes belong on Charter (L260, 266, 897) and ConformityAssessment (L31-33). Off-brand blue/purple/yellow accents on ROICalculator (L96, 254) and EnterpriseDashboard (L177, 222-239, 296, 306) vs brand emerald `#10b981` / teal `#2dd4bf` / slate-900. Unused `Users` import in EnterpriseDashboard (L16). **Fix:** standardise dashes to `—`, recolour to emerald/teal/slate, drop dead import.\n\n---\n\n## (C) Best 3 Visuals to Build (data-true, on-brand, no photos)\n\n**1. FrameworkCatalog \"Coverage Ledger\" bar + region×category grid** *(replaces prose counts — highest honesty leverage)*\nA single 100%-width stacked SVG bar segmented by **live `counts`** from the FRAMEWORKS array: Supported (emerald `#10b981`), Mapped (teal `#2dd4bf`), Planned (slate-400 `#94a3b8`), each width = count/total, labelled with the live number (no hardcoded values, so it can never drift from canon — forcing the count to reconcile to 26). Below it a CSS-grid heatmap: rows = regions (EU/US/Global/UK/China/Korea/Canada/Singapore), cols = categories (AI/Security/Privacy/Financial/Healthcare/Quality), cell fill intensity = # frameworks at that intersection (emerald tints), empty cells slate-50 outline. All derived from the array. Slate-900 headings, emerald/teal accents only.\n\n**2. Charter \"Byzantine Council\" 23/33 consensus ring** *(illustrates the most-repeated, never-shown claim)*\nCustom SVG (viewBox 0 0 360 360), 33 nodes evenly on a circle (r=140). Fill **23 of 33 solid emerald**, outline the remaining 10 in slate — visually encoding the 23/33 (2/3) quorum honestly rather than asserting it. Center label \"23 / 33\" + subtext \"consensus to act.\" Low-opacity chords between agreeing nodes convey AI-to-AI cross-check. 12 provider families as emerald/teal/slate legend swatches beneath. Theme-aware (brighten to `#34d399` on dark). Replaces the plain prose at L226-229.\n\n**3. ROICalculator \"How this is calculated\" transparency panel** *(turns an unsourced number generator into a defensible model)*\nA horizontal stacked SVG bar under the result cards: full width = current Annual Compliance Spend (slate-700), emerald segment = estimated savings, **teal segment = estimated CSOAI platform cost** — visually exposing the platform fee the current ROI formula hides, and showing NET saving. Animated width transition on slider change. Beneath: an editable assumptions legend (savings %, platform fee, implementation cost) as labelled chips with footnote *\"illustrative assumptions — edit to model your own.\"* Pure CSS/SVG, emerald/teal/slate-900.\n\n*Runner-up worth building: EnterpriseDashboard \"Compliance Posture\" donut + framework meters that render a hollow slate outline + \"—\" when a score is null (visually honest instead of defaulting to a flattering number), replacing the fabricated Recent Activity feed.*"
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Audit"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 2,
+      "title": "Synthesize"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "audit:CaseStudies.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a7100cfe2840ae8d8",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492662581,
+      "queuedAt": 1783492662567,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "client/src/pages/CaseStudies.tsx — Case Studies (social pro…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE (strict): flag any INVENTED customer name/logo/testimonial/case-study, uncited stat, made-up ROI multiplier, framework-count that contradicts the canonical '26 frameworks / 1,686 controls', wrong law/date/fine, or overclaim. Propose only custom co…",
+      "lastProgressAt": 1783492726745,
+      "tokens": 74326,
+      "toolCalls": 2,
+      "durationMs": 64164,
+      "resultPreview": "{\"page\":\"client/src/pages/CaseStudies.tsx — Case Studies (social proof)\",\"factual_risks\":[\"FABRICATION (page-wide, honesty-critical): All 7 'case studies' are invented clients with specific quantitative outcomes ('Global Bank (European)', 'Regional Healthcare Network', 'Advanced Manufacturing Corp', 'International Commerce Corp', 'Emerging Fintech Startup', etc.) presented under a 'Real-World Resu…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "audit:ROICalculator.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a577de53360bdc45f",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492662582,
+      "queuedAt": 1783492662567,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/ROICalcula…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE (strict): flag any INVENTED customer name/logo/testimonial/case-study, uncited stat, made-up ROI multiplier, framework-count that contradicts the canonical '26 frameworks / 1,686 controls', wrong law/date/fine, or overclaim. Propose only custom co…",
+      "lastProgressAt": 1783492724402,
+      "tokens": 61969,
+      "toolCalls": 2,
+      "durationMs": 61819,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/ROICalculator.tsx (ROI Calculator)\",\"factual_risks\":[\"FABRICATED SAVINGS RATE: line 34 hardcodes `complianceSpend * 0.35` and line 231 labels it '35% reduction in compliance costs'. There is no cited source — this is an invented ROI multiplier applied to every user. CORRECT FACT: CSOAI has no published, verifiable 35% compliance-cost-reduct…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "audit:Charter.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a0a48c0fb00087a97",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492662584,
+      "queuedAt": 1783492662567,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Charter.tsx — The 52-article CSOAI Partnership Charter",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE (strict): flag any INVENTED customer name/logo/testimonial/case-study, uncited stat, made-up ROI multiplier, framework-count that contradicts the canonical '26 frameworks / 1,686 controls', wrong law/date/fine, or overclaim. Propose only custom co…",
+      "lastProgressAt": 1783492744806,
+      "tokens": 75307,
+      "toolCalls": 2,
+      "durationMs": 82222,
+      "resultPreview": "{\"page\":\"Charter.tsx — The 52-article CSOAI Partnership Charter\",\"factual_risks\":[\"HINTON QUOTE FABRICATION RISK (honesty-critical). Line 392-395 and 314 attribute a verbatim quote to 'Geoffrey Hinton's Insight (2023)': “AI should want to protect humans the way a mother wants to protect a child.” This is a paraphrase presented as a direct quotation, and the DATE IS WRONG. Correct fact: Hinton's ma…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "audit:ConformityAssessment.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a6aaad281369c2098",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492662586,
+      "queuedAt": 1783492662567,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/Conformity…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE (strict): flag any INVENTED customer name/logo/testimonial/case-study, uncited stat, made-up ROI multiplier, framework-count that contradicts the canonical '26 frameworks / 1,686 controls', wrong law/date/fine, or overclaim. Propose only custom co…",
+      "lastProgressAt": 1783492721728,
+      "tokens": 58051,
+      "toolCalls": 2,
+      "durationMs": 59142,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/ConformityAssessment.tsx (EU AI Act conformity assessment)\",\"factual_risks\":[\"LEGAL OVERCLAIM (line 47): 'The Council builds and signs the evidence - risk assessments, technical documentation, and the declaration' implies CSOAI signs the EU declaration of conformity. CORRECT FACT: under Art. 47 EU AI Act, the EU declaration of conformity mu…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "audit:FrameworkCatalog.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a96e2a272618ca016",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492662586,
+      "queuedAt": 1783492662567,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Framework Catalog (client/src/pages/FrameworkCatalog.tsx)",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE (strict): flag any INVENTED customer name/logo/testimonial/case-study, uncited stat, made-up ROI multiplier, framework-count that contradicts the canonical '26 frameworks / 1,686 controls', wrong law/date/fine, or overclaim. Propose only custom co…",
+      "lastProgressAt": 1783492739908,
+      "tokens": 59446,
+      "toolCalls": 2,
+      "durationMs": 77322,
+      "resultPreview": "{\"page\":\"Framework Catalog (client/src/pages/FrameworkCatalog.tsx)\",\"factual_risks\":[\"FRAMEWORK-COUNT MISMATCH vs canonical crosswalk. The FRAMEWORKS array (lines 18-45) contains 28 entries, so the hero (lines 87-88) renders '28 frameworks ... 9 deeply supported, 14 control-mapped'. Canonical is '26 frameworks / 1,686 controls'. CORRECT FACT: reconcile to 26 — either trim the array to the 26 cross…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 6,
+      "label": "audit:CyberScan.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "ac962e89dcd306e84",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492662586,
+      "queuedAt": 1783492662567,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "client/src/pages/CyberScan.tsx (/cyber-scan — \"God's Eye\" c…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE (strict): flag any INVENTED customer name/logo/testimonial/case-study, uncited stat, made-up ROI multiplier, framework-count that contradicts the canonical '26 frameworks / 1,686 controls', wrong law/date/fine, or overclaim. Propose only custom co…",
+      "lastProgressAt": 1783492750270,
+      "tokens": 64647,
+      "toolCalls": 3,
+      "durationMs": 87684,
+      "resultPreview": "{\"page\":\"client/src/pages/CyberScan.tsx (/cyber-scan — \\\"God's Eye\\\" cyber scan tool)\",\"factual_risks\":[\"PRIVACY OVERCLAIM (honesty-critical): USP line 56 says 'your data never leaves your control' and the triage box (line 114) plus the fallback (line 77) both say 'Your findings stay in your browser.' But runTriage (lines 73-74) POSTs the pasted findings (findings.slice(0,4000)) to https://os.meok…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 7,
+      "label": "audit:RiskHeatmap.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a8f05da06a406c31f",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492662587,
+      "queuedAt": 1783492662567,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "RiskHeatmap.tsx (/risk-heatmap)",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE (strict): flag any INVENTED customer name/logo/testimonial/case-study, uncited stat, made-up ROI multiplier, framework-count that contradicts the canonical '26 frameworks / 1,686 controls', wrong law/date/fine, or overclaim. Propose only custom co…",
+      "lastProgressAt": 1783492718482,
+      "tokens": 59581,
+      "toolCalls": 2,
+      "durationMs": 55895,
+      "resultPreview": "{\"page\":\"RiskHeatmap.tsx (/risk-heatmap)\",\"factual_risks\":[\"Code comment line 3 claims Risk Heatmap is the '#1 requested enterprise GRC feature' — uncited superlative with no source. Not user-facing but violates the no-made-up-claims rule. FIX: remove the ranking or cite the survey/source; safe honest version: 'a commonly requested GRC feature'.\",\"The 8 risks (R-01..R-08, e.g. 'Model bias in CV sc…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 8,
+      "label": "audit:EnterpriseDashboard.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a2aa855e00e2f5c2f",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492662587,
+      "queuedAt": 1783492662567,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "client/src/pages/EnterpriseDashboard.tsx (Enterprise Dashbo…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE (strict): flag any INVENTED customer name/logo/testimonial/case-study, uncited stat, made-up ROI multiplier, framework-count that contradicts the canonical '26 frameworks / 1,686 controls', wrong law/date/fine, or overclaim. Propose only custom co…",
+      "lastProgressAt": 1783492713002,
+      "tokens": 63070,
+      "toolCalls": 3,
+      "durationMs": 50415,
+      "resultPreview": "{\"page\":\"client/src/pages/EnterpriseDashboard.tsx (Enterprise Dashboard)\",\"factual_risks\":[\"FABRICATED 'Recent Activity' feed (lines 284-313): three hardcoded events with invented system names and fake timestamps — 'Compliance assessment completed / Customer Service AI - EU AI Act' (2 hours ago), 'Risk level updated / ML Pipeline System - High Risk' (5 hours ago), 'PDCA cycle initiated / Quarterly…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 9,
+      "label": "synthesize",
+      "phaseIndex": 2,
+      "phaseTitle": "Synthesize",
+      "agentId": "a21f67a5e9eee007e",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783492750276,
+      "queuedAt": 1783492750274,
+      "attempt": 1,
+      "promptPreview": "Consolidate 8 page audits (JSON):\n[{\"page\":\"client/src/pages/CaseStudies.tsx — Case Studies (social proof)\",\"factual_risks\":[\"FABRICATION (page-wide, honesty-critical): All 7 'case studies' are invented clients with specific quantitative outcomes ('Global Bank (European)', 'Regional Healthcare Network', 'Advanced Manufacturing Corp', 'International Commerce Corp', 'Emerging Fintech Startup', etc.)…",
+      "lastProgressAt": 1783492824769,
+      "tokens": 63277,
+      "toolCalls": 0,
+      "durationMs": 74492,
+      "resultPreview": "# CSOAI Site Audit — Consolidated Findings (8 pages)\n\n## (A) HONESTY-CRITICAL Factual Risks — Ranked\n\n**1. FABRICATED CLIENTS + OUTCOMES — CaseStudies.tsx (page-wide, worst offender)**\nAll 7 \"case studies\" are invented clients (\"Global Bank (European)\", \"Regional Healthcare Network\", \"Advanced Manufacturing Corp\", \"International Commerce Corp\", \"Emerging Fintech Startup\") with fabricated precise o…"
+    }
+  ],
+  "totalTokens": 579674,
+  "totalToolCalls": 18
+}

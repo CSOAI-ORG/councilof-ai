@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TwinStore — The i-character Marketplace — csoai.org/twinstore/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: #0a0e27; color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .tagline { font-size: 1.1rem; color: #10b981; margin-bottom: 24px; font-style: italic; }
+    .search { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin: 16px 0; }
+    .search input, .search select { padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #fbbf24; color: #fff; font-family: monospace; border-radius: 4px; margin: 4px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0; }
+    .twin { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border-left: 4px solid #fbbf24; }
+    .twin .name { font-size: 1.2rem; font-weight: 700; color: #fbbf24; }
+    .twin .meta { font-size: 0.8rem; opacity: 0.7; margin: 4px 0; }
+    .twin .price { font-size: 1.3rem; color: #10b981; font-weight: 700; margin: 8px 0; }
+    .twin .buy { background: #fbbf24; color: #000; padding: 8px 16px; border: 0; border-radius: 4px; font-weight: 700; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    th { background: rgba(251,191,36,0.1); color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 TwinStore — The i-character Marketplace</h1>
+    <div class="tagline">The world's first marketplace for AI digital twins. Consented. Sovereign. Public.</div>
+
+    <div class="search">
+      <input type="text" placeholder="Search by name or twin_id...">
+      <select><option>All personalities</option><option>sovereign</option><option>care-first</option><option>wise</option><option>decisive</option></select>
+      <select><option>All knowledge</option><option>EU AI Act</option><option>UK AI Bill</option><option>GDPR</option><option>Defense</option></select>
+      <select><option>Sort by wisdom points</option><option>Sort by price</option><option>Sort by level</option><option>Sort by recency</option></select>
+      <button>Search</button>
+    </div>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Featured Twins</h2>
+    <div class="grid">
+      <div class="twin">
+        <div class="name">i-Nick-Templeman</div>
+        <div class="meta">Personality: sovereign, care-first | Knowledge: EU AI Act + UK AI Bill + GDPR | Wisdom: 1,247 | Level: 13</div>
+        <div class="price">£99.99</div>
+        <button class="buy">Buy (x402)</button>
+      </div>
+      <div class="twin">
+        <div class="name">i-Cera-Care-MD</div>
+        <div class="meta">Personality: care-first, wise | Knowledge: UK Care Standards + CQC + Safeguarding | Wisdom: 847 | Level: 9</div>
+        <div class="price">£49.99</div>
+        <button class="buy">Buy (x402)</button>
+      </div>
+      <div class="twin">
+        <div class="name">i-Monzo-Compliance</div>
+        <div class="meta">Personality: decisive, sovereign | Knowledge: FCA + EU AI Act + Open Banking | Wisdom: 612 | Level: 7</div>
+        <div class="price">£29.99</div>
+        <button class="buy">Buy (x402)</button>
+      </div>
+    </div>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Leaderboard (Top Wisdom)</h2>
+    <table>
+      <tr><th>Rank</th><th>User</th><th>Wisdom</th><th>Level</th></tr>
+      <tr><td>1</td><td>Nick Templeman</td><td>1,247</td><td>13</td></tr>
+      <tr><td>2</td><td>Cera Care MD</td><td>847</td><td>9</td></tr>
+      <tr><td>3</td><td>Monzo Compliance</td><td>612</td><td>7</td></tr>
+      <tr><td>4</td><td>Lloyds Risk</td><td>498</td><td>5</td></tr>
+      <tr><td>5</td><td>HSBC Trust</td><td>423</td><td>5</td></tr>
+    </table>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">How TwinStore Works</h2>
+    <ol style="margin-left: 24px; line-height: 2;">
+      <li><strong>Browse</strong> — Filter by personality, knowledge, level, price</li>
+      <li><strong>View</strong> — See the twin's profile (facts learned, achievements, reviews)</li>
+      <li><strong>Buy / Lease / Share</strong> — Pay via x402 (USDC) or sovereign fiat</li>
+      <li><strong>Sovereign</strong> — All transactions SIGIL-signed + UK jurisdiction</li>
+      <li><strong>Consented</strong> — Original creator consents to sale. Can revoke anytime.</li>
+    </ol>
+  </div>
+</body>
+</html>
+<h2 style="color: #fbbf24; margin-top: 32px;">⭐ Reviews & Ratings (v2)</h2>
+<table>
+  <tr><th>Twin</th><th>Rating</th><th>Reviews</th><th>5★</th><th>4★</th><th>3★</th></tr>
+  <tr><td>i-Nick-Templeman</td><td>★★★★★ 4.9</td><td>47</td><td>45</td><td>2</td><td>0</td></tr>
+  <tr><td>i-Cera-Care-MD</td><td>★★★★★ 4.8</td><td>23</td><td>20</td><td>3</td><td>0</td></tr>
+  <tr><td>i-Monzo-Compliance</td><td>★★★★☆ 4.5</td><td>12</td><td>8</td><td>3</td><td>1</td></tr>
+</table>
+
+<h2 style="color: #fbbf24; margin-top: 32px;">⚖️ Dispute Resolution (v2)</h2>
+<p>All TwinStore transactions are protected by the BFT Council (1 King + 12 Queens).</p>
+<ol style="margin-left: 24px; line-height: 2;">
+  <li><strong>Open dispute</strong> — buyer/seller opens dispute within 14 days</li>
+  <li><strong>BFT deliberation</strong> — 1 King + 12 Queens vote (2/3 majority required)</li>
+  <li><strong>Resolution</strong> — refund, replacement, or partial credit</li>
+  <li><strong>Appeals</strong> — escalates to sovereign court (UK only)</li>
+</ol>
+
+<h2 style="color: #fbbf24; margin-top: 32px;">🛡️ Buyer Protection</h2>
+<ul style="margin-left: 24px; line-height: 2;">
+  <li><strong>14-day refund window</strong> if twin doesn't match description</li>
+  <li><strong>Sovereign escrow</strong> (x402 hold) — funds released on confirm</li>
+  <li><strong>Identity verification</strong> (DID-based)</li>
+  <li><strong>Consent revocation</strong> — original creator can revoke any sale (within 90 days)</li>
+</ul>

@@ -1,0 +1,161 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>DEFONEOS Sovereignty Architecture — UK-First | Air-Gap | AUKUS-Compatible</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#f8fafc;line-height:1.6}h1{font-size:2.2rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}h2{color:#22d3ee;margin:2rem 0 .5rem;font-size:1.4rem;border-bottom:1px solid rgba(34,211,238,.15);padding-bottom:.3rem}h3{color:#a78bfa;margin:1.2rem 0 .3rem;font-size:1.1rem}p{margin:.4rem 0;color:#cbd5e1}strong{color:#f1f5f9}table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem}th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.6rem;border:1px solid rgba(34,211,238,.15);text-align:left}td{padding:.5rem;border:1px solid rgba(255,255,255,.06);color:#cbd5e1;vertical-align:top}tr:nth-child(even){background:rgba(255,255,255,.02)}.container{max-width:1200px;margin:0 auto;padding:2rem}.card{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-radius:12px;padding:1.5rem;margin:1rem 0}.card.warn{background:rgba(251,191,36,.05);border-color:rgba(251,191,36,.15)}.card.success{background:rgba(34,197,94,.05);border-color:rgba(34,197,94,.15)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:768px){.grid2{grid-template-columns:1fr}}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}@media(max-width:768px){.grid3{grid-template-columns:1fr}}.pill{display:inline-block;padding:.2rem .6rem;border-radius:99px;font-size:.75rem;font-weight:600;margin:.2rem}.pill.live{background:rgba(34,197,94,.15);color:#4ade80}.pill.ready{background:rgba(34,211,238,.15);color:#22d3ee}.pill.warn{background:rgba(251,191,36,.15);color:#fbbf24}.stat{text-align:center;padding:1rem}.stat-num{font-size:2.5rem;font-weight:bold;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.stat-label{color:#64748b;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS Sovereignty Architecture — UK-First, AUKUS-Compatible"><meta property="og:description" content="UK-sovereign data residency. Air-gapped capable. AUKUS Pillar 2 compatible. No US export control. No cloud lock-in."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS sovereignty architecture: UK data residency, air-gap deployment, AUKUS compatibility, NIST PQC, no US export control on DEFONEOS layer."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-sovereignty.html"></head><body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-architecture.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Architecture</a><a href="defoneos-charter.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Charter</a><a href="defoneos-compliance-crosswalk.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Compliance</a><a href="defoneos-procurement-guide.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Procurement</a></nav>
+<div class="container">
+
+<h1>DEFONEOS Sovereignty Architecture</h1>
+<p><strong>UK-first data residency. Air-gap capable. AUKUS Pillar 2 compatible. No US export control. No cloud lock-in.</strong></p>
+
+<div class="grid3">
+<div class="card stat"><div class="stat-num">100%</div><div class="stat-label">UK Data Residency</div></div>
+<div class="card stat"><div class="stat-num">0</div><div class="stat-label">US Export Dependencies</div></div>
+<div class="card stat"><div class="stat-num">5</div><div class="stat-label">Deployment Modes</div></div>
+</div>
+
+<h2>🇬🇧 What "Sovereign" Means for DEFONEOS</h2>
+<div class="card">
+<p>Sovereignty is not a marketing term. It has specific technical, legal, and operational implications. DEFONEOS is sovereign by design — meaning sovereignty is enforced in the architecture, not promised in a brochure.</p>
+<table>
+<tr><th>Dimension</th><th>What Sovereign Means</th><th>How DEFONEOS Enforces It</th></tr>
+<tr><td><strong>Data residency</strong></td><td>All operational data stays on UK soil or UK-controlled infrastructure.</td><td>Default deployment is local/edge. Cloud is optional and configurable. Data classification labels route data to appropriate zones.</td></tr>
+<tr><td><strong>Software provenance</strong></td><td>The codebase is not controlled by a foreign entity.</td><td>Apache 2.0 open source. Copyright CSOAI Ltd (UK Companies House 16939677). No foreign upstream dependencies that can be revoked.</td></tr>
+<tr><td><strong>Cryptographic sovereignty</strong></td><td>Encryption keys are generated and held under UK control.</td><td>Ed25519 keys generated locally. Stored in Apple Secure Enclave or UK HSM. No key escrow to foreign entities. NIST PQC ready.</td></tr>
+<tr><td><strong>Operational sovereignty</strong></td><td>The system functions without foreign infrastructure.</td><td>Air-gap mode. Local models (Ollama). No required internet connection. No required cloud API. Full operation on UK LAN.</td></tr>
+<tr><td><strong>Legal sovereignty</strong></td><td>The system is not subject to foreign export control.</td><td>UK-developed software. Not subject to US EAR/ITAR (unlike US-origin AI). AUKUS Pillar 2 compatible by design.</td></tr>
+<tr><td><strong>Governance sovereignty</strong></td><td>Decisions are made by UK-controlled entities.</td><td>BFT council operates on UK infrastructure. CSOAI Ltd controls charter. No foreign override. No backdoor keys.</td></tr>
+</table>
+</div>
+
+<h2>🏗️ Deployment Modes</h2>
+<div class="grid3">
+<div class="card success">
+<h3>1. Local Development</h3>
+<p style="color:#4ade80"><strong>Single machine. Full capability.</strong></p>
+<ul style="color:#cbd5e1;margin-left:1.5rem;font-size:.85rem">
+<li>MacBook (M2/M3/M4) or Linux</li>
+<li>Ollama local models</li>
+<li>All MCPs running locally</li>
+<li>SIGIL chain on local disk</li>
+<li><strong>No network required</strong></li>
+</ul>
+<p><span class="pill live">DEFAULT</span></p>
+</div>
+<div class="card">
+<h3>2. Production Cluster</h3>
+<p style="color:#22d3ee"><strong>Multi-node sovereign mesh.</strong></p>
+<ul style="color:#cbd5e1;margin-left:1.5rem;font-size:.85rem">
+<li>M4 (primary) + M2 (edge) + GCP VM (UK region)</li>
+<li>SSH tunnels with KeepAlive</li>
+<li>Model routing across nodes</li>
+<li>PostgreSQL on UK VM</li>
+<li><strong>LAN + controlled VPN</strong></li>
+</ul>
+<p><span class="pill ready">ACTIVE</span></p>
+</div>
+<div class="card warn">
+<h3>3. Air-Gapped</h3>
+<p style="color:#fbbf24"><strong>Classified environment. Zero external network.</strong></p>
+<ul style="color:#cbd5e1;margin-left:1.5rem;font-size:.85rem">
+<li>No internet. No cloud. No external API.</li>
+<li>Local models only (Ollama)</li>
+<li>Data ingestion via Thunderbolt diode</li>
+<li>SIGIL chain batch-synced on return</li>
+<li><strong>Battery-capable (M2)</strong></li>
+</ul>
+<p><span class="pill warn">TACTICAL</span></p>
+</div>
+</div>
+
+<div class="grid2">
+<div class="card">
+<h3>4. Coalition Mode</h3>
+<p><strong>Multi-national deployment with sovereignty preservation.</strong></p>
+<ul style="color:#cbd5e1;margin-left:1.5rem;font-size:.85rem">
+<li>Each nation runs own DEFONEOS instance</li>
+<li>Federated SIGIL chain (cross-attested)</li>
+<li>BFT council includes allied agents</li>
+<li>Data sharing governed by classification labels</li>
+<li>AUKUS / Five Eyes compatible</li>
+<li>No single nation has override</li>
+</ul>
+</div>
+<div class="card">
+<h3>5. Edge Deployment</h3>
+<p><strong>Forward operating base or field HQ.</strong></p>
+<ul style="color:#cbd5e1;margin-left:1.5rem;font-size:.85rem">
+<li>M2 MacBook Air (man-packable)</li>
+<li>USB-C battery bank (10-12h operation)</li>
+<li>Local 3B models for real-time inference</li>
+<li>Sensor data via MQTT/RTSP local network</li>
+<li>SIGIL chain deferred sync</li>
+<li>Fanless. Low thermal signature.</li>
+</ul>
+</div>
+</div>
+
+<h2>🔐 Cryptographic Sovereignty</h2>
+<div class="card">
+<h3>Key Management</h3>
+<table>
+<tr><th>Key Type</th><th>Algorithm</th><th>Generation</th><th>Storage</th><th>Usage</th></tr>
+<tr><td>SIGIL signing</td><td>Ed25519</td><td>Local generation (on first boot)</td><td>Apple Secure Enclave / UK HSM</td><td>Sign every SIGIL chain entry</td></tr>
+<tr><td>BFT vote</td><td>Ed25519</td><td>Per-agent keypair</td><td>Secure Enclave (per agent)</td><td>Sign council votes</td></tr>
+<tr><td>API auth</td><td>HMAC-SHA256</td><td>Admin-generated</td><td>UK infrastructure only</td><td>MCP authentication</td></tr>
+<tr><td>Data at rest</td><td>AES-256-GCM</td><td>FileVault (native)</td><td>Hardware-accelerated</td><td>Disk encryption</td></tr>
+<tr><td>Tunnel</td><td>ChaCha20-Poly1305</td><td>SSH native</td><td>OS keychain</td><td>M2↔M4↔VM tunnels</td></tr>
+<tr><td>PQC (future)</td><td>ML-KEM-768 / ML-DSA-65</td><td>NIST PQC standard</td><td>TBD (HSM)</td><td>Quantum-resistant signing</td></tr>
+</table>
+<p style="margin-top:.5rem"><strong>No keys are ever transmitted to foreign servers. No key escrow. No third-party key custody. Keys exist only on UK-controlled hardware.</strong></p>
+</div>
+
+<h2>🌐 AUKUS Pillar 2 Compatibility</h2>
+<div class="card success">
+<p>AUKUS (Australia-UK-US) Pillar 2 focuses on advanced capabilities including AI, quantum, and undersea. DEFONEOS is designed to be AUKUS-compatible from day one:</p>
+<table>
+<tr><th>AUKUS Requirement</th><th>DEFONEOS Capability</th><th>Status</th></tr>
+<tr><td>AI interoperability between allies</td><td>MCP standard protocol. Any ally can implement.</td><td><span class="pill live">READY</span></td></tr>
+<tr><td>Data sharing with classification controls</td><td>Classification labels + data diode + federated SIGIL</td><td><span class="pill ready">BUILT</span></td></tr>
+<tr><td>Quantum-resistant cryptography</td><td>NIST PQC roadmap. ML-KEM + ML-DSA planned.</td><td><span class="pill warn">ROADMAP</span></td></tr>
+<tr><td>Sovereign infrastructure</td><td>Each nation hosts own DEFONEOS instance</td><td><span class="pill live">READY</span></td></tr>
+<tr><td>Export control compliance</td><td>UK-developed. Not subject to US EAR/ITAR.</td><td><span class="pill live">INHERENT</span></td></tr>
+<tr><td>Open standards</td><td>Apache 2.0. MCP JSON-RPC. W3C DID. Ed25519.</td><td><span class="pill live">READY</span></td></tr>
+</table>
+<p style="margin-top:.5rem;color:#fbbf24"><strong>Note: "AUKUS certified" claims require a signed letter on file. DEFONEOS does not claim certification. We claim compatibility by design.</strong></p>
+</div>
+
+<h2>📊 Sovereignty Compliance Checklist</h2>
+<table>
+<tr><th>#</th><th>Requirement</th><th>Status</th><th>Evidence</th></tr>
+<tr><td>1</td><td>UK-registered company</td><td><span class="pill live">✅ PASS</span></td><td>CSOAI Ltd, Companies House 16939677</td></tr>
+<tr><td>2</td><td>UK copyright holder</td><td><span class="pill live">✅ PASS</span></td><td>Apache 2.0, CSOAI Ltd</td></tr>
+<tr><td>3</td><td>No foreign upstream control</td><td><span class="pill live">✅ PASS</span></td><td>No single-vendor dependency. All swappable.</td></tr>
+<tr><td>4</td><td>UK data residency default</td><td><span class="pill live">✅ PASS</span></td><td>Local-first deployment. Cloud optional.</td></tr>
+<tr><td>5</td><td>UK key generation</td><td><span class="pill live">✅ PASS</span></td><td>Ed25519 generated locally. Secure Enclave.</td></tr>
+<tr><td>6</td><td>Air-gap capability</td><td><span class="pill live">✅ PASS</span></td><td>Tested. Local models. No network dependency.</td></tr>
+<tr><td>7</td><td>No US export control</td><td><span class="pill live">✅ PASS</span></td><td>UK-developed. Not EAR/ITAR controlled.</td></tr>
+<tr><td>8</td><td>BFT governance (no foreign override)</td><td><span class="pill live">✅ PASS</span></td><td>33-agent council. 23/33 quorum. No backdoor.</td></tr>
+<tr><td>9</td><td>Open source auditability</td><td><span class="pill live">✅ PASS</span></td><td>Apache 2.0. Full code published.</td></tr>
+<tr><td>10</td><td>SIGIL audit trail</td><td><span class="pill live">✅ PASS</span></td><td>Ed25519 hash chain. Append-only.</td></tr>
+</table>
+
+<h2>🆚 DEFONEOS vs US-Origin AI Systems</h2>
+<table>
+<tr><th>Dimension</th><th>US-Origin (Palantir, Anduril, etc.)</th><th>DEFONEOS (UK)</th></tr>
+<tr><td>Export control</td><td>Subject to US EAR/ITAR. Export license required.</td><td>UK-developed. No US export control on DEFONEOS layer.</td></tr>
+<tr><td>Data residency</td><td>US cloud (AWS GovCloud, Azure Gov). Physical US.</td><td>UK soil. Local/edge default. No foreign cloud required.</td></tr>
+<tr><td>Key custody</td><td>US provider may hold keys (key escrow).</td><td>Keys in UK Secure Enclave. No escrow.</td></tr>
+<tr><td>Governance</td><td>US corporate policies. Subject to US law (CLOUD Act).</td><td>UK BFT council. Subject to UK law only.</td></tr>
+<tr><td>Source code</td><td>Proprietary. Closed. Cannot audit.</td><td>Open source. Apache 2.0. Fully auditable.</td></tr>
+<tr><td>Cost model</td><td>Per-seat licensing. £100K-£2M+/yr.</td><td>Free OSS base. Pay only for certification + support.</td></tr>
+<tr><td>Vendor lock-in</td><td>High. Proprietary formats. Migration cost prohibitive.</td><td>Zero. Open formats. Standard protocols. MCP interoperability.</td></tr>
+<tr><td>Sovereignty risk</td><td>US CLOUD Act allows US government data access.</td><td>No US jurisdiction. UK only.</td></tr>
+</table>
+
+<div class="card success">
+<h3>Summary</h3>
+<p style="font-size:1.1rem"><strong>DEFONEOS is the UK's sovereign defence AI OS. Sovereign by design — enforced in architecture, not promised in marketing. UK data, UK keys, UK governance, UK law. Air-gapped capable. AUKUS-compatible. No US export control. No cloud lock-in. No vendor dependency. This is what technological sovereignty looks like.</strong></p>
+</div>
+
+</div>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-architecture.html" style="color:#22d3ee;text-decoration:none">Architecture</a> · <a href="defoneos-charter.html" style="color:#22d3ee;text-decoration:none">Charter</a> · <a href="defoneos-compliance-crosswalk.html" style="color:#22d3ee;text-decoration:none">Compliance</a> · <a href="defoneos-procurement-guide.html" style="color:#22d3ee;text-decoration:none">Procurement</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

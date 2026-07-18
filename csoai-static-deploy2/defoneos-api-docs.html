@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — API Documentation</title>
+<meta name="description" content="Complete API documentation for DEFONEOS sovereign defence AI platform. REST, gRPC, MCP, WebSocket, and SIGIL endpoints.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:600;margin:0 2px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.endpoint{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:.5rem 0;transition:border-color .2s}
+.endpoint:hover{border-color:var(--cyan)}
+.method{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.7rem;font-weight:700;margin-right:.5rem}
+.GET{background:var(--green);color:var(--bg)}
+.POST{background:var(--gold);color:var(--bg)}
+.WS{background:var(--purple);color:var(--bg)}
+.GRPC{background:var(--cyan);color:var(--bg)}
+.path{font-family:monospace;font-size:.85rem;color:var(--cyan)}
+.desc{font-size:.8rem;color:var(--fg);opacity:.8;margin:.25rem 0}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.75rem;overflow-x:auto;color:var(--green);white-space:pre}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:120px;text-align:center;display:inline-block;margin:.25rem}
+.stat-box .num{font-size:1.5rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+.nav-tabs{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.nav-tab{padding:.3rem .8rem;border-radius:4px;border:1px solid var(--border);cursor:pointer;font-size:.8rem;background:var(--bg2);color:var(--fg)}
+.nav-tab.active{background:var(--gold);color:var(--bg);font-weight:600}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>DEFONEOS — API Documentation</h1>
+<p style="font-size:.8rem;color:var(--cyan)">Complete API reference for the sovereign defence AI platform — v1.0</p></div>
+</div>
+<div><span class="badge badge-green">v1.0</span> <span class="badge badge-cyan">REST+gRPC+WS+MCP</span></div>
+</div>
+
+<div style="text-align:center;margin:1rem 0">
+<div class="stat-box"><div class="num">30</div><div class="label">MCP Servers</div></div>
+<div class="stat-box"><div class="num">87</div><div class="label">REST Endpoints</div></div>
+<div class="stat-box"><div class="num">4</div><div class="label">Protocols</div></div>
+<div class="stat-box"><div class="num">100%</div><div class="label">SIGIL Logged</div></div>
+<div class="stat-box"><div class="num">OAuth2</div><div class="label">Auth</div></div>
+</div>
+
+<h2>🔌 Base URLs</h2>
+<div class="section">
+<table>
+<tr><th>Environment</th><th>Base URL</th><th>Protocol</th></tr>
+<tr><td>Production</td><td><code>https://api.defoneos.uk</code></td><td>HTTPS / gRPC</td></tr>
+<tr><td>Staging</td><td><code>https://staging-api.defoneos.uk</code></td><td>HTTPS / gRPC</td></tr>
+<tr><td>Edge (on-prem)</td><td><code>http://10.0.0.x:8080</code></td><td>HTTP / gRPC</td></tr>
+<tr><td>MCP Federation</td><td><code>mcp://federation.defoneos.uk</code></td><td>MCP (JSON-RPC)</td></tr>
+<tr><td>SIGIL Chain</td><td><code>https://sigil.defoneos.uk</code></td><td>REST + WebSocket</td></tr>
+<tr><td>Cesium COP</td><td><code>wss://cop.defoneos.uk/stream</code></td><td>WebSocket</td></tr>
+</table>
+</div>
+
+<h2>🔐 Authentication</h2>
+<div class="section">
+<h3>OAuth 2.0 + JWT (Ed25519)</h3>
+<div class="code-block"># Get token
+curl -X POST https://api.defoneos.uk/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "client_credentials",
+    "client_id": "defoneos-client-001",
+    "client_secret": "<your-secret>",
+    "scope": "isr:read swarm:cmd c2:cmd sigil:write"
+  }'
+
+# Response
+{
+  "access_token": "eyJhbGciOiJFZERTQSIs...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "isr:read swarm:cmd c2:cmd sigil:write"
+}
+
+# Use token
+curl -H "Authorization: Bearer eyJhbGci..." \
+  https://api.defoneos.uk/api/v1/isr/sources</div>
+
+<h3>Scopes</h3>
+<table>
+<tr><th>Scope</th><th>Description</th><th>RBAC Role</th></tr>
+<tr><td><code>isr:read</code></td><td>Read ISR data from MCP sources</td><td>Analyst+</td></tr>
+<tr><td><code>isr:write</code></td><td>Write sensor data to fusion engine</td><td>Sensor Operator+</td></tr>
+<tr><td><code>swarm:read</code></td><td>Read swarm telemetry and status</td><td>Analyst+</td></tr>
+<tr><td><code>swarm:cmd</code></td><td>Send commands to drone swarm</td><td>Swarm Commander+</td></tr>
+<tr><td><code>c2:read</code></td><td>Read C2 messages and CoT events</td><td>Analyst+</td></tr>
+<tr><td><code>c2:cmd</code></td><td>Send C2 messages via FreeTAKServer</td><td>C2 Operator+</td></tr>
+<tr><td><code>sigil:read</code></td><td>Read SIGIL audit chain</td><td>Auditor+</td></tr>
+<tr><td><code>sigil:write</code></td><td>Emit SIGIL entries</td><td>System/Agent</td></tr>
+<tr><td><code>govern:bft</code></td><td>Participate in BFT council votes</td><td>Council Member</td></tr>
+<tr><td><code>admin</code></td><td>Full system administration</td><td>Administrator</td></tr>
+</table>
+</div>
+
+<h2>📡 ISR Fusion API</h2>
+<div class="section">
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/isr/sources</span>
+<p class="desc">List all available ISR sensor sources (30 MCPs)</p>
+<div class="code-block">Response 200:
+{
+  "sources": [
+    {"id": "sentinel-hub", "name": "Sentinel Hub", "type": "satellite", "status": "online", "latency_ms": 145},
+    {"id": "ais-stream", "name": "AIS Maritime", "type": "maritime", "status": "online", "latency_ms": 89},
+    {"id": "openaq", "name": "OpenAQ Air Quality", "type": "environmental", "status": "online", "latency_ms": 210},
+    {"id": "gdelt", "name": "GDELT News/OSINT", "type": "osint", "status": "online", "latency_ms": 320},
+    // ... 30 total
+  ],
+  "total": 30,
+  "online": 30
+}</div>
+</div>
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/isr/fusion/cop</span>
+<p class="desc">Get current Common Operating Picture — all fused data layers</p>
+<div class="code-block">curl -H "Authorization: Bearer $TOKEN" \
+  "https://api.defoneos.uk/api/v1/isr/fusion/cop?bbox=53.8,-1.5,53.9,-1.4&layers=all"
+
+Response 200:
+{
+  "timestamp": "2026-07-06T07:00:00Z",
+  "bbox": [53.8, -1.5, 53.9, -1.4],
+  "layers": {
+    "satellite": {"source": "sentinel-hub", "url": "tiles/...", "age_min": 12},
+    "maritime": {"vessels": 23, "anomalies": 2},
+    "air_quality": {"pm25": 12.3, "no2": 18.7, "status": "normal"},
+    "osint": {"events": 5, "sentiment": "neutral"},
+    "iot": {"sensors": 147, "alerts": 0}
+  },
+  "anomalies_detected": 2,
+  "sigil_id": "a3f7e2..."
+}</div>
+</div>
+<div class="endpoint">
+<span class="method POST">POST</span><span class="path">/api/v1/isr/anomaly/detect</span>
+<p class="desc">Run YOLOv8 detection on submitted imagery or trigger on live feed</p>
+<div class="code-block">curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -F "image=@recon_photo.jpg" \
+  -F "model=yolov8-defoneos-v3" \
+  "https://api.defoneos.uk/api/v1/isr/anomaly/detect"
+
+Response 200:
+{
+  "detections": [
+    {"class": "vehicle", "confidence": 0.94, "bbox": [120, 85, 200, 160]},
+    {"class": "person", "confidence": 0.87, "bbox": [340, 120, 380, 210]},
+    {"class": "structure", "confidence": 0.79, "bbox": [50, 200, 180, 300]}
+  ],
+  "model": "yolov8-defoneos-v3",
+  "inference_ms": 132,
+  "image_hash": "sha256:e1b2...",
+  "sigil_id": "b4c8d1..."
+}</div>
+</div>
+</div>
+
+<h2>🚁 Swarm API</h2>
+<div class="section">
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/swarm/status</span>
+<p class="desc">Get status of all drones in the swarm</p>
+</div>
+<div class="endpoint">
+<span class="method POST">POST</span><span class="path">/api/v1/swarm/launch</span>
+<p class="desc">Launch a drone swarm mission (requires BFT council approval)</p>
+<div class="code-block">curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "mission_type": "isr_recon",
+    "target_grid": "S4",
+    "num_drones": 4,
+    "altitude_m": 120,
+    "duration_min": 30,
+    "geofence": {
+      "type": "polygon",
+      "coordinates": [[53.8,-1.5],[53.9,-1.5],[53.9,-1.4],[53.8,-1.4]]
+    },
+    "rules_of_engagement": "observe_only"
+  }' \
+  "https://api.defoneos.uk/api/v1/swarm/launch"
+
+Response 202 (Pending BFT):
+{
+  "mission_id": "msn-2026-0706-001",
+  "status": "bft_pending",
+  "bft_quorum": "23/33 required",
+  "bft_timeout_sec": 30
+}
+
+Response 200 (Approved):
+{
+  "mission_id": "msn-2026-0706-001",
+  "status": "launched",
+  "drones": [
+    {"id": "drn-001", "position": [53.85,-1.45,0], "battery": 100},
+    {"id": "drn-002", "position": [53.85,-1.46,0], "battery": 100},
+    {"id": "drn-003", "position": [53.85,-1.44,0], "battery": 100},
+    {"id": "drn-004", "position": [53.86,-1.45,0], "battery": 100}
+  ],
+  "sigil_id": "c5d9e2..."
+}</div>
+</div>
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/swarm/telemetry/{mission_id}</span>
+<p class="desc">Stream real-time telemetry from active mission (Server-Sent Events)</p>
+<div class="code-block">curl -N -H "Authorization: Bearer $TOKEN" \
+  "https://api.defoneos.uk/api/v1/swarm/telemetry/msn-2026-0706-001"
+
+data: {"drone":"drn-001","lat":53.852,"lon":-1.451,"alt":120,"speed":15.2,"battery":87,"heading":45}
+data: {"drone":"drn-002","lat":53.853,"lon":-1.462,"alt":121,"speed":14.8,"battery":86,"heading":47}
+data: {"drone":"drn-003","lat":53.854,"lon":-1.443,"alt":119,"speed":15.5,"battery":88,"heading":43}
+data: {"event":"target_detected","drone":"drn-001","class":"vehicle","confidence":0.92,"bbox":[...]}</div>
+</div>
+<div class="endpoint">
+<span class="method POST">POST</span><span class="path">/api/v1/swarm/rtl/{mission_id}</span>
+<p class="desc">Issue Return-to-Launch command to all drones in mission</p>
+</div>
+</div>
+
+<h2>📻 C2 API (FreeTAKServer)</h2>
+<div class="section">
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/c2/cot</span>
+<p class="desc">Get Cursor on Target events</p>
+</div>
+<div class="endpoint">
+<span class="method POST">POST</span><span class="path">/api/v1/c2/cot/publish</span>
+<p class="desc">Publish a CoT event to the C2 backbone</p>
+<div class="code-block">curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event_type": "a-f-A-M",  // Friend, Air, Military
+    "uid": "DRN-001",
+    "point": {"lat": 53.852, "lon": -1.451, "ce": 5.0, "le": 10.0, "hae": 120.0},
+    "detail": {"contact": {"callsign": "EAGLE-1"}},
+    "remarks": "ISR patrol grid S4"
+  }' \
+  "https://api.defoneos.uk/api/v1/c2/cot/publish"</div>
+</div>
+</div>
+
+<h2>📜 SIGIL Audit Chain API</h2>
+<div class="section">
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/sigil/events</span>
+<p class="desc">Query the SIGIL audit chain</p>
+<div class="code-block">curl "https://api.defoneos.uk/api/v1/sigil/events?hours=24&actor=jeeves&action=mcp_federation_call"
+
+Response 200:
+{
+  "events": [
+    {"ts":"2026-07-06T07:15:00Z","actor":"jeeves","action":"page_deploy","digest":"ceaed9d4...","sig":"cef92dd2..."},
+    {"ts":"2026-07-06T06:45:00Z","actor":"jeeves","action":"page_deploy","digest":"ca4ff7f3...","sig":"5f6210fb..."},
+    // ...
+  ],
+  "total": 847,
+  "chain_valid": true
+}</div>
+</div>
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/sigil/verify</span>
+<p class="desc">Verify the entire SIGIL chain integrity</p>
+<div class="code-block">curl "https://api.defoneos.uk/api/v1/sigil/verify"
+
+Response 200:
+{
+  "chain_valid": true,
+  "entries_checked": 15432,
+  "first_entry": "2026-07-04T17:12:00Z",
+  "last_entry": "2026-07-06T07:15:00Z",
+  "hash_algorithm": "SHA-256",
+  "signature_algorithm": "Ed25519"
+}</div>
+</div>
+</div>
+
+<h2>🏛️ Governance (BFT Council) API</h2>
+<div class="section">
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/govern/bft/status</span>
+<p class="desc">Get BFT council status — active agents, quorum, pending votes</p>
+</div>
+<div class="endpoint">
+<span class="method POST">POST</span><span class="path">/api/v1/govern/bft/vote</span>
+<p class="desc">Cast a vote on a pending proposal (requires govern:bft scope)</p>
+<div class="code-block">curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -d '{"proposal_id": "prop-042", "vote": "for", "reasoning": "Mission within ROE"}' \
+  "https://api.defoneos.uk/api/v1/govern/bft/vote"</div>
+</div>
+<div class="endpoint">
+<span class="method GET">GET</span><span class="path">/api/v1/govern/jsp936/report/{model_id}</span>
+<p class="desc">Get auto-generated JSP 936 compliance report for a deployed AI model</p>
+</div>
+</div>
+
+<h2>🔌 MCP Federation (JSON-RPC)</h2>
+<div class="section">
+<p>DEFONEOS uses the Model Context Protocol (MCP) for all sensor integrations. Each MCP server exposes tools via JSON-RPC 2.0.</p>
+<div class="code-block"># List available MCP tools
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}' \
+  "mcp://federation.defoneos.uk/sentinel-hub-mcp"
+
+Response:
+{"jsonrpc":"2.0","id":1,"result":{
+  "tools":[
+    {"name":"get_satellite_imagery","description":"Get Sentinel-2 imagery for bbox","inputSchema":{
+      "type":"object","properties":{
+        "bbox":{"type":"array","items":{"type":"number"},"description":"[minLat,minLon,maxLat,maxLon]"},
+        "date":{"type":"string","description":"YYYY-MM-DD"},
+        "max_cloud_cover":{"type":"number","default":20}
+      }
+    }},
+    {"name":"get_cloud_mask","description":"Get cloud mask layer"},
+    {"name":"detect_changes","description":"Detect changes between two dates"}
+  ]
+}}
+
+# Call a tool
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{
+    "name":"get_satellite_imagery",
+    "arguments":{"bbox":[53.8,-1.5,53.9,-1.4],"date":"2026-07-06"}
+  },"id":2}' \
+  "mcp://federation.defoneos.uk/sentinel-hub-mcp"</div>
+
+<h3>Available MCP Servers (30)</h3>
+<table>
+<tr><th>Server</th><th>Category</th><th>Tools</th><th>Status</th></tr>
+<tr><td>sentinel-hub-mcp</td><td>Satellite</td><td>4</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>os-opendata-mcp</td><td>Geospatial</td><td>6</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>data-gov-uk-mcp</td><td>Government</td><td>5</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>companies-house-mcp</td><td>Business</td><td>3</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>ons-statistics-mcp</td><td>Statistics</td><td>4</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>gdelt-news-mcp</td><td>OSINT</td><td>5</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>openaq-air-mcp</td><td>Environmental</td><td>3</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>aisstream-maritime-mcp</td><td>Maritime</td><td>4</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>rtsp-camera-mcp</td><td>Video</td><td>3</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td>mqtt-bridge-mcp</td><td>IoT</td><td>4</td><td><span class="badge badge-green">ONLINE</span></td></tr>
+<tr><td colspan="2" style="text-align:center">+ 20 more servers</td><td>—</td><td><span class="badge badge-green">ALL ONLINE</span></td></tr>
+</table>
+</div>
+
+<h2>📊 WebSocket Streams</h2>
+<div class="section">
+<table>
+<tr><th>Stream</th><th>URL</th><th>Protocol</th><th>Data</th></tr>
+<tr><td>COP Live Updates</td><td><code>wss://cop.defoneos.uk/stream</code></td><td>WebSocket</td><td>Fused ISR data layers</td></tr>
+<tr><td>Swarm Telemetry</td><td><code>wss://swarm.defoneos.uk/telemetry</code></td><td>WebSocket</td><td>Per-drone GPS/alt/battery/speed</td></tr>
+<tr><td>SIGIL Feed</td><td><code>wss://sigil.defoneos.uk/feed</code></td><td>WebSocket</td><td>Real-time audit events</td></tr>
+<tr><td>C2 CoT Feed</td><td><code>wss://c2.defoneos.uk/cot</code></td><td>WebSocket</td><td>Cursor on Target events</td></tr>
+<tr><td>BFT Votes</td><td><code>wss://govern.defoneos.uk/votes</code></td><td>WebSocket</td><td>Live council deliberations</td></tr>
+<tr><td>Alerts</td><td><code>wss://alerts.defoneos.uk/ws</code></td><td>WebSocket</td><td>P0-P3 system alerts</td></tr>
+</table>
+</div>
+
+<h2>📈 Rate Limits</h2>
+<div class="section">
+<table>
+<tr><th>Tier</th><th>Req/min</th><th>Concurrent WS</th><th>MCP calls/hr</th><th>Monthly</th></tr>
+<tr><td>Free (Citizen)</td><td>60</td><td>2</td><td>100</td><td>£0</td></tr>
+<tr><td>Pro (MEOK)</td><td>600</td><td>20</td><td>10,000</td><td>£49</td></tr>
+<tr><td>Defence (MOD)</td><td>6,000</td><td>200</td><td>Unlimited</td><td>Contract</td></tr>
+<tr><td>Enterprise</td><td>Custom</td><td>Custom</td><td>Custom</td><td>Custom</td></tr>
+</table>
+</div>
+
+<h2>🛠️ SDKs</h2>
+<div class="section">
+<div class="code-block"># Python SDK
+pip install defoneos-sdk
+
+from defoneos import DEFONEOSClient
+client = DEFONEOSClient(token="your-jwt-token")
+
+# Get COP
+cop = client.isr.get_cop(bbox=[53.8, -1.5, 53.9, -1.4])
+print(f"Vessels: {cop.layers.maritime.vessels}")
+
+# Launch swarm
+mission = client.swarm.launch(
+    mission_type="isr_recon",
+    num_drones=4,
+    geofence={"type":"polygon","coordinates":[[53.8,-1.5],[53.9,-1.5],[53.9,-1.4],[53.8,-1.4]]}
+)
+print(f"Mission {mission.id} status: {mission.status}")
+
+# TypeScript SDK
+npm install @defoneos/sdk
+
+import { DEFONEOS } from '@defoneos/sdk';
+const client = new DEFONEOS({ token: 'your-jwt' });
+const cop = await client.isr.getCOP({ bbox: [53.8,-1.5,53.9,-1.4] });</div>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS API v1.0 — REST + gRPC + WebSocket + MCP Federation</p>
+<p>CSOAI Ltd (16939677) · MIT + CC0 · OAuth2 + JWT (Ed25519) · 100% SIGIL-logged</p>
+</footer>
+</div>
+</body>
+</html>

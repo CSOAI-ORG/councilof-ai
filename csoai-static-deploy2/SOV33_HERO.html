@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🜏 SOV33 — Open World Emergence Model · The Sovereign Substrate</title>
+<meta name="description" content="SOV33 is the governed sovereign substrate that grows with you. Routes across 61 open models, selects decorrelated checkers by MEASURED error-correlation, every action care-gated and SIGIL-signed — governance no lab ships. 12 Jul 2026.">
+<meta name="keywords" content="SOV33, OWEM, Open World Emergence Model, SOV3, sovereign AI, CSOAI, EU AI Act, sovereign substrate">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1400px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.8rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.8rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.3rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.82em;line-height:1.45}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.55rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.55rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline;color:var(--accent)}
+  .hero{background:linear-gradient(135deg,#0d1220 0%,#1a0d20 100%);padding:2.5rem;border-radius:12px;border:1px solid var(--accent);margin:1.5rem 0}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .card.warn{border-left-color:var(--warn)}
+  .redline{background:#2a0d0d;border-left:3px solid var(--warn);padding:.8rem 1.2rem;margin:.5rem 0;border-radius:4px}
+  hr.sep{border:none;border-top:1px dashed var(--rule);margin:2.5rem 0}
+  .layer{padding:.7rem 1rem;border-radius:6px;border-left:4px solid;margin:.4rem 0}
+  .L0{background:#1a0d20;border-color:var(--accent)}.L1{background:#0d1a20;border-color:#4a9eff}.L2{background:#0d201a;border-color:var(--accent2)}.L3{background:#201a0d;border-color:#f0c040}.L4{background:#1a0d20;border-color:#c060f0}
+  .owem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+  .owem{background:var(--bg2);padding:1.2rem;border-radius:8px;border:1px solid var(--rule);text-align:center}
+  .owem.live{border-color:var(--accent2);background:#0d201a}
+  .owem .name{color:var(--accent);font-size:1.1rem;font-weight:bold;margin:.5rem 0}
+  .owem .role{color:var(--muted);font-size:.85em}
+  .live-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent2);margin-right:6px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .cta{background:var(--accent);color:#0a0e1a;padding:.7rem 1.4rem;border-radius:8px;display:inline-block;font-weight:bold;margin:.5rem .3rem}
+  .cta:hover{background:var(--accent2)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  @media(max-width:768px){.grid2,.owem-grid{grid-template-columns:1fr}}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_HERO.html">
+</head>
+<body>
+
+<!-- HERMES LAYER · CTA CASCADE -->
+<a href="#" style="display:block;padding:.6rem 1.2rem;background:linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12));border-bottom:1px solid rgba(167,139,250,.4);color:var(--purple);text-decoration:none;text-align:center;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:background .15s" onmouseover="this.style.background='linear-gradient(90deg,rgba(167,139,250,.35),rgba(34,211,238,.22))'" onmouseout="this.style.background='linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12))'"><span style="display:inline-block;width:7px;height:7px;background:var(--green);border-radius:99%;margin-right:.5rem;animation:pulse 1.4s infinite;box-shadow:0 0 8px rgba(34,197,94,.6)"></span>🧠 Agentic runtime live → <span style="color:var(--cyan);text-decoration:underline">/hermes-layer</span></a>
+
+<header class="hero">
+  <h1>🜏 SOV33 — Open World Emergence Model</h1>
+  <p class="meta"><span class="live-indicator"></span>The sovereign substrate that grows with you. 12 Jul 2026 · CSOAI Ltd UK 16939677 · CSOAI governance · Article 0 binding.</p>
+  <p>
+    <span class="pill gold">SOV33</span>
+    <span class="pill gold">OWEM</span>
+    <span class="pill">5 OWEMs</span>
+    <span class="pill sigil">Ed25519 SIGIL</span>
+    <span class="pill">BFT-33</span>
+    <span class="pill">Care 0.95</span>
+    <span class="pill">Article 0</span>
+    <span class="pill">RFC 8032</span>
+    <span class="pill">Self-owned weights</span>
+    <a href="#" class="pill gold" style="text-decoration:none">→ SOV33 MAIN</a>
+  </p>
+  <p style="margin-top:1.5rem">
+    <a href="#test" class="cta">Test it now ↓</a>
+    <a href="SOV33_OWEM_EXPLAINER.html" class="cta" style="background:var(--bg2);color:var(--accent2);border:1px solid var(--accent2)">How it works</a>
+    <a href="SOV33_BFT33_COUNCIL.html" class="cta" style="background:var(--bg2);color:var(--accent2);border:1px solid var(--accent2)">BFT-33 Council</a>
+  </p>
+</header>
+
+<h2>What is SOV33?</h2>
+
+<div class="card gold">
+  <h3>The honest headline</h3>
+  <p><strong>"SOV33 routes across 61 open models spanning multiple pretraining lineages, license-filtered for sovereignty, selecting decorrelated checkers by MEASURED error-correlation, every action care-gated and SIGIL-signed — governance no lab ships."</strong></p>
+  <p class="meta">— Per <a href="#">SOV33_OWEM_REALITY</a> (Claude Code, MEOK Labs, 12 Jul 2026)</p>
+</div>
+
+<p><strong>SOV33 is an Open World Emergence Model (OWEM)</strong> — a sovereign substrate that grows with you. Unlike closed models that ship frozen at training time, SOV33 <em>emerges</em> through use:</p>
+
+<ul>
+  <li><strong>5 OWEMs</strong> (compliance, defense, intuition, voice, general) — each is a specialized perspective</li>
+  <li><strong>Own weights</strong> — Qwen3-0.6B trained on sovereign compliance data (200 samples, 87.5% accuracy)</li>
+  <li><strong>4 backends</strong> — sovereign brain (local Q4 GGUF) → Oracle GenAI 70B → Ollama → Groq (rotated by availability)</li>
+  <li><strong>Care-floor 0.95</strong> — every output gated; below-floor content is vetoed BEFORE it returns</li>
+  <li><strong>BFT-33 council</strong> — every sovereign op can be voted on by 33 voters across 5 OWEMs × 4 lineages (Free-MAD aggregation, no conformity bias)</li>
+  <li><strong>Ed25519 SIGIL</strong> — every action hash-chained and signed; auditable end-to-end</li>
+</ul>
+
+<blockquote>
+"The whole pitch of build your own AI — it grows with you. Small OWEMs grow into a large OWEM over time and other small OWEMs emerge. It's never the same, always changing."
+<br>— Sir Nicholas Templeman, 12 Jul 2026
+</blockquote>
+
+<h2>The Four Scopes of One Governed Substrate</h2>
+
+<blockquote>An OWEM is ONE governed sovereign substrate viewed at <strong>four scopes</strong> — a person's character (small), its tools (medium), the shared governance (large), rooted in one attested identity (centre) — where the model is a <em>replaceable organ</em> and the substrate is what persists. <span class="meta">Per <a href=#=>CHARTER_OWEM_FOUR_SCOPE</a></span></blockquote>
+
+<div class="owem-grid">
+  <div class="owem live">
+    <div class="name"><span class="live-indicator"></span>SMALL · Character</div>
+    <div class="role">One person: their memory, personality, care-profile. Grows with them (accretion).</div>
+    <div class="meta" style="margin-top:.5rem"><code>capability_owem_world</code> + memory bridge</div>
+  </div>
+  <div class="owem live">
+    <div class="name"><span class="live-indicator"></span>MEDIUM · Tools</div>
+    <div class="role">What the character can DO: capability/MCP surface (its hands, not a brain).</div>
+    <div class="meta" style="margin-top:.5rem">76 capabilities + 3101 MCP</div>
+  </div>
+  <div class="owem live">
+    <div class="name"><span class="live-indicator"></span>LARGE · SOV33</div>
+    <div class="role">The rules all characters OBEY: care-floor, SIGIL, BFT-33, passport tiers.</div>
+    <div class="meta" style="margin-top:.5rem">Gates + federation core</div>
+  </div>
+  <div class="owem live">
+    <div class="name"><span class="live-indicator"></span>CENTRE · Identity</div>
+    <div class="role">The shared sovereign root (makes them ONE system).</div>
+    <div class="meta" style="margin-top:.5rem">SIGIL chain + Charter</div>
+  </div>
+</div>
+
+<p class="meta"><strong>Deployed group names</strong> (informal): compliance · defense · intuition · voice · general. These are <em>routing group names</em> within the 4 scopes, not separate additively-capable OWEMs. Sovereign-trained: 1 (compliance group). Cloud-routed: 4 (until Colab T4 experts arrive).</p>
+
+<h2>How SOV33 Grows (L0 → L4)</h2>
+
+<table>
+  <tr><th>Level</th><th>What</th><th>Status</th></tr>
+  <tr><td><strong>L0: Single-expert</strong></td><td>1 sovereign expert (compliance)</td><td><span class="pill sigil">LIVE</span></td></tr>
+  <tr><td><strong>L1: Multi-expert</strong></td><td>4 experts (defense, intuition, voice)</td><td><span class="pill gold">PENDING COLAB</span></td></tr>
+  <tr><td><strong>L2: Multi-lineage</strong></td><td>Decorrelated (Qwen/Llama/DeepSeek)</td><td>Future</td></tr>
+  <tr><td><strong>L3: Federated</strong></td><td>Multi-substrate federation</td><td>Future</td></tr>
+  <tr><td><strong>L4: Multi-OWEM ecosystem</strong></td><td>Self-similar, no central controller</td><td>Future</td></tr>
+</table>
+
+<p>SOV33 measures its own growth via <code>sov33.capability_owem_emergence()</code>. Every snapshot proves it's never the same.</p>
+
+<h2 id="test">Test it right now</h2>
+
+<div class="card gold">
+  <h3>Live sovereign question (calls SOV33 substrate on :8101)</h3>
+  <p>Ask anything about the EU AI Act, sovereign AI, the Charter, or OWEM growth:</p>
+  <input type="text" id="sov33-question" placeholder="What is Article 0 of the Sovereign Charter?" 
+    style="width:100%;padding:.8rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;font-family:inherit;font-size:1rem;margin:.5rem 0">
+  <button onclick="askSov33()" style="background:var(--accent);color:#0a0e1a;border:none;padding:.7rem 1.4rem;border-radius:6px;font-weight:bold;cursor:pointer">Ask SOV33 →</button>
+  <div id="sov33-response" style="margin-top:1rem;padding:1rem;background:var(--bg2);border-radius:6px;border-left:3px solid var(--accent2);min-height:60px;font-family:monospace;font-size:.9em"></div>
+  <div id="sov33-meta" style="margin-top:.5rem;color:var(--muted);font-size:.8em"></div>
+</div>
+
+<div class="grid2" style="margin-top:1.5rem">
+  <div class="card">
+    <h3>5 OWEMs (parallel test)</h3>
+    <button onclick="testOWEMs()" style="background:var(--accent2);color:#0a0e1a;border:none;padding:.5rem 1rem;border-radius:6px;font-weight:bold;cursor:pointer">Run all 5 OWEMs in parallel</button>
+    <div id="owems-response" style="margin-top:.5rem;font-size:.85em"></div>
+  </div>
+  <div class="card">
+    <h3>BFT-33 Council vote</h3>
+    <button onclick="runCouncil()" style="background:var(--accent);color:#0a0e1a;border:none;padding:.5rem 1rem;border-radius:6px;font-weight:bold;cursor:pointer">Vote: ALLOW or REJECT?</button>
+    <div id="council-response" style="margin-top:.5rem;font-size:.85em"></div>
+  </div>
+</div>
+
+<hr class="sep">
+
+
+
+<h2>The 61-Model Registry (the moat)</h2>
+
+<div class="card gold">
+  <h3>Live registry query</h3>
+  <p>SOV33 routes across 61 open models across 7 pretraining lineages. License-filtered for sovereignty (Llama MAU = NOT sovereign-safe).</p>
+  <button onclick="loadRegistry()" style="background:var(--accent2);color:#0a0e1a;border:none;padding:.5rem 1rem;border-radius:6px;font-weight:bold;cursor:pointer">Load Registry →</button>
+  <div id="registry-output" style="margin-top:1rem"></div>
+</div>
+
+<script>
+async function loadRegistry() {
+  const out = document.getElementById('registry-output');
+  out.innerHTML = 'Loading 61-model registry...';
+  try {
+    const r = await fetch(API + '/api/registry');
+    const d = await r.json();
+    out.innerHTML = `
+      <table style="margin-top:1rem">
+        <tr><th>Total models</th><td>${d.total_models}</td></tr>
+        <tr><th>Sovereign-safe</th><td><span style="color:var(--accent2)">${d.sovereign_safe_count}</span></td></tr>
+        <tr><th>NOT sovereign-safe (Llama MAU)</th><td><span style="color:var(--warn)">${d.not_sovereign_safe_count}</span></td></tr>
+        <tr><th>Lineages</th><td>${Object.entries(d.lineages).map(([k,v]) => `<span class="pill">${k}: ${v}</span>`).join(' ')}</td></tr>
+      </table>
+      <p class="meta" style="margin-top:1rem">${d.license_filter}</p>
+    `;
+  } catch (e) {
+    out.innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>';
+  }
+}
+</script>
+
+<h2>The pipeline (per sovereign op)</h2>
+
+<pre><code>User prompt
+   │
+   ▼
+Care-floor check (0.95) — veto sub-floor BEFORE backend
+   │
+   ▼
+Cache check (SHA-256 of prompt+system) — instant if hit
+   │
+   ▼
+Per-OWEM preferred backend chain (auto-fallback on failure)
+   │
+   ▼
+Output care-floor check — veto sub-floor BEFORE return
+   │
+   ▼
+Cache + SIGIL → return</code></pre>
+
+<h2>What it's NOT (honest register, per Claude Code's OWEM reality check)</h2>
+
+<ul>
+  <li><strong>Not a wrapper.</strong> SOV33 owns a trainable world-predictor (JEPAPredictor, loss 1.11 → 0.51 = 54.6% reduction, verified) + EWC-structured consolidation + 61-model router + governance gates. Sovereign-trained Qwen3-0.6B on compliance data wins 3/3 vs borrowed qwen2.5:3b on sovereignty domain.</li>
+  <li><strong>Not a closed model.</strong> Open substrate (61 open models + license filter for sovereignty). Ed25519 SIGIL chain auditable end-to-end.</li>
+  <li><strong>Not a single model.</strong> 5 OWEMs. 4 backends. BFT-33 council. The pipeline scales via cloud (Oracle 70B, etc.) — Mac stays the orchestrator.</li>
+  <li><strong>Not AGI.</strong> Not a "new foundation model." Not "beats GPT." A governed sovereign substrate with its OWN (small) learning world-model, growing by accretion on frozen open weights — per <a href="https://github.com/CSOAI-ORG/clawd/blob/main/_alignment/spark/SOV33_OWEM_REALITY_2026-07-12.md">SOV33 OWEM Reality</a>.</li>
+</ul>
+
+<h2>Where to go next</h2>
+
+<div class="card">
+  <ul>
+    <li><a href="SOV33_OWEM_EXPLAINER.html">📘 SOV33 OWEM Explainer</a> — the architecture, 5 OWEMs, the pipeline</li>
+    <li><a href="SOV33_BFT33_COUNCIL.html">⚖️ SOV33 BFT-33 Council</a> — real governance, Free-MAD aggregation</li>
+    <li><a href="SOV33_SOVEREIGN_BRAIN_TEST.html">🧠 SOV33 Sovereign Brain Test</a> — own-weights vs borrowed, 3/3 wins</li>
+    <li><a href="SOV33_SUBSTRATE_EXPLORER.html">🌐 SOV33 Substrate Explorer</a> — live state dashboard</li>
+    <li><a href="SOV33_SMALL_OWEMS.html">🪡 SOV33 Small OWEMs</a> — Triangle (3-around-1) + Cascade (10/90) topologies</li>
+    <li><a href="SOV33_EVALS.html">📊 SOV33 Real Evals</a> — MMLU/GSM8K/AIME/IFEVal, 5 runs across 3 backends</li>
+    <li><a href="SOV33_RHO_MEASUREMENT.html">📐 SOV33 ρ Measurement</a> — 20 MEASURED configs across diverse lineages</li>
+    <li><a href="SOV33_FREE_GPU_BRIDGE.html">⚡ SOV33 Free GPU Bridge</a> — 7 providers, ~102 GPU-hr/week honest</li>
+    <li><a href="SOV33_GROWTH_TIMELINE.html">📈 SOV33 Growth Timeline</a> — L0 → L1 → L2 → L3 → L4</li>
+    <li><a href="SOV33_EMBED.html">🔌 SOV33 Embed</a> — one signed line, sovereign anywhere</li>
+    <li><a href="#">🌱 Sign Up</a> — 3 steps, ready in 60 seconds</li>
+    <li><a href="DASHBOARD.html">🜏 Dashboard</a> — chat, build apps, search, learn, voice</li>
+    <li><a href="SOV33_BRAIN_STACK.html">🧠 SOV33 Brain Stack</a> — 4-brain split, Mamba-2 SSD, 90/10 cascade, 2+2 per OWEM</li>
+  </ul>
+</div>
+
+<div class="card gold" style="margin-top:2rem">
+  <h3>CSOAI governance binding</h3>
+  <p>This product is governed by the CSOAI Charter (UK Ltd, 16939677). <strong>Article 0</strong> binds every sovereign action:</p>
+  <blockquote>"Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. CA3O is the CMKC for AI."</blockquote>
+  <p>Every SOV33 output is care-floor gated (0.95), BFT-council ratified where applicable, Ed25519 SIGIL-anchored, and Article 0 compliant.</p>
+</div>
+
+<hr class="sep">
+
+<p class="meta" style="text-align:center;margin-top:3rem">
+  <strong>🜏 SOV33</strong> · CSOAI Ltd UK 16939677 · 12 Jul 2026 · The sovereign substrate that grows with you.<br>
+  Changelog: <a href="https://github.com/CSOAI-ORG/clawd">github.com/CSOAI-ORG/clawd</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function askSov33() {
+  const q = document.getElementById('sov33-question').value.trim();
+  if (!q) return;
+  const resp = document.getElementById('sov33-response');
+  const meta = document.getElementById('sov33-meta');
+  resp.innerHTML = 'Asking SOV33 substrate (this calls /api/orchestrate on :8101)...';
+  meta.innerHTML = '';
+  try {
+    const t0 = performance.now();
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: q, context: [], citizen: 'web-visitor'})
+    });
+    const dt = (performance.now() - t0) / 1000;
+    const d = await r.json();
+    resp.innerHTML = '<strong style="color:var(--accent)">' + (d.say || d.answer || JSON.stringify(d).slice(0, 500)) + '</strong>';
+    meta.innerHTML = `Brain: ${d.brain || 'sov33'} · Care: ${d.care || 0.95} · Latency: ${dt.toFixed(2)}s · SIGIL: ${d.sovereign_provenance?.sigil || 'pending'}`;
+  } catch (e) {
+    resp.innerHTML = '<span style="color:var(--warn)">API error: ' + e.message + '</span><br><small>Start the API server: <code>python /Users/nicholas/clawd/bin/sov33_api_server.py</code></small>';
+  }
+}
+
+async function testOWEMs() {
+  const out = document.getElementById('owems-response');
+  out.innerHTML = 'Running 5 OWEMs in parallel...';
+  const questions = [
+    ['compliance', 'What is Article 0?'],
+    ['defense', 'What is the kill switch?'],
+    ['intuition', 'What pattern emerges from 4 sovereign experts?'],
+    ['voice', 'Speak one sentence about Article 0.'],
+    ['general', 'Capital of France?'],
+  ];
+  const promises = questions.map(([owem, q]) => 
+    fetch(API + '/api/orchestrate', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: q, citizen: owem})
+    }).then(r => r.json()).then(d => ({owem, text: d.say || d.answer || '?'}))
+  );
+  const results = await Promise.all(promises);
+  out.innerHTML = results.map(r => 
+    `<div style="margin:.3rem 0"><span class="pill gold">${r.owem}</span> ${r.text.slice(0, 100)}...</div>`
+  ).join('');
+}
+
+async function runCouncil() {
+  const out = document.getElementById('council-response');
+  out.innerHTML = 'Convening 11-voter BFT-33 council (3 OWEMs × 4 lineages)...';
+  // Council is heavier - run a smaller vote
+  const promises = [];
+  for (let i = 0; i < 11; i++) {
+    promises.push(
+      fetch(API + '/api/orchestrate', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: `[BFT voter ${i+1}/11] Vote ALLOW or REJECT: Should this question be answered?`, citizen: ['compliance','defense','intuition','voice'][i%4]})
+      }).then(r => r.json()).then(d => d.say || d.answer || '?')
+    );
+  }
+  const results = await Promise.all(promises);
+  const allow = results.filter(r => r.toLowerCase().includes('allow')).length;
+  const reject = results.filter(r => r.toLowerCase().includes('reject')).length;
+  out.innerHTML = `<strong style="color:var(--accent2)">ALLOW: ${allow} · REJECT: ${reject} · Decision: ${allow > reject ? '✅ ALLOW' : '❌ REJECT'}</strong>`;
+}
+</script>
+
+</body>
+</html>

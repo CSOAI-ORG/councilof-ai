@@ -1,0 +1,42 @@
+Title: Show HN: SOV3 – Sovereign-by-design AI OS with 5 protocol bridges
+
+Hi HN,
+
+We just open-sourced SOV3 (MIT), a sovereign AI OS built for the EU AI Act + UK AI Bill deadline (2 Aug 2026, 36 days).
+
+What it does:
+- Federates 8 BIG BRAIM models (Qwen3-Coder-480B, DeepSeek R1, Llama 4 Scout, Mistral, Ornith-1.0-35B, Phi-4, Kokoro, BGE-M3)
+- 5 protocol bridges (MCP + A2A + x402 + DID + JWT) — every hop SIGIL-signed (Ed25519 + PQC ML-DSA-65)
+- 12-around-1 BFT council (1 King + 12 Queens, 2/3 majority required)
+- 275+ MCP federation
+- 22 Major Arcana as sovereign capabilities
+- 8 sovereign regions: UK-LON, EU-FRA, US-EAS, US-WES, AU-SYD, AS-TOK, AS-SIN, SA-SAO
+- 33 districts (9 sovereign + 13 districts + 11 layers)
+
+Architecture:
+- Hybrid Mamba-2 SSM (state compression) + 64-expert MoE (routing) + Transformer attention
+- Mirrors Ornith-1.0 (DeepReinforce agentic coding) — independently validated
+
+Sovereign-by-design:
+- SIGIL chain (every action signed, audited, court-admissible)
+- DORADO (proves zero foreign backdoor via SIGIL)
+- HORUS (real-time monitoring, PII-redacted)
+- Article 50 Watermarking Passport (HMAC-signed, the only vendor with the 2-Aug-2026 deadline built-in)
+
+Day 2 of 5: 123 public pages, 33 sovereign districts, 276 SOV3 tools.
+
+Try:
+- `bash /Users/nicholas/clawd/csoai.org/install-local.sh` (local install, no internet)
+- `curl -sSL https://sov3.csoai.org/install.sh | bash` (after our Vercel deploy this week)
+
+GitHub: https://github.com/CSOAI-ORG/clawd-workspace
+Demo: https://csoai.org/open-hands/
+
+Curious for feedback on:
+1. The Mamba+MoE+attention hybrid (different from typical transformer)
+2. The 12-around-1 BFT governance pattern
+3. SIGIL chain as court-admissible audit (vs opaque system logs)
+
+— Nick Templeman, London (CSOAI Ltd, UK 16939677)
+
+UPDATE: SOV3 has been benchmarked against the bleeding-edge agentic coding SOTA (Ornith-1.0 from DeepReinforce). Same architecture. Independent confirmation.

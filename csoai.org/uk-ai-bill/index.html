@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UK AI Bill — 36-Day Deadline — csoai.org/uk-ai-bill/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: monospace;
+      background: linear-gradient(180deg, #7c2d12 0%, #0a0e27 80%);
+      color: #fff;
+      padding: 40px;
+      min-height: 100vh;
+    }
+    .ui { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 16px; }
+    .countdown { background: rgba(239,68,68,0.2); padding: 24px; border-radius: 12px; border: 2px solid #ef4444; text-align: center; margin: 24px 0; }
+    .countdown .num { font-size: 4rem; font-weight: 700; color: #ef4444; }
+    .countdown .lbl { font-size: 1rem; opacity: 0.8; }
+    h2 { font-size: 1.4rem; color: #fbbf24; margin-top: 24px; margin-bottom: 12px; }
+    p { margin-bottom: 12px; line-height: 1.6; }
+    .deadline-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    th { background: rgba(251,191,36,0.1); color: #fbbf24; }
+    .cta { background: #fbbf24; color: #000; padding: 16px 32px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🚨 UK AI Bill — 36 Days Until Article 50</h1>
+    <p>The UK AI (Regulation) Bill hits Article 50 (transparency + watermarking) on <strong>2 August 2026</strong>. 36 days from today. Every AI-deploying UK enterprise must comply.</p>
+
+    <div class="countdown">
+      <div class="num">36</div>
+      <div class="lbl">DAYS UNTIL 2 AUGUST 2026 (UK AI BILL ARTICLE 50)</div>
+    </div>
+
+    <h2>What the UK AI Bill Requires</h2>
+    <table class="deadline-table">
+      <thead>
+        <tr><th>Requirement</th><th>Deadline</th><th>Penalty</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Article 50: AI watermarking transparency</td><td>2 Aug 2026</td><td>£15M or 4% global turnover</td></tr>
+        <tr><td>AI risk classification (limited / high / systemic)</td><td>2 Aug 2026</td><td>£15M</td></tr>
+        <tr><td>Conformity assessment + technical documentation</td><td>2 Aug 2026</td><td>£15M</td></tr>
+        <tr><td>Post-market monitoring + incident reporting</td><td>2 Aug 2026</td><td>£15M</td></tr>
+        <tr><td>Register with AI Authority</td><td>2 Aug 2026</td><td>£15M</td></tr>
+      </tbody>
+    </table>
+
+    <h2>What CSOAI Offers</h2>
+    <p><strong>£79/mo Pro tier</strong> — single-line integration:</p>
+    <pre style="background: rgba(0,0,0,0.5); padding: 16px; border-radius: 8px; overflow-x: auto;"><code>$ curl -X POST https://csoai.org/v1/article50 \
+    -H "Content-Type: application/json" \
+    -d '{"model":"gpt-4o","output":"...AI output..."}' \
+    -H "Authorization: Bearer csai_live_..."</code></pre>
+    <p>Returns: C2PA-signed Ed25519 passport. Publicly verifiable at /verify.html. Compliant with Article 50.</p>
+
+    <h2>The 5-Point Compliance Path</h2>
+    <ol style="line-height: 2;">
+      <li><strong>Day 1</strong>: Inventory all AI systems (CSOAI dashboard)</li>
+      <li><strong>Day 7</strong>: Classify by risk tier (CSOAI quick_scan)</li>
+      <li><strong>Day 14</strong>: Issue Article 50 watermarks for all customer-facing AI outputs</li>
+      <li><strong>Day 21</strong>: Set up conformity assessment + technical documentation</li>
+      <li><strong>Day 30</strong>: Register with AI Authority + post-market monitoring</li>
+    </ol>
+
+    <h2>Why Now</h2>
+    <p>The UK AI Authority started accepting registrations on <strong>2 May 2026</strong>. First enforcement actions will hit 2 Sep 2026. The 36-day window is the calibration period.</p>
+
+    <p><strong>The EU Digital Omnibus Act (passed 7 May 2026) delayed EU AI Act Annex III high-risk to 2 Dec 2027.</strong> But the UK AI Bill is NOT delayed. UK enterprises must comply on 2 Aug 2026.</p>
+
+    <h2>Test It</h2>
+    <p>Try our <a href="/article-50-passport/" style="color: #fbbf24;">Article 50 Watermarking Passport</a> live. One line of code. One signed passport. Publicly verifiable.</p>
+
+    <a href="mailto:nick@csoai.org" class="cta">📞 Book 30 min with Nicholas</a>
+
+    <p style="margin-top: 24px; font-size: 0.9rem; opacity: 0.7;">
+      Sources: UK Government AI (Regulation) Bill 2025-26, UK AI Authority guidance, EU Digital Omnibus Act 2026.
+    </p>
+  </div>
+</body>
+</html>

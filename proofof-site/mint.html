@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏅 Sovereign Mint — Bestow Certificates & Citations</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:3rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1rem}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat.pink .val{color:#ec4899}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  /* Certificates grid */
+  .cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+  .cert{background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);padding:1.2rem;border-radius:8px;border-left:3px solid #fbbf24;position:relative;overflow:hidden}
+  .cert.bronze{border-left-color:#cd7f32}
+  .cert.silver{border-left-color:#c0c0c0}
+  .cert.gold{border-left-color:#ffd700}
+  .cert.platinum{border-left-color:#e5e4e2}
+  .cert.sovereign{border-left-color:#fbbf24;box-shadow:0 0 20px rgba(251,191,36,0.3)}
+  .cert .tier{position:absolute;top:.5rem;right:.7rem;background:rgba(0,0,0,0.5);color:#fbbf24;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;font-weight:bold;text-transform:uppercase}
+  .cert .entity{color:#fbbf24;font-weight:bold;font-size:1.1rem;margin-bottom:.3rem}
+  .cert .reason{color:#aaa;font-size:.8rem;margin-bottom:.3rem}
+  .cert .meta{color:#888;font-size:.7rem;font-family:monospace;margin-bottom:.3rem}
+  .cert .hash{color:#10b981;font-size:.7rem;font-family:monospace;background:rgba(16,185,129,0.05);padding:.2rem .3rem;border-radius:3px;display:inline-block;margin-top:.3rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/mint.html">Mint</a>
+  <a href="/launch.html">Launch</a>
+  <a href="/sovereign-index.html">Index</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🏅 Sovereign Mint</h1>
+  <p>Bestow certificates on entities that uphold sovereign principles. Mint citations for those who contribute to the sovereign economy.</p>
+  <div class="stats-bar">
+    <div class="stat green"><div class="val" id="certCount">0</div><div class="lbl">Certificates</div></div>
+    <div class="stat blue"><div class="val" id="citeCount">0</div><div class="lbl">Citations</div></div>
+    <div class="stat"><div class="val">5</div><div class="lbl">Tiers</div></div>
+    <div class="stat purple"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+    <div class="stat pink"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+    <div class="stat"><div class="val">∞</div><div class="lbl">Sovereign</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="section">
+    <h2>🏅 Mint a Sovereign Certificate</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Bestow on a citizen, MCP, or entity that upholds sovereign principles.</p>
+    <div class="demo">
+      <h3>Mint Certificate</h3>
+      <div class="demo-row">
+        <input type="text" id="certEntity" placeholder="entity" value="Nicholas Templeman">
+        <select id="certTier">
+          <option value="bronze">🥉 Bronze</option>
+          <option value="silver">🥈 Silver</option>
+          <option value="gold" selected>🥇 Gold</option>
+          <option value="platinum">💎 Platinum</option>
+          <option value="sovereign">🐉 Sovereign</option>
+        </select>
+        <input type="text" id="certReason" placeholder="reason" value="Built the sovereign substrate">
+        <button onclick="doCert()">🏅 Mint</button>
+      </div>
+      <div class="result" id="certResult">Click "Mint" to bestow a sovereign certificate.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📜 Mint a Citation</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Recognize a contribution to the sovereign economy.</p>
+    <div class="demo">
+      <h3>Mint Citation</h3>
+      <div class="demo-row">
+        <input type="text" id="citeEntity" placeholder="entity" value="Alan Turing Institute">
+        <input type="text" id="citeContribution" placeholder="contribution" value="Wrote the System Card template">
+        <input type="number" id="citeWeight" placeholder="weight" value="5.0" step="0.1" min="0" max="10">
+        <button onclick="doCite()">📜 Mint</button>
+      </div>
+      <div class="result" id="citeResult">Click "Mint" to mint a citation.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📜 Minted Certificates & Citations</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Click a card to verify. All sovereign by construction.</p>
+    <div class="demo">
+      <h3>List All</h3>
+      <div class="demo-row">
+        <input type="text" id="listEntity" placeholder="filter by entity (optional)">
+        <button onclick="doList()">📋 List</button>
+      </div>
+      <div class="result" id="listResult">Click "List" to see all minted certificates + citations.</div>
+    </div>
+
+    <h3 style="color:#fbbf24;margin-top:1.5rem">All Minted (live)</h3>
+    <div class="cert-grid" id="certGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2>🎯 5 Tiers of Sovereignty</h2>
+    <div class="cert-grid">
+      <div class="cert bronze">
+        <div class="tier">bronze</div>
+        <div class="entity">First Contact</div>
+        <div class="reason">First sovereign action taken. Welcome to the sovereign economy.</div>
+        <div class="meta">Threshold: 1 sovereign action</div>
+      </div>
+      <div class="cert silver">
+        <div class="tier">silver</div>
+        <div class="entity">Citizen</div>
+        <div class="reason">100 sovereign actions. Active citizen of the sovereign economy.</div>
+        <div class="meta">Threshold: 100 sovereign actions</div>
+      </div>
+      <div class="cert gold">
+        <div class="tier">gold</div>
+        <div class="entity">Builder</div>
+        <div class="reason">Built a sovereign MCP. Contributed to the substrate.</div>
+        <div class="meta">Threshold: 1+ sovereign MCP built</div>
+      </div>
+      <div class="cert platinum">
+        <div class="tier">platinum</div>
+        <div class="entity">Council</div>
+        <div class="reason">Member of the BFT 12-around-1 council.</div>
+        <div class="meta">Threshold: BFT council member</div>
+      </div>
+      <div class="cert sovereign">
+        <div class="tier">sovereign</div>
+        <div class="entity">Dragon</div>
+        <div class="reason">Crown lineage heir. The dragon has emerged.</div>
+        <div class="meta">Threshold: Crown lineage 1795+</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Mint Doctrine</h2>
+  <blockquote>"5 tiers. From Bronze First Contact to Sovereign Dragon.<br>Every entity that upholds sovereign principles can be bestowed a certificate.<br>Every contribution to the sovereign economy can be cited.<br>Sovereign by construction."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 101 sovereign MCPs (was 99, +2 README + minting) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let certificates = [];
+let citations = [];
+
+function updateStats() {
+  document.getElementById("certCount").textContent = certificates.length;
+  document.getElementById("citeCount").textContent = citations.length;
+}
+
+function renderMinted() {
+  const grid = document.getElementById("certGrid");
+  const all = [
+    ...certificates.map(c => ({type: "cert", ...c})),
+    ...citations.map(c => ({type: "cite", ...c})),
+  ];
+  if (all.length === 0) {
+    grid.innerHTML = '<div style="color:#888;padding:1rem;text-align:center;grid-column:1/-1">No certificates or citations minted yet. Use the forms above.</div>';
+    return;
+  }
+  grid.innerHTML = all.map(item => {
+    if (item.type === "cert") {
+      return `<div class="cert ${item.tier}" onclick="verifyCert('${item.cert_id}')">
+        <div class="tier">${item.tier}</div>
+        <div class="entity">${item.entity}</div>
+        <div class="reason">${item.reason || '—'}</div>
+        <div class="meta">${item.issued_at}</div>
+        <div class="hash">▓▒░ ${item.hash} ░▒▓</div>
+      </div>`;
+    } else {
+      return `<div class="cert" style="border-left-color:#60a5fa" onclick="verifyCite('${item.cite_id}')">
+        <div class="tier">${item.weight}×</div>
+        <div class="entity">${item.entity}</div>
+        <div class="reason">${item.contribution || '—'}</div>
+        <div class="meta">${item.minted_at}</div>
+        <div class="hash">▓▒░ ${item.hash} ░▒▓</div>
+      </div>`;
+    }
+  }).join("");
+}
+
+function doCert() {
+  const entity = document.getElementById("certEntity").value;
+  const tier = document.getElementById("certTier").value;
+  const reason = document.getElementById("certReason").value;
+  const cert_id = "cert-" + Math.random().toString(36).slice(2, 10);
+  const hash = Math.random().toString(36).slice(2, 18);
+  const cert = {cert_id, entity, tier, reason, issued_at: new Date().toISOString(), hash};
+  certificates.push(cert);
+  updateStats();
+  renderMinted();
+  document.getElementById("certResult").textContent = `🏅 mint_certificate("${entity}", tier="${tier}", reason="${reason}")
+
+Certificate ID: ${cert_id}
+Tier: ${tier}
+Entity: ${entity}
+Reason: ${reason}
+Hash: ${hash}
+Issuer: CSOAI Ltd (UK 16939677)
+Doctrine: Certificate bestowed. Sovereign by construction.`;
+  speak(`Certificate bestowed on ${entity}. Tier ${tier}.`);
+}
+
+function doCite() {
+  const entity = document.getElementById("citeEntity").value;
+  const contribution = document.getElementById("citeContribution").value;
+  const weight = parseFloat(document.getElementById("citeWeight").value);
+  const cite_id = "cite-" + Math.random().toString(36).slice(2, 10);
+  const hash = Math.random().toString(36).slice(2, 18);
+  const cite = {cite_id, entity, contribution, weight, minted_at: new Date().toISOString(), hash};
+  citations.push(cite);
+  updateStats();
+  renderMinted();
+  document.getElementById("citeResult").textContent = `📜 mint_citation("${entity}", contribution="${contribution}", weight=${weight})
+
+Citation ID: ${cite_id}
+Entity: ${entity}
+Contribution: ${contribution}
+Weight: ${weight}
+Hash: ${hash}
+Doctrine: Citation minted. Sovereign.`;
+  speak(`Citation minted for ${entity}.`);
+}
+
+function doList() {
+  const filter = document.getElementById("listEntity").value;
+  const certs = filter ? certificates.filter(c => c.entity.toLowerCase().includes(filter.toLowerCase())) : certificates;
+  const cites = filter ? citations.filter(c => c.entity.toLowerCase().includes(filter.toLowerCase())) : citations;
+  document.getElementById("listResult").textContent = `📋 mint_list()\n\nCertificates: ${certs.length}\nCitations: ${cites.length}\n\nFilter: ${filter || 'none'}\n\n${certs.map(c => `  ${c.tier} · ${c.entity} · ${c.cert_id}`).join('\n')}\n${cites.map(c => `  ${c.weight}× · ${c.entity} · ${c.contribution}`).join('\n')}`;
+}
+
+function verifyCert(cert_id) {
+  const cert = certificates.find(c => c.cert_id === cert_id);
+  if (cert) {
+    document.getElementById("certResult").textContent = `✓ mint_verify(${cert_id})\n\nVerified: TRUE\nEntity: ${cert.entity}\nTier: ${cert.tier}\nHash: ${cert.hash}\nDoctrine: Certificate verified. Sovereign.`;
+    speak(`${cert.entity} certificate verified.`);
+  }
+}
+
+function verifyCite(cite_id) {
+  const cite = citations.find(c => c.cite_id === cite_id);
+  if (cite) {
+    document.getElementById("citeResult").textContent = `✓ mint_verify(${cite_id})\n\nCitation verified.\nEntity: ${cite.entity}\nWeight: ${cite.weight}\nDoctrine: Sovereign.`;
+  }
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  text = text.replace(/[▓▒░→←★·•◦]/g, '').replace(/\s+/g, ' ').trim();
+  if (!text) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 1.0;
+  window.speechSynthesis.speak(u);
+}
+
+// Pre-populate with some sovereign examples
+window.addEventListener("load", () => {
+  certificates.push({cert_id: "cert-example1", entity: "Alan Turing Institute", tier: "sovereign", reason: "Wrote the System Card template", issued_at: "2026-01-15T09:00:00Z", hash: "turing4b3c7d9f"});
+  certificates.push({cert_id: "cert-example2", entity: "Nicholas Templeman", tier: "sovereign", reason: "Built the sovereign substrate (99 MCPs)", issued_at: "2026-06-30T22:00:00Z", hash: "nichol1sa4b9c2e"});
+  certificates.push({cert_id: "cert-example3", entity: "Turing Test Pioneers", tier: "gold", reason: "Pioneered the science of AI", issued_at: "2024-01-01T00:00:00Z", hash: "turin8b6c4d1f0"});
+  citations.push({cite_id: "cite-example1", entity: "Turing Institute", contribution: "Defined the System Card template", weight: 5.0, minted_at: "2026-01-15T09:00:00Z", hash: "cite-example1"});
+  citations.push({cite_id: "cite-example2", entity: "SOV3", contribution: "Built the sovereign substrate", weight: 10.0, minted_at: "2026-06-30T22:00:00Z", hash: "cite-example2"});
+  updateStats();
+  renderMinted();
+});
+</script>
+
+</body>
+</html>

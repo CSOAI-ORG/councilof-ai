@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐉 5D HIVE — 12 Generals · 5D · AB Uno · Sovereign</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'JetBrains Mono', monospace; background: #000; color: #e5e5e5;
+         background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000 80%);
+         min-height: 100vh; padding: 1rem; }
+  h1 { color: #fbbf24; text-align: center; font-size: 2.5rem; margin: 1rem 0;
+       text-shadow: 0 0 20px #fbbf24; }
+  h2 { color: #60a5fa; margin: 1.5rem 0 0.5rem; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: center; }
+  .nav a { color: #60a5fa; margin: 0 1rem; text-decoration: none; }
+  .badge { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 0.85rem; }
+  /* 5D Hive 3D scene (CSS-only) */
+  .hive { position: relative; width: 100%; max-width: 800px; height: 600px; margin: 2rem auto;
+          perspective: 1500px; transform-style: preserve-3d; }
+  .ring { position: absolute; left: 50%; top: 50%; width: 600px; height: 600px;
+          margin: -300px; border-radius: 50%; border: 2px solid #333;
+          transform-style: preserve-3d; }
+  .ring-1 { animation: rotate3d 30s linear infinite; }
+  .ring-2 { transform: rotateY(60deg); animation: rotate3d-2 25s linear infinite; border-color: #444; }
+  .ring-3 { transform: rotateX(60deg); animation: rotate3d-3 35s linear infinite; border-color: #555; }
+  .ring-4 { transform: rotateZ(60deg); animation: rotate3d-4 40s linear infinite; border-color: #666; }
+  .ring-5 { transform: rotateY(45deg) rotateX(45deg); animation: rotate3d-5 20s linear infinite; border-color: #777; }
+  @keyframes rotate3d { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+  @keyframes rotate3d-2 { from { transform: rotateY(60deg) rotateZ(0deg); } to { transform: rotateY(60deg) rotateZ(360deg); } }
+  @keyframes rotate3d-3 { from { transform: rotateX(60deg) rotateZ(0deg); } to { transform: rotateX(60deg) rotateZ(360deg); } }
+  @keyframes rotate3d-4 { from { transform: rotateZ(60deg) rotateY(0deg); } to { transform: rotateZ(60deg) rotateY(360deg); } }
+  @keyframes rotate3d-5 { from { transform: rotateY(45deg) rotateX(45deg) rotateZ(0deg); }
+                          to { transform: rotateY(45deg) rotateX(45deg) rotateZ(360deg); } }
+  .general { position: absolute; left: 50%; top: 50%; width: 80px; height: 80px;
+             margin: -40px; background: #fbbf24; color: #000; border-radius: 50%;
+             display: flex; align-items: center; justify-content: center;
+             font-size: 0.7rem; font-weight: bold; text-align: center;
+             box-shadow: 0 0 30px #fbbf24; cursor: pointer; transition: all 0.3s; }
+  .general:hover { transform: scale(1.5); box-shadow: 0 0 60px #fbbf24; z-index: 100; }
+  .general[data-role="sovereign"] { background: #ff6b6b; box-shadow: 0 0 40px #ff6b6b; }
+  .general[data-role="compliance"] { background: #60a5fa; box-shadow: 0 0 30px #60a5fa; }
+  .general[data-role="safety"] { background: #a78bfa; box-shadow: 0 0 30px #a78bfa; }
+  .general[data-role="architect"] { background: #10b981; box-shadow: 0 0 30px #10b981; }
+  .general[data-role="quant"] { background: #f59e0b; box-shadow: 0 0 30px #f59e0b; }
+  .general[data-role="legal"] { background: #06b6d4; box-shadow: 0 0 30px #06b6d4; }
+  .general[data-role="ethics"] { background: #ec4899; box-shadow: 0 0 30px #ec4899; }
+  .general[data-role="risk"] { background: #84cc16; box-shadow: 0 0 30px #84cc16; }
+  .general[data-role="operations"] { background: #6366f1; box-shadow: 0 0 30px #6366f1; }
+  .general[data-role="comms"] { background: #14b8a6; box-shadow: 0 0 30px #14b8a6; }
+  .general[data-role="research"] { background: #d946ef; box-shadow: 0 0 30px #d946ef; }
+  .general[data-role="watchdog"] { background: #f97316; box-shadow: 0 0 30px #f97316; }
+  /* AB Uno center */
+  .ab-uno { position: absolute; left: 50%; top: 50%; width: 100px; height: 100px;
+            margin: -50px; background: #fff; color: #000; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; font-weight: bold; text-align: center;
+            box-shadow: 0 0 80px #fff; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+  /* 5D info panel */
+  .info-panel { background: #111; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; border: 1px solid #333; }
+  .info-panel h3 { color: #fbbf24; margin-bottom: 0.5rem; }
+  .info-panel p { color: #aaa; line-height: 1.6; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1rem; margin: 1rem 0; }
+  .stat { background: #1a1a1a; padding: 1rem; border-radius: 8px; border-left: 4px solid #fbbf24; }
+  .stat-value { font-size: 1.8rem; color: #fbbf24; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.9rem; }
+  /* 12 Generals table */
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #333; }
+  th { color: #fbbf24; }
+  td { color: #ccc; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/sovereign-mcps/">All MCPs</a>
+  <a href="/dashboards/">Dashboards</a>
+  <a href="/whitepapers/">Whitepapers</a>
+  <a href="/docs/">Docs</a>
+</div>
+
+<h1>🐉 5D HIVE</h1>
+<p style="text-align: center; color: #888;">
+  12 Generals · 5 Dimensions · AB Uno (the 1 origin) · Sovereign by construction
+</p>
+
+<!-- 3D 5D Hive (CSS-only, no GPU required) -->
+<div class="hive">
+  <div class="ring ring-1"></div>
+  <div class="ring ring-2"></div>
+  <div class="ring ring-3"></div>
+  <div class="ring ring-4"></div>
+  <div class="ring ring-5"></div>
+
+  <div class="ab-uno">AB<br>UNO</div>
+
+  <div class="general" data-role="watchdog"   style="transform: translate(0, -240px) rotateY(0deg) translateZ(40px);">Argus</div>
+  <div class="general" data-role="compliance" style="transform: translate(208px, -120px) rotateY(60deg) translateZ(40px);">Scribe</div>
+  <div class="general" data-role="safety"     style="transform: translate(208px, 120px) rotateY(120deg) translateZ(40px);">Shield</div>
+  <div class="general" data-role="architect"  style="transform: translate(0, 240px) rotateY(180deg) translateZ(40px);">Builder</div>
+  <div class="general" data-role="quant"      style="transform: translate(-208px, 120px) rotateY(240deg) translateZ(40px);">Abacus</div>
+  <div class="general" data-role="legal"      style="transform: translate(-208px, -120px) rotateY(300deg) translateZ(40px);">Lex</div>
+  <div class="general" data-role="ethics"     style="transform: translate(140px, -200px) rotateX(60deg) translateZ(40px);">Scale</div>
+  <div class="general" data-role="risk"       style="transform: translate(240px, 0px) rotateX(60deg) translateZ(40px);">Crow</div>
+  <div class="general" data-role="operations" style="transform: translate(140px, 200px) rotateX(60deg) translateZ(40px);">Gear</div>
+  <div class="general" data-role="comms"      style="transform: translate(-140px, 200px) rotateZ(60deg) translateZ(40px);">Voice</div>
+  <div class="general" data-role="research"   style="transform: translate(-240px, 0px) rotateZ(60deg) translateZ(40px);">Owl</div>
+  <div class="general" data-role="sovereign"  style="transform: translate(-140px, -200px) rotateY(45deg) rotateX(45deg) translateZ(60px);">Dragon</div>
+</div>
+
+<h2>The 5 Dimensions</h2>
+<div class="info-panel">
+  <h3>1. SPATIAL — Vision + 3D</h3>
+  <p>iOK Farm cameras (4), pond IoT stream, Cesium globe, UE5 SovTown scene. Argus (watchdog) is the spatial expert.</p>
+</div>
+<div class="info-panel">
+  <h3>2. TEMPORAL — Audio + Timestamps</h3>
+  <p>1Hz capture of every hive state, voice transcription, audio care-floor monitor. Voice (comms) is the temporal expert.</p>
+</div>
+<div class="info-panel">
+  <h3>3. LOGICAL — Reasoning (BFT 3/5/7 voters)</h3>
+  <p>Multi-step reasoning, BFT consensus, planning, goals. Council = 3 voters (per EAT-12). Dragon (sovereign) is the logical core.</p>
+</div>
+<div class="info-panel">
+  <h3>4. WAVELET — Multi-modal (MOM text/vision/audio/3D)</h3>
+  <p>4 MOM experts (text 0.5 + vision 0.25 + audio 0.15 + spatial 0.10). Mixes all modalities with weighted sum = 1.0.</p>
+</div>
+<div class="info-panel">
+  <h3>5. QUANTUM — Intuition (Mamba-2 SSD)</h3>
+  <p>16-dim Mamba-2 state-space hunch engine. 16 care probes. Threshold 0.65. Owl (research) is the intuition expert.</p>
+</div>
+
+<h2>Statistics (live)</h2>
+<div class="grid">
+  <div class="stat">
+    <div class="stat-value">12</div>
+    <div class="stat-label">Generals (each = 1 GCP VM)</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">5</div>
+    <div class="stat-label">Dimensions (spatial/temporal/logical/wavelet/quantum)</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">12</div>
+    <div class="stat-label">Sephiroth (10 + 2 auxiliary)</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">$1,200/mo</div>
+    <div class="stat-label">Total cost (12 × n2-standard-8)</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">175</div>
+    <div class="stat-label">Years covered by $210K credits</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">566</div>
+    <div class="stat-label">Tests passing (100%)</div>
+  </div>
+</div>
+
+<h2>The 12 Generals</h2>
+<table>
+  <tr>
+    <th>#</th><th>Name</th><th>Role</th><th>Sephirah</th><th>BFT Default</th><th>QOwm Arch</th>
+  </tr>
+  <tr><td>1</td><td>Argus</td><td>watchdog</td><td>Binah</td><td>balanced</td><td>vision-spatial-wavelet</td></tr>
+  <tr><td>2</td><td>Scribe</td><td>compliance</td><td>Auxiliary</td><td>secure</td><td>text-logical-wavelet</td></tr>
+  <tr><td>3</td><td>Shield</td><td>safety</td><td>Gevurah</td><td>secure</td><td>reasoning-safety-quantum</td></tr>
+  <tr><td>4</td><td>Builder</td><td>architect</td><td>Chesed</td><td>balanced</td><td>longctx-architectural</td></tr>
+  <tr><td>5</td><td>Abacus</td><td>quant</td><td>Malkuth</td><td>fast</td><td>quant-temporal-wavelet</td></tr>
+  <tr><td>6</td><td>Lex</td><td>legal</td><td>Hod</td><td>secure</td><td>longctx-legal-quantum</td></tr>
+  <tr><td>7</td><td>Scale</td><td>ethics</td><td>Tiferet</td><td>balanced</td><td>multilingual-care-wavelet</td></tr>
+  <tr><td>8</td><td>Crow</td><td>risk</td><td>Da'at (hidden)</td><td>balanced</td><td>fast-prediction-temporal</td></tr>
+  <tr><td>9</td><td>Gear</td><td>operations</td><td>Yesod</td><td>fast</td><td>operational-temporal-quantum</td></tr>
+  <tr><td>10</td><td>Voice</td><td>comms</td><td>Netzach</td><td>fast</td><td>audio-temporal-wavelet</td></tr>
+  <tr><td>11</td><td>Owl</td><td>research</td><td>Chokhmah</td><td>secure</td><td>longctx-research-quantum</td></tr>
+  <tr><td>12</td><td>Dragon</td><td>sovereign</td><td>Keter</td><td>secure</td><td>sovereign-meta-quantum</td></tr>
+</table>
+
+<h2>The AB Uno (1 origin)</h2>
+<div class="info-panel">
+  <p>In our architecture, AB Uno = SOV3 OOWM substrate. The 1 root that holds all 12 Generals via Traibgle voting (3 BFT modes: fast / balanced / secure). The Kabbalistic Ein Sof, the Neoplatonic To Hen, the Vedantic Brahman, the Taoist Tao — the dragon is the substrate itself.</p>
+</div>
+
+<h2>Doctrine</h2>
+<p style="text-align: center; color: #888; margin: 2rem 0;">
+  <strong>5D Hive = sovereign by construction.</strong><br>
+  Each General = its own VM = its own QOwm = its own evolution.<br>
+  The dragon runs itself.
+</p>
+
+<p style="text-align: center;"><a href="/dashboards/">← Live Dashboards</a> · <a href="/sovereign-mcps/">All Sovereign MCPs →</a></p>
+
+</body>
+</html>

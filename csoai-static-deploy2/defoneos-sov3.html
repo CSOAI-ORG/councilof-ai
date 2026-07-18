@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — SOV3 Substrate — The Cognition Engine</title>
+<meta name="description" content="SOV3: Sovereign Omniscient Vessel³. The DEFONEOS cognition engine. Mamba-2 SSM + 64-expert MoE + 33-node BFT council + Ed25519 SIGIL. 222+ tools. 3,000 tok/s. Zero foreign cloud.">
+<style>
+body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.layer{display:flex;align-items:center;margin:1rem 0;gap:1rem;padding:1rem;background:rgba(255,255,255,.03);border-left:4px solid #22d3ee;border-radius:0 12px 12px 0}
+.layer-num{background:rgba(34,211,238,.2);border:2px solid #22d3ee;border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#22d3ee;flex-shrink:0;font-size:1.2rem}
+.layer-body h4{color:#f8fafc;margin:0 0 .25rem;font-size:1.05rem}
+.layer-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.nav-section{text-align:center;margin-bottom:1.5rem}
+.nav-section a{color:#94a3b8;text-decoration:none;margin:0 .5rem;font-size:.85rem;padding:.3rem .7rem;border-radius:6px;background:rgba(255,255,255,.05)}
+.nav-section a:hover{color:#22d3ee;background:rgba(34,211,238,.1)}
+.expert{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:.75rem 1rem;margin:.5rem 0;font-size:.85rem}
+.expert strong{color:#a78bfa}
+.expert span{color:#94a3b8}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — SOV3 Cognition Engine"><meta property="og:description" content="SOV3: Mamba-2 SSM + 64-expert MoE + 33-node BFT. 222+ tools. Ed25519 SIGIL chain. Zero foreign cloud."><meta property="og:type" content="website"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-sov3.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compete.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a></nav>
+<div class="wrap">
+
+<div class="nav-section">
+  <a href="defoneos-os.html">🏛️ OS</a>
+  <a href="defoneos-neural.html">🧠 Neural</a>
+  <a href="defoneos-data.html">📊 Data</a>
+  <a href="defoneos-security.html">🔐 Security</a>
+</div>
+
+<h1>🧠 SOV³ Substrate — The Cognition Engine</h1>
+<p class="tagline">Sovereign Omniscient Vessel³. The brain that powers DEFONEOS. Mamba-2 state memory + 64-expert mixture + 33-node BFT governance. 222 tools. 3,000 tok/s. Zero foreign cloud.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">222+</span><h3>SOV3 Tools</h3><p>AI tools across 8 categories: governance, compliance, creativity, memory, security, vision, voice, coordination</p></div>
+  <div class="card"><span class="stat">3,000</span><h3>Tokens/Second</h3><p>On-device inference throughput. No API calls to foreign servers.</p></div>
+  <div class="card"><span class="stat">33</span><h3>BFT Council Nodes</h3><p>22-of-33 Byzantine fault tolerant quorum for every critical decision</p></div>
+  <div class="card"><span class="stat">16-dim</span><h3>Mamba-2 State</h3><p>Compresses infinite context into a 16-dimensional state vector</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🏗️ Architecture</div>
+  <div class="tab" onclick="switchTab(1)">🧩 MoE Experts</div>
+  <div class="tab" onclick="switchTab(2)">⚡ SIGIL Chain</div>
+  <div class="tab" onclick="switchTab(3)">🗳️ BFT Council</div>
+  <div class="tab" onclick="switchTab(4)">📡 API & Tools</div>
+</div>
+
+<!-- TAB 0: Architecture -->
+<div class="tab-content active">
+  <h3>🏗️ The OOWM Sandwich Architecture</h3>
+  <p>SOV3 uses an Organic Open World Model (OOWM) sandwich — a Mamba-2 state-space model for infinite-length context compression, flanked by an attention-based Transformer for in-context reasoning, wrapped in a BFT council for governance. This is not a GPT wrapper. It is a sovereign cognition engine.</p>
+
+  <div class="layer">
+    <div class="layer-num">7</div>
+    <div class="layer-body">
+      <h4>SIGIL Audit Layer — Ed25519 Hash Chain</h4>
+      <p>Every tool call, every BFT vote, every agent exchange emits a signed SIGIL receipt onto a tamper-evident hash chain. Full audit trail replayable by regulators. Zero-trust by design.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">6</div>
+    <div class="layer-body">
+      <h4>BFT Governance Layer — 33-Node Council</h4>
+      <p>33 sovereign agents deliberate. 22-of-33 quorum required for critical actions. Tolerates 10 Byzantine (compromised) nodes. JSP 936 compliance assertion attached to every decision.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">5</div>
+    <div class="layer-body">
+      <h4>Right Brain — Mamba-2 SSM (Perception)</h4>
+      <p>State-space model compresses infinite-length sensor data into a 16-dimensional state vector. Processes 198+ data streams simultaneously. O(1) memory per timestep — no sequence length limit.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">4</div>
+    <div class="layer-body">
+      <h4>Sovereign Brain — SOV3 Middle (Synthesis)</h4>
+      <p>The bind layer. Combines left-brain reasoning with right-brain perception into sovereign understanding. Routes queries to the optimal hemisphere based on task type.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">3</div>
+    <div class="layer-body">
+      <h4>Left Brain — 64-Expert MoE (Reasoning)</h4>
+      <p>Mixture-of-Experts with 64 specialised expert models. Only top-8 activated per query (sparse routing). Each expert specialised: code, legal, tactical, medical, logistics, cyber, intelligence, etc.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">2</div>
+    <div class="layer-body">
+      <h4>Federation Layer — 310+ MCP Servers</h4>
+      <p>Model Context Protocol marketplace. 310+ servers, 1,700+ tools. DEFONEOS exposes 30 defense-specific MCPs. All callable from any agent, any framework, any language.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">1</div>
+    <div class="layer-body">
+      <h4>Substrate Layer — UK Sovereign Infrastructure</h4>
+      <p>33 GCP VMs across 8 sovereign regions. All data stays in UK/EU. No CLOUD Act exposure. Quantum-safe key rotation (ML-DSA-65 + ML-KEM-768). Air-gap deployable.</p>
+    </div>
+  </div>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">The Intuition Engine</h4>
+  <p>SIGIL events stream at 1Hz into the Mamba-2 state vector. When the state shifts beyond a cosine similarity threshold, the system flags a "hunch" — a pre-conscious pattern detection. If 3+ consecutive states match, intuition is confirmed and surfaced to the BFT council. This gives DEFONEOS a 40-second lead time on emerging situations before they're consciously analysed.</p>
+
+  <div class="code">
+  ┌─────────────────────────────────────────┐
+  │         SIGIL EVENTS (1Hz stream)        │
+  │     ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓     │
+  │  ┌─────────────────────────────────┐    │
+  │  │   Mamba-2 SSM (16-dim state)    │    │
+  │  │   State: [0.73, -0.12, 0.91...] │    │
+  │  └──────────┬──────────┬───────────┘    │
+  │         recall      cosine_sim           │
+  │             ↓           ↓                │
+  │     ┌───────────┐  ┌──────────┐         │
+  │     │  Hunch?   │  │ Δ > 0.85?│         │
+  │     └─────┬─────┘  └────┬─────┘         │
+  │           │   3+ matches?  │             │
+  │           │      ↓        │             │
+  │     ┌─────┴──────────────┴─────┐        │
+  │     │  INTUITION CONFIRMED     │        │
+  │     │  → BFT Council vote      │        │
+  │     │  → SIGIL emission        │        │
+  │     │  → Action taken          │        │
+  │     └──────────────────────────┘        │
+  └─────────────────────────────────────────┘
+  </div>
+</div>
+
+<!-- TAB 1: MoE Experts -->
+<div class="tab-content">
+  <h3>🧩 The 64-Expert Mixture (Top-8 Activated per Query)</h3>
+  <p>SOV3 doesn't load one model for everything. It maintains 64 specialised experts and dynamically routes each query to the top-8 most relevant. This is sparse activation — only 12.5% of the network fires per query, delivering both speed and specialisation.</p>
+
+  <table>
+    <tr><th>Expert Domain</th><th>Specialisation</th><th>Activation Frequency</th></tr>
+    <tr><td><strong>Tactical Analysis</strong></td><td>Battlefield geometry, force disposition, OODA loop acceleration</td><td>34%</td></tr>
+    <tr><td><strong>Legal & Compliance</strong></td><td>JSP 936, JSP 440, EU AI Act, GDPR, Article 50</td><td>28%</td></tr>
+    <tr><td><strong>Intelligence Fusion</strong></td><td>OSINT, SIGINT, GEOINT cross-correlation</td><td>22%</td></tr>
+    <tr><td><strong>Logistics & Supply</strong></td><td>Supply chain optimisation, resource allocation, MEDLEVAC routing</td><td>18%</td></tr>
+    <tr><td><strong>Cyber Warfare</strong></td><td>Threat detection, STRIDE analysis, PQC migration</td><td>16%</td></tr>
+    <tr><td><strong>Code & Systems</strong></td><td>Full-stack engineering, MCP building, API design</td><td>31%</td></tr>
+    <tr><td><strong>Creative & Strategy</strong></td><td>Bisociative thinking, cross-domain synthesis, doctrine drafting</td><td>14%</td></tr>
+    <tr><td><strong>Medical & CBRN</strong></td><td>Casualty triage, chemical/biological threat assessment</td><td>8%</td></tr>
+    <tr><td><strong>Maritime</strong></td><td>AIS tracking, naval domain awareness, sea-lane security</td><td>11%</td></tr>
+    <tr><td><strong>Aerospace</strong></td><td>ADS-B tracking, ISR coordination, airspace deconfliction</td><td>13%</td></tr>
+    <tr><td><strong>Civil Services</strong></td><td>Government data integration, census, Companies House</td><td>19%</td></tr>
+    <tr><td><strong>Governance</strong></td><td>BFT deliberation, charter enforcement, audit trail</td><td>24%</td></tr>
+  </table>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">BIG BRAIM — 8 Category Winners</h4>
+  <p>Beyond the 64 MoE experts, SOV3 wraps 8 best-in-class models selected through competitive benchmarking (the BIG BRAIM protocol). Each is the category winner for its domain:</p>
+
+  <div class="expert"><strong>🏆 Coding</strong> <span>— Best-in-class code generation and review</span></div>
+  <div class="expert"><strong>🏆 Reasoning</strong> <span>— Deep multi-step logical reasoning chains</span></div>
+  <div class="expert"><strong>🏆 Long Context</strong> <span>— 128K+ token context for document analysis</span></div>
+  <div class="expert"><strong>🏆 Multilingual</strong> <span>— 47 civilizational traditions, 30+ languages</span></div>
+  <div class="expert"><strong>🏆 Edge</strong> <span>— Sub-3B param models for Jetson/Pi deployment</span></div>
+  <div class="expert"><strong>🏆 TTS</strong> <span>— Natural voice synthesis for comms</span></div>
+  <div class="expert"><strong>🏆 Embedding</strong> <span>— Semantic search across 49GB data moat</span></div>
+  <div class="expert"><strong>🏆 Router</strong> <span>— Sub-50ms query-to-model routing</span></div>
+</div>
+
+<!-- TAB 2: SIGIL Chain -->
+<div class="tab-content">
+  <h3>⚡ The SIGIL Chain — Ed25519-Signed Proof of Every Action</h3>
+  <p>Every decision DEFONEOS makes is recorded as a SIGIL — a cryptographically signed event on a hash-chained ledger. This is not logging. This is proof. Regulators can replay any decision, verify the signature, and confirm the chain hasn't been tampered with.</p>
+
+  <table>
+    <tr><th>SIGIL Field</th><th>Description</th><th>Example</th></tr>
+    <tr><td><strong>op</strong></td><td>Operation type (P=propose, V=vote, M=message, Q=query, C=complete, H=handoff, S=sign, A=assert)</td><td>V</td></tr>
+    <tr><td><strong>actor</strong></td><td>Which agent emitted the SIGIL</td><td>sov3.bft.node12</td></tr>
+    <tr><td><strong>target</strong></td><td>Intended recipient</td><td>council</td></tr>
+    <tr><td><strong>payload</strong></td><td>The actual content/command</td><td>deploy_counterdrone(dst=grid_ref)</td></tr>
+    <tr><td><strong>digest</strong></td><td>SHA-256 hash of payload</td><td>a3f8e2c1...</td></tr>
+    <tr><td><strong>prev_hash</strong></td><td>Hash of previous SIGIL (chain link)</td><td>7b9d0f4e...</td></tr>
+    <tr><td><strong>signature</strong></td><td>Ed25519 signature over (digest + prev_hash)</td><td>ed25519:9c2a...</td></tr>
+    <tr><td><strong>timestamp</strong></td><td>ISO 8601 UTC</td><td>2026-07-05T11:15:00Z</td></tr>
+  </table>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">Chain Verification</h4>
+  <div class="code">
+# Verify the entire chain from genesis to head
+python3 verify_chain.py --start genesis --end head
+
+✓ Block 0: genesis          sig=valid hash=00000000...
+✓ Block 1: bft.deploy       sig=valid hash=a3f8e2c1...
+✓ Block 2: sigil.emit       sig=valid hash=7b9d0f4e...
+...
+✓ Block 4827: council.vote  sig=valid hash=f1c9e8a3...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHAIN INTEGRITY: ✓ VERIFIED
+Total blocks: 4,828
+Tampered: 0
+Genesis: 2026-03-15T08:00:00Z
+Head: 2026-07-05T11:15:00Z
+  </div>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">JSP 936 Compliance Integration</h4>
+  <p>Every SIGIL can carry an L3 compliance assertion — a signed attestation that the action complies with a specific framework article. This creates a three-layer audit pattern:</p>
+  <div class="layer">
+    <div class="layer-num">L1</div>
+    <div class="layer-body"><h4>Identity Registration</h4><p>Ed25519 public key registered before any action. Agent identity is cryptographically provable.</p></div>
+  </div>
+  <div class="layer">
+    <div class="layer-num">L2</div>
+    <div class="layer-body"><h4>Execution Logging</h4><p>Every action logged with hash chain to previous. Impossible to insert or delete entries without breaking the chain.</p></div>
+  </div>
+  <div class="layer">
+    <div class="layer-num">L3</div>
+    <div class="layer-body"><h4>Compliance Assertion</h4><p>Each execution tagged with framework compliance (JSP 936 Art X, EU AI Act Art Y, GDPR Art Z). Signed attestation.</p></div>
+  </div>
+</div>
+
+<!-- TAB 3: BFT Council -->
+<div class="tab-content">
+  <h3>🗳️ The 33-Node BFT Council</h3>
+  <p>Critical decisions in DEFONEOS never come from a single agent. They are deliberated by a 33-node Byzantine Fault Tolerant council. 22-of-33 must agree. The system tolerates up to 10 compromised nodes.</p>
+
+  <table>
+    <tr><th>Parameter</th><th>Value</th></tr>
+    <tr><td>Total Nodes</td><td>33</td></tr>
+    <tr><td>Quorum Required</td><td>22 (2/3 supermajority)</td></tr>
+    <tr><td>Max Byzantine Tolerance</td><td>10 nodes (≈30%)</td></tr>
+    <tr><td>Deliberation Timeout</td><td>30 seconds (fast path)</td></tr>
+    <tr><td>Vote Types</td><td>For / Against / Abstain</td></tr>
+    <tr><td>Signature Scheme</td><td>Ed25519 (one signature per node per vote)</td></tr>
+    <tr><td>Transparency</td><td>All votes SIGIL-emitted, publicly auditable</td></tr>
+  </table>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">Council Node Specialisations</h4>
+  <div class="grid">
+    <div class="card"><h3>🏛️ Charter Guardian</h3><p>Ensures all decisions comply with the SOV3 charter and JSP 936</p></div>
+    <div class="card"><h3>🔐 Security Sentry</h3><p>Validates signatures, checks for injection, enforces red lines</p></div>
+    <div class="card"><h3>📊 Data Steward</h3><p>Guards data sovereignty — blocks any action that would exfiltrate</p></div>
+    <div class="card"><h3>⚖️ Ethics Warden</h3><p>Evaluates dual-use concerns, civilian impact, proportionality</p></div>
+    <div class="card"><h3>🎯 Mission Director</h3><p>Optimises for operational outcome within constraints</p></div>
+    <div class="card"><h3>📡 Intelligence Analyst</h3><p>Correlates multi-source intelligence for situational awareness</p></div>
+  </div>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">Decision Flow</h4>
+  <div class="code">
+  QUERY: "Deploy counter-drone system to grid SK-3847"
+  
+  Node 01 (Charter):      FOR ✓ — JSP 936 compliant
+  Node 02 (Security):     FOR ✓ — Signatures valid
+  Node 03 (Data):         FOR ✓ — No exfiltration risk
+  Node 04 (Ethics):       FOR ✓ — Defensive posture, proportional
+  Node 05 (Mission):      FOR ✓ — Priority target, window closing
+  Node 06 (Intel):        FOR ✓ — 3 independent ISR sources confirm
+  ...
+  Node 33 (Logistics):    ABSTAIN — Supply chain unverified
+  
+  TALLY: 28 FOR / 2 AGAINST / 3 ABSTAIN
+  QUORUM: 28 ≥ 22 ✓ — MOTION PASSES
+  
+  → SIGIL emitted (Ed25519 signed)
+  → Action executed
+  → Result logged to chain
+  </div>
+</div>
+
+<!-- TAB 4: API & Tools -->
+<div class="tab-content">
+  <h3>📡 SOV3 API & Tool Surface</h3>
+  <p>SOV3 exposes 222+ tools via MCP (Model Context Protocol). Any agent, any framework, any language can call them. Here are the key categories:</p>
+
+  <table>
+    <tr><th>Category</th><th>Tools</th><th>Key Functions</th></tr>
+    <tr><td><strong>Governance</strong></td><td>bft_vote, council_propose, charter_query, sigil_emit, sigil_transcript</td><td>BFT deliberation, charter enforcement, audit trail</td></tr>
+    <tr><td><strong>Compliance</strong></td><td>article50_passport_issue, compliance_check, orgkernel_assert, jsp936_generate</td><td>EU AI Act, JSP 936, GDPR audit assertions</td></tr>
+    <tr><td><strong>Memory</strong></td><td>record_memory, query_memories, quantum_memory_search, temporal_chain</td><td>Episodic memory with care-weighting, VQE scoring</td></tr>
+    <tr><td><strong>Cognition</strong></td><td>oowm_think, bridge_think, zamba_ask, intuition_ingest, intuition_status</td><td>Left-right brain synthesis, Mamba-2 SSM, Zamba hybrid</td></tr>
+    <tr><td><strong>Creativity</strong></td><td>assess_creativity, find_bisociations, compute_novelty, apply_resonance</td><td>MAP-Elites archive, Koestler bisociation, 47 traditions</td></tr>
+    <tr><td><strong>Federation</strong></td><td>mcp_federation_search, mcp_federation_call, vault_search, federated_rag</td><td>310+ MCP servers, 1,232 indexed files, E2E RAG</td></tr>
+    <tr><td><strong>Security</strong></td><td>detect_threats, dorado_detect, soc_bot_detector, key_rotation</td><td>Foreign-access detection, PQC key rotation, SOC tooling</td></tr>
+    <tr><td><strong>Coordination</strong></td><td>coord_submit_task, delegate_task, swarm_orchestrate, swarm_review</td><td>Multi-agent task delegation, Aegis reviewer gate</td></tr>
+  </table>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">Endpoint</h4>
+  <div class="code">
+  POST localhost:3101/mcp
+  
+  {
+    "tool": "oowm_think",
+    "arguments": {
+      "query": "Assess threat level in sector SK-3847",
+      "use_left_brain": true,
+      "use_right_brain": true,
+      "use_mamba": true,
+      "sigil_signed": true
+    }
+  }
+  
+  → Response includes:
+    - Sovereign synthesis (left + right brain)
+    - Mamba-2 state vector (16-dim)
+    - BFT vote tally (if council triggered)
+    - SIGIL receipt (Ed25519 signed)
+    - JSP 936 compliance assertion
+  </div>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">Brain Configurations</h4>
+  <table>
+    <tr><th>Config</th><th>Models Active</th><th>Latency</th><th>Use Case</th></tr>
+    <tr><td><code>local_only</code></td><td>4 on-device models (7GB total)</td><td>&lt;100ms</td><td>Edge deploy, air-gap, Jetson</td></tr>
+    <tr><td><code>balanced</code></td><td>8 models, BFT off</td><td>~500ms</td><td>Development, testing</td></tr>
+    <tr><td><code>power</code></td><td>14 models + Mamba-2</td><td>~2s</td><td>Full intelligence analysis</td></tr>
+    <tr><td><code>council</code></td><td>14 models + 33-node BFT</td><td>~5s</td><td>Critical decisions, audit-grade</td></tr>
+  </table>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem">
+<p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-os.html" style="color:#22d3ee;text-decoration:none">OS</a> · <a href="defoneos-neural.html" style="color:#22d3ee;text-decoration:none">Neural</a> · <a href="defoneos-security.html" style="color:#22d3ee;text-decoration:none">Security</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a></p>
+<p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style>
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button>
+<script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}});function switchTab(n){var tabs=document.querySelectorAll(".tab");var contents=document.querySelectorAll(".tab-content");tabs.forEach(function(t,i){t.classList.toggle("active",i===n)});contents.forEach(function(c,i){c.classList.toggle("active",i===n)})}</script>
+</body></html>

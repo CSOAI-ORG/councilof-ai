@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Labs — R&D, Physical Infrastructure, Forge</title>
+<meta name="description" content="DEFONEOS Labs: the physical and digital R&D infrastructure. 19,000 sqft facility, Qidi Max4 3D printers, jetson edge nodes, ISR test range, 13m koi pond acoustic sensor.">
+<style>
+body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.equip{display:flex;align-items:flex-start;margin:1rem 0;gap:1rem;padding:1rem;background:rgba(255,255,255,.03);border-left:4px solid #22d3ee;border-radius:0 12px 12px 0}
+.equip-icon{font-size:2rem;flex-shrink:0}
+.equip-body h4{color:#f8fafc;margin:0 0 .25rem;font-size:1.05rem}
+.equip-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.equip-body .specs{color:#22d3ee;font-size:.8rem;font-family:monospace;margin-top:.25rem}
+.nav-section{text-align:center;margin-bottom:1.5rem}
+.nav-section a{color:#94a3b8;text-decoration:none;margin:0 .5rem;font-size:.85rem;padding:.3rem .7rem;border-radius:6px;background:rgba(255,255,255,.05)}
+.nav-section a:hover{color:#22d3ee;background:rgba(34,211,238,.1)}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — Labs & R&D Infrastructure"><meta property="og:description" content="Physical + digital R&D. 19,000 sqft. Edge nodes. 3D printing. ISR test range. Sovereign hardware."><meta property="og:type" content="website"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-labs.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compete.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a></nav>
+<div class="wrap">
+
+<div class="nav-section">
+  <a href="defoneos-build.html">🔨 Build</a>
+  <a href="defoneos-edge.html">⚡ Edge</a>
+  <a href="#" style="color:inherit;text-decoration:none">🔧 Hardware</a>
+  <a href="defoneos-timeline.html">📅 Timeline</a>
+</div>
+
+<h1>🔬 DEFONEOS Labs — R&D Infrastructure</h1>
+<p class="tagline">Physical and digital research infrastructure powering sovereign defence AI development. Edge compute nodes, additive manufacturing, acoustic sensing, ISR test range. Built in the UK. Sovereign by design.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">19,000</span><h3>sqft Facility</h3><p>R&D and testing space with 33 buildings, installations, and sensor test areas</p></div>
+  <div class="card"><span class="stat">13m</span><h3>Koi Pond Sensor</h3><p>Acoustic/environmental test bed — water flow, ambient audio, environmental monitoring</p></div>
+  <div class="card"><span class="stat">4</span><h3>Qidi Max4 Printers</h3><p>Additive manufacturing for drone parts, sensor housings, and edge node enclosures</p></div>
+  <div class="card"><span class="stat">M2/M3/M4</span><h3>Silicon</h3><p>Apple Silicon inference mesh — M2 (right brain perception), M3 (left brain reasoning), M4 (cognition)</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🔧 Physical Infrastructure</div>
+  <div class="tab" onclick="switchTab(1)">⚡ Edge Compute Fleet</div>
+  <div class="tab" onclick="switchTab(2)">🖨️ Additive Manufacturing</div>
+  <div class="tab" onclick="switchTab(3)">📡 Sensor Test Range</div>
+  <div class="tab" onclick="switchTab(4)">🧪 Research Programmes</div>
+</div>
+
+<!-- TAB 0: Physical Infrastructure -->
+<div class="tab-content active">
+  <h3>🔧 Physical Infrastructure — iOK Farm Facility</h3>
+  <p>The DEFONEOS R&D programme operates from a 19,000 sqft facility in Yorkshire, UK. The site hosts the physical sensor infrastructure, edge compute nodes, additive manufacturing, and ISR testing capabilities that validate the digital DEFONEOS platform in the real world.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>🏛️ Main Building</h3>
+      <p>Command centre, server room, development workstations. Houses the primary SOV3 substrate node and the GCP VM bridge for live inference.</p>
+    </div>
+    <div class="card">
+      <h3>🌊 13m Koi Pond</h3>
+      <p>Acoustic and environmental sensor test bed. Water flow sensors, hydrophones, temperature probes, and ambient audio capture — simulating maritime ISR scenarios at micro-scale.</p>
+    </div>
+    <div class="card">
+      <h3>🤖 FORGE Lab</h3>
+      <p>Additive manufacturing bay. 4× Qidi Max4 3D printers for rapid prototyping of drone airframes, sensor housings, and edge compute enclosures. Tab 6 in the DEFONEOS workspace.</p>
+    </div>
+    <div class="card">
+      <h3>22 Arcana Installations</h3>
+      <p>Physical installations mapped to the 22 Hebrew letters / Major Arcana — each housing a different sensor or compute node, creating a distributed physical sensing grid across the property.</p>
+    </div>
+  </div>
+
+  <h4>Sovereign Infrastructure Principles</h4>
+  <table>
+    <tr><th>Principle</th><th>Implementation</th><th>Status</th></tr>
+    <tr><td><strong>Air-gap capable</strong></td><td>All critical compute can operate disconnected from the internet. Local inference via Ollama + SOV3 edge nodes.</td><td>✅ Operational</td></tr>
+    <tr><td><strong>No cloud dependency</strong></td><td>No AWS, Azure, or foreign cloud for sensitive data. GCP VM used only for non-sensitive orchestration. All defence data stays on sovereign hardware.</td><td>✅ Enforced</td></tr>
+    <tr><td><strong>PQC ready</strong></td><td>ML-DSA-65 (Dilithium) signatures and ML-KEM-768 (Kyber) key exchange. Post-quantum cryptography standard.</td><td>✅ Deployed</td></tr>
+    <tr><td><strong>Ed25519 SIGIL chain</strong></td><td>Every action on the infrastructure is hash-chained and Ed25519-signed. Immutable audit trail.</td><td>✅ Live</td></tr>
+    <tr><td><strong>UK data residency</strong></td><td>All data processing occurs on UK soil. No data leaves the jurisdiction. ICO-compliant.</td><td>✅ Enforced</td></tr>
+    <tr><td><strong>Renewable power</strong></td><td>Solar-assisted power for edge nodes. Battery backup for 72-hour autonomous operation.</td><td>🟡 In progress</td></tr>
+  </table>
+</div>
+
+<!-- TAB 1: Edge Compute Fleet -->
+<div class="tab-content">
+  <h3>⚡ Edge Compute Fleet</h3>
+  <p>DEFONEOS operates a heterogeneous compute fleet spanning Apple Silicon inference mesh, NVIDIA Jetson edge nodes, and Raspberry Pi sensor hubs. All nodes run the SOV3 sovereign substrate and report to the central BFT council.</p>
+
+  <div class="equip">
+    <div class="equip-icon">🍎</div>
+    <div class="equip-body">
+      <h4>Apple Silicon Inference Mesh (M2/M3/M4)</h4>
+      <p>Three MacBooks form the sovereign inference mesh: M2 handles right-brain perception (vision, audio, sensors via Ollama), M3 handles left-brain reasoning (MoE, BFT council), M4 handles cognition synthesis (SOV3 middle layer).</p>
+      <div class="specs">M2: 16GB unified · 10-core GPU · Vision/audio models · Right Brain · Qwen2.5 VL, Whisper</div>
+      <div class="specs">M3: 18GB unified · 10-core GPU · Reasoning MoE · Left Brain · DeepSeek-R1, Falcon3</div>
+      <div class="specs">M4: 32GB unified · 10-core GPU · Cognition synthesis · SOV3 SOV3small3 (7GB, 4 local models)</div>
+    </div>
+  </div>
+
+  <div class="equip">
+    <div class="equip-icon">🟢</div>
+    <div class="equip-body">
+      <h4>NVIDIA Jetson Orin Nano / Xavier NX</h4>
+      <p>Edge AI nodes for field deployment. Run YOLOv8 object detection, OpenAthena geospatial processing, and local Mamba-2 state compression. 5-15W power consumption. Air-gap capable.</p>
+      <div class="specs">Jetson Orin Nano: 8GB · 40 TOPS · YOLOv8 + OpenAthena · 7-15W</div>
+      <div class="specs">Jetson Xavier NX: 8GB · 21 TOPS · Mamba-2 SSM · 10-15W</div>
+    </div>
+  </div>
+
+  <div class="equip">
+    <div class="equip-icon">🍓</div>
+    <div class="equip-body">
+      <h4>Raspberry Pi 5 Sensor Hubs</h4>
+      <p>Low-power sensor aggregation nodes. Collect data from RTSP cameras, MQTT IoT devices, RTL-SDR radio, and environmental sensors. 5W minimum power. Can run for days on battery.</p>
+      <div class="specs">Pi 5 8GB · RTSP aggregation · MQTT bridge · RTL-SDR · Environmental sensors · 5W</div>
+    </div>
+  </div>
+
+  <div class="equip">
+    <div class="equip-icon">☁️</div>
+    <div class="equip-body">
+      <h4>GCP VM (meok-backend) — Sovereign Orchestration</h4>
+      <p>The only cloud component — used strictly for non-sensitive orchestration. Runs the King hive, 33 hives, SOV3 :3101 MCP endpoint, council :3200 BFT endpoint, and the OLM router. All sensitive data stays on sovereign hardware.</p>
+      <div class="specs">GCP e2-standard-4 · 4 vCPU · 16GB RAM · King Hive + 33 Queens · SOV3 :3101 · BFT :3200</div>
+    </div>
+  </div>
+
+  <h4>Compute Fleet Summary</h4>
+  <table>
+    <tr><th>Node Type</th><th>Count</th><th>Role</th><th>Power</th><th>Air-Gap</th></tr>
+    <tr><td>Apple Silicon (M2/M3/M4)</td><td>3</td><td>Inference mesh (perception, reasoning, cognition)</td><td>30-60W each</td><td>✅</td></tr>
+    <tr><td>NVIDIA Jetson</td><td>2+</td><td>Edge AI (YOLOv8, OpenAthena, SSM)</td><td>7-15W</td><td>✅</td></tr>
+    <tr><td>Raspberry Pi 5</td><td>3+</td><td>Sensor aggregation, IoT bridge</td><td>5W</td><td>✅</td></tr>
+    <tr><td>GCP VM</td><td>1</td><td>Orchestration (non-sensitive only)</td><td>Cloud</td><td>❌</td></tr>
+    <tr><td><strong>Total edge TOPS</strong></td><td colspan="4">~130 TOPS across sovereign hardware (excl. cloud)</td></tr>
+  </table>
+</div>
+
+<!-- TAB 2: Additive Manufacturing -->
+<div class="tab-content">
+  <h3>🖨️ Additive Manufacturing — FORGE Lab</h3>
+  <p>The FORGE Lab (Tab 6 in the DEFONEOS workspace) houses 4× Qidi Max4 3D printers for rapid prototyping. We manufacture drone airframes, sensor housings, edge compute enclosures, and mounting hardware in-house — reducing supply chain dependency for defence-grade prototypes.</p>
+
+  <div class="grid">
+    <div class="card"><span class="stat">4×</span><h3>Qidi Max4</h3><p>CoreXY FDM printers with enclosed heated chambers</p></div>
+    <div class="card"><span class="stat">600</span><h3>mm/s Print Speed</h3><p>High-velocity prototyping for iterative design</p></div>
+    <div class="card"><span class="stat">300³</span><h3>mm³ Build Volume</h3><p>Large enough for drone airframes and sensor arrays</p></div>
+    <div class="card"><span class="stat">300°C</span><h3>Hotend Max</h3><p>Prints PETG, ABS, ASA, TPU, Nylon-CF</p></div>
+  </div>
+
+  <h4>Defence-Grade Materials</h4>
+  <table>
+    <tr><th>Material</th><th>Use Case</th><th>Properties</th></tr>
+    <tr><td><strong>PETG</strong></td><td>Sensor housings, mounting brackets</td><td>Impact-resistant, chemical-resistant, UV-stable</td></tr>
+    <tr><td><strong>ASA</strong></td><td>Outdoor drone components, weather stations</td><td>UV-resistant, outdoor-rated, temperature-stable</td></tr>
+    <tr><td><strong>Nylon-CF (Carbon Fibre)</strong></td><td>Drone airframes, structural components</td><td>High strength-to-weight, stiff, lightweight</td></tr>
+    <tr><td><strong>TPU</strong></td><td>Vibration dampeners, gaskets, impact protection</td><td>Flexible, durable, impact-absorbing</td></tr>
+    <tr><td><strong>ABS</strong></td><td>Enclosures, prototype cases</td><td>Impact-resistant, machinable, paintable</td></tr>
+  </table>
+
+  <h4>Manufactured Components</h4>
+  <div class="equip">
+    <div class="equip-icon">🚁</div>
+    <div class="equip-body">
+      <h4>Drone Airframes</h4>
+      <p>Custom quadcopter frames for PX4 flight controllers. Designed for ISR payload mounting (cameras, RTL-SDR, acoustic sensors). Carbon-fibre reinforced nylon for strength-to-weight ratio.</p>
+    </div>
+  </div>
+  <div class="equip">
+    <div class="equip-icon">📷</div>
+    <div class="equip-body">
+      <h4>Sensor Housings</h4>
+      <p>Weatherproof enclosures for Raspberry Pi + Jetson edge nodes. IP65-rated outdoor deployment. Integrated thermal management for passive cooling in field conditions.</p>
+    </div>
+  </div>
+  <div class="equip">
+    <div class="equip-icon">📡</div>
+    <div class="equip-body">
+      <h4>Antenna Mounts</h4>
+      <p>Custom mounts for RTL-SDR antennas, AIS receivers, and ADS-B antennas. Designed for mast deployment and vehicle mounting.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: Sensor Test Range -->
+<div class="tab-content">
+  <h3>📡 Sensor Test Range</h3>
+  <p>The 19,000 sqft facility serves as a living sensor test range. Every DEFONEOS MCP server category has a physical counterpart being tested on-site.</p>
+
+  <table>
+    <tr><th>Sensor Category</th><th>MCP Server</th><th>Physical Test Setup</th><th>Status</th></tr>
+    <tr><td>Satellite Imagery</td><td>sentinel-hub-mcp</td><td>Sentinel-2 imagery pipeline → Cesium globe visualisation</td><td>✅ Live</td></tr>
+    <tr><td>Maritime AIS</td><td>aisstream-maritime-mcp</td><td>AIS receiver — vessel tracking from Humber/port approaches</td><td>✅ Live</td></tr>
+    <tr><td>Aviation ADS-B</td><td>(planned)</td><td>RTL-SDR ADS-B receiver — aircraft tracking within 200nm radius</td><td>🟡 Hardware ready</td></tr>
+    <tr><td>OSINT News</td><td>gdelt-news-mcp</td><td>GDELT real-time global news monitoring pipeline</td><td>✅ Live</td></tr>
+    <tr><td>Air Quality</td><td>openaq-air-mcp</td><td>OpenAQ + local PM2.5/CO₂ sensors in environmental monitoring grid</td><td>✅ Live</td></tr>
+    <tr><td>Government Data</td><td>data-gov-uk-mcp, ons-statistics-mcp, companies-house-mcp</td><td>Live UK government open data feeds</td><td>✅ Live</td></tr>
+    <tr><td>IoT</td><td>mqtt-bridge-mcp</td><td>MQTT broker bridging local sensor network to DEFONEOS pipeline</td><td>✅ Live</td></tr>
+    <tr><td>IP Cameras</td><td>rtsp-camera-mcp</td><td>4× RTSP cameras (flock-cam-1..4) — wildlife/perimeter monitoring with PII redaction</td><td>✅ Live</td></tr>
+    <tr><td>Ordnance Survey</td><td>os-opendata-mcp</td><td>OS OpenData integration — UK mapping layers for Cesium</td><td>✅ Live</td></tr>
+    <tr><td>Radio Frequency</td><td>(RTL-SDR)</td><td>RTL-SDR dongles — FM/ADS-B/NOAA weather satellite reception</td><td>🟡 Hardware ready</td></tr>
+    <tr><td>Acoustic</td><td>(batear C-UAS)</td><td>13m koi pond hydrophone + ambient audio capture — drone acoustic detection R&D</td><td>🟡 R&D</td></tr>
+  </table>
+
+  <h4>The 22 Arcana Installation Grid</h4>
+  <p>22 physical installations across the property, each mapped to a Hebrew letter and housing a different sensor or compute node. This creates a distributed sensing grid that validates the DEFONEOS MCP federation in the physical world.</p>
+  <div class="code">Physical Grid Topology:
+
+[Aleph]━━[Bet]━━[Gimel]    ← North perimeter: cameras + AIS
+   ┃        ┃        ┃
+[Daleth]━━[He]━━[Vav]      ← Central: compute nodes + weather
+   ┃        ┃        ┃
+[Zayin]━━[Chet]━━[Tet]     ← South: acoustic + radio
+   ┃        ┃        ┃
+    ... (22 total installations)
+              ┃
+        [Koi Pond Hub]      ← Central aggregation + Mamba-2 SSM</div>
+</div>
+
+<!-- TAB 4: Research Programmes -->
+<div class="tab-content">
+  <h3>🧪 Active Research Programmes</h3>
+
+  <div class="equip">
+    <div class="equip-icon">🎯</div>
+    <div class="equip-body">
+      <h4>ISR Pipeline Optimization</h4>
+      <p>Reducing the kill-chain latency from sensor detection to council-authorized action. Current target: sub-40 seconds using Mamba-2 SSM state compression for real-time signal correlation across 198+ sources.</p>
+      <div class="specs">Status: Architecture complete · Next: Live PX4 SITL integration · Target: <30s end-to-end</div>
+    </div>
+  </div>
+
+  <div class="equip">
+    <div class="equip-icon">🐝</div>
+    <div class="equip-body">
+      <h4>Swarm Intelligence (Mava + PX4)</h4>
+      <p>Multi-agent reinforcement learning for drone swarms. Using Mava MARL framework with PX4 SITL for simulation. Goal: demonstrate coordinated ISR swarm behaviour — distributed search patterns, adaptive formation flying, and autonomous threat response.</p>
+      <div class="specs">Status: PX4 SITL operational · Mava integration in progress · Target: 5-drone demo swarm</div>
+    </div>
+  </div>
+
+  <div class="equip">
+    <div class="equip-icon">🔊</div>
+    <div class="equip-body">
+      <h4>Acoustic Counter-UAS (Batear)</h4>
+      <p>$10 acoustic drone detection system. Using MEMS microphone arrays + ML classification to detect and classify drone acoustic signatures. Tested against the koi pond environmental audio baseline. Low-cost, deployable at scale.</p>
+      <div class="specs">Status: Proof-of-concept · Hardware: MEMS mic array + Pi 5 · Target: 200m drone detection range</div>
+    </div>
+  </div>
+
+  <div class="equip">
+    <div class="equip-icon">🗺️</div>
+    <div class="equip-body">
+      <h4>Digital Twin of Yorkshire</h4>
+      <p>Building a Cesium 3D digital twin of Yorkshire with real-time data layers: satellite imagery, AIS vessel tracking, ADS-B aircraft, OSINT events, air quality, and government data. The first DEMO video target.</p>
+      <div class="specs">Status: Data layers configured · Next: Cesium 3D Tiles rendering · Target: 3-min demo video</div>
+    </div>
+  </div>
+
+  <div class="equip">
+    <div class="equip-icon">🛡️</div>
+    <div class="equip-body">
+      <h4>JSP 936 Compliance Automation</h4>
+      <p>Building the UK's first automated JSP 936 (AI in Defence) compliance generator. Maps DEFONEOS architecture to JSP 936 controls and produces audit-ready compliance documentation. The compliance differentiator vs Palantir.</p>
+      <div class="specs">Status: JSP 936 controls mapped · Next: Generator v0.1 · Target: Automated JSP 936 audit report</div>
+    </div>
+  </div>
+
+  <div class="equip">
+    <div class="equip-icon">🔒</div>
+    <div class="equip-body">
+      <h4>Post-Quantum Cryptography Migration</h4>
+      <p>Migrating all SIGIL chain signatures from Ed25519 to NIST PQC standards: ML-DSA-65 (Dilithium) for signatures, ML-KEM-768 (Kyber) for key exchange. Preparing for the quantum computing threat to classical cryptography.</p>
+      <div class="specs">Status: ML-DSA-65 deployed for new signatures · Legacy Ed25519 backward-compatible · Target: Full PQC by Q4 2026</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(n){var tabs=document.querySelectorAll('.tab'),contents=document.querySelectorAll('.tab-content');tabs.forEach(function(t,i){t.classList.toggle('active',i===n)});contents.forEach(function(c,i){c.classList.toggle('active',i===n)})}
+</script>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script>
+</body></html>

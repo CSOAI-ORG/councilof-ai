@@ -1,0 +1,49 @@
+{
+  "mcpVersion": "1.0.0",
+  "serverInfo": {
+    "name": "fishkeeper---ai-powered-agriculture-booking",
+    "version": "1.0.0",
+    "description": "FishKeeper \u2014 AI-powered agriculture booking \u2014 MEOK AI Labs compliance substrate."
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "compliance-audit",
+      "description": "Run a compliance audit via FishKeeper \u2014 AI-powered agriculture booking.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string",
+            "description": "Name or identifier of the system"
+          },
+          "framework": {
+            "type": "string",
+            "description": "Framework to check"
+          }
+        },
+        "required": [
+          "system"
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "https://fishkeeper.ai/llms.txt",
+      "name": "FishKeeper \u2014 AI-powered agriculture booking LLMs.txt",
+      "description": "Discovery manifest.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://fishkeeper.ai/sitemap.xml",
+      "name": "FishKeeper \u2014 AI-powered agriculture booking Sitemap",
+      "description": "Page index.",
+      "mimeType": "application/xml"
+    }
+  ]
+}

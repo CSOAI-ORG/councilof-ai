@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "nist-iso42001-crosswalk-mcp"
+version = "0.1.1"
+description = "NIST AI RMF <-> ISO/IEC 42001 crosswalk, both directions — governed + signed. CSOAI Layer-0."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+dependencies = ["mcp>=1.28.0", "pydantic>=2.0"]
+[project.scripts]
+nist-iso42001-crosswalk-mcp = "server:main"
+[tool.setuptools]
+py-modules = ["server"]

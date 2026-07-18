@@ -1,0 +1,220 @@
+
+=== Building SOV3: A Sovereign-by-Design AI OS (Lessons from 4 sprints + 33 sovereign districts) ===
+Tags: ai, sovereign-ai, mcp, architecture, open-source
+
+# Building SOV3: A Sovereign-by-Design AI OS
+
+Four weeks ago we set out to build a sovereign AI OS that would survive the EU AI Act + UK AI Bill deadline (2 Aug 2026). Today SOV3 has:
+- 276 tools
+- 8 BIG BRAIM tier models
+- 5 protocol bridges (MCP, A2A, x402, DID, JWT)
+- 12-around-1 BFT council
+- 22 Major Arcana as sovereign capabilities
+- 33 districts (9 sovereign + 13 districts + 11 layers)
+- 123 public pages (csoai.org)
+
+## Sovereign by Design
+
+Three pillars:
+1. **SIGIL** — every action Ed25519-signed + PQC ML-DSA-65-signed + audit-logged
+2. **HORUS** — real-time monitoring, PII-redacted
+3. **DORADO** — the sovereign switch (proves zero foreign backdoor)
+
+## Architecture: Mamba+MoE+Attention
+
+SOV3's substrate uses a hybrid: Mamba-2 SSM (state compression for long-context) + 64-expert MoE (routing) + Transformer attention (in-context reasoning).
+
+This matches Ornith-1.0 (DeepReinforce, MIT, agentic coding SOTA) released this week. Independent confirmation we're on the right track.
+
+## How to Try SOV3
+
+```bash
+bash /Users/nicholas/clawd/csoai.org/install-local.sh
+```
+
+## What's Next
+
+Day 5 of 5: launch. 4 Jul 2026 09:00 BST. The dragon wakes.
+
+GitHub: https://github.com/CSOAI-ORG/clawd-workspace
+
+
+=== EU AI Act Article 50: The 36-Day Watermarking Deadline ===
+Tags: ai, compliance, eu-ai-act, watermarking
+
+# EU AI Act Article 50: The 36-Day Watermarking Deadline
+
+Article 50 of the EU AI Act requires all public-facing AI to be watermarked. Deadline: 2 Aug 2026 — 36 days from today.
+
+## What Article 50 Actually Says
+
+Every AI system that interacts with people must clearly disclose it's an AI:
+- Text generation: must say "AI generated"
+- Image generation: must include watermark
+- Audio/Video generation: must include watermark
+- Chatbots: must identify as AI
+
+## The 16-Month Delay (Digital Omnibus Act)
+
+The EU JUST delayed the high-risk systems (Annex III) by 16 months (to 2 Dec 2027). But Article 50 was NOT delayed. UK doesn't have that delay either.
+
+## How to Implement
+
+Build (or use CSOAI's) SOV3 with:
+- HMAC-signed watermarking passport per AI output
+- Auto-issued on every generation
+- Public verifiable at /verify/
+- SIGIL chain for court-admissible audit
+
+## How CSOAI Helps
+
+We built `sov_article50_passport_issue` that:
+- Single prompt → 1 passport
+- HMAC-signed (Ed25519 + ML-DSA-65)
+- Publicly verifiable
+- Compliant with EU AI Act + UK AI Bill + GDPR
+
+Try: csoai.org/article-50-passport/
+
+
+=== SOV3 DORADO: The West's Response to CCP DORADO ===
+Tags: security, sovereign-ai, backdoor, china
+
+# SOV3 DORADO: The West's Response to CCP DORADO
+
+Leaked audio from 80+ internal meetings at a US tech company confirmed:
+- Chinese government "maintained supreme access to all the company data, even data stored in the United States"
+- "Everything is seen in China"
+- A tool called "DORADO" lets China-based employees switch between Chinese and US data "like a light switch"
+
+## How SOV3 DORADO Works
+
+Where CCP DORADO is a SECRET backdoor, SOV3 DORADO is a PUBLIC proof:
+1. SIGIL — every access Ed25519-signed + audit-chained
+2. HORUS — real-time monitoring, PII-redacted
+3. The Sovereign Switch — verifies no foreign backdoor (UK jurisdiction only)
+
+## What We Built
+
+`sov_dorado_prove_sovereignty(data_id)` generates a cryptographic proof that data has NOT been accessed by any foreign government.
+
+```bash
+curl -X POST http://localhost:3101/mcp -d '{
+  "jsonrpc":"2.0","id":"1","method":"tools/call",
+  "params":{"name":"sov_dorado_prove_sovereignty","arguments":{"data_id":"monzo-credit-scoring-001"}}
+}'
+```
+
+Result:
+```json
+{
+  "claim": "This data has NOT been accessed by any foreign government.",
+  "horus_attestation": "Real-time monitoring, zero foreign-government access attempts.",
+  "jurisdiction": "UK (CSOAI Ltd, 16939677)",
+  "sigiled": true
+}
+```
+
+## The West's Response
+
+CCP DORADO: secret backdoor, China controls US data, "everything is seen in China".
+
+SOV3 DORADO: public proof, sovereign controls data, "everything is seen publicly".
+
+Choose.
+
+Web: csoai.org/dorado/
+
+
+=== Big BRAIM: 8 Sovereign AI Models in One Brain (Qwen3-Coder, DeepSeek R1, Llama 4, Mistral, Ornith-1.0) ===
+Tags: ai, big-braim, qwen, deepseek, llama4, mistral, ornith
+
+# BIG BRAIM: 8 Sovereign AI Models in One Brain
+
+SOV3 BIG BRAIM is our sovereign substrate's reasoning layer. 8 category-winning models, all MIT/Apache licensed, all wrapped in SIGIL.
+
+## The 8 Tiers
+
+| Tier | Model | License | Why |
+|---|---|---|---|
+| 1 Coding (agentic) | Ornith-1.0-35B | MIT | SOTA Terminal-Bench 2.1 = 64.4 |
+| 2 Reasoning | DeepSeek R1 | MIT | Codeforces 2029 Elo |
+| 3 Long context | Llama 4 Scout | Llama community | 10M tokens |
+| 4 Multilingual | Mistral Large 3 | Apache 2.0 | 50+ languages |
+| 5 Edge (dense) | Ornith-1.0-9B | MIT | Beats many 70B models |
+| 5b Edge (vision) | Phi-4 Multimodal | MIT | vision+audio on edge |
+| 6 TTS | Kokoro | Apache 2.0 | 82M params, broadcast quality |
+| 7 Embedding | BGE-M3 | MIT | Cross-lingual 0.940 score |
+| 8 Router | Qwen3 1.7B | Apache 2.0 | 300 tok/s, 92% accuracy |
+
+## Auto-Routing
+
+`sov_big_braim_route(query)` analyzes keywords:
+- "code/python/bug/refactor" → Qwen3-Coder-480B (or Ornith-1.0-35B)
+- "reason/proof/math/logic" → DeepSeek R1
+- "long/book/codebase/10m" → Llama 4 Scout
+- default → DeepSeek R1
+
+## Sovereign-Safe
+
+All 8 are MIT or Apache 2.0. No foreign backdoor. No foreign government access. The West's answer to CCP-controlled models.
+
+## Try
+
+```bash
+curl -X POST http://localhost:3101/mcp -d '{
+  "jsonrpc":"2.0","id":"1","method":"tools/call",
+  "params":{"name":"sov_big_braim_route","arguments":{"query":"audit Monzo compliance"}}
+}'
+```
+
+Web: csoai.org/big-braim/
+
+
+=== 16-dim Mamba Intuition Engine: SOV3 Doesn't Answer Questions, SOV3 FEELS Them ===
+Tags: ai, intuition, mamba, noise-to-wisdom
+
+# 16-dim Mamba Intuition Engine
+
+SOV3 has an intuition engine — turns high-frequency noise into low-frequency wisdom.
+
+## The Math
+
+1Hz capture of every SIGIL → Mamba-2 SSM compresses to 16-dim state vector → cosine similarity (threshold 0.85) → 3+ matching states = intuition confirmed.
+
+```
+1 second = 1 SIGIL pixel
+1 day   = 86,400 pixels
+1 week  = 604,800 pixels → compressed to 16-dim intuition vector
+```
+
+## The Wisdoms
+
+| Energy | Complexity | Wisdom |
+|---|---|---|
+| High | High | "🔥 Inflection. Action recommended." |
+| High | Low | "💤 Repetitive. Automate." |
+| Low | High | "🌱 Nascent. Plant seeds." |
+| Low | Low | "🌙 Quiet. Rest is productive." |
+
+## How It Works in SOV3
+
+When 3+ matching states occur (across the hive), the intuition engine broadcasts to:
+- Nick (the user)
+- 12 Queens (each gets the hunch)
+- BFT council (validates the hunch)
+- Proactive engine (acts on the hunch)
+
+## Why It Matters
+
+Most LLMs answer questions. SOV3 has answers + intuition. The intuition is what catches:
+- Anomalies before they escalate
+- Patterns before they're obvious
+- Threats before they materialize
+
+## Try
+
+`sov_intuition_status` on live SOV3 returns the current 16-dim state + wisdom.
+
+Web: csoai.org/intuition/
+

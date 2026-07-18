@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛰️ Free Satellite Sources — meok-sovereign-satellite-mcp</title>
+<meta name="description" content="Free Satellite Sources — sovereign MCP by CSOAI Ltd (UK 16939677). MIT licensed. 11 tests, 100% pass.">
+<meta property="og:title" content="🛰️ Free Satellite Sources">
+<meta property="og:description" content="Free Satellite Sources. 22 sovereign MCPs · 302 tests · 100% pass.">
+<meta property="og:type" content="website">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    background: radial-gradient(ellipse at top, #0a1f15 0%, #020202 70%);
+    color: #f8fafc; min-height: 100vh; padding: 40px 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .hero {
+    text-align: center; padding: 60px 20px;
+    border-bottom: 1px solid rgba(74,222,128,0.2);
+  }
+  .emoji { font-size: 5rem; margin-bottom: 16px; }
+  h1 { color: #fbbf24; font-size: 2.5rem; font-weight: 900; margin-bottom: 12px; }
+  .sub { color: #94a3b8; font-size: 1.1rem; margin-bottom: 24px; }
+  .badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  .badge {
+    background: rgba(74,222,128,0.15); color: #4ade80;
+    padding: 4px 12px; border-radius: 4px; font-weight: 700; font-size: 0.8rem;
+  }
+  .badge.gold { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .install {
+    background: rgba(0,0,0,0.4); border: 1px solid #4ade80;
+    border-radius: 8px; padding: 20px; margin: 30px 0;
+    font-family: 'JetBrains Mono', monospace; color: #4ade80; font-size: 0.9rem;
+  }
+  .install .comment { color: #64748b; }
+  .cta {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #020202; padding: 16px 32px; border-radius: 8px;
+    text-decoration: none; font-weight: 800; font-size: 1.1rem;
+    display: inline-block; margin: 16px 8px;
+  }
+  .cta-secondary {
+    background: transparent; color: #4ade80; border: 2px solid #4ade80;
+    padding: 14px 28px; border-radius: 8px;
+    text-decoration: none; font-weight: 700; font-size: 1rem;
+    display: inline-block; margin: 16px 8px;
+  }
+  .section { background: rgba(10,20,15,0.7); border-radius: 12px; padding: 30px; margin: 20px 0; }
+  .section h2 { color: #4ade80; margin-bottom: 16px; font-size: 1.4rem; }
+  pre {
+    background: #000; color: #4ade80; padding: 16px;
+    border-radius: 8px; overflow-x: auto; font-size: 0.85rem;
+    border: 1px solid rgba(74,222,128,0.3);
+  }
+  code { background: rgba(74,222,128,0.1); padding: 2px 6px; border-radius: 3px; color: #4ade80; }
+  .related { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+  .related a {
+    background: rgba(10,20,15,0.7); border: 1px solid rgba(74,222,128,0.3);
+    padding: 12px; border-radius: 8px; text-decoration: none; color: #cbd5e1; font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .related a:hover { border-color: #4ade80; color: #4ade80; }
+  footer { text-align: center; margin-top: 60px; padding: 30px; color: #64748b; font-size: 0.85rem; border-top: 1px solid rgba(148,163,184,0.2); }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="emoji">🛰️</div>
+    <h1>Free Satellite Sources</h1>
+    <p class="sub">Sovereign MCP by CSOAI Ltd (UK 16939677) · MIT licensed · <a href="https://proofof.ai" style="color:#4ade80;">proofof.ai</a> verified</p>
+    <div class="badges">
+      <span class="badge">11 tests</span>
+      <span class="badge">100% pass</span>
+      <span class="badge">Ed25519 signed</span>
+      <span class="badge gold">MIT license</span>
+    </div>
+    <a href="#install" class="cta">pip install meok-sovereign-satellite-mcp</a>
+    <a href="/sovereign-mcps/" class="cta-secondary">← all 22 sovereign MCPs</a>
+  </div>
+
+  <div class="section" id="install">
+    <h2>Install</h2>
+    <pre>$ pip install meok-sovereign-satellite-mcp</pre>
+    <p style="margin-top: 16px;">Or use the <a href="https://pypi.org/search/?q=meok-sovereign" style="color:#4ade80;">meok-sovereign-*</a> namespace on PyPI. All 22 MCPs are MIT-licensed.</p>
+  </div>
+
+  <div class="section">
+    <h2>Usage</h2>
+    <pre>from meok_sovereign_satellite_mcp import sov_sat_query, sov_sat_scenes, sov_sat_ingest, sov_sat_classify, sov_sat_status
+
+# Query Sentinel-2 for Yorkshire farm
+r = sov_sat_query("sentinel-2",
+                   {"n": 54.0, "s": 53.0, "e": -0.5, "w": -1.5},
+                   start_date="2026-06-01", end_date="2026-06-30",
+                   max_cloud=20)
+assert r["resolution_m"] == 10
+assert r["license"].startswith("CC")
+
+# List scenes
+r = sov_sat_scenes("yorkshire-farm", source="sentinel-2", max_results=10)
+assert r["scene_count"] == 5
+
+# Classify
+r = sov_sat_classify("scene-12345")
+assert r["classification"]["forest"] == 0.35
+
+# Status
+r = sov_sat_status()
+assert r["all_free"] is True</pre>
+  </div>
+
+  <div class="section">
+    <h2>Verify every output</h2>
+    <p>Every response from this MCP is Ed25519-signed. The <code>verify_url</code> field in every output points to <a href="https://proofof.ai/satellite/" style="color:#4ade80;">https://proofof.ai/satellite/</a> where anyone can verify the signature against the published CSOAI public key.</p>
+    <pre style="margin-top: 12px;">$ curl https://proofof.ai/passport | jq -r .issuer_pubkey
+$ sovereign satellite satellite_status ... | jq -r .verify_url</pre>
+  </div>
+
+  <div class="section">
+    <h2>Related sovereign MCPs</h2>
+    <div class="related">
+      <a href="../passport/">🛂 passport</a>
+<a href="../guardrails/">🛡️ guardrails</a>
+<a href="../receipt/">📜 receipt</a>
+<a href="../governance/">⚖️ governance</a>
+<a href="../x402-payment/">💎 x402-payment</a>
+<a href="../globe/">🌍 globe</a>
+<a href="../council/">🏛️ council</a>
+<a href="../memory/">🧠 memory</a>
+<a href="../avatar/">🐉 avatar</a>
+<a href="../skills/">⚙️ skills</a>
+<a href="../eu-ai-act-kit/">🇪🇺 eu-ai-act-kit</a>
+<a href="../worm/">🐛 worm</a>
+<a href="../defence/">🛡️ defence</a>
+<a href="../honour/">🪖 honour</a>
+<a href="../immortal/">∞ immortal</a>
+<a href="../dora/">📋 dora</a>
+<a href="../iso42001/">📚 iso42001</a>
+<a href="../iot/">📡 iot</a>
+<a href="../pond/">🐟 pond</a>
+<a href="../intuition/">🔮 intuition</a>
+<a href="../supply-chain/">📦 supply-chain</a>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+🜏 Sovereign MCPs by <a href="https://csoai.org" style="color:#fbbf24;">CSOAI Ltd</a> (UK 16939677) · MIT licensed<br>
+Verify every signature at <a href="https://proofof.ai" style="color:#fbbf24;">proofof.ai</a> ·
+<a href="/sovereign-mcps/.well-known/mcp.json">MCP discovery</a>
+</footer>
+</body>
+</html>

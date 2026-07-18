@@ -1,0 +1,27 @@
+# 03_merge_experts.yaml — TIES-merge your fine-tuned experts into ONE new model.
+#
+# STEP 0 (REQUIRED first — the charter-N-* are LoRA adapters, TIES needs full models):
+#   for e in compliance defense intuition voice; do
+#     python3 -c "from peft import PeftModel; from transformers import AutoModelForCausalLM as M, AutoTokenizer as T; \
+#       b=M.from_pretrained('Qwen/Qwen3-4B'); \
+#       m=PeftModel.from_pretrained(b, [d for d in __import__('glob').glob('charter-*-'+'$e')][0]).merge_and_unload(); \
+#       m.save_pretrained('merged/$e'); T.from_pretrained('Qwen/Qwen3-4B').save_pretrained('merged/$e')"; done
+# THEN run the merge below.
+# Run:  mergekit-yaml 03_merge_experts.yaml ./sovereign-merged --allow-crimes --out-shard-size 1B
+# TIES resolves conflicts between experts; density/weight tune each expert's contribution.
+merge_method: ties
+base_model: Qwen/Qwen3-4B                 # MUST match what you fine-tuned (proof run = Qwen3-4B).
+                                          # PRIMARY (later, real GPU): Qwen/Qwen3-30B-A3B once experts are retrained on it.
+models:
+  - model: merged/compliance   # = charter-1-compliance LoRA merged into the base (see step 0 below)
+    parameters: {density: 0.5, weight: 0.35}   # compliance is the moat -> higher weight
+  - model: merged/defense      # = charter-2-defense merged
+    parameters: {density: 0.5, weight: 0.20}
+  - model: merged/intuition    # = charter-3-intuition merged
+    parameters: {density: 0.5, weight: 0.25}
+  - model: merged/voice        # = charter-4-voice merged
+    parameters: {density: 0.5, weight: 0.20}
+parameters:
+  normalize: true
+  int8_mask: true
+dtype: bfloat16

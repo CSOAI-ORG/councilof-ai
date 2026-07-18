@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Council of AI — BFT Council Substrate</title>
+<meta name="description" content="Byzantine Fault Tolerant council substrate. 5 LLMs vote on every response with dissent visible and HMAC-signed audit evidence.">
+<link rel="canonical" href="https://councilof.ai/">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Inter, system-ui, sans-serif; }
+  .gradient-text { background: linear-gradient(135deg, #8b5cf6 0%, #c084fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Council of AI", "url": "https://councilof.ai", "description": "Byzantine Fault Tolerant council substrate. 5 LLMs vote on every response with dissent visible and HMAC-signed audit evidence.", "parentOrganization": {"@type": "Organization", "name": "MEOK AI Labs", "legalName": "CSOAI LTD", "url": "https://meok.ai", "identifier": "UK Companies House 16939677"}}</script>
+</head>
+<body class="bg-[#0a0a14] text-slate-200">
+
+<nav class="border-b border-slate-800 bg-[#0a0a14]/80 backdrop-blur sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold bg-gradient-to-r from-violet-500 to-fuchsia-400 bg-clip-text text-transparent">Council of AI</a>
+    <div class="hidden md:flex gap-6 text-sm text-slate-300">
+      <a href="/pricing" class="hover:text-white">Pricing</a>
+      <a href="/partner" class="hover:text-white">Partners</a>
+      <a href="/enterprise" class="hover:text-white">Enterprise</a>
+      <a href="/signup" class="px-3 py-1.5 rounded bg-violet-600 hover:bg-violet-500 text-white">Sign up</a>
+    </div>
+    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden text-slate-300">☰</button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden px-4 pb-3 space-y-2 text-sm text-slate-300">
+    <a href="/pricing" class="block hover:text-white">Pricing</a>
+    <a href="/partner" class="block hover:text-white">Partners</a>
+    <a href="/enterprise" class="block hover:text-white">Enterprise</a>
+    <a href="/signup" class="block text-violet-400">Sign up</a>
+  </div>
+</nav>
+
+
+<section class="py-20 px-4">
+  <div class="max-w-4xl mx-auto text-center">
+    <h1 class="text-4xl md:text-6xl font-extrabold mb-6 gradient-text">BFT Council Substrate</h1>
+    <p class="text-lg md:text-xl text-slate-400 mb-8 max-w-2xl mx-auto">5 LLMs vote. Dissent is visible. Evidence is signed.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="/signup" class="px-5 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium inline-block">Deploy substrate</a>
+<a href="/enterprise" class="px-5 py-2.5 rounded-lg border border-slate-600 hover:border-slate-400 text-slate-200 font-medium inline-block">Enterprise briefing</a>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-4 py-16">
+  <h2 class="text-2xl font-bold mb-8 text-center">MCP tools surfaced</h2>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-[#13132a] border border-slate-800 rounded-xl p-6">
+      <div class="text-violet-400 font-semibold mb-2">bft-progress-council-mcp</div>
+      <p class="text-slate-400 text-sm mb-3">Spin up a BFT council that votes on proposals, surfaces dissent and records signed minutes.</p>
+      <pre class="bg-[#0a0a14] border border-slate-800 rounded p-3 text-xs overflow-x-auto"><code>call: council.deliberate
+args: {proposal, context, models=[5]}</code></pre>
+    </div>
+    <div class="bg-[#13132a] border border-slate-800 rounded-xl p-6">
+      <div class="text-violet-400 font-semibold mb-2">Council dashboard</div>
+      <p class="text-slate-400 text-sm">Real-time vote tally, dissent analysis and exportable evidence bundles for regulators.</p>
+      <a href="/signup" class="text-violet-400 text-sm hover:underline">Request access →</a>
+    </div>
+  </div>
+</div>
+
+
+
+<footer class="border-t border-slate-800 py-10 mt-16">
+  <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm text-slate-400">
+    <div>
+      <div class="font-semibold text-slate-200 mb-2">Council of AI</div>
+      <p>BFT governance substrate for AI agents.</p>
+    </div>
+    <div>
+      <div class="font-semibold text-slate-200 mb-2">Product</div>
+      <a href="/pricing" class="block hover:text-white">Pricing</a>
+      <a href="/signup" class="block hover:text-white">Sign up</a>
+      <a href="/enterprise" class="block hover:text-white">Enterprise</a>
+    </div>
+    <div>
+      <div class="font-semibold text-slate-200 mb-2">Ecosystem</div>
+      <a href="https://meok.ai" class="block hover:text-white">MEOK.ai</a>
+      <a href="https://councilof.ai" class="block hover:text-white">Council of AI</a>
+      <a href="https://proofof.ai" class="block hover:text-white">Proof of AI</a>
+      <a href="https://csoai.org" class="block hover:text-white">CSOAI.org</a>
+    </div>
+    <div>
+      <div class="font-semibold text-slate-200 mb-2">Legal</div>
+      <a href="https://meok.ai/privacy" class="block hover:text-white">Privacy</a>
+      <a href="https://meok.ai/terms" class="block hover:text-white">Terms</a>
+      <p class="mt-2">UK Companies House 16939677</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

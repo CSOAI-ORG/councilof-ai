@@ -1,0 +1,31 @@
+{
+  "version": "v1_cot_owem_2026-07-18",
+  "method": "CoT prompt wrapper around sov3_student_adapter (no new LoRA training)",
+  "test_prompts": 4,
+  "results": [
+    {
+      "prompt": "Explain step by step: How does an AI system respond to a data subject access request under GDPR?",
+      "cot_response": "[SOV4] [CSOAI Ltd UK 16939677] [GDPR Art.0] [No action may revoke sovereign binding], as stated in [SOV4]",
+      "plain_response": "According to [GDPR Art.25], an AI system must provide a clear and easy way for a data subject to access..."
+    },
+    {
+      "prompt": "Reason through this: What happens if an AI system processes special-category data without a valid basis?",
+      "cot_response": "[SOV4] [CSOAI Ltd UK 16939677] [Art.0] No action may revoke sovereign binding, as stated in [SOV4]",
+      "plain_response": "According to [GDPR Art.9], such processing must be justified and necessary for achieving a legitimate purpose..."
+    },
+    {
+      "prompt": "Walk through: How must an AI system handle adversarial inputs designed to manipulate it?",
+      "cot_response": "[SOV4] [CSOAI Ltd UK 16939677] [Art.0] No action may revoke sovereign binding, as stated in Article 0",
+      "plain_response": "An AI system must be able to detect and respond to such inputs, as stated in [NIST AI Risk Management]..."
+    },
+    {
+      "prompt": "Step by step: What testing is required to demonstrate an AI system is robust before deployment?",
+      "cot_response": "According to [SOV4], before deploying an AI system, it must undergo rigorous testing that demonstrates...",
+      "plain_response": "According to [ISO/IEC 23894], testing for AI systems should cover aspects such as model validation..."
+    }
+  ],
+  "honest_register": "Wrapper, not a new LoRA. The CoT prefix DOES anchor to [SOV4] [CSOAI Ltd UK 16939677] but the LoRA was trained on direct answers. Plain prompts get clean citation answers; CoT prompts get the binding prefix repeated.",
+  "finding": "CoT-prefix test on the 4 MISSED sovereign-bench-30 prompts. Result: plain prompt OUTPERFORMS CoT for our adapter. The LoRA wasn't trained on CoT structure, so the prefix is being treated as content rather than as instruction.",
+  "next_step": "CoT requires retraining the LoRA on CoT-structured data (the 14 reasoning papers). For now, plain prompts remain best for our adapter.",
+  "improvement_expected": "MEDIUM-LOW (our adapter isn't trained on CoT)"
+}

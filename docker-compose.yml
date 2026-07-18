@@ -1,0 +1,127 @@
+version: "3.8"
+
+# ═══════════════════════════════════════════════════════════════
+# MEOK Sovereign Stack — Local Development Orchestration
+# ═══════════════════════════════════════════════════════════════
+# Services:
+#   - marketing: Next.js static export served by nginx
+#   - sovereign-api: FastAPI backend (auth, waitlist, characters, LLM routing)
+#   - temple-api: SOV3 Sovereign Temple (consciousness, council, bridges)
+#   - mcp-gateway: MCP Monetization Gateway (billing, subscriptions)
+#   - db: PostgreSQL + pgvector (optional, for production migration)
+#   - redis: Cache and session store
+#
+# Usage:
+#   docker compose up --build
+#   open http://localhost:3000  # marketing site
+#   open http://localhost:8001  # sovereign API docs
+# ═══════════════════════════════════════════════════════════════
+
+services:
+  # ─── Marketing Frontend ─────────────────────────────────────
+  marketing:
+    build:
+      context: ./meok-marketing
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:8001
+    ports:
+      - "3000:80"
+    depends_on:
+      - sovereign-api
+    restart: unless-stopped
+
+  # ─── Sovereign API (canonical backend) ──────────────────────
+  sovereign-api:
+    build:
+      context: ./meok-sovereign-api
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./data/meok_sovereign.db
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - SOV3_URL=http://temple-api:8888
+      - MCP_GATEWAY_URL=http://mcp-gateway:8000
+      - CORS_ORIGINS=http://localhost:3000,http://marketing:80
+    volumes:
+      - sovereign_data:/app/data
+    depends_on:
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ─── SOV3 Sovereign Temple API ──────────────────────────────
+  temple-api:
+    build:
+      context: ./sovereign-temple-live
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://meok:meok@db:5432/meok}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  # ─── MCP Monetization Gateway ───────────────────────────────
+  mcp-gateway:
+    build:
+      context: ./mcp-monetization-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL:-postgresql://meok:meok@db:5432/meok}
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # ─── PostgreSQL + pgvector ──────────────────────────────────
+  db:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: meok
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-meok}
+      POSTGRES_DB: meok
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Redis ──────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redisdata:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  sovereign_data:
+  pgdata:
+  redisdata:

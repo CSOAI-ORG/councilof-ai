@@ -1,0 +1,17 @@
+{
+  "stage": "AUDIT",
+  "verdict": "2 FLAG(S) for review",
+  "findings": [
+    {
+      "pattern": "additive_params",
+      "why": "additive parameter-count claim \u2014 summing stacked-model params is a category error; active compute ~3B+70B",
+      "near": "...TRUE 4-path architecture. 9.934T. beats GPT-4 by 5.6x, each brain cou..."
+    },
+    {
+      "pattern": "multiplied_params",
+      "why": "parameter counts multiplied by path-count \u2014 counting the same model N times",
+      "near": "...ats GPT-4 by 5.6x, each brain counted 4x in paths..."
+    }
+  ],
+  "note": "pattern flags = candidates for review, NOT adjudicated truth"
+}

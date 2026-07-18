@@ -1,0 +1,42 @@
+{
+  "governance": {
+    "sector": "governance",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 447,
+    "n_heldout": 78,
+    "before_overlap": 0.209,
+    "after_overlap": 0.2573,
+    "gain": 0.0483,
+    "verdict": "GO"
+  },
+  "judgment": {
+    "sector": "judgment",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 1266,
+    "n_heldout": 223,
+    "before_overlap": 0.1336,
+    "after_overlap": 0.647,
+    "gain": 0.5134,
+    "verdict": "GO"
+  },
+  "intuition": {
+    "sector": "intuition",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 1049,
+    "n_heldout": 185,
+    "before_overlap": 0.0616,
+    "after_overlap": 0.8,
+    "gain": 0.7384,
+    "verdict": "GO"
+  },
+  "reasoning": {
+    "sector": "reasoning",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 506,
+    "n_heldout": 89,
+    "before_overlap": 0.1935,
+    "after_overlap": 0.4045,
+    "gain": 0.211,
+    "verdict": "GO"
+  }
+}

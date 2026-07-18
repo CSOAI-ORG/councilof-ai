@@ -1,0 +1,7 @@
+{
+  "id": "cold-email-gov-defense",
+  "prompt": "Write a complete 6-piece cold-email sequence targeting government and defense IP counsel (DARPA, DOE, DOD, NIH TTO, FFRDC POCs, NATO STO) for openpatent.ai. Persona pain: classified-adjacent invention disclosure, ITAR/EAR controlled tech, Bayh-Dole compliance on federally-funded inventions, contractor-priority disputes, FOIA exposure of unfiled disclosures. Deliver: (1) intro email (≤160 words, hook with sovereign air-gapped deployment, FedRAMP Moderate path, ITAR review workflow, FIPS 140-3 validated crypto), (2) 5-day followup (≤100 words, name the BFT sovereign-temple v3.0 with 22/33 supermajority, 6 care dimensions, 11 jurisdictional domains, 55 bridge pairs), (3) value-prop one-liner (≤25 words, court-admissible proof without leaving the sovereign enclave), (4) 3 objection handlers ('We can't use a commercial SaaS', 'CUI markings need an authority-to-operate', 'Concur with the inspector general first') each ≤60 words, (5) 1 anonymized case study (FFRDC in Albuquerque, prior-art dispute with a Tier-1 prime contractor resolved in 11 days using OTS + Ed25519 attestation, $2.3M claim defended), (6) ROI line ('$4,999/mo enterprise tier vs $480k/year federal prior-art contractor, 8x cost reduction, ATO-ready'). Use DEFONEOS mythic voice. Return ONLY JSON: {intro:string, followup:string, value_prop:string, objection_handlers:[3 strings], case_study:string, roi:string, signature:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

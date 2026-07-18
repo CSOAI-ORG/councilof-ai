@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_sov_os_workflow_engine_mcp"
+version = "1.0.0"
+description = "MEEK SOV OS Workflow Engine MCP — the workflows that run the world (PDCA + BFT + Traibgle + Quantum). MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "sov-os", "frontend", "workflow", "permission", "gamification", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org/sov-space"
+Repository = "https://github.com/CSOAI-ORG/meek-sov-os-workflow-engine-mcp"
+
+[project.scripts]
+meek-sov-os-workflow-engine-mcp = "meek_sov_os_workflow_engine_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_sov_os_workflow_engine_mcp"]

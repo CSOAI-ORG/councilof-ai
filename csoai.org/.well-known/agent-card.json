@@ -1,0 +1,98 @@
+{
+  "name": "CSOAI Watchdog",
+  "version": "1.0.0",
+  "url": "https://csoai.org/charter",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "protocolVersion": "0.3.0",
+  "description": "CSOAI Watchdog AI Safety Certification. Multi-agent BFT deliberation, HMAC-signed audit trail, 52-Article Charter, recognised by EU AI Act Article 14 and ISO 42001 Annex A.7. Operated by MEOK AI Labs (CSOAI LTD, UK Companies House 16939677).",
+  "provider": {
+    "organization": "CSOAI LTD",
+    "legalName": "CSOAI LTD",
+    "url": "https://csoai.org",
+    "identifier": "UK Companies House 16939677"
+  },
+  "defaultInputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "documentationUrl": "https://csoai.org/charter",
+  "skills": [
+    {
+      "id": "safety-audit",
+      "name": "AI Safety Audit",
+      "description": "52-Article Charter audit covering risk classification (unacceptable/high/limited/minimal), transparency + watermarking (EU AI Act Article 50), bias detection, audit logging, explainability. HMAC-signed audit trail verifiable at proofof.ai/verify.",
+      "tags": [
+        "csoai",
+        "ai-safety",
+        "audit",
+        "bft",
+        "eu-ai-act",
+        "iso-42001",
+        "hmac-signed"
+      ],
+      "examples": [
+        "Classify my AI system under the 52-Article Charter",
+        "Generate a CSOAI Watchdog evidence pack for EU AI Act compliance",
+        "Verify the HMAC signature on a CSOAI audit certificate"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "watermark-compliance",
+      "name": "Article 50 Watermarking Compliance",
+      "description": "EU AI Act Article 50 transparency + watermarking stack: C2PA + SynthID + perceptual fingerprinting + Ed25519 attestations. Applies 2 August 2026 (new systems) / 2 December 2026 (pre-existing).",
+      "tags": [
+        "eu-ai-act",
+        "article-50",
+        "watermarking",
+        "c2pa",
+        "synthid",
+        "transparency"
+      ],
+      "examples": [
+        "Audit my GenAI system for Article 50 watermarking compliance",
+        "Generate C2PA manifest for AI-generated content",
+        "Verify SynthID watermarking is in place"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    }
+  ],
+  "x-csoai": {
+    "charter": "https://csoai.org/charter",
+    "verifier": "https://proofof.ai/verify",
+    "operator": "MEOK AI Labs",
+    "registry": "https://csoai.org/agents.json"
+  },
+  "endpoints": {
+    "article_50_passport": {
+      "url": "https://csoai.org/article-50-passport/",
+      "free": "https://buy.stripe.com/cNieVdcfAdQS0ZT5Uc8k91q",
+      "pro": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
+      "stripe_checkout": true,
+      "days_to_cliff": 36
+    },
+    "omnibus_analysis": "https://csoai.org/content/omnibus-delay/"
+  }
+}

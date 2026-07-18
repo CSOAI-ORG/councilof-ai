@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Partner Integration Guide</title>
+<meta name="description" content="Complete integration guide for DEFONEOS partners: MCP federation, REST API, WebSocket streams, C2 bridge, SIGIL chain sync, and SDK examples in Python, TypeScript, and Go.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:140px;flex:1;text-align:center}
+.stat-box .num{font-size:1.6rem;font-weight:700}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;margin:.75rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.6rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.75rem;line-height:1.5;margin:.75rem 0}
+code{color:var(--cyan);font-family:inherit}
+.kw{color:var(--purple)}
+.str{color:var(--green)}
+.cmt{color:#64748b}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+.tab-bar{display:flex;gap:.5rem;margin-bottom:0;flex-wrap:wrap}
+.tab-bar .tab{padding:.4rem 1rem;border:1px solid var(--border);border-radius:6px 6px 0 0;background:var(--bg3);font-size:.75rem;cursor:pointer}
+.tab-bar .tab.active{background:var(--bg2);border-bottom:1px solid var(--bg2);color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Partner Integration Guide</h1>
+<p style="font-size:.8rem;color:var(--cyan)">5 integration paths · Python / TypeScript / Go SDKs · MCP Federation · REST · WebSocket · C2 Bridge · SIGIL Sync</p></div>
+</div>
+<div><span class="badge badge-green">5 PATHS</span> <span class="badge badge-purple">3 SDKs</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num" style="color:var(--green)">5</div><div class="label">Integration Paths</div></div>
+<div class="stat-box"><div class="num" style="color:var(--cyan)">30</div><div class="label">MCP Tools</div></div>
+<div class="stat-box"><div class="num" style="color:var(--gold)">87</div><div class="label">REST Endpoints</div></div>
+<div class="stat-box"><div class="num" style="color:var(--green)">6</div><div class="label">WS Streams</div></div>
+<div class="stat-box"><div class="num" style="color:var(--purple)">3</div><div class="label">SDKs</div></div>
+</div>
+
+<h2>🗺️ Integration Paths Overview</h2>
+<div class="section">
+<table>
+<tr><th>#</th><th>Path</th><th>Protocol</th><th>Best For</th><th>Latency</th><th>Complexity</th></tr>
+<tr><td>1</td><td><strong>MCP Federation</strong></td><td>JSON-RPC 2.0 over stdio/SSE</td><td>AI agents, LLM tool calling, sovereign mesh</td><td><1ms local</td><td class="badge badge-green">Low</td></tr>
+<tr><td>2</td><td><strong>REST API</strong></td><td>HTTP/2 + JSON</td><td>Web apps, dashboards, third-party systems</td><td>5-50ms</td><td class="badge badge-green">Low</td></tr>
+<tr><td>3</td><td><strong>WebSocket Streams</strong></td><td>WSS + Protobuf/JSON</td><td>Real-time feeds: SIGIL events, drone telemetry, alerts</td><td><10ms</td><td class="badge badge-gold">Medium</td></tr>
+<tr><td>4</td><td><strong>C2 Bridge</strong></td><td>TAK Protocol + CoT XML</td><td>FreeTAKServer, ATAK clients, TAK-aware systems</td><td>50-200ms</td><td class="badge badge-gold">Medium</td></tr>
+<tr><td>5</td><td><strong>SIGIL Chain Sync</strong></td><td>Ed25519-signed hash chain</td><td>Audit trails, compliance, evidence, inter-org trust</td><td>Batch</td><td class="badge badge-purple">Advanced</td></tr>
+</table>
+</div>
+
+<h2>🔌 Path 1: MCP Federation (Recommended for AI Integration)</h2>
+<div class="section">
+<p>Connect your AI agent or LLM to DEFONEOS via the MCP (Model Context Protocol) federation. This is the native integration — your agent discovers and calls DEFONEOS tools the same way it calls any MCP server.</p>
+<h3>Python — Connect to DEFONEOS MCP Federation</h3>
+<pre><code><span class="cmt"># Install the SDK</span>
+<span class="kw">pip install</span> defoneos-sdk[python]
+
+<span class="cmt"># Connect to the federation</span>
+<span class="kw">from</span> defoneos_sdk <span class="kw">import</span> DefoneosClient
+
+client = DefoneosClient(
+    endpoint=<span class="str">"https://your-defoneos.example.com/mcp"</span>,
+    auth_token=<span class="str">"your-oauth2-token"</span>,  <span class="cmt"># OAuth2 JWT Ed25519</span>
+)
+
+<span class="cmt"># Discover available tools (30 MCPs × multiple tools each)</span>
+tools = client.discover_tools()
+<span class="kw">print</span>(<span class="str">f"Available tools: {len(tools)}"</span>)
+<span class="cmt"># → Available tools: 142</span>
+
+<span class="cmt"># Call a sensor fusion tool</span>
+result = client.call(<span class="str">"defoneos-fusion-mcp"</span>, <span class="str">"fuse_isr_feed"</span>, {
+    <span class="str">"sources"</span>: [<span class="str">"sentinel2"</span>, <span class="str">"ais"</span>, <span class="str">"rtsp_cam_1"</span>],
+    <span class="str">"bbox"</span>: [<span class="str">-1.5</span>, <span class="str">53.7</span>, <span class="str">-1.2</span>, <span class="str">53.9"</span>],  <span class="cmt"># Yorkshire</span>
+    <span class="str">"time_window"</span>: <span class="str">"PT1H"</span>,
+})
+<span class="kw">print</span>(result.fused_track_count)  <span class="cmt"># → 47 tracks</span>
+
+<span class="cmt"># Subscribe to SIGIL audit events</span>
+<span class="kw">for</span> event <span class="kw">in</span> client.stream(<span class="str">"sigil.events"</span>, filter={<span class="str">"action"</span>: <span class="str">"drone_command"</span>}):
+    <span class="kw">print</span>(<span class="str">f"[SIGIL] {event.actor} → {event.action}: {event.digest[:16]}..."</span>)</code></pre>
+
+<h3>TypeScript — Connect with OAuth2</h3>
+<pre><code><span class="cmt">// npm install @defoneos/sdk</span>
+<span class="kw">import</span> { DefoneosClient } <span class="kw">from</span> <span class="str">'@defoneos/sdk'</span>;
+
+<span class="kw">const</span> client = <span class="kw">new</span> DefoneosClient({
+  endpoint: <span class="str">'https://your-defoneos.example.com/mcp'</span>,
+  auth: {
+    type: <span class="str">'oauth2'</span>,
+    clientId: process.env.DEFONEOS_CLIENT_ID,
+    clientSecret: process.env.DEFONEOS_CLIENT_SECRET,
+    scopes: [<span class="str">'fusion:read'</span>, <span class="str">'swarm:command'</span>, <span class="str">'sigil:audit'</span>],
+  },
+});
+
+<span class="cmt">// List all MCP servers in the federation</span>
+<span class="kw">const</span> servers = <span class="kw">await</span> client.listServers();
+console.log(<span class="str">`Federation: ${servers.length} MCP servers online`</span>);
+
+<span class="cmt">// Command a drone swarm (requires swarm:command scope)</span>
+<span class="kw">const</span> mission = <span class="kw">await</span> client.call(<span class="str">'defoneos-swarm-mcp'</span>, <span class="str">'launch_patrol'</span>, {
+  drones: [<span class="str">'drone-01'</span>, <span class="str">'drone-02'</span>, <span class="str">'drone-03'</span>],
+  pattern: <span class="str">'grid_search'</span>,
+  area: { lat: 53.8, lng: -1.3, radius_km: 5 },
+  altitude_m: 120,
+  sigil_audit: <span class="kw">true</span>,  <span class="cmt">// Every command logged to SIGIL chain</span>
+});</code></pre>
+</div>
+
+<h2>🌐 Path 2: REST API</h2>
+<div class="section">
+<p>The REST API exposes all DEFONEOS capabilities over standard HTTP/2. Use this for web dashboards, third-party system integration, and non-AI workloads.</p>
+<h3>Authentication</h3>
+<pre><code><span class="cmt"># Step 1: Get OAuth2 token</span>
+curl -X POST https://your-defoneos.example.com/auth/token \
+  -H <span class="str">"Content-Type: application/x-www-form-urlencoded"</span> \
+  -d <span class="str">"grant_type=client_credentials"</span> \
+  -d <span class="str">"client_id=$CLIENT_ID"</span> \
+  -d <span class="str">"client_secret=$CLIENT_SECRET"</span> \
+  -d <span class="str">"scope=fusion:read swarm:command sigil:audit"</span>
+
+<span class="cmt"># Response:</span>
+<span class="cmt"># {"access_token":"eyJ...","token_type":"Bearer","expires_in":3600}</span>
+
+<span class="cmt"># Step 2: Use token for API calls</span>
+curl https://your-defoneos.example.com/api/v1/fusion/tracks \
+  -H <span class="str">"Authorization: Bearer eyJ..."</span> \
+  -H <span class="str">"Accept: application/json"</span></code></pre>
+
+<h3>Key REST Endpoints</h3>
+<table>
+<tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Scope Required</th></tr>
+<tr><td>GET</td><td><code>/api/v1/fusion/tracks</code></td><td>Get fused ISR tracks (current or historical)</td><td>fusion:read</td></tr>
+<tr><td>POST</td><td><code>/api/v1/fusion/ingest</code></td><td>Ingest sensor data (satellite, AIS, camera, RSS)</td><td>fusion:write</td></tr>
+<tr><td>POST</td><td><code>/api/v1/swarm/launch</code></td><td>Launch a drone swarm mission</td><td>swarm:command</td></tr>
+<tr><td>GET</td><td><code>/api/v1/swarm/status/{mission_id}</code></td><td>Get swarm mission status + telemetry</td><td>swarm:read</td></tr>
+<tr><td>POST</td><td><code>/api/v1/c2/cot</code></td><td>Send a Cursor-on-Target (CoT) event</td><td>c2:write</td></tr>
+<tr><td>GET</td><td><code>/api/v1/sigil/chain</code></td><td>Query the SIGIL audit chain</td><td>sigil:audit</td></tr>
+<tr><td>POST</td><td><code>/api/v1/sigil/verify</code></td><td>Verify SIGIL chain integrity (re-compute hashes)</td><td>sigil:audit</td></tr>
+<tr><td>GET</td><td><code>/api/v1/governance/proposals</code></td><td>List BFT council proposals</td><td>governance:read</td></tr>
+<tr><td>POST</td><td><code>/api/v1/governance/vote</code></td><td>Cast a BFT council vote</td><td>governance:vote</td></tr>
+<tr><td>GET</td><td><code>/api/v1/mcp/servers</code></td><td>List all MCP servers in the federation</td><td>mcp:read</td></tr>
+<tr><td>POST</td><td><code>/api/v1/mcp/call</code></td><td>Call any MCP tool (JSON-RPC bridge)</td><td>mcp:call</td></tr>
+<tr><td>POST</td><td><code>/api/v1/yolov8/detect</code></td><td>Run YOLOv8 object detection on an image</td><td>vision:read</td></tr>
+<tr><td>POST</td><td><code>/api/v1/jsp936/generate</code></td><td>Generate a JSP 936 compliance document</td><td>compliance:write</td></tr>
+<tr><td>GET</td><td><code>/api/v1/cesium/scene</code></td><td>Get Cesium 3D COP scene state (GeoJSON)</td><td>cop:read</td></tr>
+<tr><td colspan="4" style="text-align:center;color:var(--cyan);font-size:.75rem">…73 more endpoints — see <a href="defoneos-api-docs.html" style="color:var(--gold)">full API reference</a></td></tr>
+</table>
+
+<h3>Rate Limits</h3>
+<table>
+<tr><th>Tier</th><th>Requests/min</th><th>Burst</th><th>Concurrent Streams</th><th>Price</th></tr>
+<tr><td>Citizen (Free)</td><td>60</td><td>100</td><td>2</td><td>£0</td></tr>
+<tr><td>Partner</td><td>600</td><td>1,000</td><td>10</td><td>£499/mo</td></tr>
+<tr><td>Government</td><td>6,000</td><td>10,000</td><td>50</td><td>£2,499/mo</td></tr>
+<tr><td>Sovereign (On-prem)</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td><td>£9,999+/mo</td></tr>
+</table>
+</div>
+
+<h2>📡 Path 3: WebSocket Real-Time Streams</h2>
+<div class="section">
+<p>Subscribe to real-time event streams for live updates — SIGIL events, drone telemetry, alerts, and fusion track changes.</p>
+<h3>Python WebSocket Client</h3>
+<pre><code><span class="kw">import</span> websockets
+<span class="kw">import</span> asyncio
+<span class="kw">import</span> json
+
+<span class="kw">async def</span> defoneos_stream():
+    uri = <span class="str">"wss://your-defoneos.example.com/ws/v1/stream"</span>
+    <span class="kw">async with</span> websockets.connect(
+        uri,
+        extra_headers={<span class="str">"Authorization"</span>: <span class="str">f"Bearer {token}"</span>}
+    ) <span class="kw">as</span> ws:
+        <span class="cmt"># Subscribe to channels</span>
+        <span class="kw">await</span> ws.send(json.dumps({
+            <span class="str">"action"</span>: <span class="str">"subscribe"</span>,
+            <span class="str">"channels"</span>: [<span class="str">"sigil.events"</span>, <span class="str">"fusion.tracks"</span>, <span class="str">"swarm.telemetry"</span>, <span class="str">"alerts.critical"</span>]
+        }))
+
+        <span class="kw">async for</span> message <span class="kw">in</span> ws:
+            event = json.loads(message)
+            <span class="kw">if</span> event[<span class="str">"channel"</span>] == <span class="str">"alerts.critical"</span>:
+                <span class="kw">print</span>(<span class="str">f"🚨 ALERT: {event['data']['title']}"</span>)
+            <span class="kw">elif</span> event[<span class="str">"channel"</span>] == <span class="str">"sigil.events"</span>:
+                <span class="kw">print</span>(<span class="str">f"[SIGIL] {event['data']['digest'][:16]} {event['data']['action']}"</span>)
+
+asyncio.run(defoneos_stream())</code></pre>
+
+<h3>Available WebSocket Channels</h3>
+<table>
+<tr><th>Channel</th><th>Events</th><th>Format</th><th>Typical Rate</th></tr>
+<tr><td><code>sigil.events</code></td><td>SIGIL chain emissions (all actions)</td><td>JSON</td><td>1-50/sec</td></tr>
+<tr><td><code>fusion.tracks</code></td><td>Fused track create/update/delete</td><td>GeoJSON</td><td>10-500/sec</td></tr>
+<tr><td><code>swarm.telemetry</code></td><td>Drone position, battery, status</td><td>Protobuf</td><td>1-10Hz per drone</td></tr>
+<tr><td><code>alerts.critical</code></td><td>Critical alerts (geofence, low battery, threat)</td><td>JSON</td><td>Event-driven</td></tr>
+<tr><td><code>c2.cot</code></td><td>Cursor-on-Target events (TAK compatible)</td><td>CoT XML</td><td>1-100/sec</td></tr>
+<tr><td><code>governance.votes</code></td><td>BFT council proposal + vote events</td><td>JSON</td><td>Event-driven</td></tr>
+</table>
+</div>
+
+<h2>🛰️ Path 4: C2 Bridge (TAK/FreeTAKServer)</h2>
+<div class="section">
+<p>DEFONEOS includes a native C2 bridge that speaks the TAK protocol — making it compatible with ATAK, WinTAK, iTAK, and FreeTAKServer out of the box.</p>
+<h3>Architecture</h3>
+<pre><code>┌──────────────┐     CoT XML      ┌──────────────┐    MCP JSON-RPC   ┌──────────────┐
+│  ATAK Client │ ←──────────────→ │ FreeTAKServer│ ←───────────────→ │  DEFONEOS    │
+│  (Android)   │    (TAK Proto)   │   (Bridge)   │  (Bidirectional)  │  MCP Suite   │
+└──────────────┘                  └──────────────┘                   └──────────────┘
+       ↑                                                                ↑
+       │ CoT display                                                    │ ISR Fusion
+       │ (tracks, alerts)                                               │ Swarm control
+       │                                                                │ SIGIL audit
+┌──────┴──────┐                                                  ┌──────┴──────┐
+│  ATAK User  │                                                  │  Cesium COP │
+│  (Operator) │                                                  │  (3D Map)   │
+└─────────────┘                                                  └─────────────┘</code></pre>
+
+<h3>Configure FreeTAKServer → DEFONEOS Bridge</h3>
+<pre><code><span class="cmt"># /opt/freetakserver/config/defoneos_bridge.yml</span>
+defoneos:
+  endpoint: <span class="str">"https://your-defoneos.example.com/mcp"</span>
+  auth_token: <span class="str">"${DEFONEOS_TOKEN}"</span>
+  
+  <span class="cmt"># Routes: which CoT types to forward to DEFONEOS</span>
+  cot_routes:
+    - type: <span class="str">"a-f-A"</span>          <span class="cmt"># Friendly air track</span>
+      forward_to: <span class="str">"defoneos-fusion-mcp.ingest_cot"</span>
+    - type: <span class="str">"a-h-A"</span>          <span class="cmt"># Friendly ground track</span>
+      forward_to: <span class="str">"defoneos-fusion-mcp.ingest_cot"</span>
+    - type: <span class="str">"b-m-r"</span>          <span class="cmt"># Emergency alert</span>
+      forward_to: <span class="str">"defoneos-sigil-mcp.emit_alert"</span>
+  
+  <span class="cmt"># Reverse: DEFONEOS fusion tracks → CoT for ATAK display</span>
+  fusion_to_cot:
+    enabled: <span class="kw">true</span>
+    min_confidence: <span class="str">0.7</span>
+    cot_type_template: <span class="str">"a-f-A-C-M"</span>  <span class="cmt"># Friend, Air, Combat, Manual</span>
+    sigil_signed: <span class="kw">true</span>            <span class="cmt"># Attach SIGIL digest to each CoT</span></code></pre>
+</div>
+
+<h2>🔗 Path 5: SIGIL Chain Sync (Inter-Organisational Audit)</h2>
+<div class="section">
+<p>For multi-organisation deployments (e.g., joint operations, coalition partners), DEFONEOS supports SIGIL chain synchronisation — allowing each party to maintain a verifiable, tamper-evident audit trail.</p>
+<h3>Python — SIGIL Chain Subscriber</h3>
+<pre><code><span class="kw">from</span> defoneos_sdk <span class="kw">import</span> SigilSync
+
+<span class="cmt"># Connect to partner's SIGIL chain as read-only auditor</span>
+partner_chain = SigilSync(
+    endpoint=<span class="str">"https://partner-defoneos.example.com/api/v1/sigil"</span>,
+    auth_token=<span class="str">"coalition-audit-token"</span>,
+    mode=<span class="str">"read_only"</span>,  <span class="cmt"># We can verify, not write</span>
+)
+
+<span class="cmt"># Verify the entire chain integrity</span>
+report = partner_chain.verify_chain()
+<span class="kw">print</span>(<span class="str">f"Chain entries: {report.entry_count}"</span>)
+<span class="kw">print</span>(<span class="str">f"Hash chain valid: {report.hash_chain_valid}"</span>)
+<span class="kw">print</span>(<span class="str">f"Signatures valid: {report.signatures_valid}"</span>)
+<span class="kw">print</span>(<span class="str">f"Tamper detected: {report.tamper_detected}"</span>)
+
+<span class="cmt"># Subscribe to new SIGIL events (live audit feed)</span>
+<span class="kw">async for</span> entry <span class="kw">in</span> partner_chain.stream():
+    <span class="cmt"># Verify each new entry's signature independently</span>
+    <span class="kw">assert</span> entry.verify_signature(), <span class="str">"Invalid signature!"</span>
+    <span class="kw">assert</span> entry.verify_hash_link(), <span class="str">"Hash chain broken!"</span>
+    log_audit(entry)</code></pre>
+
+<h3>SIGIL Entry Structure</h3>
+<pre><code>{
+  <span class="str">"seq"</span>: 47823,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-07-06T07:45:01.234Z"</span>,
+  <span class="str">"actor"</span>: <span class="str">"swarm-mcp"</span>,
+  <span class="str">"action"</span>: <span class="str">"launch_patrol"</span>,
+  <span class="str">"payload_hash"</span>: <span class="str">"sha256:a1b2c3..."</span>,
+  <span class="str">"prev_digest"</span>: <span class="str">"sha256:9z8y7..."</span>,
+  <span class="str">"digest"</span>: <span class="str">"sha256:e5d4f3..."</span>,
+  <span class="str">"signature"</span>: <span class="str">"ed25519:8b7a6..."</span>,
+  <span class="str">"signing_key"</span>: <span class="str">"ed25519:pub:11a2b..."</span>
+}</code></pre>
+</div>
+
+<h2>⚙️ Environment Setup Checklist</h2>
+<div class="section">
+<table>
+<tr><th>Step</th><th>Action</th><th>Command / Config</th><th>Verified</th></tr>
+<tr><td>1</td><td>Install DEFONEOS SDK</td><td><code>pip install defoneos-sdk[python]</code> or <code>npm i @defoneos/sdk</code></td><td class="check">✅</td></tr>
+<tr><td>2</td><td>Request OAuth2 credentials</td><td>From DEFONEOS admin console → API Keys</td><td class="check">✅</td></tr>
+<tr><td>3</td><td>Set environment variables</td><td><code>DEFONEOS_ENDPOINT</code>, <code>DEFONEOS_CLIENT_ID</code>, <code>DEFONEOS_CLIENT_SECRET</code></td><td class="check">✅</td></tr>
+<tr><td>4</td><td>Test connectivity</td><td><code>python -c "from defoneos_sdk import DefoneosClient; c=DefoneosClient(); print(c.health())"</code></td><td class="check">✅</td></tr>
+<tr><td>5</td><td>Verify SIGIL chain read access</td><td><code>curl -H "Authorization: Bearer $TOKEN" $ENDPOINT/api/v1/sigil/chain?limit=1</code></td><td class="check">✅</td></tr>
+<tr><td>6</td><td>Test MCP tool discovery</td><td><code>client.discover_tools()</code> → should return 142+ tools</td><td class="check">✅</td></tr>
+<tr><td>7</td><td>Subscribe to alert stream (if real-time needed)</td><td>WebSocket connect + subscribe to <code>alerts.critical</code></td><td class="check">✅</td></tr>
+<tr><td>8</td><td>Configure SIGIL audit logging (compliance)</td><td>Enable <code>sigil_audit: true</code> on all write calls</td><td class="check">✅</td></tr>
+</table>
+</div>
+
+<h2>🤝 Partner Onboarding Process</h2>
+<div class="section">
+<table>
+<tr><th>Phase</th><th>Duration</th><th>Activities</th><th>Output</th></tr>
+<tr><td><strong>1. Discovery</strong></td><td>1 week</td><td>Use case workshop, data flow mapping, security review</td><td>Integration plan</td></tr>
+<tr><td><strong>2. Sandbox</strong></td><td>2 weeks</td><td>Sandbox credentials, test data, SDK setup, proof-of-concept</td><td>Working POC</td></tr>
+<tr><td><strong>3. Integration</strong></td><td>2-4 weeks</td><td>Production OAuth2, webhook setup, C2 bridge (if needed), SIGIL sync</td><td>Integrated system</td></tr>
+<tr><td><strong>4. Security Audit</strong></td><td>1 week</td><td>Pen test review, scope verification, SIGIL chain audit</td><td>Security sign-off</td></tr>
+<tr><td><strong>5. Production</strong></td><td>Ongoing</td><td>Go-live, monitoring, SLA activation, quarterly review</td><td>Live operational</td></tr>
+</table>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — UK Sovereign Public Services OS · MIT Open Source · <a href="defoneos-index.html" style="color:var(--gold)">← Back to Index</a></p>
+<p>Partner Integration Guide v1.0 · Updated 6 Jul 2026 · 5 integration paths · 3 SDKs · 87 REST endpoints</p>
+</footer>
+</div>
+</body>
+</html>

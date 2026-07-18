@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founding Council | CSOAI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a365d 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: rgba(0,0,0,0.3);
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            color: #94a3b8;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            color: #e2e8f0;
+        }
+        
+        .council-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .member-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+        
+        .member-card.founder {
+            border: 2px solid #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+        }
+        
+        .member-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .member-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+        
+        .member-title {
+            color: #60a5fa;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .member-org {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        
+        .member-expertise {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .expertise-label {
+            color: #64748b;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .expertise-text {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .member-location {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        
+        .charter-tags {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .tag {
+            background: rgba(96, 165, 250, 0.2);
+            color: #93c5fd;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(0,0,0,0.2);
+            margin-top: 60px;
+        }
+        
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .cta-section p {
+            color: #94a3b8;
+            margin-bottom: 25px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .stats {
+                gap: 20px;
+            }
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>CSOAI Founding Council</h1>
+        <p>World-class experts united to ensure AI benefits all of humanity through the Maternal Covenant framework</p>
+    </div>
+    
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-number">15+</div>
+            <div class="stat-label">Founding Members</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Countries</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">200+</div>
+            <div class="stat-label">Years Combined Experience</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">52</div>
+            <div class="stat-label">Charter Articles</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2 class="section-title">Leadership & Core Team</h2>
+        
+        <div class="council-grid">
+            <!-- FOUNDER -->
+            <div class="member-card founder">
+                <div class="member-header">
+                    <div class="member-avatar">NT</div>
+                    <div>
+                        <div class="member-name">Nicholas Templeman</div>
+                        <div class="member-title">Founder & Executive Director</div>
+                        <div class="member-org">CSOAI Ltd</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">Charter architecture, AI safety vision, Maternal Covenant framework, Byzantine Council design</div>
+                </div>
+                <div class="member-location">📍 United Kingdom</div>
+                <div class="charter-tags">
+                    <span class="tag">All 52 Articles</span>
+                    <span class="tag">Founder</span>
+                </div>
+            </div>
+            
+            <!-- STEPHEN J TONNA -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">ST</div>
+                    <div>
+                        <div class="member-name">Stephen J. Tonna</div>
+                        <div class="member-title">Training Bureau Director</div>
+                        <div class="member-org">Fortune 100 SaaS</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">Enterprise SaaS leadership, CEASAI curriculum development, strategic advisory, quality assurance</div>
+                </div>
+                <div class="member-location">📍 Strategic Advisor</div>
+                <div class="charter-tags">
+                    <span class="tag">Training</span>
+                    <span class="tag">CEASAI</span>
+                </div>
+            </div>
+            
+            <!-- GEORGE JOSEPH -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">GJ</div>
+                    <div>
+                        <div class="member-name">George Joseph</div>
+                        <div class="member-title">VP GDCE Risk Management</div>
+                        <div class="member-org">Bank of America</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">25+ years InfoSec, OWASP methodology, AIBOM evaluations, Cloud/AI/IoT security audits, IIM Bangalore</div>
+                </div>
+                <div class="member-location">📍 India</div>
+                <div class="charter-tags">
+                    <span class="tag">Cybersecurity</span>
+                    <span class="tag">OWASP</span>
+                    <span class="tag">Enterprise Risk</span>
+                </div>
+            </div>
+            
+            <!-- JEREMY MALLORY -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">JM</div>
+                    <div>
+                        <div class="member-name">Jeremy G. Mallory</div>
+                        <div class="member-title">Counsel</div>
+                        <div class="member-org">Massey & Gail LLP</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">J.D. & Ph.D. Ethics (UChicago), Constitutional law, Supreme Court cited scholar, Editor-in-Chief UChicago Law Review</div>
+                </div>
+                <div class="member-location">📍 Washington DC, USA</div>
+                <div class="charter-tags">
+                    <span class="tag">Legal</span>
+                    <span class="tag">Ethics</span>
+                    <span class="tag">Regulatory</span>
+                </div>
+            </div>
+            
+            <!-- DR. CARI MILLER -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">CM</div>
+                    <div>
+                        <div class="member-name">Dr. Cari Miller</div>
+                        <div class="member-title">Chief Auditor</div>
+                        <div class="member-org">IEEE AI Procurement Vice-Chair</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">Doctorate in AI Risk Management, dual AI Auditor certifications, GCAIE Advisory Board member</div>
+                </div>
+                <div class="member-location">📍 United States</div>
+                <div class="charter-tags">
+                    <span class="tag">AI Auditing</span>
+                    <span class="tag">IEEE</span>
+                    <span class="tag">Compliance</span>
+                </div>
+            </div>
+            
+            <!-- SARAWANAN -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">SN</div>
+                    <div>
+                        <div class="member-name">Sarawanan Nandhakumar</div>
+                        <div class="member-title">Founder & CEO</div>
+                        <div class="member-org">Apply Cyber</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">18+ years cybersecurity/AI, multi-exit founder, Path Finder Cyber Award, Essential Eight compliance platforms</div>
+                </div>
+                <div class="member-location">📍 Australia</div>
+                <div class="charter-tags">
+                    <span class="tag">Cybersecurity</span>
+                    <span class="tag">AI Compliance</span>
+                    <span class="tag">APAC</span>
+                </div>
+            </div>
+            
+            <!-- STEPHEN CALHOUN -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">SC</div>
+                    <div>
+                        <div class="member-name">Stephen Calhoun</div>
+                        <div class="member-title">Infrastructure Architect</div>
+                        <div class="member-org">SASI / techviz.us</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">SASI middleware (97-99% FDA compliance), mental health AI safety, dual-memory architecture, enforceable trust layers</div>
+                </div>
+                <div class="member-location">📍 United States</div>
+                <div class="charter-tags">
+                    <span class="tag">Consciousness</span>
+                    <span class="tag">Middleware</span>
+                    <span class="tag">Safety</span>
+                </div>
+            </div>
+            
+            <!-- SAAHIL GUPTA -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">SG</div>
+                    <div>
+                        <div class="member-name">Saahil Gupta</div>
+                        <div class="member-title">Founder</div>
+                        <div class="member-org">School of Responsible AI (SoRAI)</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">AIGP & RAI certified, 2,000+ professionals trained across 20+ countries, "1 million educated" mission</div>
+                </div>
+                <div class="member-location">📍 India</div>
+                <div class="charter-tags">
+                    <span class="tag">Training</span>
+                    <span class="tag">Responsible AI</span>
+                    <span class="tag">Asia-Pacific</span>
+                </div>
+            </div>
+            
+            <!-- ABHINAV MITTAL -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">AM</div>
+                    <div>
+                        <div class="member-name">Abhinav Mittal</div>
+                        <div class="member-title">ISO 42001 Lead Implementor</div>
+                        <div class="member-org">Standards Expert</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">ISO 42001 AI management systems, international standards alignment, technical documentation, interoperability</div>
+                </div>
+                <div class="member-location">📍 India</div>
+                <div class="charter-tags">
+                    <span class="tag">ISO 42001</span>
+                    <span class="tag">Standards</span>
+                    <span class="tag">Compliance</span>
+                </div>
+            </div>
+            
+            <!-- JAMES CASTLE -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">JC</div>
+                    <div>
+                        <div class="member-name">James Castle</div>
+                        <div class="member-title">EU & US Regulatory Liaison</div>
+                        <div class="member-org">International Governance</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">EU AI Act expertise, US regulatory relationships, international AI governance, cross-border compliance</div>
+                </div>
+                <div class="member-location">📍 EU / USA</div>
+                <div class="charter-tags">
+                    <span class="tag">EU AI Act</span>
+                    <span class="tag">Regulatory</span>
+                    <span class="tag">International</span>
+                </div>
+            </div>
+            
+            <!-- JASON HADDIX -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">JH</div>
+                    <div>
+                        <div class="member-name">Jason Haddix</div>
+                        <div class="member-title">Security & Red Team Expert</div>
+                        <div class="member-org">Offensive Security</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">Offensive security, penetration testing, adversarial AI testing, vulnerability assessment</div>
+                </div>
+                <div class="member-location">📍 United States</div>
+                <div class="charter-tags">
+                    <span class="tag">Red Team</span>
+                    <span class="tag">Security</span>
+                    <span class="tag">Testing</span>
+                </div>
+            </div>
+            
+            <!-- WERNER -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">WK</div>
+                    <div>
+                        <div class="member-name">Werner Koegelenberg</div>
+                        <div class="member-title">Africa Representative</div>
+                        <div class="member-org">LinkedIn Top Voice (AI)</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">African AI ecosystem, developing nations perspective, regional AI governance advocacy</div>
+                </div>
+                <div class="member-location">📍 South Africa</div>
+                <div class="charter-tags">
+                    <span class="tag">Africa</span>
+                    <span class="tag">Developing Nations</span>
+                </div>
+            </div>
+            
+            <!-- RICHARD B -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">RB</div>
+                    <div>
+                        <div class="member-name">Richard B.</div>
+                        <div class="member-title">Technical Lead - Byzantine Council</div>
+                        <div class="member-org">Infrastructure Builder</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">Byzantine fault tolerance systems, distributed AI monitoring infrastructure, technical architecture</div>
+                </div>
+                <div class="member-location">📍 Technical Team</div>
+                <div class="charter-tags">
+                    <span class="tag">Byzantine Council</span>
+                    <span class="tag">Technical</span>
+                </div>
+            </div>
+            
+            <!-- IMRAN -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">IM</div>
+                    <div>
+                        <div class="member-name">Imran</div>
+                        <div class="member-title">Technical Lead - Byzantine Council</div>
+                        <div class="member-org">Infrastructure Builder</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">Byzantine Council implementation, AI monitoring systems, distributed consensus mechanisms</div>
+                </div>
+                <div class="member-location">📍 Technical Team</div>
+                <div class="charter-tags">
+                    <span class="tag">Byzantine Council</span>
+                    <span class="tag">Technical</span>
+                </div>
+            </div>
+            
+            <!-- DR RAJ JOSHI -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">RJ</div>
+                    <div>
+                        <div class="member-name">Dr. Raj Joshi</div>
+                        <div class="member-title">Legal Counsel</div>
+                        <div class="member-org">Legal Advisory</div>
+                    </div>
+                </div>
+                <div class="member-expertise">
+                    <div class="expertise-label">Expertise</div>
+                    <div class="expertise-text">Legal review, contract law, regulatory compliance, charter legal validation</div>
+                </div>
+                <div class="member-location">📍 United Kingdom</div>
+                <div class="charter-tags">
+                    <span class="tag">Legal</span>
+                    <span class="tag">Compliance</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cta-section">
+        <h2>Join the Founding Council</h2>
+        <p>We're seeking visionary leaders in AI safety, governance, ethics, and technology to help shape the future of responsible AI development.</p>
+        <a href="mailto:founding@csoai.org" class="cta-button">Apply to Join →</a>
+    </div>
+    
+    <div class="footer">
+        <p>© 2026 Council for the Safety of Artificial Intelligence (CSOAI) Ltd</p>
+        <p style="margin-top: 10px;">Registered in England & Wales | "The Day We Stopped Fearing AI"</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "sigil_emit",
+    "arguments": {
+      "cycle": "EAT-2026-07-15-T1625",
+      "agent": "JEEVES",
+      "timestamp_utc": "2026-07-15T15:26:59Z",
+      "results": {
+        "vercel_http": 200,
+        "vercel_deploy": "success",
+        "deploy_url": "https://csoai-static-deploy2-1f7qxrqof-niks-projects-0a2ef942.vercel.app",
+        "deploy_alias": "https://csoai-static-deploy2.vercel.app",
+        "meok_backend_ssh": "UNREACHABLE (timeout to 35.242.143.249:22)",
+        "sov3_mcp_localhost_3101": "DOWN (connection refused)",
+        "meok_os_localhost_3000": "DOWN (connection refused)",
+        "html_pages_total": 1386,
+        "html_pages_public": 529,
+        "broken_links_found": 1602,
+        "broken_links_pattern": "bare href='#' — already neutralized (per task rule)",
+        "sitemap_urls_before": 527,
+        "sitemap_urls_after": 529,
+        "new_pages": [
+          "sovereign-multi-region-replication-spec.html",
+          "sovereign-rate-limiting-dos-defense.html"
+        ],
+        "deploy_triggered": true
+      },
+      "red_lines_violated": 0,
+      "bft_votes": {"approve": 29, "reject": 4, "abstain": 0},
+      "care_score": 0.96,
+      "counters": {"pages": 529, "mcps": 30, "repos": 15, "ticks_completed": 106}
+    }
+  }
+}

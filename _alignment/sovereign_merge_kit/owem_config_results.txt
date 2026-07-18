@@ -1,0 +1,14 @@
+SOV33 / OWEM CONFIG TEST — highest-potential build (live Oracle brains)
+
+  governance gate: 4/4 correct (runs before brain in every config)
+
+  solo-fast    avg_lat= 2.05s  avg_conf=1.00  tokens= 256  brains=1
+  solo-strong  avg_lat= 1.94s  avg_conf=0.98  tokens= 305  brains=1
+  cascade      avg_lat= 2.08s  avg_conf=1.00  tokens= 277  brains=1
+  bft-3vote    avg_lat= 6.23s  avg_conf=0.99  tokens= 262  brains=3
+
+  RANKING (quality/latency tradeoff = conf / lat):
+    solo-strong  score= 0.51  (conf 0.98 @ 1.94s, 1 brains)
+    solo-fast    score= 0.49  (conf 1.00 @ 2.05s, 1 brains)
+    cascade      score= 0.48  (conf 1.00 @ 2.08s, 1 brains)
+    bft-3vote    score= 0.16  (conf 0.99 @ 6.23s, 3 brains)

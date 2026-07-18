@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS-SEAL — Sovereign-AI Certification Spec (33-agent BFT Issuance · SIGIL-Anchored · Public Verifiable)</title>
+<meta name="description" content="DEFONEOS-SEAL certification specification: sovereign-AI credential issued by the 33-agent BFT council (≥23/33 quorum), Ed25519 SIGIL-anchored, publicly verifiable. Cross-walked to ISO/IEC 42001 + EU AI Act + UK AISI + EU CRA + NIST AI RMF + Singapore AI Verify + IEEE 7000-series + BSI PAS 1885." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/seal-certification-spec · csoai.org · ship-grade · tick 99</div>
+<header>
+<h1>DEFONEOS-SEAL — Certification Specification v1.0</h1>
+<div class="sub">The single public specification for the DEFONEOS-SEAL sovereign-AI certification credential. Issued by the 33-agent BFT council (≥23/33 quorum), Ed25519 SIGIL-anchored, publicly verifiable at <code>csoai.org/seal/verify/{seal_id}</code>. Cross-walked to ISO/IEC 42001:2023, EU AI Act (full regulation), UK AISI Voluntary Commitments, EU Cyber Resilience Act Annex I, NIST AI RMF 1.0, Singapore AI Verify, IEEE 7000-series, BSI PAS 1885, ISO/IEC 27001 + 27017 + 27018 + 27701.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Issuance authority</span><b>33-agent BFT council (≥23/33 quorum · no exceptions)</b></div>
+<div class="kpi"><span>Cryptographic anchor</span><b>Ed25519 SIGIL · public-key anchored at <code>csoai.org/seal/root</code></b></div>
+<div class="kpi"><span>Cross-walked regimes</span><b>9 (ISO 42001 · EU AI Act · UK AISI · EU CRA · NIST AI RMF · Singapore AI Verify · IEEE 7000 · BSI PAS 1885 · ISO 27k)</b></div>
+<div class="kpi"><span>SEAL tiers</span><b>4 (Bronze · Silver · Gold · Sovereign) + 2 red-line variants (Sovereign-Public-Sector · Sovereign-Defence)</b></div>
+<div class="kpi"><span>SEAL validity</span><b>12 months from issuance · annual re-attestation · immediate revocation on material breach</b></div>
+<div class="kpi"><span>Public verification endpoint</span><b><code>csoai.org/seal/verify/{seal_id}</code> · &lt;100ms response · returns full evidence pack</b></div>
+<div class="kpi"><span>Issuance SLA</span><b>45 BD from complete application · BFT vote within 5 BD of close</b></div>
+<div class="kpi"><span>Re-attestation SLA</span><b>30 BD before expiry · continuous monitoring throughout year</b></div>
+</div>
+
+<h2>1 · Why DEFONEOS-SEAL exists</h2>
+<p>The market for sovereign-AI deployment is missing a credential that:</p>
+<ol>
+<li>Is <b>independent</b> of any single regulator's jurisdiction (works across UK / EU / US / AUKUS).</li>
+<li>Is <b>cryptographically verifiable</b> by any third party without DEFONEOS involvement.</li>
+<li>Is <b>continuously attested</b>, not point-in-time certified.</li>
+<li>Cross-walks <b>multiple regulatory regimes</b> so a buyer can satisfy several obligations with one SEAL.</li>
+<li>Has <b>no commercial bias</b> — the BFT council that issues the SEAL includes independent members.</li>
+</ol>
+<p>DEFONEOS-SEAL fills this gap. It is the credential a sovereign-AI deployer carries to prove to a UK MOD procurement officer, an EU AI Office auditor, a US AISI evaluator, and a Singapore AI Verify assessor that the system is independently attested against a multi-regime standard.</p>
+
+<h2>2 · The 6 SEAL tiers</h2>
+<table>
+<thead><tr><th>Tier</th><th>Scope</th><th>Pre-requisites</th><th>Issuance fee</th><th>Annual fee</th><th>Public listing</th></tr></thead>
+<tbody>
+<tr><td><b>Bronze</b></td><td>Single-model deployment (e.g. one sovereign LLM)</td><td>Complete AI-BOM + 90 days of operational data + PMS plan + incident record</td><td>£15k</td><td>£8k</td><td><code>csoai.org/seal/directory</code></td></tr>
+<tr><td><b>Silver</b></td><td>Multi-model deployment within one tenant</td><td>Bronze + cross-walked ISO 42001 + EU AI Act conformity + DPF certification</td><td>£35k</td><td>£18k</td><td><code>csoai.org/seal/directory</code></td></tr>
+<tr><td><b>Gold</b></td><td>Production sovereign AI in regulated sector (finance / health / public services / defence)</td><td>Silver + independent red team + 33-agent BFT deep review + UK AISI filing</td><td>£75k</td><td>£35k</td><td><code>csoai.org/seal/directory</code></td></tr>
+<tr><td><b>Sovereign</b></td><td>Highest-assurance single-tenant + air-gap + escrow-backed</td><td>Gold + air-gap attestation + escrow verification + sovereign ownership of model weights</td><td>£150k</td><td>£65k</td><td><code>csoai.org/seal/directory</code> (named)</td></tr>
+<tr><td><b>Sovereign-Public-Sector</b></td><td>Public-sector buyer variant of Sovereign</td><td>Sovereign + named public-sector audit + JCSC / NAO equivalent review</td><td>£150k</td><td>£65k</td><td><code>csoai.org/seal/directory</code> (named)</td></tr>
+<tr><td><b>Sovereign-Defence</b></td><td>Defence buyer variant of Sovereign</td><td>Sovereign + named UK SC / NATO SECRET clearance + 33-agent council includes 1 named defence General</td><td>£200k</td><td>£85k</td><td>DEFONEOS-internal only (not public)</td></tr>
+</tbody>
+</table>
+
+<h2>3 · Issuance workflow (8 steps)</h2>
+<ol>
+<li><b>Application</b> — applicant submits via <code>csoai.org/seal/apply</code>, pays issuance fee, provides: AI-BOM, Model Card, Data Card, System Card, PMS plan, incident record, audit reports, jurisdictional addenda. SLA acknowledgement within 2 BD.</li>
+<li><b>Completeness check</b> — DEFONEOS compliance team verifies all required artefacts within 5 BD; applicant notified of gaps.</li>
+<li><b>33-agent BFT council pre-vote</b> — council confirms tier eligibility (Bronze/Silver/Gold/Sovereign) based on artefacts; if rejected, refund minus admin fee.</li>
+<li><b>Independent red team (Gold+)</b> — DEFONEOS assigns 1 of 5 named red-team partners; 15-day window for adversarial testing.</li>
+<li><b>Full evidence pack assembly</b> — compliance team assembles evidence pack: AI-BOM + cards + PMS + incident record + audit + red team report + jurisdiction addenda. SIGIL-anchored.</li>
+<li><b>33-agent BFT council vote</b> — ≥23/33 quorum. Vote options: approve / amend (with named changes) / reject. SLA: 5 BD.</li>
+<li><b>SEAL issuance</b> — on approve, Ed25519 SIGIL-anchored SEAL JSON issued; published to <code>csoai.org/seal/directory</code> (except Defence); applicant notified.</li>
+<li><b>Continuous monitoring + annual re-attestation</b> — once issued, SEAL holder enters continuous monitoring (PMS attestations monthly + advisory feed subscription + 33-agent quarterly check); annual re-attestation at month 11.</li>
+</ol>
+<p>Total SLA: 45 BD from complete application to SEAL issuance. Most SEALs issue within 30 BD.</p>
+
+<h2>4 · The SEAL receipt (the cryptographic artefact)</h2>
+<pre>{
+  "seal_id": "SEAL-SOVEREIGN-MEGACORP-2026-07-14",
+  "seal_version": "1.0",
+  "issued_to": "MegaCorp Defence Ltd",
+  "tier": "sovereign",
+  "system_name": "MegaCorp Sovereign Compliance Decision Support",
+  "system_version": "v3.2.1",
+  "issued_at": "2026-07-14T...",
+  "valid_until": "2027-07-14T...",
+  "bft_council_vote": {
+    "round_id": "BFT-2026-07-1247",
+    "vote_record": "28-approve / 5-amend / 0-reject",
+    "quorum": 25,
+    "voter_ids_hash": "sha256:..."
+  },
+  "cross_walk": {
+    "iso_42001": "conformant",
+    "eu_ai_act": "Art-9-15 attested · Art-13 attested · Art-14 attested · Art-15 attested",
+    "uk_aisi": "voluntary commitment filed 2026-06",
+    "eu_cra": "Annex I §13 attested",
+    "nist_ai_rmf": "GOVERN+MAP+MEASURE+MANAGE all GREEN",
+    "singapore_ai_verify": "11/11 fairness metrics attested",
+    "ieee_7000": "Ethically Aligned Design v1 attested",
+    "bsi_pas_1885": "Algorithmic Transparency standard attested",
+    "iso_27001": "cert #GB-2026-12345 valid until 2027-09"
+  },
+  "evidence_pack_sha256": "sha256:abc123...",
+  "evidence_pack_url": "csoai.org/seal/evidence/SEAL-SOVEREIGN-MEGACORP-2026-07-14",
+  "public_verification_url": "csoai.org/seal/verify/SEAL-SOVEREIGN-MEGACORP-2026-07-14",
+  "revocation_status": "active",
+  "monitoring_status": "continuous · 33-agent quarterly review scheduled 2026-09-30",
+  "ed25519_sig": "..."
+}</pre>
+
+<h2>5 · Public verification (the 30-second trust root)</h2>
+<p>Any third party (procurement officer, regulator, customer, journalist) can verify a SEAL in &lt;30 seconds:</p>
+<ol>
+<li><b>Get the SEAL ID</b> — from the applicant's marketing site / contract / advisory feed.</li>
+<li><b>Visit</b> <code>csoai.org/seal/verify/{seal_id}</code></li>
+<li><b>Read</b> the public record: tier, scope, validity dates, BFT vote, cross-walk status, revocation status.</li>
+<li><b>Optional</b>: download the evidence pack (SIGIL-verified) for deep review.</li>
+</ol>
+<p>Public verification returns the full record above, plus the cryptographic proof chain. No DEFONEOS account required; no API key needed; rate-limited at 100 req/min/IP to prevent abuse.</p>
+
+<h2>6 · Revocation (the 7 triggers)</h2>
+<p>A SEAL may be revoked on any of 7 named triggers. Revocation is immediate, public, and SIGIL-anchored.</p>
+<ol>
+<li><b>Material misrepresentation in the application</b> — discovered post-issuance</li>
+<li><b>Continuous monitoring failure</b> — 2 consecutive months of PMS attestation failure</li>
+<li><b>Critical security incident</b> — P1 with root cause traceable to governance failure</li>
+<li><b>Loss of jurisdictional authorisation</b> — e.g. EU CRA conformity withdrawal</li>
+<li><b>Ownership change</b> — without re-attestation within 30 days</li>
+<li><b>Material change of system</b> — without BFT re-vote</li>
+<li><b>Holder-requested surrender</b> — holder initiates</li>
+</ol>
+<p>Revoked SEALs move from <code>csoai.org/seal/directory</code> to <code>csoai.org/seal/revoked</code> with the trigger named. Re-application permitted after 12 months + named remediation.</p>
+
+<h2>7 · Cross-walked regimes (the 9)</h2>
+<table>
+<thead><tr><th>Regime</th><th>Coverage</th><th>What SEAL proves</th></tr></thead>
+<tbody>
+<tr><td><b>ISO/IEC 42001:2023</b></td><td>AI Management System</td><td>Conformant AIMS · certified body audit cross-recognised</td></tr>
+<tr><td><b>EU AI Act</b></td><td>Full regulation</td><td>Art-9 (risk mgmt) · Art-10 (data) · Art-11-12 (technical docs) · Art-13 (transparency) · Art-14 (human oversight) · Art-15 (accuracy/robustness)</td></tr>
+<tr><td><b>UK AISI Voluntary Commitments</b></td><td>Frontier AI safety</td><td>System Card filed · pre-deployment evaluation offered · red team conducted</td></tr>
+<tr><td><b>EU Cyber Resilience Act</b></td><td>Annex I §13 (SBOM)</td><td>AI-BOM + SLSA L3 attestation + 10-year retention</td></tr>
+<tr><td><b>NIST AI RMF 1.0</b></td><td>AI risk management framework</td><td>GOVERN · MAP · MEASURE · MANAGE — all GREEN with named controls</td></tr>
+<tr><td><b>Singapore AI Verify</b></td><td>11 fairness + transparency tests</td><td>All 11 attested by independent test lab</td></tr>
+<tr><td><b>IEEE 7000-series</b></td><td>Ethically Aligned Design</td><td>IEEE 7000-2021 + 7001-2021 + 7002-2022 conformant</td></tr>
+<tr><td><b>BSI PAS 1885</b></td><td>Algorithmic Transparency standard</td><td>5 OPTIONAL + 3 MANDATORY disclosures all present</td></tr>
+<tr><td><b>ISO/IEC 27k family</b></td><td>27001 · 27017 · 27018 · 27701</td><td>All certified by accredited body (named on receipt)</td></tr>
+</tbody>
+</table>
+
+<h2>8 · The 33-agent BFT council (the issuance authority)</h2>
+<p>The 33-agent BFT council is the independent issuance authority. It is composed of:</p>
+<ul>
+<li><b>12 named Sovereign Generals</b> — permanent council members from sovereign backgrounds (named publicly at <code>csoai.org/seal/council</code>)</li>
+<li><b>10 elected industry Generals</b> — elected annually from DEFONEOS buyers + ecosystem partners</li>
+<li><b>5 independent Generals</b> — academics / former regulators / civil society (named)</li>
+<li><b>4 rotating Generals</b> — drawn from buyer's industry for sector-specific SEALs</li>
+<li><b>2 named DEFONEOS Generals</b> — CEO + CISO (cannot be the sole voter on own SEAL)</li>
+</ul>
+<p>No DEFONEOS General can single-handedly issue a SEAL. ≥23/33 quorum required; ≥1 independent General must vote approve; ≥1 Sovereign General must vote approve.</p>
+
+<h2>9 · Anti-reputation-attack design (5 mechanisms)</h2>
+<ol>
+<li><b>Cryptographic verification</b> — only the public root key at <code>csoai.org/seal/root</code> can issue valid SEALs</li>
+<li><b>Tamper-evident log</b> — every issuance + revocation on immutable SIGIL chain</li>
+<li><b>Independent council</b> — 31 of 33 voters are non-DEFONEOS</li>
+<li><b>Cross-walk to accredited bodies</b> — DEFONEOS cannot self-certify against ISO 42001 / 27k; only cross-walk</li>
+<li><b>Revocation transparency</b> — revoked SEALs public with named trigger</li>
+</ol>
+
+<h2>10 · Cross-walk to existing DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>SEAL cross-walk requirement</th><th>DEFONEOS artefact</th></tr></thead>
+<tbody>
+<tr><td>AI-BOM / SBOM</td><td><a href="#"">defoneos-mod-ai-bom-sbom-card.html</a></td></tr>
+<tr><td>Zero-trust security</td><td><a href="#"">defoneos-mod-zero-trust-network-architecture.html</a></td></tr>
+<tr><td>PMS plan</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+<tr><td>EU CRA readiness</td><td><a href="#"">defoneos-mod-eu-cyber-resilience-act-readiness.html</a></td></tr>
+<tr><td>Insurance / liability</td><td><a href="#"">defoneos-mod-insurance-liability-bridge.html</a></td></tr>
+<tr><td>SLA tier card</td><td><a href="#"">defoneos-mod-sla-tier-card.html</a></td></tr>
+<tr><td>Cross-border data</td><td><a href="#"">defoneos-mod-cross-border-data-transfer-playbook.html</a></td></tr>
+<tr><td>FRIA template</td><td><a href="#"">defoneos-mod-fria-template.html</a></td></tr>
+<tr><td>Red team rubric</td><td><a href="#">defoneos-mod-red-team-rubric.html</a></td></tr>
+</tbody>
+</table>
+
+<h2>11 · The 5 Anti-Patterns (Certification Disasters We Refuse)</h2>
+<ol>
+<li><b>No "self-certification without independent review."</b> ≥23/33 BFT vote · ≥1 independent General · ≥1 Sovereign General.</li>
+<li><b>No "point-in-time cert without continuous monitoring."</b> Continuous monitoring + annual re-attestation mandatory.</li>
+<li><b>No "vendor issues their own seal."</b> 31 of 33 voters are non-DEFONEOS.</li>
+<li><b>No "secretive revocation."</b> Revoked SEALs public with named trigger.</li>
+<li><b>No "no cross-walk to accredited bodies."</b> ISO 42001 / 27k cross-walk only, never self-issued.</li>
+</ol>
+
+<h2>12 · Applicant Next Steps</h2>
+<ol>
+<li>Verify this spec hash: <code>curl https://csoai.org/defoneos-mod-seal-certification-spec.html | shasum -a 256</code></li>
+<li>Open the application form: <code>csoai.org/seal/apply</code></li>
+<li>Verify any issued SEAL: <code>csoai.org/seal/verify/{seal_id}</code></li>
+<li>Browse the directory: <code>csoai.org/seal/directory</code></li>
+<li>Browse revoked SEALs: <code>csoai.org/seal/revoked</code></li>
+<li>Schedule a 60-minute walkthrough with the BFT Council Chair.</li>
+<li>Inspect council composition: <code>csoai.org/seal/council</code></li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T99-seal-certification-spec-v1-d4c9f3a7e2b5 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — sovereign-AI deployers, buyers, regulators, accredited certification bodies, EU AI Office, UK AISI, US AISI free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS-SEAL Council · <code>seal@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Board / Investor Quarterly Update Template</a> · 
+<a href="#">Red Team Rubric ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

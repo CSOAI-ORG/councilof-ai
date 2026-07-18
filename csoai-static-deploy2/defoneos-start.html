@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Quick Start Guide</title>
+<meta name="description" content="Get DEFONEOS running in 5 minutes. Install via pip, connect sensors via MCP, launch Cesium globe, deploy to edge. Python, Docker, and air-gap install paths.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem}
+.nav a:hover{color:#22d3ee}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.85rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.step{display:flex;gap:1rem;margin:1rem 0;padding:1rem;background:rgba(255,255,255,.03);border-radius:8px;border-left:4px solid #22d3ee}
+.step-num{font-size:1.5rem;font-weight:800;color:#22d3ee;flex-shrink:0;width:40px;text-align:center}
+.step-body h4{color:#f8fafc;margin:0 0 .3rem}
+.step-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — Quick Start"><meta property="og:description" content="Install DEFONEOS in 5 minutes. pip, Docker, or air-gap."><meta property="og:type" content="website"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-start.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compete.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos-api.html">🔌 API</a>
+  <a href="defoneos-integration.html">🔗 Integration</a>
+  <a href="defoneos-deploy.html">🏗️ Deploy</a>
+  <a href="defoneos-os.html">🏛️ OS</a>
+</div>
+
+<h1>🚀 Quick Start Guide</h1>
+<p class="tagline">From zero to DEFONEOS running in under 5 minutes. Three paths: pip install, Docker, or air-gap deploy.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">5 min</span><h3>Quick Install</h3><p>pip install defoneos-mcp → run → connect</p></div>
+  <div class="card"><span class="stat">3</span><h3>Install Paths</h3><p>pip, Docker, or air-gap tarball</p></div>
+  <div class="card"><span class="stat">30</span><h3>Sensor MCPs</h3><p>Connect any of 30 sensor sources instantly</p></div>
+  <div class="card"><span class="stat">0</span><h3>External Dependencies</h3><p>No cloud account needed. Runs on your hardware.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🐍 pip Install</div>
+  <div class="tab" onclick="switchTab(1)">🐳 Docker</div>
+  <div class="tab" onclick="switchTab(2)">📡 Air-Gap Deploy</div>
+  <div class="tab" onclick="switchTab(3)">🔌 Connect Sensors</div>
+  <div class="tab" onclick="switchTab(4)">⚙️ Configuration</div>
+</div>
+
+<!-- TAB 0: pip -->
+<div class="tab-content active">
+  <h2 style="color:#22d3ee">Path 1: pip Install (Development / Evaluation)</h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Install DEFONEOS MCP package</h4>
+      <p>Works on Python 3.10+. Creates the defoneos CLI and MCP server.</p>
+    </div>
+  </div>
+  <div class="code">pip install defoneos-mcp</div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Initialize the sovereign substrate</h4>
+      <p>Creates ~/.defoneos/ directory structure with default config.</p>
+    </div>
+  </div>
+  <div class="code">defoneos init
+# Creates:
+#   ~/.defoneos/config.yaml     — Main configuration
+#   ~/.defoneos/sigil/          — Ed25519 keypair + chain database
+#   ~/.defoneos/data/           — Sovereign data lake (SQLite)
+#   ~/.defoneos/models/         — Local model cache (Ollama)</div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Start the DEFONEOS server</h4>
+      <p>Launches the MCP server on localhost:3101 with all 30 sensor tools.</p>
+    </div>
+  </div>
+  <div class="code">defoneos start --port 3101
+
+# Output:
+# 🐉 DEFONEOS v1.0 starting...
+# ✅ SIGIL chain loaded (0 entries)
+# ✅ 30 MCP tools registered
+# ✅ BFT council initialised (33 nodes, 11 required for quorum)
+# ✅ Server listening on http://localhost:3101/mcp</div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Verify the installation</h4>
+      <p>Run the built-in smoke test to confirm everything is working.</p>
+    </div>
+  </div>
+  <div class="code">defoneos verify
+
+# Expected output:
+# ✅ MCP server responding (HTTP 200)
+# ✅ SIGIL chain integrity verified
+# ✅ 30/30 tools available
+# ✅ BFT council quorum reachable
+# ✅ Sovereign data lake: 0 entries (ready)
+# 🐉 DEFONEOS is ready.</div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>Open the web dashboard</h4>
+      <p>DEFONEOS includes a built-in web UI on port 8080.</p>
+    </div>
+  </div>
+  <div class="code">open http://localhost:8080
+
+# Dashboard shows:
+#   - Live sensor feed (30 MCPs)
+#   - Cesium 3D globe with data overlays
+#   - BFT council status
+#   - SIGIL chain explorer
+#   - System health metrics</div>
+</div>
+
+<!-- TAB 1: Docker -->
+<div class="tab-content">
+  <h2 style="color:#22d3ee">Path 2: Docker (Production / Server)</h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Pull the DEFONEOS image</h4>
+      <p>Multi-arch image (amd64 + arm64). UK-built, signed, SBOM included.</p>
+    </div>
+  </div>
+  <div class="code">docker pull csoai/defoneos:latest</div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Run with docker-compose</h4>
+      <p>The full stack: MCP server + Cesium web + Ollama models + PostgreSQL.</p>
+    </div>
+  </div>
+  <div class="code"># docker-compose.yml
+version: '3.8'
+services:
+  defoneos:
+    image: csoai/defoneos:latest
+    ports:
+      - "3101:3101"   # MCP server
+      - "8080:8080"   # Web dashboard
+    volumes:
+      - defoneos-data:/data
+      - defoneos-sigil:/sigil
+    environment:
+      - DEFONEOS_MODE=sovereign
+      - BFT_QUORUM=11
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+      
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-models:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  defoneos-data:
+  defoneos-sigil:
+  ollama-models:</div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Launch the stack</h4>
+    </div>
+  </div>
+  <div class="code">docker-compose up -d
+
+# Verify:
+docker-compose ps
+curl http://localhost:3101/mcp   # → HTTP 200
+curl http://localhost:8080        # → Dashboard HTML</div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">Hardware Requirements</h2>
+  <table>
+    <tr><th>Tier</th><th>CPU</th><th>RAM</th><th>GPU</th><th>Storage</th><th>Use Case</th></tr>
+    <tr><td>Minimum</td><td>4 cores</td><td>8 GB</td><td>None (CPU)</td><td>20 GB</td><td>Evaluation, small sensor set</td></tr>
+    <tr><td>Recommended</td><td>8 cores</td><td>32 GB</td><td>RTX 4090 / Jetson AGX</td><td>100 GB</td><td>Full 30-MCP sensor suite + local models</td></tr>
+    <tr><td>Production</td><td>16+ cores</td><td>64+ GB</td><td>A100 / H100 / M4 Ultra</td><td>500+ GB</td><td>Multi-user, classified, air-gap</td></tr>
+  </table>
+</div>
+
+<!-- TAB 2: Air-Gap -->
+<div class="tab-content">
+  <h2 style="color:#22d3ee">Path 3: Air-Gap Deploy (Classified / Tactical Edge)</h2>
+  <p style="color:#94a3b8">For deployments with zero network connectivity. Everything pre-packaged on physical media.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Download the air-gap bundle (on a connected machine)</h4>
+      <p>~8 GB tarball containing: DEFONEOS, all 30 MCPs, Ollama + 4 local models, Cesium assets, full documentation.</p>
+    </div>
+  </div>
+  <div class="code"># On a connected machine:
+defoneos bundle --airgap --output /media/usb/defoneos-airgap.tar.gz
+
+# Bundle includes:
+#   defoneos-mcp/          — Core server + 30 MCPs
+#   ollama/                — Ollama runtime
+#   models/                — 4 GGUF models (~7 GB total)
+#     ├── qwen2.5-7b.gguf  — General reasoning
+#     ├── deepseek-r1.gguf — Deep reasoning
+#     ├── nomic-embed.gguf — Embeddings
+#     └── qwen2.5-3b.gguf  — Fast routing
+#   cesium/                — 3D globe assets (offline)
+#   sigil/                 — Ed25519 keypair generator
+#   docs/                  — Full documentation (offline)</div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Transfer to the air-gapped machine</h4>
+      <p>USB drive (checksum verified) or hardware data diode. Verify SHA-256 before extraction.</p>
+    </div>
+  </div>
+  <div class="code"># On the air-gapped machine:
+sha256sum /media/usb/defoneos-airgap.tar.gz
+# Compare with checksum from connected machine
+
+tar xzf /media/usb/defoneos-airgap.tar.gz -C /opt/defoneos
+cd /opt/defoneos</div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Generate sovereign keys (offline)</h4>
+      <p>Ed25519 keypair generated on the air-gapped machine. Never touches a network.</p>
+    </div>
+  </div>
+  <div class="code">./defoneos init --airgap
+
+# Generates:
+#   /opt/defoneos/sigil/ed25519_priv.pem  — Private key (NEVER leave machine)
+#   /opt/defoneos/sigil/ed25519_pub.pem   — Public key (share for verification)
+#   /opt/defoneos/sigil/chain.db          — Empty SIGIL chain (grows locally)</div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Start DEFONEOS in air-gap mode</h4>
+      <p>No network calls. No telemetry. No external API. All inference local.</p>
+    </div>
+  </div>
+  <div class="code">./defoneos start --airgap --port 3101
+
+# Output:
+# 🐉 DEFONEOS v1.0 (AIR-GAP MODE)
+# ✅ Network: DISABLED
+# ✅ Telemetry: DISABLED
+# ✅ External APIs: DISABLED
+# ✅ Ollama models loaded (4 models, 7 GB)
+# ✅ SIGIL chain: sovereign keys generated
+# ✅ 30 MCP tools available (offline cached data)
+# 🔒 Air-gap verified. No outbound connections.</div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">Edge Hardware Options</h2>
+  <table>
+    <tr><th>Device</th><th>Power</th><th>Compute</th><th>Best For</th></tr>
+    <tr><td>Raspberry Pi 5 (8GB)</td><td>5W</td><td>CPU only, Qwen 3B</td><td>Minimal edge sensor aggregation</td></tr>
+    <tr><td>Jetson Orin Nano (8GB)</td><td>15W</td><td>40 TOPS NPU, YOLOv8</td><td>Forward-edge vision + detection</td></tr>
+    <tr><td>Jetson Orin AGX (64GB)</td><td>60W</td><td>275 TOPS, multi-model</td><td>Tactical C2 node, full pipeline</td></tr>
+    <tr><td>MacBook Pro M4</td><td>30W</td><td>38 TOPS, 36GB unified</td><td>Command post, field HQ</td></tr>
+    <tr><td>Ruggedised server (Xeon)</td><td>300W+</td><td>Multi-GPU</td><td>Fixed-site operations centre</td></tr>
+  </table>
+</div>
+
+<!-- TAB 3: Connect Sensors -->
+<div class="tab-content">
+  <h2 style="color:#22d3ee">Connecting Sensor Sources</h2>
+  <p style="color:#94a3b8">DEFONEOS uses MCP (Model Context Protocol) to connect sensor data sources. Each MCP is a self-contained data adapter.</p>
+
+  <div class="code"># Connect a satellite imagery source:
+defoneos sensor add sentinel-hub --api-key YOUR_KEY
+
+# Connect AIS maritime tracking:
+defoneos sensor add aisstream --api-key YOUR_KEY
+
+# Connect government open data:
+defoneos sensor add data-gov-uk
+
+# Connect an RTSP camera feed:
+defoneos sensor add rtsp-camera --url rtsp://192.168.1.100:554/stream
+
+# Connect MQTT IoT bridge:
+defoneos sensor add mqtt-bridge --broker tcp://localhost:1883
+
+# List connected sensors:
+defoneos sensor list
+# NAME              STATUS    TOOLS   LAST_POLL
+# sentinel-hub      ✅ live   6       2s ago
+# aisstream         ✅ live   5       1s ago
+# data-gov-uk       ✅ live   8       5s ago
+# rtsp-camera       ✅ live   6       1s ago
+# mqtt-bridge       ✅ live   8       0s ago</div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">Available Sensor MCPs</h2>
+  <table>
+    <tr><th>Category</th><th>MCPs Available</th><th>Auth Required</th></tr>
+    <tr><td>Satellite Imagery</td><td>sentinel-hub</td><td>API key (free tier)</td></tr>
+    <tr><td>Maritime</td><td>aisstream-maritime</td><td>API key (free)</td></tr>
+    <tr><td>Government Data</td><td>data-gov-uk, os-opendata, ons-statistics, companies-house</td><td>None (open data)</td></tr>
+    <tr><td>OSINT</td><td>gdelt-news</td><td>None</td></tr>
+    <tr><td>Environmental</td><td>openaq-air, noaa-weather, uk-met-office, eonet-wildfire</td><td>None / API key</td></tr>
+    <tr><td>Seismic</td><td>quakeml-seismic</td><td>None</td></tr>
+    <tr><td>Video</td><td>rtsp-camera</td><td>Camera URL</td></tr>
+    <tr><td>IoT</td><td>mqtt-bridge</td><td>Broker address</td></tr>
+    <tr><td>Defence C2</td><td>freetak-c2</td><td>FreeTAKServer endpoint</td></tr>
+    <tr><td>Drone</td><td>px4-drone</td><td>PX4 SITL or hardware</td></tr>
+    <tr><td>Vision</td><td>yolov8-detect</td><td>Local (no auth)</td></tr>
+  </table>
+</div>
+
+<!-- TAB 4: Configuration -->
+<div class="tab-content">
+  <h2 style="color:#22d3ee">Configuration Reference</h2>
+  <p style="color:#94a3b8">Main config file at ~/.defoneos/config.yaml</p>
+
+  <div class="code"># ~/.defoneos/config.yaml
+
+server:
+  port: 3101
+  mode: sovereign          # sovereign | development | classified
+  web_port: 8080
+
+bft:
+  enabled: true
+  nodes: 33                # Total council nodes
+  quorum: 11               # Minimum for consensus (1/3 + 1)
+  timeout_ms: 5000
+
+sigil:
+  algorithm: ed25519       # Ed25519 (quantum-safe path: ml-dsa-65)
+  chain_db: ~/.defoneos/sigil/chain.db
+  auto_emit: true          # Emit SIGIL on every action
+
+sensors:
+  poll_interval_s: 30      # Poll connected sensors every 30s
+  cache_ttl_m: 5           # Cache responses for 5 minutes
+  max_retries: 3
+
+models:
+  router: ollama           # Use local Ollama for model routing
+  default_model: qwen2.5:7b
+  reasoning_model: deepseek-r1
+  embedding_model: nomic-embed
+  fast_model: qwen2.5:3b
+
+data:
+  lake_path: ~/.defoneos/data/sovereign.db
+  max_size_gb: 100
+  auto_clean_days: 90      # Delete raw data after 90 days (keep summaries)
+
+cesium:
+  enabled: true
+  ion_token: ""            # Optional: Cesium Ion token for premium assets
+  default_view: [53.8, -1.5, 500000]  # Yorkshire, UK, 500km altitude</div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">Environment Variables</h2>
+  <table>
+    <tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+    <tr><td>DEFONEOS_MODE</td><td>sovereign</td><td>sovereign, development, or classified</td></tr>
+    <tr><td>DEFONEOS_PORT</td><td>3101</td><td>MCP server port</td></tr>
+    <tr><td>DEFONEOS_WEB_PORT</td><td>8080</td><td>Web dashboard port</td></tr>
+    <tr><td>BFT_QUORUM</td><td>11</td><td>Minimum council votes for consensus</td></tr>
+    <tr><td>OLLAMA_HOST</td><td>localhost:11434</td><td>Ollama API endpoint</td></tr>
+    <tr><td>SIGIL_AUTO_EMIT</td><td>true</td><td>Emit SIGIL on every system action</td></tr>
+    <tr><td>AIR_GAP</td><td>false</td><td>Disable all network calls (air-gap mode)</td></tr>
+  </table>
+
+  <div class="card" style="margin-top:2rem;border-color:#f59e0b">
+    <h3 style="color:#f59e0b">💡 Need Help?</h3>
+    <p>Full documentation: <a href="defoneos-os.html" style="color:#22d3ee">OS Architecture</a> · <a href="defoneos-api.html" style="color:#22d3ee">API Reference</a> · <a href="defoneos-integration.html" style="color:#22d3ee">Integration Guide</a> · <a href="defoneos-security.html" style="color:#22d3ee">Security</a></p>
+  </div>
+</div>
+
+<script>
+function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n))}
+</script>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script>
+<div class="sigil">SIGIL: defoneos-start · Quick Start Guide · pip / Docker / Air-Gap · 30 MCPs · CSOAI Ltd (UK 16939677) · 🐉</div>
+</body></html>

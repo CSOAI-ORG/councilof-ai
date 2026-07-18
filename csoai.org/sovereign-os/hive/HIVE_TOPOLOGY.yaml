@@ -1,0 +1,308 @@
+# HIVE TOPOLOGY MANIFEST — Sovereign DOME Architecture
+# Each HIVE is an INDEPENDENT compute container with its own MCP, Cesium tile source, and streaming
+# channel. They can grow / evolve / learn / change independently because they're isolated
+# compute. A MoM-of-MoMs (Manager of Managers, the LEFT BRAIN) orchestrates the whole dome.
+#
+# The user's insight: "each of the layers and tools are given hives with own infra so they can
+# actually grow, evolve, learn, change, etc, improve flows" — exact match for this architecture.
+
+apiVersion: sovereign.hive/v4.0
+kind: DomeTopology
+metadata:
+  name: csoai-sirius-dome
+  crown_lineage: 1795-2026
+  sovereign_invariant: Care Floor 0.95 · BFT 12-around-1 · SIGIL Ed25519+PQC
+  license: MIT + CC0
+  generator: JEEVES
+
+# The LEFT BRAIN — Manager of Managers (MoM-of-MoMs)
+left_brain:
+  role: orchestrator
+  size: tiny                          # small by design — MoMs are lean
+  function: |
+    Sits in sovereign chat UX (the /api/chat endpoint). Receives every citizen turn.
+    BFT 12-around-1 deliberation, then DISPATCHES to the right HIVE.
+    Streams results back into the chat. Each turn = SIGIL.
+    Doesn't store state of its own — every hive reports back via SIGIL stream.
+  deployment:
+    cloud_run:
+      region: us-central1              # GCP Cloud Run
+      min_instances: 1                   # always warm
+      max_instances: 10                  # autoscale
+      memory: 512Mi
+      cpu: 1
+      timeout: 30s
+      env:
+        MOMS_NAMESPACE: sovereign
+        BFT_MAJORITY: 8                   # 2/3 of 12
+        CARE_FLOOR: 0.95
+        CITIZEN_DORADO_EAST: "true"
+  mcp_server:
+    transport: sse
+    tools:
+      - name: dispatch_to_hive
+        description: Dispatch citizen turn to the appropriate sovereign hive
+      - name: bft_deliberate
+        description: Run 12-around-1 vote on action
+      - name: emit_sigil
+        description: SIGIL emit + chain extension
+      - name: dome_overlay
+        description: Update Cesium live overlay (positions / risk / citizens)
+
+# The 28 sovereign HIVES — each is a containerized worker with its own MCP, its own Cesium
+# tile sources, and its own streaming channel. They grow / evolve / learn / change
+# independently because they're isolated compute.
+hives:
+  - id: meok-compiler
+    role: build sovereign binaries from sovereign specs
+    size: medium
+    cloud_run:
+      region: us-central1
+      memory: 2Gi
+      cpu: 2
+      min_instances: 1
+      max_instances: 20
+    mcp_server:
+      transport: streamable-http
+      port: 8080
+      tools: [build_sovereign, sign_binary, deploy_artifact]
+    cesium:
+      tile_source: none
+      state: stateless
+    streams:
+      SIGIL_OUT: ce-sub:fifo-sovereign.moms-sigil
+      METRICS: ce-sub:fifo-sovereign.moms-metrics
+    logic: |
+      on dispatch: turn citizen spec into README + license + care audit + signed binary
+      cares: dependency graph, reproducibility, care floor witness
+
+  - id: olm-autonomy
+    role: reinforcement learning substrate for humanoids (real-time adaptation)
+    size: large
+    cloud_run:
+      region: europe-west4                # GDPR-EU
+      memory: 8Gi                        # torch + realtime
+      cpu: 4
+      gpu: nvidia-l4-1
+      min_instances: 1
+      max_instances: 8
+      env:
+        LEARN_RATE_SAFETY: 0.001          # safety-constrained RL
+        CARE_FLOOR_LEARN: 0.95            # never learn below care floor
+    mcp_server:
+      transport: sse
+      port: 8080
+      tools: [observe_env, propose_action, human_review, learn_step]
+    cesium:
+      tile_source: "https://cesium-ion..."
+      overlay: humanoid_trajectories
+    streams:
+      TRAJECTORY: ws://stream.hive-2/trajectory
+      POLICY: ce-sub:fifo-sovereign.hive-2-policy
+    logic: |
+      on dispatch: propose next action for humanoid
+      human reviews · if approved, learn from it
+      if Demeter veto, throw away the gradient
+
+  - id: koi-memory
+    role: persistent i-character memory across all threads
+    size: medium
+    database:
+      engine: postgres-15
+      schema: csoai_koi
+      tables: [mem_episodic, mem_semantic, mem_procedural, mem_scientific]
+    cloud_run:
+      region: us-east1
+      memory: 4Gi
+      cpu: 2
+      min_instances: 1
+      max_instances: 10
+    mcp_server:
+      transport: streamable-http
+      port: 8080
+      tools: [store_episode, recall_semantic, store_procedure, search_scientific]
+    cesium:
+      tile_source: none
+    streams:
+      MEM_WRITES: ce-sub:fifo-sovereign.hive-3-mem
+    logic: |
+      on dispatch: return relevant memories for current turn
+      SciMem search by embedding + BM25 hybrid
+      hash-chained per write
+
+  - id: demeter-conscience
+    role: Care Floor 0.95 enforcement, non-negotiable veto
+    size: tiny                            # very fast: must respond in <5ms
+    cloud_run:
+      region: us-central1
+      memory: 256Mi
+      cpu: 1
+      min_instances: 3                    # replicated for safety
+      max_instances: 50
+    mcp_server:
+      transport: sse
+      port: 8080
+      tools: [assess_action, veto_action, escalate_to_citizen]
+    cesium:
+      tile_source: none
+    streams:
+      VETO_OUT: ce-sub:fifo-sovereign.hive-4-veto
+    logic: |
+      on dispatch: ALWAYS runs first in the left-brain's BFT deliberation
+      returns safe-to-proceed / veto decision in <5ms
+      never sleeps, never delays; stateless fast-path
+
+  - id: artemis-sentinel
+    role: anti-surveillance + privacy + security
+    size: medium
+    cloud_run:
+      region: europe-west4
+      memory: 2Gi
+      cpu: 2
+    mcp_server:
+      transport: streamable-http
+      port: 8080
+      tools: [check_privacy_leak, redact_pii, alert_citizen, freeze_export]
+    cesium:
+      tile_source: csoai-privacy-zones.geojson
+      overlay: privacy_risk_per_quadrant
+    streams:
+      ALERTS: ce-sub:fifo-sovereign.hive-5-privacy-alerts
+    logic: |
+      on dispatch: scans content for PII / surveillance patterns / data extraction
+      never reports person-list to anyone but the citizen
+
+  - id: hermes-bus
+    role: message bus — slow async + fast SOV3 routes
+    size: medium-large
+    pub_sub:
+      engine: pubsub-lite                 # GCP Pub/Sub Lite
+      region: us-central1
+      throughput: 1M msg/sec
+    mcp_server:
+      transport: sse
+      tools: [publish, subscribe, route_priority, deadletter]
+    logic: |
+      tiered delivery:
+        SOV3_FAST: <50ms p95 (Demeter, BFT, SIGIL)
+        NORMAL: <500ms p95 (everything else)
+        SLOW_BATCH: <30min p95 (training, archive)
+
+  - id: sov-tribunal
+    role: constitutional review — forks, mixers, cross-realm proposals
+    size: medium
+    cloud_run:
+      region: europe-west4
+      memory: 4Gi
+      cpu: 2
+      env:
+        CONFIRMATION_REQUIRED: "3-queen tandem"
+    mcp_server:
+      tools: [propose_change, quorum_check, ratify, log_amendment]
+    logic: |
+      on dispatch: 3-queen tandem (e.g. Demeter+Athena+Artemis) must concur
+      pending votes live in tribunal-pending topic (hermes)
+      ratified proposals become SovereingSubstrate v4.1 or 4.2
+
+  - id: lineage
+    role: Crown Authorisation lineage — generation counter, fork tree
+    size: tiny
+    database:
+      engine: postgres-15
+      table: csoai_lineage
+    cloud_run:
+      region: us-central1
+      memory: 512Mi
+      cpu: 1
+    logic: |
+      immutability: only append-only
+      records every fork, every ambassador assignment, every crown transfer
+
+  - id: phoenix-witness
+    role: historical SIGIL mirror + permanent immutable record
+    size: medium
+    backends:
+      nostr:
+        relays: ["wss://nostr.cs1.ai", "wss://relay.damus.io"]
+      bitcoin_op_return:
+        enabled: true
+        cadence: daily
+    logic: |
+      mirrors every SIGIL within 1h of emit
+      provides public cryptographic verifiability for any historical claim
+
+  - id: archive-bench
+    role: cold storage of every SIGIL ever emitted, full-text search + replay
+    size: very-large
+    database:
+      engine: postgres-15 + pg-vector + lz4
+      cadence: write-once-cold-storage tiering
+    cloud_run:
+      region: us-central1                  # cheap cold storage
+      memory: 16Gi
+      cpu: 4
+      storage: 100TB
+    logic: |
+      stores every sovereign composite, every BFT vote, every SIGIL
+      supports: replay, retry, find-bug, generate-dataset
+
+  - id: bee-pollinator
+    role: cross-pollination between sovereign instances (SIGIL forge)
+    size: medium
+    flower_protocol:
+      instances: [cs1.ai, sovereign.mom, defoneos.com, meok.health]
+    logic: |
+      every hive reports cross-pollination viability score
+      high-viability SIGILs auto-promote to other sovereign instances
+      low-viability SIGILs auto-quarantine
+
+  - id: finance
+    role: Commonwealth tradable SIGIL market
+    size: large
+    components:
+      ledger: sovereign-ledger (Federated Byzantine)
+      fiat_bridge: open-fiat-bridge.org (open source)
+      custody: self-custody-first
+    license: MIT + standard-open-banking
+    logic: |
+      every SIGIL has a value in sovereign currency (CCR)
+      auditable on-chain through phoenix-witness
+      no leveraged positions, no cascading liquidations
+
+# The Cesium globe — shared by all hives
+cesium_dome:
+  provider: cesium-ion-private
+  basemap: open-streets-vector
+  layers:
+    - id: watchdog-heat                    # live overlay
+      source: hive-bee-pollinator
+      update_rate: 5s
+    - id: humanoid-trajectories            # meok humanoid paths
+      source: hive-olm-autonomy
+      update_rate: 1s
+    - id: sovereignty-zones                # DORADO WEST/EAST switch
+      source: hive-hermes-bus
+      static: false
+    - id: care-floor-overlay              # shows where composite drops below 0.95
+      source: hive-demeter-conscience
+      update_rate: 5s
+    - id: privacy-zones                    # GDPR / Article 50 / etc
+      source: hive-artemis-sentinel
+      static: true
+
+# The MCP stream mesh
+mcp_mesh:
+  transport: streamable-http              # latest MCP spec
+  authentication: privy-DID + Ed25519     # sovereign-native auth
+  per_hive_endpoint:
+    "<hive-id>": "https://mcp.<hive-id>.honeycomb.dev/mcp"
+
+# Operability
+operability:
+  monitoring: GCP Cloud Operations + Sovereign SLOs
+  logging: structured logs to BigQuery (sovereign schema)
+  alerting: PagerDuty for Care Floor breach only
+  runbooks:
+    care_floor_breach: "Run [runbooks/demeter-reset.md]"
+    hive_offline: "Run [runbooks/hive-restore.md]"
+    bft_deadlock: "Run [runbooks/tribunal-tiebreak.md]"

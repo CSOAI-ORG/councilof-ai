@@ -1,0 +1,45 @@
+{
+  "task_id": "social-twitter-thread-launch",
+  "elapsed_s": 0.44,
+  "providers_called": [
+    "openai",
+    "openai-pro",
+    "openrouter"
+  ],
+  "providers_ok": [],
+  "providers_failed": [
+    {
+      "provider": "openrouter",
+      "error": "HTTP 401: b'{\"error\":{\"message\":\"User not found.\",\"code\":401}}'"
+    },
+    {
+      "provider": "openai-pro",
+      "error": "HTTP 401: b'{\\n  \"error\": {\\n    \"message\": \"Incorrect API key provided: sk-proj-***************************************"
+    },
+    {
+      "provider": "openai",
+      "error": "HTTP 401: b'{\\n  \"error\": {\\n    \"message\": \"Incorrect API key provided: sk-proj-***************************************"
+    }
+  ],
+  "best": null,
+  "all_results": [
+    {
+      "provider": "openrouter",
+      "model": "anthropic/claude-sonnet-4",
+      "ok": false,
+      "error": "HTTP 401: b'{\"error\":{\"message\":\"User not found.\",\"code\":401}}'"
+    },
+    {
+      "provider": "openai-pro",
+      "model": "gpt-4o",
+      "ok": false,
+      "error": "HTTP 401: b'{\\n  \"error\": {\\n    \"message\": \"Incorrect API key provided: sk-proj-*************************************************************************************************************************************'"
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "ok": false,
+      "error": "HTTP 401: b'{\\n  \"error\": {\\n    \"message\": \"Incorrect API key provided: sk-proj-*************************************************************************************************************************************'"
+    }
+  ]
+}

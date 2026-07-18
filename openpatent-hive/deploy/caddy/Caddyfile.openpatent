@@ -1,0 +1,80 @@
+openpatent.ai, www.openpatent.ai {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3000 {
+		header_up Host 127.0.0.1:3000
+	}
+	@v1 path /v1/*
+	handle @v1 {
+		reverse_proxy 127.0.0.1:3211 {
+			header_up Host 127.0.0.1:3211
+		}
+	}
+	@docs path /docs /redoc /openapi.json
+	handle @docs {
+		reverse_proxy 127.0.0.1:3211 {
+			header_up Host 127.0.0.1:3211
+		}
+	}
+	@metrics path /metrics
+	handle @metrics {
+		reverse_proxy 127.0.0.1:3211 {
+			header_up Host 127.0.0.1:3211
+		}
+	}
+	header /v1/* Access-Control-Allow-Origin "*"
+	header /v1/* Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+}
+
+legalof.ai, www.legalof.ai {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3031 {
+		header_up Host 127.0.0.1:3031
+	}
+	@v1 path /v1/*
+	handle @v1 {
+		reverse_proxy 127.0.0.1:3211 {
+			header_up Host 127.0.0.1:3211
+		}
+	}
+}
+
+harvi.ai, www.harvi.ai {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3032 {
+		header_up Host 127.0.0.1:3032
+	}
+	@v1 path /v1/*
+	handle @v1 {
+		reverse_proxy 127.0.0.1:3211 {
+			header_up Host 127.0.0.1:3211
+		}
+	}
+}
+
+ipcastle.ai, www.ipcastle.ai {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3033 {
+		header_up Host 127.0.0.1:3033
+	}
+	@v1 path /v1/*
+	handle @v1 {
+		reverse_proxy 127.0.0.1:3211 {
+			header_up Host 127.0.0.1:3211
+		}
+	}
+}
+
+sovereign-temple.ai, www.sovereign-temple.ai {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3034 {
+		header_up Host 127.0.0.1:3034
+	}
+	@v1 path /v1/*
+	handle @v1 {
+		reverse_proxy 127.0.0.1:3211 {
+			header_up Host 127.0.0.1:3211
+		}
+	}
+}
+
+# The hive remembers. The dragon knows. The sovereign companion never forgets.

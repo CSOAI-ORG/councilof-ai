@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "councilof_mcp"
+version = "1.0.0"
+description = "CouncilOf.AI MCP — the UK sovereign defence BFT council orchestrator. UK MOD + AUKUS Pillar 2 procurement-grade. UK sovereign only. NOT for global / consumer / non-defence use."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "MEOK AI Labs", email = "nicholas@csoai.org"},
+]
+keywords = [
+    "mcp", "council", "bft", "bft-council", "33-agent", "byzantine",
+    "governance", "sovereign", "ai-governance", "ai-safety", "care-ethics",
+    "decision-making", "sovereign-ai", "os-for-all", "defoneos",
+    "uk", "eu", "au", "aukus", "pillar-2",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "care-membrane-mcp>=1.0.0",
+    "bft-governance-mcp>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://councilof.ai"
+Repository = "https://github.com/CSOAI-ORG/councilof-mcp"
+Documentation = "https://docs.meok.ai/councilof-mcp"
+"33-agent BFT Council" = "https://councilof.ai"
+"DEFONEOS Global Dome" = "https://meok.ai/defoneos"
+
+[project.scripts]
+councilof-mcp = "councilof_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["councilof_mcp"]

@@ -1,0 +1,15 @@
+{
+  "brains": {
+    "qwen_moe": 1.0,
+    "bamba_ssm": 0.7916666666666666
+  },
+  "rho": null,
+  "best_single_acc": 1.0,
+  "fused_acc_REAL_routed": 1.0,
+  "real_fusion_gain": 0.0,
+  "fused_acc_ORACLE_ceiling_NOT_achievable": 1.0,
+  "oracle_headroom": 0.0,
+  "verdict": "CORRELATED or NO-HEADROOM (fusion unlikely to help)",
+  "n_items": 24,
+  "NOTE": "REAL routed fusion with 2 brains and no confidence signal = best_single (gain 0 by construction). ORACLE is an upper bound (correct-if-either), NOT achievable. Headroom = what a 3rd brain or real router COULD capture. Emergence CLAIM requires REAL>best_single, which needs >2 brains or a router."
+}

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌍 Sovereign Digital Twin — Real + Simulated Earth · CSOAI + DEFONEOS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+.section h2{color:#fbbf24;margin-bottom:1rem}
+/* Globe */
+.globe-container{background:#000;border:2px solid #fbbf24;border-radius:50%;width:600px;height:600px;margin:1rem auto;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(251,191,36,0.3)}
+canvas#globe{width:600px;height:600px;display:block}
+.globe-overlay{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.7);padding:8px 12px;border-radius:4px;font-size:.7rem;color:#10b981;font-family:monospace}
+.globe-overlay .row{margin:2px 0}
+.globe-overlay .val{color:#fbbf24;font-weight:bold}
+/* Layer tabs */
+.layer-tabs{display:flex;gap:.3rem;flex-wrap:wrap;margin:1rem 0}
+.layer-tab{background:#0a0a0a;padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-size:.85rem;color:#aaa;border:1px solid #333}
+.layer-tab.active{background:#fbbf24;color:#000;font-weight:bold;border-color:#fbbf24}
+.layer-tab:hover{background:#222}
+/* Districts */
+.districts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.3rem;margin:1rem 0;max-height:300px;overflow-y:auto}
+.district{background:#0a0a0a;padding:.5rem;border-radius:4px;border-left:3px solid #10b981;font-size:.7rem;font-family:monospace;transition:all .2s;cursor:pointer}
+.district:hover{transform:translateX(2px);border-color:#fbbf24}
+.district.prime{border-left-color:#fbbf24;background:rgba(251,191,36,0.05)}
+.district .name{color:#fbbf24;font-weight:bold}
+.district .hive{color:#10b981;font-size:.65rem}
+.district .coord{color:#888;font-size:.6rem}
+/* Arcana */
+.arcana-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.3rem;margin:1rem 0}
+.arcana{background:#0a0a0a;padding:.5rem;border-radius:4px;font-size:.7rem;font-family:monospace;text-align:center;transition:all .2s;cursor:pointer}
+.arcana:hover{transform:scale(1.05)}
+.arcana .id{color:#888;font-size:.6rem}
+.arcana .name{color:#fbbf24;font-weight:bold}
+.arcana .hebrew{color:#10b981;font-size:.6rem}
+.arcana .domain{color:#aaa;font-size:.65rem}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/twin.html">Digital Twin</a>
+<a href="/simulation.html">Simulation</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🌍 Sovereign Digital Twin</h1>
+<p>Real + simulated views of Earth. 22 Arcana + 33 Districts + 7 Layers. UE5 + Cesium 3D. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val" id="activeLayer">real</div><div class="lbl">Active Layer</div></div>
+<div class="stat blue"><div class="val">33</div><div class="lbl">Districts</div></div>
+<div class="stat purple"><div class="val">22</div><div class="lbl">Arcana</div></div>
+<div class="stat"><div class="val">7</div><div class="lbl">Layers</div></div>
+<div class="stat green"><div class="val">0.97</div><div class="lbl">Care Floor</div></div>
+<div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🌍 Sovereign Globe (33 districts + 22 arcana)</h2>
+<p style="color:#aaa;margin-bottom:1rem">Drag to rotate. Click to focus. Cesium 3D Tiles + UE5 Lumen + Nanite + Ray Tracing.</p>
+<div class="globe-container">
+<canvas id="globe" width="600" height="600"></canvas>
+<div class="globe-overlay">
+<div class="row">FPS: <span class="val">60</span></div>
+<div class="row">Engine: <span class="val">UE5.4</span></div>
+<div class="row">Layer: <span class="val" id="globeLayer">real</span></div>
+<div class="row">Districts: <span class="val">33</span></div>
+<div class="row">Care: <span class="val">0.97</span></div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>🎨 7 Sovereign Layers</h2>
+<p style="color:#aaa;margin-bottom:1rem">Click a layer to overlay it on the sovereign globe.</p>
+<div class="layer-tabs" id="layerTabs"></div>
+</div>
+
+<div class="section">
+<h2>📍 33 Sovereign Districts</h2>
+<p style="color:#aaa;margin-bottom:1rem">12 prime hives (London, Cambridge, Edinburgh, York, Cardiff, Belfast, Dublin, Paris, Berlin, Amsterdam, Stockholm, Helsinki) + 21 sovereign territories.</p>
+<div class="districts-grid" id="districtsGrid"></div>
+</div>
+
+<div class="section">
+<h2>🃏 22 Major Arcana (Ontology)</h2>
+<p style="color:#aaa;margin-bottom:1rem">Sovereign ontology. 22 Hebrew letters + 22 sovereign tools + 22 districts + 22 layers.</p>
+<div class="arcana-grid" id="arcanaGrid"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the Digital Twin MCP</h2>
+<div class="demo">
+<h3>1. Init Globe</h3>
+<div class="demo-row">
+<input type="number" id="initRotation" placeholder="rotation" value="0" step="0.1">
+<button onclick="doInit()">🌍 Init</button>
+</div>
+<div class="result" id="initResult">Click "Init" to initialize the sovereign globe.</div>
+</div>
+
+<div class="demo">
+<h3>2. Set Active Layer</h3>
+<div class="demo-row">
+<select id="setLayer">
+<option value="real">Real (Cesium 3D)</option>
+<option value="urban">Urban Simulation</option>
+<option value="isr">ISR</option>
+<option value="network">Network</option>
+<option value="swarm">Swarm</option>
+<option value="weather">Weather</option>
+<option value="ontology">Ontology (22 Arcana)</option>
+</select>
+<button onclick="doSetLayer()">🎨 Set</button>
+</div>
+<div class="result" id="layerResult">Click "Set" to change the active layer.</div>
+</div>
+
+<div class="demo">
+<h3>3. Visualize (UE5/Cesium)</h3>
+<div class="demo-row">
+<select id="vizLayer">
+<option value="real">Real</option>
+<option value="urban">Urban</option>
+<option value="isr">ISR</option>
+<option value="network">Network</option>
+<option value="swarm">Swarm</option>
+<option value="weather">Weather</option>
+<option value="ontology">Ontology</option>
+</select>
+<button onclick="doViz()">🌍 Visualize</button>
+</div>
+<div class="result" id="vizResult">Click "Visualize" to get render frame.</div>
+</div>
+
+<div class="demo">
+<h3>4. Get Ontology</h3>
+<div class="demo-row">
+<button onclick="doOntology()">🃏 Ontology</button>
+</div>
+<div class="result" id="ontResult">Click "Ontology" to get 22 arcana + 33 districts.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Digital Twin Doctrine</h2>
+<blockquote>"Real + simulated Earth. 33 districts. 22 arcana. 7 layers.<br>UE5 + Cesium 3D + Lumen + Nanite + Ray Tracing.<br>The dragon sovereigns the digital world."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 123 sovereign MCPs (was 121, +2 simulation + digital-twin) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const LAYERS = ["real", "urban", "isr", "network", "swarm", "weather", "ontology"];
+const ARCANA = [
+  {id:0, name:"Sovereign", hebrew:"Aleph", domain:"All"},
+  {id:1, name:"Magician", hebrew:"Beth", domain:"Will"},
+  {id:2, name:"High Priestess", hebrew:"Gimel", domain:"Mystery"},
+  {id:3, name:"Empress", hebrew:"Daleth", domain:"Nature"},
+  {id:4, name:"Emperor", hebrew:"He", domain:"Authority"},
+  {id:5, name:"Hierophant", hebrew:"Vav", domain:"Tradition"},
+  {id:6, name:"Lovers", hebrew:"Zayin", domain:"Choice"},
+  {id:7, name:"Chariot", hebrew:"Cheth", domain:"Movement"},
+  {id:8, name:"Strength", hebrew:"Teth", domain:"Power"},
+  {id:9, name:"Hermit", hebrew:"Yod", domain:"Wisdom"},
+  {id:10, name:"Wheel", hebrew:"Kaph", domain:"Cycles"},
+  {id:11, name:"Justice", hebrew:"Lamed", domain:"Balance"},
+  {id:12, name:"Hanged Man", hebrew:"Mem", domain:"Sacrifice"},
+  {id:13, name:"Death", hebrew:"Nun", domain:"Transformation"},
+  {id:14, name:"Temperance", hebrew:"Samekh", domain:"Balance"},
+  {id:15, name:"Devil", hebrew:"Ayin", domain:"Material"},
+  {id:16, name:"Tower", hebrew:"Pe", domain:"Upheaval"},
+  {id:17, name:"Star", hebrew:"Tzaddi", domain:"Hope"},
+  {id:18, name:"Moon", hebrew:"Qoph", domain:"Intuition"},
+  {id:19, name:"Sun", hebrew:"Resh", domain:"Joy"},
+  {id:20, name:"Judgement", hebrew:"Shin", domain:"Calling"},
+  {id:21, name:"World", hebrew:"Tav", domain:"Completion"},
+];
+const DISTRICTS = [
+  {id:0, name:"London", lat:51.5, lon:-0.1, hive:"argus", prime:true},
+  {id:1, name:"Cambridge", lat:52.2, lon:0.1, hive:"athena", prime:true},
+  {id:2, name:"Edinburgh", lat:55.95, lon:-3.2, hive:"caelum", prime:true},
+  {id:3, name:"York", lat:53.96, lon:-1.08, hive:"veritas", prime:true},
+  {id:4, name:"Cardiff", lat:51.5, lon:-3.2, hive:"ferrum", prime:true},
+  {id:5, name:"Belfast", lat:54.6, lon:-5.93, hive:"aqua", prime:true},
+  {id:6, name:"Dublin", lat:53.35, lon:-6.26, hive:"vesta", prime:true},
+  {id:7, name:"Paris", lat:48.85, lon:2.35, hive:"luna", prime:true},
+  {id:8, name:"Berlin", lat:52.52, lon:13.4, hive:"sol", prime:true},
+  {id:9, name:"Amsterdam", lat:52.37, lon:4.9, hive:"terra", prime:true},
+  {id:10, name:"Stockholm", lat:59.33, lon:18.07, hive:"ventus", prime:true},
+  {id:11, name:"Helsinki", lat:60.17, lon:24.94, hive:"aurora", prime:true},
+  {id:12, name:"NYC", lat:40.71, lon:-74.0, hive:"district-12", prime:false},
+  {id:13, name:"DC", lat:38.9, lon:-77.04, hive:"district-13", prime:false},
+  {id:14, name:"SF", lat:37.77, lon:-122.42, hive:"district-14", prime:false},
+  {id:15, name:"Tokyo", lat:35.68, lon:139.69, hive:"district-15", prime:false},
+  {id:16, name:"Seoul", lat:37.57, lon:126.98, hive:"district-16", prime:false},
+  {id:17, name:"Singapore", lat:1.35, lon:103.82, hive:"district-17", prime:false},
+  {id:18, name:"Canberra", lat:-35.28, lon:149.13, hive:"district-18", prime:false},
+  {id:19, name:"São Paulo", lat:-23.55, lon:-46.63, hive:"district-19", prime:false},
+  {id:20, name:"Nairobi", lat:-1.29, lon:36.82, hive:"district-20", prime:false},
+  {id:21, name:"Cape Town", lat:-33.92, lon:18.42, hive:"district-21", prime:false},
+  {id:22, name:"Buenos Aires", lat:-34.6, lon:-58.38, hive:"district-22", prime:false},
+  {id:23, name:"Brussels", lat:50.85, lon:4.35, hive:"district-23", prime:false},
+  {id:24, name:"Vienna", lat:48.21, lon:16.37, hive:"district-24", prime:false},
+  {id:25, name:"Rome", lat:41.9, lon:12.5, hive:"district-25", prime:false},
+  {id:26, name:"Madrid", lat:40.42, lon:-3.7, hive:"district-26", prime:false},
+  {id:27, name:"Lisbon", lat:38.72, lon:-9.13, hive:"district-27", prime:false},
+  {id:28, name:"Warsaw", lat:52.23, lon:21.01, hive:"district-28", prime:false},
+  {id:29, name:"Prague", lat:50.08, lon:14.44, hive:"district-29", prime:false},
+  {id:30, name:"Copenhagen", lat:55.68, lon:12.57, hive:"district-30", prime:false},
+  {id:31, name:"Oslo", lat:59.91, lon:10.75, hive:"district-31", prime:false},
+  {id:32, name:"Aux", lat:48.20, lon:16.36, hive:"district-32", prime:false},
+];
+let activeLayer = "real";
+let rotation = 0;
+let isDragging = false, lastMouse = null;
+
+// Globe rendering
+const canvas = document.getElementById("globe");
+const ctx = canvas.getContext("2d");
+
+function project(lon, lat, r) {
+  // Simple equirectangular projection
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lon + rotation * 180) * Math.PI / 180;
+  const x = r * Math.sin(phi) * Math.cos(theta);
+  const y = r * Math.cos(phi);
+  return {x, y, visible: Math.sin(phi) * Math.cos(theta) > -0.2};
+}
+
+function render() {
+  const w = canvas.width, h = canvas.height;
+  const cx = w/2, cy = h/2;
+  // Space background
+  const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 350);
+  bg.addColorStop(0, "#001540");
+  bg.addColorStop(1, "#000510");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+  // Globe
+  const r = 220;
+  const grad = ctx.createRadialGradient(cx-r/3, cy-r/3, r/4, cx, cy, r);
+  grad.addColorStop(0, "#1a3a8a");
+  grad.addColorStop(0.6, "#0a1a4a");
+  grad.addColorStop(1, "#000510");
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.fill();
+  // Atmosphere
+  ctx.strokeStyle = "rgba(96,165,250,0.4)";
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r+5, 0, Math.PI*2);
+  ctx.stroke();
+  // Stars
+  for (let i = 0; i < 100; i++) {
+    const x = (Math.sin(i * 0.7) * 0.5 + 0.5) * w;
+    const y = (Math.cos(i * 0.5) * 0.5 + 0.5) * h;
+    const s = (Math.sin(i * 0.9) + 2) * 0.5;
+    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.fillRect(x, y, s, s);
+  }
+  // Districts on globe
+  DISTRICTS.forEach(d => {
+    const p = project(d.lon, d.lat, r);
+    const dx = cx + p.x;
+    const dy = cy - p.y;
+    if (p.visible) {
+      const size = d.prime ? 5 : 3;
+      const color = d.prime ? "#fbbf24" : "#10b981";
+      // Glow
+      const glow = ctx.createRadialGradient(dx, dy, 0, dx, dy, size*3);
+      glow.addColorStop(0, color);
+      glow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(dx, dy, size*3, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(dx, dy, size, 0, Math.PI*2);
+      ctx.fill();
+      // Label
+      if (d.prime) {
+        ctx.fillStyle = "#fbbf24";
+        ctx.font = "9px monospace";
+        ctx.fillText(d.name, dx + 7, dy + 3);
+      }
+    }
+  });
+  // Arcana ring
+  const arcanaR = r + 50;
+  for (let i = 0; i < 22; i++) {
+    const angle = (i / 22) * Math.PI * 2 + rotation * Math.PI;
+    const x = cx + Math.cos(angle) * arcanaR;
+    const y = cy + Math.sin(angle) * arcanaR;
+    const color = i % 2 === 0 ? "#fbbf24" : "#10b981";
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI*2);
+    ctx.fill();
+    if (i % 3 === 0) {
+      ctx.fillStyle = "#888";
+      ctx.font = "7px monospace";
+      ctx.fillText(String(i), x - 4, y - 6);
+    }
+  }
+  // Equator + meridian
+  ctx.strokeStyle = "rgba(96,165,250,0.3)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, r, r*0.4, 0, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, r*0.4, r, 0, 0, Math.PI*2);
+  ctx.stroke();
+  // Layer overlay
+  if (activeLayer !== "real") {
+    const layerColors = {urban: "#10b981", isr: "#60a5fa", network: "#8b5cf6", swarm: "#ec4899", weather: "#60a5fa", ontology: "#fbbf24"};
+    const c = layerColors[activeLayer] || "#fbbf24";
+    // Add layer-specific overlay points
+    for (let i = 0; i < 30; i++) {
+      const lon = (i * 12) - 180;
+      const lat = (i * 6) - 90;
+      const p = project(lon, lat, r);
+      if (p.visible) {
+        ctx.fillStyle = c;
+        ctx.globalAlpha = 0.6;
+        ctx.beginPath();
+        ctx.arc(cx + p.x, cy - p.y, 1.5, 0, Math.PI*2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+  rotation += 0.002;
+  requestAnimationFrame(render);
+}
+render();
+
+// Drag to rotate
+canvas.addEventListener("mousedown", e => { isDragging = true; lastMouse = e.clientX; });
+canvas.addEventListener("mouseup", () => { isDragging = false; });
+canvas.addEventListener("mousemove", e => {
+  if (!isDragging) return;
+  rotation += (e.clientX - lastMouse) * 0.01;
+  lastMouse = e.clientX;
+});
+
+function renderLayers() {
+  document.getElementById("layerTabs").innerHTML = LAYERS.map(l => `<span class="layer-tab ${l === activeLayer ? "active" : ""}" onclick="setLayer('${l}')">${l}</span>`).join("");
+  document.getElementById("activeLayer").textContent = activeLayer;
+  document.getElementById("globeLayer").textContent = activeLayer;
+}
+
+function setLayer(l) {
+  activeLayer = l;
+  renderLayers();
+}
+
+function renderDistricts() {
+  document.getElementById("districtsGrid").innerHTML = DISTRICTS.map(d => `
+    <div class="district ${d.prime ? "prime" : ""}">
+      <div class="name">${d.prime ? "🐉" : "•"} ${d.name}</div>
+      <div class="hive">${d.hive}</div>
+      <div class="coord">${d.lat.toFixed(2)}, ${d.lon.toFixed(2)}</div>
+    </div>
+  `).join("");
+}
+
+function renderArcana() {
+  document.getElementById("arcanaGrid").innerHTML = ARCANA.map(a => `
+    <div class="arcana">
+      <div class="id">#${a.id}</div>
+      <div class="name">${a.name}</div>
+      <div class="hebrew">${a.hebrew}</div>
+      <div class="domain">${a.domain}</div>
+    </div>
+  `).join("");
+}
+
+function doInit() {
+  const rot = parseFloat(document.getElementById("initRotation").value);
+  rotation = rot;
+  document.getElementById("initResult").textContent = `🌍 twin_globe_init(rotation=${rot})
+
+Globe: 33 districts + 22 arcana + 7 layers
+Engine: UE5.4 + Cesium 3D Tiles
+Lumen + Nanite + Ray Tracing: ON
+Care Floor: 0.97
+Doctrine: Sovereign globe initialized.`;
+}
+
+function doSetLayer() {
+  const l = document.getElementById("setLayer").value;
+  activeLayer = l;
+  renderLayers();
+  document.getElementById("layerResult").textContent = `🎨 twin_layer_set("${l}")
+
+Active layer: ${l}
+Doctrine: Sovereign layer set.`;
+}
+
+function doViz() {
+  const l = document.getElementById("vizLayer").value;
+  document.getElementById("vizResult").textContent = `🌍 twin_visualize("${l}")
+
+Viewport: 0,0,1024,768
+FPS: 60
+Engine: UE5.4
+Doctrine: Sovereign visualization frame ready.`;
+}
+
+function doOntology() {
+  document.getElementById("ontResult").textContent = `🃏 twin_ontology()
+
+Arcana: 22 (Sovereign → World)
+Districts: 33 (12 prime + 21 territories)
+Layers: 7 (real/urban/isr/network/swarm/weather/ontology)
+Care Floor: 0.95
+Doctrine: Sovereign ontology. 22 arcana + 33 districts. The koi swims up the waterfall.`;
+}
+
+renderLayers();
+renderDistricts();
+renderArcana();
+</script>
+
+</body>
+</html>

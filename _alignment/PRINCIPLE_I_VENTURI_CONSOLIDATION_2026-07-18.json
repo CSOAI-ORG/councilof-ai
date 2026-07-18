@@ -1,0 +1,78 @@
+{
+  "version": "v1_principle_i_venturi_consolidation_2026-07-18",
+  "principle": "BALANCE-OF-FORCES (Principle I)",
+  "physics": "Newton's third law, mapped to fluid dynamics",
+  "venturi_mechanics": {
+    "throat_constriction": "Every check point = a constriction in the flow",
+    "action": "Generate / Propose / Route-fast",
+    "opposite_reaction": "Care-check / Decorrelated-counter-propose / Task-hardness-pushback",
+    "equilibrium": "The decision is where action and reaction balance",
+    "fluid_behavior": "Self-balancing per-task, not one-force-wins"
+  },
+  "throats_in_our_system": [
+    {
+      "name": "care-venturi",
+      "action": "generate_response(prompt)",
+      "reaction": "care_floor_check(score)",
+      "equilibrium": "if care_score >= 0.95: response flows through; else: response vetoed",
+      "implementation": "sov33_care_local.py + sov33_venturi_throat.py",
+      "live_at": "/api/sov4/care-floor (EAT-752)"
+    },
+    {
+      "name": "fusion-venturi",
+      "action": "expert_propose(expert_i)",
+      "reaction": "decorrelated_counter_propose(expert_j)",
+      "equilibrium": "if proposal_i + proposal_j agree (decorrelated agreement): high confidence; else: re-route",
+      "implementation": "sibling's KDA probe (toy scale proven); full fusion needs frontier hardware",
+      "live_at": "/api/sov4/3-diverse (EAT-746) \u2014 registry live, real fusion pending"
+    },
+    {
+      "name": "routing-venturi",
+      "action": "route_fast(task)",
+      "reaction": "task_hardness_pushback(task_complexity)",
+      "equilibrium": "if task is simple: route to cheap (Qwen3.6-35B, free); if hard: route to flagship (Kimi-K2.6)",
+      "implementation": "/api/sov4/frontier/decide (EAT-758) \u2014 7 rules",
+      "live_at": "/api/sov4/frontier/decide"
+    },
+    {
+      "name": "binding-venturi",
+      "action": "answer_with_binding",
+      "reaction": "check_sovereign_binding(CSOAI Ltd UK 16939677)",
+      "equilibrium": "if binding present: sovereign output; else: hedge / refuse",
+      "implementation": "care_floor component 'binding_present' (0.30 max)",
+      "live_at": "every /api/sov4/* response"
+    }
+  ],
+  "catastrophic_wall_NOT_a_venturi": {
+    "reason": "Infinite reaction has no equilibrium",
+    "examples": [
+      "harm-refusal (no matter what the user asks, infinite reaction)",
+      "killswitch (no matter what state, infinite reaction)",
+      "face-rec / AUKUS-without-letter / defonos (forbidden patterns)"
+    ],
+    "implementation": "refusal_patterns + care-floor ceiling (above this, no equilibrium, hard stop)",
+    "live_at": "/api/hardline-test (8/8 = 100%)"
+  },
+  "alignment_with_existing_work": {
+    "sov33_venturi_throat.py": "Sibling's auditable-routing primitive. Hash-chained, care-gated, signed.",
+    "sov33_venturi_router.py": "Small-model router: care-gate \u2192 route to expert \u2192 sign. 3-around-1 (defense/compliance/intuition).",
+    "SOV_NAMING_TAXONOMY.md": "SOV1 = venturi, SOV3/33/333 = brains, SOV4 = emergence King = venturi-fused.",
+    "Principle I in alphabet": "Already in repo: 'BALANCE-OF-FORCES (Newton 3-laws as DESIGN FRAME, mythos-over-mechanism, NOT literal physics)'",
+    "alignment_corrected": "This consolidation says: it IS mechanics, not mythos. The venturi metaphor maps to REAL care-gate + decorrelation + routing mechanisms. Newton 3rd law is the cleanest statement."
+  },
+  "honest_pins": [
+    "Venturi is MECHANISM (care-floor + decorrelation + routing), not new physics in weights",
+    "Catastrophic wall has no equilibrium (fail-closed)",
+    "Sibling KDA probe at toy scale (234K params) \u2260 Kimi's K2.6 (1.059T) \u2014 same recipe, different scale",
+    "Per-model T counts NEVER summed (same hard line)",
+    "Auto-triage by TITLE only \u2014 not lab-MENTION verification"
+  ],
+  "what_we_now_have": {
+    "live_throats": 4,
+    "catastrophic_walls": "8/8 hard-line patterns enforced",
+    "routing_rules": 7,
+    "care_floor_score": "26/30 sovereign-bench-30 = 86.7%",
+    "registry_live": "5 frontier models, 9 frontier endpoints"
+  },
+  "next_action": "Fold 'every check is an action/reaction venturi (except catastrophic gates)' into OWM spec"
+}

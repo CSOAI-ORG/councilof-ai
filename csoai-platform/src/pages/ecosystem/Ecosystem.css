@@ -1,0 +1,221 @@
+.ecosystem-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+.ecosystem-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.ecosystem-header h1 {
+  font-size: 3.5rem;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+.ecosystem-header p {
+  font-size: 1.5rem;
+  color: #666;
+}
+
+.ecosystem-overview {
+  max-width: 800px;
+  margin: 0 auto 80px;
+  text-align: center;
+}
+
+.ecosystem-overview h2 {
+  font-size: 2.5rem;
+  color: #1a1a1a;
+  margin-bottom: 24px;
+}
+
+.ecosystem-overview p {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: #555;
+}
+
+.ecosystem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 32px;
+  margin-bottom: 80px;
+}
+
+.ecosystem-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.ecosystem-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+}
+
+.ecosystem-card.current {
+  border: 3px solid #667eea;
+  background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+}
+
+.card-icon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+}
+
+.ecosystem-card h3 {
+  font-size: 1.5rem;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+.ecosystem-card p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.current-badge {
+  display: inline-block;
+  padding: 8px 20px;
+  background: #667eea;
+  color: white;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.visit-button {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #667eea;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.visit-button:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+}
+
+.ecosystem-benefits {
+  margin-bottom: 80px;
+}
+
+.ecosystem-benefits h2 {
+  font-size: 2.5rem;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 32px;
+}
+
+.benefit-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.benefit-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.benefit-card p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.ecosystem-cta {
+  text-align: center;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 24px;
+  color: white;
+}
+
+.ecosystem-cta h2 {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.ecosystem-cta p {
+  font-size: 1.25rem;
+  margin-bottom: 32px;
+  opacity: 0.95;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 16px 48px;
+  background: white;
+  color: #667eea;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+  .ecosystem-container {
+    padding: 40px 16px;
+  }
+  
+  .ecosystem-header h1 {
+    font-size: 2rem;
+  }
+  
+  .ecosystem-header p {
+    font-size: 1.125rem;
+  }
+  
+  .ecosystem-overview h2 {
+    font-size: 1.75rem;
+  }
+  
+  .ecosystem-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .ecosystem-card {
+    padding: 32px 24px;
+  }
+  
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .ecosystem-cta {
+    padding: 48px 24px;
+  }
+  
+  .ecosystem-cta h2 {
+    font-size: 1.75rem;
+  }
+}
+

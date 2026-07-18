@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📡 Smithery MCP Marketplace Integration</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#3a1a3a 50%,#02060f 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid #ec4899}
+  .hero h1{color:#ec4899;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #ec4899}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1.5rem}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+  .stat-pill{background:rgba(236,72,153,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #ec4899;color:#ec4899;font-size:.85rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #ec4899}
+  .section h2{color:#ec4899;margin-bottom:1rem}
+  .endpoint{background:#0a0a0a;padding:1rem;border-radius:6px;margin:0.7rem 0;font-family:monospace;font-size:0.85rem}
+  .endpoint .verb{display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;font-weight:bold;margin-right:0.5rem}
+  .endpoint .verb.get{background:#10b981;color:#000}
+  .endpoint .verb.post{background:#60a5fa;color:#000}
+  .endpoint .verb.put{background:#f59e0b;color:#000}
+  .code{background:#0a0a0a;padding:1rem;border-radius:6px;overflow-x:auto;font-size:0.8rem;color:#10b981;margin:0.5rem 0;border-left:3px solid #ec4899}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+  .card{background:#1a1a1a;padding:1.2rem;border-radius:8px;border-left:3px solid #ec4899}
+  .card h3{color:#ec4899;margin-bottom:0.3rem;font-size:0.95rem}
+  .card p{color:#aaa;font-size:0.85rem}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/marketplace.html">Marketplace</a>
+  <a href="/agent-cards.html">Agents</a>
+  <a href="/smithery.html">Smithery</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>📡 Smithery Integration</h1>
+  <p>79 sovereign MCPs ready to ship to Smithery · Connect → Install → Sovereign</p>
+  <div class="stats">
+    <div class="stat-pill">79 MCPs</div>
+    <div class="stat-pill">Smithery SDK</div>
+    <div class="stat-pill">1-command install</div>
+    <div class="stat-pill">Auto-discovery</div>
+    <div class="stat-pill">Auth routing</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="section">
+    <h2>🔌 The Smithery Sovereign Bridge</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Smithery is the universal MCP marketplace. The sovereign substrate integrates via the Smithery SDK with sovereign auth routing, DORADO 1-click sovereignty, and Care Floor 0.95 enforcement on every tool call.</p>
+
+    <h3 style="color:#fbbf24;margin-top:1.5rem;margin-bottom:.5rem">Live Endpoints</h3>
+    <div class="endpoint"><span class="verb get">GET</span><strong>/mcp/registry</strong> — List all 79 sovereign MCPs (with sovereign composite 7.305 metadata)</div>
+    <div class="endpoint"><span class="verb get">GET</span><strong>/mcp/registry/:name</strong> — Get single MCP metadata + tool list</div>
+    <div class="endpoint"><span class="verb post">POST</span><strong>/mcp/call</strong> — Invoke a tool on a sovereign MCP (Care Floor 0.95 enforced)</div>
+    <div class="endpoint"><span class="verb get">GET</span><strong>/mcp/health</strong> — Sovereign substrate health check</div>
+    <div class="endpoint"><span class="verb post">POST</span><strong>/mcp/install</strong> — 1-command install (returns Docker / pip / npm instructions)</div>
+    <div class="endpoint"><span class="verb get">GET</span><strong>/mcp/sigil/recent</strong> — Last 100 SIGIL emissions (Ed25519 hash-chained)</div>
+  </div>
+
+  <div class="section">
+    <h2>📜 Sovereign Tool Call (with Care Floor)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Every tool call goes through 4 sovereign checks: BFT deliberation → Care Floor 0.95 → SIGIL emission → Article 50 watermarking.</p>
+    <div class="code">POST /mcp/call
+{
+  "mcp": "meok-sovereign-passport-mcp",
+  "tool": "wallet_sign",
+  "args": {
+    "did": "did:csoai:nicholas-001",
+    "amount": 15000  // > $10k triggers BFT 3-voter
+  }
+}
+
+Response:
+{
+  "valid": true,
+  "bft_required": true,  // > $10k threshold
+  "bft_quorum": "3/3",
+  "care_floor": 0.95,    // 16-probe validation passed
+  "sigil": "k-a1b2c3...",
+  "signature": "ed25519:...",
+  "doctrine": "Sovereign wallet_sign ratified by BFT 3/3."
+}</div>
+  </div>
+
+  <div class="section">
+    <h2>🛍️ 79 MCPs Ready to Ship</h2>
+    <div class="grid">
+      <div class="card"><h3>Origin (28)</h3><p>Passport, Guardrails, Receipt, Governance, x402-Payment, Globe, Council, Memory, Avatar, Skills, EU-AI-Act-Kit, Worm, Defence, Satellite, Honour, Immortal, DORA, ISO42001, IoT, Pond, Intuition, OOWM, Federation, Native, Planning, Pond-Physics, RPC-Bus, EU-AI-Act-50Kit</p></div>
+      <div class="card"><h3>Substrate (28)</h3><p>BFT-Council, CareFloor, Sigil-Chain, Hive-Network, Vertical-Compliance, Compliance-Passport, Core, Telemetry, Coordination, Charter, Mind, Tracker, Prompt-Pack, Audit-Trail, IoT-MQTT, Webhook, Scheduler, Defense, Identity, Cache, Search, Backup, Economy, UE5-Bridge, Translate, 12-Mindsets, Agent-Swarm, Boardroom</p></div>
+      <div class="card"><h3>Production (10)</h3><p>Billing, Monitor, Tenant, Secret, Deploy, Training, Certification, Sphere, VRM, BFT</p></div>
+      <div class="card"><h3>Triumvirate (1)</h3><p>Wallet — BFT 3-voter >$10k</p></div>
+      <div class="card"><h3>Extras (9)</h3><p>IoT-Stream, Bio, Physical, Orbital, Finance, Knowledge, Wallet-Bind, Training-Data, ML, Doc, Revise</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🚀 1-Command Install</h2>
+    <div class="code"># Install a single MCP via Smithery
+npx -y @smithery/cli install meok-sovereign-passport-mcp
+
+# Or use the sovereign CLI
+sovereign install passport
+sovereign install wallet
+sovereign install all  # 79 MCPs
+
+# Or use pip
+pip install meok-sovereign-passport-mcp
+pip install meok-sovereign-wallet-mcp
+
+# Or Docker
+docker pull ghcr.io/csoai-org/meok-sovereign-passport-mcp:latest</div>
+  </div>
+
+  <div class="section">
+    <h2>🔐 Sovereign Auth Routing</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Every Smithery connection is routed through the sovereign auth layer. 17 providers supported. W3C DID-bound. DORADO 1-click sovereignty.</p>
+    <div class="grid">
+      <div class="card"><h3>Apple ID</h3><p>Sovereign iCloud auth. Foundation Models Provider.</p></div>
+      <div class="card"><h3>Google OAuth</h3><p>Sovereign Google auth. 2.5B users reachable.</p></div>
+      <div class="card"><h3>GitHub</h3><p>Sovereign dev auth. 100M+ devs.</p></div>
+      <div class="card"><h3>Microsoft</h3><p>Sovereign enterprise auth.</p></div>
+      <div class="card"><h3>W3C DID</h3><p>Sovereign identity. Self-sovereign.</p></div>
+      <div class="card"><h3>+ 12 more</h3><p>Facebook, X, LinkedIn, Discord, Slack, GitLab, Bitbucket, etc.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Smithery Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">Smithery integration is sovereign by construction. CC0 + MIT + OSI. Care Floor 0.95 on every call.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 79 MCPs · 1,592+ tests · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+</body>
+</html>

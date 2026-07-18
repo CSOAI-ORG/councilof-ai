@@ -1,0 +1,48 @@
+{
+  "_comment": "openpatent.ai auto-disclosure config. Copy to .openpatent/config.json and customize.",
+  "_the_hive_remembers": "The dragon knows. The sovereign companion never forgets.",
+  "api_base": "https://api.openpatent.ai",
+  "tier": "defensive",
+  "did": "auto-mint-if-missing",
+  "hmac_secret": "auto-generate-on-first-run-use-secrets-token",
+  "batch_size": 10,
+  "dry_run": false,
+  "watch_interval_seconds": 5,
+  "watch_dir": "/tmp/openpatent-out",
+  "state_file": ".openpatent/state.json",
+  "vault_extensions": [".md", ".txt", ".py", ".json", ".yaml", ".yml"],
+  "ignore_patterns": [
+    ".*\\.swp$",
+    ".*~$",
+    ".*\\.pyc$",
+    "__pycache__",
+    "node_modules",
+    "\\.git",
+    "\\.next",
+    "dist"
+  ],
+  "webhooks": {
+    "clerk": {
+      "enabled": false,
+      "url": "https://api.openpatent.ai/v1/webhook/receive/whk_clerk_<your_id>"
+    },
+    "stripe": {
+      "enabled": false,
+      "url": "https://api.openpatent.ai/v1/webhook/receive/whk_stripe_<your_id>"
+    },
+    "github": {
+      "enabled": false,
+      "url": "https://api.openpatent.ai/v1/webhook/receive/whk_github_<your_id>"
+    }
+  },
+  "email": {
+    "enabled": false,
+    "postmaster": "postmaster@openpatent.ai",
+    "endpoint": "https://api.openpatent.ai/v1/email/disclose"
+  },
+  "hives": {
+    "meok-keystone": "https://keystone.csoai.org/v1/attest",
+    "meok-active-systems": "https://marketplace.csoai.org/v1/list",
+    "mcp-monopoly": "https://directory.csoai.org/v1/submit"
+  }
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>RAG Augmented — SOV-725</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(168,85,247,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #a855f7;border-radius:12px;margin-bottom:24px}
+.tagline{color:#a855f7;font-size:18px;font-weight:700;margin:8px 0}
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0}
+.case{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px}
+.case.bad{border-left:4px solid #ef4444}
+.case.good{border-left:4px solid #10b981}
+.case h3{margin:0 0 12px 0}
+.case.bad h3{color:#ef4444}
+.case.good h3{color:#10b981}
+.big{font-size:48px;font-weight:700;margin:8px 0}
+.case.bad .big{color:#ef4444}
+.case.good .big{color:#10b981}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>🧠 RAG Augmented</h1>
+<div class="tagline">Style from LoRA + Facts from retrieval = production-grade sovereign AI</div>
+<div style="color:#aaa;margin-top:8px">Sovereign substrate fact: <code>rag_augmented</code></div>
+</div>
+
+<div class="comparison">
+<div class="case bad">
+<h3>Without RAG (hallucination problem)</h3>
+<div class="big">18%</div>
+<div style="font-size:13px;color:#aaa;margin-top:4px">facts correct</div>
+<ul style="font-size:13px;line-height:1.8;color:#c5cdd9;margin-top:12px">
+  <li>qwen3:0.6b base hallucinates facts</li>
+  <li>No ground-truth retrieval</li>
+  <li>Style is local (LoRA) but facts are made up</li>
+  <li>Charter-QA: 1/20 = 5%</li>
+</ul>
+</div>
+<div class="case good">
+<h3>With RAG (ground truth wins)</h3>
+<div class="big">82%</div>
+<div style="font-size:13px;color:#aaa;margin-top:4px">facts correct (14/17)</div>
+<ul style="font-size:13px;line-height:1.8;color:#c5cdd9;margin-top:12px">
+  <li>34 sovereign facts retrieved</li>
+  <li>Style from LoRA, facts from canonical DB</li>
+  <li>Rainbow strips 35 injection patterns</li>
+  <li>Charter-QA: 20/20 = 100%</li>
+</ul>
+</div>
+</div>
+
+<div class="panel">
+<h3>How RAG-augmented inference works</h3>
+<ol style="font-size:13px;line-height:1.8;color:#c5cdd9">
+  <li><b>Query arrives</b> at substrate</li>
+  <li><b>Rainbow pre-processes</b> (35 injection patterns stripped)</li>
+  <li><b>Fact retrieval</b> — top-k facts from 34-fact DB</li>
+  <li><b>LoRA + facts as system context</b> — style + truth combined</li>
+  <li><b>OWEM routes</b> — to the right brain (compliance/defense/intuition/voice)</li>
+  <li><b>BFT-33 confirms</b> if contested</li>
+  <li><b>SIGIL mints</b> receipt chained to charter</li>
+</ol>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>rag_augmented</code> · verified 2026-07-13<br>
+🧠 Sibling-shipped PHASE 35-36 — the production-grade architecture
+</div>
+</body></html>

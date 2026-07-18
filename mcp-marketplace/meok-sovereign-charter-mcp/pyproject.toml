@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-charter-mcp"
+version = "1.0.0"
+description = "Sovereign Charter MCP - the 10-article constitutional law of the substrate. Can only be amended by 7-voter BFT (secure mode, quorum=5). Covers Maternal Covenant, Defensive Doctrine, Sigil Mandate, BFT Council, 12 Generals, AB Uno, 12 Sephiroth, 5 Sovereign Tasks, Native Runtime, MIT License."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

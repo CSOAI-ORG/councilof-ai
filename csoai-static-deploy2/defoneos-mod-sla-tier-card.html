@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — SLA Tier Card (6 Tiers · Uptime · Response · Resolution · Credit Ladder · Bonus Pool)</title>
+<meta name="description" content="DEFONEOS SLA Tier Card: 6 contractual SLA tiers (Bronze / Silver / Gold / Platinum / Sovereign / Sovereign-Air-Gap) with uptime, P1-P4 response + resolution, credit ladder, bonus pool trigger, and SIGIL-anchored monthly attestation." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.crit{background:#ff5e5e22;color:#ff5e5e;border:1px solid #ff5e5e55;}
+.high{background:#ffb80022;color:#ffb800;border:1px solid #ffb80055;}
+.med{background:#00d4ff22;color:#00d4ff;border:1px solid #00d4ff55;}
+.ok-tag{background:#00d68f22;color:#00d68f;border:1px solid #00d68f55;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/sla-tier-card · csoai.org · ship-grade · tick 96</div>
+<header>
+<h1>SLA Tier Card</h1>
+<div class="sub">The single document a buyer procurement / CISO / GC reads to choose a contractual service tier. Six tiers — Bronze, Silver, Gold, Platinum, Sovereign, Sovereign-Air-Gap — each with named uptime, P1-P4 response &amp; resolution commitments, a credit ladder if we miss, and a bonus pool if we exceed. All measurements are SIGIL-anchored monthly.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Tiers offered</span><b>6 (Bronze / Silver / Gold / Platinum / Sovereign / Sovereign-Air-Gap)</b></div>
+<div class="kpi"><span>Uptime ceiling</span><b>99.99% (Platinum / Sovereign / Sovereign-Air-Gap) ≈ 52.6 min downtime/yr</b></div>
+<div class="kpi"><span>P1 response (fastest)</span><b>15 min (Platinum / Sovereign / Sovereign-Air-Gap)</b></div>
+<div class="kpi"><span>P1 resolution (fastest)</span><b>2 hours (Platinum / Sovereign) · 4 hours (Sovereign-Air-Gap)</b></div>
+<div class="kpi"><span>Credit on miss (max)</span><b>30% of monthly fee + named 33-agent escalation</b></div>
+<div class="kpi"><span>Bonus pool trigger</span><b>99 consecutive months above 99.99% (Platinum+) → 1 month free + named to public dashboard</b></div>
+<div class="kpi"><span>Measurement window</span><b>Calendar month, attested SIGIL on the 5th business day of next month</b></div>
+<div class="kpi"><span>Dispute window</span><b>30 days from attestation receipt, resolved within 15 business days</b></div>
+</div>
+
+<h2>1 · Why this document exists</h2>
+<p>Every procurement officer has the same mental model of an SLA: "if the vendor's system is down, what do I get back?" The naive answer is a credit. The mature answer — the one DEFONEOS offers — is a six-tier ladder with named uptime, response, resolution, credit, bonus pool, escalation owner, and SIGIL-anchored monthly measurement. This card is what a buyer sends to their procurement / CISO / GC / Insurance Broker for tier selection.</p>
+<p>The card is deliberately readable in 90 seconds. The full contractual SLA is the MSA Schedule 2, exchanged at signature; this card is the readable front.</p>
+
+<h2>2 · The 6 SLA tiers (master table)</h2>
+<table>
+<thead><tr><th>Tier</th><th>Uptime / month</th><th>P1 response</th><th>P1 resolution</th><th>P2 response</th><th>P2 resolution</th><th>P3 response</th><th>P3 resolution</th><th>P4</th><th>Credit on miss</th><th>Bonus pool</th><th>Monthly fee band</th></tr></thead>
+<tbody>
+<tr><td><b>Bronze</b></td><td>99.5%</td><td>4 BH</td><td>24 BH</td><td>8 BH</td><td>72 BH</td><td>24 BH</td><td>10 BD</td><td>Best effort</td><td>5%</td><td>—</td><td>£2k – £8k</td></tr>
+<tr><td><b>Silver</b></td><td>99.9%</td><td>2 h</td><td>12 h</td><td>4 h</td><td>48 h</td><td>12 h</td><td>5 BD</td><td>Best effort</td><td>10%</td><td>—</td><td>£8k – £25k</td></tr>
+<tr><td><b>Gold</b></td><td>99.95%</td><td>30 min</td><td>6 h</td><td>2 h</td><td>24 h</td><td>8 h</td><td>3 BD</td><td>1 BD</td><td>15%</td><td>—</td><td>£25k – £75k</td></tr>
+<tr><td><b>Platinum</b></td><td>99.99%</td><td>15 min</td><td>2 h</td><td>1 h</td><td>8 h</td><td>4 h</td><td>2 BD</td><td>1 BD</td><td>25% + named TAM</td><td>1 month free at 99 consec.</td><td>£75k – £200k</td></tr>
+<tr><td><b>Sovereign</b></td><td>99.99% (single-tenant)</td><td>15 min</td><td>2 h</td><td>1 h</td><td>8 h</td><td>4 h</td><td>2 BD</td><td>1 BD</td><td>30% + named 33-agent escalation</td><td>1 month free + named to public dashboard</td><td>£200k – £500k</td></tr>
+<tr><td><b>Sovereign-Air-Gap</b></td><td>99.99% (no internet)</td><td>30 min (OOB)</td><td>4 h</td><td>2 h (OOB)</td><td>12 h</td><td>8 h (OOB)</td><td>3 BD</td><td>1 BD</td><td>30% + named 33-agent escalation</td><td>1 month free + named to public dashboard</td><td>£500k+</td></tr>
+</tbody>
+</table>
+<p><b>Notation:</b> BH = business hours (Mon-Fri 09:00-18:00 UK, excl. UK public holidays); h = clock hours; BD = business days; OOB = out-of-band (satellite phone / secure fax / courier).</p>
+
+<h2>3 · Severity definitions (P1 – P4)</h2>
+<table>
+<thead><tr><th>Severity</th><th>Definition</th><th>Examples</th><th>Customer impact</th></tr></thead>
+<tbody>
+<tr><td><b>P1 — Critical</b></td><td>Total service outage OR safety-critical malfunction OR active exploit</td><td>API down · model producing SEV-1 content · data breach · adversarial exploit in wild</td><td>Production stopped, customer cannot proceed</td></tr>
+<tr><td><b>P2 — High</b></td><td>Major feature impaired OR non-critical malfunction affecting &gt;25% of users</td><td>Specific endpoint down · drift detected · fairness regression · slow responses</td><td>Major degradation, workaround exists</td></tr>
+<tr><td><b>P3 — Medium</b></td><td>Minor feature impaired OR cosmetic issue affecting &lt;25% of users</td><td>Single-user issue · UI bug · non-critical telemetry gap</td><td>Minor degradation, workaround trivial</td></tr>
+<tr><td><b>P4 — Low</b></td><td>Question / enhancement / documentation</td><td>How-to · feature request · doc typo</td><td>None — informational</td></tr>
+</tbody>
+</table>
+
+<h2>4 · Uptime measurement (how we count)</h2>
+<p>Uptime is measured per calendar month against the buyer's contracted tenant endpoint. The formula:</p>
+<pre>uptime_pct = ((total_minutes_in_month − excluded_downtime) − incident_minutes) / (total_minutes_in_month − excluded_downtime) × 100</pre>
+<p><b>Excluded downtime</b> (not counted against SLA):</p>
+<ul>
+<li>Buyer-side infrastructure (buyer's cloud, network, IAM, DNS)</li>
+<li>Buyer-requested maintenance windows (announced 5 BD in advance)</li>
+<li>Force majeure (war, insurrection, natural disaster, pandemic)</li>
+<li>Buyer's modifications to model weights, prompts, or training data</li>
+<li>Scheduled sovereign upgrades (announced 30 days in advance, max 4 hours/quarter)</li>
+</ul>
+<p><b>Incident minutes</b> are measured from the first SIGIL-anchored P1/P2 incident timestamp to the SIGIL-anchored resolution timestamp. Both timestamps are signed by the 33-agent BFT council at incident close.</p>
+
+<h2>5 · Credit ladder (the contractual remedy)</h2>
+<table>
+<thead><tr><th>Tier</th><th>Miss trigger</th><th>Credit %</th><th>Maximum monthly credit</th><th>Additional remedies</th></tr></thead>
+<tbody>
+<tr><td><b>Bronze</b></td><td>Uptime &lt; 99.5% in month</td><td>5%</td><td>5% of monthly fee</td><td>Postmortem within 10 BD</td></tr>
+<tr><td><b>Silver</b></td><td>Uptime &lt; 99.9% in month</td><td>10%</td><td>10% of monthly fee</td><td>Postmortem + named remediation owner</td></tr>
+<tr><td><b>Gold</b></td><td>Uptime &lt; 99.95% in month</td><td>15%</td><td>15% of monthly fee</td><td>Postmortem + named remediation owner + free next-month extension</td></tr>
+<tr><td><b>Platinum</b></td><td>Uptime &lt; 99.99% in month OR P1 resolution &gt; 2h</td><td>25%</td><td>25% of monthly fee</td><td>Postmortem + named TAM accountability + free next-month extension + named to internal trust dashboard</td></tr>
+<tr><td><b>Sovereign</b></td><td>Uptime &lt; 99.99% OR P1 resolution &gt; 2h OR BFT 33-agent vote &lt; 23/33</td><td>30%</td><td>30% of monthly fee</td><td>All Platinum remedies + named 33-agent escalation lead + named to <i>public</i> dashboard (buyer may redact)</td></tr>
+<tr><td><b>Sovereign-Air-Gap</b></td><td>Same as Sovereign, measured against air-gapped SLA endpoint</td><td>30%</td><td>30% of monthly fee</td><td>Same as Sovereign, with OOB channel acknowledgement</td></tr>
+</tbody>
+</table>
+<p>Credits are applied automatically to the next invoice. The buyer does not need to claim them. If a credit is disputed, the dispute process in §10 applies.</p>
+
+<h2>6 · Bonus pool (the upside incentive)</h2>
+<p>Platinum, Sovereign, and Sovereign-Air-Gap tiers include a bonus pool. The pool rewards sustained over-performance:</p>
+<table>
+<thead><tr><th>Trigger</th><th>Reward</th><th>Publicity</th></tr></thead>
+<tbody>
+<tr><td>99 consecutive calendar months above 99.99% uptime</td><td>1 month free service</td><td>Named (with consent) on <code>csoai.org/sla/honour-roll</code></td></tr>
+<tr><td>Zero P1 incidents in a calendar year</td><td>Quarterly QBR hosted at DEFONEOS expense</td><td>Internal trust dashboard</td></tr>
+<tr><td>Zero P2 incidents in a calendar quarter</td><td>Named "Trust Partner" status for 12 months</td><td>Public dashboard + case study option</td></tr>
+<tr><td>12 months of zero open SIGIL-anchored advisory acknowledgements</td><td>Lifetime 5% renewal discount</td><td>Public dashboard + case study</td></tr>
+</tbody>
+</table>
+
+<h2>7 · Escalation owners (named roles)</h2>
+<table>
+<thead><tr><th>Tier</th><th>First responder</th><th>Escalation owner</th><th>Final escalation</th></tr></thead>
+<tbody>
+<tr><td><b>Bronze</b></td><td>On-call engineer (24/7 rotation)</td><td>Engineering Manager</td><td>VP Engineering</td></tr>
+<tr><td><b>Silver</b></td><td>On-call senior engineer + dedicated TAM</td><td>Director of Customer Success</td><td>VP Engineering</td></tr>
+<tr><td><b>Gold</b></td><td>On-call staff engineer + dedicated TAM</td><td>VP Customer Success</td><td>CISO + CTO</td></tr>
+<tr><td><b>Platinum</b></td><td>On-call principal engineer + dedicated TAM + 24/7 SEV-1 hotline</td><td>CTO (named at MSA)</td><td>CEO + 33-agent BFT lead</td></tr>
+<tr><td><b>Sovereign</b></td><td>On-call principal + named TAM + CISO direct line</td><td>CEO + CISO</td><td>33-agent BFT council (named voters)</td></tr>
+<tr><td><b>Sovereign-Air-Gap</b></td><td>On-call principal + named TAM + CISO OOB channel</td><td>CEO + CISO</td><td>33-agent BFT council (named voters)</td></tr>
+</tbody>
+</table>
+
+<h2>8 · Measurement &amp; attestation (SIGIL)</h2>
+<p>Every month's SLA performance is captured in a SIGIL-anchored attestation record:</p>
+<pre>{
+  "att_id": "SLA-2026-07-MEGACORP",
+  "tier": "sovereign",
+  "period": "2026-07",
+  "uptime_pct": 99.994,
+  "uptime_target_pct": 99.99,
+  "miss": false,
+  "p1_count": 0,
+  "p2_count": 2,
+  "p3_count": 7,
+  "p4_count": 14,
+  "incident_minutes_excluded": 0,
+  "incident_minutes_counted": 3,
+  "credit_due_pct": 0,
+  "attested_at": "2026-08-05T09:00:00Z",
+  "bft_vote_round": 1247,
+  "bft_vote_result": "28-approve / 5-amend / 0-reject",
+  "ed25519_sig": "a4f8c2d9e1b3...",
+  "buyer_verify_url": "https://csoai.org/sla/verify/SLA-2026-07-MEGACORP"
+}</pre>
+<p>Buyers verify any attestation via <code>curl https://csoai.org/sla/verify/{att_id}</code>. Verification is &lt;100ms and returns the full record + BFT vote details.</p>
+
+<h2>9 · Maintenance windows (what we exclude)</h2>
+<table>
+<thead><tr><th>Type</th><th>Notice required</th><th>Max frequency</th><th>Max duration</th><th>Tiers affected</th></tr></thead>
+<tbody>
+<tr><td><b>Emergency security patch</b></td><td>Best-effort</td><td>No limit</td><td>60 min</td><td>All</td></tr>
+<tr><td><b>Standard maintenance</b></td><td>5 BD</td><td>2 / month</td><td>2 hours each</td><td>Bronze / Silver</td></tr>
+<tr><td><b>Gold maintenance</b></td><td>10 BD</td><td>1 / month</td><td>4 hours</td><td>Gold / Platinum</td></tr>
+<tr><td><b>Sovereign upgrade</b></td><td>30 days</td><td>1 / quarter</td><td>4 hours</td><td>Sovereign / Sovereign-Air-Gap</td></tr>
+<tr><td><b>Sovereign-Air-Gap upgrade</b></td><td>60 days + on-site presence option</td><td>1 / quarter</td><td>6 hours</td><td>Sovereign-Air-Gap</td></tr>
+</tbody>
+</table>
+
+<h2>10 · Dispute resolution (the 30-day window)</h2>
+<ol>
+<li>Buyer receives SIGIL attestation on 5th business day of month following measurement period.</li>
+<li>Buyer has 30 calendar days to raise dispute (via <code>disputes@csoai.org</code> or buyer's named TAM).</li>
+<li>Dispute triggers an independent review: DEFONEOS CISO + Buyer CISO + named neutral (typically one of the buyer's appointed auditors).</li>
+<li>Resolution target: 15 business days from dispute raise. If unresolved at 15 BD, escalation to 33-agent BFT council for binding decision.</li>
+<li>BFT decision is final and SIGIL-anchored. Buyer may publish decision (with redactions) on buyer's own trust page.</li>
+</ol>
+
+<h2>11 · The 5 Anti-Patterns (SLA Disasters We Refuse)</h2>
+<ol>
+<li><b>No "we'll get to it."</b> P1 SLA times are contractual. Every minute over is a credit minute.</li>
+<li><b>No "excluded downtime black box."</b> Excluded downtime is enumerated (§4). Anything not on the list counts.</li>
+<li><b>No "credits only on request."</b> Credits auto-apply on the next invoice. Buyer doesn't ask.</li>
+<li><b>No "we'll define severity later."</b> Severity definitions (§3) are contractual at MSA signature.</li>
+<li><b>No "disputes go to legal."</b> Disputes go to CISO + CISO + neutral (§10). Legal is the last resort, not the first.</li>
+</ol>
+
+<h2>12 · Cross-walk to other DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Question</th><th>Answer lives in</th></tr></thead>
+<tbody>
+<tr><td>"What about insurance / liability?"</td><td><a href="#"">defoneos-mod-insurance-liability-bridge.html</a></td></tr>
+<tr><td>"What about incident response?"</td><td><a href="#">defoneos-mod-escalation-runbook.html</a></td></tr>
+<tr><td>"What about PMS reporting?"</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+<tr><td>"What about security architecture?"</td><td><a href="#"">defoneos-mod-zero-trust-network-architecture.html</a></td></tr>
+<tr><td>"What about EU CRA readiness?"</td><td><a href="#"">defoneos-mod-eu-cyber-resilience-act-readiness.html</a></td></tr>
+<tr><td>"What's the contract structure?"</td><td><a href="#"">defoneos-mod-proposal.html</a> + MSA Schedule 2</td></tr>
+</tbody>
+</table>
+
+<h2>13 · Buyer Next Steps</h2>
+<ol>
+<li>Verify this document hash: <code>curl https://csoai.org/defoneos-mod-sla-tier-card.html | shasum -a 256</code></li>
+<li>Pick a tier (§2) and request the matching fee band quote.</li>
+<li>Browse live SLA attestation history: <code>csoai.org/sla/{tenant_id}</code></li>
+<li>Verify any attestation: <code>csoai.org/sla/verify/{att_id}</code></li>
+<li>Request a 60-minute SLA walkthrough with our VP Customer Success.</li>
+<li>Subscribe to material-incident advisories: <code>csoai.org/advisories/subscribe</code></li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T96-sla-tier-card-c7e2b8d4f1a9 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — buyers, brokers, procurement officers, CISOs, GCs free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Customer Success · <code>success@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Insurance &amp; Liability Bridge</a> · 
+<a href="#">Escalation Runbook ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

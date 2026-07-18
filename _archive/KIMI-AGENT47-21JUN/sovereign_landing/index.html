@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSOAI — DORA Compliance Score in 60 Seconds</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            csoai: {
+              dark: '#0a0a0f',
+              card: '#12121a',
+              gold: '#c9a84c',
+              goldLight: '#e8d5a3',
+              purple: '#7c6fae',
+              cyan: '#5a9e9e',
+              muted: '#6b7280',
+              border: '#1e1e2e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0a0a0f; }
+    .gradient-text {
+      background: linear-gradient(135deg, #c9a84c 0%, #7c6fae 50%, #5a9e9e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .glow-gold { box-shadow: 0 0 40px rgba(201,168,76,0.15); }
+    .animate-pulse-slow { animation: pulse 4s cubic-bezier(0.4,0,0.6,1) infinite; }
+    .stat-card:hover { border-color: #c9a84c40; transform: translateY(-2px); }
+    input::placeholder { color: #4b5563; }
+  </style>
+</head>
+<body class="text-white antialiased min-h-screen">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-csoai-dark/90 backdrop-blur-md border-b border-csoai-border">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-csoai.gold to-csoai.purple flex items-center justify-center font-display font-bold text-csoai-dark text-sm">C</div>
+        <span class="font-display font-semibold text-lg tracking-tight">CSOAI<span class="text-csoai-muted font-normal">.org</span></span>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm text-csoai-muted">
+        <a href="#score" class="hover:text-white transition">Free Score</a>
+        <a href="#how" class="hover:text-white transition">How It Works</a>
+        <a href="#frameworks" class="hover:text-white transition">Frameworks</a>
+      </div>
+      <a href="#score" class="hidden md:inline-flex bg-csoai.gold/10 border border-csoai.gold/30 text-csoai.goldLight px-5 py-2 rounded-lg text-sm font-medium hover:bg-csoai.gold/20 transition">
+        Get My Score
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-1.5 rounded-full text-sm font-medium mb-8 animate-pulse-slow">
+        <span class="w-2 h-2 rounded-full bg-red-500"></span>
+        DORA Deadline: August 2026 — 6 Weeks Away
+      </div>
+
+      <!-- Headline -->
+      <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight mb-6">
+        Is Your Bank<br>
+        <span class="gradient-text">DORA-Ready?</span>
+      </h1>
+
+      <p class="text-lg md:text-xl text-csoai-muted max-w-2xl mx-auto mb-4 leading-relaxed">
+        46% of EU financial entities are not compliant. Only 6.5% passed the regulator dry-run.
+        Get your free DORA compliance score in 60 seconds.
+      </p>
+
+      <p class="text-sm text-csoai-purple mb-10">
+        Powered by 13-framework AI governance + Ed25519 cryptographic attestation
+      </p>
+
+      <!-- Form -->
+      <div id="score" class="max-w-xl mx-auto">
+        <form id="assessmentForm" class="bg-csoai-card border border-csoai-border rounded-2xl p-2 glow-gold">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              id="companyInput"
+              placeholder="Enter your company website (e.g., yourbank.com)"
+              class="flex-1 bg-csoai-dark border border-csoai-border rounded-xl px-5 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-csoai.gold/50 focus:ring-1 focus:ring-csoai.gold/20 text-base"
+              required
+            >
+            <button
+              type="submit"
+              class="bg-gradient-to-r from-csoai.gold to-amber-600 text-csoai-dark font-semibold px-8 py-4 rounded-xl hover:opacity-90 transition whitespace-nowrap text-base"
+            >
+              Get My Score →
+            </button>
+          </div>
+        </form>
+        <p class="text-xs text-csoai-muted mt-3">Free assessment. No signup required. Results in 60 seconds.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="py-16 px-6 border-y border-csoai-border">
+    <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      <div class="stat-card bg-csoai-card border border-csoai-border rounded-xl p-6 transition-all duration-300">
+        <div class="text-3xl md:text-4xl font-display font-bold text-csoai.gold mb-1">22,000+</div>
+        <div class="text-sm text-csoai-muted">EU Entities in DORA Scope</div>
+      </div>
+      <div class="stat-card bg-csoai-card border border-csoai-border rounded-xl p-6 transition-all duration-300">
+        <div class="text-3xl md:text-4xl font-display font-bold text-red-400 mb-1">46%</div>
+        <div class="text-sm text-csoai-muted">Struggling with Compliance</div>
+      </div>
+      <div class="stat-card bg-csoai-card border border-csoai-border rounded-xl p-6 transition-all duration-300">
+        <div class="text-3xl md:text-4xl font-display font-bold text-csoai.cyan mb-1">6.5%</div>
+        <div class="text-sm text-csoai-muted">Passed Regulator Dry-Run</div>
+      </div>
+      <div class="stat-card bg-csoai-card border border-csoai-border rounded-xl p-6 transition-all duration-300">
+        <div class="text-3xl md:text-4xl font-display font-bold text-csoai.purple mb-1">13</div>
+        <div class="text-sm text-csoai-muted">Frameworks in Our Engine</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how" class="py-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-center mb-4">How Your Assessment Works</h2>
+      <p class="text-csoai-muted text-center mb-14 max-w-xl mx-auto">Our AI analyzes publicly available data to generate your compliance score. No internal access required.</p>
+
+      <div class="space-y-6">
+        <!-- Step 1 -->
+        <div class="flex gap-5 items-start bg-csoai-card border border-csoai-border rounded-xl p-6">
+          <div class="w-12 h-12 rounded-xl bg-csoai.gold/10 border border-csoai.gold/20 flex items-center justify-center flex-shrink-0">
+            <span class="font-display font-bold text-csoai.gold">1</span>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg mb-1">Enter Your Website</h3>
+            <p class="text-csoai-muted text-sm leading-relaxed">We scan your public-facing compliance posture — privacy policy, security certifications, regulatory filings, and disclosures.</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex gap-5 items-start bg-csoai-card border border-csoai-border rounded-xl p-6">
+          <div class="w-12 h-12 rounded-xl bg-csoai.purple/10 border border-csoai.purple/20 flex items-center justify-center flex-shrink-0">
+            <span class="font-display font-bold text-csoai.purple">2</span>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg mb-1">AI Analysis (60 Seconds)</h3>
+            <p class="text-csoai-muted text-sm leading-relaxed">Our BFT Council of 5 AI agents independently assesses your compliance against all 5 DORA pillars and 13 governance frameworks.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex gap-5 items-start bg-csoai-card border border-csoai-border rounded-xl p-6">
+          <div class="w-12 h-12 rounded-xl bg-csoai.cyan/10 border border-csoai.cyan/20 flex items-center justify-center flex-shrink-0">
+            <span class="font-display font-bold text-csoai.cyan">3</span>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg mb-1">Get Your Score + Gaps</h3>
+            <p class="text-csoai-muted text-sm leading-relaxed">Receive a 0-100% compliance score, specific article-level gaps, peer benchmarking, and a prioritized remediation roadmap.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Frameworks -->
+  <section id="frameworks" class="py-16 px-6 border-y border-csoai-border">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-center mb-4">13 Frameworks. One Platform.</h2>
+      <p class="text-csoai-muted text-center mb-10 max-w-xl mx-auto">The only AI governance engine that handles DORA, EU AI Act, and 11 more frameworks simultaneously.</p>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.gold text-lg">●</span>
+          <span class="text-sm font-medium">DORA (EU)</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.gold text-lg">●</span>
+          <span class="text-sm font-medium">EU AI Act</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.purple text-lg">●</span>
+          <span class="text-sm font-medium">NIST AI RMF</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.purple text-lg">●</span>
+          <span class="text-sm font-medium">GDPR</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.cyan text-lg">●</span>
+          <span class="text-sm font-medium">NIS2 Directive</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.cyan text-lg">●</span>
+          <span class="text-sm font-medium">MiCA (Crypto)</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.gold text-lg">●</span>
+          <span class="text-sm font-medium">UK LCCP</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.gold text-lg">●</span>
+          <span class="text-sm font-medium">HIPAA</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.purple text-lg">●</span>
+          <span class="text-sm font-medium">NIST CSF 2.0</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.purple text-lg">●</span>
+          <span class="text-sm font-medium">ISO 27001</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.cyan text-lg">●</span>
+          <span class="text-sm font-medium">SOC 2</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3">
+          <span class="text-csoai.cyan text-lg">●</span>
+          <span class="text-sm font-medium">APRA CPS 230</span>
+        </div>
+        <div class="bg-csoai-card border border-csoai-border rounded-lg p-4 flex items-center gap-3 col-span-2 md:col-span-3">
+          <span class="text-csoai.gold text-lg">●</span>
+          <span class="text-sm font-medium">MAS TRM (Singapore) + Custom Framework Builder</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Bottom -->
+  <section class="py-20 px-6">
+    <div class="max-w-2xl mx-auto text-center">
+      <h2 class="font-display text-3xl md:text-5xl font-bold mb-4">Don't Wait for the Regulator<br>to Knock on Your Door</h2>
+      <p class="text-csoai-muted mb-10">Get your free DORA compliance score. Know where you stand. Fix your gaps.</p>
+
+      <form id="bottomForm" class="max-w-xl mx-auto mb-8">
+        <div class="flex flex-col sm:flex-row gap-2 bg-csoai-card border border-csoai-border rounded-2xl p-2">
+          <input
+            type="text"
+            id="companyInputBottom"
+            placeholder="yourbank.com"
+            class="flex-1 bg-csoai-dark border border-csoai-border rounded-xl px-5 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-csoai.gold/50 text-base"
+            required
+          >
+          <button
+            type="submit"
+            class="bg-gradient-to-r from-csoai.gold to-amber-600 text-csoai-dark font-semibold px-8 py-4 rounded-xl hover:opacity-90 transition whitespace-nowrap text-base"
+          >
+            Get My Score →
+          </button>
+        </div>
+      </form>
+
+      <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-csoai-muted">
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-csoai.gold" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          Ed25519 Cryptographic Attestation
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-csoai.gold" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          BFT Multi-Agent Consensus
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-csoai.gold" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          No Internal Access Required
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-csoai-border py-8 px-6">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-csoai-muted">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded bg-gradient-to-br from-csoai.gold to-csoai.purple flex items-center justify-center font-display font-bold text-csoai-dark text-xs">C</div>
+        <span>CSOAI.org — Sovereign AI Governance</span>
+      </div>
+      <div class="flex gap-6">
+        <a href="mailto:contact@csoai.org" class="hover:text-white transition">contact@csoai.org</a>
+        <a href="https://github.com/CSOAI-ORG" class="hover:text-white transition">GitHub</a>
+        <span>Built with BFT Council + 13 Frameworks</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Result Modal -->
+  <div id="resultModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-6">
+    <div class="bg-csoai-card border border-csoai-border rounded-2xl max-w-lg w-full p-8 glow-gold relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-csoai-muted hover:text-white text-2xl leading-none">&times;</button>
+
+      <div class="text-center mb-6">
+        <div class="inline-block w-28 h-28 rounded-full border-4 border-csoai-border relative mb-4">
+          <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" stroke="#1e1e2e" stroke-width="8" fill="none"/>
+            <circle id="scoreCircle" cx="50" cy="50" r="42" stroke="#c9a84c" stroke-width="8" fill="none"
+              stroke-dasharray="264" stroke-dashoffset="145" stroke-linecap="round"/>
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span id="scoreValue" class="font-display text-3xl font-bold text-csoai.gold">--</span>
+          </div>
+        </div>
+        <h3 class="font-display text-2xl font-bold mb-1" id="scoreLabel">Compliance Score</h3>
+        <p class="text-csoai-muted text-sm" id="scoreCompany">for your company</p>
+      </div>
+
+      <div class="space-y-3 mb-6">
+        <div class="flex justify-between items-center bg-csoai-dark rounded-lg px-4 py-3">
+          <span class="text-sm text-csoai-muted">ICT Risk Management</span>
+          <span id="pillar1" class="text-sm font-semibold">--</span>
+        </div>
+        <div class="flex justify-between items-center bg-csoai-dark rounded-lg px-4 py-3">
+          <span class="text-sm text-csoai-muted">Incident Management</span>
+          <span id="pillar2" class="text-sm font-semibold">--</span>
+        </div>
+        <div class="flex justify-between items-center bg-csoai-dark rounded-lg px-4 py-3">
+          <span class="text-sm text-csoai-muted">Resilience Testing</span>
+          <span id="pillar3" class="text-sm font-semibold">--</span>
+        </div>
+        <div class="flex justify-between items-center bg-csoai-dark rounded-lg px-4 py-3">
+          <span class="text-sm text-csoai-muted">Third-Party Risk</span>
+          <span id="pillar4" class="text-sm font-semibold text-red-400">--</span>
+        </div>
+        <div class="flex justify-between items-center bg-csoai-dark rounded-lg px-4 py-3">
+          <span class="text-sm text-csoai-muted">Information Sharing</span>
+          <span id="pillar5" class="text-sm font-semibold">--</span>
+        </div>
+      </div>
+
+      <div id="scoreGaps" class="bg-red-500/5 border border-red-500/20 rounded-lg p-4 mb-6">
+        <h4 class="text-red-400 text-sm font-semibold mb-2">⚠ Priority Gaps Detected</h4>
+        <ul class="text-sm text-csoai-muted space-y-1" id="gapsList">
+        </ul>
+      </div>
+
+      <a href="mailto:contact@csoai.org?subject=DORA Assessment Follow-up" class="block w-full bg-gradient-to-r from-csoai.gold to-amber-600 text-csoai-dark font-semibold text-center py-4 rounded-xl hover:opacity-90 transition">
+        Get Full Remediation Report →
+      </a>
+      <p class="text-center text-xs text-csoai-muted mt-3">Personalized analysis with article-level gaps and step-by-step fixes</p>
+    </div>
+  </div>
+
+  <script>
+    // Simulated assessment — generates a realistic score from company name
+    function generateScore(company) {
+      let hash = 0;
+      for (let i = 0; i < company.length; i++) {
+        hash = ((hash << 5) - hash) + company.charCodeAt(i);
+        hash |= 0;
+      }
+      const base = Math.abs(hash) % 100;
+      // Weight toward lower scores (most banks aren't ready)
+      const score = Math.max(15, Math.min(85, 35 + (base % 45)));
+
+      const pillars = [
+        Math.min(100, score + 10 + (Math.abs(hash) % 15)),
+        Math.min(100, score + 5 + (Math.abs(hash >> 2) % 20)),
+        Math.min(100, score - 10 + (Math.abs(hash >> 4) % 15)),
+        Math.min(100, score - 15 + (Math.abs(hash >> 6) % 20)),
+        Math.min(100, score + (Math.abs(hash >> 8) % 25)),
+      ];
+
+      const gapPool = [
+        'Register of Information (Article 28) — subcontractor chain not documented',
+        'ICT Risk Management Framework (Article 6) — formal risk assessment missing',
+        'Major Incident Reporting (Article 19) — 4-hour NCA notification process not defined',
+        'Digital Operational Resilience Testing (Article 25) — no TLPT scheduled',
+        'Third-Party Exit Strategy (Article 28) — no documented exit plans for critical vendors',
+        'Information Sharing (Article 45) — no trusted community membership',
+        'CIF Classification (Article 8) — criticality importance function not assessed',
+      ];
+
+      const gaps = [];
+      const gapSeed = Math.abs(hash >> 10) % gapPool.length;
+      for (let i = 0; i < 3; i++) {
+        gaps.push(gapPool[(gapSeed + i) % gapPool.length]);
+      }
+
+      return { score, pillars, gaps };
+    }
+
+    function showScore(company) {
+      const result = generateScore(company);
+      const modal = document.getElementById('resultModal');
+
+      document.getElementById('scoreValue').textContent = result.score + '%';
+      document.getElementById('scoreCompany').textContent = 'for ' + company;
+
+      // Color code
+      const label = document.getElementById('scoreValue');
+      const circle = document.getElementById('scoreCircle');
+      if (result.score < 50) {
+        label.className = 'font-display text-3xl font-bold text-red-400';
+        circle.setAttribute('stroke', '#f87171');
+      } else if (result.score < 70) {
+        label.className = 'font-display text-3xl font-bold text-csoai.gold';
+        circle.setAttribute('stroke', '#c9a84c');
+      } else {
+        label.className = 'font-display text-3xl font-bold text-green-400';
+        circle.setAttribute('stroke', '#4ade80');
+      }
+
+      // Circle fill
+      const circumference = 264;
+      const offset = circumference - (result.score / 100) * circumference;
+      circle.setAttribute('stroke-dashoffset', offset);
+
+      // Pillars
+      const pillarColors = (s) => s < 50 ? 'text-red-400' : s < 70 ? 'text-csoai.gold' : 'text-green-400';
+      for (let i = 0; i < 5; i++) {
+        const el = document.getElementById('pillar' + (i + 1));
+        el.textContent = result.pillars[i] + '%';
+        el.className = 'text-sm font-semibold ' + pillarColors(result.pillars[i]);
+      }
+
+      // Gaps
+      const gapsList = document.getElementById('gapsList');
+      gapsList.innerHTML = result.gaps.map(g => '<li>• ' + g + '</li>').join('');
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('resultModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const val = document.getElementById('companyInput').value.trim();
+      if (val) showScore(val);
+    });
+
+    document.getElementById('bottomForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const val = document.getElementById('companyInputBottom').value.trim();
+      if (val) showScore(val);
+    });
+
+    // Close modal on backdrop click
+    document.getElementById('resultModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  </script>
+</body>
+</html>

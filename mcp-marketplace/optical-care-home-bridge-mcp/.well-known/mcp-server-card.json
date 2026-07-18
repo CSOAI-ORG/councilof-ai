@@ -1,0 +1,28 @@
+{
+  "name": "optical-care-home-bridge-mcp",
+  "title": "Optical Care Home Bridge Mcp",
+  "description": "Bridge between domiciliary optometry visits + care-home governance. Handles consent capacity (Mental Capacity Act), GOS 6 eligibility, post-visit care plan update sync.",
+  "version": "1.0.2",
+  "homepage": "https://meok.ai",
+  "license": "MIT",
+  "transport": {
+    "type": "stdio"
+  },
+  "tools": [
+    {
+      "name": "mca_capacity_check"
+    },
+    {
+      "name": "gos6_visit_eligibility"
+    },
+    {
+      "name": "post_visit_care_plan_sync"
+    },
+    {
+      "name": "safeguarding_red_flags"
+    },
+    {
+      "name": "registered_optometrist_audit"
+    }
+  ]
+}

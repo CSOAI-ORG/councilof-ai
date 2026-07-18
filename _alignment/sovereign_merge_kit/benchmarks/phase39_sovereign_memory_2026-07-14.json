@@ -1,0 +1,91 @@
+{
+  "name": "SOV33 Sovereign Memory (4-Layer)",
+  "ts_iso": "2026-07-14T05:10:21.251913+00:00",
+  "layers": {
+    "L1_episodic": {
+      "name": "L1 Episodic Memory",
+      "description": "Per-conversation events, raw, time-bounded",
+      "retention_days": 7,
+      "capacity": 10000,
+      "use_case": "recent context, conversation continuity",
+      "sigil_signed": true,
+      "storage": "~/.sovereign/sovereign_memory.jsonl",
+      "current_count": 0
+    },
+    "L2_semantic": {
+      "name": "L2 Semantic Memory",
+      "description": "Consolidated facts, patterns, embeddings",
+      "retention_days": 90,
+      "capacity": 50000,
+      "use_case": "pattern recognition, retrieval, context",
+      "sigil_signed": true,
+      "storage": "~/.sovereign/memory_embeddings.npz",
+      "current_count": 0
+    },
+    "L3_sovereign": {
+      "name": "L3 Sovereign Memory",
+      "description": "Audited facts, charter, care scores, BFT votes (PERMANENT)",
+      "retention_days": null,
+      "capacity": "unlimited",
+      "use_case": "audit trail, BFT records, charter facts, governance",
+      "sigil_signed": true,
+      "storage": "~/.sovereign/sovereign_substrate_chain.jsonl",
+      "current_count": 0
+    },
+    "L4_replay": {
+      "name": "L4 Replay Buffer",
+      "description": "Continual learning \u2014 recent state transitions for training",
+      "retention_days": 30,
+      "capacity": 1000,
+      "use_case": "replay in EWC training, continual learning",
+      "sigil_signed": true,
+      "storage": "~/.sovereign/replay_buffer.jsonl",
+      "current_count": 0
+    }
+  },
+  "lifecycle": {
+    "L1_to_L2": {
+      "description": "After 7 days, episodic entries are consolidated to semantic",
+      "process": "embedding + clustering + summarization",
+      "frequency": "daily"
+    },
+    "L2_to_L3": {
+      "description": "Significant semantic facts promoted to sovereign permanent",
+      "criteria": "high care-score, BFT-voted, charter-relevant",
+      "frequency": "on_significance"
+    },
+    "L3_retention": {
+      "description": "Sovereign entries never deleted (Article 0 bound)",
+      "process": "forever",
+      "note": "unless manually edited with BFT-33 vote + human escalation"
+    },
+    "L4_rotation": {
+      "description": "Replay buffer rotates oldest out (FIFO)",
+      "process": "1000 capacity, oldest evicted",
+      "frequency": "continuous"
+    }
+  },
+  "sovereignty": {
+    "sigil": "Every memory entry Ed25519-signed",
+    "article_0": "No memory deleted without BFT-33 + human escalation",
+    "care_floor": "Memory writes respect care-floor 0.95",
+    "bft_33": "L3 writes require 23/33 quorum",
+    "audit_trail": "Every read/write logged to sovereign chain"
+  },
+  "integrations": {
+    "fast_brain": "Reads L1+L2 for inference context",
+    "sovereign_brain_v2": "Reads L1+L2 for training",
+    "world_model_v2": "Writes L4 for replay",
+    "federation": "Can read from other sovereign substrates (consent)"
+  },
+  "simulation": {
+    "total": 56100,
+    "by_layer": {
+      "L1_episodic": 100,
+      "L2_semantic": 5000,
+      "L3_sovereign": 50000,
+      "L4_replay": 1000
+    },
+    "total_size_mb": 64.6484375
+  }
+}

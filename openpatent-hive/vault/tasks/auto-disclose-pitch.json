@@ -1,0 +1,7 @@
+{
+  "id": "auto-disclose-pitch",
+  "prompt": "Write a 100-word elevator pitch for the openpatent.ai auto-disclose cron daemon: every 6 hours, the hive sweeps a vault directory, finds new files, batch-discloses them via POST /v1/disclosure, hashes them with SHA-3/512, writes a hash-chained audit log entry, optionally signs with OTS. Use DEFONEOS mythic voice. Return ONLY JSON: {pitch: string}.",
+  "max_tokens": 500,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

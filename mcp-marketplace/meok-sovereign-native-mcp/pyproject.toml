@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-native-mcp"
+version = "1.0.0"
+description = "SOV3 Native Runtime MCP — NO Ollama. 5 sovereign tasks (EU AI Act, DORA, JSP 936, IoT, Mamba-2 intuition) run via rule-based + regex + state-space. Native to Python, zero external dependencies."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛰️ Free Satellite Sources — meok-sovereign-satellite-mcp docs</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    background: #020202; color: #f8fafc; min-height: 100vh;
+    display: grid; grid-template-columns: 280px 1fr;
+  }
+  nav {
+    background: rgba(10,20,15,0.7); padding: 20px; height: 100vh;
+    overflow-y: auto; border-right: 1px solid rgba(74,222,128,0.2);
+  }
+  nav h1 { color: #fbbf24; font-size: 1.1rem; margin-bottom: 16px; }
+  nav h2 { color: #4ade80; font-size: 0.75rem; text-transform: uppercase;
+    margin: 16px 0 6px; letter-spacing: 1px; }
+  nav a {
+    display: block; color: #cbd5e1; text-decoration: none;
+    padding: 4px 8px; font-size: 0.85rem; border-radius: 4px;
+  }
+  nav a:hover { background: rgba(74,222,128,0.15); color: #4ade80; }
+  main { padding: 40px; max-width: 900px; }
+  h1 { color: #fbbf24; font-size: 2rem; margin-bottom: 12px; border-bottom: 1px solid rgba(74,222,128,0.2); padding-bottom: 12px; }
+  h2 { color: #4ade80; margin: 30px 0 12px; font-size: 1.4rem; }
+  h3 { color: #c9a84c; margin: 20px 0 10px; font-size: 1.1rem; }
+  p, li { color: #cbd5e1; line-height: 1.7; margin: 8px 0; }
+  pre {
+    background: #000; color: #4ade80; padding: 16px;
+    border-radius: 8px; overflow-x: auto; font-size: 0.85rem;
+    border: 1px solid rgba(74,222,128,0.3); margin: 12px 0;
+  }
+  code { background: rgba(74,222,128,0.1); padding: 2px 6px;
+    border-radius: 3px; color: #4ade80; font-family: 'JetBrains Mono', monospace; }
+  pre code { background: none; padding: 0; }
+  li { margin-left: 24px; }
+  .breadcrumb { color: #94a3b8; font-size: 0.85rem; margin-bottom: 16px; }
+  .breadcrumb a { color: #4ade80; text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <h1>🜏 Sovereign MCP Docs</h1>
+  <h2>Identity</h2><a href="./passport.html">🛂 Ed25519 Agent Identity</a><h2>Safety</h2><a href="./guardrails.html">🛡️ Prompt Injection Defense</a><a href="./worm.html">🐛 Morris-II Defensive Guard</a><h2>Audit</h2><a href="./receipt.html">📜 Hash-Chained Audit Receipts</a><a href="./supply-chain.html">📦 SBOM + SLSA + Bitcoin</a><a href="./immortal.html">∞ Eternal Memory Ledger</a><h2>Governance</h2><a href="./governance.html">⚖️ 5-Element Zero Trust</a><a href="./council.html">🏛️ 12-Around-1 BFT Voting</a><a href="./honour.html">🪖 19 Sovereign Factors</a><h2>Compliance</h2><a href="./eu-ai-act-kit.html">🇪🇺 EU AI Act Survival Kit</a><a href="./defence.html">🛡️ Defensive Doctrine</a><a href="./dora.html">📋 EU DORA 5-Pillar Audit</a><a href="./iso42001.html">📚 ISO/IEC 42001 AIMS</a><h2>Commerce</h2><a href="./x402-payment.html">💎 HTTP 402 Micropayments</a><h2>Visualization</h2><a href="./globe.html">🌍 33-Hive Geo Registry</a><a href="./satellite.html" style="background: rgba(74,222,128,0.25); color: #4ade80; font-weight: 700;">🛰️ Free Satellite Sources</a><h2>Embodiment</h2><a href="./avatar.html">🐉 VRM Embodied Avatar</a><h2>Memory</h2><a href="./memory.html">🧠 Episodic + Graph Memory</a><h2>Lifecycle</h2><a href="./skills.html">⚙️ Skill Lifecycle</a><h2>Physical (iOK Farm)</h2><a href="./iot.html">📡 iOK Farm IoT</a><a href="./pond.html">🐟 Koi Pond Care</a><h2>Intuition</h2><a href="./intuition.html">🔮 16-dim Mamba-2 Hunch</a>
+  <hr style="border-color: rgba(74,222,128,0.2); margin: 20px 0;">
+  <a href="../sovereign-mcps/" style="color: #fbbf24; font-weight: 700;">← All 22 MCPs</a>
+  <a href="../dashboards/" style="color: #4ade80;">📊 5 Dashboards</a>
+  <a href="../whitepapers/" style="color: #4ade80;">📚 5 White Papers</a>
+</nav>
+<main>
+  <div class="breadcrumb"><a href="./">← all 22 sovereign MCPs</a></div>
+  <h1>meok-sovereign-satellite-mcp</h1>
+
+<p>**Sovereign Satellite MCP — free Earth observation.** Sentinel-2 / Sentinel-1 / Landsat 8 / MODIS / Copernicus DEM / OpenStreetMap. All free. All sovereign.</p>
+
+<p>5 tools for sovereign satellite + Earth observation:</p>
+
+</p><p>| Tool | What |</p>
+</p><p>|---|---|</p>
+</p><p>| `sov_sat_query(source, bbox, start_date, end_date, max_cloud)` | Query a free satellite source for an AOI |</p>
+</p><p>| `sov_sat_scenes(aoi_name, source, max_results)` | List available scenes for a named AOI |</p>
+</p><p>| `sov_sat_ingest(source, aoi, destination)` | Ingest a free OS satellite source (signed) |</p>
+</p><p>| `sov_sat_classify(scene_id, classes)` | Classify a satellite tile (water, forest, urban, agriculture) |</p>
+</p><p>| `sov_sat_status()` | The substrate status (what's free) |</p>
+
+<h2>The 6 free sources (no API key required)</h2>
+
+</p><p>| Source | Resolution | License | Bands |</p>
+</p><p>|---|---|---|---|</p>
+</p><p>| **Sentinel-2** (ESA Copernicus) | 10m, 5-day | CC BY-SA 3.0 | RGB + NIR |</p>
+</p><p>| **Sentinel-1 SAR** (ESA Copernicus) | 10m, 6-day | CC BY-SA 3.0 | VV + VH |</p>
+</p><p>| **Landsat 8** (USGS) | 30m, 16-day | Public domain | 11 bands |</p>
+</p><p>| **MODIS** (NASA) | 250m, daily | Public domain | NDVI, EVI, LST |</p>
+</p><p>| **Copernicus DEM** (EEA) | 30m | CC BY 4.0 | Elevation |</p>
+</p><p>| **OpenStreetMap** (global) | Vector | ODbL | Roads, buildings |</p>
+
+<h2>Install</h2>
+<pre><code class="language-bash">
+pip install meok-sovereign-satellite-mcp
+</code></pre>
+
+<h2>Usage</h2>
+<pre><code class="language-python">
+from meok_sovereign_satellite_mcp import sov_sat_query, sov_sat_scenes, sov_sat_ingest, sov_sat_classify, sov_sat_status
+
+# Query Sentinel-2 for Yorkshire farm
+r = sov_sat_query("sentinel-2",
+                   {"n": 54.0, "s": 53.0, "e": -0.5, "w": -1.5},
+                   start_date="2026-06-01", end_date="2026-06-30",
+                   max_cloud=20)
+assert r["resolution_m"] == 10
+assert r["license"].startswith("CC")
+
+# List scenes
+r = sov_sat_scenes("yorkshire-farm", source="sentinel-2", max_results=10)
+assert r["scene_count"] == 5
+
+# Classify
+r = sov_sat_classify("scene-12345")
+assert r["classification"]["forest"] == 0.35
+
+# Status
+r = sov_sat_status()
+assert r["all_free"] is True
+</code></pre>
+
+<h2>License</h2>
+<p>MIT — CSOAI Ltd (UK 16939677)</p>
+
+<p>**The earth is sovereign. The skies are free.**</p>
+
+</main>
+</body>
+</html>

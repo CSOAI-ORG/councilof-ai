@@ -1,0 +1,4435 @@
+{
+  "schema": "https://csoai.org/.well-known/mcp.json",
+  "spec_version": "2025-06-18",
+  "name": "CSOAI MCP Catalog",
+  "description": "Machine-readable catalog of the CSOAI / MEOK AI Labs Model Context Protocol (MCP) compliance tool fleet. Layer 0 trust infrastructure for the agentic economy: EU AI Act, NIST AI RMF, ISO 42001 and cross-framework compliance servers.",
+  "publisher": {
+    "name": "CSOAI LTD",
+    "trading_name": "MEOK AI Labs",
+    "company_number": "16939677",
+    "jurisdiction": "England & Wales",
+    "url": "https://csoai.org",
+    "contact": "nicholas@meok.ai"
+  },
+  "catalog_stats": {
+    "published_mcp_servers": 271,
+    "listed_in_catalog": 348,
+    "registry": "https://pypi.org",
+    "github_org": "https://github.com/CSOAI-ORG",
+    "last_updated": "2026-06-19",
+    "a2a_servers_listed": 28
+  },
+  "gateway": {
+    "url": "https://csoai.org/mcp/csoai-gateway",
+    "transport": "streamable-http",
+    "authentication": {
+      "type": "apiKey",
+      "header": "X-CSOAI-Key",
+      "request_at": "https://csoai.org/comply"
+    }
+  },
+  "agent_card": "https://csoai.org/.well-known/agent.json",
+  "tiers": {
+    "lvp": {
+      "label": "Low-Value Pack",
+      "price_gbp": 9,
+      "billing": "monthly"
+    },
+    "mvp": {
+      "label": "Mid-Value Pack",
+      "price_gbp": 29,
+      "billing": "monthly"
+    },
+    "hvp": {
+      "label": "High-Value Pack",
+      "price_gbp": 79,
+      "billing": "monthly"
+    },
+    "elite": {
+      "label": "Elite / Flagship",
+      "price_gbp": 199,
+      "billing": "monthly"
+    }
+  },
+  "featured_servers": [
+    {
+      "name": "agent-audit-logger-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-audit-logger-mcp",
+      "package": "agent-audit-logger-mcp",
+      "registry": "https://pypi.org/project/agent-audit-logger-mcp/"
+    },
+    {
+      "name": "ai-self-audit-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/ai-self-audit-mcp",
+      "package": "ai-self-audit-mcp",
+      "registry": "https://pypi.org/project/ai-self-audit-mcp/"
+    },
+    {
+      "name": "construction-iso-19650-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/construction-iso-19650-mcp",
+      "package": "construction-iso-19650-mcp",
+      "registry": "https://pypi.org/project/construction-iso-19650-mcp/"
+    },
+    {
+      "name": "cqc-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/cqc-compliance-mcp",
+      "package": "cqc-compliance-mcp",
+      "registry": "https://pypi.org/project/cqc-compliance-mcp/"
+    },
+    {
+      "name": "cra-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/cra-compliance-mcp",
+      "package": "cra-compliance-mcp",
+      "registry": "https://pypi.org/project/cra-compliance-mcp/"
+    },
+    {
+      "name": "csrd-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "government",
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/csrd-compliance-mcp",
+      "package": "csrd-compliance-mcp",
+      "registry": "https://pypi.org/project/csrd-compliance-mcp/"
+    },
+    {
+      "name": "cybersecurity-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/cybersecurity-ai-mcp",
+      "package": "cybersecurity-ai-mcp",
+      "registry": "https://pypi.org/project/cybersecurity-ai-mcp/"
+    },
+    {
+      "name": "document-comparison-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/document-comparison-ai-mcp",
+      "package": "document-comparison-ai-mcp",
+      "registry": "https://pypi.org/project/document-comparison-ai-mcp/"
+    },
+    {
+      "name": "dora-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/dora-compliance-mcp",
+      "package": "dora-compliance-mcp",
+      "registry": "https://pypi.org/project/dora-compliance-mcp/"
+    },
+    {
+      "name": "dora-nis2-crosswalk-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/dora-nis2-crosswalk-mcp",
+      "package": "dora-nis2-crosswalk-mcp",
+      "registry": "https://pypi.org/project/dora-nis2-crosswalk-mcp/"
+    },
+    {
+      "name": "eu-ai-act-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "government",
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/eu-ai-act-compliance-mcp",
+      "package": "eu-ai-act-compliance-mcp",
+      "registry": "https://pypi.org/project/eu-ai-act-compliance-mcp/"
+    },
+    {
+      "name": "fda-samd-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/fda-samd-mcp",
+      "package": "fda-samd-mcp",
+      "registry": "https://pypi.org/project/fda-samd-mcp/"
+    },
+    {
+      "name": "gdpr-compliance-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/gdpr-compliance-ai-mcp",
+      "package": "gdpr-compliance-ai-mcp",
+      "registry": "https://pypi.org/project/gdpr-compliance-ai-mcp/"
+    },
+    {
+      "name": "haulage-uk-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/haulage-uk-compliance-mcp",
+      "package": "haulage-uk-compliance-mcp",
+      "registry": "https://pypi.org/project/haulage-uk-compliance-mcp/"
+    },
+    {
+      "name": "healthcare-ai-governance-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/healthcare-ai-governance-mcp",
+      "package": "healthcare-ai-governance-mcp",
+      "registry": "https://pypi.org/project/healthcare-ai-governance-mcp/"
+    },
+    {
+      "name": "healthcare-fhir-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/healthcare-fhir-mcp",
+      "package": "healthcare-fhir-mcp",
+      "registry": "https://pypi.org/project/healthcare-fhir-mcp/"
+    },
+    {
+      "name": "hipaa-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "healthcare",
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/hipaa-compliance-mcp",
+      "package": "hipaa-compliance-mcp",
+      "registry": "https://pypi.org/project/hipaa-compliance-mcp/"
+    },
+    {
+      "name": "iso-27001-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/iso-27001-ai-mcp",
+      "package": "iso-27001-ai-mcp",
+      "registry": "https://pypi.org/project/iso-27001-ai-mcp/"
+    },
+    {
+      "name": "iso-42001-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/iso-42001-ai-mcp",
+      "package": "iso-42001-ai-mcp",
+      "registry": "https://pypi.org/project/iso-42001-ai-mcp/"
+    },
+    {
+      "name": "iso-42005-impact-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/iso-42005-impact-mcp",
+      "package": "iso-42005-impact-mcp",
+      "registry": "https://pypi.org/project/iso-42005-impact-mcp/"
+    },
+    {
+      "name": "legal-document-ai-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/legal-document-ai-mcp",
+      "package": "legal-document-ai-mcp",
+      "registry": "https://pypi.org/project/legal-document-ai-mcp/"
+    },
+    {
+      "name": "llm-compliance-comparison-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/llm-compliance-comparison-mcp",
+      "package": "llm-compliance-comparison-mcp",
+      "registry": "https://pypi.org/project/llm-compliance-comparison-mcp/"
+    },
+    {
+      "name": "mcp-spec-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/mcp-spec-compliance-mcp",
+      "package": "mcp-spec-compliance-mcp",
+      "registry": "https://pypi.org/project/mcp-spec-compliance-mcp/"
+    },
+    {
+      "name": "meok-cold-chain-pharma-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-cold-chain-pharma-mcp",
+      "package": "meok-cold-chain-pharma-mcp",
+      "registry": "https://pypi.org/project/meok-cold-chain-pharma-mcp/"
+    },
+    {
+      "name": "meok-fmcsa-hours-of-service-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-fmcsa-hours-of-service-mcp",
+      "package": "meok-fmcsa-hours-of-service-mcp",
+      "registry": "https://pypi.org/project/meok-fmcsa-hours-of-service-mcp/"
+    },
+    {
+      "name": "meok-nis2-de-register-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-nis2-de-register-mcp",
+      "package": "meok-nis2-de-register-mcp",
+      "registry": "https://pypi.org/project/meok-nis2-de-register-mcp/"
+    },
+    {
+      "name": "meok-tacho-audit-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-tacho-audit-mcp",
+      "package": "meok-tacho-audit-mcp",
+      "registry": "https://pypi.org/project/meok-tacho-audit-mcp/"
+    },
+    {
+      "name": "nis2-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/nis2-compliance-mcp",
+      "package": "nis2-compliance-mcp",
+      "registry": "https://pypi.org/project/nis2-compliance-mcp/"
+    },
+    {
+      "name": "nist-rmf-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/nist-rmf-ai-mcp",
+      "package": "nist-rmf-ai-mcp",
+      "registry": "https://pypi.org/project/nist-rmf-ai-mcp/"
+    },
+    {
+      "name": "pci-dss-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/pci-dss-mcp",
+      "package": "pci-dss-mcp",
+      "registry": "https://pypi.org/project/pci-dss-mcp/"
+    },
+    {
+      "name": "personal-finance-ai-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "finance"
+      ],
+      "endpoint": "https://csoai.org/mcp/personal-finance-ai-mcp",
+      "package": "personal-finance-ai-mcp",
+      "registry": "https://pypi.org/project/personal-finance-ai-mcp/"
+    },
+    {
+      "name": "security-scanner-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/security-scanner-ai-mcp",
+      "package": "security-scanner-ai-mcp",
+      "registry": "https://pypi.org/project/security-scanner-ai-mcp/"
+    },
+    {
+      "name": "soc2-compliance-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/soc2-compliance-ai-mcp",
+      "package": "soc2-compliance-ai-mcp",
+      "registry": "https://pypi.org/project/soc2-compliance-ai-mcp/"
+    },
+    {
+      "name": "uk-ai-bill-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/uk-ai-bill-compliance-mcp",
+      "package": "uk-ai-bill-compliance-mcp",
+      "registry": "https://pypi.org/project/uk-ai-bill-compliance-mcp/"
+    }
+  ],
+  "servers": [
+    {
+      "name": "a2a-governance-bridge-mcp",
+      "tier": "hvp",
+      "price_gbp": 1499,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/a2a-governance-bridge-mcp",
+      "package": "a2a-governance-bridge-mcp",
+      "registry": "https://pypi.org/project/a2a-governance-bridge-mcp/",
+      "description": "A2A Governance Bridge MCP server. Tools: verify agent compliance, authorize a2a transaction, get trust registry. Built by MEOK AI Labs.",
+      "version": "1.1.12",
+      "stripe_checkout_url": "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U",
+      "stripe_tier_label": "Enterprise \u00a31,499/mo",
+      "github_url": "https://github.com/CSOAI-ORG/a2a-governance-bridge-mcp"
+    },
+    {
+      "name": "accessibility-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/accessibility-ai-mcp",
+      "package": "accessibility-ai-mcp",
+      "registry": "https://pypi.org/project/accessibility-ai-mcp/"
+    },
+    {
+      "name": "accounting-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/accounting-ai-mcp",
+      "package": "accounting-ai-mcp",
+      "registry": "https://pypi.org/project/accounting-ai-mcp/"
+    },
+    {
+      "name": "ad-copy-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ad-copy-ai-mcp",
+      "package": "ad-copy-ai-mcp",
+      "registry": "https://pypi.org/project/ad-copy-ai-mcp/"
+    },
+    {
+      "name": "agent-audit-logger-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-audit-logger-mcp",
+      "package": "agent-audit-logger-mcp",
+      "registry": "https://pypi.org/project/agent-audit-logger-mcp/",
+      "description": "Hash-chained HMAC-signed audit log MCP for A2A (agent-to-agent) calls. Every tool-call, agent-handoff, decision gets a tamper-evident signed",
+      "version": "1.1.8",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-audit-logger-mcp"
+    },
+    {
+      "name": "agent-commerce-payments-mcp",
+      "tier": "lvp",
+      "price_gbp": 29,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-commerce-payments-mcp",
+      "package": "agent-commerce-payments-mcp",
+      "registry": "https://pypi.org/project/agent-commerce-payments-mcp/",
+      "description": "MCP server for agent commerce payments. Features create invoice, process payment, escrow funds. From MEOK AI Labs.",
+      "version": "1.0.11",
+      "stripe_checkout_url": "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S",
+      "stripe_tier_label": "Sovereign \u00a329/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-commerce-payments-mcp"
+    },
+    {
+      "name": "agent-commerce-protocol-mcp",
+      "tier": "lvp",
+      "price_gbp": 29,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-commerce-protocol-mcp",
+      "package": "agent-commerce-protocol-mcp",
+      "registry": "https://pypi.org/project/agent-commerce-protocol-mcp/",
+      "description": "Agent Commerce Protocol MCP \u2014 bridges Stripe ACP + Google AP2 + Coinbase x402 for agent payments inside ChatGPT, AP2 coalition rails, and pa",
+      "version": "1.0.9",
+      "stripe_checkout_url": "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S",
+      "stripe_tier_label": "Sovereign \u00a329/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-commerce-protocol-mcp"
+    },
+    {
+      "name": "agent-content-watermark-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-content-watermark-mcp",
+      "package": "agent-content-watermark-mcp",
+      "registry": "https://pypi.org/project/agent-content-watermark-mcp/",
+      "description": "Agent Content Watermark MCP \u2014 dedicated EU AI Act Article 50(2) GenAI watermarking. Visible + invisible + perceptual layers per the Code of ",
+      "version": "1.1.7",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-content-watermark-mcp"
+    },
+    {
+      "name": "agent-cost-allocator-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-cost-allocator-mcp",
+      "package": "agent-cost-allocator-mcp",
+      "registry": "https://pypi.org/project/agent-cost-allocator-mcp/",
+      "description": "Agent Cost Allocator MCP \u2014 multi-tenant LLM cost attribution for chargeback billing. Companion to agent-token-budget. Splits one agent's spe",
+      "version": "1.0.5",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-cost-allocator-mcp"
+    },
+    {
+      "name": "agent-data-residency-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-data-residency-mcp",
+      "package": "agent-data-residency-mcp",
+      "registry": "https://pypi.org/project/agent-data-residency-mcp/",
+      "description": "Agent data residency + GDPR Chapter V transfer-basis runtime guard. Programmatically answer 'where does this data live?' for agent-to-agent ",
+      "version": "1.0.7",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-data-residency-mcp"
+    },
+    {
+      "name": "agent-delegation-mcp",
+      "tier": "lvp",
+      "price_gbp": 29,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-delegation-mcp",
+      "package": "agent-delegation-mcp",
+      "registry": "https://pypi.org/project/agent-delegation-mcp/",
+      "description": "Agent Delegation MCP server. Tools: create task, delegate task, get task status. Built by MEOK AI Labs.",
+      "version": "1.0.10",
+      "stripe_checkout_url": "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S",
+      "stripe_tier_label": "Sovereign \u00a329/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-delegation-mcp"
+    },
+    {
+      "name": "agent-handoff-certified-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-handoff-certified-mcp",
+      "package": "agent-handoff-certified-mcp",
+      "registry": "https://pypi.org/project/agent-handoff-certified-mcp/",
+      "description": "Verifiable agent-to-agent task handoff with signed provenance chain. Initiating agent signs the offer, accepting agent signs acceptance, cha",
+      "version": "1.0.10",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-handoff-certified-mcp"
+    },
+    {
+      "name": "agent-identity-trust-mcp",
+      "tier": "hvp",
+      "price_gbp": 1499,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-identity-trust-mcp",
+      "package": "agent-identity-trust-mcp",
+      "registry": "https://pypi.org/project/agent-identity-trust-mcp/",
+      "description": "Agent Identity Trust tools for AI agents. Capabilities: register agent identity, issue credential, verify credential. Built by MEOK AI Labs.",
+      "version": "1.0.11",
+      "stripe_checkout_url": "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U",
+      "stripe_tier_label": "Enterprise \u00a31,499/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-identity-trust-mcp"
+    },
+    {
+      "name": "agent-incident-relay-mcp",
+      "tier": "hvp",
+      "price_gbp": 1499,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-incident-relay-mcp",
+      "package": "agent-incident-relay-mcp",
+      "registry": "https://pypi.org/project/agent-incident-relay-mcp/",
+      "description": "Agent Incident Relay MCP \u2014 Article 73 5-clock broadcaster. One incident \u2192 simultaneous signed reports to EU AI Act Art 73, DORA Art 19, NIS2",
+      "version": "1.0.5",
+      "stripe_checkout_url": "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U",
+      "stripe_tier_label": "Enterprise \u00a31,499/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-incident-relay-mcp"
+    },
+    {
+      "name": "agent-incident-reporter-mcp",
+      "tier": "hvp",
+      "price_gbp": 1499,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-incident-reporter-mcp",
+      "package": "agent-incident-reporter-mcp",
+      "registry": "https://pypi.org/project/agent-incident-reporter-mcp/",
+      "description": "Signed, hash-chained, tamper-evident AI incident records (MCP server). EU AI Act Art 73 ready. By MEOK AI Labs / CSOAI.",
+      "version": "1.0.1",
+      "stripe_checkout_url": "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U",
+      "stripe_tier_label": "Enterprise \u00a31,499/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-incident-reporter-mcp"
+    },
+    {
+      "name": "agent-mcp-router-mcp",
+      "tier": "hvp",
+      "price_gbp": 1499,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-mcp-router-mcp",
+      "package": "agent-mcp-router-mcp",
+      "registry": "https://pypi.org/project/agent-mcp-router-mcp/",
+      "description": "Agent MCP Router MCP \u2014 one router for the whole MEOK fleet. Holds 62 MEOK MCPs behind one namespaced endpoint. Install ONE thing, get all of",
+      "version": "1.1.6",
+      "stripe_checkout_url": "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U",
+      "stripe_tier_label": "Enterprise \u00a31,499/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-mcp-router-mcp"
+    },
+    {
+      "name": "agent-negotiation-mcp",
+      "tier": "lvp",
+      "price_gbp": 29,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-negotiation-mcp",
+      "package": "agent-negotiation-mcp",
+      "registry": "https://pypi.org/project/agent-negotiation-mcp/",
+      "description": "AI-powered agent negotiation MCP server for agents. Supports propose deal, evaluate offer, counter offer. By MEOK AI Labs.",
+      "version": "1.0.9",
+      "stripe_checkout_url": "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S",
+      "stripe_tier_label": "Sovereign \u00a329/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-negotiation-mcp"
+    },
+    {
+      "name": "agent-orchestrator-mcp",
+      "tier": "hvp",
+      "price_gbp": 1499,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-orchestrator-mcp",
+      "package": "agent-orchestrator-mcp",
+      "registry": "https://pypi.org/project/agent-orchestrator-mcp/",
+      "description": "MCP server for agent orchestrator. Features create agent, list agents, delegate task. From MEOK AI Labs.",
+      "version": "1.0.10",
+      "stripe_checkout_url": "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U",
+      "stripe_tier_label": "Enterprise \u00a31,499/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-orchestrator-mcp"
+    },
+    {
+      "name": "agent-policy-enforcement-mcp",
+      "tier": "hvp",
+      "price_gbp": 1499,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-policy-enforcement-mcp",
+      "package": "agent-policy-enforcement-mcp",
+      "registry": "https://pypi.org/project/agent-policy-enforcement-mcp/",
+      "description": "Per-agent-pair IAM for A2A. Define policies ('orchestrator may call billing only when amount<1000'), gate every A2A call via evaluate_call. ",
+      "version": "1.0.9",
+      "stripe_checkout_url": "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U",
+      "stripe_tier_label": "Enterprise \u00a31,499/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-policy-enforcement-mcp"
+    },
+    {
+      "name": "agent-prompt-injection-firewall-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-prompt-injection-firewall-mcp",
+      "package": "agent-prompt-injection-firewall-mcp",
+      "registry": "https://pypi.org/project/agent-prompt-injection-firewall-mcp/",
+      "description": "The WAF for agents. Pattern-based + heuristic firewall scans prompts, RAG documents, tool arguments, A2A payloads for OWASP LLM01 prompt inj",
+      "version": "1.0.11",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-prompt-injection-firewall-mcp"
+    },
+    {
+      "name": "agent-rate-limiter-mcp",
+      "tier": "lvp",
+      "price_gbp": 29,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-rate-limiter-mcp",
+      "package": "agent-rate-limiter-mcp",
+      "registry": "https://pypi.org/project/agent-rate-limiter-mcp/",
+      "description": "Fleet-wide shared rate limiter for A2A + multi-MCP deployments. Most MCP servers rate-limit independently \u2014 a hostile agent hitting 10 MCPs ",
+      "version": "1.0.8",
+      "stripe_checkout_url": "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S",
+      "stripe_tier_label": "Sovereign \u00a329/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-rate-limiter-mcp"
+    },
+    {
+      "name": "agent-replay-debugger-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-replay-debugger-mcp",
+      "package": "agent-replay-debugger-mcp",
+      "registry": "https://pypi.org/project/agent-replay-debugger-mcp/",
+      "description": "Agent Replay Debugger MCP \u2014 record every agent step + replay deterministically. Step-debugger for agentic loops. Audit-evidence signed expor",
+      "version": "1.0.5",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-replay-debugger-mcp"
+    },
+    {
+      "name": "agent-token-budget-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-token-budget-mcp",
+      "package": "agent-token-budget-mcp",
+      "registry": "https://pypi.org/project/agent-token-budget-mcp/",
+      "description": "Agent Token Budget MCP \u2014 per-session spend cap with signed budget-exhausted attestations. Twin of bft-progress-council-mcp (spend-axis vs st",
+      "version": "1.1.5",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-token-budget-mcp"
+    },
+    {
+      "name": "agent-x402-paywall-mcp",
+      "tier": "lvp",
+      "price_gbp": 29,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/agent-x402-paywall-mcp",
+      "package": "agent-x402-paywall-mcp",
+      "registry": "https://pypi.org/project/agent-x402-paywall-mcp/",
+      "description": "Agent x402 Paywall MCP \u2014 wraps Coinbase x402 (HTTP 402) so agents pay per-call without Stripe accounts. On-chain settlement via USDC (Base/P",
+      "version": "1.0.9",
+      "stripe_checkout_url": "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S",
+      "stripe_tier_label": "Sovereign \u00a329/mo",
+      "github_url": "https://github.com/CSOAI-ORG/agent-x402-paywall-mcp"
+    },
+    {
+      "name": "agriculture-robotics-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/agriculture-robotics-mcp",
+      "package": "agriculture-robotics-mcp",
+      "registry": "https://pypi.org/project/agriculture-robotics-mcp/"
+    },
+    {
+      "name": "ai-bom-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ai-bom-mcp",
+      "package": "ai-bom-mcp",
+      "registry": "https://pypi.org/project/ai-bom-mcp/"
+    },
+    {
+      "name": "ai-gateway-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ai-gateway-mcp",
+      "package": "ai-gateway-mcp",
+      "registry": "https://pypi.org/project/ai-gateway-mcp/"
+    },
+    {
+      "name": "ai-incident-reporting-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ai-incident-reporting-mcp",
+      "package": "ai-incident-reporting-mcp",
+      "registry": "https://pypi.org/project/ai-incident-reporting-mcp/"
+    },
+    {
+      "name": "ai-ops-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ai-ops-mcp",
+      "package": "ai-ops-mcp",
+      "registry": "https://pypi.org/project/ai-ops-mcp/"
+    },
+    {
+      "name": "ai-reflection-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ai-reflection-mcp",
+      "package": "ai-reflection-mcp",
+      "registry": "https://pypi.org/project/ai-reflection-mcp/"
+    },
+    {
+      "name": "ai-self-audit-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/ai-self-audit-mcp",
+      "package": "ai-self-audit-mcp",
+      "registry": "https://pypi.org/project/ai-self-audit-mcp/"
+    },
+    {
+      "name": "airspace-monitor-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/airspace-monitor-mcp",
+      "package": "airspace-monitor-mcp",
+      "registry": "https://pypi.org/project/airspace-monitor-mcp/"
+    },
+    {
+      "name": "aml-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "finance"
+      ],
+      "endpoint": "https://csoai.org/mcp/aml-ai-mcp",
+      "package": "aml-ai-mcp",
+      "registry": "https://pypi.org/project/aml-ai-mcp/"
+    },
+    {
+      "name": "api-docs-generator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/api-docs-generator-ai-mcp",
+      "package": "api-docs-generator-ai-mcp",
+      "registry": "https://pypi.org/project/api-docs-generator-ai-mcp/"
+    },
+    {
+      "name": "api-tester-ai-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/api-tester-ai-mcp",
+      "package": "api-tester-ai-mcp",
+      "registry": "https://pypi.org/project/api-tester-ai-mcp/"
+    },
+    {
+      "name": "ascii-art-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ascii-art-ai-mcp",
+      "package": "ascii-art-ai-mcp",
+      "registry": "https://pypi.org/project/ascii-art-ai-mcp/"
+    },
+    {
+      "name": "backup-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/backup-ai-mcp",
+      "package": "backup-ai-mcp",
+      "registry": "https://pypi.org/project/backup-ai-mcp/"
+    },
+    {
+      "name": "basel-ai-overlay-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/basel-ai-overlay-mcp",
+      "package": "basel-ai-overlay-mcp",
+      "registry": "https://pypi.org/project/basel-ai-overlay-mcp/"
+    },
+    {
+      "name": "bft-governance-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/bft-governance-mcp",
+      "package": "bft-governance-mcp",
+      "registry": "https://pypi.org/project/bft-governance-mcp/"
+    },
+    {
+      "name": "bft-progress-council-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/bft-progress-council-mcp",
+      "package": "bft-progress-council-mcp",
+      "registry": "https://pypi.org/project/bft-progress-council-mcp/",
+      "description": "BFT Progress Council MCP \u2014 5-voter Byzantine council halts agentic loops when no real progress is happening. Stops tokens bleeding on infini",
+      "version": "1.1.8",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/bft-progress-council-mcp"
+    },
+    {
+      "name": "bias-detection-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/bias-detection-mcp",
+      "package": "bias-detection-mcp",
+      "registry": "https://pypi.org/project/bias-detection-mcp/"
+    },
+    {
+      "name": "blockchain-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/blockchain-ai-mcp",
+      "package": "blockchain-ai-mcp",
+      "registry": "https://pypi.org/project/blockchain-ai-mcp/"
+    },
+    {
+      "name": "blockchain-verification-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/blockchain-verification-mcp",
+      "package": "blockchain-verification-mcp",
+      "registry": "https://pypi.org/project/blockchain-verification-mcp/"
+    },
+    {
+      "name": "budget-planner-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/budget-planner-ai-mcp",
+      "package": "budget-planner-ai-mcp",
+      "registry": "https://pypi.org/project/budget-planner-ai-mcp/"
+    },
+    {
+      "name": "c2pa-watermark-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/c2pa-watermark-mcp",
+      "package": "c2pa-watermark-mcp",
+      "registry": "https://pypi.org/project/c2pa-watermark-mcp/"
+    },
+    {
+      "name": "calendar-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/calendar-ai-mcp",
+      "package": "calendar-ai-mcp",
+      "registry": "https://pypi.org/project/calendar-ai-mcp/"
+    },
+    {
+      "name": "canada-aida-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/canada-aida-ai-mcp",
+      "package": "canada-aida-ai-mcp",
+      "registry": "https://pypi.org/project/canada-aida-ai-mcp/"
+    },
+    {
+      "name": "care-home-cqc-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/care-home-cqc-mcp",
+      "package": "care-home-cqc-mcp",
+      "registry": "https://pypi.org/project/care-home-cqc-mcp/"
+    },
+    {
+      "name": "care-home-scheduling-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/care-home-scheduling-mcp",
+      "package": "care-home-scheduling-mcp",
+      "registry": "https://pypi.org/project/care-home-scheduling-mcp/"
+    },
+    {
+      "name": "care-membrane-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/care-membrane-mcp",
+      "package": "care-membrane-mcp",
+      "registry": "https://pypi.org/project/care-membrane-mcp/"
+    },
+    {
+      "name": "changelog-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/changelog-ai-mcp",
+      "package": "changelog-ai-mcp",
+      "registry": "https://pypi.org/project/changelog-ai-mcp/"
+    },
+    {
+      "name": "chas-elite-prep-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/chas-elite-prep-mcp",
+      "package": "chas-elite-prep-mcp",
+      "registry": "https://pypi.org/project/chas-elite-prep-mcp/"
+    },
+    {
+      "name": "churn-predictor-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/churn-predictor-ai-mcp",
+      "package": "churn-predictor-ai-mcp",
+      "registry": "https://pypi.org/project/churn-predictor-ai-mcp/"
+    },
+    {
+      "name": "ci-cd-generator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ci-cd-generator-ai-mcp",
+      "package": "ci-cd-generator-ai-mcp",
+      "registry": "https://pypi.org/project/ci-cd-generator-ai-mcp/"
+    },
+    {
+      "name": "cisa-kev-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/cisa-kev-mcp",
+      "package": "cisa-kev-mcp",
+      "registry": "https://pypi.org/project/cisa-kev-mcp/"
+    },
+    {
+      "name": "citation-finder-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/citation-finder-ai-mcp",
+      "package": "citation-finder-ai-mcp",
+      "registry": "https://pypi.org/project/citation-finder-ai-mcp/"
+    },
+    {
+      "name": "cli-builder-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/cli-builder-ai-mcp",
+      "package": "cli-builder-ai-mcp",
+      "registry": "https://pypi.org/project/cli-builder-ai-mcp/"
+    },
+    {
+      "name": "clinical-trials-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/clinical-trials-ai-mcp",
+      "package": "clinical-trials-ai-mcp",
+      "registry": "https://pypi.org/project/clinical-trials-ai-mcp/"
+    },
+    {
+      "name": "clipboard-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/clipboard-ai-mcp",
+      "package": "clipboard-ai-mcp",
+      "registry": "https://pypi.org/project/clipboard-ai-mcp/"
+    },
+    {
+      "name": "cobol-bridge-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/cobol-bridge-mcp",
+      "package": "cobol-bridge-mcp",
+      "registry": "https://pypi.org/project/cobol-bridge-mcp/"
+    },
+    {
+      "name": "code-executor-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/code-executor-mcp",
+      "package": "code-executor-mcp",
+      "registry": "https://pypi.org/project/code-executor-mcp/"
+    },
+    {
+      "name": "code-reviewer-ai-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/code-reviewer-ai-mcp",
+      "package": "code-reviewer-ai-mcp",
+      "registry": "https://pypi.org/project/code-reviewer-ai-mcp/"
+    },
+    {
+      "name": "color-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/color-ai-mcp",
+      "package": "color-ai-mcp",
+      "registry": "https://pypi.org/project/color-ai-mcp/"
+    },
+    {
+      "name": "commit-message-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/commit-message-ai-mcp",
+      "package": "commit-message-ai-mcp",
+      "registry": "https://pypi.org/project/commit-message-ai-mcp/"
+    },
+    {
+      "name": "competitor-monitor-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/competitor-monitor-ai-mcp",
+      "package": "competitor-monitor-ai-mcp",
+      "registry": "https://pypi.org/project/competitor-monitor-ai-mcp/"
+    },
+    {
+      "name": "compression-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/compression-ai-mcp",
+      "package": "compression-ai-mcp",
+      "registry": "https://pypi.org/project/compression-ai-mcp/"
+    },
+    {
+      "name": "concrete-pump-cpa-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/concrete-pump-cpa-mcp",
+      "package": "concrete-pump-cpa-mcp",
+      "registry": "https://pypi.org/project/concrete-pump-cpa-mcp/"
+    },
+    {
+      "name": "config-validator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/config-validator-ai-mcp",
+      "package": "config-validator-ai-mcp",
+      "registry": "https://pypi.org/project/config-validator-ai-mcp/"
+    },
+    {
+      "name": "consciousness-engine-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/consciousness-engine-mcp",
+      "package": "consciousness-engine-mcp",
+      "registry": "https://pypi.org/project/consciousness-engine-mcp/"
+    },
+    {
+      "name": "construction-iso-19650-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/construction-iso-19650-mcp",
+      "package": "construction-iso-19650-mcp",
+      "registry": "https://pypi.org/project/construction-iso-19650-mcp/"
+    },
+    {
+      "name": "content-calendar-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "media"
+      ],
+      "endpoint": "https://csoai.org/mcp/content-calendar-ai-mcp",
+      "package": "content-calendar-ai-mcp",
+      "registry": "https://pypi.org/project/content-calendar-ai-mcp/"
+    },
+    {
+      "name": "content-registry-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "media"
+      ],
+      "endpoint": "https://csoai.org/mcp/content-registry-mcp",
+      "package": "content-registry-mcp",
+      "registry": "https://pypi.org/project/content-registry-mcp/"
+    },
+    {
+      "name": "contract-review-ai-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/contract-review-ai-mcp",
+      "package": "contract-review-ai-mcp",
+      "registry": "https://pypi.org/project/contract-review-ai-mcp/"
+    },
+    {
+      "name": "coppa-ferpa-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/coppa-ferpa-mcp",
+      "package": "coppa-ferpa-mcp",
+      "registry": "https://pypi.org/project/coppa-ferpa-mcp/"
+    },
+    {
+      "name": "cqc-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/cqc-compliance-mcp",
+      "package": "cqc-compliance-mcp",
+      "registry": "https://pypi.org/project/cqc-compliance-mcp/"
+    },
+    {
+      "name": "cra-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/cra-compliance-mcp",
+      "package": "cra-compliance-mcp",
+      "registry": "https://pypi.org/project/cra-compliance-mcp/"
+    },
+    {
+      "name": "crane-hire-cpcs-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/crane-hire-cpcs-mcp",
+      "package": "crane-hire-cpcs-mcp",
+      "registry": "https://pypi.org/project/crane-hire-cpcs-mcp/"
+    },
+    {
+      "name": "creativity-engine-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/creativity-engine-mcp",
+      "package": "creativity-engine-mcp",
+      "registry": "https://pypi.org/project/creativity-engine-mcp/"
+    },
+    {
+      "name": "crm-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/crm-ai-mcp",
+      "package": "crm-ai-mcp",
+      "registry": "https://pypi.org/project/crm-ai-mcp/"
+    },
+    {
+      "name": "cron-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/cron-ai-mcp",
+      "package": "cron-ai-mcp",
+      "registry": "https://pypi.org/project/cron-ai-mcp/"
+    },
+    {
+      "name": "crypto-tracker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/crypto-tracker-ai-mcp",
+      "package": "crypto-tracker-ai-mcp",
+      "registry": "https://pypi.org/project/crypto-tracker-ai-mcp/"
+    },
+    {
+      "name": "csoai-governance-crosswalk-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/csoai-governance-crosswalk-mcp",
+      "package": "csoai-governance-crosswalk-mcp",
+      "registry": "https://pypi.org/project/csoai-governance-crosswalk-mcp/"
+    },
+    {
+      "name": "csrd-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "government",
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/csrd-compliance-mcp",
+      "package": "csrd-compliance-mcp",
+      "registry": "https://pypi.org/project/csrd-compliance-mcp/"
+    },
+    {
+      "name": "csv-analytics-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/csv-analytics-mcp",
+      "package": "csv-analytics-mcp",
+      "registry": "https://pypi.org/project/csv-analytics-mcp/"
+    },
+    {
+      "name": "csv-tools-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/csv-tools-ai-mcp",
+      "package": "csv-tools-ai-mcp",
+      "registry": "https://pypi.org/project/csv-tools-ai-mcp/"
+    },
+    {
+      "name": "currency-converter-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/currency-converter-ai-mcp",
+      "package": "currency-converter-ai-mcp",
+      "registry": "https://pypi.org/project/currency-converter-ai-mcp/"
+    },
+    {
+      "name": "customer-support-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/customer-support-ai-mcp",
+      "package": "customer-support-ai-mcp",
+      "registry": "https://pypi.org/project/customer-support-ai-mcp/"
+    },
+    {
+      "name": "cybersecurity-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/cybersecurity-ai-mcp",
+      "package": "cybersecurity-ai-mcp",
+      "registry": "https://pypi.org/project/cybersecurity-ai-mcp/"
+    },
+    {
+      "name": "data-science-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/data-science-ai-mcp",
+      "package": "data-science-ai-mcp",
+      "registry": "https://pypi.org/project/data-science-ai-mcp/"
+    },
+    {
+      "name": "database-universal-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/database-universal-mcp",
+      "package": "database-universal-mcp",
+      "registry": "https://pypi.org/project/database-universal-mcp/"
+    },
+    {
+      "name": "dataprivacy-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/dataprivacy-ai-mcp",
+      "package": "dataprivacy-ai-mcp",
+      "registry": "https://pypi.org/project/dataprivacy-ai-mcp/"
+    },
+    {
+      "name": "date-calculator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/date-calculator-ai-mcp",
+      "package": "date-calculator-ai-mcp",
+      "registry": "https://pypi.org/project/date-calculator-ai-mcp/"
+    },
+    {
+      "name": "deepfake-detector-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/deepfake-detector-mcp",
+      "package": "deepfake-detector-mcp",
+      "registry": "https://pypi.org/project/deepfake-detector-mcp/"
+    },
+    {
+      "name": "dependency-updater-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/dependency-updater-ai-mcp",
+      "package": "dependency-updater-ai-mcp",
+      "registry": "https://pypi.org/project/dependency-updater-ai-mcp/"
+    },
+    {
+      "name": "devops-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/devops-ai-mcp",
+      "package": "devops-ai-mcp",
+      "registry": "https://pypi.org/project/devops-ai-mcp/"
+    },
+    {
+      "name": "diff-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/diff-ai-mcp",
+      "package": "diff-ai-mcp",
+      "registry": "https://pypi.org/project/diff-ai-mcp/"
+    },
+    {
+      "name": "dispense-record-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/dispense-record-mcp",
+      "package": "dispense-record-mcp",
+      "registry": "https://pypi.org/project/dispense-record-mcp/"
+    },
+    {
+      "name": "docker-helper-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/docker-helper-ai-mcp",
+      "package": "docker-helper-ai-mcp",
+      "registry": "https://pypi.org/project/docker-helper-ai-mcp/"
+    },
+    {
+      "name": "dockerfile-generator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/dockerfile-generator-ai-mcp",
+      "package": "dockerfile-generator-ai-mcp",
+      "registry": "https://pypi.org/project/dockerfile-generator-ai-mcp/"
+    },
+    {
+      "name": "document-comparison-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/document-comparison-ai-mcp",
+      "package": "document-comparison-ai-mcp",
+      "registry": "https://pypi.org/project/document-comparison-ai-mcp/"
+    },
+    {
+      "name": "domiciliary-care-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/domiciliary-care-mcp",
+      "package": "domiciliary-care-mcp",
+      "registry": "https://pypi.org/project/domiciliary-care-mcp/"
+    },
+    {
+      "name": "dora-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/dora-compliance-mcp",
+      "package": "dora-compliance-mcp",
+      "registry": "https://pypi.org/project/dora-compliance-mcp/"
+    },
+    {
+      "name": "dora-nis2-crosswalk-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/dora-nis2-crosswalk-mcp",
+      "package": "dora-nis2-crosswalk-mcp",
+      "registry": "https://pypi.org/project/dora-nis2-crosswalk-mcp/"
+    },
+    {
+      "name": "drone-airspace-governance-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/drone-airspace-governance-mcp",
+      "package": "drone-airspace-governance-mcp",
+      "registry": "https://pypi.org/project/drone-airspace-governance-mcp/"
+    },
+    {
+      "name": "ecommerce-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "retail"
+      ],
+      "endpoint": "https://csoai.org/mcp/ecommerce-ai-mcp",
+      "package": "ecommerce-ai-mcp",
+      "registry": "https://pypi.org/project/ecommerce-ai-mcp/"
+    },
+    {
+      "name": "education-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "education"
+      ],
+      "endpoint": "https://csoai.org/mcp/education-ai-mcp",
+      "package": "education-ai-mcp",
+      "registry": "https://pypi.org/project/education-ai-mcp/"
+    },
+    {
+      "name": "email-automation-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/email-automation-mcp",
+      "package": "email-automation-mcp",
+      "registry": "https://pypi.org/project/email-automation-mcp/"
+    },
+    {
+      "name": "email-validator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/email-validator-ai-mcp",
+      "package": "email-validator-ai-mcp",
+      "registry": "https://pypi.org/project/email-validator-ai-mcp/"
+    },
+    {
+      "name": "emoji-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/emoji-ai-mcp",
+      "package": "emoji-ai-mcp",
+      "registry": "https://pypi.org/project/emoji-ai-mcp/"
+    },
+    {
+      "name": "encoder-ai-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/encoder-ai-mcp",
+      "package": "encoder-ai-mcp",
+      "registry": "https://pypi.org/project/encoder-ai-mcp/"
+    },
+    {
+      "name": "env-manager-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/env-manager-ai-mcp",
+      "package": "env-manager-ai-mcp",
+      "registry": "https://pypi.org/project/env-manager-ai-mcp/"
+    },
+    {
+      "name": "eu-ai-act-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "government",
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/eu-ai-act-compliance-mcp",
+      "package": "eu-ai-act-compliance-mcp",
+      "registry": "https://pypi.org/project/eu-ai-act-compliance-mcp/"
+    },
+    {
+      "name": "eudi-wallet-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/eudi-wallet-mcp",
+      "package": "eudi-wallet-mcp",
+      "registry": "https://pypi.org/project/eudi-wallet-mcp/"
+    },
+    {
+      "name": "event-planning-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/event-planning-ai-mcp",
+      "package": "event-planning-ai-mcp",
+      "registry": "https://pypi.org/project/event-planning-ai-mcp/"
+    },
+    {
+      "name": "expense-tracker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/expense-tracker-ai-mcp",
+      "package": "expense-tracker-ai-mcp",
+      "registry": "https://pypi.org/project/expense-tracker-ai-mcp/"
+    },
+    {
+      "name": "explainability-report-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/explainability-report-mcp",
+      "package": "explainability-report-mcp",
+      "registry": "https://pypi.org/project/explainability-report-mcp/"
+    },
+    {
+      "name": "faker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/faker-ai-mcp",
+      "package": "faker-ai-mcp",
+      "registry": "https://pypi.org/project/faker-ai-mcp/"
+    },
+    {
+      "name": "fda-samd-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/fda-samd-mcp",
+      "package": "fda-samd-mcp",
+      "registry": "https://pypi.org/project/fda-samd-mcp/"
+    },
+    {
+      "name": "feedback-analyzer-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/feedback-analyzer-ai-mcp",
+      "package": "feedback-analyzer-ai-mcp",
+      "registry": "https://pypi.org/project/feedback-analyzer-ai-mcp/"
+    },
+    {
+      "name": "file-organizer-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/file-organizer-ai-mcp",
+      "package": "file-organizer-ai-mcp",
+      "registry": "https://pypi.org/project/file-organizer-ai-mcp/"
+    },
+    {
+      "name": "firmware-attestation-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/firmware-attestation-mcp",
+      "package": "firmware-attestation-mcp",
+      "registry": "https://pypi.org/project/firmware-attestation-mcp/"
+    },
+    {
+      "name": "fishkeeper-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/fishkeeper-ai-mcp",
+      "package": "fishkeeper-ai-mcp",
+      "registry": "https://pypi.org/project/fishkeeper-ai-mcp/"
+    },
+    {
+      "name": "fitness-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/fitness-ai-mcp",
+      "package": "fitness-ai-mcp",
+      "registry": "https://pypi.org/project/fitness-ai-mcp/"
+    },
+    {
+      "name": "flashcard-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/flashcard-ai-mcp",
+      "package": "flashcard-ai-mcp",
+      "registry": "https://pypi.org/project/flashcard-ai-mcp/"
+    },
+    {
+      "name": "flight-logger-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/flight-logger-mcp",
+      "package": "flight-logger-mcp",
+      "registry": "https://pypi.org/project/flight-logger-mcp/"
+    },
+    {
+      "name": "focus-timer-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/focus-timer-ai-mcp",
+      "package": "focus-timer-ai-mcp",
+      "registry": "https://pypi.org/project/focus-timer-ai-mcp/"
+    },
+    {
+      "name": "fsa-food-safety-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/fsa-food-safety-mcp",
+      "package": "fsa-food-safety-mcp",
+      "registry": "https://pypi.org/project/fsa-food-safety-mcp/"
+    },
+    {
+      "name": "gardening-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/gardening-ai-mcp",
+      "package": "gardening-ai-mcp",
+      "registry": "https://pypi.org/project/gardening-ai-mcp/"
+    },
+    {
+      "name": "gdpr-compliance-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/gdpr-compliance-ai-mcp",
+      "package": "gdpr-compliance-ai-mcp",
+      "registry": "https://pypi.org/project/gdpr-compliance-ai-mcp/"
+    },
+    {
+      "name": "geolocation-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/geolocation-ai-mcp",
+      "package": "geolocation-ai-mcp",
+      "registry": "https://pypi.org/project/geolocation-ai-mcp/"
+    },
+    {
+      "name": "git-helper-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/git-helper-ai-mcp",
+      "package": "git-helper-ai-mcp",
+      "registry": "https://pypi.org/project/git-helper-ai-mcp/"
+    },
+    {
+      "name": "gods-eye-geospatial-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/gods-eye-geospatial-mcp",
+      "package": "gods-eye-geospatial-mcp",
+      "registry": "https://pypi.org/project/gods-eye-geospatial-mcp/"
+    },
+    {
+      "name": "gos-claim-validator-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/gos-claim-validator-mcp",
+      "package": "gos-claim-validator-mcp",
+      "registry": "https://pypi.org/project/gos-claim-validator-mcp/"
+    },
+    {
+      "name": "grammar-fix-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/grammar-fix-ai-mcp",
+      "package": "grammar-fix-ai-mcp",
+      "registry": "https://pypi.org/project/grammar-fix-ai-mcp/"
+    },
+    {
+      "name": "habit-tracker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/habit-tracker-ai-mcp",
+      "package": "habit-tracker-ai-mcp",
+      "registry": "https://pypi.org/project/habit-tracker-ai-mcp/"
+    },
+    {
+      "name": "hash-utils-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/hash-utils-ai-mcp",
+      "package": "hash-utils-ai-mcp",
+      "registry": "https://pypi.org/project/hash-utils-ai-mcp/"
+    },
+    {
+      "name": "haulage-uk-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/haulage-uk-compliance-mcp",
+      "package": "haulage-uk-compliance-mcp",
+      "registry": "https://pypi.org/project/haulage-uk-compliance-mcp/"
+    },
+    {
+      "name": "health-check-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/health-check-ai-mcp",
+      "package": "health-check-ai-mcp",
+      "registry": "https://pypi.org/project/health-check-ai-mcp/"
+    },
+    {
+      "name": "healthcare-ai-governance-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/healthcare-ai-governance-mcp",
+      "package": "healthcare-ai-governance-mcp",
+      "registry": "https://pypi.org/project/healthcare-ai-governance-mcp/"
+    },
+    {
+      "name": "healthcare-fhir-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/healthcare-fhir-mcp",
+      "package": "healthcare-fhir-mcp",
+      "registry": "https://pypi.org/project/healthcare-fhir-mcp/"
+    },
+    {
+      "name": "hipaa-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "healthcare",
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/hipaa-compliance-mcp",
+      "package": "hipaa-compliance-mcp",
+      "registry": "https://pypi.org/project/hipaa-compliance-mcp/"
+    },
+    {
+      "name": "hr-management-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/hr-management-ai-mcp",
+      "package": "hr-management-ai-mcp",
+      "registry": "https://pypi.org/project/hr-management-ai-mcp/"
+    },
+    {
+      "name": "html-parser-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/html-parser-ai-mcp",
+      "package": "html-parser-ai-mcp",
+      "registry": "https://pypi.org/project/html-parser-ai-mcp/"
+    },
+    {
+      "name": "hydration-reminder-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/hydration-reminder-ai-mcp",
+      "package": "hydration-reminder-ai-mcp",
+      "registry": "https://pypi.org/project/hydration-reminder-ai-mcp/"
+    },
+    {
+      "name": "icon-generator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "government"
+      ],
+      "endpoint": "https://csoai.org/mcp/icon-generator-ai-mcp",
+      "package": "icon-generator-ai-mcp",
+      "registry": "https://pypi.org/project/icon-generator-ai-mcp/"
+    },
+    {
+      "name": "image-metadata-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/image-metadata-ai-mcp",
+      "package": "image-metadata-ai-mcp",
+      "registry": "https://pypi.org/project/image-metadata-ai-mcp/"
+    },
+    {
+      "name": "insurance-verification-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "insurance"
+      ],
+      "endpoint": "https://csoai.org/mcp/insurance-verification-mcp",
+      "package": "insurance-verification-mcp",
+      "registry": "https://pypi.org/project/insurance-verification-mcp/"
+    },
+    {
+      "name": "inventory-management-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "retail"
+      ],
+      "endpoint": "https://csoai.org/mcp/inventory-management-ai-mcp",
+      "package": "inventory-management-ai-mcp",
+      "registry": "https://pypi.org/project/inventory-management-ai-mcp/"
+    },
+    {
+      "name": "invoice-generator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/invoice-generator-ai-mcp",
+      "package": "invoice-generator-ai-mcp",
+      "registry": "https://pypi.org/project/invoice-generator-ai-mcp/"
+    },
+    {
+      "name": "ip-network-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/ip-network-ai-mcp",
+      "package": "ip-network-ai-mcp",
+      "registry": "https://pypi.org/project/ip-network-ai-mcp/"
+    },
+    {
+      "name": "iso-27001-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/iso-27001-ai-mcp",
+      "package": "iso-27001-ai-mcp",
+      "registry": "https://pypi.org/project/iso-27001-ai-mcp/"
+    },
+    {
+      "name": "iso-42001-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/iso-42001-ai-mcp",
+      "package": "iso-42001-ai-mcp",
+      "registry": "https://pypi.org/project/iso-42001-ai-mcp/"
+    },
+    {
+      "name": "iso-42005-impact-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/iso-42005-impact-mcp",
+      "package": "iso-42005-impact-mcp",
+      "registry": "https://pypi.org/project/iso-42005-impact-mcp/"
+    },
+    {
+      "name": "job-description-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/job-description-ai-mcp",
+      "package": "job-description-ai-mcp",
+      "registry": "https://pypi.org/project/job-description-ai-mcp/"
+    },
+    {
+      "name": "json-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/json-ai-mcp",
+      "package": "json-ai-mcp",
+      "registry": "https://pypi.org/project/json-ai-mcp/"
+    },
+    {
+      "name": "jwt-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/jwt-ai-mcp",
+      "package": "jwt-ai-mcp",
+      "registry": "https://pypi.org/project/jwt-ai-mcp/"
+    },
+    {
+      "name": "keystone-catalogue-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/keystone-catalogue-mcp",
+      "package": "keystone-catalogue-mcp",
+      "registry": "https://pypi.org/project/keystone-catalogue-mcp/"
+    },
+    {
+      "name": "keystone-verify-proxy-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/keystone-verify-proxy-mcp",
+      "package": "keystone-verify-proxy-mcp",
+      "registry": "https://pypi.org/project/keystone-verify-proxy-mcp/"
+    },
+    {
+      "name": "keyword-extractor-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/keyword-extractor-ai-mcp",
+      "package": "keyword-extractor-ai-mcp",
+      "registry": "https://pypi.org/project/keyword-extractor-ai-mcp/"
+    },
+    {
+      "name": "korea-ai-basic-act-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/korea-ai-basic-act-mcp",
+      "package": "korea-ai-basic-act-mcp",
+      "registry": "https://pypi.org/project/korea-ai-basic-act-mcp/"
+    },
+    {
+      "name": "landlaw-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/landlaw-ai-mcp",
+      "package": "landlaw-ai-mcp",
+      "registry": "https://pypi.org/project/landlaw-ai-mcp/"
+    },
+    {
+      "name": "lead-scoring-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/lead-scoring-ai-mcp",
+      "package": "lead-scoring-ai-mcp",
+      "registry": "https://pypi.org/project/lead-scoring-ai-mcp/"
+    },
+    {
+      "name": "legal-document-ai-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/legal-document-ai-mcp",
+      "package": "legal-document-ai-mcp",
+      "registry": "https://pypi.org/project/legal-document-ai-mcp/"
+    },
+    {
+      "name": "license-checker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/license-checker-ai-mcp",
+      "package": "license-checker-ai-mcp",
+      "registry": "https://pypi.org/project/license-checker-ai-mcp/"
+    },
+    {
+      "name": "linkedin-outreach-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/linkedin-outreach-mcp",
+      "package": "linkedin-outreach-mcp",
+      "registry": "https://pypi.org/project/linkedin-outreach-mcp/"
+    },
+    {
+      "name": "llm-compliance-comparison-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/llm-compliance-comparison-mcp",
+      "package": "llm-compliance-comparison-mcp",
+      "registry": "https://pypi.org/project/llm-compliance-comparison-mcp/"
+    },
+    {
+      "name": "logistics-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "manufacturing",
+        "transportation"
+      ],
+      "endpoint": "https://csoai.org/mcp/logistics-ai-mcp",
+      "package": "logistics-ai-mcp",
+      "registry": "https://pypi.org/project/logistics-ai-mcp/"
+    },
+    {
+      "name": "lorem-ipsum-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/lorem-ipsum-ai-mcp",
+      "package": "lorem-ipsum-ai-mcp",
+      "registry": "https://pypi.org/project/lorem-ipsum-ai-mcp/"
+    },
+    {
+      "name": "markdown-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/markdown-ai-mcp",
+      "package": "markdown-ai-mcp",
+      "registry": "https://pypi.org/project/markdown-ai-mcp/"
+    },
+    {
+      "name": "marketing-analytics-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/marketing-analytics-ai-mcp",
+      "package": "marketing-analytics-ai-mcp",
+      "registry": "https://pypi.org/project/marketing-analytics-ai-mcp/"
+    },
+    {
+      "name": "math-solver-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/math-solver-ai-mcp",
+      "package": "math-solver-ai-mcp",
+      "registry": "https://pypi.org/project/math-solver-ai-mcp/"
+    },
+    {
+      "name": "mcp-scorecard-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/mcp-scorecard-mcp",
+      "package": "mcp-scorecard-mcp",
+      "registry": "https://pypi.org/project/mcp-scorecard-mcp/"
+    },
+    {
+      "name": "mcp-spec-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/mcp-spec-compliance-mcp",
+      "package": "mcp-spec-compliance-mcp",
+      "registry": "https://pypi.org/project/mcp-spec-compliance-mcp/"
+    },
+    {
+      "name": "mdr-medical-device-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/mdr-medical-device-mcp",
+      "package": "mdr-medical-device-mcp",
+      "registry": "https://pypi.org/project/mdr-medical-device-mcp/"
+    },
+    {
+      "name": "meal-planner-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meal-planner-ai-mcp",
+      "package": "meal-planner-ai-mcp",
+      "registry": "https://pypi.org/project/meal-planner-ai-mcp/"
+    },
+    {
+      "name": "meditation-guide-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meditation-guide-ai-mcp",
+      "package": "meditation-guide-ai-mcp",
+      "registry": "https://pypi.org/project/meditation-guide-ai-mcp/"
+    },
+    {
+      "name": "meeting-summarizer-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meeting-summarizer-ai-mcp",
+      "package": "meeting-summarizer-ai-mcp",
+      "registry": "https://pypi.org/project/meeting-summarizer-ai-mcp/"
+    },
+    {
+      "name": "memory-search-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/memory-search-mcp",
+      "package": "memory-search-mcp",
+      "registry": "https://pypi.org/project/memory-search-mcp/"
+    },
+    {
+      "name": "meok-aaif-agent-card-mcp",
+      "tier": "hvp",
+      "price_gbp": 1499,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-aaif-agent-card-mcp",
+      "package": "meok-aaif-agent-card-mcp",
+      "registry": "https://pypi.org/project/meok-aaif-agent-card-mcp/",
+      "description": "MEOK AAIF Agent Card MCP \u2014 Linux Foundation AAIF agent identity bridge. Issues + verifies + publishes /.well-known/agent-card. Bridges A2A a",
+      "version": "1.0.3",
+      "stripe_checkout_url": "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U",
+      "stripe_tier_label": "Enterprise \u00a31,499/mo",
+      "github_url": "https://github.com/CSOAI-ORG/meok-aaif-agent-card-mcp"
+    },
+    {
+      "name": "meok-abci-bridge-mcp",
+      "tier": "lvp",
+      "price_gbp": 29,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-abci-bridge-mcp",
+      "package": "meok-abci-bridge-mcp",
+      "registry": "https://pypi.org/project/meok-abci-bridge-mcp/",
+      "description": "MEOK ABCI Bridge MCP \u2014 read-only Tendermint / Cosmos blockchain query for agents. Built-in registry of 10 mainnets (Cosmos Hub, Osmosis, Cel",
+      "version": "1.0.2",
+      "stripe_checkout_url": "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S",
+      "stripe_tier_label": "Sovereign \u00a329/mo",
+      "github_url": "https://github.com/CSOAI-ORG/meok-abci-bridge-mcp"
+    },
+    {
+      "name": "meok-agents-md-lint-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-agents-md-lint-mcp",
+      "package": "meok-agents-md-lint-mcp",
+      "registry": "https://pypi.org/project/meok-agents-md-lint-mcp/"
+    },
+    {
+      "name": "meok-ai-treaty-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-ai-treaty-mcp",
+      "package": "meok-ai-treaty-mcp",
+      "registry": "https://pypi.org/project/meok-ai-treaty-mcp/"
+    },
+    {
+      "name": "meok-allmi-hiab-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-allmi-hiab-mcp",
+      "package": "meok-allmi-hiab-mcp",
+      "registry": "https://pypi.org/project/meok-allmi-hiab-mcp/"
+    },
+    {
+      "name": "meok-ap2-mandate-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-ap2-mandate-mcp",
+      "package": "meok-ap2-mandate-mcp",
+      "registry": "https://pypi.org/project/meok-ap2-mandate-mcp/",
+      "description": "MEOK Google AP2 Mandate MCP \u2014 issue + verify + revoke signed user-side spend authorisations for agentic commerce. PSD2 SCA crosswalk + MiCA ",
+      "version": "1.0.2",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/meok-ap2-mandate-mcp"
+    },
+    {
+      "name": "meok-aquaponics-monitor-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-aquaponics-monitor-mcp",
+      "package": "meok-aquaponics-monitor-mcp",
+      "registry": "https://pypi.org/project/meok-aquaponics-monitor-mcp/"
+    },
+    {
+      "name": "meok-article-50-kit-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-article-50-kit-mcp",
+      "package": "meok-article-50-kit-mcp",
+      "registry": "https://pypi.org/project/meok-article-50-kit-mcp/"
+    },
+    {
+      "name": "meok-asc-rspca-crosswalk-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-asc-rspca-crosswalk-mcp",
+      "package": "meok-asc-rspca-crosswalk-mcp",
+      "registry": "https://pypi.org/project/meok-asc-rspca-crosswalk-mcp/"
+    },
+    {
+      "name": "meok-bs7121-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-bs7121-mcp",
+      "package": "meok-bs7121-mcp",
+      "registry": "https://pypi.org/project/meok-bs7121-mcp/"
+    },
+    {
+      "name": "meok-c2pa-durable-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-c2pa-durable-mcp",
+      "package": "meok-c2pa-durable-mcp",
+      "registry": "https://pypi.org/project/meok-c2pa-durable-mcp/"
+    },
+    {
+      "name": "meok-c2pa-watermark-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-c2pa-watermark-mcp",
+      "package": "meok-c2pa-watermark-mcp",
+      "registry": "https://pypi.org/project/meok-c2pa-watermark-mcp/"
+    },
+    {
+      "name": "meok-coinbase-x402-receipt-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-coinbase-x402-receipt-mcp",
+      "package": "meok-coinbase-x402-receipt-mcp",
+      "registry": "https://pypi.org/project/meok-coinbase-x402-receipt-mcp/",
+      "description": "MEOK Coinbase x402 Receipt MCP \u2014 signed settlement receipts for agentic payments. Base/Polygon/Solana/Lightning/Arbitrum/Optimism. MiCA Arti",
+      "version": "1.0.2",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/meok-coinbase-x402-receipt-mcp"
+    },
+    {
+      "name": "meok-cold-chain-pharma-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-cold-chain-pharma-mcp",
+      "package": "meok-cold-chain-pharma-mcp",
+      "registry": "https://pypi.org/project/meok-cold-chain-pharma-mcp/"
+    },
+    {
+      "name": "meok-cpa-contract-lift-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-cpa-contract-lift-mcp",
+      "package": "meok-cpa-contract-lift-mcp",
+      "registry": "https://pypi.org/project/meok-cpa-contract-lift-mcp/"
+    },
+    {
+      "name": "meok-cra-annex-iv-classifier-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-cra-annex-iv-classifier-mcp",
+      "package": "meok-cra-annex-iv-classifier-mcp",
+      "registry": "https://pypi.org/project/meok-cra-annex-iv-classifier-mcp/"
+    },
+    {
+      "name": "meok-cra-art14-reporter-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-cra-art14-reporter-mcp",
+      "package": "meok-cra-art14-reporter-mcp",
+      "registry": "https://pypi.org/project/meok-cra-art14-reporter-mcp/"
+    },
+    {
+      "name": "meok-credential-manager-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-credential-manager-mcp",
+      "package": "meok-credential-manager-mcp",
+      "registry": "https://pypi.org/project/meok-credential-manager-mcp/"
+    },
+    {
+      "name": "meok-dpia-edpb-template-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-dpia-edpb-template-mcp",
+      "package": "meok-dpia-edpb-template-mcp",
+      "registry": "https://pypi.org/project/meok-dpia-edpb-template-mcp/"
+    },
+    {
+      "name": "meok-drcf-agent-crosswalk-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-drcf-agent-crosswalk-mcp",
+      "package": "meok-drcf-agent-crosswalk-mcp",
+      "registry": "https://pypi.org/project/meok-drcf-agent-crosswalk-mcp/"
+    },
+    {
+      "name": "meok-dvsa-olicence-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-dvsa-olicence-mcp",
+      "package": "meok-dvsa-olicence-mcp",
+      "registry": "https://pypi.org/project/meok-dvsa-olicence-mcp/"
+    },
+    {
+      "name": "meok-eu-ai-act-2-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "government"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-eu-ai-act-2-mcp",
+      "package": "meok-eu-ai-act-2-mcp",
+      "registry": "https://pypi.org/project/meok-eu-ai-act-2-mcp/"
+    },
+    {
+      "name": "meok-eu-ai-act-art-13-ifu-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "government"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-eu-ai-act-art-13-ifu-mcp",
+      "package": "meok-eu-ai-act-art-13-ifu-mcp",
+      "registry": "https://pypi.org/project/meok-eu-ai-act-art-13-ifu-mcp/"
+    },
+    {
+      "name": "meok-eu-ai-act-art-26-fria-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "government"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-eu-ai-act-art-26-fria-mcp",
+      "package": "meok-eu-ai-act-art-26-fria-mcp",
+      "registry": "https://pypi.org/project/meok-eu-ai-act-art-26-fria-mcp/"
+    },
+    {
+      "name": "meok-eu-aia-art-9-rms-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-eu-aia-art-9-rms-mcp",
+      "package": "meok-eu-aia-art-9-rms-mcp",
+      "registry": "https://pypi.org/project/meok-eu-aia-art-9-rms-mcp/"
+    },
+    {
+      "name": "meok-eu-aigc-icon-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "government"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-eu-aigc-icon-mcp",
+      "package": "meok-eu-aigc-icon-mcp",
+      "registry": "https://pypi.org/project/meok-eu-aigc-icon-mcp/"
+    },
+    {
+      "name": "meok-eu-mobility-package-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "transportation"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-eu-mobility-package-mcp",
+      "package": "meok-eu-mobility-package-mcp",
+      "registry": "https://pypi.org/project/meok-eu-mobility-package-mcp/"
+    },
+    {
+      "name": "meok-eu-platform-worker-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-eu-platform-worker-mcp",
+      "package": "meok-eu-platform-worker-mcp",
+      "registry": "https://pypi.org/project/meok-eu-platform-worker-mcp/"
+    },
+    {
+      "name": "meok-ev-recall-transport-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-ev-recall-transport-mcp",
+      "package": "meok-ev-recall-transport-mcp",
+      "registry": "https://pypi.org/project/meok-ev-recall-transport-mcp/"
+    },
+    {
+      "name": "meok-fmcsa-hours-of-service-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-fmcsa-hours-of-service-mcp",
+      "package": "meok-fmcsa-hours-of-service-mcp",
+      "registry": "https://pypi.org/project/meok-fmcsa-hours-of-service-mcp/"
+    },
+    {
+      "name": "meok-fors-clocs-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-fors-clocs-mcp",
+      "package": "meok-fors-clocs-mcp",
+      "registry": "https://pypi.org/project/meok-fors-clocs-mcp/"
+    },
+    {
+      "name": "meok-gaming-eve-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-gaming-eve-mcp",
+      "package": "meok-gaming-eve-mcp",
+      "registry": "https://pypi.org/project/meok-gaming-eve-mcp/"
+    },
+    {
+      "name": "meok-gaming-ffxiv-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-gaming-ffxiv-mcp",
+      "package": "meok-gaming-ffxiv-mcp",
+      "registry": "https://pypi.org/project/meok-gaming-ffxiv-mcp/"
+    },
+    {
+      "name": "meok-gaming-minecraft-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-gaming-minecraft-mcp",
+      "package": "meok-gaming-minecraft-mcp",
+      "registry": "https://pypi.org/project/meok-gaming-minecraft-mcp/"
+    },
+    {
+      "name": "meok-gaming-osrs-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-gaming-osrs-mcp",
+      "package": "meok-gaming-osrs-mcp",
+      "registry": "https://pypi.org/project/meok-gaming-osrs-mcp/"
+    },
+    {
+      "name": "meok-gaming-wow-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-gaming-wow-mcp",
+      "package": "meok-gaming-wow-mcp",
+      "registry": "https://pypi.org/project/meok-gaming-wow-mcp/"
+    },
+    {
+      "name": "meok-governance-engine-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-governance-engine-mcp",
+      "package": "meok-governance-engine-mcp",
+      "registry": "https://pypi.org/project/meok-governance-engine-mcp/"
+    },
+    {
+      "name": "meok-haulage-governance-bridge-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-haulage-governance-bridge-mcp",
+      "package": "meok-haulage-governance-bridge-mcp",
+      "registry": "https://pypi.org/project/meok-haulage-governance-bridge-mcp/"
+    },
+    {
+      "name": "meok-iata-dgr-air-cargo-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-iata-dgr-air-cargo-mcp",
+      "package": "meok-iata-dgr-air-cargo-mcp",
+      "registry": "https://pypi.org/project/meok-iata-dgr-air-cargo-mcp/"
+    },
+    {
+      "name": "meok-imo-marpol-marine-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-imo-marpol-marine-mcp",
+      "package": "meok-imo-marpol-marine-mcp",
+      "registry": "https://pypi.org/project/meok-imo-marpol-marine-mcp/"
+    },
+    {
+      "name": "meok-iru-tir-international-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-iru-tir-international-mcp",
+      "package": "meok-iru-tir-international-mcp",
+      "registry": "https://pypi.org/project/meok-iru-tir-international-mcp/"
+    },
+    {
+      "name": "meok-koikeeper-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-koikeeper-ai-mcp",
+      "package": "meok-koikeeper-ai-mcp",
+      "registry": "https://pypi.org/project/meok-koikeeper-ai-mcp/"
+    },
+    {
+      "name": "meok-laia-aquatic-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-laia-aquatic-mcp",
+      "package": "meok-laia-aquatic-mcp",
+      "registry": "https://pypi.org/project/meok-laia-aquatic-mcp/"
+    },
+    {
+      "name": "meok-law-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-law-mcp",
+      "package": "meok-law-mcp",
+      "registry": "https://pypi.org/project/meok-law-mcp/"
+    },
+    {
+      "name": "meok-libp2p-agent-mesh-mcp",
+      "tier": "lvp",
+      "price_gbp": 29,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-libp2p-agent-mesh-mcp",
+      "package": "meok-libp2p-agent-mesh-mcp",
+      "registry": "https://pypi.org/project/meok-libp2p-agent-mesh-mcp/",
+      "description": "MEOK libp2p Agent Mesh MCP \u2014 peer-to-peer agent discovery + addressing. PeerID + multiaddr + signed Agent Records + GossipSub topic derivati",
+      "version": "1.0.1",
+      "stripe_checkout_url": "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S",
+      "stripe_tier_label": "Sovereign \u00a329/mo",
+      "github_url": "https://github.com/CSOAI-ORG/meok-libp2p-agent-mesh-mcp"
+    },
+    {
+      "name": "meok-livestock-welfare-transport-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-livestock-welfare-transport-mcp",
+      "package": "meok-livestock-welfare-transport-mcp",
+      "registry": "https://pypi.org/project/meok-livestock-welfare-transport-mcp/"
+    },
+    {
+      "name": "meok-mcp-cardgen-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-mcp-cardgen-mcp",
+      "package": "meok-mcp-cardgen-mcp",
+      "registry": "https://pypi.org/project/meok-mcp-cardgen-mcp/"
+    },
+    {
+      "name": "meok-mcp-hardening-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-mcp-hardening-mcp",
+      "package": "meok-mcp-hardening-mcp",
+      "registry": "https://pypi.org/project/meok-mcp-hardening-mcp/"
+    },
+    {
+      "name": "meok-mcp-injection-scan-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-mcp-injection-scan-mcp",
+      "package": "meok-mcp-injection-scan-mcp",
+      "registry": "https://pypi.org/project/meok-mcp-injection-scan-mcp/"
+    },
+    {
+      "name": "meok-mcp-test-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-mcp-test-mcp",
+      "package": "meok-mcp-test-mcp",
+      "registry": "https://pypi.org/project/meok-mcp-test-mcp/"
+    },
+    {
+      "name": "meok-nhvr-australia-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-nhvr-australia-mcp",
+      "package": "meok-nhvr-australia-mcp",
+      "registry": "https://pypi.org/project/meok-nhvr-australia-mcp/"
+    },
+    {
+      "name": "meok-nis2-de-register-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-nis2-de-register-mcp",
+      "package": "meok-nis2-de-register-mcp",
+      "registry": "https://pypi.org/project/meok-nis2-de-register-mcp/"
+    },
+    {
+      "name": "meok-omnibus-tracker-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-omnibus-tracker-mcp",
+      "package": "meok-omnibus-tracker-mcp",
+      "registry": "https://pypi.org/project/meok-omnibus-tracker-mcp/"
+    },
+    {
+      "name": "meok-rail-freight-uk-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "manufacturing"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-rail-freight-uk-mcp",
+      "package": "meok-rail-freight-uk-mcp",
+      "registry": "https://pypi.org/project/meok-rail-freight-uk-mcp/"
+    },
+    {
+      "name": "meok-rspca-aquaculture-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-rspca-aquaculture-mcp",
+      "package": "meok-rspca-aquaculture-mcp",
+      "registry": "https://pypi.org/project/meok-rspca-aquaculture-mcp/"
+    },
+    {
+      "name": "meok-soil-assoc-organic-aqua-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "energy"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-soil-assoc-organic-aqua-mcp",
+      "package": "meok-soil-assoc-organic-aqua-mcp",
+      "registry": "https://pypi.org/project/meok-soil-assoc-organic-aqua-mcp/"
+    },
+    {
+      "name": "meok-stripe-acp-checkout-mcp",
+      "tier": "mvp",
+      "price_gbp": 199,
+      "sectors": [
+        "a2a",
+        "agentic"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-stripe-acp-checkout-mcp",
+      "package": "meok-stripe-acp-checkout-mcp",
+      "registry": "https://pypi.org/project/meok-stripe-acp-checkout-mcp/",
+      "description": "MEOK Stripe ACP Checkout MCP \u2014 ChatGPT shopping bridge. Issues + verifies + signs Stripe Agentic Commerce Protocol checkout intents. AP2 man",
+      "version": "1.0.5",
+      "stripe_checkout_url": "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T",
+      "stripe_tier_label": "Pro \u00a3199/mo",
+      "github_url": "https://github.com/CSOAI-ORG/meok-stripe-acp-checkout-mcp"
+    },
+    {
+      "name": "meok-tacho-audit-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-tacho-audit-mcp",
+      "package": "meok-tacho-audit-mcp",
+      "registry": "https://pypi.org/project/meok-tacho-audit-mcp/"
+    },
+    {
+      "name": "meok-transport-canada-hos-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-transport-canada-hos-mcp",
+      "package": "meok-transport-canada-hos-mcp",
+      "registry": "https://pypi.org/project/meok-transport-canada-hos-mcp/"
+    },
+    {
+      "name": "meok-uae-rta-transport-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-uae-rta-transport-mcp",
+      "package": "meok-uae-rta-transport-mcp",
+      "registry": "https://pypi.org/project/meok-uae-rta-transport-mcp/"
+    },
+    {
+      "name": "meok-uas-commercial-drone-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-uas-commercial-drone-mcp",
+      "package": "meok-uas-commercial-drone-mcp",
+      "registry": "https://pypi.org/project/meok-uas-commercial-drone-mcp/"
+    },
+    {
+      "name": "meok-uk-adm-article22c-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-uk-adm-article22c-mcp",
+      "package": "meok-uk-adm-article22c-mcp",
+      "registry": "https://pypi.org/project/meok-uk-adm-article22c-mcp/"
+    },
+    {
+      "name": "meok-uk-fhi-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-uk-fhi-mcp",
+      "package": "meok-uk-fhi-mcp",
+      "registry": "https://pypi.org/project/meok-uk-fhi-mcp/"
+    },
+    {
+      "name": "meok-uk-phv-tfl-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-uk-phv-tfl-mcp",
+      "package": "meok-uk-phv-tfl-mcp",
+      "registry": "https://pypi.org/project/meok-uk-phv-tfl-mcp/"
+    },
+    {
+      "name": "meok-vehicle-handover-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-vehicle-handover-mcp",
+      "package": "meok-vehicle-handover-mcp",
+      "registry": "https://pypi.org/project/meok-vehicle-handover-mcp/"
+    },
+    {
+      "name": "meok-w3c-tdm-rights-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-w3c-tdm-rights-mcp",
+      "package": "meok-w3c-tdm-rights-mcp",
+      "registry": "https://pypi.org/project/meok-w3c-tdm-rights-mcp/"
+    },
+    {
+      "name": "meok-watermark-attest-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-watermark-attest-mcp",
+      "package": "meok-watermark-attest-mcp",
+      "registry": "https://pypi.org/project/meok-watermark-attest-mcp/"
+    },
+    {
+      "name": "meok-x402-wrap-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "finance"
+      ],
+      "endpoint": "https://csoai.org/mcp/meok-x402-wrap-mcp",
+      "package": "meok-x402-wrap-mcp",
+      "registry": "https://pypi.org/project/meok-x402-wrap-mcp/"
+    },
+    {
+      "name": "mhra-samd-optometry-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/mhra-samd-optometry-mcp",
+      "package": "mhra-samd-optometry-mcp",
+      "registry": "https://pypi.org/project/mhra-samd-optometry-mcp/"
+    },
+    {
+      "name": "mica-crypto-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/mica-crypto-mcp",
+      "package": "mica-crypto-mcp",
+      "registry": "https://pypi.org/project/mica-crypto-mcp/"
+    },
+    {
+      "name": "mifid-ii-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/mifid-ii-ai-mcp",
+      "package": "mifid-ii-ai-mcp",
+      "registry": "https://pypi.org/project/mifid-ii-ai-mcp/"
+    },
+    {
+      "name": "mitre-atlas-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/mitre-atlas-mcp",
+      "package": "mitre-atlas-mcp",
+      "registry": "https://pypi.org/project/mitre-atlas-mcp/"
+    },
+    {
+      "name": "mitre-attack-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/mitre-attack-mcp",
+      "package": "mitre-attack-mcp",
+      "registry": "https://pypi.org/project/mitre-attack-mcp/"
+    },
+    {
+      "name": "mock-server-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/mock-server-ai-mcp",
+      "package": "mock-server-ai-mcp",
+      "registry": "https://pypi.org/project/mock-server-ai-mcp/"
+    },
+    {
+      "name": "mortgage-calculator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/mortgage-calculator-ai-mcp",
+      "package": "mortgage-calculator-ai-mcp",
+      "registry": "https://pypi.org/project/mortgage-calculator-ai-mcp/"
+    },
+    {
+      "name": "muckaway-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/muckaway-ai-mcp",
+      "package": "muckaway-ai-mcp",
+      "registry": "https://pypi.org/project/muckaway-ai-mcp/"
+    },
+    {
+      "name": "music-production-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/music-production-ai-mcp",
+      "package": "music-production-ai-mcp",
+      "registry": "https://pypi.org/project/music-production-ai-mcp/"
+    },
+    {
+      "name": "neural-health-monitor-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/neural-health-monitor-mcp",
+      "package": "neural-health-monitor-mcp",
+      "registry": "https://pypi.org/project/neural-health-monitor-mcp/"
+    },
+    {
+      "name": "nhs-gos-claims-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "insurance"
+      ],
+      "endpoint": "https://csoai.org/mcp/nhs-gos-claims-mcp",
+      "package": "nhs-gos-claims-mcp",
+      "registry": "https://pypi.org/project/nhs-gos-claims-mcp/"
+    },
+    {
+      "name": "nis2-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/nis2-compliance-mcp",
+      "package": "nis2-compliance-mcp",
+      "registry": "https://pypi.org/project/nis2-compliance-mcp/"
+    },
+    {
+      "name": "nist-rmf-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/nist-rmf-ai-mcp",
+      "package": "nist-rmf-ai-mcp",
+      "registry": "https://pypi.org/project/nist-rmf-ai-mcp/"
+    },
+    {
+      "name": "note-taking-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/note-taking-ai-mcp",
+      "package": "note-taking-ai-mcp",
+      "registry": "https://pypi.org/project/note-taking-ai-mcp/"
+    },
+    {
+      "name": "notification-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/notification-ai-mcp",
+      "package": "notification-ai-mcp",
+      "registry": "https://pypi.org/project/notification-ai-mcp/"
+    },
+    {
+      "name": "nrswa-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/nrswa-ai-mcp",
+      "package": "nrswa-ai-mcp",
+      "registry": "https://pypi.org/project/nrswa-ai-mcp/"
+    },
+    {
+      "name": "nutrition-tracker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/nutrition-tracker-ai-mcp",
+      "package": "nutrition-tracker-ai-mcp",
+      "registry": "https://pypi.org/project/nutrition-tracker-ai-mcp/"
+    },
+    {
+      "name": "oasf-agent-directory-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/oasf-agent-directory-mcp",
+      "package": "oasf-agent-directory-mcp",
+      "registry": "https://pypi.org/project/oasf-agent-directory-mcp/"
+    },
+    {
+      "name": "optical-care-home-bridge-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/optical-care-home-bridge-mcp",
+      "package": "optical-care-home-bridge-mcp",
+      "registry": "https://pypi.org/project/optical-care-home-bridge-mcp/"
+    },
+    {
+      "name": "optometry-ai-safety-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/optometry-ai-safety-mcp",
+      "package": "optometry-ai-safety-mcp",
+      "registry": "https://pypi.org/project/optometry-ai-safety-mcp/"
+    },
+    {
+      "name": "optometry-patient-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/optometry-patient-mcp",
+      "package": "optometry-patient-mcp",
+      "registry": "https://pypi.org/project/optometry-patient-mcp/"
+    },
+    {
+      "name": "otp-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/otp-ai-mcp",
+      "package": "otp-ai-mcp",
+      "registry": "https://pypi.org/project/otp-ai-mcp/"
+    },
+    {
+      "name": "owasp-agentic-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/owasp-agentic-mcp",
+      "package": "owasp-agentic-mcp",
+      "registry": "https://pypi.org/project/owasp-agentic-mcp/"
+    },
+    {
+      "name": "password-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/password-ai-mcp",
+      "package": "password-ai-mcp",
+      "registry": "https://pypi.org/project/password-ai-mcp/"
+    },
+    {
+      "name": "patient-safety-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/patient-safety-ai-mcp",
+      "package": "patient-safety-ai-mcp",
+      "registry": "https://pypi.org/project/patient-safety-ai-mcp/"
+    },
+    {
+      "name": "pci-dss-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/pci-dss-mcp",
+      "package": "pci-dss-mcp",
+      "registry": "https://pypi.org/project/pci-dss-mcp/"
+    },
+    {
+      "name": "pdf-document-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/pdf-document-mcp",
+      "package": "pdf-document-mcp",
+      "registry": "https://pypi.org/project/pdf-document-mcp/"
+    },
+    {
+      "name": "pdf-merge-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/pdf-merge-ai-mcp",
+      "package": "pdf-merge-ai-mcp",
+      "registry": "https://pypi.org/project/pdf-merge-ai-mcp/"
+    },
+    {
+      "name": "pdf-tools-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/pdf-tools-ai-mcp",
+      "package": "pdf-tools-ai-mcp",
+      "registry": "https://pypi.org/project/pdf-tools-ai-mcp/"
+    },
+    {
+      "name": "performance-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/performance-ai-mcp",
+      "package": "performance-ai-mcp",
+      "registry": "https://pypi.org/project/performance-ai-mcp/"
+    },
+    {
+      "name": "personal-finance-ai-mcp",
+      "tier": "elite",
+      "price_gbp": 199,
+      "sectors": [
+        "finance"
+      ],
+      "endpoint": "https://csoai.org/mcp/personal-finance-ai-mcp",
+      "package": "personal-finance-ai-mcp",
+      "registry": "https://pypi.org/project/personal-finance-ai-mcp/"
+    },
+    {
+      "name": "pet-care-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "healthcare"
+      ],
+      "endpoint": "https://csoai.org/mcp/pet-care-ai-mcp",
+      "package": "pet-care-ai-mcp",
+      "registry": "https://pypi.org/project/pet-care-ai-mcp/"
+    },
+    {
+      "name": "photography-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/photography-ai-mcp",
+      "package": "photography-ai-mcp",
+      "registry": "https://pypi.org/project/photography-ai-mcp/"
+    },
+    {
+      "name": "plagiarism-checker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/plagiarism-checker-ai-mcp",
+      "package": "plagiarism-checker-ai-mcp",
+      "registry": "https://pypi.org/project/plagiarism-checker-ai-mcp/"
+    },
+    {
+      "name": "planthire-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/planthire-ai-mcp",
+      "package": "planthire-ai-mcp",
+      "registry": "https://pypi.org/project/planthire-ai-mcp/"
+    },
+    {
+      "name": "pomodoro-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/pomodoro-ai-mcp",
+      "package": "pomodoro-ai-mcp",
+      "registry": "https://pypi.org/project/pomodoro-ai-mcp/"
+    },
+    {
+      "name": "price-tracker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/price-tracker-ai-mcp",
+      "package": "price-tracker-ai-mcp",
+      "registry": "https://pypi.org/project/price-tracker-ai-mcp/"
+    },
+    {
+      "name": "project-management-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/project-management-ai-mcp",
+      "package": "project-management-ai-mcp",
+      "registry": "https://pypi.org/project/project-management-ai-mcp/"
+    },
+    {
+      "name": "proofof-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/proofof-ai-mcp",
+      "package": "proofof-ai-mcp",
+      "registry": "https://pypi.org/project/proofof-ai-mcp/"
+    },
+    {
+      "name": "qidi-printer-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/qidi-printer-mcp",
+      "package": "qidi-printer-mcp",
+      "registry": "https://pypi.org/project/qidi-printer-mcp/"
+    },
+    {
+      "name": "qr-code-ai-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/qr-code-ai-mcp",
+      "package": "qr-code-ai-mcp",
+      "registry": "https://pypi.org/project/qr-code-ai-mcp/"
+    },
+    {
+      "name": "quantum-scoring-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/quantum-scoring-mcp",
+      "package": "quantum-scoring-mcp",
+      "registry": "https://pypi.org/project/quantum-scoring-mcp/"
+    },
+    {
+      "name": "quiz-generator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/quiz-generator-ai-mcp",
+      "package": "quiz-generator-ai-mcp",
+      "registry": "https://pypi.org/project/quiz-generator-ai-mcp/"
+    },
+    {
+      "name": "rag-knowledge-graph-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/rag-knowledge-graph-mcp",
+      "package": "rag-knowledge-graph-mcp",
+      "registry": "https://pypi.org/project/rag-knowledge-graph-mcp/"
+    },
+    {
+      "name": "rag-knowledge-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/rag-knowledge-mcp",
+      "package": "rag-knowledge-mcp",
+      "registry": "https://pypi.org/project/rag-knowledge-mcp/"
+    },
+    {
+      "name": "readme-generator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/readme-generator-ai-mcp",
+      "package": "readme-generator-ai-mcp",
+      "registry": "https://pypi.org/project/readme-generator-ai-mcp/"
+    },
+    {
+      "name": "real-estate-listing-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/real-estate-listing-mcp",
+      "package": "real-estate-listing-mcp",
+      "registry": "https://pypi.org/project/real-estate-listing-mcp/"
+    },
+    {
+      "name": "recipe-finder-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/recipe-finder-ai-mcp",
+      "package": "recipe-finder-ai-mcp",
+      "registry": "https://pypi.org/project/recipe-finder-ai-mcp/"
+    },
+    {
+      "name": "recruitment-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/recruitment-ai-mcp",
+      "package": "recruitment-ai-mcp",
+      "registry": "https://pypi.org/project/recruitment-ai-mcp/"
+    },
+    {
+      "name": "regex-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/regex-ai-mcp",
+      "package": "regex-ai-mcp",
+      "registry": "https://pypi.org/project/regex-ai-mcp/"
+    },
+    {
+      "name": "regulatory-webhook-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "government"
+      ],
+      "endpoint": "https://csoai.org/mcp/regulatory-webhook-mcp",
+      "package": "regulatory-webhook-mcp",
+      "registry": "https://pypi.org/project/regulatory-webhook-mcp/"
+    },
+    {
+      "name": "restaurant-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/restaurant-ai-mcp",
+      "package": "restaurant-ai-mcp",
+      "registry": "https://pypi.org/project/restaurant-ai-mcp/"
+    },
+    {
+      "name": "resume-parser-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/resume-parser-ai-mcp",
+      "package": "resume-parser-ai-mcp",
+      "registry": "https://pypi.org/project/resume-parser-ai-mcp/"
+    },
+    {
+      "name": "risk-assessment-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/risk-assessment-ai-mcp",
+      "package": "risk-assessment-ai-mcp",
+      "registry": "https://pypi.org/project/risk-assessment-ai-mcp/"
+    },
+    {
+      "name": "robotics-control-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/robotics-control-mcp",
+      "package": "robotics-control-mcp",
+      "registry": "https://pypi.org/project/robotics-control-mcp/"
+    },
+    {
+      "name": "sbom-cyclonedx-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/sbom-cyclonedx-mcp",
+      "package": "sbom-cyclonedx-mcp",
+      "registry": "https://pypi.org/project/sbom-cyclonedx-mcp/"
+    },
+    {
+      "name": "scam-detector-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/scam-detector-mcp",
+      "package": "scam-detector-mcp",
+      "registry": "https://pypi.org/project/scam-detector-mcp/"
+    },
+    {
+      "name": "schema-validator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/schema-validator-ai-mcp",
+      "package": "schema-validator-ai-mcp",
+      "registry": "https://pypi.org/project/schema-validator-ai-mcp/"
+    },
+    {
+      "name": "security-scanner-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/security-scanner-ai-mcp",
+      "package": "security-scanner-ai-mcp",
+      "registry": "https://pypi.org/project/security-scanner-ai-mcp/"
+    },
+    {
+      "name": "self-healing-infrastructure-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/self-healing-infrastructure-mcp",
+      "package": "self-healing-infrastructure-mcp",
+      "registry": "https://pypi.org/project/self-healing-infrastructure-mcp/"
+    },
+    {
+      "name": "sentiment-analysis-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/sentiment-analysis-ai-mcp",
+      "package": "sentiment-analysis-ai-mcp",
+      "registry": "https://pypi.org/project/sentiment-analysis-ai-mcp/"
+    },
+    {
+      "name": "seo-checker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/seo-checker-ai-mcp",
+      "package": "seo-checker-ai-mcp",
+      "registry": "https://pypi.org/project/seo-checker-ai-mcp/"
+    },
+    {
+      "name": "sigstore-cosign-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/sigstore-cosign-mcp",
+      "package": "sigstore-cosign-mcp",
+      "registry": "https://pypi.org/project/sigstore-cosign-mcp/"
+    },
+    {
+      "name": "skip-hire-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/skip-hire-ai-mcp",
+      "package": "skip-hire-ai-mcp",
+      "registry": "https://pypi.org/project/skip-hire-ai-mcp/"
+    },
+    {
+      "name": "slack-enterprise-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/slack-enterprise-mcp",
+      "package": "slack-enterprise-mcp",
+      "registry": "https://pypi.org/project/slack-enterprise-mcp/"
+    },
+    {
+      "name": "sleep-tracker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/sleep-tracker-ai-mcp",
+      "package": "sleep-tracker-ai-mcp",
+      "registry": "https://pypi.org/project/sleep-tracker-ai-mcp/"
+    },
+    {
+      "name": "slsa-supply-chain-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "manufacturing"
+      ],
+      "endpoint": "https://csoai.org/mcp/slsa-supply-chain-mcp",
+      "package": "slsa-supply-chain-mcp",
+      "registry": "https://pypi.org/project/slsa-supply-chain-mcp/"
+    },
+    {
+      "name": "slugify-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/slugify-ai-mcp",
+      "package": "slugify-ai-mcp",
+      "registry": "https://pypi.org/project/slugify-ai-mcp/"
+    },
+    {
+      "name": "soc2-compliance-ai-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/soc2-compliance-ai-mcp",
+      "package": "soc2-compliance-ai-mcp",
+      "registry": "https://pypi.org/project/soc2-compliance-ai-mcp/"
+    },
+    {
+      "name": "social-media-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "media"
+      ],
+      "endpoint": "https://csoai.org/mcp/social-media-ai-mcp",
+      "package": "social-media-ai-mcp",
+      "registry": "https://pypi.org/project/social-media-ai-mcp/"
+    },
+    {
+      "name": "sql-builder-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/sql-builder-ai-mcp",
+      "package": "sql-builder-ai-mcp",
+      "registry": "https://pypi.org/project/sql-builder-ai-mcp/"
+    },
+    {
+      "name": "stock-analyzer-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/stock-analyzer-ai-mcp",
+      "package": "stock-analyzer-ai-mcp",
+      "registry": "https://pypi.org/project/stock-analyzer-ai-mcp/"
+    },
+    {
+      "name": "string-utils-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/string-utils-ai-mcp",
+      "package": "string-utils-ai-mcp",
+      "registry": "https://pypi.org/project/string-utils-ai-mcp/"
+    },
+    {
+      "name": "stripe-billing-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "finance"
+      ],
+      "endpoint": "https://csoai.org/mcp/stripe-billing-mcp",
+      "package": "stripe-billing-mcp",
+      "registry": "https://pypi.org/project/stripe-billing-mcp/"
+    },
+    {
+      "name": "subscription-tracker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/subscription-tracker-ai-mcp",
+      "package": "subscription-tracker-ai-mcp",
+      "registry": "https://pypi.org/project/subscription-tracker-ai-mcp/"
+    },
+    {
+      "name": "summarizer-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/summarizer-ai-mcp",
+      "package": "summarizer-ai-mcp",
+      "registry": "https://pypi.org/project/summarizer-ai-mcp/"
+    },
+    {
+      "name": "supply-chain-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "manufacturing"
+      ],
+      "endpoint": "https://csoai.org/mcp/supply-chain-mcp",
+      "package": "supply-chain-mcp",
+      "registry": "https://pypi.org/project/supply-chain-mcp/"
+    },
+    {
+      "name": "survey-builder-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/survey-builder-ai-mcp",
+      "package": "survey-builder-ai-mcp",
+      "registry": "https://pypi.org/project/survey-builder-ai-mcp/"
+    },
+    {
+      "name": "tax-calculator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/tax-calculator-ai-mcp",
+      "package": "tax-calculator-ai-mcp",
+      "registry": "https://pypi.org/project/tax-calculator-ai-mcp/"
+    },
+    {
+      "name": "test-case-generator-ai-mcp",
+      "tier": "mvp",
+      "price_gbp": 29,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/test-case-generator-ai-mcp",
+      "package": "test-case-generator-ai-mcp",
+      "registry": "https://pypi.org/project/test-case-generator-ai-mcp/"
+    },
+    {
+      "name": "text-stats-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/text-stats-ai-mcp",
+      "package": "text-stats-ai-mcp",
+      "registry": "https://pypi.org/project/text-stats-ai-mcp/"
+    },
+    {
+      "name": "time-tracker-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/time-tracker-ai-mcp",
+      "package": "time-tracker-ai-mcp",
+      "registry": "https://pypi.org/project/time-tracker-ai-mcp/"
+    },
+    {
+      "name": "tone-rewriter-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/tone-rewriter-ai-mcp",
+      "package": "tone-rewriter-ai-mcp",
+      "registry": "https://pypi.org/project/tone-rewriter-ai-mcp/"
+    },
+    {
+      "name": "translation-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/translation-ai-mcp",
+      "package": "translation-ai-mcp",
+      "registry": "https://pypi.org/project/translation-ai-mcp/"
+    },
+    {
+      "name": "translator-pro-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/translator-pro-ai-mcp",
+      "package": "translator-pro-ai-mcp",
+      "registry": "https://pypi.org/project/translator-pro-ai-mcp/"
+    },
+    {
+      "name": "trust-chain-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/trust-chain-mcp",
+      "package": "trust-chain-mcp",
+      "registry": "https://pypi.org/project/trust-chain-mcp/"
+    },
+    {
+      "name": "uk-ai-act-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "government"
+      ],
+      "endpoint": "https://csoai.org/mcp/uk-ai-act-mcp",
+      "package": "uk-ai-act-mcp",
+      "registry": "https://pypi.org/project/uk-ai-act-mcp/"
+    },
+    {
+      "name": "uk-ai-bill-compliance-mcp",
+      "tier": "hvp",
+      "price_gbp": 79,
+      "sectors": [
+        "legal"
+      ],
+      "endpoint": "https://csoai.org/mcp/uk-ai-bill-compliance-mcp",
+      "package": "uk-ai-bill-compliance-mcp",
+      "registry": "https://pypi.org/project/uk-ai-bill-compliance-mcp/"
+    },
+    {
+      "name": "unit-converter-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/unit-converter-ai-mcp",
+      "package": "unit-converter-ai-mcp",
+      "registry": "https://pypi.org/project/unit-converter-ai-mcp/"
+    },
+    {
+      "name": "url-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/url-ai-mcp",
+      "package": "url-ai-mcp",
+      "registry": "https://pypi.org/project/url-ai-mcp/"
+    },
+    {
+      "name": "uuid-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/uuid-ai-mcp",
+      "package": "uuid-ai-mcp",
+      "registry": "https://pypi.org/project/uuid-ai-mcp/"
+    },
+    {
+      "name": "validator-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/validator-ai-mcp",
+      "package": "validator-ai-mcp",
+      "registry": "https://pypi.org/project/validator-ai-mcp/"
+    },
+    {
+      "name": "vector-knowledge-graph-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/vector-knowledge-graph-mcp",
+      "package": "vector-knowledge-graph-mcp",
+      "registry": "https://pypi.org/project/vector-knowledge-graph-mcp/"
+    },
+    {
+      "name": "video-editing-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/video-editing-ai-mcp",
+      "package": "video-editing-ai-mcp",
+      "registry": "https://pypi.org/project/video-editing-ai-mcp/"
+    },
+    {
+      "name": "voice-audio-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/voice-audio-mcp",
+      "package": "voice-audio-mcp",
+      "registry": "https://pypi.org/project/voice-audio-mcp/"
+    },
+    {
+      "name": "watermarking-authenticity-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/watermarking-authenticity-mcp",
+      "package": "watermarking-authenticity-mcp",
+      "registry": "https://pypi.org/project/watermarking-authenticity-mcp/"
+    },
+    {
+      "name": "weather-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/weather-ai-mcp",
+      "package": "weather-ai-mcp",
+      "registry": "https://pypi.org/project/weather-ai-mcp/"
+    },
+    {
+      "name": "web-research-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/web-research-mcp",
+      "package": "web-research-mcp",
+      "registry": "https://pypi.org/project/web-research-mcp/"
+    },
+    {
+      "name": "webhook-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/webhook-ai-mcp",
+      "package": "webhook-ai-mcp",
+      "registry": "https://pypi.org/project/webhook-ai-mcp/"
+    },
+    {
+      "name": "workout-planner-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/workout-planner-ai-mcp",
+      "package": "workout-planner-ai-mcp",
+      "registry": "https://pypi.org/project/workout-planner-ai-mcp/"
+    },
+    {
+      "name": "writing-assistant-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "general"
+      ],
+      "endpoint": "https://csoai.org/mcp/writing-assistant-ai-mcp",
+      "package": "writing-assistant-ai-mcp",
+      "registry": "https://pypi.org/project/writing-assistant-ai-mcp/"
+    },
+    {
+      "name": "yaml-ai-mcp",
+      "tier": "lvp",
+      "price_gbp": 9,
+      "sectors": [
+        "finance"
+      ],
+      "endpoint": "https://csoai.org/mcp/yaml-ai-mcp",
+      "package": "yaml-ai-mcp",
+      "registry": "https://pypi.org/project/yaml-ai-mcp/"
+    }
+  ]
+}

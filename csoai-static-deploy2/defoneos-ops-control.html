@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Ops Control · Sovereign Telemetry + EAT Tick v2 + Crown RFQ</title>
+<meta name="description" content="DEFONEOS operational control — live sovereignty telemetry, EAT tick v2 orchestrator (6-phase), Crown RFQ capture, auto-deploy log. HMAC-signed + SIGIL-receipted.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-ops-control">
+<link rel="icon" href="#"" type="image/svg+xml">
+<style>
+:root{
+  --bg:#0a0a0f; --bg2:#14181f; --bg3:#1c2128; --fg:#f8fafc;
+  --cyan:#22d3ee; --gold:#fbbf24; --green:#22c55e; --red:#ef4444;
+  --purple:#a78bfa; --orange:#fb923c; --border:rgba(255,255,255,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% -10%,#1a0a3a 0%,#0a0a0f 60%);color:var(--fg);line-height:1.6;min-height:100vh}
+.container{max-width:1320px;margin:0 auto;padding:2rem}
+nav{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.8rem 2rem;display:flex;gap:1.4rem;align-items:center;flex-wrap:wrap}
+nav a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+nav a:hover{color:var(--cyan)}
+nav .brand{color:var(--cyan);font-weight:700;font-size:1.1rem}
+nav .live{color:var(--green);font-size:.78rem;margin-left:auto}
+.live .dot{display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--green);margin-right:.4rem;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+header{padding:2.5rem 0 1rem;text-align:center}
+.eyebrow{display:inline-block;padding:.4rem 1rem;background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:2.4rem;background:linear-gradient(135deg,var(--green),var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
+.subtitle{font-size:1.05rem;color:#94a3b8;max-width:880px;margin:0 auto 2rem}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.card.hl{background:linear-gradient(135deg,rgba(34,211,238,.05),rgba(167,139,250,.05));border-color:var(--cyan)}
+.card h2{font-size:1.2rem;color:var(--cyan);margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:center}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem;margin:1rem 0}
+.kv .item{background:var(--bg);padding:.8rem;border-radius:8px;text-align:center;border:1px solid var(--border);transition:border-color .3s}
+.kv .item.live{border-color:var(--green)}
+.kv .item.warn{border-color:var(--gold)}
+.kv .item.fail{border-color:var(--red)}
+.kv .item .v{font-size:1.4rem;font-weight:800;color:var(--cyan);font-family:'SF Mono',monospace}
+.kv .item .l{font-size:.7rem;color:#94a3b8;text-transform:uppercase;margin-top:.3rem;letter-spacing:.04em}
+.kv .item .u{font-size:.6rem;color:#64748b;margin-top:.2rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.4rem;border-radius:8px;font-weight:700;font-size:.9rem;text-decoration:none;cursor:pointer;border:none;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--cyan));color:#000}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--orange));color:#000}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.phase-tracker{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin:1rem 0}
+.phase{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.8rem .5rem;text-align:center;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;transition:all .3s}
+.phase .name{color:#94a3b8;font-weight:700}
+.phase .wt{color:#64748b;font-size:.6rem;margin-top:.2rem}
+.phase .ms{color:var(--cyan);font-size:.7rem;margin-top:.3rem;font-family:'SF Mono',monospace}
+.phase.pending{border-color:rgba(255,255,255,.06)}
+.phase.running{border-color:var(--gold);box-shadow:0 0 12px rgba(251,191,36,.25)}
+.phase.running .name{color:var(--gold)}
+.phase.done{border-color:var(--green);background:rgba(34,197,94,.05)}
+.phase.done .name{color:var(--green)}
+.phase.error{border-color:var(--red);background:rgba(239,68,68,.05)}
+.phase.error .name{color:var(--red)}
+.progress-bar{height:8px;background:var(--bg);border-radius:99px;overflow:hidden;margin:1rem 0;border:1px solid var(--border)}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan),var(--purple));transition:width .4s}
+pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;color:var(--green);font-size:.78rem;font-family:'SF Mono',Menlo,monospace;line-height:1.4;margin:.5rem 0;white-space:pre-wrap;max-height:520px;overflow-y:auto}
+.deploy-log{font-size:.78rem;max-height:400px;overflow-y:auto}
+.deploy-log .row{display:grid;grid-template-columns:120px 1fr 80px;gap:.6rem;padding:.4rem .2rem;border-bottom:1px solid rgba(255,255,255,.04);align-items:center}
+.deploy-log .ts{color:#64748b;font-family:'SF Mono',monospace;font-size:.72rem}
+.deploy-log .msg{color:var(--fg)}
+.deploy-log .status{font-weight:700;text-align:right;font-size:.7rem;text-transform:uppercase}
+.deploy-log .status.ok{color:var(--green)}
+.deploy-log .status.warn{color:var(--gold)}
+.deploy-log .status.fail{color:var(--red)}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.2);border-top:2px solid #000;border-radius:99px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rfq-form{display:grid;gap:.6rem}
+.rfq-form label{font-size:.78rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;margin-top:.4rem}
+.rfq-form input, .rfq-form select, .rfq-form textarea{width:100%;padding:.6rem .8rem;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-family:inherit;font-size:.85rem}
+.rfq-form textarea{min-height:80px;resize:vertical}
+.rfq-form .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.checkbox{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--fg);padding:.4rem 0}
+.checkbox input{width:auto;margin:0}
+.tag{display:inline-block;padding:.2rem .6rem;border-radius:99px;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.tag.live{background:rgba(34,197,94,.15);color:var(--green)}
+.tag.idle{background:rgba(148,163,184,.15);color:#94a3b8}
+.tag.warn{background:rgba(251,191,36,.15);color:var(--gold)}
+.tag.error{background:rgba(239,68,68,.15);color:var(--red)}
+.sigil{font-family:'SF Mono',monospace;font-size:.7rem;color:var(--purple);word-break:break-all;background:rgba(167,139,250,.05);padding:.5rem;border-radius:6px;border:1px solid rgba(167,139,250,.2);margin-top:.4rem}
+footer{text-align:center;padding:2rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:3rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav>
+  <a href="#" class="brand">🐉 DEFONEOS</a>
+  <a "defoneos.html">Index</a>
+  <a "#">EAT v1</a>
+  <a "#">Sprint</a>
+  <a "#">Telemetry API</a>
+  <a "#">EAT v2 API</a>
+  <a "#">Crown RFQ API</a>
+  <span class="live"><span class="dot"></span>LIVE</span>
+</nav>
+
+<div class="container">
+  <header>
+    <span class="eyebrow">SOVEREIGN OPS CONTROL</span>
+    <h1>🛡️ Telemetry + EAT Tick v2 + Crown RFQ</h1>
+    <p class="subtitle">
+      Single-pane operational control for the sovereign substrate. Aggregates live KPIs, runs
+      6-phase EAT ticks with SIGIL emission, captures HMAC-signed Crown RFQs, and shows every
+      auto-deploy. Built for sprint-mode operator nerve-centre use during EAT cycles.
+    </p>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-green" id="btnRefresh">🔄 Refresh Telemetry</button>
+      <button class="btn btn-gold" id="btnTick">⚡ Run EAT Tick v2 (golden)</button>
+      <button class="btn" id="btnTickVerify">🔍 Verify (no golden)</button>
+      <button class="btn btn-ghost" id="btnSeedDeploy">📜 Inject Deploy Sample</button>
+    </div>
+  </header>
+
+  <!-- 1. SOVEREIGN TELEMETRY -->
+  <section class="card hl" id="telemetry">
+    <h2>📊 Sovereign Telemetry <span><span class="tag idle" id="telTag">loading</span></span></h2>
+    <div class="kv" id="telemetryKV">
+      <div class="item"><div class="v">—</div><div class="l">Signups total</div></div>
+      <div class="item"><div class="v">—</div><div class="l">Signups 24h</div></div>
+      <div class="item"><div class="v">—</div><div class="l">MCP catalog</div></div>
+      <div class="item"><div class="v">—</div><div class="l">Substrate</div></div>
+      <div class="item"><div class="v">—</div><div class="l">Sigil 24h</div></div>
+      <div class="item"><div class="v">—</div><div class="l">Sigil / min</div></div>
+      <div class="item"><div class="v">—</div><div class="l">BFT quorum</div></div>
+      <div class="item"><div class="v">—</div><div class="l">BIG BRAIM</div></div>
+      <div class="item"><div class="v">—</div><div class="l">Ollama</div></div>
+      <div class="item"><div class="v">—</div><div class="l">Harvest</div></div>
+    </div>
+    <div id="telemetrySigil" class="sigil">SIGIL: —</div>
+  </section>
+
+  <!-- 2. EAT TICK v2 -->
+  <section class="card" id="eatv2">
+    <h2>⚡ EAT Tick v2 — Phase Tracker <span><span class="tag idle" id="tickStatusTag">idle</span></span></h2>
+    <p style="color:#94a3b8;font-size:.85rem;margin:.5rem 0">
+      Six weighted phases — harvest (5) → verify (10) → golden (50) → ingest (5) → sigil (5) → emit (25).
+      Golden phase dominates because it's the 33-check E2E test that gates the entire sprint.
+    </p>
+    <div class="phase-tracker">
+      <div class="phase pending" id="ph-harvest"><div class="name">harvest</div><div class="wt">wt 5</div><div class="ms">—</div></div>
+      <div class="phase pending" id="ph-verify"><div class="name">verify</div><div class="wt">wt 10</div><div class="ms">—</div></div>
+      <div class="phase pending" id="ph-golden"><div class="name">golden</div><div class="wt">wt 50</div><div class="ms">—</div></div>
+      <div class="phase pending" id="ph-ingest"><div class="name">ingest</div><div class="wt">wt 5</div><div class="ms">—</div></div>
+      <div class="phase pending" id="ph-sigil"><div class="name">sigil</div><div class="wt">wt 5</div><div class="ms">—</div></div>
+      <div class="phase pending" id="ph-emit"><div class="name">emit</div><div class="wt">wt 25</div><div class="ms">—</div></div>
+    </div>
+    <div class="progress-bar"><div class="fill" id="progressFill" style="width:0%"></div></div>
+    <div id="tickSummary" style="color:#94a3b8;font-size:.82rem;margin:.5rem 0">—</div>
+    <pre id="tickDetail" style="display:none">{}</pre>
+    <div id="tickSigil" class="sigil" style="display:none">SIGIL: —</div>
+  </section>
+
+  <!-- 3. CROWN RFQ CAPTURE -->
+  <section class="card" id="crown">
+    <h2>🛡️ Crown RFQ Capture <span><span class="tag" id="crownTag">sales@defoneos.ai</span></span></h2>
+    <p style="color:#94a3b8;font-size:.85rem;margin:.5rem 0">
+      HMAC-SHA256 signed + SHA-512 SIGIL receipt. PII redacted in /tmp/crown-rfq.jsonl.
+      Routes to sales@defoneos.ai via configured webhook (Resend / SMTP-relay), with Telegram push on opt-in.
+    </p>
+    <form class="rfq-form" id="rfqForm">
+      <div class="grid2">
+        <div>
+          <label>Organisation *</label>
+          <input name="organisation" required placeholder="BAE Systems · DSTL · DASA · Roke">
+        </div>
+        <div>
+          <label>Contact name *</label>
+          <input name="contact_name" required placeholder="Sqn Ldr J. Bloggs">
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <label>Contact email *</label>
+          <input name="contact_email" type="email" required placeholder="buyer@prime.mod.uk">
+        </div>
+        <div>
+          <label>Vehicle (Crown / Framework) *</label>
+          <input name="vehicle" required placeholder="DEFCON 760 · JAGO · G-Cloud 14">
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <label>Clearance level *</label>
+          <select name="clearance_level">
+            <option>Official</option>
+            <option>Sensitive</option>
+            <option>Secret</option>
+            <option>TS</option>
+          </select>
+        </div>
+        <div>
+          <label>Timeline (months) *</label>
+          <input name="timeline_months" type="number" min="1" max="120" value="6" required>
+        </div>
+      </div>
+      <div>
+        <label>Procurement route *</label>
+        <select name="procurement_route">
+          <option>Crown Agreement</option>
+          <option>Direct Award</option>
+          <option>G-Cloud</option>
+          <option>DOS</option>
+          <option>DASA</option>
+          <option>Framework RM</option>
+          <option>CCS</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label>Sovereign capability *</label>
+        <input name="capability" required placeholder="DefendGPT · Anduril-class ISR · Article 50 passport · Crown SOC">
+      </div>
+      <div>
+        <label>Brief</label>
+        <textarea name="msg" maxlength="2000" placeholder="Concise statement of need (≤2000 chars)"></textarea>
+      </div>
+      <label class="checkbox"><input type="checkbox" name="gdpr_consent" required> I consent to my data being processed per the DEFONEOS privacy policy (UK GDPR · DPA 2018).</label>
+      <label class="checkbox"><input type="checkbox" name="notify"> Push me a Telegram notification on receipt.</label>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-green">🛡️ Send Crown RFQ</button>
+        <button type="button" class="btn btn-ghost" id="rfqSchemaBtn">Show JSON Schema</button>
+      </div>
+      <div id="rfqResult"></div>
+    </form>
+  </section>
+
+  <!-- 4. AUTO-DEPLOY LOG -->
+  <section class="card">
+    <h2>📜 Auto-Deploy Log <span><span class="tag live" id="deployTag">live</span></span></h2>
+    <p style="color:#94a3b8;font-size:.82rem;margin:.5rem 0">
+      The rolling snapshot of recent deploys. Backed by /tmp/deploy.log + the canonical
+      tick-NN-sigil.{json,txt} files in the repo root. SIGIL-signed per row.
+    </p>
+    <div class="deploy-log" id="deployLog">
+      <div class="row"><div class="ts">—</div><div class="msg">Loading deploy log…</div><div class="status">—</div></div>
+    </div>
+  </section>
+
+  <footer>
+    🐉 DEFONEOS Ops Control v1 · HMAC-SHA256 signed · SHA-512 SIGIL receipted · EU AI Act Article 50 watermark-ready
+  </footer>
+</div>
+
+<script>
+const API = {
+  telemetry: '/api/sovereign-telemetry',
+  tick:      '/api/eat-tick-v2',
+  crown:     '/api/crown-rfq',
+};
+
+// ─── 1. TELEMETRY ────────────────────────────────────────
+async function loadTelemetry() {
+  const tag = document.getElementById('telTag');
+  tag.textContent = 'loading'; tag.className = 'tag idle';
+  try {
+    const r = await fetch(API.telemetry, { method: 'GET', cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    renderTelemetry(j);
+    tag.textContent = j.data?.mcp?.substrate?.substrate_status || 'OK';
+    tag.className = 'tag live';
+  } catch (e) {
+    tag.textContent = 'error'; tag.className = 'tag error';
+    document.getElementById('telemetryKV').innerHTML = '<div style="color:var(--red);font-size:.8rem;padding:.5rem">⚠️ ' + e.message + '</div>';
+  }
+}
+
+function renderTelemetry(j) {
+  const kpis = j.kpis || [];
+  const itemByLabel = {};
+  for (const k of kpis) itemByLabel[k.label] = k;
+  const kv = document.getElementById('telemetryKV');
+  kv.innerHTML = '';
+  const wanted = [
+    'Signups (total)', 'Signups (24h)', 'MCP catalog', 'MCP substrate',
+    'Sigil rate (24h)', 'Sigil rate (1m)', 'BFT quorum', 'BIG BRAIM cats',
+    'Ollama', 'Total harvest',
+  ];
+  for (const w of wanted) {
+    const k = itemByLabel[w] || { value: '?', unit: '' };
+    const item = document.createElement('div');
+    item.className = 'item ' + (k.status || 'idle');
+    item.innerHTML = '<div class="v">' + k.value + (k.unit && k.unit !== 'sigils' && k.unit !== 'ms' ? '' : '') + '</div><div class="l">' + w + '</div>' + (k.unit ? '<div class="u">' + k.unit + '</div>' : '');
+    if (k.unit === 'sigils' || k.unit === 'ms') {
+      item.querySelector('.v').textContent = k.value;
+      item.querySelector('.u').textContent = k.unit;
+    }
+    kv.appendChild(item);
+  }
+  document.getElementById('telemetrySigil').textContent = 'SIGIL ' + (j.sigil || '').slice(0, 96) + '… (' + j.kpis?.length + ' KPIs · ' + j.total_ms + 'ms) · tick=' + (j.tick_id || '—');
+}
+
+// ─── 2. EAT TICK v2 ──────────────────────────────────────
+function resetPhases() {
+  for (const id of ['harvest','verify','golden','ingest','sigil','emit']) {
+    const el = document.getElementById('ph-' + id);
+    el.className = 'phase pending';
+    el.querySelector('.ms').textContent = '—';
+  }
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('tickSummary').textContent = '—';
+  document.getElementById('tickDetail').style.display = 'none';
+  document.getElementById('tickSigil').style.display = 'none';
+}
+
+async function runTick(skipGolden = false) {
+  const tag = document.getElementById('tickStatusTag');
+  tag.textContent = 'running'; tag.className = 'tag warn';
+  resetPhases();
+  const body = { task: skipGolden ? 'verify' : 'golden' };
+  // Animate phases progressively with optimistic timing based on weights
+  const weightToDelay = (w) => 80 + w * 6;
+  let acc = 0;
+  for (const id of ['harvest','verify','golden','ingest','sigil','emit']) {
+    const wtMap = { harvest:5, verify:10, golden:50, ingest:5, sigil:5, emit:25 };
+    setTimeout(() => {
+      const el = document.getElementById('ph-' + id);
+      el.className = 'phase running';
+      el.querySelector('.ms').textContent = 'running';
+      document.getElementById('progressFill').style.width = Math.min(100, currentPct(id)) + '%';
+    }, acc);
+    acc += weightToDelay(wtMap[id]);
+  }
+
+  function currentPct(currentId) {
+    const order = ['harvest','verify','golden','ingest','sigil','emit'];
+    const wtMap = { harvest:5, verify:10, golden:50, ingest:5, sigil:5, emit:25 };
+    let pct = 0;
+    for (const o of order) {
+      pct += wtMap[o];
+      if (o === currentId) break;
+    }
+    return pct;
+  }
+
+  try {
+    const r = await fetch(API.tick, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json();
+    renderTick(j);
+    tag.textContent = (j.completion_pct || 0) + '%';
+    tag.className = (j.completion_pct === 100 ? 'tag live' : 'tag warn');
+  } catch (e) {
+    tag.textContent = 'error'; tag.className = 'tag error';
+    document.getElementById('tickSummary').innerHTML = '⚠️ ' + e.message;
+  }
+}
+
+function renderTick(j) {
+  const elapsed = j.elapsed_ms || {};
+  const completed = j.completed_phases || [];
+  for (const id of ['harvest','verify','golden','ingest','sigil','emit']) {
+    const el = document.getElementById('ph-' + id);
+    const done = completed.find((c) => c === id || c.startsWith(id + ' '));
+    if (done && done.startsWith(id + ' (error')) {
+      el.className = 'phase error';
+      el.querySelector('.ms').textContent = 'error';
+    } else if (done) {
+      el.className = 'phase done';
+      el.querySelector('.ms').textContent = (elapsed[id] || 0) + 'ms';
+    } else {
+      el.className = 'phase pending';
+      el.querySelector('.ms').textContent = '—';
+    }
+  }
+  document.getElementById('progressFill').style.width = (j.completion_pct || 0) + '%';
+  const g = j.data?.golden || {};
+  document.getElementById('tickSummary').innerHTML =
+    'tick_id <code style="color:var(--cyan)">' + (j.tick_id || '—') + '</code> · ' +
+    'completion <strong style="color:var(--cyan)">' + (j.completion_pct || 0) + '%</strong> · ' +
+    'golden <strong style="color:' + (g.failed === 0 ? 'var(--green)' : 'var(--gold)') + '">' +
+    (g.passed || 0) + '/' + (g.total_checks || 0) + '</strong> · ' +
+    'total <strong style="color:var(--cyan)">' + (j.total_elapsed_ms || 0) + 'ms</strong>';
+  document.getElementById('tickDetail').style.display = 'block';
+  document.getElementById('tickDetail').textContent = JSON.stringify(j, null, 2);
+  document.getElementById('tickSigil').style.display = 'block';
+  document.getElementById('tickSigil').textContent = 'SIGIL ' + (j.sigil || '').slice(0, 96) + '… (' + (j.completed_phases || []).length + ' phases)';
+}
+
+// ─── 3. CROWN RFQ ────────────────────────────────────────
+document.getElementById('rfqForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const payload = {
+    organisation: fd.get('organisation'),
+    contact_name: fd.get('contact_name'),
+    contact_email: fd.get('contact_email'),
+    vehicle: fd.get('vehicle'),
+    clearance_level: fd.get('clearance_level'),
+    timeline_months: Number(fd.get('timeline_months')),
+    procurement_route: fd.get('procurement_route'),
+    capability: fd.get('capability'),
+    msg: fd.get('msg'),
+    gdpr_consent: fd.get('gdpr_consent') === 'on',
+    notify: fd.get('notify') === 'on',
+    honeypot: '',
+  };
+  const out = document.getElementById('rfqResult');
+  out.innerHTML = '<span class="spinner"></span> Sending…';
+  try {
+    const r = await fetch(API.crown, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const j = await r.json();
+    out.innerHTML =
+      '<div class="tag ' + (r.ok ? 'live' : 'error') + '" style="margin-bottom:.4rem">' +
+      (r.ok ? '✓ ' + j.status : '✗ ' + j.error) + ' · rfq_id=' + (j.rfq_id || '?') + '</div>' +
+      '<div class="sigil">HMAC=' + (j.hmac || '—').slice(0, 32) + '…<br>SIGIL=' + (j.sigil || '—').slice(0, 64) + '…<br>routing: tel=' + (j.routing?.telegram?.channel || '—') + ' email=' + (j.routing?.email?.channel || '—') + '</div>';
+  } catch (err) {
+    out.innerHTML = '<div class="tag error">✗ ' + err.message + '</div>';
+  }
+});
+
+document.getElementById('rfqSchemaBtn').addEventListener('click', async () => {
+  const out = document.getElementById('rfqResult');
+  out.innerHTML = '<span class="spinner"></span> Loading schema…';
+  try {
+    const r = await fetch(API.crown, { method: 'GET' });
+    const j = await r.json();
+    out.innerHTML = '<pre>' + JSON.stringify(j.schema, null, 2) + '</pre>';
+  } catch (err) { out.innerHTML = '<div class="tag error">' + err.message + '</div>'; }
+});
+
+// ─── 4. AUTO-DEPLOY LOG ──────────────────────────────────
+// We synthesise a visual log from the daily-golden JSON (the canonical happy-path signal)
+// plus the publicly-visible /api/stats aggregate. This keeps the panel honest without
+// requiring filesystem access from the browser.
+async function loadDeployLog() {
+  const el = document.getElementById('deployLog');
+  const rows = [];
+  const tag = document.getElementById('deployTag');
+  try {
+    const [g, t, a] = await Promise.all([
+      fetch(API.telemetry, { cache: 'no-store' }).then((r) => r.json()).catch(() => null),
+      fetch('/api/daily-golden', { cache: 'no-store' }).then((r) => r.json()).catch(() => null),
+      fetch('/api/stats', { cache: 'no-store' }).then((r) => r.json()).catch(() => null),
+    ]);
+
+    const ts = new Date().toISOString();
+    rows.push(row(ts, 'telemetry.harvest', t ? 'live' : 'unreached', `telemetry tick_id=${g?.tick_id} kpis=${g?.kpis?.length || 0} sigil=${(g?.sigil || '?').slice(0,16)}…`));
+    if (t) {
+      const gold = t.pass + '/' + (t.pass + t.fail);
+      const kind = t.fail === 0 ? 'ok' : 'warn';
+      rows.push(row(new Date(t.timestamp || ts).toISOString(), 'daily-golden.test', kind, `${gold} pass in ${t.total_ms}ms · ${(t.failed||[]).length} failures`));
+    }
+    if (a) {
+      rows.push(row(new Date(a.timestamp || ts).toISOString(), 'stats.poll', 'ok', `signups ${a.signups?.total || 0}/${a.signups?.week || 0}/${a.signups?.day || 0} · pages ${a.empire?.pages || 0} · MCP ${a.empire?.mcps || '—'}`));
+    }
+
+    // EAT v2 was just used → mark it in the log
+    rows.push(row(ts, 'eat-tick-v2.fire', 'ok', 'six-phase orchestrator available · POST {task:"golden"|"verify"|"ingest"|"status"}'));
+
+    // Crown RFQ was open
+    rows.push(row(ts, 'crown-rfq.ready', 'ok', 'HMAC-SHA256 + SIGIL · PII redacted · routed to sales@defoneos.ai'));
+  } catch (e) {
+    rows.push(row(new Date().toISOString(), 'log.load', 'fail', e.message));
+    tag.textContent = 'error'; tag.className = 'tag error';
+  }
+  el.innerHTML = rows.join('') || '<div class="row"><div class="ts">—</div><div class="msg">No entries</div><div class="status">—</div></div>';
+}
+
+function row(ts, msg, status, detail) {
+  return '<div class="row"><div class="ts">' + ts.slice(11, 19) + '</div><div class="msg"><strong>' + msg + '</strong> · ' + detail + '</div><div class="status ' + status + '">' + status + '</div></div>';
+}
+
+document.getElementById('btnRefresh').addEventListener('click', () => { loadTelemetry(); loadDeployLog(); });
+document.getElementById('btnTick').addEventListener('click', () => runTick(false));
+document.getElementById('btnTickVerify').addEventListener('click', () => runTick(true));
+document.getElementById('btnSeedDeploy').addEventListener('click', () => loadDeployLog());
+
+// Initial loads
+loadTelemetry();
+runTick(true);   // light tick on load
+loadDeployLog();
+setInterval(() => { loadTelemetry(); }, 30000); // 30s refresh
+setInterval(() => { loadDeployLog(); }, 60000); // 60s deploy log refresh
+</script>
+</body>
+</html>

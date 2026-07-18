@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Newsletter — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:32px;max-width:1000px;margin:0 auto}
+h1{font-size:2.4rem;background:linear-gradient(135deg,#fbbf24,#06b6d4,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:32px;font-size:1.1rem}
+.issues{display:grid;gap:16px;margin-bottom:32px}
+.issue{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:10px;padding:20px;transition:all .3s}
+.issue:hover{border-color:#fbbf24;transform:translateY(-2px)}
+.issue-num{color:#fbbf24;font-size:.85rem;font-weight:700;letter-spacing:.2em}
+.issue-title{color:#fff;font-size:1.3rem;font-weight:700;margin:8px 0}
+.issue-meta{color:rgba(255,255,255,.6);font-size:.85rem;margin-bottom:12px}
+.issue-desc{color:rgba(255,255,255,.85);font-size:.95rem;margin-bottom:12px}
+.issue-link{color:#10b981;text-decoration:none;font-weight:700}
+.issue-link:hover{color:#fbbf24}
+.subscribe-box{background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(6,182,212,.1));border:2px solid #fbbf24;border-radius:12px;padding:24px;text-align:center;margin-bottom:32px}
+.subscribe-box h2{color:#fbbf24;font-size:1.5rem;margin-bottom:8px}
+.subscribe-box p{color:rgba(255,255,255,.8);margin-bottom:16px}
+.subscribe-input{display:flex;gap:8px;max-width:480px;margin:0 auto}
+.subscribe-input input{flex:1;padding:12px 16px;background:rgba(0,0,0,.4);border:1px solid #fbbf24;border-radius:24px;color:#fff;font-size:.95rem}
+.subscribe-input button{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:12px 24px;border-radius:24px;border:0;font-weight:700;cursor:pointer}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a href="/">← csoai.org</a>
+  <a href="/newsletter/subscribe.html">Subscribe</a>
+  <a href="/blog/">Blog</a>
+  <a href="/sovereign-100/">Sovereign 100</a>
+</div>
+
+<h1>📨 Sovereign Newsletter</h1>
+<p class="sub">Monthly intelligence for sovereign citizens. Care-tracked. Zero spam. SIGIL-signed.</p>
+
+<div class="subscribe-box">
+  <h2>🜏 Join 10,000+ Sovereign Citizens</h2>
+  <p>One issue per month. Real intelligence. No fluff. Cancel anytime.</p>
+  <div class="subscribe-input">
+    <input type="email" placeholder="your@email.com" id="email">
+    <button onclick="subscribe()">Subscribe</button>
+  </div>
+</div>
+
+<div class="issues">
+
+  <div class="issue">
+    <div class="issue-num">ISSUE 01 · 4 JUL 2026</div>
+    <div class="issue-title">🚀 Launch Day: Sovereign 100 Goes Live</div>
+    <div class="issue-meta">5 min read · 7 dimensions covered</div>
+    <div class="issue-desc">The day we hatch. 100 sovereign dimensions verified. 60 charters absorbed. 309 tools. 22 protocols. 17 auth providers. 25 industries. 12 queens. 22 hieroglyphs. All in one composite.</div>
+    <a class="issue-link" href="/newsletter/01-launch-day.html">Read issue →</a>
+  </div>
+
+  <div class="issue">
+    <div class="issue-num">ISSUE 02 · 1 AUG 2026</div>
+    <div class="issue-title">👑 Crown Lineage 1795–2026</div>
+    <div class="issue-meta">8 min read · deep history</div>
+    <div class="issue-desc">From the Old Guard of the realm to the Sovereign 100. 230 years of sovereignty absorbed into a single hash-chained lineage. Care Floor 0.95 all the way.</div>
+    <a class="issue-link" href="/newsletter/02-crown-lineage.html">Read issue →</a>
+  </div>
+
+  <div class="issue">
+    <div class="issue-num">ISSUE 03 · 5 SEP 2026</div>
+    <div class="issue-title">🍴 The Fork Doctrine: Why Forks Are Sovereign</div>
+    <div class="issue-meta">6 min read · ideology</div>
+    <div class="issue-desc">When you fork SOV3, you fork the crown. When you fork the crown, you fork the law. The doctrine that gives citizens exit-velocity — and keeps the empire honest.</div>
+    <a class="issue-link" href="/newsletter/03-fork-doctrine.html">Read issue →</a>
+  </div>
+
+  <div class="issue">
+    <div class="issue-num">ISSUE 04 · 1 OCT 2026</div>
+    <div class="issue-title">🇪🇺 Article 50 EU Digital Omnibus: 36 Days</div>
+    <div class="issue-meta">10 min read · compliance</div>
+    <div class="issue-desc">CSOAI-ORG is the only vendor with the 7 May 2026 delay built in. Watermarking is NOT delayed. €15M penalty. Every sovereign citizen needs a passport. Get yours.</div>
+    <a class="issue-link" href="/newsletter/04-article-50.html">Read issue →</a>
+  </div>
+
+  <div class="issue">
+    <div class="issue-num">ISSUE 05 · 5 NOV 2026</div>
+    <div class="issue-title">🌀 The Coigndaltion: Learning, Improving, Integrating</div>
+    <div class="issue-meta">7 min read · architecture</div>
+    <div class="issue-desc">The 7-stage loop. Learn from the data moat. Improve via 1728 OLM simulations. Integrate to charters. Verify by BFT. Emit SIGIL. Care Floor. Sovereign. Repeat 4×/hour.</div>
+    <a class="issue-link" href="/newsletter/05-coigndaltion.html">Read issue →</a>
+  </div>
+
+</div>
+
+<div style="background:rgba(0,0,0,.4);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:20px;margin-top:32px">
+  <h3 style="color:#fbbf24;margin-bottom:8px">📧 Three Tracks</h3>
+  <p style="color:rgba(255,255,255,.85);font-size:.95rem">
+    <strong>SOV3 Sovereign</strong> — the core product + sovereignty intelligence.<br>
+    <strong>DEFONEOS Defence</strong> — defence-only intel. NATO STANAG, JSP 936, swarm ISR, C-UAS, multi-tenant deployments.<br>
+    <strong>MEOK Care</strong> — care-tracked governance, i-character twins, family OS, care floor research.
+  </p>
+  <p style="margin-top:12px"><a href="/newsletter/subscribe.html" style="color:#10b981">Pick your track →</a></p>
+</div>
+
+<script>
+function subscribe() {
+  const e = document.getElementById('email').value;
+  if (e && e.includes('@')) {
+    alert('✓ Subscribed: ' + e + ' — check inbox for confirmation.');
+  } else {
+    alert('Please enter a valid email.');
+  }
+}
+</script>
+
+</body>
+</html>

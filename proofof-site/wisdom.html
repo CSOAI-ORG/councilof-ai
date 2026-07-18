@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌟 Sovereign Wisdom — Leaderboard + Economy + Transfers</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#3a1a3a 50%,#02060f 100%);padding:2.5rem 2rem;text-align:center;border-bottom:1px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24}
+  .hero p{color:#aaa;font-size:1rem}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+  .stat-pill{background:rgba(251,191,36,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #fbbf24;color:#fbbf24;font-size:.85rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  .leaderboard{margin:1rem 0}
+  .leader{background:#0a0a0a;padding:0.8rem 1rem;border-radius:6px;margin-bottom:0.4rem;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #fbbf24}
+  .leader:nth-child(1){border-left-color:#fbbf24;background:linear-gradient(90deg,rgba(251,191,36,0.1) 0%,rgba(0,0,0,0.4) 100%)}
+  .leader:nth-child(2){border-left-color:#c0c0c0}
+  .leader:nth-child(3){border-left-color:#cd7f32}
+  .leader .rank{color:#fbbf24;font-weight:bold;font-size:1.2rem;min-width:50px}
+  .leader .user{color:#e5e5e5;font-weight:bold;flex:1;margin-left:1rem}
+  .leader .balance{color:#10b981;font-weight:bold;font-size:1rem}
+  .award-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.5rem;margin:1rem 0}
+  .action{background:#0a0a0a;padding:0.7rem;border-radius:6px;text-align:center;border-left:3px solid #fbbf24;cursor:pointer;transition:transform .2s}
+  .action:hover{transform:translateY(-2px);background:rgba(251,191,36,0.1)}
+  .action .name{color:#fbbf24;font-size:0.85rem;font-weight:bold}
+  .action .points{color:#10b981;font-size:1.5rem;font-weight:bold;margin:0.3rem 0}
+  .action .desc{color:#888;font-size:0.7rem}
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:0.7rem;font-size:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0;flex-wrap:wrap}
+  .demo-row input{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #10b981;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem}
+  .demo-row button{background:#10b981;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/roadmap.html">Roadmap</a>
+  <a href="/wisdom.html">Wisdom</a>
+  <a href="/oowm.html">OOWM</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.4rem .8rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🌟 Sovereign Wisdom Economy</h1>
+  <p>Earn wisdom for sovereign actions · Transfer · Leaderboard · MIT + CC0 1.0</p>
+  <div class="stats">
+    <div class="stat-pill">10 award actions</div>
+    <div class="stat-pill">Live leaderboard</div>
+    <div class="stat-pill">P2P transfers</div>
+    <div class="stat-pill">Care Floor 0.95</div>
+    <div class="stat-pill">Crown 1795-2026</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="section">
+    <h2>🏆 Sovereign Wisdom Leaderboard</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Top sovereign citizens by accumulated wisdom. Crown lineage 1795-2026.</p>
+    <div class="leaderboard" id="leaderboard"></div>
+  </div>
+
+  <div class="section">
+    <h2>⭐ 10 Award Actions</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Earn wisdom points for these sovereign actions. Each action has a canonical point value.</p>
+    <div class="award-actions">
+      <div class="action"><div class="name">Fork Doctrine</div><div class="points">100</div><div class="desc">Forks are sovereign</div></div>
+      <div class="action"><div class="name">ML Model Trained</div><div class="points">200</div><div class="desc">12×8 sovereign combination</div></div>
+      <div class="action"><div class="name">BFT Council Ratified</div><div class="points">75</div><div class="desc">12-around-1 vote passed</div></div>
+      <div class="action"><div class="name">Care Floor Validated</div><div class="points">50</div><div class="desc">16 probes passed</div></div>
+      <div class="action"><div class="name">Article 50 Passport</div><div class="points">30</div><div class="desc">EU AI Act compliant</div></div>
+      <div class="action"><div class="name">Hive Online</div><div class="points">25</div><div class="desc">33 hive planets active</div></div>
+      <div class="action"><div class="name">Page Published</div><div class="points">20</div><div class="desc">HTML page live</div></div>
+      <div class="action"><div class="name">Knowledge Added (CC0)</div><div class="points">10</div><div class="desc">Public domain knowledge</div></div>
+      <div class="action"><div class="name">SIGIL Emitted</div><div class="points">5</div><div class="desc">Every sovereign action</div></div>
+      <div class="action"><div class="name">Test Passed</div><div class="points">1</div><div class="desc">Every sovereign test</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>⚡ Try the Sovereign Wisdom Engine</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Award yourself wisdom for any sovereign action. Then transfer to someone else.</p>
+    <div class="demo">
+      <h3>1. Award Wisdom Points</h3>
+      <div class="demo-row">
+        <input type="text" id="awardUser" placeholder="user_id (e.g. alice)" value="alice">
+        <select id="awardAction" style="padding:0.4rem 0.7rem;background:#02060f;border:1px solid #10b981;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem">
+          <option value="ml_model_trained">ml_model_trained (+200)</option>
+          <option value="fork_doctrine">fork_doctrine (+100)</option>
+          <option value="bft_council_ratified">bft_council_ratified (+75)</option>
+          <option value="care_floor_validated">care_floor_validated (+50)</option>
+          <option value="article50_passport_issued">article50_passport_issued (+30)</option>
+          <option value="hive_online">hive_online (+25)</option>
+          <option value="page_published">page_published (+20)</option>
+          <option value="knowledge_added_cc0">knowledge_added_cc0 (+10)</option>
+          <option value="sigil_emitted">sigil_emitted (+5)</option>
+          <option value="test_passed">test_passed (+1)</option>
+        </select>
+        <button onclick="doAward()">⚡ Award</button>
+      </div>
+      <div id="awardResult" style="color:#10b981;margin-top:0.5rem;font-family:monospace;font-size:0.85rem"></div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Transfer Wisdom</h3>
+      <div class="demo-row">
+        <input type="text" id="fromUser" placeholder="from user" value="alice">
+        <input type="text" id="toUser" placeholder="to user" value="bob">
+        <input type="number" id="transferPoints" placeholder="points" value="50" min="1" max="10000">
+        <button onclick="doTransfer()">⚡ Transfer</button>
+      </div>
+      <div id="transferResult" style="color:#10b981;margin-top:0.5rem;font-family:monospace;font-size:0.85rem"></div>
+    </div>
+
+    <div class="demo">
+      <h3>3. Sovereign Wisdom Stats</h3>
+      <button onclick="doStats()">⚡ Get Global Stats</button>
+      <div id="statsResult" style="color:#10b981;margin-top:0.5rem;font-family:monospace;font-size:0.85rem"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🌍 The Sovereign Wisdom Doctrine</h2>
+    <p style="color:#aaa">The wisdom economy is sovereign by construction. CC0 + MIT + OSI. Forks are sovereign. Care Floor 0.95.</p>
+    <div style="background:#0a0a0a;padding:1.5rem;border-radius:8px;margin-top:1rem;text-align:center">
+      <div style="color:#fbbf24;font-size:1.5rem;font-weight:bold">Earned by action · Transferred by will · Sovereign by construction</div>
+      <div style="color:#10b981;margin-top:0.5rem;font-size:0.85rem">Crown lineage 1795-2026 · CSOAI Ltd (UK 16939677) · Defend. Detect. Deny. Deceive. Defeat.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Wisdom Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">10 actions. ∞ combinations. Sovereign by construction.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 84 MCPs · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+// Initial leaderboard (demo data)
+const balances = {
+  "nicholas-templeman": 5000,  // Crown lineage founder
+  "alice": 200,
+  "bob": 50,
+  "carol": 25,
+  "dave": 5,
+};
+
+function renderLeaderboard() {
+  const lb = document.getElementById("leaderboard");
+  lb.innerHTML = "";
+  const sorted = Object.entries(balances).sort((a, b) => b[1] - a[1]);
+  sorted.forEach(([user, balance], i) => {
+    const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i+1}`;
+    const div = document.createElement("div");
+    div.className = "leader";
+    div.innerHTML = `<span class="rank">${medal}</span><span class="user">${user}</span><span class="balance">${balance.toLocaleString()} pts</span>`;
+    lb.appendChild(div);
+  });
+}
+
+const POINTS = {"ml_model_trained":200,"fork_doctrine":100,"bft_council_ratified":75,"care_floor_validated":50,"article50_passport_issued":30,"hive_online":25,"page_published":20,"knowledge_added_cc0":10,"sigil_emitted":5,"test_passed":1};
+
+function doAward() {
+  const user = document.getElementById("awardUser").value.trim();
+  const action = document.getElementById("awardAction").value;
+  if (!user) { document.getElementById("awardResult").textContent = "⚠️ user_id required"; return; }
+  const pts = POINTS[action];
+  balances[user] = (balances[user] || 0) + pts;
+  document.getElementById("awardResult").innerHTML = `✓ Awarded <strong>${pts}</strong> pts to <strong>${user}</strong> for <code>${action}</code>. New balance: <strong>${balances[user]}</strong>`;
+  renderLeaderboard();
+}
+
+function doTransfer() {
+  const from = document.getElementById("fromUser").value.trim();
+  const to = document.getElementById("toUser").value.trim();
+  const pts = parseInt(document.getElementById("transferPoints").value);
+  if (!from || !to || !pts) { document.getElementById("transferResult").textContent = "⚠️ from/to/points required"; return; }
+  if ((balances[from] || 0) < pts) { document.getElementById("transferResult").textContent = `⚠️ ${from} has insufficient balance (${balances[from] || 0})`; return; }
+  balances[from] -= pts;
+  balances[to] = (balances[to] || 0) + pts;
+  document.getElementById("transferResult").innerHTML = `✓ Transferred <strong>${pts}</strong> pts: <strong>${from}</strong> → <strong>${to}</strong>. ${from}: ${balances[from]}, ${to}: ${balances[to]}`;
+  renderLeaderboard();
+}
+
+function doStats() {
+  const users = Object.keys(balances).length;
+  const total = Object.values(balances).reduce((a,b) => a + b, 0);
+  document.getElementById("statsResult").innerHTML = `📊 <strong>${users}</strong> citizens · <strong>${total.toLocaleString()}</strong> total wisdom points · <strong>${Math.round(total/users)}</strong> avg per citizen`;
+}
+
+renderLeaderboard();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://ipapi.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src https://fonts.gstatic.com; connect-src 'self' http://127.0.0.1:8000 http://127.0.0.1:3101 https://ipapi.co; frame-ancestors 'none';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<meta name="description" content="MEOK WORLD — Sovereign AI Operating System. 218 MCPs, 33 sovereign VMs, 12-Queen council, 4-tier cascade. The world is at your feet.">
+<meta name="keywords" content="MEOK, CSOAI, SOV3, sovereign AI, MCP servers, EU AI Act, regulation temples, 12-Queen council, BFT">
+<title>NIST AI RMF · MEOK WORLD</title>
+<meta property="og:title" content="NIST AI RMF · MEOK WORLD">
+<meta property="og:description" content="NIST AI Risk Management Framework 1.0. 4 functions.">
+<meta property="og:image" content="https://meok.ai/api/og">
+<meta property="og:url" content="https://meok.ai/compliance/nist-ai">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@meok_ai">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MEOK WORLD">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>/* ═══════════════════════════════════════════════════════════════
+   MEOK WORLD shared stylesheet — all 17 pages
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --bg: #08060c;
+  --bg-2: #0d0a14;
+  --surface: #120e1c;
+  --surface-2: #1a1428;
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --gold-dim: #8a7035;
+  --gold-glow: rgba(201, 168, 76, 0.3);
+  --green: #22c55e;
+  --green-glow: rgba(34, 197, 94, 0.3);
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --red: #ef4444;
+  --cyan: #22d3ee;
+  --text: #f0ede6;
+  --text-dim: rgba(240, 237, 230, 0.6);
+  --text-dim-2: rgba(240, 237, 230, 0.35);
+  --border: rgba(201, 168, 76, 0.15);
+  --border-dim: rgba(240, 237, 230, 0.08);
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 15px; line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body { background: radial-gradient(ellipse at 20% 0%, rgba(201, 168, 76, 0.08), transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(96, 165, 250, 0.05), transparent 60%), var(--bg); min-height: 100vh; }
+a { color: var(--gold-bright); text-decoration: none; transition: var(--transition); }
+a:hover { color: var(--gold); }
+button { font-family: var(--font-sans); cursor: pointer; }
+
+/* TOPBAR */
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(8, 6, 12, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-dim); }
+.topbar-inner { max-width: 1400px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+.logo { font-family: var(--font-mono); font-weight: 700; font-size: 18px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; color: var(--text); }
+.logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green-glow); animation: pulse 2s ease-in-out infinite; }
+.logo .accent { color: var(--gold); }
+.topbar nav { display: flex; align-items: center; gap: 4px; }
+.topbar nav a { color: var(--text-dim); font-size: 13px; font-weight: 500; padding: 8px 14px; border-radius: 8px; transition: var(--transition); }
+.topbar nav a:hover { color: var(--text); background: var(--border-dim); }
+.topbar nav a.active { color: var(--gold); background: rgba(201, 168, 76, 0.1); }
+.topbar .cta { display: flex; align-items: center; gap: 8px; }
+.topbar .cta a { font-family: var(--font-mono); font-size: 12px; font-weight: 600; padding: 10px 16px; border-radius: 100px; }
+.topbar .cta .login { color: var(--text-dim); border: 1px solid var(--border-dim); }
+.topbar .cta .login:hover { color: var(--text); border-color: var(--border); }
+.topbar .cta .start { background: var(--gold); color: var(--bg); border: 1px solid var(--gold); }
+.topbar .cta .start:hover { background: var(--gold-bright); color: var(--bg); }
+@media (max-width: 800px) { .topbar nav { display: none; } .topbar-inner { padding: 12px 16px; } }
+
+/* PAGE WRAPPER */
+.page { max-width: 1400px; margin: 0 auto; padding: 60px 32px 100px; min-height: 60vh; }
+@media (max-width: 800px) { .page { padding: 32px 16px 60px; } }
+
+/* HERO + SECTIONS */
+.hero { padding: 40px 0 60px; }
+.hero-tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; padding: 4px 12px; background: rgba(201, 168, 76, 0.1); border: 1px solid var(--border); border-radius: 100px; margin-bottom: 16px; }
+.hero h1 { font-size: clamp(32px, 5vw, 56px); line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; margin-bottom: 20px; }
+.hero h1 .accent { color: var(--gold); background: linear-gradient(135deg, var(--gold-bright), #e6c46a); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p { font-size: 18px; color: var(--text-dim); max-width: 700px; margin-bottom: 32px; }
+.section { padding: 60px 0; }
+.section-tag { font-family: var(--font-mono); font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; }
+.section h2 { font-size: clamp(28px, 3vw, 40px); font-weight: 500; letter-spacing: -0.02em; margin-bottom: 12px; }
+.section p.lead { color: var(--text-dim); font-size: 16px; margin-bottom: 32px; max-width: 700px; }
+
+/* GRIDS */
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+@media (max-width: 500px) { .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* CARDS */
+.card { background: var(--surface); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 20px; transition: var(--transition); }
+.card:hover { border-color: var(--gold); transform: translateY(-2px); background: var(--bg-2); }
+.card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.card p { color: var(--text-dim); font-size: 14px; line-height: 1.6; }
+.card .icon { font-size: 28px; margin-bottom: 12px; display: block; }
+.card.featured { border-color: var(--gold); background: linear-gradient(135deg, var(--surface), rgba(201, 168, 76, 0.05)); }
+
+/* STATS */
+.stat-card { padding: 20px; background: var(--surface); border: 1px solid var(--border-dim); border-radius: var(--radius); }
+.stat-card .num { font-family: var(--font-mono); font-size: 32px; font-weight: 600; color: var(--gold); margin-bottom: 4px; }
+.stat-card .label { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 14px; font-weight: 600; padding: 14px 24px; border-radius: 100px; border: 1px solid; cursor: pointer; transition: var(--transition); background: transparent; }
+.btn-primary { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+.btn-primary:hover { background: var(--gold-bright); transform: translateY(-1px); }
+.btn-secondary { color: var(--text); border-color: var(--border); background: var(--bg-2); }
+.btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+/* TEMPLES */
+.temple-card { background: var(--surface); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 20px; transition: var(--transition); position: relative; overflow: hidden; }
+.temple-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; opacity: 0.6; }
+.temple-card.eu::before { background: var(--blue); }
+.temple-card.us::before { background: var(--purple); }
+.temple-card.apac::before { background: var(--cyan); }
+.temple-card.global::before { background: var(--gold); }
+.temple-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.temple-card .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.temple-card .flag { font-size: 28px; }
+.temple-card .code { font-family: var(--font-mono); font-size: 10px; color: var(--gold); background: rgba(201, 168, 76, 0.1); padding: 3px 8px; border-radius: 100px; border: 1px solid var(--border); }
+.temple-card .reg-count { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); margin-bottom: 12px; }
+.temple-card .regs { display: flex; flex-wrap: wrap; gap: 4px; }
+.temple-card .reg { font-family: var(--font-mono); font-size: 10px; background: var(--bg-2); border: 1px solid var(--border-dim); padding: 2px 8px; border-radius: 100px; color: var(--text-dim); }
+
+/* COUNCIL */
+.council-card { background: var(--surface); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 16px; text-align: center; transition: var(--transition); }
+.council-card.veto { border-color: var(--red); background: linear-gradient(135deg, var(--surface), rgba(239, 68, 68, 0.05)); }
+.council-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.council-card .emoji { font-size: 36px; margin-bottom: 8px; }
+.council-card .name { font-family: var(--font-mono); font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+.council-card .arch { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+.council-card .motto { font-style: italic; font-size: 11px; color: var(--text-dim-2); margin-top: 6px; }
+.council-card .veto-badge { display: inline-block; margin-top: 6px; padding: 2px 8px; background: var(--red); color: var(--bg); font-family: var(--font-mono); font-size: 9px; font-weight: 700; border-radius: 100px; }
+
+/* FLOW DIAGRAM */
+.flow-graph { display: flex; flex-direction: column; gap: 4px; font-family: var(--font-mono); font-size: 12px; }
+.flow-node { padding: 12px 16px; background: var(--bg-2); border-left: 3px solid var(--gold); border-radius: 4px; }
+.flow-node.actuator { border-left-color: var(--cyan); }
+.flow-node.decision { border-left-color: var(--purple); }
+.flow-node.evidence { border-left-color: var(--green); }
+.flow-node .id { color: var(--text-dim); font-size: 10px; }
+.flow-node .label { color: var(--text); font-weight: 500; }
+.flow-arrow { color: var(--text-dim-2); text-align: center; font-size: 14px; padding: 2px 0; }
+
+/* TIMELINE */
+.timeline { position: relative; padding-left: 32px; }
+.timeline::before { content: ''; position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.timeline-item { position: relative; padding-bottom: 32px; }
+.timeline-item::before { content: ''; position: absolute; left: -27px; top: 8px; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold-glow); }
+.timeline-item .date { font-family: var(--font-mono); font-size: 11px; color: var(--gold); margin-bottom: 4px; }
+.timeline-item h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.timeline-item p { color: var(--text-dim); font-size: 14px; }
+
+/* PRICING */
+.price-card { background: var(--surface); border: 1px solid var(--border-dim); border-radius: var(--radius-lg); padding: 32px; position: relative; }
+.price-card.featured { border-color: var(--gold); background: linear-gradient(135deg, var(--surface), rgba(201, 168, 76, 0.05)); transform: scale(1.02); }
+.price-card .tier { font-family: var(--font-mono); font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; }
+.price-card .price { font-size: 48px; font-weight: 600; margin: 12px 0 4px; }
+.price-card .price span { font-size: 16px; color: var(--text-dim); }
+.price-card ul { list-style: none; margin: 24px 0; }
+.price-card ul li { padding: 8px 0; border-bottom: 1px solid var(--border-dim); color: var(--text-dim); font-size: 14px; }
+.price-card ul li::before { content: '✓ '; color: var(--green); font-weight: 600; }
+
+/* BLOG */
+.blog-card { background: var(--surface); border: 1px solid var(--border-dim); border-radius: var(--radius); overflow: hidden; transition: var(--transition); }
+.blog-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.blog-card .cover { aspect-ratio: 16/9; background: linear-gradient(135deg, var(--surface-2), var(--bg-2)); display: flex; align-items: center; justify-content: center; font-size: 64px; }
+.blog-card .body { padding: 20px; }
+.blog-card .meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim-2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.blog-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+.blog-card p { color: var(--text-dim); font-size: 14px; line-height: 1.6; }
+
+/* CTA */
+.cta-box { background: linear-gradient(135deg, var(--surface) 0%, var(--bg-2) 100%); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 60px 40px; text-align: center; position: relative; overflow: hidden; }
+.cta-box::before { content: ''; position: absolute; top: -50%; right: -10%; width: 60%; height: 200%; background: radial-gradient(ellipse, var(--gold-glow), transparent 60%); opacity: 0.4; pointer-events: none; }
+.cta-box h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 500; margin-bottom: 16px; position: relative; }
+.cta-box p { color: var(--text-dim); font-size: 16px; margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto; position: relative; }
+.cta-box .ctas { position: relative; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* CODE BLOCK */
+.code { background: var(--bg); border: 1px solid var(--border-dim); border-radius: var(--radius); padding: 16px; font-family: var(--font-mono); font-size: 13px; color: var(--text); overflow-x: auto; }
+.code .comment { color: var(--text-dim-2); }
+.code .keyword { color: var(--purple); }
+.code .string { color: var(--green); }
+.code .func { color: var(--blue); }
+
+/* FOOTER */
+.footer { border-top: 1px solid var(--border-dim); padding: 40px 32px 24px; margin-top: 60px; }
+.footer-inner { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; }
+@media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 500px) { .footer-inner { grid-template-columns: 1fr; } }
+.footer-brand p { font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-top: 12px; max-width: 320px; }
+.footer h4 { font-family: var(--font-mono); font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+.footer ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer ul a { color: var(--text-dim); font-size: 13px; }
+.footer ul a:hover { color: var(--text); }
+.footer-bottom { max-width: 1400px; margin: 40px auto 0; padding-top: 24px; border-top: 1px solid var(--border-dim); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-dim-2); font-family: var(--font-mono); }
+.footer-bottom .legal { display: flex; gap: 16px; }
+.footer-bottom .legal a { color: var(--text-dim-2); }
+.footer-bottom .legal a:hover { color: var(--text-dim); }
+
+/* STATUS BAR */
+.status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(8, 6, 12, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border-dim); z-index: 50; font-family: var(--font-mono); font-size: 10px; }
+.status-bar-inner { max-width: 1400px; margin: 0 auto; padding: 6px 32px; display: flex; gap: 24px; overflow-x: auto; }
+.status-item { display: flex; align-items: center; gap: 6px; color: var(--text-dim); white-space: nowrap; }
+.status-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 4px var(--green-glow); }
+.status-item .v { color: var(--gold); font-weight: 600; }
+
+/* ANIMATIONS */
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.5; } }
+
+
+/* === MEOK Character Emergence (added 2026-06-29) === */
+.character-egg { display:inline-block; width:48px; height:64px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; position:relative; vertical-align:middle; margin:0 4px; background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 50%), radial-gradient(circle at 70% 70%, rgba(201, 168, 76, 0.4), transparent 50%); box-shadow:0 0 12px rgba(201, 168, 76, 0.4); animation:eggFloat 4s ease-in-out infinite; }
+@keyframes eggFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+.egg-sovereign { background: linear-gradient(135deg, #b0d4f0, #6ba8d4 50%, #2a5a8a); }
+.egg-guardian { background: linear-gradient(135deg, #2a4a6a, #1a3a5a 50%, #0a2a3a); }
+.egg-scout { background: linear-gradient(135deg, #e8a89a, #d47a5a 50%, #a05a3a); }
+.egg-strategist { background: linear-gradient(135deg, #4a8a5a, #2a5a3a 50%, #1a4a2a); }
+.egg-creator { background: linear-gradient(135deg, #f0d090, #d4a55a 50%, #a07a3a); }
+.egg-companion { background: linear-gradient(135deg, #88c8b8, #5aa89a 50%, #3a8878); }
+.egg-sage { background: linear-gradient(135deg, #f0e0a0, #d4c45a 50%, #a0903a); }
+.council-card-emergence { position:relative; overflow:hidden; }
+.council-card-emergence::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(201, 168, 76, 0.4), transparent 50%); opacity:0; transition:opacity 0.3s; pointer-events:none; }
+.council-card-emergence:hover::before { opacity:1; }
+</style>
+</head>
+<body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+
+
+<!-- TOPBAR (shared) -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="logo">
+      <span class="dot"></span>
+      <span>MEOK<span class="accent">.WORLD</span></span>
+    </a>
+    <nav>
+      <a href="/"  class="active">Home</a>
+      <a href="/csoai-os/v2-temple-os.html" >OS</a>
+      <a href="/council" >Council</a>
+      <a href="/mcp" >MCPs</a>
+      <a href="/temples" >Temples</a>
+      <a href="/research" >Research</a>
+      <a href="/blog" >Blog</a>
+      <a href="/about" >About</a>
+    </nav>
+    <div class="cta">
+      <a class="login" href="/login">Log in</a>
+      <a class="start" href="/csoai-os/v2-signup-wizard.html">Start free →</a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE CONTENT -->
+<main class="page">
+
+<section class="hero"><span class="hero-tag">▸ Compliance / NIST AI RMF</span>
+<h1>NIST AI Risk Management Framework 1.0 <span class="accent">NIST AI RMF</span></h1>
+<p>GOVERN/MAP/MEASURE/MANAGE. The US AI risk framework. Released Jan 2023.</p>
+</section>
+<section class="section"><div class="section-tag">▸ Key points</div><h2>What you need to know.</h2><ul style="list-style: none; padding: 0; margin-top: 24px;"><li>4 functions: GOVERN, MAP, MEASURE, MANAGE</li><li>AI RMF + generative AI profile (July 2024)</li><li>Voluntary for US, mandatory for federal agencies</li><li>Companion: NIST Cybersecurity Framework 2.0</li><li>Risk tier classification: minimal, limited, high, unacceptable</li></ul></section>
+</main>
+
+<!-- FOOTER (shared) -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <span class="dot"></span>
+        <span>MEOK<span class="accent">.WORLD</span></span>
+      </div>
+      <p>MEOK AI Labs · CSOAI Ltd · UK Companies House 16939677. Built with care. Sovereign, auditable, public.</p>
+    </div>
+    <div>
+      <h4>Universe</h4>
+      <ul>
+        <li><a href="/universe">MEOK Universe</a></li>
+        <li><a href="/town">Town</a></li>
+        <li><a href="/dome">DOME</a></li>
+        <li><a href="/go">MEOK GO</a></li>
+        <li><a href="/ar">MEOK AR</a></li>
+        <li><a href="/characters">Characters</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>OS</h4>
+      <ul>
+        <li><a href="/csoai-os/v2-temple-os.html">Sovereign OS</a></li>
+        <li><a href="/csoai-os/v2-signup-wizard.html">i-character</a></li>
+        <li><a href="/council">Council</a></li>
+        <li><a href="/research">Research</a></li>
+        <li><a href="/os/any-llm">Any LLM</a></li>
+        <li><a href="/guardian">Guardian</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/press">Press</a></li>
+        <li><a href="/roadmap">Roadmap</a></li>
+        <li><a href="/careers">Careers</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Portfolio</h4>
+      <ul>
+        <li><a href="https://csoai.org">CSOAI</a></li>
+        <li><a href="https://www.cobolbridge.ai">COBOL Bridge</a></li>
+        <li><a href="https://proofof.ai">ProofOf.AI</a></li>
+        <li><a href="/ai-act">Compliance Centre</a></li>
+        <li><a href="https://github.com/CSOAI-ORG">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 MEOK AI LABS · CSOAI LTD · UK Companies House <strong style="color: var(--gold);">16939677</strong> · Registered in England & Wales.</span>
+    <div class="legal">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/cookies">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<!-- LIVE STATUS BAR (shared) -->
+<div class="status-bar" id="statusBar">
+  <div class="status-bar-inner">
+    <div class="status-item"><span class="dot"></span><span>SOV3</span><span class="v">200 OK</span></div>
+    <div class="status-item"><span>Hive</span><span class="v" id="statusHive">34/34</span></div>
+    <div class="status-item"><span>Council</span><span class="v">13/13</span></div>
+    <div class="status-item"><span>BFT</span><span class="v">9/13</span></div>
+    <div class="status-item"><span>MCPs</span><span class="v" id="statusMcps">218</span></div>
+    <div class="status-item"><span>EU AI Act</span><span class="v">T-37</span></div>
+  </div>
+</div>
+
+<script>
+// Live backend polling (shared across all pages)
+async function pollStatus() {
+  try {
+    const r = await fetch('/api/backend/status').catch(() => null);
+    if (r && r.ok) {
+      const j = await r.json();
+      if (j.hive) document.getElementById('statusHive').textContent = j.hive;
+      if (j.mcps) document.getElementById('statusMcps').textContent = j.mcps;
+    }
+  } catch (e) {}
+}
+pollStatus();
+setInterval(pollStatus, 30000);
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

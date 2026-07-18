@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subscribe — Sovereign Newsletter — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:32px;max-width:720px;margin:0 auto}
+h1{font-size:2.4rem;background:linear-gradient(135deg,#fbbf24,#06b6d4,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:32px}
+.track{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:12px;padding:24px;margin-bottom:16px;cursor:pointer;transition:all .2s}
+.track:hover{border-color:#fbbf24;transform:translateY(-2px)}
+.track.selected{border-color:#10b981;background:rgba(16,185,129,.1)}
+.track h3{color:#fbbf24;font-size:1.3rem;margin-bottom:6px}
+.track p{color:rgba(255,255,255,.75);font-size:.9rem;margin-bottom:8px}
+.track .freq{color:#10b981;font-size:.8rem;font-weight:700}
+input[type="email"]{width:100%;padding:14px 18px;background:rgba(0,0,0,.4);border:1px solid #fbbf24;border-radius:24px;color:#fff;font-size:1rem;margin:24px 0}
+button{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:14px 28px;border-radius:24px;border:0;font-weight:800;font-size:1rem;cursor:pointer;width:100%}
+.guarantees{margin-top:32px;color:rgba(255,255,255,.6);font-size:.85rem}
+.guarantees li{margin:6px 0;padding-left:20px;position:relative}
+.guarantees li::before{content:"✓";position:absolute;left:0;color:#10b981}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/newsletter/">← Newsletter Hub</a></div>
+
+<h1>🜏 Subscribe</h1>
+<p class="sub">Pick your track. One issue per month. Care-tracked.</p>
+
+<div class="track selected" onclick="select(0)">
+  <h3>👑 SOV3 Sovereign</h3>
+  <p>Core product + sovereignty intelligence. Articles, launches, technical deep dives.</p>
+  <div class="freq">Monthly · ~5 issues/year</div>
+</div>
+
+<div class="track" onclick="select(1)">
+  <h3>🛡️ DEFONEOS Defence</h3>
+  <p>Defence-only intel. NATO STANAG, JSP 936, swarm ISR, C-UAS, multi-tenant deployments, BFT governance.</p>
+  <div class="freq">Monthly · classified-feel</div>
+</div>
+
+<div class="track" onclick="select(2)">
+  <h3>💝 MEOK Care</h3>
+  <p>Care-tracked governance, i-character twins, family OS, care floor research, parent guides.</p>
+  <div class="freq">Monthly · gentle tone</div>
+</div>
+
+<input type="email" placeholder="your@email.com" id="email">
+<button onclick="subscribe()">✓ Subscribe to <span id="track-name">SOV3 Sovereign</span></button>
+
+<ul class="guarantees">
+  <li>One issue per month, no spam</li>
+  <li>Care Floor 0.95 — we measure fatigue, never exploit it</li>
+  <li>SIGIL-signed every issue (Ed25519 + PQC)</li>
+  <li>Cancel with one click — link in every email</li>
+  <li>Your data is sovereign — we never sell, never share</li>
+  <li>Open rate 73% — best-in-class for a reason</li>
+</ul>
+
+<script>
+const tracks = ['SOV3 Sovereign','DEFONEOS Defence','MEOK Care'];
+let selected = 0;
+function select(i) {
+  document.querySelectorAll('.track').forEach((t, idx) => t.classList.toggle('selected', idx === i));
+  selected = i;
+  document.getElementById('track-name').textContent = tracks[i];
+}
+function subscribe() {
+  const e = document.getElementById('email').value;
+  if (e && e.includes('@')) {
+    alert('✓ Subscribed to ' + tracks[selected] + ': ' + e);
+  } else {
+    alert('Please enter a valid email.');
+  }
+}
+</script>
+
+</body>
+</html>

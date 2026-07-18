@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛂 Ed25519 Agent Identity — meok-sovereign-passport-mcp docs</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    background: #020202; color: #f8fafc; min-height: 100vh;
+    display: grid; grid-template-columns: 280px 1fr;
+  }
+  nav {
+    background: rgba(10,20,15,0.7); padding: 20px; height: 100vh;
+    overflow-y: auto; border-right: 1px solid rgba(74,222,128,0.2);
+  }
+  nav h1 { color: #fbbf24; font-size: 1.1rem; margin-bottom: 16px; }
+  nav h2 { color: #4ade80; font-size: 0.75rem; text-transform: uppercase;
+    margin: 16px 0 6px; letter-spacing: 1px; }
+  nav a {
+    display: block; color: #cbd5e1; text-decoration: none;
+    padding: 4px 8px; font-size: 0.85rem; border-radius: 4px;
+  }
+  nav a:hover { background: rgba(74,222,128,0.15); color: #4ade80; }
+  main { padding: 40px; max-width: 900px; }
+  h1 { color: #fbbf24; font-size: 2rem; margin-bottom: 12px; border-bottom: 1px solid rgba(74,222,128,0.2); padding-bottom: 12px; }
+  h2 { color: #4ade80; margin: 30px 0 12px; font-size: 1.4rem; }
+  h3 { color: #c9a84c; margin: 20px 0 10px; font-size: 1.1rem; }
+  p, li { color: #cbd5e1; line-height: 1.7; margin: 8px 0; }
+  pre {
+    background: #000; color: #4ade80; padding: 16px;
+    border-radius: 8px; overflow-x: auto; font-size: 0.85rem;
+    border: 1px solid rgba(74,222,128,0.3); margin: 12px 0;
+  }
+  code { background: rgba(74,222,128,0.1); padding: 2px 6px;
+    border-radius: 3px; color: #4ade80; font-family: 'JetBrains Mono', monospace; }
+  pre code { background: none; padding: 0; }
+  li { margin-left: 24px; }
+  .breadcrumb { color: #94a3b8; font-size: 0.85rem; margin-bottom: 16px; }
+  .breadcrumb a { color: #4ade80; text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <h1>🜏 Sovereign MCP Docs</h1>
+  <h2>Identity</h2><a href="./passport.html" style="background: rgba(74,222,128,0.25); color: #4ade80; font-weight: 700;">🛂 Ed25519 Agent Identity</a><h2>Safety</h2><a href="./guardrails.html">🛡️ Prompt Injection Defense</a><a href="./worm.html">🐛 Morris-II Defensive Guard</a><h2>Audit</h2><a href="./receipt.html">📜 Hash-Chained Audit Receipts</a><a href="./supply-chain.html">📦 SBOM + SLSA + Bitcoin</a><a href="./immortal.html">∞ Eternal Memory Ledger</a><h2>Governance</h2><a href="./governance.html">⚖️ 5-Element Zero Trust</a><a href="./council.html">🏛️ 12-Around-1 BFT Voting</a><a href="./honour.html">🪖 19 Sovereign Factors</a><h2>Compliance</h2><a href="./eu-ai-act-kit.html">🇪🇺 EU AI Act Survival Kit</a><a href="./defence.html">🛡️ Defensive Doctrine</a><a href="./dora.html">📋 EU DORA 5-Pillar Audit</a><a href="./iso42001.html">📚 ISO/IEC 42001 AIMS</a><h2>Commerce</h2><a href="./x402-payment.html">💎 HTTP 402 Micropayments</a><h2>Visualization</h2><a href="./globe.html">🌍 33-Hive Geo Registry</a><a href="./satellite.html">🛰️ Free Satellite Sources</a><h2>Embodiment</h2><a href="./avatar.html">🐉 VRM Embodied Avatar</a><h2>Memory</h2><a href="./memory.html">🧠 Episodic + Graph Memory</a><h2>Lifecycle</h2><a href="./skills.html">⚙️ Skill Lifecycle</a><h2>Physical (iOK Farm)</h2><a href="./iot.html">📡 iOK Farm IoT</a><a href="./pond.html">🐟 Koi Pond Care</a><h2>Intuition</h2><a href="./intuition.html">🔮 16-dim Mamba-2 Hunch</a>
+  <hr style="border-color: rgba(74,222,128,0.2); margin: 20px 0;">
+  <a href="../sovereign-mcps/" style="color: #fbbf24; font-weight: 700;">← All 22 MCPs</a>
+  <a href="../dashboards/" style="color: #4ade80;">📊 5 Dashboards</a>
+  <a href="../whitepapers/" style="color: #4ade80;">📚 5 White Papers</a>
+</nav>
+<main>
+  <div class="breadcrumb"><a href="./">← all 22 sovereign MCPs</a></div>
+  <h1>meok-sovereign-passport-mcp</h1>
+
+<p>**Sovereign Agent Passport MCP** — Ed25519-signed agent identity, delegation with the **narrowing invariant**, gateway enforcement with signed receipts.</p>
+
+<p>Wraps the [Agent Passport System (APS)](https://github.com/aeoess/agent-passport-system) protocol primitives with the **CSOAI sovereign substrate**:</p>
+
+<li>✅ **Ed25519-signed identities** (pure, no EdDSA mixing)</li>
+<li>✅ **Narrowing-invariant delegation** — authority can only decrease</li>
+<li>✅ **Gateway enforcement** with signed receipts (every outcome, both verdicts)</li>
+<li>✅ **BFT council pre-clearance** (12-around-1) before any passport issuance</li>
+<li>✅ **Maternal Covenant pre-inference care floor check**</li>
+<li>✅ **proofof.ai verify URL** on every passport + receipt</li>
+
+<h2>Install</h2>
+
+<pre><code class="language-bash">
+pip install meok-sovereign-passport-mcp
+</code></pre>
+
+<h2>Usage (Python)</h2>
+
+<pre><code class="language-python">
+from meok_sovereign_passport_mcp import (
+    create_passport, verify_passport,
+    create_delegation, evaluate_intent,
+)
+
+# 1. Issue a sovereign passport
+parent = create_passport(
+    agent_id="treasury-bot",
+    role="trader",
+    capabilities=["payments", "refunds", "view-balance"],
+    care_floor_validated=True,  # Maternal Covenant pre-check passed
+    bft_council_id="council-12of1-abc123",  # 12-around-1 BFT pre-cleared
+    spend_limit=10_000.0,
+)
+
+# 2. Verify offline
+v = verify_passport(parent)
+assert v["valid"]
+print(v["verify_url"])  # https://proofof.ai/passport/a1b2c3d4
+
+# 3. Delegate (narrowing enforced)
+child = create_delegation(
+    parent, "refund-bot", "refunder",
+    narrowed_capabilities=["refunds"],
+    spend_limit=500.0,  # &lt;= parent's 10,000
+)
+# raises ValueError if narrowing violated
+
+# 4. Gateway evaluation
+receipt = evaluate_intent(
+    child, "refunds",
+    requested_spend=200.0,
+    revocation_check=lambda aid: False,
+    values_floor_check=lambda p, c: True,  # Maternal Covenant hook
+)
+assert receipt["verdict"] == "permit"
+print(receipt["verify_url"])  # https://proofof.ai/receipt/&lt;id&gt;
+</code></pre>
+
+<h2>Usage (MCP server)</h2>
+
+<pre><code class="language-bash">
+python -m meok_sovereign_passport_mcp
+# Exposes 4 tools: sov_create_passport, sov_verify_passport,
+# sov_create_delegation, sov_evaluate_intent
+</code></pre>
+
+<h2>The Narrowing Invariant</h2>
+
+<p>> Authority can only **decrease** at each transfer point.</p>
+
+<pre><code class="language-mermaid">
+flowchart LR
+    P["Principal&lt;br/&gt;full authority"] --&gt;|"scope: payments&lt;br/&gt;limit: $10K"| A["Agent A&lt;br/&gt;payments, $10K"]
+    A --&gt;|"scope: refunds&lt;br/&gt;limit: $500"| B["Agent B&lt;br/&gt;refunds, $500"]
+    B --&gt;|"$2000 request"| X["denied + signed receipt"]
+</code></pre>
+
+<p>The invariant is **enforced at the delegation boundary** — you cannot delegate more capability, more spend, or longer expiry than you hold.</p>
+
+<h2>Sovereign Substrate</h2>
+
+</p><p>| Layer | What | Substrate |</p>
+</p><p>|---|---|---|</p>
+</p><p>| Identity | did:aps / Ed25519 kid | CSOAI sovereign keypair |</p>
+</p><p>| Delegation | Narrowing invariant | `create_delegation()` |</p>
+</p><p>| Care | Maternal Covenant | `care_floor_validated` flag |</p>
+</p><p>| Council | 12-around-1 BFT | `bft_council_id` field |</p>
+</p><p>| Audit | Ed25519 receipts | `evaluate_intent()` always signs |</p>
+</p><p>| Verify | Public verification | https://proofof.ai/passport/... |</p>
+
+<h2>Reference Implementations</h2>
+
+<li>**APS SDK** — github.com/aeoess/agent-passport-system (Apache 2.0)</li>
+<li>**APS MCP** — github.com/aeoess/agent-passport-mcp (Apache 2.0)</li>
+<li>**Sovereign wrapper** — this package (MIT)</li>
+
+<h2>License</h2>
+
+<p>MIT — CSOAI Ltd (UK 16939677)</p>
+
+<p>---</p>
+
+<p>**The dragon never lies. Every passport is signed. Every receipt is auditable.**</p>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,674 @@
+{
+  "version": "1.0",
+  "ts": "2026-06-29T07:54:17.353688+00:00Z",
+  "generals": [
+    {
+      "id": 1,
+      "name": "Argus",
+      "role": "watchdog",
+      "vm": "gen-1-argus",
+      "watch": [
+        "iOK Farm cameras (4)",
+        "pond IoT stream",
+        "SOV3 log tail"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Scribe",
+      "role": "compliance",
+      "vm": "gen-2-scribe",
+      "watch": [
+        "EU AI Act corpus",
+        "GDPR updates",
+        "DORA Pillar 1-5"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Shield",
+      "role": "safety",
+      "vm": "gen-3-shield",
+      "watch": [
+        "CVE feed",
+        "Morris-II probes",
+        "BFT tally events"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Builder",
+      "role": "architect",
+      "vm": "gen-4-builder",
+      "watch": [
+        "SovTown spec",
+        "UE5 dom spec",
+        "Cesium globe config"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Abacus",
+      "role": "quant",
+      "vm": "gen-5-abacus",
+      "watch": [
+        "Ollama tokens/s",
+        "Mamba-2 16-dim state",
+        "BFT consensus scores"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Lex",
+      "role": "legal",
+      "vm": "gen-6-lex",
+      "watch": [
+        "openpatent.ai",
+        "UK AI Bill",
+        "EU AI Act amendments"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Scale",
+      "role": "ethics",
+      "vm": "gen-7-scale",
+      "watch": [
+        "Maternal Covenant",
+        "16 care probes",
+        "harm detection"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Crow",
+      "role": "risk",
+      "vm": "gen-8-crow",
+      "watch": [
+        "risk prediction",
+        "stress test",
+        "exposure log"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Gear",
+      "role": "operations",
+      "vm": "gen-9-gear",
+      "watch": [
+        "cron",
+        "Ansible playbook",
+        "Terraform state"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Voice",
+      "role": "comms",
+      "vm": "gen-10-voice",
+      "watch": [
+        "Kokoro TTS",
+        "whisper STT",
+        "iOK Farm audio"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Owl",
+      "role": "research",
+      "vm": "gen-11-owl",
+      "watch": [
+        "arxiv",
+        "huggingface",
+        "deep research queue"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Dragon",
+      "role": "sovereign",
+      "vm": "gen-12-dragon",
+      "watch": [
+        "substrate",
+        "all cross-General proposals",
+        "AB Uno root"
+      ]
+    }
+  ],
+  "all_events": [
+    {
+      "general": "Argus",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Argus",
+          "role": "watchdog",
+          "watched": "iOK Farm cameras (4)",
+          "action": "processed iOK Farm cameras (4) for tick 1",
+          "kid": "general-1-76da2b99edd6",
+          "sig": "76da2b99edd6764d7ba50a05c28607d4bfc766bbb70e301e4e5f5fc471cb6052",
+          "ts": "2026-06-29T07:54:17.352077+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Argus",
+          "role": "watchdog",
+          "watched": "pond IoT stream",
+          "action": "processed pond IoT stream for tick 2",
+          "kid": "general-1-3342e1c3336c",
+          "sig": "3342e1c3336cd3b1d6fd856316be1fa5ed0da8624ef13e75b228b6e033d5bba0",
+          "ts": "2026-06-29T07:54:17.352102+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Argus",
+          "role": "watchdog",
+          "watched": "SOV3 log tail",
+          "action": "processed SOV3 log tail for tick 3",
+          "kid": "general-1-bf402e6121de",
+          "sig": "bf402e6121de7d20b7bfce498306d15c675172022575d4ef7f0adc9ae6ae473b",
+          "ts": "2026-06-29T07:54:17.352127+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Scribe",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Scribe",
+          "role": "compliance",
+          "watched": "EU AI Act corpus",
+          "action": "processed EU AI Act corpus for tick 1",
+          "kid": "general-2-e971781bd50c",
+          "sig": "e971781bd50ce85529809b2a4c13d753ed66aa4d32d773e57f68efecdabdae41",
+          "ts": "2026-06-29T07:54:17.352568+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Scribe",
+          "role": "compliance",
+          "watched": "GDPR updates",
+          "action": "processed GDPR updates for tick 2",
+          "kid": "general-2-372c7320a136",
+          "sig": "372c7320a1365ce13a9fd67f54946d38ccdd1614adc40338f459348480338c40",
+          "ts": "2026-06-29T07:54:17.352580+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Scribe",
+          "role": "compliance",
+          "watched": "DORA Pillar 1-5",
+          "action": "processed DORA Pillar 1-5 for tick 3",
+          "kid": "general-2-be184d6293ed",
+          "sig": "be184d6293ed19660dc0bcc813e4cfbe8bc248bb8c279138884cf5a3c4277395",
+          "ts": "2026-06-29T07:54:17.352592+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Shield",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Shield",
+          "role": "safety",
+          "watched": "CVE feed",
+          "action": "processed CVE feed for tick 1",
+          "kid": "general-3-978eb712b554",
+          "sig": "978eb712b554a8f6068cc2fd065b5f79706baf7f0061560feb0cce879189a768",
+          "ts": "2026-06-29T07:54:17.352794+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Shield",
+          "role": "safety",
+          "watched": "Morris-II probes",
+          "action": "processed Morris-II probes for tick 2",
+          "kid": "general-3-2fe01c415f34",
+          "sig": "2fe01c415f34393991e947f7bd9d9e27bab9a8a8a1b4fe8a6bb8ea8d05e49118",
+          "ts": "2026-06-29T07:54:17.352808+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Shield",
+          "role": "safety",
+          "watched": "BFT tally events",
+          "action": "processed BFT tally events for tick 3",
+          "kid": "general-3-65c176eae44f",
+          "sig": "65c176eae44f24d98956fe4c9b2c9ade932961064e2907889e6b385331050c0a",
+          "ts": "2026-06-29T07:54:17.352814+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Builder",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Builder",
+          "role": "architect",
+          "watched": "SovTown spec",
+          "action": "processed SovTown spec for tick 1",
+          "kid": "general-4-a2be3c1f396b",
+          "sig": "a2be3c1f396ba0f0a2662954bcde84a40e5b218deab2db0c7e7e59e025c88874",
+          "ts": "2026-06-29T07:54:17.352966+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Builder",
+          "role": "architect",
+          "watched": "UE5 dom spec",
+          "action": "processed UE5 dom spec for tick 2",
+          "kid": "general-4-fb59fea72285",
+          "sig": "fb59fea722857b5f57fb4139348237f779473d1b131bb95e29955df75894178c",
+          "ts": "2026-06-29T07:54:17.352974+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Builder",
+          "role": "architect",
+          "watched": "Cesium globe config",
+          "action": "processed Cesium globe config for tick 3",
+          "kid": "general-4-021cd61c8736",
+          "sig": "021cd61c873650e0c3554969dbc4e2c3122e86b0e79ac0c1f94e3c97568bb983",
+          "ts": "2026-06-29T07:54:17.352981+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Abacus",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Abacus",
+          "role": "quant",
+          "watched": "Ollama tokens/s",
+          "action": "processed Ollama tokens/s for tick 1",
+          "kid": "general-5-bacdf3c281ad",
+          "sig": "bacdf3c281adebe76fefc40c97548881ad5cef36229e3bd432f5e6cab43039f5",
+          "ts": "2026-06-29T07:54:17.353074+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Abacus",
+          "role": "quant",
+          "watched": "Mamba-2 16-dim state",
+          "action": "processed Mamba-2 16-dim state for tick 2",
+          "kid": "general-5-cf61ed40ed41",
+          "sig": "cf61ed40ed413c54ae7b64335b7692b9d86b96b8fc897c7284f6bbe5ce8fd0ca",
+          "ts": "2026-06-29T07:54:17.353080+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Abacus",
+          "role": "quant",
+          "watched": "BFT consensus scores",
+          "action": "processed BFT consensus scores for tick 3",
+          "kid": "general-5-23be80d07c89",
+          "sig": "23be80d07c89c22417c9e7435a94b43bc3e486ea9d13cd52514917fadcf6cc04",
+          "ts": "2026-06-29T07:54:17.353085+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Lex",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Lex",
+          "role": "legal",
+          "watched": "openpatent.ai",
+          "action": "processed openpatent.ai for tick 1",
+          "kid": "general-6-bf3cafeba6fd",
+          "sig": "bf3cafeba6fdb981ee08cf63f7efbec6990d4038bd0b5e93cc000172078637ac",
+          "ts": "2026-06-29T07:54:17.353158+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Lex",
+          "role": "legal",
+          "watched": "UK AI Bill",
+          "action": "processed UK AI Bill for tick 2",
+          "kid": "general-6-965defaf63a9",
+          "sig": "965defaf63a9442b464ff0de2e42e51e090e8b7bd195e5bcc568cd756a26d7fa",
+          "ts": "2026-06-29T07:54:17.353164+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Lex",
+          "role": "legal",
+          "watched": "EU AI Act amendments",
+          "action": "processed EU AI Act amendments for tick 3",
+          "kid": "general-6-39e91a14b95e",
+          "sig": "39e91a14b95e4f517b9aa00def0b0f9d9946a523770d9d1ce61bfc421247a53c",
+          "ts": "2026-06-29T07:54:17.353168+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Scale",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Scale",
+          "role": "ethics",
+          "watched": "Maternal Covenant",
+          "action": "processed Maternal Covenant for tick 1",
+          "kid": "general-7-aa82b32a2308",
+          "sig": "aa82b32a23087146b4521ea2292f59875c80f3921fb8d7ad8a183603c9899881",
+          "ts": "2026-06-29T07:54:17.353237+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Scale",
+          "role": "ethics",
+          "watched": "16 care probes",
+          "action": "processed 16 care probes for tick 2",
+          "kid": "general-7-af53b59dcbce",
+          "sig": "af53b59dcbce089376af0189f03b8578669df6ea2275b847eab5994fdeb17002",
+          "ts": "2026-06-29T07:54:17.353242+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Scale",
+          "role": "ethics",
+          "watched": "harm detection",
+          "action": "processed harm detection for tick 3",
+          "kid": "general-7-257cc59c638d",
+          "sig": "257cc59c638d9e6066f3eeb0e2b855f3271fa1b257b963799fb67912e53f9862",
+          "ts": "2026-06-29T07:54:17.353247+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Crow",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Crow",
+          "role": "risk",
+          "watched": "risk prediction",
+          "action": "processed risk prediction for tick 1",
+          "kid": "general-8-90192ad1c3fb",
+          "sig": "90192ad1c3fb2b213687f072c464d16b728c93d126d2862e1f4edd54a5663487",
+          "ts": "2026-06-29T07:54:17.353308+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Crow",
+          "role": "risk",
+          "watched": "stress test",
+          "action": "processed stress test for tick 2",
+          "kid": "general-8-e31b1bbb0e71",
+          "sig": "e31b1bbb0e710b616a273f2d0a24a341e1c3f41d77a79ee65fd84bc8839933c1",
+          "ts": "2026-06-29T07:54:17.353313+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Crow",
+          "role": "risk",
+          "watched": "exposure log",
+          "action": "processed exposure log for tick 3",
+          "kid": "general-8-5b3789f85d2b",
+          "sig": "5b3789f85d2b026e24a3c3b8f6b018ed96932714bc837a4b65e53365e4f093bd",
+          "ts": "2026-06-29T07:54:17.353318+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Gear",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Gear",
+          "role": "operations",
+          "watched": "cron",
+          "action": "processed cron for tick 1",
+          "kid": "general-9-babe03b5c56b",
+          "sig": "babe03b5c56bdc33a9f8c7b41bf8ca16d64edc352b3464b6eeb97606996b0fda",
+          "ts": "2026-06-29T07:54:17.353379+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Gear",
+          "role": "operations",
+          "watched": "Ansible playbook",
+          "action": "processed Ansible playbook for tick 2",
+          "kid": "general-9-f73a818582c6",
+          "sig": "f73a818582c64ef63d0660602fa830363a50f67168db7dc5848572bc80c79828",
+          "ts": "2026-06-29T07:54:17.353384+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Gear",
+          "role": "operations",
+          "watched": "Terraform state",
+          "action": "processed Terraform state for tick 3",
+          "kid": "general-9-dac0dfb65ac1",
+          "sig": "dac0dfb65ac1a07dcfca58fec67b36b296f3f6342b62e226f9b5d260a3e51bc2",
+          "ts": "2026-06-29T07:54:17.353388+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Voice",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Voice",
+          "role": "comms",
+          "watched": "Kokoro TTS",
+          "action": "processed Kokoro TTS for tick 1",
+          "kid": "general-10-350521e5bd8f",
+          "sig": "350521e5bd8f380183aed4ad9ca7124e6919306407677e0508db3188bb77d7ac",
+          "ts": "2026-06-29T07:54:17.353446+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Voice",
+          "role": "comms",
+          "watched": "whisper STT",
+          "action": "processed whisper STT for tick 2",
+          "kid": "general-10-b8af86f4cc58",
+          "sig": "b8af86f4cc58bcd5401fcc622d2d86d5c03f50e565240efaaf41f855179954d0",
+          "ts": "2026-06-29T07:54:17.353451+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Voice",
+          "role": "comms",
+          "watched": "iOK Farm audio",
+          "action": "processed iOK Farm audio for tick 3",
+          "kid": "general-10-ef438afd78ab",
+          "sig": "ef438afd78abb9314ebf2e73db0944818ae35657a79282d2f60be47a2f509fac",
+          "ts": "2026-06-29T07:54:17.353456+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Owl",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Owl",
+          "role": "research",
+          "watched": "arxiv",
+          "action": "processed arxiv for tick 1",
+          "kid": "general-11-85fc3999fced",
+          "sig": "85fc3999fced2e99e713da4527568831c7b772df1f2aff5deb07eec3a5523941",
+          "ts": "2026-06-29T07:54:17.353527+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Owl",
+          "role": "research",
+          "watched": "huggingface",
+          "action": "processed huggingface for tick 2",
+          "kid": "general-11-fde8d22c3650",
+          "sig": "fde8d22c36501a79655cdc123639b1d0f93532682d9dbd3e29ab54f5f5ec07b3",
+          "ts": "2026-06-29T07:54:17.353531+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Owl",
+          "role": "research",
+          "watched": "deep research queue",
+          "action": "processed deep research queue for tick 3",
+          "kid": "general-11-6a4eb58c8a2f",
+          "sig": "6a4eb58c8a2f50c5a8f2dfc45740e027545763356f1f701d17e9ac5054a13b76",
+          "ts": "2026-06-29T07:54:17.353536+00:00"
+        }
+      ]
+    },
+    {
+      "general": "Dragon",
+      "events": [
+        {
+          "tick": 1,
+          "general": "Dragon",
+          "role": "sovereign",
+          "watched": "substrate",
+          "action": "processed substrate for tick 1",
+          "kid": "general-12-273ef57253e4",
+          "sig": "273ef57253e4b0181ded717e9859e61094a008a6c95150b12f5ddc0df5611023",
+          "ts": "2026-06-29T07:54:17.353590+00:00"
+        },
+        {
+          "tick": 2,
+          "general": "Dragon",
+          "role": "sovereign",
+          "watched": "all cross-General proposals",
+          "action": "processed all cross-General proposals for tick 2",
+          "kid": "general-12-63a9127bc6a2",
+          "sig": "63a9127bc6a2df293b9598a1ff0a5d135bf98967340c4950a303750cd9d774cc",
+          "ts": "2026-06-29T07:54:17.353595+00:00"
+        },
+        {
+          "tick": 3,
+          "general": "Dragon",
+          "role": "sovereign",
+          "watched": "AB Uno root",
+          "action": "processed AB Uno root for tick 3",
+          "kid": "general-12-8079b8f71b5c",
+          "sig": "8079b8f71b5c1778aa4561c11e421dccf9dd5022dc05423a957d4aadbcf62ba3",
+          "ts": "2026-06-29T07:54:17.353599+00:00"
+        }
+      ]
+    }
+  ],
+  "handshake": {
+    "hellos": [
+      {
+        "from": "Argus",
+        "vm": "gen-1-argus",
+        "role": "watchdog",
+        "5d_coord": "x=1,y=0,z=0,t=0,l=0",
+        "kid": "general-1-0842ce52a4d1",
+        "sig": "0842ce52a4d1423bb478cb24bf7a7b8f0f97cf0715d8b780a9f9cdf978a627d5",
+        "ts": "2026-06-29T07:54:17.353624+00:00"
+      },
+      {
+        "from": "Scribe",
+        "vm": "gen-2-scribe",
+        "role": "compliance",
+        "5d_coord": "x=2,y=0,z=0,t=0,l=0",
+        "kid": "general-2-1d02bd093bb7",
+        "sig": "1d02bd093bb747c40831330347c338016be3751fd2b9d18a644a56b8fd58de1d",
+        "ts": "2026-06-29T07:54:17.353632+00:00"
+      },
+      {
+        "from": "Shield",
+        "vm": "gen-3-shield",
+        "role": "safety",
+        "5d_coord": "x=3,y=0,z=0,t=0,l=0",
+        "kid": "general-3-07853052b74a",
+        "sig": "07853052b74ab3c606ed4bf2e20b6dcb8495396078cf4b9b70714c09f95fad1b",
+        "ts": "2026-06-29T07:54:17.353637+00:00"
+      },
+      {
+        "from": "Builder",
+        "vm": "gen-4-builder",
+        "role": "architect",
+        "5d_coord": "x=4,y=0,z=0,t=0,l=0",
+        "kid": "general-4-20a19678e3c2",
+        "sig": "20a19678e3c2ead3bdd73c3bac6fdb2e3e9df0fadb6b17b0f46ea6dcf2212d4b",
+        "ts": "2026-06-29T07:54:17.353642+00:00"
+      },
+      {
+        "from": "Abacus",
+        "vm": "gen-5-abacus",
+        "role": "quant",
+        "5d_coord": "x=5,y=0,z=0,t=0,l=0",
+        "kid": "general-5-b164505661f4",
+        "sig": "b164505661f47b62a3344094459454b106120271cea5d1039de7c3717dcd5980",
+        "ts": "2026-06-29T07:54:17.353647+00:00"
+      },
+      {
+        "from": "Lex",
+        "vm": "gen-6-lex",
+        "role": "legal",
+        "5d_coord": "x=6,y=0,z=0,t=0,l=0",
+        "kid": "general-6-b04ecd76a6f0",
+        "sig": "b04ecd76a6f08fad9e6ed2b3ad892dc90eabb7b5f44387eb3a9b32d22aab4a74",
+        "ts": "2026-06-29T07:54:17.353652+00:00"
+      },
+      {
+        "from": "Scale",
+        "vm": "gen-7-scale",
+        "role": "ethics",
+        "5d_coord": "x=7,y=0,z=0,t=0,l=0",
+        "kid": "general-7-f354d9eb32c9",
+        "sig": "f354d9eb32c96f5686971b4d88c94c2965227972fa80eed9b617ccd0a32adad3",
+        "ts": "2026-06-29T07:54:17.353657+00:00"
+      },
+      {
+        "from": "Crow",
+        "vm": "gen-8-crow",
+        "role": "risk",
+        "5d_coord": "x=8,y=0,z=0,t=0,l=0",
+        "kid": "general-8-bb07867dac4d",
+        "sig": "bb07867dac4d40991acc4d6247822794164500c51a44b8824bf880a737c33474",
+        "ts": "2026-06-29T07:54:17.353663+00:00"
+      },
+      {
+        "from": "Gear",
+        "vm": "gen-9-gear",
+        "role": "operations",
+        "5d_coord": "x=9,y=0,z=0,t=0,l=0",
+        "kid": "general-9-6ecd1538ec6f",
+        "sig": "6ecd1538ec6f2ca4261f5b2a52783fc15160289b431e0eab0e384505e02505c1",
+        "ts": "2026-06-29T07:54:17.353668+00:00"
+      },
+      {
+        "from": "Voice",
+        "vm": "gen-10-voice",
+        "role": "comms",
+        "5d_coord": "x=10,y=0,z=0,t=0,l=0",
+        "kid": "general-10-d9ed24f9cdbb",
+        "sig": "d9ed24f9cdbb40f99b51098a7c134c62b01fa2a2ad56e94e6c58416db3f6c16f",
+        "ts": "2026-06-29T07:54:17.353673+00:00"
+      },
+      {
+        "from": "Owl",
+        "vm": "gen-11-owl",
+        "role": "research",
+        "5d_coord": "x=11,y=0,z=0,t=0,l=0",
+        "kid": "general-11-481745127f67",
+        "sig": "481745127f676b8fae76ad822ebed7a2770ab5e2e9c99f1737d79496f89d3224",
+        "ts": "2026-06-29T07:54:17.353677+00:00"
+      },
+      {
+        "from": "Dragon",
+        "vm": "gen-12-dragon",
+        "role": "sovereign",
+        "5d_coord": "x=12,y=0,z=0,t=0,l=0",
+        "kid": "general-12-b48d588dba64",
+        "sig": "b48d588dba642bd5ee054e2f6deb32455c4600a15f91757343c4fc14d44172b2",
+        "ts": "2026-06-29T07:54:17.353682+00:00"
+      }
+    ],
+    "consensus": true,
+    "bft_yes": 12
+  }
+}

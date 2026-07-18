@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEOK — Born 4 Jul 2026 | Birthday Launch</title>
+  <meta name="description" content="MEOK launched 4 July 2026. 17-day sprint from concept to compliance. EU AI Act Article 50 ready.">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#0d0c18;
+      --navy-light:#13112a;
+      --gold:#c9a84c;
+      --gold-dim:rgba(201,168,76,.35);
+      --gold-glow:rgba(201,168,76,.12);
+      --text-primary:#e8e4f0;
+      --text-muted:#807890;
+      --text-dim:#605870;
+      --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+      --font-mono:'SF Mono','Fira Code','Cascadia Code',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--navy);
+      color:var(--text-primary);
+      font-family:var(--font-sans);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+    /* ── Confetti / celebration background ── */
+    .confetti-container{
+      position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+    }
+    .confetti{
+      position:absolute;width:10px;height:10px;opacity:0.7;
+      animation:confetti-fall linear infinite;
+    }
+    .confetti:nth-child(odd){background:var(--gold);border-radius:50%}
+    .confetti:nth-child(even){background:rgba(201,168,76,.3);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+    .confetti:nth-child(1){left:5%;animation-duration:7s;animation-delay:0s;width:8px;height:8px}
+    .confetti:nth-child(2){left:15%;animation-duration:9s;animation-delay:1s;width:12px;height:12px}
+    .confetti:nth-child(3){left:25%;animation-duration:8s;animation-delay:2s;width:6px;height:6px}
+    .confetti:nth-child(4){left:35%;animation-duration:11s;animation-delay:0.5s;width:10px;height:10px}
+    .confetti:nth-child(5){left:45%;animation-duration:7.5s;animation-delay:3s;width:9px;height:9px}
+    .confetti:nth-child(6){left:55%;animation-duration:10s;animation-delay:1.5s;width:7px;height:7px}
+    .confetti:nth-child(7){left:65%;animation-duration:8.5s;animation-delay:0.2s;width:11px;height:11px}
+    .confetti:nth-child(8){left:75%;animation-duration:12s;animation-delay:2.5s;width:5px;height:5px}
+    .confetti:nth-child(9){left:85%;animation-duration:6.5s;animation-delay:1.8s;width:13px;height:13px}
+    .confetti:nth-child(10){left:95%;animation-duration:9.5s;animation-delay:0.8s;width:8px;height:8px}
+    @keyframes confetti-fall{
+      0%{transform:translateY(-10vh) rotate(0deg);opacity:0.7}
+      100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+    }
+    /* ── Layout ── */
+    .page{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:40px 24px 80px}
+    /* ── Hero ── */
+    .hero{text-align:center;padding:80px 0 60px}
+    .hero .logo{font-size:3.5rem;font-weight:900;letter-spacing:-0.04em;background:linear-gradient(135deg,#c9a84c 0%,#e8d48b 50%,#c9a84c 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero .sub{font-size:1.2rem;color:var(--text-muted);margin-top:8px;letter-spacing:0.02em}
+    .hero .date-badge{
+      display:inline-block;margin-top:20px;padding:10px 28px;
+      border:1.5px solid var(--gold-dim);border-radius:50px;
+      color:var(--gold);font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+      background:rgba(201,168,76,.06);
+    }
+    /* ── Countdown ── */
+    .countdown-section{text-align:center;padding:40px 0 50px}
+    .countdown-section h2{font-size:0.85rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-bottom:20px}
+    .countdown-grid{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+    .countdown-item{background:var(--navy-light);border:1px solid var(--gold-dim);border-radius:12px;padding:16px 24px;min-width:80px;text-align:center}
+    .countdown-item .num{font-size:2.4rem;font-weight:800;color:var(--gold);font-family:var(--font-mono);line-height:1}
+    .countdown-item .label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-top:6px}
+    .launch-day-msg{font-size:1.3rem;color:var(--gold);font-weight:700;padding:24px 0;animation:pulse-gold 2s ease-in-out infinite}
+    @keyframes pulse-gold{0%,100%{opacity:1}50%{opacity:0.5}}
+    /* ── Section common ── */
+    section{margin-top:60px}
+    section h2{
+      font-size:1.5rem;font-weight:700;color:var(--gold);
+      padding-bottom:12px;border-bottom:1px solid var(--gold-dim);
+      margin-bottom:24px;position:relative;
+    }
+    section h2::after{
+      content:'';position:absolute;bottom:-1px;left:0;width:60px;height:2px;background:var(--gold);
+    }
+    /* ── Sprint report ── */
+    .sprint-table{width:100%;border-collapse:collapse;font-size:0.9rem}
+    .sprint-table th{text-align:left;color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;padding:10px 12px 6px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .sprint-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+    .sprint-table tr:last-child td{border-bottom:none}
+    .sprint-table .sprint{color:var(--gold);font-weight:600;font-family:var(--font-mono)}
+    .sprint-table .dates{color:var(--text-dim);font-size:0.8rem;white-space:nowrap}
+    .sprint-table .status{display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:600}
+    .status-shipped{background:rgba(201,168,76,.15);color:var(--gold)}
+    .status-live{background:rgba(0,200,150,.12);color:#2ecc90}
+    .summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:24px}
+    .stat-card{background:var(--navy-light);border:1px solid var(--gold-dim);border-radius:10px;padding:16px;text-align:center}
+    .stat-card .num{font-size:1.8rem;font-weight:800;color:var(--gold);font-family:var(--font-mono)}
+    .stat-card .desc{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dim);margin-top:4px}
+    /* ── Timeline ── */
+    .timeline{position:relative;padding-left:32px}
+    .timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:1.5px;background:var(--gold-dim)}
+    .timeline-item{position:relative;padding:0 0 28px 20px}
+    .timeline-item::before{content:'';position:absolute;left:-26px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--navy);border:2px solid var(--gold)}
+    .timeline-item:last-child{padding-bottom:0}
+    .timeline-item .t-date{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);font-family:var(--font-mono)}
+    .timeline-item .t-title{font-weight:700;color:var(--gold);margin:2px 0 4px}
+    .timeline-item .t-desc{font-size:0.85rem;color:var(--text-muted);line-height:1.5}
+    /* ── Certification badges ── */
+    .cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+    .cert-card{
+      background:var(--navy-light);border:1px solid var(--gold-dim);border-radius:12px;
+      padding:20px;text-align:center;transition:border-color .25s,box-shadow .25s;
+    }
+    .cert-card:hover{border-color:var(--gold);box-shadow:0 0 24px var(--gold-glow)}
+    .cert-card .score{font-size:2.2rem;font-weight:900;font-family:var(--font-mono);color:var(--gold)}
+    .cert-card .score-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-top:2px}
+    .cert-card .cert-name{font-size:0.8rem;font-weight:600;margin-top:10px;color:var(--text-primary)}
+    .cert-card .cert-status{font-size:0.65rem;margin-top:4px;padding:2px 10px;border-radius:20px;display:inline-block}
+    .cert-pending{background:rgba(201,168,76,.1);color:var(--gold)}
+    .cert-ready{background:rgba(0,200,150,.12);color:#2ecc90}
+    /* ── Customer announcement ── */
+    .customer-announce{background:var(--navy-light);border:1.5px dashed var(--gold-dim);border-radius:16px;padding:40px;text-align:center}
+    .customer-announce .placeholder-icon{font-size:2.5rem;margin-bottom:12px;opacity:0.4}
+    .customer-announce h3{color:var(--text-muted);font-size:1rem;font-weight:400;margin-bottom:8px}
+    .customer-announce .ready-text{color:var(--gold);font-size:0.85rem;font-weight:600;letter-spacing:0.04em}
+    /* ── Footer ── */
+    .footer{text-align:center;margin-top:80px;padding-top:24px;border-top:1px solid rgba(255,255,255,.04)}
+    .footer p{font-size:0.75rem;color:var(--text-dim)}
+    .footer .mrr{font-size:0.7rem;color:var(--text-muted);margin-top:4px;font-style:italic}
+    /* ── Responsive ── */
+    @media(max-width:600px){
+      .page{padding:24px 16px 60px}
+      .hero{padding:50px 0 40px}
+      .hero .logo{font-size:2.4rem}
+      .hero .sub{font-size:1rem}
+      .countdown-item{padding:12px 16px;min-width:60px}
+      .countdown-item .num{font-size:1.8rem}
+      .sprint-table{font-size:0.8rem}
+      .sprint-table th,.sprint-table td{padding:6px 8px}
+      .summary-stats{grid-template-columns:repeat(2,1fr)}
+      .cert-grid{grid-template-columns:1fr 1fr}
+      .customer-announce{padding:24px 16px}
+    }
+    @media(max-width:400px){
+      .cert-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Confetti backdrop -->
+<div class="confetti-container" aria-hidden="true">
+  <div class="confetti"></div><div class="confetti"></div><div class="confetti"></div>
+  <div class="confetti"></div><div class="confetti"></div><div class="confetti"></div>
+  <div class="confetti"></div><div class="confetti"></div><div class="confetti"></div>
+  <div class="confetti"></div>
+</div>
+
+<div class="page">
+
+  <!-- ═══ HERO ═══ -->
+  <header class="hero">
+    <div class="logo">MEOK</div>
+    <p class="sub">EU AI Act Compliance · Article 50 Ready</p>
+    <div class="date-badge">&#127881; Born 4 July 2026</div>
+  </header>
+
+  <!-- ═══ COUNTDOWN ═══ -->
+  <section class="countdown-section">
+    <h2>Launch Day — 4 July 2026</h2>
+    <div class="countdown-grid">
+      <div class="countdown-item">
+        <div class="num" id="cd-days">0</div>
+        <div class="label">Days</div>
+      </div>
+      <div class="countdown-item">
+        <div class="num" id="cd-hours">0</div>
+        <div class="label">Hours</div>
+      </div>
+      <div class="countdown-item">
+        <div class="num" id="cd-minutes">0</div>
+        <div class="label">Minutes</div>
+      </div>
+      <div class="countdown-item">
+        <div class="num" id="cd-seconds">0</div>
+        <div class="label">Seconds</div>
+      </div>
+    </div>
+    <div class="launch-day-msg" id="launch-message">&#127881; MEOK IS LIVE &#127881;</div>
+  </section>
+
+  <!-- ═══ SPRINT REPORT ═══ -->
+  <section>
+    <h2>17-Day Sprint Report</h2>
+    <p style="color:var(--text-muted);margin-bottom:20px;font-size:0.9rem">
+      From concept to launch in 17 days — 4 sprints, zero-to-compliant.
+    </p>
+    <table class="sprint-table">
+      <thead>
+        <tr><th>Sprint</th><th>Dates</th><th>What Shipped</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sprint">Sprint 1</td>
+          <td class="dates">17–19 Jun</td>
+          <td>Foundation: branding, domain (meok.ai), GitHub org, Hermes Agent bootstrap, EU AI Act Article 50 research, MEOK NAVY/GOLD theme, initial public pages (Article 50 compliance suite)</td>
+          <td><span class="status status-live">&#10003; Live</span></td>
+        </tr>
+        <tr>
+          <td class="sprint">Sprint 2</td>
+          <td class="dates">20–25 Jun</td>
+          <td>Intake pipeline: FAQPage schema verification across 6 pages, pricing page (Free/Pro/Enterprise tiers), lead magnets (NHS, Monzo, Gaming), EU Code of Practice badge, CROSS_LINK mesh, 30-hive data check, 30-hive cross-link plan</td>
+          <td><span class="status status-live">&#10003; Live</span></td>
+        </tr>
+        <tr>
+          <td class="sprint">Sprint 3</td>
+          <td class="dates">26 Jun – 1 Jul</td>
+          <td>Surface audit (4 surfaces), Keystone attestation engine design, free attestation pipeline (200 certs / 20 verticals), customer onboarding schema, Stripe staging, human gate audit (H1–H3), Universe Bundle pricing page</td>
+          <td><span class="status status-live">&#10003; Live</span></td>
+        </tr>
+        <tr>
+          <td class="sprint">Sprint 4</td>
+          <td class="dates">2–3 Jul</td>
+          <td>DRAGON MODE: Birthday launch page, 200 attestations batch generation, gate closure (DNS, npm 2FA, Stripe live), launch handoff docs, post-launch roadmap, final pre-launch checks</td>
+          <td><span class="status status-shipped">&#9733; Shipped</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="num">17</div>
+        <div class="desc">Days to Launch</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">4</div>
+        <div class="desc">Sprints</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">12+</div>
+        <div class="desc">Pages Shipped</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">£0</div>
+        <div class="desc">MRR (Honest)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 100/100 CERTIFICATION BADGES ═══ -->
+  <section>
+    <h2>&#127942; Certification Scores</h2>
+    <p style="color:var(--text-muted);margin-bottom:20px;font-size:0.85rem">
+      Independent audit scores — full results posted post-launch.
+    </p>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <div class="score">—</div>
+        <div class="score-label">/ 100</div>
+        <div class="cert-name">EU AI Act Article 50<br>Compliance Score</div>
+        <div class="cert-status cert-pending">Audit Scheduled</div>
+      </div>
+      <div class="cert-card">
+        <div class="score">—</div>
+        <div class="score-label">/ 100</div>
+        <div class="cert-name">EU Code of Practice<br>Alignment Score</div>
+        <div class="cert-status cert-pending">Audit Scheduled</div>
+      </div>
+      <div class="cert-card">
+        <div class="score">—</div>
+        <div class="score-label">/ 100</div>
+        <div class="cert-name">Transparency<br>Marking Score</div>
+        <div class="cert-status cert-pending">Audit Scheduled</div>
+      </div>
+      <div class="cert-card">
+        <div class="score">—</div>
+        <div class="score-label">/ 100</div>
+        <div class="cert-name">Security &amp; Privacy<br>Posture Score</div>
+        <div class="cert-status cert-pending">Audit Scheduled</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FIRST CUSTOMER ═══ -->
+  <section>
+    <h2>&#127970; First Customer</h2>
+    <div class="customer-announce">
+      <div class="placeholder-icon">&#128226;</div>
+      <h3>First customer announcement coming soon</h3>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin:8px 0">
+        Onboarding pipeline is active. Enterprises in healthcare, finance, and legal verticals are evaluating MEOK for EU AI Act compliance.
+      </p>
+      <p class="ready-text">&#9672; First named customer will be announced post-launch &#9672;</p>
+    </div>
+  </section>
+
+  <!-- ═══ 17-DAY TIMELINE ═══ -->
+  <section>
+    <h2>&#128197; 17-Day Sprint Timeline</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="t-date">Day 1 · 17 Jun</div>
+        <div class="t-title">Sprint 1 Begins</div>
+        <div class="t-desc">Branding, domain registration, GitHub org created, Hermes Agent bootstrapped, initial EU AI Act Article 50 research complete.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-date">Day 3 · 19 Jun</div>
+        <div class="t-title">First Pages Live</div>
+        <div class="t-desc">MEOK NAVY/GOLD theme established. Article 50 transparency, deepfake, bot, and Code of Practice pages deployed.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-date">Day 4 · 20 Jun</div>
+        <div class="t-title">Sprint 2 — Intake</div>
+        <div class="t-desc">FAQPage schema verification, pricing tiers (Free/Pro/Enterprise), lead magnets for NHS, Monzo, Gaming.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-date">Day 9 · 25 Jun</div>
+        <div class="t-title">Cross-Link Mesh</div>
+        <div class="t-desc">30-hive cross-link plan, data check, EU Code of Practice badge deployed. All public pages interconnected.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-date">Day 10 · 26 Jun</div>
+        <div class="t-title">Sprint 3 — Depth</div>
+        <div class="t-desc">4-surface audit, keystone attestation engine designed, 200-cert pipeline planned, Stripe staging set up.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-date">Day 15 · 1 Jul</div>
+        <div class="t-title">Gate Audits Complete</div>
+        <div class="t-desc">Human gates H1–H3 audited (DNS, npm 2FA, Stripe live). Universe Bundle pricing page launched.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-date">Day 16 · 2 Jul</div>
+        <div class="t-title">Sprint 4 — DRAGON MODE</div>
+        <div class="t-desc">Pre-launch burst: birthday page, batch attestation generation, gate closure, handoff docs, post-launch roadmap.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-date">Day 17 · 3 Jul</div>
+        <div class="t-title">Final Checks</div>
+        <div class="t-desc">Pre-launch checklist complete. Everything staged for 4 July launch.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-date">Day 18 · 4 Jul</div>
+        <div class="t-title">&#127881; LAUNCH DAY</div>
+        <div class="t-desc" style="color:var(--gold);font-weight:600">MEOK goes live. EU AI Act compliance, available to the world.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <p>MEOK — EU AI Act Compliance Suite</p>
+    <p class="mrr">Honest accounting: £0 MRR · Launched 4 July 2026</p>
+    <p class="mrr" style="margin-top:8px">Built in 17 days · <a href="https://meok.ai" style="color:var(--gold);text-decoration:none">meok.ai</a></p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  const launch = new Date('2026-07-04T00:00:00Z');
+  const daysEl = document.getElementById('cd-days');
+  const hoursEl = document.getElementById('cd-hours');
+  const minutesEl = document.getElementById('cd-minutes');
+  const secondsEl = document.getElementById('cd-seconds');
+  const msgEl = document.getElementById('launch-message');
+
+  function tick(){
+    const now = new Date();
+    const diff = launch - now;
+    if(diff <= 0){
+      daysEl.textContent = '0';
+      hoursEl.textContent = '0';
+      minutesEl.textContent = '0';
+      secondsEl.textContent = '0';
+      msgEl.textContent = '\u{1F389} MEOK IS LIVE \u{1F389}';
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    daysEl.textContent = days;
+    hoursEl.textContent = String(hours).padStart(2,'0');
+    minutesEl.textContent = String(minutes).padStart(2,'0');
+    secondsEl.textContent = String(seconds).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>

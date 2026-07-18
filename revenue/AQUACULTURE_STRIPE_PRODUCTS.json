@@ -1,0 +1,165 @@
+{
+  "_meta": {
+    "purpose": "Stripe product + price + payment-link spec for 5 new MEOK aquaculture MCPs",
+    "stripe_account": "acct_1TLlEKQvIueK5Xpb (MEOK AI LTD, GBP, GB)",
+    "secret_key_path": "~/clawd/meok-labs-engine/.stripe-keys",
+    "create_pattern": "Use stripe-cli or Stripe MCP (when reconnected). Each price needs a corresponding payment_link with success_url -> meok.ai/thanks?product=<id>",
+    "tax_behavior": "exclusive",
+    "billing_currency": "gbp",
+    "drafted": "2026-05-21",
+    "applies_to_session": "Aquaponics takeover playbook"
+  },
+  "products": [
+    {
+      "name": "MEOK RSPCA Aquaculture MCP — Pro",
+      "metadata": {
+        "mcp": "meok-rspca-aquaculture-mcp",
+        "pypi": "meok-rspca-aquaculture-mcp",
+        "tier": "pro",
+        "vertical": "aquaculture",
+        "audience": "uk-trout-salmon-farms"
+      },
+      "description": "RSPCA Assured trout (2025.07) + salmon (2024.05) welfare compliance: gap analysis, audit-ready evidence pack, signed welfare attestations.",
+      "tax_code": "txcd_10103001",
+      "prices": [
+        {"unit_amount": 49900, "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "rspca-aquaculture-pro-monthly"},
+        {"unit_amount": 499000, "currency": "gbp", "recurring": {"interval": "year"}, "lookup_key": "rspca-aquaculture-pro-annual"}
+      ],
+      "payment_links": [
+        {"price_lookup": "rspca-aquaculture-pro-monthly", "success_url": "https://meok.ai/thanks?product=rspca-aquaculture-pro&billing=monthly"},
+        {"price_lookup": "rspca-aquaculture-pro-annual",  "success_url": "https://meok.ai/thanks?product=rspca-aquaculture-pro&billing=annual"}
+      ]
+    },
+    {
+      "name": "MEOK UK FHI MCP — Pro",
+      "metadata": {
+        "mcp": "meok-uk-fhi-mcp",
+        "pypi": "meok-uk-fhi-mcp",
+        "tier": "pro",
+        "vertical": "aquaculture",
+        "audience": "uk-fish-farms-importers"
+      },
+      "description": "UK aquaculture regulatory stack — CEFAS Form AW1 APB authorisation, APHA fish movements + IPAFFS, Environment Agency permits, AAHR 2009 listed-disease notifications.",
+      "tax_code": "txcd_10103001",
+      "prices": [
+        {"unit_amount": 7900, "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "uk-fhi-pro-monthly"},
+        {"unit_amount": 79000, "currency": "gbp", "recurring": {"interval": "year"}, "lookup_key": "uk-fhi-pro-annual"}
+      ],
+      "payment_links": [
+        {"price_lookup": "uk-fhi-pro-monthly", "success_url": "https://meok.ai/thanks?product=uk-fhi-pro&billing=monthly"},
+        {"price_lookup": "uk-fhi-pro-annual",  "success_url": "https://meok.ai/thanks?product=uk-fhi-pro&billing=annual"}
+      ]
+    },
+    {
+      "name": "MEOK Aquaponics Monitor MCP — Hobby",
+      "metadata": {
+        "mcp": "meok-aquaponics-monitor-mcp",
+        "pypi": "meok-aquaponics-monitor-mcp",
+        "tier": "hobby",
+        "vertical": "aquaponics",
+        "audience": "aquaponic-growers-koi-keepers"
+      },
+      "description": "Unified sensor schema for Atlas Scientific, Whitebox Tentacle, Seneye, GHL ProfiLux, Bluelab, DFRobot. 1 rig. Safe-range checks.",
+      "tax_code": "txcd_10103001",
+      "prices": [
+        {"unit_amount": 2900, "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "aquaponics-monitor-hobby-monthly"}
+      ],
+      "payment_links": [
+        {"price_lookup": "aquaponics-monitor-hobby-monthly", "success_url": "https://meok.ai/thanks?product=aquaponics-monitor-hobby"}
+      ]
+    },
+    {
+      "name": "MEOK Aquaponics Monitor MCP — Pro",
+      "metadata": {
+        "mcp": "meok-aquaponics-monitor-mcp",
+        "pypi": "meok-aquaponics-monitor-mcp",
+        "tier": "pro",
+        "vertical": "aquaponics",
+        "audience": "small-ras-multi-rig-operators"
+      },
+      "description": "Multi-rig sensor monitoring with care-gated actuation hooks and welfare-alert webhooks. Underwrites MEOK PondSense kit.",
+      "tax_code": "txcd_10103001",
+      "prices": [
+        {"unit_amount": 7900, "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "aquaponics-monitor-pro-monthly"},
+        {"unit_amount": 79000, "currency": "gbp", "recurring": {"interval": "year"}, "lookup_key": "aquaponics-monitor-pro-annual"}
+      ],
+      "payment_links": [
+        {"price_lookup": "aquaponics-monitor-pro-monthly", "success_url": "https://meok.ai/thanks?product=aquaponics-monitor-pro&billing=monthly"},
+        {"price_lookup": "aquaponics-monitor-pro-annual",  "success_url": "https://meok.ai/thanks?product=aquaponics-monitor-pro&billing=annual"}
+      ]
+    },
+    {
+      "name": "MEOK ASC ↔ RSPCA ↔ GlobalG.A.P. Crosswalk MCP — Enterprise (flagship)",
+      "metadata": {
+        "mcp": "meok-asc-rspca-crosswalk-mcp",
+        "pypi": "meok-asc-rspca-crosswalk-mcp",
+        "tier": "enterprise",
+        "vertical": "aquaculture",
+        "audience": "retail-supplying-farms-sainsburys-coop-tesco",
+        "flagship": true
+      },
+      "description": "One unified audit pack satisfies ASC + RSPCA Assured + GlobalG.A.P. IFA Aquaculture v6. Driven by Sainsbury's 100% ASC + Co-op 100%-by-2027 commitments.",
+      "tax_code": "txcd_10103001",
+      "prices": [
+        {"unit_amount": 99900,  "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "asc-rspca-crosswalk-enterprise-monthly"},
+        {"unit_amount": 999000, "currency": "gbp", "recurring": {"interval": "year"}, "lookup_key": "asc-rspca-crosswalk-enterprise-annual"}
+      ],
+      "payment_links": [
+        {"price_lookup": "asc-rspca-crosswalk-enterprise-monthly", "success_url": "https://meok.ai/thanks?product=asc-rspca-crosswalk&billing=monthly"},
+        {"price_lookup": "asc-rspca-crosswalk-enterprise-annual",  "success_url": "https://meok.ai/thanks?product=asc-rspca-crosswalk&billing=annual"}
+      ]
+    },
+    {
+      "name": "MEOK LAIA Aquatic MCP — Pro",
+      "metadata": {
+        "mcp": "meok-laia-aquatic-mcp",
+        "pypi": "meok-laia-aquatic-mcp",
+        "tier": "pro",
+        "vertical": "aquaponics",
+        "audience": "oata-ornamental-retailers-koi-dealers"
+      },
+      "description": "England Animal Activities Licensing (LAIA 2018) for aquatic retailers, koi dealers, public aquaria, online live-fish sellers. Inspector-ready pack.",
+      "tax_code": "txcd_10103001",
+      "prices": [
+        {"unit_amount": 2900, "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "laia-aquatic-pro-monthly"},
+        {"unit_amount": 29000, "currency": "gbp", "recurring": {"interval": "year"}, "lookup_key": "laia-aquatic-pro-annual"}
+      ],
+      "payment_links": [
+        {"price_lookup": "laia-aquatic-pro-monthly", "success_url": "https://meok.ai/thanks?product=laia-aquatic-pro&billing=monthly"},
+        {"price_lookup": "laia-aquatic-pro-annual",  "success_url": "https://meok.ai/thanks?product=laia-aquatic-pro&billing=annual"}
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "name": "MEOK Aquaculture Starter Bundle",
+      "metadata": {"bundle": "aquaculture-starter", "includes": "meok-uk-fhi-mcp,meok-laia-aquatic-mcp"},
+      "description": "UK FHI (CEFAS+APHA+EA) + LAIA. Single-site UK fish farm.",
+      "prices": [
+        {"unit_amount": 7900, "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "aquaculture-starter-monthly"}
+      ]
+    },
+    {
+      "name": "MEOK Aquaculture Pro Bundle",
+      "metadata": {"bundle": "aquaculture-pro", "includes": "starter,meok-rspca-aquaculture-mcp"},
+      "description": "Starter + RSPCA Assured. Single-scheme UK farm.",
+      "prices": [
+        {"unit_amount": 49900, "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "aquaculture-pro-monthly"}
+      ]
+    },
+    {
+      "name": "MEOK Aquaculture Enterprise Bundle",
+      "metadata": {"bundle": "aquaculture-enterprise", "includes": "pro,meok-asc-rspca-crosswalk-mcp"},
+      "description": "Pro + ASC-RSPCA-GG.A.P. Crosswalk. Multi-scheme retail-supplying farm.",
+      "prices": [
+        {"unit_amount": 99900, "currency": "gbp", "recurring": {"interval": "month"}, "lookup_key": "aquaculture-enterprise-monthly"}
+      ]
+    }
+  ],
+  "_post_create": {
+    "patch_existing_mcps": "After product creation, update each MCP's upgrade_url in server.py from https://meok.ai/pricing to direct Stripe payment link URL (matches April 26 lesson learned — 199 MCPs URL-patched).",
+    "thanks_page": "meok.ai/thanks?product=<id> — render product-specific onboarding (API key generation + Slack invite + first-call walkthrough video).",
+    "rewardful_attribution": "Both fishkeeper.ai (id 5192b4) and koikeeper.ai use Rewardful. Add cookie pass-through on Stripe checkout to credit affiliate referrals.",
+    "trinity_bump": "Update councilof.ai/catalogue to include aquaculture suite in the 4-tier ladder (£29 / £79 / £499 / £999)."
+  }
+}

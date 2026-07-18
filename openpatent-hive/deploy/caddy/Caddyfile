@@ -1,0 +1,33 @@
+# openpatent.ai hive — caddy reverse proxy (alternative to nginx)
+# Drop this at /etc/caddy/Caddyfile and run `systemctl reload caddy`.
+# Caddy handles Let's Encrypt automatically — no certbot needed.
+
+openpatent.ai, draft.openpatent.ai {
+    reverse_proxy 127.0.0.1:3000
+    encode gzip zstd
+    rate_limit 10r/s
+}
+
+api.openpatent.ai {
+    reverse_proxy 127.0.0.1:3211
+    encode gzip zstd
+    rate_limit 50r/s
+    request_body {
+        max_size 50MB
+    }
+}
+
+verify.openpatent.ai {
+    reverse_proxy 127.0.0.1:3213
+    encode gzip zstd
+    rate_limit 30r/s
+}
+
+mcp.openpatent.ai {
+    reverse_proxy 127.0.0.1:3214
+    encode gzip zstd
+    rate_limit 30r/s
+}
+
+# Internal services — only expose via the host firewall, not via Caddy
+# (patentmcp:3210, worker:3212, bft-council:3215, postgres:5432, ipfs:5001)

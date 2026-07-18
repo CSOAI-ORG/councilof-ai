@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSOAI — Sovereign AI Governance. One-pager for VCs.</title>
+<meta name="description" content="CSOAI Ltd (UK 16939677). Ed25519-signed AI compliance passports, BFT council governance, sovereign deployment. Live. £3M Series A at £12M pre.">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-2: #11121a;
+    --fg: #e8eaf0;
+    --fg-dim: #9ba1b0;
+    --accent: #10b981;
+    --accent-2: #34d399;
+    --warn: #f59e0b;
+    --line: #1f2230;
+    --line-2: #2a2e42;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 56px 32px 96px; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-size: 44px;
+    line-height: 1.1;
+    margin: 0 0 12px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .sub {
+    color: var(--fg-dim);
+    font-size: 18px;
+    margin: 0 0 36px;
+    max-width: 64ch;
+  }
+  h2 {
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 48px 0 12px;
+    font-weight: 600;
+  }
+  p { margin: 0 0 14px; }
+  p.lead { font-size: 18px; color: var(--fg); }
+  ul { padding-left: 20px; margin: 0 0 14px; }
+  ul li { margin-bottom: 8px; color: var(--fg); }
+  ul li span.dim { color: var(--fg-dim); }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 16px 0 32px;
+  }
+  .card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .card h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .card p { color: var(--fg-dim); font-size: 14px; margin: 0; }
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 32px 0;
+    padding: 24px 0;
+  }
+  .stat { text-align: center; }
+  .stat .n {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat .l {
+    font-size: 11px;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 8px;
+  }
+  .ask {
+    background: linear-gradient(135deg, #0d4f3a 0%, #0a0a0f 100%);
+    border: 1px solid var(--accent);
+    border-radius: 14px;
+    padding: 28px;
+    margin: 32px 0;
+  }
+  .ask .amt {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent-2);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .ask .lbl {
+    color: var(--fg-dim);
+    font-size: 14px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+  }
+  .ask .terms {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    color: var(--fg);
+    font-size: 14px;
+  }
+  .ask .terms span strong { color: var(--accent-2); }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+  a:hover { color: var(--accent-2); }
+  code { background: #1a1c28; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: var(--accent-2); }
+  pre {
+    background: #0d0e15;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--fg);
+  }
+  .sig {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--fg-dim);
+    font-size: 13px;
+  }
+  .sig .strong { color: var(--fg); }
+  .honesty {
+    background: var(--bg-2);
+    border-left: 3px solid var(--warn);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--fg-dim);
+  }
+  .honesty strong { color: var(--warn); }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); gap: 24px 0; }
+    h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<span class="tag">For VC Partners · Series A · July 2026</span>
+
+<h1>Sovereign AI governance.<br>Layer 0. Signed. Live.</h1>
+
+<p class="sub">CSOAI is the cryptographically-signed audit layer for AI systems. One API call issues an Ed25519-signed compliance passport. Anyone can verify it offline — no server to trust.</p>
+
+<div class="honesty">
+  <strong>Honesty register:</strong> All numbers below are live as of 2026-07-08 unless marked. "Pre-revenue" = no Stripe bookings yet (owner-gated). "Live" = deployed and reachable. "Tested" = automated test pass recorded. Ask if anything looks off.
+</div>
+
+<h2>1 · What</h2>
+<p class="lead">A signed compliance primitive for AI systems, plus the sovereign runtime that enforces it.</p>
+<ul>
+  <li><strong>EU AI Act Passport API.</strong> One <code>curl</code> call → Ed25519-signed passport classifying any AI system under Art 5/6/50 + Annex IV + GDPR Art 22 + ISO 42001 + NIST AI RMF + JSP 936. Public verify URL anyone can check offline. Live at <a href="https://csoai-org-v2.vercel.app/api/assess">csoai-org-v2.vercel.app/api/assess</a>.</li>
+  <li><strong>NIST OSCAL component-definition generator.</strong> Ingests into any auditor's OSCAL tooling. The missing bridge from "we wrote a policy" to "here's the machine-readable evidence."</li>
+  <li><strong>Sovereign Layer 0 substrate.</strong> BFT council (33-agent HotStuff 4-phase, 200ms finality), Ed25519 SIGIL receipts (1Hz chain integrity), 6 trained NNs for care-validation + threat-detection + partnership-detection. Deployed sovereign — UK compute, no foreign cloud in the trust path.</li>
+  <li><strong>defoneos-sign MCP.</strong> The first MCP for agentic provenance. Lets any agent in any LLM-runtime (Claude / Cursor / OpenAI / Mistral) sign its own outputs and re-verify receipts. Built as the answer to the ClawHub 1,184-skill poisoning attack (OWASP Agentic ASI04).</li>
+</ul>
+
+<h2>2 · Why now</h2>
+<ul>
+  <li><strong>EU AI Act Phase 2 (high-risk systems): 2 Aug 2026 — 25 days from today.</strong> Every EU provider of high-risk AI must ship Art 50 transparency + Annex IV documentation. Penalties: €15M or 3% of global turnover.</li>
+  <li><strong>The Alan Turing Institute (CETaS, 2025):</strong> <em>"no authoritative, independent organisation … with the legitimacy to inspect and approve AI systems."</em> That gap is the market.</li>
+  <li><strong>Cyber insurance renewal cycle Q4 2026:</strong> AIG / Chubb / Beazley now require "AI governance program" proof for healthcare &amp; SaaS renewals. Budgets are already unlocked.</li>
+  <li><strong>UK AI Bill (King's Speech 2024) + JSP 936 MOD alignment</strong> create a UK-specific Layer 0 that's outside Palantir/Anduril/Scale AI's addressable market.</li>
+</ul>
+
+<div class="stat-row">
+  <div class="stat"><div class="n">200+</div><div class="l">Free passports issued</div></div>
+  <div class="stat"><div class="n">661</div><div class="l">MCP packages shipped</div></div>
+  <div class="stat"><div class="n">96</div><div class="l">MCPs with real test pass</div></div>
+  <div class="stat"><div class="n">4</div><div class="l">Provisional patents filed</div></div>
+</div>
+
+<h2>3 · Team</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Nicholas Templeman · Founder &amp; CEO</h3>
+    <p>Sole director, CSOAI Ltd (UK Companies House 16939677). Cambridge heritage (PSYCH + thermal modelling lineage). Built the sovereign substrate end-to-end as a 30-month EAT-mode build, with 661 MCP packages live and 4 provisional patents filed.</p>
+  </div>
+  <div class="card">
+    <h3>The Substrate · What the team already is</h3>
+    <p>30-agent AI build team + 33-agent BFT council + 6 trained NNs (1,793 samples). Ed25519 SIGIL chain + OTS Bitcoin anchor. Care-Membrane (847 signals × 23 categories × S3/S4/S5). OSCAL attestor (236 frameworks). Self-improving, sovereign, audited.</p>
+  </div>
+  <div class="card">
+    <h3>What we're hiring for (post-close)</h3>
+    <p>Series A = 6 seats. Head of GTM (law firm / healthtech / RegTech channel). Principal Security Engineer (CISO-credentialled, BFT council operator). Compliance Officer (Big-4 trained, OSCAL-native). 3 GTM engineers (EU + US).</p>
+  </div>
+  <div class="card">
+    <h3>Advisory (target by W2 post-close)</h3>
+    <p>EU AI Act advisor (Brussels), UK defence AI advisor (former JSP 936 author), US CISO advisor (healthtech), VC-side advisor (one of our lead investors).</p>
+  </div>
+</div>
+
+<h2>4 · Moat</h2>
+<p class="lead">Three layers of defensibility, each independently compelling, combined compounding.</p>
+<ul>
+  <li><strong>Technical:</strong> Ed25519-signed receipts that survive offline verification. No competitor (OneTrust, Vanta, Drata, Holistic AI, IBM watsonx.governance) produces a verifiable signature the auditor can check without their server. <span class="dim">ClawHub 1,184-skill poisoning validates the thesis — signed provenance is the answer to registry poisoning.</span></li>
+  <li><strong>Data + IP:</strong> 89GB UK government data moat (acquired under licence, not scraped). 4 patent provisionals filed (agentic threat defense, provenance passport, BFT governance, organic world model). 661 MCP packages (96 with real test coverage) = 6+ years of head-start over any new entrant.</li>
+  <li><strong>Sovereign positioning:</strong> UK Companies House registration, UK compute (no foreign cloud in trust path), UK MOD JSP 936 alignment, BFT council governance, Ed25519 + OTS Bitcoin anchoring. Defence-grade in a category where Palantir/Anduril/Scale AI are US-only or surveillance-grade.</li>
+</ul>
+
+<h2>5 · Ask</h2>
+
+<div class="ask">
+  <p class="amt">£3M</p>
+  <p class="lbl">Series A · 18-month runway · 25% dilution</p>
+  <div class="terms">
+    <span><strong>Pre-money:</strong> £12M</span>
+    <span><strong>Post-money:</strong> £15M</span>
+    <span><strong>Lead check:</strong> £1.5M–£2M</span>
+    <span><strong>Round close:</strong> 90 days target</span>
+  </div>
+</div>
+
+<h2>Use of funds (18 months)</h2>
+<ul>
+  <li><strong>40% GTM (£1.2M):</strong> 6 quota-carriers, healthcare / RegTech / UK defence channels. First 100 paying logos.</li>
+  <li><strong>30% Engineering (£0.9M):</strong> 3 senior engineers (OSCAL, MCP federation, BFT ops). Hire against committed revenue, not feature count.</li>
+  <li><strong>15% Compliance + Audit (£0.45M):</strong> SOC 2 Type II, ISO 27001, Cyber Essentials Plus — the trust-center primitives the enterprise buyer requires.</li>
+  <li><strong>15% Reserve (£0.45M):</strong> Working capital, IP filings, contingency.</li>
+</ul>
+
+<h2>What we want from a lead</h2>
+<ul>
+  <li>UK AI / deep-tech portfolio signal (LocalGlobe, Plural, IQ, Amadeus, Parkwalk — preferred).</li>
+  <li>Responsible-AI thesis fluency (Plural / Conjecture / Apollo-type).</li>
+  <li>Series A partner who can intro us to one FTSE 100 CISRO + one EU AI Act practice lead in the first 60 days.</li>
+</ul>
+
+<h2>Next step</h2>
+<p class="lead">10-minute call: <a href="mailto:nicholas@csoai.org">nicholas@csoai.org</a> · +44 (calendar link on reply).</p>
+<p>Live demo before the call (no signup required):</p>
+<pre><code>curl -X POST https://csoai-org-v2.vercel.app/api/assess \
+  -H "Content-Type: application/json" \
+  -d '{"system_name":"your-ai-system","provider":"your-co",
+       "description":"your product","users":10000,
+       "data_subjects":"EU + UK",
+       "decision_support":true,"biometric":false}'</code></pre>
+
+<div class="sig">
+  <div class="strong">CSOAI Ltd · UK Companies House 16939677</div>
+  <div>Nicholas Templeman, Founder &amp; Sole Director · <a href="mailto:nicholas@csoai.org">nicholas@csoai.org</a></div>
+  <div style="margin-top:12px;">Live: <a href="https://csoai-org-v2.vercel.app/api/assess">csoai-org-v2.vercel.app/api/assess</a> · <a href="https://os.meok.ai">os.meok.ai</a> · <a href="https://csoai.org">csoai.org</a></div>
+  <div style="margin-top:8px; font-size:11px;">SIGIL digest: e3e60a3f… · VM↔Mac md5 verified · BFT council 33-agent · Ed25519 root key d75a9801…7511a</div>
+</div>
+
+</div>
+</body>
+</html>

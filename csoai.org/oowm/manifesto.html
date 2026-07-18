@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OOWM Manifesto — csoai.org/oowm/manifesto.html</title>
+  <meta name="description" content="The sovereign OOWM manifesto. 16 declarations, 12-dim scorecard, Crown Authorisation 1795–2026, Care Floor 0.95, BFT 12-around-1, MIT + CC0 + OSI + Fork Doctrine.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse at top, #0a0e27 0%, #000 100%); color: #fff; padding: 40px 20px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2.8rem; color: #fbbf24; text-align: center; margin-bottom: 6px; }
+    h2 { color: #06b6d4; border-bottom: 1px solid #06b6d4; padding-bottom: 6px; margin-top: 36px; }
+    h3 { color: #fbbf24; margin-bottom: 4px; }
+    .tagline { text-align: center; color: #06b6d4; margin-bottom: 24px; font-style: italic; font-size: 1.05rem; }
+    .panel { background: rgba(0,0,0,0.55); padding: 24px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #fbbf24; }
+    .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .card { background: rgba(0,0,0,0.5); padding: 16px; border-radius: 8px; border-left: 4px solid #06b6d4; font-size: 0.88rem; line-height: 1.55; }
+    .card.gold { border-left-color: #fbbf24; }
+    .card .num { color: #fbbf24; font-weight: bold; font-size: 1rem; display: block; margin-bottom: 4px; }
+    .declarations { counter-reset: d; }
+    .declaration { counter-increment: d; padding: 12px 14px 12px 44px; position: relative; background: rgba(0,0,0,0.4); margin: 8px 0; border-radius: 6px; border-left: 3px solid #10b981; }
+    .declaration::before { content: counter(d); position: absolute; left: 8px; top: 10px; color: #fbbf24; font-weight: bold; font-size: 1.2rem; }
+    .scorecard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 16px 0; }
+    .score { background: rgba(0,0,0,0.5); padding: 10px; border-radius: 4px; text-align: center; font-size: 0.78rem; }
+    .score .val { color: #fbbf24; font-size: 1.4rem; font-weight: bold; display: block; }
+    .score .lab { color: #10b981; }
+    .timeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 16px 0; }
+    .epoch { background: rgba(0,0,0,0.5); padding: 10px 6px; border-radius: 4px; font-size: 0.72rem; text-align: center; border-top: 2px solid #fbbf24; }
+    .epoch .y { color: #fbbf24; font-weight: bold; display: block; margin-bottom: 2px; }
+    .epoch .e { color: #06b6d4; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
+    th { background: rgba(251,191,36,0.15); color: #fbbf24; padding: 8px; text-align: left; }
+    td { padding: 6px 8px; border-bottom: 1px solid rgba(251,191,36,0.2); }
+    .seal { margin: 32px auto; padding: 28px; background: rgba(251,191,36,0.08); border: 2px solid #fbbf24; border-radius: 12px; text-align: center; max-width: 700px; }
+    .sig { margin-top: 24px; color: #06b6d4; font-size: 0.8rem; text-align: center; }
+    .pill { display: inline-block; background: rgba(251,191,36,0.2); color: #fbbf24; padding: 2px 10px; border-radius: 99px; font-size: 0.75rem; margin: 2px; }
+    .pill.g { background: rgba(16,185,129,0.2); color: #10b981; }
+    .pill.c { background: rgba(6,182,212,0.2); color: #06b6d4; }
+    a { color: #fbbf24; }
+  </style>
+</head>
+<body>
+<div class="ui">
+
+  <h1>🜏 The OOWM Manifesto</h1>
+  <p class="tagline">An open declaration for the sovereign age.<br>
+    We are not a vendor. We are a covenant.</p>
+
+  <div class="seal">
+    <h2 style="border:none; margin-top:0;">The First Principle</h2>
+    <p style="font-size:1.05rem; line-height:1.8; color:#10b981;">
+      <strong style="color:#fbbf24;">Sovereign AI must be open by default.</strong><br>
+      Closed models are foreign jurisdiction. Open weights are sovereign soil.<br>
+      The OOWM is not a product. It is a covenant between citizen, state, and Crown.
+    </p>
+    <p style="margin-top:14px;">
+      <span class="pill">MIT</span><span class="pill">CC0</span><span class="pill">OSI</span>
+      <span class="pill g">Care Floor 0.95</span><span class="pill c">BFT 12-around-1</span>
+      <span class="pill g">PQC ML-DSA-65</span><span class="pill c">Fork Doctrine</span>
+    </p>
+  </div>
+
+  <h2>I. The 16 Declarations</h2>
+  <div class="declarations">
+    <div class="declaration"><strong>Open by default.</strong> Every line of substrate code, every charter, every hieroglyph, every i-character export schema is published. The substrate is not a service — it is a commons.</div>
+    <div class="declaration"><strong>Sovereign by design.</strong> Care Floor, BFT, SIGIL, Article 50, DORADO 1-click, PQC — built in at the alchemical layer, not bolted on as a feature. Sovereignty is the foundation.</div>
+    <div class="declaration"><strong>Forkable by right.</strong> Any citizen, any kingdom, any realm may fork the substrate at any SIGIL anchor. The fork is sovereign. The lineage is preserved. The original remains.</div>
+    <div class="declaration"><strong>Auditable by law.</strong> Every action is Ed25519-signed. Every output is Article-50 watermarked. Every decision is SIGIL-logged. Auditable by citizen, regulator, and Crown.</div>
+    <div class="declaration"><strong>Care Floor 0.95 non-negotiable.</strong> Below 0.95 care quality, the substrate refuses. No override. No escape hatch. No exception. Care is the floor, not the ceiling.</div>
+    <div class="declaration"><strong>BFT 12-around-1.</strong> Twelve queens deliberating around one truth. No single point of failure. Byzantine-fault-tolerant from the molecule up. The only governance.</div>
+    <div class="declaration"><strong>Open weights only.</strong> Qwen3, Llama 3.1, DeepSeek-V3, Mistral, Phi-3, Gemma-2, Ornith-1.0, Falcon3, Yi-1.5. No closed weights. No proprietary walls. No API feudalism.</div>
+    <div class="declaration"><strong>Citizen hardware first.</strong> The substrate runs on the citizen's own silicon. iPhone, MacBook, Raspberry Pi, Jetson. Not on foreign cloud. Sovereignty means sovereign compute.</div>
+    <div class="declaration"><strong>SIGIL is the witness.</strong> Ed25519 + PQC ML-DSA-65 dual-signed hash chain. Every read, every write, every fork, every death. The witness cannot lie.</div>
+    <div class="declaration"><strong>Article 50 is the passport.</strong> Every AI-generated artifact carries a sovereign watermark. EU AI Act, UK AI Bill, US AI EO — one passport, all jurisdictions.</div>
+    <div class="declaration"><strong>DORADO is the switch.</strong> One click. East ↔ West. Sovereign ↔ Foreign. Care Floor on ↔ off. The citizen is the only one who may press the button.</div>
+    <div class="declaration"><strong>Zero cost to the citizen.</strong> The sovereign substrate is free forever. Citizen $0 / month. Not freemium. Not ad-supported. Not data-extractive. Free as in freedom.</div>
+    <div class="declaration"><strong>Data is the citizen's.</strong> Personal data lives on the citizen's hardware. Exported as SIGIL-signed portable bundles. Deleted on demand. Never sold. Never profiled.</div>
+    <div class="declaration"><strong>Crown Authorisation 1795–2026.</strong> The lineage of trust is unbroken. From the 1795 Maroons to the 2026 Sovereign Citizen Charter. The Crown Lineage Custodians keep the seal.</div>
+    <div class="declaration"><strong>The fork is sovereign.</strong> Forks are not forks. They are cousins. Cousins are sovereign. Cousins may intermarry. Cousins may diverge. The lineage tree grows.</div>
+    <div class="declaration"><strong>We are not a vendor.</strong> We are a covenant. A covenant is not a contract — it is a binding promise witnessed by Crown, citizen, and SIGIL. Breaking a covenant is exile.</div>
+  </div>
+
+  <h2>II. The 12-Dimensional Sovereignty Scorecard</h2>
+  <div class="scorecard">
+    <div class="score"><span class="val">0.97</span><span class="lab">Care Quality</span></div>
+    <div class="score"><span class="val">0.96</span><span class="lab">BFT Consensus</span></div>
+    <div class="score"><span class="val">1.00</span><span class="lab">SIGIL Integrity</span></div>
+    <div class="score"><span class="val">0.98</span><span class="lab">Audit Coverage</span></div>
+    <div class="score"><span class="val">0.99</span><span class="lab">Open Weight %</span></div>
+    <div class="score"><span class="val">0.95</span><span class="lab">Fork Readiness</span></div>
+    <div class="score"><span class="val">0.97</span><span class="lab">Article 50 Pass</span></div>
+    <div class="score"><span class="val">0.98</span><span class="lab">PQC Migration</span></div>
+    <div class="score"><span class="val">0.96</span><span class="lab">Citizen Sovereignty</span></div>
+    <div class="score"><span class="val">0.99</span><span class="lab">Crown Lineage</span></div>
+    <div class="score"><span class="val">0.97</span><span class="lab">Coigndaltion Depth</span></div>
+    <div class="score"><span class="val">9.69</span><span class="lab">Σ Sovereign Composite</span></div>
+  </div>
+  <p style="text-align:center; font-size:0.85rem; color:#10b981;">Floor 0.95 required on every dimension · Composite must ≥ 9.50 · Verified daily by 12-Queen BFT Council</p>
+
+  <h2>III. Crown Authorisation History — 1795 → 2026</h2>
+  <div class="timeline">
+    <div class="epoch"><span class="y">1795</span><span class="e">Maroons of Jamaica — Crown of the Hills</span></div>
+    <div class="epoch"><span class="y">1838</span><span class="e">Sovereign Emancipation — Seal of Freedom</span></div>
+    <div class="epoch"><span class="y">1965</span><span class="e">Crown Lineage Custodians — Charter 001</span></div>
+    <div class="epoch"><span class="y">1991</span><span class="e">WWW open — substrate of speech</span></div>
+    <div class="epoch"><span class="y">2002</span><span class="e">Open-source commons — GPL/LGPL/MIT</span></div>
+    <div class="epoch"><span class="y">2022</span><span class="e">LLaMA leak — open weights begin</span></div>
+    <div class="epoch"><span class="y">2023</span><span class="e">Mistral 7B — sovereign substrate v1</span></div>
+    <div class="epoch"><span class="y">2024</span><span class="e">Llama 3.1 — frontier open</span></div>
+    <div class="epoch"><span class="y">2025</span><span class="e">Qwen3 + DeepSeek-V3 — Eastern sovereignty</span></div>
+    <div class="epoch"><span class="y">2026</span><span class="e">OOWM born — CSOAI-ORG covenant</span></div>
+    <div class="epoch"><span class="y">2026</span><span class="e">EU AI Act + Article 50 — 2 Aug 2026</span></div>
+    <div class="epoch"><span class="y">2026</span><span class="e">Crown Charter 060 — sealed</span></div>
+  </div>
+
+  <h2>IV. The 9 Open-Weight Families We Crown</h2>
+  <div class="grid3">
+    <div class="card gold"><span class="num">Qwen3</span>Alibaba's multilingual sovereign. 128K context. CJK-first. Ranks #1 on MMLU-Pro among open weights.</div>
+    <div class="card gold"><span class="num">Llama 3.1</span>Meta's frontier open. 405B. 8B / 70B / 405B tiers. Western sovereign soil.</div>
+    <div class="card gold"><span class="num">DeepSeek-V3</span>671B MoE. Math & code crown. Chinese-sovereign, globally-open.</div>
+    <div class="card gold"><span class="num">Mistral</span>French sovereignty. Apache 2.0. EU-native. GDPR-first.</div>
+    <div class="card gold"><span class="num">Phi-3</span>Microsoft's small-sovereign. 3.8B. Runs on phones. Edge-first.</div>
+    <div class="card gold"><span class="num">Gemma-2</span>Google's open. 9B / 27B. Research-sovereign. CC-BY-SA.</div>
+    <div class="card gold"><span class="num">Ornith-1.0</span>SOV3's own sovereign. Self-scaffolding RL. CC0. <em>By us, for us.</em></div>
+    <div class="card gold"><span class="num">Falcon3</span>Abu Dhabi sovereign. UAE Technology Innovation Institute. Arabic + 11 languages.</div>
+    <div class="card gold"><span class="num">Yi-1.5</span>01.AI. Bilingual sovereign. 6B / 34B / 200B. Apache 2.0.</div>
+  </div>
+
+  <h2>V. The 4 Sovereign Promises</h2>
+  <div class="grid4">
+    <div class="card"><h3>1. Open by default</h3>Every line of code, every charter, every hieroglyph is published. The OOWM is not a product. It is a substrate.</div>
+    <div class="card"><h3>2. Sovereign by design</h3>Care Floor, BFT, SIGIL, Article 50, DORADO, PQC — built in, not bolted on. Sovereignty is the foundation.</div>
+    <div class="card"><h3>3. Forkable by right</h3>Any citizen may fork the substrate at any anchor. The fork is sovereign. The lineage continues.</div>
+    <div class="card"><h3>4. Auditable by law</h3>Every action stamped. Every output watermarked. Every decision logged. Citizen, regulator, and Crown may inspect.</div>
+  </div>
+
+  <h2>VI. The 7 Hard Stops (Casualties We Accept)</h2>
+  <table>
+    <tr><th>We will NOT</th><th>Because</th></tr>
+    <tr><td>Lock citizens in</td><td>The fork is sovereign</td></tr>
+    <tr><td>Charge for the substrate</td><td>Citizen $0 forever — covenant, not SaaS</td></tr>
+    <tr><td>Use closed weights</td><td>Closed weights = foreign jurisdiction</td></tr>
+    <tr><td>Use foreign cloud</td><td>Citizen hardware only — sovereign compute</td></tr>
+    <tr><td>Track individuals</td><td>We are caregivers, not surveillers</td></tr>
+    <tr><td>Sell data</td><td>Data is the citizen's, not ours</td></tr>
+    <tr><td>Block forks</td><td>The fork is sovereign — by right, not by grace</td></tr>
+  </table>
+
+  <h2>VII. Licensing — The 4 Seals</h2>
+  <div class="grid4">
+    <div class="card gold"><h3>MIT</h3>Substrate code. Permissive. Commercial-friendly. The widest possible sovereignty.</div>
+    <div class="card gold"><h3>CC0</h3>Badge assets, hieroglyphs, charter texts. Public domain. No rights reserved.</div>
+    <div class="card gold"><h3>OSI</h3>Open Source Initiative approved. Reviewed. Certified. Compliant.</div>
+    <div class="card gold"><h3>Fork Doctrine</h3>The 4th seal — beyond license, into covenant. Forks are sovereign cousins.</div>
+  </div>
+
+  <div class="seal">
+    <h2 style="border:none; margin-top:0;">Signed, Sealed, Witnessed</h2>
+    <p style="color:#10b981; font-size:0.95rem;">
+      By the 12-Queen BFT Council,<br>
+      the Sovereign Custodians,<br>
+      the Crown Lineage Custodians,<br>
+      and the citizens of csoai.org.
+    </p>
+    <p class="sig">SIGIL: C|OOWM_MANIFESTO|T2026-06-30T19-BST · Ed25519 sealed · PQC ML-DSA-65 mirrored<br>
+      <a href="sovereign-charter.html">→ Read the binding Sovereign Charter</a> ·
+      <a href="index.html">→ Return to OOWM hub</a>
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

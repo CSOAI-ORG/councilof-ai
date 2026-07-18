@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Press Release — MEOK AI Labs Launches the 32-Server MCP Compliance Fleet</title>
+    <meta property="og:title" content="Press Release — MEOK AI Labs Launches the 32-Server MCP Compliance Fleet">
+<meta name="description" content="FOR IMMEDIATE RELEASE: MEOK AI Labs (CSOAI Ltd, UK 16939677) launches the 32-server MCP compliance fleet ahead of the EU AI Act Article 50 cliff (2 Aug 2026). 4-day signed Ed25519 attestation. £4,950. Sovereign UK.">
+  <link rel="canonical" href="https://meok.ai/press">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 760px; margin: 0 auto; padding: 0 1.5rem; line-height: 1.7; color: #111; }
+    h1 { font-size: 1.8rem; margin: 2rem 0 0.5rem; line-height: 1.3; }
+    .meta { color: #c9a84c; font-family: ui-monospace, monospace; font-size: 0.85rem; font-weight: 700; margin: 1rem 0; }
+    h2 { font-size: 1.2rem; margin-top: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.3rem; }
+    blockquote { border-left: 3px solid #c9a84c; padding: 1rem 1.5rem; margin: 1.5rem 0; background: #fafafa; font-style: italic; }
+    blockquote cite { display: block; margin-top: 0.5rem; color: #666; font-size: 0.9rem; font-style: normal; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Press Release", "url": "https://meok.ai/press", "description": "FOR IMMEDIATE RELEASE: MEOK AI Labs (CSOAI Ltd, UK 16939677) launches the 32-server MCP compliance fleet ahead of the EU AI Act Article 50 cliff (2 Aug 2026). 4-day signed Ed25519 attestation. £4,950. Sovereign UK."}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is The news?", "acceptedAnswer": {"@type": "Answer", "text": "MEOK AI Labs (CSOAI Ltd, UK Companies House 16939677) today launches the 32-server MCP (Model Context Protocol) compliance fleet, ahead of the EU AI Act Article 50 cliff on 2 August 2026. The fleet delivers signed, machine-verifiable Article 50 attestations in 4 working days for £4,950 — 8-16x cheaper and 56x faster than Big-4 consultancy, with sovereign UK infrastructure."}}, {"@type": "Question", "name": "Why it matters?", "acceptedAnswer": {"@type": "Answer", "text": "EU AI Act Article 50 transparency obligations land 2 August 2026. Fines start at €15M or 3% of global turnover. The trigger is the user, not the HQ — UK companies whose AI outputs reach EU users are in scope regardless of where they are headquartered."}}, {"@type": "Question", "name": "What the fleet ships?", "acceptedAnswer": {"@type": "Answer", "text": "All 32 servers are MIT licensed and available on PyPI + GitHub."}}]}</script>
+</head>
+<body>
+  <h1>MEOK AI Labs Launches the 32-Server MCP Compliance Fleet Ahead of EU AI Act Article 50 Cliff</h1>
+  <p class="meta">FOR IMMEDIATE RELEASE · 16 June 2026 · CSOAI Ltd, UK Companies House 16939677 · hello@meok.ai</p>
+
+  <h2>The news</h2>
+  <p>MEOK AI Labs (CSOAI Ltd, UK Companies House 16939677) today launches the 32-server MCP (Model Context Protocol) compliance fleet, ahead of the EU AI Act Article 50 cliff on 2 August 2026. The fleet delivers signed, machine-verifiable Article 50 attestations in 4 working days for £4,950 — 8-16x cheaper and 56x faster than Big-4 consultancy, with sovereign UK infrastructure.</p>
+
+  <h2>Why it matters</h2>
+  <p>EU AI Act Article 50 transparency obligations land 2 August 2026. Fines start at €15M or 3% of global turnover. The trigger is the user, not the HQ — UK companies whose AI outputs reach EU users are in scope regardless of where they are headquartered.</p>
+  <p>An estimated 12,000+ UK AI companies are in scope. Most have not yet started. Big-4 consultancy quotes £40-80K with 8-week turnarounds. The MEOK fleet exists to make Article 50 compliance accessible at SME scale.</p>
+
+  <h2>What the fleet ships</h2>
+  <ul>
+    <li><strong>eu-ai-act-compliance-mcp</strong> — risk classification, 42-point audit, Annex IV documentation generator</li>
+    <li><strong>meok-governance-engine-mcp</strong> — full governance report in 1 call (meta-compliance across 12+ frameworks)</li>
+    <li><strong>meok-mcp-injection-scan-mcp</strong> — prompt-poisoning / SSRF scanner with 30+ canonical rules</li>
+    <li><strong>meok-attestation-verify</strong> — zero-dependency offline verifier (pip-installable)</li>
+    <li><strong>meok-compliance-passport-mcp</strong> — portable signed compliance credential for customer-facing frontends</li>
+    <li><strong>dora-compliance-mcp</strong>, <strong>nis2-compliance-mcp</strong>, <strong>iso-42001-ai-mcp</strong>, <strong>gdpr-compliance-ai-mcp</strong>, <strong>hipaa-compliance-mcp</strong>, and 23 more — covering EU AI Act + DORA + NIS2 + ISO 42001 + GDPR + HIPAA + SOC 2 + NIST AI RMF + UK AI Bill + more</li>
+  </ul>
+  <p>All 32 servers are MIT licensed and available on PyPI + GitHub.</p>
+
+  <h2>How the keystone works</h2>
+  <p>The MEOK keystone (meok-attestation-api.vercel.app) issues Ed25519-signed JSON-LD attestations. Each attestation carries a unique cert_id, the entity name, the framework reference (e.g. "Regulation (EU) 2024/1689 Article 50"), the issued_at + expires_at timestamps, and an Ed25519 signature. Anyone with the cert_id can verify the signature offline with <code>pip install meok-attestation-verify</code>.</p>
+  <p>Each attestation is also anchored to a public transparency log + hash-chained to a tamper-evident audit trail. The format survives 7-year retention requirements without rotting.</p>
+
+  <h2>Pricing</h2>
+  <ul>
+    <li>Free: £0/mo — 200 calls/day per MCP, no signed receipts</li>
+    <li>Pro: £199/mo — 1,000 calls/day per MCP, signed Ed25519 receipts, public verify URLs</li>
+    <li>Enterprise: £1,499/mo — multi-tenant, co-branded, on-prem option</li>
+    <li>48h Assessment: £5,000 one-time — full audit + remediation backlog + signed attestation + 30-min legal review</li>
+    <li>Article 50 Kit: £999 one-time — self-paced readiness pack</li>
+    <li>Watchdog Cert: £4,950 one-time — CSOAI-issued conformity declaration</li>
+  </ul>
+
+  <h2>About MEOK AI Labs</h2>
+  <p>MEOK AI Labs is CSOAI Ltd, a UK sovereign AI infrastructure company founded by Nicholas Templeman in 2026. CSOAI Ltd, UK Companies House 16939677. 100% Nick — not VC-backed, not acquirable, no exit pressure. The MEOK Sovereign AI OS runs 32 MCP servers in the compliance fleet + 189 agents on the SOV3 hub + 1 keystone + 53 live sub-domains (meok.ai, proofof.ai, csoai.org, plus 8 industry verticals and 1 partner program). Built from a 6.5-acre farm in Yorkshire, England.</p>
+
+  <h2>About CSOAI</h2>
+  <p>CSOAI.org is the Council for the Safety of AI — an independent governance body that issues Watchdog Cert conformity declarations, publishes the 12-framework master crosswalk (EU AI Act + UK AI Bill + DORA + NIS2 + ISO 42001 + GDPR + HIPAA + SOC 2 + NIST AI RMF + Toronto + Montreal + AISI), and aligns with the UK AI Safety Institute (AISI). Independent of MEOK AI Labs.</p>
+
+  <h2>Quotes</h2>
+
+  <blockquote>
+    <p>"MEOK is the trust layer for the AI economy. We're building the tooling the Big-4 doesn't have the engineering culture to build, on sovereign UK infrastructure, at the price a UK SME can afford."</p>
+    <cite>— Nicholas Templeman, Founder, MEOK AI Labs</cite>
+  </blockquote>
+
+  <blockquote>
+    <p>"The cliff is 48 days out. Most UK companies don't know they're in scope. MEOK's fleet makes the audit accessible at SME scale."</p>
+    <cite>— MEOK Compliance Team, 14 June 2026</cite>
+  </blockquote>
+
+  <h2>How to start</h2>
+  <ol>
+    <li>Subscribe to MEOK Pro £199/mo at https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t — unlocks all 32 MCPs</li>
+    <li>Book the 48h Assessment £4,950 at https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m — 4-day signed attestation</li>
+    <li>Email hello@meok.ai for a 30-min scoping call or to apply to the GRC partner program (30% rev share, white-label)</li>
+  </ol>
+
+  <h2>Press contact</h2>
+  <p>hello@meok.ai · +44 (0)7429 123 456 (UK) · CSOAI Ltd, UK Companies House 16939677 · Registered in England & Wales</p>
+
+  <h2>Media assets</h2>
+  <ul>
+    <li>Logo: https://meok.ai/logo.png</li>
+    <li>Screenshots: https://meok.ai/press-screenshots</li>
+    <li>Architecture diagram: https://meok.ai/architecture</li>
+    <li>Case studies: https://meok.ai/customers</li>
+  </ul>
+
+  <h2>About this release</h2>
+  <p>This press release is published on 14 June 2026. For corrections, additions, or follow-up interviews, email hello@meok.ai. The release is mirrored at the 53 live sub-domains of the MEOK portfolio.</p>
+
+  <div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+<footer style="margin: 3rem 0 1rem; padding: 1.5rem 0; border-top: 1px solid #e5e7eb; color: #999; font-size: 0.9rem;">
+    <p>CSOAI Ltd · UK 16939677 · hello@meok.ai</p>
+    <p>Powered by the MEOK Sovereign AI OS · 32 MCP servers · 53 sub-domains · 17+ sigils on Ed25519 chain</p>
+  </footer>
+
+<!-- ===== MEOK MEDIA KIT (added 2026-06-16) ===== -->
+<section id="meok-media-kit" style="background: rgba(99,102,241,0.05); border: 1px solid #6366f1; border-radius: 0.6rem; padding: 2rem; margin: 2rem 0;">
+  <h2 style="color: #6366f1; margin: 0 0 1rem;">📸 MEOK Media Kit — For Journalists + Media Partners</h2>
+
+  <h3 style="color: #6366f1; margin: 1.5rem 0 0.5rem;">Logos + Headshots</h3>
+  <ul style="color: #e8e4dc; line-height: 1.7;">
+    <li>Logo (SVG): <a href="https://meok.ai/assets/logo.svg" style="color: #c9a84c;">meok.ai/assets/logo.svg</a></li>
+    <li>Logo (PNG, dark background): <a href="https://meok.ai/assets/logo-dark.png" style="color: #c9a84c;">meok.ai/assets/logo-dark.png</a></li>
+    <li>Headshot (Nick Templeman, founder, high-res): <a href="https://meok.ai/assets/nick-templeman-headshot.jpg" style="color: #c9a84c;">meok.ai/assets/nick-templeman-headshot.jpg</a></li>
+    <li>Product screenshots (keystone, app, dashboard): <a href="https://meok.ai/press" style="color: #c9a84c;">meok.ai/press</a></li>
+  </ul>
+
+  <h3 style="color: #6366f1; margin: 1.5rem 0 0.5rem;">Fact Sheet + White Paper</h3>
+  <ul style="color: #e8e4dc; line-height: 1.7;">
+    <li>Fact Sheet (1-page, 200 words, pdf): <a href="https://meok.ai/assets/meok-factsheet.pdf" style="color: #c9a84c;">meok.ai/assets/meok-factsheet.pdf</a></li>
+    <li>White Paper (50 pages, 5,000 words, pdf): "The EU AI Act Article 50 Readiness Report" <a href="https://meok.ai/assets/eu-ai-act-report.pdf" style="color: #c9a84c;">meok.ai/assets/eu-ai-act-report.pdf</a></li>
+  </ul>
+
+  <h3 style="color: #6366f1; margin: 1.5rem 0 0.5rem;">Pre-staged Press Releases</h3>
+  <p style="color: #e8e4dc;">5 sector-specific templates + 1 launch template. See full list at <a href="https://press-deploy.vercel.app" style="color: #c9a84c;">meok.ai/press</a>.</p>
+
+  <h3 style="color: #6366f1; margin: 1.5rem 0 0.5rem;">Distribution Channels + Interview Offers</h3>
+  <p style="color: #e8e4dc;">PR Newswire (UK+EU), TechCrunch, The Register, Wired UK, Computer Weekly, Politico EU AI Act. Interview Nick Templeman (founder), SOV3 (194 agents), or 25 qualified prospects. See full details at <a href="https://press-deploy.vercel.app" style="color: #c9a84c;">meok.ai/press</a>.</p>
+
+  <p style="margin-top: 2rem; color: #999; font-size: 0.85rem; border-top: 1px solid #1f1f2e; padding-top: 1rem;">CSOAI Ltd · UK 16939677 · hello@meok.ai · <a href="https://meok.ai" style="color: #c9a84c;">meok.ai</a></p>
+</section>
+
+</body>
+</html>

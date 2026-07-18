@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 Sovereign Command Hub — 36-Tab Nexus · MEOK OS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav-strip{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav-strip a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav-strip .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav-strip .spacer{flex:1}
+
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .sub { text-align: center; color: #888; margin-bottom: 2rem; }
+  .tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .tabs button { 
+    background: #1a1a1a; color: #888; padding: 0.7rem 1.2rem; border: 2px solid #444;
+    border-radius: 8px 8px 0 0; font-family: inherit; font-size: 0.9rem; cursor: pointer;
+    font-weight: bold; transition: all 0.2s;
+  }
+  .tabs button.active { background: #0a0a0a; color: #fbbf24; border-color: #fbbf24; border-bottom-color: #0a0a0a; }
+  .tabs button:hover { color: #fbbf24; border-color: #fbbf24; }
+
+  .content-section { display: none; background: #0a0a0a; padding: 2rem; border-radius: 0 12px 12px 12px; border: 2px solid #fbbf24; max-width: 1200px; margin: 0 auto 2rem; }
+  .content-section.active { display: block; }
+  .content-section h2 { color: #fbbf24; margin-bottom: 1rem; }
+  .content-section p { color: #aaa; margin-bottom: 1rem; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .stat-card { background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: center; border-left: 4px solid #4a9eff; }
+  .stat-card.deep { border-color: #22c55e; }
+  .stat-card.codex { border-color: #fbbf24; }
+  .stat-value { color: #e5e5e5; font-size: 1.8rem; font-weight: bold; font-family: monospace; }
+  .stat-label { color: #888; font-size: 0.75rem; margin-top: 0.25rem; }
+  .stat-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+
+  .trio-header { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 2rem; margin-bottom: 1rem; }
+  .trio-header .tag { padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: bold; }
+  .trio-header .tag.surface { background: rgba(74,158,255,0.1); color: #4a9eff; }
+  .trio-header .tag.deep { background: rgba(34,197,94,0.1); color: #22c55e; }
+  .trio-header .tag.codex { background: rgba(251,191,36,0.1); color: #fbbf24; }
+
+  .tri-domain-nav{display:flex;justify-content:center;margin-top:2rem;margin-bottom:1rem;gap:1.5rem;flex-wrap:wrap}
+  .tri-domain-nav a{text-decoration:none;font-weight:bold;font-size:1.1rem;padding:.5rem 1rem;border-radius:8px;transition:background-color .2s,color .2s}
+  .tri-domain-nav a.surface{background:#0a0a0a;color:#4a9eff;border:1px solid #4a9eff;}
+  .tri-domain-nav a.deep{background:#0a0a0a;color:#22c55e;border:1px solid #22c55e;}
+  .tri-domain-nav a.codex{background:#0a0a0a;color:#fbbf24;border:1px solid #fbbf24;}
+  .tri-domain-nav a:hover{background-color:rgba(255,255,255,0.05);}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+
+<nav class="nav-strip">
+  <a class="brand" href="/">🐉 MEOK OS</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/charter.html">Charter</a>
+  <a href="/signup">Sign up</a>
+  <a href="/waitlist">Waitlist</a>
+  <a href="/audit">Audit</a>
+  <a href="/api/stats" target="_blank">API</a>
+  <span class="spacer"></span>
+  <a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<h1 style="margin-top:2rem">🌐 Sovereign Command Hub</h1>
+<p class="sub">36-Tab Nexus · All-in-one Sovereign OS · Crown lineage 1795-3025</p>
+
+<div class="tri-domain-nav">
+  <a href="#surface" class="surface" onclick="showTrio('surface', event)">Surface</a>
+  <a href="#deep" class="deep" onclick="showTrio('deep', event)">Deep</a>
+  <a href="#codex" class="codex" onclick="showTrio('codex', event)">Codex</a>
+</div>
+
+<div class="tabs" id="tab-buttons"></div>
+
+<div id="tab-content"></div>
+
+<div class="doctrine">
+  <h2>🐉 The Sovereign Nexus Doctrine</h2>
+  <blockquote>"18 tabs. 3 realms. 1 OS.<br>Surface, Deep, Codex. All sovereign. All verifiable.<br>The dragon unifies. The dragon commands. The dragon governs."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 149 sovereign MCPs · 590 HTML pages · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>25 days to 2 Aug 2026 EU AI Act</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const TRIO_DATA = {
+  surface: {name: "Surface", color: "#4a9eff", purpose: "Operator-facing — humans read, agents act"},
+  deep:    {name: "Deep",    color: "#22c55e", purpose: "Builder-facing — MCPs / APIs / substrate"},
+  codex:   {name: "Codex",   color: "#fbbf24", purpose: "Public-facing — onboarding / community"},
+};
+
+let NEXUS_DATA = [];
+let currentFilter = null;
+
+async function loadNexus() {
+  try {
+    const r = await fetch('/api/nexus');
+    const n = await r.json();
+    NEXUS_DATA = n.tabs || [];
+    document.querySelector('h1').textContent = `SOV33 Nexus — ${NEXUS_DATA.length} Sovereign Surfaces`;
+    renderTabs();
+  } catch (e) {
+    console.error('Failed to load nexus:', e);
+    document.querySelector('h1').textContent = 'SOV33 Nexus — Loading...';
+  }
+}
+
+function renderTabs(trio) {
+  currentFilter = trio || null;
+  const tabBtns = document.getElementById('tab-buttons');
+  const tabContent = document.getElementById('tab-content');
+  tabBtns.innerHTML = '';
+  tabContent.innerHTML = '';
+
+  const filtered = currentFilter ? NEXUS_DATA.filter(t => t.trio === currentFilter) : NEXUS_DATA;
+  let firstActive = true;
+
+  filtered.forEach(tab => {
+    const btn = document.createElement('button');
+    btn.textContent = `${tab.icon || ''} ${tab.title}`;
+    btn.className = 'tab-btn';
+    btn.dataset.slug = tab.slug;
+    btn.onclick = () => activateTab(tab.slug);
+    tabBtns.appendChild(btn);
+
+    const section = document.createElement('div');
+    section.id = `section-${tab.slug}`;
+    section.className = 'tab-section';
+    section.innerHTML = `
+      <h2>${tab.icon || ''} ${tab.title}</h2>
+      <p style="color:#9ca3af;font-size:12px;margin:8px 0">Tab ${tab.tab} · ${tab.trio} · ${tab.tag}</p>
+      <p style="color:#c5cdd9;font-size:14px;margin:12px 0">${tab.purpose}</p>
+      <a href="${tab.route || '/' + tab.slug + '.html'}" style="color:#7dd3fc;text-decoration:none;font-size:13px">Open → ${tab.route || '/' + tab.slug + '.html'}</a>
+    `;
+    tabContent.appendChild(section);
+
+    if (firstActive) {
+      btn.classList.add('active');
+      section.style.display = 'block';
+      firstActive = false;
+    } else {
+      section.style.display = 'none';
+    }
+  });
+}
+
+function activateTab(slug) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-section').forEach(s => s.style.display = 'none');
+  const btn = document.querySelector(`.tab-btn[data-slug="${slug}"]`);
+  const sec = document.getElementById(`section-${slug}`);
+  if (btn) btn.classList.add('active');
+  if (sec) sec.style.display = 'block';
+}
+
+function filterByTrio(trio) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (event && event.target) event.target.classList.add('active');
+  renderTabs(trio === currentFilter ? null : trio);
+}
+
+loadNexus();
+</script>
+
+</body>
+</html>

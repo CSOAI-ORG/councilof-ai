@@ -1,0 +1,319 @@
+# 📡 MEOK OS API — OpenAPI 3.0 Specification
+
+**Version:** 1.0.0
+**Base URL:** `http://localhost:8765` (dev) · `https://api.proofof.ai` (prod)
+**Auth:** None (public) · API key (Pro+) · W3C DID + JWT (Enterprise)
+**Last updated:** 2026-06-29
+
+## Overview
+
+The MEOK OS API exposes 30+ sovereign endpoints across 12 sovereign MCPs. Every response is sigil-signed (Ed25519) and includes:
+- `kid` — key ID (sigil)
+- `sig` — signature
+- `ts` — ISO 8601 timestamp
+
+## Endpoints
+
+### Health & Status
+
+#### `GET /health`
+Health check for the MEOK OS backend.
+```bash
+curl http://localhost:8765/health
+```
+**Response:**
+```json
+{
+  "status": "healthy",
+  "ts": "2026-06-29T16:00:00+00:00Z",
+  "version": "v2.0.0",
+  "substrate": "SOV3 OOWM"
+}
+```
+
+### Federations & Hives
+
+#### `GET /v1/hives`
+List all 33 sovereign hives.
+```bash
+curl http://localhost:8765/v1/hives
+```
+
+#### `GET /v1/hive/{id}`
+Get a specific hive by ID (1-33).
+```bash
+curl http://localhost:8765/v1/hive/1
+```
+
+### Dashboard & Metrics
+
+#### `GET /v1/dashboard/metrics`
+Master dashboard metrics.
+```bash
+curl http://localhost:8765/v1/dashboard/metrics
+```
+
+#### `GET /v1/dashboard/fleet`
+Fleet health status (12 Generals).
+```bash
+curl http://localhost:8765/v1/dashboard/fleet
+```
+
+### OOWM (Organic Open World Model)
+
+#### `GET /v1/oowm/council`
+Get the 12 General council.
+```bash
+curl http://localhost:8765/v1/oowm/council
+```
+
+#### `GET /v1/oowm/5d-hive`
+Get the 5D Hive configuration.
+```bash
+curl http://localhost:8765/v1/oowm/5d-hive
+```
+
+#### `GET /v1/oowm/sephiroth`
+Get the 12 Sephiroth mapping.
+```bash
+curl http://localhost:8765/v1/oowm/sephiroth
+```
+
+#### `GET /v1/oowm/status`
+Get OOWM status.
+```bash
+curl http://localhost:8765/v1/oowm/status
+```
+
+### Federation
+
+#### `GET /v1/federation/status`
+Get federation status.
+```bash
+curl http://localhost:8765/v1/federation/status
+```
+
+#### `GET /v1/federation/health`
+Get federation health (12 Generals + BFT).
+```bash
+curl http://localhost:8765/v1/federation/health
+```
+
+#### `POST /v1/federation/route`
+Route a query to the right General.
+```bash
+curl -X POST http://localhost:8765/v1/federation/route \
+  -H "Content-Type: application/json" \
+  -d '{"query": "audit this code for EU AI Act", "use_bft": true}'
+```
+
+### Native (5 Sovereign Tasks, NO Ollama)
+
+#### `POST /v1/native/audit`
+EU AI Act audit.
+```bash
+curl -X POST http://localhost:8765/v1/native/audit \
+  -H "Content-Type: application/json" \
+  -d '{"code": "def hello(): return safe_response(user_input)"}'
+```
+
+#### `POST /v1/native/dora`
+DORA 5-pillar audit + CTPP classification.
+```bash
+curl -X POST http://localhost:8765/v1/native/dora \
+  -H "Content-Type: application/json" \
+  -d '{"entity": "HSBC", "entity_type": "credit_institution", "employees": 200000, "is_credit_institution": true}'
+```
+
+#### `POST /v1/native/defence`
+JSP 936 NATO audit.
+```bash
+curl -X POST http://localhost:8765/v1/native/defence \
+  -H "Content-Type: application/json" \
+  -d '{"scans_per_day": 100, "detected": 90, "neutralised": 85}'
+```
+
+#### `POST /v1/native/iot`
+iOK Farm IoT — Care Floor on pond state.
+```bash
+curl -X POST http://localhost:8765/v1/native/iot \
+  -H "Content-Type: application/json" \
+  -d '{"ph": 7.4, "do_mgL": 8.2, "temp_c": 22.0, "humidity": 65.0}'
+```
+
+#### `POST /v1/intuition/observe`
+Mamba-2 16-dim intuition engine.
+```bash
+curl -X POST http://localhost:8765/v1/intuition/observe \
+  -H "Content-Type: application/json" \
+  -d '{"state": [0.5, 0.4, 0.6, 0.3, 0.7, 0.2, 0.8, 0.1, 0.9, 0.0, -0.1, -0.2, -0.3, -0.4, -0.5, -0.6]}'
+```
+
+### Constitution & Care Floor
+
+#### `GET /v1/constitution/articles`
+Get the 10-Article Constitutional Charter.
+```bash
+curl http://localhost:8765/v1/constitution/articles
+```
+
+#### `GET /v1/carefloor/probe`
+Get a care floor probe result.
+```bash
+curl http://localhost:8765/v1/carefloor/probe
+```
+
+#### `GET /v1/sephiroth/tree`
+Get the 12 Sephiroth tree.
+```bash
+curl http://localhost:8765/v1/sephiroth/tree
+```
+
+### Sigil & Audit
+
+#### `GET /v1/sigil/chain`
+Get the current sigil chain.
+```bash
+curl http://localhost:8765/v1/sigil/chain
+```
+
+#### `POST /v1/sigil/anchor`
+Anchor a hash to Bitcoin (simulated).
+```bash
+curl -X POST http://localhost:8765/v1/sigil/anchor \
+  -H "Content-Type: application/json" \
+  -d '{"data": "audit_trail_2026_06_29"}'
+```
+
+### Competition (3 Top Builds)
+
+#### `GET /v1/competition/builds`
+Get all 3 top builds (Phoenix, Titan, Atlas).
+```bash
+curl http://localhost:8765/v1/competition/builds
+```
+
+#### `GET /v1/competition/scoreboard`
+Get the current leaderboard.
+```bash
+curl http://localhost:8765/v1/competition/scoreboard
+```
+
+#### `GET /v1/competition/{phoenix|titan|atlas}`
+Get a specific build.
+```bash
+curl http://localhost:8765/v1/competition/phoenix
+```
+
+### BIG BRAIM (8 MoE)
+
+#### `GET /v1/brain`
+Get the 8 BIG BRAIM winners.
+```bash
+curl http://localhost:8765/v1/brain
+```
+
+## Response Schema
+
+Every response includes a sigil:
+```json
+{
+  "protocol": "sovereign-os/1.0",
+  "version": "1.0.0",
+  "kid": "audit-7a8b9c0d1e2f3g4h",
+  "sig": "abc123def456...",
+  "ts": "2026-06-29T16:00:00+00:00Z",
+  // ... endpoint-specific data
+}
+```
+
+## Rate Limits
+
+| Tier | Rate Limit | Monthly Cost |
+|---|---|---|
+| Free | 100 req/day | $0 |
+| Pro | 10,000 req/day | $99/mo |
+| Governance | 100,000 req/day | $2,499/mo |
+| Enterprise | Unlimited | $9,999+/mo |
+
+## Error Codes
+
+| Code | Meaning |
+|---|---|
+| 200 | Success |
+| 400 | Bad Request (invalid input) |
+| 404 | Not Found |
+| 422 | Unprocessable Entity (validation failed) |
+| 500 | Internal Server Error |
+| 503 | Service Unavailable |
+
+## Authentication
+
+- **Free tier:** No auth required
+- **Pro tier:** `X-API-Key: <your-key>` header
+- **Governance tier:** `X-API-Key: <your-key>` + `X-DID: <did:csoai:org-hash>` header
+- **Enterprise tier:** W3C DID + Ed25519 JWT (Bearer)
+
+## Python SDK
+
+```bash
+pip install meok-os-sdk
+```
+
+```python
+from meok_os import MEOK
+
+client = MEOK(api_key="your-key")
+
+# EU AI Act audit
+result = client.audit_eu_ai_act(code="def hello(): pass")
+print(f"Articles satisfied: {result.satisfied}/{result.total}")
+
+# DORA CTPP check
+result = client.dora_ctpp(entity="HSBC", employees=200000)
+print(f"Is CTPP: {result.is_ctpp}")
+
+# iOK Farm IoT
+result = client.iot_pond(ph=7.4, do_mgL=8.2)
+print(f"Care floor: {result.care_floor_passed}")
+```
+
+## JavaScript SDK
+
+```bash
+npm install @meok-os/sdk
+```
+
+```javascript
+import { MEOK } from '@meok-os/sdk';
+
+const client = new MEOK({ apiKey: 'your-key' });
+
+// EU AI Act audit
+const audit = await client.auditEUAIAct('def hello(): pass');
+console.log(`${audit.satisfied}/${audit.total} articles`);
+
+// iOK Farm IoT
+const pond = await client.iotPond({ ph: 7.4, doMgL: 8.2 });
+console.log(`Care floor: ${pond.careFloorPassed}`);
+```
+
+## OpenAPI Spec (downloadable)
+
+```bash
+curl -o openapi.yaml https://proofof.ai/api/openapi.yaml
+```
+
+## Support
+
+- **Docs:** https://proofof.ai/docs
+- **Status:** https://proofof.ai/status
+- **Email:** nicholas@csoai.org
+- **GitHub:** github.com/csoai-org
+- **Discord:** discord.gg/meok-os (coming)
+
+## License
+
+MIT — CSOAI Ltd (UK 16939677). Sovereign by construction.
+
+**The dragon ships. The API is sovereign.** 🐉

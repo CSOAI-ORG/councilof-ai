@@ -1,0 +1,51 @@
+name: Publish to PyPI with Sigstore
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-n-publish:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      # This permission is required for Trusted Publishing (OIDC)
+      id-token: write
+      # This permission is required for creating a release
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install build dependencies
+      run: python -m pip install build --user
+
+    - name: Build a binary wheel and a source tarball
+      run: python -m build
+
+    - name: Publish distribution 📦 to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      # Note: No token needed when using Trusted Publishing.
+      # You must configure the repository on PyPI with the GitHub repo name,
+      # environment name 'pypi', and workflow filename.
+
+    - name: Sign the Python 🐍 distributions 📦 with Sigstore
+      uses: sigstore/gh-action-sigstore-python@v3.0.0
+      with:
+        inputs: >
+          ./dist/*.tar.gz
+          ./dist/*.whl
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          dist/*
+          ./*.sigstore.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DEFONEOS — Sovereign Edge-to-Dome | CSOAI-ORG</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The sovereign substrate for defence, AI OS, and digital twin. 4-tier edge-to-fog-to-cloud-to-sovereign architecture. JSP 440/936 compliant.">
+<style>
+:root { --navy: #0a1a2f; --gold: #c9a84c; --green: #16a34a; --bg: #02060f; --red: #dc2626; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: var(--bg); color: white; overflow-x: hidden; }
+#cesium-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
+#threejs-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none; }
+.overlay { position: relative; z-index: 10; min-height: 100vh; background: linear-gradient(180deg, rgba(2,6,15,0.85) 0%, rgba(2,6,15,0.4) 100%); }
+.hero { padding: 100px 24px 60px; text-align: center; }
+.hero .badge { display: inline-block; background: var(--green); color: white; padding: 6px 16px; border-radius: 100px; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; margin-bottom: 16px; }
+.hero h1 { font-size: 72px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 16px; background: linear-gradient(135deg, #16a34a 0%, #c9a84c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p { font-size: 22px; color: rgba(255,255,255,0.85); max-width: 800px; margin: 0 auto 24px; line-height: 1.5; }
+.hero .jsp { color: var(--red); font-size: 14px; font-weight: 700; letter-spacing: 0.1em; }
+.tiers { padding: 60px 24px; max-width: 1200px; margin: 0 auto; }
+.tiers h2 { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 48px; color: var(--gold); }
+.tier-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.tier { background: rgba(0,0,0,0.6); border: 1px solid var(--gold); border-radius: 12px; padding: 24px; text-align: center; }
+.tier .num { font-size: 36px; font-weight: 900; color: var(--gold); font-family: 'SF Mono', monospace; }
+.tier h3 { font-size: 18px; font-weight: 800; margin: 12px 0 8px; }
+.tier p { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.products { padding: 60px 24px; max-width: 1200px; margin: 0 auto; }
+.products h2 { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 48px; color: var(--gold); }
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.product { background: rgba(0,0,0,0.6); border: 1px solid rgba(201,168,76,0.5); border-radius: 12px; padding: 24px; }
+.product h3 { color: var(--green); font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+.product .tag { display: inline-block; background: rgba(22,163,74,0.2); border: 1px solid var(--green); border-radius: 4px; padding: 2px 8px; font-size: 10px; color: var(--green); margin-bottom: 8px; }
+.product p { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.cta { display: inline-block; background: var(--gold); color: var(--navy); padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 14px; margin: 12px; }
+.cta.green { background: var(--green); color: white; }
+.cta:hover { transform: translateY(-2px); transition: 0.2s; }
+.cta-section { text-align: center; padding: 40px 0; }
+footer { padding: 40px 24px; text-align: center; background: rgba(0,0,0,0.9); border-top: 1px solid var(--gold); font-size: 12px; color: rgba(255,255,255,0.5); }
+</style>
+</head>
+<body>
+<div id="cesium-container"></div>
+<div id="threejs-container"></div>
+<div class="overlay">
+  <section class="hero">
+    <div class="badge">● DEFENCE AI OS · DUAL-USE</div>
+    <h1>DEFONEOS</h1>
+    <p>The sovereign substrate for defence, AI OS, and digital twin. 4-tier edge-to-fog-to-cloud-to-sovereign architecture. WebGL + Cesium 3D + Three.js 22 Arcana. JSP 440/936 compliant.</p>
+    <div class="jsp">JSP 440 · JSP 936 · UK SOIL 100% · CSOAI LTD (UK 16939677)</div>
+    <div class="cta-section">
+      <a class="cta green" href="#demo">→ See Live Demo</a>
+      <a class="cta" href="/install.html">→ Install SOV3</a>
+    </div>
+  </section>
+  <section class="tiers">
+    <h2>The 4-Tier Sovereign Architecture</h2>
+    <div class="tier-grid">
+      <div class="tier">
+        <div class="num">1</div>
+        <h3>Edge</h3>
+        <p>Drone + sensor + AKIDA. 16 TOPS NPU. SOV3small3 (7 GB). 0.96 W power.</p>
+      </div>
+      <div class="tier">
+        <div class="num">2</div>
+        <h3>Fog</h3>
+        <p>RTX 6000 + 1.39 TB BIG BRAIM. MoE-LARGE. 8 models. Horizon scanning.</p>
+      </div>
+      <div class="tier">
+        <div class="num">3</div>
+        <h3>Cloud</h3>
+        <p>GCP sovereign VM (35.242.143.249). 49 GB data moat. 8 sovereign GCP VMs.</p>
+      </div>
+      <div class="tier">
+        <div class="num">4</div>
+        <h3>Sovereign</h3>
+        <p>DORADO EAST↔WEST. 0.937 SOVEREIGN_BOND. 7/7 compliance. PQC ML-DSA-65.</p>
+      </div>
+    </div>
+  </section>
+  <section class="products" id="demo">
+    <h2>The 8 DEFONEOS Products</h2>
+    <div class="product-grid">
+      <div class="product"><span class="tag">CORE</span><h3>CORE</h3><p>The sovereign substrate. 80 MCPs, 330 SOV3 tools, 22 Arcana, 33 districts.</p></div>
+      <div class="product"><span class="tag">SENTRY</span><h3>SENTRY</h3><p>33-hive BFT council + 21-seat trinity + 12-around-1. 2/3 majority.</p></div>
+      <div class="product"><span class="tag">EYE</span><h3>EYE</h3><p>Cesium 3D COP (Common Operational Picture). 17 data layers. CoT/TAK interop.</p></div>
+      <div class="product"><span class="tag">SHIELD</span><h3>SHIELD</h3><p>PQC ML-DSA-65 + ML-KEM-768. Zero Trust. Air-gap deploy. STRIDE threat model.</p></div>
+      <div class="product"><span class="tag">SWARM</span><h3>SWARM</h3><p>33-agent BFT. PX4 Fleet + Mava MARL swarms + OpenAthena geo + Batear acoustic.</p></div>
+      <div class="product"><span class="tag">GUARD</span><h3>GUARD</h3><p>JSP 936 audit. 8 attack vectors. FreeTAKServer C2 + TAK Protocol + CoT.</p></div>
+      <div class="product"><span class="tag">COGNITION</span><h3>COGNITION</h3><p>qwen3:30b-a3b + deepseek-r1:7b + llama3.1:8b + moondream. 4 sovereign brains.</p></div>
+      <div class="product"><span class="tag">SIM</span><h3>SIM</h3><p>Digital Twin. Cesium 3D + Mamba-2 SSM. 16-dim intuition engine.</p></div>
+    </div>
+  </section>
+  <section class="cta-section">
+    <a class="cta green" href="https://meok.ai/defoneos" target="_blank">→ Open meok.ai/defoneos</a>
+    <a class="cta" href="/defoneos/">→ Read the DEFONEOS pages</a>
+    <a class="cta" href="/sovereign-constitution/">→ The 7 Articles</a>
+  </section>
+  <footer>
+    🐉 DEFONEOS · CSOAI Ltd (UK 16939677) · MEOK AI Labs<br>
+    Public. Auditable. Sovereign. · 100% UK soil · JSP 440/936 compliant
+  </footer>
+</div>
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+Cesium.Ion.defaultAccessToken = '';
+const viewer = new Cesium.Viewer('cesium-container', {
+  imageryProvider: new Cesium.OpenStreetMapImageryProvider({ url: 'https://tile.openstreetmap.org/' }),
+  baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
+  navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false,
+  infoBox: false, selectionIndicator: false,
+});
+viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0a1a2f');
+viewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#02060f');
+viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(-0.1278, 51.5074, 120000), duration: 4 });
+for (let i = 0; i < 4; i++) {
+  const angle = (i / 4) * 2 * Math.PI;
+  const r = 0.06;
+  viewer.entities.add({
+    name: 'Tier ' + (i + 1),
+    position: Cesium.Cartesian3.fromDegrees(-0.1278 + r * Math.cos(angle), 51.5074 + r * Math.sin(angle), 500),
+    point: { pixelSize: 12, color: Cesium.Color.fromCssColorString('#16a34a') },
+    label: { text: 'TIER ' + (i + 1), font: '12px monospace', fillColor: Cesium.Color.WHITE, pixelOffset: new Cesium.Cartesian2(0, -16) },
+  });
+}
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 30;
+const renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.getElementById('threejs-container').appendChild(renderer.domElement);
+const tierGroup = new THREE.Group();
+const tierColors = [0x16a34a, 0x4ade80, 0x06b6d4, 0x8b5cf6];
+const tierNames = ['Edge', 'Fog', 'Cloud', 'Sovereign'];
+for (let i = 0; i < 4; i++) {
+  const geometry = new THREE.OctahedronGeometry(1.5 - i * 0.2, 0);
+  const material = new THREE.MeshBasicMaterial({ color: tierColors[i], wireframe: true, transparent: true, opacity: 0.5 });
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.position.set((i - 1.5) * 8, 0, 0);
+  tierGroup.add(mesh);
+  const label = new THREE.Sprite(new THREE.SpriteMaterial({ color: tierColors[i], transparent: true }));
+  label.position.set((i - 1.5) * 8, -3, 0);
+  label.scale.set(2, 0.5, 1);
+  tierGroup.add(label);
+}
+scene.add(tierGroup);
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.008;
+  tierGroup.rotation.y = time;
+  renderer.render(scene, camera);
+}
+animate();
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+console.log('🐉 DEFONEOS next-level site: Cesium 3D globe + Three.js 4-tier architecture loaded');
+</script>
+</body>
+</html>

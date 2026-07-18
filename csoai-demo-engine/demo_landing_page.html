@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSOAI - Free AI Compliance Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a3a5c;
+            --primary-light: #2a5a8c;
+            --accent: #00b894;
+            --accent-dark: #00a383;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --text: #2c3e50;
+            --text-light: #5a6c7d;
+            --bg: #f8fafb;
+            --card-bg: #ffffff;
+            --border: #e1e8ed;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+            --gradient: linear-gradient(135deg, #1a3a5c 0%, #2a5a8c 50%, #1a3a5c 100%);
+            --gradient-accent: linear-gradient(135deg, #00b894 0%, #00a383 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero */
+        .hero {
+            background: var(--gradient);
+            color: white;
+            padding: 4rem 2rem 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0,184,148,0.2);
+            border: 1px solid rgba(0,184,148,0.4);
+            color: var(--accent);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-around;
+            max-width: 900px;
+            margin: -2.5rem auto 0;
+            position: relative;
+            z-index: 10;
+            box-shadow: var(--shadow-lg);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .form-card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-card .form-subtitle {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group label .required {
+            color: var(--danger);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(42,90,140,0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,184,148,0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Features List */
+        .features {
+            padding: 1rem 0;
+        }
+
+        .feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .feature-icon.blue { background: rgba(26,58,92,0.1); }
+        .feature-icon.green { background: rgba(0,184,148,0.1); }
+        .feature-icon.orange { background: rgba(243,156,18,0.1); }
+        .feature-icon.red { background: rgba(231,76,60,0.1); }
+
+        .feature-content h3 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .feature-content p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-section.visible {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Result Card */
+        .result-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .result-company {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .risk-badge {
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .risk-high {
+            background: rgba(231,76,60,0.1);
+            color: var(--danger);
+            border: 1px solid rgba(231,76,60,0.3);
+        }
+
+        .risk-limited {
+            background: rgba(243,156,18,0.1);
+            color: var(--warning);
+            border: 1px solid rgba(243,156,18,0.3);
+        }
+
+        .risk-minimal {
+            background: rgba(0,184,148,0.1);
+            color: var(--accent-dark);
+            border: 1px solid rgba(0,184,148,0.3);
+        }
+
+        .risk-prohibited {
+            background: rgba(142,68,173,0.1);
+            color: #8e44ad;
+            border: 1px solid rgba(142,68,173,0.3);
+        }
+
+        /* Score Circle */
+        .score-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            border: 4px solid var(--border);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .score-circle .score-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .score-circle .score-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+        }
+
+        .score-details {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .score-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-details p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .progress-fill.high { background: var(--danger); }
+        .progress-fill.limited { background: var(--warning); }
+        .progress-fill.minimal { background: var(--accent); }
+
+        /* Detail Grids */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-card {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .detail-card h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .detail-card ul {
+            list-style: none;
+        }
+
+        .detail-card li {
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .detail-card li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .detail-card li.risk-item::before {
+            content: '⚠';
+        }
+
+        .detail-card li.gap-item::before {
+            content: '✗';
+            color: var(--danger);
+        }
+
+        .detail-card li.action-item::before {
+            content: '✓';
+            color: var(--accent);
+        }
+
+        /* Regulation Tags */
+        .reg-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .reg-tag {
+            background: rgba(26,58,92,0.08);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            color: white;
+            margin-top: 2rem;
+        }
+
+        .cta-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-light {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-light:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        /* How It Works */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.visible {
+            display: block;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Penalty Box */
+        .penalty-box {
+            background: rgba(231,76,60,0.05);
+            border: 1px solid rgba(231,76,60,0.2);
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .penalty-box h4 {
+            color: var(--danger);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .penalty-box p {
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                padding: 1.5rem;
+                margin-top: -1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .score-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .result-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">CSO<span>AI</span></div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#assessment">Assessment</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#solution">Solution</a></li>
+            </ul>
+        </nav>
+        <button class="mobile-menu-btn">☰</button>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="badge">🚀 FREE Instant Assessment</div>
+        <h1>Is Your AI Compliant?</h1>
+        <p>Get a personalized AI compliance assessment in seconds. Discover your risk level, applicable regulations, and the path to compliance.</p>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat">
+            <div class="stat-number">11</div>
+            <div class="stat-label">Industries Covered</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">30+</div>
+            <div class="stat-label">AI Use Cases</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">15</div>
+            <div class="stat-label">Regulations Mapped</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">&lt;30s</div>
+            <div class="stat-label">Assessment Time</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <section id="assessment" class="two-col">
+            <!-- Form -->
+            <div class="form-card">
+                <h2>Get Your Free Assessment</h2>
+                <p class="form-subtitle">Enter your details to generate a personalized compliance report</p>
+                <form id="assessmentForm">
+                    <div class="form-group">
+                        <label for="companyName">Company Name <span class="required">*</span></label>
+                        <input type="text" id="companyName" placeholder="e.g., Acme Bank" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="industry">Industry <span class="required">*</span></label>
+                        <select id="industry" required>
+                            <option value="">Select your industry...</option>
+                            <option value="banking">Banking & Financial Services</option>
+                            <option value="healthcare">Healthcare & Life Sciences</option>
+                            <option value="insurance">Insurance</option>
+                            <option value="retail">Retail & E-Commerce</option>
+                            <option value="automotive">Automotive & Mobility</option>
+                            <option value="manufacturing">Manufacturing & Industry 4.0</option>
+                            <option value="energy">Energy & Utilities</option>
+                            <option value="government">Government & Public Sector</option>
+                            <option value="legal">Legal & Professional Services</option>
+                            <option value="telecom">Telecommunications</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="useCase">AI Use Case <span class="required">*</span></label>
+                        <input type="text" id="useCase" placeholder="e.g., Credit scoring AI, Diagnostic AI..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Business Email <span class="required">*</span></label>
+                        <input type="email" id="email" placeholder="you@company.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        Generate My Assessment →
+                    </button>
+                </form>
+            </div>
+
+            <!-- Features -->
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon blue">🔍</div>
+                    <div class="feature-content">
+                        <h3>Comprehensive Risk Analysis</h3>
+                        <p>Identify specific compliance risks across 15+ regulations including EU AI Act, GDPR, FDA, and sector-specific frameworks.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon green">📊</div>
+                    <div class="feature-content">
+                        <h3>Personalized Report</h3>
+                        <p>Every assessment is tailored to your specific industry, use case, and regulatory environment with actionable recommendations.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon orange">⚡</div>
+                    <div class="feature-content">
+                        <h3>Instant Results</h3>
+                        <p>Get your compliance assessment in under 30 seconds. No waiting, no consultation required.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon red">🛡️</div>
+                    <div class="feature-content">
+                        <h3>Expert-Grade Analysis</h3>
+                        <p>Built on regulatory expertise from EU AI Act, FDA, NIST, and 10+ other frameworks. Used by compliance professionals worldwide.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing your AI compliance posture...</p>
+        </div>
+
+        <!-- Results -->
+        <div class="results-section" id="results"></div>
+
+        <!-- How It Works -->
+        <section id="how-it-works">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Three simple steps to compliance clarity</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Tell Us About Your AI</h3>
+                    <p>Enter your company name, industry, and AI use case. Our system matches your inputs against our comprehensive regulatory database.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Get Instant Analysis</h3>
+                    <p>Receive a personalized risk assessment with your EU AI Act classification, applicable regulations, and specific compliance gaps.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>See the Full Report</h3>
+                    <p>Unlock the complete assessment with detailed recommendations, implementation timeline, and a personalized demo of CSOAI's solution.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution CTA -->
+        <section id="solution">
+            <div class="cta-section">
+                <h2>Stop Guessing. Start Complying.</h2>
+                <p>CSOAI's AI-native compliance infrastructure automates validation, monitors risk signals 24/7, and creates immutable audit trails. Join 100+ organizations that trust CSOAI.</p>
+                <a href="#assessment" class="btn-light">Get Your Free Assessment</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 CSOAI. All rights reserved. | <a href="#">Privacy</a> | <a href="#">Terms</a></p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem;">This assessment provides initial guidance based on industry templates. A detailed consultation is recommended for specific compliance strategies.</p>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ========================================================================
+        // INDUSTRY DATABASE (Embedded - no server needed)
+        // ========================================================================
+
+        const INDUSTRY_DB = {
+            banking: {
+                name: "Banking & Financial Services",
+                regulations: ["EU AI Act (Annex III)", "GDPR Article 22", "FCRA", "ECOA / Regulation B", "Basel III/IV"],
+                risks: [
+                    "Algorithmic bias in lending decisions",
+                    "Lack of explainability in credit scoring",
+                    "Inadequate human oversight in approvals",
+                    "Data quality issues in training datasets"
+                ],
+                penalty: "Up to 7% of global annual turnover (EU AI Act) + GDPR fines up to EUR 20M",
+                csoai: "CSOAI's BFT Council validates scoring models through multi-agent consensus. The Pheromone Matrix tracks 200+ fairness signals, alerting when drift exceeds thresholds."
+            },
+            healthcare: {
+                name: "Healthcare & Life Sciences",
+                regulations: ["EU AI Act (Medical Devices)", "FDA SaMD", "HIPAA", "GDPR Health Data", "EU MDR/IVDR"],
+                risks: [
+                    "Higher false negatives for underrepresented populations",
+                    "Training data lacking diversity",
+                    "Inadequate clinical validation",
+                    "Patient data privacy breaches"
+                ],
+                penalty: "Up to 7% global turnover (EU AI Act). FDA Warning Letters. GDPR: up to EUR 20M",
+                csoai: "CSOAI's Clinical Validation Council evaluates diagnostic models across 50+ demographic subgroups. Immutable audit trails exceed FDA 510(k) requirements."
+            },
+            insurance: {
+                name: "Insurance",
+                regulations: ["EU AI Act (Annex III)", "NAIC AI Model Bulletin", "GDPR Article 22", "EIOPA AI Guidelines"],
+                risks: [
+                    "Proxy discrimination in risk scoring",
+                    "Black-box pricing models",
+                    "Claims automation denying valid claims",
+                    "Inadequate documentation for filings"
+                ],
+                penalty: "EU AI Act: up to 7% global turnover. NAIC: up to $50M per violation",
+                csoai: "CSOAI's Actuarial Review Council provides multi-agent validation with full proxy discrimination detection. The Compliance Ledger streamlines NAIC filings."
+            },
+            retail: {
+                name: "Retail & E-Commerce",
+                regulations: ["EU AI Act (Limited Risk)", "GDPR Profiling", "CCPA/CPRA", "FTC Act Section 5"],
+                risks: [
+                    "Dynamic pricing discrimination",
+                    "Recommendation engine safety",
+                    "Customer profiling privacy",
+                    "Fraud detection false positives"
+                ],
+                penalty: "GDPR: up to EUR 20M. CCPA: up to $7,500 per violation. FTC: up to $50,120 per violation",
+                csoai: "CSOAI's Commerce Council monitors pricing algorithms for fairness. The Trust Matrix validates recommendation outputs against safety guidelines."
+            },
+            automotive: {
+                name: "Automotive & Mobility",
+                regulations: ["EU AI Act (Transport)", "UNECE R79/R157", "ISO 21448 (SOTIF)", "ISO 26262", "NHTSA"],
+                risks: [
+                    "Perception failures in adverse weather",
+                    "Planning errors in urban scenarios",
+                    "Cybersecurity vulnerabilities",
+                    "Insufficient handover time"
+                ],
+                penalty: "EU AI Act: up to 7% global turnover. UNECE: market access denied. NHTSA: up to $150M",
+                csoai: "CSOAI's Safety Council validates perception and planning across 10,000+ edge cases. The Safety Ledger provides evidence exceeding SOTIF requirements."
+            },
+            manufacturing: {
+                name: "Manufacturing & Industry 4.0",
+                regulations: ["EU AI Act (Critical Infrastructure)", "EU Machinery Regulation", "OSHA", "IEC 61508"],
+                risks: [
+                    "Predictive maintenance missing critical failures",
+                    "Quality inspection accepting defects",
+                    "Worker safety monitoring privacy",
+                    "Autonomous system safety gaps"
+                ],
+                penalty: "EU AI Act: up to 7% global turnover. OSHA: up to $145,027 per violation. Recalls: $50M-$500M",
+                csoai: "CSOAI's Industrial Council validates maintenance models against safety-critical failure modes. Full traceability for quality certifications."
+            },
+            energy: {
+                name: "Energy & Utilities",
+                regulations: ["EU AI Act (Critical Infrastructure)", "NERC CIP", "EU NIS2", "IEC 62351"],
+                risks: [
+                    "Grid optimization causing instability",
+                    "Smart meter data privacy",
+                    "Predictive model failures in extremes",
+                    "Cyber-physical attacks"
+                ],
+                penalty: "EU AI Act: up to 7% global turnover. NERC CIP: up to $1.5M per violation per day",
+                csoai: "CSOAI's Grid Council validates optimization across 500+ contingency scenarios. Immutable audit trails satisfy NERC CIP requirements."
+            },
+            government: {
+                name: "Government & Public Sector",
+                regulations: ["EU AI Act (Full Applicability)", "Algorithmic Accountability Act", "EO 14110", "Equal Treatment Directive"],
+                risks: [
+                    "Benefits algorithms denying valid claims",
+                    "Surveillance violating civil liberties",
+                    "Procurement scoring bias",
+                    "Predictive policing amplification"
+                ],
+                penalty: "EU AI Act: up to 7% global turnover. ADA lawsuits: averaging $5M settlements",
+                csoai: "CSOAI's Public Sector Council provides transparent, auditable validation. The Equity Matrix ensures strict non-discrimination standards."
+            },
+            legal: {
+                name: "Legal & Professional Services",
+                regulations: ["EU AI Act (Legal AI)", "ABA Model Rules", "GDPR", "SRA AI Guidance"],
+                risks: [
+                    "Hallucinated legal precedents",
+                    "Contract analysis missing critical clauses",
+                    "Client confidentiality breaches",
+                    "E-discovery incomplete results"
+                ],
+                penalty: "EU AI Act: up to 7% global turnover. Malpractice: unlimited liability",
+                csoai: "CSOAI's Legal Council validates outputs against verified legal databases. The Privilege Vault ensures client data never leaves secure environments."
+            },
+            telecom: {
+                name: "Telecommunications",
+                regulations: ["EU AI Act (Critical Infrastructure)", "GDPR", "FCC AI Requirements", "Ofcom Online Safety Act"],
+                risks: [
+                    "Network optimization discrimination",
+                    "Content moderation censorship",
+                    "Fraud detection false blocks",
+                    "5G/IoT security vulnerabilities"
+                ],
+                penalty: "EU AI Act: up to 7% global turnover. FCC: up to $2.5M per violation. Ofcom: up to 10% UK turnover",
+                csoai: "CSOAI's Telecom Council validates network AI for fairness. The Trust & Safety Matrix ensures content moderation meets proportionality standards."
+            }
+        };
+
+        // Use case risk mapping
+        const USE_CASE_RISKS = {
+            banking: {
+                credit: { level: "HIGH", annex: "Annex III, Point 3(b) - Credit Scoring" },
+                fraud: { level: "HIGH", annex: "Annex III, Point 3(a) - Fraud Prevention" },
+                trading: { level: "HIGH", annex: "Annex III, Point 3(c) - Risk Assessment" },
+                onboarding: { level: "LIMITED", annex: "Limited Risk - Transparency" },
+                default: { level: "HIGH", annex: "Annex III, Point 3 - Financial Services" }
+            },
+            healthcare: {
+                diagnostic: { level: "HIGH", annex: "Annex III, Point 1(a) - Medical Devices" },
+                clinical: { level: "HIGH", annex: "Annex III, Point 1 - Healthcare" },
+                drug: { level: "LIMITED", annex: "Limited Risk - Transparency" },
+                patient: { level: "HIGH", annex: "Annex III, Point 1(a) - Remote Monitoring" },
+                default: { level: "HIGH", annex: "Annex III, Point 1 - Healthcare" }
+            },
+            insurance: {
+                risk: { level: "HIGH", annex: "Annex III, Point 3 - Insurance Pricing" },
+                claim: { level: "HIGH", annex: "Annex III, Point 3 - Claims" },
+                underwrit: { level: "HIGH", annex: "Annex III, Point 3 - Underwriting" },
+                default: { level: "HIGH", annex: "Annex III, Point 3 - Insurance" }
+            },
+            retail: {
+                pric: { level: "LIMITED", annex: "Limited Risk - Transparency" },
+                recommend: { level: "LIMITED", annex: "Limited Risk - Transparency" },
+                demand: { level: "MINIMAL", annex: "Minimal Risk - No Additional Obligations" },
+                default: { level: "LIMITED", annex: "Limited Risk - Transparency" }
+            },
+            automotive: {
+                autonom: { level: "HIGH", annex: "Annex III, Point 2(a) - Transport Safety" },
+                driver: { level: "LIMITED", annex: "Limited Risk - Transparency" },
+                default: { level: "HIGH", annex: "Annex III, Point 2 - Transport" }
+            },
+            manufacturing: {
+                mainten: { level: "LIMITED", annex: "Limited Risk - Critical Infrastructure" },
+                qualit: { level: "LIMITED", annex: "Annex III - Product Safety" },
+                default: { level: "LIMITED", annex: "Limited Risk - Critical Infrastructure" }
+            },
+            energy: {
+                grid: { level: "HIGH", annex: "Annex III - Critical Infrastructure" },
+                demand: { level: "LIMITED", annex: "Limited Risk - Critical Infrastructure" },
+                default: { level: "HIGH", annex: "Annex III - Critical Infrastructure" }
+            },
+            government: {
+                benefit: { level: "HIGH", annex: "Annex III - Public Services" },
+                safety: { level: "HIGH", annex: "Annex III - Law Enforcement" },
+                procure: { level: "HIGH", annex: "Annex III - Public Services" },
+                default: { level: "HIGH", annex: "Annex III - Public Services" }
+            },
+            legal: {
+                document: { level: "LIMITED", annex: "Limited Risk - Professional Services" },
+                research: { level: "LIMITED", annex: "Limited Risk - Professional Services" },
+                contract: { level: "LIMITED", annex: "Limited Risk - Professional Services" },
+                default: { level: "LIMITED", annex: "Limited Risk - Professional Services" }
+            },
+            telecom: {
+                network: { level: "HIGH", annex: "Annex III - Critical Infrastructure" },
+                fraud: { level: "HIGH", annex: "Annex III - Critical Infrastructure" },
+                default: { level: "HIGH", annex: "Annex III - Critical Infrastructure" }
+            }
+        };
+
+        function findUseCaseRisk(industry, useCase) {
+            const industryRisks = USE_CASE_RISKS[industry] || {};
+            const normalized = useCase.toLowerCase();
+
+            for (const [key, value] of Object.entries(industryRisks)) {
+                if (key === 'default') continue;
+                if (normalized.includes(key)) return value;
+            }
+            return industryRisks.default || { level: "HIGH", annex: "To be determined" };
+        }
+
+        function calculateRiskScore(level) {
+            const scores = { PROHIBITED: 95, HIGH: 75, LIMITED: 50, MINIMAL: 25 };
+            return scores[level] || 50;
+        }
+
+        // ========================================================================
+        // EVENT HANDLERS
+        // ========================================================================
+
+        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateAssessment();
+        });
+
+        function generateAssessment() {
+            const companyName = document.getElementById('companyName').value;
+            const industry = document.getElementById('industry').value;
+            const useCase = document.getElementById('useCase').value;
+
+            // Show loading
+            document.getElementById('loading').classList.add('visible');
+            document.getElementById('results').classList.remove('visible');
+            document.getElementById('submitBtn').disabled = true;
+
+            // Build the client result, then ask the REAL CSOAI engine to classify (graceful fallback if offline)
+            const result = buildAssessment(companyName, industry, useCase);
+            fetch('/api/audit', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({useCase: useCase, industry: industry})
+            }).then(r => r.json()).then(eng => {
+                if (eng && eng.engine) {
+                    result.riskLevel = eng.riskLevel;
+                    result.riskScore = eng.riskScore;
+                    result.engine = eng;
+                }
+                finishAssessment(result);
+            }).catch(() => finishAssessment(result));
+        }
+
+        function finishAssessment(result) {
+            displayResults(result);
+            if (result.engine) {
+                const e = result.engine;
+                const extra = document.createElement('div');
+                extra.className = 'result-card';
+                extra.style.marginTop = '16px';
+                extra.innerHTML = '<div class="result-header"><div class="result-company">✓ Verified by the CSOAI engine</div>'
+                    + '<span class="risk-badge risk-' + result.riskLevel.toLowerCase() + '">' + e.rawLevel + ' · conf ' + e.confidence + '</span></div>'
+                    + (e.frameworks && e.frameworks.length ? '<p style="margin:8px 0"><strong>Matched signals:</strong> ' + e.frameworks.join(' · ') + '</p>' : '')
+                    + (e.checklist && e.checklist.length ? '<p style="margin:8px 0"><strong>Your compliance checklist:</strong></p><ul>' + e.checklist.map(c => '<li>' + c + '</li>').join('') + '</ul>' : '')
+                    + '<p style="margin:8px 0;opacity:.75">' + (e.council || '') + '</p>';
+                document.getElementById('results').appendChild(extra);
+            }
+            document.getElementById('loading').classList.remove('visible');
+            document.getElementById('submitBtn').disabled = false;
+            showToast('Assessment complete — see your results below.');
+        }
+
+        function buildAssessment(company, industryKey, useCase) {
+            const industry = INDUSTRY_DB[industryKey];
+            const useCaseRisk = findUseCaseRisk(industryKey, useCase);
+            const riskScore = calculateRiskScore(useCaseRisk.level);
+
+            return {
+                company,
+                industry: industry.name,
+                useCase,
+                riskLevel: useCaseRisk.level,
+                annex: useCaseRisk.annex,
+                riskScore,
+                regulations: industry.regulations,
+                risks: industry.risks,
+                penalty: industry.penalty,
+                csoai: industry.csoai
+            };
+        }
+
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+
+            const riskClass = `risk-${data.riskLevel.toLowerCase()}`;
+            const progressClass = data.riskLevel === 'HIGH' ? 'high' : data.riskLevel === 'LIMITED' ? 'limited' : 'minimal';
+
+            resultsDiv.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-company">${data.company}</div>
+                        <span class="risk-badge ${riskClass}">${data.riskLevel} RISK</span>
+                    </div>
+
+                    <div class="score-section">
+                        <div class="score-circle">
+                            <div class="score-value">${data.riskScore}</div>
+                            <div class="score-label">Risk Score</div>
+                        </div>
+                        <div class="score-details">
+                            <h3>EU AI Act Classification</h3>
+                            <p><strong>${data.annex}</strong></p>
+                            <p>${data.company}'s <strong>${data.useCase}</strong> in the ${data.industry} sector requires immediate compliance attention.</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill ${progressClass}" style="width: ${data.riskScore}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="penalty-box">
+                        <h4>⚠️ Penalty Exposure</h4>
+                        <p>${data.penalty}</p>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>Applicable Regulations</h4>
+                            <div class="reg-tags">
+                                ${data.regulations.map(r => `<span class="reg-tag">${r}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Key Risks</h4>
+                            <ul>
+                                ${data.risks.map(r => `<li class="risk-item">${r}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="detail-card" style="margin-bottom: 2rem;">
+                        <h4>How CSOAI Helps</h4>
+                        <p>${data.csoai}</p>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <a href="mailto:demo@csoai.com?subject=Full%20Compliance%20Report%20Request%20-%20${encodeURIComponent(data.company)}&body=Company:%20${encodeURIComponent(data.company)}%0AIndustry:%20${encodeURIComponent(data.industry)}%0AUse%20Case:%20${encodeURIComponent(data.useCase)}" class="btn btn-primary" style="max-width: 400px; display: inline-block;">
+                            📄 See Full Report →
+                        </a>
+                        <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-light);">
+                            Get the complete assessment with detailed action items, timeline, and implementation roadmap
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            resultsDiv.classList.add('visible');
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 3000);
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

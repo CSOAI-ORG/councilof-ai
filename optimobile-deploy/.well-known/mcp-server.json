@@ -1,0 +1,49 @@
+{
+  "mcpVersion": "1.0.0",
+  "serverInfo": {
+    "name": "optimobile.ai---practice-management-for-modern-opticians",
+    "version": "1.0.0",
+    "description": "Optimobile.ai \u2014 Practice Management for Modern Opticians \u2014 MEOK AI Labs compliance substrate."
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "compliance-audit",
+      "description": "Run a compliance audit via Optimobile.ai \u2014 Practice Management for Modern Opticians.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string",
+            "description": "Name or identifier of the system"
+          },
+          "framework": {
+            "type": "string",
+            "description": "Framework to check"
+          }
+        },
+        "required": [
+          "system"
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "https://optimobile.ai/llms.txt",
+      "name": "Optimobile.ai \u2014 Practice Management for Modern Opticians LLMs.txt",
+      "description": "Discovery manifest.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://optimobile.ai/sitemap.xml",
+      "name": "Optimobile.ai \u2014 Practice Management for Modern Opticians Sitemap",
+      "description": "Page index.",
+      "mimeType": "application/xml"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "task_id": "test-001",
+  "elapsed_s": 0.37,
+  "providers_called": [
+    "openai",
+    "openrouter"
+  ],
+  "providers_ok": [],
+  "providers_failed": [
+    {
+      "provider": "openai",
+      "error": "HTTP 401: b'{\\n  \"error\": {\\n    \"message\": \"Incorrect API key provided: sk-proj-***************************************"
+    },
+    {
+      "provider": "openrouter",
+      "error": "HTTP 401: b'{\"error\":{\"message\":\"User not found.\",\"code\":401}}'"
+    }
+  ],
+  "best": null,
+  "all_results": [
+    {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "ok": false,
+      "error": "HTTP 401: b'{\\n  \"error\": {\\n    \"message\": \"Incorrect API key provided: sk-proj-*************************************************************************************************************************************'"
+    },
+    {
+      "provider": "openrouter",
+      "model": "anthropic/claude-sonnet-4",
+      "ok": false,
+      "error": "HTTP 401: b'{\"error\":{\"message\":\"User not found.\",\"code\":401}}'"
+    }
+  ]
+}

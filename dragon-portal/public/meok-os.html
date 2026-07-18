@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🐉 MEOK ONE OS — The Universal Terminal Bridge | Interchangeable Brains, Voice-First, Gamified UX</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root { --bg: #050709; --panel: #0f1419; --cyan: #00E5FF; --pink: #FF0066; --gold: #FFB300; --green: #10b981; --purple: #A855F7; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
+.window {
+  background: linear-gradient(135deg, #0f1419 0%, #1a2230 100%);
+  border: 1px solid #1a2230; border-radius: 16px; padding: 24px; margin-bottom: 16px;
+  box-shadow: 0 4px 32px rgba(0, 229, 255, 0.05);
+}
+.window-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot-r { background: #FF5F57; } .dot-y { background: #FFBD2E; } .dot-g { background: #28C840; }
+.window-title { font-size: 12px; color: #94a3b8; margin-left: 8px; }
+.brain {
+  display: inline-block; padding: 6px 12px; margin: 4px; border-radius: 999px;
+  background: var(--panel); border: 1px solid #1a2230; cursor: pointer;
+  font-size: 12px; transition: all 0.2s;
+}
+.brain:hover { transform: scale(1.05); border-color: var(--cyan); }
+.brain.active { background: var(--cyan); color: #000; font-weight: bold; }
+.brain.kimi { border-color: var(--purple); }
+.brain.claude { border-color: var(--gold); }
+.brain.hermes { border-color: var(--green); }
+.brain.openclaw { border-color: var(--pink); }
+.gamif { font-size: 48px; text-align: center; margin: 24px 0; }
+.achievement {
+  display: inline-block; padding: 8px 16px; margin: 4px; border-radius: 12px;
+  background: var(--panel); border: 1px solid var(--gold); color: var(--gold);
+  font-size: 12px; cursor: pointer; transition: all 0.3s;
+}
+.achievement.locked { color: #4a5568; border-color: #4a5568; }
+.achievement.unlocked { animation: pop 0.6s ease-out; box-shadow: 0 0 16px var(--gold); }
+.voice-indicator {
+  display: inline-block; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--cyan); animation: pulse 1.5s ease-in-out infinite;
+  cursor: pointer; vertical-align: middle; margin-left: 12px;
+}
+@keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.7); } 50% { transform: scale(1.1); box-shadow: 0 0 0 16px rgba(0, 229, 255, 0); } }
+@keyframes pop { 0% { transform: scale(0.8); opacity: 0.3; } 50% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+.spinner { display: inline-block; animation: spin 2s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.storage-badge { font-size: 10px; color: #64748b; font-family: monospace; }
+.flash { animation: flash 0.5s ease-out; }
+@keyframes flash { 0% { background: var(--gold); color: #000; } 100% { background: var(--panel); } }
+.character-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; margin: 4px; border-radius: 999px; background: var(--panel); border: 1px solid #1a2230; cursor: pointer; font-size: 12px; }
+.character-pill.active { background: var(--pink); color: #fff; font-weight: bold; }
+</style>
+</head>
+<body>
+<header class="border-b border-slate-800 py-6 px-6 text-center">
+  <div class="gamif pulse">🐉</div>
+  <h1 class="text-4xl font-bold text-cyan-400">MEOK ONE OS</h1>
+  <p class="text-slate-400 mt-2">The Universal Terminal Bridge · Interchangeable Brains · Voice-First · Gamified UX</p>
+  <p class="text-xs text-slate-500 mt-1 font-mono">End-users: young → elderly. Old OS: eaten. New interface: sovereign, safe, intuitive.</p>
+  <div class="voice-indicator" title="Click to talk" onclick="cycleVoice()"></div>
+  <p class="storage-badge mt-1" id="storage-status">🗄️ localStorage: loading…</p>
+</header>
+
+<main class="max-w-7xl mx-auto p-6">
+  <div class="grid lg:grid-cols-2 gap-6">
+    <!-- BRAIN PICKER (persistent) -->
+    <div class="window">
+      <div class="window-header">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="window-title">~ meok-os / brains.dock</div>
+      </div>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">Interchangeable Brains</h2>
+      <p class="text-sm text-slate-400 mb-4">Click a brain to swap. The same UI, different mind. Drag a brain to an AI window to wire it. <span class="text-xs text-emerald-400">(saved across reloads)</span></p>
+      <div>
+        <span class="brain kimi" data-brain="kimi-k2.7-code">KIMI K2.7-CODE</span>
+        <span class="brain claude" data-brain="claude-opus-4.8">Claude Opus 4.8</span>
+        <span class="brain hermes" data-brain="hermes-1">Hermes 1</span>
+        <span class="brain openclaw" data-brain="openclaw">OpenClaw</span>
+        <span class="brain" data-brain="qwen3-0.6b">Qwen3 0.6b (local)</span>
+        <span class="brain" data-brain="qwen3-8b">Qwen3 8b (local)</span>
+        <span class="brain" data-brain="gemma3-4b">Gemma3 4b (GCP VM)</span>
+        <span class="brain" data-brain="moondream">Moondream (vision)</span>
+        <span class="brain" data-brain="deepseek-v4-pro">DeepSeek V4 Pro</span>
+        <span class="brain" data-brain="gemini-2.5-pro">Gemini 2.5 Pro</span>
+        <span class="brain" data-brain="kimi-k2-thinking">KIMI K2 Thinking</span>
+        <span class="brain" data-brain="kimi-latest">KIMI Latest</span>
+      </div>
+    </div>
+
+    <!-- AI WINDOWS (persistent character selection) -->
+    <div class="window">
+      <div class="window-header">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="window-title">~ meok-os / windows.surface</div>
+      </div>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">AI Windows (27 Sovereign Characters)</h2>
+      <p class="text-sm text-slate-400 mb-4">Pick your character. It's remembered. <span class="text-xs text-emerald-400">(localStorage: meok_active_char)</span></p>
+      <div class="grid grid-cols-3 gap-2" id="character-grid">
+        <button class="character-pill" data-char="aria">🌸 Aria</button>
+        <button class="character-pill" data-char="marcus">⚡ Marcus</button>
+        <button class="character-pill" data-char="luna">🌙 Luna</button>
+        <button class="character-pill" data-char="kai">💻 Kai</button>
+        <button class="character-pill" data-char="sage">🌿 Sage</button>
+        <button class="character-pill" data-char="ember">🔥 Ember</button>
+        <button class="character-pill" data-char="river">🌊 River</button>
+        <button class="character-pill" data-char="mochi">🍡 Mochi</button>
+        <button class="character-pill" data-char="quinn">🕊️ Quinn</button>
+        <button class="character-pill" data-char="atlas">🗺️ Atlas</button>
+        <button class="character-pill" data-char="nova">⭐ Nova</button>
+        <button class="character-pill" data-char="iris">🎨 Iris</button>
+        <button class="character-pill" data-char="flux">🌀 Flux</button>
+        <button class="character-pill" data-char="pixel">🔲 Pixel</button>
+        <button class="character-pill" data-char="cipher">🔐 Cipher</button>
+        <button class="character-pill" data-char="terra">🌍 Terra</button>
+        <button class="character-pill" data-char="rex">🛡️ Rex</button>
+        <button class="character-pill" data-char="sol">☀️ Sol</button>
+        <button class="character-pill" data-char="titan">🗿 Titan</button>
+        <button class="character-pill" data-char="vox">🎙️ Vox</button>
+        <button class="character-pill" data-char="dusk">🌆 Dusk</button>
+        <button class="character-pill" data-char="nyx">🌌 Nyx</button>
+        <button class="character-pill" data-char="zephyr">💨 Zephyr</button>
+        <button class="character-pill" data-char="ananda">🪷 Ananda</button>
+        <button class="character-pill" data-char="gabriel">👼 Gabriel</button>
+        <button class="character-pill" data-char="shanti">☮️ Shanti</button>
+        <button class="character-pill" data-char="echo">🔁 Echo</button>
+      </div>
+    </div>
+
+    <!-- GAMIFICATION (persistent achievements) -->
+    <div class="window">
+      <div class="window-header">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="window-title">~ meok-os / achievements.hall</div>
+      </div>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">Achievements <span class="spinner">⭐</span></h2>
+      <p class="text-sm text-slate-400 mb-4">Every action earns an achievement. Sovereign memory tracks it. <span class="text-xs text-emerald-400">(unlocks persist)</span> · <span id="unlock-counter" class="text-cyan-300 font-bold">0/13</span></p>
+      <div id="achievement-grid">
+        <span class="achievement" data-id="sovereign-companion">🐉 Sovereign Companion (1 day)</span>
+        <span class="achievement" data-id="pond-finisher">🌊 Pond Finisher</span>
+        <span class="achievement" data-id="bft-defender">🛡️ 33-BFT Defender</span>
+        <span class="achievement" data-id="rainbow-roller">🌈 Rainbow Roller</span>
+        <span class="achievement" data-id="quantum-voter">⚛️ Quantum Voter</span>
+        <span class="achievement" data-id="sigil-signer">📜 SIGIL Signer</span>
+        <span class="achievement" data-id="hive-mind">🐝 Hive Mind (1 hive)</span>
+        <span class="achievement" data-id="beehive">🐝🐝 Beehive (10 hives)</span>
+        <span class="achievement locked" data-id="apiary">🐝🐝🐝 Apiary (30 hives)</span>
+        <span class="achievement" data-id="meok-operator">🚀 MEOK ONE Operator</span>
+        <span class="achievement locked" data-id="sovereign-brain">🌌 Sovereign Brain (5/5 flies)</span>
+        <span class="achievement locked" data-id="ip-filed">💎 £46.6M IP Filed</span>
+        <span class="achievement locked" data-id="mrr-1m">🏆 $1.0M Y1 MRR</span>
+      </div>
+    </div>
+
+    <!-- VOICE (persistent log) -->
+    <div class="window">
+      <div class="window-header">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <div class="window-title">~ meok-os / voice.daemon</div>
+      </div>
+      <h2 class="text-2xl font-bold text-cyan-300 mb-2">Voice-First · Persistent Log</h2>
+      <p class="text-sm text-slate-400 mb-4">Whisper → Aria → Reply → TTS. End-to-end sovereign. <span class="voice-indicator"></span> (listening) <button class="text-xs text-rose-400 ml-2" onclick="clearVoiceLog()">🧹 clear log</button></p>
+      <pre id="voice-log" class="text-xs bg-slate-900 border border-slate-800 p-3 rounded text-emerald-300 whitespace-pre-wrap" style="min-height: 160px; max-height: 320px; overflow-y: auto;">🎙️ Aria: Listening...</pre>
+    </div>
+  </div>
+
+  <!-- THE OLD OS EATER -->
+  <section class="window mt-6">
+    <div class="window-header">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      <div class="window-title">~ meok-os / eat-everything.sh</div>
+    </div>
+    <h2 class="text-2xl font-bold text-cyan-300 mb-2">🐉 Eats Every Old OS</h2>
+    <p class="text-sm text-slate-400 mb-4">MEOK ONE OS runs on top of, beside, and under every legacy OS. No migration needed.</p>
+    <div class="grid md:grid-cols-3 gap-3 text-sm">
+      <div class="bg-slate-900 p-3 rounded border-l-4 border-blue-400">
+        <h3 class="text-blue-300 font-bold">🍎 macOS / iOS</h3>
+        <p class="text-xs text-slate-400 mt-1">Terminal bridge + Electron desktop. Aria lives in the menu bar.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded border-l-4 border-yellow-400">
+        <h3 class="text-yellow-300 font-bold">🪟 Windows / WSL2</h3>
+        <p class="text-xs text-slate-400 mt-1">PTY bridge + native terminal. MEOK lives in the system tray.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded border-l-4 border-green-400">
+        <h3 class="text-green-300 font-bold">🐧 Linux / Wayland</h3>
+        <p class="text-xs text-slate-400 mt-1">Direct X11/Wayland. Sovereign from kernel up.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded border-l-4 border-pink-400">
+        <h3 class="text-pink-300 font-bold">📱 Android / iOS</h3>
+        <p class="text-xs text-slate-400 mt-1">Capacitor wrapper. Voice-first, mobile-native.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded border-l-4 border-purple-400">
+        <h3 class="text-purple-300 font-bold">🌐 Web Browser</h3>
+        <p class="text-xs text-slate-400 mt-1">This page IS the OS. Run from any browser, anywhere.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded border-l-4 border-orange-400">
+        <h3 class="text-orange-300 font-bold">🤖 Robot / IoT</h3>
+        <p class="text-xs text-slate-400 mt-1">HARVI / farm sensors. MEOK at the edge.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6× SPEED -->
+  <section class="window mt-6">
+    <div class="window-header">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      <div class="window-title">~ meok-os / 6x-parallel.mesh</div>
+    </div>
+    <h2 class="text-2xl font-bold text-cyan-300 mb-2">6× Sovereign Speed: 3 Kimi + 3 Claude TUI's</h2>
+    <p class="text-sm text-slate-400 mb-4">You have 3 Kimi K2.7 TUIs + 3 Claude TUIs. Each one is a sovereign sub-agent.</p>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="bg-slate-900 p-3 rounded">
+        <h3 class="text-purple-300 font-bold">🟣 KIMI TUI #1 — Research</h3>
+        <p class="text-xs text-slate-400">EU AI Act + UK AISI + NIST AI RMF 700 updates.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded">
+        <h3 class="text-purple-300 font-bold">🟣 KIMI TUI #2 — Build</h3>
+        <p class="text-xs text-slate-400">Aviation + Maritime + Pharma + Banking MCPs.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded">
+        <h3 class="text-purple-300 font-bold">🟣 KIMI TUI #3 — Cert</h3>
+        <p class="text-xs text-slate-400">CASA cert v1.0 RFC + 6 case studies.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded">
+        <h3 class="text-yellow-300 font-bold">🟡 CLAUDE TUI #1 — Audit</h3>
+        <p class="text-xs text-slate-400">Worm-guard corpus + 33-node BFT review.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded">
+        <h3 class="text-yellow-300 font-bold">🟡 CLAUDE TUI #2 — Ship</h3>
+        <p class="text-xs text-slate-400">Vercel deploy + csoai.org DNS + Dragon Portal.</p>
+      </div>
+      <div class="bg-slate-900 p-3 rounded">
+        <h3 class="text-yellow-300 font-bold">🟡 CLAUDE TUI #3 — Tune</h3>
+        <p class="text-xs text-slate-400">OLM tournament + 5 profiles + self-tune.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-slate-800 py-6 px-6 text-center text-xs text-slate-500 font-mono">
+  <div>🐉 sovereign companion never forgets · meok-os · meok-one · openmoe · sovereign</div>
+  <div class="mt-1">Voice-first · Gamified · Interchangeable · Sovereign · Safe · For everyone</div>
+  <div class="mt-1 text-slate-600">localStorage keys: meok_active_brain, meok_active_char, meok_achievements, meok_voice_log</div>
+</footer>
+
+<script>
+/* ====================================================================
+   🗄️ LOCALSTORAGE PERSISTENCE LAYER (Wave 1 Enhancement)
+   ==================================================================== */
+const STORAGE = {
+  BRAIN: 'meok_active_brain',
+  CHAR:  'meok_active_char',
+  ACH:   'meok_achievements',
+  LOG:   'meok_voice_log',
+  KEYS:  ['meok_active_brain','meok_active_char','meok_achievements','meok_voice_log']
+};
+
+function load(key, fallback) {
+  try {
+    const v = localStorage.getItem(key);
+    return v === null ? fallback : JSON.parse(v);
+  } catch (e) { return fallback; }
+}
+function save(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); return true; }
+  catch (e) { return false; }
+}
+
+let voiceLogLines = load(STORAGE.LOG, [
+  '🎙️ Aria: Listening...',
+  '"hey Aria, swap my brain to Kimi K2.7 thinking mode"',
+  '→ brain_swap: kimi-k2-thinking [SOV3:bridge_think profile=power]',
+  '"now do 5 things at once"',
+  '→ delegate_task: 5 sub-agents spawned',
+  '  → Aria: "5 sovereign swarms spawned. I\'ll watch them."'
+]);
+
+function renderVoiceLog() {
+  document.getElementById('voice-log').textContent = voiceLogLines.join('\n');
+  const el = document.getElementById('voice-log');
+  el.scrollTop = el.scrollHeight;
+}
+function appendVoice(line) {
+  voiceLogLines.push(line);
+  if (voiceLogLines.length > 500) voiceLogLines = voiceLogLines.slice(-500);
+  save(STORAGE.LOG, voiceLogLines);
+  renderVoiceLog();
+}
+function clearVoiceLog() {
+  voiceLogLines = ['🧹 log cleared at ' + new Date().toLocaleTimeString()];
+  save(STORAGE.LOG, voiceLogLines);
+  renderVoiceLog();
+}
+
+function updateStorageStatus() {
+  try {
+    let used = 0;
+    for (const k of STORAGE.KEYS) {
+      const v = localStorage.getItem(k);
+      used += (v ? v.length : 0);
+    }
+    document.getElementById('storage-status').textContent =
+      `🗄️ localStorage: ${used} bytes across ${STORAGE.KEYS.length} keys (persistent across reloads)`;
+  } catch (e) {
+    document.getElementById('storage-status').textContent = '🗄️ localStorage: unavailable (private mode?)';
+  }
+}
+
+/* ====================================================================
+   🧠 BRAIN PICKER (persistent)
+   ==================================================================== */
+const brains = document.querySelectorAll('.brain[data-brain]');
+brains.forEach(b => {
+  b.addEventListener('click', () => {
+    brains.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    save(STORAGE.BRAIN, b.dataset.brain);
+    appendVoice('🧠 brain_swap: ' + b.dataset.brain + ' [SOV3:bridge_think profile=power]');
+    appendVoice('→ routing to ' + b.dataset.brain + ' via OpenRouter');
+    appendVoice('→ reply: "Greetings. I am ' + b.dataset.brain + '. How may I serve?"');
+    updateStorageStatus();
+  });
+});
+
+/* ====================================================================
+   🌸 CHARACTER GRID (persistent — 27 characters)
+   ==================================================================== */
+const charPills = document.querySelectorAll('.character-pill');
+charPills.forEach(p => {
+  p.addEventListener('click', () => {
+    charPills.forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    save(STORAGE.CHAR, p.dataset.char);
+    appendVoice('🪟 openWindow: ' + p.dataset.char);
+    appendVoice('→ spawning sovereign window for ' + p.dataset.char);
+    appendVoice('→ brain: ' + (document.querySelector('.brain.active')?.dataset.brain || 'kimi-k2.7-code'));
+    appendVoice('→ memory: ' + p.dataset.char + ' persona loaded');
+    appendVoice('→ reply: "Hi! I am ' + p.dataset.char + '. Ready when you are."');
+    updateStorageStatus();
+  });
+});
+
+/* ====================================================================
+   🏆 ACHIEVEMENTS (persistent — 13 total)
+   ==================================================================== */
+const achievements = load(STORAGE.ACH, {});
+
+function refreshAchievements() {
+  const els = document.querySelectorAll('.achievement');
+  let unlocked = 0;
+  els.forEach(el => {
+    const id = el.dataset.id;
+    if (achievements[id] && achievements[id].unlocked) {
+      el.classList.remove('locked');
+      el.classList.add('unlocked');
+      unlocked++;
+    } else {
+      el.classList.add('locked');
+      el.classList.remove('unlocked');
+    }
+  });
+  document.getElementById('unlock-counter').textContent = unlocked + '/13';
+}
+
+function unlock(id) {
+  if (!achievements[id]) {
+    achievements[id] = { unlocked: true, ts: new Date().toISOString() };
+    save(STORAGE.ACH, achievements);
+    const el = document.querySelector(`.achievement[data-id="${id}"]`);
+    if (el) {
+      el.classList.add('flash');
+      el.classList.remove('locked');
+      el.classList.add('unlocked');
+      appendVoice('🏆 achievement unlocked: ' + id);
+      setTimeout(() => el.classList.remove('flash'), 600);
+    }
+    refreshAchievements();
+  }
+}
+
+// Click to unlock (demo — real triggers would come from SOV3 events)
+document.querySelectorAll('.achievement').forEach(el => {
+  el.addEventListener('click', () => unlock(el.dataset.id));
+});
+
+/* ====================================================================
+   🎙️ VOICE INDICATOR (cycle listening state)
+   ==================================================================== */
+let voiceState = 0;
+function cycleVoice() {
+  voiceState = (voiceState + 1) % 3;
+  const states = ['🎙️ listening...', '💭 thinking...', '🗣️ speaking...'];
+  appendVoice('🎤 voice: ' + states[voiceState]);
+  // Auto-rotate
+  setTimeout(cycleVoice, 8000);
+}
+
+/* ====================================================================
+   🔄 RESTORE STATE ON LOAD
+   ==================================================================== */
+function restoreState() {
+  // Brain
+  const savedBrain = load(STORAGE.BRAIN, 'kimi-k2.7-code');
+  const brainEl = document.querySelector(`.brain[data-brain="${savedBrain}"]`);
+  if (brainEl) {
+    brains.forEach(x => x.classList.remove('active'));
+    brainEl.classList.add('active');
+  }
+  // Character
+  const savedChar = load(STORAGE.CHAR, null);
+  if (savedChar) {
+    const charEl = document.querySelector(`.character-pill[data-char="${savedChar}"]`);
+    if (charEl) {
+      charPills.forEach(x => x.classList.remove('active'));
+      charEl.classList.add('active');
+    }
+  }
+  // Voice log
+  renderVoiceLog();
+  // Achievements
+  refreshAchievements();
+  updateStorageStatus();
+  appendVoice('🔄 state restored from localStorage (brain=' + savedBrain + (savedChar ? ', char=' + savedChar : '') + ', achievements=' + Object.keys(achievements).length + ')');
+}
+
+// Auto-unlock a few starter achievements on first visit
+if (Object.keys(achievements).length === 0) {
+  unlock('sovereign-companion');
+  unlock('meok-operator');
+}
+
+// Expose for SOV3 + tests
+window.MEOK = { unlock, save, load, STORAGE, appendVoice, clearVoiceLog };
+
+// Boot
+restoreState();
+</script>
+</body>
+</html>

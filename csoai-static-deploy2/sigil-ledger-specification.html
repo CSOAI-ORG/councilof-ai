@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS SIGIL Ledger Specification — the permanent, tamper-evident audit trail. Ed25519-signed, RFC3161-timestamped, Bitcoin OTS-anchored. Every tool invocation, governance decision, data release.">
+<meta property="og:title" content="DEFONEOS · SIGIL Ledger Specification">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · SIGIL Ledger Specification</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4.5vw,3rem);background:linear-gradient(135deg,#22d3ee 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.83rem;margin:1rem 0}
+.spec-doc th{background:rgba(34,211,238,.08);color:var(--cyan);padding:.6rem .7rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}
+.spec-doc td{padding:.5rem .7rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.sigil-example{font-family:'SF Mono','JetBrains Mono',monospace;font-size:.8rem;line-height:1.6;background:var(--bg2,#14181f);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1rem 0;color:var(--muted2)}
+.sigil-example .key{color:var(--cyan);font-weight:700}
+.sigil-example .value{color:var(--muted2)}
+.sigil-example .anchor{color:#fbbf24;font-weight:700}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:1.8rem;font-weight:900;color:var(--cyan)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="deployment-topology-reference.html">Topology</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>SIGIL Ledger Specification</h1>
+  <p class="tagline">The permanent, tamper-evident audit trail for every action in DEFONEOS. Ed25519-signed · RFC3161-timestamped · Bitcoin OTS-anchored. Append-only. Permanent. Sovereign.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">500+</div><div class="lbl">Receipts Logged</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">Crypto Layers</div></div>
+    <div class="stat"><div class="num">∞</div><div class="lbl">Retention</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">Tamper Events</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2>1. What Is SIGIL?</h2>
+<p>SIGIL (Sovereign Integrity Guard for Immutable Logging) is DEFONEOS's permanent audit trail. Every tool invocation, governance decision, data access, data release, and system event generates a SIGIL receipt. Each receipt is cryptographically signed, timestamped, and anchored to the Bitcoin blockchain — making the ledger <strong>tamper-evident and permanent</strong>.</p>
+<div class="note"><strong>Three cryptographic layers:</strong> (1) Ed25519 signature proves <em>who</em> acted. (2) RFC3161 timestamp proves <em>when</em> they acted. (3) Bitcoin OTS anchor proves the receipt <em>existed at that time</em> and has not been modified since.</div>
+</section>
+
+<section>
+<h2>2. SIGIL Receipt Structure</h2>
+<p>Every SIGIL receipt contains the following fields:</p>
+<div class="sigil-example">
+{
+  <span class="key">"sigil_id"</span>: <span class="value">"sig_0123_abc456..."</span>,         <span class="value">// Ed25519-derived unique ID</span><br>
+  <span class="key">"tick"</span>: <span class="value">103</span>,                              <span class="value">// Global tick counter</span><br>
+  <span class="key">"action"</span>: <span class="value">"tool_invoke"</span>,                   <span class="value">// What happened</span><br>
+  <span class="key">"mcp_id"</span>: <span class="value">"sentinel-hub-mcp"</span>,              <span class="value">// Which MCP server</span><br>
+  <span class="key">"tool_name"</span>: <span class="value">"get_satellite_image"</span>,        <span class="value">// Which specific tool</span><br>
+  <span class="key">"caller"</span>: <span class="value">"ed25519:0xABC..."</span>,            <span class="value">// Who called it</span><br>
+  <span class="key">"ring"</span>: <span class="value">1</span>,                                <span class="value">// Trust ring (0, 1, or 2)</span><br>
+  <span class="key">"data_hash"</span>: <span class="value">"sha256:0xDEF..."</span>,           <span class="value">// Hash of input + output</span><br>
+  <span class="key">"timestamp"</span>: <span class="value">"2026-07-14T19:30:00Z"</span>,     <span class="value">// ISO 8601</span><br>
+  <span class="key">"rfc3161_receipt"</span>: <span class="value">"base64:..."</span>,          <span class="value">// Trusted timestamp proof</span><br>
+  <span class="anchor">"ots_proof"</span>: <span class="anchor">"bitcoin:block:850000..."</span>,  <span class="anchor">// Bitcoin OTS anchor</span><br>
+  <span class="key">"signature"</span>: <span class="value">"ed25519:0x123..."</span>,          <span class="value">// Caller's signature</span><br>
+  <span class="key">"bft_witness"</span>: <span class="value">"ed25519:0x456..."</span>,        <span class="value">// BFT agent co-signature</span><br>
+  <span class="key">"release_condition"</span>: <span class="value">null</span>,                 <span class="value">// RC-1 to RC-6 (for data releases)</span><br>
+  <span class="key">"metadata"</span>: <span class="value">{}</span>                             <span class="value">// Action-specific context</span>
+}
+</div>
+</section>
+
+<section>
+<h2>3. The Three Cryptographic Layers</h2>
+
+<h3>Layer 1 — Ed25519 Signature (Who)</h3>
+<p>Every actor in DEFONEOS (human or AI) has an Ed25519 key pair. When an action is taken, the actor signs the SIGIL receipt with their private key. The signature proves <strong>who performed the action</strong> and that the receipt has not been modified since signing.</p>
+<ul>
+<li><strong>Key generation:</strong> Each actor generates their Ed25519 key pair on first registration.</li>
+<li><strong>Key rotation:</strong> Every 90 days, or immediately on compromise.</li>
+<li><strong>Key revocation:</strong> BFT council can revoke keys (Emergency Session P4).</li>
+<li><strong>Multi-signature:</strong> Data releases require 2 human signatures + 1 BFT witness signature.</li>
+</ul>
+
+<h3>Layer 2 — RFC3161 Trusted Timestamp (When)</h3>
+<p>Every receipt is timestamped by an RFC3161 Trusted Timestamp Authority (TSA). The TSA signs a hash of the receipt + the current time, proving <strong>when the receipt was created</strong> (to TSA-attested precision).</p>
+<ul>
+<li><strong>TSA:</strong> FreeTSA.org (free) or organisational TSA (self-hosted, UK-only).</li>
+<li><strong>Receipt format:</strong> ASN.1 DER-encoded TimeStampResp (RFC 3161 standard).</li>
+<li><strong>Verification:</strong> Receipt can be independently verified against the TSA's public key.</li>
+<li><strong>Anti-replay:</strong> The timestamp includes a nonce, preventing receipt reuse.</li>
+</ul>
+
+<h3>Layer 3 — Bitcoin OTS Anchor (Existed)</h3>
+<p>Every receipt is anchored to the Bitcoin blockchain via OpenTimestamps (OTS). This proves <strong>the receipt existed at a specific point in time</strong> and cannot be backdated or modified.</p>
+<ul>
+<li><strong>How it works:</strong> OTS takes the SHA-256 of the receipt, creates a Merkle path, and embeds the root hash in a Bitcoin transaction.</li>
+<li><strong>Cost:</strong> Free (OTS aggregates timestamps into shared Bitcoin transactions).</li>
+<li><strong>Verification:</strong> Anyone can verify the OTS proof against the Bitcoin blockchain — no trusted third party needed.</li>
+<li><strong>Permanence:</strong> As long as the Bitcoin blockchain exists (forever), the proof exists. This is the strongest possible timestamp guarantee.</li>
+</ul>
+</section>
+
+<section>
+<h2>4. Action Types Recorded</h2>
+<table>
+<tr><th>Action</th><th>Description</th><th>BFT Witness Required</th></tr>
+<tr><td><code>tool_invoke</code></td><td>A tool was called on an MCP server</td><td>Yes (standard)</td></tr>
+<tr><td><code>bft_vote</code></td><td>A BFT agent cast a vote</td><td>Self (the vote IS the witness)</td></tr>
+<tr><td><code>bft_session</code></td><td>A BFT session (standard or emergency) completed</td><td>All participating agents</td></tr>
+<tr><td><code>data_store</code></td><td>Data was stored in the escrow</td><td>Yes</td></tr>
+<tr><td><code>data_access</code></td><td>Escrow data was accessed</td><td>Yes</td></tr>
+<tr><td><code>data_release</code></td><td>Escrow data was released (RC-1 to RC-6)</td><td>Yes + 4-eyes + BFT quorum</td></tr>
+<tr><td><code>data_destroy</code></td><td>Escrow data was cryptographically destroyed</td><td>Yes + 23/33 BFT + human-owner</td></tr>
+<tr><td><code>key_rotation</code></td><td>An Ed25519 key was rotated</td><td>Yes</td></tr>
+<tr><td><code>mcp_admission</code></td><td>An MCP was admitted to the federation</td><td>23/33 BFT quorum</td></tr>
+<tr><td><code>mcp_quarantine</code></td><td>An MCP was quarantined</td><td>17/33 BFT emergency quorum</td></tr>
+<tr><td><code>redline_proximity</code></td><td>An output approached a red-line boundary</td><td>Immediate emergency session</td></tr>
+<tr><td><code>deploy</code></td><td>A new deployment was pushed to production</td><td>BFT pre-flight vote</td></tr>
+</table>
+</section>
+
+<section>
+<h2>5. Ledger Properties</h2>
+<table>
+<tr><th>Property</th><th>Value</th><th>How Enforced</th></tr>
+<tr><td>Append-only</td><td>Receipts can never be modified or deleted</td><td>SQLite journal_mode=WAL + hash chaining + Bitcoin OTS</td></tr>
+<tr><td>Tamper-evident</td><td>Any modification is immediately detectable</td><td>Ed25519 signature + RFC3161 timestamp + OTS anchor</td></tr>
+<tr><td>Permanent</td><td>Receipts retained indefinitely</td><td>UK-sovereign storage + Bitcoin blockchain (OTS)</td></tr>
+<tr><td>Verifiable</td><td>Anyone can independently verify receipts</td><td>Public Ed25519 keys + RFC3161 TSA public key + Bitcoin chain</td></tr>
+<tr><td>Ordered</td><td>Receipts have a global tick ordering</td><td>Monotonic tick counter + RFC3161 timestamps</td></tr>
+<tr><td>Complete</td><td>Every action generates a receipt</td><td>Architecture-level enforcement (no action path bypasses SIGIL)</td></tr>
+</table>
+</section>
+
+<section>
+<h2>6. Hash Chaining</h2>
+<p>SIGIL receipts are hash-chained: each receipt includes the hash of the previous receipt. This creates a tamper-evident chain where modifying any receipt breaks the chain for all subsequent receipts.</p>
+<div class="sigil-example">
+Receipt N-1                    Receipt N                     Receipt N+1<br>
+┌──────────────┐              ┌──────────────┐              ┌──────────────┐<br>
+│ <span class="key">prev_hash</span>: ∅    │     ────→    │ <span class="key">prev_hash</span>: H(N-1)│     ────→    │ <span class="key">prev_hash</span>: H(N)  │<br>
+│ <span class="key">data</span>: {...}     │              │ <span class="key">data</span>: {...}     │              │ <span class="key">data</span>: {...}     │<br>
+│ <span class="anchor">hash</span>: H(N-1)  │              │ <span class="anchor">hash</span>: H(N)    │              │ <span class="anchor">hash</span>: H(N+1)  │<br>
+│ <span class="key">sig</span>: ed25519   │              │ <span class="key">sig</span>: ed25519   │              │ <span class="key">sig</span>: ed25519   │<br>
+└──────────────┘              └──────────────┘              └──────────────┘<br>
+<br>
+Modifying Receipt N changes H(N), which breaks Receipt N+1's prev_hash check → <span class="anchor">DETECTABLE</span>
+</div>
+</section>
+
+<section>
+<h2>7. Verification API</h2>
+<p>The SIGIL ledger exposes a verification endpoint:</p>
+<p><code>GET https://deploy.escrow.mcp/sigil/verify?sigil_id=sig_0123_abc...</code></p>
+<p>Returns:</p>
+<div class="sigil-example">
+{
+  <span class="key">"sigil_id"</span>: <span class="value">"sig_0123_abc..."</span>,
+  <span class="key">"ed25519_valid"</span>: <span class="value">true</span>,
+  <span class="key">"rfc3161_valid"</span>: <span class="value">true</span>,
+  <span class="key">"ots_valid"</span>: <span class="value">true</span>,
+  <span class="key">"hash_chain_valid"</span>: <span class="value">true</span>,
+  <span class="key">"overall"</span>: <span class="value">"VERIFIED"</span>
+}
+</div>
+<p><strong>Bulk verification:</strong> <code>GET /sigil/verify-all</code> — verifies every receipt in the ledger. Used for periodic integrity audits.</p>
+</section>
+
+<section>
+<h2>8. Retention Policy</h2>
+<table>
+<tr><th>Data Type</th><th>Retention</th><th>Location</th></tr>
+<tr><td>SIGIL receipts (all types)</td><td>Permanent</td><td>UK-sovereign SQLite + Bitcoin blockchain (OTS)</td></tr>
+<tr><td>SIGIL receipts (BFT session transcripts)</td><td>7 years (full) / Permanent (minutes)</td><td>UK-sovereign storage + SIGIL ledger</td></tr>
+<tr><td>SIGIL receipts (public-facing minutes)</td><td>Permanent</td><td>csoai.org/bft-minutes (OSA s7 redacted)</td></tr>
+<tr><td>SIGIL verification proofs</td><td>Permanent</td><td>Bitcoin blockchain (immutable by design)</td></tr>
+</table>
+<div class="note"><strong>Even if all UK storage is destroyed</strong>, the Bitcoin OTS anchors remain, proving that the receipts existed at specific times. The receipts themselves can be reconstructed from the hash chain + backup copies.</div>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="sig">SIGIL · DEFONEOS|sigil-ledger-specification|0.1.0|sovereign|british|forever · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  <div>🐉 DEFONEOS — UK Sovereign Defence AI Operating System<br>
+  Built by <strong>Nicholas Templeman / CSOAI LTD (16939677)</strong>. Crown use permitted under UK MOD terms.<br>
+  Apache 2.0 · © 2026 · <a href="mailto:crown@csoai.org">crown@csoai.org</a></div>
+</footer>
+</body>
+</html>

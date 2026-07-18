@@ -1,0 +1,21 @@
+{
+  "name": "meok-os",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MEOK OS — sovereign AI operating system. Shared backend for MEOK/CSOAI/DEFONEOS.",
+  "scripts": {
+    "test": "node test/e2e-products.mjs https://os.meok.ai",
+    "test:local": "node test/e2e-products.mjs http://localhost:3000",
+    "dev": "node scripts/dev-server.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:visual": "playwright test --project=visual",
+    "test:all": "npm run test:local && playwright test",
+    "postinstall": "playwright install chromium webkit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  },
+  "license": "MIT"
+}

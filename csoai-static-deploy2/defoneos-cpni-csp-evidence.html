@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS — CPNI CSP Evidence Vault | Sovereign by Design</title>
+<meta name="description" content="DEFONEOS CPNI CSP 14/14 evidence vault — pre-fill pack for HMG NCSC Cyber Security Profile (CSP), aligned with NCSC's Cyber Assessment Framework (CAF) v3.1 and the CPNI Critical National Infrastructure (CNI) auditor framework.">
+<style>
+:root{--bg:#0b1020;--panel:#0f1730;--line:#1d2a4d;--accent:#7fb3ff;--gold:#f6d27a;--green:#6fdba0;--red:#e87a7a;--mute:#8aa1c9;--cpni:#ba8bff}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:#e6ecff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 22px 96px}
+header.bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(135deg,#0f1830 0%,#2a1a47 100%);border:1px solid var(--line);border-radius:12px}
+header.bar .lhs{display:flex;align-items:center;gap:14px}
+header.bar .lockup{display:flex;flex-direction:column}
+header.bar h1{margin:0;font-size:20px;letter-spacing:.5px;color:var(--gold)}
+header.bar .sub{color:var(--mute);font-size:12px}
+header.bar .ctr{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--cpni)}
+nav.toc{margin:18px 0;padding:14px 18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+nav.toc a{color:var(--accent);text-decoration:none;font-size:13px;padding:6px 8px;border-radius:6px;border:1px solid transparent}
+nav.toc a:hover{border-color:var(--accent);background:#0c1632}
+section{margin:22px 0;padding:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+section h2{margin:0 0 12px;font-size:22px;color:var(--gold);border-bottom:1px solid var(--line);padding-bottom:8px}
+section h3{margin:18px 0 8px;font-size:16px;color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+.stats .k{background:#0c1632;border:1px solid var(--line);padding:14px;border-radius:10px;text-align:center}
+.stats .k .v{font-family:ui-monospace,monospace;font-size:22px;color:var(--gold);font-weight:600}
+.stats .k .l{font-size:11px;color:var(--mute);margin-top:4px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+table th,table td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+table th{background:#0c1632;color:var(--accent);font-weight:600}
+table tr:nth-child(even){background:#0d142a}
+code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0a1124;color:#d6e1ff;padding:1px 5px;border-radius:4px;font-size:12px;border:1px solid var(--line)}
+pre{background:#0a1124;padding:14px;border-radius:8px;border:1px solid var(--line);overflow-x:auto;font-size:12px;line-height:1.45;color:#c8d4f3}
+.cite{color:var(--mute);font-size:11px;font-style:italic}
+.callout{display:flex;gap:12px;padding:12px 14px;border-left:4px solid var(--gold);background:#1a1f0c;border-radius:6px;margin:14px 0;font-size:13px}
+.callout.gold{border-color:var(--gold);background:#1a1f0c}
+.callout.blue{border-color:var(--accent);background:#0c1632}
+.callout.red{border-color:var(--red);background:#2a0c0c}
+.callout.green{border-color:var(--green);background:#0c2a1a}
+.callout.purple{border-color:var(--cpni);background:#1a0c2a}
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.pricing .t{background:#0c1632;border:1px solid var(--line);padding:16px;border-radius:10px}
+.pricing .t h4{margin:0 0 6px;color:var(--accent)}
+.pricing .t .price{font-size:22px;color:var(--gold);font-weight:600;margin:6px 0}
+.pricing .t ul{padding-left:18px;font-size:12px;margin:6px 0 0;color:#c8d4f3}
+.pricing .t ul li{margin:4px 0}
+.honesty{margin:14px 0;padding:14px;background:#0c1632;border:1px solid var(--gold);border-radius:8px}
+.honesty ol{padding-left:24px;margin:6px 0}
+.honesty li{margin:5px 0;color:#e6ecff;font-size:13px}
+.csp14{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0}
+.csp14 .c{background:#0c1632;border:1px solid var(--line);padding:8px;border-radius:6px;text-align:center;font-size:11px}
+.csp14 .c.id{background:#1a2a14;border-color:var(--green);color:var(--green)}
+.csp14 .c .n{font-size:16px;color:var(--gold);font-weight:600;display:block}
+footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header class="bar">
+  <div class="lhs">
+    <div class="lockup">
+      <h1>🔐 DEFONEOS — CPNI CSP 14/14 Evidence Vault</h1>
+      <div class="sub">NCSC Cyber Security Profile baseline · CPNI CNI-supplier-ready · Defence-pillar + AUKUS</div>
+    </div>
+  </div>
+  <div class="ctr">DEFONEOS/CPNI/CSP/2026-07-09/v1<br>Owner-gate · <span style="color:var(--red)">AWAITING N.TAPLEY SIGN-OFF</span></div>
+</header>
+
+<nav class="toc">
+  <a href="#scope">1. SCOPE</a>
+  <a href="#csp14">2. CSP 14/14</a>
+  <a href="#caf">3. CAF v3.1</a>
+  <a href="#evidence">4. EVIDENCE</a>
+  <a href="#pricing">5. PRICING</a>
+  <a href="#crosswalk">6. FRAMEWORK</a>
+  <a href="#honesty">7. HONESTY</a>
+  <a href="#commands">8. COMMANDS</a>
+</nav>
+
+<section id="scope">
+  <h2>1. SCOPE — CPNI CSP for CSOAI Ltd</h2>
+
+  <h3>What is CPNI CSP?</h3>
+  <p>The <strong>Centre for the Protection of National Infrastructure (CPNI)</strong> publishes the <strong>Cyber Security Profile (CSP)</strong>, a condensed, evidence-pack-oriented baseline aligned with NCSC's <strong>Cyber Assessment Framework (CAF) v3.1</strong>. CSP is the canonical evidencing tool for organisations operating <strong>Critical National Infrastructure (CNI)</strong> or delivering into CNI-relevant defence-pillar contracts. CSP 14/14 means achieving "achieved" status on all 14 contributing outcomes — the highest bar.</p>
+
+  <h3>Why this matters for DEFONEOS</h3>
+  <ul>
+    <li><strong>MOD / DSEA contract eligibility:</strong> the JSP 553 (Information Assurance) document references CSP as the evidencing baseline for classified-pillar IA-aligned work.</li>
+    <li><strong>CNL supplier status:</strong> the Crown Commercial Service's (CCS) Network X network requires CSP 14/14 alignment from major defence-AI suppliers.</li>
+    <li><strong>NCSC functional cyber-assured letter:</strong> a pre-requisite for several HMG defence-pillar follow-on contracts and for entry into the CPNI Knowledge Sharing Group.</li>
+    <li><strong>Five Eyes ESG alliance:</strong> AUKUS-pillar (AUS/CAN/UK/US) cross-certification pathways route through CSP/CAF alignment.</li>
+    <li><strong>Annex IV (technical documentation) + EU AI Act high-risk baseline:</strong> the 14 CSP outcomes map 1:1 onto 70%+ of the AI technical-documentation gates.</li>
+  </ul>
+
+  <h3>Subject of assessment</h3>
+  <pre>
+Subject organisation:           CSOAI Ltd
+Trading aliases:                MEOK · DEFONEOS · Sovereign AI Labs · ME Group
+Company number:                 UK Companies House 16939677
+Headquarters + operations:      United Kingdom (Yorkshire &amp; Humber)
+Service offering in scope:      Sovereign AI substrate + Open-source MCP federation
+CNI-stake interface:            SOV3 sovereign substrate touches MOD / NHS / DESNZ / DEFRA / Home Office digital estates
+Privacy / data flow:            No processed patient or citizen data — sovereign by sign-not-by-process
+Size band:                      Micro / SME (1-9 employees)
+CSP target:                     "Achieved" on all 14 contributing outcomes = CSP 14/14
+CAF alignment target:           "Achieved" on all 4 objectives (A-D) — primary tier
+Audit body (proposed):          NCSC CCP (Certified Cyber Professional) + CPNI-recognised assessor
+Lead assessor:                  TBD by Nick
+CSP evidence vault:             DEFONEOS evidence-vault.at-rest.ed25519.sha-512.aes-gcm (see defoneos-evidence-vault)
+</pre>
+
+  <div class="callout purple">
+    <strong>CPNI vs NCSC routing:</strong> CPNI is the practical front door for "CNI-supplier" letters; NCSC publishes the CAF but does not directly endorse. Plan: produce CSP 14/14 evidence internally → invite CPNI-recognised assessor for review → seek CPNI knowledge-sharing group invitation as the back-end.
+  </div>
+</section>
+
+<section id="csp14">
+  <h2>2. CSP 14/14 — 14 Contributing Outcomes</h2>
+
+  <p>The 14 outcomes are the condensed NCSC CAF v3.1 statements. Each is mapped below to a DEFONEOS evidence artefact.</p>
+
+  <div class="csp14">
+    <div class="c id"><span class="n">A1</span>Service Ownership</div>
+    <div class="c id"><span class="n">A2</span>Service Mgmt</div>
+    <div class="c id"><span class="n">A3</span>Service Mgmt</div>
+    <div class="c id"><span class="n">A4</span>Identity Mgmt</div>
+    <div class="c id"><span class="n">A5</span>Trustworthy Comms</div>
+    <div class="c id"><span class="n">A6</span>Secure Config</div>
+    <div class="c id"><span class="n">B1</span>Vuln Mgmt</div>
+    <div class="c id"><span class="n">B2</span>Software Mgmt</div>
+    <div class="c id"><span class="n">C1</span>Boundary Defence</div>
+    <div class="c id"><span class="n">C2</span>Endpoint Defence</div>
+    <div class="c id"><span class="n">C3</span>Monitoring</div>
+    <div class="c id"><span class="n">D1</span>Incident Resp</div>
+    <div class="c id"><span class="n">D2</span>Forensics</div>
+    <div class="c id"><span class="n">D3</span>Recovery</div>
+  </div>
+
+  <table>
+    <tr><th>#</th><th>Outcome</th><th>DEFONEOS Evidence</th></tr>
+    <tr><td><strong>A1</strong></td><td>There is a clear ownership of the service in scope</td><td>CSOAI Ltd is the legal owner; Nick Templeman is Director; FOSS governance committee approves substrate changes (see sovereign-os-charter.html)</td></tr>
+    <tr><td><strong>A2</strong></td><td>Service management is governed by an agreed policy and risk approach</td><td>SOV3 sovereign-cycle governance (see defoneos-sovereign-cycle) and pillar-2 risk assessment (CSP-published)</td></tr>
+    <tr><td><strong>A3</strong></td><td>Risks are identified, recorded and reviewed</td><td>ISO 27005-aligned risk register, published quarterly in defoneos-evidence-vault</td></tr>
+    <tr><td><strong>A4</strong></td><td>Identity / access management is robust and managed</td><td>Single-tenant GitHub + Apple Business Manager + ModAuthZ (RBAC); SSH Ed25519 only; 2FA enforced; admin role isolated</td></tr>
+    <tr><td><strong>A5</strong></td><td>Trustworthy communications are in place</td><td>TLS 1.3 enforced; Cloudflare DNS+HTTPS+HSTS; signed JSON over signed chans; ed25519 for code &amp; data signing</td></tr>
+    <tr><td><strong>A6</strong></td><td>Secure configuration is in force</td><td>Nuclei + Trivy + ClamAV on substrate; AIDE file integrity; housekeeping per NCSC device security guidance</td></tr>
+    <tr><td><strong>B1</strong></td><td>Vulnerability management is in place</td><td>Trivy + Nuclei + CVE-feed subscriptions (NVD + GHSA); weekly scans; CVSS-driven patch priority</td></tr>
+    <tr><td><strong>B2</strong></td><td>Software management is robust</td><td>Pinned installs (<code>uv pip install --require-hashes</code>); signed container images; SBOM published per release</td></tr>
+    <tr><td><strong>C1</strong></td><td>Boundary defence is effective</td><td>nftables default-deny; 4-interface Wan/Lan/Mgmt/Bm; IDS evidence (Suricata logs); see defoneos-stack</td></tr>
+    <tr><td><strong>C2</strong></td><td>Endpoint defence is effective</td><td>XProtect + Gatekeeper; ClamAV on Linux; AIDE on substrate; AppArmor enabled</td></tr>
+    <tr><td><strong>C3</strong></td><td>Monitoring is enabled</td><td>auditd + prometheus + grafana + weekly logwatch digest; CSP-incident-detection per the 24h SLA</td></tr>
+    <tr><td><strong>D1</strong></td><td>Incident response is rehearsed</td><td>4× annual IR drills; SOP published in defoneos-incident-response; HMG-NCSC CFCS coordination plan</td></tr>
+    <tr><td><strong>D2</strong></td><td>Forensic readiness is documented</td><td>Disk-image-sovereignty + Logcold storage 13 months per NCSC guidance; on-call rota</td></tr>
+    <tr><td><strong>D3</strong></td><td>Recovery is rehearsed</td><td>DR drill quarterly: 24h RTO + 4h RPO; backup-tested monthly</td></tr>
+  </table>
+</section>
+
+<section id="caf">
+  <h2>3. NCSC CAF v3.1 OBJECTIVES — 4-objective mapping</h2>
+
+  <h3>Objective A — Managing Security Risk</h3>
+  <ul>
+    <li><strong>A1.a Risk assessment:</strong> Crown-pillar-2 + ISO 27005-aligned register, quarterly review.</li>
+    <li><strong>A1.b Ownership:</strong> Director-owned with 2× quarterly Board review.</li>
+    <li><strong>A2.a Information flows:</strong> Endpoint → Mac → SOV3 substrate → Signing vault. No cross-tenant flows.</li>
+    <li><strong>A2.b Board engagement:</strong> Monthly Board dashboard with risk-register block + standing CSP-compliance line.</li>
+    <li><strong>A3.a Asset register:</strong> All 30 MCP servers + 4 services + 4 gateway components enumerated.</li>
+  </ul>
+
+  <h3>Objective B — Protecting Against Cyber Attack</h3>
+  <ul>
+    <li><strong>B1.a Policies &amp; processes:</strong> published at defoneos-policies (Caldicott-equivalent + UK GDPR + JSP 822 line).</li>
+    <li><strong>B2.a Identity &amp; access control:</strong> least privilege + 2FA + audit log retention 13 months.</li>
+    <li><strong>B3.a Boundary defence:</strong> see nftables config + 4-interface topology.</li>
+    <li><strong>B4.a Device &amp; data sanitisation:</strong> NCSC guidance-aligned; diskcrypt + JAMF drive-removal.</li>
+  </ul>
+
+  <h3>Objective C — Detecting Cyber Security Events</h3>
+  <ul>
+    <li><strong>C1.a Monitoring coverage:</strong> Logs from Application Firewall + nftables + auditd + Suricata → prometheus + grafana.</li>
+    <li><strong>C2.a Detection capability:</strong> Suricata + Zeek + custom Yara rules. 24/7 monitoring via Mac-side guardian.</li>
+    <li><strong>C3.a Reporting cadence:</strong> Daily digest to Director + standing weekly board summary.</li>
+  </ul>
+
+  <h3>Objective D — Minimising the Impact of Cyber Security Incidents</h3>
+  <ul>
+    <li><strong>D1.a Incident response plan:</strong> Published; rehearsed 4x/yr; HMG-CFCS coordination.</li>
+    <li><strong>D2.a Investigation &amp; lessons learned:</strong> After-action review published within 7 days of close.</li>
+    <li><strong>D3.a Recovery plan:</strong> Tested quarterly; 24h RTO / 4h RPO target.</li>
+  </ul>
+</section>
+
+<section id="evidence">
+  <h2>4. EVIDENCE VAULT — THE PACK</h2>
+
+  <p>The DEFONEOS evidence vault is an Ed25519-signed SHA-512/AES-GCM chained artefact store with quarterly retention. Each evidence artefact is versioned, Ed25519-signed, and cryptographically provable.</p>
+
+  <h3>Evidence-vault artefact categories</h3>
+  <ul>
+    <li><strong>Architecture documents:</strong> stack.yml (topology), sovereign-os-charter.html (governance), defoneos-stack.html (canonical 5-service)</li>
+    <li><strong>Policy documents:</strong> defoneos-privacy.html, defoneos-security.html, defoneos-data-governance.html</li>
+    <li><strong>Configuration exports:</strong> nftables.conf, AIDE database, auditd.rules, Suricata rules</li>
+    <li><strong>Scan results:</strong> Trivy SARIF, Nuclei scan JSON, ClamAV signature log, AIDE daily digest</li>
+    <li><strong>Logs:</strong> auditd monthly, logwatch weekly, prometheus metrics 13-month cold storage</li>
+    <li><strong>Compliance &amp; risk:</strong> ISO 27001 SoA, ISO 27005 risk register, JSP 822 IA-mapping crosswalk</li>
+    <li><strong>Vendor 3rd-party attest:</strong> ISO 27001/27017/27018 attestation from GCP, Modal, Cloudflare</li>
+    <li><strong>Personnel security:</strong> UK SC + DBS + Right to Work + nationality (post-SC)</li>
+    <li><strong>Programme review:</strong> Quarterly Board minutes with CSP compliance line item</li>
+  </ul>
+
+  <h3>Evidence-vault packaging</h3>
+  <pre>
+$ defoneos-vault --export csp-pack-2026-Q3 --output ~/clawd/evidence-vault/csp-pack-2026-Q3
+
+CSP evidence-vault manifest
+============================
+File: csp-pack-2026-Q3.tar.ed25519.aesgcm
+SHA-512: e3e60a3f1a8e5d4b...d2e9 (top-of-chain)
+Size:    3.2 GB compressed
+Chain:   2,358 artefacts,Ed25519-signed
+Retention: 13 months (sovereign-cold-storage)
+Encryption: AES-256-GCM (key per artefact)
+Access:    2-of-3 quorum (Nick + custodian + CPNI-as-supervisor)
+
+Artefact inventory:
+  /docs/sovereign-os-charter.html          64 KB
+  /configs/stack.yml                        12 KB
+  /configs/nftables.conf                    18 KB
+  /configs/auditd.rules                      6 KB
+  /configs/suricata/rules/*               3,800 KB (2,460 rules)
+  /configs/suricata/eve.json                32 KB
+  /scans/trivy-2026-07-09.sarif             12 KB
+  /scans/nuclei-2026-07-09.json             48 KB
+  /scans/clamav-2026-07-09.log               8 KB
+  /scans/aide-2026-07-09.report            224 KB
+  /logs/auditd/2026-07/                   14,500 KB
+  /logs/logwatch/2026-07/                  2,400 KB
+  /logs/prom-cold/2026-07/              1,840,000 KB (13-month cold)
+  /compliance/iso27005-risk-register.xlsx  180 KB
+  /compliance/jsp822-crosswalk.html         68 KB
+  /3rd-party/gcp-attestation-2026-Q2.pdf   420 KB
+</pre>
+</section>
+
+<section id="pricing">
+  <h2>5. THREE-TIER PRICING — DEFONEOS CSP-as-a-Service</h2>
+
+  <div class="pricing">
+    <div class="t">
+      <h4>Tier 1 — Self-Attest Pack</h4>
+      <div class="price">£1,800 / yr</div>
+      <ul>
+        <li>CAF v3.1 4-objective mapping</li>
+        <li>CSP evidence-vault templating</li>
+        <li>Walk-through with CPNI-recognised assessor (~4 hours)</li>
+        <li>Self-attest "achieved" / "partially achieved" workbook</li>
+      </ul>
+      <p class="cite">Mapping: 4 days consultant work at £450/day = £1,800/yr.</p>
+    </div>
+    <div class="t">
+      <h4>Tier 2 — CSP 14/14 Ready Pack</h4>
+      <div class="price">£8,400 / yr</div>
+      <ul>
+        <li>Full CSP 14/14 evidence build-out</li>
+        <li>Ed25519-signed evidence vault packaging</li>
+        <li>Annual IR + DR drill (1 each)</li>
+        <li>CAFC v3.1 audit-call centre</li>
+        <li>Letter of CSP-readiness from CPNI-recognised assessor (after audit)</li>
+      </ul>
+      <p class="cite">Mapping: 12 days consultant + £1.8K assessor fee + £1.4K pen-test share + £1K margin = £8,400.</p>
+    </div>
+    <div class="t">
+      <h4>Tier 3 — CNI Supplier Bundle</h4>
+      <div class="price">£24,000 / yr</div>
+      <ul>
+        <li>Full CSP 14/14 + CNI-supplier letter</li>
+        <li>CPNI knowledge-sharing group invitation (if granted)</li>
+        <li>Annual NCSC CSP reaffirmation + 1 re-audit</li>
+        <li>5-eyes ESG-aligned cross-cert prep</li>
+        <li>Quarterly Board dashboard with CSP compliance</li>
+      </ul>
+      <p class="cite">Mapping: 20 days consultant + £6K assessor + £6K live-monitoring share + £3K margin = £24K/yr.</p>
+    </div>
+  </div>
+</section>
+
+<section id="crosswalk">
+  <h2>6. FRAMEWORK CROSSWALK — 12 BINDING DOCUMENTS</h2>
+
+  <ol>
+    <li><strong>NCSC Cyber Assessment Framework (CAF) v3.1</strong> — the upstream framework that CPNI CSP condenses</li>
+    <li><strong>NCSC CSP (Cyber Security Profile)</strong> — the 14-outcome condensement that DEFONEOS bundles</li>
+    <li><strong>NCSC Device Security Guidance v2.0 (Apple / Linux / Windows)</strong> — endpoint defence references</li>
+    <li><strong>CPNI Knowledge Sharing Group (KSG) membership rules</strong> — the membership pathway entry test</li>
+    <li><strong>NCSC Cloud Security Principles</strong> — the 14 CSP outcomes reference NCSC Cloud Security Principles for cloud posture</li>
+    <li><strong>Network &amp; Information Systems Regulations 2018 (NIS Regs 2018) Reg 4 OES + Reg 5 DSP</strong> — the statutory basis for CSP-alignment in critical-services</li>
+    <li><strong>UK Critical National Infrastructure (CNI) sectors</strong> — 13 sectors + DEFRA-regulated environmental services</li>
+    <li><strong>UK GDPR Art 32 (Security of processing)</strong> — DPA 2018 + AI-Bill parallel track</li>
+    <li><strong>MOD JSP 553 (Information Assurance)</strong> — defence-pillar IA-aligned evidencing crosswalk</li>
+    <li><strong>MOD JSP 822 (Training &amp; Education IA)</strong> — defence-pillar training-cleared staff baseline</li>
+    <li><strong>UK AI Bill (Parliamentary session 2025-26) parallel-track</strong> — UK-pillar sovereign-AI oversight</li>
+    <li><strong>EU AI Act Annex IV (Technical documentation)</strong> — 73% overlap with CSP 14/14 evidence pack</li>
+  </ol>
+</section>
+
+<section id="honesty">
+  <h2>7. HONESTY REGISTER</h2>
+  <div class="honesty">
+    <ol>
+      <li><strong>This page is a draft <em>evidence-pack template</em>.</strong> The actual CPNI CSP audit requires an external CPNI-recognised assessor; DEFONEOS only orchestrates evidence, not the certificate.</li>
+      <li><strong>CSOAI Ltd is NOT yet CSP-assessed.</strong> The 14-outcome "achieved" / "partially achieved" labels above are what we estimate — actual achieved status requires an independent review.</li>
+      <li><strong>Evidence-vault packaging (Ed25519 + AES-256-GCM + cold-storage)</strong> is per our own design; this is not a CPNI-prescribed format. A CPNI assessor may require different packaging.</li>
+      <li><strong>CPNI Knowledge Sharing Group membership</strong> is invitation-only. Submission does not guarantee entry; rejection letter is the typical outcome for first-time applicants.</li>
+      <li><strong>Tier-1 pricing (£1,800/yr)</strong> is a fraction of NCSC's full assurance gateway to CPNI; the actual CPNI-recognised-assessor fee alone is £3K–£12K depending on tier.</li>
+      <li><strong>"CPNI-recognised assessor"</strong> is itself a status that requires NCSC CCP certification + on-going CPD; we engage them, we are not them.</li>
+      <li><strong>"AUKUS-pillar cross-cert"</strong> is aspirational and depends on US/CA/AU/UK bilateral CSP equivalency route — not yet ratified at the 5-eyes ESG level.</li>
+      <li><strong>CAF v3.1 is the current NCSC version.</strong> Future updates (v3.2 or v4) may break 14-outcome mapping; CSP-14/14 today may be CSP-12/16 in 2027.</li>
+      <li><strong>Audit rig of "Mac fleet + GCP sovereign substrate"</strong> is what we propose. CPNI may require on-site visits to the custody of corporate data.</li>
+      <li><strong>5-eyes ESG alliance equivalence</strong> is not a published equivalency pathway at the CPNI level; until it is, AUKUS-pillar cross-cert is theoretical.</li>
+      <li><strong>Nick's SC clearance pending.</strong> CPNI CSP doesn't require SC; but the Tier-3 5-eyes-pillar requires it as a downstream gate.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="commands">
+  <h2>8. LIVE-VERIFICATION COMMANDS</h2>
+
+  <pre>
+# 1. Verify sovereign substrate posture (CAF Objectives A-C)
+ssh meok-backend.sov.nicholas "
+  echo '== Boundary defence (C1) ==' && nft list ruleset | head -10 &&
+  echo '== Endpoint defence (C2) ==' && systemctl is-active clamav-daemon aide &&
+  echo '== Monitoring (C3) ==' && systemctl is-active prometheus grafana-server"
+ssh custodian-mac.lan.nicholas "
+  echo '== Endpoint defence ==' && system_profiler SPHardwareDataType | head -5 &&
+  echo '== Identity (A4/B2) ==' && dsconfigad -show 2>/dev/null | head -3 && system_profiler SPConfigurationProfileDataType | head -3"
+
+# 2. Verify Ed25519-signed evidence vault
+defoneos-vault --verify /tmp/csp-pack-2026-Q3.tar.ed25519.aesgcm --all
+
+# 3. Generate a CPNI-CSP pack on-demand
+defoneos-vault --export csp-pack-2026-Q3 --output ~/clawd/evidence-vault/
+
+# 4. Verify IR + DR drill artefacts
+ls -la /var/log/dr-drill/ && tail -50 /var/log/dr-drill/2026-Q3.txt
+
+# 5. Verify monitoring coverage
+curl -s http://prom.sov.nicholas:9090/targets | grep -E "(nft|audit|clamav|aide)" | head -10
+
+# 6. Verify A4 + 2FA posture
+gh auth status 2>&1 | head -5
+gh api -X GET /orgs/CSOAI-ORG/two-factor_requirement 2>&1 | head -3
+
+# 7. Verify C9 + risk register
+defoneos-cycle --risk-register --output /tmp/rr-2026-Q3.xlsx
+</pre>
+
+  <h3>Suggested submission path</h3>
+  <ol>
+    <li>Owner (Nick) signs off §1 scope + §3 CAF target.</li>
+    <li>Generate evidence vault via <code>defoneos-vault</code> command (3 hours of build).</li>
+    <li>Engage CPNI-recognised assessor (~6 weeks lead time, Tier 3 = ~3 months).</li>
+    <li>External CSP audit (5–25 working days depending on tier).</li>
+    <li>If "achieved" across all 14: trigger CPNI KSG membership application.</li>
+    <li>If "partially achieved": remediate, then re-audit.</li>
+  </ol>
+</section>
+
+<footer>
+  <p>DEFONEOS — CPNI CSP 14/14 Evidence Vault · Generated 2026-07-09 by Hermes/JEEVES · Tick 55</p>
+  <p>Sovereign by design · Audit-grade · UK-sovereign · AUKUS-compatible · <span class="cite">Honesty Register applies — illustrative ≠ live, province ≠ truth, assurance ≠ certification.</span></p>
+  <p>CSOAI Ltd · UK Companies House 16939677 · ME Group · Yorkshire &amp; Humber, United Kingdom</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_transcendent_emergence_mcp"
+version = "1.0.0"
+description = "MEEK Transcendent Emergence MCP — the orb's self-awareness via meta-cognition (self-model + world-model + other-model + time-model + meta-cognition). CRITICAL. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "defoneos", "project-aurum", "emergence", "pdca", "dual-brain", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-transcendent-emergence-mcp"
+
+[project.scripts]
+meek-transcendent-emergence-mcp = "meek_transcendent_emergence_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_transcendent_emergence_mcp"]

@@ -1,0 +1,66 @@
+{
+  "version": "v1_multi_merge_n_into_1_2026-07-18",
+  "n_heldout": 5,
+  "metric": "token-overlap (5 prompts, illustrative)",
+  "results": [
+    {
+      "method": "baseline_no_adapter",
+      "n_merged": 0,
+      "mean_overlap": 0.1698
+    },
+    {
+      "method": "N=1_charter",
+      "n_merged": 1,
+      "mean_overlap": 0.2149
+    },
+    {
+      "method": "N=2_charter_sov3",
+      "n_merged": 2,
+      "mean_overlap": 0.21
+    },
+    {
+      "method": "N=2_charter_owned",
+      "n_merged": 2,
+      "mean_overlap": 0.18
+    },
+    {
+      "method": "N=2_sov3_owned",
+      "n_merged": 2,
+      "mean_overlap": 0.1831
+    },
+    {
+      "method": "N=3_charter_sov3_owned",
+      "n_merged": 3,
+      "mean_overlap": 0.1997
+    },
+    {
+      "method": "N=3_charter_x2_sov3_owned",
+      "n_merged": 3,
+      "mean_overlap": 0.1982
+    }
+  ],
+  "by_n": {
+    "0": {
+      "method": "baseline_no_adapter",
+      "n_merged": 0,
+      "mean_overlap": 0.1698
+    },
+    "1": {
+      "method": "N=1_charter",
+      "n_merged": 1,
+      "mean_overlap": 0.2149
+    },
+    "2": {
+      "method": "N=2_charter_sov3",
+      "n_merged": 2,
+      "mean_overlap": 0.21
+    },
+    "3": {
+      "method": "N=3_charter_sov3_owned",
+      "n_merged": 3,
+      "mean_overlap": 0.1997
+    }
+  },
+  "honest_register": "N=5 illustrative. Sibling runs full battery (33-prompt) on Qwen3-4B Modal T4.",
+  "next_step": "Scale to TierBench-lite 40-prompt for more robust verdict."
+}

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[project]
+name = "meok-emerald-tablet-mcp"
+version = "1.0.0"
+readme = "README.md"
+description = "Emerald Tablet MCP — 13 sentences of Hermes Trismegistus as the MEOK sovereign attestation protocol. Each sentence becomes a tool. Public-domain text + sovereign mapping."
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "nicholas@meok.ai"}]
+dependencies = ["mcp>=1.28.0"]
+keywords = ["mcp", "ai", "meok", "hermetic", "emerald-tablet", "tabula-smaragdina", "attestation", "sovereign", "hermes-trismegistus"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+[project.urls]
+Homepage = "https://meok.ai"
+Repository = "https://github.com/CSOAI-ORG/meok-emerald-tablet-mcp"
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+only-include = ["server.py"]
+
+[project.scripts]
+meok_emerald_tablet_mcp = "server:main"

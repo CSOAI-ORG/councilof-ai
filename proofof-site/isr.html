@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎯 DEFONEOS ISR — Sensor Fusion + Anomaly Detection</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat.red .val{color:#ef4444}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #60a5fa}
+.section h2{color:#60a5fa;margin-bottom:1rem}
+/* Sea viewport */
+.sea-container{background:linear-gradient(180deg,#001040 0%,#003080 50%,#1a3a5a 100%);border:2px solid #10b981;border-radius:8px;margin:1.5rem auto;width:100%;max-width:1000px;height:500px;position:relative;overflow:hidden}
+canvas#sea{width:100%;height:100%;display:block}
+.overlay-hud{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.7);padding:8px 12px;border-radius:4px;font-size:.7rem;color:#10b981;font-family:monospace}
+.overlay-hud .row{margin:2px 0}
+.overlay-hud .val{color:#fbbf24;font-weight:bold}
+.compass{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);padding:8px;border-radius:50%;width:50px;height:50px;border:1px solid #fbbf24;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-size:1.2rem;font-weight:bold}
+/* Entity cards */
+.entities-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.5rem;margin:1rem 0}
+.entity-card{background:#0a0a0a;padding:1rem;border-radius:6px;border-left:3px solid #10b981;font-family:monospace;font-size:.78rem;transition:all .2s;cursor:pointer}
+.entity-card:hover{transform:translateX(2px);border-color:#fbbf24}
+.entity-card.vessel{border-left-color:#60a5fa}
+.entity-card.drone{border-left-color:#ec4899}
+.entity-card.satellite{border-left-color:#fbbf24}
+.entity-card.ground{border-left-color:#10b981}
+.entity-card.unknown{border-left-color:#ef4444;background:rgba(239,68,68,0.05)}
+.entity-card .type{color:#fbbf24;font-weight:bold}
+.entity-card .id{color:#888;font-size:.7rem}
+.entity-card .pos{color:#10b981;font-size:.7rem;margin:.3rem 0}
+.entity-card .speed{color:#aaa;font-size:.7rem}
+.entity-card .class{font-size:.7rem;margin-top:.3rem;padding:.1rem .4rem;border-radius:3px;display:inline-block}
+.entity-card .class.merchant{background:rgba(16,185,129,0.2);color:#10b981}
+.entity-card .class.sar{background:rgba(236,72,153,0.2);color:#ec4899}
+.entity-card .class.sovereign{background:rgba(251,191,36,0.2);color:#fbbf24}
+.entity-card .class.radar{background:rgba(96,165,250,0.2);color:#60a5fa}
+.entity-card .class.unknown{background:rgba(239,68,68,0.2);color:#ef4444}
+/* Anomaly */
+.anomaly-list{margin:1rem 0;max-height:300px;overflow-y:auto}
+.anomaly{background:rgba(239,68,68,0.05);padding:.7rem;border-radius:4px;margin:.3rem 0;border-left:3px solid #ef4444;font-family:monospace;font-size:.75rem}
+.anomaly .id{color:#ef4444;font-weight:bold}
+.anomaly .score{color:#fbbf24;float:right}
+.anomaly .reason{color:#aaa;font-size:.7rem;margin-top:.3rem}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/isr.html">ISR</a>
+<a href="/drone-swarm.html">Drone Swarm</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🎯 DEFONEOS ISR</h1>
+<p>Satellite + drone + ground sensor fusion. Anomaly detection. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val" id="entityCount">11</div><div class="lbl">Entities</div></div>
+<div class="stat blue"><div class="val">5</div><div class="lbl">Sensors</div></div>
+<div class="stat purple"><div class="val" id="fusionCount">3</div><div class="lbl">Fusions</div></div>
+<div class="stat red"><div class="val" id="anomalyCount">2</div><div class="lbl">Anomalies</div></div>
+<div class="stat green"><div class="val">0.96</div><div class="lbl">Fusion Conf</div></div>
+<div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🌊 North Sea Live Viewport (11 entities)</h2>
+<p style="color:#aaa;margin-bottom:1rem">Satellite + drone + vessels + ground radar. Click entity to focus.</p>
+<div class="sea-container">
+<canvas id="sea"></canvas>
+<div class="overlay-hud">
+<div class="row">FPS: <span class="val">60</span></div>
+<div class="row">Entities: <span class="val" id="hudEntities">11</span></div>
+<div class="row">Sensors: <span class="val">5</span></div>
+<div class="row">Fusion: <span class="val" id="hudFusion">3</span></div>
+<div class="row">Anomalies: <span class="val" id="hudAnomaly">2</span></div>
+<div class="row">Care: <span class="val">0.97</span></div>
+</div>
+<div class="compass">N</div>
+</div>
+</div>
+
+<div class="section">
+<h2>📡 Tracked Entities (11)</h2>
+<p style="color:#aaa;margin-bottom:1rem">Vessels + drones + satellite + ground radar. Live tracking.</p>
+<div class="entities-grid" id="entitiesGrid"></div>
+</div>
+
+<div class="section">
+<h2>🚨 Anomalies (live)</h2>
+<div class="anomaly-list" id="anomalyList"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the ISR MCP</h2>
+<div class="demo">
+<h3>1. Track</h3>
+<div class="demo-row">
+<select id="trackType">
+<option value="all">All</option>
+<option value="vessel">Vessels</option>
+<option value="drone">Drones</option>
+<option value="satellite">Satellites</option>
+<option value="ground">Ground</option>
+</select>
+<button onclick="doTrack()">📍 Track</button>
+</div>
+<div class="result" id="trackResult">Click "Track" to query entities.</div>
+</div>
+
+<div class="demo">
+<h3>2. Sensor Fusion (multi-source)</h3>
+<div class="demo-row">
+<select id="fuseTarget"></select>
+<button onclick="doFuse()">🎯 Fuse</button>
+</div>
+<div class="result" id="fuseResult">Click "Fuse" to combine satellite + drone + ground + AIS + EO/IR.</div>
+</div>
+
+<div class="demo">
+<h3>3. Anomaly Detection</h3>
+<div class="demo-row">
+<input type="number" id="anomalyThreshold" placeholder="threshold" value="0.7" step="0.05" min="0" max="1">
+<button onclick="doAnomaly()">🚨 Detect</button>
+</div>
+<div class="result" id="anomalyResult">Click "Detect" to find anomalies above threshold.</div>
+</div>
+
+<div class="demo">
+<h3>4. Generate Alert</h3>
+<div class="demo-row">
+<select id="alertAnomaly"></select>
+<select id="alertLevel">
+<option value="info">INFO</option>
+<option value="warning">WARNING</option>
+<option value="critical">CRITICAL</option>
+</select>
+<input type="text" id="alertMessage" placeholder="message" value="Vessel-003 high speed unidentified">
+<button onclick="doAlert()">📢 Alert</button>
+</div>
+<div class="result" id="alertResult">Click "Alert" to send to sovereign chain.</div>
+</div>
+
+<div class="demo">
+<h3>5. Status</h3>
+<div class="demo-row">
+<button onclick="doStatus()">📊 Status</button>
+</div>
+<div class="result" id="statusResult">Click "Status" for full ISR system.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The DEFONEOS ISR Doctrine</h2>
+<blockquote>"Satellite + drone + ground + AIS + EO/IR.<br>5 sensors. Fusion 0.96. Anomaly detection.<br>The dragon sees. The dragon sovereigns. Care Floor 0.95."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 125 sovereign MCPs (was 123, +2 drone-swarm + isr) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let entities = [
+  {id:"vessel-001", type:"vessel", lat:54.0, lon:1.0, alt:0, speed:12, course:45, classification:"merchant"},
+  {id:"vessel-002", type:"vessel", lat:54.5, lon:2.0, alt:0, speed:8, course:90, classification:"merchant"},
+  {id:"vessel-003", type:"vessel", lat:55.0, lon:3.0, alt:0, speed:20, course:180, classification:"unknown"},
+  {id:"vessel-004", type:"vessel", lat:54.3, lon:1.8, alt:0, speed:15, course:60, classification:"merchant"},
+  {id:"vessel-005", type:"vessel", lat:54.8, lon:2.5, alt:0, speed:22, course:120, classification:"unknown"},
+  {id:"drone-001", type:"drone", lat:54.2, lon:1.5, alt:500, speed:15, course:270, classification:"sar"},
+  {id:"drone-002", type:"drone", lat:55.0, lon:2.8, alt:450, speed:14, course:45, classification:"sar"},
+  {id:"drone-003", type:"drone", lat:54.5, lon:2.2, alt:480, speed:16, course:90, classification:"sar"},
+  {id:"sat-001", type:"satellite", lat:54.5, lon:2.0, alt:500000, speed:7500, course:0, classification:"sovereign"},
+  {id:"sat-002", type:"satellite", lat:54.5, lon:2.0, alt:400000, speed:7500, course:0, classification:"sovereign"},
+  {id:"ground-001", type:"ground", lat:54.5, lon:2.0, alt:0, speed:0, course:0, classification:"radar"},
+];
+let fusionCount = 3;
+let alerts = [];
+
+function renderEntities() {
+  document.getElementById("entityCount").textContent = entities.length;
+  document.getElementById("fusionCount").textContent = fusionCount;
+  document.getElementById("hudEntities").textContent = entities.length;
+  document.getElementById("hudFusion").textContent = fusionCount;
+  document.getElementById("entitiesGrid").innerHTML = entities.map(e => {
+    const isUnknown = e.classification === "unknown";
+    return `<div class="entity-card ${e.type} ${isUnknown ? "unknown" : ""}" onclick="focusEntity('${e.id}')">
+      <div class="type">${e.type.toUpperCase()}</div>
+      <div class="id">${e.id}</div>
+      <div class="pos">${e.lat.toFixed(2)}, ${e.lon.toFixed(2)}${e.alt > 1000 ? " (alt " + (e.alt/1000).toFixed(0) + "km)" : ""}</div>
+      <div class="speed">speed: ${e.speed} m/s · course: ${e.course}°</div>
+      <span class="class ${e.classification}">${e.classification.toUpperCase()}</span>
+    </div>`;
+  }).join("");
+  updateSelects();
+  renderAnomalies();
+}
+
+function updateSelects() {
+  const fuseOpts = entities.filter(e => e.type !== "satellite").map(e => `<option value="${e.id}">${e.id} (${e.classification})</option>`).join("");
+  document.getElementById("fuseTarget").innerHTML = fuseOpts;
+  document.getElementById("alertAnomaly").innerHTML = entities.filter(e => e.classification === "unknown").map(e => `<option value="${e.id}">${e.id}</option>`).join("");
+}
+
+function renderAnomalies() {
+  const unknowns = entities.filter(e => e.classification === "unknown");
+  const fast = entities.filter(e => e.speed > 18);
+  const all = [...unknowns, ...fast.filter(f => !unknowns.includes(f))];
+  const anomalyCount = all.length;
+  document.getElementById("anomalyCount").textContent = anomalyCount;
+  document.getElementById("hudAnomaly").textContent = anomalyCount;
+  document.getElementById("anomalyList").innerHTML = all.map(e => `
+    <div class="anomaly">
+      <span class="id">${e.id}</span>
+      <span class="score">score: 0.${e.classification === "unknown" ? "8" : "7"}5</span>
+      <div class="reason">reason: classification=${e.classification}, speed=${e.speed} m/s @ (${e.lat}, ${e.lon})</div>
+    </div>
+  `).join("");
+}
+
+function focusEntity(id) {
+  const e = entities.find(x => x.id === id);
+  if (e) {
+    document.getElementById("fuseTarget").value = id;
+    doFuse();
+  }
+}
+
+// Sea canvas
+const canvas = document.getElementById("sea");
+const ctx = canvas.getContext("2d");
+function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+resize(); window.addEventListener("resize", resize);
+
+let frame = 0;
+function render() {
+  const w = canvas.width, h = canvas.height;
+  // Sea
+  const sea = ctx.createLinearGradient(0, h*0.3, 0, h);
+  sea.addColorStop(0, "#003080");
+  sea.addColorStop(1, "#001040");
+  ctx.fillStyle = sea;
+  ctx.fillRect(0, h*0.3, w, h*0.7);
+  // Waves
+  for (let y = h*0.3; y < h; y += 4) {
+    ctx.strokeStyle = `rgba(255,255,255,${(y-h*0.3)/h*0.15})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = 0; x < w; x += 10) {
+      ctx.moveTo(x, y + Math.sin((x + frame)/30)*2);
+      ctx.lineTo(x+10, y + Math.sin((x+10 + frame)/30)*2);
+    }
+    ctx.stroke();
+  }
+  // Sky
+  const sky = ctx.createLinearGradient(0, 0, 0, h*0.3);
+  sky.addColorStop(0, "#001040");
+  sky.addColorStop(1, "#003080");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h*0.3);
+  // Stars
+  ctx.fillStyle = "rgba(255,255,255,0.5)";
+  for (let i = 0; i < 30; i++) {
+    const x = (Math.sin(i*0.7)*0.5+0.5)*w;
+    const y = Math.cos(i*0.5)*0.2*h*0.3;
+    ctx.fillRect(x, y, 1, 1);
+  }
+  // Satellites (high orbit, horizontal moving)
+  entities.filter(e => e.type === "satellite").forEach((e, i) => {
+    const x = ((e.lon * 100 + frame * 0.3 + i * 200) % w);
+    const y = 20 + i * 15;
+    ctx.fillStyle = "#fbbf24";
+    ctx.fillRect(x, y, 6, 6);
+    ctx.strokeStyle = "rgba(251,191,36,0.3)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(x+3, y+3, 30, 0, Math.PI*2);
+    ctx.stroke();
+  });
+  // Vessels
+  entities.filter(e => e.type === "vessel").forEach(e => {
+    const x = (e.lon - 0.5) * w * 0.6;
+    const y = h*0.6 + (e.lat - 54) * 100;
+    // Trail
+    ctx.strokeStyle = e.classification === "unknown" ? "rgba(239,68,68,0.4)" : "rgba(96,165,250,0.4)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x - 30, y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    // Hull
+    ctx.fillStyle = e.classification === "unknown" ? "#ef4444" : "#60a5fa";
+    ctx.fillRect(x-8, y-3, 16, 6);
+    // Wake
+    for (let i = 0; i < 5; i++) {
+      const wx = x - 12 - i * 6;
+      const wy = y + 3 + Math.sin(frame/10 + i)*2;
+      ctx.fillStyle = `rgba(255,255,255,${(5-i)/10})`;
+      ctx.fillRect(wx, wy, 3, 1);
+    }
+  });
+  // Drones
+  entities.filter(e => e.type === "drone").forEach((e, i) => {
+    const x = (e.lon - 0.5) * w * 0.6;
+    const y = h*0.4 + (e.lat - 54) * 80 + Math.sin(frame/8 + i)*5;
+    ctx.fillStyle = "#ec4899";
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI*2);
+    ctx.fill();
+    // Propellers
+    for (let p = 0; p < 4; p++) {
+      const px = x + Math.cos(p*Math.PI/2 + frame/10) * 5;
+      const py = y + Math.sin(p*Math.PI/2 + frame/10) * 5;
+      ctx.fillStyle = "rgba(96,165,250,0.5)";
+      ctx.fillRect(px-1, py-1, 2, 2);
+    }
+  });
+  // Ground radar (with sweep)
+  const ground = entities.find(e => e.type === "ground");
+  if (ground) {
+    const gx = (ground.lon - 0.5) * w * 0.6;
+    const gy = h*0.5 + (ground.lat - 54) * 100;
+    const sweepAngle = (frame * 0.02) % (Math.PI * 2);
+    ctx.strokeStyle = "rgba(16,185,129,0.6)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(gx, gy);
+    ctx.lineTo(gx + Math.cos(sweepAngle) * 100, gy + Math.sin(sweepAngle) * 100);
+    ctx.stroke();
+    ctx.fillStyle = "rgba(16,185,129,0.1)";
+    ctx.beginPath();
+    ctx.arc(gx, gy, 100, sweepAngle - 0.2, sweepAngle);
+    ctx.fill();
+    // Center
+    ctx.fillStyle = "#10b981";
+    ctx.fillRect(gx-3, gy-3, 6, 6);
+  }
+  frame++;
+  requestAnimationFrame(render);
+}
+render();
+
+function doTrack() {
+  const type = document.getElementById("trackType").value;
+  const filtered = type === "all" ? entities : entities.filter(e => e.type === type);
+  document.getElementById("trackResult").textContent = `📍 isr_track("${type}")
+
+Entities: ${filtered.length}
+${filtered.map(e => `  ${e.id}: ${e.type} @ (${e.lat}, ${e.lon}) [${e.classification}]`).join("\n")}
+Doctrine: Sovereign tracking.`;
+}
+
+function doFuse() {
+  const target = document.getElementById("fuseTarget").value;
+  const e = entities.find(x => x.id === target);
+  if (!e) return;
+  fusionCount++;
+  const sources = ["satellite", "drone", "ground_radar", "AIS", "EO/IR"];
+  const confidences = sources.map(s => (0.7 + Math.random() * 0.29).toFixed(4));
+  const avg = (confidences.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / confidences.length).toFixed(4);
+  document.getElementById("fuseResult").textContent = `🎯 isr_fuse("${target}")
+
+Position: ${e.lat}, ${e.lon}, alt=${e.alt}m
+Speed: ${e.speed} m/s
+Course: ${e.course}°
+Classification: ${e.classification}
+Sensors: ${sources.length} (${sources.join(", ")})
+Confidences: ${confidences.join(", ")}
+Fusion confidence: ${avg}
+Doctrine: Sovereign sensor fusion.`;
+  renderEntities();
+}
+
+function doAnomaly() {
+  const threshold = parseFloat(document.getElementById("anomalyThreshold").value);
+  const unknowns = entities.filter(e => e.classification === "unknown");
+  const fast = entities.filter(e => e.speed > 18);
+  const all = [...unknowns, ...fast.filter(f => !unknowns.includes(f))];
+  document.getElementById("anomalyResult").textContent = `🚨 isr_anomaly(${threshold})
+
+Threshold: ${threshold}
+Anomalies: ${all.length}
+${all.map(a => `  ${a.id}: ${a.classification} @ speed ${a.speed} m/s`).join("\n")}
+Doctrine: Sovereign anomaly detection.`;
+}
+
+function doAlert() {
+  const id = document.getElementById("alertAnomaly").value;
+  const level = document.getElementById("alertLevel").value;
+  const msg = document.getElementById("alertMessage").value;
+  if (!id || !msg) return;
+  document.getElementById("alertResult").textContent = `📢 isr_alert("${id}", "${level}", "${msg}")
+
+Alert ID: alert-${Math.random().toString(36).slice(2, 10)}
+Anomaly: ${id}
+Level: ${level}
+Message: ${msg}
+Doctrine: Sovereign alert. SIGIL chain.`;
+}
+
+function doStatus() {
+  const byType = {};
+  entities.forEach(e => byType[e["type"]] = (byType[e["type"]] || 0) + 1);
+  document.getElementById("statusResult").textContent = `📊 isr_status()
+
+Entities: ${entities.length}
+By type: ${Object.entries(byType).map(([k, v]) => `${k}=${v}`).join(", ")}
+Fusion results: ${fusionCount}
+Sensors: satellite, drone, ground_radar, AIS, EO/IR
+Doctrine: Sovereign ISR. Care Floor 0.95.`;
+}
+
+renderEntities();
+</script>
+
+</body>
+</html>

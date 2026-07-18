@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS: MCP Category Lifecycle Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --text-color: #e0e0e0;
+            --accent-color: #00ffff; /* Cyan for dashboard focus */
+            --secondary-accent: #00aaff;
+            --border-color: #333;
+            --code-bg: #1a1a1a;
+            --card-bg: #1a1a1a;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            flex-grow: 1;
+        }
+        header {
+            background-color: var(--code-bg);
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 1.8em;
+        }
+        header .logo {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--secondary-accent);
+            font-size: 1.2em;
+        }
+        h2, h3 {
+            color: var(--accent-color);
+            font-family: 'IBM Plex Mono', monospace;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--secondary-accent);
+        }
+        code, pre {
+            font-family: 'IBM Plex Mono', monospace;
+            background-color: var(--code-bg);
+            color: var(--text-color);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        pre {
+            padding: 10px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        a {
+            color: var(--secondary-accent);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid var(--border-color);
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--code-bg);
+            color: var(--accent-color);
+        }
+        .chart-placeholder {
+            background-color: #222;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px dashed var(--border-color);
+            color: #888;
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            color: #888;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DEFONEOS</h1>
+        <div class="logo">MCP LIFECYCLE DASHBOARD</div>
+    </header>
+    <div class="container">
+        <h2>MCP Category Lifecycle Dashboard</h2>
+        <p>This dashboard provides a high-level overview of the health, status, and lifecycle stage of all Model Context Protocol (MCP) servers within the DEFONEOS ecosystem, categorized for strategic analysis. It tracks key metrics like deployment status, red-line compliance, SEAL eligibility, and update frequency.</p>
+
+        <h3>1. MCP Category Overview (Current Status)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Total MCPs</th>
+                    <th>Deployed</th>
+                    <th>SEAL Eligible</th>
+                    <th>Red-Line Pass</th>
+                    <th>Average Age (Days)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sensor</td>
+                    <td>10</td>
+                    <td>10 (100%)</td>
+                    <td>4</td>
+                    <td>10 (100%)</td>
+                    <td>45</td>
+                </tr>
+                <tr>
+                    <td>Defence</td>
+                    <td>8</td>
+                    <td>8 (100%)</td>
+                    <td>3</td>
+                    <td>8 (100%)</td>
+                    <td>60</td>
+                </tr>
+                <tr>
+                    <td>Civil Service</td>
+                    <td>7</td>
+                    <td>7 (100%)</td>
+                    <td>2</td>
+                    <td>7 (100%)</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>Compliance</td>
+                    <td>3</td>
+                    <td>3 (100%)</td>
+                    <td>1</td>
+                    <td>3 (100%)</td>
+                    <td>70</td>
+                </tr>
+                <tr>
+                    <td>Core</td>
+                    <td>2</td>
+                    <td>2 (100%)</td>
+                    <td>2</td>
+                    <td>2 (100%)</td>
+                    <td>90</td>
+                </tr>
+                <tr>
+                    <th>TOTAL</th>
+                    <th>30</th>
+                    <th>30 (100%)</th>
+                    <th>12</th>
+                    <th>30 (100%)</th>
+                    <th>57</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>2. Deployment Status & Trends (Visualisation Placeholder)</h3>
+        <p>This section would typically feature interactive charts showing deployment success rates, error trends, and deployment frequency over time, broken down by MCP category.</p>
+        <div class="chart-placeholder">
+            [DEPLOYMENT TRENDS CHART: SUCCESS/FAILURES OVER TIME BY CATEGORY]
+        </div>
+        <div class="card">
+            <p><strong>Note:</strong> All 30 core MCPs are currently deployed and operational. Future charts will track the continuous integration and deployment pipeline for updates and new releases.</p>
+        </div>
+
+        <h3>3. Red-Line Compliance & Vulnerability Trends (Visualisation Placeholder)</h3>
+        <p>Charts illustrating the trend of red-line audit outcomes (PASS/WARN/FAIL) and detected vulnerabilities (e.g., CVEs) over quarters, per category.</p>
+        <div class="chart-placeholder">
+            [RED-LINE COMPLIANCE & VULNERABILITY TRENDS CHART]
+        </div>
+        <div class="card">
+            <p><strong>Status:</strong> All 30 MCPs currently maintain a PASS status across all 7 red-line vectors. Continuous monitoring is in place.</p>
+        </div>
+
+        <h3>4. DEFONEOS-SEAL Eligibility Pipeline (Visualisation Placeholder)</h3>
+        <p>Visual representation of MCPs progressing through the DEFONEOS-SEAL certification pipeline (e.g., from "Draft Compliance" to "BFT Council Approved" to "SEAL Issued").</p>
+        <div class="chart-placeholder">
+            [DEFONEOS-SEAL ELIGIBILITY PIPELINE CHART]
+        </div>
+        <div class="card">
+            <p><strong>Focus:</strong> Accelerating the SEAL eligibility of remaining MCPs, with an emphasis on Defence and Sensor categories.</p>
+        </div>
+
+        <h3>5. MCP Update Frequency & Freshness (Visualisation Placeholder)</h3>
+        <p>Graphs showing the average time between updates for MCPs, indicating code freshness and active maintenance. Probes trigger alerts for stale MCPs.</p>
+        <div class="chart-placeholder">
+            [MCP UPDATE FREQUENCY CHART]
+        </div>
+        <div class="card">
+            <p><strong>Metric:</strong> Target is an average update cycle of < 60 days across all MCPs. Real-time probes ensure freshness.</p>
+        </div>
+
+        <h3>6. Cross-Links</h3>
+        <ul>
+            <li><a href="defoneos-sbom-index.html">SBOM Index</a></li>
+            <li><a href="defoneos-red-line-vector-audit-quarterly.html">Red-Line Vector Audit (Quarterly)</a></li>
+            <li><a href="#">MEOK Compliance Passport</a></li>
+            <li><a href="defoneos-bft-council-public-minutes.html">BFT Council Public Minutes</a></li>
+        </ul>
+    </div>
+    <footer>
+        DEFONEOS &copy; 2026. Data-driven sovereignty.
+    </footer>
+</body>
+</html>

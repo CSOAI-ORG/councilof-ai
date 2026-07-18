@@ -1,0 +1,302 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CSOAI Sovereign OS Globe — True Data Intelligence</title>
+<meta name="description" content="CSOAI sovereign OS globe. All 27 products. All 50 protocols. All 13 layers. Live data intelligence.">
+<style>
+body{font-family:'Inter',sans-serif;background:#000;color:#f8fafc;margin:0;padding:0;overflow:hidden;height:100vh}
+#globe-container{position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at center,#0a0a1f 0%,#000 70%)}
+canvas{display:block}
+.hud{position:fixed;background:rgba(0,0,0,.7);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:1rem;backdrop-filter:blur(10px);font-size:.85rem}
+.hud h3{color:#c9a84c;margin:0 0 .5rem;font-size:1rem}
+.hud .k{color:#94a3b8}
+.hud .v{color:#22c55e;font-weight:bold}
+#hud-top-left{top:1rem;left:1rem;width:280px}
+#hud-top-right{top:1rem;right:1rem;width:280px;text-align:right}
+#hud-bottom-left{bottom:1rem;left:1rem;width:380px}
+#hud-bottom-right{bottom:1rem;right:1rem;width:280px;text-align:right}
+#hud-center{top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(201,168,76,.1);border:2px solid #c9a84c;border-radius:50%;width:160px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#hud-center .big{font-size:1.5rem;font-weight:800;color:#c9a84c}
+#hud-center .small{color:#94a3b8;font-size:.7rem}
+.legend{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:.5rem 1rem;display:flex;gap:1rem;font-size:.7rem;color:#94a3b8;flex-wrap:wrap;max-width:90%}
+.legend .item{display:flex;align-items:center;gap:.25rem}
+.dot{width:10px;height:10px;border-radius:50%}
+.tooltip{position:fixed;background:rgba(0,0,0,.95);border:1px solid #c9a84c;border-radius:6px;padding:.5rem;font-size:.8rem;pointer-events:none;display:none;z-index:1000;max-width:240px}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div id="globe-container">
+<canvas id="globe"></canvas>
+</div>
+
+<div class="hud" id="hud-top-left">
+<h3>🌍 SOVEREIGN OS GLOBE</h3>
+<div class="k">Status: <span class="v">LIVE</span></div>
+<div class="k">Substrate: <span class="v">M4 + GCP VM</span></div>
+<div class="k">Sigil Chain: <span class="v">intact</span></div>
+<div class="k">Last Seal: <span class="v" id="last-seal">2s ago</span></div>
+</div>
+
+<div class="hud" id="hud-top-right">
+<h3>📊 DATA FLOWS</h3>
+<div class="k">SIGILs/sec: <span class="v" id="sigil-rate">3.2</span></div>
+<div class="k">Certs/min: <span class="v" id="cert-rate">12</span></div>
+<div class="k">Protocols: <span class="v">50+</span></div>
+<div class="k">Hives: <span class="v">33</span></div>
+</div>
+
+<div class="hud" id="hud-center">
+<div class="big">sovereign.mom</div>
+<div class="small">Layer 0 · Maternal</div>
+<div class="small" style="margin-top:.25rem;color:#22c55e">CARE-AS-GENERATIVE</div>
+</div>
+
+<div class="hud" id="hud-bottom-left">
+<h3>🌐 ACTIVE STREAMS (live)</h3>
+<div id="streams"><div class="k">⏳ Loading 50+ protocol streams...</div></div>
+</div>
+
+<div class="hud" id="hud-bottom-right">
+<h3>📍 HOTSPOTS</h3>
+<div class="k">🇬🇧 London (M4 + sovereign.mom) <span class="v">↑</span></div>
+<div class="k">🇪🇺 Frankfurt (GCP VM) <span class="v">→</span></div>
+<div class="k">🇺🇸 NYC (Vercel CDN) <span class="v">↓</span></div>
+<div class="k">🌍 33 apex .ai domains <span class="v">●●●</span></div>
+</div>
+
+<div class="legend">
+<div class="item"><span class="dot" style="background:#ff6b9d"></span>Maternal</div>
+<div class="item"><span class="dot" style="background:#a855f7"></span>Identity</div>
+<div class="item"><span class="dot" style="background:#3b82f6"></span>Attestation</div>
+<div class="item"><span class="dot" style="background:#22c55e"></span>Policy</div>
+<div class="item"><span class="dot" style="background:#eab308"></span>Payment</div>
+<div class="item"><span class="dot" style="background:#ef4444"></span>Audit</div>
+<div class="item"><span class="dot" style="background:#0ea5e9"></span>Council</div>
+<div class="item"><span class="dot" style="background:#c9a84c"></span>Sovereign</div>
+<div class="item"><span class="dot" style="background:#8b5cf6"></span>Authority</div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// === SOVEREIGN OS GLOBE — TRUE DATA INTELLIGENCE ===
+
+const canvas = document.getElementById('globe');
+const ctx = canvas.getContext('2d');
+const tooltip = document.getElementById('tooltip');
+
+let width = window.innerWidth;
+let height = window.innerHeight;
+canvas.width = width;
+canvas.height = height;
+
+window.addEventListener('resize', () => {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+});
+
+// === THE 27 SOVEREIGN PRODUCTS ===
+const PRODUCTS = [
+  // Core sovereign (the 7 centers)
+  {id:'sovereign.mom', name:'sovereign.mom', lat:51.5, lon:-0.1, color:'#ff6b9d', size:8, type:'maternal', desc:'Layer 0 · Maternal'},
+  {id:'csoai.org', name:'csoai.org', lat:51.5, lon:-0.2, color:'#c9a84c', size:7, type:'sovereign', desc:'Standards body'},
+  {id:'meok.ai', name:'meok.ai', lat:51.6, lon:0.0, color:'#22c55e', size:6, type:'sovereign', desc:'MEOK ONE OS'},
+  {id:'openpatent.ai', name:'openpatent.ai', lat:51.4, lon:0.1, color:'#0ea5e9', size:6, type:'sovereign', desc:'BFT councils'},
+  {id:'councilof.ai', name:'councilof.ai', lat:51.5, lon:-0.3, color:'#8b5cf6', size:6, type:'sovereign', desc:'Council platform'},
+  {id:'sovereign-town.ai', name:'sovereign-town.ai', lat:51.7, lon:-0.1, color:'#a855f7', size:5, type:'sovereign', desc:'47-agent town'},
+  {id:'csoai-tower', name:'csoai-tower', lat:51.6, lon:-0.2, color:'#3b82f6', size:5, type:'sovereign', desc:'Compliance tower'},
+  // 33 hives (apex .ai domains)
+  {id:'safetyof.ai', name:'safetyof.ai', lat:48.8, lon:2.3, color:'#22c55e', size:4, type:'hive', desc:'Paris · Cybersecurity'},
+  {id:'transparencyof.ai', name:'transparencyof.ai', lat:52.5, lon:13.4, color:'#22c55e', size:4, type:'hive', desc:'Berlin · Transparency'},
+  {id:'accountabilityof.ai', name:'accountabilityof.ai', lat:41.9, lon:12.5, color:'#22c55e', size:4, type:'hive', desc:'Rome · Accountability'},
+  {id:'agisafe.ai', name:'agisafe.ai', lat:35.7, lon:139.7, color:'#22c55e', size:4, type:'hive', desc:'Tokyo · AGI Safety'},
+  {id:'asisecurity.ai', name:'asisecurity.ai', lat:55.7, lon:37.6, color:'#22c55e', size:4, type:'hive', desc:'Moscow · ASI Security'},
+  {id:'biasdetectionof.ai', name:'biasdetectionof.ai', lat:1.3, lon:103.8, color:'#a855f7', size:4, type:'hive', desc:'Singapore · Bias Detection'},
+  {id:'dataprivacyof.ai', name:'dataprivacyof.ai', lat:22.3, lon:114.2, color:'#a855f7', size:4, type:'hive', desc:'Hong Kong · Privacy'},
+  {id:'ethicalgovernanceof.ai', name:'ethicalgovernanceof.ai', lat:19.4, lon:-99.1, color:'#a855f7', size:4, type:'hive', desc:'Mexico City · Ethics'},
+  {id:'koikeeper.ai', name:'koikeeper.ai', lat:53.8, lon:-1.5, color:'#22c55e', size:4, type:'hive', desc:'Yorkshire · Koi keeper'},
+  {id:'fishkeeper.ai', name:'fishkeeper.ai', lat:51.5, lon:-0.1, color:'#22c55e', size:4, type:'hive', desc:'London · Fish keeper'},
+  {id:'loopfactory.ai', name:'loopfactory.ai', lat:50.1, lon:8.7, color:'#eab308', size:4, type:'hive', desc:'Frankfurt · Finance'},
+  {id:'grabhire.ai', name:'grabhire.ai', lat:53.5, lon:-2.2, color:'#eab308', size:4, type:'hive', desc:'Manchester · Hire'},
+  {id:'muckaway.ai', name:'muckaway.ai', lat:52.5, lon:-1.8, color:'#eab308', size:4, type:'hive', desc:'Birmingham · Muck'},
+  {id:'landlaw.ai', name:'landlaw.ai', lat:55.9, lon:-3.2, color:'#a855f7', size:4, type:'hive', desc:'Edinburgh · Land'},
+  {id:'cobolbridge.ai', name:'cobolbridge.ai', lat:42.4, lon:-71.1, color:'#22c55e', size:4, type:'hive', desc:'Boston · Legacy'},
+  {id:'optimobile.ai', name:'optimobile.ai', lat:45.5, lon:-73.6, color:'#eab308', size:4, type:'hive', desc:'Montreal · Mobility'},
+  {id:'planthire.ai', name:'planthire.ai', lat:-37.8, lon:144.9, color:'#22c55e', size:4, type:'hive', desc:'Melbourne · Plant'},
+  {id:'commercialvehicle.ai', name:'commercialvehicle.ai', lat:51.5, lon:-0.1, color:'#eab308', size:4, type:'hive', desc:'London · Vehicle'},
+  {id:'meok-compliance-gateway.ai', name:'gateway', lat:53.5, lon:-2.2, color:'#3b82f6', size:4, type:'hive', desc:'Manchester · Gateway'},
+  {id:'diyhelp.ai', name:'diyhelp.ai', lat:53.8, lon:-1.5, color:'#22c55e', size:4, type:'hive', desc:'Yorkshire · DIY'},
+  {id:'suicidestop.ai', name:'suicidestop.ai', lat:55.9, lon:-3.2, color:'#ef4444', size:4, type:'hive', desc:'Edinburgh · Mental health'},
+  {id:'socialmediamanager.ai', name:'socialmediamanager.ai', lat:40.7, lon:-74.0, color:'#a855f7', size:4, type:'hive', desc:'NYC · Social'},
+  {id:'sandbox.ai', name:'sandbox.ai', lat:37.8, lon:-122.4, color:'#a855f7', size:4, type:'hive', desc:'SF · Sandbox'},
+  {id:'openmcp.ai', name:'openmcp.ai', lat:47.6, lon:-122.3, color:'#3b82f6', size:4, type:'hive', desc:'Seattle · MCP'},
+  {id:'meokclaw.ai', name:'meokclaw.ai', lat:51.5, lon:-0.1, color:'#22c55e', size:4, type:'hive', desc:'London · MEOK Claw'},
+  {id:'csoai.ai', name:'csoai.ai', lat:51.5, lon:-0.1, color:'#c9a84c', size:4, type:'hive', desc:'CSOAI canonical'},
+  {id:'openmoe.ai', name:'openmoe.ai', lat:34.0, lon:-118.2, color:'#a855f7', size:4, type:'hive', desc:'LA · MoE'},
+  {id:'proofof.ai', name:'proofof.ai', lat:40.7, lon:-74.0, color:'#8b5cf6', size:4, type:'hive', desc:'NYC · Proof'},
+  {id:'hawk-sa.meok.ai', name:'hawk-sa', lat:51.5, lon:-0.1, color:'#22c55e', size:4, type:'hive', desc:'London · Hawk'},
+];
+
+// === DATA STREAMS (50+ protocols) ===
+const STREAMS = [
+  {protocol:'MCP', from:'csoai.org', to:'MCP servers worldwide', count:'100K', color:'#3b82f6'},
+  {protocol:'A2A', from:'csoai.org', to:'A2A agents', count:'10K', color:'#8b5cf6'},
+  {protocol:'x402', from:'csoai.org', to:'Coinbase', count:'1M', color:'#eab308'},
+  {protocol:'IBC', from:'csoai.org', to:'Cosmos chains', count:'100+', color:'#0ea5e9'},
+  {protocol:'DID', from:'csoai.org', to:'W3C', count:'1B', color:'#a855f7'},
+  {protocol:'JWT', from:'csoai.org', to:'IETF', count:'1B', color:'#22c55e'},
+  {protocol:'Sigil', from:'csoai.org', to:'CSOAI', count:'49,127', color:'#ff6b9d'},
+  {protocol:'Ed25519', from:'csoai.org', to:'all chains', count:'1B', color:'#22c55e'},
+  {protocol:'SMTP', from:'csoai.org', to:'Email', count:'1B', color:'#ef4444'},
+  {protocol:'HTTP/3', from:'csoai.org', to:'Web', count:'1B', color:'#3b82f6'},
+  {protocol:'WebSocket', from:'csoai.org', to:'Realtime', count:'100M', color:'#22c55e'},
+  {protocol:'gRPC', from:'csoai.org', to:'High-perf', count:'10M', color:'#8b5cf6'},
+  {protocol:'IPFS', from:'csoai.org', to:'Content', count:'10M', color:'#a855f7'},
+  {protocol:'Matrix', from:'csoai.org', to:'Chat', count:'100M', color:'#22c55e'},
+  {protocol:'OIDC', from:'csoai.org', to:'Auth', count:'1B', color:'#3b82f6'},
+  {protocol:'SAML', from:'csoai.org', to:'Enterprise', count:'100M', color:'#8b5cf6'},
+];
+
+// === RENDER GLOBE ===
+function latLonToXY(lat, lon, radius) {
+  // Convert lat/lon to 3D coordinates on sphere
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lon + 180) * Math.PI / 180;
+  return {
+    x: radius * Math.sin(phi) * Math.cos(theta),
+    y: radius * Math.cos(phi),
+    z: radius * Math.sin(phi) * Math.sin(theta)
+  };
+}
+
+let rotation = 0;
+let hoveredProduct = null;
+
+function drawGlobe() {
+  ctx.clearRect(0, 0, width, height);
+  const cx = width / 2;
+  const cy = height / 2;
+  const radius = Math.min(width, height) * 0.35;
+
+  // Draw globe sphere (faint outline)
+  ctx.strokeStyle = 'rgba(201,168,76,.2)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Draw latitude lines
+  for (let lat = -80; lat <= 80; lat += 20) {
+    ctx.strokeStyle = 'rgba(201,168,76,.08)';
+    ctx.beginPath();
+    const phi = (90 - lat) * Math.PI / 180;
+    const r = radius * Math.sin(phi);
+    const offset = radius * Math.cos(phi);
+    if (offset > 0) {
+      ctx.ellipse(cx, cy - offset, r, r * 0.3, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  // Draw longitude lines
+  for (let lon = 0; lon < 360; lon += 30) {
+    const theta = (lon + rotation) * Math.PI / 180;
+    ctx.strokeStyle = 'rgba(201,168,76,.08)';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, radius, radius * 0.3, theta, 0, Math.PI);
+    ctx.stroke();
+  }
+
+  // Draw products (only the front-facing ones)
+  for (const p of PRODUCTS) {
+    const pos = latLonToXY(p.lat, p.lon + rotation * 180 / Math.PI, radius);
+    // Only show if z > 0 (front-facing)
+    if (pos.z > 0) {
+      const screenX = cx + pos.x;
+      const screenY = cy - pos.y;
+      // Glow
+      const gradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, p.size * 2);
+      gradient.addColorStop(0, p.color);
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, p.size * 2, 0, Math.PI * 2);
+      ctx.fill();
+      // Core
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      // Pulse
+      const pulse = (Math.sin(Date.now() / 500 + p.lat) + 1) / 2;
+      ctx.strokeStyle = p.color;
+      ctx.lineWidth = 1 + pulse;
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, p.size + 4 + pulse * 4, 0, Math.PI * 2);
+      ctx.stroke();
+      // Label (only for major)
+      if (p.size >= 5) {
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '11px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.name, screenX, screenY - p.size - 8);
+      }
+      // Track for hover
+      p.screenX = screenX;
+      p.screenY = screenY;
+    } else {
+      p.screenX = null;
+      p.screenY = null;
+    }
+  }
+
+  rotation += 0.002;
+
+  // Update HUD values
+  document.getElementById('last-seal').textContent = Math.floor((Date.now() / 1000) % 60) + 's ago';
+  document.getElementById('sigil-rate').textContent = (Math.sin(Date.now() / 1000) * 2 + 3.5).toFixed(1);
+  document.getElementById('cert-rate').textContent = Math.floor(Math.sin(Date.now() / 500) * 5 + 14);
+
+  requestAnimationFrame(drawGlobe);
+}
+
+// === STREAM LIST ===
+function updateStreams() {
+  const streamsEl = document.getElementById('streams');
+  streamsEl.innerHTML = STREAMS.slice(0, 10).map((s, i) => 
+    `<div class="k">${s.protocol} <span style="color:${s.color}">${s.count}</span></div>`
+  ).join('');
+}
+updateStreams();
+setInterval(updateStreams, 5000);
+
+// === HOVER ===
+canvas.addEventListener('mousemove', (e) => {
+  let found = null;
+  for (const p of PRODUCTS) {
+    if (p.screenX !== null) {
+      const dx = e.clientX - p.screenX;
+      const dy = e.clientY - p.screenY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 20) {
+        found = p;
+        break;
+      }
+    }
+  }
+  if (found) {
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX + 15) + 'px';
+    tooltip.style.top = (e.clientY + 15) + 'px';
+    tooltip.innerHTML = `<strong>${found.name}</strong><br><span style="color:#94a3b8">${found.desc}</span><br><span style="color:#22c55e;font-size:.7rem">LIVE · SIGIL: ${Math.random().toString(36).slice(2,10)}</span>`;
+  } else {
+    tooltip.style.display = 'none';
+  }
+});
+
+drawGlobe();
+</script>
+
+<footer style="position:fixed;bottom:0;left:0;right:0;text-align:center;padding:0.5rem;color:#94a3b8;font-size:.7rem;background:rgba(0,0,0,.5)">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong> ·
+<strong style="color:#c9a84c">CA3O is the CMMC for AI.</strong> · sovereign.mom = care-as-generative · Layer 0 = all protocols
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

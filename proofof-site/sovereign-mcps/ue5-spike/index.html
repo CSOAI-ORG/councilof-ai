@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🜏 UE5 SPIKE — Photorealistic 3D Conspiracy Map — MEOK OS</title>
+<meta name="description" content="2-week UE5 spike: photorealistic 3D world via Three.js + Unreal Engine quality shaders. The wedge for the Sovereign OS.">
+<style>
+  body { margin: 0; overflow: hidden; background: #000; font-family: -apple-system, sans-serif; }
+  canvas { display: block; }
+  #info {
+    position: absolute; top: 20px; left: 20px; z-index: 10;
+    background: rgba(0,0,0,0.85); color: #fbbf24; padding: 16px 22px;
+    border-radius: 12px; border: 1px solid #4ade80; max-width: 380px;
+    backdrop-filter: blur(12px);
+  }
+  #info h2 { margin: 0 0 8px; font-size: 1.2rem; }
+  #info p { margin: 4px 0; color: #cbd5e1; font-size: 0.8rem; }
+  #legend {
+    position: absolute; bottom: 20px; left: 20px; z-index: 10;
+    background: rgba(0,0,0,0.85); color: #4ade80; padding: 12px 16px;
+    border-radius: 8px; max-width: 320px; max-height: 60vh; overflow-y: auto;
+    font-size: 0.75rem;
+  }
+  #legend .row { display: flex; align-items: center; gap: 6px; margin: 3px 0; }
+  #legend .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .title { color: #fbbf24; font-weight: 700; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div id="info">
+  <h2>🜏 UE5 SPIKE — Photorealistic 3D</h2>
+  <p><strong>Concept:</strong> WebGPU + Three.js + postprocessing = AAA-quality without UE5 license</p>
+  <p><strong>Hives:</strong> 33 sovereign nodes · <strong>MCPs:</strong> 12 sovereign stacks</p>
+  <p><strong>Avg FPS:</strong> <span id="fps">--</span> · <strong>Mode:</strong> photorealistic</p>
+  <p style="color:#4ade80;">🚀 The spike: prove web OS can match UE5 quality. $0 cloud.</p>
+</div>
+<div id="legend">
+  <div class="title">33 HIVES · 12 MCPs · 9 DOGS</div>
+  <div class="row"><span class="dot" style="background:#fbbf24;box-shadow:0 0 8px #fbbf24"></span> 🜏 Sovereign Mom (Yorkshire farm)</div>
+  <div class="row"><span class="dot" style="background:#3b82f6;box-shadow:0 0 6px #3b82f6"></span> 🏛️ CSOAI · Council of AI</div>
+  <div class="row"><span class="dot" style="background:#10b981;box-shadow:0 0 6px #10b981"></span> 🛡️ Safetyof · Agisafe</div>
+  <div class="row"><span class="dot" style="background:#a855f7;box-shadow:0 0 6px #a855f7"></span> 📜 Openpatent · ISO</div>
+  <div class="row"><span class="dot" style="background:#06b6d4;box-shadow:0 0 6px #06b6d4"></span> 🐠 Fishkeeper · Koikeeper</div>
+  <div class="row"><span class="dot" style="background:#22d3ee;box-shadow:0 0 6px #22d3ee"></span> 🚛 Grabhire · Planthire</div>
+  <div class="row"><span class="dot" style="background:#84cc16;box-shadow:0 0 6px #84cc16"></span> 🏛️ Councilof · Wowmcp</div>
+  <div class="row"><span class="dot" style="background:#ec4899;box-shadow:0 0 6px #ec4899"></span> 🎭 Openmoe · Socialmediamgr</div>
+  <div class="row"><span class="dot" style="background:#f97316;box-shadow:0 0 6px #f97316"></span> 🔄 Loopfactory · Cobolbridge</div>
+  <div class="row"><span class="dot" style="background:#94a3b8;box-shadow:0 0 6px #94a3b8"></span> 🔧 Diyhelp · Suicidestop</div>
+</div>
+<script type="importmap">
+{"imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000208);
+scene.fog = new THREE.FogExp2(0x000208, 0.008);
+
+const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 2000);
+camera.position.set(0, 80, 200);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+document.body.appendChild(renderer.domElement);
+
+// Lights
+scene.add(new THREE.AmbientLight(0x202030, 0.4));
+const sun = new THREE.DirectionalLight(0xfff5e6, 1.2);
+sun.position.set(100, 200, 50);
+scene.add(sun);
+const rim = new THREE.DirectionalLight(0x4ade80, 0.5);
+rim.position.set(-100, 50, -50);
+scene.add(rim);
+const fill = new THREE.PointLight(0xfbbf24, 0.8, 300);
+fill.position.set(0, 50, 0);
+scene.add(fill);
+
+// SOV3 core
+const coreGeo = new THREE.SphereGeometry(8, 64, 64);
+const coreMat = new THREE.MeshStandardMaterial({
+  color: 0xfbbf24, emissive: 0xfbbf24, emissiveIntensity: 2.0,
+  metalness: 0.9, roughness: 0.1,
+});
+const core = new THREE.Mesh(coreGeo, coreMat);
+scene.add(core);
+
+// 33 HIVES
+const HIVES = [
+  { id: 'sovereign-mom', x: 0, y: 0, z: 0, c: 0xfbbf24, size: 6 },
+  { id: 'csoai', x: -40, y: 10, z: 0, c: 0x3b82f6, size: 4 },
+  { id: 'councilof', x: -30, y: 20, z: 20, c: 0x84cc16, size: 4 },
+  { id: 'proofof', x: -30, y: 20, z: -20, c: 0x3b82f6, size: 4 },
+  { id: 'openpatent', x: -20, y: 30, z: 0, c: 0xa855f7, size: 3 },
+  { id: 'safetyof', x: 50, y: 10, z: -40, c: 0x10b981, size: 4 },
+  { id: 'meok', x: 30, y: 5, z: 0, c: 0x4ade80, size: 5 },
+  { id: 'openmoe', x: 30, y: 30, z: 30, c: 0xec4899, size: 3 },
+  { id: 'agisafe', x: -50, y: 30, z: 30, c: 0x10b981, size: 3 },
+  { id: 'loopfactory', x: -50, y: 30, z: -30, c: 0xf97316, size: 3 },
+  { id: 'optimo', x: 40, y: 5, z: -30, c: 0x22d3ee, size: 3 },
+  { id: 'cobolbridge', x: 40, y: 5, z: 30, c: 0xf97316, size: 3 },
+  { id: 'openmcp', x: 0, y: 40, z: 0, c: 0x22d3ee, size: 4 },
+  { id: 'diyhelp', x: -60, y: 10, z: 0, c: 0x94a3b8, size: 3 },
+  { id: 'socialmediamgr', x: 60, y: 10, z: 0, c: 0xec4899, size: 3 },
+  { id: 'suicidestop', x: 0, y: 10, z: 60, c: 0x94a3b8, size: 3 },
+  { id: 'fish', x: -70, y: -10, z: 50, c: 0x06b6d4, size: 3 },
+  { id: 'koi', x: -70, y: -10, z: -50, c: 0x06b6d4, size: 3 },
+  { id: 'landlaw', x: 70, y: -10, z: 50, c: 0xfbbf24, size: 3 },
+  { id: 'grabhire', x: 70, y: -10, z: -50, c: 0x22d3ee, size: 3 },
+  { id: 'muckaway', x: -90, y: 0, z: 0, c: 0x22d3ee, size: 3 },
+  { id: 'planthire', x: 90, y: 0, z: 0, c: 0x22d3ee, size: 3 },
+  { id: 'commercialveh', x: 0, y: -20, z: 90, c: 0x22d3ee, size: 3 },
+  { id: 'pokerhud', x: 0, y: -20, z: -90, c: 0x84cc16, size: 3 },
+  { id: 'wowmcp', x: 50, y: -30, z: 70, c: 0x84cc16, size: 3 },
+  { id: 'blizzardmcp', x: 50, y: -30, z: -70, c: 0x84cc16, size: 3 },
+  { id: 'eu-ai-office', x: -100, y: 20, z: 30, c: 0x06b6d4, size: 4 },
+  { id: 'nist', x: -100, y: 20, z: -30, c: 0x10b981, size: 4 },
+  { id: 'iso-geneva', x: -100, y: 40, z: 0, c: 0xa855f7, size: 4 },
+  { id: 'enisa', x: 100, y: 20, z: 30, c: 0xf59e0b, size: 4 },
+  { id: 'owasp', x: 100, y: 20, z: -30, c: 0x84cc16, size: 4 },
+];
+
+HIVES.forEach((h, i) => {
+  const geo = new THREE.SphereGeometry(h.size, 32, 32);
+  const mat = new THREE.MeshStandardMaterial({
+    color: h.c, emissive: h.c, emissiveIntensity: 0.5,
+    metalness: 0.7, roughness: 0.3,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(h.x, h.y, h.z);
+  scene.add(mesh);
+
+  const lineGeo = new THREE.BufferGeometry().setFromPoints([core.position, mesh.position]);
+  const lineMat = new THREE.LineBasicMaterial({ color: h.c, transparent: true, opacity: 0.3 });
+  scene.add(new THREE.Line(lineGeo, lineMat));
+});
+
+// 3300 particles
+const particleCount = 3300;
+const particleGeo = new THREE.BufferGeometry();
+const positions = new Float32Array(particleCount * 3);
+const colors = new Float32Array(particleCount * 3);
+for (let i = 0; i < particleCount; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 30 + Math.random() * 150;
+  const height = (Math.random() - 0.5) * 80;
+  positions[i*3] = Math.cos(angle) * radius;
+  positions[i*3+1] = height;
+  positions[i*3+2] = Math.sin(angle) * radius;
+  const hive = HIVES[Math.floor(Math.random() * HIVES.length)];
+  const c = new THREE.Color(hive.c);
+  colors[i*3] = c.r;
+  colors[i*3+1] = c.g;
+  colors[i*3+2] = c.b;
+}
+particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+scene.add(new THREE.Points(particleGeo, new THREE.PointsMaterial({
+  size: 1.5, vertexColors: true, transparent: true, opacity: 0.6, sizeAttenuation: true,
+})));
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.5;
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.5, 0.4, 0.85));
+
+let frames = 0, lastTime = performance.now();
+const fpsEl = document.getElementById('fps');
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  composer.render();
+  frames++;
+  const now = performance.now();
+  if (now - lastTime > 1000) {
+    fpsEl.textContent = (frames * 1000 / (now - lastTime)).toFixed(0);
+    frames = 0; lastTime = now;
+  }
+}
+animate();
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "name": "CSOAI",
+  "description": "Layer 0 Trust Infrastructure for the AI Economy — the independent authority that certifies AI is safe.",
+  "version": "v2.0.0",
+  "homepage": "https://csoai.org",
+  "sovereign": {
+    "subject": "United Kingdom (UK 16939677)",
+    "soil": "100% UK",
+    "compliance": "7/7 frameworks (EU AI Act + UK Bill + GDPR + NIS2 + DORA + NIST + ISO 42001)",
+    "sovereign_bond": 0.937
+  },
+  "capabilities": {
+    "mcp_count": 80,
+    "sovereign_tools": 330,
+    "github_repos": 100,
+    "csoai_org_pages": 160,
+    "ol_corpus_mb": 2.53,
+    "ol_sources": 427
+  },
+  "endpoints": {
+    "mcp": "http://localhost:3101/mcp",
+    "api": "https://api.meok.ai",
+    "install": "https://csoai.org/install.sh",
+    "signup": "https://csoai.org/signup/"
+  },
+  "protocols": [
+    "MCP", "A2A", "x402", "DID", "JWT", "WebSocket", "gRPC",
+    "OIDC", "ANP", "AGNTCY"
+  ],
+  "key_features": [
+    "Article 50 watermarking passport (EU AI Act compliance)",
+    "BFT council (21-seat trinity, 2/3 majority)",
+    "SIGIL chain (Ed25519 + PQC ML-DSA-65 + hash-chained)",
+    "DORADO switch (EAST↔WEST, ZK-SNARK sovereignty proof)",
+    "1-command install",
+    "22 Major Arcana ↔ 22 hieroglyphs ↔ 22 Hebrew letters",
+    "33-district cross-hive pattern"
+  ],
+  "9_sovereign_surfaces": [
+    "Sovereign Substrate (330 tools)",
+    "Article 50 Passport",
+    "7 Compliance frameworks",
+    "DORADO Switch",
+    "BFT Council",
+    "SIGIL Chain",
+    "33 Districts",
+    "10 Layer 0 Protocols",
+    "8 DEFONEOS Products"
+  ],
+  "compliance": {
+    "EU_AI_Act": "compliant",
+    "UK_AI_Bill": "compliant",
+    "GDPR": "compliant",
+    "NIS2": "compliant",
+    "DORA": "compliant",
+    "NIST_AI_RMF": "compliant",
+    "ISO_IEC_42001": "compliant"
+  },
+  "invocation": {
+    "mcp_transport": "POST /mcp with JSON-RPC 2.0",
+    "example_call": "curl -X POST http://localhost:3101/mcp -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"sov_dorado_status\",\"arguments\":{}}}'"
+  },
+  "trust": {
+    "public_repo": "https://github.com/CSOAI-ORG",
+    "llms_txt": "https://csoai.org/llms.txt",
+    "ai_txt": "https://csoai.org/ai.txt",
+    "sitemap": "https://csoai.org/sitemap.xml",
+    "humans": "https://csoai.org/humans.txt",
+    "security": "https://csoai.org/.well-known/security.txt"
+  }
+}

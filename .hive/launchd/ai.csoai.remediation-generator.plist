@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>ai.csoai.remediation-generator</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/nicholas/clawd/sovereign-temple/.venv/bin/python3</string>
+		<string>/Users/nicholas/clawd/.hive/scripts/remediation_generator.py</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.remediation-generator.stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.remediation-generator.stdout.log</string>
+	<key>StartInterval</key>
+	<integer>21600</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/nicholas/clawd</string>
+</dict>
+</plist>

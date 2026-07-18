@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Connect AgiSafe via MCP</title>
+  <meta name="description" content="Connect AgiSafe.ai to your IDE or agent via MCP (Model Context Protocol).">
+  <link rel="canonical" href="https://agisafe.ai/connect/mcp">
+  <style>body{font-family:sans-serif;background:#070b14;color:#f5f5f5;margin:0;padding:40px}pre{background:#0f172a;border:1px solid #26263a;border-radius:8px;padding:16px;overflow-x:auto}code{font-family:Menlo,monospace;font-size:.9rem;color:#c9a84c}h1{color:#c9a84c}a{color:#c9a84c}</style>
+</head>
+<body>
+  <h1>Connect AgiSafe via MCP</h1>
+  <p>Wire AgiSafe.ai into your agent in 30 seconds. Pro and Enterprise tiers include MCP access.</p>
+  <h2>Endpoint</h2>
+  <pre><code>https://agisafe.ai/mcp</code></pre>
+  <h2>Tools (3)</h2>
+  <ul><li><code>care-membrane-mcp</code></li><li><code>ai-self-audit-mcp</code></li><li><code>deepfake-detector-mcp</code></li></ul>
+  <h2>Headers</h2>
+  <pre><code>Authorization: Bearer $MEOK_MASTER_API_KEY
+Content-Type: application/json
+Accept: application/json, text/event-stream</code></pre>
+  <h2>Example</h2>
+  <pre><code>curl -X POST https://agisafe.ai/mcp \
+  -H "Authorization: Bearer $MEOK_MASTER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'</code></pre>
+  <p><a href="/pricing/">Start at £29/mo</a> or <a href="/signup/?plan=free">get a free scorecard</a>.</p>
+</body>
+</html>

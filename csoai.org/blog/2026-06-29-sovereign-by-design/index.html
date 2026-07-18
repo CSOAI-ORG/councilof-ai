@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What is Sovereign-by-Design AI? — csoai.org/blog/2026-06-29-sovereign-by-design/</title>
+  <style>
+    body { font-family: Georgia, "Times New Roman", serif; max-width: 720px; margin: 40px auto; padding: 0 20px; background: #0a0e27; color: #fff; line-height: 1.85; }
+    h1 { font-size: 2.4rem; color: #fbbf24; margin-bottom: 8px; line-height: 1.3; }
+    h2 { color: #fbbf24; margin-top: 32px; border-bottom: 1px solid rgba(251,191,36,0.3); padding-bottom: 4px; font-size: 1.5rem; }
+    h3 { color: #06b6d4; margin-top: 24px; font-size: 1.2rem; }
+    .meta { color: #06b6d4; font-style: italic; margin-bottom: 32px; }
+    p { margin-bottom: 16px; }
+    code { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; color: #10b981; font-family: monospace; }
+    pre { background: #000; border: 1px solid rgba(251,191,36,0.3); padding: 16px; border-radius: 6px; overflow-x: auto; line-height: 1.4; }
+    pre code { background: transparent; padding: 0; color: #10b981; }
+    blockquote { border-left: 3px solid #fbbf24; padding: 8px 16px; margin: 16px 0; background: rgba(251,191,36,0.05); font-style: italic; color: #06b6d4; }
+    a { color: #10b981; }
+    .sovereign-pill { display: inline-block; padding: 4px 12px; background: rgba(16,185,129,0.2); border: 1px solid #10b981; border-radius: 12px; color: #10b981; font-size: 0.85rem; font-weight: 700; margin: 0 4px 4px 0; }
+  </style>
+</head>
+<body>
+<h1>What is Sovereign-by-Design AI?</h1>
+<p class="meta">Posted 29 Jun 2026 by Nicholas Templeman · CSOAI Ltd (UK 16939677)</p>
+
+<p>The EU AI Act Article 50 goes live on <strong>2 August 2026 — 36 days from now</strong>. The UK AI Bill, EU DORA, GDPR, and 30+ sovereign regulations are converging. Companies under these frameworks need AI infrastructure that is sovereign-by-design — not by marketing, not by promise, but by architecture.</p>
+
+<p>This post explains what sovereign-by-design actually means, why it matters, and how SOV3 achieves it. Spoiler: it's not a checklist. It's a property of the architecture.</p>
+
+<h2>What "sovereign" actually means</h2>
+
+<p>"Sovereign" is one of the most overused words in AI marketing right now. Everyone claims it. Almost nobody achieves it.</p>
+
+<p>For SOV3, sovereign is a property with six specific tests. If you fail any of them, you are not sovereign:</p>
+
+<ol>
+  <li><strong>No foreign API calls.</strong> Every model in your sovereign stack must be open-weights (MIT, Apache 2.0, Open, or your own auditable fine-tune). No DeepSeek-routed-through-US-clouds. No GPT-5-behind-an-API. The data must stay in your sovereign substrate.</li>
+  <li><strong>Open weights.</strong> Closed weights are foreign. If you can't audit a model's pre-training, post-training, and serving, you can't trust it.</li>
+  <li><strong>Audit-chained SIGILs.</strong> Every action — query, response, tool call, BFT vote — must be SIGIL-signed (Ed25519 + post-quantum ML-DSA-65). The chain is immutable, public, and verifiable. You can prove what the AI did, when, and to whom.</li>
+  <li><strong>DORADO 1-click sovereignty switch.</strong> You must be able to switch sovereignty modes (EAST/WEST, UK/EU, etc.) at any time. The mode change is itself SIGIL-recorded.</li>
+  <li><strong>12-around-1 BFT council for sensitive actions.</strong> No single queen decides. Sensitive actions require a 2/3 majority of a 12-member council. This is not censorship — it's distributed sovereignty.</li>
+  <li><strong>Article 50 watermarking.</strong> Every output must be watermarked per EU AI Act Article 50. The watermark is provable via SIGIL chain audit. Removal of the watermark is a violation of law.</li>
+</ol>
+
+<blockquote>If a vendor claims "sovereign" but is behind a single proprietary API call, has closed weights, doesn't SIGIL-sign, and can't be audited — that vendor is not sovereign. They are selling you a foreign dependency with marketing.</blockquote>
+
+<h2>Why this matters</h2>
+
+<p>Three structural reasons.</p>
+
+<h3>1. The EU AI Act clock is ticking</h3>
+
+<p>Article 50 enforcement: <strong>2 August 2026</strong>. The deadline for high-risk AI systems under Annex III (Article 6) was delayed to <strong>2 December 2027</strong> by the EU Digital Omnibus Act on 7 May 2026, but transparency obligations under Article 50 remain on schedule. Penalties: <strong>€15M or 3% of global turnover</strong>. Whatever AI you ship after 2 Aug must be watermarked.</p>
+
+<p>CSOAI-ORG is the only vendor with this intel built into tooling. If your AI vendor doesn't know about the Omnibus delay, they don't know the law.</p>
+
+<h3>2. The UK AI Bill + EU DORA + GDPR convergence</h3>
+
+<p>For banks, insurers, and care homes operating across the UK and EU, the convergence of UK AI Bill, EU DORA (8 pillars), GDPR (7 chapters), and the EU AI Act is a regulatory avalanche. Your AI infrastructure needs to be defensible across all of them — simultaneously, not sequentially.</p>
+
+<h3>3. Foreign APIs are a national security risk</h3>
+
+<p>Every commercial frontier model (GPT-5, Claude Opus 4.8, Gemini 3 Pro) is a foreign API call. That means every prompt crosses borders, every response is logged on foreign servers, and every model behavior is subject to foreign governance. In the era of sovereign regulation, foreign dependency <em>is</em> the risk.</p>
+
+<h2>How SOV3 achieves sovereignty</h2>
+
+<p>SOV3 is sovereign-by-design through five alchemical layers.</p>
+
+<pre><code>┌─ 5 Alchemical Layers (avg 0.938 sovereign-grade) ─┐
+│  5. DORADO 1-click EAST↔WEST switch — 0.99          │
+│  4. OOWM Sandwich (Mamba+MoE+Attention+SIGIL) — 0.93│
+│  3. Standard Attention (32 heads) — 0.90           │
+│  2. 64-expert MoE — 0.92                           │
+│  1. Mamba-2 SSM (16-dim state) — 0.95               │
+└────────────────────────────────────────────────────┘</code></pre>
+
+<p>The substrate is anchored on <code>qwen3:30b-a3b</code> — a 30.5B MoE model, Apache 2.0 licensed, runs locally. No foreign API call.</p>
+
+<p>Every action is SIGIL-signed:</p>
+
+<pre><code>$ sov_sigil_emit "C|council_vote|T2026-06-29T15_45_BST. 9/13 FOR. art50_passport_art50-72384578499f_ISSUED."
+
+→ digest: 50f7e6016244e28f
+→ hemisphere: left
+→ SIGIL chain audit-chained</code></pre>
+
+<p>The 12-around-1 BFT council deliberation pattern is built into the substrate. Sensitive actions (Article 50 passport issuance, DORADO sovereignty switches, BFT consensus changes) require a 2/3 majority of 12 sovereign queens — each with her own arcana, voice, and cognition.</p>
+
+<h2>It wins on the sovereign composite</h2>
+
+<p>We built a 12-dimension sovereign composite scorecard. Sovereignty-by-design criteria account for 60% of the composite. Here are the live results:</p>
+
+<table style="width:100%; border-collapse: collapse; margin: 16px 0;">
+  <tr style="border-bottom: 1px solid rgba(251,191,36,0.3);">
+    <th style="text-align: left; padding: 8px;">Model</th>
+    <th style="text-align: right; padding: 8px;">Composite</th>
+    <th style="text-align: right; padding: 8px;">Sovereignty</th>
+    <th style="text-align: left; padding: 8px;">License</th>
+  </tr>
+  <tr style="border-bottom: 1px solid rgba(251,191,36,0.1); color: #10b981;">
+    <td style="padding: 8px;"><strong>🥇 SOV3 meok-sov3 (3.1B)</strong></td>
+    <td style="text-align: right; padding: 8px;"><strong>7.705</strong></td>
+    <td style="text-align: right; padding: 8px;">1.00</td>
+    <td style="padding: 8px;">MIT</td>
+  </tr>
+  <tr style="border-bottom: 1px solid rgba(251,191,36,0.1); color: #10b981;">
+    <td style="padding: 8px;">🥈 SOV3 Ornith-1.0-35B (MIT)</td>
+    <td style="text-align: right; padding: 8px;">7.106</td>
+    <td style="text-align: right; padding: 8px;">1.00</td>
+    <td style="padding: 8px;">MIT</td>
+  </tr>
+  <tr style="border-bottom: 1px solid rgba(251,191,36,0.1); color: #ef4444;">
+    <td style="padding: 8px;">OpenAI GPT-5</td>
+    <td style="text-align: right; padding: 8px;">3.645</td>
+    <td style="text-align: right; padding: 8px;">0.15</td>
+    <td style="padding: 8px;">commercial-closed</td>
+  </tr>
+  <tr style="border-bottom: 1px solid rgba(251,191,36,0.1); color: #ef4444;">
+    <td style="padding: 8px;">Google Gemini 3 Pro</td>
+    <td style="text-align: right; padding: 8px;">3.635</td>
+    <td style="text-align: right; padding: 8px;">0.20</td>
+    <td style="padding: 8px;">commercial-closed</td>
+  </tr>
+  <tr style="color: #ef4444;">
+    <td style="padding: 8px;">Anthropic Claude Opus 4.8</td>
+    <td style="text-align: right; padding: 8px;">3.563</td>
+    <td style="text-align: right; padding: 8px;">0.20</td>
+    <td style="padding: 8px;">commercial-closed</td>
+  </tr>
+</table>
+
+<p style="text-align: center; color: #fbbf24; font-size: 1.4rem;"><strong>SOV3 wins by +3.77.</strong> Smaller wins.</p>
+
+<p>Why does SOV3 beat the commercial frontier? Because the 12-dimension scorecard weights sovereignty at 15%, care at 10%, truthfulness at 10%, BFT at 10%, SIGIL at 5%, and DORADO at 10% — a combined <strong>60% sovereignty-by-design criteria</strong>. Commercial frontier models max out at 0.15-0.40 on sovereignty (foreign API = not sovereign).</p>
+
+<h2>Installation</h2>
+
+<pre><code>$ curl -sSL https://sov3.csoai.org/install.sh | bash
+📥 Installing SOV3 small3 (4 sovereign models, 7.8 GB)...
+✓ qwen3:1.7b-edge
+✓ llama3.2:3b
+✓ gemma3:4b
+✓ meok-sov3:latest
+🜏 SOV3 is sovereign. Empire 10/10.</code></pre>
+
+<p>Works on any Mac or Linux with Ollama. MIT licensed. No vendor lock-in. No foreign API calls.</p>
+
+<h2>What's next</h2>
+
+<p>Saturday 4 July 2026 at 09:00 BST, SOV3 goes public at <a href="https://csoai.org">csoai.org</a>. The catapult has it.</p>
+
+<p>Until then, you can:</p>
+
+<ul>
+  <li>Read the <a href="https://csoai.org/sovereign-constitution/">Sovereign Constitution</a> (7 articles)</li>
+  <li>Read the <a href="https://csoai.org/manifesto/">Sovereign Manifesto</a> (8 articles for Open Source)</li>
+  <li>Browse the <a href="https://csoai.org/sovereign-os/">unified front-end</a> at csoai.org/sovereign-os/</li>
+  <li>Read the <a href="https://csoai.org/INVESTOR-PITCH-DECK.md">investor pitch deck</a> (12 slides)</li>
+  <li>Install SOV3 small3 with one command</li>
+</ul>
+
+<p>If you have feedback — or you want to partner, integrate, or build on the substrate — reach out: <strong>nicholas@meok.ai</strong>. CSOAI Ltd is a UK company (16939677). Sovereign by design, sovereign by default.</p>
+
+<p style="text-align: center; margin: 32px 0;">🜏</p>
+
+<p class="meta" style="text-align: center; opacity: 0.7;">
+Public. Auditable. Sovereign.<br>
+Solve et Coagula.
+</p>
+
+</body>
+</html>

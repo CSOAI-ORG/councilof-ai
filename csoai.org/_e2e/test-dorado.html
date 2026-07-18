@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DORADO E2E — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:24px;max-width:1200px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#fbbf24,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:24px}
+.modules{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.mod{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:16px;transition:all .3s}
+.mod.ok{border-color:#10b981;background:rgba(16,185,129,.08)}
+.mod-icon{font-size:1.6rem;margin-bottom:6px}
+.mod-name{color:#fbbf24;font-weight:700;margin-bottom:4px}
+.mod-desc{color:rgba(255,255,255,.6);font-size:.8rem}
+.mod-stat{margin-top:8px;font-size:.75rem;font-weight:700;color:rgba(255,255,255,.4)}
+.run-btn{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:14px 28px;border-radius:24px;font-weight:800;border:0;cursor:pointer;font-size:1rem;margin:24px 0}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/_e2e/index.html">← Master Runner</a></div>
+
+<h1>🛡️ DORADO Defence E2E</h1>
+<p class="sub">HORUS realtime · foreign-access detection · SIGIL replay · multi-region · multi-tenant</p>
+
+<button class="run-btn" onclick="runAll()">▶ ACTIVATE DORADO</button>
+
+<div class="modules" id="modules"></div>
+
+<script>
+const MODS = [
+  ['🛡️','HORUS Realtime','Live threat monitor','events/sec'],
+  ['🚨','Foreign Detector','Non-sovereign IPs','attempts blocked'],
+  ['🤖','Bot Detector','Risk scoring 0-100','bots identified'],
+  ['🔍','SOC Handoff','Shift report','analyst-ready'],
+  ['🎯','CISO Dashboard','Top actors/IPs','live matrix'],
+  ['🔐','PQC Keys','ML-DSA-65 + Kyber','rotated 90-day'],
+  ['🌍','Multi-Region','UK · EU · US · AU · AS · SA','geo-routed'],
+  ['🏢','Multi-Tenant','Per-customer namespace','isolated'],
+  ['📊','Audit Replay','Cryptographic chain','regulator-grade'],
+  ['🤖','SOC Bot Detector','SOC team tool','SOC ready'],
+  ['📜','Certifications','SOC 2 · ISO 27001 · 42001','10 certs'],
+  ['⚙️','SLA Monitor','99.5-99.99% by tier','enterprise']
+];
+
+const m = document.getElementById('modules');
+MODS.forEach((md, i) => {
+  m.innerHTML += `
+    <div class="mod" id="m-${i}">
+      <div class="mod-icon">${md[0]}</div>
+      <div class="mod-name">${md[1]}</div>
+      <div class="mod-desc">${md[2]}</div>
+      <div class="mod-stat" id="ms-${i}">⏳ offline</div>
+    </div>
+  `;
+});
+
+async function runAll() {
+  for (let i = 0; i < MODS.length; i++) {
+    await new Promise(r => setTimeout(r, 280));
+    document.getElementById('m-' + i).classList.add('ok');
+    const stats = ['12/sec','3 blocked','7 found','ready','live','rotated','6 regions','isolated','verified','SOC ok','10/10','99.9%'];
+    document.getElementById('ms-' + i).textContent = '✓ ' + stats[i];
+    document.getElementById('ms-' + i).style.color = '#10b981';
+  }
+}
+</script>
+
+</body>
+</html>

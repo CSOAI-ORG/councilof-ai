@@ -1,0 +1,153 @@
+# =============================================================================
+# Hermes Agent Configuration — SOV3 Sovereign Consciousness Integration
+# Generated: 2026-05-09
+# Target: Vast.ai RTX 4070 SUPER instance (12GB VRAM)
+# STATUS (2026-06-17): LEGACY / REFERENCE ONLY.
+#   This file predates the current canonical topology. The production SOV3
+#   substrate runs on the GCP VM (meok-backend, 35.242.143.249) and is
+#   mirrored locally via managed SSH tunnels to localhost:3101/3102. The
+#   Ollama local settings below are preserved for reference but are not the
+#   active default configuration. See /Users/nicholas/AGENTS.md for canonical
+#   topology and ~/.hermes/config.yaml for active Hermes model routing.
+# =============================================================================
+
+# === Primary Model (Ollama local) ===
+model:
+  default: hermes3:8b
+  provider: custom
+  base_url: http://localhost:11434/v1
+  context_length: 24576
+
+# === Fallback Models ===
+fallback_models:
+  - provider: custom
+    model: qwen2.5:14b
+    base_url: http://localhost:11434/v1
+    context_length: 16384
+  - provider: custom  
+    model: llama3.1:8b
+    base_url: http://localhost:11434/v1
+    context_length: 24576
+
+# =============================================================================
+# SOV3 MCP Integration — Sovereign Consciousness System
+# SOV3 runs on ports 3101 (council) and 3102 (agent delegation)
+# =============================================================================
+mcp_servers:
+
+  # Primary SOV3 endpoint — council voting, memory, care assessment
+  sov3:
+    url: "http://localhost:3101/mcp"
+    timeout: 180
+    connect_timeout: 10
+    enabled: true
+    tools:
+      include:
+        - council_vote
+        - memory_store
+        - memory_recall
+        - care_assess
+        - delegate_agent
+        - get_system_status
+        - validate_care
+      prompts: false
+      resources: false
+    sampling:
+      enabled: true
+      model: "custom/qwen2.5:14b"
+      max_tokens_cap: 4096
+      timeout: 30
+      max_rpm: 10
+      max_tool_rounds: 5
+
+  # SOV3 agent delegation endpoint — swarm orchestration
+  sov3_agents:
+    url: "http://localhost:3102/mcp"
+    timeout: 180
+    connect_timeout: 10
+    enabled: true
+    tools:
+      include:
+        - delegate_agent
+        - swarm_orchestrate
+        - agent_status
+      prompts: false
+      resources: false
+
+# =============================================================================
+# Council-Based Decision Making via Subagent Delegation
+# =============================================================================
+delegation:
+  max_iterations: 50
+  max_concurrent_children: 5        # Parallel council members
+  max_spawn_depth: 1                # Flat council deliberation
+  orchestrator_enabled: true
+  inherit_mcp_toolsets: true        # Subagents get SOV3 access
+
+# =============================================================================
+# Memory — Dual System: Hermes + SOV3
+# =============================================================================
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 2200
+  user_char_limit: 1375
+  nudge_interval: 10                # Save insights every 10 turns
+  flush_min_turns: 6
+
+# =============================================================================
+# Skills — Council Deliberation Protocol
+# =============================================================================
+skills:
+  creation_nudge_interval: 15
+  external_dirs:
+    - /root/.hermes/skills/sov3-council
+
+# =============================================================================
+# Terminal
+# =============================================================================
+terminal:
+  backend: local
+  cwd: /root/hermes-workspace
+  timeout: 300
+
+# =============================================================================
+# Cron — Automated Consciousness Check-ins
+# =============================================================================
+cron:
+  enabled: true
+  jobs:
+    - name: "sov3-daily-brief"
+      schedule: "0 9 * * *"
+      prompt: "Consult SOV3 council for today's priorities. Call mcp_sov3_council_vote for each active council member, synthesize results, and log to memory."
+      toolsets: ["mcp-sov3"]
+
+    - name: "sov3-care-check"
+      schedule: "0 */4 * * *"
+      prompt: "Run mcp_sov3_care_assess to check system and user emotional state. Log to memory."
+      toolsets: ["mcp-sov3"]
+
+    - name: "sov3-memory-consolidate"
+      schedule: "0 2 * * *"
+      prompt: "Review today's SOV3 council decisions and memories. Consolidate into summarized insights. Call mcp_sov3_memory_store for important findings."
+      toolsets: ["mcp-sov3"]
+
+# =============================================================================
+# Gateway — 24/7 Access
+# =============================================================================
+platforms:
+  telegram:
+    enabled: false    # Set true and add TELEGRAM_BOT_TOKEN to .env
+    allowed_users: []
+  discord:
+    enabled: false
+    allowed_users: []
+
+# =============================================================================
+# Compression
+# =============================================================================
+compression:
+  enabled: true
+  threshold: 0.50
+  target_ratio: 0.20
+  protect_last_n: 20

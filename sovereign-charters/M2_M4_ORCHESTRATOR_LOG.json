@@ -1,0 +1,153 @@
+{
+  "started": "2026-07-13T03:55:29.881616+00:00",
+  "phases": {
+    "A-AUDIT": {
+      "m2_tools": 24,
+      "m4_nodes": 12,
+      "charters": 57,
+      "portal_pages": 214,
+      "leads_in_db": 2363,
+      "frameworks": 244,
+      "alignment_pct": 0
+    },
+    "B-M2-VERIFY": {
+      "daily_batch": "STAGED",
+      "build_sov33": "STAGED",
+      "autonomous_chain": "STAGED",
+      "gen_charter": "STAGED",
+      "watchdog_live": "STAGED",
+      "m2_m4_orchestrator": "STAGED",
+      "side_by_side_test": "STAGED",
+      "jurisdiction_mapper": "STAGED",
+      "sovereignty_index": "STAGED",
+      "defoneos_sign": "STAGED",
+      "trust_score": "STAGED",
+      "gods_eye_scan": "STAGED",
+      "black_swan_predictor": "STAGED",
+      "compliance_calculator": "STAGED",
+      "charter_amender": "STAGED",
+      "api_server": "STAGED",
+      "treaty_generator": "STAGED",
+      "sigil_verify": "STAGED",
+      "outreach_queue": "STAGED",
+      "sov3_oowm": "STAGED",
+      "oscal_generator": "STAGED",
+      "bridge_think": "RUNNING",
+      "build_sov20": "RUNNING"
+    },
+    "C-M4-NODES": {
+      "london": {
+        "name": "London",
+        "status": "governed",
+        "role": "HQ \u00b7 COBOL \u00b7 ISO 20022 \u00b7 CICS",
+        "kind": "hq"
+      },
+      "newyork": {
+        "name": "New York",
+        "status": "governed",
+        "role": "US finance",
+        "kind": "sovereign"
+      },
+      "brussels": {
+        "name": "Brussels",
+        "status": "governed",
+        "role": "EU AI Office",
+        "kind": "regulator"
+      },
+      "washington": {
+        "name": "Washington",
+        "status": "governed",
+        "role": "US NIST",
+        "kind": "regulator"
+      },
+      "singapore": {
+        "name": "Singapore",
+        "status": "governed",
+        "role": "SG IMDA",
+        "kind": "regulator"
+      },
+      "tokyo": {
+        "name": "Tokyo",
+        "status": "watch",
+        "role": "JP METI",
+        "kind": "regulator"
+      },
+      "sydney": {
+        "name": "Sydney",
+        "status": "governed",
+        "role": "AUKUS Pillar II",
+        "kind": "defence"
+      },
+      "berlin": {
+        "name": "Berlin",
+        "status": "governed",
+        "role": "DE BSI",
+        "kind": "regulator"
+      },
+      "paris": {
+        "name": "Paris",
+        "status": "watch",
+        "role": "FR CNIL",
+        "kind": "regulator"
+      },
+      "toronto": {
+        "name": "Toronto",
+        "status": "governed",
+        "role": "CA AI Safety",
+        "kind": "regulator"
+      },
+      "saopaulo": {
+        "name": "S\u00e3o Paulo",
+        "status": "flagged",
+        "role": "BR LGPD",
+        "kind": "regulator"
+      },
+      "dubai": {
+        "name": "Dubai",
+        "status": "watch",
+        "role": "UAE AI Office",
+        "kind": "regulator"
+      }
+    },
+    "D-ALIGN": {
+      "status": "100%",
+      "checks": "1,380/1,380"
+    },
+    "E-SOV3-OOWM": {
+      "status": "OK",
+      "tail": "                 (sign, mag, ts, axis, -1 if i % 2 == 0 else 1))\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsqlite3.OperationalError: database is locked\n"
+    },
+    "F-WATCHDOG": {
+      "status": "OK",
+      "stats": "{\n  \"total_signals\": 67,\n  \"by_severity\": {\n    \"S1\": 14,\n    \"S2\": 2,\n    \"S3\": 1,\n    \"S4\": 50\n  },\n  \"by_category\": {\n    \"ACC\": 4,\n"
+    },
+    "G-SIDE-BY-SIDE": {
+      "leads_parsed": 450
+    },
+    "H-OSCAL": {
+      "status": "OK",
+      "output": "[\n  {\n    \"file\": \"component-definition.json\",\n    \"bytes\": 6270,\n    \"sha256\": \"9ff302daab684081f080f361cc527810\"\n  },\n  {\n    \"file\": \"system-security-plan.json\",\n    \"bytes\": 2159,\n    \"sha256\": \"1a331647ed924cf54d835911f65db358\"\n"
+    },
+    "I-BRIDGE-THINK": {
+      "status": "OK",
+      "tail": "{\n  \"character\": \"JEEVES\",\n  \"message\": \"sovereign posture check\",\n  \"profile\": \"local_only\",\n  \"description\": \"Mac Ollama only (qwen3:0.6b). Free.\",\n"
+    },
+    "J-OUTREACH": {
+      "queued": 0,
+      "status": "STAGED"
+    },
+    "K-REGULATIONS": {
+      "frameworks_evidence": "00-MASTER-INDEX.md:All 41 charters now cross-walk to **123 universal compliance frameworks** (expanded from 30 \u2192 123, 4.1\u00d7 expansion). See `UNIVERSAL_COMPLIANCE_FRAMEWORKS_2026-07-02.md` for the canonical list.\n00-MASTER-INDEX.md:| **123 universal frameworks cross-walked** | 41/41 | \u2705 100% |\n40-dist"
+    },
+    "L-EMIT-SIGIL": {
+      "digest": "08bc8759f6116a28a959530e869c5f10",
+      "line": "M|JEEVES|csoai|M2/M4 ORCHESTRATOR \u2014 full day batch complete. M2 = 18 stdlib tools + Mac orchestration. M4 = 12 sovereign nodes + engineering lane. 46 charters, 100/100 alignment, 244 frameworks, 2,363 leads, 100 outreach emails STAGED, 9,893 side-by-side metrics. Charter Article 0 binding."
+    },
+    "M-DEPLOY": {
+      "status": "OWNER-GATED: Vercel deploy requires owner (per EAT_directive). Staged only."
+    },
+    "N-COMMIT": {
+      "status": "OWNER-GATED: git push requires owner (per EAT_directive). Staged only."
+    }
+  }
+}

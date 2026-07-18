@@ -1,0 +1,30 @@
+apiVersion: v2
+name: openpatent-hive
+description: |
+  openpatent.ai sovereign hive — 9 Python FastAPI services (patentmcp, api-gateway,
+  worker, verify-page, mcp-manifest, bft-council, drafting-fork, x402-router,
+  openpatent-primitives) on ports 3210-3218, plus the landing-site on :3000,
+  with Postgres 16 and IPFS Kubo as the only stateful dependencies.  All
+  Python services expose Prometheus /metrics via services/_shared/metrics.py.
+type: application
+version: 0.1.0
+appVersion: "0.4.0"
+keywords:
+  - openpatent
+  - hive
+  - sovereign
+  - patent
+  - prometheus
+  - fastapi
+  - ipfs
+  - postgres
+home: https://openpatent.ai
+sources:
+  - https://github.com/openpatent-ai/hive
+maintainers:
+  - name: openpatent.ai
+    email: ops@openpatent.ai
+    url: https://openpatent.ai
+annotations:
+  category: Sovereign Infrastructure
+  licenses: AGPL-3.0

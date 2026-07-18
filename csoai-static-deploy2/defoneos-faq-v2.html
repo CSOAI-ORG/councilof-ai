@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS FAQ v2 - Expanded Technical Questions</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #E0E0E0; background-color: #121212; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: #1E1E1E; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+        h1, h2 { color: #8BE9FD; text-align: center; margin-bottom: 20px; }
+        .faq-item { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #333; }
+        .faq-item:last-child { border-bottom: none; }
+        .question { font-weight: bold; color: #F0F0F0; font-size: 1.1em; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .question:hover { color: #8BE9FD; }
+        .answer { margin-top: 10px; color: #B0B0B0; display: none; }
+        .toggle-icon { font-size: 1.2em; transition: transform 0.3s ease; }
+        .faq-item.active .toggle-icon { transform: rotate(180deg); }
+        code { background-color: #2D2D2D; color: #F8F8F2; padding: 2px 4px; border-radius: 4px; }
+        pre { background-color: #2D2D2D; padding: 10px; border-radius: 4px; overflow-x: auto; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+    <div class="container">
+        <h1>DEFONEOS FAQ v2: Expanded Technical Questions</h1>
+
+        <div class="faq-item">
+            <div class="question" onclick="toggleAnswer(this)">
+                <span>Q: What is the underlying architecture of DEFONEOS?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="answer">
+                <p>DEFONEOS is built on a 5-layer Sovereign Substrate architecture:</p>
+                <ol>
+                    <li><strong>Layer 0: Core Protocols</strong> (MCP, A2A, x402, DID, JWT, IBC, OIDC)</li>
+                    <li><strong>Layer 1: Identity & Attestation</strong> (W3C DIDs, Ed25519-signed SIGILs, BFT Council for governance)</li>
+                    <li><strong>Layer 2: Execution & Orchestration</strong> (SOV3 Hive, Federated MCPs, Organic Learning Model (OLM) for routing)</li>
+                    <li><strong>Layer 3: Cognitive & Analytical</strong> (BIG BRAIM multi-model ensemble, Mamba-2 SSM for long context, MoE for reasoning, MOM for perception)</li>
+                    <li><strong>Layer 4: Physical Actuation & Digital Twin</strong> (iOK Farm demo, Cesium 3D Globe, Open Hands OS for human-AI interaction)</li>
+                </ol>
+                <p>The entire stack is designed for air-gapped deployment, UK sovereignty, and auditability via its hash-chained SIGIL ledger.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="question" onclick="toggleAnswer(this)">
+                <span>Q: How does DEFONEOS ensure data sovereignty and control?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="answer">
+                <p>Data sovereignty is fundamental to DEFONEOS, implemented through several mechanisms:</p>
+                <ul>
+                    <li><strong>Ed25519 Signatures:</strong> Every inter-agent message (SIGIL) and critical action is cryptographically signed, creating an immutable, auditable chain of custody.</li>
+                    <li><strong>Compartment Doctrine:</strong> Strict separation of code and IP for `meok-defoneos` (builds), `csoai-defoneos` (certifies), and `dagon` (legacy/NDA-only) ensures no cross-contamination.</li>
+                    <li><strong>Geo-fencing & Multi-region Deployment:</strong> Data can be isolated to specific sovereign regions (e.g., UK, AUKUS) with ZK-SNARK proofs of data residency.</li>
+                    <li><strong>Air-gapped Deployment:</strong> The OS is designed to function entirely offline, preventing unauthorized exfiltration.</li>
+                    <li><strong>OrgKernel 3-Layer Audit:</strong> Identity (L1), Execution (L2), and Compliance (L3) are logged and verified on-chain, providing granular accountability.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="question" onclick="toggleAnswer(this)">
+                <span>Q: What is a "SIGIL" and how is it used in DEFONEOS?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="answer">
+                <p>A SIGIL (Signed Inter-Agent Global Interchange Ledger) is the atomic unit of communication and action within the DEFONEOS ecosystem. It's a cryptographically signed, hash-chained entry on an immutable ledger.</p>
+                <p>Key uses:</p>
+                <ul>
+                    <li><strong>Audit Trail:</strong> Provides a transparent, unforgeable record of all agent interactions, decisions, and data flows for regulatory compliance (EU AI Act, JSP 936).</li>
+                    <li><strong>Inter-Agent Communication:</strong> Agents (like JEEVES, JARVIS, Kimi) communicate by emitting SIGILs, ensuring all actions are traceable and attributable.</li>
+                    <li><strong>Training & Learning:</strong> The Organic Learning Model (OLM) learns from the patterns and outcomes recorded in SIGILs to improve its routing and decision-making over time.</li>
+                    <li><strong>Consensus & Governance:</strong> Critical actions, like BFT Council votes or model deployments, are recorded as SIGILs.</li>
+                </ul>
+                <p>Example SIGIL line:</p>
+                <pre><code>H|opus|sov3|review the Q3 plan|aeef2e7e54809755|Ed25519_SIG_DATA</code></pre>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="question" onclick="toggleAnswer(this)">
+                <span>Q: How does DEFONEOS handle AI model provenance and integrity?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="answer">
+                <p>Model provenance and integrity are critical. DEFONEOS implements:</p>
+                <ul>
+                    <li><strong>C2PA Integration:</strong> Every generated output (text, image, audio, video) is watermarked and signed with C2PA metadata, allowing verifiable tracing back to the originating model and input.</li>
+                    <li><strong>Model Weight Hashing & Integrity Scans:</strong> Before deployment, model weights are hashed and continuously scanned for tampering or poisoning attempts.</li>
+                    <li><strong>BFT Council Approval:</strong> Deployment of new or updated models requires a Byzantine Fault Tolerant (BFT) council vote (quorum 23/33 agents) to ensure multi-stakeholder approval.</li>
+                    <li><strong>Supply Chain Risk Management:</strong> MCP manifests include detailed dependency trees, allowing for proactive vulnerability identification.</li>
+                    <li><strong>Article 50 Passports:</strong> For EU AI Act compliance, each AI-generated content piece is issued an Article 50 watermarking passport, detailing its origin and watermarking status.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="question" onclick="toggleAnswer(this)">
+                <span>Q: What is the "BIG BRAIM" and how does it contribute to DEFONEOS?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="answer">
+                <p>The "BIG BRAIM" is SOV3's sovereign multi-model ensemble, wrapping 8 category-winning LLMs and AI models into a single, cohesive cognitive unit. It acts as a universal router, intelligently selecting the best model for a given task.</p>
+                <p>Categories include:</p>
+                <ul>
+                    <li><strong>Coding:</strong> (e.g., `falcon3-code`) for software development and analysis.</li>
+                    <li><strong>Reasoning:</strong> (e.g., `deepseek-r1`) for complex problem-solving.</li>
+                    <li><strong>Long Context:</strong> (e.g., `mamba-2`) for processing extensive documents and histories.</li>
+                    <li><strong>Multilingual:</strong> (e.g., `qwen2.5`) for diverse language handling.</li>
+                    <li><strong>Edge:</strong> (e.g., `llama3.1-4bit`) for optimized on-device performance.</li>
+                    <li><strong>TTS & Embedding:</strong> Specialized models for text-to-speech and vector embeddings.</li>
+                    <li><strong>Router:</strong> An internal OLM-trained router that intelligently directs queries.</li>
+                </ul>
+                <p>This allows DEFONEOS to leverage the strengths of various models while maintaining a unified, sovereign control plane, with every invocation recorded via SIGILs.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="question" onclick="toggleAnswer(this)">
+                <span>Q: How does DEFONEOS enable "Human-in-the-Loop" decision making?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="answer">
+                <p>Human-in-the-Loop (HITL) is paramount for ethical and responsible AI deployment, especially in defence. DEFONEOS integrates HITL at multiple levels:</p>
+                <ul>
+                    <li><strong>Red Lines Enforcement:</strong> Immutable red lines (e.g., no kinetic targeting, no personal surveillance) are hard-coded into the system and enforced by the BFT Council, preventing autonomous action in sensitive areas.</li>
+                    <li><strong>Operator Overlays (Open Hands OS):</strong> The Open Hands OS provides intuitive user interfaces (TUI, native mobile apps, 3D globes) that give human operators clear visibility and control over AI actions.</li>
+                    <li><strong>Plausibility Checks:</strong> AI suggestions are always subject to human plausibility checks, with mechanisms to flag and review anomalous outputs.</li>
+                    <li><strong>Consent & Digital Twins:</strong> For i-character generation (digital twins), explicit user consent is required, ensuring autonomous agents respect human autonomy.</li>
+                    <li><strong>BFT Veto Mechanisms:</strong> The BFT Council can veto any proposed AI action that deviates from ethical guidelines or operational protocols.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        function toggleAnswer(element) {
+            const faqItem = element.closest('.faq-item');
+            faqItem.classList.toggle('active');
+            const answer = faqItem.querySelector('.answer');
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+            } else {
+                answer.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+{
+  "inventory": {
+    "WHAT WE ACTUALLY HAVE (verified)": {
+      "github": {
+        "CSOAI-ORG": "400 repos (verified)",
+        "languages": "Python 320, TypeScript 30, HTML 38, JavaScript 12",
+        "categories": "268 MCP servers, 30 verticals, 9 org-level, 88 other",
+        "stars_total": "~5 (zero marketing, no adoption)"
+      },
+      "pypi_published": {
+        "verified_published": [
+          "csoai-governance-crosswalk-mcp",
+          "agent-rate-limiter-mcp",
+          "dora-compliance-mcp",
+          "eu-ai-act-compliance-mcp",
+          "clawd",
+          "oscal-generator-mcp",
+          "sbom-cyclonedx-mcp",
+          "watermarking-authenticity-mcp",
+          "rag-knowledge-graph-mcp"
+        ],
+        "verified_NOT_published": [
+          "sov4-king",
+          "sovereign-flash",
+          "sov-bench",
+          "sovereign-kda",
+          "linear-attn-kernel (EAT-767)",
+          "frontier-router"
+        ]
+      },
+      "huggingface": {
+        "csoai-llc": "0 models",
+        "sovereign-llc": "0 models",
+        "implication": "We haven't published any model weights publicly (only OWEMs on local disk)"
+      },
+      "kaggle": {
+        "creds": "sibling has them (used in overnight sprints)",
+        "datasets_published": "?",
+        "notebooks_published": "?"
+      }
+    },
+    "WHAT WE'D LIKE TO HAVE (gaps)": {
+      "missing_repos": [
+        "sov4-king (the SOV4 King tab/API)",
+        "sovereign-flash (linear-attn kernel package)",
+        "sovereign-kda (KDA paper impl)",
+        "sov-bench (the sovereign benchmark suite)",
+        "linear-attn-kernel (EAT-767 should be packaged)",
+        "frontier-router (EAT-758 should be packaged)",
+        "bft-33 (33-agent BFT council)",
+        "owem-trainer (LoRA training harness)",
+        "sovereign-care-floor (Article 6 enforcement)",
+        "sovereign-venturi (the architecture surface)"
+      ],
+      "missing_hf_repos": [
+        "csoai-llc/sovereign-qwen3-0.5b (our OWEM base)",
+        "csoai-llc/sov3_student_adapter (the 83.3% eval'd adapter)",
+        "csoai-llc/linear-attn-kernel (our v4 kernel)"
+      ],
+      "missing_compute": [
+        "Oracle A1 (4 OCPU + 24 GB ARM, always-free) \u2014 bootstrap ready, need to provision",
+        "Kaggle creds for our hands (sibling owns, ask)"
+      ]
+    },
+    "WHAT TO ADOPT FROM OPEN SOURCE (free, high leverage)": {
+      "FlashQLA (596 stars)": "linear-attn CUDA kernel \u2014 drop-in for our v4 kernel",
+      "GatedDeltaNet-2 (240 stars)": "exact paper impl of arxiv 2510.26692 \u2014 replace our toy impl",
+      "KnOTS (94 stars)": "TIES with SVD \u2014 extend sibling's TIES finding",
+      "mergekit": "the standard model merging library (sibling already uses)"
+    }
+  },
+  "actions": [
+    {
+      "rank": 1,
+      "name": "Package our EAT-767 linear-attn kernel as 'linear-attn-kernel' PyPI pkg",
+      "effort": "20 min",
+      "cost": "$0",
+      "what": "Wrap linear_attn_kernel_v4.py into a pip-installable package. Use the same template as our other MCPs. Test pip install on M2. Publish to PyPI.",
+      "leverage": "Reuses work; gets us a PyPI line item we currently lack"
+    },
+    {
+      "rank": 2,
+      "name": "Publish sov3_student_adapter to HF (the 83.3% adapter)",
+      "effort": "30 min",
+      "cost": "$0",
+      "what": "Upload our best-eval'd adapter (20/24 = 83.3% on governance bench) to HuggingFace as csoai-llc/sov3_student_adapter. Includes PROVENANCE + eval scorecard.",
+      "leverage": "First public model weights from CSOAI. Verifies our commitment to 'open source.'"
+    },
+    {
+      "rank": 3,
+      "name": "Fork FlashQLA + GatedDeltaNet-2 (production-grade linear-attn)",
+      "effort": "2-4 hours",
+      "cost": "$0 (read code, extract paper impl)",
+      "what": "Read FlashQLA (596\u2605) for CUDA kernel patterns + GatedDeltaNet-2 (240\u2605) for exact paper impl. Fold the paper-accurate KDA into our v4 linear-attn kernel.",
+      "leverage": "Replace toy impl with production-grade. Citable."
+    },
+    {
+      "rank": 4,
+      "name": "Create the Oracle A1 (always-free 4 OCPU + 24 GB ARM)",
+      "effort": "15 min console + 15 min bootstrap",
+      "cost": "$0",
+      "what": "Log into OCI, create VM.Standard.A1.Flex, retry if 'out of capacity', then ssh + run oracle_a1_bootstrap.sh.",
+      "leverage": "Replaces 956MB micro with 24 GB ARM. Mac becomes thin client."
+    },
+    {
+      "rank": 5,
+      "name": "Get Kaggle creds for our hands (sibling has them)",
+      "effort": "1 day (wait for sibling to share)",
+      "cost": "$0",
+      "what": "60h/week free T4 GPU. Enables Modal-grade runs without Modal costs. Covers all sibling's overnight-sprint work.",
+      "leverage": "Backup compute path. Independence from Modal billing."
+    }
+  ]
+}

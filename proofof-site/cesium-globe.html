@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 Cesium 3D Sovereign Hive Globe — MEOK OS</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui; background: #000; color: #e5e5e5;
+         overflow: hidden; }
+  #globe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .nav { position: absolute; top: 0; left: 0; right: 0; padding: 1rem;
+         background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+         z-index: 10; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; font-size: 0.9rem; }
+  .nav a:hover { color: #fbbf24; }
+  h1 { margin: 0; font-size: 1.8rem; color: #fbbf24; text-shadow: 0 0 20px #fbbf24; }
+  .info { position: absolute; bottom: 1rem; left: 1rem; background: rgba(0,0,0,0.8);
+          padding: 1rem; border-radius: 8px; border: 1px solid #333; z-index: 10; max-width: 400px; }
+  .info h2 { margin: 0 0 0.5rem; color: #60a5fa; font-size: 1rem; }
+  .info p { margin: 0.3rem 0; font-size: 0.85rem; color: #aaa; }
+  .stat { display: inline-block; margin-right: 1rem; }
+  .stat-value { color: #fbbf24; font-weight: bold; }
+  .legend { position: absolute; top: 4rem; right: 1rem; background: rgba(0,0,0,0.8);
+            padding: 1rem; border-radius: 8px; border: 1px solid #333; z-index: 10; }
+  .legend h3 { margin: 0 0 0.5rem; color: #fbbf24; font-size: 0.95rem; }
+  .legend div { font-size: 0.8rem; margin: 0.2rem 0; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+         margin-right: 0.5rem; vertical-align: middle; }
+  .controls { position: absolute; top: 50%; right: 1rem; transform: translateY(-50%);
+              display: flex; flex-direction: column; gap: 0.5rem; z-index: 10; }
+  .controls button { background: rgba(0,0,0,0.8); color: #fbbf24; border: 1px solid #fbbf24;
+                    padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-family: monospace; }
+  .controls button:hover { background: #fbbf24; color: #000; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <h1>🌐 Cesium 3D Sovereign Hive Globe</h1>
+  <a href="/">← Home</a>
+  <a href="/sovereign-town/5d-hive.html">5D Hive</a>
+  <a href="/dashboards/">Dashboards</a>
+  <a href="/sov-os.html">SOV OS</a>
+</div>
+
+<canvas id="globe"></canvas>
+
+<div class="info">
+  <h2>🜏 Sovereign Hive Network</h2>
+  <p>
+    <span class="stat"><span class="stat-value">33</span> Hives</span>
+    <span class="stat"><span class="stat-value">12</span> Generals</span>
+    <span class="stat"><span class="stat-value">$1.2K/mo</span></span>
+  </p>
+  <p>🛰️ <strong>UK Sovereign</strong> · europe-west2</p>
+  <p>🔐 <strong>Ed25519</strong> · Sigil every hop</p>
+  <p>👆 Click a hive to inspect its General + QOwm</p>
+</div>
+
+<div class="legend">
+  <h3>Hive Legend</h3>
+  <div><span class="dot" style="background: #fbbf24;"></span>Dragon (Sovereign) — Keter</div>
+  <div><span class="dot" style="background: #60a5fa;"></span>Scribe/Owl/Lex (Compliance/Research/Legal)</div>
+  <div><span class="dot" style="background: #10b981;"></span>Builder/Scale (Architect/Ethics)</div>
+  <div><span class="dot" style="background: #a78bfa;"></span>Shield/Voice (Safety/Comms)</div>
+  <div><span class="dot" style="background: #f59e0b;"></span>Abacus/Gear (Quant/Ops)</div>
+  <div><span class="dot" style="background: #ec4899;"></span>Argus/Crow (Watchdog/Risk)</div>
+</div>
+
+<div class="controls">
+  <button id="btn-reset">Reset View</button>
+  <button id="btn-spin">Auto Spin</button>
+  <button id="btn-zoomin">Zoom +</button>
+  <button id="btn-zoomout">Zoom -</button>
+</div>
+
+<script>
+/* === 33 HIVES GEOGRAPHY === */
+const HIVES = [
+  // Europe (12 hives — UK sovereign)
+  {id: 1, name: "London-1", lat: 51.5074, lng: -0.1278, general: "Dragon", tier: "sovereign"},
+  {id: 2, name: "Cambridge-1", lat: 52.2053, lng: 0.1218, general: "Scribe", tier: "enterprise"},
+  {id: 3, name: "Edinburgh-1", lat: 55.9533, lng: -3.1883, general: "Builder", tier: "enterprise"},
+  {id: 4, name: "Dublin-1", lat: 53.3498, lng: -6.2603, general: "Voice", tier: "smb"},
+  {id: 5, name: "Paris-1", lat: 48.8566, lng: 2.3522, general: "Lex", tier: "enterprise"},
+  {id: 6, name: "Berlin-1", lat: 52.5200, lng: 13.4050, general: "Shield", tier: "enterprise"},
+  {id: 7, name: "Amsterdam-1", lat: 52.3676, lng: 4.9041, general: "Crow", tier: "smb"},
+  {id: 8, name: "Stockholm-1", lat: 59.3293, lng: 18.0686, general: "Argus", tier: "smb"},
+  {id: 9, name: "Helsinki-1", lat: 60.1699, lng: 24.9384, general: "Abacus", tier: "smb"},
+  {id: 10, name: "Madrid-1", lat: 40.4168, lng: -3.7038, general: "Scale", tier: "enterprise"},
+  {id: 11, name: "Rome-1", lat: 41.9028, lng: 12.4964, general: "Gear", tier: "smb"},
+  {id: 12, name: "Vienna-1", lat: 48.2082, lng: 16.3738, general: "Owl", tier: "smb"},
+
+  // Americas (8 hives)
+  {id: 13, name: "NYC-1", lat: 40.7128, lng: -74.0060, general: "Scribe", tier: "enterprise"},
+  {id: 14, name: "SF-1", lat: 37.7749, lng: -122.4194, general: "Owl", tier: "enterprise"},
+  {id: 15, name: "Toronto-1", lat: 43.6532, lng: -79.3832, general: "Builder", tier: "enterprise"},
+  {id: 16, name: "Mexico-1", lat: 19.4326, lng: -99.1332, general: "Crow", tier: "smb"},
+  {id: 17, name: "Bogota-1", lat: 4.7110, lng: -74.0721, general: "Voice", tier: "smb"},
+  {id: 18, name: "Lima-1", lat: -12.0464, lng: -77.0428, general: "Lex", tier: "smb"},
+  {id: 19, name: "Santiago-1", lat: -33.4489, lng: -70.6693, general: "Abacus", tier: "smb"},
+  {id: 20, name: "Buenos-1", lat: -34.6037, lng: -58.3816, general: "Scale", tier: "smb"},
+
+  // Asia-Pacific (8 hives)
+  {id: 21, name: "Tokyo-1", lat: 35.6762, lng: 139.6503, general: "Dragon", tier: "sovereign"},
+  {id: 22, name: "Singapore-1", lat: 1.3521, lng: 103.8198, general: "Shield", tier: "enterprise"},
+  {id: 23, name: "Sydney-1", lat: -33.8688, lng: 151.2093, general: "Builder", tier: "enterprise"},
+  {id: 24, name: "Mumbai-1", lat: 19.0760, lng: 72.8777, general: "Abacus", tier: "enterprise"},
+  {id: 25, name: "Dubai-1", lat: 25.2048, lng: 55.2708, general: "Voice", tier: "enterprise"},
+  {id: 26, name: "HongKong-1", lat: 22.3193, lng: 114.1694, general: "Scribe", tier: "enterprise"},
+  {id: 27, name: "Seoul-1", lat: 37.5665, lng: 126.9780, general: "Lex", tier: "smb"},
+  {id: 28, name: "Jakarta-1", lat: -6.2088, lng: 106.8456, general: "Crow", tier: "smb"},
+
+  // Africa + Middle East (5 hives)
+  {id: 29, name: "CapeTown-1", lat: -33.9249, lng: 18.4241, general: "Scale", tier: "smb"},
+  {id: 30, name: "Nairobi-1", lat: -1.2921, lng: 36.8219, general: "Gear", tier: "smb"},
+  {id: 31, name: "Cairo-1", lat: 30.0444, lng: 31.2357, general: "Shield", tier: "smb"},
+  {id: 32, name: "Lagos-1", lat: 6.5244, lng: 3.3792, general: "Argus", tier: "smb"},
+  {id: 33, name: "Reykjavik-1", lat: 64.1466, lng: -21.9426, general: "Owl", tier: "smb"}
+];
+
+const GENERAL_COLORS = {
+  "Dragon": "#fbbf24",
+  "Scribe": "#60a5fa",
+  "Owl": "#60a5fa",
+  "Lex": "#60a5fa",
+  "Builder": "#10b981",
+  "Scale": "#10b981",
+  "Shield": "#a78bfa",
+  "Voice": "#a78bfa",
+  "Abacus": "#f59e0b",
+  "Gear": "#f59e0b",
+  "Argus": "#ec4899",
+  "Crow": "#ec4899"
+};
+
+/* === CANVAS GLOBE === */
+const canvas = document.getElementById("globe");
+const ctx = canvas.getContext("2d");
+
+let W = canvas.width = window.innerWidth;
+let H = canvas.height = window.innerHeight;
+window.onresize = () => {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+};
+
+let rotation = 0;
+let autoSpin = true;
+let zoom = 1.0;
+let hoverHive = null;
+let clickedHive = null;
+
+document.getElementById("btn-reset").onclick = () => { rotation = 0; zoom = 1.0; };
+document.getElementById("btn-spin").onclick = () => { autoSpin = !autoSpin; };
+document.getElementById("btn-zoomin").onclick = () => { zoom = Math.min(zoom * 1.2, 5); };
+document.getElementById("btn-zoomout").onclick = () => { zoom = Math.max(zoom / 1.2, 0.5); };
+
+canvas.onclick = (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left - W/2;
+  const my = e.clientY - rect.top - H/2;
+  // Find closest hive
+  let closest = null, minDist = 30;
+  for (const hive of HIVES) {
+    const pos = projectHive(hive);
+    if (!pos) continue;
+    const d = Math.hypot(pos.x - mx, pos.y - my);
+    if (d < minDist) { minDist = d; closest = hive; }
+  }
+  clickedHive = closest;
+};
+
+canvas.onmousemove = (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left - W/2;
+  const my = e.clientY - rect.top - H/2;
+  let closest = null, minDist = 30;
+  for (const hive of HIVES) {
+    const pos = projectHive(hive);
+    if (!pos) continue;
+    const d = Math.hypot(pos.x - mx, pos.y - my);
+    if (d < minDist) { minDist = d; closest = hive; }
+  }
+  hoverHive = closest;
+};
+
+function projectHive(hive) {
+  // Convert lat/lng to 3D position on sphere
+  const phi = (90 - hive.lat) * Math.PI / 180;
+  const theta = (hive.lng + rotation * 0.5) * Math.PI / 180;
+  const x = Math.sin(phi) * Math.cos(theta);
+  const y = Math.cos(phi);
+  const z = Math.sin(phi) * Math.sin(theta);
+  // Rotate around Y axis (just to show back-face culling)
+  const x2 = x * Math.cos(rotation * 0.01) - z * Math.sin(rotation * 0.01);
+  const z2 = x * Math.sin(rotation * 0.01) + z * Math.cos(rotation * 0.01);
+  // Front-face cull
+  if (z2 < -0.1) return null;
+  // Project to 2D
+  const R = Math.min(W, H) * 0.35 * zoom;
+  return {
+    x: x2 * R,
+    y: -y * R,
+    z: z2
+  };
+}
+
+function drawGlobe() {
+  ctx.clearRect(0, 0, W, H);
+  // Background gradient
+  const grad = ctx.createRadialGradient(W/2, H/2, 50, W/2, H/2, W);
+  grad.addColorStop(0, "#0a0a2a");
+  grad.addColorStop(1, "#000");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw globe sphere
+  const R = Math.min(W, H) * 0.35 * zoom;
+  ctx.beginPath();
+  ctx.arc(W/2, H/2, R, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(251, 191, 36, 0.5)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Draw latitude/longitude lines
+  ctx.strokeStyle = "rgba(96, 165, 250, 0.1)";
+  ctx.lineWidth = 1;
+  for (let lat = -60; lat <= 60; lat += 30) {
+    ctx.beginPath();
+    const phi = (90 - lat) * Math.PI / 180;
+    const r = Math.sin(phi) * R;
+    const y = -Math.cos(phi) * R;
+    ctx.ellipse(W/2, H/2 + y, r, r * 0.2, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  for (let lng = -180; lng <= 180; lng += 30) {
+    ctx.beginPath();
+    const theta = lng * Math.PI / 180;
+    ctx.ellipse(W/2, H/2, R * Math.abs(Math.cos(theta)), R, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Draw hives (3D projected to 2D)
+  let allHives = HIVES.map(h => ({...h, pos: projectHive(h)})).filter(h => h.pos);
+
+  // Sort by Z (back to front)
+  allHives.sort((a, b) => a.pos.z - b.pos.z);
+
+  for (const h of allHives) {
+    const pos = h.pos;
+    const isHover = hoverHive && hoverHive.id === h.id;
+    const isClick = clickedHive && clickedHive.id === h.id;
+    const color = GENERAL_COLORS[h.general] || "#fbbf24";
+    const size = (isHover || isClick) ? 12 : 8;
+    const alpha = 0.5 + 0.5 * pos.z;
+
+    // Pulse for sovereign tier
+    if (h.tier === "sovereign") {
+      ctx.beginPath();
+      ctx.arc(W/2 + pos.x, H/2 + pos.y, size + 4, 0, Math.PI * 2);
+      ctx.fillStyle = `${color}33`;
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(W/2 + pos.x, H/2 + pos.y, size, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1.0;
+
+    // Glow ring
+    ctx.beginPath();
+    ctx.arc(W/2 + pos.x, H/2 + pos.y, size + 3, 0, Math.PI * 2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = isHover ? 3 : 1;
+    ctx.globalAlpha = alpha * 0.7;
+    ctx.stroke();
+    ctx.globalAlpha = 1.0;
+
+    // Label if hovered or sovereign
+    if (isHover || isClick || h.tier === "sovereign") {
+      ctx.fillStyle = "#fff";
+      ctx.font = isHover ? "bold 12px monospace" : "11px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(h.name, W/2 + pos.x, H/2 + pos.y - size - 5);
+      if (isHover || isClick) {
+        ctx.fillStyle = "#fbbf24";
+        ctx.font = "10px monospace";
+        ctx.fillText(h.general + " (" + h.tier + ")", W/2 + pos.x, H/2 + pos.y + size + 12);
+      }
+    }
+  }
+
+  // Draw connections from London-1 (sovereign HQ) to all others
+  ctx.strokeStyle = "rgba(251, 191, 36, 0.15)";
+  ctx.lineWidth = 1;
+  const hq = HIVES[0];
+  const hqPos = projectHive(hq);
+  if (hqPos) {
+    for (let i = 1; i < HIVES.length; i++) {
+      const pos = projectHive(HIVES[i]);
+      if (pos) {
+        ctx.beginPath();
+        ctx.moveTo(W/2 + hqPos.x, H/2 + hqPos.y);
+        ctx.lineTo(W/2 + pos.x, H/2 + pos.y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Update info panel if clicked
+  if (clickedHive) {
+    const h = clickedHive;
+    const info = document.querySelector(".info");
+    info.innerHTML = `
+      <h2>🜏 Hive: ${h.name}</h2>
+      <p><span class="stat"><span class="stat-value">${h.id}/33</span></span></p>
+      <p><strong>General:</strong> ${h.general}</p>
+      <p><strong>Tier:</strong> ${h.tier}</p>
+      <p><strong>Coordinates:</strong> ${h.lat.toFixed(2)}°, ${h.lng.toFixed(2)}°</p>
+      <p><strong>Sig:</strong> <code>hive-${h.id.toString().padStart(2, '0')}-${h.name.toLowerCase().replace(/[^a-z0-9]/g, '')}-sig</code></p>
+      <p>👆 Click elsewhere to dismiss</p>
+    `;
+  }
+
+  if (autoSpin) rotation += 0.003;
+  requestAnimationFrame(drawGlobe);
+}
+
+drawGlobe();
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

@@ -1,0 +1,104 @@
+# OpenPatent.ai SOV3 Hive Bridge Manifest
+# Registers the openpatent hive with the SOV3 28-hive mesh (port 3101).
+# BFT council + A2A protocol + shared audit chain.
+#
+# This is the "sovereign-hive" registration payload — when dropped
+# into the SOV3 BFT council, it makes OpenPatent.ai a first-class
+# citizen of the 28-hive mesh.
+{
+  "hive_id": "openpatent",
+  "hive_name": "OpenPatent.ai",
+  "version": "1.0.0",
+  "hive_role": "ip-protection",
+  "registered_at": "2026-06-13",
+  "registered_by": "did:web:csoai.org",
+  "homepage": "https://openpatent.ai",
+  "tagline": "Disclose First. AI Second.",
+  "usp": "Protect your inventions from AI before you use AI.",
+  "stack": {
+    "core": "PatentMCP (Python 3.11, MIT)",
+    "frontend": "Next.js 14 + Tailwind + shadcn/ui",
+    "crypto_layers": [
+      "SHA-3/512",
+      "HMAC-SHA256",
+      "Ed25519",
+      "Bitcoin OpenTimestamps",
+      "C2PA Content Credential",
+      "Hash-chained audit log"
+    ],
+    "blockchain_anchors": ["Bitcoin (OTS)", "Polygon PoS"],
+    "optional_council": "33-agent BFT (22/33 threshold)"
+  },
+  "services": {
+    "patentmcp":     { "port": 3210, "role": "core", "internal": true },
+    "api-gateway":   { "port": 3211, "role": "public", "public_hostname": "api.openpatent.ai" },
+    "worker":        { "port": 3212, "role": "core", "internal": true },
+    "verify-page":   { "port": 3213, "role": "public", "public_hostname": "verify.openpatent.ai" },
+    "mcp-manifest":  { "port": 3214, "role": "public", "public_hostname": "mcp.openpatent.ai" },
+    "bft-council":   { "port": 3215, "role": "core", "internal": true },
+    "landing-site":  { "port": 3000, "role": "public", "public_hostname": "openpatent.ai" }
+  },
+  "sov3_integration": {
+    "intent_router_intent": ["disclose", "verify", "search", "draft", "protect"],
+    "bft_council_eligible": true,
+    "audit_chain_shared": true,
+    "x402_revenue_split": {
+      "operations_treasury": 0.60,
+      "infrastructure_pool": 0.25,
+      "bft_council_reward": 0.15
+    }
+  },
+  "memory_tiers": {
+    "version": "0.1.0-mvp",
+    "wired_at": "2026-06-15",
+    "subscribes": [
+      "bft.sigil.*",
+      "disclosure.created",
+      "verify.disclosure"
+    ],
+    "writes_to": "cold",
+    "promotes_on": [
+      "verify.disclosure",
+      "search.prior_art",
+      "draft.patent_claims"
+    ],
+    "warm_storage_path": "/dev/shm/meok-warm/",
+    "cold_storage_path": "/opt/meok-cold/",
+    "tier_router": "http://localhost:3101/api/memory/tier",
+    "promotion_threshold": 5,
+    "promotion_window_seconds": 600,
+    "auto_warm": false,
+    "notes": "MVP registration only — declares memory awareness to SOV3. No cache-promoter daemon yet. Promotion is log-only until Step 2 of the cold/warm split ships. Reversible: delete this block to roll back."
+  },
+  "mcp_server": {
+    "name": "openpatent-mcp",
+    "manifest_url": "https://mcp.openpatent.ai/.well-known/mcp.json",
+    "stdio": "npx -y @openpatent/mcp-server",
+    "http": "https://mcp.openpatent.ai",
+    "tools": ["disclose_invention", "verify_disclosure", "search_prior_art", "draft_patent_claims"]
+  },
+  "dependencies": {
+    "sov3_bridge": "http://localhost:3101",
+    "meok_mcp":    "http://localhost:3102",
+    "meok_api":    "http://localhost:3200",
+    "postgresql":  "postgres://openpatent:***@postgres:5432/openpatent",
+    "ipfs":        "http://ipfs:5001"
+  },
+  "fees": {
+    "free": 0,
+    "starter": 29,
+    "defensive": 149,
+    "full": 999,
+    "premium": 2499,
+    "enterprise_monthly": 4999,
+    "currency": "USD"
+  },
+  "legal_jurisdictions": ["US", "EU", "UK", "JP", "CN"],
+  "domain": {
+    "primary": "openpatent.ai",
+    "subdomains": ["draft", "verify", "mcp", "api"],
+    "registrar": "NameCheap, Inc.",
+    "creation_date": "2026-06-13",
+    "renewal_interval_years": 2
+  }
+}

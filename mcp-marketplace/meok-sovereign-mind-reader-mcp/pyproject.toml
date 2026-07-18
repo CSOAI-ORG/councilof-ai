@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=64.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "meok-sovereign-mind-reader-mcp"
+version = "1.0.0"
+description = "MEOK Sovereign Mind Reader MCP — interpretability layer for SOV3 (SAE + Activation Verbalizer)"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "labs@meok.ai"}]
+keywords = ["mcp", "interpretability", "sae", "sparse-autoencoder", "anthropic-nla", "sovereign", "safety", "audit"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.24.0",
+    "numpy>=1.21.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/CSOAI-ORG/meok-sovereign-mind-reader-mcp"
+Repository = "https://github.com/CSOAI-ORG/meok-sovereign-mind-reader-mcp"
+
+[tool.setuptools.packages.find]
+where = ["."]

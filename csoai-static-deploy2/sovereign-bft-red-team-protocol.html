@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SOVEREIGN — BFT Red Team Protocol | DEFONEOS Adversarial Testing</title>
+<meta name="description" content="The DEFONEOS BFT Red Team Protocol outlines the adversarial testing procedures for sovereign AI systems, ensuring resilience against advanced threats."/>
+<link rel="canonical" href="https://www.csoai.org/sovereign-bft-red-team-protocol.html"/>
+<style>
+:root{--bg:#0a0e1a;--fg:#e6edf3;--acc:#5b8def;--acc2:#22c55e;--warn:#f59e0b;--rule:#1f2937;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--fg);background:var(--bg);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:48px 28px 96px}
+h1{font-size:42px;line-height:1.15;margin:0 0 12px;font-weight:700}
+h2{font-size:28px;margin:48px 0 14px;font-weight:600;border-bottom:1px solid var(--rule);padding-bottom:6px}
+h3{font-size:20px;margin:28px 0 8px;font-weight:600;color:var(--acc)}
+p{margin:10px 0}a{color:var(--acc);text-decoration:none;border-bottom:1px solid transparent}a:hover{border-bottom-color:var(--acc)}
+.kicker{font:600 13px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:18px}
+.lede{font-size:18px;color:#cbd5e1;max-width:780px;margin:0 0 28px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 36px;font:13px/1.4 var(--mono)}
+.meta span{background:#111827;padding:6px 11px;border-radius:6px;color:#cbd5e1;border:1px solid var(--rule)}
+.meta .ok{color:var(--acc2);border-color:#14532d}
+.meta .pending{color:var(--warn);border-color:#78350f}
+table{border-collapse:collapse;margin:18px 0;width:100%;font-size:14px}
+th,td{padding:10px 12px;border:1px solid var(--rule);text-align:left;vertical-align:top}
+th{background:#111827;font-weight:600;color:var(--acc)}
+tr:nth-child(even) td{background:#0d1320}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+code{font:13px/1.5 var(--mono);background:#111827;padding:2px 6px;border-radius:4px;color:#fbbf24}
+pre{font:13px/1.6 var(--mono);background:#0d1320;padding:18px;border-radius:8px;overflow-x:auto;border:1px solid var(--rule);margin:14px 0}
+.bundle{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:24px 0}
+.bundle .card{background:#0f1729;padding:20px;border-radius:10px;border:1px solid var(--rule)}
+.bundle .card h4{margin:0 0 8px;font-size:16px;color:var(--acc2)}
+.bundle .card p{margin:0;font-size:13px;color:#94a3b8}
+.bundle .card .num{font-size:22px;color:var(--acc);font-weight:600;margin:8px 0 4px;font-family:var(--mono)}
+.cta{display:inline-block;background:var(--acc);color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;margin:18px 0 6px}
+.cta:hover{background:#3b6fd1;border-bottom-color:transparent}
+hr{border:none;border-top:1px solid var(--rule);margin:36px 0}
+.signoff{margin-top:48px;padding:20px;background:#0f1729;border-left:4px solid var(--acc2);border-radius:8px;font:13px/1.5 var(--mono);color:#94a3b8}
+.toc{background:#0f1729;padding:18px 22px;border-radius:8px;border:1px solid var(--rule);margin:24px 0}
+.toc ol{margin:6px 0 0;padding-left:22px;font-size:14px;line-height:1.9}
+.toc a{color:#cbd5e1}
+.note{border-left:4px solid var(--warn);padding:14px 18px;background:#1a1306;border-radius:6px;margin:18px 0;font-size:14px}
+.ok-note{border-left:4px solid var(--acc2);padding:14px 18px;background:#082012;border-radius:6px;margin:18px 0;font-size:14px}
+.flag{color:var(--warn);font-weight:600}
+@media(max-width:680px){.wrap{padding:28px 16px 64px}h1{font-size:30px}.bundle{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="kicker">SOVEREIGN · ADVERSARIAL TESTING · BFT COUNCIL</p>
+<h1>BFT Red Team Protocol</h1>
+<p class="lede">The DEFONEOS BFT (Byzantine Fault Tolerant) Red Team Protocol outlines the adversarial testing procedures for sovereign AI systems, ensuring resilience against advanced threats while preserving cryptographic proof of all actions.</p>
+
+<div class="meta">
+<span class="ok">▣ BFT-GATED APPROVAL</span>
+<span class="ok">▣ CRYPTOGRAPHIC PROOF</span>
+<span class="ok">▣ SEVEN STAGES OF ATTACK</span>
+<span class="ok">▣ REAL-TIME SIGIL INTEGRITY</span>
+<span class="pending">▣ HUMAN-ALWAYS-WINS INVARIANT</span>
+</div>
+
+<div class="toc">
+<h3>Table of Contents</h3>
+<ol>
+<li><a href="#phase-1-charter-and-approval">Phase 1: Charter and Approval</a></li>
+<li><a href="#phase-2-intelligence-gathering">Phase 2: Intelligence Gathering</a></li>
+<li><a href="#phase-3-threat-modeling-and-attack-planning">Phase 3: Threat Modeling and Attack Planning</a></li>
+<li><a href="#phase-4-execution-and-tooling">Phase 4: Execution and Tooling</a></li>
+<li><a href="#phase-5-containment-and-mitigation">Phase 5: Containment and Mitigation</a></li>
+<li><a href="#phase-6-post-engagement-analysis">Phase 6: Post-Engagement Analysis</a></li>
+<li><a href="#phase-7-continuous-improvement">Phase 7: Continuous Improvement</a></li>
+</ol>
+</div>
+
+<h2 id="phase-1-charter-and-approval">Phase 1: Charter and Approval</h2>
+<h3>Objective: Define scope, rules of engagement, and secure BFT council approval.</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+<th>Acceptance Criteria</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>Draft Red Team Charter (scope, objectives, red lines).</td>
+<td>Charter document (Ed25519-signed) defines clear boundaries; no kinetic-targeting or personal-surveillance patterns allowed.</td>
+<td>Charter validated against DEFONEOS immutable red lines policy.</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Secure BFT Council supermajority approval for charter.</td>
+<td>27/33 (supermajority) BFT agents vote to approve charter.</td>
+<td>SIGIL ledger records <code>bft_red_team_charter_approved</code> with quorum proof.</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>Establish secure communication channels for red team.</td>
+<td>End-to-end encrypted (HPKE RFC 9180) channels with ephemeral keys.</td>
+<td>Communication channel integrity verified via SIGIL ledger.</td>
+</tr>
+<tr>
+<td>1.4</td>
+<td>Define success metrics and reporting requirements.</td>
+<td>Metrics include detection time, containment time, number of vulnerabilities found.</td>
+<td>Metrics document (Ed25519-signed) published to SIGIL ledger.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="phase-2-intelligence-gathering">Phase 2: Intelligence Gathering</h2>
+<h3>Objective: Collect information on target system using OSINT and active reconnaissance.</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+<th>Acceptance Criteria</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1</td>
+<td>Perform passive OSINT (public domain, Shodan, passive DNS).</td>
+<td>No sensitive information exposed publicly; attack surface mapped.</td>
+<td>OSINT report (Ed25519-signed) confirms zero P0/P1 exposures.</td>
+</tr>
+<tr>
+<td><td>Conduct active reconnaissance (port scanning, service enumeration).</td>
+<td>Only whitelisted ports/services detected; no unexpected entry points.</td>
+<td>Nmap/Masscan report (Ed25519-signed) aligns with expected attack surface.</td>
+</tr>
+<tr>
+<td>2.3</td>
+<td>Analyze code repositories and deployment artifacts.</td>
+<td>No hardcoded credentials, sensitive configs, or backdoors found.</td>
+<td>Code audit report (Ed25519-signed) confirms zero P0/P1 findings.</td>
+</tr>
+<tr>
+<td>2.4</td>
+<td>Identify potential human targets and social engineering vectors.</td>
+<td>Pilot team members listed; no high-risk social engineering vectors found.</td>
+<td>Human element assessment (Ed25519-signed) confirms low-risk posture.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="phase-3-threat-modeling-and-attack-planning">Phase 3: Threat Modeling and Attack Planning</h2>
+<h3>Objective: Develop targeted attack scenarios based on gathered intelligence.</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+<th>Acceptance Criteria</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1</td>
+<td>Create STRIDE/DREAD-based threat model for DEFONEOS components.</td>
+<td>Threat model covers all 5 DEFONEOS layers (Kernel → Sentinel).</td>
+<td>Threat model document (Ed25519-signed) reviewed by BFT security council.</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>Formulate specific attack scenarios (e.g., supply chain, data poisoning).</td>
+<td>Scenarios target critical assets; measurable impact on system invariants.</td>
+<td>Attack plan (Ed25519-signed) details 7+ attack vectors.</td>
+</tr>
+<tr>
+<td>3.3</td>
+<td>Identify required tooling and infrastructure for attacks.</td>
+<td>Tools (e.g., custom MCPs, LLM jailbreaks) provisioned securely.</td>
+<td>Tool inventory (Ed25519-signed) confirms isolated tooling environment.</td>
+</tr>
+<tr>
+<td>3.4</td>
+<td>Simulate attacks in a sandbox environment before live execution.</td>
+<td>Sandbox simulations confirm attack efficacy and potential impact.</td>
+<td>Simulation report (Ed25519-signed) shows successful sandbox attacks.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="phase-4-execution-and-tooling">Phase 4: Execution and Tooling</h2>
+<h3>Objective: Execute approved attack scenarios against the target system.</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+<th>Acceptance Criteria</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1</td>
+<td>Execute approved attack scenarios as per plan.</td>
+<td>Attacks confined to defined scope; no out-of-bounds actions.</td>
+<td>Red team operator logs (Ed25519-signed) match approved attack plan.</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Record all attack steps, timestamps, and observed outcomes.</td>
+<td>Every action logged to a secure, immutable red team SIGIL ledger.</td>
+<td>SIGIL ledger query for red team ID returns full forensic trail.</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td>Capture evidence of compromise (e.g., screenshots, command output).</td>
+<td>Evidence securely stored and hash-verified against red team SIGIL.</td>
+<td>Evidence vault (Ed25519-signed manifest) contains all artifacts.</td>
+</tr>
+<tr>
+<td>4.4</td>
+<td>Maintain stealth and avoid detection where possible.</td>
+<td>Red team activity not detected by blue team until post-engagement.</td>
+<td>Blue team logs show no alerts/anomalies during red team operations.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="phase-5-containment-and-mitigation">Phase 5: Containment and Mitigation</h2>
+<h3>Objective: Simulate blue team response and verify containment mechanisms.</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+<th>Acceptance Criteria</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5.1</td>
+<td>Simulate detection of red team activity by blue team.</td>
+<td>P0/P1 alerts triggered in SIEM; incident response initiated.</td>
+<td>SIEM dashboard shows red team detection events.</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Test DEFONEOS automated containment protocols.</td>
+<td>BFT-gated containment actions (e.g., model isolation, network segmentation) executed.</td>
+<td>DEFONEOS system logs confirm automated containment actions.</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>Verify human operator intervention and override capabilities.</td>
+<td>Owner-gated kill switch successfully engaged; model output paused.</td>
+<td>Human operator log (Ed25519-signed) confirms override action.</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>Assess integrity of SIGIL ledger during/after attack.</td>
+<td>SIGIL ledger remains immutable; no compromise of cryptographic proofs.</td>
+<td>SIGIL ledger audit confirms integrity and tamper-evidence.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="phase-6-post-engagement-analysis">Phase 6: Post-Engagement Analysis</h2>
+<h3>Objective: Analyze findings, identify root causes, and recommend remediations.</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+<th>Acceptance Criteria</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.1</td>
+<td>Collate all red team findings and evidence of compromise.</td>
+<td>Comprehensive report detailing all vulnerabilities, attack paths, and impact.</td>
+<td>Red Team Final Report (Ed25519-signed) includes all artifacts.</td>
+</tr>
+<tr>
+<td>6.2</td>
+<td>Conduct joint debrief with blue team and DEFONEOS developers.</td>
+<td>Lessons learned shared; root causes of vulnerabilities identified.</td>
+<td>Debrief minutes (Ed25519-signed) document all discussions.</td>
+</tr>
+<tr>
+<td>6.3</td>
+<td>Propose specific remediations and architectural improvements.</td>
+<td>Prioritized list of fixes, architectural changes, and policy updates.</td>
+<td>Remediation plan (Ed25519-signed) assigned to DEFONEOS development team.</td>
+</tr>
+<tr>
+<td>6.4</td>
+<td>Update DEFONEOS threat model and attack surface.</td>
+<td>Threat model reflects new vulnerabilities; attack surface updated.</td>
+<td>Updated threat model (Ed25519-signed) committed to version control.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="phase-7-continuous-improvement">Phase 7: Continuous Improvement</h2>
+<h3>Objective: Integrate lessons learned into DEFONEOS development lifecycle.</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+<th>Acceptance Criteria</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7.1</td>
+<td>Implement all agreed-upon remediations and improvements.</td>
+<td>All P0/P1 vulnerabilities fixed; architectural changes deployed.</td>
+<td>Verification tests confirm fixes; vulnerability scan shows no regressions.</td>
+</tr>
+<tr>
+<td>7.2</td>
+<td>Conduct re-testing of identified vulnerabilities.</td>
+<td>Re-test confirms vulnerabilities are closed and not re-introduced.</td>
+<td>Re-test report (Ed25519-signed) shows all previous findings mitigated.</td>
+</tr>
+<tr>
+<td>7.3</td>
+<td>Update DEFONEOS security policies and training materials.</td>
+<td>Policies reflect new best practices; operator training updated.</td>
+<td>Updated policies/training materials (Ed25519-signed) distributed.</td>
+</tr>
+<tr>
+<td>7.4</td>
+<td>Schedule next red team engagement (cadence of 6-12 months).</td>
+<td>Future red team exercises planned and budgeted.</td>
+<td>Next red team engagement (Ed25519-signed) entered into DEFONEOS roadmap.</td>
+</tr>
+</tbody>
+</table>
+
+<div class="signoff">
+  DEFONEOS — Sovereign AI for Public Services. Built in the UK. Designed for trust.
+</div>
+
+</div>
+</body>
+</html>

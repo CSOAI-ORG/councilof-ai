@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Checklist - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/sovereignty/">sovereignty</a> / checklist</div>
+<h1>Sovereign Checklist</h1>
+<p class="tagline">Self-assessment: is your AI deployment actually sovereign?</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>The <strong>Sovereign Checklist</strong> is the human-readable companion to the <a href="/wiki/sovereignty/specification.html">Specification</a>. It translates each assertion into a yes/no question that a CTO, CISO, or DPO can answer in 30 minutes.</p>
+
+<h2>Section 1 — Lawful Control (P1)</h2>
+<ul>
+<li>☐ Can we export the complete customer dataset in a portable format within 30 days?</li>
+<li>☐ Can we honour right-to-be-forgotten within 30 days with cryptographic proof?</li>
+<li>☐ Are all data bytes hash-chained to an auditable ledger?</li>
+<li>☐ Can customers read their own access logs in real time?</li>
+</ul>
+
+<h2>Section 2 — Cryptographic Identity (P2)</h2>
+<ul>
+<li>☐ Does every actor (human, agent, org) have a W3C DID?</li>
+<li>☐ Are all Ed25519 keys generated on the principal's device, never exported?</li>
+<li>☐ Are credentials unique per actor (no shared admins)?</li>
+<li>☐ Is there a documented path to post-quantum keys (ML-DSA-65, ML-KEM-768)?</li>
+</ul>
+
+<h2>Section 3 — Cross-Jurisdiction Clarity (P3)</h2>
+<ul>
+<li>☐ Does every access attempt return a SOVEREIGN / FOREIGN_APPROVED / FOREIGN_BLOCKED verdict within 100ms?</li>
+<li>☐ Is the treaty database refreshed daily from authoritative sources?</li>
+<li>☐ Are foreign-blocked attempts observable in a dashboard?</li>
+<li>☐ Does the system recognise the eight sovereign realms (UK, USA, EU, CA, AU, NZ, JP, AUKUS)?</li>
+</ul>
+
+<h2>Section 4 — Multi-Stakeholder Governance (P4)</h2>
+<ul>
+<li>☐ Do sovereignty-changing actions require ≥2/3 council majority?</li>
+<li>☐ Can any single admin revoke keys, change jurisdiction, or alter audit logs?</li>
+<li>☐ Are council members' DIDs public, and are votes cryptographically recorded?</li>
+<li>☐ Does the system tolerate Byzantine faults (e.g., up to 4 of 13 nodes malicious)?</li>
+</ul>
+
+<h2>Section 5 — Public Auditability (P5)</h2>
+<ul>
+<li>☐ Is the audit chain publicly verifiable via API?</li>
+<li>☐ Are model weights open-source?</li>
+<li>☐ Can audit logs be exported in CSV / JSON / Parquet?</li>
+<li>☐ Is default retention ≥90 days, configurable by the principal?</li>
+</ul>
+
+<h2>Scoring</h2>
+<table>
+<tr><th>Yes answers</th><th>Verdict</th></tr>
+<tr><td>20/20</td><td>Fully sovereign — pass all CSOAI audits</td></tr>
+<tr><td>15–19</td><td>Mostly sovereign — close gaps within 90 days</td></tr>
+<tr><td>10–14</td><td>Partially sovereign — significant gaps, multi-quarter remediation</td></tr>
+<tr><td>&lt;10</td><td>Not sovereign — do not market as sovereign</td></tr>
+</table>
+
+<h2>How to Use This Checklist</h2>
+<p>Run the checklist at quarterly governance reviews. Document each "yes" with the mechanism that enforces it (not just the promise). Where the answer is "no", identify the gap and the responsible owner.</p>
+
+<h2>What It Doesn't Cover</h2>
+<p>The checklist does not cover legal interpretation — sovereignty in law differs across jurisdictions. It also does not cover cost — a sovereign system costs more than a non-sovereign one. It does, however, cover the technical properties that any sovereign claim must rest on.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/sovereignty/axiomatic.html">Axiomatic</a></li>
+<li><a href="/wiki/sovereignty/specification.html">Specification</a></li>
+<li><a href="/wiki/sovereignty/methodology.html">Methodology</a></li>
+<li><a href="/wiki/demos/care-floor-check.html">Care Floor Check Demo</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

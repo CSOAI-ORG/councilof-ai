@@ -1,0 +1,104 @@
+#!/bin/bash
+# mesh-status: One-glance productivity dashboard
+
+clear 2>/dev/null || true
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║         🚀 M2 MESH NODE — PRODUCTIVITY DASHBOARD             ║"
+echo "╚══════════════════════════════════════════════════════════════╝"
+echo ""
+
+# Time
+printf "  ⏰ %-20s %s\n" "Time:" "$(date '+%Y-%m-%d %H:%M:%S %Z')"
+
+# Uptime
+printf "  🔥 %-20s %s\n" "Uptime:" "$(uptime | awk -F'up ' '{print $2}' | awk -F',' '{print $1}')"
+
+# Disk
+DISK_PCT=$(df /System/Volumes/Data 2>/dev/null | awk 'NR==2 {print $5}')
+[ -z "$DISK_PCT" ] && DISK_PCT=$(df / | awk 'NR==2 {print $5}')
+DISK_FREE=$(df -h /System/Volumes/Data 2>/dev/null | awk 'NR==2 {print $4}')
+[ -z "$DISK_FREE" ] && DISK_FREE=$(df -h / | awk 'NR==2 {print $4}')
+printf "  💾 %-20s %s (%s free)\n" "Disk:" "$DISK_PCT" "$DISK_FREE"
+
+# RAM
+RAM_USED=$(vm_stat | awk '
+/Pages free/ {free=$3}
+/Pages active/ {active=$3}
+/Pages inactive/ {inactive=$3}
+/Pages wired/ {wired=$3}
+END {
+  used=(active+inactive+wired)*16384/1e9;
+  printf "%.1fGB", used
+}')
+printf "  🧠 %-20s %s\n" "RAM Used:" "$RAM_USED"
+
+# Ollama
+if curl -sf --max-time 3 http://localhost:11434/api/tags >/dev/null 2>&1; then
+  MODEL_COUNT=$(curl -sf --max-time 3 http://localhost:11434/api/tags | python3 -c 'import sys,json; print(len(json.load(sys.stdin)["models"]))' 2>/dev/null || echo "?")
+  printf "  🤖 %-20s %s\n" "Ollama:" "✅ Online ($MODEL_COUNT models)"
+else
+  printf "  🤖 %-20s %s\n" "Ollama:" "❌ OFFLINE"
+fi
+
+# Mesh
+MESH_HEALTH=$(curl -sf --max-time 5 http://192.168.50.105:3205/health 2>/dev/null)
+if [ -n "$MESH_HEALTH" ]; then
+  MESH_NODES=$(echo "$MESH_HEALTH" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(f"{d.get("nodes_online","?")}/{d.get("nodes_total","?")}")' 2>/dev/null || echo "?/?")
+  printf "  🌐 %-20s %s\n" "Mesh:" "✅ Online ($MESH_NODES nodes)"
+else
+  printf "  🌐 %-20s %s\n" "Mesh:" "❌ OFFLINE"
+fi
+
+# Active model
+ACTIVE=$(cat ~/.mesh-prod/active_model.txt 2>/dev/null || echo "unknown")
+printf "  ⚡ %-20s %s\n" "Active Model:" "$ACTIVE"
+
+# Watchdog
+if launchctl list | grep -q com.mesh-prod.watchdog; then
+  printf "  🐕 %-20s %s\n" "Watchdog:" "✅ Running"
+else
+  printf "  🐕 %-20s %s\n" "Watchdog:" "❌ Stopped"
+fi
+
+# Today's benchmarks
+BENCH_COUNT=$(grep -c "tok/s" /tmp/mesh-benchmark.log 2>/dev/null || echo "0")
+printf "  📊 %-20s %s\n" "Benchmarks Today:" "$BENCH_COUNT runs"
+
+# Downtime
+DOWNTIME=$(wc -l < /tmp/mesh-downtime.log 2>/dev/null | awk '{print $1}' || echo "0")
+printf "  ⚠️  %-20s %s\n" "Mesh Downtime Events:" "$DOWNTIME"
+
+echo ""
+echo "═══════════════════════════════════════════════════════════════"
+echo "  Commands: mesh-prod {status|benchmark|battle|rotate|heal|report}"
+echo "  Logs:    /tmp/mesh-*.log"
+echo "  DB:      ~/.mesh-prod/perf.db"
+echo "═══════════════════════════════════════════════════════════════"
+
+# Federation overlay
+FED_REPORT="$HOME/.mesh-prod/federation/status-report.json"
+if [ -f "$FED_REPORT" ]; then
+  echo ""
+  echo "═══════════════════════════════════════════════════════════════"
+  echo "  🌐 FEDERATION AWARENESS"
+  echo "═══════════════════════════════════════════════════════════════"
+  
+  # Active terminals
+  ACTIVE_TERMS=$(cat "$FED_REPORT" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(sum(1 for t in d.get("terminals",{}).values() if t.get("active")))' 2>/dev/null || echo "?")
+  printf "  💻 %-20s %s\n" "Active Terminals:" "$ACTIVE_TERMS/4"
+  
+  # Running agents
+  ACTIVE_AGENTS=$(cat "$FED_REPORT" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(sum(1 for a in d.get("agents",[]) if a.get("live_status")=="running"))' 2>/dev/null || echo "?")
+  printf "  🤖 %-20s %s\n" "Running Agents:" "$ACTIVE_AGENTS"
+  
+  # Mesh gateway
+  GW_STATUS=$(cat "$FED_REPORT" | python3 -c 'import sys,json; d=json.load(sys.stdin); gw=d.get("mesh_gateway",{}); print(f"{gw.get(\"status\",\"?\")} ({gw.get(\"nodes_online\",\"?\")}/{gw.get(\"nodes_total\",\"?\")})" )' 2>/dev/null || echo "?")
+  printf "  🌐 %-20s %s\n" "Mesh Gateway:" "$GW_STATUS"
+  
+  # OpenClaw
+  OC_DAEMON=$(cat "$FED_REPORT" | python3 -c 'import sys,json; print("✅" if json.load(sys.stdin).get("openclaw",{}).get("daemon_running") else "❌")' 2>/dev/null || echo "?")
+  OC_MEM=$(cat "$FED_REPORT" | python3 -c 'import sys,json; print("✅" if json.load(sys.stdin).get("openclaw",{}).get("memory_exists") else "❌")' 2>/dev/null || echo "?")
+  printf "  🦀 %-20s %s\n" "OpenClaw:" "Daemon $OC_DAEMON | Memory $OC_MEM"
+  
+  echo "═══════════════════════════════════════════════════════════════"
+fi

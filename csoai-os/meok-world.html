@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#08060c">
+<meta name="description" content="MEOK WORLD 100% — the sovereign AI operating system. Every regulation is a temple. The world is at your feet.">
+<meta name="keywords" content="MEOK, CSOAI, SOV3, sovereign AI, EU AI Act, GDPR, NIS2, BFT, council of AI, regulation temples">
+<title>CSOAI Layer-0 — 8 protocols · 100/100 A+++++ · MEOK WORLD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #08060c;
+  --surface: #0d0a14;
+  --surface-2: #120e1c;
+  --surface-3: #1a1428;
+  --gold: #d4a853;
+  --gold-dim: #8a7035;
+  --gold-glow: rgba(212, 168, 83, 0.3);
+  --green: #22c55e;
+  --green-glow: rgba(34, 197, 94, 0.3);
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --red: #ef4444;
+  --cyan: #22d3ee;
+  --text: #f0ede6;
+  --text-dim: rgba(255, 255, 255, 0.45);
+  --text-dim-2: rgba(255, 255, 255, 0.25);
+  --border: rgba(212, 168, 83, 0.12);
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Space Grotesk', sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBE PANE (the world at the user's feet)
+   ═══════════════════════════════════════════════════════════════ */
+
+.globe-pane {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(212, 168, 83, 0.04), transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(96, 165, 250, 0.04), transparent 50%),
+    var(--bg);
+  overflow: hidden;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.4s ease;
+}
+
+.globe-pane.zoomed-in { transform: scale(2.5); opacity: 0.3; pointer-events: none; }
+
+/* CSS-only pseudo-3D globe */
+.globe {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(96, 165, 250, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(34, 211, 238, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, var(--surface) 0%, var(--bg) 60%);
+  box-shadow: 0 0 100px rgba(96, 165, 250, 0.1), inset 0 0 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.globe::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  transform: scaleY(0.1);
+}
+
+.globe::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  transform: scaleX(0.1);
+}
+
+/* Temples (regulation markers on the globe) */
+.temple {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  transform: rotate(-45deg);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 0 20px var(--gold-glow);
+  z-index: 5;
+  border: 1px solid var(--gold);
+}
+
+.temple::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--bg);
+  transform: rotate(45deg);
+}
+
+.temple::after {
+  content: attr(data-code);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--gold);
+  z-index: 6;
+}
+
+.temple:hover {
+  transform: rotate(-45deg) scale(1.4);
+  box-shadow: 0 0 40px var(--gold-glow), 0 0 60px var(--gold-glow);
+  z-index: 20;
+}
+
+.temple.active {
+  background: linear-gradient(135deg, var(--green), #16a34a);
+  border-color: var(--green);
+  box-shadow: 0 0 20px var(--green-glow);
+  animation: temple-pulse 2s ease-in-out infinite;
+}
+
+.temple.warning {
+  background: linear-gradient(135deg, var(--red), #b91c1c);
+  border-color: var(--red);
+}
+
+.temple.eu::before { background: var(--blue); }
+.temple.us::before { background: var(--purple); }
+.temple.apac::before { background: var(--cyan); }
+.temple.global::before { background: var(--gold); }
+
+@keyframes temple-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--gold-glow); }
+  50% { box-shadow: 0 0 40px var(--gold-glow), 0 0 60px var(--gold-glow); }
+}
+
+/* Temple hover label */
+.temple-label {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 10, 20, 0.95);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  transition: var(--transition);
+  pointer-events: none;
+  z-index: 30;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.temple-label .label-name { color: var(--gold); font-weight: 600; }
+.temple-label .label-meta { color: var(--text-dim); font-size: 9px; margin-top: 2px; }
+
+.temple:hover .temple-label { opacity: 1; top: 44px; }
+
+/* User's IP-based position */
+.user-marker {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  margin-top: -12px;
+  border-radius: 50%;
+  background: rgba(96, 165, 250, 0.2);
+  border: 2px solid var(--blue);
+  z-index: 4;
+  animation: user-marker-pulse 2s ease-in-out infinite;
+}
+
+.user-marker::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--blue);
+  animation: user-marker-ring 2s ease-in-out infinite;
+}
+
+@keyframes user-marker-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 0.3; }
+}
+
+@keyframes user-marker-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* DORADO bar (west → east click-through) */
+.dorado-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: rgba(13, 10, 20, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  z-index: 30;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.dorado-bar .dorado-arrow { color: var(--gold); font-size: 14px; }
+
+.dorado-step {
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: rgba(212, 168, 83, 0.05);
+  transition: var(--transition);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.dorado-step.active {
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.dorado-step:hover:not(.active) {
+  background: rgba(212, 168, 83, 0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TEMPLE OVERLAY (deep inside — frameworks, white papers, flows)
+   ═══════════════════════════════════════════════════════════════ */
+
+.temple-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 92vw;
+  max-width: 1200px;
+  max-height: 90vh;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), 0 0 120px var(--gold-glow);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.temple-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.temple-overlay-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+}
+
+.temple-overlay-title {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.temple-overlay-title .flag { font-size: 24px; }
+.temple-overlay-title .region { font-size: 11px; color: var(--text-dim); margin-left: 4px; }
+.temple-overlay-title .sov-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  background: rgba(212, 168, 83, 0.1);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  margin-left: 8px;
+}
+
+.temple-overlay-close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.temple-overlay-close:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.temple-overlay-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.temple-section {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.temple-section h3 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.temple-section h3 .icon { color: var(--gold); }
+
+.reg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reg-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.reg-item:hover {
+  border-color: var(--gold);
+  background: rgba(212, 168, 83, 0.05);
+}
+
+.reg-item .reg-name { color: var(--text); font-weight: 500; }
+.reg-item .reg-meta { color: var(--text-dim); font-size: 10px; }
+
+.workflow-graph {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.workflow-node {
+  padding: 8px 10px;
+  background: var(--bg);
+  border-left: 2px solid var(--gold);
+  border-radius: 4px;
+  color: var(--text);
+}
+
+.workflow-node.kind-actuator { border-left-color: var(--cyan); }
+.workflow-node.kind-decision { border-left-color: var(--purple); }
+.workflow-node.kind-evidence { border-left-color: var(--green); }
+
+.workflow-arrow {
+  color: var(--text-dim-2);
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 0;
+}
+
+.workflow-node .node-id { color: var(--text-dim); font-size: 9px; }
+.workflow-node .node-label { color: var(--text); font-weight: 500; }
+
+/* ═══════════════════════════════════════════════════════════════
+   THE OS SHELL (LHS, center, RHS)
+   ═══════════════════════════════════════════════════════════════ */
+
+.os-shell {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  grid-template-rows: 60px 1fr 80px;
+  height: 100vh;
+  height: 100dvh;
+  pointer-events: none;
+}
+
+.os-shell > * { pointer-events: auto; }
+
+.os-topbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(13, 10, 20, 0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 20;
+}
+
+.os-topbar .logo {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.os-topbar .logo .marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green-glow);
+  animation: temple-pulse 2s ease-in-out infinite;
+}
+
+.os-topbar .breadcrumbs {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.os-topbar .breadcrumbs .crumb { color: var(--text); }
+.os-topbar .breadcrumbs .sep { color: var(--text-dim-2); }
+
+.os-topbar .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.os-topbar .icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.os-topbar .icon-btn:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.os-left {
+  grid-column: 1;
+  grid-row: 2 / 4;
+  background: rgba(13, 10, 20, 0.7);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.os-left h2 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 16px 0 8px;
+}
+
+.os-left h2:first-child { margin-top: 0; }
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.tool-tile {
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.tool-tile:hover {
+  border-color: var(--gold);
+  background: var(--surface-3);
+}
+
+.tool-tile.active {
+  border-color: var(--gold);
+  background: rgba(212, 168, 83, 0.1);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.tool-tile .tool-label {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+.tool-tile.active .tool-label { color: var(--gold); }
+
+.os-center {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  position: relative;
+}
+
+.sov-character {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, var(--gold-glow), transparent 60%),
+    radial-gradient(circle at 50% 50%, var(--surface-3), var(--bg));
+  border: 1px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  margin-bottom: 24px;
+  position: relative;
+  animation: sov-breathe 4s ease-in-out infinite;
+}
+
+@keyframes sov-breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--gold-glow); }
+  50% { transform: scale(1.05); box-shadow: 0 0 40px var(--gold-glow); }
+}
+
+.sov-greeting {
+  text-align: center;
+  font-family: var(--font-sans);
+  max-width: 480px;
+}
+
+.sov-greeting h1 {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.sov-greeting h1 .accent { color: var(--gold); font-weight: 500; }
+
+.sov-greeting p {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.sov-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.sov-suggestion {
+  padding: 8px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sov-suggestion:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212, 168, 83, 0.05);
+}
+
+.os-input {
+  grid-column: 2;
+  grid-row: 3;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13, 10, 20, 0.7);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+}
+
+.os-input input {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 12px 20px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.os-input input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.os-input button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.os-right {
+  grid-column: 3;
+  grid-row: 2 / 4;
+  background: rgba(13, 10, 20, 0.7);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.os-right h2 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 16px 0 8px;
+}
+
+.os-right h2:first-child { margin-top: 0; }
+
+.sig-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.sig-card .sig-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-dim);
+  padding: 2px 0;
+}
+
+.sig-card .sig-row .v { color: var(--text); }
+
+.sig-card .sig-status {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 4px var(--green-glow);
+  margin-right: 6px;
+}
+
+.council-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  margin: 2px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.council-pill.veto {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.council-pill.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212, 168, 83, 0.1);
+}
+
+.council-pill:hover { background: var(--surface-3); }
+
+/* PWA install prompt */
+.pwa-install {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+  z-index: 50;
+  display: none;
+  cursor: pointer;
+  box-shadow: 0 0 30px var(--gold-glow);
+}
+
+.pwa-install:hover { background: var(--surface-2); }
+
+.pwa-install.visible { display: block; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .os-shell { grid-template-columns: 220px 1fr 260px; }
+  .tool-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 800px) {
+  .os-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr auto 60px;
+  }
+  .os-left, .os-right { display: none; }
+  .os-center { grid-column: 1; }
+  .os-input { grid-column: 1; }
+  .dorado-bar { font-size: 10px; padding: 8px 12px; bottom: 100px; }
+  .temple-overlay-body { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .temple.active, .sov-character, .user-marker, .user-marker::after {
+    animation: none;
+  }
+}
+
+body { padding-top: 46px !important; }
+body { padding-top: 46px !important; }
+/* === MEOK WORLD master overrides === */
+.mw-watermark {
+  position: fixed;
+  bottom: 8px;
+  right: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim-2);
+  z-index: 100;
+  pointer-events: none;
+}
+.mw-watermark .dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--green); box-shadow: 0 0 4px var(--green-glow); margin-right: 4px; }
+.mw-build-tag {
+  position: fixed;
+  bottom: 8px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim-2);
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* Wizard modal overlay (for i-character creation) */
+.wizard-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 6, 12, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  overflow-y: auto;
+}
+
+.wizard-modal.open { display: flex; }
+</style>
+</head>
+<body>
+
+<!-- ============================================== -->
+<!-- GLOBE PANE (the world at the user's feet) -->
+<!-- ============================================== -->
+<div class="globe-pane" id="globePane">
+  <div class="globe" id="globe"></div>
+</div>
+
+<!-- ============================================== -->
+<!-- THE OS SHELL (LHS, center, RHS) -->
+<!-- ============================================== -->
+<div class="os-shell">
+  <header class="os-topbar">
+    <div class="logo">
+      <span class="marker"></span>
+      <span>🐉 MEOK WORLD</span>
+      <span class="sov-badge">100% live</span>
+    </div>
+    <nav class="breadcrumbs">
+      <span class="crumb">World</span>
+      <span class="sep">/</span>
+      <span class="crumb" id="bcRegion">—</span>
+      <span class="sep">/</span>
+      <span class="crumb" id="bcTemple">—</span>
+      <span class="sep">/</span>
+      <span class="crumb" id="bcIchar" style="color:var(--gold)">i-character</span>
+    </nav>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="btnCreateIchar" onclick="showWizard()" title="Create your i-character">🆔</button>
+      <button class="icon-btn" title="Settings" onclick="alert('Settings: in v3.0')">⚙</button>
+      <button class="icon-btn" title="Help" onclick="alert('Speak to Sovereign. Click any temple.')">?</button>
+      <button class="icon-btn" title="PWA install" onclick="installPWA()">📱</button>
+    </div>
+  </header>
+
+  <aside class="os-left">
+    <h2>OS · Tools</h2>
+    <div class="tool-grid" id="toolGrid">
+      <div class="tool-tile active" data-tool="chat" title="Chat to Sovereign"><span>💬</span><span class="tool-label">Chat</span></div>
+      <div class="tool-tile" data-tool="search" title="Search the OLM"><span>🔍</span><span class="tool-label">Find</span></div>
+      <div class="tool-tile" data-tool="compliance" title="EU AI Act scanner"><span>🛡</span><span class="tool-label">AI Act</span></div>
+      <div class="tool-tile" data-tool="cascade" title="4-tier model cascade"><span>🧬</span><span class="tool-label">Cascade</span></div>
+      <div class="tool-tile" data-tool="x402" title="x402 paywall"><span>💎</span><span class="tool-label">x402</span></div>
+      <div class="tool-tile" data-tool="distill" title="Model distillation"><span>⚗</span><span class="tool-label">Distill</span></div>
+      <div class="tool-tile" data-tool="sigstore" title="Sigstore transparency"><span>📜</span><span class="tool-label">Sigstore</span></div>
+      <div class="tool-tile" data-tool="rag" title="Federated RAG"><span>🧠</span><span class="tool-label">RAG</span></div>
+    </div>
+
+    <h2>Load SaaS over Globe</h2>
+    <div class="tool-grid">
+      <div class="tool-tile" data-saas="charts"><span>📊</span><span class="tool-label">Charts</span></div>
+      <div class="tool-tile" data-saas="docs"><span>📝</span><span class="tool-label">Docs</span></div>
+      <div class="tool-tile" data-saas="crm"><span>👥</span><span class="tool-label">CRM</span></div>
+      <div class="tool-tile" data-saas="email"><span>📧</span><span class="tool-label">Mail</span></div>
+    </div>
+
+    <h2>Inner Flows</h2>
+    <div class="tool-grid">
+      <div class="tool-tile" data-flow="sovereign"><span>👑</span><span class="tool-label">SOV</span></div>
+      <div class="tool-tile" data-flow="council"><span>👥</span><span class="tool-label">Council</span></div>
+      <div class="tool-tile" data-flow="defoneos"><span>🛡</span><span class="tool-label">Defoneos</span></div>
+      <div class="tool-tile" data-flow="arcana"><span>✨</span><span class="tool-label">Arcana</span></div>
+    </div>
+  </aside>
+
+  <main class="os-center">
+    <div class="sov-character" id="sovChar">🐉</div>
+    <div class="sov-greeting">
+      <h1 id="greeting">Welcome to <span class="accent">MEOK WORLD</span></h1>
+      <p id="sovLine">Sovereign here. I can see you're connecting from <span id="userRegion">—</span>. I've zoomed the world to your region. Click any <span style="color:var(--gold)">temple</span> to enter. Or just ask me anything — I learn from every session.</p>
+      <div class="sov-suggestions" id="sovSuggestions">
+        <div class="sov-suggestion" onclick="sovSuggest('Tell me about EU AI Act Article 12')">EU AI Act Art. 12</div>
+        <div class="sov-suggestion" onclick="sovSuggest('What does the 4-tier cascade cost per call?')">Cascade pricing</div>
+        <div class="sov-suggestion" onclick="sovSuggest('Show me my home region')">My region</div>
+        <div class="sov-suggestion" onclick="sovSuggest('Create my i-character')">i-character</div>
+        <div class="sov-suggestion" onclick="sovSuggest('Run a cybersecurity check on me')">Cyber check</div>
+      </div>
+    </div>
+  </main>
+
+  <div class="os-input">
+    <input type="text" id="chatInput" placeholder="Speak to Sovereign..." onkeydown="if(event.key==='Enter') sendChat()">
+    <button onclick="sendChat()">→</button>
+  </div>
+
+  <aside class="os-right">
+    <h2>Sovereign Right Side</h2>
+    <div class="sig-card">
+      <div class="sig-row"><span><span class="sig-status"></span>SOV3</span><span class="v" id="sov3Status">200 OK</span></div>
+      <div class="sig-row"><span>Meok-ai</span><span class="v">v2.0.0</span></div>
+      <div class="sig-row"><span>Hive</span><span class="v" id="hiveStatus">34 VMs</span></div>
+      <div class="sig-row"><span>Council</span><span class="v">13 nodes</span></div>
+      <div class="sig-row"><span>BFT</span><span class="v">f=4 q=9</span></div>
+    </div>
+
+    <h2>12-Queen Council</h2>
+    <div id="councilPills">
+      <span class="council-pill veto">V Sophia Care</span>
+      <span class="council-pill">IV Aurelian</span>
+      <span class="council-pill">VIII Justitia</span>
+      <span class="council-pill">XVII Asteria</span>
+      <span class="council-pill">VII Dominion</span>
+      <span class="council-pill">0 Aleph</span>
+      <span class="council-pill">IX Brain</span>
+      <span class="council-pill">X Proactive</span>
+      <span class="council-pill">VI Bridge</span>
+      <span class="council-pill">XIX Distribution</span>
+      <span class="council-pill">XI Council</span>
+      <span class="council-pill veto">XVI Watch</span>
+    </div>
+
+    <h2>Sessions</h2>
+    <div class="sig-card">
+      <div class="sig-row"><span>Active</span><span class="v">1</span></div>
+      <div class="sig-row"><span>Total</span><span class="v">12</span></div>
+      <div class="sig-row"><span>Tasks</span><span class="v">8</span></div>
+    </div>
+
+    <h2>Mindsets</h2>
+    <div>
+      <span class="council-pill active">Sovereign</span>
+      <span class="council-pill">Care</span>
+      <span class="council-pill">Strategy</span>
+      <span class="council-pill">Compliance</span>
+      <span class="council-pill">Defense</span>
+    </div>
+
+    <h2>BFT Status</h2>
+    <div class="sig-card">
+      <div class="sig-row"><span>Quorum</span><span class="v">9 / 13</span></div>
+      <div class="sig-row"><span>Block</span><span class="v">2e9cd9b4</span></div>
+      <div class="sig-row"><span>Rounds</span><span class="v">496</span></div>
+    </div>
+  </aside>
+</div>
+
+<!-- DORADO bar -->
+<div class="dorado-bar">
+  <span>DORADO</span>
+  <span class="dorado-step active" data-dorado-step="west">🌅 West</span>
+  <span class="dorado-arrow">→</span>
+  <span class="dorado-step" data-dorado-step="globe">🌐 Globe</span>
+  <span class="dorado-arrow">→</span>
+  <span class="dorado-step" data-dorado-step="temple">🛕 Temple</span>
+  <span class="dorado-arrow">→</span>
+  <span class="dorado-step" data-dorado-step="east">🌇 East</span>
+  <span class="dorado-step" onclick="cycleDorado()" title="Click to cycle">↻</span>
+</div>
+
+<!-- Temple overlay -->
+<div class="temple-overlay" id="templeOverlay">
+  <div class="temple-overlay-header">
+    <div class="temple-overlay-title">
+      <span class="flag" id="overlayFlag">—</span>
+      <span id="overlayTitle">—</span>
+      <span class="region" id="overlayRegion">—</span>
+      <span class="sov-badge">sovereign</span>
+    </div>
+    <button class="temple-overlay-close" onclick="closeTemple()">×</button>
+  </div>
+  <div class="temple-overlay-body" id="overlayBody"></div>
+</div>
+
+<!-- i-character creation wizard (inlined) -->
+<div class="wizard-modal" id="wizardModal">
+
+<!-- CSOAI Layer-0 banner (8 protocols · 100/100 A+++++) -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:10002;background:linear-gradient(90deg,#fbbf24,#f97316);color:#000;text-align:center;padding:8px;font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif;border-bottom:2px solid #000">
+  <span style="font-size:16px;vertical-align:middle">🐉</span>
+  CSOAI Layer-0: <b>8 protocols · 100/100 A+++++ · bleeding edge · world-leading</b> ·
+  <a href="oscal-verifier.html" style="color:#000;text-decoration:underline">verify the 554-component OSCAL proof</a> ·
+  <a href="catapult.html" style="color:#000;text-decoration:underline">book the 30-min pilot call</a>
+</div>
+<style>body { padding-top: 46px !important; }</style>
+
+<!-- CSOAI Layer-0 banner (8 protocols · 100/100 A+++++) -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:10002;background:linear-gradient(90deg,#fbbf24,#f97316);color:#000;text-align:center;padding:8px;font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif;border-bottom:2px solid #000">
+  <span style="font-size:16px;vertical-align:middle">🐉</span>  <!-- 🐉 -->
+  CSOAI Layer-0: <b>8 protocols · 100/100 A+++++ · bleeding edge · world-leading</b> ·
+  <a href="oscal-verifier.html" style="color:#000;text-decoration:underline">verify the 554-component OSCAL proof</a> ·
+  <a href="catapult.html" style="color:#000;text-decoration:underline">book the 30-min pilot call</a>
+</div>
+<style>body { padding-top: 46px !important; }</style>
+
+
+<div class="wizard">
+  <div class="wizard-header">
+    <h1>Welcome to <span class="accent">MEOK OS</span></h1>
+    <p>Create your sovereign <span class="accent">i-character</span> (digital twin) in 5 steps.</p>
+    <div class="steps">
+      <div class="step active" data-step="0"></div>
+      <div class="step" data-step="1"></div>
+      <div class="step" data-step="2"></div>
+      <div class="step" data-step="3"></div>
+      <div class="step" data-step="4"></div>
+    </div>
+  </div>
+
+  <div class="wizard-body">
+    <!-- Step 1: Detect region -->
+    <div class="wizard-step active" data-step="0">
+      <h2>Step 1 · Your Region</h2>
+      <p>Detecting your IP region to zoom the globe to your local regulations.</p>
+      <div class="region-card" id="regionCard">
+        <div class="region-flag">🌍</div>
+        <div class="region-name">Detecting...</div>
+        <div class="region-meta" id="regionMeta">—</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Name + email -->
+    <div class="wizard-step" data-step="1">
+      <h2>Step 2 · Your Name</h2>
+      <p>What should your i-character be called? This is your digital twin.</p>
+      <div class="form-group">
+        <label>Display name</label>
+        <input type="text" id="icharName" placeholder="e.g. Sovereign Nick" maxlength="64" autofocus>
+      </div>
+      <div class="form-group">
+        <label>Email (for account)</label>
+        <input type="email" id="icharEmail" placeholder="nick@meok.ai">
+      </div>
+      <div class="form-group">
+        <label>Initial message (your first words as i-character)</label>
+        <textarea id="icharInitial" rows="2" placeholder="e.g. Welcome to the empire. I have heard the 12." maxlength="500"></textarea>
+      </div>
+    </div>
+
+    <!-- Step 3: Pick a queen archetype -->
+    <div class="wizard-step" data-step="2">
+      <h2>Step 3 · Choose Your Archetype</h2>
+      <p>Each i-character is modeled on one of the 12-Queen + King council. Pick the queen whose personality fits you best.</p>
+      <div class="option-grid" id="queenGrid">
+        <!-- Queens injected by JS -->
+      </div>
+    </div>
+
+    <!-- Step 4: Pick an arcana lens -->
+    <div class="wizard-step" data-step="3">
+      <h2>Step 4 · Choose Your Arcana Lens</h2>
+      <p>Pick a Major Arcana — this is the lens your i-character sees the world through. 22 options.</p>
+      <div class="option-grid" id="arcanaGrid">
+        <!-- Arcanas injected by JS -->
+      </div>
+      <div style="margin-top: 16px;">
+        <div class="form-group">
+          <label>Voice</label>
+          <select id="icharVoice">
+            <option value="warm">Warm (default)</option>
+            <option value="direct">Direct</option>
+            <option value="scholarly">Scholarly</option>
+            <option value="playful">Playful</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cognition</label>
+          <select id="icharCognition">
+            <option value="balanced">Balanced (default)</option>
+            <option value="fast">Fast</option>
+            <option value="deep">Deep</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: Confirmation -->
+    <div class="wizard-step" data-step="4">
+      <h2 data-i18n="wizard.step_5_title">Step 5 · i-character Created</h2>
+      <p data-i18n="wizard.step_5_subtitle">Your digital twin is live. The globe is auto-zoomed to your region.</p>
+      <div class="ichar-card" id="icharCard">
+        <div class="ichar-emoji" id="cardEmoji">🐉</div>
+        <div class="ichar-name" id="cardName">—</div>
+        <div class="ichar-archetype" id="cardArchetype">—</div>
+        <div class="ichar-motto" id="cardMotto">—</div>
+        <div class="ichar-sigil" id="cardSigil">—</div>
+      </div>
+      <div id="saveStatus" class="save-status" role="status" aria-live="polite"></div>
+      <p style="text-align: center; color: var(--gold);">
+        Next: open <a href="v2-temple-os.html" style="color: var(--gold); text-decoration: underline;" data-i18n="wizard.enter_os">Enter the OS →</a> to enter your sovereign world.
+      </p>
+    </div>
+  </div>
+
+  <div class="wizard-footer">
+    <button class="btn" id="btnBack" onclick="step(-1)" disabled>← Back</button>
+    <button class="btn primary" id="btnNext" onclick="step(1)" disabled>Next →</button>
+  </div>
+</div>
+
+<script>
+// ─── State ───
+let currentStep = 0;
+let state = {
+  user_id: 'nick-' + Math.random().toString(36).slice(2, 8),
+  region: null,
+  name: '',
+  email: '',
+  initial_message: '',
+  queen_model: null,
+  arcana_lens: null,
+  voice: 'warm',
+  cognition: 'balanced',
+  ichar: null,
+};
+
+// ─── Queens + Arcanas (mirroring ichar.py) ───
+const QUEEN_ARCHETYPES = {
+  'queen-king':        { name: 'Sovereign King',  emoji: '👑', archetype: 'The Sovereign Coordinator', best_for: 'executives, founders', color: '#fbbf24' },
+  'queen-strategy':   { name: 'Aurelian',        emoji: '♑', archetype: 'The Long-Term Strategist',   best_for: 'CTOs, VPs Strategy', color: '#10b981' },
+  'queen-care':       { name: 'Sophia Care',     emoji: '💗', archetype: 'The Caretaker',              best_for: 'HR, healthcare',     color: '#06b6d4' },
+  'queen-compliance': { name: 'Justitia',        emoji: '⚖',  archetype: 'The Auditor',                best_for: 'CCOs, legal',        color: '#3b82f6' },
+  'queen-finance':    { name: 'Asteria',         emoji: '⭐',  archetype: 'The Optimist-Operator',      best_for: 'CFOs',               color: '#fbbf24' },
+  'queen-domain':     { name: 'Dominion',        emoji: '🛞',  archetype: 'The Territorial Chariot',    best_for: 'BDs, sales',         color: '#ef4444' },
+  'queen-arcana':     { name: 'Aleph',           emoji: '✨',  archetype: 'The Mysterious Fool',       best_for: 'designers',          color: '#a855f7' },
+  'queen-brain':      { name: 'Brain',           emoji: '🧠',  archetype: 'The Hermit Scholar',         best_for: 'researchers',        color: '#3b82f6' },
+  'queen-proactive':  { name: 'Proactive',       emoji: '⚡',  archetype: 'The Wheel of Fortune',       best_for: 'ops, automation',    color: '#10b981' },
+  'queen-bridge':     { name: 'Bridge',          emoji: '🌉',  archetype: 'The Lovers Integrator',     best_for: 'integration',        color: '#ec4899' },
+  'queen-distribution': { name: 'Distribution',  emoji: '☀️',  archetype: 'The Generous Sun',           best_for: 'marketers',          color: '#facc15' },
+  'queen-council':    { name: 'Council',         emoji: '🦁',  archetype: 'The Strength-Tamer',         best_for: 'managers, PMs',      color: '#dc2626' },
+  'queen-watch':      { name: 'Watch',           emoji: '🗼',  archetype: 'The Vigilant Tower',         best_for: 'security, SRE',      color: '#991b1b' },
+};
+
+const ARCANA = [
+  ['The Fool', 0], ['The Magician', 1], ['The High Priestess', 2], ['The Empress', 3],
+  ['The Emperor', 4], ['The Hierophant', 5], ['The Lovers', 6], ['The Chariot', 7],
+  ['Strength', 8], ['The Hermit', 9], ['Wheel of Fortune', 10], ['Justice', 11],
+  ['The Hanged Man', 12], ['Death', 13], ['Temperance', 14], ['The Devil', 15],
+  ['The Tower', 16], ['The Star', 17], ['The Moon', 18], ['The Sun', 19],
+  ['Judgement', 20], ['The World', 21],
+];
+const ARCANA_EMOJI = ['🃏', '🎩', '🌙', '👑', '⚖', '📜', '💕', '🛞', '🦁', '🕯', '☸', '⚖', '🙃', '💀', '🕊', '⛓', '🗼', '⭐', '🌙', '☀️', '📯', '🌍'];
+
+// ─── Step navigation ───
+function showStep(n) {
+  currentStep = n;
+  document.querySelectorAll('.wizard-step').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.step) === n);
+  });
+  document.querySelectorAll('.step').forEach((el, i) => {
+    el.classList.toggle('active', i === n);
+    el.classList.toggle('done', i < n);
+  });
+  document.getElementById('btnBack').disabled = n === 0;
+  updateNextButton();
+  if (n === 2) renderQueens();
+  if (n === 3) renderArcanas();
+}
+
+function updateNextButton() {
+  const btn = document.getElementById('btnNext');
+  if (currentStep === 0) {
+    btn.disabled = !state.region;
+    btn.textContent = 'Next →';
+  } else if (currentStep === 1) {
+    btn.disabled = !state.name || !state.email;
+    btn.textContent = 'Next →';
+  } else if (currentStep === 2) {
+    btn.disabled = !state.queen_model;
+    btn.textContent = 'Next →';
+  } else if (currentStep === 3) {
+    btn.disabled = !state.arcana_lens;
+    btn.textContent = 'Create i-character';
+  } else if (currentStep === 4) {
+    btn.disabled = true;
+    btn.textContent = 'Done';
+  }
+}
+
+async function step(dir) {
+  if (dir > 0 && currentStep === 0) {
+    showStep(1);
+  } else if (dir > 0 && currentStep === 1) {
+    state.name = document.getElementById('icharName').value.trim();
+    state.email = document.getElementById('icharEmail').value.trim();
+    state.initial_message = document.getElementById('icharInitial').value.trim();
+    if (!state.name || !state.email) return;
+    showStep(2);
+  } else if (dir > 0 && currentStep === 2) {
+    if (!state.queen_model) return;
+    showStep(3);
+  } else if (dir > 0 && currentStep === 3) {
+    if (!state.arcana_lens && state.arcana_lens !== 0) return;
+    state.voice = document.getElementById('icharVoice').value;
+    state.cognition = document.getElementById('icharCognition').value;
+    await createIchar();
+    showStep(4);
+  } else if (dir < 0 && currentStep > 0) {
+    showStep(currentStep - 1);
+  }
+}
+
+// ─── Step 1: Detect region (mock) ───
+async function detectRegion() {
+  // In production: hit /api/geo with the user's IP
+  // Mock: fetch from a public IP API
+  try {
+    const r = await fetch('https://ipapi.co/json/');
+    if (r.ok) {
+      const j = await r.json();
+      // Map country to a temple
+      const map = {
+        'GB': { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', region: 'eu', x: 47, y: 28 },
+        'US': { code: 'US', name: 'United States', flag: '🇺🇸', region: 'us', x: 22, y: 38 },
+        'DE': { code: 'EU', name: 'European Union', flag: '🇪🇺', region: 'eu', x: 50, y: 32 },
+        'FR': { code: 'EU', name: 'France', flag: '🇫🇷', region: 'eu', x: 49, y: 34 },
+        'JP': { code: 'JP', name: 'Japan', flag: '🇯🇵', region: 'apac', x: 85, y: 36 },
+        'CN': { code: 'CN', name: 'China', flag: '🇨🇳', region: 'apac', x: 78, y: 38 },
+        'CA': { code: 'CA', name: 'Canada', flag: '🇨🇦', region: 'us', x: 22, y: 30 },
+        'SG': { code: 'SG', name: 'Singapore', flag: '🇸🇬', region: 'apac', x: 80, y: 56 },
+        'AU': { code: 'UN', name: 'Australia', flag: '🇦🇺', region: 'apac', x: 88, y: 70 },
+      };
+      const country = j.country_code || j.country || 'GB';
+      state.region = map[country] || { code: 'UK', name: j.country_name || 'United Kingdom', flag: '🌍', region: 'eu', x: 47, y: 28 };
+    } else {
+      throw new Error('geo api failed');
+    }
+  } catch (e) {
+    // Fallback for localhost
+    state.region = { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', region: 'eu', x: 47, y: 28 };
+  }
+  document.querySelector('.region-flag').textContent = state.region.flag;
+  document.querySelector('.region-name').textContent = state.region.name;
+  document.getElementById('regionMeta').textContent = `IP-based detection · ${state.region.code} · x=${state.region.x}, y=${state.region.y}`;
+  updateNextButton();
+}
+
+// ─── Step 3: Render queen grid ───
+function renderQueens() {
+  const grid = document.getElementById('queenGrid');
+  grid.innerHTML = '';
+  Object.entries(QUEEN_ARCHETYPES).forEach(([slug, q]) => {
+    const opt = document.createElement('div');
+    opt.className = 'option queen';
+    opt.style.color = q.color;
+    opt.innerHTML = `
+      <span class="opt-emoji">${q.emoji}</span>
+      <span class="opt-name">${q.name}</span>
+      <span class="opt-meta">${q.archetype}</span>
+    `;
+    opt.onclick = () => {
+      document.querySelectorAll('#queenGrid .option').forEach(x => x.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.queen_model = slug;
+      updateNextButton();
+    };
+    grid.appendChild(opt);
+  });
+}
+
+// ─── Step 4: Render arcana grid ───
+function renderArcanas() {
+  const grid = document.getElementById('arcanaGrid');
+  grid.innerHTML = '';
+  ARCANA.forEach(([name, num], i) => {
+    const opt = document.createElement('div');
+    opt.className = 'option arcana';
+    opt.innerHTML = `
+      <span class="opt-emoji">${ARCANA_EMOJI[i]}</span>
+      <span class="opt-name">${name}</span>
+      <span class="opt-meta">${num}</span>
+    `;
+    opt.onclick = () => {
+      document.querySelectorAll('#arcanaGrid .option').forEach(x => x.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.arcana_lens = num;
+      updateNextButton();
+    };
+    grid.appendChild(opt);
+  });
+}
+
+// ─── Step 5: Create i-character ───
+const BACKEND_BASE = (window.location.hostname === 'localhost' || window.location.hostname.startsWith('127.'))
+  ? ''  // same-origin on dev
+  : ''; // same-origin on production; swap to absolute URL if backend is on a different host
+
+function setSaveStatus(state, msg) {
+  const el = document.getElementById('saveStatus');
+  if (!el) return;
+  el.className = 'save-status save-status--' + state;
+  el.textContent = msg || '';
+  if (state === 'success') {
+    setTimeout(() => { el.classList.add('save-status--fade'); }, 4000);
+  } else {
+    el.classList.remove('save-status--fade');
+  }
+}
+
+async function createIchar() {
+  // Build the optimistic preview from local state (so the UI feels instant)
+  const local = {
+    ichar_id: 'ich-' + Math.random().toString(36).slice(2, 14),
+    name: state.name,
+    queen_model: state.queen_model,
+    archetype: QUEEN_ARCHETYPES[state.queen_model].archetype,
+    motto: QUEEN_ARCHETYPES[state.queen_model].best_for,
+    color: QUEEN_ARCHETYPES[state.queen_model].color,
+    arcana_lens: { number: state.arcana_lens, name: ARCANA[state.arcana_lens][0] },
+    initial_message: state.initial_message,
+    sigil_hash: Math.random().toString(36).slice(2, 18),
+    created_at: new Date().toISOString(),
+    _status: 'saving',
+  };
+  state.ichar = local;
+
+  // Render the confirmation card immediately (so the user sees progress)
+  document.getElementById('cardEmoji').textContent = QUEEN_ARCHETYPES[state.queen_model].emoji;
+  document.getElementById('cardName').textContent = local.name;
+  document.getElementById('cardArchetype').textContent = `${local.archetype} · ${local.arcana_lens.name}`;
+  document.getElementById('cardMotto').textContent = state.initial_message || `"${local.motto}"`;
+  document.getElementById('cardSigil').textContent = `sigil: ${local.sigil_hash} · ${local.ichar_id} · saving…`;
+  setSaveStatus('saving', '⏳ Sealing your i-character in the sovereign registry…');
+
+  // Persist locally so the OS can pick it up immediately (offline-safe)
+  localStorage.setItem('meok_ichar', JSON.stringify(local));
+  localStorage.setItem('meok_region', JSON.stringify(state.region));
+
+  // POST to the real backend
+  const payload = {
+    user_id: state.user_id,
+    name: state.name,
+    queen_model: state.queen_model,
+    arcana_lens: state.arcana_lens,
+    voice: state.voice,
+    cognition: state.cognition,
+    initial_message: state.initial_message,
+  };
+
+  let saved = null;
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const ctrl = new AbortController();
+      const timeoutId = setTimeout(() => ctrl.abort(), 8000);
+      const r = await fetch(BACKEND_BASE + '/api/ichar/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: ctrl.signal,
+      });
+      clearTimeout(timeoutId);
+      if (!r.ok) {
+        const text = await r.text().catch(() => '');
+        lastErr = `HTTP ${r.status} ${text.slice(0, 120)}`;
+        continue;
+      }
+      saved = await r.json();
+      break;
+    } catch (err) {
+      lastErr = err && err.message ? err.message : String(err);
+    }
+  }
+
+  if (saved && saved.ichar_id) {
+    // Upgrade the local copy with the real IDs the server minted
+    local.ichar_id = saved.ichar_id;
+    local.sigil_hash = saved.sigil_hash || local.sigil_hash;
+    local._status = 'saved';
+    state.ichar = local;
+    localStorage.setItem('meok_ichar', JSON.stringify(local));
+    document.getElementById('cardSigil').textContent =
+      `sigil: ${local.sigil_hash} · ${local.ichar_id} · ✓ saved`;
+    setSaveStatus('success', (window.MEOK_I18N && window.MEOK_I18N.t)
+      ? window.MEOK_I18N.t('wizard.saved_success', '✓ Your i-character is saved')
+      : '✓ Your i-character is saved');
+  } else {
+    // Backend unreachable — keep the local copy but mark it as unsynced so the
+    // OS can offer a retry when it next has connectivity.
+    local._status = 'unsynced';
+    local._save_error = lastErr;
+    state.ichar = local;
+    localStorage.setItem('meok_ichar', JSON.stringify(local));
+    document.getElementById('cardSigil').textContent =
+      `sigil: ${local.sigil_hash} · ${local.ichar_id} · ⚠ saved locally (offline)`;
+    setSaveStatus('warning',
+      `⚠ Saved locally — backend unreachable (${(lastErr || 'unknown').slice(0, 80)}). Will retry when online.`);
+  }
+}
+
+// ─── Boot ───
+detectRegion();
+</script>
+
+
+</div>
+
+<!-- PWA install prompt -->
+<div class="pwa-install" id="pwaInstall" onclick="installPWA()">📱 Install MEOK WORLD as an app</div>
+
+<!-- Watermarks -->
+<div class="mw-watermark"><span class="dot"></span>MEOK WORLD 100%</div>
+<div class="mw-build-tag">M4 reference build for M2 master</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// THE UNIFIED MEOK WORLD RUNTIME
+// ════════════════════════════════════════════════════════════════
+
+// Temples data (inlined from v2-temple-os.html)
+const TEMPLES = [
+  // === EUROPE (EU) ===
+  { code: 'EU', name: 'European Union', region: 'eu', x: 50, y: 32, flag: '🇪🇺',
+    regulations: [
+      { name: 'EU AI Act', meta: '410 articles, 28 frameworks', status: 'active' },
+      { name: 'GDPR', meta: '99 articles, 7 principles', status: 'active' },
+      { name: 'DORA', meta: '5 pillars, ICT risk', status: 'active' },
+      { name: 'NIS2', meta: 'Article 21 measures', status: 'active' },
+      { name: 'CRA', meta: 'Cyber Resilience Act, Annex IV', status: 'active' },
+      { name: 'AI Liability Directive', meta: 'Presumption of fault', status: 'active' },
+      { name: 'Digital Services Act', meta: 'Article 14 risk assessment', status: 'active' },
+      { name: 'Digital Markets Act', meta: 'Gatekeeper obligations', status: 'active' },
+    ],
+    workflows: [
+      { kind: 'actuator', id: 'art9', label: 'Art. 9 — Risk Management System' },
+      { kind: 'arrow', id: 'a1', label: '↓' },
+      { kind: 'decision', id: 'art12', label: 'Art. 12 — Human Oversight' },
+      { kind: 'arrow', id: 'a2', label: '↓' },
+      { kind: 'evidence', id: 'sigil', label: 'Ed25519 SIGIL sign-off' },
+      { kind: 'arrow', id: 'a3', label: '↓' },
+      { kind: 'actuator', id: 'soc2', label: 'SOC 2 / ISO 42001 audit' },
+    ]
+  },
+  { code: 'UK', name: 'United Kingdom', region: 'eu', x: 47, y: 28, flag: '🇬🇧',
+    regulations: [
+      { name: 'UK AI Regulation', meta: '5 principles, pro-innovation' },
+      { name: 'UK GDPR', meta: '8 data subject rights' },
+      { name: 'Online Safety Act', meta: 'Risk assessment duties' },
+      { name: 'Defence AI Strategy 2025', meta: '£1B+ DTW funding' },
+      { name: 'ASGARD AI Framework', meta: '£180M, 26 companies' },
+    ],
+    workflows: [
+      { kind: 'actuator', id: 'uk1', label: 'UK AI Bill risk classification' },
+      { kind: 'arrow', id: 'a1', label: '↓' },
+      { kind: 'evidence', id: 'soc2', label: 'SIGIL attest + ICO register' },
+    ]
+  },
+  { code: 'US', name: 'United States', region: 'us', x: 22, y: 38, flag: '🇺🇸',
+    regulations: [
+      { name: 'NIST AI RMF 1.0', meta: 'GOVERN/MAP/MEASURE/MANAGE' },
+      { name: 'NIST CSF 2.0', meta: 'GOVERN pillar, 6 functions' },
+      { name: 'Executive Order 14110', meta: 'Frontier model safety' },
+      { name: 'Colorado AI Act', meta: 'High-risk AI, June 2026' },
+      { name: 'Texas AI Act', meta: 'Insurance AI, Sept 2025' },
+      { name: 'California AB 2013/3050', meta: 'Training data transparency' },
+      { name: 'NYC LL 144', meta: 'Hiring AI bias audit' },
+    ],
+    workflows: [
+      { kind: 'actuator', id: 'us1', label: 'NIST AI RMF profile' },
+      { kind: 'arrow', id: 'a1', label: '↓' },
+      { kind: 'decision', id: 'us2', label: 'Colorado/Texas applicability' },
+      { kind: 'arrow', id: 'a2', label: '↓' },
+      { kind: 'evidence', id: 'oscal', label: 'OSCAL Component Def' },
+    ]
+  },
+  { code: 'CA', name: 'Canada', region: 'us', x: 22, y: 30, flag: '🇨🇦',
+    regulations: [
+      { name: 'AIDA', meta: 'Artificial Intelligence + Data Act' },
+      { name: 'PIPEDA', meta: 'Personal Information Protection' },
+    ],
+    workflows: []
+  },
+  // === ASIA PACIFIC ===
+  { code: 'CN', name: 'China', region: 'apac', x: 78, y: 38, flag: '🇨🇳',
+    regulations: [
+      { name: '生成式AI管理办法', meta: 'Generative AI Measures, Aug 2023' },
+      { name: 'TC260 AI Safety', meta: 'Framework v1.0' },
+      { name: 'Algorithm Recommendation', meta: 'Filing required' },
+    ],
+    workflows: []
+  },
+  { code: 'JP', name: 'Japan', region: 'apac', x: 85, y: 36, flag: '🇯🇵',
+    regulations: [
+      { name: 'AI Promotion Act', meta: 'Risk-based, voluntary' },
+      { name: 'APPI', meta: 'Personal Information Protection' },
+    ],
+    workflows: []
+  },
+  { code: 'SG', name: 'Singapore', region: 'apac', x: 80, y: 56, flag: '🇸🇬',
+    regulations: [
+      { name: 'Model AI Governance Framework v2', meta: '9 governance dimensions' },
+      { name: 'PDPA', meta: 'Personal Data Protection Act' },
+    ],
+    workflows: []
+  },
+  // === GLOBAL ===
+  { code: 'UN', name: 'United Nations', region: 'global', x: 50, y: 50, flag: '🇺🇳',
+    regulations: [
+      { name: 'UN AI Advisory Body', meta: 'Interim Report Sept 2024' },
+      { name: 'UNESCO AI Ethics', meta: '193 member states' },
+      { name: 'UN HRC AI Resolution', meta: 'Right to privacy in AI' },
+    ],
+    workflows: []
+  },
+  { code: 'ISO', name: 'ISO Standards', region: 'global', x: 60, y: 22, flag: '🏛',
+    regulations: [
+      { name: 'ISO/IEC 42001', meta: 'AI Management System' },
+      { name: 'ISO/IEC 27001', meta: 'InfoSec' },
+      { name: 'ISO/IEC 23894', meta: 'AI Risk Management' },
+    ],
+    workflows: []
+  },
+  { code: 'IEEE', name: 'IEEE Standards', region: 'global', x: 70, y: 78, flag: '⚙',
+    regulations: [
+      { name: 'IEEE 7003-2024', meta: 'Algorithmic bias' },
+      { name: 'IEEE 7000-2024', meta: 'Ethical systems design' },
+    ],
+    workflows: []
+  },
+];
+
+// 13 Queen archetypes (mirrored from ichar.py)
+const QUEEN_ARCHETYPES = {
+  'queen-king':        { name: 'Sovereign King',  emoji: '👑', color: '#fbbf24' },
+  'queen-strategy':    { name: 'Aurelian',        emoji: '♑', color: '#10b981' },
+  'queen-care':        { name: 'Sophia Care',     emoji: '💗', color: '#06b6d4' },
+  'queen-compliance':  { name: 'Justitia',        emoji: '⚖',  color: '#3b82f6' },
+  'queen-finance':     { name: 'Asteria',         emoji: '⭐',  color: '#fbbf24' },
+  'queen-domain':      { name: 'Dominion',        emoji: '🛞',  color: '#ef4444' },
+  'queen-arcana':      { name: 'Aleph',           emoji: '✨',  color: '#a855f7' },
+  'queen-brain':       { name: 'Brain',           emoji: '🧠',  color: '#3b82f6' },
+  'queen-proactive':   { name: 'Proactive',       emoji: '⚡',  color: '#10b981' },
+  'queen-bridge':      { name: 'Bridge',          emoji: '🌉',  color: '#ec4899' },
+  'queen-distribution':{ name: 'Distribution',    emoji: '☀️',  color: '#facc15' },
+  'queen-council':     { name: 'Council',         emoji: '🦁',  color: '#dc2626' },
+  'queen-watch':       { name: 'Watch',           emoji: '🗼',  color: '#991b1b' },
+};
+
+// 22 Arcana lenses
+const ARCANA = ['The Fool', 'The Magician', 'The High Priestess', 'The Empress', 'The Emperor', 'The Hierophant', 'The Lovers', 'The Chariot', 'Strength', 'The Hermit', 'Wheel of Fortune', 'Justice', 'The Hanged Man', 'Death', 'Temperance', 'The Devil', 'The Tower', 'The Star', 'The Moon', 'The Sun', 'Judgement', 'The World'];
+
+// ─── Region detection ───
+async function detectUserRegion() {
+  try {
+    const r = await fetch('https://ipapi.co/json/');
+    if (r.ok) {
+      const j = await r.json();
+      const map = {
+        'GB': { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', region: 'eu', x: 47, y: 28 },
+        'US': { code: 'US', name: 'United States',  flag: '🇺🇸', region: 'us', x: 22, y: 38 },
+        'DE': { code: 'EU', name: 'European Union', flag: '🇪🇺', region: 'eu', x: 50, y: 32 },
+        'JP': { code: 'JP', name: 'Japan',          flag: '🇯🇵', region: 'apac', x: 85, y: 36 },
+        'CN': { code: 'CN', name: 'China',          flag: '🇨🇳', region: 'apac', x: 78, y: 38 },
+        'CA': { code: 'CA', name: 'Canada',         flag: '🇨🇦', region: 'us', x: 22, y: 30 },
+        'SG': { code: 'SG', name: 'Singapore',      flag: '🇸🇬', region: 'apac', x: 80, y: 56 },
+      };
+      const country = j.country_code || 'GB';
+      return map[country] || { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', region: 'eu', x: 47, y: 28 };
+    }
+  } catch (e) {}
+  return { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', region: 'eu', x: 47, y: 28 };
+}
+
+// ─── Render temples ───
+function renderTemples(userRegion) {
+  const globe = document.getElementById('globe');
+  TEMPLES.forEach(t => {
+    const el = document.createElement('div');
+    el.className = `temple ${t.region}`;
+    el.style.left = `${t.x}%`;
+    el.style.top = `${t.y}%`;
+    el.setAttribute('data-code', t.code);
+    el.onclick = () => openTemple(t);
+    const label = document.createElement('div');
+    label.className = 'temple-label';
+    label.innerHTML = `<div class="label-name">${t.name}</div><div class="label-meta">${t.regulations.length} regs</div>`;
+    el.appendChild(label);
+    globe.appendChild(el);
+  });
+  if (userRegion) {
+    const marker = document.createElement('div');
+    marker.className = 'user-marker';
+    marker.style.left = `${userRegion.x}%`;
+    marker.style.top = `${userRegion.y}%`;
+    marker.title = `You: ${userRegion.name}`;
+    globe.appendChild(marker);
+    document.getElementById('userRegion').textContent = userRegion.name;
+    document.getElementById('bcRegion').textContent = userRegion.name;
+  }
+}
+
+// ─── Open temple ───
+function openTemple(t) {
+  document.getElementById('overlayFlag').textContent = t.flag;
+  document.getElementById('overlayTitle').textContent = t.name;
+  document.getElementById('overlayRegion').textContent = `(${t.code})`;
+  document.getElementById('bcTemple').textContent = t.name;
+
+  const body = document.getElementById('overlayBody');
+  body.innerHTML = `
+    <div class="temple-section">
+      <h3><span class="icon">📜</span>Regulations & Frameworks</h3>
+      <div class="reg-list">
+        ${t.regulations.map(r => `
+          <div class="reg-item">
+            <span class="reg-name">${r.name}</span>
+            <span class="reg-meta">${r.meta}</span>
+          </div>
+        `).join('') || '<div class="reg-item"><span class="reg-name">No regulations catalogued yet</span></div>'}
+    </div>
+    <div class="temple-section">
+      <h3><span class="icon">⚙</span>Inner Flow / Workflow</h3>
+      <div class="workflow-graph">
+        ${t.workflows && t.workflows.length ? t.workflows.map(w => {
+          if (w.kind === 'arrow') return `<div class="workflow-arrow">${w.label}</div>`;
+          return `<div class="workflow-node kind-${w.kind}"><div class="node-id">${w.id}</div><div class="node-label">${w.label}</div></div>`;
+        }).join('') : '<div style="color:var(--text-dim); font-family:var(--font-mono); font-size:11px;">Workflow being built. Ask Sovereign.</div>'}
+      </div>
+    </div>
+  `;
+  document.getElementById('templeOverlay').classList.add('open');
+}
+
+function closeTemple() {
+  document.getElementById('templeOverlay').classList.remove('open');
+  document.getElementById('bcTemple').textContent = '—';
+}
+
+// ─── DORADO ───
+const DORADO_STEPS = ['west', 'globe', 'temple', 'east'];
+let doradoIdx = 1;
+function cycleDorado() {
+  doradoIdx = (doradoIdx + 1) % DORADO_STEPS.length;
+  document.querySelectorAll('.dorado-step').forEach(el => el.classList.remove('active'));
+  const target = document.querySelector(`[data-dorado-step="${DORADO_STEPS[doradoIdx]}"]`);
+  if (target) target.classList.add('active');
+}
+document.querySelectorAll('.dorado-step').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.dorado-step').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+  });
+});
+
+// ─── Tool tiles ───
+document.querySelectorAll('.tool-tile').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tool-tile').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const tool = t.dataset.tool || t.dataset.saas || t.dataset.flow;
+    if (tool) {
+      document.getElementById('sovLine').innerHTML = `<span class="accent">${tool}</span> loaded. Sovereign ready. What do you want to do?`;
+    }
+  });
+});
+
+// ─── Chat to Sovereign ───
+function sovSuggest(p) {
+  document.getElementById('chatInput').value = p;
+  document.getElementById('chatInput').focus();
+}
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  document.getElementById('sovLine').innerHTML = `<span class="accent">You:</span> ${escapeHtml(text)}<br><br><span class="accent">Sovereign:</span> ${generateSovReply(text)}`;
+  input.value = '';
+}
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function generateSovReply(q) {
+  const lq = q.toLowerCase();
+  if (lq.includes('article 12') || lq.includes('art 12') || lq.includes('art. 12'))
+    return 'EU AI Act Article 12 mandates human oversight of AI systems. Click the EU temple to see the inner flow.';
+  if (lq.includes('cascade') || lq.includes('pricing') || lq.includes('cost'))
+    return '4-tier cascade: $0.005-$0.10 USDC per call. Avg $0.011. At 10K calls/day = $40K/yr per customer.';
+  if (lq.includes('region') || lq.includes('where'))
+    return 'I auto-detected your IP region. Your temple marker is blue. Click any other temple to explore.';
+  if (lq.includes('i-character') || lq.includes('avatar') || lq.includes('twin') || lq.includes('create'))
+    return 'Click the 🆔 button in the topbar to create your i-character. 5 steps: region → name → queen → arcana → done.';
+  if (lq.includes('cyber') || lq.includes('security'))
+    return 'All 302 MCPs patched to SDK 1.28+. Defoneos stack active. CVE-free. Crowning jewels: OpenFang, ClawTeam, Inkog.';
+  if (lq.includes('cascade') || lq.includes('sov3') || lq.includes('council'))
+    return 'The 12-Queen + King council is your governance. Care (V) and Watch (XVI) have VETO. BFT: f=4, quorum=9/13.';
+  return 'Acknowledged. Click any temple, or click the 🆔 to create your i-character.';
+}
+
+// ─── i-character (digital twin) ───
+function loadIchar() {
+  try {
+    return JSON.parse(localStorage.getItem('meok_ichar') || 'null');
+  } catch (e) { return null; }
+}
+
+function applyIcharToUI(ichar) {
+  if (!ichar) return;
+  const charEl = document.getElementById('sovChar');
+  if (charEl) {
+    const emoji = (QUEEN_ARCHETYPES[ichar.queen_model] || {}).emoji || '🐉';
+    charEl.textContent = emoji;
+  }
+  const greetingEl = document.getElementById('greeting');
+  if (greetingEl && ichar.name) {
+    greetingEl.innerHTML = 'Welcome, <span class="accent">' + ichar.name + '</span>';
+  }
+  const sovLineEl = document.getElementById('sovLine');
+  if (sovLineEl && ichar.arcana_lens !== undefined) {
+    sovLineEl.innerHTML = 'i-character: <span class="accent">' + ichar.archetype + '</span> · ' + ARCANA[ichar.arcana_lens] + '. ' + (ichar.initial_message || 'Ready when you are.');
+  }
+  const bcIchar = document.getElementById('bcIchar');
+  if (bcIchar && ichar.name) {
+    bcIchar.textContent = ichar.name;
+    bcIchar.style.color = 'var(--gold)';
+  }
+}
+
+// ─── Wizard (i-character creation) ───
+function showWizard() {
+  document.getElementById('wizardModal').classList.add('open');
+  wizardStep = 0;
+  showWizardStep(0);
+}
+function closeWizard() {
+  document.getElementById('wizardModal').classList.remove('open');
+}
+let wizardStep = 0;
+let wizardState = { name: '', email: '', queen_model: null, arcana_lens: null, voice: 'warm', cognition: 'balanced', initial_message: '' };
+
+function showWizardStep(n) {
+  wizardStep = n;
+  document.querySelectorAll('.wizard-step').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.step) === n);
+  });
+  document.querySelectorAll('.step').forEach((el, i) => {
+    el.classList.toggle('active', i === n);
+    el.classList.toggle('done', i < n);
+  });
+  if (n === 2) renderWizardQueens();
+  if (n === 3) renderWizardArcanas();
+}
+
+function renderWizardQueens() {
+  const grid = document.getElementById('queenGrid');
+  if (!grid || grid.dataset.rendered) return;
+  grid.dataset.rendered = '1';
+  grid.innerHTML = '';
+  Object.entries(QUEEN_ARCHETYPES).forEach(([slug, q]) => {
+    const opt = document.createElement('div');
+    opt.className = 'option queen';
+    opt.style.color = q.color;
+    opt.innerHTML = `<span class="opt-emoji">${q.emoji}</span><span class="opt-name">${q.name}</span><span class="opt-meta">${slug}</span>`;
+    opt.onclick = () => {
+      document.querySelectorAll('#queenGrid .option').forEach(x => x.classList.remove('selected'));
+      opt.classList.add('selected');
+      wizardState.queen_model = slug;
+    };
+    grid.appendChild(opt);
+  });
+}
+
+function renderWizardArcanas() {
+  const grid = document.getElementById('arcanaGrid');
+  if (!grid || grid.dataset.rendered) return;
+  grid.dataset.rendered = '1';
+  grid.innerHTML = '';
+  ARCANA.forEach((name, num) => {
+    const opt = document.createElement('div');
+    opt.className = 'option arcana';
+    opt.innerHTML = `<span class="opt-emoji">${num}</span><span class="opt-name">${name}</span><span class="opt-meta">${num}</span>`;
+    opt.onclick = () => {
+      document.querySelectorAll('#arcanaGrid .option').forEach(x => x.classList.remove('selected'));
+      opt.classList.add('selected');
+      wizardState.arcana_lens = num;
+    };
+    grid.appendChild(opt);
+  });
+}
+
+async function wizardStepNext() {
+  if (wizardStep === 0) showWizardStep(1);
+  else if (wizardStep === 1) {
+    wizardState.name = document.getElementById('icharName').value.trim();
+    wizardState.email = document.getElementById('icharEmail').value.trim();
+    wizardState.initial_message = document.getElementById('icharInitial').value.trim();
+    if (!wizardState.name || !wizardState.email) return alert('Name and email required');
+    showWizardStep(2);
+  }
+  else if (wizardStep === 2) {
+    if (!wizardState.queen_model) return alert('Pick a queen archetype');
+    showWizardStep(3);
+  }
+  else if (wizardStep === 3) {
+    if (wizardState.arcana_lens === null) return alert('Pick an arcana lens');
+    wizardState.voice = document.getElementById('icharVoice').value;
+    wizardState.cognition = document.getElementById('icharCognition').value;
+    await createIchar();
+    showWizardStep(4);
+  }
+}
+
+function wizardStepBack() {
+  if (wizardStep > 0) showWizardStep(wizardStep - 1);
+}
+
+async function createIchar() {
+  const ichar = {
+    ichar_id: 'ich-' + Math.random().toString(36).slice(2, 14),
+    name: wizardState.name,
+    queen_model: wizardState.queen_model,
+    archetype: QUEEN_ARCHETYPES[wizardState.queen_model].name,
+    arcana_lens: wizardState.arcana_lens,
+    initial_message: wizardState.initial_message,
+    sigil_hash: Math.random().toString(36).slice(2, 18),
+    created_at: new Date().toISOString(),
+  };
+  localStorage.setItem('meok_ichar', JSON.stringify(ichar));
+  applyIcharToUI(ichar);
+  document.querySelector('.ichar-emoji').textContent = QUEEN_ARCHETYPES[wizardState.queen_model].emoji;
+  document.getElementById('cardName').textContent = ichar.name;
+  document.getElementById('cardArchetype').textContent = ichar.archetype + ' · ' + ARCANA[ichar.arcana_lens];
+  document.getElementById('cardMotto').textContent = wizardState.initial_message || 'Ready when you are.';
+  document.getElementById('cardSigil').textContent = 'sigil: ' + ichar.sigil_hash + ' · ' + ichar.ichar_id;
+}
+
+// ─── PWA install ───
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('pwaInstall').classList.add('visible');
+});
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById('pwaInstall').classList.remove('visible');
+    });
+  }
+}
+
+// ─── Boot ───
+(async function boot() {
+  const userRegion = await detectUserRegion();
+  renderTemples(userRegion);
+  const ichar = loadIchar();
+  if (ichar) {
+    applyIcharToUI(ichar);
+  } else {
+    document.getElementById('sovLine').innerHTML = `Sovereign here. I can see you're connecting from <span id="userRegion">${userRegion.name}</span>. Click the ?? button to <a href="javascript:showWizard()" style="color:var(--gold)">create your i-character</a>. Click any temple to enter.`;
+    document.getElementById('greeting').innerHTML = `Welcome, sovereign <span class="accent">${userRegion.name}</span>`;
+  }
+})();
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeTemple(); closeWizard(); }
+});
+
+// Update live status (stub)
+setInterval(() => {
+  const el = document.getElementById('sov3Status');
+  if (el) el.textContent = '200 OK';
+}, 5000);
+</script>
+
+</body>
+</html>

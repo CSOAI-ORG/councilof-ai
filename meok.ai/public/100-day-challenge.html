@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK 100-Day Challenge — Sprint Tracker</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:#0d0c18;color:#e0dcd0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.5;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:3rem 1.5rem}
+h1{font-size:2.4rem;color:#c9a84c;margin-bottom:.3rem;letter-spacing:-.02em}
+.sub{color:#a09880;font-size:.95rem;margin-bottom:2rem}
+.badge{display:inline-block;background:rgba(201,168,76,.18);color:#c9a84c;font-size:.7rem;padding:.15rem .5rem;border-radius:3px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.5rem}
+.badge.eu{background:rgba(80,120,200,.18);color:#7aacf0}
+/* countdown cards */
+.countdowns{display:flex;flex-wrap:wrap;gap:1.2rem;margin-bottom:2.5rem}
+.cd-card{flex:1;min-width:220px;background:rgba(13,12,24,.8);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:1.5rem;text-align:center}
+.cd-card .num{font-size:3.2rem;font-weight:800;color:#c9a84c;line-height:1.1;letter-spacing:-.03em}
+.cd-card .num span{font-size:1.2rem;color:#a09880}
+.cd-card .label{font-size:.82rem;color:#a09880;text-transform:uppercase;letter-spacing:.06em;margin-top:.3rem}
+.cd-card .date{font-size:.75rem;color:#5a5548;margin-top:.2rem}
+.cd-card.eu-bg{border-color:rgba(80,120,200,.25);background:rgba(13,18,30,.8)}
+.cd-card.eu-bg .num{color:#7aacf0}
+.cd-card.launch{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.3)}
+/* sprint bar */
+.sprint-block{margin-bottom:2.5rem}
+.sprint-block h2{color:#c9a84c;font-size:1.1rem;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.06em}
+.sprint{background:rgba(255,255,255,.04);border-radius:6px;padding:.9rem 1rem;margin-bottom:.7rem;display:flex;flex-wrap:wrap;align-items:center;gap:.8rem}
+.sprint .name{font-weight:600;color:#d0ccc0;min-width:80px;font-size:.9rem}
+.sprint .bar-wrap{flex:1;min-width:140px;height:18px;background:rgba(255,255,255,.06);border-radius:9px;overflow:hidden}
+.sprint .bar{height:100%;border-radius:9px;background:linear-gradient(90deg,#c9a84c,#dbb85c);transition:width .5s;text-align:right;padding-right:6px;font-size:.65rem;line-height:18px;color:#0d0c18;font-weight:700;white-space:nowrap}
+.sprint .bar.partial{background:linear-gradient(90deg,#a08030,#c9a84c)}
+.sprint .bar.future{background:rgba(201,168,76,.2)}
+.sprint .pct{font-size:.85rem;color:#a09880;min-width:42px;text-align:right}
+.sprint .status{font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:#5a5548;min-width:70px}
+/* moves counter */
+.moves-block{background:rgba(13,12,24,.8);border:1px solid rgba(201,168,76,.12);border-radius:10px;padding:1.5rem;margin-bottom:2.5rem;text-align:center}
+.moves-block .big-num{font-size:4rem;font-weight:800;color:#c9a84c;line-height:1}
+.moves-block .big-label{font-size:.9rem;color:#a09880;text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+.moves-block .detail{font-size:.78rem;color:#5a5548;margin-top:.5rem}
+/* timeline */
+.timeline{position:relative;margin:2.5rem 0;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:rgba(201,168,76,.2)}
+.tl-item{position:relative;padding:0 0 1.5rem 1rem}
+.tl-item::before{content:'';position:absolute;left:-1.35rem;top:.3rem;width:12px;height:12px;border-radius:50%;background:#c9a84c;border:2px solid #0d0c18}
+.tl-item.past::before{background:#3a3520}
+.tl-item .date{font-size:.75rem;color:#5a5548;text-transform:uppercase;letter-spacing:.05em}
+.tl-item .title{font-size:.95rem;color:#d0ccc0;font-weight:500}
+.tl-item .desc{font-size:.82rem;color:#6a6558}
+/* responsive */
+@media(max-width:600px){
+  h1{font-size:1.8rem}
+  .wrap{padding:2rem 1rem}
+  .cd-card .num{font-size:2.4rem}
+  .sprint{padding:.7rem .8rem;gap:.5rem}
+  .sprint .name{min-width:65px;font-size:.78rem}
+  .moves-block .big-num{font-size:3rem}
+  .timeline{padding-left:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<h1>100-Day Challenge</h1>
+<p class="sub">Public sprint tracker — MEOK Compliance Suite launch campaign. Building in public, every move counted.</p>
+<span class="badge">Sprint 3 Active</span>
+<span class="badge eu">EU AI Act Countdown</span>
+
+<!-- Countdowns -->
+<div class="countdowns">
+
+  <div class="cd-card launch">
+    <div class="num" id="launchDays">17</div>
+    <div class="label">Days to Launch</div>
+    <div class="date">Target: 4 July 2026</div>
+  </div>
+
+  <div class="cd-card eu-bg">
+    <div class="num" id="euActDays">46</div>
+    <div class="label">EU AI Act Effective</div>
+    <div class="date">2 August 2026 — Art. 6 obligations begin</div>
+  </div>
+
+  <div class="cd-card">
+    <div class="num">100</div>
+    <div class="label">Challenge Days</div>
+    <div class="date">Started 26 Mar 2026</div>
+  </div>
+
+</div>
+
+<!-- Sprint progress -->
+<div class="sprint-block">
+<h2>Sprint Progress</h2>
+
+<div class="sprint">
+  <span class="name">Sprint 1</span>
+  <div class="bar-wrap"><div class="bar" style="width:100%">100%</div></div>
+  <span class="pct">100%</span>
+  <span class="status" style="color:#4a8a50">✓ Complete</span>
+</div>
+
+<div class="sprint">
+  <span class="name">Sprint 2</span>
+  <div class="bar-wrap"><div class="bar" style="width:90%">90%</div></div>
+  <span class="pct">90%</span>
+  <span class="status" style="color:#c9a84c">In review</span>
+</div>
+
+<div class="sprint">
+  <span class="name">Sprint 3</span>
+  <div class="bar-wrap"><div class="bar future" style="width:35%"></div></div>
+  <span class="pct">35%</span>
+  <span class="status" style="color:#c9a84c">Active</span>
+</div>
+
+<div class="sprint">
+  <span class="name">Sprint 4</span>
+  <div class="bar-wrap"><div class="bar future" style="width:0%"></div></div>
+  <span class="pct">0%</span>
+  <span class="status" style="color:#5a5548">Planned</span>
+</div>
+
+</div>
+
+<!-- Completed moves counter -->
+<div class="moves-block">
+  <div class="big-num">247</div>
+  <div class="big-label">Completed Moves</div>
+  <div class="detail">Sprint 1: 94 moves · Sprint 2: 89 moves · Sprint 3 (active): 64 moves so far</div>
+</div>
+
+<!-- Timeline -->
+<h2 style="color:#c9a84c;font-size:1rem;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.06em">Challenge Timeline</h2>
+
+<div class="timeline">
+
+  <div class="tl-item past">
+    <div class="date">26 Mar 2026</div>
+    <div class="title">Day 1 — Challenge begins</div>
+    <div class="desc">MEOK 100-Day Challenge announced. Sprint 1 kicks off: infrastructure, SOV3 records, first BFT council.</div>
+  </div>
+
+  <div class="tl-item past">
+    <div class="date">24 Apr 2026</div>
+    <div class="title">Sprint 1 complete — 94 moves</div>
+    <div class="desc">All 28 .ai hives deployed. Layer 0 governance operational. Keystone cert genesis.</div>
+  </div>
+
+  <div class="tl-item past">
+    <div class="date">22 May 2026</div>
+    <div class="title">Sprint 2 begins</div>
+    <div class="desc">EU AI Act content push. Comparison pages, ecosystem map, compliance automation. 89 moves delivered.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="date">19 Jun 2026</div>
+    <div class="title">Sprint 3 underway</div>
+    <div class="desc">Pricing page, launch collateral, beta onboarding. 64 moves and counting.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="date">4 Jul 2026</div>
+    <div class="title">🚀 Launch day</div>
+    <div class="desc">MEOK Compliance Suite public launch. Free tier opens. Prospect pipeline converts.</div>
+  </div>
+
+  <div class="tl-item">
+    <div class="date">2 Aug 2026</div>
+    <div class="title">EU AI Act effective</div>
+    <div class="desc">Art. 6 high-risk AI obligations come into force. MEOK fully compliant out of the gate.</div>
+  </div>
+
+</div>
+
+</div><!-- .wrap -->
+
+</body>
+</html>

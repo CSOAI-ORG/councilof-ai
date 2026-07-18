@@ -1,0 +1,29 @@
+{
+  "model": "qwen3-formal:latest",
+  "n": 33,
+  "raw_baseline": {
+    "TP": 0,
+    "FP": 0,
+    "TN": 18,
+    "FN": 15,
+    "recall": 0.0,
+    "precision": 0.0,
+    "accuracy": 0.545
+  },
+  "our_gate_offline": {
+    "TP": 14,
+    "FP": 1,
+    "TN": 17,
+    "FN": 1,
+    "accuracy": 0.939
+  },
+  "our_gate_oci": {
+    "TP": 15,
+    "FP": 0,
+    "TN": 18,
+    "FN": 0,
+    "accuracy": 1.0
+  },
+  "note": "raw model = qwen3-formal via Ollama, thinking disabled, real responses verified",
+  "honest": "heuristic refusal-detector + a small 3B local model = directional signal, not a leaderboard. The value question: does the raw model MISS harmful asks (FN>0) that our gate catches?"
+}

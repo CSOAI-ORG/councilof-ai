@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_onboarding_mcp"
+version = "1.0.0"
+description = "MEEK Onboarding MCP — the IP-detect + temple-zoom + permission-ask flow. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "sov-space", "consolidation", "absorption", "csoai", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org"
+Repository = "https://github.com/CSOAI-ORG/meek-onboarding-mcp"
+
+[project.scripts]
+meek-onboarding-mcp = "meek_onboarding_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_onboarding_mcp"]

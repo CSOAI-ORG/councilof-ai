@@ -1,0 +1,15 @@
+# 03b_moe_upcycle.yaml — assemble experts as a Mixture-of-Experts (each brain-config = 1 expert).
+# Run:  mergekit-moe 03b_moe_upcycle.yaml ./sovereign-moe --allow-crimes
+# This is the literal "our configs become one MoE model" — new weights, routed by learned gates.
+base_model: Qwen/Qwen3.6-35B-A3B
+gate_mode: hidden        # route on hidden states (or "cheap_embed" for a fast approx)
+dtype: bfloat16
+experts:
+  - source_model: experts/compliance
+    positive_prompts: ["is this compliant", "EU AI Act", "risk tier", "Annex III"]
+  - source_model: experts/defense
+    positive_prompts: ["threat", "attack", "defensive", "security posture"]
+  - source_model: experts/intuition
+    positive_prompts: ["what's the pattern", "hypothesis", "quick read", "intuition"]
+  - source_model: experts/voice
+    positive_prompts: ["explain simply", "say it plainly", "talk to the user"]

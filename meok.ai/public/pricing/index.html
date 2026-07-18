@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — MEOK Compliance | MEOK Empire</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #0a1628;
+    color: #e0e6ed;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: #d4a843; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .header {
+    background: linear-gradient(135deg, #0d1f3c 0%, #0a1628 100%);
+    border-bottom: 2px solid #d4a84333;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .header .logo { font-size: 1.25rem; font-weight: 700; color: #d4a843; letter-spacing: 0.05em; }
+  .header .logo span { color: #e0e6ed; font-weight: 300; }
+  .header .main-link { font-size: 0.875rem; padding: 0.4rem 1rem; border: 1px solid #d4a84355; border-radius: 6px; transition: 0.2s; }
+  .header .main-link:hover { background: #d4a84315; text-decoration: none; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 3rem 0 1rem;
+  }
+  .hero h1 { font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 .gold { color: #d4a843; }
+  .hero .subtitle { font-size: 1.15rem; color: #8899aa; max-width: 650px; margin: 0 auto 1rem; }
+  .hero .subtitle a { color: #d4a843; }
+
+  /* Plan Cards */
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem 0;
+  }
+  .plan-card {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 14px;
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .plan-card:hover { border-color: #d4a84366; transform: translateY(-3px); box-shadow: 0 12px 40px #00000044; }
+  .plan-card.featured {
+    border-color: #d4a84366;
+    box-shadow: 0 0 0 1px #d4a84333, 0 8px 32px #00000055;
+  }
+  .plan-card.featured::before {
+    content: 'Most Popular';
+    position: absolute;
+    top: -0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #d4a843;
+    color: #0a1628;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 1.2rem;
+    border-radius: 100px;
+  }
+  .plan-card .plan-name { font-size: 1rem; font-weight: 700; color: #d4a843; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+  .plan-card h3 { font-size: 1.75rem; font-weight: 800; color: #fff; margin-bottom: 0.75rem; }
+  .plan-card .price { font-size: 2rem; font-weight: 700; color: #fff; margin: 0.5rem 0; }
+  .plan-card .price span { font-size: 0.9rem; font-weight: 400; color: #8899aa; }
+  .plan-card .desc { color: #8899aa; font-size: 0.95rem; margin-bottom: 1.5rem; flex-grow: 1; }
+  .plan-card ul { list-style: none; padding: 0; margin-bottom: 1.5rem; }
+  .plan-card ul li { padding: 0.4rem 0; font-size: 0.9rem; color: #c0c8d4; }
+  .plan-card ul li .check { color: #2ecc71; font-weight: 700; margin-right: 0.5rem; }
+  .plan-card .btn-plan {
+    display: inline-block;
+    background: #d4a843;
+    color: #0a1628;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: auto;
+  }
+  .plan-card .btn-plan:hover { background: #e0b85a; text-decoration: none; }
+  .plan-card .btn-plan.outline {
+    background: transparent;
+    color: #d4a843;
+    border: 1.5px solid #d4a84366;
+  }
+  .plan-card .btn-plan.outline:hover { background: #d4a84315; }
+
+  /* Section */
+  .section { padding: 2.5rem 0; }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+  }
+  .section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 3px;
+    background: #d4a843;
+    border-radius: 2px;
+  }
+
+  /* Full comparison table */
+  .comparison {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #1a2d4a;
+  }
+  .comparison th, .comparison td {
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid #1a2d4a;
+  }
+  .comparison th {
+    background: #0d1f3c;
+    color: #d4a843;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .comparison th:first-child { width: 26%; }
+  .comparison td:first-child { color: #c0c8d4; font-weight: 500; }
+  .comparison tr:last-child td { border-bottom: none; }
+  .comparison .yes { color: #2ecc71; font-weight: 700; }
+  .comparison .no { color: #555; }
+  .comparison .highlight { background: #d4a8430a; }
+  .comparison tr:hover td { background: #0d1f3c55; }
+  .comparison .featured-col { color: #d4a843; font-weight: 700; }
+  .comparison-wrap { overflow-x: auto; }
+
+  /* FAQ */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 0.75rem;
+  }
+  .faq-item {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+  .faq-item summary {
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    color: #d4a843;
+    font-size: 1.3rem;
+    font-weight: 700;
+    transition: 0.2s;
+  }
+  .faq-item[open] summary::after { content: '−'; }
+  .faq-item .answer {
+    margin-top: 0.75rem;
+    color: #8899aa;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .faq-item .answer a { color: #d4a843; }
+
+  .free-tier-note {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+  }
+  .free-tier-note p { color: #8899aa; }
+  .free-tier-note a { color: #d4a843; font-weight: 600; }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #4a5a6a;
+    font-size: 0.85rem;
+    border-top: 1px solid #0d1f3c;
+  }
+  .footer a { color: #6a7a8a; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.75rem; }
+    .container { padding: 1.5rem 1rem; }
+    .header { padding: 1rem; flex-direction: column; text-align: center; }
+    .plans { grid-template-columns: 1fr; gap: 1.5rem; }
+    .comparison th, .comparison td { padding: 0.6rem 0.6rem; font-size: 0.8rem; }
+    .faq-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">MEOK <span>Empire</span></div>
+  <a href="https://meok.ai" class="main-link">meok.ai →</a>
+</header>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>MEOK Compliance <span class="gold">Pricing</span></h1>
+    <p class="subtitle">Choose the tier that matches your compliance maturity — from free attestations to enterprise-grade governance. <a href="https://meok-attestation-api.vercel.app/sign" target="_blank">Try the free tier →</a></p>
+  </section>
+
+  <!-- Plan Cards -->
+  <div class="plans">
+
+    <!-- Pro -->
+    <div class="plan-card featured">
+      <div class="plan-name">Pro</div>
+      <h3>For Growing Teams</h3>
+      <div class="price">£199 <span>/ month</span></div>
+      <p class="desc">Signed attestations, API-first workflow, and priority email support. For teams that need verifiable proof of AI safety controls.</p>
+      <ul>
+        <li><span class="check">✓</span> Signed compliance attestations</li>
+        <li><span class="check">✓</span> REST API access</li>
+        <li><span class="check">✓</span> Unlimited attestations</li>
+        <li><span class="check">✓</span> Webhook integrations</li>
+        <li><span class="check">✓</span> Status dashboard</li>
+      </ul>
+      <a href="pro.html" class="btn-plan">View Pro Details →</a>
+    </div>
+
+    <!-- Enterprise -->
+    <div class="plan-card">
+      <div class="plan-name">Enterprise</div>
+      <h3>For Regulated Organisations</h3>
+      <div class="price">£1,499 <span>/ month</span></div>
+      <p class="desc">Full compliance suite with custom integrations, dedicated support, SLAs, SSO, and organisation-wide deployment.</p>
+      <ul>
+        <li><span class="check">✓</span> Everything in Pro</li>
+        <li><span class="check">✓</span> Custom integrations</li>
+        <li><span class="check">✓</span> SSO / SAML / OIDC</li>
+        <li><span class="check">✓</span> 1h response SLA</li>
+        <li><span class="check">✓</span> Account manager</li>
+      </ul>
+      <a href="enterprise.html" class="btn-plan">View Enterprise Details →</a>
+    </div>
+
+    <!-- Assessment -->
+    <div class="plan-card">
+      <div class="plan-name">Assessment</div>
+      <h3>One-Time Audit</h3>
+      <div class="price">£5,000 <span>one-time</span></div>
+      <p class="desc">Rapid, expert-led compliance audit delivered in 48 hours with a full report, gap analysis, and remediation roadmap.</p>
+      <ul>
+        <li><span class="check">✓</span> Full compliance audit</li>
+        <li><span class="check">✓</span> 48-hour turnaround</li>
+        <li><span class="check">✓</span> Executive summary</li>
+        <li><span class="check">✓</span> Remediation roadmap</li>
+        <li><span class="check">✓</span> Debrief session</li>
+      </ul>
+      <a href="assessment.html" class="btn-plan outline">View Assessment Details →</a>
+    </div>
+
+  </div>
+
+  <!-- Free tier note -->
+  <div class="free-tier-note">
+    <p><strong>🆓 Not ready to buy?</strong> Use the <a href="https://meok-attestation-api.vercel.app/sign" target="_blank">free attestation tier</a> — 3 signed attestations per email per day, no credit card required.</p>
+  </div>
+
+  <!-- Full Comparison -->
+  <section class="section">
+    <h2 class="section-title">Full Plan Comparison</h2>
+    <div class="comparison-wrap">
+      <table class="comparison">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free</th>
+            <th>Pro</th>
+            <th>Enterprise</th>
+            <th>Assessment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Price</td>
+            <td>Free</td>
+            <td class="featured-col">£199/mo</td>
+            <td>£1,499/mo</td>
+            <td>£5,000 one-time</td>
+          </tr>
+          <tr>
+            <td>Attestations per day</td>
+            <td>3 / email</td>
+            <td class="yes">Unlimited</td>
+            <td class="yes">Unlimited</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>Signed attestations</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+            <td class="yes">✓</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>API access</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+            <td class="yes">Unlimited</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>Email support</td>
+            <td class="no">Community</td>
+            <td class="yes">Priority</td>
+            <td class="yes">1h SLA</td>
+            <td class="yes">Debrief call</td>
+          </tr>
+          <tr>
+            <td>Custom integrations</td>
+            <td class="no">—</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>SSO / SAML / OIDC</td>
+            <td class="no">—</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>Organisation management</td>
+            <td class="no">—</td>
+            <td class="no">Single</td>
+            <td class="yes">Multi-team</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>Full compliance audit</td>
+            <td class="no">—</td>
+            <td class="no">Self-serve</td>
+            <td class="no">Self-serve</td>
+            <td class="yes">Expert-led</td>
+          </tr>
+          <tr>
+            <td>Remediation roadmap</td>
+            <td class="no">—</td>
+            <td class="no">—</td>
+            <td class="no">—</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Executive report</td>
+            <td class="no">—</td>
+            <td class="no">—</td>
+            <td class="yes">Annual</td>
+            <td class="yes">Board-ready</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>Best for</strong></td>
+            <td>Evaluation</td>
+            <td><strong>Growing teams</strong></td>
+            <td>Regulated orgs</td>
+            <td>Compliance prep</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-grid">
+      <details class="faq-item">
+        <summary>Can I switch between plans?</summary>
+        <div class="answer">Yes. Upgrade or downgrade at any time. We'll pro-rate your billing for the remainder of the month. Enterprise plan requires a 6-month minimum commitment.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What payment methods do you accept?</summary>
+        <div class="answer">All major credit and debit cards via Stripe. Enterprise customers can request invoice billing with net-30 terms.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is there a free trial?</summary>
+        <div class="answer">The free tier at <a href="https://meok-attestation-api.vercel.app/sign" target="_blank">meok-attestation-api.vercel.app/sign</a> gives you 3 attestations per email per day at no cost — no credit card needed. Contact <a href="mailto:sales@meok.ai">sales@meok.ai</a> for a personalised Pro/Enterprise demo.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I get a discount on annual billing?</summary>
+        <div class="answer">Yes. Annual billing for Pro is £1,990/yr (save £398). Enterprise annual is £15,289/yr (save £2,699).</div>
+      </details>
+      <details class="faq-item">
+        <summary>How do the 48h Assessment and subscriptions work together?</summary>
+        <div class="answer">Buy the assessment to get a full compliance audit, then apply 50% of the fee (£2,500) toward a Pro or Enterprise subscription within 30 days.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Do you offer SSO for Pro?</summary>
+        <div class="answer">SSO / SAML / OIDC is available on the Enterprise plan only. Pro uses email + API key authentication.</div>
+      </details>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>MEOK Empire · <a href="https://meok.ai">meok.ai</a> · <a href="mailto:sales@meok.ai">sales@meok.ai</a></p>
+  <p style="margin-top:0.4rem;">© 2026 MEOK Empire Ltd. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

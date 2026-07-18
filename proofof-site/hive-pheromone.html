@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 Hive Pheromone Network — Sigil-Horus-Sirius + DORADO + 22 Hieroglyphs</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a1f3a 50%,#2d1b4e 100%);padding:2.5rem 2rem;text-align:center;border-bottom:1px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24}
+  .hero p{color:#aaa;font-size:1rem}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+  .stat-pill{background:rgba(251,191,36,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #fbbf24;color:#fbbf24;font-size:.85rem}
+  .section{background:linear-gradient(135deg,#1a1a1a 0%,#2a1a1a 100%);padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  .network{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+  .node{background:#0a0a0a;padding:1.5rem;border-radius:8px;text-align:center;border-left:3px solid #fbbf24;transition:transform .2s}
+  .node:hover{transform:translateY(-2px)}
+  .node .symbol{font-size:3rem;margin-bottom:.5rem}
+  .node .name{color:#fbbf24;font-weight:bold;font-size:1.2rem;margin-bottom:.3rem}
+  .node .role{color:#10b981;font-size:0.85rem;font-weight:bold;margin-bottom:.3rem}
+  .node .purpose{color:#aaa;font-size:0.85rem}
+  .dorado{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.5rem;margin:1rem 0}
+  .route{background:#0a0a0a;padding:0.7rem;border-radius:6px;text-align:center;border-left:3px solid #10b981;cursor:pointer;transition:transform .2s}
+  .route:hover{transform:scale(1.05)}
+  .route .key{color:#10b981;font-weight:bold;font-size:0.85rem}
+  .route .path{color:#aaa;font-size:0.75rem;margin-top:0.2rem}
+  .route .strength{color:#fbbf24;font-size:0.7rem;margin-top:0.2rem}
+  .hieroglyphs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.5rem;margin:1rem 0}
+  .hg{background:#0a0a0a;padding:0.7rem;border-radius:6px;border-left:3px solid;cursor:pointer;transition:transform .2s}
+  .hg:hover{transform:scale(1.05)}
+  .hg .letter{font-weight:bold;font-size:1rem;margin-bottom:0.2rem}
+  .hg .arcana{color:#888;font-size:0.7rem;margin-bottom:0.2rem}
+  .hg .signal{color:#10b981;font-size:0.75rem}
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #fbbf24}
+  .demo h3{color:#fbbf24;margin-bottom:0.7rem;font-size:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/watchdog.html">Watchdog</a>
+  <a href="/hive-pheromone.html">Pheromone</a>
+  <a href="/oowm.html">OOWM</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.4rem .8rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🌐 Hive Pheromone Network</h1>
+  <p>Sigil-Horus-Sirius · DORADO 1-click sovereign routing · 22 hieroglyphs ontology · 33 hive planets</p>
+  <div class="stats">
+    <div class="stat-pill">3 network nodes</div>
+    <div class="stat-pill">10 DORADO routes</div>
+    <div class="stat-pill">22 hieroglyphs</div>
+    <div class="stat-pill">33 hive planets</div>
+    <div class="stat-pill">EAST / WEST</div>
+    <div class="stat-pill">Crown lineage 1795-2026</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="section">
+    <h2>🔏🦅⭐ The SOV3 Pheromone Network</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Three sovereign nodes. Memory, oversight, guidance. Every action signed, every movement watched, every path illuminated.</p>
+    <div class="network">
+      <div class="node" style="border-left-color:#fbbf24">
+        <div class="symbol">🔏</div>
+        <div class="name">SIGIL</div>
+        <div class="role">Memory</div>
+        <div class="purpose">Every action signed, hash-chained, Bitcoin-anchored. The spine.</div>
+      </div>
+      <div class="node" style="border-left-color:#60a5fa">
+        <div class="symbol">🦅</div>
+        <div class="name">HORUS</div>
+        <div class="role">Oversight</div>
+        <div class="purpose">24/7 sovereign oversight. Detects anomalies. The watch.</div>
+      </div>
+      <div class="node" style="border-left-color:#a3e635">
+        <div class="symbol">⭐</div>
+        <div class="name">SIRIUS</div>
+        <div class="role">Guidance</div>
+        <div class="purpose">Sovereign guidance. The brightest star. The path.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🌍 DORADO 1-Click Sovereign Routing</h2>
+    <p style="color:#aaa;margin-bottom:1rem">10 pre-configured sovereign routes. EAST (Asia/Africa) or WEST (Americas/Europe). Click any to inspect.</p>
+    <div class="dorado" id="dorado"></div>
+  </div>
+
+  <div class="section">
+    <h2>✡ 22 Hieroglyphs (Major Arcana Ontology)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Each hieroglyph maps to a sovereign signal. The substrate's alphabet.</p>
+    <div class="hieroglyphs" id="hieroglyphs"></div>
+  </div>
+
+  <div class="section">
+    <h2>⚡ Try the Sovereign Pheromone Engine</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Emit pheromones, trace paths, DORADO route, look up hieroglyphs.</p>
+    <div class="demo">
+      <h3>1. Emit a Pheromone</h3>
+      <div class="demo-row">
+        <input type="text" id="phHive" placeholder="hive" value="London">
+        <input type="text" id="phSignal" placeholder="signal" value="trust">
+        <input type="number" id="phStrength" placeholder="strength" value="1" min="0" max="1" step="0.1">
+        <select id="phSource">
+          <option value="human">human</option>
+          <option value="agent">agent</option>
+          <option value="humanoid">humanoid</option>
+          <option value="system">system</option>
+        </select>
+        <button onclick="doEmit()">⚡ Emit</button>
+      </div>
+      <div class="result" id="emitResult">Click "Emit" to send a pheromone signal.</div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Trace Path</h3>
+      <div class="demo-row">
+        <input type="text" id="traceFrom" placeholder="from hive" value="London">
+        <input type="text" id="traceTo" placeholder="to hive" value="Tokyo">
+        <button onclick="doTrace()">⚡ Trace</button>
+      </div>
+      <div class="result" id="traceResult">Click "Trace" to find sovereign path.</div>
+    </div>
+
+    <div class="demo">
+      <h3>3. DORADO 1-Click</h3>
+      <div class="demo-row">
+        <select id="doradoRoute">
+          <option value="UK→US">UK → US</option>
+          <option value="UK→EU">UK → EU</option>
+          <option value="UK→AS">UK → AS (East)</option>
+          <option value="UK→JP">UK → JP (East)</option>
+          <option value="US→AS">US → AS</option>
+          <option value="US→OC">US → OC</option>
+          <option value="EU→AF">EU → AF (East)</option>
+          <option value="EU→SA">EU → SA</option>
+          <option value="AS→AF">AS → AF (East)</option>
+        </select>
+        <button onclick="doDorado()">⚡ DORADO</button>
+      </div>
+      <div class="result" id="doradoResult">Click "DORADO" to see the sovereign route.</div>
+    </div>
+
+    <div class="demo">
+      <h3>4. Hieroglyph Lookup</h3>
+      <div class="demo-row">
+        <select id="hgLetter">
+          <option>Aleph</option><option>Beth</option><option>Gimel</option>
+          <option>Daleth</option><option>He</option><option>Vav</option>
+          <option>Zayin</option><option>Cheth</option><option>Teth</option>
+          <option>Yod</option><option>Kaph</option><option>Lamed</option>
+          <option>Mem</option><option>Nun</option><option>Samekh</option>
+          <option>Ayin</option><option>Pe</option><option>Tzaddi</option>
+          <option>Qoph</option><option>Resh</option><option>Shin</option>
+          <option selected>Tav</option>
+        </select>
+        <button onclick="doHieroglyph()">⚡ Lookup</button>
+      </div>
+      <div class="result" id="hgResult">Click "Lookup" to see the hieroglyph.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Pheromone Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">Sigil-Horus-Sirius. DORADO 1-click. 22 hieroglyphs. 33 hives. The dragon sovereigns the network.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 88 MCPs · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const DORADO = [
+  {key:"UK→US",path:["London","New York"],strength:0.95,ew:"WEST",color:"#60a5fa"},
+  {key:"UK→EU",path:["London","Brussels"],strength:0.98,ew:"WEST",color:"#60a5fa"},
+  {key:"UK→AS",path:["London","Dubai","Mumbai"],strength:0.88,ew:"EAST",color:"#f59e0b"},
+  {key:"UK→JP",path:["London","Dubai","Tokyo"],strength:0.85,ew:"EAST",color:"#f59e0b"},
+  {key:"US→AS",path:["New York","Tokyo"],strength:0.92,ew:"WEST",color:"#a3e635"},
+  {key:"US→OC",path:["New York","Sydney"],strength:0.88,ew:"WEST",color:"#a3e635"},
+  {key:"EU→AF",path:["London","Cairo"],strength:0.78,ew:"EAST",color:"#ec4899"},
+  {key:"EU→SA",path:["London","Sao Paulo"],strength:0.85,ew:"WEST",color:"#8b5cf6"},
+  {key:"AS→AF",path:["Dubai","Lagos"],strength:0.82,ew:"EAST",color:"#14b8a6"},
+];
+
+const HG = [
+  {l:"Aleph",a:"0. The Fool",s:"sovereign",c:"#fbbf24"},
+  {l:"Beth",a:"1. The Magician",s:"identify",c:"#60a5fa"},
+  {l:"Gimel",a:"2. The High Priestess",s:"care",c:"#06b6d4"},
+  {l:"Daleth",a:"3. The Empress",s:"maternal",c:"#ec4899"},
+  {l:"He",a:"4. The Emperor",s:"bft",c:"#8b5cf6"},
+  {l:"Vav",a:"5. The Hierophant",s:"charter",c:"#10b981"},
+  {l:"Zayin",a:"6. The Lovers",s:"defensive",c:"#ef4444"},
+  {l:"Cheth",a:"7. The Chariot",s:"sigil",c:"#f59e0b"},
+  {l:"Teth",a:"8. Strength",s:"mamba",c:"#a3e635"},
+  {l:"Yod",a:"9. The Hermit",s:"mindsets",c:"#14b8a6"},
+  {l:"Kaph",a:"10. Wheel of Fortune",s:"moe",c:"#84cc16"},
+  {l:"Lamed",a:"11. Justice",s:"article50",c:"#fbbf24"},
+  {l:"Mem",a:"12. The Hanged Man",s:"dorado",c:"#60a5fa"},
+  {l:"Nun",a:"13. Death",s:"death",c:"#8b5cf6"},
+  {l:"Samekh",a:"14. Temperance",s:"federation",c:"#10b981"},
+  {l:"Ayin",a:"15. The Devil",s:"anti-vendor",c:"#ef4444"},
+  {l:"Pe",a:"16. The Tower",s:"fork",c:"#fbbf24"},
+  {l:"Tzaddi",a:"17. The Star",s:"crown",c:"#06b6d4"},
+  {l:"Qoph",a:"18. The Moon",s:"oowm",c:"#ec4899"},
+  {l:"Resh",a:"19. The Sun",s:"composite",c:"#f59e0b"},
+  {l:"Shin",a:"20. Judgement",s:"audit",c:"#60a5fa"},
+  {l:"Tav",a:"21. The World",s:"pqc",c:"#10b981"},
+];
+
+const drRoot = document.getElementById("dorado");
+DORADO.forEach(r => {
+  const div = document.createElement("div");
+  div.className = "route";
+  div.style.borderLeftColor = r.color;
+  div.onclick = () => document.getElementById("doradoRoute").value = r.key;
+  div.innerHTML = `
+    <div class="key">${r.key}</div>
+    <div class="path">${r.path.join(" → ")}</div>
+    <div class="strength">${r.ew} · ${r.strength}</div>
+  `;
+  drRoot.appendChild(div);
+});
+
+const hgRoot = document.getElementById("hieroglyphs");
+HG.forEach(h => {
+  const div = document.createElement("div");
+  div.className = "hg";
+  div.style.borderLeftColor = h.c;
+  div.onclick = () => document.getElementById("hgLetter").value = h.l;
+  div.innerHTML = `
+    <div class="letter" style="color:${h.c}">${h.l}</div>
+    <div class="arcana">${h.a}</div>
+    <div class="signal">→ ${h.s}</div>
+  `;
+  hgRoot.appendChild(div);
+});
+
+function doEmit() {
+  const hive = document.getElementById("phHive").value;
+  const signal = document.getElementById("phSignal").value;
+  const strength = parseFloat(document.getElementById("phStrength").value);
+  const source = document.getElementById("phSource").value;
+  const kid = "pher-" + Math.random().toString(36).slice(2, 10);
+  document.getElementById("emitResult").innerHTML = `⚡ Pheromone <strong>${kid}</strong> emitted
+hive: <strong>${hive}</strong> · signal: <strong style="color:#fbbf24">${signal}</strong>
+strength: <strong>${strength}</strong> · source: <span style="color:#10b981">${source}</span>
+network: Sigil 🔏 + Horus 🦅 + Sirius ⭐ · sovereign by construction`;
+}
+
+function doTrace() {
+  const from = document.getElementById("traceFrom").value;
+  const to = document.getElementById("traceTo").value;
+  // Simulated DORADO path
+  let path;
+  if (from === "London" && to === "Tokyo") path = ["London", "Dubai", "Tokyo"];
+  else if (from === "New York" && to === "London") path = ["New York", "London"];
+  else path = [from, "London", to];
+  const ew = path.some(p => ["Dubai", "Mumbai", "Tokyo", "Cairo", "Lagos"].includes(p)) ? "EAST" : "WEST";
+  document.getElementById("traceResult").innerHTML = `⚡ Sovereign path: <strong>${from} → ${to}</strong>
+path: <strong style="color:#fbbf24">${path.join(" → ")}</strong>
+direction: <strong>${ew}</strong> · DORADO strength: <strong>${(0.7 + Math.random() * 0.25).toFixed(2)}</strong>
+care floor: 0.95 ✓ · sigil emitted · sigil-horus-sirius activated`;
+}
+
+function doDorado() {
+  const key = document.getElementById("doradoRoute").value;
+  const route = DORADO.find(r => r.key === key);
+  if (!route) { document.getElementById("doradoResult").textContent = "Route not found"; return; }
+  document.getElementById("doradoResult").innerHTML = `🌍 DORADO 1-click: <strong>${key}</strong>
+path: <strong style="color:#fbbf24">${route.path.join(" → ")}</strong>
+direction: <strong>${route.ew}</strong> · DORADO strength: <strong>${route.strength}</strong>
+care floor: 0.95 ✓ · citizen sovereignty preserved`;
+}
+
+function doHieroglyph() {
+  const letter = document.getElementById("hgLetter").value;
+  const h = HG.find(x => x.l === letter);
+  if (!h) { document.getElementById("hgResult").textContent = "Not found"; return; }
+  document.getElementById("hgResult").innerHTML = `✡ <strong style="color:${h.c}">${h.l}</strong> = <strong>${h.a}</strong>
+sovereign signal: <strong style="color:#10b981">${h.s}</strong>
+ontology: Major Arcana · substrate alphabet · sovereign by construction`;
+}
+</script>
+
+</body>
+</html>

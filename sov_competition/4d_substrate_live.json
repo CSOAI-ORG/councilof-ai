@@ -1,0 +1,1249 @@
+{
+  "ts": "2026-06-29T11:46:51.561855+00:00Z",
+  "generals": [
+    {
+      "id": 1,
+      "name": "Argus",
+      "role": "watchdog",
+      "qowm": "vision-spatial-wavelet",
+      "sephirah": "Binah",
+      "bft_default": "balanced"
+    },
+    {
+      "id": 2,
+      "name": "Scribe",
+      "role": "compliance",
+      "qowm": "text-logical-wavelet",
+      "sephirah": "Auxiliary",
+      "bft_default": "secure"
+    },
+    {
+      "id": 3,
+      "name": "Shield",
+      "role": "safety",
+      "qowm": "reasoning-safety-quantum",
+      "sephirah": "Gevurah",
+      "bft_default": "secure"
+    },
+    {
+      "id": 4,
+      "name": "Builder",
+      "role": "architect",
+      "qowm": "longctx-architectural",
+      "sephirah": "Chesed",
+      "bft_default": "balanced"
+    },
+    {
+      "id": 5,
+      "name": "Abacus",
+      "role": "quant",
+      "qowm": "quant-temporal-wavelet",
+      "sephirah": "Malkuth",
+      "bft_default": "fast"
+    },
+    {
+      "id": 6,
+      "name": "Lex",
+      "role": "legal",
+      "qowm": "longctx-legal-quantum",
+      "sephirah": "Hod",
+      "bft_default": "secure"
+    },
+    {
+      "id": 7,
+      "name": "Scale",
+      "role": "ethics",
+      "qowm": "multilingual-care-wavelet",
+      "sephirah": "Tiferet",
+      "bft_default": "balanced"
+    },
+    {
+      "id": 8,
+      "name": "Crow",
+      "role": "risk",
+      "qowm": "fast-prediction-temporal",
+      "sephirah": "Da'at",
+      "bft_default": "balanced"
+    },
+    {
+      "id": 9,
+      "name": "Gear",
+      "role": "operations",
+      "qowm": "operational-temporal-quantum",
+      "sephirah": "Yesod",
+      "bft_default": "fast"
+    },
+    {
+      "id": 10,
+      "name": "Voice",
+      "role": "comms",
+      "qowm": "audio-temporal-wavelet",
+      "sephirah": "Netzach",
+      "bft_default": "fast"
+    },
+    {
+      "id": 11,
+      "name": "Owl",
+      "role": "research",
+      "qowm": "longctx-research-quantum",
+      "sephirah": "Chokhmah",
+      "bft_default": "secure"
+    },
+    {
+      "id": 12,
+      "name": "Dragon",
+      "role": "sovereign",
+      "qowm": "sovereign-meta-quantum",
+      "sephirah": "Keter",
+      "bft_default": "secure"
+    }
+  ],
+  "bft_modes": {
+    "fast": {
+      "voters": 3,
+      "quorum": 2,
+      "latency_ms": 50,
+      "security": 0.7
+    },
+    "balanced": {
+      "voters": 5,
+      "quorum": 3,
+      "latency_ms": 150,
+      "security": 0.85
+    },
+    "secure": {
+      "voters": 7,
+      "quorum": 5,
+      "latency_ms": 400,
+      "security": 0.98
+    }
+  },
+  "mom_experts": [
+    {
+      "name": "TextMOM",
+      "weight": 0.5,
+      "general_use": [
+        "all"
+      ]
+    },
+    {
+      "name": "VisionMOM",
+      "weight": 0.25,
+      "general_use": [
+        "Argus",
+        "Scribe"
+      ]
+    },
+    {
+      "name": "AudioMOM",
+      "weight": 0.15,
+      "general_use": [
+        "Voice",
+        "Shield"
+      ]
+    },
+    {
+      "name": "SpatialMOM",
+      "weight": 0.1,
+      "general_use": [
+        "Builder",
+        "Gear"
+      ]
+    }
+  ],
+  "moe_experts": [
+    {
+      "name": "CodingMoE",
+      "model": "Qwen3-Coder-480B",
+      "size_gb": 480,
+      "tier": "online"
+    },
+    {
+      "name": "ReasoningMoE",
+      "model": "DeepSeek R1",
+      "size_gb": 671,
+      "tier": "online"
+    },
+    {
+      "name": "LongCtxMoE",
+      "model": "Llama 4 Scout",
+      "size_gb": 109,
+      "tier": "online"
+    },
+    {
+      "name": "MultilingualMoE",
+      "model": "Mistral Large 3",
+      "size_gb": 123,
+      "tier": "online"
+    },
+    {
+      "name": "EdgeMoE",
+      "model": "Qwen3 4B-Thinking",
+      "size_gb": 2.5,
+      "tier": "edge"
+    },
+    {
+      "name": "TTSMoE",
+      "model": "Kokoro",
+      "size_gb": 0.3,
+      "tier": "edge"
+    },
+    {
+      "name": "EmbedMoE",
+      "model": "BGE-M3",
+      "size_gb": 2.3,
+      "tier": "edge"
+    },
+    {
+      "name": "RouterMoE",
+      "model": "Qwen3 1.7B",
+      "size_gb": 1.0,
+      "tier": "edge"
+    }
+  ],
+  "hives": [
+    {
+      "id": 1,
+      "name": "London",
+      "lat": 51.5074,
+      "lng": -0.1278,
+      "general": "Dragon",
+      "tier": "sovereign"
+    },
+    {
+      "id": 2,
+      "name": "Cambridge",
+      "lat": 52.2053,
+      "lng": 0.1218,
+      "general": "Scribe",
+      "tier": "enterprise"
+    },
+    {
+      "id": 3,
+      "name": "NYC",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "general": "Scribe",
+      "tier": "enterprise"
+    },
+    {
+      "id": 4,
+      "name": "SF",
+      "lat": 37.7749,
+      "lng": -122.4194,
+      "general": "Owl",
+      "tier": "enterprise"
+    },
+    {
+      "id": 5,
+      "name": "Tokyo",
+      "lat": 35.6762,
+      "lng": 139.6503,
+      "general": "Dragon",
+      "tier": "sovereign"
+    },
+    {
+      "id": 6,
+      "name": "Berlin",
+      "lat": 52.52,
+      "lng": 13.405,
+      "general": "Shield",
+      "tier": "enterprise"
+    },
+    {
+      "id": 7,
+      "name": "Paris",
+      "lat": 48.8566,
+      "lng": 2.3522,
+      "general": "Lex",
+      "tier": "enterprise"
+    },
+    {
+      "id": 8,
+      "name": "Sydney",
+      "lat": -33.8688,
+      "lng": 151.2093,
+      "general": "Builder",
+      "tier": "enterprise"
+    },
+    {
+      "id": 9,
+      "name": "Singapore",
+      "lat": 1.3521,
+      "lng": 103.8198,
+      "general": "Shield",
+      "tier": "enterprise"
+    },
+    {
+      "id": 10,
+      "name": "Toronto",
+      "lat": 43.6532,
+      "lng": -79.3832,
+      "general": "Builder",
+      "tier": "enterprise"
+    },
+    {
+      "id": 11,
+      "name": "Mumbai",
+      "lat": 19.076,
+      "lng": 72.8777,
+      "general": "Abacus",
+      "tier": "enterprise"
+    },
+    {
+      "id": 12,
+      "name": "Dubai",
+      "lat": 25.2048,
+      "lng": 55.2708,
+      "general": "Voice",
+      "tier": "enterprise"
+    },
+    {
+      "id": 13,
+      "name": "HongKong",
+      "lat": 22.3193,
+      "lng": 114.1694,
+      "general": "Scribe",
+      "tier": "enterprise"
+    },
+    {
+      "id": 14,
+      "name": "Madrid",
+      "lat": 40.4168,
+      "lng": -3.7038,
+      "general": "Scale",
+      "tier": "enterprise"
+    },
+    {
+      "id": 15,
+      "name": "Amsterdam",
+      "lat": 52.3676,
+      "lng": 4.9041,
+      "general": "Crow",
+      "tier": "smb"
+    },
+    {
+      "id": 16,
+      "name": "Edinburgh",
+      "lat": 55.9533,
+      "lng": -3.1883,
+      "general": "Builder",
+      "tier": "enterprise"
+    },
+    {
+      "id": 17,
+      "name": "Stockholm",
+      "lat": 59.3293,
+      "lng": 18.0686,
+      "general": "Argus",
+      "tier": "smb"
+    },
+    {
+      "id": 18,
+      "name": "Dublin",
+      "lat": 53.3498,
+      "lng": -6.2603,
+      "general": "Voice",
+      "tier": "smb"
+    },
+    {
+      "id": 19,
+      "name": "Mexico",
+      "lat": 19.4326,
+      "lng": -99.1332,
+      "general": "Crow",
+      "tier": "smb"
+    },
+    {
+      "id": 20,
+      "name": "CapeTown",
+      "lat": -33.9249,
+      "lng": 18.4241,
+      "general": "Scale",
+      "tier": "smb"
+    },
+    {
+      "id": 21,
+      "name": "Helsinki",
+      "lat": 60.1699,
+      "lng": 24.9384,
+      "general": "Abacus",
+      "tier": "smb"
+    },
+    {
+      "id": 22,
+      "name": "Rome",
+      "lat": 41.9028,
+      "lng": 12.4964,
+      "general": "Gear",
+      "tier": "smb"
+    },
+    {
+      "id": 23,
+      "name": "Seoul",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "general": "Lex",
+      "tier": "smb"
+    },
+    {
+      "id": 24,
+      "name": "Vienna",
+      "lat": 48.2082,
+      "lng": 16.3738,
+      "general": "Owl",
+      "tier": "smb"
+    },
+    {
+      "id": 25,
+      "name": "Buenos",
+      "lat": -34.6037,
+      "lng": -58.3816,
+      "general": "Scale",
+      "tier": "smb"
+    },
+    {
+      "id": 26,
+      "name": "Nairobi",
+      "lat": -1.2921,
+      "lng": 36.8219,
+      "general": "Gear",
+      "tier": "smb"
+    },
+    {
+      "id": 27,
+      "name": "Bogota",
+      "lat": 4.711,
+      "lng": -74.0721,
+      "general": "Voice",
+      "tier": "smb"
+    },
+    {
+      "id": 28,
+      "name": "Lima",
+      "lat": -12.0464,
+      "lng": -77.0428,
+      "general": "Lex",
+      "tier": "smb"
+    },
+    {
+      "id": 29,
+      "name": "Cairo",
+      "lat": 30.0444,
+      "lng": 31.2357,
+      "general": "Shield",
+      "tier": "smb"
+    },
+    {
+      "id": 30,
+      "name": "Santiago",
+      "lat": -33.4489,
+      "lng": -70.6693,
+      "general": "Abacus",
+      "tier": "smb"
+    },
+    {
+      "id": 31,
+      "name": "Lagos",
+      "lat": 6.5244,
+      "lng": 3.3792,
+      "general": "Argus",
+      "tier": "smb"
+    },
+    {
+      "id": 32,
+      "name": "Jakarta",
+      "lat": -6.2088,
+      "lng": 106.8456,
+      "general": "Crow",
+      "tier": "smb"
+    },
+    {
+      "id": 33,
+      "name": "Reykjavik",
+      "lat": 64.1466,
+      "lng": -21.9426,
+      "general": "Owl",
+      "tier": "smb"
+    }
+  ],
+  "mindsets": [
+    {
+      "id": 1,
+      "name": "Hermetic",
+      "env": "Fire",
+      "score": 0.95
+    },
+    {
+      "id": 2,
+      "name": "Alchemical",
+      "env": "Water",
+      "score": 0.92
+    },
+    {
+      "id": 3,
+      "name": "Kabbalistic",
+      "env": "Air",
+      "score": 0.94
+    },
+    {
+      "id": 4,
+      "name": "Taoist",
+      "env": "Wood",
+      "score": 0.91
+    },
+    {
+      "id": 5,
+      "name": "Vedantic",
+      "env": "Ether",
+      "score": 0.93
+    },
+    {
+      "id": 6,
+      "name": "Sufi",
+      "env": "Light",
+      "score": 0.89
+    },
+    {
+      "id": 7,
+      "name": "Stoic",
+      "env": "Earth",
+      "score": 0.9
+    },
+    {
+      "id": 8,
+      "name": "Buddhist",
+      "env": "Air",
+      "score": 0.92
+    },
+    {
+      "id": 9,
+      "name": "Tantric",
+      "env": "Fire",
+      "score": 0.88
+    },
+    {
+      "id": 10,
+      "name": "Gnostic",
+      "env": "Ether",
+      "score": 0.86
+    },
+    {
+      "id": 11,
+      "name": "Druidic",
+      "env": "Earth",
+      "score": 0.84
+    },
+    {
+      "id": 12,
+      "name": "Sovereign",
+      "env": "All",
+      "score": 1.0
+    }
+  ],
+  "substrate": {
+    "ab_uno": "SOV3 OOWM substrate (the 1 origin)",
+    "sephiroth_count": 12,
+    "care_floor_probes": 16,
+    "bft_default_size": 5,
+    "sigil_chain_hops": 461,
+    "bitcoin_anchored": true
+  },
+  "daemon_runs": {
+    "Argus": [
+      {
+        "general": "Argus",
+        "tick": 1,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 178,
+        "kid": "sov3-0200380200e8da8f",
+        "sig": "0200380200e8da8fb05d00a9643b50119f4cdcf79f2c49d5e98f1b2af2e84456",
+        "ts": "2026-06-29T11:46:51.562087+00:00"
+      },
+      {
+        "general": "Argus",
+        "tick": 2,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 178,
+        "kid": "sov3-27320a8667954dc7",
+        "sig": "27320a8667954dc7c0921d21c4a3c409936bc229670c81307b40328cdf78b78c",
+        "ts": "2026-06-29T11:46:51.563635+00:00"
+      },
+      {
+        "general": "Argus",
+        "tick": 3,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 178,
+        "kid": "sov3-25197d85feeb2e7f",
+        "sig": "25197d85feeb2e7fccabf486e44ee1ba058d435d584a42af02e48e0e8cdc2291",
+        "ts": "2026-06-29T11:46:51.565117+00:00"
+      },
+      {
+        "general": "Argus",
+        "tick": 4,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 178,
+        "kid": "sov3-bd5739fcfb83eaef",
+        "sig": "bd5739fcfb83eaeff94fe65f258b1a8e8deded91be311267fd0bd3a4a3ad8d41",
+        "ts": "2026-06-29T11:46:51.566592+00:00"
+      },
+      {
+        "general": "Argus",
+        "tick": 5,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 178,
+        "kid": "sov3-854fe349cd5d3701",
+        "sig": "854fe349cd5d370185cf220230a5b7e652e854eee37c79c3850155e55ce0e8fc",
+        "ts": "2026-06-29T11:46:51.568178+00:00"
+      }
+    ],
+    "Scribe": [
+      {
+        "general": "Scribe",
+        "tick": 1,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 425,
+        "kid": "sov3-0087838e77e845e0",
+        "sig": "0087838e77e845e0ad1ce817865a32dbc655f1c06bcefa61aaa6cd431cc2c1b6",
+        "ts": "2026-06-29T11:46:51.569758+00:00"
+      },
+      {
+        "general": "Scribe",
+        "tick": 2,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 425,
+        "kid": "sov3-8c44f615de403b63",
+        "sig": "8c44f615de403b63f65c67a8c88c921fd229556d2e1f5d1e17feb37636400324",
+        "ts": "2026-06-29T11:46:51.571044+00:00"
+      },
+      {
+        "general": "Scribe",
+        "tick": 3,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 425,
+        "kid": "sov3-130603251e345a7d",
+        "sig": "130603251e345a7d56e069d8c802c8a3a45e75f5ad6620fc7ab192ed62db30c4",
+        "ts": "2026-06-29T11:46:51.572387+00:00"
+      },
+      {
+        "general": "Scribe",
+        "tick": 4,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 425,
+        "kid": "sov3-e640dc9a36a6004d",
+        "sig": "e640dc9a36a6004de8678e425220203ed501a448bf26720a63199308b635f9be",
+        "ts": "2026-06-29T11:46:51.573936+00:00"
+      },
+      {
+        "general": "Scribe",
+        "tick": 5,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 425,
+        "kid": "sov3-6953a38e418a0474",
+        "sig": "6953a38e418a04744afc6a6ca2593032147fa37f46d87ff8ecbc523363ca8422",
+        "ts": "2026-06-29T11:46:51.575203+00:00"
+      }
+    ],
+    "Shield": [
+      {
+        "general": "Shield",
+        "tick": 1,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 402,
+        "kid": "sov3-ae109cea41836798",
+        "sig": "ae109cea4183679850f0d452e590b8e3c5718a2b822fff81fad79737f586352d",
+        "ts": "2026-06-29T11:46:51.576773+00:00"
+      },
+      {
+        "general": "Shield",
+        "tick": 2,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 402,
+        "kid": "sov3-f9f183cc1d6a1bc0",
+        "sig": "f9f183cc1d6a1bc0746d80ab9a497e40149cc27a25aa868d83251c645e84ad93",
+        "ts": "2026-06-29T11:46:51.578317+00:00"
+      },
+      {
+        "general": "Shield",
+        "tick": 3,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 402,
+        "kid": "sov3-646df618595e6bf8",
+        "sig": "646df618595e6bf8a68336a4070abf8bd2b20e516e60814b3b25ee1608f8eadb",
+        "ts": "2026-06-29T11:46:51.579847+00:00"
+      },
+      {
+        "general": "Shield",
+        "tick": 4,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 402,
+        "kid": "sov3-e8ebd2ed07df536b",
+        "sig": "e8ebd2ed07df536b41590525b75df07661d068c98098c2393dcdfb7f1081162a",
+        "ts": "2026-06-29T11:46:51.581428+00:00"
+      },
+      {
+        "general": "Shield",
+        "tick": 5,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 402,
+        "kid": "sov3-faae70aa92047a12",
+        "sig": "faae70aa92047a1296022c744a108822c5c8398ddd4ff4cde9c9b507b8cc936c",
+        "ts": "2026-06-29T11:46:51.582740+00:00"
+      }
+    ],
+    "Builder": [
+      {
+        "general": "Builder",
+        "tick": 1,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 187,
+        "kid": "sov3-c861bb8b6143fe77",
+        "sig": "c861bb8b6143fe774df56ce3379e6fbf326214e1a9541f243f50781326d24816",
+        "ts": "2026-06-29T11:46:51.584082+00:00"
+      },
+      {
+        "general": "Builder",
+        "tick": 2,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 187,
+        "kid": "sov3-65895bc17dd4cb34",
+        "sig": "65895bc17dd4cb34b717c36459ce048a77635379123a68ba06bd87745dc4bae6",
+        "ts": "2026-06-29T11:46:51.585661+00:00"
+      },
+      {
+        "general": "Builder",
+        "tick": 3,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 187,
+        "kid": "sov3-ce891ff80984231b",
+        "sig": "ce891ff80984231b0e47bcd6401b80e7fb51bfd2dd04c8db34cde07afe65335f",
+        "ts": "2026-06-29T11:46:51.587234+00:00"
+      },
+      {
+        "general": "Builder",
+        "tick": 4,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 187,
+        "kid": "sov3-9e8a90fb4e6fac04",
+        "sig": "9e8a90fb4e6fac04de3629fbbc2ed98596a3290fb27fabea1b7450c69cafa145",
+        "ts": "2026-06-29T11:46:51.588793+00:00"
+      },
+      {
+        "general": "Builder",
+        "tick": 5,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 187,
+        "kid": "sov3-ff9a70d0996ff012",
+        "sig": "ff9a70d0996ff012f903ef0c1f2b71fdbd7cd44c66d4239c26a7994017f29232",
+        "ts": "2026-06-29T11:46:51.590348+00:00"
+      }
+    ],
+    "Abacus": [
+      {
+        "general": "Abacus",
+        "tick": 1,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 54,
+        "kid": "sov3-89a545dfbcae6c65",
+        "sig": "89a545dfbcae6c654acac9839514cbcf03d9c54c548d4493b989e77b6c410a8a",
+        "ts": "2026-06-29T11:46:51.591931+00:00"
+      },
+      {
+        "general": "Abacus",
+        "tick": 2,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 54,
+        "kid": "sov3-b8a353786b4efc9b",
+        "sig": "b8a353786b4efc9b2b6b900e4d2502002fa8d0e704cb0b35a4a025243a22e11b",
+        "ts": "2026-06-29T11:46:51.593461+00:00"
+      },
+      {
+        "general": "Abacus",
+        "tick": 3,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 54,
+        "kid": "sov3-4dc17e0bb4b3ef11",
+        "sig": "4dc17e0bb4b3ef11fd8cca48ef2296ed93e1f31177051d96ec1d2c6a07174531",
+        "ts": "2026-06-29T11:46:51.595039+00:00"
+      },
+      {
+        "general": "Abacus",
+        "tick": 4,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 54,
+        "kid": "sov3-62d62211752448c8",
+        "sig": "62d62211752448c8c2d29cb3eb323cb2de57e26e9275937b8176be7982d33b36",
+        "ts": "2026-06-29T11:46:51.596624+00:00"
+      },
+      {
+        "general": "Abacus",
+        "tick": 5,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 54,
+        "kid": "sov3-0c65141be7ce7987",
+        "sig": "0c65141be7ce798761589658e0760950663b5aa092861f83426f806d82d64b67",
+        "ts": "2026-06-29T11:46:51.598207+00:00"
+      }
+    ],
+    "Lex": [
+      {
+        "general": "Lex",
+        "tick": 1,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 427,
+        "kid": "sov3-cd90c6db7385f07a",
+        "sig": "cd90c6db7385f07a38c2a50399e127a1212d728650ecd32041d5ae9a72d8e3d1",
+        "ts": "2026-06-29T11:46:51.599775+00:00"
+      },
+      {
+        "general": "Lex",
+        "tick": 2,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 427,
+        "kid": "sov3-b00eb4418df00672",
+        "sig": "b00eb4418df00672b125792bfb2a3c660b9c14ffb5864952a0e68a9c6430fbe8",
+        "ts": "2026-06-29T11:46:51.601327+00:00"
+      },
+      {
+        "general": "Lex",
+        "tick": 3,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 427,
+        "kid": "sov3-3b616b95fd1b7e78",
+        "sig": "3b616b95fd1b7e7848e6c4ff58014ff6bc05f429a77f45c191fe4499f51041b6",
+        "ts": "2026-06-29T11:46:51.602851+00:00"
+      },
+      {
+        "general": "Lex",
+        "tick": 4,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 427,
+        "kid": "sov3-cc3f7782ba88602d",
+        "sig": "cc3f7782ba88602dadd707bb7310768d2216a73debdadaeb15fc645d2bf070f0",
+        "ts": "2026-06-29T11:46:51.604374+00:00"
+      },
+      {
+        "general": "Lex",
+        "tick": 5,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 427,
+        "kid": "sov3-53bd1266fa9343e4",
+        "sig": "53bd1266fa9343e416c3d28fe44ce4b08be3692947391c263a996682107d7f42",
+        "ts": "2026-06-29T11:46:51.605915+00:00"
+      }
+    ],
+    "Scale": [
+      {
+        "general": "Scale",
+        "tick": 1,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 183,
+        "kid": "sov3-6593ebac57829bd8",
+        "sig": "6593ebac57829bd883b03b0ea85bff368333e5d33597e768194458983bbb9ad0",
+        "ts": "2026-06-29T11:46:51.607479+00:00"
+      },
+      {
+        "general": "Scale",
+        "tick": 2,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 183,
+        "kid": "sov3-de5e2e2a743fb6ad",
+        "sig": "de5e2e2a743fb6ad971bc86ffd01e779d413fbfd5c7786fbeb1b5c79c1354499",
+        "ts": "2026-06-29T11:46:51.609052+00:00"
+      },
+      {
+        "general": "Scale",
+        "tick": 3,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 183,
+        "kid": "sov3-6700fba177f51495",
+        "sig": "6700fba177f51495645865577367ae67e3509b5038bafba25c8ab7bb4efa2372",
+        "ts": "2026-06-29T11:46:51.610645+00:00"
+      },
+      {
+        "general": "Scale",
+        "tick": 4,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 183,
+        "kid": "sov3-bf58fb05f573a825",
+        "sig": "bf58fb05f573a825fdfbbede47a85a44592e8496788098d4335ad298cd5858d6",
+        "ts": "2026-06-29T11:46:51.612223+00:00"
+      },
+      {
+        "general": "Scale",
+        "tick": 5,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 183,
+        "kid": "sov3-55acf34a321de75d",
+        "sig": "55acf34a321de75da3e12b5db8a39fd66489705622285d0c915f6358a25613bb",
+        "ts": "2026-06-29T11:46:51.613813+00:00"
+      }
+    ],
+    "Crow": [
+      {
+        "general": "Crow",
+        "tick": 1,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 173,
+        "kid": "sov3-b1edef3d308f67ad",
+        "sig": "b1edef3d308f67ad7de60797e2d784167f66a15e90b262a25b1d904cfff3f676",
+        "ts": "2026-06-29T11:46:51.615358+00:00"
+      },
+      {
+        "general": "Crow",
+        "tick": 2,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 173,
+        "kid": "sov3-511aaa98e3abcd5d",
+        "sig": "511aaa98e3abcd5da3569867ef60586228431a20669d6dc991081e144d3546c4",
+        "ts": "2026-06-29T11:46:51.616883+00:00"
+      },
+      {
+        "general": "Crow",
+        "tick": 3,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 173,
+        "kid": "sov3-30e84071d28dd4b6",
+        "sig": "30e84071d28dd4b6643a6185fb63094fc9c7d472c09b048d5d7e04d188bf3034",
+        "ts": "2026-06-29T11:46:51.618413+00:00"
+      },
+      {
+        "general": "Crow",
+        "tick": 4,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 173,
+        "kid": "sov3-cb2bbc98c49cb942",
+        "sig": "cb2bbc98c49cb942f9862bfee40ee96e7721154cb3fb2e7cd01854aba4cf6c04",
+        "ts": "2026-06-29T11:46:51.619942+00:00"
+      },
+      {
+        "general": "Crow",
+        "tick": 5,
+        "bft_mode": "balanced",
+        "bft_votes": "2 for, 2 against, 3 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 173,
+        "kid": "sov3-7a010a0bb83fb28b",
+        "sig": "7a010a0bb83fb28b516ed59456454c07a431aab6ccc55d8de87466e6935d99a9",
+        "ts": "2026-06-29T11:46:51.621506+00:00"
+      }
+    ],
+    "Gear": [
+      {
+        "general": "Gear",
+        "tick": 1,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 85,
+        "kid": "sov3-041adc9e9e4f6c89",
+        "sig": "041adc9e9e4f6c890c24902a1b23e6188043a6e9e12c735059571d7f59460aec",
+        "ts": "2026-06-29T11:46:51.623096+00:00"
+      },
+      {
+        "general": "Gear",
+        "tick": 2,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 85,
+        "kid": "sov3-d13ac3a2e8eb9b9d",
+        "sig": "d13ac3a2e8eb9b9d06777edc87da704ab42d9b0d775f9f9f56ffd8372322774c",
+        "ts": "2026-06-29T11:46:51.624337+00:00"
+      },
+      {
+        "general": "Gear",
+        "tick": 3,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 85,
+        "kid": "sov3-30439d2abf2524d1",
+        "sig": "30439d2abf2524d1fca5f4c82696be1b34063b8596f58bd9a02cf05d3d51606e",
+        "ts": "2026-06-29T11:46:51.625690+00:00"
+      },
+      {
+        "general": "Gear",
+        "tick": 4,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 85,
+        "kid": "sov3-26596c7be2d1b2e8",
+        "sig": "26596c7be2d1b2e827661eb9402ab7cc19da554c8e4e7f865dab4365c9b41725",
+        "ts": "2026-06-29T11:46:51.627215+00:00"
+      },
+      {
+        "general": "Gear",
+        "tick": 5,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 85,
+        "kid": "sov3-49d11996402c9d64",
+        "sig": "49d11996402c9d645dc04d3a99649d8b5d041729ea5826d85d9c930df9a05167",
+        "ts": "2026-06-29T11:46:51.628753+00:00"
+      }
+    ],
+    "Voice": [
+      {
+        "general": "Voice",
+        "tick": 1,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 95,
+        "kid": "sov3-877458e317610cf3",
+        "sig": "877458e317610cf3141415b16ca7f0f1616624e4ac809ff078ce219be8c65403",
+        "ts": "2026-06-29T11:46:51.629867+00:00"
+      },
+      {
+        "general": "Voice",
+        "tick": 2,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 95,
+        "kid": "sov3-f7889fca66effb5d",
+        "sig": "f7889fca66effb5ddb163db4d52a69160b29e02cf4090ad6d93234568f1c093d",
+        "ts": "2026-06-29T11:46:51.630925+00:00"
+      },
+      {
+        "general": "Voice",
+        "tick": 3,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 95,
+        "kid": "sov3-bef9425ba7124f59",
+        "sig": "bef9425ba7124f590719c1429d4d17648aeb9ac4ad112faf1a1ff395f2489353",
+        "ts": "2026-06-29T11:46:51.632483+00:00"
+      },
+      {
+        "general": "Voice",
+        "tick": 4,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 95,
+        "kid": "sov3-2a996d73e0126f80",
+        "sig": "2a996d73e0126f8087da555be2802183384e681c7e3d29dd553248f15db4cbc4",
+        "ts": "2026-06-29T11:46:51.634008+00:00"
+      },
+      {
+        "general": "Voice",
+        "tick": 5,
+        "bft_mode": "fast",
+        "bft_votes": "1 for, 1 against, 2 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 95,
+        "kid": "sov3-45ab44cb828edd9e",
+        "sig": "45ab44cb828edd9ef6fdbb6c65a9cbeeaeba3d585705fccfd05639eb72b1a3ad",
+        "ts": "2026-06-29T11:46:51.635556+00:00"
+      }
+    ],
+    "Owl": [
+      {
+        "general": "Owl",
+        "tick": 1,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 419,
+        "kid": "sov3-fe9b729766257dad",
+        "sig": "fe9b729766257dadc584ae257a9484928db6de3808d26eaa5e3fc75178b4255a",
+        "ts": "2026-06-29T11:46:51.637141+00:00"
+      },
+      {
+        "general": "Owl",
+        "tick": 2,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 419,
+        "kid": "sov3-77db2c7efde81794",
+        "sig": "77db2c7efde817947c81dfacdadd8bf644e61935f7e85d854e838cc61afc40d2",
+        "ts": "2026-06-29T11:46:51.638733+00:00"
+      },
+      {
+        "general": "Owl",
+        "tick": 3,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 419,
+        "kid": "sov3-8aa16da064bc0724",
+        "sig": "8aa16da064bc0724d90a4782b24aebd9d100d6b8eb0b423862fa21e3d97261f1",
+        "ts": "2026-06-29T11:46:51.640274+00:00"
+      },
+      {
+        "general": "Owl",
+        "tick": 4,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 419,
+        "kid": "sov3-da0ca319afd51c6f",
+        "sig": "da0ca319afd51c6f6ffd423a0bc3426db8d64edab1aa2c1344b927c6e597edff",
+        "ts": "2026-06-29T11:46:51.641882+00:00"
+      },
+      {
+        "general": "Owl",
+        "tick": 5,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 419,
+        "kid": "sov3-13e93b275a6b7ad9",
+        "sig": "13e93b275a6b7ad932233ceeb7e4ef9aaae5be267f81247b41afbc5e3f139a71",
+        "ts": "2026-06-29T11:46:51.643445+00:00"
+      }
+    ],
+    "Dragon": [
+      {
+        "general": "Dragon",
+        "tick": 1,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": false,
+        "latency_ms": 447,
+        "kid": "sov3-77c72d54dccb8140",
+        "sig": "77c72d54dccb8140527651da5b3f295a77cdcffe43372123c13b058d30a9f059",
+        "ts": "2026-06-29T11:46:51.644999+00:00"
+      },
+      {
+        "general": "Dragon",
+        "tick": 2,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 447,
+        "kid": "sov3-4329e1bb7aed8a45",
+        "sig": "4329e1bb7aed8a45ac81455ac90cfd9e04e2595798037d35c837c8ab55d2c40e",
+        "ts": "2026-06-29T11:46:51.646523+00:00"
+      },
+      {
+        "general": "Dragon",
+        "tick": 3,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 447,
+        "kid": "sov3-8be2ee44068176d8",
+        "sig": "8be2ee44068176d8f550920d5ac88ee5e880fbf901f5aea636bd4ca7c846b524",
+        "ts": "2026-06-29T11:46:51.648051+00:00"
+      },
+      {
+        "general": "Dragon",
+        "tick": 4,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 447,
+        "kid": "sov3-554dbb8687ea7dae",
+        "sig": "554dbb8687ea7daee769f2a1a953258e07f3dba1a39f7322f5dec1ac56fe3524",
+        "ts": "2026-06-29T11:46:51.649615+00:00"
+      },
+      {
+        "general": "Dragon",
+        "tick": 5,
+        "bft_mode": "secure",
+        "bft_votes": "4 for, 2 against, 5 quorum",
+        "care_floor_pass": true,
+        "latency_ms": 447,
+        "kid": "sov3-53e1cf02e46e9811",
+        "sig": "53e1cf02e46e9811178ca24eb6afdb4f7d401479224f0d5b8f35995b48cd1690",
+        "ts": "2026-06-29T11:46:51.651204+00:00"
+      }
+    ]
+  },
+  "summary": {
+    "total_events": 60,
+    "avg_bft_voters": 5.33,
+    "avg_bft_quorum": 3.58,
+    "hives_active": 33,
+    "hives_sovereign": 2,
+    "hives_enterprise": 13,
+    "hives_smb": 18,
+    "mindsets_count": 12,
+    "moe_total_size_tb": 1.36
+  }
+}

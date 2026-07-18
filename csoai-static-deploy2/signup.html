@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🌱 Sign Up — SOV33 Sovereign AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding:1rem;line-height:1.6}
+  .wrap{max-width:480px;margin:2rem auto;padding:1rem}
+  h1{color:var(--accent);font-size:2.2rem;text-align:center;margin-bottom:.5rem}
+  .sub{color:var(--muted);text-align:center;margin-bottom:2rem;font-size:1rem}
+  .step{background:var(--bg2);border-radius:12px;padding:1.5rem;margin:1rem 0;border:1px solid var(--rule)}
+  .step-num{display:inline-block;background:var(--accent);color:#0a0e1a;width:32px;height:32px;border-radius:50%;text-align:center;line-height:32px;font-weight:bold;margin-right:.5rem}
+  .step h2{color:var(--accent2);font-size:1.2rem;margin-bottom:.5rem;display:flex;align-items:center}
+  .step p{color:var(--muted);margin-bottom:1rem}
+  input,select,textarea{width:100%;padding:1rem;background:var(--bg);color:var(--ink);border:2px solid var(--rule);border-radius:8px;font-family:inherit;font-size:1.1rem;margin:.5rem 0}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+  label{display:block;color:var(--ink);font-weight:600;margin:.8rem 0 .3rem;font-size:1rem}
+  .help{color:var(--muted);font-size:.85rem;margin-top:.2rem}
+  button{width:100%;padding:1.2rem;background:var(--accent);color:#0a0e1a;border:none;border-radius:8px;font-size:1.2rem;font-weight:bold;cursor:pointer;margin-top:1rem}
+  button:hover{background:var(--accent2)}
+  .big-btn{padding:1.5rem;font-size:1.4rem}
+  .ok{color:var(--accent2);font-weight:bold}
+  .err{color:var(--warn);font-weight:bold}
+  .skip{background:transparent;color:var(--muted);border:2px solid var(--muted)}
+  .skip:hover{background:var(--rule)}
+  .progress{height:6px;background:var(--rule);border-radius:3px;margin:1rem 0}
+  .progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .3s}
+  .step.hidden{display:none}
+  .step.active{display:block}
+  .back-btn{background:transparent;color:var(--ink);border:2px solid var(--rule);padding:.8rem;font-size:1rem;margin-top:.5rem}
+  .big-text{font-size:1.3rem;line-height:1.8}
+  .emoji{font-size:1.5rem}
+  @media (max-width:480px){
+    body{padding:.5rem}
+    h1{font-size:1.8rem}
+    .wrap{padding:.5rem;margin:1rem auto}
+    .step{padding:1.2rem}
+    button{font-size:1.1rem;padding:1rem}
+    .big-btn{font-size:1.2rem;padding:1.3rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>🌱 Welcome to SOV33</h1>
+  <p class="sub">Your sovereign AI. Easy as 1-2-3.</p>
+
+  <div class="progress">
+    <div class="progress-fill" id="progress-fill" style="width:33%"></div>
+  </div>
+
+  <!-- STEP 1: What do you want to call yourself? -->
+  <div class="step active" id="step-1">
+    <h2><span class="step-num">1</span>What should we call you?</h2>
+    <p>This is just so we can greet you. Your real name is fine. Or a nickname. Or anything you like.</p>
+    <input type="text" id="name" placeholder="Your name or nickname" autofocus>
+    <button class="big-btn" onclick="goStep(2)">Next →</button>
+  </div>
+
+  <!-- STEP 2: Pick your AI character -->
+  <div class="step hidden" id="step-2">
+    <h2><span class="step-num">2</span>Pick your AI character</h2>
+    <p>Each character has the same knowledge but a different personality. Pick the one that feels right.</p>
+
+    <label><input type="radio" name="char" value="sophia" checked> <strong>Sophia</strong> — Calm, thoughtful, good listener</label>
+    <label><input type="radio" name="char" value="atlas"> <strong>Atlas</strong> — Practical, gets things done</label>
+    <label><input type="radio" name="char" value="lyra"> <strong>Lyra</strong> — Creative, asks great questions</label>
+    <label><input type="radio" name="char" value="echo"> <strong>Echo</strong> — Direct, no fluff, fast</label>
+    <label><input type="radio" name="char" value="custom"> <strong>Custom</strong> — I'll describe my own</label>
+
+    <div id="custom-name" style="display:none;margin-top:.5rem">
+      <input type="text" id="custom-name-input" placeholder="Describe your character's personality">
+    </div>
+
+    <button class="big-btn" onclick="goStep(3)">Next →</button>
+    <button class="back-btn" onclick="goStep(1)">← Back</button>
+  </div>
+
+  <!-- STEP 3: Done! -->
+  <div class="step hidden" id="step-3">
+    <h2><span class="step-num">3</span><span class="emoji">🎉</span> You're all set!</h2>
+    <p class="big-text" id="welcome-msg"></p>
+
+    <p>What would you like to do first?</p>
+
+    <button class="big-btn" onclick="goApp('chat')">💬 Chat with my AI</button>
+    <button class="big-btn" onclick="goApp('build')">🛠️ Build an app</button>
+    <button class="big-btn" onclick="goApp('search')">🔍 Search the web</button>
+    <button class="big-btn" onclick="goApp('learn')">📚 Learn something</button>
+  </div>
+</div>
+
+<script>
+function goStep(n) {
+  // Validate step 1
+  if (n === 2) {
+    const name = document.getElementById('name').value.trim();
+    if (!name) {
+      alert('Please type a name (anything works!)');
+      return;
+    }
+    localStorage.setItem('sov33_user_name', name);
+  }
+
+  // Validate step 2
+  if (n === 3) {
+    const char = document.querySelector('input[name="char"]:checked').value;
+    localStorage.setItem('sov33_character', char);
+    if (char === 'custom') {
+      const customName = document.getElementById('custom-name-input').value.trim();
+      if (customName) localStorage.setItem('sov33_character_custom', customName);
+    }
+  }
+
+  // Hide all, show target
+  document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
+  document.getElementById('step-' + n).classList.remove('hidden');
+
+  // Update progress
+  const progress = (n / 3) * 100;
+  document.getElementById('progress-fill').style.width = progress + '%';
+
+  // Welcome message
+  if (n === 3) {
+    const name = localStorage.getItem('sov33_user_name');
+    const char = localStorage.getItem('sov33_character') || 'sophia';
+    document.getElementById('welcome-msg').innerHTML = `Welcome, <span class="ok">${name}</span>! Your sovereign AI is ready. Everything you do stays private and signed.`;
+
+    // Call /api/signup to register
+    fetch('http://localhost:8101/api/signup', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name, character: char})
+    })
+    .then(r => r.json())
+    .then(d => {
+      if (d.citizen_id) {
+        localStorage.setItem('sov33_citizen_id', d.citizen_id);
+        console.log('✓ Citizen registered:', d.citizen_id);
+      }
+    })
+    .catch(e => console.warn('Signup warning:', e.message));
+  }
+}
+
+// Show custom name field
+document.querySelectorAll('input[name="char"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('custom-name').style.display =
+      r.value === 'custom' && r.checked ? 'block' : 'none';
+  });
+});
+
+function goApp(app) {
+  // In production: would route to /app/chat, /app/build, etc.
+  const name = localStorage.getItem('sov33_user_name') || 'friend';
+  const char = localStorage.getItem('sov33_character') || 'sophia';
+  alert(`Launching ${app} for ${name} with ${char}!\n\n(In production this would route to the dedicated app page.)`);
+  // For now, go to the chat interface
+  window.location.href = 'SOV33_HERO.html';
+}
+</script>
+
+</body>
+</html>

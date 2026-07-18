@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — SOV3 Command Reference — 188+ Tools</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#f8fafc;padding:2rem;line-height:1.6;max-width:1200px;margin:0 auto}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+h2{color:#22d3ee;margin:1.5rem 0 .5rem;font-size:1.5rem;border-bottom:1px solid rgba(34,211,238,.2);padding-bottom:.3rem}
+h3{color:#8b5cf6;margin:1rem 0 .3rem}
+p{margin:.5rem 0;color:#cbd5e1}
+code{background:rgba(34,211,238,.1);color:#22d3ee;padding:2px 6px;border-radius:3px;font-size:.9rem}
+pre{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;overflow-x:auto;color:#e2e8f0;font-size:.85rem;margin:1rem 0}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.6rem;text-align:left;font-size:.8rem}
+td{padding:.5rem;border-bottom:1px solid rgba(255,255,255,.05);color:#94a3b8;font-size:.85rem}
+.cta{display:inline-block;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;padding:.8rem 2rem;border-radius:8px;text-decoration:none;font-weight:bold;margin:1rem 0}
+.cat{background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.2);border-radius:12px;padding:1.5rem;margin:1rem 0}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-commands.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+
+<h1>SOV3 Command Reference</h1>
+<p><strong>188+ tools across 8 categories. The sovereign AI substrate.</strong></p>
+<p>SOV3 (Sovereign Omniscient Vessel³) is the AI core of DEFONEOS. Every tool is callable via <code>POST http://localhost:3101/mcp</code> using JSON-RPC 2.0.</p>
+
+<h2>📋 Category 1: Governance & Council</h2>
+<div class="cat">
+<table>
+<tr><th>Tool</th><th>Params</th><th>Description</th></tr>
+<tr><td><code>bft_council_vote</code></td><td>proposal, voters</td><td>Submit proposal to BFT council for vote</td></tr>
+<tr><td><code>bft_council_status</code></td><td>—</td><td>Get current council composition (33 hives, 22 quorum)</td></tr>
+<tr><td><code>bft_propose</code></td><td>action, rationale</td><td>Propose action for council approval</td></tr>
+<tr><td><code>bft_get_proposal</code></td><td>proposal_id</td><td>Get proposal details and vote tally</td></tr>
+<tr><td><code>charter_check</code></td><td>action</td><td>Verify action complies with DEFONEOS Constitution</td></tr>
+<tr><td><code>charter_article</code></td><td>article_num</td><td>Get full text of Constitution Article (0-11)</td></tr>
+</table>
+</div>
+
+<pre>
+# Example: Submit proposal to BFT council
+curl -X POST http://localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"bft_propose","arguments":{"action":"deploy_swarm","rationale":"Dark vessel detected in UK EEZ"}}}'
+</pre>
+
+<h2>🔐 Category 2: SIGIL & Audit</h2>
+<div class="cat">
+<table>
+<tr><th>Tool</th><th>Params</th><th>Description</th></tr>
+<tr><td><code>sigil_emit</code></td><td>line</td><td>Emit Ed25519-signed SIGIL receipt</td></tr>
+<tr><td><code>sigil_verify</code></td><td>digest</td><td>Verify SIGIL by digest</td></tr>
+<tr><td><code>sigil_chain_status</code></td><td>—</td><td>Get chain length, latest digest, total receipts</td></tr>
+<tr><td><code>sigil_search</code></td><td>query</td><td>Search SIGIL chain by keyword</td></tr>
+<tr><td><code>sigil_export</code></td><td>from, to</td><td>Export SIGIL chain segment as JSON</td></tr>
+<tr><td><code>sigil_anchor</code></td><td>digest</td><td>Anchor SIGIL to Bitcoin blockchain</td></tr>
+</table>
+</div>
+
+<pre>
+# Example: Emit a SIGIL
+curl -X POST http://localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"sigil_emit","arguments":{"line":"C|defence|alert|Dark vessel detected at 55.2N -1.3W"}}}'
+</pre>
+
+<h2>🧠 Category 3: AI Bridge & Reasoning</h2>
+<div class="cat">
+<table>
+<tr><th>Tool</th><th>Params</th><th>Description</th></tr>
+<tr><td><code>bridge_think</code></td><td>character, message, profile</td><td>Cross-model reasoning. Profiles: local_only (free), balanced, power, council</td></tr>
+<tr><td><code>sov_sovereign_builder_status</code></td><td>—</td><td>Get sovereign builder training status</td></tr>
+<tr><td><code>brain_race</code></td><td>prompt, models</td><td>Race multiple models on same prompt, return best</td></tr>
+<tr><td><code>intuition_check</code></td><td>signals</td><td>Run signals through Noise→Intuition pipeline</td></tr>
+</table>
+</div>
+
+<pre>
+# Example: Bridge think with council profile
+curl -X POST http://localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"bridge_think","arguments":{"character":"JEEVES","message":"Assess threat level for 3 dark vessels in English Channel","profile":"council"}}}'
+</pre>
+
+<h2>🌐 Category 4: Federation & Agents</h2>
+<div class="cat">
+<table>
+<tr><th>Tool</th><th>Params</th><th>Description</th></tr>
+<tr><td><code>sov_a2a_agent_card</code></td><td>—</td><td>Get A2A (Agent-to-Agent) protocol card</td></tr>
+<tr><td><code>mcp_federation_stats</code></td><td>—</td><td>Get federation catalog stats</td></tr>
+<tr><td><code>mcp_federation_list</code></td><td>—</td><td>List all federated MCP servers</td></tr>
+<tr><td><code>mcp_federation_register</code></td><td>url, name</td><td>Register new MCP server to federation</td></tr>
+<tr><td><code>agent_spawn</code></td><td>type, target</td><td>Spawn agent (worm, hornet, dragonfly, killer_bee)</td></tr>
+</table>
+</div>
+
+<h2>📜 Category 5: Compliance & Certification</h2>
+<div class="cat">
+<table>
+<tr><th>Tool</th><th>Params</th><th>Description</th></tr>
+<tr><td><code>article50_passport_issue</code></td><td>system_name, provider</td><td>Issue EU AI Act Article 50 transparency passport</td></tr>
+<tr><td><code>jsp936_audit</code></td><td>system_id</td><td>Run JSP 936 AI governance audit</td></tr>
+<tr><td><code>eu_ai_act_classify</code></td><td>system_desc</td><td>Classify AI system under EU AI Act risk tiers</td></tr>
+<tr><td><code>iso42001_gap</code></td><td>system_id</td><td>ISO 42001 gap analysis</td></tr>
+<tr><td><code>nist_rmf_assess</code></td><td>system_id</td><td>NIST AI RMF assessment</td></tr>
+<tr><td><code>crosswalk_map</code></td><td>from, to</td><td>Map controls between frameworks (13 supported)</td></tr>
+</table>
+</div>
+
+<h2>🏰 Category 6: Hive Management</h2>
+<div class="cat">
+<table>
+<tr><th>Tool</th><th>Params</th><th>Description</th></tr>
+<tr><td><code>hive_status</code></td><td>hive_id (optional)</td><td>Get status of one or all 33 hives</td></tr>
+<tr><td><code>hive_list</code></td><td>—</td><td>List all 33 hives with domain assignments</td></tr>
+<tr><td><code>hive_pheromone_emit</code></td><td>hive_id, type, data</td><td>Emit pheromone marker (6 types)</td></tr>
+<tr><td><code>hive_pheromone_read</code></td><td>hive_id, radius</td><td>Read pheromone markers in range</td></tr>
+<tr><td><code>hive_spawn_agent</code></td><td>hive_id, agent_type</td><td>Spawn new agent from hive</td></tr>
+</table>
+</div>
+
+<h2>🌍 Category 7: Simulation & Globe</h2>
+<div class="cat">
+<table>
+<tr><th>Tool</th><th>Params</th><th>Description</th></tr>
+<tr><td><code>sov_space_spawn_world</code></td><td>scenario, coords</td><td>Spawn new simulation world</td></tr>
+<tr><td><code>sov_space_list_worlds</code></td><td>—</td><td>List active simulation worlds</td></tr>
+<tr><td><code>cesium_add_entity</code></td><td>type, lat, lon, alt</td><td>Add entity to Cesium globe</td></tr>
+<tr><td><code>cesium_set_camera</code></td><td>lat, lon, alt</td><td>Move globe camera</td></tr>
+<tr><td><code>sim_run_scenario</code></td><td>scenario_file</td><td>Run pre-built scenario (flood, drone, cyber)</td></tr>
+</table>
+</div>
+
+<h2>📡 Category 8: Data & Intelligence</h2>
+<div class="cat">
+<table>
+<tr><th>Tool</th><th>Params</th><th>Description</th></tr>
+<tr><td><code>data_source_list</code></td><td>—</td><td>List all 198+ connected data sources</td></tr>
+<tr><td><code>data_source_query</code></td><td>source, query</td><td>Query specific data source</td></tr>
+<tr><td><code>isr_ingest</code></td><td>feed_type, data</td><td>Ingest ISR feed (camera, RF, satellite, AIS)</td></tr>
+<tr><td><code>isr_detect</code></td><td>feed_id</td><td>Run object detection on ISR feed</td></tr>
+<tr><td><code>met_office_get</code></td><td>location, hours</td><td>Get Met Office forecast</td></tr>
+<tr><td><code>ea_flood_get</code></td><td>area</td><td>Get Environment Agency flood data</td></tr>
+<tr><td><code>companies_house_lookup</code></td><td>company_id</td><td>Look up company at Companies House</td></tr>
+<tr><td><code>ais_stream</code></td><td>bounds</td><td>Get AIS vessel stream for area</td></tr>
+</table>
+</div>
+
+<h2>Summary by Category</h2>
+<table>
+<tr><th>Category</th><th>Tools</th><th>Key Use</th></tr>
+<tr><td>Governance & Council</td><td>~25</td><td>BFT voting, charter enforcement</td></tr>
+<tr><td>SIGIL & Audit</td><td>~20</td><td>Immutable proof, compliance evidence</td></tr>
+<tr><td>AI Bridge & Reasoning</td><td>~15</td><td>Cross-model reasoning, intuition</td></tr>
+<tr><td>Federation & Agents</td><td>~20</td><td>MCP federation, A2A, agent spawning</td></tr>
+<tr><td>Compliance</td><td>~30</td><td>EU AI Act, ISO 42001, NIST, JSP 936</td></tr>
+<tr><td>Hive Management</td><td>~20</td><td>33 hives, pheromones, spawning</td></tr>
+<tr><td>Simulation & Globe</td><td>~25</td><td>Cesium, SOV SPACE, scenarios</td></tr>
+<tr><td>Data & Intelligence</td><td>~33</td><td>198+ sources, ISR, government data</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>188+</strong></td><td><strong>Full sovereign stack</strong></td></tr>
+</table>
+
+<p><a class="cta" href="defoneos-api.html">← API Reference</a> · <a class="cta" href="defoneos-index.html">Index →</a></p>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

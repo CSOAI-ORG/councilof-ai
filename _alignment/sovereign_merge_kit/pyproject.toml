@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sov4"
+version = "0.0.1"
+description = "SOV4 — the clean sovereign package: one governed, signed decision path over open models (trinity + care-gate + hard-stops + Ed25519 signing + fusion + cockpit)."
+readme = "SOV4_README.md"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+authors = [{name = "CSOAI / Nicholas Templeman"}]
+dependencies = ["cryptography>=41"]   # Ed25519 signing. Brains reached over HTTP (no torch needed to *serve*).
+
+[project.optional-dependencies]
+train = ["torch", "transformers==4.44.2", "trl==0.9.6", "peft==0.12.0", "datasets==2.20.0", "accelerate"]
+
+[project.scripts]
+sov4 = "sov4:status"
+
+[tool.setuptools]
+# flat-module package (the kit is single-file modules wired via the decision path)
+py-modules = ["sov4", "sovereign_decision", "sovereign_router", "sovereign_claude",
+              "sov33_care_local", "sov33_dorado", "sov33_ed25519_sigil", "sovereign_mlx"]

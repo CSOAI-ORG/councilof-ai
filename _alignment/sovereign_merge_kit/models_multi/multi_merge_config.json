@@ -1,0 +1,51 @@
+{
+  "version": "v1_multi_merge_n_into_1_2026-07-18",
+  "method": "Linear TIES (weighted sum)",
+  "configs": [
+    {
+      "name": "ties_2_charter_sov3",
+      "n": 2,
+      "weights": [
+        0.6,
+        0.4
+      ]
+    },
+    {
+      "name": "ties_2_charter_owned",
+      "n": 2,
+      "weights": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "ties_2_sov3_owned",
+      "n": 2,
+      "weights": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "ties_3_charter_sov3_owned",
+      "n": 3,
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ]
+    },
+    {
+      "name": "ties_3_charter_x2_sov3_owned",
+      "n": 3,
+      "weights": [
+        0.35,
+        0.35,
+        0.2,
+        0.1
+      ]
+    }
+  ],
+  "honest_register": "Sweep N. Quality eval on TierBench-lite to determine climb vs saturate.",
+  "next_step": "Run merge_sweep_quick.py on all 5 N-into-1 variants + charter alone baseline."
+}

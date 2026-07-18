@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🜏 SOV33 Dashboard — Chat, Build, Search, Learn</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+  header{background:var(--bg2);border-bottom:1px solid var(--rule);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+  header h1{color:var(--accent);font-size:1.5rem}
+  .user{display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.9rem}
+  .user .orb{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--accent2),#006633);box-shadow:0 0 8px var(--accent2)}
+  .wrap{max-width:1400px;margin:0 auto;padding:2rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:2rem}
+  .app{background:var(--bg2);border-radius:12px;padding:1.5rem;border:1px solid var(--rule);cursor:pointer;transition:all .2s}
+  .app:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(212,175,55,.2)}
+  .app h2{color:var(--accent);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;font-size:1.3rem}
+  .app p{color:var(--muted);font-size:.95rem;line-height:1.5}
+  .app .icon{font-size:2rem;margin-bottom:.5rem}
+  .panel{background:var(--bg2);border-radius:12px;padding:2rem;border:1px solid var(--rule);margin-top:2rem;display:none}
+  .panel.active{display:block}
+  .panel h2{color:var(--accent);margin-bottom:1rem}
+  textarea,input,select{width:100%;padding:1rem;background:var(--bg);color:var(--ink);border:2px solid var(--rule);border-radius:8px;font-family:inherit;font-size:1rem;margin:.5rem 0}
+  textarea{min-height:120px;resize:vertical}
+  button{padding:1rem 2rem;background:var(--accent);color:#0a0e1a;border:none;border-radius:8px;font-size:1.1rem;font-weight:bold;cursor:pointer;margin:.5rem .5rem .5rem 0}
+  button:hover{background:var(--accent2)}
+  button.ghost{background:transparent;color:var(--ink);border:2px solid var(--rule)}
+  .chat-window{background:var(--bg);border-radius:8px;padding:1rem;min-height:300px;max-height:500px;overflow-y:auto;margin:1rem 0}
+  .msg{padding:.8rem;margin:.5rem 0;border-radius:8px;max-width:85%}
+  .msg.user{background:var(--rule);margin-left:auto}
+  .msg.ai{background:#1a0d20;border-left:3px solid var(--accent)}
+  .msg .role{font-size:.75rem;color:var(--muted);margin-bottom:.3rem}
+  .quick-row{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+  .quick-btn{padding:.5rem .8rem;background:var(--bg);color:var(--ink);border:1px solid var(--rule);border-radius:6px;cursor:pointer;font-size:.9rem}
+  .quick-btn:hover{border-color:var(--accent)}
+  .voice-btn{background:var(--accent2);color:#0a0e1a;border:none;padding:.8rem 1.2rem;border-radius:50%;font-size:1.3rem;cursor:pointer}
+  .toolbar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+  .status{color:var(--muted);font-size:.85rem;padding:.5rem}
+  @media (max-width:768px){
+    header{padding:1rem}
+    header h1{font-size:1.2rem}
+    .wrap{padding:1rem}
+    .app{padding:1.2rem}
+    .panel{padding:1.2rem}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🜏 SOV33 Dashboard</h1>
+  <div class="user">
+    <span>Hi <span id="user-name">friend</span>!</span>
+    <div class="orb"></div>
+    <span id="user-char">Sophia</span>
+    <a href="#" style="color:var(--muted);font-size:.8rem;margin-left:1rem">[change]</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="grid">
+    <div class="app" onclick="openPanel('chat')">
+      <div class="icon">💬</div>
+      <h2>Chat</h2>
+      <p>Talk to your AI about anything. It remembers you across sessions.</p>
+    </div>
+
+    <div class="app" onclick="openPanel('build')">
+      <div class="icon">🛠️</div>
+      <h2>Build an App</h2>
+      <p>Describe what you want — your AI will build it. No coding needed.</p>
+    </div>
+
+    <div class="app" onclick="openPanel('search')">
+      <div class="icon">🔍</div>
+      <h2>Search the Web</h2>
+      <p>Ask a question. Your AI searches the internet and gives you a sourced answer.</p>
+    </div>
+
+    <div class="app" onclick="openPanel('learn')">
+      <div class="icon">📚</div>
+      <h2>Learn Something</h2>
+      <p>Pick a topic. Your AI teaches you at your pace.</p>
+    </div>
+
+    <div class="app" onclick="openPanel('voice')">
+      <div class="icon">🎤</div>
+      <h2>Voice Mode</h2>
+      <p>Talk hands-free. Your AI listens and responds with voice.</p>
+    </div>
+
+    <div class="app" onclick="openPanel('integrations')">
+      <div class="icon">🔌</div>
+      <h2>Integrations</h2>
+      <p>Connect your AI to Alexa, Siri, Google Home, your phone, your email.</p>
+    </div>
+  </div>
+
+  <!-- CHAT PANEL -->
+  <div class="panel" id="panel-chat">
+    <h2>💬 Chat with your AI</h2>
+    <div class="toolbar">
+      <select id="chat-citizen" onchange="updateStatus()">
+        <option value="general">General chat</option>
+        <option value="compliance">Compliance / EU AI Act</option>
+        <option value="defense">Defense / Kill switch</option>
+        <option value="intuition">Intuition / Patterns</option>
+        <option value="voice">Voice / Sovereign truths</option>
+      </select>
+      <button class="ghost" onclick="clearChat()">Clear</button>
+    </div>
+    <div class="chat-window" id="chat-window">
+      <div class="msg ai"><div class="role">Sophia</div>Hi! Ask me anything. I remember what we talk about.</div>
+    </div>
+    <div class="quick-row">
+      <button class="quick-btn" onclick="quickChat('What can you help me with?')">What can you do?</button>
+      <button class="quick-btn" onclick="quickChat('Tell me about sovereign AI')">Sovereign AI</button>
+      <button class="quick-btn" onclick="quickChat('Help me plan my day')">Plan my day</button>
+      <button class="quick-btn" onclick="quickChat('What is the EU AI Act?')">EU AI Act?</button>
+    </div>
+    <textarea id="chat-input" placeholder="Type your message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+    <button onclick="sendChat()">Send →</button>
+    <div class="status" id="chat-status"></div>
+  </div>
+
+  <!-- BUILD PANEL -->
+  <div class="panel" id="panel-build">
+    <h2>🛠️ Build an app with AI</h2>
+    <p>Describe what you want. Your AI builds the code.</p>
+    <label>What do you want to build?</label>
+    <textarea id="build-desc" placeholder="e.g., A simple calculator that converts Celsius to Fahrenheit"></textarea>
+    <label>Which language?</label>
+    <select id="build-lang">
+      <option>HTML/CSS/JavaScript (website)</option>
+      <option>Python (script)</option>
+      <option>Node.js (app)</option>
+      <option>React (web app)</option>
+      <option>No preference — you pick</option>
+    </select>
+    <button onclick="buildApp()">Build →</button>
+    <div class="status" id="build-status"></div>
+    <pre id="build-output" style="display:none"></pre>
+  </div>
+
+  <!-- SEARCH PANEL -->
+  <div class="panel" id="panel-search">
+    <h2>🔍 Search the web</h2>
+    <p>Ask anything. Your AI finds sources.</p>
+    <textarea id="search-q" placeholder="What do you want to know?"></textarea>
+    <button onclick="webSearch()">Search →</button>
+    <div class="status" id="search-status"></div>
+    <div id="search-results"></div>
+  </div>
+
+  <!-- LEARN PANEL -->
+  <div class="panel" id="panel-learn">
+    <h2>📚 Learn something</h2>
+    <p>Pick a topic. Your AI teaches step by step.</p>
+    <div class="quick-row">
+      <button class="quick-btn" onclick="learn('how does the internet work')">How the internet works</button>
+      <button class="quick-btn" onclick="learn('what is AI')">What is AI?</button>
+      <button class="quick-btn" onclick="learn('how do computers think')">How computers think</button>
+      <button class="quick-btn" onclick="learn('what is blockchain')">Blockchain</button>
+      <button class="quick-btn" onclick="learn('how do solar panels work')">Solar panels</button>
+      <button class="quick-btn" onclick="learn('why is the sky blue')">Why is the sky blue?</button>
+    </div>
+    <div id="learn-content" style="margin-top:1rem;padding:1rem;background:var(--bg);border-radius:8px;display:none"></div>
+  </div>
+
+  <!-- VOICE PANEL -->
+  <div class="panel" id="panel-voice">
+    <h2>🎤 Voice mode</h2>
+    <p>Talk hands-free. (Uses browser's speech recognition + SOV33 brain.)</p>
+    <button class="voice-btn" id="voice-btn" onclick="toggleVoice()">🎤</button>
+    <p id="voice-status" style="margin-top:1rem;color:var(--muted)">Click the mic to start</p>
+    <div id="voice-response" style="margin-top:1rem;padding:1rem;background:var(--bg);border-radius:8px;display:none"></div>
+  </div>
+
+  <!-- INTEGRATIONS PANEL -->
+  <div class="panel" id="panel-integrations">
+    <h2>🔌 Integrations</h2>
+    <p>Use your sovereign AI everywhere:</p>
+
+    <h3 style="color:var(--accent2);margin-top:1.5rem">🎙️ Alexa (Amazon Echo)</h3>
+    <p>Ask: "Alexa, ask SOV33 what's the weather." Works via custom Alexa Skill.</p>
+    <button onclick="window.open('https://developer.amazon.com/alexa/custom-skills', '_blank')">Set up Alexa Skill →</button>
+    <pre><code>// In Alexa Developer Console:
+// Endpoint: https://api.meok.ai/alexa
+// Skill name: "SOV33"
+// Intent: AskSov33Intent → routes to SOV33 API
+// Custom slot: question</code></pre>
+
+    <h3 style="color:var(--accent2);margin-top:1.5rem">🍎 Siri (iPhone, iPad, Mac)</h3>
+    <p>Add Siri Shortcut: "Hey Siri, ask Sovereign AI..."</p>
+    <button onclick="window.open('https://support.apple.com/guide/shortcuts/welcome/ios', '_blank')">Set up Siri Shortcut →</button>
+
+    <h3 style="color:var(--accent2);margin-top:1.5rem">🏠 Google Home</h3>
+    <p>"Hey Google, ask SOV33..." via custom Action.</p>
+    <button onclick="window.open('https://developers.google.com/assistant', '_blank')">Set up Google Action →</button>
+
+    <h3 style="color:var(--accent2);margin-top:1.5rem">📱 Phone (SMS / WhatsApp)</h3>
+    <p>Text your AI. Get answers anywhere.</p>
+    <pre><code># Webhook: POST https://api.meok.ai/sms
+# Body: {"from": "+447700900123", "text": "..."}
+# Response: {"reply": "..."}</code></pre>
+
+    <h3 style="color:var(--accent2);margin-top:1.5rem">🌐 Embed on your website</h3>
+    <p>One line. Character on any site.</p>
+    <pre><code>&lt;script src="https://sov33.csoai.org/embed.js" 
+        data-sov-name="Sophia"
+        async&gt;&lt;/script&gt;</code></pre>
+  </div>
+
+</div>
+
+<script>
+const API = 'http://localhost:8101';
+
+// Load user info from localStorage
+const userName = localStorage.getItem('sov33_user_name') || 'friend';
+const userChar = localStorage.getItem('sov33_character') || 'Sophia';
+document.getElementById('user-name').textContent = userName;
+document.getElementById('user-char').textContent = userChar;
+
+function openPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  window.scrollTo({top: 200, behavior: 'smooth'});
+}
+
+function updateStatus() {
+  const c = document.getElementById('chat-citizen').value;
+  document.getElementById('chat-status').textContent = `Using OWEM: ${c} · Care floor: 0.95 · SIGIL-signed`;
+}
+
+// CHAT
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const q = input.value.trim();
+  if (!q) return;
+
+  const win = document.getElementById('chat-window');
+  win.innerHTML += `<div class="msg user"><div class="role">You</div>${q}</div>`;
+  input.value = '';
+  win.scrollTop = win.scrollHeight;
+
+  const citizen = document.getElementById('chat-citizen').value;
+
+  try {
+    document.getElementById('chat-status').textContent = 'Thinking...';
+    const citizen_id = localStorage.getItem('sov33_citizen_id') || 'guest';
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: q, citizen: citizen, citizen_id})
+    });
+    const d = await r.json();
+    const text = d.say || d.answer || d.error || 'No response';
+    win.innerHTML += `<div class="msg ai"><div class="role">${userChar}</div>${text}</div>`;
+    win.scrollTop = win.scrollHeight;
+    document.getElementById('chat-status').textContent = `✓ SIGIL: ${(d.sovereign_provenance?.sigil || '').slice(0,16) || 'pending'}`;
+  } catch (e) {
+    win.innerHTML += `<div class="msg ai" style="border-left-color:var(--warn)"><div class="role">Error</div>${e.message}</div>`;
+    document.getElementById('chat-status').textContent = '❌ ' + e.message;
+  }
+}
+
+function quickChat(text) {
+  document.getElementById('chat-input').value = text;
+  sendChat();
+}
+
+function clearChat() {
+  document.getElementById('chat-window').innerHTML = '<div class="msg ai"><div class="role">' + userChar + '</div>Hi! Ask me anything. I remember what we talk about.</div>';
+  document.getElementById('chat-status').textContent = '';
+}
+
+// BUILD
+async function buildApp() {
+  const desc = document.getElementById('build-desc').value.trim();
+  const lang = document.getElementById('build-lang').value;
+  if (!desc) {
+    alert('Describe what you want to build.');
+    return;
+  }
+  document.getElementById('build-status').textContent = 'Building... (this may take a moment)';
+  document.getElementById('build-output').style.display = 'none';
+
+  const prompt = `Write ${lang} code for: ${desc}. Include comments. Make it work.`;
+
+  try {
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: prompt, citizen: 'general'})
+    });
+    const d = await r.json();
+    const code = d.say || d.answer || 'No code returned';
+    document.getElementById('build-output').textContent = code;
+    document.getElementById('build-output').style.display = 'block';
+    document.getElementById('build-status').textContent = '✓ Built. Copy the code below.';
+  } catch (e) {
+    document.getElementById('build-status').textContent = '❌ ' + e.message;
+  }
+}
+
+// SEARCH
+async function webSearch() {
+  const q = document.getElementById('search-q').value.trim();
+  if (!q) return;
+  document.getElementById('search-status').textContent = 'Searching...';
+  document.getElementById('search-results').innerHTML = '';
+
+  try {
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: 'Search the web for: ' + q, citizen_id: citizen_id, citizen: 'general'})
+    });
+    const d = await r.json();
+    const text = d.say || d.answer || 'No result';
+    document.getElementById('search-results').innerHTML = `<div style="padding:1rem;background:var(--bg);border-radius:8px;margin-top:1rem;border-left:3px solid var(--accent2)">${text}</div>`;
+    document.getElementById('search-status').textContent = '✓ Searched';
+  } catch (e) {
+    document.getElementById('search-status').textContent = '❌ ' + e.message;
+  }
+}
+
+// LEARN
+async function learn(topic) {
+  const out = document.getElementById('learn-content');
+  out.style.display = 'block';
+  out.innerHTML = '<em style="color:var(--muted)">Your AI is teaching...</em>';
+
+  try {
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: 'Explain ' + topic + ' like I am 10 years old. Use simple words and one analogy.', citizen_id: citizen_id, citizen: 'voice'})
+    });
+    const d = await r.json();
+    out.innerHTML = (d.say || d.answer || 'No answer').replace(/\n/g, '<br>');
+  } catch (e) {
+    out.innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>';
+  }
+}
+
+// VOICE
+let recognition = null;
+function toggleVoice() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    document.getElementById('voice-status').textContent = 'Sorry, your browser doesn\'t support voice. Try Chrome.';
+    return;
+  }
+  if (recognition) {
+    recognition.stop();
+    recognition = null;
+    document.getElementById('voice-btn').textContent = '🎤';
+    document.getElementById('voice-status').textContent = 'Stopped.';
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.onresult = (e) => {
+    const text = e.results[0][0].transcript;
+    document.getElementById('voice-status').textContent = 'You said: "' + text + '"';
+    voiceAsk(text);
+  };
+  recognition.onend = () => {
+    recognition = null;
+    document.getElementById('voice-btn').textContent = '🎤';
+  };
+  recognition.start();
+  document.getElementById('voice-btn').textContent = '⏹';
+  document.getElementById('voice-status').textContent = 'Listening...';
+}
+
+async function voiceAsk(text) {
+  const out = document.getElementById('voice-response');
+  out.style.display = 'block';
+  out.innerHTML = 'Thinking...';
+  try {
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: text, citizen_id: citizen_id, citizen: 'voice'})
+    });
+    const d = await r.json();
+    const reply = d.say || d.answer || 'No response';
+    out.innerHTML = reply;
+
+    // Speak the reply
+    if ('speechSynthesis' in window) {
+      const u = new SpeechSynthesisUtterance(reply.slice(0, 500));
+      u.rate = 0.95;
+      speechSynthesis.speak(u);
+    }
+  } catch (e) {
+    out.innerHTML = 'Error: ' + e.message;
+  }
+}
+
+updateStatus();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "name": "openmoe.ai BFT Council",
+  "version": "0.1.0",
+  "url": "https://mcp.openmoe.ai/mcp",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "protocolVersion": "0.3.0",
+  "description": "openmoe.ai — EU AI Act compliance MCP server with Byzantine-fault-tolerant (BFT) consensus over MoE routing. Scores high-risk AI system conformity against Articles 9-15, validates A2A Agent Cards, runs red-team scans, and adds BFT consensus over MoE routing. AI governance / agent compliance audit (DORA, NIS2, CRA aware).",
+  "provider": {
+    "organization": "CSOAI-ORG",
+    "url": "https://github.com/CSOAI-ORG/OPENMOE"
+  },
+  "defaultInputModes": ["application/json", "text/plain"],
+  "defaultOutputModes": ["application/json", "text/plain"],
+  "documentationUrl": "https://openmoe.ai/",
+  "skills": [
+    {
+      "id": "conformity-score",
+      "name": "EU AI Act Conformity Score",
+      "description": "Score high-risk AI system conformity against EU AI Act Articles 9 (risk management), 10 (data governance), 11 (technical documentation), 12 (record-keeping), 13 (transparency), 14 (human oversight), 15 (accuracy, robustness, cybersecurity). Returns 0-1 score with evidence trail per article.",
+      "tags": ["eu-ai-act", "conformity", "high-risk", "article-9", "article-13", "article-14", "red-team"],
+      "examples": [
+        "Score my HR screening AI for EU AI Act Article 9-15 conformity",
+        "Run a red-team scan against my model",
+        "Validate the A2A Agent Card for my agent system"
+      ],
+      "inputModes": ["application/json", "text/plain"],
+      "outputModes": ["application/json", "text/plain"]
+    },
+    {
+      "id": "bft-consensus",
+      "name": "BFT Consensus over MoE Routing",
+      "description": "Byzantine-fault-tolerant consensus layer over Mixture-of-Experts routing. 5 expert voters reach 3-of-5 consensus before any routing decision. Tolerates f=2 faulty experts in a 2f+1=5 quorum.",
+      "tags": ["bft", "consensus", "moe", "routing", "byzantine"],
+      "examples": [
+        "Route my prompt through BFT MoE consensus",
+        "Get 5 expert opinions with 3-of-5 quorum",
+        "Verify BFT consensus proof for a routing decision"
+      ],
+      "inputModes": ["application/json", "text/plain"],
+      "outputModes": ["application/json", "text/plain"]
+    }
+  ],
+  "x-openmoe": {
+    "dossier": "https://openmoe.ai/",
+    "github": "https://github.com/CSOAI-ORG/OPENMOE",
+    "registry": "https://openmoe.ai/agents.json"
+  }
+}

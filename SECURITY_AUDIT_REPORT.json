@@ -1,0 +1,98 @@
+{
+  "audited_at": "2026-04-15T05:00:00Z",
+  "total_servers": 208,
+  "total_findings": 11,
+  "high": 0,
+  "medium": 0,
+  "low": 11,
+  "findings": [
+    {
+      "repo": "ai-ops-mcp",
+      "file": "server.py",
+      "line": 270,
+      "level": "LOW",
+      "reason": "subprocess.run call",
+      "code": "result = subprocess.run([\"ps\", \"aux\"], capture_output=True, text=True, timeout=5)"
+    },
+    {
+      "repo": "code-executor-mcp",
+      "file": "server.py",
+      "line": 17,
+      "level": "LOW",
+      "reason": "subprocess import",
+      "code": "import subprocess"
+    },
+    {
+      "repo": "code-executor-mcp",
+      "file": "server.py",
+      "line": 93,
+      "level": "LOW",
+      "reason": "subprocess import",
+      "code": "r\"import\\s+subprocess\\b\",                  # No 'import subprocess'"
+    },
+    {
+      "repo": "code-executor-mcp",
+      "file": "server.py",
+      "line": 165,
+      "level": "LOW",
+      "reason": "subprocess.run call",
+      "code": "result = subprocess.run("
+    },
+    {
+      "repo": "code-executor-mcp",
+      "file": "server.py",
+      "line": 202,
+      "level": "LOW",
+      "reason": "subprocess.run call",
+      "code": "result = subprocess.run("
+    },
+    {
+      "repo": "code-executor-mcp",
+      "file": "server.py",
+      "line": 238,
+      "level": "LOW",
+      "reason": "subprocess.run call",
+      "code": "result = subprocess.run("
+    },
+    {
+      "repo": "code-executor-mcp",
+      "file": "server.py",
+      "line": 467,
+      "level": "LOW",
+      "reason": "subprocess.run call",
+      "code": "result = subprocess.run("
+    },
+    {
+      "repo": "code-executor-mcp",
+      "file": "server.py",
+      "line": 688,
+      "level": "LOW",
+      "reason": "subprocess import",
+      "code": "import subprocess, tempfile, os"
+    },
+    {
+      "repo": "code-executor-mcp",
+      "file": "server.py",
+      "line": 722,
+      "level": "LOW",
+      "reason": "subprocess.run call",
+      "code": "result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_sec)"
+    },
+    {
+      "repo": "web-research-mcp",
+      "file": "server.py",
+      "line": 15,
+      "level": "LOW",
+      "reason": "subprocess import",
+      "code": "import subprocess"
+    },
+    {
+      "repo": "web-research-mcp",
+      "file": "server.py",
+      "line": 196,
+      "level": "LOW",
+      "reason": "subprocess.run call",
+      "code": "proc = subprocess.run("
+    }
+  ]
+}

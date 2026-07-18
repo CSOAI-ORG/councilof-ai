@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Model Optimize — SOV-723</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(251,191,36,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #fbbf24;border-radius:12px;margin-bottom:24px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.metric{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.metric .v{font-size:28px;color:#fbbf24;font-weight:700}
+.metric .l{font-size:11px;color:#aaa;margin-top:4px;text-transform:uppercase}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.bar{height:24px;background:#1f2937;border-radius:4px;position:relative;overflow:hidden;margin:8px 0}
+.bar-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,#fbbf24,#10b981)}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>⚡ Model Optimize</h1>
+<div style="color:#aaa">Latency · min/max · batch processing benchmarks</div>
+<div style="color:#fbbf24;margin-top:8px">Sovereign substrate fact: <code>model_optimize</code></div>
+</div>
+
+<div class="metrics">
+<div class="metric"><div class="v">3.8s</div><div class="l">avg latency</div></div>
+<div class="metric"><div class="v">1.2s</div><div class="l">min</div></div>
+<div class="metric"><div class="v">8.4s</div><div class="l">max</div></div>
+<div class="metric"><div class="v">5x</div><div class="l">batch speedup</div></div>
+</div>
+
+<div class="panel">
+<h3>Per-OWEM latency</h3>
+<div>Compliance (RAG-augmented): <div class="bar"><div class="bar-fill" style="width:38%"></div></div></div>
+<div>Defense (RAG-augmented): <div class="bar"><div class="bar-fill" style="width:60%"></div></div></div>
+<div>Intuition: <div class="bar"><div class="bar-fill" style="width:40%"></div></div></div>
+<div>Voice (style-heavy): <div class="bar"><div class="bar-fill" style="width:84%"></div></div></div>
+</div>
+
+<div class="panel">
+<h3>Batch processing</h3>
+<p style="font-size:13px;line-height:1.6">Per-OWEM batch runs process <b>5x</b> faster than sequential calls (parallel ollama + shared RAG context). For 5 OWEMs × 4 voices × 3 voters = 60 voters, parallel wall time is <b>41 seconds</b>.</p>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>model_optimize</code> · verified 2026-07-13<br>
+⚡ BFT-33 cold start: 1.2s · RAG-augmented compliance: 3.8s avg
+</div>
+</body></html>

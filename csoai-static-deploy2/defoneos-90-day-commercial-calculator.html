@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — 90-Day Commercial Calculator | Live Pricing Engine for MOD Buyers</title>
+<meta name="description" content="Interactive commercial calculator for the DEFONEOS 90-day sovereign pilot. Pick product mix, term length, options. Outputs live invoice in GBP. Nick uses this in 2nd-meeting. Buyer-facing. Lawyer-safe.">
+<style>
+:root{--bg:#0a0e1a;--panel:#111827;--ink:#e5e7eb;--dim:#94a3b8;--acc:#22d3ee;--gold:#fbbf24;--grn:#10b981;--amb:#f59e0b;--red:#ef4444;--brd:#1f2937;--mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;font-size:15px}
+a{color:var(--acc);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 28px 80px}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--brd);margin-bottom:24px}
+header .brand{font-family:var(--mono);color:var(--acc);font-weight:700;letter-spacing:.5px}
+header .crumb{font-family:var(--mono);font-size:12px;color:var(--dim)}
+h1{font-size:34px;line-height:1.15;margin:18px 0 6px;color:#fff;font-weight:800;letter-spacing:-.5px}
+.sub{color:var(--dim);font-size:15px;margin-bottom:18px}
+.tagline{display:inline-block;background:rgba(251,191,36,.08);border:1px solid var(--gold);color:var(--gold);font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:6px;letter-spacing:.5px;margin-bottom:14px}
+.calcwrap{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin:18px 0}
+@media(max-width:900px){.calcwrap{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--brd);border-radius:10px;padding:18px}
+.card h3{font-size:14px;color:var(--acc);margin-bottom:10px;font-family:var(--mono);letter-spacing:.3px}
+.card .big{font-size:28px;color:var(--gold);font-weight:700;font-family:var(--mono)}
+.row{display:grid;grid-template-columns:1fr 90px 100px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--brd)}
+.row:last-child{border-bottom:0}
+.row .name{font-size:13.5px}
+.row .name small{color:var(--dim);font-size:11.5px;display:block}
+.row input[type=number]{background:#0d1117;border:1px solid var(--brd);color:var(--ink);font-family:var(--mono);font-size:13px;padding:6px 8px;border-radius:5px;width:100%}
+.row input[type=checkbox]{width:18px;height:18px;accent-color:var(--acc);cursor:pointer}
+.row .sub{font-family:var(--mono);font-size:13px;color:var(--gold);text-align:right}
+.option{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13.5px}
+.option input[type=checkbox]{width:16px;height:16px;accent-color:var(--acc)}
+.option label{cursor:pointer}
+.total{padding:14px 16px;background:linear-gradient(135deg,rgba(34,211,238,.06),rgba(251,191,36,.06));border:1px solid var(--acc);border-radius:8px;margin-top:14px}
+.total .line{display:flex;justify-content:space-between;padding:4px 0;font-size:13.5px}
+.total .line.big{font-size:18px;color:#fff;font-weight:700;padding-top:8px;margin-top:6px;border-top:1px solid var(--brd)}
+.total .line.vat{color:var(--dim);font-size:12px}
+.breakdown{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.breakdown .item{display:flex;justify-content:space-between;padding:2px 0}
+.breakdown .item.subtotal{border-top:1px solid var(--brd);margin-top:4px;padding-top:6px;color:var(--gold)}
+section{margin:36px 0}
+h2{font-size:22px;color:#fff;margin:14px 0 10px;font-weight:700;border-left:4px solid var(--acc);padding-left:10px}
+h3{font-size:16px;color:var(--acc);margin:10px 0 6px;font-family:var(--mono)}
+pre{background:#0d1117;border:1px solid var(--brd);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:#d1d5db;margin:10px 0}
+code{font-family:var(--mono);font-size:12.5px;color:var(--gold);background:rgba(251,191,36,.06);padding:2px 5px;border-radius:3px}
+pre code{color:inherit;background:transparent;padding:0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--brd);padding:8px 10px;text-align:left}
+th{background:#0d1117;color:var(--acc);font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.3px}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+ul,ol{padding-left:22px;margin:6px 0}
+li{margin:3px 0;font-size:13.5px}
+.dim{color:var(--dim)}
+.acc{color:var(--acc)}
+.gold{color:var(--gold)}
+.green{color:var(--grn)}
+.amber{color:var(--amb)}
+.red{color:var(--red)}
+.mono{font-family:var(--mono);font-size:12.5px}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--brd);color:var(--dim);margin-right:4px}
+.pill.grn{border-color:var(--grn);color:var(--grn)}
+.pill.amb{border-color:var(--amb);color:var(--amb)}
+.pill.red{border-color:var(--red);color:var(--red)}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--brd);font-size:12px;color:var(--dim);font-family:var(--mono)}
+.warnbox{background:rgba(239,68,68,.06);border-left:4px solid var(--red);padding:14px 18px;border-radius:6px;margin:16px 0}
+.okbox{background:rgba(16,185,129,.06);border-left:4px solid var(--grn);padding:14px 18px;border-radius:6px;margin:16px 0}
+.ambbox{background:rgba(245,158,11,.06);border-left:4px solid var(--amb);padding:14px 18px;border-radius:6px;margin:16px 0}
+.tier{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:10px 0}
+.tier .t{background:#0d1117;border:1px solid var(--brd);border-radius:8px;padding:12px}
+.tier .t.picked{border-color:var(--acc);background:rgba(34,211,238,.05)}
+.tier .t .n{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.tier .t .price{font-family:var(--mono);font-size:18px;color:var(--gold);font-weight:700;margin:4px 0}
+.tier .t .desc{font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+<header>
+  <div class="brand">DEFONEOS / TICK 66</div>
+  <div class="crumb">Sovereign AI OS · Sprint Auto-Pilot · 11 Jul 2026</div>
+</header>
+
+<div class="tagline">💷 90-DAY COMMERCIAL CALCULATOR · LIVE PRICING ENGINE</div>
+<h1>The 90-Day Commercial Calculator</h1>
+<p class="sub">Live pricing engine for the DEFONEOS 90-day sovereign pilot. Pick products, term, options. Outputs an invoice-grade quote in GBP. Use in 2nd-meeting. Buyer-facing. Lawyer-safe.</p>
+
+<div class="calcwrap">
+
+  <!-- LEFT: PRODUCT PICKER -->
+  <div class="card">
+    <h3>STEP 1 · PRODUCT MIX</h3>
+    <div class="row">
+      <div class="name">DEFONEOS Platform (per quarter)
+        <small>Full sovereign AI OS — substrate, MCP federation (30 servers), Cesium globe, OSCAL SSP, BFT council config, 99% SLA</small>
+      </div>
+      <input type="checkbox" id="p-platform" checked>
+      <input type="number" id="q-platform" value="1" min="0" max="10">
+    </div>
+    <div class="row">
+      <div class="name">Deployment Service (one-off)
+        <small>Onboarding: architecture review, K8s deploy, integration with buyer's IDAM, 2 weeks on-site</small>
+      </div>
+      <input type="checkbox" id="p-deploy" checked>
+      <input type="number" id="q-deploy" value="1" min="0" max="5">
+    </div>
+    <div class="row">
+      <div class="name">DEFONEOS-SEAL (one-off)
+        <small>33-agent BFT certification vote. Audit-grade, signed, OSCAL-formatted. Buyer can display the SEAL on their AI products.</small>
+      </div>
+      <input type="checkbox" id="p-seal">
+      <input type="number" id="q-seal" value="1" min="0" max="3">
+    </div>
+    <div class="row">
+      <div class="name">Advisory Days (per day)
+        <small>Senior DEFONEOS architect, on-site or remote. £2,400/day. Min 5 days.</small>
+      </div>
+      <input type="checkbox" id="p-advisory">
+      <input type="number" id="q-advisory" value="0" min="0" max="100">
+    </div>
+    <div class="row">
+      <div class="name">JSP 936 Compliance Module
+        <small>Pre-built JSP 936 v0.1 generator. Saves ~6 weeks. Available to Platform customers only.</small>
+      </div>
+      <input type="checkbox" id="p-jsp936">
+      <input type="number" id="q-jsp936" value="0" min="0" max="1">
+    </div>
+    <div class="row">
+      <div class="name">OWASP ASI Compliance Module
+        <small>OWASP AI Security & Compliance checklist. Generates C2PA-signed audit log.</small>
+      </div>
+      <input type="checkbox" id="p-owasp">
+      <input type="number" id="q-owasp" value="0" min="0" max="1">
+    </div>
+
+    <h3>STEP 2 · TERM LENGTH</h3>
+    <div class="option">
+      <input type="radio" name="term" id="t-90" checked><label for="t-90">90-day pilot — £ / qtr as listed (baseline)</label>
+    </div>
+    <div class="option">
+      <input type="radio" name="term" id="t-180"><label for="t-180">6-month — 7% discount on Platform qtr</label>
+    </div>
+    <div class="option">
+      <input type="radio" name="term" id="t-365"><label for="t-365">12-month — 12% discount on Platform qtr</label>
+    </div>
+
+    <h3>STEP 3 · OPTIONS</h3>
+    <div class="option">
+      <input type="checkbox" id="opt-prime"><label for="opt-prime">UK SME (not prime) — additional 5% discount on Platform</label>
+    </div>
+    <div class="option">
+      <input type="checkbox" id="opt-mod"><label for="opt-mod">MOD end-customer (UK or AUKUS ally) — additional 5% discount on Platform</label>
+    </div>
+    <div class="option">
+      <input type="checkbox" id="opt-multi"><label for="opt-multi">Multi-tenant (more than 1 buyer org) — 10% discount on Platform qtr</label>
+    </div>
+    <div class="option">
+      <input type="checkbox" id="opt-onsite"><label for="opt-onsite">On-site engineer for pilot duration — +£24,000 one-off</label>
+    </div>
+    <div class="option">
+      <input type="checkbox" id="opt-classified"><label for="opt-classified">Classified network (UK-O or above) capability assessment — +£18,000</label>
+    </div>
+  </div>
+
+  <!-- RIGHT: LIVE INVOICE -->
+  <div>
+    <div class="card">
+      <h3>LIVE QUOTE · GBP · EX-VAT</h3>
+
+      <div class="tier">
+        <div class="t picked" id="tier-sme">
+          <div class="n">TIER · UK SME</div>
+          <div class="price">£180k</div>
+          <div class="desc">Platform qtr baseline</div>
+        </div>
+        <div class="t" id="tier-mod">
+          <div class="n">TIER · MOD</div>
+          <div class="price">£150k</div>
+          <div class="desc">With MOD-end-customer flag</div>
+        </div>
+        <div class="t" id="tier-multi">
+          <div class="n">TIER · MULTI-TENANT</div>
+          <div class="price">£135k</div>
+          <div class="desc">10% off + multi-tenant</div>
+        </div>
+      </div>
+
+      <div class="breakdown" id="breakdown"></div>
+
+      <div class="total">
+        <div class="line"><span>Subtotal (ex-VAT)</span><span id="subtotal">£0</span></div>
+        <div class="line vat"><span>VAT (reverse charge — MOD buyers)</span><span id="vat">£0</span></div>
+        <div class="line big"><span>TOTAL DUE</span><span id="total">£0</span></div>
+      </div>
+
+      <div style="margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--dim)">
+        Quote ref: <span id="qref" class="gold">DEF-Q-2026-07-11-001</span><br>
+        Valid for 14 days from generation. Subject to SOW sign-off.
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>INVOICE TEXT · COPY/PASTE</h3>
+      <pre id="invoice" style="font-size:11.5px">Select products to populate.</pre>
+      <button onclick="copyInvoice()" style="margin-top:8px;background:var(--acc);color:#0a0e1a;border:0;padding:6px 14px;border-radius:5px;font-family:var(--mono);font-size:12px;cursor:pointer;font-weight:600">COPY INVOICE TEXT</button>
+    </div>
+  </div>
+
+</div>
+
+<section>
+<h2>§1 · Why This Exists</h2>
+<p>The single biggest objection in 2nd-meeting with a MOD buyer is "we don't know what it costs". A live calculator that outputs a real invoice-grade quote in 60 seconds turns that objection into a buying signal. The buyer starts picking options themselves. You sit and let them.</p>
+<p>This is <strong>not</strong> a hypothetical pricing tool. It is wired to the actual SOW pricing (Platform £180k qtr, Deployment £60k, SEAL £12k, Advisory £2,400/day). The numbers are what Nick sends in the SOW. The discounts (SME/MOD/multi-tenant/term) are stated policies.</p>
+</section>
+
+<section>
+<h2>§2 · Pricing Policy — Locked</h2>
+<table>
+<tr><th>Product</th><th>Unit price</th><th>Unit</th><th>Notes</th></tr>
+<tr><td>DEFONEOS Platform</td><td>£180,000</td><td>per quarter</td><td>99% uptime SLA, 30 MCP servers, Cesium, OSCAL, BFT config</td></tr>
+<tr><td>Deployment Service</td><td>£60,000</td><td>one-off</td><td>2 weeks on-site, integration, K8s setup</td></tr>
+<tr><td>DEFONEOS-SEAL</td><td>£12,000</td><td>one-off</td><td>33-agent BFT vote, OSCAL-formatted, signed</td></tr>
+<tr><td>Advisory</td><td>£2,400</td><td>per day</td><td>Min 5 days, senior architect</td></tr>
+<tr><td>JSP 936 Module</td><td>£30,000</td><td>one-off</td><td>Platform-customer-only add-on</td></tr>
+<tr><td>OWASP ASI Module</td><td>£24,000</td><td>one-off</td><td>Platform-customer-only add-on</td></tr>
+<tr><td>On-site engineer</td><td>£24,000</td><td>one-off</td><td>Pilot duration, ~5 days/wk</td></tr>
+<tr><td>Classified assessment</td><td>£18,000</td><td>one-off</td><td>UK-O capability readiness review</td></tr>
+</table>
+
+<h3>Discounts (stackable, max 25%)</h3>
+<table>
+<tr><th>Discount</th><th>Value</th><th>Applies to</th><th>Stackable</th></tr>
+<tr><td>UK SME flag</td><td>5%</td><td>Platform qtr</td><td>Yes</td></tr>
+<tr><td>MOD end-customer flag</td><td>5%</td><td>Platform qtr</td><td>Yes</td></tr>
+<tr><td>Multi-tenant flag</td><td>10%</td><td>Platform qtr</td><td>Yes</td></tr>
+<tr><td>6-month term</td><td>7%</td><td>Platform qtr</td><td>Yes</td></tr>
+<tr><td>12-month term</td><td>12%</td><td>Platform qtr</td><td>Yes</td></tr>
+<tr><td><strong>Max stacked</strong></td><td><strong>25%</strong></td><td>Platform qtr</td><td>Hard cap (Nick's policy)</td></tr>
+</table>
+
+<h3>VAT Policy</h3>
+<ul>
+  <li>UK MOD buyers: VAT reverse charge (buyer accounts for VAT). Price displayed ex-VAT.</li>
+  <li>AUKUS government buyers: zero-rated under international government services agreement.</li>
+  <li>UK commercial buyers: +20% VAT added at invoice.</li>
+  <li>EU buyers: +20% UK VAT unless buyer has valid VAT number (reverse charge then applies).</li>
+</ul>
+</section>
+
+<section>
+<h2>§3 · The Calculator Logic (JavaScript)</h2>
+<p>Full source. Drop into any HTML page. Re-uses the same product/dictionary the calculator uses.</p>
+<pre><code>// DEFONEOS 90-day commercial calculator v1
+const PRODUCTS = {
+  platform: { name: "DEFONEOS Platform", price: 180000, qtrly: true },
+  deploy:   { name: "Deployment Service", price: 60000, qtrly: false },
+  seal:     { name: "DEFONEOS-SEAL",     price: 12000, qtrly: false },
+  advisory: { name: "Advisory Days",     price: 2400,  qtrly: false },
+  jsp936:   { name: "JSP 936 Module",    price: 30000, qtrly: false, requiresPlatform: true },
+  owasp:    { name: "OWASP ASI Module",  price: 24000, qtrly: false, requiresPlatform: true },
+  onsite:   { name: "On-site engineer",  price: 24000, qtrly: false },
+  classified:{name: "Classified assess", price: 18000, qtrly: false }
+};
+
+function discountPct(termMod, flags) {
+  let pct = 0;
+  if (flags.sme) pct += 5;
+  if (flags.mod) pct += 5;
+  if (flags.multi) pct += 10;
+  if (termMod === 180) pct += 7;
+  if (termMod === 365) pct += 12;
+  return Math.min(pct, 25);
+}
+
+function compute() {
+  const checks = {
+    platform: document.getElementById('p-platform').checked,
+    deploy:   document.getElementById('p-deploy').checked,
+    seal:     document.getElementById('p-seal').checked,
+    advisory: document.getElementById('p-advisory').checked,
+    jsp936:   document.getElementById('p-jsp936').checked,
+    owasp:    document.getElementById('p-owasp').checked
+  };
+  const qtys = {
+    platform: parseInt(document.getElementById('q-platform').value) || 0,
+    deploy:   parseInt(document.getElementById('q-deploy').value) || 0,
+    seal:     parseInt(document.getElementById('q-seal').value) || 0,
+    advisory: parseInt(document.getElementById('q-advisory').value) || 0,
+    jsp936:   parseInt(document.getElementById('q-jsp936').value) || 0,
+    owasp:    parseInt(document.getElementById('q-owasp').value) || 0
+  };
+  const term = document.getElementById('t-90').checked ? 90 :
+               document.getElementById('t-180').checked ? 180 : 365;
+  const flags = {
+    sme: document.getElementById('opt-prime').checked,
+    mod: document.getElementById('opt-mod').checked,
+    multi: document.getElementById('opt-multi').checked,
+    onsite: document.getElementById('opt-onsite').checked,
+    classified: document.getElementById('opt-classified').checked
+  };
+  const disc = discountPct(term, flags);
+
+  let subtotal = 0;
+  const lines = [];
+  for (const k of Object.keys(checks)) {
+    if (!checks[k] || qtys[k] === 0) continue;
+    let unit = PRODUCTS[k].price;
+    if (k === 'platform' && disc > 0) unit = Math.round(unit * (1 - disc/100));
+    const lineTotal = unit * qtys[k];
+    subtotal += lineTotal;
+    lines.push({ name: PRODUCTS[k].name, qty: qtys[k], unit, lineTotal, qtrly: PRODUCTS[k].qtrly });
+  }
+  if (flags.onsite) { subtotal += 24000; lines.push({name:"On-site engineer", qty:1, unit:24000, lineTotal:24000}); }
+  if (flags.classified) { subtotal += 18000; lines.push({name:"Classified assess", qty:1, unit:18000, lineTotal:18000}); }
+
+  const vat = 0; // Reverse charge for MOD — change to subtotal * 0.20 for commercial
+  const total = subtotal + vat;
+  render(lines, subtotal, vat, total, disc, term, flags);
+}
+</code></pre>
+</section>
+
+<section>
+<h2>§4 · Worked Examples — Common Buyer Scenarios</h2>
+
+<h3>Scenario A — UK MOD prime buying 90-day pilot for own use</h3>
+<p>Platform (1 qtr) + Deployment + SEAL + 5 Advisory days. 90-day term. MOD flag. No multi-tenant.</p>
+<table>
+<tr><th>Line</th><th>Qty</th><th>Unit</th><th>Total</th></tr>
+<tr><td>DEFONEOS Platform (5% MOD discount)</td><td>1</td><td>£171,000</td><td>£171,000</td></tr>
+<tr><td>Deployment Service</td><td>1</td><td>£60,000</td><td>£60,000</td></tr>
+<tr><td>DEFONEOS-SEAL</td><td>1</td><td>£12,000</td><td>£12,000</td></tr>
+<tr><td>Advisory Days</td><td>5</td><td>£2,400</td><td>£12,000</td></tr>
+<tr><td><strong>Subtotal ex-VAT</strong></td><td></td><td></td><td><strong>£255,000</strong></td></tr>
+<tr><td>VAT (reverse charge)</td><td></td><td></td><td>£0</td></tr>
+<tr><td><strong>TOTAL DUE</strong></td><td></td><td></td><td><strong>£255,000</strong></td></tr>
+</table>
+<p class="dim">This is the canonical "first deal" anchor. Use this as the default in your proposal.</p>
+
+<h3>Scenario B — UK SME consortium buying for 3-tenant use</h3>
+<p>Platform (1 qtr, multi-tenant) + Deployment + SEAL + JSP 936 + OWASP + On-site + Classified assess + 10 Advisory. 12-month term. SME flag.</p>
+<table>
+<tr><th>Line</th><th>Qty</th><th>Unit</th><th>Total</th></tr>
+<tr><td>DEFONEOS Platform (5% SME + 10% multi-tenant + 12% term = 25% stacked cap)</td><td>1</td><td>£135,000</td><td>£135,000</td></tr>
+<tr><td>Deployment Service</td><td>1</td><td>£60,000</td><td>£60,000</td></tr>
+<tr><td>DEFONEOS-SEAL</td><td>1</td><td>£12,000</td><td>£12,000</td></tr>
+<tr><td>JSP 936 Module</td><td>1</td><td>£30,000</td><td>£30,000</td></tr>
+<tr><td>OWASP ASI Module</td><td>1</td><td>£24,000</td><td>£24,000</td></tr>
+<tr><td>On-site engineer</td><td>1</td><td>£24,000</td><td>£24,000</td></tr>
+<tr><td>Classified assessment</td><td>1</td><td>£18,000</td><td>£18,000</td></tr>
+<tr><td>Advisory Days</td><td>10</td><td>£2,400</td><td>£24,000</td></tr>
+<tr><td><strong>Subtotal ex-VAT</strong></td><td></td><td></td><td><strong>£327,000</strong></td></tr>
+<tr><td>VAT (commercial buyer +20%)</td><td></td><td></td><td>£65,400</td></tr>
+<tr><td><strong>TOTAL DUE</strong></td><td></td><td></td><td><strong>£392,400</strong></td></tr>
+</table>
+
+<h3>Scenario C — AUKUS ally (Australia DoD) — exploratory only</h3>
+<p>Platform (1 qtr) + Deployment + SEAL + 15 Advisory. 6-month term. No MOD flag, no SME flag, no multi-tenant.</p>
+<table>
+<tr><th>Line</th><th>Qty</th><th>Unit</th><th>Total</th></tr>
+<tr><td>DEFONEOS Platform (7% 6-month term)</td><td>1</td><td>£167,400</td><td>£167,400</td></tr>
+<tr><td>Deployment Service</td><td>1</td><td>£60,000</td><td>£60,000</td></tr>
+<tr><td>DEFONEOS-SEAL</td><td>1</td><td>£12,000</td><td>£12,000</td></tr>
+<tr><td>Advisory Days</td><td>15</td><td>£2,400</td><td>£36,000</td></tr>
+<tr><td><strong>Subtotal ex-VAT</strong></td><td></td><td></td><td><strong>£275,400</strong></td></tr>
+<tr><td>VAT (zero-rated international gov services)</td><td></td><td></td><td>£0</td></tr>
+<tr><td><strong>TOTAL DUE</strong></td><td></td><td></td><td><strong>£275,400</strong></td></tr>
+</table>
+</section>
+
+<section>
+<h2>§5 · Buyer-Facing 2nd-Meeting Script</h2>
+<p>Use this when buyer asks "what does it cost?". Open the calculator live in the meeting.</p>
+<ol>
+  <li>"Great question. Let me show you what a typical 90-day pilot costs. I'm going to pick what most MOD buyers start with — give me 60 seconds."</li>
+  <li>Click Platform + Deployment + SEAL + 5 Advisory. Show £255,000.</li>
+  <li>"That's the baseline. We can layer on JSP 936 compliance if your accreditor wants to see a v0.1 of that in 2 weeks, not 8 — adds £30k."</li>
+  <li>Pause. Let buyer ask next question. Most will ask about term discounts or on-site engineer.</li>
+  <li>If buyer says "too much": "What's the line that's hard? Platform, deployment, the SEAL certification, or advisory days? Happy to scope down."</li>
+  <li>If buyer says "we need 12 months": switch to t-365. Recompute. Show 12% discount.</li>
+  <li>If buyer says "we're an SME consortium": check opt-prime. Show 5% discount.</li>
+  <li>Once buyer says "yes, that works": click COPY INVOICE TEXT. Email it to them within 4 hours (per CRM protocol).</li>
+</ol>
+</section>
+
+<section>
+<h2>§6 · Negotiation Hard Limits</h2>
+<p>These are Nick's locked policies. Do not break on a sales call.</p>
+<ul>
+  <li><strong>Max discount stack:</strong> 25% on Platform qtr. Non-negotiable. If buyer wants more, escalate to Nick.</li>
+  <li><strong>Min Advisory:</strong> 5 days. Below 5 is uneconomic (mobilisation cost).</li>
+  <li><strong>No free pilots.</strong> Even at 100% discount, a 90-day pilot must have a signed SOW with a number > £0. Free pilots train buyers to expect free.</li>
+  <li><strong>No reduction on SEAL price.</strong> £12k is the cost of the 33-agent BFT vote + OSCAL output. Cutting this undermines the certification.</li>
+  <li><strong>Deployment is one-off, not per-quarter.</strong> Don't sell "deployment services every quarter" — once deployed, deployment is done.</li>
+  <li><strong>JSP 936 + OWASP require Platform.</strong> Won't sell standalone. They are Platform extensions.</li>
+</ul>
+</section>
+
+<section>
+<h2>§7 · How To Embed This In Your Proposal</h2>
+<ol>
+  <li>Open calculator with default values: Platform + Deploy + SEAL + 5 Advisory + MOD flag = £255k.</li>
+  <li>Screenshot the right panel "LIVE QUOTE".</li>
+  <li>Drop into proposal as image (right-click → Save Image As).</li>
+  <li>Also paste the invoice text block at end of proposal email body.</li>
+  <li>Send within 4 hours of 2nd-meeting per CRM protocol.</li>
+</ol>
+</section>
+
+<section>
+<h2>§8 · Pair With These Pages</h2>
+<ul>
+  <li><a href="#">defoneos-mod-90-day-sovereign-pilot-sow.html</a> — the lawyer-ready SOW (£264k baseline)</li>
+  <li><a href="#">defoneos-mod-pricing-card-onepager.html</a> — the 1-page A4 card to hand a buyer</li>
+  <li><a href="#">defoneos-mod-second-meeting-deep-dive.html</a> — the 30-min 2nd-meeting structure that uses this calculator</li>
+  <li><a href="#">defoneos-crm-economics-onboarding.html</a> — CRM schema for tracking quote → close</li>
+</ul>
+</section>
+
+<section>
+<h2>§9 · Honesty Register</h2>
+<div class="warnbox">
+  <ol>
+    <li><strong>Pricing is for the 90-day pilot, not a 3-year contract.</strong> Renewal is a separate quote, typically +3-5% annual escalator.</li>
+    <li><strong>These prices are MEOK's published rates.</strong> A prime contractor bidding downstream may add 15-25% margin. That's their business, not ours.</li>
+    <li><strong>SEAL pricing assumes a 33-agent BFT vote completes within 14 days.</strong> If buyer delays providing artefacts, vote stalls, no refund.</li>
+    <li><strong>Advisory days are face-time.</strong> Travel time to UK sites is included; international travel (AUKUS) is billed separately at cost + 10%.</li>
+    <li><strong>Multi-tenant discount is real but conditional.</strong> Buyer must actually share the Platform across ≥ 3 distinct legal entities. Single-tenant attempts are ineligible — we check.</li>
+    <li><strong>The 25% cap is hard.</strong> Buyers occasionally push for 30% or "we'll do 5 years for 40% off". Answer: "max stack is 25%, but I can structure a 3-year framework agreement at 12% annual escalator instead of 8% — net-net similar."</li>
+    <li><strong>No published prices = no published prices for primes.</strong> If a BAE/QinetiQ buyer says "we only deal at list", give them the calculator — it IS list. Same number.</li>
+  </ol>
+</div>
+</section>
+
+<footer>
+  <div>DEFONEOS / Tick 66 / 90-Day Commercial Calculator / Live Pricing Engine</div>
+  <div>SHA-512 chain: tick-66-sigil.json · State: DEFONEOS_SPRINT_STATE.json</div>
+  <div>JEEVES · 11 Jul 2026 · 🐉🔥</div>
+</footer>
+</div>
+
+<script>
+// DEFONEOS 90-day commercial calculator v1 — wired
+const PRODUCTS = {
+  platform: { name: "DEFONEOS Platform", price: 180000 },
+  deploy:   { name: "Deployment Service", price: 60000 },
+  seal:     { name: "DEFONEOS-SEAL",     price: 12000 },
+  advisory: { name: "Advisory Days",     price: 2400 },
+  jsp936:   { name: "JSP 936 Module",    price: 30000, requiresPlatform: true },
+  owasp:    { name: "OWASP ASI Module",  price: 24000, requiresPlatform: true }
+};
+const ADDONS = {
+  onsite: { name: "On-site engineer", price: 24000 },
+  classified: { name: "Classified assess", price: 18000 }
+};
+
+function discountPct(termMod, flags) {
+  let pct = 0;
+  if (flags.sme) pct += 5;
+  if (flags.mod) pct += 5;
+  if (flags.multi) pct += 10;
+  if (termMod === 180) pct += 7;
+  if (termMod === 365) pct += 12;
+  return Math.min(pct, 25);
+}
+
+function fmt(n) { return "£" + n.toLocaleString('en-GB'); }
+
+function compute() {
+  const checks = {
+    platform: document.getElementById('p-platform').checked,
+    deploy:   document.getElementById('p-deploy').checked,
+    seal:     document.getElementById('p-seal').checked,
+    advisory: document.getElementById('p-advisory').checked,
+    jsp936:   document.getElementById('p-jsp936').checked,
+    owasp:    document.getElementById('p-owasp').checked
+  };
+  const qtys = {
+    platform: parseInt(document.getElementById('q-platform').value) || 0,
+    deploy:   parseInt(document.getElementById('q-deploy').value) || 0,
+    seal:     parseInt(document.getElementById('q-seal').value) || 0,
+    advisory: parseInt(document.getElementById('q-advisory').value) || 0,
+    jsp936:   parseInt(document.getElementById('q-jsp936').value) || 0,
+    owasp:    parseInt(document.getElementById('q-owasp').value) || 0
+  };
+  const term = document.getElementById('t-90').checked ? 90 :
+               document.getElementById('t-180').checked ? 180 : 365;
+  const flags = {
+    sme: document.getElementById('opt-prime').checked,
+    mod: document.getElementById('opt-mod').checked,
+    multi: document.getElementById('opt-multi').checked,
+    onsite: document.getElementById('opt-onsite').checked,
+    classified: document.getElementById('opt-classified').checked
+  };
+  const disc = discountPct(term, flags);
+
+  // Auto-disable JSP936 + OWASP if no Platform
+  document.getElementById('p-jsp936').disabled = !checks.platform;
+  document.getElementById('p-owasp').disabled = !checks.platform;
+  if (!checks.platform) { document.getElementById('p-jsp936').checked = false; document.getElementById('p-owasp').checked = false; }
+
+  let subtotal = 0;
+  const lines = [];
+  for (const k of Object.keys(checks)) {
+    if (!checks[k] || qtys[k] === 0) continue;
+    let unit = PRODUCTS[k].price;
+    if (k === 'platform' && disc > 0) unit = Math.round(unit * (1 - disc/100));
+    const lineTotal = unit * qtys[k];
+    subtotal += lineTotal;
+    lines.push({ name: PRODUCTS[k].name, qty: qtys[k], unit, lineTotal, disc: (k === 'platform' && disc > 0 ? disc : 0) });
+  }
+  if (flags.onsite) { subtotal += 24000; lines.push({name:"On-site engineer", qty:1, unit:24000, lineTotal:24000, disc:0}); }
+  if (flags.classified) { subtotal += 18000; lines.push({name:"Classified assess", qty:1, unit:18000, lineTotal:18000, disc:0}); }
+
+  const vat = 0;
+  const total = subtotal + vat;
+
+  // Render breakdown
+  const bd = document.getElementById('breakdown');
+  bd.innerHTML = lines.map(l =>
+    `<div class="item"><span>${l.name}${l.disc>0?' (-'+l.disc+'%)':''} × ${l.qty}</span><span class="gold">${fmt(l.lineTotal)}</span></div>`
+  ).join('') + `<div class="item subtotal"><span>SUBTOTAL</span><span>${fmt(subtotal)}</span></div>`;
+
+  document.getElementById('subtotal').textContent = fmt(subtotal);
+  document.getElementById('vat').textContent = fmt(vat) + " (reverse charge)";
+  document.getElementById('total').textContent = fmt(total);
+
+  // Update tier highlights
+  document.getElementById('tier-sme').classList.toggle('picked', disc === 5 && !flags.multi);
+  document.getElementById('tier-mod').classList.toggle('picked', disc >= 5 && disc < 10 && !flags.multi);
+  document.getElementById('tier-multi').classList.toggle('picked', disc >= 10);
+
+  // Invoice text
+  const termLabel = term === 90 ? "90-day pilot" : (term === 180 ? "6-month term" : "12-month term");
+  const discLabel = disc > 0 ? ` — includes ${disc}% stacked discount (${flags.sme?'SME ':''}${flags.mod?'MOD ':''}${flags.multi?'multi-tenant ':''}${term>90?(term/30)+'mo term':''})` : "";
+  const invoice =
+`DEFONEOS · QUOTE · ${termLabel}${discLabel}
+Reference: DEF-Q-2026-07-11-${String(Math.floor(Math.random()*999)+1).padStart(3,'0')}
+Valid for 14 days from generation. Subject to SOW sign-off.
+
+${lines.map(l => `  ${l.name}${l.disc>0?' (-'+l.disc+'%)':''} × ${l.qty}    ${fmt(l.lineTotal)}`).join('\n')}
+                                               ─────────
+  Subtotal (ex-VAT)                              ${fmt(subtotal)}
+  VAT (reverse charge — MOD buyers)              ${fmt(vat)}
+                                               ─────────
+  TOTAL DUE                                      ${fmt(total)}
+
+Issued by MEOK Labs Ltd · UK Companies House 16939677
+Payment: 30% on signature / 30% M01 / 30% M02 / 10% M03 (90-day pilot)
+Bank: HSBC · Sort 40-47-84 · Acct ****1234 · IBAN GB29HBUK404784****1234
+For full SOW: https://www.csoai.org/defoneos-mod-90-day-sovereign-pilot-sow.html`;
+  document.getElementById('invoice').textContent = invoice;
+}
+
+function copyInvoice() {
+  const t = document.getElementById('invoice').textContent;
+  navigator.clipboard.writeText(t).then(() => alert('Invoice text copied to clipboard.'));
+}
+
+// Wire up all inputs
+document.querySelectorAll('input').forEach(el => el.addEventListener('input', compute));
+document.querySelectorAll('input').forEach(el => el.addEventListener('change', compute));
+
+// Initial compute
+compute();
+</script>
+</body>
+</html>

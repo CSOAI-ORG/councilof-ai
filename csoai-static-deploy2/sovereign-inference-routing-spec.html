@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Sovereign Inference Routing Specification — how DEFONEOS routes inference requests based on trust ring, data classification, and sovereignty requirements. Ring0 UK-only, Ring1 AUKUS-compatible, Ring2 unrestricted.">
+<meta property="og:title" content="DEFONEOS · Sovereign Inference Routing Specification">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · Sovereign Inference Routing Specification</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4.5vw,3rem);background:linear-gradient(135deg,#22d3ee 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1rem 0}
+.spec-doc th{background:rgba(34,211,238,.08);color:var(--cyan);padding:.7rem .8rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}
+.spec-doc td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.routing-diagram{font-family:'SF Mono','JetBrains Mono',monospace;font-size:.8rem;line-height:1.8;background:var(--bg2,#14181f);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1rem 0}
+.routing-diagram .ring0{color:#fbbf24;font-weight:700}
+.routing-diagram .ring1{color:#4fc3f7;font-weight:700}
+.routing-diagram .ring2{color:var(--muted2)}
+.routing-diagram .sovereign{color:#4ade80;font-weight:700}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:1.8rem;font-weight:900;color:var(--cyan)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="mcp-federation-architecture.html">Federation</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>Sovereign Inference Routing Specification</h1>
+  <p class="tagline">How DEFONEOS routes every inference request based on trust ring, data classification, and sovereignty requirements. Ring 0: UK-sovereign-only. Ring 1: AUKUS-compatible. Ring 2: unrestricted.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">3</div><div class="lbl">Routing Tiers</div></div>
+    <div class="stat"><div class="num">8</div><div class="lbl">Decision Factors</div></div>
+    <div class="stat"><div class="num">100%</div><div class="lbl">Ring0 UK-Only</div></div>
+    <div class="stat"><div class="num">0ms</div><div class="lbl">Ring0 Latency</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2>1. Overview</h2>
+<p>Every inference request in DEFONEOS passes through the <strong>Sovereign Inference Router</strong> — a decision engine that determines which model, which compute, and which jurisdiction processes the request. The router ensures that data sovereignty is enforced at the inference layer, not just the storage layer.</p>
+<div class="note"><strong>Core principle:</strong> The sensitivity of the data determines the sovereignty of the inference. Ring 0 data (governance, escrow, compliance) <strong>always</strong> uses UK-sovereign MLX models. Never external APIs.</div>
+</section>
+
+<section>
+<h2>2. The 3 Routing Tiers</h2>
+<div class="routing-diagram">
+Incoming Request<br>
+       │<br>
+       ▼<br>
+┌──────────────────┐<br>
+│ Data Classification │ ──→ What ring is the data from?<br>
+│ (automatic)          │ ──→ What classification level?<br>
+└────────┬─────────┘<br>
+         │<br>
+    ┌────┼────┐<br>
+    ▼    ▼    ▼<br>
+<span class="ring0">RING 0</span>  <span class="ring1">RING 1</span>  <span class="ring2">RING 2</span><br>
+    │    │    │<br>
+    ▼    ▼    ▼<br>
+<span class="sovereign">MLX</span>  <span class="ring1">MLX+</span>  <span class="ring2">Any</span><br>
+<span class="sovereign">(UK)</span>  <span class="ring1">Bridge</span> <span class="ring2">Model</span>
+</div>
+
+<h3>Tier 1 — Ring 0 (Core Sovereign)</h3>
+<p><strong>Model:</strong> SOV3 sovereign models running on MLX (Apple Silicon, UK hardware).<br>
+<strong>External API:</strong> NONE. Zero external API calls. Under any circumstances.<br>
+<strong>Models available:</strong> SOV3small (governance), SOV3large (complex reasoning), BFT deliberation models.<br>
+<strong>Latency:</strong> <100ms (local inference).<br>
+<strong>Cost:</strong> £0 (self-hosted compute).</p>
+
+<h3>Tier 2 — Ring 1 (Defence Sensors)</h3>
+<p><strong>Model:</strong> MLX (UK-sovereign) by default. Frontier bridge available (BFT-gated) for complex reasoning on non-sensitive sensor data.<br>
+<strong>External API:</strong> AUKUS-partner models only, BFT 23/33 approved per call.<br>
+<strong>Models available:</strong> SOV3 + frontier models (GPT-4o, Claude, Gemini) via bridge.<br>
+<strong>Latency:</strong> <100ms (sovereign) / 500ms-2s (frontier bridge).<br>
+<strong>Cost:</strong> £0 (sovereign) / API cost (frontier bridge, tracked).</p>
+
+<h3>Tier 3 — Ring 2 (Civil Open-Data)</h3>
+<p><strong>Model:</strong> Any model. Data is publicly available, so sovereignty constraints are relaxed.<br>
+<strong>External API:</strong> Any (OpenAI, Anthropic, Google, local MLX, cloud GPU).<br>
+<strong>Models available:</strong> All models.<br>
+<strong>Latency:</strong> Model-dependent.<br>
+<strong>Cost:</strong> Model-dependent.</p>
+</section>
+
+<section>
+<h2>3. The 8 Decision Factors</h2>
+<p>The router evaluates 8 factors for every request before selecting a model and compute target:</p>
+<table>
+<tr><th>#</th><th>Factor</th><th>Description</th><th>Ring 0 Rule</th><th>Ring 1 Rule</th><th>Ring 2 Rule</th></tr>
+<tr><td>F1</td><td>Data Ring</td><td>Which trust ring the data belongs to</td><td>Force Ring 0 model</td><td>Default Ring 1 model</td><td>Any model</td></tr>
+<tr><td>F2</td><td>Classification</td><td>OFFICIAL / OFFICIAL-SENSITIVE / SECRET</td><td>FORCE UK-only (any class)</td><td>SENSITIVE → MLX only</td><td>OFFICIAL → any</td></tr>
+<tr><td>F3</td><td>PII Present</td><td>Does the data contain personal data?</td><td>FORCE UK-only</td><td>PII → MLX only</td><td>No PII in Ring 2</td></tr>
+<tr><td>F4</td><td>Red-Line Proximity</td><td>Does the request approach red-line boundary?</td><td>FORCE UK-only + BFT check</td><td>BFT check</td><td>N/A</td></tr>
+<tr><td>F5</td><td>BFT Governance Flag</td><td>Has BFT council flagged this request type?</td><td>FORCE UK-only + BFT vote</td><td>BFT vote</td><td>N/A</td></tr>
+<tr><td>F6</td><td>Model Capability Needed</td><td>Does the task need frontier capability?</td><td>NO external models</td><td>BFT-gated bridge</td><td>Any model</td></tr>
+<tr><td>F7</td><td>Latency Requirement</td><td>Is this real-time (<500ms)?</td><td>MLX only</td><td>MLX preferred</td><td>Any</td></tr>
+<tr><td>F8</td><td>Cost Budget</td><td>Is there an API cost budget constraint?</td><td>£0 always</td><td>MLX free / bridge tracked</td><td>Any</td></tr>
+</table>
+</section>
+
+<section>
+<h2>4. Ring 0 Invariant: Zero External API</h2>
+<p>Ring 0 has an <strong>architectural invariant</strong>: zero external API calls. This is not a policy — it is enforced in code:</p>
+<ul>
+<li><code>inference_router.route()</code> checks <code>data.ring == 0</code> and forces <code>model = "sov3-local"</code>.</li>
+<li>No external API client is instantiated for Ring 0 requests.</li>
+<li>If a Ring 0 request somehow reaches an external API path, the <code>firewall_bft</code> gate blocks it and triggers T1 emergency session.</li>
+<li>The <code>allowlist</code> for Ring 0 contains exactly one entry: <code>["mlx://local/*"]</code>.</li>
+</ul>
+<div class="note"><strong>Testing:</strong> The adversarial red-team framework continuously probes Ring 0 for external API leakage (V5 — Model Extraction). 0 findings to date.</div>
+</section>
+
+<section>
+<h2>5. Frontier Bridge (Ring 1 Only)</h2>
+<p>For Ring 1 requests that need frontier model capability (complex reasoning, large-context analysis), DEFONEOS provides a <strong>frontier bridge</strong>:</p>
+<table>
+<tr><th>Step</th><th>Action</th></tr>
+<tr><td>1</td><td>Request classified as Ring 1 + frontier capability needed (F6 = true)</td></tr>
+<tr><td>2</td><td>Router checks BFT governance flag (F5). If flagged → BFT vote (23/33).</td></tr>
+<tr><td>3</td><td>Router checks classification (F2). If OFFICIAL-SENSITIVE or higher → MLX only (no bridge).</td></tr>
+<tr><td>4</td><td>Router strips PII from the request (F3 check). Only non-personal data sent to frontier model.</td></tr>
+<tr><td>5</td><td>Router selects frontier model from BFT-approved allowlist.</td></tr>
+<tr><td>6</td><td>Request sent. Response received. SIGIL receipt generated.</td></tr>
+<tr><td>7</td><td>Response merged with sovereign inference context. Final output delivered.</td></tr>
+</table>
+<p><strong>Models in BFT-approved allowlist:</strong> GPT-4o (OpenAI), Claude 3.5 Sonnet (Anthropic), Gemini 1.5 Pro (Google). All accessed via API keys stored in UK-sovereign secrets manager.</p>
+</section>
+
+<section>
+<h2>6. SOV3 Sovereign Model Stack</h2>
+<p>The UK-sovereign models that serve Ring 0 and default Ring 1:</p>
+<table>
+<tr><th>Model</th><th>Size</th><th>Use Case</th><th>Hardware</th></tr>
+<tr><td>SOV3small</td><td>7B-13B</td><td>Governance decisions, BFT voting, compliance checks</td><td>MLX on M2/M3/M4 (local)</td></tr>
+<tr><td>SOV3large</td><td>30B-70B</td><td>Complex reasoning, multi-step analysis</td><td>MLX on M4 16GB (fleet)</td></tr>
+<tr><td>SOV3 OWEM</td><td>7B (fine-tuned)</td><td>Domain-specific (defence, compliance, sovereignty)</td><td>MLX on any node</td></tr>
+<tr><td>BFT Deliberation</td><td>SOV3small × 33</td><td>33-agent parallel deliberation for governance votes</td><td>MLX fleet (distributed)</td></tr>
+</table>
+</section>
+
+<section>
+<h2>7. Inference Cost Tracking</h2>
+<table>
+<tr><th>Tier</th><th>Cost Model</th><th>Tracking</th></tr>
+<tr><td>Ring 0 (SOV3)</td><td>£0 (self-hosted compute)</td><td>SIGIL receipt records compute time, no monetary cost</td></tr>
+<tr><td>Ring 1 Sovereign (MLX)</td><td>£0 (self-hosted compute)</td><td>SIGIL receipt records compute time</td></tr>
+<tr><td>Ring 1 Frontier Bridge</td><td>API cost per call</td><td>SIGIL receipt records API cost + model + token count</td></tr>
+<tr><td>Ring 2 (Any model)</td><td>Model-dependent</td><td>SIGIL receipt records full cost breakdown</td></tr>
+</table>
+</section>
+
+<section>
+<h2>8. Failover: Sovereign-Only Mode</h2>
+<p>If the frontier bridge becomes unavailable (API outage, network partition, BFT emergency freeze), DEFONEOS automatically degrades to <strong>sovereign-only mode</strong>:</p>
+<ul>
+<li>All Ring 1 requests that would have used the frontier bridge are routed to SOV3large instead.</li>
+<li>Capability is reduced (SOV3large < GPT-4o for complex reasoning), but sovereignty is maintained.</li>
+<li>BFT council is notified. Care-score may temporarily drop.</li>
+<li>Frontier bridge auto-retries every 5 minutes.</li>
+</ul>
+<div class="note"><strong>Key property:</strong> DEFONEOS is fully operational in sovereign-only mode. The frontier bridge is an enhancement, not a dependency.</div>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="sig">SIGIL · DEFONEOS|inference-routing-spec|0.1.0|sovereign|british|forever · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  <div>🐉 DEFONEOS — UK Sovereign Defence AI Operating System<br>
+  Built by <strong>Nicholas Templeman / CSOAI LTD (16939677)</strong>. Crown use permitted under UK MOD terms.<br>
+  Apache 2.0 · © 2026 · <a href="mailto:crown@csoai.org">crown@csoai.org</a></div>
+</footer>
+</body>
+</html>

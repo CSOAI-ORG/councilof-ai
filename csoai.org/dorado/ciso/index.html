@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DORADO CISO Dashboard — csoai.org/dorado/ciso/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: #0a0e27; color: #10b981; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .period { font-size: 0.9rem; opacity: 0.7; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+    .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border-left: 4px solid #10b981; }
+    .card .num { font-size: 2rem; font-weight: 700; color: #10b981; }
+    .card .lbl { font-size: 0.85rem; opacity: 0.7; margin-top: 4px; }
+    .card.red { border-left-color: #ef4444; }
+    .card.red .num { color: #ef4444; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    th { background: rgba(251,191,36,0.1); color: #fbbf24; }
+    h2 { color: #fbbf24; margin-top: 32px; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>📊 DORADO CISO Dashboard</h1>
+    <div class="period">Period: 30 days · Generated: 28 Jun 2026 12:14 BST · For: CISO</div>
+
+    <div class="grid">
+      <div class="card"><div class="num">12,847</div><div class="lbl">Total events</div></div>
+      <div class="card red"><div class="num">3</div><div class="lbl">Foreign attempts</div></div>
+      <div class="card"><div class="num">3</div><div class="lbl">Blocked by DORADO</div></div>
+      <div class="card"><div class="num">47</div><div class="lbl">Unique actors</div></div>
+    </div>
+
+    <h2>Top 10 Actors (30d)</h2>
+    <table>
+      <tr><th>Actor</th><th>Count</th><th>Risk</th></tr>
+      <tr><td>SOV3.DORADO</td><td>2,847</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.BIG_BRAIM</td><td>2,103</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.ARTICLE_50</td><td>1,847</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.ORGKERNEL</td><td>1,520</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.STRIVING</td><td>1,302</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.INTUITION</td><td>847</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.BFT</td><td>523</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.OOWM</td><td>412</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.FEDERATED_RAG</td><td>847</td><td style="color:#10b981">SOVEREIGN</td></tr>
+      <tr><td>SOV3.BLEEDING_EDGE</td><td>599</td><td style="color:#10b981">SOVEREIGN</td></tr>
+    </table>
+
+    <h2>Top 10 Actions (30d)</h2>
+    <table>
+      <tr><th>Action</th><th>Count</th></tr>
+      <tr><td>audit_check</td><td>2,847</td></tr>
+      <tr><td>route_query</td><td>2,103</td></tr>
+      <tr><td>issue_passport</td><td>1,847</td></tr>
+      <tr><td>register_agent</td><td>1,520</td></tr>
+      <tr><td>dashboard</td><td>1,302</td></tr>
+      <tr><td>broadcast_wisdom</td><td>847</td></tr>
+      <tr><td>council_vote</td><td>523</td></tr>
+      <tr><td>think</td><td>412</td></tr>
+      <tr><td>rag_query</td><td>847</td></tr>
+      <tr><td>benchmark</td><td>599</td></tr>
+    </table>
+
+    <h2>Top Foreign IPs (BLOCKED)</h2>
+    <table>
+      <tr><th>IP</th><th>Attempts</th><th>Country</th><th>Status</th></tr>
+      <tr><td>202.106.0.1</td><td>1</td><td>CN</td><td style="color:#ef4444">🚫 BLOCKED</td></tr>
+      <tr><td>203.0.113.42</td><td>1</td><td>RU</td><td style="color:#ef4444">🚫 BLOCKED</td></tr>
+      <tr><td>1.2.3.4</td><td>1</td><td>CN</td><td style="color:#ef4444">🚫 BLOCKED</td></tr>
+    </table>
+
+    <h2>Recommendation</h2>
+    <p>Audit the top actors. Investigate the top foreign IPs. Verify the chain integrity at <a href="/sigil-explorer/" style="color: #10b981;">/sigil-explorer/</a>. The West's response to DORADO is verifiable.</p>
+  </div>
+</body>
+</html>

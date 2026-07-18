@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSOAI Platform - Development Preview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        .subtitle { color: #888; font-size: 1.1rem; margin-bottom: 20px; }
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #059669;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); }
+        .card h3 {
+            color: #3b82f6;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card ul { list-style: none; }
+        .card li {
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .icon { width: 16px; height: 16px; }
+        .check { color: #10b981; }
+        .warning { color: #f59e0b; }
+        .error { color: #ef4444; }
+        .api-status {
+            background: #0f1419;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+        }
+        .api-endpoint {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+        .api-endpoint:last-child { border-bottom: none; }
+        .method { 
+            background: #1f2937; 
+            color: #10b981; 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 0.8rem;
+        }
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">CSOAI</div>
+            <div class="subtitle">Council of Safety of AI - Platform Development Preview</div>
+            <div class="status">
+                <span>🚀</span>
+                <span>Backend Server Running</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>🏗️ Platform Features</h3>
+                <ul>
+                    <li><span class="check">✅</span> EU AI Act Compliance (113 Articles)</li>
+                    <li><span class="check">✅</span> NIST AI RMF (72 Requirements)</li>
+                    <li><span class="check">✅</span> ISO 42001 (56 Requirements)</li>
+                    <li><span class="check">✅</span> TC260 AI Safety Governance</li>
+                    <li><span class="check">✅</span> 33-Agent Byzantine Council</li>
+                    <li><span class="check">✅</span> Watchdog Incident Reporting</li>
+                    <li><span class="check">✅</span> Training & Certification System</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>⚡ Server Status</h3>
+                <ul>
+                    <li><span class="check">✅</span> Backend API (localhost:3001)</li>
+                    <li><span class="warning">⚠️</span> Frontend Build (fixing dependencies)</li>
+                    <li><span class="warning">⚠️</span> Database (needs setup)</li>
+                    <li><span class="error">❌</span> AI Providers (needs API keys)</li>
+                    <li><span class="check">✅</span> tRPC Integration</li>
+                    <li><span class="check">✅</span> Express Server</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🔧 Tech Stack</h3>
+                <ul>
+                    <li><span class="check">✅</span> React 19 + TypeScript</li>
+                    <li><span class="check">✅</span> Node.js + Express</li>
+                    <li><span class="check">✅</span> tRPC for API</li>
+                    <li><span class="check">✅</span> Drizzle ORM</li>
+                    <li><span class="check">✅</span> TailwindCSS</li>
+                    <li><span class="check">✅</span> Vite Build System</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🤖 AI Integration</h3>
+                <ul>
+                    <li><span class="warning">⚠️</span> OpenAI API (needs key)</li>
+                    <li><span class="warning">⚠️</span> Anthropic API (needs key)</li>
+                    <li><span class="warning">⚠️</span> Google AI API (needs key)</li>
+                    <li><span class="check">✅</span> 33-Agent Council Logic</li>
+                    <li><span class="check">✅</span> Byzantine Fault Tolerance</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🌐 API Endpoints</h3>
+            <div class="api-status">
+                <div class="api-endpoint">
+                    <span><span class="method">GET</span> /health</span>
+                    <span style="color: #10b981;">✅ Active</span>
+                </div>
+                <div class="api-endpoint">
+                    <span><span class="method">POST</span> /api/trpc/auth.login</span>
+                    <span style="color: #10b981;">✅ Ready</span>
+                </div>
+                <div class="api-endpoint">
+                    <span><span class="method">GET</span> /api/trpc/compliance.getFrameworks</span>
+                    <span style="color: #10b981;">✅ Ready</span>
+                </div>
+                <div class="api-endpoint">
+                    <span><span class="method">POST</span> /api/trpc/council.triggerVoting</span>
+                    <span style="color: #f59e0b;">⚠️ Needs AI Keys</span>
+                </div>
+                <div class="api-endpoint">
+                    <span><span class="method">GET</span> /api/trpc/watchdog.getReports</span>
+                    <span style="color: #10b981;">✅ Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="http://localhost:3001" class="btn" target="_blank">
+                🚀 Open Backend API
+            </a>
+            <a href="http://localhost:3001/health" class="btn" target="_blank" style="margin-left: 10px;">
+                📊 Health Check
+            </a>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #1a1a1a; border-radius: 8px; border-left: 4px solid #3b82f6;">
+            <h3 style="color: #3b82f6; margin-bottom: 10px;">🔨 Current Status</h3>
+            <p><strong>Backend:</strong> Running successfully on localhost:3001</p>
+            <p><strong>Frontend:</strong> Fixing Rollup dependency issue (common on ARM Macs)</p>
+            <p><strong>Next Steps:</strong> Complete frontend setup, configure database, add API keys</p>
+            <p><strong>ETA:</strong> Frontend preview ready in ~5 minutes</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh API status
+        async function checkApiStatus() {
+            try {
+                const response = await fetch('http://localhost:3001/health');
+                if (response.ok) {
+                    document.querySelector('.status span:last-child').textContent = 'Backend Server Running';
+                    document.querySelector('.status').style.background = '#059669';
+                }
+            } catch (error) {
+                document.querySelector('.status span:last-child').textContent = 'Backend Server Offline';
+                document.querySelector('.status').style.background = '#ef4444';
+            }
+        }
+        
+        checkApiStatus();
+        setInterval(checkApiStatus, 5000);
+    </script>
+</body>
+</html>

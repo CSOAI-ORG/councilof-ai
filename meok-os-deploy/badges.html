@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sovereign Authority Badges — embed on any site</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1410'/%3E%3Ctext x='16' y='23' font-family='Arial' font-size='20' font-weight='800' fill='%23c9a84c' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E"/>
+<meta property="og:title" content="MEOK Sovereign Authority Badges"/>
+<meta property="og:description" content="A verifiable, signed trust mark for any website — show your AI is governed, care-aligned, and signed."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://os.meok.ai/badges.html"/>
+<meta property="og:image" content="https://os.meok.ai/api/avatar?queen_id=queen-care&size=600"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<style>
+:root{--gold:#c9a84c;--bg:#F5F0E6;--card:#FFFCF5;--ink:#2a1a14;--dim:#7a6a58;--border:rgba(201,168,76,.28)}
+*{margin:0;box-sizing:border-box}
+body{font-family:'Space Grotesk',-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:34px 22px 70px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:19px;margin-bottom:24px}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#1a1410,#3a2e1a);color:var(--gold);display:grid;place-items:center;font-weight:900}
+h1{font-size:32px;letter-spacing:-.02em;margin-bottom:8px}
+h1 span{background:linear-gradient(120deg,var(--gold),#8a6f2e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--dim);font-size:16px;line-height:1.5;margin-bottom:26px;max-width:620px}
+.preview{background:#fff;border:1px solid var(--border);border-radius:14px;padding:34px;display:grid;place-items:center;margin-bottom:22px}
+.preview img{height:30px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.fld{flex:1;min-width:150px}
+label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin-bottom:5px}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;font-size:14px;background:#fff;color:var(--ink);font-family:inherit}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.pchip{padding:7px 14px;border:1px solid var(--border);border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:var(--dim)}
+.pchip.on{background:#1a1410;color:var(--gold);border-color:#1a1410}
+.embed{margin-top:18px}
+pre{background:#15120c;color:#e9dcc0;padding:14px;border-radius:10px;font:12.5px ui-monospace,monospace;overflow:auto;white-space:pre-wrap;word-break:break-all}
+.copy{margin-top:10px;border:1px solid #1a1410;background:#1a1410;color:var(--gold);font:700 14px inherit;padding:11px 20px;border-radius:10px;cursor:pointer}
+.copy:hover{opacity:.9}
+.note{color:var(--dim);font-size:13px;margin-top:18px;line-height:1.5}
+footer{margin-top:30px;color:var(--dim);font-size:13px}
+</style></head><body>
+<div class="wrap">
+<div class="brand"><div class="logo">M</div> MEOK · Authority Badges</div>
+<h1>Sovereign <span>authority badges</span></h1>
+<p class="sub">A verifiable trust mark for any website or front-end. Show the world your AI is <b>governed</b>, <b>care-aligned</b>, and <b>signed</b>. Customize it, copy the code, paste it anywhere — it links back to your verify page.</p>
+
+<div class="preview"><img id="prev" alt="badge preview"></div>
+
+<div class="panel">
+  <div class="presets" id="presets"></div>
+  <div class="row">
+    <div class="fld"><label>Label</label><input id="label" value="Sovereign"></div>
+    <div class="fld"><label>Message</label><input id="message" value="Governed"></div>
+  </div>
+  <div class="row">
+    <div class="fld"><label>Your entity (optional)</label><input id="entity" placeholder="acme.ai"></div>
+    <div class="fld"><label>Colour</label><input id="color" value="c9a84c"></div>
+    <div class="fld"><label>Verify link</label><input id="href" value="https://os.meok.ai/verify.html"></div>
+  </div>
+  <div class="embed">
+    <label>Embed code — paste into any HTML page</label>
+    <pre id="code"></pre>
+    <button class="copy" id="copy">Copy embed code</button>
+  </div>
+  <p class="note">Styles: <b>governed · verified · signed · care · member</b> (presets above) or fully custom. Every badge links to <b>os.meok.ai/verify</b>, where the Ed25519-signed SIGIL attestation is checked. Cross-origin enabled — works on any domain.</p>
+</div>
+<footer><a href="/" style="color:var(--gold)">← MEOK OS</a> · part of the sovereign brand layer</footer>
+</div>
+<script>
+const PRESETS={governed:['Sovereign','Governed','c9a84c'],verified:['MEOK','Verified','5aa89a'],signed:['SIGIL','Signed','a855f7'],care:['Care','Aligned','06b6d4'],member:['CSOAI','Member','c9a84c']};
+const el=id=>document.getElementById(id);
+const BASE=location.origin+'/api/badge';
+function url(){
+  const p=new URLSearchParams();
+  if(el('label').value)p.set('label',el('label').value);
+  if(el('message').value)p.set('message',el('message').value);
+  if(el('entity').value)p.set('entity',el('entity').value);
+  if(el('color').value)p.set('color',el('color').value.replace('#',''));
+  return BASE+'?'+p.toString();
+}
+function refresh(){
+  const u=url(); el('prev').src=u;
+  const alt=(el('label').value||'')+': '+(el('message').value||'')+(el('entity').value?' · '+el('entity').value:'');
+  el('code').textContent=`<a href="${el('href').value}" target="_blank" rel="noopener">\n  <img src="${u}" alt="${alt}" height="28">\n</a>`;
+}
+el('presets').innerHTML=Object.keys(PRESETS).map((k,i)=>`<span class="pchip${i==0?' on':''}" data-k="${k}">${k}</span>`).join('');
+el('presets').querySelectorAll('.pchip').forEach(c=>c.onclick=()=>{
+  const[l,m,col]=PRESETS[c.dataset.k];el('label').value=l;el('message').value=m;el('color').value=col;
+  el('presets').querySelectorAll('.pchip').forEach(x=>x.classList.toggle('on',x===c));refresh();
+});
+['label','message','entity','color','href'].forEach(id=>el(id).addEventListener('input',refresh));
+el('copy').onclick=()=>{navigator.clipboard.writeText(el('code').textContent).then(()=>{el('copy').textContent='✓ Copied!';setTimeout(()=>el('copy').textContent='Copy embed code',1600)})};
+refresh();
+</script><a id="meok-tour-pill" href="/?tour=demo" style="position:fixed;right:16px;bottom:16px;z-index:9999;background:#1a1410;color:#c9a84c;border:1px solid #c9a84c;border-radius:999px;padding:9px 16px;font:700 13px system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.3)">🎬 Take the tour</a>
+  <script defer src="/meok-reveal.js"></script>
+</body></html>

@@ -1,0 +1,530 @@
+{
+  "summary": "Proofread + factual + visual audit of CSOAI framework/regulator/globe pages",
+  "agentCount": 13,
+  "logs": [],
+  "result": {
+    "audits": [
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/Crosswalk.tsx",
+        "factual_risks": [
+          "LINE 53 — WRONG DATE ATTRIBUTION. The amber countdown reads 'EU AI Act GPAI + Art. 50 transparency enforceable (2 Aug 2026)'. GPAI (general-purpose AI model) obligations under Chapter V became applicable on 2 AUGUST 2025, not 2026 — they are already in force. What actually starts on 2 August 2026 is the Act's general application, high-risk systems under Annex III, and Article 50 transparency obligations. CORRECT FIX: drop 'GPAI' from the 2026 countdown (e.g. 'High-risk (Annex III) + Art. 50 transparency obligations apply — 2 Aug 2026'); if you want to mention GPAI, note it has been live since 2 Aug 2025. Note: only GPAI models placed on market BEFORE 2 Aug 2025 have a 2 Aug 2027 compliance deadline.",
+          "LINE 54 — LIKELY FABRICATED DATE. The second countdown claims 'Art. 50 AI-content marking (2 Dec 2026)'. There is no 2 December 2026 milestone in the EU AI Act. Article 50 transparency obligations — including the marking/labelling of AI-generated or manipulated content (Art. 50(2) and 50(4)) — apply from 2 AUGUST 2026, the same date as the first countdown. CORRECT FIX: remove this second countdown (it duplicates 2 Aug 2026) or, if you want a distinct GPAI code-of-practice reference, cite the correct instrument — do not invent a December date.",
+          "LINES 3-6, 22, 37, 49 — OVERCLAIM: all 13 are called 'global AI-governance frameworks'. Only the EU AI Act, NIST AI RMF, ISO/IEC 42001 (and partly China TC260) are AI-specific governance frameworks. GDPR is data protection; ISO 27001 / SOC 2 / PCI DSS are information-security/trust; HIPAA is health-data privacy; DORA is financial ICT operational resilience; NIS2 is network-and-information-systems cybersecurity; CRA is product cybersecurity; MiCA is crypto-asset regulation. CORRECT FIX: describe the set as 'AI-governance and adjacent compliance frameworks' or 'AI, security, and data-protection frameworks' — accurate and still impressive. The Dataset JSON-LD description (line 37) has the same overclaim and is what answer engines will cite verbatim.",
+          "LINE 23 — OVERSIMPLIFICATION: FAQ calls 2 Aug 2026 'the 2 August 2026 enforcement date' (singular/definite). The EU AI Act applies on a STAGGERED schedule: prohibited practices + AI literacy from 2 Feb 2025; GPAI obligations from 2 Aug 2025; high-risk (Annex III) + Art. 50 transparency from 2 Aug 2026; high-risk under Annex I (product safety) + pre-existing GPAI models from 2 Aug 2027. CORRECT FIX: '…ahead of the 2 August 2026 milestone, when high-risk (Annex III) and Art. 50 transparency obligations apply.'",
+          "LINE 22 vs rest — INCONSISTENT COUNT: FAQ says '13+' frameworks while the title (line 30), hero (line 49) and Dataset (line 37) all say exactly 13, and the FRAMEWORKS array (line 8) contains exactly 13. The '+' implies undisclosed extra coverage. CORRECT FIX: say '13' everywhere, or list the additional frameworks the '+' refers to.",
+          "LINE 15 — LOW-PRIORITY INDICATIVE MAPPING: 'MiCA Art. 68' is mapped to Security & resilience. MiCA Art. 68 governs operating rules and systems/security of crypto trading platforms; MiCA's substantive ICT-resilience requirements largely defer to DORA. Fine as an indicative pointer given the on-page disclaimer, but verify before any legal-facing use."
+        ],
+        "proof_fixes": [
+          "The other 30+ article citations in the matrix check out and are a genuine strength — spot-verified: EU AI Act Art. 9 (risk mgmt), Art. 10 (data), Art. 13/50 (transparency), Art. 14 (oversight), Art. 15 (security), Art. 11-12/Annex IV (docs); DORA Art. 5-6/9/28-RoI; NIS2 Art. 20/21; GDPR Art. 5-6/13-14/22; ISO 27001:2022 A.5-A.8 (all four theme groups); SOC 2 CC1/CC2; NIST AI RMF MEASURE 2.11; ISO 42001 6.1/8.2 all correct. Keep them.",
+          "Line 37 Dataset license is 'https://opensource.org/licenses/MIT' — MIT is a software license, not a data license. For a crawlable Dataset use a Creative Commons license (e.g. CC-BY-4.0) so the 'open/citable' claim is technically coherent.",
+          "Line 8 code comment and Dataset keywords repeat 'ISO 42001' while the visible table uses the correct full name 'ISO/IEC 42001'. Normalise to 'ISO/IEC 42001' everywhere for citation accuracy.",
+          "Line 30 document.title and line 49 hero both hard-code '13 frameworks' — if the framework list ever grows, these three literals (title, hero, Dataset) plus the '13+' in FAQ drift out of sync. Consider deriving the count from FRAMEWORKS.length.",
+          "Disclaimer on line 84 ('References are indicative … not legal advice … Verify against primary sources') is well done and should stay — but it does not cover the two enforcement-date errors above, which read as authoritative countdowns, not indicative mappings. Fix the dates rather than relying on the disclaimer."
+        ],
+        "visual_spec": "Replace the two free-floating countdown pills (lines 52-55) with a single branded, horizontally-scrollable 'EU AI Act enforcement timeline' — a custom inline SVG that both fixes the date confusion AND becomes a citable asset. Spec: a horizontal baseline (slate-900 #0f172a track) with 4 milestone nodes on an emerald→teal gradient (#10b981 → #2dd4bf), left-to-right: (1) 2 Feb 2025 'Prohibited practices + AI literacy' (dimmed/past), (2) 2 Aug 2025 'GPAI model obligations' (dimmed/past), (3) 2 Aug 2026 'High-risk (Annex III) + Art. 50 transparency' (BRIGHT emerald, pulsing ring, the live target), (4) 2 Aug 2027 'Annex I product-safety high-risk + legacy GPAI' (outlined/future). Add a small teal 'You are here' triangle marker positioned by today's date between nodes 2 and 3, and drive its x-position + the two live day-counts from the existing days() helper so it stays accurate. Each node: a filled circle, a date in font-mono uppercase tracking-[2px] text-emerald-300/70, and a one-line label in emerald-100/80. Past nodes at 40% opacity, the active node at full brightness with a soft emerald glow (SVG feGaussianBlur or a CSS box-shadow ring). Fully theme-safe on the #03110b background, no photos, ~120px tall, degrades to vertical stack on mobile. This single visual corrects the GPAI/Dec-2026 errors, shows the real staggered schedule, and is exactly the kind of clean regulatory diagram answer engines screenshot and cite.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/EUAIActGuide.tsx (EU AI Act guide, route /guides/eu-ai-act)",
+        "proof_fixes": [
+          "OFF-BRAND PALETTE (biggest visual issue): the hero gradient, badges, timeline rail, and 3 of 4 stat numbers use blue-600 -> indigo-600 and a purple-600 accent (lines 345, 354-357, 361, 370, 397, 405, 445-460, 581, 609, 613, 699). This contradicts the CSOAI emerald #10b981 / teal #2dd4bf / slate-900 brand; only the CTA and 'How CSOAI Helps' sections are on-brand green. Recolor hero, timeline, and stat tiles to emerald/teal/slate for a consistent, credible identity.",
+          "Line 684/685/695: `req.category.toLowerCase().replace(' ', '-')` replaces only the FIRST space, so 'Accuracy & Robustness' becomes the tab value 'accuracy-& robustness' (space and & left in). It works today only because the identical broken transform is applied to both TabsTrigger and TabsContent. Replace with a real slugify, e.g. `.toLowerCase().replace(/[^a-z0-9]+/g,'-')`, to remove the latent fragility.",
+          "No source/citation deep-links on any stat or requirement. The page makes ~30 legal claims but the only external link is the top-level CELEX URL (line 382). Add EUR-Lex article anchors (Art. 5, Art. 9-15, Art. 50, Art. 99) next to the requirement tabs and penalty cards to earn trust on the highest-traffic regulation page.",
+          "Line 45/123/45: the Feb 2, 2025 milestone is hard-labelled status 'imminent' (line 126) and the section badge says 'Latest Update - November 2025' (line 639). Today is 2026-07-08, so 'imminent' is stale (that ban is 17 months past). Make the timeline status derive from the current date, or relabel completed milestones.",
+          "Line 278 and 859: '113 requirements' phrasing is imprecise and reads as marketing filler — reword to '113 Articles' (see factual risks) so the number is defensible."
+        ],
+        "factual_risks": [
+          "WRONG ADOPTION DATE (lines 111-113, 431-432): page states the AI Act was 'Adopted on July 12, 2024' and that on 'July 12, 2024 ... European Parliament formally adopted the AI Act.' CORRECT: the European Parliament adopted the Act on 13 March 2024 and the Council formally adopted it on 21 May 2024. 12 July 2024 is the date it was PUBLISHED in the Official Journal (Regulation (EU) 2024/1689) — the Parliament took no vote on that date. Relabel the 12 July milestone 'Published in the Official Journal' and fix the hero sentence to say adopted March/May 2024, published 12 July 2024, in force 1 August 2024.",
+          "WRONG LIMITED-RISK DEADLINE (line 84): Limited Risk / transparency is dated 'August 2, 2025.' CORRECT: the Article 50 transparency obligations (chatbots, deepfakes, AI-generated content) apply from 2 August 2026, the general application date — NOT 2025. Only the prohibitions/AI-literacy (2 Feb 2025) and GPAI + governance + penalties (2 Aug 2025) apply earlier. Change the Limited Risk badge to 'August 2, 2026.'",
+          "OVERSTATED DATA OBLIGATION (line 207): 'Training data must be relevant, representative, and error-free.' CORRECT: Article 10(3) requires datasets be 'relevant, sufficiently representative, and to the best extent possible, free of errors and complete.' The Act does NOT mandate absolute error-free data; 'error-free' overstates the legal standard. Reword to '...and, to the best extent possible, free of errors.'",
+          "UNCITED / MISLABELLED COUNT (lines 278, 859): 'all 113 EU AI Act requirements' and '113 Requirements Covered.' The figure 113 is the number of ARTICLES in Regulation 2024/1689, not a count of discrete 'requirements.' Presenting the article count as a requirements count is unsupported. Say '113 Articles' or drop the precise number.",
+          "DIGITAL OMNIBUS DATE (lines 148, 337): 'proposed November 26, 2025.' The European Commission presented the Digital Omnibus package on 19 November 2025, not 26 November. Verify against the Commission press release and correct to 19 November 2025 (the section badge 'November 2025' is fine).",
+          "INCOMPLETE HIGH-RISK DEADLINE in FAQ (line 317): 'For high-risk AI systems, you have until August 2026 to achieve full compliance.' Incomplete: high-risk systems that are safety components of products regulated under Annex I (e.g. medical devices, machinery) have until 2 August 2027 (Art. 113(c)). Add the Annex I / 2027 carve-out so the answer isn't misleading for product manufacturers."
+        ],
+        "visual_spec": "Replace the generic bullet-grid risk section AND the off-brand blue timeline with ONE branded, custom-coded SVG: an 'EU AI Act risk pyramid + enforcement timeline' in CSOAI emerald/teal/slate (no photos). TOP — four stacked trapezoids narrowing to an apex: Unacceptable (slate-900 fill, thin red #ef4444 top hairline = 'banned'), High-Risk (emerald #10b981), Limited (teal #2dd4bf), Minimal (slate-300). Each band left-labels the tier + one-line obligation and right-aligns the governing article and its CORRECT application date: 'Art. 5 - 2 Feb 2025', 'Annex III / Art. 9-15 - 2 Aug 2026', 'Art. 50 - 2 Aug 2026', 'none'. BOTTOM — a horizontal enforcement rail (slate-900 line, emerald node dots, teal connectors) with 5 accurate nodes: 1 Aug 2024 in force -> 2 Feb 2025 prohibitions -> 2 Aug 2025 GPAI + governance + penalties -> 2 Aug 2026 high-risk + transparency -> 2 Aug 2027 Annex I product systems. Drive every color from CSS variables (--emerald, --teal, --slate-900) with a prefers-color-scheme dark override so it themes correctly, and use viewBox + max-width:100% so it scales on mobile. This unifies the brand, fixes the two date errors inline, and gives the page one authoritative at-a-glance asset instead of four flat cards.",
+        "impact": "high"
+      },
+      {
+        "page": "NIST AI RMF Guide (US) — /Users/nicholas/councilof-ai-wt/client/src/pages/NISTAIRMFGuide.tsx",
+        "proof_fixes": [
+          "Dead imports: `FileText`, `Zap`, and `Heart` are imported (lines 9,11,13) but never used in JSX. Remove them from the lucide-react import to clean the bundle.",
+          "Dead data field: every object in `coreFunctions` has a `color:` string ('blue'/'purple'/'green'/'orange', lines 31/74/110/142) that is never read — only bgColor/borderColor/textColor are used. Drop the `color` field.",
+          "Quick Stats 'Subcategories 72+' (line 525) — the AI RMF 1.0 Core has exactly 72 subcategories (GOVERN 19 + MAP 18 + MEASURE 21 + MANAGE 14 = 72). Change '72+' to '72' so the number reads as precise rather than an estimate.",
+          "Category ID notation is non-standard throughout (GV-1, MP-1, MS-1, MG-1, lines 39–166). NIST writes these as 'GOVERN 1', 'MAP 1', 'MEASURE 1', 'MANAGE 1'. Either relabel to the official form or add a one-line note that these are shorthand, so practitioners can cross-reference the real framework.",
+          "Clarity: the hero badge (line 472) and body correctly date v1.0 to January 2023, but the page never states that the Cyber AI Profile is a separate/newer work product from the 1.0 Core — a reader may think '72 subcategories' and the Cyber AI Profile are the same release. Add a clarifying line."
+        ],
+        "factual_risks": [
+          "'NIST AI RMF Cyber AI Profile' is presented as a finalized 'New Release - December 2025' (lines 254, 421, 453, 779) with definitive claims ('provides explicit mappings between the two frameworks'). CORRECT FACT: as of the Jan 2026 cutoff, NIST's Cyber AI Profile is an in-development effort led by the NCCoE — a concept paper (released ~2025) plus workshops/public comment — NOT a published final profile. Presenting a draft/concept effort as a released, mappings-complete document is an overclaim. Reword to 'a draft Cyber AI Profile is in development (concept paper released 2025, public comment ongoing)' unless a final publication with an exact NIST publication number can be cited.",
+          "GOVERN categories are scrambled/misattributed vs AI RMF 1.0. The page OMITS the real GOVERN 6 (third-party / supply-chain risk) entirely and instead labels GV-5 'Risk Management Integration' and GV-6 'Stakeholder Engagement' (lines 58–67). CORRECT FACT per NIST AI RMF 1.0: GOVERN 4 = organizational safety-first culture (not 'Organizational Context'), GOVERN 5 = robust stakeholder/AI-actor engagement, GOVERN 6 = policies for third-party software/data supply-chain risk. Fix GV-4/5/6 to match, and restore the supply-chain category.",
+          "MAP 4 is mislabeled 'Risk Tolerance' (lines 96–98). CORRECT FACT: in AI RMF 1.0, MAP 4 covers risks and benefits mapped for all AI-system components including third-party software/data. 'Risk tolerance' is a GOVERN concept (GOVERN 1.3), not a MAP category — relabel MP-4.",
+          "MANAGE 3 is mislabeled 'Risk Monitoring' (lines 160–162). CORRECT FACT: MANAGE 3 in AI RMF 1.0 addresses AI risks and benefits from third parties being managed; ongoing monitoring is folded into MANAGE 4. Relabel MG-3 to the third-party dimension (matching the omitted supply-chain theme above).",
+          "OECD alignment claim 'The AI RMF was developed in consultation with OECD' (line 313). CORRECT FACT: NIST developed the AI RMF via a congressionally-directed (National AI Initiative Act of 2020), open multi-stakeholder process; it ALIGNS with and includes a crosswalk to the OECD AI Principles, but 'developed in consultation with OECD' overstates OECD's role. Reword to 'aligns with, and includes an official crosswalk to, the OECD AI Principles.'",
+          "Trustworthy characteristic #7 is labeled 'Fair with Managed Bias' (line 241). The exact NIST wording is 'Fair – with Harmful Bias Managed'. Minor, but on a 'definitive' page use NIST's exact phrasing to stay quotable/verifiable."
+        ],
+        "visual_spec": "Replace the weak text-badge 'Function Relationships' block (lines 675–696) with a custom-coded SVG 'AI RMF lifecycle wheel' that matches NIST's canonical diagram AND the CSOAI brand. Design: a large rounded outer ring labeled GOVERN (emerald #10b981 stroke, subtle slate-900 fill) that visibly ENCLOSES three inner nodes — MAP → MEASURE → MANAGE — connected by curved teal (#2dd4bf) arrows in a continuous clockwise cycle, with a thin arrow closing MANAGE back to MAP to show iteration. GOVERN's ring should have four small tick labels ('informs all functions') pointing inward to reinforce it as cross-cutting rather than a first step in a linear arrow chain (the current left-to-right ArrowRight layout wrongly implies GOVERN is step 0). Use CSS variables and @media (prefers-color-scheme) so it renders in both themes; nodes as slate-900 chips with emerald/teal borders, no photos. Secondary fix: the page's blue/purple/orange/red gradients (hero line 461, function tabs, red Cyber-AI section) clash with the emerald/teal/slate-900 brand — recolor the hero gradient and the four function accent colors onto a brand-consistent emerald→teal ramp (keep only a single restrained amber for the 'Managing Tradeoffs' caution card) so this page reads as CSOAI rather than a generic NIST reskin.",
+        "impact": "high"
+      },
+      {
+        "page": "ISO42001Guide.tsx (ISO/IEC 42001 guide)",
+        "proof_fixes": [
+          "Dead imports — remove: `Tabs, TabsContent, TabsList, TabsTrigger` (imported line 24, never rendered) and the `FileText` + `Scale` lucide icons (lines 11-12, never used). Verified via grep: each appears only on its import line.",
+          "Line 441: background references `bg-[url('/grid.svg')]` but no grid.svg exists anywhere in client/ (confirmed by find) — this 404s silently and the hero grid texture never renders. Either add client/public/grid.svg or drop the div.",
+          "Line 269 certification body 'TUV' should be the correct proper noun 'TÜV' — and ideally the specific entity ('TÜV SÜD' vs 'TÜV Rheinland' vs 'TÜV NORD'), since 'TUV' alone is not an accredited body name.",
+          "Brand mismatch: the whole page is purple/indigo (hero, stats, timeline, CTAs on lines 440, 456, 465, 492-497, 728, 962, 1129), but the CSOAI brand is emerald #10b981 / teal #2dd4bf. Only the 'Recent Certifications' and 'How CSOAI Helps' sections use green — the page contradicts itself. Align hero/stat/timeline/CTA gradients to emerald→teal for a credible, on-brand look.",
+          "Quick-stat label line 501 'Informative Annexes' is factually wrong (see factual_risks) — relabel to '4 Annexes' and drop 'Informative', or split into 'normative + informative'."
+        ],
+        "factual_risks": [
+          "'4 Informative Annexes' (line 501) and 'four informative annexes' (line 673) are WRONG. In ISO/IEC 42001:2023 Annex A ('Reference control objectives and controls', lines 314-315) is NORMATIVE — it is the mandatory control reference audited for certification. Only Annexes B, C and D are informative. Correct: '4 annexes — Annex A normative, Annexes B–D informative.' Calling the audited control set 'informative' is a material governance error on an authority page.",
+          "The 'five domains' framing of Annex A is inaccurate. Quick-stat implies it, and FAQ line 424 plus Annex A categories (lines 317-323) list exactly five buckets. Annex A of ISO/IEC 42001:2023 actually contains ~38 controls organised under NINE control objectives (A.2–A.10): Policies related to AI; Internal organization; Resources for AI systems; Assessing impacts of AI systems; AI system life cycle; Data for AI systems; Information for interested parties; Use of AI systems; Third-party & customer relationships. Replace the invented 'five domains' with the real 9 control objectives / ~38 controls.",
+          "The entire 'Recent Certifications' block (lines 229-272) states specific certification bodies and 'first'-superlatives with NO citations — honesty-critical. 'Microsoft … First major cloud provider certified' (line 235) is contestable: AWS and others also hold ISO 42001, and Anthropic (certified via Schellman) was among the very first AI developers certified. 'KPMG … First Big Four firm certified' (line 240), the CB attributions (BSI/LRQA/Schellman/TÜV) and 2024/2025 dates are all unverified. Either cite each company's certificate/press release inline or remove the section — unsourced 'first' claims about named firms are the highest-risk content here.",
+          "Line 1085: 'NIST AI RMF — The US framework that maps directly to ISO 42001 structure' is an overclaim. NIST AI RMF is organised around four functions (Govern, Map, Measure, Manage) and does NOT map directly onto ISO 42001's Annex SL clause structure (Clauses 4–10). They are complementary and commonly cross-walked, not structurally aligned. Reword to 'a complementary US framework often cross-walked to ISO 42001', not 'maps directly'.",
+          "FAQ line 408 'Article 40 of the EU AI Act explicitly mentions harmonized standards' is correct (Art. 40 of Regulation (EU) 2024/1689 covers harmonised standards) — but 'ISO 42001 is expected to become a key supporting standard' is optimistic: CEN-CENELEC is drafting dedicated EU harmonised standards under the AI Act mandate, and ISO 42001 is not confirmed as THE harmonised standard. Keep it clearly hedged as 'may support', not presumed.",
+          "Certification-timeline durations (lines 125-190: 'Stage 1 Audit 1-2 days', 'Stage 2 Audit 2-5 days', '6-12 months' etc.) are presented as fact but uncited. They are plausible industry norms — lower risk — but should be framed as 'typical/illustrative' and ideally sourced, since they read as authoritative."
+        ],
+        "visual_spec": "Add a custom coded SVG 'AIMS Clause Wheel' to replace or anchor the flat Clause 4-10 card grid. Render a PDCA ring on slate-900 (#0f172a) with an emerald→teal gradient (#10b981 → #2dd4bf): four outer arcs = Plan (Clause 6 Planning), Do (Clauses 7 Support + 8 Operation), Check (Clause 9 Performance Evaluation), Act (Clause 10 Improvement), rotating clockwise; a solid inner core = Clauses 4 Context + 5 Leadership as the governing hub, since they drive the whole system. Each arc labelled with clause number + title in white/slate-100, thin teal tick separators, subtle hover-lift on each segment. Pure inline SVG/CSS, theme-aware (light: slate text on white; dark: slate-100 on #03110b to match the SovereignSpot band at line 1143). No stock or AI photos. Bonus accuracy visual: a small two-tone legend chip on the Annexes section marking Annex A as 'Normative' (filled emerald) vs B/C/D 'Informative' (outline teal) to fix the normativity error visually.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/Dora.tsx (route /dora — DORA financial-services vertical)",
+        "proof_fixes": [
+          "Line 30 & 17 & 18: the '~65% overlap with NIS2' figure appears 4 times across hero, FAQ, and comment (lines 4, 17, 18, 30). Because it is unsourced (see factual_risks), fix it in ONE place and reuse — do not leave the precise number scattered as if independently corroborated.",
+          "Line 22: page sets document.title but has no meta description. For an SEO/AEO compliance page, add a <meta name=\"description\"> (via a head effect or your existing head helper) e.g. 'DORA (Regulation (EU) 2022/2554) compliance for financial entities — five pillars, NIS2 crosswalk, TLPT/TIBER-EU planning, and signed evidence.'",
+          "Line 18 FAQ 'How does CSOAI help': the phrase 'produces Layer-0 (Ed25519) signed evidence for supervisors' reads as if supervisors require/accept Ed25519 signatures — they do not. Reword to 'produces tamper-evident, Ed25519-signed evidence records for your audit trail and supervisory submissions' so the signing is framed as your internal integrity control, not a regulator requirement.",
+          "Line 28 eyebrow 'active enforcement 2026': DORA has APPLIED since 17 Jan 2025; 'active enforcement' is defensible but soften to 'applicable since Jan 2025 · under supervision 2026' to avoid implying a distinct 2026 enforcement start.",
+          "Line 15 FAQ scope list: add 'among others' or 'and other financial entities' — DORA covers ~20 categories of financial entity (payment institutions, CCPs, trading venues, trade repositories, crowdfunding providers, etc.), and the current closed list of five could read as exhaustive."
+        ],
+        "factual_risks": [
+          "THE '~65% overlap with NIS2' STAT IS UNCITED AND HAS NO AUTHORITATIVE SOURCE (lines 4, 17, 18, 30 — stated 4 times, including as a hard '65%'). There is no ESA/Commission/ENISA publication quantifying the DORA–NIS2 overlap at 65%. CORRECT FACT: The relationship is qualitative and governed by lex specialis — under NIS2 Article 4 and Recital 28, where a sector-specific Union act (DORA) imposes ICT-risk/incident-reporting requirements at least equivalent to NIS2, the DORA provisions apply IN PLACE OF the corresponding NIS2 ones for financial entities. Fix: drop the precise percentage and say 'DORA is lex specialis to NIS2 for financial entities — its ICT-risk and incident-reporting rules displace the equivalent NIS2 obligations' (cite NIS2 Art. 4 / DORA Recital 16).",
+          "MISLEADING FRAMING on line 17: 'For entities in scope of both, mapping the overlap once avoids duplicated controls.' Because DORA is lex specialis (see above), financial entities are largely NOT subject to NIS2's substantive ICT requirements at all — DORA replaces them rather than stacking on top. CORRECT FACT: The value proposition is not 'you're double-regulated, map once' but 'DORA supersedes NIS2's ICT obligations for you; we confirm which NIS2 duties (if any, e.g. as an essential/important entity in a non-financial capacity) still bite.' Reframe to avoid implying dual substantive compliance.",
+          "Line 16 'several national deadlines have already passed and consolidation at the ESAs is under way' — vague and slightly off. CORRECT FACT: The Register of Information is not set by staggered 'national deadlines'; financial entities submitted their RoI to their competent authority in a coordinated EU exercise in April 2025 (following the 2024 ESA dry run), for onward consolidation by the ESAs. Replace 'several national deadlines have already passed' with the specific April 2025 first-collection milestone.",
+          "Line 15 'in active enforcement in 2026' (also line 3 comment): DORA's date of application is 17 January 2025, not 2026. It is accurate that it is in force/applicable throughout 2026, but the copy should anchor to the real Jan-2025 applicability date rather than implying 2026 as the operative year."
+        ],
+        "visual_spec": "Add a custom-coded SVG 'DORA major-incident reporting clock' — the page claims 'strict timelines' (line 9) but shows none, and these are concrete, verifiable, and highly citable. Build a horizontal emerald/teal timeline (bg #05140d, border emerald-500/20, matching the pillar cards) with 4 nodes on a gradient rail (from-emerald-300 to-teal-300): (1) Initial notification — within 4 hours of classification as major, and no later than 24h from detection; (2) Intermediate report — within 72 hours; (3) Final report — within 1 month; each node an emerald pill like the existing Art. badges. Use CSS-only (no JS) with pure SVG circles/lines, brand colors as variables, dark-mode native, responsive with viewBox + max-width:100%. This turns an unsubstantiated 'strict timelines' phrase into a factual, source-backed asset (DORA Art. 19 + the Commission Delegated/Implementing Regulation on incident reporting). Optionally add a second small SVG: a Venn/lex-specialis diagram showing DORA displacing the NIS2 ICT segment (replacing the fabricated 65% number with an honest relationship graphic). No stock/AI photos.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/Nis2.tsx (route /nis2 — NIS2 critical-infrastructure page)",
+        "proof_fixes": [
+          "Line 30 H1 subtext + line 5 comment + line 15 FAQ all repeat the same wrong deadline ('October 2026' / 'Transposition lands October 2026'). Fix the wording everywhere to the real deadline once the factual correction is made (see factual_risks) — e.g. line 30: 'The transposition deadline was 17 October 2024; national laws are now landing (implementation varies by member state).'",
+          "Line 59 disclaimer reads 'Status verified July 2026; national transposition varies.' — the 'verified' claim is undercut by the wrong dates and uncited stats on the page. Soften to 'Last reviewed July 2026' and only restore 'verified' after the deadline (2024) and the DORA-overlap/templates claims are corrected or removed.",
+          "Line 9: the incident-reporting timeline text is correct (24h early warning / 72h notification / 1-month final report, Art. 23) but is duplicated verbatim in the FAQ (line 16) and the intro (line 30). Keep them consistent when editing so the corrected copy doesn't drift between the three locations.",
+          "No dead code or broken JSX; internal links (/assess, /dora, /cra, /crosswalk) are consistent with the repo's route conventions — no fix needed there."
+        ],
+        "factual_risks": [
+          "WRONG DATE (most serious): The page states the NIS2 transposition deadline is 'October 2026' (line 30 H1 subtext, line 5 code comment, line 15 FAQ 'transposition deadline in October 2026'). CORRECT FACT: the NIS2 transposition deadline was 17 October 2024, with entities required to apply measures from 18 October 2024 (Directive (EU) 2022/2555, Art. 41). As of July 2026 that deadline is nearly two years past — several member states transposed late, but the legal deadline is 2024, not 2026. For a compliance vendor this is a credibility-critical error. Replace with '17 October 2024' and note that national implementation is still being completed in some states.",
+          "FABRICATED/UNVERIFIABLE SPECIFIC CLAIM: Line 5 (comment) and lines 9, 15, 16, 18 reference 'common incident-reporting templates adopted May 2026' / 'the Cooperation Group adopted common incident-reporting templates (26 May 2026)'. CORRECT FACT: there is no widely-sourced record of a Cooperation Group common reporting template adopted on 26 May 2026. The real, citable instrument is Commission Implementing Regulation (EU) 2024/2690 of 17 October 2024, which sets the technical/methodological requirements and defines when an incident is 'significant' for specific entity types (DNS, cloud, data centres, MSPs, etc.). Remove the 26 May 2026 claim or replace it with a citation to IR (EU) 2024/2690; do not present an unverifiable dated event as fact.",
+          "UNCITED / INVENTED STATISTIC: 'Overlaps DORA by ~65%' (line 6 comment, line 17 FAQ 'overlap by roughly 65% on ICT risk management, incident reporting and third-party/supply-chain risk'). CORRECT FRAMING: there is no authoritative source for a 65% figure — it reads as fabricated precision. The accurate, defensible statement is qualitative: DORA is lex specialis for financial entities, so for firms in scope of both, DORA's ICT-risk-management and incident-reporting rules apply INSTEAD OF the corresponding NIS2 obligations (NIS2 Art. 4 / DORA Art. 1(2)). Reframe as 'DORA takes precedence for financial entities' rather than a made-up percentage, or drop the number.",
+          "OVERSTATEMENT (minor, verify wording): 'Management bodies ... can be held personally liable' (line 11, Art. 20) and 'personal management accountability' (line 30). CORRECT NUANCE: Art. 20 requires management bodies to approve and oversee cybersecurity risk-management measures and makes them responsible for infringements; member states must ensure management bodies 'can be held liable.' The precise liability regime is set by national transposition and varies — 'personally liable' is broadly defensible but should be hedged (e.g. 'can be held accountable, with the exact liability set by national law') to avoid overclaiming a uniform EU-wide personal-liability standard."
+        ],
+        "visual_spec": "Add a branded custom-SVG 'incident reporting cascade' timeline — the one visual this page is missing and its strongest asset. A horizontal 3-stop track on the #05140d card background: node 1 '24h — Early warning', node 2 '72h — Incident notification', node 3 '1 month — Final report', each a rounded pill with an emerald (#10b981) → teal (#2dd4bf) gradient connector line and a small pulse dot on node 1. Label under the track: 'From becoming aware of a significant incident (Art. 23).' Use CSS/SVG only, currentColor + the emerald/teal palette, no images. Optionally add a compact 4-badge 'core duties' strip mirroring the REQS array (Risk mgmt · Incident reporting · Supply-chain · Board accountability) with Art. numbers, reinforcing the article citations. This turns abstract timelines into a scannable, on-brand graphic and directly supports the (corrected) reporting-deadline copy.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/Fedramp.tsx",
+        "proof_fixes": [
+          "Lines 22, 23, 42, 43: CTA labels use the HTML entity '-&gt;' which renders as a hyphen-arrow '->'. Replace with a real arrow character '→' (e.g. 'Open OSCAL Studio →') for a cleaner, less markup-leaky look.",
+          "Lines 18, 20, 29: spaced hyphens are used where em/en dashes are intended ('CSOAI - fedramp readiness', 'the opportunity - close it here', 'the bottleneck for every CSP'). Use '—' (em dash) so they don't read as broken hyphens.",
+          "Line 20: the sentence 'of 100+ Rev5 authorizations in 2025, virtually none actually produced OSCAL' presents an uncited statistic as fact — either add a source/link or soften to a defensible statement (see factual_risks). As written it is the page's boldest claim and has no citation anchor.",
+          "Line 12: document.title 'FedRAMP RFC-0024 / OSCAL readiness - CSOAI' — fine, but once the OSCAL-mandatory claim is corrected, retitle to '...machine-readable / OSCAL readiness' so the tab, hero and body stay consistent."
+        ],
+        "factual_risks": [
+          "OVERCLAIM (highest priority) — Hero line 20 'RFC-0024 makes OSCAL packages mandatory for every FedRAMP provider' and Step 2 line 7 'Machine-readable SSP, SAP, SAR, and POA&M as RFC-0024 requires'. CORRECT FACT: RFC-0024 requires machine-readable authorization DATA; OSCAL is only ONE FedRAMP-approved format. The RFC states FedRAMP maintains 'a list of approved standardized formats' — OSCAL, OR any format that 5+ FedRAMP-certified CSPs agree to use. OSCAL is optional, not mandated. Reword to 'RFC-0024 requires machine-readable packages (OSCAL is the leading approved format)'.",
+          "OVERCLAIM — The page treats RFC-0024 as settled, binding law ('makes OSCAL mandatory', 'as RFC-0024 requires', hard deadlines in the amber 'clock' box). CORRECT FACT: RFC-0024 is a Request for Comment / PROPOSAL. The fedramp.gov RFC page explicitly says 'After public comment, the final form of these requirements and recommendations will apply.' Frame it as 'proposed' with the caveat that dates take effect once finalized, not as enacted law.",
+          "MIS-ATTRIBUTION — Amber box line 29 lumps 'FedRAMP Ready retires 28 Jul 2026' and 'FIPS-199 levels become Certification Classes A-D' under the RFC-0024 clock. CORRECT FACT: both are real 2026 FedRAMP changes but come from the separate Certification Classes / CR26 rulemaking (RFC-0023 area), NOT RFC-0024, which is solely about machine-readable packages. The RFC-0024 document makes no mention of Certification Classes, FIPS-199, or FedRAMP Ready retirement. Keep the facts, attribute them correctly (e.g. 'Separately, under the 2026 Certification Classes change...').",
+          "UNCITED STAT — Line 20 'of 100+ Rev5 authorizations in 2025, virtually none actually produced OSCAL'. Could not verify this figure in any FedRAMP source. FedRAMP has accepted OSCAL SSP submissions for years but true machine-readable adoption has been low — that directional point is defensible; the specific '100+ / virtually none' count is not sourced. Add a citation or restate as 'few 2025 Rev5 packages were delivered as validated OSCAL'.",
+          "VERIFIED CORRECT (do not change) — 'initial deadline 30 Sep 2026, final 30 Sep 2027' matches the RFC-0024 text (Sep 30 2026 requirements take effect; Sep 30 2027 grace period ends / non-compliant services lose certification). The '28 Jul 2026' FedRAMP Ready retirement date also checks out. Only their attribution/framing needs fixing, not the dates."
+        ],
+        "visual_spec": "Add a branded, custom-coded SVG 'RFC-0024 compliance runway' timeline (no photos) below the amber box, replacing the current all-text clock. Horizontal rail in slate-900 with milestone nodes plotted to scale: 13 Jan 2026 (RFC-0024 published, hollow node) → 15 Apr 2026 (FedRAMP supporting materials) → 30 Sep 2026 (requirements take effect — emerald #10b981 filled node, 'public notification if non-compliant') → 30 Sep 2027 (grace ends — teal #2dd4bf node, 'certification revoked'). Use a SEPARATE muted track/color (slate-400, dashed) for the two mis-attributed items — 28 Jul 2026 FedRAMP Ready retires and Certification Classes A-D — labelled 'Separate CR26 / Certification-Classes change' so the visual itself enforces the correct attribution. Overlay a small CSS/SVG readiness ring (emerald arc on a slate track, animated stroke-dashoffset) showing days-to-30-Sep-2026 computed from Date.now(). Add a caption tag 'Proposed — pending final form after public comment' to keep the honesty framing. Theme-aware via currentColor; all inline SVG, brand emerald/teal/slate only.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/HighRiskSystems.tsx",
+        "proof_fixes": [
+          "Line 34 & 36: mixed dash styles — 'CSOAI - Annex III' and 'categories - if your AI' use a spaced ASCII hyphen where an em-dash is intended. Replace ' - ' with ' — ' (U+2014) for typographic consistency with the rest of the site.",
+          "Lines 22-24: the FAQ JSON-LD answer text repeats the same ' - ' spaced-hyphen pattern; normalise to em-dashes so the rich-result snippet reads cleanly.",
+          "Line 7 (Biometrics example): tighten to match Annex III point 1 wording — 'Remote biometric identification, biometric categorisation, and emotion recognition' should note these are the *permitted-but-high-risk* uses, to distinguish from the Article 5 prohibited ones (see factual risk #4).",
+          "Line 8 (Critical infrastructure): Annex III point 2 also covers 'critical digital infrastructure' — the current list ('road traffic, water, gas, heating, electricity') omits it. Add 'critical digital infrastructure' for completeness.",
+          "No dead code: SovereignSpot import (line 4) is used at line 58; useEffect cleanup correctly removes the injected script. No fix needed."
+        ],
+        "factual_risks": [
+          "OVERCLAIM / STALE LAW (line 24 FAQ): 'High-risk obligations phase in through 2027 — product-safety AI (Annex I) by August 2027 and standalone Annex III systems by December 2027 under the Digital Omnibus' presents an unadopted proposal as settled law. CORRECT FACT: The Digital Omnibus is a European Commission proposal published 19 November 2025 and is NOT yet adopted (still in the ordinary legislative procedure as of the page date). Under the AI Act currently in force (Reg. (EU) 2024/1689), standalone Annex III high-risk obligations apply from 2 August 2026 and Annex I product-safety high-risk from 2 August 2027. The page should say the Omnibus *would, if adopted,* delay these — not state the new dates as fact.",
+          "INTERNALLY INCONSISTENT DATE (line 24): the page attributes 'Annex I by August 2027' to the Digital Omnibus, but August 2027 is the ORIGINAL AI Act date, not an Omnibus date. The Digital Omnibus proposal moves Annex I product-safety high-risk to 2 August 2028 (and Annex III to a standards-readiness date, backstop December 2027). So pairing 'Annex I Aug 2027' with 'Annex III Dec 2027' as both 'under the Digital Omnibus' is wrong — one is the old date, one is the proposed date. Correct pairing under the proposal: Annex III → Dec 2027, Annex I → Aug 2028.",
+          "OVERCLAIM (line 36 'if your AI lands in one, the full regime applies' and lines 48-49 'In a category? The full high-risk regime applies'): being in an Annex III area does NOT automatically make a system high-risk. CORRECT FACT: Article 6(3) exempts systems that perform a narrow procedural task, improve a prior human activity, detect decision-making patterns without replacing/influencing human assessment, or perform a preparatory task — provided they don't profile natural persons. The page should add that an Annex III system is high-risk *unless it qualifies for an Article 6(3) exemption*.",
+          "IMPRECISE (line 7): listing 'emotion recognition' flatly as high-risk biometrics ignores that emotion-recognition systems in the workplace and education settings are PROHIBITED under Article 5(1)(f), not high-risk. Only emotion recognition outside those banned contexts is high-risk. Qualify the biometrics example accordingly.",
+          "MINOR (line 36 'The EU AI Act's heaviest obligations fall on high-risk systems'): defensible for permitted systems, but prohibited practices (Article 5, outright banned since 2 Feb 2025) are arguably the heaviest treatment. Consider 'heaviest compliance obligations' to avoid overstating."
+        ],
+        "visual_spec": "Replace the flat 8-card grid (or add above it) with a branded custom-SVG 'Am I high-risk?' decision flow — the page's real value-add and the honest fix for the Article 6(3) gap. Three coded nodes on a horizontal rail, no photos: (1) slate-900 rounded node 'In an Annex III area?' → emerald arrow → (2) teal-bordered diamond 'Article 6(3) exemption? (narrow procedural / preparatory / no profiling)' with a fork: YES → grey 'Not high-risk (register + document reasoning)' / NO → (3) emerald #10b981 filled node 'HIGH-RISK — full regime applies'. Use CSS vars --emerald:#10b981, --teal:#2dd4bf, slate-900 bg; connector arrows in emerald-300; 12px mono caption labels matching line-34 style. Second custom SVG: a horizontal compliance-timeline strip with two clearly-labelled tracks — a solid emerald line 'In force today: Annex III 2 Aug 2026 · Annex I 2 Aug 2027' and a dashed teal line 'If Digital Omnibus adopted (proposed 19 Nov 2025): Annex III Dec 2027 · Annex I Aug 2028' — the dashed style visually encodes 'proposed, not law', directly fixing factual risks #1-2. All viewBox-scaled, prefers-color-scheme aware, no raster/AI images.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/RegulatorAtlas.tsx (content from client/src/data/regulators.ts)",
+        "proof_fixes": [
+          "regulators.ts line 74 & 144 — the Colorado AI Act effective date is stated twice ('1 Jan 2027'). Both instances are wrong (see factual_risks); change to '30 Jun 2026' and drop the '(amended from Feb 2026)' framing that implies a single 2027 slip.",
+          "RegulatorAtlas.tsx line 28 — the guard `if (!ans)` reads a stale render-closure value of `ans` (it was cleared via setAns('') at line 22 but the local const still holds the previous render's value), so the guard is unreliable. It's also redundant: the functional updater `setAns((a) => a || fallback)` already no-ops when a live answer arrived. Delete the `if (!ans)` wrapper and call `setAns((a) => a || 'Live read unavailable…')` unconditionally.",
+          "RegulatorAtlas.tsx line 27 — empty `catch (e) {}` silently swallows every fetch/parse error; at minimum log to console so a broken /api/chat endpoint is debuggable rather than invisible.",
+          "regulators.ts line 270 & 275 — 'AI Safety Institute' is the pre-Feb-2025 name; the UK body was renamed the 'AI Security Institute' on 14 Feb 2025. Update both references to keep the atlas current.",
+          "RegulatorAtlas.tsx line 22 — chargeSovereign(6) debits 6 credits at the start of ask() even when the request fails and the fallback 'Live read unavailable' string is shown; consider charging only on a successful live read to avoid billing users for nothing."
+        ],
+        "factual_risks": [
+          "OUTDATED/WRONG (regulators.ts lines 58 & 71): NIST card states OMB M-24-10 is 'the operative US federal baseline' and 'in effect'. M-24-10 (Mar 2024) was RESCINDED and replaced by OMB M-25-21 ('Accelerating Federal Use of AI', 3 Apr 2025); the companion procurement memo M-24-18 was replaced by M-25-22. Correct fact: the current federal AI-governance memo is OMB M-25-21 (with M-25-22 for procurement), not M-24-10. Presenting a rescinded memo as operative is a credibility hit on an atlas.",
+          "WRONG DATE (regulators.ts lines 74 & 144): Colorado AI Act (SB 24-205) effective date given as '1 Jan 2027'. The enacted law was Feb 1 2026, then delayed by SB 25B-004 (Aug 2025 special session) to 30 June 2026 — not January 2027. Correct fact: effective 30 June 2026 (verify for any further slip). Both the NIST-card 'state laws bite 1 Jan 2027' line and the Colorado-card 'Act takes effect' line inherit this error.",
+          "PROPOSAL PRESENTED AS TIMELINE (regulators.ts lines 44, 46, 52): EU AI Act dates '2 Dec 2026' (Art. 50 transparency) and '2 Dec 2027' (Annex III high-risk) are drawn from the Digital Omnibus, which as of early 2026 is an unadopted Commission PROPOSAL (tabled 19 Nov 2025), not law. The enacted AI Act baseline is: Art. 50 transparency applies 2 Aug 2026 and Annex III high-risk obligations apply 2 Aug 2027. The card hedges ('verify final text') but still lists the proposed dates as the primary clock — lead with the enacted Aug-2026/Aug-2027 dates and mark the Omnibus shift as proposed.",
+          "VERIFY (regulators.ts line 33): 'The world's first comprehensive, binding, risk-tiered AI law' is defensible for the EU AI Act but is an absolute superlative; safer as 'the first comprehensive, binding, risk-tiered AI law' without 'world's first' contested framing, or keep only if comfortable defending it.",
+          "MINOR (regulators.ts line 48): GPAI systemic-risk threshold '>10^25 FLOP' is correct (the Act's presumption threshold is 10^25 FLOPs of cumulative training compute) — no change needed, just confirming the one hard technical number on the page checks out."
+        ],
+        "visual_spec": "Add a custom-coded SVG 'Regulatory clock' banner directly under the hero (above the card grid) — the atlas currently has zero data visualization, only a text-card grid, so the scannable 'and the clock' promise in the H1 is unfulfilled. Build a horizontal timeline spanning 2025→2028 (four year gridlines, slate-900 #03110b ground, faint emerald #10b981 baseline). Plot each regime's single most important upcoming milestone as a labelled dot positioned by date: color the dot by status using the page's existing tokens — in-force emerald #10b981, phasing-in amber, shifting rose, voluntary sky. Milestones to plot: EU AI Act Art.50 (Aug 2026, mark 'enacted' vs a ghosted Omnibus-proposed marker), CRA reporting (Sep 2026), Colorado AI Act (Jun 2026), CRA full (Dec 2027), EU high-risk (Aug 2027). Use a teal #2dd4bf 'today' vertical marker at the current date. Pure inline SVG + CSS, theme-aware, no raster/photo assets, ~1100x220 viewBox scrolling inside an overflow-x:auto container on mobile. This turns the page's strongest differentiator (dated obligations) into a single glanceable graphic and lets you visually distinguish enacted vs proposed dates — which also mitigates the Digital Omnibus factual risk above.",
+        "impact": "high"
+      },
+      {
+        "page": "Government Dashboard — /Users/nicholas/councilof-ai-wt/client/src/pages/GovernmentDashboard.tsx",
+        "proof_fixes": [
+          "DEAD DATA rendered nowhere: `riskCategories` (line 377) and `recentAlerts` (line 384) are fully defined but never referenced in the JSX return. Either render them (riskCategories is the perfect data source for the visual below) or delete both arrays.",
+          "10 unused icon imports (dead code) in lines 10-54: TrendingUp, TrendingDown, BarChart3, PieChart, Bot, Zap, Target, ChevronDown, ExternalLink, ArrowRight are imported but never used. Remove them to keep the import block honest.",
+          "Filters are non-functional: selectedFramework, selectedRegion, timeRange (lines 455-457) drive the Select widgets but nothing downstream filters on them — the dashboard shows identical data regardless of selection. Either wire the filters to the rendered data or remove them so the UI doesn't imply interactivity it lacks.",
+          "Currency mismatch: EU AI Act enforcement fines are rendered with a `$` prefix (lines 888, 928, 931) but every EU-AI-Act case is a Euro penalty. Show `€` for EU AI Act rows (fines under that Act are set in EUR, e.g. up to €35M / 7% turnover), or state the display currency.",
+          "Language-count contradiction: footer says 'Available in 24 Languages' (line 1184) but the FAQ says reports come in 'all EU official languages plus Mandarin, Japanese, and Korean' (line 365) = 27. The EU has 24 official languages, so +3 = 27. Reconcile the two numbers.",
+          "Regional totals don't reconcile with the global figure: Europe 456 + North America 487 + Asia-Pacific 234 = 1,177, but Global 'totalSystems' is 1,247 (70 systems unaccounted, with no 'Rest of World' bucket). Either add the missing region or correct the totals so the arithmetic closes.",
+          "Add a visible 'Illustrative / demo data — not live regulatory records' disclaimer near the hero and the Incidents/Enforcement section. Fictional company names, fines, and case IDs are attributed to REAL agencies (see factual_risks), which is misleading without a label."
+        ],
+        "factual_risks": [
+          "'47 regulatory partnerships / 47 regulatory bodies across 32 countries' (lines 307, 533, 1137, FAQ line 353) is an uncited, unverifiable fabricated figure presented as fact and repeated four times. CSOAI has no published register of 47 signed regulatory MOUs. Correct action: remove the specific count or replace with a sourced, verifiable number; do not assert bilateral data-sharing agreements that don't exist.",
+          "'Founding Member' of the 'Network of AI Safety Institutes' with '12 institutes' (lines 334-338) is an overclaim. The real body is the International Network of AI Safety Institutes, launched Nov 2024 with ~9-10 members (US, UK, Japan, Singapore, Canada, EU, France, Kenya, Australia; South Korea joined). CSOAI is not among the founders. Correct: drop the 'Founding Member' status and the '12 institutes' figure, or reclassify as aspirational.",
+          "Byzantine supermajority stated as '22/33' (line 293) is mathematically wrong for a Byzantine-fault-tolerant threshold and contradicts the page's own council votes ('Approved 31-2', '31-1', lines 434,441) and CSOAI's own canon (23/33). 22/33 = exactly 66.67%, which is NOT a strict Byzantine supermajority (BFT needs > 2/3, i.e. ≥ 23 of 33). Correct: 23/33.",
+          "'99.97% decision accuracy' (line 295) and '< 30 second alert latency' (line 301) are uncited precision-implying metrics with no methodology or benchmark. Remove or cite a measurement source; a governance page should not publish accuracy claims it cannot substantiate.",
+          "Fictional investigations/enforcement are attributed to REAL government agencies — 'CFPB AI Unit', 'EEOC Investigation', 'FDA AI/ML Division', 'EU DPA Task Force' (lines 203,211,223,195) — alongside invented case IDs, company names and fines. Falsely implying named regulators are running specific cases is a material misrepresentation. Correct: use clearly fictitious placeholder bodies or add a prominent 'illustrative data' label.",
+          "Council of Europe treaty name is slightly wrong (line 328): 'Framework Convention on AI, Human Rights, Democracy and Rule of Law'. Correct full title: 'Framework Convention on Artificial Intelligence and Human Rights, Democracy and the Rule of Law' (opened for signature 5 Sept 2024). The '46 member states' figure (line 331) is correct.",
+          "'TC260 AI Safety' framed as a compliance framework with '48 requirements' (lines 120-124) is imprecise/uncited. TC260 is China's National Information Security Standardization Technical Committee; the relevant artifact is its 'AI Safety Governance Framework' (v1.0 Sept 2024, v2.0 2025) — a guidance document, not a 48-article rulebook. Verify or remove the '48 requirements' count.",
+          "'NIST AI RMF' labelled as having 72 'Requirements' (lines 92-94, badge line 675). NIST AI RMF 1.0 is explicitly VOLUNTARY and is structured as 4 functions with ~72 subcategories, not mandatory 'requirements'. Relabel as 'subcategories' or 'controls', not 'requirements', to avoid overstating its legal force. (EU AI Act's '113' articles, by contrast, IS correct — Regulation (EU) 2024/1689 has 113 articles.)"
+        ],
+        "visual_spec": "Add a branded, coded SVG 'EU AI Act Risk-Classification Pyramid' that finally renders the orphaned `riskCategories` data (lines 377-382) — currently defined and shown nowhere. Build a 4-tier pyramid in pure SVG/CSS, widest at bottom: Unacceptable (3, red #dc2626, 'Prohibited') → High-Risk (156, orange #f97316, 'Requires assessment') → Limited Risk (423, amber #f59e0b, 'Transparency required') → Minimal Risk (665, emerald #10b981, 'Voluntary codes'). Each tier is a trapezoid with the count and label inline; tier width proportional to count (log or capped so the top tier stays visible). Use the brand emerald→teal gradient for the surrounding card border and slate-900 (#0f172a) text on a white panel; on the dark emerald sections invert to white text. Include a small caption 'Classification per EU AI Act (Regulation (EU) 2024/1689)' and a footnote 'Illustrative distribution across monitored systems.' No photos, no icons-as-data — geometry encodes the counts. This replaces four dead lines of data with the single most legible governance visual on the page.",
+        "impact": "high"
+      },
+      {
+        "page": "/Users/nicholas/councilof-ai-wt/client/src/pages/IndustrySolutions.tsx (Industry Solutions hub, route wired via client/ Vite app)",
+        "factual_risks": [
+          "FINANCIAL, line 46: 'Basel III AI Requirements' does not exist. Basel III is the Basel Committee's bank capital-adequacy/liquidity accord and contains NO AI-specific requirements. CORRECT: the relevant model-governance references are the Basel Committee's model-risk principles and the PRA's SS1/23 'Model risk management principles for banks' (effective 17 May 2024) — replace 'Basel III AI Requirements' with 'PRA SS1/23 Model Risk Management' or drop it.",
+          "DEFENSE, line 333: '40-nation NATO-grade governance' overstates NATO's size. CORRECT: NATO has 32 member states (Sweden joined 7 March 2024 as the 32nd). Change to '32-nation NATO-grade governance' or 'NATO-aligned governance' to avoid an easily-checked false number.",
+          "EDUCATION, line 199: 'FERPA (Family Education Privacy Act)' is the wrong statute name. CORRECT: FERPA = 'Family Educational Rights and Privacy Act' (20 U.S.C. § 1232g). Fix the expansion.",
+          "FINANCIAL, line 48: 'PRA/FCA Guidance on ML in Banking' implies a single binding joint guidance that does not exist under that name. CORRECT: the actual UK artefacts are the Bank of England/PRA & FCA joint Discussion Paper DP5/22 'Artificial Intelligence and Machine Learning' (Oct 2022) and the AI Public-Private Forum final report (Feb 2022) — both non-binding. Reframe as 'BoE/PRA & FCA DP5/22 (AI/ML)'.",
+          "GOVERNMENT, line 124: 'Executive Orders on AI' is stale as a current driver — the flagship Biden EO 14110 (Oct 2023) was rescinded on 20 Jan 2025 by EO 14148, and replaced by EO 14179 (23 Jan 2025). Either name the current EO 14179 or generalise to 'Federal AI policy / OMB memoranda' rather than implying EO 14110 still governs.",
+          "FOOTER + cards: uncited quantitative claims — '8+' Industries (exactly 8 are listed, so '8+' is unsupported), '40+' Regulatory Frameworks, '200+' Expert Network (lines 585-588), '33-Agent Council' (line 181), and 'DSRB pipeline' (line 334). None carry a source or definition. Either cite/define each or soften; note '200+' also conflicts with other CSOAI surfaces citing a 2,363-profile SME base."
+        ],
+        "proof_fixes": [
+          "Line 391 `className={`text-${industry.color}-600`}` is a dynamically-constructed Tailwind class. Tailwind's JIT compiler only emits classes it finds as complete literal strings, so text-blue-600/text-red-600/text-purple-600/text-emerald-600/text-amber-600/text-orange-600/text-slate-600/text-indigo-600 will NOT be generated and every card icon renders with no color. Fix: replace the `color` string with a full literal class per industry (e.g. iconClass: 'text-blue-600') or add a safelist in tailwind.config. Verify in-browser, not by reading source.",
+          "All eight card CTAs are inert: 'Explore Tools' (line 483) and 'Assessment' (line 487) have no onClick/href, and the page-level 'Start Free Training' (line 565) and 'Request Industry Assessment' (line 569) buttons also do nothing. Wire to real routes (/certification, /readiness-assessment) or remove.",
+          "Footer stat 'Industries Covered: 8+' (line 585) is contradicted by the array — exactly 8 industries render. Use '8' (drop the '+') so the number matches what a visitor can count on the page.",
+          "Brand mismatch: the primary CTA gradient and buttons are purple (from-purple-600 to-purple-700, lines 468/474/483/553/565/591), not the CSOAI emerald #10b981 / teal #2dd4bf / slate-900 palette. Retune the CSOAI-solution accent, CTA band, and footer stat numerals to emerald/teal so the hub reads on-brand; the slate-900 hero is already correct.",
+          "Icon semantics: Financial Services uses the TrendingUp icon (line 40) while the 'Continuous Monitoring' challenge (line 529) ALSO uses TrendingUp — reuse is fine, but Financial Services would read more clearly with Building2 or Scale (currently unused-ish), avoiding a growth-chart connotation on a compliance card."
+        ],
+        "visual_spec": "Add one branded, custom-coded SVG 'Regulatory Coverage Matrix' above the Common Challenges section — no photos. An 8-row (industries) x ~5-column (EU AI Act, NIST AI RMF, ISO 42001, sector-specific, privacy) grid of rounded cells rendered in inline SVG/CSS: filled emerald #10b981 where CSOAI maps a control, faded teal #2dd4bf for partial, slate-800 hairline outline for none, on a slate-900 panel. Column headers in slate-300 uppercase micro-labels; row labels reuse each industry's lucide icon at 16px in emerald. This turns the currently text-only regulation bullet-lists into a single scannable, honest 'which frameworks we actually cover per sector' artifact, is fully theme-aware, and replaces the purple accents with brand emerald/teal. Cells must reflect only frameworks genuinely named in the data — do not invent coverage. Optional emerald 1px animated stroke-draw on the outer frame for polish; keep it CSS-only.",
+        "impact": "high"
+      },
+      {
+        "page": "client/src/pages/WorldGlobe.tsx — \"The Sovereign Globe\" (flagship governance globe)",
+        "proof_fixes": [
+          "Line 35: Council of Europe AI Treaty is tagged region:\"EU\" — the Council of Europe is a separate 46-state body, not the EU. Change region to \"CoE\" (or \"Global\") so the legend/detail panel stops conflating them.",
+          "Line 78: HIVE_SLUG maps uk:\"uk-aisi\" (UK AI *Safety* Institute). It was renamed the UK AI *Security* Institute in Feb 2025 — update the slug/label if the hive page has moved, or it will 404.",
+          "Line 162: the Ontology toggle forces fw:true when turned ON but never restores prior state when turned OFF — toggling Ontology off silently leaves Frameworks pinned on. Capture/restore the prior fw value, or drop the coupling.",
+          "Lines 121/122: the Rogue-swarm demo's fallback string asserts \"Signed to Layer 0\" and appends a 24-char \"ledger\" hash, but that value is just crypto.subtle.digest('SHA-256', ...) of a timestamp string — a plain hash, NOT an Ed25519 signature. Relabel as \"demo digest\" / \"illustrative\" so it is not read as a real signed-ledger attestation (honesty-critical if shown to buyers).",
+          "Consistency: the page mixes ASCII hyphens ( - ) where em dashes are intended (e.g. line 91 title, line 155 eyebrow, lines 233/242 panels) while other strings use — ; normalise to — for the credible typographic look.",
+          "Line 254 copy says frameworks sit \"at the city where they are made\" — but the base globe renders no coastlines/continents, only a dot graticule, so a reader cannot tell Brussels from Beijing. This undercuts the core claim (see visual_spec)."
+        ],
+        "factual_risks": [
+          "Line 43 — \"Canada AIDA (C-27) — High-impact systems regime\" presented as a live regime. WRONG/STALE: Bill C-27 (containing AIDA) DIED on the Order Paper when Parliament was prorogued on 6 Jan 2025 and dissolved for the 2025 election; AIDA was never enacted. CORRECT: Canada currently has NO in-force AI statute — only the voluntary Code of Conduct on Generative AI and the Directive on Automated Decision-Making (federal use). Reword to \"proposed (lapsed with Bill C-27)\" or remove the \"regime\" claim.",
+          "Line 33 — \"EU AI Act — Transparency 2 Aug 2026; high-risk Dec 2027 (Omnibus)\" states the Dec-2027 high-risk date as settled. RISK: the statutory dates are Annex III high-risk = 2 Aug 2026 and Annex I (product-embedded) high-risk = 2 Aug 2027. The \"Dec 2027\" postponement comes from the Commission's Digital Omnibus, a PROPOSAL (tabled Nov 2025) that was not adopted as of the Jan-2026 cutoff. CORRECT: label it \"proposed delay (Digital Omnibus, not yet law)\" and keep 2 Aug 2026 / 2 Aug 2027 as the current legal dates. (The \"Transparency 2 Aug 2026\" part — Art 50 — is fine.)",
+          "Line 39 — \"FedRAMP / OSCAL — RFC-0024 machine-readable mandate, 30 Sep 2026\" is an uncited, highly specific claim. RISK: FedRAMP's RFC series exists under the 2025 FedRAMP 20x effort, but that a specific \"RFC-0024\" imposes a machine-readable-package MANDATE with a hard 30 Sep 2026 deadline is unverifiable from public FedRAMP materials and reads as fabricated precision. Either cite the exact RFC URL/date or soften to \"FedRAMP 20x is moving toward machine-readable (OSCAL) packages.\"",
+          "Line 35 — \"Council of Europe AI Treaty — First binding AI human-rights treaty.\" Defensible but tighten: it is the Council of Europe Framework Convention on AI, opened for signature 5 Sep 2024, described as the first legally binding *international* AI treaty. Add \"opened 2024, in force on ratification\" so it is not read as already fully binding on all signatories today.",
+          "Lines 56-64 — the Watchdog \"heat\" hubs carry hardcoded base counts (eu 51, cn 55, us-dc 47, in 43, us-sf 44…) that render as report-density blobs with no source; only localStorage user reports are added on top. RISK: presented as real watchdog activity but they are arbitrary seed numbers. Either drive from a cited dataset or label the layer \"illustrative density.\""
+        ],
+        "visual_spec": "\"Highest-impact upgrade: the globe currently renders only an ocean radial-gradient plus a sparse teal dot graticule — NO landmasses — so pins float on blank water and the flagship claim \\\"every framework lives where it is made\\\" is illegitimately hard to read. Add coastline/continent outlines as low-poly SVG polylines (a compact hand-simplified world outline, ~150-300 points) run through the SAME project(lat,lng,rot) orthographic function already in the file, drawing only segments where p.front is true and fading strokeOpacity by p.depth so the back of the globe recedes. Style continents with stroke #2dd4bf at 0.35 opacity and a faint emerald #10b981 landfill at 0.06 on the slate-950 backdrop — no raster, no photo, pure coded SVG that stays zero-dependency. Optional second pass: a soft day/night terminator as a single translucent great-circle arc (rgba(2,6,23,0.35)) recomputed from rot, reinforcing the \\\"living\\\" globe. This makes each framework pin legibly sit over its real country and turns the globe from an abstract dotted sphere into the credible flagship map the page promises.\"",
+        "impact": "high"
+      }
+    ],
+    "plan": "# Council-of-AI Compliance Pages — Consolidated Audit (12 pages)\n\n## A. Honesty-critical factual risks (ranked, wrong → right)\n\nThese are ranked by credibility damage: flatly-wrong regulatory dates and fabricated facts on a compliance-vendor site rank above overclaims and imprecision.\n\n**1. NIS2 transposition date — off by ~2 years** · `Nis2.tsx` (H1 line 30, comment line 5, FAQ line 15)\nWrong: \"transposition deadline October 2026\". Right: **17 October 2024** (Directive (EU) 2022/2555 Art. 41; measures apply from 18 Oct 2024). It is ~21 months past, not future. Fix all three copies.\n\n**2. NIS2 fabricated instrument** · `Nis2.tsx` (lines 5, 9, 15, 16, 18)\nWrong: \"Cooperation Group adopted common incident-reporting templates (26 May 2026)\". Right: **no such event exists.** The real citable instrument is **Commission Implementing Regulation (EU) 2024/2690 (17 Oct 2024)** defining \"significant incident\" thresholds. Remove the invented date or cite IR 2024/2690.\n\n**3. Crosswalk fabricated milestone** · `Crosswalk.tsx` (line 54)\nWrong: countdown \"Art. 50 AI-content marking (2 Dec 2026)\". Right: **no 2 Dec 2026 milestone exists** in the AI Act; Art. 50 transparency/marking applies **2 Aug 2026**. Remove — it duplicates the first countdown.\n\n**4. Crosswalk GPAI date — already in force** · `Crosswalk.tsx` (line 53)\nWrong: \"EU AI Act GPAI + Art. 50 transparency enforceable (2 Aug 2026)\". Right: **GPAI (Chapter V) obligations applied 2 Aug 2025** — live now. 2 Aug 2026 = high-risk (Annex III) + Art. 50 transparency. Drop \"GPAI\" from the 2026 pill.\n\n**5. EU AI Act adoption date wrong** · `EUAIActGuide.tsx` (lines 111–113, 431–432)\nWrong: \"European Parliament formally adopted the AI Act on July 12, 2024\". Right: **Parliament adopted 13 March 2024, Council 21 May 2024; published in the OJ (Reg. (EU) 2024/1689) 12 July 2024; in force 1 August 2024.** No vote occurred on 12 July. Relabel that node \"Published in the Official Journal\".\n\n**6. EU AI Act limited-risk deadline wrong** · `EUAIActGuide.tsx` (line 84)\nWrong: Limited Risk / Art. 50 transparency dated \"August 2, 2025\". Right: **Art. 50 transparency applies 2 August 2026.** Change the badge to 2 Aug 2026.\n\n**7. DORA / NIS2 fabricated \"~65% overlap\" stat** · `Dora.tsx` (lines 4, 17, 18, 30) and `Nis2.tsx` (lines 6, 17)\nWrong: \"overlaps NIS2/DORA by ~65%\". Right: **no ESA/Commission/ENISA source quantifies this.** Correct framing is qualitative lex specialis — under **NIS2 Art. 4 / DORA Recital 16**, DORA's ICT-risk and incident-reporting rules apply *in place of* the equivalent NIS2 obligations for financial entities. Drop the number everywhere.\n\n**8. DORA \"map once, avoid duplicated controls\" framing is inverted** · `Dora.tsx` (line 17)\nWrong: implies financial entities are double-regulated. Right: because DORA is lex specialis, in-scope firms are **largely not subject to NIS2's substantive ICT rules at all** — DORA replaces them. Reframe to \"DORA supersedes NIS2's ICT obligations for you\".\n\n**9. NIST GOVERN categories scrambled + supply-chain omitted** · `NISTAIRMFGuide.tsx` (lines 58–67, 96–98, 160–162)\nWrong: page omits **GOVERN 6 (third-party/supply-chain risk)** entirely; mislabels GV-4/5/6, MAP 4 as \"Risk Tolerance\", MANAGE 3 as \"Risk Monitoring\". Right (AI RMF 1.0): GOVERN 4 = safety-first culture, GOVERN 5 = stakeholder engagement, **GOVERN 6 = third-party/supply-chain policies**; MAP 4 = risks/benefits of all components incl. third-party; MANAGE 3 = third-party risks managed. Restore the supply-chain category.\n\n**10. NIST Cyber AI Profile presented as a finalized release** · `NISTAIRMFGuide.tsx` (lines 254, 421, 453, 779)\nWrong: \"New Release – December 2025\", \"provides explicit mappings\". Right: as of Jan 2026 it is an **NCCoE in-development effort — concept paper + open public comment, no final published profile.** Reword to \"draft Cyber AI Profile in development (concept paper 2025, public comment ongoing)\".\n\n**11. ISO/IEC 42001 Annex A mislabelled \"informative\"** · `ISO42001Guide.tsx` (lines 501, 673)\nWrong: \"4 Informative Annexes\". Right: **Annex A is NORMATIVE** (the audited control reference); only Annexes B–D are informative. Calling the certified control set \"informative\" is a material governance error. Also fix \"five domains\" → **9 control objectives (A.2–A.10), ~38 controls.**\n\n**12. HighRisk — Digital Omnibus proposal stated as settled law** · `HighRiskSystems.tsx` (line 24)\nWrong: \"High-risk obligations phase in through 2027 … under the Digital Omnibus\" as fact, and pairs \"Annex I by Aug 2027\" (the *original* date) with \"Annex III Dec 2027\" (a *proposed* date) both as Omnibus. Right: **Omnibus is an unadopted Commission proposal (19 Nov 2025).** Under law in force: **Annex III → 2 Aug 2026, Annex I → 2 Aug 2027.** If adopted, the proposal moves Annex III → Dec 2027 and **Annex I → Aug 2028.**\n\n**13. FedRAMP — \"RFC-0024 makes OSCAL mandatory\" / treated as binding law** · `Fedramp.tsx` (lines 7, 20, 29)\nWrong: OSCAL mandatory; RFC-0024 as enacted law; lumps \"FedRAMP Ready retires 28 Jul 2026\" + \"Certification Classes A–D\" under RFC-0024. Right: **RFC-0024 requires machine-readable *data* (OSCAL is one approved format among 5+-CSP-agreed formats); it is a Request for Comment/proposal, not law;** the Ready-retirement and Certification-Classes items belong to the **separate CR26 / RFC-0023** rulemaking. Dates (30 Sep 2026 / 30 Sep 2027 / 28 Jul 2026) are correct — only framing/attribution is wrong.\n\n**14. ISO 42001 uncited \"first\"-certification superlatives** · `ISO42001Guide.tsx` (lines 229–272)\nWrong: \"Microsoft — first major cloud provider certified\", \"KPMG — first Big Four\", named CBs/dates, zero citations. Right: contestable (AWS, Anthropic-via-Schellman among earliest). Cite each certificate/press release inline or **remove the section** — unsourced \"first\" claims about named firms are the single highest-risk block on the page.\n\n**15. HighRisk — Annex III area ≠ automatically high-risk** · `HighRiskSystems.tsx` (lines 36, 48–49)\nWrong: \"if your AI lands in one, the full regime applies\". Right: **Art. 6(3)** exempts systems doing a narrow procedural/preparatory task, improving prior human activity, or detecting patterns without replacing human assessment (and not profiling). Add \"unless it qualifies for an Art. 6(3) exemption\".\n\n**16. HighRisk — emotion recognition flatly high-risk** · `HighRiskSystems.tsx` (line 7)\nWrong: lists emotion recognition as high-risk biometrics. Right: emotion recognition **in workplace and education is PROHIBITED (Art. 5(1)(f))**; only outside those contexts is it high-risk. Qualify.\n\n**17. EU AI Act \"error-free\" data obligation overstated** · `EUAIActGuide.tsx` (line 207)\nWrong: \"Training data must be … error-free\". Right: **Art. 10(3)** requires \"relevant, sufficiently representative, and *to the best extent possible* free of errors and complete\". Reword.\n\n**18. Colorado AI Act effective date wrong** · `regulators.ts` (lines 74, 144)\nWrong: \"1 Jan 2027\" (×2). Right: **30 June 2026.** Drop the \"(amended from Feb 2026)\" framing implying a single slip to 2027.\n\n**19. NIST OECD role overstated** · `NISTAIRMFGuide.tsx` (line 313) — \"developed in consultation with OECD\" → **\"aligns with, and includes an official crosswalk to, the OECD AI Principles\"** (developed via the congressionally-directed National AI Initiative Act process).\n\n**20. Lower-priority overclaims to soften** — ISO 42001 \"NIST AI RMF maps directly to ISO 42001 structure\" → \"complementary, commonly cross-walked\" (`ISO42001Guide.tsx` line 1085); EU AI Act \"113 requirements\" → **\"113 Articles\"** (`EUAIActGuide.tsx` 278, 859); NIST \"Fair with Managed Bias\" → exact **\"Fair – with Harmful Bias Managed\"** (line 241); NIS2 \"personally liable\" → \"can be held accountable; exact liability set by national law\" (line 11); DORA \"active enforcement 2026\" → \"applicable since 17 Jan 2025\".\n\n---\n\n## B. Top 8 proof / clarity fixes\n\n1. **Off-brand palette (recurs on 3 pages — biggest visual credibility hit).** `EUAIActGuide.tsx` (hero/timeline/stats, blue-600→indigo-600 + purple), `NISTAIRMFGuide.tsx` (blue/purple/orange/red), `ISO42001Guide.tsx` (purple/indigo). Each contradicts the CSOAI emerald `#10b981` / teal `#2dd4bf` / slate-900 brand — only the \"How CSOAI Helps\" sections are on-brand, so the pages self-contradict. Recolor hero, timeline, and stat tiles to emerald→teal/slate on all three.\n\n2. **Broken slugify (latent bug).** `EUAIActGuide.tsx` lines 684/695: `req.category.toLowerCase().replace(' ', '-')` replaces only the *first* space — \"Accuracy & Robustness\" → `accuracy-& robustness`. Works only because the same broken transform is applied to both `TabsTrigger` and `TabsContent`. Replace with `.toLowerCase().replace(/[^a-z0-9]+/g,'-')`.\n\n3. **Dead imports / dead data.** `NISTAIRMFGuide.tsx`: `FileText`, `Zap`, `Heart` (lines 9/11/13) unused; `color:` field on every `coreFunctions` object (31/74/110/142) never read. `ISO42001Guide.tsx`: `Tabs/TabsContent/TabsList/TabsTrigger` (line 24) never rendered; `FileText` + `Scale` icons unused. Remove all.\n\n4. **Wrong license on the crawlable Dataset.** `Crosswalk.tsx` line 37 JSON-LD uses `opensource.org/licenses/MIT` (a software license) for a Dataset — answer engines cite this verbatim. Switch to **CC-BY-4.0** so the \"open/citable\" claim is coherent. Also normalise \"ISO 42001\" → \"ISO/IEC 42001\" and align the Dataset description to the corrected \"AI-governance and adjacent compliance frameworks\" wording.\n\n5. **Add source deep-links on the highest-traffic pages.** `EUAIActGuide.tsx` makes ~30 legal claims with only one external link (CELEX, line 382). Add EUR-Lex article anchors (Art. 5, 9–15, 50, 99) beside the requirement tabs and penalty cards. Same on `Crosswalk.tsx` matrix (whose ~30 verified citations are a genuine strength — keep them, link them).\n\n6. **Markup-leaky / broken typography.** `Fedramp.tsx` lines 22/23/42/43 render the HTML entity `-&gt;` as `->` in CTAs → use real `→`. Spaced ASCII hyphens used as em-dashes across `Fedramp.tsx` (18/20/29), `HighRiskSystems.tsx` (34/36 + FAQ JSON-LD 22–24), `Dora.tsx` — replace ` - ` with ` — `.\n\n7. **Derive counts/status from data, not hardcoded literals.** `Crosswalk.tsx` says \"13\" in title/hero/Dataset but \"13+\" in FAQ — derive from `FRAMEWORKS.length`; normalise to \"13\". `NISTAIRMFGuide.tsx` \"72+\" → exact \"72\" (GOVERN 19 + MAP 18 + MEASURE 21 + MANAGE 14). `EUAIActGuide.tsx` \"imminent\" badge (line 126) for a Feb-2025 ban and stale relative dates — drive timeline status from `Date.now()`.\n\n8. **Missing/broken page-level assets.** `ISO42001Guide.tsx` line 441 references `bg-[url('/grid.svg')]` — no `grid.svg` exists in `client/` (silent 404); add the file or drop the div. Also fix \"TUV\" → \"TÜV SÜD/Rheinland/NORD\" (line 269). `Dora.tsx` has a `document.title` but **no `<meta name=\"description\">`** — add one for an SEO/AEO compliance page.\n\n---\n\n## C. The 3 best branded-visual additions (each fixes a factual error inline + is citable)\n\n**1. EU AI Act staggered-enforcement timeline (SVG)** — for `Crosswalk.tsx` (replace the two free-floating countdown pills, lines 52–55) and `EUAIActGuide.tsx` (as the risk-pyramid + rail).\nHorizontal slate-900 rail, emerald→teal gradient nodes, left→right: **2 Feb 2025** Prohibited practices + AI literacy (dimmed/past) → **2 Aug 2025** GPAI obligations (dimmed/past) → **2 Aug 2026** High-risk (Annex III) + Art. 50 transparency (bright emerald, pulsing ring = live target) → **2 Aug 2027** Annex I product-safety high-risk + legacy GPAI (outlined/future). A teal \"You are here\" marker positioned by `Date.now()` between nodes 2 and 3, driving the live day-counts from the existing `days()` helper. On `EUAIActGuide` add the 4-band risk pyramid above it (Unacceptable/High/Limited/Minimal with correct article + date on each band). This single asset corrects the GPAI/\"2 Dec 2026\" errors, shows the real staggered schedule, and is exactly the clean regulatory diagram answer engines screenshot. Inline SVG, CSS-variable colors, `prefers-color-scheme` aware, `viewBox` + `max-width:100%`, degrades to vertical stack on mobile. No photos.\n\n**2. NIST AI RMF lifecycle wheel (SVG)** — for `NISTAIRMFGuide.tsx` (replace the text-badge \"Function Relationships\" block, lines 675–696).\nAn emerald `#10b981` outer ring labelled **GOVERN** that visibly *encloses* three inner nodes **MAP → MEASURE → MANAGE**, joined by curved teal `#2dd4bf` clockwise arrows with a closing arrow MANAGE→MAP to show iteration. Four inward ticks on the GOVERN ring (\"informs all functions\") make it cross-cutting rather than \"step 0\" — the current left-to-right `ArrowRight` layout wrongly implies GOVERN is linear-first. Nodes as slate-900 chips with emerald/teal borders. This matches NIST's canonical diagram, fixes the linear-implication error, and pairs with restoring GOVERN 6. CSS variables + `@media (prefers-color-scheme)`, no photos.\n\n**3. Incident-reporting cascade clock (SVG)** — reusable on `Dora.tsx` (page claims \"strict timelines\" but shows none, line 9) and `Nis2.tsx` (the one visual it's missing).\nHorizontal 3–4 node track on the `#05140d` card background, emerald→teal gradient connectors, article badges styled like the existing Art. pills. **NIS2 (Art. 23):** 24h early warning → 72h incident notification → 1-month final report. **DORA (Art. 19 + the incident-reporting Delegated/Implementing Regulation):** initial notification ≤4h of major-classification (and ≤24h from detection) → intermediate ≤72h → final ≤1 month. A small pulse dot on node 1; caption \"From becoming aware of a significant incident\". This converts an unsubstantiated \"strict timelines\" phrase into a factual, source-backed, on-brand asset. CSS/SVG only, emerald/teal palette as variables, dark-native, `viewBox` + `max-width:100%`. Optional companion on both pages: a lex-specialis Venn showing DORA displacing the NIS2 ICT segment — the honest replacement for the deleted \"65%\" number.\n\nSource pages: all under `/Users/nicholas/councilof-ai-wt/client/src/pages/` (Colorado item lives in `/Users/nicholas/councilof-ai-wt/client/src/data/regulators.ts`)."
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Audit"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 2,
+      "title": "Synthesize"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "audit:Crosswalk.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "ac588db630833aa3b",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489086665,
+      "queuedAt": 1783489086650,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/Crosswalk.…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: The 26-framework crosswalk — the core product page\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/Crosswalk.tsx a…",
+      "lastProgressAt": 1783489197979,
+      "tokens": 60752,
+      "toolCalls": 2,
+      "durationMs": 111313,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/Crosswalk.tsx\",\"factual_risks\":[\"LINE 53 — WRONG DATE ATTRIBUTION. The amber countdown reads 'EU AI Act GPAI + Art. 50 transparency enforceable (2 Aug 2026)'. GPAI (general-purpose AI model) obligations under Chapter V became applicable on 2 AUGUST 2025, not 2026 — they are already in force. What actually starts on 2 August 2026 is the Act'…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "audit:EUAIActGuide.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a1bba7ceeb58f0065",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489086667,
+      "queuedAt": 1783489086650,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/EUAIActGui…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: EU AI Act guide — highest-traffic regulation page\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/EUAIActGuide.tsx…",
+      "lastProgressAt": 1783489191526,
+      "tokens": 74419,
+      "toolCalls": 2,
+      "durationMs": 104859,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/EUAIActGuide.tsx (EU AI Act guide, route /guides/eu-ai-act)\",\"proof_fixes\":[\"OFF-BRAND PALETTE (biggest visual issue): the hero gradient, badges, timeline rail, and 3 of 4 stat numbers use blue-600 -> indigo-600 and a purple-600 accent (lines 345, 354-357, 361, 370, 397, 405, 445-460, 581, 609, 613, 699). This contradicts the CSOAI emerald …"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "audit:NISTAIRMFGuide.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a57206cb7eeab425b",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489086667,
+      "queuedAt": 1783489086650,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "NIST AI RMF Guide (US) — /Users/nicholas/councilof-ai-wt/cl…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: NIST AI RMF guide (US)\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/NISTAIRMFGuide.tsx and return proof_fixes, …",
+      "lastProgressAt": 1783489196978,
+      "tokens": 76134,
+      "toolCalls": 2,
+      "durationMs": 110311,
+      "resultPreview": "{\"page\":\"NIST AI RMF Guide (US) — /Users/nicholas/councilof-ai-wt/client/src/pages/NISTAIRMFGuide.tsx\",\"proof_fixes\":[\"Dead imports: `FileText`, `Zap`, and `Heart` are imported (lines 9,11,13) but never used in JSX. Remove them from the lucide-react import to clean the bundle.\",\"Dead data field: every object in `coreFunctions` has a `color:` string ('blue'/'purple'/'green'/'orange', lines 31/74/11…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "audit:ISO42001Guide.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a4b1ba1770806a511",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489086667,
+      "queuedAt": 1783489086650,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "ISO42001Guide.tsx (ISO/IEC 42001 guide)",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: ISO 42001 guide\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/ISO42001Guide.tsx and return proof_fixes, factual_…",
+      "lastProgressAt": 1783489203926,
+      "tokens": 81723,
+      "toolCalls": 4,
+      "durationMs": 117259,
+      "resultPreview": "{\"page\":\"ISO42001Guide.tsx (ISO/IEC 42001 guide)\",\"proof_fixes\":[\"Dead imports — remove: `Tabs, TabsContent, TabsList, TabsTrigger` (imported line 24, never rendered) and the `FileText` + `Scale` lucide icons (lines 11-12, never used). Verified via grep: each appears only on its import line.\",\"Line 441: background references `bg-[url('/grid.svg')]` but no grid.svg exists anywhere in client/ (confi…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "audit:Dora.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a1d2e0ccf50907dfd",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489086668,
+      "queuedAt": 1783489086650,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/Dora.tsx (…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: DORA (financial resilience)\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/Dora.tsx and return proof_fixes, factu…",
+      "lastProgressAt": 1783489156357,
+      "tokens": 58152,
+      "toolCalls": 2,
+      "durationMs": 69689,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/Dora.tsx (route /dora — DORA financial-services vertical)\",\"proof_fixes\":[\"Line 30 & 17 & 18: the '~65% overlap with NIS2' figure appears 4 times across hero, FAQ, and comment (lines 4, 17, 18, 30). Because it is unsourced (see factual_risks), fix it in ONE place and reuse — do not leave the precise number scattered as if independently corr…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 6,
+      "label": "audit:Nis2.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a8e760381becbdf21",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489086668,
+      "queuedAt": 1783489086651,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/Nis2.tsx (…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: NIS2 (critical infrastructure)\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/Nis2.tsx and return proof_fixes, fa…",
+      "lastProgressAt": 1783489150283,
+      "tokens": 58092,
+      "toolCalls": 2,
+      "durationMs": 63615,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/Nis2.tsx (route /nis2 — NIS2 critical-infrastructure page)\",\"proof_fixes\":[\"Line 30 H1 subtext + line 5 comment + line 15 FAQ all repeat the same wrong deadline ('October 2026' / 'Transposition lands October 2026'). Fix the wording everywhere to the real deadline once the factual correction is made (see factual_risks) — e.g. line 30: 'The t…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 7,
+      "label": "audit:Fedramp.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a95cd7bf3ec16c630",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489086669,
+      "queuedAt": 1783489086651,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/Fedramp.tsx",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: FedRAMP (US gov)\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/Fedramp.tsx and return proof_fixes, factual_risks…",
+      "lastProgressAt": 1783489201452,
+      "tokens": 63701,
+      "toolCalls": 6,
+      "durationMs": 114783,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/Fedramp.tsx\",\"proof_fixes\":[\"Lines 22, 23, 42, 43: CTA labels use the HTML entity '-&gt;' which renders as a hyphen-arrow '->'. Replace with a real arrow character '→' (e.g. 'Open OSCAL Studio →') for a cleaner, less markup-leaky look.\",\"Lines 18, 20, 29: spaced hyphens are used where em/en dashes are intended ('CSOAI - fedramp readiness', …"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 8,
+      "label": "audit:HighRiskSystems.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a15c7ac68b1abdebf",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489086669,
+      "queuedAt": 1783489086651,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/HighRiskSy…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: High-risk AI systems (EU AI Act Annex III)\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/HighRiskSystems.tsx and…",
+      "lastProgressAt": 1783489161457,
+      "tokens": 58114,
+      "toolCalls": 2,
+      "durationMs": 74788,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/HighRiskSystems.tsx\",\"proof_fixes\":[\"Line 34 & 36: mixed dash styles — 'CSOAI - Annex III' and 'categories - if your AI' use a spaced ASCII hyphen where an em-dash is intended. Replace ' - ' with ' — ' (U+2014) for typographic consistency with the rest of the site.\",\"Lines 22-24: the FAQ JSON-LD answer text repeats the same ' - ' spaced-hyp…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 9,
+      "label": "audit:RegulatorAtlas.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a06145ddb337613ca",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489150285,
+      "queuedAt": 1783489086651,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/RegulatorA…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: Global regulator atlas\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/RegulatorAtlas.tsx and return proof_fixes, …",
+      "lastProgressAt": 1783489246739,
+      "tokens": 68539,
+      "toolCalls": 3,
+      "durationMs": 96454,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/RegulatorAtlas.tsx (content from client/src/data/regulators.ts)\",\"proof_fixes\":[\"regulators.ts line 74 & 144 — the Colorado AI Act effective date is stated twice ('1 Jan 2027'). Both instances are wrong (see factual_risks); change to '30 Jun 2026' and drop the '(amended from Feb 2026)' framing that implies a single 2027 slip.\",\"RegulatorAtl…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 10,
+      "label": "audit:GovernmentDashboard.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a1c718c3e33597fa5",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489156357,
+      "queuedAt": 1783489086652,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Government Dashboard — /Users/nicholas/councilof-ai-wt/clie…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: Government dashboard\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/GovernmentDashboard.tsx and return proof_fixe…",
+      "lastProgressAt": 1783489250111,
+      "tokens": 77180,
+      "toolCalls": 2,
+      "durationMs": 93753,
+      "resultPreview": "{\"page\":\"Government Dashboard — /Users/nicholas/councilof-ai-wt/client/src/pages/GovernmentDashboard.tsx\",\"proof_fixes\":[\"DEAD DATA rendered nowhere: `riskCategories` (line 377) and `recentAlerts` (line 384) are fully defined but never referenced in the JSX return. Either render them (riskCategories is the perfect data source for the visual below) or delete both arrays.\",\"10 unused icon imports (d…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 11,
+      "label": "audit:IndustrySolutions.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a0c601100fd86b477",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489161458,
+      "queuedAt": 1783489086652,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "/Users/nicholas/councilof-ai-wt/client/src/pages/IndustrySo…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: Industry solutions hub\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/IndustrySolutions.tsx and return proof_fixe…",
+      "lastProgressAt": 1783489225815,
+      "tokens": 65587,
+      "toolCalls": 2,
+      "durationMs": 64357,
+      "resultPreview": "{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/IndustrySolutions.tsx (Industry Solutions hub, route wired via client/ Vite app)\",\"factual_risks\":[\"FINANCIAL, line 46: 'Basel III AI Requirements' does not exist. Basel III is the Basel Committee's bank capital-adequacy/liquidity accord and contains NO AI-specific requirements. CORRECT: the relevant model-governance references are the Base…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 12,
+      "label": "audit:WorldGlobe.tsx",
+      "phaseIndex": 1,
+      "phaseTitle": "Audit",
+      "agentId": "a0c4cdc54d1e10169",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489191527,
+      "queuedAt": 1783489086652,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "client/src/pages/WorldGlobe.tsx — \"The Sovereign Globe\" (fl…",
+      "promptPreview": "Senior AI-governance fact-checker + brand designer auditing a CSOAI page. Brand: emerald #10b981/teal #2dd4bf/slate-900, credible, no hype. HONESTY RULE: flag every uncited stat, wrong law name/date, or overclaim; propose only custom coded SVG/CSS visuals (no photos).\nPage role: The governance globe — the flagship visual\nRead /Users/nicholas/councilof-ai-wt/client/src/pages/WorldGlobe.tsx and retu…",
+      "lastProgressAt": 1783489302909,
+      "tokens": 71131,
+      "toolCalls": 4,
+      "durationMs": 111382,
+      "resultPreview": "{\"page\":\"client/src/pages/WorldGlobe.tsx — \\\"The Sovereign Globe\\\" (flagship governance globe)\",\"proof_fixes\":[\"Line 35: Council of Europe AI Treaty is tagged region:\\\"EU\\\" — the Council of Europe is a separate 46-state body, not the EU. Change region to \\\"CoE\\\" (or \\\"Global\\\") so the legend/detail panel stops conflating them.\",\"Line 78: HIVE_SLUG maps uk:\\\"uk-aisi\\\" (UK AI *Safety* Institute). It…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 13,
+      "label": "synthesize",
+      "phaseIndex": 2,
+      "phaseTitle": "Synthesize",
+      "agentId": "ab19a5b2072fc7e2d",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1783489302912,
+      "queuedAt": 1783489302910,
+      "attempt": 1,
+      "promptPreview": "Consolidate these 12 page audits (JSON):\n[{\"page\":\"/Users/nicholas/councilof-ai-wt/client/src/pages/Crosswalk.tsx\",\"factual_risks\":[\"LINE 53 — WRONG DATE ATTRIBUTION. The amber countdown reads 'EU AI Act GPAI + Art. 50 transparency enforceable (2 Aug 2026)'. GPAI (general-purpose AI model) obligations under Chapter V became applicable on 2 AUGUST 2025, not 2026 — they are already in force. What ac…",
+      "lastProgressAt": 1783489418953,
+      "tokens": 65622,
+      "toolCalls": 0,
+      "durationMs": 116041,
+      "resultPreview": "# Council-of-AI Compliance Pages — Consolidated Audit (12 pages)\n\n## A. Honesty-critical factual risks (ranked, wrong → right)\n\nThese are ranked by credibility damage: flatly-wrong regulatory dates and fabricated facts on a compliance-vendor site rank above overclaims and imprecision.\n\n**1. NIS2 transposition date — off by ~2 years** · `Nis2.tsx` (H1 line 30, comment line 5, FAQ line 15)\nWrong: \"t…"
+    }
+  ],
+  "totalTokens": 879146,
+  "totalToolCalls": 33
+}

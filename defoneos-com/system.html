@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="seal.svg">
+<title>DEFONEOS — The Sovereign System</title>
+<meta name="description" content="The sovereign AI-OS. Hives orbit the Sovereign; worlds rotate around it. Click the DEFONEOS dome to enter live operations.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c9a84c; --gold2:#e7cf8e; --ink:#eef1fb; --dim:#8a93b2; --line:rgba(201,168,76,.16);
+    --defoneos:#c9a84c; --meok:#c9b8e8; --csoai:#06b6d4; }
+  *{ margin:0; box-sizing:border-box; }
+  html,body{ height:100%; overflow:hidden; background:#05060d; color:var(--ink); font-family:"Inter",system-ui,sans-serif; }
+  body{ background:
+    radial-gradient(1200px 800px at 50% 50%, rgba(201,168,76,.06), transparent 60%),
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1px 1px at 70% 20%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1.5px 1.5px at 40% 70%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1px 1px at 85% 65%, rgba(255,255,255,.35), transparent),
+    radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,.35), transparent),
+    radial-gradient(1.5px 1.5px at 60% 85%, rgba(255,255,255,.3), transparent),
+    #05060d; }
+  .top{ position:fixed; top:0; left:0; right:0; height:52px; z-index:20; display:flex; align-items:center; gap:14px; padding:0 18px; }
+  .brand{ font-weight:600; letter-spacing:1px; color:var(--gold); }
+  .brand small{ color:var(--dim); font-weight:400; }
+  .spacer{ flex:1; }
+  .tabs{ display:flex; gap:4px; background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:999px; padding:3px; }
+  .tab{ font-size:12px; padding:6px 16px; border-radius:999px; cursor:pointer; color:var(--dim); font-weight:600; transition:.15s; }
+  .tab.on{ background:var(--gold); color:#1d1505; }
+  a.home{ color:var(--dim); text-decoration:none; font-size:12px; }
+
+  .stage{ position:fixed; inset:0; display:grid; place-items:center; }
+  .system{ position:relative; width:760px; height:760px; max-width:96vw; max-height:96vh; }
+  @media(max-width:780px){ .system{ transform:scale(.62); } }
+
+  .ow{ position:absolute; top:50%; left:50%; border:1px dashed var(--line); border-radius:50%; transform:translate(-50%,-50%);
+    width:var(--d); height:var(--d); margin-left:calc(var(--d) / -2); margin-top:calc(var(--d) / -2);
+    animation:spin var(--dur) linear infinite; }
+  .ow.rev{ animation-direction:reverse; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .pl{ position:absolute; top:0; left:50%; transform:translate(-50%,-50%); animation:spin var(--dur) linear infinite reverse; text-decoration:none; }
+  .ow.rev .pl{ animation-direction:normal; }
+
+  .body{ display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; transition:transform .2s; }
+  .body:hover{ transform:scale(1.14); }
+  .orb{ border-radius:50%; display:grid; place-items:center; box-shadow:0 0 18px -2px currentColor, inset -4px -6px 14px rgba(0,0,0,.4), inset 3px 4px 10px rgba(255,255,255,.25); }
+  .world .orb{ width:62px; height:62px; font-size:26px; }
+  .hive .orb{ width:38px; height:38px; font-size:17px; }
+  .lab{ font-size:11px; color:var(--ink); font-weight:600; white-space:nowrap; }
+  .world .lab{ font-size:12.5px; }
+  .sub{ font-size:9.5px; color:var(--dim); white-space:nowrap; }
+
+  .core{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:5; text-align:center; }
+  .sun{ width:130px; height:130px; border-radius:50%; display:grid; place-items:center; font-size:54px; margin:0 auto;
+    background:radial-gradient(circle at 42% 38%, #fff6df, #e7cf8e 40%, #c9a84c 70%, #8a6f23);
+    box-shadow:0 0 60px rgba(201,168,76,.55), 0 0 120px rgba(201,168,76,.25); animation:pulse 4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ box-shadow:0 0 60px rgba(201,168,76,.5),0 0 120px rgba(201,168,76,.22) } 50%{ box-shadow:0 0 80px rgba(201,168,76,.7),0 0 150px rgba(201,168,76,.34) } }
+  .core .t{ margin-top:12px; font-weight:600; letter-spacing:2px; }
+  .core .s{ font-size:11px; color:var(--dim); }
+
+  .hint{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:20; color:var(--dim); font-size:12px; text-align:center; }
+  .hint b{ color:var(--gold); }
+  .tip{ position:fixed; z-index:30; pointer-events:none; background:rgba(9,13,26,.92); border:1px solid var(--line); border-radius:10px; padding:8px 12px; font-size:12px; display:none; max-width:240px; }
+  .tip .n{ color:var(--gold); font-weight:600; }
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="brand">DEFONEOS <small>· the sovereign system</small></span>
+  <span class="spacer"></span>
+  <div class="tabs" id="tabs"><span class="tab on" data-m="real" onclick="setMode('real')">REAL OPS</span><span class="tab" data-m="sim" onclick="setMode('sim')">SIM</span></div>
+  <span style="font-size:11px;color:var(--dim)">Powered by <b style="color:var(--gold)">SOV3³</b></span>
+  <a class="home" href="cop.html">dome ▸</a>
+</div>
+
+<div class="stage">
+  <div class="system" id="system">
+    <div class="core">
+      <div class="sun" title="The Sovereign · DEFONEOS the one">🐉</div>
+      <div class="t">THE SOVEREIGN</div>
+      <div class="s" id="modeLabel">real operations</div>
+    </div>
+  </div>
+</div>
+
+<div class="hint">Click <b>DEFONEOS</b> to enter the live dome · hives orbit the sovereign · <b id="modeHint">REAL</b> mode</div>
+<div class="tip" id="tip"></div>
+
+<script>
+const WORLDS=[
+ {n:'DEFONEOS',i:'🐉',c:'var(--defoneos)',href:'cop.html',d:'the dome · live operations'},
+ {n:'MEOK',i:'🥚',c:'var(--meok)',href:'index.html',d:'the OS · character world'},
+ {n:'CSOAI',i:'⚖️',c:'var(--csoai)',href:'https://csoai.org',d:'governance · certify'}
+];
+const HIVES=[
+ {n:'Council',i:'⚖️',d:'33-agent BFT',lk:'cop.html#cmd=compare%20doctrines'},{n:'Bridges',i:'🔌',d:'legacy · COBOL/FIX/HL7',lk:'cop.html#mcps'},{n:'Labs',i:'🤖',d:'robotics R&D',lk:'cop.html#sim'},
+ {n:'SIGIL',i:'🔏',d:'Ed25519 audit chain',lk:'verify.html'},{n:'Brains',i:'🧠',d:'OOWM sandwich',lk:'cop.html#brains'},{n:'Twin',i:'🌐',d:'3D digital twin',lk:'cop.html#sim'},
+ {n:'Threat',i:'🎯',d:'ISR · governed',lk:'cop.html#threat'},{n:'Sensors',i:'📡',d:'C2 fabric',lk:'cop.html#sensors'},{n:'Pilots',i:'🚀',d:'£5K/£25K',lk:'mailto:nicholas@meok.ai?subject=DEFONEOS%20pilot'},
+ {n:'Compliance',i:'📜',d:'designed to align',lk:'cop.html#reg'},{n:'EOD',i:'💣',d:'human-in-loop',lk:'cop.html#cmd=run%20eod-clearance'},{n:'Cyber',i:'🦾',d:'ATLAS',lk:'cop.html#cyber'}
+];
+let MODE='real';
+const sys=document.getElementById('system');
+function orbiter(d,dur,delay,cls,inner){ return '<div class="ow'+(cls||'')+'" style="--d:'+d+'px;--dur:'+dur+'s;animation-delay:'+delay+'s"><a class="pl" style="--dur:'+dur+'s;animation-delay:'+delay+'s" '+inner+'</a></div>'; }
+function build(){
+  let html='';
+  // worlds — inner ring
+  WORLDS.forEach(function(w,i){ const delay=-(90/WORLDS.length)*i;
+    html+=orbiter(340,90,delay,'', 'href="'+w.href+'" '+(w.href.startsWith('http')?'target="_blank" rel="noopener"':'')+' data-n="'+w.n+'" data-d="'+w.d+'"><span class="body world"><span class="orb" style="color:'+w.c+';background:radial-gradient(circle at 40% 35%, #fff8, '+w.c+')">'+w.i+'</span><span class="lab">'+w.n+'</span><span class="sub">'+w.d+'</span></span>'); });
+  // hives — two outer rings
+  HIVES.forEach(function(h,i){ const ring=i<6?0:1; const idx=i%6; const d=ring===0?520:690; const dur=ring===0?120:160; const delay=-(dur/6)*idx - (ring*7);
+    html+=orbiter(d,dur,delay,'', 'href="'+(h.lk||'cop.html')+'" data-n="'+h.n+'" data-d="'+h.d+'"><span class="body hive"><span class="orb" style="color:#9aa3c4;background:radial-gradient(circle at 40% 35%,#fff6,#3a4570)">'+h.i+'</span><span class="lab" style="font-size:10px;color:#aab4d6">'+h.n+'</span></span>'); });
+  sys.insertAdjacentHTML('beforeend', html);
+  // tooltips
+  const tip=document.getElementById('tip');
+  sys.querySelectorAll('.pl').forEach(function(a){
+    a.addEventListener('mousemove',function(e){ tip.style.display='block'; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+14)+'px'; tip.innerHTML='<span class="n">'+a.dataset.n+'</span><br>'+a.dataset.d+(MODE==='sim'&&a.dataset.n==='DEFONEOS'?' · <b>SIM</b>':''); });
+    a.addEventListener('mouseleave',function(){ tip.style.display='none'; });
+  });
+}
+function setMode(m){ MODE=m; document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on',t.dataset.m===m); });
+  document.getElementById('modeLabel').textContent = m==='sim'?'simulation arena':'real operations';
+  document.getElementById('modeHint').textContent = m.toUpperCase();
+  // DEFONEOS world routes to live dome (real) or the SOV SPACE sim
+  const def=[...sys.querySelectorAll('.pl')].find(function(a){return a.dataset.n==='DEFONEOS';});
+  if(def) def.setAttribute('href', m==='sim' ? 'cop.html#sim' : 'cop.html');
+}
+build();
+</script>
+</body>
+</html>

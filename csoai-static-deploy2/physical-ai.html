@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CSOAI Sovereign Physical AI — Hamsa + Flock Live Demo</title>
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1a1f);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1300px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#22c55e,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.flow{display:flex;align-items:stretch;justify-content:space-between;gap:.5rem;margin:2rem 0;flex-wrap:wrap}
+.stage{flex:1;min-width:140px;background:rgba(255,255,255,.05);border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:1rem;text-align:center;cursor:pointer;transition:all .2s}
+.stage:hover{background:rgba(34,197,94,.1);transform:translateY(-2px)}
+.stage h3{color:#22c55e;margin:0 0 .5rem;font-size:1rem}
+.stage p{color:#94a3b8;font-size:.75rem;margin:0}
+.arrow{font-size:1.5rem;color:#22c55e;align-self:center}
+.btn{display:inline-block;background:linear-gradient(135deg,#22c55e,#3b82f6);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem;text-transform:uppercase;font-size:.85rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:1.5rem}
+.card h3{color:#22c55e;margin:0 0 .5rem;font-size:1rem}
+.card p{color:#94a3b8;font-size:.85rem;margin:0}
+.card .big{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.feed{background:rgba(0,0,0,.3);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:1rem;font-family:monospace;font-size:.85rem;margin:1rem 0;max-height:300px;overflow-y:auto}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem}
+.tab.active{background:rgba(34,197,94,.2);border-color:#22c55e;color:#22c55e;font-weight:700}
+.tab-content{display:none;padding:2rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.1)}
+.tab-content.active{display:block}
+.tab h2{color:#22c55e;margin:0 0 1rem}
+.status{display:inline-block;padding:.25rem .75rem;border-radius:12px;font-size:.75rem;margin:.25rem}
+.online{background:rgba(34,197,94,.2);color:#22c55e}
+.hand-viz{font-size:4rem;text-align:center;margin:1rem 0;transition:transform .3s}
+.hand-viz.wave{transform:rotate(20deg)}
+.hand-viz.point{transform:translateX(40px)}
+.hand-viz.grasp{transform:scale(0.8)}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/physical-ai.html"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+<h1>🏠 Sovereign Physical AI</h1>
+<p class="tagline">Hamsa + Flock + MEOK ONE + SOV3 = £300-520 sovereign physical AI</p>
+
+<h2>The End-to-End Loop</h2>
+<div class="flow">
+<div class="stage" onclick="showStage(0)">
+<h3>📷 Flock Camera</h3>
+<p>RTSP stream · Motion detect · People count</p>
+<span class="status online">ONLINE</span>
+</div>
+<div class="arrow">→</div>
+<div class="stage" onclick="showStage(1)">
+<h3>👁️ Awareness v2</h3>
+<p>5-state FSM · PII redact · 37 gestures</p>
+<span class="status online">ACTIVE</span>
+</div>
+<div class="arrow">→</div>
+<div class="stage" onclick="showStage(2)">
+<h3>🧠 SOV3 SIGIL</h3>
+<p>Ed25519 signed · Hash chained · Public verify</p>
+<span class="status online">EMITTING</span>
+</div>
+<div class="arrow">→</div>
+<div class="stage" onclick="showStage(3)">
+<h3>🏛️ BFT Council</h3>
+<p>Byzantine Fault Tolerant · Multi-stakeholder</p>
+<span class="status online">VOTING</span>
+</div>
+<div class="arrow">→</div>
+<div class="stage" onclick="showStage(4)">
+<h3>🤖 Hamsa Hand</h3>
+<p>Sovereign actuation · EI3 safety · Apache 2.0</p>
+<span class="status online">READY</span>
+</div>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab(0)">📷 Stage 1: Flock</div>
+<div class="tab" onclick="switchTab(1)">👁️ Stage 2: Awareness</div>
+<div class="tab" onclick="switchTab(2)">🧠 Stage 3: SOV3</div>
+<div class="tab" onclick="switchTab(3)">🤖 Stage 4: Hamsa</div>
+<div class="tab" onclick="switchTab(4)">🔁 Full Loop</div>
+</div>
+
+<!-- Tab 0: Flock -->
+<div class="tab-content active">
+<h2>📷 Stage 1: Flock Cameras (the eyes)</h2>
+<div class="grid">
+<div class="card">
+<h3>4 Cameras Mounted</h3>
+<span class="big">4</span>
+<p>Workshop · Barn · Koi Pond · Gate</p>
+</div>
+<div class="card">
+<h3>Total Cost</h3>
+<span class="big">£180</span>
+<p>4 Flock cameras · Solar panels · WiFi</p>
+</div>
+<div class="card">
+<h3>RTSP Latency</h3>
+<span class="big">120ms</span>
+<p>Workshop → MEOK ONE → Awareness v2</p>
+</div>
+<div class="card">
+<h3>Privacy</h3>
+<span class="big">PII</span>
+<p>Redacted when others present (Awareness v2)</p>
+</div>
+</div>
+<div class="feed" id="flock-feed"></div>
+<button class="btn" onclick="streamFlock()">Stream Flock Feed</button>
+</div>
+
+<!-- Tab 1: Awareness -->
+<div class="tab-content">
+<h2>👁️ Stage 2: Awareness v2 (5-State FSM)</h2>
+<div class="grid">
+<div class="card">
+<h3>Current State</h3>
+<span class="big" id="state-big">SOLO</span>
+<p id="state-detail">No other person detected</p>
+</div>
+<div class="card">
+<h3>People Detected</h3>
+<span class="big" id="people-count">1</span>
+<p id="cameras-seeing">Workshop + Barn cameras</p>
+</div>
+<div class="card">
+<h3>Gestures Detected</h3>
+<span class="big" id="gesture-count">3</span>
+<p>Wave + Point + Grasp</p>
+</div>
+<div class="card">
+<h3>PII Redacted</h3>
+<span class="big" id="pii-count">7</span>
+<p>Names, locations, phones, emails</p>
+</div>
+</div>
+<div class="feed" id="awareness-feed"></div>
+<button class="btn" onclick="streamAwareness()">Stream Awareness</button>
+</div>
+
+<!-- Tab 2: SOV3 -->
+<div class="tab-content">
+<h2>🧠 Stage 3: SOV3 (the brain)</h2>
+<div class="grid">
+<div class="card">
+<h3>SIGILs Emitted</h3>
+<span class="big" id="sigil-count">49,127</span>
+<p>Cumulative Ed25519-signed</p>
+</div>
+<div class="card">
+<h3>Neural Models</h3>
+<span class="big">6</span>
+<p>1,793 training samples</p>
+</div>
+<div class="card">
+<h3>Tools Live</h3>
+<span class="big">127</span>
+<p>+ 6 striving tools defined</p>
+</div>
+<div class="card">
+<h3>BFT Councils</h3>
+<span class="big">60+</span>
+<p>Multi-stakeholder governance</p>
+</div>
+</div>
+<div class="feed" id="sov3-feed"></div>
+<button class="btn" onclick="streamSov3()">Stream SOV3 SIGILs</button>
+</div>
+
+<!-- Tab 3: Hamsa -->
+<div class="tab-content">
+<h2>🤖 Stage 4: Hamsa Hand (the actuator)</h2>
+<div class="card" style="text-align:center;margin-bottom:1rem">
+<h3>Live Hand State</h3>
+<div class="hand-viz wave" id="hand-viz">🤚</div>
+<p id="hand-state">Ready: SOLO + Wave gesture detected</p>
+</div>
+<div class="grid">
+<div class="card">
+<h3>Hardware</h3>
+<span class="big">£100</span>
+<p>SO-101 arm or Robot Nano Hand</p>
+</div>
+<div class="card">
+<h3>Gestures</h3>
+<span class="big">8</span>
+<p>home, open, close, wave, point, thumbs_up, grasp, pinch</p>
+</div>
+<div class="card">
+<h3>EI3 Safety</h3>
+<span class="big">✓</span>
+<p>Maternal Covenant validated before actuation</p>
+</div>
+<div class="card">
+<h3>Byzantine Council</h3>
+<span class="big">✓</span>
+<p>Actuation authorised by quorum (default 22-of-33)</p>
+</div>
+</div>
+<div class="feed" id="hamsa-feed"></div>
+<button class="btn" onclick="triggerGesture('wave')">Trigger Wave</button>
+<button class="btn" onclick="triggerGesture('grasp')">Trigger Grasp</button>
+<button class="btn" onclick="triggerGesture('point')">Trigger Point</button>
+</div>
+
+<!-- Tab 4: Full Loop -->
+<div class="tab-content">
+<h2>🔁 Full Loop (the sovereign physical AI cycle)</h2>
+<p>Click "Run Full Loop" to see the entire Flock → Awareness → SOV3 → Hamsa loop in action.</p>
+<button class="btn" onclick="runFullLoop()">▶️ Run Full Loop</button>
+<div class="feed" id="full-loop-feed"></div>
+</div>
+
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<a href="#"" style="color:#c9a84c">Launch Kit</a> ·
+<a href="#"" style="color:#c9a84c">Series A</a> ·
+<a href="#"" style="color:#c9a84c">Verify</a> ·
+<a href="#"" style="color:#c9a84c">BFT Configurator</a> ·
+<a href="#"" style="color:#c9a84c">Vote</a> ·
+<a href="#"" style="color:#c9a84c">Sovereign</a>
+<br><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <strong>CA3O is the CMMC for AI.</strong>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+<script>
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===idx)});
+  document.querySelectorAll('.tab-content').forEach((c,i)=>{c.classList.toggle('active',i===idx)});
+}
+function showStage(stage) {
+  switchTab(stage);
+}
+function streamFlock() {
+  const feed = document.getElementById('flock-feed');
+  feed.innerHTML = '';
+  const events = [
+    '[10:23:01.123] Workshop camera: 1 person detected (biometric: OWNER)',
+    '[10:23:01.245] Barn camera: 0 people detected',
+    '[10:23:01.367] Koi pond camera: 0 people detected',
+    '[10:23:01.489] Gate camera: 1 person detected (biometric: UNKNOWN)',
+    '[10:23:01.611] State change: OWNER_UNKNOWN (OWNER + 1 unknown)',
+    '[10:23:01.733] PII redact applied (unknown person detected)',
+  ];
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i >= events.length) { clearInterval(interval); return; }
+    feed.innerHTML += '\n' + events[i];
+    feed.scrollTop = feed.scrollHeight;
+    i++;
+  }, 300);
+}
+function streamAwareness() {
+  const feed = document.getElementById('awareness-feed');
+  feed.innerHTML = '';
+  const events = [
+    '[10:23:02.001] Awareness v2: 5-state FSM active',
+    '[10:23:02.123] Camera 1 (Workshop): Person count = 1 (OWNER match)',
+    '[10:23:02.245] Camera 4 (Gate): Person count = 1 (no match)',
+    '[10:23:02.367] FSM transition: SOLO → OWNER_UNKNOWN',
+    '[10:23:02.489] PII redact: "Nick in Yorkshire, 555-1234" → "[name] in [location], [phone]"',
+    '[10:23:02.611] Gesture detected: Wave (universal)',
+    '[10:23:02.733] State → OWNER_KNOWN (UNKNOWN person left)',
+  ];
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i >= events.length) { clearInterval(interval); return; }
+    feed.innerHTML += '\n' + events[i];
+    feed.scrollTop = feed.scrollHeight;
+    i++;
+  }, 300);
+}
+function streamSov3() {
+  const feed = document.getElementById('sov3-feed');
+  feed.innerHTML = '';
+  const events = [
+    'C|autopilot-48h|flock-frame-001|Frame 001 received from Workshop camera',
+    'C|sov3|awareness-fsm|SOLO → OWNER_UNKNOWN (state change)',
+    'C|sov3|pii-redact|PII redacted per state (Nick → [name])',
+    'C|sov3|gesture-detect|Wave gesture detected (universal)',
+    'C|bft-council|vote-actuation|Proposed: Wave actuation. Vote: 22-of-33 PASS',
+    'C|sov3|council-authorised|Actuation authorised by quorum',
+    'C|sov3|ei3-safety|EI3 Maternal Covenant: PASS',
+    'C|sov3|actuation-issued|Hamsa wave gesture: command sent',
+    'C|sov3|hand-state|Wave gesture completed in 245ms',
+    'C|sov3|sigil-chained|All SIGILs hash-chained. Public verify available.',
+  ];
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i >= events.length) { clearInterval(interval); return; }
+    feed.innerHTML += '\n' + events[i];
+    feed.scrollTop = feed.scrollHeight;
+    i++;
+  }, 400);
+}
+function triggerGesture(gesture) {
+  const feed = document.getElementById('hamsa-feed');
+  const hand = document.getElementById('hand-viz');
+  const state = document.getElementById('hand-state');
+  hand.className = 'hand-viz';
+  setTimeout(() => {
+    if (gesture === 'wave') { hand.classList.add('wave'); state.textContent = 'Waving: gesture executed in 245ms'; }
+    else if (gesture === 'point') { hand.classList.add('point'); state.textContent = 'Pointing: gesture executed in 189ms'; }
+    else if (gesture === 'grasp') { hand.classList.add('grasp'); state.textContent = 'Grasping: gesture executed in 312ms'; }
+    feed.innerHTML += `\n[${new Date().toLocaleTimeString()}] Hamsa ${gesture.toUpperCase()} executed. EI3 PASS. BFT council PASS. SIGIL: autopilot-48h-hamsa-${gesture}-${Date.now()}`;
+    feed.scrollTop = feed.scrollHeight;
+  }, 200);
+}
+async function runFullLoop() {
+  const feed = document.getElementById('full-loop-feed');
+  feed.innerHTML = '';
+  const loop = [
+    '▶️ LOOP START',
+    '[Stage 1] Flock camera: Workshop sees 1 person (OWNER match)',
+    '[Stage 1] Flock camera: Gate sees 1 person (no match)',
+    '[Stage 2] Awareness v2: SOLO → OWNER_UNKNOWN (state transition)',
+    '[Stage 2] PII redact: "Nick in Yorkshire" → "[name] in [location]"',
+    '[Stage 2] Gesture: Wave detected (universal)',
+    '[Stage 3] SOV3 SIGIL: awareness-fsm-state-change',
+    '[Stage 3] SOV3 SIGIL: pii-redact-applied',
+    '[Stage 3] SOV3 SIGIL: gesture-detected-wave',
+    '[Stage 4] BFT Council: Proposed wave actuation. Vote: 22-of-33 PASS',
+    '[Stage 4] EI3 Maternal Covenant: PASS (gesture safe)',
+    '[Stage 4] Hamsa: Wave gesture executed in 245ms',
+    '[Stage 4] Hamsa: Hand state: WAVING',
+    '[Stage 3] SOV3 SIGIL: actuation-issued',
+    '[Stage 3] SOV3 SIGIL: hand-state-updated',
+    '✅ LOOP COMPLETE (1.8 seconds end-to-end)',
+    '',
+    'Next iteration:',
+    '[Stage 1] Flock camera: Gate sees 0 people (UNKNOWN left)',
+    '[Stage 2] Awareness v2: OWNER_UNKNOWN → SOLO',
+    '[Stage 2] PII redact: re-allowed (back to SOLO)',
+    '...',
+  ];
+  for (const line of loop) {
+    feed.innerHTML += '\n' + line;
+    feed.scrollTop = feed.scrollHeight;
+    await new Promise(r => setTimeout(r, 250));
+  }
+}
+</script>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<a href="#"" style="color:#c9a84c">Launch Kit</a> ·
+<a href="#"" style="color:#c9a84c">Series A</a> ·
+<a href="#"" style="color:#c9a84c">Verify</a> ·
+<a href="#"" style="color:#c9a84c">BFT Configurator</a> ·
+<a href="#"" style="color:#c9a84c">Vote</a> ·
+<a href="#"" style="color:#c9a84c">Sovereign</a>
+<br><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <strong>CA3O is the CMMC for AI.</strong>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

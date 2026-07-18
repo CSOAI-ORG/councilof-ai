@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — UK Sovereign Defence AI</title>
+<meta name="description" content="Why UK sovereign matters: No US CLOUD Act exposure. No vendor lock-in. British defence data under British law. CSOAI Ltd (16939677) is a UK company building sovereign AI for MOD, NATO, and AUKUS.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem}
+.nav a:hover{color:#22d3ee}
+.callout{background:rgba(245,158,11,.1);border-left:4px solid #f59e0b;border-radius:8px;padding:1rem 1.5rem;margin:1.5rem 0}
+.callout h3{color:#f59e0b;margin:0 0 .5rem}
+.callout p{color:#cbd5e1;font-size:.9rem;margin:0}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.compare>div{padding:1.5rem;border-radius:12px}
+.compare .bad{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3)}
+.compare .good{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)}
+.compare h4{margin:0 0 .5rem;font-size:1rem}
+.compare .bad h4{color:#ef4444}
+.compare .good h4{color:#22c55e}
+.compare ul{list-style:none;padding:0;margin:0}
+.compare li{padding:.3rem 0;font-size:.85rem;color:#94a3b8}
+.compare li::before{content:"▸ ";color:inherit}
+.compare .bad li::before{color:#ef4444}
+.compare .good li::before{color:#22c55e}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI"><meta property="og:description" content="No CLOUD Act. No vendor lock-in. British defence data under British law."><meta property="og:type" content="website"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-sovereign.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compete.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos-security.html">🔐 Security</a>
+  <a href="defoneos-deploy.html">🏗️ Deploy</a>
+  <a href="defoneos-aukus.html">🤝 AUKUS</a>
+  <a href="defoneos-nato.html"> NATO</a>
+</div>
+
+<h1>🇬🇧 Why UK Sovereign Matters</h1>
+<p class="tagline">No US cloud. No vendor lock-in. No foreign jurisdiction. Britain builds its own defence AI — and controls it completely.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">0</span><h3>US Jurisdiction Exposure</h3><p>CSOAI Ltd is UK-incorporated. No CLOUD Act. No foreign subpoena.</p></div>
+  <div class="card"><span class="stat">100%</span><h3>UK Company</h3><p>Companies House 16939677. British law. British data. British control.</p></div>
+  <div class="card"><span class="stat">3</span><h3>Sovereign Compute Tiers</h3><p>Mac edge (M2/M3/M4) + GCP UK region + Air-gap capable</p></div>
+  <div class="card"><span class="stat">Ed25519</span><h3>SIGIL Proof Chain</h3><p>Every action cryptographically signed. Full audit trail. Quantum-safe path.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">⚖️ The CLOUD Act Problem</div>
+  <div class="tab" onclick="switchTab(1)">🏛️ Sovereign Architecture</div>
+  <div class="tab" onclick="switchTab(2)">📊 Palantir vs DEFONEOS</div>
+  <div class="tab" onclick="switchTab(3)">🛡️ Data Sovereignty Guarantees</div>
+  <div class="tab" onclick="switchTab(4)">🌍 NATO & AUKUS</div>
+</div>
+
+<!-- TAB 0: CLOUD Act -->
+<div class="tab-content active">
+  <div class="callout">
+    <h3>⚠️ The CLOUD Act (2018)</h3>
+    <p>The Clarifying Lawful Overseas Use of Data Act allows US law enforcement to compel US companies to hand over data — <strong>even if that data is stored in the UK</strong>. If the UK MOD uses Palantir, Anduril, Microsoft, or AWS, US authorities can access UK defence data through legal compulsion on the US company.</p>
+  </div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">How Foreign Vendors Create Jurisdictional Risk</h2>
+  <table>
+    <tr><th>Vendor</th><th>HQ</th><th>CLOUD Act?</th><th>Risk to UK Defence Data</th></tr>
+    <tr><td>Palantir Technologies</td><td>Denver, USA</td><td style="color:#ef4444">YES</td><td>US DOJ can compel data access regardless of UK storage location</td></tr>
+    <tr><td>Anduril Industries</td><td>Costa Mesa, USA</td><td style="color:#ef4444">YES</td><td>Lattice OS data subject to US legal process</td></tr>
+    <tr><td>Microsoft Azure (Gov)</td><td>Redmond, USA</td><td style="color:#ef4444">YES</td><td>Even UK South region is accessible via CLOUD Act</td></tr>
+    <tr><td>AWS (UK Region)</td><td>Seattle, USA</td><td style="color:#ef4444">YES</td><td>US company = CLOUD Act jurisdiction</td></tr>
+    <tr><td>Google Cloud</td><td>Mountain View, USA</td><td style="color:#ef4444">YES</td><td>Same exposure as all US-incorporated providers</td></tr>
+    <tr style="background:rgba(34,197,94,.05)"><td><strong>CSOAI Ltd (DEFONEOS)</strong></td><td><strong>UK</strong></td><td style="color:#22c55e"><strong>NO</strong></td><td><strong>UK company. UK law only. No US jurisdiction.</strong></td></tr>
+  </table>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">The Legal Chain</h2>
+  <div class="code">
+US DOJ → Subpoena to US Company → Company MUST produce data
+     ↓ (regardless of where data is physically stored)
+UK Defence Data stored in "UK region" of AWS/Azure
+     ↓
+CLOUD Act: US company must comply with US court order
+     ↓
+RESULT: UK defence data exposed to US legal process
+
+DEFONEOS SOLUTION:
+UK MOD → DEFONEOS (CSOAI Ltd, UK) → UK Law applies
+     ↓
+No US company in the critical path
+     ↓
+No CLOUD Act jurisdiction
+     ↓
+RESULT: UK defence data stays under UK sovereign control
+  </div>
+</div>
+
+<!-- TAB 1: Sovereign Architecture -->
+<div class="tab-content">
+  <h2 style="color:#22d3ee">3-Tier Sovereign Compute</h2>
+  <p style="color:#94a3b8">DEFONEOS operates on a sovereign compute mesh — no component touches US-jurisdiction infrastructure.</p>
+
+  <table>
+    <tr><th>Tier</th><th>Hardware</th><th>Role</th><th>Location</th><th>Jurisdiction</th></tr>
+    <tr><td><strong>Edge</strong></td><td>Jetson Orin / Raspberry Pi 5</td><td>Forward-deployed inference. Air-gap capable.</td><td>Field / tactical</td><td style="color:#22c55e">UK sovereign</td></tr>
+    <tr><td><strong>Mac Mesh</strong></td><td>M4 + M3 + M2 Apple Silicon</td><td>Primary orchestration + model inference</td><td>iOK Farm, UK</td><td style="color:#22c55e">UK sovereign</td></tr>
+    <tr><td><strong>Cloud</strong></td><td>GCP VM (UK region)</td><td>Live autonomous stack, federation, web-facing</td><td>London/UK</td><td style="color:#22c55e">UK region only</td></tr>
+  </table>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">Sovereign AI Models</h2>
+  <p style="color:#94a3b8">DEFONEOS runs sovereign AI models locally. No data sent to OpenAI/Anthropic/Google APIs in the defence path.</p>
+
+  <div class="grid" style="margin-top:1rem">
+    <div class="card">
+      <h3>SOV3 OLM Router</h3>
+      <p>14 local models via Ollama. Routes queries to best model without external API calls. Trained on sovereign corpus (49GB).</p>
+    </div>
+    <div class="card">
+      <h3>Local Llama/Qwen/DeepSeek</h3>
+      <p>Open-weight models running on Apple Silicon. No telemetry. No data exfiltration. Full offline operation.</p>
+    </div>
+    <div class="card">
+      <h3>Mamba-2 Intuition Engine</h3>
+      <p>State-space model compresses 1Hz SIGIL stream into 16-dim state vector. 40-second lead time on emerging threats.</p>
+    </div>
+    <div class="card">
+      <h3>BFT Council (33 nodes)</h3>
+      <p>33 independent AI agents must reach consensus before any classified action. Byzantine fault tolerant. JSP 936 auditable.</p>
+    </div>
+  </div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">Data Flow: Never Leaves UK</h2>
+  <div class="code">
+┌─────────────┐     ┌──────────────┐     ┌───────────────┐
+│  SENSORS    │────→│  EDGE NODE   │────→│  MAC MESH     │
+│ (30 MCPs)   │     │ (Jetson/Pi)  │     │ (M4+M3+M2)    │
+└─────────────┘     └──────────────┘     └───────┬───────┘
+                                                 │
+                    ┌──────────────┐             │
+                    │  GCP UK      │←────────────┘
+                    │  (London)    │
+                    │  SOV3 :3101  │
+                    └──────────────┘
+                          │
+                    ┌──────────────┐
+                    │  SIGIL Chain │
+                    │  (Ed25519)   │
+                    │  On-device   │
+                    └──────────────┘
+
+✅ No US cloud in the path
+✅ No external API calls
+✅ Air-gap capable at every tier
+✅ Quantum-safe cryptography roadmap (ML-DSA-65, ML-KEM-768)
+  </div>
+</div>
+
+<!-- TAB 2: Comparison -->
+<div class="tab-content">
+  <h2 style="color:#22d3ee">Palantir vs DEFONEOS: Sovereignty</h2>
+
+  <div class="compare">
+    <div class="bad">
+      <h4>🔴 Palantir (Foreign Vendor)</h4>
+      <ul>
+        <li>US-incorporated (Denver, CO)</li>
+        <li>CLOUD Act: US DOJ can compel data access</li>
+        <li>Closed source — cannot audit the code</li>
+        <li>Vendor lock-in: proprietary data formats</li>
+        <li>$1B+ per MOD contract</li>
+        <li>US citizens have access to UK defence data</li>
+        <li>No air-gap capability (cloud-dependent)</li>
+        <li>Founders aligned with US political party</li>
+      </ul>
+    </div>
+    <div class="good">
+      <h4>🟢 DEFONEOS (UK Sovereign)</h4>
+      <ul>
+        <li>UK-incorporated (Companies House 16939677)</li>
+        <li>No CLOUD Act: UK law only</li>
+        <li>Open source: full code audit available</li>
+        <li>No lock-in: MCP standard, open formats</li>
+        <li>Free / £2,499/mo / enterprise negotiable</li>
+        <li>Only UK-cleared personnel access data</li>
+        <li>Air-gap capable (full offline operation)</li>
+        <li>Apolitical: built for the Crown, not a party</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">Technical Sovereignty Comparison</h2>
+  <table>
+    <tr><th>Capability</th><th>Palantir Gotham</th><th>DEFONEOS</th></tr>
+    <tr><td>Source code</td><td style="color:#ef4444">Closed</td><td style="color:#22c55e">Open (MIT/Apache)</td></tr>
+    <tr><td>Data residency</td><td style="color:#ef4444">US jurisdiction</td><td style="color:#22c55e">UK only</td></tr>
+    <tr><td>Audit trail</td><td>Proprietary logs</td><td style="color:#22c55e">Ed25519 SIGIL chain</td></tr>
+    <tr><td>Governance</td><td>Corporate policy</td><td style="color:#22c55e">BFT 33-node council</td></tr>
+    <tr><td>Air-gap operation</td><td style="color:#ef4444">No</td><td style="color:#22c55e">Yes (full)</td></tr>
+    <tr><td>Interoperability</td><td>Proprietary APIs</td><td style="color:#22c55e">MCP / A2A / CoT / TAK</td></tr>
+    <tr><td>PQC roadmap</td><td style="color:#ef4444">Undisclosed</td><td style="color:#22c55e">ML-DSA-65 + ML-KEM-768</td></tr>
+    <tr><td>Price (annual)</td><td>£10M-£100M+</td><td style="color:#22c55e">Free / £30K-£300K</td></tr>
+  </table>
+</div>
+
+<!-- TAB 3: Data Sovereignty Guarantees -->
+<div class="tab-content">
+  <h2 style="color:#22d3ee">5 Data Sovereignty Guarantees</h2>
+
+  <div class="grid">
+    <div class="card">
+      <span class="stat">1</span>
+      <h3>UK Jurisdiction Only</h3>
+      <p>CSOAI Ltd is incorporated in England & Wales. All data processing is governed exclusively by UK law (UK GDPR, DPA 2018). No foreign government can compel access.</p>
+    </div>
+    <div class="card">
+      <span class="stat">2</span>
+      <h3>Air-Gap Capable</h3>
+      <p>Every component runs fully offline. Edge nodes (Jetson, Pi) operate without any network. Sovereign SIGIL chain records locally, syncs when connectivity returns.</p>
+    </div>
+    <div class="card">
+      <span class="stat">3</span>
+      <h3>Cryptographic Proof</h3>
+      <p>Every data access, every AI decision, every system action is logged to an Ed25519-signed hash chain. Tamper-evident. Auditor-verifiable. JSP 936 compatible.</p>
+    </div>
+    <div class="card">
+      <span class="stat">4</span>
+      <h3>No External APIs</h3>
+      <p>In defence mode, zero data leaves the sovereign mesh. No OpenAI, Anthropic, Google, or AWS calls. All inference runs on local Apple Silicon / Jetson.</p>
+    </div>
+    <div class="card">
+      <span class="stat">5</span>
+      <h3>Quantum-Safe Path</h3>
+      <p>PQC migration roadmap: ML-DSA-65 (Dilithium) for signatures, ML-KEM-768 (Kyber) for key exchange. NIST PQC standard. 90-day key rotation cycle.</p>
+    </div>
+  </div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">Compliance Posture</h2>
+  <table>
+    <tr><th>Framework</th><th>Status</th><th>Evidence</th></tr>
+    <tr><td>UK GDPR / DPA 2018</td><td style="color:#22c55e">✅ Compliant</td><td>UK company, UK data residency, data minimisation by design</td></tr>
+    <tr><td>Cyber Essentials</td><td style="color:#f59e0b">🔄 In Progress</td><td>Application started via IASME. Firewalls, access control, malware protection in place.</td></tr>
+    <tr><td>UK SC Clearance</td><td style="color:#f59e0b">🔄 Initiated</td><td>4-6 week process started for key personnel.</td></tr>
+    <tr><td>JSP 440 (Security)</td><td style="color:#22c55e">✅ Aligned</td><td>Zero Trust architecture, PQC roadmap, air-gap capability</td></tr>
+    <tr><td>JSP 936 (AI Safety)</td><td style="color:#22c55e">✅ Generator v0.1</td><td>BFT council governance, SIGIL audit chain, 3-layer compliance assertion</td></tr>
+    <tr><td>NATO STANAG 4778</td><td style="color:#22c55e">✅ Compatible</td><td>Ed25519 labelling, CoT/TAK interop, STANAG 5516 tactical data link</td></tr>
+  </table>
+</div>
+
+<!-- TAB 4: NATO & AUKUS -->
+<div class="tab-content">
+  <h2 style="color:#22d3ee">Sovereign ≠ Isolated</h2>
+  <p style="color:#94a3b8">DEFONEOS is sovereign (UK-controlled) but designed for interoperability with NATO and AUKUS allies. Sovereignty means the UK controls its own capability — not that it can't share.</p>
+
+  <div class="compare">
+    <div class="good">
+      <h4>🇬🇧 What UK Gets</h4>
+      <ul>
+        <li>Full sovereign control of defence AI</li>
+        <li>No dependency on US vendors for critical capability</li>
+        <li>Own IP, own codebase, own roadmap</li>
+        <li>Ability to audit every line of code</li>
+        <li>Bargaining power in AUKUS Pillar 2</li>
+        <li>Exportable to Five Eyes partners on UK terms</li>
+      </ul>
+    </div>
+    <div class="good">
+      <h4>🤝 What Allies Get</h4>
+      <ul>
+        <li><strong>NATO:</strong> European alternative to Palantir monopoly</li>
+        <li><strong>AUKUS Pillar 2:</strong> UK contributes OWN AI capability</li>
+        <li><strong>Five Eyes:</strong> Sovereign nodes can federate via A2A</li>
+        <li><strong>Interoperability:</strong> CoT/TAK, STANAG, MCP, A2A</li>
+        <li><strong>Audit:</strong> SIGIL chain verifiable by ally auditors</li>
+        <li><strong>No backdoors:</strong> Open source = verifiable trust</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="color:#22d3ee;margin-top:2rem">UK Government Partnership Strategy</h2>
+  <table>
+    <tr><th>Partner</th><th>Relationship</th><th>Status</th></tr>
+    <tr><td><strong>MOD</strong></td><td>Primary customer. First contact target.</td><td style="color:#f59e0b">Outreach in progress</td></tr>
+    <tr><td><strong>Home Office</strong></td><td>Civil security, border, counter-terror use cases</td><td style="color:#94a3b8">Identified</td></tr>
+    <tr><td><strong>NCA</strong></td><td>Organised crime intelligence fusion</td><td style="color:#94a3b8">Identified</td></tr>
+    <tr><td><strong>NCSC</strong></td><td>Cyber security, CISP integration</td><td style="color:#94a3b8">Identified</td></tr>
+    <tr><td><strong>GCHQ</strong></td><td>SIGINT, classified deployments</td><td style="color:#94a3b8">Long-term target</td></tr>
+    <tr><td><strong>NHS</strong></td><td>Civil resilience, mass casualty, pandemic response</td><td style="color:#94a3b8">Identified</td></tr>
+    <tr><td><strong>UKDI</strong></td><td>Defence Innovation — regional engagement</td><td style="color:#f59e0b">Email drafted</td></tr>
+    <tr><td><strong>DASA</strong></td><td>Defence and Security Accelerator — grant funding</td><td style="color:#f59e0b">Application queued</td></tr>
+    <tr><td><strong>NATO DIANA</strong></td><td>Dual-use AI accelerator</td><td style="color:#f59e0b">Application queued</td></tr>
+  </table>
+
+  <div class="callout" style="margin-top:2rem">
+    <h3>🇬🇧 The Sovereign Thesis</h3>
+    <p>Britain cannot be truly sovereign if its defence AI is built, hosted, and controlled by a foreign power. DEFONEOS gives the UK its OWN capability — open, auditable, affordable, and interoperable with allies on <strong>British terms</strong>.</p>
+  </div>
+</div>
+
+<script>
+function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n))}
+</script>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script>
+<div class="sigil">SIGIL: defoneos-sovereign · CSOAI Ltd (UK 16939677) · No CLOUD Act · No vendor lock-in · British Defence AI · 🐉</div>
+</body></html>

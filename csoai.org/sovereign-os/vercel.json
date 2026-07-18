@@ -1,0 +1,92 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dist/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/brain.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxDuration": 60
+      }
+    },
+    {
+      "src": "api/watchdog/**/*.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxDuration": 60
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/dist/index.html"
+    },
+    {
+      "src": "/sovereign-os/(.*)",
+      "dest": "/frontend/$1"
+    },
+    {
+      "src": "/api/chat",
+      "dest": "/api/brain.py"
+    },
+    {
+      "src": "/api/status",
+      "dest": "/api/brain.py"
+    },
+    {
+      "src": "/api/watchdog/health",
+      "dest": "/api/watchdog/health.py"
+    },
+    {
+      "src": "/api/watchdog/report",
+      "dest": "/api/watchdog/report.py"
+    },
+    {
+      "src": "/api/watchdog/reports",
+      "dest": "/api/watchdog/reports.py"
+    },
+    {
+      "src": "/api/watchdog/heatmap",
+      "dest": "/api/watchdog/heatmap.py"
+    },
+    {
+      "src": "/api/watchdog/regions",
+      "dest": "/api/watchdog/regions.py"
+    },
+    {
+      "src": "/api/watchdog/simulate",
+      "dest": "/api/watchdog/simulate.py"
+    },
+    {
+      "src": "/api/watchdog/stats",
+      "dest": "/api/watchdog/stats.py"
+    },
+    {
+      "src": "/api/watchdog/lake",
+      "dest": "/api/watchdog/lake_status.py"
+    },
+    {
+      "src": "/api/watchdog/live",
+      "dest": "/api/watchdog/live.py"
+    },
+    {
+      "src": "/api/watchdog/ws/heatmap",
+      "dest": "/api/watchdog/ws/heatmap.py"
+    }
+  ],
+  "env": {
+    "SOV3_CARE_FLOOR": "0.95",
+    "SOV3_BFT_MAJORITY": "0.667",
+    "SOV3_CROWN_LINEAGE": "1795-2026",
+    "WATCHDOG_VERSION": "1.0.0-phase472"
+  }
+}

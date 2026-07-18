@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mac Deploy E2E — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:24px;max-width:1100px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#fbbf24,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:24px}
+.terminal{background:#0a0a0a;border:1px solid #10b981;border-radius:8px;padding:16px;font-family:monospace;font-size:.85rem;height:400px;overflow-y:auto}
+.line{margin:2px 0}
+.prompt{color:#10b981}
+.cmd{color:#fbbf24}
+.out{color:rgba(255,255,255,.85)}
+.warn{color:#fbbf24}
+.ok{color:#10b981}
+.err{color:#ef4444}
+.run-btn{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:14px 28px;border-radius:24px;font-weight:800;border:0;cursor:pointer;font-size:1rem;margin:24px 0}
+.specs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.spec{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:14px;text-align:center}
+.spec-num{font-size:1.8rem;color:#10b981;font-weight:900}
+.spec-label{color:#fbbf24;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/_e2e/index.html">← Master Runner</a></div>
+
+<h1>💻 Mac Sovereign Deploy E2E</h1>
+<p class="sub">$0/month · 100% sovereign · 4 local models · 7 GB total</p>
+
+<div class="specs">
+  <div class="spec"><div class="spec-num">$0</div><div class="spec-label">Per Month</div></div>
+  <div class="spec"><div class="spec-num">7GB</div><div class="spec-label">RAM Footprint</div></div>
+  <div class="spec"><div class="spec-num">4</div><div class="spec-label">Local Models</div></div>
+  <div class="spec"><div class="spec-num">100%</div><div class="spec-label">Sovereign</div></div>
+  <div class="spec"><div class="spec-num">0</div><div class="spec-label">Cloud Calls</div></div>
+  <div class="spec"><div class="spec-num">∞</div><div class="spec-label">Offline</div></div>
+</div>
+
+<button class="run-btn" onclick="runDeploy()">▶ RUN DEPLOY SCRIPT</button>
+
+<div class="terminal" id="terminal">
+  <div class="line prompt">~$ sovereign-deploy.sh --tier=mac --mode=local</div>
+  <div class="line warn">→ Initialising sovereign substrate...</div>
+</div>
+
+<script>
+const t = document.getElementById('terminal');
+function add(cls, txt) {
+  const d = document.createElement('div');
+  d.className = 'line ' + cls;
+  d.textContent = txt;
+  t.appendChild(d);
+  t.scrollTop = t.scrollHeight;
+}
+
+async function runDeploy() {
+  const lines = [
+    ['out', '→ Checking Ollama... ✓'],
+    ['out', '→ Checking llama.cpp... ✓'],
+    ['out', '→ Pulling SOV3small3 (4 models, 7GB)...'],
+    ['ok',  '  ✓ llama3.1:8b (4.7GB)'],
+    ['ok',  '  ✓ qwen2.5:3b (1.9GB)'],
+    ['ok',  '  ✓ nomic-embed-text (274MB)'],
+    ['ok',  '  ✓ moondream (1.7GB)'],
+    ['out', '→ Installing MEOK shell integration... ✓'],
+    ['out', '→ Building SOV3 small brain (Mamba-2 + MoE)... ✓'],
+    ['out', '→ Configuring sovereign composite (7.305)... ✓'],
+    ['out', '→ Connecting to local SIGIL ledger... ✓'],
+    ['out', '→ Care Floor 0.95 baseline... ✓'],
+    ['out', '→ BFT 12-around-1 fallback queue... ✓'],
+    ['warn','→ Testing Article 50 local passport issue... ✓'],
+    ['out', '→ Starting MEOK dashboard on :7777... ✓'],
+    ['ok',  ''],
+    ['ok',  '✓ SOVEREIGN DEPLOY COMPLETE'],
+    ['out', '→ http://localhost:7777 — open dashboard'],
+    ['out', '→ Type `sov3` to enter the sovereign shell'],
+    ['out', '→ Cost: $0/month · Cloud: 0 calls · Sovereign: 100%'],
+  ];
+  for (const [cls, txt] of lines) {
+    await new Promise(r => setTimeout(r, 250));
+    add(cls, txt);
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>i-character Deep · 7 beads on a rope · CSOAI</title>
+<style>
+:root{--bg:#0a0e27;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--pink:#ec4899;--serif:'Georgia',serif;--mono:'SF Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:radial-gradient(ellipse at 20% 0%,#1e3a8a 0%,#0a0e27 50%);color:var(--fg);min-height:100vh;line-height:1.6}
+.container{max-width:1300px;margin:0 auto;padding:24px}
+nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(10,14,39,.92);border-bottom:1px solid rgba(251,191,36,.15);z-index:100;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;font-size:.85rem}
+nav .logo{color:var(--gold);font-weight:700;font-size:1.1rem}
+nav a{color:#94a3b8;text-decoration:none;margin-left:18px}
+h1{font-family:var(--serif);color:var(--gold);font-size:2.2rem;text-align:center;margin:24px 0 8px;text-shadow:0 0 24px rgba(251,191,36,.3)}
+.tag{color:var(--cyan);font-style:italic;text-align:center;margin-bottom:24px;font-size:1rem}
+.sub-line{color:#94a3b8;text-align:center;font-size:.85rem;margin-bottom:24px}
+.grid2{display:grid;grid-template-columns:2fr 1fr;gap:24px}
+@media(max-width:768px){.grid2{grid-template-columns:1fr}}
+.bead-rope{background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:24px}
+.bead-rope h2{font-family:var(--serif);color:var(--gold);font-size:1.4rem;margin:0 0 16px}
+.bead-svg{width:100%;max-width:520px;margin:0 auto;display:block}
+.bead-label{font-family:var(--mono);font-size:.65rem;text-anchor:middle;fill:var(--gold);font-weight:700}
+.bead-detail{background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:24px;margin-top:16px;min-height:120px;display:none}
+.bead-detail.active{display:block}
+.bead-detail h3{color:var(--gold);margin:0 0 8px;font-size:1.1rem}
+.bead-detail p{color:#94a3b8;font-size:.85rem;margin:4px 0}
+.bead-detail .field{display:flex;gap:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.bead-detail .field strong{color:var(--cyan);min-width:120px;font-size:.78rem}
+.bead-detail .field span{color:#e2e8f0;font-size:.85rem;font-family:var(--mono)}
+.right-rail{display:flex;flex-direction:column;gap:16px}
+.rail-card{background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:18px}
+.rail-card h3{color:var(--gold);font-size:.9rem;margin:0 0 8px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.rail-card .big{font-size:1.6rem;font-weight:900;color:var(--gold);text-align:center;margin:8px 0;font-family:var(--serif)}
+.rail-card .sm{font-size:.7rem;color:var(--cyan);font-family:var(--mono);word-break:break-all;text-align:center}
+.rail-card ul{list-style:none;color:#94a3b8;font-size:.78rem;line-height:1.8;padding:0}
+.rail-card ul li{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05);font-family:var(--mono);font-size:.7rem}
+.badge{display:inline-block;padding:4px 8px;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000;border-radius:6px;font-family:var(--mono);font-size:.65rem;font-weight:700;letter-spacing:.05em;margin:4px 2px}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;margin-right:4px}
+footer{text-align:center;color:#94a3b8;font-size:.75rem;padding:24px;border-top:1px solid rgba(255,255,255,.05);margin-top:32px;font-family:var(--mono)}
+footer a{color:var(--gold);text-decoration:none}
+</style>
+</head><body>
+<nav>
+<div class="logo">i-character · Deep Visualizer</div>
+<div>
+<a href="../csoai.org/index.html">CSOAI</a>
+<a href="../csoai.org/oowm/demo-tour.html">Demos</a>
+<a href="../csoai.org/sovereign-charter.html">Charter</a>
+<a href="../csoai.org/sovereign-os/screenshots/index.html">Screenshots</a>
+</div>
+</nav>
+
+<div class="container">
+<h1>7 beads on a rope</h1>
+<p class="tag">Click any bead to reveal its 4-field detail. Composite + OOWM-C07 badge in the right rail.</p>
+<p class="sub-line">Crown Lineage 1795-2026 · MIT + CC0 · OOWM-C07 contract</p>
+
+<div class="grid2">
+<div>
+<div class="bead-rope">
+<h2>The Bead Rope</h2>
+<svg class="bead-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
+<line x1="40" y1="100" x2="480" y2="100" stroke="rgba(251,191,36,.5)" stroke-width="2"/>
+<circle cx="40" cy="100" r="22" fill="#fbbf24" stroke="#0a0e27" stroke-width="4" class="bead" data-id="ID" style="cursor:pointer">
+  <title>ID = Identity</title>
+  <animate attributeName="r" values="22;26;22" dur="3s" begin="0.0s" repeatCount="indefinite"/>
+</circle>
+<text x="40" y="105" class="bead-label">ID</text>
+<text x="40" y="160" class="bead-label" style="fill:#94a3b8">Identity</text>
+<circle cx="113" cy="100" r="22" fill="#06b6d4" stroke="#0a0e27" stroke-width="4" class="bead" data-id="DOX" style="cursor:pointer">
+  <title>DOX = Doctrine</title>
+  <animate attributeName="r" values="22;26;22" dur="3s" begin="0.3s" repeatCount="indefinite"/>
+</circle>
+<text x="113" y="105" class="bead-label">DOX</text>
+<text x="113" y="160" class="bead-label" style="fill:#94a3b8">Doctrine</text>
+<circle cx="186" cy="100" r="22" fill="#10b981" stroke="#0a0e27" stroke-width="4" class="bead" data-id="DMN" style="cursor:pointer">
+  <title>DMN = Domain</title>
+  <animate attributeName="r" values="22;26;22" dur="3s" begin="0.6s" repeatCount="indefinite"/>
+</circle>
+<text x="186" y="105" class="bead-label">DMN</text>
+<text x="186" y="160" class="bead-label" style="fill:#94a3b8">Domain</text>
+<circle cx="259" cy="100" r="22" fill="#fbbf24" stroke="#0a0e27" stroke-width="4" class="bead" data-id="RHE" style="cursor:pointer">
+  <title>RHE = Rhetoric</title>
+  <animate attributeName="r" values="22;26;22" dur="3s" begin="0.9s" repeatCount="indefinite"/>
+</circle>
+<text x="259" y="105" class="bead-label">RHE</text>
+<text x="259" y="160" class="bead-label" style="fill:#94a3b8">Rhetoric</text>
+<circle cx="332" cy="100" r="22" fill="#06b6d4" stroke="#0a0e27" stroke-width="4" class="bead" data-id="CAR" style="cursor:pointer">
+  <title>CAR = Care Floor</title>
+  <animate attributeName="r" values="22;26;22" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+</circle>
+<text x="332" y="105" class="bead-label">CAR</text>
+<text x="332" y="160" class="bead-label" style="fill:#94a3b8">Care Floor</text>
+<circle cx="405" cy="100" r="22" fill="#ec4899" stroke="#0a0e27" stroke-width="4" class="bead" data-id="SOV" style="cursor:pointer">
+  <title>SOV = Sovereignty</title>
+  <animate attributeName="r" values="22;26;22" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+</circle>
+<text x="405" y="105" class="bead-label">SOV</text>
+<text x="405" y="160" class="bead-label" style="fill:#94a3b8">Sovereignty</text>
+<circle cx="478" cy="100" r="22" fill="#10b981" stroke="#0a0e27" stroke-width="4" class="bead" data-id="LIN" style="cursor:pointer">
+  <title>LIN = Lineage</title>
+  <animate attributeName="r" values="22;26;22" dur="3s" begin="1.8s" repeatCount="indefinite"/>
+</circle>
+<text x="478" y="105" class="bead-label">LIN</text>
+<text x="478" y="160" class="bead-label" style="fill:#94a3b8">Lineage</text>
+</svg>
+<div style="margin-top:16px;text-align:center;color:#94a3b8;font-size:.78rem">Tap any bead ▼</div>
+<div class="bead-detail" data-bead="ID">
+  <h3>ID · Identity</h3>
+  <div class="field"><strong>Field 1</strong><span>DID</span></div>
+  <div class="field"><strong>Field 2</strong><span>did:csoai:nicholas-001</span></div>
+  <div class="field"><strong>Field 3</strong><span>Ed25519</span></div>
+  <div class="field"><strong>Field 4</strong><span>F2K4::MFX6::K3P9</span></div>
+</div>
+<div class="bead-detail" data-bead="DOX">
+  <h3>DOX · Doctrine</h3>
+  <div class="field"><strong>Field 1</strong><span>Charter</span></div>
+  <div class="field"><strong>Field 2</strong><span>Article 50 + Fork Doctrine</span></div>
+  <div class="field"><strong>Field 3</strong><span>License</span></div>
+  <div class="field"><strong>Field 4</strong><span>MIT + CC0 1.0</span></div>
+</div>
+<div class="bead-detail" data-bead="DMN">
+  <h3>DMN · Domain</h3>
+  <div class="field"><strong>Field 1</strong><span>Domain</span></div>
+  <div class="field"><strong>Field 2</strong><span>London / UK / EU</span></div>
+  <div class="field"><strong>Field 3</strong><span>Language</span></div>
+  <div class="field"><strong>Field 4</strong><span>en-GB · auto-detect</span></div>
+</div>
+<div class="bead-detail" data-bead="RHE">
+  <h3>RHE · Rhetoric</h3>
+  <div class="field"><strong>Field 1</strong><span>Voice</span></div>
+  <div class="field"><strong>Field 2</strong><span>Committed but kind. Prefers tables.</span></div>
+  <div class="field"><strong>Field 3</strong><span>Formality</span></div>
+  <div class="field"><strong>Field 4</strong><span>Diplomatic-first</span></div>
+</div>
+<div class="bead-detail" data-bead="CAR">
+  <h3>CAR · Care Floor</h3>
+  <div class="field"><strong>Field 1</strong><span>Floor</span></div>
+  <div class="field"><strong>Field 2</strong><span>0.95 (non-negotiable)</span></div>
+  <div class="field"><strong>Field 3</strong><span>Sigils/h</span></div>
+  <div class="field"><strong>Field 4</strong><span>4,892 last 24h</span></div>
+</div>
+<div class="bead-detail" data-bead="SOV">
+  <h3>SOV · Sovereignty</h3>
+  <div class="field"><strong>Field 1</strong><span>Crown</span></div>
+  <div class="field"><strong>Field 2</strong><span>Crown Authorisation 1795-2026</span></div>
+  <div class="field"><strong>Field 3</strong><span>Fork lineage</span></div>
+  <div class="field"><strong>Field 4</strong><span>Gen 1 of 1</span></div>
+</div>
+<div class="bead-detail" data-bead="LIN">
+  <h3>LIN · Lineage</h3>
+  <div class="field"><strong>Field 1</strong><span>Parents</span></div>
+  <div class="field"><strong>Field 2</strong><span>1795 / 1847 / 1901 / 1936 / 1952 / 2022</span></div>
+  <div class="field"><strong>Field 3</strong><span>Next gen</span></div>
+  <div class="field"><strong>Field 4</strong><span>Scheduled 2090-01-01</span></div>
+</div>
+</div>
+</div>
+<div class="right-rail">
+
+<div class="rail-card">
+<h3><span class="dot"></span>Sovereign Composite</h3>
+<div class="big">7.305</div>
+<div class="sm">ed25519:pqc-ml-dsa-65<br>a3f9e2b7d45162a8...</div>
+</div>
+
+<div class="rail-card">
+<h3><span class="dot"></span>Crown Lineage</h3>
+<div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:4px">
+<span class="badge">1795</span><span class="badge">1847</span><span class="badge">1901</span><span class="badge">1936</span><span class="badge">1952</span><span class="badge">2022</span><span class="badge">2026</span>
+</div>
+</div>
+
+<div class="rail-card">
+<h3><span class="dot"></span>Last 24h history</h3>
+<ul>
+<li>07:00 composite 7.291</li>
+<li>08:00 composite 7.305</li>
+<li>09:00 composite 7.305</li>
+<li>10:00 composite 7.305</li>
+<li>11:00 composite 7.305</li>
+<li>12:00 composite 7.305</li>
+<li>13:00 composite 7.305</li>
+<li>14:00 composite 7.305</li>
+<li>15:00 composite 7.305</li>
+</ul>
+</div>
+
+<div class="rail-card">
+<h3><span class="dot"></span>OOWM-C07</h3>
+<div style="text-align:center">
+<span class="badge">OOWM-C07</span>
+</div>
+<p style="color:#94a3b8;font-size:.78rem;margin-top:8px">This i-character is bound to the OOWM-C07 contract. The 7 beads above are the canonical primitives covered by C07. Care Floor is non-negotiable per C07 §3.2.</p>
+</div>
+
+</div>  <!-- close right-rail -->
+</div>  <!-- close grid2 -->
+
+<div style="margin-top:32px">
+<p style="color:#94a3b8;text-align:center;font-size:.85rem">Bead-rope schema covers all sovereign primitives. The 7 canonical facets are <b style="color:var(--gold)">Identity · Doctrine · Domain · Rhetoric · Care Floor · Sovereignty · Lineage</b>.</p>
+<p style="color:#94a3b8;text-align:center;font-size:.78rem;margin-top:8px">Click ⌘⇧S anywhere to summon the sovereign. ⌘⇧→ for sovereign TUI.</p>
+</div>
+
+</div>
+
+<footer>
+i-character Deep Visualizer · part of <a href="../csoai.org/sovereign-charter.html">the Sovereign Charter</a> · CSOAI Ltd · UK 16939677 · MIT + CC0
+</footer>
+
+<script>
+// Click bead → show detail panel + auto-fill the 4 fields (already in HTML)
+document.querySelectorAll('.bead').forEach(b => {
+  b.addEventListener('click', () => {
+    const id = b.dataset.id;
+    document.querySelectorAll('.bead-detail').forEach(p => p.classList.remove('active'));
+    const panel = document.querySelector('.bead-detail[data-bead="' + id + '"]');
+    if (panel) panel.classList.add('active');
+  });
+});
+// Cmd+Shift+S global
+document.addEventListener('keydown', e => {
+  if (e.metaKey && e.shiftKey && e.key === 'S') {
+    e.preventDefault();
+    document.querySelectorAll('.bead')[0].click();
+  }
+});
+</script>
+</body></html>

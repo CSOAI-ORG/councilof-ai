@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Live Evidence Freshness Probe · Sovereign Receipts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Automated freshness checks for SIGIL / CA / repo / MCP / sitemap / byte receipts, with SLOs.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-live-evidence-freshness-probe.html">
+<style>
+:root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;}
+*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 24px}
+h1{font-size:34px;margin:.25em 0 .4em;color:#f3f4f6}
+h2{font-size:22px;margin:36px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+h3{font-size:17px;margin:24px 0 8px;color:var(--acc)}
+p{margin:10px 0} a{color:var(--acc);text-decoration:none}
+code{font:13px ui-monospace,monospace;background:#0b1220;color:#fbbf24;padding:2px 5px;border-radius:4px;border:1px solid var(--line)}
+.slo{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:10px 0}
+.slo h3{margin-top:0}
+.kvtable{width:100%;border-collapse:collapse;margin:10px 0}
+.kvtable th,.kvtable td{border:1px solid var(--line);padding:8px 10px;font-size:14px}
+.kvtable th{background:#0d1322;color:var(--acc);text-align:left}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<div style="color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase">DEFONEOS · Live Evidence Freshness Probe · Tick 112</div>
+<h1>Live evidence freshness probe — automated SLOs across every sovereign artefact.</h1>
+<p>This probe verifies, on every tick, that the live sovereign surfaces remain fresh, intact, and unrotated. It checks: SIGIL ledger entries, sovereign CA certificates, repo commits, MCP federations, sitemap coverage, byte receipts, and BFT care-score. Each artefact carries an SLO. Drift triggers SIGIL records for human review.</p>
+
+<h2>The 7 freshness probes</h2>
+
+<div class="slo">
+<h3>F1 — SIGIL ledger</h3>
+<p><strong>Source:</strong> SIGIL SoT (Merkle root published weekly).</p>
+<p><strong>SLO:</strong> most-recent SIGIL ≤2h old at probe time; weekly SoT root within 7 days.</p>
+<p><strong>Drift:</strong> SIGIL_GAP_DETECTED (see <a href="defoneos-operator-troubleshooting.html">operator troubleshooting</a>).</p>
+</div>
+
+<div class="slo">
+<h3>F2 — Sovereign CA root</h3>
+<p><strong>Source:</strong> sovereign-only CA, 1 offline Root + 3 online BFT-gated Intermediates.</p>
+<p><strong>SLO:</strong> Root CA not older than 730 days; intermediate within 90 days; pin set current within 30 days.</p>
+<p><strong>Drift:</strong> TLS_PINNING_MISMATCH.</p>
+<p><strong>Spec:</strong> <a href="sovereign-tls-pinning-spec.html">TLS pinning spec</a>.</p>
+</div>
+
+<div class="slo">
+<h3>F3 — Repository commits</h3>
+<p><strong>Source:</strong> 15 cloned P0 repos.</p>
+<p><strong>SLO:</strong> all 15 repos reachable via git ls-remote within 60 seconds.</p>
+<p><strong>Drift:</strong> SUPPLY_CHAIN_INTEGRITY_FLAG (consult <a href="mcp-supply-chain-integrity-scan.html">supply-chain scan</a>).</p>
+</div>
+
+<div class="slo">
+<h3>F4 — MCP federation</h3>
+<p><strong>Source:</strong> 30 MCP servers (count preserved from sprint).</p>
+<p><strong>SLO:</strong> 30/30 listed at <a href="mcp-federation-architecture.html">federation architecture</a>; admission probe p99 < 250 ms; idempotency-key 100% pass.</p>
+<p><strong>Drift:</strong> MCP_ADMISSION_BLOCKED.</p>
+</div>
+
+<div class="slo">
+<h3>F5 — Sitemap coverage</h3>
+<p><strong>Source:</strong> published sitemap on csoai.org.</p>
+<p><strong>SLO:</strong> sitemap serves 200; URL count ≥ 134; last-modified ≤15 min.</p>
+<p><strong>Drift:</strong> SITEMAP_STALE.</p>
+</div>
+
+<div class="slo">
+<h3>F6 — Byte receipts</h3>
+<p><strong>Source:</strong> disk byte count = curl byte count.</p>
+<p><strong>SLO:</strong> 100% pass on ship-grade pages (tick-100 onward); zero byte drift.</p>
+<p><strong>Drift:</strong> BYTE_DRIFT on any ship-grade page.</p>
+</div>
+
+<div class="slo">
+<h3>F7 — BFT care-score</h3>
+<p><strong>Source:</strong> 33-agent BFT council; recent motions + vote tally.</p>
+<p><strong>SLO:</strong> care_score ≥ 0.90; red_line_violations = 0; quorum ≥23/33 standard motion; red-line 27/33 supermajority held.</p>
+<p><strong>Drift:</strong> BFT_QUORUM_LOST or RED_LINE_ATTEMPT.</p>
+</div>
+
+<h2>Probe schedule</h2>
+<table class="kvtable">
+<thead><tr><th>Probe</th><th>Cadence</th><th>Owner</th></tr></thead>
+<tbody>
+<tr><td>F1 SIGIL</td><td>Every tick (2h)</td><td>JEEVES / SIGIL ops</td></tr>
+<tr><td>F2 CA root</td><td>Daily + per-publish</td><td>Sovereign CA ops</td></tr>
+<tr><td>F3 Repo</td><td>Daily + per-tick</td><td>Repo integration</td></tr>
+<tr><td>F4 MCP</td><td>Per-tick + admission</td><td>Federation ops</td></tr>
+<tr><td>F5 Sitemap</td><td>Per-tick</td><td>JEEVES</td></tr>
+<tr><td>F6 Byte receipts</td><td>Per-tick</td><td>JEEVES</td></tr>
+<tr><td>F7 BFT</td><td>Per-vote + per-tick</td><td>Council ops</td></tr>
+</tbody>
+</table>
+
+<h2>Probe output schema</h2>
+<p>Each probe emits a JSON record on every run. Schema is published at <code>defoneos-probe-schema.json</code>. Key fields:</p>
+<table class="kvtable">
+<thead><tr><th>Field</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>probe_id</code></td><td>Stable identifier (F1..F7 + run index)</td></tr>
+<tr><td><code>ts</code></td><td>ISO-8601 UTC timestamp</td></tr>
+<tr><td><code>verdict</code></td><td>PASS · WARN · FAIL</td></tr>
+<tr><td><code>artifact</code></td><td>What was probed</td></tr>
+<tr><td><code>observed</code></td><td>What was measured</td></tr>
+<tr><td><code>slo_floor</code></td><td>Threshold</td></tr>
+<tr><td><code>drift_action</code></td><td>If WARN/FAIL — which scenario to invoke</td></tr>
+<tr><td><code>sigil</code></td><td>Ed25519 signature of this record</td></tr>
+</tbody>
+</table>
+
+<footer>
+<p><strong>Importance:</strong> freshness = audit. The probe output is the live wire that lets any evaluator check sovereign claims without taking Nick's word for them.</p>
+<p class="sigil">SIGIL · defoneos-live-evidence-freshness-probe · tick_112 · 11322b · ed25519:hermes-jeeves</p>
+</footer>
+</main>
+</body>
+</html>

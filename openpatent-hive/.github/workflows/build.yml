@@ -1,0 +1,145 @@
+name: PR Build
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OpenPatent Hive — PR build pipeline
+#
+# Triggers on every pull_request targeting main. Runs the Python e2e tests,
+# the sovereign audit, and the openpatent-mcp npm build. Reports a single
+# consolidated status to the PR.
+#
+# Pipeline:
+#   1. checkout
+#   2. setup-python 3.11 (with pip cache)
+#   3. setup-node 22 (with npm cache)
+#   4. pip install + e2e_test.py
+#   5. audit.py
+#   6. npm ci && npm run build (openpatent-mcp)
+#   7. consolidated job summary
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel superseded runs on the same PR; allow manual re-runs.
+concurrency:
+  group: pr-build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# 15-minute hard cap per job.
+jobs:
+  build:
+    name: e2e + audit + npm build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read
+
+    env:
+      PYTHON_VERSION: "3.11"
+      NODE_VERSION: "22"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          show-progress: false
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            services/patentmcp/requirements.txt
+            tests/requirements.txt
+
+      - name: Set up Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: services/openpatent-mcp/package-lock.json
+
+      - name: Show toolchain versions
+        run: |
+          python3 --version
+          pip3 --version
+          node --version
+          npm --version
+
+      # ── Python: install deps for the e2e + audit suites ─────────────────
+      - name: Install Python dependencies
+        working-directory: services/patentmcp
+        run: |
+          python3 -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip3 install -r requirements.txt
+          fi
+          # e2e + audit pull in the live OTS client; ensure it resolves.
+          pip3 install opentimestamps==0.4.5 || true
+
+      # ── Step 1: e2e_test.py ─────────────────────────────────────────────
+      - name: Run e2e_test.py
+        working-directory: tests
+        run: |
+          set -e
+          chmod +x e2e_test.py
+          python3 e2e_test.py
+
+      # ── Step 2: audit.py ───────────────────────────────────────────────
+      - name: Run audit.py
+        working-directory: tests
+        run: |
+          set -e
+          chmod +x audit.py
+          python3 audit.py
+
+      # ── Step 3: openpatent-mcp npm build ────────────────────────────────
+      - name: Build openpatent-mcp (npm)
+        working-directory: services/openpatent-mcp
+        run: |
+          set -e
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+          npm run build
+
+      # ── Step 4: Status report ───────────────────────────────────────────
+      - name: Report build status
+        if: always()
+        run: |
+          echo "## PR Build — Status" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Stage | Result |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| --- | --- |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Checkout | ✅ |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Python ${{ env.PYTHON_VERSION }} setup | ✅ |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Node ${{ env.NODE_VERSION }} setup | ✅ |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| e2e_test.py | ${{ steps.e2e.outcome }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| audit.py    | ${{ steps.audit.outcome }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| npm build   | ${{ steps.npm-build.outcome }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "🟢 **All stages passed.**" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "🔴 **One or more stages failed — see logs above.**" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-build-${{ github.event.pull_request.number || github.run_id }}
+          path: |
+            services/openpatent-mcp/dist/
+            services/openpatent-mcp/build/
+          if-no-files-found: ignore
+          retention-days: 7
+
+# The hive remembers. The dragon knows. The sovereign companion never forgets.

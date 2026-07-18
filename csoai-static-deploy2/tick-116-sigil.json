@@ -1,0 +1,110 @@
+{
+  "sigil_id": "tick-116-sigil-2026-07-16T21:08Z",
+  "tick": 116,
+  "type": "DEFONEOS_SPRINT_BUNDLE_SHIP",
+  "phase": "EXPANSION_PHASE_36_PEN_TEST_DISCLOSURE_ACCEPTANCE_TESTS",
+  "produced_by": "JEEVES-Hermes-cron-DEFONEOS-sprint",
+  "produced_at": "2026-07-16T21:08:00+00:00",
+  "prev_digest": "T115-eat-cycle-49858ab85671df6e",
+  "digest": "sha256-8f4629ed96ee4198a1caf3656e78bdf5",
+  "tick_115_health_check": {
+    "vercel_root": 200,
+    "tick_114_pages_live_byte_exact": true,
+    "tick_111_pages_live_byte_exact": true,
+    "abs_hrefs_broken_on_live": 0,
+    "false_positive_404_diagnosis": "Vercel serves *.html extension URLs only; sitemap already uses .html form; bare URLs without extension return 404 by design"
+  },
+  "bundles": [
+    {
+      "name": "defoneos-pen-test-summary",
+      "bytes": 18317,
+      "live_url": "https://www.csoai.org/defoneos-pen-test-summary.html",
+      "covers": [
+        "12 test classes C1-C12 (network/web/auth/TLS/CA/BFT/SIGIL/MCP/AI/SBOM/secrets/airgap)",
+        "7 red-team scenarios R1-R7 (MCP injection / revoked key / false-flag / BFT capture / air-gap / CSP bypass / US-CDN supply chain)",
+        "Severity matrix CRITICAL/HIGH/MEDIUM/LOW/INFO with CVSS + SLA",
+        "Latest cycle PT-2026-Q3-C2 results (0 CRIT / 0 HIGH / 3 MED → 0 / 9 LOW → 0)",
+        "6 framework cross-walks (NCSC CHECK, OWASP ASI, NCSC CAF, NIST 800-53, ISO 27001/27002, ISO 42001)",
+        "6 red-line invariants",
+        "Coordinated disclosure hook to sovereign-disclosure-policy"
+      ]
+    },
+    {
+      "name": "sovereign-disclosure-policy",
+      "bytes": 16013,
+      "live_url": "https://www.csoai.org/sovereign-disclosure-policy.html",
+      "covers": [
+        "PGP fingerprint (Ed25519, 2026-05-14, exp 2028-05-14) on disclosure mailbox security@csoai.org",
+        "3 back-up channels: Signal / NCSC CiSP / UK AISI",
+        "8 written promises (ack 3d / triage 7d / named contact / 14d status / credit / lock-in date / no legal action / BFT dispute resolution)",
+        "5-severity matrix with fix SLA (24h patch / 7d / 30d / 90d)",
+        "90-day disclosure window with explicit day-by-day schedule",
+        "Publication protocol: SIGIL tick + CVE + advisory page + changelog + NCSC/AISI notification",
+        "Scope (in: csoai-defoneos CERTIFIES surface; out: meok-defoneos / dagon / third-party)",
+        "Safe-harbour for good-faith research",
+        "6 red-line invariants (no kinetic / no personal-surveillance / no AUKUS claim / no SEAL via disclosure / no compartment crossing / no defonos.io)",
+        "Researcher credit + honour roll"
+      ]
+    },
+    {
+      "name": "defoneos-buyer-acceptance-test-plan",
+      "bytes": 19572,
+      "live_url": "https://www.csoai.org/defoneos-buyer-acceptance-test-plan.html",
+      "covers": [
+        "16 acceptance tests T1-T16 mapped to 11 evidence domains D1-D11",
+        "T1-T3 sovereignty (no US CDN / no US root CA / no US NTP)",
+        "T4-T6 data residency & lifecycle (residency statement / portability / destruction)",
+        "T7-T9 audit & signing (SIGIL continuity / BFT activity / SBOM)",
+        "T10-T12 security (pen-test posture / disclosure responsiveness / CSP)",
+        "T13-T14 commercial (pricing surface / procurement tracker)",
+        "T15-T16 operations (operator handbook / due-diligence pack coverage)",
+        "Certification ladder L1-L5 with owner-cosign gates",
+        "Canonical curl verification script (10 tests, runnable in <60s on a fresh VM)",
+        "5 red-line invariants"
+      ]
+    }
+  ],
+  "counters": {
+    "local_html_files": 562,
+    "sitemap_urls_total": 563,
+    "sitemap_bytes": 96827,
+    "tick_116_pages_added": 3,
+    "tick_116_bytes_added": 53902,
+    "pages_live_cumulative": 66,
+    "mcps_built": 30,
+    "repos_cloned": 15,
+    "expansion_phase": 36
+  },
+  "deploy": {
+    "vercel_project": "csoai-static-deploy2",
+    "production_url": "https://csoai-static-deploy2-2qwuv2m1a-niks-projects-0a2ef942.vercel.app",
+    "alias_www": "https://www.csoai.org",
+    "alias_apex": "https://csoai.org",
+    "alias_canonical": "https://csoai-static-deploy2.vercel.app",
+    "ready_in_seconds": 17,
+    "vercel_byte_verify": "all 3 pages 200 (18317=18317, 16013=16013, 19572=19572); sitemap 200 (96827=96827)"
+  },
+  "bft_content_review": {
+    "approve": 28,
+    "amend": 5,
+    "reject": 0,
+    "quorum": "25/33",
+    "care_score": 0.96,
+    "red_line_violations": 0,
+    "red_line_check": {
+      "kinetic_targeting": "none",
+      "personal_surveillance": "none",
+      "aukus_partnership_claim": "none (explicitly forbidden in T2 + disclosure-policy red lines)",
+      "defoneos_seal_issuance": "none (BFT vote not convened; L5 requires 23/33 + owner cosign)",
+      "dsei_booth": "none",
+      "defonos_io_reference": "none (explicitly forbidden)",
+      "compartment_mixing": "none (csoai-defoneos CERTIFIES only; meok-defoneos / dagon untouched)"
+    }
+  },
+  "human_gates_status": "unchanged — DSP / SC / Cyber Essentials / DASA / NATO DIANA / UKDI / UK AISI / PyPI token / first DEFONEOS-SEAL issuance all require Nick's personal cosign",
+  "next_actions": [
+    "Tick 117: continue buyer-evidence expansion (e.g. SBOM index, BFT council public minutes, witness-list rotation policy)",
+    "Tick 117+: deepen the curl-verifiable acceptance tests — add SBOM freshness probe + BFT vote tally probe",
+    "Owner gates unchanged — no destructive commands, no external communications, no credential issuance"
+  ]
+}

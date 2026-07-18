@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>MEOK_MCP__PORT</key>
+		<string>3102</string>
+	</dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>ai.csoai.meok-mcp</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/bash</string>
+		<string>-c</string>
+		<string>cd /Users/nicholas/clawd &amp;&amp; exec /Users/nicholas/clawd/sovereign-temple/.venv/bin/python3 -m meok.mcp.server</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.meok-mcp.stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.meok-mcp.stdout.log</string>
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/nicholas/clawd</string>
+</dict>
+</plist>

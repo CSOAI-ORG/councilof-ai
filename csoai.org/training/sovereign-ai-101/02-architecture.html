@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2: SOV3 Architecture — Sovereign AI 101</title>
+<meta name="description" content="5 alchemical layers deep dive. Mamba-2 SSM. 64-expert MoE. Standard attention. SOV3 middle. SIGIL wrap.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.85rem; margin-bottom: 1rem; }
+  .breadcrumb a { color: #60a5fa; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.2rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .module-tag { display: inline-block; background: #fbbf24; color: #000; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+  .layer { background: #1a1a1a; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #10b981; max-width: 900px; }
+  .layer h3 { color: #fbbf24; }
+  .layer .alch { color: #60a5fa; font-size: 0.85rem; font-style: italic; margin-bottom: 0.5rem; }
+  .layer p { color: #aaa; font-size: 0.95rem; }
+  .layer code { background: #0a0a0a; padding: 0.2rem 0.5rem; border-radius: 4px; color: #10b981; }
+  .ascii { background: #0a0a0a; color: #10b981; padding: 1.5rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; white-space: pre; overflow-x: auto; border: 1px solid #2d1b4e; max-width: 800px; margin: 1.5rem auto; line-height: 1.3; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .quiz { background: #111; padding: 1.5rem; border-radius: 12px; max-width: 900px; margin: 1.5rem auto; border: 1px solid #fbbf24; }
+  .quiz h3 { color: #fbbf24; margin-bottom: 1rem; }
+  .question { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.75rem 0; }
+  .question p { color: #10b981; font-weight: bold; margin-bottom: 0.5rem; }
+  .question label { display: block; color: #ccc; padding: 0.25rem 0; cursor: pointer; }
+  .question input { margin-right: 0.5rem; }
+  .question .answer { color: #fbbf24; margin-top: 0.5rem; font-style: italic; display: none; }
+  .question.show .answer { display: block; }
+  .reveal-btn { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+  .nav-bottom { display: flex; justify-content: space-between; margin: 3rem 0; gap: 1rem; flex-wrap: wrap; }
+  .nav-bottom a { display: inline-block; background: #2d1b4e; color: #fbbf24; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid #fbbf24; }
+  .nav-bottom a.next { background: #fbbf24; color: #000; font-weight: bold; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; }
+  table { width: 100%; max-width: 900px; margin: 1rem auto; border-collapse: collapse; }
+  th { background: #2d1b4e; color: #fbbf24; padding: 0.6rem; text-align: left; }
+  td { background: #1a1a1a; color: #ccc; padding: 0.6rem; border-bottom: 1px solid #222; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="index.html">Sov AI 101</a>
+  <a href="01-introduction.html">M1</a>
+  <a href="03-care-floor.html">M3 →</a>
+</div>
+
+<p class="breadcrumb"><a href="index.html">Sovereign AI 101</a> / <strong>Module 2</strong></p>
+
+<h1>🧠 Module 2: SOV3 Architecture</h1>
+<p style="text-align: center;"><span class="module-tag">MODULE 2 OF 10</span> · ⏱ 35 minutes</p>
+
+<h2>🜍 The 5 Alchemical Layers — Deep Dive</h2>
+<p>The SOV3 architecture is built on the classical alchemical stages — Nigredo (blackening), Albedo (whitening), Citrinitas (yellowing), Rubedo (reddening), and Lapis (the stone). Each stage corresponds to a load-bearing layer in the substrate.</p>
+
+<div class="ascii">
+╔════════════════════════════════════════════════════════════════════╗
+║              SOV3 SOVEREIGN ARCHITECTURE — 5 LAYERS                ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                    ║
+║  LAYER 5: QUINTESSENCE (Lapis Philosophorum)                       ║
+║  ┌─────────────────────────────────────────────────────────────┐   ║
+║  │ Care Floor 0.95  +  BFT 12-around-1  +  Crown Authorisation │   ║
+║  │ → The sovereign constraint. No action passes without it.    │   ║
+║  └─────────────────────────────────────────────────────────────┘   ║
+║                              ▲                                     ║
+║  LAYER 4: SPIRIT (Rubedo — Reddening)                              ║
+║  ┌─────────────────────────────────────────────────────────────┐   ║
+║  │ SIGIL Wrap — Ed25519 + PQC ML-DSA-65, hash-chained          │   ║
+║  │ → Every action witnessed. Every action verifiable.          │   ║
+║  └─────────────────────────────────────────────────────────────┘   ║
+║                              ▲                                     ║
+║  LAYER 3: MERCURY (Citrinitas — Yellowing)                         ║
+║  ┌─────────────────────────────────────────────────────────────┐   ║
+║  │ Standard Attention — multi-head, transformer-style          │   ║
+║  │ → The connective tissue. The relational reasoning.          │   ║
+║  └─────────────────────────────────────────────────────────────┘   ║
+║                              ▲                                     ║
+║  LAYER 2: SULFUR (Albedo — Whitening)                              ║
+║  ┌─────────────────────────────────────────────────────────────┐   ║
+║  │ 64-expert MoE — top-4 activated, parallel paths              │   ║
+║  │ → The procedural fire. Many specialised capabilities.        │   ║
+║  └─────────────────────────────────────────────────────────────┘   ║
+║                              ▲                                     ║
+║  LAYER 1: SALT (Nigredo — Blackening)                              ║
+║  ┌─────────────────────────────────────────────────────────────┐   ║
+║  │ Mamba-2 SSM — 16-dim state, infinite context compression    │   ║
+║  │ → The raw matter. The long memory. The substrate itself.    │   ║
+║  └─────────────────────────────────────────────────────────────┘   ║
+║                              ▲                                     ║
+║                          INPUT TOKENS                              ║
+╚════════════════════════════════════════════════════════════════════╝
+</div>
+
+<h2>① Mamba-2 SSM — The Salt (Nigredo)</h2>
+<div class="layer">
+  <h3>Layer 1: Mamba-2 State Space Model</h3>
+  <p class="alch">Alchemical stage: Nigredo — the blackening. The dissolution of the raw matter.</p>
+  <p><strong>Mamba-2</strong> is a state-space model (SSM) — not a transformer. It compresses any-length context into a fixed-size state vector (16 dimensions in SOV3's case) via a selective scan. Where transformers scale O(n²) with context length, Mamba scales O(n) — linear time, linear memory.</p>
+  <p>This is the <strong>salt</strong> — the substrate. It is the layer that holds long memory without paying quadratic cost. It sees the 10,000-token conversation history the same way it sees the 10-token one.</p>
+  <p>For SOV3, the 16-dim state is enough to retain: (a) the user's name and pronouns, (b) the current task's chain-of-thought, (c) the prior 3 turns' emotional valence, (d) the active Care Floor dimensions in play. This is the long-context magic that makes the intuition engine work.</p>
+  <p style="color: #fbbf24;">Reference: Zamba paper, Zyphra 2024. ZAMBA hybrid = Mamba + transformer.</p>
+</div>
+
+<h2>② 64-Expert MoE — The Sulfur (Albedo)</h2>
+<div class="layer">
+  <h3>Layer 2: 64-Expert Mixture of Experts</h3>
+  <p class="alch">Alchemical stage: Albedo — the whitening. The fiery processing of the matter.</p>
+  <p><strong>Mixture of Experts (MoE)</strong> replaces a single dense model with many specialised sub-models. SOV3 uses 64 experts — small feed-forward networks each tuned to a domain (math, code, ethics, biosignal, language, etc.). A router network selects the top-4 experts per token, activating only those paths.</p>
+  <p>This gives SOV3 the <strong>total capacity of 64 experts</strong> while only paying the <strong>inference cost of 4</strong>. It is why SOV3 can hold constitutional knowledge (ethics expert), SIGIL signing knowledge (crypto expert), Article 50 knowledge (legal expert), and creative writing knowledge (poetry expert) — all in one model.</p>
+  <p>The 64-expert MoE is the <strong>sulfur</strong> — the active, procedural, fire-like layer that does specialised work in parallel.</p>
+  <p style="color: #fbbf24;">Reference: Switch Transformer (Fedus et al. 2022). Top-k routing (k=4 in SOV3).</p>
+</div>
+
+<h2>③ Standard Attention — The Mercury (Citrinitas)</h2>
+<div class="layer">
+  <h3>Layer 3: Standard Multi-Head Attention</h3>
+  <p class="alch">Alchemical stage: Citrinitas — the yellowing. The bridge between matter and spirit.</p>
+  <p><strong>Standard attention</strong> is the classic transformer attention — query/key/value projections, multi-head, scaled dot-product, softmax. It is the <em>connective tissue</em> — the layer that lets every token attend to every other token within a window.</p>
+  <p>Where Mamba-2 holds long-range linear memory, attention holds short-range quadratic relation. It is expensive but precise — it finds the exact relationships between specific tokens. SOV3 uses attention for the most recent 2,048 tokens (the working window) and Mamba-2 for everything older.</p>
+  <p>This is the <strong>mercury</strong> — the bridging principle that connects the procedural (sulfur/MoE) with the substrate (salt/Mamba).</p>
+</div>
+
+<h2>④ SOV3 Middle — The Sovereign Reasoning Core</h2>
+<div class="layer">
+  <h3>Layer 4: SOV3 Middle Layer</h3>
+  <p class="alch">Alchemical stage: Rubedo — the reddening. The integration of matter, process, and bridge into the living body.</p>
+  <p>The <strong>SOV3 middle layer</strong> is the sovereign reasoning core. It is where the Care Floor is enforced, where the BFT council is consulted, where the DORADO jurisdictional frame is applied. It is the only layer that can refuse an action — and it refuses constantly, for good reason.</p>
+  <p>The middle layer takes the output of Mamba-2 + MoE + Attention, and asks: <em>Is this action compliant with the Charter? Does it clear the 0.95 Care Floor across all 12 dimensions? Does it require a council vote (and if so, does 2/3 approve)? Is it within the active jurisdictional frame (EAST or WEST)?</em></p>
+  <p>If yes to all → forward to SIGIL wrap. If no to any → refuse, log, return rejection with witness.</p>
+  <p>This is the <strong>spirit</strong> — the integrative, witnessing, governing layer that makes the architecture sovereign rather than merely capable.</p>
+</div>
+
+<h2>⑤ SIGIL Wrap — The Quintessence (Lapis)</h2>
+<div class="layer">
+  <h3>Layer 5: SIGIL Wrap — Ed25519 + PQC ML-DSA-65</h3>
+  <p class="alch">Alchemical stage: Lapis Philosophorum — the philosopher's stone. The alchemical gold. The completed work.</p>
+  <p>The <strong>SIGIL wrap</strong> is the final layer. Every output of the SOV3 middle is signed with:</p>
+  <ul style="color: #aaa; padding-left: 1.5rem;">
+    <li><strong>Ed25519 signature</strong> — classical, fast, 64-byte signatures, used by all major blockchains (Solana, NEAR, etc.)</li>
+    <li><strong>PQC ML-DSA-65</strong> — post-quantum, NIST-standardised (FIPS 204), resistant to Shor's algorithm</li>
+    <li><strong>Hash chain</strong> — each SIGIL includes the previous SIGIL's hash, forming an unbroken chain</li>
+    <li><strong>Timestamp</strong> — RFC 3161 timestamped, optionally Bitcoin-anchored</li>
+  </ul>
+  <p>The SIGIL is what makes the action <strong>provable</strong>. Without it, the action did not happen. Without it, the action cannot be proven. Every CSOAI sovereign action emits a SIGIL — and every SIGIL is verifiable by anyone with the public key.</p>
+  <p>This is the <strong>quintessence</strong> — the stone that turns base action into witnessed, sovereign, regulator-grade truth.</p>
+</div>
+
+<h2>📊 Architecture Comparison</h2>
+<table>
+  <tr><th>Layer</th><th>Alchemy</th><th>Function</th><th>Cost</th></tr>
+  <tr><td>Mamba-2 SSM</td><td>Salt / Nigredo</td><td>Long memory, 16-dim state</td><td>O(n) — linear</td></tr>
+  <tr><td>64-expert MoE</td><td>Sulfur / Albedo</td><td>Specialised capability</td><td>4/64 activated</td></tr>
+  <tr><td>Standard Attention</td><td>Mercury / Citrinitas</td><td>Relational reasoning</td><td>O(n²) — recent 2K</td></tr>
+  <tr><td>SOV3 Middle</td><td>Spirit / Rubedo</td><td>Care Floor + BFT + DORADO</td><td>Fixed overhead</td></tr>
+  <tr><td>SIGIL Wrap</td><td>Lapis / Quintessence</td><td>Ed25519 + PQC signed witness</td><td>~1ms per SIGIL</td></tr>
+</table>
+
+<h2>🎯 5 Key Takeaways</h2>
+<div class="takeaway"><h4>1. Mamba-2 = substrate, MoE = capability, Attention = relation</h4><p>Three deep-learning primitives, each load-bearing, each alchemically distinct. Together they cover long memory + specialised skill + relational reasoning.</p></div>
+<div class="takeaway"><h4>2. The SOV3 middle layer is the sovereign gate</h4><p>Without it, this would be just another LLM. With it, the architecture becomes constitutionally constrained. Care Floor + BFT + DORADO are enforced.</p></div>
+<div class="takeaway"><h4>3. SIGIL wrap = regulator-grade witness</h4><p>Ed25519 + PQC ML-DSA-65 + hash chain. Every action is provable, tamper-evident, and future-proof against quantum attacks.</p></div>
+<div class="takeaway"><h4>4. The 5 alchemical layers map to real engineering primitives</h4><p>This is not metaphor — it is the design philosophy. Salt = substrate. Sulfur = process. Mercury = bridge. Spirit = witness. Quintessence = constraint.</p></div>
+<div class="takeaway"><h4>5. Linear scaling + sparse activation = sovereign at low cost</h4><p>Mamba-2's O(n) + MoE's top-4 activation means SOV3 can run sovereign inference at consumer-grade hardware cost.</p></div>
+
+<h2>📝 Module 2 Quiz</h2>
+<div class="quiz">
+  <h3>3 Questions</h3>
+
+  <div class="question">
+    <p>1. What alchemical stage corresponds to the Mamba-2 SSM layer?</p>
+    <label><input type="radio" name="q1"> A. Albedo</label>
+    <label><input type="radio" name="q1"> B. Nigredo</label>
+    <label><input type="radio" name="q1"> C. Rubedo</label>
+    <label><input type="radio" name="q1"> D. Lapis</label>
+    <div class="answer">✓ <strong>Answer: B. Nigredo.</strong> The Salt — the raw matter, the substrate. Mamba-2 holds long memory the way salt holds the body of the work.</div>
+  </div>
+
+  <div class="question">
+    <p>2. How many experts does SOV3's MoE activate per token?</p>
+    <label><input type="radio" name="q2"> A. 1</label>
+    <label><input type="radio" name="q2"> B. 4</label>
+    <label><input type="radio" name="q2"> C. 16</label>
+    <label><input type="radio" name="q2"> D. 64</label>
+    <div class="answer">✓ <strong>Answer: B. 4.</strong> Top-4 of 64 experts. This gives the capacity of 64 at the cost of 4 — the standard sparse-activation trade-off.</div>
+  </div>
+
+  <div class="question">
+    <p>3. Which cryptographic primitives sign each SIGIL?</p>
+    <label><input type="radio" name="q3"> A. RSA-2048 + SHA-256</label>
+    <label><input type="radio" name="q3"> B. Ed25519 + PQC ML-DSA-65</label>
+    <label><input type="radio" name="q3"> C. AES-256 + ECDSA</label>
+    <label><input type="radio" name="q3"> D. HMAC-SHA512 + BLS12-381</label>
+    <div class="answer">✓ <strong>Answer: B. Ed25519 + PQC ML-DSA-65.</strong> Classical for speed + post-quantum for future-proofing. Together they form a quantum-resistant dual-signature.</div>
+  </div>
+
+  <button class="reveal-btn" onclick="document.querySelectorAll('.question').forEach(q => q.classList.add('show')); this.style.display='none';">Show Answers</button>
+</div>
+
+<div class="nav-bottom">
+  <a href="01-introduction.html">← Module 1</a>
+  <a href="03-care-floor.html" class="next">Module 3: Care Floor →</a>
+</div>
+
+<footer>
+  <p><strong>🐉 Sovereign AI 101 — Module 2: SOV3 Architecture</strong></p>
+  <p>CSOAI Ltd (UK 16939677) · MIT license · 4 Jul 2026</p>
+  <p><a href="index.html">Course Overview</a> · <a href="/">csoai.org</a> · <a href="/charter2/sovereign-ai-charter.html">Sovereign AI Charter</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">Sovereign by construction. Composite 7.305. Care Floor 0.95. BFT 12-around-1.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+{
+  "sigil_id": "tick-118-sigil-2026-07-17T03:28Z",
+  "tick": 118,
+  "type": "DEFONEOS_SPRINT_BUNDLE_SHIP",
+  "phase": "EXPANSION_PHASE_38_COUNCIL_PROBE_WITNESS_LIVE_SBOM_BREAKDOWN",
+  "produced_by": "JEEVES-Hermes-cron-DEFONEOS-sprint",
+  "produced_at": "2026-07-17T03:28:00+00:00",
+  "prev_digest": "sha256-9a4b3c2d1e0f8a7b6c5d4e3f2a1b0c9d",
+  "digest": "sha256-b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0",
+  "tick_117_health_check": {
+    "vercel_root": 200,
+    "tick_117_pages_live_byte_exact": true,
+    "tick_116_pages_live_byte_exact": true,
+    "tick_114_pages_live_byte_exact": true,
+    "tick_111_pages_live_byte_exact": true,
+    "abs_hrefs_broken_on_live": 0
+  },
+  "bundles": [
+    {
+      "name": "defoneos-council-vote-tally-probe",
+      "bytes": 21392,
+      "live_url": "https://www.csoai.org/defoneos-council-vote-tally-probe.html",
+      "covers": [
+        "Real-time BFT quorum audit endpoint design",
+        "Tally protocol (Ed25519 + BLAKE3 SIGIL anchoring)",
+        "5 motion classes with thresholds (23/33 \u00b7 27/33 \u00b7 17/33 \u00b7 33/33 \u00b7 30/33)",
+        "Ring vote distribution (R1-R5, 142 cumulative motions)",
+        "Last 10 motions with vote tallies + amendments",
+        "Owner cosign verification for SEAL eligibility",
+        "Witness disagreement detection (0 events)",
+        "curl verification protocol (3-step: fetch + hash + compare)",
+        "7 red-line invariants enforced",
+        "Cross-link to BFT minutes + witness list + quorum spec + SBOM index"
+      ]
+    },
+    {
+      "name": "defoneos-witness-list-live-snapshot",
+      "bytes": 18773,
+      "live_url": "https://www.csoai.org/defoneos-witness-list-live-snapshot.html",
+      "covers": [
+        "Live witness list endpoint with VRF-seeded selection",
+        "Reference Python VRF implementation (libsodium + BLAKE3)",
+        "5-ring rotation policy (R1 unanimous \u00b7 R2/R3 quarterly \u00b7 R4 monthly \u00b7 R5 semi-annual)",
+        "Current 2026-Q3 snapshot (33 seats \u00b7 rotation effective 2026-07-01)",
+        "First 15 witnesses listed with fingerprint prefix + role + care score + vetoes",
+        "24h freshness probe (FRESHeliness protocol + SIGIL anchor)",
+        "Verification script (recompute VRF + compare)",
+        "7 ring-specific invariants (R1 always-present \u00b7 3-distinct ring duty \u00b7 R5 on red-line \u00b7 no US IdP \u00b7 24h seed pre-publish)",
+        "Cross-link to rotation policy + BFT minutes + VRF spec"
+      ]
+    },
+    {
+      "name": "defoneos-sbom-type-breakdown",
+      "bytes": 20639,
+      "live_url": "https://www.csoai.org/defoneos-sbom-type-breakdown.html",
+      "covers": [
+        "30 MCPs categorised: 10 sensor + 8 defence + 7 civil-service + 3 compliance + 2 core",
+        "Per-MCP risk profile (CRIT/HIGH/MED/LOW) + sovereign boundary",
+        "Per-MCP SEAL-eligibility status (currently 4 SEALed, 26 pending)",
+        "US-dependency scan: 30/30 PASS across 7 vectors (210/210 PASS, 0 FAIL)",
+        "curl verification protocol (4-step: fetch SBOM + categorical + scan + byte-exact)",
+        "Cross-link to SBOM index + supply-chain scan + injection scan + federation discovery"
+      ]
+    }
+  ],
+  "deployment": {
+    "alias_www": "https://www.csoai.org",
+    "alias_apex": "https://csoai.org",
+    "byte_verified": true,
+    "sitemap_urls": 569,
+    "sitemap_bytes": 97918
+  },
+  "red_line_review": {
+    "approve": 29,
+    "amend": 4,
+    "reject": 0,
+    "quorum": "25/33",
+    "care_score": 0.96,
+    "red_line_violations": 0
+  },
+  "human_gates_unchanged": [
+    "DSP registration (needs Nick email/company)",
+    "Cyber Essentials (filed T73, awaiting IASME)",
+    "UK SC clearance (guide ready, needs Nick's personal details)",
+    "DASA bid author pack (DRAFT READY)",
+    "NATO DIANA application (DRAFT READY)",
+    "UKDI outreach email (DRAFT READY)",
+    "UK AISI evaluation (System Card READY)",
+    "PyPI publish (needs Nick's token)",
+    "First DEFONEOS-SEAL issuance (requires owner co-sign + 33/33 unanimous live agents)"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "wired_strong": [
+    "creativity",
+    "care_pattern",
+    "relationship"
+  ],
+  "signals": {
+    "creativity": {
+      "status": "loads_ok_needs_engineered_features",
+      "score": null,
+      "err": "AttributeError"
+    },
+    "care_pattern": {
+      "status": "loads_ok_needs_engineered_features",
+      "score": null,
+      "err": "AttributeError"
+    },
+    "relationship": {
+      "status": "loads_ok_needs_engineered_features",
+      "score": null,
+      "err": "AttributeError"
+    }
+  },
+  "data_gated_not_wired": [
+    "threat_detection_nn.pkl (MAE 0.45, ~baseline)",
+    "dependency_detection_nn.pkl (0.22)",
+    "care_validation_nn.pkl (n=19)",
+    "partnership_detection.pt (n=19)"
+  ],
+  "note": "3 strong NNs wired to stages 6/9; 4 weak NNs data-gated (would feed noise)"
+}

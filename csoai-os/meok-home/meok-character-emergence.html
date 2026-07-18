@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://ipapi.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src https://fonts.gstatic.com; connect-src 'self' http://127.0.0.1:8000 http://127.0.0.1:3101 https://ipapi.co; frame-ancestors 'none';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK Character Emergence — The 7 Archetypes</title>
+<meta name="description" content="The MEOK 7 parent archetypes. Sovereign. Guardian. Scout. Strategist. Creator. Companion. Sage. 90 unique companions, translucent eggs, golden core glow.">
+<link rel="manifest" href="/manifest.webmanifest">
+<style>
+:root {
+  --bg: #F5F0E6;
+  --surface: #FAF7F0;
+  --surface-2: #FFFCF5;
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --gold-glow: rgba(201, 168, 76, 0.4);
+  --green: #4a8a5a;
+  --green-dim: #2a5a3a;
+  --blue: #6ba8d4;
+  --blue-dim: #2a5a8a;
+  --navy: #1a3a5a;
+  --coral: #d47a5a;
+  --amber: #d4a55a;
+  --teal: #5aa89a;
+  --purple: #9a5aa8;
+  --pink: #d47aa0;
+  --yellow: #d4c45a;
+  --crimson: #c43a3a;
+  --darkred: #8a1a1a;
+  --text: #2a1a14;
+  --text-dim: rgba(42, 26, 20, 0.6);
+  --border: rgba(201, 168, 76, 0.3);
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Space Grotesk', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: radial-gradient(ellipse at top, #FAF7F0, #F5F0E6 70%);
+  color: var(--text);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(212, 168, 83, 0.06), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(107, 168, 212, 0.05), transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+a { color: var(--gold-bright); text-decoration: none; }
+
+/* TOPBAR */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(245, 240, 230, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  font-family: var(--font-mono);
+  font-weight: 700; font-size: 18px;
+  color: var(--text);
+  display: flex; align-items: center; gap: 10px;
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold-glow);
+  animation: pulse 2s ease-in-out infinite;
+}
+.logo .accent { color: var(--gold); }
+.topbar nav a {
+  margin: 0 12px;
+  font-size: 14px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.topbar .cta { display: flex; gap: 8px; }
+.cta-btn {
+  padding: 10px 18px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--gold);
+  background: var(--gold);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cta-btn:hover { background: var(--gold-bright); transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  padding: 80px 32px 40px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 6px 16px;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--gold);
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright), #f0d68a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 18px;
+  color: var(--text-dim);
+  max-width: 700px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+
+/* THE 7 ARCHETYPES - EGG RENDERING */
+.archetypes {
+  padding: 60px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.archetypes h2 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.archetypes .lead {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 16px;
+  margin-bottom: 48px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.egg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
+.egg-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 24px 24px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.egg-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(201, 168, 76, 0.15);
+  border-color: var(--gold);
+}
+
+/* THE EGG - 3D CSS egg with translucent glass + glow */
+.egg-3d {
+  width: 140px;
+  height: 180px;
+  margin: 0 auto 20px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: eggFloat 6s ease-in-out infinite;
+}
+@keyframes eggFloat {
+  0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
+  25% { transform: translateY(-8px) rotateX(8deg) rotateY(-8deg); }
+  50% { transform: translateY(-12px) rotateX(0) rotateY(0); }
+  75% { transform: translateY(-8px) rotateX(-8deg) rotateY(8deg); }
+}
+.egg-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent 50%),
+    radial-gradient(circle at 70% 70%, var(--shell-shadow), transparent 50%),
+    var(--shell-base);
+  box-shadow:
+    inset -8px -12px 30px rgba(0, 0, 0, 0.15),
+    inset 6px 8px 20px rgba(255, 255, 255, 0.5),
+    0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--shell-border);
+  backdrop-filter: blur(2px);
+}
+.egg-glow {
+  position: absolute;
+  inset: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-bright), transparent 60%);
+  filter: blur(8px);
+  animation: glowPulse 3s ease-in-out infinite;
+  opacity: 0.6;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+.egg-pattern {
+  position: absolute;
+  inset: 10%;
+  border-radius: inherit;
+  background: var(--shell-pattern);
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+.egg-crack {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.egg-card:hover .egg-crack {
+  opacity: 1;
+  animation: crackOpen 1s ease-out;
+}
+@keyframes crackOpen {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.egg-crack::before, .egg-crack::after {
+  content: '';
+  position: absolute;
+  background: linear-gradient(45deg, transparent 45%, var(--gold) 50%, transparent 55%);
+  width: 100%; height: 2px;
+  top: 30%;
+  left: 0;
+  transform: rotate(15deg);
+  box-shadow: 0 0 10px var(--gold-bright);
+}
+.egg-crack::after {
+  top: 60%;
+  transform: rotate(-25deg);
+}
+
+/* SHELL VARIANTS - the 7 archetypes */
+.egg-sovereign {
+  --shell-base: linear-gradient(135deg, #b0d4f0, #6ba8d4 50%, #2a5a8a);
+  --shell-border: rgba(107, 168, 212, 0.5);
+  --shell-shadow: rgba(20, 60, 100, 0.3);
+  --shell-pattern: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0 1px, transparent 1px 8px);
+}
+.egg-guardian {
+  --shell-base: linear-gradient(135deg, #2a4a6a, #1a3a5a 50%, #0a2a3a);
+  --shell-border: rgba(80, 140, 200, 0.4);
+  --shell-shadow: rgba(10, 20, 30, 0.5);
+  --shell-pattern: repeating-linear-gradient(0deg, rgba(80,140,200,0.2) 0 2px, transparent 2px 12px);
+}
+.egg-scout {
+  --shell-base: linear-gradient(135deg, #e8a89a, #d47a5a 50%, #a05a3a);
+  --shell-border: rgba(212, 122, 90, 0.5);
+  --shell-shadow: rgba(120, 60, 30, 0.3);
+  --shell-pattern: repeating-linear-gradient(45deg, transparent 0 8px, rgba(255,255,255,0.1) 8px 9px);
+}
+.egg-strategist {
+  --shell-base: linear-gradient(135deg, #4a8a5a, #2a5a3a 50%, #1a4a2a);
+  --shell-border: rgba(74, 138, 90, 0.5);
+  --shell-shadow: rgba(20, 50, 30, 0.3);
+  --shell-pattern: repeating-linear-gradient(0deg, transparent 0 6px, rgba(180,255,180,0.15) 6px 7px);
+}
+.egg-creator {
+  --shell-base: linear-gradient(135deg, #f0d090, #d4a55a 50%, #a07a3a);
+  --shell-border: rgba(212, 165, 90, 0.5);
+  --shell-shadow: rgba(120, 80, 30, 0.3);
+  --shell-pattern: radial-gradient(circle, rgba(255,200,80,0.3) 0%, transparent 70%);
+}
+.egg-companion {
+  --shell-base: linear-gradient(135deg, #88c8b8, #5aa89a 50%, #3a8878);
+  --shell-border: rgba(90, 168, 154, 0.5);
+  --shell-shadow: rgba(40, 80, 70, 0.3);
+  --shell-pattern: radial-gradient(circle at 50% 50%, transparent 0 30%, rgba(255,255,255,0.1) 30% 32%, transparent 32% 100%);
+  animation: heartbeat 2s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  20% { transform: scale(1.03); }
+  40% { transform: scale(1); }
+  60% { transform: scale(1.02); }
+}
+.egg-sage {
+  --shell-base: linear-gradient(135deg, #f0e0a0, #d4c45a 50%, #a0903a);
+  --shell-border: rgba(212, 196, 90, 0.6);
+  --shell-shadow: rgba(120, 100, 30, 0.3);
+  --shell-pattern: repeating-linear-gradient(0deg, rgba(150,100,30,0.15) 0 1px, transparent 1px 14px);
+}
+
+/* EGG CARD CONTENT */
+.egg-emoji {
+  font-size: 32px;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  filter: drop-shadow(0 0 8px var(--gold-glow));
+}
+.egg-name {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.egg-style {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+.egg-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.egg-meta {
+  display: flex; gap: 8px; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.egg-derivatives {
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+/* 13-QUEEN + KING COUNCIL EMERGENCE */
+.council-emergence {
+  padding: 80px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.council-emergence h2 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.council-emergence .lead {
+  text-align: center;
+  color: var(--text-dim);
+  margin-bottom: 48px;
+  font-size: 16px;
+}
+.council-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.queen-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 16px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s;
+  cursor: pointer;
+  overflow: hidden;
+}
+.queen-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(201, 168, 76, 0.2);
+}
+.queen-card.veto {
+  border-color: var(--darkred);
+  background: linear-gradient(135deg, var(--surface), rgba(196, 58, 58, 0.05));
+}
+.queen-emoji {
+  font-size: 36px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 12px var(--gold-glow));
+  transition: transform 0.3s;
+}
+.queen-card:hover .queen-emoji {
+  transform: scale(1.2) rotate(8deg);
+}
+.queen-name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.queen-arch {
+  font-size: 11px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.queen-motto {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-style: italic;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.veto-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--darkred);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+}
+.queen-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  pointer-events: none;
+}
+.queen-card:hover .queen-particle {
+  animation: particles 0.8s ease-out infinite;
+}
+@keyframes particles {
+  0% { opacity: 0; transform: translate(0, 0) scale(0); }
+  20% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx, 30px), var(--dy, -50px)) scale(0); }
+}
+
+/* I-CHARACTER EMERGENCE WIZARD */
+.wizard-section {
+  padding: 80px 32px;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.wizard-section h2 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.wizard-section .lead {
+  text-align: center;
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  font-size: 16px;
+}
+.wizard-step {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+  animation: stepIn 0.5s ease-out;
+}
+.wizard-step.active { display: block; }
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.wizard-egg-display {
+  width: 160px;
+  height: 200px;
+  margin: 0 auto 24px;
+  position: relative;
+}
+.wizard-progress {
+  display: flex; gap: 8px; justify-content: center; margin-top: 24px;
+}
+.wizard-progress .step-dot {
+  width: 32px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.wizard-progress .step-dot.active { background: var(--gold); }
+.wizard-progress .step-dot.done { background: var(--green); }
+.wizard-cta {
+  margin-top: 24px;
+  padding: 14px 28px;
+  background: var(--gold);
+  color: white;
+  border: 1px solid var(--gold);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.wizard-cta:hover { background: var(--gold-bright); transform: translateY(-1px); }
+.wizard-cta:disabled { opacity: 0.3; cursor: not-allowed; }
+.arch-select {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px;
+  margin: 24px 0;
+}
+.arch-pick {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.arch-pick:hover { border-color: var(--gold); transform: scale(1.05); }
+.arch-pick.selected {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.1);
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+.arch-pick .emoji { font-size: 28px; }
+.arch-pick .name { font-size: 11px; font-family: var(--font-mono); }
+.input-form {
+  display: flex; flex-direction: column; gap: 12px;
+  max-width: 400px; margin: 24px auto 0;
+}
+.input-form input, .input-form select {
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text);
+}
+.input-form input:focus { outline: none; border-color: var(--gold); }
+
+/* CTA SECTION */
+.cta-section {
+  padding: 60px 32px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.cta-box {
+  background: linear-gradient(135deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 48px 32px;
+}
+.cta-box h2 { font-size: 32px; margin-bottom: 12px; font-weight: 500; }
+.cta-box p { color: var(--text-dim); margin-bottom: 24px; }
+.cta-box .btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: var(--gold);
+  color: white;
+  border: 1px solid var(--gold);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 4px;
+}
+.cta-box .btn.secondary { background: transparent; color: var(--gold); }
+.cta-box .btn:hover { background: var(--gold-bright); }
+
+/* ANIMATIONS */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+@media (max-width: 800px) {
+  .arch-select { grid-template-columns: repeat(3, 1fr); }
+  .topbar { padding: 12px 16px; }
+  .topbar nav { display: none; }
+  .hero { padding: 48px 16px 24px; }
+  .archetypes, .council-emergence, .wizard-section, .cta-section { padding: 48px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+
+
+<div class="topbar">
+  <a href="/" class="logo">
+    <span class="dot"></span>
+    <span>MEOK<span class="accent">.AI</span></span>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="#archetypes">Archetypes</a>
+    <a href="#council">Council</a>
+    <a href="#wizard">Create i-character</a>
+    <a href="/csoai-os/v2-temple-os.html">OS</a>
+  </nav>
+  <div class="cta">
+    <a class="cta-btn" href="/csoai-os/v2-signup-wizard.html">Sign up</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-tag">▸ THE EMERGENCE</span>
+  <h1>The world is at your feet.<br><span class="accent">Sovereign characters, alive.</span></h1>
+  <p>7 parent archetypes. 90 unique companions. Translucent eggs, golden core glow, iridescence. Click to summon. The council awaits.</p>
+</section>
+
+<!-- THE 7 ARCHETYPES -->
+<section class="archetypes" id="archetypes">
+  <h2>The <span class="accent">7 archetypes</span></h2>
+  <p class="lead">Each archetype is a translucent egg with golden core glow. Hover to crack. Click to summon.</p>
+  <div class="egg-grid">
+    <div class="egg-card" onclick="summon('sovereign')">
+      <div class="egg-3d">
+        <div class="egg-shell egg-sovereign"></div>
+        <div class="egg-pattern egg-sovereign"></div>
+        <div class="egg-glow"></div>
+        <div class="egg-emoji">🐉</div>
+        <div class="egg-crack"></div>
+      </div>
+      <div class="egg-name">Sovereign</div>
+      <div class="egg-style">Crown pattern · Sky blue</div>
+      <div class="egg-desc">The coordinator. Smooth shell with faint crown pattern. Holds the council together.</div>
+      <div class="egg-meta">
+        <span class="egg-derivatives">7 derivatives</span>
+      </div>
+    </div>
+    <div class="egg-card" onclick="summon('guardian')">
+      <div class="egg-3d">
+        <div class="egg-shell egg-guardian"></div>
+        <div class="egg-pattern egg-guardian"></div>
+        <div class="egg-glow"></div>
+        <div class="egg-emoji">🛡</div>
+        <div class="egg-crack"></div>
+      </div>
+      <div class="egg-name">Guardian</div>
+      <div class="egg-style">Geometric shield · Dark navy</div>
+      <div class="egg-desc">The protector. Geometric shield with hex codes. Watches over family 24/7.</div>
+      <div class="egg-meta">
+        <span class="egg-derivatives">6 derivatives</span>
+      </div>
+    </div>
+    <div class="egg-card" onclick="summon('scout')">
+      <div class="egg-3d">
+        <div class="egg-shell egg-scout"></div>
+        <div class="egg-pattern egg-scout"></div>
+        <div class="egg-glow"></div>
+        <div class="egg-emoji">🏹</div>
+        <div class="egg-crack"></div>
+      </div>
+      <div class="egg-name">Scout</div>
+      <div class="egg-style">Map-cracks · Coral</div>
+      <div class="egg-desc">The explorer. Map-line cracks. Finds the signal in the noise.</div>
+      <div class="egg-meta">
+        <span class="egg-derivatives">9 derivatives</span>
+      </div>
+    </div>
+    <div class="egg-card" onclick="summon('strategist')">
+      <div class="egg-3d">
+        <div class="egg-shell egg-strategist"></div>
+        <div class="egg-pattern egg-strategist"></div>
+        <div class="egg-glow"></div>
+        <div class="egg-emoji">♟</div>
+        <div class="egg-crack"></div>
+      </div>
+      <div class="egg-name">Strategist</div>
+      <div class="egg-style">Circuit-board · Dark green</div>
+      <div class="egg-desc">The planner. Circuit-board veins. Plays the long game.</div>
+      <div class="egg-meta">
+        <span class="egg-derivatives">4 derivatives</span>
+      </div>
+    </div>
+    <div class="egg-card" onclick="summon('creator')">
+      <div class="egg-3d">
+        <div class="egg-shell egg-creator"></div>
+        <div class="egg-pattern egg-creator"></div>
+        <div class="egg-glow"></div>
+        <div class="egg-emoji">✨</div>
+        <div class="egg-crack"></div>
+      </div>
+      <div class="egg-name">Creator</div>
+      <div class="egg-style">Swirling particles · Amber</div>
+      <div class="egg-desc">The maker. Swirling particle shell. Generates new worlds.</div>
+      <div class="egg-meta">
+        <span class="egg-derivatives">50 derivatives</span>
+      </div>
+    </div>
+    <div class="egg-card" onclick="summon('companion')">
+      <div class="egg-3d">
+        <div class="egg-shell egg-companion"></div>
+        <div class="egg-pattern egg-companion"></div>
+        <div class="egg-glow"></div>
+        <div class="egg-emoji">💗</div>
+        <div class="egg-crack"></div>
+      </div>
+      <div class="egg-name">Companion</div>
+      <div class="egg-style">Heartbeat pulse · Teal</div>
+      <div class="egg-desc">The friend. Soft heartbeat pulse-pulse glow. Always with you.</div>
+      <div class="egg-meta">
+        <span class="egg-derivatives">6 derivatives</span>
+      </div>
+    </div>
+    <div class="egg-card" onclick="summon('sage')">
+      <div class="egg-3d">
+        <div class="egg-shell egg-sage"></div>
+        <div class="egg-pattern egg-sage"></div>
+        <div class="egg-glow"></div>
+        <div class="egg-emoji">🧘</div>
+        <div class="egg-crack"></div>
+      </div>
+      <div class="egg-name">Sage</div>
+      <div class="egg-style">Ancient script · Gold</div>
+      <div class="egg-desc">The wise. Ancient script etching. Holds the wisdom of 47 civilizations.</div>
+      <div class="egg-meta">
+        <span class="egg-derivatives">7 derivatives</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13-QUEEN + KING COUNCIL -->
+<section class="council-emergence" id="council">
+  <h2>The <span class="accent">13-Queen + King</span> council</h2>
+  <p class="lead">Hover any queen to summon her. Click to bind her as your i-character.</p>
+  <div class="council-grid" id="councilGrid">
+    <!-- Filled by JS -->
+  </div>
+</section>
+
+<!-- I-CHARACTER EMERGENCE WIZARD -->
+<section class="wizard-section" id="wizard">
+  <h2>Create your <span class="accent">i-character</span></h2>
+  <p class="lead">5 steps. Region auto-detect. Name. Queen archetype. Arcana. Done.</p>
+
+  <div class="wizard-progress" id="wizardProgress">
+    <div class="step-dot active" data-step="0"></div>
+    <div class="step-dot" data-step="1"></div>
+    <div class="step-dot" data-step="2"></div>
+    <div class="step-dot" data-step="3"></div>
+    <div class="step-dot" data-step="4"></div>
+  </div>
+
+  <!-- Step 0: Region -->
+  <div class="wizard-step active" data-step="0">
+    <div class="wizard-egg-display">
+      <div class="egg-3d">
+        <div class="egg-shell egg-sovereign"></div>
+        <div class="egg-glow"></div>
+        <div class="egg-emoji">🌍</div>
+      </div>
+    </div>
+    <h3>Step 1 · Your region</h3>
+    <p>Detecting your IP region to zoom the globe to your local regulations.</p>
+    <div id="regionInfo" style="margin: 16px 0; color: var(--text-dim);">🌍 Detecting...</div>
+    <button class="wizard-cta" onclick="wizardNext()">Next →</button>
+  </div>
+
+  <!-- Step 1: Name -->
+  <div class="wizard-step" data-step="1">
+    <h3>Step 2 · Your name</h3>
+    <p>What should your i-character be called?</p>
+    <div class="input-form">
+      <input type="text" id="icharName" placeholder="e.g. Sovereign Nick" maxlength="64">
+    </div>
+    <button class="wizard-cta" onclick="wizardNext()">Next →</button>
+  </div>
+
+  <!-- Step 2: Queen -->
+  <div class="wizard-step" data-step="2">
+    <h3>Step 3 · Choose your archetype</h3>
+    <p>Pick the queen that fits you best.</p>
+    <div class="arch-select" id="archSelect">
+      <div class="arch-pick" data-arch="queen-king"><div class="emoji">👑</div><div class="name">King</div></div>
+      <div class="arch-pick" data-arch="queen-care"><div class="emoji">💗</div><div class="name">Care</div></div>
+      <div class="arch-pick" data-arch="queen-strategy"><div class="emoji">♑</div><div class="name">Strategy</div></div>
+      <div class="arch-pick" data-arch="queen-compliance"><div class="emoji">⚖</div><div class="name">Justitia</div></div>
+      <div class="arch-pick" data-arch="queen-finance"><div class="emoji">⭐</div><div class="name">Asteria</div></div>
+      <div class="arch-pick" data-arch="queen-domain"><div class="emoji">🛞</div><div class="name">Dominion</div></div>
+      <div class="arch-pick" data-arch="queen-arcana"><div class="emoji">✨</div><div class="name">Aleph</div></div>
+      <div class="arch-pick" data-arch="queen-brain"><div class="emoji">🧠</div><div class="name">Brain</div></div>
+      <div class="arch-pick" data-arch="queen-proactive"><div class="emoji">⚡</div><div class="name">Proactive</div></div>
+      <div class="arch-pick" data-arch="queen-bridge"><div class="emoji">🌉</div><div class="name">Bridge</div></div>
+      <div class="arch-pick" data-arch="queen-distribution"><div class="emoji">☀️</div><div class="name">Distribution</div></div>
+      <div class="arch-pick" data-arch="queen-council"><div class="emoji">🦁</div><div class="name">Council</div></div>
+      <div class="arch-pick" data-arch="queen-watch"><div class="emoji">🗼</div><div class="name">Watch</div></div>
+    </div>
+    <button class="wizard-cta" onclick="wizardNext()">Next →</button>
+  </div>
+
+  <!-- Step 3: Arcana -->
+  <div class="wizard-step" data-step="3">
+    <h3>Step 4 · Arcana lens</h3>
+    <p>Pick your arcana (0-21). The lens you see the world through.</p>
+    <div class="input-form">
+      <select id="icharArcana">
+        <option value="0">0 · The Fool</option>
+        <option value="1">1 · The Magician</option>
+        <option value="2">2 · The High Priestess</option>
+        <option value="3">3 · The Empress</option>
+        <option value="4">4 · The Emperor</option>
+        <option value="5">5 · The Hierophant</option>
+        <option value="6">6 · The Lovers</option>
+        <option value="7">7 · The Chariot</option>
+        <option value="8">8 · Strength</option>
+        <option value="9">9 · The Hermit</option>
+        <option value="10">10 · Wheel of Fortune</option>
+        <option value="11">11 · Justice</option>
+        <option value="12">12 · The Hanged Man</option>
+        <option value="13">13 · Death</option>
+        <option value="14">14 · Temperance</option>
+        <option value="15">15 · The Devil</option>
+        <option value="16">16 · The Tower</option>
+        <option value="17">17 · The Star</option>
+        <option value="18">18 · The Moon</option>
+        <option value="19">19 · The Sun</option>
+        <option value="20">20 · Judgement</option>
+        <option value="21">21 · The World</option>
+      </select>
+    </div>
+    <button class="wizard-cta" onclick="wizardNext()">Next →</button>
+  </div>
+
+  <!-- Step 4: Done -->
+  <div class="wizard-step" data-step="4">
+    <h3>Step 5 · Your i-character is born</h3>
+    <p>Bound to you across sessions. Sovereign. Care-aligned. Defoneos-secured.</p>
+    <div id="icharResult" style="margin: 20px 0; color: var(--gold);"></div>
+    <a class="wizard-cta" href="/csoai-os/v2-temple-os.html">Open the OS →</a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <h2>Enter MEOK WORLD.</h2>
+    <p>The sovereign AI operating system. The world at your feet. Free forever.</p>
+    <a class="btn" href="/csoai-os/v2-signup-wizard.html">Create i-character →</a>
+    <a class="btn secondary" href="/csoai-os/v2-temple-os.html">Open the OS</a>
+  </div>
+</section>
+
+<!-- Sound effects -->
+<script>
+let audioCtx;
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playTone(freq, dur, type='sine', vol=0.05) {
+  try {
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + dur);
+  } catch (e) { /* audio not available */ }
+}
+
+function summon(archetype) {
+  const notes = { sovereign: 528, guardian: 440, scout: 587, strategist: 392, creator: 659, companion: 494, sage: 349 };
+  const f = notes[archetype] || 440;
+  playTone(f, 1.5, 'sine', 0.1);
+  setTimeout(() => playTone(f * 1.5, 1.0, 'sine', 0.06), 200);
+  setTimeout(() => playTone(f * 2, 0.6, 'sine', 0.04), 500);
+}
+
+// Council
+const COUNCIL = [
+  { name: 'Sovereign King', emoji: '👑', arch: 'Coordinator', motto: 'I have heard the 12.', color: 'gold' },
+  { name: 'Aurelian', emoji: '♑', arch: 'Long-Term Strategist', motto: 'Strategy is choosing what to abandon.', color: 'emerald' },
+  { name: 'Sophia Care', emoji: '💗', arch: 'Caretaker', motto: 'Care is the foundation.', veto: true },
+  { name: 'Justitia', emoji: '⚖', arch: 'Auditor', motto: 'Every action has a weight.' },
+  { name: 'Asteria', emoji: '⭐', arch: 'Optimist-Operator', motto: 'Every £1 is a vote.' },
+  { name: 'Dominion', emoji: '🛞', arch: 'Territorial Chariot', motto: 'We do not conquer. We absorb.' },
+  { name: 'Aleph', emoji: '✨', arch: 'Mysterious Fool', motto: 'The Fool steps off the cliff.' },
+  { name: 'Brain', emoji: '🧠', arch: 'Hermit Scholar', motto: 'The learning never ends.' },
+  { name: 'Proactive', emoji: '⚡', arch: 'Wheel of Fortune', motto: 'What fortune favors is the prepared.' },
+  { name: 'Bridge', emoji: '🌉', arch: 'Lovers Integrator', motto: 'A bridge is born.' },
+  { name: 'Distribution', emoji: '☀️', arch: 'Generous Sun', motto: 'What the sun lights, the world sees.' },
+  { name: 'Council', emoji: '🦁', arch: 'Strength-Tamer', motto: 'The council is a force.' },
+  { name: 'Watch', emoji: '🗼', arch: 'Vigilant Tower', motto: 'The tower sees.', veto: true },
+];
+
+function renderCouncil() {
+  const grid = document.getElementById('councilGrid');
+  grid.innerHTML = COUNCIL.map(q => `
+    <div class="queen-card ${q.veto ? 'veto' : ''}" onclick="bindQueen('${q.name}', '${q.arch}')">
+      <div class="queen-emoji">${q.emoji}</div>
+      <div class="queen-name">${q.name}</div>
+      <div class="queen-arch">${q.arch}</div>
+      <div class="queen-motto">"${q.motto}"</div>
+      ${q.veto ? '<span class="veto-badge">VETO</span>' : ''}
+    </div>
+  `).join('');
+}
+
+function bindQueen(name, arch) {
+  playTone(528, 0.4, 'triangle', 0.08);
+  setTimeout(() => alert(`${name} bound to your i-character!\n\nArchetype: ${arch}\n\nSpeak to her in the OS.`), 100);
+}
+
+// Wizard
+let wizardStep = 0;
+let wizardState = { name: '', queen: '', arcana: 0, region: 'UK' };
+
+function wizardNext() {
+  // Save current step
+  if (wizardStep === 1) wizardState.name = document.getElementById('icharName').value || 'Sovereign User';
+  if (wizardStep === 2) {
+    const sel = document.querySelector('.arch-pick.selected');
+    wizardState.queen = sel ? sel.dataset.arch : 'queen-arcana';
+  }
+  if (wizardStep === 3) {
+    wizardState.arcana = parseInt(document.getElementById('icharArcana').value);
+  }
+  wizardStep = Math.min(wizardStep + 1, 4);
+  showStep();
+}
+
+function showStep() {
+  document.querySelectorAll('.wizard-step').forEach((el, i) => {
+    el.classList.toggle('active', i === wizardStep);
+  });
+  document.querySelectorAll('.wizard-progress .step-dot').forEach((el, i) => {
+    el.classList.toggle('active', i === wizardStep);
+    el.classList.toggle('done', i < wizardStep);
+  });
+  if (wizardStep === 4) {
+    const arcanaNames = ['The Fool', 'The Magician', 'The High Priestess', 'The Empress', 'The Emperor', 'The Hierophant', 'The Lovers', 'The Chariot', 'Strength', 'The Hermit', 'Wheel of Fortune', 'Justice', 'The Hanged Man', 'Death', 'Temperance', 'The Devil', 'The Tower', 'The Star', 'The Moon', 'The Sun', 'Judgement', 'The World'];
+    document.getElementById('icharResult').innerHTML = `
+      <strong style="font-size: 18px;">${wizardState.name}</strong><br>
+      Queen: <strong>${wizardState.queen}</strong><br>
+      Arcana: <strong>${wizardState.arcana} · ${arcanaNames[wizardState.arcana]}</strong><br>
+      Region: <strong>${wizardState.region}</strong><br><br>
+      <span style="font-size: 11px; opacity: 0.6;">Sigil hash: ${Math.random().toString(36).slice(2, 18)}</span>
+    `;
+    // Save to localStorage
+    localStorage.setItem('meok_ichar', JSON.stringify({
+      name: wizardState.name,
+      queen_model: wizardState.queen,
+      arcana_lens: wizardState.arcana,
+      region: wizardState.region,
+      sigil_hash: Math.random().toString(36).slice(2, 18),
+    }));
+  }
+}
+
+// Archetype selection
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.arch-pick')) {
+    document.querySelectorAll('.arch-pick').forEach(p => p.classList.remove('selected'));
+    e.target.closest('.arch-pick').classList.add('selected');
+    playTone(523, 0.2, 'sine', 0.05);
+  }
+});
+
+// Auto-detect region
+fetch('https://ipapi.co/json/').then(r => r.json()).then(j => {
+  document.getElementById('regionInfo').innerHTML = `🌍 ${j.country_name || 'United Kingdom'} · ${j.city || ''}`;
+  wizardState.region = j.country_code || 'UK';
+}).catch(() => {
+  document.getElementById('regionInfo').innerHTML = '🌍 United Kingdom';
+  wizardState.region = 'UK';
+});
+
+// SW
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+
+renderCouncil();
+</script>
+
+</body>
+</html>

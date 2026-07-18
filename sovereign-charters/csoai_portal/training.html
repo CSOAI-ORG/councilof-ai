@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free Training · 34 Sovereign Industries · CSOAI</title>
+<meta name="description" content="Free 4-tier certification pathway across 34 sovereign industries. Foundation, Practitioner, Lead Auditor, Director.">
+<style>
+
+    :root {
+      --gold: #c9a84c;
+      --gold-dim: #8a7235;
+      --navy: #0a0e1a;
+      --navy-2: #131829;
+      --panel: #1a1f33;
+      --panel-2: #0f1322;
+      --text: #e6e6e6;
+      --muted: #9aa0b4;
+      --green: #3ecf8e;
+      --danger: #ff5d5d;
+      --maxw: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--navy);
+      color: var(--text);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre, .mono { font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace; }
+    h1, h2, h3, h4 { font-family: "Times New Roman", Georgia, serif; font-weight: 600; letter-spacing: -.01em; color: #fff; }
+    h1 { font-size: 2.3rem; margin: 0 0 .6rem; }
+    h2 { font-size: 1.5rem; margin: 2.4rem 0 .8rem; border-bottom: 1px solid var(--gold-dim); padding-bottom: .3rem; }
+    h3 { font-size: 1.15rem; margin: 1.6rem 0 .5rem; color: var(--gold); }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    /* Top bar */
+    .topbar {
+      background: linear-gradient(180deg, #06080f 0%, var(--navy) 100%);
+      border-bottom: 1px solid var(--gold-dim);
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 14px;
+    }
+    .topbar .brand {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .topbar .brand .seali {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--gold), #6e5a26);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--navy); font-weight: 700; font-size: .9rem;
+      box-shadow: 0 0 12px rgba(201, 168, 76, .35);
+    }
+    .topbar .brand h1 {
+      font-size: 1.05rem; margin: 0; font-family: ui-sans-serif, sans-serif;
+    }
+    .topbar .brand small { color: var(--muted); font-size: .8rem; }
+    .topbar nav a {
+      color: var(--text); margin-left: 16px; font-size: .88rem;
+      padding: 6px 10px; border-radius: 4px;
+    }
+    .topbar nav a:hover { background: var(--panel); color: var(--gold); text-decoration: none; }
+    .topbar nav a.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+
+    /* Hero */
+    .hero {
+      padding: 64px 24px 56px; text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+    }
+    .hero .eyebrow {
+      color: var(--gold); font-family: ui-monospace, monospace; font-size: .82rem;
+      letter-spacing: .25em; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.05; max-width: 880px; margin: 0 auto;
+    }
+    .hero p { max-width: 760px; margin: 16px auto 28px; color: var(--muted); font-size: 1.05rem; }
+    .hero .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* Buttons */
+    .btn {
+      display: inline-block; padding: 10px 18px; border-radius: 4px;
+      font-size: .9rem; font-weight: 600; border: 1px solid var(--gold-dim);
+      cursor: pointer; transition: all .15s ease;
+    }
+    .btn-primary { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+    .btn-primary:hover { background: #e0bc52; text-decoration: none; }
+    .btn-ghost { color: var(--gold); background: transparent; }
+    .btn-ghost:hover { background: rgba(201,168,76,.08); text-decoration: none; }
+
+    /* Cards & grid */
+    .grid { display: grid; gap: 16px; }
+    .grid-3 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .card {
+      background: var(--panel); border: 1px solid #232838;
+      border-radius: 6px; padding: 18px 20px;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+    .card h3 { margin: 0 0 6px; }
+    .card .meta { color: var(--muted); font-size: .8rem; font-family: ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .card a { color: var(--gold); }
+    .card p { margin: 8px 0 12px; color: var(--muted); font-size: .92rem; }
+
+    /* Stat strip */
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px; padding: 24px; background: var(--panel-2);
+      border-top: 1px solid var(--gold-dim); border-bottom: 1px solid var(--gold-dim);
+    }
+    .stat .num { font-size: 1.9rem; color: var(--gold); font-weight: 700; font-family: "Times New Roman", serif; line-height: 1; }
+    .stat .lbl { font-size: .76rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-top: 6px; }
+
+    /* Panels */
+    .panel { background: var(--panel); border: 1px solid #232838; border-radius: 6px; padding: 22px 24px; margin: 1rem 0; }
+    .panel h3 { margin-top: 0; }
+    .panel.note { background: rgba(201,168,76,.06); border-color: var(--gold-dim); }
+    .panel.danger { background: rgba(255,93,93,.06); border-color: rgba(255,93,93,.4); }
+
+    /* Article-style layout */
+    article { padding: 32px 0; }
+    article h1 { margin-top: 0; }
+    article h1 small { display: block; color: var(--muted); font-size: 0.9rem; font-weight: 400; margin-top: 4px; font-family: ui-sans-serif, sans-serif; }
+
+    /* Layout with sidebar */
+    .layout { display: grid; grid-template-columns: 260px 1fr; gap: 32px; padding: 24px; }
+    @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+    aside.nav {
+      background: var(--panel-2); border: 1px solid #232838; border-radius: 6px;
+      padding: 18px; max-height: calc(100vh - 80px); position: sticky; top: 16px; overflow-y: auto;
+    }
+    aside.nav h4 { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 14px 0 4px; font-family: ui-monospace, monospace; }
+    aside.nav h4:first-child { margin-top: 0; }
+    aside.nav a { display: block; padding: 5px 8px; color: var(--text); font-size: .85rem; border-radius: 4px; }
+    aside.nav a:hover { background: rgba(201,168,76,.08); text-decoration: none; }
+    aside.nav a.current { background: rgba(201,168,76,.18); color: var(--gold); border-left: 2px solid var(--gold); padding-left: 6px; }
+
+    /* Tables */
+    table {
+      width: 100%; border-collapse: collapse; margin: 1rem 0;
+      font-size: .9rem;
+    }
+    th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #1d2236; vertical-align: top; }
+    th { background: var(--panel-2); color: var(--gold); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+    tr:hover td { background: rgba(201,168,76,.03); }
+
+    /* Footer */
+    footer {
+      margin-top: 60px; padding: 32px 24px; background: #06080f;
+      border-top: 1px solid var(--gold-dim); color: var(--muted); font-size: .85rem;
+    }
+    footer .wrap { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    @media (max-width: 720px) { footer .wrap { grid-template-columns: 1fr; } }
+    footer h4 { color: var(--gold); font-size: .85rem; margin: 0 0 8px; font-family: ui-sans-serif, sans-serif; text-transform: uppercase; letter-spacing: .1em; }
+    footer a { color: var(--text); display: block; padding: 3px 0; font-size: .85rem; }
+    footer a:hover { color: var(--gold); }
+
+    .sig-line {
+      font-family: ui-monospace, monospace; font-size: .85rem;
+      background: var(--panel-2); border-left: 3px solid var(--gold);
+      padding: 12px 16px; border-radius: 0 4px 4px 0; margin: 1rem 0;
+      white-space: pre-wrap; word-break: break-all;
+    }
+
+    .tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 1rem 0; }
+    .tier {
+      background: var(--panel); border: 1px solid #232838; border-radius: 6px;
+      padding: 14px 16px; position: relative; overflow: hidden;
+    }
+    .tier::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--gold);
+    }
+    .tier .num { font-size: .8rem; color: var(--muted); font-family: ui-monospace, monospace; }
+    .tier .name { font-weight: 600; color: var(--gold); font-size: 1rem; margin: 4px 0 8px; }
+    .tier .body { font-size: .82rem; color: var(--muted); }
+
+    .pill { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: .7rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+    .pill-gold { background: rgba(201,168,76,.18); color: var(--gold); }
+    .pill-green { background: rgba(62,207,142,.15); color: var(--green); }
+    .pill-danger { background: rgba(255,93,93,.15); color: var(--danger); }
+
+    .countdown { font-family: ui-monospace, monospace; color: var(--gold); font-size: 1.4rem; font-weight: 700; }
+
+    .bsw-row {
+      display: grid; grid-template-columns: 90px 1fr; gap: 12px;
+      padding: 10px 0; border-bottom: 1px dashed #232838;
+    }
+    .bsw-row:last-child { border-bottom: 0; }
+    .bsw-row .days { color: var(--gold); font-weight: 700; font-family: ui-monospace, monospace; }
+
+    .charter-card {
+      background: var(--panel); border: 1px solid #232838; border-radius: 6px;
+      padding: 16px; display: flex; flex-direction: column;
+    }
+    .charter-card .num-badge {
+      align-self: flex-start; padding: 2px 8px; border-radius: 4px;
+      background: rgba(201,168,76,.15); color: var(--gold);
+      font-family: ui-monospace, monospace; font-size: .72rem; margin-bottom: 6px;
+    }
+    .charter-card h3 { margin: 0 0 4px; font-size: 1.1rem; }
+    .charter-card .sub { color: var(--muted); font-size: .82rem; margin: 4px 0 12px; }
+    .charter-card a.footer-link { margin-top: auto; font-size: .82rem; color: var(--gold); }
+
+    .framework-tag { display:inline-block; padding:2px 8px; border-radius:99px; background: rgba(62,207,142,.12); color: var(--green); font-size:.72rem; margin: 2px 4px 2px 0; font-family: ui-monospace, monospace;}
+    
+</style></head><body>
+
+    <div class="topbar">
+      <a class="brand" href="index.html">
+        <span class="seali">CA3O</span>
+        <div>
+          <h1>CSOAI · Sovereign Charter Portal</h1>
+          <small>UK 16939677 · 34 hives · 1,122 bilateral cross-walks</small>
+        </div>
+      </a>
+      <nav>
+        <a href="index.html" class="">Charters</a><a href="training.html" class="active">Training</a><a href="crosswalk.html" class="">Cross-Walk</a><a href="bft-council.html" class="">BFT Council</a>
+      </nav>
+    </div>
+    
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">FREE TRAINING PORTAL · ALL 34 CHARTERS</div>
+    <h1>From <span style="color:var(--gold)">Foundation</span> to <span style="color:var(--gold)">Director</span>.<br>£0. Forever.</h1>
+    <p>Every charter ships with 4 free training tiers, certified by CSOAI, and ratified by the 33-agent BFT council. The pathway covers 34 industries and unlocks a sovereign UBI starter credit at every level.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#start">Start Free Training →</a>
+      <a class="btn btn-ghost" href="bft-council.html">About BFT Council</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="num">4</div><div class="lbl">Training Tiers</div></div>
+  <div class="stat"><div class="num">102+</div><div class="lbl">UE5 Simulations</div></div>
+  <div class="stat"><div class="num">34</div><div class="lbl">Industry Verticals</div></div>
+  <div class="stat"><div class="num">33</div><div class="lbl">BFT Council Seats</div></div>
+  <div class="stat"><div class="num">FREE</div><div class="lbl">All Tiers</div></div>
+  <div class="stat"><div class="num">£1,200</div><div class="lbl">Director UBI/mo</div></div>
+</div>
+
+<article><div class="wrap">
+  <h2>The 4-Tier Pathway</h2>
+  <p style="color: var(--muted);">Each tier deepens your craft, increases your UBI starter, and earns a Watchdog Certificate that is publicly verifiable at <a href="https://proofof.ai/verify" target="_blank" rel="noopener">proofof.ai/verify</a>.</p>
+
+  <div class="tier-grid">
+    <div class="tier">
+      <div class="num">TIER 1</div>
+      <div class="name">Foundation · CASA-1</div>
+      <div class="body">Industry fundamentals, regulatory landscape, Article 50 EU AI Act, NIST AI RMF, MCP protocol basics, Ed25519 cryptography.<br><br><span class="mono">40 hours · ~2 weeks</span></div>
+    </div>
+    <div class="tier">
+      <div class="num">TIER 2</div>
+      <div class="name">Practitioner · CASA-2</div>
+      <div class="body">MCP deployment, audit evidence generation, UE5 simulation runs, ISO 42001 Clause 9, real-world projects under supervision.<br><br><span class="mono">80 hours · ~4 weeks</span></div>
+    </div>
+    <div class="tier">
+      <div class="num">TIER 3</div>
+      <div class="name">Lead Auditor · CASA-3</div>
+      <div class="body">Independent conformity assessment, multi-framework evidence packs, BFT council vote (23/33), sector-specific regulations.<br><br><span class="mono">120 hours · ~6 weeks</span></div>
+    </div>
+    <div class="tier">
+      <div class="num">TIER 4</div>
+      <div class="name">Director · CASA-4</div>
+      <div class="body">C3PAO Director (ISO 17065 conformity assessment body leadership), 33-agent BFT ratification, international standards work, sovereign architecture design.<br><br><span class="mono">160 hours · ~8 weeks</span></div>
+    </div>
+  </div>
+
+  <h2>UBI Starter Ladder</h2>
+  <p>Every certification tier unlocks an UBI starter credit on a sovereign-managed wallet via Ed25519-signed contracts. <strong>Article 0</strong> governs that CSOAI takes zero commission on subsequent practitioner engagements.</p>
+  <table>
+    <thead><tr><th>Tier</th><th>UBI Credit</th><th>Duration</th><th>Inclusions</th></tr></thead>
+    <tbody>
+      <tr><td>Foundation (CASA-1)</td><td>£300/mo</td><td>3-6 months</td><td>Training, simulation access, marketplace badge</td></tr>
+      <tr><td>Practitioner (CASA-2)</td><td>£600/mo</td><td>12 months</td><td>+ sovereign VM, MCP sandbox, first paid engagements</td></tr>
+      <tr><td>Lead Auditor (CASA-3)</td><td>£900/mo</td><td>18 months</td><td>+ BFT council committee observer status, audit practice tools</td></tr>
+      <tr><td>Director (CASA-4)</td><td>£1,200/mo</td><td>24 months</td><td>+ sovereign VM for CAB, BFT voting rights</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Industry-Specific Training — All 34 Industries</h2>
+  <p style="color: var(--muted);">Each industry has its own 4-tier pathway tailored to real-world work. Click any industry to see its full training detail page.</p>
+  <div class="grid grid-3" style="margin-top:1rem;">
+
+    <a class="card" href="charter-csoai.html#training">
+      <span class="num-badge">01</span>
+      <h3>CSOAI</h3>
+      <p class="sub">AI Governance Standards &amp; Watchdog Certification</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-meok.html#training">
+      <span class="num-badge">02</span>
+      <h3>MEOK</h3>
+      <p class="sub">Sovereign AI OS &amp; MCP Compliance Fleet</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-proofof.html#training">
+      <span class="num-badge">03</span>
+      <h3>ProofOf</h3>
+      <p class="sub">Cryptographic Attestation &amp; Verification</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-safetyof.html#training">
+      <span class="num-badge">04</span>
+      <h3>SafetyOf</h3>
+      <p class="sub">AI Safety Monitoring &amp; Care Membrane</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-accountabilityof.html#training">
+      <span class="num-badge">05</span>
+      <h3>AccountabilityOf</h3>
+      <p class="sub">Audit Trails, Root-Cause Analysis, AI Incidents</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-ethicalgovernanceof.html#training">
+      <span class="num-badge">06</span>
+      <h3>EthicalGovernanceOf</h3>
+      <p class="sub">AI Frameworks, AI Bill of Materials &amp; Explainability</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-transparencyof.html#training">
+      <span class="num-badge">07</span>
+      <h3>TransparencyOf</h3>
+      <p class="sub">Model Decisions, Feature Importances &amp; Watermarks</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-biasdetectionof.html#training">
+      <span class="num-badge">08</span>
+      <h3>BiasDetectionOf</h3>
+      <p class="sub">Bias Metrics, Protected Attributes &amp; Fair-Lending</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-dataprivacyof.html#training">
+      <span class="num-badge">09</span>
+      <h3>DataPrivacyOf</h3>
+      <p class="sub">GDPR Articles 5-21, DSARs &amp; Breach Notification</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-asisecurity.html#training">
+      <span class="num-badge">10</span>
+      <h3>ASI Security</h3>
+      <p class="sub">AI Security Threats &amp; Defensive Patterns</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-agisafe.html#training">
+      <span class="num-badge">11</span>
+      <h3>AGI Safe</h3>
+      <p class="sub">AGI Safety Research &amp; Frontier Risk</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-defoneos.html#training">
+      <span class="num-badge">12</span>
+      <h3>DEFONEOS</h3>
+      <p class="sub">Defence AI Operating System</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-councilof.html#training">
+      <span class="num-badge">13</span>
+      <h3>CouncilOf</h3>
+      <p class="sub">BFT Governance Councils &amp; Agent Orchestration</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-openmoe.html#training">
+      <span class="num-badge">14</span>
+      <h3>OpenMoE</h3>
+      <p class="sub">Mixture-of-Experts Base Model &amp; BFT Inference</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-openmcp.html#training">
+      <span class="num-badge">15</span>
+      <h3>OpenMCP</h3>
+      <p class="sub">MCP Server Directory &amp; Registry</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-openpatent.html#training">
+      <span class="num-badge">16</span>
+      <h3>OpenPatent</h3>
+      <p class="sub">SIGIL-Signed Invention Disclosures &amp; Patent Chain</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-sandbox.html#training">
+      <span class="num-badge">17</span>
+      <h3>Sandbox</h3>
+      <p class="sub">Hive Architecture Diagnostics &amp; Self-Testing</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-sovereign-town.html#training">
+      <span class="num-badge">18</span>
+      <h3>Sovereign Town</h3>
+      <p class="sub">Sovereign Town Lab &amp; Headless Simulation</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-meok-compliance-gateway.html#training">
+      <span class="num-badge">19</span>
+      <h3>MEOK Compliance Gateway</h3>
+      <p class="sub">MCP Transport Layer &amp; x402 Payments</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-loopfactory.html#training">
+      <span class="num-badge">20</span>
+      <h3>LoopFactory</h3>
+      <p class="sub">Automation Workflows &amp; Cron/Webhook Triggers</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-optimobile.html#training">
+      <span class="num-badge">21</span>
+      <h3>OptiMobile</h3>
+      <p class="sub">Mobile Apps &amp; Retention Analytics</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-socialmediamanager.html#training">
+      <span class="num-badge">22</span>
+      <h3>Social Media Manager</h3>
+      <p class="sub">Multi-Platform Scheduling &amp; Content</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-cobolbridge.html#training">
+      <span class="num-badge">23</span>
+      <h3>COBOL Bridge</h3>
+      <p class="sub">COBOL Legacy Modernisation &amp; Transpilation</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-commercialvehicle.html#training">
+      <span class="num-badge">24</span>
+      <h3>Commercial Vehicle</h3>
+      <p class="sub">UK Commercial Fleets &amp; Logistics</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-diyhelp.html#training">
+      <span class="num-badge">25</span>
+      <h3>DIY Help</h3>
+      <p class="sub">DIY Home Improvement &amp; How-To Guides</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-fishkeeper.html#training">
+      <span class="num-badge">26</span>
+      <h3>Fishkeeper</h3>
+      <p class="sub">Freshwater/Saltwater Species &amp; Aquatics</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-grabhire.html#training">
+      <span class="num-badge">27</span>
+      <h3>GrabHire</h3>
+      <p class="sub">UK Haulage &amp; Grab-Lorry Fleet Operations</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-koikeeper.html#training">
+      <span class="num-badge">28</span>
+      <h3>KoiKeeper</h3>
+      <p class="sub">Koi Varieties &amp; Water Quality Management</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-landlaw.html#training">
+      <span class="num-badge">29</span>
+      <h3>LandLaw</h3>
+      <p class="sub">UK Property Law &amp; Conveyancing</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-muckaway.html#training">
+      <span class="num-badge">30</span>
+      <h3>MuckAway</h3>
+      <p class="sub">UK Skip Hire &amp; Waste Management</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-planthire.html#training">
+      <span class="num-badge">31</span>
+      <h3>PlantHire</h3>
+      <p class="sub">UK Plant Hire &amp; Machinery Operations</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-pokerhud.html#training">
+      <span class="num-badge">32</span>
+      <h3>PokerHUD</h3>
+      <p class="sub">Poker Hands, GTO Solutions &amp; ICM</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-suicidestop.html#training">
+      <span class="num-badge">33</span>
+      <h3>SuicideStop</h3>
+      <p class="sub">Crisis Hotlines &amp; Mental Health Resources</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-science.html#training">
+      <span class="num-badge">34</span>
+      <h3>Science</h3>
+      <p class="sub">Scientific Research &amp; Discovery</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+    <a class="card" href="charter-coigndaltion.html#training">
+      <span class="num-badge">35</span>
+      <h3>Coigndaltion</h3>
+      <p class="sub">The Cornerstone Cognition Layer</p>
+      <span class="pill pill-gold">4 Tiers · Free</span>
+    </a>
+
+  </div>
+
+  <h2>Mentorship Marketplace</h2>
+  <div class="grid grid-2">
+    <div class="panel">
+      <h3>Learn from CASA-3+ Practitioners</h3>
+      <p style="color: var(--muted);">Every certified practitioner can list mentorship availability in the CSOAI marketplace. Mentors earn 100% of engagement fees. CSOAI takes zero commission — Article 0 binds this.</p>
+      <p><span class="pill pill-green">No commission</span> <span class="pill pill-gold">Ed25519-attested</span></p>
+    </div>
+    <div class="panel">
+      <h3>Bridge to Practice</h3>
+      <p style="color: var(--muted);">CASA-2 Practitioners gain access to practice engagements subsidised by CSOAI for the first 3 engagements (audit, training delivery, or compliance assessment). Subsequent engagements are paid, 100% practitioner-retained.</p>
+    </div>
+  </div>
+
+  <h2 id="start">Start Now — Free</h2>
+  <div class="panel note">
+    <p style="font-size:1.05rem; margin: 0;">Sign in with any sovereign identity provider (Apple, Google, Microsoft, GitHub, OIDC) → receive your Ed25519 sovereign key pair → begin Foundation tier. The sovereign substrate issues all credentials via SIGIL chain entries; no platform controls your professional identity.</p>
+  </div>
+  <p style="text-align: center; margin: 2rem 0;">
+    <a class="btn btn-primary" href="https://sov3.csoai.org:3101" target="_blank" rel="noopener">Start Free Training on SOV3 →</a>
+    <a class="btn btn-ghost" href="crosswalk.html">Explore Cross-Walk</a>
+  </p>
+
+  <h2>Free Certification. Public Verification.</h2>
+  <div class="sig-line">Watchdog Certificate Structure:
+Ed25519 public key bound to certificant
+Public verify URL: https://proofof.ai/verify/CSOAI-{SLUG}-{CERT_ID}
+SOV3 SIGIL chain entry recording certification event
+BFT council ratification record (23/33 quorum)
+ISO 17065-compliant certificate format
+Public W3C Verifiable Credential with sovereignty metadata
+Validity checked via MCP: tools/call validate_certificate {cert_id}</div>
+</div></article>
+
+
+    <footer>
+      <div class="wrap">
+        <div>
+          <h4>CSOAI Ltd</h4>
+          <p>UK Companies House <strong>16939677</strong><br>
+          Sovereign Charter Authority (CA3O) — CMKC for AI.<br>
+          Ed25519-signed · BFT-council-ratified · Bitcoin-anchored via OTS.<br>
+          Free training. Free certification. Free certification.</p>
+        </div>
+        <div>
+          <h4>Portal</h4>
+          <a href="index.html">All 34 Charters</a>
+          <a href="training.html">Free Training</a>
+          <a href="crosswalk.html">Cross-Walk Explorer</a>
+          <a href="bft-council.html">BFT Council</a>
+        </div>
+        <div>
+          <h4>Verify</h4>
+          <a href="https://proofof.ai/verify" target="_blank" rel="noopener">proofof.ai/verify</a>
+          <a href="https://meok.ai/fleet" target="_blank" rel="noopener">MCP Fleet</a>
+          <a href="https://sov3.csoai.org:3101" target="_blank" rel="noopener">SOV3 Substrate</a>
+        </div>
+        <div>
+          <h4>Article 0</h4>
+          <p style="font-size:.78rem; line-height:1.4;">Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. <em>ISO fee-for-service model only.</em></p>
+        </div>
+      </div>
+      <div class="wrap" style="margin-top:20px; padding-top:20px; border-top:1px solid #1a1f33; font-size:.78rem;">
+        <span>© 2026 CSOAI Ltd · csoai.org</span>
+        <span style="float:right; font-family: ui-monospace, monospace; color: var(--gold);">Sovereign substrate signs everything · 🐉</span>
+      </div>
+    </footer>
+    
+</body></html>

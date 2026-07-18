@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_digital_twin_mcp"
+version = "1.0.0"
+description = "MEEK Digital Twin MCP — digital version of the user as AI character. CRITICAL for gamification. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "sov-space", "sovereign", "temple", "globe", "tui", "digital-twin", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org/sov-space"
+Repository = "https://github.com/CSOAI-ORG/meek-digital-twin-mcp"
+
+[project.scripts]
+meek-digital-twin-mcp = "meek_digital_twin_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_digital_twin_mcp"]

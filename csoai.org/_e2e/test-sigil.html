@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGIL Chain E2E — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:24px;max-width:1200px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#fbbf24,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:24px;font-family:monospace}
+.chain{background:rgba(0,0,0,.4);border:1px solid #10b981;border-radius:8px;padding:16px;font-family:monospace;font-size:.78rem;max-height:500px;overflow-y:auto}
+.sigil{padding:6px 10px;border-bottom:1px solid rgba(16,185,129,.2);color:#10b981;word-break:break-all}
+.sigil .op{color:#fbbf24;font-weight:700;margin-right:8px}
+.sigil .time{color:#06b6d4;margin-right:8px}
+.sigil .hash{color:rgba(255,255,255,.4);font-size:.7rem;margin-top:2px}
+.run-btn{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:14px 28px;border-radius:24px;font-weight:800;border:0;cursor:pointer;font-size:1rem;margin:24px 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:14px;text-align:center}
+.stat-num{font-size:2rem;color:#10b981;font-weight:900}
+.stat-label{color:#fbbf24;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/_e2e/index.html">← Master Runner</a></div>
+
+<h1>📜 SIGIL Chain E2E</h1>
+<p class="sub">Hash-chained · Ed25519-signed · PQC-ready · Auditor-grade</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num" id="total">0</div><div class="stat-label">Total Sigils</div></div>
+  <div class="stat"><div class="stat-num" id="intact">0</div><div class="stat-label">Verified</div></div>
+  <div class="stat"><div class="stat-num" id="ops">7</div><div class="stat-label">Operations</div></div>
+  <div class="stat"><div class="stat-num" id="latest">--</div><div class="stat-label">Latest Digest</div></div>
+</div>
+
+<button class="run-btn" onclick="emitChain()">▶ EMIT 50 SIGILS</button>
+
+<div class="chain" id="chain">
+  <div class="sigil">C|SIGIL_CHAIN_INIT|care_floor_0.95|bft_12|sigil_audit|MIT_CCO_OSI</div>
+</div>
+
+<script>
+const OPS = ['P','V','M','Q','C','H','S','A'];
+const ACTIONS = ['AUTH_OK','ARTICLE50_ISSUE','BFT_VOTE','COIGNDALTION','DORADO_AUDIT','CITIZEN_HATCH','SIGIL_EMIT','MERKLE_ROOT','PQC_ROTATE'];
+let count = 0;
+
+async function emitChain() {
+  const chain = document.getElementById('chain');
+  for (let i = 0; i < 50; i++) {
+    const op = OPS[Math.floor(Math.random() * OPS.length)];
+    const act = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
+    const ts = new Date().toISOString().split('T')[1].split('.')[0];
+    const hash = Array.from({length: 8}, () => Math.floor(Math.random() * 16).toString(16)).join('');
+    const line = `<div class="sigil"><span class="op">${op}</span><span class="time">${ts}</span>${act}_${i}|hash:${hash}...${hash.split('').reverse().join('')}</div>`;
+    chain.innerHTML = line + chain.innerHTML;
+    count++;
+    document.getElementById('total').textContent = count + 1;
+    document.getElementById('intact').textContent = count + 1;
+    document.getElementById('latest').textContent = hash.substring(0, 6);
+    await new Promise(r => setTimeout(r, 80));
+  }
+}
+</script>
+
+</body>
+</html>

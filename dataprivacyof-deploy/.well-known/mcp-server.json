@@ -1,0 +1,49 @@
+{
+  "mcpVersion": "1.0.0",
+  "serverInfo": {
+    "name": "dataprivacyof.ai---gdpr-&-ai-privacy-mcp",
+    "version": "1.0.0",
+    "description": "DataPrivacyOf.AI \u2014 GDPR & AI Privacy MCP \u2014 MEOK AI Labs compliance substrate."
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "compliance-audit",
+      "description": "Run a compliance audit via DataPrivacyOf.AI \u2014 GDPR & AI Privacy MCP.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string",
+            "description": "Name or identifier of the system"
+          },
+          "framework": {
+            "type": "string",
+            "description": "Framework to check"
+          }
+        },
+        "required": [
+          "system"
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "https://dataprivacyof.ai/llms.txt",
+      "name": "DataPrivacyOf.AI \u2014 GDPR & AI Privacy MCP LLMs.txt",
+      "description": "Discovery manifest.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://dataprivacyof.ai/sitemap.xml",
+      "name": "DataPrivacyOf.AI \u2014 GDPR & AI Privacy MCP Sitemap",
+      "description": "Page index.",
+      "mimeType": "application/xml"
+    }
+  ]
+}

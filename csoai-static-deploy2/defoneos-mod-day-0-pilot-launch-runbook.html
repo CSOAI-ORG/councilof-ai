@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS Day-0 Pilot Launch Runbook — 5-Day Execution — 14-18 Jul 2026</title>
+<meta name="description" content="5-day Day-0 pilot execution runbook. Hours-by-hours schedule. Owner of each step. Stop conditions. Escalation paths.">
+<style>
+:root{--bg:#0a0e1a;--panel:#111827;--ink:#e6edf3;--mute:#94a3b8;--accent:#22d3ee;--accent2:#a78bfa;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--border:#1f2937;--mono:'SF Mono','Monaco','Cascadia Code',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.65;font-size:15px}
+.wrap{max-width:1100px;margin:0 auto;padding:48px 32px}
+header{border-bottom:2px solid var(--accent);padding-bottom:24px;margin-bottom:48px}
+.eyebrow{color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px}
+h1{font-size:36px;font-weight:800;line-height:1.15;margin-bottom:12px}
+.sub{color:var(--mute);font-size:16px}
+h2{font-size:24px;font-weight:700;margin:48px 0 16px;color:var(--accent);border-left:4px solid var(--accent);padding-left:16px}
+h3{font-size:18px;font-weight:700;margin:24px 0 12px}
+.day{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:24px;margin:24px 0}
+.day-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px}
+.day-title{font-size:20px;font-weight:700;color:var(--accent)}
+.day-meta{font-family:var(--mono);font-size:12px;color:var(--mute)}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left}
+th{background:#0f172a;color:var(--accent);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:0.05em}
+tr:hover{background:rgba(34,211,238,0.03)}
+.bullet{margin:12px 0 12px 24px}
+.bullet li{margin:8px 0}
+code{background:var(--panel);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:13px;color:var(--accent)}
+.alert{background:rgba(239,68,68,0.1);border:1px solid var(--red);border-radius:6px;padding:16px;margin:16px 0}
+.alert .lbl{color:var(--red);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.warn{background:rgba(245,158,11,0.1);border:1px solid var(--amber);border-radius:6px;padding:16px;margin:16px 0}
+.warn .lbl{color:var(--amber);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.ok{background:rgba(16,185,129,0.1);border:1px solid var(--green);border-radius:6px;padding:16px;margin:16px 0}
+.ok .lbl{color:var(--green);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.metric{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center}
+.metric .v{font-size:24px;font-weight:800;color:var(--accent);font-family:var(--mono)}
+.metric .l{color:var(--mute);font-size:12px;margin-top:4px}
+.time-block{padding:8px 12px;border-left:3px solid var(--accent);margin:8px 0;background:rgba(34,211,238,0.03)}
+.time-block .t{font-family:var(--mono);color:var(--accent);font-size:12px;font-weight:700}
+.time-block .w{margin-top:4px}
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);color:var(--mute);font-size:12px;font-family:var(--mono)}
+@media(max-width:768px){.grid3{grid-template-columns:1fr}.day-header{flex-direction:column;align-items:flex-start;gap:8px}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+<header>
+<div class="eyebrow">DEFONEOS · DAY-0 PILOT LAUNCH RUNBOOK · 5-DAY EXECUTION · 14-18 JUL 2026</div>
+<h1>Day-0 Pilot Launch — 5-Day Execution Runbook</h1>
+<div class="sub">From "first email sent" → "pilot contract live in DEFONEOS-MIRROR". Hours-by-hours schedule. Owner per step. Stop conditions. Escalation paths.</div>
+</header>
+
+<div class="alert">
+<div class="lbl">⚠️ PREREQUISITE — Sprint close must be complete</div>
+Before this runbook starts: (a) 11 first-MOD emails sent by 09:00 BST 14 Jul · (b) DSP registration submitted by 12:00 BST 14 Jul · (c) Cyber Essentials application paid & submitted by 17:00 BST 14 Jul · (d) SC clearance application submitted by 17:00 BST 14 Jul. None of these block Day-0 — but they block Day-30 close.
+</div>
+
+<h2>0. Pre-Runbook State — 13 Jul 23:59 BST</h2>
+<div class="grid3">
+<div class="metric"><div class="v">11</div><div class="l">Emails drafted, BFT-signed</div></div>
+<div class="metric"><div class="v">227</div><div class="l">Pages live on Vercel</div></div>
+<div class="metric"><div class="v">30/30</div><div class="l">MCPs built &amp; deployed</div></div>
+</div>
+
+<h2>1. Day-1 — Mon 14 Jul — First-Touch Cascade</h2>
+<div class="day">
+<div class="day-header"><div class="day-title">DAY 1 · 14 JUL · FIRST-TOUCH CASCADE</div><div class="day-meta">Owner: Nick (8h) · JEEVES (background)</div></div>
+
+<h3>08:30 BST — Daily 10-min CRM routine (every weekday from 14 Jul onward)</h3>
+<div class="time-block"><div class="t">08:30-08:40 BST</div><div class="w">Open Notion CRM · review 12-buyer pipeline · mark replied/clicked/bounced · add new touchpoints · identify 3 priority buyers for today.</div></div>
+
+<h3>09:00 BST — Send 11 first-MOD emails (Tier 1 × 6 first)</h3>
+<div class="time-block"><div class="t">09:00-09:30 BST</div><div class="w">Send to T1 buyers (highest reply-rate 35-50%): Dstl AI Assurance / DASA Innovation / Dstl Cyber / Navy Autonomy / RE Digital Eng / RAF Rapid Cap. Use nicholas@csoai.org. Subject lines ≤8 words. Body: literal 28-line template from defoneos-mod-first-email-blueprint.html.</div></div>
+
+<div class="time-block"><div class="t">09:30-10:00 BST</div><div class="w">Send to T2 buyers (reply-rate 20-35%): UKDI / DIANA / UK AISI. Different from-name (first-contact-2026-07-13@defoneos.org) — signals fresh initiative.</div></div>
+
+<div class="time-block"><div class="t">10:00-10:30 BST</div><div class="w">Send to T3+T4: Dstl CBRN (T3) + UK StratCom DAIC (T4). Lower priority, lower reply-rate but worth the ask.</div></div>
+
+<div class="time-block"><div class="t">10:30-11:00 BST</div><div class="w">Verify all 11 sends via Notion CRM · log send-time + bounce status · archive email-copies for audit trail.</div></div>
+
+<h3>11:00-13:00 BST — DSP / SC / Cyber Essentials submission</h3>
+<div class="time-block"><div class="t">11:00-12:30 BST</div><div class="w">Defence Sourcing Portal registration: company details (CSOAI Ltd, UK 16939677, registered office) + bank details + insurance cert + Companies House extract. Submit. Capture confirmation number.</div></div>
+
+<div class="time-block"><div class="t">12:30-13:00 BST</div><div class="w">IASME Cyber Essentials: application form + IT equipment register + boundary diagram. Pay £320 (Level 1) or £600 (Level 1+Plus). Submit. Capture ref.</div></div>
+
+<h3>14:00-16:00 BST — LinkedIn / Twitter public signal</h3>
+<div class="time-block"><div class="t">14:00-14:30 BST</div><div class="w">LinkedIn post (100-word opener from defoneos-mod-referral-partner-letter.html): "10-day sprint. 30 MCPs. 227 pages. 12 MOD buyers. First contact cascade begins today. Sovereign. British. Forever." Tag 5 primes + 3 buyers who are publicly active on LinkedIn.</div></div>
+
+<div class="time-block"><div class="t">14:30-15:00 BST</div><div class="w">Twitter thread (8 posts): (1) sprint-complete · (2) 30 MCPs in 10 days · (3) £3.3M 3y LTV math · (4) 12 MOD buyers named · (5) sovereign anti-patterns · (6) Day-0 runbook live · (7) pricing 1-pager · (8) ask — 1 intro to a T1 buyer.</div></div>
+
+<div class="time-block"><div class="t">15:00-16:00 BST</div><div class="w">Reply-handling: any T1 buyer who responds within 60-min gets same-day reply. Schedule Calendly 15-min slots for the next 7 days (Tue-Fri 09:00, 11:00, 14:00, 16:00 = 16 slots).</div></div>
+
+<h3>16:00 BST — Friday-style review (rolled-forward for Mon launch)</h3>
+<div class="time-block"><div class="t">16:00-16:30 BST</div><div class="w">Update CRM: 11 sends logged · 0 bounces · 0 replies yet · T1 signal-score baseline all 5 (send-points). Save snapshot.</div></div>
+
+<div class="ok">
+<div class="lbl">✅ END-OF-DAY-1 SUCCESS CRITERIA</div>
+<ul class="bullet">
+<li>11 first-MOD emails sent (verified via CRM)</li>
+<li>DSP registration confirmation received</li>
+<li>Cyber Essentials application ref received</li>
+<li>SC clearance application submitted</li>
+<li>LinkedIn + Twitter public-signal posted</li>
+<li>CRM state-machine set: all 11 buyers in DISCOVER state</li>
+</ul>
+</div>
+</div>
+
+<h2>2. Day-2 — Tue 15 Jul — DASA Submission + 24h Follow-ups</h2>
+<div class="day">
+<div class="day-header"><div class="day-title">DAY 2 · 15 JUL · DASA + FOLLOW-UPS</div><div class="day-meta">Owner: Nick (8h) · JEEVES (background)</div></div>
+
+<h3>08:30 BST — Daily CRM routine</h3>
+<div class="time-block"><div class="t">08:30-08:40 BST</div><div class="w">24h post-send check: any opens / clicks / replies from yesterday's 11. Score up. Identify priority T1 buyer for today.</div></div>
+
+<h3>09:00 BST — 1st follow-up (only to non-openers)</h3>
+<div class="time-block"><div class="t">09:00-09:15 BST</div><div class="w">For any of the 11 who did NOT open: send 1-line follow-up "Hi [name], just floating this back to the top — would a 15-min Tue/Thu 14:00 slot work to walk through the OSCAL SSP artefact? — N". Soft ask, no pressure.</div></div>
+
+<h3>10:00 BST — DASA open call submission</h3>
+<div class="time-block"><div class="t">10:00-12:00 BST</div><div class="w">DASA portal submission: defoneos-dasa-application.html drafted content + cost-model (£180k Platform × 1 buyer / £60k Deployment / £12k SEAL annual fees / 12-month delivery / 3-year renewal at £162k) + team CV (Nick Templeman) + sovereign-claim evidence pack (OSCAL SSP, 240-test pytest, UK sovereign map).</div></div>
+
+<div class="time-block"><div class="t">12:00-13:00 BST</div><div class="w">Capture DASA submission confirmation number · add to CRM as evidence line · share with BFT council for vote (post-submission retroactive ratification).</div></div>
+
+<h3>14:00 BST — 1st T1 buyer meeting (if booked)</h3>
+<div class="time-block"><div class="t">14:00-14:15 BST</div><div class="w">Run 15-min DISCOVER→DEMO→PILLAR→PACT structure from defoneos-mod-call-prep-brief.html. Capture: (a) buyer pain-point, (b) budget envelope, (c) timeline, (d) decision-maker chain, (e) specific time-bound next step. Update CRM state to DEMO.</div></div>
+
+<h3>15:00 BST — NATO DIANA submission</h3>
+<div class="time-block"><div class="t">15:00-17:00 BST</div><div class="w">NATO DIANA portal: defoneos-nato-diana.html content + dual-use AI challenge framing + AUKUS-compatible positioning + sovereign-by-design claim + 3 reference customers (10 buyers in pipeline, 5 primes mapped, 3 standards bodies engaged).</div></div>
+
+<h3>17:00 BST — End-of-day review</h3>
+<div class="time-block"><div class="t">17:00-17:30 BST</div><div class="w">CRM update: opens logged · DASA ref captured · DIANA ref captured · 1st meeting outcome logged. Generate 16:00 BST Friday-style report.</div></div>
+
+<div class="ok">
+<div class="lbl">✅ END-OF-DAY-2 SUCCESS CRITERIA</div>
+<ul class="bullet">
+<li>24h follow-ups sent (or skipped for openers)</li>
+<li>DASA application submitted with confirmation</li>
+<li>NATO DIANA application submitted with confirmation</li>
+<li>First T1 buyer meeting run (if booked) — outcome captured</li>
+<li>CRM updated: state transitions DISCOVER→DEMO logged</li>
+</ul>
+</div>
+</div>
+
+<h2>3. Day-3 — Wed 16 Jul — UKDI + AISI + Repos Push</h2>
+<div class="day">
+<div class="day-header"><div class="day-title">DAY 3 · 16 JUL · UKDI + AISI + REPOS</div><div class="day-meta">Owner: Nick (6h) · JEEVES (background + autonomous)</div></div>
+
+<h3>08:30 BST — Daily CRM routine</h3>
+<div class="time-block"><div class="t">08:30-08:40 BST</div><div class="w">Score updates: replies from T1 likely now (24-72h post-send) · 72h follow-ups scheduled for non-openers today at +72h mark.</div></div>
+
+<h3>09:00 BST — UKDI Regional Engagement email</h3>
+<div class="time-block"><div class="t">09:00-09:15 BST</div><div class="w">Send to UKDI Yorkshire/Humber rep: defoneos-ukdi-outreach.html body. Subject: "DEFONEOS — Yorkshire AI-sovereign pilot opportunity".</div></div>
+
+<h3>09:30 BST — UK AISI evaluation submission</h3>
+<div class="time-block"><div class="t">09:30-11:00 BST</div><div class="w">UK AISI portal: defoneos-system-card.html (system card) + 240-test pytest evidence + OSCAL SSP + sovereign-by-design claim + 33-agent BFT council sign-off.</div></div>
+
+<h3>11:00 BST — JEEVES autonomous push (background, no Nick attention)</h3>
+<div class="time-block"><div class="t">11:00-17:00 BST</div><div class="w">JEEVES publishes: (1) Digital Twin of Yorkshire video (Day-14 work) · (2) ISR pipeline first cut (YOLOv8 + OpenAthena) · (3) Mava swarm stub · (4) 30 MCPs to PyPI (Nick token required — block on owner-gate).</div></div>
+
+<h3>14:00 BST — 2nd T1 buyer meeting (if booked)</h3>
+<div class="time-block"><div class="t">14:00-14:30 BST</div><div class="w">Run second 15-min meeting. Use defoneos-mod-second-meeting-deep-dive.html structure (30-min deep-dive on technical anchors).</div></div>
+
+<h3>16:00 BST — End-of-day review</h3>
+<div class="time-block"><div class="t">16:00-16:30 BST</div><div class="w">CRM update: replies logged · UKDI email ref captured · AISI ref captured · 2nd meeting outcome captured.</div></div>
+
+<div class="ok">
+<div class="lbl">✅ END-OF-DAY-3 SUCCESS CRITERIA</div>
+<ul class="bullet">
+<li>UKDI Regional Engagement email sent</li>
+<li>UK AISI evaluation submitted</li>
+<li>2nd T1 buyer meeting held + outcome logged</li>
+<li>CRM updated · 72h follow-ups sent</li>
+<li>JEEVES progress: Digital Twin / ISR / Swarm progress logged</li>
+</ul>
+</div>
+</div>
+
+<h2>4. Day-4 — Thu 17 Jul — UKAISI + NATO STO</h2>
+<div class="day">
+<div class="day-header"><div class="day-title">DAY 4 · 17 JUL · STANDARDS-BODY OUTREACH</div><div class="day-meta">Owner: Nick (6h) · JEEVES (background)</div></div>
+
+<h3>08:30 BST — Daily CRM routine</h3>
+<div class="time-block"><div class="t">08:30-08:40 BST</div><div class="w">Reply-count check: ~50% of T1 should have replied or opened by now · score-based prioritisation for follow-ups.</div></div>
+
+<h3>09:00 BST — Standards-body outreach (BSI / NCSC / UKAISI / ICO / DSRB / NATO STO / ISO SC42)</h3>
+<div class="time-block"><div class="t">09:00-12:00 BST</div><div class="w">Send 7 standards-body emails (variants from defoneos-mod-referral-partner-letter.html "Standards-body variant"): no-fee, no-royalty template offer · 4-step cross-walk framework · £4M-£12M/yr UK Plc saving if 100 entities adopt.</div></div>
+
+<h3>13:00 BST — Academic outreach (12 universities)</h3>
+<div class="time-block"><div class="t">13:00-15:00 BST</div><div class="w">Send 12 academic-variant emails (Oxford/Cambridge/Imperial/Edinburgh/UCL/Manchester/Bristol/Southampton/Sheffield/Leeds/York/Queens) · Co-PI + PhD-student compute-pod donation + £5k/yr advisory honorarium.</div></div>
+
+<h3>15:00 BST — 3rd T1 buyer meeting</h3>
+<div class="time-block"><div class="t">15:00-15:30 BST</div><div class="w">Run third 15-min meeting. Different buyer, different anchor lead.</div></div>
+
+<h3>16:00 BST — Friday-style weekly review (rolled-forward for Thu end-of-week)</h3>
+<div class="time-block"><div class="t">16:00-17:00 BST</div><div class="w">Generate W2 mid-week report: 11 buyers contacted · X replies · Y meetings · Z demos sent · pipeline value £W. Identify slow-mover + escalation plan.</div></div>
+
+<div class="ok">
+<div class="lbl">✅ END-OF-DAY-4 SUCCESS CRITERIA</div>
+<ul class="bullet">
+<li>7 standards-body emails sent</li>
+<li>12 academic emails sent</li>
+<li>3rd T1 buyer meeting held</li>
+<li>W2 mid-week report generated · escalation moves identified</li>
+</ul>
+</div>
+</div>
+
+<h2>5. Day-5 — Fri 18 Jul — Weekly Review + Pipeline Reconciliation</h2>
+<div class="day">
+<div class="day-header"><div class="day-title">DAY 5 · 18 JUL · WEEKLY REVIEW</div><div class="day-meta">Owner: Nick (4h) · JEEVES (background)</div></div>
+
+<h3>08:30 BST — Daily CRM routine</h3>
+<div class="time-block"><div class="t">08:30-08:40 BST</div><div class="w">5-day pipeline review: identify top-3 buyers by signal-score · schedule W3 cadence.</div></div>
+
+<h3>09:00 BST — Prime-partner outreach (10 primes)</h3>
+<div class="time-block"><div class="t">09:00-12:00 BST</div><div class="w">Send 10 prime-variant referral-partner letters (BAE / QinetiQ / Thales / Leidos / Babcock / Atkins / SopraSteria / CGI / AccentureFed / Deloitte-PwC-KPMG) · 8% sub-contract fee = £14.4k/yr under £180k Platform · named-individual capture-lead table.</div></div>
+
+<h3>14:00 BST — Friday 16:00 weekly review (rolled-forward)</h3>
+<div class="time-block"><div class="t">14:00-16:00 BST</div><div class="w">W2 full report: 30+ emails sent · reply-rate by tier · meeting count · demo-sent count · £pipeline estimate. Identify W3 priorities. Update CRM state-machine.</div></div>
+
+<h3>16:00 BST — Sprint-close + W3 planning</h3>
+<div class="time-block"><div class="t">16:00-17:00 BST</div><div class="w">Archive W2 · commit to W3 workplan: Digital Twin video + ISR pipeline + Mava swarm + 30 MCPs to PyPI + first DEFONEOS-SEAL credential post-SC-clearance. BFT council vote on W3 priorities.</div></div>
+
+<div class="ok">
+<div class="lbl">✅ END-OF-DAY-5 SUCCESS CRITERIA</div>
+<ul class="bullet">
+<li>10 prime-partner letters sent</li>
+<li>W2 weekly review report generated + archived</li>
+<li>W3 workplan committed · BFT council ratification</li>
+<li>CRM full-state capture · pipeline estimate logged</li>
+</ul>
+</div>
+</div>
+
+<h2>6. Stop Conditions — Pause the Runbook</h2>
+<div class="alert">
+<div class="lbl">🛑 HARD STOP — PAUSE RUNBOOK IMMEDIATELY IF:</div>
+<ul class="bullet">
+<li><strong>Data breach / IP leak:</strong> any OSCAL SSP, 240-test pytest evidence, or buyer contact data exposed externally. Stop all sends. Notify NCSC within 72h per UK-GDPR.</li>
+<li><strong>Negative press:</strong> any Tier-1 publication (FT, Telegraph, Wired, Register) publishes negative DEFONEOS coverage. Pause all sends. Crisis-comms review.</li>
+<li><strong>Personal emergency:</strong> Nick unavailable for 48h+ (illness, family, legal). JEEVES holds the line at CRM-routine only. No new sends.</li>
+<li><strong>MOD formal complaint:</strong> any of the 11 buyers files formal complaint about contact method. Pause + review + amend.</li>
+</ul>
+</div>
+
+<div class="warn">
+<div class="lbl">⚠️ SOFT PAUSE — DELAY NEW SENDS IF:</div>
+<ul class="bullet">
+<li>Bounce-rate &gt; 10% on first-MOD batch (suggests email-list hygiene issue — review addresses before next batch).</li>
+<li>Reply-rate &lt; 5% after 14 days (suggests subject-line / sender-identity issue — A/B test before W3).</li>
+<li>Cyber Essentials / SC clearance / DSP rejection — escalate to Nick for human decision before continuing.</li>
+</ul>
+</div>
+
+<h2>7. Escalation Paths</h2>
+<table>
+<thead><tr><th>Trigger</th><th>Severity</th><th>First Responder</th><th>Escalation</th><th>SLA</th></tr></thead>
+<tbody>
+<tr><td>Data breach / IP leak</td><td>🔴 Critical</td><td>JEEVES auto-pause</td><td>Nick → NCSC → ICO</td><td>&lt;1h</td></tr>
+<tr><td>T1 buyer asks for technical deep-dive</td><td>🟡 Standard</td><td>JEEVES generates deep-dive</td><td>Nick for review</td><td>&lt;4h</td></tr>
+<tr><td>T1 buyer pushes back on pricing</td><td>🟡 Standard</td><td>JEEVES applies objection playbook</td><td>Nick for negotiation</td><td>&lt;8h</td></tr>
+<tr><td>Competitor mentioned in same deal</td><td>🟡 Standard</td><td>JEEVES generates comparison sheet</td><td>Nick for review</td><td>&lt;4h</td></tr>
+<tr><td>DSP / SC / Cyber Essentials rejection</td><td>🔴 Critical</td><td>JEEVES pauses outreach</td><td>Nick → IASME / UKSV</td><td>&lt;24h</td></tr>
+<tr><td>Prime partner responds to referral letter</td><td>🟢 Positive</td><td>JEEVES schedules 30-min</td><td>Nick + partner</td><td>&lt;48h</td></tr>
+<tr><td>T1 buyer signs NDA</td><td>🟢 Positive</td><td>JEEVES prepares DRAFT pilot SoW</td><td>Nick for legal review</td><td>&lt;72h</td></tr>
+</tbody>
+</table>
+
+<h2>8. End-of-Runbook State — 18 Jul 17:00 BST</h2>
+<div class="grid3">
+<div class="metric"><div class="v">30+</div><div class="l">Emails sent (11 MOD + 7 standards + 12 academic)</div></div>
+<div class="metric"><div class="v">3+</div><div class="l">T1 buyer meetings held</div></div>
+<div class="metric"><div class="v">£W</div><div class="l">Pipeline value (target ≥£300k)</div></div>
+</div>
+<p style="margin-top:16px">If the 18 Jul close is green on all 3 metrics above, the DEFONEOS pilot is on track. If any metric is red, trigger the W3 escalation review with Nick + BFT council.</p>
+
+<div class="ok">
+<div class="lbl">✅ FINAL-DAY SUCCESS CRITERIA</div>
+<ul class="bullet">
+<li>30+ emails sent · 5+ replies · 3+ meetings held</li>
+<li>DASA + DIANA + UKDI + AISI + DSP + Cyber Essentials + SC clearance all submitted</li>
+<li>Pipeline estimate ≥£300k</li>
+<li>W3 workplan ratified by BFT council</li>
+<li>JEEVES autonomous push logged: Digital Twin / ISR / Swarm / PyPI progress</li>
+</ul>
+</div>
+
+<footer>
+DEFONEOS · Day-0 pilot launch runbook · v1.0 · 14-18 Jul 2026 · 5-day execution · Owner: Nick · JEEVES autonomous background. Sitemap entry 303/227
+</footer>
+</div>
+</body>
+</html>

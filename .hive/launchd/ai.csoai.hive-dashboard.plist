@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>ai.csoai.hive-dashboard</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/bin/python3</string>
+		<string>-m</string>
+		<string>http.server</string>
+		<string>3800</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.hive-dashboard.stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.hive-dashboard.stdout.log</string>
+	<key>WorkingDirectory</key>
+	<string>/Users/nicholas/clawd</string>
+</dict>
+</plist>

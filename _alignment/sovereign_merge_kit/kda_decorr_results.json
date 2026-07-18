@@ -1,0 +1,80 @@
+{
+  "probe": "sov33_kda_decorr_probe",
+  "question": "Does a KDA-style (gated-delta linear attention) leg DECORRELATE from the transformer + SSM legs (make different mistakes)?",
+  "lead": "Kimi Linear (Kimi Delta Attention), arXiv 2510.26692 \u2014 LEAD, mechanism only, toy scale",
+  "honesty": "RUNNING at toy scale (~0.5M params, ctx<=14). Kimi's 75%/6.3x are THEIR scale (1M ctx, 5.7T tokens), NOT claimed here.",
+  "config": {
+    "d_model": 96,
+    "n_heads": 4,
+    "head_dim_base": 24,
+    "head_dim_matched": {
+      "transformer": 24,
+      "ssm": 32,
+      "kda": 19
+    },
+    "n_layers": 3,
+    "steps": 2500,
+    "bsz": 64,
+    "lr": 0.002,
+    "seed": 1234,
+    "task": {
+      "n_keys": 32,
+      "n_values": 8,
+      "n_pairs": 6,
+      "seq_len": 14,
+      "chance": 0.125,
+      "n_eval": 4000
+    }
+  },
+  "param_counts": {
+    "transformer": 234186,
+    "ssm": 234474,
+    "kda": 234246
+  },
+  "param_spread_frac": 0.0012297917040301298,
+  "train_seconds": {
+    "transformer": 50.19619584083557,
+    "ssm": 53.63721299171448,
+    "kda": 181.1054368019104
+  },
+  "heldout_accuracy": {
+    "transformer": 1.0,
+    "ssm": 0.35825,
+    "kda": 0.3605
+  },
+  "rho_matrix": {
+    "rho_T_SSM": NaN,
+    "rho_T_KDA": NaN,
+    "rho_SSM_KDA": 0.8224667869956183
+  },
+  "metric": "phi coefficient = Pearson correlation of binary error indicators (1=wrong) on shared held-out set",
+  "kda_decorrelates": false,
+  "verdict": "INCONCLUSIVE at toy scale: accuracies leave too little error variance to estimate rho reliably (acc range 0.358-1.000, chance 0.125).",
+  "train_log": [
+    "[budget] target params ~234,186 (transformer @ hd=24); matched head_dim per leg: {'transformer': 24, 'ssm': 32, 'kda': 19}",
+    "  [transformer] step    0/2500 loss 3.8760",
+    "  [transformer] step  500/2500 loss 1.5316",
+    "  [transformer] step 1000/2500 loss 1.4444",
+    "  [transformer] step 1500/2500 loss 1.1190",
+    "  [transformer] step 2000/2500 loss 0.0024",
+    "  [transformer] step 2499/2500 loss 0.0018",
+    "[transformer] trained 50.2s  final_loss 0.0018  params 234,186 (hd=24)",
+    "  [ssm] step    0/2500 loss 3.7966",
+    "  [ssm] step  500/2500 loss 1.5778",
+    "  [ssm] step 1000/2500 loss 1.4412",
+    "  [ssm] step 1500/2500 loss 1.4076",
+    "  [ssm] step 2000/2500 loss 1.5266",
+    "  [ssm] step 2499/2500 loss 1.4746",
+    "[ssm] trained 53.6s  final_loss 1.4746  params 234,474 (hd=32)",
+    "  [kda] step    0/2500 loss 3.8663",
+    "  [kda] step  500/2500 loss 1.5126",
+    "  [kda] step 1000/2500 loss 1.4421",
+    "  [kda] step 1500/2500 loss 1.4313",
+    "  [kda] step 2000/2500 loss 1.5203",
+    "  [kda] step 2499/2500 loss 1.4613",
+    "[kda] trained 181.1s  final_loss 1.4613  params 234,246 (hd=19)",
+    "[transformer] heldout acc 1.0000  (chance 0.125)",
+    "[ssm] heldout acc 0.3583  (chance 0.125)",
+    "[kda] heldout acc 0.3605  (chance 0.125)"
+  ]
+}

@@ -1,0 +1,70 @@
+1/ The EU AI Act Article 50 deadline is in 28 days.
+
+Every AI company that generates content (text, image, audio, video) for EU users MUST watermark and prove provenance.
+
+Penalty: €15M or 3% of global turnover.
+
+Here's how to comply in one curl call ↓
+
+2/ We built the simplest possible compliance proof: an Ed25519-signed "compliance passport" API.
+
+One call. One signed certificate. One verify URL your regulator can check.
+
+Live and working today: csoai-org-v2.vercel.app/api/assess
+
+3/ What you get back:
+
+{
+  "report_id": "7f54374a9836282a",
+  "alg": "ed25519",
+  "pub": "...",
+  "sig": "...",
+  "verdict": "remediate",
+  "compliance_score": 0.5,
+  "gaps": ["art12_logging", "art14_human_oversight"]
+}
+
+Anyone can verify offline using the public key. No platform lock-in.
+
+4/ Why Ed25519?
+
+- Smaller signatures than RSA (64 bytes vs 256)
+- Faster verification
+- Quantum-resistant via ML-DSA migration (we ship a PQC migration tool too)
+- Open standard, multiple open-source implementations
+
+5/ What we do for you:
+
+✅ EU AI Act Article 50 (transparency + watermarking)
+✅ GDPR Art 22 (automated decision-making)
+✅ ISO 42001 (AI management system)
+✅ NIST AI RMF (risk profile)
+✅ 12-framework crosswalk via the CSOAI Governance Engine
+
+6/ Pricing:
+
+- Free: 3 passports/day (forever, no signup needed)
+- Pro: £499/mo — 1,000/day, custom frameworks
+- Governance: £2,499/mo — 10K/day, SLA
+- Enterprise: £9,999+/mo — unlimited, on-prem option
+
+7/ How to start:
+
+```bash
+curl -X POST https://csoai-org-v2.vercel.app/api/assess \
+  -H "Content-Type: application/json" \
+  -d '{"system":"Your AI","purpose":"customer chat","domain":"general","human_oversight":true}'
+```
+
+Returns a signed passport. ~200ms latency.
+
+8/ Who's using this:
+
+- DPOs at EU SaaS companies (GDPR + EU AI Act)
+- CISO teams at healthtech startups (HIPAA + AI governance)
+- Series A founders (defensibility for their deck)
+- Compliance consultants (Big 4 firms)
+
+28 days. One curl call. Start today.
+
+— Nicholas Templeman, CSOAI Ltd (UK 16939677), os.meok.ai

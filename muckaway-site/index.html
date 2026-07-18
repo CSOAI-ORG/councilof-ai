@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0F172A" />
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.posthog.com https://us.i.posthog.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: blob: https: http:;
+      connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com https://ai.gateway.lovable.dev https://*.posthog.com https://us.i.posthog.com https://api.stripe.com https://api.mapbox.com;
+      frame-src 'self' https://js.stripe.com https://hooks.stripe.com;
+      media-src 'self' blob:;
+      worker-src 'self' blob:;
+    " />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://muckaway.ai/" />
+    
+    <!-- Hreflang for International SEO -->
+    <link rel="alternate" hreflang="en" href="https://muckaway.ai/" />
+    <link rel="alternate" hreflang="en-GB" href="https://muckaway.ai/" />
+    <link rel="alternate" hreflang="en-US" href="https://muckaway.ai/" />
+    <link rel="alternate" hreflang="es" href="https://muckaway.ai/?lang=es" />
+    <link rel="alternate" hreflang="fr" href="https://muckaway.ai/?lang=fr" />
+    <link rel="alternate" hreflang="de" href="https://muckaway.ai/?lang=de" />
+    <link rel="alternate" hreflang="pt" href="https://muckaway.ai/?lang=pt" />
+    <link rel="alternate" hreflang="x-default" href="https://muckaway.ai/" />
+    
+    <!-- Primary Meta Tags -->
+    <title>MuckAway.ai - AI-Powered Waste Management Platform | Built for Global Standards</title>
+    <meta name="title" content="MuckAway.ai - AI-Powered Waste Management & Spoil Removal Platform" />
+    <meta name="description" content="Advanced AI-powered waste management platform. Supports 11 regulatory frameworks with instant quotes, automated compliance, AI waste classification, and real-time tracking. Designed to reduce costs up to 40%." />
+    <meta name="author" content="MEOK AI Labs (CSOAI LTD, UK Companies House 16939677)" />
+    <meta name="keywords" content="muck away, spoil removal, waste management, AI waste classification, bulk earthworks, waste compliance, WTN generator, hazardous waste, construction waste, instant waste quotes, digital waste tracking, AI image analysis, global waste platform, RCRA, EPA, Environment Agency, DEFRA" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://muckaway.ai/" />
+    <meta property="og:site_name" content="MuckAway.ai" />
+    <meta property="og:title" content="MuckAway.ai - AI-Powered Waste Management Platform" />
+    <meta property="og:description" content="AI-powered waste management supporting 11 regulatory frameworks. Instant quotes, automated compliance, and intelligent waste classification. Designed to reduce costs up to 40%." />
+    <meta property="og:image" content="https://muckaway.ai/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="640" />
+    <meta property="og:image:alt" content="MuckAway.ai - AI-Powered Waste Management Platform" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="es_ES" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:locale:alternate" content="pt_BR" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://muckaway.ai/" />
+    <meta name="twitter:title" content="MuckAway.ai - AI Waste Management for Global Standards" />
+    <meta name="twitter:description" content="AI-powered platform designed to reduce waste management costs up to 40%. Instant quotes, automated compliance, real-time tracking across 11 regulatory frameworks." />
+    <meta name="twitter:image" content="https://muckaway.ai/og-image.png" />
+    <meta name="twitter:image:alt" content="MuckAway.ai - AI-Powered Waste Platform" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "MuckAway.ai",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "AggregateOffer",
+        "lowPrice": "0",
+        "highPrice": "199",
+        "priceCurrency": "GBP",
+        "offerCount": "3"
+      },
+      "description": "AI-powered waste management platform supporting 11 regulatory frameworks. Instant quotes, automated compliance, and intelligent waste classification for construction professionals.",
+      "image": "https://muckaway.ai/og-image.png",
+      "author": {
+        "@type": "Organization",
+        "name": "MEOK AI Labs",
+        "legalName": "CSOAI LTD",
+        "url": "https://meok.ai",
+        "identifier": "UK Companies House 16939677"
+      },
+      "availableCountry": ["GB", "US", "AU", "CA", "NZ", "DE", "FR", "ES", "BR", "IN", "SG", "AE", "ZA"]
+    }
+    </script>
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "MEOK AI Labs",
+      "legalName": "CSOAI LTD",
+      "url": "https://meok.ai",
+      "identifier": "UK Companies House 16939677",
+      "logo": "https://muckaway.ai/icon-512.png",
+      "description": "Trade-vertical compliance brand operated by MEOK AI Labs (CSOAI LTD, UK Companies House 16939677). MuckAway.ai, GrabHire.ai, and PlantHire.ai are AI-powered construction and waste management platforms.",
+      "sameAs": [
+        "https://muckaway.ai",
+        "https://grabhire.ai",
+        "https://planthire.ai"
+      ],
+      "brand": [
+        {
+          "@type": "Brand",
+          "name": "MuckAway.ai",
+          "url": "https://muckaway.ai"
+        },
+        {
+          "@type": "Brand",
+          "name": "GrabHire.ai",
+          "url": "https://grabhire.ai"
+        },
+        {
+          "@type": "Brand",
+          "name": "PlantHire.ai",
+          "url": "https://planthire.ai"
+        }
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "hello@meok.ai",
+        "contactType": "customer service",
+        "availableLanguage": ["English", "Spanish", "French", "German", "Portuguese"]
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-Be8Tzg5e.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-react-aQMUJeq6.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-ui-CbkX5ZIW.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-charts-CabJ0Ao3.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-query-CsLG9NUO.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-supabase-Bgf2W1us.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-i18n-LRMzioJ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-forms-CHqvsDYZ.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CUiqHpb1.css">
+  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script><script defer src="/~flock.js" data-proxy-url="/~api/analytics"></script></head>
+
+  <body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">MuckAway</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
+    <div id="root"></div>
+  
+    <script src="https://meok.ai/widgets/meok-trust-bar.js" defer async></script>
+    <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">MuckAway by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
+</body>
+</html>

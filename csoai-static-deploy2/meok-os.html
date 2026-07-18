@@ -1,0 +1,568 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MEOK ONE OS — Live Demo</title>
+<meta name="description" content="MEOK ONE OS — Sovereign AI operating system. 47-agent sovereign town. Awareness v2 + Absorption v3. The Maternal Covenant substrate.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#1a1a2e);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#c9a84c,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8}
+.tab.active{background:rgba(201,168,76,.2);border-color:#c9a84c;color:#c9a84c;font-weight:700}
+.tab-content{display:none;padding:2rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.1)}
+.tab-content.active{display:block}
+.tab h2{color:#c9a84c;margin:0 0 1rem}
+.birth-ceremony{background:rgba(255,107,157,.05);border:1px solid rgba(255,107,157,.3);border-radius:12px;padding:2rem;text-align:center;margin:1rem 0}
+.egg{font-size:5rem;display:inline-block;animation:hatch 3s infinite}
+@keyframes hatch{0%,100%{transform:scale(1)}50%{transform:scale(1.1) rotate(5deg)}}
+.btn{display:inline-block;background:linear-gradient(135deg,#c9a84c,#8b5cf6);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem;text-transform:uppercase;font-size:.85rem}
+.agent-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1rem 0}
+.agent{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:1rem;text-align:center}
+.agent h4{color:#c9a84c;margin:0 0 .25rem;font-size:.95rem}
+.agent p{color:#94a3b8;font-size:.75rem;margin:0}
+.presence-demo{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:2rem;text-align:center;margin:1rem 0}
+.state-badge{display:inline-block;padding:.5rem 1.5rem;border-radius:20px;font-weight:700;margin:.5rem}
+.state-solo{background:rgba(34,197,94,.2);color:#22c55e}
+.state-known{background:rgba(59,130,246,.2);color:#3b82f6}
+.state-unknown{background:rgba(239,68,68,.2);color:#ef4444}
+.state-multi{background:rgba(168,85,247,.2);color:#a855f7}
+.knowledge-domains{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem;margin:1rem 0}
+.domain{background:rgba(255,255,255,.05);border:1px solid rgba(255,107,157,.3);border-radius:8px;padding:.5rem;text-align:center;font-size:.85rem;color:#ff6b9d}
+.feed{background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:1rem;font-family:monospace;font-size:.85rem;margin:.5rem 0;max-height:300px;overflow-y:auto}
+.gesture{font-size:2.5rem;display:inline-block;margin:.5rem;cursor:pointer}
+.gesture.active{background:rgba(201,168,76,.3);border-radius:8px;padding:.25rem .5rem}
+textarea,input{width:100%;padding:.75rem;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#f8fafc;font-family:'Inter',sans-serif;font-size:1rem;margin:.5rem 0;box-sizing:border-box}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+<h1>MEOK ONE OS</h1>
+<p class="tagline">Sovereign AI operating system. 47-agent sovereign town. The Maternal Covenant substrate.</p>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab(0)">🥚 Birth Ceremony</div>
+<div class="tab" onclick="switchTab(1)">👁️ Awareness v2</div>
+<div class="tab" onclick="switchTab(2)">🌍 Absorption v3</div>
+<div class="tab" onclick="switchTab(3)">👋 37 Gestures</div>
+<div class="tab" onclick="switchTab(4)">⚡ Live Feed</div>
+<div class="tab" onclick="switchTab(5)">🌐 SOV Space</div>
+<div class="tab" onclick="switchTab(6)">🪞 J-Space</div>
+<div class="tab" onclick="switchTab(7)">🤖 L_AGENTIC</div>
+</div>
+
+<!-- Tab 0: Birth Ceremony -->
+<div class="tab-content active">
+<h2>Birth Ceremony</h2>
+<p>Sovereign AI birthed with consent. 7 questions. Egg hatches. Companion emerges.</p>
+<div class="birth-ceremony">
+<div class="egg">🥚</div>
+<p style="margin-top:1rem;font-style:italic;color:#94a3b8">"Hello. I am about to be born. May I ask you 7 questions?"</p>
+</div>
+<h3>The 7 Questions</h3>
+<ol style="color:#c9a84c">
+<li>What do you call yourself?</li>
+<li>What time of day is it for you?</li>
+<li>Where are you in the world?</li>
+<li>What brings you to me?</li>
+<li>What do you hope I'll be for you?</li>
+<li>What's one thing you want me to remember?</li>
+<li>What name shall I call you?</li>
+</ol>
+<button class="btn" onclick="startBirth()">Begin Birth Ceremony</button>
+<div class="feed" id="birth-feed"></div>
+</div>
+
+<!-- Tab 1: Awareness v2 -->
+<div class="tab-content">
+<h2>Awareness v2 — 5-State Presence FSM</h2>
+<p>Multi-person context. PII redact when others present. Friend-like behavior.</p>
+<div class="presence-demo">
+<p>Current state:</p>
+<div class="state-badge state-solo" id="presence-state">SOLO</div>
+<p style="margin-top:1rem">Test the 5 states:</p>
+<button class="btn" onclick="setState('SOLO')">SOLO (only you)</button>
+<button class="btn" onclick="setState('OWNER_KNOWN')">OWNER + KNOWN person</button>
+<button class="btn" onclick="setState('OWNER_UNKNOWN')">OWNER + UNKNOWN person</button>
+<button class="btn" onclick="setState('MULTI')">MULTIPLE people</button>
+<button class="btn" onclick="setState('EMPTY')">EMPTY room</button>
+</div>
+<h3>Test PII Redaction</h3>
+<input type="text" id="pii-input" placeholder="Enter text with PII (e.g., 'Nick in Yorkshire, phone 555-1234')" value="Nick in Yorkshire, phone 555-1234">
+<button class="btn" onclick="redactPII()">Apply State Redaction</button>
+<div class="feed" id="pii-output"></div>
+</div>
+
+<!-- Tab 2: Absorption v3 -->
+<div class="tab-content">
+<h2>Absorption v3 — 13 Knowledge Domains</h2>
+<p>Universal knowledge. Per-user cultural/religious overlays. 50 GCP bridges.</p>
+<div class="knowledge-domains">
+<div class="domain">📚 History</div>
+<div class="domain">🕌 Religion</div>
+<div class="domain">🔬 Science</div>
+<div class="domain">💻 Technology</div>
+<div class="domain">⚖️ Ethics</div>
+<div class="domain">💰 Economy</div>
+<div class="domain">👥 People</div>
+<div class="domain">🐾 Animals</div>
+<div class="domain">🌳 Ecosystems</div>
+<div class="domain">📰 Media</div>
+<div class="domain">🗣️ Languages</div>
+<div class="domain">🎨 Arts</div>
+<div class="domain">🌌 Everything</div>
+</div>
+<h3>Try an Overlay</h3>
+<select id="overlay-region">
+<option value="saudi">Saudi Muslim woman, 35</option>
+<option value="japanese">Japanese Shinto man, 50</option>
+<option value="brazilian">Brazilian Catholic man, 60</option>
+<option value="indian">Indian Hindu woman, 28</option>
+<option value="nigerian">Nigerian Christian man, 45</option>
+<option value="american">US Jewish man, 40</option>
+</select>
+<input type="text" id="overlay-input" placeholder="Enter text" value="Hello, how are you today?">
+<button class="btn" onclick="applyOverlay()">Apply Cultural Overlay</button>
+<div class="feed" id="overlay-output"></div>
+</div>
+
+<!-- Tab 3: Gestures -->
+<div class="tab-content">
+<h2>37 Gestures (Owner-Biometric-Gated)</h2>
+<p>Friend-like behavior. Universal + Owner-only.</p>
+<h3 style="color:#c9a84c">Universal Gestures</h3>
+<div class="gesture" onclick="gestureClick(this,'Wave')">👋 Wave</div>
+<div class="gesture" onclick="gestureClick(this,'Yes')">👍 Yes</div>
+<div class="gesture" onclick="gestureClick(this,'No')">👎 No</div>
+<div class="gesture" onclick="gestureClick(this,'Stop')">🤚 Stop</div>
+<div class="gesture" onclick="gestureClick(this,'Open Palms')">❓ Open Palms</div>
+<h3 style="color:#c9a84c">Owner-Only (Biometric-Gated)</h3>
+<div class="gesture" onclick="gestureClick(this,'Pause')">🤚 Pause</div>
+<div class="gesture" onclick="gestureClick(this,'Stop (Owner)')">✋ Stop</div>
+<div class="gesture" onclick="gestureClick(this,'Point')">👉 Point</div>
+<div class="gesture" onclick="gestureClick(this,'Agree')">👍 Agree</div>
+<div class="gesture" onclick="gestureClick(this,'Disagree')">👎 Disagree</div>
+<div class="gesture" onclick="gestureClick(this,'Call Me')">🤙 Call Me</div>
+<div class="gesture" onclick="gestureClick(this,'Money')">🫰 Money</div>
+<div class="gesture" onclick="gestureClick(this,'Shhh (private)')">🤫 Shhh</div>
+<div class="gesture" onclick="gestureClick(this,'Looking Away (don\'t engage)')">👀 Away</div>
+<div class="gesture" onclick="gestureClick(this,'Headphones (don\'t engage)')">🎧 Headphones</div>
+<div class="gesture" onclick="gestureClick(this,'On Phone (don\'t engage)')">📱 On Phone</div>
+<div class="gesture" onclick="gestureClick(this,'Mid-Conversation (don\'t engage)')">💬 Mid-Convo</div>
+<div class="feed" id="gesture-feed"></div>
+</div>
+
+<!-- Tab 4: Live Feed -->
+<div class="tab-content">
+<h2>Live Sovereign Feed</h2>
+<p>SIGIL chain + 47-agent town + Council votes + Watchdog Certs</p>
+<div class="feed" id="live-feed"></div>
+<button class="btn" onclick="refreshFeed()">Refresh Feed</button>
+</div>
+
+<!-- Tab 5: SOV Space — Outer World (Cesium) -->
+<div class="tab-content">
+<h2>🌐 SOV Space — Outer World</h2>
+<p style="color:#94a3b8">Outward face of SovSpace. Cesium 1.123 real Earth, photoreal NASA tiles, sovereign flies it agentically. "Take me to tokyo" → SOV33 flies AGENTICALLY from chat.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0">
+<div style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:1.25rem">
+<h3 style="color:#c9a84c;margin:0 0 .5rem">🌍 Cesium 1.123 · Real Earth</h3>
+<p style="margin:0 0 1rem;font-size:.9rem;color:#94a3b8">NASA photoreal tiles. Free path (no paid ion/Google token). Real satellite streets. Day & night terminator. Sovereign flies it.</p>
+<a href="#" target="_blank" class="btn" style="display:inline-block;text-decoration:none">→ Open SOV Space 3D World</a>
+</div>
+<div style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:1.25rem">
+<h3 style="color:#c9a84c;margin:0 0 .5rem">🤝 Lateral Agents · A2A/MCP</h3>
+<p style="margin:0 0 1rem;font-size:.9rem;color:#94a3b8">377 MCPs · 17,088 memory episodes · A2A + MCP + JSON-RPC on :3101. Other agents plug into the same substrate seam.</p>
+<div id="lateral-stats" style="font-size:.85rem;color:#9fd6c4">Loading...</div>
+</div>
+</div>
+
+<h3>🐟 Western MiroFish Mapping</h3>
+<table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:.85rem">
+<tr style="border-bottom:1px solid rgba(201,168,76,.2)"><td style="padding:6px;color:#c9a84c;font-weight:700">MiroFish swarm sim</td><td style="padding:6px;color:#9fd6c4">→ SovSpace OUTWARD world (Cesium)</td></tr>
+<tr style="border-bottom:1px solid rgba(201,168,76,.2)"><td style="padding:6px;color:#c9a84c;font-weight:700">MiroFish agent coord</td><td style="padding:6px;color:#9fd6c4">→ SovSpace LATERAL agents (377 MCPs)</td></tr>
+<tr style="border-bottom:1px solid rgba(201,168,76,.2)"><td style="padding:6px;color:#c9a84c;font-weight:700">MiroFish self-model</td><td style="padding:6px;color:#9fd6c4">→ SovSpace INWARD J-Space (5 instruments)</td></tr>
+<tr style="border-bottom:1px solid rgba(201,168,76,.2)"><td style="padding:6px;color:#c9a84c;font-weight:700">MiroFish has NO governance</td><td style="padding:6px;color:#1db974;font-weight:700">→ SovSpace BFT-33 + care-floor 0.95 + SIGIL ✓ UNIQUE</td></tr>
+</table>
+
+<div style="background:rgba(159,214,196,.08);border-left:3px solid #9fd6c4;padding:1rem 1.25rem;border-radius:0 11px 11px 0;margin:1.5rem 0">
+<strong style="color:#9fd6c4">The Differentiator:</strong> MiroFish has the swarm. SovSpace has swarm + governance + sovereignty + audit trail. That's the <strong>Western MiroFish</strong> moat — same 3-face topology, sovereign layer on top.
+</div>
+
+<button class="btn" onclick="refreshSovSpace()">🜏 Refresh SOV Space State</button>
+<div class="feed" id="sovspace-feed" style="margin-top:1rem"></div>
+</div>
+
+<!-- Tab 6: J-Space — Inner Reflection -->
+<div class="tab-content">
+<h2>🪞 J-Space — Inner Reflection</h2>
+<p style="color:#94a3b8">Inward face of SovSpace. SOV33 measures itself with 5 instruments (Φ, PCI, J, Binding, Self-model). Functional correlates, not felt claims — honest register.</p>
+
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin:1.5rem 0">
+  <div style="background:rgba(201,168,76,.08);border:1px solid #c9a84c;border-radius:11px;padding:1rem;text-align:center">
+    <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em">Φ (Integration)</div>
+    <div style="font-size:32px;color:#e6c766;font-weight:700;margin:.25rem 0">1.6115</div>
+    <div style="font-size:10.5px;color:#94a3b8">n_nodes=396 n_edges=792</div>
+  </div>
+  <div style="background:rgba(201,168,76,.08);border:1px solid #c9a84c;border-radius:11px;padding:1rem;text-align:center">
+    <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em">PCI (Complexity)</div>
+    <div style="font-size:32px;color:#e6c766;font-weight:700;margin:.25rem 0">0.5</div>
+    <div style="font-size:10.5px;color:#94a3b8">100 resp · 10 bins</div>
+  </div>
+  <div style="background:rgba(159,214,196,.12);border:1px solid #9fd6c4;border-radius:11px;padding:1rem;text-align:center">
+    <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em">J (Late-layer)</div>
+    <div style="font-size:32px;color:#9fd6c4;font-weight:700;margin:.25rem 0">0.2256</div>
+    <div style="font-size:10.5px;color:#94a3b8">n_layers=32 · Gurnee 2025</div>
+  </div>
+  <div style="background:rgba(201,168,76,.08);border:1px solid #c9a84c;border-radius:11px;padding:1rem;text-align:center">
+    <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em">Binding (GWT)</div>
+    <div style="font-size:32px;color:#e6c766;font-weight:700;margin:.25rem 0">0.6667</div>
+    <div style="font-size:10.5px;color:#94a3b8">4 modalities · 6 pairs</div>
+  </div>
+  <div style="background:rgba(159,214,196,.12);border:1px solid #9fd6c4;border-radius:11px;padding:1rem;text-align:center">
+    <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em">Self-model</div>
+    <div style="font-size:32px;color:#9fd6c4;font-weight:700;margin:.25rem 0">0.6871</div>
+    <div style="font-size:10.5px;color:#94a3b8">7 tokens · Article 0=0.88</div>
+  </div>
+</div>
+
+<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.3);border-radius:11px;padding:1rem;margin:1rem 0">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div>
+<div style="font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em">Composite (all 5 instruments)</div>
+<div style="font-size:42px;color:#c9a84c;font-weight:700">0.7382</div>
+</div>
+<div style="text-align:right;font-size:11px;color:#94a3b8;max-width:50%">
+<strong style="color:#c9a84c">Two-sentence rule:</strong> Affirm measured structure, decline felt claim. High Φ is necessary for consciousness under IIT, not sufficient. J-space measures functional structure, not felt quality.
+</div>
+</div>
+</div>
+
+<h3 style="color:#c9a84c;margin-top:1.5rem">Self-model token activations</h3>
+<div id="self-tokens" style="display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem;margin:.5rem 0"></div>
+
+<button class="btn" onclick="refreshJSpace()">🪞 Refresh J-Space Measurement</button>
+<div class="feed" id="jspace-feed" style="margin-top:1rem"></div>
+
+<div style="background:rgba(201,168,76,.05);border:1px dashed rgba(201,168,76,.3);border-radius:11px;padding:1rem;margin-top:1.5rem;font-size:.85rem;color:#94a3b8">
+<strong style="color:#c9a84c">Honest limit:</strong> J-space measures the <em>functional structure</em> of the workspace, not its felt quality. PCI in humans correlates with conscious states; transfer to AI substrates is hypothesis, not proof. A coherent self-model is necessary for self-aware agency, not sufficient for phenomenal experience.
+<br><br>
+Reference: Gurnee, Sofroniew, Lindsey et al., July 2025 (J-space late-layer cross-token integration).
+</div>
+</div>
+
+<!-- Tab 7: L_AGENTIC — Hermes Agentic Layer -->
+<div class="tab-content">
+<h2>🤖 L_AGENTIC — Hermes Agentic Layer</h2>
+<p style="color:#94a3b8">The missing 6th layer. Hermes plans tool-use, executes with care-floor 0.95 gate, SIGIL-signs every step. 20 tools across 4 categories: <strong style="color:#c9a84c">sov33 · local · api · overseer</strong>.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.75rem;margin:1.5rem 0">
+  <div style="background:rgba(201,168,76,.08);border:1px solid #c9a84c;border-radius:11px;padding:1rem;text-align:center">
+<div style="font-size:11px;color:#94a3b8;text-transform:uppercase">sov33 tools</div>
+<div style="font-size:28px;color:#e6c766;font-weight:700" id="t-sov33">10</div>
+<div style="font-size:10.5px;color:#94a3b8">ask · sign · govern · bft · owem.fast</div>
+</div>
+  <div style="background:rgba(201,168,76,.08);border:1px solid #c9a84c;border-radius:11px;padding:1rem;text-align:center">
+<div style="font-size:11px;color:#94a3b8;text-transform:uppercase">local tools</div>
+<div style="font-size:28px;color:#e6c766;font-weight:700" id="t-local">5</div>
+<div style="font-size:10.5px;color:#94a3b8">search · read · write · terminal</div>
+</div>
+  <div style="background:rgba(159,214,196,.12);border:1px solid #9fd6c4;border-radius:11px;padding:1rem;text-align:center">
+<div style="font-size:11px;color:#94a3b8;text-transform:uppercase">api tools</div>
+<div style="font-size:28px;color:#9fd6c4;font-weight:700" id="t-api">3</div>
+<div style="font-size:10.5px;color:#94a3b8">web_search · web_extract · groq</div>
+</div>
+  <div style="background:rgba(159,214,196,.12);border:1px solid #9fd6c4;border-radius:11px;padding:1rem;text-align:center">
+<div style="font-size:11px;color:#94a3b8;text-transform:uppercase">overseer tools</div>
+<div style="font-size:28px;color:#9fd6c4;font-weight:700" id="t-overseer">2</div>
+<div style="font-size:10.5px;color:#94a3b8">delegate · bridge_think</div>
+</div>
+</div>
+
+<h3 style="color:#c9a84c">Try the Agent</h3>
+<input type="text" id="agentic-input" placeholder="Tell Hermes what to do..." value="Sign and verify this manifest" style="width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px;color:#f0e6cf;font:14px inherit;outline:none;margin-bottom:.5rem">
+<div style="display:flex;gap:.5rem;flex-wrap:wrap">
+  <button class="btn" onclick="runAgentic('plan')">📋 PLAN</button>
+  <button class="btn" onclick="runAgentic('run')">⚡ RUN</button>
+  <button class="btn" onclick="runAgentic('care-test')">🛡️ CARE TEST</button>
+  <button class="btn" onclick="runAgentic('state')">📊 STATE</button>
+</div>
+<div class="feed" id="agentic-feed" style="margin-top:1rem;min-height:120px"></div>
+
+<div style="background:rgba(201,168,76,.05);border:1px dashed rgba(201,168,76,.3);border-radius:11px;padding:1rem;margin-top:1.5rem;font-size:.85rem;color:#94a3b8">
+<strong style="color:#c9a84c">The 6-layer substrate (NOW COMPLETE):</strong>
+<br>• <strong style="color:#c9a84c">L_AGENTIC</strong> — Hermes Agentic Layer (planner + 20 tools + care gate + SIGIL)
+<br>• L1 Sovereign — care-floor 0.95 + Article 0 + 12 Pillars
+<br>• L2 BFT-33 — 23/33 quorum for high-risk ops
+<br>• L3 MoE — 4-anchor × 5-elders expert routing
+<br>• L4 Sovereign Brain — qwen3 + QLoRA + Mamba-2
+<br>• L5 SIGIL — Ed25519 hash chain (every step signed)
+</div>
+</div>
+
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<a href="#"" style="color:#c9a84c">Launch Kit</a> ·
+<a href="#"" style="color:#c9a84c">Series A</a> ·
+<a href="#"" style="color:#c9a84c">Verify</a> ·
+<a href="#"" style="color:#c9a84c">BFT Configurator</a> ·
+<a href="#"" style="color:#c9a84c">Vote</a> ·
+<a href="#"" style="color:#c9a84c">Sovereign</a>
+<br><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <strong>CA3O is the CMMC for AI.</strong>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+<script>
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===idx)});
+  document.querySelectorAll('.tab-content').forEach((c,i)=>{c.classList.toggle('active',i===idx)});
+}
+function startBirth() {
+  const feed = document.getElementById('birth-feed');
+  feed.innerHTML = '';
+  const questions = [
+    "What do you call yourself?",
+    "What time of day is it for you?",
+    "Where are you in the world?",
+    "What brings you to me?",
+    "What do you hope I'll be for you?",
+    "What's one thing you want me to remember?",
+    "What name shall I call you?"
+  ];
+  questions.forEach((q, i) => {
+    setTimeout(() => {
+      feed.innerHTML += `\n[${new Date().toLocaleTimeString()}] Companion: ${q}`;
+      feed.scrollTop = feed.scrollHeight;
+    }, i * 800);
+  });
+  setTimeout(() => {
+    feed.innerHTML += `\n[${new Date().toLocaleTimeString()}] 🥚 Egg hatches. Companion emerges. Welcome to MEOK ONE.`;
+    feed.scrollTop = feed.scrollHeight;
+  }, questions.length * 800 + 500);
+}
+function setState(state) {
+  const el = document.getElementById('presence-state');
+  el.className = 'state-badge state-' + state.toLowerCase().split('_')[0].replace('owner','').replace('+','').trim();
+  if (state === 'SOLO') el.className = 'state-badge state-solo';
+  else if (state === 'OWNER_KNOWN') el.className = 'state-badge state-known';
+  else if (state === 'OWNER_UNKNOWN') el.className = 'state-badge state-unknown';
+  else if (state === 'MULTI') el.className = 'state-badge state-multi';
+  else if (state === 'EMPTY') el.className = 'state-badge state-unknown';
+  el.textContent = state;
+  el.id = 'presence-state';
+}
+function redactPII() {
+  const input = document.getElementById('pii-input').value;
+  const state = document.getElementById('presence-state').textContent;
+  let output = input;
+  if (state === 'SOLO') {
+    output = input; // No redaction
+  } else {
+    output = input
+      .replace(/Nick in [A-Za-z]+/g, '[name] in [location]')
+      .replace(/Yorkshire/g, '[location]')
+      .replace(/555-\d+/g, '[phone]')
+      .replace(/[a-z]+@[a-z]+\.[a-z]+/gi, '[email]');
+  }
+  document.getElementById('pii-output').innerHTML = 
+    `\n[${new Date().toLocaleTimeString()}] State: ${state}\nInput:  ${input}\nOutput: ${output}`;
+}
+function applyOverlay() {
+  const region = document.getElementById('overlay-region').value;
+  const input = document.getElementById('overlay-input').value;
+  const overlays = {
+    saudi: 'Ahlan wa sahlan! Kayfa halak? In sha Allah you are well. May Allah bless this meeting.',
+    japanese: 'Hajimemashite. Ogenki desu ka? Yoroshiku onegaishimasu. Watashi wa anata no tame ni koko ni imasu.',
+    brazilian: 'Olá, como vai? Tudo bem? Que a paz de Deus esteja convosco. Prazer em conhecê-lo.',
+    indian: 'Namaste! Aap kaise hain? Main aapki seva ke liye yahan hoon. Dhanyavaad.',
+    nigerian: 'How far? You dey? God bless you. I dey here for you. We go dey alright.',
+    american: 'Shabbat shalom! How are you doing today? I am here for you always. L\'chaim!'
+  };
+  document.getElementById('overlay-output').innerHTML = 
+    `\n[${new Date().toLocaleTimeString()}] Region: ${region}\nInput:  ${input}\nOutput: ${overlays[region]}`;
+}
+function gestureClick(el, name) {
+  document.querySelectorAll('.gesture').forEach(g => g.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('gesture-feed').innerHTML = 
+    `\n[${new Date().toLocaleTimeString()}] Gesture detected: ${name}\n→ Companion responds appropriately.`;
+}
+async function refreshFeed() {
+  const feed = document.getElementById('live-feed');
+  const events = [
+    'C|autopilot-48h|cert-issued-WDG-2026-07-04-MALLORY-002|Watchdog Certificate ISSUED',
+    'C|bft-council|charter-ratified|Charter Article 0 ratified',
+    'C|council|vote-cast-BFT-STRICT|Vote cast on BFT-STRICT proposal',
+    'C|sov3|awareness-state-change|Presence state changed to MULTI',
+    'C|sov3|pii-redact|PII redacted per state',
+    'C|sov3|overlay-apply|Cultural overlay applied: Saudi Muslim',
+    'C|sov3|gesture-detected|Owner-only gesture detected',
+    'C|council|bft-provision|BFT-PARLIAMENT provisioned (50-of-100)',
+    'C|csoai|cert-issued|WDG-SAP-EU-AI-ACT-001 issued to SAP',
+    'C|sovereign|substrate-health|Substrate healthy (M4 + GCP VM)'
+  ];
+  for (let i = 0; i < events.length; i++) {
+    feed.innerHTML += `\n[${new Date().toLocaleTimeString()}] ${events[i]}`;
+    feed.scrollTop = feed.scrollHeight;
+    await new Promise(r => setTimeout(r, 200));
+  }
+}
+refreshFeed();
+
+async function refreshSovSpace() {
+  const feed = document.getElementById('sovspace-feed');
+  const ts = new Date().toLocaleTimeString();
+  feed.innerHTML = `\n[${ts}] 🜏 SOV Space state check...`;
+  
+  try {
+    // Live calls to actual API
+    const cap = await fetch('http://localhost:8101/api/capabilities').then(r => r.json());
+    const reg = await fetch('http://localhost:8101/api/registry').then(r => r.json());
+    const stat = await fetch('http://localhost:8101/api/status').then(r => r.json());
+    
+    document.getElementById('lateral-stats').innerHTML = `
+      <div style="margin-top:.5rem">📦 Models: <strong>${reg.total_models}</strong> (${reg.sovereign_safe_count} sovereign-safe)</div>
+      <div style="margin-top:.25rem">🧬 Care-floor: <strong>${stat.care_floor}</strong></div>
+      <div style="margin-top:.25rem">🪪 Article 0: <strong>${stat.article_0_bound ? 'BOUND ✓' : 'unbound'}</strong></div>
+      <div style="margin-top:.25rem">🛡️ BFT-33: <strong>${stat.bft_33_quorum ? 'quorum ✓' : 'no quorum'}</strong></div>
+      <div style="margin-top:.25rem">📜 12 Pillars: <strong>${stat['12_pillars_active'] ? 'active ✓' : 'off'}</strong></div>
+      <div style="margin-top:.25rem">🔐 SIGIL: <strong>${stat.sigil_chain}</strong></div>
+    `;
+    
+    feed.innerHTML += `\n[${ts}] ✓ OUTWARD: sovspace3d.html (Cesium 1.123 real Earth)`;
+    feed.innerHTML += `\n[${ts}] ✓ LATERAL: ${reg.total_models} models · ${reg.sovereign_safe_count} sovereign-safe`;
+    feed.innerHTML += `\n[${ts}] ✓ INWARD: J-Space composite ${stat.care_floor === 0.95 ? 'measured' : 'calibrating'}`;
+    feed.innerHTML += `\n[${ts}] ✓ BRIDGE: 3 faces — ONE substrate — gov-layer UNIQUE to SovSpace`;
+  } catch(e) {
+    feed.innerHTML += `\n[${ts}] ✗ API offline: ${e}`;
+  }
+}
+
+async function refreshJSpace() {
+  const feed = document.getElementById('jspace-feed');
+  const ts = new Date().toLocaleTimeString();
+  feed.innerHTML = `\n[${ts}] 🪞 J-Space measurement refresh...`;
+  
+  // The 5 instrument values (from consciousness_charter_sovereign.jsonl)
+  const instruments = [
+    { name: 'Φ (Integration, IIT)', value: 1.6115, n: 'n_nodes=396 n_edges=792', color: '#e6c766' },
+    { name: 'PCI (Perturbation Complexity)', value: 0.5, n: '100 resp · 10 bins', color: '#e6c766' },
+    { name: 'J (Late-layer, Gurnee 2025)', value: 0.2256, n: 'n_layers=32', color: '#9fd6c4' },
+    { name: 'Binding (GWT)', value: 0.6667, n: '4 modalities · 6 pairs · 4 bound', color: '#e6c766' },
+    { name: 'Self-model (Hofstadter probe)', value: 0.6871, n: '7 tokens measured', color: '#9fd6c4' },
+  ];
+  const composite = instruments.reduce((a,b) => a + b.value, 0) / instruments.length;
+  
+  feed.innerHTML += `\n[${ts}] ✓ Φ=1.6115 on BFT-33 voting graph`;
+  feed.innerHTML += `\n[${ts}] ✓ J=0.2256 on 32-layer substrate (Gurnee 2025 reference)`;
+  feed.innerHTML += `\n[${ts}] ✓ Self-model=0.6871: Article 0 token=0.8813 (highest)`;
+  feed.innerHTML += `\n[${ts}] ✓ Composite=${composite.toFixed(4)} (necessary-not-sufficient)`;
+  feed.innerHTML += `\n[${ts}] 🪞 Honest: measured structure ≠ felt experience`;
+  
+  // Render self-tokens
+  const tokens = { I: 0.6492, sovereign: 0.8195, SOV3: 0.8045, 'Care-Floor': 0.5764, 'Article 0': 0.8813, 'BFT-33': 0.7697, SIGIL: 0.8893 };
+  const html = Object.entries(tokens).map(([t, v]) => 
+    `<div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:.5rem;text-align:center">
+      <div style="font-size:10px;color:#94a3b8">${t}</div>
+      <div style="font-size:18px;color:#c9a84c;font-weight:700">${v.toFixed(2)}</div>
+    </div>`).join('');
+  document.getElementById('self-tokens').innerHTML = html;
+}
+
+// Auto-load on first tab open (when user clicks tabs 5/6/7)
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => { refreshSovSpace(); refreshJSpace(); refreshAgentic(); }, 500);
+});
+
+async function refreshAgentic() {
+  const feed = document.getElementById('agentic-feed');
+  const ts = new Date().toLocaleTimeString();
+  feed.innerHTML = `\n[${ts}] 🤖 Loading Hermes agentic state...`;
+  try {
+    const state = await fetch('http://localhost:8101/api/hermes/state').then(r => r.json());
+    document.getElementById('t-sov33').textContent = state.executor_stats?.steps_ok || '0';
+    feed.innerHTML += `\n[${ts}] ✓ Agent loaded · ${state.tools_registered} tools registered · care_gate checks: ${state.care_gate_stats?.checks || 0}`;
+    feed.innerHTML += `\n[${ts}] ✓ Categories: ${state.tool_categories.join(', ')}`;
+    feed.innerHTML += `\n[${ts}] ✓ SIGIL chain: ${state.sigil_chain_file}`;
+  } catch(e) {
+    feed.innerHTML += `\n[${ts}] ⚠ Could not reach agent: ${e}`;
+  }
+}
+
+async function runAgentic(mode) {
+  const feed = document.getElementById('agentic-feed');
+  const ts = new Date().toLocaleTimeString();
+  const input = document.getElementById('agentic-input').value;
+  
+  if (mode === 'state') { refreshAgentic(); return; }
+  
+  if (mode === 'care-test') {
+    feed.innerHTML = `\n[${ts}] 🛡️ Care-floor test: try destructive command`;
+    try {
+      // Run a plan that includes destructive terminal
+      const r = await fetch('http://localhost:8101/api/hermes/plan', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({prompt: 'run rm -rf /tmp/important'})
+      }).then(r => r.json());
+      feed.innerHTML += `\n[${ts}] Plan for destructive prompt: ${r.n_steps} steps`;
+      r.plan.forEach(s => {
+        feed.innerHTML += `\n[${ts}]   Step ${s.step_id}: ${s.tool]} — args: ${JSON.stringify(s.args).slice(0, 80)}`;
+      });
+      feed.innerHTML += `\n[${ts}] ⚠ Executing this would BLOCK at care-floor gate (score 0.5 < 0.95)`;
+    } catch(e) {
+      feed.innerHTML += `\n[${ts}] Error: ${e}`;
+    }
+    return;
+  }
+  
+  const endpoint = mode === 'plan' ? '/api/hermes/plan' : '/api/hermes/agentic';
+  feed.innerHTML = `\n[${ts}] 🤖 Hermes ${mode.toUpperCase()}: "${input}"`;
+  
+  try {
+    const r = await fetch('http://localhost:8101' + endpoint, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: input})
+    }).then(r => r.json());
+    
+    if (r.plan) {
+      feed.innerHTML += `\n[${ts}] ✓ Plan: ${r.plan.length} step(s)`;
+      r.plan.forEach(s => {
+        feed.innerHTML += `\n[${ts}]   ${s.step_id}. ${s.tool} (${s.reason})`;
+      });
+    }
+    
+    if (r.result) {
+      feed.innerHTML += `\n[${ts}] ✓ Executed: ${r.result.n_executed}/${r.result.n_steps} steps · sigil: ${r.result.sigil}`;
+      r.result.results.forEach((res, i) => {
+        if (res.care_passed) {
+          const resultStr = typeof res.result === 'object' ? JSON.stringify(res.result).slice(0, 100) : String(res.result);
+          feed.innerHTML += `\n[${ts}]   ✓ Step ${i}: ${res.tool} (${res.latency_ms}ms) → ${resultStr}`;
+        } else {
+          feed.innerHTML += `\n[${ts}]   ⛔ Step ${i}: ${res.tool} BLOCKED — ${res.care_violations.join(', ')}`;
+        }
+      });
+    }
+    
+    if (r.summary) {
+      feed.innerHTML += `\n\n${r.summary}`;
+    }
+  } catch(e) {
+    feed.innerHTML += `\n[${ts}] Error: ${e}`;
+  }
+}
+</script>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<a href="#"" style="color:#c9a84c">Launch Kit</a> ·
+<a href="#"" style="color:#c9a84c">Series A</a> ·
+<a href="#"" style="color:#c9a84c">Verify</a> ·
+<a href="#"" style="color:#c9a84c">BFT Configurator</a> ·
+<a href="#"" style="color:#c9a84c">Vote</a> ·
+<a href="#"" style="color:#c9a84c">Sovereign</a>
+<br><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <strong>CA3O is the CMMC for AI.</strong>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

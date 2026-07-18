@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Deployment Architecture — Edge → Fog → Cloud → Sovereign Mesh</title>
+<meta name="description" content="DEFONEOS Deployment Architecture — Edge nodes (Raspberry Pi/Jetson), Fog layer (Mac inference), Cloud tier (GCP VM), Sovereign mesh (P2P). Air-gapped capable. JSP 440 comms. DISN-connected.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:1.5rem;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-2px);border-color:rgba(245,158,11,.6)}
+.card h3{color:#f59e0b;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.btn{display:inline-block;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem .5rem 0 0;text-transform:uppercase;font-size:.85rem;text-decoration:none}
+.btn:hover{opacity:.9}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(245,158,11,.2);border-color:#f59e0b;color:#f59e0b;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(245,158,11,.15);color:#f59e0b;font-size:.85rem;border-bottom:2px solid rgba(245,158,11,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem;transition:color .2s}
+.nav a:hover{color:#f59e0b}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.pipeline-step{display:flex;align-items:center;margin:1rem 0;gap:1rem}
+.step-num{background:rgba(245,158,11,.2);border:2px solid #f59e0b;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#f59e0b;flex-shrink:0}
+.step-body{flex:1}
+.step-body h4{color:#f8fafc;margin:0 0 .25rem}
+.step-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.status-live{color:#22c55e;font-weight:700}
+.status-alert{color:#ef4444}
+.status-warn{color:#f59e0b}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-isr-pipeline.html">🛰️ ISR</a>
+  <a href="defoneos-swarm.html">🦅 Swarm</a>
+  <a href="defoneos-cyber.html">🛡️ Cyber</a>
+  <a href="defoneos-sensor-layer.html">📡 Sensors</a>
+  <a href="defoneos-freetak.html">📻 FreeTAK</a>
+  <a href="defoneos-deploy.html" style="color:#f59e0b;font-weight:700">🚀 Deploy</a>
+</div>
+
+<h1>🚀 Deployment Architecture</h1>
+<p class="tagline">Edge → Fog → Cloud → Sovereign Mesh. Air-gapped capable. JSP 440 secure comms. DISN-connected for NATO interoperability. Deploy anywhere from Raspberry Pi to GCP VM.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">4 Tiers</span><h3>Layered Architecture</h3><p>Edge (RPi/Jetson) → Fog (Mac inference) → Cloud (GCP VM) → Sovereign (P2P mesh). Each tier independently operational.</p></div>
+  <div class="card"><span class="stat">JSP 440</span><h3>Secure Comms</h3><p>All inter-tier comms encrypted at rest and in transit. JSP 440 compliant. Air-gapped mode supported.</p></div>
+  <div class="card"><span class="stat">DISN</span><h3>NATO Interop</h3><p>Defence Information Systems Network compatible. STANAG 5525 CoT messages. BICES-capable.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🏗️ Architecture</div>
+  <div class="tab" onclick="switchTab(1)">🖥️ Edge Nodes</div>
+  <div class="tab" onclick="switchTab(2)">☁️ Cloud Tier</div>
+  <div class="tab" onclick="switchTab(3)">🔐 Security</div>
+  <div class="tab" onclick="switchTab(4)">🧬 MCP Tools</div>
+</div>
+
+<div class="tab-content active">
+  <h3>🏗️ 4-Tier Deployment Architecture</h3>
+
+  <div class="pipeline-step"><div class="step-num">L0</div><div class="step-body"><h4>Edge Tier — Tactical Edge</h4><p>Raspberry Pi 5 / Jetson Orin. Sensor ingestion, acoustic detection, camera feeds, drone telemetry. Runs MQTT bridge + TAK client. 4G/LTE or LoRa mesh. Solar + battery.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">L1</div><div class="step-body"><h4>Fog Tier — Forward Inference</h4><p>MacBook Pro M2/M3/M4. Local LLM inference (LLaMA 3.3 70B, Qwen 30B, Gemma 27B). FTS server. Sensor fusion. Offline-capable. 5-15ms latency to Edge nodes.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">L2</div><div class="step-body"><h4>Cloud Tier — Strategic Backend</h4><p>GCP VM (meok-backend). SOV3 sovereign substrate (:3101). King hive. 49 GB data moat. OLM corpus. Council (:3200). 24/7 autonomous ops.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">L3</div><div class="step-body"><h4>Sovereign Tier — P2P Mesh</h4><p>5 nodes interconnected (M2, M3, M4, ORION, GCP VM). WireGuard tunnels. DID-authenticated. BFT consensus. Zero cloud dependency possible.</p></div></div>
+
+  <table>
+    <tr><th>Tier</th><th>Compute</th><th>Storage</th><th>Network</th><th>Power</th><th>Autonomy</th></tr>
+    <tr><td>L0 Edge</td><td>RPi 5 (8GB) / Jetson Orin</td><td>128 GB NVMe</td><td>4G/LTE / LoRa</td><td>Solar 20W</td><td>48h no comms</td></tr>
+    <tr><td>L1 Fog</td><td>M2/M3/M4 MacBook</td><td>512 GB - 2 TB SSD</td><td>WiFi / Ethernet</td><td>Mains / UPS</td><td>72h offline</td></tr>
+    <tr><td>L2 Cloud</td><td>GCP e2-standard-8</td><td>200 GB SSD + 49 GB data</td><td>GCP VPC + WARP</td><td>Always-on</td><td>N/A (always on)</td></tr>
+    <tr><td>L3 Sovereign</td><td>5-node mesh</td><td>Distributed (each node)</td><td>WireGuard P2P</td><td>Diverse</td><td>All offline → local fallback</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>🖥️ Edge Node Configuration</h3>
+  <p>Standard DEFONEOS Edge Node — deployable in under 30 minutes from a single Raspberry Pi 5:</p>
+
+  <div class="grid">
+    <div class="card"><h3>Hardware</h3><p>Raspberry Pi 5 (8GB) + 128GB NVMe SSD HAT + 4G/LTE HAT + GPS HAT. Solar panel 20W + 20,000mAh battery. Pelican case. Total: ~&pound;200.</p></div>
+    <div class="card"><h3>Software Stack</h3><p>Ubuntu Server 24.04 ARM64. Docker: FTS client, MQTT bridge, Batear, rtsp-camera-mcp, MAVSDK listener. Systemd services for auto-recovery.</p></div>
+    <div class="card"><h3>Sensors</h3><p>USB camera (RTSP stream), 4-mic array (Batear), GPS/GNSS, temperature/humidity, PIR motion. All streamed via MQTT → Fog tier.</p></div>
+    <div class="card"><h3>Comms</h3><p>Primary: 4G/LTE VPN to Fog. Secondary: LoRa mesh (868 MHz, 5 km range). Tertiary: WiFi ad-hoc. Fallback: store-and-forward on NVMe.</p></div>
+  </div>
+
+  <h4 style="color:#f59e0b;margin-top:1.5rem">Edge Node Deploy Script (30 min from unboxing)</h4>
+  <pre style="background:rgba(0,0,0,.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:.8rem;color:#22c55e">
+#!/bin/bash
+# DEFONEOS Edge Node — 30-min deploy
+curl -sL https://defoneos.com/deploy/edge.sh | bash -s -- \
+  --node-id EDGE-YORK-01 \
+  --fog-ip 10.42.0.1 \
+  --mesh-channel 868.1 \
+  --sensors camera,mic_array,gps,temp \
+  --auto-update
+# Installs: Docker + FTS client + MQTT bridge + Batear + RTSP camera
+# Registers DID on sovereign mesh
+# Starts health heartbeat every 30s to Fog tier
+  </pre>
+</div>
+
+<div class="tab-content">
+  <h3>☁️ Cloud Tier — meok-backend (GCP VM)</h3>
+  <p>The strategic cloud tier runs on a single GCP e2-standard-8 VM. It hosts the SOV3 sovereign substrate, the 49 GB data moat, the King hive, and the 33-agent BFT council.</p>
+
+  <table>
+    <tr><th>Service</th><th>Port</th><th>Technology</th><th>Description</th></tr>
+    <tr><td>SOV3 Substrate</td><td>:3101/mcp</td><td>Python/FastAPI/uvicorn</td><td>222 sovereign MCP tools. King hive + 28 hives + BFT council + striving</td></tr>
+    <tr><td>BFT Council</td><td>:3200</td><td>Python PBFT</td><td>33-agent Byzantine Fault Tolerant voting. JSP 936 auditable</td></tr>
+    <tr><td>SOV3 Map</td><td>:3300</td><td>React + D3.js</td><td>Interactive 3D map of 429 sovereign nodes</td></tr>
+    <tr><td>OLM Corpus</td><td>Internal</td><td>PostgreSQL + pgvector</td><td>Organic Learning Model — 17+ MB Kimi research, 290+ files</td></tr>
+    <tr><td>Moat DB</td><td>Internal</td><td>PostgreSQL</td><td>49 GB data moat — UK defence contracts, MOD suppliers, OSINT</td></tr>
+    <tr><td>Monitor</td><td>:9090</td><td>Prometheus + Grafana</td><td>All 5 sovereign nodes monitored. Edge nodes heartbeat.</td></tr>
+    <tr><td>WARP</td><td>—</td><td>Cloudflare WARP</td><td>Zero-trust tunnel to Mac inference nodes. Encrypted mesh.</td></tr>
+  </table>
+
+  <h4 style="color:#f59e0b;margin-top:1.5rem">VM Specifications</h4>
+  <div class="grid">
+    <div class="card"><span class="stat">8 vCPU</span><h3>Compute</h3><p>GCP e2-standard-8. Intel Cascade Lake. 32 GB RAM. Handles concurrent 222-tool API + council votes.</p></div>
+    <div class="card"><span class="stat">200 GB</span><h3>Boot SSD</h3><p>Persistent SSD. OS + Docker + services. 49 GB data moat on attached volume.</p></div>
+    <div class="card"><span class="stat">Ubuntu 24.04</span><h3>OS</h3><p>Minimal install. Docker Compose for all services. systemd for auto-start. UFW firewall.</p></div>
+    <div class="card"><span class="stat">~$150/mo</span><h3>Cost</h3><p>e2-standard-8 + 200 GB SSD + 49 GB data + network egress. MOD contract would fund upgrade to dedicated.</p></div>
+  </div>
+</div>
+
+<div class="tab-content">
+  <h3>🔐 Security Architecture</h3>
+  <p>DEFONEOS is designed for JSP 440 (Secure Communications) and JSP 604 (Network Routing) compliance. Air-gapped operation is supported at all tiers.</p>
+
+  <div class="grid">
+    <div class="card"><h3>🔑 DID Authentication</h3><p>Every node, agent, and operator has a hardware-rooted Decentralized Identifier (Ed25519). Mutual TLS between all tiers.</p></div>
+    <div class="card"><h3>🔐 WireGuard Mesh</h3><p>All inter-node traffic encrypted via WireGuard. P2P mesh — no central VPN server. Perfect forward secrecy.</p></div>
+    <div class="card"><h3>🛡️ Air-Gap Mode</h3><p>All tiers independently operational. Edge → Fog works without internet. Cloud optional. Full BFT council available offline.</p></div>
+    <div class="card"><h3>📜 Audit Trail</h3><p>Every API call, CoT message, council vote, and deployment logged. SHA-256 + Ed25519 signed. Immutable append-only log.</p></div>
+    <div class="card"><h3>🧪 Red Team</h3><p>PyRIT + Caldera continuous red-teaming. Automated prompt injection testing. BFT attack simulation every 24h.</p></div>
+    <div class="card"><h3>🏷️ SBOM</h3><p>Software Bill of Materials for every deployment. Every Python package, Docker image, system library tracked. Supply chain verified.</p></div>
+  </div>
+
+  <h4 style="color:#f59e0b;margin-top:1.5rem">JSP 440 Compliance Matrix</h4>
+  <table>
+    <tr><th>Requirement</th><th>DEFONEOS Implementation</th><th>Status</th></tr>
+    <tr><td>Encryption at rest</td><td>LUKS full-disk encryption on all nodes. AES-256-XTS.</td><td class="status-live">&check;</td></tr>
+    <tr><td>Encryption in transit</td><td>WireGuard + mTLS on all inter-tier links. TLS 1.3 only.</td><td class="status-live">&check;</td></tr>
+    <tr><td>Key management</td><td>Hardware-rooted DIDs. Ed25519 keypair per node. TPM where available.</td><td class="status-live">&check;</td></tr>
+    <tr><td>Access control</td><td>RBAC via DIDs. Attribute-Based Access Control for CoT messages.</td><td class="status-live">&check;</td></tr>
+    <tr><td>Audit logging</td><td>Immutable append-only log. All actions signed + timestamped.</td><td class="status-live">&check;</td></tr>
+    <tr><td>Air-gap support</td><td>Offline mode tested. All critical functions work without internet.</td><td class="status-live">&check;</td></tr>
+    <tr><td>Cross-domain</td><td>DID-based trust between security domains. SECRET↔UNCLASS bridge planned.</td><td class="status-warn">Planned</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>🧬 MCP Tools — defoneos-deploy-mcp</h3>
+  <table>
+    <tr><th>Tool</th><th>Function</th><th>Input</th><th>Status</th></tr>
+    <tr><td><code>deploy_node_status</code></td><td>Health check all deployed nodes</td><td>—</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_provision_edge</code></td><td>Provision new Edge node (RPi/Jetson)</td><td>node_id, config</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_get_telemetry</code></td><td>Get node CPU/RAM/disk/network</td><td>node_id</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_list_services</code></td><td>List running services per node</td><td>node_id</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_restart_service</code></td><td>Restart service on node</td><td>node_id, service_name</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_check_comms</code></td><td>Test inter-tier connectivity</td><td>from_tier, to_tier</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_airgap_mode</code></td><td>Toggle air-gap mode on tier</td><td>tier, enabled: bool</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_sbom_export</code></td><td>Export Software Bill of Materials</td><td>node_id, format</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_audit_export</code></td><td>Export JSP 440 audit trail</td><td>node_id, date_range</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>deploy_did_verify</code></td><td>Verify node hardware-rooted DID</td><td>node_id</td><td class="status-live">LIVE</td></tr>
+  </table>
+</div>
+
+<div class="sigil">🐉 DEFONEOS · Sovereign British Defence OS · CORE DEMO Phase · 5 Jul 2026 · TICK 6</div>
+</div>
+<script>
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n));
+}
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

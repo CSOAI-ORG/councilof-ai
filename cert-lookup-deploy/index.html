@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Free Cert Lookup — MEOK AI Labs | Verify a Signed Ed25519 Attestation</title>
+    <meta property="og:title" content="Free Cert Lookup — MEOK AI Labs | Verify a Signed Ed25519 Attestation">
+<meta name="description" content="Paste a MEOK attestation cert_id, get the signed JSON-LD payload back. Free, no signup, sovereign UK infrastructure.">
+  <link rel="canonical" href="https://meok.ai/cert-lookup">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 760px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.6; color: #111; }
+    h1 { font-size: 2.2rem; margin: 1.5rem 0 0.5rem; }
+    .lede { font-size: 1.1rem; color: #666; margin: 0 0 1.5rem; }
+    form { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0; }
+    input { flex: 1; min-width: 240px; padding: 0.8rem; border: 1px solid #e5e7eb; border-radius: 0.4rem; font-size: 1rem; font-family: ui-monospace, monospace; }
+    button { background: #c9a84c; color: #111; border: none; padding: 0.8rem 1.5rem; border-radius: 0.4rem; font-weight: 700; cursor: pointer; font-size: 1rem; font-family: inherit; }
+    .output { background: #0a0a14; color: #22c55e; padding: 1rem; border-radius: 0.4rem; font-family: ui-monospace, monospace; font-size: 0.8rem; white-space: pre; overflow-x: auto; max-height: 500px; overflow-y: auto; }
+    .examples { background: #f9fafb; border-left: 3px solid #c9a84c; padding: 1rem 1.2rem; margin: 1.5rem 0; }
+    .examples code { background: #fff; padding: 0.1rem 0.3rem; border-radius: 0.2rem; font-size: 0.95em; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Free Cert Lookup", "url": "https://meok.ai/cert-lookup", "description": "Paste a MEOK attestation cert_id, get the signed JSON-LD payload back. Free, no signup, sovereign UK infrastructure."}</script>
+</head>
+<body>
+  <h1>Free Cert Lookup</h1>
+  <p class="lede">Paste a MEOK attestation cert_id, get the signed JSON-LD payload back. Free, no signup, sovereign UK infrastructure. Hit the keystone at <code>meok-attestation-api.vercel.app</code>.</p>
+
+  <form onsubmit="event.preventDefault(); lookup();">
+    <input type="text" id="cert_id" placeholder="MEOK-REGULA-XXXXX" required>
+    <button type="submit">▶ Lookup</button>
+  </form>
+
+  <h2>Result</h2>
+  <div class="output" id="output">// Paste a cert_id and click ▶ Lookup</div>
+
+  <h2>How to use</h2>
+  <ol>
+    <li>Get a cert_id from any MEOK Pro subscriber or from your own <code>/sign</code> call</li>
+    <li>Paste it above</li>
+    <li>Get the signed JSON-LD payload back</li>
+    <li>Verify the Ed25519 signature with <code>pip install meok-attestation-verify</code></li>
+  </ol>
+
+  <h2>Try a sample cert_id</h2>
+  <div class="examples">
+    <p>Sample cert_ids (use any):</p>
+    <ul>
+      <li><code>MEOK-REGULA-1234567890AB</code></li>
+      <li><code>MEOK-DORA-A1B2C3D4E5F6</code></li>
+      <li><code>MEOK-NIS2-FEEDFACECAFE</code></li>
+    </ul>
+  </div>
+
+  <h2>The full verification chain</h2>
+  <p>For maximum security, you can verify the attestation offline:</p>
+  <pre>pip install meok-attestation-verify
+meok-attestation-verify &lt; cert.json</pre>
+
+  <h2>What's in the JSON-LD payload</h2>
+  <ul>
+    <li><code>cert_id</code> — the unique ID (MEOK-REGULA-XXXXX)</li>
+    <li><code>entity</code> — what the attestation is for (e.g. "Monzo ML fraud detection")</li>
+    <li><code>framework</code> — which framework (eu-ai-act, dora, nis2, etc)</li>
+    <li><code>regulation</code> — the specific regulation referenced</li>
+    <li><code>issued_at</code> — when it was signed (ISO 8601 UTC)</li>
+    <li><code>expires_at</code> — when the attestation expires (1 year default)</li>
+    <li><code>signature</code> — Ed25519 signature, 64 bytes, base64 encoded</li>
+    <li><code>public_key</code> — the MEOK public key that signed it</li>
+    <li><code>hmac_chain</code> — the HMAC chain anchor (for tamper-evidence)</li>
+  </ul>
+
+  <div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+<footer style="margin: 3rem 0 1rem; padding: 1.5rem 0; border-top: 1px solid #e5e7eb; color: #999; font-size: 0.9rem;">
+    <p>CSOAI Ltd · UK 16939677 · hello@meok.ai</p>
+    <p>Powered by the MEOK Sovereign AI OS · 193 SOV3 agents · 25+ sigils on Ed25519 chain</p>
+  </footer>
+
+  <script>
+    async function lookup() {
+      const out = document.getElementById('output');
+      const certId = document.getElementById('cert_id').value;
+      out.textContent = '// Looking up ' + certId + ' via keystone...';
+
+      try {
+        const r = await fetch('https://meok-attestation-api.vercel.app/verify/' + encodeURIComponent(certId), { method: 'GET' });
+        const d = await r.json();
+        out.textContent = JSON.stringify(d, null, 2);
+      } catch (e) {
+        // Try POST /verify as fallback
+        try {
+          const r = await fetch('https://meok-attestation-api.vercel.app/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cert_id: certId })
+          });
+          const d = await r.json();
+          out.textContent = JSON.stringify(d, null, 2);
+        } catch (e2) {
+          out.textContent = '// ERROR: ' + e.message + '\n// Try a different cert_id, or sign one first via the live demo.';
+        }
+      }
+    }
+  </script>
+</body>
+</html>

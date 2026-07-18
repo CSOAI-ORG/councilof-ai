@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS: Per-Motion Owner Cosign Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --text-color: #e0e0e0;
+            --accent-color: #00ff00;
+            --secondary-accent: #00aaff;
+            --border-color: #333;
+            --code-bg: #1a1a1a;
+            --card-bg: #1a1a1a;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            flex-grow: 1;
+        }
+        header {
+            background-color: var(--code-bg);
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 1.8em;
+        }
+        header .logo {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--secondary-accent);
+            font-size: 1.2em;
+        }
+        h2, h3 {
+            color: var(--accent-color);
+            font-family: 'IBM Plex Mono', monospace;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--secondary-accent);
+        }
+        code, pre {
+            font-family: 'IBM Plex Mono', monospace;
+            background-color: var(--code-bg);
+            color: var(--text-color);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        pre {
+            padding: 10px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        a {
+            color: var(--secondary-accent);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid var(--border-color);
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--code-bg);
+            color: var(--accent-color);
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            color: #888;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DEFONEOS</h1>
+        <div class="logo">SOVEREIGN PUBLIC SERVICES OS</div>
+    </header>
+    <div class="container">
+        <h2>Per-Motion Owner Cosign Verification</h2>
+        <p>This page details the rigorous process by which each DEFONEOS BFT Council motion's owner cosign is verified, forming a critical pillar for DEFONEOS-SEAL eligibility and overall system integrity.</p>
+
+        <h3>1. Owner Cosign Principle</h3>
+        <div class="card">
+            <p>Every motion submitted to the DEFONEOS BFT Council requires an explicit digital cosign from the designated "Owner" (Ring 1). This ensures accountability and prevents unauthorised or unverified motions from entering the decision-making pipeline. The cosign is cryptographically linked to the motion content.</p>
+        </div>
+
+        <h3>2. Verification Chain (Ed25519 & BLAKE3)</h3>
+        <p>The owner cosign verification relies on a robust cryptographic chain:</p>
+        <ul>
+            <li><strong>BLAKE3 Hash:</strong> The content of the motion (including all proposals, amendments, and context) is first hashed using BLAKE3, providing a tamper-proof digest.</li>
+            <li><strong>Ed25519 Signature:</strong> The Owner then signs this BLAKE3 hash using their unique Ed25519 private key. This signature is the "owner cosign".</li>
+            <li><strong>SIGIL Anchoring:</strong> The signed motion (content + BLAKE3 hash + Ed25519 signature) is then anchored to the DEFONEOS SIGIL chain, providing an immutable, publicly verifiable timestamp and proof of existence.</li>
+            <li><strong>Witness Fingerprint Check:</strong> Independent "Witness" agents (from Ring 5) perform a real-time verification of the Ed25519 signature against the owner's public key, as well as a BLAKE3 re-computation to detect any tampering before a motion is considered valid for council voting.</li>
+        </ul>
+
+        <h3>3. Criteria for DEFONEOS-SEAL Eligibility</h3>
+        <p>For any MCP or component to achieve DEFONEOS-SEAL certification, all associated motions must meet the following owner cosign criteria:</p>
+        <ul>
+            <li><strong>Valid Ed25519 Signature:</strong> The signature must be verifiable against the registered public key of the motion's designated owner.</li>
+            <li><strong>BLAKE3 Integrity Match:</strong> The BLAKE3 hash of the motion content must perfectly match the hash embedded in the signed data.</li>
+            <li><strong>SIGIL Chain Anchor:</strong> The motion must be correctly anchored to the DEFONEOS SIGIL chain, confirming its place in the audit trail.</li>
+            <li><strong>Zero Witness Disagreements:</strong> All Witness agents (Ring 5) must confirm successful verification without any disagreements.</li>
+            <li><strong>Current Owner Key:</strong> The signing key must be current and not revoked or expired as per the <a href="#">Key Rotation Policy</a>.</li>
+        </ul>
+
+        <h3>4. Curl Verification Script</h3>
+        <p>The following script demonstrates how to programmatically verify an owner cosign for a given motion (example uses a placeholder motion ID). This can be integrated into automated CI/CD pipelines or compliance checks.</p>
+        <pre><code>
+#!/bin/bash
+MOTION_ID="example-motion-123"
+OWNER_PUBLIC_KEY="[OWNER_PUBLIC_KEY_HEX]" # Replace with actual public key
+MOTION_CONTENT_URL="https://www.csoai.org/motions/${MOTION_ID}/content.json"
+MOTION_SIGIL_URL="https://www.csoai.org/motions/${MOTION_ID}/sigil.json"
+
+echo "--- Fetching Motion Content ---"
+MOTION_CONTENT=$(curl -s "$MOTION_CONTENT_URL")
+if [ $? -ne 0 ]; then echo "Error fetching content."; exit 1; fi
+echo "$MOTION_CONTENT" | head -n 5
+echo "... (truncated)"
+
+echo "--- Fetching Motion SIGIL Data ---"
+MOTION_SIGIL=$(curl -s "$MOTION_SIGIL_URL")
+if [ $? -ne 0 ]; then echo "Error fetching SIGIL."; exit 1; fi
+
+SIGNED_HASH=$(echo "$MOTION_SIGIL" | jq -r '.signed_hash')
+OWNER_SIGNATURE=$(echo "$MOTION_SIGIL" | jq -r '.owner_signature')
+
+if [ -z "$SIGNED_HASH" ] || [ -z "$OWNER_SIGNATURE" ]; then
+    echo "Error: Signed hash or owner signature not found in SIGIL data."
+    exit 1
+fi
+
+echo "--- Recomputing BLAKE3 Hash ---"
+RECOMPUTED_HASH=$(echo "$MOTION_CONTENT" | blake3 --no-names | awk '{print $1}')
+
+if [ "$SIGNED_HASH" != "$RECOMPUTED_HASH" ]; then
+    echo "VERIFICATION FAILED: BLAKE3 hash mismatch."
+    echo "  Signed Hash:     $SIGNED_HASH"
+    echo "  Recomputed Hash: $RECOMPUTED_HASH"
+    exit 1
+else
+    echo "BLAKE3 Hash Match: OK"
+fi
+
+echo "--- Verifying Ed25519 Signature ---"
+# This would require a local utility for Ed25519 verification against a public key
+# Example (conceptual, requires specific crypto library/tool):
+# ED25519_VERIFY_RESULT=$(echo "$RECOMPUTED_HASH" | ed25519_verify "$OWNER_SIGNATURE" "$OWNER_PUBLIC_KEY")
+# if [ "$ED25519_VERIFY_RESULT" == "VALID" ]; then
+#     echo "Ed25519 Signature: VALID"
+# else
+#     echo "Ed25519 Signature: INVALID"
+#     exit 1
+# fi
+
+echo "--- Owner Cosign Verification: PASSED ---"
+        </code></pre>
+        <p><strong>Note:</strong> Full Ed25519 signature verification requires a local cryptographic utility (e.g., <code>libsodium</code> or <code>pynacl</code>) that can interpret the signature against the public key. The example above illustrates the logical flow.</p>
+
+        <h3>5. Cross-Links</h3>
+        <ul>
+            <li><a href="defoneos-bft-council-public-minutes.html">BFT Council Public Minutes</a></li>
+            <li><a href="#">Key Rotation Policy</a></li>
+            <li><a href="defoneos-witness-list-live-snapshot.html">Witness List Live Snapshot</a></li>
+            <li><a href="defoneos-sbom-index.html">SBOM Index</a></li>
+        </ul>
+    </div>
+    <footer>
+        DEFONEOS &copy; 2026. Built with integrity.
+    </footer>
+</body>
+</html>

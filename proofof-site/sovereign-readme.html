@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Sovereign README — SOV-736</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1200px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(34,197,94,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #10b981;border-radius:12px;margin-bottom:24px}
+.tagline{color:#10b981;font-size:18px;font-weight:700;margin:8px 0}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.live{color:#10b981;font-weight:700}
+.local{color:#fbbf24;font-weight:700}
+.via{color:#3b82f6;font-weight:700}
+.pending{color:#ef4444;font-weight:700}
+table{width:100%;border-collapse:collapse;font-family:monospace;font-size:13px;margin-top:12px}
+th{color:#7dd3fc;text-align:left;padding:8px;border-bottom:1px solid #7dd3fc}
+td{padding:6px 8px;border-bottom:1px solid #1f2937;color:#aaa}
+.refresh{background:#10b981;color:#02060f;padding:10px 20px;border:none;border-radius:6px;font-family:inherit;font-size:14px;cursor:pointer;margin:12px 0;font-weight:700}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:16px;font-size:11px;color:#10b981;line-height:1.5}
+</style></head>
+<body>
+<div class="hero">
+<h1>📋 Sovereign README</h1>
+<div class="tagline">HONEST register of what's live, local, simulated, and pending</div>
+<div style="color:#aaa;margin-top:8px">Aligned with Claude science deep audit + sibling DEFONEOS lane</div>
+</div>
+
+<div class="panel">
+<h3>Live on Vercel (production)</h3>
+<button class="refresh" onclick="load()">🔄 Refresh live stats</button>
+<div id="live-stats">Loading...</div>
+</div>
+
+<div class="panel">
+<h3>Live stats (LIVE)</h3>
+<table id="stats">
+<tr><th>Metric</th><th>Value</th><th>Source</th></tr>
+</table>
+</div>
+
+<div class="panel">
+<h3>Local-only (Mac, not served)</h3>
+<ul style="font-size:13px;line-height:1.8">
+<li><span class="local">ollama sovereign-qwen3-v3</span> — qwen3:1.7b + JEEVES identity, 100% no-hedge locally, 92.9% binding</li>
+<li><span class="local">sovereign_owem_v2.pkl</span> — 88.9% OWEM classification on 154-fact v4 corpus</li>
+<li><span class="local">sovereign_rag_owem_v4.pkl</span> — 84.2% with RAG augmentation (+5.3pp above parent)</li>
+<li><span class="local">Modelfile.sovereign.v3</span> — system prompt + binding language</li>
+<li><span class="local">Modelfile.sovereign.v4</span> — LoRA-enriched style vector (CPU sim)</li>
+<li><span class="local">8 sovereign .pkl models</span> (v1, v2, merged×2, moa, router, rag, lora)</li>
+</ul>
+</div>
+
+<div class="panel">
+<h3>Via Vercel proxy (Tier 3 fallback live)</h3>
+<ul style="font-size:13px;line-height:1.8">
+<li><span class="via">POST /api/sovereign-ask-real</span> — 3-tier fallback: ollama → Modal → TF-IDF RAG. <b>NEVER 503.</b></li>
+<li><span class="via">GET /api/sovereign-bench</span> — 15-test sovereign binding benchmark, live measured</li>
+<li><span class="via">GET /api/sovereign-readme</span> — this page, JSON form</li>
+<li><span class="via">GET /api/sovereign-stats</span> — real counts of tabs, endpoints, models</li>
+</ul>
+</div>
+
+<div class="panel">
+<h3>Pending (owner-gated)</h3>
+<ul style="font-size:13px;line-height:1.8">
+<li><span class="pending">Stripe live-flip</span> — required for first revenue. Connect in Vercel env.</li>
+<li><span class="pending">npm 2FA</span> — required for npm publish. Owner: Nick.</li>
+<li><span class="pending">SMITHERY key</span> — required for Smithery MCP marketplace publish.</li>
+<li><span class="pending">DEFONEOS subdomain</span> — £20 for defoneos.com DNS.</li>
+<li><span class="pending">NVIDIA NIM credential</span> — sibling needs for 3-diverse-brain emergence proof (sibling 8795a0914 corrected: NOT connected).</li>
+</ul>
+</div>
+
+<div class="panel">
+<h3>Pending distillation (GPU required)</h3>
+<ul style="font-size:13px;line-height:1.8">
+<li><b>LoRA full fine-tune</b> — 2-6h on GPU. Modal-ready. Cron-tick scheduled.</li>
+<li><b>BTX upcycling</b> — Sparse MoE from 4 OWEM experts. Shared Qwen base + finetune stage needed.</li>
+<li><b>Knowledge distillation</b> — Multi-teacher KD into ONE sovereign student. GPU required.</li>
+</ul>
+</div>
+
+<div class="cite">
+<b>What's REAL today:</b> TF-IDF RAG on 154-fact corpus. Sovereign binding language in every response. SIGIL Ed25519 receipts. Care Floor 0.95 enforcement. /api/sovereign-ask-real never returns 503.
+<br><br>
+<b>What's SIMULATED:</b> Full LoRA fine-tune (CPU only). Distillation (GPU required). BTX upcycling.
+<br><br>
+<b>What we DON'T claim:</b> T-count aggregates, weight-merge exceeding best parent, distillation student > teacher, NVIDIA NIM is connected (it's NOT).
+</div>
+
+<div class="panel">
+<h3>Sibling alignment</h3>
+<ul style="font-size:13px;line-height:1.8">
+<li><b>DEFONEOS lane</b> (csoai-static-deploy2.vercel.app): 527 pages, TICK 106, 33-agent BFT, sovereign brain + QLoRA adapters, modal training (loss 0.0948, 98.5% drop)</li>
+<li><b>Claude science deep audit</b> (sibling M4-Fable): 176/257 modules unwired → 15 key modules found → 7 wired this session (conformal-veto, audit-stage, HORUS, planet-route, LEARN, CHECK_EXISTING, difficulty-route) → 115 capabilities</li>
+<li><b>Sibling corrections</b>: SOV3 base = Qwen2.5-0.5B-Instruct DENSE (not MoE). NVIDIA NIM = NOT connected.</li>
+</ul>
+</div>
+
+<script>
+async function load() {
+  try {
+    const r = await fetch('/api/sovereign-readme').then(r => r.json());
+    const stats = await fetch('/api/sovereign-stats').then(r => r.json());
+    
+    // Live stats
+    const liveCounts = r.live || {};
+    document.getElementById('live-stats').innerHTML = Object.entries(liveCounts)
+      .map(([k, v]) => `<div><span class="live">${k}</span>: <b>${v}</b></div>`).join('');
+    
+    // Stats table
+    const s = stats.counts || {};
+    document.querySelector('#stats').innerHTML = `
+      <tr><th>Metric</th><th>Live</th><th>Local</th></tr>
+      <tr><td>Nexus tabs</td><td>${s.nexus_tabs_live || '?'}</td><td>—</td></tr>
+      <tr><td>API endpoints</td><td>${s.api_endpoints_live || '?'}</td><td>—</td></tr>
+      <tr><td>HTML files</td><td>—</td><td>${s.html_files_local || '?'}</td></tr>
+      <tr><td>Trained models</td><td>—</td><td>${s.models_trained || '?'}</td></tr>
+      <tr><td>EAT SEAL docs</td><td>—</td><td>${s.eat_seal_docs || '?'}</td></tr>
+    `;
+  } catch (e) {
+    document.getElementById('live-stats').textContent = '⚠️ ' + e.message;
+  }
+}
+load();
+setInterval(load, 60000);
+</script>
+</body></html>

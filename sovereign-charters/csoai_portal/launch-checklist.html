@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launch Checklist — A-style Signups · CSOAI</title>
+<style>:root{--navy:#0a0e1a;--slate:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--text:#f1f5f9;--muted:#94a3b8}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--navy);color:var(--text);font-family:Inter,-apple-system,sans-serif;line-height:1.6}.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}.header-link{display:block;text-align:center;margin-bottom:2rem;color:var(--gold);text-decoration:none;font-size:.875rem}h1{font-size:1.875rem;line-height:1.2;margin-bottom:.5rem}.subtitle{color:var(--muted);font-size:1rem;margin-bottom:1.5rem}.progress{height:10px;background:var(--slate);border-radius:5px;overflow:hidden;margin:1rem 0}.progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));transition:width .3s}.checklist{counter-reset:step;margin:1rem 0}.checklist li{padding:.75rem;border-bottom:1px solid var(--slate);counter-increment:step;list-style:none;display:flex;align-items:flex-start;gap:.75rem;cursor:pointer}.checklist li::before{content:counter(step);display:inline-block;width:1.75rem;height:1.75rem;background:var(--slate);border-radius:50%;color:var(--gold);text-align:center;line-height:1.75rem;font-weight:700;flex-shrink:0}.checklist li.done::before{content:'✓';background:var(--green);color:var(--navy)}.checklist li.done .item-title{color:var(--muted);text-decoration:line-through}.item-title{font-weight:600;color:var(--gold-light)}.item-desc{font-size:.875rem;color:var(--muted);margin-top:.25rem}.gate{background:var(--slate);border-radius:12px;padding:1.25rem;margin:1rem 0;border:1px solid rgba(239,68,68,.2)}.gate h3{color:var(--red);margin-bottom:.5rem}.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:.75rem;margin:1rem 0;font-size:.75rem;color:var(--muted)}.card{background:var(--slate);border-radius:12px;padding:1.5rem;margin:1rem 0;border:1px solid rgba(201,168,76,.15)}.btn{display:inline-block;padding:.75rem 1.5rem;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-weight:600;text-decoration:none;cursor:pointer}.btn:hover{opacity:.9}footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--slate);margin-top:3rem}.stat{background:var(--navy);padding:1rem;border-radius:8px;text-align:center;margin:.5rem 0}.stat-value{font-size:1.5rem;color:var(--gold);font-weight:700}</style></head>
+<body>
+<div class="container">
+<a class="header-link" href="index.html">← Back to CSOAI Home</a>
+
+<h1>Launch Checklist — A-style Signups</h1>
+<p class="subtitle">5 owner-gated gates. ~4 hours of work. Unblocks every signup. Auto-track your progress (browser-local).</p>
+
+<div class="progress"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<p style="text-align:center;color:var(--muted);font-size:.875rem"><span id="progressText">0</span>/5 gates complete · <span id="revenue">£0</span> weekly revenue potential unlocked</p>
+
+<div class="gate">
+<h3>🚪 Gate 1: Vercel Redeploy (10 min)</h3>
+<p>Redeploy current sovereign-charters build to csoai-static-deploy2.vercel.app. Vercel auth refresh. Live URL accessible.</p>
+<strong>Owner action:</strong>
+<pre style="background:var(--navy);padding:.75rem;border-radius:6px;font-size:.8125rem;color:var(--green);overflow-x:auto">vercel login  # refresh auth
+vercel deploy --prod  # push sovereign-charters
+# → csoai-static-deploy2.vercel.app</pre>
+<p style="font-size:.75rem;color:var(--muted)"><b>Unblocks:</b> public access to 187 portal pages including signup.html</p>
+</div>
+
+<ul class="checklist" id="checklist">
+<li data-step="1" onclick="toggleStep(1, 'gate1')">
+<div><div class="item-title">Gate 1: Vercel redeploy</div><div class="item-desc">10 min · auth refresh · sovereign-charters deploy</div></div>
+</li>
+<li data-step="2" onclick="toggleStep(2, 'gate2')">
+<div><div class="item-title">Gate 2: csoai.org domain</div><div class="item-desc">30 min · register + DNS + Cloudflare + SSL</div></div>
+</li>
+<li data-step="3" onclick="toggleStep(3, 'gate3')">
+<div><div class="item-title">Gate 3: Email capture (ConvertKit / Formspree)</div><div class="item-desc">30 min · free tier · embed form in signup.html</div></div>
+</li>
+<li data-step="4" onclick="toggleStep(4, 'gate4')">
+<div><div class="item-title">Gate 4: Stripe Checkout (5 tiers)</div><div class="item-desc">1 hour · real £999/£4,950/£50K/£500K</div></div>
+</li>
+<li data-step="5" onclick="toggleStep(5, 'gate5')">
+<div><div class="item-title">Gate 5: Live SOV3 endpoint</div><div class="item-desc">1 hour · real SIGIL chain · real verify</div></div>
+</li>
+</ul>
+
+<div class="card">
+<h3>📊 What you get when all 5 are fired</h3>
+<div class="stat">
+<div class="stat-value">£30K-£100K</div>
+<div>Week 1 revenue potential</div>
+</div>
+<div class="honesty">
+<b>Honesty register:</b> this assumes you do the 5 launches (HN + PH + X + 100 emails). Without launches, expect 10x lower.
+</div>
+</div>
+
+<div class="card">
+<h3>🛠 After the 5 gates fire (Day 3 onward)</h3>
+<ul style="list-style:disc;padding-left:1.5rem;color:var(--muted)">
+<li><b style="color:var(--gold-light)">Day 4:</b> HN launch post (already drafted)</li>
+<li><b style="color:var(--gold-light)">Day 4:</b> Product Hunt (already drafted)</li>
+<li><b style="color:var(--gold-light)">Day 4:</b> Twitter/X 8-tweet thread (already drafted)</li>
+<li><b style="color:var(--gold-light)">Day 5:</b> First £999 fulfilment</li>
+<li><b style="color:var(--gold-light)">Day 5:</b> First £4,950 gap analysis delivery</li>
+<li><b style="color:var(--gold-light)">Day 6:</b> First Article 50 EU AI Act passport issued</li>
+<li><b style="color:var(--gold-light)">Day 7:</b> Sigstore + Garak integration (autonomous)</li>
+<li><b style="color:var(--gold-light)">Day 7:</b> £5K-£30K week 1 revenue in fact</li>
+</ul>
+</div>
+
+<div class="honesty">
+<b>Honesty register (per EAT_directive):</b> this checklist is illustrative. Provenance ≠ truth. Owner-fires are the only path. The barrier to entry is zero.
+</div>
+
+<a href="signup.html" class="btn">→ Try the Signup Form Now (Live Demo)</a>
+
+</div>
+<footer>
+<p>CSOAI Ltd · UK Companies House 16939677 · Charter Article 0 binding</p>
+<p>Honesty register: illustrative. Owner-fires = real. Auto-deploy never fires.</p>
+</footer>
+
+<script>
+// Local-only progress (browser-localStorage, no telemetry)
+const key = 'csoai-launch-progress';
+let progress = parseInt(localStorage.getItem(key) || '0');
+
+function updateProgress() {
+const pct = (progress / 5) * 100;
+document.getElementById('progressBar').style.width = pct + '%';
+document.getElementById('progressText').textContent = progress;
+const revenue = progress * 8000;
+document.getElementById('revenue').textContent = '£' + revenue.toLocaleString();
+for (let i = 1; i <= 5; i++) {
+const el = document.querySelector('[data-step="' + i + '"]');
+if (i <= progress) el.classList.add('done');
+else el.classList.remove('done');
+}
+localStorage.setItem(key, progress);
+}
+
+function toggleStep(n, id) {
+if (n <= progress) progress = n - 1;
+else progress = n;
+updateProgress();
+}
+
+updateProgress();
+</script>
+</body></html>

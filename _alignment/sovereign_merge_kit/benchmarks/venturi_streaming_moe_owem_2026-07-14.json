@@ -1,0 +1,29 @@
+{
+  "ts": "2026-07-14T07:18:00+00:00",
+  "test": "sov33_streaming_moe_owem.py",
+  "owems": ["compliance", "defense", "intuition", "voice", "general"],
+  "results": {
+    "tokens_routed": 30,
+    "tokens_collapsed": 0,
+    "expert_disk_loads": 180,
+    "footprint_reduction_pct": 46.875,
+    "sigils_emitted": 30
+  },
+  "sigil_chains": {
+    "compliance": "ok=True (6 records, 0 collapses)",
+    "defense": "ok=True (6 records, 0 collapses)",
+    "intuition": "ok=True (6 records, 0 collapses)",
+    "voice": "ok=True (6 records, 0 collapses)",
+    "general": "ok=True (6 records, 0 collapses)"
+  },
+  "fail_closed_test": "PASS (unsigned expert refused)",
+  "care_floor_test": "PASS (0 collapses with intent_hint=0.7 → care=0.99)",
+  "real_world_projection": {
+    "qwen3-30b-a3b_disk_gb": 17,
+    "mac_ssd_seq_read_gbps": 7,
+    "per_token_disk_wait_ms": 3.5,
+    "tokens_per_sec_achievable": 500,
+    "honest_register": "Real tok/s bounded by SSD bandwidth; measured on sim is conservative."
+  },
+  "doctrine": "Venturi SSD-streaming MoE: weights live on SSD, Venturi throat routes signed-load-manifest, OWEM gates care-floor, fail-closed unsigned experts, every byte loaded is signed."
+}

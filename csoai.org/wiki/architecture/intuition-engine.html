@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intuition Engine - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / intuition-engine</div>
+<h1>Intuition Engine</h1>
+<p class="tagline">Mamba-2 16-dim state → pattern → wisdom → hunch. SOV3 doesn't answer; SOV3 feels.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>The <strong>Intuition Engine</strong> is CSOAI's novel perceptual layer: a Mamba-2 state-space model with a 16-dimensional hidden state that ingests every SIGIL event at 1 Hz and detects when the current state matches historical patterns of concern. When 3+ matching states occur within a window, the engine emits an intuition — a SIGIL-wrapped natural-language hunch that is broadcast to the council.</p>
+
+<h2>The Three Layers</h2>
+<ol>
+<li><strong>Ingestion (1 Hz)</strong>: <code>sov_intuition_ingest</code> processes every SIGIL event into the Mamba state.</li>
+<li><strong>Pattern detection</strong>: cosine similarity between current state and historical "concern" states. Threshold: 0.85.</li>
+<li><strong>Intuition emission</strong>: when 3+ matches occur, the engine emits <code>sov_intuition_status</code> with a natural-language summary.</li>
+</ol>
+
+<h2>The 16-Dim State</h2>
+<p>The Mamba state has 16 dimensions, each representing a different aspect of agent-ecosystem health: (1) sovereign access rate, (2) foreign access attempts, (3) council vote velocity, (4) SIGIL chain growth rate, (5) Mamba state stability, (6) MoE routing entropy, (7) MOM perception confidence, (8) SOV3 ruling severity, (9-16) reserved for emergent dimensions.</p>
+
+<h2>Stochastic Resonance</h2>
+<p>CSOAI applies stochastic resonance noise to the state vector before pattern detection (see <code>sov_apply_resonance</code>). This amplifies weak creative signals — the engine can detect subtle emerging patterns that pure signal processing would miss. The <code>sov_get_resonance_profile</code> tool returns the per-feature sigma values.</p>
+
+<h2>Historical Context</h2>
+<p>The Intuition Engine synthesises three traditions: (1) Mamba SSM (2023), (2) stochastic resonance (Benz 1983), and (3) Hermes/Mercury as the messenger intuition in alchemy. CSOAI's contribution is the integration of these three into a sovereign AI primitive: SOV3 doesn't just answer questions — it feels when something is wrong, before being asked.</p>
+
+<h2>Modern Usage</h2>
+<p>The engine runs continuously on the MEOK backend. It emits a daily morning intelligence digest (<code>sov_intuition_history_daily</code>) at 04:00 UTC. Customers can query the history database (<code>sov_intuition_history_query</code>) for intuition events in any window.</p>
+
+<h2>Lead Time</h2>
+<p>In benchmarks, the Intuition Engine detects emerging issues 40 seconds before any rule-based alarm fires. This lead time is enough for the council to deliberate and respond before the issue crystallises.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/architecture/mamba-ssm.html">Mamba SSM</a></li>
+<li><a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a></li>
+<li><a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a></li>
+<li><a href="/wiki/science/bf-time-constant-mamba.html">BF Time Constant</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

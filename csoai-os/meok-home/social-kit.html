@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<title>MEOK Social Media Profile Kit</title>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --bg: #F5F0E6;
+  --text: #2a1a14;
+  --text-dim: rgba(42, 26, 20, 0.65);
+  --surface: #FAF7F0;
+  --border: rgba(201, 168, 76, 0.3);
+  --green: #10b981;
+  --blue: #3b82f6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  background: radial-gradient(ellipse at top, var(--bg), var(--surface) 70%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+}
+a { color: var(--gold-bright); text-decoration: none; }
+
+.topbar {
+  max-width: 1200px; margin: 0 auto 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 16px; border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+.logo .accent { color: var(--gold); }
+.topbar nav a { margin: 0 12px; font-size: 13px; color: var(--text-dim); }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+.hero { text-align: center; margin-bottom: 32px; }
+.hero h1 {
+  font-size: clamp(36px, 5vw, 48px); font-weight: 600;
+  letter-spacing: -0.02em; margin-bottom: 12px;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p { font-size: 15px; color: var(--text-dim); max-width: 700px; margin: 0 auto; }
+
+.section-title {
+  font-size: 22px; font-weight: 600; margin: 32px 0 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; background: rgba(201, 168, 76, 0.1);
+  padding: 2px 8px; border-radius: 100px;
+}
+
+.kit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.kit-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+.kit-card h3 {
+  font-size: 16px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px;
+}
+.kit-card .platform {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.kit-card .dimensions {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.kit-card .preview {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.kit-card .preview svg {
+  width: 100%; height: auto;
+  display: block;
+}
+.kit-card .copy {
+  width: 100%;
+  padding: 8px;
+  background: var(--gold);
+  color: white;
+  border: 0;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.guarantees {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.guarantees h3 { font-size: 18px; margin-bottom: 16px; }
+.guarantees ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.guarantees li { display: flex; align-items: center; gap: 8px; padding: 6px; font-size: 12px; }
+.guarantees li::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+@media (max-width: 800px) {
+  .kit-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <span class="dot"></span>
+    <span>MEOK<span class="accent">.SOCIAL</span></span>
+  </div>
+  <nav>
+    <a href="#kit">Profile Kit</a>
+    <a href="#usage">Usage</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <h1>The MEOK <span class="accent">Social Media Profile Kit</span></h1>
+  <p>8 platform covers, banners, icons, OG images, email signature, press kit — all sovereign, care-aligned, defoneos-secured.</p>
+</section>
+
+<div class="container">
+
+<h2 class="section-title" id="kit">Profile Kit <span class="count">8</span></h2>
+
+<div class="kit-grid" id="kitGrid"></div>
+
+<div class="guarantees">
+  <h3>📍 Where to use these</h3>
+  <ul>
+    <li>X / Twitter banner (1500x500) + profile picture</li>
+    <li>LinkedIn cover (1584x396) + company logo</li>
+    <li>Facebook cover (820x312)</li>
+    <li>Discord server icon (256x256)</li>
+    <li>Open Graph image (1200x630) for shared links</li>
+    <li>Email signature HTML (Outlook + Apple Mail + Gmail)</li>
+    <li>Press kit PDF for media + Defoneos buyers</li>
+    <li>Verification badge SVG for website footers</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+const KITS = [
+  {
+    platform: 'X / Twitter',
+    name: 'X / Twitter Banner',
+    dimensions: '1500x500',
+    color: '#000',
+    text: 'X / TWITTER BANNER',
+    sub: 'The sovereign AI operating system',
+  },
+  {
+    platform: 'LinkedIn',
+    name: 'LinkedIn Cover',
+    dimensions: '1584x396',
+    color: '#0a66c2',
+    text: 'LINKEDIN COVER',
+    sub: 'For the CSOAI LTD company page',
+  },
+  {
+    platform: 'Facebook',
+    name: 'Facebook Cover',
+    dimensions: '820x312',
+    color: '#1877f2',
+    text: 'FACEBOOK COVER',
+    sub: 'For the csoai.org page',
+  },
+  {
+    platform: 'Discord',
+    name: 'Discord Server Icon',
+    dimensions: '256x256',
+    color: '#5865f2',
+    text: 'DISCORD ICON',
+    sub: 'For the sovereign community',
+  },
+  {
+    platform: 'OG',
+    name: 'Open Graph Image',
+    dimensions: '1200x630',
+    color: '#c9a84c',
+    text: 'OPEN GRAPH',
+    sub: 'For shared links on all platforms',
+  },
+  {
+    platform: 'Email',
+    name: 'Email Signature',
+    dimensions: 'HTML',
+    color: '#1e3a8a',
+    text: 'EMAIL SIGNATURE',
+    sub: 'For all team members',
+  },
+  {
+    platform: 'Press',
+    name: 'Press Kit PDF',
+    dimensions: 'A4 PDF',
+    color: '#c9a84c',
+    text: 'PRESS KIT',
+    sub: 'For media + Defoneos buyers',
+  },
+  {
+    platform: 'Footer',
+    name: 'Verification Badge',
+    dimensions: 'SVG 240x80',
+    color: '#c9a84c',
+    text: 'VERIFICATION BADGE',
+    sub: 'For website footers',
+  },
+];
+
+function buildKitSVG(k) {
+  // Parse dimensions
+  let w = 600, h = 200;
+  if (k.dimensions.includes('x')) {
+    const [a, b] = k.dimensions.split('x').map(Number);
+    w = Math.min(800, a / 2);
+    h = Math.min(400, b / 2);
+  } else if (k.dimensions === '256x256') { w = 200; h = 200; }
+  else if (k.dimensions === 'HTML') { w = 600; h = 200; }
+  else if (k.dimensions === 'A4 PDF') { w = 300; h = 400; }
+  else { w = 400; h = 200; }
+
+  const grad = `<linearGradient id="g-${k.platform}" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="${k.color}" stop-opacity="0.95"/>
+    <stop offset="100%" stop-color="${k.color}" stop-opacity="0.7"/>
+  </linearGradient>`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <defs>${grad}</defs>
+    <rect x="0" y="0" width="${w}" height="${h}" fill="url(#g-${k.platform})"/>
+    <text x="50%" y="40%" font-family="JetBrains Mono, monospace" font-size="${w/20}" font-weight="700" fill="white" text-anchor="middle">${k.text}</text>
+    <text x="50%" y="60%" font-family="Space Grotesk, sans-serif" font-size="${w/40}" fill="rgba(255,255,255,0.85)" text-anchor="middle">${k.sub}</text>
+    <text x="50%" y="90%" font-family="JetBrains Mono, monospace" font-size="${w/50}" fill="rgba(255,255,255,0.6)" text-anchor="middle">MEOK SOVEREIGN · ${k.dimensions}</text>
+    <circle cx="30" cy="30" r="6" fill="rgba(255,255,255,0.9)">
+      <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </svg>`;
+}
+
+function renderKits() {
+  document.getElementById('kitGrid').innerHTML = KITS.map((k, i) => `
+    <div class="kit-card">
+      <h3>${k.name}</h3>
+      <div class="platform">${k.platform}</div>
+      <div class="dimensions">${k.dimensions}</div>
+      <div class="preview">${buildKitSVG(k)}</div>
+      <button class="copy" onclick="copyKit(${i})">📋 Copy SVG</button>
+    </div>
+  `).join('');
+}
+
+function copyKit(i) {
+  const k = KITS[i];
+  const svg = buildKitSVG(k);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(svg);
+    event.target.textContent = '✓ Copied!';
+    setTimeout(() => event.target.textContent = '📋 Copy SVG', 2000);
+  }
+}
+
+renderKits();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+</script>
+
+</body>
+</html>

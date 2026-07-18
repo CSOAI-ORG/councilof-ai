@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSOAI — 90-second feedback</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --bg-0: #050810;
+  --bg-1: #0c1119;
+  --bg-2: #151c28;
+  --bg-3: #1f2937;
+  --line: #2a3441;
+  --fg-0: #e8edf2;
+  --fg-1: #a8b3c1;
+  --fg-2: #6b7888;
+  --accent: #4f9cff;
+  --green: #34d399;
+  --orange: #fbbf24;
+  --red: #f87171;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: radial-gradient(ellipse at top, #0d1623 0%, var(--bg-0) 60%);
+  color: var(--fg-0);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  line-height: 1.55;
+  min-height: 100vh;
+  padding: 32px 22px 80px;
+}
+.container { max-width: 720px; margin: 0 auto; }
+
+h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, var(--green), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 4px; }
+.sub { color: var(--fg-2); font-size: 14px; margin-bottom: 28px; }
+
+.card { background: var(--bg-1); border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+
+label { display: block; font-size: 13px; color: var(--fg-1); margin-bottom: 6px; font-weight: 500; }
+label .req { color: var(--orange); margin-left: 4px; }
+
+input[type="text"], input[type="email"], select, textarea {
+  width: 100%;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px;
+  color: var(--fg-0);
+  font-size: 14px;
+  font-family: inherit;
+  margin-bottom: 14px;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+textarea { min-height: 90px; resize: vertical; }
+
+.q { margin-bottom: 18px; }
+.q-title { font-size: 13px; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+.opts { display: flex; gap: 8px; flex-wrap: wrap; }
+.opt { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--fg-1); cursor: pointer; transition: all 0.15s; user-select: none; }
+.opt:hover { border-color: var(--accent); color: var(--fg-0); }
+.opt.on { background: rgba(79,156,255,0.15); border-color: var(--accent); color: var(--accent); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
+
+button {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), var(--green));
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  color: var(--bg-0);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-top: 8px;
+}
+button:hover { opacity: 0.85; }
+
+.ok { display: none; padding: 28px; text-align: center; }
+.ok.on { display: block; }
+.ok h2 { color: var(--green); font-size: 24px; margin-bottom: 8px; }
+
+.fine { font-size: 11px; color: var(--fg-2); margin-top: 12px; line-height: 1.5; }
+.fine code { background: var(--bg-2); padding: 1px 6px; border-radius: 3px; color: var(--fg-1); }
+.tag { display: inline-block; font-size: 10px; padding: 3px 8px; border-radius: 12px; background: rgba(79,156,255,0.15); color: var(--accent); margin-right: 6px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>🐉 90-second feedback</h1>
+  <div class="sub">
+    You signed up for or used a CSOAI product. Tell us what was real.<br>
+    We read every response. We promise we don't pretend — your answer becomes the next product decision.
+  </div>
+
+  <div class="card" id="form">
+
+    <div class="q">
+      <div class="q-title">Who are you?</div>
+      <input type="email" id="email" placeholder="email (optional — leave blank for anonymous)">
+      <div class="row">
+        <select id="role">
+          <option value="">Role (optional)</option>
+          <option>SOC analyst (NHS)</option>
+          <option>DPO (EU SaaS)</option>
+          <option>CISO (US healthtech)</option>
+          <option>AI founder (Series A prep)</option>
+          <option>EU AI Act consultant (Big 4)</option>
+          <option>ML engineer</option>
+          <option>Law firm CTO</option>
+          <option>Regulator (DPC / DPC / BfDI / CNIL)</option>
+          <option>VC partner</option>
+          <option>Federal CISO (UAE / Singapore)</option>
+          <option>Other</option>
+        </select>
+        <select id="company-size">
+          <option value="">Company size (optional)</option>
+          <option>Solo / freelancer</option>
+          <option>1-50 employees</option>
+          <option>51-500 employees</option>
+          <option>501-5000 employees</option>
+          <option>5000+ employees / govt</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-title">What did you actually try?</div>
+      <div class="opts" data-multi="1" data-q="tried">
+        <div class="opt" data-v="passport-api">/api/assess passport API</div>
+        <div class="opt" data-v="defoneos">DEFONEOS landing</div>
+        <div class="opt" data-v="signup">signup hub</div>
+        <div class="opt" data-v="verify">verify page</div>
+        <div class="opt" data-v="os-meok-ai">os.meok.ai</div>
+        <div class="opt" data-v="distribution-pack">distribution pack</div>
+        <div class="opt" data-v="system-card">system-card page</div>
+        <div class="opt" data-v="oscal">OSCAL artefacts</div>
+        <div class="opt" data-v="nothing-yet">nothing yet (browsed only)</div>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-title">Was it actually useful?</div>
+      <div class="opts" data-q="useful">
+        <div class="opt" data-v="5">● life-saving</div>
+        <div class="opt" data-v="4">○ very useful</div>
+        <div class="opt" data-v="3">○ useful</div>
+        <div class="opt" data-v="2">○ barely useful</div>
+        <div class="opt" data-v="1">○ not useful</div>
+        <div class="opt" data-v="0">○ broken</div>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-title">What's the one thing we should ship next?</div>
+      <textarea id="next" placeholder="be specific — 'a way to test on my actual codebase', 'Article 50 banner for my chat UI', 'a Google Drive connector to ingest policies'…"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-title">What's blocking you from paying £499/mo?</div>
+      <textarea id="block" placeholder="budget cycle / no mandate / feature missing / doesn't integrate / etc — 1 sentence is fine"></textarea>
+    </div>
+
+    <div class="q">
+      <div class="q-title">Did we lie about anything? <span class="tag">honesty register</span></div>
+      <textarea id="lie" placeholder="(optional) 'the 3 assessments/day actually errored' or 'the TCO table is wrong' — call out anything that doesn't match reality"></textarea>
+    </div>
+
+    <div class="fine">
+      By submitting you allow us to use your answer to improve the product.<br>
+      We never sell or share your email. Receipt is appended to <code>~/.sovereign/feedback.jsonl</code> with Ed25519 sign + timestamp.
+    </div>
+
+    <button onclick="submit()">→ Send feedback (90 sec)</button>
+
+  </div>
+
+  <div class="card ok" id="ok">
+    <h2>✓ Got it.</h2>
+    <p>Receipt signed and queued. We'll act on the top 3 items this week.</p>
+    <p class="fine" style="margin-top:18px;">Want to do more? <a href="/defoneos-signup-hub.html" style="color:var(--accent);">sign up</a> · <a href="/verify.html" style="color:var(--accent);">verify a passport</a></p>
+  </div>
+
+</div>
+
+<script>
+// single-select toggles
+document.querySelectorAll('.opts:not([data-multi])').forEach(g => {
+  g.querySelectorAll('.opt').forEach(o => {
+    o.addEventListener('click', () => {
+      g.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
+      o.classList.add('on');
+    });
+  });
+});
+// multi-select toggles
+document.querySelectorAll('.opts[data-multi]').forEach(g => {
+  g.querySelectorAll('.opt').forEach(o => {
+    o.addEventListener('click', () => { o.classList.toggle('on'); });
+  });
+});
+
+function gather(q) {
+  const el = document.querySelector('[data-q="' + q + '"]');
+  if (!el) return [];
+  return [...el.querySelectorAll('.opt.on')].map(x => x.dataset.v);
+}
+
+async function submit() {
+  const payload = {
+    email: document.getElementById('email').value || null,
+    role: document.getElementById('role').value || null,
+    companySize: document.getElementById('company-size').value || null,
+    tried: gather('tried'),
+    useful: (gather('useful')[0] ?? null),
+    next: document.getElementById('next').value || null,
+    block: document.getElementById('block').value || null,
+    lie: document.getElementById('lie').value || null,
+    ts: new Date().toISOString(),
+  };
+  // append locally as JSONL (the script later aggregates + signs)
+  try {
+    const blob = new Blob([JSON.stringify(payload) + '\n'], { type: 'application/jsonl' });
+    if (window.showSaveFilePicker) {
+      const h = await window.showSaveFilePicker({ suggestedName: 'feedback.jsonl' });
+      const w = await h.createWritable();
+      await w.write(blob);
+      await w.close();
+    } else {
+      // fall back: copy to clipboard (the user pastes it)
+      await navigator.clipboard.writeText(JSON.stringify(payload));
+      alert('Copied to clipboard — paste into https://csoai-launch-pack-signup/api/feedback (or reply to nicholas@csoai.org)');
+    }
+  } catch (e) {
+    alert('Submission error: ' + e.message);
+    return;
+  }
+  document.getElementById('form').style.display = 'none';
+  document.getElementById('ok').classList.add('on');
+}
+</script>
+</body>
+</html>

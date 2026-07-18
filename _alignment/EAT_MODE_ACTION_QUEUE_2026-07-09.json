@@ -1,0 +1,91 @@
+{
+ "auto_fired_during_eat_mode": [
+  {
+   "ts": "2026-07-09T07:59:17.180794+00:00",
+   "action": "Verified 01_prep_expert_data.py runs cleanly: 3,926 examples",
+   "files": "expert_data/{compliance,defense,intuition,voice}.jsonl",
+   "cost": "$0",
+   "owner_gated": false
+  },
+  {
+   "ts": "2026-07-09T07:59:17.180937+00:00",
+   "action": "Built the 65-task real held-out battery",
+   "files": "expert_data/held_out_battery.jsonl",
+   "cost": "$0",
+   "owner_gated": false
+  },
+  {
+   "ts": "2026-07-09T07:59:17.180939+00:00",
+   "action": "Ran 7-config sweep in mock mode (validates infra, not real pass rates)",
+   "files": "/tmp/sweep_results_full/sweep_summary.json",
+   "cost": "$0",
+   "owner_gated": false,
+   "winner_mock": "F_symmetric_deep (MiMo 1.02T / 1.02T, $3.50/1M tok)"
+  },
+  {
+   "ts": "2026-07-09T07:59:17.180940+00:00",
+   "action": "Verified SIGIL demo: 95 tok vs 182 tok = 1.9x denser, 48% fewer tokens",
+   "files": "sovereign-temple/sigil.py",
+   "cost": "$0",
+   "owner_gated": false
+  },
+  {
+   "ts": "2026-07-09T07:59:17.180941+00:00",
+   "action": "Verified 12-around-1 council roster (13 members, arcana + Ed25519 pubkeys live)",
+   "files": "sovereign-temple/data/council_12_around_1.json",
+   "cost": "$0",
+   "owner_gated": false
+  },
+  {
+   "ts": "2026-07-09T07:59:17.180941+00:00",
+   "action": "Built paste-ready Colab notebook (21 cells, 10 steps, $0 run cost)",
+   "files": "_alignment/sovereign_merge_kit/colab_runbook_step2.ipynb",
+   "cost": "$0",
+   "owner_gated": "OPEN BROWSER + UPLOAD NOTEBOOK"
+  },
+  {
+   "ts": "2026-07-09T07:59:17.180942+00:00",
+   "action": "Catalogued 674 sovereign MCPs in mcp-marketplace/",
+   "files": "/tmp/mcp_catalog.json",
+   "cost": "$0",
+   "owner_gated": false
+  }
+ ],
+ "owner_gated_for_sir_nick_wake_up": [
+  {
+   "action": "FIRE STEP 2: open colab.research.google.com, upload the notebook, hit run",
+   "expected_output": "Charter-1 sovereign merge weights + GATE 1 verdict (merged pass rate > base pass rate)",
+   "expected_cost": "$0",
+   "expected_time": "2-3 hours",
+   "what_to_do_after": "If GATE 1 passes, scale to STEP 3 on Vast.ai A100 spot ($100-300); if fails, ship fine-tune-only"
+  },
+  {
+   "action": "Run the asymmetric sweep on REAL GPU (Vast.ai spot A100 \u00d7 4 parallel GPUs \u00d7 1 hour)",
+   "expected_output": "Real pass rates + p50 latency + cost per 1M tokens for all 7 configs",
+   "expected_cost": "$30-60",
+   "expected_time": "1-3 hours",
+   "what_to_do_after": "Ship the winning config as Charter-2 sovereign merge baseline"
+  },
+  {
+   "action": "Submit NVIDIA Inception + Microsoft for Startups + Modal startup credit applications",
+   "expected_output": "$5K-100K of GPU credits within 4-8 weeks",
+   "expected_cost": "$0 (just the application time)",
+   "expected_time": "1-2 hours of application time, 4-8 weeks for response",
+   "what_to_do_after": "Use the credits to fund sovereign merge v0.3 on the bigger models"
+  },
+  {
+   "action": "Submit PyPI publish of meok-sovereign-aiact-passport-mcp (Crown Jewel #1, 88 tests pass)",
+   "expected_output": "Public PyPI listing of CJ1",
+   "expected_cost": "$0 (PyPI account is free)",
+   "expected_time": "10 min (push to PyPI + Smithery sync)",
+   "what_to_do_after": "Run defoneos competitor benchmark vs aeoess/agent-passport-mcp"
+  },
+  {
+   "action": "Clarify 3 architecture questions (7-planets, 24-elders, 'statate spalce' terminology)",
+   "expected_output": "Committed SOVEREIGN_HIERARCHY_24_12_7_SPEC.md with all 3 confirmed",
+   "expected_cost": "$0 (just the conversation)",
+   "expected_time": "5 min",
+   "what_to_do_after": "Lock in the hierarchy spec, commit the runnable extension to per_feature_queen.py"
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sovereign on Alexa — “Alexa, ask my Sovereign”</title>
+<meta name="description" content="Add your sovereign AI character to any Amazon Echo. A real Alexa Skills Kit endpoint is already live — point a custom skill at it and talk to your Sovereign by voice.">
+<style>
+:root{--bg:#f4f1ea;--card:#fffdf8;--ink:#1a1712;--dim:#6b6355;--gold:#b8912f;--line:#e6dfd0;--ink2:#2a2620;--ok:#2e7d32}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:38px 20px 90px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em}
+.brand .m{width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800}
+h1{font-size:30px;line-height:1.15;letter-spacing:-.02em;margin:26px 0 8px}
+h1 .g{color:var(--gold)}
+.sub{color:var(--dim);font-size:16px;max-width:60ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:18px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.step{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+.card h3{margin:2px 0 10px;font-size:18px}
+.card p{color:var(--dim);margin:6px 0 12px}
+ol{margin:6px 0 0;padding-left:20px}ol li{margin:9px 0;color:var(--ink2)}
+code,.kbd{background:#efe9db;border:1px solid var(--line);border-radius:6px;padding:1px 7px;font:12.5px ui-monospace,Menlo,monospace;color:var(--ink)}
+pre{background:#1c1a16;color:#f0ead9;border-radius:10px;padding:13px 15px;overflow-x:auto;font:12px/1.55 ui-monospace,Menlo,monospace;margin:8px 0 0;white-space:pre}
+.row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+button.copy{background:var(--ink);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:13px}
+a{color:var(--gold)}
+.foot{color:var(--dim);font-size:13px;margin-top:24px;border-top:1px solid var(--line);padding-top:16px}
+.ok{color:var(--ok);font-weight:600}
+</style></head><body><div class="wrap">
+<div class="brand"><span class="m">M</span> MEOK · sovereign</div>
+<h1>“Alexa, ask <span class="g">my Sovereign</span>.”</h1>
+<p class="sub">Your sovereign AI character on any Amazon Echo. A real <b>Alexa Skills Kit endpoint is already live</b> at <code>/api/alexa</code> — it speaks Alexa's protocol and routes to your governed Sovereign. Point a custom skill at it and talk by voice. <span class="ok">✓ endpoint live</span></p>
+
+<div class="card">
+  <div class="step">build the skill · Alexa Developer Console (free)</div>
+  <h3>Create a custom skill → point it here</h3>
+  <ol>
+    <li>developer.amazon.com/alexa/console/ask → <b>Create Skill</b> → Custom → Provision your own.</li>
+    <li><b>Invocation name:</b> <code>my sovereign</code></li>
+    <li>Add an <b>Intent</b> named <code>AskIntent</code> with one slot <code>query</code> of type <code>AMAZON.SearchQuery</code>, and a sample utterance: <code>{query}</code> (and <code>ask about {query}</code>).</li>
+    <li><b>Endpoint → HTTPS:</b> paste:
+      <pre id="ep">https://os.meok.ai/api/alexa</pre>
+      SSL cert option: “My development endpoint has a certificate from a trusted CA.”</li>
+    <li>Save + Build Model → Test. Say: <b>“Alexa, ask my Sovereign what governs a bank.”</b></li>
+  </ol>
+  <div class="row"><button class="copy" data-copy="ep">Copy endpoint</button></div>
+</div>
+
+<div class="card">
+  <div class="step">how it works</div>
+  <h3>Same mind, spoken aloud</h3>
+  <p>The endpoint parses Alexa's <code>LaunchRequest</code> / <code>IntentRequest</code>, passes your words to the Sovereign (<code>/api/chat</code>, care-floored + governed, medium OWEM tier), and returns Alexa-format speech. It's the <i>same</i> character you meet in Claude, on the web, on Siri — just through Echo.</p>
+</div>
+
+<div class="foot">
+  <p><b>Honest:</b> unlike the Siri Shortcut (60-second, no account), Alexa requires creating a skill in the Developer Console (free, ~5 min) because Amazon has no personal-shortcut equivalent — but the hard part (an endpoint that speaks ASK) is done and live. Publishing the skill publicly needs Amazon certification; for yourself, the dev skill works immediately. Same Sovereign everywhere: <a href="/connect.html">Claude/MCP</a> · <a href="/embed.html">any website</a> · <a href="/siri.html">Siri</a> · <a href="/council.html">Council</a>.</p>
+</div>
+</div>
+<script>
+document.querySelectorAll('button.copy').forEach(b=>b.onclick=async()=>{const t=document.getElementById(b.dataset.copy).textContent;try{await navigator.clipboard.writeText(t);const o=b.textContent;b.textContent='Copied ✓';setTimeout(()=>b.textContent=o,1400);}catch(e){}});
+</script></body></html>

@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEOK Earth — Photoreal / High-Quality 3D</title>
+<!-- Tiered 3D, best token wins — all read from same-origin localStorage (nothing leaves device):
+       1. Google Maps key (meok_maps_key)   → Google Photorealistic 3D Tiles (photo-real buildings, needs Maps billing)
+       2. Cesium ion token (meok_cesium_token) → World Terrain + World Imagery + Cesium OSM Buildings (FREE tier, GitHub sign-in, NO Google billing)
+       3. no token                            → free OSM globe (never blank)
+     Same postMessage API as earth3d.html (fly/scan/top/card/orbit/arc). -->
+<link href="https://unpkg.com/cesium@1.123/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>
+  html,body,#c{margin:0;height:100%;width:100%;background:#04060d;overflow:hidden;font-family:ui-monospace,monospace}
+  .cesium-viewer-bottom,.cesium-widget-credits{display:none!important}
+  #banner{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:40;color:#f0e6cf;font:600 11px ui-monospace;letter-spacing:.08em;background:rgba(12,10,7,.78);padding:6px 14px;border-radius:999px;border:1px solid rgba(201,168,76,.5)}
+  #scanfx{position:fixed;inset:0;pointer-events:none;z-index:50;display:none;align-items:center;justify-content:center}
+  .scanring{width:40px;height:40px;border:2px solid rgba(201,168,76,.9);border-radius:50%}
+  .scanlbl{position:absolute;bottom:14%;color:#f0e6cf;font:700 12px ui-monospace;letter-spacing:.12em;background:rgba(12,10,7,.7);padding:5px 12px;border-radius:999px;border:1px solid rgba(201,168,76,.5)}
+  @keyframes scanpulse{0%{width:20px;height:20px;opacity:.95}100%{width:78vmin;height:78vmin;opacity:0}}
+  #loccard{position:fixed;left:16px;bottom:16px;z-index:60;max-width:280px;background:rgba(14,11,8,.92);color:#efe6d4;border:1px solid rgba(201,168,76,.55);border-radius:14px;padding:12px 14px;font:500 12.5px system-ui,sans-serif;line-height:1.45;display:none;box-shadow:0 12px 34px rgba(0,0,0,.45)}
+</style></head>
+<body>
+<div id="c"></div>
+<div id="banner">◉ 3D · initialising…</div>
+<div id="scanfx"><div class="scanring"></div><div class="scanlbl"></div></div>
+<div id="loccard"></div>
+<script>window.CESIUM_BASE_URL='https://unpkg.com/cesium@1.123/Build/Cesium/';</script>
+<script src="https://unpkg.com/cesium@1.123/Build/Cesium/Cesium.js"></script>
+<script>
+function pick(name, q){ try{ const u=new URLSearchParams(location.search); if(u.get(q)) return u.get(q); }catch(e){}
+  try{ const m=document.querySelector('meta[name="'+name.replace(/_/g,'-')+'"]'); if(m&&m.content) return m.content; }catch(e){}
+  try{ const v=window[name.toUpperCase()]; if(v) return v; }catch(e){}
+  try{ const k=localStorage.getItem(name); if(k) return k; }catch(e){}
+  return ''; }
+const googleKey = pick('meok_maps_key','k');
+const ionToken  = pick('meok_cesium_token','ion');
+const banner=document.getElementById('banner');
+let viewer;
+(async function(){
+  try{ if(ionToken) Cesium.Ion.defaultAccessToken=ionToken; else Cesium.Ion.defaultAccessToken=''; }catch(e){}
+  // If we have neither a Google key nor an ion token, avoid ion base imagery (needs token) → OSM.
+  const opts={ baseLayerPicker:false, geocoder:false, homeButton:false, sceneModePicker:false, navigationHelpButton:false, animation:false, timeline:false, fullscreenButton:false, infoBox:false, selectionIndicator:false };
+  if(!ionToken){ opts.baseLayer=false; }
+  try{ viewer=new Cesium.Viewer('c', opts); }catch(e){ opts.imageryProvider=false; viewer=new Cesium.Viewer('c', opts); }
+  try{ viewer.scene.skyAtmosphere.show=true; viewer.scene.globe.enableLighting=true; }catch(e){}
+  try{
+    if(googleKey){
+      Cesium.GoogleMaps.defaultApiKey=googleKey; const ts=await Cesium.createGooglePhotorealistic3DTileset();
+      viewer.scene.primitives.add(ts); viewer.scene.globe.show=false; banner.textContent='◉ PHOTOREAL 3D · Google 3D Tiles';
+    } else if(ionToken){
+      try{ viewer.scene.setTerrain(new Cesium.Terrain(Cesium.CesiumTerrainProvider.fromIonAssetId(1))); }catch(e){ try{ viewer.terrainProvider=await Cesium.createWorldTerrainAsync(); }catch(_){} }
+      try{ const osm=await Cesium.createOsmBuildingsAsync(); viewer.scene.primitives.add(osm); }catch(e){}
+      banner.textContent='◉ HIGH-QUALITY 3D · Cesium ion (terrain + 3D buildings)';
+    } else {
+      addOSM(); banner.textContent='◉ Free globe — add a Cesium ion token (free, GitHub) for 3D buildings';
+    }
+  }catch(e){ addOSM(); banner.textContent='◉ 3D token error — free globe'; }
+  fly(51.5072,-0.1276,13.5);
+  setTimeout(()=>{ banner.style.opacity='.55'; }, 3500);
+})();
+function addOSM(){ try{ viewer.imageryLayers.addImageryProvider(new Cesium.OpenStreetMapImageryProvider({url:'https://tile.openstreetmap.org/'})); }catch(e){} }
+function altForZoom(z){ return Math.max(180, 40000000/Math.pow(2, (z||11))); }
+let _orbitOn=false;
+function fly(lat,lon,zoom){ try{ _orbitOn=false; viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(lon,lat,altForZoom(zoom)), orientation:{ heading:0, pitch:Cesium.Math.toRadians(zoom>13?-45:-70), roll:0 }, duration:3.6 }); }catch(e){} }
+function top(){ try{ _orbitOn=false; const c=viewer.camera.positionCartographic; viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromRadians(c.longitude,c.latitude, altForZoom(3.2)), orientation:{heading:0,pitch:Cesium.Math.toRadians(-89),roll:0}, duration:1.8 }); }catch(e){} }
+function _spin(){ try{ viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, -0.0009); }catch(e){} }
+function orbit(){ try{ _orbitOn=!_orbitOn; if(_orbitOn) viewer.clock.onTick.addEventListener(_spin); else viewer.clock.onTick.removeEventListener(_spin); }catch(e){} }
+function scan(mi){ const s=document.getElementById('scanfx'); s.style.display='flex'; const ring=s.querySelector('.scanring'); ring.style.animation='none'; void ring.offsetWidth; ring.style.animation='scanpulse 2.6s ease-out'; s.querySelector('.scanlbl').textContent='◎ SCANNING '+(mi||10)+'-MILE RADIUS · ALL LAYERS'; clearTimeout(window._st); window._st=setTimeout(()=>{ s.style.display='none'; },2800); }
+function card(html){ const c=document.getElementById('loccard'); c.innerHTML=html; c.style.display='block'; }
+function arc(from,to,label){ try{ viewer.entities.add({ polyline:{ positions:Cesium.Cartesian3.fromDegreesArray([from[1],from[0],to[1],to[0]]), width:3, arcType:Cesium.ArcType.GEODESIC, material:new Cesium.PolylineGlowMaterialProperty({glowPower:0.25,color:Cesium.Color.fromCssColorString('#c9a84c')}) } }); if(label){ viewer.entities.add({ position:Cesium.Cartesian3.fromDegrees((from[1]+to[1])/2,(from[0]+to[0])/2, 30000), label:{ text:label, font:'11px monospace', fillColor:Cesium.Color.fromCssColorString('#f0e6cf'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('rgba(12,10,7,0.82)'), scale:0.9 } }); } }catch(e){} }
+function clearArcs(){ try{ viewer.entities.removeAll(); }catch(e){} }
+window.addEventListener('message',function(ev){ var d=ev.data||{}; if(d.type!=='meok-cmd') return; try{ if(d.cmd==='fly') fly(d.lat,d.lon,d.zoom); else if(d.cmd==='scan') scan(d.radiusMi); else if(d.cmd==='top') top(); else if(d.cmd==='orbit') orbit(); else if(d.cmd==='card') card(d.html); else if(d.cmd==='arc') arc(d.from,d.to,d.label); else if(d.cmd==='clearArcs') clearArcs(); }catch(e){} });
+</script></body></html>

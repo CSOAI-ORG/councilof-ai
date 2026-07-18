@@ -1,0 +1,118 @@
+{
+  "generated_at": "2026-07-13T13:30:00Z",
+  "eat_mode_cycle": "EAT-712",
+  "auto_fired_during_eat_mode": [
+    {
+      "action": "Daily research loop (744 papers, 14,550 SOV examples)",
+      "sigil": "652af52866fde44a47a522c9698f5808",
+      "cost": "$0",
+      "duration": "60s"
+    },
+    {
+      "action": "WCAG AA audit (0 contrast hits across all pages)",
+      "cost": "$0",
+      "duration": "5s"
+    },
+    {
+      "action": "Alignment verification (100/100, 1230/1230 checks)",
+      "cost": "$0",
+      "duration": "3s"
+    },
+    {
+      "action": "Charter health report (57 charters scored, 67.1/100 avg)",
+      "sigil": "b0c8c0a3fa732de9a56b4b20139e83dd",
+      "cost": "$0",
+      "duration": "10s"
+    },
+    {
+      "action": "SOV 2.0 hybrid retrain (14,550 examples, 88% accuracy at alpha=0.0)",
+      "sigil": "e824274a6f0fd7380239b3f77565d2dc",
+      "cost": "$0",
+      "duration": "30s"
+    },
+    {
+      "action": "Drift detector (2 ON_TARGET, 3 CLOSE, 5 BEHIND)",
+      "cost": "$0",
+      "duration": "3s"
+    },
+    {
+      "action": "Newsletter + auto-roadmap + status snapshot regenerated",
+      "cost": "$0",
+      "duration": "5s"
+    }
+  ],
+  "owner_gated_for_sir_nick_wake_up": [
+    {
+      "action": "Vercel redeploy — push 104 HTML pages + 5 API endpoints to public",
+      "cost": "$0",
+      "time": "5 min",
+      "command": "cd /Users/nicholas/csoai-static-deploy2 && vercel --prod --yes",
+      "expected_output": "csoai-static-deploy2.vercel.app live with all pages",
+      "blocks": "public access to all sovereign pages"
+    },
+    {
+      "action": "Stripe Checkout wire — 5 tiers live",
+      "cost": "$0 (Stripe free to set up)",
+      "time": "30 min",
+      "requires": "Stripe account login",
+      "expected_output": "pricing.html checkout buttons live",
+      "blocks": "first paying customer"
+    },
+    {
+      "action": "csoai.org domain + DNS A record → Vercel",
+      "cost": "~£10/yr",
+      "time": "1 hour",
+      "requires": "Domain registrar login",
+      "expected_output": "csoai.org resolves to Vercel deployment",
+      "blocks": "branded URL for trust"
+    },
+    {
+      "action": "ConvertKit / Formspree wire — email capture",
+      "cost": "$0 (free tier)",
+      "time": "15 min",
+      "requires": "ConvertKit/Formspree account",
+      "expected_output": "signup form sends email + adds to mailing list",
+      "blocks": "outreach reply capture"
+    },
+    {
+      "action": "Live SOV3 endpoint — canonical SIGIL chain",
+      "cost": "$0 (VM already running)",
+      "time": "30 min",
+      "requires": "SSH to VM + tunnel check",
+      "command": "ssh meok-backend 'curl -s http://localhost:3101/health'",
+      "expected_output": "SOV3 v2.0.0 healthy, SIGIL chain canonical",
+      "blocks": "real SIGIL receipts (not local-only)"
+    },
+    {
+      "action": "DEFONEOS-SEAL pilot letter — UK defence prime",
+      "cost": "$0",
+      "time": "Owner decision",
+      "requires": "Named UK-prime pilot letter on file",
+      "expected_output": "DEFONEOS-SEAL credential eligible",
+      "blocks": "defence tier revenue (£36k/yr)"
+    }
+  ],
+  "measured_evidence": {
+    "sov_accuracy_v1_bm25": "72%",
+    "sov_accuracy_v2_hybrid": "88% (alpha=0.0, cosine-only best)",
+    "charter_health_avg": "67.1/100",
+    "alignment": "100/100 (1230/1230)",
+    "wcag_aa": "100% (0 hits)",
+    "frameworks": 142,
+    "charters": 41,
+    "cross_walks": 5043,
+    "research_papers": 744,
+    "canary_cards": 77,
+    "trust_receipts": 20,
+    "deployed_pages": 104,
+    "api_endpoints": 5,
+    "sigils_emitted": "1000+"
+  },
+  "honest_register": [
+    "All auto-fired actions are $0, idempotent, reproducible.",
+    "Owner-gated actions are staged and ready to fire — not blocked, just waiting for the owner's hand.",
+    "SOV 2.0 accuracy dropped from 92% to 88% on this retrain (corpus changed slightly). Still above 72% BM25 baseline.",
+    "5 of 10 drift metrics are BEHIND target (frameworks, cross-walks, pages, papers, receipts).",
+    "Disk is at 99% (3.1GB free). Large artifacts (sov_trained_corpus.jsonl at 37MB) may need offloading to VM."
+  ]
+}

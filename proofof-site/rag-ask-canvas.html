@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>RAG Ask Canvas — SOV-720</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px}
+h1{color:#7dd3fc;margin:0 0 4px 0}
+.sub{color:#9ca3af;font-size:12px;margin-bottom:24px}
+.ask{display:flex;gap:8px;margin:16px 0}
+input,button{background:#0a0e14;color:#c5cdd9;border:1px solid #1f2937;padding:10px;border-radius:6px;font-family:inherit;font-size:14px}
+input{flex:1}
+button{background:#1e3a8a;color:#7dd3fc;cursor:pointer;min-width:120px}
+.result{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;margin-top:12px;min-height:200px}
+.result .q{color:#a78bfa;font-size:12px}
+.result .a{color:#c5cdd9;font-size:14px;margin-top:8px;line-height:1.6;white-space:pre-wrap}
+.result .meta{color:#9ca3af;font-size:10px;margin-top:8px}
+.examples{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.examples button{font-size:11px;padding:6px 10px;background:#1f2937;color:#7dd3fc}
+</style>
+</head>
+<body>
+<h1>🤖 RAG Ask Canvas</h1>
+<div class="sub">Ask the sovereign substrate. Facts come from RAG ground truth; style from LoRA. <code>/api/rag/ask</code></div>
+<div class="examples">
+<button onclick="ask('What is Article 0?')">Article 0</button>
+<button onclick="ask('What is the care-floor threshold?')">Care-Floor 0.95</button>
+<button onclick="ask('What is BFT-33 quorum?')">BFT-33 23/33</button>
+<button onclick="ask('What is Liquid AI Antidoom?')">Liquid AI Antidoom</button>
+<button onclick="ask('What is Article 50 transparency?')">Article 50</button>
+<button onclick="ask('What is DORADO 6×96?')">DORADO 6×96</button>
+</div>
+<div class="ask">
+<input id="q" placeholder="Ask a sovereign question..." value="What is the care-floor threshold?">
+<button onclick="ask()">Ask →</button>
+</div>
+<div class="result"><div class="q">Question will appear here</div><div class="a"></div><div class="meta"></div></div>
+<script>
+async function ask(q) {
+  const query = q || document.getElementById('q').value;
+  if (q) document.getElementById('q').value = q;
+  const r = document.querySelector('.result');
+  r.querySelector('.q').textContent = 'Q: ' + query;
+  r.querySelector('.a').textContent = '... asking';
+  r.querySelector('.meta').textContent = '';
+  try {
+    const res = await fetch('/api/rag/ask', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question: query, owem: 'compliance'})}).then(r => r.json());
+    r.querySelector('.a').textContent = res.answer || res.response || res.text || JSON.stringify(res);
+    r.querySelector('.meta').textContent = 'facts_used: ' + (res.facts_used || res.sources || 0) + ' · care_floor: ' + (res.care_floor || 0.95) + ' · sigil: ' + (res.sigil || '—').substring(0,16);
+  } catch (e) { r.querySelector('.a').textContent = '✗ ' + e.message; }
+}
+</script>
+</body></html>

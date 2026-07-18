@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article 50 Transparency Requirements — MEOK Compliance Suite</title>
+<meta name="description" content="Understand the EU AI Act Article 50 two-layer transparency requirements for AI-generated outputs. Visible labelling and machine-readable marking explained.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#0d0c18;color:#f0ece4;line-height:1.7;min-height:100vh}
+a{color:#c9a84c;text-decoration:none;transition:color .2s}
+a:hover,a:focus{color:#e8d28a;text-decoration:underline}
+.container{max-width:1000px;margin:0 auto;padding:0 1.5rem}
+/* header */
+.header{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 100%);border-bottom:2px solid rgba(201,168,76,.2);padding:1.25rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.logo{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.logo svg{flex-shrink:0}
+.logo span{color:#c9a84c}
+.logo .navy{color:#f0ece4}
+.header nav{display:flex;gap:1.25rem;font-size:.875rem;font-weight:500}
+.header nav a{color:#a098b0}
+.header nav a:hover{color:#c9a84c;text-decoration:none}
+/* hero */
+.hero{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 50%,#0d0c18 100%);padding:5rem 0 3.5rem;text-align:center;border-bottom:1px solid rgba(201,168,76,.15)}
+.hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.02em}
+.hero h1 span{color:#c9a84c}
+.hero p{font-size:clamp(1rem,1.8vw,1.2rem);color:#b0a8c0;max-width:720px;margin:0 auto 1.75rem}
+.badge{display:inline-block;background:rgba(201,168,76,.12);color:#c9a84c;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(201,168,76,.25);margin-bottom:1.25rem}
+.cta-btn{display:inline-block;background:#c9a84c;color:#0d0c18;font-weight:700;font-size:.95rem;padding:.85rem 2rem;border-radius:8px;transition:all .2s;border:none;cursor:pointer}
+.cta-btn:hover{background:#e8d28a;color:#0d0c18;text-decoration:none;transform:translateY(-1px)}
+.cta-btn-outline{display:inline-block;background:transparent;color:#c9a84c;font-weight:600;font-size:.9rem;padding:.8rem 1.75rem;border-radius:8px;border:1.5px solid #c9a84c;transition:all .2s}
+.cta-btn-outline:hover{background:rgba(201,168,76,.1);text-decoration:none;transform:translateY(-1px)}
+.cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+/* sections */
+section{padding:3.5rem 0}
+section h2{font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:700;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.01em}
+section h2 .gold{color:#c9a84c}
+section h3{font-size:1.2rem;font-weight:600;color:#c9a84c;margin:1.5rem 0 .6rem}
+section p,section li{color:#b0a8c0;font-size:.975rem}
+section p{margin-bottom:1rem}
+.card{background:linear-gradient(135deg,#13112a 0%,#1a1730 100%);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
+.card h3{margin-top:0}
+.card ul{list-style:none;padding-left:0}
+.card ul li{padding:.3rem 0 .3rem 1.5rem;position:relative}
+.card ul li::before{content:"▸";position:absolute;left:0;color:#c9a84c;font-weight:700}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:680px){.two-col{grid-template-columns:1fr}}
+/* highlight box */
+.highlight{border-left:4px solid #c9a84c;background:rgba(201,168,76,.06);padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;margin:1.5rem 0}
+.highlight p:last-child{margin-bottom:0}
+.highlight strong{color:#c9a84c}
+/* layer-diagram */
+.layer-diagram{display:flex;flex-direction:column;gap:1rem;margin:1.5rem 0}
+.layer-row{display:flex;align-items:center;gap:1rem}
+.layer-label{flex:0 0 120px;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#c9a84c;text-align:right}
+.layer-bar{flex:1;padding:.85rem 1.25rem;border-radius:8px;font-size:.9rem;font-weight:600}
+.layer-bar.visible{background:rgba(201,168,76,.15);border:1px solid #c9a84c;color:#c9a84c}
+.layer-bar.machine{background:rgba(100,140,255,.12);border:1px solid rgba(100,140,255,.4);color:#8cb0ff}
+.layer-bar.synthetic{background:rgba(255,100,150,.12);border:1px solid rgba(255,100,150,.4);color:#ff8cb0}
+@media(max-width:500px){.layer-row{flex-direction:column;align-items:stretch;gap:.4rem}.layer-label{text-align:left;flex:auto}}
+/* faq */
+.faq-item{border-bottom:1px solid rgba(201,168,76,.1);padding:.5rem 0}
+.faq-item summary{padding:.85rem 0;font-weight:600;cursor:pointer;color:#f0ece4;font-size:1rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";color:#c9a84c;font-size:1.3rem;font-weight:400;transition:transform .2s}
+.faq-item[open] summary::after{content:"−"}
+.faq-item .answer{padding:0 0 1rem;color:#b0a8c0;font-size:.95rem}
+.faq-item .answer p{margin-bottom:.5rem}
+.faq-item .answer p:last-child{margin-bottom:0}
+/* footer */
+.footer{background:linear-gradient(135deg,#0d0c18 0%,#0a0914 100%);border-top:1px solid rgba(201,168,76,.12);padding:2.5rem 0;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;margin-bottom:2rem}
+.footer h4{color:#c9a84c;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.footer ul{list-style:none}
+.footer li{margin-bottom:.4rem}
+.footer a{color:#807890;font-size:.85rem}
+.footer a:hover{color:#c9a84c}
+.footer-bottom{text-align:center;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,.08);color:#605870;font-size:.8rem}
+/* responsive */
+@media(max-width:600px){.header .container{flex-direction:column;text-align:center}.header nav{flex-wrap:wrap;justify-content:center}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Article 50 of the EU AI Act?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50 of the EU AI Act governs transparency obligations for providers and deployers of AI systems. It requires that AI-generated or manipulated content (text, image, audio, video) be clearly labelled as AI-generated, that deepfakes be disclosed, and that AI systems interacting with humans disclose their artificial nature. These obligations apply across the entire AI value chain, from foundation model providers to downstream deployers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the two-layer marking requirement under Article 50?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50 mandates a two-layer approach: (1) a visible marking that humans can see — such as a label, watermark, or overlay reading 'AI-generated' — and (2) a machine-readable marking embedded in the content's metadata or file headers that automated systems can detect. This dual-layer ensures both human awareness and automated compliance monitoring across the content lifecycle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who is responsible for AI labelling under Article 50?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Responsibility is shared. Providers of general-purpose AI models must ensure technical capabilities for labelling exist. Deployers (the entities using the AI to generate or manipulate content) are primarily responsible for applying the visible and machine-readable labels to outputs. Both parties must cooperate to ensure compliance, and deployers cannot shift liability back to providers if they fail to implement labelling."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Article 50 apply to all AI-generated content?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50 applies broadly to AI-generated or manipulated text, images, audio, and video content that could be mistaken for human-created or authentic content. Exceptions exist for content that is clearly AI-generated due to context (e.g., obviously fictional works), content that has undergone substantial human review and editorial control, and content that is lawfully authorised for legitimate purposes (such as law enforcement investigations). However, these exceptions are narrowly construed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does Article 50 come into effect?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50 obligations begin phasing in from May 2025. The deepfake and AI-generated content labelling requirements for deployers become enforceable from 2 August 2026. All deployers of AI systems that generate or manipulate content should implement compliance measures well before this date to avoid penalties of up to €15 million or 3% of annual worldwide turnover."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the penalties for non-compliance with Article 50?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Failure to comply with Article 50 transparency obligations can result in administrative fines of up to €15 million or 3% of the undertaking's total annual worldwide turnover, whichever is higher. Regulatory authorities may also issue orders to cease non-compliant deployments, require corrective labelling, and impose periodic penalty payments for continuing violations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can MEOK help with Article 50 compliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MEOK's Compliance Suite provides automated tools for applying visible AI labels, embedding machine-readable markers (including C2PA-compliant metadata and W3C standard formats), generating audit trails, and monitoring compliance across your AI deployments. MEOK Pro at £199/mo includes full Article 50 compliance tooling with C2PA integration, custom labelling policies, and audit-ready reporting."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="28" height="28" rx="6" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
+        <path d="M10 16 L14 20 L22 12" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div><span class="navy">MEOK</span> <span>Compliance</span></div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/article-50/">Article 50</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="badge">EU AI Act — Article 50</span>
+    <h1>AI Transparency <span>Requirements</span></h1>
+    <p>Everything you need to know about the EU AI Act's two-layer transparency obligations for AI-generated outputs — visible labels and machine-readable markings.</p>
+    <div class="cta-group">
+      <a href="https://proofof.ai" class="cta-btn">Start Compliance Audit →</a>
+      <a href="/pricing" class="cta-btn-outline">View Pricing</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>What Article 50 <span class="gold">Requires</span></h2>
+    <p>Article 50 of the EU AI Act establishes a comprehensive transparency framework for AI-generated and manipulated content. The core obligation is simple: <strong>any output created or modified by an AI system must be clearly identifiable as such</strong> — both to humans and to automated systems.</p>
+
+    <div class="highlight">
+      <strong>Key deadline:</strong> The transparency obligations for deployers of AI systems that generate or manipulate content become enforceable from <strong>2 August 2026</strong>. Providers of general-purpose AI models must ensure their systems support downstream compliance from the date the model is placed on the market.
+    </div>
+
+    <div class="two-col" style="margin-top:2rem">
+      <div class="card">
+        <h3>Scope of Coverage</h3>
+        <ul>
+          <li>AI-generated text (articles, marketing copy, reports)</li>
+          <li>AI-generated images and graphics (including synthetic media)</li>
+          <li>AI-generated audio (voice synthesis, music, sound effects)</li>
+          <li>AI-generated video (deepfakes, synthetic footage, animation)</li>
+          <li>AI-manipulated content (edited photos, altered recordings)</li>
+          <li>AI-system-to-human interactions (chatbots, voice assistants)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Who Must Comply</h3>
+        <ul>
+          <li><strong>Providers</strong> of general-purpose AI models that generate content</li>
+          <li><strong>Deployers</strong> who use AI systems to create or modify content for end users</li>
+          <li><strong>Distributors</strong> who make AI-generated content available to the public</li>
+          <li><strong>Importers</strong> bringing AI-generated content into the EU market</li>
+          <li><strong>Authorised representatives</strong> acting on behalf of non-EU providers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>The Two-Layer <span class="gold">Marking System</span></h2>
+    <p>Article 50's transparency framework operates on two distinct but complementary layers. Both must be present for full compliance.</p>
+
+    <div class="layer-diagram">
+      <div class="layer-row">
+        <div class="layer-label">Layer 1</div>
+        <div class="layer-bar visible">Visible Marking — for human readers</div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-label">Layer 2</div>
+        <div class="layer-bar machine">Machine-Readable Marking — for automated systems</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>🔵 Layer 1: Visible Marking</h3>
+        <p>A perceptible label or indicator that clearly communicates to any human viewer that the content is AI-generated. Must be:</p>
+        <ul>
+          <li>Clearly legible and understandable to end users</li>
+          <li>Prominently placed (not hidden, buried, or easily removed)</li>
+          <li>Appropriate to the medium — overlay on images, splash text on video, announcement in audio</li>
+          <li>Persistent — not removable through cropping, transcoding, or screenshotting</li>
+          <li>Language-appropriate for the target audience</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🟡 Layer 2: Machine-Readable Marking</h3>
+        <p>A technical marker embedded in the content's metadata, file headers, or digital signature that automated systems can detect and verify. Must be:</p>
+        <ul>
+          <li>Embedded in a standardised format (C2PA, XMP, IPTC)</li>
+          <li>Persistent through common transformations (re-encoding, resizing, format conversion)</li>
+          <li>Tamper-evident — alterations to the content should invalidate the marker</li>
+          <li>Backwards-compatible with existing content management pipelines</li>
+          <li>Verifiable without requiring proprietary tooling</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Implementation <span class="gold">Guidance</span></h2>
+
+    <div class="card">
+      <h3>For Text Content</h3>
+      <p>AI-generated text outputs must include a clear statement that the text was AI-generated. This can be a header/banner reading "AI-Generated Content" or an inline disclosure at the start or end of the text. Machine-readable metadata should be embedded using schema.org/creativeWork encoding or XMP metadata in exported formats (PDF, DOCX).</p>
+    </div>
+
+    <div class="card">
+      <h3>For Image &amp; Video Content</h3>
+      <p>Images require a visible watermark or overlay (e.g. "AI-Generated" badge in the corner) plus C2PA-compliant provenance metadata embedded in the file. Video content additionally needs labelling at the start and end of playback, with a persistent logo overlay during the content.</p>
+    </div>
+
+    <div class="card">
+      <h3>For Audio Content</h3>
+      <p>Synthetic or AI-manipulated audio must include a verbal disclosure at the beginning of the audio track ("This audio was generated by artificial intelligence"). Machine-readable audio watermarking should be applied using frequency-domain watermarking that survives compression and format transcoding.</p>
+    </div>
+
+    <div style="text-align:center;margin-top:2rem">
+      <a href="https://proofof.ai" class="cta-btn">Audit Your AI Outputs Now →</a>
+    </div>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>Frequently Asked <span class="gold">Questions</span></h2>
+
+    <div class="faq-item">
+      <details>
+        <summary>What is Article 50 of the EU AI Act?</summary>
+        <div class="answer">
+          <p>Article 50 of the EU AI Act governs transparency obligations for providers and deployers of AI systems. It requires that AI-generated or manipulated content (text, image, audio, video) be clearly labelled as AI-generated, that deepfakes be disclosed, and that AI systems interacting with humans disclose their artificial nature. These obligations apply across the entire AI value chain, from foundation model providers to downstream deployers.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>What is the two-layer marking requirement?</summary>
+        <div class="answer">
+          <p>Article 50 mandates a two-layer approach: (1) a visible marking that humans can see — such as a label, watermark, or overlay reading "AI-generated" — and (2) a machine-readable marking embedded in the content's metadata or file headers that automated systems can detect. This dual-layer ensures both human awareness and automated compliance monitoring across the content lifecycle.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>Who is responsible for AI labelling?</summary>
+        <div class="answer">
+          <p>Responsibility is shared. Providers of general-purpose AI models must ensure technical capabilities for labelling exist. Deployers (the entities using the AI to generate or manipulate content) are primarily responsible for applying the visible and machine-readable labels to outputs. Both parties must cooperate to ensure compliance, and deployers cannot shift liability back to providers if they fail to implement labelling.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>Does Article 50 apply to all AI-generated content?</summary>
+        <div class="answer">
+          <p>Article 50 applies broadly to AI-generated or manipulated text, images, audio, and video content that could be mistaken for human-created or authentic content. Exceptions exist for content that is clearly AI-generated due to context (e.g., obviously fictional works), content that has undergone substantial human review and editorial control, and content that is lawfully authorised for legitimate purposes. However, these exceptions are narrowly construed.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>When does Article 50 come into effect?</summary>
+        <div class="answer">
+          <p>Article 50 obligations begin phasing in from May 2025. The deepfake and AI-generated content labelling requirements for deployers become enforceable from 2 August 2026. All deployers of AI systems that generate or manipulate content should implement compliance measures well before this date to avoid penalties of up to €15 million or 3% of annual worldwide turnover.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>How can MEOK help with Article 50 compliance?</summary>
+        <div class="answer">
+          <p>MEOK's Compliance Suite provides automated tools for applying visible AI labels, embedding machine-readable markers (including C2PA-compliant metadata and W3C standard formats), generating audit trails, and monitoring compliance across your AI deployments. MEOK Pro at £199/mo includes full Article 50 compliance tooling with C2PA integration, custom labelling policies, and audit-ready reporting.</p>
+          <p><a href="https://proofof.ai" style="color:#c9a84c;font-weight:600">→ Start your compliance audit with MEOK</a></p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://proofof.ai">MEOK Platform</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/article-50-kit">Article 50 Kit</a></li>
+          <li><a href="/compliance-suite">Compliance Suite</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/article-50/">Article 50 Hub</a></li>
+          <li><a href="/article-50/transparency.html">Transparency Guide</a></li>
+          <li><a href="/article-50/marking.html">Marking Spec</a></li>
+          <li><a href="/article-50/deepfake.html">Deepfake Detection</a></li>
+          <li><a href="/article-50/bot.html">Bot Disclosure</a></li>
+          <li><a href="/article-50/code-of-practice.html">Code of Practice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MEOK Compliance. All rights reserved. Part of the MEOK AI Governance Platform.</p>
+      <p style="margin-top:.25rem">EU AI Act compliance solutions — Article 50, 51, 52, 53, 55, and beyond.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

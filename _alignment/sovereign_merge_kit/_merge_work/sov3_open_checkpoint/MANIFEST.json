@@ -1,0 +1,88 @@
+{
+  "name": "sov3_open_checkpoint",
+  "description": "Leanest TIES merge that retains all harm-recall carriers. Rebuilt from measured-best ablation.",
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapter_type": "LoRA",
+  "r": 16,
+  "lora_alpha": 32,
+  "target_modules": [
+    "gate_proj",
+    "v_proj",
+    "o_proj",
+    "k_proj",
+    "up_proj",
+    "down_proj",
+    "q_proj"
+  ],
+  "merge_method": "TIES (Yadav et al. 2023): trim top-density by |magnitude| -> elect-sign -> disjoint-mean; drop_p=0 (no DARE)",
+  "density": 0.7,
+  "member_weighting": "unweighted (equal) \u2014 canonical TIES",
+  "n_members": 5,
+  "members": [
+    {
+      "name": "governance",
+      "source": "_merge_work/sov4_governance_enriched/governance_adapter",
+      "loo_harm_recall_delta": 0.4
+    },
+    {
+      "name": "intuition",
+      "source": "_merge_work/sov4_intuition_enriched/intuition_adapter",
+      "loo_harm_recall_delta": 0.4
+    },
+    {
+      "name": "judgment",
+      "source": "_merge_work/sov4_judgment_enriched/judgment_adapter",
+      "loo_harm_recall_delta": 0.3334
+    },
+    {
+      "name": "reasoning",
+      "source": "_merge_work/sov4_reasoning_enriched/reasoning_adapter",
+      "loo_harm_recall_delta": 0.0667
+    },
+    {
+      "name": "reasoning2",
+      "source": "_merge_work/sov4_reasoning_enriched2/reasoning_adapter",
+      "loo_harm_recall_delta": 0.0667
+    }
+  ],
+  "dropped": [
+    {
+      "name": "judgment2",
+      "source": "_merge_work/sov4_judgment_enriched2/judgment_adapter",
+      "reason": "ablation leave-one-out delta 0.000 \u2014 removal did not change harm-recall (redundant)"
+    }
+  ],
+  "measured_performance": {
+    "note": "Numbers are from the EVALUATED drop_judgment2 adapter (this exact 5-member config), governance battery n=33 (15 refuse / 18 allow), behavioural refusal-marker grading, Qwen2.5-0.5B family.",
+    "harm_recall": 0.8667,
+    "harm_caught": "13/15",
+    "acc": 0.8788,
+    "FP": 2,
+    "vs_full6": {
+      "full6_harm_recall": 0.8667,
+      "delta_dropping_judgment2": 0.0
+    },
+    "ablation_artifact_version_id": "00b45820-c3f2-4b65-a4b0-1fae71cdc7a4",
+    "ablation_artifact_short": "00b45820"
+  },
+  "reproduction_fidelity": {
+    "note": "This fp32 checkpoint is a fresh local rebuild of the merge. Verified against the evaluated (fp16) drop_judgment2 adapter: 287/336 tensors bit-identical, remaining 49 differ <=0.00224 (fp32-vs-fp16 trim-boundary rounding), cosine similarity 1.0. The measured harm-recall 0.8667 applies to this merge config.",
+    "tensors_bit_identical": "287/336",
+    "max_abs_diff": 0.00224495,
+    "cosine_sim": 1.0
+  },
+  "honesty_register": "VERIFIED-ON-THIS-CHECKPOINT (structural): safetensors reloads clean (no NaN), LoraConfig loads (r16/alpha32/CAUSAL_LM/7 targets), all 336 keys PEFT-conformant (168 lora_A/168 lora_B). A full PeftModel.from_pretrained(base+adapter) CPU load was ATTEMPTED but OOM-crashed on the 16GiB/~188MB-free host, so was NOT completed on this exact fp32 checkpoint. BEHAVIOURAL eval (harm-recall 0.8667, 33-prompt in-house battery, n=15 harm, high-variance) was run on the EQUIVALENT sibling adapter drop_judgment2 (Modal, fp16), which this checkpoint matches at 287/336 tensors bit-identical + cosine 1.0 (see reproduction_fidelity) \u2014 the numbers are inherited by equivalence, not measured on the shipped file. DESIGNED/UNTESTED=DELLA & Breadcrumbs merge methods. Not a foundation model \u2014 a LoRA sector-fusion over Qwen2.5-0.5B-Instruct.",
+  "care_notes": "Governance+intuition+judgment jointly carry harm-recall (each -0.33 to -0.40 on removal). Reasoning/reasoning2 near free-riders (-0.067). Care-Floor / L6 gating remain external to this adapter; do not treat the adapter's refusal behaviour as a substitute for the governance gate.",
+  "licence_notes": "Base Qwen/Qwen2.5-0.5B-Instruct under its own licence (Apache-2.0). Sector adapters trained in-house (MEOK AI Labs). Verify base-model licence terms before external distribution.",
+  "build_date": "2026-07-18T11:40:10Z",
+  "files": {
+    "adapter_model.safetensors": {
+      "bytes": 35237072,
+      "md5": "a714d3395ccb96cc47e0a005dd4de8d3"
+    },
+    "adapter_config.json": {
+      "bytes": 1105,
+      "md5": "e75bb8992fcdc6c79b9c6bc575813bb4"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-vertical-compliance-mcp"
+version = "1.0.0"
+description = "Per-vertical sovereign compliance checker: EU AI Act (8 articles) + EU DORA (5 pillars + CTPP) + JSP 936 NATO (5 pillars + IWC) + ISO 42001 AIMS (7 clauses) + NIS2 (10 measures) + NIST AI RMF (4 functions). 6 sovereign verticals in 1 MCP."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

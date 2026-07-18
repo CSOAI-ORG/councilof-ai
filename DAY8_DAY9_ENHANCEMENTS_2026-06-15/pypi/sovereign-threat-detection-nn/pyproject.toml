@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sovereign-threat-detection-nn"
+version = "0.1.0"
+description = "Sovereign sovereign-threat-detection-nn"
+requires-python = ">=3.9"
+license = {text = "CC0-1.0"}
+
+[tool.setuptools]
+packages = ["sovereign-threat-detection-nn"]
+
+[tool.setuptools.package-data]
+sovereign-threat-detection-nn = ["*.pkl"]

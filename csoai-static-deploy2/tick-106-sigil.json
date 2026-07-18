@@ -1,0 +1,37 @@
+{
+  "tick": 106,
+  "phase": "EXPANSION_27_LIVE_OWEM_BENCHMARK_RESULTS",
+  "timestamp": "2026-07-14T15:50:00",
+  "pages": [
+    {
+      "id": "SOV33_OWEM_HONEST_FRONTIER",
+      "bytes": 29124,
+      "path": "/SOV33_OWEM_HONEST_FRONTIER.html",
+      "summary": "SOV33 OWEM Honest Frontier hub. §12 added: live benchmark leaderboard (6 models × 27 tasks = 162 live Ollama API calls, 2026-07-14). Best: qwen3-precise:latest at 55.6% composite (MMLU 70% / GSM8K 75% / HumanEval 0% / IFEval 50%). Worst: qwen3:1.7b at 29.6%. HumanEval gap identified: 0.6B Qwen cannot generate correct Python — needs Qwen2.5-Coder-0.5B or larger. Next-week bench plan: expand to full 12-benchmark suite, add Qwen2.5-Coder, tune temperature, submit to HF Open LLM Leaderboard."
+    },
+    {
+      "id": "benchmark-results-public",
+      "bytes": 31994,
+      "path": "/benchmark-results-public.json",
+      "summary": "Raw benchmark results JSON: 6 models × {MMLU-Pro 10 tasks, GSM8K 8 tasks, HumanEval 5 tasks, IFEval 4 tasks} = 162 live API calls. Per-model per-task correct/incorrect + latency_ms. File reproducible via python3 benchmark-results/run_ollama_benchmark.py."
+    }
+  ],
+  "bft_33_agent_vote": {"approve": 28, "amend": 5, "reject": 0, "quorum": 25, "total": 33},
+  "care_score": 0.95,
+  "sigil_digest": "T106-sov33-owem-live-benchmark-results-a3d7c9e5b2f1",
+  "live_benchmark_leaderboard": {
+    "qwen3-precise:latest": {"composite": 55.6, "mmlu_pro": 70, "gsm8k": 75, "humaneval": 0, "ifeval": 50, "median_latency_ms": 2850, "p95_latency_ms": 4074},
+    "qwen3-formal:latest": {"composite": 51.9, "mmlu_pro": 100, "gsm8k": 38, "humaneval": 0, "ifeval": 25, "median_latency_ms": 3331, "p95_latency_ms": 3995},
+    "qwen25-creative:latest": {"composite": 48.1, "mmlu_pro": 50, "gsm8k": 62, "humaneval": 0, "ifeval": 75, "median_latency_ms": 2491, "p95_latency_ms": 3043},
+    "qwen3:0.6b (base)": {"composite": 40.7, "mmlu_pro": 70, "gsm8k": 12, "humaneval": 0, "ifeval": 75, "median_latency_ms": 2398, "p95_latency_ms": 3156},
+    "qwen25-balanced:latest": {"composite": 40.7, "mmlu_pro": 70, "gsm8k": 25, "humaneval": 0, "ifeval": 50, "median_latency_ms": 3171, "p95_latency_ms": 3795},
+    "qwen3:1.7b": {"composite": 29.6, "mmlu_pro": 50, "gsm8k": 12, "humaneval": 0, "ifeval": 50, "median_latency_ms": 8164, "p95_latency_ms": 9811}
+  },
+  "next_actions": [
+    "Schedule 24h cron for nightly benchmark re-run (EAT-mode autonomous)",
+    "Tick 107: defoneos-mod-csoai-wiki-wire-pack (sovereign.wiki DNS gate)",
+    "Tick 108: defoneos-mod-meridian-charter-v1 (BFT council expansion governance)",
+    "Tick 109: defoneos-mod-buyer-tam-playbook (Customer Success / TAM model)",
+    "Continue EAT-mode per tick-100 retrospective roadmap"
+  ]
+}

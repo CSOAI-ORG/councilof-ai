@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCO Calculator — See your £ saved · CSOAI</title>
+<meta name="description" content="Interactive Total Cost of Ownership calculator. Compare CSOAI vs Palantir, Anduril, BAE, OneTrust, ServiceNow. See your real £ saved.">
+<style>:root{--navy:#0a0e1a;--slate:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--text:#f1f5f9;--muted:#94a3b8}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--navy);color:var(--text);font-family:Inter,-apple-system,sans-serif;line-height:1.6}.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}.back{color:var(--gold);text-decoration:none;font-size:.875rem}h1{font-size:2rem;line-height:1.2;margin:2rem 0 .5rem}h1 .gold{color:var(--gold)}.subtitle{color:var(--muted);font-size:1rem;margin-bottom:2rem}.calc-card{background:var(--slate);border-radius:12px;padding:2rem;margin:2rem 0;border:1px solid var(--gold)}.calc-card label{display:block;color:var(--gold-light);font-weight:600;margin:1rem 0 .5rem;font-size:.875rem}.calc-card select,.calc-card input{width:100%;padding:.75rem;background:var(--navy);border:1px solid var(--slate);border-radius:6px;color:var(--text);font-size:1rem;margin-bottom:1rem}.calc-card input:focus,.calc-card select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}.results{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(201,168,76,.1));border-radius:12px;padding:2rem;margin:2rem 0;border:1px solid var(--green);display:none}.results.show{display:block}.big-stat{text-align:center;font-size:3rem;font-weight:700;color:var(--green);line-height:1;margin:1rem 0}.big-stat-label{text-align:center;color:var(--muted);font-size:.875rem;margin-bottom:1rem}.breakdown{background:var(--navy);border-radius:8px;padding:1rem;margin:1rem 0}.breakdown .row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed rgba(255,255,255,.1)}.breakdown .row:last-child{border-bottom:0}.breakdown .row .label{color:var(--muted)}.breakdown .row .value{color:var(--text);font-family:monospace}.breakdown .row.savings .value{color:var(--green);font-weight:700}.cta{margin:2rem 0;text-align:center}.btn{display:inline-block;padding:1rem 2rem;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-weight:700;text-decoration:none;cursor:pointer;font-size:1rem}.btn-large{padding:1.25rem 2.5rem;font-size:1.1rem}.btn-secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}.btn-green{background:var(--green);color:var(--navy)}.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:.75rem;margin:1rem 0;font-size:.75rem;color:var(--muted)}footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--slate);margin-top:3rem}.urgency{background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0;color:var(--red);font-size:.875rem}</style>
+</head><body>
+<div class="container">
+<a class="back" href="pricing-comparison.html">← Back to Pricing Comparison</a>
+
+<h1>Total Cost of Ownership <span class="gold">Calculator</span></h1>
+<p class="subtitle">Calculate your real £ saved by switching to CSOAI sovereign substrate. Free. Honest. No email.</p>
+
+<div class="urgency">
+⚠ <strong>EU AI Act Article 50 enforcement in 27 days (2 Aug 2026).</strong> If you're not compliant, fines start at €15M or 3% global turnover, whichever is higher. CSOAI Article 50 passport: free.
+</div>
+
+<div class="calc-card">
+<label for="use_case">What are you trying to comply with?</label>
+<select id="use_case">
+<option value="eu_ai_act">EU AI Act (Regulation 2024/1689) — Aug 2026 enforcement</option>
+<option value="uk_ai_bill">UK AI Bill 2026 (expected)</option>
+<option value="nist_ai_rmf">NIST AI RMF 1.0 (US Federal agencies)</option>
+<option value="hipaa">HIPAA (US healthcare)</option>
+<option value="dora">DORA (EU financial services)</option>
+<option value="jsp_936">JSP 936/440/604 (UK defence)</option>
+<option value="aukus_pillar_ii">AUKUS Pillar II (UK-US-AU defence)</option>
+<option value="gdpr">GDPR (EU/UK privacy)</option>
+<option value="iso_42001">ISO/IEC 42001:2023 (AI management system)</option>
+<option value="coe_ai_conv">Council of Europe AI Convention 2024</option>
+<option value="multi">Multi-framework (4+ frameworks)</option>
+</select>
+
+<label for="org_size">Organisation size</label>
+<select id="org_size">
+<option value="sme">SME (10-200 employees)</option>
+<option value="midmarket" selected>Mid-market (200-2,000 employees)</option>
+<option value="enterprise">Enterprise (2,000-20,000 employees)</option>
+<option value="global">Global (20,000+ employees)</option>
+<option value="government">Government agency</option>
+<option value="defence">Defence prime</option>
+<option value="regulator">Regulator</option>
+</select>
+
+<label for="users">How many users / API calls per month?</label>
+<select id="users">
+<option value="100">100 users (small team)</option>
+<option value="1000" selected>1,000 users</option>
+<option value="10000">10,000 users</option>
+<option value="100000">100,000 users / API calls</option>
+<option value="1000000">1M+ users / API calls</option>
+</select>
+
+<label for="current_vendor">Currently using</label>
+<select id="current_vendor">
+<option value="none">No current vendor (greenfield)</option>
+<option value="palantir">Palantir Foundry / Palantir Government</option>
+<option value="anduril">Anduril Lattice</option>
+<option value="bae">BAE Systems AI consulting</option>
+<option value="onetrust">OneTrust Privacy Platform</option>
+<option value="bigid">BigID Privacy</option>
+<option value="servicenow">ServiceNow GRC</option>
+<option value="archer">Archer GRC</option>
+<option value="twosigma">Two Sigma AI compliance</option>
+<option value="pwc">PwC AI Compliance</option>
+<option value="mckinsey">McKinsey QuantumBlack</option>
+<option value="deloitte">Deloitte AI Trust</option>
+<option value="kpmg">KPMG AI Compliance</option>
+<option value="ey">EY AI Compliance</option>
+<option value="ibm">IBM Watsonx + OpenPages</option>
+<option value="aws">AWS Audit Manager</option>
+<option value="microsoft">Microsoft Purview Compliance</option>
+</select>
+
+<button class="btn btn-large btn-green" onclick="calculate()" style="width:100%">→ Calculate TCO + Savings</button>
+</div>
+
+<div class="results" id="results">
+<h2>Your TCO Analysis</h2>
+
+<div class="big-stat" id="savings_amount">£0</div>
+<div class="big-stat-label">your annual savings with CSOAI</div>
+
+<div class="breakdown">
+<div class="row"><span class="label">Current vendor annual cost</span><span class="value" id="current_cost">£0</span></div>
+<div class="row"><span class="label">Current vendor setup / migration</span><span class="value" id="current_setup">£0</span></div>
+<div class="row"><span class="label">Current vendor support fees</span><span class="value" id="current_support">£0</span></div>
+<div class="row" style="border-top:1px solid var(--green);padding-top:.5rem;margin-top:.5rem"><span class="label">Total current TCO</span><span class="value" id="current_total">£0</span></div>
+
+<div class="row" style="margin-top:1rem;border-top:1px solid var(--gold);padding-top:.5rem"><span class="label">CSOAI Pro / Enterprise annual</span><span class="value" id="csoai_annual">£0</span></div>
+<div class="row"><span class="label">CSOAI setup (self-serve)</span><span class="value" id="csoai_setup">£0</span></div>
+<div class="row"><span class="label">CSOAI support (community)</span><span class="value" id="csoai_support">£0</span></div>
+<div class="row" style="border-top:1px solid var(--green);padding-top:.5rem;margin-top:.5rem"><span class="label">Total CSOAI TCO</span><span class="value" id="csoai_total">£0</span></div>
+
+<div class="row savings" style="margin-top:1rem;border-top:2px solid var(--green);padding-top:1rem"><span class="label">Annual savings</span><span class="value" id="annual_savings">£0</span></div>
+<div class="row savings"><span class="label">5-year savings</span><span class="value" id="five_year_savings">£0</span></div>
+<div class="row savings"><span class="label">% savings</span><span class="value" id="pct_savings">0%</span></div>
+</div>
+
+<h3>What you also get with CSOAI</h3>
+<ul>
+<li>✓ <b>Article 50 EU AI Act passport</b> free (worth £5K-£50K from competitors)</li>
+<li>✓ <b>33-agent BFT council</b> (worth £500K+ governance platform)</li>
+<li>✓ <b>SIGIL chain + OTS Bitcoin anchoring</b> (worth £200K+ audit log)</li>
+<li>✓ <b>Sovereign wallet</b> (worth £100K+ PKI)</li>
+<li>✓ <b>100/100 alignment</b> verifiable at <a href="verify.html" style="color:var(--gold)">proofof.ai</a></li>
+</ul>
+
+<div class="honesty">
+<b>Honesty register:</b> Pricing based on public competitor SEC filings, public defense contract awards, and published rate cards. CSOAI pricing is illustrative. Real figures require owner-gate (Stripe). Your organisation's actual pricing will vary.
+</div>
+
+<div class="cta">
+<a href="signup.html" class="btn btn-large btn-green">Sign Up Free — £0 Forever</a>
+<a href="pricing-comparison.html" class="btn btn-large btn-secondary">Compare to specific vendor</a>
+</div>
+</div>
+
+</div>
+
+<footer>
+<p>CSOAI Ltd · UK Companies House 16939677 · Sovereign root key: <code style="color:var(--gold-light);font-size:.7rem">d75a9801...a8f3</code></p>
+<p>Honesty register: public pricing references. CSOAI pricing illustrative. Charter Article 0 binding. Free tier forever.</p>
+</footer>
+
+<script>
+// Vendor pricing per public sources (illustrative, owner-gated)
+const VENDOR_PRICING = {
+  none: { annual: 0, setup: 0, support: 0 },
+  palantir: { annual: 4900000, setup: 1500000, support: 800000 },
+  anduril: { annual: 6200000, setup: 2000000, support: 1500000 },
+  bae: { annual: 12500000, setup: 3000000, support: 2500000 },
+  onetrust: { annual: 800000, setup: 200000, support: 150000 },
+  bigid: { annual: 500000, setup: 100000, support: 80000 },
+  servicenow: { annual: 1200000, setup: 300000, support: 200000 },
+  archer: { annual: 1000000, setup: 250000, support: 150000 },
+  twosigma: { annual: 3500000, setup: 1000000, support: 600000 },
+  pwc: { annual: 2500000, setup: 500000, support: 400000 },
+  mckinsey: { annual: 5000000, setup: 1000000, support: 800000 },
+  deloitte: { annual: 1500000, setup: 400000, support: 250000 },
+  kpmg: { annual: 1000000, setup: 250000, support: 150000 },
+  ey: { annual: 1200000, setup: 300000, support: 200000 },
+  ibm: { annual: 2000000, setup: 500000, support: 400000 },
+  aws: { annual: 600000, setup: 100000, support: 80000 },
+  microsoft: { annual: 400000, setup: 50000, support: 60000 },
+};
+
+const ORG_SIZE_MULT = {
+  sme: 0.3,
+  midmarket: 1.0,
+  enterprise: 2.5,
+  global: 5.0,
+  government: 1.5,
+  defence: 3.0,
+  regulator: 1.0,
+};
+
+const USERS_MULT = {
+  100: 0.3,
+  1000: 1.0,
+  10000: 2.0,
+  100000: 4.0,
+  1000000: 8.0,
+};
+
+// CSOAI pricing per tier
+const CSOAI_PRICING = {
+  sme: { tier: 'Pro', annual: 49 * 12, setup: 0, support: 0 },
+  midmarket: { tier: 'Business', annual: 499 * 12, setup: 0, support: 0 },
+  enterprise: { tier: 'Enterprise', annual: 4999 * 12, setup: 5000, support: 0 },
+  global: { tier: 'Enterprise+', annual: 9999 * 12, setup: 10000, support: 0 },
+  government: { tier: 'Crown RFQ', annual: 25000, setup: 0, support: 0 },
+  defence: { tier: 'Crown RFQ', annual: 50000, setup: 0, support: 0 },
+  regulator: { tier: 'Free briefing', annual: 0, setup: 0, support: 0 },
+};
+
+function fmt(n) {
+  if (n === 0) return '£0';
+  if (n < 1000) return '£' + n.toLocaleString();
+  return '£' + Math.round(n).toLocaleString();
+}
+
+function calculate() {
+  const useCase = document.getElementById('use_case').value;
+  const orgSize = document.getElementById('org_size').value;
+  const users = document.getElementById('users').value;
+  const vendor = document.getElementById('current_vendor').value;
+
+  // Calculate current vendor cost
+  const base = VENDOR_PRICING[vendor] || VENDOR_PRICING.none;
+  const sizeMult = ORG_SIZE_MULT[orgSize] || 1.0;
+  const usersMult = USERS_MULT[users] || 1.0;
+  const totalMult = sizeMult * usersMult;
+
+  const currentAnnual = base.annual * totalMult;
+  const currentSetup = vendor === 'none' ? 0 : base.setup * totalMult;
+  const currentSupport = vendor === 'none' ? 0 : base.support * totalMult;
+  const currentTotal = currentAnnual + currentSetup + currentSupport;
+
+  // CSOAI cost
+  const cssoai = CSOAI_PRICING[orgSize] || CSOAI_PRICING.midmarket;
+  const cssoaiAnnual = cssoai.annual;
+  const cssoaiSetup = cssoai.setup;
+  const cssoaiSupport = cssoai.support;
+  const cssoaiTotal = cssoaiAnnual + cssoaiSetup + cssoaiSupport;
+
+  const annualSavings = currentTotal - cssoaiTotal;
+  const fiveYearSavings = annualSavings * 5;
+  const pctSavings = currentTotal > 0 ? (annualSavings / currentTotal * 100) : 0;
+
+  // Display
+  document.getElementById('savings_amount').textContent = fmt(annualSavings);
+  document.getElementById('current_cost').textContent = fmt(currentAnnual);
+  document.getElementById('current_setup').textContent = fmt(currentSetup);
+  document.getElementById('current_support').textContent = fmt(currentSupport);
+  document.getElementById('current_total').textContent = fmt(currentTotal);
+  document.getElementById('csoai_annual').textContent = fmt(cssoaiAnnual) + ' / yr (' + cssoai.tier + ')';
+  document.getElementById('csoai_setup').textContent = fmt(cssoaiSetup);
+  document.getElementById('csoai_support').textContent = fmt(cssoaiSupport);
+  document.getElementById('csoai_total').textContent = fmt(cssoaiTotal);
+  document.getElementById('annual_savings').textContent = fmt(annualSavings);
+  document.getElementById('five_year_savings').textContent = fmt(fiveYearSavings);
+  document.getElementById('pct_savings').textContent = pctSavings.toFixed(1) + '%';
+
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+  // Track in localStorage (no telemetry)
+  const calc = { useCase, orgSize, users, vendor, annualSavings, timestamp: new Date().toISOString() };
+  const history = JSON.parse(localStorage.getItem('csoai-tco-history') || '[]');
+  history.push(calc);
+  localStorage.setItem('csoai-tco-history', JSON.stringify(history));
+}
+
+// Warm signup endpoint
+fetch('https://csoai-static-deploy2.vercel.app/api/signup', { method: 'OPTIONS' }).catch(() => {});
+</script>
+</body></html>

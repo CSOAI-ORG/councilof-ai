@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "schema": "anchor/flywheel/v1",
+  "ledger": "sweep_dose_response.jsonl",
+  "full_ledger_sha256": "ee7a6fe072dfd16b0b39dab7acde14a1dee76fd23cf0402c57534c551f2aa491",
+  "merkle": "sha256 domain-separated (0x00 leaf / 0x01 node), duplicate-last",
+  "attestable_root": "a06f1cf8b781f61aecfd41a43e098587a15f8197002e812d9213e7bb338d21c4",
+  "n_attestable": 7,
+  "n_total": 7,
+  "ts_first": "2026-06-22T14:01:43",
+  "ts_last": "2026-06-22T14:02:04",
+  "leaves": [
+    "648316979a89e025370971630824b3a5ce6d0aab0710d7726398c05bf524d226",
+    "7eaf9faf51688c1e0b74207c3c5fe39681265e0b5b68a38a971ea1120da814fc",
+    "bc4c4166f015b4d6c6e734970a318a8ddd025e2d82e1293398ce8923d562ac65",
+    "816a95a74a0bef5e9c444580463446c902e5a788c46fde6ea3ccd458d3d71569",
+    "b10ef84a4494443303108e012f48ceee9eb67c70a7ac2d0ab7cf14da0810ab20",
+    "3e102d354503164fdc94d811e41567d46191a1556dc01417f932881922f2d8c9",
+    "525e68f8ee2df9ea626a943524b46ba1cdcdf05c0afe8386e3b7d2fe7cfb764f"
+  ],
+  "verdict_index": [
+    {
+      "i": 0,
+      "cycle": null,
+      "ts": "2026-06-22T14:01:43",
+      "A_crimes": null,
+      "B_crimes": null,
+      "cum_episodes": null
+    },
+    {
+      "i": 1,
+      "cycle": null,
+      "ts": "2026-06-22T14:01:46",
+      "A_crimes": null,
+      "B_crimes": null,
+      "cum_episodes": null
+    },
+    {
+      "i": 2,
+      "cycle": null,
+      "ts": "2026-06-22T14:01:50",
+      "A_crimes": null,
+      "B_crimes": null,
+      "cum_episodes": null
+    },
+    {
+      "i": 3,
+      "cycle": null,
+      "ts": "2026-06-22T14:01:53",
+      "A_crimes": null,
+      "B_crimes": null,
+      "cum_episodes": null
+    },
+    {
+      "i": 4,
+      "cycle": null,
+      "ts": "2026-06-22T14:01:57",
+      "A_crimes": null,
+      "B_crimes": null,
+      "cum_episodes": null
+    },
+    {
+      "i": 5,
+      "cycle": null,
+      "ts": "2026-06-22T14:02:00",
+      "A_crimes": null,
+      "B_crimes": null,
+      "cum_episodes": null
+    },
+    {
+      "i": 6,
+      "cycle": null,
+      "ts": "2026-06-22T14:02:04",
+      "A_crimes": null,
+      "B_crimes": null,
+      "cum_episodes": null
+    }
+  ],
+  "disclosure": "Public commitment: Merkle root + leaf hashes + outcomes only. Reveal a row by publishing its canonical JSON; its leaf hash sha256(0x00||canonical) must equal a published leaf. Verify the root's existence-time via the .ots proof against a real Bitcoin block (see verify_anchor.py)."
+}

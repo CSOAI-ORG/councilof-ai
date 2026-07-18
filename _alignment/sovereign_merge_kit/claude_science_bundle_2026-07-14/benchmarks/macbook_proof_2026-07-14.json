@@ -1,0 +1,20 @@
+{
+  "ts": "2026-07-14T07:40:00+00:00",
+  "platform": "macOS 26.5.1 arm64",
+  "metal_gpu": "Apple M4",
+  "mlx_verified": true,
+  "metal_throughput_tflops": 1.06,
+  "metal_bench": "2048x2048 in 16.2ms/op = 1.06 TFLOPS on M4 GPU",
+  "model_tested": "qwen3:1.7b (MIT, open-source)",
+  "warmup": {
+    "tokens": 260,
+    "time_s": 8.9,
+    "tok_per_s": 29.2
+  },
+  "implication": "any M4 16GB owner can run frontier-class sovereign inference at £0 compute",
+  "open_weights_used": ["Qwen3-1.7B (MIT)", "Qwen3-0.6B (Apache 2.0)", "Qwen2.5-3B (Apache 2.0)"],
+  "mlx_installed": true,
+  "ollama_models": 7,
+  "total_disk_used": "5.8GB for all ollama + 1.4GB for HF cache",
+  "vs_frontier_rental": "$0 vs $1500-3000/month cloud GPU rental"
+}

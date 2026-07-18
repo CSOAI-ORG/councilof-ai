@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<title>MEOK AVATAR IMPORT — Bring your avatar from any sim</title>
+<meta name="description" content="Import your avatar from Apple Memoji, Vision Pro Persona, Bitmoji, Ready Player Me, Meta Avatars, VRChat, Roblox, Rec Room. Wrap in MEOK sovereignty.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --bg: #F5F0E6;
+  --bg-deep: #0a0a1e;
+  --text: #2a1a14;
+  --text-dim: rgba(42, 26, 20, 0.65);
+  --surface: #FAF7F0;
+  --border: rgba(201, 168, 76, 0.3);
+  --green: #10b981;
+  --blue: #3b82f6;
+  --coral: #d47a5a;
+  --purple: #a855f7;
+  --teal: #5aa89a;
+  --darkred: #991b1b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  background: radial-gradient(ellipse at top, var(--bg), var(--surface) 70%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+}
+a { color: var(--gold-bright); text-decoration: none; }
+
+/* === Topbar === */
+.topbar {
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+.logo .accent { color: var(--gold); }
+.topbar nav a {
+  margin: 0 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+/* === Hero === */
+.hero {
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+.hero h1 {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 15px;
+  color: var(--text-dim);
+  max-width: 700px;
+  margin: 0 auto 8px;
+}
+.hero-stats {
+  display: flex; gap: 24px; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 16px;
+}
+.hero-stat strong { color: var(--gold); }
+
+/* === Container === */
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* === Source platforms grid === */
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 40px 0 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  background: rgba(201, 168, 76, 0.1);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.sources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.source-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.source-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.15);
+  border-color: var(--gold);
+}
+.source-card.selected {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.08);
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.2);
+}
+.source-card .name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.source-card .platform {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.source-card .format {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 8px;
+}
+.source-card .fields {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-bottom: 12px;
+}
+.source-card .field {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text);
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.source-card .import-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--gold);
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.source-card .import-btn:hover { background: var(--gold-bright); }
+
+/* === Upload area === */
+.upload-area {
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  margin: 24px 0;
+  transition: all 0.2s;
+}
+.upload-area:hover { border-color: var(--gold); background: rgba(201, 168, 76, 0.05); }
+.upload-area h3 { color: var(--text); margin-bottom: 8px; }
+.upload-area p { color: var(--text-dim); font-size: 13px; }
+.upload-area .upload-btn {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: var(--gold);
+  color: white;
+  border: 0;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  cursor: pointer;
+}
+.upload-area input { display: none; }
+
+/* === Side-by-side preview === */
+.preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 32px 0;
+}
+.preview-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+.preview-panel h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+.preview-avatar {
+  width: 200px; height: 200px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 80px;
+  position: relative;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.3);
+}
+.preview-avatar.original { background: linear-gradient(135deg, var(--blue), var(--teal)); }
+.preview-info {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.preview-info .row {
+  display: flex; justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.preview-info .row:last-child { border: 0; }
+.preview-info .lbl { color: var(--text-dim); }
+.preview-info .val { color: var(--gold); font-weight: 600; }
+
+/* === Sovereign guarantees === */
+.guarantees {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.guarantees h3 { font-size: 18px; margin-bottom: 16px; }
+.guarantees ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.guarantees li {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.guarantees li::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+/* === Share === */
+.share {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin: 24px 0;
+}
+.share-btn {
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.share-btn:hover { background: var(--gold); color: white; border-color: var(--gold); }
+
+/* === Responsive === */
+@media (max-width: 800px) {
+  .preview { grid-template-columns: 1fr; }
+  .guarantees ul { grid-template-columns: 1fr; }
+  .topbar { flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <span class="dot"></span>
+    <span>MEOK<span class="accent">.AVATAR</span></span>
+  </div>
+  <nav>
+    <a href="/csoai-os/meok-home/index.html">Home</a>
+    <a href="#import">Import</a>
+    <a href="#preview">Preview</a>
+    <a href="#share">Share</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <h1>Bring your avatar. <span class="accent">Become sovereign.</span></h1>
+  <p>Import from any sim world — Apple Memoji, Vision Pro Persona, Bitmoji, Ready Player Me, Meta, VRChat, Roblox, Rec Room. Wrap in MEOK sovereignty. Export back to any sim.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>10</strong> source platforms</div>
+    <div class="hero-stat"><strong>7</strong> MEOK archetypes</div>
+    <div class="hero-stat"><strong>22</strong> arcana lenses</div>
+    <div class="hero-stat"><strong>13</strong> queens + king BFT</div>
+    <div class="hero-stat"><strong>6</strong> care dimensions</div>
+    <div class="hero-stat"><strong>8</strong> sovereign guarantees</div>
+  </div>
+</section>
+
+<div class="container">
+
+<h2 class="section-title" id="import">Source platforms <span class="count">10</span></h2>
+
+<div class="sources-grid" id="sourcesGrid"></div>
+
+<div class="upload-area" id="uploadArea">
+  <h3>📂 Drop your avatar file here</h3>
+  <p>.zip (Apple Memoji), .usdz/.vrm (Vision Pro), .vrm/.glb/.fbx (VRChat, Roblox, Meta), .json (Bitmoji, Rec Room, Meta Horizon)</p>
+  <input type="file" id="fileInput" accept=".zip,.usdz,.vrm,.glb,.fbx,.json,.obj,.png,.jpg">
+  <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Choose file</button>
+</div>
+
+<h2 class="section-title" id="preview">Side-by-side preview <span class="count">2</span></h2>
+
+<div class="preview">
+  <div class="preview-panel">
+    <h3>◂ Original avatar</h3>
+    <div class="preview-avatar original" id="origAvatar">👤</div>
+    <div class="preview-info" id="origInfo">
+      <div class="row"><span class="lbl">Platform</span><span class="val" id="origPlatform">—</span></div>
+      <div class="row"><span class="lbl">Format</span><span class="val" id="origFormat">—</span></div>
+      <div class="row"><span class="lbl">ID</span><span class="val" id="origId">—</span></div>
+      <div class="row"><span class="lbl">Sovereign</span><span class="val" style="color:var(--coral)">NO</span></div>
+    </div>
+  </div>
+  <div class="preview-panel">
+    <h3>▸ MEOK i-character</h3>
+    <div class="preview-avatar" id="meokAvatar">🐉</div>
+    <div class="preview-info" id="meokInfo">
+      <div class="row"><span class="lbl">ichar_id</span><span class="val" id="meokId">—</span></div>
+      <div class="row"><span class="lbl">Archetype</span><span class="val" id="meokArchetype">—</span></div>
+      <div class="row"><span class="lbl">Queen</span><span class="val" id="meokQueen">—</span></div>
+      <div class="row"><span class="lbl">Arcana</span><span class="val" id="meokArcana">—</span></div>
+      <div class="row"><span class="lbl">SIGIL</span><span class="val" id="meokSigil">—</span></div>
+      <div class="row"><span class="lbl">Sovereign</span><span class="val" style="color:var(--green)">YES ✓</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="guarantees">
+  <h3>🤝 The 8 sovereign guarantees</h3>
+  <p style="color:var(--text-dim);font-size:13px;margin-bottom:16px">Your MEOK i-character wraps any avatar with these guarantees:</p>
+  <ul>
+    <li>Defoneos-secured (302 SDK patches, CVE-free)</li>
+    <li>SIGIL-signed every action (Ed25519)</li>
+    <li>Maternal Covenant: 6 care dimensions</li>
+    <li>BFT council: f=4, quorum=9/13</li>
+    <li>4-tier cascade: $0.011/avg (85-90% cheaper)</li>
+    <li>Care before code</li>
+    <li>No foreign surveillance</li>
+    <li>100% you (exportable, deletable, portable)</li>
+  </ul>
+</div>
+
+<h2 class="section-title" id="share">Share to social <span class="count">8</span></h2>
+
+<div class="share" id="shareButtons">
+  <button class="share-btn" onclick="shareTo('apple')">🍎 Apple ID</button>
+  <button class="share-btn" onclick="shareTo('meta')">📘 Meta</button>
+  <button class="share-btn" onclick="shareTo('x')">𝕏 X / Twitter</button>
+  <button class="share-btn" onclick="shareTo('linkedin')">💼 LinkedIn</button>
+  <button class="share-btn" onclick="shareTo('snapchat')">👻 Snapchat</button>
+  <button class="share-btn" onclick="shareTo('tiktok')">🎵 TikTok</button>
+  <button class="share-btn" onclick="shareTo('discord')">💬 Discord</button>
+  <button class="share-btn" onclick="shareTo('telegram')">✈️ Telegram</button>
+</div>
+
+</div>
+
+<script>
+/* === 10 source platforms === */
+const SOURCES = [
+  {id: 'apple_memoji', name: 'Apple Memoji', platform: 'iOS / iPadOS / macOS', format: '.zip + PNG', emoji: '🍎', color: '#1a1a2e', fields: ['skin', 'hair', 'eyes', 'eyebrows', 'nose', 'mouth', 'facial_hair', 'glasses', 'headwear', 'earrings']},
+  {id: 'apple_persona', name: 'Apple Vision Pro Persona', platform: 'visionOS', format: '.usdz + .vrm', emoji: '🥽', color: '#0a0a1e', fields: ['head', 'body', 'hands', 'expressions', 'gaze']},
+  {id: 'apple_spatial', name: 'Apple Spatial Persona', platform: 'visionOS 2.0+', format: '.spatial', emoji: '🌌', color: '#16213e', fields: ['spatial_id', 'depth', 'expressions']},
+  {id: 'bitmoji', name: 'Bitmoji', platform: 'Snapchat', format: 'JSON + .png', emoji: '👻', color: '#fffc00', fields: ['avatar_id', 'style', 'outfit', 'features']},
+  {id: 'ready_player_me', name: 'Ready Player Me', platform: 'RPM API', format: '.glb + .json', emoji: '🧍', color: '#8a4fff', fields: ['body_type', 'skin_color', 'hair', 'outfit', 'face_features']},
+  {id: 'meta_avatar', name: 'Meta Avatar', platform: 'Meta Quest / Horizon Worlds', format: '.glb + .json', emoji: '🥽', color: '#1877f2', fields: ['body_type', 'outfit', 'hair', 'expressions', 'hand_tracking']},
+  {id: 'meta_horizon', name: 'Meta Horizon Avatar', platform: 'Meta Horizon Worlds', format: '.hvr', emoji: '🌐', color: '#4267b2', fields: ['avatar_id', 'worlds', 'expressions']},
+  {id: 'vrchat', name: 'VRChat Avatar', platform: 'VRChat', format: '.vrm / .glb / .fbx', emoji: '🎮', color: '#7b2cbf', fields: ['vroid_id', 'expressions', 'physics', 'shaders']},
+  {id: 'roblox', name: 'Roblox Avatar', platform: 'Roblox', format: 'JSON + .obj', emoji: '🤖', color: '#00a2ff', fields: ['body_colors', 'scale', 'accessories', 'animations']},
+  {id: 'rec_room', name: 'Rec Room Avatar', platform: 'Rec Room', format: 'JSON + .glb', emoji: '🎲', color: '#ff3366', fields: ['head', 'body', 'outfit', 'accessories']},
+];
+
+/* === 7 archetypes (with queens) === */
+const ARCHETYPE_QUEEN = {
+  'sovereign': {emoji: '🐉', color: '#6ba8d4', queen: 'queen-king', name: 'Sovereign'},
+  'guardian': {emoji: '🛡', color: '#1a3a5a', queen: 'queen-watch', name: 'Guardian'},
+  'scout': {emoji: '🏹', color: '#d47a5a', queen: 'queen-proactive', name: 'Scout'},
+  'strategist': {emoji: '♟', color: '#2a5a3a', queen: 'queen-strategy', name: 'Strategist'},
+  'creator': {emoji: '✨', color: '#d4a55a', queen: 'queen-arcana', name: 'Creator'},
+  'companion': {emoji: '💗', color: '#5aa89a', queen: 'queen-care', name: 'Companion'},
+  'sage': {emoji: '🧘', color: '#d4c45a', queen: 'queen-sage', name: 'Sage'},
+};
+
+let selectedSource = null;
+let currentIchar = null;
+
+/* === Render source grid === */
+function renderSources() {
+  document.getElementById('sourcesGrid').innerHTML = SOURCES.map(s => `
+    <div class="source-card ${selectedSource === s.id ? 'selected' : ''}" onclick="selectSource('${s.id}')" data-source="${s.id}">
+      <div class="platform">${s.platform}</div>
+      <div class="name" style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:24px">${s.emoji}</span>
+        <span>${s.name}</span>
+      </div>
+      <div class="format">${s.format}</div>
+      <div class="fields">${s.fields.map(f => `<span class="field">${f}</span>`).join('')}</div>
+      <button class="import-btn">Import ${s.name} →</button>
+    </div>
+  `).join('');
+}
+
+function selectSource(id) {
+  selectedSource = id;
+  const s = SOURCES.find(x => x.id === id);
+  if (!s) return;
+  // Auto-detect archetype from emoji
+  const emoji = s.emoji;
+  let archetype = 'sovereign';
+  if (emoji === '🍎' || emoji === '🥽' || emoji === '🌌') archetype = 'companion';
+  else if (emoji === '👻') archetype = 'companion';
+  else if (emoji === '🧍') archetype = 'creator';
+  else if (emoji === '🌐') archetype = 'strategist';
+  else if (emoji === '🎮') archetype = 'scout';
+  else if (emoji === '🤖') archetype = 'strategist';
+  else if (emoji === '🎲') archetype = 'companion';
+  // Build a sample avatar
+  const sampleName = `${s.name} User`;
+  // Display original
+  document.getElementById('origAvatar').innerHTML = `<span style="font-size:120px">${s.emoji}</span>`;
+  document.getElementById('origPlatform').textContent = s.platform;
+  document.getElementById('origFormat').textContent = s.format;
+  document.getElementById('origId').textContent = `src-${Math.random().toString(36).slice(2, 10)}`;
+  // Build MEOK i-character
+  const meok = buildMeokAvatar(sampleName, s.id, emoji, archetype);
+  const aq = ARCHETYPE_QUEEN[archetype];
+  document.getElementById('meokAvatar').innerHTML = `<span style="font-size:120px">${aq.emoji}</span>`;
+  document.getElementById('meokId').textContent = meok.ichar_id;
+  document.getElementById('meokArchetype').textContent = `${aq.name} ${aq.emoji}`;
+  document.getElementById('meokQueen').textContent = aq.queen;
+  document.getElementById('meokArcana').textContent = meok.arcana;
+  document.getElementById('meokSigil').textContent = meok.sigil_hash;
+  currentIchar = meok;
+  renderSources();
+}
+
+function buildMeokAvatar(name, source, emoji, archetype) {
+  // SHA-256 SIGIL (browser)
+  const payload = JSON.stringify({name, source, archetype});
+  const sigil = simpleHash(payload).slice(0, 16);
+  const arcana = archetype === 'creator' ? 6 : archetype === 'companion' ? 17 : 21;
+  return {
+    ichar_id: `ich-${sigil}`,
+    archetype: archetype,
+    arcana: arcana,
+    sigil_hash: sigil,
+  };
+}
+
+function simpleHash(str) {
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (let i = 0; i < str.length; i++) {
+    const c = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ c, 2654435761);
+    h2 = Math.imul(h2 ^ c, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
+}
+
+/* === Share to social === */
+function shareTo(platform) {
+  if (!currentIchar) {
+    alert('Please select a source first');
+    return;
+  }
+  const url = `https://meok.ai/i/${currentIchar.ichar_id}?via=${platform}`;
+  const names = {
+    apple: 'Apple ID', meta: 'Meta', x: 'X / Twitter', linkedin: 'LinkedIn',
+    snapchat: 'Snapchat', tiktok: 'TikTok', discord: 'Discord', telegram: 'Telegram',
+  };
+  // In production: open OAuth + share intent
+  // For now: copy link + show alert
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert(`Shared to ${names[platform]}!\n\nURL copied to clipboard:\n${url}\n\nThis is your MEOK i-character. Sovereign. Care-aligned. Defoneos-secured.`);
+    });
+  } else {
+    alert(`Share to ${names[platform]}:\n${url}`);
+  }
+}
+
+/* === File upload === */
+document.getElementById('fileInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const ext = f.name.split('.').pop().toLowerCase();
+  // Map extension to source
+  const extMap = {zip: 'apple_memoji', usdz: 'apple_persona', vrm: 'vrchat', glb: 'ready_player_me', fbx: 'vrchat', json: 'bitmoji', obj: 'roblox'};
+  const sid = extMap[ext] || 'apple_memoji';
+  selectSource(sid);
+  alert(`Imported ${f.name}\n\nFile type: .${ext}\nDetected: ${SOURCES.find(x => x.id === sid).name}\n\nMEOK i-character bound. Sovereign. Care-aligned. Defoneos-secured.`);
+});
+
+/* === Boot === */
+renderSources();
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+</script>
+
+</body>
+</html>

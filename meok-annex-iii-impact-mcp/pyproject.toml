@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meok-annex-iii-impact-mcp"
+version = "0.1.1"
+description = "Automated EU AI Act Annex III risk classification and impact assessment engine"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [
+  {name = "MEOK AI Labs CSOAI LTD", email = "csoai@meok.ai"},
+]
+keywords = ["eu-ai-act", "annex-iii", "fria", "risk-classification", "mcp", "compliance"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "cryptography>=42.0.0",
+  "mcp>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "pytest-asyncio>=0.23.0",
+]
+
+[project.scripts]
+meok-annex-iii-impact-mcp = "meok_annex_iii_impact_mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/meok-ai-labs/meok-annex-iii-impact-mcp"
+Repository = "https://github.com/meok-ai-labs/meok-annex-iii-impact-mcp"
+Issues = "https://github.com/meok-ai-labs/meok-annex-iii-impact-mcp/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["meok_annex_iii_impact_mcp*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"

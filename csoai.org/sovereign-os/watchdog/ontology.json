@@ -1,0 +1,90 @@
+{
+  "$schema": "https://csoai.org/schemas/watchdog-report-v1.json",
+  "name": "SiriusWatchdogReport",
+  "version": "1.0.0",
+  "license": "MIT + CC0 1.0",
+  "description": "The sovereign report ontology for the AI economy's collective nervous system. Reports from humans, agents, humanoids, systems.",
+  "types": {
+    "WatchdogReport": {
+      "fields": {
+        "id": "UUID",
+        "timestamp": "ISO8601",
+        "reporter": {
+          "type": "enum(human|agent|humanoid|system)",
+          "id": "string",
+          "trust_score": "float 0.0-1.0 (derived from SIGIL history)"
+        },
+        "location": {
+          "lat": "float",
+          "lng": "float",
+          "altitude_m": "float?",
+          "area_name": "string?"
+        },
+        "type": "enum(safety|infrastructure|environment|social|health|economic|unclassified)",
+        "subtype": "string (e.g. crime.assault, infra.power_outage, env.air_quality)",
+        "severity": "float 0.0-1.0",
+        "confidence": "float 0.0-1.0",
+        "description": "string (max 2000 chars)",
+        "evidence": {
+          "media": "array<URI>?",
+          "sensors": "object? (raw sensor data: wifi_spectrum, lidar, audio, thermal)"
+        },
+        "sigil": "string (Ed25519 + PQC ML-DSA-65 hex)",
+        "status": "enum(active|resolved|false_positive|expired)"
+      }
+    },
+    "PreDepartureSim": {
+      "description": "Pre-departure route simulation for humanoids/agents",
+      "fields": {
+        "agent_id": "string",
+        "scope": "string (task name)",
+        "start": {
+          "lat": "float",
+          "lng": "float"
+        },
+        "end": {
+          "lat": "float",
+          "lng": "float"
+        },
+        "candidate_routes": "array<Route>",
+        "data_sources": {
+          "watchdog_reports": "array<WatchdogReport>",
+          "cameras": "array<Camera>",
+          "wifi_spectrum": "object",
+          "weather": "object",
+          "acoustics": "object",
+          "air_quality": "object",
+          "other_humanoids": "array<HumanoidPosition>",
+          "municipal": "object"
+        },
+        "best_route": "Route (with care_floor_ok, bft_pass, sigil)"
+      }
+    },
+    "Route": {
+      "fields": {
+        "id": "string",
+        "geometry": "array<{lat, lng}>",
+        "risk_score": "float 0.0-1.0",
+        "confidence": "float 0.0-1.0",
+        "data_completeness": "float 0.0-1.0",
+        "requires_citizen_confirm": "bool",
+        "estimated_time_s": "int",
+        "estimated_battery_pct": "float",
+        "predictions": "array<Prediction>"
+      }
+    }
+  },
+  "sigil_algorithm": "ed25519+pqc-ml-dsa-65",
+  "care_floor": 0.95,
+  "bft_maj": 12,
+  "hives_integrated": [
+    "King",
+    "Pheromone",
+    "SIGIL",
+    "HORUS",
+    "Sirius",
+    "DORADO",
+    "ORION",
+    "Hecate"
+  ]
+}

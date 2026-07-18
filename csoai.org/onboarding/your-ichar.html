@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your i-Character — Sovereign Onboarding — csoai.org</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(160deg,#0a0e27,#1e3a8a,#0a0e27);color:#e2e8f0;padding:32px 20px;line-height:1.6;margin:0}
+.container{max-width:1180px;margin:0 auto}
+h1{color:#fbbf24;font-size:2.6rem;margin:0 0 8px;text-shadow:0 0 20px rgba(251,191,36,.3)}
+.tagline{color:#06b6d4;font-style:italic;margin-bottom:32px;font-size:1.1rem}
+.grid{display:grid;gap:18px;margin:24px 0}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.card{background:rgba(0,0,0,.55);padding:22px;border-radius:12px;border:1px solid rgba(251,191,36,.2)}
+.card h3{color:#fbbf24;margin:0 0 10px;font-size:1.05rem}
+.card p{margin:0;font-size:.92rem;opacity:.92}
+.section-title{color:#fbbf24;font-size:1.6rem;margin:36px 0 12px;border-bottom:1px solid rgba(251,191,36,.25);padding-bottom:8px}
+.hero{background:radial-gradient(circle,rgba(168,85,247,.2),transparent 70%);padding:36px;border-radius:16px;border:1px solid rgba(168,85,247,.4);margin-bottom:32px}
+.btn{display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0a0e27;text-decoration:none;border-radius:8px;font-weight:800;border:none;cursor:pointer;margin:8px 6px 8px 0}
+.btn-secondary{background:transparent;border:2px solid #fbbf24;color:#fbbf24}
+.code{background:rgba(0,0,0,.6);padding:18px;border-radius:10px;font-family:ui-monospace,SF Mono,monospace;font-size:.85rem;color:#10b981;overflow-x:auto;line-height:1.6;border:1px solid rgba(16,185,129,.3)}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}
+th{background:rgba(251,191,36,.12);color:#fbbf24;padding:10px;text-align:left}
+td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.alert{padding:14px 20px;border-radius:10px;margin:16px 0;background:rgba(168,85,247,.12);border-left:4px solid #a855f7}
+.alert-info{background:rgba(6,182,212,.12);border-left-color:#06b6d4}
+.footer{text-align:center;padding:24px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.3);opacity:.8;font-size:.85rem}
+a{color:#10b981;text-decoration:none}
+@media(max-width:768px){.grid-3,.grid-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🪪 Meet Your i-Character</h1>
+<p class="tagline">Your sovereign digital twin. Yours to train. Yours to export. Yours to delete. Yours forever.</p>
+
+<div class="hero">
+<h2 style="color:#fbbf24;margin:0 0 10px">What is an i-character?</h2>
+<p style="opacity:.95;margin:0">An <strong>i-character</strong> (i = intelligent + individual + immutable + interoperable) is a digital twin that learns from your conversations, preferences, and decisions. It speaks in your voice. It defends your values. It represents you in the sovereign stack — and it belongs to you, not to a vendor.</p>
+</div>
+
+<h2 class="section-title">🌱 The 4 Properties of an i-character</h2>
+<div class="grid grid-2">
+<div class="card"><h3>1. Individual</h3><p>Built from your data. Trained on your conversations. Tuned to your personality. There is no other i-character like yours — even twins diverge after 100 conversations.</p></div>
+<div class="card"><h3>2. Immutable</h3><p>Every change is SIGIL-signed. You can replay your i-character's entire history. Auditors, regulators, and your future self can prove exactly when each fact was learned.</p></div>
+<div class="card"><h3>3. Interoperable</h3><p>Speaks MCP, A2A, x402, DID, JWT, ANP, AGNTCY, OIDC, WebSocket, gRPC. Your i-character can talk to any sovereign or non-sovereign agent — and reject foreign surveillance.</p></div>
+<div class="card"><h3>4. Sovereign (the 'i' = me, myself)</h3><p>Owned by you. Exportable in 3 formats. Deletable in 1 click. Sellable in TwinStore. Migratable via DORADO. MIT-licensed export means you can rebuild it anywhere.</p></div>
+</div>
+
+<h2 class="section-title">📊 Anatomy of Your i-character</h2>
+<table>
+<tr><th>Component</th><th>What it is</th><th>Where it lives</th><th>You control</th></tr>
+<tr><td><strong>Personality</strong></td><td>Voice, tone, values, preferences</td><td>Sovereign vault (UK by default)</td><td>Edit anytime · SIGIL-logged</td></tr>
+<tr><td><strong>Knowledge base</strong></td><td>Facts learned from conversations</td><td>Mamba-2 16-dim state + cold storage</td><td>Edit, delete, freeze facts</td></tr>
+<tr><td><strong>Conversations</strong></td><td>Training corpus (your messages)</td><td>30+ TB sovereign corpus</td><td>Delete any conversation</td></tr>
+<tr><td><strong>Consent ledger</strong></td><td>Every "yes/no" you gave</td><td>Immutable SIGIL chain</td><td>Read-only, verifiable</td></tr>
+<tr><td><strong>DID identity</strong></td><td>did:csoai:your-name-XXXXX</td><td>Sovereign DID registry</td><td>Own + transfer + revoke</td></tr>
+<tr><td><strong>Avatar (optional)</strong></td><td>GLB mesh + voice clone</td><td>On-device or sovereign VM</td><td>On-device: never uploaded</td></tr>
+</table>
+
+<h2 class="section-title">🔐 Consent-First: 6 Permissions You Always Set</h2>
+<div class="grid grid-3">
+<div class="card"><h3>✓ Training</h3><p>May your i-character learn from new conversations? Default: opt-in per session.</p></div>
+<div class="card"><h3>✓ Sharing</h3><p>May TwinStore list your i-character for sale/lease? Default: no.</p></div>
+<div class="card"><h3>✓ Foreign calls</h3><p>May your i-character call non-sovereign APIs? Default: no.</p></div>
+<div class="card"><h3>✓ Voice cloning</h3><p>May your i-character speak in your voice? Default: opt-in.</p></div>
+<div class="card"><h3>✓ Avatar use</h3><p>May TwinStore render your 3D avatar? Default: on-device only.</p></div>
+<div class="card"><h3>✓ Inheritance</h3><p>May your i-character outlive you (passed to family)? Default: opt-in.</p></div>
+</div>
+
+<h2 class="section-title">💻 Create Your i-character (3 lines)</h2>
+<div class="code">import { Sov3 } from "@csoai/sdk"
+
+const nicholas = await Sov3.ichar.create({
+  name: "Nicholas-i",
+  did: "did:csoai:nicholas",
+  consent: { train: true, share: false, foreign_calls: false }
+})
+
+// → DID: did:csoai:nicholas-7e3a2b
+// → Knowledge base: 0 facts (empty)
+// → Care Floor: 0.95
+// → SIGIL: 8e3a...f127
+
+console.log(nicholas.did, nicholas.sigil)</div>
+
+<h2 class="section-title">💻 Train from Conversations</h2>
+<div class="code">const facts = await Sov3.ichar.train({
+  did: "did:csoai:nicholas-7e3a2b",
+  conversations: [
+    { role: "user", text: "I always vote against TwinStore fees above 1%" },
+    { role: "user", text: "My mother prefers privacy over convenience" },
+    { role: "user", text: "I want my i-char to defend UK data residency" }
+  ]
+})
+
+// → Extracted 3 facts
+// → SIGIL #1,247,892
+// → Care Floor: 0.97 (your values are conservative + protective)</div>
+
+<h2 class="section-title">💻 Export / Delete / Migrate</h2>
+<div class="code">// Export as JSON
+const backup = await Sov3.ichar.export({ did: "did:csoai:nicholas-7e3a2b", format: "json" })
+fs.writeFileSync("nicholas-i.json", backup)
+
+// Export as PDF (printable character card)
+const pdf = await Sov3.ichar.export({ did: "did:csoai:nicholas-7e3a2b", format: "pdf" })
+
+// Export as GLB (3D avatar)
+const avatar = await Sov3.ichar.export({ did: "did:csoai:nicholas-7e3a2b", format: "glb" })
+
+// Migrate to another region (DORADO)
+await Sov3.dorado.switch({ region: "EU", did: "did:csoai:nicholas-7e3a2b" })
+
+// Delete (GDPR Art 17 — right to erasure)
+await Sov3.ichar.delete({ did: "did:csoai:nicholas-7e3a2b", confirm: true })
+// → All facts purged
+// → All conversations purged
+// → Cold-storage shards zero-filled
+// → SIGIL #1,247,895: "i-char deleted"
+</div>
+
+<div class="alert">
+<strong>🔒 Sovereign guarantee:</strong> Your i-character is encrypted at rest with ML-KEM-768 (post-quantum). Only you can decrypt. Even CSOAI engineers cannot read your data without your consent — verified by 12-queen BFT council.
+</div>
+
+<h2 class="section-title">🎭 Your i-character vs the Industry</h2>
+<table>
+<tr><th>Feature</th><th>SOV3 i-character</th><th>ChatGPT Memory</th><th>Replika</th><th>Character.ai</th></tr>
+<tr><td>Owned by you</td><td>✓ (DID + signed consent)</td><td>✗ (vendor-owned)</td><td>✗</td><td>✗</td></tr>
+<tr><td>Export format</td><td>JSON · PDF · GLB</td><td>None</td><td>None</td><td>None</td></tr>
+<tr><td>Delete in 1 click</td><td>✓ + cold-storage purge</td><td>Partial</td><td>Soft-delete only</td><td>No</td></tr>
+<tr><td>Sell on TwinStore</td><td>✓ (consented)</td><td>✗</td><td>✗</td><td>✗</td></tr>
+<tr><td>Migrate to other region</td><td>✓ (DORADO)</td><td>✗</td><td>✗</td><td>✗</td></tr>
+<tr><td>Independent BFT audit</td><td>✓ (12 queens)</td><td>✗</td><td>✗</td><td>✗</td></tr>
+<tr><td>Open-source export</td><td>MIT license</td><td>✗</td><td>✗</td><td>✗</td></tr>
+<tr><td>Post-quantum encryption</td><td>ML-KEM-768</td><td>✗</td><td>✗</td><td>✗</td></tr>
+</table>
+
+<h2 class="section-title">🛤️ What's Next?</h2>
+<div class="grid grid-3">
+<div class="card"><h3>1. Your rights</h3><p>Read your 9 sovereign rights</p><a class="btn btn-secondary" href="/onboarding/your-rights.html">Read rights →</a></div>
+<div class="card"><h3>2. Your council</h3><p>Meet your 12-queen BFT council</p><a class="btn btn-secondary" href="/onboarding/your-council.html">Open council →</a></div>
+<div class="card"><h3>3. Start using SOV3</h3><p>Cast your first vote, ask first query</p><a class="btn" href="/onboarding/start.html">Start →</a></div>
+</div>
+
+<div class="footer">
+<p>csoai.org/onboarding/your-ichar.html · MIT license · CC0 · OSI approved · Care Floor 0.95 · BFT 12-around-1 · SIGIL audit · Article 50 · DORADO</p>
+</div>
+
+</div>
+</body>
+</html>

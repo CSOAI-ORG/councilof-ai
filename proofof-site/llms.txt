@@ -1,0 +1,183 @@
+# SOV_OS — MEOK OS Sovereign AI Compliance OS
+
+## What is this?
+
+The Sovereign AI Compliance Operating System. MIT-licensed. UK-resident (CSOAI Ltd, UK 16939677).
+
+## What does it do?
+
+Runs 52 sovereign MCPs (Model Context Protocol servers) that audit, certify, and monitor AI systems across 12 sovereign frameworks:
+
+- **EU AI Act** (Aug 2 2026 deadline)
+- **EU DORA** (Digital Operational Resilience Act)
+- **UK AI Bill**
+- **EU GDPR**
+- **EU NIS2**
+- **ISO 42001 AIMS** (AI Management System)
+- **NIST AI RMF**
+- **JSP 936** (NATO)
+- **HIPAA** (US healthcare)
+- **SOC 2** (US trust criteria)
+- **ISO 27001** (ISMS)
+- **PCI-DSS 4.0**
+
+## Architecture
+
+- 12 Generals × 5 Dimensions × AB Uno = the sovereign substrate
+- 33 Hives across 5 continents
+- 8 BIG BRAIM experts (1.39 TB total MoE)
+- Care Floor (16 probes) on every state
+- Sigil every hop (Ed25519, hash-chained, Bitcoin-anchored)
+- 3/5/7 BFT voter council (EAT-12 tuned)
+
+## Key Features
+
+- **Native runtime** — no Ollama needed for the 5 sovereign tasks (EU AI Act, DORA, JSP 936, IoT, Mamba-2)
+- **12 Generals** — each with their own QOwm (substrate) and personality
+- **iOK Farm IoT** — 9-sensor bridge (pH, DO, temp, humidity, ammonia, fish, filter, light, feed)
+- **Audit trail** — regulator-grade, CSV/JSON/Parquet, sigil-signed
+- **UE5 SovTown bridge** — 1640 lines of UE5 C++ absorbed into the substrate
+
+## Pricing
+
+| Tier | Price | Features |
+|---|---|---|
+| Free | $0/mo | All sovereign features |
+| Pro | $99/mo | Unlimited audits + passport |
+| Governance | $2,499/mo | Full audit trail + 7-voter BFT |
+| Enterprise | $9,999+/mo | On-prem · GovCloud · Air-gap |
+
+**25-33% of competitors** (Vanta $400, Drata $300, Sprinto $250, Secureframe $500).
+**5-10× more features** (EU AI Act native, JSP 936 native, Care Floor, Sigil every hop).
+
+## How to use
+
+### Try in browser
+Visit [proofof.ai](https://proofof.ai) and click "Try free".
+
+### Install via MCP
+```bash
+pip install meok-sovereign-eu-ai-act-mcp meok-sovereign-dora-mcp meok-sovereign-jsp936-mcp
+```
+
+### Use the backend
+```bash
+curl http://localhost:8765/health
+curl http://localhost:8765/v1/dashboard/metrics
+```
+
+### Run a sovereign audit
+```python
+from meok_sovereign_eu_ai_act_mcp import eu_ai_act_audit
+result = eu_ai_act_audit(code=open('main.py').read())
+print(f"Articles satisfied: {result['satisfied']}/{result['total']}")
+```
+
+## Available MCP Servers
+
+| MCP | Purpose |
+|---|---|
+| meok-sovereign-passport-mcp | 12-framework crosswalk passport |
+| meok-sovereign-guardrails-mcp | AI guardrails validator |
+| meok-sovereign-receipt-mcp | Compliance receipt generator |
+| meok-sovereign-governance-mcp | Governance engine |
+| meok-sovereign-x402-payment-mcp | x402 payment gateway |
+| meok-sovereign-globe-mcp | 3D hive globe |
+| meok-sovereign-council-mcp | BFT council vote |
+| meok-sovereign-memory-mcp | Substrate memory |
+| meok-sovereign-avatar-mcp | 12 General avatars |
+| meok-sovereign-skills-mcp | Skill packs |
+| meok-sovereign-eu-ai-act-mcp | EU AI Act audit (8 articles) |
+| meok-sovereign-worm-mcp | Morris-II worm guard |
+| meok-sovereign-defence-mcp | JSP 936 audit |
+| meok-sovereign-satellite-mcp | Satellite imaging |
+| meok-sovereign-honour-mcp | Honor system |
+| meok-sovereign-immortal-mcp | Long-running processes |
+| meok-sovereign-dora-mcp | DORA 5-pillar audit |
+| meok-sovereign-iso42001-mcp | ISO 42001 AIMS |
+| meok-sovereign-iot-mcp | iOK Farm IoT |
+| meok-sovereign-pond-mcp | 16-dim Mamba-2 pond physics |
+| meok-sovereign-intuition-mcp | Mamba-2 intuition engine |
+| meok-sovereign-oowm-mcp | OOWM substrate |
+| meok-sovereign-federation-mcp | 12 General federation |
+| meok-sovereign-native-mcp | 5 sovereign task natives |
+| meok-sovereign-planning-mcp | Plans + goals + history |
+| meok-sovereign-bft-council-mcp | BFT 3/5/7 voters |
+| meok-sovereign-carefloor-mcp | 16-probe care floor |
+| meok-sovereign-sigil-chain-mcp | Ed25519 sigil chain |
+| meok-sovereign-hive-network-mcp | 33-hive network |
+| meok-sovereign-vertical-compliance-mcp | 6 verticals |
+| meok-sovereign-compliance-passport-mcp | 12-framework crosswalk |
+| meok-sovereign-core-mcp | AB Uno substrate |
+| meok-sovereign-telemetry-mcp | Live observability |
+| meok-sovereign-coordination-mcp | Cross-General tasks |
+| meok-sovereign-pond-physics-mcp | 16-dim Mamba-2 pond sim |
+| meok-sovereign-charter-mcp | 10-Article Constitutional Charter |
+| meok-sovereign-rpc-bus-mcp | 33-hive RPC |
+| meok-sovereign-mind-mcp | 12 mindsets × 8 MoE |
+| meok-sovereign-tracker-mcp | PR + issue tracker |
+| meok-sovereign-prompt-pack-mcp | 12 General personalities |
+| meok-sovereign-audit-trail-mcp | Regulator-grade audit |
+| meok-sovereign-iot-mqtt-mcp | iOK Farm MQTT bridge |
+| meok-sovereign-webhook-mcp | 8 event topics |
+| meok-sovereign-scheduler-mcp | cron/once/interval |
+| meok-sovereign-defense-mcp | Morris-II + WORM |
+| meok-sovereign-identity-mcp | W3C DID + JWT |
+| meok-sovereign-cache-mcp | in-mem + TTL |
+| meok-sovereign-search-mcp | full-text + tag |
+| meok-sovereign-backup-mcp | snapshot + delta |
+| meok-sovereign-economy-mcp | x402 invoices |
+| meok-sovereign-ue5-bridge-mcp | UE5 SovTown bridge (1640 lines absorbed) |
+
+## License
+
+MIT License. UK-resident. Sovereign by construction.
+
+## Company
+
+CSOAI Ltd (UK 16939677)
+[Meadow Farm, Sutton St James, Spalding, Lincs PE12 0EQ, UK]
+[nicholas@csoai.org]
+[proofof.ai]
+
+## Doctrine
+
+> "Defend. Detect. Deny. Deceive. Defeat. — Never Offend."
+>
+> "The dragon runs itself. No Ollama needed. Sovereign by construction."
+>
+> "12 Generals × 5 Dimensions × AB Uno = the sovereign substrate."
+>
+> "Council of 12 votes. Smaller wins. (3/5/7 voters per EAT-12)"
+>
+> "Maternal Covenant. 16 probes. Every state validated."
+>
+> "Every hop Ed25519-signed. Hash-chained. Bitcoin-anchored."
+
+## 6 Languages
+
+- English (en) — UK, native
+- French (fr) — France / EU
+- German (de) — Germany / EU
+- Spanish (es) — Spain / LATAM
+- Japanese (ja) — Japan / APAC
+- Chinese (zh) — China / APAC
+
+## Launch
+
+**Saturday 4 July 2026, 09:00 BST**
+
+## Contact
+
+[nicholas@csoai.org]
+[proofof.ai/contact]
+[proofof.ai/signup]
+
+## Press
+
+[proofof.ai/press-release]
+[Show HN (pending)]
+
+## Status
+
+[proofof.ai/status] — All 52 MCPs · 973 tests · 100/100

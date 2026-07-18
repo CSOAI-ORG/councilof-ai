@@ -1,0 +1,239 @@
+{
+  "ts": "2026-07-14T06:48:20.586533+00:00",
+  "live_ollama_snapshot": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "size": "1.4"
+      },
+      {
+        "name": "qwen25-balanced:latest",
+        "size": "522"
+      },
+      {
+        "name": "qwen25-creative:latest",
+        "size": "522"
+      },
+      {
+        "name": "qwen2.5:3b",
+        "size": "1.9"
+      },
+      {
+        "name": "qwen3-formal:latest",
+        "size": "522"
+      },
+      {
+        "name": "qwen3-precise:latest",
+        "size": "522"
+      },
+      {
+        "name": "qwen3:0.6b",
+        "size": "522"
+      }
+    ],
+    "n_models": 7
+  },
+  "n_canonical": 17,
+  "n_on_mac": 3,
+  "n_not_on_mac": 14,
+  "on_mac": [
+    {
+      "name": "qwen2.5:3b",
+      "size": "1.9 GB",
+      "license": "Apache-2.0",
+      "specialty": "general-default",
+      "tier_home": "SOV3-lite",
+      "on_mac": true,
+      "pull_command": "ollama pull qwen2.5:3b"
+    },
+    {
+      "name": "qwen3:0.6b",
+      "size": "522 MB",
+      "license": "Apache-2.0",
+      "specialty": "SOV3-small backbone",
+      "tier_home": "SOV3-lite",
+      "on_mac": true,
+      "pull_command": "ollama pull qwen3:0.6b"
+    },
+    {
+      "name": "qwen3:1.7b",
+      "size": "1.4 GB",
+      "license": "Apache-2.0",
+      "specialty": "small-router",
+      "tier_home": "SOV3-lite",
+      "on_mac": true,
+      "pull_command": "ollama pull qwen3:1.7b"
+    }
+  ],
+  "not_on_mac": [
+    {
+      "name": "qwen2.5:7b",
+      "size": "4.4 GB",
+      "license": "Apache-2.0",
+      "specialty": "reasoning",
+      "tier_home": "SOV3-lite",
+      "on_mac": false,
+      "pull_command": "ollama pull qwen2.5:7b"
+    },
+    {
+      "name": "qwen2.5-coder:1.5b",
+      "size": "1.0 GB",
+      "license": "Apache-2.0",
+      "specialty": "code",
+      "tier_home": "SOV3-lite",
+      "on_mac": false,
+      "pull_command": "ollama pull qwen2.5-coder:1.5b"
+    },
+    {
+      "name": "qwen2.5-coder:7b",
+      "size": "4.4 GB",
+      "license": "Apache-2.0",
+      "specialty": "code-7b",
+      "tier_home": "SOV3-lite",
+      "on_mac": false,
+      "pull_command": "ollama pull qwen2.5-coder:7b"
+    },
+    {
+      "name": "qwen3:8b",
+      "size": "4.7 GB",
+      "license": "Apache-2.0",
+      "specialty": "4brain-large-fallback",
+      "tier_home": "SOV33-pro",
+      "on_mac": false,
+      "pull_command": "ollama pull qwen3:8b"
+    },
+    {
+      "name": "qwen3-30b-a3b",
+      "size": "~18 GB",
+      "license": "Apache-2.0",
+      "specialty": "Sovereign-Merge Brain (L4)",
+      "tier_home": "SOV33-pro",
+      "on_mac": false,
+      "pull_command": "ollama pull qwen3-30b-a3b"
+    },
+    {
+      "name": "qwen3-vl-30b-a3b",
+      "size": "~18 GB",
+      "license": "Apache-2.0",
+      "specialty": "vision",
+      "tier_home": "SOV33-pro",
+      "on_mac": false,
+      "pull_command": "ollama pull qwen3-vl-30b-a3b"
+    },
+    {
+      "name": "qwen3guard-8b",
+      "size": "4.7 GB",
+      "license": "Apache-2.0",
+      "specialty": "safety-guard",
+      "tier_home": "SOV3-lite",
+      "on_mac": false,
+      "pull_command": "ollama pull qwen3guard-8b"
+    },
+    {
+      "name": "nemotron-nano",
+      "size": "~5 GB",
+      "license": "Apache-2.0",
+      "specialty": "sibling-fleet planned",
+      "tier_home": "SOV3-lite",
+      "on_mac": false,
+      "pull_command": "ollama pull nemotron-nano"
+    },
+    {
+      "name": "nomic-embed-text",
+      "size": "260 MB",
+      "license": "Apache-2.0",
+      "specialty": "embedding",
+      "tier_home": "SOV3-lite",
+      "on_mac": false,
+      "pull_command": "ollama pull nomic-embed-text"
+    },
+    {
+      "name": "llama-guard3:1b",
+      "size": "~1 GB",
+      "license": "Llama-Guard",
+      "specialty": "safety",
+      "tier_home": "SOV3-lite",
+      "on_mac": false,
+      "pull_command": "ollama pull llama-guard3:1b"
+    },
+    {
+      "name": "deepseek-v4-pro",
+      "size": "~320 GB",
+      "license": "MIT",
+      "specialty": "trillion-scale base",
+      "tier_home": "SOV333-max",
+      "on_mac": false,
+      "pull_command": "ollama pull deepseek-v4-pro"
+    },
+    {
+      "name": "glm-5.2",
+      "size": "~150 GB",
+      "license": "MIT",
+      "specialty": "Colibri-validated",
+      "tier_home": "SOV333-max",
+      "on_mac": false,
+      "pull_command": "ollama pull glm-5.2"
+    },
+    {
+      "name": "meta-llama-3.3-70b",
+      "size": "~40 GB",
+      "license": "Llama-3.3",
+      "specialty": "4brain-large (Oracle only)",
+      "tier_home": "SOV33-pro",
+      "on_mac": false,
+      "pull_command": "ollama pull meta-llama-3.3-70b"
+    },
+    {
+      "name": "cohere-command-r",
+      "size": "~20 GB",
+      "license": "CC-BY-NC",
+      "specialty": "L4 brain divergence",
+      "tier_home": "SOV33-pro",
+      "on_mac": false,
+      "pull_command": "ollama pull cohere-command-r"
+    }
+  ],
+  "pull_order": [
+    "qwen3:8b",
+    "qwen3-30b-a3b",
+    "qwen2.5-coder:1.5b",
+    "qwen2.5-coder:7b",
+    "qwen2.5:7b",
+    "nomic-embed-text",
+    "qwen3guard-8b",
+    "llama-guard3:1b",
+    "nemotron-nano",
+    "qwen3-vl-30b-a3b",
+    "meta-llama-3.3-70b",
+    "cohere-command-r",
+    "glm-5.2",
+    "deepseek-v4-pro"
+  ],
+  "cascade_roles": {
+    "left_top_10": {
+      "role": "routing-decision",
+      "small": "qwen2.5:3b",
+      "large": "meta-llama-3.3-70b"
+    },
+    "left_bottom_90": {
+      "role": "easy-queries",
+      "small": "qwen2.5:3b",
+      "large": "qwen3:8b"
+    },
+    "right_top_10": {
+      "role": "deep-dive",
+      "small": "qwen3:8b",
+      "large": "meta-llama-3.3-70b"
+    },
+    "right_bottom_90": {
+      "role": "final-validation",
+      "small": "qwen2.5:3b",
+      "large": "meta-llama-3.3-70b"
+    }
+  },
+  "honest_register": [
+    "Web search is BLOCKED in this env (FIRECRAWL_API_KEY unset) \u2014 inventory built from on-disk records.",
+    "Cascade currently STUB: large brain = same as small (qwen2.5:3b everywhere).",
+    "Single biggest unlock: ollama pull qwen3:8b (4brain large-fallback) + qwen3-30b-a3b (L4 brain)."
+  ]
+}

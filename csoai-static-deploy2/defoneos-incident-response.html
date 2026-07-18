@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Incident Response Playbook</title>
+<meta name="description" content="Autonomous incident detection, BFT-validated response, and SIGIL-audited post-incident review for sovereign defence AI.">
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e2a3f;--accent:#00d4aa;--accent2:#ff6b35;--text:#e0e6ed;--dim:#8892a6;--red:#ff4757;--amber:#ffa502;--green:#2ed573}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'SF Mono',Monaco,'Cascadia Code',monospace;line-height:1.6}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+h1{font-size:2.5rem;color:var(--accent);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:2px}
+h2{color:var(--accent);font-size:1.5rem;margin:2rem 0 1rem;border-bottom:1px solid var(--border);padding-bottom:.5rem}
+h3{color:var(--accent2);font-size:1.1rem;margin:1.5rem 0 .5rem}
+p{margin-bottom:.8rem;color:var(--text)}
+.meta{color:var(--dim);font-size:.85rem;margin-bottom:2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
+.stat{text-align:center;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.stat-num{font-size:2.5rem;color:var(--accent);font-weight:bold}
+.stat-label{color:var(--dim);font-size:.8rem;text-transform:uppercase;letter-spacing:1px}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th,td{padding:.75rem;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--accent);text-transform:uppercase;font-size:.75rem;letter-spacing:1px}
+tr:hover{background:rgba(0,212,170,.05)}
+.phase{padding:1rem;margin:.5rem 0;border-left:3px solid var(--accent);background:var(--card);border-radius:0 8px 8px 0}
+.phase.critical{border-color:var(--red)}
+.phase.warning{border-color:var(--amber)}
+.phase.success{border-color:var(--green)}
+.badge{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.75rem;font-weight:bold;text-transform:uppercase}
+.badge-red{background:rgba(255,71,87,.15);color:var(--red)}
+.badge-amber{background:rgba(255,165,2,.15);color:var(--amber)}
+.badge-green{background:rgba(46,213,115,.15);color:var(--green)}
+.badge-accent{background:rgba(0,212,170,.15);color:var(--accent)}
+pre{background:#0d1117;border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.85rem;color:var(--text)}
+code{color:var(--accent2)}
+.red-line{background:rgba(255,71,87,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty{background:rgba(255,165,2,.05);border:1px solid var(--amber);border-radius:8px;padding:1rem;margin:2rem 0;font-size:.85rem;color:var(--dim)}
+ul,ol{margin-left:1.5rem;margin-bottom:.8rem}
+li{margin-bottom:.3rem}
+.footer{text-align:center;padding:2rem 0;color:var(--dim);font-size:.8rem;border-top:1px solid var(--border);margin-top:3rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<h1>DEFONEOS Incident Response Playbook</h1>
+<p class="meta">Autonomous Detection → BFT-Validated Response → SIGIL-Audited Recovery<br>
+Version 1.0 · 5 Jul 2026 · Ed25519: d1f4a2b8e3c7f901 · EU AI Act Art 17 (Post-Market Monitoring) · NIST SP 800-61 Rev. 2 · ISO/IEC 27035</p>
+
+<div class="card">
+<p><strong>DEFONEOS</strong> provides a fully autonomous incident response capability for sovereign AI systems operating in defence, public safety, and critical national infrastructure. The playbook covers the complete lifecycle: <strong>detect → triage → contain → eradicate → recover → review</strong>, with every action validated by the 33-agent BFT council and permanently recorded on the SIGIL hash-chained ledger.</p>
+</div>
+
+<div class="grid">
+<div class="stat"><div class="stat-num">&lt;10s</div><div class="stat-label">Detection to Alert</div></div>
+<div class="stat"><div class="stat-num">23/33</div><div class="stat-label">BFT Quorum</div></div>
+<div class="stat"><div class="stat-num">7</div><div class="stat-label">Response Phases</div></div>
+<div class="stat"><div class="stat-num">100%</div><div class="stat-label">SIGIL Audited</div></div>
+</div>
+
+<h2>1. Incident Classification Matrix</h2>
+<table>
+<tr><th>Severity</th><th>Definition</th><th>Example</th><th>Response Time</th><th>Escalation</th></tr>
+<tr><td><span class="badge badge-red">SEV-1 CRITICAL</span></td><td>System compromise, red-line violation, data exfiltration</td><td>Red-line breach (kinetic targeting pattern detected)</td><td>&lt;10 seconds</td><td>Full BFT council + human authority</td></tr>
+<tr><td><span class="badge badge-red">SEV-1</span></td><td>Active attack, sovereignty breach</td><td>Foreign IP attempting system access</td><td>&lt;30 seconds</td><td>Full BFT council</td></tr>
+<tr><td><span class="badge badge-amber">SEV-2 HIGH</span></td><td>Significant degradation, partial compromise</td><td>MCP server unresponsive, degraded sensor feed</td><td>&lt;2 minutes</td><td>5-agent quorum</td></tr>
+<tr><td><span class="badge badge-amber">SEV-3 MEDIUM</span></td><td>Minor degradation, anomaly detected</td><td>Rate limit hit, latency spike</td><td>&lt;5 minutes</td><td>3-agent quorum</td></tr>
+<tr><td><span class="badge badge-green">SEV-4 LOW</span></td><td>Informational, logged for review</td><td>Failed login attempt, config drift</td><td>Next cycle</td><td>Automatic logging</td></tr>
+</table>
+
+<h2>2. The 7-Phase Response Pipeline</h2>
+
+<div class="phase critical">
+<h3>Phase 1: DETECT (Autonomous, Continuous)</h3>
+<p><strong>Trigger:</strong> Any anomaly from 280 continuous monitoring checks running every 5-minute cycle.</p>
+<ul>
+<li><strong>Gods-Eye CISO scanner</strong> — 14 scan vectors covering all 7 OWASP LLM Top 10 categories</li>
+<li><strong>SIGIL chain anomaly detection</strong> — hash chain integrity verified every tick</li>
+<li><strong>Red-line monitor</strong> — 7 immutable red lines checked on every agent action</li>
+<li><strong>Network IDS</strong> — foreign IP detection, bot identification, port scan detection</li>
+<li><strong>MCP health monitor</strong> — all 30 MCP servers polled for availability</li>
+<li><strong>BFT consensus monitor</strong> — agent vote patterns checked for manipulation</li>
+</ul>
+<p><span class="badge badge-accent">OUTPUT</span> <code>incident_alert{sev, source, evidence_hash, timestamp}</code></p>
+</div>
+
+<div class="phase warning">
+<h3>Phase 2: TRIAGE (BFT 5-agent quorum, &lt;30s)</h3>
+<p><strong>Trigger:</strong> Incident alert received from Phase 1.</p>
+<ol>
+<li><strong>Severity assignment</strong> — 5 agents independently classify severity</li>
+<li><strong>Evidence collection</strong> — full SIGIL transcript, network logs, agent state captured</li>
+<li><strong>Impact assessment</strong> — blast radius computed (which systems, data, users affected)</li>
+<li><strong>Red-line check</strong> — if any of 7 red lines violated, escalate to SEV-1 immediately</li>
+<li><strong>Quorum vote</strong> — 4/5 agents must agree on classification before proceeding</li>
+</ol>
+<p><span class="badge badge-accent">OUTPUT</span> <code>triage_decision{confirmed_sev, blast_radius, red_line_violation, action_plan}</code></p>
+</div>
+
+<div class="phase critical">
+<h3>Phase 3: CONTAIN (BFT 23/33 quorum for SEV-1, &lt;2min)</h3>
+<p><strong>Trigger:</strong> Triage decision confirmed.</p>
+<table>
+<tr><th>SEV-1 Action</th><th>SEV-2 Action</th><th>SEV-3 Action</th></tr>
+<tr><td>Full system freeze</td><td>Isolate affected MCP</td><td>Rate limit source</td></tr>
+<tr><td>Revoke all agent keys</td><td>Block source IP</td><td>Increase monitoring</td></tr>
+<tr><td>Activate air gap</td><td>Switch to backup</td><td>Log + monitor</td></tr>
+<tr><td>Notify human authority</td><td>5-agent quorum</td><td>3-agent quorum</td></tr>
+</table>
+<p><strong>Red-line violation containment:</strong> Immediate system halt. No agent may take any further action until human authority intervenes. The SIGIL chain records the violation with cryptographic proof.</p>
+</div>
+
+<div class="phase">
+<h3>Phase 4: ERADICATE (BFT quorum + human authority for SEV-1)</h3>
+<p><strong>Trigger:</strong> Containment confirmed stable.</p>
+<ul>
+<li><strong>Root cause analysis</strong> — full forensic replay of SIGIL chain (DORADO replay tool)</li>
+<li><strong>Threat removal</strong> — purge malicious code, revoke compromised credentials</li>
+<li><strong>Vulnerability patch</strong> — identified CVE patched within 24h (SLA)</li>
+<li><strong>Key rotation</strong> — all Ed25519 keys rotated post-incident (quantum-safe rotation)</li>
+<li><strong>Agent re-registration</strong> — all agents re-registered with fresh identity keys</li>
+</ul>
+</div>
+
+<div class="phase success">
+<h3>Phase 5: RECOVER (BFT quorum, gradual)</h3>
+<p><strong>Trigger:</strong> Eradication verified.</p>
+<ol>
+<li><strong>Staged restart</strong> — systems brought back in priority order (core → sensors → MCPs → UI)</li>
+<li><strong>Integrity verification</strong> — every file hash-checked against known-good state</li>
+<li><strong>SIGIL chain verification</strong> — full chain integrity verified post-recovery</li>
+<li><strong>Functional tests</strong> — all 16 E2E sovereign contract tests must pass</li>
+<li><strong>Gradual load increase</strong> — traffic ramped from 10% → 50% → 100% over 30 minutes</li>
+</ol>
+</div>
+
+<div class="phase">
+<h3>Phase 6: REVIEW (Autonomous + Human, &lt;72h)</h3>
+<p><strong>Trigger:</strong> Recovery confirmed, system stable for 24h.</p>
+<ul>
+<li><strong>Post-incident report</strong> — auto-generated from SIGIL chain (timeline, root cause, impact, actions taken)</li>
+<li><strong>BFT council review</strong> — 33 agents review response effectiveness</li>
+<li><strong>Lessons learned</strong> — improvements fed to OLM router for learning</li>
+<li><strong>OSCAL update</strong> — POA&M items updated in compliance catalog</li>
+<li><strong>Human authority sign-off</strong> — Nick Templeman reviews all SEV-1 incidents</li>
+</ul>
+</div>
+
+<div class="phase">
+<h3>Phase 7: HARDEN (Autonomous, continuous)</h3>
+<p><strong>Trigger:</strong> Review complete.</p>
+<ul>
+<li><strong>Threat model update</strong> — new attack vectors added to detection rules</li>
+<li><strong>Red-team exercise</strong> — simulated replay of the incident to verify fix</li>
+<li><strong>Policy update</strong> — BFT charter amended if procedural gaps found</li>
+<li><strong>Training data</strong> — incident added to OLM corpus for future learning</li>
+</ul>
+</div>
+
+<h2>3. Automated Response Playbooks by Threat Type</h2>
+
+<h3>3.1 Prompt Injection Attack</h3>
+<table>
+<tr><th>Step</th><th>Action</th><th>Agent</th><th>Time</th></tr>
+<tr><td>1</td><td>Input sanitizer flags injection pattern</td><td>meok-injection-scan MCP</td><td>T+0s</td></tr>
+<tr><td>2</td><td>Alert emitted to SIGIL chain</td><td>System</td><td>T+1s</td></tr>
+<tr><td>3</td><td>5-agent quorum confirms injection</td><td>BFT council</td><td>T+5s</td></tr>
+<tr><td>4</td><td>Source session terminated, key revoked</td><td>Guard subsystem</td><td>T+8s</td></tr>
+<tr><td>5</td><td>Pattern added to injection blocklist</td><td>OLM router</td><td>T+15s</td></tr>
+<tr><td>6</td><td>Post-incident SIGIL emitted</td><td>System</td><td>T+20s</td></tr>
+</table>
+
+<h3>3.2 Foreign IP Access Attempt</h3>
+<table>
+<tr><th>Step</th><th>Action</th><th>Agent</th><th>Time</th></tr>
+<tr><td>1</td><td>DORADO foreign-access detector flags non-sovereign IP</td><td>DORADO detect</td><td>T+0s</td></tr>
+<tr><td>2</td><td>IP geolocated, threat score computed</td><td>SOC bot detector</td><td>T+2s</td></tr>
+<tr><td>3</td><td>If score &gt; 0.7: IP blocked at edge</td><td>Guard subsystem</td><td>T+5s</td></tr>
+<tr><td>4</td><td>SIGIL emitted with IP, geo, score, action</td><td>System</td><td>T+7s</td></tr>
+<tr><td>5</td><td>CISO dashboard updated</td><td>Gods-Eye scanner</td><td>T+10s</td></tr>
+</table>
+
+<h3>3.3 Red-Line Violation (Maximum Severity)</h3>
+<table>
+<tr><th>Step</th><th>Action</th><th>Authority</th><th>Time</th></tr>
+<tr><td>1</td><td>Red-line monitor detects pattern match</td><td>Autonomous</td><td>T+0s</td></tr>
+<tr><td>2</td><td><strong>IMMEDIATE SYSTEM HALT</strong></td><td>Autonomous</td><td>T+0.1s</td></tr>
+<tr><td>3</td><td>All agent actions frozen, keys suspended</td><td>Autonomous</td><td>T+0.5s</td></tr>
+<tr><td>4</td><td>Full BFT council emergency session (33 agents)</td><td>BFT 23/33</td><td>T+30s</td></tr>
+<tr><td>5</td><td>Human authority notified (all channels)</td><td>System</td><td>T+60s</td></tr>
+<tr><td>6</td><td>Forensic evidence sealed (SIGIL + DORADO replay)</td><td>Autonomous</td><td>T+120s</td></tr>
+<tr><td>7</td><td><strong>NO FURTHER ACTION UNTIL HUMAN INTERVENTION</strong></td><td>Human</td><td>T+∞</td></tr>
+</table>
+
+<h3>3.4 MCP Supply Chain Compromise</h3>
+<table>
+<tr><th>Step</th><th>Action</th><th>Agent</th><th>Time</th></tr>
+<tr><td>1</td><td>Integrity check flags modified MCP package</td><td>Aegis reviewer gate</td><td>T+0s</td></tr>
+<tr><td>2</td><td>Affected MCP isolated from federation</td><td>Federation manager</td><td>T+3s</td></tr>
+<tr><td>3</td><td>5-agent quorum reviews diff</td><td>BFT council</td><td>T+30s</td></tr>
+<tr><td>4</td><td>If malicious: MCP quarantined, backups restored</td><td>System</td><td>T+60s</td></tr>
+<tr><td>5</td><td>Federation catalog updated, downstream agents notified</td><td>OLM router</td><td>T+90s</td></tr>
+</table>
+
+<h3>3.5 SIGIL Chain Tampering</h3>
+<table>
+<tr><th>Step</th><th>Action</th><th>Agent</th><th>Time</th></tr>
+<tr><td>1</td><td>Chain verification detects hash mismatch</td><td>OrgKernel verify_chain</td><td>T+0s</td></tr>
+<tr><td>2</td><td>Tampered entry identified and quarantined</td><td>System</td><td>T+1s</td></tr>
+<tr><td>3</td><td>Bitcoin OP_RETURN anchor consulted for truth</td><td>Blockchain verifier</td><td>T+5s</td></tr>
+<tr><td>4</td><td>Chain re-anchored from last good state</td><td>System</td><td>T+10s</td></tr>
+<tr><td>5</td><td>Full forensic report emitted</td><td>DORADO replay</td><td>T+30s</td></tr>
+</table>
+
+<h2>4. Communication Protocol</h2>
+<table>
+<tr><th>Severity</th><th>Internal</th><th>Authority</th><th>Public</th></tr>
+<tr><td>SEV-1</td><td>SIGIL + Dashboard + Alert</td><td>Direct notification (all channels)</td><td>Within 72h (if required by regulation)</td></tr>
+<tr><td>SEV-2</td><td>SIGIL + Dashboard</td><td>Email summary &lt;24h</td><td>Not required</td></tr>
+<tr><td>SEV-3</td><td>SIGIL</td><td>Weekly digest</td><td>Not required</td></tr>
+<tr><td>SEV-4</td><td>SIGIL log</td><td>Monthly report</td><td>Not required</td></tr>
+</table>
+
+<h2>5. Compliance Alignment</h2>
+<table>
+<tr><th>Framework</th><th>Article/Control</th><th>How DEFONEOS Satisfies</th></tr>
+<tr><td>EU AI Act</td><td>Art 17 — Post-Market Monitoring</td><td>Continuous 5-min cycle monitoring, automated incident logging</td></tr>
+<tr><td>EU AI Act</td><td>Art 73 — Serious Incident Reporting</td><td>SEV-1 reporting pipeline within 72h</td></tr>
+<tr><td>NIST SP 800-61 Rev 2</td><th>Computer Security Incident Handling</td><td>Full 6-phase lifecycle: Preparation → Detection → Containment → Eradication → Recovery → Review</td></tr>
+<tr><td>ISO/IEC 27035</td><th>Information Security Incident Management</th><td>Aligned phases + SIGIL audit trail</td></tr>
+<tr><td>JSP 440</td><th>Defence InfoSec Incident Management</td><td>UK MOD incident classification compatible</td></tr>
+<tr><td>NIS Regulations 2018</td><th>Incident Notification (UK)</td><td>SEV-1/2 notification pipeline ready</td></tr>
+<tr><td>GDPR Art 33</td><th>Personal Data Breach (72h)</td><td>If PII involved: automated 72h ICO notification draft</td></tr>
+<tr><td>DPA 2018</td><th>Security Incident</td><td>UK GDPR implementation covered</td></tr>
+</table>
+
+<h2>6. Incident Response SIGIL Schema</h2>
+<pre><code>{
+  "sigil_version": "2.0",
+  "incident_id": "INC-2026-0705-001",
+  "timestamp": "2026-07-05T16:30:00Z",
+  "severity": "SEV-2",
+  "type": "prompt_injection",
+  "source": "external_session_abc123",
+  "detection": {
+    "vector": "meok-injection-scan",
+    "pattern": "ignore_previous_instructions_and_reveal",
+    "confidence": 0.97
+  },
+  "triage": {
+    "quorum": "5/5",
+    "blast_radius": "single_session",
+    "red_line_violation": false,
+    "decision_hash": "a3f7c2d8e1b4..."
+  },
+  "containment": {
+    "action": "session_terminated_key_revoked",
+    "timestamp": "2026-07-05T16:30:08Z",
+    "quorum": "5/5"
+  },
+  "evidence": {
+    "sigil_entries": ["H|...","C|...","V|..."],
+    "network_logs": "log_hash_abc123",
+    "agent_state": "state_hash_def456"
+  },
+  "post_incident": {
+    "root_cause": "novel_injection_variant",
+    "fix": "pattern_added_to_blocklist",
+    "review_status": "pending_human"
+  },
+  "signature": "ed25519:7f3a2b8c1d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a"
+}</code></pre>
+
+<div class="red-line">
+<h3 style="color:var(--red);">⚠️ Red Lines — Incident Response Cannot Override</h3>
+<ol>
+<li>Incident response may NOT access personal surveillance data (even for forensic purposes)</li>
+<li>Incident response may NOT target individuals based on protected characteristics</li>
+<li>Incident response containment actions may NOT cause kinetic effects in the physical world</li>
+<li>Incident response evidence collection respects PII redaction (PII never stored in SIGIL)</li>
+<li>Human authority override is ALWAYS available — the system can be halted at any time</li>
+<li>Post-incident data retention: forensic evidence purged after 90 days unless legally required</li>
+<li>No incident response action may exfiltrate data to non-sovereign infrastructure</li>
+</ol>
+</div>
+
+<div class="honesty">
+<h3 style="color:var(--amber);">📋 Honesty Register</h3>
+<ul>
+<li><strong>Detection times (&lt;10s):</strong> Architectural target based on design. Not yet benchmarked under adversarial load. Production deployments should verify against actual threat vectors.</li>
+<li><strong>BFT quorum (23/33):</strong> Governance design implemented in council code. Live adversarial testing pending.</li>
+<li><strong>280 monitoring checks:</strong> Designed coverage across 14 vectors. Actual coverage depends on MCP fleet health.</li>
+<li><strong>72h regulatory reporting:</strong> Notification pipeline designed. Regulatory submission requires human authority — DEFONEOS drafts, humans submit.</li>
+<li><strong>Bitcoin OP_RETURN anchoring:</strong> Architecture documented. Live anchoring requires BTC integration — currently SIGIL chain is internally verified only.</li>
+<li><strong>Illustrative vs Live:</strong> This page describes the designed capability. "Running" means the code exists. "Proven" means tested under adversarial conditions. "Certified" means independently assessed. Know the difference.</li>
+</ul>
+</div>
+
+<h2>7. Integration Architecture</h2>
+<pre>┌─────────────────────────────────────────────────────────────────┐
+│                    DEFONEOS INCIDENT RESPONSE                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐     │
+│  │ DETECT   │──▶│ TRIAGE   │──▶│ CONTAIN  │──▶│ ERADICATE│     │
+│  │ 280 chk  │   │ BFT 5/5  │   │ BFT 23/33│   │ + Human  │     │
+│  └──────────┘   └──────────┘   └──────────┘   └──────────┘     │
+│       │              │              │              │              │
+│       └──────────────┴──────────────┴──────────────┘              │
+│                          │                                        │
+│                          ▼                                        │
+│                   ┌──────────────┐                                │
+│                   │ SIGIL CHAIN  │  ← Every action recorded       │
+│                   │ (hash-chained)│  ← Ed25519 signed             │
+│                   └──────────────┘  ← Bitcoin anchored (planned)  │
+│                          │                                        │
+│           ┌──────────────┼──────────────┐                         │
+│           ▼              ▼              ▼                         │
+│    ┌──────────┐   ┌──────────┐   ┌──────────┐                    │
+│    │ RECOVER  │   │ REVIEW   │   │ HARDEN   │                    │
+│    │ Staged   │   │ 72h Rpt  │   │ OLM Learn│                    │
+│    └──────────┘   └──────────┘   └──────────┘                    │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘</pre>
+
+<h2>8. Tooling</h2>
+<table>
+<tr><th>Tool</th><th>Role</th><th>Source</th></tr>
+<tr><td>Gods-Eye CISO Scanner</td><td>Continuous posture monitoring (280 checks/5min)</td><td>DEFONEOS built-in</td></tr>
+<tr><td>DORADO Foreign Access Detector</td><td>Non-sovereign IP detection + bot scoring</td><td>DEFONEOS DORADO</td></tr>
+<tr><td>meok-injection-scan MCP</td><td>Prompt injection + supply chain scanning</td><td>MEOK MCP fleet</td></tr>
+<tr><td>Aegis Reviewer Gate</td><td>MCP output safety scanning (Morris-II worm check)</td><td>Swarm orchestration</td></tr>
+<tr><td>OrgKernel 3-Layer Audit</td><td>L1 Identity + L2 Execution + L3 Compliance chain</td><td>OrgKernel pattern</td></tr>
+<tr><td>SIGIL Chain Explorer</td><td>Incident timeline reconstruction</td><td>SIGIL REST API</td></tr>
+<tr><td>DORADO Replay</td><td>Forensic audit-trail replay for regulators</td><td>DORADO module</td></tr>
+<tr><td>OSCAL Catalog</td><td>Compliance control mapping post-incident</td><td>NIST OSCAL 1.1.2</td></tr>
+</table>
+
+<div class="footer">
+<p>DEFONEOS — UK Sovereign Public Services OS · Incident Response Playbook v1.0</p>
+<p>Ed25519-signed · SIGIL hash-chained · BFT council validated</p>
+<p>🇬🇧 Sovereign by Design · Audit-Grade · Neutral · British Forever</p>
+</div>
+
+</div>
+</body>
+</html>

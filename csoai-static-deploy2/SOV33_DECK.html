@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🎯 SOV33 Pitch Deck — 6 Slides</title>
+<meta name="description" content="SOV33 6-slide pitch deck — the sovereign Open World Emergence Model in one shareable URL: 61 models, BFT-33, SIGIL chain, EU AI Act aligned.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink));padding:1.5rem;line-height:1.55;max-width:1200px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;text-align:center}
+  h2{color:var(--accent2);font-size:1.6rem;margin-top:2rem}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .meta{color:var(--muted);font-size:.9em}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .slide{background:var(--bg);padding:1.5rem;border-radius:8px;border:1px solid var(--rule);margin:1rem 0}
+  .slide .num{color:var(--accent);font-size:.85em;font-weight:bold}
+  .slide .title{color:var(--accent2);font-size:1.5rem;font-weight:bold;margin:.5rem 0}
+  .slide .points{color:var(--ink)}
+  .slide .points li{margin:.3rem 0}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_DECK.html">
+</head>
+<body>
+
+<header class="card">
+  <h1>🎯 SOV33 Pitch Deck</h1>
+  <p class="meta">6 slides · 12 Jul 2026</p>
+  <p style="text-align:center"><a href="SOV33_HERO.html">← SOV33 Hub</a></p>
+</header>
+
+<div id="slides">Loading...</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+<strong>🎯 SOV33 Pitch Deck</strong> · 12 Jul 2026 · Hermes lane<br>
+<a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function load() {
+  try {
+    const r = await fetch(API + '/api/deck');
+    const d = await r.json();
+
+    let html = '';
+    d.slides.forEach((s, i) => {
+      html += `
+        <div class="slide">
+          <div class="num">SLIDE ${s.slide} / ${d.slides.length}</div>
+          <div class="title">${s.title}</div>
+          <ul class="points">
+            ${s.points.map(p => `<li>${p}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    });
+    html += `<div class="card" style="border-left-color:var(--accent);text-align:center">
+      <h3 style="color:var(--accent)">${d.tagline}</h3>
+    </div>`;
+    document.getElementById('slides').innerHTML = html;
+  } catch (e) {}
+}
+load();
+</script>
+
+</body>
+</html>

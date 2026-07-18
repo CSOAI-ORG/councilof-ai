@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MEOK Hackathon — Q3 2026 | Open-Source Contribution Event</title>
+  <meta name="description" content="MEOK Hackathon Q3 2026. 24-hour open-source contribution event. UK + EU. Augment the 32-server MCP compliance fleet. CSOAI Ltd, UK 16939677. £1,000 in prizes.">
+  <link rel="canonical" href="https://meok.ai/hackathon">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 880px; margin: 0 auto; padding: 0 1.5rem; line-height: 1.6; color: #111; }
+    h1 { font-size: 2.4rem; margin: 2rem 0 0.5rem; }
+    .lede { font-size: 1.1rem; color: #666; margin: 0 0 1.5rem; }
+    .hero { background: linear-gradient(135deg, rgba(22,163,74,0.06), rgba(201,168,76,0.12)); padding: 2rem 1.5rem; border-radius: 0.5rem; text-align: center; margin: 1.5rem 0; }
+    .hero .prize { font-size: 2.5rem; font-weight: 800; color: #c9a84c; }
+    h2 { font-size: 1.4rem; margin-top: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.3rem; }
+    .prize-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .prize-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.25rem; }
+    .prize-card h3 { margin: 0 0 0.3rem; }
+    .prize-card .p { font-size: 1.5rem; font-weight: 800; color: #c9a84c; }
+    .cta { display: inline-block; background: #c9a84c; color: #111; padding: 0.7rem 1.4rem; border-radius: 0.5rem; text-decoration: none; font-weight: 700; }
+    form { background: #f9fafb; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; margin: 1.5rem 0; }
+    .form-row { margin: 0.8rem 0; }
+    label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
+    input, select, textarea { width: 100%; padding: 0.6rem; border: 1px solid #e5e7eb; border-radius: 0.4rem; font-size: 1rem; font-family: inherit; }
+  </style>
+</head>
+<body>
+  <h1>MEOK Hackathon — Q3 2026</h1>
+  <p class="lede">24-hour open-source contribution event. UK + EU. Augment the 32-server MCP compliance fleet. £1,000 in prizes. CSOAI Ltd, UK 16939677.</p>
+
+  <div class="hero">
+    <p style="font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 0.1em;">15 September 2026 · 09:00 BST → 16 September 2026 · 09:00 BST · 24 hours</p>
+    <p class="prize">£1,000 in prizes</p>
+    <p style="color: #666;">+ 6 months free MEOK Pro + a MEOK.com @ handle + a CSOAI co-authored blog post + a CSOAI Watchdog Cert</p>
+  </div>
+
+  <h2>What to build</h2>
+  <p>Anything that augments the 32-server MCP compliance fleet. Pick a category:</p>
+  <ul>
+    <li><strong>New MCP server</strong> — build a new compliance MCP (e.g. CSRD reporting MCP, Colorado AI Act MCP, Quebec Law 25 MCP)</li>
+    <li><strong>New MCP tool</strong> — add a new tool to an existing MCP (e.g. <code>sign_with_pgp</code> on meok-attestation-api)</li>
+    <li><strong>Industry vertical pack</strong> — package a subset of MCPs for a specific industry (e.g. <code>fintech-compliance-pack</code> = eu-ai-act + dora + fca + bis)</li>
+    <li><strong>AI policy generator</strong> — like the MEOK policy-gen page but for a specific framework (e.g. a US HIPAA generator)</li>
+    <li><strong>Compliance dashboard</strong> — a real-time view of an organization's compliance posture (using the keystone as the data source)</li>
+    <li><strong>Documentation</strong> — improve the existing docs (llms.txt, openapi.json, README files)</li>
+  </ul>
+
+  <h2>Prizes</h2>
+  <div class="prize-list">
+    <div class="prize-card"><h3>🥇 1st place</h3><p class="p">£500</p>+ 6 months Pro + Watchdog Cert + co-authored blog</div>
+    <div class="prize-card"><h3>🥈 2nd place</h3><p class="p">£300</p>+ 6 months Pro + co-authored blog</div>
+    <div class="prize-card"><h3>🥉 3rd place</h3><p class="p">£200</p>+ 6 months Pro + co-authored blog</div>
+    <div class="prize-card"><h3>🏅 Best new MCP server</h3><p class="p">—</p>+ 6 months Pro + co-authored blog + GitHub README credit</div>
+    <div class="prize-card"><h3>🏅 Best industry pack</h3><p class="p">—</p>+ 6 months Pro + co-authored blog + GitHub README credit</div>
+    <div class="prize-card"><h3>🏅 Most creative submission</h3><p class="p">—</p>+ 6 months Pro + co-authored blog + GitHub README credit</div>
+  </div>
+
+  <h2>Rules</h2>
+  <ol>
+    <li>Submissions must be open source (MIT or Apache 2.0)</li>
+    <li>Submissions must integrate with at least one MEOK MCP server (use it, extend it, build a wrapper around it)</li>
+    <li>Submissions must be your own work (no copy-paste of existing OSS without credit)</li>
+    <li>Submissions must include a 1-page README explaining what it does + how to run it + a 30-sec screen recording</li>
+    <li>Submissions are due 16 September 2026 09:00 BST</li>
+    <li>Winners announced 19 September 2026 09:00 BST</li>
+  </ol>
+
+  <h2>How to participate</h2>
+  <ol>
+    <li>Register below (free, no fee)</li>
+    <li>Get the MEOK Pro tier for free during the hackathon (24 hours)</li>
+    <li>Build your submission</li>
+    <li>Submit a PR to github.com/CSOAI-ORG/hackathon-2026-q3 with your code + README + screen recording</li>
+    <li>Winners announced 19 September 2026</li>
+  </ol>
+
+  <h2>Register</h2>
+  <form action="mailto:hello@meok.ai" method="post" enctype="text/plain" onsubmit="event.preventDefault(); document.getElementById('thanks').style.display = 'block'; this.style.display = 'none';">
+    <div class="form-row">
+      <label for="name">Your name + handle</label>
+      <input type="text" id="name" placeholder="e.g. Sarah Chen (@sarah)" required>
+    </div>
+    <div class="form-row">
+      <label for="email">Your work email</label>
+      <input type="email" id="email" placeholder="you@company.com" required>
+    </div>
+    <div class="form-row">
+      <label for="country">Your country</label>
+      <input type="text" id="country" placeholder="UK / Germany / France / etc" required>
+    </div>
+    <div class="form-row">
+      <label for="track">Which track?</label>
+      <select id="track" required>
+        <option>New MCP server</option>
+        <option>New MCP tool</option>
+        <option>Industry vertical pack</option>
+        <option>AI policy generator</option>
+        <option>Compliance dashboard</option>
+        <option>Documentation</option>
+        <option>Other (open category)</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="idea">1-line idea (or "I have an idea" + a 2-sentence description)</label>
+      <textarea id="idea" rows="3" placeholder="e.g. A Colorado AI Act MCP that mirrors the EU AI Act compliance fleet for US SMBs." required></textarea>
+    </div>
+    <a class="cta" href="#" onclick="event.preventDefault(); this.closest('form').dispatchEvent(new Event('submit')); return false;">Register for free →</a>
+  </form>
+
+  <div id="thanks" style="display: none; background: #f0fdf4; border-left: 4px solid #16a34a; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0.4rem;">
+    <strong>Registered.</strong> Email <code>hello@meok.ai</code> with your name + email + 'HACKATHON' in the subject — Nick will reply within 1 working day with your free Pro tier credentials + the GitHub repo URL.
+  </div>
+
+  <footer style="margin: 3rem 0 1rem; padding: 1.5rem 0; border-top: 1px solid #e5e7eb; color: #999; font-size: 0.9rem;">
+    <p>CSOAI Ltd · UK 16939677 · hello@meok.ai</p>
+    <p>Open source. MIT licensed. Sovereign UK infrastructure.</p>
+  </footer>
+</body>
+</html>

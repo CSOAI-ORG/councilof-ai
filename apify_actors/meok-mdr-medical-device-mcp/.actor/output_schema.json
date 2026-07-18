@@ -1,0 +1,18 @@
+{
+  "title": "mdr-medical-device-mcp Output",
+  "type": "object",
+  "schemaVersion": 1,
+  "actorOutputSchemaVersion": 1,
+  "template": {
+    "result": "{{result_json}}",
+    "audit_id": "{{audit_id}}",
+    "version": "{{version}}",
+    "timestamp_utc": "{{timestamp_utc}}"
+  },
+  "properties": {
+    "result": {"title": "Result", "type": "string", "description": "JSON-stringified structured output", "template": "{{result_json}}"},
+    "audit_id": {"title": "Audit ID", "type": "string", "description": "Hash-chained audit trail reference", "template": "{{audit_id}}"},
+    "version": {"title": "Server version", "type": "string", "description": "MCP server semver", "template": "{{version}}"},
+    "timestamp_utc": {"title": "Timestamp UTC", "type": "string", "description": "ISO8601 timestamp (UTC)", "template": "{{timestamp_utc}}"}
+  }
+}

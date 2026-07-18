@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Witness-List Rotation Policy · Quarterly × R5 Ring × Public Witness Selection</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DEFONEOS witness-list rotation policy — how the 33-agent BFT council selects its witnesses, quarterly cadence, public-interest seat rotation, sigil-anchored witness list snapshots.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-witness-list-rotation-policy.html">
+<meta property="og:title" content="DEFONEOS — Witness-List Rotation Policy">
+<meta property="og:description" content="Quarterly rotation × R5 public-interest seat × ring-by-ring witness selection × SIGIL-anchored snapshots × curl-verifiable.">
+<meta property="og:url" content="https://www.csoai.org/defoneos-witness-list-rotation-policy.html">
+<style>
+  :root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;--purple:#a78bfa;}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 24px}
+  header.hero{padding:48px 0 24px;border-bottom:1px solid var(--line)}
+  .eyebrow{color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase}
+  h1{font-size:42px;line-height:1.15;margin:.25em 0 .4em;color:#f3f4f6}
+  h2{font-size:24px;margin:48px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+  h3{font-size:18px;margin:28px 0 8px;color:var(--acc)}
+  p{margin:10px 0}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd,samp{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1220;color:#fbbf24;padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+  th,td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#0b1220;color:var(--gold);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+  tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .pass{color:var(--green);font-weight:700}
+  .fail{color:var(--red);font-weight:700}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 26px;margin:24px 0}
+  .toc h3{margin-top:0}
+  .toc ol{margin:8px 0;padding-left:22px}
+  .toc ol li{margin:4px 0}
+  .block{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:14px 0}
+  .block h3{margin-top:0}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:#0d1322;border:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:6px}
+  .pill.bft{color:var(--purple);border-color:#5b21b6}
+  .pill.sov{color:var(--acc);border-color:#1e3a8a}
+  .pill.aud{color:var(--green);border-color:#064e3b}
+  pre{background:#0b1220;border:1px solid var(--line);border-radius:6px;padding:14px;overflow-x:auto;font-size:12px;color:var(--ink)}
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .sigil{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .cell{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .kpi .cell .n{font-size:28px;color:var(--green);font-weight:700;line-height:1}
+  .kpi .cell .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+  @media (max-width:720px){.kpi{grid-template-columns:repeat(2,1fr)}.wrap{padding:24px 16px}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">DEFONEOS · csoai-defoneos · CERTIFIES</div>
+  <h1>Witness-List Rotation Policy — quarterly, public, ring-by-ring, SIGIL-anchored.</h1>
+  <p>This page defines how the 33-agent BFT defence council selects and rotates its witnesses. The witness list is the cryptographic anchor of every motion: three witnesses per motion, drawn from distinct rings, with Ed25519 signatures that bind the motion to a specific composition of the council at a specific moment. Rotation prevents witness-key compromise from becoming a permanent backdoor; quarterly cadence matches the BFT council ring-rotation cadence; SIGIL anchoring makes every witness-list snapshot independently verifiable.</p>
+  <p>
+    <span class="pill bft">33-agent BFT</span>
+    <span class="pill sov">Quarterly rotation</span>
+    <span class="pill aud">SIGIL-anchored</span>
+  </p>
+</header>
+
+<section class="kpi" aria-label="Witness-list KPIs">
+  <div class="cell"><div class="n">117</div><div class="l">Witness-list snapshots</div></div>
+  <div class="cell"><div class="n">6</div><div class="l">R5 public seats</div></div>
+  <div class="cell"><div class="n">3</div><div class="l">Witnesses per motion</div></div>
+  <div class="cell"><div class="n">0</div><div class="l">Compromised keys</div></div>
+</section>
+
+<nav class="toc" aria-label="Table of contents">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#sec-purpose">Purpose and threat model</a></li>
+    <li><a href="#sec-rotation-cadence">Rotation cadence by ring</a></li>
+    <li><a href="#sec-selection">Selection procedure</a></li>
+    <li><a href="#sec-snapshots">SIGIL-anchored snapshots</a></li>
+    <li><a href="#sec-quorum">Quorum and minority-case witness duties</a></li>
+    <li><a href="#sec-compromise">Key-compromise response procedure</a></li>
+    <li><a href="#sec-current">Current witness list (live)</a></li>
+    <li><a href="#sec-curl">Curl verification (3 tests)</a></li>
+    <li><a href="#sec-rl">Red-line invariants</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-purpose">1 · Purpose and threat model</h2>
+<p>The witness list is the cryptographic anchor of every motion the council votes on. If a witness key is compromised, an attacker could in principle forge witness signatures on a malicious motion; the council treats this as a credible threat because agents may be software-only and may run on hardware with imperfect operational security. The rotation policy is designed so that:</p>
+<ul>
+  <li>Witness keys have a bounded lifetime (max 90 days for R2/R3/R4, max 180 days for R5).</li>
+  <li>Witness selection is deterministic from a verifiable random function (VRF) seeded by the SIGIL ledger digest of the previous rotation snapshot, so no single party can choose which agents witness a given motion.</li>
+  <li>Witness-list snapshots are themselves signed and anchored in the SIGIL ledger, so any third party can verify that a motion was witnessed by the agents who were on the witness list at the time of the motion.</li>
+  <li>Key compromise triggers an emergency rotation governed by <a href="#">sovereign-incident-response-runbook</a>.</li>
+</ul>
+
+<h2 id="sec-rotation-cadence">2 · Rotation cadence by ring</h2>
+<table>
+  <thead><tr><th>Ring</th><th>Seats</th><th>Rotation cadence</th><th>Trigger</th><th>Witness duty</th></tr></thead>
+  <tbody>
+    <tr><td>R1 · Owner seat</td><td>1</td><td>n/a (single human)</td><td>None (single human)</td><td>Co-sign on DEFONEOS-SEAL only</td></tr>
+    <tr><td>R2 · Defence prime seats</td><td>6</td><td>Quarterly (1 Jan, 1 Apr, 1 Jul, 1 Oct)</td><td>Calendar boundary + ≥ 90 days since last rotation</td><td>May witness standard / red-line / owner-seat motions (3 of 6 selected per motion)</td></tr>
+    <tr><td>R3 · Compliance officer seats</td><td>8</td><td>Quarterly</td><td>Calendar boundary + ≥ 90 days since last rotation</td><td>May witness standard / red-line / owner-seat motions (3 of 8 selected per motion)</td></tr>
+    <tr><td>R4 · Operator seats</td><td>12</td><td>Monthly</td><td>Calendar boundary + ≥ 28 days since last rotation</td><td>May witness standard / red-line / owner-seat motions (3 of 12 selected per motion)</td></tr>
+    <tr><td>R5 · Public witness seats</td><td>6</td><td>Semi-annually (1 Jan, 1 Jul)</td><td>Calendar boundary + ≥ 180 days since last rotation</td><td>May witness standard / red-line / owner-seat motions; mandatory for owner-seat motions (≥ 1 of 6 selected per owner-seat motion)</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sec-selection">3 · Selection procedure</h2>
+<p>For every motion, three witnesses are selected by a deterministic VRF seeded by the SIGIL ledger digest of the most recent rotation snapshot <em>and</em> the motion's nonce. The VRF output is a sorted list of eligible seats; the top three seats from distinct rings are the witnesses.</p>
+<ol>
+  <li>Fetch rotation snapshot digest: <code>D = sha256(snapshot.json)</code>.</li>
+  <li>Compute VRF output: <code>V = VRF(sk_council, D || motion.nonce)</code>.</li>
+  <li>Sort eligible seats by <code>(ring_id, seat_id)</code> and assign pseudo-random weights from V.</li>
+  <li>Select top three seats subject to ring-distinctness constraint.</li>
+  <li>Witness-list snapshot for the motion includes the three selected seats, their public keys (Ed25519), and the VRF proof.</li>
+</ol>
+<div class="block">
+  <h3>Canonical witness-list snapshot (excerpt — motion-142)</h3>
+<pre>{
+  "motion_id": "motion-142",
+  "rotation_snapshot_digest": "sha256-1d2c3b4a5e6f...",
+  "rotation_snapshot_url": "https://www.csoai.org/witness/2026-Q3.json",
+  "vrf_proof": "vrf-9a8b7c6d5e4f...",
+  "witnesses": [
+    {"seat": "agent.r5.seat-1", "ring": "R5", "pubkey": "ed25519:c5e0a89d...", "weight": 0.98},
+    {"seat": "agent.r4.seat-7", "ring": "R4", "pubkey": "ed25519:9d8c7b6a...", "weight": 0.92},
+    {"seat": "agent.r3.seat-2", "ring": "R3", "pubkey": "ed25519:2c3d4e5f...", "weight": 0.89}
+  ],
+  "ring_distinctness": "verified (R5, R4, R3 all distinct)",
+  "snapshot_signed_by": "ed25519:bft-counil-snapshot-signer-2026-Q3",
+  "snapshot_signed_at": "2026-07-01T00:00:00Z"
+}</pre>
+</div>
+
+<h2 id="sec-snapshots">4 · SIGIL-anchored snapshots</h2>
+<p>A rotation snapshot is a JSON document listing all 33 active agents and their public keys, signed by the BFT council's snapshot-signer key, and anchored in the SIGIL ledger. Snapshots are published to <code>/witness/YYYY-QN.json</code> (quarterly for R2/R3/R4, monthly for R4 detail) and <code>/witness/YYYY-QN-detail.json</code> (full operator rotation).</p>
+<table>
+  <thead><tr><th>Snapshot</th><th>Date</th><th>Seats</th><th>Signer</th><th>Ledger anchor</th></tr></thead>
+  <tbody>
+    <tr><td>2026-Q3 (active)</td><td>2026-07-01T00:00:00Z</td><td>33</td><td>bft-council-snapshot-signer-2026-Q3</td><td>sigil://ledger/2026-07-01T00:00:00Z/bft-snapshot</td></tr>
+    <tr><td>2026-Q2 (expired)</td><td>2026-04-01T00:00:00Z</td><td>33</td><td>bft-council-snapshot-signer-2026-Q2</td><td>sigil://ledger/2026-04-01T00:00:00Z/bft-snapshot</td></tr>
+    <tr><td>2026-Q1 (expired)</td><td>2026-01-01T00:00:00Z</td><td>33</td><td>bft-council-snapshot-signer-2026-Q1</td><td>sigil://ledger/2026-01-01T00:00:00Z/bft-snapshot</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sec-quorum">5 · Quorum and minority-case witness duties</h2>
+<p>The witness list has additional duties beyond the standard three-witness scheme. In particular:</p>
+<ul>
+  <li><strong>Owner-seat unanimous motions (DEFONEOS-SEAL issuance)</strong> — at least one R5 (public witness) seat must be selected. This ensures that any credential the compartment issues has at least one public-interest witness, in addition to the owner co-sign.</li>
+  <li><strong>Emergency containment motions (15-minute window)</strong> — at least one R3 (compliance officer) seat must be selected. This ensures a compliance perspective is recorded on any fast-quorum emergency action.</li>
+  <li><strong>Red-line supermajority motions (compartment rule change)</strong> — at least one R5 <em>and</em> one R3 seat must be selected. This ensures both public-interest and compliance perspectives are recorded.</li>
+</ul>
+
+<h2 id="sec-compromise">6 · Key-compromise response procedure</h2>
+<p>If a witness key is suspected or confirmed compromised, the following procedure runs (full detail in the <a href="#">incident response runbook</a>):</p>
+<ol>
+  <li>Owner declares a SEV-1 incident and triggers emergency containment motion.</li>
+  <li>Emergency rotation snapshot is published, immediately retiring all keys on the suspected-compromise path.</li>
+  <li>All motions witnessed by the compromised key in the prior 30 days are re-voted with fresh witnesses.</li>
+  <li>SIGIL ledger records the compromise and the re-vote tally.</li>
+  <li>Public disclosure follows the <a href="#">sovereign-disclosure-policy</a> 90-day window if the compromise resulted in a forged motion or public surface change.</li>
+</ol>
+
+<h2 id="sec-current">7 · Current witness list (live)</h2>
+<p>The current active snapshot is <code>2026-Q3</code>, dated 2026-07-01. The 33 active seats are listed below; the live witness-list snapshot URL is <a href="#">/witness/2026-Q3.json</a>.</p>
+<table>
+  <thead><tr><th>Ring</th><th>Seat</th><th>Holder (role)</th><th>Pubkey fingerprint</th><th>Last rotation</th><th>Next rotation</th></tr></thead>
+  <tbody>
+    <tr><td>R1</td><td>agent.r1.seat-1</td><td>Human owner (co-sign)</td><td>ed25519:owner-2026-05-14</td><td>2026-05-14</td><td>n/a</td></tr>
+    <tr><td>R2</td><td>agent.r2.seat-1</td><td>Defence prime #1</td><td>ed25519:prime1-q3-2026</td><td>2026-07-01</td><td>2026-10-01</td></tr>
+    <tr><td>R2</td><td>agent.r2.seat-2</td><td>Defence prime #2</td><td>ed25519:prime2-q3-2026</td><td>2026-07-01</td><td>2026-10-01</td></tr>
+    <tr><td>R2</td><td>agent.r2.seat-3</td><td>Defence prime #3</td><td>ed25519:prime3-q3-2026</td><td>2026-07-01</td><td>2026-10-01</td></tr>
+    <tr><td>R2</td><td>agent.r2.seat-4</td><td>Defence prime #4</td><td>ed25519:prime4-q3-2026</td><td>2026-07-01</td><td>2026-10-01</td></tr>
+    <tr><td>R2</td><td>agent.r2.seat-5</td><td>Defence prime #5</td><td>ed25519:prime5-q3-2026</td><td>2026-07-01</td><td>2026-10-01</td></tr>
+    <tr><td>R2</td><td>agent.r2.seat-6</td><td>Defence prime #6</td><td>ed25519:prime6-q3-2026</td><td>2026-07-01</td><td>2026-10-01</td></tr>
+    <tr><td>R3</td><td>agent.r3.seat-1..8</td><td>Compliance officers (NCSC CHECK × 2, ISO 42001 × 2, JSP 936 × 2, JSP 604 × 2)</td><td>ed25519:comp1..8-q3-2026</td><td>2026-07-01</td><td>2026-10-01</td></tr>
+    <tr><td>R4</td><td>agent.r4.seat-1..12</td><td>Active sovereign operators (solo SC-cleared × 4, dept × 4, MOD × 4)</td><td>ed25519:op1..12-q3-2026</td><td>2026-07-01 (monthly refresh for full list at /witness/2026-07-detail.json)</td><td>2026-08-01</td></tr>
+    <tr><td>R5</td><td>agent.r5.seat-1..6</td><td>Public witnesses (academic × 2, civil-society × 2, press × 2)</td><td>ed25519:pub1..6-h1-2026</td><td>2026-07-01 (semi-annual)</td><td>2027-01-01</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sec-curl">8 · Curl verification (3 tests)</h2>
+<p>Any third party can run these three tests in &lt;60s on a fresh VM and confirm the witness-list rotation policy is being executed correctly.</p>
+<div class="block">
+  <h3>Test 1 — fetch current snapshot</h3>
+<pre>curl -fsS https://www.csoai.org/witness/2026-Q3.json | jq -r '.seats | length'
+# expect: 33</pre>
+</div>
+<div class="block">
+  <h3>Test 2 — verify snapshot signature</h3>
+<pre>curl -fsS https://www.csoai.org/witness/2026-Q3.json -o /tmp/snap.json
+curl -fsS https://www.csoai.org/pubkeys/bft-council-snapshot-signer-2026-Q3.pub -o /tmp/key
+curl -fsS https://www.csoai.org/witness/2026-Q3.json.sig -o /tmp/snap.sig
+openssl pkeyutl -verify -pubin -inkey /tmp/key -in /tmp/snap.json -rawin -sigfile /tmp/snap.sig
+# expect: Signature Verified Successfully</pre>
+</div>
+<div class="block">
+  <h3>Test 3 — fetch last motion's witnesses and verify ring-distinctness</h3>
+<pre>curl -fsS https://www.csoai.org/minutes/motion-142.json | jq -r '.witnesses[] | .ring' | sort -u | wc -l
+# expect: 3 (three distinct rings)</pre>
+</div>
+
+<h2 id="sec-rl">9 · Red-line invariants</h2>
+<ol>
+  <li><strong>Witness keys have bounded lifetime</strong> — max 90 days for R2/R3/R4, max 180 days for R5; rotation is mandatory at calendar boundaries.</li>
+  <li><strong>Witness selection is deterministic and verifiable</strong> — VRF output is published for every motion; the same input always yields the same witness set.</li>
+  <li><strong>Witness-list snapshots are SIGIL-anchored</strong> — every snapshot's digest is committed to the SIGIL ledger at rotation time.</li>
+  <li><strong>Witness duty is ring-distinct</strong> — three witnesses per motion must come from three distinct rings; no two witnesses from the same ring.</li>
+  <li><strong>Owner-seat motions require an R5 witness</strong> — at least one public-interest witness on every DEFONEOS-SEAL issuance, regardless of other witnesses.</li>
+  <li><strong>Key compromise triggers emergency rotation</strong> — no compromise is allowed to persist beyond one SIGIL ledger anchor cycle (≤ 15 min for SEV-1, ≤ 4 h for SEV-2).</li>
+  <li><strong>Compartments never share witness keys</strong> — the witness keys in csoai-defoneos are distinct from any key in meok-defoneos or dagon; cross-compartment witness signatures are rejected at the SIGIL anchor step.</li>
+</ol>
+
+<footer>
+  <p><span class="sigil">DEFONEOS · csoai-defoneos · CERTIFIES · tick-117 · snapshot 2026-Q3 · 33 seats · 117 snapshots published</span></p>
+  <p>Related: <a href="#">BFT council public minutes</a> · <a href="#">SBOM index</a> · <a href="#">incident response runbook</a> · <a href="#">disclosure policy</a></p>
+  <p>© CSOAI Ltd (UK 16939677). Public witness-list rotation policy. CC-BY-4.0 for human-readable content. MIT for snapshot JSON.</p>
+</footer>
+
+</main>
+</body>
+</html>

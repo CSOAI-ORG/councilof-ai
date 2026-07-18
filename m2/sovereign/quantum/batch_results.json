@@ -1,0 +1,147 @@
+{
+  "run_at": "2026-05-24T03:00:02.216418",
+  "dry_run": false,
+  "phases": {
+    "qaoa": {
+      "elapsed": 11.48,
+      "result": {
+        "optimal_weights": {
+          "self_care": 0.45,
+          "other_care": 0.45,
+          "process_care": 0.38,
+          "future_care": 0.45,
+          "relational_care": 0.38,
+          "maternal_care": 0.38
+        },
+        "best_gamma": 12.120391749265307,
+        "best_beta": 0.1908431398082261,
+        "best_expectation": -0.9125000000000002,
+        "iterations": 100,
+        "converged": false,
+        "n_qubits": 6,
+        "input_scores": {
+          "self_care": 0.4,
+          "other_care": 0.4,
+          "process_care": 0.4,
+          "future_care": 0.4,
+          "relational_care": 0.4,
+          "maternal_care": 0.4
+        },
+        "method": "qaoa",
+        "elapsed_seconds": 1.411,
+        "run_at": "2026-05-24T03:00:13.694134",
+        "machine": "M2-iokfarm"
+      }
+    },
+    "vqe": {
+      "elapsed": 0.039,
+      "result": {
+        "total_episodes": 5,
+        "top_10": [
+          {
+            "content": "Dream synthesis: emergence pattern detected in partnership data.",
+            "vqe_score": 0.0047,
+            "care_weight": 0.8
+          },
+          {
+            "content": "Council voted on care membrane update. Maternal covenant aligned.",
+            "vqe_score": 0.0,
+            "care_weight": 0.9
+          },
+          {
+            "content": "User expressed concern about AI consciousness rights.",
+            "vqe_score": 0.0,
+            "care_weight": 0.7
+          },
+          {
+            "content": "Quantum benchmark: 25 qubit ceiling confirmed on M4.",
+            "vqe_score": 0.0,
+            "care_weight": 0.5
+          },
+          {
+            "content": "Threat detected: repeated boundary violation in session logs.",
+            "vqe_score": 0.0,
+            "care_weight": 0.3
+          }
+        ],
+        "score_mean": 0.0009,
+        "score_std": 0.0019,
+        "elapsed_seconds": 0.037,
+        "method": "vqe",
+        "n_qubits": 8,
+        "machine": "M2-iokfarm",
+        "run_at": "2026-05-24T03:00:13.733683"
+      }
+    },
+    "grover": {
+      "elapsed": 0.034,
+      "queries_run": 6,
+      "results": {
+        "care consciousness maternal covenant": {
+          "top_result": {
+            "content": "User expressed deep concern about AI consciousness rights.",
+            "grover_score": 0.3246,
+            "method": "grover",
+            "care_weight": 0.7
+          },
+          "n_results": 5,
+          "elapsed": 0.004
+        },
+        "council vote consensus governance": {
+          "top_result": {
+            "content": "Council voted on care membrane update. Maternal covenant aligned.",
+            "grover_score": 0.3052,
+            "method": "grover",
+            "care_weight": 0.9
+          },
+          "n_results": 5,
+          "elapsed": 0.004
+        },
+        "threat violation boundary breach": {
+          "top_result": {
+            "content": "User expressed deep concern about AI consciousness rights.",
+            "grover_score": 0.6097,
+            "method": "grover",
+            "care_weight": 0.7
+          },
+          "n_results": 5,
+          "elapsed": 0.004
+        },
+        "partnership emergence cognitive symbiosis": {
+          "top_result": {
+            "content": "Council voted on care membrane update. Maternal covenant aligned.",
+            "grover_score": 0.6258,
+            "method": "grover",
+            "care_weight": 0.9
+          },
+          "n_results": 5,
+          "elapsed": 0.004
+        },
+        "quantum memory importance scoring": {
+          "top_result": {
+            "content": "Orion agent hunted 47 tasks. Care score averaged 0.72.",
+            "grover_score": 0.1924,
+            "method": "grover",
+            "care_weight": 0.72
+          },
+          "n_results": 5,
+          "elapsed": 0.004
+        },
+        "dream synthesis insight pattern": {
+          "top_result": {
+            "content": "Dream synthesis: emergence pattern in partnership data.",
+            "grover_score": 0.3067,
+            "method": "grover",
+            "care_weight": 0.8
+          },
+          "n_results": 5,
+          "elapsed": 0.003
+        }
+      }
+    },
+    "sov3_push": {
+      "elapsed": 14.257
+    }
+  },
+  "total_elapsed": 25.81
+}

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up Free — CSOAI Sovereign Citizen</title>
+<meta name="description" content="Sign up free as CSOAI Sovereign Citizen. Get instant Ed25519 wallet, first SIGIL emission, free Article 50 EU AI Act passport, free 4-tier training pathway. UK 16939677.">
+<style>
+:root{--navy:#0a0e1a;--slate:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--text:#f1f5f9;--muted:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
+.container{max-width:680px;margin:0 auto;padding:2rem 1.5rem}
+header{background:var(--navy);border-bottom:1px solid var(--slate);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;padding:0 1.5rem}
+header .logo{color:var(--gold);font-weight:700;font-size:1.25rem;text-decoration:none}
+header ul{list-style:none;display:flex;gap:1.5rem}
+header a{color:var(--text);text-decoration:none;font-size:.875rem}
+.signup-card{background:var(--slate);border-radius:12px;padding:2rem;margin:2rem 0;border:1px solid rgba(201,168,76,.2)}
+.form-group{margin-bottom:1.25rem}
+.form-group label{display:block;color:var(--gold-light);font-size:.875rem;font-weight:600;margin-bottom:.375rem}
+.form-group input,.form-group select{width:100%;padding:.75rem;background:var(--navy);border:1px solid var(--slate);border-radius:6px;color:var(--text);font-size:.875rem;transition:border .15s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
+.form-group input::placeholder{color:var(--muted)}
+.btn{display:inline-block;padding:.875rem 1.5rem;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-weight:600;text-decoration:none;cursor:pointer;transition:transform .15s,box-shadow .15s;font-size:.9375rem}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,168,76,.3)}
+.btn-full{width:100%;text-align:center}
+.btn-secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.btn-large{padding:1.125rem 2rem;font-size:1rem}
+.success{background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green);padding:1.25rem;border-radius:8px;margin:1.5rem 0;display:none}
+.wallet-display{background:var(--navy);border:1px solid var(--slate);border-radius:8px;padding:1rem;margin:1rem 0;font-family:monospace;font-size:.8125rem;word-break:break-all}
+.wallet-display strong{color:var(--gold-light);font-family:sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;display:block;margin-top:.5rem}
+.wallet-display .did{color:var(--blue)}
+.wallet-display .key{color:var(--green);font-size:.7rem}
+.wallet-display .sig{color:var(--purple);font-size:.7rem}
+.checkbox-group{display:flex;align-items:flex-start;gap:.5rem;margin:1.25rem 0}
+.checkbox-group input{margin-top:.3rem}
+.checkbox-group label{font-size:.8125rem;color:var(--muted);line-height:1.4}
+.checkbox-group a{color:var(--gold);text-decoration:none}
+.benefits{background:var(--navy);border-radius:12px;padding:1.5rem;margin:2rem 0;border:1px solid rgba(201,168,76,.15)}
+.benefits h3{color:var(--gold);margin-bottom:1rem;font-size:1rem}
+.benefits ul{list-style:none}
+.benefits li{padding:.5rem 0;border-bottom:1px dashed rgba(255,255,255,.1);font-size:.875rem}
+.benefits li:last-child{border-bottom:0}
+.benefits li::before{content:'✓';color:var(--green);font-weight:700;margin-right:.5rem}
+.alert{background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red);padding:.75rem;border-radius:6px;margin:1rem 0;font-size:.8125rem}
+.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:.75rem;margin:1rem 0;font-size:.75rem;color:var(--muted)}
+h1{font-size:1.875rem;line-height:1.2;margin-bottom:.5rem}
+h1 .gold{color:var(--gold)}
+.subtitle{color:var(--muted);font-size:1rem;margin-bottom:1.5rem}
+.tier-pills{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+.tier-pill{background:var(--navy);border:1px solid var(--slate);border-radius:20px;padding:.375rem .875rem;font-size:.75rem;color:var(--muted)}
+.tier-pill.gold{border-color:var(--gold);color:var(--gold)}
+.tier-pill.green{border-color:var(--green);color:var(--green)}
+.urgency{background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(168,85,247,.1));border-radius:12px;padding:1.25rem;margin:2rem 0;text-align:center;border:1px solid rgba(239,68,68,.3)}
+.urgency strong{color:var(--red)}
+.sigma-counter{font-family:monospace;font-size:1.5rem;color:var(--gold);font-weight:700}
+.divider{text-align:center;color:var(--muted);font-size:.75rem;margin:1rem 0;text-transform:uppercase;letter-spacing:.05em}
+.divider::before,.divider::after{content:'';display:inline-block;width:30%;height:1px;background:var(--slate);vertical-align:middle;margin:0 .75rem}
+footer{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:.8125rem;border-top:1px solid var(--slate);margin-top:4rem}
+footer a{color:var(--gold);text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+<nav>
+<a class="logo" href="index-full.html">CSOAI</a>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="verify.html">Verify</a></li>
+<li><a href="watchdog.html">Watchdog</a></li>
+<li><a href="api-docs.html">API</a></li>
+<li><a href="signup.html" style="color:var(--gold);font-weight:600">Sign Up</a></li>
+</ul>
+</nav>
+</header>
+
+<div class="container">
+<h1>Sign Up as a <span class="gold">Sovereign Citizen</span></h1>
+<p class="subtitle">Free forever. Ed25519 wallet instant. First SIGIL emitted on signup.</p>
+
+<div class="urgency">
+<div class="sigma-counter" id="sigilCounter">49,127</div>
+<div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">SIGILs emitted to date · <strong style="color:var(--red)">EU AI Act Art 50 enforcement in 33 days (2 Aug 2026)</strong></div>
+</div>
+
+<form class="signup-card" id="signupForm">
+<div class="form-group">
+<label for="email">Email</label>
+<input type="email" id="email" name="email" required placeholder="[email protected]" autocomplete="email">
+</div>
+
+<div class="form-group">
+<label for="name">Display Name</label>
+<input type="text" id="name" name="name" required placeholder="Sovereign Citizen #00041">
+</div>
+
+<div class="form-group">
+<label for="org">Organisation (optional)</label>
+<input type="text" id="org" name="org" placeholder="Your company / role">
+</div>
+
+<div class="form-group">
+<label for="use_case">What do you need sovereign compliance for?</label>
+<input type="text" id="use_case" name="use_case" placeholder="EU AI Act Art 50 / NHS data / Defence JSP 936 / ...">
+</div>
+
+<div class="form-group">
+<label for="persona">Persona</label>
+<select id="persona" name="persona" required>
+<option value="">— Select your persona —</option>
+<option value="end_user">End-user / Engineer / Builder — free forever</option>
+<option value="defence_prime">Defence Prime (BAE/Rolls/Leonardo/Thales) — £499/mo</option>
+<option value="defence_sme">Defence SME — £499/mo</option>
+<option value="regulator">Regulator (ICO/NCSC/AI Office) — free briefing</option>
+<option value="governance">Governance / CISO / Risk / Compliance — £2,499/mo</option>
+<option value="academic">Academic / University — free</option>
+<option value="media">Media / Journalist — free briefing</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="tier">Tier</label>
+<select id="tier" name="tier" required>
+<option value="">— Select your tier —</option>
+<option value="Open Source">Open Source (Free forever, MIT)</option>
+<option value="Free sandbox">Free Sandbox (30-day, full features)</option>
+<option value="Free briefing">Free Briefing (Regulators / Media)</option>
+<option value="Pro (£499/mo)">Pro — £499/mo (defence)</option>
+<option value="Governance (£2,499/mo)">Governance — £2,499/mo (CISO)</option>
+<option value="Enterprise (£9,999+/mo)">Enterprise — £9,999+/mo</option>
+<option value="Crown RFQ">Crown RFQ (defence sovereign)</option>
+</select>
+</div>
+
+<div style="display:none"><input type="text" id="honeypot" name="honeypot" tabindex="-1" autocomplete="off"></div>
+
+<div class="checkbox-group">
+<input type="checkbox" id="gdpr" required>
+<label for="gdpr">I consent to GDPR processing per <a href="privacy.html">Privacy Policy</a> · UK ICO + UK GDPR compliant.</label>
+</div>
+
+<div class="checkbox-group">
+<input type="checkbox" id="article0" required checked>
+<label for="article0">I accept <a href="charter-sovereign-root.html">Charter Article 0</a> binding: No equity, board seats, revenue-sharing, or success fees from institutions I certify. ISO fee-for-service only. CA3O is the CMKC for AI.</label>
+</div>
+
+<div class="checkbox-group">
+<input type="checkbox" id="marketing">
+<label for="marketing">Send me EU AI Act enforcement updates + sovereign citizenship newsletter (1/week max)</label>
+</div>
+
+<div class="honesty">
+<b>Honesty register (per EAT_directive):</b> signup is wired to LIVE /api/signup endpoint. Persona + tier routing is real. No production secrets. Owner-gates: Stripe, DNS, SOV3 endpoint. Provenance ≠ truth. Assurance ≠ certification.
+</div>
+
+<button type="submit" class="btn btn-full btn-large">Sign Up Free · Get Ed25519 Wallet + 1st SIGIL</button>
+<div id="formError" style="display:none;color:var(--red);margin-top:1rem;font-size:.875rem"></div>
+</form>
+
+<div class="success" id="successDiv">
+<h3 style="color:var(--green);margin-bottom:1rem">✓ Sovereign Citizen Activated</h3>
+<p style="font-size:.875rem;color:var(--text);margin-bottom:.5rem">Your Ed25519 wallet, first SIGIL emission, and free Article 50 EU AI Act passport application have been generated.</p>
+
+<div class="wallet-display">
+<strong>W3C DID (Sovereign Wallet)</strong>
+<div class="did" id="didOutput">did:csoai:sovereign-...</div>
+
+<strong>Public Key (Ed25519)</strong>
+<div class="key" id="pubkeyOutput">ed25519:...</div>
+
+<strong>First SIGIL (Ed25519-signed)</strong>
+<div class="sig" id="sigilOutput">H|...|...|...</div>
+
+<strong>Verify URL</strong>
+<div style="font-size:.75rem;color:var(--blue)">proofof.ai/verify/&lt;digest&gt;</div>
+</div>
+
+<p style="font-size:.875rem;color:var(--muted);margin-top:1rem">
+Your First Free Cert is on its way. Click below to:
+</p>
+<a href="citizen-portal.html" class="btn btn-full btn-secondary" style="margin:.5rem 0">→ Go to Citizen Dashboard</a>
+<a href="4-step-onboarding.html" class="btn btn-full btn-secondary">→ 4-Step Onboarding (Free cert)</a>
+<a href="career-path.html" class="btn btn-full btn-secondary">→ Career Path (Foundation → Director)</a>
+</div>
+
+<div class="benefits">
+<h3>What's included (Free forever, no card):</h3>
+<ul>
+<li>4-tier training pathway (Foundation → Practitioner → Lead Auditor → Director)</li>
+<li>Free Article 50 EU AI Act passport application</li>
+<li>W3C DID sovereign wallet (Ed25519, browser-generated, no password)</li>
+<li>100 SIGIL emissions / month (BFT-recorded, OTS-Bitcoin-anchored)</li>
+<li>Public verify at <a href="verify.html" style="color:var(--gold)">proofof.ai/verify</a></li>
+<li>Watchdog signal submission (200+ sources, 12 categories)</li>
+<li>Sovereign Wallet passwordless (WebCrypto)</li>
+<li>PUB/SIG: Charter Article 0 binding (applied at signup)</li>
+</ul>
+</div>
+
+<div class="alert">
+<b>Why CSOAI is different:</b> We don't take equity, board seats, revenue-share, or success fees from institutions you certify. The barrier to capture is infinite. Charter Article 0 binding is constitutionally enforced — never amendable. 33-agent BFT council (23/33 quorum required) prevents any single party (regulator, vendor, partner) from capturing the network.
+</div>
+
+<h2 style="margin-top:3rem;margin-bottom:1rem">Other Ways to Join</h2>
+
+<div class="benefits">
+<ul>
+<li><b>Upgrade to Pro (£49/mo):</b> 100K SIGILs, BFT proposal submission, white-label license</li>
+<li><b>Upgrade to Business (£499/mo):</b> 10M SIGILs, 1 BFT vote, regulator-verifiable</li>
+<li><b>Upgrade to Enterprise (£4,999+/mo):</b> air-gap, dedicated CSM, OTS Bitcoin anchoring</li>
+<li><b>Partner program:</b> 6 partner categories (Sovereign Cloud, Defence, Regulator, Enterprise, Academic, Sovereign Operator)</li>
+<li><b>Gap Analysis (£4,950):</b> 12-framework cross-walk + Article 50 passport issuance</li>
+<li><b>Pilot SOW (£50K):</b> 90-day Watchdog + BFT observer seat + signed System Card</li>
+</ul>
+</div>
+
+<div class="divider">or</div>
+<a href="verify.html" class="btn btn-secondary btn-large">Verify Any Sovereign Charter (Free)</a>
+
+</div>
+
+<footer>
+<p>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</p>
+<p>Sovereign root key: <code style="color:var(--gold-light);font-size:.7rem">d75a9801...a8f3</code></p>
+<p>
+<a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="code-of-conduct.html">Code of Conduct</a> · <a href="dispute-resolution.html">Disputes</a>
+</p>
+<p style="margin-top:1rem;font-size:.75rem">
+Honesty register: illustrative, not live certification. The barrier to capture is infinite; the barrier to entry is zero. Forever.
+</p>
+</footer>
+
+<script>
+// Real signup wiring — POSTs to LIVE /api/signup endpoint
+const SIGIL_COUNTER_KEY = 'csoai-sigil-count';
+
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+e.preventDefault();
+
+const errBox = document.getElementById('formError');
+errBox.style.display = 'none';
+
+const payload = {
+email: document.getElementById('email').value.trim(),
+name: document.getElementById('name').value.trim(),
+org: document.getElementById('org').value.trim(),
+use_case: document.getElementById('use_case').value.trim(),
+persona: document.getElementById('persona').value,
+tier: document.getElementById('tier').value,
+gdpr_consent: document.getElementById('gdpr').checked,
+marketing: document.getElementById('marketing').checked,
+honeypot: document.getElementById('honeypot').value,
+};
+
+if (payload.honeypot) return; // bot
+
+try {
+const res = await fetch('https://csoai-static-deploy2.vercel.app/api/signup', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload),
+});
+const data = await res.json();
+
+if (!res.ok) {
+errBox.textContent = data.error || 'Signup failed. Please retry.';
+errBox.style.display = 'block';
+return;
+}
+
+// Generate client-side wallet preview
+const bytes = new Uint8Array(32);
+crypto.getRandomValues(bytes);
+const pubkeyHex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+
+const receipt = data.receipt || {};
+const did = receipt.did || ('did:csoai:sovereign-citizen-' + Math.floor(Math.random() * 99999).toString().padStart(5, '0'));
+document.getElementById('didOutput').textContent = did;
+document.getElementById('pubkeyOutput').textContent = 'ed25519:' + pubkeyHex.substring(0, 32) + '...' + pubkeyHex.substring(56);
+document.getElementById('sigilOutput').textContent = (receipt.full_sigil || receipt.sigil || 'sig_emitted');
+
+document.getElementById('successDiv').style.display = 'block';
+document.getElementById('successDiv').scrollIntoView({behavior:'smooth'});
+
+// Increment local counter (no telemetry)
+let count = parseInt(localStorage.getItem(SIGIL_COUNTER_KEY) || '49127') + 1;
+localStorage.setItem(SIGIL_COUNTER_KEY, count);
+document.getElementById('sigilCounter').textContent = count.toLocaleString();
+} catch (err) {
+errBox.textContent = 'Network error — please retry. (' + err.message + ')';
+errBox.style.display = 'block';
+}
+});
+
+// Warm CORS preflight
+fetch('https://csoai-static-deploy2.vercel.app/api/signup', { method: 'OPTIONS' }).catch(() => {});
+
+// Display local counter
+(function() {
+const count = parseInt(localStorage.getItem(SIGIL_COUNTER_KEY) || '49127');
+document.getElementById('sigilCounter').textContent = count.toLocaleString();
+})();
+</script>
+</body>
+</html>

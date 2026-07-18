@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Operator Troubleshooting Knowledge Base</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DEFONEOS Operator Troubleshooting Knowledge Base — common issues, diagnostic steps, and resolution guides for deploying and managing the Sovereign AI OS.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-operator-troubleshooting-knowledge-base.html">
+<meta property="og:title" content="DEFONEOS — Operator Troubleshooting Knowledge Base">
+<meta property="og:description" content="Common issues, diagnostic steps, and resolution guides for DEFONEOS operators.">
+<meta property="og:url" content="https://www.csoai.org/defoneos-operator-troubleshooting-knowledge-base.html">
+<style>
+  :root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;--purple:#a78bfa;}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 24px}
+  header.hero{padding:48px 0 24px;border-bottom:1px solid var(--line)}
+  .eyebrow{color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase}
+  h1{font-size:42px;line-height:1.15;margin:.25em 0 .4em;color:#f3f4f6}
+  h2{font-size:24px;margin:48px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+  h3{font-size:18px;margin:28px 0 8px;color:var(--acc)}
+  p{margin:10px 0}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd,samp{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1220;color:#fbbf24;padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+  th,td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#0b1220;color:var(--gold);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+  tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .pass{color:var(--green);font-weight:700}
+  .fail{color:var(--red);font-weight:700}
+  .warn{color:var(--gold);font-weight:700}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 26px;margin:24px 0}
+  .toc h3{margin-top:0}
+  .toc ol{margin:8px 0;padding-left:22px}
+  .toc ol li{margin:4px 0}
+  .block{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:14px 0}
+  .block h3{margin-top:0}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:#0d1322;border:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:6px}
+  .pill.sov{color:var(--acc);border-color:#1e3a8a}
+  .pill.aud{color:var(--green);border-color:#064e3b}
+  .pill.bft{color:var(--purple);border-color:#5b21b6}
+  .pill.red{color:var(--red);border-color:#7f1d1d}
+  .pill.gold{color:var(--gold);border-color:#783a00}
+  pre{background:#0b1220;border:1px solid var(--line);border-radius:6px;padding:14px;overflow-x:auto;font-size:12px;color:var(--ink)}
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .sigil{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .cell{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .kpi .cell .n{font-size:28px;color:var(--green);font-weight:700;line-height:1}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow">DEFONEOS</div>
+      <h1>Operator Troubleshooting Knowledge Base</h1>
+      <p>A comprehensive guide for operators of the DEFONEOS Sovereign AI OS. This knowledge base provides diagnostic steps, common issue resolutions, and best practices for maintaining system health and performance.</p>
+    </header>
+
+    <div class="toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#system-health-checks">System Health Checks</a></li>
+        <li><a href="#common-deployment-issues">Common Deployment Issues</a></li>
+        <li><a href="#mcp-connectivity-failures">MCP Connectivity Failures</a></li>
+        <li><a href="#data-ingestion-problems">Data Ingestion Problems</a></li>
+        <li><a href="#bft-council-synchronization-errors">BFT Council Synchronization Errors</a></li>
+        <li><a href="#security-incident-response">Security Incident Response</a></li>
+      </ol>
+    </div>
+
+    <section id="system-health-checks">
+      <h2>System Health Checks</h2>
+      <p>Regular health checks are crucial for proactive issue detection. These commands provide a baseline for system status.</p>
+      <div class="block">
+        <h3>Verify Core Services</h3>
+        <p>Ensure all core DEFONEOS services are running and accessible.</p>
+<pre><code>systemctl status defoneos-core-api defoneos-bft-agent defoneos-data-pipeline
+curl -sf http://localhost:8080/health || echo "Core API DOWN"
+curl -sf http://localhost:8081/health || echo "BFT Agent DOWN"</code></pre>
+      </div>
+      <div class="block">
+        <h3>Check Log Files</h3>
+        <p>Review recent logs for errors or warnings across all components.</p>
+<pre><code>journalctl -u defoneos-core-api -n 50 --since "5 minutes ago"
+journalctl -u defoneos-bft-agent -n 50 --since "5 minutes ago"
+grep -E "ERROR|WARN" /var/log/defoneos/*.log | tail -20</code></pre>
+      </div>
+    </section>
+
+    <section id="common-deployment-issues">
+      <h2>Common Deployment Issues</h2>
+      <p>Addressing typical problems encountered during initial deployment or updates.</p>
+      <div class="block">
+        <h3>Incomplete Configuration</h3>
+        <p>Verify that all environment variables and configuration files are correctly set.</p>
+<pre><code>cat /etc/defoneos/config.yaml
+printenv | grep DEFONEOS_</code></pre>
+        <p><strong>Resolution:</strong> Cross-reference with deployment documentation. Restart services after config changes.</p>
+      </div>
+      <div class="block">
+        <h3>Firewall Blockages</h3>
+        <p>Ensure necessary ports are open for inter-service communication and external access.</p>
+<pre><code>sudo ufw status verbose
+sudo firewall-cmd --list-all</code></pre>
+        <p><strong>Resolution:</strong> Open ports 8080 (Core API), 8081 (BFT Agent), and any MCP-specific ports.</p>
+      </div>
+    </section>
+
+    <section id="mcp-connectivity-failures">
+      <h2>MCP Connectivity Failures</h2>
+      <p>Diagnosing and resolving issues with Micro-Contextual Processor (MCP) server communication.</p>
+      <div class="block">
+        <h3>MCP Server Unreachable</h3>
+        <p>Confirm the MCP server is running and its network endpoint is accessible.</p>
+<pre><code>ping &lt;MCP_IP_OR_HOSTNAME&gt;
+curl -sf http://&lt;MCP_IP_OR_HOSTNAME&gt;:&lt;MCP_PORT&gt;/health || echo "MCP &lt;MCP_NAME&gt; DOWN"</code></pre>
+        <p><strong>Resolution:</strong> Check MCP server logs. Verify network routes and firewall rules.</p>
+      </div>
+      <div class="block">
+        <h3>Authentication Errors</h3>
+        <p>Ensure API keys or tokens are correctly configured and have appropriate permissions.</p>
+<pre><code>grep -i "auth_token" /etc/defoneos/mcp-creds.yaml
+# Example for a specific MCP
+python3 -c "import mcporter; print(mcporter.auth_test('my_mcp_name'))"</code></pre>
+        <p><strong>Resolution:</strong> Regenerate or update credentials. Verify scope and expiry.</p>
+      </div>
+    </section>
+
+    <section id="data-ingestion-problems">
+      <h2>Data Ingestion Problems</h2>
+      <p>Troubleshooting issues related to data flow into the DEFONEOS knowledge base and processing pipelines.</p>
+      <div class="block">
+        <h3>Stalled Ingestion Queue</h3>
+        <p>Check the status of the data ingestion queue and processing workers.</p>
+<pre><code>docker compose ps
+docker compose logs data-ingestor | tail -50</code></pre>
+        <p><strong>Resolution:</strong> Restart ingestion workers. Check database connectivity and disk space.</p>
+      </div>
+      <div class="block">
+        <h3>Malformed Data Input</h3>
+        <p>Identify and rectify issues with incoming data formats that prevent processing.</p>
+<pre><code># Example: Check a data source for common parsing errors
+python3 /opt/defoneos/scripts/validate_data_source.py --source &lt;SOURCE_ID&gt; --sample-size 10</code></pre>
+        <p><strong>Resolution:</strong> Review data source schemas. Implement pre-processing sanitization steps.</p>
+      </div>
+    </section>
+
+    <section id="bft-council-synchronization-errors">
+      <h2>BFT Council Synchronization Errors</h2>
+      <p>Resolving inconsistencies or delays in the BFT Council's distributed state synchronization.</p>
+      <div class="block">
+        <h3>Consensus Lag</h3>
+        <p>Monitor the BFT agent's log for signs of network partitioning or slow peer responses.</p>
+<pre><code>journalctl -u defoneos-bft-agent -n 100 | grep "consensus_lag_detected"
+# Check peer connectivity
+python3 -c "import bft_council_cli; print(bft_council_cli.peer_status())"</code></pre>
+        <p><strong>Resolution:</strong> Verify network connectivity between BFT nodes. Restart unresponsive peers.</p>
+      </div>
+    </section>
+
+    <section id="security-incident-response">
+      <h2>Security Incident Response</h2>
+      <p>First steps and immediate actions in case of a suspected security breach or anomaly.</p>
+      <div class="block">
+        <h3>Detected Anomaly</h3>
+        <p>Isolate affected systems, notify security teams, and preserve forensic evidence.</p>
+<pre><code>sudo systemctl stop defoneos-core-api defoneos-bft-agent
+sudo rsync -av --ignore-errors /var/log/defoneos/ /mnt/forensics/logs_&lt;TIMESTAMP&gt;/
+# Initiate incident response playbook
+/opt/defoneos/scripts/ir_playbook.sh --stage initial_containment</code></pre>
+        <p><strong>Resolution:</strong> Follow the <a href="#">DEFONEOS Incident Response Policy</a>. Engage designated security personnel.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>DEFONEOS Sovereign AI OS · <a href="https://www.csoai.org/">csoai.org</a></p>
+      <p class="sigil">Built for operational resilience. <!-- SIGIL: OPERATOR-KB-20260717-T119 --></p>
+    </footer>
+  </div>
+</body>
+</html>

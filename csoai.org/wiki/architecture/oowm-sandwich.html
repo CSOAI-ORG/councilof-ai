@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOWM Sandwich - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / oowm-sandwich</div>
+<h1>OOWM Sandwich</h1>
+<p class="tagline">The One-Ouroboros-World-Model: Mamba + MoE + MOM + SOV3 + SIGIL.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>The <strong>OOWM Sandwich</strong> is CSOAI's central model architecture: a five-layer integration of Mamba-2 long-context memory, MoE-64 reasoning, MOM perceptual routing, SOV3 sovereign binding, and SIGIL cryptographic wrapping. It is the substrate of every sovereign AI product.</p>
+
+<h2>The Five Layers</h2>
+<table>
+<tr><th>Layer</th><th>Role</th><th>Component</th><th>Reference</th></tr>
+<tr><td>1 (bottom)</td><td>Long-context memory</td><td>Mamba-2 SSM (16-dim state)</td><td><a href="/wiki/architecture/mamba-ssm.html">Mamba SSM</a></td></tr>
+<tr><td>2</td><td>Reasoning</td><td>MoE-64 (4 of 64 active)</td><td><a href="/wiki/architecture/moe-64.html">MoE-64</a></td></tr>
+<tr><td>3</td><td>Perception</td><td>MOM (Mixture of Modalities)</td><td><a href="/wiki/architecture/intuition-engine.html">Intuition Engine</a></td></tr>
+<tr><td>4</td><td>Binding</td><td>SOV3 (sovereign rules + council gate)</td><td><a href="/wiki/council/council-mechanics.html">Council Mechanics</a></td></tr>
+<tr><td>5 (top)</td><td>Wrapping</td><td>SIGIL (Ed25519 hash chain)</td><td><a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a></td></tr>
+</table>
+
+<h2>Why a Sandwich?</h2>
+<p>A sandwich is the right metaphor because: (1) each layer is independent and can be swapped, (2) layers can be inspected and audited separately, (3) the architecture scales horizontally (more experts, more modalities) without restructuring, and (4) the layers cooperate through well-defined interfaces (the SIGIL events flowing up and the Mamba state flowing down).</p>
+
+<h2>Forward Pass</h2>
+<pre>Input → Mamba (compress) → MoE-64 (reason) → MOM (perceive) → SOV3 (gate) → SIGIL (sign) → Output</pre>
+<p>At inference, an input query is first compressed by Mamba into a 16-dim state. The state plus query are routed to MoE-64 (4 experts fire). The MoE output is enriched by MOM with perceptual metadata (e.g., "this is a legal query", "user is in UK jurisdiction"). SOV3 checks the action against council rules. SIGIL signs and emits the result.</p>
+
+<h2>Backward Pass / Training</h2>
+<p>Training uses the <a href="/wiki/architecture/oowm-anchor.html">OOWM Anchor</a> mechanism: each layer's gradient flows through the sandwich, with council-approved sample selection. The Sov3ren Gym (<code>sov_gym_mode_status</code>) runs the continuous training loop.</p>
+
+<h2>Sovereign Alignment</h2>
+<p>The Sandwich is sovereign because every layer enforces a property: Mamba ensures constant memory (data stays local), MoE-64 ensures interpretability (you can see which expert fired), MOM ensures modality awareness, SOV3 ensures rules are enforced, and SIGIL ensures every output is auditable.</p>
+
+<h2>Historical Context</h2>
+<p>The Sandwich was first sketched in CSOAI Charter 2026 (see <a href="/wiki/lineage/csoai-org-2026.html">CSOAI 2026</a>), inspired by the alchemical Salt-Sulfur-Mercury triad (see <a href="/wiki/architecture/alchemical-layers.html">Alchemical Layers</a>) and the Zoharic三层结构 (three-layer structure) of the <a href="/wiki/lineage/zohar.html">Zohar</a>. It was operationalised in March 2026 and reached production maturity in June 2026.</p>
+
+<h2>Modern Usage</h2>
+<p>Every sovereign AI customer product uses the OOWM Sandwich. The <a href="/wiki/demos/quickstart.html">Quickstart Demo</a> spins up a sandbox OOWM in 60 seconds. The <code>sov_oowm_status</code> tool reports layer-by-layer health.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/architecture/oowm-anchor.html">OOWM Anchor</a></li>
+<li><a href="/wiki/architecture/big-braim.html">Big Braim</a></li>
+<li><a href="/wiki/architecture/intuition-engine.html">Intuition Engine</a></li>
+<li><a href="/wiki/sovereignty/sovereign-stack.html">Sovereign Stack</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

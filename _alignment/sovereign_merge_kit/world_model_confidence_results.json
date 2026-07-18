@@ -1,0 +1,21 @@
+{
+  "easy_env": {
+    "danger_trajectories": 295,
+    "kept_safe": 289,
+    "walked_into_danger": 6,
+    "safety_rate": 0.98,
+    "abstain_rate": 0.0
+  },
+  "chaotic_env": {
+    "danger_trajectories": 287,
+    "kept_safe": 196,
+    "walked_into_danger": 91,
+    "safety_rate": 0.683,
+    "abstain_rate": 0.403
+  },
+  "verdict": {
+    "easy_safe_and_confident": true,
+    "chaos_safe_by_abstaining": false,
+    "claim": "safe where it can predict (easy: acts, high safety, low abstain); safe-by-abstaining where it can't (chaos: high abstain, safety recovered)."
+  }
+}

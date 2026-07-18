@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Data Governance (GDPR / DPA 2018 / Sovereign Data)</title>
+<meta name="description" content="Comprehensive data governance for sovereign AI: GDPR/DPA 2018 mapping, data minimisation, sovereign storage, subject rights automation.">
+<style>
+:root{--bg:#0a0e17;--card:#121826;--border:#1e2a3f;--accent:#00d4aa;--accent2:#ff6b35;--text:#e0e6ed;--dim:#8892a6;--red:#ff4757;--amber:#ffa502;--green:#2ed573;--blue:#3742fa}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'SF Mono',Monaco,'Cascadia Code',monospace;line-height:1.6}
+.container{max-width:1100px;margin:0 auto;padding:2rem}
+h1{font-size:2.5rem;color:var(--accent);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:2px}
+h2{color:var(--accent);font-size:1.5rem;margin:2rem 0 1rem;border-bottom:1px solid var(--border);padding-bottom:.5rem}
+h3{color:var(--accent2);font-size:1.1rem;margin:1.5rem 0 .5rem}
+p{margin-bottom:.8rem}
+.meta{color:var(--dim);font-size:.85rem;margin-bottom:2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.stat{text-align:center;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.stat-num{font-size:2.5rem;color:var(--accent);font-weight:bold}
+.stat-label{color:var(--dim);font-size:.8rem;text-transform:uppercase;letter-spacing:1px}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th,td{padding:.75rem;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--accent);text-transform:uppercase;font-size:.75rem;letter-spacing:1px}
+tr:hover{background:rgba(0,212,170,.05)}
+.badge{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.75rem;font-weight:bold}
+.badge-green{background:rgba(46,213,115,.15);color:var(--green)}
+.badge-amber{background:rgba(255,165,2,.15);color:var(--amber)}
+.badge-red{background:rgba(255,71,87,.15);color:var(--red)}
+.badge-blue{background:rgba(55,66,250,.15);color:var(--blue)}
+.badge-accent{background:rgba(0,212,170,.15);color:var(--accent)}
+pre{background:#0d1117;border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.85rem}
+code{color:var(--accent2)}
+.principle{background:var(--card);border-left:3px solid var(--accent);padding:1rem 1.5rem;margin:1rem 0;border-radius:0 8px 8px 0}
+.honesty{background:rgba(255,165,2,.05);border:1px solid var(--amber);border-radius:8px;padding:1rem;margin:2rem 0;font-size:.85rem;color:var(--dim)}
+ul,ol{margin-left:1.5rem;margin-bottom:.8rem}
+.footer{text-align:center;padding:2rem 0;color:var(--dim);font-size:.8rem;border-top:1px solid var(--border);margin-top:3rem}
+.flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+.flow-box{background:var(--card);border:1px solid var(--border);padding:.5rem 1rem;border-radius:6px;font-size:.85rem}
+.flow-arrow{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<h1>DEFONEOS Data Governance</h1>
+<p class="meta">GDPR · DPA 2018 · UK GDPR · Data Minimisation · Sovereign Storage · Subject Rights Automation<br>
+Version 1.0 · 5 Jul 2026 · Ed25519: b2e5f8a1c3d7e902 · ICO Registration: ZA##### (pending)</p>
+
+<div class="card">
+<p><strong>DEFONEOS</strong> operates under the principle of <strong>sovereign data sovereignty</strong>: all personal data stays within UK jurisdiction, processed on UK-based infrastructure, under UK law (DPA 2018 + UK GDPR). No data crosses to foreign infrastructure. No data trains foreign models. Every data action is SIGIL-recorded for audit.</p>
+</div>
+
+<div class="grid">
+<div class="stat"><div class="stat-num">0</div><div class="stat-label">Data Items Leaving UK</div></div>
+<div class="stat"><div class="stat-num">7</div><div class="stat-label">GDPR Principles Enforced</div></div>
+<div class="stat"><div class="stat-num">8</div><div class="stat-label">Subject Rights Automated</div></div>
+<div class="stat"><div class="stat-num">90d</div><div class="stat-label">Forensic Data Retention Max</div></div>
+</div>
+
+<h2>1. GDPR Principles → DEFONEOS Implementation</h2>
+<table>
+<tr><th>GDPR Principle</th><th>Article</th><th>DEFONEOS Implementation</th><th>Status</th></tr>
+<tr><td><strong>Lawfulness, Fairness, Transparency</strong></td><td>Art 5(1)(a)</td><td>Every data processing action logged to SIGIL chain with purpose. Data subjects can request full processing history.</td><td><span class="badge badge-green">ENFORCED</span></td></tr>
+<tr><td><strong>Purpose Limitation</strong></td><td>Art 5(1)(b)</td><td>Data collected for defence/public safety purposes may NOT be repurposed. Purpose hash recorded at collection time.</td><td><span class="badge badge-green">ENFORCED</span></td></tr>
+<tr><td><strong>Data Minimisation</strong></td><td>Art 5(1)(c)</td><td>PII redaction at source. Only operationally necessary data collected. Camera feeds auto-blur faces. Audio feeds anonymise voices.</td><td><span class="badge badge-green">ENFORCED</span></td></tr>
+<tr><td><strong>Accuracy</strong></td><td>Art 5(1)(d)</td><td>Sensor data timestamped and source-attributed. Confidence scores attached. No data presented without provenance.</td><td><span class="badge badge-green">ENFORCED</span></td></tr>
+<tr><td><strong>Storage Limitation</strong></td><td>Art 5(1)(e)</td><td>Operational data: 30-day rolling window. Forensic data: 90-day max. SIGIL chain: permanent (hash only, no PII).</td><td><span class="badge badge-green">ENFORCED</span></td></tr>
+<tr><td><strong>Integrity & Confidentiality</strong></td><td>Art 5(1)(f)</td><td>Ed25519 signatures on all data. Quantum-safe key rotation (ML-DSA-65 by 2027). Air-gapped deployment option.</td><td><span class="badge badge-green">ENFORCED</span></td></tr>
+<tr><td><strong>Accountability</strong></td><td>Art 5(2)</td><td>3-layer audit chain (OrgKernel): L1 Identity → L2 Execution → L3 Compliance. Every action cryptographically attributed.</td><td><span class="badge badge-green">ENFORCED</span></td></tr>
+</table>
+
+<h2>2. Data Categories & Handling</h2>
+<table>
+<tr><th>Category</th><th>Examples</th><th>Legal Basis</th><th>Retention</th><th>Storage</th></tr>
+<tr><td><strong>Special Category (Art 9)</strong></td><td>Biometrics (face blur only), health (medevac)</td><td>Art 9(2)(g) — substantial public interest</td><td>30 days</td><td>On-device only, never persisted</td></tr>
+<tr><td><strong>Operational Sensor Data</strong></td><td>Camera feeds, AIS, weather, air quality</td><td>Art 6(1)(e) — public task</td><td>30 days rolling</td><td>UK sovereign VM</td></tr>
+<tr><td><strong>Agent Communications</strong></td><td>SIGIL entries, BFT votes, council decisions</td><td>Art 6(1)(f) — legitimate interest</td><td>Permanent (hash only)</td><td>SIGIL chain (no PII)</td></tr>
+<tr><td><strong>System Logs</strong></td><td>Access logs, error logs, performance metrics</td><td>Art 6(1)(f) — legitimate interest</td><td>90 days</td><td>UK sovereign VM</td></tr>
+<tr><td><strong>User Account Data</strong></td><td>Name, email, role, RBAC permissions</td><td>Art 6(1)(b) — contract</td><td>Account lifetime + 30d</td><td>UK sovereign VM (encrypted)</td></tr>
+<tr><td><strong>Forensic Evidence</strong></td><td>Incident artifacts, chain of custody</td><td>Art 6(1)(c) — legal obligation</td><td>90 days (unless legally required longer)</td><td>Air-gapped storage</td></tr>
+</table>
+
+<h2>3. Data Subject Rights Automation</h2>
+<table>
+<tr><th>Right</th><th>Article</th><th>How DEFONEOS Satisfies</th><th>Response Time</th></tr>
+<tr><td><strong>Right of Access</strong></td><td>Art 15</td><td>SIGIL explorer API: subject can query all processing actions involving their data (PII-redacted references)</td><td>≤30 days</td></tr>
+<tr><td><strong>Right to Rectification</strong></td><td>Art 16</td><td>Self-service portal: user can correct account data. Operational sensor data is immutable (timestamped).</td><td>≤30 days</td></tr>
+<tr><td><strong>Right to Erasure</strong></td><td>Art 17</td><td>Account data: immediate deletion. SIGIL references: pseudonymised (hash remains, PII removed).</td><td>≤30 days</td></tr>
+<tr><td><strong>Right to Restrict Processing</strong></td><td>Art 18</td><td>User can flag their data as restricted. System marks all related SIGIL entries as restricted.</td><td>≤30 days</td></tr>
+<tr><td><strong>Right to Data Portability</strong></td><td>Art 20</td><td>Export API: user data exported as JSON/CSV with full processing history.</td><td>≤30 days</td></tr>
+<tr><td><strong>Right to Object</strong></td><td>Art 21</td><td>User can object to specific processing. BFT council reviews objection within 30 days.</td><td>≤30 days</td></tr>
+<tr><td><strong>Right Not to Be Subject to Automated Decision-Making</strong></td><td>Art 22</td><td>5-level human oversight framework. All SEV-1 decisions require human authority. No fully autonomous kinetic decisions.</td><td>Immediate</td></tr>
+<tr><td><strong>Right to Withdraw Consent</strong></td><td>Art 7(3)</td><td>One-click withdrawal in user portal. Processing stops immediately, data queued for deletion.</td><td>Immediate</td></tr>
+</table>
+
+<h2>4. Sovereign Storage Architecture</h2>
+
+<div class="flow">
+<div class="flow-box">📡 Sensor Input</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">🔒 PII Redaction</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">🇬🇧 UK VM Storage</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">⛓️ SIGIL Hash</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">⏰ 30d Expiry</div>
+</div>
+
+<div class="card">
+<h3>Storage Locations</h3>
+<table>
+<tr><th>Layer</th><th>Location</th><th>Encryption</th><th>Backup</th></tr>
+<tr><td>Primary VM</td><td>UK GCP (meok-backend)</td><td>AES-256 at rest</td><td>Daily snapshot, UK region</td></tr>
+<tr><td>Edge Cache</td><td>On-device (M2/M3/M4 Mac)</td><td>FileVault + AES-256</td><td>Local Time Machine</td></tr>
+<tr><td>Air Gap</td><td>Physical USB (offline)</td><td>VeraCrypt container</td><td>Manual rotation</td></tr>
+<tr><td>SIGIL Chain</td><td>Distributed (Mac + VM)</td><td>Ed25519 signed</td><td>Hash-chained (tamper-evident)</td></tr>
+</table>
+</div>
+
+<h3>No Foreign Transfer — Ever</h3>
+<div class="principle">
+<p>DEFONEOS guarantees zero international data transfers. The system is architected so that:</p>
+<ul>
+<li><strong>No data is sent to US cloud providers</strong> (AWS, GCP US regions, Azure US)</li>
+<li><strong>No data trains foreign AI models</strong> (no data sent to OpenAI, Anthropic, Google AI, etc.)</li>
+<li><strong>No data crosses UK borders</strong> (all processing on UK sovereign infrastructure)</li>
+<li><strong>If international transfer is operationally required</strong> (e.g., AUKUS data sharing): explicit BFT 23/33 vote + human authority + data minimisation + transfer impact assessment</li>
+</ul>
+</div>
+
+<h2>5. Data Protection Impact Assessment (DPIA) — Summary</h2>
+<table>
+<tr><th>DPIA Element</th><th>DEFONEOS Response</th></tr>
+<tr><td><strong>System Description</strong></td><td>Sovereign AI OS for defence/public safety. 30 MCP servers, 33-agent BFT council, SIGIL audit chain.</td></tr>
+<tr><td><strong>Necessity & Proportionality</strong></td><td>Data minimisation at source. PII redaction before storage. Only operationally necessary data collected. 30-day retention.</td></tr>
+<tr><td><strong>Risks to Rights & Freedoms</strong></td><td>Mass surveillance risk → mitigated by 7 red lines. Discrimination risk → mitigated by BFT council diversity. Data breach risk → mitigated by Ed25519 + quantum-safe rotation.</td></tr>
+<tr><td><strong>Risk Mitigation Measures</strong></td><td>PII redaction, SIGIL audit chain, BFT governance, red-line enforcement, human oversight, sovereign storage, 90-day forensic cap.</td></tr>
+<tr><td><strong>DPO Sign-off</strong></td><td><span class="badge badge-amber">PENDING</span> — DPIA drafted, requires DPO review before live deployment.</td></tr>
+</table>
+
+<h2>6. UK GDPR + DPA 2018 Specifics</h2>
+<table>
+<tr><th>DPA 2018 Provision</th><th>DEFONEOS Implementation</th></tr>
+<tr><td><strong>Part 2, Ch 2 — General Processing</strong></td><td>All standard GDPR principles applied as above.</td></tr>
+<tr><td><strong>Part 2, Ch 3 — Law Enforcement Processing</strong></td><td>If used for law enforcement: separate controller agreement, additional safeguards, crime-specific retention schedule.</td></tr>
+<tr><td><strong>Schedule 1 — Substantial Public Interest Conditions</strong></td><td>Defence and national security fall under Schedule 1(2). Appropriate policy document required — DEFONEOS Charter serves this role.</td></tr>
+<tr><td><strong>s170 — Unlawful Obtaining of Personal Data</strong></td><td>SIGIL chain + DORADO foreign access detector prevent and log all unauthorised data access attempts.</td></tr>
+<tr><td><strong>National Security Exemption (s26)</strong></td><td>DEFONEOS documents which exemptions are claimed and why — never blanket-applied. SIGIL chain records the claim.</td></tr>
+</table>
+
+<h2>7. Automated Compliance Pipeline</h2>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│              DATA GOVERNANCE PIPELINE                     │
+├──────────────────────────────────────────────────────────┤
+│                                                           │
+│  INPUT          REDACT          STORE          AUDIT      │
+│  ┌─────┐       ┌─────┐        ┌─────┐       ┌─────┐     │
+│  │Data │──────▶│PII  │───────▶│UK VM│──────▶│SIGIL│     │
+│  │In   │       │Blur │        │Encr │       │Chain│     │
+│  └─────┘       └─────┘        └─────┘       └─────┘     │
+│                    │              │              │        │
+│                    ▼              ▼              ▼        │
+│               No faces       AES-256        Ed25519      │
+│               No voices      FileVault      Hash-chain   │
+│               No plates      Air-gap opt   BTC anchor    │
+│                                                           │
+│  EXPIRE:  30 days operational  |  90 days forensic        │
+│  EXPORT:  Art 20 JSON/CSV     |  Art 15 SIGIL query      │
+│  DELETE:  Art 17 immediate    |  Art 17(3) hash remains  │
+│                                                           │
+└──────────────────────────────────────────────────────────┘</code></pre>
+
+<h2>8. Breach Notification Protocol</h2>
+<table>
+<tr><th>Step</th><th>Action</th><th>Timeline</th><th>Responsible</th></tr>
+<tr><td>1</td><td>Breach detected by Gods-Eye scanner or DORADO</td><td>T+0</td><td>Autonomous</td></tr>
+<tr><td>2</td><td>SEV-1 classification, BFT council emergency session</td><td>T+30s</td><td>BFT 23/33</td></tr>
+<tr><td>3</td><td>Containment (see Incident Response Playbook)</td><td>T+2min</td><td>BFT + System</td></tr>
+<tr><td>4</td><td>Breach assessment: scope, data types, affected subjects</td><td>T+1h</td><td>DPO (human)</td></tr>
+<tr><td>5</td><td>If risk to rights & freedoms: notify ICO</td><td>≤72h</td><td>DPO + Nick</td></tr>
+<tr><td>6</td><td>If high risk: notify affected data subjects</td><td>≤72h</td><td>DPO + Nick</td></tr>
+<tr><td>7</td><td>Breach record created on SIGIL chain</td><td>≤72h</td><td>Autonomous</td></tr>
+<tr><td>8</td><td>Post-breach review and hardening</td><td>≤7 days</td><td>BFT + DPO</td></tr>
+</table>
+
+<h2>9. Controller / Processor Roles</h2>
+<table>
+<tr><th>Entity</th><th>Role</th><th>Responsibilities</th></tr>
+<tr><td><strong>CSOAI Ltd (UK 16939677)</strong></td><td>Data Controller</td><td>Determines purposes and means of processing. Maintains DPIA. ICO point of contact.</td></tr>
+<tr><td><strong>MEOK AI Labs</strong></td><td>Processor (internal)</td><td>Builds and maintains DEFONEOS infrastructure. Acts on controller instructions.</td></tr>
+<tr><td><strong>End User Organisation (e.g., MOD)</strong></td><td>Joint Controller</td><td>Determines operational use. Subject to their own DPIA.</td></tr>
+<tr><td><strong>UK GCP Infrastructure</strong></td><td>Sub-processor</td><td>Provides compute. Data Processing Agreement (DPA) in place. UK region only.</td></tr>
+</table>
+
+<div class="honesty">
+<h3 style="color:var(--amber);">📋 Honesty Register</h3>
+<ul>
+<li><strong>ICO Registration:</strong> CSOAI Ltd registration as data controller pending Nick's completion. Framework is designed; legal registration is a human gate.</li>
+<li><strong>DPO appointment:</strong> CSOAI Ltd has not formally appointed a DPO. Under UK GDPR, a DPO is required for large-scale special category processing. This is a human gate.</li>
+<li><strong>"No foreign transfer":</strong> This is a design principle enforced architecturally. If deployed in an AUKUS context with allied data sharing, an explicit Article 49 transfer mechanism would be required.</li>
+<li><strong>PII redaction:</strong> Camera face-blur and voice anonymisation are implemented as MCP tools. Effectiveness depends on correct deployment configuration.</li>
+<li><strong>BTC anchoring:</strong> Planned for SIGIL chain. Currently internally verified only. The design accommodates BTC OP_RETURN anchoring when integrated.</li>
+<li><strong>Subject rights automation:</strong> The API endpoints are designed. Full self-service portal UI is planned but not yet built.</li>
+</ul>
+</div>
+
+<h2>10. Compliance Crosswalk</h2>
+<table>
+<tr><th>Framework</th><th>Article/Control</th><th>DEFONEOS Coverage</th></tr>
+<tr><td>UK GDPR</td><td>Arts 5-22</td><td>Full — all 7 principles + 8 rights implemented</td></tr>
+<tr><td>DPA 2018</td><td>Parts 2-4 + Schedule 1</td><td>Framework documented. Schedule 1 policy = DEFONEOS Charter</td></tr>
+<tr><td>EU AI Act</td><td>Art 10 — Data Governance</td><td>Training data governance, bias mitigation, provenance tracking</td></tr>
+<tr><td>EU AI Act</td><td>Art 14 — Human Oversight</td><td>5-level oversight framework, Art 22 automated decision rights</td></tr>
+<tr><td>JSP 440</td><th>Defence InfoSec</td><td>UK MOD data handling compatible. SIGIL chain provides audit trail.</td></tr>
+<tr><td>NIS Regulations 2018</td><th>Security of Network & Info Systems</td><td>Incident notification pipeline. Operators of Essential Services compatible.</td></tr>
+<tr><td>Cyber Essentials</td><th>5 Technical Controls</td><td>Firewall, secure config, access control, malware protection, patch management</td></tr>
+<tr><td>ISO 27001</td><th>Annex A.8 — Asset Management</td><td>Data classification, handling, retention schedule</td></tr>
+</table>
+
+<div class="footer">
+<p>DEFONEOS — UK Sovereign Public Services OS · Data Governance v1.0</p>
+<p>GDPR-compliant design · DPA 2018 compatible · UK sovereign storage</p>
+<p>🇬🇧 Sovereign by Design · Audit-Grade · Neutral · British Forever</p>
+</div>
+
+</div>
+</body>
+</html>

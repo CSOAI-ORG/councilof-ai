@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEOK Compliance Dashboard — 156 Live Frameworks · Article 50 Cliff</title>
+<meta name="description" content="Real-time dashboard for the 156 published MEOK compliance MCP packages. Tracks EU AI Act, DORA, NIS2, CRA, GDPR, ISO 42001, NIST AI RMF coverage. Built 2026-06-13.">
+<style>
+  :root {
+    --bg: #0a0a14; --fg: #e8e8f0; --muted: #8a8aa0; --accent: #5b21b6;
+    --accent-light: #7c3aed; --green: #22c55e; --red: #ef4444; --amber: #f59e0b;
+    --border: #1a1a2e; --card: #13132a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+    background: var(--bg); color: var(--fg);
+    margin: 0; padding: 0; min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, #13132a 0%, #1a1a2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+  }
+  header h1 {
+    margin: 0 0 4px; font-size: 24px; font-weight: 700;
+    background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #c084fc 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header .sub { color: var(--muted); font-size: 13px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 20px;
+  }
+  .stat .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat .value { font-size: 28px; font-weight: 700; margin-top: 4px; }
+  .stat .delta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .stat.green .value { color: var(--green); }
+  .stat.amber .value { color: var(--amber); }
+  .stat.red .value { color: var(--red); }
+  .section { margin-bottom: 32px; }
+  .section h2 {
+    font-size: 16px; font-weight: 600; margin: 0 0 16px;
+    color: var(--fg); border-bottom: 1px solid var(--border); padding-bottom: 8px;
+  }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 14px 16px;
+  }
+  .card .name {
+    font-size: 13px; font-weight: 600; color: var(--fg);
+    margin-bottom: 4px; font-family: ui-monospace, "SF Mono", monospace;
+  }
+  .card .reg { color: var(--muted); font-size: 11px; margin-bottom: 6px; }
+  .card .dl { color: var(--green); font-size: 13px; font-weight: 600; }
+  .card .dl.zero { color: var(--muted); }
+  .card .dl.amber { color: var(--amber); }
+  .card .stars { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  .card.urgent { border-color: var(--amber); background: linear-gradient(135deg, #1a1525 0%, #13132a 100%); }
+  .card.urgent::before {
+    content: "⏰"; margin-right: 4px;
+  }
+  .card.urgent .reg { color: var(--amber); }
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px;
+    text-transform: uppercase; font-weight: 600; margin-left: 4px;
+  }
+  .pill.urgent { background: var(--amber); color: #000; }
+  .pill.critical { background: var(--red); color: #fff; }
+  .pill.live { background: var(--green); color: #000; }
+  .pill.draft { background: var(--muted); color: #fff; }
+  .footer {
+    margin-top: 48px; padding: 24px 0; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 12px; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MEOK Compliance Dashboard</h1>
+  <div class="sub">156 published compliance MCP packages · live from proofof.ai + PyPI · built 2026-06-13</div>
+</header>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat green">
+      <div class="label">Total Published</div>
+      <div class="value" id="stat-total">—</div>
+      <div class="delta">/ 341 fleet packages</div>
+    </div>
+    <div class="stat green">
+      <div class="label">PyPI Downloads / Month</div>
+      <div class="value" id="stat-monthly">—</div>
+      <div class="delta">organic (all-time: 2,498 releases)</div>
+    </div>
+    <div class="stat amber">
+      <div class="label">Article 50 Cliff</div>
+      <div class="value" id="stat-cliff">2 Aug</div>
+      <div class="delta">EU AI Act transparency — <span id="cliff-days">—</span> days</div>
+    </div>
+    <div class="stat">
+      <div class="label">Council Substrate</div>
+      <div class="value" id="stat-council">36/23</div>
+      <div class="delta">nodes / PBFT threshold</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Critical Cliffs <span class="pill urgent">Time-sensitive</span></h2>
+    <div class="grid" id="grid-cliffs">
+      <div class="card urgent">
+        <div class="name">EU AI Act Article 50 <span class="pill urgent">2 Aug 2026</span></div>
+        <div class="reg">Transparency + watermarking · ALL AI systems · 2 Dec 2026 (pre-existing)</div>
+        <div class="dl">eu-ai-act-compliance-mcp · 940 dl/wk · 16 tools</div>
+      </div>
+      <div class="card urgent">
+        <div class="name">DORA <span class="pill live">LIVE</span></div>
+        <div class="reg">Regulation (EU) 2022/2554 · LIVE since 17 Jan 2025 · 1% daily turnover CTPPs</div>
+        <div class="dl">dora-compliance-mcp · 919 dl/wk · 10 tools</div>
+      </div>
+      <div class="card urgent">
+        <div class="name">NIS2 <span class="pill live">LIVE</span></div>
+        <div class="reg">Directive (EU) 2022/2555 · 160k entities · 18 sectors · €10M / 2%</div>
+        <div class="dl">nis2-compliance-mcp · 660 dl/wk · 4 tools</div>
+      </div>
+      <div class="card urgent">
+        <div class="name">CRA <span class="pill live">LIVE</span></div>
+        <div class="reg">Regulation (EU) 2024/2847 · 11 Dec 2027 full enforcement · €15M / 2.5%</div>
+        <div class="dl">cra-compliance-mcp · 742 dl/wk · 12 tools</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Top 30 by PyPI Weekly Downloads</h2>
+    <div class="grid" id="grid-top30">
+      <div class="card"><div class="name">eu-ai-act-compliance-mcp</div><div class="reg">EU AI Act · 2 Aug 2026 cliff</div><div class="dl">940/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">dora-compliance-mcp</div><div class="reg">DORA · LIVE since 2025</div><div class="dl">919/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">gdpr-compliance-ai-mcp</div><div class="reg">GDPR · DPIA + Art 33 + SCCs</div><div class="dl">743/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">cra-compliance-mcp</div><div class="reg">CRA · 11 Dec 2027</div><div class="dl">742/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">sentiment-analysis-ai-mcp</div><div class="reg">Sentiment analysis</div><div class="dl">727/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">iso-42001-ai-mcp</div><div class="reg">ISO/IEC 42001 · AIMS</div><div class="dl">695/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">bias-detection-mcp</div><div class="reg">Bias detection</div><div class="dl">684/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">ai-bom-mcp</div><div class="reg">AI Bill of Materials · CycloneDX</div><div class="dl">679/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">nis2-compliance-mcp</div><div class="reg">NIS2 Directive</div><div class="dl">660/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">vector-knowledge-graph-mcp</div><div class="reg">Vector + KG</div><div class="dl">644/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">encoder-ai-mcp</div><div class="reg">Encoder</div><div class="dl">592/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">explainability-report-mcp</div><div class="reg">Explainability · EU AI Act</div><div class="dl">587/wk</div><div class="stars">★ 1</div></div>
+      <div class="card"><div class="name">database-universal-mcp</div><div class="reg">Universal DB</div><div class="dl">572/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">keyword-extractor-ai-mcp</div><div class="reg">Keyword extraction</div><div class="dl">567/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">a2a-governance-bridge-mcp</div><div class="reg">A2A bridge</div><div class="dl">558/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">agent-audit-logger-mcp</div><div class="reg">Agent audit logging</div><div class="dl">554/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">csrd-compliance-mcp</div><div class="reg">CSRD · ESRS</div><div class="dl">542/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">meok-cra-annex-iv-classifier-mcp</div><div class="reg">CRA Annex IV</div><div class="dl">537/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">budget-planner-ai-mcp</div><div class="reg">Budget planner</div><div class="dl">533/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">clipboard-ai-mcp</div><div class="reg">Clipboard bridge</div><div class="dl">532/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">agent-commerce-protocol-mcp</div><div class="reg">A2A commerce</div><div class="dl">525/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">care-home-cqc-mcp</div><div class="reg">UK CQC care homes</div><div class="dl">516/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">dockerfile-generator-ai-mcp</div><div class="reg">Dockerfile gen</div><div class="dl">514/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">canada-aida-ai-mcp</div><div class="reg">Canada AIDA</div><div class="dl">513/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">agent-policy-enforcement-mcp</div><div class="reg">Agent policy</div><div class="dl">506/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">ci-cd-generator-ai-mcp</div><div class="reg">CI/CD gen</div><div class="dl">494/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">translator-pro-ai-mcp</div><div class="reg">Translation pro</div><div class="dl">488/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">ai-incident-reporting-mcp</div><div class="reg">AI incident · Art 73 + NIS2</div><div class="dl">482/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">ai-self-audit-mcp</div><div class="reg">AI self-audit</div><div class="dl">478/wk</div><div class="stars">★ 0</div></div>
+      <div class="card"><div class="name">workout-planner-ai-mcp</div><div class="reg">Workout planner</div><div class="dl">478/wk</div><div class="stars">★ 0</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Council Substrate — Live</h2>
+    <div class="grid" id="grid-council">
+      <div class="card"><div class="name">nodes / threshold</div><div class="reg">36 / 23 (f=11, 2f+1 quorum)</div><div class="dl">11 domains</div></div>
+      <div class="card"><div class="name">meok-council :3200</div><div class="reg">/health · /api/council/vote · /proposals · /decisions · /history</div><div class="dl">PBFT substrate</div></div>
+      <div class="card"><div class="name">meok-king :8077</div><div class="reg">28-hive routing + canon watcher</div><div class="dl">SHA-256 audit chain</div></div>
+      <div class="card"><div class="name">proofof.ai/verify</div><div class="reg">HMAC + Ed25519 sigs · fail-open metering</div><div class="dl">200 free / day cap (when KV on)</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Open Hard Gates (Nick-only) <span class="pill critical">2 min each</span></h2>
+    <div class="grid" id="grid-gates">
+      <div class="card urgent"><div class="name">csga_global npm password change</div><div class="reg">Kills 8 remaining publish tokens on the severed account</div><div class="dl amber">30 sec UI click → kills 192 squatters</div></div>
+      <div class="card urgent"><div class="name">Vercel KV create</div><div class="reg">meok-metering in eu-west-1</div><div class="dl amber">2 min UI click → 200/day cap activates</div></div>
+      <div class="card urgent"><div class="name">Stripe live key roll</div><div class="reg">rk_live… in env</div><div class="dl amber">2 min UI click → security hygiene</div></div>
+      <div class="card urgent"><div class="name">PyPI per-PROJECT throttle</div><div class="reg">22 phantom packages + 40 first-publish blocked</div><div class="dl amber">Wait 24-48h OR support tickets</div></div>
+      <div class="card urgent"><div class="name">GitHub token scope ↑</div><div class="reg">repo:write + admin:org</div><div class="dl amber">19 missing repos + 305 0-star updates</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    MEOK AI Labs · Mavis root · 2026-06-13 PM23
+    <br><a href="https://clawd/_TABS/_inventory/FULL_FLEET_RUNDOWN_2026-06-12.md" style="color: var(--muted);">Full rundown</a> · <a href="https://clawd/_TABS/_inventory/CSGA_NPM_SQUAT_AUDIT_2026-06-12.md" style="color: var(--muted);">CSGA audit</a> · <a href="https://clawd/_TABS/OVERNIGHT_SPRINT_PLAN_2026-06-13.md" style="color: var(--muted);">Sprint plan</a>
+  </div>
+
+</div>
+
+<script>
+// Live fetch (degrades gracefully if /health is down)
+async function fetchStat(url, fieldId) {
+  try {
+    const r = await fetch(url, { method: "GET", signal: AbortSignal.timeout(5000) });
+    if (r.ok) {
+      const d = await r.json();
+      const el = document.getElementById(fieldId);
+      if (el && d) {
+        // format based on field
+        if (fieldId === "stat-total") el.textContent = d.live || "?";
+        else if (fieldId === "stat-monthly") el.textContent = (d.monthly || 0).toLocaleString();
+      }
+    }
+  } catch (e) { /* fail-open */ }
+}
+
+// Article 50 cliff countdown
+const cliff = new Date("2026-08-02T00:00:00Z");
+const now = new Date();
+const days = Math.floor((cliff - now) / (1000 * 60 * 60 * 24));
+document.getElementById("cliff-days").textContent = days;
+
+// Live stats
+fetchStat("/api/health", "stat-total");
+fetchStat("/api/downloads", "stat-monthly");
+</script>
+
+</body>
+</html>

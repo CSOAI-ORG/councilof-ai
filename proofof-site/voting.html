@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🗳 Sovereign Voting — BFT 12-around-1 · 12 Dragon Queens</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #ec4899}
+  .section h2{color:#ec4899;margin-bottom:1rem}
+  /* Queens grid */
+  .queens-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem;margin:1rem 0}
+  .queen-card{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:1rem;border-radius:8px;border:1px solid #ec4899;position:relative;overflow:hidden}
+  .queen-card .name{color:#ec4899;font-size:1.1rem;font-weight:bold;margin-bottom:.3rem}
+  .queen-card .domain{color:#fbbf24;font-size:.78rem;margin-bottom:.3rem}
+  .queen-card .hive{color:#10b981;font-size:.7rem;font-family:monospace;margin-bottom:.5rem}
+  .queen-card .votes{color:#aaa;font-size:.7rem;font-family:monospace}
+  .queen-card .icon{position:absolute;top:.5rem;right:.7rem;font-size:1.5rem;opacity:0.4}
+  /* Proposals */
+  .proposal-list{margin:1rem 0}
+  .proposal-card{background:#0a0a0a;padding:1rem;border-radius:6px;margin:.5rem 0;border-left:3px solid #fbbf24;font-family:monospace;font-size:.78rem}
+  .proposal-card.open{border-left-color:#10b981}
+  .proposal-card.closed{border-left-color:#888;opacity:0.6}
+  .proposal-card.passed{border-left-color:#10b981;background:rgba(16,185,129,0.05)}
+  .proposal-card.rejected{border-left-color:#ef4444;background:rgba(239,68,68,0.05)}
+  .proposal-card .prop-id{color:#fbbf24;font-weight:bold}
+  .proposal-card .prop-title{color:#10b981;font-weight:bold}
+  .proposal-card .prop-desc{color:#888;margin-top:.3rem}
+  .proposal-card .prop-meta{color:#888;font-size:.7rem;margin-top:.3rem}
+  .proposal-card .prop-actions{margin-top:.5rem;display:flex;gap:.3rem}
+  .proposal-card .prop-actions button{background:#fbbf24;color:#000;padding:.3rem .7rem;border:none;border-radius:3px;font-weight:bold;cursor:pointer;font-family:monospace;font-size:.7rem}
+  /* Tally */
+  .tally{margin:1rem 0}
+  .tally-row{display:flex;align-items:center;gap:.7rem;padding:.3rem 0;font-size:.85rem}
+  .tally-row .label{width:80px;color:#aaa;font-family:monospace}
+  .tally-row .bar{flex:1;height:20px;background:#222;border-radius:4px;overflow:hidden}
+  .tally-row .fill-for{height:100%;background:linear-gradient(90deg,#10b981,#34d399)}
+  .tally-row .fill-against{height:100%;background:linear-gradient(90deg,#ef4444,#f87171)}
+  .tally-row .fill-abstain{height:100%;background:linear-gradient(90deg,#888,#aaa)}
+  .tally-row .count{color:#10b981;font-weight:bold;font-family:monospace;min-width:40px}
+  /* Demo */
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .demo-row button.green{background:#10b981;color:#000}
+  .demo-row button.red{background:#ef4444;color:#fff}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  .queen-vote-btn{background:rgba(236,72,153,0.2);border:1px solid #ec4899;color:#ec4899;padding:.3rem .5rem;border-radius:3px;font-size:.65rem;cursor:pointer;font-family:monospace;flex:1;min-width:50px}
+  .queen-vote-btn:hover{background:#ec4899;color:#000}
+  .queen-vote-btn.voted-for{background:#10b981;border-color:#10b981;color:#000}
+  .queen-vote-btn.voted-against{background:#ef4444;border-color:#ef4444;color:#fff}
+  .queen-vote-btn.voted-abstain{background:#888;border-color:#888;color:#fff}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/voting.html">Voting</a>
+  <a href="/compliance.html">Compliance</a>
+  <a href="/api-health.html">Health</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🗳 Sovereign Voting</h1>
+  <p>BFT 12-around-1. 12 dragon queens. Quorum 7/12. Care Floor 0.95. Sovereign by construction.</p>
+  <div class="stats-bar">
+    <div class="stat green"><div class="val">12</div><div class="lbl">Dragon Queens</div></div>
+    <div class="stat blue"><div class="val">7</div><div class="lbl">Quorum</div></div>
+    <div class="stat purple"><div class="val">12:1</div><div class="lbl">BFT Pattern</div></div>
+    <div class="stat"><div class="val">∞</div><div class="lbl">Proposals</div></div>
+    <div class="stat green"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+    <div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="section">
+    <h2>👑 The 12 Dragon Queens</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Each queen governs a sovereign domain. Cast their votes on any proposal.</p>
+    <div class="queens-grid" id="queensGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2>📜 Active Proposals</h2>
+    <p style="color:#aaa;margin-bottom:1rem">All sovereign proposals. Click to vote. Quorum 7/12 required.</p>
+    <div class="proposal-list" id="proposalList"></div>
+  </div>
+
+  <div class="section">
+    <h2>🗳 Try the Voting MCP</h2>
+    <div class="demo">
+      <h3>1. Submit a Proposal</h3>
+      <div class="demo-row">
+        <input type="text" id="propTitle" placeholder="title" value="Adopt Care Floor 0.95 globally">
+        <input type="text" id="propDesc" placeholder="description" value="All sovereign actions must pass Care Floor 0.95">
+        <button onclick="doPropose()">+ Propose</button>
+      </div>
+      <div class="result" id="propResult">Click "Propose" to submit a sovereign proposal.</div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Cast Votes (12 queens)</h3>
+      <div class="demo-row">
+        <select id="voteProp"></select>
+        <select id="voteChoice">
+          <option value="for">✓ For</option>
+          <option value="against">✗ Against</option>
+          <option value="abstain">— Abstain</option>
+        </select>
+        <button onclick="doAutoVote()">🗳 Vote All 12</button>
+      </div>
+      <div class="result" id="voteResult">Click "Vote All 12" to cast 12 votes.</div>
+    </div>
+
+    <div class="demo">
+      <h3>3. Tally + Close</h3>
+      <div class="demo-row">
+        <select id="tallyProp"></select>
+        <button class="green" onclick="doTally()">📊 Tally</button>
+        <button class="red" onclick="doClose()">🔒 Close</button>
+      </div>
+      <div class="result" id="tallyResult">Click "Tally" for results.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Voting Doctrine</h2>
+  <blockquote>"12 dragon queens. BFT 12-around-1. Quorum 7/12.<br>Care Floor 0.95. Sovereign by construction.<br>The dragon governs forever."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 109 sovereign MCPs (was 107, +2 compliance + voting) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const QUEENS = [
+  {id:"q-argus",name:"Argus",domain:"Identity & Vigilance",hive:"London",icon:"🦅"},
+  {id:"q-athena",name:"Athena",domain:"Wisdom & Strategy",hive:"Cambridge",icon:"🦉"},
+  {id:"q-caelum",name:"Caelum",domain:"Knowledge",hive:"Edinburgh",icon:"🌌"},
+  {id:"q-veritas",name:"Veritas",domain:"Truth & Compliance",hive:"York",icon:"⚖️"},
+  {id:"q-ferrum",name:"Ferrum",domain:"Engineering",hive:"Cardiff",icon:"⚒️"},
+  {id:"q-aqua",name:"Aqua",domain:"Care",hive:"Belfast",icon:"💧"},
+  {id:"q-vesta",name:"Vesta",domain:"Operations",hive:"Dublin",icon:"🔥"},
+  {id:"q-luna",name:"Luna",domain:"OOWM",hive:"Paris",icon:"🌙"},
+  {id:"q-sol",name:"Sol",domain:"Renewal",hive:"Berlin",icon:"☀️"},
+  {id:"q-terra",name:"Terra",domain:"Physical",hive:"Amsterdam",icon:"🌍"},
+  {id:"q-ventus",name:"Ventus",domain:"Network",hive:"Stockholm",icon:"💨"},
+  {id:"q-aurora",name:"Aurora",domain:"Emergence",hive:"Helsinki",icon:"🌌"},
+];
+
+const PROPOSALS_TEMPLATE = [
+  {title:"Adopt SIGIL chain as canonical sovereign ledger", desc:"Every sovereign action must be Ed25519 signed and hash-chained.", proposer:"SOV3"},
+  {title:"Adopt BFT 12-around-1 for hive decisions", desc:"Major hive decisions require 7/12 queens quorum.", proposer:"JEEVES"},
+  {title:"Adopt Care Floor 0.95 across all sovereign actions", desc:"16 probes must pass for any sovereign action.", proposer:"SOV33"},
+  {title:"Mint 1000 sovereign certificates for early adopters", desc:"Bronze (First Contact) tier available to anyone.", proposer:"CSOAI"},
+  {title:"Ship the dragon — launch Sat 4 Jul 2026 09:00 BST", desc:"All 109 sovereign MCPs + 121 HTML pages + 2,109+ tests ready.", proposer:"SOV33"},
+];
+
+let proposals = [];
+let votes = {}; // proposal_id -> {queen_id: choice}
+
+function renderQueens() {
+  document.getElementById("queensGrid").innerHTML = QUEENS.map(q => `
+    <div class="queen-card">
+      <div class="icon">${q.icon}</div>
+      <div class="name">${q.name}</div>
+      <div class="domain">${q.domain}</div>
+      <div class="hive">🏛 ${q.hive}</div>
+      <div class="votes">${q.id} · ${q.votes || 0} votes cast</div>
+    </div>
+  `).join("");
+}
+
+function renderProposals() {
+  const list = document.getElementById("proposalList");
+  if (proposals.length === 0) {
+    list.innerHTML = '<div style="color:#888;padding:1rem;text-align:center">No proposals yet. Submit one below.</div>';
+    return;
+  }
+  list.innerHTML = proposals.map(p => {
+    const tally = computeTally(p.prop_id);
+    const cls = p.status === "closed" ? (p.result === "PASSED" ? "passed" : "rejected") : "open";
+    return `<div class="proposal-card ${cls}">
+      <div><span class="prop-id">${p.prop_id}</span> · <span class="prop-title">${p.title}</span></div>
+      <div class="prop-desc">${p.desc}</div>
+      <div class="prop-meta">proposed by ${p.proposer} · ${tally.total} votes · ${p.status}${p.result ? ` · ${p.result}` : ""}</div>
+      ${p.status === "open" ? renderVotingUI(p) : ""}
+    </div>`;
+  }).join("");
+}
+
+function renderVotingUI(p) {
+  return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.3rem;margin:.5rem 0">
+    ${QUEENS.map(q => {
+      const choice = votes[p.prop_id]?.[q.id];
+      const cls = choice === "for" ? "voted-for" : choice === "against" ? "voted-against" : choice === "abstain" ? "voted-abstain" : "";
+      return `<button class="queen-vote-btn ${cls}" onclick="castVote('${p.prop_id}', '${q.id}', '${q.name}')">${q.icon} ${q.name}</button>`;
+    }).join("")}
+  </div>`;
+}
+
+function computeTally(prop_id) {
+  const t = {for: 0, against: 0, abstain: 0, total: 0};
+  for (const choice of Object.values(votes[prop_id] || {})) {
+    t[choice]++;
+    t.total++;
+  }
+  return t;
+}
+
+function updateSelects() {
+  const opts = proposals.map(p => `<option value="${p.prop_id}">${p.prop_id}: ${p.title.substring(0, 30)}...</option>`).join("");
+  ["voteProp","tallyProp"].forEach(id => document.getElementById(id).innerHTML = opts || '<option>No proposals yet</option>');
+}
+
+function doPropose() {
+  const title = document.getElementById("propTitle").value;
+  const desc = document.getElementById("propDesc").value;
+  if (!title) return;
+  const prop_id = "prop-" + Math.random().toString(36).slice(2, 10);
+  proposals.push({prop_id, title, desc, proposer: "SOV33", status: "open", created_at: new Date().toISOString()});
+  votes[prop_id] = {};
+  renderProposals();
+  updateSelects();
+  document.getElementById("propResult").textContent = `+ voting_propose("${title}", "${desc}")
+
+Proposal ID: ${prop_id}
+Status: open
+Quorum: 7/12 queens required
+Created at: ${new Date().toISOString()}
+Doctrine: Sovereign proposal. Care Floor 0.95.`;
+}
+
+function castVote(prop_id, queen_id, queen_name) {
+  if (!votes[prop_id]) votes[prop_id] = {};
+  // Cycle through choices
+  const current = votes[prop_id][queen_id];
+  const next = current === "for" ? "against" : current === "against" ? "abstain" : "for";
+  votes[prop_id][queen_id] = next;
+  renderProposals();
+}
+
+function doAutoVote() {
+  const prop_id = document.getElementById("voteProp").value;
+  const choice = document.getElementById("voteChoice").value;
+  if (!prop_id || !votes[prop_id]) return;
+  QUEENS.forEach(q => votes[prop_id][q.id] = choice);
+  renderProposals();
+  const t = computeTally(prop_id);
+  document.getElementById("voteResult").textContent = `🗳 voting_cast() for all 12 queens
+
+12 votes cast: all '${choice}'
+Tally: for=${t.for}, against=${t.against}, abstain=${t.abstain}, total=${t.total}
+Quorum: 7/12 (${t.total >= 7 ? "✓ MET" : "✗ NOT MET"})
+Doctrine: 12 dragon queens voted. Care Floor 0.95. Sovereign.`;
+}
+
+function doTally() {
+  const prop_id = document.getElementById("tallyProp").value;
+  const t = computeTally(prop_id);
+  const quorum_met = t.total >= 7;
+  let result = "QUORUM_NOT_MET";
+  if (quorum_met) result = t.for > t.against ? "PASSED" : t.against > t.for ? "REJECTED" : "TIE";
+  document.getElementById("tallyResult").textContent = `📊 voting_tally(${prop_id})
+
+Tally:
+  For: ${t.for} ▓▒░${'█'.repeat(t.for)}░▒▓
+  Against: ${t.against} ▓▒░${'█'.repeat(t.against)}░▒▓
+  Abstain: ${t.abstain} ▓▒░${'█'.repeat(t.abstain)}░▒▓
+
+Total: ${t.total} votes
+Quorum required: 7
+Quorum met: ${quorum_met ? "✓ YES" : "✗ NO"}
+Result: ${result}
+Doctrine: BFT 12-around-1. Sovereign.`;
+}
+
+function doClose() {
+  const prop_id = document.getElementById("tallyProp").value;
+  const p = proposals.find(x => x.prop_id === prop_id);
+  if (!p) return;
+  const t = computeTally(prop_id);
+  const quorum_met = t.total >= 7;
+  if (quorum_met && t.for > t.against) p.result = "PASSED";
+  else if (quorum_met && t.against > t.for) p.result = "REJECTED";
+  else p.result = "INCONCLUSIVE";
+  p.status = "closed";
+  p.closed_at = new Date().toISOString();
+  renderProposals();
+  document.getElementById("tallyResult").textContent = `🔒 voting_close(${prop_id})
+
+Status: closed
+Final result: ${p.result}
+Closed at: ${p.closed_at}
+Doctrine: BFT 12-around-1 closed. Sovereign by construction.`;
+}
+
+// Pre-populate with template proposals
+PROPOSALS_TEMPLATE.forEach(tpl => {
+  const prop_id = "prop-" + Math.random().toString(36).slice(2, 10);
+  proposals.push({prop_id, title: tpl.title, desc: tpl.desc, proposer: tpl.proposer, status: "open", created_at: new Date().toISOString()});
+  votes[prop_id] = {};
+  // Auto-vote a few
+  votes[prop_id]["q-argus"] = "for";
+  votes[prop_id]["q-athena"] = "for";
+  votes[prop_id]["q-veritas"] = "for";
+  votes[prop_id]["q-aqua"] = "for";
+  votes[prop_id]["q-luna"] = "for";
+});
+renderQueens();
+renderProposals();
+updateSelects();
+</script>
+
+</body>
+</html>

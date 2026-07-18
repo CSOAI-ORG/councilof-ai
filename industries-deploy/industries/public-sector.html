@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MEOK for Public Sector — EU AI Act + 21 frameworks | MEOK AI Labs</title>
+  <meta name="description" content="GOV.UK + Cabinet Office + AISI + GovTech procurement compliance for government AI. 32-server MCP compliance fleet. Ed25519-signed attestations. 49 days to the 2 Aug 2026 cliff.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="MEOK for Public Sector">
+  <meta property="og:description" content="GOV.UK + Cabinet Office + AISI + GovTech procurement compliance for government AI">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://meok.ai/industries/public-sector">
+  <link rel="canonical" href="https://meok.ai/industries/public-sector">
+  <link rel="llms-txt" href="/llms.txt" title="MEOK for Public Sector — MEOK AI Labs">
+  <link rel="icon" href="https://meok.ai/favicon.ico">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "MEOK for Public Sector",
+    "description": "GOV.UK + Cabinet Office + AISI + GovTech procurement compliance for government AI",
+    "provider": {"@type": "Organization", "name": "MEOK AI Labs", "url": "https://meok.ai"},
+    "areaServed": ["GB", "EU", "US", "CA", "AU", "SG"],
+    "offers": [
+      {"@type": "Offer", "name": "Pro", "price": "199", "priceCurrency": "GBP", "url": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t"},
+      {"@type": "Offer", "name": "Enterprise", "price": "1499", "priceCurrency": "GBP", "url": "https://buy.stripe.com/fZu5kF0xS8wy9wpeGY8k91s"},
+      {"@type": "Offer", "name": "48h Assessment", "price": "4950", "priceCurrency": "GBP", "url": "https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m"}
+    ]
+  }
+  </script>
+  <style>
+    :root { --bg: #fff; --fg: #111; --mut: #666; --gold: #c9a84c; --line: #e5e7eb; --alert: #dc2626; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 960px; margin: 0 auto; padding: 0 1.5rem; line-height: 1.6; color: var(--fg); }
+    h1 { font-size: 2.5rem; letter-spacing: -0.02em; margin: 2rem 0 0.5rem; line-height: 1.1; }
+    .lede { font-size: 1.2rem; color: var(--mut); margin: 0 0 1.5rem; }
+    h2 { font-size: 1.5rem; margin-top: 2.5rem; border-bottom: 1px solid var(--line); padding-bottom: 0.25rem; }
+    .countdown { background: #fef2f2; border-left: 4px solid var(--alert); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0.4rem; display: flex; align-items: center; gap: 1.5rem; }
+    .countdown .num { font-size: 2.5rem; font-weight: 700; color: var(--alert); }
+    .countdown .label { font-size: 0.95rem; color: var(--mut); }
+    .hero { font-size: 1.1rem; color: var(--fg); margin: 1.5rem 0; padding: 1.5rem; background: #fafafa; border-left: 3px solid var(--gold); border-radius: 0.5rem; }
+    .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .tier { border: 1px solid var(--line); border-radius: 0.5rem; padding: 1.25rem; background: #fafafa; }
+    .tier.hi { border-color: var(--gold); background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .tier .price { font-size: 1.75rem; font-weight: 700; }
+    .tier ul { padding-left: 1.2rem; margin: 0.5rem 0; font-size: 0.95rem; }
+    .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; margin: 1.5rem 0; }
+    .case { background: #f9fafb; border: 1px solid var(--line); border-radius: 0.5rem; padding: 1rem; }
+    .case h3 { margin: 0 0 0.3rem; font-size: 1rem; }
+    .case p { margin: 0; color: var(--mut); font-size: 0.9rem; }
+    .case a { display: inline-block; margin-top: 0.5rem; color: var(--gold); text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+    .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.6rem; margin: 1.5rem 0; }
+    .tool { background: #f9fafb; padding: 0.8rem; border-radius: 0.4rem; border: 1px solid var(--line); }
+    .tool h4 { margin: 0; font-size: 0.95rem; color: var(--gold); font-family: ui-monospace, SFMono-Regular, monospace; }
+    .tool p { margin: 0.3rem 0 0; color: var(--mut); font-size: 0.85rem; }
+    .obligation { background: #fff; padding: 0.6rem 0.8rem; margin: 0.4rem 0; border-left: 3px solid var(--gold); border-radius: 0.3rem; font-size: 0.95rem; }
+    .cta { display: inline-block; background: var(--gold); color: #111; padding: 0.7rem 1.4rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; margin: 0.5rem 0.5rem 0.5rem 0; }
+    .cta.secondary { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+    .hero-cta { text-align: center; padding: 2rem 0; }
+    .breadcrumb { padding-top: 1rem; font-size: 0.85rem; color: var(--mut); }
+    .breadcrumb a { color: var(--mut); text-decoration: none; }
+    footer { margin: 3rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--mut); font-size: 0.85rem; }
+    footer a { color: var(--mut); }
+  </style>
+</head>
+<body>
+  <div class="breadcrumb"><a href="https://meok.ai">← meok.ai</a> · <a href="https://meok.ai/hive">hive</a> · <a href="https://meok.ai/industries">industries</a> · public-sector</div>
+  <h1>MEOK for Public Sector</h1>
+  <p class="lede">Public-sector AI compliance — GOV.UK + Cabinet Office + AISI</p>
+
+  <div class="countdown">
+    <div class="num" id="days-left">49</div>
+    <div class="label">days to EU AI Act Article 50 (2 Aug 2026 cliff)</div>
+  </div>
+
+  <div class="hero">Every government AI procurement now requires signed attestations. MEOK gives you the procurement framework template + the supplier-side Article 50 cert + the AISI-aligned safety testing report.</div>
+
+  <h2>Top obligations (public-sector)</h2>
+  <div class="obligation">EU AI Act — government AI deployer obligations</div>
+  <div class="obligation">UK AI Bill — public sector + AISI framework</div>
+  <div class="obligation">GOV.UK AI Playbook — sovereign UK infrastructure</div>
+  <div class="obligation">Procurement Policy Note 02/24 — AI in public procurement</div>
+
+  <h2>3 case studies in this vertical</h2>
+  <div class="cases">
+    <div class="case"><h3>UK Central Government</h3><p>Cabinet Office AI procurement framework + AISI sign-off.</p><a href="https://case-studies-deploy.vercel.app">Read the case study →</a></div>
+    <div class="case"><h3>UK Local Authority</h3><p>Care + education AI compliance — 14 LA-wide.</p><a href="https://case-studies-deploy.vercel.app">Read the case study →</a></div>
+    <div class="case"><h3>UK GovTech vendor</h3><p>Faculty AI / Accenture UK / Capita-grade attestation.</p><a href="https://case-studies-deploy.vercel.app">Read the case study →</a></div>
+  </div>
+
+  <h2>3 MCP tools for public-sector</h2>
+  <div class="tools">
+    <div class="tool"><h4>uk-ai-bill-compliance-mcp</h4><p>100% readiness scoring + AISI alignment</p></div>
+    <div class="tool"><h4>eu-ai-act-compliance-mcp</h4><p>Government AI deployer attestation</p></div>
+    <div class="tool"><h4>csoai-governance-crosswalk-mcp</h4><p>12-framework master crosswalk (UK AISI + EU AI Act + NIST)</p></div>
+  </div>
+
+  <h2>Pricing</h2>
+  <div class="tiers">
+    <div class="tier">
+      <h3>Free</h3>
+      <p class="price">£0</p>
+      <p style="color: var(--mut); font-size: 0.9rem;">200 calls/day per MCP. No signed receipts.</p>
+      <ul>
+        <li>All 32 MCPs in the catalogue</li>
+        <li>Free-tier <code>/sign</code> endpoint</li>
+        <li>Community support</li>
+      </ul>
+      <a class="cta secondary" href="https://meok-attestation-api.vercel.app/signup">Start free →</a>
+    </div>
+    <div class="tier hi">
+      <h3>Pro <span class="pill" style="background: rgba(201,168,76,0.12); color: var(--gold); padding: 0.15rem 0.4rem; border-radius: 0.3rem; font-size: 0.7rem;">MOST POPULAR</span></h3>
+      <p class="price">£199<span style="font-size: 0.9rem; color: var(--mut);">/mo</span></p>
+      <p style="color: var(--mut); font-size: 0.9rem;">1,000 calls/day per MCP. Ed25519-signed receipts.</p>
+      <ul>
+        <li>All 32 MCPs in the catalogue</li>
+        <li>Signed Ed25519 attestations</li>
+        <li>Public verify URL per cert</li>
+        <li>Priority support</li>
+        <li>Offline verification tool</li>
+      </ul>
+      <a class="cta" href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro →</a>
+    </div>
+    <div class="tier">
+      <h3>Enterprise</h3>
+      <p class="price">£1,499<span style="font-size: 0.9rem; color: var(--mut);">/mo</span></p>
+      <p style="color: var(--mut); font-size: 0.9rem;">Multi-tenant. Co-branded receipts. On-prem option.</p>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Co-branded attestations</li>
+        <li>Multi-tenant provisioning</li>
+        <li>On-prem deployment</li>
+        <li>Dedicated CSM</li>
+      </ul>
+      <a class="cta secondary" href="https://buy.stripe.com/fZu5kF0xS8wy9wpeGY8k91s">Buy Enterprise →</a>
+    </div>
+    <div class="tier">
+      <h3>48h Assessment</h3>
+      <p class="price">£5,000<span style="font-size: 0.9rem; color: var(--mut);">one-time</span></p>
+      <p style="color: var(--mut); font-size: 0.9rem;">Full public-sector audit + remediation backlog + signed cert.</p>
+      <ul>
+        <li>Full governance report</li>
+        <li>All in-scope frameworks</li>
+        <li>Remediation backlog with line-item owners</li>
+        <li>Signed Article 50 attestation</li>
+      </ul>
+      <a class="cta" href="https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m">Buy the Public-Sector Compliance Pack →</a>
+    </div>
+  </div>
+
+  <div class="hero-cta">
+    <h2>Get from "in scope" to signed Article 50 in 4 days</h2>
+    <p style="font-size: 1.1rem; color: var(--mut);">Same tooling the UK challenger bank used. Same tooling the care home operator used. Same tooling the HR-tech scaleup used.</p>
+    <a class="cta" href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro £199/month →</a>
+    <a class="cta secondary" href="https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m">Book 48h Assessment £4950 →</a>
+    <a class="cta secondary" href="mailto:hello@meok.ai">Book scoping call →</a>
+  </div>
+
+  <footer>
+    <p><strong>MEOK for Public Sector</strong> — Part of the <a href="https://meok.ai">MEOK AI Labs</a> portfolio · <a href="https://csoai.org">CSOAI council</a> · <a href="https://proofof.ai">ProofOf.AI trust surface</a> · <a href="https://hive-deploy.vercel.app">SOV3 hive</a></p>
+    <p>CSOAI Ltd · UK Companies House <strong>16939677</strong> · Registered in England & Wales · hello@meok.ai</p>
+    <p style="margin-top: 1rem;">
+      <a href="https://meok.ai">home</a> ·
+      <a href="https://meok.ai/hive">hive</a> ·
+      <a href="https://meok.ai/industries">industries</a> ·
+      <a href="https://meok.ai/llms.txt">llms.txt</a> ·
+      <a href="https://meok.ai/openapi.json">openapi.json</a> ·
+      <a href="https://meok.ai/privacy">privacy</a> ·
+      <a href="https://meok.ai/terms">terms</a>
+    </p>
+    <p style="margin-top: 1rem; font-style: italic;">Powered by the MEOK Sovereign AI OS · SOV3 hub at <code>localhost:3101/mcp</code> · 182 agents · 56 tasks · 22 sigils on Ed25519 chain</p>
+  </footer>
+
+  <script>
+    (function() {{
+      const target = new Date('2026-08-02T00:00:00Z');
+      const now = new Date();
+      const days = Math.max(0, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
+      const el = document.getElementById('days-left');
+      if (el) el.textContent = days;
+    }})();
+  </script>
+</body>
+</html>

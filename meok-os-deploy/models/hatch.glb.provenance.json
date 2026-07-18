@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "provenance": {
+    "spec": "meok.provenance.v1",
+    "type": "sovereign research-provenance record",
+    "claim": "MEOK Hatch character mesh hatch.glb sha256=4da4a7bd1e999932",
+    "source": "Hunyuan3D-2-ZeroGPU",
+    "kind": "generated-3d-asset",
+    "evidence": "",
+    "asserter": "CSOAI / MEOK Labs",
+    "attests": "WHO asserted WHAT + WITH WHICH SOURCE + integrity (not tampered). Provenance != truth: does NOT certify the claim is correct.",
+    "governance": {
+      "careFloor": 0.95,
+      "hardStops": [
+        "no fabricated sources",
+        "no claim-as-fact without source"
+      ]
+    },
+    "rides": "sign the artifacts a workbench (e.g. Claude Science) produces \u2014 reproducible + now offline-verifiable, forever.",
+    "provider": "CSOAI / MEOK (UK Co. 16939677)"
+  },
+  "signature": {
+    "alg": "ed25519",
+    "canonical": "{\"asserter\":\"CSOAI / MEOK Labs\",\"attests\":\"WHO asserted WHAT + WITH WHICH SOURCE + integrity (not tampered). Provenance != truth: does NOT certify the claim is correct.\",\"claim\":\"MEOK Hatch character mesh hatch.glb sha256=4da4a7bd1e999932\",\"evidence\":\"\",\"governance\":{\"careFloor\":0.95,\"hardStops\":[\"no fabricated sources\",\"no claim-as-fact without source\"]},\"kind\":\"generated-3d-asset\",\"provider\":\"CSOAI / MEOK (UK Co. 16939677)\",\"rides\":\"sign the artifacts a workbench (e.g. Claude Science) produces \u2014 reproducible + now offline-verifiable, forever.\",\"source\":\"Hunyuan3D-2-ZeroGPU\",\"spec\":\"meok.provenance.v1\",\"type\":\"sovereign research-provenance record\"}",
+    "signature": "6f0a0f540e5a77fb33e537361724cdf8e8d7685418aa4f502186781118dba78b8ef3b3d2109668f69f4ae2dfb8c7eb172bdc5e11e5435464780956e67e5efe07",
+    "publicKey": "302a300506032b6570032100a6781b49fba6294a3b69a721648722337b232a77b0b2b5ef7a00c69022332c24",
+    "sha256": "d8ae64ce1480648f3cbf365465c558a718b681887acf586b82753a943f6bf7e2",
+    "fingerprint": "SOV:D78A-DC19-C87C-F9C4-1530-659A-1E55-ABB5",
+    "seeded": false,
+    "verify": "https://os.meok.ai/api/verify"
+  },
+  "note": "MEOK provenance record \u2014 Ed25519-signed, offline-verifiable. Verify at /api/verify or in-browser (Web Crypto). Provenance attests assertion+source+integrity, NOT truth."
+}

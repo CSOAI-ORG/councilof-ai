@@ -1,0 +1,49 @@
+{
+  "mcpVersion": "1.0.0",
+  "serverInfo": {
+    "name": "safetyof.ai---ai-safety-posture-score",
+    "version": "1.0.0",
+    "description": "SafetyOf.AI \u2014 AI Safety Posture Score \u2014 MEOK AI Labs compliance substrate."
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "compliance-audit",
+      "description": "Run a compliance audit via SafetyOf.AI \u2014 AI Safety Posture Score.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string",
+            "description": "Name or identifier of the system"
+          },
+          "framework": {
+            "type": "string",
+            "description": "Framework to check"
+          }
+        },
+        "required": [
+          "system"
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "https://safetyof.ai/llms.txt",
+      "name": "SafetyOf.AI \u2014 AI Safety Posture Score LLMs.txt",
+      "description": "Discovery manifest.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://safetyof.ai/sitemap.xml",
+      "name": "SafetyOf.AI \u2014 AI Safety Posture Score Sitemap",
+      "description": "Page index.",
+      "mimeType": "application/xml"
+    }
+  ]
+}

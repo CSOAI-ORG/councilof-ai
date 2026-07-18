@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mamba SSM - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / mamba-ssm</div>
+<h1>Mamba SSM</h1>
+<p class="tagline">State-space sequence model — linear time, infinite context, sovereign memory.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p><strong>Mamba</strong> is a selective state-space model (SSM) introduced by Albert Gu and Tri Dao in December 2023. It achieves Transformer-quality language modelling with linear-time complexity and a constant-size recurrent state, making it ideal for sovereign AI where long memory and predictable compute matter.</p>
+
+<h2>Why SSM, Why Not Transformer?</h2>
+<p>Standard Transformers (see <a href="/wiki/architecture/standard-attention.html">Standard Attention</a>) have O(n²) complexity in sequence length — doubling the context quadruples the FLOPs. For sovereign memory (e.g., 100K SIGIL events, 1M audit log lines), this is prohibitive. Mamba compresses any-length context into a fixed-size state vector (16 dimensions in CSOAI's deployment), enabling O(1) memory and O(n) compute.</p>
+
+<h2>Mathematical Sketch</h2>
+<pre>h_{t+1} = A * h_t + B * x_t
+y_t = C * h_t</pre>
+<p>where <code>h</code> is the hidden state, <code>x</code> is the input, and <code>A</code>, <code>B</code>, <code>C</code> are learned matrices. The selective variant makes <code>B</code>, <code>C</code>, and <code>Δ</code> input-dependent, enabling the model to remember or forget as content warrants.</p>
+
+<h2>Role in OOWM</h2>
+<p>In the OOWM Sandwich (see <a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a>), Mamba-2 is the long-context layer. It receives every SIGIL emission (1 Hz cadence) and maintains a 16-dimensional state vector that summarises the agent ecosystem. This state vector drives the <a href="/wiki/architecture/intuition-engine.html">Intuition Engine</a>.</p>
+
+<h2>Sovereign Alignment</h2>
+<p>Mamba is well-suited to sovereignty for three reasons: (1) the constant-state enables local-only inference (no need to ship context to a remote server), (2) the linear compute makes cost predictable (no surprise bills), and (3) the architecture is open-source (Apache 2.0), so the weights are auditable.</p>
+
+<h2>Historical Context</h2>
+<p>SSMs date to the 1970s (Kalman filters) but were eclipsed by RNNs (1990s) and Transformers (2017). Mamba's 2023 breakthrough — making the SSM selective — restored SSMs to the frontier. CSOAI deployed Mamba-2 in production by Q1 2025; by Q2 2026 it had been adapted to the sovereign use case via the 16-dim Intuition Engine.</p>
+
+<h2>Modern Usage</h2>
+<p>CSOAI customers use Mamba-2 in two ways: (1) as the long-memory component of OOWM (default), and (2) as a standalone embedding model for SIGIL chain analysis (the <code>sov_zamba_ingest</code> tool). The <a href="/wiki/demos/siglil-verify.html">SIGLIL Verify Demo</a> demonstrates Mamba's pattern-matching on a 100K-event SIGIL transcript.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/architecture/standard-attention.html">Standard Attention</a></li>
+<li><a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a></li>
+<li><a href="/wiki/architecture/intuition-engine.html">Intuition Engine</a></li>
+<li><a href="/wiki/science/mamba.html">Science: Mamba</a></li>
+<li><a href="/wiki/science/bf-time-constant-mamba.html">BF Time Constant</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

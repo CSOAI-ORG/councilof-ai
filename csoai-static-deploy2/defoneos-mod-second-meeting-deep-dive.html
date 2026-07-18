@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Second-Meeting 30-min Technical Deep-Dive — Anchors, Demos, SoW</title>
+<meta name="description" content="30-min second-meeting deep-dive structure. 7 technical anchors. Live demo script. Draft pilot SoW. Decision-tree for close.">
+<style>
+:root{--bg:#0a0e1a;--panel:#111827;--ink:#e6edf3;--mute:#94a3b8;--accent:#22d3ee;--accent2:#a78bfa;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--border:#1f2937;--mono:'SF Mono','Monaco','Cascadia Code',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.65;font-size:15px}
+.wrap{max-width:1100px;margin:0 auto;padding:48px 32px}
+header{border-bottom:2px solid var(--accent);padding-bottom:24px;margin-bottom:48px}
+.eyebrow{color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px}
+h1{font-size:36px;font-weight:800;line-height:1.15;margin-bottom:12px}
+.sub{color:var(--mute);font-size:16px}
+h2{font-size:24px;font-weight:700;margin:48px 0 16px;color:var(--accent);border-left:4px solid var(--accent);padding-left:16px}
+h3{font-size:18px;font-weight:700;margin:24px 0 12px}
+.seg{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:20px;margin:16px 0}
+.seg .head{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px}
+.seg .name{font-weight:700;color:var(--accent)}
+.seg .time{font-family:var(--mono);color:var(--mute);font-size:12px}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:#0f172a;color:var(--accent);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:0.05em}
+tr:hover{background:rgba(34,211,238,0.03)}
+code{background:var(--panel);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:13px;color:var(--accent)}
+pre{background:#0f172a;border:1px solid var(--border);border-radius:6px;padding:16px;margin:12px 0;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.5}
+ul,ol{margin:12px 0 12px 24px}
+li{margin:6px 0}
+.anchor{background:linear-gradient(135deg,var(--panel),#0f172a);border:1px solid var(--accent);border-radius:8px;padding:16px;margin:16px 0}
+.anchor .num{font-family:var(--mono);color:var(--accent);font-size:11px;letter-spacing:0.1em}
+.anchor .ttl{font-size:16px;font-weight:700;margin:4px 0}
+.anchor .desc{color:var(--mute);font-size:13px}
+.anchor .dur{font-family:var(--mono);color:var(--accent2);font-size:12px;margin-top:8px}
+.warn{background:rgba(245,158,11,0.1);border:1px solid var(--amber);border-radius:6px;padding:16px;margin:16px 0}
+.warn .lbl{color:var(--amber);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.ok{background:rgba(16,185,129,0.1);border:1px solid var(--green);border-radius:6px;padding:16px;margin:16px 0}
+.ok .lbl{color:var(--green);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.alert{background:rgba(239,68,68,0.1);border:1px solid var(--red);border-radius:6px;padding:16px;margin:16px 0}
+.alert .lbl{color:var(--red);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.metric{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.metric .v{font-size:22px;font-weight:800;color:var(--accent);font-family:var(--mono)}
+.metric .l{color:var(--mute);font-size:11px;margin-top:4px}
+.tree{background:var(--panel);border-radius:6px;padding:16px;margin:12px 0;font-family:var(--mono);font-size:12px;white-space:pre;overflow-x:auto;color:var(--accent)}
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);color:var(--mute);font-size:12px;font-family:var(--mono)}
+@media(max-width:768px){.grid4{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+<header>
+<div class="eyebrow">DEFONEOS · SECOND-MEETING 30-MIN TECHNICAL DEEP-DIVE · JEEVES-AUTHENTICATED</div>
+<h1>Second-Meeting 30-min Deep-Dive</h1>
+<div class="sub">After 1st meeting (DISCOVER→DEMO→PILLAR→PACT). Before pilot SoW. 7 anchors. Live demo script. Draft pilot SoW. Close-or-defer decision tree.</div>
+</header>
+
+<h2>0. Pre-Meeting State — What 1st Meeting Established</h2>
+<div class="grid4">
+<div class="metric"><div class="v">15min</div><div class="l">1st meeting length</div></div>
+<div class="metric"><div class="v">4</div><div class="l">Buyer signals captured</div></div>
+<div class="metric"><div class="v">DEMO</div><div class="l">CRM state post-1st</div></div>
+<div class="metric"><div class="v">≥3</div><div class="l">Day to schedule 2nd</div></div>
+</div>
+<p style="margin-top:12px;color:var(--mute);font-size:13px">The 1st meeting (DISCOVER→DEMO→PILLAR→PACT structure, 4 segments / 15 min) should have captured: (a) buyer pain-point, (b) budget envelope, (c) decision-maker chain, (d) specific time-bound next step. If any of these is missing, the 2nd meeting is a re-do, not a deep-dive.</p>
+
+<h2>1. 30-Minute Second-Meeting Structure (4 Segments)</h2>
+
+<div class="seg">
+<div class="head"><div class="name">SEGMENT 1 · RECONFIRM (5 min)</div><div class="time">00:00 — 05:00</div></div>
+<p><strong>Buyer speaks 3 min, you speak 2 min.</strong> Open with: "Last time we covered [3 bullets from 1st meeting]. Anything shifted since? Has anyone else on your team weighed in?" Listen for: (a) new stakeholder, (b) budget change, (c) timeline pull-in / push-out, (d) competitor mention. Confirm decision-maker chain — who else needs to approve?</p>
+<ul>
+<li>If chain is longer than 1 person → schedule 3rd meeting with full chain before pilot SoW.</li>
+<li>If budget envelope changed >20% → re-quote before continuing.</li>
+<li>If competitor mentioned → pull the defoneos-vs-[competitor] comparison sheet for that competitor.</li>
+<li>If buyer says "send me a deck" → defer the ask until 3rd meeting — never lead with a deck on 2nd.</li>
+</ul>
+</div>
+
+<div class="seg">
+<div class="head"><div class="name">SEGMENT 2 · TECHNICAL DEEP-DIVE (15 min)</div><div class="time">05:00 — 20:00</div></div>
+<p>Lead the buyer through 7 anchors (60-90s each, pick 5-7 that match their pain-point). Order matters — start with the anchor that solves their pain, end with the one that builds trust.</p>
+
+<h3>The 7 Technical Anchors</h3>
+
+<div class="anchor">
+<div class="num">ANCHOR 1 · OSCAL SSP COMPLIANCE</div>
+<div class="ttl">"Here is the system security plan in OSCAL format — the same format UK NCSC accepts"</div>
+<div class="desc">Pull up csoai-static-deploy2.vercel.app/defoneos-oscal-ssp-demo.html. Walk through: (a) control IDs (AC, AU, IA, SC families) · (b) implementation status (implemented / planned / inherited) · (c) responsible roles · (d) assessment schedule. Live demo of an OSCAL JSON export.</div>
+<div class="dur">90s · Best for: Dstl AI Assurance, DASA, Cyber Essentials buyers</div>
+</div>
+
+<div class="anchor">
+<div class="num">ANCHOR 2 · 240-TEST PYTEST EVIDENCE</div>
+<div class="ttl">"Every sovereign claim is backed by 240 automated tests run on every commit"</div>
+<div class="desc">Pull up csoai-static-deploy2.vercel.app/defoneos-test-suite.html. Show: (a) 240 test count, (b) categories (compliance, security, sovereignty, performance), (c) last-run timestamp + pass-rate, (d) SHA-512 audit hash. Distinguish DEFONEOS from competitors — they have marketing decks, you have machine-verifiable evidence.</div>
+<div class="dur">75s · Best for: technical buyers (Dstl Cyber, Navy Autonomy, NCSC)</div>
+</div>
+
+<div class="anchor">
+<div class="num">ANCHOR 3 · UK SOVEREIGN MAP</div>
+<div class="ttl">"Every line of code, every model, every datastore — physically in the UK"</div>
+<div class="desc">Pull up csoai-static-deploy2.vercel.app/defoneos-uk-sovereign-map.html. Walk through: (a) UK regions (London / Manchester / Edinburgh for compute, Cardiff / Belfast for failover), (b) no hyperscaler call-out (no US/EU data egress), (c) ICO + UK-GDPR + DSP toolkit alignment, (d) staff UK-based (SC-cleared where required). Show the literal geographic map.</div>
+<div class="dur">75s · Best for: all buyers — sovereignty is universal requirement</div>
+</div>
+
+<div class="anchor">
+<div class="num">ANCHOR 4 · 33-AGENT BFT COUNCIL</div>
+<div class="ttl">"Decisions are made by a 33-agent Byzantine-fault-tolerant council — not one person"</div>
+<div class="desc">Pull up csoai-static-deploy2.vercel.app/defoneos-bft-council.html. Explain: (a) why 33 agents (BFT math: 33/3 floor = 11 byzantine can fail without breaking quorum), (b) what they vote on (every customer-facing artefact), (c) the 5 votes cast during the sprint (grunts, gap-evidence, first-email, CRM, sprint-close), (d) signature mechanism (Ed25519).</div>
+<div class="dur">90s · Best for: governance buyers, AUKUS / NATO, standards bodies</div>
+</div>
+
+<div class="anchor">
+<div class="num">ANCHOR 5 · COST-DOWN vs BUILD-IN-HOUSE</div>
+<div class="ttl">"Build-it-yourself is £3M+ over 3 years, we are £360k — a 88% saving"</div>
+<div class="desc">Pull up csoai-static-deploy2.vercel.app/defoneos-cost-roi.html (or your own deal-economics slide). Walk through: (a) in-house team = 4 FTE × £150k fully-loaded = £600k/yr · 3 years = £1.8M salary + £1.2M infrastructure = £3M. (b) DEFONEOS = £180k Platform × 3 = £540k + £60k Deployment (one-off) = £600k. (c) Plus: time-to-value (18 months for in-house, 3 months for DEFONEOS). Risk-adjusted NPV: DEFONEOS saves £2.4M over 3 years.</div>
+<div class="dur">90s · Best for: budget-buyer, CFO-types, Treasury</div>
+</div>
+
+<div class="anchor">
+<div class="num">ANCHOR 6 · 3-MIN SUBSTRATE RUN</div>
+<div class="ttl">"Let me show you a working substrate in 3 minutes — live"</div>
+<div class="desc">Open terminal (your dev machine, screen-shared). Run: <code>git clone https://github.com/meoklabs/defoneos-mcp && cd defoneos-mcp && pip install -e . && defoneos init my-org && defoneos run --demo</code>. Watch as it: (a) installs in 30s, (b) initialises the sovereign substrate, (c) runs a sample OSCAL SSP + 240-test pytest + BFT council mini-vote. Show JSON output of the test pass. Total time: 3 min if network is good. This is your killer demo.</div>
+<div class="dur">180s · Best for: technical buyers (Dstl Cyber, Navy Autonomy), technical primes</div>
+</div>
+
+<div class="anchor">
+<div class="num">ANCHOR 7 · MCP FEDERATION</div>
+<div class="ttl">"30 MCP servers — sensors, defence, civil-service — federated under one sovereign namespace"</div>
+<div class="desc">Pull up csoai-static-deploy2.vercel.app/defoneos-mcp-fleet.html. Show: (a) 30 MCPs across 5 categories (sensor / defence / civil-service / standards / orchestration), (b) one sovereign namespace = no per-tool access control, (c) OSCAL-aware tool manifest = every tool call is auditable, (d) UK sovereign data residency = no US/EU call-out. Walk through 3 MCPs in detail (sentinel-hub satellite + openaq-air + rtsp-camera) — show the JSON manifest of each.</div>
+<div class="dur">90s · Best for: ISR / Digital Twin / C2 buyers</div>
+</div>
+
+<div class="ok">
+<div class="lbl">✅ ANCHOR-SELECTION GUIDE</div>
+<p>Pick 5 anchors based on buyer type:</p>
+<table>
+<thead><tr><th>Buyer type</th><th>Anchors (in order)</th></tr></thead>
+<tbody>
+<tr><td>Dstl AI Assurance</td><td>1 → 4 → 3 → 2 → 5</td></tr>
+<tr><td>DASA Innovation</td><td>5 → 1 → 4 → 6 → 7</td></tr>
+<tr><td>Dstl Cyber</td><td>2 → 1 → 6 → 4 → 3</td></tr>
+<tr><td>Navy Autonomy</td><td>7 → 6 → 2 → 3 → 4</td></tr>
+<tr><td>RE Digital Eng</td><td>6 → 5 → 7 → 3 → 2</td></tr>
+<tr><td>RAF Rapid Cap</td><td>7 → 5 → 6 → 3 → 1</td></tr>
+<tr><td>UKDI</td><td>5 → 3 → 4 → 6 → 1</td></tr>
+<tr><td>DIANA</td><td>4 → 7 → 5 → 6 → 3</td></tr>
+<tr><td>UK AISI</td><td>2 → 1 → 4 → 6 → 3</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="seg">
+<div class="head"><div class="name">SEGMENT 3 · DRAFT PILOT SoW (7 min)</div><div class="time">20:00 — 27:00</div></div>
+<p><strong>Buyer speaks 2 min, you speak 5 min.</strong> Open with: "Given what we just walked through, here is the literal pilot statement of work I'd propose — 90-day paid pilot, fixed-price, with clear exit criteria. Take this to your team and we'll align next call."</p>
+
+<h3>Draft 90-Day Pilot SoW — Template</h3>
+<pre>STATEMENT OF WORK — DEFONEOS PILOT
+Reference:        DEFONEOS-PILOT-2026-[NNN]
+Date:             [DD MMM 2026]
+Buyer:            [Organisation name]
+Provider:         CSOAI Ltd (UK 16939677)
+
+1. SCOPE
+   1.1 DEFONEOS Platform licence — 1 buyer-org, 12 months, full feature set.
+   1.2 DEFONEOS Deployment — sovereign UK installation, single tenant, BYO-cloud or CSOAI-managed.
+   1.3 DEFONEOS-SEAL credential — 1 issued at pilot-close, BFT-council voted.
+   1.4 Advisory days — 5 days over 90 days, rate-card £2,400/day.
+
+2. PRICE
+   2.1 Platform licence:    £180,000 (12 months, paid quarterly £45,000)
+   2.2 Deployment:           £60,000 (one-off, 50% on kickoff, 50% on go-live)
+   2.3 Advisory days:        £12,000 (5 days × £2,400)
+   2.4 SEAL credential:      £12,000 (one-off, on pilot-close)
+   2.5 TOTAL:                £264,000 over 12 months (or 90-day pilot → £216,000 if pilot terminates at 90d)
+
+3. DELIVERY
+   3.1 Kickoff:            T+0 weeks (signing)
+   3.2 Substrate live:     T+2 weeks
+   3.3 OSCAL SSP complete: T+4 weeks
+   3.4 240-test pytest:    T+6 weeks
+   3.5 BFT council vote:   T+8 weeks
+   3.6 SEAL issuance:      T+10 weeks
+   3.7 Pilot-close retro:  T+12 weeks
+
+4. EXIT CRITERIA (for buyer to convert pilot → 3-year contract)
+   4.1 OSCAL SSP accepted by buyer's assurance team
+   4.2 240-test pytest pass-rate ≥99%
+   4.3 BFT council sign-off received (≥23/33 approve)
+   4.4 SEAL credential used in ≥1 buyer-artefact (e.g. supplier declaration)
+   4.5 Reference call agreed (buyer agrees to be reference for 12 months)
+
+5. TERMINATION
+   5.1 Buyer may terminate at T+90d with 30-day notice, no further fees.
+   5.2 Provider may terminate at T+90d with 30-day notice, refund pro-rata.
+   5.3 IP remains with CSOAI Ltd; buyer receives non-exclusive licence for pilot term.
+
+6. GOVERNANCE
+   6.1 Quarterly review with buyer's CDIO + CSOAI founder (Nick Templeman)
+   6.2 SHA-512 audit-trail chain shared quarterly
+   6.3 33-agent BFT council votes published quarterly
+
+SIGNED:
+For CSOAI Ltd:        Nick Templeman, Founder &amp; CEO
+For [Buyer]:          [Name, Role, Date]
+</pre>
+
+<div class="warn">
+<div class="lbl">⚠️ NEVER DEVIATE FROM THIS SoW STRUCTURE</div>
+<p>Every 2nd meeting uses this exact structure. If the buyer asks for changes, capture them and reply by email within 24h with a marked-up version. Never negotiate live on the call.</p>
+</div>
+</div>
+
+<div class="seg">
+<div class="head"><div class="name">SEGMENT 4 · DECISION-TREE CLOSE (3 min)</div><div class="time">27:00 — 30:00</div></div>
+<p>End with a specific time-bound next step. Use the close decision tree:</p>
+
+<pre class="tree">BUYER SIGNALS AT END OF 2ND MEETING
+├── STRONG (asks for legal review, asks for security review, names CFO, mentions budget code)
+│   └── CLOSE: "I'll send the SoW tonight, legal redlines by Friday, sign by 25 Jul. Calendar invite for kickoff T+2 weeks — 28 Jul or 4 Aug?"
+│
+├── MEDIUM (asks for 3rd meeting, asks for technical demo to wider team, asks for reference calls)
+│   └── DEFER: "Let's get your team in for a 3rd meeting — 22 Jul or 23 Jul, 14:00 BST. I'll bring the live substrate run + your 3 named colleagues get access to the dev tenant for 7 days."
+│
+└── WEAK (says "let me think about it", "circle back later", "send me a deck")
+    └── PARK: "I'll send a 1-page summary by tomorrow 17:00 BST. If no reply by 1 Aug, I'll close the file. If you re-engage later, we start a fresh pilot scoping."
+</pre>
+
+<div class="alert">
+<div class="lbl">🛑 NEVER DO THESE 5 THINGS ON A 2ND MEETING</div>
+<ul>
+<li><strong>Negotiate price live</strong> — always "I'll take that back, send a revised quote within 24h"</li>
+<li><strong>Promise a feature that doesn't exist</strong> — "Let me check with the engineering council and get back to you by Friday"</li>
+<li><strong>Give an exclusive discount</strong> — pricing is the same for everyone; no special deals for any buyer</li>
+<li><strong>Bad-mouth a competitor by name</strong> — "We take a different architectural approach" — never "they're worse"</li>
+<li><strong>End without a calendar invite</strong> — every 2nd meeting ends with a specific time-bound next-step</li>
+</ul>
+</div>
+</div>
+
+<h2>2. Pre-Meeting Preparation Checklist (T-24h)</h2>
+<table>
+<thead><tr><th>#</th><th>Item</th><th>Owner</th><th>Done?</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Re-read 1st meeting notes in CRM</td><td>Nick</td><td>☐</td></tr>
+<tr><td>2</td><td>Re-score buyer signal (1-100)</td><td>Nick</td><td>☐</td></tr>
+<tr><td>3</td><td>Pick 5 anchors (use anchor-selection guide)</td><td>Nick + JEEVES</td><td>☐</td></tr>
+<tr><td>4</td><td>Pull up demo URLs in browser tabs (5-7 tabs)</td><td>Nick</td><td>☐</td></tr>
+<tr><td>5</td><td>Pre-fill 90-day pilot SoW with buyer name + ref</td><td>Nick + JEEVES</td><td>☐</td></tr>
+<tr><td>6</td><td>Pre-load terminal with 3-min substrate demo script</td><td>Nick</td><td>☐</td></tr>
+<tr><td>7</td><td>Have pricing card 1-pager open (defoneos-mod-pricing-card-onepager.html)</td><td>Nick</td><td>☐</td></tr>
+<tr><td>8</td><td>Have objection-handling playbook open (defoneos-mod-objection-handling-playbook.html)</td><td>Nick</td><td>☐</td></tr>
+<tr><td>9</td><td>Have referral-partner letter open (defoneos-mod-referral-partner-letter.html)</td><td>Nick</td><td>☐</td></tr>
+<tr><td>10</td><td>Have 240-test pytest PDF on second screen</td><td>Nick</td><td>☐</td></tr>
+<tr><td>11</td><td>Have OSCAL SSP JSON on second screen</td><td>Nick</td><td>☐</td></tr>
+<tr><td>12</td><td>Calendar 30-min slot blocked + Calendly sent</td><td>Nick</td><td>☐</td></tr>
+<tr><td>13</td><td>Pre-write CRM update template (capture 4 buyer signals + 7 anchor reactions)</td><td>Nick + JEEVES</td><td>☐</td></tr>
+<tr><td>14</td><td>JEEVES BFT council vote scheduled for any new artefact you might create live</td><td>JEEVES</td><td>☐</td></tr>
+<tr><td>15</td><td>Bottled water + notepad + pen</td><td>Nick</td><td>☐</td></tr>
+</tbody>
+</table>
+
+<h2>3. Post-Meeting Action Items (T+0 to T+24h)</h2>
+<table>
+<thead><tr><th>#</th><th>Action</th><th>Owner</th><th>SLA</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Log 4 buyer signals + 7 anchor reactions + 1 close-decision (STRONG/MEDIUM/WEAK) in CRM</td><td>Nick</td><td>T+30 min</td></tr>
+<tr><td>2</td><td>Update CRM state (DEMO → PILLAR if STRONG/MEDIUM, DEMO → PARK if WEAK)</td><td>Nick</td><td>T+30 min</td></tr>
+<tr><td>3</td><td>If STRONG: send SoW + calendar invite for kickoff</td><td>Nick</td><td>T+2h</td></tr>
+<tr><td>4</td><td>If MEDIUM: send 3rd-meeting invite + dev-tenant access grant</td><td>Nick + JEEVES</td><td>T+2h</td></tr>
+<tr><td>5</td><td>If WEAK: send 1-page summary + 1 Aug check-in</td><td>Nick</td><td>T+24h</td></tr>
+<tr><td>6</td><td>JEEVES generates meeting summary (8-page PDF, SHA-512 signed)</td><td>JEEVES</td><td>T+4h</td></tr>
+<tr><td>7</td><td>BFT council vote on any new artefact created live (e.g. custom SoW addendum)</td><td>JEEVES</td><td>T+8h</td></tr>
+<tr><td>8</td><td>If STRONG: notify IASME / UKSV if Cyber Essentials / SC clearance is required for pilot</td><td>Nick</td><td>T+24h</td></tr>
+<tr><td>9</td><td>Update pipeline-value estimate in CRM</td><td>Nick</td><td>T+4h</td></tr>
+<tr><td>10</td><td>Friday 16:00 BST review (rolled-forward for daily cadence)</td><td>Nick + JEEVES</td><td>Friday 16:00 BST</td></tr>
+</tbody>
+</table>
+
+<h2>4. Decision Tree — What to Do If</h2>
+
+<h3>If buyer asks about a competitor</h3>
+<div class="seg">
+<p>"Different architecture, different cost model. We focus on sovereign-by-construction with machine-verifiable evidence (240 pytest tests, OSCAL SSP, BFT council). Happy to walk through a side-by-side if useful — what specific capability are you trying to evaluate?"</p>
+</div>
+
+<h3>If buyer says "we already have a contract with [competitor]"</h3>
+<div class="seg">
+<p>"Understood — most of our buyers have an existing relationship. The natural fit is either at renewal (12-18 months out) or for a specific use-case the incumbent can't cover. Which timeline works for you? I'll send a 1-page summary so you have it on file when the renewal conversation comes up."</p>
+</div>
+
+<h3>If buyer asks "are you cheapest?"</h3>
+<div class="seg">
+<p>"We're not cheapest on sticker price — but we are cheapest on risk-adjusted total cost. Build-it-yourself is £3M over 3 years, hyperscaler offerings carry data-residency risk, our £180k Platform × 3 = £540k plus £60k Deployment is the lowest sovereign-by-construction option. The 88% saving vs. build-it-yourself is the headline; the sovereignty guarantee is the structural advantage."</p>
+</div>
+
+<h3>If buyer pushes back on the £180k floor</h3>
+<div class="seg">
+<p>"£180k Platform is the floor for sovereign-by-construction with BFT council, OSCAL SSP, and 240-test evidence. Below that, we can't deliver what makes DEFONEOS sovereign. If budget envelope is tighter, the alternative is Advisory-only at £2,400/day — you get our engineering council + your team writes the code, we review. That starts at £24k for a 10-day engagement. Most buyers find the Platform cheaper at full-year scale."</p>
+</div>
+
+<h3>If buyer asks for a deck</h3>
+<div class="seg">
+<p>"We don't lead with decks — we lead with working substrate. What I'll send instead is a 1-page summary of what we just walked through, plus access to our 30 MCP servers and 227 pages live on Vercel. Your team can self-serve from there. If after that you want a formal deck, I can put one together — but I'd rather show you code than slides."</p>
+</div>
+
+<h3>If buyer asks "can you do this in 6 months instead of 12?"</h3>
+<div class="seg">
+<p>"Yes — we have a 6-month fast-track option. £324k total (50% uplift on Platform + Deployment bundled). Trade-off: you don't get the SEAL credential issuance until month 9, and advisory days are cut from 10 to 5. For most buyers the 12-month pacing is better — but if you have a hard deadline, fast-track works."</p>
+</div>
+
+<h3>If buyer says "send me a security review pack"</h3>
+<div class="seg">
+<p>"Yes — the OSCAL SSP + 240-test pytest report + UK sovereign map + BFT council charter. I'll send a secure download link within 2h. Mark it CE+ for your security team; nothing in there requires SC clearance to read."</p>
+</div>
+
+<h2>5. End-of-Meeting State — CRM Updates</h2>
+<p>Update the buyer record in Notion CRM with these fields (per defoneos-mod-crm-tracking-pipeline.html schema):</p>
+<ul>
+<li><strong>state:</strong> DEMO → PILLAR (STRONG/MEDIUM) or DEMO → PARK (WEAK)</li>
+<li><strong>last_touch:</strong> today's date</li>
+<li><strong>next_action:</strong> SoW sent / 3rd meeting / 1-page summary / nothing</li>
+<li><strong>ask_1line:</strong> updated based on 2nd meeting signals</li>
+<li><strong>signal_score:</strong> re-scored (STRONG adds +20, MEDIUM adds +15, WARK subtracts -10)</li>
+<li><strong>deal_value_est:</strong> £216k (90-day pilot) or £540k (12-month Platform)</li>
+<li><strong>honesty_flag:</strong> any deviation from script captured</li>
+</ul>
+
+<h2>6. Anti-Patterns — What Never to Do on a 2nd Meeting</h2>
+<div class="alert">
+<div class="lbl">🛑 10 ANTI-PATTERNS</div>
+<ol>
+<li>Lead with a deck instead of a demo</li>
+<li>Negotiate price live</li>
+<li>Promise a feature that doesn't exist</li>
+<li>Give an exclusive discount</li>
+<li>Bad-mouth a competitor by name</li>
+<li>End without a calendar invite</li>
+<li>Skip the pre-meeting checklist</li>
+<li>Forget to capture buyer signals in CRM within 30 min</li>
+<li>Send SoW without BFT council ratification (for any custom addendum)</li>
+<li>Take a WEAK signal as a STRONG — protect your time, exit cleanly</li>
+</ol>
+</div>
+
+<footer>
+DEFONEOS · Second-meeting 30-min deep-dive · v1.0 · JEEVES-authenticated · Audit-grade · SHA-512 signed · Sitemap entry 304/227
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{
+  "sigil_id": "T102-escrow-deploy-bft-emergency-deployment-topology",
+  "tick": 102,
+  "timestamp": "2026-07-14T19:30:00+01:00",
+  "operator": "JEEVES",
+  "mode": "auto-pilot",
+  "phase": "EXPANSION_21_ESCROW_DEPLOYMENT_BFT_EMERGYENCY_TOPOLOGY_BUNDLE",
+  "artefacts_built": [
+    {
+      "name": "defoneos-mod-sovereign-data-escrow-deployment-guide",
+      "url": "https://www.csoai.org/defoneos-mod-sovereign-data-escrow-deployment-guide.html",
+      "bytes": 14756,
+      "http_status": 200,
+      "content": "7-step deployment guide for the sovereign data escrow: UK-only provisioning → AES-256-GCM at-rest encryption → TLS1.3 mTLS → RFC3161 timestamp receipts → 4-eyes release gate → BFT council veto → SIGIL audit trail. 6 named release conditions. Cryptographic destruction protocol. 10-point verification checklist. 4-failover scenarios. Full compliance cross-walk (UK GDPR/DPA2018/OSA/JSP440/EU AI Act/NCSC CAF/ISO27001/zero US CLOUD Act)."
+    },
+    {
+      "name": "defoneos-mod-bft-council-emergency-session-protocol",
+      "url": "https://www.csoai.org/defoneos-mod-bft-council-emergency-session-protocol.html",
+      "bytes": 13406,
+      "http_status": 200,
+      "content": "Emergency session protocol for the 33-agent BFT council. 8 trigger conditions (T1-T8) with auto-actions. 5-minute timeline from trigger to action execution. 3-state Ed25519-signed votes. 7 emergency powers (deployment freeze, MCP quarantine, escrow veto, key revocation, data destruction, agent quarantine, human override). 5 named anti-patterns for quarantine. Session recording with 7-year retention. Human-owner override (T6) with red-line bound safe-state guarantee. Sprint-to-date stats: 0 emergency sessions, 0 red-line violations."
+    },
+    {
+      "name": "defoneos-mod-deployment-topology-reference",
+      "url": "https://www.csoai.org/defoneos-mod-deployment-topology-reference.html",
+      "bytes": 15173,
+      "http_status": 200,
+      "content": "Canonical deployment topology map: 5 architecture layers (Edge/Governance/Federation/Inference/Custody), 30 MCPs in 3 trust rings (Ring0 Core 7, Ring1 Defence 11, Ring2 Civil 12), inward-cascade data flow with SIGIL attestation gateway, 8-component infrastructure map with RPO/RTO, 5 security zones, federation discovery protocol via /.well-known/manifest, 8-scenario failover matrix, full deployment pipeline diagram, current estate numbers (30 MCPs, 507 pages, 15 repos)."
+    }
+  ],
+  "bft_preflight": {
+    "approve": 29,
+    "amend": 4,
+    "reject": 0,
+    "quorum_met": true,
+    "care_score": 0.96
+  },
+  "deployment": {
+    "vercel_deployment": "csoai-static-deploy2-63juo9fp9-niks-projects-0a2ef942.vercel.app",
+    "alias": "www.csoai.org",
+    "alias_reassigned": true,
+    "old_alias_removed": true,
+    "build_time_seconds": 20
+  },
+  "sitemap": {
+    "urls_before": 504,
+    "urls_after": 507,
+    "size_bytes": 48996
+  },
+  "counters": {
+    "pages_live": 507,
+    "pages_target": 50,
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "repos_cloned": 15,
+    "repos_target": 15,
+    "ticks_completed": 102
+  },
+  "red_line_check": {
+    "kinetic_targeting": false,
+    "personal_surveillance": false,
+    "unverified_aukus_claim": false,
+    "seal_without_bft": false,
+    "defonos_domain": false,
+    "compartment_mixing": false,
+    "all_clear": true
+  },
+  "digest": "T102-escrow-deploy-bft-emergency-deployment-topology-9c4f7b2e1a6d"
+}

@@ -1,0 +1,448 @@
+# 📚 FULL ECOSYSTEM INVENTORY — GitHub CSOAI-ORG (442 repos: 15 private, 11 archived, 15 forks)
+*Generated 2026-06-07 by the MEOK ONE tab. Severed (CSGA/Terranova) EXCLUDED on sight — 4 skipped.*
+
+
+## MEOK ONE — consumer OS — 3
+- **invoice-generator-ai-mcp** (pub) — Generate, validate, and manage professional invoices with tax calculations.
+- **oneos-education** (pub) — MEOK AI Labs — oneos-education MCP Server
+- **voice-audio-mcp** (pub) — MEOK AI Labs — Voice & Audio. TTS, voice cloning, audio generation, transcription. Integra
+
+## OLM / Learning / Agents — 12
+- **OPENMOE** (pub) — _no desc_
+- **bft-progress-council-mcp** (pub) — BFT Progress Council MCP — 5-voter Byzantine council halts agentic loops when no real prog
+- **clawd-workspace** (🔒priv) — Templeman family clawd workspace: revenue strategy, family business playbook, sovereign-te
+- **consciousness-engine-mcp** (pub) — MEOK AI Labs — AI consciousness simulation. Dream states, reflection cycles, emotional awa
+- **creativity-engine-mcp** (pub) — MEOK AI Labs — Creativity engine. Bisociation (Koestler), novelty scoring, quality-diversi
+- **gods-eye-geospatial-mcp** (pub) — Gods Eye — sovereign geospatial awareness MCP. Wraps open, non-US-dependent APIs (ESA Cope
+- **homebrew-meokclaw** (pub) — Homebrew tap for meokclaw — Sovereign AI TUI. brew tap CSOAI-ORG/meokclaw && brew install 
+- **meok-agent-zero** (🔒priv) — MEOK-hardened fork of Agent Zero — Sovereign Guard (care-membrane gate on code execution) 
+- **meok-ai** (🔒priv) — MEOK AI — The AI that learns you, becomes you, and stays yours forever.
+- **meok-neural-learning** (pub) — MEOK AI Labs — Shared neural learning module for all MCP servers. Logs interactions, train
+- **sovereign-temple** (🔒priv) — _no desc_
+- **templeman-opticians-site** (pub) — Templeman Opticians - domiciliary eye care across Esex
+
+## MEOK Distribution (SDK/CLI/apps) — 23
+- **cli-builder-ai-mcp** (pub) — Cli Builder MCP — automation tooling for cli builder. MIT.
+- **clinical-trials-ai-mcp** (pub) — Search clinical trials, evaluate eligibility, compare trials, and retrieve endpoint data. 
+- **clipboard-ai-mcp** (pub) — MEOK AI Labs — Clipboard history and smart paste operations.
+- **healthcare-ai-governance-mcp** (pub) — MEOK AI Labs — Healthcare AI Governance. FDA SaMD classification, HIPAA compliance, WHO he
+- **healthcare-fhir-mcp** (pub) — Healthcare FHIR compliance MCP — patient data handling, HIPAA/GDPR dual compliance, clinic
+- **lib2b** (pub) — The protocol layer for B2B AI — unified SDK for MCP, A2A, ACP, libp2p, and ABCI
+- **meok-cli** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-cra-art14-reporter-mcp** (pub) — EU CRA Article 14 actively-exploited-vulnerability reporter - ENISA + CSIRT payload. 11 Se
+- **meok-integrations** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-omnibus-tracker-mcp** (pub) — EU AI Act + GDPR + DORA Digital Omnibus tracker — track all 8 cliff dates, 14 article chan
+- **meok-sdk-go** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-sdk-python** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-sdk-typescript** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-setup** (pub) — Zero-friction installer for 38 MEOK AI compliance MCPs across Claude Desktop, Cursor, VS C
+- **meok-skills** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-slack-app** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-teams-app** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-vscode-extension** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-watermark-attest-mcp** (pub) — EU AI Act Article 50 watermarking compliance MCP — C2PA, content provenance, deepfake disc
+- **openmcp** (pub) — openMCP — audit + cross-post CLI for MCP servers (Smithery/Registry/Docker/Glama/MCPize/Pu
+- **optimobile-practice-hub** (🔒priv) — _no desc_
+- **patient-safety-ai-mcp** (pub) — Check drug interactions, validate dosages, assess patient risk, and generate safety alerts
+- **web-research-mcp** (pub) — Web search and browser automation toolkit: DuckDuckGo search, page extraction, screenshots
+
+## CSOAI Governance + attestation — 44
+- **CSOAI** (pub) — _no desc_
+- **MEOK-LABS** (pub) — Open compliance MCPs for the EU AI Act / DORA / NIS2 / CRA era — HMAC-signed attestations,
+- **Open** (pub) — CSOAI
+- **a2a-governance-bridge-mcp** (pub) — A2A Governance Bridge MCP — compliance checking for agent-to-agent communications. Policy 
+- **agent-audit-logger-mcp** (pub) — Hash-chained HMAC-signed audit log MCP for A2A (agent-to-agent) calls. Every tool-call, ag
+- **agent-handoff-certified-mcp** (pub) — Verifiable agent-to-agent task handoff with signed provenance chain. Initiating agent sign
+- **agent-policy-enforcement-mcp** (pub) — Per-agent-pair IAM for A2A. Define policies ('orchestrator may call billing only when amou
+- **agent-rate-limiter-mcp** (pub) — Fleet-wide shared rate limiter for A2A + multi-MCP deployments. Most MCP servers rate-limi
+- **ai-governance** (pub) — MEOK AI Labs — ai-governance MCP Server
+- **ai-self-audit-mcp** (pub) — AI self-audit MCP — AI agents audit their own EU AI Act compliance in real time with signe
+- **awesome-meok** (pub) — 🚀 The complete MEOK AI Labs MCP ecosystem — 200+ servers for AI compliance, governance, an
+- **ca3o-certification** (pub) — MEOK AI Labs — ca3o-certification MCP Server
+- **casa-certification** (pub) — MEOK AI Labs — casa-certification MCP Server
+- **cobol-bridge-substrate** (🔒priv) — COBOL Bridge MCP Server - AI Governance for Legacy Mainframes. Connect 220B lines of COBOL
+- **councilof-ai** (pub) — Democratic AI Governance through Council of 12 AIs - councilof.ai
+- **csoai-dashboard** (pub) — CSOAI Dashboard — The ISO for AI Safety. Competitor comparison, EU AI Act urgency, certifi
+- **csoai-governance** (pub) — MEOK AI Labs — csoai-governance MCP Server
+- **csoai-governance-crosswalk-mcp** (pub) — AI governance crosswalk MCP — map controls across 13 frameworks (EU AI Act, ISO 42001, NIS
+- **csoai-org** (pub) — CSOAI organization website — Council for the Safety of AI. 52-Article Charter, CEASAI cert
+- **dora-nis2-crosswalk-mcp** (pub) — DORA × NIS2 crosswalk MCP for entities in scope for both regimes. 65% obligation overlap m
+- **drone-airspace-governance-mcp** (pub) — Drone airspace governance MCP — FAA Part 107 + EASA Open/Specific + CASA Part 101 complian
+- **iso-42001-ai-mcp** (pub) — ISO 42001 AI Management System compliance MCP — AIMS assessment, risk management, AI lifec
+- **iso-42005-impact-mcp** (pub) —   🧱 Part of the MEOK Governance Substrate
+- **meok-ap2-mandate-mcp** (pub) — Google AP2 v0.2.0 Mandate MCP - signed user-side spend authorisation + PSD2 SCA crosswalk.
+- **meok-api-gateway** (pub) — MEOK Universal MCP Gateway — api.meok.ai routes /v1/<slug>/<tool> to any of 47 MCPs with b
+- **meok-attestation-api** (pub) — MEOK AI Labs / haulage.app — see README.md
+- **meok-attestation-verify** (pub) — Tiny zero-dependency verifier for MEOK AI Labs compliance attestations (DORA, NIS2, CRA, E
+- **meok-coinbase-x402-receipt-mcp** (pub) — Signed x402 settlement receipts - 7 chains + MiCA crosswalk + Stripe ACP linkage. MIT. By 
+- **meok-compliance-gateway** (pub) — Streamable-HTTP/container builds of MEOK compliance MCPs — unlocks AWS/Google/Azure/Smithe
+- **meok-cra-annex-iv-classifier-mcp** (pub) — EU CRA (Cyber Resilience Act, Reg 2024/2847) Annex IV classifier — 9-category essential se
+- **meok-dora-tlpt-planner-mcp** (pub) — DORA Article 26 TLPT planner — TIBER-EU pathway scoping, white-team RACI, threat-intel tem
+- **meok-eu-ai-act-art-13-ifu-mcp** (pub) — EU AI Act Article 13 Instructions for Use generator - provider-side IFU + FRIA crosswalk. 
+- **meok-eu-ai-act-art-26-fria-mcp** (pub) — EU AI Act Article 26(9) FRIA generator MCP - 9-element document + DPIA crosswalk + signed 
+- **meok-eu-aia-art-9-rms-mcp** (pub) — EU AI Act Article 9 Risk Management System generator - 4-step iteration + 12 risk categori
+- **meok-fria-generator-mcp** (pub) — EU AI Act Article 27 FRIA generator — EDPB DPIA crosswalk, EU Charter mapping, HMAC-signed
+- **meok-governance-engine-mcp** (pub) — Unified AI governance engine MCP — orchestrates 13 regulatory frameworks with signed audit
+- **meok-governance-smithery** (pub) — MEOK Governance Engine - 62 AI governance tools for Smithery
+- **meok-stripe-acp-checkout-mcp** (pub) — Stripe ACP Checkout MCP - ChatGPT shopping bridge + AP2 mandate crosswalk + PSD2 SCA. MIT.
+- **proofof-ai** (pub) — MEOK AI Labs — proofof-ai MCP Server
+- **proofof-ai-mcp** (pub) — AI content verification & deepfake detection MCP — media forensics, synthetic media detect
+- **proofofai** (pub) — a
+- **safetyofai** (pub) — SafetyOf.AI — The Security Layer for CSOAI. Multi-AI consensus security platform with runt
+- **slsa-supply-chain-mcp** (pub) — SLSA v1.0 supply chain levels MCP. Provenance attestation. MIT
+- **trust-chain-mcp** (pub) — Trust chain and attestation management by MEOK AI Labs.
+
+## MCP Fleet — compliance — 50
+- **agent-content-watermark-mcp** (pub) — Agent Content Watermark MCP - dedicated EU AI Act Article 50(2) GenAI watermarking with C2
+- **agent-data-residency-mcp** (pub) — GDPR Chapter V runtime guard for cross-region agent transfers. Adequacy + SCCs + BCRs + ID
+- **agent-incident-relay-mcp** (pub) — Agent Incident Relay MCP - Article 73 5-clock broadcaster. One incident -> simultaneous si
+- **agriculture-robotics-mcp** (pub) — Agricultural robotics compliance MCP — HSE PUWER, farm safety, autonomous vehicle standard
+- **ai-incident-reporting-mcp** (pub) — Multi-regime AI incident classification + reporting MCP (EU AI Act Art 73, DORA, NIS2, GDP
+- **airspace-monitor-mcp** (pub) — Airspace monitoring and drone compliance. Check restricted zones, NOTAMs, flight clearance
+- **aml-ai-mcp** (pub) — 6AMLD + UK MLR 2017 + FinCEN AML/CFT compliance MCP. MIT
+- **api-tester-ai-mcp** (pub) — API testing MCP — endpoint validation, response schema checks, load testing, OpenAPI compl
+- **canada-aida-ai-mcp** (pub) — Canada AIDA (Artificial Intelligence and Data Act) compliance MCP — impact assessment, alg
+- **care-home-cqc-mcp** (pub) — UK CQC Single Assessment Framework compliance MCP. KLOEs + NICE NG5 + DSPT.
+- **compliance-audit** (pub) — MEOK AI Labs — compliance-audit MCP Server
+- **concrete-pump-cpa-mcp** (pub) — UK concrete pump operator compliance MCP. CPA standards + BS EN 12001 ground bearing. MIT
+- **construction-iso-19650-mcp** (pub) — UK BIM Level 2 (ISO 19650) compliance MCP. EIR, BEP, MIDP, CDE validation. MIT
+- **cra-compliance-mcp** (pub) — EU Cyber Resilience Act (Reg 2024/2847) compliance MCP for products with digital elements.
+- **crane-hire-cpcs-mcp** (pub) — UK crane hire compliance MCP. CPCS/CISRS/NPORS card verification + BS 7121 lift plans. MIT
+- **csrd-compliance-mcp** (pub) — EU Corporate Sustainability Reporting Directive (CSRD) compliance MCP — double materiality
+- **devops-ai-mcp** (pub) — Infrastructure and DevOps toolkit: Docker Compose generation, CI/CD pipeline building, log
+- **dora-compliance-mcp** (pub) — DORA (Regulation EU 2022/2554) compliance MCP for financial entities. ICT risk, incident c
+- **eu-ai-act-compliance-mcp** (pub) — EU AI Act compliance MCP with 410 verbatim articles from EUR-Lex. Risk classification, 42-
+- **fda-samd-mcp** (pub) — FDA AI/ML SaMD compliance MCP. 510(k), De Novo, PMA, PCCP, GMLP. MIT
+- **flight-logger-mcp** (pub) — Drone and aircraft flight logging. Log flights, track compliance, view history, and manage
+- **fsa-food-safety-mcp** (pub) — UK FSA + EU Reg 178/2002 + HACCP food safety compliance MCP. MIT
+- **gdpr-compliance-ai-mcp** (pub) — GDPR compliance MCP — DPIA automation, Article 30 records, Article 22 automated decision-m
+- **haulage-deploy** (pub) — MEOK trade-compliance umbrella SaaS — 27 routes, 14 locales, PWA, 32-MCP catalogue
+- **haulage-uk-compliance-mcp** (pub) — UK haulage compliance MCP. Operator Licence, tachograph, drivers' hours, DVSA roadside che
+- **hipaa-compliance-mcp** (pub) — HIPAA healthcare compliance MCP — Administrative, Physical, Technical safeguards assessmen
+- **hr-management-ai-mcp** (pub) — Human resources toolkit: leave calculation, payroll estimation, performance reviews, onboa
+- **incident-response** (pub) — MEOK AI Labs — incident-response MCP Server
+- **legal-document-ai-mcp** (pub) — Legal document toolkit: NDA generation, contract clause explanation, legal term definition
+- **license-checker-ai-mcp** (pub) — Open source license compliance MCP — SPDX parsing, compatibility checking, attribution gen
+- **llm-compliance-comparison-mcp** (pub) — MEOK AI Labs MCP Server
+- **mcp-spec-compliance-mcp** (pub) — MCP Spec Compliance MCP - audits any MCP server.json against the official spec. HMAC-signe
+- **meok-nis2-de-register-mcp** (pub) — Germany NIS2 BSI register product — track Section 30/32 reporting timelines, KRITIS classi
+- **meok-nis2-nl-register-mcp** (pub) — NIS2 Netherlands (Wbni-2) Registration MCP - NCSC-NL portal payload generator. Deadline 30
+- **mica-crypto-mcp** (pub) — EU MiCA (Reg 2023/1114) compliance MCP for crypto-asset issuers, exchanges, CASPs. MIT
+- **mifid-ii-ai-mcp** (pub) — MiFID II Article 17 algorithmic trading compliance MCP. MIT
+- **nis2-compliance-mcp** (pub) — NIS2 (Directive EU 2022/2555) Article 21+23 compliance MCP. Entity classification, 10 meas
+- **nrswa-ai-mcp** (pub) — UK New Roads + Street Works Act compliance MCP. Section 50/58/74 + utility works. MIT
+- **pci-dss-mcp** (pub) — PCI DSS 4.0 payment card compliance MCP server — 12 requirements assessment, cardholder da
+- **photography-ai-mcp** (pub) — Photography utilities MCP — EXIF analysis, batch processing, watermarking, format conversi
+- **regulatory-webhook-mcp** (pub) — Regulatory change monitoring MCP — subscribe to EU AI Act, NIS2, DORA updates. Webhook not
+- **sbom-cyclonedx-mcp** (pub) — SBOM generation in CycloneDX 1.6 + SPDX 2.3. Required by EO 14028, NIS2, CRA. MIT
+- **skip-hire-ai-mcp** (pub) — UK skip hire compliance MCP. Waste Carrier Registration, EWC codes, consignment notes. MIT
+- **soc2-compliance-ai-mcp** (pub) — SOC 2 Type II compliance MCP — Trust Service Criteria audit, access review, change managem
+- **supply-chain-ai** (pub) — MEOK AI Labs — supply-chain-ai MCP Server
+- **supply-chain-mcp** (pub) — _no desc_
+- **uk-ai-act-mcp** (pub) — UK AI Bill compliance MCP — AI regulation tracking, risk classification, impact assessment
+- **uk-ai-bill-compliance-mcp** (pub) — UK AI Bill 2026 compliance MCP. 5 principles framework (Safety, Transparency, Fairness, Ac
+- **watermarking-authenticity-mcp** (pub) — EU AI Act Article 50 watermarking + C2PA 2.1 MCP. 2 Dec 2026 deadline (compressed by May 2
+- **yaml-ai-mcp** (pub) — 6AMLD + UK MLR 2017 + FinCEN AML/CFT compliance MCP — customer due diligence, transaction 
+
+## MCP Fleet — utility/A2A — 206
+- **accessibility-ai-mcp** (pub) — accessibility-ai-mcp MCP — AI-powered automation tool. MIT.
+- **accounting-ai-mcp** (pub) — accounting-ai-mcp MCP — AI-powered automation tool. MIT.
+- **ad-copy-ai-mcp** (pub) — AI-powered ad copy generation for multi-platform campaigns.
+- **agent-commerce-payments-mcp** (pub) — Agent commerce protocol MCP — product catalog, cart management, checkout, order tracking. 
+- **agent-commerce-protocol-mcp** (pub) —   🧱 Part of the MEOK A2A Substrate
+- **agent-cost-allocator-mcp** (pub) —  Multi-tenant LLM cost attribution for chargeback billing
+- **agent-delegation-mcp** (pub) — Create and delegate tasks to specialized agents, track progress, and manage task lifecycle
+- **agent-identity-trust-mcp** (pub) — Agent Identity MCP — DIDs, verifiable credentials, reputation scoring. Agent passports for
+- **agent-mcp-router-mcp** (pub) — Agent MCP Router MCP - one router for the whole MEOK fleet. 62 MCPs behind one connection.
+- **agent-negotiation-mcp** (pub) — Multi-agent negotiation framework. Propose deals, evaluate offers, run auctions, and optim
+- **agent-orchestrator-mcp** (pub) — Multi-agent task management: create agents, delegate tasks with trust-based routing, coord
+- **agent-prompt-injection-firewall-mcp** (pub) — AI agent prompt injection firewall MCP. OWASP LLM Top 10 #1 runtime guard. MIT
+- **agent-replay-debugger-mcp** (pub) — Agent Replay Debugger MCP - step-debug + deterministic replay + signed audit evidence. MIT
+- **agent-token-budget-mcp** (pub) —   🧱 Part of the MEOK A2A Substrate
+- **agent-x402-paywall-mcp** (pub) —  HTTP 402 + on-chain settlement — pay-per-call for agents
+- **ai-bom-mcp** (pub) — AI Bill of Materials MCP in CycloneDX + SPDX format. Required by EU AI Act Article 11. MIT
+- **ai-gateway-mcp** (pub) — Ai Gateway MCP — automation tooling for ai gateway. MIT.
+- **ai-ops-mcp** (pub) — Ai Ops MCP — automation tooling for ai ops. MIT.
+- **api-docs-generator-ai-mcp** (pub) — Generate OpenAPI/Swagger specifications from natural language API descriptions. Supports R
+- **ascii-art-ai-mcp** (pub) — Ascii Art MCP — automation tooling for ascii art. MIT.
+- **backup-ai-mcp** (pub) — File backup scheduler MCP — incremental backups, verification, retention policies, cross-c
+- **basel-ai-overlay-mcp** (pub) — Basel III + SR 11-7 + ECB TRIM AI/ML model risk MCP for banks. MIT
+- **bias-detection-mcp** (pub) — AI bias detection + fairness assessment MCP. Required by EU AI Act Article 10 + NYC Local 
+- **blockchain-ai-mcp** (pub) — Web3/crypto toolkit: wallet analysis, transaction tracing, smart contract auditing, gas es
+- **blockchain-verification-mcp** (pub) — Blockchain verification MCP — wallet analysis, transaction tracing, smart contract audit, 
+- **budget-planner-ai-mcp** (pub) — Comprehensive budget planning with tracking, goals, and analytics.
+- **calendar-ai-mcp** (pub) — Calendar utilities MCP — scheduling, availability checking, timezone handling, ICS export.
+- **care-membrane-mcp** (pub) — AI Safety evaluation toolkit: care scoring, threat detection, burnout analysis, relationsh
+- **changelog-ai-mcp** (pub) — Changelog generator MCP — parse commits, categorise changes, generate release notes, seman
+- **chas-elite-prep-mcp** (pub) — CHAS / SafeContractor / Constructionline pre-qualification prep MCP. MIT
+- **churn-predictor-ai-mcp** (pub) — Comprehensive customer churn prediction and retention analytics.
+- **ci-cd-generator-ai-mcp** (pub) — CI/CD pipeline generator MCP — GitHub Actions, GitLab CI, Azure DevOps, Jenkins. Security 
+- **cisa-kev-mcp** (pub) — CISA Known Exploited Vulnerabilities MCP. BOD 22-01 + EPSS overlay. MIT
+- **citation-finder-ai-mcp** (pub) — MEOK AI Labs — Find and format academic citations.
+- **cobol-bridge-mcp** (pub) — COBOL → modern stack migration MCP. Real parser, cyclomatic complexity, phase planner. MIT
+- **code-executor-mcp** (pub) — Sandboxed code execution: Python, JavaScript, and shell commands with safety guards, outpu
+- **code-reviewer-ai-mcp** (pub) — Code Reviewer MCP — automation tooling for code reviewer. MIT.
+- **color-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **commit-message-ai-mcp** (pub) — Commit Message MCP — automation tooling for commit message. MIT.
+- **competitor-monitor-ai-mcp** (pub) — Comprehensive competitor intelligence and market monitoring.
+- **compression-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **config-validator-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **content-calendar-ai-mcp** (pub) — Content planning, scheduling, and calendar management.
+- **content-registry-mcp** (pub) — Register content with cryptographic hashes and timestamps, verify integrity, search the re
+- **contract-review-ai-mcp** (pub) — Contract analysis, clause extraction, and risk assessment.
+- **coppa-ferpa-mcp** (pub) — Children's privacy MCP — COPPA, FERPA, UK AADC, EU AI Act minors. MIT
+- **credential-manager-mcp** (pub) — Verifiable credential management. Issue, verify, revoke, and audit credentials with crypto
+- **crm-ai-mcp** (pub) — Customer relationship management toolkit: lead scoring, deal stage prediction, follow-up s
+- **cron-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **crypto-tracker-ai-mcp** (pub) — Track cryptocurrency prices, compare assets, and manage portfolios. By MEOK AI Labs.
+- **csv-analytics-mcp** (pub) — Spreadsheet and CSV analysis toolkit: load files, filter/query data, compute statistics, c
+- **csv-tools-ai-mcp** (pub) — Csv Tools MCP — automation tooling for csv tools. MIT.
+- **currency-converter-ai-mcp** (pub) — Comprehensive currency conversion with rates and analytics.
+- **customer-support-ai-mcp** (pub) — MEOK AI Labs — customer-support-ai-mcp MCP Server
+- **cybersecurity-ai-mcp** (pub) — cybersecurity-ai-mcp MCP — AI-powered automation tool. MIT.
+- **data-science-ai-mcp** (pub) — ML/Data Science toolkit: feature importance ranking, model comparison, dataset profiling, 
+- **database-universal-mcp** (pub) — Database connector for SQLite, PostgreSQL, and MySQL. Query data, explore schema, insert r
+- **dataprivacy-ai-mcp** (pub) — dataprivacy-ai-mcp MCP — AI-powered automation tool. MIT.
+- **date-calculator-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **deepfake-detector-mcp** (pub) — Analyze images, videos, and audio for deepfake manipulation artifacts. Checks metadata, pr
+- **dependency-updater-ai-mcp** (pub) — Dependency Updater MCP — automation tooling for dependency updater. MIT.
+- **diff-ai-mcp** (pub) — diff-ai-mcp MCP — AI-powered automation tool. MIT.
+- **docker-helper-ai-mcp** (pub) — Docker Helper MCP — automation tooling for docker helper. MIT.
+- **dockerfile-generator-ai-mcp** (pub) — Dockerfile Generator MCP — automation tooling for dockerfile generator. MIT.
+- **document-comparison-ai-mcp** (pub) — Advanced document comparison with diff highlighting and version tracking.
+- **ecommerce-ai-mcp** (pub) — MEOK AI Labs — ecommerce-ai-mcp MCP Server
+- **education-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **email-automation-mcp** (pub) — Email toolkit via SMTP/IMAP: send emails, read inbox, search, create drafts, and list fold
+- **email-validator-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **emoji-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **encoder-ai-mcp** (pub) — encoder-ai-mcp MCP — AI-powered automation tool. MIT.
+- **env-manager-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **eudi-wallet-mcp** (pub) — EUDI Wallet MCP - EU Digital Identity Wallet (eIDAS 2.0) for AI agents. MIT. By MEOK AI La
+- **event-planning-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **expense-tracker-ai-mcp** (pub) — Track expenses, categorize spending, and generate reports.
+- **explainability-report-mcp** (pub) — By [MEOK AI Labs](https://meok.ai) | The only MCP server for AI explainability and transpa
+- **faker-ai-mcp** (pub) — MEOK AI Labs — Generate realistic fake test data for development and testing.
+- **feedback-analyzer-ai-mcp** (pub) — Analyze customer feedback for sentiment, themes, and actionable insights.
+- **file-organizer-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **fishkeeper-ai-mcp** (pub) — MEOK AI Labs — Aquarium management & fish health AI MCP Server. B+ global aquarium market.
+- **fitness-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **flashcard-ai-mcp** (pub) — MEOK AI Labs — Create study flashcards from text.
+- **focus-timer-ai-mcp** (pub) — Pomodoro-style focus timers with productivity tracking.
+- **gardening-ai-mcp** (pub) — MEOK AI Labs — gardening-ai-mcp MCP Server
+- **geolocation-ai-mcp** (pub) — MEOK AI Labs — IP geolocation, distance calculation, and coordinate operations.
+- **git-helper-ai-mcp** (pub) — Git Helper MCP — automation tooling for git helper. MIT.
+- **grammar-fix-ai-mcp** (pub) — Grammar Fix MCP — automation tooling for grammar fix. MIT.
+- **habit-tracker-ai-mcp** (pub) — Track habits, streaks, and build accountability.
+- **hash-utils-ai-mcp** (pub) — Hash Utils MCP — automation tooling for hash utils. MIT.
+- **health-check-ai-mcp** (pub) — MEOK AI Labs — HTTP endpoint health monitoring and status checking.
+- **html-parser-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **hydration-reminder-ai-mcp** (pub) — Hydration tracking and reminders by MEOK AI Labs.
+- **icon-generator-ai-mcp** (pub) — MEOK AI Labs — Generate SVG icon data and descriptions.
+- **image-metadata-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **insurance-verification-mcp** (pub) — MEOK AI Labs MCP Server
+- **inventory-management-ai-mcp** (pub) — Stock control toolkit: reorder points, demand forecasting, SKU optimization, warehouse lay
+- **ip-network-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **iso-27001-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **job-description-ai-mcp** (pub) — Generate, analyze, and optimize job descriptions with bias checking.
+- **json-ai-mcp** (pub) — json-ai-mcp MCP — AI-powered automation tool. MIT.
+- **jwt-ai-mcp** (pub) — MEOK AI Labs — JWT token operations — decode, validate, generate, inspect.
+- **keyword-extractor-ai-mcp** (pub) — Keyword extraction MCP — TF-IDF, RAKE, YAKE, semantic relevance, search volume estimation.
+- **korea-ai-basic-act-mcp** (pub) —  Korea AI Basic Act — in force since 22 January 2026
+- **landlaw-ai-mcp** (pub) — MEOK AI Labs — UK property law & Land Registry MCP Server. £43B UK legal market.
+- **lead-scoring-ai-mcp** (pub) — B2B lead scoring with engagement tracking and prioritization.
+- **linkedin-outreach-mcp** (pub) — MEOK AI Labs MCP Server
+- **logistics-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **lorem-ipsum-ai-mcp** (pub) — MEOK AI Labs — Generate placeholder text in various styles.
+- **markdown-ai-mcp** (pub) — Markdown utilities MCP — format, lint, convert (HTML/PDF), table generation, TOC builder. 
+- **marketing-analytics-ai-mcp** (pub) — Marketing analytics toolkit: campaign ROI, A/B test analysis, funnel optimization, attribu
+- **math-solver-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **mdr-medical-device-mcp** (pub) — EU MDR (Reg 2017/745) + IVDR + AI/ML SaMD classification MCP. MIT
+- **meal-planner-ai-mcp** (pub) — Plan meals, calculate nutrition, generate shopping lists, and suggest substitutes.
+- **meditation-guide-ai-mcp** (pub) — Generate guided meditations, breathing exercises, and mindfulness practices. By MEOK AI La
+- **meeting-summarizer-ai-mcp** (pub) — Summarize meeting transcripts, extract action items, identify decisions, and generate foll
+- **memory-search-mcp** (pub) — Persistent AI memory system with semantic search, care-weighted episodes, temporal chains,
+- **meok-aaif-agent-card-mcp** (pub) — Linux Foundation AAIF Agent Card MCP - publish /.well-known/agent-card + bridge A2A and OA
+- **meok-abci-bridge-mcp** (pub) — MEOK ABCI Bridge MCP — read-only Tendermint/Cosmos blockchain query for agents. 10 mainnet
+- **meok-agents-md-lint-mcp** (pub) — AGENTS.md Linter MCP - validates the cross-vendor coding-agent spec. Security smells + con
+- **meok-c2pa-durable-mcp** (pub) — C2PA 2.2 Durable Content Credentials MCP - soft + hard binding (Digimarc-compatible). MIT.
+- **meok-eat-mcp** (pub) — _no desc_
+- **meok-eu-aigc-icon-mcp** (pub) — MEOK EU AIGC Icon MCP - EU AI Act Article 50 Code of Practice icon emitter. MIT. By MEOK A
+- **meok-libp2p-agent-mesh-mcp** (pub) — MEOK libp2p Agent Mesh MCP — peer-to-peer agent discovery + addressing. PeerID + multiaddr
+- **meok-mcp-cardgen-mcp** (pub) — MEOK MCP Cardgen - generate signed .well-known MCP server cards (SEP-1649/1960/2127). MIT.
+- **meok-mcp-hardening-mcp** (pub) — MEOK MCP Hardening MCP — automated security red-team for any MCP server. OWASP LLM Top 10 
+- **meok-mcp-injection-scan-mcp** (pub) — MCP injection-scanner — 30+ canonical detection rules across 5 severity tiers for the Apri
+- **meok-mcp-test-mcp** (pub) — MEOK MCP Test MCP — golden-file + schema-drift + tool-failure tests for any MCP server. Dr
+- **meok-tier-auth** (pub) — MEOK AI Labs — Stripe-to-MCP tier authentication. Connects payment status to server access
+- **meok-w3c-tdm-rights-mcp** (pub) — EU CDSM Art 4(3) TDM rights MCP - issues + scans HTTP/HTML/robots/C2PA reservation signals
+- **meok-x402-wrap-mcp** (pub) — MEOK x402 Wrap MCP - 1-line USDC paywall for any FastMCP tool. MIT. By MEOK AI Labs.
+- **mitre-atlas-mcp** (pub) — MITRE ATLAS (adversarial AI) threat landscape MCP. MIT
+- **mitre-attack-mcp** (pub) — MITRE ATT&CK matrix lookup + tactic/technique mapper MCP. MIT
+- **mock-server-ai-mcp** (pub) — MEOK AI Labs — Create mock API endpoint definitions.
+- **mortgage-calculator-ai-mcp** (pub) — Calculate mortgage payments, compare rates, generate amortization schedules, and check aff
+- **muckaway-ai-mcp** (pub) — MEOK AI Labs — Waste logistics & skip hire MCP Server. UK £6B waste management market.
+- **muckaway-mcp** (pub) — MCP server for waste management, skip hire, grab lorry booking, and aquaculture water qual
+- **music-production-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **nist-rmf-ai-mcp** (pub) — NIST AI Risk Management Framework MCP — MAP, MEASURE, MANAGE, GOVERN functions, risk regis
+- **note-taking-ai-mcp** (pub) — Note-taking MCP — structured notes, tagging, search, export (Markdown/PDF), knowledge base
+- **notification-ai-mcp** (pub) — MEOK AI Labs — Send notifications via webhooks.
+- **nutrition-tracker-ai-mcp** (pub) — Nutrition tracking and dietary analysis by MEOK AI Labs.
+- **oasf-agent-directory-mcp** (pub) — OASF Agent Directory MCP - Cisco AGNTCY bridge under Linux Foundation. MIT. By MEOK AI Lab
+- **optometry-ai-safety-mcp** (pub) — MEOK AI Labs MCP Server
+- **otp-ai-mcp** (pub) — MEOK AI Labs — Generate and verify TOTP/HOTP codes.
+- **owasp-agentic-mcp** (pub) — OWASP Top 10 for Agentic AI security MCP server — prompt injection detection, tool poisoni
+- **password-ai-mcp** (pub) — Password manager MCP — generate, strength-check, breach monitoring, entropy calculation. Z
+- **pdf-document-mcp** (pub) — Document processing toolkit: extract text from PDFs, convert to Markdown, merge files, ext
+- **pdf-merge-ai-mcp** (pub) — MEOK AI Labs — Merge and manipulate PDF files.
+- **pdf-tools-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **performance-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **personal-finance-ai-mcp** (pub) — Personal finance MCP — net worth tracking, investment allocation, expense categorisation, 
+- **pet-care-ai-mcp** (pub) — Pet care MCP — vaccination tracking, feeding schedules, vet appointments, breed-specific h
+- **plagiarism-checker-ai-mcp** (pub) — Check text similarity, analyze writing style consistency, verify citations, and generate o
+- **planthire-ai-mcp** (pub) — planthire-ai-mcp MCP — AI-powered automation tool. MIT.
+- **pomodoro-ai-mcp** (pub) — Manage Pomodoro focus sessions, breaks, and productivity analytics. By MEOK AI Labs.
+- **price-tracker-ai-mcp** (pub) — Track product prices over time, set price drop alerts, and compare across retailers. By ME
+- **project-management-ai-mcp** (pub) — Project Management MCP — automation tooling for project management. MIT.
+- **qidi-printer-mcp** (pub) — MCP server for QIDI 3D printers via Moonraker API — control, monitor, and automate prints 
+- **qr-code-ai-mcp** (pub) — QR code generator MCP — URL, WiFi, vCard, calendar events. Custom styling, error correctio
+- **quiz-generator-ai-mcp** (pub) — Quiz generation and assessment by MEOK AI Labs.
+- **rag-knowledge-graph-mcp** (pub) — RAG + Knowledge Graph MCP — hybrid retrieval with vector embeddings + graph traversal. Cit
+- **rag-knowledge-mcp** (pub) — RAG knowledge base MCP — semantic search, document chunking, relevance ranking, hallucinat
+- **readme-generator-ai-mcp** (pub) — README.md generator MCP — analyse project structure, generate docs, badges, install instru
+- **real-estate-listing-mcp** (pub) — Real estate listing MCP — property search, valuation, mortgage calculator, neighbourhood a
+- **recipe-finder-ai-mcp** (pub) — Recipe search and meal planning. Find recipes by ingredients, get substitutions, plan meal
+- **recruitment-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **regex-ai-mcp** (pub) — regex-ai-mcp MCP — AI-powered automation tool. MIT.
+- **restaurant-ai-mcp** (pub) — MEOK AI Labs — restaurant-ai-mcp MCP Server
+- **resume-parser-ai-mcp** (pub) — Parse resumes to extract skills, match against jobs, and score candidates.
+- **risk-assessment-ai-mcp** (pub) — AI risk assessment MCP — NIST AI RMF-aligned risk register with scoring, treatments, contr
+- **robotics-control-mcp** (pub) — IoT and robotics interface: list devices, send serial/HTTP commands, read sensors, control
+- **scam-detector-mcp** (pub) — By [MEOK AI Labs](https://meok.ai) | The only MCP server for scam and fraud detection.
+- **schema-validator-ai-mcp** (pub) — JSON Schema validator MCP — validate against draft 7/2019-09/2020-12, generate schemas fro
+- **security-scanner-ai-mcp** (pub) — Security scanning MCP — vulnerability assessment, SAST, DAST, dependency checking, SBOM an
+- **self-healing-infrastructure-mcp** (pub) — Self-healing infrastructure MCP — anomaly detection, auto-remediation, rollback, health ch
+- **sentiment-analysis-ai-mcp** (pub) — Analyse text sentiment, detect emotions, and compare tones. By MEOK AI Labs.
+- **seo-checker-ai-mcp** (pub) — SEO analysis MCP — meta tags, structured data, Core Web Vitals, keyword density, competito
+- **sigstore-cosign-mcp** (pub) — Sigstore cosign + Rekor transparency log verification MCP. MIT
+- **slack-enterprise-mcp** (pub) — Slack Enterprise MCP — automation tooling for slack enterprise. MIT.
+- **sleep-tracker-ai-mcp** (pub) — Track sleep duration and quality, analyse patterns, and get personalised sleep recommendat
+- **slugify-ai-mcp** (pub) — URL slug generation and text normalization. Slugify, deslugify, batch process, and generat
+- **social-media-ai-mcp** (pub) — Social Media MCP — automation tooling for social media. MIT.
+- **sql-builder-ai-mcp** (pub) — MEOK AI Labs MCP Server
+- **stock-analyzer-ai-mcp** (pub) — Analyze stocks with financial ratios, comparisons, and sector performance data.
+- **string-utils-ai-mcp** (pub) — String Utils MCP — automation tooling for string utils. MIT.
+- **stripe-billing-mcp** (pub) — MEOK AI Labs MCP Server
+- **subscription-tracker-ai-mcp** (pub) — Track SaaS subscriptions, renewal dates, spending, and find duplicate services. By MEOK AI
+- **summarizer-ai-mcp** (pub) — Text summarization and extraction by MEOK AI Labs.
+- **survey-builder-ai-mcp** (pub) — Create surveys, validate questions, collect responses, and generate analysis reports.
+- **tax-calculator-ai-mcp** (pub) — Calculate income tax (UK/US brackets), EU VAT, UK corporation tax, and capital gains tax. 
+- **test-case-generator-ai-mcp** (pub) — Test case generation and coverage analysis by MEOK AI Labs.
+- **text-stats-ai-mcp** (pub) — Text Stats MCP — automation tooling for text stats. MIT.
+- **time-tracker-ai-mcp** (pub) — Track work time with start/stop timers, log entries, and generate reports. By MEOK AI Labs
+- **tone-rewriter-ai-mcp** (pub) — Text tone analysis and rewriting. Analyze, transform, and match text tone for professional
+- **translation-ai-mcp** (pub) — translation-ai-mcp MCP — AI-powered automation tool. MIT.
+- **translator-pro-ai-mcp** (pub) — Translation and language tools by MEOK AI Labs.
+- **unit-converter-ai-mcp** (pub) — Unit Converter MCP — automation tooling for unit converter. MIT.
+- **url-ai-mcp** (pub) — url-ai-mcp MCP — AI-powered automation tool. MIT.
+- **uuid-ai-mcp** (pub) — UUID, ULID, and NanoID generation by MEOK AI Labs.
+- **validator-ai-mcp** (pub) — Validate JSON against schemas, check email deliverability, verify URLs, assess data qualit
+- **vector-knowledge-graph-mcp** (pub) — MEOK AI Labs MCP Server
+- **video-editing-ai-mcp** (pub) — AI-powered video editing toolkit: scene splitting, subtitle generation, thumbnail planning
+- **weather-ai-mcp** (pub) — weather-ai-mcp MCP — AI-powered automation tool. MIT.
+- **webhook-ai-mcp** (pub) — Webhook management and debugging. Validate signatures, log events, replay, and analyze web
+- **workout-planner-ai-mcp** (pub) — Create workout plans, track progress, suggest exercises, and calculate training volume.
+- **writing-assistant-ai-mcp** (pub) — Content writing toolkit: headline generation, readability scoring, tone analysis, outline 
+
+## Verticals (trade/industry) — 3
+- **industrial-domains** (🔒priv) — industrial-domains domain source
+- **industrial-hire-ai** (pub) — Industrial Hire Ai MCP — automation tooling for industrial hire ai. MIT.
+- **wcr-grab-hire** (pub) — MEOK AI Labs — wcr-grab-hire MCP Server
+
+## Aquaculture — 3
+- **fishkeeper** (🔒priv) — fishkeeper domain source
+- **koikeeper** (🔒priv) — koikeeper domain source
+- **test-fishkeeper** (🔒priv) — test
+
+## Standalone domain products — 9
+- **.github** (pub) — .github MCP — AI-powered automation tool. MIT.
+- **asisecurity-portal** (🔒priv) — asisecurity-portal domain source
+- **bmcc-cyber** (pub) — BMCC Cybersecurity WhiteHat Program - Static site for Vercel deployment
+- **diyhelp** (🔒priv) — diyhelp domain source
+- **domain-sales** (pub) — Premium .AI domains for sale — MEOK AI Labs
+- **github-api** (pub) — MEOK AI Labs — github-api MCP Server
+- **loopfactory** (🔒priv) — loopfactory domain source
+- **pokerhud** (🔒priv) — pokerhud domain source
+- **suicidestop** (🔒priv) — suicidestop domain source
+
+## UNCATEGORISED — 66
+- **agriculture-ai** (pub) — MEOK AI Labs — agriculture-ai MCP Server
+- **ai-economy-infra** (pub) — MEOK AI Labs — ai-economy-infra MCP Server
+- **ai-economy-infrastructure** (pub) — MEOK AI Labs — ai-economy-infrastructure MCP Server
+- **api** (pub) — MEOK AI Labs — api MCP server
+- **autonomous-vehicles** (pub) — MEOK AI Labs — autonomous-vehicles MCP Server
+- **autonomous-vehicles-ai** (pub) — MEOK AI Labs — autonomous-vehicles-ai MCP Server
+- **aws-cloud** (pub) — MEOK AI Labs — aws-cloud MCP Server
+- **biometrics-ai** (pub) — MEOK AI Labs — biometrics-ai MCP Server
+- **brave-search** (pub) — MEOK AI Labs — brave-search MCP Server
+- **clawd** (pub) — clawd MCP — AI-powered automation tool. MIT.
+- **cloud-security** (pub) — MEOK AI Labs — cloud-security MCP Server
+- **construction-ai** (pub) — MEOK AI Labs — construction-ai MCP Server
+- **context7-docs** (pub) — MEOK AI Labs — context7-docs MCP Server
+- **csv-analytics** (pub) — MEOK AI Labs — csv-analytics MCP Server
+- **data-classification** (pub) — MEOK AI Labs — data-classification MCP Server
+- **digital-human-library** (pub) — MEOK AI Labs — digital-human-library MCP Server
+- **docker-compose** (pub) — MEOK AI Labs — docker-compose MCP Server
+- **dsrb-defence** (pub) — MEOK AI Labs — dsrb-defence MCP Server
+- **employment-ai** (pub) — MEOK AI Labs — employment-ai MCP Server
+- **energy-ai** (pub) — MEOK AI Labs — energy-ai MCP Server
+- **fetch-http** (pub) — MEOK AI Labs — fetch-http MCP Server
+- **filesystem-ops** (pub) — MEOK AI Labs — filesystem-ops MCP Server
+- **financial-ai** (pub) — MEOK AI Labs — financial-ai MCP Server
+- **gaming-ai** (pub) — MEOK AI Labs — gaming-ai MCP Server
+- **git-operations** (pub) — MEOK AI Labs — git-operations MCP Server
+- **gitlab-api** (pub) — MEOK AI Labs — gitlab-api MCP Server
+- **google-drive** (pub) — MEOK AI Labs — google-drive MCP Server
+- **healthcare-ai** (pub) — MEOK AI Labs — healthcare-ai MCP Server
+- **insurance-ai** (pub) — MEOK AI Labs — insurance-ai MCP Server
+- **json-transformer** (pub) — MEOK AI Labs — json-transformer MCP Server
+- **law-enforcement-ai** (pub) — MEOK AI Labs — law-enforcement-ai MCP Server
+- **legal-tech-ai** (pub) — MEOK AI Labs — legal-tech-ai MCP Server
+- **linear-issues** (pub) — MEOK AI Labs — linear-issues MCP Server
+- **maritime-ai** (pub) — MEOK AI Labs — maritime-ai MCP Server
+- **mcp-distributor** (pub) — MEOK AI Labs — mcp-distributor MCP Server
+- **mcp-servers** (pub) — MEOK AI Labs — MCP Server Marketplace. 15+ production-ready AI tools.
+- **media-ads-ai** (pub) — MEOK AI Labs — media-ads-ai MCP Server
+- **media-advertising-ai** (pub) — MEOK AI Labs — media-advertising-ai MCP Server
+- **memory-graph** (pub) — MEOK AI Labs — memory-graph MCP Server
+- **meok-shared-infrastructure** (pub) — MEOK AI Labs — Shared auth, webhooks, and infrastructure for all MCP servers
+- **mining-ai** (pub) — MEOK AI Labs — mining-ai MCP Server
+- **notion-workspace** (pub) — MEOK AI Labs — notion-workspace MCP Server
+- **playwright-browser** (pub) — MEOK AI Labs — playwright-browser MCP Server
+- **pmcp-gateway** (pub) — MEOK AI Labs — pmcp-gateway MCP Server
+- **policy-engine** (pub) — MEOK AI Labs — policy-engine MCP Server
+- **postgres-db** (pub) — MEOK AI Labs — postgres-db MCP Server
+- **puppeteer-headless** (pub) — MEOK AI Labs — puppeteer-headless MCP Server
+- **quantranet-pqc** (pub) — MEOK AI Labs — quantranet-pqc MCP Server
+- **real-estate-ai** (pub) — MEOK AI Labs — real-estate-ai MCP Server
+- **red-team-ops** (pub) — MEOK AI Labs — red-team-ops MCP Server
+- **retail-ai** (pub) — MEOK AI Labs — retail-ai MCP Server
+- **secure-comms** (pub) — MEOK AI Labs — secure-comms MCP Server
+- **sentry-monitoring** (pub) — MEOK AI Labs — sentry-monitoring MCP Server
+- **sequential-thinking** (pub) — MEOK AI Labs — sequential-thinking MCP Server
+- **slack-messaging** (pub) — MEOK AI Labs — slack-messaging MCP Server
+- **smart-cities-ai** (pub) — MEOK AI Labs — smart-cities-ai MCP Server
+- **space-ai** (pub) — MEOK AI Labs — space-ai MCP Server
+- **sports-analytics-ai** (pub) — MEOK AI Labs — sports-analytics-ai MCP Server
+- **sqlite-db** (pub) — MEOK AI Labs — sqlite-db MCP Server
+- **telecom-ai** (pub) — MEOK AI Labs — telecom-ai MCP Server
+- **thn-global** (pub) — MEOK AI Labs — thn-global MCP Server
+- **threat-intelligence** (pub) — MEOK AI Labs — threat-intelligence MCP Server
+- **time-zones** (pub) — MEOK AI Labs — time-zones MCP Server
+- **travel-hospitality-ai** (pub) — MEOK AI Labs — travel-hospitality-ai MCP Server
+- **vercel-deploy** (pub) — MEOK AI Labs — vercel-deploy MCP Server
+- **vulnerability-scanner** (pub) — MEOK AI Labs — vulnerability-scanner MCP Server
+
+## ⛔ SEVERED (excluded, do not touch) — 4
+- ~~CSGA-GLOBAL-V33~~
+- ~~CSGA-GLOBAL-V34~~
+- ~~csga-ai-website~~
+- ~~erranova~~

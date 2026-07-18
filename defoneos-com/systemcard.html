@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Signed AI System Card (JSP 936 assurance)</title>
+<meta name="description" content="An independent, offline-verifiable, Ed25519-signed AI System Card — the JSP 936 assurance primitive the Alan Turing Institute (CETaS) named as missing: no independent body with the legitimacy to inspect and approve defence AI. Verify it in your own browser; tamper with it and it rejects.">
+<style>
+  :root{ --bg:#070b12; --ink:#dfe7f5; --dim:#8a97b4; --line:rgba(120,150,200,.16); --neon:#5ff4ff; --gold:#c9a84c; --ok:#00e07a; --bad:#ff6b6b; }
+  *{box-sizing:border-box} body{margin:0;background:radial-gradient(1200px 700px at 60% -10%,#0d1830,#070b12) fixed;color:var(--ink);font:15px/1.6 -apple-system,Inter,system-ui,sans-serif;padding:28px 18px 60px}
+  .wrap{max-width:760px;margin:0 auto}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.5px}.brand img{height:30px;width:30px}
+  a{color:var(--neon);text-decoration:none} a:hover{text-decoration:underline}
+  h1{font-size:30px;line-height:1.15;margin:18px 0 6px} h1 b{background:linear-gradient(90deg,#eaf6ff,#5ff4ff 60%,#c9a84c);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);max-width:620px}
+  .card{background:rgba(10,16,28,.7);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0}
+  .k{color:var(--gold);font:700 10px ui-monospace,monospace;letter-spacing:1.5px;text-transform:uppercase;margin:12px 0 4px}
+  .mono{font:12px/1.5 ui-monospace,SFMono-Regular,monospace;color:#bcd0ee;word-break:break-all}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  button{cursor:pointer;font:700 13px ui-monospace,monospace;border-radius:11px;padding:11px 16px;border:1px solid var(--line);background:rgba(20,30,50,.7);color:var(--ink)}
+  button.p{background:linear-gradient(90deg,#0bd,#5ff4ff);color:#04121a;border:none}
+  button.warn{border-color:rgba(255,120,120,.4);color:#ffb3b3}
+  #verdict{margin-top:12px;font:800 15px ui-monospace,monospace;min-height:22px}
+  .ok{color:var(--ok)} .bad{color:var(--bad)}
+  table{width:100%;border-collapse:collapse;font-size:13px} td{padding:5px 8px;border-top:1px solid var(--line);vertical-align:top} td:first-child{color:var(--dim);white-space:nowrap;width:150px}
+  .pill{display:inline-block;font:700 9px ui-monospace,monospace;letter-spacing:1px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:var(--neon)}
+  .honest{border-left:3px solid var(--gold);padding:8px 12px;background:rgba(201,168,76,.07);color:var(--dim);font-size:12.5px;margin-top:16px;border-radius:0 8px 8px 0}
+</style></head><body><div class="wrap">
+  <a class="brand" href="/"><img src="seal.svg" alt="">DEFONEOS</a>
+  <div style="margin-top:14px" class="pill">JSP 936 · ASSURANCE PROOF POINT</div>
+  <h1>A signed AI <b>System Card</b> — verify it yourself.</h1>
+  <p class="sub">The Alan Turing Institute (CETaS, Jan 2026) finds there is <b>“no authoritative, independent organisation … with the legitimacy to inspect and approve AI systems”</b> in defence &amp; security — and that vendor safety claims are seen as an effort to <b>“mark their own homework.”</b> DEFONEOS ships the missing primitive: an <b>independent, offline-verifiable, Ed25519-signed</b> record that an AI system was governed. Consultancies sell assurance as a service — this is the cryptographic artifact. Below is a live one. <b>Check the signature in your own browser</b>; tamper with it and it rejects.</p>
+
+  <div class="card" id="cardBox"><div class="k">loading signed system card…</div></div>
+
+  <div class="row">
+    <button class="p" id="btnVerify">🔎 Verify offline (in your browser)</button>
+    <button class="warn" id="btnTamper">⚠ Tamper test</button>
+    <button id="btnReissue">↻ Re-issue</button>
+  </div>
+  <div id="verdict"></div>
+
+  <div class="honest"><b>Honest scope.</b> The card <b>content</b> is synthetic demo data (an illustrative ISR-triage decision). The <b>signing and verification are real</b> — the check above runs entirely in your browser against the returned public key, asking no server. On the deployed sovereign key, the same artifact becomes a durable, forever-verifiable assurance record. See also the <a href="verify.html">SIGIL ledger verifier</a> and <a href="cop.html">the live dome</a>. Have a signed <b>receipt</b>, <b>ledger</b>, or <b>brief</b> from the dome? Drop it into the <a href="verify.html">verifier ↗</a> — checked offline, no server.</div>
+
+<script type="module">
+import * as ed from 'https://esm.sh/@noble/ed25519@2';
+const $=s=>document.querySelector(s);
+const unhex=h=>Uint8Array.from(h.match(/.{2}/g).map(b=>parseInt(b,16)));
+let DATA=null;
+
+function render(){
+  const c=DATA.card, a=c.jsp936_assurance||{};
+  $('#cardBox').innerHTML =
+    '<div class="k">System</div><div>'+esc(c.system)+'</div>'+
+    '<div class="k">Purpose</div><div>'+esc(c.purpose||'')+'</div>'+
+    '<div class="k">JSP 936 assurance domains</div><table>'+
+      Object.keys(a).map(k=>'<tr><td>'+esc(k)+'</td><td>'+esc(a[k])+'</td></tr>').join('')+'</table>'+
+    '<div class="k">Hard stops</div><div>'+(c.hard_stops||[]).map(esc).join(' · ')+'</div>'+
+    '<div class="k">Issued</div><div class="mono">'+esc(c.issued_at||'')+' · '+esc((c.standards_referenced||[]).join(' · '))+'</div>'+
+    '<div class="k">Algorithm / key</div><div class="mono">'+esc(DATA.algorithm)+(DATA.demo_key?' · <span style="color:var(--gold)">ephemeral demo key</span>':' · sovereign key')+'</div>'+
+    '<div class="k">Public key</div><div class="mono">'+esc(DATA.publicKey)+'</div>'+
+    '<div class="k">Signature</div><div class="mono">'+esc(DATA.signature)+'</div>'+
+    '<div class="k">SHA-256 (canonical)</div><div class="mono">'+esc(DATA.sha256)+'</div>';
+  $('#verdict').textContent='';
+}
+function esc(s){return (''+s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
+
+async function verify(msg){
+  try{ return await ed.verifyAsync(unhex(DATA.signature), new TextEncoder().encode(msg), unhex(DATA.publicKey)); }
+  catch(e){ return false; }
+}
+async function load(){
+  $('#verdict').textContent='';
+  const r=await fetch('/api/systemcard'); DATA=await r.json(); render();
+}
+$('#btnVerify').onclick=async()=>{ $('#verdict').innerHTML='verifying in-browser…';
+  const ok=await verify(DATA.canonical);
+  $('#verdict').innerHTML=ok?'<span class="ok">✓ VALID — signature verifies against the public key, offline, no server trusted.</span>'
+                            :'<span class="bad">✗ could not verify</span>'; };
+$('#btnTamper').onclick=async()=>{ $('#verdict').innerHTML='flipping one byte of the card, re-checking…';
+  const tampered=DATA.canonical.replace(/.$/,'ZZZ');
+  const ok=await verify(tampered);
+  $('#verdict').innerHTML=ok?'<span class="bad">unexpected: tampered card verified</span>'
+                            :'<span class="ok">✓ REJECTED — one altered byte breaks the signature. Tamper-evident.</span>'; };
+$('#btnReissue').onclick=load;
+load();
+</script>
+</div></body></html>

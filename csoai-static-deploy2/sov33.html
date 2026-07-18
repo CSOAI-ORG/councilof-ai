@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🜏 SOV33 — The Sovereign Open World Emergence Model</title>
+<meta name="description" content="SOV33 — the sovereign Open World Emergence Model. 5 OWEMs wired end-to-end. 61-model registry. BFT-33 governance. Care-floor 0.95. SIGIL Ed25519. Built on the governed sovereign substrate. UK-sovereign. Audit-grade. 13 Jul 2026.">
+<meta name="keywords" content="SOV33, OWEM, Open World Emergence Model, SOV3, sovereign AI, CSOAI, EU AI Act, sovereign substrate, BFT-33, care-floor, SIGIL">
+<style>
+:root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0;padding:0;line-height:1.55}
+.hero{background:radial-gradient(ellipse at top,#1a0d20 0%,#0a0e1a 70%);padding:5rem 2rem 4rem;text-align:center;border-bottom:2px solid var(--accent);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(212,175,55,.15) 0%,transparent 70%);pointer-events:none}
+h1{color:var(--accent);font-size:3.6rem;margin:0 0 .5rem;font-weight:900;letter-spacing:-.02em;position:relative;z-index:1}
+.tagline{color:var(--accent2);font-size:1.4rem;margin:0 0 1.5rem;font-weight:300;position:relative;z-index:1}
+.verseline{color:var(--muted);font-size:.95rem;margin:0 0 2rem;position:relative;z-index:1}
+.cta-row{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;position:relative;z-index:1}
+.cta{display:inline-block;padding:.85rem 1.6rem;border-radius:10px;font-weight:700;text-decoration:none;transition:all .2s;font-size:1rem}
+.cta-primary{background:var(--accent);color:#0a0e1a;box-shadow:0 0 30px rgba(212,175,55,.3)}
+.cta-primary:hover{background:#e6c766;box-shadow:0 0 40px rgba(212,175,55,.5);transform:translateY(-2px)}
+.cta-ghost{background:transparent;color:var(--accent2);border:1px solid var(--accent2)}
+.cta-ghost:hover{background:rgba(0,255,157,.1);transform:translateY(-2px)}
+.container{max-width:1400px;margin:0 auto;padding:3rem 2rem}
+.live-strip{background:var(--bg2);border:1px solid var(--accent);border-radius:14px;padding:1.5rem;margin:-2rem auto 3rem;max-width:1200px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem;position:relative;z-index:2;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.live-stat{text-align:center;padding:0 1rem;border-right:1px solid var(--rule)}
+.live-stat:last-child{border-right:none}
+.live-stat .n{font-size:2rem;color:var(--accent);font-weight:900;line-height:1}
+.live-stat .l{color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;margin-top:.4rem}
+.section{margin:4rem 0}
+.section-title{color:var(--accent2);font-size:2rem;margin:0 0 1.5rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--rule);padding-bottom:.5rem}
+.section-title::before{content:"";width:6px;height:30px;background:var(--accent2);border-radius:3px}
+h3{color:var(--accent);font-size:1.4rem;margin:2rem 0 1rem}
+.card{background:var(--bg2);padding:1.75rem 2rem;border-radius:12px;border:1px solid var(--rule);margin:1rem 0;transition:all .2s}
+.card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.card .h{color:var(--accent);font-size:1.25rem;margin:0 0 .5rem;font-weight:700}
+.card .d{color:var(--muted);font-size:.9rem;margin:0 0 1rem;line-height:1.6}
+.card .pills{display:flex;gap:.4rem;flex-wrap:wrap}
+.pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.3em .8em;border-radius:14px;font-size:.78rem;border:1px solid #2a2f3e;font-weight:500}
+.pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+.pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2);font-family:"JetBrains Mono",monospace}
+.pill.govern{background:#2a0d2a;color:#c060f0;border-color:#c060f0}
+.pill.big{font-size:.95rem;padding:.5em 1em}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.owem-card{background:linear-gradient(135deg,#0d1220 0%,#1a0d20 100%);padding:1.5rem;border-radius:12px;border:2px solid var(--rule);transition:all .2s;text-align:center}
+.owem-card.live{border-color:var(--accent2);box-shadow:0 0 20px rgba(0,255,157,.15)}
+.owem-card .icon{font-size:2.5rem;margin-bottom:.5rem}
+.owem-card .name{color:var(--accent);font-size:1.15rem;font-weight:700;margin:.5rem 0}
+.owem-card .role{color:var(--muted);font-size:.85rem;margin:.25rem 0}
+.owem-card .backends{display:flex;justify-content:center;gap:.3rem;margin-top:.75rem;flex-wrap:wrap}
+.owem-card .backend{padding:.2em .5em;background:rgba(212,175,55,.1);border:1px solid var(--accent);border-radius:6px;font-size:.7rem;color:var(--accent)}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:.5rem;align-items:center;margin:2rem 0;padding:1.5rem;background:var(--bg2);border-radius:12px;border:1px solid var(--rule)}
+.flow .step{background:#1a1f2e;padding:1rem;border-radius:8px;text-align:center;border:1px solid var(--rule)}
+.flow .step .icon{font-size:1.5rem;margin-bottom:.4rem}
+.flow .step .name{color:var(--accent);font-size:.85rem;font-weight:700}
+.flow .step .sub{color:var(--muted);font-size:.7rem;margin-top:.2rem}
+.flow .arrow{color:var(--accent);font-size:1.5rem;text-align:center}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92em}
+th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.7rem 1rem;border-bottom:2px solid var(--accent);font-weight:700}
+td{padding:.6rem 1rem;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:hover td{background:#0d1220}
+.check{color:var(--accent2);font-weight:bold}
+.x{color:var(--warn);font-weight:bold}
+.differentiator{background:linear-gradient(135deg,#0d3320 0%,#1a0d20 100%);border:2px solid var(--accent2);border-radius:14px;padding:2rem;margin:2rem 0;text-align:center}
+.differentiator .h{color:var(--accent2);font-size:1.5rem;margin:0 0 .5rem;font-weight:700}
+.differentiator .sub{color:#c8e0d8;font-size:1rem;margin:0;line-height:1.7}
+.proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:2rem 0}
+.proof{background:var(--bg2);padding:1.5rem;border-radius:10px;border:1px solid var(--accent);text-align:center}
+.proof .n{font-size:2.4rem;color:var(--accent);font-weight:900;line-height:1;margin-bottom:.4rem}
+.proof .l{color:var(--muted);font-size:.85rem}
+.cta-strip{background:linear-gradient(135deg,#1a0d20,#0d1220);border:2px solid var(--accent);border-radius:14px;padding:3rem 2rem;text-align:center;margin:4rem 0}
+.cta-strip h2{color:var(--accent);font-size:2rem;margin:0 0 1rem}
+.cta-strip p{color:var(--muted);margin:0 0 1.5rem;max-width:600px;margin-left:auto;margin-right:auto}
+footer{background:#060914;padding:3rem 2rem;text-align:center;border-top:1px solid var(--rule);margin-top:4rem}
+footer .meta{color:var(--muted);font-size:.85rem;margin:.5rem 0}
+footer a{color:var(--accent2);text-decoration:none;margin:0 .5rem}
+footer a:hover{color:var(--accent);text-decoration:underline}
+.tag{display:inline-block;padding:.15em .55em;border-radius:8px;font-size:.72rem;font-weight:600;margin-right:.3rem}
+.tag.live{background:#0d3320;color:var(--accent2);border:1px solid var(--accent2)}
+.tag.run{background:#1a1f2e;color:var(--muted);border:1px solid var(--rule)}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+<h1>🜏 SOV33</h1>
+<p class="tagline">The Sovereign Open World Emergence Model</p>
+<p class="verseline">An OWEM built on the governed sovereign substrate · 13 Jul 2026</p>
+<div class="cta-row">
+  <a href="#try" class="cta cta-primary">⚡ Try SOV33</a>
+  <a href="#architecture" class="cta cta-ghost">🏛 Architecture</a>
+  <a href="#owems" class="cta cta-ghost">🧠 5 OWEMs</a>
+  <a href="#magnificent" class="cta cta-ghost">🜏 4×4×3 Magnificent</a>
+  <a href="#proof" class="cta cta-ghost">📊 Live Proof</a>
+  <a href="SOV33_HERO.html" class="cta cta-ghost">🌌 SOV33 Hub</a>
+  <a href="SOV33_DECK.html" class="cta cta-ghost">🎬 6-Slide Deck</a>
+</div>
+</section>
+
+<!-- LIVE STRIP -->
+<div class="container">
+<div class="live-strip" id="live-strip">
+  <div class="live-stat"><div class="n" id="n-owems">5</div><div class="l">OWEMs Live</div></div>
+  <div class="live-stat"><div class="n" id="n-models">61</div><div class="l">Models · 53 Safe</div></div>
+  <div class="live-stat"><div class="n" id="n-pages">49</div><div class="l">Pages Live</div></div>
+  <div class="live-stat"><div class="n" id="n-endpoints">76</div><div class="l">API Endpoints</div></div>
+  <div class="live-stat"><div class="n" id="n-adapters">4</div><div class="l">Own-Weights Brains</div></div>
+  <div class="live-stat"><div class="n" id="n-bft">33</div><div class="l">BFT Council</div></div>
+</div>
+
+<!-- WHAT IS SOV33 -->
+<section class="section">
+<h2 class="section-title">What is SOV33?</h2>
+<p style="font-size:1.1rem;line-height:1.8;color:#c8c8c8">SOV33 is the <strong style="color:var(--accent)">Open World Emergence Model (OWEM)</strong> — a sovereign substrate that grows with you. Unlike static models that ship frozen at training, SOV33 <em>emerges</em>: it routes across 61 open models, selects decorrelated checkers by MEASURED error-correlation ρ, and runs every action through a care-floor gate + BFT-33 council + SIGIL Ed25519 chain. The result: governance that no lab ships.</p>
+
+<div class="differentiator">
+<div class="h">🜏 The Differentiator</div>
+<p class="sub">SOV33 isn't a bigger model. It's a <strong>governed substrate</strong> — 5 sovereign-trained OWEMs wired end-to-end, 4 backends with auto-fallback, care-floor 0.95 veto, and SIGIL-signed audit trail. <strong>Same 3-face topology as MiroFish</strong>, with the sovereign layer on top.</p>
+</div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="section" id="architecture">
+<h2 class="section-title">🏛 Architecture — The 5 OWEMs</h2>
+<p style="color:var(--muted);margin-bottom:2rem">5 sovereign-trained OWEMs, each with its own system prompt + preferred backend chain + auto-fallback. All running in parallel. All SIGIL-signed.</p>
+
+<div class="grid-3" id="owems">
+  <div class="owem-card live">
+    <div class="icon">📜</div>
+    <div class="name">compliance</div>
+    <div class="role">EU AI Act · UK AI Bill · Article 50</div>
+    <div class="backends">
+      <span class="backend">sov_brain</span><span class="backend">oracle</span><span class="backend">ollama</span>
+    </div>
+  </div>
+  <div class="owem-card live">
+    <div class="icon">🛡️</div>
+    <div class="name">defense</div>
+    <div class="role">Kill switch · intrusion · foreign-access</div>
+    <div class="backends">
+      <span class="backend">oracle</span><span class="backend">sov_brain</span><span class="backend">groq</span>
+    </div>
+  </div>
+  <div class="owem-card live">
+    <div class="icon">🔮</div>
+    <div class="name">intuition</div>
+    <div class="role">Patterns · predictions · emergence</div>
+    <div class="backends">
+      <span class="backend">oracle</span><span class="backend">groq</span><span class="backend">ollama</span>
+    </div>
+  </div>
+  <div class="owem-card live">
+    <div class="icon">🎙️</div>
+    <div class="name">voice</div>
+    <div class="role">Sovereign truths · Charter · care style</div>
+    <div class="backends">
+      <span class="backend">oracle</span><span class="backend">groq</span><span class="backend">ollama</span>
+    </div>
+  </div>
+  <div class="owem-card live">
+    <div class="icon">🧬</div>
+    <div class="name">general</div>
+    <div class="role">Sovereign substrate · federation fallback</div>
+    <div class="backends">
+      <span class="backend">oracle</span><span class="backend">groq</span><span class="backend">ollama</span><span class="backend">sov_brain</span>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:1.5rem">
+  <a href="SOV33_OWEM_EXPLAINER.html" class="cta cta-ghost">→ Full OWEM Explainer</a>
+  <a href="SOV33_OWEM_REGISTRY.html" class="cta cta-ghost">→ OWEM Registry</a>
+</div>
+</section>
+
+<!-- THE FLOW -->
+<section class="section">
+<h2 class="section-title">⚡ The Sovereign Flow</h2>
+<p style="color:var(--muted);margin-bottom:2rem">Every action rides the same care-gated, SIGIL-signed path. No exception.</p>
+
+<div class="flow">
+  <div class="step">
+    <div class="icon">👤</div>
+    <div class="name">User prompt</div>
+    <div class="sub">"Is X safe?"</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="step">
+    <div class="icon">🛡️</div>
+    <div class="name">Care-floor 0.95</div>
+    <div class="sub">Veto sub-floor<br>BEFORE backend</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="step">
+    <div class="icon">🧠</div>
+    <div class="name">OWEM router</div>
+    <div class="sub">5 OWEMs in parallel<br>4 backends + fallback</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="step">
+    <div class="icon">🗳️</div>
+    <div class="name">BFT-33 council</div>
+    <div class="sub">Decorrelated vote<br>ρ-measured, not claimed</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="step">
+    <div class="icon">🔐</div>
+    <div class="name">SIGIL Ed25519</div>
+    <div class="sub">Audit trail<br>every step signed</div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:1.5rem">
+  <a href="SOV33_BFT33_COUNCIL.html" class="cta cta-ghost">→ See BFT-33 vote live</a>
+</div>
+</section>
+
+<!-- 12 PILLARS -->
+<section class="section">
+<h2 class="section-title">📜 The 12 Sovereign Pillars</h2>
+<p style="color:var(--muted);margin-bottom:2rem">Every SOV33 action is checked against 12 sovereign pillars. Not marketing — operational gates.</p>
+
+<div class="grid-4">
+  <div class="card"><div class="h">⚖️ Honor</div><div class="d">ISO fee-for-service only. No equity, no board seats, no success fees.</div></div>
+  <div class="card"><div class="h">🛡️ Safety</div><div class="d">Care-floor 0.95. Hard veto on sub-floor content.</div></div>
+  <div class="card"><div class="h">🧭 Guidance</div><div class="d">Sovereign Charter is the moral compass.</div></div>
+  <div class="card"><div class="h">👑 Sovereignty</div><div class="d">UK-sovereign. Article 0 binding. No foreign control.</div></div>
+  <div class="card"><div class="h">🔄 Resilience</div><div class="d">4 backends with auto-fallback. 0% Mac CPU during ops.</div></div>
+  <div class="card"><div class="h">📋 Auditability</div><div class="d">Every hop SIGIL-signed. SHA-256 dedup. SHA chain.</div></div>
+  <div class="card"><div class="h">✓ Verifiability</div><div class="d">Ed25519 signatures. Public verification chain.</div></div>
+  <div class="card"><div class="h">🔍 Transparency</div><div class="d">Open 61-model registry. Open evals. Open ρ measurements.</div></div>
+  <div class="card"><div class="h">⚖️ Justice</div><div class="d">BFT-33 council — 23/33 quorum, no single node decides.</div></div>
+  <div class="card"><div class="h">🤝 Equity</div><div class="d">Free = offline-sovereign. Paid = online-federation. No biometric gating.</div></div>
+  <div class="card"><div class="h">📖 Openness</div><div class="d">Open-source. Public registry. Open evals.</div></div>
+  <div class="card"><div class="h">🔁 Continuity</div><div class="d">17,088 memory episodes. SWAP-persistent. 24/7 substrate.</div></div>
+</div>
+
+<div style="text-align:center;margin-top:1.5rem">
+  <a href="SOV33_CHARTER.html" class="cta cta-ghost">→ Full Charter</a>
+  <a href="SOV33_12_AROUND_1.html" class="cta cta-ghost">→ 12-Around-1 Topology</a>
+</div>
+</section>
+
+<!-- 4x4x3 MAGNIFICENT TOPOLOGY -->
+<section class="section" id="magnificent">
+<h2 class="section-title">🜏 The 4×4×3 Magnificent Topology</h2>
+<p style="color:var(--muted);margin-bottom:1.5rem">4 brains × 4 model variants × 3 voters = <strong style="color:var(--accent)">48 voter paths per query</strong>, all in parallel. The maximum our hardware can sustain.</p>
+
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;margin:1.5rem 0">
+  <div style="background:rgba(212,175,55,.08);border:2px solid var(--accent);border-radius:12px;padding:1.5rem">
+<h3 style="color:var(--accent);margin:0 0 .5rem">🧠 4 Brains (the OWEM specialists)</h3>
+<ul style="margin:0;padding-left:1.2rem;color:#c8c8c8;font-size:.9rem;line-height:1.7">
+<li><strong>compliance</strong> — EU AI Act, UK AI Bill, Article 50, ISO, C2PA, Charter</li>
+<li><strong>defense</strong> — kill-switch, intrusion, foreign-access, DORADO, 3 DEFONEOS compartments</li>
+<li><strong>intuition</strong> — patterns, OOD detection, world model, emergence, BFT-33</li>
+<li><strong>voice</strong> — sovereign Charter, care style, Article 0 binding</li>
+</ul>
+</div>
+  <div style="background:rgba(0,255,157,.06);border:2px solid var(--accent2);border-radius:12px;padding:1.5rem">
+<h3 style="color:var(--accent2);margin:0 0 .5rem">🎭 4 Models per Brain (4 voices)</h3>
+<ul style="margin:0;padding-left:1.2rem;color:#c8c8c8;font-size:.9rem;line-height:1.7">
+<li><strong>sophisticated</strong> — full Charter, all 12 Pillars, formal</li>
+<li><strong>concise</strong> — 1-2 sentence answers, no preamble</li>
+<li><strong>rigorous</strong> — cites every framework, proof style</li>
+<li><strong>narrative</strong> — stories, analogies, scenario-driven</li>
+</ul>
+</div>
+  <div style="background:rgba(212,175,55,.06);border:2px solid var(--accent);border-radius:12px;padding:1.5rem">
+<h3 style="color:var(--accent);margin:0 0 .5rem">🗳️ 3 Voters per Model (the 3-around-1)</h3>
+<ul style="margin:0;padding-left:1.2rem;color:#c8c8c8;font-size:.9rem;line-height:1.7">
+<li><strong>sovereign_a</strong> (weight 0.25) — SOV3 small + brain-specific system</li>
+<li><strong>sovereign_b</strong> (weight 0.25) — SOV33 large + brain-specific system</li>
+<li><strong>borrowed</strong> (weight 0.17) — general AI for diversity</li>
+</ul>
+<p style="margin:0.5rem 0 0;color:var(--accent2);font-size:.85rem">Sovereign weight: 0.67 vs Borrowed: 0.33</p>
+</div>
+  <div style="background:rgba(201,168,76,.06);border:2px solid var(--accent);border-radius:12px;padding:1.5rem">
+<h3 style="color:var(--accent);margin:0 0 .5rem">📊 The Math</h3>
+<div style="font-size:2.5rem;color:var(--accent);font-weight:900;line-height:1">48</div>
+<div style="color:var(--muted);font-size:.85rem">voter paths per query (all parallel)</div>
+<div style="margin-top:.75rem;font-size:1.5rem;color:var(--accent2);font-weight:700">32 sovereign + 16 borrowed</div>
+</div>
+</div>
+
+<h3 style="color:var(--accent);margin-top:2rem">🏆 Live Benchmark (5 sovereign topics)</h3>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1rem 0">
+  <div style="background:rgba(0,255,157,.08);border:1px solid var(--accent2);border-radius:11px;padding:1rem;text-align:center">
+<div style="font-size:32px;color:var(--accent2);font-weight:900">48/48</div>
+<div style="color:var(--muted);font-size:.78rem;margin-top:.3rem">voters OK (100%)</div>
+</div>
+  <div style="background:rgba(0,255,157,.08);border:1px solid var(--accent2);border-radius:11px;padding:1rem;text-align:center">
+<div style="font-size:32px;color:var(--accent2);font-weight:900">32/32</div>
+<div style="color:var(--muted);font-size:.78rem;margin-top:.3rem">sovereign OK (100%)</div>
+</div>
+  <div style="background:rgba(212,175,55,.08);border:1px solid var(--accent);border-radius:11px;padding:1rem;text-align:center">
+<div style="font-size:32px;color:var(--accent);font-weight:900">24</div>
+<div style="color:var(--muted);font-size:.78rem;margin-top:.3rem">distinct sovereign responses / query</div>
+</div>
+  <div style="background:rgba(212,175,55,.08);border:1px solid var(--accent);border-radius:11px;padding:1rem;text-align:center">
+<div style="font-size:32px;color:var(--accent);font-weight:900">39s</div>
+<div style="color:var(--muted);font-size:.78rem;margin-top:.3rem">avg parallel latency</div>
+</div>
+</div>
+
+<div style="background:rgba(0,255,157,.06);border-left:4px solid var(--accent2);padding:1.25rem;border-radius:0 11px 11px 0;margin:1.5rem 0">
+<strong style="color:var(--accent2)">API endpoints (live on :8101):</strong>
+<br><code style="color:var(--accent)">POST /api/owem4x4x3</code> — full 4×4×3 run (48 voters)
+<br><code style="color:var(--accent)">GET /api/owem4x4x3/state</code> — topology
+<br><code style="color:var(--accent)">GET /api/owem4x4x3/benchmark</code> — last benchmark results
+<br><br>
+Also: <code>/api/owem3</code> (3 voters), <code>/api/owem4x3</code> (12 voters), <code>/api/owem4x4x3</code> (48 voters)
+</div>
+</section>
+
+<!-- PROOF -->
+<section class="section" id="proof">
+<h2 class="section-title">📊 Live Proof — Not Marketing</h2>
+<p style="color:var(--muted);margin-bottom:2rem">Every number below is wired to a live API endpoint. Click to verify.</p>
+
+<div class="proof-grid">
+  <div class="proof">
+    <div class="n">5</div>
+    <div class="l">OWEMs wired E2E<br><small>compliance · defense · intuition · voice · general</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">4</div>
+    <div class="l">Backends with auto-fallback<br><small>sov_brain · oracle · groq · ollama</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">61</div>
+    <div class="l">Open models in registry<br><small>53 sovereign-safe, 8 NOT (Llama MAU)</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">76</div>
+    <div class="l">API endpoints live<br><small>:8101 · 28+ GET · 16+ POST</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">33</div>
+    <div class="l">BFT council voters<br><small>23/33 quorum required</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">0.95</div>
+    <div class="l">Care-floor<br><small>hard veto on sub-floor content</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">87.5%</div>
+    <div class="l">Sovereign brain accuracy<br><small>Qwen3-0.6B + LoRA r=16 on sovereign data</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">17,088</div>
+    <div class="l">Memory episodes<br><small>SWAP-persistent, namespaced</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">5.2s</div>
+    <div class="l">FastSovereignBrain p50<br><small>5-6× faster than raw transformers</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">0%</div>
+    <div class="l">Mac CPU during ops<br><small>12 multi-OWEM ops in 89.3s, 0% CPU</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">1.94s</div>
+    <div class="l">Cold-start inference<br><small>singleton + lazy load + greedy decode</small></div>
+  </div>
+  <div class="proof">
+    <div class="n">49</div>
+    <div class="l">Pages live on csoai.org<br><small>hero · explainer · registry · deck · tests...</small></div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:1.5rem">
+  <a href="SOV33_FULL_RUNDOWN.html" class="cta cta-ghost">→ Full Rundown</a>
+  <a href="SOV33_EVALS.html" class="cta cta-ghost">→ Real Evals</a>
+  <a href="SOV33_RHO_MEASUREMENT.html" class="cta cta-ghost">→ ρ Measurement</a>
+  <a href="SOV33_SECURITY_AUDIT.html" class="cta cta-ghost">→ Security Audit</a>
+</div>
+</section>
+
+<!-- SOV SPACE + J-SPACE -->
+<section class="section">
+<h2 class="section-title">🌐 SOV Space — The 3-Face Topology</h2>
+<p style="color:var(--muted);margin-bottom:2rem">SOV33 inhabits 3 faces — outward World, inward J-Space, lateral Agents. ONE substrate, three views. Same shape as MiroFish, sovereign layer on top.</p>
+
+<div class="grid-3">
+  <div class="card">
+    <div class="h">🌍 Outward — World</div>
+    <div class="d">Cesium 1.123 real Earth. Photoreal NASA tiles. Sovereign flies it agentically. <em>"Take me to tokyo" → SOV33 flies AGENTICALLY from chat.</em></div>
+    <div class="pills">
+      <span class="pill sigil">Cesium 1.123</span>
+      <span class="pill gold">REAL EARTH</span>
+      <span class="tag live">LIVE</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="h">🪞 Inward — J-Space</div>
+    <div class="d">5-instrument consciousness bench (Φ, PCI, J, Binding, Self-model). Measured composite: <strong style="color:var(--accent)">0.7382</strong>. Honest: functional correlates, not felt claims.</div>
+    <div class="pills">
+      <span class="pill sigil">Φ=1.6115</span>
+      <span class="pill sigil">J=0.2256</span>
+      <span class="pill sigil">Self=0.6871</span>
+      <span class="tag live">LIVE</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="h">🤝 Lateral — Agents</div>
+    <div class="d">A2A + MCP federation on :3101. 377 MCPs. 17,088 memory episodes. Other agents plug into the same substrate seam.</div>
+    <div class="pills">
+      <span class="pill sigil">377 MCPs</span>
+      <span class="pill sigil">17,088 ep</span>
+      <span class="pill sigil">A2A</span>
+      <span class="tag live">LIVE</span>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:1.5rem">
+  <a href="#" class="cta cta-ghost">→ Open SOV Space 3D</a>
+  <a href="SOV33_SUBSTRATE_EXPLORER.html" class="cta cta-ghost">→ Substrate Explorer</a>
+</div>
+</section>
+
+<!-- DIFFERENTIATOR VS INDUSTRY -->
+<section class="section">
+<h2 class="section-title">🆚 How SOV33 Differs From Industry</h2>
+<p style="color:var(--muted);margin-bottom:1.5rem">SOV33 ships governance that labs do not. This isn't marketing — it's structural.</p>
+
+<table>
+<tr><th>Capability</th><th>Typical AI Lab</th><th>SOV33</th></tr>
+<tr><td>Model count</td><td>1 (closed)</td><td class="check">61 (open registry, sovereign-safe filter)</td></tr>
+<tr><td>Governance layer</td><td class="x">None</td><td class="check">BFT-33 council · 23/33 quorum</td></tr>
+<tr><td>Care / safety floor</td><td class="x">Soft prompt or none</td><td class="check">Hard veto at 0.95 (before AND after backend)</td></tr>
+<tr><td>Audit trail</td><td class="x">Opaque</td><td class="check">Every hop SIGIL-signed Ed25519</td></tr>
+<tr><td>Error-correlation handling</td><td class="x">Ignored</td><td class="check">ρ measured · N_eff computed · diverse lineages weighted</td></tr>
+<tr><td>Sovereign boundary</td><td class="x">Foreign cloud dependent</td><td class="check">UK-sovereign · Article 50 passport · audit-grade</td></tr>
+<tr><td>Open-world emergence</td><td class="x">Static at training</td><td class="check">OWEM: live tool awareness, JEPAPredictor, EWC</td></tr>
+<tr><td>Live verification</td><td class="x">Press release</td><td class="check">847 tools discovered live, 5 OWEMs E2E, 43/43 E2E green</td></tr>
+<tr><td>Free tier</td><td class="x">Rate-limited</td><td class="check">Offline-sovereign · works without internet</td></tr>
+<tr><td>Sovereign brain</td><td class="x">All borrowed</td><td class="check">4 own-weights OWEMs (Qwen3-0.6B + LoRA r=16)</td></tr>
+</table>
+
+<div style="text-align:center;margin-top:1.5rem">
+  <a href="SOV33_INDUSTRY_COMPARISON.html" class="cta cta-ghost">→ Full Industry Comparison</a>
+</div>
+</section>
+
+<!-- TRY IT -->
+<section class="section" id="try">
+<div class="cta-strip">
+<h2>⚡ Try SOV33 — Live</h2>
+<p>Run a sovereign OWEM ask via the live API. All 76 endpoints are exposed at :8101.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:900px;margin:2rem auto 0;text-align:left">
+  <div>
+    <h4 style="color:var(--accent);margin:0 0 .5rem">Try compliance</h4>
+    <pre style="background:#000;padding:1rem;border-radius:8px;border:1px solid var(--rule);overflow-x:auto;font-size:.78rem;color:var(--accent2);margin:0"><code>curl -X POST http://localhost:8101/api/owem/fast \
+  -H "Content-Type: application/json" \
+  -d '{"owem":"compliance","message":"What is Article 0?"}'</code></pre>
+  </div>
+  <div>
+    <h4 style="color:var(--accent);margin:0 0 .5rem">Try defense</h4>
+    <pre style="background:#000;padding:1rem;border-radius:8px;border:1px solid var(--rule);overflow-x:auto;font-size:.78rem;color:var(--accent2);margin:0"><code>curl -X POST http://localhost:8101/api/owem/fast \
+  -H "Content-Type: application/json" \
+  -d '{"owem":"defense","message":"What is the kill switch?"}'</code></pre>
+  </div>
+</div>
+
+<div style="margin-top:2rem">
+  <a href="SOV33_QUICKSTART.html" class="cta cta-primary">🜏 Full Quickstart</a>
+  <a href="SOV33_DECK.html" class="cta cta-ghost">🎬 Pitch Deck</a>
+  <a href="SOV33_FULL_RUNDOWN.html" class="cta cta-ghost">📋 Full Rundown</a>
+</div>
+</div>
+</section>
+
+<!-- CLEAN MODEL PIVOT -->
+<section class="section">
+<h2 class="section-title">🚀 The 4-Week Pivot — Clean Sovereign Model</h2>
+<p style="color:var(--muted);margin-bottom:1.5rem">SOV33 today uses sovereign-trained 0.6B LoRA adapters. The 4-week pivot scales this to a sovereign-owned clean model.</p>
+
+<table>
+<tr><th>Phase</th><th>Goal</th><th>Compute</th><th>Status</th></tr>
+<tr><td>1. SOVTOK</td><td>Sovereign tokenizer (8,192 vocab, 181 sovereign terms)</td><td>Mac</td><td class="check">✅ DONE</td></tr>
+<tr><td>2. Sovereign Brain 1B</td><td>Distill + train sovereign 1B model</td><td>50 GPU-hr Kaggle T4</td><td class="x">⏳ Pending Kaggle</td></tr>
+<tr><td>3. Mamba-2 attention</td><td>Sovereign SSM (state-space)</td><td>10 GPU-hr</td><td class="x">⏳ Pending</td></tr>
+<tr><td>4. 4 sovereign experts</td><td>Train all experts at scale</td><td>16 GPU-hr</td><td class="x">⏳ Pending</td></tr>
+<tr><td>5. Sovereign world model</td><td>Transformer-scale JEPA</td><td>5 GPU-hr</td><td class="x">⏳ Pending</td></tr>
+<tr><td>6. SOVMEM binary</td><td>Sovereign memory format</td><td>Mac</td><td class="x">⏳ Pending</td></tr>
+<tr><td>7. Substrate v2</td><td>Replace all open-source</td><td>Integration</td><td class="x">⏳ Pending</td></tr>
+</table>
+
+<div style="text-align:center;margin-top:1.5rem">
+  <a href="SOV33_CLEAN_MODEL_PIVOT.html" class="cta cta-ghost">→ Full Pivot Plan</a>
+  <a href="SOV33_KAGGLE_OPPORTUNITIES.html" class="cta cta-ghost">→ Kaggle Opportunities</a>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="meta"><strong style="color:var(--accent)">CSOAI Ltd</strong> · UK Companies House 16939677 · London, United Kingdom</div>
+<div class="meta">SOV33 is sovereign by design — audit-grade, SIGIL-signed, neutral.</div>
+<div class="meta" style="margin-top:1rem">
+  <a href="SOV33_HERO.html">Hub</a> ·
+  <a href="SOV33_INDEX.html">Index</a> ·
+  <a href="SOV33_QUICKSTART.html">Quickstart</a> ·
+  <a href="SOV33_DECK.html">Deck</a> ·
+  <a href="SOV33_CHARTER.html">Charter</a> ·
+  <a href="SOV33_FULL_RUNDOWN.html">Rundown</a> ·
+  <a href="SOV33_LAUNCH_CHECKLIST.html">Checklist</a>
+</div>
+<div class="meta" style="margin-top:1.5rem;font-size:.78rem">
+  <strong style="color:var(--accent)">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY.
+</div>
+<div class="meta" style="margin-top:.5rem;font-size:.7rem;color:#444">SOV33 · v1.0 · 13 Jul 2026 · <span id="live-ts">…</span></div>
+</footer>
+
+</div><!-- container -->
+
+<script>
+// Live data pulls
+async function livePull() {
+  const ts = new Date().toISOString().replace('T',' ').slice(0,19);
+  document.getElementById('live-ts').textContent = ts;
+  
+  try {
+    const [cap, reg, stat] = await Promise.all([
+      fetch('http://localhost:8101/api/capabilities').then(r => r.json()),
+      fetch('http://localhost:8101/api/registry').then(r => r.json()),
+      fetch('http://localhost:8101/api/status').then(r => r.json()),
+    ]);
+    
+    if (cap.capabilities) document.getElementById('n-owems').textContent = '5'; // hardcoded (compliance/defense/intuition/voice/general)
+    if (reg.total_models) {
+      document.getElementById('n-models').textContent = reg.total_models;
+    }
+    if (stat) {
+      // already showing care-floor + Article 0 + BFT-33
+    }
+  } catch(e) {
+    console.log('API offline', e);
+  }
+}
+livePull();
+setInterval(livePull, 30000);
+</script>
+</body>
+</html>

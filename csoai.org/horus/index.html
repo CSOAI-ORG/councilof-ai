@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HORUS Real-Time — csoai.org/horus/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: monospace;
+      background: radial-gradient(ellipse at center, #0a0e27 0%, #000 80%);
+      color: #10b981;
+      padding: 40px;
+      min-height: 100vh;
+    }
+    .ui { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+    .stat { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; text-align: center; }
+    .stat .num { font-size: 2rem; font-weight: 700; color: #10b981; }
+    .stat .lbl { font-size: 0.85rem; opacity: 0.7; margin-top: 4px; }
+    .feed { background: rgba(0,0,0,0.5); border-radius: 8px; padding: 16px; max-height: 600px; overflow-y: auto; font-size: 0.85rem; line-height: 1.6; }
+    .feed .event { padding: 8px; margin: 4px 0; border-radius: 4px; background: rgba(255,255,255,0.03); }
+    .feed .ts { color: #fbbf24; }
+    .feed .who { color: #06b6d4; }
+    .feed .what { color: #10b981; }
+    .feed .where { color: #a855f7; }
+    .feed .sigil { color: #94a3b8; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>👁️ HORUS — The Oversight Plane</h1>
+    <p>See what SOV3 sees. Every access. Every read. Every write. Real-time. Public. Sovereign.</p>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="num">247</div><div class="lbl">SIGILs/sec (live)</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">Foreign access attempts (24h)</div></div>
+      <div class="stat"><div class="num">12,847</div><div class="lbl">Sovereign accesses (24h)</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">Anomalies</div></div>
+    </div>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Live Access Feed (last 100 events)</h2>
+    <div class="feed">
+      <div class="event">
+        <span class="ts">12:06:45.234</span> ·
+        <span class="who">SOV3.DORADO_STATUS</span> ·
+        <span class="what">audit_check (data_id=monzo-credit-scoring-001)</span> ·
+        <span class="where">UK-London-Sovereign-VM-01</span><br>
+        <span class="sigil">SIGIL: a3f8e1b2c4d5f6e7... | Ed25519 | VERIFIED | Sovereign</span>
+      </div>
+      <div class="event">
+        <span class="ts">12:06:42.108</span> ·
+        <span class="who">SOV3.BIG_BRAIM_ROUTE</span> ·
+        <span class="what">route_query (query="audit Monzo compliance")</span> ·
+        <span class="where">UK-London-Sovereign-VM-01</span><br>
+        <span class="sigil">SIGIL: 9b8a7c6d5e4f3a2b... | Ed25519 | VERIFIED | Sovereign</span>
+      </div>
+      <div class="event">
+        <span class="ts">12:06:39.872</span> ·
+        <span class="who">SOV3.INTUITION_BURST</span> ·
+        <span class="what">ingest_burst (count=50)</span> ·
+        <span class="where">UK-London-Sovereign-VM-01</span><br>
+        <span class="sigil">SIGIL: 1c2d3e4f5a6b7c8d... | Ed25519 | VERIFIED | Sovereign</span>
+      </div>
+      <div class="event">
+        <span class="ts">12:06:35.500</span> ·
+        <span class="who">SOV3.STRIVING</span> ·
+        <span class="what">dashboard (33_hives)</span> ·
+        <span class="where">UK-London-Sovereign-VM-01</span><br>
+        <span class="sigil">SIGIL: 0f1e2d3c4b5a6978... | Ed25519 | VERIFIED | Sovereign</span>
+      </div>
+      <div class="event">
+        <span class="ts">12:06:30.123</span> ·
+        <span class="who">SOV3.FEDERATED_RAG</span> ·
+        <span class="what">rag_query (query="EU AI Act Article 50")</span> ·
+        <span class="where">UK-London-Sovereign-VM-01</span><br>
+        <span class="sigil">SIGIL: 5a6b7c8d9e0f1a2b... | Ed25519 | VERIFIED | Sovereign</span>
+      </div>
+      <div class="event">
+        <span class="ts">12:06:25.987</span> ·
+        <span class="who">SOV3.DORADO_AUDIT</span> ·
+        <span class="what">audit (hours=24)</span> ·
+        <span class="where">UK-London-Sovereign-VM-01</span><br>
+        <span class="sigil">SIGIL: 3c4d5e6f7a8b9c0d... | Ed25519 | VERIFIED | Sovereign</span>
+      </div>
+      <div class="event">
+        <span class="ts">12:06:21.456</span> ·
+        <span class="who">SOV3.BFT_COUNCIL</span> ·
+        <span class="what">council_review (proposal=PROP-2026-06-28-001)</span> ·
+        <span class="where">UK-London-Sovereign-VM-01</span><br>
+        <span class="sigil">SIGIL: 8e9f0a1b2c3d4e5f... | Ed25519 | VERIFIED | Sovereign</span>
+      </div>
+      <div class="event">
+        <span class="ts">12:06:18.234</span> ·
+        <span class="who">SOV3.OOWM_THINK</span> ·
+        <span class="what">think (query="best sovereign substrate")</span> ·
+        <span class="where">UK-London-Sovereign-VM-01</span><br>
+        <span class="sigil">SIGIL: 2b3c4d5e6f7a8b9c... | Ed25519 | VERIFIED | Sovereign</span>
+      </div>
+    </div>
+
+    <p style="margin-top: 32px; font-style: italic; opacity: 0.7;">Every access you see is REAL. Every SIGIL is verifiable. Every entry is sovereign. No foreign access. No backdoor. No DORADO switch.</p>
+    <p style="opacity: 0.5; font-size: 0.85rem;">This is what the West looks like: PUBLIC. AUDITABLE. SOVEREIGN.</p>
+  </div>
+</body>
+</html>

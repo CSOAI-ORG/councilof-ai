@@ -1,0 +1,688 @@
+{
+  "radar_lidar": {
+    "open_radar_software": [
+      {
+        "name": "OpenRadar (PreSenseRadar)",
+        "stars": 912,
+        "license": "Apache-2.0",
+        "desc": "Open-source library for processing radar data. Masterpiece reference for FMCW/mmWave.",
+        "fork": "https://github.com/PreSenseRadar/OpenRadar",
+        "integration": "DEFONEOS GUARD: replace proprietary RF detection with OpenRadar + LD2450"
+      },
+      {
+        "name": "SonicSurface (upnalab)",
+        "stars": 208,
+        "license": "MIT",
+        "desc": "Generates airborne ultrasonic amplitude patterns using phased arrays. Open-source hardware for haptic VR/haptic.",
+        "integration": "Future DEFONEOS COGNITION touchless interface"
+      },
+      {
+        "name": "Aerial autonomy stack (JacopoPan)",
+        "stars": 515,
+        "license": "MIT",
+        "desc": "Open framework to simulate and deploy perception-based drone autonomy. ROS2 + PX4 compatible.",
+        "fork": "https://github.com/JacopoPan/aerial-autonomy-stack",
+        "integration": "DEFONEOS SWARM core autonomy engine"
+      },
+      {
+        "name": "flock2 (clydemcqueen)",
+        "stars": 72,
+        "license": "BSD-3-Clause",
+        "desc": "ROS2 swarm controller for DJI Tello drones. Production-grade swarm logic.",
+        "integration": "Swarm RL baseline for DEFONEOS SWARM"
+      },
+      {
+        "name": "amos-autonomous_mission (merkuriddg)",
+        "stars": 24,
+        "license": "Apache-2.0",
+        "desc": "Multi-domain command-and-control platform for autonomous missions",
+        "integration": "DEFONEOS COMMAND layer"
+      },
+      {
+        "name": "ioda_lidar (plex1)",
+        "stars": 8,
+        "license": "BSD-2-Clause",
+        "desc": "Open-source time-of-flight 3D lidar FROM SCRATCH \u2014 optics, processing, the works.",
+        "integration": "Open-source reference for DEFONEOS LIDAR module"
+      },
+      {
+        "name": "3dfier (tudelft3d)",
+        "stars": 624,
+        "license": "GPL-3.0",
+        "desc": "Open-source tool for creating 3D models from point clouds.",
+        "integration": "DEFONEOS ISR pipeline \u2192 3D digital twin"
+      },
+      {
+        "name": "digital-twin-toolbox (geosolutions)",
+        "stars": 96,
+        "license": "GPL-3.0",
+        "desc": "Open-source tool for inspecting and generating 3D twin from aerial LiDAR.",
+        "integration": "Reference for DEFONEOS EYE 3D COP"
+      },
+      {
+        "name": "but_velodyne_lib (robofit)",
+        "stars": 84,
+        "license": "LGPL-3.0",
+        "desc": "Open source library for Velodyne 3D LIDAR point clouds",
+        "integration": "Velodyne integration for DEFONEOS"
+      },
+      {
+        "name": "HLK-LD2450/LD2411S ESP libraries",
+        "stars": 35,
+        "license": "MIT",
+        "desc": "ESP32 + HLK-LD2450 24GHz mmWave radar multi-target. Closest to a $5 C-UAS radar.",
+        "fork": "Stevee87/Arduino-ESP32-Radarproject",
+        "integration": "PRIMARY OPEN RADAR FOR COUNTER-DRONE"
+      },
+      {
+        "name": "uhd_radar (HI-SNR-Lab)",
+        "stars": 22,
+        "license": "MIT",
+        "desc": "Open Radar Code Architecture for SDR radar",
+        "integration": "Future higher-end radar integration"
+      },
+      {
+        "name": "botwhiz_apmc_lom (BotWhiz)",
+        "stars": 33,
+        "license": "Apache-2.0",
+        "desc": "Open-source auto parking with mobile LiDAR",
+        "integration": "Reference for SLAM/lidar autonomy"
+      },
+      {
+        "name": "FD-SLAM (SLAMWang)",
+        "stars": 26,
+        "license": "BSD-2-Clause",
+        "desc": "Feature & Distribution based SLAM, open-source",
+        "integration": "DEFONEOS EYE SLAM layer"
+      }
+    ],
+    "proprietary_breakthroughs_2026": [
+      {
+        "name": "Ai-Thinker RD-03D",
+        "price": "$11",
+        "desc": "24GHz mmWave radar, 3D point cloud, multi-target tracking, ESP32-compatible",
+        "integration": "PRIMARY DRONE DETECTION CHIP"
+      },
+      {
+        "name": "HLK-LD2450",
+        "price": "$4",
+        "desc": "24GHz FMCW mmWave radar module, multi-target, ESP32/Arduino compatible",
+        "integration": "Cheapest open-source C-UAS foundation"
+      },
+      {
+        "name": "Garmin Lidar Lite v4",
+        "price": "$99",
+        "desc": "Optical rangefinder, up to 40m, 1cm resolution",
+        "integration": "DEFONEOS EYE low-cost depth sensor"
+      },
+      {
+        "name": "Benewake TFmini-S",
+        "price": "$45",
+        "desc": "100m LiDAR, 1cm accuracy, UART/I2C",
+        "integration": "Drone obstacle avoidance"
+      },
+      {
+        "name": "RPLIDAR A1",
+        "price": "$99",
+        "desc": "12m 360\u00b0 laser scanner for ROS SLAM",
+        "integration": "Indoor mapping for ASIMOV V8 sim-to-real"
+      }
+    ]
+  },
+  "drones": {
+    "open_drones_3d_printable": [
+      {
+        "name": "Aerial autonomy stack",
+        "stars": 515,
+        "license": "MIT",
+        "desc": "Open framework to simulate and deploy perception-based drone autonomy",
+        "integration": "DEFONEOS SWARM core"
+      },
+      {
+        "name": "flock2",
+        "stars": 72,
+        "license": "BSD-3-Clause",
+        "desc": "ROS2 swarm controller for DJI Tello",
+        "integration": "DEFONEOS SWARM low-level"
+      },
+      {
+        "name": "kamikaze-robots",
+        "stars": 15,
+        "license": "Apache-2.0",
+        "desc": "Swarm algorithms for C-UAS kamikaze drones",
+        "integration": "DEFONEOS GUARD home-on-decide"
+      },
+      {
+        "name": "PX4-Aerial-Swarm-Reconstruction",
+        "stars": 14,
+        "license": "MIT",
+        "desc": "Simulation of swarm reconstruction using PX4 in ROS2",
+        "integration": "DEFONEOS SWARM sim base"
+      },
+      {
+        "name": "DIAMANTS",
+        "stars": 11,
+        "license": "MIT",
+        "desc": "Open-source platform for distributed intelligence (swarm)",
+        "integration": "DEFONEOS SWARM consensus"
+      }
+    ],
+    "heavy_lift_3d_printable": [
+      {
+        "name": "Tarot 650 frame clone repos",
+        "desc": "Multiple open-source Tarot 650/680/680-pro clones on Thingiverse/Printables with AUW (all-up weight) up to 15kg",
+        "integration": "DEFONEOS-HEAVYLIFT: payload drone for 10kg camera/sensor rig"
+      },
+      {
+        "name": "F450 quadcopter clones",
+        "desc": "F450 clones dominate GitHub/Printables. Standard ARDU-PIX/PX4/Pixhawk platform. 1-3kg payload.",
+        "integration": "DEFONEOS-CHEAPDRONE: \u00a350 per airframe + \u00a3200 electronics = \u00a3250 drone"
+      },
+      {
+        "name": "QAV-250 mini-quad clones",
+        "desc": "5\" mini-quad clones for FPV racing. Furling drones.",
+        "integration": "DEFONEOS-FPV: spec FPV platform for teleop control of swarm drones"
+      },
+      {
+        "name": "3D-printed FPV race frames",
+        "desc": "40+ 3D-printable FPV racing frames. Maximum 350mm wingspan.",
+        "integration": "DEFONEOS-FPV high-speed"
+      }
+    ],
+    "vtol_fixed_wing": [
+      {
+        "name": "ArduPilot VTOL frames",
+        "desc": "Open-source ArduPilot VTOL frames (Tiltrotor + tail-sitter variants)",
+        "integration": "DEFONEOS-VTOL: 2hr flight time UAV for border surveillance"
+      },
+      {
+        "name": "PX4-SITL + Gazebo",
+        "desc": "Full Software-in-the-Loop simulation for VTOL",
+        "integration": "DEFONEOS-SIM for VTOL"
+      }
+    ]
+  },
+  "humanoids_actuators": {
+    "open_humanoids": [
+      {
+        "name": "upkie/upkie",
+        "stars": 374,
+        "license": "Apache-2.0",
+        "desc": "Open-source wheeled biped robot, MPC+WBC control, mature",
+        "integration": "REFERENCE ARCHITECTURE FOR BFT-WBC CONTROL"
+      },
+      {
+        "name": "MarcDcls/microban",
+        "stars": 1,
+        "license": "CERN-OHL-S-2.0",
+        "desc": "RPi Zero 2W + 19 Dynamixel, new May 2026",
+        "integration": "CHEAPEST PATH TO DYNAMIXEL HUMANOID"
+      },
+      {
+        "name": "alia-humanoid-core",
+        "stars": 7,
+        "license": "MIT",
+        "desc": "Tendon-driven human-scale humanoid, STL+firmware Phase 0",
+        "integration": "FUTURE TENDON-DRIVEN ARMATURE"
+      },
+      {
+        "name": "mekion/bimo",
+        "stars": 157,
+        "license": "Apache-2.0",
+        "desc": "Bipedal robotics platform + Isaac Lab sim",
+        "integration": "ISAAC LAB SIM INTEGRATION FOR V9"
+      },
+      {
+        "name": "bridgedp/hunter_bipedal_control",
+        "stars": 580,
+        "license": "MIT",
+        "desc": "Nonlinear MPC + WBC framework (paper: Bipedal Robot Control)",
+        "integration": "UPKIE-STYLE WBC FRAMEWORK FOR ASIMOV V9"
+      },
+      {
+        "name": "haraduka/mevita",
+        "stars": 96,
+        "license": "MIT",
+        "desc": "Bipedal from sheet metal + e-commerce components",
+        "integration": "CHEAP SHEET-METAL BIPED BACKUP"
+      },
+      {
+        "name": "makerforgetech/modular-biped",
+        "stars": 474,
+        "license": "GPL-3.0",
+        "desc": "Modular companion-bot framework",
+        "integration": "LONG-TERM COMMUNITY BENCHMARK"
+      }
+    ],
+    "actuators_2026": [
+      {
+        "name": "timxuti/Integrated-Joint-Actuator",
+        "stars": 7,
+        "license": "MIT",
+        "desc": "3D-printed BLDC QDD w/ internal cycloidal gearbox",
+        "integration": "WOLF V2 INTERNAL CYCLOIDAL CANDIDATE"
+      },
+      {
+        "name": "sirojudinMunir/3D-printed-cycloidal-actuator",
+        "stars": 171,
+        "license": "MIT",
+        "desc": "Detailed cycloidal actuator reference",
+        "integration": "WOLF V2 REFERENCE"
+      },
+      {
+        "name": "KoshiroRobot/Internal-Cycloidal",
+        "stars": 48,
+        "license": "MIT",
+        "desc": "Internal cycloidal actuator",
+        "integration": "QUIETER, DUST-PROOF WOLF V2"
+      },
+      {
+        "name": "JelmerV/Anti-Backlash-Cycloidal-Actuator",
+        "stars": 4,
+        "license": "CC-BY-SA-4.0",
+        "desc": "Anti-backlash cycloidal",
+        "integration": "PERFORMANCE UPGRADE FOR WOLF"
+      },
+      {
+        "name": "DarrenLevine/TipTapMotor",
+        "stars": 15,
+        "license": "MIT",
+        "desc": "Modular 3D-printed torque-controllable BLDC + 8:1 planetary",
+        "integration": "MODULAR ACTUATOR BACKUP"
+      }
+    ],
+    "simulation_2026": [
+      {
+        "name": "Genesis (Genesis-Embodied-AI)",
+        "stars": "8k+",
+        "license": "Apache-2.0",
+        "desc": "43M FPS physics simulator for embodied AI",
+        "integration": "REPLACE MUJOCO FOR V9 RL TRAINING"
+      },
+      {
+        "name": "MuJoCo",
+        "stars": "high",
+        "license": "Apache-2.0",
+        "desc": "Physics simulator, current Asimov baseline",
+        "integration": "KEEP AS BEST-IN-CLASS BENCHMARK"
+      }
+    ]
+  },
+  "sovereign_ai_models": {
+    "open_weight_2026": [
+      {
+        "name": "DeepSeek V4",
+        "params": "1T (32B active)",
+        "ctx": "1M",
+        "license": "Apache-2.0",
+        "desc": "Sparse Attention (DSA) - 98% FLOPs cut at 128K",
+        "price": "$0.435/M input, $0.87/M output - 12x cheaper than GPT-5.5",
+        "integration": "PRIMARY DEFONEOS COGNITION MODEL"
+      },
+      {
+        "name": "DeepSeek V4-Pro",
+        "params": "production-tuned",
+        "ctx": "1M",
+        "license": "Apache-2.0",
+        "desc": "Production-tuned V4",
+        "integration": "PRODUCTION DEFONEOS"
+      },
+      {
+        "name": "DeepSeek V4-Flash",
+        "params": "latency-optimized",
+        "ctx": "1M",
+        "license": "Apache-2.0",
+        "desc": "Low-latency variant for real-time defense",
+        "integration": "REAL-TIME C2 INFERENCE"
+      },
+      {
+        "name": "Llama 4 Scout",
+        "params": "17B active/109B total",
+        "ctx": "10M",
+        "license": "Llama Community",
+        "desc": "10M context unmatched; single H100",
+        "integration": "LONG-CONTEXT RAG (codebase scan, document analysis)"
+      },
+      {
+        "name": "Llama 4 Maverick",
+        "params": "17B active/400B total",
+        "ctx": "1M",
+        "license": "Llama Community",
+        "desc": "Multi-GPU general-purpose chat",
+        "integration": "SECONDARY CHAT MODEL"
+      },
+      {
+        "name": "Mistral Small 4",
+        "params": "~22B",
+        "ctx": "-",
+        "license": "Apache-2.0",
+        "desc": "Small open-weight tier",
+        "integration": "EDGE/SMALL-FOOTPRINT MODE"
+      },
+      {
+        "name": "Kimi K2.5",
+        "params": "MoE",
+        "ctx": "-",
+        "license": "Apache-2.0",
+        "desc": "MoE open-weight LLM",
+        "integration": "THIRD MODEL FOR FALLBACK REDUNDANCY"
+      },
+      {
+        "name": "NVIDIA NVFP4 quantization",
+        "ratio": "4x throughput",
+        "ctx": "-",
+        "license": "-",
+        "desc": "4x throughput on Blackwell GPUs",
+        "integration": "REDUCE INFRA COSTS 4X"
+      }
+    ],
+    "inference_serving": [
+      {
+        "name": "vLLM",
+        "desc": "LLM serving framework, supports DSA + NVFP4",
+        "integration": "STANDARD DEFONEOS INFERENCE"
+      },
+      {
+        "name": "SGLang",
+        "desc": "Alternative LLM serving",
+        "integration": "BACKUP SERVING"
+      },
+      {
+        "name": "TensorRT-LLM",
+        "desc": "NVIDIA tensor RT optimized",
+        "integration": "NVIDIA HARDWARE"
+      },
+      {
+        "name": "OpenRLHF",
+        "desc": "Open RLHF for fine-tuning",
+        "integration": "V9 POLICY FINE-TUNE"
+      },
+      {
+        "name": "NeMo Safe Synthesizer",
+        "desc": "Synthetic data generation",
+        "integration": "TRAINING DATA GENERATION"
+      },
+      {
+        "name": "NVIDIA Dynamo",
+        "desc": "Inference orchestration",
+        "integration": "PRODUCTION DEFONEOS"
+      }
+    ]
+  },
+  "printing": {
+    "slicer_software": [
+      {
+        "name": "QIDIStudio",
+        "desc": "Qidi's official slicer (installed locally)",
+        "integration": "PRIMARY LOCAL SLICER"
+      },
+      {
+        "name": "OrcaSlicer",
+        "stars": 14823,
+        "license": "AGPL-3.0",
+        "desc": "Best modern slicer, Bambu/Prusa/Voron support",
+        "integration": "UPGRADE FOR PRODUCTION"
+      },
+      {
+        "name": "PrusaSlicer",
+        "desc": "Alternative",
+        "integration": "BACKUP"
+      },
+      {
+        "name": "SuperSlicer",
+        "desc": "Alternative",
+        "integration": "POWER-USER"
+      }
+    ],
+    "firmware": [
+      {
+        "name": "Klipper",
+        "stars": 11664,
+        "license": "GPL-3.0",
+        "desc": "Qidi Max4 stock firmware",
+        "integration": "CURRENT"
+      },
+      {
+        "name": "OpenQ1 (frap129)",
+        "stars": 142,
+        "license": "GPL-3.0",
+        "desc": "Custom firmware for QIDI Q1 Pro",
+        "integration": "FUTURE PORT TO MAX4"
+      },
+      {
+        "name": "Klippain (Frix-x)",
+        "stars": 1173,
+        "license": "GPL-3.0",
+        "desc": "Generic Klipper config templates",
+        "integration": "BEST-PRACTICE KLIPPER CONFIG"
+      }
+    ],
+    "materials_breakthroughs": [
+      {
+        "name": "Bambu PLA Basic",
+        "desc": "Engineering PLA, on hand",
+        "integration": "CALIBRATION/CALIBRATION CUBES"
+      },
+      {
+        "name": "PA12-CF",
+        "desc": "Already have (multi-roll)",
+        "integration": "STRUCTURAL PRINTS"
+      },
+      {
+        "name": "PA6-CF",
+        "desc": "Already have (multi-roll), needs anneal",
+        "integration": "HIGH-STIFFNESS PRINTS"
+      },
+      {
+        "name": "TPU 95A",
+        "desc": "Already have",
+        "integration": "ELASTIC PARTS"
+      },
+      {
+        "name": "PA-CF generation 2 sources",
+        "desc": "Coming on market Q3 2026",
+        "integration": "NEXT-GEN STRUCTURAL"
+      }
+    ],
+    "mcp_integration": [
+      {
+        "name": "qidi-printer-mcp (NIC/nicholastempleman)",
+        "license": "MIT",
+        "desc": "Ours, Moonraker \u2192 MCP, 10 tools",
+        "integration": "CURRENT"
+      },
+      {
+        "name": "mcp-3D-printer-server (DMontgomery40)",
+        "stars": 198,
+        "license": "GPL-2.0",
+        "desc": "Multi-protocol printer MCP (Orca, OctoPrint, Klipper, Duet)",
+        "integration": "STANDARD CROSS-PRINTER COMPAT"
+      }
+    ]
+  },
+  "materials_hardware": {
+    "capillary_cooling": [
+      {
+        "name": "Capillary Robotics Engineering (Kimi/Capillary)",
+        "desc": "Your whitepaper. Patentable.",
+        "integration": "DEFONEOS-THERMAL IP MOAT"
+      },
+      {
+        "name": "SkyWater SKY130 PDK",
+        "license": "Apache-2.0",
+        "desc": "Open-source 130nm CMOS process",
+        "integration": "DEFONEOS-THERMAL chip tape-out"
+      },
+      {
+        "name": "DissolvPCB",
+        "desc": "Water-soluble PVA + EGaIn liquid metal",
+        "integration": "RECYCLABLE DEFENSE PCBS"
+      },
+      {
+        "name": "OpenROAD",
+        "license": "Apache-2.0",
+        "desc": "Open-source digital flow",
+        "integration": "FREE SILICON DESIGN"
+      },
+      {
+        "name": "SLIPS (Slippery Liquid-Infused Porous Surfaces)",
+        "desc": "Anti-icing, anti-biofouling",
+        "integration": "DEFONEOS-GUARD coatings"
+      }
+    ],
+    "water_computing": [
+      {
+        "name": "ORBS V2",
+        "desc": "DNA in water computing substrate",
+        "integration": "SOVEREIGN DATA STORAGE"
+      },
+      {
+        "name": "Capillary DNA Cooling Integration",
+        "desc": "Capillary + DNA = data + cooling",
+        "integration": "COMBINED IP"
+      },
+      {
+        "name": "Plasmonics Laser 5D Storage",
+        "desc": "5D optical storage",
+        "integration": "LONG-TERM STORAGE"
+      },
+      {
+        "name": "Water Computing Substrate",
+        "desc": "Water-based computing",
+        "integration": "FUTURE PLATFORM"
+      }
+    ]
+  },
+  "defense_bft": {
+    "bft_governance": [
+      {
+        "name": "OpenFang (RightNow-AI)",
+        "license": "MIT",
+        "desc": "Rust agent OS, 16 security layers, WASM dual-metered sandbox, 7 autonomous hands, Merkle hash-chain audit trail, 27 LLM providers, cold start <200ms, 32MB install",
+        "integration": "PRIMARY AGENT RUNTIME FOR DEFONEOS"
+      },
+      {
+        "name": "Malachite BFT consensus (Informal Systems)",
+        "license": "Apache-2.0",
+        "desc": "Production BFT engine (Tendermint-style)",
+        "integration": "OPTIONAL BACKBONE FOR VM BFT"
+      },
+      {
+        "name": "HashiCorp Nomad",
+        "license": "MPL-2.0",
+        "desc": "Workload orchestrator (4-10k nodes)",
+        "integration": "BFT CONSENSUS COORDINATOR"
+      }
+    ],
+    "tactical_c2": [
+      {
+        "name": "ATAK (TAK.gov, GOTS)",
+        "desc": "500k DoD users, used in combat ops, free to allies",
+        "integration": "DEFONEOS-EYE OPERATIONS DASHBOARD"
+      },
+      {
+        "name": "FreeTAKTeam/FreeTAKServer",
+        "license": "EPL",
+        "desc": "Open-source TAK server",
+        "integration": "DEFONEOS C2 BACKBONE"
+      },
+      {
+        "name": "act3-ace/chat-to-cop",
+        "license": "?-MIT",
+        "desc": "AI staff officer agents for CoP",
+        "integration": "AUTOMATED C2 UPDATES"
+      },
+      {
+        "name": "Blue Force Tracking standards (CoT)",
+        "desc": "Cursor-on-Target protocol",
+        "integration": "STANDARD INTEROP"
+      }
+    ]
+  },
+  "three_prototype_targets": {
+    "prototype_1_radar_lidar_module": {
+      "name": "DEFONEOS-ASSURANCE-RADAR",
+      "original_goal": "Open-source C-UAS radar + LIDAR module that boots when Qidi is back online",
+      "realigned_goal": "Physical PROOF ARTIFACT for DEFONEOS-SHIELD cyber assurance claim \u2014 PCB designed to OS hardening standards (TPM, signed firmware, air-gap caps). Demonstrates that DEFONEOS hardware ships with same assurance stack as software.",
+      "parts": [
+        "Ai-Thinker RD-03D 24GHz mmWave radar ($11)",
+        "HLK-LD2450 module ($4, secondary)",
+        "ESP32-S3 dev board with secure boot ($5)",
+        "Custom 3D-printed enclosure with tamper-evident screws (Qidi Max4 PA12-CF)",
+        "Custom 3D-printed mount bracket (PA6-CF)"
+      ],
+      "firmware": "OpenRadar (Apache-2.0) + custom ESPHome with VERIFY-HASH SIGIL",
+      "integration": "Prints System Card YAML. Exports OSCAL assessment. Aligns with SIGIL MCP verification stack.",
+      "pcs": "5 demo units (one per governance client briefing)",
+      "cost_per_unit": "\u00a335 (~40\u20ac): \u00a311 sensor + \u00a35 ESP32 + \u00a312 3D print + \u00a37 misc",
+      "prints_needed": [
+        "sensor housing x5",
+        "mount bracket x5",
+        "vented lid x5",
+        "tamper screw caps x5"
+      ],
+      "print_time_hours": 22,
+      "commercial_angle": "Demo to MOD/regulators showing security-by-design hardware assurance",
+      "directive_alignment": "GOVERNANCE / ASSURANCE proof artifact (CSOAI launch pack)"
+    },
+    "prototype_2_drone_aristotle_lite": {
+      "name": "DEFONEOS-ASSURANCE-DRONE",
+      "original_goal": "\u00a3250 3D-printable drone for the cheapest defensible DEFONEOS sensor",
+      "realigned_goal": "PROOF ARTIFACT for DEFONEOS EU AI Act TRANSPARENCY REGISTER + PLACEMENT-ON-MARKET requirements (defoneos-transparency-register.html). The drone is a CONCRETE high-risk system artifact that demonstrates the System Card + EU Declaration workflow against a real Category 3 system.",
+      "parts": [
+        "QAV-250 clone airframe (3D printed on Qidi)",
+        "F722 flight controller (\u00a325) with signed bootloader",
+        "4x 2207 motors (~\u00a320 each)",
+        "4x 5\" propellers (~\u00a38)",
+        "ESP32-CAM (\u00a38, broadcasts signed telemetry)",
+        "FrSky RX/TX pair (~\u00a330)",
+        "3S 2200mAh LiPo (~\u00a320)",
+        "SkyWater SKY130 prototype MCU (\u00a315) \u2014 pre-DCFONEOS-THERMAL chip demo"
+      ],
+      "firmware": "PX4-Autopilot + aerial-autonomy-stack (MIT) + SIGIL-signed telemetry",
+      "integration": "Tied to csoai-launch-pack/02-gap-analysis-4950-onepager. Demonstrates \u00a34,950 gap analysis output against a real AI-powered drone system.",
+      "pcs": "3 demo units (one each: lead demo + governance briefing + cyber assurance briefing)",
+      "cost_per_unit": "\u00a3250",
+      "prints_needed": [
+        "frame x3",
+        "arm x12",
+        "canopy x3",
+        "landing skid x3"
+      ],
+      "print_time_hours": 6,
+      "commercial_angle": "Show MOD + EU regulators that DEFONEOS EU AI Act placement-on-market templates work against real Category 3 systems",
+      "directive_alignment": "GOVERNANCE / \u00a3999 SALE + \u00a34,950 GAP ANALYSIS proof"
+    },
+    "prototype_3_humanoid_mini": {
+      "name": "DEFONEOS-ASSURANCE-WALKER",
+      "original_goal": "Sub-\u00a3300 indoor biped as the WOLF-V2 engineering testbed",
+      "realigned_goal": "PROOF ARTIFACT for DEFONEOS Care Membrane + Care Floor 0.95 claim. The humanoid demonstrates PHYSICAL EMBODIED compliance \u2014 every joint movement passes through the Maternal Covenant, every action logged with SIGIL. Shows that DEFONEOS Care Floor safety works on REAL ROBOTICS, not just demos. Critical for MOD/regulator buy-in to governance-as-code thesis.",
+      "parts": [
+        "MarcDcls/microban design (BSD-CERN-OHL-S-2.0)",
+        "19x DS3235MG servos (low-cost, signable position feedback)",
+        "RPi Zero 2W (\u00a315)",
+        "USB-C battery pack (\u00a315)",
+        "3D printed body (PA12-CF + TPU feet)"
+      ],
+      "firmware": "WBC + MPC (bridgedp/hunter_bipedal_control) + Defoneos Care Membrane integration + maternal-covenant motion validator",
+      "integration": "Critical narrative asset: \"DEFONEOS Care Floor 0.95 governs embodied AI\". Used in 13 regulatory briefings.",
+      "pcs": "2 demo units (1 governance tour + 1 cyber assurance tour)",
+      "cost_per_unit": "\u00a3300",
+      "prints_needed": [
+        "torso x2",
+        "thigh x4",
+        "shin x4",
+        "foot x4",
+        "head x2",
+        "arm x4",
+        "shoulder x4",
+        "pelvis x2",
+        "safety enclosure x2"
+      ],
+      "print_time_hours": 80,
+      "commercial_angle": "Embodied AI that DOES NOT VIOLATE the Care Floor \u2014 first-of-its-kind proof that governance can govern physical systems",
+      "directive_alignment": "CARE / GOVERNANCE / CYBER \u2014 the safety moat for embodied AI"
+    }
+  },
+  "e_aligned": "2026-07-02"
+}

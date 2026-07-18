@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sirius Watchdog · Live Heat Map · CSOAI</title>
+<style>
+:root{--bg:#0a0e27;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--amber:#fbbf24;--red:#ef4444;--serif:'Georgia',serif;--mono:'SF Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:radial-gradient(ellipse at 20% 0%,#1e3a8a 0%,#0a0e27 50%);color:var(--fg);min-height:100vh;line-height:1.6;overflow-x:hidden}
+.container{max-width:1300px;margin:0 auto;padding:24px}
+nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(10,14,39,.92);border-bottom:1px solid rgba(251,191,36,.15);z-index:100;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;font-size:.85rem;font-family:var(--mono)}
+nav a{color:#94a3b8;text-decoration:none;margin-left:18px}
+nav .logo{color:var(--gold);font-weight:700}
+h1{font-family:var(--serif);color:var(--gold);font-size:2.4rem;text-align:center;margin:24px 0 8px;text-shadow:0 0 24px rgba(251,191,36,.3)}
+.tag{color:var(--cyan);font-style:italic;text-align:center;margin-bottom:8px}
+.sub{color:#94a3b8;text-align:center;font-size:.85rem;margin-bottom:24px}
+.banner{display:flex;justify-content:center;align-items:center;gap:24px;padding:12px;background:rgba(0,0,0,.4);border:1px solid rgba(251,191,36,.2);border-radius:8px;margin:24px auto;max-width:880px;font-family:var(--mono);font-size:.8rem;flex-wrap:wrap}
+.banner .live{color:var(--green);font-weight:700}
+.banner .live::before{content:"●";font-size:1.4rem;margin-right:4px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.banner .stat{color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}}
+.hive{background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:14px;text-align:center;position:relative;transition:all .5s;cursor:pointer}
+.hive.critical{border-color:var(--red);animation:pulse 2s infinite}
+.hive .name{color:var(--gold);font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase}
+.hive .value{font-size:1.4rem;font-weight:900;margin:4px 0;font-family:var(--serif)}
+.hive .sub{color:#94a3b8;font-size:.65rem;font-family:var(--mono)}
+.spark-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:24px 0}
+@media(max-width:768px){.spark-row{grid-template-columns:1fr}}
+.spark-card{background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:14px}
+.spark-card h3{color:var(--gold);font-size:.8rem;margin:0 0 8px;font-family:var(--mono);text-transform:uppercase}
+.spark-card svg{width:100%;height:60px}
+.events{background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:14px;margin:24px 0;font-family:var(--mono);font-size:.78rem;max-height:300px;overflow-y:auto}
+.events .ev{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.events .ev .ts{color:#94a3b8}
+.events .ev.safety{color:var(--red)}
+.events .ev.infra{color:var(--gold)}
+.events .ev.env{color:var(--cyan)}
+.events .ev.health{color:var(--green)}
+footer{text-align:center;color:#94a3b8;font-size:.75rem;padding:24px;border-top:1px solid rgba(255,255,255,.05);margin-top:32px;font-family:var(--mono)}
+footer a{color:var(--gold);text-decoration:none}
+h2{font-family:var(--serif);color:var(--gold);text-align:center;font-size:1.4rem;margin:24px 0 12px}
+.detail{background:rgba(0,0,0,.6);border:1px solid rgba(251,191,36,.3);border-radius:12px;padding:20px;margin-top:16px;display:none}
+.detail.active{display:block;animation:slideUp .4s}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.detail h3{color:var(--gold);margin:0 0 8px;font-size:1.1rem}
+.detail p{color:#94a3b8;margin:4px 0;font-size:.85rem}
+</style></head><body>
+<nav>
+<div class="logo">Sirius Watchdog</div>
+<div>
+<a href="../csoai.org/index.html">CSOAI</a>
+<a href="../csoai.org/oowm/demo-tour.html">Demos</a>
+<a href="../csoai.org/sovereign-charter.html">Charter</a>
+<a href="../csoai.org/sovereign-os/9-demos.html">Hub</a>
+</div>
+</nav>
+
+<div class="container">
+<h1>Live Heat Map</h1>
+<p class="tag">Sovereign by design · CC0 data · fork-friendly</p>
+<p class="sub">12-hive grid · stress = 1 - care_floor_smoothed · clicks drill the hive</p>
+
+<div class="banner" id="banner">
+<span class="live">SSE STREAM</span>
+<span class="stat">4 reporter classes</span>
+<span class="stat">3 hazard projections</span>
+<span class="stat">CC0 · MIT</span>
+</div>
+
+<h2>12 Sovereign Hives</h2>
+<div class="grid" id="hives"></div>
+
+<div class="spark-row">
+<div class="spark-card">
+<h3>Care Floor (24h)</h3>
+<svg id="spark1" viewBox="0 0 280 60" preserveAspectRatio="none"><polyline points="" fill="none" stroke="#fbbf24" stroke-width="2"/></svg>
+</div>
+<div class="spark-card">
+<h3>BFT Pass-rate (24h)</h3>
+<svg id="spark2" viewBox="0 0 280 60" preserveAspectRatio="none"><polyline points="" fill="none" stroke="#10b981" stroke-width="2"/></svg>
+</div>
+<div class="spark-card">
+<h3>Latency p95 (24h)</h3>
+<svg id="spark3" viewBox="0 0 280 60" preserveAspectRatio="none"><polyline points="" fill="none" stroke="#06b6d4" stroke-width="2"/></svg>
+</div>
+</div>
+
+<h2>Live Event Feed</h2>
+<div class="events" id="events">
+<div class="ev"><span class="ts">09:23:14</span> <span class="safety">SAFETY</span> Safety · Drone sighting Westminster</div>
+<div class="ev"><span class="ts">09:22:48</span> <span class="infra">INFRA</span> Power grid fluctuation Manchester</div>
+<div class="ev"><span class="ts">09:22:01</span> <span class="env">ENV</span> AQI elevated · Mumbai</div>
+<div class="ev"><span class="ts">09:21:33</span> <span class="safety">SAFETY</span> Recovery · Tokyo resolved</div>
+<div class="ev"><span class="ts">09:20:55</span> <span class="env">ENV</span> Heatwave alert · Madrid</div>
+<div class="ev"><span class="ts">09:19:22</span> <span class="health">HEALTH</span> Cluster pattern flagged · Cape Town</div>
+<div class="ev"><span class="ts">09:18:10</span> <span class="env">ENV</span> AQI 32 · São Paulo</div>
+<div class="ev"><span class="ts">09:17:00</span> <span class="infra">INFRA</span> Telecom outage · Sydney</div>
+</div>
+
+<div class="detail" id="detail">
+<h3 id="dName"></h3>
+<p id="dDesc"></p>
+<p><b>Citizens online:</b> <span id="dCitizens"></span></p>
+<p><b>Reports/h:</b> <span id="dReports"></span></p>
+<p><b>SIGILs/h:</b> <span id="dSigils"></span></p>
+<p><b>Care Floor:</b> <span id="dCare"></span></p>
+</div>
+
+</div>
+
+<footer>
+Sirius Watchdog · 4 reporter classes (human/agent/humanoid/system) · CC0 data fork-friendly · part of <a href="../csoai.org/index.html">the CSOAI sovereign substrate</a>
+</footer>
+
+<script>
+const HIVES = [
+  {id:'MEOK',name:'MEOK Compiler',desc:'Converts sovereign specs to executable binaries. Underwrites the substrate.',citizens:3480,reports:847,sigils:4921,care:.94},
+  {id:'OLM',name:'OLM Autonomy',desc:'Reinforcement learning substrate for humanoids. Real-time adaptation.',citizens:1205,reports:312,sigils:1803,care:.96},
+  {id:'KOI',name:'KOI Memory',desc:'Persistent i-character memory. Causal + Episodic + Procedural + Scientific.',citizens:2700,reports:606,sigils:3030,care:.93},
+  {id:'DEM',name:'Demeter Conscience',desc:'Care Floor 0.95 enforcement. Non-negotiable. Veto on any violation.',citizens:0,reports:0,sigils:492,care:1.00},
+  {id:'ART',name:'Artemis Sentinel',desc:'Anti-surveillance + security. Refuses any cascade into citizen privacy.',citizens:780,reports:188,sigils:1190,care:.95},
+  {id:'HER',name:'Hermes Bus',desc:'Message bus, slow async vs fast SOV3 routes. Tiered delivery.',citizens:0,reports:0,sigils:12410,care:1.00},
+  {id:'SOV',name:'Sovereign Tribunal',desc:'Constitutional review. Decides forks, mixers, cross-realm proposals.',citizens:90,reports:8,sigils:84,care:.98},
+  {id:'LIN',name:'Lineage',desc:'Crown Authorisation lineage. 1795-2026. Generation counter.',citizens:1,reports:0,sigils:2,care:1.00},
+  {id:'PHO',name:'Phoenix Witness',desc:'Historical SIGIL mirror. Nostr + bitcoin OP_RETURN for permanence.',citizens:0,reports:0,sigils:0,care:1.00},
+  {id:'ARC',name:'Archive Bench',desc:'Cold storage of every SIGIL ever emitted. Search + replay.',citizens:42,reports:0,sigils:2.4e6,care:1.00},
+  {id:'BEE',name:'Bee Pollinator',desc:'Cross-pollination between sovereign instances. SIGIL forge.',citizens:12000,reports:4847,sigils:49000,care:.95},
+  {id:'FIN',name:'Finance',desc:'Commonwealth tradable SIGIL market. Custody + fiat on/off-ramp.',citizens:600,reports:12,sigils:200,care:.97},
+];
+// Hive grid
+const grid = document.getElementById('hives');
+HIVES.forEach(h => {
+  const div = document.createElement('div');
+  div.className = 'hive';
+  if (h.care < 0.95) div.classList.add('critical');
+  const stress = Math.max(0, 1 - h.care);
+  const risk = stress > 0.5 ? 'critical' : stress > 0.2 ? 'warn' : 'calm';
+  // Care floor gradient green->amber->red
+  const c = h.care;
+  const g = Math.round(63 + (16 - 63) * (1 - c));
+  const rr = Math.round(185 + (248 - 185) * (1 - c));
+  const color = (c >= 0.95) ? `rgba(${g},${165 - Math.round(80 * (1 - c))},${85 + Math.round(50 * c)},0.85)` : c >= 0.85 ? `rgba(251,191,36,0.75)` : `rgba(239,68,68,0.85)`;
+  div.style.background = `linear-gradient(135deg, ${color}, rgba(0,0,0,.5))`;
+  div.innerHTML = `
+    <div class="name">${h.id}</div>
+    <div class="value">${h.care.toFixed(3)}</div>
+    <div class="sub">care floor</div>
+    <div style="margin-top:6px;font-size:.65rem;color:#94a3b8;font-family:monospace">${h.sigils.toLocaleString()} SIGILS</div>
+  `;
+  div.onclick = () => drill(h);
+  div.style.cursor = 'pointer';
+  grid.appendChild(div);
+});
+function drill(h) {
+  document.getElementById('dName').textContent = h.id + ' · ' + h.name;
+  document.getElementById('dDesc').textContent = h.desc;
+  document.getElementById('dCitizens').textContent = h.citizens.toLocaleString();
+  document.getElementById('dReports').textContent = h.reports.toLocaleString() + '/h';
+  document.getElementById('dSigils').textContent = h.sigils.toLocaleString() + '/h';
+  document.getElementById('dCare').textContent = h.care.toFixed(3);
+  const det = document.getElementById('detail');
+  det.classList.add('active');
+  det.scrollIntoView({behavior:'smooth'});
+}
+
+// Sparklines (synthetic 24h data, time-decay to current)
+function gen(n, base) { const r = []; let v = base; for (let i = 0; i < n; i++) { v += (Math.random() - 0.5) * 0.02; v = Math.max(.85, Math.min(1, v)); r.push(v); } return r; }
+function spark(svgId, data, color) {
+  const svg = document.getElementById(svgId);
+  const w = 280, h = 60;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = Math.max(.01, max - min);
+  const pts = data.map((v, i) => {
+    const x = (i / (data.length - 1)) * w;
+    const y = h - ((v - min) / range) * (h - 10) - 5;
+    return Math.round(x) + ',' + Math.round(y);
+  }).join(' ');
+  svg.querySelector('polyline').setAttribute('points', pts);
+}
+function genLat(n) { const r = []; let v = 80; for (let i = 0; i < n; i++) { v += (Math.random() - 0.5) * 20; v = Math.max(40, Math.min(180, v)); r.push(v); } return r; }
+spark('spark1', gen(48, 0.95), '#fbbf24');
+spark('spark2', gen(48, 0.92), '#10b981');
+spark('spark3', genLat(48), '#06b6d4');
+
+// Streaming event simulation (SSE fallback for offline)
+const evTypes = [['safety','#ef4444'],['infra','#fbbf24'],['env','#06b6d4'],['health','#10b981']];
+const evText = ['Drone sighting', 'Power grid fluctuation', 'AQI elevated', 'Cluster pattern flagged', 'Heatwave alert', 'Recovery', 'All clear', 'Crowd density high'];
+const log = document.getElementById('events');
+function ts() { return new Date().toLocaleTimeString('en-GB'); }
+setInterval(() => {
+  const [type, color] = evTypes[Math.floor(Math.random() * evTypes.length)];
+  const text = evText[Math.floor(Math.random() * evText.length)];
+  const div = document.createElement('div');
+  div.className = 'ev ' + type;
+  div.innerHTML = '<span class="ts">' + ts() + '</span> <span style="color:' + color + ';font-weight:700">' + type.toUpperCase() + '</span> ' + text;
+  log.insertBefore(div, log.firstChild);
+  // remove oldest
+  if (log.children.length > 20) log.removeChild(log.lastChild);
+}, 5000);
+
+// Status banner tone updates with avg care floor
+setInterval(() => {
+  const avg = HIVES.reduce((s, h) => s + h.care, 0) / HIVES.length;
+  const banner = document.getElementById('banner');
+  const live = banner.querySelector('.live');
+  if (avg > 0.95) { live.textContent = 'SSE STABLE · OK'; live.style.color = '#10b981'; }
+  else if (avg > 0.9) { live.textContent = 'SSE LIVE · WATCH'; live.style.color = '#fbbf24'; }
+  else { live.textContent = 'SSE STREAM · CRITICAL'; live.style.color = '#ef4444'; }
+}, 6000);
+</script>
+</body></html>

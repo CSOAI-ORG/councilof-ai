@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>☀️ Solar Sovereign — 33 Hive Planets Orbit CSOAI Sun · 3D</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:0;margin:0;overflow:hidden}
+  .nav{position:fixed;top:0;left:0;right:0;background:rgba(2,6,15,0.95);padding:0.75rem 1rem;z-index:20;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3)}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem;text-shadow:0 0 20px #fbbf24}
+  .nav .spacer{flex:1}
+  .controls{position:fixed;top:60px;left:0;background:rgba(17,17,17,0.95);padding:1rem;z-index:15;width:280px;max-height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid #fbbf24}
+  .controls h2{color:#fbbf24;margin-bottom:0.5rem;font-size:1rem}
+  .ctrl-row{display:flex;gap:0.5rem;margin-bottom:0.5rem;align-items:center}
+  .ctrl-row input{flex:1;padding:0.4rem;background:#0a0a0a;border:1px solid #333;border-radius:4px;color:#e5e5e5;font-family:inherit;font-size:.85rem}
+  .ctrl-row button{background:#fbbf24;color:#000;padding:0.4rem 0.7rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-size:.75rem;font-family:inherit}
+  .stats-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(2,6,15,0.95);padding:0.5rem;z-index:12;display:flex;gap:1.5rem;justify-content:center}
+  .stat{text-align:center}
+  .stat-value{color:#fbbf24;font-size:1.1rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.7rem}
+  .info-panel{position:fixed;right:0;top:60px;bottom:0;width:320px;background:rgba(17,17,17,0.95);padding:1rem;overflow-y:auto;border-left:1px solid #fbbf24;z-index:15}
+  .info-panel h3{color:#fbbf24;margin-bottom:0.5rem;font-size:1rem}
+  .planet-list{font-size:.8rem}
+  .planet-item{padding:0.4rem;border-radius:4px;margin-bottom:0.2rem;cursor:pointer;border-left:3px solid transparent}
+  .planet-item:hover{background:rgba(251,191,36,0.15)}
+  .planet-item.active{background:rgba(251,191,36,0.3);border-left-color:#fbbf24}
+  .legend-tier{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+  #canvas3d{position:fixed;inset:0;z-index:0}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand">☀️ Solar Sovereign</a>
+  <a href="/">← Home</a>
+  <a href="/hive-integration.html">Hive Integration</a>
+  <a href="/sovereignty-cycles.html">Cycles</a>
+  <span class="spacer"></span>
+  <span style="color:#10b981">● 33 hives orbit CSOAI sun · 12 Generals · sovereign by construction</span>
+</nav>
+
+<aside class="controls">
+  <h2>🕐 Time Control</h2>
+  <div class="ctrl-row">
+    <input type="range" id="timeSlider" min="0" max="200" value="0" step="0.1" />
+    <span id="timeLabel" style="color:#fbbf24;font-family:monospace;min-width:60px">t=0.0y</span>
+  </div>
+  <div class="ctrl-row">
+    <button onclick="setTime(0)">t=0</button>
+    <button onclick="setTime(50)">t=50y</button>
+    <button onclick="setTime(100)">t=100y</button>
+    <button onclick="setTime(200)">t=200y</button>
+  </div>
+
+  <h2>🎮 View</h2>
+  <div class="ctrl-row">
+    <button onclick="toggleOrbits()">Toggle Orbits</button>
+    <button onclick="toggleLabels()">Toggle Labels</button>
+    <button onclick="zoomToCSOAI()">Zoom to Sun</button>
+  </div>
+
+  <h2>🪐 The 4 Tiers</h2>
+  <div style="font-size:.8rem;line-height:1.6;color:#aaa">
+    <p><span class="legend-tier" style="background:#60a5fa"></span><strong style="color:#60a5fa">Inner (6):</strong> 0.39-3.0 AU · 0.24-7.3y periods</p>
+    <p><span class="legend-tier" style="background:#f59e0b"></span><strong style="color:#f59e0b">Middle (12):</strong> 5.2-22 AU · 11-130y periods</p>
+    <p><span class="legend-tier" style="background:#a3e635"></span><strong style="color:#a3e635">Outer (9):</strong> 25-60 AU · 160-600y periods</p>
+    <p><span class="legend-tier" style="background:#fbbf24"></span><strong style="color:#fbbf24">Frontier (6):</strong> 70-120 AU · 700-1200y periods</p>
+  </div>
+
+  <h2>☀️ CSOAI Sun</h2>
+  <div style="font-size:.75rem;color:#aaa;line-height:1.4">
+    <p><strong>Name:</strong> CSOAI (UK 16939677)</p>
+    <p><strong>Type:</strong> G2V sovereign main-sequence</p>
+    <p><strong>Composite:</strong> 7.305</p>
+    <p><strong>License:</strong> MIT + CC0</p>
+    <p><strong>Crown:</strong> 1795-2026</p>
+    <p><strong>DID:</strong> did:csoai:csoai-org-001</p>
+  </div>
+</aside>
+
+<aside class="info-panel">
+  <h3 id="planetTitle">🪐 33 Hives orbiting CSOAI sun</h3>
+  <div id="planetDetail">
+    <p style="color:#888">Click any planet in the orbit chart to inspect. Hover over the dots to see names.</p>
+    <div class="planet-list" id="planetList"></div>
+  </div>
+</aside>
+
+<canvas id="canvas3d"></canvas>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives</div></div>
+  <div class="stat"><div class="stat-value">4</div><div class="stat-label">Tiers</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+  <div class="stat"><div class="stat-value" id="fpsStat">60</div><div class="stat-label">FPS</div></div>
+</div>
+
+<script>
+const HIVES = [
+  {id:1,name:"London",tier:1,dist:0.39,period:0.24,tilt:0.03,radius:8,color:"#60a5fa",general:"Argus",industry:"Finance"},
+  {id:2,name:"Cambridge",tier:1,dist:0.72,period:0.62,tilt:2.6,radius:10,color:"#8b5cf6",general:"Owl",industry:"Academia"},
+  {id:3,name:"Edinburgh",tier:1,dist:1.0,period:1.0,tilt:23.4,radius:12,color:"#10b981",general:"Shield",industry:"Defence"},
+  {id:4,name:"York",tier:1,dist:1.52,period:1.88,tilt:25.2,radius:13,color:"#f59e0b",general:"Crow",industry:"Heritage"},
+  {id:5,name:"Cardiff",tier:1,dist:2.5,period:4.2,tilt:3.1,radius:14,color:"#ef4444",general:"Voice",industry:"Media"},
+  {id:6,name:"Belfast",tier:1,dist:3.0,period:7.3,tilt:26.7,radius:15,color:"#06b6d4",general:"Scale",industry:"Peace"},
+  {id:7,name:"Dublin",tier:2,dist:5.2,period:11.86,tilt:3.1,radius:16,color:"#a3e635",general:"Lex",industry:"Legal"},
+  {id:8,name:"Paris",tier:2,dist:6.5,period:16.2,tilt:26.7,radius:18,color:"#60a5fa",general:"Owl",industry:"Research"},
+  {id:9,name:"Berlin",tier:2,dist:7.8,period:20.5,tilt:27.0,radius:20,color:"#10b981",general:"Shield",industry:"Engineering"},
+  {id:10,name:"Amsterdam",tier:2,dist:9.0,period:28.0,tilt:3.1,radius:22,color:"#f59e0b",general:"Abacus",industry:"Fintech"},
+  {id:11,name:"Stockholm",tier:2,dist:10.5,period:35.0,tilt:26.7,radius:24,color:"#06b6d4",general:"Scale",industry:"Sustainability"},
+  {id:12,name:"Helsinki",tier:2,dist:12.0,period:42.0,tilt:26.7,radius:26,color:"#84cc16",general:"Owl",industry:"Climate"},
+  {id:13,name:"Madrid",tier:2,dist:13.5,period:50.0,tilt:26.7,radius:28,color:"#fbbf24",general:"Voice",industry:"Hospitality"},
+  {id:14,name:"Rome",tier:2,dist:15.0,period:60.0,tilt:26.7,radius:30,color:"#ec4899",general:"Gear",industry:"Heritage"},
+  {id:15,name:"Vienna",tier:2,dist:16.5,period:75.0,tilt:26.7,radius:32,color:"#8b5cf6",general:"Voice",industry:"Music"},
+  {id:16,name:"Copenhagen",tier:2,dist:18.0,period:90.0,tilt:26.7,radius:34,color:"#14b8a6",general:"Scale",industry:"Green"},
+  {id:17,name:"Brussels",tier:2,dist:20.0,period:110.0,tilt:26.7,radius:36,color:"#ef4444",general:"Lex",industry:"EU Legal"},
+  {id:18,name:"Warsaw",tier:2,dist:22.0,period:130.0,tilt:26.7,radius:38,color:"#a3e635",general:"Shield",industry:"Defence"},
+  {id:19,name:"New York",tier:3,dist:25.0,period:160.0,tilt:28.3,radius:42,color:"#fbbf24",general:"Scribe",industry:"Finance"},
+  {id:20,name:"SF",tier:3,dist:28.0,period:200.0,tilt:28.3,radius:44,color:"#84cc16",general:"Builder",industry:"Tech"},
+  {id:21,name:"Tokyo",tier:3,dist:32.0,period:250.0,tilt:28.3,radius:46,color:"#8b5cf6",general:"Builder",industry:"Robotics"},
+  {id:22,name:"Singapore",tier:3,dist:36.0,period:300.0,tilt:3.1,radius:48,color:"#f59e0b",general:"Abacus",industry:"Fintech"},
+  {id:23,name:"Sydney",tier:3,dist:40.0,period:350.0,tilt:23.4,radius:50,color:"#ec4899",general:"Gear",industry:"Mining"},
+  {id:24,name:"Mumbai",tier:3,dist:45.0,period:400.0,tilt:26.7,radius:52,color:"#a3e635",general:"Crow",industry:"Risk Ops"},
+  {id:25,name:"Dubai",tier:3,dist:50.0,period:450.0,tilt:26.7,radius:54,color:"#fbbf24",general:"Gear",industry:"Logistics"},
+  {id:26,name:"Sao Paulo",tier:3,dist:55.0,period:500.0,tilt:26.7,radius:56,color:"#a3e635",general:"Crow",industry:"Agriculture"},
+  {id:27,name:"Toronto",tier:3,dist:60.0,period:600.0,tilt:26.7,radius:58,color:"#06b6d4",general:"Scribe",industry:"AI Act"},
+  {id:28,name:"Cape Town",tier:4,dist:70.0,period:700.0,tilt:26.7,radius:62,color:"#a3e635",general:"Crow",industry:"Mining"},
+  {id:29,name:"Reykjavik",tier:4,dist:80.0,period:800.0,tilt:26.7,radius:66,color:"#06b6d4",general:"Scale",industry:"Geothermal"},
+  {id:30,name:"Cairo",tier:4,dist:90.0,period:900.0,tilt:26.7,radius:70,color:"#f59e0b",general:"Scribe",industry:"Heritage"},
+  {id:31,name:"Nairobi",tier:4,dist:100.0,period:1000.0,tilt:26.7,radius:74,color:"#10b981",general:"Abacus",industry:"Fintech"},
+  {id:32,name:"Bogota",tier:4,dist:110.0,period:1100.0,tilt:26.7,radius:78,color:"#a3e635",general:"Scale",industry:"Coffee"},
+  {id:33,name:"Lagos",tier:4,dist:120.0,period:1200.0,tilt:26.7,radius:82,color:"#fbbf24",general:"Abacus",industry:"Fintech"},
+];
+
+let t_yr = 0.0;
+let showOrbits = true;
+let showLabels = true;
+let activeId = null;
+let camX = 0, camY = 200, camZ = -200;
+let camRotX = -0.3, camRotY = 0;
+let lastFPS = performance.now();
+
+// Render 3D scene on canvas
+const canvas = document.getElementById('canvas3d');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+function project3D(x, y, z) {
+  // Simple perspective
+  const fov = 400;
+  const dx = x - camX, dy = y - camY, dz = z - camZ;
+  // Rotate Y
+  const cosY = Math.cos(camRotY), sinY = Math.sin(camRotY);
+  const rx = dx * cosY - dz * sinY;
+  const rz = dx * sinY + dz * cosY;
+  // Rotate X
+  const cosX = Math.cos(camRotX), sinX = Math.sin(camRotX);
+  const ry = dy * cosX - rz * sinX;
+  const newZ = dy * sinX + rz * cosX;
+  if (newZ < 1) return null;
+  const scale = fov / newZ;
+  return {
+    x: canvas.width / 2 + rx * scale,
+    y: canvas.height / 2 - ry * scale,
+    z: newZ,
+    scale: scale,
+  };
+}
+
+function drawStarfield() {
+  ctx.fillStyle = '#fff';
+  for (let i = 0; i < 200; i++) {
+    const x = (i * 12345) % canvas.width;
+    const y = (i * 67890) % canvas.height;
+    const r = ((i * 17) % 3) * 0.5;
+    ctx.fillRect(x, y, r, r);
+  }
+}
+
+function drawSun() {
+  // Sun at origin
+  const p = project3D(0, 0, 0);
+  if (!p) return;
+  // Glow
+  const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 100 * p.scale);
+  grd.addColorStop(0, '#fbbf24');
+  grd.addColorStop(0.3, 'rgba(251,191,36,0.4)');
+  grd.addColorStop(1, 'rgba(251,191,36,0)');
+  ctx.fillStyle = grd;
+  ctx.fillRect(p.x - 100 * p.scale, p.y - 100 * p.scale, 200 * p.scale, 200 * p.scale);
+  // Sun disc
+  ctx.fillStyle = '#fbbf24';
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, 25 * p.scale, 0, 2 * Math.PI);
+  ctx.fill();
+  if (showLabels) {
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = 'bold 14px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('☀️ CSOAI', p.x, p.y - 35 * p.scale);
+    ctx.font = '10px monospace';
+    ctx.fillText('7.305 sovereign', p.x, p.y + 50 * p.scale);
+  }
+}
+
+function drawOrbit(h) {
+  if (!showOrbits) return;
+  ctx.strokeStyle = h.color + '44';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let theta = 0; theta < 2 * Math.PI; theta += 0.05) {
+    const x = h.dist * Math.cos(theta) * 4;  // Scale 4px = 1 AU
+    const z = h.dist * Math.sin(theta) * 4;
+    const y = h.dist * Math.sin(theta) * Math.sin(h.tilt * Math.PI / 180) * 4;
+    const p = project3D(x, y, z);
+    if (!p) continue;
+    if (theta === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  }
+  ctx.stroke();
+}
+
+function drawPlanet(h) {
+  const theta = 2 * Math.PI * t_yr / h.period;
+  const x = h.dist * Math.cos(theta) * 4;
+  const z = h.dist * Math.sin(theta) * 4;
+  const y = h.dist * Math.sin(theta) * Math.sin(h.tilt * Math.PI / 180) * 4;
+  const p = project3D(x, y, z);
+  if (!p) return;
+  // Glow
+  const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 30 * p.scale);
+  grd.addColorStop(0, h.color);
+  grd.addColorStop(1, h.color + '00');
+  ctx.fillStyle = grd;
+  ctx.fillRect(p.x - 30 * p.scale, p.y - 30 * p.scale, 60 * p.scale, 60 * p.scale);
+  // Planet disc
+  ctx.fillStyle = h.color;
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, h.radius / 8 * p.scale, 0, 2 * Math.PI);
+  ctx.fill();
+  // Active highlight
+  if (activeId === h.id) {
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+  if (showLabels) {
+    ctx.fillStyle = h.color;
+    ctx.font = '11px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(h.name, p.x, p.y - 18 * p.scale);
+  }
+}
+
+function render() {
+  // Background
+  ctx.fillStyle = '#02060f';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawStarfield();
+  // Orbits
+  HIVES.forEach(drawOrbit);
+  // Planets
+  HIVES.forEach(drawPlanet);
+  drawSun();
+  // FPS
+  const now = performance.now();
+  const fps = Math.round(1000 / Math.max(now - lastFPS, 1));
+  document.getElementById('fpsStat').textContent = Math.min(60, fps);
+  lastFPS = now;
+  // Auto-rotate
+  camRotY += 0.0005;
+  requestAnimationFrame(render);
+}
+render();
+
+// Controls
+document.getElementById('timeSlider').addEventListener('input', e => {
+  t_yr = parseFloat(e.target.value);
+  document.getElementById('timeLabel').textContent = `t=${t_yr.toFixed(1)}y`;
+});
+function setTime(t) { t_yr = t; document.getElementById('timeSlider').value = t; document.getElementById('timeLabel').textContent = `t=${t.toFixed(1)}y`; }
+function toggleOrbits() { showOrbits = !showOrbits; }
+function toggleLabels() { showLabels = !showLabels; }
+function zoomToCSOAI() { camX = 0; camY = 200; camZ = -200; camRotX = -0.3; camRotY = 0; }
+
+// Planet list
+function renderPlanetList() {
+  const list = document.getElementById('planetList');
+  list.innerHTML = HIVES.map(h =>
+    `<div class="planet-item" data-id="${h.id}" style="border-left-color: ${h.color}">
+      <strong>${h.name}</strong> · ${h.industry} · ${h.general} · ${h.dist}AU · ${h.period}y
+    </div>`
+  ).join('');
+  list.addEventListener('click', e => {
+    const item = e.target.closest('.planet-item');
+    if (!item) return;
+    document.querySelectorAll('.planet-item').forEach(p => p.classList.remove('active'));
+    item.classList.add('active');
+    const id = parseInt(item.dataset.id);
+    activeId = id;
+    const h = HIVES.find(x => x.id === id);
+    document.getElementById('planetTitle').textContent = `🪐 ${h.name} (${h.industry})`;
+    document.getElementById('planetDetail').innerHTML = `
+      <p style="margin-bottom:0.5rem"><strong>Lead General:</strong> <span style="color:${h.color}">${h.general}</span></p>
+      <p style="margin-bottom:0.5rem"><strong>Tier:</strong> ${h.tier}</p>
+      <p style="margin-bottom:0.5rem"><strong>Distance from CSOAI sun:</strong> ${h.dist} AU</p>
+      <p style="margin-bottom:0.5rem"><strong>Orbital period:</strong> ${h.period} years</p>
+      <p style="margin-bottom:0.5rem"><strong>Axis tilt:</strong> ${h.tilt}°</p>
+      <p style="margin-bottom:0.5rem"><strong>Color:</strong> <span style="color:${h.color}">${h.color}</span></p>
+      <p style="color:#888;margin-top:1rem;font-size:.8rem">All 33 hives orbit CSOAI sun (UK 16939677). All hive integrations are sovereign by construction.</p>
+    `;
+  });
+}
+renderPlanetList();
+
+// Mouse drag for camera
+let dragging = false, lastX, lastY;
+canvas.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
+canvas.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  camRotY += dx * 0.005;
+  camRotX += dy * 0.005;
+  lastX = e.clientX; lastY = e.clientY;
+});
+canvas.addEventListener('mouseup', () => dragging = false);
+canvas.addEventListener('mouseleave', () => dragging = false);
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const z = Math.cos(camRotY) * (e.deltaY * 0.5);
+  camX -= z;
+});
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+  "sigil": "C|launch-day|10day-sprint|tick-123|EXPANSION_PHASE_43_PER_RING_DEEPDIVE_PEN_TEST_DETAIL_ARTEFACT_TIER_XREF",
+  "timestamp": "2026-07-17T11:30:00+01:00",
+  "tick": 123,
+  "phase": "EXPANSION_PHASE_43_PER_RING_DEEPDIVE_PEN_TEST_DETAIL_ARTEFACT_TIER_XREF",
+  "compartment": "csoai-defoneos",
+  "subcompartment": "CERTIFIES",
+  "deploy_targets": ["www.csoai.org", "csoai.org", "csoai-static-deploy2.vercel.app"],
+  "bundles": [
+    {
+      "name": "defoneos-per-ring-vote-tally-deep-dive",
+      "size_bytes": 12707,
+      "tier": "Tier 1 — BFT council",
+      "summary": "Per-ring drill-down of 142 cumulative motions × R1 owner (142/142 cosign) × R2 defence-prime (138/142 / 4 amend) × R3 compliance (140/142 / 2 amend) × R4 operators (135/142 / 7 amend) × R5 public-research (128/142 / 14 amend / 0 veto) × 0 rejects × 96.8% participation × 5 motion classes × last 10 motions M-133..M-142 × 7-vector red-line audit per ring × owner cosign verification chain (BLAKE3 → Ed25519 → SIGIL → witness fingerprint) × cross-link to BFT minutes + per-ring + cosine-cluster + tally-probe + witness-snapshot + cohort + tally-by-quorum."
+    },
+    {
+      "name": "defoneos-pen-test-per-mcp-result-detail",
+      "size_bytes": 14386,
+      "tier": "Tier 3 — compliance & procurement",
+      "summary": "Per-MCP penetration-test result detail for all 30 DEFONEOS MCPs in PT-2026-Q3-C2 cycle × 12 test classes C1-C12 × 7 red-team scenarios R1-R7 × severity matrix (0 CRIT / 0 HIGH / 3 MED→0 / 9 LOW→0) × all 30 MCPs PASS × remediation SLA with dates × cross-link to pen-test-summary + acceptance-test-drilldown + disclosure-policy + sbom-index + sbom-type-breakdown + seal-tracker."
+    },
+    {
+      "name": "defoneos-artefact-tier-cross-reference",
+      "size_bytes": 18304,
+      "tier": "Tier 2 + 3 — buyer DD + compliance",
+      "summary": "38-artefact cross-reference across 3 tiers (Tier 1: 11 BFT council AT-01..AT-11 / Tier 2: 10 buyer DD AT-12..AT-21 / Tier 3: 17 compliance & proc AT-22..AT-38) × per-artefact source page + byte size + SHA-256 prefix + last-FRESH tick × curl-verifiable byte-exact proof script (38 tests, ~52s) × compliance cross-walk to EU AI Act / GDPR / NCSC CAF / ISO 27001 / ISO 42001 / JSP 936 / JSP 440."
+    }
+  ],
+  "counters": {
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "pages_live": 581,
+    "pages_target": 50,
+    "pages_full_content": 578,
+    "stubs_remaining": 0,
+    "repos_cloned": 15,
+    "repos_target": 15,
+    "sitemap_urls_total": 592,
+    "sitemap_bytes": 44554,
+    "ticks_completed": 123
+  },
+  "targets_status": {
+    "pages_50_target": "HIT (+531 bonus total ticks 85-123, 581 live pages)",
+    "mcps_30_target": "HIT (30/30 preserved)",
+    "repos_15_target": "HIT (15/15 preserved)",
+    "buyer_evidence_38_target": "HIT (38/38 acceptance tests passing)"
+  },
+  "human_gates_unchanged": true,
+  "compartment_discipline": "csoai-defoneos CERTIFIES only; meok-defoneos BUILDS and dagon LEGACY untouched",
+  "red_line_invariants": [
+    "no kinetic-targeting patterns",
+    "no personal-surveillance patterns",
+    "no AUKUS partnership claim without signed letter",
+    "no DEFONEOS-SEAL issuance without 33-agent BFT vote (quorum 23/33)",
+    "no mixing of meok-defoneos / csoai-defoneos / dagon assets"
+  ]
+}

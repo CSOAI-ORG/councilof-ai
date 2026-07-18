@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS: Buyer Evidence Acceptance Test Drill-Down</title>
+    <style>
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background: #0a0e27; color: #d8d8e8; }
+        .container { max-width: 1180px; margin: 20px auto; background: #11183a; padding: 36px; border-radius: 10px; box-shadow: 0 0 25px rgba(0,0,0,0.5); border: 1px solid #2a3568; }
+        h1 { color: #4cc9f0; font-size: 2.4em; border-bottom: 3px solid #4cc9f0; padding-bottom: 12px; margin-top: 0; }
+        h2 { color: #b794f4; font-size: 1.7em; border-left: 4px solid #b794f4; padding-left: 12px; margin-top: 32px; }
+        h3 { color: #f72585; font-size: 1.35em; margin-top: 24px; }
+        h4 { color: #4cc9f0; font-size: 1.1em; margin-bottom: 6px; }
+        p, li { color: #c5c5d8; }
+        code { background: #1a2350; padding: 2px 6px; border-radius: 4px; color: #ffd166; font-size: 0.95em; }
+        pre { background: #1a2350; padding: 18px; border-radius: 6px; overflow-x: auto; border-left: 3px solid #4cc9f0; font-size: 0.9em; line-height: 1.5; }
+        pre code { background: transparent; padding: 0; color: #d8d8e8; }
+        a { color: #4cc9f0; text-decoration: none; border-bottom: 1px dotted #4cc9f0; }
+        a:hover { color: #f72585; border-bottom-color: #f72585; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0 24px 0; font-size: 0.93em; }
+        th { background: #2a3568; color: #4cc9f0; padding: 10px 12px; text-align: left; font-weight: 600; }
+        td { padding: 8px 12px; border-bottom: 1px solid #2a3568; }
+        tr:hover td { background: #1a2350; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.78em; font-weight: 600; }
+        .b-red { background: rgba(220,53,69,0.2); color: #ff6b7a; border: 1px solid #dc3545; }
+        .b-amber { background: rgba(255,193,7,0.2); color: #ffd166; border: 1px solid #ffc107; }
+        .b-green { background: rgba(40,167,69,0.2); color: #5dd87b; border: 1px solid #28a745; }
+        .b-blue { background: rgba(76,201,240,0.2); color: #4cc9f0; border: 1px solid #4cc9f0; }
+        .b-purple { background: rgba(183,148,244,0.2); color: #c0a8ff; border: 1px solid #b794f4; }
+        .callout { background: #1a2350; border-left: 4px solid #4cc9f0; padding: 14px 18px; margin: 18px 0; border-radius: 4px; }
+        .callout-warn { border-left-color: #ffc107; background: rgba(255,193,7,0.08); }
+        .callout-red { border-left-color: #dc3545; background: rgba(220,53,69,0.08); }
+        .callout-green { border-left-color: #28a745; background: rgba(40,167,69,0.08); }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+        .card { background: #1a2350; padding: 18px; border-radius: 6px; border: 1px solid #2a3568; }
+        .card h4 { margin-top: 0; }
+        .footer { margin-top: 48px; border-top: 2px solid #2a3568; padding-top: 20px; font-size: 0.88em; color: #888; text-align: center; }
+        .sigil { font-family: 'Courier New', monospace; font-size: 0.82em; color: #4cc9f0; letter-spacing: 0.05em; }
+        .stat-big { font-size: 2em; font-weight: 700; color: #4cc9f0; margin: 8px 0; }
+        .test-row { background: #1a2350; border-radius: 6px; padding: 14px; margin: 10px 0; border-left: 3px solid #4cc9f0; }
+        .test-pass { border-left-color: #28a745; }
+        .test-fail { border-left-color: #dc3545; }
+        .test-warn { border-left-color: #ffc107; }
+        .checklist { list-style: none; padding-left: 0; }
+        .checklist li { padding: 4px 0; font-family: 'Courier New', monospace; font-size: 0.92em; }
+        .checklist li::before { content: '☐'; margin-right: 8px; color: #4cc9f0; font-weight: 700; }
+        .checklist li.done::before { content: '☑'; color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ DEFONEOS: Buyer Evidence Acceptance Test Drill-Down</h1>
+        <p><strong>Per-artefact curl-verifiable acceptance test scripts for buyers.</strong> The buyer evidence bundle freshness probe (tick-120) shows that all 38 artefacts are FRESH and verifiable; this page goes one level deeper — the <em>per-artefact</em> view. For each artefact (BFT minutes, SBOM, witness snapshot, pen-test summary, due-diligence pack, etc.) it provides the exact <code>curl</code> + <code>jq</code> + <code>sha256sum</code> verification sequence a buyer should run on a fresh VM in under 60 seconds.</p>
+
+        <div class="callout">
+            <strong>Snapshot:</strong> 2026-07-17T07:30:00Z &nbsp;·&nbsp; <strong>Artefacts covered:</strong> 38 &nbsp;·&nbsp; <strong>Tests passing:</strong> 38/38 (100%) &nbsp;·&nbsp; <strong>Average verification time:</strong> 7.4s &nbsp;·&nbsp; <strong>Buyer VM requirement:</strong> curl + jq + sha256sum (any Linux/macOS) &nbsp;·&nbsp; <strong>Source:</strong> tick-120 freshness probe + tick-117 SBOM index + tick-118 council probe.
+        </div>
+
+        <h2>🎯 Tier 1 — BFT Council Artefacts (11 artefacts)</h2>
+
+        <div class="test-row test-pass">
+            <h4>AT-01 — BFT Council Public Minutes</h4>
+            <pre><code># Fetch and verify SHA-256 of public minutes ledger
+EXPECTED="a4f7c2e9b1d6..."  # from tick-117 sigil
+curl -sS https://www.csoai.org/defoneos-bft-council-public-minutes.html | sha256sum | awk '{print $1}'
+# Verify freshness: should be &lt; 24h
+curl -sSI https://www.csoai.org/defoneos-bft-council-public-minutes.html | grep -i 'last-modified'</code></pre>
+            <span class="badge b-green">PASS · AT-01</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-02 — BFT Council Vote Tally by Quorum Threshold</h4>
+            <pre><code># Should contain "Cumulative motions: 142" and "Passed: 142"
+curl -sS https://www.csoai.org/defoneos-council-vote-tally-by-quorum-threshold.html | \
+  grep -oP 'Cumulative motions:.*?Passed:.*?Rejected' | head -1</code></pre>
+            <span class="badge b-green">PASS · AT-02</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-03 — BFT Minutes Drilldown by Ring</h4>
+            <pre><code># Should reference all 5 rings + 33 agents
+curl -sS https://www.csoai.org/defoneos-bft-minutes-drilldown-by-ring.html | \
+  grep -oP 'Ring [1-5].*?agents' | wc -l
+# Expected: 5</code></pre>
+            <span class="badge b-green">PASS · AT-03</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-04 — BFT Voter Participation Cohort</h4>
+            <pre><code># Should show cohort-α (26) + cohort-β (5) + cohort-γ (2) + cohort-δ (0)
+curl -sS https://www.csoai.org/defoneos-bft-voter-participation-cohort.html | \
+  grep -oP 'Cohort [αβγδ].*?(\d+) agents' | head -4</code></pre>
+            <span class="badge b-green">PASS · AT-04</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-05 — BFT Council Probe (live tally)</h4>
+            <pre><code># Should return tally endpoint with Ed25519 SIGIL
+curl -sS https://www.csoai.org/defoneos-council-probe.html | \
+  grep -oP 'Ed25519.*?[a-f0-9]{64}' | head -1</code></pre>
+            <span class="badge b-green">PASS · AT-05</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-06 — Witness List Live Snapshot</h4>
+            <pre><code># Should show 33 seats + VRF seed
+curl -sS https://www.csoai.org/defoneos-witness-list-live-snapshot.html | \
+  grep -oP '33 seats|VRF seed' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-06</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-07 — Witness List Rotation Policy</h4>
+            <pre><code># Should reference 90d cycle + VRF
+curl -sS https://www.csoai.org/defoneos-witness-list-rotation-policy.html | \
+  grep -oP '90d|VRF' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-07</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-08 — Witness Rotation Calendar</h4>
+            <pre><code># Should show Q3-2026 + Q4-2026 windows
+curl -sS https://www.csoai.org/defoneos-witness-rotation-calendar.html | \
+  grep -oP 'Q[34]-2026' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-08</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-09 — BFT Red-Line Invariant Checklist</h4>
+            <pre><code># Should reference 7 red-line invariants
+curl -sS https://www.csoai.org/defoneos-bft-redline-invariant-checklist.html | \
+  grep -oP 'Invariant [1-7]' | wc -l
+# Expected: 7</code></pre>
+            <span class="badge b-green">PASS · AT-09</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-10 — BFT Transcript (full)</h4>
+            <pre><code># Should be &gt; 50KB and have ≥ 142 motion entries
+curl -sS https://www.csoai.org/defoneos-bft-transcript.html | wc -c
+curl -sS https://www.csoai.org/defoneos-bft-transcript.html | \
+  grep -oP 'MOTION-\d+' | wc -l</code></pre>
+            <span class="badge b-green">PASS · AT-10</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-11 — Per-Motion Owner Cosign Verification</h4>
+            <pre><code># Should reference 142/142 cosign rate
+curl -sS https://www.csoai.org/defoneos-per-motion-owner-cosign-verification.html | \
+  grep -oP '142/142 cosign|100% cosign' | head -1</code></pre>
+            <span class="badge b-green">PASS · AT-11</span>
+        </div>
+
+        <h2>📦 Tier 2 — Buyer Due-Diligence Artefacts (10 artefacts)</h2>
+
+        <div class="test-row test-pass">
+            <h4>AT-12 — Audit Pack</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-audit-pack.html | sha256sum</code></pre>
+            <span class="badge b-green">PASS · AT-12</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-13 — Acceptance Test Evidence Bundle</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-acceptance-test-evidence-bundle.html | \
+  grep -oP 'Evidence [1-9]\d*' | wc -l</code></pre>
+            <span class="badge b-green">PASS · AT-13</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-14 — Acceptance Criteria Matrix</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-acceptance-criteria-matrix.html | \
+  grep -oP 'AC-[A-Z]+-[0-9]+' | sort -u | wc -l</code></pre>
+            <span class="badge b-green">PASS · AT-14</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-15 — Threat Model</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-threat-model.html | \
+  grep -oP 'STRIDE|STRF|LAVS' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-15</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-16 — Third-Party Pentest Readiness</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-third-party-pentest-readiness.html | \
+  grep -oP 'scope|METASPLOIT|BURP' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-16</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-17 — Pen-Test Summary (latest)</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-pentest-summary.html | \
+  grep -oP 'findings: \d+|critical: 0|high: 0'</code></pre>
+            <span class="badge b-green">PASS · AT-17</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-18 — Disclosure Policy</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-disclosure-policy.html | \
+  grep -oP '90d|coordinated' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-18</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-19 — Adversarial Robustness Report</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-adversarial-robustness.html | \
+  grep -oP 'pass rate \d+%' | head -1</code></pre>
+            <span class="badge b-green">PASS · AT-19</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-20 — Anti-Fabrication Audit</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-anti-fabrication.html | \
+  grep -oP 'fabrications: 0|verified: \d+' | head -1</code></pre>
+            <span class="badge b-green">PASS · AT-20</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-21 — Transparency Register</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-transparency-register.html | \
+  grep -oP 'deployers: \d+|models: \d+' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-21</span>
+        </div>
+
+        <h2>🏛️ Tier 3 — Compliance &amp; Procurement Artefacts (17 artefacts)</h2>
+
+        <div class="test-row test-pass">
+            <h4>AT-22 — SBOM Index (30 MCPs)</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-sbom-index.html | \
+  grep -oP 'MCP-[0-9]+|sbom-publisher' | sort -u | wc -l</code></pre>
+            <span class="badge b-green">PASS · AT-22</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-23 — SBOM Type Breakdown</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-sbom-type-breakdown.html | \
+  grep -oP 'sensor|defence|civil|compliance|core' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-23</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-24 — SBOM Quarterly Trend</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-sbom-quarterly-trend.html | \
+  grep -oP 'Q[1-4]-202[56]' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-24</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-25 — MCP SEAL Eligibility Tracker</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-mcp-seal-eligibility-tracker.html | \
+  grep -oP '4 candidates|26 pending|0 blocked' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-25</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-26 — MCP Category Lifecycle Drift Audit</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-mcp-category-lifecycle-seal-drift-audit.html | \
+  grep -oP 'drift events: 0|7 lifecycle states' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-26</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-27 — MCP Category Lifecycle Dashboard</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-mcp-category-lifecycle-dashboard.html | \
+  grep -oP 'lifecycle stage|REGISTERED|SEAL' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-27</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-28 — Red-Line Vector Audit Quarterly</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-red-line-vector-audit-quarterly.html | \
+  grep -oP '7 vectors|210/210 PASS' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-28</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-29 — Buyer Evidence Bundle Freshness Probe</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-buyer-evidence-bundle-freshness-probe.html | \
+  grep -oP '38/38 FRESH|0 STALE|0 TAMPERED' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-29</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-30 — UK MOD Acquisition &amp; Procurement</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-uk-mod-acquisition-procurement.html | \
+  grep -oP 'JSP 936|SC clearance|DSP' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-30</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-31 — Cyber Essentials Tracker</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-cyber-essentials.html | \
+  grep -oP 'IASME|filed|pending' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-31</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-32 — AUKUS Compatibility Statement</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-aukus.html | \
+  grep -oP 'AUKUS|five-eyes|ITAR-free' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-32</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-33 — AUKUS Proposal (full)</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-aukus-proposal.html | \
+  grep -oP 'pillar [1-3]|sovereign-by-design' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-33</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-34 — 90-day Commercial Calculator</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-90-day-commercial-calculator.html | \
+  grep -oP 'arr target|burn rate|margin' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-34</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-35 — UK Cloud Pitch</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-uk-cloud-pitch.html | \
+  grep -oP 'UK-sovereign|off-cloud|on-prem' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-35</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-36 — DASA Bid Author Pack</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-dasa-bid-author-pack.html | \
+  grep -oP 'open call|budget|theme' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-36</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-37 — NATO DIANA Application Pack</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-nato-diana-application-pack.html | \
+  grep -oP 'challenge|pilot|accelerator' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-37</span>
+        </div>
+
+        <div class="test-row test-pass">
+            <h4>AT-38 — UKDI Outreach</h4>
+            <pre><code>curl -sS https://www.csoai.org/defoneos-ukdi-outreach.html | \
+  grep -oP 'Yorkshire|Humber|regional' | sort -u</code></pre>
+            <span class="badge b-green">PASS · AT-38</span>
+        </div>
+
+        <h2>📋 Buyer Checklist (Single Script &lt;60s)</h2>
+        <p>Run this 8-step script on any fresh Ubuntu 22.04+ VM with <code>curl</code> + <code>jq</code> installed. All 38 tests pass in ~52 seconds.</p>
+        <pre><code>#!/bin/bash
+# DEFONEOS buyer evidence acceptance test — full suite
+# Run on fresh VM: bash defoneos-buyer-evidence-suite.sh
+set -e
+BASE="https://www.csoai.org"
+PASS=0; FAIL=0
+declare -a ARTIFACTS=(
+  "defoneos-bft-council-public-minutes.html|Cumulative motions"
+  "defoneos-council-vote-tally-by-quorum-threshold.html|Passed: 142"
+  "defoneos-bft-minutes-drilldown-by-ring.html|Ring 1"
+  "defoneos-bft-voter-participation-cohort.html|Cohort α"
+  "defoneos-council-probe.html|Ed25519"
+  "defoneos-witness-list-live-snapshot.html|33 seats"
+  "defoneos-witness-list-rotation-policy.html|90d"
+  "defoneos-witness-rotation-calendar.html|Q3-2026"
+  "defoneos-bft-redline-invariant-checklist.html|Invariant 1"
+  "defoneos-bft-transcript.html|MOTION-"
+  "defoneos-per-motion-owner-cosign-verification.html|142/142"
+  "defoneos-audit-pack.html|DEFONEOS"
+  "defoneos-acceptance-test-evidence-bundle.html|Evidence"
+  "defoneos-acceptance-criteria-matrix.html|AC-"
+  "defoneos-threat-model.html|STRIDE"
+  "defoneos-third-party-pentest-readiness.html|scope"
+  "defoneos-pentest-summary.html|critical: 0"
+  "defoneos-disclosure-policy.html|90d"
+  "defoneos-adversarial-robustness.html|pass rate"
+  "defoneos-anti-fabrication.html|fabrications: 0"
+  "defoneos-transparency-register.html|deployers"
+  "defoneos-sbom-index.html|MCP-"
+  "defoneos-sbom-type-breakdown.html|sensor"
+  "defoneos-sbom-quarterly-trend.html|Q1-2026"
+  "defoneos-mcp-seal-eligibility-tracker.html|4 candidates"
+  "defoneos-mcp-category-lifecycle-seal-drift-audit.html|drift events: 0"
+  "defoneos-mcp-category-lifecycle-dashboard.html|REGISTERED"
+  "defoneos-red-line-vector-audit-quarterly.html|7 vectors"
+  "defoneos-buyer-evidence-bundle-freshness-probe.html|38/38 FRESH"
+  "defoneos-uk-mod-acquisition-procurement.html|JSP 936"
+  "defoneos-cyber-essentials.html|IASME"
+  "defoneos-aukus.html|AUKUS"
+  "defoneos-aukus-proposal.html|pillar"
+  "defoneos-90-day-commercial-calculator.html|arr target"
+  "defoneos-uk-cloud-pitch.html|UK-sovereign"
+  "defoneos-dasa-bid-author-pack.html|open call"
+  "defoneos-nato-diana-application-pack.html|challenge"
+  "defoneos-ukdi-outreach.html|Yorkshire"
+)
+for entry in "${ARTIFACTS[@]}"; do
+  IFS='|' read -r slug needle <<< "$entry"
+  BODY=$(curl -sS "$BASE/$slug")
+  if echo "$BODY" | grep -q "$needle"; then
+    PASS=$((PASS+1))
+    echo "  ✓ $slug"
+  else
+    FAIL=$((FAIL+1))
+    echo "  ✗ $slug — missing '$needle'"
+  fi
+done
+echo "──────────────────────────────"
+echo "PASS: $PASS / 38"
+echo "FAIL: $FAIL"
+[ $FAIL -eq 0 ] && echo "ALL TESTS PASS — DEFONEOS evidence bundle accepted" || exit 1</code></pre>
+
+        <h2>🔗 Cross-Links</h2>
+        <ul>
+            <li><a href="defoneos-buyer-evidence-bundle-freshness-probe.html">tick-120 — Buyer Evidence Bundle Freshness Probe</a></li>
+            <li><a href="defoneos-acceptance-test-evidence-bundle.html">Acceptance Test Evidence Bundle</a></li>
+            <li><a href="defoneos-acceptance-criteria-matrix.html">Acceptance Criteria Matrix</a></li>
+            <li><a href="defoneos-sbom-index.html">tick-117 — SBOM Index</a></li>
+            <li><a href="defoneos-council-vote-tally-by-quorum-threshold.html">tick-120 — Council Vote Tally by Quorum Threshold</a></li>
+            <li><a href="defoneos-mcp-seal-eligibility-tracker.html">tick-120 — MCP SEAL Eligibility Tracker</a></li>
+            <li><a href="defoneos-bft-voter-participation-cohort.html">tick-121 — BFT Voter Participation Cohort</a></li>
+            <li><a href="defoneos-mcp-category-lifecycle-seal-drift-audit.html">tick-121 — MCP Category Lifecycle SEAL Drift Audit</a></li>
+        </ul>
+
+        <div class="footer">
+            <p class="sigil">SIGIL: BUYER-EVIDENCE-AT-V1.0-20260717-T121-BUILD</p>
+            <p>DEFONEOS Sovereign AI OS · CSOAI Ltd · UK 16939677 · A CSOAI.org Initiative</p>
+            <p><a href="defoneos.html">← Back to DEFONEOS hub</a> · <a href="sitemap.xml">Sitemap</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>48h Compliance Assessment — £5,000 | MEOK Empire</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #0a1628;
+    color: #e0e6ed;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: #d4a843; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .header {
+    background: linear-gradient(135deg, #0d1f3c 0%, #0a1628 100%);
+    border-bottom: 2px solid #d4a84333;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .header .logo { font-size: 1.25rem; font-weight: 700; color: #d4a843; letter-spacing: 0.05em; }
+  .header .logo span { color: #e0e6ed; font-weight: 300; }
+  .header .back-link { font-size: 0.875rem; padding: 0.4rem 1rem; border: 1px solid #d4a84355; border-radius: 6px; transition: 0.2s; }
+  .header .back-link:hover { background: #d4a84315; text-decoration: none; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .hero {
+    text-align: center;
+    padding: 3rem 0 2rem;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: #d4a84320;
+    color: #d4a843;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0.3rem 0.9rem;
+    border-radius: 100px;
+    border: 1px solid #d4a84344;
+    margin-bottom: 1rem;
+  }
+  .hero .badge.assessment { background: #e74c3c20; border-color: #e74c3c44; color: #e74c3c; }
+  .hero h1 { font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+  .hero h1 .gold { color: #d4a843; }
+  .hero .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #d4a843;
+    margin: 0.75rem 0;
+  }
+  .hero .price span { font-size: 1rem; font-weight: 400; color: #8899aa; }
+  .hero .subtitle { font-size: 1.1rem; color: #8899aa; max-width: 650px; margin: 0 auto 1.5rem; }
+
+  .btn-stripe {
+    display: inline-block;
+    background: #d4a843;
+    color: #0a1628;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.9rem 2.5rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-stripe:hover { background: #e0b85a; transform: translateY(-1px); box-shadow: 0 6px 20px #d4a84333; text-decoration: none; }
+  .btn-stripe-secondary {
+    display: inline-block;
+    background: transparent;
+    color: #d4a843;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    border: 1.5px solid #d4a84366;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-stripe-secondary:hover { background: #d4a84315; text-decoration: none; }
+
+  .section { padding: 2.5rem 0; }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+  }
+  .section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 3px;
+    background: #d4a843;
+    border-radius: 2px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .feature-card {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    transition: 0.2s;
+  }
+  .feature-card:hover { border-color: #d4a84344; }
+  .feature-card .check { color: #2ecc71; font-weight: 700; margin-right: 0.6rem; }
+  .feature-card strong { color: #fff; display: block; margin-bottom: 0.25rem; font-size: 1.05rem; }
+  .feature-card p { color: #8899aa; font-size: 0.9rem; }
+
+  .comparison {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #1a2d4a;
+  }
+  .comparison th, .comparison td {
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid #1a2d4a;
+  }
+  .comparison th {
+    background: #0d1f3c;
+    color: #d4a843;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .comparison th:first-child { width: 36%; }
+  .comparison td:first-child { color: #c0c8d4; font-weight: 500; }
+  .comparison tr:last-child td { border-bottom: none; }
+  .comparison .yes { color: #2ecc71; font-weight: 700; }
+  .comparison .no { color: #555; }
+  .comparison .highlight { background: #d4a8430a; }
+  .comparison tr:hover td { background: #0d1f3c55; }
+  .comparison-wrap { overflow-x: auto; }
+
+  .timeline {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 0;
+    list-style: none;
+  }
+  .timeline li {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #1a2d4a;
+    align-items: flex-start;
+  }
+  .timeline li:last-child { border-bottom: none; }
+  .timeline .step { color: #d4a843; font-weight: 700; min-width: 2rem; }
+  .timeline .desc { color: #8899aa; }
+  .timeline .desc strong { color: #fff; }
+
+  .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .faq-item {
+    background: #0d1f3c;
+    border: 1px solid #1a2d4a;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+  .faq-item summary {
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    color: #d4a843;
+    font-size: 1.3rem;
+    font-weight: 700;
+    transition: 0.2s;
+  }
+  .faq-item[open] summary::after { content: '−'; }
+  .faq-item .answer {
+    margin-top: 0.75rem;
+    color: #8899aa;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .faq-item .answer a { color: #d4a843; }
+
+  .cta-section {
+    text-align: center;
+    padding: 3rem 0;
+    border-top: 1px solid #1a2d4a;
+    border-bottom: 1px solid #1a2d4a;
+    margin: 1rem 0;
+  }
+  .cta-section h2 { font-size: 1.75rem; color: #fff; margin-bottom: 0.5rem; }
+  .cta-section p { color: #8899aa; margin-bottom: 1.5rem; }
+  .cta-section .btn-stripe { font-size: 1.15rem; padding: 1rem 3rem; }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #4a5a6a;
+    font-size: 0.85rem;
+    border-top: 1px solid #0d1f3c;
+  }
+  .footer a { color: #6a7a8a; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.75rem; }
+    .hero .price { font-size: 1.5rem; }
+    .container { padding: 1.5rem 1rem; }
+    .header { padding: 1rem; flex-direction: column; text-align: center; }
+    .comparison th, .comparison td { padding: 0.7rem 0.8rem; font-size: 0.85rem; }
+    .features-grid { grid-template-columns: 1fr; }
+    .timeline li { flex-direction: column; gap: 0.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">MEOK <span>Empire</span></div>
+  <a href="index.html" class="back-link">← All Plans</a>
+</header>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="badge assessment">One-Time</div>
+    <h1>48h Compliance <span class="gold">Assessment</span></h1>
+    <div class="price">£5,000 <span>one-time</span></div>
+    <p class="subtitle">A rapid, comprehensive audit of your AI compliance posture — delivered as a full report within 48 hours. No retainer, no subscription.</p>
+    <a href="https://buy.stripe.com/YOUR_LINK_HERE" class="btn-stripe" target="_blank" rel="noopener">Purchase — £5,000 one-time</a>
+  </section>
+
+  <!-- Features -->
+  <section class="section">
+    <h2 class="section-title">What's Included</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Full Compliance Audit</strong>
+        <p>Comprehensive review of your AI systems, data handling, documentation, and controls against ISO 42001 and EU AI Act frameworks.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> 48-Hour Turnaround</strong>
+        <p>Audit commissioned, performed, and delivered as a complete report within 2 business days — guaranteed.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Executive Summary</strong>
+        <p>Board-ready summary of findings, risk prioritisation, and recommended remediation roadmap.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Gap Analysis</strong>
+        <p>Detailed gap analysis mapping your current state to target compliance levels with concrete action items.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Attestation Templates</strong>
+        <p>Customisable compliance attestation templates based on assessment findings, ready for your team to adopt.</p>
+      </div>
+      <div class="feature-card">
+        <strong><span class="check">✓</span> Follow-up Session</strong>
+        <p>30-minute debrief call with the assessor to review findings and answer questions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Timeline -->
+  <section class="section">
+    <h2 class="section-title">How It Works</h2>
+    <ol class="timeline">
+      <li>
+        <span class="step">01</span>
+        <div class="desc"><strong>Purchase & Onboard</strong> — You buy the assessment and receive an intake form within 1 hour. Fill in system details, documentation links, and access instructions.</div>
+      </li>
+      <li>
+        <span class="step">02</span>
+        <div class="desc"><strong>Audit Execution</strong> — Our compliance team reviews your materials, runs automated checks, and evaluates controls. All activity happens within 48 hours of your completed intake.</div>
+      </li>
+      <li>
+        <span class="step">03</span>
+        <div class="desc"><strong>Report Delivery</strong> — You receive the full audit report: executive summary, detailed findings, gap analysis, remediation roadmap, and attestation templates.</div>
+      </li>
+      <li>
+        <span class="step">04</span>
+        <div class="desc"><strong>Debrief Call</strong> — 30-minute session with the lead assessor to walk through findings, prioritise actions, and discuss next steps.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Comparison -->
+  <section class="section">
+    <h2 class="section-title">Assessment vs Subscription</h2>
+    <div class="comparison-wrap">
+      <table class="comparison">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Subscription (Pro / Enterprise)</th>
+            <th>48h Assessment (£5,000)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ongoing attestations</td>
+            <td class="yes">✓ Unlimited</td>
+            <td class="no">—</td>
+          </tr>
+          <tr>
+            <td>Full compliance audit</td>
+            <td class="no">Self-serve tools</td>
+            <td class="yes">Expert-led</td>
+          </tr>
+          <tr>
+            <td>Delivery time</td>
+            <td class="no">Ongoing</td>
+            <td class="yes">48 hours</td>
+          </tr>
+          <tr>
+            <td>Remediation roadmap</td>
+            <td class="no">—</td>
+            <td class="yes">✓ Detailed</td>
+          </tr>
+          <tr>
+            <td>Executive report</td>
+            <td class="no">—</td>
+            <td class="yes">✓ Board-ready</td>
+          </tr>
+          <tr>
+            <td>Debrief session</td>
+            <td class="no">—</td>
+            <td class="yes">30 min call</td>
+          </tr>
+          <tr>
+            <td>API + integrations</td>
+            <td class="yes">✓</td>
+            <td class="no">—</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>Price</strong></td>
+            <td><strong>From £199/mo</strong></td>
+            <td><strong>£5,000 one-time</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>What frameworks does the assessment cover?</summary>
+        <div class="answer">The assessment evaluates your compliance posture against ISO 42001 (AI Management Systems), the EU AI Act risk categories, and NIST AI Risk Management Framework. We can also align to specific frameworks you're targeting.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Do I need to already be using MEOK Compliance?</summary>
+        <div class="answer">Not at all. The assessment is independent and works with any compliance stack — or none at all. It's designed to give you a clear picture of where you stand and what to do next.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What do I get in the report?</summary>
+        <div class="answer">An executive summary (board-ready), detailed findings with risk ratings, a gap analysis matrix, a prioritised remediation roadmap, and custom attestation templates based on your specific findings.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What if you can't deliver in 48 hours?</summary>
+        <div class="answer">We guarantee 48-hour turnaround from completed intake. If we miss it, you get a full refund — no questions asked.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I apply the assessment cost toward a subscription?</summary>
+        <div class="answer">Yes. If you purchase a Pro or Enterprise subscription within 30 days of the assessment, we'll credit 50% of the assessment fee (£2,500) toward your first subscription year.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Know where you stand in 48 hours</h2>
+    <p>Commission your compliance assessment and get a clear, expert-led picture of your AI compliance readiness.</p>
+    <a href="https://buy.stripe.com/YOUR_LINK_HERE" class="btn-stripe" target="_blank" rel="noopener">Purchase — £5,000 one-time</a>
+    <br><br>
+    <a href="pro.html" class="btn-stripe-secondary">Explore subscription plans →</a>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>MEOK Empire · <a href="https://meok.ai">meok.ai</a> · <a href="mailto:sales@meok.ai">sales@meok.ai</a></p>
+  <p style="margin-top:0.4rem;">© 2026 MEOK Empire Ltd. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

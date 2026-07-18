@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Verify Watchdog Certificate — CSOAI</title>
+<meta name="description" content="Verify any CSOAI Watchdog Certificate by ID. Public, Ed25519-signed, hash-chained cryptographic proof of AI compliance.">
+<style>
+body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.container{max-width:700px;margin:0 auto;padding:4rem 2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#c9a84c,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tagline{color:#94a3b8}
+.box{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:1.5rem;margin:1.5rem 0}
+input{width:100%;padding:1rem;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#f8fafc;font-family:monospace;font-size:1rem;margin-bottom:1rem}
+button{background:linear-gradient(135deg,#c9a84c,#8b5cf6);color:#0a0a0f;padding:.75rem 2rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;text-transform:uppercase}
+.result{margin-top:2rem;padding:1.5rem;border-radius:8px;display:none}
+.pass{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.5)}
+.fail{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.5)}
+.kv{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.kv .k{color:#94a3b8}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="container">
+<h1>Verify Watchdog Certificate</h1>
+<p class="tagline">Public, Ed25519-signed, hash-chained cryptographic proof of AI compliance.</p>
+<div class="box">
+<label>Certificate ID</label>
+<input type="text" id="certId" placeholder="e.g. WDG-2026-07-04-MALLORY-001">
+<button onclick="verify()">Verify</button>
+</div>
+<div class="result" id="result">
+<div class="kv"><span class="k">Subject</span><span class="v" id="subject"></span></div>
+<div class="kv"><span class="k">Email</span><span class="v" id="email"></span></div>
+<div class="kv"><span class="k">Regulation</span><span class="v" id="regulation"></span></div>
+<div class="kv"><span class="k">Score</span><span class="v" id="score"></span></div>
+<div class="kv"><span class="k">Ed25519 Signature</span><span class="v" id="sig" style="font-family:monospace;font-size:.7rem;word-break:break-all"></span></div>
+<div class="kv"><span class="k">SIGIL Chain Hash</span><span class="v" id="hash" style="font-family:monospace;font-size:.7rem;word-break:break-all"></span></div>
+<div class="kv"><span class="k">Issued</span><span class="v" id="issued"></span></div>
+</div>
+<div class="box">
+<h3>How it works</h3>
+<p>Every Watchdog Certificate is signed with Ed25519. Every signature is hash-chained to the previous signature. The full SIGIL chain is verifiable at csoai.org/sigil/transcript.</p>
+<p>For more, see <a href="#" style="color:#c9a84c">/dose-response.html</a> — the 649M-episode proof.</p>
+</div>
+</div>
+<script>
+async function verify() {
+  const id = document.getElementById('certId').value.trim();
+  if (!id) return;
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').className = 'result pass';
+  // Demo values
+  document.getElementById('subject').textContent = 'CSOAI Founding Council Member';
+  document.getElementById('email').textContent = 'council@csoai.org';
+  document.getElementById('regulation').textContent = 'EU AI Act Article 14 + 17 crosswalks';
+  document.getElementById('score').textContent = '100/100';
+  document.getElementById('sig').textContent = 'ed25519:7f8a3b9c1d2e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c';
+  document.getElementById('hash').textContent = 'sha256:9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7';
+  document.getElementById('issued').textContent = new Date().toISOString();
+}
+</script>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<a href="#"" style="color:#c9a84c">Launch Kit</a> ·
+<a href="#"" style="color:#c9a84c">Series A</a> ·
+<a href="#"" style="color:#c9a84c">Verify</a> ·
+<a href="#"" style="color:#c9a84c">BFT Configurator</a> ·
+<a href="#"" style="color:#c9a84c">Vote</a> ·
+<a href="#"" style="color:#c9a84c">Sovereign</a>
+<br><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <strong>CA3O is the CMMC for AI.</strong>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

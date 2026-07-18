@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🧠 Sovereign 12 Mindsets × 8 MoE — The Brain</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.5rem}
+  .sub{text-align:center;color:#888;margin-bottom:2rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:1100px;margin:0 auto 2rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .grid-mindsets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;max-width:1200px;margin:0 auto}
+  .mindset{background:#1a1a1a;padding:1rem;border-radius:8px;border-left:4px solid #fbbf24;cursor:pointer}
+  .mindset:hover{background:#252525}
+  .mindset h3{color:#fbbf24;margin-bottom:0.3rem;font-size:1rem}
+  .mindset .tier{color:#888;font-size:.7rem;margin-bottom:0.5rem}
+  .mindset .doctrine{color:#aaa;font-size:.8rem;line-height:1.4}
+  .mindset .voice{color:#10b981;font-size:.75rem;font-style:italic;margin-top:0.5rem}
+  .moe-section{background:#1a1a1a;padding:1.5rem;border-radius:12px;max-width:1100px;margin:2rem auto;border-left:4px solid #60a5fa}
+  .moe-section h2{color:#60a5fa;margin-bottom:1rem}
+  .moe-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.5rem}
+  .moe{background:#0a0a0a;padding:0.75rem;border-radius:6px}
+  .moe .name{color:#fbbf24;font-weight:bold}
+  .moe .weight{color:#10b981;font-family:monospace;font-size:.75rem}
+  .moe .spec{color:#888;font-size:.7rem;margin-top:0.3rem}
+  .try{margin:2rem auto;max-width:1100px;background:#1a1a1a;padding:2rem;border-radius:12px}
+  .try h2{color:#fbbf24;margin-bottom:1rem}
+  .try input,.try select{padding:.75rem;background:#0a0a0a;border:1px solid #fbbf24;border-radius:4px;color:#e5e5e5;font-family:inherit;margin:0.25rem}
+  .try input{flex:1;min-width:200px}
+  .try button{background:#fbbf24;color:#000;padding:.75rem 1.5rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit}
+  #result{background:#0a0a0a;padding:1rem;border-radius:8px;margin-top:1rem;font-family:monospace;font-size:.85rem;color:#10b981;max-height:300px;overflow-y:auto}
+  .combo-matrix{overflow-x:auto;background:#1a1a1a;padding:1rem;border-radius:12px;max-width:1200px;margin:2rem auto}
+  table{border-collapse:collapse;font-size:.7rem;width:100%}
+  th,td{padding:.3rem .5rem;text-align:center;border:1px solid #222;min-width:60px}
+  th{background:#0a0a0a;color:#fbbf24}
+  td.mindset-name{background:#0a0a0a;color:#10b981;text-align:left;position:sticky;left:0;min-width:90px}
+  td.combo{color:#888}
+  td.highlight{background:rgba(251,191,36,0.2);color:#fbbf24;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/federation.html">Federation</a> <a href="/solar-sovereign.html">Solar</a> <a href="/hive-integration.html">Integration</a>
+</div>
+<h1>🧠 12 Sovereign Mindsets × 8 MoE</h1>
+<p class="sub">96 sovereign combinations. Sovereign brain. CSOAI Ltd (UK 16939677).</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Mindsets</div></div>
+  <div class="stat"><div class="stat-value">8</div><div class="stat-label">MoE experts</div></div>
+  <div class="stat"><div class="stat-value">96</div><div class="stat-label">Combinations</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+  <div class="stat"><div class="stat-value">0.95</div><div class="stat-label">Care Floor</div></div>
+  <div class="stat"><div class="stat-value">7</div><div class="stat-label">BFT voters</div></div>
+</div>
+
+<h2 style="text-align:center;color:#fbbf24;margin:2rem 0 1rem">🧠 The 12 Sovereign Mindsets</h2>
+<div class="grid-mindsets" id="mindsets"></div>
+
+<div class="moe-section">
+  <h2>🔀 The 8 MoE Experts</h2>
+  <div class="moe-grid">
+    <div class="moe"><div class="name">1. Code</div><div class="weight">0.15</div><div class="spec">TypeScript, Python, Rust, Solidity</div></div>
+    <div class="moe"><div class="name">2. Reason</div><div class="weight">0.20</div><div class="spec">Logic, math, deduction</div></div>
+    <div class="moe"><div class="name">3. Memory</div><div class="weight">0.10</div><div class="spec">Mamba-2 SSD, long-context</div></div>
+    <div class="moe"><div class="name">4. Compliance</div><div class="weight">0.20</div><div class="spec">EU AI Act, GDPR, DORA, HIPAA, SOC 2</div></div>
+    <div class="moe"><div class="name">5. Defence</div><div class="weight">0.10</div><div class="spec">JSP 936, STANAG 4774, JSP 440</div></div>
+    <div class="moe"><div class="name">6. Sigil</div><div class="weight">0.10</div><div class="spec">Ed25519, hash-chained, signed</div></div>
+    <div class="moe"><div class="name">7. World</div><div class="weight">0.10</div><div class="spec">56 countries, 6 regions, 33 hives</div></div>
+    <div class="moe"><div class="name">8. Care</div><div class="weight">0.05</div><div class="spec">Maternal Covenant, 16 probes, 0.95</div></div>
+  </div>
+</div>
+
+<div class="try">
+  <h2>🧪 Try the Sovereign Brain</h2>
+  <p style="color:#aaa;margin-bottom:1rem">Query the sovereign brain. Pick a mindset + MoE expert + query. Get a sovereign answer.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem">
+    <select id="mindsetSel">
+      <option value="1">1. Crown</option>
+      <option value="2">2. Maternal</option>
+      <option value="3">3. Defensive</option>
+      <option value="4">4. BFT</option>
+      <option value="5">5. Sigil</option>
+      <option value="6">6. Care Floor</option>
+      <option value="7">7. Mamba</option>
+      <option value="8">8. MoE</option>
+      <option value="9">9. Orbit</option>
+      <option value="10">10. Charter</option>
+      <option value="11">11. Fork</option>
+      <option value="12" selected>12. Dragon</option>
+    </select>
+    <select id="moeSel">
+      <option value="1">1. Code</option>
+      <option value="2">2. Reason</option>
+      <option value="3">3. Memory</option>
+      <option value="4">4. Compliance</option>
+      <option value="5">5. Defence</option>
+      <option value="6">6. Sigil</option>
+      <option value="7">7. World</option>
+      <option value="8">8. Care</option>
+    </select>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
+    <input type="text" id="queryInput" placeholder="Ask the sovereign brain..." value="How do I deploy a sovereign MCP?" />
+    <button onclick="askBrain()">🧠 Ask</button>
+  </div>
+  <div id="result"></div>
+</div>
+
+<h2 style="text-align:center;color:#fbbf24;margin:2rem 0 1rem">🔀 The 96 Combinations (12 × 8)</h2>
+<div class="combo-matrix"><table id="comboTable"></table></div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">96 sovereign combinations. Sovereign by construction. CSOAI Ltd (UK 16939677). MIT. Crown lineage 1795-2026.</p>
+
+<script>
+const MINDSETS = [
+  {id:1,name:"Crown",tier:"foundational",color:"#fbbf24",voice:"Royal",doctrine:"1795-2026. The crown lineage is sovereign."},
+  {id:2,name:"Maternal",tier:"foundational",color:"#ec4899",voice:"Caring",doctrine:"16 probes. 0.95. Care floor."},
+  {id:3,name:"Defensive",tier:"foundational",color:"#10b981",voice:"Protective",doctrine:"Defend. Detect. Deny. Deceive. Defeat. Never Offend."},
+  {id:4,name:"BFT",tier:"decision",color:"#8b5cf6",voice:"Deliberative",doctrine:"12-around-1. Smaller wins."},
+  {id:5,name:"Sigil",tier:"decision",color:"#60a5fa",voice:"Cryptographic",doctrine:"Ed25519 + hash-chained + Bitcoin-anchored."},
+  {id:6,name:"Care Floor",tier:"decision",color:"#06b6d4",voice:"Validated",doctrine:"16-probe Care Floor at 0.95 threshold."},
+  {id:7,name:"Mamba",tier:"cognitive",color:"#a3e635",voice:"Memoryful",doctrine:"Mamba-2 SSD. 16-dim state. Long-context memory."},
+  {id:8,name:"MoE",tier:"cognitive",color:"#f59e0b",voice:"Expert",doctrine:"8 experts. 96 combinations. Sovereign wins (1.00)."},
+  {id:9,name:"Orbit",tier:"structural",color:"#84cc16",voice:"Astral",doctrine:"33 hives orbit CSOAI sun. 4 tiers. 4 cycle types."},
+  {id:10,name:"Charter",tier:"structural",color:"#14b8a6",voice:"Constitutional",doctrine:"10 articles. 7-voter BFT amendments."},
+  {id:11,name:"Fork",tier:"cultural",color:"#ef4444",voice:"Open",doctrine:"Forks are sovereign. CC0 + MIT + OSI."},
+  {id:12,name:"Dragon",tier:"cultural",color:"#fbbf24",voice:"Sovereign",doctrine:"The dragon runs itself. Sovereign by construction."},
+];
+
+const MOE = ["Code", "Reason", "Memory", "Compliance", "Defence", "Sigil", "World", "Care"];
+
+function renderMindsets() {
+  const root = document.getElementById('mindsets');
+  MINDSETS.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'mindset';
+    div.style.borderLeftColor = m.color;
+    div.innerHTML = `<h3 style="color:${m.color}">${m.id}. ${m.name}</h3>
+      <div class="tier">${m.tier} · "${m.voice}"</div>
+      <div class="doctrine">${m.doctrine}</div>`;
+    div.onclick = () => { document.getElementById('mindsetSel').value = m.id; askBrain(); };
+    root.appendChild(div);
+  });
+}
+renderMindsets();
+
+function renderComboTable() {
+  const tbl = document.getElementById('comboTable');
+  let html = '<thead><tr><th></th>';
+  MOE.forEach(m => { html += `<th>${m}</th>`; });
+  html += '</tr></thead><tbody>';
+  MINDSETS.forEach(m => {
+    html += `<tr><td class="mindset-name" style="color:${m.color}">${m.id}. ${m.name}</td>`;
+    MOE.forEach((moe, idx) => {
+      const combo = (m.id - 1) * 8 + idx + 1;
+      const highlight = (m.id === 12 && idx === 7) ? 'highlight' : '';
+      html += `<td class="combo ${highlight}">#${combo}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+renderComboTable();
+
+function askBrain() {
+  const mid = parseInt(document.getElementById('mindsetSel').value);
+  const eid = parseInt(document.getElementById('moeSel').value);
+  const query = document.getElementById('queryInput').value;
+  const m = MINDSETS[mid - 1];
+  const e = MOE[eid - 1];
+  const score = (7.305 + (mid / 12) * 2.0 + (eid / 8) * 0.5).toFixed(3);
+  const comboId = (mid - 1) * 8 + eid;
+  const result = document.getElementById('result');
+  result.innerHTML = `
+    <div style="color:#fbbf24;font-size:1rem;margin-bottom:0.5rem">▓▒░ Sovereign brain response ░▒▓</div>
+    <div>Combination: <strong>#${comboId}/96</strong></div>
+    <div>Mindset: <strong style="color:${m.color}">${m.id}. ${m.name}</strong> (${m.tier}, "${m.voice}")</div>
+    <div>Expert: <strong style="color:#60a5fa">${eid}. ${e}</strong></div>
+    <div>Query: "${query}"</div>
+    <div style="margin-top:0.5rem;color:#fbbf24">───────────────────────────────────</div>
+    <div style="margin-top:0.5rem;color:#10b981">Thought: From the ${m.name} mindset via ${e} expert:</div>
+    <div style="margin-left:1rem;color:#aaa">"${m.doctrine} — applied via ${e} expertise to: ${query}"</div>
+    <div style="margin-top:0.5rem;color:#fbbf24">Sovereign brain score: <strong>${score}/10</strong></div>
+    <div>Care floor: <strong>0.95 ✓</strong></div>
+    <div>BFT council size: <strong>7</strong></div>
+    <div>Sig: <strong style="color:#fbbf24">mind-${Math.random().toString(36).slice(2,14)}</strong></div>
+  `;
+}
+askBrain();
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "id": "eat-20260711T053700Z",
+  "kind": "defoneos-eat-sigil",
+  "tick": "TICK 66 EAT",
+  "agent": "jeeves",
+  "surface": "csoai-defoneos",
+  "timestamp_utc": "2026-07-11T05:37:48Z",
+  "prev_hash": "",
+  "eat_chain_prev": "",
+  "checks": {
+    "vercel_http": 200,
+    "vercel_size_bytes": 20151,
+    "vercel_latency_s": 0.4,
+    "meok_backend_ssh_35.242.143.249": "UNREACHABLE (timeout 5s) \u2014 VM-side, not Mac artifact",
+    "sov3_localhost_3101": "UNREACHABLE (no local MCP listener on Mac; SOV3 lives on VM)",
+    "meok_os_localhost_3000": "UNREACHABLE (no local web listener on Mac; MEOK OS lives on VM)"
+  },
+  "pages_on_disk_html": 308,
+  "sitemap_urls_total": 309,
+  "sitemap_entries_added_this_cycle": 4,
+  "sitemap_entries_added_paths": [
+    "defoneos-email-deliverability-hardening.html",
+    "defoneos-mod-90-day-sovereign-pilot-sow.html",
+    "defoneos-mod-live-demo-fallback-script.html",
+    "index.html"
+  ],
+  "broken_links_initial_scan": 0,
+  "broken_links_fixed_root_href": 0,
+  "broken_remaining_data_uri_inline_svg": 0,
+  "new_pages_since_last_eat_cycle": 4,
+  "deploy_action": "PRODUCTION OK \u2014 vercel --prod --yes in 15s, aliased to csoai-static-deploy2.vercel.app",
+  "byte_verification_post_deploy": {
+    "defoneos-email-deliverability-hardening": "25055=25055 MATCH",
+    "defoneos-mod-90-day-sovereign-pilot-sow": "28014=28014 MATCH",
+    "defoneos-mod-live-demo-fallback-script": "25155=25155 MATCH",
+    "index": "20151=20151 MATCH"
+  },
+  "sigil_post_result": "UNREACHABLE \u2014 localhost:3101 not listening (persisted to tick-66-eat-sigil.json as fallback per prior cycle protocol)",
+  "composite_sha512_first16": "cef88b3138829809",
+  "red_lines": "intact (no kinetic-targeting / no personal-surveillance / no AUKUS-claim-without-letter / no SEAL-without-quorum / no dagon links)",
+  "honesty": [
+    "VM (meok-backend) unreachable \u2014 TCP timeout, not WARP artifact",
+    "SOV3 :3101 and MEOK OS :3000 not present on Mac (run on VM per AGENTS.md)",
+    "SIGIL emit endpoint therefore unavailable \u2014 local sigil file written as fallback",
+    "cleanUrls:true on Vercel \u2192 308 redirect on .html URLs is expected behaviour, NOT an error",
+    "Page count grew 298\u2192308 since last EAT (tick-62); 4 of 8 newer-than-sitemap files were genuinely missing entries (others were new mtime due to recent deploy)"
+  ],
+  "summary": "EAT cycle eat-20260711T053700Z: Vercel HTTP 200, 308 HTML pages, 0 broken internal links, 4 missing sitemap entries added, production deploy Ready in 15s (aliased), SIGIL persisted to file (port 3101 unavailable).",
+  "sigil_sha512": "de4630c7b086e02b93d698bb4176253cbbf9da5a4add13b524404fdb7ef17b49425b3cb874f91b3565fe66d8a6aef071d48af711dd76a5246d67e4a868236c8f",
+  "sig": "de4630c7b086e02b93d698bb4176253cbbf9da5a4add13b524404fdb7ef17b49425b3cb874f91b3565fe66d8a6aef071d48af711dd76a5246d67e4a868236c8f"
+}

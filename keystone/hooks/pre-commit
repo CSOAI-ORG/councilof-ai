@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# MEOK Keystone global pre-commit secret guard.
+# Blocks a commit if staged changes contain real-length live credentials.
+# Uses gitleaks if installed; otherwise a regex fallback covering the patterns
+# that caused the 2026-06-17 public-key incident.
+set -uo pipefail
+
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks protect --staged --redact -q; then
+    echo "🛑 keystone: gitleaks found a secret in staged changes — commit blocked." >&2
+    echo "   Move it to the keystone:  pbpaste | keystone set NAME   then reference it, don't commit it." >&2
+    exit 1
+  fi
+  exit 0
+fi
+
+# ── regex fallback (no gitleaks) ──────────────────────────────────────────
+PAT='sk_live_[A-Za-z0-9]{40,}|rk_live_[A-Za-z0-9]{40,}|whsec_[A-Za-z0-9]{20,}|re_[A-Za-z0-9]{25,}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{50,}|AIza[A-Za-z0-9_-]{30,}|-----BEGIN (RSA|EC|OPENSSH|PRIVATE) KEY-----'
+hits="$(git diff --cached --no-color | grep -nE "^\+" | grep -E "$PAT" || true)"
+if [ -n "$hits" ]; then
+  echo "🛑 keystone: a live-looking secret is staged — commit blocked." >&2
+  echo "   Offending pattern(s) detected. Put the secret in the keystone instead:" >&2
+  echo "     pbpaste | keystone set NAME" >&2
+  echo "   To override (NOT recommended):  git commit --no-verify" >&2
+  exit 1
+fi
+exit 0

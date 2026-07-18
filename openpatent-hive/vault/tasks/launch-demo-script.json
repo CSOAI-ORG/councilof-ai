@@ -1,0 +1,7 @@
+{
+  "id": "launch-demo-script",
+  "prompt": "Write a 3-minute demo video script (8 scenes, 60-90 sec each) for openpatent.ai. Each scene: visual (what the viewer sees), voiceover (what the narrator says), text overlay. Show: 1) hero scene with the 6-layer disclosure explanation, 2) live disclosure flow (typing → SHA-3/512 → HMAC → OTS → Bitcoin → chain receipt), 3) BFT council review in real-time, 4) verify.openpatent.ai page, 5) IP boutique use case, 6) government/defense use case, 7) pricing tier comparison, 8) CTA. Use DEFONEOS mythic voice. Return ONLY JSON: {scenes:[{scene:int, duration_sec:int, visual:string, voiceover:string, text_overlay:string}]}.",
+  "max_tokens": 1200,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

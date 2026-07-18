@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Property - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/sovereignty/">sovereignty</a> / property</div>
+<h1>Sovereign Property</h1>
+<p class="tagline">What a sovereign system owns — the four estates.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>A <strong>Sovereign Property</strong> is one of four estates that any sovereign system must own directly, not delegate to a non-sovereign intermediary. They are: (1) Data, (2) Keys, (3) Compute, (4) Jurisdiction. Ownership means cryptographically enforceable, auditable in real time, and revocable by the principal.</p>
+
+<h2>The Four Estates</h2>
+
+<h3>1. Data</h3>
+<p>The raw bytes, embeddings, and metadata that constitute the principal's information. Sovereign ownership of data requires: (a) the ability to export the complete dataset in a portable format at any time, (b) the right to be forgotten within 30 days, (c) cryptographic integrity proof (SIGIL hash-chained), (d) access logs that the principal can read. CSOAI's MEOK substrate satisfies all four via the SIGIL chain (see <a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a>).</p>
+
+<h3>2. Keys</h3>
+<p>The cryptographic material that proves identity and signs operations. Sovereign key ownership means: (a) the principal holds the Ed25519 or PQC private key, not the cloud provider, (b) rotation is governed by the principal (90-day cycle by default — see <a href="/wiki/cryptography/rotation.html">Key Rotation</a>), (c) post-quantum upgrade path (ML-DSA-65, ML-KEM-768 — see <a href="/wiki/cryptography/pqc-ml-dsa-65.html">ML-DSA-65</a> and <a href="/wiki/cryptography/pqc-ml-kem-768.html">ML-KEM-768</a>), (d) multi-region key escrow under the principal's control only.</p>
+
+<h3>3. Compute</h3>
+<p>The CPU/GPU/TPU cycles that process the data. Sovereign compute ownership means: (a) the runtime is open-source and auditable, (b) no opaque third-party process can read intermediate states, (c) the principal can pause, migrate, or destroy the compute at will, (d) the SIGIL chain records every invocation. CSOAI's DORADO 1-click switch (see <a href="/wiki/architecture/dorado-1click.html">DORADO 1-click</a>) implements (c) at the infrastructure layer.</p>
+
+<h3>4. Jurisdiction</h3>
+<p>The legal territory whose law governs the data. Sovereign jurisdiction ownership means: (a) the principal knows which courts can compel disclosure, (b) cross-border transfers are pre-approved by the principal, (c) data residency is enforced at the SIGIL chain layer, (d) the principal can migrate to a different jurisdiction (e.g., UK→EU) without data loss. See the eight sovereign realms: <a href="/wiki/realms/">Realms</a>.</p>
+
+<h2>Property vs. Promise</h2>
+<p>A <em>promise</em> is a contractual assurance. A <em>property</em> is a mathematical guarantee. Sovereign Property is the latter — it cannot be silently revoked, cannot be subverted by a foreign court order, and cannot be unilaterally changed by the cloud provider. This is the central argument of <a href="/wiki/sovereignty/promise-vs-property.html">Promise vs Property</a>.</p>
+
+<h2>Historical Roots</h2>
+<p>The four-estate model draws on the medieval doctrine of <em>dominium</em> (full ownership) as distinguished from <em>usus</em> (mere use). A tenant has <em>usus</em> over land; a sovereign has <em>dominium</em>. CSOAI reinterprets this in digital terms: most cloud contracts grant <em>usus</em>; the Sovereign Property model asserts <em>dominium</em>.</p>
+
+<h2>Modern Implementation</h2>
+<p>In SOV3: the four estates are exposed as tools <code>sov_dorado_data_export</code>, <code>sov_did_create</code>, <code>sov_dorado_switch</code>, and <code>sov_dorado_prove_sovereignty</code>. The CSOAI Charter's Article 4 codifies the four-estate rule.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/sovereignty/principle.html">Principle</a></li>
+<li><a href="/wiki/sovereignty/promise-vs-property.html">Promise vs Property</a></li>
+<li><a href="/wiki/cryptography/anchor.html">Anchor</a></li>
+<li><a href="/wiki/architecture/dorado-1click.html">DORADO 1-click</a></li>
+<li><a href="/wiki/realms/">Realms</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

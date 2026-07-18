@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Sovereign TLS Pinning Specification — HPKE-secured mTLS with Ed25519 certificate pinning, sovereign CA, and certificate transparency log on SIGIL ledger. Rejects US CAs, MITM proxies, and CLOUD Act exposure.">
+<meta property="og:title" content="DEFONEOS · Sovereign TLS Pinning Specification">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · Sovereign TLS Pinning Specification</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#1a0f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4.5vw,3rem);background:linear-gradient(135deg,#fb7185 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.83rem;margin:1rem 0}
+.spec-doc th{background:rgba(251,113,133,.08);color:#fb7185;padding:.6rem .7rem;text-align:left;border-bottom:2px solid rgba(251,113,133,.2)}
+.spec-doc td{padding:.5rem .7rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.spec-doc .warn{background:rgba(251,113,133,.08);border-left:3px solid #fb7185;padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.spec-doc .ok{background:rgba(74,222,128,.08);border-left:3px solid #4ade80;padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.arch-example{font-family:'SF Mono','JetBrains Mono',monospace;font-size:.8rem;line-height:1.6;background:var(--bg2,#14181f);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1rem 0;color:var(--muted2);overflow-x:auto;white-space:pre}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:1.6rem;font-weight:900;color:#fb7185}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="sovereign-identity-attestation-spec.html">Identity</a>
+    <a href="sigil-ledger-specification.html">SIGIL</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>Sovereign TLS Pinning Specification</h1>
+  <p class="tagline">HPKE-secured mTLS with Ed25519 certificate pinning and a sovereign-only Certificate Authority. Certificate transparency log on the SIGIL ledger. Zero US CA dependency. Zero CLOUD Act exposure. NCSC SC-01 CAF B3 compliant.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">0</div><div class="lbl">US CAs</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">Pin Strategies</div></div>
+    <div class="stat"><div class="num">90d</div><div class="lbl">Cert Rotation</div></div>
+    <div class="stat"><div class="num">7yr</div><div class="lbl">CT Log Retention</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2>1. Why Sovereign TLS Pinning?</h2>
+<p>Conventional TLS relies on the WebPKI: Let's Encrypt (US 501c3), DigiCert (US private), Sectigo (US private), Google Trust Services (US), and dozens of other CAs all subject to US jurisdiction. For a UK Ministry of Defence or NHS deployment, every TLS handshake presents the peer's certificate to a chain that ultimately roots in a US CA. This creates CLOUD Act exposure on every connection and allows nation-state attackers with US-CA coercion to forge certificates for MITM.</p>
+<p>DEFONEOS operates its own sovereign Certificate Authority on UK-sovereign hardware (Oracle UK-South + MacBook M4 Pro Secure Enclave + GCHQ-certified cluster), with Ed25519-based certificate pinning at every endpoint, and a certificate transparency log recorded on the SIGIL ledger. The WebPKI is rejected entirely. Every TLS handshake is between two DEFONEOS nodes whose cert chains terminate in the sovereign CA root.</p>
+<div class="note"><strong>Sovereignty invariant:</strong> No DEFONEOS endpoint trusts a WebPKI CA. No TLS handshake depends on a non-UK CA root. No certificate is issued by or verifiable through a US-incorporated authority.</div>
+</section>
+
+<section>
+<h2>2. Sovereign CA Architecture</h2>
+<h3>Root CA (offline, air-gapped)</h3>
+<p>The DEFONEOS Root CA lives on an offline encrypted USB drive in a UK physical safe, never connected to any network. The Root CA has a single Ed25519 key pair (public key distributed to all DEFONEOS nodes as a trust anchor; private key never leaves the USB). Root CA validity: 10 years. Rotation requires BFT supermajority 27/33 plus human-owner witness and BFT witness ceremony.</p>
+<h3>Intermediate CAs (online, BFT-gated)</h3>
+<p>Three Intermediate CAs operate online: <code>DEFONEOS-Ring0-ICA</code> for sovereign MCPs, <code>DEFONEOS-Ring1-ICA</code> for defence sensors, <code>DEFONEOS-Ring2-ICA</code> for civil open-data MCPs. Each Intermediate CA has a 1-year validity and signs end-entity certificates. Intermediate rotation is automated every 90 days with SIGIL-anchored evidence.</p>
+<h3>End-Entity Certificates (per-node)</h3>
+<p>Each DEFONEOS node (MacBook, Oracle VM, GCHQ cluster node, BT Sovereign ring node) receives a per-node end-entity certificate bound to: node ID, ring (0/1/2), Ed25519 public key, MAC address, attestation token, valid-from/valid-to. Certificates are valid 30 days and rotate every 30 days via automated renewal.</p>
+<pre class="arch-example">{
+  "version": 3,
+  "subject": "CN=defoneos-m4pro-7842,O=DEFONEOS,L=Oracle-UK-South,C=GB",
+  "ring": 0,
+  "node_id": "ed25519:7842:ab3f...",
+  "validity": {"not_before": "2026-07-15T00:00:00Z", "not_after": "2026-08-14T00:00:00Z"},
+  "public_key": {
+    "algorithm": "Ed25519",
+    "value": "MCowBQYDK2VwAyEAGb9ECWmEzf6FQbrBZ9w7lshQhqowtrbLDFw4rXAxZuE="
+  },
+  "attestation_token": "ed25519:secure-enclave:...",
+  "issuer": "DEFONEOS-Ring0-ICA",
+  "signature_algorithm": "Ed25519",
+  "signature": "0x9f3a8b7c2d..."
+}</pre>
+</section>
+
+<section>
+<h2>3. Three Pin Strategies</h2>
+<h3>Pin Strategy 1: SPKI Pinning (SubjectPublicKeyInfo hash)</h3>
+<p>Each DEFONEOS endpoint pins the SPKI hash of the peer's public key. Even if the certificate is re-issued (new validity, new serial), the same Ed25519 key produces the same SPKI hash and the pin is preserved. SPKI pinning is the recommended primary strategy. Pin hash format: SHA-256 of DER-encoded SubjectPublicKeyInfo, base64 encoded.</p>
+<h3>Pin Strategy 2: Full-Certificate Pinning (SHA-256 of DER)</h3>
+<p>Each endpoint pins the full certificate SHA-256 hash. This is the strictest strategy — any re-issuance (even with same key) breaks the pin and requires pin update. Used only for the most sensitive cross-region links (e.g., MacBook → Oracle UK-South BFT gateway). Pin update requires BFT quorum and SIGIL emission.</p>
+<h3>Pin Strategy 3: TUF-style Delegated Pinning</h3>
+<p>For federation with peer DEFONEOS operators, pins are managed via a TUF (The Update Framework) repository. Each peer operator signs a delegation chain with Ed25519, and pin updates roll forward through the chain. This allows safe pin rotation without manual coordination. TUF repository is replicated to all peer operators via the federation discovery protocol.</p>
+</section>
+
+<section>
+<h2>4. HPKE for Application-Layer Encryption</h2>
+<p>TLS 1.3 mTLS provides transport-layer encryption. For application-layer encryption of MCP request/response payloads (defence-in-depth against TLS termination at intermediaries), DEFONEOS uses HPKE (Hybrid Public Key Encryption, RFC 9180) with X25519 + HKDF-SHA256 + ChaCha20-Poly1305. Each MCP request payload is HPKE-sealed to the peer's HPKE public key before being passed to the TLS layer.</p>
+<p>HPKE key pairs are distinct from TLS key pairs and rotate on a different schedule (per-request nonces with key rotation every 1000 requests). HPKE ensures that even if TLS is terminated (e.g., at a load balancer that re-encrypts), the application payload remains encrypted end-to-end.</p>
+<div class="note"><strong>Threat model note:</strong> HPKE mitigates TLS termination at intermediaries (reverse proxies, load balancers, traffic-inspection appliances). Even with full TLS MITM capability, the attacker sees ciphertext only.</div>
+</section>
+
+<section>
+<h2>5. Certificate Transparency on SIGIL</h2>
+<p>Every certificate issued by a DEFONEOS Intermediate CA is logged to the SIGIL ledger within 5 seconds of issuance. The CT log entry includes: certificate serial, subject, issuer, valid-from/valid-to, SPKI hash, ring, issuing Intermediate CA signature, and timestamp. CT log entries are append-only, Merkle-anchored, and replicated to all DEFONEOS nodes.</p>
+<p>Monitors (per-node CT-verification agents) check the CT log for unauthorized certificate issuance. If a certificate appears in the log that was not expected (e.g., a new certificate for a node that is currently in maintenance), the monitor emits a SIGIL red-line alert and the BFT council is auto-paged.</p>
+<pre class="arch-example">{
+  "ct_entry_id": "ct-2026-07-15-7842-001",
+  "version": 1,
+  "certificate_serial": "0x9f3a8b7c2d1e0f",
+  "subject": "CN=defoneos-m4pro-7842,O=DEFONEOS",
+  "issuer": "CN=DEFONEOS-Ring0-ICA,O=DEFONEOS",
+  "not_before": "2026-07-15T00:00:00Z",
+  "not_after": "2026-08-14T00:00:00Z",
+  "spki_sha256": "VKZ9YvhKjP3z4eQ8M...",
+  "ring": 0,
+  "issuing_ca_signature": "ed25519:0x9f3a8b7c2d...",
+  "sigil_receipt": "sigil_ct_logged_v1:9f3a8b7c...",
+  "merkle_leaf_index": 47821,
+  "merkle_root": "0x7b2e...",
+  "timestamp": "2026-07-15T00:00:05Z"
+}</pre>
+</section>
+
+<section>
+<h2>6. Certificate Lifecycle &amp; Rotation</h2>
+<table>
+<thead><tr><th>Stage</th><th>Duration</th><th>Trigger</th><th>SIGIL Emission</th></tr></thead>
+<tbody>
+<tr><td>Issuance</td><td>≤5 sec</td><td>Node bootstrap or renewal</td><td><code>cert_issued</code></td></tr>
+<tr><td>Distribution</td><td>≤30 sec</td><td>Push to all nodes + CT log</td><td><code>cert_distributed</code></td></tr>
+<tr><td>Active</td><td>30 days</td><td>—</td><td>health probes daily</td></tr>
+<tr><td>Renewal</td><td>T-7 days before expiry</td><td>Auto-renewal daemon</td><td><code>cert_renewed</code></td></tr>
+<tr><td>Revocation</td><td>≤60 sec</td><td>Compromise / quarantine / incident</td><td><code>cert_revoked</code></td></tr>
+<tr><td>CRL publication</td><td>≤60 sec</td><td>Auto-publish to SIGIL + peer-federation</td><td><code>crl_published</code></td></tr>
+<tr><td>Archival</td><td>7 years</td><td>CT log retention</td><td><code>cert_archived</code></td></tr>
+</tbody>
+</table>
+<p>Certificate Revocation List (CRL) is published to the SIGIL ledger every 60 seconds and replicated to peer DEFONEOS operators via the federation discovery protocol. OCSP stapling is used for high-availability revocation checks; if OCSP is unavailable, CRL fallback to the SIGIL ledger.</p>
+</section>
+
+<section>
+<h2>7. BFT-Gated Root CA Operations</h2>
+<p>Root CA operations (issuance of new Intermediate CA, root key rotation, emergency revocation) require BFT supermajority 27/33. Daily Intermediate CA operations (end-entity issuance, routine renewal) require 17/33 BFT approval or automated via the on-call agent with Friday BFT ratification. All Root CA operations emit a SIGIL receipt with the full BFT vote record.</p>
+<h3>BFT-Gated Operations</h3>
+<table>
+<thead><tr><th>Operation</th><th>Quorum</th><th>Use Case</th></tr></thead>
+<tbody>
+<tr><td>Root CA key rotation</td><td>27/33 + human witness</td><td>10-year cycle or compromise</td></tr>
+<tr><td>Intermediate CA issuance</td><td>23/33</td><td>Adding new ring / new deployment</td></tr>
+<tr><td>Emergency revocation</td><td>23/33</td><td>Compromise / SEV1 incident</td></tr>
+<tr><td>Routine end-entity issuance</td><td>17/33 (or auto)</td><td>Node bootstrap / renewal</td></tr>
+<tr><td>CRL publication</td><td>auto</td><td>Every 60 sec + on-revocation</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>8. Anti-Patterns (Immediate Quarantine)</h2>
+<ol>
+<li><strong>Trusting WebPKI CAs.</strong> US-incorporated CAs (Let's Encrypt, DigiCert, Sectigo, Google Trust Services) are rejected. Endpoints configured to trust WebPKI are quarantined as compromised.</li>
+<li><strong>Skipping CT logging.</strong> Any certificate issued without a SIGIL CT log entry is treated as unauthorized and triggers BFT emergency session.</li>
+<li><strong>Using RSA keys for new certificates.</strong> All new DEFONEOS certificates use Ed25519 only. RSA keys are grandfathered only for legacy interop and must rotate to Ed25519 within 90 days.</li>
+<li><strong>Storing private keys in US HSMs.</strong> AWS CloudHSM, Azure Dedicated HSM, Google Cloud HSM are rejected. Private keys live in MacBook Secure Enclave, Oracle UK-South HSM, or offline encrypted USB.</li>
+<li><strong>Skipping pin verification on bootstrap.</strong> New nodes must verify pins against TUF repository before joining federation. Bootstrap with pins disabled is rejected.</li>
+<li><strong>Issuing certificates without attestation token.</strong> Every end-entity cert must include an attestation token (Ed25519-signed proof of node identity). Certs without attestation are invalid.</li>
+<li><strong>Using 5+ year validity on end-entity certs.</strong> Maximum 30 days. Longer validity increases compromise window. Long-lived certs are auto-revoked at audit.</li>
+</ol>
+</section>
+
+<section>
+<h2>9. Compliance Cross-Walk</h2>
+<ul>
+<li><strong>NCSC SC-01 CAF B3 (Secure Configuration)</strong> — TLS configuration aligned to NCSC TLS guidance with sovereign-only CAs and 90-day rotation.</li>
+<li><strong>UK GDPR Article 32 (Security of Processing)</strong> — Encryption in transit via HPKE + TLS 1.3 mTLS. Pseudonymisation via per-request nonces.</li>
+<li><strong>DPA 2018 Schedule 1 Part 2</strong> — Encryption aligned to UK encryption standards for personal data.</li>
+<li><strong>JSP 440 Ch 7 (Defence Cyber Security)</strong> — Cryptographic key management aligned to JSP 440 with HSM custody.</li>
+<li><strong>JSP 936 §4 (AI Security)</strong> — Model and data encryption in transit aligned to JSP 936 requirements.</li>
+<li><strong>EU AI Act Article 15 (Accuracy, Robustness, Cybersecurity)</strong> — Cryptographic integrity of AI components via sovereign CA and HPKE.</li>
+<li><strong>NIST SP 800-52 Rev 2 (Guidelines for TLS Implementations)</strong> — TLS 1.3 mandatory, weak ciphers rejected, HPKE for application layer.</li>
+<li><strong>RFC 9180 (HPKE)</strong> — Hybrid Public Key Encryption standard, X25519 + HKDF-SHA256 + ChaCha20-Poly1305.</li>
+<li><strong>RFC 6962 (Certificate Transparency Version 2)</strong> — CT log structure aligned, Merkle tree, append-only.</li>
+</ul>
+</section>
+
+<section>
+<h2>10. Live Posture (tick-108)</h2>
+<p>DEFONEOS sovereign CA is operational. 1 Root CA (offline, air-gapped). 3 Intermediate CAs (online, BFT-gated). 30 end-entity certificates issued across the 30 MCP nodes. 0 WebPKI dependencies. 7-year CT log retention active. 30-day end-entity rotation automated. 90-day Intermediate rotation scheduled. TUF pin repository live with 3 pin strategies (SPKI, full-cert, delegated). 0 pin verification failures in last 30 days. HPKE enabled on all MCP-to-MCP links. 5 named anti-patterns with automatic quarantine. 7 immutable red lines including: no WebPKI trust, no US HSM, no RSA for new certs, mandatory CT logging, mandatory attestation tokens.</p>
+<div class="ok"><strong>Status: PRODUCTION READY.</strong> Sovereign CA ships with DEFONEOS R3. Live posture verified at tick-108.</div>
+</section>
+
+</div>
+
+<footer style="text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem">
+  <div>🐉 <strong>DEFONEOS</strong> · Sovereign Public Services OS · UK-sovereign, AUKUS-compatible</div>
+  <div style="margin-top:.5rem">SIGIL-anchored · 33-agent BFT · Sovereign CA · HPKE everywhere</div>
+</footer>
+
+</body>
+</html>

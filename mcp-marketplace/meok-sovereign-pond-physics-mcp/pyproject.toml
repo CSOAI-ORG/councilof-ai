@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-pond-physics-mcp"
+version = "1.0.0"
+description = "Sovereign Pond Physics MCP - 16-dim Mamba-2 state-space simulator for the iOK Farm 13m x 12m koi pond. 8 water quality + 4 fish + 4 environmental dimensions. Care floor + alert detection + sigil-signed every step."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

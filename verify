@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# 🐉 MEOK verify — wrapper for verify.py
+# Usage: ./verify charter /path/to/charter.md
+#        ./verify --json ichar ich-abc123
+#        ./verify --version
+exec python3 "$(dirname "$0")/meok-backend/verify.py" "$@"

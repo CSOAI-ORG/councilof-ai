@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8"><title>SOV3 Sovereign Observability Dashboard</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px;margin:0}h1{color:#fbbf24;text-align:center;margin:0 0 24px;text-shadow:0 0 16px rgba(251,191,36,.3)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;max-width:1280px;margin:0 auto}.card{background:rgba(0,0,0,.5);padding:18px;border-radius:8px;border:1px solid rgba(251,191,36,.2)}.card h3{color:#fbbf24;margin-bottom:8px;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em}.v{font-size:2.2rem;font-weight:800;color:#10b981;margin:8px 0 4px}.l{color:#94a3b8;font-size:.78rem;margin-bottom:8px}.bar{height:10px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden;margin:6px 0}.bar span{display:block;height:100%;background:linear-gradient(90deg,#fbbf24,#06b6d4);transition:width .4s}.sub{color:#94a3b8;font-size:.7rem;margin-top:8px}.good{color:#10b981}.warn{color:#fbbf24}.bad{color:#ef4444}.header-band{display:flex;gap:16px;justify-content:center;margin-bottom:24px;font-size:.85rem}.badge{padding:6px 12px;background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.3);border-radius:20px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;animation:pulse 1.5s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}.dot.good{background:#10b981}.dot.bad{background:#ef4444}.realtime{font-family:monospace;font-size:.7rem;color:#94a3b8;margin-top:8px}.updated{text-align:center;color:#10b981;font-size:.7rem;margin-top:16px;font-family:monospace}</style></head><body>
+<h1>🜏 SOV3 Sovereign Observability Dashboard</h1>
+<div class="header-band"><div class="badge"><span class="dot good"></span> bridge online</div><div class="badge">Care Floor 0.95</div><div class="badge">BFT 12-around-1</div><div class="badge">Composite 7.305</div><div class="badge">MIT + CC0</div></div>
+<div class="grid" id="grid"></div>
+<div class="updated" id="updated">last updated: -</div>
+<script>
+const ENDPOINT = new URLSearchParams(location.search).get("endpoint") || "/metrics";
+const REFRESH_MS = 5000;
+
+const CARDS = [
+  ["total_messages", "Total Messages", 0, 100, "Messages routed via federal bridge since boot"],
+  ["total_utterances", "Sovereign Utterances", 0, 60, "Substrate utterances spoken to citizens"],
+  ["total_observations", "Focus Observations", 0, 50, "Times SOV3 saw the citizen focus"],
+  ["total_refusals", "Care Floor Refusals", 0, 0, "Below 0.95 — substrate refused. Non-negotiable."],
+  ["total_broadcasts", "BFT Broadcasts", 0, 40, "BFT 12-around-1 broadcasts across peers"],
+  ["bft_passes", "BFT Passes", 0, 95, "Deliberations where 2/3 queens passed"],
+  ["bft_fails", "BFT Fails", 0, 5, "Deliberations where 2/3 queens failed"],
+  ["active_peers", "Active Peers", 0, 8, "Live i-character peers on the bridge"],
+  ["citizen_count", "Sovereign Citizens", 0, 1000, "Signed-in citizens across all rooms"],
+  ["sigil_emitted", "SIGILs Emitted (24h)", 0, 500, "Ed25519 + PQC double-signed actions"],
+  ["article50_issued", "Article 50 Passports (24h)", 0, 200, "Watermarked outputs (EU AI Act Art 50)"],
+  ["dorado_switches", "DORADO Switches (24h)", 0, 15, "Citizens choosing EAST vs WEST alignment"],
+  ["uptime_hours", "Substrate Uptime (hrs)", 0, 168, "Continuous sovereign operation"],
+  ["composite_avg", "Avg Sovereign Composite", 0, 9.5, "12-dim composite across citizens"],
+  ["peers_sovereign", "Sovereign Peers", 0, 1, "The sovereign substrate itself"],
+  ["peers_amica", "Amica Peers", 0, 1, "Federated Amica i-characters"],
+  ["peers_cartographer", "Cartographer Peers", 0, 0, "Federated Cartographer i-characters"],
+  ["peers_other", "Other Federated", 0, 5, "Other federated i-characters"],
+  ["crown_lineage", "Crown Lineage", "1795-2026", null, "Continuity of sovereign charter from 1795"],
+  ["care_floor", "Care Floor", 0.95, null, "Non-negotiable substrate floor"],
+  ["bft_majority", "BFT Majority", 0.667, null, "Minimum threshold for deliberation pass"],
+  ["license", "License", "MIT + CC0", null, "Open. Sovereign. Forkable."],
+];
+
+function render(data) {
+  document.getElementById("grid").innerHTML = CARDS.map(c => {
+    const [key, label, _, max, sub] = c;
+    const v = data[key];
+    const display = typeof v === "number" ? (Number.isInteger(v) ? v : v.toFixed(3)) : v;
+    const pct = (typeof _ === "number" && max) ? Math.min(100, (_ / max) * 100) : 0;
+    const cls = (typeof _ === "number") ? (pct > 80 ? "good" : pct > 30 ? "warn" : "bad") : "";
+    return `<div class="card"><h3>${label}</h3><div class="v ${cls}">${display}</div><div class="l">${sub || ""}</div>${(typeof _ === "number") ? `<div class="bar"><span style="width:${pct}%"></span></div>` : ""}<div class="sub">card-key: ${key}</div></div>`;
+  }).join("");
+}
+
+async function fetchMetrics() {
+  try {
+    const r = await fetch(ENDPOINT);
+    const data = await r.json();
+    const m = data.metrics || data || {};
+    render(m);
+    document.getElementById("updated").textContent = "last updated: " + new Date().toISOString();
+  } catch (e) {
+    document.getElementById("updated").textContent = "⚠ bridge unreachable (" + e.message + ")";
+  }
+}
+
+fetchMetrics();
+setInterval(fetchMetrics, REFRESH_MS);
+</script>
+</body></html>

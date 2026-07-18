@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<title>EU AI Act Compliance in 48 Hours — Signed Attestations Auditors Accept | MEOK AI Labs</title>
+<meta name="description" content="103 days until EU AI Act enforcement. Audit your AI systems against DORA, NIS2, CRA, EU AI Act in minutes. Cryptographically signed compliance attestations with public verify URLs. Pro £199/mo. 48h assessment £5,000.">
+<meta property="og:title" content="EU AI Act Compliance in 48 Hours — Signed Attestations | MEOK AI Labs">
+<meta property="og:description" content="Live countdown to the 2 Aug 2026 Article 50 watermarking + transparency cliff (NOT delayed by the 7 May 2026 Digital Omnibus — Annex III/I were delayed, Article 50 was not). Signed HMAC compliance attestations your auditor verifies at a public URL. Free tier + Pro £199/mo + 48h assessment £5,000.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://compliance.meok.ai">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://compliance.meok.ai">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://meok.ai/#org",
+      "name": "MEOK AI Labs",
+      "url": "https://meok.ai",
+      "email": "nicholas@csoai.org",
+      "founder": { "@type": "Person", "name": "Nicholas Templeman" },
+      "sameAs": ["https://github.com/CSOAI-ORG", "https://pypi.org/user/MEOK_AI_Labs/"]
+    },
+    {
+      "@type": "WebSite",
+      "name": "MEOK Compliance",
+      "url": "https://compliance.meok.ai",
+      "publisher": { "@id": "https://meok.ai/#org" }
+    },
+    {
+      "@type": "Product",
+      "name": "MEOK Compliance Pro",
+      "description": "Unlimited AI-regulation audits (EU AI Act, DORA, NIS2, CRA, CSRD, UK AI, GDPR, HIPAA, ISO 42001) + HMAC-signed attestations with public verify URLs.",
+      "brand": { "@type": "Brand", "name": "MEOK AI Labs" },
+      "offers": {
+        "@type": "Offer",
+        "price": "199",
+        "priceCurrency": "GBP",
+        "priceSpecification": {"@type": "UnitPriceSpecification", "price": "199", "priceCurrency": "GBP", "unitCode": "MON"},
+        "url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "name": "MEOK 48-Hour Compliance Assessment",
+      "description": "Bespoke 48h EU AI Act / DORA / NIS2 compliance audit with signed deliverable.",
+      "brand": { "@type": "Brand", "name": "MEOK AI Labs" },
+      "offers": {
+        "@type": "Offer",
+        "price": "5000",
+        "priceCurrency": "GBP",
+        "url": "https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "When does the EU AI Act come into force?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Article 50 transparency + watermarking obligations become enforceable 2 August 2026 — NOT delayed by the 7 May 2026 Digital Omnibus, which only pushed Annex III high-risk to 2 December 2027 and Annex I product-safety to 2 August 2028. Prohibited-practice rules have been in force since 2 February 2025; general-purpose AI (GPAI) obligations started 2 August 2025, with the grandfather window for pre-Aug-2025 models closing 2 August 2027."}},
+        {"@type": "Question", "name": "What are the penalties for EU AI Act non-compliance?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Up to €35 million or 7% of global turnover for prohibited practices. Up to €15M or 3% for high-risk violations."}},
+        {"@type": "Question", "name": "What is a signed attestation?",
+         "acceptedAnswer": {"@type": "Answer", "text": "A cryptographically signed (HMAC-SHA256) JSON document proving you ran a specific regulatory audit with a specific score. Carries a public verify URL so auditors and procurement teams can validate authenticity without contacting MEOK."}},
+        {"@type": "Question", "name": "Why not build this internally?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Article-by-article mapping of EU AI Act + DORA + NIS2 + CRA + CSRD takes a compliance team 6-12 months. MEOK gives you 15 MCPs on day one with signed attestations Article-11 auditors accept."}},
+        {"@type": "Question", "name": "Can I cancel anytime?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Yes. Stripe handles billing. Cancel in one click from your email receipt. No contracts."}}
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root {
+    --brand: #0057FF;
+    --brand-dark: #003dcc;
+    --ink: #0b0b0b;
+    --muted: #555;
+    --bg: #ffffff;
+    --bg-soft: #f7f8fb;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --success-bg: #d1fae5;
+    --warning: #ef4444;
+    --warning-bg: #fee2e2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    line-height: 1.55;
+    background: var(--bg);
+    font-size: 16px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.25rem; }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-weight: 800; font-size: 1.15rem; letter-spacing: -.02em; }
+  .logo span { color: var(--brand); }
+  header nav { display: flex; gap: 1.5rem; font-size: .95rem; }
+  header nav a { color: var(--ink); text-decoration: none; }
+  header nav a:hover { color: var(--brand); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .75rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: .95rem;
+    text-decoration: none;
+    transition: all .15s;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn.primary { background: var(--brand); color: white; }
+  .btn.primary:hover { background: var(--brand-dark); transform: translateY(-1px); }
+  .btn.secondary { background: white; color: var(--ink); border-color: var(--border); }
+  .btn.secondary:hover { border-color: var(--ink); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--bg-soft); }
+
+  /* HERO */
+  .hero { padding: 4rem 0 3rem; text-align: center; }
+  .countdown-badge {
+    display: inline-block;
+    background: var(--warning-bg);
+    color: var(--warning);
+    padding: .4rem .9rem;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -.03em;
+    margin: 0 0 1rem;
+    font-weight: 800;
+  }
+  .hero h1 span { color: var(--brand); }
+  .hero p.sub {
+    font-size: 1.2rem;
+    color: var(--muted);
+    max-width: 680px;
+    margin: 0 auto 2rem;
+  }
+  .cta-row { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+  .trust-line {
+    font-size: .85rem;
+    color: var(--muted);
+    margin-top: 1.25rem;
+  }
+  .trust-line strong { color: var(--ink); }
+
+  /* Trust badges */
+  .badges {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: .88rem;
+  }
+  .badges strong { color: var(--ink); font-size: 1rem; display: block; }
+
+  /* SECTION — the problem */
+  section { padding: 4rem 0; border-top: 1px solid var(--border); }
+  section h2 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.2;
+    letter-spacing: -.02em;
+    margin: 0 0 1rem;
+    font-weight: 700;
+    max-width: 720px;
+  }
+  section p.lead {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin: 0 0 2rem;
+    max-width: 680px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .stat {
+    padding: 1.5rem;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .stat .big { font-size: 2rem; font-weight: 800; color: var(--brand); letter-spacing: -.02em; }
+  .stat .lbl { font-size: .9rem; color: var(--muted); margin-top: .25rem; }
+
+  /* HOW IT WORKS */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .step-card {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: white;
+    position: relative;
+  }
+  .step-card .num {
+    position: absolute;
+    top: -.75rem;
+    left: 1.25rem;
+    background: var(--brand);
+    color: white;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: .9rem;
+  }
+  .step-card h3 { margin: .25rem 0 .5rem; font-size: 1.1rem; }
+  .step-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .step-card code { background: #f3f4f6; padding: .1rem .35rem; border-radius: 4px; font-size: .88em; }
+
+  /* PRICING */
+  .pricing {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+  .price-card {
+    padding: 1.75rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+  }
+  .price-card.featured {
+    border-color: var(--brand);
+    border-width: 2px;
+    box-shadow: 0 8px 24px rgba(0, 87, 255, .12);
+    position: relative;
+  }
+  .price-card.featured::before {
+    content: "MOST CHOSEN";
+    position: absolute;
+    top: -.75rem;
+    right: 1.25rem;
+    background: var(--brand);
+    color: white;
+    font-size: .7rem;
+    font-weight: 700;
+    padding: .35rem .75rem;
+    border-radius: 999px;
+    letter-spacing: .05em;
+  }
+  .price-card h3 { margin: 0 0 .25rem; font-size: 1.25rem; }
+  .price-card .tagline { color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
+  .price-card .amount { font-size: 2.5rem; font-weight: 800; letter-spacing: -.02em; }
+  .price-card .amount span { font-size: 1rem; font-weight: 500; color: var(--muted); }
+  .price-card ul { list-style: none; padding: 0; margin: 1.5rem 0; flex: 1; }
+  .price-card li { padding: .4rem 0 .4rem 1.5rem; position: relative; font-size: .92rem; color: var(--ink); }
+  .price-card li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: 700;
+  }
+  .price-card .btn { width: 100%; justify-content: center; }
+  .price-card .fine {
+    font-size: .8rem;
+    color: var(--muted);
+    margin-top: .75rem;
+    text-align: center;
+  }
+
+  /* Regs covered */
+  .regs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .reg-card {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+  }
+  .reg-card h4 { margin: 0 0 .25rem; font-size: 1.05rem; }
+  .reg-card p { margin: 0; color: var(--muted); font-size: .88rem; }
+  .reg-card code { background: #f3f4f6; padding: .1rem .35rem; border-radius: 4px; font-size: .82em; }
+
+  /* Demo cert */
+  .demo-cert {
+    background: #0b0b0b;
+    color: #e5e7eb;
+    padding: 1.5rem;
+    border-radius: 12px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: .85rem;
+    overflow-x: auto;
+    margin-top: 1.5rem;
+  }
+  .demo-cert .key { color: #93c5fd; }
+  .demo-cert .str { color: #86efac; }
+  .demo-cert .num { color: #fbbf24; }
+
+  /* FAQ */
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 0;
+  }
+  .faq-item h4 { margin: 0 0 .5rem; font-size: 1.05rem; }
+  .faq-item p { margin: 0; color: var(--muted); }
+
+  /* Footer */
+  footer {
+    background: var(--bg-soft);
+    padding: 3rem 0 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: .88rem;
+  }
+  footer .cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  footer h5 { color: var(--ink); font-size: .95rem; margin: 0 0 .75rem; }
+  footer a { color: var(--muted); text-decoration: none; display: block; padding: .2rem 0; }
+  footer a:hover { color: var(--brand); }
+  footer .legal { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+  /* Sticky bottom CTA on mobile */
+  @media (max-width: 640px) {
+    .hero { padding: 2.5rem 0 2rem; }
+    .cta-row { flex-direction: column; align-items: stretch; }
+    .cta-row .btn { width: 100%; justify-content: center; }
+  }
+
+.card,.feature,.pack,.service{transition:all .25s}
+.card:hover,.feature:hover,.pack:hover,.service:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">MEOK<span>.</span>ai</div>
+      <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">EU AI Act</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="countdown-badge" id="countdown">⏰ Calculating days to the 2 Aug 2026 Article 50 watermarking + transparency cliff…</div>
+    <h1>Your AI compliance, <span>signed and verified</span>,<br>in 48 hours.</h1>
+    <p class="sub">We audit your AI systems against EU AI Act, DORA, NIS2, CRA, CSRD and 10 more regulations — then emit cryptographically signed attestations your auditor validates at a public URL.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="#pricing">See pricing →</a>
+      <a class="btn secondary" href="https://pypi.org/project/eu-ai-act-compliance-mcp/" target="_blank">Try free on PyPI</a>
+    </div>
+    <p class="trust-line"><strong>No card needed for free tier.</strong> Cancel anytime. 365-day attestation validity.</p>
+    <div class="badges">
+      <div><strong>15</strong>compliance MCPs live</div>
+      <div><strong>320+</strong>monthly installs on flagship</div>
+      <div><strong>HMAC-SHA256</strong>cryptographic binding</div>
+      <div><strong>Public verify URL</strong>auditor-accepted</div>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="wrap">
+    <h2>Your Article 11 technical documentation pack is probably incomplete.</h2>
+    <p class="lead">14 mandatory fields per EU AI Act Annex IV. Most teams I talk to cover 3-4. The rest get flagged by the notified body. You don't find out until your conformity assessment fails — and you're stuck scrambling within 4-week deadlines.</p>
+    <div class="stat-grid">
+      <div class="stat"><div class="big">€35M</div><div class="lbl">or 7% of global turnover — max penalty for prohibited-practice breaches</div></div>
+      <div class="stat"><div class="big">14</div><div class="lbl">mandatory Annex IV documentation fields most teams miss</div></div>
+      <div class="stat"><div class="big">4h</div><div class="lbl">the tightest reporting clock — DORA major ICT incidents</div></div>
+      <div class="stat"><div class="big" id="dec-cliff-days">…</div><div class="lbl">days until the 2 Aug 2026 Article 50 watermarking + transparency cliff (NOT delayed by the Omnibus — Annex III/I were delayed, Article 50 was not)</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Install → audit → share signed attestation. Three steps.</h2>
+    <p class="lead">No sign-up for free tier. No seat licenses. No minimum commitment.</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="num">1</div>
+        <h3>Install</h3>
+        <p><code>pip install eu-ai-act-compliance-mcp</code> (or any of 15 regulation-specific packages). Free tier runs locally. No data leaves your machine.</p>
+      </div>
+      <div class="step-card">
+        <div class="num">2</div>
+        <h3>Audit</h3>
+        <p>Call from Claude Desktop, Cursor, Cline, VS Code. Article-by-article audits produce a score + gap list. Upgrade to Pro for signing.</p>
+      </div>
+      <div class="step-card">
+        <div class="num">3</div>
+        <h3>Sign + share</h3>
+        <p>Pro tier emits a HMAC-signed attestation. You share the public <code>verify_url</code>. Your auditor validates signature + expiry without contacting us.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:3rem;font-size:1.1rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">Sample signed cert</h3>
+    <pre class="demo-cert"><span class="key">{
+  "cert_id": </span><span class="str">"MEOK-DORA-A1B2C3D4E5F6"</span><span class="key">,
+  "regulation": </span><span class="str">"DORA (Regulation (EU) 2022/2554)"</span><span class="key">,
+  "entity": </span><span class="str">"Acme Bank PLC"</span><span class="key">,
+  "score_percent": </span><span class="num">82.5</span><span class="key">,
+  "assessment": </span><span class="str">"COMPLIANT"</span><span class="key">,
+  "findings": [</span><span class="str">"Article 9: PASS"</span><span class="key">, </span><span class="str">"Article 28: GAP"</span><span class="key">],
+  "issued_utc": </span><span class="str">"2026-04-23T12:00:00Z"</span><span class="key">,
+  "expires_utc": </span><span class="str">"2027-04-23T12:00:00Z"</span><span class="key">,
+  "signature_sha256_hmac": </span><span class="str">"7e4b8..."</span><span class="key">,
+  "verify_url": </span><span class="str">"https://meok-attestation-api.vercel.app/verify/MEOK-DORA-A1B2C3D4E5F6"</span><span class="key">
+}</span></pre>
+  </div>
+</section>
+
+<section id="pricing" style="background:var(--bg-soft);">
+  <div class="wrap">
+    <h2>Start free. Sign when you need evidence.</h2>
+    <p class="lead">Every tier includes all 15 MCPs. Pro unlocks signed attestations — the artefact your auditor accepts.</p>
+    <div class="pricing">
+      <div class="price-card">
+        <h3>Free</h3>
+        <p class="tagline">For evaluation and small teams</p>
+        <div class="amount">£0<span></span></div>
+        <ul>
+          <li>10 audits per day per MCP</li>
+          <li>All 15 regulations covered</li>
+          <li>Every tool available</li>
+          <li>No signed attestations</li>
+          <li>No credit card required</li>
+        </ul>
+        <a class="btn secondary" href="https://pypi.org/user/MEOK_AI_Labs/" target="_blank">Browse on PyPI</a>
+        <div class="fine">Install from PyPI · Use in Claude, Cursor, Cline</div>
+      </div>
+
+      <div class="price-card featured">
+        <h3>Pro</h3>
+        <p class="tagline">For teams shipping AI into regulated markets</p>
+        <div class="amount">£199<span>/mo</span></div>
+        <ul>
+          <li>Unlimited audits across all 15 MCPs</li>
+          <li><strong>Signed HMAC attestations</strong> with public verify URL</li>
+          <li>365-day attestation validity</li>
+          <li>Priority email support</li>
+          <li>Cancel anytime — one click</li>
+        </ul>
+        <a class="btn primary" href="https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836">Start Pro — £199/mo</a>
+        <div class="fine">Secure checkout via Stripe · UK VAT inc. where applicable</div>
+      </div>
+
+      <div class="price-card">
+        <h3>Enterprise</h3>
+        <p class="tagline">For multi-entity AI + financial services</p>
+        <div class="amount">£1,499<span>/mo</span></div>
+        <ul>
+          <li>Everything in Pro</li>
+          <li>Multi-tenant deployments</li>
+          <li>Co-branded PDF certificates</li>
+          <li>Trust Center webhook integration</li>
+          <li>Custom Care Membrane policies</li>
+        </ul>
+        <a class="btn secondary" href="https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837">Start Enterprise</a>
+        <div class="fine">Invoice on request · Contact for multi-seat or annual</div>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;padding:1.75rem;background:white;border:1px solid var(--border);border-radius:14px;text-align:center;">
+      <h3 style="margin:0 0 .5rem;font-size:1.3rem;">48-Hour Compliance Assessment — £5,000</h3>
+      <p style="margin:0 0 1rem;color:var(--muted);">Bespoke written report + signed deliverable. Full article-by-article audit for EU AI Act, DORA, NIS2, CRA, CSRD — whichever applies to your entity. 48-hour turnaround. Discount for Pro subscribers.</p>
+      <a class="btn primary" href="https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833">Book 48h assessment — £5,000</a>
+    </div>
+  </div>
+</section>
+
+<section id="regs">
+  <div class="wrap">
+    <h2>15 regulations. One subscription.</h2>
+    <p class="lead">Each MCP is a dedicated compliance automator for a specific framework. All included in Pro.</p>
+    <div class="regs">
+      <div class="reg-card"><h4>EU AI Act</h4><p><code>eu-ai-act-compliance-mcp</code> · Regulation (EU) 2024/1689</p></div>
+      <div class="reg-card"><h4>DORA</h4><p><code>dora-compliance-mcp</code> · Regulation (EU) 2022/2554</p></div>
+      <div class="reg-card"><h4>NIS2</h4><p><code>nis2-compliance-mcp</code> · Directive (EU) 2022/2555</p></div>
+      <div class="reg-card"><h4>CRA</h4><p><code>cra-compliance-mcp</code> · Regulation (EU) 2024/2847</p></div>
+      <div class="reg-card"><h4>CSRD</h4><p><code>csrd-compliance-mcp</code> · Directive (EU) 2022/2464</p></div>
+      <div class="reg-card"><h4>GDPR</h4><p><code>gdpr-compliance-mcp</code> · Regulation (EU) 2016/679</p></div>
+      <div class="reg-card"><h4>UK AI Regulation</h4><p><code>uk-ai-bill-compliance-mcp</code> · White Paper + AI Bill</p></div>
+      <div class="reg-card"><h4>HIPAA</h4><p><code>hipaa-compliance-mcp</code> · US healthcare privacy</p></div>
+      <div class="reg-card"><h4>SOC 2</h4><p><code>soc2-compliance-mcp</code> · Trust Services Criteria</p></div>
+      <div class="reg-card"><h4>ISO/IEC 42001</h4><p><code>iso-42001-compliance-mcp</code> · AI Management System</p></div>
+      <div class="reg-card"><h4>NIST AI RMF</h4><p><code>nist-rmf-ai-mcp</code> · Govern/Map/Measure/Manage</p></div>
+      <div class="reg-card"><h4>AI-BOM</h4><p><code>ai-bom-mcp</code> · CycloneDX ML-BOM + SPDX 3.0 AI</p></div>
+      <div class="reg-card"><h4>DORA × NIS2</h4><p><code>dora-nis2-crosswalk-mcp</code> · Dual-compliance scoring</p></div>
+      <div class="reg-card"><h4>Incident Reporting</h4><p><code>ai-incident-reporting-mcp</code> · 6-regime clock unifier</p></div>
+      <div class="reg-card"><h4>Gods Eye Geospatial</h4><p><code>gods-eye-geospatial-mcp</code> · Open-licence + ethics gate</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>Questions people ask before subscribing.</h2>
+    <div style="margin-top:1.5rem;">
+      <div class="faq-item">
+        <h4>Can I verify a cert without signing up?</h4>
+        <p>Yes. Run <code>pip install meok-attestation-verify</code>, pipe the cert JSON on stdin, get VALID or INVALID back. Zero dependencies. Anyone auditing a cert — your procurement team, your external auditor, your board — can validate without an account.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Does my data leave my machine?</h4>
+        <p>Free tier: no. MCPs run 100% locally via the Model Context Protocol. Pro tier: only the signed-attestation payload is sent to our Vercel signing API (regulation name, entity, score, findings, articles). Raw data stays local.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What happens if I cancel?</h4>
+        <p>Your existing attestations stay valid for their full 365 days. You lose ability to issue NEW signed attestations. Free tier of all MCPs keeps working. Cancel anytime from the Stripe receipt email.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Is this a substitute for legal advice or a notified body?</h4>
+        <p>No. Signed attestations are automated self-assessments — the legal notice on every cert says so explicitly. They speed up the preparation work your legal team or notified body still signs off on. Think of it as the Vanta Trust Center pattern, for AI compliance.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Why should I trust a 15-MCP startup vs Big 4?</h4>
+        <p>You shouldn't trust — you should verify. Every cert has a cryptographic signature anyone can validate. The signing key stays on our server. If we ever went offline, your existing certs remain verifiable via the independent <code>meok-attestation-verify</code> tool. Big 4 invoices don't come with cryptographic binding.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Do you offer invoice billing?</h4>
+        <p>Enterprise tier billing can be invoiced on request. Pro is card-only via Stripe. For the 48h assessment (£5k) we can issue a PO on request before payment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--ink);color:white;text-align:center;">
+  <div class="wrap">
+    <h2 style="color:white;">103 days. One Stripe subscription. Every signed.</h2>
+    <p class="lead" style="color:#cbd5e1;max-width:620px;margin:0 auto 1.5rem;">Get Pro, run unlimited audits across all 15 regulations, share signed verifiable attestations with whoever asks.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836" style="background:white;color:var(--ink);">Start Pro — £199/mo</a>
+      <a class="btn ghost" href="https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833" style="color:white;">Or book 48h assessment</a>
+    </div>
+  </div>
+</section>
+
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">EU AI Act by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
+
+<script>
+  // Live countdown to the 2 Aug 2026 Article 50 watermarking + transparency cliff.
+  // Article 50 was NOT delayed by the 7 May 2026 Digital Omnibus — Annex III/I were.
+  (function () {
+    const target = new Date('2026-08-02T00:00:00Z').getTime();
+    function update() {
+      const days = Math.max(0, Math.ceil((target - Date.now()) / 86400000));
+      const badge = document.getElementById('countdown');
+      if (badge) badge.textContent = '⏰ ' + days + ' days until the 2 Aug 2026 Article 50 watermarking + transparency cliff';
+      const stat = document.getElementById('dec-cliff-days');
+      if (stat) stat.textContent = days;
+    }
+    update();
+    setInterval(update, 3600000);
+  })();
+</script>
+
+</body>
+</html>

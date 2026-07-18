@@ -1,0 +1,50 @@
+{
+  "cycle_id": "EAT-2026-07-13-T2300",
+  "timestamp": "2026-07-13T22:32:44Z",
+  "operator": "JEEVES",
+  "compartment": "csoai-defoneos",
+  "care_score": 0.92,
+  "results": {
+    "public_site_check": {
+      "url": "https://csoai-static-deploy2.vercel.app/",
+      "http_code": 200,
+      "size_bytes": 9156,
+      "time_s": 0.161
+    },
+    "meok_backend_ssh": {
+      "status": "TIMEOUT",
+      "note": "VM unreachable \u2014 investigate separately"
+    },
+    "sov3_local_3101": {
+      "status": "DOWN",
+      "note": "MCP bus not running locally"
+    },
+    "meok_os_local_3000": {
+      "status": "DOWN",
+      "note": "MEOK OS not running locally"
+    },
+    "html_pages_count": 452,
+    "broken_links_detected": 2,
+    "broken_links_fixed": 2,
+    "fixes": [
+      {
+        "file": "defoneos-signup-v2.html",
+        "old": "href=\"/\"",
+        "new": "href=\"#\""
+      },
+      {
+        "file": "SOV33_HERO.html",
+        "old": "href=\"SOV33.html\"",
+        "new": "href=\"#\""
+      }
+    ],
+    "new_pages_since_last_cycle": 0,
+    "deploy_triggered": false,
+    "sitemap_urls": 453,
+    "sitemap_bytes": 89383
+  },
+  "verdict": "GREEN-WITH-INFRA-CAVEATS",
+  "red_lines_checked": true,
+  "compartment_isolation": true,
+  "sigil_digest": "78a8c3a6b7293fa9"
+}

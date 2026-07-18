@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MEOK.AI ULTIMATE — Sovereign AI OS | Master OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root { --navy: #0a1a2f; --gold: #c9a84c; --green: #4ade80; --cyan: #06b6d4; --bg: #000814; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, monospace, system-ui, sans-serif; background: var(--bg); color: white; overflow: hidden; }
+canvas { display: block; }
+.ui { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+.hud { position: absolute; padding: 20px; font-family: 'SF Mono', monospace; }
+.hud.tl { top: 0; left: 0; }
+.hud.tr { top: 0; right: 0; text-align: right; }
+.hud.bl { bottom: 0; left: 0; }
+.hud.br { bottom: 0; right: 0; text-align: right; }
+.title { font-size: 64px; font-weight: 900; letter-spacing: -0.04em; background: linear-gradient(135deg, #c9a84c 0%, #4ade80 50%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { color: var(--gold); font-size: 14px; letter-spacing: 0.2em; margin-top: 8px; }
+.metric { display: inline-block; margin: 8px 16px 8px 0; }
+.metric .label { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 0.2em; }
+.metric .value { font-size: 24px; font-weight: 900; color: var(--gold); }
+.green { color: var(--green); }
+.cyan { color: var(--cyan); }
+.pill { display: inline-block; background: rgba(201,168,76,0.1); border: 1px solid var(--gold); border-radius: 100px; padding: 4px 12px; font-size: 10px; margin: 4px; }
+.cta { pointer-events: auto; display: inline-block; background: var(--gold); color: var(--navy); padding: 12px 24px; border-radius: 100px; text-decoration: none; font-weight: 800; font-size: 14px; margin-top: 16px; }
+.cta.green { background: var(--green); color: white; }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="ui">
+  <div class="hud tl">
+    <div class="title">MEOK.AI</div>
+    <div class="subtitle">MASTER OS · SOVEREIGN · 100% UK SOIL</div>
+  </div>
+  <div class="hud tr">
+    <div class="metric"><div class="label">MCPs</div><div class="value">80</div></div>
+    <div class="metric"><div class="label">Tools</div><div class="value">330</div></div>
+    <div class="metric"><div class="label">Repos</div><div class="value">100</div></div>
+    <div class="metric"><div class="label">Compliance</div><div class="value green">7/7</div></div>
+    <div class="metric"><div class="label">SOVEREIGN_BOND</div><div class="value">0.937</div></div>
+    <div class="metric"><div class="label">UK Soil</div><div class="value cyan">100%</div></div>
+  </div>
+  <div class="hud bl">
+    <div class="pill">● LIVE</div>
+    <div class="pill">22 ARCANA</div>
+    <div class="pill">33 DISTRICTS</div>
+    <div class="pill">SIGIL CHAIN</div>
+    <div class="pill">BFT 21</div>
+    <div class="pill">PQC ML-DSA-65</div>
+    <div class="pill">CESIUM 3D</div>
+    <div class="pill">THREE.JS</div>
+    <div class="pill">GLSL SHADERS</div>
+    <div class="pill">UNREAL BLOOM</div>
+    <div class="pill">5000 PARTICLES</div>
+    <div class="pill">12 MINDSETS</div>
+  </div>
+  <div class="hud br">
+    <div class="green">● Sovereign substrate live</div>
+    <div>Q-SIGIL: <span class="cyan">2aa7a7c92cabf9c8</span></div>
+    <div>Block: 19,041,407,221</div>
+    <div>Ed25519 + PQC ML-DSA-65</div>
+  </div>
+  <a class="cta green" href="/install.html" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 80px 0 0 0;">→ INSTALL SOV3</a>
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.5;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(0, 5, 30);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.0, 0.5, 0.2));
+composer.addPass(new OutputPass());
+
+const particleCount = 10000;
+const positions = new Float32Array(particleCount * 3);
+const colors = new Float32Array(particleCount * 3);
+for (let i = 0; i < particleCount; i++) {
+  const r = 5 + Math.pow(Math.random(), 0.5) * 50;
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos(2 * Math.random() - 1);
+  positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+  positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+  positions[i * 3 + 2] = r * Math.cos(phi);
+  const hue = Math.random() * 0.2 + 0.1;
+  const color = new THREE.Color().setHSL(hue, 0.9, 0.5);
+  colors[i * 3] = color.r;
+  colors[i * 3 + 1] = color.g;
+  colors[i * 3 + 2] = color.b;
+}
+const particleGeometry = new THREE.BufferGeometry();
+particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+const particles = new THREE.Points(particleGeometry, new THREE.PointsMaterial({ size: 0.08, vertexColors: true, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+scene.add(particles);
+
+const coreGeometry = new THREE.IcosahedronGeometry(2, 4);
+const coreMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xc9a84c,
+  emissive: 0xc9a84c,
+  emissiveIntensity: 0.6,
+  metalness: 0.95,
+  roughness: 0.05,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.05,
+  iridescence: 1.0,
+  iridescenceIOR: 1.5,
+  transmission: 0.3,
+  thickness: 0.5,
+});
+const core = new THREE.Mesh(coreGeometry, coreMaterial);
+scene.add(core);
+
+const arcanaGroup = new THREE.Group();
+for (let i = 0; i < 22; i++) {
+  const angle = (i / 22) * Math.PI * 2;
+  const r = 10;
+  const y = Math.sin(i * 0.6) * 3;
+  const sphere = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.4, 1),
+    new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color().setHSL(i / 22, 0.8, 0.5),
+      emissive: new THREE.Color().setHSL(i / 22, 0.8, 0.3),
+      metalness: 0.9,
+      roughness: 0.1,
+    })
+  );
+  sphere.position.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
+  arcanaGroup.add(sphere);
+}
+scene.add(arcanaGroup);
+
+const districtGroup = new THREE.Group();
+for (let i = 0; i < 33; i++) {
+  const angle = (i / 33) * Math.PI * 2;
+  const r = 16 + Math.sin(i * 0.4) * 1.5;
+  const y = Math.cos(i * 0.3) * 5;
+  const d = new THREE.Mesh(
+    new THREE.TetrahedronGeometry(0.25, 0),
+    new THREE.MeshBasicMaterial({ color: 0x4ade80, transparent: true, opacity: 0.9 })
+  );
+  d.position.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
+  districtGroup.add(d);
+}
+scene.add(districtGroup);
+
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  core.rotation.y = t * 0.2;
+  core.rotation.x = t * 0.15;
+  particles.rotation.y = -t * 0.03;
+  particles.rotation.x = t * 0.01;
+  arcanaGroup.rotation.y = t * 0.15;
+  arcanaGroup.rotation.x = Math.sin(t * 0.3) * 0.1;
+  districtGroup.rotation.y = -t * 0.08;
+  districtGroup.rotation.x = Math.sin(t * 0.2) * 0.1;
+  controls.update();
+  composer.render();
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+});
+
+console.log('🐉 MEOK.AI ULTIMATE: 10000 particles + 22 Arcana + 33 districts + UnrealBloom + iridescent core');
+</script>
+</body>
+</html>

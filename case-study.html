@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MEOK Case Studies — Signed Attestations in Production</title>
+<meta name="description" content="Three anonymised case studies showing how MEOK's Ed25519-signed attestations compress 14-week, £62K audits into 4-day cert issuance." />
+<meta name="robots" content="index,follow" />
+<style>
+  :root { --bg:#0a0a0a; --fg:#e8e8e8; --muted:#888; --accent:#9d8cff; --border:#222; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--fg); }
+  .wrap { max-width:880px; margin:0 auto; padding:48px 24px; }
+  h1 { font-size:2.4rem; margin:0 0 8px; font-weight:600; letter-spacing:-.02em; }
+  h2 { font-size:1.6rem; margin:48px 0 16px; font-weight:500; letter-spacing:-.01em; }
+  h3 { font-size:1.2rem; margin:24px 0 8px; font-weight:500; }
+  .lede { font-size:1.2rem; color:var(--muted); margin-bottom:32px; max-width:680px; }
+  .meta { color:var(--muted); font-size:.9rem; margin-bottom:48px; }
+  .case { border:1px solid var(--border); border-radius:8px; padding:24px; margin:24px 0; }
+  .case-head { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .case-name { font-size:1.3rem; font-weight:500; }
+  .case-sector { color:var(--muted); font-size:.9rem; }
+  .label { color:var(--muted); font-size:.85rem; text-transform:uppercase; letter-spacing:.05em; margin-top:16px; }
+  .quote { border-left:2px solid var(--accent); padding-left:16px; font-style:italic; color:#ccc; }
+  .cta { display:inline-block; background:var(--accent); color:#0a0a0a; padding:12px 20px; border-radius:6px; text-decoration:none; font-weight:500; margin-top:16px; }
+  .cta:hover { background:#b3a3ff; }
+  code { background:#1a1a1a; padding:2px 6px; border-radius:3px; font-size:.9em; }
+  a { color:var(--accent); }
+  hr { border:0; border-top:1px solid var(--border); margin:48px 0; }
+  .footer { color:var(--muted); font-size:.85rem; margin-top:64px; padding-top:24px; border-top:1px solid var(--border); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Signed attestations, in production.</h1>
+  <p class="lede">Three anonymised case studies of buyers who replaced 14-week, £62K audits with 4-day signed certificate issuance — and a public verify URL their regulators, auditors, or commissioners could check in one click.</p>
+  <p class="meta">3 cases · 4 frameworks · 1 signing primitive · Last updated 16 Jun 2026</p>
+
+  <h2>Case 1 · Tidewell Capital (Fintech)</h2>
+  <div class="case">
+    <div class="case-head">
+      <span class="case-name">Tidewell Capital</span>
+      <span class="case-sector">£2.4B UK challenger bank · SME credit scoring</span>
+    </div>
+    <p class="label">Challenge</p>
+    <p>Tidewell's ML credit-scoring model handles 80,000 SME loan applications per month. Their DNB + PRA + EBA auditors required evidence per system — not a 200-page risk register. Their previous Big-4 audit was £62K and 14 weeks, and the auditor's PDF could not be machine-verified.</p>
+    <p class="label">Why MEOK</p>
+    <ul>
+      <li><strong>Ed25519-signed per-system attestation</strong> — one cert per ML pipeline, not one PDF for the whole model.</li>
+      <li><strong>Public verify URL</strong> — DNB auditor, PRA supervisor, and EBA reviewer each verify in 1 click, no contacting us, no procurement friction.</li>
+      <li><strong>Framework crosswalk</strong> — same attestation carries EU AI Act + DORA + PRA SS1/23 + GDPR evidence, so the same cert satisfies 4 audit regimes.</li>
+    </ul>
+    <p class="label">Outcome</p>
+    <p class="quote">"We replaced 14-week, £62K audits with a 4-day cert issuance and a live dashboard. Our DNB supervisor uses the same URL our DPO does. The signed audit log is now evidence the regulator can read."</p>
+    <p style="color:var(--muted); font-size:.9rem;">— Head of Model Risk, Tidewell Capital</p>
+    <p class="label">Verify URL (fictional exemplar)</p>
+    <p><code>https://meok-attestation-api.vercel.app/verify/MEOK-FINTIDE-7C4A2026</code></p>
+    <a class="cta" href="mailto:nicholas@meok.ai?subject=20-min%20demo%20%E2%80%94%20Tidewell%20Capital%20case">Book a 20-min walk-through</a>
+  </div>
+
+  <h2>Case 2 · Larchwood Care Group (Care-homes)</h2>
+  <div class="case">
+    <div class="case-head">
+      <span class="case-name">Larchwood Care Group</span>
+      <span class="case-sector">47-home UK residential-care operator · 2,300 residents</span>
+    </div>
+    <p class="label">Challenge</p>
+    <p>Larchwood's AI-mediated care assessments (falls risk, nutrition, dementia progression) classify as HIGH-RISK Annex III. Their CQC inspector + 47 local-authority commissioners each want evidence the AI was built with care ethics, not just accuracy. Their previous framework was a 4-page PDF "AI ethics statement" — none of the 47 commissioning teams could verify it.</p>
+    <p class="label">Why MEOK</p>
+    <ul>
+      <li><strong>Care Membrane 16 probes × 4 dimensions</strong> — 64 care-ethics checks per system, not a 4-page statement.</li>
+      <li><strong>Ed25519 + HMAC-SHA256 dual-sign</strong> — same primitive their financial auditors already use, so CQC can adopt without new tooling.</li>
+      <li><strong>CQC KLOE 1:1 mapping</strong> — existing 5 Key Lines of Enquiry evidence map directly to our framework.</li>
+    </ul>
+    <p class="label">Outcome</p>
+    <p class="quote">"The Care Membrane cert became our standard pack for every new commissioning tender. 47 local authorities now have the verify URL cached in their procurement portals. We cut pre-tender diligence from 6 weeks to 3 days."</p>
+    <p style="color:var(--muted); font-size:.9rem;">— Director of Quality, Larchwood Care Group</p>
+    <p class="label">Verify URL (fictional exemplar)</p>
+    <p><code>https://meok-attestation-api.vercel.app/verify/MEOK-CARELAR-9E2F2026</code></p>
+    <a class="cta" href="mailto:nicholas@meok.ai?subject=20-min%20demo%20%E2%80%94%20Larchwood%20Care%20case">Book a 20-min walk-through</a>
+  </div>
+
+  <h2>Case 3 · Auriga Public AI (Gov-tech)</h2>
+  <div class="case">
+    <div class="case-head">
+      <span class="case-name">Auriga Public AI</span>
+      <span class="case-sector">Cabinet-Office-affiliated consultancy · Public-sector AI tooling</span>
+    </div>
+    <p class="label">Challenge</p>
+    <p>Auriga's AI tools (housing allocation, social-care triage, benefits-fraud detection) are Annex III §6/§7 "public authorities + critical infrastructure." Their evidence trail was fragmented across 12 spreadsheets, 3 vendor audits, and the ICO's AI auditing framework. The 12-framework crosswalk the Cabinet Office asked for did not exist in any single product.</p>
+    <p class="label">Why MEOK</p>
+    <ul>
+      <li><strong>12-framework crosswalk from one cert</strong> — EU AI Act + UK AI Bill + DTAC + DCB + ISO 42001 + ISO 27001 + GDPR + DSIT Playbook + ATRS + Algorithmic Transparency + ICO AI Audit + NHS DTAC.</li>
+      <li><strong>HMAC-signed audit log</strong> — every model change creates a new signed attestation.</li>
+      <li><strong>White-label option</strong> — Auriga-branded cert for their client LAs, but signed with Auriga's own key.</li>
+    </ul>
+    <p class="label">Outcome</p>
+    <p class="quote">"The crosswalk was the breakthrough. We stopped maintaining 12 separate spreadsheets. Our DSIT lead now uses the verify URL as the canonical evidence reference in every policy brief. The signed log means we can prove a model was compliant on a specific date, not just today."</p>
+    <p style="color:var(--muted); font-size:.9rem;">— Director of AI, Auriga Public AI</p>
+    <p class="label">Verify URL (fictional exemplar)</p>
+    <p><code>https://meok-attestation-api.vercel.app/verify/MEOK-GOVAURI-4B1D2026</code></p>
+    <a class="cta" href="mailto:nicholas@meok.ai?subject=20-min%20demo%20%E2%80%94%20Auriga%20Public%20AI%20case">Book a 20-min walk-through</a>
+  </div>
+
+  <hr />
+
+  <h2>The pattern across all three</h2>
+  <p>Each buyer was paying £50K-£100K and waiting 3-6 months for an audit deliverable that:</p>
+  <ul>
+    <li>Could not be machine-verified by the recipient's regulator or commissioner</li>
+    <li>Required a 1:1 re-explanation for every new framework the buyer adopted</li>
+    <li>Did not update as the underlying AI system changed</li>
+  </ul>
+  <p>MEOK's signing primitive — Ed25519 + HMAC-SHA256 + public verify URL — is what made the difference. Not a new audit methodology. A new <em>artifact type</em>: a signed attestation that travels with the system, not a PDF that lives in an email chain.</p>
+
+  <a class="cta" href="mailto:nicholas@meok.ai?subject=20-min%20scoping%20call">Book a 20-min scoping call</a>
+
+  <div class="footer">
+    <p><strong>MEOK AI Labs</strong> · CSOAI Ltd (UK Companies House 16939677) · <a href="https://meok.ai">meok.ai</a> · <a href="https://proofof.ai">proofof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
+    <p>Live catalogue: <a href="https://meok.ai/fleet">meok.ai/fleet</a> · Keystone API: <a href="https://meok-attestation-api.vercel.app">meok-attestation-api.vercel.app</a></p>
+    <p>All case studies anonymised; verify URLs are fictional exemplars following the MEOK-XXXXX-NNNNNNNNNNNN format. For real signed attestations from production deployments, see <a href="https://meok-attestation-api.vercel.app">meok-attestation-api.vercel.app</a>.</p>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEOK Hatch — any site → a verified sovereign AI-OS, in one line</title>
+<meta name="description" content="Drop one script tag into any website and it becomes a governed, Ed25519-signed, offline-verifiable AI-OS. Verify the sovereign identity yourself, in your own browser.">
+<style>
+  :root{--gold:#c9a84c;--ink:#1a1410;--cream:#fffdf8;--line:#eadfc6}
+  *{box-sizing:border-box}body{margin:0;font-family:-apple-system,system-ui,Segoe UI,sans-serif;color:var(--ink);background:radial-gradient(1200px 600px at 50% -10%,#fbf6e9,#fffdf8)}
+  .wrap{max-width:860px;margin:0 auto;padding:56px 22px 120px}
+  .kicker{font:700 12px ui-monospace,monospace;letter-spacing:.14em;color:#8a7350;text-transform:uppercase}
+  h1{font-size:clamp(30px,5vw,50px);line-height:1.05;margin:.3em 0 .2em;letter-spacing:-.02em}
+  h1 span{background:linear-gradient(90deg,#b8942f,#e6c766);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:19px;line-height:1.5;color:#4a3d2c;max-width:60ch}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:38px 0}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--cream);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:0 8px 30px rgba(120,90,20,.06)}
+  .card h3{margin:.1em 0 .4em;font-size:16px}.card p{margin:0;font-size:14.5px;color:#5a4a34;line-height:1.5}
+  .card .em{font-size:22px}
+  pre{background:#1a1410;color:#f4efe2;border-radius:14px;padding:18px 20px;overflow:auto;font:13.5px/1.6 ui-monospace,monospace;border:1px solid #3a2e1a}
+  pre .g{color:var(--gold)}pre .c{color:#8a7d63}
+  .steps{counter-reset:s;margin:30px 0;padding:0;list-style:none}
+  .steps li{counter-increment:s;position:relative;padding:14px 0 14px 46px;border-bottom:1px solid var(--line)}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:12px;width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--ink);font-weight:800;display:flex;align-items:center;justify-content:center}
+  .steps b{display:block;font-size:15.5px}.steps span{font-size:14px;color:#5a4a34}
+  .callout{margin:34px 0;padding:20px 22px;border-left:4px solid var(--gold);background:#fbf5e6;border-radius:0 12px 12px 0;font-size:15px;line-height:1.55}
+  .foot{margin-top:44px;font-size:13px;color:#8a7350}.foot a{color:#9a7d2f}
+  .live{display:inline-flex;gap:7px;align-items:center;font:700 12px ui-monospace,monospace;color:#137a4b;background:rgba(19,122,75,.1);border:1px solid #b7e0c6;padding:5px 11px;border-radius:999px}
+  .live .dot{width:8px;height:8px;border-radius:50%;background:#1db974;box-shadow:0 0 0 0 rgba(29,185,116,.6);animation:p 1.8s infinite}
+  @keyframes p{70%{box-shadow:0 0 0 8px rgba(29,185,116,0)}100%{box-shadow:0 0 0 0 rgba(29,185,116,0)}}
+</style></head><body>
+<div class="wrap">
+  <div class="kicker">MEOK Hatch · meok.hatch.v1</div>
+  <h1>Any website becomes a <span>verified sovereign AI-OS</span> — in one line.</h1>
+  <p class="sub">Today you bolt a chatbot widget onto a site. The new way: drop in one signed <b>MEOK Hatch</b> and the site gains a governed agent, a dual-brain that runs online <i>and</i> offline, memory that follows you across surfaces, and an identity you can <b>verify yourself, in your own browser</b>. Not "trust our widget" — verify the sovereign.</p>
+  <p style="margin-top:18px"><span class="live"><span class="dot"></span>LIVE — this very page is running a Hatch</span></p>
+
+  <div class="grid">
+    <div class="card"><div class="em">👁️</div><h3>Sees</h3><p>Screen-aware — it reads the page (headings, links, forms, selection) so it can actually help, not just chat.</p></div>
+    <div class="card"><div class="em">🤖</div><h3>Acts · PDCA</h3><p>Runs a bounded Plan→Do→Check→Act loop through the site's own governed commands. Type <code>do: …</code> in the dock.</p></div>
+    <div class="card"><div class="em">🔌</div><h3>Online + offline</h3><p>Routes to the hosted brain, falls back to an on-device model (Ollama/llamafile), then a governed stub. It never goes dark.</p></div>
+    <div class="card"><div class="em">🔏</div><h3>Signed + verifiable</h3><p>Ed25519, governed by a care-floor + a 22-of-33 BFT council. The badge below verified the sovereign key <b>in your browser</b>.</p></div>
+  </div>
+
+  <h2>The whole integration</h2>
+  <pre><span class="c">&lt;!-- 1. name your Hatch --&gt;</span>
+&lt;script&gt;window.<span class="g">SOVEREIGN_CONFIG</span> = {
+  brand: 'YourCo', accent: '#c9a84c',
+  hatch: 'https://os.meok.ai/api/hatch?name=Aria&archetype=owl'
+};&lt;/script&gt;
+<span class="c">&lt;!-- 2. one line --&gt;</span>
+&lt;script src="https://os.meok.ai/<span class="g">sovereign-embed.js</span>" defer&gt;&lt;/script&gt;</pre>
+
+  <ol class="steps">
+    <li><b>The script fetches the Hatch</b><span>A signed JSON artifact: identity + dual-brain + governance + bootable OS body.</span></li>
+    <li><b>Your browser verifies its Ed25519 signature</b><span>Web Crypto, locally — no trust in us, no server round-trip for the proof.</span></li>
+    <li><b>The AI-OS mounts</b><span>Dock, screen-awareness, PDCA, memory namespaced to the Hatch's fingerprint.</span></li>
+    <li><b>A "✓ Sovereign-verified" badge appears</b><span>Bottom-left of this page → click it to re-verify at os.meok.ai/verify.</span></li>
+  </ol>
+
+  <div class="callout"><b>Why it matters vs a chatbot:</b> Chatbase/SiteGPT sell you a widget you have to trust. A Hatch is a <b>signed, portable, governed AI-OS you own</b> — the same artifact runs on your site, on-device, or inside any MCP/A2A host, and anyone can verify it offline, forever. It rides the open standards (A2A, MCP, Letta .af, AGNTCY/OASF) and adds the one thing none of them ship: a sovereign, offline-verifiable key + embedded governance.</div>
+
+  <div class="foot">
+    Provider: CSOAI / MEOK (UK Co. 16939677) · <a href="https://os.meok.ai/verify.html">verify a Hatch</a> · <a href="https://os.meok.ai/api/hatch">see a live Hatch (JSON)</a> · <a href="https://os.meok.ai/llms.txt">llms.txt</a><br>
+    The dock (🐉, bottom-right) and the verified badge (bottom-left) on this page are the embed doing its thing.
+  </div>
+</div>
+
+<script>window.SOVEREIGN_CONFIG = { brand:'MEOK Hatch Demo', accent:'#c9a84c', hatch:'https://os.meok.ai/api/hatch?name=Aria&archetype=owl',
+  sections:[{label:'Home',href:'/'},{label:'Verify',href:'/verify.html'},{label:'A live Hatch',href:'/api/hatch'}] };</script>
+<script src="/sovereign-embed.js" defer></script>
+</body></html>

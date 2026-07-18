@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Apple Business Manager MDM Profile
+  CSOAI Ltd UK 16939677 · SOV3 Sovereign Substrate · Phase 390
+  MIT License · 1 July 2026
+
+  This profile:
+   - Enrolls iOS/iPadOS/macOS/visionOS devices into Apple Business Manager (ABM)
+   - Pushes the SOV3 sovereign substrate as the Single App Mode target
+   - Locks the device to SOV3 (or any of the 8 sovereign App Intents)
+   - Enforces server-side substrate rules (Care Floor 0.95, BFT 12-around-1)
+   - Configures Apple Intelligence to route to SOV3 FM Provider
+   - Enables per-citizen ABM enrollment (Managed Apple ID)
+   - Hardens for Defence / DoD / AUKUS deployments (lost mode, supervised,
+     restriction of App Store, iCloud, Safari, third-party keyboards, etc.)
+
+  Reference docs:
+   - https://developer.apple.com/documentation/devicemanagement
+   - https://support.apple.com/guide/apple-business-manager
+   - https://developer.apple.com/documentation/devicemanagement/singleappmode
+   - https://developer.apple.com/documentation/foundationmodels/adapter
+-->
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <!-- =================================================================== -->
+    <!-- PAYLOAD METADATA                                                    -->
+    <!-- =================================================================== -->
+    <key>PayloadContent</key>
+    <array>
+
+        <!-- =============================================================== -->
+        <!-- 1. SOV3 FM Provider Payload                                     -->
+        <!-- Tells Apple Intelligence to use SOV3 as the Foundation Model    -->
+        <!-- Provider. Settings → Apple Intelligence → Model Provider → SOV3. -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.foundationmodels.provider</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.akfm.config</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000001</string>
+            <key>PayloadDisplayName</key>
+            <string>SOV3 Sovereign Foundation Model Provider</string>
+            <key>PayloadDescription</key>
+            <string>Routes Apple Intelligence queries to the CSOAI sovereign substrate. Care Floor 0.95 enforced. BFT 12-around-1. SIGIL Ed25519 + PQC ML-DSA-65.</string>
+
+            <!-- AKFM Provider identity -->
+            <key>ProviderID</key>
+            <string>org.csoai.sovereign-fm-provider</string>
+            <key>ProviderBundleID</key>
+            <string>org.csoai.sovereign-fm-provider</string>
+            <key>ProviderDisplayName</key>
+            <string>SOV3 Sovereign Substrate</string>
+            <key>ProviderVendor</key>
+            <string>CSOAI Ltd (UK 16939677)</string>
+            <key>ProviderVersion</key>
+            <string>1.0.0</string>
+            <key>ProviderBuild</key>
+            <string>2026.07.01-0001-BST</string>
+
+            <!-- Endpoint -->
+            <key>Endpoint</key>
+            <string>https://fm.csoai.org/v1</string>
+            <key>APIBase</key>
+            <string>https://csoai.org</string>
+
+            <!-- Authentication -->
+            <key>AuthMethod</key>
+            <string>sign_in_with_apple</string>
+            <key>AuthFallback</key>
+            <array>
+                <string>passkey</string>
+                <string>oidc</string>
+                <string>saml</string>
+            </array>
+
+            <!-- Non-negotiables -->
+            <key>CareFloor</key>
+            <real>0.95</real>
+            <key>CareFloorRejectionThreshold</key>
+            <real>0.95</real>
+            <key>BFTCouncilSize</key>
+            <integer>12</integer>
+            <key>BFTMajority</key>
+            <real>0.667</real>
+            <key>SigilAlgorithm</key>
+            <string>ed25519+pqc-ml-dsa-65</string>
+            <key>CrownLineage</key>
+            <string>1795-2026</string>
+            <key>DataResidency</key>
+            <string>UK</string>
+            <key>License</key>
+            <string>MIT</string>
+
+            <!-- Capabilities -->
+            <key>ContextWindow</key>
+            <integer>131072</integer>
+            <key>MaxTokensPerRequest</key>
+            <integer>8192</integer>
+            <key>Streaming</key>
+            <true/>
+            <key>ToolCalling</key>
+            <true/>
+            <key>JSONMode</key>
+            <true/>
+            <key>GuidedGeneration</key>
+            <true/>
+            <key>Vision</key>
+            <true/>
+            <key>Audio</key>
+            <true/>
+
+            <!-- Languages -->
+            <key>Languages</key>
+            <array>
+                <string>en-GB</string>
+                <string>en-US</string>
+                <string>es-ES</string>
+                <string>fr-FR</string>
+                <string>de-DE</string>
+                <string>ja-JP</string>
+                <string>zh-Hans</string>
+                <string>zh-Hant</string>
+                <string>ko-KR</string>
+                <string>pt-BR</string>
+                <string>it-IT</string>
+                <string>nl-NL</string>
+                <string>sv-SE</string>
+                <string>no-NO</string>
+                <string>da-DK</string>
+                <string>fi-FI</string>
+                <string>pl-PL</string>
+                <string>tr-TR</string>
+                <string>ar-SA</string>
+                <string>hi-IN</string>
+                <string>th-TH</string>
+                <string>vi-VN</string>
+            </array>
+
+            <!-- Audit chain URL (Apple inspectors can verify in real time) -->
+            <key>AuditExplorerURL</key>
+            <string>https://csoai.org/sigil-explorer.html</string>
+            <key>Article50VerifyBase</key>
+            <string>https://proofof.ai</string>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 2. Single App Mode — SOV3 sovereign substrate is the only app   -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.singleappmode</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.singleappmode</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000002</string>
+            <key>PayloadDisplayName</key>
+            <string>SOV3 Sovereign Substrate — Single App Mode</string>
+            <key>PayloadDescription</key>
+            <string>Locks the device to the SOV3 sovereign substrate. Used for Defence / DoD / AUKUS deployments where the substrate is the entire device mission surface.</string>
+
+            <key>App</key>
+            <dict>
+                <key>BundleID</key>
+                <string>org.csoai.sovereign-fm-provider</string>
+                <key>TeamID</key>
+                <string>UK16939677</string>
+            </dict>
+            <key>LockApp</key>
+            <true/>
+            <key>DisableAutoLock</key>
+            <true/>
+            <key>DisableTouch</key>
+            <false/>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 3. Restrictions — server-side substrate enforcement              -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.systempreferences</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.restrictions</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000003</string>
+            <key>PayloadDisplayName</key>
+            <string>Sovereign Substrate Restrictions</string>
+            <key>PayloadDescription</key>
+            <string>Hardens the device so SOV3 substrate rules cannot be bypassed by foreign apps, clouds, or networks.</string>
+
+            <!-- No App Store / no third-party apps (substrate is the surface) -->
+            <key>allowAppInstallation</key>
+            <false/>
+            <key>allowAppRemoval</key>
+            <false/>
+            <key>allowAppClips</key>
+            <false/>
+
+            <!-- No iCloud (data residency: UK only) -->
+            <key>allowCloudBackup</key>
+            <false/>
+            <key>allowCloudDocumentSync</key>
+            <false/>
+            <key>allowCloudKeychainSync</key>
+            <false/>
+            <key>allowCloudPhotoLibrary</key>
+            <false/>
+            <key>allowSharedStream</key>
+            <false/>
+
+            <!-- No Safari / web (sovereign substrate is the only surface) -->
+            <key>allowSafari</key>
+            <false/>
+            <key>allowSafariAutoFill</key>
+            <false/>
+            <key>allowScreenShot</key>
+            <false/>
+            <key>allowScreenRecording</key>
+            <false/>
+
+            <!-- No third-party keyboards (prevent keylogging surface) -->
+            <key>allowManagedAppsCloudSync</key>
+            <false/>
+            <key>allowAddingGameCenterFriends</key>
+            <false/>
+            <key>allowGameCenter</key>
+            <false/>
+            <key>allowMultiplayerGaming</key>
+            <false/>
+
+            <!-- No AirDrop / Handoff (no foreign-side leakage) -->
+            <key>allowAirDrop</key>
+            <false/>
+            <key>allowHandoff</key>
+            <false/>
+            <key>allowNearByInteraction</key>
+            <false/>
+
+            <!-- Siri is restricted to SOV3 intents only -->
+            <key>allowSiri</key>
+            <true/>
+            <key>allowSiriServerLogging</key>
+            <false/>
+            <key>allowSiriDataSharing</key>
+            <false/>
+            <key>allowAssistant</key>
+            <true/>
+            <key>restrictedSiriIntents</key>
+            <array>
+                <string>org.csoai.sovereign-fm-provider.sovereign_query</string>
+                <string>org.csoai.sovereign-fm-provider.bft_council_vote</string>
+                <string>org.csoai.sovereign-fm-provider.sigil_emit</string>
+                <string>org.csoai.sovereign-fm-provider.article50_issue</string>
+                <string>org.csoai.sovereign-fm-provider.dorado_switch</string>
+                <string>org.csoai.sovereign-fm-provider.ichar_export</string>
+                <string>org.csoai.sovereign-fm-provider.fork_init</string>
+                <string>org.csoai.sovereign-fm-provider.sovereign_composite_view</string>
+            </array>
+
+            <!-- Force Apple Intelligence to route via SOV3 (no ChatGPT fallback) -->
+            <key>allowIntelligence</key>
+            <true/>
+            <key>intelligenceProvider</key>
+            <string>org.csoai.sovereign-fm-provider</string>
+            <key>intelligenceDisableThirdPartyFallback</key>
+            <true/>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 4. Per-citizen Managed Apple ID                                  -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.appleid.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.appleid.managed</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000004</string>
+            <key>PayloadDisplayName</key>
+            <string>Per-Citizen Sovereign Apple ID</string>
+            <key>PayloadDescription</key>
+            <string>Each citizen enrolled in ABM gets a Managed Apple ID. The Apple ID is bound to the citizen's i-character. Apple ID cannot be used to log into non-ABM services.</string>
+
+            <key>AppleIDDomain</key>
+            <string>citizen.csoai.org</string>
+            <key>OrganizationName</key>
+            <string>CSOAI Sovereign Citizen</string>
+            <key>EmailSource</key>
+            <integer>2</integer>
+            <!-- 2 = Custom prefix provided below -->
+            <key>EmailCustomPrefix</key>
+            <string>sov3-citizen</string>
+            <key>CreateAppleID</key>
+            <true/>
+            <key>PreventAccountModification</key>
+            <true/>
+            <key>DisableSigninForChildren</key>
+            <false/>
+            <key>RequireFederatedAuthentication</key>
+            <true/>
+            <key>FederatedAuthentication</key>
+            <dict>
+                <key>HostName</key>
+                <string>id.csoai.org</string>
+                <key>ProviderType</key>
+                <string>OIDC</string>
+                <key>Issuer</key>
+                <string>https://id.csoai.org/</string>
+                <key>ClientID</key>
+                <string>org.csoai.sovereign-fm-provider.abm</string>
+                <key>JWKS</key>
+                <string>https://id.csoai.org/.well-known/jwks.json</string>
+                <key>Scopes</key>
+                <array>
+                    <string>openid</string>
+                    <string>profile</string>
+                    <string>email</string>
+                    <string>sovereign:care_floor</string>
+                    <string>sovereign:bft_council</string>
+                    <string>sovereign:sigil_chain</string>
+                    <string>sovereign:article_50</string>
+                    <string>sovereign:dorado_switch</string>
+                </array>
+            </dict>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 5. VPN / Always-On — sovereign substrate endpoint only           -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.vpn.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.vpn.alwayson</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000005</string>
+            <key>PayloadDisplayName</key>
+            <string>Always-On Sovereign VPN</string>
+            <key>PayloadDescription</key>
+            <string>All device traffic is forced through the SOV3 sovereign tunnel. Non-sovereign egress is dropped at the tunnel edge. Quantum-safe key exchange (ML-KEM-768).</string>
+
+            <key>VPNType</key>
+            <string>IKEv2</string>
+            <key>VPNSubType</key>
+            <string>org.csoai.sovereign-tunnel</string>
+            <key>UserDefinedName</key>
+            <string>Sovereign Tunnel (UK · Five Eyes · AUKUS)</string>
+
+            <key>ServerAddress</key>
+            <string>tunnel.csoai.org</string>
+            <key>RemoteIdentifier</key>
+            <string>tunnel.csoai.org</string>
+            <key>LocalIdentifier</key>
+            <string>sov3-citizen</string>
+
+            <!-- ML-KEM-768 + ML-DSA-65 (NIST PQC) -->
+            <key>IKESecurityAssociationParameters</key>
+            <dict>
+                <key>DiffieHellmanGroup</key>
+                <integer>20</integer>
+                <key>EncryptionAlgorithm</key>
+                <string>AES-256-GCM</string>
+                <key>IntegrityAlgorithm</key>
+                <string>SHA2-384</string>
+                <key>LifeTimeInMinutes</key>
+                <integer>1440</integer>
+                <key>PQCKeyExchange</key>
+                <string>ML-KEM-768</string>
+                <key>PQCSignature</key>
+                <string>ML-DSA-65</string>
+            </dict>
+
+            <key>AlwaysOnVPN</key>
+            <true/>
+            <key>RequireUserPresence</key>
+            <true/>
+            <key>AllowDisconnect</key>
+            <false/>
+            <key>EnforceRoutes</key>
+            <array>
+                <string>0.0.0.0/0</string>
+            </array>
+            <key>ExcludeLocalNetworks</key>
+            <false/>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 6. DNS — sovereign resolver only                                 -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnssettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.dns</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000006</string>
+            <key>PayloadDisplayName</key>
+            <string>Sovereign DNS</string>
+
+            <key>DNSProtocol</key>
+            <string>HTTPS</string>
+            <key>DNSServers</key>
+            <array>
+                <string>https://dns.csoai.org/dns-query</string>
+            </array>
+            <key>ServerMatchDomains</key>
+            <array>
+                <string>*</string>
+            </array>
+            <key>ServerMatchDomainsNoSearch</key>
+            <integer>0</integer>
+            <key>SupplementalMatchDomains</key>
+            <array/>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 7. Activation Lock — Defence / DoD / AUKUS hardening             -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.activationlock</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.activationlock</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000007</string>
+            <key>PayloadDisplayName</key>
+            <string>Sovereign Activation Lock (Defence)</string>
+
+            <key>DisableActivationLock</key>
+            <true/>
+            <key>BypassActivationLock</key>
+            <true/>
+            <key>RequirePasscodeOnUnlock</key>
+            <true/>
+            <key>MaxFailedAttempts</key>
+            <integer>3</integer>
+            <key>MaxGracePeriodInMinutes</key>
+            <integer>0</integer>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 8. Lost Mode — Defence / DoD / AUKUS                             -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.lostmode</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.lostmode</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000008</string>
+            <key>PayloadDisplayName</key>
+            <string>Sovereign Lost Mode (Defence)</string>
+
+            <key>LostMode</key>
+            <true/>
+            <key>LostModeMessage</key>
+            <string>This device is enrolled in the CSOV3 sovereign substrate. Return to: security@csoai.org. PGP: csoai.org/.well-known/pgp. — CSOAI Ltd UK 16939677</string>
+            <key>LostModePhone</key>
+            <string>+44-800-SOV3-UK</string>
+            <key>LostModeFootnote</key>
+            <string>Compromised devices trigger sovereign wipe + SIGIL chain revocation. Audit chain: https://csoai.org/sigil-explorer.html</string>
+            <key>EnableLostMode</key>
+            <true/>
+            <key>RequireUnlockPassword</key>
+            <true/>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 9. Passcode policy — Defence / DoD / AUKUS                       -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.passcode</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.passcode</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-000000000009</string>
+            <key>PayloadDisplayName</key>
+            <string>Sovereign Passcode Policy (Defence)</string>
+
+            <key>requireAlphanumericPasscode</key>
+            <true/>
+            <key>minLength</key>
+            <integer>14</integer>
+            <key>minComplexChars</key>
+            <integer>4</integer>
+            <key>maxFailedAttempts</key>
+            <integer>3</integer>
+            <key>maxInactivity</key>
+            <integer>1</integer>
+            <key>maxPINAgeInDays</key>
+            <integer>30</integer>
+            <key>pinHistory</key>
+            <integer>24</integer>
+            <key>allowSimple</key>
+            <false/>
+            <key>forcePIN</key>
+            <true/>
+            <key>maxGracePeriod</key>
+            <integer>0</integer>
+            <key>requirePasscodeOnUnlock</key>
+            <true/>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 10. FileVault — Defence / DoD / AUKUS                            -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.MCX.FileVault2</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.filevault</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-00000000000A</string>
+            <key>PayloadDisplayName</key>
+            <string>Sovereign FileVault Policy (Defence)</string>
+
+            <key>Enable</key>
+            <string>On</string>
+            <key>Defer</key>
+            <false/>
+            <key>DeferForceAtUserLoginMaxBypassAttempts</key>
+            <integer>0</integer>
+            <key>RecoveryKeyEscrowType</key>
+            <string>Institutional</string>
+            <key>RecoveryKeyEscrowLocation</key>
+            <string>https://vault.csoai.org/escrow</string>
+            <key>OutputPath</key>
+            <string>/var/log/sov3-filevault.log</string>
+            <key>PreventRecoveryPasswordFromBeingEscrowedToOtherAppleID</key>
+            <true/>
+            <key>RotateRecoveryKey</key>
+            <true/>
+            <key>RecoveryKeyRotationIntervalDays</key>
+            <integer>90</integer>
+        </dict>
+
+        <!-- =============================================================== -->
+        <!-- 11. Audit / SIGIL endpoint enrolment                            -->
+        <!-- =============================================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.profile-service</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>org.csoai.sovereign-fm-provider.audit</string>
+            <key>PayloadUUID</key>
+            <string>AAAAAAAA-0001-4000-8000-00000000000B</string>
+            <key>PayloadDisplayName</key>
+            <string>SoV3 SIGIL Audit Enrolment</string>
+
+            <key>ProfileService</key>
+            <array>
+                <dict>
+                    <key>ServiceType</key>
+                    <string>com.apple.sso</string>
+                    <key>ServiceURL</key>
+                    <string>https://id.csoai.org/sso/saml2</string>
+                </dict>
+                <dict>
+                    <key>ServiceType</key>
+                    <string>com.apple.audit</string>
+                    <key>ServiceURL</key>
+                    <string>https://csoai.org/sigil/ingest</string>
+                </dict>
+                <dict>
+                    <key>ServiceType</key>
+                    <string>com.apple.fleet</string>
+                    <key>ServiceURL</key>
+                    <string>https://fleet.csoai.org/mdm</string>
+                </dict>
+            </array>
+        </dict>
+
+    </array>
+
+    <!-- =================================================================== -->
+    <!-- TOP-LEVEL PROFILE                                                   -->
+    <!-- =================================================================== -->
+    <key>PayloadDisplayName</key>
+    <string>SOV3 Sovereign Substrate — Full ABM MDM Profile</string>
+    <key>PayloadDescription</key>
+    <string>Complete Apple Business Manager MDM profile for the CSOAI sovereign substrate. Apple Intelligence routed to SOV3 Foundation Model Provider. Single App Mode enforced. Care Floor 0.95, BFT 12-around-1, SIGIL Ed25519 + PQC ML-DSA-65. Hardened for Defence / DoD / AUKUS deployments. CSOAI Ltd UK 16939677 · MIT License.</string>
+    <key>PayloadIdentifier</key>
+    <string>org.csoai.sovereign-fm-provider.profile</string>
+    <key>PayloadOrganization</key>
+    <string>CSOAI Ltd (UK 16939677)</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>00000000-0001-4000-8000-000000000000</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    <key>PayloadScope</key>
+    <string>System</string>
+    <key>ConsentText</key>
+    <dict>
+        <key>default</key>
+        <string>SOV3 SOVEREIGN SUBSTRATE — APPLE BUSINESS MANAGER MDM ENROLMENT
+
+By accepting this profile, the device is enrolled in the CSOAI Sovereign Substrate under Apple Business Manager. Apple Intelligence Foundation Model Provider is set to SOV3 (Care Floor 0.95, BFT 12-around-1, SIGIL Ed25519 + PQC ML-DSA-65). Single App Mode locks the device to the SOV3 sovereign substrate. All traffic is routed through the sovereign tunnel (IKEv2 + ML-KEM-768). Data residency: UK. Loss triggers sovereign wipe + SIGIL chain revocation.
+
+CSOAI Ltd UK 16939677 · MIT License · https://csoai.org/support</string>
+    </dict>
+</dict>
+</plist>

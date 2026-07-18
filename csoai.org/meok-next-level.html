@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MEOK.AI — The Personal Sovereign AI OS | Master OS for the AI Economy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Master OS for the AI Economy. Sovereign Edge-to-Dome AI OS for compliance + productivity + digital twin.">
+<style>
+:root { --navy: #0a1a2f; --gold: #c9a84c; --green: #16a34a; --bg: #000814; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: var(--bg); color: white; overflow-x: hidden; }
+#cesium-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
+#threejs-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none; }
+.overlay { position: relative; z-index: 10; min-height: 100vh; background: linear-gradient(180deg, rgba(0,8,20,0.8) 0%, rgba(0,8,20,0.3) 100%); }
+.hero { padding: 100px 24px 60px; text-align: center; }
+.hero h1 { font-size: 80px; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 16px; background: linear-gradient(135deg, #c9a84c 0%, #4ade80 50%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p { font-size: 22px; color: rgba(255,255,255,0.85); max-width: 800px; margin: 0 auto 32px; line-height: 1.5; }
+.metrics { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; max-width: 1200px; margin: 0 auto; padding: 32px 0; }
+.metric { background: rgba(201,168,76,0.08); border: 1px solid var(--gold); border-radius: 8px; padding: 16px; text-align: center; }
+.metric .big { font-size: 28px; font-weight: 900; color: var(--gold); font-family: 'SF Mono', monospace; }
+.metric .label { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+.products { padding: 60px 24px; max-width: 1200px; margin: 0 auto; }
+.products h2 { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 48px; color: var(--gold); }
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.product { background: rgba(0,0,0,0.7); border: 1px solid rgba(201,168,76,0.4); border-radius: 12px; padding: 24px; text-align: center; }
+.product .icon { font-size: 32px; margin-bottom: 12px; }
+.product h3 { color: var(--green); font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+.product p { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.cta { display: inline-block; background: var(--gold); color: var(--navy); padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 14px; margin: 12px; }
+.cta.green { background: var(--green); color: white; }
+footer { padding: 40px 24px; text-align: center; background: rgba(0,0,0,0.9); border-top: 1px solid var(--gold); font-size: 12px; color: rgba(255,255,255,0.5); }
+</style>
+</head>
+<body>
+<div id="cesium-container"></div>
+<div id="threejs-container"></div>
+<div class="overlay">
+  <section class="hero">
+    <h1>MEOK.AI</h1>
+    <p>The Master OS for the AI Economy. Sovereign Edge-to-Dome AI OS for compliance + productivity + digital twin. The personal AI OS for the sovereign subject.</p>
+    <div class="metrics">
+      <div class="metric"><div class="big">80</div><div class="label">MCPs</div></div>
+      <div class="metric"><div class="big">330</div><div class="label">Tools</div></div>
+      <div class="metric"><div class="big">100</div><div class="label">GitHub Repos</div></div>
+      <div class="metric"><div class="big">7/7</div><div class="label">Compliance</div></div>
+      <div class="metric"><div class="big">0.937</div><div class="label">SOVEREIGN_BOND</div></div>
+      <div class="metric"><div class="big">100%</div><div class="label">UK Soil</div></div>
+    </div>
+  </section>
+  <section class="products">
+    <h2>The 9 Sovereign Surfaces</h2>
+    <div class="product-grid">
+      <div class="product"><div class="icon">🜏</div><h3>Sovereign Substrate</h3><p>330 tools, 22 Arcana, 33 districts, 0.937 SOVEREIGN_BOND</p></div>
+      <div class="product"><div class="icon">⚖️</div><h3>Article 50 Passport</h3><p>EU AI Act watermarking. 50 free/day, Pro £79/mo, Ed25519 signed</p></div>
+      <div class="product"><div class="icon">🛡️</div><h3>7 Compliance</h3><p>EU AI Act, UK Bill, GDPR, NIS2, DORA, NIST, ISO 42001</p></div>
+      <div class="product"><div class="icon">🌍</div><h3>DORADO Switch</h3><p>1-click EAST↔WEST. ZK-SNARK sovereignty proof. PQC ML-DSA-65</p></div>
+      <div class="product"><div class="icon">🏛️</div><h3>BFT Council</h3><p>21-seat trinity. 33-hive council. 2/3 majority required</p></div>
+      <div class="product"><div class="icon">📜</div><h3>SIGIL Chain</h3><p>Ed25519 + PQC. Hash-chained. Every sovereign action signed</p></div>
+      <div class="product"><div class="icon">🌐</div><h3>33 Districts</h3><p>Bee + Queen + Sentinel + CobolBridge + DORADO + iOKFarm + OpenHands + OrgKernel + Article50 + Horus + BigBraim + OLM + NBA + Vault + Federation + Proactive + Lapis + Distribution + Arcana + Mind + Router + Zamba + A2A + x402 + DID + RightBrain + OOWM + SOV3small + SOV3small3 + Intuition + BleedingEdge + OpenHandsReceptionist + UKDefence</p></div>
+      <div class="product"><div class="icon">🜍</div><h3>10 Layer 0 Protocols</h3><p>MCP + A2A + x402 + DID + JWT + WS + gRPC + OIDC + ANP + AGNTCY</p></div>
+    </div>
+  </section>
+  <footer>
+    🐉 MEOK.AI · The Master OS for the AI Economy<br>
+    Public. Auditable. Sovereign. · CSOAI Ltd (UK 16939677) · 100% UK soil
+  </footer>
+</div>
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+Cesium.Ion.defaultAccessToken = '';
+const viewer = new Cesium.Viewer('cesium-container', {
+  imageryProvider: new Cesium.OpenStreetMapImageryProvider({ url: 'https://tile.openstreetmap.org/' }),
+  baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
+  navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false,
+  infoBox: false, selectionIndicator: false,
+});
+viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0a1a2f');
+viewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#000814');
+viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(-0.1278, 51.5074, 100000), duration: 4 });
+for (let i = 0; i < 33; i++) {
+  const angle = (i / 33) * 2 * Math.PI;
+  const r = 0.05;
+  viewer.entities.add({
+    name: 'Hive ' + (i + 1),
+    position: Cesium.Cartesian3.fromDegrees(-0.1278 + r * Math.cos(angle), 51.5074 + r * Math.sin(angle), 600),
+    point: { pixelSize: 5, color: Cesium.Color.fromCssColorString('#4ade80') },
+  });
+}
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 30;
+const renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.getElementById('threejs-container').appendChild(renderer.domElement);
+const hiveGroup = new THREE.Group();
+for (let i = 0; i < 33; i++) {
+  const angle = (i / 33) * Math.PI * 2;
+  const r = 8 + Math.sin(i * 0.3) * 2;
+  const y = Math.cos(i * 0.2) * 4;
+  const geometry = new THREE.TetrahedronGeometry(0.3, 0);
+  const hue = i / 33;
+  const color = new THREE.Color().setHSL(hue, 0.8, 0.5);
+  const material = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.7 });
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.position.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
+  hiveGroup.add(mesh);
+}
+scene.add(hiveGroup);
+const centralGeometry = new THREE.DodecahedronGeometry(2, 0);
+const centralMaterial = new THREE.MeshBasicMaterial({ color: 0xc9a84c, wireframe: true, transparent: true, opacity: 0.6 });
+const central = new THREE.Mesh(centralGeometry, centralMaterial);
+scene.add(central);
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.006;
+  hiveGroup.rotation.y = time;
+  hiveGroup.rotation.x = Math.sin(time * 0.3) * 0.2;
+  central.rotation.y = -time * 0.4;
+  central.rotation.x = time * 0.3;
+  renderer.render(scene, camera);
+}
+animate();
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+console.log('🐉 MEOK.AI next-level site: Cesium 3D globe + Three.js 33-district orbit loaded');
+</script>
+</body>
+</html>

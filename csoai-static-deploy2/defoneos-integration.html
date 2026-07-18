@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Technical Integration Guide — REST API, WebSocket, SDK, A2A</title>
+<meta name="description" content="DEFONEOS Technical Integration: REST API, WebSocket events, Python SDK, A2A Agent Card, MCP protocol. Full developer documentation for sovereign defence AI integration.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.btn{display:inline-block;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem .5rem 0 0;text-transform:uppercase;font-size:.85rem;text-decoration:none}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem}
+.nav a:hover{color:#22d3ee}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-isr-pipeline.html">🛰️ ISR</a>
+  <a href="defoneos-swarm.html">🦅 Swarm</a>
+  <a href="defoneos-cyber.html">🛡️ Cyber</a>
+  <a href="defoneos-sensor-layer.html">📡 Sensors</a>
+  <a href="defoneos-jsp936.html">📋 JSP 936</a>
+</div>
+
+<h1>🔧 Technical Integration Guide</h1>
+<p class="tagline">REST API, WebSocket events, Python SDK, A2A Agent Card, MCP protocol. Everything a developer needs to integrate DEFONEOS into existing defence systems.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">300+</span><h3>MCP Tools</h3><p>Full JSON-RPC tool surface. Every DEFONEOS capability is an MCP tool.</p></div>
+  <div class="card"><span class="stat">JSON-RPC</span><h3>Protocol</h3><p>Standard MCP over HTTP/SSE. Compatible with Claude, GPT, Gemini, any MCP client.</p></div>
+  <div class="card"><span class="stat">Ed25519</span><h3>SIGIL Signing</h3><p>Every API call is hash-chained and Ed25519-signed. Immutable audit trail.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🌐 REST API</div>
+  <div class="tab" onclick="switchTab(1)">📡 WebSocket</div>
+  <div class="tab" onclick="switchTab(2)">🐍 Python SDK</div>
+  <div class="tab" onclick="switchTab(3)">🤖 A2A Protocol</div>
+  <div class="tab" onclick="switchTab(4)">📋 API Reference</div>
+</div>
+
+<div class="tab-content active">
+  <h3>🌐 REST API — JSON-RPC over HTTP</h3>
+  <p>The DEFONEOS API uses JSON-RPC 2.0 over HTTP POST. The endpoint is <code>/mcp</code> on the sovereign substrate (default port 3101).</p>
+
+  <h4>Health Check</h4>
+  <div class="code">curl -X POST http://localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}'
+
+→ {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2025-06-18",
+   "serverInfo":{"name":"defoneos","version":"1.0.0"}}}</div>
+
+  <h4>List Available Tools</h4>
+  <div class="code">curl -X POST http://localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
+
+→ {"tools":[{"name":"sigil_emit","description":"Emit SIGIL to audit chain"},
+            {"name":"bft_vote","description":"Cast BFT council vote"},
+            {"name":"swarm_launch","description":"Launch drone swarm"},
+            ... 300+ tools]</div>
+
+  <h4>Call a Tool — Emit SIGIL</h4>
+  <div class="code">curl -X POST http://localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call",
+       "params":{"name":"sigil_emit",
+                 "arguments":{"line":"C|defoneos|test|Integration test"}}}'
+
+→ {"digest":"a3f7b2e1...","signature":"Ed25519:...","prev_hash":"8c4f..."}</div>
+
+  <h4>Authentication</h4>
+  <p>API key passed via <code>X-API-Key</code> header. Keys issued via <code>dorado_api_auth</code> tool. Tier-based rate limits:</p>
+  <table>
+    <tr><th>Tier</th><th>Rate Limit</th><th>Tools Available</th><th>Cost</th></tr>
+    <tr><td>Free</td><td>100 req/day</td><td>Read-only tools</td><td>£0</td></tr>
+    <tr><td>Pro</td><td>10K req/day</td><td>All tools + BFT</td><td>£499/mo</td></tr>
+    <tr><td>Governance</td><td>Unlimited</td><td>All + council + audit</td><td>£2,499/mo</td></tr>
+    <tr><td>Enterprise</td><td>Unlimited + SLA</td><td>All + multi-region + PQC</td><td>£9,999+/mo</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>📡 WebSocket Events — Real-time Stream</h3>
+  <p>DEFONEOS pushes real-time events over WebSocket. Subscribe to channels for live updates: SIGIL emissions, BFT votes, swarm status, sensor alerts, ISR detections.</p>
+
+  <h4>Connect & Subscribe</h4>
+  <div class="code">wscat -c ws://localhost:3101/ws
+
+# Subscribe to channels
+> {"action":"subscribe","channel":"sigil"}
+> {"action":"subscribe","channel":"bft"}
+> {"action":"subscribe","channel":"swarm"}
+> {"action":"subscribe","channel":"sensor"}
+> {"action":"subscribe","channel":"isr"}
+
+# Live events stream in:
+< {"channel":"sigil","digest":"a3f7...","line":"C|swarm|launch|dragonfly-8"}
+< {"channel":"bft","proposal":"engage-Alpha-7","vote":"for","agent":"agent-14"}
+< {"channel":"swarm","mission":"msn-001","coverage":47,"drones_active":6}
+< {"channel":"sensor","node":"bat-03","detection":"drone","bearing":142}</div>
+
+  <h4>Available Channels</h4>
+  <table>
+    <tr><th>Channel</th><th>Events</th><th>Use Case</th></tr>
+    <tr><td>sigil</td><td>All SIGIL emissions</td><td>Audit trail monitoring</td></tr>
+    <tr><td>bft</td><td>BFT proposals, votes, consensus</td><td>Governance dashboard</td></tr>
+    <tr><td>swarm</td><td>Drone launches, status, recalls</td><td>C2 real-time map</td></tr>
+    <tr><td>sensor</td><td>Batear detections, satellite passes, AIS</td><td>Sensor fusion feed</td></tr>
+    <tr><td>isr</td><td>YOLOv8 detections, target geolocation</td><td>ISR analyst terminal</td></tr>
+    <tr><td>council</td><td>Council proposals, deliberations</td><td>Decision tracking</td></tr>
+    <tr><td>audit</td><td>Compliance assertions, chain verification</td><td>Regulator view</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>🐍 Python SDK</h3>
+  <p>The <code>defoneos</code> Python package provides a typed wrapper around the MCP API. Install via pip.</p>
+
+  <h4>Installation</h4>
+  <div class="code">pip install defoneos</div>
+
+  <h4>Quick Start</h4>
+  <div class="code">from defoneos import DEFONEOS
+
+# Connect to sovereign substrate
+df = DEFONEOS(host="localhost", port=3101, api_key="dk_...")
+
+# Emit a SIGIL
+result = df.sigil_emit("C|test|hello|Hello from Python SDK")
+print(f"Digest: {result.digest}")
+print(f"Signature: {result.signature}")
+
+# Launch swarm
+mission = df.swarm_launch(pattern="dragonfly", n_drones=6, area="SE-1444")
+print(f"Mission ID: {mission.mission_id}")
+
+# Monitor
+import time
+while True:
+    status = df.swarm_status(mission_id=mission.mission_id)
+    print(f"Active: {status.active}, Coverage: {status.coverage}%")
+    if status.coverage >= 95:
+        df.swarm_recall(mission_id=mission.mission_id)
+        break
+    time.sleep(10)
+
+# BFT vote
+vote = df.bft_vote(proposal="recall-swarm", choice="for")
+print(f"Consensus: {vote.consensus}, Votes: {vote.votes_for}/33")</div>
+
+  <h4>Async Support</h4>
+  <div class="code">import asyncio
+from defoneos import AsyncDEFONEOS
+
+async def main():
+    df = AsyncDEFONEOS(host="localhost", port=3101)
+    
+    # Subscribe to WebSocket events
+    async for event in df.subscribe("swarm"):
+        print(f"Swarm event: {event}")
+        if event.type == "mission_complete":
+            break
+
+asyncio.run(main())</div>
+</div>
+
+<div class="tab-content">
+  <h3>🤖 A2A (Agent-to-Agent) Protocol</h3>
+  <p>DEFONEOS supports Google's A2A protocol for inter-agent communication. Other AI agents can discover DEFONEOS capabilities, submit tasks, and receive results asynchronously.</p>
+
+  <h4>Agent Card Discovery</h4>
+  <div class="code"># Get DEFONEOS Agent Card (JSON-LD)
+curl http://localhost:3101/.well-known/agent.json
+
+→ {
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:csoai:defoneos",
+  "name": "DEFONEOS Sovereign Defence OS",
+  "description": "UK sovereign defence AI operating system",
+  "capabilities": ["sigil_emit","bft_vote","swarm_launch",...],
+  "skills": [
+    {"id":"eu-ai-act-compliance","name":"EU AI Act Compliance"},
+    {"id":"jsp936-audit","name":"JSP 936 Audit Generator"},
+    {"id":"isr-pipeline","name":"ISR Pipeline (YOLOv8+OpenAthena)"},
+    {"id":"swarm-coordination","name":"Drone Swarm Coordinator"}
+  ],
+  "authentication": {"type":"api-key","header":"X-API-Key"}
+}</div>
+
+  <h4>Submit Task to DEFONEOS</h4>
+  <div class="code"># From another AI agent (e.g., Claude, GPT)
+POST http://localhost:3101/a2a/tasks
+{
+  "message": "Launch ISR mission over grid SE-1444-NW, report detections",
+  "skill_id": "isr-pipeline",
+  "arguments": {"area": "SE-1444-NW", "duration": 300}
+}
+
+→ {"task_id":"task-2026-0705-001","status":"submitted"}
+
+# Poll for result
+GET http://localhost:3101/a2a/tasks/task-2026-0705-001
+→ {"status":"completed","result":{"detections":3,"targets":[...]}}</div>
+
+  <h4>Federation Topology</h4>
+  <table>
+    <tr><th>Protocol</th><th>Use</th><th>Status</th></tr>
+    <tr><td>A2A (Google)</td><td>Agent-to-agent task delegation</td><td class="status-live">✅ Live</td></tr>
+    <tr><td>MCP (Anthropic)</td><td>Tool calling</td><td class="status-live">✅ Live</td></tr>
+    <tr><td>SIGIL</td><td>Signed inter-agent messaging</td><td class="status-live">✅ Live</td></tr>
+    <tr><td>x402 (Coinbase)</td><td>Per-outcome payment</td><td class="status-live">✅ Live</td></tr>
+    <tr><td>DID (W3C)</td><td>Sovereign identity</td><td class="status-live">✅ Live</td></tr>
+    <tr><td>JWT</td><td>Session auth</td><td class="status-live">✅ Live</td></tr>
+    <tr><td>WebSocket</td><td>Real-time events</td><td class="status-live">✅ Live</td></tr>
+    <tr><td>gRPC</td><td>High-perf internal comms</td><td>🔧 Planned</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>📋 Full API Reference — Key Endpoints</h3>
+  <table>
+    <tr><th>Endpoint</th><th>Method</th><th>Description</th></tr>
+    <tr><td>/mcp</td><td>POST</td><td>MCP JSON-RPC endpoint (all tools)</td></tr>
+    <tr><td>/ws</td><td>WS</td><td>WebSocket event stream</td></tr>
+    <tr><td>/.well-known/agent.json</td><td>GET</td><td>A2A Agent Card</td></tr>
+    <tr><td>/a2a/tasks</td><td>POST</td><td>Submit A2A task</td></tr>
+    <tr><td>/a2a/tasks/:id</td><td>GET</td><td>Get A2A task status</td></tr>
+    <tr><td>/v1/sigil/events</td><td>GET</td><td>Query SIGIL chain</td></tr>
+    <tr><td>/v1/sigil/stats</td><td>GET</td><td>SIGIL chain statistics</td></tr>
+    <tr><td>/v1/sigil/export</td><td>GET</td><td>Export SIGIL chain (CSV/JSON)</td></tr>
+    <tr><td>/v1/dorado/cust-report</td><td>GET</td><td>Customer audit report</td></tr>
+    <tr><td>/v1/dorado/replay</td><td>GET</td><td>Audit trail replay for regulators</td></tr>
+  </table>
+
+  <h4>Rate Limiting</h4>
+  <p>Rate limits applied per API key. Headers return quota:</p>
+  <div class="code">X-RateLimit-Limit: 10000
+X-RateLimit-Remaining: 9847
+X-RateLimit-Reset: 1720195200</div>
+
+  <h4>Error Codes</h4>
+  <table>
+    <tr><th>Code</th><th>Meaning</th></tr>
+    <tr><td>200</td><td>Success</td></tr>
+    <tr><td>400</td><td>Bad request (invalid params)</td></tr>
+    <tr><td>401</td><td>Unauthorized (missing/invalid API key)</td></tr>
+    <tr><td>403</td><td>Forbidden (tier insufficient for tool)</td></tr>
+    <tr><td>429</td><td>Rate limited</td></tr>
+    <tr><td>500</td><td>Internal error (SIGIL logged)</td></tr>
+  </table>
+</div>
+
+<div class="sigil">DEFONEOS Technical Integration Guide · REST · WebSocket · Python SDK · A2A · MCP · UK Sovereign · CSOAI Certified · SIGIL-signed</div>
+</div>
+
+<script>
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n));
+}
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

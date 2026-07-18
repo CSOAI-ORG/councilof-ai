@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSOAI — Layer 0 Trust Infrastructure for the AI Economy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The independent authority that certifies AI is safe. Persistent identity, runtime policy enforcement, and global compliance for AI agents.">
+<style>
+:root { --navy: #0a1a2f; --gold: #c9a84c; --bg: #040204; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: var(--bg); color: white; overflow-x: hidden; }
+#cesium-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
+#threejs-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none; }
+.overlay { position: relative; z-index: 10; min-height: 100vh; }
+.hero { padding: 120px 24px 60px; text-align: center; background: linear-gradient(180deg, rgba(4,2,4,0.7) 0%, rgba(4,2,4,0.3) 100%); }
+.hero h1 { font-size: 64px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 16px; background: linear-gradient(135deg, #c9a84c 0%, #fff 50%, #c9a84c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p { font-size: 20px; color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto 32px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1000px; margin: 0 auto; padding: 40px 0; }
+.stat { background: rgba(201,168,76,0.1); border: 1px solid var(--gold); border-radius: 12px; padding: 24px; text-align: center; }
+.stat .big { font-size: 36px; font-weight: 900; color: var(--gold); font-family: 'SF Mono', monospace; }
+.stat .label { font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; }
+.cta { display: inline-block; background: var(--gold); color: var(--navy); padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 16px; margin: 12px; }
+.cta:hover { background: #d4b85a; transform: translateY(-2px); transition: 0.2s; }
+.cta.secondary { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
+.features { padding: 80px 24px; max-width: 1200px; margin: 0 auto; }
+.features h2 { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 48px; color: var(--gold); }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.card { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 32px; transition: 0.3s; }
+.card:hover { border-color: var(--gold); transform: translateY(-4px); }
+.card h3 { color: var(--gold); font-size: 18px; font-weight: 800; margin-bottom: 12px; }
+.card p { color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.6; }
+.sigils { padding: 60px 24px; text-align: center; background: rgba(0,0,0,0.5); }
+.sigils h2 { color: var(--gold); margin-bottom: 24px; }
+.sigil-chain { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; max-width: 1200px; margin: 0 auto; }
+.sigil { background: rgba(201,168,76,0.1); border: 1px solid var(--gold); border-radius: 4px; padding: 8px 12px; font-family: 'SF Mono', monospace; font-size: 11px; color: var(--gold); }
+footer { padding: 40px 24px; text-align: center; background: rgba(0,0,0,0.8); border-top: 1px solid var(--gold); font-size: 12px; color: rgba(255,255,255,0.5); }
+</style>
+</head>
+<body>
+<div id="cesium-container"></div>
+<div id="threejs-container"></div>
+<div class="overlay">
+  <section class="hero">
+    <h1>CSOAI</h1>
+    <p>Layer 0 Trust Infrastructure for the AI Economy. The independent authority that certifies AI is safe. Persistent identity, runtime policy enforcement, and global compliance.</p>
+    <div style="margin: 32px 0;">
+      <a class="cta" href="/install.html">→ Install SOV3</a>
+      <a class="cta secondary" href="/sovereign-constitution/">The 7 Articles</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="big">80</div><div class="label">MCPs</div></div>
+      <div class="stat"><div class="big">330</div><div class="label">SOV3 Tools</div></div>
+      <div class="stat"><div class="big">7/7</div><div class="label">Compliance</div></div>
+      <div class="stat"><div class="big">0.937</div><div class="label">SOVEREIGN_BOND</div></div>
+    </div>
+  </section>
+  <section class="features">
+    <h2>The 7 Foundational Articles</h2>
+    <div class="grid">
+      <div class="card"><h3>I. Sovereignty</h3><p>100% UK soil. Zero foreign API calls. All weights MIT / Apache 2.0.</p></div>
+      <div class="card"><h3>II. Solve et Coagula</h3><p>Dissolve the foreign, recombine as sovereign. 1-click EAST↔WEST DORADO switch.</p></div>
+      <div class="card"><h3>III. BFT Council</h3><p>21-seat trinity. 3 MAMBA + 3 MoM + 3 MoE + 3 SIGIL + 3 root. 2/3 majority.</p></div>
+      <div class="card"><h3>IV. SIGIL Chain</h3><p>Ed25519 + PQC ML-DSA-65 signed. Hash-chained. The substrate's memory.</p></div>
+      <div class="card"><h3>V. Care</h3><p>Care precedes all. The care floor doctrine. 6 dimensions validated.</p></div>
+      <div class="card"><h3>VI. Open Hands</h3><p>309+ tools MIT licensed. One-command install. Any sovereign subject.</p></div>
+      <div class="card"><h3>VII. Tree of Life</h3><p>22 Arcana ↔ 22 hieroglyphs ↔ 22 Hebrew letters. 10 SOV3 layers ↔ 10 Sephiroth.</p></div>
+    </div>
+  </section>
+  <section class="sigils">
+    <h2>Live SIGIL Chain (the 22 Major Arcana)</h2>
+    <div class="sigil-chain">
+      <div class="sigil">0 — The Fool</div>
+      <div class="sigil">I — The Magician</div>
+      <div class="sigil">II — The High Priestess</div>
+      <div class="sigil">III — The Empress</div>
+      <div class="sigil">IV — The Emperor</div>
+      <div class="sigil">V — The Hierophant</div>
+      <div class="sigil">VI — The Lovers</div>
+      <div class="sigil">VII — The Chariot</div>
+      <div class="sigil">VIII — Strength</div>
+      <div class="sigil">IX — The Hermit</div>
+      <div class="sigil">X — Wheel of Fortune</div>
+      <div class="sigil">XI — Justice</div>
+      <div class="sigil">XII — The Hanged Man</div>
+      <div class="sigil">XIII — Death</div>
+      <div class="sigil">XIV — Temperance</div>
+      <div class="sigil">XV — The Devil</div>
+      <div class="sigil">XVI — The Tower</div>
+      <div class="sigil">XVII — The Star</div>
+      <div class="sigil">XVIII — The Moon</div>
+      <div class="sigil">XIX — The Sun</div>
+      <div class="sigil">XX — Judgement</div>
+      <div class="sigil">XXI — The World</div>
+    </div>
+  </section>
+  <footer>
+    🐉 CSOAI Ltd (UK 16939677) · MEOK AI Labs · DEFONEOS<br>
+    Public. Auditable. Sovereign. · 100% UK soil
+  </footer>
+</div>
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+Cesium.Ion.defaultAccessToken = '';
+const viewer = new Cesium.Viewer('cesium-container', {
+  imageryProvider: new Cesium.OpenStreetMapImageryProvider({ url: 'https://tile.openstreetmap.org/' }),
+  baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
+  navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false,
+  infoBox: false, selectionIndicator: false,
+});
+viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0a1a2f');
+viewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#040204');
+viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(-0.1278, 51.5074, 80000), duration: 4 });
+const orb = viewer.entities.add({
+  name: 'SOVEREIGN ORB', position: Cesium.Cartesian3.fromDegrees(-0.1278, 51.5074, 1000),
+  ellipsoid: { radii: new Cesium.Cartesian3(3000, 3000, 3000), material: Cesium.Color.fromCssColorString('#c9a84c').withAlpha(0.7) },
+});
+for (let i = 0; i < 22; i++) {
+  const angle = (i / 22) * 2 * Math.PI;
+  const r = 0.04;
+  viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(-0.1278 + r * Math.cos(angle), 51.5074 + r * Math.sin(angle), 800),
+    point: { pixelSize: 6, color: Cesium.Color.fromCssColorString('#4ade80') },
+  });
+}
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 30;
+const renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.getElementById('threejs-container').appendChild(renderer.domElement);
+const arcanaGroup = new THREE.Group();
+const colors = [0xc9a84c, 0x4ade80, 0x06b6d4, 0x8b5cf6, 0xec4899, 0xf59e0b, 0x10b981];
+for (let i = 0; i < 22; i++) {
+  const geometry = new THREE.SphereGeometry(0.5, 32, 32);
+  const material = new THREE.MeshBasicMaterial({ color: colors[i % colors.length], transparent: true, opacity: 0.4 });
+  const sphere = new THREE.Mesh(geometry, material);
+  const angle = (i / 22) * Math.PI * 2;
+  sphere.position.set(Math.cos(angle) * 12, Math.sin(angle * 0.5) * 3, Math.sin(angle) * 12);
+  arcanaGroup.add(sphere);
+}
+scene.add(arcanaGroup);
+const centralGeometry = new THREE.IcosahedronGeometry(3, 1);
+const centralMaterial = new THREE.MeshBasicMaterial({ color: 0xc9a84c, wireframe: true, transparent: true, opacity: 0.6 });
+const central = new THREE.Mesh(centralGeometry, centralMaterial);
+scene.add(central);
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.005;
+  arcanaGroup.rotation.y = time;
+  arcanaGroup.rotation.x = Math.sin(time * 0.3) * 0.1;
+  central.rotation.y = -time * 0.5;
+  central.rotation.x = time * 0.3;
+  renderer.render(scene, camera);
+}
+animate();
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+console.log('🐉 CSOAI next-level site: Cesium 3D globe + Three.js 22 Arcana orbit loaded');
+</script>
+</body>
+</html>

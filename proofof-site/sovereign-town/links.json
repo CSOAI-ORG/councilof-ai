@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "description": "Cross-link graph of sov-town pages and the wider sovereign substrate",
+  "nodes": [
+    {"id": "index", "url": "/sovereign-town/", "title": "Sovereign Town — The 33 Hives", "type": "hub"},
+    {"id": "run", "url": "/sovereign-town/run.html", "title": "Run Page — Live Leaderboard", "type": "page"},
+    {"id": "leaderboard", "url": "/sovereign-town/leaderboard.html", "title": "Sigil Leaderboard", "type": "page"},
+    {"id": "fleet-status", "url": "/sovereign-town/fleet-status.html", "title": "Fleet Status — Sovereign MCPs", "type": "page"},
+    {"id": "3d-map", "url": "/sovereign-town/sov-3d-map.html", "title": "3D Map of the 33 Hives", "type": "viz"},
+    {"id": "press-kit", "url": "/sovereign-town/press-kit-live.html", "title": "Press Kit", "type": "page"},
+    {"id": "experiments", "url": "/sovereign-town/experiments.html", "title": "Policy-Lab Experiments", "type": "page"},
+    {"id": "agents", "url": "/sovereign-town/agent.json", "title": "A2A Agent Card", "type": "metadata"},
+    {"id": "registry", "url": "/sovereign-town/registry.json", "title": "Hive Registry", "type": "data"},
+    {"id": "anchor", "url": "/sovereign-town/anchor.json", "title": "Bitcoin Anchor", "type": "data"},
+    {"id": "pubkey", "url": "/sovereign-town/issuer-pubkey.txt", "title": "CSOAI Public Key (Ed25519)", "type": "data"}
+  ],
+  "links": [
+    {"from": "index", "to": "run", "type": "nav"},
+    {"from": "index", "to": "leaderboard", "type": "nav"},
+    {"from": "index", "to": "fleet-status", "type": "nav"},
+    {"from": "index", "to": "3d-map", "type": "nav"},
+    {"from": "index", "to": "press-kit", "type": "nav"},
+    {"from": "index", "to": "experiments", "type": "nav"},
+    {"from": "index", "to": "registry", "type": "data-ref"},
+    {"from": "index", "to": "anchor", "type": "data-ref"},
+    {"from": "index", "to": "pubkey", "type": "data-ref"},
+    {"from": "index", "to": "agents", "type": "data-ref"},
+    {"from": "run", "to": "leaderboard", "type": "nav"},
+    {"from": "fleet-status", "to": "registry", "type": "data-ref"},
+    {"from": "leaderboard", "to": "anchor", "type": "verify-link"},
+    {"from": "press-kit", "to": "registry", "type": "data-ref"}
+  ],
+  "stats": {
+    "node_count": 11,
+    "link_count": 14,
+    "categories": ["hub", "page", "viz", "metadata", "data"]
+  }
+}

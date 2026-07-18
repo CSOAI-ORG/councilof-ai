@@ -1,0 +1,86 @@
+[
+ {
+  "phase": 1,
+  "test": "logger log+readback",
+  "status": "PASS",
+  "detail": "0\u21921"
+ },
+ {
+  "phase": 1,
+  "test": "creates dependency file",
+  "status": "PASS",
+  "detail": "ok"
+ },
+ {
+  "phase": 2,
+  "test": "8 files, all have content",
+  "status": "PASS",
+  "detail": "8 files, 0 empty"
+ },
+ {
+  "phase": 3,
+  "test": "sov3_governance_episodes.csv",
+  "status": "PASS",
+  "detail": "1076 rows (\u22651000)"
+ },
+ {
+  "phase": 3,
+  "test": "sov3_town_care_dataset.csv",
+  "status": "PASS",
+  "detail": "5040 rows (\u22655000)"
+ },
+ {
+  "phase": 3,
+  "test": "threat_backfill.csv",
+  "status": "PASS",
+  "detail": "1823 rows (\u22651500)"
+ },
+ {
+  "phase": 4,
+  "test": "PYTHONPATH fix",
+  "status": "PASS",
+  "detail": "present"
+ },
+ {
+  "phase": 5,
+  "test": "notebook GPU+valid",
+  "status": "PASS",
+  "detail": "12 cells"
+ },
+ {
+  "phase": 6,
+  "test": "artifact care_town_model.joblib",
+  "status": "PASS",
+  "detail": "present"
+ },
+ {
+  "phase": 6,
+  "test": "artifact threat_classifier_v2.joblib",
+  "status": "PASS",
+  "detail": "present"
+ },
+ {
+  "phase": 6,
+  "test": "artifact WIRING_PATCHES.md",
+  "status": "PASS",
+  "detail": "present"
+ },
+ {
+  "phase": 6,
+  "test": "artifact _WIRING_HOOKS.md",
+  "status": "PASS",
+  "detail": "present"
+ },
+ {
+  "phase": 6,
+  "test": "artifact threat_backfill.csv",
+  "status": "PASS",
+  "detail": "present"
+ },
+ {
+  "phase": 7,
+  "test": "threat classifier loads+predicts",
+  "status": "PASS",
+  "detail": "predictions=[1, 0]"
+ }
+]

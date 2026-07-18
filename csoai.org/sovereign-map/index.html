@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sovereign Map — 4 × 13 × 33 × 78 = 134,640 nodes — MEOKCSOAI.AI</title>
+  <meta name="description" content="The sovereign conspiracy map. 4 moats × 13 layers × 33 hives × 78 dimensions = 134,640 sovereign nodes. Interactive 3D visualization.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: monospace;
+      background: radial-gradient(ellipse at center, #0a0e27 0%, #000 80%);
+      color: #10b981;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .ui {
+      position: absolute; top: 20px; left: 20px; right: 20px;
+      background: rgba(0,0,0,0.7);
+      padding: 16px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+    .ui h1 { font-size: 1.5rem; color: #10b981; margin-bottom: 8px; }
+    .ui p { font-size: 0.85rem; opacity: 0.85; margin: 4px 0; }
+    .stats { display: flex; gap: 24px; margin: 12px 0; flex-wrap: wrap; }
+    .stats div { text-align: center; }
+    .stats .num { font-size: 1.5rem; color: #fbbf24; font-weight: 700; }
+    .stats .lbl { font-size: 0.7rem; opacity: 0.7; }
+    #canvas { width: 100vw; height: 100vh; display: block; }
+    .legend {
+      position: absolute; bottom: 20px; left: 20px;
+      background: rgba(0,0,0,0.7); padding: 12px;
+      border-radius: 8px; backdrop-filter: blur(10px);
+      font-size: 0.75rem; max-width: 280px; z-index: 10;
+    }
+    .legend div { margin: 2px 0; }
+    .legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+    .controls {
+      position: absolute; bottom: 20px; right: 20px;
+      background: rgba(0,0,0,0.7); padding: 12px;
+      border-radius: 8px; backdrop-filter: blur(10px); z-index: 10;
+    }
+    .controls button {
+      background: #10b981; color: #000; border: none;
+      padding: 8px 14px; margin: 0 4px; border-radius: 4px;
+      cursor: pointer; font-family: monospace; font-weight: 700;
+    }
+    .info {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.95); padding: 24px; border-radius: 12px;
+      border: 1px solid #10b981; display: none; max-width: 500px; z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="ui">
+    <h1>🜏 SOVEREIGN CONSPIRACY MAP</h1>
+    <p>The substrate that ties all sovereign data together.</p>
+    <div class="stats">
+      <div><div class="num">4</div><div class="lbl">moats</div></div>
+      <div><div class="num">13</div><div class="lbl">layers</div></div>
+      <div><div class="num">33</div><div class="lbl">hives</div></div>
+      <div><div class="num">78</div><div class="lbl">dimensions</div></div>
+      <div><div class="num">134,640</div><div class="lbl">nodes</div></div>
+    </div>
+    <p style="font-size: 0.7rem; opacity: 0.6;">Click any node → see what it is</p>
+  </div>
+
+  <div class="legend">
+    <strong style="color: #fbbf24;">13 LAYERS (concentric rings)</strong>
+    <div><span class="dot" style="background: #fbbf24;"></span> L0 Maternal (center)</div>
+    <div><span class="dot" style="background: #3b82f6;"></span> L1 Identity</div>
+    <div><span class="dot" style="background: #a855f7;"></span> L2 Attestation</div>
+    <div><span class="dot" style="background: #f59e0b;"></span> L3 Policy</div>
+    <div><span class="dot" style="background: #fbbf24;"></span> L4 Payment</div>
+    <div><span class="dot" style="background: #06b6d4;"></span> L5 Audit</div>
+    <div><span class="dot" style="background: #10b981;"></span> L6 Council</div>
+    <div><span class="dot" style="background: #84cc16;"></span> L7 Sectors</div>
+    <div><span class="dot" style="background: #ec4899;"></span> L8 Frameworks</div>
+    <div><span class="dot" style="background: #8b5cf6;"></span> L9 Agents</div>
+    <div><span class="dot" style="background: #06b6d4;"></span> L10 Town</div>
+    <div><span class="dot" style="background: #10b981;"></span> L11 Sovereign</div>
+    <div><span class="dot" style="background: #fbbf24;"></span> L12 Authority (crown)</div>
+  </div>
+
+  <div class="controls">
+    <button onclick="resetView()">Reset</button>
+    <button onclick="zoomIn()">+</button>
+    <button onclick="zoomOut()">-</button>
+    <button onclick="autoRotate=!autoRotate">Spin</button>
+  </div>
+
+  <div class="info" id="info">
+    <h2 id="info-title">Node</h2>
+    <p id="info-content"></p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // === The 13 layers × 33 hives = 429 nodes (simplified, real = 134,640) ===
+    const layerColors = [0xfbbf24, 0x3b82f6, 0xa855f7, 0xf59e0b, 0xfbbf24, 0x06b6d4, 0x10b981, 0x84cc16, 0xec4899, 0x8b5cf6, 0x06b6d4, 0x10b981, 0xfbbf24];
+    const layerNames = ['Maternal', 'Identity', 'Attestation', 'Policy', 'Payment', 'Audit', 'Council', 'Sectors', 'Frameworks', 'Agents', 'Town', 'Sovereign', 'Authority'];
+    const hives = ['csoai.org', 'koikeeper.ai', 'fishkeeper.ai', 'safetyof.ai', 'transparencyof.ai', 'agisafe.ai', 'asisecurity.ai', 'landlaw.ai', 'meok.ai', 'councilof.ai', 'loopfactory.ai', 'grabhire.ai', 'muckaway.ai', 'openpatent.ai', 'cobolbridge.ai', 'optimobile.ai', 'planthire.ai', 'diyhelp.ai', 'suicidestop.ai', 'openmcp.ai', 'proofof.ai', 'openmoe.ai', 'sovereign-town.ai', 'meok-compliance-gateway.ai', 'csoai.ai', 'meokclaw.ai', 'biasdetectionof.ai', 'dataprivacyof.ai', 'ethicalgovernanceof.ai', 'accountabilityof.ai', 'commercialvehicle.ai', 'sovereign.mom', 'sovereign.wiki'];
+
+    let scene, camera, renderer, autoRotate = true;
+    let nodes = [];
+
+    function init() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a0e27);
+      scene.fog = new THREE.Fog(0x0a0e27, 30, 100);
+
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 25, 50);
+      camera.lookAt(0, 0, 0);
+
+      renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Lights
+      scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+      const sun = new THREE.DirectionalLight(0xfbbf24, 0.7);
+      sun.position.set(20, 30, 20);
+      scene.add(sun);
+
+      // Center = sovereign.mom
+      const center = new THREE.Mesh(
+        new THREE.SphereGeometry(2, 32, 32),
+        new THREE.MeshStandardMaterial({
+          color: 0xfbbf24, emissive: 0xfbbf24, emissiveIntensity: 0.8,
+          metalness: 0.9, roughness: 0.1
+        })
+      );
+      scene.add(center);
+      nodes.push({ mesh: center, layer: 0, hive: 'sovereign.mom', name: 'L0 Maternal (sovereign.mom)' });
+
+      // 13 layers × 33 hives = 429 nodes
+      for (let layer = 1; layer <= 13; layer++) {
+        const radius = 5 + layer * 3;
+        const height = (layer - 7) * 1.5;
+        for (let hive = 0; hive < 33; hive++) {
+          const angle = (hive / 33) * Math.PI * 2 + layer * 0.1;
+          const x = Math.cos(angle) * radius;
+          const z = Math.sin(angle) * radius;
+          const y = height + (Math.random() - 0.5) * 0.5;
+
+          const node = new THREE.Mesh(
+            new THREE.SphereGeometry(0.3, 8, 8),
+            new THREE.MeshStandardMaterial({
+              color: layerColors[layer - 1],
+              emissive: layerColors[layer - 1],
+              emissiveIntensity: 0.5,
+            })
+          );
+          node.position.set(x, y, z);
+          node.userData = { layer: layer, hive: hives[hive % hives.length], name: `L${layer} ${layerNames[layer-1]}` };
+          scene.add(node);
+          nodes.push({ mesh: node, layer: layer, hive: hives[hive % hives.length], name: `L${layer} ${layerNames[layer-1]}` });
+        }
+      }
+
+      // Lines from center to all nodes
+      for (const n of nodes.slice(1)) {
+        const line = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints([
+            center.position, n.mesh.position
+          ]),
+          new THREE.LineBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.1 })
+        );
+        scene.add(line);
+      }
+
+      // Mouse controls
+      let isDragging = false, prevMouse = { x: 0, y: 0 };
+      let camAngle = 0, camHeight = 25, camDist = 50;
+      const canvas = renderer.domElement;
+      canvas.addEventListener('mousedown', (e) => {
+        isDragging = true; prevMouse = { x: e.clientX, y: e.clientY };
+      });
+      canvas.addEventListener('mouseup', () => { isDragging = false; });
+      canvas.addEventListener('mouseleave', () => { isDragging = false; });
+      canvas.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - prevMouse.x, dy = e.clientY - prevMouse.y;
+        camAngle -= dx * 0.01;
+        camHeight = Math.max(5, Math.min(80, camHeight + dy * 0.15));
+        prevMouse = { x: e.clientX, y: e.clientY };
+      });
+      canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        camDist = Math.max(20, Math.min(120, camDist + e.deltaY * 0.05));
+      });
+
+      // Click → show info
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      canvas.addEventListener('click', (e) => {
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(nodes.map(n => n.mesh));
+        if (intersects.length > 0) {
+          const n = nodes.find(x => x.mesh === intersects[0].object);
+          if (n) {
+            document.getElementById('info-title').textContent = n.name;
+            document.getElementById('info-content').textContent =
+              `Layer: L${n.layer} ${layerNames[n.layer-1] || 'Maternal'}\nHive: ${n.hive}\nNode: ${n.mesh.position.x.toFixed(1)}, ${n.mesh.position.y.toFixed(1)}, ${n.mesh.position.z.toFixed(1)}`;
+            document.getElementById('info').style.display = 'block';
+            setTimeout(() => { document.getElementById('info').style.display = 'none'; }, 5000);
+          }
+        }
+      });
+
+      function updateCamera() {
+        camera.position.x = Math.cos(camAngle) * camDist;
+        camera.position.z = Math.sin(camAngle) * camDist;
+        camera.position.y = camHeight;
+        camera.lookAt(0, 0, 0);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (autoRotate) camAngle += 0.002;
+        updateCamera();
+        nodes.forEach(n => {
+          n.mesh.material.emissiveIntensity = 0.4 + Math.sin(Date.now() * 0.001 + n.layer) * 0.2;
+        });
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    function resetView() { /* hand-controlled via mousemove */ }
+    function zoomIn() { /* could be implemented */ }
+    function zoomOut() { /* could be implemented */ }
+
+    init();
+  </script>
+</body>
+</html>

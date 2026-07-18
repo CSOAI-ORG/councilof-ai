@@ -1,0 +1,54 @@
+#!/bin/bash
+# mesh-overnight: Comprehensive overnight monitoring
+# Always hot. Always productive.
+
+LOG_DIR=/tmp/mesh-overnight
+mkdir -p "$LOG_DIR"
+DATE=$(date +%Y%m%d_%H%M)
+OLLAMA_HOST="${OLLAMA_HOST:-192.168.50.176:11434}"
+MESH_GATEWAY="${MESH_GATEWAY:-192.168.50.105:3205}"
+
+# 1. Health snapshot
+curl -sf --max-time 10 "http://$MESH_GATEWAY/health" > "$LOG_DIR/health_${DATE}.json" 2>/dev/null || echo '{"error":"unreachable"}' > "$LOG_DIR/health_${DATE}.json"
+
+# 2. Local Ollama stats
+curl -sf --max-time 5 "http://$OLLAMA_HOST/api/tags" > "$LOG_DIR/models_${DATE}.json" 2>/dev/null || echo '{"error":"unreachable"}' > "$LOG_DIR/models_${DATE}.json"
+
+# 3. System stats
+{
+  echo "--- $DATE ---"
+  (df -h /System/Volumes/Data 2>/dev/null || df -h /) | tail -1
+  vm_stat | head -6
+  echo "Load: $(uptime | awk -F'load averages: ' '{print $2}')"
+  ps aux | grep "ollama" | grep -v grep | awk '{printf "PID %s CPU %s%% MEM %s%% %s\n", $2, $3, $4, $11}'
+} >> "$LOG_DIR/system.log"
+
+# 4. Keep primary model warm (read from active_model.txt or default to qwen3:1.7b)
+WARM_MODEL=$(cat ~/.mesh-prod/active_model.txt 2>/dev/null || echo "qwen3:1.7b")
+if ! pgrep -f "ollama runner.*$WARM_MODEL" > /dev/null; then
+  curl -sf --max-time 60 "http://$OLLAMA_HOST/api/generate" \
+    -H "Content-Type: application/json" \
+    -d "{\"model\":\"$WARM_MODEL\",\"prompt\":\"warmup\",\"stream\":false,\"options\":{\"num_predict\":1}}" > /dev/null 2>&1
+fi
+
+# 5. Store health to DB if available
+if command -v sqlite3 >/dev/null 2>&1 && [ -f "$HOME/.mesh-prod/perf.db" ]; then
+  DISK_PCT=$(df / | awk 'NR==2 {gsub(/%/,""); print $5}')
+  DISK_FREE=$(df / | awk 'NR==2 {print $4/1024/1024}')
+  RAM_USED_GB=$(vm_stat | awk '
+/Pages free/ {free=$3}
+/Pages active/ {active=$3}
+/Pages inactive/ {inactive=$3}
+/Pages wired/ {wired=$3}
+END {printf "%.2f", (active+inactive+wired)*16384/1e9}')
+  RAM_FREE_GB=$(vm_stat | awk '/Pages free/ {printf "%.2f", $3*16384/1e9}')
+  SWAP_USED=$(sysctl vm.swapusage 2>/dev/null | grep -o 'used = [0-9.]*[MG]' | head -1 | awk '{print $3}' || echo "0")
+  OLLAMA_UP=$(curl -sf --max-time 3 "http://$OLLAMA_HOST/api/tags" >/dev/null 2>&1 && echo 1 || echo 0)
+  MESH_UP=$(curl -sf --max-time 3 "http://$MESH_GATEWAY/health" >/dev/null 2>&1 && echo 1 || echo 0)
+  
+  sqlite3 "$HOME/.mesh-prod/perf.db" \
+    "INSERT INTO health_snapshots (disk_used_pct,disk_free_gb,ram_used_gb,ram_free_gb,swap_used_gb,ollama_running,mesh_reachable,active_model) VALUES ($DISK_PCT,$DISK_FREE,$RAM_USED_GB,$RAM_FREE_GB,'$SWAP_USED',$OLLAMA_UP,$MESH_UP,'$WARM_MODEL');" 2>/dev/null || true
+fi
+
+# 6. Cleanup old logs (>7 days)
+find "$LOG_DIR" -name "*.json" -mtime +7 -delete 2>/dev/null || true

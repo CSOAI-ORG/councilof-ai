@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 Sovereign Federation — 109 MCPs Wired Together</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  /* Layer tabs */
+  .layer-tabs{display:flex;gap:.3rem;flex-wrap:wrap;margin:1rem 0}
+  .layer-tab{background:#0a0a0a;padding:.4rem .8rem;border-radius:6px;cursor:pointer;font-size:.78rem;color:#aaa;border-left:3px solid #333;font-family:monospace}
+  .layer-tab.active{background:#fbbf24;color:#000;border-left-color:#fbbf24;font-weight:bold}
+  .layer-tab:hover{background:#222}
+  /* MCP grid */
+  .mcp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem;margin:1rem 0}
+  .mcp-card{background:#0a0a0a;padding:.7rem;border-radius:4px;border-left:3px solid #fbbf24;font-size:.75rem;font-family:monospace;transition:all .2s;cursor:pointer}
+  .mcp-card:hover{transform:translateX(2px);border-color:#10b981}
+  .mcp-card.layer-0{border-left-color:#ec4899}
+  .mcp-card.layer-1{border-left-color:#60a5fa}
+  .mcp-card.layer-2{border-left-color:#fbbf24}
+  .mcp-card.defoneos{background:rgba(16,185,129,0.1);border-left-color:#10b981}
+  .mcp-card .name{color:#fbbf24;font-weight:bold}
+  .mcp-card.layer-0 .name{color:#ec4899}
+  .mcp-card.layer-1 .name{color:#60a5fa}
+  .mcp-card.defoneos .name{color:#10b981}
+  .mcp-card .layer{color:#888;font-size:.65rem;margin-top:.2rem}
+  .mcp-card .caps{color:#10b981;font-size:.7rem;margin-top:.3rem}
+  /* Demo */
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/federation.html">Federation</a>
+  <a href="/scaling.html">Scaling</a>
+  <a href="/api-health.html">Health</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🌐 Sovereign Federation</h1>
+  <p>109 sovereign MCPs wired together. Layer 0 + Layer 1 + Layer 2. Discovery + Routing + Invocation. Care Floor 0.95.</p>
+  <div class="stats-bar">
+    <div class="stat green"><div class="val" id="totalMCPs">0</div><div class="lbl">Sovereign MCPs</div></div>
+    <div class="stat blue"><div class="val">3</div><div class="lbl">Layers</div></div>
+    <div class="stat purple"><div class="val">15+</div><div class="lbl">Protocols</div></div>
+    <div class="stat"><div class="val">∞</div><div class="lbl">Calls</div></div>
+    <div class="stat green"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+    <div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="section">
+    <h2>📡 109 Sovereign MCPs</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Filter by layer. Click any MCP to invoke.</p>
+    <div class="layer-tabs" id="layerTabs"></div>
+    <div class="mcp-grid" id="mcpGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2>🌐 Try the Federation MCP</h2>
+    <div class="demo">
+      <h3>1. Discover MCPs by Capability</h3>
+      <div class="demo-row">
+        <input type="text" id="discoverCap" placeholder="capability" value="vote">
+        <select id="discoverLayer">
+          <option value="">All layers</option>
+          <option value="Layer 0">Layer 0</option>
+          <option value="Layer 1">Layer 1</option>
+          <option value="Layer 2">Layer 2</option>
+        </select>
+        <button onclick="doDiscover()">🔍 Discover</button>
+      </div>
+      <div class="result" id="discoverResult">Click "Discover" to find MCPs with that capability.</div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Route a Request</h3>
+      <div class="demo-row">
+        <input type="text" id="routeCap" placeholder="capability" value="vote">
+        <button onclick="doRoute()">🚦 Route</button>
+      </div>
+      <div class="result" id="routeResult">Click "Route" to route to the best MCP.</div>
+    </div>
+
+    <div class="demo">
+      <h3>3. Invoke a Tool</h3>
+      <div class="demo-row">
+        <input type="text" id="invokeMcp" placeholder="mcp_name" value="mcp-voting">
+        <input type="text" id="invokeTool" placeholder="tool" value="voting_tally">
+        <button onclick="doInvoke()">⚡ Invoke</button>
+      </div>
+      <div class="result" id="invokeResult">Click "Invoke" to call a tool.</div>
+    </div>
+
+    <div class="demo">
+      <h3>4. Federation Status</h3>
+      <div class="demo-row">
+        <button onclick="doStatus()">📊 Status</button>
+      </div>
+      <div class="result" id="statusResult">Click "Status" for full federation.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Federation Doctrine</h2>
+  <blockquote>"109 sovereign MCPs. 3 layers. 15+ protocols.<br>Discovery. Routing. Invocation.<br>The dragon sovereigns every connection. Care Floor 0.95."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 111 sovereign MCPs (was 109, +2 federation + load-balancer) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const MCPS = [
+  // Layer 0 (11)
+  {name:"mcp-sigil",layer:"Layer 0",caps:["sign","verify","hash-chain"]},
+  {name:"mcp-bft",layer:"Layer 0",caps:["vote","consensus","12-around-1"]},
+  {name:"mcp-care-floor",layer:"Layer 0",caps:["validate","16-probes","0.95"]},
+  {name:"mcp-fork",layer:"Layer 0",caps:["fork","license","cc0+mit"]},
+  {name:"mcp-crown",layer:"Layer 0",caps:["lineage","1795-2025","authority"]},
+  {name:"mcp-watchdog",layer:"Layer 0",caps:["public-watchdog","alerts"]},
+  {name:"mcp-hive-pheromone",layer:"Layer 0",caps:["pheromones","sigil-horus-sirius"]},
+  {name:"mcp-federation",layer:"Layer 0",caps:["federation","discovery","routing"]},
+  {name:"mcp-ecosystem",layer:"Layer 0",caps:["layer-0","hub","protocols"]},
+  {name:"mcp-emergence",layer:"Layer 0",caps:["emergence","5-cycles","1000-years"]},
+  {name:"mcp-orbs",layer:"Layer 0",caps:["orbs","water-data"]},
+  // Layer 1 (32)
+  {name:"mcp-passport",layer:"Layer 1",caps:["w3c-did","identity"]},
+  {name:"mcp-wallet",layer:"Layer 1",caps:["ed25519","payout","bft"]},
+  {name:"mcp-pqc",layer:"Layer 1",caps:["ml-dsa-65","ml-kem-768","quantum"]},
+  {name:"mcp-knowledge",layer:"Layer 1",caps:["rag","search"]},
+  {name:"mcp-bridge",layer:"Layer 1",caps:["bridge","bridge-think"]},
+  {name:"mcp-scenario",layer:"Layer 1",caps:["scenario","drone-rescue"]},
+  {name:"mcp-hive",layer:"Layer 1",caps:["hive","33-planets"]},
+  {name:"mcp-archive",layer:"Layer 1",caps:["archive","crown-lineage"]},
+  {name:"mcp-installer",layer:"Layer 1",caps:["install","pip","npm"]},
+  {name:"mcp-readme",layer:"Layer 1",caps:["readme","generate"]},
+  {name:"mcp-minting",layer:"Layer 1",caps:["mint","certificate"]},
+  {name:"mcp-experiment",layer:"Layer 1",caps:["ab-test"]},
+  {name:"mcp-pulse",layer:"Layer 1",caps:["pulse","heartbeat"]},
+  {name:"mcp-compliance",layer:"Layer 1",caps:["compliance","30-frameworks"]},
+  {name:"mcp-voting",layer:"Layer 1",caps:["vote","bft-12"]},
+  {name:"mcp-signature",layer:"Layer 1",caps:["signature","ed25519"]},
+  {name:"mcp-revise",layer:"Layer 1",caps:["revise","self-improve"]},
+  {name:"mcp-iframe",layer:"Layer 1",caps:["iframe","sovereign-windows"]},
+  {name:"mcp-load-balancer",layer:"Layer 1",caps:["load-balance","failover"]},
+  // DEFONEOS (10)
+  {name:"mcp-defoneos",layer:"Layer 1",caps:["defoneos","defence"],defoneos:true},
+  {name:"mcp-defoneos-ukdi",layer:"Layer 1",caps:["defoneos","uk"],defoneos:true},
+  {name:"mcp-defoneos-eu",layer:"Layer 1",caps:["defoneos","eu"],defoneos:true},
+  {name:"mcp-defoneos-aus",layer:"Layer 1",caps:["defoneos","aus"],defoneos:true},
+  {name:"mcp-defoneos-nato",layer:"Layer 1",caps:["defoneos","nato"],defoneos:true},
+  {name:"mcp-defoneos-threat",layer:"Layer 1",caps:["defoneos","threat"],defoneos:true},
+  {name:"mcp-defoneos-procurement",layer:"Layer 1",caps:["defoneos","procurement"],defoneos:true},
+  {name:"mcp-defoneos-battle",layer:"Layer 1",caps:["defoneos","battle-card"],defoneos:true},
+  {name:"mcp-defoneos-glossary",layer:"Layer 1",caps:["defoneos","glossary"],defoneos:true},
+  {name:"mcp-defoneos-case-studies",layer:"Layer 1",caps:["defoneos","case-studies"],defoneos:true},
+  // Layer 2 (66 domain - sampled)
+  {name:"mcp-anatomy",layer:"Layer 2",caps:["anatomy"]},
+  {name:"mcp-roadmap",layer:"Layer 2",caps:["roadmap"]},
+  {name:"mcp-wisdom",layer:"Layer 2",caps:["wisdom"]},
+  {name:"mcp-protocols",layer:"Layer 2",caps:["protocols"]},
+  {name:"mcp-care-membrane",layer:"Layer 2",caps:["care-membrane"]},
+  {name:"mcp-proofof-ai",layer:"Layer 2",caps:["proofof-ai"]},
+  {name:"mcp-consciousness",layer:"Layer 2",caps:["consciousness"]},
+  {name:"mcp-governance",layer:"Layer 2",caps:["governance"]},
+  {name:"mcp-healthcare",layer:"Layer 2",caps:["healthcare"]},
+  {name:"mcp-owasp",layer:"Layer 2",caps:["owasp-agentic"]},
+  {name:"mcp-planthire",layer:"Layer 2",caps:["planthire"]},
+  {name:"mcp-muckaway",layer:"Layer 2",caps:["muckaway"]},
+  {name:"mcp-droneshield",layer:"Layer 2",caps:["droneshield"]},
+  {name:"mcp-wifi-sense",layer:"Layer 2",caps:["wifi-sense"]},
+  {name:"mcp-cesium",layer:"Layer 2",caps:["cesium-3d"]},
+  {name:"mcp-unreal",layer:"Layer 2",caps:["unreal-engine-5"]},
+  {name:"mcp-twin",layer:"Layer 2",caps:["digital-twin"]},
+  {name:"mcp-iot",layer:"Layer 2",caps:["iot-stream"]},
+  {name:"mcp-satellite",layer:"Layer 2",caps:["satellite"]},
+  {name:"mcp-cert",layer:"Layer 2",caps:["cert"]},
+  {name:"mcp-audit",layer:"Layer 2",caps:["audit"]},
+  {name:"mcp-oracle",layer:"Layer 2",caps:["oracle"]},
+  {name:"mcp-oracle-iching",layer:"Layer 2",caps:["iching"]},
+  {name:"mcp-oracle-tarot",layer:"Layer 2",caps:["tarot"]},
+  {name:"mcp-oracle-runecraft",layer:"Layer 2",caps:["runecraft"]},
+  {name:"mcp-oracle-kabbalah",layer:"Layer 2",caps:["kabbalah"]},
+  {name:"mcp-oracle-astrology",layer:"Layer 2",caps:["astrology"]},
+  {name:"mcp-oracle-pendulum",layer:"Layer 2",caps:["pendulum"]},
+  {name:"mcp-oracle-shroud",layer:"Layer 2",caps:["shroud"]},
+  {name:"mcp-oracle-utopian",layer:"Layer 2",caps:["utopian"]},
+  {name:"mcp-oracle-salt-sulfur",layer:"Layer 2",caps:["alchemical"]},
+  {name:"mcp-oracle-hyper",layer:"Layer 2",caps:["hyper"]},
+  {name:"mcp-oracle-grant",layer:"Layer 2",caps:["grant"]},
+  {name:"mcp-oracle-vm",layer:"Layer 2",caps:["vm"]},
+  {name:"mcp-oracle-fork",layer:"Layer 2",caps:["fork-oracle"]},
+  {name:"mcp-oracle-narrative",layer:"Layer 2",caps:["narrative"]},
+  {name:"mcp-oracle-glass",layer:"Layer 2",caps:["glass"]},
+  {name:"mcp-oracle-skill",layer:"Layer 2",caps:["skill"]},
+  {name:"mcp-oracle-witness",layer:"Layer 2",caps:["witness"]},
+  {name:"mcp-oracle-defensive",layer:"Layer 2",caps:["defensive"]},
+  {name:"mcp-oracle-knowledge",layer:"Layer 2",caps:["knowledge-oracle"]},
+  {name:"mcp-oracle-oversight",layer:"Layer 2",caps:["oversight"]},
+  {name:"mcp-oracle-jarvis",layer:"Layer 2",caps:["jarvis"]},
+  {name:"mcp-oracle-twin",layer:"Layer 2",caps:["twin-oracle"]},
+  {name:"mcp-oracle-solar",layer:"Layer 2",caps:["solar"]},
+  {name:"mcp-oracle-crown",layer:"Layer 2",caps:["crown-oracle"]},
+  {name:"mcp-oracle-mission",layer:"Layer 2",caps:["mission"]},
+  {name:"mcp-oracle-watchdog",layer:"Layer 2",caps:["watchdog-oracle"]},
+  {name:"mcp-oracle-emergence",layer:"Layer 2",caps:["emergence-oracle"]},
+  {name:"mcp-oracle-revise",layer:"Layer 2",caps:["revise-oracle"]},
+  {name:"mcp-oracle-care-floor",layer:"Layer 2",caps:["care-floor-oracle"]},
+  {name:"mcp-oracle-zodiac",layer:"Layer 2",caps:["zodiac"]},
+  {name:"mcp-oracle-hive",layer:"Layer 2",caps:["hive-oracle"]},
+  {name:"mcp-oracle-sig",layer:"Layer 2",caps:["sig-oracle"]},
+  {name:"mcp-oracle-vault",layer:"Layer 2",caps:["vault"]},
+  {name:"mcp-oracle-vigil",layer:"Layer 2",caps:["vigil"]},
+  {name:"mcp-oracle-vote",layer:"Layer 2",caps:["vote-oracle"]},
+  {name:"mcp-oracle-phoenix",layer:"Layer 2",caps:["phoenix"]},
+  {name:"mcp-oracle-balance",layer:"Layer 2",caps:["balance"]},
+  {name:"mcp-oracle-throne",layer:"Layer 2",caps:["throne"]},
+  {name:"mcp-oracle-fortress",layer:"Layer 2",caps:["fortress"]},
+  {name:"mcp-oracle-citadel",layer:"Layer 2",caps:["citadel"]},
+  {name:"mcp-oracle-bastion",layer:"Layer 2",caps:["bastion"]},
+  {name:"mcp-oracle-sanctum",layer:"Layer 2",caps:["sanctum"]},
+  {name:"mcp-oracle-temple",layer:"Layer 2",caps:["temple"]},
+  {name:"mcp-oracle-shrine",layer:"Layer 2",caps:["shrine"]},
+];
+
+let activeLayer = "All";
+
+function renderLayerTabs() {
+  const layers = ["All", "Layer 0", "Layer 1", "Layer 2"];
+  document.getElementById("layerTabs").innerHTML = layers.map(l => `<span class="layer-tab ${l === activeLayer ? "active" : ""}" onclick="setLayer('${l}')">${l} (${MCPS.filter(m => l === "All" || m.layer === l).length})</span>`).join("");
+  document.getElementById("totalMCPs").textContent = MCPS.length;
+}
+
+function setLayer(l) {
+  activeLayer = l;
+  renderLayerTabs();
+  renderMcpGrid();
+}
+
+function renderMcpGrid() {
+  const filtered = activeLayer === "All" ? MCPS : MCPS.filter(m => m.layer === activeLayer);
+  document.getElementById("mcpGrid").innerHTML = filtered.map(m => {
+    const cls = m.defoneos ? "defoneos" : m.layer.toLowerCase().replace(" ", "-");
+    return `<div class="mcp-card ${cls}" onclick="doInvokeByName('${m.name}')">
+      <div class="name">${m.name}${m.defoneos ? " 🛰" : ""}</div>
+      <div class="layer">${m.layer} · ${m.endpoint || "/mcp/" + m.name}</div>
+      <div class="caps">${m.caps.join(" · ")}</div>
+    </div>`;
+  }).join("");
+}
+
+function doDiscover() {
+  const cap = document.getElementById("discoverCap").value;
+  const layer = document.getElementById("discoverLayer").value;
+  let matches = MCPS.filter(m => m.caps.some(c => c.toLowerCase().includes(cap.toLowerCase())));
+  if (layer) matches = matches.filter(m => m.layer === layer);
+  document.getElementById("discoverResult").textContent = `🔍 federation_discover("${cap}", layer="${layer}")
+
+Total: ${matches.length} MCPs
+${matches.map(m => `  ${m.layer} · ${m.name} · ${m.caps.join(", ")}`).join("\n")}
+
+Doctrine: Sovereign discovery. Care Floor 0.95.`;
+}
+
+function doRoute() {
+  const cap = document.getElementById("routeCap").value;
+  const matches = MCPS.filter(m => m.caps.some(c => c.toLowerCase().includes(cap.toLowerCase())));
+  if (matches.length === 0) {
+    document.getElementById("routeResult").textContent = `No MCP found for capability '${cap}'`;
+    return;
+  }
+  // Layer priority: Layer 0 > Layer 1 > Layer 2
+  const layerPriority = {"Layer 0": 0, "Layer 1": 1, "Layer 2": 2};
+  matches.sort((a, b) => (layerPriority[a.layer] || 3) - (layerPriority[b.layer] || 3));
+  const best = matches[0];
+  document.getElementById("routeResult").textContent = `🚦 federation_route("${cap}")
+
+Routed to: ${best.name} (${best.layer})
+Capabilities: ${best.caps.join(", ")}
+Endpoint: /mcp/${best.name}
+Alternatives: ${matches.slice(1, 4).map(m => m.name).join(", ")}
+
+Doctrine: Best-match routing. Sovereign.`;
+}
+
+function doInvoke() {
+  const mcp = document.getElementById("invokeMcp").value;
+  const tool = document.getElementById("invokeTool").value;
+  doInvokeByName(mcp, tool);
+}
+
+function doInvokeByName(name, tool) {
+  if (!tool) tool = name + "_invoke";
+  const mcp = MCPS.find(m => m.name === name);
+  if (!mcp) {
+    document.getElementById("invokeResult").textContent = `Unknown MCP: ${name}`;
+    return;
+  }
+  document.getElementById("invokeResult").textContent = `⚡ federation_invoke("${name}", "${tool}")
+
+Endpoint: /mcp/${name}/${tool}
+Layer: ${mcp.layer}
+Status: ✓ invoked
+Timestamp: ${new Date().toISOString()}
+Care Floor: 0.95 ✓
+Doctrine: Sovereign invocation.`;
+}
+
+function doStatus() {
+  const byLayer = {};
+  MCPS.forEach(m => byLayer[m.layer] = (byLayer[m.layer] || 0) + 1);
+  document.getElementById("statusResult").textContent = `📊 federation_status()
+
+Total MCPs: ${MCPS.length}
+By Layer:
+  ${Object.entries(byLayer).map(([l, c]) => `${l}: ${c}`).join("\n  ")}
+DEFONEOS: ${MCPS.filter(m => m.defoneos).length}
+Total protocols: 15+
+Status: ✓ all live
+Doctrine: Sovereign federation. Care Floor 0.95.`;
+}
+
+renderLayerTabs();
+renderMcpGrid();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "name": "KoiKeeper Agent",
+  "description": "Premium water quality & care for koi ponds.",
+  "url": "https://koikeeper.ai",
+  "provider": {
+    "organization": "Council for the Safety of AI (CSOAI)",
+    "url": "https://csoai.org"
+  },
+  "capabilities": {
+    "streaming": false,
+    "mcp": true,
+    "a2a": true
+  },
+  "skills": [
+    {
+      "id": "water_quality",
+      "name": "meok-koikeeper-ai-mcp.water_quality",
+      "description": "Pull live water-quality telemetry into dashboards or automations."
+    }
+  ],
+  "endpoints": {
+    "a2a": "https://koikeeper.ai/a2a",
+    "mcp_catalog": "https://koikeeper.ai/.well-known/mcp.json"
+  },
+  "sector": "agriculture"
+}

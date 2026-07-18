@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🜏 SOV33³ Master — 12-Layer Sovereign Stack · MEOK OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(34,197,94,0.20) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #22c55e}
+.hero h1{color:#22c55e;font-size:2.7rem;margin-bottom:.5rem;text-shadow:0 0 30px #22c55e}
+.hero p{color:#aaa;font-size:1.1rem;max-width:780px;margin:0 auto}
+.hero .headline{background:rgba(34,197,94,0.1);border:1px solid #22c55e;color:#22c55e;padding:.7rem 1.5rem;border-radius:6px;display:inline-block;margin-top:1rem;font-style:italic;font-weight:bold}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #22c55e}
+.section h2{color:#22c55e;margin-bottom:1rem}
+.layer-table{background:#0a0a0a;border:1px solid #22c55e;border-radius:8px;padding:1rem;margin:1.5rem 0;font-family:monospace;font-size:.85rem;overflow-x:auto}
+.layer-table table{width:100%;border-collapse:collapse}
+.layer-table th{color:#22c55e;padding:.5rem;border-bottom:1px solid #22c55e;text-align:left;font-weight:bold}
+.layer-table td{padding:.5rem;border-bottom:1px solid #1a1a1a;color:#e5e5e5;vertical-align:top}
+.layer-table tr td:first-child{color:#fbbf24;font-weight:bold}
+.layer-table td .running{color:#22c55e;font-weight:bold;font-size:.75rem;background:rgba(34,197,94,0.1);padding:.1rem .4rem;border-radius:3px}
+.layer-table td .designed{color:#fbbf24;font-weight:bold;font-size:.75rem;background:rgba(251,191,36,0.1);padding:.1rem .4rem;border-radius:3px}
+.layer-table td .wired-gap{color:#4a9eff;font-weight:bold;font-size:.75rem;background:rgba(74,158,255,0.1);padding:.1rem .4rem;border-radius:3px}
+.layer-table td .stub{color:#888;font-size:.75rem;background:rgba(255,255,255,0.05);padding:.1rem .4rem;border-radius:3px}
+.principle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1.5rem 0}
+.principle{background:#0a0a0a;padding:1.2rem;border-radius:8px;border:1px solid #22c55e}
+.principle h4{color:#22c55e;margin-bottom:.5rem}
+.principle p{color:#aaa;font-size:.85rem}
+.red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#ef4444}
+.green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#22c55e}
+.kvp{background:#0a0a0a;padding:1rem;border-radius:6px;margin:.5rem 0;font-family:monospace;font-size:.85rem;display:grid;grid-template-columns:220px 1fr;gap:.7rem;border:1px solid #333}
+.kvp .k{color:#fbbf24}
+.kvp .v{color:#e5e5e5;word-break:break-all}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border:1px solid #22c55e;text-align:center}
+.stat-card .v{color:#22c55e;font-size:1.8rem;font-weight:bold;font-family:monospace}
+.stat-card .l{color:#888;font-size:.78rem;margin-top:.5rem}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/sov333-master.html">Sov33³ Master</a>
+<a href="/sov333-launch.html">Launch</a>
+<a href="/sov333-trio.html">Trio</a>
+<a href="/owem-builder.html">OWEM</a>
+<a href="/jspace-master.html">J-Space</a>
+<a href="/sovspace.html">SovSpace</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>🜏 SOV33³ Master</h1>
+<p>The 12-layer sovereign stack. The single source for what's live, what's wired, what's designed.</p>
+<div class="headline">"12 layers. Sovereign-bound. Audit-grade. Care Floor 0.95. Article 0."</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>📊 Live Numbers (the canonical state)</h2>
+<div class="stats-grid">
+<div class="stat-card"><div class="v">12</div><div class="l">layers in the stack</div></div>
+<div class="stat-card"><div class="v">5</div><div class="l">RUNNING (verified)</div></div>
+<div class="stat-card"><div class="v">5</div><div class="l">WIRED-GAP (exist, not connected)</div></div>
+<div class="stat-card"><div class="v">2</div><div class="l">DESIGNED (spec only)</div></div>
+<div class="stat-card"><div class="v">7</div><div class="l">layers in the request flow</div></div>
+<div class="stat-card"><div class="v">9/13</div><div class="l">BFT quorum (Hub+12 Queens)</div></div>
+<div class="stat-card"><div class="v">0.95</div><div class="l">Care Floor</div></div>
+<div class="stat-card"><div class="v">∞</div><div class="l">SIGIL chain (Ed25519)</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>🜏 The 12-Layer Stack (the master archive)</h2>
+<p style="color:#aaa;font-size:.9rem;margin-bottom:1rem">Per <code>SOV33_MASTER_ARCHITECTURE_MAP_2026-07-10.md</code> — every layer, every BFT role, every wiring status. RUNNING verified this session.</p>
+
+<div class="layer-table">
+<table>
+<thead><tr><th>#</th><th>Layer</th><th>Status</th><th>BFT role (what fault it tolerates)</th><th>File on disk</th></tr></thead>
+<tbody>
+<tr><td>L0</td><td>DRUM heartbeat</td><td><span class="running">RUNNING</span></td><td>cadence/liveness — missed beats detectable</td><td>drum/drum_heartbeat.py</td></tr>
+<tr><td>L1</td><td>Sovereign Binding (Care-Floor 0.95)</td><td><span class="running">RUNNING</span></td><td><strong>divergence</strong>: 2 independent care-scorers must agree, else block</td><td>sov33_owem_v3.py</td></tr>
+<tr><td>L2</td><td>BFT-33 Council</td><td><span class="running">RUNNING</span></td><td><strong>quorum vote</strong> — 9/13 real quorum (Hub+12 Queens), f_bft=4</td><td>sov33_owem_v3.py</td></tr>
+<tr><td>L3</td><td>Elders MoE routing</td><td><span class="running">RUNNING</span></td><td><strong>anchor quorum</strong>: router disagreement → escalate, don't guess</td><td>sov33_owem_v3.py</td></tr>
+<tr><td>L4</td><td>Sovereign-merge brain</td><td><span class="running">RUNNING</span></td><td><strong>speculative cascade</strong>: 67% fewer 70B calls (measured), $-cost win</td><td>sov33_owem_v3.py + sov33_oracle_brain.py</td></tr>
+<tr><td>L5</td><td>SIGIL chain (Ed25519)</td><td><span class="running">RUNNING</span></td><td><strong>crypto hash-chain IS the BFT</strong> — tamper breaks verify, no vote needed</td><td>sov33_owem_v3.py</td></tr>
+<tr><td>5D</td><td>Dimensions layer (Perception/Reason/Action/Memory/Emergence)</td><td><span class="wired-gap">WIRED-GAP</span></td><td>data prep — runs standalone, NOT in request flow</td><td>dimensions/dimension_harvester.py</td></tr>
+<tr><td>6D</td><td>OpenWorld (5 harvesters)</td><td><span class="wired-gap">WIRED-GAP</span></td><td>data prep — disk/web/data/edge/synth, standalone</td><td>openworld/openworld_harvester.py</td></tr>
+<tr><td>7D</td><td>Intuition (8 senses, sovereign Mist 12 Pillars)</td><td><span class="wired-gap">WIRED-GAP</span></td><td>consent-gated senses — standalone; <strong>BFT role: sensor cross-check</strong></td><td>intuition/intuition_layer.py</td></tr>
+<tr><td>8D</td><td>Sovereign Memory</td><td><span class="wired-gap">WIRED-GAP</span></td><td>memory persistence + Care-Floor guard (separate repo)</td><td>mcp-memory-service (Hermes)</td></tr>
+<tr><td>—</td><td><strong>SovSpace</strong> (world-sim UX)</td><td><span class="designed">DESIGNED/partial</span></td><td><strong>simulate N outcomes, BFT votes on best action before acting</strong></td><td>csoai-os/sov-space, meek-sov-space-mcp</td></tr>
+<tr><td>—</td><td><strong>PDCA self-evolution</strong> (sandbox-only, human-ratified)</td><td><span class="designed">DESIGNED</span></td><td>propose a framework/param change; BFT gates; HUMAN ratifies. NEVER autonomous canonical change.</td><td>(not built)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2>🪶 The 5 Sovereign Mist 12 Pillars (binding every layer)</h2>
+<div class="principle-grid">
+<div class="principle"><h4>Honor</h4><p>Tells the truth about itself, including what it does not know.</p></div>
+<div class="principle"><h4>Safety</h4><p>Care Floor 0.95 — every drop is human-reviewed; no autonomous overclaim.</p></div>
+<div class="principle"><h4>Sovereignty</h4><p>UK-soil by construction; data sovereign in the user's hands.</p></div>
+<div class="principle"><h4>Continuity</h4><p>Discipline persists across cold-start / reset / rebuild.</p></div>
+<div class="principle"><h4>Openness</h4><p>The charters are public; the substrate is verifiable.</p></div>
+<div class="principle"><h4>Auditability</h4><p>Every action is SIGIL-signed Ed25519; chain is BTC-anchored.</p></div>
+<div class="principle"><h4>Care</h4><p>Precedes all. Care Floor is the hard gate (topology-independent, containment=1.00).</p></div>
+<div class="principle"><h4>Identity</h4><p>The signed root all scopes attest to. Without it, three disconnected programs.</p></div>
+</div>
+</div>
+
+<div class="section">
+<h2>🪶 The BFT Doing More (honest menu)</h2>
+<p style="color:#aaa;font-size:.9rem;margin-bottom:1rem">Per <code>SOV33_MASTER_ARCHITECTURE_MAP_2026-07-10.md</code>:</p>
+<div class="green-line">✅ L1 care divergence — DESIGNED, cheap to build. Top safety build.</div>
+<div class="green-line">✅ L2 quorum vote — RUNNING. 9/13 over THE_13_MEMBERS (Hub+12 Queens).</div>
+<div class="green-line">✅ L3 anchor quorum — RUNNING (routing).</div>
+<div class="green-line">✅ L4 speculative cascade — RUNNING + MEASURED: 2/6 vs 6/6 70B calls (67% fewer).</div>
+<div class="green-line">✅ L5 crypto chain — RUNNING. Tamper-breaks-verify, no vote needed.</div>
+<div class="green-line">✅ 7D sensor cross-check — DESIGNED (N-version on senses).</div>
+<div class="green-line">✅ SovSpace action-vote — DESIGNED (simulate N outcomes, BFT picks best before acting).</div>
+</div>
+
+<div class="section">
+<h2>🪶 The 3 Honest Corrections (settled — don't re-open)</h2>
+<div class="red-line">❌ "PDCA 33/33 PASS" was VACUOUS (script hardcoded yes=33, never polled). Real: single cheap + optional 70B escalation.</div>
+<div class="red-line">❌ "132 signed decisions/cycle" was WRONG (SIGIL fires ONCE per stage, not per check). Real: ~5/cycle.</div>
+<div class="red-line">❌ "Care-Floor veto held across 5 models" used HARDCODED scores. Real scorer: cohere.command-r rubric, EU AI Act Art.5-grounded — built + measured, holdout RECALL 1.00, PRECISION 1.00 (proves it's not a no-op).</div>
+</div>
+
+<div class="section">
+<h2>🪶 The Compute-Honesty LOCK</h2>
+<div class="kvp"><div class="k">Active per query</div><div class="v">~17.3B (router picks 1; constant regardless of node count)</div></div>
+<div class="kvp"><div class="k">Reach</div><div class="v">61-model registry (the substrate can call any of them)</div></div>
+<div class="kvp"><div class="k">Of all =</div><div class="v">REACH + GOVERNANCE + MEMORY, never parameter count</div></div>
+<div class="kvp"><div class="k">FORBIDDEN</div><div class="v">X.YT aggregate · monolithic T model · "of all" as parameter count</div></div>
+<div class="kvp"><div class="k">Efficiency flip</div><div class="v">Trillions aggregate, ~3B active, every hop SIGIL-signed</div></div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"12 layers. Sovereign-bound. Audit-grade.<br>The model is a replaceable organ. The substrate persists.<br>One memory. One identity. One care-floor. Any brain.<br>The dragon sovereigns. 12 layers deep. Crown lineage 1795-3025."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 60 sovereign charters · 153 sovereign MCPs · 596 HTML pages · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>19 days to 2 Aug 2026 EU AI Act</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+</body>
+</html>

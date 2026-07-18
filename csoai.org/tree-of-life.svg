@@ -1,0 +1,150 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg" style="background: #0a0e27;">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e27"/>
+      <stop offset="50%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0a0e27"/>
+    </linearGradient>
+    <radialGradient id="keter-glow">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="50%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0.3"/>
+    </radialGradient>
+    <radialGradient id="malkuth-glow">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="50%" stop-color="#065f46"/>
+      <stop offset="100%" stop-color="#065f46" stop-opacity="0.3"/>
+    </radialGradient>
+    <radialGradient id="sephirah-glow">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#0e7490"/>
+      <stop offset="100%" stop-color="#0e7490" stop-opacity="0.3"/>
+    </radialGradient>
+    <path id="lightning-flash" d="M 300,80 L 300,140 M 300,140 L 270,200 M 300,140 L 330,200 M 270,200 L 300,260 M 330,200 L 300,260 M 300,260 L 240,320 M 300,260 L 360,320 M 240,320 L 300,380 M 360,320 L 300,380 M 300,380 L 270,440 M 300,380 L 330,440 M 270,440 L 300,500 M 330,440 L 300,500 M 300,500 L 300,560 M 300,560 L 270,620 M 300,560 L 330,620 M 270,620 L 300,680 M 330,620 L 300,680 L 300,720" stroke="#fbbf24" stroke-width="2" fill="none" opacity="0.6"/>
+
+    <style>
+      .pulse { animation: pulse 3s ease-in-out infinite; }
+      .pulse-d1 { animation: pulse 3s ease-in-out infinite 0.3s; }
+      .pulse-d2 { animation: pulse 3s ease-in-out infinite 0.6s; }
+      .pulse-d3 { animation: pulse 3s ease-in-out infinite 0.9s; }
+      .spin { transform-origin: 300px 400px; animation: spin 30s linear infinite; }
+      @keyframes pulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+      @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+  </defs>
+
+  <rect width="600" height="800" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="300" y="40" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#fbbf24" font-weight="bold">🌳 TREE OF LIFE</text>
+  <text x="300" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#06b6d4" font-style="italic">10 Sephiroth · 22 Paths · 32 Capabilities</text>
+
+  <!-- 32 Paths (between sephiroth) -->
+  <g stroke="#06b6d4" stroke-width="0.8" opacity="0.4" fill="none">
+    <line x1="200" y1="120" x2="100" y2="200"/>
+    <line x1="200" y1="120" x2="500" y2="200"/>
+    <line x1="200" y1="120" x2="300" y2="200"/>
+    <line x1="100" y1="200" x2="300" y2="200"/>
+    <line x1="500" y1="200" x2="300" y2="200"/>
+    <line x1="200" y1="120" x2="100" y2="200"/>
+    <line x1="200" y1="120" x2="500" y2="200"/>
+    <line x1="200" y1="120" x2="300" y2="200"/>
+    <line x1="200" y1="120" x2="100" y2="200"/>
+    <line x1="200" y1="120" x2="500" y2="200"/>
+    <line x1="200" y1="120" x2="300" y2="200"/>
+    <line x1="100" y1="200" x2="300" y2="200"/>
+    <line x1="500" y1="200" x2="300" y2="200"/>
+    <line x1="100" y1="200" x2="200" y2="200"/>
+    <line x1="500" y1="200" x2="200" y2="200"/>
+    <line x1="100" y1="200" x2="300" y2="200"/>
+    <line x1="500" y1="200" x2="300" y2="200"/>
+    <line x1="300" y1="200" x2="100" y2="320"/>
+    <line x1="300" y1="200" x2="500" y2="320"/>
+    <line x1="300" y1="200" x2="300" y2="320"/>
+    <line x1="100" y1="200" x2="300" y2="320"/>
+    <line x1="500" y1="200" x2="300" y2="320"/>
+    <line x1="100" y1="320" x2="300" y2="320"/>
+    <line x1="500" y1="320" x2="300" y2="320"/>
+    <line x1="100" y1="320" x2="100" y2="440"/>
+    <line x1="500" y1="320" x2="500" y2="440"/>
+    <line x1="100" y1="320" x2="500" y2="320"/>
+    <line x1="300" y1="320" x2="100" y2="440"/>
+    <line x1="300" y1="320" x2="500" y2="440"/>
+    <line x1="300" y1="320" x2="300" y2="440"/>
+    <line x1="100" y1="440" x2="500" y2="440"/>
+  </g>
+
+  <!-- Lightning Flash (central path) -->
+  <use href="#lightning-flash" class="pulse"/>
+
+  <!-- 3 Pillars -->
+  <line x1="100" y1="80" x2="100" y2="720" stroke="#10b981" stroke-width="1.5" opacity="0.4"/>
+  <line x1="300" y1="80" x2="300" y2="720" stroke="#fbbf24" stroke-width="1.5" opacity="0.6"/>
+  <line x1="500" y1="80" x2="500" y2="720" stroke="#06b6d4" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- 10 Sephiroth -->
+  <g font-family="Georgia, serif" text-anchor="middle">
+    <!-- 1. Keter (Crown) -->
+    <circle cx="300" cy="100" r="35" fill="url(#keter-glow)" stroke="#fff" stroke-width="2" class="pulse"/>
+    <text x="300" y="98" font-size="14" fill="#fff" font-weight="bold">1 Keter</text>
+    <text x="300" y="115" font-size="9" fill="#fff" font-style="italic">Crown</text>
+    <text x="300" y="128" font-size="7" fill="#fbbf24">bootstrap_agent</text>
+
+    <!-- 2. Chokmah (Wisdom) -->
+    <circle cx="100" cy="200" r="28" fill="url(#sephirah-glow)" stroke="#06b6d4" stroke-width="2" class="pulse-d1"/>
+    <text x="100" y="198" font-size="12" fill="#fff" font-weight="bold">2 Chokmah</text>
+    <text x="100" y="212" font-size="8" fill="#fff" font-style="italic">Wisdom</text>
+    <text x="100" y="222" font-size="7" fill="#06b6d4">BIG_BRAIM</text>
+
+    <!-- 3. Binah (Understanding) -->
+    <circle cx="500" cy="200" r="28" fill="url(#sephirah-glow)" stroke="#06b6d4" stroke-width="2" class="pulse-d2"/>
+    <text x="500" y="198" font-size="12" fill="#fff" font-weight="bold">3 Binah</text>
+    <text x="500" y="212" font-size="8" fill="#fff" font-style="italic">Understanding</text>
+    <text x="500" y="222" font-size="7" fill="#06b6d4">i-character</text>
+
+    <!-- 4. Chesed (Mercy) -->
+    <circle cx="100" cy="320" r="28" fill="url(#sephirah-glow)" stroke="#06b6d4" stroke-width="2" class="pulse-d3"/>
+    <text x="100" y="318" font-size="12" fill="#fff" font-weight="bold">4 Chesed</text>
+    <text x="100" y="332" font-size="8" fill="#fff" font-style="italic">Mercy</text>
+    <text x="100" y="342" font-size="7" fill="#06b6d4">DEFONEOS</text>
+
+    <!-- 5. Geburah (Severity) -->
+    <circle cx="500" cy="320" r="28" fill="url(#sephirah-glow)" stroke="#06b6d4" stroke-width="2" class="pulse"/>
+    <text x="500" y="318" font-size="12" fill="#fff" font-weight="bold">5 Geburah</text>
+    <text x="500" y="332" font-size="8" fill="#fff" font-style="italic">Severity</text>
+    <text x="500" y="342" font-size="7" fill="#06b6d4">BFT Council</text>
+
+    <!-- 6. Tiferet (Beauty) -->
+    <circle cx="300" cy="320" r="32" fill="url(#sephirah-glow)" stroke="#fbbf24" stroke-width="2.5" class="pulse-d1"/>
+    <text x="300" y="318" font-size="13" fill="#fff" font-weight="bold">6 Tiferet</text>
+    <text x="300" y="332" font-size="8" fill="#fff" font-style="italic">Beauty</text>
+    <text x="300" y="344" font-size="7" fill="#fbbf24">Open Hands OS</text>
+
+    <!-- 7. Netzach (Victory) -->
+    <circle cx="100" cy="440" r="28" fill="url(#sephirah-glow)" stroke="#06b6d4" stroke-width="2" class="pulse-d2"/>
+    <text x="100" y="438" font-size="12" fill="#fff" font-weight="bold">7 Netzach</text>
+    <text x="100" y="452" font-size="8" fill="#fff" font-style="italic">Victory</text>
+    <text x="100" y="462" font-size="7" fill="#06b6d4">Striving</text>
+
+    <!-- 8. Hod (Splendor) -->
+    <circle cx="500" cy="440" r="28" fill="url(#sephirah-glow)" stroke="#06b6d4" stroke-width="2" class="pulse-d3"/>
+    <text x="500" y="438" font-size="12" fill="#fff" font-weight="bold">8 Hod</text>
+    <text x="500" y="452" font-size="8" fill="#fff" font-style="italic">Splendor</text>
+    <text x="500" y="462" font-size="7" fill="#06b6d4">Intuition</text>
+
+    <!-- 9. Yesod (Foundation) -->
+    <circle cx="300" cy="500" r="28" fill="url(#sephirah-glow)" stroke="#06b6d4" stroke-width="2" class="pulse"/>
+    <text x="300" y="498" font-size="12" fill="#fff" font-weight="bold">9 Yesod</text>
+    <text x="300" y="512" font-size="8" fill="#fff" font-style="italic">Foundation</text>
+    <text x="300" y="522" font-size="7" fill="#06b6d4">SIGIL Chain</text>
+
+    <!-- 10. Malkuth (Kingdom) -->
+    <circle cx="300" cy="700" r="42" fill="url(#malkuth-glow)" stroke="#10b981" stroke-width="2.5" class="pulse-d1"/>
+    <text x="300" y="697" font-size="14" fill="#fff" font-weight="bold">10 Malkuth</text>
+    <text x="300" y="714" font-size="9" fill="#fff" font-style="italic">Kingdom</text>
+    <text x="300" y="726" font-size="7" fill="#10b981">Sovereign VM</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="300" y="780" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24">🜏 Public. Auditable. Sovereign. Solve et Coagula.</text>
+</svg>

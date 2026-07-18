@@ -1,0 +1,64 @@
+{
+  "generated_at": "2026-07-13T11:57:59.060254+00:00",
+  "stages": [
+    {
+      "stage": "aware",
+      "count": 200,
+      "source": "200 named-buyer leads in LEADS_DATABASE",
+      "conversion_pct_to_next": 25.0
+    },
+    {
+      "stage": "visited",
+      "count": 50,
+      "source": "estimated from csoai.org traffic",
+      "conversion_pct_to_next": 20.0
+    },
+    {
+      "stage": "signed_up",
+      "count": 10,
+      "source": "1 signups from SIGIL_LOG",
+      "conversion_pct_to_next": 50.0
+    },
+    {
+      "stage": "activated",
+      "count": 5,
+      "source": "estimated 50% signup \u2192 activation",
+      "conversion_pct_to_next": 40.0
+    },
+    {
+      "stage": "engaged",
+      "count": 2,
+      "source": "estimated 40% activation \u2192 engagement",
+      "conversion_pct_to_next": 50.0
+    },
+    {
+      "stage": "paying",
+      "count": 1,
+      "source": "estimated 50% engagement \u2192 paid",
+      "conversion_pct_to_next": null
+    }
+  ],
+  "revenue_projection": {
+    "mrr_low": 29,
+    "mrr_high": 499,
+    "mrr_blended": 264,
+    "arr_blended": 3168,
+    "12_month_target": 50000,
+    "24_month_target": 200000
+  },
+  "funnel_visualisation": {
+    "width_pct": [
+      100,
+      25,
+      5,
+      2.5,
+      1,
+      0.5
+    ]
+  },
+  "honest_register": [
+    "Stage counts are estimates based on real artifacts (leads DB, SIGIL log).",
+    "Conversion rates are conservative defaults \u2014 not measured funnel data.",
+    "Funnel visualisation is theoretical \u2014 actual deployment would track with PostHog or similar."
+  ]
+}

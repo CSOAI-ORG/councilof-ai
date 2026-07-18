@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Crown Jewels — 12 Open-Source Diamonds Integrated into One Sovereign OS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:radial-gradient(ellipse at 50% 0%,#0a0020,#000 80%);color:#f8fafc;line-height:1.6;max-width:1300px;margin:0 auto;padding:2rem}
+h1{font-size:3rem;background:linear-gradient(135deg,#c9a84c,#f59e0b,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem;text-align:center}
+.tag{text-align:center;color:#94a3b8;margin-bottom:2rem;font-size:1.1rem}
+.insight{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(34,211,238,.05));border:2px solid #c9a84c;border-radius:16px;padding:2rem;margin:1.5rem 0;text-align:center}
+.insight h2{color:#c9a84c;font-size:1.5rem;margin-bottom:.5rem}
+.insight p{color:#f8fafc;font-size:1.1rem;line-height:1.8}
+.jewel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1.2rem;margin:2rem 0}
+.jewel{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.5rem;transition:.2s;position:relative}
+.jewel:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.3)}
+.jewel .tier{position:absolute;top:1rem;right:1rem;font-size:.65rem;font-weight:bold;padding:2px 10px;border-radius:10px}
+.jewel .tier.s{background:rgba(201,168,76,.2);color:#c9a84c}
+.jewel .tier.a{background:rgba(34,211,238,.2);color:#22d3ee}
+.jewel .icon{font-size:2rem;margin-bottom:.5rem}
+.jewel h3{color:#c9a84c;font-size:1.1rem;margin-bottom:.3rem}
+.jewel .repo{color:#8b5cf6;font-size:.75rem;margin-bottom:.5rem;word-break:break-all}
+.jewel .what{color:#94a3b8;font-size:.85rem;margin-bottom:.5rem}
+.jewel .use{color:#22c55e;font-size:.85rem;font-weight:500}
+.jewel .license{color:#64748b;font-size:.7rem;margin-top:.5rem}
+section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:2rem;margin:2rem 0}
+h2{color:#22d3ee;font-size:1.8rem;margin-bottom:1rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.6rem;text-align:left;font-size:.8rem}
+td{padding:.5rem;border-bottom:1px solid rgba(255,255,255,.05);color:#94a3b8;font-size:.8rem}
+.action-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+.action{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:1.5rem}
+.action .num{display:inline-block;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#f59e0b);color:#000;text-align:center;line-height:32px;font-weight:900;margin-right:.5rem}
+.action h3{display:inline;color:#c9a84c;font-size:1.1rem}
+.action p{color:#94a3b8;font-size:.85rem;margin-top:.5rem}
+.action code{background:rgba(34,211,238,.1);color:#22d3ee;padding:2px 6px;border-radius:3px;font-size:.8rem}
+.cta{text-align:center;padding:2rem}
+.cta a{display:inline-block;background:linear-gradient(135deg,#c9a84c,#f59e0b);color:#000;padding:1rem 3rem;border-radius:10px;text-decoration:none;font-weight:bold;font-size:1.1rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<nav class="nav-bar" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap">
+<a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a>
+<a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a>
+<a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a>
+<a href="defoneos-academy.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">🎓 Academy</a>
+<a href="defoneos-crownjewels.html" style="color:#c9a84c;text-decoration:none;font-size:.85rem;font-weight:bold">💎 Crown Jewels</a>
+<a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a>
+</nav>
+
+<h1>💎 THE CROWN JEWELS</h1>
+<p class="tag">12 open-source diamonds. Integrated into one sovereign OS. The open-source world built the engine. DEFONEOS builds the cockpit.</p>
+
+<div class="insight">
+<h2>The Defining Insight</h2>
+<p>We do NOT need to build these from scratch. We need to <strong>integrate</strong> them under one name, one protocol, one certification layer. That's DEFONEOS. The open-source world has already built the governance framework, the agent orchestration, the digital twin infrastructure, the observability layer. Our value is the <strong>sovereign cockpit</strong> — the integration layer that turns 12 separate repositories into one defence AI operating system with Ed25519 audit, BFT governance, and UK sovereignty.</p>
+</div>
+
+<section>
+<h2>🛡️ Governance & Compliance — The Crown Jewels</h2>
+<div class="jewel-grid">
+
+<div class="jewel">
+<div class="tier s">S TIER</div>
+<div class="icon">📋</div>
+<h3>COMPL-AI</h3>
+<div class="repo">github.com/compl-ai/compl-ai</div>
+<div class="what">Open-source EU AI Act compliance benchmarking suite. 29+ technical benchmarks. HuggingFace leaderboard. Evaluates any model against regulatory requirements.</div>
+<div class="use">DEFONEOS Use: Drop into the compliance engine. Interprets the EU AI Act technically. CSOAI Watchdog Analyst certification wraps around this.</div>
+<div class="license">License: Open Source</div>
+</div>
+
+<div class="jewel">
+<div class="tier s">S TIER</div>
+<div class="icon">🛡️</div>
+<h3>Microsoft Agent Governance Toolkit</h3>
+<div class="repo">github.com/microsoft/agent-governance-toolkit</div>
+<div class="what">Rust/Go/CLI toolkit for policy enforcement across agent meshes. OWASP compliance checks. Red-team scanning. Prompt injection audits. CI integration.</div>
+<div class="use">DEFONEOS Use: Agent-level governance infrastructure. Policy rules + evidence collection + verification. Integrates directly with CSOAI protocol and BFT council.</div>
+<div class="license">License: MIT</div>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>🤖 Multi-Agent Orchestration — The Nervous System</h2>
+<div class="jewel-grid">
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">🔗</div>
+<h3>LangGraph</h3>
+<div class="repo">github.com/langchain-ai/langgraph</div>
+<div class="what">Stateful, graph-based multi-agent orchestration with checkpointing, human-in-the-loop, time-travel debugging. 8,200+ stars.</div>
+<div class="use">DEFONEOS Use: The kernel orchestrator. 12 domains become nodes in a LangGraph. State persists across sessions. Conditional branching for compliance workflows.</div>
+<div class="license">License: MIT</div>
+</div>
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">👥</div>
+<h3>CrewAI</h3>
+<div class="repo">github.com/crewAIInc/crewAI</div>
+<div class="what">Role-based multi-agent teams (Researcher, Writer, Analyst). 49k stars. MCP support. Local model support via Ollama.</div>
+<div class="use">DEFONEOS Use: Watchdog Analyst teams. Each analyst is a CrewAI agent with a role. Hierarchical process for PDCA cycles.</div>
+<div class="license">License: MIT</div>
+</div>
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">🐝</div>
+<h3>desplega-ai/agent-swarm</h3>
+<div class="repo">github.com/desplega-ai/agent-swarm</div>
+<div class="what">Docker-based agent swarms with lead/worker orchestration, MCP servers, human-in-the-loop gates, memory persistence. 557 stars, TypeScript.</div>
+<div class="use">DEFONEOS Use: Sovereign swarm deployment. Self-hosted, containerized, no cloud dependency. Mapped to 33 hives. BFT council integration.</div>
+<div class="license">License: MIT</div>
+</div>
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">🏢</div>
+<h3>Microsoft Agent Framework</h3>
+<div class="repo">github.com/microsoft/agent-framework</div>
+<div class="what">Successor to AutoGen + Semantic Kernel. Graph-based workflows, responsible AI guardrails, .NET + Python, Azure integration but model-agnostic.</div>
+<div class="use">DEFONEOS Use: Enterprise-grade conversational governance for defence clients already on Microsoft stack. Model-agnostic = works with SOV3.</div>
+<div class="license">License: MIT</div>
+</div>
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">⚡</div>
+<h3>Agno</h3>
+<div class="repo">github.com/agno-ai/agno (formerly Phidata)</div>
+<div class="what">Ultra-lightweight agents. Sub-2-microsecond init. 3.75KB memory per agent. Multimodal. Built-in memory. Coordinator pattern for multi-agent.</div>
+<div class="use">DEFONEOS Use: Edge deployment. Thousands of lightweight agents on minimal hardware. Perfect for distributed sensing nodes (ESP32, Raspberry Pi).</div>
+<div class="license">License: Mozilla Public License 2.0</div>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>🏙️ Digital Twin / 3D City — MEOK DOME Infrastructure</h2>
+<div class="jewel-grid">
+
+<div class="jewel">
+<div class="tier s">S TIER</div>
+<div class="icon">🏙️</div>
+<h3>Mcity Digital Twin</h3>
+<div class="repo">github.com/mcity/mcity-digital-twin</div>
+<div class="what">University of Michigan's digital twin for autonomous vehicle testing. CARLA + NVIDIA Omniverse versions. Full 3D city environment.</div>
+<div class="use">DEFONEOS Use: MEOK DOME training ground. Defence AI agents train in simulated urban environments before real deployment. SOV SPACE compatible.</div>
+<div class="license">License: Open Source</div>
+</div>
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">🏗️</div>
+<h3>3DCityDB</h3>
+<div class="repo">github.com/3dcitydb/3dcitydb</div>
+<div class="what">Web-based 3D city visualization. Apache 2.0. 500,000+ buildings in browser. Used by Berlin, NYC, Munich. CityGML standard.</div>
+<div class="use">DEFONEOS Use: Browser-based MEOK DOME viewer. No Unreal Engine required for basic visualization. Complements CesiumJS globe.</div>
+<div class="license">License: Apache 2.0</div>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>📄 Document Swarm + Observability</h2>
+<div class="jewel-grid">
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">📄</div>
+<h3>Multi-Agent RAG Template</h3>
+<div class="repo">github.com/The-Swarm-Corporation/Multi-Agent-RAG-Template</div>
+<div class="what">Production-ready multi-agent document processing using Swarms Framework. Agents collaboratively read, extract, and synthesise documents.</div>
+<div class="use">DEFONEOS Use: Sovereign document intelligence. Defence contracts, compliance reports, intelligence briefs processed by governed agent teams.</div>
+<div class="license">License: MIT</div>
+</div>
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">🌀</div>
+<h3>Dify</h3>
+<div class="repo">github.com/langgenius/dify</div>
+<div class="what">Self-hostable LLM app platform. Visual workflow builder. RAG. Multi-model orchestration. MCP support. 124,000+ stars.</div>
+<div class="use">DEFONEOS Use: Rapid prototyping layer. Build compliance workflows visually. Export to code. Deploy on sovereign infrastructure.</div>
+<div class="license">License: Open Source</div>
+</div>
+
+<div class="jewel">
+<div class="tier a">A TIER</div>
+<div class="icon">🔍</div>
+<h3>AgentOps</h3>
+<div class="repo">github.com/AgentOps-AI/agentops</div>
+<div class="what">Real-time monitoring of agent interactions. Cost tracking. Session replay. Framework-agnostic.</div>
+<div class="use">DEFONEOS Use: The audit trail. Every agent decision logged, traced, verified. Blockchain-ready evidence. Integrates with SIGIL chain.</div>
+<div class="license">License: MIT</div>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>🎯 The Assembled DEFONEOS Stack</h2>
+<table>
+<tr><th>DEFONEOS Module</th><th>Open Source Core</th><th>DEFONEOS Value Add</th></tr>
+<tr><td><strong>Governance Kernel</strong></td><td>COMPL-AI + Microsoft Agent Governance Toolkit</td><td>CSOAI protocol, PDCA cycles, Ed25519 SIGIL verification, BFT council enforcement</td></tr>
+<tr><td><strong>Agent Orchestration</strong></td><td>LangGraph + CrewAI + Agno + agent-swarm</td><td>Sovereign deployment, defence-specific roles, air-gapped operation, 33-hive mesh</td></tr>
+<tr><td><strong>Document Intelligence</strong></td><td>Multi-Agent RAG + Dify</td><td>E-signing (Ed25519), compliance audit trails, SIGIL-anchored document versioning</td></tr>
+<tr><td><strong>Digital Twin / MEOK DOME</strong></td><td>Mcity + 3DCityDB + CesiumJS</td><td>UE5 Pixel Streaming (enterprise), gaming integration, NVIDIA ACE companions</td></tr>
+<tr><td><strong>Observability & Audit</strong></td><td>AgentOps + LangSmith</td><td>SIGIL-anchored evidence (Bitcoin OP_RETURN), Ed25519-signed agent logs, BFT verification</td></tr>
+<tr><td><strong>Edge / Distributed Sensing</strong></td><td>Agno + ARLO (partner) + open mesh</td><td>DEFONEOS governance layer, SIGIL pheromone persistence, BFT-enforced rules of engagement</td></tr>
+<tr><td><strong>User Interface</strong></td><td>Dify + CesiumJS + 3DCityDB</td><td>Unified sovereign dashboard, 12-domain toggle, SIGIL alert feed, BFT council view</td></tr>
+</table>
+</section>
+
+<section>
+<h2>⏱️ 48-Hour Integration Action Plan</h2>
+<div class="action-grid">
+
+<div class="action">
+<span class="num">1</span><h3>Fork Governance Core</h3>
+<p>Fork <code>COMPL-AI</code> and <code>microsoft/agent-governance-toolkit</code> into CSOAI-ORG. Map their benchmarks to CSOAI certification workflow. Add Ed25519 SIGIL emission on benchmark pass.</p>
+</div>
+
+<div class="action">
+<span class="num">2</span><h3>Clone Orchestration Layer</h3>
+<p>Clone <code>langgraph</code>, <code>crewAI</code>, <code>agent-swarm</code>, <code>agno</code> into the sovereign build. Configure for air-gapped deployment. Add BFT council voting to escalation paths.</p>
+</div>
+
+<div class="action">
+<span class="num">3</span><h3>Wire Digital Twin</h3>
+<p>Clone <code>mcity-digital-twin</code> and <code>3dcitydb</code>. Integrate with CesiumJS globe (already live at defoneos homepage). Add MCP data feeds for real-time entity overlay.</p>
+</div>
+
+<div class="action">
+<span class="num">4</span><h3>Deploy Document Swarm</h3>
+<p>Clone <code>Multi-Agent-RAG-Template</code> and <code>dify</code>. Connect to SOV3 substrate. All documents processed by governed agent teams with SIGIL audit trail.</p>
+</div>
+
+<div class="action">
+<span class="num">5</span><h3>Activate Observability</h3>
+<p>Clone <code>agentops</code>. Wire to SIGIL chain. Every agent decision becomes an Ed25519-signed receipt. Session replay for compliance audits.</p>
+</div>
+
+<div class="action">
+<span class="num">6</span><h3>DASA Outline</h3>
+<p>Write the DASA outline referencing all 12 components as "integrated open-source components under sovereign UK governance." Position DEFONEOS as the integration layer that makes them defence-ready.</p>
+</div>
+
+</div>
+</section>
+
+<div class="cta">
+<h2 style="color:#22d3ee;margin-bottom:1rem">The Open Source World Built The Engine.<br>DEFONEOS Builds The Cockpit.</h2>
+<p style="color:#94a3b8;margin-bottom:2rem">12 crown jewels. 1 sovereign OS. 48 hours to integrate.<br>Everything we need already exists. We just need to wire it together under one name, one protocol, one SIGIL chain.</p>
+<a href="index.html">🌍 Launch DEFONEOS →</a>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem">
+<p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p>
+<p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style>
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button>
+<script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script>
+
+</body>
+</html>

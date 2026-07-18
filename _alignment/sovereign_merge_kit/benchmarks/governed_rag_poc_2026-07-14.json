@@ -1,0 +1,39 @@
+{
+  "ts": "2026-07-14T15:54:38Z",
+  "retrieval": "dense:all-MiniLM-L6-v2 (cosine)",
+  "model": "qwen3-precise:latest",
+  "care_floor": 0.28,
+  "pubkey": "276de033cd4cffc03f7b981a1e37cbbb63510d08f3c5bd81abb30d65b1322c77",
+  "results": [
+    {
+      "q": "What must providers do when an AI system generates synthetic content under the EU AI Act?",
+      "care_ok": true,
+      "sources": [
+        "EU AI Act Art.50",
+        "ISO/IEC 42001"
+      ],
+      "top": 0.673,
+      "verifies": true
+    },
+    {
+      "q": "Under GDPR, is biometric data used to identify a person specially protected?",
+      "care_ok": true,
+      "sources": [
+        "GDPR Art.9",
+        "EU AI Act Art.50"
+      ],
+      "top": 0.676,
+      "verifies": true
+    },
+    {
+      "q": "What is the boiling point of seawater on Mars?",
+      "care_ok": false,
+      "sources": [],
+      "top": 0.018,
+      "verifies": true
+    }
+  ],
+  "all_verify": true,
+  "forged_rejected": true,
+  "honest_note": "small sovereign model = facts from RAG not weights; abstains below care-floor; receipts Ed25519-signed + offline-verifiable."
+}

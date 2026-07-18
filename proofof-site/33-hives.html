@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌎 33 Sovereign Hives — World Map · MEOK OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(60,166,247,0.15) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #3ca6f7}
+.hero h1{color:#3ca6f7;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #3ca6f7}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #3ca6f7}
+.section h2{color:#3ca6f7;margin-bottom:1rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border:1px solid #3ca6f7;text-align:center}
+.stat-card .v{color:#3ca6f7;font-size:2rem;font-weight:bold;font-family:monospace}
+.stat-card .l{color:#888;font-size:.78rem;margin-top:.5rem}
+.map-container{position:relative;width:100%;padding-bottom:56.25%;height:0;overflow:hidden;margin:2rem 0;border:1px solid #3ca6f7;border-radius:12px}
+.map-container iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+.hive-list{margin:1rem 0;max-height:500px;overflow-y:auto}
+.hive-item{background:#0a0a0a;padding:1rem;border-radius:4px;margin:.3rem 0;border-left:3px solid #3ca6f7;font-family:monospace;font-size:.78rem;display:grid;grid-template-columns:1fr 150px 80px;gap:.7rem;align-items:center}
+.hive-item .name{color:#fbbf24;font-weight:bold}
+.hive-item .location{color:#3ca6f7}
+.hive-item .status{color:#10b981;font-size:.7rem;background:rgba(16,185,129,0.1);padding:.1rem .4rem;border-radius:3px;text-align:center}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<a href="/waitlist">Waitlist</a>
+<a href="/audit">Audit</a>
+<a href="/api/stats" target="_blank">API</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>🌎 33 Sovereign Hives</h1>
+<p>Federated sovereign sub-systems. 1 King + 12 Queens + 12 Generals. Vast.ai autoscale.<br>UK-sovereign by construction. Care Floor 0.95. BFT-33 23/33 quorum.</p>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>📊 Global Hive Stats</h2>
+<div class="stats-grid">
+<div class="stat-card"><div class="v">33</div><div class="l">Total Hives</div></div>
+<div class="stat-card"><div class="v">12</div><div class="l">Active Generals</div></div>
+<div class="stat-card"><div class="v">95%</div><div class="l">Care Floor</div></div>
+<div class="stat-card"><div class="v">23/33</div><div class="l">BFT Quorum</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>🗺️ Real-time Hive Map (simulation)</h2>
+<div class="map-container">
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1522.686566810237!2d-0.1278!3d51.5074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487604c72879659b%3A0x7d01373a0e44b8!2sLondon%2C%20UK!5e0!3m2!1sen!2sus!4v1678901234567!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
+</div>
+</div>
+
+<div class="section">
+<h2>🐝 Active Hive Register</h2>
+<div class="hive-list">
+<div class="hive-item"><div class="name">London Telehouse</div><div class="location">UK · London</div><div class="status">ACTIVE</div></div>
+<div class="hive-item"><div class="name">Equinix Manchester</div><div class="location">UK · Manchester</div><div class="status">ACTIVE</div></div>
+<div class="hive-item"><div class="name">Heriot-Watt Edinburgh</div><div class="location">UK · Edinburgh</div><div class="status">ACTIVE</div></div>
+<div class="hive-item"><div class="name">iOK Farm M4</div><div class="location">UK · Berkshire</div><div class="status">ACTIVE</div></div>
+<div class="hive-item"><div class="name">Dounreay HSE-NUC</div><div class="location">UK · Scotland</div><div class="status">ACTIVE</div></div>
+<div class="hive-item"><div class="name">MoD Corsham NEC</div><div class="location">UK · Wiltshire</div><div class="status">ACTIVE</div></div>
+<div class="hive-item"><div class="name">GCP `meok-backend`</div><div class="location">EU · Belgium</div><div class="status">ACTIVE</div></div>
+</div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"33 worlds. 12 Generals. 23/33 quorum. Sovereignty by federation.<br>Vast.ai autoscale. Care Floor 0.95. Article 0 binding.<br>The dragon federates. The dragon scales. The dragon governs."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 149 sovereign MCPs · 587 HTML pages · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>25 days to 2 Aug 2026 EU AI Act</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+</body>
+</html>

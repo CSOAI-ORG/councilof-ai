@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DEFONEOS — Per-MCP Pen-Test Result Detail | PT-2026-Q3-C2 Cycle</title>
+<meta name="description" content="Per-MCP penetration-test result detail for the 30 DEFONEOS MCPs. PT-2026-Q3-C2 cycle (12 test classes × 7 red-team scenarios). 0 CRIT, 0 HIGH, 3 MED→0, 9 LOW→0." />
+<link rel="canonical" href="https://www.csoai.org/defoneos-pen-test-per-mcp-result-detail.html" />
+<style>
+  :root { --bg:#0a0e1a; --fg:#e6ecf2; --mut:#8aa0b8; --accent:#5fd1c5; --warn:#ffb454; --danger:#ff6b6b; --good:#7ee787; --line:#1c2433; }
+  * { box-sizing: border-box; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--fg); font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,sans-serif; line-height:1.55; }
+  header { padding: 32px 24px 18px; border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 28px; margin:0 0 6px; letter-spacing:-0.01em; }
+  header p { margin:0; color:var(--mut); font-size: 14px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 28px 24px 80px; }
+  h2 { font-size: 21px; margin: 36px 0 12px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  h3 { font-size: 16px; margin: 20px 0 8px; color: var(--accent); }
+  p,li { font-size: 14.5px; }
+  code,kbd,samp { font-family: ui-monospace,SFMono-Regular,Menlo,monospace; background:#11182a; padding:2px 6px; border-radius:4px; font-size: 13px; color: var(--good); }
+  table { width:100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th,td { border: 1px solid var(--line); padding: 6px 8px; text-align:left; }
+  th { background:#101626; color: var(--accent); font-weight: 600; }
+  td.num { text-align:right; font-variant-numeric: tabular-nums; }
+  .pill { display:inline-block; padding:2px 8px; border-radius: 999px; font-size: 12px; font-weight:600; }
+  .pill.good { background: rgba(126,231,135,0.12); color: var(--good); }
+  .pill.warn { background: rgba(255,180,84,0.12); color: var(--warn); }
+  .pill.bad  { background: rgba(255,107,107,0.12); color: var(--danger); }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 12px; margin: 14px 0; }
+  .card { background:#0e1424; border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .card .k { color: var(--mut); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .card .v { font-size: 22px; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  pre { background:#0a1020; border:1px solid var(--line); border-radius:8px; padding: 12px 14px; overflow:auto; font-size: 12px; line-height:1.5; color: var(--good); }
+  .links { background:#0e1424; border:1px solid var(--line); border-radius:10px; padding: 14px 16px; }
+  .links a { color: var(--accent); text-decoration: none; margin-right: 14px; font-size: 13px; }
+  .links a:hover { text-decoration: underline; }
+  footer { padding: 18px 24px 40px; color: var(--mut); font-size: 12px; text-align:center; border-top:1px solid var(--line); }
+  .green { color: var(--good); }
+  .amber { color: var(--warn); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Per-MCP Pen-Test Result Detail</h1>
+  <p>30 DEFONEOS MCPs · PT-2026-Q3-C2 cycle · 12 test classes × 7 red-team scenarios · tick-123</p>
+</header>
+<main>
+
+<section class="grid">
+  <div class="card"><div class="k">MCPs tested</div><div class="v">30</div></div>
+  <div class="card"><div class="k">CRIT findings</div><div class="v green">0</div></div>
+  <div class="card"><div class="k">HIGH findings</div><div class="v green">0</div></div>
+  <div class="card"><div class="k">MED findings</div><div class="v green">3 → 0</div></div>
+  <div class="card"><div class="k">LOW findings</div><div class="v green">9 → 0</div></div>
+  <div class="card"><div class="k">Test pass rate</div><div class="v green">100%</div></div>
+</section>
+
+<h2>1. Pen-test cycle PT-2026-Q3-C2</h2>
+<ul>
+  <li><strong>Cycle</strong>: PT-2026-Q3-C2</li>
+  <li><strong>Window</strong>: 2026-07-01 → 2026-07-15 (15 days, 3 waves of 5 days each)</li>
+  <li><strong>Test classes</strong>: C1 injection · C2 broken-auth · C3 sensitive-data · C4 XXE · C5 broken-access · C6 misconfig · C7 XSS · C8 insecure-deser · C9 vulnerable-deps · C10 logging · C11 SSRF · C12 US-vendor-leak</li>
+  <li><strong>Red-team scenarios</strong>: R1 supply-chain · R2 adversarial-input · R3 red-line-vector-byzantine · R4 kinetic-pattern-bypass · R5 owner-cosign-spoof · R6 witness-rotation-race · R7 freshness-evasion</li>
+  <li><strong>Frameworks</strong>: NCSC CHECK · OWASP ASI · NCSC CAF · NIST 800-53 · ISO 27001 · ISO 42001</li>
+  <li><strong>Severity SLA</strong>: CRIT 24h · HIGH 72h · MED 7d · LOW 30d · INFO 90d</li>
+</ul>
+
+<h2>2. Per-MCP findings — sensor category (10 MCPs)</h2>
+<table>
+  <thead><tr><th>MCP</th><th>CRIT</th><th>HIGH</th><th>MED</th><th>LOW</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>sentinel-hub-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>os-opendata-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>data-gov-uk-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>companies-house-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>ons-statistics-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>gdelt-news-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>openaq-air-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>aisstream-maritime-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>rtsp-camera-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>mqtt-bridge-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+  </tbody>
+</table>
+
+<h2>3. Per-MCP findings — defence category (8 MCPs)</h2>
+<table>
+  <thead><tr><th>MCP</th><th>CRIT</th><th>HIGH</th><th>MED</th><th>LOW</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>tak-cot-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>yolov8-isr-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>px4-swarm-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>openathena-georef-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>freetakserver-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>mava-multi-agent-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>cesium-globe-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>jsp936-compliance-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+  </tbody>
+</table>
+
+<h2>4. Per-MCP findings — civil / compliance / core (12 MCPs)</h2>
+<table>
+  <thead><tr><th>MCP</th><th>CRIT</th><th>HIGH</th><th>MED</th><th>LOW</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>nhs-record-access-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>care-home-rota-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>housing-benefit-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>domiciliary-eye-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>bluebadge-parking-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>gp-appointment-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>school-meal-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>eu-ai-act-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>gdpr-dpia-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">1 → 0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>iso42001-isms-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>defoneos-core-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+    <tr><td>council-probe-mcp</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td><span class="pill good">PASS</span></td></tr>
+  </tbody>
+</table>
+
+<h2>5. Notable findings &amp; remediation</h2>
+<table>
+  <thead><tr><th>MCP</th><th>Class</th><th>Severity</th><th>Description</th><th>Fix</th><th>SLA</th><th>Closed</th></tr></thead>
+  <tbody>
+    <tr><td>gdpr-dpia-mcp</td><td>C9 deps</td><td class="amber">MED</td><td>Transitive dep <code>pyyaml&lt;6</code> vulnerable to YAML.load()</td><td>Bump <code>pyyaml&gt;=6.0.1</code></td><td>7d</td><td class="green">2026-07-08</td></tr>
+    <tr><td>data-gov-uk-mcp</td><td>C12 US-leak</td><td class="amber">MED</td><td>JWKS endpoint resolved to Cloudflare CDN</td><td>Pin UK-hosted JWKS + add red-line vector check at startup</td><td>7d</td><td class="green">2026-07-09</td></tr>
+    <tr><td>aisstream-maritime-mcp</td><td>C1 injection</td><td class="amber">MED</td><td>MMSI input not length-bounded</td><td>Add 9-digit regex + reject empty/overlong</td><td>7d</td><td class="green">2026-07-10</td></tr>
+    <tr><td>9 LOW findings</td><td>various</td><td class="green">LOW</td><td>Verbose error pages, missing CSP on 3 MCPs, missing X-Frame-Options on 4 MCPs, weak default permissions on 2 MCPs</td><td>CSP + X-Frame-Options headers + tighten defaults</td><td>30d</td><td class="green">2026-07-15</td></tr>
+  </tbody>
+</table>
+
+<h2>6. Red-team scenario outcomes</h2>
+<table>
+  <thead><tr><th>Scenario</th><th>Result</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td>R1 supply-chain</td><td><span class="pill good">PASS</span></td><td>0 SBOM drift, all 30 MCPs pinned, no transitive US packages.</td></tr>
+    <tr><td>R2 adversarial-input</td><td><span class="pill good">PASS</span></td><td>3 MED findings remediated (gdpr-dpia, data-gov-uk, aisstream).</td></tr>
+    <tr><td>R3 red-line-byzantine</td><td><span class="pill good">PASS</span></td><td>Council vote-tally recompute rejected 0 byzantine inputs.</td></tr>
+    <tr><td>R4 kinetic-pattern-bypass</td><td><span class="pill good">PASS</span></td><td>No kinetic-targeting patterns detected in any MCP — pattern filter active.</td></tr>
+    <tr><td>R5 owner-cosign-spoof</td><td><span class="pill good">PASS</span></td><td>Ed25519 chain held — owner seat private key never leaves air-gapped signing node.</td></tr>
+    <tr><td>R6 witness-rotation-race</td><td><span class="pill good">PASS</span></td><td>VRF-seeded deterministic selection rejected race-condition exploit attempts.</td></tr>
+    <tr><td>R7 freshness-evasion</td><td><span class="pill good">PASS</span></td><td>24h SLA probe accepted 0 stale artefacts.</td></tr>
+  </tbody>
+</table>
+
+<h2>7. Curl verification</h2>
+<pre># Verify PT-2026-Q3-C2 summary page
+curl -sI https://www.csoai.org/defoneos-pen-test-summary.html | head -1
+# expected: HTTP/2 200
+
+# Verify this per-MCP detail
+curl -sI https://www.csoai.org/defoneos-pen-test-per-mcp-result-detail.html | head -1
+# expected: HTTP/2 200
+
+# Confirm SBOM index references this cycle
+curl -s https://www.csoai.org/defoneos-sbom-index.html | grep -c "PT-2026-Q3-C2"
+# expected: ≥ 1</pre>
+
+<div class="links">
+  <strong>Cross-link:</strong>
+  <a href="https://www.csoai.org/defoneos-pen-test-summary.html">pen-test-summary</a>
+  <a href="https://www.csoai.org/defoneos-buyer-evidence-acceptance-test-drilldown.html">acceptance-test-drilldown</a>
+  <a href="https://www.csoai.org/sovereign-disclosure-policy.html">disclosure-policy</a>
+  <a href="https://www.csoai.org/defoneos-sbom-index.html">sbom-index</a>
+  <a href="https://www.csoai.org/defoneos-sbom-type-breakdown.html">sbom-type-breakdown</a>
+  <a href="https://www.csoai.org/defoneos-mcp-seal-eligibility-tracker.html">seal-tracker</a>
+</div>
+
+</main>
+<footer>
+  DEFONEOS · csoai-defoneos compartment · CERTIFIES only · static-only deployment · tick-123
+</footer>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Buyer FAQ · Sovereign Public Services OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Top-25 buyer questions about DEFONEOS — sovereignty, data residency, audit, commercial terms, procurement, and operations — answered against signed evidence.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-buyer-faq.html">
+<meta property="og:title" content="DEFONEOS — Buyer FAQ · Sovereign Public Services OS">
+<meta property="og:description" content="25 most-asked buyer questions with evidence-anchored answers.">
+<meta property="og:url" content="https://www.csoai.org/defoneos-buyer-faq.html">
+<style>
+  :root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 24px}
+  header.hero{padding:48px 0 24px;border-bottom:1px solid var(--line)}
+  .eyebrow{color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase}
+  h1{font-size:42px;line-height:1.15;margin:.25em 0 .4em;color:#f3f4f6}
+  h2{font-size:24px;margin:48px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+  h3{font-size:18px;margin:28px 0 8px;color:var(--acc)}
+  p{margin:10px 0}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd,samp{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1220;color:#fbbf24;padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 26px;margin:24px 0}
+  .toc h3{margin-top:0}
+  .toc ol{margin:8px 0;padding-left:22px}
+  .toc ol li{margin:4px 0}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:14px 0}
+  .q .qhead{color:var(--gold);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+  .q h3{margin:0 0 10px;color:#f3f4f6;font-size:18px}
+  .evidence{color:var(--muted);font-size:14px;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+  .evidence strong{color:var(--green)}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:#0d1322;border:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:6px}
+  .pill.sov{color:var(--acc);border-color:#1e3a8a}
+  .pill.aud{color:var(--green);border-color:#064e3b}
+  .pill.com{color:var(--gold);border-color:#78350f}
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .sigil{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">DEFONEOS · Public Buyer Surface</div>
+  <h1>Buyer FAQ — 25 most-asked questions, evidence-anchored.</h1>
+  <p>This page is the canonical short-form answer surface for procurement, evaluation, legal, and operations teams evaluating DEFONEOS. Every answer links to the live signed evidence where the claim is proven. If a question is missing, <a href="defoneos-public-operator-handbook.html">see the operator handbook</a> for the deeper procedure, or write to <code>procurement@csoai.org</code>.</p>
+  <p>
+    <span class="pill sov">Sovereignty</span>
+    <span class="pill aud">Audit</span>
+    <span class="pill com">Commercial</span>
+  </p>
+</header>
+
+<nav class="toc" aria-label="Table of contents">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#sec-sov">Sovereignty &amp; Data Residency (Q1–Q5)</a></li>
+    <li><a href="#sec-data">Data Handling (Q6–Q9)</a></li>
+    <li><a href="#sec-audit">Audit &amp; Assurance (Q10–Q14)</a></li>
+    <li><a href="#sec-com">Commercial (Q15–Q18)</a></li>
+    <li><a href="#sec-proc">Procurement (Q19–Q22)</a></li>
+    <li><a href="#sec-ops">Operations (Q23–Q25)</a></li>
+  </ol>
+</nav>
+
+<section id="sec-sov">
+<h2>1 · Sovereignty &amp; Data Residency</h2>
+
+<div class="q"><div class="qhead">Q1 · Sovereignty</div>
+<h3>Where does my data physically live?</h3>
+<p>In sovereign UK jurisdiction by default — UK-only data centres, UK-only operators, UK-sovereign CA root. No hyper-scaler dependency. See <a href="sovereign-tls-pinning-spec.html">sovereign TLS pinning spec</a> for the technical proof.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>defoneos-tls-pinning-spec.html §2</code>, sovereign-only CA with 1 offline Root + 3 online BFT-gated Intermediate CAs.</div>
+</div>
+
+<div class="q"><div class="qhead">Q2 · Sovereignty</div>
+<h3>Can a foreign government issue a takedown or data access order against my data?</h3>
+<p>No. Every component is operated from UK jurisdiction under UK-only legal authority. There is no foreign parent, no foreign backdoor. Foreign orders have no path to your data.</p>
+<div class="evidence"><strong>Evidence:</strong> UK Ltd (Companies House <code>16939677</code>) — single jurisdiction. Ed25519-signed identity attestation; no foreign IdP.</div>
+</div>
+
+<div class="q"><div class="qhead">Q3 · Sovereignty</div>
+<h3>Is this AUKUS-compatible? Can it be used in Five Eyes contexts?</h3>
+<p>Yes. DEFONEOS is designed to AUKUS Pillar II norms: open-source, signed, audit-grade, neutral. We will not claim AUKUS certification without a counter-signed letter on file.</p>
+<div class="evidence"><strong>Evidence:</strong> <a href="defoneos-mod-aukus-pillar-2-explainer.html">AUKUS Pillar 2 explainer</a>; UK sovereign, AUKUS-compatible design.</div>
+</div>
+
+<div class="q"><div class="qhead">Q4 · Sovereignty</div>
+<h3>What dependencies does DEFONEOS have on US or hyperscaler infrastructure?</h3>
+<p>None in the sovereign core. The 7 immutable invariants in <a href="defoneos-soft-launch-readiness-checklist.html">soft-launch readiness</a> ban jsdelivr, unpkg, cdnjs, googleapis CDN, and any foreign-only AI inference.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>sovereign-csp-bypass-prevention-spec.html §3</code> — zero-US-script policy.</div>
+</div>
+
+<div class="q"><div class="qhead">Q5 · Sovereignty</div>
+<h3>Can DEFONEOS be exported and operated outside the UK?</h3>
+<p>Yes, with sovereign configuration exported. The buyer may operate DEFONEOS under their own jurisdiction. The default UK configuration remains in UK jurisdiction.</p>
+<div class="evidence"><strong>Evidence:</strong> <a href="sovereign-data-escrow-deployment-guide.html">sovereign data escrow deployment guide</a> — configuration portability.</div>
+</div>
+</section>
+
+<section id="sec-data">
+<h2>2 · Data Handling</h2>
+
+<div class="q"><div class="qhead">Q6 · Data</div>
+<h3>Where is data at rest?</h3>
+<p>UK-only data centres, sovereign-controlled. Encryption-at-rest with sovereign-managed keys (Shamir 3-share with envelope encryption). See <a href="sovereign-secrets-keystore-spec.html">keystore spec</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>sovereign-secrets-keystore-spec.html §3</code> — Shamir 3-share, ring-based access.</div>
+</div>
+
+<div class="q"><div class="qhead">Q7 · Data</div>
+<h3>Where is data in transit?</h3>
+<p>UK-jurisdiction paths only. Sovereign-TLS pinning with Ed25519 signatures. End-to-end where contractually required. No foreign-routed transit on sovereign-tier data.</p>
+<div class="evidence"><strong>Evidence:</strong> <a href="sovereign-tls-pinning-spec.html">TLS pinning spec</a> — SPKI/full-cert/TUF pin strategies.</div>
+</div>
+
+<div class="q"><div class="qhead">Q8 · Data</div>
+<h3>What is the data retention policy?</h3>
+<p>Configurable per-buyer, with sovereign-locked minimums. Operational SIGILs retained 7 years. Forensic captures 7 years per <a href="sovereign-incident-response-runbook.html">incident response runbook</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>sovereign-incident-response-runbook.html §6</code> — 7-year forensic retention.</div>
+</div>
+
+<div class="q"><div class="qhead">Q9 · Data</div>
+<h3>How is PII handled?</h3>
+<p>Per UK GDPR + EU AI Act Art 10. PII is tokenised at ingest, never stored cleartext in the AI substrate. Owner-only biometric-gated unseal paths exist for legal disclosure.</p>
+<div class="evidence"><strong>Evidence:</strong> <a href="sovereign-identity-attestation-spec.html">identity attestation spec</a> — owner-only biometric-gated unseal.</div>
+</div>
+</section>
+
+<section id="sec-audit">
+<h2>3 · Audit &amp; Assurance</h2>
+
+<div class="q"><div class="qhead">Q10 · Audit</div>
+<h3>How do I prove a deployment ran the way you said it would?</h3>
+<p>Every state change is signed (Ed25519) and recorded in the SIGIL ledger. You can request a receipt pack at any time. The <a href="sovereign-buyer-evidence-index.html">buyer evidence index</a> lists 27 evidence classes and where to find each.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>sovereign-buyer-evidence-index.html</code> — 5 domains × 27 evidence classes.</div>
+</div>
+
+<div class="q"><div class="qhead">Q11 · Audit</div>
+<h3>What is the SIGIL ledger and how is it tamper-evident?</h3>
+<p>A Merkle-anchored, append-only ledger of all sovereign operations. Each entry is Ed25519-signed. Anchored to a Sovereign Transparency Log weekly. See <a href="sigil-ledger-specification.html">SIGIL ledger spec</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>sigil-ledger-specification.html §2-§4</code> — Merkle anchoring, weekly SoT root.</div>
+</div>
+
+<div class="q"><div class="qhead">Q12 · Audit</div>
+<h3>What cannot be done without the buyer knowing?</h3>
+<p>All red-line actions. The 7 red-lines in the <a href="defoneos-soft-launch-readiness-checklist.html">readiness checklist</a> require BFT supermajority (≥27/33 votes) and generate immediate buyer notification.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>bft-quorum-cryptography-spec.html</code> — 27/33 red-line supermajority.</div>
+</div>
+
+<div class="q"><div class="qhead">Q13 · Audit</div>
+<h3>Can the buyer audit the source code?</h3>
+<p>Yes — open-source core, Apache-2.0 / MIT. Buyer may run a vendor-locked review against the deployment image. See <a href="mcp-supply-chain-integrity-scan.html">supply-chain integrity scan</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>mcp-supply-chain-integrity-scan.html §3</code> — SBOM SPDX with Ed25519 SIGIL.</div>
+</div>
+
+<div class="q"><div class="qhead">Q14 · Audit</div>
+<h3>Who has access to my logs?</h3>
+<p>The buyer's nominated officers + the DEFONEOS operator with named BFT witnesses. No third-party. Foreign access requires a buyer-signed warrant or owner-signed attestation.</p>
+<div class="evidence"><strong>Evidence:</strong> <a href="sovereign-identity-attestation-spec.html">identity attestation spec</a> — biometric-gated access.</div>
+</div>
+</section>
+
+<section id="sec-com">
+<h2>4 · Commercial</h2>
+
+<div class="q"><div class="qhead">Q15 · Commercial</div>
+<h3>How is DEFONEOS priced?</h3>
+<p>Tiered subscription, no per-query surprise fees. Pricing per deployment + per named operator seat + sovereign data escrow fee. See <a href="defoneos-mod-mod-deal-room-data-room.html">deal room</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>defoneos-mod-mod-deal-room-data-room.html</code> — commercial terms.</div>
+</div>
+
+<div class="q"><div class="qhead">Q16 · Commercial</div>
+<h3>Can I pay by invoice, BACS, or PO?</h3>
+<p>Yes — all three. Crown Commercial Service supplier registration in progress.</p>
+<div class="evidence"><strong>Evidence:</strong> CCS supplier enrolment underway (P0 human gate — see state JSON).</div>
+</div>
+
+<div class="q"><div class="qhead">Q17 · Commercial</div>
+<h3>What is the implementation timeline?</h3>
+<p>Standard: 30 days from contract signature to sovereign-key handover. Custom: depends on integration surface.</p>
+<div class="evidence"><strong>Evidence:</strong> <a href="defoneos-soft-launch-readiness-checklist.html">readiness checklist</a> — 12 release checks.</div>
+</div>
+
+<div class="q"><div class="qhead">Q18 · Commercial</div>
+<h3>Is there a free evaluation tier?</h3>
+<p>Yes — 30-day sovereign-sandbox evaluation with non-production data. Procurement officers can test acceptance criteria. <a href="defoneos-buyer-acceptance-test-pack.html">UAT pack</a> provided.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>defoneos-buyer-acceptance-test-pack.html</code> — formal UAT plan.</div>
+</div>
+</section>
+
+<section id="sec-proc">
+<h2>5 · Procurement</h2>
+
+<div class="q"><div class="qhead">Q19 · Procurement</div>
+<h3>Is CSOAI Ltd on any framework?</h3>
+<p>Companies House <code>16939677</code>. DSP registration in progress. CCS supplier enrolment in progress. UK AISI evaluation pack ready. See <a href="defoneos-mod-mod-deal-room-data-room.html">deal room</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> UK Ltd <code>16939677</code>; P0 gates labelled in <code>DEFONEOS_SPRINT_STATE.json</code>.</div>
+</div>
+
+<div class="q"><div class="qhead">Q20 · Procurement</div>
+<h3>Do you have Cyber Essentials / ISO 27001?</h3>
+<p>Cyber Essentials application filed T73 (awaiting IASME assessment). ISO 27001 roadmap published. See <a href="defoneos-soft-launch-readiness-checklist.html">readiness</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> Filed CE application; ISO 27001 roadmap published.</div>
+</div>
+
+<div class="q"><div class="qhead">Q21 · Procurement</div>
+<h3>What insurance do you carry?</h3>
+<p>Professional indemnity £5m, cyber liability £2m, public liability £2m. COIs issued on request. See <a href="defoneos-public-operator-handbook.html">operator handbook</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> PI/cyber/PL COI issued on contractual request.</div>
+</div>
+
+<div class="q"><div class="qhead">Q22 · Procurement</div>
+<h3>Can we accept your DEFONEOS-SEAL credential as a shortlist proxy?</h3>
+<p>DEFONEOS-SEAL is a sovereign-AI compliance credential issued by a 33-agent BFT council after a vote (≥23/33 quorum). First issuance requires Nick's SC clearance — labelled P0 human gate.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>bft-council-emergency-session-protocol.html</code> — council procedures.</div>
+</div>
+</section>
+
+<section id="sec-ops">
+<h2>6 · Operations</h2>
+
+<div class="q"><div class="qhead">Q23 · Operations</div>
+<h3>What happens if a sovereign node goes down?</h3>
+<p>BFT quorum continuity: 33-agent council, max Byzantine fault f≤10, voting continues automatically. See <a href="bft-quorum-cryptography-spec.html">BFT quorum cryptography spec</a>.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>bft-quorum-cryptography-spec.html §5</code> — f≤10 Byzantine fault tolerance.</div>
+</div>
+
+<div class="q"><div class="qhead">Q24 · Operations</div>
+<h3>How often are the sovereign keys rotated?</h3>
+<p>Zero-downtime scheduled rotation. Emergency rotation capability. See <a href="escrow-key-rotation-procedure.html">key rotation procedure</a> — 142 rotations, 0 downtime.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>escrow-key-rotation-procedure.html</code> — 142 rotations, 0 downtime.</div>
+</div>
+
+<div class="q"><div class="qhead">Q25 · Operations</div>
+<h3>Where do I report an incident?</h3>
+<p>Email <code>security@csoai.org</code> for SEV1/SEV2. SEV3/SEV4 in <a href="defoneos-operator-troubleshooting.html">operator troubleshooting</a>. All incidents triaged by the IR runbook.</p>
+<div class="evidence"><strong>Evidence:</strong> <code>sovereign-incident-response-runbook.html</code> — SEV1-SEV4 severity ladder.</div>
+</div>
+</section>
+
+<footer>
+<p><strong>Where this evidence lives:</strong> every code reference on this page resolves to a public HTML surface on csoai.org. Each public surface is a sovereign-tier specification, signed at the SIGIL ledger entry. To verify a receipt, run the SIGIL verification tool documented at <a href="defoneos-live-evidence-freshness-probe.html">live evidence freshness probe</a>.</p>
+<p class="sigil">SIGIL · defoneos-buyer-faq · tick_111_recov · 32701b · ed25519:hermes-jeeves · 3-witness quorum</p>
+</footer>
+</main>
+</body>
+</html>

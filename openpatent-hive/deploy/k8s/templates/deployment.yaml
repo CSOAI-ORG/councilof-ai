@@ -1,0 +1,113 @@
+# openpatent.ai — Sovereign Hive · Stateless Deployments
+# ─────────────────────────────────────────────────────────────────────
+# Iterates over values.services and emits one Deployment for every
+# entry whose `kind` is "stateless".  Stateful services (postgres, ipfs)
+# are rendered by statefulset.yaml.
+{{- $global := .Values.global -}}
+{{- $prom := .Values.prometheus -}}
+{{- range $svc := .Values.services }}
+{{- if eq $svc.kind "stateless" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $svc.name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ $svc.name }}
+    app.kubernetes.io/name: {{ $svc.name }}
+    app.kubernetes.io/part-of: openpatent-hive
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/version: "{{ $svc.image | default "latest" | splitList ":" | last }}"
+    hive.openpatent.ai/role: {{ $svc.role | quote }}
+  {{- with $prom.enabled }}
+  annotations:
+    prometheus.io/scrape: {{ . | quote }}
+    prometheus.io/port: {{ $svc.port | quote }}
+    prometheus.io/path: "/metrics"
+  {{- end }}
+spec:
+  replicas: {{ $svc.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ $svc.name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ $svc.name }}
+        app.kubernetes.io/name: {{ $svc.name }}
+        app.kubernetes.io/part-of: openpatent-hive
+      {{- with $prom.enabled }}
+      annotations:
+        prometheus.io/scrape: {{ . | quote }}
+        prometheus.io/port: {{ $svc.port | quote }}
+        prometheus.io/path: "/metrics"
+      {{- end }}
+    spec:
+      containers:
+        - name: {{ $svc.name }}
+          image: "{{ $global.imageRegistry }}/{{ $svc.image | default (printf "%s:latest" $svc.name) }}"
+          imagePullPolicy: {{ $global.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: {{ $svc.port }}
+              protocol: TCP
+          env:
+            - name: HIVE_NAME
+              value: {{ $svc.name }}
+            - name: HIVE_PORT
+              value: {{ $svc.port | quote }}
+            - name: HIVE_DOMAIN
+              value: {{ $global.domain | default "openpatent.ai" | quote }}
+            - name: PATENTMCP_URL
+              value: "http://patentmcp:3210"
+            - name: WORKER_URL
+              value: "http://worker:3212"
+            - name: BFT_URL
+              value: "http://bft-council:3215"
+            - name: DRAFTING_URL
+              value: "http://drafting-fork:3216"
+            - name: X402_URL
+              value: "http://x402-router:3217"
+            - name: PRIMITIVES_URL
+              value: "http://openpatent-primitives:3218"
+            - name: IPFS_API
+              value: "http://ipfs:5001"
+            - name: POLYGON_RPC
+              value: "https://polygon-rpc.com"
+            - name: PATENTMCP_STORAGE
+              value: /var/lib/patentmcp
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: {{ $svc.resources.cpu | default "200m" }}
+              memory: {{ $svc.resources.memory | default "512Mi" }}
+          volumeMounts:
+            - name: patentmcp-data
+              mountPath: /var/lib/patentmcp
+      volumes:
+        - name: patentmcp-data
+          emptyDir: {}
+      terminationGracePeriodSeconds: 30
+{{- end }}
+{{- end }}

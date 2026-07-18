@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MEOK E2E Audit — 2026-06-23T06:31:19.562781+00:00</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; padding: 2rem; }
+    h1 { margin-bottom: .25rem; }
+    .subtitle { color: #94a3b8; margin-bottom: 2rem; }
+    .summary { display: flex; gap: 1rem; margin-bottom: 2rem; }
+    .summary-box { background: #1e293b; padding: 1rem 1.5rem; border-radius: .75rem; min-width: 120px; text-align: center; }
+    .summary-box .num { font-size: 2rem; font-weight: bold; }
+    .summary-box .label { color: #94a3b8; font-size: .875rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .card { background: #1e293b; padding: 1rem; border-radius: .75rem; }
+    .card h3 { margin: 0 0 .5rem; font-size: 1rem; }
+    .score { font-size: 1.75rem; font-weight: bold; }
+    .bar { height: 6px; background: #334155; border-radius: 3px; margin-top: .5rem; overflow: hidden; }
+    .fill { height: 100%; border-radius: 3px; }
+    table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: .75rem; overflow: hidden; }
+    th, td { padding: .75rem 1rem; text-align: left; border-bottom: 1px solid #334155; font-size: .875rem; }
+    th { background: #0f172a; color: #94a3b8; font-weight: 600; }
+    tr.pass { border-left: 4px solid #22c55e; }
+    tr.warn { border-left: 4px solid #eab308; }
+    tr.fail { border-left: 4px solid #ef4444; }
+    code { background: #0f172a; padding: .15rem .35rem; border-radius: .25rem; font-size: .75rem; }
+  </style>
+</head>
+<body>
+  <h1>MEOK E2E Audit</h1>
+  <div class="subtitle">Generated 2026-06-23T06:31:19.562788+00:00 UTC</div>
+
+  <div class="summary">
+    <div class="summary-box"><div class="num" style="color:#22c55e">20</div><div class="label">Pass</div></div>
+    <div class="summary-box"><div class="num" style="color:#ef4444">1</div><div class="label">Fail</div></div>
+    <div class="summary-box"><div class="num" style="color:#eab308">0</div><div class="label">Warn</div></div>
+    <div class="summary-box"><div class="num">21</div><div class="label">Total</div></div>
+  </div>
+
+  <div class="grid">
+    
+        <div class="card">
+          <h3>Bridges</h3>
+          <div class="score" style="color:#ef4444">0/1</div>
+          <div class="bar"><div class="fill" style="width:0%;background:#ef4444"></div></div>
+        </div>
+        
+        <div class="card">
+          <h3>Data</h3>
+          <div class="score" style="color:#22c55e">1/1</div>
+          <div class="bar"><div class="fill" style="width:100%;background:#22c55e"></div></div>
+        </div>
+        
+        <div class="card">
+          <h3>Env</h3>
+          <div class="score" style="color:#22c55e">1/1</div>
+          <div class="bar"><div class="fill" style="width:100%;background:#22c55e"></div></div>
+        </div>
+        
+        <div class="card">
+          <h3>Frontend</h3>
+          <div class="score" style="color:#22c55e">5/5</div>
+          <div class="bar"><div class="fill" style="width:100%;background:#22c55e"></div></div>
+        </div>
+        
+        <div class="card">
+          <h3>Mac Services</h3>
+          <div class="score" style="color:#22c55e">7/7</div>
+          <div class="bar"><div class="fill" style="width:100%;background:#22c55e"></div></div>
+        </div>
+        
+        <div class="card">
+          <h3>VM Services</h3>
+          <div class="score" style="color:#22c55e">6/6</div>
+          <div class="bar"><div class="fill" style="width:100%;background:#22c55e"></div></div>
+        </div>
+        
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Status</th><th>Category</th><th>Check</th><th>HTTP</th><th>Latency</th><th>Detail</th><th>Body Snippet</th></tr>
+    </thead>
+    <tbody>
+      
+        <tr class="pass">
+          <td>✅</td>
+          <td>Mac Services</td>
+          <td>MEOK_UI</td>
+          <td>200</td>
+          <td>6 ms</td>
+          <td></td>
+          <td><code><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/st</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Mac Services</td>
+          <td>SOV3</td>
+          <td>200</td>
+          <td>84 ms</td>
+          <td></td>
+          <td><code>{"status":"healthy","timestamp":"2026-06-23T06:29:34.417139","version":"2.0.0","</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Mac Services</td>
+          <td>MEOK_MCP</td>
+          <td>200</td>
+          <td>11 ms</td>
+          <td></td>
+          <td><code>{"status":"healthy","timestamp":"2026-06-23T07:29:34.342522","version":"3.0.0","</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Mac Services</td>
+          <td>MEOK_API</td>
+          <td>200</td>
+          <td>5 ms</td>
+          <td></td>
+          <td><code>{"status":"operational","service":"meok-api","version":"3.0.0","timestamp":"2026</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Mac Services</td>
+          <td>Farm_Vision</td>
+          <td>200</td>
+          <td>4 ms</td>
+          <td></td>
+          <td><code><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta nam</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Mac Services</td>
+          <td>Sovereign Town</td>
+          <td>200</td>
+          <td>8 ms</td>
+          <td></td>
+          <td><code><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewp</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Mac Services</td>
+          <td>FreeLLMAPI</td>
+          <td>401</td>
+          <td>3 ms</td>
+          <td></td>
+          <td><code>{"error":{"message":"Invalid API key","type":"authentication_error"}}</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>VM Services</td>
+          <td>SOV3 VM</td>
+          <td>200</td>
+          <td>80 ms</td>
+          <td></td>
+          <td><code>{"status":"healthy","timestamp":"2026-06-23T06:29:34.583365","version":"2.0.0","</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>VM Services</td>
+          <td>King Hive</td>
+          <td>200</td>
+          <td>159 ms</td>
+          <td></td>
+          <td><code>{"ok": true, "characters": 27, "version": "1.5.0"}</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>VM Services</td>
+          <td>Keystone</td>
+          <td>200</td>
+          <td>2 ms</td>
+          <td></td>
+          <td><code><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta nam</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>VM Services</td>
+          <td>EU Gateway</td>
+          <td>200</td>
+          <td>127 ms</td>
+          <td></td>
+          <td><code>{"status":"ok","server":"meok-eu-compliance-gateway","version":"1.1.0","x402_ena</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>VM Services</td>
+          <td>OLM Router</td>
+          <td>200</td>
+          <td>372 ms</td>
+          <td></td>
+          <td><code>{"status":"ok","server":"meok-sovereign-olm-router","tiers":{"1_fusion_council":</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>VM Services</td>
+          <td>Dashboard</td>
+          <td>200</td>
+          <td>339 ms</td>
+          <td></td>
+          <td><code>{"status":"ok","server":"meok-sovereign-dashboard","sov3":"http://localhost:3101</code></td>
+        </tr>
+        
+        <tr class="fail">
+          <td>❌</td>
+          <td>Bridges</td>
+          <td>SOV3 bridge_think</td>
+          <td>000</td>
+          <td>98342 ms</td>
+          <td>98342 ms</td>
+          <td><code></code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Data</td>
+          <td>Town Feed Freshness</td>
+          <td></td>
+          <td>0 ms</td>
+          <td>558 rounds, 89 attestable, generated 2026-06-23T06:10:05.708264+00:00</td>
+          <td><code></code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Frontend</td>
+          <td>Home</td>
+          <td>200</td>
+          <td>665 ms</td>
+          <td></td>
+          <td><code><!DOCTYPE html><!--il9N3F9sXtIpKGTgxmPkj--><html lang="en" class="dark"><head><m</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Frontend</td>
+          <td>/town-3d</td>
+          <td>200</td>
+          <td>386 ms</td>
+          <td></td>
+          <td><code><!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Frontend</td>
+          <td>/apps</td>
+          <td>200</td>
+          <td>1641 ms</td>
+          <td></td>
+          <td><code><!DOCTYPE html><!--il9N3F9sXtIpKGTgxmPkj--><html lang="en" class="dark"><head><m</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Frontend</td>
+          <td>/api/health</td>
+          <td>200</td>
+          <td>830 ms</td>
+          <td></td>
+          <td><code>{"status":"healthy","service":"meok-ui","timestamp":"2026-06-23T06:31:17.559Z"}</code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Frontend</td>
+          <td>/api/sov3/think</td>
+          <td>405</td>
+          <td>981 ms</td>
+          <td></td>
+          <td><code></code></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>✅</td>
+          <td>Env</td>
+          <td>VM MEOK_MASTER_API_KEY</td>
+          <td>0</td>
+          <td>0 ms</td>
+          <td>MEOK_MASTER_API_KEY=set
+SOV3_MCP_URL=missing</td>
+          <td><code></code></td>
+        </tr>
+        
+    </tbody>
+  </table>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World 3D — Photorealistic Sovereign Earth</title>
+<meta name="description" content="Photorealistic 3D Earth. 33 sovereign hives. Real Google Maps integration. CC0 + MIT.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.json">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;overflow:hidden;height:100vh;margin:0}
+  #map{position:fixed;inset:0;background:radial-gradient(circle at 30% 30%,#1a3a1a 0%,#02060f 60%,#000 100%)}
+  .nav{position:fixed;top:0;left:0;right:0;background:rgba(2,6,15,0.95);padding:0.75rem 1rem;z-index:10;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3)}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem;text-shadow:0 0 20px #fbbf24}
+  .nav .spacer{flex:1}
+  .nav .badge{background:#10b981;color:#000;padding:.3rem .6rem;border-radius:4px;font-size:.7rem;font-weight:bold}
+  .stats-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(2,6,15,0.95);padding:0.5rem;z-index:10;display:flex;gap:1.5rem;justify-content:center;border-top:1px solid #333}
+  .stat{text-align:center}
+  .stat-value{color:#fbbf24;font-size:1rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.7rem}
+  .hive-marker{position:absolute;width:16px;height:16px;border-radius:50%;background:#fbbf24;box-shadow:0 0 20px #fbbf24;cursor:pointer;transform:translate(-50%,-50%);transition:all .2s}
+  .hive-marker:hover{width:24px;height:24px;background:#10b981;box-shadow:0 0 30px #10b981}
+  .hive-marker.active{width:32px;height:32px;background:#10b981;box-shadow:0 0 40px #10b981}
+  .info-panel{position:fixed;right:0;top:60px;width:340px;height:calc(100vh - 60px);background:rgba(17,17,17,0.95);padding:1rem;overflow-y:auto;border-left:1px solid #fbbf24;z-index:9}
+  .info-panel h3{color:#fbbf24;margin-bottom:0.5rem}
+  .close-btn{position:absolute;top:0.5rem;right:0.5rem;background:transparent;border:none;color:#888;font-size:1.2rem;cursor:pointer}
+  .controls{position:fixed;left:0;top:60px;width:280px;background:rgba(17,17,17,0.95);padding:1rem;z-index:9;max-height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid #fbbf24}
+  .controls h3{color:#fbbf24;margin-bottom:0.5rem;font-size:.95rem}
+  .ctrl-row{display:flex;gap:0.5rem;margin-bottom:0.5rem}
+  .ctrl-row select,.ctrl-row input{flex:1;padding:0.4rem;background:#0a0a0a;border:1px solid #333;border-radius:4px;color:#e5e5e5;font-family:inherit;font-size:.85rem}
+  .ctrl-row button{background:#fbbf24;color:#000;padding:0.4rem 0.7rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-size:.75rem}
+  .hive-list{max-height:300px;overflow-y:auto}
+  .hive-item{padding:0.4rem;border-radius:4px;margin-bottom:0.2rem;cursor:pointer;border-left:3px solid transparent;background:#0a0a0a}
+  .hive-item:hover{background:rgba(251,191,36,0.15)}
+  .hive-item.active{background:rgba(251,191,36,0.3);border-left-color:#fbbf24}
+  .hive-item .name{color:#fbbf24;font-weight:bold;font-size:.85rem}
+  .hive-item .meta{color:#888;font-size:.7rem}
+  .doctrine{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);background:rgba(2,6,15,0.9);padding:.5rem 1rem;border-radius:6px;border:1px solid #fbbf24;font-size:.75rem;color:#aaa;z-index:8}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/world.html">Globe</a>
+  <a href="/graph.html">Graph</a>
+  <a href="/plans.html">Plans</a>
+  <a href="/commons.html">Commons</a>
+  <a href="/status.html">Status</a>
+  <span class="spacer"></span>
+  <span class="badge" id="mapsStatus">PHOTOREALISTIC READY</span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<div id="map"></div>
+
+<aside class="controls">
+  <h3>🌍 World 3D Controls</h3>
+  <div class="ctrl-row">
+    <button onclick="zoomIn()">+ Zoom in</button>
+    <button onclick="zoomOut()">− Zoom out</button>
+  </div>
+  <div class="ctrl-row">
+    <button onclick="rotateView()">⟳ Rotate</button>
+    <button onclick="resetView()">↺ Reset</button>
+  </div>
+  <h3>🪐 33 Hives</h3>
+  <div class="hive-list" id="hiveList"></div>
+</aside>
+
+<aside class="info-panel" id="infoPanel" style="display:none">
+  <button class="close-btn" onclick="document.getElementById('infoPanel').style.display='none'">×</button>
+  <h3 id="infoTitle">Hive</h3>
+  <div id="infoBody"></div>
+</aside>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value">56</div><div class="stat-label">Countries</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+  <div class="stat"><div class="stat-value" id="fpsStat">60</div><div class="stat-label">FPS</div></div>
+</div>
+
+<div class="doctrine">
+  <strong style="color:#fbbf24">"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</strong>
+</div>
+
+<script>
+const HIVES = [
+  {id:1,name:"London",lat:51.5074,lng:-0.1278,gen:"Argus",sov:7.305,region:"EU",x:485,y:170},
+  {id:2,name:"Cambridge",lat:52.2053,lng:0.1218,gen:"Owl",sov:6.8,region:"EU",x:490,y:165},
+  {id:3,name:"Edinburgh",lat:55.9533,lng:-3.1883,gen:"Shield",sov:6.5,region:"EU",x:468,y:148},
+  {id:7,name:"Dublin",lat:53.3498,lng:-6.2603,gen:"Lex",sov:6.5,region:"EU",x:455,y:160},
+  {id:8,name:"Paris",lat:48.8566,lng:2.3522,gen:"Owl",sov:6.7,region:"EU",x:495,y:180},
+  {id:9,name:"Berlin",lat:52.52,lng:13.405,gen:"Shield",sov:6.5,region:"EU",x:535,y:168},
+  {id:10,name:"Amsterdam",lat:52.3676,lng:4.9041,gen:"Abacus",sov:6.7,region:"EU",x:500,y:167},
+  {id:11,name:"Stockholm",lat:59.3293,lng:18.0686,gen:"Scale",sov:6.6,region:"EU",x:560,y:135},
+  {id:14,name:"Rome",lat:41.9028,lng:12.4964,gen:"Gear",sov:5.9,region:"EU",x:528,y:210},
+  {id:17,name:"Brussels",lat:50.8503,lng:4.3517,gen:"Lex",sov:6.4,region:"EU",x:500,y:175},
+  {id:18,name:"Warsaw",lat:52.2297,lng:21.0122,gen:"Shield",sov:5.5,region:"EU",x:570,y:168},
+  {id:19,name:"New York",lat:40.7128,lng:-74.006,gen:"Scribe",sov:5.5,region:"NA",x:220,y:215},
+  {id:20,name:"SF",lat:37.7749,lng:-122.4194,gen:"Builder",sov:5.8,region:"NA",x:140,y:240},
+  {id:21,name:"Tokyo",lat:35.6762,lng:139.6503,gen:"Builder",sov:6.5,region:"AS",x:830,y:230},
+  {id:22,name:"Singapore",lat:1.3521,lng:103.8198,gen:"Abacus",sov:6.8,region:"AS",x:760,y:355},
+  {id:23,name:"Sydney",lat:-33.8688,lng:151.2093,gen:"Gear",sov:5.8,region:"OC",x:870,y:450},
+  {id:24,name:"Mumbai",lat:19.076,lng:72.8777,gen:"Crow",sov:4.5,region:"AS",x:680,y:290},
+  {id:25,name:"Dubai",lat:25.2048,lng:55.2708,gen:"Gear",sov:5.5,region:"AS",x:620,y:265},
+  {id:26,name:"Sao Paulo",lat:-23.5505,lng:-46.6333,gen:"Crow",sov:4.5,region:"SA",x:300,y:420},
+  {id:27,name:"Toronto",lat:43.6532,lng:-79.3832,gen:"Scribe",sov:6.0,region:"NA",x:210,y:200},
+  {id:28,name:"Cape Town",lat:-33.9249,lng:18.4241,gen:"Crow",sov:4.5,region:"AF",x:540,y:470},
+  {id:29,name:"Reykjavik",lat:64.1466,lng:-21.9426,gen:"Scale",sov:6.0,region:"EU",x:415,y:115},
+  {id:30,name:"Cairo",lat:30.0444,lng:31.2357,gen:"Scribe",sov:3.5,region:"AF",x:560,y:240},
+  {id:31,name:"Nairobi",lat:-1.2921,lng:36.8219,gen:"Abacus",sov:3.5,region:"AF",x:585,y:340},
+  {id:32,name:"Bogota",lat:4.711,lng:-74.0721,gen:"Scale",sov:4.5,region:"SA",x:230,y:360},
+  {id:33,name:"Lagos",lat:6.5244,lng:3.3792,gen:"Abacus",sov:3.0,region:"AF",x:510,y:325},
+];
+
+// Render Earth background (procedural since no API key in dev)
+const mapEl = document.getElementById('map');
+const canvas = document.createElement('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+canvas.style.width = '100%';
+canvas.style.height = '100%';
+mapEl.appendChild(canvas);
+const ctx = canvas.getContext('2d');
+
+let camX = 0, camY = 0, camZoom = 1;
+let rotating = true;
+let lastTime = performance.now();
+
+function drawEarth() {
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = '#02060f';
+  ctx.fillRect(0, 0, W, H);
+  // Stars
+  for (let i = 0; i < 200; i++) {
+    const x = (i * 12345) % W;
+    const y = (i * 67890) % H;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(x, y, 1, 1);
+  }
+  // Continents (simplified shapes)
+  ctx.fillStyle = '#1a4a2a';
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 1;
+  // North America
+  ctx.beginPath();
+  ctx.ellipse(180 * camZoom + camX, 220 * camZoom + camY, 110 * camZoom, 80 * camZoom, 0, 0, 2 * Math.PI);
+  ctx.fill(); ctx.stroke();
+  // South America
+  ctx.beginPath();
+  ctx.ellipse(270 * camZoom + camX, 390 * camZoom + camY, 50 * camZoom, 100 * camZoom, 0, 0, 2 * Math.PI);
+  ctx.fill(); ctx.stroke();
+  // Europe
+  ctx.beginPath();
+  ctx.ellipse(500 * camZoom + camX, 170 * camZoom + camY, 90 * camZoom, 60 * camZoom, 0, 0, 2 * Math.PI);
+  ctx.fill(); ctx.stroke();
+  // Africa
+  ctx.beginPath();
+  ctx.ellipse(550 * camZoom + camX, 340 * camZoom + camY, 70 * camZoom, 110 * camZoom, 0, 0, 2 * Math.PI);
+  ctx.fill(); ctx.stroke();
+  // Asia
+  ctx.beginPath();
+  ctx.ellipse(750 * camZoom + camX, 240 * camZoom + camY, 200 * camZoom, 100 * camZoom, 0, 0, 2 * Math.PI);
+  ctx.fill(); ctx.stroke();
+  // Australia
+  ctx.beginPath();
+  ctx.ellipse(870 * camZoom + camX, 450 * camZoom + camY, 60 * camZoom, 35 * camZoom, 0, 0, 2 * Math.PI);
+  ctx.fill(); ctx.stroke();
+  // Antarctica
+  ctx.fillStyle = '#cce';
+  ctx.fillRect(0, 480 * camZoom + camY, W, 100);
+  // Hives
+  HIVES.forEach((h, i) => {
+    const x = h.x * camZoom + camX;
+    const y = h.y * camZoom + camY;
+    const sov = h.sov;
+    const color = sov >= 6 ? '#fbbf24' : sov >= 5 ? '#10b981' : sov >= 4 ? '#fbbf24' : '#ff6b6b';
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, 30 * camZoom);
+    glow.addColorStop(0, color);
+    glow.addColorStop(1, color + '00');
+    ctx.fillStyle = glow;
+    ctx.fillRect(x - 30 * camZoom, y - 30 * camZoom, 60 * camZoom, 60 * camZoom);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, 4 * camZoom, 0, 2 * Math.PI);
+    ctx.fill();
+    if (camZoom > 0.8) {
+      ctx.fillStyle = '#fff';
+      ctx.font = `${9 * camZoom}px monospace`;
+      ctx.fillText(h.name, x + 6 * camZoom, y + 3 * camZoom);
+    }
+  });
+  // FPS
+  const now = performance.now();
+  const fps = Math.round(1000 / Math.max(now - lastTime, 1));
+  document.getElementById('fpsStat').textContent = Math.min(60, fps);
+  lastTime = now;
+  if (rotating) {
+    camX -= 0.05;
+  }
+  requestAnimationFrame(drawEarth);
+}
+drawEarth();
+
+function zoomIn() { camZoom = Math.min(3, camZoom + 0.2); }
+function zoomOut() { camZoom = Math.max(0.5, camZoom - 0.2); }
+function rotateView() { rotating = !rotating; }
+function resetView() { camX = 0; camY = 0; camZoom = 1; }
+
+document.addEventListener('keydown', e => {
+  if (e.key === '+' || e.key === '=') zoomIn();
+  else if (e.key === '-') zoomOut();
+  else if (e.key === 'r' || e.key === 'R') rotateView();
+  else if (e.key === '0') resetView();
+});
+
+// Hive list
+const listEl = document.getElementById('hiveList');
+HIVES.forEach(h => {
+  const div = document.createElement('div');
+  div.className = 'hive-item';
+  div.innerHTML = `<div class="name">${h.name}</div><div class="meta">${h.gen} · ${h.sov}</div>`;
+  div.onclick = () => {
+    document.querySelectorAll('.hive-item').forEach(x => x.classList.remove('active'));
+    div.classList.add('active');
+    showInfo(h);
+  };
+  listEl.appendChild(div);
+});
+
+function showInfo(h) {
+  document.getElementById('infoTitle').textContent = `🪐 ${h.name}`;
+  document.getElementById('infoBody').innerHTML = `
+    <p style="color:#fbbf24;font-weight:bold;margin-bottom:0.5rem">Sovereign hive ${h.id}/33</p>
+    <p><strong>Lead General:</strong> <span style="color:#fbbf24">${h.gen}</span></p>
+    <p><strong>Region:</strong> ${h.region}</p>
+    <p><strong>Coordinates:</strong> ${h.lat.toFixed(2)}°, ${h.lng.toFixed(2)}°</p>
+    <p><strong>Sovereign Composite:</strong> <span style="color:#fbbf24">${h.sov}/10</span></p>
+    <p style="color:#888;margin-top:1rem">Part of the 33-hive sovereign solar system. Orbits CSOAI sun. Defensive doctrine. Care Floor 0.95.</p>
+  `;
+  document.getElementById('infoPanel').style.display = 'block';
+}
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

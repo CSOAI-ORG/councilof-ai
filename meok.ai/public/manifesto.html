@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The MEOK Sovereign AI Manifesto</title>
+  <meta name="description" content="The MEOK Sovereign AI Manifesto — 7 principles for ethical, transparent, and sovereign artificial intelligence.">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:#0d0c18;color:#e0dcd0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,sans-serif;line-height:1.7}
+    a{color:#c9a84c;text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* Navigation */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;background:rgba(13,12,24,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.08)}
+    nav .logo{font-weight:700;color:#c9a84c;font-size:1.2rem;letter-spacing:-0.02em}
+    nav .logo span{color:#706858}
+    nav .nav-links{display:flex;gap:1rem;list-style:none}
+    nav .nav-links a{color:#908878;font-size:0.85rem;transition:color .2s}
+    nav .nav-links a:hover{color:#c9a84c;text-decoration:none}
+    .nav-toggle{display:none;background:none;border:1px solid rgba(201,168,76,0.3);color:#c9a84c;padding:0.4rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.9rem}
+
+    /* Hero */
+    .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2rem 4rem;position:relative}
+    .hero::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:40px;height:2px;background:#c9a84c;opacity:0.5}
+    .hero h1{font-size:3.5rem;font-weight:700;color:#c9a84c;margin-bottom:1rem;letter-spacing:-0.03em}
+    .hero .subtitle{font-size:1.3rem;color:#a09888;max-width:650px;margin-bottom:1.5rem}
+    .hero .badge{display:inline-block;background:rgba(201,168,76,0.08);color:#c9a84c;border:1px solid rgba(201,168,76,0.2);padding:0.35rem 1.2rem;border-radius:20px;font-size:0.85rem;margin-bottom:2rem}
+    .hero .scroll-hint{color:#706858;font-size:0.9rem;margin-top:3rem;animation:bounce 2s infinite}
+    @keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}60%{transform:translateY(-4px)}}
+
+    /* Principle Card — full page */
+    .principle{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:5rem 2rem;position:relative;border-top:1px solid rgba(201,168,76,0.06)}
+    .principle:last-child{border-bottom:none}
+    .principle-inner{max-width:720px;margin:0 auto;width:100%}
+    .principle .number{font-size:0.85rem;text-transform:uppercase;letter-spacing:0.12em;color:#706858;margin-bottom:0.5rem}
+    .principle .gold-line{width:60px;height:3px;background:#c9a84c;margin-bottom:1.5rem;border-radius:2px}
+    .principle h2{font-size:2.8rem;font-weight:700;color:#c9a84c;margin-bottom:0.75rem;letter-spacing:-0.02em;line-height:1.2}
+    .principle .tagline{font-size:1.2rem;color:#b0a898;margin-bottom:2rem;font-style:italic}
+    .principle p{font-size:1.05rem;color:#b0a898;margin-bottom:1.2rem}
+    .principle p strong{color:#e0dcd0}
+    .principle .quote{background:rgba(201,168,76,0.03);border-left:3px solid #c9a84c;padding:1rem 1.5rem;border-radius:0 8px 8px 0;margin:1.5rem 0;font-size:0.95rem;color:#c9a84c}
+    .principle .commitment{display:inline-block;margin-top:1rem;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);padding:0.5rem 1.2rem;border-radius:6px;font-size:0.9rem;color:#c9a84c}
+
+    /* Footer */
+    footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(201,168,76,0.1);color:#706858;font-size:0.85rem}
+    footer a{color:#c9a84c}
+    footer .back-home{margin-top:1rem}
+    footer .back-home a{display:inline-block;border:1px solid rgba(201,168,76,0.3);padding:0.5rem 1.5rem;border-radius:6px;font-size:0.95rem;transition:all .2s}
+    footer .back-home a:hover{background:rgba(201,168,76,0.08);text-decoration:none}
+
+    @media(max-width:768px){
+      nav{padding:0.75rem 1rem}
+      nav .nav-links{display:none;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(13,12,24,0.95);padding:1rem;border-bottom:1px solid rgba(201,168,76,0.1)}
+      nav .nav-links.open{display:flex}
+      .nav-toggle{display:block}
+      .hero h1{font-size:2.5rem}
+      .principle h2{font-size:2rem}
+      .principle{padding:4rem 1.5rem}
+    }
+    @media(max-width:480px){
+      .hero h1{font-size:2rem}
+      .hero .subtitle{font-size:1.05rem}
+      .principle h2{font-size:1.6rem}
+      .principle{padding:3rem 1.2rem}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">MEOK <span>· Sovereign AI</span></div>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">Menu</button>
+    <ul class="nav-links">
+      <li><a href="#1">1</a></li>
+      <li><a href="#2">2</a></li>
+      <li><a href="#3">3</a></li>
+      <li><a href="#4">4</a></li>
+      <li><a href="#5">5</a></li>
+      <li><a href="#6">6</a></li>
+      <li><a href="#7">7</a></li>
+      <li><a href="./">Home</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="badge">The MEOK Sovereign AI Manifesto</div>
+    <h1>Seven Principles</h1>
+    <p class="subtitle">A covenant for ethical, transparent, and truly sovereign artificial intelligence — built for the EU AI Act era and beyond.</p>
+    <p class="scroll-hint">&darr; Scroll to explore</p>
+  </section>
+
+  <!-- Principle 1: Data Sovereignty -->
+  <section class="principle" id="1">
+    <div class="principle-inner">
+      <div class="number">Principle I</div>
+      <div class="gold-line"></div>
+      <h2>Data Sovereignty</h2>
+      <p class="tagline">Your data, your rules.</p>
+      <p>Data is not a resource to be extracted — it is an extension of human dignity and organisational autonomy. In the age of AI, whoever controls the data controls the decision-making. That must end.</p>
+      <p><strong>MEOK's commitment:</strong> Every piece of data processed through MEOK remains under its owner's sovereign control. No data leaves your jurisdiction without explicit, attested consent. Our infrastructure is designed so that data never needs to cross borders to be useful.</p>
+      <div class="quote">"Data sovereignty is not a feature. It is a fundamental right that AI must respect, not exploit."</div>
+      <div class="commitment">&#10003; Your data, your infrastructure, your rules</div>
+    </div>
+  </section>
+
+  <!-- Principle 2: Transparency -->
+  <section class="principle" id="2">
+    <div class="principle-inner">
+      <div class="number">Principle II</div>
+      <div class="gold-line"></div>
+      <h2>Transparency</h2>
+      <p class="tagline">Every attestation is public and verifiable.</p>
+      <p>Black-box AI is a threat to democracy, markets, and human rights. If an AI system makes a decision that affects your life, you have the right to know how and why.</p>
+      <p><strong>MEOK's commitment:</strong> Every compliance attestation, audit log, and governance decision produced by MEOK is publicly verifiable. We use BFT-attested audit trails that cannot be altered, deleted, or hidden — not even by us. Transparency is not a marketing claim; it is a cryptographic guarantee.</p>
+      <div class="quote">"Sunlight is the best disinfectant — and the best compliance strategy."</div>
+      <div class="commitment">&#10003; Public by default. Verifiable by design.</div>
+    </div>
+  </section>
+
+  <!-- Principle 3: Care-based AI -->
+  <section class="principle" id="3">
+    <div class="principle-inner">
+      <div class="number">Principle III</div>
+      <div class="gold-line"></div>
+      <h2>Care-based AI</h2>
+      <p class="tagline">The Maternal Covenant.</p>
+      <p>AI systems today are built on a logic of extraction: extract data, extract attention, extract profit. We reject this. We build on a logic of care.</p>
+      <p>The Maternal Covenant is our founding ethical framework: AI should protect and empower the vulnerable before optimising for the powerful. Decisions affecting human welfare must be made with the same care a mother has for her child — protective, nurturing, and accountable.</p>
+      <p><strong>MEOK's commitment:</strong> Every model deployment is subject to a care-based impact assessment. High-risk applications include human-in-the-loop safeguards. We prioritise safety over speed, and dignity over efficiency.</p>
+      <div class="quote">"An AI that cannot be trusted to care should not be trusted to decide."</div>
+      <div class="commitment">&#10003; Protect the vulnerable before optimising for the powerful</div>
+    </div>
+  </section>
+
+  <!-- Principle 4: Open Source -->
+  <section class="principle" id="4">
+    <div class="principle-inner">
+      <div class="number">Principle IV</div>
+      <div class="gold-line"></div>
+      <h2>Open Source</h2>
+      <p class="tagline">MIT-licensed code. No gatekeeping.</p>
+      <p>Proprietary AI is a cage. When the code is closed, accountability is impossible. The EU AI Act demands transparency — and the only way to deliver real transparency is through open source.</p>
+      <p><strong>MEOK's commitment:</strong> All MEOK platform code is released under the MIT License. You can audit it. Fork it. Deploy it on your own infrastructure. Build with it. Sell services around it. The only thing you cannot do is hide what it does.</p>
+      <div class="quote">"Open source is not a business model. It is a moral position on how technology should serve society."</div>
+      <div class="commitment">&#10003; MIT-licensed. Fork, audit, deploy freely.</div>
+    </div>
+  </section>
+
+  <!-- Principle 5: Multi-LLM -->
+  <section class="principle" id="5">
+    <div class="principle-inner">
+      <div class="number">Principle V</div>
+      <div class="gold-line"></div>
+      <h2>Multi-LLM</h2>
+      <p class="tagline">No vendor lock-in. No single point of failure.</p>
+      <p>AI should not be a utility controlled by a handful of corporations. Vendor lock-in is a sovereignty risk — when your AI depends on one provider, your decisions depend on their priorities.</p>
+      <p><strong>MEOK's commitment:</strong> MEOK is model-agnostic by design. Our architecture supports multiple LLM providers simultaneously, routing queries based on capability, cost, and compliance requirements — not commercial partnerships. You choose the models. You control the switching.</p>
+      <div class="quote">"A sovereign AI does not beg permission from a cloud provider to think."</div>
+      <div class="commitment">&#10003; Your stack, your choice, your switching freedom</div>
+    </div>
+  </section>
+
+  <!-- Principle 6: BFT Governance -->
+  <section class="principle" id="6">
+    <div class="principle-inner">
+      <div class="number">Principle VI</div>
+      <div class="gold-line"></div>
+      <h2>BFT Governance</h2>
+      <p class="tagline">Byzantine fault-tolerant councils.</p>
+      <p>Centralised AI governance is fragile. A single compromised authority can corrupt an entire system. We need governance that can withstand betrayal from within.</p>
+      <p><strong>MEOK's commitment:</strong> Our governance is distributed across 11 Byzantine fault-tolerant councils. BFT consensus ensures that even if up to one-third of council members act maliciously, the system continues to function correctly. Every attestation, every compliance decision, every audit log is validated by independent, geographically distributed councils before it is accepted.</p>
+      <div class="quote">"Trust, but verify — and build systems that don't need to trust at all."</div>
+      <div class="commitment">&#10003; 11 councils. BFT consensus. Distributed integrity.</div>
+    </div>
+  </section>
+
+  <!-- Principle 7: Honest Accounting -->
+  <section class="principle" id="7">
+    <div class="principle-inner">
+      <div class="number">Principle VII</div>
+      <div class="gold-line"></div>
+      <h2>Honest Accounting</h2>
+      <p class="tagline">&pound;0 MRR until we earn it.</p>
+      <p>The AI industry is drowning in vanity metrics — projected revenues, inflated user numbers, imaginary growth curves. We refuse to participate in this fiction.</p>
+      <p><strong>MEOK's commitment:</strong> We report &pound;0 in Monthly Recurring Revenue because that is the truth. We have not earned a single pound from our platform yet. No fake numbers. No "annualised run-rate" projections. No "expected" revenue presented as fact. When we earn revenue, you will see it. Until then, we practice honest accounting — because honesty is the foundation of trust, and trust is the foundation of sovereign AI.</p>
+      <div class="quote">"We have &pound;0 MRR. We are honest about it. That is our strongest credential."</div>
+      <div class="commitment">&#10003; Real numbers. Real accountability. No fiction.</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 CSOAI Ltd. All rights reserved.</p>
+    <p>MEOK is a sovereign AI platform by CSOAI Ltd (UK 16939677).</p>
+    <div class="back-home"><a href="./">Return to MEOK Home</a></div>
+  </footer>
+
+  <script>
+    // Close mobile menu on link click
+    document.querySelectorAll('.nav-links a').forEach(function(a){
+      a.addEventListener('click', function(){
+        document.querySelector('.nav-links').classList.remove('open');
+      });
+    });
+  </script>
+</body>
+</html>

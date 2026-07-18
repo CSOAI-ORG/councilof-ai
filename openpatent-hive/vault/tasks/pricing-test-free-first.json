@@ -1,0 +1,7 @@
+{
+  "id": "pricing-test-free-first",
+  "prompt": "Write the pricing-page A/B test variant B for openpatent.ai where the $29 starter tier is shown first. Render the 5-tier ladder in this order: (1) $29 starter — '1 disclosure/quarter, Bitcoin OTS, sovereign custody', (2) $149 defensive — '10 disclosures, C2PA manifest, hash-chained audit', (3) $999 full — 'unlimited disclosures, BFT council review, 22/33 supermajority', (4) $2499 premium — 'cross-hive attestation, MCP 33-tool, white-label .ai', (5) $4999/mo enterprise — 'sovereign air-gap, FedRAMP path, named partner'. Lead with the $29 tier and a frictionless signup CTA ('Start with $29 — disclose in 90 seconds'). Justify the order in 1 paragraph: 'the $29 starter converts cold traffic into the hive; defensive/full/premium/enterprise upsell via the 6-layer proof; free-first ordering reduces time-to-first-disclosure by ~62% vs premium-first.' Use DEFONEOS mythic voice. Return ONLY JSON: {tier_order:[5 strings], lead_paragraph:string, signup_cta:string, hypothesis:string, signature:string}.",
+  "max_tokens": 600,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "defensive"
+}

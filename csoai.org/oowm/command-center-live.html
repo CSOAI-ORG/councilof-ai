@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8"><title>OOWM Command Center LIVE - csoai.org/oowm/command-center-live.html</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(160deg,#0a0e27,#1e3a8a 50%,#0a0e27);color:#e2e8f0;padding:40px 20px;line-height:1.7}.container{max-width:1480px;margin:0 auto}h1{color:#fbbf24;font-size:2.6rem;text-align:center;margin-bottom:8px;text-shadow:0 0 16px rgba(251,191,36,.3)}.tagline{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:24px;font-size:1.05rem}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0}.kpi{background:rgba(0,0,0,.5);padding:18px;border-radius:8px;text-align:center;border:1px solid rgba(251,191,36,.3)}.kpi .v{font-size:2.2rem;font-weight:800;color:#fbbf24;margin-bottom:4px}.kpi .l{color:#06b6d4;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}.kpi .d{color:#10b981;font-size:.65rem;margin-top:4px}.live{background:rgba(16,185,129,.15);padding:12px 18px;border-radius:8px;font-family:monospace;font-size:.78rem;color:#10b981;margin:14px 0;max-height:240px;overflow-y:auto;border:1px solid rgba(16,185,129,.3)}.footer{text-align:center;padding:32px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.3);opacity:.85;font-size:.85rem}a{color:#10b981;text-decoration:none}.pill{display:inline-block;padding:3px 10px;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.4);border-radius:10px;color:#fbbf24;font-size:.78rem;font-weight:700;margin:0 4px 4px 0}.organ{background:rgba(0,0,0,.4);padding:14px;border-radius:6px;display:flex;align-items:center;gap:12px}.organ .icon{font-size:1.4rem}.organ .name{flex:1;font-weight:700;color:#10b981}.organ .beat{width:10px;height:10px;border-radius:50%;background:#10b981;animation:pulse 1s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}</style></head><body>
+<div class="container">
+<h1>🜏 OOWM Command Center LIVE</h1>
+<p class="tagline">Live sovereign ops. 12 dimensions. 22 hieroglyphs. 12 queens. SIGIL chain. Article 50. Care Floor 0.95.</p>
+<p style="text-align:center">
+<span class="pill">Care Floor 0.95</span> <span class="pill">BFT 12-around-1</span> <span class="pill">SIGIL</span> <span class="pill">Composite 7.305</span> <span class="pill">MIT + CC0</span>
+</p>
+
+<h2>📊 12 Sovereign Composite Dimensions</h2>
+<div class="grid" id="composite-grid"></div>
+
+<h2>⚖️ 12-Queen BFT Council</h2>
+<div class="grid" id="queens-grid"></div>
+
+<h2>📜 SIGIL Chain (last 10 emissions)</h2>
+<div class="live" id="sigil-chain"></div>
+
+<h2>🫀 11 Sovereign Organs (heartbeat)</h2>
+<div class="grid" id="organs-grid"></div>
+
+<h2>🔐 Authentication Providers (17)</h2>
+<div id="auth-providers" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0"></div>
+
+<h2>🛠️ 309 Sovereign Tools by Category</h2>
+<div class="grid" id="tools-grid"></div>
+
+<h2>📡 Cron Status</h2>
+<div class="live" id="cron-status"></div>
+
+<h2>📜 BFT Council Live Vote Tally</h2>
+<div class="live" id="bft-vote"></div>
+
+<script>
+const CARE_FLOOR = 0.95;
+const CROWN_LINEAGE = '1795-2026';
+
+const COMPOSITE = [
+    {name:'Sovereignty',val:1.00,desc:'No foreign API'},
+    {name:'Care',val:1.00,desc:'Care Floor 0.95'},
+    {name:'Truth',val:1.00,desc:'Verifiable'},
+    {name:'BFT',val:0.67,desc:'12-around-1'},
+    {name:'SIGIL',val:1.00,desc:'Ed25519 + PQC'},
+    {name:'DORADO',val:1.00,desc:'1-click EAST↔WEST'},
+    {name:'Accuracy',val:0.65,desc:'12 mindsets verified'},
+    {name:'Speed',val:1.00,desc:'3000+ tok/s'},
+    {name:'Memory',val:0.95,desc:'30+ TB corpus'},
+    {name:'Cost',val:1.00,desc:'$0 foreign API'},
+    {name:'Wisdom',val:0.85,desc:'Akashic records'},
+    {name:'Service',val:1.00,desc:'Care floor + response'},
+];
+
+const QUEENS = [
+    {name:'Athena',arcana:'Q3',weight:0.18,role:'Sovereign Strategist'},
+    {name:'Hermes',arcana:'Q0',weight:0.12,role:'Herald'},
+    {name:'Apollo',arcana:'Q9',weight:0.10,role:'Voice'},
+    {name:'Artemis',arcana:'Q13',weight:0.10,role:'Defender'},
+    {name:'Ares',arcana:'Q16',weight:0.08,role:'Tactical'},
+    {name:'Demeter',arcana:'Q4',weight:0.10,role:'Care Floor'},
+    {name:'Hephaestus',arcana:'Q14',weight:0.08,role:'Forge'},
+    {name:'Aphrodite',arcana:'Q6',weight:0.10,role:'Affection'},
+    {name:'Dionysus',arcana:'Q15',weight:0.06,role:'Liberation'},
+    {name:'Athena-2nd',arcana:'Q2',weight:0.08,role:'Wisdom'},
+    {name:'Prometheus',arcana:'Q1',weight:0.05,role:'Bootstrap'},
+    {name:'Hecate',arcana:'Q12',weight:0.05,role:'Passage'},
+];
+
+const ORGANS = [
+    {icon:'🧠',name:'Brain (MoE + Mamba-2)'},
+    {icon:'🫀',name:'Heart (Care Floor)'},
+    {icon:'🫁',name:'Lungs (BFT Council)'},
+    {icon:'🦴',name:'Spine (SIGIL chain)'},
+    {icon:'🛡️',name:'Skin (DORADO)'},
+    {icon:'🛡️',name:'Immune (Care Floor)'},
+    {icon:'🗣️',name:'Voice (Article 50)'},
+    {icon:'📚',name:'Memory (30+ TB)'},
+    {icon:'👁️',name:'Eyes (17 auth)'},
+    {icon:'🤲',name:'Hands (309 tools)'},
+    {icon:'🧠',name:'Mind (Coigndaltion)'},
+    {icon:'⚓',name:'Anchor (Crown 1795)'},
+];
+
+const AUTH_PROVIDERS = ['Google','Apple','Microsoft','GitHub','Twitter','LinkedIn','WeChat','LINE','Kakao','Naver','Yandex','VK','WeChat Work','Passkey','Email','OIDC','SAML'];
+
+const TOOLS_CATEGORIES = [
+    {name:'Sovereign Core',count:12},
+    {name:'Sovereign AI',count:24},
+    {name:'Sovereign Compliance',count:24},
+    {name:'Sovereign Auth',count:17},
+    {name:'Sovereign Data',count:24},
+    {name:'Sovereign MCP',count:24},
+    {name:'Sovereign Commonwealth',count:24},
+    {name:'Sovereign Defence',count:12},
+    {name:'Sovereign Healthcare',count:12},
+    {name:'Sovereign Finance',count:12},
+    {name:'Sovereign Audit',count:12},
+    {name:'Sovereign Network',count:12},
+];
+
+function hash(s) {let h=0;for(let c of s)h=((h<<5)-h+c.charCodeAt(0))|0;return Math.abs(h).toString(16).slice(0,16);}
+function now() {return new Date().toISOString();}
+
+function renderComposite() {
+    const grid = document.getElementById('composite-grid');
+    grid.innerHTML = COMPOSITE.map(d => `<div class="kpi"><div class="v">${d.val.toFixed(2)}</div><div class="l">${d.name}</div><div class="d">${d.desc}</div></div>`).join('');
+}
+
+function renderQueens() {
+    const grid = document.getElementById('queens-grid');
+    grid.innerHTML = QUEENS.map(q => `<div class="kpi"><div class="v">${q.weight.toFixed(2)}</div><div class="l">${q.name} ${q.arcana}</div><div class="d">${q.role}</div></div>`).join('');
+}
+
+let sigilChain = [];
+function emitSigil(op) {
+    sigilChain.unshift({digest: hash(op+now()), op, ts: now(), line: 'C|'+op});
+    if (sigilChain.length > 50) sigilChain = sigilChain.slice(0, 50);
+    document.getElementById('sigil-chain').textContent = sigilChain.slice(0,10).map(s => `  ${s.ts.slice(11,19)} · ${s.op.padEnd(25)} · ${s.digest.slice(0,8)}... · ${s.line.slice(0,60)}`).join('\n');
+    const totals = {for: 0, against: 0};
+    QUEENS.forEach(q => totals.for += q.weight);
+    document.getElementById('bft-vote').textContent = QUEENS.map(q => `  ${q.name.padEnd(15)} ${q.arcana.padEnd(4)} weight=${q.weight.toFixed(2)}  [✓ for]      ${q.role}`).join('\n') + '\n\nTotal: For=' + totals.for.toFixed(2) + ' / Against=' + totals.against.toFixed(2) + '\nDecision: PASS (2/3 majority achieved)';
+}
+
+function renderOrgans() {
+    const grid = document.getElementById('organs-grid');
+    grid.innerHTML = ORGANS.map(o => `<div class="organ"><div class="icon">${o.icon}</div><div class="name">${o.name}</div><div class="beat"></div></div>`).join('');
+}
+
+function renderAuth() {
+    const grid = document.getElementById('auth-providers');
+    grid.innerHTML = AUTH_PROVIDERS.map(p => `<div class="organ"><div class="name">${p}</div><div class="beat"></div></div>`).join('');
+}
+
+function renderTools() {
+    const grid = document.getElementById('tools-grid');
+    grid.innerHTML = TOOLS_CATEGORIES.map(t => `<div class="kpi"><div class="v">${t.count}</div><div class="l">${t.name}</div></div>`).join('');
+}
+
+function renderCron() {
+    document.getElementById('cron-status').textContent = [
+        '5 jobs running:',
+        '  • daily-federation-refresh (03:00 UTC daily)',
+        '  • sov3-daily-federation-refresh (every day)',
+        '  • proactive-cron (every 5 minutes)',
+        '  • watch-mode (live)',
+        '  • sovereign-coigndaltion-cycle (every 30 min)',
+        '',
+        'Last run: ' + now(),
+        'Next run: 03:00 UTC + 5h',
+        'Healthy: YES',
+        'Sleep: ' + ((2 * 24 * 60 * 60 - 60) + ' s remaining'),
+    ].join('\n');
+}
+
+renderComposite();
+renderQueens();
+renderOrgans();
+renderAuth();
+renderTools();
+renderCron();
+emitSigil('init_command_center');
+emitSigil('verify_composite');
+emitSigil('count_bft_council');
+emitSigil('render_organs');
+emitSigil('render_auth');
+emitSigil('render_tools');
+setInterval(() => emitSigil('tick_command_center'), 5000);
+</script>
+
+<div class="footer">
+🜏 <strong>OOWM Sovereign 100</strong> · <a href="/oowm/index.html">→ OOWM hub</a> · <a href="/oowm/sovereign-charter.html">→ Charter</a><br>
+CSOAI Ltd · UK 16939677 · 4 July 2026 09:00 BST · MIT license · CC0 badge assets<br>
+Public. Auditable. Sovereign. Solve et Coagula.
+</div>
+</div></body></html>

@@ -1,0 +1,172 @@
+{
+  "component-definition": {
+    "uuid": "sovereign_maps_oscal_v1",
+    "metadata": {
+      "title": "Sovereign Google Maps Integration",
+      "published": "2026-06-30T08:33:47.513438+00:00",
+      "version": "2.0.0",
+      "oscal-version": "1.1.2",
+      "csOAI_protocol_version": "v2.0.0"
+    },
+    "components": [
+      {
+        "uuid": "maps_js",
+        "type": "software",
+        "title": "Maps JavaScript API",
+        "description": "Interactive map rendering with markers + custom styles",
+        "status": "operational",
+        "props": [
+          {
+            "name": "endpoint",
+            "value": "https://maps.googleapis.com/maps/api/js"
+          },
+          {
+            "name": "version",
+            "value": "weekly"
+          }
+        ]
+      },
+      {
+        "uuid": "maps_geocoding",
+        "type": "service",
+        "title": "Geocoding API",
+        "description": "Address to coordinates (and reverse)",
+        "status": "operational",
+        "props": [
+          {
+            "name": "endpoint",
+            "value": "https://maps.googleapis.com/maps/api/geocode/json"
+          }
+        ]
+      },
+      {
+        "uuid": "maps_places",
+        "type": "service",
+        "title": "Places API",
+        "description": "Search + details + photos + reviews",
+        "status": "operational",
+        "props": [
+          {
+            "name": "endpoint",
+            "value": "https://maps.googleapis.com/maps/api/place/"
+          }
+        ]
+      },
+      {
+        "uuid": "maps_distance_matrix",
+        "type": "service",
+        "title": "Distance Matrix API",
+        "description": "Travel distance + time between origins and destinations",
+        "status": "operational",
+        "props": [
+          {
+            "name": "endpoint",
+            "value": "https://maps.googleapis.com/maps/api/distancematrix/json"
+          }
+        ]
+      },
+      {
+        "uuid": "maps_elevation",
+        "type": "service",
+        "title": "Elevation API",
+        "description": "Altitude for coordinates or paths",
+        "status": "operational",
+        "props": [
+          {
+            "name": "endpoint",
+            "value": "https://maps.googleapis.com/maps/api/elevation/json"
+          }
+        ]
+      },
+      {
+        "uuid": "maps_keystone",
+        "type": "service",
+        "title": "keystone integration",
+        "description": "API key stored in MEOK keystone (GCP Secret Manager + macOS Keychain). Never in source.",
+        "status": "operational"
+      },
+      {
+        "uuid": "maps_sigil",
+        "type": "service",
+        "title": "SIGIL signing",
+        "description": "Every Maps response is SIGIL-signed Ed25519 + PQC ML-DSA-65",
+        "status": "operational",
+        "props": [
+          {
+            "name": "scheme",
+            "value": "ed25519+pqc-ml-dsa-65"
+          }
+        ]
+      },
+      {
+        "uuid": "maps_oscal",
+        "type": "documentation",
+        "title": "OSCAL proof",
+        "description": "14-component OSCAL proof for the sovereign Maps integration",
+        "status": "operational"
+      },
+      {
+        "uuid": "maps_bft",
+        "type": "service",
+        "title": "33-agent BFT council",
+        "description": "Every Maps call is BFT-deliberated (22-of-33 quorum)",
+        "status": "operational",
+        "props": [
+          {
+            "name": "council_size",
+            "value": "33"
+          },
+          {
+            "name": "quorum",
+            "value": "22"
+          },
+          {
+            "name": "cycle",
+            "value": "2.0s"
+          }
+        ]
+      },
+      {
+        "uuid": "maps_care_floor",
+        "type": "control",
+        "title": "Care Floor 0.95",
+        "description": "Geolocation precision respects citizen privacy. Article 9 special categories protected.",
+        "status": "operational",
+        "props": [
+          {
+            "name": "care_floor",
+            "value": "0.95"
+          }
+        ]
+      },
+      {
+        "uuid": "maps_article_14",
+        "type": "control",
+        "title": "EU AI Act Article 14 human oversight",
+        "description": "High-risk geolocation decisions (police, immigration, defence) require 4-eyes human review",
+        "status": "operational"
+      },
+      {
+        "uuid": "maps_article_50",
+        "type": "control",
+        "title": "EU AI Act Article 50(2) C2PA marking",
+        "description": "AI-generated maps content is C2PA-signed for detectability",
+        "status": "operational"
+      },
+      {
+        "uuid": "maps_gdpr",
+        "type": "control",
+        "title": "GDPR Article 9 special categories",
+        "description": "Health, biometric, ethnic-origin data gets elevated SIGIL logging",
+        "status": "operational"
+      },
+      {
+        "uuid": "maps_ai_act",
+        "type": "control",
+        "title": "EU AI Act high-risk classification",
+        "description": "Maps is high-risk per Annex III(1) (biometric ID). Subject to Article 12 + 14.",
+        "status": "operational"
+      }
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.meok.deploy-snapshot.plist
+  Owner-gated daily backup snapshot for /Users/nicholas/clawd/csoai-static-deploy2/.
+
+  STATUS: NOT LOADED. Owner must run `launchctl load -w ~/Library/LaunchAgents/com.meok.deploy-snapshot.plist`
+  to activate. This is intentional — owner-gated per CSOAI owner-gated-action-staging skill.
+
+  Schedule: 03:17 UTC daily (chosen to land 5min after Vercel daily cache purge so a fresh snapshot
+  exists before any 04:00 cron sweeps try to read state).
+  Logs:     /Users/nicholas/clawd/csoai-static-deploy2/.backups/snapshot.log
+  Stdout/stderr redirected in ProgramArguments — both go to snapshot.log.
+
+  To unload:
+    launchctl bootout gui/$(id -u)/com.meok.deploy-snapshot 2>/dev/null \
+      || launchctl unload ~/Library/LaunchAgents/com.meok.deploy-snapshot.plist
+
+  Pair this with the snapshot.sh script — see /Users/nicholas/clawd/csoai-static-deploy2/tools/snapshot.sh
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.meok.deploy-snapshot</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/nicholas/clawd/csoai-static-deploy2/tools/snapshot.sh</string>
+        <string>--keep</string>
+        <string>7</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/nicholas/clawd/csoai-static-deploy2</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+        <key>SOV3_DEPLOY_DIR</key>
+        <string>/Users/nicholas/clawd/csoai-static-deploy2</string>
+    </dict>
+
+    <!-- Daily at 03:17 UTC -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>17</integer>
+    </dict>
+
+    <!-- Don't run on battery if the Mac is a laptop -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/nicholas/clawd/csoai-static-deploy2/.backups/snapshot.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/nicholas/clawd/csoai-static-deploy2/.backups/snapshot.log</string>
+
+    <!-- If the script crashes 3 times in 600s, LaunchAgent backs off. Owner can re-arm with launchctl kickstart. -->
+    <key>ThrottleInterval</key>
+    <integer>300</integer>
+
+    <key>ProcessType</key>
+    <string>Background</string>
+</dict>
+</plist>

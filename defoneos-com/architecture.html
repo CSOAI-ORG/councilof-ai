@@ -1,0 +1,84 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Architecture (live, self-documenting)</title>
+<meta name="description" content="The DEFONEOS architecture, self-documenting and live: every API endpoint with its purpose and real-time connected/gated status, the one-mind→bodies→Layer-0 seam, and how to verify the signing moat yourself.">
+<style>
+  :root{ --bg:#070b12; --ink:#dfe7f5; --dim:#8a97b4; --line:rgba(120,150,200,.16); --neon:#5ff4ff; --gold:#c9a84c; --ok:#00e07a; --amber:#ffcf6b; }
+  *{box-sizing:border-box} body{margin:0;background:radial-gradient(1100px 640px at 62% -10%,#0d1830,#070b12) fixed;color:var(--ink);font:15px/1.6 -apple-system,Inter,system-ui,sans-serif;padding:26px 18px 70px}
+  .wrap{max-width:860px;margin:0 auto}
+  a{color:var(--neon);text-decoration:none} a:hover{text-decoration:underline}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.5px}.brand img{height:30px;width:30px}
+  h1{font-size:30px;margin:18px 0 4px} h1 b{background:linear-gradient(90deg,#eaf6ff,#5ff4ff 60%,#c9a84c);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);max-width:640px}
+  h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin:30px 0 10px}
+  .seam{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font:700 10px ui-monospace,monospace;margin:8px 0 4px}
+  .seam span{border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:#bcd0ee} .seam .a{color:var(--neon);border-color:rgba(95,244,255,.3)} .seam .g{color:#9effa8;border-color:rgba(120,255,150,.3)} .seam .p{color:var(--amber);border-color:rgba(255,207,107,.3)} .seam .x{color:#4a5a78}
+  table{width:100%;border-collapse:collapse;margin-top:6px;font-size:13.5px}
+  td,th{padding:8px 10px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:1px;border-top:none}
+  code{font:12px ui-monospace,monospace;color:#bcd0ee}
+  .st{font:700 10px ui-monospace,monospace;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .st.ok{color:var(--ok);border:1px solid rgba(0,224,122,.4)} .st.gate{color:var(--amber);border:1px solid rgba(255,207,107,.4)} .st.free{color:#8fdcff;border:1px solid rgba(95,244,255,.3)} .st.loading{color:var(--dim);border:1px solid var(--line)}
+  .card{background:rgba(10,16,28,.6);border:1px solid var(--line);border-radius:12px;padding:4px 14px 12px;margin-top:6px}
+  .honest{border-left:3px solid var(--gold);padding:9px 13px;background:rgba(201,168,76,.07);color:var(--dim);font-size:12.5px;margin-top:14px;border-radius:0 8px 8px 0}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .row a{border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-size:13px;color:var(--ink)}
+</style></head><body><div class="wrap">
+  <a class="brand" href="/"><img src="seal.svg" alt="">DEFONEOS</a>
+  <h1>The <b>architecture</b>, live.</h1>
+  <p class="sub">One mind, pluggable bodies, one governed seam. Every endpoint below is <b>probed in real time</b> — you see its actual connected/gated state, not a diagram. Nothing here is claimed that the code doesn't do.</p>
+
+  <h2>The seam</h2>
+  <div class="card">
+    <div class="seam"><span class="a">MIND · Sovereign</span><span class="x">— symbolic sight + on-demand VLM · tool-calling loop</span></div>
+    <div class="seam"><span class="x">wears →</span><span class="g">🌐 GLOBE body · live</span><span class="p">🎮 UNREAL body · premium</span></div>
+    <div class="seam"><span class="x">under →</span><span class="a">LAYER-0</span><span class="x">Ed25519 sign · SIGIL hash-chain · BFT 23/33 · care-floor ≥ 0.30</span></div>
+    <div style="color:var(--dim);font-size:12.5px;margin-top:6px">The mirror shows the governed <b>decision</b>, signed + verifiable. Real reasoning &amp; enforcement run on the <b>SOV3 node</b>.</div>
+  </div>
+
+  <h2>API surface — live status</h2>
+  <div class="card"><table id="apiTbl"><thead><tr><th>Endpoint</th><th>Purpose</th><th>Status</th></tr></thead><tbody id="apiBody"></tbody></table></div>
+
+  <h2>Verify it yourself</h2>
+  <div class="card"><table><tbody>
+    <tr><td><a href="verify.html">/verify.html</a></td><td>re-checks each SIGIL Ed25519 signature in <b>your</b> browser — no server trusted</td><td><span class="st ok">real</span></td></tr>
+    <tr><td><a href="systemcard.html">/systemcard.html</a></td><td>signed AI System Card — <b>Verify offline</b> passes, <b>Tamper test</b> rejects (JSP 936 proof point)</td><td><span class="st ok">real</span></td></tr>
+    <tr><td><a href="cop.html">/cop.html</a></td><td>the dome — 3D globe, live layers, sims, the Sovereign</td><td><span class="st ok">live</span></td></tr>
+  </tbody></table></div>
+
+  <div class="honest"><b>Reading this page:</b> <span class="st ok" style="padding:1px 7px">real</span> = keyless &amp; working now · <span class="st gate" style="padding:1px 7px">gated</span> = honest, lights up when the owner sets its env key (see <a href="#" onclick="return false" style="pointer-events:none;opacity:.6">SETUP_KEYS.md</a>) · card/sim data marked <i>synthetic</i> is illustrative, but the <b>signing is real</b>. Flag any overclaim — that's a defect here.</div>
+
+  <div class="row"><a href="cop.html">▶ Launch the dome</a><a href="systemcard.html">See a signed System Card</a><a href="verify.html">Verify a seal</a></div>
+
+<script>
+// self-documenting registry — the single source of truth for the API surface (config-driven, like the benchmark)
+var API=[
+  {p:'/api/brain',      d:'server-side LLM proxy — the reasoning brain (key stays server-side)', probe:true},
+  {p:'/api/vlm',        d:'on-demand pixel vision for the "look" tool', probe:true},
+  {p:'/api/learn',      d:'export the signed learning-queue to the SOV3 node', probe:true},
+  {p:'/api/systemcard', d:'Ed25519-signed AI System Card (JSP 936 assurance)', probe:true, real:true},
+  {p:'/api/unreal',     d:'Unreal Pixel-Streaming "body" tunnel', probe:true},
+  {p:'/api/companies',  d:'UK Companies House registry (companies only)', probe:true},
+  {p:'/api/cameras',    d:'live public cameras (TfL/511 keyless; Windy global)', free:true},
+  {p:'/api/space',      d:'live ISS position + upcoming launches', free:true},
+  {p:'/api/places',     d:'OSM POIs — business/health/energy + comms/wifi/power/water', free:true},
+  {p:'/api/powerplants',d:'global power plants (WRI)', free:true},
+  {p:'/api/simulate',   d:'governed scenario — deterministic illustrative council vote', free:true},
+  {p:'/api/badge',      d:'embeddable verifiable DEFONEOS-SEAL badge', free:true},
+  {p:'/api/g3dkey',     d:'serves Google Map-Tiles key for photoreal 3D', probe:true}
+];
+var tb=document.getElementById('apiBody');
+API.forEach(function(a){
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td><code>'+a.p+'</code></td><td>'+a.d+'</td><td><span class="st '+(a.free?'free':'loading')+'" id="st'+a.p.replace(/\W/g,'')+'">'+(a.free?'free · live':'…')+'</span></td>';
+  tb.appendChild(tr);
+  if(a.probe){ fetch(a.p).then(function(r){return r.json();}).then(function(d){
+    var el=document.getElementById('st'+a.p.replace(/\W/g,''));
+    var connected = d.connected===true || (d.ok===true && d.gated!==true) || (a.p==='/api/g3dkey' && d.key) || (a.p==='/api/systemcard' && d.ok) || (a.p==='/api/companies' && d.ok===true);
+    if(a.p==='/api/systemcard'){ el.className='st ok'; el.textContent='signing live'+(d.demo_key?' · demo key':''); }
+    else if(connected){ el.className='st ok'; el.textContent='connected'; }
+    else { el.className='st gate'; el.textContent='gated'; }
+  }).catch(function(){ var el=document.getElementById('st'+a.p.replace(/\W/g,'')); el.className='st gate'; el.textContent='gated'; }); }
+});
+</script>
+</div></body></html>

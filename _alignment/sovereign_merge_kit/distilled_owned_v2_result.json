@@ -1,0 +1,20 @@
+{
+  "sector": "sector",
+  "base": "Qwen/Qwen2.5-0.5B-Instruct",
+  "n_train": 279,
+  "n_heldout": 49,
+  "before_overlap": 0.2485,
+  "after_overlap": 0.3461,
+  "gain": 0.0975,
+  "verdict": "GO",
+  "sector_intended": "distilled_owned_v2",
+  "note_sector_name": "env SECTOR_NAME did not propagate to script; output labeled 'sector'. Corpus (328 pairs) and metrics are correct.",
+  "corpus": "distill_corpus_grown.jsonl",
+  "corpus_size": 328,
+  "corpus_version_id": "29b97683-d6d5-411d-a2f2-278de629b922",
+  "baseline_gain": 0.016,
+  "gain_vs_baseline_ratio": 6.09,
+  "modal_job_id": "aa49df1b-d4e0-4373-bc41-a8908d28a5bb",
+  "gpu": "A100",
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct"
+}

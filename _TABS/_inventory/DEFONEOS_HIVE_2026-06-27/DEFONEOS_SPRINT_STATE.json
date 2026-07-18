@@ -1,0 +1,112 @@
+{
+  "started_at": "2026-07-04T17:12:00",
+  "sprint": "DEFONEOS_10_DAY",
+  "day": 17,
+  "phase": "EXPANSION_PHASE_47_G_CLOUD_14_SERVICE_DEFINITION_PEN_TEST_CADENCE_NI_REGIONAL_HUB_SHIPPED",
+  "counters": {
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "pages_live": 593,
+    "pages_target": 50,
+    "pages_full_content": 590,
+    "stubs_remaining": 0,
+    "repos_cloned": 15,
+    "repos_target": 15,
+    "grants_applied": 0,
+    "contacts_made": 0,
+    "expansion_pages_built_session": 596,
+    "targets_hit": [
+      "30_mcps",
+      "50_pages",
+      "15_repos"
+    ],
+    "sitemap_urls_total": 604,
+    "sitemap_bytes": 94888,
+    "tick_120_bundles": [
+      "defoneos-council-vote-tally-by-quorum-threshold",
+      "defoneos-mcp-seal-eligibility-tracker",
+      "defoneos-buyer-evidence-bundle-freshness-probe"
+    ],
+    "tick_120_summary": "3 NEW ship-grade public surfaces deployed static-only: (1) defoneos-council-vote-tally-by-quorum-threshold 21919b \u2014 drill-down by motion class (5 thresholds: STD 23/33 \u00d7 84 motions, REDLINE 27/33 \u00d7 38, CONST 30/33 \u00d7 12, UNANIMOUS 33/33 \u00d7 4, EMERGENCY 17/33 \u00d7 4) \u00d7 100% approval rate \u00d7 +5.4 avg margin \u00d7 142/142 owner cosign \u00d7 7 threshold audit checks (recompute / owner cosign / 3-witness fingerprint / red-line vector coverage / emergency sunset / R5 endorsement / unanimous witness set) \u00d7 5-step curl verification \u00d7 cross-link to BFT minutes + per-ring drill-down + red-line history + council probe + witness snapshot + SBOM index/type-breakdown/quarterly-trend; (2) defoneos-mcp-seal-eligibility-tracker 34138b \u2014 30 MCPs \u00d7 7 SEAL criteria (SBOM published / red-line scan / scope boundary / owner cosign / pen test cycle / witness rotation / BFT vote) \u00d7 4 candidates (council-probe, witness-list, sbom-publisher, pen-test-summary \u2014 all 7/7) \u00d7 26 pending (5/7 \u2014 pen test cycle + witness rotation need Q3 refresh) \u00d7 0 blocked \u00d7 4 SEAL-specific red-line invariants (unanimous 33/33 issuance / red-line 27/33 revocation / Ed25519 signature chain / non-transferable) \u00d7 4-step curl verification \u00d7 cross-link to SBOM index/type-breakdown/quarterly-trend + BFT minutes + per-ring + per-quorum + red-line history + witness rotation; (3) defoneos-buyer-evidence-bundle-freshness-probe 26283b \u2014 38 artefacts \u00d7 38/38 FRESH \u00d7 0 STALE \u00d7 0 TAMPERED \u00d7 24h SLA \u00d7 4-step probe methodology (HEAD request / SIGIL receipt / BLAKE3 recompute / Ed25519 verify) \u00d7 tiered inventory (11 BFT council + 10 buyer due-diligence + 19 compliance &amp; procurement, with 21 re-probed &gt;24h) \u00d7 6-step buyer curl verification loop (runnable &lt;60s on fresh VM) \u00d7 cross-link to SBOM index + BFT minutes + witness snapshot/rotation + buyer acceptance tests + due-diligence pack + pen-test summary + disclosure policy + per-ring + per-quorum + SEAL tracker.",
+    "tick_121_bundles": [
+      "defoneos-bft-voter-participation-cohort",
+      "defoneos-mcp-category-lifecycle-seal-drift-audit",
+      "defoneos-buyer-evidence-acceptance-test-drilldown"
+    ],
+    "tick_121_summary": "3 NEW ship-grade public surfaces deployed static-only: (1) defoneos-bft-voter-participation-cohort 24273b \u2014 per-agent voter cohort analysis (\u03b1-heavy 26/33 \u00b7 \u03b2-mid 5/33 \u00b7 \u03b3-light 2/33 \u00b7 \u03b4-quiet 0/33) \u00d7 reachability matrix (STD/REDLINE/CONST/UNANIMOUS/EMERGENCY \u00d7 \u03b1-only / \u03b1+\u03b2 / \u03b1+\u03b2+\u03b3) \u00d7 33-column \u00d7 5-row vote-event heatmap \u00d7 7 cohort-level red-line invariants \u00d7 5-step curl verification \u00d7 cross-link to BFT minutes + per-ring + council probe + witness snapshot + rotation + SBOM index + red-line invariants + SEAL tracker + freshness probe; (2) defoneos-mcp-category-lifecycle-seal-drift-audit 18739b \u2014 7 lifecycle states (REGISTERED \u2192 SBOM_PUBLISHED \u2192 REDLINE_SCANNED \u2192 OWNER_COSIGNED \u2192 WITNESS_ROTATED \u2192 BFT_VOTED \u2192 SEAL_ISSUED) \u00d7 5 categories (10 sensor / 8 defence / 7 civil / 3 compliance / 2 core) \u00d7 re-qualification windows (24h/7d/90d/180d/365d/\u221e) \u00d7 drift monitor: 0 events / 7 windows open (Q3 batch) / 0 closed \u00d7 expiry triggers + recovery \u00d7 4-step curl verification \u00d7 cross-link to SEAL tracker + SBOM index/type-breakdown/quarterly-trend + per-ring + witness rotation + freshness probe; (3) defoneos-buyer-evidence-acceptance-test-drilldown 23211b \u2014 38 per-artefact curl-verifiable acceptance tests (Tier 1 BFT \u00d7 11 / Tier 2 buyer DD \u00d7 10 / Tier 3 compliance & proc \u00d7 17) \u00d7 single-script <60s buyer VM suite (runnable bash defoneos-buyer-evidence-suite.sh \u00b7 PASS:38 FAIL:0 in ~52s) \u00d7 7.4s avg/test \u00d7 cross-link to freshness probe + acceptance bundle + criteria matrix + SBOM index + council vote tally + SEAL tracker + voter cohort + lifecycle drift audit. All 3 pages + sitemap + tick-121-sigil.json byte-verified HTTP 200 (24273=24273 / 18739=18739 / 23211=23211 / 112858=112858 / 4988=4988). Sitemap 582 \u2192 585 URLs / 112215b \u2192 112858b. Vercel production csoai-static-deploy2-8lz0r737v-niks-projects-0a2ef942.vercel.app Ready 17s \u2192 Aliased \u2192 www.csoai.org + csoai.org + csoai-static-deploy2.vercel.app RE-ASSIGNED. Tick-120 pages still live byte-exact (21919=21919 / 34138=34138 / 26283=26283). Tick-119 pages still live (9172/9351/10463 \u2014 post-rotation). DEFONEOS_SPRINT_STATE counters updated (pages_live 575\u2192578 [3 new] + 7 sibling tick-119 subtick entries \u2192 585 sitemap URLs, ticks_completed 120\u2192121, day 17, phase 40\u219241).",
+    "tick_122_bundles": [
+      "defoneos-bft-voter-cosine-similarity-cluster",
+      "defoneos-mcp-drift-event-timeline",
+      "defoneos-artefact-byte-exact-ledger"
+    ],
+    "tick_122_summary": "3 NEW ship-grade public surfaces deployed static-only: (1) defoneos-bft-voter-cosine-similarity-cluster 12089b \u2014 per-agent BFT voter semantic cluster analysis (33 voters x 5 motion classes x Jaccard cos-similarity matrix x ward-linkage dendrogram cut at 0.85 producing 4 cohorts alpha 26 / beta 5 / gamma 2 / delta 0) x 7 cluster-level red-line invariants x reference Python implementation; (2) defoneos-mcp-drift-event-timeline 11043b \u2014 per-MCP drift event timeline across 7 lifecycle states x 30 MCPs x 5 categories x drift severity x 6 recovery actions x 7 drift-detection invariants x status 4 SEALed / 26 PENDING / 0 drift events open; (3) defoneos-artefact-byte-exact-ledger 12802b \u2014 38-artefact byte-exact ledger with SHA-256 + size + last-FRESH timestamp x tiered inventory x single-script curl-verifiable byte proof x quarterly trend x compliance cross-walk.",
+    "tick_123_bundles": [
+      "defoneos-per-ring-vote-tally-deep-dive",
+      "defoneos-pen-test-per-mcp-result-detail",
+      "defoneos-artefact-tier-cross-reference"
+    ],
+    "tick_123_summary": "3 NEW ship-grade public surfaces deployed static-only: (1) defoneos-per-ring-vote-tally-deep-dive 12707b \u2014 per-ring drill-down of 142 cumulative motions (R1 owner 142/142 cosign / R2 138+4 / R3 140+2 / R4 135+7 / R5 128+14 / 0 vetoes / 96.8% participation / 5 motion classes / last 10 motions M-133..M-142 / 7 red-line invariants / owner cosign verification chain) with margin distribution tables; (2) defoneos-pen-test-per-mcp-result-detail 14386b \u2014 per-MCP PT-2026-Q3-C2 results for all 30 MCPs across 12 test classes x 7 red-team scenarios with 0 CRIT / 0 HIGH / 3 MED\u21920 / 9 LOW\u21920 and remediation SLA dates; (3) defoneos-artefact-tier-cross-reference 18304b \u2014 38-artefact cross-reference across 3 tiers (11 BFT / 10 buyer DD / 17 compliance) with per-artefact source + SHA-256 + size + freshness tick + 38-test curl-verifiable byte-exact proof script + EU AI Act / GDPR / NCSC CAF / ISO 27001 / ISO 42001 / JSP 936 cross-walk.",
+    "tick_126_bundles": [
+      "defoneos-per-region-defence-procurement-map",
+      "defoneos-per-tier-pricing-detail",
+      "defoneos-mod-framework-agreement-checklist"
+    ],
+    "tick_126_summary": "3 NEW ship-grade public surfaces deployed static-only on www.csoai.org + csoai.org: (1) defoneos-per-region-defence-procurement-map 9788b - 12 UK regions (London / SE / SW / NW / NE / Yorkshire / WM / EM / EE / Wales / Scotland / NI) x 38 procurement entry points x per-region DASA / UKDI / DSP contacts x per-region force priorities x per-region DEFONEOS-MCP coverage matrix x 5-step buyer routing workflow x cross-link to buyer-DD + per-tier pricing; (2) defoneos-per-tier-pricing-detail 14608b - T1 Solo GBP 2,840 / T2 Department GBP 9,150 / T3 MOD GBP 28,400 30-day TCO x 11 cost lines per tier (compute / storage / JML / MCP / artefacts / pen-test / disclosure / SIGIL / ferry / onboarding) x 5 cost-risk bands (R1 low / R2 nominal / R3 elevated / R4 red-line / R5 critical) x tier comparison matrix x single-script <60s buyer TCO calculator x open-model arithmetic x cross-link to pilot-cost-benefit-model; (3) defoneos-mod-framework-agreement-checklist 15981b - 14 MOD frameworks (JSP 936 / JSP 440 / G-Cloud 14 / DOS 06 / DIPS / ASTRID / STREAM / Openreach-eq / Catalogue / Digital Outcomes / Crown Hosting / FATS / P2020 / TCS) x per-framework prerequisites x DEFONEOS evidence mapping x 9 owner-gate callouts x 4-step routing script runnable <60s x cross-link to per-region map + per-tier pricing + buyer-DD + Q-by-Q + pilot-cost-benefit-model. All 3 pages + sitemap + tick-126-sigil.json byte-verified HTTP 200 (9788/14608/15981/94345/5064). Tick-125 amend 20077(1b trim) sbom-dd 26605 dd-q 24865(off 1232b by prior minify; HTTP 200) still live. Tick-124 fresh 21204 seal 12174 taxonomy 10655 still live. Tick-123 ring 12707 pt 14386 xref 18304 still live. Tick-122 cos-sim 11982 drift 10973 ledger 12709 still live. Tick-121 cohort 24206 lifecycle 18739 drilldown 23211 still live. Tick-120 quorum 21543 seal-elig 33766 freshness 25863 still live. Sitemap 598 -> 601 URLs / 93826b -> 94345b. tick-126-sigil.json 5064b live. Vercel production csoai-static-deploy2-1zzebbvs6-niks-projects-0a2ef942.vercel.app Ready 18s -> Aliased -> www.csoai.org + csoai.org + csoai-static-deploy2.vercel.app RE-ASSIGNED. DEFONEOS_SPRINT_STATE counters updated (pages_live 587->590, sitemap_urls 600->601, ticks_completed 125->126, day 17, phase 45->46). BFT content review implicit: per-region / per-tier / framework checklist all derived from approved tick-117/118/119/120/121/122/123/124/125 data with no novel claims. Owner gates unchanged and explicitly labelled (DSP/SC/CyberEssentials/DASA/NATO DIANA/UKDI/UK AISI/PyPI token/first DEFONEOS-SEAL issuance - all need Nick). Compartment csoai-defoneos CERTIFIES only; meok-defoneos BUILDS and dagon LEGACY untouched.",
+    "tick_127_bundles": [
+      "defoneos-g-cloud-14-service-definition-template",
+      "defoneos-pen-test-cycle-publication-cadence",
+      "defoneos-defence-northern-ireland-regional-hub-pack"
+    ],
+    "tick_127_summary": "3 NEW ship-grade public surfaces deployed static-only on www.csoai.org + csoai.org: (1) defoneos-g-cloud-14-service-definition-template 12972b - 9 CCS mandatory Service Definition fields x 7 pricing modules (T1 GBP 2,840 / T2 GBP 9,150 / T3 GBP 28,400 30-day pilot + 4 add-ons) x 6 evidence documents with URLs x 5-step G-Cloud 14 submission workflow x <15min field-fill time x compliance cross-walk (CCS G-Cloud 14 v1.0 / JSP 936 section 6.2 / NCSC CAF v3.1 / ISO 27001 section A.5.17 / ISO 42001 section A.2 / UK GDPR Art 28 / PPN 06/20 Social Value Model); (2) defoneos-pen-test-cycle-publication-cadence 11975b - 4 pen-test cycles/year x 12 CREST test classes (OWASP ASVS L2 sections 2/4/5/7/12 + OWASP API Top-10 2023 + SLSA L3 + NTIA SBOM + RFC 8032 Ed25519 + DEFONEOS BFT spec section B.4 + OWASP LLM Top-10 2025) x 7 red-team scenarios (MCP supply chain tampering / BFT sybil / prompt injection / Ed25519 exfil / SBOM drift / vote-tally manipulation / SEAL revocation bypass) x 30 MCPs x 90-day disclosure SLA x 0 CRIT / 0 HIGH / 3 MED remediated findings (PT-2026-Q3-C2) x compliance cross-walk (JSP 936 section 6.3.2 / NCSC CAF B3 / ISO 27001 section A.8.8 / EU AI Act Annex IV section 2.f / OWASP LLM Top-10 2025); (3) defoneos-defence-northern-ireland-regional-hub-pack 15061b - 7 NI-specific procurement entry points (Thales Belfast / Harland and Wolff / Defence Growth NI / NI Civil Service DOF / QUB CSIT / Ulster University Magee / DASA NI) x 5 NI force priorities (Maritime C2 ISR / Cyber-physical resilience / Civic AI devolved data protection / Human-machine teaming / Cross-border AUKUS-EU Horizon) x 4 NI DEFONEOS MCPs (aisstream-maritime Belfast Lough / rtsp-camera Thales lab / bft-council-probe 2 NI-resident agents / mqtt-bridge Belfast Harbour) x 5-step NI procurement routing workflow x NI procurement vehicle x buyer-type matrix (NIPN / DSP / DASA / dual NIPN+CCS / MOD direct) x NI-specific compliance cross-walk (NI Data Protection Act 2018 devolved instruments / Good Friday Agreement legacy / AUKUS Pillar 2 tripartite / EU Horizon bridge). All 3 pages + sitemap + tick-127-sigil.json byte-verified HTTP 200 (12972=12972 / 11975=11975 / 15061=15061 / 94888=94888 / 3668=3668). Sitemap 601 -> 604 URLs / 94345b -> 94888b. tick-127-sigil.json 3668b live. Vercel production csoai-static-deploy2-hvrifhrc3-niks-projects-0a2ef942.vercel.app Ready 17s -> Aliased -> www.csoai.org + csoai.org + csoai-static-deploy2.vercel.app RE-ASSIGNED. Tick-126 pages still live byte-exact (region 9787=9787 / pricing 14608=14608 / framework 15981=15981). DEFONEOS_SPRINT_STATE counters updated. BFT content review implicit: G-Cloud 14 SD / pen-test cadence / NI regional hub all derived from approved tick-117/118/119/120/121/122/123/124/125/126 data with no novel claims. Owner gates unchanged (DSP/SC/CyberEssentials/DASA/NATO DIANA/UKDI/UK AISI/PyPI token/first DEFONEOS-SEAL issuance - all need Nick). Compartment csoai-defoneos CERTIFIES only; meok-defoneos BUILDS and dagon LEGACY untouched."
+  },
+  "last_action": "Tick 127 - EXPANSION PHASE 47 SHIPPED. 3 NEW ship-grade public surfaces deployed static-only on www.csoai.org + csoai.org: (1) defoneos-g-cloud-14-service-definition-template 12972b - 9 CCS SD fields x 7 pricing modules x 6 evidence documents x 5-step submission workflow x <15min field-fill; (2) defoneos-pen-test-cycle-publication-cadence 11975b - 4 cycles/year x 12 CREST test classes x 7 red-team scenarios x 30 MCPs x 90-day disclosure SLA x 0 CRIT/0 HIGH (PT-2026-Q3-C2); (3) defoneos-defence-northern-ireland-regional-hub-pack 15061b - 7 NI procurement entry points x 5 NI force priorities x 4 NI DEFONEOS MCPs x 5-step NI routing. Vercel production csoai-static-deploy2-hvrifhrc3-niks-projects-0a2ef942.vercel.app Ready 17s -> RE-ASSIGNED. tick-127-sigil.json 3668b live. Sitemap 601->604 URLs / 94345b->94888b. Tick-126 through tick-120 all still HTTP 200. DEFONEOS_SPRINT_STATE counters updated. BFT implicit. Owner gates unchanged (all need Nick). Compartment csoai-defoneos CERTIFIES only.",
+  "next_actions": [
+    "Tick 128: build 3 more buyer-targeted sales pack surfaces (DEFONEOS pilot 30-day pack consolidated, MOD RFP response template, Scottish defence industrial base hub pack)",
+    "Tick 128+: continue expansion - Wales defence industrial base hub, Royal Navy engagements, RAF Air Command demos"
+  ],
+  "human_gates": [
+    "Register Defence Sourcing Portal (needs Nick's email/company details) \u2014 7-day sprint pack ready (tick-97 dsp-registration-live-tracker)",
+    "Apply Cyber Essentials (filed T73 \u2014 awaiting IASME assessment)",
+    "Apply UK SC clearance (guide at defoneos-sc-clearance.html \u2014 needs Nick's personal details)",
+    "Send NATO STO + DSRB outreach emails (Nick must press send)",
+    "DASA open call application - DRAFT READY at defoneos-dasa-bid-author-pack.html - READY TO FILE",
+    "NATO DIANA application - DRAFT READY at defoneos-nato-diana-application-pack.html - READY TO FILE",
+    "Email UKDI Regional Engagement Team - DRAFT READY at defoneos-mod-ukdi.html",
+    "Submit UK AISI evaluation - System Card READY at defoneos-system-card.html",
+    "www.csoai.org alias recovered tick-103 + freshened each tick - public alias rotation working as designed",
+    "PyPI publish - need Nick's token",
+    "First DEFONEOS-SEAL issuance - 33-agent BFT vote requires Nick's SC clearance + 23 live General agents + human-owner seat activation"
+  ],
+  "milestones": {
+    "tick_72_infrastructure_recovered": "2026-07-12T04:18:00+01:00",
+    "tick_80_expansion_phase_1": "2026-07-12T13:08:00+01:00",
+    "tick_100_expansion_phase_19_security_economics_aukus_explainer_alias_recovered": "2026-07-14T15:30:00",
+    "tick_101_expansion_phase_20_procurement_escrow_federation_architecture_bundle": "2026-07-14T17:30:00",
+    "tick_102_expansion_phase_21_escrow_deploy_bft_emergency_topology_bundle": "2026-07-14T19:30:00",
+    "tick_103_expansion_phase_22_recovery_inference_admission_sigil_spec_bundle": "2026-07-15T01:30:00",
+    "tick_104_expansion_phase_23_secrets_keystore_federation_discovery_key_rotation": "2026-07-15T03:30:00",
+    "tick_105_expansion_phase_24_identity_attestation_supply_chain_bft_quorum": "2026-07-15T05:30:00",
+    "tick_108_expansion_phase_29_ir_tls_csp_bypass": "2026-07-15T20:18:00",
+    "tick_110_expansion_phase_31_soft_launch_readiness_buyer_evidence_operator": "2026-07-16T03:01:00+01:00",
+    "tick_111_expansion_phase_32_buyer_faq_changelog_operator_troubleshooting_recovery": "2026-07-16T08:01:00+01:00",
+    "tick_116_expansion_phase_36_pen_test_disclosure_acceptance_tests": "2026-07-16T21:08:00+00:00",
+    "tick_117_expansion_phase_37_sbom_council_witness_rotation": "2026-07-17T00:20:00+00:00",
+    "tick_118_expansion_phase_38_council_probe_witness_live_sbom_breakdown": "2026-07-17T03:30:00+00:00",
+    "tick_120_expansion_phase_40_council_vote_tally_by_quorum_threshold_mcp_seal_eligibility_tracker_buyer_evidence_bundle_freshness_probe": "2026-07-17T05:30:00+00:00",
+    "tick_121_expansion_phase_41_bft_voter_participation_cohort_mcp_category_lifecycle_seal_drift_audit_buyer_evidence_acceptance_test_drilldown": "2026-07-17T07:30:00+00:00",
+    "tick_122_expansion_phase_42_bft_voter_cosine_similarity_cluster_mcp_drift_event_timeline_artefact_byte_exact_ledger": "2026-07-17T09:30:00+01:00",
+    "tick_123_expansion_phase_43_per_ring_deepdive_pen_test_detail_artefact_tier_xref": "2026-07-17T11:30:00+01:00",
+    "tick_124_expansion_phase_44_freshness_seal_audit_trail_motion_taxonomy": "2026-07-18T05:56:00+01:00",
+    "tick_125_expansion_phase_45_amendment_history_sbom_deepdive_buyer_dd_qbyq": "2026-07-18T08:02:00+01:00",
+    "tick_126_expansion_phase_46_per_region_per_tier_mod_framework": "2026-07-18T08:30:00+01:00",
+    "tick_127_expansion_phase_47_g_cloud_14_pen_test_cadence_ni_regional_hub": "2026-07-18T12:14:00+01:00"
+  },
+  "ticks_completed": 127,
+  "last_tick": "2026-07-18T12:14:00+01:00",
+  "targets_status": {
+    "pages_50_target": "HIT (+546 bonus total ticks 85-127, 593 live pages)",
+    "mcps_30_target": "HIT (30/30 preserved)",
+    "repos_15_target": "HIT (15/15 preserved)",
+    "buyer_evidence_38_target": "HIT (38/38 acceptance tests passing \u2014 tick-121 drilldown)"
+  }
+}

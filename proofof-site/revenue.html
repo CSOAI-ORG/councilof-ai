@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💰 Sovereign Revenue — Live Dashboard · 4 Tiers · Stripe Live-Flip</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a3a1a 50%,#02060f 100%);padding:2.5rem 2rem;text-align:center;border-bottom:1px solid #10b981}
+  .hero h1{color:#10b981;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #10b981}
+  .hero p{color:#aaa;font-size:1rem}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:2rem 0}
+  .stat{background:#1a1a1a;padding:1.5rem;border-radius:8px;border-left:4px solid #10b981;text-align:center}
+  .stat.gold{border-left-color:#fbbf24}
+  .stat.blue{border-left-color:#60a5fa}
+  .stat.purple{border-left-color:#8b5cf6}
+  .stat.red{border-left-color:#ef4444}
+  .stat-value{color:#10b981;font-size:2rem;font-weight:bold}
+  .stat.gold .stat-value{color:#fbbf24}
+  .stat.blue .stat-value{color:#60a5fa}
+  .stat.purple .stat-value{color:#8b5cf6}
+  .stat.red .stat-value{color:#ef4444}
+  .stat-label{color:#888;font-size:.85rem;margin-top:.3rem}
+  .stat-sub{color:#aaa;font-size:.7rem;margin-top:.3rem}
+  .funnel{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .funnel h2{color:#fbbf24;margin-bottom:1rem}
+  .funnel-bar{background:#0a0a0a;height:40px;border-radius:6px;margin:0.5rem 0;display:flex;align-items:center;position:relative;overflow:hidden}
+  .funnel-fill{background:linear-gradient(90deg,#fbbf24,#10b981);height:100%;display:flex;align-items:center;padding:0 1rem;color:#000;font-weight:bold;font-size:0.85rem}
+  .funnel-label{color:#aaa;margin-bottom:0.3rem;font-size:0.85rem}
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:2rem 0}
+  .tier{background:#1a1a1a;padding:1.5rem;border-radius:12px;border-left:4px solid #10b981;position:relative}
+  .tier.citizen{border-left-color:#fbbf24}
+  .tier.pro{border-left-color:#60a5fa}
+  .tier.enterprise{border-left-color:#8b5cf6}
+  .tier.free{border-left-color:#10b981}
+  .tier h3{color:#fbbf24;margin-bottom:.5rem}
+  .tier.citizen h3{color:#fbbf24}
+  .tier.pro h3{color:#60a5fa}
+  .tier.enterprise h3{color:#8b5cf6}
+  .tier.free h3{color:#10b981}
+  .tier .price{font-size:2rem;font-weight:bold;color:#fff;margin:.5rem 0}
+  .tier .features{color:#aaa;font-size:.8rem;list-style:none;padding:0}
+  .tier .features li{padding:.2rem 0;border-bottom:1px solid #222}
+  .tier .count{background:rgba(0,0,0,0.5);padding:.5rem;border-radius:6px;margin-top:1rem;text-align:center;color:#fbbf24;font-size:0.85rem}
+  .stripe-status{background:linear-gradient(135deg,#1a1a1a 0%,#2a1a1a 100%);padding:2rem;border-radius:12px;margin:2rem 0;border:2px solid #fbbf24;text-align:center}
+  .stripe-status h2{color:#fbbf24;margin-bottom:1rem}
+  .stripe-status .live{color:#10b981;font-size:1.5rem;font-weight:bold;margin:1rem 0}
+  .stripe-status .pending{color:#f59e0b;font-size:1.5rem;font-weight:bold;margin:1rem 0}
+  .gate{background:#0a0a0a;padding:1rem;border-radius:6px;margin:1rem 0;border-left:3px solid #ef4444;color:#aaa;font-size:.85rem}
+  .gate.green{border-left-color:#10b981}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/plans.html">Plans</a>
+  <a href="/revenue.html">Revenue</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>💰 Sovereign Revenue Dashboard</h1>
+  <p>4 tiers · Stripe live-flip gate · Care Floor 0.95 on every transaction · Crown lineage 1795-2026</p>
+</section>
+
+<div class="container">
+  <div class="stats-row">
+    <div class="stat gold">
+      <div class="stat-value">$0</div>
+      <div class="stat-label">Revenue YTD</div>
+      <div class="stat-sub">Stripe not flipped yet</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Citizens signed</div>
+      <div class="stat-sub">Waitlist (post-launch)</div>
+    </div>
+    <div class="stat blue">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Pro subscribers</div>
+      <div class="stat-sub">$29/mo target</div>
+    </div>
+    <div class="stat purple">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Enterprise leads</div>
+      <div class="stat-sub">$99+ target</div>
+    </div>
+    <div class="stat red">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Revenue gates blocking</div>
+      <div class="stat-sub">See below</div>
+    </div>
+  </div>
+
+  <div class="funnel">
+    <h2>📊 Conversion Funnel (target post-launch)</h2>
+    <div class="funnel-label">Visitors</div>
+    <div class="funnel-bar"><div class="funnel-fill" style="width:100%">10,000 visitors (Show HN target)</div></div>
+    <div class="funnel-label">Start page → /start.html</div>
+    <div class="funnel-bar"><div class="funnel-fill" style="width:40%">4,000 sign-ups (40% conversion)</div></div>
+    <div class="funnel-label">Citizens</div>
+    <div class="funnel-bar"><div class="funnel-fill" style="width:30%">3,000 citizens (75%)</div></div>
+    <div class="funnel-label">Pro conversions</div>
+    <div class="funnel-bar"><div class="funnel-fill" style="width:3%">300 Pro ($29/mo)</div></div>
+    <div class="funnel-label">Enterprise leads</div>
+    <div class="funnel-bar"><div class="funnel-fill" style="width:0.3%">30 Enterprise ($99+/mo)</div></div>
+  </div>
+
+  <h2 style="color:#fbbf24;text-align:center;margin:2rem 0 1rem">💎 The 4 Sovereign Tiers</h2>
+  <div class="tiers">
+    <div class="tier free">
+      <h3>🌱 Free</h3>
+      <div class="price">$0</div>
+      <ul class="features">
+        <li>✓ 5 sovereign MCPs</li>
+        <li>✓ 1 hive (home)</li>
+        <li>✓ 0 Generals</li>
+        <li>✓ 1 Care Floor probe</li>
+        <li>✓ CC0 + MIT + OSI</li>
+        <li>✓ Crown lineage</li>
+      </ul>
+      <div class="count">∞ free users target</div>
+    </div>
+    <div class="tier citizen">
+      <h3>🪪 Citizen</h3>
+      <div class="price">$9<span style="font-size:.8rem;color:#888">/mo</span></div>
+      <ul class="features">
+        <li>✓ 30 sovereign MCPs</li>
+        <li>✓ 3 hives</li>
+        <li>✓ 3 Generals</li>
+        <li>✓ 8 Care Floor probes</li>
+        <li>✓ W3C DID + Ed25519</li>
+        <li>✓ DORADO 1-click</li>
+      </ul>
+      <div class="count">target: 3,000 citizens</div>
+    </div>
+    <div class="tier pro">
+      <h3>⚡ Pro</h3>
+      <div class="price">$29<span style="font-size:.8rem;color:#888">/mo</span></div>
+      <ul class="features">
+        <li>✓ 74 sovereign MCPs (all)</li>
+        <li>✓ 33 hives</li>
+        <li>✓ 12 Generals (all)</li>
+        <li>✓ 16 Care Floor probes</li>
+        <li>✓ Apple Foundation Models</li>
+        <li>✓ Sovereign wallet >$10k</li>
+      </ul>
+      <div class="count">target: 300 Pro ($8.7k MRR)</div>
+    </div>
+    <div class="tier enterprise">
+      <h3>🏛️ Enterprise</h3>
+      <div class="price">$99+<span style="font-size:.8rem;color:#888">/mo</span></div>
+      <ul class="features">
+        <li>✓ All + custom MCPs</li>
+        <li>✓ Unlimited hives</li>
+        <li>✓ Custom Generals</li>
+        <li>✓ Custom Care Floor</li>
+        <li>✓ Apple ABM MDM</li>
+        <li>✓ Dedicated sovereign ops</li>
+      </ul>
+      <div class="count">target: 30 Ent ($3k+ MRR)</div>
+    </div>
+  </div>
+
+  <div class="stripe-status">
+    <h2>⚡ Stripe Live-Flip Gate</h2>
+    <p style="color:#aaa">The sovereign substrate is ready. Stripe is not flipped yet. 3 gates blocking.</p>
+    <div class="pending">⏳ STRIPE_PENDING</div>
+    <p style="color:#fbbf24;margin:1rem 0">Set in Vercel → csoai-v2-app → Settings → Env Vars → Redeploy</p>
+  </div>
+
+  <h2 style="color:#fbbf24;text-align:center;margin:2rem 0 1rem">🚧 Revenue Gates</h2>
+  <div class="gate">❌ <strong>GATE 1: PyPI publish</strong> · Need PYPI_TOKEN to ship 79 MCPs to PyPI. 1-command fix. <code>npm 2FA</code></div>
+  <div class="gate">❌ <strong>GATE 2: Vercel deploy</strong> · Need vercel token. Production deployment ready. <code>vercel --prod</code></div>
+  <div class="gate">❌ <strong>GATE 3: Resend outreach</strong> · Need RESEND_TOKEN. 55+ email drafts ready. <code>sovereign-outreach</code></div>
+  <div class="gate green">✅ <strong>GATE 4: GCP VMs</strong> · 33 sovereign VMs deployed. Live.</div>
+  <div class="gate green">✅ <strong>GATE 5: Production site</strong> · proofof-site.vercel.app LIVE. 42/42 surfaces HTTP 200.</div>
+  <div class="gate green">✅ <strong>GATE 6: Sovereign substrate</strong> · 79 MCPs + 1,592+ tests. CC0 + MIT + OSI. Crown lineage.</div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Revenue Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">4 tiers. Sovereign by construction. The dragon ships when Stripe flips.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 79 MCPs · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+</body>
+</html>

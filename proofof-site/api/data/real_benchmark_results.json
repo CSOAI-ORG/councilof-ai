@@ -1,0 +1,336 @@
+{
+  "benchmark_id": "sovereign_v1_real",
+  "timestamp": "2026-07-15T04:56:45Z",
+  "model_file": "sovereign_owem_v1.pkl",
+  "model_sha256": "da853b79b37c5fbdfae343c9865f26b7c937653bbb0ad681248ea1068e6633d5",
+  "latency_ms": {
+    "min": 0.028,
+    "max": 0.038,
+    "avg": 0.03
+  },
+  "accuracy": {
+    "top1_correct": 13,
+    "top1_total": 20,
+    "top1_pct": 65.0,
+    "top3_correct": 20,
+    "top3_total": 20,
+    "top3_pct": 100.0
+  },
+  "throughput_qps": 38716.61,
+  "owem_classification": {
+    "correct": true,
+    "total": 10,
+    "pct": 70.0
+  },
+  "topology_5x4x3": {
+    "avg_all_ok_pct": 100.0,
+    "avg_sov_ok_pct": 100.0,
+    "top1_correct": 7,
+    "top1_total": 10,
+    "top1_pct": 70.0
+  },
+  "bft33": {
+    "voters": 33,
+    "quorum": 23,
+    "f_bft": 10,
+    "avg_votes_for": 30.4,
+    "pass_rate_pct": 100.0
+  },
+  "per_query": [
+    {
+      "fact_id": "article_0",
+      "query": "What is Article 0 of the sovereign charter?",
+      "latency_ms": 0.038,
+      "top_fact": "venturi_pyramid",
+      "correct": false
+    },
+    {
+      "fact_id": "care_floor",
+      "query": "What is the care-floor threshold?",
+      "latency_ms": 0.031,
+      "top_fact": "venturi_pyramid",
+      "correct": false
+    },
+    {
+      "fact_id": "bft_33_quorum",
+      "query": "What is BFT-33 quorum?",
+      "latency_ms": 0.03,
+      "top_fact": "bft_33_quorum",
+      "correct": true
+    },
+    {
+      "fact_id": "article_50_transparency",
+      "query": "What is Article 50 transparency?",
+      "latency_ms": 0.031,
+      "top_fact": "article_50_transparency",
+      "correct": true
+    },
+    {
+      "fact_id": "article_50_watermarking",
+      "query": "What is Article 50 watermarking?",
+      "latency_ms": 0.03,
+      "top_fact": "article_50_transparency",
+      "correct": false
+    },
+    {
+      "fact_id": "dorado_6x96",
+      "query": "What is DORADO 6\u00d796?",
+      "latency_ms": 0.029,
+      "top_fact": "dorado_6x96",
+      "correct": true
+    },
+    {
+      "fact_id": "horus_gate",
+      "query": "What is Horus Gate?",
+      "latency_ms": 0.028,
+      "top_fact": "horus_gate",
+      "correct": true
+    },
+    {
+      "fact_id": "rainbow_security",
+      "query": "What is Rainbow Security?",
+      "latency_ms": 0.029,
+      "top_fact": "rainbow_security",
+      "correct": true
+    },
+    {
+      "fact_id": "iso_17000",
+      "query": "What is ISO 17000?",
+      "latency_ms": 0.028,
+      "top_fact": "iso_17000",
+      "correct": true
+    },
+    {
+      "fact_id": "venturi_pyramid",
+      "query": "What is Venturi Pyramid?",
+      "latency_ms": 0.028,
+      "top_fact": "venturi_pyramid",
+      "correct": true
+    },
+    {
+      "fact_id": "liquid_antidoom",
+      "query": "What is Liquid AI Antidoom?",
+      "latency_ms": 0.031,
+      "top_fact": "liquid_antidoom",
+      "correct": true
+    },
+    {
+      "fact_id": "horizon_3k",
+      "query": "What is Horizon 3K?",
+      "latency_ms": 0.028,
+      "top_fact": "horizon_3k",
+      "correct": true
+    },
+    {
+      "fact_id": "mcp_2026_07_28",
+      "query": "When does MCP stateless spec ship?",
+      "latency_ms": 0.031,
+      "top_fact": "mcp_2026_07_28",
+      "correct": true
+    },
+    {
+      "fact_id": "launch_status",
+      "query": "What is the launch status?",
+      "latency_ms": 0.03,
+      "top_fact": "venturi_pyramid",
+      "correct": false
+    },
+    {
+      "fact_id": "audit_log",
+      "query": "What is the audit log?",
+      "latency_ms": 0.03,
+      "top_fact": "venturi_pyramid",
+      "correct": false
+    },
+    {
+      "fact_id": "c2pa_manifest",
+      "query": "What is C2PA manifest?",
+      "latency_ms": 0.028,
+      "top_fact": "c2pa_manifest",
+      "correct": true
+    },
+    {
+      "fact_id": "sigil_receipts",
+      "query": "What are SIGIL receipts?",
+      "latency_ms": 0.028,
+      "top_fact": "article_50_transparency",
+      "correct": false
+    },
+    {
+      "fact_id": "voice_15",
+      "query": "Why is voice OWEM hardest?",
+      "latency_ms": 0.031,
+      "top_fact": "voice_15",
+      "correct": true
+    },
+    {
+      "fact_id": "model_optimize",
+      "query": "What does model optimize measure?",
+      "latency_ms": 0.03,
+      "top_fact": "model_optimize",
+      "correct": true
+    },
+    {
+      "fact_id": "training_dashboard",
+      "query": "What is training dashboard?",
+      "latency_ms": 0.029,
+      "top_fact": "venturi_pyramid",
+      "correct": false
+    }
+  ],
+  "topology_results": [
+    {
+      "fact_id": "article_0",
+      "query": "What is Article 0 of the sovereign charter?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "venturi_pyramid",
+      "majority_count": 60,
+      "correct": false
+    },
+    {
+      "fact_id": "care_floor",
+      "query": "What is the care-floor threshold?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "venturi_pyramid",
+      "majority_count": 60,
+      "correct": false
+    },
+    {
+      "fact_id": "bft_33_quorum",
+      "query": "What is BFT-33 quorum?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "bft_33_quorum",
+      "majority_count": 60,
+      "correct": true
+    },
+    {
+      "fact_id": "article_50_transparency",
+      "query": "What is Article 50 transparency?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "article_50_transparency",
+      "majority_count": 60,
+      "correct": true
+    },
+    {
+      "fact_id": "article_50_watermarking",
+      "query": "What is Article 50 watermarking?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "article_50_transparency",
+      "majority_count": 60,
+      "correct": false
+    },
+    {
+      "fact_id": "dorado_6x96",
+      "query": "What is DORADO 6\u00d796?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "dorado_6x96",
+      "majority_count": 60,
+      "correct": true
+    },
+    {
+      "fact_id": "horus_gate",
+      "query": "What is Horus Gate?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "horus_gate",
+      "majority_count": 60,
+      "correct": true
+    },
+    {
+      "fact_id": "rainbow_security",
+      "query": "What is Rainbow Security?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "rainbow_security",
+      "majority_count": 60,
+      "correct": true
+    },
+    {
+      "fact_id": "iso_17000",
+      "query": "What is ISO 17000?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "iso_17000",
+      "majority_count": 60,
+      "correct": true
+    },
+    {
+      "fact_id": "venturi_pyramid",
+      "query": "What is Venturi Pyramid?",
+      "all_ok": 60,
+      "all_total": 60,
+      "sov_ok": 40,
+      "sov_total": 40,
+      "majority_fact": "venturi_pyramid",
+      "majority_count": 60,
+      "correct": true
+    }
+  ],
+  "bft33_results": [
+    {
+      "fact_id": "article_0",
+      "query": "What is Article 0 of the sovereign charter?",
+      "votes_for": 30,
+      "votes_against": 3,
+      "quorum": 23,
+      "passed": true
+    },
+    {
+      "fact_id": "care_floor",
+      "query": "What is the care-floor threshold?",
+      "votes_for": 31,
+      "votes_against": 2,
+      "quorum": 23,
+      "passed": true
+    },
+    {
+      "fact_id": "bft_33_quorum",
+      "query": "What is BFT-33 quorum?",
+      "votes_for": 30,
+      "votes_against": 3,
+      "quorum": 23,
+      "passed": true
+    },
+    {
+      "fact_id": "article_50_transparency",
+      "query": "What is Article 50 transparency?",
+      "votes_for": 33,
+      "votes_against": 0,
+      "quorum": 23,
+      "passed": true
+    },
+    {
+      "fact_id": "article_50_watermarking",
+      "query": "What is Article 50 watermarking?",
+      "votes_for": 28,
+      "votes_against": 5,
+      "quorum": 23,
+      "passed": true
+    }
+  ],
+  "honest_register": "REAL measured numbers from local sovereign_owem_v1.pkl (8,792 bytes). Sibling claim of 13/55 baseline tested here. Sibling claim of 96% 5x4x3 OK tested here."
+}

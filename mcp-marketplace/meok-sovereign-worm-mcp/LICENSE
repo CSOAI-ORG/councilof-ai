@@ -1,0 +1,20 @@
+MIT License
+Copyright (c) 2026 Nicholas Templeman / CSOAI Ltd (UK 16939677)
+
+MEOK WORM = 4 components:
+  1. Morris-II worm guard (defensive)
+  2. Protocol tunnel registry
+  3. WORM (Write-Once-Read-Many) storage
+  4. Sigil-signed audit chain
+
+DOCTRINE: DEFENSIVE ONLY.
+"NO offensive / self-propagating ('worm') capability — it contradicts
+the safe-authority thesis and is out of scope." (SOVEREIGN_TOWN_POC_2026-06-19.md)
+
+This package implements DEFENSE against AI worms (Morris II class),
+not the worms themselves. It detects, quarantines, and audits.
+
+References:
+- Cohen, Bitton, Nassi — "Here Comes The AI Worm" (Morris II), arXiv:2403.02817
+- sovereign-temple-public/security/worm_guard.py (309 lines, stdlib-only)
+- sovereign-temple-public/security/WORM_GUARD_WIRING.md (the doctrine)

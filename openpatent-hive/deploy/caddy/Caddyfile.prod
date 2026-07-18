@@ -1,0 +1,127 @@
+# Caddyfile (production)
+# Reverse proxy + TLS + rate limit + CORS + WebSocket for the openpatent.ai hive.
+# Drop this at /etc/caddy/Caddyfile on the sovereign VM, then `systemctl reload caddy`.
+
+# ── Defaults ──────────────────────────────────────────────────────────────
+{
+    email founder@csoai.org
+    admin off
+    auto_https on
+}
+
+# ── Rate limit shared cache ────────────────────────────────────────────────
+# (in-memory; swap to redis for multi-node)
+
+# ── Landing site ───────────────────────────────────────────────────────────
+openpatent.ai, www.openpatent.ai {
+    reverse_proxy 127.0.0.1:3000 {
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Real-IP {remote_host}
+    }
+    encode zstd gzip
+    header {
+        # Security headers (HSTS, X-Frame-Options, etc.)
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "geolocation=(), microphone=(), camera=()"
+        # CORS for the openpatent-mcp browser clients
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization, X-Inventor-DID"
+        # Cache static assets
+        Cache-Control "public, max-age=300"
+    }
+    @options method OPTIONS
+    handle @options {
+        header Access-Control-Allow-Origin "*"
+        header Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        header Access-Control-Allow-Headers "Content-Type, Authorization, X-Inventor-DID"
+        respond "" 204
+    }
+}
+
+# ── Public API ────────────────────────────────────────────────────────────
+api.openpatent.ai {
+    reverse_proxy 127.0.0.1:3211 {
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Real-IP {remote_host}
+        # 30s for BFT council reviews, 10s for normal endpoints
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 30s
+        }
+    }
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        # API is CORS-open for now (auth is via DID header, not cookies)
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization, X-Inventor-DID"
+    }
+    @options method OPTIONS
+    handle @options {
+        header Access-Control-Allow-Origin "*"
+        respond "" 204
+    }
+    # Rate limit: 100 req/min for unauthenticated, 1000 req/min for authenticated
+    # (the api-gateway's rate_limit.py middleware does per-DID enforcement)
+    rate_limit {
+        zone api_zone {
+            key    {remote_host}
+            events 100
+            window 1m
+        }
+    }
+}
+
+# ── Verify pages (public) ─────────────────────────────────────────────────
+verify.openpatent.ai {
+    reverse_proxy 127.0.0.1:3213 {
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Real-IP {remote_host}
+    }
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}
+
+# ── MCP manifest + WebSocket live logs ────────────────────────────────────
+mcp.openpatent.ai {
+    reverse_proxy 127.0.0.1:3214 {
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Real-IP {remote_host}
+    }
+    encode zstd gzip
+    # WebSocket support for /v1/live (live logs / live BFT council feed)
+    @websockets {
+        path /v1/live
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    reverse_proxy @websockets 127.0.0.1:3214
+    header {
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        # MCP servers are designed to be CORS-open
+        Access-Control-Allow-Origin "*"
+    }
+}
+
+# ── Ops dashboard (internal) ──────────────────────────────────────────────
+ops.openpatent.ai {
+    basicauth {
+        founder $2a$14$abcdefghijklmnopqrstuv  # bcrypt of the founder password
+    }
+    reverse_proxy 127.0.0.1:8088 {
+        header_up X-Forwarded-Proto {scheme}
+    }
+    header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+}

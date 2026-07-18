@@ -1,0 +1,107 @@
+{
+  "proposals": [
+    {
+      "id": "prop-grc-revshare-2026-06-17",
+      "title": "GRC White-Label Rev-Share 30%",
+      "description": "Authorise the GRC white-label rev-share program: 30% recurring rev to certified GRC partners who resell MEOK Sovereign / Pro / Enterprise tiers to their clients. Term: 2-year. Exit: 6mo notice. Certification: BFT-council-voted. Target: 5 partners by 4 Jul, 15 partners by 30 Sep.",
+      "proposed_by": "jeeves-cli",
+      "action_type": "partner_program",
+      "action_params": {
+        "rev_share_pct": 30,
+        "term_months": 24,
+        "exit_notice_months": 6,
+        "target_partners_d9": 5,
+        "target_partners_q3": 15
+      },
+      "council": "compliance",
+      "estimated_revenue_q3": "£45K-£180K ARR",
+      "voting_open_until": "2026-06-17T18:00:00+00:00"
+    },
+    {
+      "id": "prop-care-membrane-1495-2026-06-17",
+      "title": "Care-Membrane £1,495 Onboarding Special — First 5 Social-Care Providers",
+      "description": "Authorise the care-membrane £1,495 onboarding special for the first 5 social-care providers (Cera, HC-One, Four Seasons, Barchester, Care UK). Includes: 30-min care-membrane-mcp demo, full Article 50 attestation cert, CQC documentation pack, 6 months Pro tier at no charge. Marketing hook: UK care homes are the canary in the AI coal mine.",
+      "proposed_by": "jeeves-cli",
+      "action_type": "pricing_special",
+      "action_params": {
+        "price_gbp": 1495,
+        "slots": 5,
+        "duration": "6 months Pro free + £1,495 onboarding",
+        "tier_locked": "Pro"
+      },
+      "council": "care",
+      "estimated_revenue_q3": "£7,475 immediate + £5,970/mo recurring",
+      "voting_open_until": "2026-06-17T18:00:00+00:00"
+    },
+    {
+      "id": "prop-free-pro-trial-14d-2026-06-17",
+      "title": "Free Tier → Pro Tier 14-Day Trial",
+      "description": "Authorise a 14-day Pro trial for free-tier users who hit the 3-attestations/day cap. Trial includes unlimited attestations + public verify URLs + own HMAC signing key (Pro features). Auto-converts to £199/mo Stripe subscription at end of trial unless cancelled. Conversion target: 8% trial-to-paid (industry benchmark for dev tools).",
+      "proposed_by": "jeeves-cli",
+      "action_type": "trial_flow",
+      "action_params": {
+        "trial_days": 14,
+        "tier": "Pro",
+        "monthly_price_gbp": 199,
+        "target_conversion_pct": 8
+      },
+      "council": "sovereign",
+      "estimated_revenue_q3": "£3,184/mo at 100 trials/mo (conservative)",
+      "voting_open_until": "2026-06-17T18:00:00+00:00"
+    },
+    {
+      "id": "prop-article-50-kit-999-2026-06-17",
+      "title": "Article 50 Kit £999 One-Time Fixed-Fee",
+      "description": "Lock the Article 50 Kit pricing at £999 (confirmed 2 Aug deadline + two-layer marking per AGENTS.md). Includes: Annex IV documentation pack, 10 unlimited attestations, CQC + ICO + NHS evidence bundle, 1hr consultation with CSOAI Ltd compliance team. Fixed-fee (not monthly) because the deadline is hard. Currently in market at £999 — propose no change.",
+      "proposed_by": "jeeves-cli",
+      "action_type": "pricing_lock",
+      "action_params": {
+        "price_gbp": 999,
+        "type": "one-time",
+        "deadline": "2026-08-02",
+        "tier_locked": "Article 50 Kit"
+      },
+      "council": "proof",
+      "estimated_revenue_q3": "£50K-£150K (50-150 sales)",
+      "voting_open_until": "2026-06-17T18:00:00+00:00"
+    },
+    {
+      "id": "prop-5-industry-packages-2026-06-17",
+      "title": "5 Unified .AI Industry Packages — Final Lock",
+      "description": "Lock the 5 unified .AI industry packages as the canonical industry pitch surface for 4 Jul launch: fintech.industries.meok.ai (Monzo/Starling/Zopa/ClearScore), healthtech.industries.meok.ai (Babylon/AccuRx/NHS), care.industries.meok.ai (Cera/HC-One/14 LAs), regtech.industries.meok.ai (GRC partners), govtech.industries.meok.ai (Faculty/Cabinet Office). Each page: industry-specific case studies + relevant MCP servers + keystone CTA. Currently LIVE — propose no change.",
+      "proposed_by": "jeeves-cli",
+      "action_type": "product_surface",
+      "action_params": {
+        "packages": [
+          "fintech.industries.meok.ai",
+          "healthtech.industries.meok.ai",
+          "care.industries.meok.ai",
+          "regtech.industries.meok.ai",
+          "govtech.industries.meok.ai"
+        ]
+      },
+      "council": "research",
+      "estimated_revenue_q3": "£120K-£300K (industry-tailored conversion uplift)",
+      "voting_open_until": "2026-06-17T18:00:00+00:00"
+    },
+    {
+      "id": "prop-meok-app-pwa-distribution-2026-06-17",
+      "title": "MEOK App PWA Distribution Strategy",
+      "description": "Authorise the MEOK App PWA distribution strategy: app-deploy.vercel.app (10.6KB) installable on iOS Safari 11.3+, Android Chrome 40+, macOS, Windows, Linux — all browsers, all OS, mobile, across board. Per store-ready config: PWABuilder.com for .ipa/.aab/.msix, Capacitor for native shells. 5 reasons why PWA > native: no app store tax, no review delay, live updates, one codebase, sovereign UK. Currently LIVE — propose distribution go-ahead.",
+      "proposed_by": "jeeves-cli",
+      "action_type": "distribution",
+      "action_params": {
+        "surface": "PWA",
+        "primary_url": "app-deploy.vercel.app",
+        "secondary_paths": ["PWABuilder.com", "Capacitor"],
+        "supported_platforms": ["iOS", "Android", "macOS", "Windows", "Linux", "all browsers"]
+      },
+      "council": "charter",
+      "estimated_revenue_q3": "Funnel uplift, TBD by attribution",
+      "voting_open_until": "2026-06-17T18:00:00+00:00"
+    }
+  ],
+  "voting_window_opens": "2026-06-17T08:00:00+00:00",
+  "voting_window_closes": "2026-06-17T18:00:00+00:00",
+  "total_estimated_q3_revenue": "£225K-£640K ARR + one-time"
+}

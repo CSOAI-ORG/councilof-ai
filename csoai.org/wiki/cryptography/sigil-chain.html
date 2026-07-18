@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGIL Chain - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/cryptography/">cryptography</a> / sigil-chain</div>
+<h1>SIGIL Chain</h1>
+<p class="tagline">Ed25519 hash-chained, append-only, publicly auditable. The ledger of sovereign actions.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>The <strong>SIGIL Chain</strong> is CSOAI's append-only, Ed25519-signed, hash-chained ledger of every significant action taken by the sovereign stack. It is named after the alchemical sigil — a mark that both conceals and reveals — because every chain entry is both cryptographically sealed and publicly verifiable.</p>
+
+<h2>Structure</h2>
+<p>Each entry in the chain has the form:</p>
+<pre>{
+  "index": 12345,
+  "timestamp": "2026-06-29T18:42:01Z",
+  "actor": "did:csoai:queen-athena",
+  "op": "C",                   // P, V, M, Q, C, H, S, A
+  "line": "C|WIKI_FINAL|...",   // human-readable summary
+  "prev_hash": "abc123...",
+  "payload_hash": "def456...",
+  "ed25519_sig": "base64..."
+}</pre>
+
+<h2>The Eight Operations</h2>
+<table>
+<tr><th>Op</th><th>Meaning</th><th>Example</th></tr>
+<tr><td>P</td><td>Proposal</td><td>Council proposal submitted</td></tr>
+<tr><td>V</td><td>Vote</td><td>Council member voted</td></tr>
+<tr><td>M</td><td>Memory</td><td>Episode recorded to long-term memory</td></tr>
+<tr><td>Q</td><td>Quantum</td><td>Quantum batch result</td></tr>
+<tr><td>C</td><td>Construction</td><td>New sovereign action taken</td></tr>
+<tr><td>H</td><td>Hive communication</td><td>Cross-hive message</td></tr>
+<tr><td>S</td><td>Switch</td><td>Sovereignty region switch</td></tr>
+<tr><td>A</td><td>Audit</td><td>Compliance assertion</td></tr>
+</table>
+
+<h2>Append-Only Property</h2>
+<p>Once written, an entry cannot be modified or deleted. The chain is append-only by cryptographic mechanism: each entry's hash includes the previous entry's hash, so modifying any historical entry would invalidate all subsequent entries. Re-computing the chain is the integrity check, exposed via <code>sov_orgkernel_verify_chain</code>.</p>
+
+<h2>Public Verifiability</h2>
+<p>The chain is publicly readable via the REST API at <code>/v1/sigil/*</code> and the explorer at <code>sov_sigil_explorer</code>. Anyone can verify that a given chain entry was signed by a given DID, that the chain has not been tampered with, and that no entries have been retroactively removed.</p>
+
+<h2>Historical Context</h2>
+<p>SIGIL was first prototyped in March 2026 during CSOAI's Sprint 6 ("Defoneos"). The hash-chain pattern derives from Certificate Transparency (2013) and Bitcoin (2008), but SIGIL adds: (1) typed operations (P/V/M/Q/C/H/S/A), (2) DID-signed actors, and (3) quantum-safe upgrade path to PQC signatures.</p>
+
+<h2>Modern Usage</h2>
+<p>Every SOV3 tool emits at least one SIGIL entry per invocation. Customers audit their chain weekly via <code>sov_dorado_customer_report</code>. Regulators (ICO, AISI, EU AI Office) can verify compliance assertions directly from the chain.</p>
+
+<h2>Demo</h2>
+<p>The <a href="/wiki/demos/emit-sigil.html">Emit SIGIL Demo</a> walks through emitting your first SIGIL in 60 seconds.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/cryptography/ed25519.html">Ed25519</a></li>
+<li><a href="/wiki/cryptography/anchor.html">Anchor</a></li>
+<li><a href="/wiki/cryptography/rotation.html">Key Rotation</a></li>
+<li><a href="/wiki/architecture/oowm-anchor.html">OOWM Anchor</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

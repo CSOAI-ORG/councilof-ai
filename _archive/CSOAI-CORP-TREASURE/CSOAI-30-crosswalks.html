@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSOAI 30 Framework Crosswalks | Mapping to ISO 42001, NIST, EU AI Act, CMMC 2.0</title>
+    <meta name="description" content="CSOAI 30 framework crosswalks mapping AI governance to ISO 42001, NIST AI RMF, EU AI Act, CMMC 2.0 (48 CFR), HIPAA, and SOC 2 Type II. Interactive comparison matrices showing compliance coverage.">
+    <meta name="theme-color" content="#0D0B21">
+    <meta property="og:title" content="CSOAI Framework Crosswalks">
+    <meta property="og:description" content="Interactive crosswalk comparing CSOAI to major AI governance frameworks.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://csoai.org/crosswalks.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://csoai.org/assets/og-image.png">
+    <link rel="canonical" href="https://csoai.org/crosswalks.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --color-dark: #0D0B21;
+            --color-dark-light: #1A1145;
+            --color-accent: #D4A843;
+            --color-accent-bright: #E8B76D;
+            --color-text: #E8E4F0;
+            --color-white: #FFFFFF;
+            --color-glass-bg: rgba(255, 255, 255, 0.03);
+            --color-glass-border: rgba(255, 255, 255, 0.08);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-dark-light) 100%);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle, rgba(212, 168, 67, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none; z-index: 0;
+            animation: drift 20s ease-in-out infinite;
+        }
+        @keyframes drift { 0%, 100% { background-position: 0 0; } 50% { background-position: 20px 20px; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes progressBar { from { width: 0%; } }
+        .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-bright) 100%); width: 0%; z-index: 200; animation: progressBar ease-out; }
+        main { position: relative; z-index: 1; }
+        .hero-section {
+            position: relative;
+            padding: 80px 2rem 60px;
+            background: linear-gradient(135deg, rgba(13, 11, 33, 0.5) 0%, rgba(26, 17, 69, 0.3) 100%);
+            border-bottom: 1px solid var(--color-glass-border);
+            z-index: 2;
+            animation: slideDown 0.8s ease;
+        }
+        .hero-content { max-width: 1400px; margin: 0 auto; }
+        .hero-content h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.2; margin-bottom: 1.5rem; color: var(--color-white); font-weight: 800; }
+        .hero-content p { font-size: 1.1rem; color: var(--color-text); margin-bottom: 2rem; line-height: 1.8; }
+        .breadcrumbs { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; font-size: 0.9rem; color: var(--color-text); z-index: 3; position: relative; }
+        .breadcrumbs a { color: var(--color-accent); text-decoration: none; transition: color 0.3s ease; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: var(--color-white); margin-bottom: 1rem; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: var(--color-white); margin-top: 2rem; margin-bottom: 1rem; }
+        p { font-size: 1rem; line-height: 1.8; color: var(--color-text); margin-bottom: 1rem; }
+        .btn {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            color: var(--color-dark);
+            border: none; border-radius: 12px;
+            font-weight: 600; font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(212, 168, 67, 0.25);
+            text-decoration: none;
+        }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 15px 45px rgba(212, 168, 67, 0.4); }
+        .btn-small { padding: 0.75rem 1.5rem; font-size: 0.95rem; }
+        nav { position: sticky; top: 0; z-index: 100; padding: 1.5rem 2rem; backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: rgba(13, 11, 33, 0.7); }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 800; color: var(--color-white); }
+        .logo-dot { width: 12px; height: 12px; background: var(--color-accent); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        nav a { color: var(--color-text); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        nav a:hover { color: var(--color-accent); }
+        .content-container { max-width: 1200px; margin: 0 auto; padding: 80px 2rem; position: relative; z-index: 1; }
+        .tab-buttons { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 2px solid var(--color-accent);
+            color: var(--color-accent);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            color: var(--color-dark);
+        }
+        .crosswalk-content {
+            background: var(--color-glass-bg);
+            border: 1px solid var(--color-glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .crosswalk-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            overflow-x: auto;
+        }
+        table th {
+            background: rgba(212, 168, 67, 0.15);
+            color: var(--color-accent);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            border: 1px solid var(--color-glass-border);
+        }
+        table td {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-glass-border);
+            color: var(--color-text);
+        }
+        table tr:hover { background: rgba(212, 168, 67, 0.05); }
+        .coverage-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(212, 168, 67, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        .coverage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dark);
+            font-weight: 700;
+            font-size: 0.7rem;
+        }
+        .tab-content { display: none; animation: fadeUp 0.3s ease; }
+        .tab-content.active { display: block; }
+        .framework-info {
+            background: rgba(212, 168, 67, 0.08);
+            border-left: 4px solid var(--color-accent);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        footer {
+            background: linear-gradient(135deg, #0A0820 0%, #0D0B21 100%);
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 2;
+        }
+        .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        .footer-section h4 { color: var(--color-accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; font-weight: 700; }
+        .footer-section ul { list-style: none; }
+        .footer-section a { color: var(--color-text); text-decoration: none; font-size: 0.95rem; display: block; margin-bottom: 0.75rem; transition: color 0.3s ease; }
+        .footer-section a:hover { color: var(--color-accent); }
+        .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 2rem; text-align: center; color: var(--color-text); font-size: 0.9rem; }
+        .social-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; }
+        .social-links a { color: var(--color-text); text-decoration: none; transition: color 0.3s ease; }
+        .social-links a:hover { color: var(--color-accent); }
+        @media (max-width: 768px) {
+            .hero-section { padding: 60px 1.5rem 40px; }
+            .content-container { padding: 40px 1.5rem; }
+            nav { padding: 1rem 1.5rem; }
+            h1 { font-size: 1.75rem; }
+            .crosswalk-content { padding: 1.5rem; }
+            table { font-size: 0.85rem; }
+            table th, table td { padding: 0.5rem; }
+            .tab-buttons { flex-direction: column; }
+            .tab-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <main>
+        
+<!-- ═══ MEGA NAV ═══ -->
+<header style="position:sticky;top:0;z-index:1000;background:rgba(13,11,33,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(212,168,67,.15);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center">
+  <a href="index.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+    <span style="font-size:.7rem;color:rgba(232,228,240,.4);margin-left:.25rem">by MEOK AI Labs</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:.25rem" class="nav-links">
+    <!-- Standards -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Standards ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Governance Frameworks</div>
+        <a href="article-50-kit.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:#EF4444;transition:background .2s;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);margin-bottom:.5rem" onmouseover="this.style.background='rgba(239,68,68,.15)'" onmouseout="this.style.background='rgba(239,68,68,.1)'"><span style="font-size:1.2rem">🚨</span><span><strong style="display:block;font-size:.9rem">Article 50 Emergency Kit</strong><small style="color:rgba(239,68,68,.8);font-size:.8rem">Secure EU AI Act compliance in 48hrs</small></span></a>
+        <a href="charter.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📜</span><span><strong style="display:block;font-size:.9rem">52-Article Charter</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Complete governance framework</small></span></a>
+        <a href="crosswalks.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔄</span><span><strong style="display:block;font-size:.9rem">Framework Crosswalks</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">ISO 42001, NIST, EU AI Act, IEEE</small></span></a>
+        <a href="guides.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📖</span><span><strong style="display:block;font-size:.9rem">Implementation Guides</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">8 step-by-step modules</small></span></a>
+        <a href="glossary.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">AI Safety Glossary</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">250+ terms defined</small></span></a>
+      </div>
+    </div>
+    <!-- Products -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Products ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;left:-100px;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Solutions</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <a href="mcp-packs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📦</span><span><strong style="display:block;font-size:.9rem">Premium MCP Packs</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Curated server bundles</small></span></a>
+          <a href="finance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💳</span><span><strong style="display:block;font-size:.9rem">Agentic Finance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Payment pre-checks</small></span></a>
+          <a href="legacy.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏛️</span><span><strong style="display:block;font-size:.9rem">Legacy Bridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">COBOL/Mainframe tunnels</small></span></a>
+          <a href="governance.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌍</span><span><strong style="display:block;font-size:.9rem">Global Mesh</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Cross-regional handoff</small></span></a>
+          <a href="certification.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏅</span><span><strong style="display:block;font-size:.9rem">CASA Certification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Standard AI safety cert</small></span></a>
+          <a href="enterprise.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🏢</span><span><strong style="display:block;font-size:.9rem">Enterprise Governance</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Turnkey compliance for orgs</small></span></a>
+          <a href="advisory.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🎯</span><span><strong style="display:block;font-size:.9rem">Advisory Services</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Expert AI governance consultancy</small></span></a>
+          <a href="pricing.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">💰</span><span><strong style="display:block;font-size:.9rem">Pricing & Plans</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">From £1 to Enterprise</small></span></a>
+        </div>
+      </div>
+    </div>
+    <!-- Ecosystem -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Ecosystem ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:520px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">CSOAI Group Network</div>
+<<<<<<< HEAD:crosswalks.html
+        <a href="https://meok.ai" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🧠</span><span><strong style="display:block;font-size:.9rem">MEOK AI Labs</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">207 MCP servers &amp; commercial AI platform</small></span></a>
+                <a href="https://cobolbridge.ai" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔗</span><span><strong style="display:block;font-size:.9rem">CobolBridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Legacy COBOL migration platform</small></span></a>
+        <a href="mcp-infrastructure.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🛠</span><span><strong style="display:block;font-size:.9rem">207 MCP Servers</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">1,050+ tools across 30 frameworks</small></span></a>
+        <a href="https://github.com/csoai-org" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🐙</span><span><strong style="display:block;font-size:.9rem">GitHub</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Open-source repositories</small></span></a>
+=======
+        <a href="https://meok.ai" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🧠</span><span><strong style="display:block;font-size:.9rem">MEOK.AI</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Sovereign AI OS &amp; agent marketplace</small></span></a>
+        <a href="https://cobolbridge.ai" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🔗</span><span><strong style="display:block;font-size:.9rem">CobolBridge</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Legacy COBOL migration platform</small></span></a>
+        <a href="mcp-infrastructure.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🛠</span><span><strong style="display:block;font-size:.9rem">207 MCP Servers</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">1,050+ tools across 30 frameworks</small></span></a>
+        <a href="https://github.com/csoai-org" target="_blank" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🐙</span><span><strong style="display:block;font-size:.9rem">GitHub</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">369 open-source repositories</small></span></a>
+>>>>>>> origin/main:public/crosswalks.html
+      </div>
+    </div>
+    <a href="about.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">About</a>
+    <a href="blog.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Blog</a>
+    <a href="contact.html" style="color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='var(--text)'">Contact</a>
+    <!-- Developer -->
+    <div class="mega-wrap" style="position:relative">
+      <button onclick="toggleMega(this)" style="background:none;border:none;color:var(--text);padding:.5rem 1rem;font-size:.9rem;font-weight:500;cursor:pointer;font-family:inherit">Developer ▾</button>
+      <div class="mega-panel" style="display:none;position:absolute;top:100%;right:0;width:320px;background:rgba(13,11,33,.98);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:1.5rem;margin-top:.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);z-index:999">
+        <div style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem">Developer Resources</div>
+        <a href="api-docs.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📚</span><span><strong style="display:block;font-size:.9rem">API Documentation</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">REST API reference</small></span></a>
+        <a href="status.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">📊</span><span><strong style="display:block;font-size:.9rem">System Status</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Platform health monitoring</small></span></a>
+        <a href="verify.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">✓</span><span><strong style="display:block;font-size:.9rem">Certificate Verification</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">Verify certifications</small></span></a>
+        <a href="layer0.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">⚡</span><span><strong style="display:block;font-size:.9rem">Layer 0 Protocol</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">The 8 trust layers</small></span></a>
+        <a href="mcp-distribution.html" style="display:flex;align-items:flex-start;gap:.75rem;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);transition:background .2s" onmouseover="this.style.background='rgba(212,168,67,.1)'" onmouseout="this.style.background='transparent'"><span style="font-size:1.2rem">🌐</span><span><strong style="display:block;font-size:.9rem">MCP Distribution Map</strong><small style="color:rgba(232,228,240,.5);font-size:.8rem">AEO &amp; GEO fleet registry</small></span></a>
+      </div>
+    </div>
+    <a href="dashboard.html" style="background:linear-gradient(135deg,#D4A843,#E8B76D);color:#0D0B21;padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;margin-left:.5rem;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 15px rgba(212,168,67,.3)" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(212,168,67,.5)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 15px rgba(212,168,67,.3)'">Dashboard</a>
+  </div>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open');this.classList.toggle('active')" style="display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;z-index:1001"><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span><span style="width:24px;height:2px;background:var(--accent);border-radius:2px;transition:all .3s"></span></button>
+</header>
+<script>
+function toggleMega(btn){
+  const panel=btn.nextElementSibling;
+  const wasOpen=panel.style.display==='block';
+  document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none');
+  if(!wasOpen)panel.style.display='block';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.mega-wrap'))document.querySelectorAll('.mega-panel').forEach(p=>p.style.display='none')});
+</script>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>CSOAI 30 Framework Crosswalks</h1>
+                <p>Interactive crosswalk showing how CSOAI governance framework maps to 30 frameworks including ISO 42001, NIST AI RMF, EU AI Act, CMMC 2.0 (48 CFR, Nov 10 2025), HIPAA, and SOC 2 Type II. Understand coverage overlap and integration possibilities.</p>
+            </div>
+        </section>
+
+        <div class="breadcrumbs">
+            <a href="index.html">Home</a> <span>/</span> <span>Crosswalks</span>
+        </div>
+
+        <div class="content-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="showTab('iso42001')">ISO 42001</button>
+                <button class="tab-btn" onclick="showTab('nist')">NIST AI RMF</button>
+                <button class="tab-btn" onclick="showTab('euai')">EU AI Act</button>
+                <button class="tab-btn" onclick="showTab('ieee')">IEEE 7000</button>
+                <button class="tab-btn" onclick="showTab('soc2')">SOC 2 Type II</button>
+                <button class="tab-btn" onclick="showTab('ukaisi')">UK AISI</button>
+                <button class="tab-btn" onclick="showTab('tc260')">China TC260</button>
+                <button class="tab-btn" onclick="showTab('singapore')">Singapore</button>
+                <button class="tab-btn" onclick="showTab('korea')">South Korea</button>
+            </div>
+
+            <div id="iso42001" class="tab-content active">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to ISO 42001 Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 85%</strong> - CSOAI complements ISO 42001 with stronger safety governance and Byzantine voting oversight, while ISO 42001 provides systematic management system foundation.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 85%;">85%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr>
+                                <th>CSOAI Component</th>
+                                <th>ISO 42001 Equivalent</th>
+                                <th>Alignment Strength</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AI Risk Assessment (Articles 16)</td>
+                                <td>4.1 - AI Risk Management</td>
+                                <td>Strong</td>
+                            </tr>
+                            <tr>
+                                <td>Fairness Testing (Article 17)</td>
+                                <td>5.1 - Performance Monitoring</td>
+                                <td>Strong</td>
+                            </tr>
+                            <tr>
+                                <td>Byzantine Governance (Article 8-10)</td>
+                                <td>No direct equivalent</td>
+                                <td>Complementary</td>
+                            </tr>
+                            <tr>
+                                <td>Data Governance (Articles 29-35)</td>
+                                <td>5.2 - Data Management</td>
+                                <td>Strong</td>
+                            </tr>
+                            <tr>
+                                <td>Security Assessment (Article 22)</td>
+                                <td>5.3 - Security Controls</td>
+                                <td>Strong</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="nist" class="tab-content">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to NIST AI RMF Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 90%</strong> - Strong alignment across all NIST AI RMF functions: Govern, Map, Measure, Manage. CSOAI adds institutional governance layer above NIST's risk management guidance.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 90%;">90%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr>
+                                <th>CSOAI Element</th>
+                                <th>NIST AI RMF Function</th>
+                                <th>Alignment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Governance Structure</td>
+                                <td>GOVERN - Oversight</td>
+                                <td>Strong</td>
+                            </tr>
+                            <tr>
+                                <td>Risk Assessment</td>
+                                <td>MAP - Context Understanding</td>
+                                <td>Strong</td>
+                            </tr>
+                            <tr>
+                                <td>Testing & Monitoring</td>
+                                <td>MEASURE - Performance</td>
+                                <td>Strong</td>
+                            </tr>
+                            <tr>
+                                <td>Mitigation Strategies</td>
+                                <td>MANAGE - Risk Response</td>
+                                <td>Strong</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="euai" class="tab-content">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to EU AI Act Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 92%</strong> - CSOAI exceeds EU AI Act in multiple areas (fairness, Byzantine governance), provides operational framework for compliance, enables Proof of Compliance documentation.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 92%;">92%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr>
+                                <th>EU AI Act Requirement</th>
+                                <th>CSOAI Implementation</th>
+                                <th>Coverage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>High-Risk System Assessment</td>
+                                <td>Articles 15-21 (Certification Standards)</td>
+                                <td>Complete</td>
+                            </tr>
+                            <tr>
+                                <td>Data Quality Requirements</td>
+                                <td>Articles 29-35 (Data & Privacy)</td>
+                                <td>Complete</td>
+                            </tr>
+                            <tr>
+                                <td>Transparency & Documentation</td>
+                                <td>Articles 15, 39 (Documentation & Reporting)</td>
+                                <td>Complete</td>
+                            </tr>
+                            <tr>
+                                <td>Monitoring & Maintenance</td>
+                                <td>Articles 37-38 (Ongoing Monitoring)</td>
+                                <td>Exceeds</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="ieee" class="tab-content">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to IEEE 7000 Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 78%</strong> - CSOAI focuses on safety governance; IEEE 7000 emphasizes ethical design process. Organizations implementing both achieve comprehensive ethics-to-governance integration.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 78%;">78%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr>
+                                <th>IEEE 7000 Domain</th>
+                                <th>CSOAI Alignment</th>
+                                <th>Gap</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Stakeholder Value Alignment</td>
+                                <td>Articles 18-19 (Explainability & Oversight)</td>
+                                <td>Partial</td>
+                            </tr>
+                            <tr>
+                                <td>Ethical Impact Assessment</td>
+                                <td>Articles 16-17 (Risk & Fairness)</td>
+                                <td>Strong</td>
+                            </tr>
+                            <tr>
+                                <td>Human Agency & Control</td>
+                                <td>Article 19 (Human Oversight)</td>
+                                <td>Strong</td>
+                            </tr>
+                            <tr>
+                                <td>Transparency & Accountability</td>
+                                <td>Articles 13, 18, 39</td>
+                                <td>Strong</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+<div id="soc2" class="tab-content">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to SOC 2 Type II Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 92%</strong> - CSOAI builds on SOC 2's security controls with AI-specific governance, bias monitoring, and transparency requirements beyond standard IT security.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 92%;">92%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr><th>CSOAI Component</th><th>SOC 2 Category</th><th>Alignment</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>9. Data Security</td><td>CC6.1 - Logical Access</td><td>Strong</td></tr>
+                            <tr><td>10. Authentication</td><td>CC6.7 - Identity Management</td><td>Strong</td></tr>
+                            <tr><td>11. Audit Logging</td><td>CC7.2 - System Monitoring</td><td>Strong</td></tr>
+                            <tr><td>13. Incident Response</td><td>CC8.1 - Change Management</td><td>Moderate</td></tr>
+                        </tbody>
+                    </table>
+                    <a href="crosswalks.html" class="btn btn-small" style="margin-top:1.5rem;">View Full SOC 2 Crosswalk →</a>
+                </div>
+            </div>
+
+            <div id="ukaisi" class="tab-content">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to UK AISI Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 88%</strong> - CSOAI incorporates UK AI Safety Institute requirements for frontier AI evaluation, responsible AI capabilities assessment, and third-party testing protocols.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 88%;">88%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr><th>CSOAI Component</th><th>UK AISI Requirement</th><th>Alignment</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Frontier AI Testing</td><td>AISI Capability Assessment</td><td>Strong</td></tr>
+                            <tr><td>Model Evaluation</td><td>Responsible AI Benchmarks</td><td>Strong</td></tr>
+                            <tr><td>Red Team Testing</td><td>Third-Party Red Team</td><td>Strong</td></tr>
+                            <tr><td>Incident Reporting</td><td>Safety Incident Disclosure</td><td>Moderate</td></tr>
+                        </tbody>
+                    </table>
+                    <a href="guide-eu-ai-act.html" class="btn btn-small" style="margin-top:1.5rem;">View UK AISI Guidelines →</a>
+                </div>
+            </div>
+
+            <div id="tc260" class="tab-content">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to China TC260 Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 82%</strong> - CSOAI aligns with China's TC260 AI governance standards covering ethics, security assessment, and algorithmic recommendation requirements.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 82%;">82%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr><th>CSOAI Component</th><th>TC260 Standard</th><th>Alignment</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Algorithmic Ethics</td><td>TC260 Ethics Guidelines</td><td>Strong</td></tr>
+                            <tr><td>Data Governance</td><td>Data Security Assessment</td><td>Strong</td></tr>
+                            <tr><td>Transparency</td><td>Algorithm Disclosure</td><td>Moderate</td></tr>
+                            <tr><td>User Consent</td><td>Personal Information Protection</td><td>Moderate</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="singapore" class="tab-content">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to Singapore IMDA Model Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 91%</strong> - CSOAI aligns with Singapore's AI Governance Framework (2nd Edition) for responsibility, transparency, and human-centric AI deployment.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 91%;">91%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr><th>CSOAI Component</th><th>Singapore Model Principle</th><th>Alignment</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Accountability</td><td>Human-Centric Design</td><td>Strong</td></tr>
+                            <tr><td>Transparency</td><td>Explainability</td><td>Strong</td></tr>
+                            <tr><td>Fairness</td><td>Bias Mitigation</td><td>Strong</td></tr>
+                            <tr><td>Robustness</td><td>Security Testing</td><td>Strong</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="korea" class="tab-content">
+                <div class="crosswalk-content">
+                    <h2>CSOAI to South Korea AI Act Alignment</h2>
+                    <div class="framework-info">
+                        <strong>Coverage: 89%</strong> - CSOAI covers South Korea's Act on Promotion of AI and Its Framework (effective January 2026) for comprehensive AI lifecycle governance.
+                    </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 89%;">89%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr><th>CSOAI Component</th><th>Korea AI Act Requirement</th><th>Alignment</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Risk Assessment</td><td>High-Risk AI Classification</td><td>Strong</td></tr>
+                            <tr><td>Conformity Assessment</td><td>Self-Certification Requirements</td><td>Strong</td></tr>
+                            <tr><td>Data Governance</td><td>Training Data Documentation</td><td>Strong</td></tr>
+                            <tr><td>Human Oversight</td><td>Human-in-the-Loop Requirements</td><td>Moderate</td></tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:1rem;font-size:0.9rem;color:rgba(232,228,240,0.7)">South Korea's AI Act took effect January 2026, covering the full AI lifecycle with mandatory compliance for high-risk systems.</p>
+                </div>
+            </div>
+                    <div class="coverage-bar">
+                        <div class="coverage-fill" style="width: 75%;">75%</div>
+                    </div>
+                    <table class="crosswalk-table">
+                        <thead>
+                            <tr>
+                                <th>SOC 2 Trust Service</th>
+                                <th>CSOAI Coverage</th>
+                                <th>Additional Requirements</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Security</td>
+                                <td>Articles 22-28 (Security & Testing)</td>
+                                <td>AI-specific threat modeling</td>
+                            </tr>
+                            <tr>
+                                <td>Availability</td>
+                                <td>Articles 28, 39 (Monitoring)</td>
+                                <td>AI system reliability requirements</td>
+                            </tr>
+                            <tr>
+                                <td>Processing Integrity</td>
+                                <td>Articles 18-21, 26 (Audit trails)</td>
+                                <td>Model accuracy & consistency</td>
+                            </tr>
+                            <tr>
+                                <td>Confidentiality</td>
+                                <td>Articles 29-35 (Data Privacy)</td>
+                                <td>Aligned with privacy regulations</td>
+                            </tr>
+                            <tr>
+                                <td>Privacy</td>
+                                <td>Articles 29-35 (Full coverage)</td>
+                                <td>Exceeds SOC 2 with AI specifics</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    
+<footer style="background:var(--dark);border-top:3px solid var(--accent);padding:4rem 0 2rem;margin-top:4rem;position:relative;z-index:1">
+<div class="container">
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:2rem;margin-bottom:3rem">
+    <div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,#D4A843,#E8B76D);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CSOAI</span>
+      </div>
+      <p style="color:rgba(232,228,240,.6);font-size:.9rem;line-height:1.6;margin-bottom:1rem">The global standard for AI safety. Institutional governance through the 52-article charter and Byzantine consensus.</p>
+      <div style="display:flex;gap:.75rem"><a href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">𝕏</a><a href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">in</a><a href="#" style="color:rgba(232,228,240,.5);font-size:1.2rem;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.5)'">▶</a></div>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Standards</h4><a href="charter.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Charter</a><a href="crosswalks.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Crosswalks</a><a href="guides.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Guides</a><a href="glossary.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Glossary</a></div>
+<<<<<<< HEAD:crosswalks.html
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Products</h4><a href="certification.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Certification</a><a href="enterprise.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Enterprise</a><a href="advisory.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Advisory</a><a href="pricing.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Pricing</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Ecosystem</h4><a href="https://meok.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">MEOK AI Labs</a><a href="https://cobolbridge.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CobolBridge</a><a href="https://github.com/csoai-org" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">GitHub</a></div>
+=======
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Products</h4>
+      <a href="mcp-packs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Premium Packs</a>
+      <a href="finance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Agentic Finance</a>
+      <a href="legacy.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Legacy Bridge</a>
+      <a href="governance.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Global Mesh</a>
+      <a href="certification.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CASA Certification</a>
+      <a href="enterprise.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Enterprise</a>
+      <a href="advisory.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Advisory</a>
+      <a href="pricing.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Pricing</a>
+    </div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Ecosystem</h4><a href="https://meok.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">MEOK.AI</a><a href="https://cobolbridge.ai" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">CobolBridge</a><a href="mcp-infrastructure.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">207 MCP Servers</a><a href="https://github.com/csoai-org" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">GitHub (369 repos)</a></div>
+>>>>>>> origin/main:public/crosswalks.html
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Company</h4><a href="about.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">About</a><a href="case-studies.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Case Studies</a><a href="blog.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Blog</a><a href="contact.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Contact</a></div>
+    <div><h4 style="color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif">Account</h4><a href="dashboard.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Dashboard</a><a href="faq.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">FAQ</a><a href="resources.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">Resources</a><a href="api-docs.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">API Docs</a><a href="status.html" style="display:block;color:rgba(232,228,240,.6);font-size:.85rem;padding:.3rem 0;text-decoration:none" onmouseover="this.style.color='#D4A843'" onmouseout="this.style.color='rgba(232,228,240,.6)'">System Status</a></div>
+  </div>
+  <div style="border-top:1px solid rgba(212,168,67,.1);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+<<<<<<< HEAD:crosswalks.html
+    <p style="color:rgba(232,228,240,.4);font-size:.8rem">&copy; 2026 CSOAI — Council for the Safety of AI. Founded by Nicholas Templeman. All rights reserved.</p>
+=======
+    <p style="color:rgba(232,228,240,.4);font-size:.8rem">&copy; 2026 CSOAI — The Global Standard for AI Safety. Powered by <a href="https://meok.ai" style="color:rgba(232,228,240,.4);text-decoration:none">MEOK AI Labs</a>. All rights reserved.</p>
+>>>>>>> origin/main:public/crosswalks.html
+    <div style="display:flex;gap:1.5rem"><a href="privacy.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Privacy</a><a href="terms.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Terms</a><a href="cookies.html" style="color:rgba(232,228,240,.4);font-size:.8rem;text-decoration:none">Cookies</a></div>
+  </div>
+</div>
+</footer>
+
+
+    <script>
+        function showTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+            contents.forEach(c => c.classList.remove('active'));
+            buttons.forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function updateProgressBar() {
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            const scrollPercent = (scrolled / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        }
+
+        window.addEventListener('scroll', updateProgressBar);
+        document.addEventListener('DOMContentLoaded', updateProgressBar);
+    </script>
+</body>
+</html>

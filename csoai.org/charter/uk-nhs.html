@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UK NHS — SOV3 🜏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="UK NHS sovereign mapping for CSOAI Ltd (UK 16939677). DTAC, DCB0129, DCB0160, clinical safety, MHRA medical-device software, NICE evidence. Adopted 4 July 2026.">
+<link rel="icon" href="https://csoai.org/favicon.ico">
+<style>
+:root { --navy:#0a1a2f; --gold:#c9a84c; --gold-light:#d4b85a; --cyan:#06b6d4; --bg:#f5f0e8; --ink:#0f172a; --paper:#fdfbf6; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Iowan Old Style","Palatino Linotype",Georgia,serif; background:var(--bg); color:var(--ink); line-height:1.7; }
+header.royal { background:linear-gradient(135deg,#0a1a2f 0%,#1a2f4f 100%); color:white; padding:56px 32px 40px; text-align:center; border-bottom:6px double var(--gold); }
+header.royal h1 { color:var(--gold); font-size:42px; font-weight:900; letter-spacing:-0.02em; margin-bottom:8px; }
+header.royal .sub { color:rgba(255,255,255,0.78); font-size:15px; letter-spacing:0.18em; text-transform:uppercase; }
+header.royal .preamble { color:rgba(255,255,255,0.92); font-style:italic; margin-top:24px; max-width:780px; margin-left:auto; margin-right:auto; font-size:16px; }
+.badges { display:flex; justify-content:center; gap:10px; margin-top:22px; flex-wrap:wrap; }
+.badge { background:rgba(201,168,76,0.12); color:var(--gold); border:1px solid rgba(201,168,76,0.4); padding:6px 14px; border-radius:999px; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; font-family:ui-monospace,monospace; }
+.container { max-width:980px; margin:0 auto; padding:40px 28px; }
+section { background:var(--paper); border:1px solid rgba(10,26,47,0.08); border-left:5px solid var(--gold); border-radius:8px; padding:32px; margin-bottom:28px; box-shadow:0 4px 18px rgba(10,26,47,0.05); }
+section h2 { color:var(--navy); font-size:26px; font-weight:800; padding-bottom:10px; border-bottom:2px solid var(--gold); margin-bottom:16px; }
+section h3 { color:var(--navy); font-size:18px; margin:18px 0 8px; font-weight:700; }
+section p { margin-bottom:12px; }
+section blockquote { background:linear-gradient(90deg,rgba(201,168,76,0.12),transparent); border-left:4px solid var(--gold); padding:12px 18px; margin:14px 0; font-style:italic; color:var(--navy); }
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+th { background:var(--navy); color:var(--gold); padding:12px 14px; text-align:left; font-weight:700; font-size:12px; text-transform:uppercase; }
+td { padding:10px 14px; border-bottom:1px solid rgba(10,26,47,0.08); }
+tr:nth-child(even) td { background:rgba(201,168,76,0.04); }
+.footer { text-align:center; padding:36px 24px; color:rgba(10,26,47,0.55); font-size:12px; border-top:1px solid rgba(10,26,47,0.1); margin-top:40px; background:var(--paper); }
+.footer a { color:var(--navy); text-decoration:none; border-bottom:1px dashed rgba(10,26,47,0.3); }
+.related { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.related a { background:rgba(6,182,212,0.08); color:#0e7490; padding:8px 14px; border-radius:6px; text-decoration:none; font-size:13px; font-weight:600; border:1px solid rgba(6,182,212,0.25); }
+</style>
+</head>
+<body>
+
+<header class="royal">
+  <h1>🜏 UK NHS</h1>
+  <div class="sub">DTAC · DCB0129 · DCB0160 · Clinical Safety · MHRA · NICE</div>
+  <div class="badges">
+    <span class="badge">CSOAI Ltd · UK 16939677</span>
+    <span class="badge">NHS DTAC</span>
+    <span class="badge">DCB0129 Clinical Safety</span>
+    <span class="badge">MHRA UKCA</span>
+    <span class="badge">Sovereign-by-Design</span>
+  </div>
+  <div class="preamble">"Care for the sick is the original King Dimension act. The sovereign system must honour that lineage."</div>
+</header>
+
+<div class="container">
+
+<section>
+  <h2>Scope</h2>
+  <p>The UK NHS pillar maps CSOAI Ltd (UK 16939677) to the NHS Digital Technology Assessment Criteria (DTAC), the clinical-safety standards DCB0129 (manufacturer) and DCB0160 (deployer), MHRA UKCA-marking requirements for medical-device software, NICE evidence standards framework, and the NHS England AI roadmap. This pillar governs any NHS-deployment of the sovereign system, including DEFONEOS MEDEVAC and clinical decision-support tools.</p>
+  <p>Adopted on Saturday 4 July 2026 09:00 BST, T-minus-4-days from launch.</p>
+</section>
+
+<section>
+  <h2>DTAC — Five Pillars</h2>
+  <table>
+    <thead><tr><th>Pillar</th><th>Requirement</th><th>Sovereign Mapping</th></tr></thead>
+    <tbody>
+      <tr><td>1. Clinical Safety</td><td>DCB0129 / DCB0160</td><td>sov_dose_response, sov_physical_simulate, 12-around-1 BFT clinical sign-off</td></tr>
+      <tr><td>2. Data Protection</td><td>UK GDPR + DSPT</td><td>sov_pii_redact, sov_dorado_pqc_status, UK sovereign region</td></tr>
+      <tr><td>3. Technical Security</td><td>NHS DSPT + Cyber Essentials Plus</td><td>sov_dorado_status, sov_soc_bot_detector</td></tr>
+      <tr><td>4. Interoperability</td><td>FHIR + HL7 + NHS Spine</td><td>REST API, A2A agent card, 22 MCP bridges</td></tr>
+      <tr><td>5. Usability & Accessibility</td><td>WCAG 2.2 AA + NHS Service Manual</td><td>WCAG-verified sovereign surface, NHS design system</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Clinical Safety — DCB0129 / DCB0160</h2>
+  <p>Every clinical-safety-relevant tool in the sovereign system carries a Hazard Log and Clinical Safety Case File, with SIGIL-signed evidence of:</p>
+  <ul>
+    <li>Intended use, user profile, and patient population.</li>
+    <li>Risk register with mitigations and residual-risk acceptance.</li>
+    <li>Clinical Safety Officer (CSO) sign-off per release.</li>
+    <li>Post-deployment surveillance and incident reporting.</li>
+    <li>Annual safety case review and update.</li>
+  </ul>
+  <blockquote>"A sovereign system in clinical use is not a tool — it is a colleague. Treat colleagues with the same respect as patients."</blockquote>
+</section>
+
+<section>
+  <h2>MHRA UKCA Software as a Medical Device</h2>
+  <p>For SaMD-class tools, the sovereign system provides:</p>
+  <ul>
+    <li>UKCA technical documentation aligned to UK MDR 2002 (as amended).</li>
+    <li>Quality Management System per ISO 13485.</li>
+    <li>Risk Management File per ISO 14971.</li>
+    <li>Usability Engineering File per IEC 62366-1.</li>
+    <li>Vigilance and post-market surveillance system.</li>
+    <li>Unique Device Identification (UDI-DI) per MHRA guidance.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>NICE Evidence Standards Framework</h2>
+  <p>For AI tools within the scope of NICE evidence evaluation:</p>
+  <ol>
+    <li><strong>Design stage</strong> — User need, intended use, target population, comparators.</li>
+    <li><strong>Effectiveness</strong> — Clinical-effectiveness studies (ideally RCT), real-world evidence, outcome measures.</li>
+    <li><strong>Economic</strong> — Cost-effectiveness vs standard of care, budget impact.</li>
+    <li><strong>Patient & service</strong> — Patient-reported outcomes, service-delivery impact.</li>
+    <li><strong>Implementation</strong> — Integration pathway, training, ongoing monitoring.</li>
+  </ol>
+  <p>All five tiers are SIGIL-signed and audit-ready for NICE submission.</p>
+</section>
+
+<section>
+  <h2>DEFONEOS MEDEVAC — Clinical Example</h2>
+  <p>The DEFONEOS MEDEVAC capability of CSOAI Ltd is the canonical NHS-mapped sovereign tool. It provides:</p>
+  <ul>
+    <li>Triage routing aligned to NICE NG39 (major trauma) and NHS Pathways.</li>
+    <li>Clinical safety case with Hazard Log covering 17 failure modes.</li>
+    <li>UK sovereign region only; no cross-border data flow.</li>
+    <li>Article 50 watermarking on any AI-generated medical imagery.</li>
+    <li>Care-pattern monitoring for clinician burnout (sov_analyze_care_patterns).</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ratification</h2>
+  <p>The UK NHS pillar enters force on Saturday 4 July 2026 at 09:00 BST. It binds any NHS-engagement of the sovereign system; deviations are SIGIL-signed and reported to MHRA / NHS England per regulatory obligation.</p>
+  <div class="related">
+    <a href="index.html">Charter Hub</a>
+    <a href="sovereign-charter.html">Sovereign Charter</a>
+    <a href="care-charter.html">Care Charter</a>
+    <a href="uk-cabinet-office.html">UK Cabinet Office</a>
+    <a href="uk-defence.html">UK Defence</a>
+  </div>
+</section>
+
+</div>
+
+<div class="footer">
+  <p>🜏 UK NHS Pillar — Published by <strong>CSOAI Ltd (UK 16939677)</strong> · DEFONEOS · 2026</p>
+  <p>Public · Auditable · Sovereign · <a href="/">csoai.org</a> · <a href="/sovereign-constitution/">Sovereign Constitution</a> · <a href="/manifesto/">Manifesto</a> · <a href="/blog/">Blog</a></p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-ue5-bridge-mcp"
+version = "1.0.0"
+description = "UE5 SovTown bridge MCP - absorbs the 1640 lines of UE5 C++ into the sovereign substrate. Mirrors the SovTownEngine.h + Avatar/VRMCharacter.h + Hives/Actor.cpp + IoT/Beacon.cpp + MCP/Bridge.cpp C++ classes."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

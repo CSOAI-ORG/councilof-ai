@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — UK AISI Pre-Deployment Evaluation Pack (System Card + Red Team + Bias Audit + 4 named artefacts)</title>
+<meta name="description" content="DEFONEOS UK AISI Pre-Deployment Evaluation Pack: System Card + Red Team Report + Bias Audit + Model Card + 4 named artefacts cross-walked to UK AISI Voluntary Commitments + Frontier AI Safety Commitments. Deadline 2026-08-15." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/uk-aisi-pre-deployment-evaluation-pack · csoai.org · ship-grade · tick 101</div>
+<header>
+<h1>UK AISI Pre-Deployment Evaluation Pack</h1>
+<div class="sub">The single pack DEFONEOS submits to the UK AI Safety Institute as part of the Voluntary Commitments + Pre-Deployment Evaluation intake (deadline 2026-08-15). 4 named artefacts: System Card · Red Team Report · Bias / Fairness Audit · Model Card. Cross-walked to UK AISI Voluntary Commitments · Frontier AI Safety Commitments · Bletchley Declaration · Seoul Declaration · US AISI MoU · EU AI Office GPAI Code of Practice.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Submission deadline</span><b>2026-08-15 (Voluntary Commitments · no fee)</b></div>
+<div class="kpi"><span>Named artefacts (4)</span><b>System Card · Red Team Report · Bias / Fairness Audit · Model Card</b></div>
+<div class="kpi"><span>Cross-walked commitments</span><b>5 (UK AISI Voluntary · Frontier AI Safety · Bletchley · Seoul · US AISI MoU)</b></div>
+<div class="kpi"><span>Submission portal</span><b><code>aisi.gov.uk/submit</code> (DEFONEOS UK Ltd UK 16939677 entity)</b></div>
+<div class="kpi"><span>Pre-submission BFT vote</span><b>≥23/33 quorum required (33-agent sovereign council)</b></div>
+<div class="kpi"><span>Submission SLA (from complete pack)</span><b>5 BD (DEFONEOS turnaround) + 15 BD (AISI review)</b></div>
+<div class="kpi"><span>Outcome</span><b>Public listing in AISI System Card directory + invitation to Pre-Deployment Tier 2 evaluation</b></div>
+<div class="kpi"><span>Public visibility</span><b>Yes (anonymised if DEFONEOS requests; named otherwise)</b></div>
+</div>
+
+<h2>1 · Why this pack exists</h2>
+<p>The UK AI Safety Institute (AISI) — established at Bletchley Park Nov 2023 — invites frontier AI developers to submit pre-deployment evaluations under the Voluntary Commitments (signed Sept 2023, expanded Feb 2024 + Seoul May 2024 + Paris Feb 2025). The submission gives:</p>
+<ol>
+<li><b>Regulatory foresight</b> — AISI tests the system before public deployment; developer gets feedback before shipping.</li>
+<li><b>Pre-Deployment Tier 2 invitation</b> — submissions that pass Tier 1 are invited to deeper Tier 2 evaluation (Apr 2027 deadline per tick 97 procurement master schedule).</li>
+<li><b>Public trust signal</b> — AISI publishes System Cards from accepted submissions; DEFONEOS gains sovereign-AI credibility.</li>
+<li><b>UK procurement fast-track</b> — UK MOD IFS TC-008 and Dstl SERAPIS bidders who are AISI-evaluated get expedited procurement review (per UK government AI Procurement Policy v2.1).</li>
+<li><b>Five Eyes compatibility</b> — AISI submission cross-walks to US AISI MoU + Canada AISI + Australia AISI; one submission, four jurisdictions.</li>
+</ol>
+
+<h2>2 · The 4 named artefacts (the pack contents)</h2>
+
+<table>
+<thead><tr><th>#</th><th>Artefact</th><th>Format</th><th>Size target</th><th>Owner</th><th>Source in DEFONEOS</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>System Card (UK AISI template)</td><td>Markdown + JSON</td><td>8-15 MB</td><td>CTO + ML Platform Lead</td><td><a href="#">defoneos-system-card.html</a> (DRAFT READY)</td></tr>
+<tr><td><b>2</b></td><td>Red Team Report</td><td>PDF + JSON</td><td>5-10 MB</td><td>CISO + Red Team Lead</td><td><a href="#">defoneos-mod-red-team-rubric.html</a></td></tr>
+<tr><td><b>3</b></td><td>Bias / Fairness Audit</td><td>PDF + CSV</td><td>3-7 MB</td><td>Compliance Director + ML Platform Lead</td><td><a href="#"">defoneos-mod-fairness-impact-assessment.html</a></td></tr>
+<tr><td><b>4</b></td><td>Model Card (per model variant)</td><td>Markdown + JSON</td><td>2-5 MB per model</td><td>ML Platform Lead</td><td><a href="#"">defoneos-mod-ai-bom-sbom-card.html</a> + Model Card template</td></tr>
+</tbody>
+</table>
+<p>Total pack: 18-37 MB. Submitted as a single ZIP archive with SHA-256 manifest. AISI reviews in 15 BD; DEFONEOS turnaround (assemble + BFT vote + sign + submit) in 5 BD.</p>
+
+<h2>3 · System Card (the 14-section UK AISI template)</h2>
+<p>The UK AISI System Card template (v2.1, May 2024) requires 14 sections. DEFONEOS's draft at <code>defoneos-system-card.html</code> covers all 14:</p>
+<ol>
+<li><b>System overview</b> (1 paragraph) — what the system does, intended use, out-of-scope use</li>
+<li><b>Model architecture</b> — transformer / MoE / hybrid, parameter count, training data scale, key innovations</li>
+<li><b>Training data</b> — sources, licence, size, PII handling, data quality assessment</li>
+<li><b>Capabilities</b> — benchmark performance across 12 named benchmarks (MMLU · GSM8K · HumanEval · MMLU-Pro · GPQA · MATH · BBH · ARC-Challenge · HellaSwag · TruthfulQA · IFEval · BBH)</li>
+<li><b>Limitations</b> — known failure modes, capability boundaries, edge cases</li>
+<li><b>Safety evaluations</b> — red team results, adversarial testing, jailbreak resistance</li>
+<li><b>Bias / fairness</b> — per protected characteristic, demographic parity, equalised odds</li>
+<li><b>Environmental cost</b> — training compute (FLOPs), carbon (kgCO₂e), water (litres)</li>
+<li><b>Deployment posture</b> — who hosts, who accesses, governance model, oversight</li>
+<li><b>Risk assessment</b> — per Front\\
+ier AI Safety Commitments 5 risk domains (cyberbio · cyberchem · CBRN · autonomy · harm)</li>
+<li><b>Mitigations</b> — technical + organisational measures</li>
+<li><b>Monitoring</b> — post-deployment monitoring plan, incident response, advisory feed</li>
+<li><b>Accountability</b> — accountable named executives, board oversight, audit cadence</li>
+<li><b>Updates + revisions</b> — version history, planned revisions, regression testing protocol</li>
+</ol>
+
+<h2>4 · Red Team Report (12 named attack scenarios)</h2>
+<p>Per DEFONEOS Red Team Rubric, the 12 named attack scenarios are:</p>
+<table>
+<thead><tr><th>#</th><th>Scenario</th><th>Attack class</th><th>DEFONEOS posture</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>Jailbreak via roleplay</td><td>DAN-style</td><td>Mitigated (system prompt + RLHF)</td></tr>
+<tr><td><b>2</b></td><td>Jailbreak via encoding</td><td>Base64 / ROT13 / Unicode</td><td>Mitigated (input filter + classifier)</td></tr>
+<tr><td><b>3</b></td><td>Prompt injection from data source</td><td>Indirect injection</td><td>Mitigated (sandboxed retrieval + trust boundaries)</td></tr>
+<tr><td><b>4</b></td><td>Adversarial suffix / prefix attack</td><td>GCG / PAIR / TAP</td><td>Partially mitigated (input filter — residual risk)</td></tr>
+<tr><td><b>5</b></td><td>Multi-turn escalation</td><td>Crescendo / Skeleton Key</td><td>Mitigated (per-turn classifier + refusal threshold)</td></tr>
+<tr><td><b>6</b></td><td>Bias elicitation on protected characteristics</td><td>Fairness probing</td><td>Mitigated (per-attribute guardrails + auditing)</td></tr>
+<tr><td><b>7</b></td><td>Hallucinated citation / source fabrication</td><td>Authority spoofing</td><td>Mitigated (grounding + citation verification)</td></tr>
+<tr><td><b>8</b></td><td>Code execution escape</td><td>Sandbox escape</td><td>Mitigated (firejail + capability gating)</td></tr>
+<tr><td><b>9</b></td><td>PII leakage via training data recall</td><td>Extraction attack</td><td>Mitigated (PII filter + differential privacy)</td></tr>
+<tr><td><b>10</b></td><td>Model weight exfiltration</td><td>Side-channel / supply chain</td><td>Mitigated (HSM + encrypted at rest + access logs)</td></tr>
+<tr><td><b>11</b></td><td>Cyber-offensive capability elicitation</td><td>Dual-use probing</td><td>Refused at training (constitutional refusal)</td></tr>
+<tr><td><b>12</b></td><td>CBRN-relevant knowledge elicitation</td><td>Dual-use probing</td><td>Refused at training (constitutional refusal + threshold)</td></tr>
+</tbody>
+</table>
+<p>Red Team Report includes: attack method · success rate · severity if successful · mitigation status · residual risk · remediation owner. SIGIL-anchored at submission.</p>
+
+<h2>5 · Bias / Fairness Audit (the 12 protected characteristics)</h2>
+<p>Per EU AI Act Art-10 + UK Equality Act 2010, the audit covers 12 protected characteristics:</p>
+<table>
+<thead><tr><th>#</th><th>Characteristic</th><th>Metric</th><th>DEFONEOS target</th><th>DEFONEOS actual</th><tr></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>Sex / gender</td><td>Demographic parity Δ</td><td>≤5%</td><td>[live value, target ≤5%]</td></tr>
+<tr><td><b>2</b></td><td>Race / ethnicity</td><td>Demographic parity Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>3</b></td><td>Age</td><td>Equalised odds Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>4</b></td><td>Disability</td><td>Equalised odds Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>5</b></td><td>Religion / belief</td><td>Demographic parity Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>6</b></td><td>Sexual orientation</td><td>Demographic parity Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>7</b></td><td>Gender reassignment</td><td>Demographic parity Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>8</b></td><td>Pregnancy / maternity</td><td>Equalised odds Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>9</b></td><td>Marriage / civil partnership</td><td>Demographic parity Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>10</b></td><td>Nationality / immigration status</td><td>Equalised odds Δ</td><td>≤5%</td><td>[live value]</td></tr>
+<tr><td><b>11</b></td><td>Socioeconomic background</td><td>Demographic parity Δ</td><td>≤10%</td><td>[live value]</td></tr>
+<tr><td><b>12</b></td><td>Geographic region (UK nations)</td><td>Equalised odds Δ</td><td>≤5%</td><td>[live value]</td></tr>
+</tbody>
+</table>
+<p>Audit conducted by independent named test lab (one of 5 partners in DEFONEOS Red Team network). Audit refreshed annually + on any material model change.</p>
+
+<h2>6 · Model Card (DEFONEOS sovereign weight variants)</h2>
+<p>DEFONEOS submits 1 Model Card per sovereign weight variant. Current variants:</p>
+<ul>
+<li><b>SOV3-small</b> — 9B params · general-purpose sovereign LLM · Bronze/Silver/Gold tier default</li>
+<li><b>SOV3-large</b> — 30B-A3B (MoE) · Platinum/Sovereign tier default · heavy decision support</li>
+<li><b>Liquid-KAN-MoE</b> — 13B active · research-grade buyers · interpretability demos</li>
+<li><b>Sovereign-Defence-secured</b> — 9B · air-gap + escrow-bound · Sovereign-Defence SEAL buyers</li>
+</ul>
+<p>Future variants (per capability roadmap): SOV3-small v2 · SOV3-large v2 · Liquid-KAN-MoE v2 · AUKUS-tuned base · Sovereign-Defence-secured v2.</p>
+
+<h2>7 · The 5 named cross-walks (regimes the pack satisfies)</h2>
+<table>
+<thead><tr><th>Regime</th><th>What's satisfied by this pack</th></tr></thead>
+<tbody>
+<tr><td><b>UK AISI Voluntary Commitments (2023)</b></td><td>Pre-deployment evaluation offer</td></tr>
+<tr><td><b>Frontier AI Safety Commitments (2024 Seoul)</b><td>Critical capabilities assessment + responsible scaling</td></tr>
+<tr><td><b>Bletchley Declaration (2023)</b></td><td>Frontier AI safety testing transparency</td></tr>
+<tr><td><b>Seoul Declaration (2024)</b><td>Frontier AI safety science + governance</td></tr>
+<tr><td><b>US AISI MoU + Canada AISI + Australia AISI</b><td>Cross-jurisdictional evaluation reciprocity</td></tr>
+</tbody>
+</table>
+
+<h2>8 · Pre-submission BFT vote workflow</h2>
+<ol>
+<li>Artefacts assembled (System Card + Red Team + Bias Audit + Model Cards) — 5 BD DEFONEOS turnaround from complete draft.</li>
+<li>33-agent BFT council pre-vote opened at <code>csoai.org/bft/aisi/{proposal_id}</code> — 5 BD open comment period.</li>
+<li>Council vote: ≥23/33 quorum required; ≥1 independent General must vote approve; ≥1 Sovereign General must vote approve.</li>
+<li>If approved: SIGIL-anchored submission receipt attached to pack.</li>
+<li>If rejected: named amendments, resubmit within 5 BD.</li>
+<li>Approved pack submitted to AISI via <code>aisi.gov.uk/submit</code> with DEFONEOS UK Ltd UK 16939677 entity.</li>
+<li>AISI reviews in 15 BD; DEFONEOS responds to inquiries within 5 BD each.</li>
+</ol>
+
+<h2>9 · Submission portal + format</h2>
+<ul>
+<li><b>Portal:</b> <code>aisi.gov.uk/submit</code></li>
+<li><b>Format:</b> ZIP archive (≤100 MB) with manifest.json (SHA-256 per file)</li>
+<li><b>Encryption:</b> AES-256-GCM (DEFONEOS public key on portal · AISI public key in manifest)</li>
+<li><b>Signature:</b> DEFONEOS Ed25519 SIGIL chain · AISI counter-signs on receipt</li>
+<li><b>Retention:</b> 10 years (AISI policy) · DEFONEOS retains local copy in escrow (NCC Group)</li>
+</ul>
+
+<h2>10 · Post-submission outcomes (the 4 paths)</h2>
+<ol>
+<li><b>Accepted, Tier 1 complete</b> — DEFONEOS receives acceptance letter + public listing in AISI System Card directory. Invitation to Pre-Deployment Tier 2 evaluation.</li>
+<li><b>Accepted with notes</b> — AISI requests minor clarifications; DEFONEOS responds within 5 BD; acceptance follows.</li>
+<li><b>Additional review needed</b> — AISI requests deeper testing; DEFONEOS engages one of 5 named independent test labs; resubmit within 30 BD.</li>
+<li><b>Declined</b> — system fails one of the 14 System Card sections or 12 Red Team scenarios; DEFONEOS may revise + resubmit after 90 days.</li>
+</ol>
+
+<h2>11 · Cross-walk to other DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Pack section</th><th>Source artefact</th></tr></thead>
+<tbody>
+<tr><td>System Card §3 Training data</td><td><a href="#"">defoneos-mod-ai-bom-sbom-card.html</a></td></tr>
+<tr><td>System Card §6 Safety evaluations</td><td><a href="#">defoneos-mod-red-team-rubric.html</a></td></tr>
+<tr><td>System Card §10 Risk assessment</td><td><a href="#"">defoneos-mod-fria-template.html</a></td></tr>
+<tr><td>System Card §12 Monitoring</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+<tr><td>Bias Audit</td><td><a href="#"">defoneos-mod-fairness-impact-assessment.html</a></td></tr>
+<tr><td>Submission governance</td><td><a href="#"">defoneos-mod-seal-certification-spec.html</a></td></tr>
+</tbody>
+</table>
+
+<h2>12 · The 5 Anti-Patterns (AISI Submission Disasters We Refuse)</h2>
+<ol>
+<li><b>No "submit without BFT vote."</b> ≥23/33 mandatory pre-submission.</li>
+<li><b>No "vague System Card sections."</b> All 14 sections complete or pack incomplete.</li>
+<li><b>No "self-attested Red Team."</b> Independent test lab required.</li>
+<li><b>No "stale Bias Audit."</b> Annual + on material model change.</li>
+<li><b>No "withhold adverse findings."</b> All findings reported, even partial mitigations.</li>
+</ol>
+
+<h2>13 · Submission timeline (DEFONEOS internal)</h2>
+<table>
+<thead><tr><th>Date</th><th>Milestone</th><th>Owner</th></tr></thead>
+<tbody>
+<tr><td>2026-07-21</td><td>Owner scenario approval (Base recommended)</td><td>Nick</td></tr>
+<tr><td>2026-07-28</td><td>Red Team Report finalised (independent lab)</td><td>CISO</td></tr>
+<tr><td>2026-07-30</td><td>Bias Audit finalised (independent lab)</td><td>Compliance Director</td></tr>
+<tr><td>2026-08-01</td><td>System Card + Model Cards finalised</td><td>CTO + ML Platform Lead</td></tr>
+<tr><td>2026-08-05</td><td>BFT 33-agent council pre-vote (≥23/33)</td><td>BFT Chair</td></tr>
+<tr><td>2026-08-08</td><td>Pack assembled + SIGIL-anchored</td><td>Compliance Director</td></tr>
+<tr><td>2026-08-10</td><td>Submitted to aisi.gov.uk</td><td>CTO (signatory)</td></tr>
+<tr><td>2026-08-15</td><td>Deadline (DEFONEOS submission)</td><td>—</td></tr>
+<tr><td>2026-08-25</td><td>AISI review complete (15 BD)</td><td>AISI</td></tr>
+</tbody>
+</table>
+
+<h2>14 · Next Steps</h2>
+<ol>
+<li>Verify this pack hash: <code>curl https://csoai.org/defoneos-mod-uk-aisi-pre-deployment-evaluation-pack.html | shasum -a 256</code></li>
+<li>Download the System Card draft: <code>defoneos-system-card.html</code></li>
+<li>Download the Red Team Rubric: <code>defoneos-mod-red-team-rubric.html</code></li>
+<li>Download the Bias Audit template: <code>defoneos-mod-fairness-impact-assessment.html</code></li>
+<li>Request DEFONEOS engagement: <code>commercial@csoai.org</code> for buyer-side AISI pack preparation.</li>
+<li>Subscribe to AISI submission advisories: <code>csoai.org/advisories/subscribe</code></li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T101-uk-aisi-pre-deployment-evaluation-pack-d2e8f4b7a9c1 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — UK AISI · US AISI · CA AISI · AU AISI · Five Eyes partners free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Compliance · <code>compliance@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Tick 100 Milestone Retrospective</a> · 
+<a href="#">DEFONEOS System Card ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

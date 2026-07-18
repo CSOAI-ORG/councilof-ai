@@ -1,0 +1,243 @@
+{
+  "generated_at": "2026-06-23T05:16:40.944219+00:00",
+  "preview_url": "https://ui-cxspon4o5-niks-projects-0a2ef942.vercel.app",
+  "summary": {
+    "pass": 21,
+    "fail": 0,
+    "warn": 0,
+    "total": 21
+  },
+  "checks": [
+    {
+      "category": "Mac Services",
+      "name": "MEOK_UI",
+      "url": "http://127.0.0.1:3000/",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 3.1809999999999996,
+      "detail": "",
+      "body_snippet": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n<head>\n<meta http-equi"
+    },
+    {
+      "category": "Mac Services",
+      "name": "SOV3",
+      "url": "http://127.0.0.1:3101/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 82.266,
+      "detail": "",
+      "body_snippet": "{\"status\":\"healthy\",\"timestamp\":\"2026-06-23T05:16:08.616709\",\"version\":\"2.0.0\",\"production_calls_today\":11,\"components\":"
+    },
+    {
+      "category": "Mac Services",
+      "name": "MEOK_MCP",
+      "url": "http://127.0.0.1:3102/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 4.143,
+      "detail": "",
+      "body_snippet": "{\"status\":\"healthy\",\"timestamp\":\"2026-06-23T06:16:08.605239\",\"version\":\"3.0.0\",\"components\":{\"neural_models\":{\"care_vali"
+    },
+    {
+      "category": "Mac Services",
+      "name": "MEOK_API",
+      "url": "http://127.0.0.1:3200/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 1.914,
+      "detail": "",
+      "body_snippet": "{\"status\":\"operational\",\"service\":\"meok-api\",\"version\":\"3.0.0\",\"timestamp\":\"2026-06-23T06:16:08.616156\",\"council_nodes\":"
+    },
+    {
+      "category": "Mac Services",
+      "name": "Farm_Vision",
+      "url": "http://127.0.0.1:8888/",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 1.961,
+      "detail": "",
+      "body_snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width"
+    },
+    {
+      "category": "Mac Services",
+      "name": "Sovereign Town",
+      "url": "http://127.0.0.1:3940/",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 4.433000000000001,
+      "detail": "",
+      "body_snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initia"
+    },
+    {
+      "category": "Mac Services",
+      "name": "FreeLLMAPI",
+      "url": "http://127.0.0.1:3001/v1/models",
+      "expected": "401",
+      "status": "pass",
+      "code": "401",
+      "latency_ms": 0.9970000000000001,
+      "detail": "",
+      "body_snippet": "{\"error\":{\"message\":\"Invalid API key\",\"type\":\"authentication_error\"}}"
+    },
+    {
+      "category": "VM Services",
+      "name": "SOV3 VM",
+      "url": "http://127.0.0.1:3101/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 154.465,
+      "detail": "",
+      "body_snippet": "{\"status\":\"healthy\",\"timestamp\":\"2026-06-23T05:16:08.823902\",\"version\":\"2.0.0\",\"production_calls_today\":11,\"components\":"
+    },
+    {
+      "category": "VM Services",
+      "name": "King Hive",
+      "url": "http://127.0.0.1:8077/api/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 59.318000000000005,
+      "detail": "",
+      "body_snippet": "{\"ok\": true, \"characters\": 27, \"version\": \"1.5.0\"}"
+    },
+    {
+      "category": "VM Services",
+      "name": "Keystone",
+      "url": "http://127.0.0.1:8888/",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 3.747,
+      "detail": "",
+      "body_snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width"
+    },
+    {
+      "category": "VM Services",
+      "name": "EU Gateway",
+      "url": "http://127.0.0.1:8889/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 106.351,
+      "detail": "",
+      "body_snippet": "{\"status\":\"ok\",\"server\":\"meok-eu-compliance-gateway\",\"version\":\"1.1.0\",\"x402_enabled\":false,\"x402_price_per_call_usd\":nu"
+    },
+    {
+      "category": "VM Services",
+      "name": "OLM Router",
+      "url": "http://127.0.0.1:8890/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 69.714,
+      "detail": "",
+      "body_snippet": "{\"status\":\"ok\",\"server\":\"meok-sovereign-olm-router\",\"tiers\":{\"1_fusion_council\":\"https://api.councilof.ai/fuse\",\"2_auto_"
+    },
+    {
+      "category": "VM Services",
+      "name": "Dashboard",
+      "url": "http://127.0.0.1:8891/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 160.442,
+      "detail": "",
+      "body_snippet": "{\"status\":\"ok\",\"server\":\"meok-sovereign-dashboard\",\"sov3\":\"http://localhost:3101\"}"
+    },
+    {
+      "category": "Bridges",
+      "name": "SOV3 bridge_think",
+      "url": "http://127.0.0.1:3101/mcp",
+      "expected": "200 reply",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 29002.327,
+      "detail": "29002 ms",
+      "body_snippet": "{\"jsonrpc\":\"2.0\",\"id\":\"audit\",\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\n  \\\"character\\\": \\\"Aria\\\",\\n  \\\"emoji\\\": \\\""
+    },
+    {
+      "category": "Data",
+      "name": "Town Feed Freshness",
+      "url": "/Users/nicholas/clawd/policy-lab/town_feed.json",
+      "expected": "present",
+      "status": "pass",
+      "code": "",
+      "latency_ms": 0.0,
+      "detail": "555 rounds, 86 attestable, generated 2026-06-23T05:09:44.916638+00:00",
+      "body_snippet": ""
+    },
+    {
+      "category": "Frontend",
+      "name": "Home",
+      "url": "https://ui-cxspon4o5-niks-projects-0a2ef942.vercel.app/",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 548.4449999999999,
+      "detail": "",
+      "body_snippet": "<!DOCTYPE html><!--ueKYDODZM8N5jxiD9bMT2--><html lang=\"en\" class=\"dark\"><head><meta charSet=\"utf-8\"/><meta name=\"viewpor"
+    },
+    {
+      "category": "Frontend",
+      "name": "/town-3d",
+      "url": "https://ui-cxspon4o5-niks-projects-0a2ef942.vercel.app/town-3d",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 288.24699999999996,
+      "detail": "",
+      "body_snippet": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-w"
+    },
+    {
+      "category": "Frontend",
+      "name": "/apps",
+      "url": "https://ui-cxspon4o5-niks-projects-0a2ef942.vercel.app/apps",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 315.543,
+      "detail": "",
+      "body_snippet": "<!DOCTYPE html><!--ueKYDODZM8N5jxiD9bMT2--><html lang=\"en\" class=\"dark\"><head><meta charSet=\"utf-8\"/><meta name=\"viewpor"
+    },
+    {
+      "category": "Frontend",
+      "name": "/api/health",
+      "url": "https://ui-cxspon4o5-niks-projects-0a2ef942.vercel.app/api/health",
+      "expected": "200",
+      "status": "pass",
+      "code": "200",
+      "latency_ms": 440.936,
+      "detail": "",
+      "body_snippet": "{\"status\":\"healthy\",\"service\":\"meok-ui\",\"timestamp\":\"2026-06-23T05:16:39.932Z\"}"
+    },
+    {
+      "category": "Frontend",
+      "name": "/api/sov3/think",
+      "url": "https://ui-cxspon4o5-niks-projects-0a2ef942.vercel.app/api/sov3/think",
+      "expected": "405",
+      "status": "pass",
+      "code": "405",
+      "latency_ms": 357.98600000000005,
+      "detail": "",
+      "body_snippet": ""
+    },
+    {
+      "category": "Env",
+      "name": "VM MEOK_MASTER_API_KEY",
+      "url": "ssh meok-backend env",
+      "expected": "set",
+      "status": "pass",
+      "code": "0",
+      "latency_ms": 0.0,
+      "detail": "MEOK_MASTER_API_KEY=set\nSOV3_MCP_URL=missing",
+      "body_snippet": ""
+    }
+  ]
+}

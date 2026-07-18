@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MEOK AI Labs — The Trust Layer for the AI Economy | meok.ai</title>
+  <meta name="description" content="MEOK AI Labs (CSOAI Ltd, UK 16939677). 32-server MCP compliance fleet for EU AI Act, DORA, NIS2, CRA, CSRD, ISO 42001. Ed25519-signed attestations. 49 days to 2 Aug 2026. The .ai brand that absorbs every hive.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="MEOK AI Labs — Trust Layer for the AI Economy">
+  <meta property="og:description" content="32-server MCP compliance fleet. Ed25519-signed attestations. The .ai brand that absorbs every hive.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://meok.ai/">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="icon" href="https://meok.ai/favicon.ico">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"MEOK AI Labs",
+    "url":"https://meok.ai",
+    "logo":"https://meok.ai/logo.png",
+    "description":"The .ai brand that absorbs every hive. CSOAI Ltd, UK 16939677. 32-server MCP compliance fleet. Ed25519-signed attestations. 49 days to EU AI Act Article 50.",
+    "founder":{"@type":"Person","name":"Nicholas Templeman"},
+    "sameAs":["https://github.com/CSOAI-ORG","https://pypi.org/user/MEOK_AI_Labs/","https://hive-deploy.vercel.app"]
+  }
+  </script>
+  <style>
+    :root { --bg: #fff; --fg: #111; --mut: #666; --gold: #c9a84c; --line: #e5e7eb; --green: #16a34a; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--fg); line-height: 1.6; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    header.top { padding: 1rem 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-weight: 800; font-size: 1.4rem; color: var(--fg); text-decoration: none; }
+    .logo .ai { color: var(--gold); }
+    nav.top-nav { display: flex; gap: 1.5rem; font-size: 0.95rem; }
+    nav.top-nav a { color: var(--mut); text-decoration: none; }
+    nav.top-nav a:hover { color: var(--gold); }
+    .hero { padding: 4rem 0 2rem; }
+    .hero h1 { font-size: 3.2rem; letter-spacing: -0.02em; margin: 0 0 1rem; line-height: 1.1; }
+    .hero .lede { font-size: 1.3rem; color: var(--mut); margin: 0 0 1.5rem; max-width: 780px; }
+    .pill { display: inline-block; background: rgba(201,168,76,0.12); color: var(--gold); padding: 0.25rem 0.7rem; border-radius: 0.4rem; font-size: 0.85rem; font-weight: 600; margin-right: 0.4rem; }
+    .countdown { background: #fef2f2; border-left: 4px solid #dc2626; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0.4rem; display: flex; align-items: center; gap: 1.5rem; max-width: 700px; }
+    .countdown .num { font-size: 2.5rem; font-weight: 700; color: #dc2626; }
+    .countdown .label { font-size: 0.95rem; color: var(--mut); }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0; }
+    .cta { display: inline-block; background: var(--gold); color: #111; padding: 0.7rem 1.4rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; }
+    .cta.secondary { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+    .cta.ghost { background: transparent; color: var(--mut); border: 1px solid var(--line); }
+    section { padding: 3rem 0; }
+    h2 { font-size: 1.8rem; margin: 0 0 1rem; border-bottom: 1px solid var(--line); padding-bottom: 0.4rem; }
+    .hives { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .hive { background: #fafafa; border: 1px solid var(--line); border-radius: 0.5rem; padding: 1.25rem; }
+    .hive h3 { margin: 0 0 0.5rem; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+    .hive p { margin: 0; color: var(--mut); font-size: 0.9rem; }
+    .hive .pills { margin-top: 0.5rem; }
+    .hive a { display: block; margin-top: 0.5rem; color: var(--gold); text-decoration: none; font-size: 0.9rem; }
+    .industries { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; }
+    .ind-tile { background: #f9fafb; border: 1px solid var(--line); border-radius: 0.4rem; padding: 0.7rem; text-align: center; text-decoration: none; color: var(--fg); }
+    .ind-tile:hover { border-color: var(--gold); }
+    .ind-tile .n { font-weight: 600; }
+    .ind-tile .r { font-size: 0.8rem; color: var(--mut); margin-top: 0.3rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .stat { background: #f9fafb; padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--line); text-align: center; }
+    .stat .v { font-size: 1.5rem; font-weight: 700; }
+    .stat.hi .v { color: var(--gold); }
+    .stat .l { font-size: 0.8rem; color: var(--mut); text-transform: uppercase; letter-spacing: 0.05em; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .product { background: #f9fafb; border: 1px solid var(--line); border-radius: 0.5rem; padding: 1.25rem; }
+    .product h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+    .product .price { font-size: 1.4rem; font-weight: 700; margin: 0.5rem 0; }
+    .product ul { padding-left: 1.2rem; margin: 0.5rem 0; font-size: 0.9rem; }
+    .product .cta { display: inline-block; margin-top: 0.5rem; padding: 0.4rem 1rem; font-size: 0.9rem; }
+    .why { background: linear-gradient(135deg, rgba(201,168,76,0.04), rgba(201,168,76,0.10)); padding: 3rem 1.5rem; border-radius: 0.5rem; }
+    .why h2 { text-align: center; border: none; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .why-item { text-align: center; }
+    .why-item .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .why-item h4 { margin: 0 0 0.4rem; }
+    .why-item p { margin: 0; color: var(--mut); font-size: 0.9rem; }
+    footer.bottom { padding: 2rem 0; border-top: 1px solid var(--line); color: var(--mut); font-size: 0.85rem; }
+    footer.bottom .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
+    footer.bottom h5 { margin: 0 0 0.4rem; color: var(--fg); font-size: 0.9rem; }
+    footer.bottom ul { list-style: none; padding: 0; margin: 0; }
+    footer.bottom a { color: var(--mut); text-decoration: none; }
+    footer.bottom a:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a href="/" class="logo">MEOK<span class="ai">.ai</span></a>
+      <nav class="top-nav">
+        <a href="/os">OS</a>
+        <a href="/gaming">Gaming</a>
+        <a href="/industries">Industries</a>
+        <a href="/hive">Hive</a>
+        <a href="/compliance">Compliance</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/about">About</a>
+        <a href="/blog">Blog</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <p>
+        <span class="pill">EU AI Act</span>
+        <span class="pill">DORA</span>
+        <span class="pill">NIS2</span>
+        <span class="pill">ISO 42001</span>
+        <span class="pill">UK AI Bill</span>
+      </p>
+      <h1>The .ai brand that absorbs every hive.</h1>
+      <p class="lede">MEOK AI Labs (CSOAI Ltd, UK 16939677). The 32-server MCP compliance fleet. Ed25519-signed attestations your auditor verifies with a single <code>curl</code>. Every hive — sovereignty, gaming, compliance, opticians, COBOL — lives inside one .ai domain.</p>
+
+      <div class="countdown">
+        <div class="num" id="days-left">49</div>
+        <div class="label">days until EU AI Act Article 50 transparency obligations land (2 Aug 2026)</div>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta" href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro £199/mo →</a>
+        <a class="cta secondary" href="https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m">Book 48h Assessment £4950 →</a>
+        <a class="cta secondary" href="/hive">View the SOV3 hive →</a>
+        <a class="cta ghost" href="mailto:hello@meok.ai">Email Nick</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>By the numbers (live from the SOV3 hub)</h2>
+      <div class="stats">
+        <div class="stat hi"><div class="v">182</div><div class="l">SOV3 agents</div></div>
+        <div class="stat"><div class="v">76</div><div class="l">Active now</div></div>
+        <div class="stat hi"><div class="v">22</div><div class="l">Sigils on chain</div></div>
+        <div class="stat"><div class="v">56</div><div class="l">Tasks done</div></div>
+        <div class="stat hi"><div class="v">6/6</div><div class="l">MEOK packages on PyPI</div></div>
+        <div class="stat hi"><div class="v">100%</div><div class="l">EU AI Act 43/43</div></div>
+        <div class="stat hi"><div class="v">100%</div><div class="l">UK AI Bill readiness</div></div>
+        <div class="stat"><div class="v">12</div><div class="l">Frameworks crosswalked</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>The .ai portfolio — every hive absorbed</h2>
+      <p style="color: var(--mut); font-size: 1.05rem;">One meok.ai brand, ten live sub-domains, one sovereign UK company. Pick the entry point that matches your problem; the rest is unified underneath.</p>
+      <div class="hives">
+        <div class="hive">
+          <h3>meok.ai / <span style="color: var(--green); font-size: 0.7rem;">live</span></h3>
+          <p>The sovereign AI OS — 145KB home, 180KB /gaming, 12+ character pages, persistent memory, multi-LLM routing, Maternal Covenant ethics.</p>
+          <div class="pills"><span class="pill">Sovereign OS</span><span class="pill">Characters</span><span class="pill">Memory</span></div>
+          <a href="/os">Open the OS →</a>
+        </div>
+        <div class="hive">
+          <h3>proofof.ai <span style="color: var(--green); font-size: 0.7rem;">live</span></h3>
+          <p>The trust surface. 12.6KB catalogue page, 294-server compliance fleet, 48+ per-MCP scorecard pages, full llms.txt + openapi.json.</p>
+          <div class="pills"><span class="pill">Trust</span><span class="pill">Scorecard</span><span class="pill">Catalogue</span></div>
+          <a href="https://proofof.ai" target="_blank" rel="noopener noreferrer">Open ProofOf.AI →</a>
+        </div>
+        <div class="hive">
+          <h3>csoai.org <span style="color: var(--green); font-size: 0.7rem;">live</span></h3>
+          <p>Council for the Safety of AI. 21.9KB. 6+ charter articles. 12-framework master crosswalk. AISI alignment. Ed25519 Watchdog Certification.</p>
+          <div class="pills"><span class="pill">Council</span><span class="pill">Charter</span><span class="pill">Watchdog</span></div>
+          <a href="https://csoai.org" target="_blank" rel="noopener noreferrer">Open CSOAI.org →</a>
+        </div>
+        <div class="hive">
+          <h3>meok-attestation-api <span style="color: var(--green); font-size: 0.7rem;">live</span></h3>
+          <p>The keystone. v1.2.0. 17 endpoints. HMAC-SHA256 + Ed25519. Live sign + verify. 4 webhook handlers. The pricing tier wall (£199/mo Pro unlocks all 32 MCPs).</p>
+          <div class="pills"><span class="pill">Keystone</span><span class="pill">Sign</span><span class="pill">Verify</span></div>
+          <a href="https://meok-attestation-api.vercel.app" target="_blank" rel="noopener noreferrer">Open the keystone →</a>
+        </div>
+        <div class="hive">
+          <h3>wowmcp.ai <span style="color: var(--green); font-size: 0.7rem;">live</span></h3>
+          <p>World of Warcraft MCP for AI agents. 10 tools, 3 cross-game MCPs, COAI-certified, SOV3-attested. Live at wowmcp-deploy.vercel.app, awaiting $6.79 domain swap.</p>
+          <div class="pills"><span class="pill">Gaming</span><span class="pill">WoW</span><span class="pill">MCP</span></div>
+          <a href="https://wowmcp-deploy.vercel.app" target="_blank" rel="noopener noreferrer">Open wowmcp.ai →</a>
+        </div>
+        <div class="hive">
+          <h3>compliance.meok.ai <span style="color: var(--green); font-size: 0.7rem;">live</span></h3>
+          <p>EU AI Act + DORA + NIS2 + ISO 42001 centre. Live JS deadline countdown to 2 Aug 2026. 4 pricing tiers. 21+ frameworks. 3 case-study cards.</p>
+          <div class="pills"><span class="pill">Compliance</span><span class="pill">EU AI Act</span><span class="pill">Pricing</span></div>
+          <a href="https://compliance-meok-ai.vercel.app" target="_blank" rel="noopener noreferrer">Open compliance centre →</a>
+        </div>
+        <div class="hive">
+          <h3>templeman-opticians <span style="color: var(--green); font-size: 0.7rem;">live</span></h3>
+          <p>The cash business. Domiciliary eye care. ~2,800 visits/day across 14 local authorities. CQC-registered. Opticians that fund the AI empire.</p>
+          <div class="pills"><span class="pill">Cash biz</span><span class="pill">Domiciliary</span><span class="pill">CQC</span></div>
+          <a href="https://sovereign.templeman-opticians.com" target="_blank" rel="noopener noreferrer">Open Templeman Opticians →</a>
+        </div>
+        <div class="hive">
+          <h3>cobolbridge.ai <span style="color: #f59e0b; font-size: 0.7rem;">alpha</span></h3>
+          <p>Legacy modernisation. COBOL → Java/Go bridge. The MEOK portfolio's enterprise IT consulting arm.</p>
+          <div class="pills"><span class="pill">COBOL</span><span class="pill">Bridge</span><span class="pill">Modern</span></div>
+          <a href="https://cobolbridge.ai" target="_blank" rel="noopener noreferrer">Open cobolbridge.ai →</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>8 industries — same tooling, different regulator</h2>
+      <p style="color: var(--mut); font-size: 1.05rem;">Each industry has its own EU AI Act + sector-framework compliance page. Pick yours:</p>
+      <div class="industries">
+        <a class="ind-tile" href="https://industries-deploy.vercel.app/industries/fintech"><div class="n">Fintech</div><div class="r">100% UK AI Bill + EU AI Act 43/43</div></a>
+        <a class="ind-tile" href="https://industries-deploy.vercel.app/industries/healthtech"><div class="n">Healthtech</div><div class="r">SaMD + HIPAA + FDA AI/ML</div></a>
+        <a class="ind-tile" href="https://industries-deploy.vercel.app/industries/hrtech"><div class="n">HR-tech</div><div class="r">Annex III (4) hiring AI</div></a>
+        <a class="ind-tile" href="https://industries-deploy.vercel.app/industries/care-homes"><div class="n">Care homes</div><div class="r">Domiciliary + CQC + 14 LAs</div></a>
+        <a class="ind-tile" href="https://industries-deploy.vercel.app/industries/public-sector"><div class="n">Public sector</div><div class="r">Cabinet Office + AISI</div></a>
+        <a class="ind-tile" href="https://industries-deploy.vercel.app/industries/regtech"><div class="n">RegTech</div><div class="r">DORA + NIS2 + UK AI Bill</div></a>
+        <a class="ind-tile" href="https://industries-deploy.vercel.app/industries/legal"><div class="n">Legal</div><div class="r">Toronto + Montreal</div></a>
+        <a class="ind-tile" href="https://industries-deploy.vercel.app/industries/insurance"><div class="n">Insurance</div><div class="r">Article 50 + Solvency II</div></a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Pricing — every hive shares the same wall</h2>
+      <p style="color: var(--mut); font-size: 1.05rem;">One Pro £199/mo subscription unlocks all 32 MCPs in the catalogue across every hive. Same pricing for fintech, healthtech, care, gaming, sovereign OS.</p>
+      <div class="products">
+        <div class="product">
+          <h3>Free</h3>
+          <p class="price">£0</p>
+          <p style="color: var(--mut); font-size: 0.9rem;">200 calls/day per MCP. No signed receipts.</p>
+          <ul>
+            <li>All 32 MCPs in the catalogue</li>
+            <li>Free-tier <code>/sign</code></li>
+            <li>Community support</li>
+          </ul>
+          <a class="cta ghost" href="https://meok-attestation-api.vercel.app/signup">Start free →</a>
+        </div>
+        <div class="product" style="border-color: var(--gold); background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+          <h3>Pro <span style="background: rgba(201,168,76,0.12); color: var(--gold); padding: 0.15rem 0.4rem; border-radius: 0.3rem; font-size: 0.7rem; margin-left: 0.5rem;">MOST POPULAR</span></h3>
+          <p class="price">£199<span style="font-size: 0.9rem; color: var(--mut);">/mo</span></p>
+          <p style="color: var(--mut); font-size: 0.9rem;">1,000 calls/day per MCP. Signed Ed25519 receipts.</p>
+          <ul>
+            <li>All 32 MCPs</li>
+            <li>Signed Ed25519 attestations</li>
+            <li>Public verify URL per cert</li>
+            <li>Priority support</li>
+            <li>Offline verification tool</li>
+          </ul>
+          <a class="cta" href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro →</a>
+        </div>
+        <div class="product">
+          <h3>Enterprise</h3>
+          <p class="price">£1,499<span style="font-size: 0.9rem; color: var(--mut);">/mo</span></p>
+          <p style="color: var(--mut); font-size: 0.9rem;">Multi-tenant. Co-branded. On-prem.</p>
+          <ul>
+            <li>Everything in Pro</li>
+            <li>Co-branded attestations</li>
+            <li>Multi-tenant provisioning</li>
+            <li>On-prem deployment</li>
+            <li>Dedicated CSM</li>
+          </ul>
+          <a class="cta ghost" href="https://buy.stripe.com/fZu5kF0xS8wy9wpeGY8k91s">Buy Enterprise →</a>
+        </div>
+        <div class="product">
+          <h3>48h Assessment</h3>
+          <p class="price">£5,000<span style="font-size: 0.9rem; color: var(--mut);">one-time</span></p>
+          <p style="color: var(--mut); font-size: 0.9rem;">Full audit + remediation + signed cert.</p>
+          <ul>
+            <li>Full governance report</li>
+            <li>All in-scope frameworks</li>
+            <li>Remediation backlog</li>
+            <li>Signed Article 50 cert</li>
+            <li>30-min legal review</li>
+          </ul>
+          <a class="cta" href="https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m">Book 48h →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="why">
+      <h2>Why MEOK, not Big-4, not a generic GRC tool</h2>
+      <div class="why-grid">
+        <div class="why-item"><div class="icon">🇬🇧</div><h4>Sovereign UK</h4><p>CSOAI Ltd, UK 16939677. No EU dependency. No data leaves the UK. Built from the farm.</p></div>
+        <div class="why-item"><div class="icon">🏛️</div><h4>Independent</h4><p>100% Nick Templeman. Not VC-backed. Not acquirable. No exit pressure.</p></div>
+        <div class="why-item"><div class="icon">🔓</div><h4>Open source</h4><p>32 MCPs. Inspect the code, fork it, run it yourself. MIT licensed.</p></div>
+        <div class="why-item"><div class="icon">🔏</div><h4>Ed25519-signed</h4><p>Every attestation survives 7-year retention. Verify offline with one <code>pip install</code>.</p></div>
+        <div class="why-item"><div class="icon">⏱️</div><h4>4 days, not 8 weeks</h4><p>£4,950 vs Big-4 £40-80K. 4-working-day turnaround. Same tooling we use.</p></div>
+        <div class="why-item"><div class="icon">🪲</div><h4>Inject-scanned</h4><p>Every MCP server scanned by meok-mcp-injection-scan-mcp. 30+ canonical rules.</p></div>
+      </div>
+    </section>
+
+    <div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+<footer class="bottom">
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <h5>Portfolio</h5>
+            <ul>
+              <li><a href="/">meok.ai</a></li>
+              <li><a href="/gaming">/gaming</a></li>
+              <li><a href="/characters">/characters</a></li>
+              <li><a href="/os">/os</a></li>
+              <li><a href="https://proofof.ai">proofof.ai</a></li>
+              <li><a href="https://csoai.org">csoai.org</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Compliance</h5>
+            <ul>
+              <li><a href="https://compliance-meok-ai.vercel.app">compliance.meok.ai</a></li>
+              <li><a href="https://meok-attestation-api.vercel.app">keystone</a></li>
+              <li><a href="/hive">SOV3 hive</a></li>
+              <li><a href="https://industries-deploy.vercel.app">industries</a></li>
+              <li><a href="https://case-studies-deploy.vercel.app">case studies</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Gaming</h5>
+            <ul>
+              <li><a href="https://wowmcp-deploy.vercel.app">wowmcp.ai</a></li>
+              <li><a href="https://github.com/CSOAI-ORG/blizzard-wow-mcp">@csoai-org/blizzard-wow-mcp</a></li>
+              <li><a href="https://github.com/CSOAI-ORG/mmoagent-mcp">@csoai-org/mmoagent-mcp</a></li>
+              <li><a href="https://github.com/CSOAI-ORG/evergame-hive-mcp">@csoai-org/evergame-hive-mcp</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Other</h5>
+            <ul>
+              <li><a href="https://cobolbridge.ai">cobolbridge.ai</a></li>
+              <li><a href="https://sovereign.templeman-opticians.com">templeman-opticians</a></li>
+              <li><a href="/blog">blog</a></li>
+              <li><a href="/about">about</a></li>
+              <li><a href="mailto:hello@meok.ai">hello@meok.ai</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Tech</h5>
+            <ul>
+              <li><a href="https://github.com/CSOAI-ORG">GitHub (100+ repos)</a></li>
+              <li><a href="https://pypi.org/user/MEOK_AI_Labs/">PyPI (4 packages)</a></li>
+              <li><a href="https://hive-deploy.vercel.app">SOV3 hive</a></li>
+              <li><a href="/llms.txt">llms.txt</a></li>
+              <li><a href="/openapi.json">openapi.json</a></li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top: 1.5rem; text-align: center;">
+          © 2026 MEOK AI LABS · CSOAI LTD · UK Companies House <strong>16939677</strong> · Registered in England & Wales. Built with care. Sovereign UK infrastructure.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const target = new Date('2026-08-02T00:00:00Z');
+      const now = new Date();
+      const days = Math.max(0, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
+      const el = document.getElementById('days-left');
+      if (el) el.textContent = days;
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_intuitive_frequency_mcp"
+version = "1.0.0"
+description = "MEEK Intuitive Frequency MCP — the 6 human intuitive frequency mechanisms applied to the orb (mirror neurons + neural coupling + heartbeat + Schumann + vocal + skin conductance). CRITICAL for the bond. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "defoneos", "project-aurum", "intuitive-frequency", "bond", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-intuitive-frequency-mcp"
+
+[project.scripts]
+meek-intuitive-frequency-mcp = "meek_intuitive_frequency_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_intuitive_frequency_mcp"]

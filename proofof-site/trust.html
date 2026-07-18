@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛡️ Trust Proof — Sovereign SIGIL Receipts · MEOK OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(34,197,94,0.15) 0%,#000 100%);padding:3rem 2rem 2rem;text-align:center;border-bottom:2px solid #22c55e}
+.hero h1{color:#22c55e;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #22c55e}
+.hero p{color:#aaa;font-size:1.1rem;max-width:720px;margin:0 auto 1rem}
+.container{max-width:1100px;margin:0 auto;padding:0 1rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #22c55e}
+.section h2{color:#22c55e;margin-bottom:1rem}
+.kvp{background:#0a0a0a;padding:1rem;border-radius:6px;margin:.5rem 0;font-family:monospace;font-size:.85rem;display:grid;grid-template-columns:200px 1fr;gap:.7rem;border:1px solid #333}
+.kvp .k{color:#fbbf24}
+.kvp .v{color:#e5e5e5;word-break:break-all}
+.red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#ef4444}
+.green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#22c55e}
+.curl-block{background:#02060f;border:1px solid #4a9eff;border-radius:8px;padding:1.2rem 1.5rem;margin:1rem 0;font-family:monospace;font-size:.85rem;color:#4a9eff;overflow-x:auto;word-break:break-all}
+.curl-block pre{white-space:pre-wrap}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border:1px solid #22c55e;text-align:center}
+.stat-card .v{color:#22c55e;font-size:2rem;font-weight:bold;font-family:monospace}
+.stat-card .l{color:#888;font-size:.78rem;margin-top:.5rem}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+.honest-register{background:#0a0a0a;border:1px solid #fbbf24;border-radius:8px;padding:1.5rem;margin:1rem 0}
+.honest-register h4{color:#fbbf24;margin-bottom:.7rem;font-size:.95rem}
+.honest-register li{color:#aaa;font-size:.85rem;margin:.3rem 0;list-style-type:'·  '}
+.live-test{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border:1px solid #fbbf24}
+.live-test h3{color:#fbbf24;margin-bottom:1rem}
+.live-test .test-row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:.5rem 0;font-family:monospace;font-size:.85rem}
+.live-test input{padding:.4rem .7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;flex:1;min-width:200px}
+.live-test button{background:#fbbf24;color:#000;padding:.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:.7rem;font-family:monospace;font-size:.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap;word-break:break-all}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<a href="/waitlist">Waitlist</a>
+<a href="/audit">Audit</a>
+<a href="/api/stats" target="_blank">API</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>🛡️ Trust Proof</h1>
+<p>No marketing. No claims. The sovereign receipts are live. Verify anything yourself.<br>Ed25519 signed · RFC 8032 · Charter Article 0 binding.</p>
+</section>
+
+<div class="container">
+
+<!-- LIVE STATE -->
+<div class="section">
+<h2>📊 Live state (proofof.site-funnel)</h2>
+<div class="stats-grid" id="statsGrid">
+<div class="stat-card"><div class="v" id="stat-sigils">—</div><div class="l">SIGIL chain length</div></div>
+<div class="stat-card"><div class="v" id="stat-signups">—</div><div class="l">Live signups</div></div>
+<div class="stat-card"><div class="v" id="stat-waitlist">—</div><div class="l">Live waitlist</div></div>
+<div class="stat-card"><div class="v" id="stat-temp">—</div><div class="l">Care Floor</div></div>
+</div>
+<div class="honest-register">
+<h4>🪧 Honest register</h4>
+<li>Sigil + signup count is local-store (Vercel /tmp or ~/.sovereign-funnel), resets between cold-starts</li>
+<li>STR signing requires pynacl (Apache-2.0); falls back to SHA-256 if unavailable</li>
+<li>The audit receipt is the actual SIGIL chain entry, locked to the Charter SHA-256</li>
+<li>Outbound email is OWNER-GATED. The funnel converts; the next step is a human follow-up.</li>
+</div>
+</div>
+
+<!-- CHARTER -->
+<div class="section">
+<h2>📜 Charter fingerprint</h2>
+<div class="kvp"><div class="k">Charter SHA-256</div><div class="v" id="charter-sha">df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054</div></div>
+<div class="kvp"><div class="k">STR Ed25519 pubkey</div><div class="v">QD595cz6iQaEaYOjwwgLmMdoz1mtm1pzKBb9ygvMvf3xhQ28</div></div>
+<div class="kvp"><div class="k">SIGIL mint</div><div class="v">77ab0e6f9d6c77e8</div></div>
+<div class="kvp"><div class="k">Charter license</div><div class="v">CC0 1.0 (canonical) · Apache-2.0 (reference impl)</div></div>
+<div class="kvp"><div class="k">Operator</div><div class="v">CSOAI Ltd (UK 16939677)</div></div>
+<div class="kvp"><div class="k">Audit verify URL</div><div class="v">https://proofof.site/audit/&lt;digest&gt;</div></div>
+</div>
+
+<!-- RED LINES -->
+<div class="section">
+<h2>🛑 Article 15 red lines (immutable)</h2>
+<div class="red-line">❌ <strong>NO</strong> kinetic-targeting patterns (strike package / find-fix-finish / kill order)</div>
+<div class="red-line">❌ <strong>NO</strong> personal-surveillance patterns (track individual / face-rec / locate phone)</div>
+<div class="red-line">❌ <strong>NO</strong> "AUKUS partnership" / "DAIC certified" claim without a signed letter on file</div>
+<div class="red-line">❌ <strong>NO</strong> DEFONEOS-SEAL credential issued without a 33-agent BFT council vote (quorum 23/33)</div>
+<div class="red-line">❌ <strong>NO</strong> DSEI booth without a named UK-prime pilot letter</div>
+<div class="red-line">❌ <strong>NO</strong> reference to or acquisition of the <code>defonos.io</code> domain</div>
+<div class="red-line">❌ <strong>NO</strong> mixing of meok-defoneos / csoai-defoneos / dagon assets</div>
+<div class="green-line">✅ <strong>YES</strong> Charter Article 0 binding on every receipt</div>
+<div class="green-line">✅ <strong>YES</strong> Care Floor 0.95 — every drop is human-reviewed</div>
+<div class="green-line">✅ <strong>YES</strong> public SIGIL receipts on every signup</div>
+</div>
+
+<!-- LIVE TEST -->
+<div class="section">
+<h2>🧪 Verify a live receipt</h2>
+<div class="live-test">
+<h3>Test the API yourself</h3>
+<div class="test-row">
+<button onclick="testHealth()">1. /api/health</button>
+<button onclick="testCharter()">2. /api/charter</button>
+<button onclick="testStats()">3. /api/stats</button>
+</div>
+<div class="test-row">
+<input type="email" id="test-email" placeholder="email for signup test" value="test@proofof.site">
+<button onclick="testSignup()">4. POST /api/signup → see receipt</button>
+</div>
+<div class="result" id="test-result">Click any button above.</div>
+</div>
+</div>
+
+<!-- PUBLIC CURL PROOFS -->
+<div class="section">
+<h2>📋 Curl proofs (run yourself)</h2>
+<div class="curl-block"><pre>curl https://proofof.site/api/health</pre></div>
+<div class="curl-block"><pre>curl https://proofof.site/api/charter</pre></div>
+<div class="curl-block"><pre>curl https://proofof.site/api/stats</pre></div>
+<div class="curl-block"><pre>curl -X POST https://proofof.site/api/signup -H "Content-Type: application/json" \
+  -d '{"email":"you@example.com","persona":"end_user","jurisdiction":"UK"}'</pre></div>
+<div class="curl-block"><pre>curl -X POST https://proofof.site/api/waitlist -H "Content-Type: application/json" \
+  -d '{"email":"you@example.com","interest":"demo"}'</pre></div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"Don't trust. Verify.<br>Every claim has a curl one-liner.<br>Every receipt has a SIGIL. Every SIGIL has a Charter.<br>The dragon proves. The dragon sovereigns."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 149 sovereign MCPs · 584 HTML pages · Crown lineage 1795-3025</p>
+</div>
+
+<script>
+// Live state from /api/stats
+async function loadStats() {
+  try {
+    const r = await fetch('/api/stats');
+    const d = await r.json();
+    document.getElementById('stat-sigils').textContent = d.sigil_chain_length || 0;
+    document.getElementById('stat-signups').textContent = d.live_signups || 0;
+    document.getElementById('stat-waitlist').textContent = d.live_waitlist || 0;
+    document.getElementById('stat-temp').textContent = d.care_floor || '0.95';
+  } catch (e) {
+    document.getElementById('stat-sigils').textContent = 'ERR';
+    document.getElementById('stat-signups').textContent = 'ERR';
+    document.getElementById('stat-waitlist').textContent = 'ERR';
+  }
+}
+
+async function testHealth()  { const r = await fetch('/api/health'); document.getElementById('test-result').textContent = JSON.stringify(await r.json(), null, 2); }
+async function testCharter() { const r = await fetch('/api/charter'); document.getElementById('test-result').textContent = JSON.stringify(await r.json(), null, 2); }
+async function testStats()   { const r = await fetch('/api/stats'); document.getElementById('test-result').textContent = JSON.stringify(await r.json(), null, 2); }
+async function testSignup() {
+  const email = document.getElementById('test-email').value;
+  const r = await fetch('/api/signup', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, persona:'end_user', jurisdiction:'UK'})});
+  document.getElementById('test-result').textContent = JSON.stringify(await r.json(), null, 2);
+}
+
+loadStats();
+setInterval(loadStats, 10000);
+</script>
+
+</body>
+</html>

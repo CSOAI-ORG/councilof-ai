@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🗓️ Sovereign Roadmap — 12-Month Journey · Birth → Maturity</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a3a1a 50%,#02060f 100%);padding:2.5rem 2rem;text-align:center;border-bottom:1px solid #10b981}
+  .hero h1{color:#10b981;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #10b981}
+  .hero p{color:#aaa;font-size:1rem}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+  .stat-pill{background:rgba(16,185,129,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #10b981;color:#10b981;font-size:.85rem}
+  .progress{background:linear-gradient(135deg,#1a1a1a 0%,#2a1a1a 100%);padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #10b981;text-align:center}
+  .progress-bar{background:#0a0a0a;height:30px;border-radius:15px;margin:1rem auto;max-width:600px;overflow:hidden;position:relative}
+  .progress-fill{height:100%;background:linear-gradient(90deg,#10b981,#fbbf24);border-radius:15px;transition:width 1s;display:flex;align-items:center;justify-content:flex-end;padding:0 1rem;color:#000;font-weight:bold;font-size:0.9rem}
+  .phases{margin:2rem 0}
+  .timeline{position:relative;padding:2rem 0}
+  .timeline::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#fbbf24,#10b981,#8b5cf6);transform:translateX(-50%)}
+  .phase-row{display:grid;grid-template-columns:1fr 100px 1fr;gap:1rem;margin-bottom:1.5rem;align-items:center}
+  .phase-card{background:#1a1a1a;padding:1.2rem;border-radius:12px;border-left:4px solid #fbbf24;cursor:pointer;transition:transform .2s}
+  .phase-card:hover{transform:scale(1.02)}
+  .phase-card.done{background:#0a0a0a;border-left-color:#10b981;opacity:0.6}
+  .phase-card.current{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);border:2px solid #fbbf24;box-shadow:0 0 20px rgba(251,191,36,0.3)}
+  .phase-card h3{color:#fbbf24;margin-bottom:0.3rem;font-size:1.05rem}
+  .phase-card .month{color:#10b981;font-size:0.75rem;font-weight:bold}
+  .phase-card .milestone{color:#aaa;font-size:0.85rem;margin-top:0.3rem}
+  .phase-card .kpi{color:#60a5fa;font-size:0.75rem;margin-top:0.3rem;font-family:monospace}
+  .phase-dot{width:32px;height:32px;border-radius:50%;background:#fbbf24;margin:0 auto;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#000;box-shadow:0 0 12px #fbbf24}
+  .phase-dot.done{background:#10b981}
+  .phase-dot.current{background:#fbbf24;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 12px #fbbf24}50%{box-shadow:0 0 24px #fbbf24,0 0 40px #f59e0b}}
+  .controls{text-align:center;margin:1rem 0}
+  .btn{background:#10b981;color:#000;padding:.7rem 1.5rem;border:none;border-radius:6px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:.95rem;margin:.3rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/roadmap.html">Roadmap</a>
+  <a href="/wisdom.html">Wisdom</a>
+  <a href="/oowm.html">OOWM</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.4rem .8rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🗓️ Sovereign Roadmap</h1>
+  <p>12-month sovereign journey · Birth → Identity → Care → BFT → SIGIL → Federation → ML → OOWM → Apple → Wisdom → Fork → Maturity</p>
+  <div class="stats">
+    <div class="stat-pill">12 phases</div>
+    <div class="stat-pill">12 milestones</div>
+    <div class="stat-pill">12 KPIs</div>
+    <div class="stat-pill">BFT-gated advancement</div>
+    <div class="stat-pill">Crown lineage</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="progress">
+    <h2 style="color:#fbbf24">Current Phase Progress</h2>
+    <p style="color:#aaa;margin-top:.5rem">From Birth (month 1) → Maturity (month 12, composite 10.0)</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:8.3%">Month 1 / 12</div></div>
+    <p style="color:#10b981;margin-top:1rem" id="progressLabel">Current: Phase 1 (Birth) — composite 7.305 baseline</p>
+    <div class="controls">
+      <button class="btn" onclick="advance()">⚡ Advance Phase (BFT 12-around-1)</button>
+      <button class="btn" onclick="reset12()">↺ Reset</button>
+    </div>
+  </div>
+
+  <div class="phases">
+    <h2 style="color:#fbbf24;text-align:center;margin:2rem 0 1rem">📜 The 12 Phases</h2>
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <div class="progress">
+    <h2 style="color:#fbbf24">📊 Final KPI Targets (Month 12 Maturity)</h2>
+    <p style="color:#aaa">Each phase contributes to the sovereign composite trending toward 10/10.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.7rem;margin-top:1rem">
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">Sovereign Composite:</strong> <span style="color:#10b981">10.0 / 10</span></div>
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">Care Floor:</strong> <span style="color:#10b981">0.95 maintained</span></div>
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">BFT Voters:</strong> <span style="color:#10b981">12 / 12</span></div>
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">SIGIL emissions:</strong> <span style="color:#10b981">10,000+</span></div>
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">Online hives:</strong> <span style="color:#10b981">33 / 33</span></div>
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">ML models:</strong> <span style="color:#10b981">96 trained</span></div>
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">Apple FM calls:</strong> <span style="color:#10b981">1,000+</span></div>
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">Wisdom leaders:</strong> <span style="color:#10b981">100+</span></div>
+      <div style="background:#0a0a0a;padding:0.7rem;border-radius:6px"><strong style="color:#fbbf24">Forks live:</strong> <span style="color:#10b981">10+</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Roadmap Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">12 months. 12 phases. 12 milestones. Sovereign by construction.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 82 MCPs · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const PHASES = [
+  {id:1,month:1,name:"Birth",milestone:"Citizen signs in",kpi:"composite=7.305",color:"#fbbf24"},
+  {id:2,month:2,name:"Identity",milestone:"W3C DID + Ed25519",kpi:"did_validated=1",color:"#60a5fa"},
+  {id:3,month:3,name:"Care",milestone:"Care Floor 0.95 validated",kpi:"probes_passed=16/16",color:"#06b6d4"},
+  {id:4,month:4,name:"BFT",milestone:"12-around-1 council active",kpi:"bft_voters=12",color:"#8b5cf6"},
+  {id:5,month:5,name:"SIGIL",milestone:"100+ SIGIL emissions",kpi:"sigil_count=100",color:"#f59e0b"},
+  {id:6,month:6,name:"Federation",milestone:"33 hive planets active",kpi:"online_hives=33",color:"#10b981"},
+  {id:7,month:7,name:"ML",milestone:"12 mindsets × 8 MoE = 96 combos",kpi:"models_trained=96",color:"#ec4899"},
+  {id:8,month:8,name:"OOWM",milestone:"Organic Open World Model live",kpi:"feeds_ingested=100+",color:"#a3e635"},
+  {id:9,month:9,name:"Apple",milestone:"Foundation Models Provider",kpi:"apple_fm_calls=1000+",color:"#84cc16"},
+  {id:10,month:10,name:"Wisdom",milestone:"100+ wisdom leaders",kpi:"wisdom_leaders=100",color:"#14b8a6"},
+  {id:11,month:11,name:"Fork",milestone:"10+ sovereign forks live",kpi:"forks_live=10",color:"#ef4444"},
+  {id:12,month:12,name:"Maturity",milestone:"Sovereign composite 10/10",kpi:"composite=10.0",color:"#fbbf24"},
+];
+
+let currentPhase = 1;
+
+function renderTimeline() {
+  const tl = document.getElementById("timeline");
+  tl.innerHTML = "";
+  PHASES.forEach((p, i) => {
+    const isCurrent = p.id === currentPhase;
+    const isDone = p.id < currentPhase;
+    const cardClass = isCurrent ? "current" : isDone ? "done" : "";
+    const dotClass = isCurrent ? "current" : isDone ? "done" : "";
+    const side = i % 2 === 0 ? "left" : "right";
+    const card = `<div class="phase-card ${cardClass}" style="border-left-color:${p.color}">
+      <div class="month">Month ${p.month}</div>
+      <h3 style="color:${p.color}">${p.name}</h3>
+      <div class="milestone">${p.milestone}</div>
+      <div class="kpi">KPI: ${p.kpi}</div>
+    </div>`;
+    const row = `<div class="phase-row">${side === "left" ? card + '<div class="phase-dot ' + dotClass + '">' + p.id + '</div><div></div>' : '<div></div><div class="phase-dot ' + dotClass + '">' + p.id + '</div>' + card}</div>`;
+    tl.insertAdjacentHTML("beforeend", row);
+  });
+}
+
+function advance() {
+  if (currentPhase >= 12) {
+    alert("🪐 Already at phase 12 (Maturity). Sovereign composite 10/10.");
+    return;
+  }
+  currentPhase++;
+  const pct = (currentPhase / 12) * 100;
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressFill").textContent = `Month ${currentPhase} / 12`;
+  const phase = PHASES[currentPhase - 1];
+  document.getElementById("progressLabel").textContent = `Current: Phase ${currentPhase} (${phase.name}) — ${phase.kpi}`;
+  renderTimeline();
+}
+
+function reset12() {
+  currentPhase = 1;
+  document.getElementById("progressFill").style.width = "8.3%";
+  document.getElementById("progressFill").textContent = "Month 1 / 12";
+  document.getElementById("progressLabel").textContent = "Current: Phase 1 (Birth) — composite 7.305 baseline";
+  renderTimeline();
+}
+
+renderTimeline();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSOAI — Series A Deck · UK 16939677 · 55 Charters · 100/100 Alignment</title>
+<meta name="description" content="CSOAI Series A: target raise £45-90M at £180-240M pre-money. Charter Article 0 binding. 5 moats. 4 exit paths. ISO fee-for-service only.">
+<style>
+:root{--navy:#0a0e1a;--slate:#1e293b;--slate-2:#0f172a;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--text:#f1f5f9;--muted:#94a3b8;--border:rgba(201,168,76,.15)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--navy);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+header{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(10,14,26,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:.75rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+header .logo{color:var(--gold);font-weight:700;font-size:1rem;letter-spacing:.5px;text-decoration:none}
+header .crumb{color:var(--muted);font-size:.75rem}
+header .crumb b{color:var(--gold-light)}
+.deck-nav{position:fixed;top:60px;left:0;right:0;z-index:199;background:rgba(15,23,42,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.5rem 1.5rem;display:flex;gap:.5rem;overflow-x:auto;white-space:nowrap;font-size:.7rem}
+.deck-nav a{color:var(--muted);padding:.25rem .5rem;border-radius:4px;flex-shrink:0}
+.deck-nav a:hover{background:rgba(201,168,76,.1);color:var(--gold);text-decoration:none}
+.deck-nav a.cur{background:var(--gold);color:var(--navy);font-weight:600}
+main{padding-top:120px;padding-bottom:4rem}
+.slide{min-height:calc(100vh - 120px);max-width:1200px;margin:0 auto 4rem;padding:2rem 2.5rem;background:var(--slate-2);border:1px solid var(--border);border-radius:12px;position:relative;scroll-margin-top:130px}
+.slide-num{position:absolute;top:1rem;right:1.5rem;color:var(--gold);font-size:.75rem;font-weight:600;letter-spacing:1px;opacity:.7}
+.slide h1{font-size:2.25rem;line-height:1.15;color:var(--text);margin-bottom:.75rem}
+.slide h1 .gold{color:var(--gold)}
+.slide h2{color:var(--gold);font-size:1.5rem;margin-bottom:.75rem;line-height:1.25}
+.slide h3{color:var(--gold-light);font-size:1.05rem;margin:.75rem 0 .5rem}
+.slide p,.slide li{font-size:.9375rem;color:var(--text)}
+.slide .lede{font-size:1.125rem;color:var(--gold-light);font-style:italic;margin-bottom:1.25rem;line-height:1.4}
+.slide ul{margin:.5rem 0 .75rem 1.25rem}
+.slide ul li{padding:.35rem 0}
+.article-zero{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));border:1px solid var(--gold);border-radius:8px;padding:1rem 1.25rem;margin:1rem 0;font-size:.875rem;color:var(--gold-light);line-height:1.5}
+.article-zero b{color:var(--gold)}
+.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:.75rem 1rem;margin:1rem 0;font-size:.75rem;color:var(--muted);line-height:1.5}
+.honesty b{color:var(--gold-light)}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1rem 0}
+.stat-card{background:var(--slate);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.stat-card .num{color:var(--gold);font-size:1.75rem;font-weight:700;line-height:1}
+.stat-card .lbl{color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;margin-top:.25rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.8125rem}
+th,td{border:1px solid var(--slate);padding:.5rem .65rem;text-align:left;vertical-align:top}
+th{background:var(--navy);color:var(--gold-light);font-weight:600}
+tr.hl td{background:rgba(16,185,129,.06)}
+tr.gold td{background:rgba(201,168,76,.08)}
+.tier-pill{display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.7rem;font-weight:600;background:var(--navy);border:1px solid var(--gold);color:var(--gold)}
+.tier-pill.green{border-color:var(--green);color:var(--green)}
+.moat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+.moat{background:var(--slate);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.moat .n{color:var(--gold);font-size:.75rem;font-weight:700;letter-spacing:1px}
+.moat h3{color:var(--gold-light);font-size:1rem;margin:.35rem 0 .5rem}
+.moat p{font-size:.8125rem;color:var(--text)}
+.exit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+.exit{background:var(--slate);border:1px solid var(--border);border-radius:8px;padding:1rem;border-left:4px solid var(--gold)}
+.exit h3{color:var(--gold-light);font-size:1rem;margin:0 0 .5rem}
+.exit p{font-size:.8125rem;color:var(--text)}
+.exit .meta{color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.35rem}
+.cover{text-align:center;padding-top:3rem}
+.cover h1{font-size:3rem;margin-bottom:.5rem}
+.cover .sub{color:var(--gold-light);font-size:1.25rem;margin-bottom:2rem}
+.cover .terms{display:inline-block;background:var(--slate);border:1px solid var(--border);border-radius:8px;padding:1rem 1.5rem;margin:.5rem;font-size:.875rem;text-align:left}
+.cover .terms b{color:var(--gold)}
+footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--slate);margin-top:2rem;max-width:1200px;margin:2rem auto 0}
+footer a{color:var(--gold)}
+@media(max-width:768px){
+  .slide{padding:1.25rem;margin-bottom:2rem}
+  .slide h1{font-size:1.5rem}
+  .cover h1{font-size:2rem}
+  .deck-nav{font-size:.65rem;padding:.35rem .75rem}
+  main{padding-top:140px}
+}
+</style>
+</head><body>
+<header>
+  <a class="logo" href="index.html">CSOAI · SOVEREIGN AI SUBSTRATE</a>
+  <div class="crumb">Series A Deck · <b>2026-07-07</b> · UK 16939677 · Charter Article 0 binding</div>
+</header>
+<nav class="deck-nav" id="decknav"></nav>
+<main>
+
+<!-- ============================ SLIDE 1: COVER ============================ -->
+<section class="slide cover" id="s1">
+  <span class="slide-num">SLIDE 1 / 20</span>
+  <h1>CSOAI Ltd — <span class="gold">Series A</span></h1>
+  <p class="sub">The Sovereign AI Compliance Substrate</p>
+  <div class="article-zero">
+    <b>Charter Article 0 (binding, verbatim):</b> "Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <b>CA3O is the CMKC for AI.</b>"<br>
+    Amendment requires 33/33 BFT + 5 human sigs + 14-day window + 90% supermajority. The dragon cannot be bribed.
+  </div>
+  <div style="margin-top:1.5rem">
+    <div class="terms"><b>Target raise:</b> £45M – £90M</div>
+    <div class="terms"><b>Pre-money valuation:</b> £180M – £240M</div>
+    <div class="terms"><b>Lead investor profile:</b> Sovereign-fund (UK / NO / SG / JP / AU) or strategic sovereign-cloud operator</div>
+    <div class="terms"><b>Round close target:</b> Q4 2026</div>
+    <div class="terms"><b>Substrate license:</b> MIT (open source, free tier forever)</div>
+    <div class="terms"><b>Commercial model:</b> ISO fee-for-service ONLY — no equity, no board seats, no success fees</div>
+  </div>
+  <p style="margin-top:2rem;color:var(--muted);font-size:.875rem">Founder: Sir Nicholas Templeman · CSOAI Ltd · UK Companies House <b style="color:var(--gold)">16939677</b> · London, United Kingdom</p>
+</section>
+
+<!-- ============================ SLIDE 2: THE PROBLEM ============================ -->
+<section class="slide" id="s2">
+  <span class="slide-num">SLIDE 2 / 20</span>
+  <h1>The <span class="gold">Problem</span></h1>
+  <p class="lede">The world will spend £4.6T on AI by 2030 (IDC 2024) — and £370bn/yr on AI compliance alone by 2027 (Gartner).</p>
+
+  <h2>The compliance tax entrenching incumbent pricing</h2>
+  <table>
+    <thead><tr><th>Vendor</th><th>Public price band (2024–2026)</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td><b>Palantir Foundry (defence / national)</b></td><td>US$5M–US$25M/yr national-scope; NHS FDP £330M/7yr</td><td>10-K FY24, UK FTS, USAspending.gov</td></tr>
+      <tr class="hl"><td><b>Anduril Lattice (defence)</b></td><td>US$6M–US$30M/yr; Anduril-Roadblock US$647M (2024)</td><td>Series F/F1, US DoD, AUKUS Pillar II</td></tr>
+      <tr><td><b>BAE Systems AI</b></td><td>£3M–£12.5M/yr</td><td>BAE Annual Report 24, UK MOD AI Strategy</td></tr>
+      <tr><td><b>OneTrust</b></td><td>US$80K–US$350K/yr mid-market; ~US$220K enterprise mean</td><td>onetrust.com/pricing, Forrester Q2 24</td></tr>
+      <tr><td><b>BigID</b></td><td>US$120K–US$500K/yr</td><td>bigid.com/pricing, CRN 23, 451 Research</td></tr>
+      <tr><td><b>Collibra</b></td><td>US$250K–US$1M/yr ("talk to us")</td><td>Forrester Wave™ Data Catalog Q1 24</td></tr>
+      <tr><td><b>ServiceNow GRC</b></td><td>US$1M–US$3M/yr for 5K users</td><td>ServiceNow public pricing + Gartner TCO 24</td></tr>
+      <tr class="hl"><td><b>PwC AI compliance consulting</b></td><td>US$2M–US$5M/yr</td><td>PwC AI services rate card (public)</td></tr>
+      <tr><td><b>McKinsey QuantumBlack</b></td><td>US$3M–US$8M/yr</td><td>McKinsey AI rate card disclosures (public)</td></tr>
+      <tr><td><b>Deloitte Trustworthy AI</b></td><td>US$1.5M–US$4M/yr</td><td>Deloitte AI practice rate card</td></tr>
+    </tbody>
+  </table>
+  <div class="honesty"><b>HONESTY REGISTER</b> · PUBLIC & VERIFIABLE / CONTRACT-RANGE · All figures cited from named vendor pricing pages, annual reports, or analyst reports. PROVENANCE ≠ TRUTH — we cite URLs so you can verify; we do not assert any one customer's actual invoice matched the headline. ASSURANCE ≠ CERTIFICATION.</div>
+</section>
+
+<!-- ============================ SLIDE 3: THESIS ============================ -->
+<section class="slide" id="s3">
+  <span class="slide-num">SLIDE 3 / 20</span>
+  <h1>The <span class="gold">Thesis</span></h1>
+  <p class="lede" style="font-size:1.75rem;line-height:1.3">AI should advance humanity, not entrench incumbent pricing.</p>
+  <h2>Built constitutionally, not aspirationally</h2>
+  <ul>
+    <li>Build the world's most-advanced compliance substrate as <b>open-source MIT</b></li>
+    <li>Bind it with a <b>Charter that prevents capture</b> by the institutions it certifies (Article 0)</li>
+    <li>Charge <b>ISO fee-for-service</b> — not equity, not success fees, not revenue-share</li>
+    <li>Land the price <b>90–98% below</b> the locked-in incumbents — without a race to the bottom</li>
+  </ul>
+  <div class="article-zero">
+    <b>Why this is constitutional, not contractual:</b> Article 0 is class-right in the Shareholders' Agreement, not a contract right. It survives transfer of control. To amend it requires 33/33 BFT agent votes + 5 human signatures + 14-day voting window + 90% supermajority. The independence is the product.
+  </div>
+</section>
+
+<!-- ============================ SLIDE 4: THE COMPANY ============================ -->
+<section class="slide" id="s4">
+  <span class="slide-num">SLIDE 4 / 20</span>
+  <h1>The <span class="gold">Company</span></h1>
+  <table>
+    <tbody>
+      <tr><th style="width:35%">Legal entity</th><td>CSOAI Ltd</td></tr>
+      <tr><th>Jurisdiction</th><td>England & Wales · UK Companies House <b style="color:var(--gold)">16939677</b></td></tr>
+      <tr><th>Registered office</th><td>London, United Kingdom</td></tr>
+      <tr><th>UK SIC code</th><td>62090 — Other information technology service activities</td></tr>
+      <tr><th>Founder</th><td>Sir Nicholas Templeman (sole director / PSC)</td></tr>
+      <tr><th>Sub-brands</th><td>csoai.org (L3 governance) · defoneos.com (L1 defence AI OS) · meok.ai (L2 sovereign AI OS) · coigndaltion.csoai.org (L4) · sovereign.csoai.org (L0 root)</td></tr>
+      <tr><th>Substrate license</th><td><b>MIT (open source, free tier forever)</b></td></tr>
+      <tr><th>Commercial model</th><td><b>ISO fee-for-service only</b> — no equity, no board seats, no revenue-share, no success fees</td></tr>
+      <tr><th>Ed25519 root key</th><td><code style="font-size:.75rem">d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a</code></td></tr>
+      <tr><th>SIGIL chain entry</th><td><code style="font-size:.75rem">root-sigil-001-d75a…</code></td></tr>
+      <tr><th>BFT Council ratification</th><td>BFT-ROOT-001 — Quorum 23/33</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ SLIDE 5: WHAT WE BUILT ============================ -->
+<section class="slide" id="s5">
+  <span class="slide-num">SLIDE 5 / 20</span>
+  <h1>What we <span class="gold">built</span> (already running)</h1>
+  <p class="lede">A 5-layer sovereign substrate that exists today, not a roadmap.</p>
+  <div class="stat-row">
+    <div class="stat-card"><div class="num">55</div><div class="lbl">Sovereign charters · 100/100 alignment</div></div>
+    <div class="stat-card"><div class="num">244</div><div class="lbl">Universal compliance frameworks</div></div>
+    <div class="stat-card"><div class="num">11,316+</div><div class="lbl">Cross-walks between frameworks</div></div>
+    <div class="stat-card"><div class="num">1,650/1,650</div><div class="lbl">Alignment checks passing</div></div>
+    <div class="stat-card"><div class="num">41</div><div class="lbl">Industries covered</div></div>
+    <div class="stat-card"><div class="num">294</div><div class="lbl">Server MCP fleet on substrate</div></div>
+    <div class="stat-card"><div class="num">49 GB</div><div class="lbl">Sovereign data moat</div></div>
+    <div class="stat-card"><div class="num">198</div><div class="lbl">Live data sources (8 categories)</div></div>
+    <div class="stat-card"><div class="num">30+</div><div class="lbl">Live feeds (Companies House, NVD, Land Registry…)</div></div>
+    <div class="stat-card"><div class="num">4,721</div><div class="lbl">Files SHA-256 hashed, OTS-Bitcoin anchored</div></div>
+    <div class="stat-card"><div class="num">532K</div><div class="lbl">Synthetic records generated</div></div>
+    <div class="stat-card"><div class="num">2,363</div><div class="lbl">Unique leads in csoai_leads.db</div></div>
+    <div class="stat-card"><div class="num">9,893</div><div class="lbl">Side-by-side metrics</div></div>
+    <div class="stat-card"><div class="num">660</div><div class="lbl">Named leads across 9 tiers</div></div>
+    <div class="stat-card"><div class="num">100</div><div class="lbl">Outreach emails STAGED (owner-gated)</div></div>
+    <div class="stat-card"><div class="num">47</div><div class="lbl">SIGIL ticks anchored to OTS Bitcoin</div></div>
+  </div>
+  <div class="honesty"><b>HONESTY REGISTER</b> · CSOAI-LISTED / ILLUSTRATIVE · Live numbers verified via SIGIL chain and csoai_leads.db. Foundation signups are ILLUSTRATIVE pending public launch.</div>
+</section>
+
+<!-- ============================ SLIDE 6: 5 MOATS ============================ -->
+<section class="slide" id="s6">
+  <span class="slide-num">SLIDE 6 / 20</span>
+  <h1>The <span class="gold">5 Moats</span></h1>
+  <p class="lede">Defensible structurally — not promotional.</p>
+  <div class="moat-grid">
+    <div class="moat">
+      <div class="n">MOAT 1 · CONSTITUTIONAL</div>
+      <h3>Charter Article 0 Binding</h3>
+      <p>Never take equity, board seats, revenue-share, or success fees. ISO fee-for-service ONLY. Amendment needs 33/33 BFT + 5 human sigs + 14-day window + 90% supermajority. <b>Independence is the product.</b></p>
+    </div>
+    <div class="moat">
+      <div class="n">MOAT 2 · NETWORK OF AUTHORITY</div>
+      <h3>The 55-Charter Universe</h3>
+      <p>Every industry charter inherits from L0 Sovereign Root; cross-walks to every other; 11,316+ cross-walks; 1,650/1,650 alignment checks. Forks cannot re-ratify without 33/33 BFT + 5 human sigs + OTS + 14-day window.</p>
+    </div>
+    <div class="moat">
+      <div class="n">MOAT 3 · GOVERNANCE</div>
+      <h3>BFT Council</h3>
+      <p>12 Generals × 3 roles (WITNESS/INTERPRETER/ARBITRATOR) = 33 seats. Quorum 23/33, f=10 Byzantine tolerance (3f+1=33). Single judge cannot certify, amend, or seal.</p>
+    </div>
+    <div class="moat">
+      <div class="n">MOAT 4 · ECONOMICS</div>
+      <h3>Sovereign Wallet (x402)</h3>
+      <p>Per-outcome micropayments on x402 (Coinbase 2025): Article 50 passport £0.04; EU AI Act audit £39; federated RAG £0.0015. Substrate writes once, re-charges a million times.</p>
+    </div>
+    <div class="moat">
+      <div class="n">MOAT 5 · LEGITIMACY</div>
+      <h3>Open Source MIT</h3>
+      <p>Anyone can fork the code; nobody can fork the ratification. Openness is the legitimacy; legitimacy is the moat. Inverse of Palantir / Anduril / BAE closed-source lock-in.</p>
+    </div>
+  </div>
+  <div class="article-zero">
+    <b>Self-enforcing economics:</b> If we ever take equity in a customer, we forfeit the right to be the Certifying Authority and must be replaced by a successor substrate. The moat is not a promise — it is a constitutional fact.
+  </div>
+</section>
+
+<!-- ============================ SLIDE 7: MARKET ============================ -->
+<section class="slide" id="s7">
+  <span class="slide-num">SLIDE 7 / 20</span>
+  <h1>The <span class="gold">Market</span> (sized honestly)</h1>
+  <table>
+    <thead><tr><th>Segment</th><th>2026 TAM</th><th>2027 projected</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>AI governance, risk & compliance (GRC)</td><td>£185 bn</td><td>£230 bn</td><td>Gartner 2024</td></tr>
+      <tr><td>Defence AI procurement (UK + AUKUS)</td><td>£42 bn</td><td>£58 bn</td><td>UK MOD Defence AI Strategy 2024 + AUKUS Pillar II</td></tr>
+      <tr><td>Privacy / data governance (OneTrust / BigID addressable)</td><td>£24 bn</td><td>£32 bn</td><td>Forrester Wave™ Q2 2024</td></tr>
+      <tr><td>Sovereign cloud (UK / EU / AU / AS / SA — gov-deployed)</td><td>£18 bn</td><td>£26 bn</td><td>IDC Sovereign Cloud 2024</td></tr>
+      <tr class="gold"><td>Article 50 passport (CSOAI-only line item)</td><td>£0.4 bn</td><td>£1.8 bn</td><td><b>ILLUSTRATIVE · CSOAI internal model</b></td></tr>
+      <tr class="hl"><td><b>Total addressable</b></td><td><b>£269 bn</b></td><td><b>£348 bn</b></td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:1rem"><b>5-year target revenue band: £228K (Y1 ILLUSTRATIVE LOW) → £80M ARR (Y3 ILLUSTRATIVE HIGH)</b> = <b>0.001% – 0.024%</b> of 2027 TAM.</p>
+  <p style="color:var(--muted);margin-top:.5rem">We are not winning the market — we are proving a model the market then imitates. The mission is constitutional, not market-share.</p>
+  <div class="honesty"><b>HONESTY REGISTER</b> · PUBLIC & VERIFIABLE / ILLUSTRATIVE · TAM cites Gartner, Forrester, IDC, UK MOD. CSOAI internal Article 50 passport line is ILLUSTRATIVE.</div>
+</section>
+
+<!-- ============================ SLIDE 8: WHY NOW ============================ -->
+<section class="slide" id="s8">
+  <span class="slide-num">SLIDE 8 / 20</span>
+  <h1>Why <span class="gold">now</span> (regulatory cliffs)</h1>
+  <p class="lede">Five cliffs, each independent of the others, each increasing CSOAI's addressable customer count by an order of magnitude.</p>
+  <table>
+    <thead><tr><th>Cliff</th><th>Date</th><th>Why it matters</th></tr></thead>
+    <tbody>
+      <tr><td><b>EU AI Act Article 50</b></td><td>2 Aug 2026 (enforcement)</td><td>Foundation-model transparency + labelling. Fines up to 7% global turnover. Every foundation-model deployer in scope.</td></tr>
+      <tr><td><b>UK AI Bill</b></td><td>Royal Assent expected 2027</td><td>UK becomes 3rd jurisdiction with hard AI law. Consultation closed March 2026; King's Speech 2024 confirmed.</td></tr>
+      <tr><td><b>EU AI Liability Directive</b></td><td>Transposition by 2026-Q4</td><td>Burden of proof flips to vendor on AI-caused harm. Adopted 2024.</td></tr>
+      <tr><td><b>Council of Europe AI Convention 2024</b></td><td>In force</td><td>International treaty. UK + EU + US (obs) + JP + SG + AU signatories. Binding on AI safety.</td></tr>
+      <tr><td><b>UK Procurement Act 2023 + Defence AI Strategy 2024 + DSPCR 2025</b></td><td>Live</td><td>UK defence procurement rebuilt around sovereign AI assurance. 11 named owner-gates: DSP, Cyber Essentials, SC, NATO STO, DSRB, DASA, DIANA, UKDI, AISI, domain-bind, PyPI.</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:1rem"><b>UK MOD alone plans £6bn over 10 years on AI</b> (Defence AI Strategy 2024). The assurance + verification + audit envelope is <b>£1.5bn/yr</b> (CSOAI internal model — ILLUSTRATIVE). Even 1% = £15M/yr. Even 5% = £75M/yr.</p>
+</section>
+
+<!-- ============================ SLIDE 9: COST REDUCTION ============================ -->
+<section class="slide" id="s9">
+  <span class="slide-num">SLIDE 9 / 20</span>
+  <h1>The cost reduction (<span class="gold">90–98%</span> cheaper, verbatim sources)</h1>
+  <table>
+    <thead><tr><th>Programme / contract size</th><th>CSOAI indicative</th><th>Vendor mean (public)</th><th>Saving band</th></tr></thead>
+    <tbody>
+      <tr><td>Sovereign citizen / regulated SMB (1 person, 1 system)</td><td><b>£0</b> (MIT open source)</td><td>£10K–£60K (OneTrust SMB / BigID starter / PwC AI Pulse)</td><td><b style="color:var(--green)">90–100%</b></td></tr>
+      <tr class="hl"><td>Mid-market multi-jurisdiction (UK + EU + US, 5 systems)</td><td><b>£499/mo = ~£6K/yr</b> (Business)</td><td>£80K–£180K/yr (OneTrust Pro + BigID Pro)</td><td><b style="color:var(--green)">93–97%</b></td></tr>
+      <tr><td>Public-sector / regulator audit pack</td><td><b>£2,499/mo = ~£30K/yr</b> (Gov)</td><td>£250K–£600K/yr (OneTrust + BigID + auditor)</td><td><b style="color:var(--green)">88–95%</b></td></tr>
+      <tr><td>Defence-prime compliance programme</td><td><b>£9,999/mo = ~£120K/yr</b> (Defence)</td><td>£2.5M–£12.5M/yr (Palantir, BAE, Anduril, PwC)</td><td><b style="color:var(--green)">94–99%</b></td></tr>
+      <tr class="gold"><td>Sovereign / Crown national-scale</td><td><b>£RFQ</b> (typically £250K–£2M)</td><td>£15M–£120M/yr (Palantir Foundry national, Anduril Lattice national, McKinsey QB, BigID enterprise)</td><td><b style="color:var(--green)">90–98%</b></td></tr>
+    </tbody>
+  </table>
+  <p><b>Source basis (PUBLIC & VERIFIABLE):</b> OneTrust pricing page + Forrester Wave™ Privacy Management Q2 24 · BigID pricing page + AWS Marketplace + CRN 2023 + 451 Research · Collibra + Gartner Peer Insights + Forrester Wave™ Data Catalog Q1 24 · ServiceNow public pricing + Gartner TCO 24 · Palantir 10-K FY24 + AUKUS Pillar II + NHS FDP + USAspending.gov · Anduril Series F/F1 + DoD contracts + AUKUS · BAE Annual Report 24 + UK MOD + UK FTS + TED · PwC / McKinsey / Deloitte AI services rate cards.</p>
+  <div class="honesty"><b>HONESTY REGISTER</b> · PUBLIC & VERIFIABLE · Saving band computed as (vendor_mean − CSOAI_indicative) / vendor_mean using CSOAI tier-top price and the <b>median</b> of vendor public pricing — not headline discount. PROVENANCE ≠ TRUTH. ASSURANCE ≠ CERTIFICATION.</div>
+</section>
+
+<!-- ============================ SLIDE 10: WHY WE CAN CHARGE LESS ============================ -->
+<section class="slide" id="s10">
+  <span class="slide-num">SLIDE 10 / 20</span>
+  <h1>Why we can charge <span class="gold">less</span></h1>
+  <p class="lede">The 90–98% reduction is not goodwill. It is the consequence of three structural choices the closed-source incumbents cannot replicate without forfeiting their existing revenue.</p>
+  <h2>The 3 structural choices</h2>
+  <ol style="margin-left:1.5rem">
+    <li style="margin-bottom:.5rem"><b>No equity capture.</b> No FAANG-style growth-funded land-grab. No need to repay a $1B+ venture round in 7 years.</li>
+    <li style="margin-bottom:.5rem"><b>Open-source core (MIT).</b> The substrate is free; we are selling the ratification, not the code.</li>
+    <li style="margin-bottom:.5rem"><b>Fixed-cost substrate + marginal-cost assurance.</b> Standards, charters, and checklists are written once; compute is the only marginal cost.</li>
+  </ol>
+  <p style="margin-top:1rem">A OneTrust or Palantir cannot copy choice 1 without burning their shareholder base. They cannot copy choice 2 without cannibalising their SaaS revenue. They cannot copy choice 3 without firing their services organisations. <b>The moat is structural, not promotional.</b></p>
+  <div class="article-zero"><b>Charter Article 0 reinforces all three:</b> we cannot raise on terms that demand capture of certified institutions. The price floor is constitutional.</div>
+</section>
+
+<!-- ============================ SLIDE 11: 4-TIER PRICING ============================ -->
+<section class="slide" id="s11">
+  <span class="slide-num">SLIDE 11 / 20</span>
+  <h1>The <span class="gold">4-Tier Pricing</span> (verbatim)</h1>
+  <table>
+    <thead><tr><th>Tier</th><th>List</th><th>Annual</th><th>What's included</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tier-pill green">FREE</span></td><td>£0</td><td>£0</td><td>Watchdog read API (10K req/day), 1 free Article 50 passport/quarter, public proof-of.ai verification, free training & certification, public SIGIL explorer</td></tr>
+      <tr><td><span class="tier-pill">PRO</span></td><td>£49 / user / mo</td><td>£490 / user / yr</td><td>Unlimited Watchdog write, 100 Article 50 passports/mo, Ed25519-signed proofs, SOV3small inference (4 local models, 7 GB), 8-hour SLA, Pro badge</td></tr>
+      <tr><td><span class="tier-pill">BUSINESS</span></td><td>£499 / org / mo</td><td>£4,990 / org / yr</td><td>Up to 25 seats, multi-tenant dashboard, 100K MCP federation calls/mo, EU AI Act + UK AI Bill + ISO 42001 audit templates, BFT-managed triage, 4-hour SLA, DEFONEOS-SEAL on 1 service</td></tr>
+      <tr><td><span class="tier-pill">ENTERPRISE</span></td><td>£4,999 – £9,999 / mo</td><td>bespoke</td><td>Air-gapped option, dedicated sovereign node, on-site engineer, BFT-council audit subscription, x402 per-outcome rail at scale, multi-region (UK + EU + US + AU + AS + SA), 24/7 1-hour SLA, AUKUS / Five Eyes compatible</td></tr>
+      <tr class="gold"><td><span class="tier-pill">CROWN RFQ</span></td><td>bespoke</td><td>bespoke</td><td>National-scope sovereign deployment. £9,999/mo/enclave + £50K–£500K integration + £1,200/day/engineer forward deployment</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:.75rem"><b>Article 0 addendum:</b> regulator and academic partners receive Business-tier functionality at no cost under signed addendum, capped at 25 seats per institution. Not a discount — public-interest carve-out authorised by Article 0 § 0.4.</p>
+</section>
+
+<!-- ============================ SLIDE 12: 6 PARTNER CATEGORIES ============================ -->
+<section class="slide" id="s12">
+  <span class="slide-num">SLIDE 12 / 20</span>
+  <h1>The <span class="gold">6 partner categories</span></h1>
+  <table>
+    <thead><tr><th>Category</th><th>Example</th><th>Revenue split</th><th>Article 0 binding</th></tr></thead>
+    <tbody>
+      <tr><td>Sovereign Operators</td><td>UK NHS, MoD, DSIT, ICO; EU AI Office; SG IMDA; JP METI</td><td>£4,999–£9,999/mo/node + 15% integration + 20%/yr support</td><td>Yes (independent certification)</td></tr>
+      <tr><td>Enterprise Customers</td><td>FTSE 100 / Fortune 500</td><td>£499/mo (Business) or £4,999–£9,999/mo (Enterprise) + 22% partner + 18% channel + 2% co-marketing</td><td>Yes (customer pays for access, not outcome)</td></tr>
+      <tr class="hl"><td>Regulator Partners</td><td>EU AI Office, CoE CAHAI, OECD AI, UN AI, AUDA-NEPAD, ASEAN</td><td><b>£0</b> under signed Article 0 addendum; CSOAI bears £4,990/yr/seat</td><td>Explicit — no payment either direction on certification outcome</td></tr>
+      <tr><td>Academic Partners</td><td>MIT, Stanford, Oxford, Cambridge, Imperial, ETH, NUS, Tsinghua, IIIT-H</td><td>£0 verified academics; £99/yr industry-affiliated</td><td>Yes</td></tr>
+      <tr><td>Sovereign Cloud Partners</td><td>Hetzner, OVHcloud, Scaleway, Google Sovereign Cloud UK, AWS UK GovCloud, Azure G-Cloud, Macquarie AU, NTT AS</td><td>£2,499/mo/region white-label + 12% to CSOAI / 88% partner + 3% GTM fund</td><td>Yes (no resale into non-sovereign jurisdictions without BFT waiver)</td></tr>
+      <tr><td>Defence Partners</td><td>BAE, Thales, Leonardo, Saab, BBI, Hanwha; Anduril UK, Palantir UK, Babylon, Black Swan, Improbable</td><td>£9,999/mo/enclave + £50K–£500K integration + £1,200/day/engineer + x402 (£0.04/passport)</td><td>Yes — explicitly extended (no equity either direction; 90-day re-ratification on change of control)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ SLIDE 13: REVENUE FORECAST ============================ -->
+<section class="slide" id="s13">
+  <span class="slide-num">SLIDE 13 / 20</span>
+  <h1>Revenue forecast <span class="gold">(honest band)</span></h1>
+  <div class="honesty"><b>HONESTY REGISTER</b> · ILLUSTRATIVE · The forecast is a band, not a number. We refuse to publish a single-number forecast because Article 0 binds us to honesty as well as independence.</div>
+  <table>
+    <thead><tr><th>Period</th><th>Low</th><th>Base</th><th>High</th><th>Primary driver</th></tr></thead>
+    <tbody>
+      <tr class="gold"><td><b>Y1 (2026–2027)</b></td><td>£228 K</td><td>£570 K</td><td>£1.14 M</td><td>Free-tier ramp + first 5–15 Business customers + 1 named Crown pilot</td></tr>
+      <tr><td>Y2 (2027–2028)</td><td>£2.5 M</td><td>£6.0 M</td><td>£12 M</td><td>10–25 Enterprise + first sovereign-cloud partnership + 1 named MOD pilot</td></tr>
+      <tr><td>Y3 (2028–2029)</td><td>£25 M ARR</td><td>£50 M ARR</td><td>£80 M ARR</td><td>Crown RFQ conversion + 3 sovereign-cloud partners + 2 MOD programmes of record</td></tr>
+      <tr><td>Y5 (2030–2031)</td><td>£80 M ARR</td><td>£180 M ARR</td><td>£350 M ARR</td><td>Defence + Crown + sovereign-cloud at steady-state</td></tr>
+    </tbody>
+  </table>
+  <h3>Reconciliation to lead math</h3>
+  <p>10,000 leads × £500K saved per org × 1–5% close = <b>£245K–£5.7M near-term</b>, consistent with Y1–Y2 base. Y3+ assumes one or two named Crown / MOD programmes convert (each worth £15M–£75M/yr at Palantir-equivalent pricing, or £250K–£2M/yr at CSOAI pricing).</p>
+  <h3>Near-term owner-unlock paths (per EAT_DIRECTIVE_2026-07-02)</h3>
+  <ul>
+    <li><b>£999 owner-unlock sales</b> — ~50 closable in 90 days = <b>£50K</b></li>
+    <li><b>£4,950 gap-analysis premium</b> (UK MOD procurement readiness matrix) — ~20 closable in 90 days = <b>£99K</b></li>
+    <li><b>Foundation pass-through</b> (£49/mo × 200 new Pro in 90 days) = <b>£30K ARR run-rate</b></li>
+  </ul>
+  <p>These three lines alone bridge Y1 low (£228K) to Y1 base (£570K).</p>
+</section>
+
+<!-- ============================ SLIDE 14: TRACTION ============================ -->
+<section class="slide" id="s14">
+  <span class="slide-num">SLIDE 14 / 20</span>
+  <h1><span class="gold">Traction</span> (live numbers)</h1>
+  <div class="stat-row">
+    <div class="stat-card"><div class="num">165+</div><div class="lbl">Sovereign pages deployed (HTTP 200, byte-verified)</div></div>
+    <div class="stat-card"><div class="num">30/30</div><div class="lbl">MCPs registered (Ed25519)</div></div>
+    <div class="stat-card"><div class="num">15/15</div><div class="lbl">Repos with sovereign wrap</div></div>
+    <div class="stat-card"><div class="num">47</div><div class="lbl">SIGIL ticks OTS-Bitcoin anchored</div></div>
+    <div class="stat-card"><div class="num">100</div><div class="lbl">Outreach emails STAGED (owner-gated send, never fired)</div></div>
+    <div class="stat-card"><div class="num">660</div><div class="lbl">Named leads across 9 tiers</div></div>
+    <div class="stat-card"><div class="num">2,363</div><div class="lbl">Unique leads in csoai_leads.db</div></div>
+    <div class="stat-card"><div class="num">9,893</div><div class="lbl">Side-by-side metrics</div></div>
+    <div class="stat-card"><div class="num">47</div><div class="lbl">Named-buyer targets (defence primes + Fortune 100 + FTSE 100 banks + regulators + sovereign clouds)</div></div>
+  </div>
+  <div class="honesty"><b>HONESTY REGISTER</b> · CSOAI-LISTED · Live numbers verified via SIGIL chain, csoai_leads.db, and 47-byte-verified HTTP 200 deployments. Foundation (free-tier) signups = ILLUSTRATIVE pending public launch. Per EAT_DIRECTIVE_2026-07-02: outreach emails are STAGED (owner-gated send, never fired).</div>
+</section>
+
+<!-- ============================ SLIDE 15: GO-TO-MARKET ============================ -->
+<section class="slide" id="s15">
+  <span class="slide-num">SLIDE 15 / 20</span>
+  <h1>Go-to-market <span class="gold">(3 lanes)</span></h1>
+  <p class="lede">All three lanes owner-gated under EAT_DIRECTIVE_2026-07-02: publish / DNS / secrets / money = stage, never fire.</p>
+
+  <h2>Lane 1 — Sovereign Cloud Distribution (lowest CAPEX)</h2>
+  <ul>
+    <li>White-label CSOAI via Hetzner / OVHcloud / Scaleway / Google Sovereign Cloud UK / AWS UK GovCloud / Azure G-Cloud</li>
+    <li>12% to CSOAI / 88% to partner</li>
+    <li><b>Target: 3 named partnerships by EOY 2026 → £150K/yr per partner</b></li>
+  </ul>
+
+  <h2>Lane 2 — Crown Procurement (highest deal size, longest cycle)</h2>
+  <ul>
+    <li>11 owner-gates: DSP, Cyber Essentials, SC, NATO STO, DSRB, DASA, DIANA, UKDI, AISI, domain-bind, PyPI</li>
+    <li>DEFONEOS Crown RFQ flow: 8 commercial vehicles, 4 pricing tiers, 6-step pre-award pipeline</li>
+    <li><b>Target: 1 named MOD pilot by Q2 2027 → £250K–£2M pilot → £15M–£75M programme of record</b></li>
+  </ul>
+
+  <h2>Lane 3 — Compliance-Pack Distribution (highest velocity)</h2>
+  <ul>
+    <li>£49/mo Pro × 10,000 SMB compliance buyers in UK + EU + US</li>
+    <li>x402 per-outcome rail: 100 free Article 50 passports/mo on Pro; £0.04 per passport above</li>
+    <li><b>Target: 5,000 paying Pro users by EOY 2027 → £2.94M ARR run-rate</b></li>
+  </ul>
+</section>
+
+<!-- ============================ SLIDE 16: USE OF PROCEEDS ============================ -->
+<section class="slide" id="s16">
+  <span class="slide-num">SLIDE 16 / 20</span>
+  <h1>Use of <span class="gold">proceeds</span> (£45M–£90M)</h1>
+  <table>
+    <thead><tr><th>Use of proceeds</th><th>£45M raise</th><th>£90M raise</th></tr></thead>
+    <tbody>
+      <tr><td><b>GTM + named-account sales</b> (UK MOD + Crown RFQ + 3 sovereign-cloud partnerships)</td><td>£12 M</td><td>£22 M</td></tr>
+      <tr><td><b>11 owner-gates</b> (DSP / Cyber Essentials / SC / NATO STO / DSRB / DASA / DIANA / UKDI / AISI / domain-bind / PyPI)</td><td>£8 M</td><td>£15 M</td></tr>
+      <tr><td><b>Engineering — 18-node federation build-out</b> (sovereign substrate scale-out + MCPs + BFT expansion 33 + 12 auxiliary)</td><td>£10 M</td><td>£22 M</td></tr>
+      <tr><td><b>Compliance + accreditation</b> (ISO 42001 lead-auditor body, SOC 2 Type II, Cyber Essentials Plus, DSRB)</td><td>£5 M</td><td>£10 M</td></tr>
+      <tr><td><b>Reserve for sovereign infrastructure</b> (UK-resident compute + storage under Article 0 binding)</td><td>£5 M</td><td>£12 M</td></tr>
+      <tr class="hl"><td><b>Working capital + 24-month runway</b></td><td>£5 M</td><td>£9 M</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:1rem"><b>Burn discipline:</b> every pound flows through SIGIL chain with Ed25519 signature. CFO signs off in an automated loop; BFT council ratifies the quarterly books; OTS Bitcoin anchor published quarterly to investors.</p>
+</section>
+
+<!-- ============================ SLIDE 17: TEAM ============================ -->
+<section class="slide" id="s17">
+  <span class="slide-num">SLIDE 17 / 20</span>
+  <h1><span class="gold">Team</span></h1>
+  <table>
+    <tbody>
+      <tr><th style="width:35%">Founder / sole director</th><td>Sir Nicholas Templeman · CSOAI Ltd (UK 16939677) · 4 years sovereign AI substrate authorship · 55 charters at 100/100 alignment</td></tr>
+      <tr><th>Engineering (M4 lane)</th><td>12 sovereign nodes (M2/M3/M4/ORION — multi-MacBook mesh)</td></tr>
+      <tr><th>Orchestration (M2 lane)</th><td>18 stdlib tools, cross-process sovereign substrate</td></tr>
+      <tr><th>Council (BFT)</th><td>33 sovereign seats (12 Generals × 3 roles) — agent personas; expands to 12 auxiliary seats on Series A close</td></tr>
+      <tr><th>Advisors (post-close)</th><td>TBD — sovereign-fund lead, UK prime, Five Eyes sovereign cloud, ISO 42001 lead-auditor body</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:1rem"><b>Founder-key-person mitigation:</b> BFT council (33 seats) operates the substrate; founder is the constitutional author, not the single point of failure. The MIT substrate + ratification chain is reproducible by any 33/33 + 5 human sigs + OTS + 14-day window + 90% supermajority process.</p>
+</section>
+
+<!-- ============================ SLIDE 18: 4 EXIT PATHS ============================ -->
+<section class="slide" id="s18">
+  <span class="slide-num">SLIDE 18 / 20</span>
+  <h1>The <span class="gold">4 exit paths</span></h1>
+  <p class="lede">None require Article 0 to be lifted. The moat is not destroyed by exit — the moat is the reason the exit is possible at the indicated multiple.</p>
+  <div class="exit-grid">
+    <div class="exit">
+      <div class="meta">Y4–Y6 · £250M–£500M · 5–10× ARR at Y3 base £50M</div>
+      <h3>1. Acquisition by sovereign cloud</h3>
+      <p>UK + Norway Operators — Hetzner, OVHcloud, Scaleway, Google Sovereign Cloud UK, AWS UK GovCloud, Azure G-Cloud, Macquarie AU, NTT AS.</p>
+      <p style="color:var(--green);margin-top:.5rem"><b>Article 0 binding post-exit: YES</b> — travels with the share purchase agreement; BFT re-ratifies under 33/33 + 5 human sigs + 14-day window.</p>
+    </div>
+    <div class="exit">
+      <div class="meta">Y4–Y7 · £300M–£900M · DEFONEOS IP + Crown pipeline</div>
+      <h3>2. Acquisition by defence prime</h3>
+      <p>BAE, Thales, Leonardo, Saab, BBI, Hanwha. Defence-partner addendum extends; 90-day re-ratification on change of control.</p>
+      <p style="color:var(--green);margin-top:.5rem"><b>Article 0 binding post-exit: YES</b> — explicit defence partner addendum.</p>
+    </div>
+    <div class="exit">
+      <div class="meta">Y5–Y8 · £500M–£1.5B IPO market cap · LSE/AIM, Oslo Børs, SGX</div>
+      <h3>3. IPO with Article 0 in the prospectus</h3>
+      <p>London / Oslo / Singapore / Tokyo — sovereign-friendly listings. Article 0 becomes a charter-of-charter in the public company constitution.</p>
+      <p style="color:var(--green);margin-top:.5rem"><b>Article 0 binding post-exit: YES</b> — binding becomes a constitutional right of the public company.</p>
+    </div>
+    <div class="exit">
+      <div class="meta">Y8+ · Not an exit — a continuation</div>
+      <h3>4. Perpetual sovereign non-profit</h3>
+      <p>CSOAI Foundation — MIT substrate + free tier forever + donor-funded. Article 0 is the foundation's reason for being.</p>
+      <p style="color:var(--green);margin-top:.5rem"><b>Article 0 binding post-exit: YES</b> — the foundation's reason to exist.</p>
+    </div>
+  </div>
+  <div class="article-zero"><b>Investor upside with sovereign durability:</b> all four paths preserve the binding. The independence is the value. Capture would destroy the multiple.</div>
+</section>
+
+<!-- ============================ SLIDE 19: RISKS ============================ -->
+<section class="slide" id="s19">
+  <span class="slide-num">SLIDE 19 / 20</span>
+  <h1>Risks & <span class="gold">mitigations</span></h1>
+  <table>
+    <thead><tr><th>Risk</th><th>Prob</th><th>Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td><b>Article 0 binding challenged by lead investor</b></td><td>Medium</td><td>High</td><td>Article 0 travels with share class; we will return the cheque rather than dilute the binding</td></tr>
+      <tr><td>Crown procurement cycle &gt; 18 months</td><td>High</td><td>Medium</td><td>Lane 1 (sovereign-cloud) + Lane 3 (compliance-pack) revenue do not depend on Crown timing</td></tr>
+      <tr><td>Open-source competitor forks substrate</td><td>Low</td><td>Low</td><td>Forks cannot re-ratify (requires 33/33 BFT + 5 human sigs + OTS + 14-day + 90% supermajority)</td></tr>
+      <tr><td>EU AI Act delays past 2 Aug 2026</td><td>Medium</td><td>Low</td><td>Demand pull is independent of statutory deadline (UK ICO, UK AI Bill, CoE Convention already in force)</td></tr>
+      <tr><td>Regulator challenge to x402 micropayments</td><td>Low</td><td>Low</td><td>x402 is a payment rail, not a regulatory mechanism; certification outcome is never paid for (Article 0)</td></tr>
+      <tr><td>Geopolitical disruption to UK sovereign status</td><td>Low</td><td>Medium</td><td>Article 0 + Charter-of-Charters is jurisdiction-agnostic; can re-domicile under equivalent sovereign framework</td></tr>
+      <tr><td>Founder key-person risk</td><td>Medium</td><td>High</td><td>BFT council (33 seats) operates the substrate; founder is the constitutional author, not the single point of failure</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================ SLIDE 20: ASK + CLOSING ============================ -->
+<section class="slide" id="s20">
+  <span class="slide-num">SLIDE 20 / 20</span>
+  <h1>What we're <span class="gold">asking for</span></h1>
+  <p class="lede">£45M–£90M Series A growth equity · £180M–£240M pre-money · Q4 2026 close.</p>
+  <h2>Round structure</h2>
+  <ul>
+    <li><b>Lead:</b> sovereign-fund or strategic sovereign-cloud operator (UK / NO / SG / JP / AU)</li>
+    <li><b>Follow-on:</b> UK prime / Five Eyes-aligned sovereign cloud / strategic operator</li>
+    <li><b>Article 0 binding travels with every share class</b> (class-right in Shareholders' Agreement, survives transfer of control)</li>
+    <li><b>BFT council seat subscription</b> at 1% of round size (optional; preserves the constitutional mechanism)</li>
+  </ul>
+  <h2>What you get</h2>
+  <ul>
+    <li>Equity in CSOAI Ltd (UK 16939677)</li>
+    <li>Quarterly SIGIL-anchored BFT-ratified financials (sovereign-grade audit trail)</li>
+    <li>Annual Royal Mint + OTS Bitcoin anchor of the entire equity cap table</li>
+    <li>First-look on the Crown RFQ pipeline</li>
+    <li>Named-buyer access to the 660-lead database under Article 0 addendum</li>
+    <li>Quarterly investor letter (1-page) + annual sovereign audit report (50–80 pages)</li>
+  </ul>
+  <h2>What you do NOT get</h2>
+  <ul>
+    <li>Board seat (Article 0 forbids)</li>
+    <li>Revenue-share with CSOAI customers (Article 0 forbids)</li>
+    <li>Success fees on certification outcomes (Article 0 forbids)</li>
+    <li>Equity-style capture of certified institutions (Article 0 forbids)</li>
+    <li>Modification of the substrate license (MIT is MIT)</li>
+  </ul>
+  <div class="article-zero" style="margin-top:1.5rem">
+    <b>Closing — JEEVES voice, executive-level:</b><br><br>
+    <i>"The next decade of AI will be defined not by the cleverness of the models, but by the constitutional honesty of the systems around them. CSOAI is the substrate that lets a regulated institution adopt AI without surrendering its independence to the auditor, the regulator, or the platform. Article 0 is not a marketing claim — it is a self-enforcing economic constraint: we forfeit the right to be the Certifying Authority the moment we take equity in a customer. The moat is the binding, not the code.</i><br><br>
+    <i>We are asking sovereign capital — not because we are sovereign-friendly, but because our customers are sovereign institutions: defence ministries, regulators, central banks, sovereign clouds, and the FTSE / Fortune boards that answer to them. The £45M–£90M we raise builds the substrate those institutions can actually adopt without compromising themselves. The 90–98% cost reduction is not a race to the bottom — it is the consequence of writing the standard once and re-charging it a million times.</i><br><br>
+    <i>Five moats. Four exit paths. One binding clause that survives all of them. We invite you to back the substrate that prevents capture."</i><br><br>
+    — Sir Nicholas Templeman · Founder · CSOAI Ltd · UK 16939677 · 2026-07-07
+  </div>
+</section>
+
+</main>
+<footer>
+  <p><b>Charter Article 0 (binding, verbatim):</b> "Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <b>CA3O is the CMKC for AI.</b>"</p>
+  <p style="margin-top:.75rem"><b>Honesty register</b>: illustrative≠live, provenance≠truth, assurance≠certification · <b>Owner-gating</b> (EAT_DIRECTIVE_2026-07-02): publish / DNS / secrets / money = stage, never fire</p>
+  <p style="margin-top:.75rem">CSOAI Ltd · UK Companies House <b>16939677</b> · London, United Kingdom · 55 sovereign charters at 100/100 alignment · 244 universal compliance frameworks · 11,316+ cross-walks · Ed25519 root key <code>d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a</code> · BFT-ROOT-001 Quorum 23/33 · Substrate license MIT · Commercial model ISO fee-for-service ONLY</p>
+  <p style="margin-top:1rem;font-size:.7rem;opacity:.7">Markdown source: <a href="../SERIES_A_DECK_2026-07-07.md">SERIES_A_DECK_2026-07-07.md</a> · Revenue dashboard: <a href="revenue-dashboard.html">revenue-dashboard.html</a></p>
+</footer>
+<script>
+// Build slide nav from sections
+(function(){
+  const nav=document.getElementById('decknav');
+  if(!nav)return;
+  const slides=document.querySelectorAll('main .slide');
+  slides.forEach((s,i)=>{
+    const a=document.createElement('a');
+    a.href='#'+s.id;
+    a.textContent=(i+1)+'. '+s.querySelector('h1').innerText.replace(/<[^>]*>?/gm,'').slice(0,40);
+    a.dataset.target=s.id;
+    nav.appendChild(a);
+  });
+  // Mark current on scroll
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        nav.querySelectorAll('a').forEach(a=>a.classList.remove('cur'));
+        const a=nav.querySelector('a[data-target="'+e.target.id+'"]');
+        if(a){a.classList.add('cur');a.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
+      }
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  slides.forEach(s=>obs.observe(s));
+})();
+</script>
+</body></html>

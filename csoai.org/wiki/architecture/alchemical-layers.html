@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alchemical Layers - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / alchemical-layers</div>
+<h1>Alchemical Layers</h1>
+<p class="tagline">Salt, Sulfur, Mercury — the substrate, the process, the bridge.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>The <strong>Alchemical Layers</strong> are CSOAI's three-fold architecture, named after the three primes of classical alchemy: Salt (body/substrate), Sulfur (soul/process), Mercury (spirit/bridge). The metaphor is operational: each layer is a measurable, monitorable component of the sovereign stack.</p>
+
+<h2>Salt — The Substrate</h2>
+<p>Salt is what remains when the fire goes out: the body, the substrate, the file system. In CSOAI's stack, Salt is the MEOK file system + the SIGIL chain. Every byte has a Salt identity — a hash, a location, a timestamp, an owner. The Salt layer never forgets and never loses data; it is the corpus on which everything else operates.</p>
+
+<p>The Salt layer exposes tools: <code>sov_vault_search</code>, <code>sov_vault_get</code>, <code>sov_list_memories</code>. Its health is measured by the <code>sov_sovereign_health_check</code> tool.</p>
+
+<h2>Sulfur — The Process</h2>
+<p>Sulfur is what burns: the soul, the process, the active agent. In CSOAI's stack, Sulfur is the OOWM model + the Big Braim ensemble + the 8 category-winning models. The Sulfur layer takes Salt as input and produces new Salt (intuitions, decisions, inferences).</p>
+
+<p>The Sulfur layer exposes tools: <code>sov_oowm_think</code>, <code>sov_oowm_evolve</code>, <code>sov_big_braim_route</code>. Its health is measured by the <code>sov_oowm_test</code> suite.</p>
+
+<h2>Mercury — The Bridge</h2>
+<p>Mercury is what flows: the spirit, the messenger, the bridge between Salt and Sulfur. In CSOAI's stack, Mercury is the MCP federation + the 7 protocols (MCP, A2A, x402, DID, JWT, ANP, AGNTCY) + the SIGIL emission layer. Mercury is volatile, ubiquitous, and essential.</p>
+
+<p>The Mercury layer exposes tools: <code>sov_sigil_emit</code>, <code>sov_mcp_federation_call</code>, <code>sov_protocol_call</code>. Its health is measured by the <code>sov_mcp_federation_stats</code> tool.</p>
+
+<h2>The Lapis Dashboard</h2>
+<p>CSOAI ships a <strong>Lapis Dashboard</strong> — a real-time view of the Salt/Sulfur/Mercury balance. The lapis is the philosopher's stone, the integrated unity of the three primes. The dashboard shows imbalance alerts (e.g., "Mercury too active, Salt not digesting") and recommends actions.</p>
+
+<h2>Historical Context</h2>
+<p>The three primes derive from Paracelsus (1493–1541), who systematised alchemical theory. They appear in the <a href="/wiki/lineage/hermetic-corpus.html">Hermetic Corpus</a>, in Kircher's 1665 synthesis (see <a href="/wiki/lineage/kircher-1665.html">Kircher 1665</a>), and in 19th-century Rosicrucian literature. CSOAI reinterprets them as a software architecture metaphor because the alchemists were, in modern terms, describing a layered state machine.</p>
+
+<h2>Modern Usage</h2>
+<p>Engineers use the lapis dashboard daily to verify stack health. When the Lapis balance drops below 0.7, the council is notified. When it drops below 0.5, sovereign operations are paused pending remediation.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a></li>
+<li><a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a></li>
+<li><a href="/wiki/sovereignty/sovereign-stack.html">Sovereign Stack</a></li>
+<li><a href="/wiki/lineage/hermetic-corpus.html">Hermetic Corpus</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Root · L0 Constitutional Substrate · CSOAI</title>
+<meta name="description" content="The L0 Sovereign Root: constitutional substrate of the 6-layer sovereign federation. 40 charters. 1,560 bilateral cross-walks. 1,200 framework cross-walks. 49GB sovereign data moat. Charter Article 0 binding on all.">
+<meta name="sovereign-charter" content="CSOAI-ROOT-SOVEREIGN-2026-06-30">
+<meta name="uk-companies-house" content="16939677">
+<link rel="canonical" href="https://csoai.org/sovereign-root/">
+<style>
+  :root { --gold:#c9a84c; --navy:#0a0e1a; --slate:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --accent:#3b82f6; --green:#10b981; --red:#ef4444; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--navy); color:var(--text); line-height:1.6; }
+  .container { max-width:1100px; margin:0 auto; padding:2rem; }
+  nav.breadcrumb { margin-bottom:1rem; font-size:.85rem; }
+  nav.breadcrumb a { color:var(--gold); }
+  h1 { font-size:2.4rem; color:var(--gold); margin-bottom:.5rem; }
+  .subtitle { color:var(--muted); margin-bottom:2rem; font-size:1.1rem; }
+  h2 { color:var(--gold); margin:2rem 0 1rem; font-size:1.4rem; border-bottom:1px solid rgba(201,168,76,.2); padding-bottom:.5rem; }
+  h3 { color:#fff; margin:1.25rem 0 .5rem; font-size:1.05rem; }
+  p, li { margin-bottom:.5rem; }
+  code { font-family:'SF Mono',monospace; font-size:.85rem; background:rgba(255,255,255,.05); padding:.15rem .4rem; border-radius:3px; color:var(--gold); }
+
+  /* HERO */
+  .hero { background:linear-gradient(135deg,#060912 0%,#0a0e1a 50%,#1a1f3a 100%); padding:3rem 2rem; text-align:center; border-bottom:1px solid rgba(201,168,76,.3); position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:radial-gradient(circle at 50% 50%, rgba(201,168,76,.08) 0%, transparent 70%); pointer-events:none; }
+  .hero-content { position:relative; z-index:1; }
+  .hero .layer-tag { display:inline-block; padding:.5rem 1.5rem; background:rgba(201,168,76,.15); border:1px solid var(--gold); border-radius:20px; font-size:.8rem; letter-spacing:.2em; color:var(--gold); margin-bottom:1rem; }
+  .hero h1 { background:linear-gradient(135deg,#fff 0%,#c9a84c 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero .tagline { color:var(--muted); font-size:1.2rem; max-width:700px; margin:1rem auto; }
+
+  /* STATS */
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:1px; background:rgba(255,255,255,.05); padding:1.5rem; border:1px solid rgba(255,255,255,.1); border-radius:8px; margin:2rem 0; }
+  .stat { background:var(--navy); padding:1.25rem; text-align:center; }
+  .stat-num { font-size:2.2rem; font-weight:700; color:var(--gold); font-family:'SF Mono',monospace; }
+  .stat-label { font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-top:.25rem; }
+
+  /* ARTICLE 0 */
+  .article-zero { background:rgba(201,168,76,.08); border:2px solid rgba(201,168,76,.4); padding:1.5rem 2rem; border-radius:8px; margin:2rem 0; text-align:center; }
+  .article-zero-label { color:var(--gold); font-weight:600; font-size:.85rem; letter-spacing:.15em; margin-bottom:.5rem; }
+  .article-zero-text { font-style:italic; font-size:1.05rem; line-height:1.5; }
+
+  /* LAYER STACK */
+  .layer-stack { background:var(--slate); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:2rem; margin:2rem 0; }
+  .layer { background:#0a0e1a; border:1px solid rgba(201,168,76,.2); border-radius:6px; padding:1rem 1.5rem; margin-bottom:.75rem; }
+  .layer:last-child { margin-bottom:0; }
+  .layer-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem; }
+  .layer-name { font-size:1.1rem; font-weight:700; color:#fff; }
+  .layer-tag { padding:.2rem .6rem; background:rgba(201,168,76,.2); border-radius:3px; font-size:.7rem; color:var(--gold); font-weight:600; }
+  .layer-desc { color:var(--muted); font-size:.85rem; margin-top:.5rem; }
+  .layer-charters { color:#94a3b8; font-size:.75rem; margin-top:.25rem; font-family:'SF Mono',monospace; }
+
+  /* DATA SECTION */
+  .data-table { width:100%; border-collapse:collapse; font-size:.85rem; margin:1rem 0; }
+  .data-table th { text-align:left; padding:.5rem; border-bottom:1px solid rgba(201,168,76,.3); color:var(--gold); font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; }
+  .data-table td { padding:.5rem; border-bottom:1px solid rgba(255,255,255,.05); }
+  .data-table tr:hover { background:rgba(255,255,255,.02); }
+
+  /* 30-FRAMEWORK */
+  .frameworks { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:.5rem; margin:1rem 0; }
+  .framework { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); border-radius:4px; padding:.5rem .75rem; font-size:.8rem; display:flex; justify-content:space-between; align-items:center; }
+  .framework-num { color:var(--gold); font-weight:600; font-size:.7rem; }
+  .framework-name { color:#cbd5e1; }
+
+  /* CTA */
+  .cta { display:flex; gap:1rem; margin:2rem 0; flex-wrap:wrap; }
+  .btn { padding:.75rem 1.5rem; border-radius:6px; font-weight:600; transition:all .2s; display:inline-block; }
+  .btn-primary { background:var(--gold); color:#0a0e1a; }
+  .btn-primary:hover { background:#d4b75c; transform:translateY(-2px); }
+  .btn-secondary { background:transparent; border:1px solid var(--gold); color:var(--gold); }
+  .btn-secondary:hover { background:rgba(201,168,76,.1); }
+
+  footer { text-align:center; padding-top:2rem; margin-top:3rem; border-top:1px solid rgba(255,255,255,.05); color:var(--muted); font-size:.85rem; }
+  footer a { color:var(--gold); }
+  .uk-binding { color:var(--gold); font-weight:600; font-size:.9rem; letter-spacing:.1em; margin-bottom:.5rem; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="layer-tag">🐉 L0 — SOVEREIGN ROOT</div>
+    <h1>The Constitutional Substrate</h1>
+    <p class="tagline">Where 40 charters, 30 frameworks, 2,760 cross-walks, and the world's data become one sovereign federation.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <nav class="breadcrumb">
+    <a href="index.html">← Sovereign Charter Universe</a> / L0 Sovereign Root
+  </nav>
+
+  <h2>📊 Federation at a Glance</h2>
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-num">40</div><div class="stat-label">Charters</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Layers (L0-L4)</div></div>
+    <div class="stat"><div class="stat-num">1,560</div><div class="stat-label">Charter Cross-Walks</div></div>
+    <div class="stat"><div class="stat-num">1,200</div><div class="stat-label">Framework Cross-Walks</div></div>
+    <div class="stat"><div class="stat-num">30+7</div><div class="stat-label">Compliance Frameworks</div></div>
+    <div class="stat"><div class="stat-num">49GB</div><div class="stat-label">Sovereign Data Moat</div></div>
+    <div class="stat"><div class="stat-num">198</div><div class="stat-label">Data Sources</div></div>
+    <div class="stat"><div class="stat-num">23/33</div><div class="stat-label">BFT Quorum</div></div>
+  </div>
+
+  <div class="article-zero">
+    <div class="article-zero-label">CHARTER ARTICLE 0 · BINDING ON ALL 40 CHARTERS</div>
+    <div class="article-zero-text">
+      "Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <strong>CA3O is the CMKC for AI.</strong>"
+    </div>
+  </div>
+
+  <h2>🏛️ The 6-Layer Federation</h2>
+  <div class="layer-stack">
+    <div class="layer">
+      <div class="layer-header">
+        <div class="layer-name">L0 — Sovereign Root</div>
+        <div class="layer-tag">CONSEED 3 CHARTERS</div>
+      </div>
+      <div class="layer-desc">The constitutional substrate. Where all sovereignty begins. Every other layer inherits from here.</div>
+      <div class="layer-charters">00-sovereign-root-charter.md · CHARTER-OF-CHARTERS.md · 00-partners-charter.md · 00-SOVEREIGN-UBI-CHARTER.md</div>
+    </div>
+    <div class="layer">
+      <div class="layer-header">
+        <div class="layer-name">L0+ — Partners Alliance</div>
+        <div class="layer-tag">FEDED PARTNER</div>
+      </div>
+      <div class="layer-desc">The partner federation. Every certified partner binds to Charter Article 0.</div>
+      <div class="layer-charters">00-partners-charter.md (inherits all 40)</div>
+    </div>
+    <div class="layer">
+      <div class="layer-header">
+        <div class="layer-name">L1 — SOV3³ / DEFONEOS</div>
+        <div class="layer-tag">DEFENCE LAYER</div>
+      </div>
+      <div class="layer-desc">Defence AI OS. 15 defence MCPs. JSP 936/440/604. PQC ML-DSA-65. AUKUS-compatible. Air-gap deployable.</div>
+      <div class="layer-charters">12-defoneos-charter.md</div>
+    </div>
+    <div class="layer">
+      <div class="layer-header">
+        <div class="layer-name">L2 — SOV3 / meok</div>
+        <div class="layer-tag">BUILD LAYER</div>
+      </div>
+      <div class="layer-desc">Sovereign AI OS. 294-server MCP fleet. MEOK Compliance Gateway. meok-attestation-api.</div>
+      <div class="layer-charters">02-meok-charter.md</div>
+    </div>
+    <div class="layer">
+      <div class="layer-header">
+        <div class="layer-name">L3 — CSOAI + 35 Industry Hives</div>
+        <div class="layer-tag">TRUST LAYER</div>
+      </div>
+      <div class="layer-desc">33-agent BFT council. Watchdog. Certification. 35 industry hives covering AI governance, technical infrastructure, and industry verticals.</div>
+      <div class="layer-charters">01-csoai + 03-12, 13-23, 24-34, 36-publicwatchdog</div>
+    </div>
+    <div class="layer">
+      <div class="layer-header">
+        <div class="layer-name">L4 — Coigndaltion</div>
+        <div class="layer-tag">CORNERSTONE</div>
+      </div>
+      <div class="layer-desc">The cornerstone that binds L1 + L2 + L3. Three Pillars: Cognition (Mamba-2), Integration (cross-walk), Cornerstone (4-layer dep).</div>
+      <div class="layer-charters">35-coigndaltion-charter.md</div>
+    </div>
+  </div>
+
+  <h2>🌍 The World's Data — 49GB Sovereign Moat</h2>
+  <p>The L0 Sovereign Root binds the world's data through 198 live sources + 49GB sovereign data moat + 532K synthetic records. Every dataset is UK-resident, GDPR-compliant, OTS-anchored.</p>
+
+  <table class="data-table">
+    <thead><tr><th>Category</th><th>Sources</th><th>Size</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td>Government</td><td>12</td><td>~14GB</td><td>UK Companies House (5M+ cos), Land Registry (30M+ txns), OS Open Names (2.5M places), DVSA MOT 2024</td></tr>
+      <tr><td>Standards</td><td>8</td><td>~50MB</td><td>ISO, IEEE, NIST, BSI, IETF, W3C, ETSI, NCSC</td></tr>
+      <tr><td>Industry</td><td>45</td><td>~25GB</td><td>Companies House PSC (6.1GB), DVSA MOT, Land Registry price-paid, HSE RIDDOR, EA Flood</td></tr>
+      <tr><td>Vulnerability</td><td>6</td><td>~3GB</td><td>NVD CVE, GitHub Advisory, OSV, MITRE ATLAS, OWASP, Exploit-DB</td></tr>
+      <tr><td>Academic</td><td>18</td><td>~2GB</td><td>arXiv, PubMed, PsyArXiv, SocArXiv, Cochrane, Campbell, FAccT, NeurIPS, ICML</td></tr>
+      <tr><td>News</td><td>27</td><td>~1GB</td><td>Reuters, FT, BBC, MIT Tech Review, Wired, The Verge, TechCrunch, The Register</td></tr>
+      <tr><td>Court</td><td>5</td><td>~200MB</td><td>CourtListener, BAILII, EUR-Lex, ICO, BfDI</td></tr>
+      <tr><td>Social</td><td>8</td><td>~500MB</td><td>Reddit, HN, X, Stack Overflow, GitHub, ArXiv discussions</td></tr>
+      <tr><td>Vendor</td><td>35</td><td>~3GB</td><td>OpenAI, Anthropic, DeepMind, Mistral, Meta AI, Google, Microsoft, Cohere, AI21, etc.</td></tr>
+      <tr><td>Synthetic</td><td>4</td><td>~532K recs</td><td>synthetic-data-factory, loopfactory, muckaway, 532K generated records</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Data Sovereignty Guarantees</h3>
+  <ul>
+    <li>✅ All data <strong>UK-resident</strong> (CSOAI Ltd infrastructure)</li>
+    <li>✅ <strong>No cross-border transfer</strong> without Charter Article 0 binding</li>
+    <li>✅ <strong>GDPR-compliant</strong> (data subject rights, DSAR support, right to erasure)</li>
+    <li>✅ <strong>Open data only</strong> (no proprietary data scraped without permission)</li>
+    <li>✅ <strong>Synthetic augmentation</strong> (532K records generated to fill gaps)</li>
+    <li>✅ <strong>OTS-anchored</strong> (every dataset hash on Bitcoin blockchain)</li>
+  </ul>
+
+  <h2>📜 The 30 Universal Compliance Frameworks</h2>
+  <p>Every charter maps to all 30 frameworks. The 7 partner-specific frameworks are added at L0+.</p>
+
+  <div class="frameworks">
+    <div class="framework"><span class="framework-num">#1</span><span class="framework-name">EU AI Act (Art 5, 10, 50, Annex III)</span></div>
+    <div class="framework"><span class="framework-num">#2</span><span class="framework-name">GDPR (Articles 5-21)</span></div>
+    <div class="framework"><span class="framework-num">#3</span><span class="framework-name">ISO/IEC 42001:2023</span></div>
+    <div class="framework"><span class="framework-num">#4</span><span class="framework-name">ISO/IEC 27001:2022</span></div>
+    <div class="framework"><span class="framework-num">#5</span><span class="framework-name">ISO/IEC 23894:2023</span></div>
+    <div class="framework"><span class="framework-num">#6</span><span class="framework-name">NIST AI RMF 1.0</span></div>
+    <div class="framework"><span class="framework-num">#7</span><span class="framework-name">NIST CSF 2.0</span></div>
+    <div class="framework"><span class="framework-num">#8</span><span class="framework-name">SOC 2 Type II</span></div>
+    <div class="framework"><span class="framework-num">#9</span><span class="framework-name">HIPAA</span></div>
+    <div class="framework"><span class="framework-num">#10</span><span class="framework-name">DORA (EU 2022/2554)</span></div>
+    <div class="framework"><span class="framework-num">#11</span><span class="framework-name">CSRD / ESRS</span></div>
+    <div class="framework"><span class="framework-num">#12</span><span class="framework-name">UK AI Regulation (pro-innovation)</span></div>
+    <div class="framework"><span class="framework-num">#13</span><span class="framework-name">UK Data Protection Act 2018</span></div>
+    <div class="framework"><span class="framework-num">#14</span><span class="framework-name">Colorado AI Act (SB 205)</span></div>
+    <div class="framework"><span class="framework-num">#15</span><span class="framework-name">California CPPA AI Regulations</span></div>
+    <div class="framework"><span class="framework-num">#16</span><span class="framework-name">NIST SP 800-53 Rev 5</span></div>
+    <div class="framework"><span class="framework-num">#17</span><span class="framework-name">NIST SP 800-171 Rev 3</span></div>
+    <div class="framework"><span class="framework-num">#18</span><span class="framework-name">FedRAMP</span></div>
+    <div class="framework"><span class="framework-num">#19</span><span class="framework-name">PCI DSS v4.0</span></div>
+    <div class="framework"><span class="framework-num">#20</span><span class="framework-name">CMMC 2.0</span></div>
+    <div class="framework"><span class="framework-num">#21</span><span class="framework-name">MITRE ATLAS</span></div>
+    <div class="framework"><span class="framework-num">#22</span><span class="framework-name">OWASP Top 10 for LLMs</span></div>
+    <div class="framework"><span class="framework-num">#23</span><span class="framework-name">IEEE 7000-2021</span></div>
+    <div class="framework"><span class="framework-num">#24</span><span class="framework-name">ISO/IEC 38507:2022</span></div>
+    <div class="framework"><span class="framework-num">#25</span><span class="framework-name">BSI PAS 1880:2020</span></div>
+    <div class="framework"><span class="framework-num">#26</span><span class="framework-name">Singapore AI Verify</span></div>
+    <div class="framework"><span class="framework-num">#27</span><span class="framework-name">Canada AIDA (proposed)</span></div>
+    <div class="framework"><span class="framework-num">#28</span><span class="framework-name">UNESCO AI Ethics Recommendation</span></div>
+    <div class="framework"><span class="framework-num">#29</span><span class="framework-name">OECD AI Principles</span></div>
+    <div class="framework"><span class="framework-num">#30</span><span class="framework-name">G7 Hiroshima AI Process</span></div>
+  </div>
+
+  <h2>🔐 The 5 Sovereign Principles</h2>
+  <ol>
+    <li><strong>Universal Access</strong> — Free training + certification in all 40 industries. No paywalls. No gatekeepers.</li>
+    <li><strong>Cryptographic Truth</strong> — Ed25519-signed. OTS-anchored. Anyone can verify. No one can forge.</li>
+    <li><strong>Sovereign Governance</strong> — 33-agent BFT council. Quorum 23/33. No single entity control.</li>
+    <li><strong>Cross-Walk Completeness</strong> — 2,760 verified cross-walks. Every charter ↔ every charter. Every framework ↔ every charter.</li>
+    <li><strong>Clean House Protocol</strong> — When an industry is captured, deploy free alternatives within 90 days.</li>
+  </ol>
+
+  <h2>📍 Verification</h2>
+  <p>This charter is publicly verifiable at <code>https://proofof.ai/verify/CSOAI-ROOT-SOVEREIGN-2026-06-30</code></p>
+
+  <div class="cta">
+    <a href="charter-sovereign-root.html" class="btn btn-primary">📜 Read Full Charter</a>
+    <a href="00-partners-charter.html" class="btn btn-secondary">🤝 Partners Alliance</a>
+    <a href="CHARTER-OF-CHARTERS.html" class="btn btn-secondary">🌐 Charter of Charters</a>
+    <a href="https://proofof.ai/verify" class="btn btn-secondary">✓ Verify</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="uk-binding">CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</div>
+  <div style="margin-bottom:.5rem;">
+    <a href="index.html">← Sovereign Charter Universe</a> ·
+    <a href="charter-sovereign-root.html">Charter</a> ·
+    <a href="watchdog.html">Public Watchdog</a> ·
+    <a href="https://proofof.ai/verify">Verify</a>
+  </div>
+  <div style="font-size:.75rem; font-style:italic;">
+    Charter Article 0: Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. CA3O is the CMKC for AI.
+  </div>
+  <div style="font-size:.7rem; margin-top:1rem; color:#475569;">
+    Ed25519-signed · BFT-ratified · 40 charters · 6 layers · 2,760 cross-walks · OTS Bitcoin-anchored
+  </div>
+</footer>
+
+</body>
+</html>

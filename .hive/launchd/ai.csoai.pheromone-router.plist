@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>ai.csoai.pheromone-router</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/bash</string>
+		<string>-c</string>
+		<string>cd /Users/nicholas/clawd/.hive/scripts &amp;&amp; exec /usr/bin/python3 /Users/nicholas/clawd/.hive/scripts/pheromone_router.py</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.pheromone-router.stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.pheromone-router.stdout.log</string>
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/nicholas/clawd</string>
+</dict>
+</plist>

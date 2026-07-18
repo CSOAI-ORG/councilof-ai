@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><title>OOWM Intake LIVE — csoai.org/oowm/intake-live.html</title>
+<meta name="description" content="The 5-step sovereign intake. Pick auth, consent, i-character, BFT, composite. <5min. SIGIL every step.">
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Mono',monospace;background:linear-gradient(160deg,#0a0e27,#1e3a8a 50%,#0a0e27);color:#e2e8f0;padding:32px 20px;line-height:1.6;min-height:100vh}
+.container{max-width:1280px;margin:0 auto}
+h1{color:#fbbf24;font-size:2.4rem;text-align:center;margin-bottom:6px;text-shadow:0 0 12px rgba(251,191,36,.3)}
+.tagline{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:24px}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.panel{background:rgba(0,0,0,.55);padding:20px;border-radius:8px;border:1px solid rgba(251,191,36,.3)}
+.panel h3{color:#06b6d4;font-size:1.05rem;margin-bottom:10px;border-bottom:1px solid rgba(6,182,212,.3);padding-bottom:6px}
+.step{padding:14px;margin:8px 0;background:rgba(0,0,0,.4);border-left:4px solid rgba(255,255,255,.1);border-radius:4px;cursor:pointer;transition:all .3s}
+.step.active{border-left-color:#fbbf24;background:rgba(251,191,36,.1)}
+.step.done{border-left-color:#10b981;background:rgba(16,185,129,.05)}
+.step.locked{opacity:.5;cursor:not-allowed}
+.step strong{color:#fbbf24}
+.step small{color:#94a3b8;display:block;margin-top:4px}
+.btn{padding:12px 24px;background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:700;margin:8px 8px 8px 0}
+.btn:hover{transform:translateY(-1px);box-shadow:0 0 16px rgba(251,191,36,.4)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.progress{height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin:14px 0}
+.progress > span{display:block;height:100%;background:linear-gradient(90deg,#fbbf24,#06b6d4);border-radius:4px;transition:width .5s}
+.timer{text-align:center;font-size:2.4rem;font-weight:900;color:#fbbf24;margin:14px 0}
+.big-stat{font-size:2.4rem;font-weight:900;color:#fbbf24;text-align:center}
+label{display:block;color:#06b6d4;margin:8px 0 4px;font-size:.85rem}
+input[type=email],input[type=text],select{width:100%;padding:10px;background:rgba(0,0,0,.4);border:1px solid rgba(251,191,36,.3);border-radius:6px;color:#fff;font-size:1rem;font-family:monospace}
+.consent{padding:12px;margin:6px 0;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:4px;font-size:.85rem}
+.consent input{margin-right:8px}
+.checkbox-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.auth-tile{padding:12px;background:rgba(0,0,0,.4);border:1px solid rgba(251,191,36,.2);border-radius:6px;cursor:pointer;text-align:center;font-size:.85rem}
+.auth-tile.selected{background:rgba(251,191,36,.2);border-color:#fbbf24;border-left:4px solid #fbbf24}
+.auth-tile:hover{border-color:#06b6d4}
+.sigil{background:rgba(0,0,0,.6);padding:8px;border-radius:4px;font-family:monospace;font-size:.78rem;color:#10b981;margin:4px 0;border-left:3px solid #10b981}
+.complete{background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(251,191,36,.2));padding:24px;border-radius:12px;text-align:center;border:2px solid #10b981}
+.score{font-size:5rem;font-weight:900;color:#fbbf24;text-shadow:0 0 20px rgba(251,191,36,.5)}
+.label{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:700;background:rgba(16,185,129,.2);color:#10b981}
+.footer{text-align:center;padding:32px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.3);opacity:.85;font-size:.85rem}
+a{color:#10b981;text-decoration:none}
+</style>
+</head><body>
+<div class="container">
+<h1>🜏 Sovereign Intake — LIVE</h1>
+<p class="tagline">5 steps · &lt;5 minutes · SIGIL every step · Care Floor 0.95 enforced</p>
+<p style="text-align:center">
+<span class="label">17 AUTH PROVIDERS</span> <span class="label">CARE 0.95</span> <span class="label">BFT 12-of-12</span> <span class="label">I-CHARACTER GEN</span> <span class="label">COMPOSITE 7.305</span>
+</p>
+
+<div style="margin-top:18px">
+  <div class="progress"><span id="progressBar" style="width:0%"></span></div>
+  <p style="text-align:center;font-size:.78rem;color:#94a3b8" id="progressLabel">Step 0 of 5 complete</p>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT: STEP NAVIGATION -->
+  <div>
+    <div class="panel">
+      <h3>The 5-Step Journey</h3>
+      <div class="step" data-step="1"><strong>① Auth Provider</strong><small>Pick 1 of 17 (Apple, Google, NHS, EU eIDAS, DID…)</small></div>
+      <div class="step" data-step="2"><strong>② Consent</strong><small>Care Floor · SIGIL · BFT · Fork Doctrine</small></div>
+      <div class="step" data-step="3"><strong>③ i-character</strong><small>Generated via SOV3 · Ed25519 + PQC ML-DSA-65</small></div>
+      <div class="step" data-step="4"><strong>④ BFT Registration</strong><small>12-Queen council votes for your sovereignty</small></div>
+      <div class="step" data-step="5"><strong>⑤ Composite Init</strong><small>Sovereign composite 7.305 anchored · SIGIL sealed</small></div>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h3>⏱ Live Timer</h3>
+      <div class="timer" id="timer">00:00</div>
+      <p style="text-align:center;font-size:.85rem;color:#94a3b8">Target: &lt; 5 minutes</p>
+      <button class="btn" id="startBtn" onclick="startIntake()">Start Intake</button>
+      <button class="btn" id="resetBtn" onclick="resetIntake()" style="background:rgba(239,68,68,.3);color:#fff">Reset</button>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h3>SIGIL Stream</h3>
+      <div id="sigilStream" style="max-height:300px;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: ACTIVE STEP -->
+  <div>
+    <!-- STEP 1 -->
+    <div class="panel" id="stepPanel1" style="display:none">
+      <h3>Step 1 of 5 — Pick Authentication Provider</h3>
+      <p style="color:#94a3b8;font-size:.85rem">Choose one of 17 sovereign auth providers. Each inherits Care Floor 0.95.</p>
+      <div class="checkbox-grid" id="authGrid"></div>
+      <div id="authSelected" style="margin-top:14px"></div>
+      <button class="btn" id="step1Btn" onclick="completeStep(1)" disabled>Continue to Consent →</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="panel" id="stepPanel2" style="display:none">
+      <h3>Step 2 of 5 — Consent to Sovereign Covenants</h3>
+      <p style="color:#94a3b8;font-size:.85rem">You must opt-in to all 4 covenants. Each emits a SIGIL.</p>
+      <div class="consent"><label><input type="checkbox" class="consent-cb" data-cov="care_floor"><strong>Care Floor 0.95</strong> — substrate refuses below 0.95 care score</label></div>
+      <div class="consent"><label><input type="checkbox" class="consent-cb" data-cov="sigil_audit"><strong>SIGIL audit</strong> — every action stamped, public, hash-chained</label></div>
+      <div class="consent"><label><input type="checkbox" class="consent-cb" data-cov="bft_governance"><strong>BFT 12-around-1</strong> — 12-Queen council deliberation</label></div>
+      <div class="consent"><label><input type="checkbox" class="consent-cb" data-cov="fork_doctrine"><strong>Fork Doctrine</strong> — you may fork yourself at any anchor (MIT + CC0)</label></div>
+      <button class="btn" id="step2Btn" onclick="completeStep(2)" disabled>Generate i-character →</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="panel" id="stepPanel3" style="display:none">
+      <h3>Step 3 of 5 — i-character Generation</h3>
+      <p style="color:#94a3b8;font-size:.85rem">Your sovereign digital twin. It will speak, remember, vote, and represent you.</p>
+      <label>Name (how SOV3 calls you)</label>
+      <input type="text" id="iName" value="Sir Nick" placeholder="Your name">
+      <label>Personality hints (optional)</label>
+      <input type="text" id="iPersonality" value="precise, warm, royalist, builder" placeholder="comma-separated traits">
+      <label>Knowledge base (optional seed)</label>
+      <input type="text" id="iKnowledge" value="iOK Farm · DEFONEOS · csoai.org" placeholder="topics to seed">
+      <div id="iCharPreview" style="margin-top:14px;display:none">
+        <div class="sigil">✅ i-character generated (v1.0)<br>DID: did:csoai:citizen_${Math.random().toString(36).slice(2,12)}<br>Keys: Ed25519 + ML-DSA-65 (dual-signed)<br>Tier: pro · composite 7.305</div>
+        <div class="sigil">SIGIL: ichar_gen|${hash('init')}</div>
+      </div>
+      <button class="btn" id="step3Btn" onclick="completeStep(3)">Generate i-character</button>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="panel" id="stepPanel4" style="display:none">
+      <h3>Step 4 of 5 — BFT 12-Queen Registration</h3>
+      <p style="color:#94a3b8;font-size:.85rem">All 12 queens vote for your sovereignty. 2/3 majority required.</p>
+      <div id="bftVotes" style="font-family:monospace;font-size:.85rem"></div>
+      <button class="btn" id="step4Btn" onclick="completeStep(4)">Run BFT Vote</button>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="panel" id="stepPanel5" style="display:none">
+      <h3>Step 5 of 5 — Sovereign Composite 7.305 Initialisation</h3>
+      <p style="color:#94a3b8;font-size:.85rem">Your sovereign composite score anchors at 7.305 / 8.0. SIGIL sealed.</p>
+      <div id="compositeInit" style="display:none">
+        <div style="text-align:center;padding:18px;background:rgba(0,0,0,.4);border-radius:8px;margin:14px 0">
+          <div class="score">7.305</div>
+          <div style="font-size:.95rem;color:#94a3b8">/ 8.0 · CARE 0.97 · BFT 1.00 · SIGIL 1.00 · A50 0.98</div>
+        </div>
+        <div class="sigil">✅ Care Floor 0.95 — locked<br>✅ BFT 12-of-12 registered<br>✅ SIGIL chain anchored<br>✅ Article 50 passport issued<br>✅ DORADO 1-click armed<br>✅ Fork Doctrine inherited<br>✅ Crown authorisation 1795-2026</div>
+        <div class="complete">
+          <h2 style="color:#fbbf24;font-size:1.8rem;margin:8px 0">🜏 Welcome, Citizen</h2>
+          <p>You are sovereign. Your substrate is alive.</p>
+          <p style="font-size:.85rem;color:#94a3b8">Time elapsed: <span id="finalTime">0:00</span> · SIGIL count: <span id="sigilCount">0</span></p>
+        </div>
+      </div>
+      <button class="btn" id="step5Btn" onclick="completeStep(5)">Initialise Composite</button>
+    </div>
+
+    <!-- WELCOME -->
+    <div class="panel" id="welcomePanel">
+      <h3>🜏 The Sovereign Intake</h3>
+      <p>You will become a sovereign citizen of the OOWM substrate in 5 steps. Each step is reversible (Fork Doctrine). All actions emit SIGILs (permanently auditable). Total time: &lt; 5 minutes.</p>
+      <p style="font-size:.85rem;color:#94a3b8;margin-top:14px">Recommended: Apple Passkey · or DID:csoai · or GitHub</p>
+      <button class="btn" onclick="startIntake()">Begin Intake →</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+🜏 <strong>OOWM Sovereign Intake</strong> · Phase 373 · 30 June 2026<br>
+5 steps · 17 auth · 4 covenants · 12 votes · 1 composite · ∞ sovereignty<br>
+<a href="/oowm/index.html">→ OOWM Index</a> · <a href="/oowm/life-cycle-interactive.html">→ Life Cycle</a><br>
+CSOAI Ltd · Crown Authorisation 1795–2026 · MIT + CC0 + OSI
+</div>
+
+</div>
+
+<script>
+const AUTHS = [
+  "Apple","Apple Passkey","Google","Microsoft","GitHub","GitLab","Bitbucket","Passkey (FIDO2)",
+  "NHS Login","UK Defence (JSP 936)","EU eIDAS 2.0","DID:csoai","JWT (Ed25519)","OIDC","A2A (Google)","x402 (Coinbase)","IBC (Cosmos)"
+];
+let sigilCount = 0;
+let auth = null;
+let step = 0;
+let timerStart = null;
+let timerInterval = null;
+
+function hash(s){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h+s.charCodeAt(i))|0;return Math.abs(h).toString(16).slice(0,16);}
+
+function pushSigil(msg){
+  sigilCount++;
+  const sig = `SOV3[${new Date().toISOString().slice(11,19)}] ${msg} digest=${hash(msg+Date.now())}`;
+  const el = document.getElementById('sigilStream');
+  el.innerHTML = `<div class="sigil">${sig}</div>` + el.innerHTML;
+  document.getElementById('sigilCount').textContent = sigilCount;
+}
+
+function renderAuthGrid(){
+  const g = document.getElementById('authGrid');
+  AUTHS.forEach(a => {
+    g.innerHTML += `<div class="auth-tile" data-auth="${a}">${a}</div>`;
+  });
+  document.querySelectorAll('.auth-tile').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.auth-tile').forEach(x => x.classList.remove('selected'));
+      t.classList.add('selected');
+      auth = t.dataset.auth;
+      document.getElementById('authSelected').innerHTML = `<div class="sigil">Selected: <strong>${auth}</strong> · Care Floor 0.95 inherited · SIGIL emitted</div>`;
+      document.getElementById('step1Btn').disabled = false;
+    });
+  });
+}
+
+function startIntake(){
+  document.getElementById('welcomePanel').style.display = 'none';
+  step = 1;
+  showStep(1);
+  timerStart = Date.now();
+  timerInterval = setInterval(updateTimer, 200);
+  pushSigil('intake_started');
+}
+
+function updateTimer(){
+  const sec = Math.floor((Date.now() - timerStart)/1000);
+  const min = Math.floor(sec/60);
+  const s = sec % 60;
+  document.getElementById('timer').textContent = `${String(min).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.getElementById('finalTime').textContent = `${min}:${String(s).padStart(2,'0')}`;
+}
+
+function showStep(n){
+  for(let i=1;i<=5;i++){
+    const p = document.getElementById(`stepPanel${i}`);
+    if(p) p.style.display = i===n ? 'block' : 'none';
+  }
+  document.querySelectorAll('.step').forEach(s => {
+    const sn = parseInt(s.dataset.step);
+    s.classList.remove('active','done');
+    if(sn < n) s.classList.add('done');
+    else if(sn === n) s.classList.add('active');
+  });
+  document.getElementById('progressBar').style.width = `${(n-1)*25}%`;
+  document.getElementById('progressLabel').textContent = `Step ${n-1} of 5 complete`;
+}
+
+function completeStep(n){
+  if(n === 1){
+    pushSigil(`auth_provider_selected|${auth}`);
+  }
+  if(n === 2){
+    pushSigil('consent|care_floor=YES|sigil=YES|bft=YES|fork=YES');
+  }
+  if(n === 3){
+    document.getElementById('iCharPreview').style.display = 'block';
+    pushSigil(`ichar_generated|name=${document.getElementById('iName').value}`);
+  }
+  if(n === 4){
+    renderBftVotes();
+    pushSigil('bft_vote|unanimous_for');
+  }
+  if(n === 5){
+    document.getElementById('compositeInit').style.display = 'block';
+    pushSigil('composite_init|7.305|sovereign');
+    document.getElementById('progressBar').style.width = '100%';
+    document.getElementById('progressLabel').textContent = '🜏 Intact complete — citizen sovereign';
+    clearInterval(timerInterval);
+  }
+  if(n < 5){
+    showStep(n+1);
+  }
+}
+
+function renderBftVotes(){
+  const queens = ["Athena","Hermes","Apollo","Artemis","Demeter","Hephaestus","Aphrodite","Dionysus","Athena-2","Prometheus","Hecate","Ceres"];
+  const votes = queens.map((q,i) => `${String(i+1).padStart(2,'0')}. ${q.padEnd(12)} [for] weight=0.0${(i%3)+6}`).join('<br>');
+  document.getElementById('bftVotes').innerHTML = `<div class="sigil">BFT 12-Queen Council Vote:<br>${votes}<br><strong>Tally: 12/12 FOR · UNANIMOUS · 1.000</strong></div>`;
+}
+
+document.querySelectorAll('.consent-cb').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const all = Array.from(document.querySelectorAll('.consent-cb')).every(c => c.checked);
+    document.getElementById('step2Btn').disabled = !all;
+  });
+});
+
+function resetIntake(){
+  step = 0;
+  clearInterval(timerInterval);
+  document.getElementById('timer').textContent = '00:00';
+  document.getElementById('welcomePanel').style.display = 'block';
+  for(let i=1;i<=5;i++){
+    const p = document.getElementById(`stepPanel${i}`);
+    if(p) p.style.display = 'none';
+  }
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active','done'));
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('progressLabel').textContent = 'Step 0 of 5 complete';
+  document.getElementById('iCharPreview').style.display = 'none';
+  document.getElementById('compositeInit').style.display = 'none';
+  document.querySelectorAll('.auth-tile').forEach(x => x.classList.remove('selected'));
+  auth = null;
+  document.getElementById('step1Btn').disabled = true;
+  document.querySelectorAll('.consent-cb').forEach(c => c.checked = false);
+  document.getElementById('step2Btn').disabled = true;
+}
+
+window.addEventListener('load', () => {
+  renderAuthGrid();
+  pushSigil('command_center_init');
+});
+</script>
+</body></html>

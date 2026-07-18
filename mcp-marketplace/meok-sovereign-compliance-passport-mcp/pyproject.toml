@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-compliance-passport-mcp"
+version = "1.0.0"
+description = "Sovereign Compliance Passport MCP - 12-framework crosswalk passport. One control satisfies N frameworks (write once, comply many). Covers EU AI Act, DORA, GDPR, NIS2, ISO 42001, NIST RMF, JSP 936, HIPAA, SOC 2, ISO 27001, PCI-DSS."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

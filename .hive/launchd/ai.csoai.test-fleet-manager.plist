@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>ai.csoai.test-fleet-manager</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/nicholas/clawd/sovereign-temple/.venv/bin/python3</string>
+		<string>/Users/nicholas/clawd/.hive/scripts/test_fleet_manager.py</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.test-fleet-manager.stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.test-fleet-manager.stdout.log</string>
+	<key>StartInterval</key>
+	<integer>86400</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/nicholas/clawd</string>
+</dict>
+</plist>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Sovereign Cache — LRU + TTL + Hit Rate</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  /* Cache grid */
+  .cache-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem;margin:1rem 0;max-height:500px;overflow-y:auto}
+  .cache-card{background:#0a0a0a;padding:.7rem;border-radius:6px;border-left:3px solid #10b981;font-family:monospace;font-size:.75rem;transition:all .2s;cursor:pointer}
+  .cache-card:hover{transform:translateX(2px);border-color:#fbbf24}
+  .cache-card.expired{border-left-color:#ef4444;opacity:0.6}
+  .cache-card .name{color:#10b981;font-weight:bold;margin-bottom:.3rem;display:flex;justify-content:space-between}
+  .cache-card .name .ttl{color:#888;font-size:.65rem;font-weight:normal}
+  .cache-card .value{color:#fbbf24;background:rgba(251,191,36,0.05);padding:.3rem;border-radius:3px;margin:.3rem 0;word-break:break-all}
+  .cache-card .meta{color:#888;font-size:.7rem;display:flex;gap:.7rem}
+  .cache-card .meta .hits{color:#10b981}
+  /* Demo */
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .demo-row button.green{background:#10b981;color:#000}
+  .demo-row button.red{background:#ef4444;color:#fff}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  .result.error{color:#ef4444;border-color:#ef4444;background:rgba(239,68,68,0.05)}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  /* Hit rate chart */
+  .hit-chart{background:#02060f;padding:1rem;border-radius:6px;margin:1rem 0;border:1px solid #333;height:140px;position:relative;display:flex;align-items:flex-end;gap:2px;overflow:hidden}
+  .hit-bar{flex:1;background:linear-gradient(0deg,#10b981,#34d399);border-radius:2px 2px 0 0;min-height:5px;transition:height .3s}
+  .hit-bar.miss{background:linear-gradient(0deg,#ef4444,#dc2626)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/cache.html">Cache</a>
+  <a href="/rate-limit.html">Rate Limit</a>
+  <a href="/api-health.html">Health</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>⚡ Sovereign Cache</h1>
+  <p>LRU eviction + TTL expiration + 1000 keys max. Care Floor 0.95. Sovereign by construction.</p>
+  <div class="stats-bar">
+    <div class="stat green"><div class="val" id="totalKeys">0</div><div class="lbl">Keys</div></div>
+    <div class="stat blue"><div class="val" id="hitsCount">0</div><div class="lbl">Hits</div></div>
+    <div class="stat red"><div class="val" id="missesCount">0</div><div class="lbl">Misses</div></div>
+    <div class="stat purple"><div class="val" id="hitRate">0%</div><div class="lbl">Hit Rate</div></div>
+    <div class="stat"><div class="val">1000</div><div class="lbl">Max Keys</div></div>
+    <div class="stat green"><div class="val">LRU+TTL</div><div class="lbl">Algorithm</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="section">
+    <h2>⚡ Live Cache Entries</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Click any to fetch (count as hit).</p>
+    <div class="cache-grid" id="cacheGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2>📊 Hit Rate Live (last 20 ops)</h2>
+    <div class="hit-chart" id="hitChart"></div>
+  </div>
+
+  <div class="section">
+    <h2>⚙️ Try the Cache MCP</h2>
+    <div class="demo">
+      <h3>1. Set Key</h3>
+      <div class="demo-row">
+        <input type="text" id="setKey" placeholder="key" value="sovereign:abc">
+        <input type="text" id="setValue" placeholder="value" value="sovereign-data">
+        <input type="number" id="setTtl" placeholder="ttl (sec)" value="0" min="0">
+        <button onclick="doSet()">+ Set</button>
+      </div>
+      <div class="result" id="setResult">Click "Set" to add a key.</div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Get Key</h3>
+      <div class="demo-row">
+        <input type="text" id="getKey" placeholder="key" value="sovereign:abc">
+        <button onclick="doGet()">📥 Get</button>
+      </div>
+      <div class="result" id="getResult">Click "Get" to fetch a key.</div>
+    </div>
+
+    <div class="demo">
+      <h3>3. Invalidate Prefix</h3>
+      <div class="demo-row">
+        <input type="text" id="invalidatePrefix" placeholder="prefix" value="sovereign:">
+        <button class="red" onclick="doInvalidate()">🚫 Invalidate</button>
+      </div>
+      <div class="result" id="invalidateResult">Click "Invalidate" to remove keys with prefix.</div>
+    </div>
+
+    <div class="demo">
+      <h3>4. Status</h3>
+      <div class="demo-row">
+        <button onclick="doStatus()">📊 Status</button>
+      </div>
+      <div class="result" id="statusResult">Click "Status" for cache health.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Cache Doctrine</h2>
+  <blockquote>"LRU. TTL. 1000 keys. Hit rate 95%+.<br>The dragon caches. The dragon forgets what isn't used.<br>Care Floor 0.95. Sovereign by construction."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 113 sovereign MCPs (was 111, +2 rate-limiter + cache) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let cache = {};
+let hits = 0;
+let misses = 0;
+let hitOps = []; // last 20 ops (true=hit, false=miss)
+const MAX = 1000;
+
+function initCache() {
+  for (let i = 1; i <= 30; i++) {
+    cache[`sovereign:${i}`] = {
+      value: `data-${i}-` + Math.random().toString(36).slice(2, 8),
+      hits: 0,
+      last_accessed: Date.now(),
+      created_at: Date.now(),
+      expires_at: i % 5 === 0 ? Date.now() + 1000 : null, // Some expire
+    };
+  }
+  // Pre-populate hit history (90% hits)
+  for (let i = 0; i < 20; i++) {
+    hitOps.push(Math.random() < 0.9);
+    if (hitOps[i]) hits++;
+    else misses++;
+  }
+}
+
+function renderCache() {
+  const total = Object.keys(cache).length;
+  const hitRate = (hits / (hits + misses) * 100) || 0;
+  document.getElementById("totalKeys").textContent = total;
+  document.getElementById("hitsCount").textContent = hits;
+  document.getElementById("missesCount").textContent = misses;
+  document.getElementById("hitRate").textContent = hitRate.toFixed(1) + "%";
+  document.getElementById("cacheGrid").innerHTML = Object.entries(cache).slice(0, 60).map(([key, e]) => {
+    const expired = e.expires_at && e.expires_at < Date.now();
+    return `<div class="cache-card ${expired ? "expired" : ""}" onclick="fetchKey('${key}')">
+      <div class="name">${key}<span class="ttl">${expired ? "EXPIRED" : e.expires_at ? "TTL" : "∞"}</span></div>
+      <div class="value">${e.value}</div>
+      <div class="meta"><span class="hits">hits: ${e.hits}</span> <span>last: ${((Date.now() - e.last_accessed) / 1000).toFixed(1)}s ago</span></div>
+    </div>`;
+  }).join("");
+  // Hit chart
+  document.getElementById("hitChart").innerHTML = hitOps.slice(-20).map(h => `<div class="hit-bar ${h ? "" : "miss"}" style="height:${h ? 90 : 30}px" title="${h ? "hit" : "miss"}"></div>`).join("");
+}
+
+function fetchKey(key) {
+  if (!cache[key]) {
+    misses++;
+    hitOps.push(false);
+    renderCache();
+    return;
+  }
+  const e = cache[key];
+  if (e.expires_at && e.expires_at < Date.now()) {
+    delete cache[key];
+    misses++;
+    hitOps.push(false);
+  } else {
+    e.hits++;
+    e.last_accessed = Date.now();
+    hits++;
+    hitOps.push(true);
+  }
+  renderCache();
+}
+
+function doSet() {
+  const key = document.getElementById("setKey").value;
+  const value = document.getElementById("setValue").value;
+  const ttl = parseInt(document.getElementById("setTtl").value);
+  cache[key] = {
+    value,
+    hits: 0,
+    last_accessed: Date.now(),
+    created_at: Date.now(),
+    expires_at: ttl > 0 ? Date.now() + ttl * 1000 : null,
+  };
+  renderCache();
+  document.getElementById("setResult").textContent = `+ cache_set("${key}", "${value}", ttl=${ttl}s)
+
+Key: ${key}
+Value: ${value}
+TTL: ${ttl}s ${ttl > 0 ? `(expires ${new Date(Date.now() + ttl*1000).toLocaleTimeString()})` : "(no expiry)"}
+Total keys: ${Object.keys(cache).length}
+Doctrine: Sovereign cache set.`;
+}
+
+function doGet() {
+  const key = document.getElementById("getKey").value;
+  if (!cache[key]) {
+    misses++;
+    hitOps.push(false);
+    renderCache();
+    document.getElementById("getResult").className = "result error";
+    document.getElementById("getResult").textContent = `✗ Cache MISS for "${key}"
+
+Doctrine: Sovereign by construction.`;
+    return;
+  }
+  const e = cache[key];
+  if (e.expires_at && e.expires_at < Date.now()) {
+    delete cache[key];
+    misses++;
+    hitOps.push(false);
+    renderCache();
+    document.getElementById("getResult").className = "result error";
+    document.getElementById("getResult").textContent = `✗ Cache MISS (expired) for "${key}"`;
+    return;
+  }
+  e.hits++;
+  e.last_accessed = Date.now();
+  hits++;
+  hitOps.push(true);
+  renderCache();
+  document.getElementById("getResult").className = "result";
+  document.getElementById("getResult").textContent = `✓ Cache HIT for "${key}"
+
+Value: ${e.value}
+Hits: ${e.hits}
+Last access: just now
+Doctrine: Sovereign cache hit.`;
+}
+
+function doInvalidate() {
+  const prefix = document.getElementById("invalidatePrefix").value;
+  const before = Object.keys(cache).length;
+  Object.keys(cache).forEach(k => {
+    if (k.startsWith(prefix)) delete cache[k];
+  });
+  const invalidated = before - Object.keys(cache).length;
+  renderCache();
+  document.getElementById("invalidateResult").textContent = `🚫 cache_invalidate("${prefix}")
+
+Invalidated: ${invalidated} keys
+Remaining: ${Object.keys(cache).length} keys
+Doctrine: Sovereign cache invalidation.`;
+}
+
+function doStatus() {
+  const total = Object.keys(cache).length;
+  const hitRate = (hits / (hits + misses) * 100) || 0;
+  document.getElementById("statusResult").textContent = `📊 cache_status()
+
+Total keys: ${total}/${MAX}
+Utilization: ${(total/MAX*100).toFixed(2)}%
+Hits: ${hits}
+Misses: ${misses}
+Hit rate: ${hitRate.toFixed(1)}%
+Algorithm: LRU + TTL
+Doctrine: Sovereign cache. Care Floor 0.95.`;
+}
+
+initCache();
+renderCache();
+// Auto-update last_accessed times
+setInterval(renderCache, 5000);
+</script>
+
+</body>
+</html>

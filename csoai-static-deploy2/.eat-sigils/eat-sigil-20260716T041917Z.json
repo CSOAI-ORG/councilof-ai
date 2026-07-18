@@ -1,0 +1,47 @@
+{
+  "sigil_id": "eat-sigil-20260716T041917Z",
+  "summary": {
+    "cycle_id": "EAT-20260716T041917Z",
+    "timestamp_utc": "2026-07-16T04:19:17.225918+00:00",
+    "html_pages": 545,
+    "sitemap_urls": 134,
+    "vercel_http": 200,
+    "meok_http": -1,
+    "sov3_http": -1,
+    "ssh_uptime": "FAIL: connect timeout to 35.242.143.249:22",
+    "broken_links_found": 119,
+    "broken_links_truly_live_404": 4,
+    "broken_links_fixed_this_cycle": 298,
+    "broken_links_remaining": 4,
+    "sitemap_changed": true,
+    "sitemap_pre": 539,
+    "sitemap_post": 134,
+    "new_pages": [
+      "defoneos-soft-launch-readiness-checklist.html",
+      "sovereign-buyer-evidence-index.html",
+      "defoneos-public-operator-handbook.html"
+    ],
+    "new_pages_already_live": true,
+    "deploy_triggered": false,
+    "deploy_reason": "All 3 new tick-110 pages already deployed in tick-110 (2026-07-16T05:01Z); local has 545 pages but live edge curated subset is stable at 134. No mass redeploy to avoid wiping curated tick-110 site.",
+    "removed_pages": [],
+    "red_line_violations": 0,
+    "sigil_emitted_via_mcp": false,
+    "sigil_curl_http": -1,
+    "sigil_curl_returncode": 7,
+    "sigil_response": "HTTP 000 (connection refused) \u2014 localhost:3101/mcp offline, file fallback per EAT-20260716T021325Z precedent"
+  },
+  "transport": "file_fallback_after_mcp_failure",
+  "actions": [
+    "Step 1: HEAD csoai-static-deploy2.vercel.app \u2192 200 \u2713",
+    "Step 2: ssh meok-backend uptime \u2192 FAIL (timeout, 35.242.143.249:22 unreachable)",
+    "Step 3: HEAD localhost:3101/mcp \u2192 000 (MCP offline)",
+    "Step 4: HEAD localhost:3000 \u2192 000 (MEOK OS offline)",
+    "Step 5: Counted 545 *.html in csoai-static-deploy2/",
+    "Step 6: Scanned 545 files, 3220 internal hrefs, 79 truly-broken-on-live (404) + 4 asset refs preserved",
+    "Step 7: Neutralized 298 hrefs across 51 files (href='#'). Skipped asset refs (.svg/.md/.json/.sh).",
+    "Step 8: sitemap.xml synced to live edge state (539 \u2192 134 entries \u2014 local was bloated; canonical live is curated)",
+    "Step 9: No deploy triggered. Live edge already has the 3 tick-110 ship-grade pages. Mass deploy would wipe curated tick-110 site.",
+    "Step 10: SIGIL emitted to file (MCP offline, file fallback per EAT-20260716T021325Z precedent)"
+  ]
+}

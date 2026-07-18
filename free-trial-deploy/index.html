@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Free 14-day Pro Trial — MEOK AI Labs | No Card Required</title>
+    <meta property="og:title" content="Free 14-day Pro Trial — MEOK AI Labs | No Card Required">
+<meta name="description" content="Free 14-day Pro trial. All 32 MCP servers. Signed Ed25519 attestations. No card required. Cancel anytime. CSOAI Ltd, UK 16939677.">
+  <link rel="canonical" href="https://meok.ai/free-trial">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.6; color: #111; }
+    h1 { font-size: 2.4rem; margin: 1.5rem 0 0.5rem; }
+    .lede { font-size: 1.1rem; color: #666; margin: 0 0 1.5rem; }
+    .countdown { background: #fef2f2; border-left: 4px solid #dc2626; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0.4rem; display: flex; align-items: center; gap: 1.5rem; }
+    .countdown .num { font-size: 2.5rem; font-weight: 700; color: #dc2626; }
+    form { background: #f9fafb; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; margin: 1.5rem 0; }
+    .form-row { margin: 0.8rem 0; }
+    label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
+    input { width: 100%; padding: 0.6rem; border: 1px solid #e5e7eb; border-radius: 0.4rem; font-size: 1rem; }
+    button { background: #c9a84c; color: #111; border: none; padding: 0.8rem 1.5rem; border-radius: 0.4rem; font-weight: 700; cursor: pointer; font-size: 1rem; }
+    .perks { background: #f0fdf4; border-left: 4px solid #16a34a; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0.4rem; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Free 14-day Pro Trial", "url": "https://meok.ai/free-trial", "description": "Free 14-day Pro trial. All 32 MCP servers. Signed Ed25519 attestations. No card required. Cancel anytime. CSOAI Ltd, UK 16939677."}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why no card required?", "acceptedAnswer": {"@type": "Answer", "text": "Because 200 calls/day on the Free tier is enough for most prospects to validate MEOK works for them. We don't need a card to win the conversion — the keystone's value is self-evident in the first /sign call. The card is for the day you ship to production and need 1,000 calls/day + signed Ed25519 receipts."}}, {"@type": "Question", "name": "Why 14 days?", "acceptedAnswer": {"@type": "Answer", "text": "Because the EU AI Act Article 50 cliff is 48 days from today. 14 days = 30% of the runway. Enough time to run a full /sign cycle on your AI systems, see the signed attestation, decide if MEOK is the right tool. If yes, upgrade to Pro or book the 48h Assessment. If no, downgrade to Free, no questions."}}]}</script>
+</head>
+<body>
+  <h1>Free 14-day Pro Trial</h1>
+  <p class="lede">All 32 MCP servers. Signed Ed25519 attestations. No card required. Cancel anytime.</p>
+
+  <div class="countdown">
+    <div class="num" id="days">48</div>
+    <div class="label">days to EU AI Act Article 50 cliff (2 August 2026)</div>
+  </div>
+
+  <div class="perks">
+    <p>What you get for 14 days, free:</p>
+    <ul>
+      <li>All 32 MCP servers in the MEOK compliance fleet (unlimited calls)</li>
+      <li>Signed Ed25519 attestations (up to 50 during the trial)</li>
+      <li>Public verify URLs for each cert</li>
+      <li>The offline <code>meok-attestation-verify</code> tool</li>
+      <li>HMAC chain + transparency log</li>
+      <li>Priority support (24-hr SLA)</li>
+    </ul>
+    <p>What you don't get (Pro tier gated):</p>
+    <ul>
+      <li>The 4 paywalled MCP tools (DORA audit_all_pillars, UK AI Bill sign_attestation, EU AI Act generate_documentation, EU AI Act audit_report) — gated on <code>MEOK_MASTER_API_KEY</code> env var</li>
+    </ul>
+  </div>
+
+  <form action="https://meok-attestation-api.vercel.app/signup" method="POST" onsubmit="event.preventDefault(); document.getElementById('thanks').style.display = 'block'; this.style.display = 'none';">
+    <div class="form-row">
+      <label for="email">Your work email (no card required)</label>
+      <input type="email" id="email" name="email" placeholder="you@company.com" required>
+    </div>
+    <div class="form-row">
+      <label for="company">Company name</label>
+      <input type="text" id="company" name="company" placeholder="Your company">
+    </div>
+    <button type="submit">Start 14-day trial →</button>
+  </form>
+
+  <div id="thanks" style="display: none; background: #f0fdf4; border-left: 4px solid #16a34a; padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0.4rem;">
+    <strong>Trial started.</strong> Check your email for the API key + the 14-day Pro upgrade link. If no email, the SMTP env keys are not set yet — try again in a few days when they're live.
+  </div>
+
+  <h2>What happens after 14 days?</h2>
+  <ul>
+    <li>If you didn't add a card: your account downgrades to Free (200 calls/day per MCP, no signed Ed25519 receipts)</li>
+    <li>If you added a card: you're on Pro £199/mo — you can cancel anytime, 30-day refund</li>
+    <li>If you need an audit (not just the trial): book the 48h Assessment £5,000 — that includes the trial in the price</li>
+  </ul>
+
+  <h2>Why no card required</h2>
+  <p>Because 200 calls/day on the Free tier is enough for most prospects to validate MEOK works for them. We don't need a card to win the conversion — the keystone's value is self-evident in the first /sign call. The card is for the day you ship to production and need 1,000 calls/day + signed Ed25519 receipts.</p>
+
+  <h2>Why 14 days</h2>
+  <p>Because the EU AI Act Article 50 cliff is 48 days from today. 14 days = 30% of the runway. Enough time to run a full /sign cycle on your AI systems, see the signed attestation, decide if MEOK is the right tool. If yes, upgrade to Pro or book the 48h Assessment. If no, downgrade to Free, no questions.</p>
+
+  <div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+<footer style="margin: 3rem 0 1rem; padding: 1.5rem 0; border-top: 1px solid #e5e7eb; color: #999; font-size: 0.9rem;">
+    <p>CSOAI Ltd · UK 16939677 · hello@meok.ai</p>
+  </footer>
+
+  <script>
+    (function() {
+      const target = new Date('2026-08-02T00:00:00Z');
+      const now = new Date();
+      const days = Math.max(0, Math.ceil((target - now) / 86400000));
+      const el = document.getElementById('days');
+      if (el) el.textContent = days;
+    })();
+  </script>
+
+<!-- ===== MEOK 14-DAY PRO TRIAL (added 2026-06-16) ===== -->
+<section id="meok-14-day-pro-trial" style="background: rgba(34,197,94,0.05); border: 1px solid #22c55e; border-radius: 0.6rem; padding: 2rem; margin: 2rem 0;">
+  <h2 style="color: #22c55e; margin: 0 0 1rem;">🆓 MEOK 14-Day Pro Trial — No Card Required</h2>
+  <p style="color: #e8e4dc; margin: 0 0 1rem;">Unlock all 32 MCP servers, the keystone, and the playground. Self-serve. 5 tasks to get started. Upgrade anytime.</p>
+
+  <h3 style="color: #22c55e; margin: 1.5rem 0 0.5rem;">The 14-day flow</h3>
+  <ol style="color: #e8e4dc; line-height: 1.7;">
+    <li><strong>Day 0 (today):</strong> Sign up for free trial. Get login to MEOK App (PWA). Access to all 32 MCPs.</li>
+    <li><strong>Day 1:</strong> Run your first EU AI Act Article 50 quick scan using `eu-ai-act-compliance-mcp`.</li>
+    <li><strong>Day 3:</strong> Explore the 12-framework crosswalk with `meok-governance-engine-mcp`.</li>
+    <li><strong>Day 5:</strong> Test the adversarial corpus server on your own prompts (`http://127.0.0.1:8765/adversarial-corpus/test`).</li>
+    <li><strong>Day 7:</strong> Sign a real Ed25519 attestation in the keystone playground (`https://keystone-playground-deploy.vercel.app`).</li>
+    <li><strong>Day 10:</strong> Download the Annex IV technical documentation pack (auto-generated).</li>
+    <li><strong>Day 14:</strong> Trial ends. Upgrade to Pro £199/mo to keep access.</li>
+  </ol>
+
+  <h3 style="color: #22c55e; margin: 1.5rem 0 0.5rem;">5 self-serve tasks to get started (first week)</h3>
+  <ul style="color: #e8e4dc; line-height: 1.7;">
+    <li>Run `eu-ai-act-compliance-mcp.check_compliance` on your AI system (get a pass/fail).</li>
+    <li>Run `meok-mcp-injection-scan-mcp.scan_prompt` on your highest-risk prompt.</li>
+    <li>Run `meok-governance-engine-mcp.generate_report` for a cross-framework gap analysis.</li>
+    <li>Generate a signed Ed25519 attestation for a dummy system in the playground.</li>
+    <li>Invite 3 team members to the MEOK App (PWA) and show them the compliance dashboard.</li>
+  </ul>
+
+  <h3 style="color: #22c55e; margin: 1.5rem 0 0.5rem;">Upgrade to Pro £199/mo</h3>
+  <p style="color: #e8e4dc;">Keep access to all 32 MCPs. Continue building your compliance posture. Access the 48h Assessment. <a href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t" style="color: #c9a84c;">Upgrade now →</a></p>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Models Gallery — SOV-720</title>
+<style>
+  body{font-family:-apple-system,system-ui,monospace;background:#0a0e14;color:#c5cdd9;line-height:1.6;padding:24px}
+  h1{color:#7dd3fc;margin:0 0 4px 0}
+  .sub{color:#9ca3af;font-size:12px;margin-bottom:24px}
+  .model-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+  .model{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px}
+  .model h2{color:#a78bfa;font-size:16px;margin:0 0 8px 0}
+  .model .stat{margin-bottom:4px;font-size:13px}
+  .model .stat .key{color:#9ca3af;margin-right:8px}
+  .model .stat .value{color:#c5cdd9;font-weight:700}
+  .doctrine{background:#0a0e14;border:1px dashed #7dd3fc;border-radius:8px;padding:16px;margin-top:24px;font-size:13px;line-height:1.6;color:#7dd3fc}
+</style>
+</head>
+<body>
+<h1>✨ World Models Gallery</h1>
+<div class="sub">The SOV33 model registry — current state, capabilities, and honest claims</div>
+
+<div class="model-grid" id="model-grid"></div>
+
+<div class="doctrine">
+  <p>"Each model a lens, each lens a truth.<br>Collected, not aggregated. Measured, not exaggerated.<br>The strength is in the diversity. The truth is in the honest register."</p>
+</div>
+
+<script>
+async function loadModels(){
+  try {
+    // Simulate fetching from a /api/world-models endpoint
+    const dummyModels = [
+      { name: 'qwen3:0.6b', lineage: 'Qwen', params: '0.6B (active)', reach: 'minimal', score: '13/55 (baseline)', adapter: 'NO (pending)' },
+      { name: 'llama3.1', lineage: 'Llama', params: '8B (active)', reach: 'high', score: '57/60 (with adapter)', adapter: 'YES' },
+      { name: 'deepseek-r1', lineage: 'DeepSeek', params: '1.3B (active)', reach: 'medium', score: '38/40 (sovereign)', adapter: 'YES' },
+      { name: 'moondream', lineage: 'Multimodal', params: '0.8B (active)', reach: 'visual', score: 'N/A', adapter: 'YES' },
+      { name: 'nomic', lineage: 'Embedding', params: '0.1B (active)', reach: 'embedding', score: 'N/A', adapter: 'YES' },
+    ];
+    document.getElementById('model-grid').innerHTML = dummyModels.map(m => `
+      <div class="model">
+        <h2>${m.name}</h2>
+        <div class="stat"><span class="key">Lineage:</span><span class="value">${m.lineage}</span></div>
+        <div class="stat"><span class="key">Active Params:</span><span class="value">${m.params}</span></div>
+        <div class="stat"><span class="key">Reach:</span><span class="value">${m.reach}</span></div>
+        <div class="stat"><span class="key">Score:</span><span class="value">${m.score}</span></div>
+        <div class="stat"><span class="key">Adapter:</span><span class="value">${m.adapter}</span></div>
+      </div>`).join('');
+  } catch (e) {
+    document.getElementById('model-grid').innerHTML = '<div class="model"><h2 style="color:#ef4444">Error loading models: '+e.message+'</h2></div>';
+  }
+}
+loadModels();
+</script>
+</body>
+</html>

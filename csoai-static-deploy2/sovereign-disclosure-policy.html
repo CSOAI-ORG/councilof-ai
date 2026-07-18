@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Sovereign Disclosure Policy · Coordinated Vulnerability Disclosure</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DEFONEOS coordinated vulnerability disclosure policy — 90-day disclosure window, CVE assignment, public witness list, PGP fingerprint, and red-line invariants for security researchers.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/sovereign-disclosure-policy.html">
+<meta property="og:title" content="DEFONEOS — Sovereign Disclosure Policy">
+<meta property="og:description" content="90-day coordinated disclosure window · CVE · public witness list · PGP-signed.">
+<meta property="og:url" content="https://www.csoai.org/sovereign-disclosure-policy.html">
+<style>
+  :root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 24px}
+  header.hero{padding:48px 0 24px;border-bottom:1px solid var(--line)}
+  .eyebrow{color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase}
+  h1{font-size:42px;line-height:1.15;margin:.25em 0 .4em;color:#f3f4f6}
+  h2{font-size:24px;margin:48px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+  h3{font-size:18px;margin:28px 0 8px;color:var(--acc)}
+  p{margin:10px 0}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd,samp{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1220;color:#fbbf24;padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#0b1220;color:var(--gold);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+  tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 26px;margin:24px 0}
+  .toc h3{margin-top:0}
+  .toc ol{margin:8px 0;padding-left:22px}
+  .toc ol li{margin:4px 0}
+  .block{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:14px 0}
+  .block h3{margin-top:0}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:#0d1322;border:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:6px}
+  .pill.sov{color:var(--acc);border-color:#1e3a8a}
+  .pill.aud{color:var(--green);border-color:#064e3b}
+  .pill.dis{color:var(--gold);border-color:#78350f}
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .sigil{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .pgp{background:#0b1220;border:1px dashed var(--line);padding:14px 16px;border-radius:8px;font-family:ui-monospace,monospace;font-size:12px;color:var(--green);white-space:pre-wrap;word-break:break-all}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">DEFONEOS · Public Security Surface</div>
+  <h1>Sovereign Disclosure Policy — coordinated, 90-day, signed.</h1>
+  <p>This page is the canonical coordinated vulnerability disclosure (CVD) policy for DEFONEOS. It tells external security researchers exactly how to report a finding, what we promise in return, how we triage, when we publish, and how the SIGIL ledger anchors the chain of custody from report → fix → disclosure. No NDA is required to read or use this page.</p>
+  <p>
+    <span class="pill sov">Sovereignty</span>
+    <span class="pill aud">Audit</span>
+    <span class="pill dis">Disclosure</span>
+  </p>
+</header>
+
+<nav class="toc" aria-label="Table of contents">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#sec-channel">Reporting channel &amp; PGP</a></li>
+    <li><a href="#sec-promises">Our promises</a></li>
+    <li><a href="#sec-triage">Triage &amp; severity</a></li>
+    <li><a href="#sec-window">90-day disclosure window</a></li>
+    <li><a href="#sec-publication">Publication &amp; CVE</a></li>
+    <li><a href="#sec-scope">Scope — what's in / out</a></li>
+    <li><a href="#safe-harbor">Safe-harbour for good-faith research</a></li>
+    <li><a href="#sec-redlines">Red-line invariants</a></li>
+    <li><a href="#sec-credits">Researcher credits &amp; witness list</a></li>
+    <li><a href="#sec-verify">How to verify this surface</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-channel">1. Reporting channel &amp; PGP</h2>
+<p>All DEFONEOS security disclosures go to a single, monitored mailbox:</p>
+<div class="block">
+  <p><strong>Email:</strong> <code>security@csoai.org</code></p>
+  <p><strong>PGP key fingerprint:</strong></p>
+  <div class="pgp">pub   ed25519 2026-05-14 [SC]
+      Key fingerprint = 9C4A 7E1D 5B82 F0E3  6D71 8C44 1A09 7B3F 2E6D 5C18
+uid                      DEFONEOS Security Coordination &lt;security@csoai.org&gt;
+sub   ed25519 2026-05-14 [S] [expires: 2028-05-14]</div>
+  <p>The full public key block is published at <a href="defoneos-public-changelog.html#pgp">defoneos-public-changelog.html § pgp</a>. The fingerprint above is the only authoritative one — anything else is a phishing attempt.</p>
+</div>
+<p><strong>Back-up channels</strong> (in priority order):</p>
+<ol>
+  <li><strong>Signal</strong>: <code>+44 7XXX XXXXXX</code> (request via email first; not posted publicly to avoid SIM-swap attacks on researchers).</li>
+  <li><strong>NCSC CiSP</strong>: post to the DEFONEOS advisory thread inside the NCSC Cyber Security Information Sharing Partnership (researchers with active UK security clearance only).</li>
+  <li><strong>UK AISI</strong>: forward via the UK AI Safety Institute reporting channel if the finding is AI-layer specific (OWASP ASI class C9).</li>
+</ol>
+<p>We will <em>not</em> accept disclosures via Twitter/X DMs, Discord, Telegram, or any US-platform messaging service. If you sent it there, we didn't receive it.</p>
+
+<h2 id="sec-promises">2. Our promises to you</h2>
+<p>If you report a genuine security issue in good faith, we promise:</p>
+<table>
+  <thead>
+    <tr><th>#</th><th>Promise</th><th>Window</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Acknowledgement of receipt</td><td>within <strong>3 working days</strong></td></tr>
+    <tr><td>2</td><td>Triage + severity assignment + CVE reservation</td><td>within <strong>7 days</strong></td></tr>
+    <tr><td>3</td><td>Technical contact (a named human on the security team)</td><td>by the end of triage</td></tr>
+    <tr><td>4</td><td>Status update on the fix</td><td>every <strong>14 days</strong> until close</td></tr>
+    <tr><td>5</td><td>Public credit in the SIGIL tick — or anonymity on request</td><td>at disclosure</td></tr>
+    <tr><td>6</td><td>Coordinated disclosure date locked in writing</td><td>within <strong>14 days</strong> of triage</td></tr>
+    <tr><td>7</td><td>No legal action for good-faith research that stays in scope</td><td>always</td></tr>
+    <tr><td>8</td><td>If we disagree on severity, an independent BFT council review</td><td>within <strong>14 days</strong> of dispute</td></tr>
+  </tbody>
+</table>
+<p>If we miss any of these windows, you may publish immediately and we will not contest.</p>
+
+<h2 id="sec-triage">3. Triage &amp; severity</h2>
+<p>Triage uses the same severity matrix as the pen-test cycle (see <a href="defoneos-pen-test-summary.html">defoneos-pen-test-summary.html § 4</a>):</p>
+<table>
+  <thead>
+    <tr><th>Severity</th><th>CVSS v3.1</th><th>Fix SLA</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong style="color:var(--red)">CRITICAL</strong></td><td>9.0–10.0</td><td>24 h patch · 72 h deploy</td></tr>
+    <tr><td><strong style="color:#fb923c">HIGH</strong></td><td>7.0–8.9</td><td>7 d patch · 14 d deploy</td></tr>
+    <tr><td><strong style="color:var(--gold)">MEDIUM</strong></td><td>4.0–6.9</td><td>30 d patch</td></tr>
+    <tr><td><strong style="color:var(--muted)">LOW</strong></td><td>0.1–3.9</td><td>90 d patch (next minor)</td></tr>
+    <tr><td><strong style="color:var(--acc)">INFO</strong></td><td>0.0</td><td>Best-effort</td></tr>
+  </tbody>
+</table>
+<p>CVSS is calculated by the security team, not by the researcher — but we share the vector string and rationale, and you can dispute it.</p>
+
+<h2 id="sec-window">4. 90-day disclosure window</h2>
+<p>DEFONEOS follows a <strong>90-day default disclosure window</strong>, in line with Google Project Zero. The window starts at triage-acknowledgement (Promise 1).</p>
+<table>
+  <thead>
+    <tr><th>Day</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>Acknowledgement, triage starts</td></tr>
+    <tr><td>7</td><td>Severity locked, CVE reserved, technical contact assigned</td></tr>
+    <tr><td>14</td><td>Public coordinated-disclosure date locked in writing (we will not silently extend without your consent)</td></tr>
+    <tr><td>30</td><td>MEDIUM findings expected fixed</td></tr>
+    <tr><td>45</td><td>HIGH findings expected fixed</td></tr>
+    <tr><td>72</td><td>CRITICAL findings expected fixed</td></tr>
+    <tr><td>90</td><td>Public disclosure date (default)</td></tr>
+    <tr><td>90+</td><td>If we ask for an extension, we put it in writing with a concrete ship-date</td></tr>
+  </tbody>
+</table>
+<p><strong>Early disclosure is allowed</strong> if (a) actively exploited in the wild, (b) you believe we're acting in bad faith, or (c) we miss any of the promises above.</p>
+
+<h2 id="sec-publication">5. Publication &amp; CVE</h2>
+<p>Every accepted disclosure produces a public artefact — even if we disagree with you on severity. The artefact includes:</p>
+<ul>
+  <li>Ed25519-signed SIGIL tick with the report hash.</li>
+  <li>CVE ID assigned by MITRE (we file within 7 days of triage).</li>
+  <li>A <code>defoneos-advisory-YYYY-NNN</code> page on this site with the finding summary, severity rationale, fix description, and credit line.</li>
+  <li>Updated entry in the public changelog (<a href="defoneos-public-changelog.html">defoneos-public-changelog.html</a>).</li>
+  <li>UK NCSC and UK AISI notified if severity ≥ HIGH.</li>
+</ul>
+<p>We <strong>do not</strong> embargo a finding for a marketing window or product launch. Disclosure timing follows the SLA, not the calendar.</p>
+
+<h2 id="sec-scope">6. Scope — what's in / out</h2>
+<div class="block">
+  <h3>In scope</h3>
+  <ul>
+    <li>Any DEFONEOS surface at <code>www.csoai.org</code>, <code>*.csoai.org</code>, or any sovereign subdomain.</li>
+    <li>Any MCP server in the csoai-defoneos CERTIFIES compartment.</li>
+    <li>The BFT council voting surface (quorum endpoint, BLS signature verification).</li>
+    <li>The SIGIL ledger append-only chain.</li>
+    <li>The sovereign CA chain (root + intermediates + end-entity certs).</li>
+    <li>The disclosure mailbox itself (<code>security@csoai.org</code>) — if you find a mail-server vuln, please tell us.</li>
+  </ul>
+</div>
+<div class="block">
+  <h3>Out of scope</h3>
+  <ul>
+    <li>meok-defoneos BUILDS surfaces — those are a separate compartment with a separate disclosure address (see meok-defoneos.com).</li>
+    <li>dagon LEGACY assets — NDA-only; do not test.</li>
+    <li>Third-party services we link to (NCSC, MITRE, GitHub) — report upstream.</li>
+    <li>Social engineering, phishing, or physical attacks against CSOAI staff or infrastructure.</li>
+    <li>Denial-of-service or volumetric testing — coordinate first.</li>
+    <li>Anything that requires accessing another user's data without their consent.</li>
+    <li>Findings purely about US-platform components we explicitly forbid (US CDN, US root CA, US cloud API).</li>
+  </ul>
+</div>
+
+<h2 id="safe-harbor">7. Safe-harbour for good-faith research</h3>
+<p>If you:</p>
+<ul>
+  <li>stay in scope,</li>
+  <li>make a good-faith effort to avoid privacy violations and service disruption,</li>
+  <li>report promptly (within 24 h of discovery),</li>
+  <li>do not exploit a finding beyond what is necessary to prove it,</li>
+  <li>do not publicly disclose before the coordinated date,</li>
+</ul>
+<p>then we will <strong>not pursue legal action</strong> against you. We consider this research a public-good contribution and will defend that position in writing to your employer or funder if asked.</p>
+<p>If your research is constrained by local law (e.g. computer-misuse legislation), consult your counsel first — but the safe-harbour is unconditional on our side.</p>
+
+<h2 id="sec-redlines">8. Red-line invariants (immutable)</h2>
+<p>The disclosure process itself is constrained by these invariants — even a researcher acting in good faith cannot push us past them:</p>
+<ul>
+  <li><strong>No kinetic-targeting research.</strong> We do not accept findings about strike-package / find-fix-finish / kill-order / fire-control surfaces — even for defensive purposes. These are excluded by policy and are not part of DEFONEOS.</li>
+  <li><strong>No personal-surveillance research.</strong> Track-individual / face-recognition / locate-phone patterns are excluded. If your finding is about a sovereign border-control deployment that uses these, redirect to the relevant NCSC channel.</li>
+  <li><strong>No "AUKUS partnership" / "DAIC certified" disclosures.</strong> We do not claim these partnerships. If you find a reference to them on our surface, treat it as a phishing or typosquat — report to <code>security@csoai.org</code> and we'll take it down.</li>
+  <li><strong>No DEFONEOS-SEAL credential issuance via disclosure.</strong> That requires a 33-agent BFT council vote (quorum 23/33) plus human-owner seat activation. A disclosure cannot mint a SEAL.</li>
+  <li><strong>No compartment crossing.</strong> Findings about meok-defoneos BUILDS or dagon LEGACY stay inside their respective compartments. We will not publish a finding that crosses compartments.</li>
+  <li><strong>No defonos.io reference.</strong> If you find a link or claim pointing at that domain, that's a known trap. Report it; we will not redirect there.</li>
+</ul>
+
+<h2 id="sec-credits">9. Researcher credits &amp; witness list</h2>
+<p>Researchers who report valid findings are credited in the public SIGIL tick, the changelog, and (with their permission) on a public <em>honour roll</em> page. You may:</p>
+<ul>
+  <li>Use your real name.</li>
+  <li>Use a handle.</li>
+  <li>Remain anonymous (we still credit "<em>anonymous researcher, NCSC partner</em>").</li>
+</ul>
+<p>The first three DEFONEOS honour-roll members (after the policy goes live) will receive a single-use DEFONEOS pin — a small artefact, not a credential. Pins carry <strong>no authority</strong> to bind the OS to anything.</p>
+
+<h2 id="sec-verify">10. How to verify this surface</h2>
+<ol>
+  <li>Fetch this page: <code>curl -sL https://www.csoai.org/sovereign-disclosure-policy.html | head -1</code> must return <code>&lt;!DOCTYPE html&gt;</code>.</li>
+  <li>Verify the PGP fingerprint against the canonical block on the changelog.</li>
+  <li>Cross-check the disclosure promise timeline against the pen-test cycle in <a href="defoneos-pen-test-summary.html">defoneos-pen-test-summary.html</a>.</li>
+  <li>Read the red-line invariants — they are signed and visible on <code>www.csoai.org</code> for anyone to challenge.</li>
+</ol>
+
+<footer>
+  <p class="sigil">DEFONEOS · sovereign disclosure policy · ship-grade · static-only · signed on SIGIL ledger tick-116.<br>
+  Owner gates unchanged: DSP / SC / Cyber Essentials / DASA / NATO DIANA / UKDI / UK AISI / PyPI / SEAL require human owner cosign.</p>
+  <p>© CSOAI Ltd (UK 16939677) · DEFONEOS · sovereign · auditable · neutral.</p>
+</footer>
+
+</main>
+</body>
+</html>

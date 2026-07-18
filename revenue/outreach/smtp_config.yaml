@@ -1,0 +1,43 @@
+# SMTP Configuration for Mass Outreach
+# Fill in credentials, then run: python3 mass_sender.py
+# SECURITY: Keep this file private. chmod 600 this file.
+
+# SendGrid (Recommended for mass outreach)
+sendgrid:
+  api_key: "YOUR_SENDGRID_API_KEY"
+  from_name: "Nick Templeman"
+  from_email: "nicholas@meok.ai"
+  rate_limit: 100  # emails per hour (SendGrid free tier)
+
+# Namecheap PrivateEmail (for professional replies)
+namecheap:
+  meok_ai:
+    host: "mail.privateemail.com"
+    port: 587
+    username: "nicholas@meok.ai"
+    password: "YOUR_PASSWORD"
+    from_name: "Nick Templeman"
+    rate_limit: 50  # emails per hour
+  councilof_ai:
+    host: "mail.privateemail.com"
+    port: 587
+    username: "nicholas@councilof.ai"
+    password: "YOUR_PASSWORD"
+    from_name: "Nick Templeman"
+    rate_limit: 50
+
+# Gmail (for Tree King + existing accounts)
+gmail:
+  username: "treekingessex@gmail.com"
+  password: "YOUR_APP_PASSWORD"  # Use App Password, not regular password
+  from_name: "Tree King"
+  rate_limit: 100
+
+# AWS SES (for high volume when scaling)
+aws_ses:
+  region: "eu-west-1"
+  access_key: "YOUR_AWS_ACCESS_KEY"
+  secret_key: "YOUR_AWS_SECRET_KEY"
+  from_name: "Nick Templeman"
+  from_email: "nicholas@meok.ai"
+  rate_limit: 500  # emails per hour

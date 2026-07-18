@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "MEOK Sovereign — your AI, everywhere",
+  "version": "0.1.0",
+  "description": "Your sovereign AI rides on top of every website as a character you can talk to. It finds the right tool. Your data stays yours.",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": ["https://os.meok.ai/*"],
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "action": {
+    "default_title": "MEOK Sovereign",
+    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

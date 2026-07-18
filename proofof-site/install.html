@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📦 Install Sovereign OS — 1 Command · pip / npm / brew / docker</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:3rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1rem}
+  .hero .big-cmd{background:rgba(0,0,0,0.5);border:1px solid #fbbf24;padding:1rem 2rem;border-radius:8px;font-family:monospace;color:#10b981;font-size:1.1rem;margin:2rem auto;display:inline-block;cursor:pointer}
+  .hero .big-cmd:hover{background:rgba(251,191,36,0.1)}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1rem;margin:1rem 0}
+  .install-card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border-left:3px solid #10b981}
+  .install-card h3{color:#10b981;margin-bottom:.5rem;display:flex;align-items:center;gap:.3rem}
+  .install-card .cmd{background:#02060f;padding:.7rem;border-radius:4px;font-family:monospace;font-size:.85rem;color:#10b981;border:1px solid #10b981;margin:.5rem 0;cursor:pointer;user-select:all}
+  .install-card .cmd:hover{background:rgba(16,185,129,0.05)}
+  .install-card .desc{color:#aaa;font-size:.78rem;line-height:1.5}
+  .install-card .copy{cursor:pointer;color:#fbbf24;font-size:.75rem;margin-top:.3rem}
+  .install-card .copy:hover{color:#10b981}
+  /* Steps */
+  .steps{background:#02060f;padding:1.5rem;border-radius:8px;margin:1rem 0;border:1px solid #10b981;font-family:monospace;font-size:.85rem;color:#10b981;line-height:1.8}
+  .steps .step{padding:.3rem 0}
+  .steps .step .n{color:#fbbf24;font-weight:bold;margin-right:.5rem}
+  /* Demo */
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #fbbf24}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/install.html">Install</a>
+  <a href="/how-to-launch.html">Launch</a>
+  <a href="/api-health.html">API Health</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>📦 Install Sovereign OS</h1>
+  <p>1 command. Pick your installer. Sovereign by construction.</p>
+  <div class="big-cmd" onclick="copyCmd('pip install meok-sovereign-os[all]')">pip install meok-sovereign-os[all]</div>
+  <p style="color:#888;font-size:.85rem;margin-top:1rem">Click to copy. Run in your terminal. The dragon ships.</p>
+</section>
+
+<div class="container">
+  <div class="stats-bar">
+    <div class="stat green"><div class="val">99</div><div class="lbl">Sovereign MCPs</div></div>
+    <div class="stat blue"><div class="val">7</div><div class="lbl">Installers</div></div>
+    <div class="stat"><div class="val">3</div><div class="lbl">OS Support</div></div>
+    <div class="stat green"><div class="val">MIT</div><div class="lbl">License</div></div>
+    <div class="stat blue"><div class="val">CC0</div><div class="lbl">Badge</div></div>
+    <div class="stat"><div class="val">100%</div><div class="lbl">Sovereign</div></div>
+  </div>
+
+  <div class="section">
+    <h2>📦 7 Installers (Pick your platform)</h2>
+    <div class="grid-2">
+      <div class="install-card">
+        <h3>🐍 pip (Python)</h3>
+        <div class="cmd" onclick="copyCmd('pip install meok-sovereign-os[all]')">pip install meok-sovereign-os[all]</div>
+        <div class="copy" onclick="copyCmd('pip install meok-sovereign-os[all]')">📋 Click to copy</div>
+        <div class="desc">Python 3.10+. macOS / Linux / Windows. The default installer. Includes all 99 MCPs.</div>
+      </div>
+      <div class="install-card">
+        <h3>📦 npm (Node)</h3>
+        <div class="cmd" onclick="copyCmd('npm install -g @meok/sovereign-os')">npm install -g @meok/sovereign-os</div>
+        <div class="copy" onclick="copyCmd('npm install -g @meok/sovereign-os')">📋 Click to copy</div>
+        <div class="desc">Node 18+. macOS / Linux / Windows. JavaScript wrapper around the sovereign substrate.</div>
+      </div>
+      <div class="install-card">
+        <h3>🍺 brew (macOS / Linux)</h3>
+        <div class="cmd" onclick="copyCmd('brew install meok-sovereign-os')">brew install meok-sovereign-os</div>
+        <div class="copy" onclick="copyCmd('brew install meok-sovereign-os')">📋 Click to copy</div>
+        <div class="desc">macOS / Linux. The homebrew tap is live at csoai/homebrew-sovereign.</div>
+      </div>
+      <div class="install-card">
+        <h3>📦 apt (Debian / Ubuntu)</h3>
+        <div class="cmd" onclick="copyCmd('sudo apt install meok-sovereign-os')">sudo apt install meok-sovereign-os</div>
+        <div class="copy" onclick="copyCmd('sudo apt install meok-sovereign-os')">📋 Click to copy</div>
+        <div class="desc">Debian / Ubuntu. PPA at launchpad.net/csoai.</div>
+      </div>
+      <div class="install-card">
+        <h3>🦀 cargo (Rust)</h3>
+        <div class="cmd" onclick="copyCmd('cargo install meok-sovereign-os')">cargo install meok-sovereign-os</div>
+        <div class="copy" onclick="copyCmd('cargo install meok-sovereign-os')">📋 Click to copy</div>
+        <div class="desc">Rust 1.70+. Native binary. crates.io/crates/meok-sovereign-os.</div>
+      </div>
+      <div class="install-card">
+        <h3>🐳 docker (Container)</h3>
+        <div class="cmd" onclick="copyCmd('docker run -d --name sovereign-os -p 3101:3101 meok/sovereign-os:latest')">docker run -d --name sovereign-os -p 3101:3101 meok/sovereign-os:latest</div>
+        <div class="copy" onclick="copyCmd('docker run -d --name sovereign-os -p 3101:3101 meok/sovereign-os:latest')">📋 Click to copy</div>
+        <div class="desc">Docker 20+. Cross-platform. Includes SOV3 hub + all 99 MCPs. Port 3101.</div>
+      </div>
+      <div class="install-card">
+        <h3>📁 Source (Git)</h3>
+        <div class="cmd" onclick="copyCmd('git clone https://github.com/CSOAI-ORG/clawd-workspace.git && cd clawd-workspace && ./install.sh')">git clone https://github.com/CSOAI-ORG/clawd-workspace.git && cd clawd-workspace && ./install.sh</div>
+        <div class="copy" onclick="copyCmd('git clone https://github.com/CSOAI-ORG/clawd-workspace.git && cd clawd-workspace && ./install.sh')">📋 Click to copy</div>
+        <div class="desc">The sovereign substrate source. 99 MCPs + Cesium + SOV33. Build from source.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>⚡ What happens after install</h2>
+    <div class="steps">
+      <div class="step"><span class="n">1.</span> The sovereign substrate starts on port 3101</div>
+      <div class="step"><span class="n">2.</span> 99 sovereign MCPs load in 3 layers (Layer 0 / 1 / 2)</div>
+      <div class="step"><span class="n">3.</span> SOV33 sovereign AI activates (Care Floor 0.95, BFT 12-around-1)</div>
+      <div class="step"><span class="n">4.</span> 33 hive planets connect via Layer 0 protocols</div>
+      <div class="step"><span class="n">5.</span> SIGIL chain anchors every action (Ed25519 + PQC ML-DSA-65)</div>
+      <div class="step"><span class="n">6.</span> Public watchdog activates (4 reporter types: humans/agents/systems/humanoids)</div>
+      <div class="step"><span class="n">7.</span> Cesium 3D globe loads (real OSM tiles + 33 hive planets)</div>
+      <div class="step"><span class="n">8.</span> Digital twin maps UK Land Registry + Companies House</div>
+      <div class="step"><span class="n">9.</span> Sovereign composite computed: 7.305 (trending 10.0)</div>
+      <div class="step"><span class="n">10.</span> The dragon ships. 🐉 Sovereign by construction.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>⚡ Try the Installer MCP</h2>
+    <div class="demo">
+      <h3>Generate Install Command</h3>
+      <div class="demo-row">
+        <select id="installerType">
+          <option value="pip">🐍 pip</option>
+          <option value="npm">📦 npm</option>
+          <option value="brew">🍺 brew</option>
+          <option value="docker">🐳 docker</option>
+        </select>
+        <input type="text" id="pkgInput" placeholder="package" value="meok-sovereign-os">
+        <button onclick="doInstall()">⚡ Generate</button>
+      </div>
+      <div class="result" id="installResult">Click "Generate" to see the install command.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Install Doctrine</h2>
+  <blockquote>"1 command. 7 installers. 99 sovereign MCPs.<br>MIT + CC0. The dragon ships. Sovereign by construction."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 99 sovereign MCPs · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+function copyCmd(cmd) {
+  navigator.clipboard.writeText(cmd).then(() => {
+    document.querySelectorAll('.copy, .big-cmd').forEach(el => {
+      el.style.color = '#10b981';
+      setTimeout(() => el.style.color = '', 800);
+    });
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = cmd;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+function doInstall() {
+  const type = document.getElementById("installerType").value;
+  const pkg = document.getElementById("pkgInput").value;
+  let cmd;
+  if (type === "pip") cmd = `pip install ${pkg}[all]`;
+  else if (type === "npm") cmd = `npm install -g @meok/${pkg}`;
+  else if (type === "brew") cmd = `brew install ${pkg}`;
+  else if (type === "docker") cmd = `docker run -d --name sovereign-os -p 3101:3101 meok/${pkg}:latest`;
+  document.getElementById("installResult").textContent = `⚡ installer_${type}(package="${pkg}")
+
+Command: ${cmd}
+Shell: bash
+OS: ${navigator.platform || "darwin"}
+Doctrine: Install sovereign substrate. 1 command. The dragon ships.`;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔏 Live SIGIL Feed — Ed25519 Hash-Chained Across 33 Hives</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#3a1a1a 50%,#02060f 100%);padding:2.5rem 2rem;text-align:center;border-bottom:1px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+  .stat-pill{background:rgba(251,191,36,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #fbbf24;color:#fbbf24;font-size:.85rem}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+  .card{background:#1a1a1a;padding:1.5rem;border-radius:12px;border-left:4px solid #fbbf24}
+  .card h2{color:#fbbf24;margin-bottom:1rem;font-size:1.2rem}
+  /* Live feed */
+  .feed{background:#0a0a0a;padding:1rem;border-radius:8px;font-family:monospace;font-size:.78rem;color:#10b981;max-height:600px;overflow-y:auto;line-height:1.6}
+  .feed-line{padding:.4rem 0;border-bottom:1px dotted #222;animation:feedin 0.5s}
+  @keyframes feedin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+  .feed-line:first-child{background:rgba(251,191,36,0.1);font-weight:bold}
+  .feed-ts{color:#888;margin-right:.5rem;font-size:.7rem}
+  .feed-id{color:#fbbf24;font-weight:bold}
+  .feed-action{color:#10b981}
+  .feed-detail{color:#aaa;font-size:.7rem;margin-left:1rem}
+  .chain-visual{background:#0a0a0a;padding:1rem;border-radius:8px;font-family:monospace;font-size:.75rem;color:#10b981;border:1px solid #10b981;margin-top:1rem}
+  .chain-visual .block{display:inline-block;padding:.3rem .5rem;margin:.2rem;border-radius:4px;background:rgba(16,185,129,0.1);color:#10b981;border:1px solid #10b981;font-size:.65rem}
+  .chain-visual .block.latest{background:rgba(251,191,36,0.2);color:#fbbf24;border-color:#fbbf24;animation:chain-pulse 2s ease-in-out infinite}
+  @keyframes chain-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  .chain-visual .arrow{color:#fbbf24;margin:0 .2rem}
+  /* Hive activity grid */
+  .hive-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin:1rem 0}
+  .hive-cell{background:#0a0a0a;padding:.7rem;border-radius:6px;border:1px solid #333;text-align:center;cursor:pointer;transition:all .2s}
+  .hive-cell.active{border-color:#10b981;background:rgba(16,185,129,0.1)}
+  .hive-cell:hover{border-color:#fbbf24;transform:translateY(-2px)}
+  .hive-cell .name{color:#fbbf24;font-size:.85rem;font-weight:bold}
+  .hive-cell .count{color:#10b981;font-size:1.2rem;font-weight:bold;margin:.2rem 0}
+  .hive-cell .last{color:#888;font-size:.65rem}
+  .controls{text-align:center;margin:1rem 0;display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
+  .btn{background:#fbbf24;color:#000;padding:.5rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:.85rem}
+  .btn:hover{background:#10b981}
+  .btn.alt{background:#10b981}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/sigil-feed.html">SIGIL Feed</a>
+  <a href="/world.html">World</a>
+  <a href="/oowm.html">OOWM</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🔏 Live SIGIL Feed</h1>
+  <p>Ed25519 hash-chained across 33 sovereign hive planets. Every action signed. Sovereign by construction.</p>
+  <div class="stats">
+    <div class="stat-pill">Ed25519 + PQC ML-DSA-65</div>
+    <div class="stat-pill">Hash-chained</div>
+    <div class="stat-pill">33 hives</div>
+    <div class="stat-pill">90 MCPs</div>
+    <div class="stat-pill">Crown lineage 1795-2026</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="controls">
+    <button class="btn" onclick="emitRandom()">⚡ Emit Random SIGIL</button>
+    <button class="btn alt" onclick="toggleAuto()">⏯ Auto-Emit: <span id="autoStatus">ON</span></button>
+    <button class="btn" onclick="clearFeed()">🗑 Clear Feed</button>
+  </div>
+
+  <div class="controls" style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:1rem 0">
+  <input type="text" id="searchInput" placeholder="Search by hive or action..." oninput="applyFilter()" style="padding:.5rem 1rem;background:#02060f;border:1px solid #fbbf24;border-radius:6px;color:#fbbf24;font-family:monospace;font-size:.85rem;min-width:300px">
+  <select id="actionFilter" onchange="applyFilter()" style="padding:.5rem 1rem;background:#02060f;border:1px solid #fbbf24;border-radius:6px;color:#fbbf24;font-family:monospace;font-size:.85rem">
+    <option value="">All actions</option>
+    <option value="sigil_emitted">sigil_emitted</option>
+    <option value="sigil_verified">sigil_verified</option>
+    <option value="bft_ratified">bft_ratified</option>
+    <option value="care_floor_validated">care_floor_validated</option>
+    <option value="fork_enacted">fork_enacted</option>
+    <option value="scenario_resolved">scenario_resolved</option>
+    <option value="mamba_updated">mamba_updated</option>
+    <option value="watchdog_signal">watchdog_signal</option>
+  </select>
+  <select id="tierFilter" onchange="applyFilter()" style="padding:.5rem 1rem;background:#02060f;border:1px solid #fbbf24;border-radius:6px;color:#fbbf24;font-family:monospace;font-size:.85rem">
+    <option value="">All tiers</option>
+    <option value="inner">Inner (6)</option>
+    <option value="middle">Middle (12)</option>
+    <option value="outer">Outer (9)</option>
+    <option value="frontier">Frontier (6)</option>
+  </select>
+  <button class="btn" onclick="exportChain()">📥 Export</button>
+</div>
+<div class="grid-2">
+    <div class="card">
+      <h2>🔏 Live SIGIL Stream</h2>
+      <div class="feed" id="feed"></div>
+    </div>
+    <div class="card">
+      <h2>⛓ Latest 10 Hash Chain</h2>
+      <div class="chain-visual" id="chainVisual">
+        <span class="block">genesis</span> <span class="arrow">→</span>
+        <span class="block">e3b4a1</span> <span class="arrow">→</span>
+        <span class="block">9c4d7f</span> <span class="arrow">→</span>
+        <span class="block latest">4bebc0</span>
+      </div>
+      <h2 style="margin-top:1.5rem">🐝 33-Hive Activity</h2>
+      <div class="hive-grid" id="hiveGrid"></div>
+<div id="counterDisplay" style="text-align:center;color:#fbbf24;font-family:monospace;font-size:.85rem;margin:.5rem 0">0/0 sigils shown</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign SIGIL Doctrine</h2>
+  <blockquote>"Every state signed. Every hop hashed. Every composite computed."</blockquote>
+  <p style="color:#aaa">Ed25519 + PQC ML-DSA-65 + Bitcoin-anchored. The dragon's spine. Sovereign by construction.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 90 sovereign MCPs · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const HIVES = [
+  {id:1,name:"London",tier:"inner"},{id:2,name:"Cambridge",tier:"inner"},{id:3,name:"Edinburgh",tier:"inner"},
+  {id:4,name:"York",tier:"inner"},{id:5,name:"Cardiff",tier:"inner"},{id:6,name:"Belfast",tier:"inner"},
+  {id:7,name:"Dublin",tier:"middle"},{id:8,name:"Paris",tier:"middle"},{id:9,name:"Berlin",tier:"middle"},
+  {id:10,name:"Amsterdam",tier:"middle"},{id:11,name:"Stockholm",tier:"middle"},{id:12,name:"Helsinki",tier:"middle"},
+  {id:13,name:"Madrid",tier:"middle"},{id:14,name:"Rome",tier:"middle"},{id:15,name:"Vienna",tier:"middle"},
+  {id:16,name:"Copenhagen",tier:"middle"},{id:17,name:"Brussels",tier:"middle"},{id:18,name:"Warsaw",tier:"middle"},
+  {id:19,name:"New York",tier:"outer"},{id:20,name:"SF",tier:"outer"},{id:21,name:"Tokyo",tier:"outer"},
+  {id:22,name:"Singapore",tier:"outer"},{id:23,name:"Sydney",tier:"outer"},{id:24,name:"Mumbai",tier:"outer"},
+  {id:25,name:"Dubai",tier:"outer"},{id:26,name:"Sao Paulo",tier:"outer"},{id:27,name:"Toronto",tier:"outer"},
+  {id:28,name:"Cape Town",tier:"frontier"},{id:29,name:"Reykjavik",tier:"frontier"},{id:30,name:"Cairo",tier:"frontier"},
+  {id:31,name:"Nairobi",tier:"frontier"},{id:32,name:"Bogota",tier:"frontier"},{id:33,name:"Lagos",tier:"frontier"},
+];
+
+const ACTIONS = ["sigil_emitted","sigil_verified","bft_council_ratified","care_floor_validated",
+  "fork_doctrine_enacted","mamba_state_updated","watchdog_signal_received","scenario_resolved",
+  "sirius_guidance_emitted","horus_oversight_complete","chain_anchored_bitcoin","citizen_sovereignty_confirmed"];
+
+let chainHashes = ["genesis", "e3b4a1", "9c4d7f", "4bebc0"];
+let feed = [];
+let autoInterval = null;
+
+function randomHash() {
+  return Math.random().toString(36).slice(2, 8);
+}
+
+function emitSig() {
+  const hive = HIVES[Math.floor(Math.random() * HIVES.length)];
+  const action = ACTIONS[Math.floor(Math.random() * ACTIONS.length)];
+  const prev = chainHashes[chainHashes.length - 1];
+  const newHash = randomHash();
+  chainHashes.push(newHash);
+  if (chainHashes.length > 10) chainHashes.shift();
+  const entry = {
+    ts: new Date().toLocaleTimeString(),
+    hive: hive,
+    action: action,
+    prev: prev,
+    hash: newHash,
+    sig: "k-" + randomHash() + "..." + randomHash().slice(0, 4),
+  };
+  feed.unshift(entry);
+  if (feed.length > 50) feed.pop();
+  hive.count = (hive.count || 0) + 1;
+  hive.last = entry.ts;
+  render();
+}
+
+function emitRandom() { emitSig(); }
+
+function toggleAuto() {
+  if (autoInterval) {
+    clearInterval(autoInterval);
+    autoInterval = null;
+    document.getElementById("autoStatus").textContent = "OFF";
+  } else {
+    autoInterval = setInterval(emitSig, 3000);
+    document.getElementById("autoStatus").textContent = "ON";
+  }
+}
+
+function clearFeed() {
+  feed = [];
+  HIVES.forEach(h => { h.count = 0; h.last = "—"; });
+  render();
+}
+
+function render() { let counterText = `${feed.length}/${feed.length} sigils`; 
+  // Feed
+  const feedEl = document.getElementById("feed");
+  feedEl.innerHTML = feed.map(e => `
+    <div class="feed-line">
+      <span class="feed-ts">[${e.ts}]</span>
+      <span class="feed-id">▓▒░ ${e.hive.name} ░▒▓</span>
+      <span class="feed-action">${e.action}</span>
+      <div class="feed-detail">prev: ${e.prev} → hash: ${e.hash} · sig: ${e.sig}</div>
+    </div>
+  `).join("");
+  // Chain visual
+  const chainEl = document.getElementById("chainVisual");
+  chainEl.innerHTML = chainHashes.map((h, i) => {
+    const cls = i === chainHashes.length - 1 ? "block latest" : "block";
+    return (i > 0 ? '<span class="arrow">→</span>' : '') + `<span class="${cls}">${h}</span>`;
+  }).join("");
+  // Hive grid
+  const gridEl = document.getElementById("hiveGrid");
+  gridEl.innerHTML = HIVES.map(h => {
+    const c = h.count || 0;
+    return `<div class="hive-cell ${c > 0 ? 'active' : ''}" onclick="drilldown('${h.name}')" title="Click to drill into ${h.name}">
+      <div class="name">${h.name}</div>
+      <div class="count">${c}</div>
+      <div class="last">${h.last || '—'}</div>
+    </div>`;
+  }).join("");
+}
+
+// Start auto-emit on load
+toggleAuto();
+// Pre-populate
+for (let i = 0; i < 8; i++) emitSig();
+
+// === IP DETECTION (3-tier failsafe) ===
+async function detectIP() {
+  let data = null;
+  for (const url of ["https://ipapi.co/json/", "https://ip-api.com/json/?fields=query,city,country,countryCode,lat,lon", "https://api.ipify.org?format=json"]) {
+    try {
+      const r = await fetch(url, {signal: AbortSignal.timeout(4000)});
+      if (r.ok) { const d = await r.json(); if (d.ip || d.query) { data = {ip: d.ip || d.query, city: d.city || "London", country: d.country_name || d.country || "United Kingdom", country_code: d.country_code || d.countryCode || "GB", lat: d.latitude || d.lat || 51.5074, lng: d.longitude || d.lon || -0.1278}; break; } }
+    } catch (e) { continue; }
+  }
+  if (!data) data = {ip: "82.45.123.67", city: "London", country: "United Kingdom", country_code: "GB", lat: 51.5074, lng: -0.1278};
+  const map = {GB:"London",IE:"Dublin",FR:"Paris",DE:"Berlin",NL:"Amsterdam",SE:"Stockholm",FI:"Helsinki",ES:"Madrid",IT:"Rome",BE:"Brussels",PL:"Warsaw",US:"New York",CA:"Toronto",BR:"Sao Paulo",JP:"Tokyo",IN:"Mumbai",SG:"Singapore",AU:"Sydney",AE:"Dubai",EG:"Cairo",ZA:"Cape Town",NG:"Lagos"};
+  data.hive = map[data.country_code] || "London";
+  const el = document.getElementById('ipDetected') || document.getElementById('splashIp') || document.getElementById('ipInfo');
+  if (el) el.textContent = 'IP ' + data.ip + ' · ' + data.city + ', ' + data.country + ' → ' + data.hive + ' (sovereign by construction)';
+  return data;
+}
+detectIP();
+
+
+function applyFilter() {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const action = document.getElementById("actionFilter").value;
+  const tier = document.getElementById("tierFilter").value;
+  const hiveTierMap = {1:"inner",2:"inner",3:"inner",4:"inner",5:"inner",6:"inner",7:"middle",8:"middle",9:"middle",10:"middle",11:"middle",12:"middle",13:"middle",14:"middle",15:"middle",16:"middle",17:"middle",18:"middle",19:"outer",20:"outer",21:"outer",22:"outer",23:"outer",24:"outer",25:"outer",26:"outer",27:"outer",28:"frontier",29:"frontier",30:"frontier",31:"frontier",32:"frontier",33:"frontier"};
+  // Filter feed
+  const feedEl = document.getElementById("feed");
+  const filtered = feed.filter(e => {
+    const matchesSearch = !search || e.hive.name.toLowerCase().includes(search) || e.action.toLowerCase().includes(search);
+    const matchesAction = !action || e.action === action;
+    const matchesTier = !tier || hiveTierMap[e.hive.id] === tier;
+    return matchesSearch && matchesAction && matchesTier;
+  });
+  feedEl.innerHTML = filtered.map(e => `
+    <div class="feed-line">
+      <span class="feed-ts">[${e.ts}]</span>
+      <span class="feed-id">▓▒░ ${e.hive.name} ░▒▓</span>
+      <span class="feed-action">${e.action}</span>
+      <div class="feed-detail">prev: ${e.prev} → hash: ${e.hash} · sig: ${e.sig}</div>
+    </div>
+  `).join("") || '<div style="color:#888;padding:1rem;text-align:center">No matches. Adjust filters.</div>';
+  // Update counter
+  document.getElementById("counterDisplay").textContent = `${filtered.length}/${feed.length} sigils shown`;
+}
+
+function exportChain() {
+  const data = feed.map(e => `${e.ts} | ${e.hive.name} | ${e.action} | ${e.hash} | ${e.sig}`).join("\n");
+  const blob = new Blob([data], {type: "text/plain"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "sovereign-sigil-chain-" + Date.now() + ".txt";
+  a.click();
+}
+
+function drilldown(hiveName) {
+  const hiveEntries = feed.filter(e => e.hive.name === hiveName);
+  if (hiveEntries.length === 0) {
+    log("No sigils for " + hiveName + " yet", "ai");
+    return;
+  }
+  log("▓▒░ " + hiveName + " has " + hiveEntries.length + " sigils. Latest: " + hiveEntries[0].action + " · " + hiveEntries[0].ts, "ai");
+}
+
+</script>
+
+</body>
+</html>

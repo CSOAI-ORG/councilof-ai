@@ -1,0 +1,31 @@
+# CSOAI Platform - Robots.txt
+# https://councilof.ai
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://councilof.ai/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin
+Disallow: /api/
+Disallow: /settings/
+Disallow: /dashboard/
+Disallow: /*.json$
+
+# Allow search engines to index public content
+Allow: /about
+Allow: /charter
+Allow: /pricing
+Allow: /training
+Allow: /certification
+Allow: /watchdog
+Allow: /eu-ai-act
+Allow: /frameworks/
+Allow: /guides/
+Allow: /resources
+Allow: /blog
+
+# Crawl delay (be nice to the server)
+Crawl-delay: 1

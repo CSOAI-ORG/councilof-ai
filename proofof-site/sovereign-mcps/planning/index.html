@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📋 Planning MCP — Multi-step Plans, Goals, Sovereign History</title>
+<style>
+  body { font-family: system-ui; max-width: 900px; margin: 0 auto; padding: 2rem; background: #0a0a0a; color: #e5e5e5; }
+  h1 { color: #fbbf24; }
+  h2 { color: #60a5fa; }
+  code { background: #1f1f1f; padding: 2px 6px; border-radius: 4px; color: #fbbf24; }
+  pre { background: #1f1f1f; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .badge { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 2rem 0; }
+  .card { background: #1a1a1a; padding: 1rem; border-radius: 8px; border: 1px solid #333; }
+  .card h3 { color: #fbbf24; margin-top: 0; }
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/sovereign-mcps/">All MCPs</a>
+  <a href="/docs/">Docs</a>
+  <a href="/dashboards/">Dashboards</a>
+</div>
+
+<h1>📋 Planning MCP — The 5th Core MCP</h1>
+<p><span class="badge">v1.0.0</span> <span class="badge">MIT</span> <span class="badge">19 tests ✓</span></p>
+
+<p><strong>Multi-step plans with care-floor BFT. Goals with weighted scoring. Sovereign history searchable by event type.</strong></p>
+
+<h2>5 Tools</h2>
+<div class="grid">
+  <div class="card">
+    <h3>1. sov_plan_create</h3>
+    <p>Create a multi-step plan. If <code>care_floor_impact=True</code>, BFT approval is required before execution.</p>
+  </div>
+  <div class="card">
+    <h3>2. sov_plan_step</h3>
+    <p>Mark a step done. Propose the next. Auto-detect plan completion when all steps done.</p>
+  </div>
+  <div class="card">
+    <h3>3. sov_goal_set</h3>
+    <p>Set a goal with care-floor weight + sovereign weight. Tracks progress towards completion.</p>
+  </div>
+  <div class="card">
+    <h3>4. sov_goal_progress</h3>
+    <p>Update progress on a goal. Caps at 1.0 (100%). Emits care-floor + sovereign scores.</p>
+  </div>
+  <div class="card">
+    <h3>5. sov_history_search</h3>
+    <p>Search the sovereign history (sigil-anchored JSONL). Filter by query + event_type + limit.</p>
+  </div>
+  <div class="card">
+    <h3>Bonus: Persistence</h3>
+    <p>Every plan, goal, history event is persisted to <code>history.jsonl</code> + Ed25519-signed.</p>
+  </div>
+</div>
+
+<h2>Usage</h2>
+<pre><code>from meok_sovereign_planning_mcp import (
+    sov_plan_create, sov_plan_step, sov_goal_set,
+    sov_goal_progress, sov_history_search,
+)
+
+# 1. Create a multi-step plan
+plan = sov_plan_create(
+    "Launch the sovereign empire",
+    steps=["Build MCPs", "Test", "Deploy", "Audit"],
+    care_floor_impact=False,  # true if plan affects care floor
+)
+print(plan["plan_id"])  # → abc123
+print(plan["status"])   # → APPROVED or PENDING_BFT
+
+# 2. Mark step 0 done, propose next
+next_step = sov_plan_step(plan["plan_id"], 0, done=True, next_proposal="Ship it")
+print(next_step["next_step"]["text"])  # → "Test"
+
+# 3. Set a goal
+goal = sov_goal_set("Ship 22 sovereign MCPs", care_floor_weight=0.5, sovereign_weight=0.3)
+print(goal["goal_id"])  # → def456
+
+# 4. Update progress
+prog = sov_goal_progress(goal["goal_id"], delta=0.5, note="11/22 shipped")
+print(prog["progress"])             # → 0.5
+print(prog["care_floor_score"])     # → 0.25
+print(prog["sovereign_score"])      # → 0.15
+print(prog["status"])               # → ACTIVE
+
+# 5. Search history (sigil-anchored)
+hist = sov_history_search("sovereign", event_type="goal_set", limit=10)
+print(hist["match_count"])  # → N
+print(hist["total_history"])  # → total events in sovereign log</code></pre>
+
+<h2>Install</h2>
+<pre><code>pip install meok-sovereign-planning-mcp</code></pre>
+
+<h2>Use Cases</h2>
+<ul>
+  <li><strong>Multi-step workflows:</strong> deployment, audit, remediation, onboarding</li>
+  <li><strong>Goal tracking:</strong> "Ship 22 MCPs by July 4" with care-floor + sovereign scoring</li>
+  <li><strong>Sovereign history:</strong> searchable audit trail across the 12 Generals</li>
+  <li><strong>Care-floor BFT:</strong> plans that affect care floor require BFT approval (3 voters)</li>
+</ul>
+
+<h2>Doctrine</h2>
+<p><strong>Every plan, goal, and history event is Ed25519-signed.</strong> The sovereign substrate remembers. The 12 Generals share plans via the federation. Care floor is sovereign.</p>
+
+<p><a href="/sovereign-mcps/">← All Sovereign MCPs</a> · <a href="/dashboards/">View Live Dashboards →</a></p>
+
+</body>
+</html>

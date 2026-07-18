@@ -1,0 +1,7 @@
+{
+  "id": "prelaunch-dns-cutover-tweetstorm-blog",
+  "prompt": "Write the dual-format pre-launch announcement for the openpatent.ai DNS cutover from the staging hive to the production sovereign temple. Deliver TWO artifacts in ONE response: (1) a 14-tweet announcement thread — each tweet ≤260 chars, tweet 1 hooks with 'the hive moved to its sovereign temple tonight at 00:00 UTC', tweet 2 confirms the new DNS records (openpatent.ai → 3211, ipcastle.ai → 3210, legalof.ai → 3215, harvi.ai → 3216, sovereign.openpatent.ai → 3218, gaming.openpatent.ai → 3220), tweet 3 names the TLS-1.3 + HSTS pin, tweet 4 cites the 22/33 BFT sovereign-temple v3.0, tweet 5 names the MCP 33-tool surface at /.well-known/mcp.json, tweets 6-12 enumerate the .ai portfolio + jurisdictional coverage + the 6-layer disclosure + the 5-tier ladder, tweet 13 invites migration (re-point your HMAC secret at the new attestation endpoint), tweet 14 closes with the canonical signature line; (2) a 600-word blog post titled 'The Hive Has Moved: Sovereign Temple v3.0 Is Live' — must (a) confirm the cutover timestamp in UTC, (b) list the DNS records, (c) name the 6-layer cryptographic disclosure unchanged, (d) call out the 10+ jurisdictions, (e) close with the waitlist CTA. Use DEFONEOS mythic voice. Return ONLY JSON: {tweetstorm:{thread:[14 strings], signature:string}, blog:{title:string, body:string, signature:string}}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

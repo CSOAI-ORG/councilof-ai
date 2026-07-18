@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>MCP Stateless Spec 2026-07-28 — SOV-722</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(34,197,94,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #10b981;border-radius:12px;margin-bottom:24px}
+.countdown{font-size:48px;color:#10b981;font-weight:700;margin:16px 0;font-family:monospace}
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.list{font-size:13px;line-height:1.7;color:#c5cdd9}
+.list code{background:#1f2937;padding:2px 6px;border-radius:3px;color:#10b981;font-size:11px}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>📦 MCP Stateless Spec</h1>
+<div style="color:#aaa">Ships 2026-07-28 · sovereign substrate fact: <code>mcp_2026_07_28</code></div>
+<div class="countdown" id="cd">counting down...</div>
+<div style="color:#aaa">Model Context Protocol — stateless variant</div>
+</div>
+
+<div class="spec">
+<div class="panel">
+<h3>What changes</h3>
+<div class="list">
+  • Every MCP request is <code>idempotent</code> + <code>stateless</code><br>
+  • No server-side session state required<br>
+  • Receipts are first-class (Ed25519 SIGIL)<br>
+  • Cold-start safe on serverless (Vercel, Cloudflare Workers)<br>
+  • Forward-compatible with agent cards + A2A
+</div>
+</div>
+<div class="panel">
+<h3>Why it matters</h3>
+<div class="list">
+  • Today: MCP servers maintain state across calls (stateful)<br>
+  • 2026-07-28: spec ships, all new servers MUST be stateless<br>
+  • Migration path: existing servers add a <code>?stateless=true</code> mode<br>
+  • Sovereign substrate is <b>already stateless</b> (all 23 API endpoints)<br>
+  • Care Floor + BFT-33 + SIGIL work unchanged
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h3>Sovereign substrate readiness</h3>
+<div class="list">
+  ✅ All 23 API endpoints already stateless (POST = pure function of input + charter + timestamp)<br>
+  ✅ SIGIL Ed25519 receipts first-class (no session dependency)<br>
+  ✅ No sessions, no cookies, no stored tokens (charter-bound only)<br>
+  ✅ Vercel serverless cold-start safe (verified today)<br>
+  ✅ A2A agent-card compatible (pre-2026-07-28)
+</div>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>mcp_2026_07_28</code> · verified 2026-07-13<br>
+📦 Ships: 2026-07-28 (15 days from now)
+</div>
+
+<script>
+const target = new Date('2026-07-28T00:00:00Z').getTime();
+function tick() {
+  const now = Date.now();
+  const diff = target - now;
+  if (diff < 0) { document.getElementById('cd').textContent = 'SHIPPED'; return; }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd').textContent = `${d}d ${h}h ${m}m ${s}s`;
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body></html>

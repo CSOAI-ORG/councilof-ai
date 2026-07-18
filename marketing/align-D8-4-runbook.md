@@ -1,0 +1,9 @@
+# First-customer runbook (7-day sequence from first reply to signed audit)
+
+**Source:** Drafted by Kimi Bridge (Kimi K2.7) via hermes_ask
+**Date:** 2026-06-15 (D8 ALIGN)
+
+{
+  "response": "# First Customer Runbook for Nick\n\n### D+0 (First Reply)\nReply within 1 hour. Book 20-min scoping call via Calendly (demo-deploy-lyart-delta.vercel.app).\n\n### D+1 (Call)\nRun the 20-min scoping call framework. End with 2 options: 48h Assessment \u00a35,000 OR Pro \u00a3199/mo. If they choose Pro, send Stripe link (buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t). If 48h, send Stripe link (buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m).\n\n### D+2 (Kickoff)\nPro: API key emailed. 48h: audit kickoff brief emailed. Send the 7-day MEOK Article 50 sequence (subscribe-deploy.vercel.app) for context.\n\n### D+3 (Value Moment)\nSend the live demo link (live-demo-deploy.vercel.app) + the clock embed (clock-embed-deploy.vercel.app). They start sharing the embed with their network. Viral spread.\n\n### D+4 (Proof Moment)\nSend the 5 case studies (case-studies-deploy.vercel.app). They pick 1-2 that match their vertical. They share with their team.\n\n### D+5 (Commitment Moment)\nSend the partner agreement (partner-sign-deploy.vercel.app) IF they want to white-label. Else send the apply-48h page (apply-48h-deploy.vercel.app). They commit to the audit OR escalate to the team.\n\n### D+6 (The Cliff)\nSend a 1-line: \"The cliff is 41 days out. What's your team's sign-off process for the 48h Assessment?\"\n\n### D+7 (The Ask)\nSend a 1-line: \"Should I send the Stripe checkout link to you or your finance team?\"",
+  "exit_code": 0
+}

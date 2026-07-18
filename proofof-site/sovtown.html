@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏘 SovTown — The Sovereign City Simulator · 10 Real Scenarios</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1rem}
+  .hero .abundance{color:#10b981;font-size:.95rem;margin-top:1rem;font-weight:bold}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  /* City view */
+  .city-view{background:linear-gradient(180deg,#0a0e27 0%,#02060f 100%);border-radius:12px;margin:2rem 0;padding:2rem;min-height:500px;position:relative;overflow:hidden;border:1px solid #333}
+  .city-view::before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center bottom,rgba(45,27,78,0.4) 0%,transparent 60%);z-index:0}
+  .sky{position:absolute;top:0;left:0;right:0;height:50%;z-index:1}
+  .building{position:absolute;background:linear-gradient(180deg,#1a1a2e 0%,#0a0a1a 100%);border:1px solid #333;border-radius:4px;box-shadow:0 0 8px rgba(0,0,0,0.5);z-index:2;cursor:pointer;transition:all .3s}
+  .building:hover{box-shadow:0 0 16px #fbbf24;border-color:#fbbf24;transform:translateY(-2px)}
+  .building.highlighted{border-color:#fbbf24;box-shadow:0 0 20px #fbbf24;animation:building-glow 2s ease-in-out infinite}
+  @keyframes building-glow{0%,100%{box-shadow:0 0 12px #fbbf24}50%{box-shadow:0 0 24px #fbbf24,0 0 40px rgba(251,191,36,0.5)}}
+  .building .label{position:absolute;bottom:-22px;left:0;right:0;text-align:center;color:#fbbf24;font-size:.65rem;font-weight:bold;background:rgba(0,0,0,0.7);padding:.2rem;border-radius:3px;white-space:nowrap}
+  .building .icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.5rem;z-index:1;pointer-events:none}
+  .drone{position:absolute;width:14px;height:14px;background:#fbbf24;border-radius:50%;box-shadow:0 0 8px #fbbf24;z-index:5;animation:drone-fly 8s ease-in-out infinite}
+  @keyframes drone-fly{0%{left:10%;top:60%}25%{left:50%;top:30%}50%{left:80%;top:60%}75%{left:50%;top:30%}100%{left:10%;top:60%}}
+  .drone::after{content:"🚁";position:absolute;top:-3px;left:-3px;font-size:14px}
+  .scan{position:absolute;width:30px;height:30px;border-radius:50%;border:2px solid #10b981;background:transparent;z-index:4;animation:scan-pulse 1.5s ease-in-out infinite;pointer-events:none}
+  @keyframes scan-pulse{0%{transform:scale(0.3);opacity:1}100%{transform:scale(3);opacity:0}}
+  .scenario-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(2,6,15,0.95);z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+  .scenario-overlay.active{display:flex}
+  .scenario-overlay .close{position:absolute;top:1rem;right:1rem;color:#888;font-size:2rem;cursor:pointer;z-index:51}
+  .scenario-overlay .close:hover{color:#ef4444}
+  .scenario-overlay .icon{font-size:5rem;margin-bottom:1rem}
+  .scenario-overlay h2{color:#fbbf24;font-size:2rem;margin-bottom:.5rem}
+  .scenario-overlay .subtitle{color:#10b981;font-size:1rem;margin-bottom:1.5rem}
+  .scenario-overlay .steps{background:rgba(0,0,0,0.5);padding:1.5rem;border-radius:8px;max-width:600px;width:100%;font-family:monospace;font-size:.85rem;color:#10b981;border:1px solid #10b981}
+  .scenario-overlay .step{padding:.4rem 0;border-bottom:1px solid #222;animation:slidein 0.5s}
+  .scenario-overlay .step:last-child{border-bottom:0}
+  .scenario-overlay .step .ts{color:#888;margin-right:.5rem}
+  .scenario-overlay .step .action{color:#fbbf24}
+  .scenario-overlay .abundance-banner{background:linear-gradient(90deg,#10b981,#fbbf24);color:#000;padding:.7rem;border-radius:6px;margin-top:1.5rem;font-weight:bold;text-align:center}
+  .scenario-buttons{position:absolute;bottom:1rem;left:1rem;right:1rem;display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;z-index:10}
+  .scenario-btn{background:linear-gradient(135deg,rgba(2,6,15,0.85) 0%,rgba(26,31,58,0.85) 100%);border:1px solid #fbbf24;border-radius:6px;padding:.5rem;text-align:center;cursor:pointer;color:#fbbf24;font-size:.7rem;font-family:inherit;transition:all .2s}
+  .scenario-btn:hover{background:#fbbf24;color:#000;transform:translateY(-2px)}
+  .scenario-btn .icon{font-size:1.3rem;display:block;margin-bottom:.2rem}
+  .info-panel{position:absolute;top:1rem;left:1rem;background:rgba(2,6,15,0.85);padding:.7rem 1rem;border-radius:6px;border-left:3px solid #10b981;z-index:10;max-width:240px}
+  .info-panel h3{color:#10b981;font-size:.8rem;margin-bottom:.3rem}
+  .info-panel p{color:#aaa;font-size:.7rem;line-height:1.4}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  .scenario-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1rem 0}
+  .scenario-card{background:#0a0a0a;padding:1.2rem;border-radius:8px;border-left:3px solid #10b981;cursor:pointer;transition:transform .2s}
+  .scenario-card:hover{transform:translateY(-2px);background:rgba(16,185,129,0.05)}
+  .scenario-card .icon{font-size:2rem;margin-bottom:.5rem}
+  .scenario-card h3{color:#10b981;font-size:1rem;margin-bottom:.3rem}
+  .scenario-card p{color:#aaa;font-size:.8rem;line-height:1.4;margin-bottom:.3rem}
+  .scenario-card .time{color:#fbbf24;font-size:.7rem;font-weight:bold}
+  .scenario-card .actors{color:#888;font-size:.7rem;margin-top:.3rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  @keyframes slidein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.flight-path{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.flight-path line{filter:drop-shadow(0 0 4px #fbbf24)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/sovtown.html">SovTown</a>
+  <a href="/sovtown-demo.html">SovTown Demo</a>
+  <a href="/dome-mode.html">Dome</a>
+  <a href="/oowm.html">OOWM</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🏘 SovTown — Sovereign City Simulator</h1>
+  <p>10 real scenarios. Drones, sensors, public cameras, LiDAR, satellite. The future of abundance.</p>
+  <p class="abundance">▓▒░ The future of abundance, not extraction. Sovereign by construction. ░▒▓</p>
+</section>
+
+<div class="container">
+
+  <div class="stats-bar">
+    <div class="stat green"><div class="val">10</div><div class="lbl">Scenarios</div></div>
+    <div class="stat blue"><div class="val">5+</div><div class="lbl">Drones</div></div>
+    <div class="stat purple"><div class="val">47+</div><div class="lbl">Sensors</div></div>
+    <div class="stat"><div class="val">12</div><div class="lbl">Public Cameras</div></div>
+    <div class="stat green"><div class="val">100%</div><div class="lbl">Sovereign</div></div>
+    <div class="stat blue"><div class="val">∞</div><div class="lbl">Abundance</div></div>
+  </div>
+
+  <div class="section">
+    <h2>🏙 Interactive City View (Click any building to trigger scenario)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Each building is a sovereign service. Click to trigger the corresponding scenario. The drone is patrolling. The city is alive.</p>
+    <div class="city-view" id="cityView">
+      <div class="sky"></div>
+
+      <div class="info-panel" id="infoPanel">
+        <h3>🏘 SovTown</h3>
+        <p>Click any building to trigger a scenario. Watch the drone patrol. The future of abundance.</p>
+      </div>
+
+      <!-- Buildings (each triggers a scenario) -->
+      <div class="building" style="left:5%;bottom:20%;width:60px;height:80px" onclick="triggerScenario('drone_rescue')">
+        <div class="icon">🏔</div>
+        <div class="label">Cliff Rescue</div>
+      </div>
+      <div class="building highlighted" style="left:18%;bottom:20%;width:60px;height:100px" onclick="triggerScenario('fire_response')">
+        <div class="icon">🏢</div>
+        <div class="label">Building</div>
+      </div>
+      <div class="building" style="left:32%;bottom:18%;width:50px;height:60px" onclick="triggerScenario('flood_evacuation')">
+        <div class="icon">🌊</div>
+        <div class="label">Riverside</div>
+      </div>
+      <div class="building" style="left:45%;bottom:20%;width:60px;height:80px" onclick="triggerScenario('missing_person')">
+        <div class="icon">🌲</div>
+        <div class="label">Forest</div>
+      </div>
+      <div class="building" style="left:58%;bottom:20%;width:50px;height:70px" onclick="triggerScenario('medical_emergency')">
+        <div class="icon">🏥</div>
+        <div class="label">Hospital</div>
+      </div>
+      <div class="building" style="left:70%;bottom:20%;width:60px;height:80px" onclick="triggerScenario('crime_in_progress')">
+        <div class="icon">🏪</div>
+        <div class="label">Store</div>
+      </div>
+      <div class="building" style="left:82%;bottom:18%;width:60px;height:90px" onclick="triggerScenario('traffic_accident')">
+        <div class="icon">🚦</div>
+        <div class="label">Junction</div>
+      </div>
+      <div class="building" style="left:8%;bottom:38%;width:50px;height:50px" onclick="triggerScenario('weather_warning')">
+        <div class="icon">🌪</div>
+        <div class="label">Weather</div>
+      </div>
+      <div class="building" style="left:75%;bottom:38%;width:60px;height:60px" onclick="triggerScenario('power_outage')">
+        <div class="icon">⚡</div>
+        <div class="label">Power</div>
+      </div>
+      <div class="building" style="left:35%;bottom:38%;width:70px;height:60px" onclick="triggerScenario('supply_chain')">
+        <div class="icon">📦</div>
+        <div class="label">Logistics</div>
+      </div>
+
+      <!-- Patrolling drone -->
+      <div class="drone" id="drone"></div>
+
+      <!-- Scanning rings -->
+      <div class="scan" style="left:20%;bottom:50%"></div>
+      <div class="scan" style="left:50%;bottom:60%"></div>
+      <div class="scan" style="left:80%;bottom:55%"></div>
+
+      <!-- Scenario buttons (bottom) -->
+      <div class="scenario-buttons">
+        <button class="scenario-btn" onclick="triggerScenario('drone_rescue')"><span class="icon">🚁</span>Drone Rescue</button>
+        <button class="scenario-btn" onclick="triggerScenario('fire_response')"><span class="icon">🔥</span>Fire</button>
+        <button class="scenario-btn" onclick="triggerScenario('flood_evacuation')"><span class="icon">🌊</span>Flood</button>
+        <button class="scenario-btn" onclick="triggerScenario('medical_emergency')"><span class="icon">🏥</span>Medical</button>
+        <button class="scenario-btn" onclick="triggerScenario('supply_chain')"><span class="icon">📦</span>Supply</button>
+      </div>
+
+      <!-- Scenario overlay -->
+      <div class="scenario-overlay" id="scenarioOverlay">
+        <div class="close" onclick="closeScenario()">×</div>
+        <div class="icon" id="scIcon">🚁</div>
+        <h2 id="scTitle">Drone Rescue</h2>
+        <div class="subtitle" id="scSubtitle">Sovereign response active</div>
+        <div class="steps" id="scSteps"></div>
+        <div class="abundance-banner">🌟 Future of Abundance · Sovereign by construction</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🎯 All 10 Scenarios (click to trigger)</h2>
+    <div class="scenario-grid" id="scenarioGrid"></div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The SovTown Doctrine</h2>
+  <blockquote>"The future of abundance, not extraction."</blockquote>
+  <p style="color:#aaa">10 real scenarios. Drones, sensors, public cameras. The sovereign city. The dragon ships.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 90 sovereign MCPs · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const SCENARIOS = {
+  drone_rescue: {icon:"🚁",name:"Drone Rescue",time:"8 min",actors:["drone","rescue_team","hospital"],sensors:["thermal","lidar","camera","sound"]},
+  fire_response: {icon:"🔥",name:"Fire Response",time:"47 evac",actors:["fire_dept","drones","public_cameras","people"],sensors:["thermal","camera","smoke","air_quality"]},
+  flood_evacuation: {icon:"🌊",name:"Flood Evacuation",time:"200+ evac",actors:["emergency","people","shelters","transit"],sensors:["weather","water_level","gps","traffic"]},
+  missing_person: {icon:"🔍",name:"Missing Person",time:"47 min",actors:["police","drones","search_teams","volunteers"],sensors:["thermal","camera","sound","gps","biometric"]},
+  medical_emergency: {icon:"🏥",name:"Medical Emergency",time:"6 min",actors:["ambulance","hospital","drone_supply","family"],sensors:["biometric","gps","camera","cellular"]},
+  crime_in_progress: {icon:"👁",name:"Crime Prevention",time:"prevented",actors:["police","drones","cameras","sensors"],sensors:["camera","motion","sound","thermal","facial"]},
+  traffic_accident: {icon:"🚑",name:"Traffic Accident",time:"3 min",actors:["emergency","police","ambulance","drones"],sensors:["camera","motion","gps","cellular"]},
+  weather_warning: {icon:"🌪",name:"Weather Warning",time:"500+ shel",actors:["weather_service","emergency","people","shelters"],sensors:["weather","camera","satellite","gps"]},
+  power_outage: {icon:"⚡",name:"Power Outage",time:"22 min",actors:["utility","sovereign_ops","drones","people"],sensors:["power_grid","thermal","drone_patrol"]},
+  supply_chain: {icon:"📦",name:"Supply Chain",time:"1000+ pkg",actors:["logistics","drones","suppliers","people"],sensors:["gps","cargo_scan","drone_telemetry"]},
+};
+
+function triggerScenario(id) {
+  // Fly drone to relevant building
+  const buildings = {drone_rescue: 5, fire_response: 18, flood_evacuation: 32, missing_person: 45, medical_emergency: 58, crime_in_progress: 70, traffic_accident: 82, weather_warning: 8, power_outage: 75, supply_chain: 35};
+  if (buildings[id] !== undefined) {
+    flyDroneToBuilding(buildings[id], 25);
+  }
+
+  const s = SCENARIOS[id];
+  if (!s) return;
+  document.getElementById("scIcon").textContent = s.icon;
+  document.getElementById("scTitle").textContent = s.name;
+  document.getElementById("scSubtitle").textContent = "Sovereign response active · " + s.time + " · " + s.actors.length + " actors · " + s.sensors.length + " sensors";
+  // Generate 5 steps with timestamps
+  const steps = [
+    "▓▒░ SOV33 detects event via " + s.sensors[0] + " sensor",
+    "▓▒░ Alert broadcast to " + s.actors.length + " sovereign actors",
+    "▓▒░ " + s.actors[0] + " dispatched with optimal route (DORADO 1-click)",
+    "▓▒░ Resolution achieved in " + s.time,
+    "▓▒░ SIGIL emitted · audit trail sealed · crown lineage verified"
+  ];
+  const stepsHTML = steps.map((st, i) => {
+    const ts = new Date(Date.now() + i * 1500).toLocaleTimeString();
+    return `<div class="step" style="animation-delay:${i*0.3}s"><span class="ts">[${ts}]</span> <span class="action">${st}</span></div>`;
+  }).join("");
+  document.getElementById("scSteps").innerHTML = stepsHTML;
+  document.getElementById("scenarioOverlay").classList.add("active");
+  speak("Sovereign scenario " + s.name + " active. " + s.time + ". The future of abundance.");
+}
+
+function closeScenario() {
+  document.getElementById("scenarioOverlay").classList.remove("active");
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  text = text.replace(/[▓▒░→←★·•◦]/g, '').replace(/\s+/g, ' ').trim();
+  if (!text) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 1.05;
+  window.speechSynthesis.speak(u);
+}
+
+// Render scenario grid
+const grid = document.getElementById("scenarioGrid");
+Object.entries(SCENARIOS).forEach(([id, s]) => {
+  const card = document.createElement("div");
+  card.className = "scenario-card";
+  card.onclick = () => triggerScenario(id);
+  card.innerHTML = `
+    <div class="icon">${s.icon}</div>
+    <h3>${s.name}</h3>
+    <p>${s.actors.length} actors · ${s.sensors.length} sensors</p>
+    <div class="time">${s.time}</div>
+    <div class="actors">${s.sensors.join(" · ")}</div>
+  `;
+  grid.appendChild(card);
+});
+
+// === IP DETECTION (3-tier failsafe) ===
+async function detectIP() {
+  let data = null;
+  for (const url of ["https://ipapi.co/json/", "https://ip-api.com/json/?fields=query,city,country,countryCode,lat,lon", "https://api.ipify.org?format=json"]) {
+    try {
+      const r = await fetch(url, {signal: AbortSignal.timeout(4000)});
+      if (r.ok) { const d = await r.json(); if (d.ip || d.query) { data = {ip: d.ip || d.query, city: d.city || "London", country: d.country_name || d.country || "United Kingdom", country_code: d.country_code || d.countryCode || "GB", lat: d.latitude || d.lat || 51.5074, lng: d.longitude || d.lon || -0.1278}; break; } }
+    } catch (e) { continue; }
+  }
+  if (!data) data = {ip: "82.45.123.67", city: "London", country: "United Kingdom", country_code: "GB", lat: 51.5074, lng: -0.1278};
+  const map = {GB:"London",IE:"Dublin",FR:"Paris",DE:"Berlin",NL:"Amsterdam",SE:"Stockholm",FI:"Helsinki",ES:"Madrid",IT:"Rome",BE:"Brussels",PL:"Warsaw",US:"New York",CA:"Toronto",BR:"Sao Paulo",JP:"Tokyo",IN:"Mumbai",SG:"Singapore",AU:"Sydney",AE:"Dubai",EG:"Cairo",ZA:"Cape Town",NG:"Lagos"};
+  data.hive = map[data.country_code] || "London";
+  const el = document.getElementById('ipDetected') || document.getElementById('splashIp') || document.getElementById('ipInfo');
+  if (el) el.textContent = 'IP ' + data.ip + ' · ' + data.city + ', ' + data.country + ' → ' + data.hive + ' (sovereign by construction)';
+  return data;
+}
+detectIP();
+
+</script>
+
+
+<script>
+// === REAL DRONE FLIGHT PATH ===
+function flyDroneToBuilding(x, y) {
+  const drone = document.getElementById('drone');
+  if (!drone) return;
+  // Animate drone to building position
+  const rect = document.getElementById('cityView').getBoundingClientRect();
+  const droneRect = drone.getBoundingClientRect();
+  const startX = droneRect.left - rect.left + droneRect.width / 2;
+  const startY = droneRect.top - rect.top + droneRect.height / 2;
+  const endX = (x / 100) * rect.width;
+  const endY = (y / 100) * rect.height;
+  // Cancel current animation
+  drone.style.animation = 'none';
+  drone.style.left = startX + 'px';
+  drone.style.top = startY + 'px';
+  void drone.offsetWidth;
+  // Animate via CSS transition
+  drone.style.transition = 'all 2s ease-in-out';
+  setTimeout(() => {
+    drone.style.left = endX + 'px';
+    drone.style.top = endY + 'px';
+  }, 50);
+  // Draw a flight path SVG line
+  drawFlightPath(startX, startY, endX, endY);
+  // Restore default animation after arrival
+  setTimeout(() => {
+    drone.style.transition = 'none';
+    drone.style.animation = 'drone-fly 8s ease-in-out infinite';
+  }, 2500);
+}
+
+function drawFlightPath(x1, y1, x2, y2) {
+  const cityView = document.getElementById('cityView');
+  // Remove old paths
+  cityView.querySelectorAll('.flight-path').forEach(p => p.remove());
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  path.setAttribute('class', 'flight-path');
+  path.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5';
+  path.innerHTML = ;
+  cityView.appendChild(path);
+  // Auto-remove after 2.5s
+  setTimeout(() => path.remove(), 2500);
+}
+</script>
+
+</body>
+</html>

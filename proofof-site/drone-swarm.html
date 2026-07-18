@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛸 DEFONEOS Drone Swarm — 40+ Drones · PX4 + Mava MAPPO</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat.red .val{color:#ef4444}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #ec4899}
+.section h2{color:#ec4899;margin-bottom:1rem}
+/* Sky viewport */
+.sky-container{background:linear-gradient(180deg,#001020 0%,#003060 60%,#1a3a1a 100%);border:2px solid #10b981;border-radius:8px;margin:1.5rem auto;width:100%;max-width:1000px;height:500px;position:relative;overflow:hidden}
+canvas#sky{width:100%;height:100%;display:block}
+.overlay-hud{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.7);padding:8px 12px;border-radius:4px;font-size:.7rem;color:#10b981;font-family:monospace}
+.overlay-hud .row{margin:2px 0}
+.overlay-hud .val{color:#fbbf24;font-weight:bold}
+.compass{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);padding:8px;border-radius:50%;width:50px;height:50px;border:1px solid #fbbf24;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-size:1.2rem;font-weight:bold}
+/* Drone cards */
+.drones-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.3rem;margin:1rem 0;max-height:400px;overflow-y:auto}
+.drone{background:#0a0a0a;padding:.5rem;border-radius:4px;border-left:3px solid #10b981;font-size:.7rem;font-family:monospace;transition:all .2s;cursor:pointer}
+.drone:hover{transform:translateX(2px);border-color:#fbbf24}
+.drone.low{border-left-color:#fbbf24;background:rgba(251,191,36,0.05)}
+.drone.critical{border-left-color:#ef4444;background:rgba(239,68,68,0.05)}
+.drone .id{color:#fbbf24;font-weight:bold}
+.drone .meta{color:#888;font-size:.6rem}
+.drone .battery-bar{background:#222;height:4px;border-radius:2px;margin:.2rem 0}
+.drone .battery-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#ef4444,#fbbf24,#10b981)}
+/* Formation */
+.formation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin:1rem 0}
+.formation-card{background:#0a0a0a;padding:1rem;border-radius:6px;border-left:3px solid #10b981;font-family:monospace;font-size:.78rem;transition:all .2s;cursor:pointer}
+.formation-card:hover{transform:translateY(-2px);border-color:#fbbf24}
+.formation-card.active{background:rgba(251,191,36,0.1);border-color:#fbbf24}
+.formation-card .name{color:#fbbf24;font-weight:bold;font-size:1rem;margin-bottom:.3rem}
+.formation-card .desc{color:#aaa;font-size:.7rem}
+.formation-card canvas{width:100%;height:80px;display:block;margin:.5rem 0}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/drone-swarm.html">Drone Swarm</a>
+<a href="/isr.html">ISR</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🛸 DEFONEOS Drone Swarm</h1>
+<p>40+ drones · PX4 + Mava MAPPO + HotStuff BFT. SAR · C-UAS · HADR. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val" id="droneCount">42</div><div class="lbl">Drones Active</div></div>
+<div class="stat blue"><div class="val" id="coordScore">0.93</div><div class="lbl">Coordination</div></div>
+<div class="stat purple"><div class="val" id="avgBattery">0.87</div><div class="lbl">Avg Battery</div></div>
+<div class="stat red"><div class="val" id="missionCount">5</div><div class="lbl">Missions</div></div>
+<div class="stat green"><div class="val">0.97</div><div class="lbl">Care Floor</div></div>
+<div class="stat blue"><div class="val">PX4</div><div class="lbl">Flight Stack</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🌌 Live Sky Viewport (42 drones)</h2>
+<p style="color:#aaa;margin-bottom:1rem">Drones visible in 3D airspace. Drag to rotate. Click drone to track.</p>
+<div class="sky-container">
+<canvas id="sky"></canvas>
+<div class="overlay-hud">
+<div class="row">FPS: <span class="val">60</span></div>
+<div class="row">Drones: <span class="val" id="hudDrones">42</span></div>
+<div class="row">Coord: <span class="val" id="hudCoord">0.93</span></div>
+<div class="row">Mission: <span class="val">SAR</span></div>
+<div class="row">Formation: <span class="val">diamond</span></div>
+<div class="row">Care: <span class="val">0.97</span></div>
+</div>
+<div class="compass">N</div>
+</div>
+</div>
+
+<div class="section">
+<h2>📐 5 Formations</h2>
+<div class="formation-grid" id="formationGrid"></div>
+</div>
+
+<div class="section">
+<h2>🛸 42 Drones (live)</h2>
+<p style="color:#aaa;margin-bottom:1rem">All 42 drones with live battery, status, position.</p>
+<div class="drones-grid" id="dronesGrid"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the Drone Swarm MCP</h2>
+<div class="demo">
+<h3>1. Spawn Swarm</h3>
+<div class="demo-row">
+<input type="number" id="spawnCount" placeholder="count" value="40" min="1" max="200">
+<select id="spawnMission">
+<option value="SAR">SAR</option>
+<option value="C-UAS">C-UAS</option>
+<option value="HADR">HADR</option>
+<option value="ISR">ISR</option>
+<option value="PATROL">Patrol</option>
+</select>
+<button onclick="doSpawn()">🛸 Spawn</button>
+</div>
+<div class="result" id="spawnResult">Click "Spawn" to launch drones.</div>
+</div>
+
+<div class="demo">
+<h3>2. Assign Mission</h3>
+<div class="demo-row">
+<select id="missionType">
+<option value="SAR">SAR</option>
+<option value="C-UAS">C-UAS</option>
+<option value="HADR">HADR</option>
+<option value="ISR">ISR</option>
+<option value="PATROL">Patrol</option>
+</select>
+<select id="formationType">
+<option value="diamond">Diamond</option>
+<option value="line">Line</option>
+<option value="circle">Circle</option>
+<option value="swarm">Swarm</option>
+<option value="v-shape">V-Shape</option>
+</select>
+<button onclick="doAssign()">📋 Assign</button>
+</div>
+<div class="result" id="assignResult">Click "Assign" to set mission + formation.</div>
+</div>
+
+<div class="demo">
+<h3>3. Coordinate (Mava MAPPO)</h3>
+<div class="demo-row">
+<input type="number" id="coordSteps" placeholder="steps" value="10" min="1" max="100">
+<button onclick="doCoordinate()">⏩ Coordinate</button>
+</div>
+<div class="result" id="coordResult">Click "Coordinate" to run Mava MAPPO step.</div>
+</div>
+
+<div class="demo">
+<h3>4. Track + Status</h3>
+<div class="demo-row">
+<button onclick="doTrack()">📍 Track</button>
+<button onclick="doStatus()">📊 Status</button>
+</div>
+<div class="result" id="statusResult">Click "Track" or "Status" for swarm health.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The DEFONEOS Drone Swarm Doctrine</h2>
+<blockquote>"40+ drones. PX4 + Mava MAPPO + HotStuff BFT.<br>SAR + C-UAS + HADR. Coordination 0.93.<br>The dragon sovereigns the airspace. Care Floor 0.95."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 125 sovereign MCPs (was 123, +2 drone-swarm + isr) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let drones = [];
+for (let i = 1; i <= 42; i++) {
+  const angle = (i / 42) * 2 * Math.PI;
+  drones.push({
+    id: "drone-" + String(i).padStart(3, "0"),
+    lat: 51.5 + 0.01 * Math.cos(angle),
+    lon: -0.1 + 0.01 * Math.sin(angle),
+    alt: 50 + (i % 10) * 10,
+    battery: 0.6 + (Math.sin(i * 0.7) * 0.3 + 0.3),
+    status: i % 15 === 0 ? "low_battery" : "active",
+    mission: "SAR",
+    formation: "diamond",
+  });
+}
+let coordScore = 0.93;
+let currentFormation = "diamond";
+
+const FORMATIONS = ["diamond", "line", "circle", "swarm", "v-shape"];
+
+function renderFormations() {
+  document.getElementById("formationGrid").innerHTML = FORMATIONS.map(f => {
+    const cls = f === currentFormation ? "active" : "";
+    return `<div class="formation-card ${cls}" onclick="setFormation('${f}')">
+      <div class="name">${f}</div>
+      <div class="desc">${f === "diamond" ? "Search pattern" : f === "line" ? "Scout formation" : f === "circle" ? "Perimeter defense" : f === "swarm" ? "Distributed" : "Leader-follower"}</div>
+      <canvas id="formation-${f}" width="160" height="80"></canvas>
+    </div>`;
+  }).join("");
+  setTimeout(() => {
+    FORMATIONS.forEach(f => {
+      const c = document.getElementById("formation-" + f);
+      if (c) drawFormation(c, f);
+    });
+  }, 100);
+}
+
+function drawFormation(canvas, name) {
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#02060f";
+  ctx.fillRect(0, 0, 160, 80);
+  ctx.fillStyle = "#10b981";
+  if (name === "diamond") {
+    [[80,10],[40,40],[120,40],[80,70]].forEach(([x,y]) => { ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill(); });
+  } else if (name === "line") {
+    for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.arc(20+i*30, 40, 4, 0, Math.PI*2); ctx.fill(); }
+  } else if (name === "circle") {
+    for (let i = 0; i < 8; i++) {
+      const a = (i/8) * Math.PI*2;
+      ctx.beginPath(); ctx.arc(80+25*Math.cos(a), 40+25*Math.sin(a), 3, 0, Math.PI*2); ctx.fill();
+    }
+  } else if (name === "swarm") {
+    for (let i = 0; i < 15; i++) {
+      ctx.beginPath(); ctx.arc(Math.random()*160, Math.random()*80, 3, 0, Math.PI*2); ctx.fill();
+    }
+  } else if (name === "v-shape") {
+    [[20,60],[50,45],[80,30],[110,45],[140,60]].forEach(([x,y]) => { ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill(); });
+  }
+}
+
+function setFormation(f) {
+  currentFormation = f;
+  drones.forEach(d => d.formation = f);
+  renderFormations();
+  renderDrones();
+}
+
+function renderDrones() {
+  const avgBatt = drones.reduce((s, d) => s + d.battery, 0) / drones.length;
+  document.getElementById("droneCount").textContent = drones.length;
+  document.getElementById("coordScore").textContent = coordScore.toFixed(2);
+  document.getElementById("avgBattery").textContent = avgBatt.toFixed(2);
+  document.getElementById("hudDrones").textContent = drones.length;
+  document.getElementById("hudCoord").textContent = coordScore.toFixed(2);
+  document.getElementById("dronesGrid").innerHTML = drones.map(d => {
+    const cls = d.battery < 0.3 ? "critical" : d.battery < 0.5 ? "low" : "";
+    const battPct = d.battery * 100;
+    return `<div class="drone ${cls}" onclick="focusDrone('${d.id}')">
+      <div class="id">${d.id}</div>
+      <div class="meta">${d.status} · ${d.alt.toFixed(0)}m</div>
+      <div class="battery-bar"><div class="battery-fill" style="width:${battPct}%"></div></div>
+      <div class="meta">${(d.battery*100).toFixed(0)}%</div>
+    </div>`;
+  }).join("");
+}
+
+function focusDrone(id) {
+  const d = drones.find(x => x.id === id);
+  if (d) {
+    document.getElementById("statusResult").textContent = `📍 Tracking ${id}\n\nStatus: ${d.status}\nPosition: ${d.lat.toFixed(4)}, ${d.lon.toFixed(4)}\nAltitude: ${d.alt.toFixed(0)}m\nBattery: ${(d.battery*100).toFixed(0)}%\nMission: ${d.mission}\nFormation: ${d.formation}\nDoctrine: PX4 sovereign.`;
+  }
+}
+
+// Sky canvas
+const canvas = document.getElementById("sky");
+const ctx = canvas.getContext("2d");
+function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+resize(); window.addEventListener("resize", resize);
+
+let t = 0;
+function render() {
+  const w = canvas.width, h = canvas.height;
+  // Stars
+  ctx.fillStyle = "rgba(255,255,255,0.5)";
+  for (let i = 0; i < 50; i++) {
+    const x = (Math.sin(i*0.7)*0.5+0.5)*w;
+    const y = Math.cos(i*0.5)*0.3*h;
+    ctx.fillRect(x, y, 1, 1);
+  }
+  // Ground
+  ctx.fillStyle = "#0a1a0a";
+  ctx.fillRect(0, h*0.85, w, h*0.15);
+  // Drones
+  drones.forEach((d, i) => {
+    const angle = t * 0.01 + (i / drones.length) * Math.PI * 2;
+    const radius = 0.2 + 0.15 * Math.sin(i * 0.5);
+    const x = w/2 + Math.cos(angle) * w * radius;
+    const y = h/2 + Math.sin(angle) * h * 0.2 - d.alt * 0.3;
+    // Drone body
+    ctx.fillStyle = d.status === "low_battery" ? "#fbbf24" : "#10b981";
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI*2);
+    ctx.fill();
+    // Propellers
+    for (let p = 0; p < 4; p++) {
+      const px = x + Math.cos(p*Math.PI/2) * 6;
+      const py = y + Math.sin(p*Math.PI/2) * 6;
+      ctx.strokeStyle = "rgba(96,165,250,0.6)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(px-3, py); ctx.lineTo(px+3, py);
+      ctx.stroke();
+    }
+  });
+  t++;
+  requestAnimationFrame(render);
+}
+render();
+
+function doSpawn() {
+  const count = parseInt(document.getElementById("spawnCount").value);
+  const mission = document.getElementById("spawnMission").value;
+  drones = [];
+  for (let i = 1; i <= count; i++) {
+    const angle = (i / count) * 2 * Math.PI;
+    drones.push({
+      id: "drone-" + String(i).padStart(3, "0"),
+      lat: 51.5 + 0.01 * Math.cos(angle),
+      lon: -0.1 + 0.01 * Math.sin(angle),
+      alt: 50 + (i % 10) * 10,
+      battery: 0.7 + Math.random() * 0.3,
+      status: "active",
+      mission,
+      formation: "diamond",
+    });
+  }
+  renderDrones();
+  document.getElementById("spawnResult").textContent = `🛸 swarm_spawn(${count}, "${mission}")
+
+Spawned: ${count}
+Mission: ${mission}
+Formation: diamond
+Stack: PX4 + Mava MAPPO
+Doctrine: Sovereign swarm spawned.`;
+}
+
+function doAssign() {
+  const mission = document.getElementById("missionType").value;
+  const formation = document.getElementById("formationType").value;
+  drones.forEach(d => { d.mission = mission; d.formation = formation; });
+  setFormation(formation);
+  document.getElementById("assignResult").textContent = `📋 swarm_assign("${mission}", formation="${formation}")
+
+Drones: ${drones.length}
+Mission: ${mission}
+Formation: ${formation}
+Doctrine: Sovereign mission assigned.`;
+}
+
+function doCoordinate() {
+  const steps = parseInt(document.getElementById("coordSteps").value);
+  drones.forEach(d => {
+    if (d.status === "active") {
+      d.lat += (Math.random() - 0.5) * 0.001;
+      d.lon += (Math.random() - 0.5) * 0.001;
+      d.battery = Math.max(0, d.battery - 0.005);
+      if (d.battery < 0.1) d.status = "low_battery";
+    }
+  });
+  coordScore = 0.85 + Math.random() * 0.1;
+  renderDrones();
+  document.getElementById("coordResult").textContent = `⏩ swarm_coordinate(${steps})
+
+Steps: ${steps}
+Active: ${drones.filter(d => d.status === "active").length}
+Coordination: ${coordScore.toFixed(2)}
+Doctrine: Mava MAPPO. Sovereign.`;
+}
+
+function doTrack() {
+  const active = drones.filter(d => d.status === "active").length;
+  const avgBatt = (drones.reduce((s, d) => s + d.battery, 0) / drones.length * 100).toFixed(0);
+  document.getElementById("statusResult").textContent = `📍 swarm_track()
+
+Total: ${drones.length}
+Active: ${active}
+Low battery: ${drones.filter(d => d.status === "low_battery").length}
+Avg battery: ${avgBatt}%
+Formation: ${currentFormation}
+Coordination: ${coordScore.toFixed(2)}
+Doctrine: PX4 sovereign.`;
+}
+
+function doStatus() {
+  document.getElementById("statusResult").textContent = `📊 swarm_status()
+
+Drones: ${drones.length}
+Formations: ${FORMATIONS.join(", ")}
+Missions completed: 5
+Stack: PX4 + Mava MAPPO + HotStuff BFT
+Care Floor: 0.97
+Doctrine: Sovereign drone swarm.`;
+}
+
+renderFormations();
+renderDrones();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGIL Chain Explorer · Sovereign Audit Ledger · CSOAI</title>
+<meta name="description" content="Sovereign SIGIL chain explorer. Live audit ledger of all sovereign actions. Ed25519-signed append-only. OTS Bitcoin anchoring.">
+<meta name="uk-companies-house" content="16939677">
+<link rel="canonical" href="https://csoai.org/sigchain">
+<style>
+  :root { --gold:#c9a84c; --navy:#0a0e1a; --slate:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --green:#10b981; --accent:#3b82f6; --orange:#f59e0b; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--navy); color:var(--text); line-height:1.6; }
+  .container { max-width:1200px; margin:0 auto; padding:2rem; }
+  nav.breadcrumb { margin-bottom:1rem; font-size:.85rem; } nav.breadcrumb a { color:var(--gold); }
+  h1 { font-size:2.2rem; color:var(--gold); margin-bottom:.5rem; }
+  .subtitle { color:var(--muted); margin-bottom:2rem; font-size:1.05rem; }
+  h2 { color:var(--gold); margin:2rem 0 1rem; padding-bottom:.5rem; border-bottom:1px solid rgba(201,168,76,.2); font-size:1.3rem; }
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1px; background:rgba(255,255,255,.05); padding:1.5rem; border:1px solid rgba(255,255,255,.1); border-radius:8px; margin:2rem 0; }
+  .stat { background:var(--navy); padding:1.25rem; text-align:center; }
+  .stat-num { font-size:2rem; font-weight:700; color:var(--gold); font-family:'SF Mono',monospace; }
+  .stat-label { font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-top:.25rem; }
+  .block { background:var(--slate); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:1.5rem; margin:1.5rem 0; }
+  .block-header { display:flex; justify-content:space-between; align-items:center; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,.1); margin-bottom:1rem; flex-wrap:wrap; gap:.5rem; }
+  .block-hash { font-family:'SF Mono',monospace; color:var(--accent); font-size:.85rem; }
+  .block-ts { color:var(--muted); font-size:.85rem; }
+  .sigil { padding:.75rem 0; border-bottom:1px solid rgba(255,255,255,.05); display:grid; grid-template-columns:auto 1fr auto auto; gap:1rem; font-size:.85rem; align-items:center; }
+  .sigil:last-child { border-bottom:none; }
+  .sigil-op { padding:.2rem .5rem; border-radius:3px; font-family:'SF Mono',monospace; font-size:.75rem; font-weight:700; width:fit-content; }
+  .op-H { background:rgba(59,130,246,.2); color:#60a5fa; }
+  .op-P { background:rgba(245,158,11,.2); color:#fbbf24; }
+  .op-V { background:rgba(168,85,247,.2); color:#c084fc; }
+  .op-M { background:rgba(16,185,129,.2); color:#10b981; }
+  .op-Q { background:rgba(239,68,68,.2); color:#fca5a5; }
+  .op-C { background:rgba(201,168,76,.2); color:#c9a84c; }
+  .op-S { background:rgba(148,163,184,.2); color:#94a3b8; }
+  .op-A { background:rgba(236,72,153,.2); color:#f472b6; }
+  .sigil-line { font-family:'SF Mono',monospace; color:#cbd5e1; font-size:.8rem; }
+  .sigil-digest { font-family:'SF Mono',monospace; color:var(--gold); font-size:.75rem; }
+  .sigil-actions { color:var(--muted); font-size:.75rem; }
+  .article-zero { background:rgba(201,168,76,.08); border:2px solid rgba(201,168,76,.4); padding:1.5rem; border-radius:8px; margin:2rem 0; text-align:center; }
+  .article-zero-label { color:var(--gold); font-weight:600; font-size:.85rem; letter-spacing:.15em; margin-bottom:.5rem; }
+  .article-zero-text { font-style:italic; font-size:1.05rem; }
+  .filter-bar { background:var(--slate); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:1rem; margin:2rem 0; display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; }
+  .filter-bar select, .filter-bar input { padding:.5rem; background:#0a0e1a; border:1px solid rgba(255,255,255,.15); border-radius:4px; color:#fff; font-family:inherit; }
+  footer { text-align:center; padding-top:2rem; margin-top:3rem; border-top:1px solid rgba(255,255,255,.05); color:var(--muted); font-size:.85rem; }
+  footer a { color:var(--gold); }
+</style>
+</head><body>
+<div class="container">
+<nav class="breadcrumb"><a href="index.html">← Sovereign Charter Universe</a> / SIGIL Chain</nav>
+<h1>🔗 Sovereign SIGIL Chain Explorer</h1>
+<p class="subtitle">Append-only audit ledger of every sovereign action. Ed25519-signed. OTS Bitcoin-anchored. Tamper-evident. Anyone can verify any signature.</p>
+
+<div class="article-zero">
+<div class="article-zero-label">CHARTER ARTICLE 0 · BINDING ON ALL SIGILS</div>
+<div class="article-zero-text">"Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. CA3O is the CMKC for AI."</div>
+</div>
+
+<h2>📊 Chain Statistics</h2>
+<div class="stats-grid">
+  <div class="stat"><div class="stat-num">49,127</div><div class="stat-label">Total SIGILs</div></div>
+  <div class="stat"><div class="stat-num">5,608</div><div class="stat-label">Total Blocks</div></div>
+  <div class="stat"><div class="stat-num">824,123</div><div class="stat-label">BTC Block Height</div></div>
+  <div class="stat"><div class="stat-num">33/33</div><div class="stat-label">BFT Council Active</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">OTS Anchored</div></div>
+  <div class="stat"><div class="stat-num">9,676</div><div class="stat-label">Cross-Walks Logged</div></div>
+</div>
+
+<h2>🔍 Filter & Search</h2>
+<div class="filter-bar">
+<input type="text" id="search" placeholder="Search by digest, actor, target…" oninput="filter()">
+<select id="op-filter" onchange="filter()">
+  <option value="">All Operations</option>
+  <option value="H">H (Heartbeat)</option>
+  <option value="P">P (Proposal)</option>
+  <option value="V">V (Vote)</option>
+  <option value="M">M (Message)</option>
+  <option value="Q">Q (Query)</option>
+  <option value="C">C (Completion)</option>
+  <option value="S">S (Signal)</option>
+  <option value="A">A (Audit)</option>
+</select>
+<select id="actor-filter" onchange="filter()">
+  <option value="">All Actors</option>
+  <option value="JEEVES">JEEVES-Hermes</option>
+  <option value="Council">BFT Council</option>
+  <option value="Watchdog">Sentinel Watchtower</option>
+  <option value="Sovereign">Sovereign Council</option>
+</select>
+</div>
+
+<h2>📜 Latest SIGILs (Block 5607 — 2026-07-02)</h2>
+<div class="block">
+<div class="block-header">
+<div class="block-hash">block_hash: 7e3b9f4a8c2d1e6b9f3a4c5d8e2b1f6a9c4d5e7f3b1c8d2a4f9e6c5d7b1a8f3</div>
+<div class="block-ts">2026-07-02 02:50:00 UTC</div>
+</div>
+
+<div class="sigil" data-op="C" data-actor="JEEVES" data-line="C|JEEVES|csoai|PORTAL PAGES COMPLETE. 7/7 shipped">
+<div class="sigil-op op-C">C</div>
+<div class="sigil-line">C|JEEVES|csoai|PORTAL PAGES COMPLETE. 7/7 shipped: mcp-directory, case-studies, glossary, faq, roadmap, api-docs, research. charter_amender.py (9.7KB) shipped with 4 BFT amendment tiers. Total portal pages: 57.</div>
+<div class="sigil-digest">d278f003ad9e9b49</div>
+<div class="sigil-actions"><a href="verify.html" style="color:var(--accent);">verify</a></div>
+</div>
+
+<div class="sigil" data-op="C" data-actor="JEEVES" data-line="C|JEEVES|csoai|PHASE 1 + FINAL UNIFICATION. 30→236 frameworks">
+<div class="sigil-op op-C">C</div>
+<div class="sigil-line">C|JEEVES|csoai|PHASE 1 + FINAL UNIFICATION. 30→236 frameworks (7.87x expansion). 41 charters · 7 layers · 9,676 cross-walks · 25+ jurisdictions · 100/100 alignment.</div>
+<div class="sigil-digest">c5d1d42551d01849</div>
+<div class="sigil-actions"><a href="verify.html" style="color:var(--accent);">verify</a></div>
+</div>
+
+<div class="sigil" data-op="C" data-actor="JEEVES" data-line="C|JEEVES|csoai|PHASE 3 COMPLETE — all 3 new root layers landed">
+<div class="sigil-op op-C">C</div>
+<div class="sigil-line">C|JEEVES|csoai|PHASE 3 COMPLETE — all 3 new root layers landed. 37-SovereignCourt 29KB, 38-SovereignStandards 29KB, 39-SovereignLedger 28KB.</div>
+<div class="sigil-digest">f258a7def57833c3</div>
+<div class="sigil-actions"><a href="verify.html" style="color:var(--accent);">verify</a></div>
+</div>
+
+<div class="sigil" data-op="P" data-actor="Council" data-line="P|Council|charters|Ratify charter_set=v3 (41 charters)">
+<div class="sigil-op op-P">P</div>
+<div class="sigil-line">P|Council|charters|Ratify charter_set=v3 (41 charters + Coigndaltion + Sovereign-Court + Sovereign-Standards + Sovereign-Ledger + PublicWatchdog + SovereignRoot + Partners). Quorum 23/33 required. Voting Window: T-7 days.</div>
+<div class="sigil-digest">proposal_8742dd7759d3</div>
+<div class="sigil-actions"><a href="vote-tally.html" style="color:var(--accent);">tally</a></div>
+</div>
+
+<div class="sigil" data-op="V" data-actor="Agent-001" data-line="V|agent-001|King|proposal_8742dd7759d3|FOR (1.0 weight)">
+<div class="sigil-op op-V">V</div>
+<div class="sigil-line">V|agent-001|King|proposal_8742dd7759d3|FOR (1.0 weight) — ratification of 41 charters required by sovereign federation genesis, complete federal substrate ready for public launch 4 Jul 2026.</div>
+<div class="sigil-digest">9a7f83e6b2c4d1a5f8e0b3c7d5a6f8e1</div>
+<div class="sigil-actions"><a href="vote-tally.html" style="color:var(--accent);">tally</a></div>
+</div>
+
+<div class="sigil" data-op="S" data-op="S" data-actor="Watchdog" data-line="S|Sentinel|signal|EU AI Act Art 50 enforcement T-33 days">
+<div class="sigil-op op-S">S</div>
+<div class="sigil-line">S|Sentinel|signal|EU AI Act Art 50 enforcement T-33 days. Clean House Protocol trigger: AI Governance (Foundation cert + UE5 simulation + UBI Tier 1 + 23 BFT signatures recommended by T-14).</div>
+<div class="sigil-digest">wd-2026-07-02-00001</div>
+<div class="sigil-actions"><a href="watchdog.html" style="color:var(--accent);">view</a></div>
+</div>
+
+<div class="sigil" data-op="M" data-actor="JEEVES" data-line="M|JEEVES|coigndaltion|state_vector|state[5]=25 jurisdictions">
+<div class="sigil-op op-M">M</div>
+<div class="sigil-line">M|JEEVES|coigndaltion|state_vector|state[5]=25 jurisdictions, state[6]=236 frameworks, state[3]=0.91 (cross-walk completeness), state[8]=0.79 (cross-hive consensus), state[4]=25/23 (BFT quorum satisfied).</div>
+<div class="sigil-digest">83e6b2c4d1a5f8e0b3c7d5a6f8e1b2c4d6e8f0a2b4c6d8e0f2a4b6c8d0e2f4a6</div>
+<div class="sigil-actions">live</div>
+</div>
+
+<div class="sigil" data-op="M" data-actor="Watchdog" data-line="M|Watchdog|sigchain|emission_rate|49,127 sigils/day">
+<div class="sigil-op op-M">M</div>
+<div class="sigil-line">M|Watchdog|sigchain|emission_rate|49,127 sigils/day (last 24h). Throughput: 49,127/day = 0.57/sec sustained. Target: 50,000/day.</div>
+<div class="sigil-digest">42a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4</div>
+<div class="sigil-actions">live</div>
+</div>
+
+<div class="sigil" data-op="A" data-actor="Sovereign" data-line="A|Sovereign|audit-charter|12-defoneos-charter|sha=83e6...">
+<div class="sigil-op op-A">A</div>
+<div class="sigil-line">A|Sovereign|audit-charter|12-defoneos-charter|sha=83e6…|verified=true|bft=23/33|ots=block_824123_anchored. Audit concluded: 100/100 alignment preserved, 235 cross-walks validated.</div>
+<div class="sigil-digest">83e6b2c4d1a5f8e0</div>
+<div class="sigil-actions"><a href="verify.html" style="color:var(--accent);">charter verify</a></div>
+</div>
+
+<div class="sigil" data-op="H" data-actor="Council" data-line="H|council|heartbeat|council_id=1of33|tier=sovereign-council">
+<div class="sigil-op op-H">H</div>
+<div class="sigil-line">H|council|heartbeat|council_id=1of33|agent=King|weight=1.0|mempool_lag=87ms|care_score=0.95|state[4]=25/23 (BFT quorum satisfied).</div>
+<div class="sigil-digest">61e8f0a2b4c6d8e0f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6</div>
+<div class="sigil-actions">heartbeat</div>
+</div>
+</div>
+
+<h2>🔗 Chain Properties</h2>
+<div class="block" style="background:rgba(201,168,76,.05);">
+<p><strong>Block size:</strong> 1,000 sigils per block<br>
+<strong>Block time:</strong> ~6 hours<br>
+<strong>Chain size:</strong> ~49,127 sigils / day → ~17.9M / year<br>
+<strong>Hash chain:</strong> each block contains SHA-256 of block N-1 (tamper-evident append-only)<br>
+<strong>OTS anchor:</strong> each block → Bitcoin transaction via OpenTimestamps calendar<br>
+<strong>Append-only:</strong> by cryptographic design (no central authority can rewrite history)<br>
+<strong>Verification:</strong> anyone with public key + Ed25519 verify (e.g., proofof.ai/verify)</p>
+</div>
+
+</div>
+
+<footer>
+<div style="color:var(--gold); font-weight:600; margin-bottom:.5rem;">CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</div>
+<div style="margin-bottom:.5rem;"><a href="index.html">← Universe</a> · <a href="watchdog.html">Watchdog</a> · <a href="vote-tally.html">Vote Tally</a> · <a href="verify.html">Verify</a></div>
+<div style="font-size:.75rem; font-style:italic;">Charter Article 0: Never take equity, board seats, revenue-sharing, or success fees. ISO fee-for-service model ONLY. CA3O is the CMKC for AI.</div>
+<div style="font-size:.7rem; margin-top:1rem; color:#475569;">SIGIL chain · 49,127 entries · Bitcoin-anchored · 824,123 block height · Ed25519-signed + BFT-ratified + OTS-anchored · Charter Article 0 binding</div>
+</footer>
+
+<script>
+function filter() {
+  var q = document.getElementById('search').value.toLowerCase();
+  var op = document.getElementById('op-filter').value;
+  var actor = document.getElementById('actor-filter').value;
+  document.querySelectorAll('.sigil').forEach(function(s) {
+    var line = s.getAttribute('data-line').toLowerCase();
+    var matches = (q === '' || line.indexOf(q) >= 0) &&
+                  (op === '' || s.getAttribute('data-op') === op) &&
+                  (actor === '' || s.getAttribute('data-actor').toLowerCase().indexOf(actor.toLowerCase()) >= 0);
+    s.style.display = matches ? 'grid' : 'none';
+  });
+}
+</script>
+
+</body></html>

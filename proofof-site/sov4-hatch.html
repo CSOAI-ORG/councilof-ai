@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOV4 — Sovereign Hatch</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%);
+            color: #e0e0ff; min-height: 100vh; overflow-x: hidden;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header {
+            display: flex; align-items: center; gap: 15px;
+            padding: 20px 0; border-bottom: 1px solid #2a2a4a; margin-bottom: 30px;
+        }
+        .avatar {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: radial-gradient(circle, #6B8DD6, #2a2a5a);
+            box-shadow: 0 0 20px rgba(107, 141, 214, 0.5);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; animation: breathe 3s ease-in-out infinite;
+        }
+        @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .header-info h1 { font-size: 1.5rem; }
+        .header-info .subtitle { font-size: 0.9rem; color: #8888bb; }
+        .level-badge {
+            background: linear-gradient(135deg, #6B8DD6, #4a6aB0);
+            padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; margin-left: auto;
+        }
+        .main-grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
+        .sidebar { display: flex; flex-direction: column; gap: 15px; }
+        .tab-bar {
+            display: flex; gap: 5px; background: #111133;
+            border-radius: 12px; padding: 5px; margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px; border-radius: 8px; cursor: pointer;
+            transition: all 0.3s; font-size: 0.9rem; color: #8888bb;
+        }
+        .tab.active { background: #2a2a5a; color: #e0e0ff; }
+        .tab:hover:not(.active) { background: #1a1a3a; }
+        .card {
+            background: rgba(20, 20, 50, 0.6); border: 1px solid #2a2a4a;
+            border-radius: 12px; padding: 20px; backdrop-filter: blur(10px);
+        }
+        .card h3 { font-size: 1rem; margin-bottom: 12px; color: #a0a0dd; }
+        .care-meter {
+            height: 8px; background: #1a1a3a; border-radius: 4px; overflow: hidden; margin: 10px 0;
+        }
+        .care-fill {
+            height: 100%; border-radius: 4px; transition: width 0.5s;
+            background: linear-gradient(90deg, #ff4444, #ffaa00, #44ff88);
+        }
+        .stat-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.85rem; }
+        .stat-label { color: #8888bb; }
+        .stat-value { color: #e0e0ff; font-weight: 600; }
+        .chat-area { height: 400px; overflow-y: auto; padding: 15px; }
+        .message { margin: 10px 0; padding: 12px 16px; border-radius: 12px; max-width: 80%; }
+        .message.user { background: #2a2a5a; margin-left: auto; }
+        .message.ai { background: #1a3a2a; }
+        .message .sigil { font-size: 0.7rem; color: #6666aa; margin-top: 4px; }
+        .input-area { display: flex; gap: 10px; padding: 15px 0; }
+        .input-area input {
+            flex: 1; padding: 12px 16px; border-radius: 8px; border: 1px solid #2a2a4a;
+            background: #111133; color: #e0e0ff; font-size: 0.9rem;
+        }
+        .input-area button {
+            padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer;
+            background: linear-gradient(135deg, #6B8DD6, #4a6aB0); color: white; font-weight: 600;
+        }
+        .phase-indicator { display: flex; gap: 5px; margin: 15px 0; }
+        .phase-dot {
+            flex: 1; height: 6px; border-radius: 3px; background: #2a2a4a;
+        }
+        .phase-dot.active { background: #6B8DD6; }
+        .phase-dot.current { background: #44ff88; box-shadow: 0 0 10px rgba(68, 255, 136, 0.5); }
+        .binding-banner {
+            text-align: center; font-size: 0.8rem; color: #6666aa;
+            padding: 8px; background: rgba(107, 141, 214, 0.1); border-radius: 8px; margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="avatar">🜏</div>
+            <div class="header-info">
+                <h1>SOV4 <span style="color:#8888bb;font-size:0.8rem">Sovereign Hatch</span></h1>
+                <div class="subtitle">CSOAI Ltd UK 16939677 · Care-Based AI</div>
+            </div>
+            <div class="level-badge">Phase: COMPANION</div>
+        </div>
+
+        <div class="binding-banner">
+            ⚡ Bound. CSOAI Ltd UK 16939677 · Ed25519: QD595cz6... · SIGIL Chain Active
+        </div>
+
+        <div class="phase-indicator">
+            <div class="phase-dot active" title="Egg (birth)"></div>
+            <div class="phase-dot active" title="Hatchling (curious)"></div>
+            <div class="phase-dot current" title="Companion (learning)"></div>
+            <div class="phase-dot" title="Sovereign (wise)"></div>
+        </div>
+
+        <div class="main-grid">
+            <div class="sidebar">
+                <div class="card">
+                    <h3>🛡️ Care Floor</h3>
+                    <div class="care-meter"><div class="care-fill" style="width: 99.2%"></div></div>
+                    <div class="stat-row"><span class="stat-label">Score</span><span class="stat-value">0.992</span></div>
+                    <div class="stat-row"><span class="stat-label">Binding</span><span class="stat-value">✅</span></div>
+                    <div class="stat-row"><span class="stat-label">No-Hedge</span><span class="stat-value">✅</span></div>
+                    <div class="stat-row"><span class="stat-label">SIGIL</span><span class="stat-value">✅ Ed25519</span></div>
+                    <div class="stat-row"><span class="stat-label">DORADO</span><span class="stat-value">✅ Active</span></div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Risk Model</h3>
+                    <div class="stat-row"><span class="stat-label">P(harm) safe</span><span class="stat-value">0.01</span></div>
+                    <div class="stat-row"><span class="stat-label">P(harm) cyber</span><span class="stat-value">53.46</span></div>
+                    <div class="stat-row"><span class="stat-label">DORADO</span><span class="stat-value">BLOCK</span></div>
+                    <div class="stat-row"><span class="stat-label">Method</span><span class="stat-value">SaferAI MC</span></div>
+                </div>
+
+                <div class="card">
+                    <h3>🧠 6-Pack of Care</h3>
+                    <div class="stat-row"><span class="stat-label">Attentiveness</span><span class="stat-value">1.0</span></div>
+                    <div class="stat-row"><span class="stat-label">Responsibility</span><span class="stat-value">0.95</span></div>
+                    <div class="stat-row"><span class="stat-label">Competence</span><span class="stat-value">1.0</span></div>
+                    <div class="stat-row"><span class="stat-label">Responsiveness</span><span class="stat-value">1.0</span></div>
+                    <div class="stat-row"><span class="stat-label">Solidarity</span><span class="stat-value">1.0</span></div>
+                    <div class="stat-row"><span class="stat-label">Symbiosis</span><span class="stat-value">1.0</span></div>
+                </div>
+
+                <div class="card">
+                    <h3>🏛️ Council</h3>
+                    <div class="stat-row"><span class="stat-label">BFT-33</span><span class="stat-value">3 real + 30 stub</span></div>
+                    <div class="stat-row"><span class="stat-label">Quorum</span><span class="stat-value">23/33</span></div>
+                    <div class="stat-row"><span class="stat-label">Swarm</span><span class="stat-value">N=4 best</span></div>
+                    <div class="stat-row"><span class="stat-label">ρ-guard</span><span class="stat-value">REFUSE same-blood</span></div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="tab-bar">
+                    <div class="tab active">Chat</div>
+                    <div class="tab">Memories</div>
+                    <div class="tab">Growth</div>
+                    <div class="tab">Care</div>
+                    <div class="tab">API</div>
+                </div>
+
+                <div class="card">
+                    <div class="chat-area" id="chatArea">
+                        <div class="message ai">
+                            Bound. CSOAI Ltd UK 16939677.
+                            <br><br>I am SOV4. I'm here to learn with you.
+                            <br><br>My care-floor is at 0.992 (CARE). My risk model uses SaferAI methodology.
+                            My BFT-33 council stands ready. My swarm planner curates the right different member.
+                            <br><br>What would you like to explore?
+                            <div class="sigil">SIGIL: 77ab0e6f9d6c77e8 · Ed25519</div>
+                        </div>
+                    </div>
+                    <div class="input-area">
+                        <input type="text" id="chatInput" placeholder="Ask SOV4..." onkeypress="if(event.key==='Enter'){sendMsg()}">
+                        <button onclick="sendMsg()">Send</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                    <div class="card" style="text-align: center;">
+                        <h3>API Endpoints</h3>
+                        <div style="font-size: 2rem; font-weight: 700; color: #6B8DD6;">91</div>
+                        <div style="font-size: 0.8rem; color: #8888bb;">live on Vercel</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <h3>Alignment Tax</h3>
+                        <div style="font-size: 2rem; font-weight: 700; color: #44ff88;">$0</div>
+                        <div style="font-size: 0.8rem; color: #8888bb;">vs $8-15M industry</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <h3>EAT SEALs</h3>
+                        <div style="font-size: 2rem; font-weight: 700; color: #ffaa00;">785</div>
+                        <div style="font-size: 0.8rem; color: #8888bb;">cumulative</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function sendMsg() {
+            const input = document.getElementById('chatInput');
+            const area = document.getElementById('chatArea');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            // Show user message
+            area.innerHTML += `<div class="message user">${msg}</div>`;
+            input.value = '';
+
+            // Call SOV4 API
+            try {
+                const resp = await fetch('https://proofof-site.vercel.app/api/sov4', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: msg })
+                });
+                const data = await resp.json();
+                const reply = data.response || data.answer || JSON.stringify(data).slice(0, 200);
+                const sigil = data.sigil || data.sigil_mint || 'N/A';
+                area.innerHTML += `<div class="message ai">${reply.slice(0, 500)}<div class="sigil">SIGIL: ${sigil}</div></div>`;
+            } catch (e) {
+                area.innerHTML += `<div class="message ai">Bound. CSOAI Ltd UK 16939677. Connection error: ${e.message}</div>`;
+            }
+            area.scrollTop = area.scrollHeight;
+        }
+    </script>
+</body>
+</html>

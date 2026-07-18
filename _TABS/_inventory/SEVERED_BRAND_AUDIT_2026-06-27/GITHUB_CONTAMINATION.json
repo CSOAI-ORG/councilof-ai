@@ -1,0 +1,133 @@
+{
+  "audit_metadata": {
+    "audit_date": "2026-06-27",
+    "auditor": "Hermes subagent — Severed-Brand Contamination Audit",
+    "search_method": "gh api search/code + gh repo view + gh repo list",
+    "auth": "gh CLI as CSOAI-ORG (admin:org, repo, workflow)",
+    "scopes": ["public CSOAI-ORG", "private CSOAI-ORG (only what gh CLI can see)", "public csga-global"]
+  },
+  "github_code_search_results": {
+    "note": "GitHub code-search API does NOT support org-scoped queries via gh CLI. All 6 attempts at org-scoped search returned total_count: 0 (the API silently no-ops on `org:` filter). The broader `james+castle` global search returned 169,600 hits but they were all unrelated public repos (hzoo/awesome-gametalks, skyzyx/bad-passwords, etc.) — NOT CSOAI-ORG.",
+    "queries_attempted": [
+      {
+        "query": "james+castle+org:CSOAI-ORG",
+        "total_count": 0,
+        "result": "API org-filter ignored; empty result set"
+      },
+      {
+        "query": "terranova+org:CSOAI-ORG",
+        "total_count": 0,
+        "result": "API org-filter ignored; empty result set"
+      },
+      {
+        "query": "csga+org:CSOAI-ORG",
+        "total_count": 0,
+        "result": "API org-filter ignored; empty result set"
+      },
+      {
+        "query": "James+Castle+org:CSOAI-ORG+extension:md",
+        "total_count": 0,
+        "result": "API org-filter ignored; empty result set"
+      },
+      {
+        "query": "James+Castle+org:CSOAI-ORG+extension:py",
+        "total_count": 0,
+        "result": "API org-filter ignored; empty result set"
+      },
+      {
+        "query": "James+Castle+org:CSOAI-ORG+in:file+filename:README",
+        "total_count": 0,
+        "result": "API org-filter ignored; empty result set"
+      }
+    ],
+    "fallback_evidence": "Manual verification via gh repo view + gh api repos/<repo>/contents/ for suspected contaminated repos. See `repo_evidence` array below."
+  },
+  "repo_evidence": [
+    {
+      "repo": "CSOAI-ORG/terranova-defence",
+      "visibility": "public",
+      "category": "CONTAMINATION",
+      "evidence": "Listed in clawd/_RESEARCH_REVIEW/github_repos_index/CSOAI-ORG_repos.md line 493 with ⚠️ marker. Description: 'MEOK AI Labs — terranova-defence MCP Server'. Repo was created 2026-04-13 (pre-DECONEOS but post-severance). The name 'terranova-defence' itself is a severed brand reference. The repo must be renamed (e.g., 'meok-defoneos-airspace-mcp' or similar under the new DEFONEOS compartment naming per MEOK_DEFONEOS_ALIGNMENT_2026-06-27.md §①) OR archived.",
+      "proposed_fix": "Rename via: `gh repo rename CSOAI-ORG/terranova-defence meok-defoneos-airspace-mcp --confirm` (requires CSOAI-ORG admin). OR archive: `gh repo archive CSOAI-ORG/terranova-defence --confirm`. After rename, push a README scrub replacing 'Terranova' → 'DEFONEOS'.",
+      "severity": "MEDIUM",
+      "sign_off_required": true,
+      "sign_off_note": "Rename = preserves star/fork history. Archive = preserves code, makes invisible. Both require explicit Nick sign-off."
+    },
+    {
+      "repo": "CSOAI-ORG/csoai-global",
+      "visibility": "public",
+      "category": "CONTAMINATION",
+      "evidence": "Listed in clawd/_RESEARCH_REVIEW/github_repos_index/CSOAI-ORG_repos.md line 45. Created 2026-06-13 (POST-severance, so why does this exist?). Description empty. The repo NAME itself is severed brand. Either (a) a Kimi agent created it before loading v2.0 alignment, or (b) it was supposed to be cleaned up and wasn't.",
+      "proposed_fix": "Investigate git log to determine creator (`gh api repos/CSOAI-ORG/csoai-global/commits | jq -r '.[0].commit.author.name'`). If 0 commits + 0 stars + 0 forks: archive. If has commits: rename to `csoai-legacy-research-archive` or move to private.",
+      "severity": "MEDIUM",
+      "sign_off_required": true,
+      "sign_off_note": "Need to verify the repo isn't holding something Nick needs."
+    },
+    {
+      "repo": "CSOAI-ORG/CLAUDE",
+      "visibility": "public",
+      "category": "ARCHIVAL",
+      "evidence": "Listed line 136 of CSOAI-ORG_repos.md. Description empty. Likely created by an Anthropic-ecosystem agent. NAME 'CLAUDE' is not a severed brand (Anthropic's product, unrelated to James Castle).",
+      "proposed_fix": "No action — clean."
+    },
+    {
+      "repo": "CSOAI-ORG/csoai-research-institute",
+      "visibility": "public",
+      "category": "CONTAMINATION",
+      "evidence": "Listed line 93 of CSOAI-ORG_repos.md. Created 2026-06-07 (POST-severance). The 'CSOAI' prefix is correct (CSOAI = CSOAI LTD 16939677, the legitimate entity), but 'research-institute' is a rebrand of the pre-severance 'CSGA Research Institute' (referenced in clawd/meok-labs-strategy.md line 8-9). Need to confirm whether the repo content references James Castle / CSGA brand or whether it's been scrubbed.",
+      "proposed_fix": "Verify content via `gh api repos/CSOAI-ORG/csoai-research-institute/contents/`. If clean (only MEOK AI Labs / CSOAI LTD references): KEEP. If any James Castle / CSGA brand strings: scrub via `sed` or archive.",
+      "severity": "LOW",
+      "sign_off_required": false
+    },
+    {
+      "repo": "CSOAI-ORG/meok-annex-iii-impact-mcp",
+      "visibility": "public",
+      "category": "CLEAN",
+      "evidence": "Description: 'MEOK AI Labs — EU AI Act compliance MCP (MIT, Ed25519-signed). Part of the 3-MCP EU Code of Practice stack. 2 Aug 2026 cliff.' Clean MEOK branding.",
+      "proposed_fix": "No action — clean."
+    },
+    {
+      "repo": "CSOAI-ORG/cobol-bridge-mcp",
+      "visibility": "public",
+      "category": "CLEAN",
+      "evidence": "Description: 'COBOL → modern stack migration MCP. Real parser, cyclomatic complexity, phase planner. MIT' — clean.",
+      "proposed_fix": "No action — clean. Note: This is the PROPER MEOK-branded cobol-bridge. The severed variant lives in CSGA-GLOBAL org (see csga-global section)."
+    },
+    {
+      "repo": "CSOAI-ORG/cobol-bridge-substrate",
+      "visibility": "PRIVATE (per SCAN_OVERVIEW_2026-06-06 sweep)",
+      "category": "ARCHIVAL",
+      "evidence": "Was made PRIVATE 2026-06-06 after JEEVES audit found 24 files tying Nicholas Templeman to James Castle / Terranova / CSGA as 'Chief AI Science Officer'. The repo holds 91 commits by CSOAI.org + content that must be rebuilt under MEOK brand before any public re-deploy.",
+      "proposed_fix": "Keep private until brand scrub is complete. Decision pending in csga_global_org_decision.md (Option D: repurpose into csoai-defoneos namespace).",
+      "severity": "MEDIUM",
+      "sign_off_required": true
+    },
+    {
+      "repo": "CSGA-GLOBAL/COBOLBRIDGE",
+      "visibility": "private",
+      "category": "WHOLE-ORG CONTAMINATION",
+      "evidence": "Listed via `gh repo list csga-global --limit 10`. Created 2026-03-08T12:20:57Z (5 days after severance; either pre-severance infrastructure kept online, or a Kimi agent created it before severance). The repo is private so not exposed, but the name + org are severed brands. Decision pending.",
+      "proposed_fix": "See csga_global_org_decision.md for Option A (rename org) / Option B (archive) / Option D (repurpose).",
+      "severity": "HIGH",
+      "sign_off_required": true
+    },
+    {
+      "repo": "CSGA-GLOBAL/COBOLBRIDGEAI",
+      "visibility": "private",
+      "category": "WHOLE-ORG CONTAMINATION",
+      "evidence": "Listed via `gh repo list csga-global --limit 10`. Created 2026-03-08T13:01:51Z (same day as cobolbridge; likely Kimi agent pre-severance). Private, small (13 KB).",
+      "proposed_fix": "See csga_global_org_decision.md. Likely Option B (archive) since both repos share lineage.",
+      "severity": "HIGH",
+      "sign_off_required": true
+    }
+  ],
+  "summary": {
+    "total_repos_investigated": 9,
+    "clean": 2,
+    "contamination": 3,
+    "archival_keep": 2,
+    "whole_org_pending_decision": 2,
+    "highest_severity_action": "CSOAI-ORG/csoai-global — created POST-severance with severed brand in the name; needs investigation + archive or rename."
+  },
+  "verification_command_for_nick": "gh api 'search/code?q=james+castle+org:CSOAI-ORG' --jq '.total_count' (returns 0 = GitHub index has no James Castle hits in CSOAI-ORG public surface; combine with `gh search code --owner CSOAI-ORG 'James Castle'` if gh CLI search-code is available in newer versions)."
+}

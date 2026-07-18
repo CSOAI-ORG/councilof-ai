@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Tour · 9 sovereign experiences · CSOAI</title>
+<style>
+:root{--bg:#0a0e27;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--serif:'Georgia',serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:radial-gradient(ellipse at 20% 0%,#1e3a8a 0%,#0a0e27 50%);color:var(--fg);min-height:100vh;line-height:1.6;overflow-x:hidden}
+.container{max-width:1280px;margin:0 auto;padding:24px}
+nav{position:sticky;top:0;backdrop-filter:blur(12px);background:rgba(10,14,39,.92);border-bottom:1px solid rgba(251,191,36,.15);z-index:100;padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+nav .logo{color:var(--gold);font-weight:700;font-size:1.1rem}
+nav .right{display:flex;gap:18px;font-size:.85rem}
+nav .right a{color:#94a3b8;text-decoration:none;cursor:pointer}
+nav .right a:hover{color:var(--gold)}
+nav .right .btn{padding:6px 14px;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000;border-radius:5px;font-weight:700}
+section{padding:48px 24px;border-top:1px solid rgba(255,255,255,.05)}
+h1,h2{font-family:var(--serif);color:var(--gold);text-shadow:0 0 24px rgba(251,191,36,.3)}
+h1{font-size:2.8rem;text-align:center;margin:8px 0}
+h2{font-size:1.8rem;text-align:center;margin-bottom:24px}
+.tag{color:var(--cyan);font-style:italic;text-align:center;margin-bottom:24px;font-size:1.1rem}
+.lead{color:#94a3b8;max-width:760px;margin:0 auto 32px;text-align:center;font-size:1.05rem}
+.grid{display:grid;gap:20px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:768px){.grid-3{grid-template-columns:1fr}}
+.demo-card{background:rgba(0,0,0,.5);border:1px solid rgba(251,191,36,.2);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .3s;text-decoration:none;display:block;position:relative}
+.demo-card:hover{border-color:var(--gold);transform:translateY(-6px);box-shadow:0 16px 48px rgba(251,191,36,.2)}
+.demo-card:hover .thumb-overlay{opacity:1}
+.demo-card .thumb{height:200px;position:relative;overflow:hidden;border-bottom:1px solid rgba(251,191,36,.15)}
+.demo-card .thumb-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(251,191,36,.85),rgba(6,182,212,.7));opacity:0;transition:opacity .3s;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#000}
+.demo-card .thumb svg{width:100%;height:100%}
+.demo-card .body{padding:16px}
+.demo-card .body h3{color:var(--gold);font-family:var(--serif);margin:0 0 6px;font-size:1.1rem;text-shadow:none}
+.demo-card .body p{color:#94a3b8;font-size:.82rem;margin:0;line-height:1.5}
+.demo-card .body .meta{margin-top:8px;font-size:.7rem;color:var(--cyan);font-family:monospace}
+.btn{display:inline-block;padding:10px 18px;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000;border-radius:6px;text-decoration:none;font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:all .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-outline{background:transparent;border:2px solid var(--gold);color:var(--gold)}
+.btn-outline:hover{background:rgba(251,191,36,.1)}
+footer{text-align:center;color:#94a3b8;font-size:.78rem;padding:32px 24px;border-top:1px solid rgba(255,255,255,.05);margin-top:64px}
+footer a{color:var(--gold);text-decoration:none}
+.chip{display:inline-block;padding:2px 6px;background:rgba(251,191,36,.15);color:var(--gold);border-radius:4px;font-size:.6rem;font-weight:700;letter-spacing:.05em;margin-right:4px;font-family:monospace}
+.live-banner{text-align:center;padding:12px;background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(6,182,212,.05));border:1px solid rgba(16,185,129,.3);border-radius:8px;margin-bottom:32px;font-size:.85rem}
+.live-banner .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:8px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+</style></head><body>
+
+<nav>
+<div class="logo">🜏 Demo Tour</div>
+<div class="right">
+<a href="#tour">Tour</a>
+<a href="index.html">CSOAI home</a>
+<a class="btn" href="#tour">Start the tour</a>
+</div>
+</nav>
+
+<header style="text-align:center;padding:60px 24px 32px">
+<div style="font-size:4rem">🛰</div>
+<h1 style="margin-top:16px">9 sovereign experiences.</h1>
+<p class="tag">Each opens in any browser. No signup. No install. Sovereign.</p>
+<p class="lead">These are real, working sovereign demos. Click each one to open it in a new tab. Each is its own self-contained file — view source if you want to see how the sovereignty works.</p>
+<div class="live-banner"><span class="dot"></span><b>55/55 E2E tests pass · exit 0 · 0.4s total</b> · sovereign-os  · live for 90 days since 1 Apr 2026</div>
+</header>
+
+<section id="tour" class="container">
+<h2>The 9 demos</h2>
+<div class="grid grid-3">
+
+<a class="demo-card" href="sov-town.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="g1" cx="50%" cy="40%"><stop offset="0%" stop-color="rgba(251,191,36,0.3)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient><radialGradient id="g2" cx="50%" cy="40%"><stop offset="0%" stop-color="rgba(6,182,212,0.4)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient></defs>
+<rect width="320" height="200" fill="#0a0e27"/>
+<circle cx="160" cy="80" r="60" fill="url(#g1)"/>
+<circle cx="160" cy="80" r="40" fill="url(#g2)"/>
+<circle cx="160" cy="80" r="14" fill="#fbbf24"/>
+<text x="160" y="85" text-anchor="middle" fill="#0a0e27" font-family="Georgia" font-size="11" font-style="italic">Sirius</text>
+<ellipse cx="160" cy="110" rx="140" ry="20" fill="none" stroke="rgba(6,182,212,.6)" stroke-width="1"/>
+<circle cx="120" cy="100" r="3" fill="#10b981"><animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite"/></circle>
+<circle cx="200" cy="105" r="3" fill="#06b6d4"><animate attributeName="opacity" values="1;0.4;1" dur="3.5s" repeatCount="indefinite"/></circle>
+<text x="120" y="135" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="9">Watchdog 4,847</text>
+<text x="200" y="140" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="9">Demo 12,492</text>
+<text x="20" y="180" fill="#10b981" font-family="monospace" font-size="8">CAT.FLOOR ✓ 0.95</text>
+<text x="220" y="180" fill="#10b981" font-family="monospace" font-size="8">BFT 12-around-1 ✓</text>
+</svg>
+<div class="thumb-overlay">▶ Walk the town</div>
+</div>
+<div class="body">
+<h3>1. Sov Town</h3>
+<p>The full sovereign AI city. 10 sections. Dome Mode SVG with live HUD. 9 simulators. 7-step sovereign tour. Citizenship. Partnership Charter. Abundance loop.</p>
+<div class="meta"><span class="chip">47KB</span><span class="chip">10 sections</span><span class="chip">9 simulators</span></div>
+</div>
+</a>
+
+<a class="demo-card" href="icharacter-explainer.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<rect width="320" height="200" fill="#0a0e27"/>
+<line x1="20" y1="100" x2="300" y2="100" stroke="rgba(251,191,36,.4)" stroke-width="2"/>
+<circle cx="40" cy="100" r="14" fill="#fbbf24" stroke="#0a0e27" stroke-width="3"/>
+<circle cx="80" cy="100" r="14" fill="#06b6d4" stroke="#0a0e27" stroke-width="3"/>
+<circle cx="120" cy="100" r="14" fill="#10b981" stroke="#0a0e27" stroke-width="3"/>
+<circle cx="160" cy="100" r="14" fill="#fbbf24" stroke="#0a0e27" stroke-width="3"/>
+<circle cx="200" cy="100" r="14" fill="#06b6d4" stroke="#0a0e27" stroke-width="3"/>
+<circle cx="240" cy="100" r="14" fill="#ec4899" stroke="#0a0e27" stroke-width="3"/>
+<circle cx="280" cy="100" r="14" fill="#10b981" stroke="#0a0e27" stroke-width="3"/>
+<text x="40" y="103" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9">DID</text>
+<text x="80" y="103" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9">Sig</text>
+<text x="120" y="103" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9">K</text>
+<text x="160" y="103" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9">P</text>
+<text x="200" y="103" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9">M</text>
+<text x="240" y="103" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9">Cs</text>
+<text x="280" y="103" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9">K</text>
+<text x="40" y="140" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="8">ID</text>
+<text x="80" y="140" text-anchor="middle" fill="#06b6d4" font-family="monospace" font-size="8">Ed25519</text>
+<text x="120" y="140" text-anchor="middle" fill="#10b981" font-family="monospace" font-size="8">Know</text>
+<text x="160" y="140" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="8">Pers</text>
+<text x="200" y="140" text-anchor="middle" fill="#06b6d4" font-family="monospace" font-size="8">Mem</text>
+<text x="240" y="140" text-anchor="middle" fill="#ec4899" font-family="monospace" font-size="8">Cons</text>
+<text x="280" y="140" text-anchor="middle" fill="#10b981" font-family="monospace" font-size="8">SIGIL</text>
+<text x="160" y="180" text-anchor="middle" fill="#fbbf24" font-family="Georgia" font-size="11" font-style="italic">7 beads on a rope · the i-character</text>
+</svg>
+<div class="thumb-overlay">▶ See your digital twin</div>
+</div>
+<div class="body">
+<h3>2. i-character Explainer</h3>
+<p>Sovereign digital twin. Bead rope. TwinTrain. TwinStore. 5-min citizenship. Fork doctrine. GDPR Art 20 export. Compare to ChatGPT Persona + Replika.</p>
+<div class="meta"><span class="chip">20KB</span><span class="chip">8 steps</span><span class="chip">TwinStore</span></div>
+</div>
+</a>
+
+<a class="demo-card" href="../csoai.org/sovereign-os/dist/sirius-live-demo.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<rect width="320" height="200" fill="#0a0e27"/>
+<rect x="20" y="40" width="280" height="120" rx="6" fill="rgba(0,0,0,.5)" stroke="rgba(251,191,36,.3)"/>
+<text x="40" y="56" fill="#fbbf24" font-family="Georgia" font-size="11" font-style="italic">Sirius · Sovereign Composite</text>
+<text x="285" y="56" text-anchor="end" fill="#fbbf24" font-family="monospace" font-size="9">7.305</text>
+<line x1="40" y1="65" x2="285" y2="65" stroke="rgba(255,255,255,.05)"/>
+<text x="40" y="82" fill="#94a3b8" font-family="monospace" font-size="8">sovereignty</text>
+<rect x="100" y="74" width="120" height="6" rx="3" fill="rgba(251,191,36,.2)"/>
+<rect x="100" y="74" width="110" height="6" rx="3" fill="#10b981"/>
+<text x="40" y="96" fill="#94a3b8" font-family="monospace" font-size="8">care</text>
+<rect x="100" y="88" width="120" height="6" rx="3" fill="rgba(251,191,36,.2)"/>
+<rect x="100" y="88" width="115" height="6" rx="3" fill="#10b981"/>
+<text x="40" y="110" fill="#94a3b8" font-family="monospace" font-size="8">truth</text>
+<rect x="100" y="102" width="120" height="6" rx="3" fill="rgba(251,191,36,.2)"/>
+<rect x="100" y="102" width="108" height="6" rx="3" fill="#10b981"/>
+<text x="40" y="124" fill="#94a3b8" font-family="monospace" font-size="8">BFT 12-around-1</text>
+<rect x="100" y="116" width="120" height="6" rx="3" fill="rgba(251,191,36,.2)"/>
+<rect x="100" y="116" width="105" height="6" rx="3" fill="#10b981"/>
+<text x="40" y="138" fill="#94a3b8" font-family="monospace" font-size="8">SIGIL Ed25519+PQC</text>
+<rect x="100" y="130" width="120" height="6" rx="3" fill="rgba(251,191,36,.2)"/>
+<rect x="100" y="130" width="118" height="6" rx="3" fill="#10b981"/>
+<text x="20" y="190" fill="#fbbf24" font-family="monospace" font-size="8">Care Floor 0.95 ✓ BFT 12-around-1 ✓ Composite 7.305</text>
+</svg>
+<div class="thumb-overlay">▶ Try the single-file demo</div>
+</div>
+<div class="body">
+<h3>3. Sirius Live Demo</h3>
+<p>1 file. 18KB. The complete sovereign experience in a single HTML page. 12 composite dimensions. 19 E2E tests in-browser. Chat with SIGIL.</p>
+<div class="meta"><span class="chip">18KB</span><span class="chip">1 file</span><span class="chip">19 tests</span></div>
+</div>
+</a>
+
+<a class="demo-card" href="../defoneos.com/live.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="g3" cx="50%" cy="50%"><stop offset="0%" stop-color="rgba(6,182,212,.3)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient></defs>
+<rect width="320" height="200" fill="#0a0e27"/>
+<circle cx="160" cy="100" r="90" fill="url(#g3)" stroke="rgba(6,182,212,.5)"/>
+<circle cx="160" cy="100" r="70" fill="none" stroke="rgba(6,182,212,.3)"/>
+<circle cx="160" cy="100" r="50" fill="none" stroke="rgba(6,182,212,.3)"/>
+<circle cx="160" cy="100" r="30" fill="none" stroke="rgba(251,191,36,.4)"/>
+<circle cx="130" cy="80" r="3" fill="#10b981"><animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="190" cy="85" r="3" fill="#06b6d4"><animate attributeName="opacity" values="1;0.5;1" dur="2.5s" repeatCount="indefinite"/></circle>
+<circle cx="170" cy="125" r="3" fill="#fbbf24"><animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite"/></circle>
+<circle cx="120" cy="110" r="3" fill="#06b6d4"><animate attributeName="opacity" values="1;0.5;1" dur="3.5s" repeatCount="indefinite"/></circle>
+<circle cx="195" cy="115" r="2" fill="#06b6d4"><animate attributeName="opacity" values="1;0.5;1" dur="4s" repeatCount="indefinite"/></circle>
+<line x1="130" y1="80" x2="190" y2="85" stroke="rgba(251,191,36,.2)" stroke-width="0.5" stroke-dasharray="2,2"/>
+<line x1="130" y1="80" x2="170" y2="125" stroke="rgba(6,182,212,.2)" stroke-width="0.5" stroke-dasharray="2,2"/>
+<text x="160" y="103" text-anchor="middle" fill="#0a0e27" font-family="Georgia" font-size="10" font-style="italic">Sirius</text>
+<text x="20" y="180" fill="#ef4444" font-family="monospace" font-size="8">⚠ T-32 days · EU AI Act Article 50</text>
+<text x="20" y="195" fill="#fbbf24" font-family="monospace" font-size="8">28 CSI layers · 36 decans</text>
+</svg>
+<div class="thumb-overlay">▶ Enter DEFONEOS</div>
+</div>
+<div class="body">
+<h3>4. DEFONEOS Live</h3>
+<p>Live SOV SPACE common operating picture. 28 CSI layers + 36 decans + Crown lineage 1795-2026 + Article 50 countdown. For defence + AUKUS + NATO.</p>
+<div class="meta"><span class="chip">54KB</span><span class="chip">28 layers</span><span class="chip">36 decans</span></div>
+</div>
+</a>
+
+<a class="demo-card" href="../meok-universe/sovereign-mom/index.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="g4" cx="50%" cy="20%"><stop offset="0%" stop-color="rgba(251,191,36,0.6)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient></defs>
+<rect width="320" height="200" fill="#0a0e27"/>
+<circle cx="160" cy="80" r="40" fill="url(#g4)"/>
+<circle cx="160" cy="80" r="14" fill="#fbbf24"/>
+<text x="160" y="85" text-anchor="middle" fill="#0a0e27" font-family="Georgia" font-size="10" font-style="italic">Sirius</text>
+<text x="20" y="180" fill="#fbbf24" font-family="monospace" font-size="8">⌘⇧S anywhere · sovereign.mom</text>
+<text x="20" y="195" fill="#94a3b8" font-family="monospace" font-size="8">3 pricing · Citizen / MEOK Pro / Enterprise</text>
+<text x="160" y="120" text-anchor="middle" fill="#fbbf24" font-family="Georgia" font-size="14" font-style="italic">sovereign.mom</text>
+</svg>
+<div class="thumb-overlay">▶ Visit sovereign.mom</div>
+</div>
+<div class="body">
+<h3>5. sovereign.mom</h3>
+<p>The consumer landing page. Citizen / MEOK Pro / CSOAI Enterprise. SVG globe with HUD. Free open-source. Upsells to MEOK Pro.</p>
+<div class="meta"><span class="chip">22KB</span><span class="chip">3 tier pricing</span><span class="chip">CITIZEN $0</span></div>
+</div>
+</a>
+
+<a class="demo-card" href="../csoai.org/sovereign-os/watchdog/heatmap.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<rect width="320" height="200" fill="#0a0e27"/>
+<circle cx="100" cy="80" r="40" fill="rgba(239,68,68,.4)"/>
+<circle cx="160" cy="100" r="30" fill="rgba(251,191,36,.3)"/>
+<circle cx="220" cy="120" r="25" fill="rgba(251,191,36,.3)"/>
+<circle cx="80" cy="140" r="15" fill="rgba(16,185,129,.3)"/>
+<circle cx="200" cy="60" r="20" fill="rgba(251,191,36,.3)"/>
+<circle cx="240" cy="80" r="12" fill="rgba(16,185,129,.3)"/>
+<circle cx="160" cy="80" r="50" fill="none" stroke="rgba(239,68,68,.6)" stroke-width="0.5">
+<animate attributeName="r" values="50;65;50" dur="3s" repeatCount="indefinite"/>
+</circle>
+<text x="100" y="85" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9" font-weight="700">L</text>
+<text x="160" y="105" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9" font-weight="700">N</text>
+<text x="220" y="125" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="9" font-weight="700">T</text>
+<text x="200" y="62" text-anchor="middle" fill="#0a0e27" font-family="monospace" font-size="8" font-weight="700">C</text>
+<text x="20" y="180" fill="#fbbf24" font-family="monospace" font-size="8">15 cities · 4 severity levels · BFT-verified every 5s</text>
+<text x="20" y="195" fill="#94a3b8" font-family="monospace" font-size="8">4 reporter classes · human / agent / humanoid / system</text>
+</svg>
+<div class="thumb-overlay">▶ View the heat map</div>
+</div>
+<div class="body">
+<h3>6. Watchdog Heat Map</h3>
+<p>Public heat map. 4 reporter classes. 15 cities with 4 severity levels. Live aggregates. CC0 data. Fork-friendly.</p>
+<div class="meta"><span class="chip">8KB</span><span class="chip">15 cities</span><span class="chip">CC0 data</span></div>
+</div>
+</a>
+
+<a class="demo-card" href="../csoai.org/sovereign-os/watchdog/simulate.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<rect width="320" height="200" fill="#0a0e27"/>
+<circle cx="60" cy="120" r="14" fill="#fbbf24"><animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="220" cy="80" r="14" fill="#fbbf24"><animate attributeName="opacity" values="1;0.5;1" dur="2.5s" repeatCount="indefinite"/></circle>
+<line x1="60" y1="120" x2="220" y2="80" stroke="rgba(251,191,36,.6)" stroke-width="2"/>
+<line x1="60" y1="120" x2="180" y2="40" stroke="rgba(251,191,36,.3)" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="60" y1="120" x2="240" y2="160" stroke="rgba(251,191,36,.3)" stroke-width="1" stroke-dasharray="3,3"/>
+<circle cx="180" cy="40" r="10" fill="#10b981"><animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite"/></circle>
+<circle cx="240" cy="160" r="10" fill="#06b6d4"><animate attributeName="opacity" values="1;0.5;1" dur="3.5s" repeatCount="indefinite"/></circle>
+<text x="60" y="160" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="8">A</text>
+<text x="180" y="32" text-anchor="middle" fill="#10b981" font-family="monospace" font-size="8">B</text>
+<text x="240" y="178" text-anchor="middle" fill="#06b6d4" font-family="monospace" font-size="8">C</text>
+<text x="60" y="195" fill="#10b981" font-family="monospace" font-size="7">0.075 risk</text>
+<text x="180" y="195" fill="#10b981" font-family="monospace" font-size="7">0.072 BEST</text>
+<text x="240" y="195" fill="#fbbf24" font-family="monospace" font-size="7">0.067 risk</text>
+</svg>
+<div class="thumb-overlay">▶ Simulate a route</div>
+</div>
+<div class="body">
+<h3>7. Pre-Departure Simulator</h3>
+<p>Computes best route before leaving. 3 candidates BFT-scored. Real Open-Meteo weather + USGS earthquakes + local reports. Real, not synthetic.</p>
+<div class="meta"><span class="chip">5KB</span><span class="chip">3 routes</span><span class="chip">BFT-scored</span></div>
+</div>
+</a>
+
+<a class="demo-card" href="../csoai.org/sovereign-os/watchdog/report.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<rect width="320" height="200" fill="#0a0e27"/>
+<rect x="60" y="40" width="200" height="130" rx="6" fill="rgba(0,0,0,.5)" stroke="rgba(251,191,36,.3)"/>
+<circle cx="80" cy="60" r="4" fill="#fbbf24"/>
+<circle cx="92" cy="60" r="4" fill="#10b981"/>
+<circle cx="104" cy="60" r="4" fill="#ef4444"/>
+<circle cx="116" cy="60" r="4" fill="#06b6d4"/>
+<circle cx="128" cy="60" r="4" fill="#fbbf24"/>
+<circle cx="140" cy="60" r="4" fill="#10b981"/>
+<circle cx="152" cy="60" r="4" fill="#fbbf24"/>
+<text x="80" y="100" fill="#fbbf24" font-family="monospace" font-size="9">🔒 Safety</text>
+<text x="80" y="120" fill="#94a3b8" font-family="monospace" font-size="8">Report</text>
+<rect x="80" y="125" width="160" height="22" rx="4" fill="rgba(255,255,255,.05)" stroke="rgba(251,191,36,.3)"/>
+<text x="86" y="138" fill="#94a3b8" font-family="monospace" font-size="8">GPS 51.5 -0.1 auto</text>
+<rect x="80" y="155" width="160" height="6" rx="3" fill="#10b981"/>
+<text x="240" y="160" text-anchor="end" fill="#10b981" font-family="monospace" font-size="7">SIGIL ✓</text>
+</svg>
+<div class="thumb-overlay">▶ Report something</div>
+</div>
+<div class="body">
+<h3>8. Citizen Report Form</h3>
+<p>One-tap sovereign reporting. 7 report types. GPS auto-detect. SIGIL emit. The report joins the public Watchdog.</p>
+<div class="meta"><span class="chip">5.5KB</span><span class="chip">7 report types</span><span class="chip">GPS</span></div>
+</div>
+</a>
+
+<a class="demo-card" href="../csoai.org/sovereign-os/sovereign-dashboard.html">
+<div class="thumb">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+<rect width="320" height="200" fill="#0a0e27"/>
+<rect x="20" y="40" width="135" height="80" rx="6" fill="rgba(0,0,0,.5)" stroke="rgba(251,191,36,.3)"/>
+<rect x="165" y="40" width="135" height="80" rx="6" fill="rgba(0,0,0,.5)" stroke="rgba(6b182c,.3)"/>
+<rect x="20" y="130" width="280" height="50" rx="6" fill="rgba(0,0,0,.5)" stroke="rgba(16,185,129,.3)"/>
+<text x="30" y="56" fill="#fbbf24" font-family="monospace" font-size="8">SIGIL</text>
+<text x="135" y="56" text-anchor="end" fill="#10b981" font-family="monospace" font-size="9">ed25519+pqc ✓</text>
+<line x1="30" y1="62" x2="145" y2="62" stroke="rgba(255,255,255,.05)"/>
+<text x="30" y="78" fill="#94a3b8" font-family="monospace" font-size="7">Ed25519 64B</text>
+<text x="30" y="92" fill="#94a3b8" font-family="monospace" font-size="7">PQC 3309B</text>
+<text x="30" y="106" fill="#94a3b8" font-family="monospace" font-size="7">SHA-256 32B</text>
+<text x="175" y="56" fill="#fbbf24" font-family="monospace" font-size="8">Composite</text>
+<text x="285" y="68" text-anchor="end" fill="#fbbf24" font-family="Georgia" font-size="20">7.305</text>
+<text x="175" y="86" fill="#10b981" font-family="monospace" font-size="7">Care floor OK ✓</text>
+<text x="175" y="98" fill="#10b981" font-family="monospace" font-size="7">BFT pass ✓</text>
+<text x="175" y="110" fill="#fbbf24" font-family="monospace" font-size="7">6 experts</text>
+<text x="30" y="148" fill="#fbbf24" font-family="monospace" font-size="8">Threat Council</text>
+<text x="30" y="160" fill="#94a3b8" font-family="monospace" font-size="7">✓ 75 nodes · 5 providers · care floor 0.95</text>
+<text x="30" y="175" fill="#10b981" font-family="monospace" font-size="7">✓ Benign: passes  ✓ Weapon: fails  ✓ Crisis: fails</text>
+</svg>
+<div class="thumb-overlay">▶ See the composite</div>
+</div>
+<div class="body">
+<h3>9. Sovereign Dashboard</h3>
+<p>Wires all 3 primitives live: SIGIL + composite + threat council BFT. Care Floor gauge. RoE for the sovereign.</p>
+<div class="meta"><span class="chip">7KB</span><span class="chip">3 primitives</span><span class="chip">live</span></div>
+</div>
+</a>
+
+</div>
+</section>
+
+<section class="container">
+<h2>How to integrate</h2>
+<p class="lead">Add the Sovereign TUI to your own web app in 4 lines.</p>
+<div style="background:rgba(0,0,0,.5);padding:24px;border-radius:12px;border:1px solid rgba(251,191,36,.2);max-width:780px;margin:0 auto">
+<pre style="color:#10b981;font-family:monospace;font-size:.85rem;overflow-x:auto;line-height:1.7">&lt;script src="/sovereign-os/frontend/sovereign-event-bus.js"
+        data-citizen-id="your-citizen-id"&gt;&lt;/script&gt;
+&lt;script src="/sovereign-os/frontend/sovereign-hud.js"&gt;&lt;/script&gt;
+&lt;script src="/sovereign-os/frontend/sov3-llm-brain.js"
+        data-brain-endpoint="http://localhost:8100/v1"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="/sovereign-os/frontend/sovereign-hud.css"&gt;</pre>
+</div>
+<p style="text-align:center;color:#94a3b8;font-size:.85rem;margin-top:16px">Or one click: <code style="background:rgba(255,255,255,.05);padding:2px 6px;color:var(--cyan);border-radius:3px;font-family:monospace">make install WEB_ROOT=.</code></p>
+</section>
+
+<footer>
+<p>🜏 <b style="color:var(--gold)">9 demos · sovereign by design · MIT + CC0</b></p>
+<p style="margin-top:6px">Care Floor 0.95 · BFT 12-around-1 · SIGIL Ed25519 + PQC</p>
+<p style="margin-top:6px">CSOAI Ltd · UK 16939677 · 1 July 2026</p>
+<p style="margin-top:12px">
+<a href="index.html">CSOAI home</a> ·
+<a href="sov-town.html">Sov Town</a> ·
+<a href="sovereign-charter.html">Charter</a> ·
+<a href="../csoai.org/sovereign-os/HANDOFF-TO-M2.md">M2 Handbook</a>
+</p>
+</footer>
+
+</body></html>

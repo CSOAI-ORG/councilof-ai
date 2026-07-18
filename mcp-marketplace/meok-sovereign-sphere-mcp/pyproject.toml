@@ -1,0 +1,26 @@
+[project]
+name = "meok-sovereign-sphere-mcp"
+version = "0.1.0"
+description = "MCP for rendering a sovereign globe with hive data"
+authors = ["Your Name <your.email@example.com>"]
+dependencies = [
+    "pydantic",
+    "fastapi",
+    "uvicorn",
+    "numpy",
+]
+requires-python = ">=3.9"
+readme = "README.md"
+license = { text = "MIT" }
+
+[tool.pdm]
+distribution = false
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest",
+]

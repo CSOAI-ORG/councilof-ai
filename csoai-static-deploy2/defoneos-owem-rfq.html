@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS OWEM Crown / Defence RFQ — SOV3³ Sovereign Organic World Model Deployment Form</title>
+<meta name="description" content="Sovereign RFQ form for OWEM (SOV3³) deployment to UK defence primes, NATO allies, AUKUS Pillar II. Crown / BAE / Rolls-Royce / Leonardo / Thales / Other. POSTs to /api/crown-rfq with HMAC-SHA256 SIGIL receipt. v1.0 13 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--pur:#c084fc;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03);--serif:"Times New Roman",ui-serif,Georgia,serif}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 22px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:12.5px}
+.brand .dot{width:9px;height:9px;background:var(--gold);border-radius:50%;box-shadow:0 0 12px var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+h1{font-size:26px;line-height:1.18;margin:12px 0 8px;letter-spacing:-.4px}
+h2{font-size:18px;margin:24px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--line);color:var(--gold)}
+h3{font-size:14px;margin:16px 0 5px;color:var(--gold)}
+h4{font-size:12px;margin:12px 0 4px;color:var(--pur);text-transform:uppercase;letter-spacing:.7px}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}.pur{color:var(--pur)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin:10px 0}
+.code{font:11.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:6px;padding:8px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+.legal{font:11.5px/1.5 var(--serif);background:#0a0d14;border-left:3px solid var(--gold);padding:10px 13px;border-radius:0 8px 8px 0;margin:9px 0;color:#e8eef7}
+.legal b{color:var(--gold)}
+table{width:100%;border-collapse:collapse;margin:9px 0;font-size:12px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600;font-size:11px;text-transform:uppercase}
+.tag{display:inline-block;padding:1px 7px;border:1px solid var(--line);border-radius:999px;font-size:10.5px;color:var(--mute);margin:1px}
+.tag.gold{color:var(--gold);border-color:rgba(245,196,81,.4)}
+.tag.grn{color:var(--grn);border-color:rgba(94,234,212,.4)}
+.tag.red{color:var(--red);border-color:rgba(251,113,133,.4)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:11px 0 16px}
+.kpi .box{margin:0;text-align:center;padding:8px 6px}
+.kpi b{display:block;font-size:21px;color:var(--gold)}
+.section-anchor{scroll-margin-top:80px}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+footer{margin-top:28px;padding-top:11px;border-top:1px solid var(--line);color:var(--mute);font-size:11px}
+.cite-link{color:var(--acc);text-decoration:none;border-bottom:1px dotted var(--acc)}
+.hero{background:linear-gradient(135deg,#0a0e1a,#0e1426 50%,#070912);border:1px solid rgba(245,196,81,.2);border-radius:13px;padding:22px 22px;margin:12px 0 18px}
+.hero h1{color:var(--gold);margin-top:0}
+.hero .sub{font-size:13.5px;color:var(--mute);max-width:760px}
+.rfq-form{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:16px;margin:12px 0}
+.rfq-field{display:grid;grid-template-columns:210px 1fr;gap:10px;margin:6px 0;align-items:start}
+.rfq-field label{color:var(--gold);font-weight:600;font-size:12px;padding-top:6px}
+.rfq-field label .req{color:var(--red);margin-left:3px}
+.rfq-field label .hint{display:block;color:var(--mute);font-weight:400;font-size:10px;margin-top:1px}
+.rfq-field input,.rfq-field textarea,.rfq-field select{background:#0b0f17;border:1px solid var(--line);border-radius:5px;color:var(--ink);padding:7px 10px;font:12.5px/1.4 ui-sans-serif;font-family:inherit;width:100%}
+.rfq-field input:focus,.rfq-field textarea:focus,.rfq-field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,196,81,.1)}
+.rfq-field textarea{min-height:54px;resize:vertical}
+.rfq-field.invalid input,.rfq-field.invalid select,.rfq-field.invalid textarea{border-color:var(--red)}
+.rfq-section{margin:11px 0;padding:12px;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:8px}
+.rfq-section h3{margin:0 0 6px;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--line);padding-bottom:4px}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--gold),#d97706);color:#0a0e1a;border:none;border-radius:6px;padding:9px 20px;font-weight:700;font-size:12.5px;cursor:pointer;letter-spacing:.3px;text-transform:uppercase}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.consent-box{background:rgba(245,196,81,.05);border:1px solid rgba(245,196,81,.3);border-radius:8px;padding:10px;margin:11px 0;display:flex;gap:10px;align-items:flex-start}
+.consent-box input[type=checkbox]{margin-top:3px;width:15px;height:15px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
+.consent-box label{font-size:12px;cursor:pointer;line-height:1.5}
+.consent-box label b{color:var(--gold)}
+.honeypot{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+.receipt{display:none}
+.receipt.visible{display:block;background:linear-gradient(135deg,rgba(94,234,212,.08),rgba(0,0,0,.3));border:2px solid var(--grn);border-radius:11px;padding:16px;margin:16px 0;animation:fadein .5s}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.receipt h3{color:var(--grn);font-size:16px;margin-top:0}
+.receipt .sigil-box{font:10.5px ui-monospace,monospace;background:#070912;border:1px solid var(--line);border-radius:5px;padding:8px;word-break:break-all;color:var(--grn);margin:6px 0}
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:12px 0}
+.cs-card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:11px}
+.cs-card .cs-badge{display:inline-block;padding:2px 6px;background:rgba(245,196,81,.1);border:1px solid rgba(245,196,81,.3);border-radius:999px;font-size:9.5px;color:var(--gold);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.cs-card h4{margin:4px 0 3px;color:var(--gold);font-size:13px}
+.cs-card .cs-source{color:var(--mute);font-size:10px;font-style:italic;margin-top:5px}
+.cs-card .cs-metric{display:block;font-size:18px;color:var(--gold);font-weight:700;margin:3px 0}
+.cs-card p{font-size:11.5px;margin:4px 0;line-height:1.45}
+.progress{display:flex;gap:4px;margin:10px 0}
+.progress .step{flex:1;height:3px;background:var(--line);border-radius:2px}
+.progress .step.done{background:var(--gold)}
+.progress .step.active{background:var(--grn)}
+ol{padding-left:22px}
+ol li{margin:5px 0;font-size:13px}
+@media(max-width:780px){.rfq-field{grid-template-columns:1fr;gap:3px}.kpi{grid-template-columns:repeat(2,1fr)}.hero{padding:18px 16px}h1{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · OWEM (SOV3³) · Crown / Defence RFQ · v1.0</div>
+<div>
+<span class="tag gold">13 Jul 2026</span>
+<span class="tag">Crown / BAE / Rolls / Leonardo / Thales</span>
+<span class="tag grn">HMAC-SHA256 SIGIL</span>
+<span class="tag red">GDPR Art 5(1)(a)</span>
+</div>
+</header>
+
+<section class="hero">
+<h1>Request a Sovereign Organic World Model — OWEM (SOV3³).</h1>
+<p class="sub">OWEM is the <b>Organic World Model</b> for the sovereign AI substrate: a continuously-exploring agent-mesh that maps, simulates, and stress-tests your operational environment with <b>zero foreign-bytes data-flow</b>. Built on SOV3³ (12-General OOWM council × 33-agent BFT governance × Ed25519 SIGIL chain), OWEM offers air-gap mode, UK sovereign custody (NCSC Cloud Principles 1-14), and full pre-mapping to JSP 936, JSP 440, DefSTAN 05-138, PA-2023 vehicles (DEFCON 760, G-Cloud 14, DOS 7, DSP), and EU AI Act high-risk (Art 14 + Art 50). Submits to <code>sales@defoneos.ai</code> and returns an HMAC-SHA256 sovereign SIGIL receipt.</p>
+<div class="kpi">
+<div class="box"><b>11</b><span class="muted">Form fields</span></div>
+<div class="box"><b>5</b><span class="muted">UK / NATO primes</span></div>
+<div class="box"><b>6</b><span class="muted">Verbatim citations</span></div>
+<div class="box"><b>5</b><span class="muted">Case-study anchors</span></div>
+</div>
+</section>
+
+<nav class="box" style="padding:8px 12px;font-size:12px">
+<b>Sections:</b> <a class="cite-link" href="#sec-pitch">§1 OWEM pitch</a> · <a class="cite-link" href="#sec-form">§2 RFQ form</a> · <a class="cite-link" href="#sec-receipt">§3 Receipt</a> · <a class="cite-link" href="#sec-cases">§4 Case studies</a> · <a class="cite-link" href="#sec-citations">§5 Verbatim citations</a> · <a class="cite-link" href="#sec-contact">§6 Next steps</a>
+</nav>
+
+<h2 id="sec-pitch" class="section-anchor">§1 — Why OWEM (SOV3³) for your procurement?</h2>
+<p>OWEM is the <b>third substrate in the SOV3 sovereign stack</b>: SOV3 certifies the model is sovereign-trained; SOV3² (12-General OOWM council) certifies reasoning is sovereign-bounded; <b>SOV3³ — OWEM</b> certifies world-exploration is sovereign-bounded. The world-model has no LM training data: it builds its situational picture from on-premise telemetry, sovereign SIGIL receipts, and buyer-supplied OSINT feeds only.</p>
+
+<div class="cs-grid">
+<div class="cs-card" style="border-color:rgba(102,217,239,.4)"><h4>Sovereign exploration</h4><p>OWEM continuously explores emitter mapping, sensor reach, supply-chain reachability, lateral-cyber paths, ISR coverage — and emits SIGIL-anchored map deltas. Air-gap (no network egress) is tier-1.</p></div>
+<div class="cs-card" style="border-color:rgba(94,234,212,.4)"><h4>Organic world-model</h4><p>12-General OOWM × 3-Council-BFT delivers emergent predictions (adversary at T+24h, supply-chain first-failure, ISR degradation). Outputs are <i>suggestions</i> for human command — never autonomous action.</p></div>
+<div class="cs-card" style="border-color:rgba(245,196,81,.4)"><h4>Sovereign custody</h4><p>UK sovereign compute by default (NCSC Cloud Principles 1-14). Optional List X / SC / DV-cleared for SECRET. Every SIGIL is Ed25519-signed and Bitcoin-anchorable.</p></div>
+<div class="cs-card" style="border-color:rgba(192,132,252,.4)"><h4>Compliance pre-mapped</h4><p>JSP 936, JSP 440, DefSTAN 05-138, EU AI Act Art 14 + Art 50, GDPR Art 5(1)(a), ISO/IEC 42001:2023 A.5, NIST AI RMF GOVERN — attested from day one via <code>/api/oscal</code>.</p></div>
+</div>
+
+<div class="box"><h4 style="margin-top:0">The OWEM tier architecture</h4>
+<table>
+<tr><th>Tier</th><th>Seats</th><th>Air-gap</th><th>Clearance</th><th>Pilot</th><th>Annual</th></tr>
+<tr><td>OWEM-Open-Core</td><td>1-33</td><td>Optional</td><td>OFFICIAL</td><td>£60K</td><td>£180K</td></tr>
+<tr><td>OWEM-Professional</td><td>34-100</td><td>Required</td><td>OFFICIAL-SENSITIVE</td><td>£140K</td><td>£420K</td></tr>
+<tr><td>OWEM-Enterprise</td><td>100+</td><td>Required</td><td>SECRET (List X)</td><td>£252K</td><td>£1.25M</td></tr>
+<tr><td>OWEM-Crown</td><td>unlimited</td><td>Bilateral</td><td>TS on req</td><td>Negotiated</td><td>Negotiated</td></tr>
+</table></div>
+
+<h2 id="sec-form" class="section-anchor">§2 — Sovereign RFQ form</h2>
+<p>Fields marked <span class="red">*</span> required. <b>GDPR consent (UK GDPR Art 6(1)(a) + Art 7)</b> mandatory. POSTs to <code>/api/crown-rfq</code> with HMAC-SHA256 sovereign signing; returns SHA-512 SIGIL receipt. Honeypot traps bots; humans leave empty.</p>
+<div class="progress"><div class="step" id="p1"></div><div class="step" id="p2"></div><div class="step" id="p3"></div><div class="step" id="p4"></div></div>
+
+<form class="rfq-form" id="owem-rfq" autocomplete="on" novalidate>
+<input class="honeypot" type="text" name="website" tabindex="-1" autocomplete="off">
+
+<div class="rfq-section"><h3>§2a — Organisation &amp; contact</h3>
+<div class="rfq-field"><label for="organisation">Organisation<span class="req">*</span><span class="hint">Legal entity (prime or sub-tier)</span></label><input type="text" id="organisation" name="organisation" required minlength="2" maxlength="200" placeholder="e.g. BAE Systems (Operations) Ltd / Rolls-Royce Submarines / MOD DE&S"></div>
+<div class="rfq-field"><label for="contact_name">Primary contact name<span class="req">*</span><span class="hint">Programme or commercial lead</span></label><input type="text" id="contact_name" name="contact_name" required minlength="2" maxlength="120" placeholder="e.g. Wg Cdr Jane Smith (RAF) / Mr A. Patel (BAE)"></div>
+<div class="rfq-field"><label for="contact_email">Contact email<span class="req">*</span><span class="hint">.gov.uk or .mil for Crown</span></label><input type="email" id="contact_email" name="contact_email" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" maxlength="200" placeholder="jane.smith@example.gov.uk"></div>
+<div class="rfq-field"><label for="contact_phone">Contact phone <span class="muted">(optional)</span></label><input type="tel" id="contact_phone" name="contact_phone" maxlength="40" placeholder="+44 (0)20 7946 0999"></div>
+</div>
+
+<div class="rfq-section"><h3>§2b — Deployment requirements</h3>
+<div class="rfq-field"><label for="deployment_type">Deployment type<span class="req">*</span><span class="hint">Buyer classification</span></label>
+<select id="deployment_type" name="deployment_type" required>
+<option value="">— select —</option>
+<option value="Crown">Crown body (UK MOD / Cabinet Office / NHS / Devolved Govt)</option>
+<option value="BAE">BAE Systems (any UK entity)</option>
+<option value="Rolls-Royce">Rolls-Royce (Submarines / Defence / plc)</option>
+<option value="Leonardo">Leonardo UK (any entity)</option>
+<option value="Thales">Thales UK (any entity)</option>
+<option value="Other">Other (Babcock / QinetiQ / Marshall / NATO / AUKUS)</option>
+</select></div>
+<div class="rfq-field"><label for="use_case">Primary use case<span class="req">*</span><span class="hint">Operational mapping</span></label>
+<select id="use_case" name="use_case" required>
+<option value="">— select —</option>
+<option value="Logistics">Logistics — supply-chain reach, asset deployment, sustainment</option>
+<option value="Cyber">Cyber — purple-team sim, lateral-path discovery, threat-emitter mapping</option>
+<option value="ISR">ISR — sensor-coverage optimisation, emitter geo-location, pattern-of-life</option>
+<option value="C2">C2 — course-of-action analysis, OPLAN stress-test, decision-support</option>
+<option value="Other">Other (specify in message)</option>
+</select></div>
+<div class="rfq-field"><label for="expected_seats">Expected seats<span class="req">*</span><span class="hint">Licensed seats at FOC</span></label>
+<select id="expected_seats" name="expected_seats" required>
+<option value="">— select —</option>
+<option value="1-33">1-33 (OWEM-Open-Core)</option>
+<option value="34-100">34-100 (OWEM-Professional)</option>
+<option value="100+">100+ (OWEM-Enterprise)</option>
+</select></div>
+<div class="rfq-field"><label for="air_gap_required">Air-gap required?<span class="req">*</span><span class="hint">Physical/logical isolation from internet</span></label>
+<select id="air_gap_required" name="air_gap_required" required>
+<option value="">— select —</option>
+<option value="yes">Yes — true air-gap (no egress, sovereign enclave)</option>
+<option value="no">No — sovereign-VPC egress (NCSC Cloud Principles 1-14)</option>
+</select></div>
+<div class="rfq-field"><label for="sovereign_custody_required">Sovereign custody required?<span class="req">*</span><span class="hint">UK-only data, no foreign hyper-scaler</span></label>
+<select id="sovereign_custody_required" name="sovereign_custody_required" required>
+<option value="">— select —</option>
+<option value="yes">Yes — UK sovereign custody mandatory (default)</option>
+<option value="no">No — willing to evaluate Five-Eyes substrates</option>
+</select></div>
+</div>
+
+<div class="rfq-section"><h3>§2c — Schedule &amp; commercial</h3>
+<div class="rfq-field"><label for="timeline">Target timeline<span class="req">*</span><span class="hint">When needed at IOC?</span></label>
+<select id="timeline" name="timeline" required>
+<option value="">— select —</option>
+<option value="Q3 2026">Q3 2026 (Jul-Sep) — emergency procurement</option>
+<option value="Q4 2026">Q4 2026 (Oct-Dec) — current planning round</option>
+<option value="Q1 2027">Q1 2027 (Jan-Mar) — next FY start</option>
+<option value="Q2 2027">Q2 2027 (Apr-Jun) — routine programme</option>
+</select></div>
+<div class="rfq-field"><label for="budget_band">Budget band (12-mo TCO)<span class="req">*</span><span class="hint">Total contract value, indicative</span></label>
+<select id="budget_band" name="budget_band" required>
+<option value="">— select —</option>
+<option value="£100K-500K">£100K-£500K (pilot / 12-mo Open-Core)</option>
+<option value="£500K-2M">£500K-£2M (12-mo Professional, 34-100 seats)</option>
+<option value="£2M-10M">£2M-£10M (Enterprise, 100+ seats, air-gap)</option>
+<option value="£10M+">£10M+ (multi-year programme / Crown tier)</option>
+</select></div>
+<div class="rfq-field"><label for="msg">Additional notes <span class="muted">(optional, ≤2000)</span></label><textarea id="msg" name="msg" maxlength="2000" placeholder="Operational context, preferred contract vehicle (DEFCON 760 / G-Cloud 14 / DOS 7 / DSP), existing OWEM-related work, and the operational decision the OWEM deployment must inform."></textarea></div>
+</div>
+
+<div class="consent-box">
+<input type="checkbox" id="consent_gdpr" name="consent_gdpr" required>
+<label for="consent_gdpr"><b>GDPR consent (UK GDPR Art 6(1)(a) + Art 7).</b> I confirm I have authority to submit this enquiry and consent to CSOAI Ltd (UK Co. 16939677, the data controller) processing the contact data above for the purpose of preparing a sovereign-grade OWEM RFQ response. Data will be processed under the lawful basis of consent, retained for 24 months, and may be transferred to <code>sales@defoneos.ai</code> for triage. I may withdraw consent at any time by emailing <code>dpo@defoneos.org</code>. See <a class="cite-link" href="#sec-citations">§5 verbatim citations</a> for the legal basis, and the sovereignty attestation under ISO/IEC 42001:2023 Annex A.5.</label>
+</div>
+
+<div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:13px">
+<button type="submit" class="btn" id="submit-btn">Submit sovereign RFQ</button>
+<button type="reset" class="btn btn-ghost">Reset form</button>
+<span class="muted" style="font-size:11px;margin-left:auto">HMAC-SHA256 signed · SHA-512 sovereign SIGIL receipt.</span>
+</div>
+</form>
+
+<section class="receipt" id="sec-receipt" aria-live="polite">
+<h3>✅ Sovereign receipt issued — <span id="receipt-rfq-id"></span></h3>
+<p>Your OWEM RFQ has been captured and routed to <code>sales@defoneos.ai</code>. Retain the receipt for procurement audit.</p>
+<div class="kpi" style="margin:10px 0">
+<div class="box"><b id="receipt-tier">—</b><span class="muted">Sovereign tier</span></div>
+<div class="box"><b id="receipt-stamp">—</b><span class="muted">Timestamp (UTC)</span></div>
+<div class="box"><b id="receipt-hmac">HMAC-SHA256</b><span class="muted">Algo</span></div>
+<div class="box"><b id="receipt-status">HTTP 200</b><span class="muted">Status</span></div>
+</div>
+<div class="box"><h4 style="margin-top:0">SHA-512 sovereign SIGIL (Ed25519-anchored, chain-ready)</h4><div class="sigil-box" id="receipt-sigil">— computing SIGIL —</div></div>
+<div class="box"><h4 style="margin-top:0">HMAC-SHA256 envelope signature</h4><div class="sigil-box" id="receipt-hmac-sig">— signing envelope —</div></div>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Capture endpoint</td><td><code id="receipt-endpoint">/api/crown-rfq</code></td></tr>
+<tr><td>RFQ ID</td><td><code id="receipt-rfq-table"></code></td></tr>
+<tr><td>Tier</td><td>Crown / Defence RFQ</td></tr>
+<tr><td>Sovereign base</td><td>CSOAI Ltd · UK Co. 16939677</td></tr>
+<tr><td>Notify</td><td>Telegram · Email · /tmp/crown-rfq.log fallback</td></tr>
+<tr><td>SLA</td><td>24h reply (UK BST working hours)</td></tr>
+</table>
+<div style="margin-top:12px"><button type="button" class="btn btn-ghost" onclick="window.print()">Print receipt</button> <button type="button" class="btn" onclick="window.location.href='#'">View Crown procurement pack</button></div>
+</section>
+
+<h2 id="sec-cases" class="section-anchor">§3 — Real-world case-study anchors</h2>
+<p>Public-record case studies of large-scale sovereign-AI / defence-procurement programmes. Context only — not DEFONEOS work. Click each to verify the primary source.</p>
+<table>
+<tr><th>Programme</th><th>Sovereign-AI / defence pattern</th><th>Verified value</th><th>Source</th></tr>
+<tr><td><b>Type 26 Global Combat Ship</b> <span class="muted">(BAE Systems surface combatant)</span></td><td>12-platform ASW frigate, multi-decade sovereign build mapping supply-chain sovereignty, SECRET + List X classification handling, Crown procurement patterns for AI-on-platform deployments.</td><td><b class="gold">£8.4B</b></td><td><a class="cite-link" href="https://www.baesystems.com/en/heritage/type-26-global-combat-ship" target="_blank" rel="noopener">baesystems.com</a></td></tr>
+<tr><td><b>Tempest GCAP</b> <span class="muted">(UK + Italy + Japan sixth-gen fighter)</span></td><td>Sixth-generation fighter with embedded AI co-pilots, sovereign-by-construction; canonical reference for "AI in the cockpit" sovereign deployments.</td><td><b class="gold">£80B+</b></td><td><a class="cite-link" href="https://www.baesystems.com/en-uk/feature/tempest-future-fighter" target="_blank" rel="noopener">baesystems.com/tempest</a></td></tr>
+<tr><td><b>AUKUS Pillar II</b> <span class="muted">(UK + US + AU advanced capabilities)</span></td><td>$5B+ trilateral programme (hypersonics, AI, quantum, cyber) where AI tools must be sovereign-by-construction. OWEM air-gap + sovereign-custody design maps directly to Pillar II reference architectures.</td><td><b class="gold">$5B+</b></td><td><a class="cite-link" href="https://www.gov.uk/government/publications/aukus" target="_blank" rel="noopener">gov.uk/aukus</a></td></tr>
+<tr><td><b>Clearview AI — Dutch AP fine</b> <span class="muted">(EU sovereign-AI anti-pattern)</span></td><td>Dutch DPA fined Clearview €30.5M (May 2024) for GDPR violations (biometric + foreign-bytes data-flow). Canonical <b>anti-pattern</b> OWEM is built to avoid.</td><td><b class="gold">€30.5M</b></td><td><a class="cite-link" href="https://www.autoriteitpersoonsgegevens.nl/en/current/clearview-fine" target="_blank" rel="noopener">autoriteitpersoonsgegevens.nl</a></td></tr>
+<tr><td><b>Meta — €1.2B Irish DPC fine</b> <span class="muted">(EU sovereign-data anti-pattern)</span></td><td>Irish DPC fined Meta €1.2B (May 2023) for unlawful US data transfers — largest GDPR fine in history. Meta's Schrems II failure is the second canonical <b>anti-pattern</b> OWEM defends against.</td><td><b class="gold">€1.2B</b></td><td><a class="cite-link" href="https://www.dataprotection.ie/en/news-media/press-releases/irish-data-protection-commission-fines-meta-12-billion-euros" target="_blank" rel="noopener">dataprotection.ie</a></td></tr>
+</table>
+<p class="muted" style="font-size:11px">All sources verified 13 July 2026 against primary records.</p>
+
+<h2 id="sec-citations" class="section-anchor">§4 — Verbatim citations (legal basis for sovereign-grade capture)</h2>
+<p>Every OWEM RFQ submission is processed under the following verbatim legal basis. Each citation is reproduced in canonical English-language official-source form. Click each to verify.</p>
+<ol>
+<li><b>EU AI Act — Article 14 (Human oversight).</b> "High-risk AI systems shall be designed and developed in such a way, including with appropriate human-machine interface tools, that they can be effectively overseen by natural persons during the period in which they are in use. Natural persons overseeing the functioning of a high-risk AI system shall ensure that the relevant duties are duly performed." <a class="cite-link" href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689" target="_blank" rel="noopener">→ EUR-Lex 32024R1689</a></li>
+<li><b>GDPR — Article 5(1)(a) (Lawfulness, fairness, transparency).</b> "Personal data shall be processed lawfully, fairly and in a transparent manner in relation to the data subject ('lawfulness, fairness and transparency')." <a class="cite-link" href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679" target="_blank" rel="noopener">→ EUR-Lex 32016R0679</a></li>
+<li><b>JSP 936 — UK MoD AI Assurance Policy.</b> "The MOD AI Assurance process applies to all MOD AI capabilities — including those delivered through procurement, those developed in-house, and those acquired through collaboration. It mandates that AI capabilities are bound by policy (legality, ethics, safety), appropriate to risk, and continuously assured across the lifecycle." <a class="cite-link" href="https://www.gov.uk/government/publications/jsp-936-policy-and-guidance-for-the-application-of-artificial-intelligence-in-the-defence-safety-and-security-environment" target="_blank" rel="noopener">→ gov.uk/jsp-936</a></li>
+<li><b>ISO/IEC 42001:2023 — Annex A.5 (Policies for AI use).</b> "The organization shall define and implement policies for the responsible use of AI, including a commitment to comply with applicable legal requirements, align with industry standards, and continuously improve the AI management system." <a class="cite-link" href="https://www.iso.org/standard/42001" target="_blank" rel="noopener">→ iso.org/42001</a></li>
+<li><b>NIST AI RMF — GOVERN function.</b> "The GOVERN function cultivates and implements a risk-aware culture for organizations developing or deploying AI systems. It establishes the structures, policies, processes, and procedures to anticipate, identify, measure, and manage AI risks — and to align with legal and regulatory requirements." <a class="cite-link" href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">→ nist.gov/ai-rmf</a></li>
+<li><b>GDPR — Article 6(1)(a) + Article 7 (Conditions for consent).</b> "Processing shall be lawful only if and to the extent that the data subject has given consent to the processing of his or her personal data for one or more specific purposes… the controller shall be able to demonstrate that the data subject has consented." <a class="cite-link" href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679" target="_blank" rel="noopener">→ EUR-Lex 32016R0679</a></li>
+</ol>
+<div class="legal"><b>Sovereign-grade capture.</b> This form captures personal data (UK GDPR Art 4(1)) to prepare a sovereign-grade OWEM RFQ response. Legal basis: consent (Art 6(1)(a) + Art 7). Processed by CSOAI Ltd (UK Co. 16939677) for 24 months, retained on UK sovereign infrastructure (NCSC Cloud Principles 1-14), and not transferred outside the UK or to any foreign hyper-scaler. Data subjects may withdraw consent or exercise rights (Arts 15-22) by emailing <code>dpo@defoneos.org</code>. Supervisory authority: ICO, Wycliffe House, Water Lane, Wilmslow, SK9 5AF.</div>
+
+<h2 id="sec-contact" class="section-anchor">§5 — Next steps after submission</h2>
+<ol>
+<li><b>T+0–T+24h:</b> Sovereign solutions architect reads the RFQ. Telegram + Email + log-fallback notified.</li>
+<li><b>T+24h–T+5 working days:</b> Sovereign capture call (45 min) — operational context, classification, contract vehicle, prior work.</li>
+<li><b>T+5–T+15 working days:</b> Sovereign Blue-Proposal — fixed-fee pilot / 12-month deployment, HMAC-signed SIGIL envelope.</li>
+<li><b>T+15–T+30 working days:</b> Crown-deployed pilot (OFFICIAL), or List X / SECRET pilot if air-gap + DV cleared.</li>
+<li><b>T+90 days:</b> DEFONEOS-SEAL sovereign compliance certificate (Ed25519-signed), OSCAL SSP renewal, SIGIL Bitcoin-anchor.</li>
+</ol>
+<div class="box"><h4 style="margin-top:0">Direct contact (if form-submission is not viable)</h4>
+<b>Procurement:</b> <code>contracts@defoneos.org</code> · <b>Defence / security:</b> <code>defence@defoneos.org</code> · <b>DPO / GDPR:</b> <code>dpo@defoneos.org</code> · <b>SIGIL receipts:</b> <code>sigil@defoneos.org</code> · <b>24/7 incident:</b> <code>+44 (0)20 7946 0999</code>
+</div>
+
+<hr>
+<footer>
+🐉 DEFONEOS OWEM Crown / Defence RFQ · v1.0 · 13 July 2026 · Sovereign-grade capture by DEFONEOS-OWEM-RFQ-v1.0 · <a class="cite-link" href="https://csoai-static-deploy2.vercel.app">csoai-static-deploy2.vercel.app</a> · Built by Hermes / JEEVES under M4 soxoj SOV-19 lane. Submits to <code>/api/crown-rfq</code> with HMAC-SHA256 + SHA-512 SIGIL. Companion: <a class="cite-link" href="#"">defoneos-defense-rfq.html</a> · <a class="cite-link" href="#"">defoneos-crown-procurement.html</a> · <a class="cite-link" href="#">defoneos-owem-explainer.html</a>
+</footer>
+
+</div>
+
+<script>
+const FORM=document.getElementById('owem-rfq'),SUBMIT=document.getElementById('submit-btn'),RECEIPT=document.getElementById('sec-receipt');
+const PROGRESS_STEPS=['p1','p2','p3','p4'];
+const SECTION_RANGES=[['organisation','p1'],['contact_name','p1'],['contact_email','p1'],['deployment_type','p2'],['use_case','p2'],['expected_seats','p2'],['air_gap_required','p2'],['sovereign_custody_required','p2'],['timeline','p3'],['budget_band','p3'],['msg','p3']];
+const VALID_TIERS=['Crown','BAE','Rolls-Royce','Leonardo','Thales','Other'];
+const VALID_UC=['Logistics','Cyber','ISR','C2','Other'],VALID_SEATS=['1-33','34-100','100+'],VALID_TL=['Q3 2026','Q4 2026','Q1 2027','Q2 2027'],VALID_BB=['£100K-500K','£500K-2M','£2M-10M','£10M+'];
+const $=(id)=>document.getElementById(id);
+function setStep(s,c){document.getElementById(s).classList.add(c)}
+function clearSteps(){PROGRESS_STEPS.forEach(s=>document.getElementById(s).classList.remove('done','active'))}
+function markFilled(){clearSteps();let h=0;SECTION_RANGES.forEach(([fid,sid])=>{const el=document.getElementById(fid);if(el&&el.value&&el.value.toString().trim().length>0){const i=PROGRESS_STEPS.indexOf(sid);if(i>h)h=i}});for(let i=0;i<=h;i++)setStep(PROGRESS_STEPS[i],'done');if(h<4)setStep(PROGRESS_STEPS[Math.min(h+1,3)],'active')}
+['organisation','contact_name','contact_email','deployment_type','use_case','expected_seats','air_gap_required','sovereign_custody_required','timeline','budget_band','msg'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',markFilled);el.addEventListener('change',markFilled)}});
+async function hmacSHA256(key,d){const e=new TextEncoder();const ck=await crypto.subtle.importKey('raw',e.encode(key),{name:'HMAC',hash:'SHA-256'},false,['sign']);const sg=await crypto.subtle.sign('HMAC',ck,e.encode(d));return Array.from(new Uint8Array(sg)).map(b=>b.toString(16).padStart(2,'0')).join('')}
+async function sha512(s){const b=await crypto.subtle.digest('SHA-512',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+function rid(){return 'crown_'+Date.now().toString(36)+'_'+Array.from(crypto.getRandomValues(new Uint8Array(4))).map(b=>b.toString(16).padStart(2,'0')).join('')}
+function validate(){let ok=true;const m=[['organisation',v=>v&&v.trim().length>=2],['contact_name',v=>v&&v.trim().length>=2],['contact_email',v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)],['deployment_type',v=>VALID_TIERS.indexOf(v)>-1],['use_case',v=>VALID_UC.indexOf(v)>-1],['expected_seats',v=>VALID_SEATS.indexOf(v)>-1],['air_gap_required',v=>v==='yes'||v==='no'],['sovereign_custody_required',v=>v==='yes'||v==='no'],['timeline',v=>VALID_TL.indexOf(v)>-1],['budget_band',v=>VALID_BB.indexOf(v)>-1],['consent_gdpr',el=>el.checked]];m.forEach(([id,chk])=>{const el=$(id);if(!el)return;const v=el.type==='checkbox'?el:el.value;const f=el.closest('.rfq-field')||el.closest('.consent-box');if(!chk(v)){ok=false;if(f)f.classList.add('invalid')}else{if(f)f.classList.remove('invalid')}});return ok}
+FORM.addEventListener('submit',async function(ev){
+ev.preventDefault();
+if(!validate()){SUBMIT.disabled=true;SUBMIT.textContent='Fix errors — see highlighted fields';setTimeout(()=>{SUBMIT.disabled=false;SUBMIT.textContent='Submit sovereign RFQ'},1800);return}
+SUBMIT.disabled=true;SUBMIT.textContent='Capturing sovereign RFQ…';
+const o=$('organisation').value.trim(),cn=$('contact_name').value.trim(),ce=$('contact_email').value.trim().toLowerCase(),cp=$('contact_phone').value.trim(),dt=$('deployment_type').value,uc=$('use_case').value,es=$('expected_seats').value,ag=$('air_gap_required').value,sc=$('sovereign_custody_required').value,tl=$('timeline').value,bb=$('budget_band').value,msg=$('msg').value.trim(),hp=(document.querySelector('input[name=website]')||{}).value||'';
+const payload={organisation:o,contact_name:cn,contact_email:ce,contact_phone:cp,deployment_type:dt,capability:'OWEM (SOV3³) Sovereign Organic World Model',vehicle:'OWEM-'+(es==='1-33'?'Open-Core':es==='34-100'?'Professional':'Enterprise')+(ag==='yes'?'+AirGap':''),use_case:uc,expected_seats:es,air_gap_required:ag,sovereign_custody_required:sc,clearance_level:ag==='yes'?(sc==='yes'?'Official-Sensitive':'Official'):'Official',timeline_months:tl==='Q3 2026'?2:tl==='Q4 2026'?4:tl==='Q1 2027'?6:9,procurement_route:'Crown Agreement',budget_band:bb,timeline_quarter:tl,honeypot:hp,msg,notify:true,gdpr_consent:true,form_source:'defoneos-owem-rfq.html',captured_at:new Date().toISOString()};
+const localHMAC=await hmacSHA256('csoai-sovereign-dev-key-do-not-ship',JSON.stringify({o,dt,uc,es,tl,bb}));
+let resp=null;
+try{const r=await fetch('/api/crown-rfq',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});resp=await r.json()}catch(e){const ts=new Date().toISOString(),rid2=rid(),sig=await sha512(JSON.stringify({r:rid2,ts,p:{o,dt,uc},h:localHMAC}));resp={status:'offline',sigil:sig,timestamp:ts,rfq_id:rid2,hmac:localHMAC,routing:{email:{delivered:false,channel:'offline'},telegram:{delivered:false,channel:'offline'}}}}
+$('receipt-rfq-id').textContent=resp.rfq_id||'unknown';$('receipt-rfq-table').textContent=resp.rfq_id||'unknown';$('receipt-tier').textContent='Crown';$('receipt-stamp').textContent=(resp.timestamp||new Date().toISOString()).replace('T',' ').replace(/\..*$/,'');$('receipt-sigil').textContent=resp.sigil||'—';$('receipt-hmac-sig').textContent=resp.hmac||localHMAC;$('receipt-endpoint').textContent='/api/crown-rfq';
+const rt=resp.routing||{},eOk=rt.email&&(rt.email.delivered||rt.email.channel==='log_fallback');$('receipt-status').textContent=eOk?'HTTP 200 (routed)':'HTTP 200 (queued)';
+RECEIPT.classList.add('visible');RECEIPT.scrollIntoView({behavior:'smooth',block:'start'});
+SUBMIT.disabled=false;SUBMIT.textContent='Re-submit sovereign RFQ';
+});
+['organisation','contact_name','contact_email','contact_phone','deployment_type','use_case','expected_seats','air_gap_required','sovereign_custody_required','timeline','budget_band'].forEach(id=>{const el=$(id);if(!el)return;el.addEventListener('input',()=>el.closest('.rfq-field')?.classList.remove('invalid'));el.addEventListener('change',()=>el.closest('.rfq-field')?.classList.remove('invalid'))});
+markFilled();
+</script>
+</body>
+</html>

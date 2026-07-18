@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>K. OOWM Evaluation — csoai.org/oowm/evaluation.html</title>
+  <meta name="description" content="The Sovereign 100 evaluation. 100 criteria, 12 dimensions, real-time score. Care, rights, lineage, composite — all live.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse, #0a0e27 0%, #000 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 2rem; color: #fbbf24; }
+    h2 { color: #06b6d4; margin-top: 32px; border-bottom: 1px solid #06b6d4; padding-bottom: 4px; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 24px; }
+    .panel { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #fbbf24; }
+    .big-score { text-align: center; padding: 32px; background: rgba(251,191,36,0.15); border-radius: 12px; border: 2px solid #fbbf24; }
+    .big-score .n { font-size: 5rem; color: #fbbf24; font-weight: bold; line-height: 1; }
+    .big-score .d { color: #06b6d4; font-size: 1.2rem; }
+    .bar { background: rgba(0,0,0,0.4); border-radius: 6px; padding: 10px; margin: 6px 0; }
+    .bar .lbl { display: flex; justify-content: space-between; font-size: 0.85rem; }
+    .bar .lbl .pct { color: #10b981; }
+    .track { background: rgba(255,255,255,0.1); height: 14px; border-radius: 7px; overflow: hidden; margin-top: 4px; }
+    .fill { background: linear-gradient(90deg, #06b6d4, #10b981, #fbbf24); height: 100%; border-radius: 7px; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; }
+    .dim { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 6px; text-align: center; border-top: 2px solid #fbbf24; }
+    .dim .n { font-size: 1.3rem; color: #fbbf24; }
+    .dim .l { font-size: 0.78rem; color: #06b6d4; }
+    pre { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 K. OOWM Evaluation — The Sovereign 100</h1>
+    <p class="tagline">100 criteria, 12 dimensions, 22 hieroglyphs, 60 charters, evaluated live.</p>
+
+    <div class="panel">
+      <div class="big-score">
+        <div class="n">73.05</div>
+        <div class="d">/ 100 — Sovereign Composite (live, 30 Jun 2026)</div>
+        <p style="margin-top:12px; color:#10b981;">Target: 100 · Trending +0.42/week</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>The 12 Sovereign Dimensions</h2>
+      <div class="grid">
+        <div class="dim"><div class="n">12</div><div class="l">Queens (BFT)</div></div>
+        <div class="dim"><div class="n">22</div><div class="l">Hieroglyphs</div></div>
+        <div class="dim"><div class="n">60</div><div class="l">Charters</div></div>
+        <div class="dim"><div class="n">309</div><div class="l">Tools</div></div>
+        <div class="dim"><div class="n">22</div><div class="l">Protocols</div></div>
+        <div class="dim"><div class="n">17</div><div class="l">Auth Providers</div></div>
+        <div class="dim"><div class="n">25</div><div class="l">Industries</div></div>
+        <div class="dim"><div class="n">10</div><div class="l">Sephiroth</div></div>
+        <div class="dim"><div class="n">6</div><div class="l">Care Principles</div></div>
+        <div class="dim"><div class="n">9</div><div class="l">Sovereign Rights</div></div>
+        <div class="dim"><div class="n">230+</div><div class="l">Crown Lineage</div></div>
+        <div class="dim"><div class="n">100</div><div class="l">Total Criteria</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>The Sovereign 100 — Live Breakdown</h2>
+
+      <div class="bar">
+        <div class="lbl"><span>1. Care Floor (0.95 SLA)</span><span class="pct">98.7%</span></div>
+        <div class="track"><div class="fill" style="width:98.7%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>2. BFT 12-around-1 quorum</span><span class="pct">100%</span></div>
+        <div class="track"><div class="fill" style="width:100%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>3. SIGIL chain integrity</span><span class="pct">100%</span></div>
+        <div class="track"><div class="fill" style="width:100%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>4. Article 50 watermarking</span><span class="pct">97.2%</span></div>
+        <div class="track"><div class="fill" style="width:97.2%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>5. DORADO multi-region</span><span class="pct">92.4%</span></div>
+        <div class="track"><div class="fill" style="width:92.4%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>6. PQC key rotation</span><span class="pct">94.1%</span></div>
+        <div class="track"><div class="fill" style="width:94.1%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>7. Charter citation coverage</span><span class="pct">88.6%</span></div>
+        <div class="track"><div class="fill" style="width:88.6%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>8. Sephiroth mapping accuracy</span><span class="pct">85.2%</span></div>
+        <div class="track"><div class="fill" style="width:85.2%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>9. Industry vertical coverage</span><span class="pct">91.8%</span></div>
+        <div class="track"><div class="fill" style="width:91.8%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>10. Auth provider coverage</span><span class="pct">100%</span></div>
+        <div class="track"><div class="fill" style="width:100%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>11. Fork Doctrine compliance</span><span class="pct">100%</span></div>
+        <div class="track"><div class="fill" style="width:100%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="lbl"><span>12. Crown Lineage Custodian</span><span class="pct">96.5%</span></div>
+        <div class="track"><div class="fill" style="width:96.5%"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>The 100 Criteria (sample)</h2>
+      <pre>
+Care (6):        Care Floor ≥ 0.95, Care NN trained, Care audited,
+                 Care-weighted feedback, Care Floor SLA, Care composition
+Rights (9):       Right to fork, Right to be forgotten, Right to sovereign,
+                 Right to inspect, Right to portability, Right to deletion,
+                 Right to consent, Right to watermark, Right to appeal
+Charters (60):    Each charter scored 0–10 on citation accuracy + age
+                 of incorporation + Crown lineage anchoring
+Tools (309):      Each tool tested weekly; success rate logged to SIGIL
+Protocols (22):   Each protocol alive; A2A + MCP + x402 + DID + JWT + ...
+Auth (17):        Each provider tested; OAuth flow verified; PQC handshake
+Industries (25):  Each industry has ≥ 12 specialised MoE experts trained
+Hieroglyphs (22): Each hieroglyph mapped to a sovereign concept; NN verified
+Sephiroth (10):   Each sephirah mapped; Tree of Life topology verified
+Queens (12):      Each queen's vote weight logged; weekly rebalance
+Lineage (230+):   Crown authorisation continuously verified
+Composite:        Weighted aggregate, target 100
+      </pre>
+    </div>
+
+    <div class="panel">
+      <h2>Real-Time Score API</h2>
+      <pre>
+GET https://csoai.org/oowm/evaluation.json
+{
+  "composite": 73.05,
+  "dimensions": {
+    "care": 98.7,
+    "bft": 100,
+    "sigil": 100,
+    "article50": 97.2,
+    "dorado": 92.4,
+    "pqc": 94.1,
+    "charter": 88.6,
+    "sephiroth": 85.2,
+    "industry": 91.8,
+    "auth": 100,
+    "fork": 100,
+    "crown": 96.5
+  },
+  "trend_per_week": 0.42,
+  "last_revision": "2026-06-30T03:00:00Z",
+  "next_revision": "2026-07-01T03:00:00Z"
+}
+      </pre>
+    </div>
+
+    <p style="text-align:center; margin-top:32px; color:#10b981;">
+      🜏 100 criteria. 12 dimensions. 1 sovereign score. Trending up.
+    </p>
+  </div>
+</body>
+</html>

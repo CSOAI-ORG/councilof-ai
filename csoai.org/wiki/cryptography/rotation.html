@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>90-Day Key Rotation — sovereign.wiki</title>
+  <style>body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}ul{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}</style>
+</head>
+<body>
+  <div class="container">
+    <div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/cryptography/">cryptography</a> / rotation</div>
+    <h1>90-Day Key Rotation</h1>
+    <p class="tagline">PQC rotation cycle — defensive depth over cryptographic permanence.</p>
+    <div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+    <h2>The 90-Day Cycle</h2>
+    <p>Every 90 days, the <a href="anchor.html">Anchor</a> rotates its keys: a fresh Ed25519 keypair generated, dual-signed with ML-DSA-65, and the old key flagged for retirement. The mapping is published on the <a href="sigil-chain.html">SIGIL chain</a>.</p>
+
+    <h2>Schedule</h2>
+    <ul>
+      <li><strong>Day 0:</strong> New key generated inside <a href="citadel.html">Citadel</a>.</li>
+      <li><strong>Day 0:</strong> Old key signs a SIGIL announcing the rotation.</li>
+      <li><strong>Day 0:</strong> New key signs a SIGIL accepting the rotation.</li>
+      <li><strong>Day 90:</strong> Old key expires.</li>
+      <li><strong>Day 180:</strong> Old key is destroyed.</li>
+    </ul>
+
+    <h2>Why 90 Days?</h2>
+    <p>NIST SP 800-57 Part 1 Rev. 5 recommends &le; 1 year for signing keys; CSOAI-ORG chose 90 days for defensive depth. Shorter rotations minimise the damage from a leaked key.</p>
+
+    <h2>The Encapsulation Step</h2>
+    <p><a href="pqc-ml-kem-768.html">ML-KEM-768</a> encapsulates the new key to the next Anchor during handover.</p>
+
+    <h2>Hieroglyph</h2>
+    <p>Maps to the <a href="../hieroglyphs/10-wheel.html">Wheel of Fortune</a>: the turning, the cycle, the schedule.</p>
+
+    <h2>Tools</h2>
+    <p><code>dorado_key_rotation</code> with actions <em>status</em>, <em>rotate</em>, <em>schedule</em>.</p>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="anchor.html">The Anchor</a></li>
+      <li><a href="ed25519.html">Ed25519</a></li>
+      <li><a href="pqc-ml-dsa-65.html">ML-DSA-65</a></li>
+      <li><a href="pqc-ml-kem-768.html">ML-KEM-768</a></li>
+      <li><a href="citadel.html">Citadel</a></li>
+      <li><a href="../hieroglyphs/10-wheel.html">The Wheel</a></li>
+    </ul>
+    <div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+  </div>
+</body>
+</html>

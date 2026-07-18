@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>DEFONEOS — Open Ontology</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#f8fafc;padding:0;line-height:1.6}.container{max-width:1180px;margin:0 auto;padding:2rem}nav.nav-bar{position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}nav.nav-bar a{color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem}nav.nav-bar a.sub{color:#94a3b8;font-weight:normal;font-size:.85rem}h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}h2{color:#22d3ee;margin:2rem 0 .75rem;font-size:1.6rem}h3{color:#a78bfa;margin:1.5rem 0 .5rem;font-size:1.15rem}p{margin:.6rem 0;color:#cbd5e1}table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9rem}th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.7rem;text-align:left;border-bottom:1px solid rgba(34,211,238,.2)}td{padding:.6rem;border-bottom:1px solid rgba(255,255,255,.05);color:#94a3b8}.tabs{display:flex;gap:.25rem;border-bottom:1px solid rgba(34,211,238,.2);margin:1.5rem 0;flex-wrap:wrap}.tab{padding:.7rem 1.2rem;cursor:pointer;background:transparent;border:none;color:#94a3b8;font-size:.9rem;font-family:inherit;border-bottom:2px solid transparent;transition:all .2s}.tab:hover{color:#22d3ee}.tab.active{color:#22d3ee;border-bottom-color:#22d3ee;background:rgba(34,211,238,.05)}.tab-content{display:none;animation:fadeIn .3s}.tab-content.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}.badge{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.7rem;font-weight:bold;background:rgba(34,211,238,.15);color:#22d3ee;margin-right:.4rem}.badge.green{background:rgba(34,197,94,.15);color:#22c55e}.badge.amber{background:rgba(245,158,11,.15);color:#f59e0b}.badge.red{background:rgba(239,68,68,.15);color:#ef4444}.badge.purple{background:rgba(139,92,246,.15);color:#a78bfa}.card{background:rgba(255,255,255,.03);border:1px solid rgba(34,211,238,.15);border-radius:8px;padding:1.2rem;margin:1rem 0}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1rem 0}code{background:rgba(34,211,238,.08);padding:.15rem .4rem;border-radius:3px;color:#22d3ee;font-size:.85em;font-family:'SF Mono',Menlo,monospace}pre{background:#000;border:1px solid rgba(34,211,238,.15);border-radius:6px;padding:1rem;overflow-x:auto;margin:1rem 0;font-size:.8rem;line-height:1.5}pre code{background:none;padding:0;color:#94a3b8}.footer{text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}@media(max-width:768px){.grid-2{grid-template-columns:1fr}.container{padding:1rem}h1{font-size:2rem}}</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — Open Ontology vs Palantir"><meta property="og:description" content="Palantir's $308B secret sauce, now open source. RDF/OWL. SPARQL. MCP-native. SIGIL-audited."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS Open Ontology — the open-source Palantir Ontology alternative. RDF/OWL, SPARQL-queryable, MCP-integrated, SIGIL-audited."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-ontology.html"></head><body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar"><a href="index.html">🐉 DEFONEOS</a><a class="sub" href="defoneos-demo.html">Demo</a><a class="sub" href="defoneos-seriesa.html">Series A</a><a class="sub" href="defoneos-pricing.html">Pricing</a><a class="sub" href="defoneos-compare.html">vs Palantir</a><a class="sub" href="defoneos-index.html">All Pages</a><a class="sub" href="defoneos-checklist.html">Checklist</a></nav><div class="container">
+<h1>DEFONEOS Open Ontology</h1>
+<p><span class="badge green">APACHE 2.0</span><span class="badge purple">RDF/OWL</span><span class="badge">SPARQL</span><span class="badge amber">MCP-NATIVE</span><span class="badge red">PALANTIR-KILLER</span></p>
+<p style="font-size:1.1rem;color:#22d3ee"><strong>Palantir's $308B secret sauce — now open source. That's the Ontology.</strong></p>
+
+<div class="tabs">
+<button class="tab active" data-tab="model">1. Object-Action Model</button>
+<button class="tab" data-tab="schema">2. RDF/OWL Schema</button>
+<button class="tab" data-tab="compare">3. vs Palantir</button>
+<button class="tab" data-tab="sparql">4. SPARQL Examples</button>
+<button class="tab" data-tab="audit">5. SIGIL Audit Trail</button>
+</div>
+
+<div class="tab-content active" data-tab="model">
+<h2>The Object-Action-Function Model</h2>
+<p>The Palantir Ontology — the proprietary backbone behind Foundry, Gotham, and AIP — rests on four primitives: <strong>Objects, Links, Actions, Functions</strong>. DEFONEOS reimplements the same four primitives as open W3C standards with sovereign-by-design audit and MCP-native tooling.</p>
+
+<h3>1. Objects</h3>
+<p>An Object is a real-world entity in your operational picture: a vessel, a sensor, a person, a building, a runway, a drone swarm. Each Object carries:</p>
+<ul style="color:#94a3b8;margin-left:1.5rem">
+<li><strong>Identity</strong> — globally unique IRI, RFC 4122 UUID, or NATO STANAG 4677 URN</li>
+<li><strong>Properties</strong> — typed, versioned, provenance-tracked (e.g. <code>:vessel/IMO9456321</code> has <code>length=290m</code>, <code>flag=PA</code>, <code>lastAIS=2026-07-05T14:23Z</code>)</li>
+<li><strong>Class</strong> — RDF type, inherits from a hierarchy (Vessel→CommercialVessel→Tanker)</li>
+<li><strong>SIGIL history</strong> — every property write is Ed25519-signed and chained</li>
+</ul>
+
+<h3>2. Links</h3>
+<p>Links are typed relationships between Objects: <code>vessel:9456321</code> <em>carries</em> <code>cargo:crude_oil_50kt</code>, <code>vessel:9456321</code> <em>reported_at</em> <code>port:rotterdam</code>, <code>vessel:9456321</code> <em>shadowed_by</em> <code>vessel:9456790</code>. Links support time-bounded validity and confidence weights.</p>
+
+<h3>3. Actions</h3>
+<p>Actions are state-changing operations: <code>CreateReport</code>, <code>DispatchDrone</code>, <code>AuthoriseJam</code>, <code>EscalateToHuman</code>. Each Action is gated by a BFT council vote, logged with who/what/when/why, and reversible by an inverse Action.</p>
+
+<h3>4. Functions</h3>
+<p>Functions are pure computations over Objects and Links: <code>findDarkVesselsInRegion(lat, lon, radius, hours)</code>, <code>predictTrajectory(objectId, t)</code>, <code>riskScore(objectId)</code>. Functions run in the SOV3 substrate and can be called via MCP or SPARQL extension.</p>
+
+<div class="card">
+<h3 style="margin-top:0">Why this model works</h3>
+<p style="margin-bottom:0">It maps cleanly onto how defence operators think. The same model serves maritime (vessel), land (vehicle, person, building), air (aircraft, drone), cyber (host, alert), and joint operations. It's the lingua franca that makes MCP servers interoperable — an MCP that emits vessels can be queried alongside an MCP that emits aircraft in a single SPARQL query.</p>
+</div>
+
+<h3>Example: the same idea in 3 syntaxes</h3>
+<pre><code>// Turtle (RDF)
+@prefix defo: &lt;https://defoneos.com/ontology#&gt; .
+@prefix ex: &lt;https://example.org/maritime#&gt; .
+
+ex:vessel/IMO9456321 a defo:Vessel ;
+    defo:name "MV Northern Star" ;
+    defo:flag "PA" ;
+    defo:length 290 ;
+    defo:lastAIS "2026-07-05T14:23:00Z"^^xsd:dateTime ;
+    defo:carries ex:cargo/crude_oil_50kt .
+
+ex:cargo/crude_oil_50kt a defo:Cargo ;
+    defo:type "HS 2709.00" ;
+    defo:quantity 50000 ;
+    defo:unit "MT" .</code></pre>
+</div>
+
+<div class="tab-content" data-tab="schema">
+<h2>RDF/OWL Schema & Namespace</h2>
+<p>The DEFONEOS Ontology is published at <code>https://defoneos.com/ontology#</code> as a versioned RDF/OWL document. It extends schema.org and PROV-O for provenance.</p>
+
+<table>
+<tr><th>Prefix</th><th>Namespace</th><th>Examples</th></tr>
+<tr><td><code>defo:</code></td><td>https://defoneos.com/ontology#</td><td>Vessel, Aircraft, Drone, Sensor, Person, Building, Action, Link</td></tr>
+<tr><td><code>prov:</code></td><td>http://www.w3.org/ns/prov#</td><td>Entity, Activity, Agent, wasDerivedFrom</td></tr>
+<tr><td><code>geo:</code></td><td>http://www.w3.org/2003/01/geo/wgs84_pos#</td><td>lat, lon, alt, SpatialThing</td></tr>
+<tr><td><code>time:</code></td><td>http://www.w3.org/2006/time#</td><td>Instant, Interval, before, after</td></tr>
+<tr><td><code>nato:</code></td><td>https://nato.int/stanag/4677#</td><td>FriendFoeIdentifier, TrackNumber</td></tr>
+<tr><td><code>ji:</code></td><td>https://jointisr.org/ontology#</td><td>Track, Contact, Classification</td></tr>
+</table>
+
+<h3>Core classes</h3>
+<table>
+<tr><th>Class</th><th>Subclass of</th><th>Key properties</th></tr>
+<tr><td><code>defo:Vessel</code></td><td>defo:Platform</td><td>IMO, MMSI, flag, length, beam, draft, cargo</td></tr>
+<tr><td><code>defo:Aircraft</code></td><td>defo:Platform</td><td>ICAO24, callsign, type, squawk</td></tr>
+<tr><td><code>defo:Drone</code></td><td>defo:Aircraft</td><td>class (1-5 per JSP 936), serial, operator, geofence</td></tr>
+<tr><td><code>defo:Sensor</code></td><td>defo:Equipment</td><td>type, model, lat/lon, coverage, frequency</td></tr>
+<tr><td><code>defo:Track</code></td><td>ji:Contact</td><td>platform, time, lat/lon/alt, heading, speed, confidence</td></tr>
+<tr><td><code>defo:Report</code></td><td>prov:Entity</td><td>subject, predicate, object, source, confidence, sigil</td></tr>
+<tr><td><code>defo:Action</code></td><td>prov:Activity</td><td>type, agent, target, parameters, bft_id, sigil</td></tr>
+<tr><td><code>defo:Threat</code></td><td>defo:Classification</td><td>severity, category, recommended_response</td></tr>
+</table>
+
+<h3>Why RDF/OWL and not JSON Schema</h3>
+<div class="grid-2">
+<div class="card"><strong>Interoperability</strong><br><span style="color:#94a3b8;font-size:.85rem">RDF is the only W3C-recommended standard for semantic interoperability. DEFONEOS data joins cleanly with NATO STANAGs, OS OpenData, EU customs, and any other modern ontology.</span></div>
+<div class="card"><strong>Inference</strong><br><span style="color:#94a3b8;font-size:.85rem">OWL reasoners (HermiT, Pellet, ELK) can derive new facts from existing ones. "All dark vessels in piracy zone are elevated risk" — express once, applies forever.</span></div>
+<div class="card"><strong>Provenance</strong><br><span style="color:#94a3b8;font-size:.85rem">PROV-O integration: every fact carries who, when, why, derived from what. Required for JSP 936 and any audit-grade regulator.</span></div>
+<div class="card"><strong>Federation</strong><br><span style="color:#94a3b8;font-size:.85rem">SPARQL 1.1 Federated Query lets you query across multiple triple stores in one query. DEFONEOS doesn't centralise — it federates.</span></div>
+</div>
+</div>
+
+<div class="tab-content" data-tab="compare">
+<h2>DEFONEOS Ontology vs Palantir Ontology</h2>
+<table>
+<tr><th>Dimension</th><th>DEFONEOS</th><th>Palantir</th></tr>
+<tr><td>Open Source</td><td>✅ Apache 2.0</td><td>❌ Proprietary</td></tr>
+<tr><td>Standards</td><td>RDF/OWL, SPARQL, JSON-LD, PROV-O</td><td>Proprietary "Photon" / "Ontology" types</td></tr>
+<tr><td>Reasoning</td><td>HermiT, Pellet, ELK, Stardog</td><td>Proprietary rule engine</td></tr>
+<tr><td>MCP Integration</td><td>✅ Native (every Object is MCP-toolable)</td><td>❌ Custom SDK only</td></tr>
+<tr><td>Audit Trail</td><td>Ed25519 SIGIL, Bitcoin-anchored</td><td>Centralised logs, opaque to customer</td></tr>
+<tr><td>Hosting</td><td>On-prem, air-gap, sovereign VM, MOD cloud</td><td>AWS GovCloud / Foundry-on-AWS only</td></tr>
+<tr><td>Data sovereignty</td><td>100% customer-owned, never leaves UK</td><td>US CLOUD Act applies — data is reachable by US agencies</td></tr>
+<tr><td>License cost</td><td>Free (Apache 2.0); Support £50K+/yr</td><td>$50M+/yr depending on seats & modules</td></tr>
+<tr><td>Time to deploy</td><td>Days (single container)</td><td>9-18 months enterprise engagement</td></tr>
+<tr><td>Onboarding</td><td>Self-serve docs + Discord; Pro has dedicated PM</td><td>Forward-deployed engineers for 6+ months</td></tr>
+<tr><td>Modification</td><td>Customer-owned, fork-friendly</td><td>Vendor-only changes; customer cannot modify engine</td></tr>
+</table>
+
+<h3>Why Palantir wins deals today (and why DEFONEOS wins them tomorrow)</h3>
+<p>Palantir wins because procurement officers recognise the brand and fear the alternative risk. Once a buyer has seen the DEFONEOS Ontology run a live maritime operation alongside a counter-drone exercise alongside an emergency services dispatch — all from the same RDF store — the procurement risk flips. "We trust the open, auditable, sovereign thing we can read and modify" beats "We trust the $50M/yr proprietary thing we cannot".</p>
+
+<h3>The killer feature: audit-grade provenance</h3>
+<p>Every Palantir ontology change goes into a centralised log. Regulators and auditors cannot independently verify it. With DEFONEOS, every change is Ed25519-signed by the BFT council that authorised it, hash-chained to the previous change, and optionally anchored to the Bitcoin blockchain. Auditors don't trust DEFONEOS — they verify it.</p>
+</div>
+
+<div class="tab-content" data-tab="sparql">
+<h2>SPARQL Query Examples</h2>
+<p>DEFONEOS data is queryable via SPARQL 1.1 (with spatial extension). The same MCP servers that ingest data also serve SPARQL.</p>
+
+<h3>Find all dark vessels in the English Channel in the last 6 hours</h3>
+<pre><code>PREFIX defo: &lt;https://defoneos.com/ontology#&gt;
+PREFIX geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;
+PREFIX time: &lt;http://www.w3.org/2006/time#&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+SELECT ?vessel ?name ?lastSeen ?confidence WHERE {
+  ?track a defo:Track ;
+         defo:platform ?vessel ;
+         geo:lat ?lat ;
+         geo:lon ?lon ;
+         defo:timestamp ?lastSeen ;
+         defo:confidence ?confidence .
+  ?vessel a defo:Vessel ;
+           defo:name ?name ;
+           defo:dark true .
+
+  FILTER(?lat &gt; 49.0 &amp;&amp; ?lat &lt; 51.5 &amp;&amp; ?lon &gt; -2.0 &amp;&amp; ?lon &lt; 2.0)
+  FILTER(?lastSeen &gt; (NOW() - "PT6H"^^xsd:duration))
+}
+ORDER BY DESC(?confidence)
+LIMIT 100</code></pre>
+
+<h3>Find all drone swarms classified as Class 3+ near restricted airspace</h3>
+<pre><code>PREFIX defo: &lt;https://defoneos.com/ontology#&gt;
+PREFIX geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;
+
+SELECT ?drone ?class ?operator ?distance WHERE {
+  ?drone a defo:Drone ;
+         defo:droneClass ?class ;
+         defo:operator ?operator ;
+         geo:lat ?dLat ;
+         geo:lon ?dLon .
+
+  ?zone a defo:RestrictedAirspace ;
+        geo:lat ?zLat ;
+        geo:lon ?zLon ;
+        defo:radius ?radius .
+
+  BIND(geof:distance(?dLat, ?dLon, ?zLat, ?zLon) AS ?distance)
+
+  FILTER(?class &gt;= 3)
+  FILTER(?distance &lt; ?radius)
+}
+ORDER BY ?distance</code></pre>
+
+<h3>Federated query: maritime MCP + aviation MCP + weather MCP</h3>
+<pre><code>PREFIX defo: &lt;https://defoneos.com/ontology#&gt;
+
+SELECT ?vessel ?aircraft ?wind WHERE {
+  SERVICE &lt;https://mcp.defoneos.com/aisstream/sparql&gt; {
+    ?vessel a defo:Vessel ; defo:lastSeen ?vT .
+  }
+  SERVICE &lt;https://mcp.defoneos.com/opensky/sparql&gt; {
+    ?aircraft a defo:Aircraft ; defo:lastSeen ?aT .
+  }
+  SERVICE &lt;https://mcp.defoneos.com/metoffice/sparql&gt; {
+    ?obs a defo:WeatherObservation ; defo:windSpeed ?wind .
+  }
+  FILTER(?vT &gt; NOW() - "PT1H"^^xsd:duration)
+  FILTER(?aT &gt; NOW() - "PT1H"^^xsd:duration)
+}</code></pre>
+</div>
+
+<div class="tab-content" data-tab="audit">
+<h2>SIGIL Audit Trail</h2>
+<p>Every modification to the ontology — adding a class, changing a property, ingesting a new object, running an action — is recorded as a SIGIL entry. SIGILs are Ed25519-signed and chained. The chain is optionally anchored to Bitcoin (proofof.ai) for external immutability.</p>
+
+<h3>Sample SIGIL</h3>
+<pre><code>H|defoneos|ontology|action=CreateObject|type=Vessel|imo=9456321|ts=2026-07-05T14:23:01Z|agent=aisstream-mcp|sigil=4f8a2c91e7b3d6a0|sig=0x9f4e2a...c83b
+V|defoneos|bft-validator-09|approved|conf=0.94|rationale="IMO valid, AIS position consistent with satellite"|ts=2026-07-05T14:23:02Z
+M|defoneos|ontology|property=lastSeen|target=vessel:9456321|new=2026-07-05T14:23:00Z|prev=2026-07-05T13:45:00Z|diff=38min|prev_sigil=4f8a2c91e7b3d69f
+A|defoneos|bft-council|quorum=23/33|for=24|against=0|abstain=9|action=PromoteToDarkVessel|target=vessel:9456321</code></pre>
+
+<h3>Audit properties</h3>
+<ul style="color:#94a3b8;margin-left:1.5rem">
+<li><strong>Tamper-evident</strong> — Ed25519 signature on every entry; chain hash includes prior hash</li>
+<li><strong>Non-repudiable</strong> — every agent and validator is identified by Ed25519 public key registered in the OrgKernel L1</li>
+<li><strong>Externally verifiable</strong> — anyone with read access can verify the chain; anchor to Bitcoin makes deletion economically infeasible</li>
+<li><strong>Re-playable</strong> — <code>defoneos_audit_replay(start, end)</code> reconstructs exact ontology state at any historical moment</li>
+<li><strong>Regulator-friendly</strong> — JSP 936, ISO 42001, EU AI Act all satisfied with a single SIGIL export</li>
+</ul>
+
+<h3>Compliance frameworks natively supported</h3>
+<table>
+<tr><th>Framework</th><th>Article/Section</th><th>How SIGIL satisfies</th></tr>
+<tr><td>UK JSP 936</td><td>AI Assurance — Auditability</td><td>Full lineage + BFT approvals for every model + decision</td></tr>
+<tr><td>EU AI Act</td><td>Article 12 (Logging), 13 (Transparency)</td><td>Automatic logging with cryptographic integrity; technical documentation exportable</td></tr>
+<tr><td>ISO 42001</td><td>A.6.1.2 (AI system lifecycle)</td><td>Versioned ontology + full change history</td></tr>
+<tr><td>NIST AI RMF</td><td>GOVERN, MAP, MEASURE, MANAGE</td><td>All four functions log to SIGIL chain</td></tr>
+<tr><td>UK DPA 2018 / GDPR</td><td>Article 30 (Records of Processing)</td><td>Every data write is recorded with lawful basis + retention</td></tr>
+<tr><td>MOD JSP 440</td><td>Spectrum Management</td><td>RF emissions SIGILed with frequency, power, time</td></tr>
+</table>
+</div>
+
+</div>
+<div class="footer"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></div>
+<style>html{scroll-behavior:smooth}</style>
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+<script>document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{const tab=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelector(`.tab-content[data-tab="${tab}"]`).classList.add('active')}));window.addEventListener('scroll',function(){var b=document.querySelector('.back-to-top');if(window.pageYOffset>300){b.classList.add('visible')}else{b.classList.remove('visible')}});</script>
+</body></html>

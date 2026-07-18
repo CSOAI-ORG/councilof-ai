@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK · Sovereign AI · The Brand Landing</title>
+<meta name="description" content="MEOK — the sovereign AI for UK + AUKUS defence, governance, and security. 13 model classes. Ed25519 SIGIL chain. BFT 23/33 council. 7 hard-stop red lines. UK-sovereign. Charter Article 0 binding.">
+<meta property="og:title" content="MEOK · Sovereign AI">
+<meta property="og:description" content="The sovereign AI substrate for UK + AUKUS defence, governance, and security. 94-98% cheaper than Palantir.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/meok-landing">
+<link rel="icon" href="#"" type="image/svg+xml">
+<style>
+:root{--bg:#0a0a0f;--bg2:#14181f;--bg3:#1c2128;--fg:#f8fafc;--cyan:#22d3ee;--gold:#fbbf24;--green:#22c55e;--purple:#a78bfa;--border:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 30% 0%,#0a3a2a 0%,#0a0a0f 60%);color:var(--fg);line-height:1.5;min-height:100vh}
+.container{max-width:1180px;margin:0 auto;padding:1.5rem}
+nav{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+nav a{color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:500}
+nav a:hover{color:var(--cyan)}
+nav .brand{color:var(--cyan);font-weight:800;font-size:1.1rem}
+nav .meok-logo{font-size:1.4rem}
+header{padding:4rem 0 2rem;text-align:center}
+.eyebrow{display:inline-block;padding:.4rem 1rem;background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:3.5rem;background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em;margin-bottom:1rem;line-height:1.05}
+.lead{font-size:1.15rem;color:#cbd5e1;max-width:780px;margin:0 auto 1.5rem;line-height:1.6}
+section{padding:2.5rem 0}
+h2{font-size:1.8rem;font-weight:800;margin-bottom:.5rem;text-align:center}
+h2 .grad{background:linear-gradient(135deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:#94a3b8;font-size:1rem;text-align:center;max-width:680px;margin:0 auto 2rem}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:1rem 0}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.75rem 1.4rem;border-radius:8px;font-weight:700;font-size:.9rem;text-decoration:none;cursor:pointer;border:none;transition:.15s}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(34,211,238,.3)}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--cyan));color:#000}
+.cta-row{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:2rem auto;max-width:920px}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.9rem .7rem;text-align:center}
+.metric.live{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.04)}
+.metric .big{font-size:1.4rem;font-weight:900;color:var(--gold);display:block;line-height:1}
+.metric.live .big{color:var(--green)}
+.metric .lab{font-size:.65rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.5rem 0}
+.feat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:240px}
+.feat .icon{font-size:1.6rem;margin-bottom:.5rem;display:block}
+.feat h3{color:var(--cyan);font-size:1rem;margin-bottom:.4rem;font-weight:700}
+.feat p{color:#cbd5e1;font-size:.85rem;margin-bottom:.8rem;line-height:1.4}
+.feat .link{color:var(--gold);text-decoration:none;font-size:.78rem;font-weight:600}
+.feat .link:hover{color:var(--cyan)}
+.form-mini{display:grid;grid-template-columns:1fr auto;gap:.5rem;max-width:480px;margin:1.5rem auto 0}
+.form-mini input{padding:.7rem 1rem;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-family:inherit;font-size:.95rem}
+.form-mini input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 2px rgba(34,211,238,.2)}
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:99px;font-size:.65rem;font-weight:700;background:rgba(34,211,238,.1);color:var(--cyan);border:1px solid rgba(34,211,238,.3)}
+footer{text-align:center;padding:2rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:3rem}
+.sig{font-family:'SF Mono',monospace;font-size:.62rem;color:var(--cyan);word-break:break-all;margin:.5rem 0;padding:.3rem;background:var(--bg2);border-radius:4px;display:inline-block;max-width:600px}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="brand"><span class="meok-logo">🜏</span> MEOK</a>
+  <a href="#">Master Hub</a>
+  <a href="#">Substrate</a>
+  <a href="#">SOV-18</a>
+  <a href="#">Pricing</a>
+  <a href="#">Verify</a>
+  <a href="#">Academy</a>
+  <a href="#signup" style="color:var(--gold)">Get Started</a>
+</nav>
+
+<div class="container">
+
+<header>
+  <span class="eyebrow">🜏 MEOK · The sovereign AI for UK + AUKUS</span>
+  <h1>Sovereign AI.<br>For the people who need it.</h1>
+  <p class="lead">DEFONEOS is the sovereign substrate that powers MEOK. 13 model classes in one organic loop. Ed25519 SIGIL chain. BFT 23/33 council. 7 hard-stop red lines. <strong>94-98% cheaper than Palantir</strong>. <strong>£0 open source</strong>. <strong>UK-sovereign</strong>.</p>
+  <div class="metrics-row">
+    <div class="metric live"><span class="big">13</span><div class="lab">Model Classes</div></div>
+    <div class="metric live"><span class="big">30/30</span><div class="lab">MCPs Live</div></div>
+    <div class="metric live"><span class="big">100%</span><div class="lab">Alignment</div></div>
+    <div class="metric live"><span class="big">0.95</span><div class="lab">Care Floor</div></div>
+    <div class="metric live"><span class="big">23/33</span><div class="lab">BFT Quorum</div></div>
+    <div class="metric live"><span class="big">94-98%</span><div class="lab">cheaper</div></div>
+  </div>
+  <div class="cta-row">
+    <a href="#signup" class="btn btn-primary">⚡ Try 30s · £0</a>
+    <a href="#" class="btn btn-ghost">Pricing</a>
+    <a href="#" class="btn btn-ghost">System Card</a>
+    <a href="#" class="btn btn-gold">📈 Series A</a>
+  </div>
+</header>
+
+<section>
+  <h2>What MEOK does</h2>
+  <p class="sub">DEFONEOS is the substrate; MEOK is the product. Sovereign AI for the people who need it — defence, governance, healthcare, finance, cyber, and academic research. UK-built, MIT-licensed, fork-able.</p>
+  <div class="feat-grid">
+    <div class="feat"><span class="icon">🛡️</span><h3>Defence primes</h3><p>BAE · Rolls-Royce · Leonardo · Thales · Raytheon · Lockheed · L3Harris</p><a href="#" class="link">Crown RFQ →</a></div>
+    <div class="feat"><span class="icon">⚖️</span><h3>Regulators</h3><p>ICO · NCSC · AI Office · DG-CONNECT · NCAS · EDPB</p><a href="#" class="link">Free 30-day sandbox →</a></div>
+    <div class="feat"><span class="icon">⚕️</span><h3>Healthcare</h3><p>NHS England · 42 ICBs · 220 trusts · DTAC · MHRA · HRA</p><a href="#" class="link">14-day NHS pilot →</a></div>
+    <div class="feat"><span class="icon">🏦</span><h3>Finance</h3><p>FCA · PRA · DORA · UK GDPR · SR 11-7 · SYSC 15.3/16A</p><a href="#" class="link">Audit pack →</a></div>
+    <div class="feat"><span class="icon">🛡️</span><h3>Cyber</h3><p>UK NCSC · NIS2 · NCSC CAF L1-L4 · CRA</p><a href="#" class="link">14-day cyber pilot →</a></div>
+    <div class="feat"><span class="icon">🎓</span><h3>Academy / Research</h3><p>CASA 1-4 certs · MIT-licensed · PyPI · GitHub</p><a href="#" class="link">Enrol · £99/yr →</a></div>
+  </div>
+</section>
+
+<section>
+  <h2>Why MEOK exists</h2>
+  <p class="sub">EU AI Act enforcement in T-26 days. UK JSP 936 / DSEC forcing procurement. NATO Autonomy Policy requiring meaningful human control. AUKUS-Pillar-2 £3.5B / 5yr for sovereign AI cooperation.</p>
+  <div class="card">
+    <h3 style="color:var(--cyan);margin-bottom:.6rem">The procurement problem</h3>
+    <p style="color:#cbd5e1;font-size:.95rem;margin-bottom:1rem">Defence primes spend 6-18 months procuring AI through corporate frameworks. By the time AI reaches pilot, they've sunk £500K into procurement with zero deployed value. The EU AI Act deadline is breathing on the board.</p>
+    <h3 style="color:var(--cyan);margin-bottom:.6rem">The MEOK answer</h3>
+    <p style="color:#cbd5e1;font-size:.95rem">14-day proof-of-value. Pre-baked EU AI Act + UK GDPR + JSP 936 + DSEC + NATO + AUKUS-Pillar-2 evidence. Sovereign-by-construction. 94-98% cheaper than Palantir. 7 protocol-enforced red lines.</p>
+  </div>
+</section>
+
+<section id="signup" style="text-align:center;background:linear-gradient(135deg,rgba(34,211,238,.06),rgba(167,139,250,.06));border:1px solid var(--cyan);border-radius:18px;padding:2.5rem;margin:2rem 0">
+  <h2>Get started in 30 seconds</h2>
+  <p class="sub">No credit card. SIGIL-signed receipt. Routes to Crown / Pro / Sandbox / Press / Install based on your role.</p>
+  <form class="form-mini" id="tryForm">
+    <input type="email" id="tryEmail" placeholder="Work email" required>
+    <button type="submit" class="btn btn-primary" id="tryBtn">⚡ Try 30s</button>
+  </form>
+  <p style="font-size:.78rem;color:#94a3b8;margin-top:.6rem">GDPR-compliant · 14-day money-back · UK-sovereign</p>
+  <div id="tryResult" style="display:none;margin-top:1.5rem;padding:1rem;background:var(--bg2);border:1px dashed var(--green);border-radius:8px;color:var(--green);font-family:'SF Mono',monospace;font-size:.78rem"></div>
+</section>
+
+<section>
+  <h2>Press & Series A</h2>
+  <p class="sub">DEFONEOS Series A is in market: £45-90M raise at £180-240M pre-money. 12-week close target.</p>
+  <div class="cta-row">
+    <a href="#" class="btn btn-gold">📈 Series A brief</a>
+    <a href="#" class="btn btn-ghost">📜 Term sheet</a>
+    <a href="#" class="btn btn-ghost">🎬 12-slide deck</a>
+    <a href="#" class="btn btn-ghost">❓ 12 hard Qs</a>
+    <a href="#" class="btn btn-green">📰 Press</a>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · sovereign-by-construction · UK · AUKUS-compatible · Charter Article 0 binding
+  <br><br>
+  <div class="sig">SIGIL: d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  press@csoai.org · crown@csoai.org · series-a@csoai.org · +44 (0)20 7946 0958
+  <br>
+  <a href="#">Verify</a> · <a href="#">System Card</a> · <a href="#">Privacy</a> · <a href="#">Terms</a>
+</footer>
+
+<script>
+const $ = (s) => document.querySelector(s);
+fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'page_view', source: 'meok-landing' }) }).catch(()=>{});
+$('#tryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = $('#tryEmail').value.trim();
+  if (!email || !email.includes('@')) { alert('Valid email required'); return; }
+  const btn = $('#tryBtn'); btn.disabled = true; btn.textContent = 'Issuing SIGIL...';
+  try {
+    const r = await fetch('/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, name: '', org: '', persona: 'governance', tier: 'Open Source', gdpr_consent: true, marketing: true, honeypot: '' }) });
+    const j = await r.json();
+    if (!j.ok) { btn.disabled = false; btn.textContent = '⚡ Try 30s'; alert('Error: ' + (j.error||'unknown')); return; }
+    fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'signup_completed', source: 'meok-landing', persona: 'governance', meta: { sigil: j.receipt.sigil } }) }).catch(()=>{});
+    document.getElementById('tryResult').style.display = 'block';
+    document.getElementById('tryResult').innerHTML = '✓ SIGIL-signed · ' + j.receipt.sigil.slice(0, 16) + '…<br>✓ ' + j.receipt.next_steps + '<br>✓ Continue at: <a href="#" style="color:var(--cyan)">' + j.receipt.tier_routed_to + '</a>';
+    btn.style.display = 'none';
+  } catch (err) { btn.disabled = false; btn.textContent = '⚡ Try 30s'; alert('Network error: ' + err.message); }
+});
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a,button');
+  if (!link) return;
+  fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'cta_click', source: 'meok-landing', meta: { href: link.href || link.textContent.trim().slice(0, 60) } }) }).catch(()=>{});
+});
+</script>
+</body>
+</html>

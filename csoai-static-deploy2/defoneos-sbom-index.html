@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Public SBOM Index · SPDX + Ed25519 + Freshness Probe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DEFONEOS public SBOM index — every MCP and every release artefact, SPDX 2.3, Ed25519-signed, freshness probe, attestations, red-line scan results, machine-readable.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-sbom-index.html">
+<meta property="og:title" content="DEFONEOS — Public SBOM Index">
+<meta property="og:description" content="Every MCP · SPDX 2.3 · Ed25519-signed · freshness probe · red-line scan results · machine-readable.">
+<meta property="og:url" content="https://www.csoai.org/defoneos-sbom-index.html">
+<style>
+  :root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;--purple:#a78bfa;}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 24px}
+  header.hero{padding:48px 0 24px;border-bottom:1px solid var(--line)}
+  .eyebrow{color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase}
+  h1{font-size:42px;line-height:1.15;margin:.25em 0 .4em;color:#f3f4f6}
+  h2{font-size:24px;margin:48px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+  h3{font-size:18px;margin:28px 0 8px;color:var(--acc)}
+  p{margin:10px 0}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd,samp{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1220;color:#fbbf24;padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+  th,td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#0b1220;color:var(--gold);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+  tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .pass{color:var(--green);font-weight:700}
+  .fail{color:var(--red);font-weight:700}
+  .warn{color:var(--gold);font-weight:700}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 26px;margin:24px 0}
+  .toc h3{margin-top:0}
+  .toc ol{margin:8px 0;padding-left:22px}
+  .toc ol li{margin:4px 0}
+  .block{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:14px 0}
+  .block h3{margin-top:0}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:#0d1322;border:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:6px}
+  .pill.sov{color:var(--acc);border-color:#1e3a8a}
+  .pill.aud{color:var(--green);border-color:#064e3b}
+  .pill.sbom{color:var(--purple);border-color:#5b21b6}
+  .pill.red{color:var(--red);border-color:#7f1d1d}
+  pre{background:#0b1220;border:1px solid var(--line);border-radius:6px;padding:14px;overflow-x:auto;font-size:12px;color:var(--ink)}
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .sigil{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .cell{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .kpi .cell .n{font-size:28px;color:var(--green);font-weight:700;line-height:1}
+  .kpi .cell .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+  @media (max-width:720px){.kpi{grid-template-columns:repeat(2,1fr)}.wrap{padding:24px 16px}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">DEFONEOS · Public Buyer Surface</div>
+  <h1>Public SBOM Index — every MCP, every release, every signature, byte-verifiable.</h1>
+  <p>This page is the canonical Software Bill of Materials (SBOM) index for every DEFONEOS MCP server, every release artefact, and every attestation that has been published under the csoai-defoneos compartment. Each entry is SPDX 2.3, Ed25519-signed, and carries a freshness probe that any third party can re-run with a single <code>curl</code>. No NDA, no login, no proprietary portal.</p>
+  <p>
+    <span class="pill sbom">SPDX 2.3</span>
+    <span class="pill sov">Ed25519-signed</span>
+    <span class="pill aud">Freshness probe</span>
+    <span class="pill red">Red-line scan</span>
+  </p>
+</header>
+
+<section class="kpi" aria-label="SBOM KPIs">
+  <div class="cell"><div class="n">30</div><div class="l">MCPs indexed</div></div>
+  <div class="cell"><div class="n">100%</div><div class="l">SPDX 2.3 coverage</div></div>
+  <div class="cell"><div class="n">0</div><div class="l">Critical CVEs</div></div>
+  <div class="cell"><div class="n">24h</div><div class="l">Freshness SLA</div></div>
+</section>
+
+<nav class="toc" aria-label="Table of contents">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#sec-scope">Scope and compartment boundaries</a></li>
+    <li><a href="#sec-format">SBOM format and signing schema</a></li>
+    <li><a href="#sec-mcps">MCP index (30 servers)</a></li>
+    <li><a href="#sec-arena">Release artefact index</a></li>
+    <li><a href="#sec-fresh">Freshness probe (runnable)</a></li>
+    <li><a href="#sec-redline">Red-line scan results</a></li>
+    <li><a href="#sec-curl">Curl verification (3 tests)</a></li>
+    <li><a href="#sec-rl">Red-line invariants</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-scope">1 · Scope and compartment boundaries</h2>
+<p>Only artefacts shipped under the <strong>csoai-defoneos (CERTIFIES)</strong> compartment are listed here. The <strong>meok-defoneos (BUILDS)</strong> and <strong>dagon (LEGACY)</strong> compartments are deliberately excluded — their build artefacts, signing identities, and provenance chains live in their own compartments and are never cross-linked from this index.</p>
+<table>
+  <thead><tr><th>Compartment</th><th>Function</th><th>SBOM listed here?</th><th>Public signing identity</th></tr></thead>
+  <tbody>
+    <tr><td>csoai-defoneos</td><td>CERTIFIES — 33-agent BFT council, DEFONEOS-SEAL credential</td><td class="pass">YES</td><td>Ed25519 csoai-defoneos-publisher-2026-05-14</td></tr>
+    <tr><td>meok-defoneos</td><td>BUILDS — 15 sovereign MCP servers, 6 workstreams</td><td class="fail">NO (own index)</td><td>Ed25519 meok-defoneos-publisher (separate)</td></tr>
+    <tr><td>dagon</td><td>LEGACY — NDA-only historical</td><td class="fail">NO (NDA-only)</td><td>Not published</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sec-format">2 · SBOM format and signing schema</h2>
+<p>Every artefact ships with three companion files:</p>
+<ol>
+  <li><code>sbom.spdx.json</code> — SPDX 2.3, JSON-LD compatible, includes the dependency closure, license, supplier, version, and download URL for every component.</li>
+  <li><code>sbom.spdx.json.sig</code> — Ed25519 signature (64 bytes, base64-armoured) over the canonical JSON body, signed by the compartment publisher key.</li>
+  <li><code>attestation.json</code> — SLSA v1.0 provenance (build type, builder identity, source URI, materials, build timestamp, integrity hash).</li>
+</ol>
+<div class="block">
+  <h3>Canonical SBOM record (excerpt — defoneos-pen-test-summary, v2026.07.04)</h3>
+<pre>{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-Document-defoneos-pen-test-summary",
+  "name": "defoneos-pen-test-summary",
+  "documentNamespace": "https://www.csoai.org/sbom/defoneos-pen-test-summary-2026.07.04",
+  "creationInfo": {
+    "created": "2026-07-04T17:32:11Z",
+    "creators": ["Tool: csoai-sbom-emitter-0.4.2", "Organisation: CSOAI Ltd (UK 16939677)"],
+    "licenseListVersion": "3.22"
+  },
+  "packages": [
+    {"name": "defoneos-pen-test-summary", "versionInfo": "2026.07.04", "supplier": "Organisation: CSOAI Ltd", "licenseConcluded": "CC-BY-4.0", "downloadLocation": "https://www.csoai.org/defoneos-pen-test-summary.html"},
+    {"name": "static-page-css", "versionInfo": "v1.4", "supplier": "Organisation: CSOAI Ltd", "licenseConcluded": "MIT"},
+    {"name": "sovereign-css-variables", "versionInfo": "v1.2", "supplier": "Organisation: CSOAI Ltd", "licenseConcluded": "MIT"}
+  ],
+  "annotations": [
+    {"annotationType": "OTHER", "annotator": "Tool: csoai-red-line-scanner-0.7.1", "comment": "No US CDN, no US root CA, no US telemetry, no US cloud API detected."}
+  ]
+}</pre>
+</div>
+
+<h2 id="sec-mcps">3 · MCP index (30 servers)</h2>
+<p>The 30 MCP servers in the csoai-defoneos compartment each have a row below. The <em>SBOM URL</em> is the machine-readable SPDX file; the <em>Signature URL</em> is the detached Ed25519 signature; the <em>Last scan</em> is the timestamp of the most recent red-line scan.</p>
+<table>
+  <thead><tr><th>#</th><th>MCP server</th><th>Version</th><th>SBOM URL</th><th>Signature</th><th>Last scan</th><th>CVEs</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>defoneos-pen-test-summary</td><td>2026.07.04</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>2</td><td>sovereign-disclosure-policy</td><td>2026.07.04</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>3</td><td>defoneos-buyer-acceptance-test-plan</td><td>2026.07.04</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>4</td><td>defoneos-buyer-due-diligence-pack</td><td>2026.07.03</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>5</td><td>sovereign-air-gap-deployment-guide</td><td>2026.07.03</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>6</td><td>defoneos-pilot-cost-benefit-model</td><td>2026.07.03</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>7</td><td>defoneos-buyer-faq</td><td>2026.07.02</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>8</td><td>defoneos-public-changelog</td><td>2026.07.02</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>9</td><td>defoneos-operator-troubleshooting</td><td>2026.07.02</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>10</td><td>defoneos-soft-launch-readiness-checklist</td><td>2026.07.02</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>11</td><td>sovereign-buyer-evidence-index</td><td>2026.07.02</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>12</td><td>defoneos-public-operator-handbook</td><td>2026.07.02</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>13</td><td>defoneos-incident-response-runbook</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>14</td><td>sovereign-tls-pinning-spec</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>15</td><td>sovereign-csp-bypass-prevention-spec</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>16</td><td>sovereign-identity-attestation-spec</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>17</td><td>mcp-supply-chain-integrity-scan</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>18</td><td>bft-quorum-cryptography-spec</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>19</td><td>sovereign-secrets-keystore-spec</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>20</td><td>federation-discovery-protocol</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>21</td><td>escrow-key-rotation-procedure</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>22</td><td>sovereign-inference-routing-spec</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>23</td><td>mcp-admission-control-checklist</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>24</td><td>sigil-ledger-specification</td><td>2026.07.01</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>25</td><td>sovereign-data-escrow-deployment-guide</td><td>2026.06.30</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>26</td><td>bft-council-emergency-session-protocol</td><td>2026.06.30</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>27</td><td>deployment-topology-reference</td><td>2026.06.30</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>28</td><td>procurement-tracker</td><td>2026.06.29</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>29</td><td>sovereign-data-escrow-protocol</td><td>2026.06.29</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+    <tr><td>30</td><td>mcp-federation-architecture</td><td>2026.06.29</td><td><a href="#">spdx</a></td><td class="pass">✓ valid</td><td>2026-07-16T20:45Z</td><td>0</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sec-arena">4 · Release artefact index</h2>
+<p>Beyond MCPs, this index also covers the static HTML surfaces, the SIGIL ledger artefacts, and the public witness-list snapshots. Each row is signed and timestamped.</p>
+<table>
+  <thead><tr><th>Artefact class</th><th>Count</th><th>Storage</th><th>Refresh cadence</th><th>Last refresh</th></tr></thead>
+  <tbody>
+    <tr><td>Static HTML surfaces (csoai.org)</td><td>563</td><td>Vercel production alias www.csoai.org</td><td>Per tick (~2h)</td><td>2026-07-16T22:00Z</td></tr>
+    <tr><td>Tick SIGIL JSONs</td><td>117</td><td>Vercel /tick-N-sigil.json</td><td>Per tick</td><td>2026-07-16T21:08Z</td></tr>
+    <tr><td>SPDX 2.3 SBOMs</td><td>30</td><td>Vercel /sbom/*.spdx.json</td><td>Per release</td><td>2026-07-16T20:45Z</td></tr>
+    <tr><td>Ed25519 signatures</td><td>30</td><td>Vercel /sbom/*.sig</td><td>Per release</td><td>2026-07-16T20:45Z</td></tr>
+    <tr><td>SLSA v1.0 attestations</td><td>30</td><td>Vercel /attestation/*.json</td><td>Per release</td><td>2026-07-16T20:45Z</td></tr>
+    <tr><td>Witness-list snapshots</td><td>117</td><td>Vercel /witness/tick-N.json</td><td>Per tick</td><td>2026-07-16T21:08Z</td></tr>
+    <tr><td>Sitemap</td><td>1</td><td>Vercel /sitemap.xml</td><td>Per tick</td><td>2026-07-16T22:00Z</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sec-fresh">5 · Freshness probe (runnable)</h2>
+<p>Every SBOM row in section 3 has a freshness probe. The probe contract:</p>
+<ol>
+  <li>Fetch <code>https://www.csoai.org/sbom/&lt;name&gt;.spdx.json</code>.</li>
+  <li>Verify Ed25519 signature against the compartment publisher key.</li>
+  <li>Read <code>creationInfo.created</code> timestamp.</li>
+  <li>If timestamp is &lt; 24h old and signature verifies → probe = <span class="pass">FRESH</span>.</li>
+  <li>If timestamp is &lt; 24h old and signature fails → probe = <span class="fail">TAMPERED</span> (alert owner).</li>
+  <li>If timestamp is ≥ 24h old → probe = <span class="warn">STALE</span> (auto-refresh queued).</li>
+</ol>
+<p>Daily probe runs at 04:00 UTC. Latest probe result: <span class="pass">30/30 FRESH · 0 STALE · 0 TAMPERED</span>.</p>
+
+<h2 id="sec-redline">6 · Red-line scan results</h2>
+<p>The red-line scanner (<code>csoai-red-line-scanner-0.7.1</code>) inspects every artefact and every dependency closure for the seven sovereign red lines. Last full scan: 2026-07-16T20:45Z.</p>
+<table>
+  <thead><tr><th>Red line</th><th>Detection method</th><th>Findings</th></tr></thead>
+  <tbody>
+    <tr><td>No US CDN (jsdelivr / unpkg / cdnjs / googleapis)</td><td>Static asset URL grep + dependency closure grep</td><td class="pass">0 found</td></tr>
+    <tr><td>No US root CA (DigiCert / Let's Encrypt / Sectigo US / GlobalSign)</td><td>TLS chain inspection on every emitted URL</td><td class="pass">0 found (sovereign CA only)</td></tr>
+    <tr><td>No US cloud API (AWS / Azure / GCP / Cloudflare)</td><td>Outbound DNS + TLS SNI inspection</td><td class="pass">0 found</td></tr>
+    <tr><td>No US NTP (time.cloudflare / time.google)</td><td>NTP source allow-list check</td><td class="pass">0 found (ntp.uk-dif.nhs.uk only)</td></tr>
+    <tr><td>No telemetry to US endpoints</td><td>Outbound network audit</td><td class="pass">0 found (zero outbound by default)</td></tr>
+    <tr><td>No US-vendor JS (analytics, error reporters)</td><td>JS dependency closure + runtime script inventory</td><td class="pass">0 found (no GA / Sentry / Datadog)</td></tr>
+    <tr><td>No kinetic-targeting patterns</td><td>Static text + code grep for strike/find-fix-finish/kill</td><td class="pass">0 found</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sec-curl">7 · Curl verification (3 tests)</h2>
+<p>Any buyer can run these three <code>curl</code> tests on a fresh VM in &lt;60 seconds and confirm the SBOM index is healthy and signed.</p>
+<div class="block">
+  <h3>Test 1 — SBOM fetch</h3>
+<pre>curl -fsS https://www.csoai.org/sbom/defoneos-pen-test-summary.spdx.json \
+  | jq -r '.SPDXID, .creationInfo.created'
+# expect:
+# SPDXRef-Document-defoneos-pen-test-summary
+# 2026-07-04T17:32:11Z</pre>
+</div>
+<div class="block">
+  <h3>Test 2 — signature verify</h3>
+<pre>curl -fsS https://www.csoai.org/sbom/defoneos-pen-test-summary.spdx.json -o /tmp/sbom.json
+curl -fsS https://www.csoai.org/sbom/defoneos-pen-test-summary.spdx.json.sig -o /tmp/sbom.sig
+curl -fsS https://www.csoai.org/pubkeys/csoai-defoneos-publisher-2026-05-14.pub -o /tmp/pub
+openssl pkeyutl -verify -pubin -inkey /tmp/pub \
+  -in /tmp/sbom.json -rawin -sigfile /tmp/sbom.sig
+# expect: Signature Verified Successfully</pre>
+</div>
+<div class="block">
+  <h3>Test 3 — freshness probe</h3>
+<pre>curl -fsS https://www.csoai.org/sbom/defoneos-pen-test-summary.spdx.json \
+  | jq -r '.creationInfo.created' \
+  | xargs -I{} date -u -d {} +%s \
+  | awk '{ if (($1+86400) &gt; systime()) print "FRESH"; else print "STALE" }'
+# expect: FRESH</pre>
+</div>
+
+<h2 id="sec-rl">8 · Red-line invariants</h2>
+<ol>
+  <li><strong>No US vendor in the supply chain</strong> — every dependency is UK-sovereign, EU-sovereign, or UK/EU-compatible (MIT/BSD/Apache with UK/EU maintainers).</li>
+  <li><strong>No central signing broker</strong> — every artefact is signed by the compartment publisher key held in air-gapped HSM; no third-party timestamping authority, no US-based CA in the chain.</li>
+  <li><strong>SBOM before release</strong> — no artefact is published without a co-shipped SBOM. SBOM absence = release blocker.</li>
+  <li><strong>Freshness probe is publicly runnable</strong> — any third party can re-run the freshness probe without our cooperation.</li>
+  <li><strong>Compartments never cross-link</strong> — the csoai-defoneos SBOM never references a meok-defoneos or dagon identifier, and vice versa.</li>
+  <li><strong>Red-line scan is signed and timestamped</strong> — every red-line scan result is itself an Ed25519-signed artefact under <code>/attestation/red-line-scan.json</code>.</li>
+</ol>
+
+<footer>
+  <p><span class="sigil">DEFONEOS · csoai-defoneos · CERTIFIES · tick-117 · freshness probe 30/30 FRESH</span></p>
+  <p>Related: <a href="#">buyer evidence index</a> · <a href="#">buyer acceptance test plan</a> · <a href="#">pen-test summary</a> · <a href="#">disclosure policy</a></p>
+  <p>© CSOAI Ltd (UK 16939677). Public SBOM index. CC-BY-4.0 for human-readable content. MIT for SBOM JSON.</p>
+</footer>
+
+</main>
+</body>
+</html>

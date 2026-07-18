@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "linear-attn-kernel"
+version = "0.1.0"
+description = "Pure-PyTorch causal linear attention kernel (toy-scale, paper-accurate mechanism)"
+readme = "README.md"
+authors = [{name = "CSOAI Ltd UK 16939677", email = "ops@csoai.org"}]
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/CSOAI-ORG/clawd-workspace"
+Repository = "https://github.com/CSOAI-ORG/clawd-workspace"
+
+[tool.setuptools]
+py-modules = ["linear_attn_kernel"]

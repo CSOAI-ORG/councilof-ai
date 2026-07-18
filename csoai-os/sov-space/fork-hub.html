@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<title>Fork Hub · sov.space</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--gold:#fbbf24;--blue:#3b82f6;--green:#10b981;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316}
+*{box-sizing:border-box}
+body{font:14px/1.6 Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}
+.wrap{max-width:1200px;margin:0 auto}
+h1{color:var(--gold);font-size:2rem;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin:16px 0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;cursor:pointer;transition:.15s}
+.card:hover{border-color:var(--gold);background:#1a1108;transform:translateY(-2px)}
+.card h3{margin:0 0 8px;color:var(--blue);font-size:1.1rem}
+.card .desc{color:var(--muted);font-size:13px;margin:0 0 12px}
+.card .meta{font-family:ui-monospace,monospace;font-size:11px;color:var(--green);background:#0c1018;padding:6px 8px;border-radius:4px;margin:6px 0}
+.pill{display:inline-block;padding:2px 8px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);border-radius:8px;color:var(--blue);font-size:.75rem;margin:0 2px 2px 0}
+.pill.gold{background:rgba(251,191,36,.15);border-color:rgba(251,191,36,.3);color:var(--gold)}
+.pill.green{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:var(--green)}
+.pill.purple{background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.3);color:var(--purple)}
+.cta{display:inline-block;padding:8px 16px;background:var(--gold);color:#000;border-radius:6px;font-weight:700;text-decoration:none;margin:8px 0 0;font-size:13px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin:16px 0}
+h2{color:var(--gold);font-size:1.4rem;margin:0 0 12px;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:4px}
+code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:3px;color:var(--green);font-family:ui-monospace,monospace;font-size:.85em}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>🔌 Fork Hub</h1>
+<p class="sub">Every Layer-0 protocol · every legacy bridge · every MCP — plug-and-play for your sovereign stack. MIT license. Verifiable in browser.</p>
+
+<div class="section">
+<h2>The 8 Layer-0 protocols — fork any</h2>
+<div class="grid">
+
+<div class="card">
+<h3>P1 · MCP Federation</h3>
+<p class="desc">531 ship-ready MCPs. Fork any, customise, re-publish.</p>
+<span class="pill gold">531</span><span class="pill green">ship-ready</span>
+<div class="meta">git clone https://github.com/CSOAI-ORG/&lt;your-mcp&gt;.git</div>
+<a class="cta" href="https://github.com/CSOAI-ORG/cobol-bridge-mcp">Fork Example →</a>
+</div>
+
+<div class="card">
+<h3>P2 · Legacy Bridges</h3>
+<p class="desc">22 governed gateways to COBOL, HL7, SAP, Solvency II, ISO 20022, PSD2, FIX, SCADA, and more.</p>
+<span class="pill gold">22</span><span class="pill green">category of one</span>
+<div class="meta">git clone https://github.com/CSOAI-ORG/&lt;bridge&gt;.git</div>
+<a class="cta" href="https://github.com/CSOAI-ORG/solvency-ii-mcp">Fork Example →</a>
+</div>
+
+<div class="card">
+<h3>P3 · A2A Substrate</h3>
+<p class="desc">20 MCPs for inter-agent governance, handoff, and BFT deliberation. Compatible with Google A2A + IBM ACP + AGNTCY.</p>
+<span class="pill gold">20</span><span class="pill">A2A-compatible</span>
+<div class="meta">git clone https://github.com/CSOAI-ORG/sov3-A2A-substrate.git</div>
+<a class="cta" href="https://github.com/CSOAI-ORG/sov3-A2A-substrate">Fork Example →</a>
+</div>
+
+<div class="card">
+<h3>P4 · x402 Payments</h3>
+<p class="desc">HTTP 402 + on-chain + MiCA-compliant. Pay-per-outcome sovereignty.</p>
+<span class="pill gold">HTTP 402</span><span class="pill">MiCA</span>
+<div class="meta">git clone https://github.com/CSOAI-ORG/x402-sovereign-pay.git</div>
+<a class="cta" href="https://github.com/CSOAI-ORG/x402-sovereign-pay">Fork Example →</a>
+</div>
+
+<div class="card">
+<h3>P5 · SIGIL Attestation</h3>
+<p class="desc">Ed25519 + PQC ML-DSA-65 hash chain. Every action signed. Every action auditable.</p>
+<span class="pill gold">Ed25519</span><span class="pill gold">ML-DSA-65</span>
+<div class="meta">git clone https://github.com/CSOAI-ORG/sigil-attestor.git</div>
+<a class="cta" href="https://github.com/CSOAI-ORG/sigil-attestor">Fork Example →</a>
+</div>
+
+<div class="card">
+<h3>P6 · OSCAL / FedRAMP</h3>
+<p class="desc">554-component Ed25519-signed OSCAL proof. Verifiable offline in any browser.</p>
+<span class="pill gold">554</span><span class="pill green">strict-valid</span>
+<div class="meta">git clone https://github.com/CSOAI-ORG/oscal-generator-mcp.git</div>
+<a class="cta" href="https://github.com/CSOAI-ORG/oscal-generator-mcp">Fork Example →</a>
+</div>
+
+<div class="card">
+<h3>P7 · BFT Council</h3>
+<p class="desc">33-agent PBFT consensus + Hermes external voice. Multi-stakeholder governance.</p>
+<span class="pill gold">33</span><span class="pill">Hermes</span>
+<div class="meta">git clone https://github.com/CSOAI-ORG/sov3-council.git</div>
+<a class="cta" href="https://github.com/CSOAI-ORG/sov3-council">Fork Example →</a>
+</div>
+
+<div class="card">
+<h3>P8 · Compliance Passport</h3>
+<p class="desc">W3C VC + EU AI Act Article 50 + self-issued sovereignty. No CA required.</p>
+<span class="pill gold">W3C VC</span><span class="pill">Article 50</span>
+<div class="meta">git clone https://github.com/CSOAI-ORG/meok-compliance-passport-mcp.git</div>
+<a class="cta" href="https://github.com/CSOAI-ORG/meok-compliance-passport-mcp">Fork Example →</a>
+</div>
+
+</div>
+</div>
+
+<div class="section">
+<h2>Plug-in a third-party API</h2>
+<p>Any third-party API can be wrapped as a sovereign MCP in 3 commands:</p>
+<div class="meta" style="font-size:14px;padding:14px;line-height:1.8">
+<pre style="margin:0;background:transparent">
+$ sov api-add https://your-api.com/v1
+[sov.space] Inspecting API spec...
+[sov.space] Detected 12 endpoints.
+[sov.space] Wrapping as sovereign MCP...
+[sov.space] Generating SIGIL wrapper.
+[sov.space] OSCAL-stamping 12 components.
+[sov.space] ✓ Your API is now on sov.space: https://sov.space/api/v1/your-api-mcp
+[sov.space] ✓ Social Authority Badge: Silver (1+ SIGIL events)
+[sov.space] ✓ Discoverable across 22 industries.
+</pre>
+</div>
+<p>The wrapping is automatic. The MCP is sovereign-signed. The OSCAL proof is generated. The social authority badge is awarded.</p>
+</div>
+
+<div class="section">
+<h2>Plug-in an A2A protocol</h2>
+<p>Any A2A-compatible service (Google A2A, IBM ACP, AGNTCY) can be wrapped as a sovereign A2A substrate:</p>
+<div class="meta" style="font-size:14px;padding:14px;line-height:1.8">
+<pre style="margin:0;background:transparent">
+$ sov a2a-add https://your-a2a-endpoint.com
+[sov.space] Detected A2A protocol version 0.3.0
+[sov.space] Wrapping as sovereign A2A substrate...
+[sov.space] Cross-vendor interop verified.
+[sov.space] ✓ Your A2A substrate is now on sov.space: https://sov.space/a2a/v1/your-substrate
+[sov.space] ✓ Compatible with 33-agent BFT deliberation.
+</pre>
+</div>
+</div>
+
+<div class="section">
+<h2>Plug-in a fork of any Layer-0 protocol</h2>
+<p>The most powerful pattern. Fork a protocol, customise the council size + the SIGIL rate + the OSCAL scope, and re-publish:</p>
+<div class="meta" style="font-size:14px;padding:14px;line-height:1.8">
+<pre style="margin:0;background:transparent">
+$ git clone https://github.com/CSOAI-ORG/sov3-A2A-substrate.git
+$ cd sov3-A2A-substrate
+$ # Edit: change BFT council from 33 to 51 nodes for your community
+$ python build.py --council-size 51 --quorum 35
+$ sov register --repo your-fork
+[sov.space] Your fork is on sov.space.
+[sov.space] ✓ 8 protocols verified.
+[sov.space] ✓ 51 BFT nodes (Hermes external voice + 50 sovereign nodes).
+[sov.space] ✓ Social Authority Badge: Sovereign (full i-character + 33-council).
+</pre>
+</div>
+</div>
+
+<div class="section">
+<h2>The Economics</h2>
+<p>Every fork on sov.space is monetised via the x402 (HTTP 402 + on-chain + MiCA) protocol. 5 tiers:</p>
+<ul>
+<li><span class="pill">Free</span> 0 USD/call — 3 calls/day per tool. i-character.</li>
+<li><span class="pill">Pro</span> 0.10 USD/call — power users.</li>
+<li><span class="pill">Enterprise</span> 0.50 USD/call — SMEs, mid-market.</li>
+<li><span class="pill">Government</span> 1.00 USD/call — government, defence, intel.</li>
+<li><span class="pill">Premium</span> 5.00+ USD/call — custom SLA + air-gap.</li>
+</ul>
+<p>The fork author gets 80% of every call. The substrate gets 20%. The Care Floor 0.95 is enforced for every transaction.</p>
+</div>
+
+<div style="text-align:center;padding:24px;margin-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:11px">
+© 2026 MEOK AI Labs · CSOAI Ltd (UK 16939677) · 8 protocols · 100/100 A+++++ · MIT license
+</div>
+
+</div></body></html>

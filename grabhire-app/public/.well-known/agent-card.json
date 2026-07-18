@@ -1,0 +1,16 @@
+{
+  "name": "GrabHire.ai Compliance Agent",
+  "description": "AI compliance agent for UK skip-hire and grab-hire operators. Fleet compliance, permit tracking, and waste licensing checks. CSOAI-governed.",
+  "url": "https://grabhire.ai",
+  "version": "1.0.0",
+  "provider": { "name": "MEOK AI Labs", "url": "https://meok.ai" },
+  "capabilities": { "streaming": true, "stateTransitionHistory": true },
+  "skills": [
+    { "id": "permit-license-checks", "name": "Permit & License Checks", "description": "Verify waste carrier, operator, and local permit status" },
+    { "id": "fleet-compliance-scores", "name": "Fleet Compliance Scores", "description": "Tachograph, driver hours, and vehicle inspection scoring" },
+    { "id": "waste-duty-of-care", "name": "Waste Duty of Care", "description": "EA waste codes, hazardous consignment notes, and digital waste transfer tracking" }
+  ],
+  "pricing": { "pro": "£29/mo", "enterprise": "£99/mo" },
+  "mcp_endpoint": "https://grabhire.ai/api/mcp",
+  "a2a_endpoint": "https://grabhire.ai/api/a2a"
+}

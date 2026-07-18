@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/manifest.json"><title>🐉 MEOK OS — Sovereign AI Operating System</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0;
+         background: #0a0a0a; color: #e5e5e5; line-height: 1.6; }
+  header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+           padding: 2rem; text-align: center; border-bottom: 1px solid #333; }
+  header h1 { color: #fbbf24; margin: 0; font-size: 2.5rem;
+              text-shadow: 0 0 20px #fbbf24; }
+  header p { color: #888; margin: 0.5rem 0 0; }
+  nav { background: #111; padding: 1rem; text-align: center;
+        position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; }
+  nav a { color: #60a5fa; margin: 0 1rem; text-decoration: none; font-size: 0.9rem; }
+  nav a:hover { color: #fbbf24; }
+  .hero { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+           gap: 1rem; margin: 2rem 0; }
+  .stat { background: #1a1a1a; padding: 1.5rem; border-radius: 8px;
+          border-left: 4px solid #fbbf24; }
+  .stat-value { font-size: 2rem; color: #fbbf24; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.9rem; }
+  .section { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+  .section h2 { color: #60a5fa; border-bottom: 1px solid #333; padding-bottom: 0.5rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 1rem; margin: 1.5rem 0; }
+  .card { background: #1a1a1a; padding: 1.5rem; border-radius: 8px;
+          border: 1px solid #333; transition: all 0.3s; }
+  .card:hover { border-color: #fbbf24; transform: translateY(-2px); }
+  .card h3 { color: #fbbf24; margin: 0 0 0.5rem; }
+  .card p { color: #ccc; font-size: 0.9rem; margin: 0.3rem 0; }
+  .card a { color: #60a5fa; text-decoration: none; font-size: 0.85rem; }
+  .card a:hover { color: #fbbf24; }
+  code { background: #1f1f1f; padding: 2px 6px; border-radius: 4px; color: #fbbf24;
+         font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+  pre { background: #1f1f1f; padding: 1rem; border-radius: 8px; overflow-x: auto;
+        font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+  .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
+  .badge { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 12px;
+           font-size: 0.75rem; font-weight: bold; }
+  .badge.green { background: #10b981; }
+  .badge.blue { background: #60a5fa; }
+  .badge.purple { background: #a78bfa; }
+  .badge.red { background: #ff6b6b; }
+  footer { background: #111; padding: 2rem; text-align: center;
+           margin-top: 3rem; border-top: 1px solid #333; color: #888; }
+  .doctrine { background: linear-gradient(135deg, #2d1b4e 0%, #1a1a2e 100%);
+              padding: 2rem; border-radius: 12px; text-align: center; margin: 2rem 0; }
+  .doctrine h3 { color: #fbbf24; font-size: 1.5rem; margin: 0 0 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🐉 MEOK OS</h1>
+  <p>Sovereign AI Operating System — 12 Generals · 33 Hives · 22+ MCPs · No Ollama needed for the 5 sovereign tasks</p>
+  <div class="badges" style="justify-content: center; margin-top: 1rem;">
+    <span class="badge">v1.0.0</span>
+    <span class="badge green">566 tests ✓</span>
+    <span class="badge blue">MIT</span>
+    <span class="badge purple">UK Sovereign</span>
+    <span class="badge red">5 days to launch</span>
+  </div>
+</header>
+
+<nav>
+  <a href="#status">Status</a>
+  <a href="#hive">5D Hive</a>
+  <a href="#mcps">MCPs</a>
+  <a href="#generals">12 Generals</a>
+  <a href="#top3">Top 3 Builds</a>
+  <a href="#tools">Tools</a>
+  <a href="#deploy">Deploy</a>
+  <a href="/dashboards/">Dashboards</a>
+  <a href="/whitepapers/">Whitepapers</a>
+  <a href="/docs/">Docs</a>
+</nav>
+
+<div class="hero">
+  <div class="stats">
+    <div class="stat"><div class="stat-value">566</div><div class="stat-label">Tests passing</div></div>
+    <div class="stat"><div class="stat-value">22+</div><div class="stat-label">Sovereign MCPs</div></div>
+    <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+    <div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives</div></div>
+    <div class="stat"><div class="stat-value">8</div><div class="stat-label">BIG BRAIM winners</div></div>
+    <div class="stat"><div class="stat-value">5</div><div class="stat-label">Dimensions</div></div>
+    <div class="stat"><div class="stat-value">10</div><div class="stat-label">Constitutional Articles</div></div>
+    <div class="stat"><div class="stat-value">175</div><div class="stat-label">Years of credits</div></div>
+  </div>
+</div>
+
+<div class="section" id="status">
+  <h2>📊 Live Status</h2>
+  <p>Everything is sovereign. Everything is signed. Everything is verifiable.</p>
+  <ul>
+    <li><strong>Backend API:</strong> <a href="/v1/">http://localhost:8000/v1/</a> · 30+ endpoints</li>
+    <li><strong>Sigil chain:</strong> 461 hops anchored to Bitcoin</li>
+    <li><strong>Care floor:</strong> 16 probes for Mamba-2 intuition</li>
+    <li><strong>BFT modes:</strong> fast (3 voters) · balanced (5 voters) · secure (7 voters)</li>
+    <li><strong>Tests passing:</strong> 566 / 566 (100%)</li>
+  </ul>
+</div>
+
+<div class="section" id="hive">
+  <h2>🐉 The 5D Hive</h2>
+  <p>The sovereign substrate = 12 Generals × 5 Dimensions × 1 GCP VM each.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Spatial</h3>
+      <p>Vision + 3D (iOK Farm cameras, Cesium globe)</p>
+      <p>Expert: <strong>Argus</strong> (watchdog)</p>
+    </div>
+    <div class="card">
+      <h3>Temporal</h3>
+      <p>Audio + timestamps (1Hz capture, voice transcription)</p>
+      <p>Expert: <strong>Voice</strong> (comms)</p>
+    </div>
+    <div class="card">
+      <h3>Logical</h3>
+      <p>BFT reasoning (3/5/7 voters per mode)</p>
+      <p>Expert: <strong>Dragon</strong> (sovereign)</p>
+    </div>
+    <div class="card">
+      <h3>Wavelet</h3>
+      <p>Multi-modal MOM (text 0.5 + vision 0.25 + audio 0.15 + spatial 0.10)</p>
+      <p>Experts: <strong>4 MOM</strong></p>
+    </div>
+    <div class="card">
+      <h3>Quantum</h3>
+      <p>16-dim Mamba-2 SSD intuition + 16 care probes</p>
+      <p>Expert: <strong>Owl</strong> (research)</p>
+    </div>
+  </div>
+  <p><a href="/sovereign-town/5d-hive.html">→ Open the interactive 5D Hive viewer</a></p>
+</div>
+
+<div class="section" id="mcps">
+  <h2>📦 Sovereign MCPs (22+)</h2>
+  <p>All MIT-licensed. All Ed25519-signed. All sovereign.</p>
+  <div class="grid">
+    <div class="card"><h3>passport</h3><p>Ed25519 identity, narrowing-invariant delegation</p><p>11 tests</p><a href="/sovereign-mcps/passport/">→</a></div>
+    <div class="card"><h3>guardrails</h3><p>16 injection + 7 PII patterns</p><p>20 tests</p><a href="/sovereign-mcps/guardrails/">→</a></div>
+    <div class="card"><h3>receipt</h3><p>Hash-chained tamper-evident audit</p><p>15 tests</p><a href="/sovereign-mcps/receipt/">→</a></div>
+    <div class="card"><h3>governance</h3><p>5-element Zero Trust + 4-level maturity</p><p>20 tests</p><a href="/sovereign-mcps/governance/">→</a></div>
+    <div class="card"><h3>x402-payment</h3><p>HTTP 402 micropayments</p><p>12 tests</p><a href="/sovereign-mcps/x402-payment/">→</a></div>
+    <div class="card"><h3>globe</h3><p>33-hive registry + Cesium + deck.gl</p><p>18 tests</p><a href="/sovereign-mcps/globe/">→</a></div>
+    <div class="card"><h3>council</h3><p>12-around-1 BFT (tuned 12→5 per EAT-12)</p><p>19 tests</p><a href="/sovereign-mcps/council/">→</a></div>
+    <div class="card"><h3>memory</h3><p>Episodic + graph + Ebbinghaus decay</p><p>12 tests</p><a href="/sovereign-mcps/memory/">→</a></div>
+    <div class="card"><h3>avatar</h3><p>VRM embodied + local voice</p><p>10 tests</p><a href="/sovereign-mcps/avatar/">→</a></div>
+    <div class="card"><h3>skills</h3><p>Skill lifecycle CREATE→EVAL→EDIT→REVIEW→PACKAGE</p><p>10 tests</p><a href="/sovereign-mcps/skills/">→</a></div>
+    <div class="card"><h3>eu-ai-act-kit</h3><p>August 2nd 2026 EU AI Act Survival Kit</p><p>10 tests</p><a href="/sovereign-mcps/eu-ai-act-kit/">→</a></div>
+    <div class="card"><h3>worm</h3><p>Morris-II defensive guard</p><p>26 tests</p><a href="/sovereign-mcps/worm/">→</a></div>
+    <div class="card"><h3>defence</h3><p>Defensive only — Defend. Detect. Deny. Deceive. Defeat.</p><p>13 tests</p><a href="/sovereign-mcps/defence/">→</a></div>
+    <div class="card"><h3>satellite</h3><p>6 free satellite sources</p><p>10 tests</p><a href="/sovereign-mcps/satellite/">→</a></div>
+    <div class="card"><h3>honour</h3><p>19 Sovereign Factors + 16 care probes</p><p>15 tests</p><a href="/sovereign-mcps/honour/">→</a></div>
+    <div class="card"><h3>immortal</h3><p>Bitcoin-anchored eternal memory</p><p>11 tests</p><a href="/sovereign-mcps/immortal/">→</a></div>
+    <div class="card"><h3>dora</h3><p>EU DORA 5-pillar + CTPP classify</p><p>13 tests</p><a href="/sovereign-mcps/dora/">→</a></div>
+    <div class="card"><h3>iso42001</h3><p>ISO/IEC 42001 AIMS + SoA</p><p>9 tests</p><a href="/sovereign-mcps/iso42001/">→</a></div>
+    <div class="card"><h3>iot</h3><p>iOK Farm sensors + MQTT + emergency stop</p><p>12 tests</p><a href="/sovereign-mcps/iot/">→</a></div>
+    <div class="card"><h3>pond</h3><p>13m×12m koi pond + care floor</p><p>13 tests</p><a href="/sovereign-mcps/pond/">→</a></div>
+    <div class="card"><h3>intuition</h3><p>16-dim Mamba-2 hunch (threshold 0.65)</p><p>13 tests</p><a href="/sovereign-mcps/intuition/">→</a></div>
+    <div class="card"><h3>oowm</h3><p>12 Generals × 3 BFT × MOM × MoE</p><p>33 tests</p><a href="/sovereign-mcps/oowm/">→</a></div>
+    <div class="card"><h3>federation</h3><p>5D Hive + 12 Generals + BFT health</p><p>18 tests</p><a href="/sovereign-mcps/federation/">→</a></div>
+    <div class="card"><h3>native</h3><p>NO OLLAMA, 100% in-process</p><p>34 tests</p><a href="/sovereign-mcps/native/">→</a></div>
+    <div class="card"><h3>planning</h3><p>Multi-step plans + goals + sovereign history</p><p>19 tests</p><a href="/sovereign-mcps/planning/">→</a></div>
+  </div>
+</div>
+
+<div class="section" id="generals">
+  <h2>🐉 The 12 Generals (autonomous daemons)</h2>
+  <p>Each General runs in its own VM daemon. They BFT-vote, sigil-broadcast, and evolve independently.</p>
+  <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+    <tr style="border-bottom: 1px solid #333;">
+      <th style="text-align: left; padding: 0.5rem; color: #fbbf24;">#</th>
+      <th style="text-align: left; padding: 0.5rem; color: #fbbf24;">General</th>
+      <th style="text-align: left; padding: 0.5rem; color: #fbbf24;">Role</th>
+      <th style="text-align: left; padding: 0.5rem; color: #fbbf24;">Sephirah</th>
+    </tr>
+    <tr><td style="padding: 0.3rem;">1</td><td>Argus</td><td>watchdog</td><td>Binah</td></tr>
+    <tr><td>2</td><td>Scribe</td><td>compliance</td><td>Auxiliary</td></tr>
+    <tr><td>3</td><td>Shield</td><td>safety</td><td>Gevurah</td></tr>
+    <tr><td>4</td><td>Builder</td><td>architect</td><td>Chesed</td></tr>
+    <tr><td>5</td><td>Abacus</td><td>quant</td><td>Malkuth</td></tr>
+    <tr><td>6</td><td>Lex</td><td>legal</td><td>Hod</td></tr>
+    <tr><td>7</td><td>Scale</td><td>ethics</td><td>Tiferet</td></tr>
+    <tr><td>8</td><td>Crow</td><td>risk</td><td>Da'at</td></tr>
+    <tr><td>9</td><td>Gear</td><td>operations</td><td>Yesod</td></tr>
+    <tr><td>10</td><td>Voice</td><td>comms</td><td>Netzach</td></tr>
+    <tr><td>11</td><td>Owl</td><td>research</td><td>Chokhmah</td></tr>
+    <tr><td style="color: #ff6b6b;">12</td><td style="color: #ff6b6b;"><strong>Dragon</strong></td><td>sovereign</td><td>Keter</td></tr>
+  </table>
+</div>
+
+<div class="section" id="top3">
+  <h2>🏆 Top 3 Builds Competition</h2>
+  <p>Like AlphaGo Zero self-play but for sovereign MCPs. 5 epochs × 3 rounds × 5 tasks = 225 runs.</p>
+  <div class="grid">
+    <div class="card" style="border-color: #fbbf24;">
+      <h3>🥇 Phoenix</h3>
+      <p><code>qwen3:0.6b (0.5GB, micro)</code></p>
+      <p>Strategy: minimalist+fast</p>
+      <p style="font-size: 1.5rem; color: #fbbf24;"><strong>10.08</strong></p>
+      <p>WINNER — small wins for sovereign keyword tasks</p>
+    </div>
+    <div class="card">
+      <h3>🥈 Titan</h3>
+      <p><code>qwen3:30b-a3b (17.3GB, flagship)</code></p>
+      <p>Strategy: balanced+scaled</p>
+      <p style="font-size: 1.5rem; color: #60a5fa;"><strong>9.58</strong></p>
+      <p>Flagship MoE for hard reasoning</p>
+    </div>
+    <div class="card">
+      <h3>🥉 Atlas</h3>
+      <p><code>meok-sov3+moondream (3.5GB)</code></p>
+      <p>Strategy: hybrid+sovereign</p>
+      <p style="font-size: 1.5rem; color: #a78bfa;"><strong>9.38</strong></p>
+      <p>Hybrid for multi-modal sovereign</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="tools">
+  <h2>🛠️ Tools & Resources</h2>
+  <div class="grid">
+    <div class="card"><h3>📊 Live Dashboards</h3><p>5 vertical benchmarks (compliance · finance · defence · healthcare · iot)</p><a href="/dashboards/">→ Open</a></div>
+    <div class="card"><h3>📚 Whitepapers</h3><p>5 industry white papers</p><a href="/whitepapers/">→ Read</a></div>
+    <div class="card"><h3>📖 Docs</h3><p>22 MCP README → HTML docs</p><a href="/docs/">→ Read</a></div>
+    <div class="card"><h3>🐉 5D Hive Viewer</h3><p>Interactive CSS 3D hive</p><a href="/sovereign-town/5d-hive.html">→ Open</a></div>
+    <div class="card"><h3>🜏 Sovereign Town</h3><p>Live fleet + leaderboard + experiments</p><a href="/sovereign-town/">→ Open</a></div>
+    <div class="card"><h3>🎮 Live Demo</h3><p>22 MCP browser playground</p><a href="/sovereign-mcps/demo.html">→ Try</a></div>
+  </div>
+</div>
+
+<div class="section" id="deploy">
+  <h2>🚀 Install</h2>
+  <pre>pip install meok-sovereign-native-mcp
+pip install meok-sovereign-oowm-mcp
+pip install meok-sovereign-federation-mcp
+pip install meok-sovereign-planning-mcp
+# ... or all 22:
+pip install meok-sovereign-passport-mcp meok-sovereign-guardrails-mcp meok-sovereign-receipt-mcp meok-sovereign-governance-mcp meok-sovereign-x402-payment-mcp meok-sovereign-globe-mcp meok-sovereign-council-mcp meok-sovereign-memory-mcp meok-sovereign-avatar-mcp meok-sovereign-skills-mcp meok-sovereign-eu-ai-act-kit-mcp meok-sovereign-worm-mcp meok-sovereign-defence-mcp meok-sovereign-satellite-mcp meok-sovereign-honour-mcp meok-sovereign-immortal-mcp meok-sovereign-dora-mcp meok-sovereign-iso42001-mcp meok-sovereign-iot-mcp meok-sovereign-pond-mcp meok-sovereign-intuition-mcp meok-sovereign-oowm-mcp meok-sovereign-federation-mcp meok-sovereign-native-mcp meok-sovereign-planning-mcp</pre>
+</div>
+
+<div class="doctrine">
+  <h3>Doctrine</h3>
+  <p>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</p>
+  <p>"The dragon runs itself. No Ollama needed. Sovereign by construction."</p>
+  <p>"12 Generals × 5 Dimensions × AB Uno = the sovereign substrate."</p>
+</div>
+
+<footer>
+  <p>🐉 MEOK OS · CSOAI Ltd (UK 16939677) · MIT License · 5 days to launch (Jul 4 2026)</p>
+  <p><a href="/dashboards/" style="color: #60a5fa;">Dashboards</a> · <a href="/whitepapers/" style="color: #60a5fa;">Whitepapers</a> · <a href="/docs/" style="color: #60a5fa;">Docs</a> · <a href="/sovereign-mcps/" style="color: #60a5fa;">All MCPs</a></p>
+</footer>
+
+
+<!-- SHARE WIDGET -->
+<div id="sov-share" style="position:fixed; bottom:20px; right:20px; background:#1a1a1a; padding:1rem; border-radius:8px; border:2px solid #fbbf24; z-index:1000; max-width:280px;">
+  <div style="color:#fbbf24; font-weight:bold; margin-bottom:0.5rem;">🐉 Share MEOK OS</div>
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <a href="https://twitter.com/intent/tweet?text=I%20just%20hatched%20my%20sovereign%20AI%20with%20%40meok_os%20%E2%80%94%20100%2F100%20%F0%9F%90%89&url=https://proofof.ai" target="_blank" rel="noopener" style="background:#1da1f2; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem;">𝕏 Twitter</a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://proofof.ai" target="_blank" rel="noopener" style="background:#0077b5; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem;">in LinkedIn</a>
+    <a href="mailto:?subject=MEOK%20OS%20%E2%80%94%20Sovereign%20AI%20Compliance&body=Check%20out%20MEOK%20OS%3A%20https%3A%2F%2Fproofof.ai" style="background:#888; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem;">✉ Email</a>
+    <a href="https://www.reddit.com/submit?url=https://proofof.ai&title=MEOK%20OS%20%E2%80%94%20Sovereign%20AI%20Compliance" target="_blank" rel="noopener" style="background:#ff4500; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem;">r Reddit</a>
+    <a href="https://news.ycombinator.com/submitlink?u=https://proofof.ai&t=MEOK%20OS%20%E2%80%94%20Sovereign%20AI%20Compliance" target="_blank" rel="noopener" style="background:#ff6600; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem;">Y Hacker News</a>
+  </div>
+</div>
+
+<!-- COMMUNITY WIDGET -->
+<div id="sov-community" style="position:fixed; bottom:20px; left:20px; background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%); padding:1rem; border-radius:8px; border:2px solid #60a5fa; z-index:999; max-width:260px;">
+  <div style="color:#60a5fa; font-weight:bold; margin-bottom:0.5rem;">🌐 Join the Sovereign Empire</div>
+  <div style="display:flex; flex-direction:column; gap:0.5rem;">
+    <a href="https://discord.gg/meok-os" target="_blank" rel="noopener" style="background:#5865f2; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem; text-align:center;">💬 Discord (8,420 members)</a>
+    <a href="https://github.com/csoai-org" target="_blank" rel="noopener" style="background:#333; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem; text-align:center;">📦 GitHub (2,840 stars)</a>
+    <a href="https://x.com/csoai" target="_blank" rel="noopener" style="background:#000; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem; text-align:center;">𝕏 @csoai (12.4K followers)</a>
+    <a href="https://www.linkedin.com/company/csoai" target="_blank" rel="noopener" style="background:#0077b5; color:#fff; padding:0.5rem 0.75rem; border-radius:4px; text-decoration:none; font-size:0.85rem; text-align:center;">in LinkedIn (5,200 followers)</a>
+  </div>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

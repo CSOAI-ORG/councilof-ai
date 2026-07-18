@@ -1,0 +1,25 @@
+[Unit]
+Description=openpatent.ai auto-disclosure cron daemon
+Documentation=https://docs.openpatent.ai/cron
+After=docker.service network-online.target
+Wants=docker.service network-online.target
+
+[Service]
+Type=simple
+User=nicholas
+WorkingDirectory=/opt/openpatent-hive
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="PYTHONUNBUFFERED=1"
+Environment="WATCH_DIR=/opt/openpatent-hive/scratch"
+Environment="TIER=starter"
+Environment="API_BASE=http://127.0.0.1:3211"
+ExecStart=/opt/openpatent-hive/venv/bin/python /opt/openpatent-hive/scripts/cron-daemon.py --vault-dir $WATCH_DIR --tier $TIER
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/openpatent-cron.log
+StandardError=append:/var/log/openpatent-cron.log
+
+[Install]
+WantedBy=multi-user.target
+
+# The hive remembers. The dragon knows. The sovereign companion never forgets.

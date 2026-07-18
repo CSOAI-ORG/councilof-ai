@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing — wowmcp.ai</title>
+  <meta name="description" content="Model Context Protocol server for World of Warcraft data. 10 tools for raid strategy, character analysis, auction house intelligence, M+ routing, and more.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Pricing — wowmcp.ai">
+  <meta property="og:description" content="Model Context Protocol server for World of Warcraft data. 10 tools for raid strategy, character analysis, auction house intelligence, M+ routing, and more.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wowmcp.ai/pricing">
+  <link rel="canonical" href="https://wowmcp.ai/pricing">
+  <link rel="llms-txt" href="/llms.txt">
+  <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css"></script>
+  <style>
+    body { background:#050510; color:#e8e4dc; }
+    .meok-gold { color:#c9a84c; }
+    .bg-meok-gold { background-color:#c9a84c; }
+    .border-meok-gold { border-color:#c9a84c; }
+    .btn-primary { background:#c9a84c; color:#050510; padding:0.75rem 1.5rem; border-radius:0.5rem; font-weight:700; display:inline-block; transition:opacity .2s; }
+    .btn-primary:hover { opacity:.9; }
+    .btn-secondary { border:1px solid #c9a84c; color:#c9a84c; padding:0.75rem 1.5rem; border-radius:0.5rem; font-weight:600; display:inline-block; }
+    .btn-secondary:hover { background:rgba(201,168,76,0.1); }
+    .card { background:#0f0f1a; border:1px solid #1f1f2e; border-radius:0.75rem; padding:1.5rem; }
+  </style>
+  
+</head>
+<body>
+<nav class="border-b border-slate-800 bg-[#050510]/90 backdrop-blur sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+    <a href="/" class="text-xl font-bold meok-gold tracking-tight">MEOK</a>
+    <div class="flex flex-wrap gap-6"><a href="/" class="hover:text-amber-400 transition text-sm">Home</a><a href="/pricing" class="hover:text-amber-400 transition text-sm">Pricing</a><a href="/signup" class="hover:text-amber-400 transition text-sm">Signup</a><a href="/partner" class="hover:text-amber-400 transition text-sm">Partner</a></div>
+  </div>
+</nav>
+<section class="py-20 px-6 text-center">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold mb-4">Simple, transparent pricing</h1>
+    <p class="text-lg text-slate-400 mb-12">No hidden fees. Cancel anytime. VAT added where applicable.</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left"><div class="card flex flex-col">
+      <h3 class="text-xl font-bold mb-2">Free</h3>
+      <p class="text-3xl font-extrabold meok-gold mb-4">£0/mo</p>
+      <p class="text-slate-400 flex-1 mb-6">10 calls/day per tool, all 10 tools, no signed receipts.</p>
+      <button class="btn-primary w-full" onclick="alert('Stripe checkout for wowmcp.ai Free will connect after Nick verifies live keys.')">Choose Free</button>
+    </div><div class="card flex flex-col">
+      <h3 class="text-xl font-bold mb-2">Pro</h3>
+      <p class="text-3xl font-extrabold meok-gold mb-4">£29/mo</p>
+      <p class="text-slate-400 flex-1 mb-6">1,000 calls/day per tool, signed Ed25519 receipts, priority support.</p>
+      <button class="btn-primary w-full" onclick="alert('Stripe checkout for wowmcp.ai Pro will connect after Nick verifies live keys.')">Choose Pro</button>
+    </div><div class="card flex flex-col">
+      <h3 class="text-xl font-bold mb-2">Guild</h3>
+      <p class="text-3xl font-extrabold meok-gold mb-4">£149/mo</p>
+      <p class="text-slate-400 flex-1 mb-6">Unlimited calls, multi-key, guild analytics, webhook alerts.</p>
+      <button class="btn-primary w-full" onclick="alert('Stripe checkout for wowmcp.ai Guild will connect after Nick verifies live keys.')">Choose Guild</button>
+    </div></div>
+    <p class="mt-10 text-sm text-slate-500">Need a custom plan? <a href="/enterprise" class="meok-gold underline">Contact enterprise sales</a> or <a href="/partner" class="meok-gold underline">apply as a partner</a>.</p>
+  </div>
+</section>
+<footer class="border-t border-slate-800 mt-20 py-10 text-slate-500 text-sm">
+  <div class="max-w-6xl mx-auto px-6">
+    <nav class="flex flex-wrap justify-center gap-4 mb-6">
+      <a href="https://meok.ai" class="hover:text-amber-400 transition">MEOK.ai</a>
+      <a href="https://csoai.org" class="hover:text-amber-400 transition">CSOAI</a>
+      <a href="https://proofof.ai" class="hover:text-amber-400 transition">ProofOf.AI</a>
+      <a href="https://meok.ai/privacy" class="hover:text-amber-400 transition">Privacy</a>
+      <a href="https://meok.ai/terms" class="hover:text-amber-400 transition">Terms</a>
+    </nav>
+    <p class="text-center">© 2026 MEOK AI Labs · CSOAI Ltd · UK Companies House <strong>16939677</strong></p>
+    <p class="text-center mt-2">Part of the MEOK sovereign AI hive.</p>
+  </div>
+</footer>
+<!-- d31-stripe-inject:v2 -->
+<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:2px solid #f59e0b;border-radius:16px;padding:32px;margin:32px auto;max-width:900px;text-align:center;">
+<h2 style="color:#f59e0b;font-size:1.8rem;margin:0 0 16px;">Subscribe via Stripe — EU AI Act ready</h2>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;">
+<a href="https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S" style="display:block;background:#f59e0b;color:#070b14;padding:16px;border-radius:10px;text-decoration:none;font-weight:700;">Sovereign · £29/mo</a>
+<a href="https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T" style="display:block;background:#26263a;color:#f5f5f5;padding:16px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid #f59e0b;">Pro · £199/mo</a>
+<a href="https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U" style="display:block;background:#26263a;color:#f5f5f5;padding:16px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid #f59e0b;">Enterprise · £1,499/mo</a>
+</div>
+<p style="color:#888;font-size:0.85rem;margin-top:12px;">One-time: <a href="https://buy.stripe.com/fZu00l4O8fZ07oh0Q88k91V" style="color:#f59e0b;">Article 50 Kit £999</a> · <a href="https://buy.stripe.com/9B6dRb2G0eUWcIBaqI8k91Y" style="color:#f59e0b;">Watchdog Cert £4,950</a> · 30-day money back</p>
+<p style="color:#aaa;margin-top:16px;"><a href="/connect/mcp" style="color:#f59e0b;">Connect via MCP</a> · <a href="/signup/?plan=free" style="color:#f59e0b;">Get free scorecard</a></p>
+</div></body>
+</html>

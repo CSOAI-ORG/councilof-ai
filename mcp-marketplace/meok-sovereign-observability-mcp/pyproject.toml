@@ -1,0 +1,15 @@
+[project]
+name = "meok-sovereign-observability-mcp"
+version = "1.0.0"
+description = "Sovereign MCP - meok-sovereign-observability-mcp."
+requires-python = ">=3.10"
+dependencies = []
+authors = [{name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"}]
+license = {text = "MIT + CC0 1.0"}
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+where = ["."]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

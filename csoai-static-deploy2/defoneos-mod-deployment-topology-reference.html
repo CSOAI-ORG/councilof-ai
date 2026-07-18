@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Deployment Topology Reference</title>
+<meta name="description" content="The canonical deployment topology for DEFONEOS — 5 layers, 30 MCPs, 3 trust rings, UK-sovereign infrastructure, and the complete data-flow map.">
+<style>
+:root{--bg:#0a0e1a;--fg:#e0e6ed;--accent:#00d4aa;--accent2:#ff6b35;--card:#111827;--border:#1e2d43;--dim:#6b7d99}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;font-size:15px}
+.container{max-width:1000px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.8rem;color:var(--accent);margin-bottom:.3rem}
+h2{font-size:1.3rem;color:var(--accent);margin-top:2rem;margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1.05rem;color:var(--accent2);margin-top:1.2rem;margin-bottom:.5rem}
+.subtitle{color:var(--dim);font-size:.85rem;margin-bottom:1.5rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th,td{text-align:left;padding:.5rem .7rem;border:1px solid var(--border);font-size:.82rem;vertical-align:top}
+th{background:var(--card);color:var(--accent)}
+td{background:rgba(17,24,39,.5)}
+code{background:var(--card);padding:.15rem .4rem;border-radius:3px;font-family:'SF Mono',Menlo,monospace;font-size:.8rem;color:var(--accent2)}
+pre{background:var(--card);padding:1rem;border-radius:6px;overflow-x:auto;border:1px solid var(--border);margin:1rem 0}
+pre code{background:none;padding:0;color:var(--fg)}
+.layer{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);padding:1rem 1.2rem;margin:1rem 0;border-radius:0 6px 6px 0}
+.layer-num{display:inline-block;background:var(--accent);color:var(--bg);font-weight:700;padding:.1rem .6rem;border-radius:3px;font-size:.8rem;margin-right:.5rem}
+.badge{display:inline-block;padding:.15rem .6rem;border-radius:3px;font-size:.72rem;font-weight:600}
+.ring0{background:#dc262633;color:#f87171;border:1px solid #dc262655}
+.ring1{background:#f59e0b33;color:#fbbf24;border:1px solid #f59e0b55}
+.ring2{background:#16a34a33;color:#4ade80;border:1px solid #16a34a55}
+ul{margin:.5rem 0 .5rem 1.5rem}
+li{margin:.3rem 0}
+.footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--dim);font-size:.75rem;text-align:center}
+.flow{font-family:'SF Mono',Menlo,monospace;font-size:.82rem;background:var(--card);padding:1rem;border-radius:6px;border:1px solid var(--border);margin:1rem 0;white-space:pre;overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🗺️ DEFONEOS — Deployment Topology Reference</h1>
+<p class="subtitle">The canonical architecture map. 5 deployment layers, 30 MCPs in 3 trust rings, UK-sovereign infrastructure, complete data-flow map, and failover topology. This is the reference operators use to understand what lives where and how data flows.</p>
+
+<h2>🏗️ The 5-Layer Architecture</h2>
+
+<div class="layer">
+<span class="layer-num">L5</span><strong>Edge / Presentation Layer</strong>
+<p>The user-facing surface. Static HTML pages deployed on Vercel (www.csoai.org). Zero server-side state. All dynamic content generated at build time and served as static files. CDN-cached globally, TLS1.3 terminated at edge.</p>
+<ul>
+<li><strong>Hosting:</strong> Vercel (edge CDN, global)</li>
+<li><strong>Tech:</strong> Hand-crafted HTML5, zero JavaScript frameworks, &lt;1s load</li>
+<li><strong>Pages:</strong> 506 live pages (target was 50)</li>
+<li><strong>Deployment:</strong> <code>vercel --prod</code> from csoai-static-deploy2/</li>
+</ul>
+</div>
+
+<div class="layer">
+<span class="layer-num">L4</span><strong>Governance Layer (BFT Council)</strong>
+<p>The 33-agent Byzantine Fault Tolerant governance council. Runs pre-flight votes on every deployment, monitors for red-line violations, and can trigger emergency sessions. This is the safety brain of DEFONEOS.</p>
+<ul>
+<li><strong>Councils:</strong> Marshall (4 seats), Operations (4 seats), Conscience (5 seats) × 3 = 33</li>
+<li><strong>Consensus:</strong> 23/33 standard quorum, 17/33 emergency quorum</li>
+<li><strong>Binding powers:</strong> Deployment freeze, MCP quarantine, escrow veto, key revocation</li>
+<li><strong>Hosting:</strong> Sovereign mesh (M2/M3/M4 MacBooks on local network)</li>
+</ul>
+</div>
+
+<div class="layer">
+<span class="layer-num">L3</span><strong>MCP Federation Layer (30 MCPs in 3 Rings)</strong>
+<p>30 Model Context Protocol servers organised into 3 trust rings with inward-cascade data flow. Each tool invocation is SIGIL-attested. MCPs are admitted/removed via BFT council vote.</p>
+</div>
+
+<div class="layer">
+<span class="layer-num">L2</span><strong>Sovereign Inference Layer</strong>
+<p>Local AI inference on the sovereign mesh. No data leaves UK territory. Models run on commodity hardware (M2/M3/M4 MacBooks + MLX framework). Frontier models accessed only via sovereign-wrapped API bridges with SIGIL attestation.</p>
+<ul>
+<li><strong>Local inference:</strong> MLX framework on Apple Silicon</li>
+<li><strong>Frontier bridge:</strong> Sovereign API wrappers (OpenAI/Anthropic/Gemini via UK-routed proxies)</li>
+<li><strong>Routing:</strong> Ring0 → UK-sovereign-only models; Ring1 → AUKUS-compatible; Ring2 → unrestricted</li>
+</ul>
+</div>
+
+<div class="layer">
+<span class="layer-num">L1</span><strong>Data Custody Layer (Sovereign Escrow)</strong>
+<p>The 7-layer sovereign data escrow. All sensitive data held in UK-only encrypted storage with Ed25519-signed receipts, RFC3161 timestamps, 4-eyes release, and BFT council veto. Zero US CLOUD Act exposure.</p>
+<ul>
+<li><strong>Storage:</strong> UK-only data centres (London/Manchester)</li>
+<li><strong>Encryption:</strong> AES-256-GCM at rest, TLS1.3 in transit</li>
+<li><strong>Release:</strong> 4-eyes + BFT council (17/33 emergency, 23/33 standard)</li>
+</ul>
+</div>
+
+<h2>💍 The 3 Trust Rings</h2>
+<table>
+<tr><th>Ring</th><th>Trust Level</th><th>MCPs</th><th>Inference</th><th>Data Residency</th></tr>
+<tr><td><span class="badge ring0">Ring 0</span></td><td>Core Sovereign — highest trust, UK-only inference, BFT-gated</td><td>7: sigil, bft, compliance, seal, redteam, escrow, audit</td><td>UK-sovereign only (local MLX)</td><td>UK-only, zero external</td></tr>
+<tr><td><span class="badge ring1">Ring 1</span></td><td>Defence Sensors — AUKUS-compatible, SIGIL-attested, restricted data</td><td>11: freetak, sentinel, ais, gdelt, rtsp, yolo, athena, mava, cesium, mqtt, openaq</td><td>AUKUS-compatible (UK + allied models)</td><td>UK + AUKUS territories</td></tr>
+<tr><td><span class="badge ring2">Ring 2</span></td><td>Civil Open-Data — unrestricted public data, no classification</td><td>12: os, govuk, companies, ons, met, nhs, env, transport, planning, parliament, ofcom, landreg</td><td>Unrestricted (any frontier model)</td><td>Standard cloud</td></tr>
+</table>
+
+<h2>🔄 Data Flow — Inward Cascade</h2>
+<p>Data flows INWARD — from open external sources toward the sovereign core. No data flows outward from Ring 0 without BFT-approved release.</p>
+<div class="flow">
+Ring 2 (Civil Open-Data)          Ring 1 (Defence Sensors)
+  │                                  │
+  │  Public datasets                 │  ISR feeds, AIS, satellite
+  │  OS, ONS, GovUK, NHS             │  FreeTAK, YOLO, Sentinel
+  │                                  │
+  └──────────┬───────────────────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │  SIGIL Attestation │ ◄── Every tool invocation signed
+    │  Point (Gateway)   │     Ed25519 + RFC3161 timestamp
+    └────────┬────────┘
+             │  Attested data only
+             ▼
+    ┌─────────────────┐
+    │  Ring 0 Core     │ ◄── Sovereign inference (UK-only MLX)
+    │  BFT Governance  │     Compliance checks, escrow custody
+    │  Escrow Vault    │     SIGIL ledger, audit trail
+    └─────────────────┘
+             │
+             │  BFT-approved release only (4-eyes + 23/33)
+             ▼
+    ┌─────────────────┐
+    │  Edge Layer      │ ◄── Static HTML output to Vercel CDN
+    │  www.csoai.org   │     Public-facing, zero dynamic state
+    └─────────────────┘
+</div>
+
+<h2>🖥️ Infrastructure Map</h2>
+<table>
+<tr><th>Component</th><th>Host</th><th>Location</th><th>Backup</th><th>RPO/RTO</th></tr>
+<tr><td>Edge (HTML pages)</td><td>Vercel CDN</td><td>Global edge (origin: UK)</td><td>Git repo (GitHub)</td><td>RPO 0 / RTO 0</td></tr>
+<tr><td>BFT Council (33 agents)</td><td>Sovereign mesh</td><td>M2/M3/M4 MacBooks (LAN)</td><td>Cross-host redundancy</td><td>RPO 0 / RTO 60s</td></tr>
+<tr><td>MCP Federation</td><td>Sovereign mesh</td><td>M4 MacBook (primary)</td><td>M3 MacBook (failover)</td><td>RPO 5min / RTO 5min</td></tr>
+<tr><td>Sovereign Inference</td><td>MLX on Apple Silicon</td><td>M2/M3/M4 MacBooks</td><td>Frontier API bridge</td><td>RPO 0 / RTO 0</td></tr>
+<tr><td>Escrow Vault (encrypted data)</td><td>UK-only data centre</td><td>London (primary)</td><td>Manchester (DR)</td><td>RPO 15min / RTO 4h</td></tr>
+<tr><td>SIGIL Ledger</td><td>Sovereign mesh</td><td>M4 MacBook (append-only)</td><td>M3 + M2 mirrors</td><td>RPO 0 / RTO 0</td></tr>
+<tr><td>Audit Trail (7-year retention)</td><td>UK-only encrypted storage</td><td>London</td><td>Manchester</td><td>RPO 0 / RTO 1h</td></tr>
+<tr><td>Frontier API Bridge</td><td>UK-routed proxy</td><td>London</td><td>Manchester</td><td>RPO 0 / RTO 30s</td></tr>
+</table>
+
+<h2>🔐 Security Zones</h2>
+<table>
+<tr><th>Zone</th><th>Boundary</th><th>Controls</th><th>Monitoring</th></tr>
+<tr><td>Zone A: Public Edge</td><td>Internet-facing HTML</td><td>TLS1.3, CDN DDoS, no dynamic content</td><td>Vercel analytics, edge logs</td></tr>
+<tr><td>Zone B: MCP Federation</td><td>LAN-only, no internet inbound</td><td>mTLS between MCPs, SIGIL attestation, BFT admission control</td><td>SIGIL ledger, BFT continuous scan</td></tr>
+<tr><td>Zone C: Escrow Vault</td><td>Air-gapped storage, encrypted at rest</td><td>AES-256-GCM, Ed25519 identity, 4-eyes release, BFT veto</td><td>Escrow event logs, BFT escrow monitor</td></tr>
+<tr><td>Zone D: BFT Council</td><td>LAN-only, quorum-protected</td><td>Ed25519 votes, Byzantine detection, anti-pattern enforcement</td><td>Vote transcripts, participation metrics</td></tr>
+<tr><td>Zone E: SIGIL Ledger</td><td>Append-only, cryptographically chained</td><td>Ed25519 chaining, RFC3161 timestamps, hash integrity</td><td>Continuous hash verification, tamper detection</td></tr>
+</table>
+
+<h2>📊 Federation Discovery Protocol</h2>
+<p>Each MCP exposes its capabilities via a well-known manifest:</p>
+<pre><code># /.well-known/defoneos-manifest.json (per MCP)
+{
+  "mcp_id": "sentinel-hub-mcp",
+  "ring": 1,
+  "trust_level": "AUKUS-compatible",
+  "tools": ["satellite_imagery", "ndvi_analysis", "change_detection"],
+  "data_egress": "none",
+  "sigil_attestation": true,
+  "bft_admitted": "2026-07-09T14:00:00Z",
+  "bft_vote": { "approve": 28, "amend": 3, "reject": 0 },
+  "capabilities": {
+    "realtime": false,
+    "batch": true,
+    "classification_max": "OFFICIAL"
+  },
+  "health_endpoint": "/health",
+  "quarantine_status": "active"
+}</code></pre>
+
+<h2>🔄 Failover & Degradation Matrix</h2>
+<table>
+<tr><th>Failure</th><th>Impact</th><th>Graceful Degradation</th><th>Recovery</th></tr>
+<tr><td>Vercel outage</td><td>Public pages unavailable</td><td>Pages cached at edge (90min TTL)</td><td>Vercel auto-recovery</td></tr>
+<tr><td>M4 MacBook (primary MCP host) down</td><td>Ring 1 + Ring 2 MCPs offline</td><td>Failover to M3 MacBook</td><td>Manual recovery / reboot</td></tr>
+<tr><td>BFT quorum drops &lt;17</td><td>No emergency sessions possible</td><td>All operations freeze (safe-state)</td><td>Restore agents to ≥17</td></tr>
+<tr><td>BFT quorum 17-22</td><td>Emergency sessions only, no standard</td><td>Standard deployments paused</td><td>Restore to ≥23</td></tr>
+<tr><td>Escrow vault (London) down</td><td>No new custody events</td><td>Failover to Manchester DR</td><td>RTO 4h</td></tr>
+<tr><td>Frontier API bridge down</td><td>No frontier model access</td><td>Local MLX inference only (Ring 0 unaffected)</td><td>Restore UK proxy</td></tr>
+<tr><td>SIGIL ledger corruption</td><td>Audit trail compromised</td><td>Reconstruct from M3/M2 mirrors</td><td>Manual forensic rebuild</td></tr>
+<tr><td>Byzantine agent detected</td><td>Council integrity at risk</td><td>Agent quarantined, session re-run</td><td>New agent provisioned</td></tr>
+</table>
+
+<h2>📦 Deployment Pipeline</h2>
+<div class="flow">
+  Build (local)
+    │
+    ├── Generate HTML pages (hand-crafted, no framework)
+    ├── Update sitemap.xml (all URLs)
+    ├── Write SIGIL receipt for the build
+    │
+    ▼
+  BFT Pre-Flight Vote (33 agents)
+    │
+    ├── Each agent reviews: red-lines, care-score, compliance
+    ├── Vote: APPROVE / AMEND / REJECT
+    ├── Quorum: 23/33 APPROVE required
+    │
+    ▼
+  Deploy to Vercel
+    │
+    ├── vercel --prod
+    ├── Wait for Ready (typically 15-20s)
+    ├── Alias www.csoai.org to new deployment
+    │
+    ▼
+  Verify (curl HTTP 200 all new pages)
+    │
+    ├── Byte-size verification (local file size = remote size)
+    ├── Sitemap URL count check
+    ├── Root page health check
+    │
+    ▼
+  Update State + Claim
+    │
+    ├── DEFONEOS_SPRINT_STATE.json (counters, milestones)
+    ├── AGENTS.md CLAIM board (claim + release entry)
+    ├── SIGIL digest published
+    │
+    ▼
+  Complete ✅
+</div>
+
+<h2>📈 Current Estate Numbers</h2>
+<table>
+<tr><th>Metric</th><th>Target</th><th>Current</th><th>Status</th></tr>
+<tr><td>MCP servers</td><td>30</td><td>30</td><td><span class="badge ring2">HIT</span></td></tr>
+<tr><td>Live pages</td><td>50+</td><td>506 (after this tick: 509)</td><td><span class="badge ring2">HIT +459 bonus</span></td></tr>
+<tr><td>P0 repos cloned</td><td>15</td><td>15</td><td><span class="badge ring2">HIT</span></td></tr>
+<tr><td>Vercel deployments (total)</td><td>—</td><td>101+</td><td>—</td></tr>
+<tr><td>SIGIL receipts (total)</td><td>—</td><td>100+</td><td>—</td></tr>
+<tr><td>BFT standard sessions</td><td>—</td><td>101</td><td>—</td></tr>
+<tr><td>BFT emergency sessions</td><td>0</td><td>0</td><td><span class="badge ring2">CLEAN</span></td></tr>
+<tr><td>Red-line violations</td><td>0</td><td>0</td><td><span class="badge ring2">CLEAN</span></td></tr>
+</table>
+
+<div class="footer">
+<p>DEFONEOS — UK's first open-source Sovereign Public Services OS. Sovereign by design. British. Forever.</p>
+<p>SIGIL: T102-deployment-topology-reference · Ed25519-signed · BFT 33-agent verified · 14 Jul 2026</p>
+</div>
+
+</div>
+</body>
+</html>

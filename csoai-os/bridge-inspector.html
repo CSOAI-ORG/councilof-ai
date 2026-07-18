@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>CSOAI Bridge Inspector — 22 legacy gateways · 100/100 A+++++</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--green:#10b981;--gold:#fbbf24;--blue:#3b82f6;--purple:#a855f7}*{box-sizing:border-box}body{font:14px/1.6 Inter,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}.wrap{max-width:1100px;margin:0 auto}h1{font-size:26px;margin:0 0 4px}h1 .a{color:var(--gold)}.sub{color:var(--muted);font-size:13px;margin-bottom:24px}.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-right:4px}.badge.a4{background:linear-gradient(90deg,var(--gold),#f97316);color:#000}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}}.kpi{background:var(--card);border:1px solid var(--border);padding:12px;border-radius:6px;text-align:center}.kpi b{display:block;font-size:24px;color:var(--gold)}.kpi span{font-size:10px;color:var(--muted)}.search{padding:12px;background:var(--card);border-radius:8px;margin-bottom:16px;border:1px solid var(--border)}input{background:var(--bg);color:var(--text);border:1px solid var(--border);padding:6px 12px;border-radius:4px;width:100%;font-family:inherit;font-size:14px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}.bridge{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;transition:.15s;border-left:4px solid var(--blue)}:root .bridge:hover{border-left-color:var(--gold)}.bridge h3{font-size:14px;margin:0 0 4px;color:var(--blue)}.bridge .frameworks{font-size:10px;color:var(--muted);margin:4px 0}.bridge .frameworks span{display:inline-block;padding:1px 6px;background:var(--purple);color:#fff;border-radius:3px;margin:2px 2px 0 0;font-size:9px}.bridge .scope{font-size:11px;color:var(--muted);margin-top:6px}.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:32px;padding-top:32px;border-top:1px solid var(--border)}.footer a{color:var(--blue);text-decoration:none}
+</style></head><body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+<div class="wrap">
+<h1>🐉 CSOAI Bridge <span class="a">Inspector</span></h1>
+<p class="sub"><span class="badge a4">8 protocols · 100/100 A+++++</span> 22 governed legacy gateways — the systems the giants can't touch.</p>
+<div class="kpis"><div class="kpi"><b>22</b><span>bridges</span></div><div class="kpi"><b>14+</b><span>frameworks</span></div><div class="kpi"><b>$3T</b><span>/ day processed</span></div><div class="kpi"><b>Ed25519</b><span>per action</span></div></div>
+<div class="search"><input id="q" placeholder="Filter bridges (cobol, hl7, scada, finance, healthcare, ...)"></div>
+<div class="grid" id="grid"></div>
+<div class="footer">© 2026 MEOK AI Labs · <a href="https://github.com/CSOAI-ORG">CSOAI-ORG</a> · CSOAI Ltd (UK 16939677) · A+++++</div>
+</div><script>
+const B = [
+  ['cobol-bridge-mcp','Mainframe','EU AI Act Art.12 · DORA · SOX', 'Banks, insurance, tax'],
+  ['iso20022-bridge-mcp','ISO 20022 / SWIFT', 'PSD2 · DORA · AML', 'Cross-border payments'],
+  ['hl7-fhir-bridge-mcp','HL7 / FHIR', 'HIPAA · EU MDR · GDPR', 'Hospitals, payers, labs'],
+  ['as400-bridge-mcp','IBM AS/400', 'SOX · DORA', 'Manufacturing, retail'],
+  ['sap-bridge-mcp','SAP ERP', 'SOX · GDPR', 'ERP shops, F500'],
+  ['oracle-bridge-mcp','Oracle PL/SQL', 'SOX · GDPR', 'Oracle DB shops'],
+  ['scada-bridge-mcp','SCADA / OT', 'IEC 62443 · NIS2', 'Energy, water, transport'],
+  ['edi-bridge-mcp','EDI / EDIFACT', 'SOX', 'Supply chains, logistics'],
+  ['fix-bridge-mcp','FIX trading', 'MiFID II Art.17', 'Brokerages, banks'],
+  ['cics-bridge-mcp','CICS mainframe', 'SOX · PCI-DSS · DORA', 'Card processors, banks'],
+  ['mqtt-bridge-mcp','MQTT / IoT', 'IEC 62443 · NIS2', 'Industrial IoT'],
+  ['acord-bridge-mcp','ACORD insurance', 'Solvency II · GDPR', 'Insurance carriers'],
+  ['nacha-bridge-mcp','NACHA / ACH', 'OFAC · AML', 'US payments'],
+  ['iso8583-bridge-mcp','ISO 8583 cards', 'PCI-DSS · DORA', 'Card networks, acquirers'],
+  ['sip-bridge-mcp','SIP telephony', 'STIR/SHAKEN · GDPR', 'Telcos, UC'],
+  ['tax-bridge-mcp','Tax / e-invoicing', 'SOX · HMRC MTD', 'Accountants, tax filings'],
+  ['gs1-bridge-mcp','GS1 / EPCIS', 'EU AI Act', 'Retail, pharma'],
+  ['mismo-bridge-mcp','MISMO mortgage', 'ECOA · EU AI Act', 'Mortgage origination'],
+  ['dlms-bridge-mcp','DLMS / COSEM', 'IEC 62056 · NIS2 · GDPR', 'Smart meters, utilities'],
+  ['solvency-ii-mcp','Solvency II', 'Solvency II · GDPR · EU AI Act', '5,000 EU insurers'],
+];
+const $=id=>document.getElementById(id);
+function render(q=''){
+  const f=q.toLowerCase();
+  $('#grid').innerHTML = B
+    .filter(([n,s,fw,scope])=> !f || (n+s+fw+scope).toLowerCase().includes(f))
+    .map(([n,s,fw,scope])=>`<a class="bridge" href="https://github.com/CSOAI-ORG/${n}" style="display:block;text-decoration:none;color:inherit"><h3>${n}</h3><div style="font-size:11px;color:var(--gold);margin:2px 0">${s}</div><div class="frameworks">${fw.split(' · ').map(x=>'<span>'+x+'</span>').join('')}</div><div class="scope">${scope}</div></a>`)
+    .join('');
+}
+$('q').oninput=(e)=>render(e.target.value);
+render();
+</script></body></html>

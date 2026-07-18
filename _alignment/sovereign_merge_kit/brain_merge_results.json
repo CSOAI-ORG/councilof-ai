@@ -1,0 +1,39 @@
+{
+  "same_init_soup_small": {
+    "alpha_sweep": {
+      "a=1.0": 0.2125,
+      "a=0.9": 0.2117,
+      "a=0.7": 0.2127,
+      "a=0.5": 0.2115,
+      "a=0.3": 0.2059,
+      "a=0.1": 0.2007,
+      "a=0.0": 0.2007
+    },
+    "best_alpha": "a=0.1",
+    "best_soup": 0.2007,
+    "ensemble_vote": 0.1794,
+    "soup_beats_or_ties_vote": false
+  },
+  "diff_init_soup": {
+    "model1": 0.2005,
+    "model2": 0.1979,
+    "soup_0.5": 0.2561,
+    "soup_worse_than_either": true,
+    "lesson": "naive weight-merge of different-init models fails; needs shared init OR weight-matching (Git-Re-Basin) OR just route/vote."
+  },
+  "cross_size": {
+    "can_weight_merge": false,
+    "big_h48": 0.0371,
+    "small_h8": 0.1975,
+    "small_distilled_from_big": 0.1902,
+    "distill_helped": true,
+    "lesson": "small+large can't share weights; DISTILL the large into the small, or ROUTE (small=draft, large=verify)."
+  },
+  "four_to_one_brain": {
+    "merged_small": 0.2115,
+    "merged_large": 0.0411,
+    "routed_oracle": 0.0411,
+    "cascade_heuristic": 0.2115,
+    "structure": "brain = soup(2 small)->1 small + soup(2 large)->1 large, routed small->large"
+  }
+}

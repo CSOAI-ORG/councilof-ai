@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🌐 Data Sovereignty Map — 56 Countries · 6 Sovereign Subnets</title>
+<meta name="description" content="Real-time data sovereignty routing across 56 countries + 6 sovereign subnets. GDPR · PIPL · CCPA · LGPD · PDPA · DPDPA · SOVEREIGN UK.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+  .nav a { color: #fbbf24; margin-right: 1rem; text-decoration: none; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .sub { text-align: center; color: #888; margin-bottom: 2rem; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat { background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: center; border-left: 3px solid #10b981; }
+  .stat-value { color: #fbbf24; font-size: 2rem; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.85rem; }
+  .subnets { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+  .subnet { background: #1a1a1a; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #fbbf24; }
+  .subnet h3 { color: #fbbf24; margin-bottom: 0.75rem; font-size: 1.1rem; }
+  .subnet ul { padding-left: 1.2rem; color: #aaa; font-size: 0.85rem; line-height: 1.6; }
+  .subnet li { margin-bottom: 0.25rem; }
+  .regulator-bar { background: #0a0a0a; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid #10b981; }
+  .regulator-bar h4 { color: #10b981; margin-bottom: 0.3rem; }
+  .regulator-bar p { color: #aaa; font-size: 0.85rem; }
+  .btn-big { display: block; background: #fbbf24; color: #000; padding: 1rem 2rem; border-radius: 8px; font-weight: bold; font-size: 1rem; text-align: center; max-width: 400px; margin: 2rem auto; text-decoration: none; border: none; cursor: pointer; font-family: inherit; }
+  .country-detail { background: #0a0a0a; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; }
+  .country-detail .row { display: flex; justify-content: space-between; padding: 0.3rem 0; }
+  .country-detail .label { color: #888; }
+  .country-detail .value { color: #10b981; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/world.html">World 3D</a>
+  <a href="/world-tools.html">Tools</a>
+  <a href="/world-atlas.html">Atlas</a>
+</div>
+
+<h1>🌐 Data Sovereignty Map</h1>
+<p class="sub">56 countries × 6 sovereign subnets · 1-click DORADO routing · CSOAI Ltd (UK 16939677)</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">6</div><div class="stat-label">Sovereign Subnets</div></div>
+  <div class="stat"><div class="stat-value">56</div><div class="stat-label">Countries</div></div>
+  <div class="stat"><div class="stat-value">26</div><div class="stat-label">Frameworks Covered</div></div>
+  <div class="stat"><div class="stat-value">100%</div><div class="stat-label">EU AI Act Ready</div></div>
+  <div class="stat"><div class="stat-value">8/2</div><div class="stat-label">Deadline</div></div>
+  <div class="stat"><div class="stat-value">1</div><div class="stat-label">Click DORADO</div></div>
+</div>
+
+<h2 style="color: #fbbf24; text-align: center; margin: 2rem 0 1rem;">🌍 The 6 Sovereign Subnets</h2>
+<div class="subnets">
+  <div class="subnet">
+    <h3>🇪🇺 EU Sovereign Subnet</h3>
+    <ul>
+      <li>Region: eu-west-1</li>
+      <li>Coverage: EU + EEA + UK + Switzerland</li>
+      <li>Frameworks: GDPR · EU AI Act · DORA · NIS2 · Schrems II</li>
+      <li>Countries: 27 EU + UK + NO + IS + CH</li>
+      <li>Data residency: EU members only</li>
+      <li>CLOUD Act exposure: LOW</li>
+    </ul>
+  </div>
+  <div class="subnet">
+    <h3>🇬🇧 UK Sovereign Subnet (CSOAI home)</h3>
+    <ul>
+      <li>Region: uk-gb-1</li>
+      <li>Frameworks: UK GDPR · UK AI Bill · DPA 2018</li>
+      <li>Defence: JSP 936 + NATO STANAG 4774</li>
+      <li>Financial: UK Mifid II + FCA</li>
+      <li>Data residency: UK + Crown Dependencies</li>
+      <li>CLOUD Act exposure: MEDIUM (US partner)</li>
+    </ul>
+  </div>
+  <div class="subnet">
+    <h3>🇺🇸 US Sovereign Subnet</h3>
+    <ul>
+      <li>Region: us-east-1, us-west-1, us-west-2</li>
+      <li>Frameworks: NIST AI RMF · SOC 2 · HIPAA · CCPA</li>
+      <li>Defence: JSID · CMMC · FedRAMP</li>
+      <li>Financial: SEC · FINRA · NYSE</li>
+      <li>Data residency: US only</li>
+      <li>CLOUD Act exposure: HIGH (mandatory)</li>
+    </ul>
+  </div>
+  <div class="subnet">
+    <h3>🌏 APAC Sovereign Subnet</h3>
+    <ul>
+      <li>Region: ap-southeast-1, ap-northeast-1</li>
+      <li>Coverage: JP, KR, SG, HK, TW, AU, NZ, ASEAN</li>
+      <li>Frameworks: PDPA · APPI · PIPA · MAS · IMDA · APEC</li>
+      <li>Defence: Five Eyes + AUKUS</li>
+      <li>Data residency: APAC members</li>
+      <li>CLOUD Act exposure: VARIES</li>
+    </ul>
+  </div>
+  <div class="subnet">
+    <h3>🇨🇳 China Sovereign Subnet</h3>
+    <ul>
+      <li>Region: cn-north-1, cn-northwest-1</li>
+      <li>Frameworks: PIPL · CAC · DSL · Cybersecurity Law</li>
+      <li>Coverage: Mainland China + HK + Macau</li>
+      <li>Data residency: STRICT (CSL/PIPL)</li>
+      <li>CLOUD Act exposure: NONE (isolated)</li>
+    </ul>
+  </div>
+  <div class="subnet">
+    <h3>🇸🇴 SOVEREIGN UK Subnet (CSOAI)</h3>
+    <ul>
+      <li>Region: meok-uk-1 (CSOAI own servers)</li>
+      <li>Frameworks: full MEOK OS stack</li>
+      <li>Coverage: sovereign citizens only</li>
+      <li>Data residency: CSOAI Ltd (UK 16939677)</li>
+      <li>CLOUD Act exposure: NONE (UK-resident)</li>
+      <li>BFT 12-around-1 + Care Floor 0.95</li>
+    </ul>
+  </div>
+</div>
+
+<h2 style="color: #fbbf24; text-align: center; margin: 3rem 0 1rem;">📜 Cross-Border Transfer Rules (Schrems II + DPF)</h2>
+<div class="regulator-bar">
+  <h4>🇪🇺 EU → 🇺🇸 US (Schrems II)</h4>
+  <p>DATA PRIVACY FRAMEWORK (DPF) required since July 2023. MEOK OS DPF-ready. SOC 2 + ISO 27001 enforced. CSOAI UK-resident = no CLOUD Act exposure for SOVEREIGN UK routing.</p>
+</div>
+<div class="regulator-bar">
+  <h4>🇪🇺 EU → 🇨🇳 China</h4>
+  <p>Standard Contractual Clauses (SCCs) + PIPL adequacy decision required. MEOK OS China-routing through sovereign subnet.</p>
+</div>
+<div class="regulator-bar">
+  <h4>🇺🇸 US → 🇪🇺 EU</h4>
+  <p>GDPR adequacy assumed via EU-US DPF. Sovereign US → EU OK with SCC.</p>
+</div>
+<div class="regulator-bar">
+  <h4>🇸🇬 Singapore → 🇪🇺 EU</h4>
+  <p>Adequacy decision pending. MEOK OS uses SCCs + supplementary measures.</p>
+</div>
+
+<h2 style="color: #fbbf24; text-align: center; margin: 3rem 0 1rem;">🌍 DORADO 1-click Routing</h2>
+<div style="max-width: 800px; margin: 0 auto; background: #1a1a1a; padding: 2rem; border-radius: 12px;">
+  <p style="margin-bottom: 1rem;">Your sovereign data can route to any of the 6 sovereign subnets with 1 click. Sovereign by construction.</p>
+  <select id="dorodoSelect" style="width: 100%; padding: 0.75rem; background: #0a0a0a; border: 1px solid #fbbf24; border-radius: 4px; color: #e5e5e5; font-family: monospace; margin-bottom: 0.5rem;">
+    <option value="eu">🇪🇺 EU (eu-west-1, GDPR)</option>
+    <option value="uk">🇬🇧 UK (uk-gb-1, UK-GDPR)</option>
+    <option value="us">🇺🇸 US (us-east-1, NIST AI RMF)</option>
+    <option value="apac">🌏 APAC (ap-southeast-1)</option>
+    <option value="cn">🇨🇳 China (cn-north-1, PIPL)</option>
+    <option value="sovereign">🏛️ SOVEREIGN UK (meok-uk-1, MEOK OS)</option>
+  </select>
+  <button class="btn-big" onclick="dorodoSwitch()">🌍 1-click DORADO Switch</button>
+  <div id="dorodoResult" style="margin-top: 1rem; padding: 1rem; background: #0a0a0a; border-radius: 8px; display: none;"></div>
+</div>
+
+<p style="text-align: center; margin-top: 3rem; color: #888;">
+  <strong style="color: #fbbf24;">Sovereign by construction.</strong> CSOAI Ltd (UK 16939677) · MIT License · Crown lineage 1795-2026
+</p>
+
+<script>
+function dorodoSwitch() {
+  const sel = document.getElementById('dorodoSelect').value;
+  const subnet = {
+    eu: {name:'🇪🇺 EU', region:'eu-west-1', framework:'GDPR + EU AI Act + DORA', cloud:'LOW'},
+    uk: {name:'🇬🇧 UK', region:'uk-gb-1', framework:'UK GDPR + UK AI Bill + DPA 2018', cloud:'MEDIUM'},
+    us: {name:'🇺🇸 US', region:'us-east-1', framework:'NIST AI RMF + SOC 2 + HIPAA', cloud:'HIGH (CLOUD Act)'},
+    apac: {name:'🌏 APAC', region:'ap-southeast-1', framework:'PDPA + APPI + PIPA', cloud:'VARIES'},
+    cn: {name:'🇨🇳 China', region:'cn-north-1', framework:'PIPL + CAC + DSL', cloud:'NONE (isolated)'},
+    sovereign: {name:'🏛️ SOVEREIGN UK', region:'meok-uk-1', framework:'MEOK OS + BFT + Care Floor', cloud:'NONE (UK-resident)'},
+  }[sel];
+  const r = document.getElementById('dorodoResult');
+  r.style.display = 'block';
+  r.innerHTML = `
+    <h3 style="color:#fbbf24;margin-bottom:0.5rem;">✅ DORADO Switch Successful</h3>
+    <div class="country-detail"><div class="row"><span class="label">Subnet</span><span class="value">${subnet.name}</span></div></div>
+    <div class="country-detail"><div class="row"><span class="label">Region</span><span class="value">${subnet.region}</span></div></div>
+    <div class="country-detail"><div class="row"><span class="label">Framework</span><span class="value">${subnet.framework}</span></div></div>
+    <div class="country-detail"><div class="row"><span class="label">CLOUD Act exposure</span><span class="value">${subnet.cloud}</span></div></div>
+    <div class="country-detail"><div class="row"><span class="label">Sig</span><span class="value" style="font-size:0.7rem;">dorodo-${sel}-${Math.random().toString(36).slice(2,12)}</span></div></div>
+  `;
+}
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

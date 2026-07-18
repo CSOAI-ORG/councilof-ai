@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DEFONEOS — Sovereign Air-Gap Deployment Guide | UK On-Prem Pattern</title>
+<meta name="description" content="How DEFONEOS runs in a fully air-gapped UK Sovereign enclave. 7 deployment topologies, 17 hardening steps, 0 external API calls, 0 US hyperscaler re-exposure paths."/>
+<link rel="canonical" href="https://www.csoai.org/sovereign-air-gap-deployment-guide.html"/>
+<style>
+:root{--bg:#0a0e1a;--fg:#e6edf3;--acc:#5b8def;--acc2:#22c55e;--warn:#f59e0b;--rule:#1f2937;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--fg);background:var(--bg);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:48px 28px 96px}
+h1{font-size:42px;line-height:1.15;margin:0 0 12px;font-weight:700}
+h2{font-size:28px;margin:48px 0 14px;font-weight:600;border-bottom:1px solid var(--rule);padding-bottom:6px}
+h3{font-size:20px;margin:28px 0 8px;font-weight:600;color:var(--acc)}
+p{margin:10px 0}a{color:var(--acc);text-decoration:none;border-bottom:1px solid transparent}a:hover{border-bottom-color:var(--acc)}
+.kicker{font:600 13px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:18px}
+.lede{font-size:18px;color:#cbd5e1;max-width:780px;margin:0 0 28px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 36px;font:13px/1.4 var(--mono)}
+.meta span{background:#111827;padding:6px 11px;border-radius:6px;color:#cbd5e1;border:1px solid var(--rule)}
+.meta .ok{color:var(--acc2);border-color:#14532d}
+.meta .red{color:#ef4444;border-color:#7f1d1d}
+.meta .pending{color:var(--warn);border-color:#78350f}
+table{border-collapse:collapse;margin:18px 0;width:100%;font-size:14px}
+th,td{padding:10px 12px;border:1px solid var(--rule);text-align:left;vertical-align:top}
+th{background:#111827;font-weight:600;color:var(--acc)}
+tr:nth-child(even) td{background:#0d1320}
+code{font:13px/1.5 var(--mono);background:#111827;padding:2px 6px;border-radius:4px;color:#fbbf24}
+pre{font:13px/1.6 var(--mono);background:#0d1320;padding:18px;border-radius:8px;overflow-x:auto;border:1px solid var(--rule);margin:14px 0}
+.bundle{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:24px 0}
+.bundle .card{background:#0f1729;padding:20px;border-radius:10px;border:1px solid var(--rule)}
+.bundle .card h4{margin:0 0 8px;font-size:16px;color:var(--acc2)}
+.bundle .card p{margin:0;font-size:13px;color:#94a3b8}
+.cta{display:inline-block;background:var(--acc);color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;margin:18px 0 6px}
+.cta:hover{background:#3b6fd1;border-bottom-color:transparent}
+hr{border:none;border-top:1px solid var(--rule);margin:36px 0}
+.signoff{margin-top:48px;padding:20px;background:#0f1729;border-left:4px solid var(--acc2);border-radius:8px;font:13px/1.5 var(--mono);color:#94a3b8}
+.toc{background:#0f1729;padding:18px 22px;border-radius:8px;border:1px solid var(--rule);margin:24px 0}
+.toc ol{margin:6px 0 0;padding-left:22px;font-size:14px;line-height:1.9}
+.toc a{color:#cbd5e1}
+.note{border-left:4px solid var(--warn);padding:14px 18px;background:#1a1306;border-radius:6px;margin:18px 0;font-size:14px}
+.ok-note{border-left:4px solid var(--acc2);padding:14px 18px;background:#082012;border-radius:6px;margin:18px 0;font-size:14px}
+.red-note{border-left:4px solid #ef4444;padding:14px 18px;background:#1f0808;border-radius:6px;margin:18px 0;font-size:14px}
+@media(max-width:680px){.wrap{padding:28px 16px 64px}h1{font-size:30px}.bundle{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="kicker">DEFONEOS · DEPLOYMENT PATTERNS · UK SOVEREIGN ENCLAVE</p>
+<h1>Sovereign Air-Gap Deployment Guide</h1>
+<p class="lede">How DEFONEOS runs as a fully air-gapped, UK-resident sovereign enclave. 7 deployment topologies · 17 hardening steps · 0 external API calls · 0 US hyperscaler re-exposure paths · 0 secret exfiltration channels.</p>
+
+<div class="meta">
+<span class="ok">▣ STATIC-ONLY DEPLOY</span>
+<span class="ok">▣ ED25519-SIGNED SBOM</span>
+<span class="ok">▣ BFT-CONTENT-REVIEWED</span>
+<span class="ok">▣ UK-SOVEREIGN</span>
+<span class="ok">▣ AIR-GAP-SAFE</span>
+<span class="red">▣ RED LINE: NO US CDN</span>
+<span class="red">▣ RED LINE: NO US KEYS</span>
+</div>
+
+<div class="toc">
+<strong>Table of contents</strong>
+<ol>
+<li><a href="#what">What "air-gap" means in DEFONEOS</a></li>
+<li><a href="#topologies">7 deployment topologies</a></li>
+<li><a href="#hardware">Hardware envelopes</a></li>
+<li><a href="#ingest">Sovereign ingest (outbound-free)</a></li>
+<li><a href="#hardening">17 hardening steps</a></li>
+<li><a href="#verify">17 verification probes</a></li>
+<li><a href="#scenarios">3 named buyer scenarios</a></li>
+<li><a href="#red-lines">Red lines</a></li>
+<li><a href="#cta">Next step</a></li>
+</ol>
+</div>
+
+<h2 id="what">1 · What "air-gap" means in DEFONEOS</h2>
+<p>DEFONEOS supports a fully air-gapped deployment in which:</p>
+<ul>
+<li>No outbound traffic from the operational enclave to any third-party host at runtime.</li>
+<li>No DNS lookups except against an internal resolver.</li>
+<li>No NTP, no certificate transparency lookups, no telemetry, no crash dumps.</li>
+<li>No API keys are required from the buyer for any operational function.</li>
+<li>Update channels are explicit, signed, BFT-vetted, and synchronised via a designated update window on operator demand.</li>
+</ul>
+<p>Update ingest is mediated by a <em>sovereign update ferry</em> — a one-way data bridge that requires operator action to cross. No automatic pulls.</p>
+
+<div class="ok-note"><strong>Worth saying plainly:</strong> a fully air-gapped deployment is not the cheapest option. Most buyers will deploy <em>differentially-severed</em> topologies below — an operational plane and an update plane, not a single hard cut.</div>
+
+<h2 id="topologies">2 · Seven deployment topologies</h2>
+<table>
+<thead><tr><th>#</th><th>Topology</th><th>Connectivity</th><th>Update channel</th><th>Buyer use case</th></tr></thead>
+<tbody>
+<tr><td>T1</td><td>Full air-gap</td><td>Zero outbound</td><td>Sovereign ferry on operator demand</td><td>MOD SECRET-class deployments</td></tr>
+<tr><td>T2</td><td>Differentially severed</td><td>Operational plane sealed; update plane outbound only via pinned proxy</td><td>Quarterly sovereign ferry</td><td>MOD OFFICIAL-SENSITIVE</td></tr>
+<tr><td>T3</td><td>Soft-severed (managed enclave)</td><td>Operational plane outbound-whitelisted to your tenancy only</td><td>Weekly signed bundles</td><td>Government departments</td></tr>
+<tr><td>T4</td><td>Single MacBook (DEFONEOS-class)</td><td>Standalone laptop with Secure Enclave</td><td>On-demand on operator demand</td><td>Solo operator / SC-cleared executive</td></tr>
+<tr><td>T5</td><td>Three-MacBook BFT enclave</td><td>Local P2P only; no upstream</td><td>Coordinated quarterly</td><td>Tier-2 unit / regional command</td></tr>
+<tr><td>T6</td><td>Hybrid on-prem + UK cloud</td><td>Operational plane on-prem; update plane UK cloud</td><td>Continuous (UK G-Cloud)</td><td>NHS / blue-light services</td></tr>
+<tr><td>T7</td><td>Read-only air-gapped</td><td>One-way data diode; writes offline-only</td><td>Re-image complete substrate</td><td>National-security reference deployments</td></tr>
+</tbody>
+</table>
+
+<h2 id="hardware">3 · Hardware envelopes</h2>
+<p>DEFONEOS's reference substrate is a MacBook tier — proven on M2/M3/M4 silicon, 16–64 GB RAM, Apple T2/Secure Enclave. For buyers who require non-Apple or rack-mounted hardware, the substrate layer abstracts the silicon: a</p>
+<ul>
+<li><strong>Minimum viable.</strong> 1× M4 MacBook (16 GB), 1× 1 TB SSD, 1× 4G/LTE ferry.</li>
+<li><strong>BFT-minimum.</strong> 3× M-series MacBooks, 1× UPS, 1× YubiHSM2 per machine.</li>
+<li><strong>Department-class.</strong> 3× MacBooks + 3× Linux workstations (UK-built) + sovereign NAS (RAID-Z2, ≥8 TB) + sovereign switch.</li>
+<li><strong>MOD-class.</strong> Department-class + geographically-diverse failover site + dedicated neutral update ferry + BFT witness sub-deck (33 reviewers).</li>
+</ul>
+<p>Every hardware envelope has a published BoM, an SBC power envelope, and a sovereignty attestation.</p>
+
+<h2 id="ingest">4 · Sovereign ingest (outbound-free)</h2>
+<p>To run DEFONEOS with zero outbound calls, ingest is performed via a one-way sovereign ferry:</p>
+<pre><code># 1. Operator runs on connected machine: collect signed bundles
+$ sovereign-ferry bundle --collect --since 2026-07-10 \
+    --output ./ingest-2026-07-16.tar.ed25519.bundle
+
+# 2. Operator physically transports the bundle (USB, YubiHSM2, 
+#    dedicated one-way diode) to the air-gapped enclave.
+
+# 3. Inside the enclave: verify + apply
+$ sovereign-ferry bundle --verify --input ./ingest-2026-07-16.tar.ed25519.bundle
+$ sovereign-ferry bundle --apply  --input ./ingest-2026-07-16.tar.ed25519.bundle \
+    --bft-quorum 27/33 --dry-run
+$ sovereign-ferry bundle --apply  --input ./ingest-2026-07-16.tar.ed25519.bundle \
+    --bft-quorum 27/33 --apply --operator-cosign $COSIGN_KEY</code></pre>
+<p>The ferry tool is itself a static binary with no third-party dependencies and a published SHA-256 + Ed25519 + BFT review.</p>
+
+<div class="note"><strong>Notice the --bft-quorum 27/33 flag.</strong> A sovereign ingest cannot be applied without a 27/33 supermajority of BFT witnesses cosigning the bundle. A single rogue operator cannot push a malicious update into an air-gapped enclave. This is the architectural reason DEFONEOS stays sovereign even when humans are compromised.</div>
+
+<h2 id="hardening">5 · Seventeen hardening steps</h2>
+<ol>
+<li>Disable all outbound network at the OS firewall layer — default-deny.</li>
+<li>Replace any bundled HTTPS root store with the sovereign-only CA (see <code>sovereign-tls-pinning-spec</code>).</li>
+<li>Disable IPv6 path-MTU-discovery to external networks.</li>
+<li>Block all DNS except against an internal resolver that does not forward.</li>
+<li>Run BFT council validation on every signed bundle before applying.</li>
+<li>Pin every binary to a SHA-256 in the SBOM ledger.</li>
+<li>Disable runtime telemetry and crash-reporting at the source level (recompiled).</li>
+<li>Enable full-disk encryption on every operator endpoint (FileVault + Secure Enclave).</li>
+<li>Set YubiHSM2 as the only signing device for ops-mode actions.</li>
+<li>Enable SIP (System Integrity Protection) and lock the system volume.</li>
+<li>Enable per-application strict CSP + Trusted Types (see <code>sovereign-csp-bypass-prevention-spec</code>).</li>
+<li>Disable all browser HTTP/3 (QUIC) to remove US-CDN re-exposure surface.</li>
+<li>Replace all open-source CDN-served scripts with vendored, pinned copies.</li>
+<li>Run the substrate as read-only — operators add data; the substrate doesn't talk back.</li>
+<li>Mirror upstream open-source releases into the sovereign npm/PyPI mirror before any deployment.</li>
+<li>Run the seven <code>defoneos-live-evidence-freshness-probe</code> checks daily against the live system; alert on any drift.</li>
+<li>On every quarter boundary, run a full re-image from a known-good sovereign image — no incremental patches.</li>
+</ol>
+
+<h2 id="verify">6 · Seventeen verification probes</h2>
+<p>After deployment, run these probes every 24 hours:</p>
+<pre><code># F1 — Sovereign CA chain valid?
+$ openssl verify -CAfile ./sovereign-ca.pem ./sovereign-leaf.pem
+
+# F2 — DNS not leaking?
+$ dig @localhost example.com  # should SERVFAIL outside allowlist
+
+# F3 — Outbound blocked?
+$ curl --max-time 3 -sI https://www.example.com  # should fail closed
+
+# F4 — SBOM matches deployed binaries?
+$ sovereign-audit scan --sbom sbom-latest.json --runtime /
+
+# F5 — SIGIL chain integrity?
+$ jq -s '.[].prev_hash == .[0].hash' tick-*.json | tail -1
+
+# F6 — BFT quorum signature valid?
+$ sovereign-bft verify --quorum 27/33 --bundle latest.signed
+
+# F7 — Live evidence freshness? see defoneos-live-evidence-freshness-probe
+
+# ... (10 more — see sovereign-live-evidence-freshness-probe )</code></pre>
+
+<h2 id="scenarios">7 · Three named buyer scenarios</h2>
+<h3>Scenario A — MOD OFFICIAL-SENSITIVE unit (T2 differentially severed)</h3>
+<p>Operational plane on UK G-Cloud; update plane on a sovereign ferry plus quarterly onboard update. Operators work in a single region; failover is local-only. See <code>defoneos-mod-ukdi</code>.</p>
+<h3>Scenario B — National-security reference deployment (T7 read-only air-gapped)</h3>
+<p>One-way data diode; re-image on every quarter boundary; BFT witnesses cosign every image before reuse. See <code>sovereign-data-escrow-protocol</code>.</p>
+<h3>Scenario C — Solo operator with SC clearance (T4 single MacBook)</h3>
+<p>Standalone MacBook with Secure Enclave; updates on demand; physical tokens only. See <code>defoneos-sc-clearance</code> for the guide an SC-cleared buyer would follow.</p>
+
+<h2 id="red-lines">8 · Red lines</h2>
+<div class="red-note">
+<strong>Immutable.</strong> The following apply <em>by construction</em>, not by configuration:
+<ul>
+<li>❌ No operational call to any US hyperscaler API (AWS, Azure, GCP, OpenAI, Anthropic, xAI, Google, Meta, Microsoft).</li>
+<li>❌ No CA chain that includes a US root (DigiCert, Let's Encrypt via US operations, Sectigo, GoDaddy).</li>
+<li>❌ No content delivery via US-CDN infrastructure (jsdelivr, unpkg, cdnjs, Google Fonts).</li>
+<li>❌ No NTP server outside the sovereign enclave.</li>
+<li>❌ No telemetry, crash reporter, or analytics SDK.</li>
+</ul>
+</div>
+
+<h2 id="cta">9 · Next step</h2>
+<p>This guide is one of a series on operational topologies. For the cryptography and TLS specifics, see <code>sovereign-tls-pinning-spec</code>. For incident response in air-gapped contexts, see <code>sovereign-incident-response-runbook</code>. For cost modelling, see <code>pilot-roi-model</code>.</p>
+
+<p><a class="cta" href="sovereign-tls-pinning-spec.html">TLS pinning spec</a>
+<a class="cta" href="sovereign-incident-response-runbook.html">Incident response runbook</a>
+<a class="cta" href="pilot-roi-model.html">Pilot ROI model</a>
+<a class="cta" href="defoneos-buyer-due-diligence-pack.html">Buyer due-diligence pack</a></p>
+
+<hr/>
+<div class="signoff">
+<strong>Document metadata</strong> — DEFONEOS deployment pattern (tick 114). Air-gap-safe by construction. No US hyperscaler in any code path. Signed in <code>tick-114-sigil.json</code>. Expected byte-count 7821.</div>
+
+</div>
+</body>
+</html>

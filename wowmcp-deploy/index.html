@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>wowmcp.ai — WoW MCP Server for AI Agents | MEOK AI Labs</title>
+  <meta name="description" content="Model Context Protocol server for World of Warcraft data. 10 tools for raid strategy, character analysis, auction house intelligence, M+ routing, and more. COAI-certified, SOV3-attested. By MEOK AI Labs.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="wowmcp.ai — WoW MCP for AI Agents">
+  <meta property="og:description" content="10 tools for WoW data. COAI-certified. SOV3-attested. By MEOK AI Labs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wowmcp.meok.ai">
+  <link rel="canonical" href="https://wowmcp.meok.ai">
+  <link rel="llms-txt" href="/llms.txt" title="wowmcp.ai — WoW MCP for AI Agents">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "wowmcp",
+    "applicationCategory": "GameApplication",
+    "description": "Model Context Protocol server for World of Warcraft data. 10 tools: raid strategy, character analysis, auction house, M+ routing. COAI INTELLIGENCE_ONLY.",
+    "operatingSystem": "Cross-platform (Node.js)",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP", "description": "Free tier: 10 calls/day per tool"},
+    "featureList": [
+      "raid_strategy_lookup",
+      "character_analyse",
+      "auction_house_query",
+      "mythic_plus_route",
+      "gear_compare",
+      "achievement_check",
+      "guild_lookup",
+      "pvp_leaderboard",
+      "token_price",
+      "patch_notes"
+    ],
+    "author": {
+      "@type": "Organization",
+      "name": "MEOK AI Labs",
+      "url": "https://meok.ai",
+      "founder": {"@type": "Person", "name": "Nicholas Templeman"}
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "MEOK AI Labs",
+      "url": "https://meok.ai"
+    }
+  }
+  </script>
+  <style>
+    :root { --bg: #0a0a14; --fg: #e8e4dc; --mut: #9a9a8a; --gold: #c9a84c; --line: #1f1f2e; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem; }
+    h1 { font-size: 2.5rem; letter-spacing: -0.02em; margin: 0 0 0.5rem; }
+    h2 { font-size: 1.5rem; margin-top: 2.5rem; border-bottom: 1px solid var(--line); padding-bottom: 0.25rem; }
+    .lede { font-size: 1.15rem; color: var(--mut); margin: 0 0 2rem; }
+    .pill { display: inline-block; background: rgba(201, 168, 76, 0.12); color: var(--gold); padding: 0.25rem 0.6rem; border-radius: 0.4rem; font-size: 0.85rem; font-weight: 600; margin-right: 0.5rem; }
+    code { background: #11111a; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; color: var(--gold); }
+    pre { background: #11111a; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; border: 1px solid var(--line); }
+    pre code { background: none; padding: 0; color: var(--fg); }
+    .cta { display: inline-block; background: var(--gold); color: #0a0a14; padding: 0.6rem 1.25rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; margin-top: 1rem; }
+    .cta:hover { opacity: 0.9; }
+    ul { padding-left: 1.25rem; }
+    li { margin: 0.4rem 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; margin: 1.5rem 0; }
+    .card { background: #11111a; border: 1px solid var(--line); border-radius: 0.5rem; padding: 1rem; }
+    .card h3 { margin: 0 0 0.5rem; font-size: 1rem; color: var(--gold); }
+    .card p { margin: 0; font-size: 0.9rem; color: var(--mut); }
+    footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); color: var(--mut); font-size: 0.85rem; }
+    footer a { color: var(--mut); }
+  </style>
+</head>
+<body>
+  <nav style="border-bottom:1px solid var(--line); background:#0a0a14; position:sticky; top:0; z-index:50;">
+    <div style="max-width:760px; margin:0 auto; padding:1rem 1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+      <a href="/" style="color:var(--gold); font-weight:700; text-decoration:none;">wowmcp.ai</a>
+      <div style="display:flex; gap:1rem; font-size:0.9rem;">
+        <a href="/pricing" style="color:var(--fg); text-decoration:none;">Pricing</a>
+        <a href="/signup" style="color:var(--fg); text-decoration:none;">Sign up</a>
+        <a href="/partner" style="color:var(--fg); text-decoration:none;">Partner</a>
+      </div>
+    </div>
+  </nav>
+  <div class="wrap">
+    <p>
+      <span class="pill">MCP</span>
+      <span class="pill">WoW</span>
+      <span class="pill">COAI-certified</span>
+      <span class="pill">SOV3-attested</span>
+    </p>
+    <h1>wowmcp.ai</h1>
+    <p class="lede">Model Context Protocol server for World of Warcraft data. 10 tools. Free tier. Built by MEOK AI Labs — the same team that ships the EU AI Act compliance fleet.</p>
+
+    <h2>Quick start</h2>
+    <pre><code>npm install @csoai-org/blizzard-wow-mcp
+# or via Smithery
+npx -y @smithery/cli install @csoai-org/blizzard-wow-mcp
+# or via GitHub
+git clone https://github.com/CSOAI-ORG/blizzard-wow-mcp
+cd blizzard-wow-mcp && npm install && npm start</code></pre>
+
+    <a class="cta" href="https://github.com/CSOAI-ORG/blizzard-wow-mcp" rel="noopener noreferrer">View on GitHub →</a>
+    <a class="cta" style="background: transparent; color: var(--gold); border: 1px solid var(--gold); margin-left: 0.5rem;" href="https://meok.ai/gaming" rel="noopener noreferrer">MEOK Gaming hub →</a>
+
+    <h2>The 10 tools</h2>
+    <div class="grid">
+      <div class="card"><h3>raid_strategy_lookup</h3><p>Pull current raid strat, boss mechanics, cooldown timings for any tier.</p></div>
+      <div class="card"><h3>character_analyse</h3><p>Parse armory data — gear, talents, parses, recent logs.</p></div>
+      <div class="card"><h3>auction_house_query</h3><p>Real-time AH prices, trends, market depth for any commodity.</p></div>
+      <div class="card"><h3>mythic_plus_route</h3><p>Optimised M+ routes, affix strategies, timer targets.</p></div>
+      <div class="card"><h3>gear_compare</h3><p>Sim upgrade, BiS lists, stat weights, upgrade paths.</p></div>
+      <div class="card"><h3>achievement_check</h3><p>Track missing achievements, point-in-time requirements.</p></div>
+      <div class="card"><h3>guild_lookup</h3><p>Guild roster, activity, recruitment signal.</p></div>
+      <div class="card"><h3>pvp_leaderboard</h3><p>RBG / 2s / 3s rating, decay tracking, recent activity.</p></div>
+      <div class="card"><h3>token_price</h3><p>WoW Token live price, gold-per-USD history.</p></div>
+      <div class="card"><h3>patch_notes</h3><p>Latest patch notes, hotfixes, datamined upcoming changes.</p></div>
+    </div>
+
+    <h2>What this is NOT</h2>
+    <ul>
+      <li>Not a botting tool. COAI <code>INTELLIGENCE_ONLY</code> means no automated character actions.</li>
+      <li>Not a Blizzard product. Built independently by MEOK AI Labs. Not affiliated with or endorsed by Blizzard Entertainment.</li>
+      <li>Not a free-for-all data scrape. Rate-limited. Each tool has a free tier + Pro tier.</li>
+    </ul>
+
+    <h2>Compliance posture</h2>
+    <p>This server is one node in the <a href="https://meok.ai/gaming">MEOK Gaming hive</a>, signed under the CSOAI COAI compliance framework and attested on the MEOK SOV3 Ed25519 chain. Every tool call emits a signed compliance receipt your auditor can verify offline.</p>
+    <p>Sister servers in the hive:</p>
+    <ul>
+      <li><a href="https://github.com/CSOAI-ORG/mmoagent-mcp" rel="noopener noreferrer">mmoagent-mcp</a> — 6 cross-game intelligence tools (FFXIV, ESO, GW2, Lost Ark, New World, OSRS)</li>
+      <li><a href="https://github.com/CSOAI-ORG/evergame-hive-mcp" rel="noopener noreferrer">evergame-hive-mcp</a> — 4 data-moat tools (cross-player benchmarks, market trends, esports signals)</li>
+    </ul>
+
+    <h2>Pricing</h2>
+    <ul>
+      <li><strong>Free:</strong> 10 calls/day per tool, all 10 tools, no signed receipts.</li>
+      <li><strong>Pro £29/mo:</strong> 1,000 calls/day per tool, signed Ed25519 receipts, priority support.</li>
+      <li><strong>Enterprise:</strong> Multi-tenant, co-branded receipts, on-prem option. Contact <a href="mailto:hello@meok.ai">hello@meok.ai</a></li>
+    </ul>
+
+    <div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+<footer>
+<nav style='text-align:center; padding: 0.5rem; background: rgba(201,168,76,0.05); border-top: 1px solid #e5e7eb;'><strong>MEOK portfolio:</strong> | <a href="https://hive-deploy.vercel.app" target="_blank" rel="noopener noreferrer">hive</a> | <a href="https://industries-deploy.vercel.app" target="_blank" rel="noopener noreferrer">industries</a> | <a href="https://blog-deploy-azure.vercel.app" target="_blank" rel="noopener noreferrer">blog</a> | <a href="https://portfolio-deploy-orcin-three.vercel.app" target="_blank" rel="noopener noreferrer">portfolio</a> | <a href="https://meok.ai" target="_blank" rel="noopener noreferrer">meok.ai</a></nav>
+      <p>© 2026 MEOK AI Labs · CSOAI Ltd · UK Companies House <strong>16939677</strong> · Registered in England & Wales.</p>
+      <p>Part of the <a href="https://meok.ai">MEOK AI Labs</a> portfolio · <a href="https://csoai.org">CSOAI council</a> · <a href="https://proofof.ai">ProofOf.AI trust surface</a> · <a href="https://meok.ai/gaming">Gaming hub</a> · <a href="https://meok.ai/sitemap">Sitemap</a> · <a href="https://meok.ai/privacy">Privacy</a> · <a href="https://meok.ai/terms">Terms</a></p>
+    </footer>
+  </div>
+</body>
+</html>

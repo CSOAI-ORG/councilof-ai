@@ -1,0 +1,52 @@
+{
+  "rewrites": [
+    {
+      "source": "/signup",
+      "destination": "/signup.html"
+    },
+    {
+      "source": "/api/payg",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/api/payg/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/api/webhooks/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/api/acp",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/api/audit",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/v1/healthx",
+      "destination": "/api/v1_sdk_pro"
+    },
+    {
+      "source": "/v1/:path*",
+      "destination": "/api/v1_sdk_pro"
+    },
+    {
+      "source": "/api/v1/:path*",
+      "destination": "/api/v1_sdk_pro"
+    },
+    {
+      "source": "/v1/a2a/:path*",
+      "destination": "/api/a2a_demo"
+    },
+    {
+      "source": "/api/a2a/:path*",
+      "destination": "/api/a2a_demo"
+    },
+    {
+      "source": "/((?!api/|\\.well-known/|scorecard/|sitemap\\.xml|robots\\.txt|llms-full\\.txt|llms\\.txt|get-key\\.html|favicon\\.ico|openapi\\.json|docs\\.html).*)",
+      "destination": "/api/index.py"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+[project]
+name = "meok-sovereign-avatar-mcp"
+version = "0.1.0"
+description = "Sovereign Avatar MCP — VRM embodied character control, lip-sync, gaze tracking, and SOVEREIGN council voice. Wraps Virtual Avatar SDK patterns + Kokoro TTS + whisper.cpp STT — all local, all sovereign."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Nicholas Templeman", email = "nicholas@csoai.org" }]
+requires-python = ">=3.10"
+keywords = [
+    "sovereign", "avatar", "vrm", "lip-sync", "gaze",
+    "tts", "stt", "kokoro", "whisper", "local", "voice",
+    "ed25519", "mcp", "csai", "meok",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "cryptography>=42.0.0",
+    "mcp>=1.0.0",
+]

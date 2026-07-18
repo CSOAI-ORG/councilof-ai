@@ -1,0 +1,69 @@
+{
+  "version": "v1_ties_consolidation_2026-07-18",
+  "context": "Folding Claude Science's TIES-merge measured result into our architecture matrix",
+  "sibling_claude_science_result": {
+    "source": "Sibling's Modal job f7c6423c, sov33_fuse_experts.py",
+    "commit": "126b6b214 (TIES-fused) + f6d685ce8 (Node1 fusion done)",
+    "method": "TIES-merge (trim + elect-sign + disjoint-merge)",
+    "base": "Qwen2.5-0.5B (same base for all 3 experts)",
+    "experts_trained": [
+      "defense (0.75)",
+      "compliance (1.34)",
+      "intuition (1.22)"
+    ],
+    "results": {
+      "ties_fused_loss": 2.9095,
+      "naive_avg_loss": 2.9965,
+      "best_single_expert_loss": 2.9087,
+      "merged_lens_n24": "merged=7 < best_parent=10"
+    },
+    "honest_verdict": "TIES beats naive (no collapse) BUT ~= best-single \u2014 NO emergence at this scale on same-base experts."
+  },
+  "what_this_means_for_us": {
+    "confirmed": "TIES machinery WORKS (no NaN, 336 tensors, clean merge)",
+    "confirmed_negative": "Same-base experts do NOT emerge \u2014 TIES prunes direction-specific knowledge",
+    "validated_sibling_design": "SOV4 must be 3 DIFFERENT architectures (MoE + MoM + OWM), not 3 Qwen fine-tunes",
+    "open_hypothesis": "Different-architecture fusion WILL emerge \u2014 UNTESTED",
+    "our_3_owems_status": {
+      "sov3_student_adapter": "Qwen2.5-0.5B + 113-pair sovereign distill (alignment/governance)",
+      "qwen3-sov-compliance-charter": "Qwen2.5-0.5B + charter distill (alignment/governance)",
+      "_owned_v2_adapter": "Qwen2.5-0.5B + 1289-pair merged corpus (MoE/capacity)",
+      "all_same_base": true,
+      "implication": "Per sibling finding, TIES-merging these 3 will likely give TIES-loss > best-single. Same-base no-emergence law applies."
+    }
+  },
+  "our_action": "NOT to TIES-merge our 3 same-base OWEMs. That would be redundant work. Instead:",
+  "alternative_actions_ranked": [
+    {
+      "rank": 1,
+      "name": "Adopt TIES result into architecture matrix (CONSUME, don't re-run)",
+      "action": "Update SOV_NEXT_5_ACTIONS_2026-07-18.json to remove TIES-merge from our queue. Note sibling's measured finding.",
+      "cost": "$0",
+      "outcome": "Architecture matrix stays honest. No duplicate work."
+    },
+    {
+      "rank": 2,
+      "name": "Build DIFFERENT-architecture fusion experiment (next lane to test sibling's hypothesis)",
+      "action": "Define a SOV4 test: combine sov3 (Qwen2.5-0.5B) + GLM-5.2 MoE (via API stub) + a true SSM brain. Measure if DIFFERENT-architecture fusion emerges.",
+      "cost": "$5 Modal T4",
+      "outcome": "Tests the sibling's UNTESTED HYPOTHESIS. If positive, SOV4 emergence claim validated.",
+      "lane": "Claude Science + Hermes collaboration"
+    },
+    {
+      "rank": 3,
+      "name": "Run TIES on our 3 OWEMs anyway (for INT8-quantized inference)",
+      "action": "TIES-merge + int8 quantize -> one merged int8 adapter. Even if no emergence, this gives ONE artifact for production serving (faster inference, less memory).",
+      "cost": "$0.50 Modal T4",
+      "outcome": "ONE merged adapter for inference, even if quality ~= best-single.",
+      "honest_register": "Sibling proved TIES-mechanism works. We're using it for INFERENCE COMPRESSION (different goal than emergence)."
+    }
+  ],
+  "what_I_am_DOING_right_now": "Action #1: Adopting sibling's TIES result into architecture matrix. Not duplicating their work.",
+  "what_Nick_will_fold_into_OWM_spec": [
+    "SOV4 = 3 DIFFERENT architectures (not 3 same-base fine-tunes)",
+    "TIES works for same-base COMPRESSION (inference), not for emergence",
+    "Emergence hypothesis UNTEsted \u2014 requires heterogeneous architectures",
+    "Sibling's evidence: TIES-fused=2.9095 vs best-single=2.9087 (~= no gain) on same-base Qwen3"
+  ],
+  "lane_respect": "TIES-merge = Claude Science lane. We adopt the result, don't re-run it."
+}

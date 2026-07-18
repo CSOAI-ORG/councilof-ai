@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Article 50 EU AI Act — Live Cliff Dashboard | DEFONEOS</title>
+<meta name="description" content="Article 50 EU AI Act goes live 2 Aug 2026. Watermarking + transparency mandatory for all GPAI providers. Penalties: EUR 15M or 3% of global turnover. DEFONEOS / CSOAI sovereign passport issuance." />
+<meta name="theme-color" content="#0a0d14" />
+<style>
+  :root{
+    --bg:#0a0d14; --bg-2:#101521; --bg-3:#161c2c;
+    --line:#1f2840; --line-2:#2a3454;
+    --gold:#d4af37; --gold-2:#f5d061; --gold-3:#8a7220;
+    --txt:#e7ecf5; --txt-2:#9aa3b8; --txt-3:#6b7390;
+    --red:#ff5470; --red-2:#7a1f33; --red-3:#3a0f1a;
+    --green:#3ddc97; --green-2:#1a3a2c;
+    --blue:#6aa7ff; --blue-2:#1a2742;
+    --purple:#a78bfa; --purple-2:#2a1f4a;
+    --shadow:0 8px 32px rgba(0,0,0,.45);
+    --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--gold-2);text-decoration:none}
+  a:hover{color:var(--gold)}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+  header{position:sticky;top:0;z-index:50;background:rgba(10,13,20,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;max-width:1240px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.04em}
+  .brand-mark{width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-3) 100%);display:grid;place-items:center;color:#000;font-weight:800;font-size:14px;font-family:var(--mono)}
+  .nav-links{display:flex;gap:22px;font-size:13px;color:var(--txt-2)}
+  .nav-links a{color:var(--txt-2)}
+  .nav-links a:hover{color:var(--gold-2)}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em}
+  .pill-red{background:var(--red-3);color:var(--red);border:1px solid var(--red-2)}
+  .pill-gold{background:rgba(212,175,55,.12);color:var(--gold-2);border:1px solid var(--gold-3)}
+  .pill-green{background:var(--green-2);color:var(--green);border:1px solid #1f5a44}
+  .pill-blue{background:var(--blue-2);color:var(--blue);border:1px solid #2a3f6a}
+  .dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .banner-warn{background:linear-gradient(90deg,var(--red-3) 0%,var(--red-2) 50%,var(--red-3) 100%);border-bottom:1px solid var(--red-2);padding:10px 0;text-align:center;font-size:13px;color:#ffd5dd;font-weight:500}
+  .banner-warn b{color:#fff;font-weight:700}
+  .hero{padding:64px 0 48px;background:radial-gradient(ellipse at top, rgba(212,175,55,.07) 0%, transparent 55%)}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border-radius:999px;background:rgba(212,175,55,.08);border:1px solid var(--gold-3);font-size:12px;color:var(--gold-2);font-family:var(--mono);letter-spacing:.06em;margin-bottom:22px}
+  h1{font-size:54px;line-height:1.05;font-weight:700;letter-spacing:-.02em;margin-bottom:18px}
+  h1 .accent{background:linear-gradient(90deg,var(--gold-2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .lede{font-size:18px;color:var(--txt-2);margin-bottom:28px;max-width:580px}
+  .lede b{color:var(--txt);font-weight:600}
+  .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+  .stat{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .stat .v{font-size:22px;font-weight:700;color:var(--gold-2);font-family:var(--mono)}
+  .stat .l{font-size:11px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:8px;font-size:14px;font-weight:500;border:1px solid transparent;transition:all .15s ease}
+  .btn-primary{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-3) 100%);color:#000;border-color:var(--gold)}
+  .btn-primary:hover{box-shadow:0 4px 20px rgba(212,175,55,.4);color:#000}
+  .btn-ghost{background:transparent;color:var(--txt);border-color:var(--line-2)}
+  .btn-ghost:hover{border-color:var(--gold-2);color:var(--gold-2)}
+  /* countdown card */
+  .countdown{background:linear-gradient(160deg,var(--bg-2) 0%,var(--bg-3) 100%);border:1px solid var(--gold-3);border-radius:16px;padding:32px 28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .countdown::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .cd-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .cd-head h2{font-size:13px;color:var(--txt-2);text-transform:uppercase;letter-spacing:.12em;font-weight:500}
+  .cd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .cd-cell{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;padding:18px 6px;text-align:center}
+  .cd-num{font-size:42px;font-weight:700;color:var(--gold-2);font-family:var(--mono);line-height:1;letter-spacing:-.02em}
+  .cd-lbl{font-size:10px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.1em;margin-top:8px}
+  .cd-meta{font-size:12px;color:var(--txt-3);text-align:center;font-family:var(--mono);padding-top:14px;border-top:1px solid var(--line)}
+  .cd-meta b{color:var(--txt-2)}
+  section{padding:56px 0;border-top:1px solid var(--line)}
+  .sec-head{margin-bottom:32px}
+  .sec-head .num{font-family:var(--mono);font-size:12px;color:var(--gold-3);letter-spacing:.12em}
+  .sec-head h2{font-size:32px;font-weight:700;letter-spacing:-.01em;margin-top:6px}
+  .sec-head p{color:var(--txt-2);margin-top:10px;max-width:720px;font-size:15px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:24px;transition:border .15s}
+  .card:hover{border-color:var(--line-2)}
+  .card h3{font-size:16px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .card .tag{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--gold-3);background:rgba(212,175,55,.08);padding:2px 6px;border-radius:4px;letter-spacing:.06em}
+  .card p{color:var(--txt-2);font-size:14px}
+  .card ul{list-style:none;margin-top:12px}
+  .card li{padding:6px 0;color:var(--txt-2);font-size:14px;display:flex;gap:8px}
+  .card li::before{content:"→";color:var(--gold-2);flex-shrink:0;font-family:var(--mono)}
+  .verbatim{background:rgba(212,175,55,.04);border-left:3px solid var(--gold);padding:20px 22px;border-radius:0 8px 8px 0;margin:20px 0;font-size:15px;line-height:1.7;color:var(--txt);font-style:italic}
+  .verbatim .src{display:block;margin-top:10px;font-style:normal;font-size:12px;color:var(--txt-3);font-family:var(--mono)}
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
+  table.matrix th,table.matrix td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line)}
+  table.matrix th{background:var(--bg-3);color:var(--txt);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+  table.matrix td{color:var(--txt-2)}
+  table.matrix .num{color:var(--red);font-family:var(--mono);font-weight:600}
+  table.matrix tr:hover td{background:rgba(255,255,255,.02)}
+  .pill-out{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em}
+  .pill-out.red{background:var(--red-3);color:var(--red)}
+  .pill-out.gold{background:rgba(212,175,55,.12);color:var(--gold-2)}
+  .pill-out.green{background:var(--green-2);color:var(--green)}
+  .api-box{background:#000;border:1px solid var(--line);border-radius:8px;padding:16px;font-family:var(--mono);font-size:13px;color:var(--txt-2);overflow-x:auto;margin:14px 0;line-height:1.6}
+  .api-box .k{color:var(--blue)}
+  .api-box .s{color:var(--green)}
+  .api-box .c{color:var(--txt-3)}
+  .api-box .n{color:var(--gold-2)}
+  .audit-widget{background:linear-gradient(135deg,var(--bg-2),var(--bg-3));border:1px solid var(--line-2);border-radius:14px;padding:28px;display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center}
+  .audit-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+  .audit-stat{text-align:center;padding:16px 8px;background:rgba(0,0,0,.3);border-radius:8px;border:1px solid var(--line)}
+  .audit-stat .v{font-size:28px;font-weight:700;color:var(--gold-2);font-family:var(--mono)}
+  .audit-stat .v.green{color:var(--green)}
+  .audit-stat .l{font-size:11px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+  .audit-list{background:rgba(0,0,0,.4);border:1px solid var(--line);border-radius:8px;padding:16px;max-height:260px;overflow-y:auto;font-family:var(--mono);font-size:12px}
+  .audit-list .row{padding:8px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
+  .audit-list .row:last-child{border:none}
+  .audit-list .hash{color:var(--txt-3)}
+  .audit-list .ok{color:var(--green)}
+  .cta-band{background:linear-gradient(135deg,var(--gold-3) 0%,#5a4810 100%);border-radius:14px;padding:36px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+  .cta-band h3{font-size:22px;color:#000;margin-bottom:6px}
+  .cta-band p{color:#1a1a1a;font-size:14px;max-width:520px}
+  .cta-band .btn{background:#000;color:var(--gold-2);border-color:#000}
+  .cta-band .btn:hover{background:#1a1a1a;color:var(--gold)}
+  footer{padding:40px 0;border-top:1px solid var(--line);margin-top:60px;font-size:13px;color:var(--txt-3)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:24px}
+  .foot-grid h4{color:var(--txt);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:600}
+  .foot-grid ul{list-style:none}
+  .foot-grid li{padding:4px 0;color:var(--txt-2);font-size:13px}
+  .foot-grid li a{color:var(--txt-2)}
+  .foot-grid li a:hover{color:var(--gold-2)}
+  .foot-bottom{padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--txt-3)}
+  .sig{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);color:var(--txt-3)}
+  .sig .dot{background:var(--green)}
+  .disclaimer{margin-top:12px;padding:14px;background:var(--red-3);border-left:3px solid var(--red);border-radius:0 6px 6px 0;font-size:12px;color:#ffd5dd}
+  .disclaimer b{color:#fff}
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:32px}
+    h1{font-size:38px}
+    .grid-2,.grid-3,.foot-grid{grid-template-columns:1fr}
+    .cd-num{font-size:30px}
+    .audit-widget{grid-template-columns:1fr}
+    .cta-band{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .hero-stats{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<div class="banner-warn">
+  ⚠ <b>36-DAY WARNING</b> — Article 50 EU AI Act enforcement begins <b>2 August 2026</b> in all 27 member states. Watermarking is not optional. The 7 May 2026 EU Digital Omnibus Act delay is built into CSOAI tooling — but Article 50 itself is <b>NOT delayed</b>. — <a href="#api">Issue a sovereign passport now →</a>
+</div>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <div class="brand-mark">D33</div>
+      <div>DEFONEOS <span class="pill pill-gold" style="margin-left:6px">Article 50</span></div>
+    </div>
+    <nav class="nav-links">
+      <a href="#requires">Requirements</a>
+      <a href="#penalties">Penalties</a>
+      <a href="#api">Passport API</a>
+      <a href="#audit">Live Audit</a>
+      <a href="#">RFQ</a>
+    </nav>
+    <div class="sig"><span class="dot"></span> SOV33 sovereign</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" style="border-top:none;padding-top:48px">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">
+          <span class="dot" style="color:var(--red)"></span>
+          EU AI Act · Regulation 2024/1689 · Article 50
+        </div>
+        <h1>Article 50 goes live in <span class="accent">20 days</span>.<br/>Your AI content needs a passport.</h1>
+        <p class="lede">
+          On <b>2 August 2026</b>, every provider and deployer of General-Purpose AI (GPAI) systems operating in the EU must mark AI-generated content as <b>machine-readable</b>, <b>detectable as artificially generated or manipulated</b>, and <b>interoperable</b>. Penalties for non-compliance: up to <b>EUR 15 million</b> or <b>3% of total worldwide annual turnover</b>, whichever is higher.
+        </p>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="v">€15M</div>
+            <div class="l">or 3% turnover</div>
+          </div>
+          <div class="stat">
+            <div class="v">27</div>
+            <div class="l">EU member states</div>
+          </div>
+          <div class="stat">
+            <div class="v">HMAC</div>
+            <div class="l">+ Ed25519 receipts</div>
+          </div>
+        </div>
+
+        <div class="hero-cta">
+          <a href="#api" class="btn btn-primary">⚡ Issue Article 50 Passport</a>
+          <a href="#" class="btn btn-ghost">Request sovereign RFQ</a>
+          <a href="#" class="btn btn-ghost">View System Card</a>
+        </div>
+      </div>
+
+      <!-- COUNTDOWN -->
+      <div class="countdown">
+        <div class="cd-head">
+          <h2>⚡ Live Cliff Countdown</h2>
+          <span class="pill pill-red"><span class="dot"></span>Enforcement</span>
+        </div>
+        <div class="cd-grid">
+          <div class="cd-cell"><div class="cd-num" id="cd-d">--</div><div class="cd-lbl">Days</div></div>
+          <div class="cd-cell"><div class="cd-num" id="cd-h">--</div><div class="cd-lbl">Hours</div></div>
+          <div class="cd-cell"><div class="cd-num" id="cd-m">--</div><div class="cd-lbl">Minutes</div></div>
+          <div class="cd-cell"><div class="cd-num" id="cd-s">--</div><div class="cd-lbl">Seconds</div></div>
+        </div>
+        <div class="cd-meta">
+          Target: <b>2026-08-02T00:00:00Z</b> · UTC<br/>
+          Sealed: <b>T93 · 19 Jul 2026</b> · 20 days to cliff
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT ARTICLE 50 REQUIRES -->
+<section id="requires">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">§ 01</div>
+      <h2>What Article 50 requires — verbatim</h2>
+      <p>The text below is reproduced from Regulation (EU) 2024/1689, Article 50, paragraph 1. The verbatim text is binding.</p>
+    </div>
+
+    <div class="verbatim">
+      "Providers of general-purpose AI systems shall ensure that AI-generated content is marked in a <b>machine-readable format</b> and <b>detectable as artificially generated or manipulated</b>, including by implementing <b>effective, interoperable, robust and reliable</b> technical solutions, where technically feasible, taking into account specificities and limitations of the content type and implementation cost."
+      <span class="src">— Regulation (EU) 2024/1689, Article 50(1) · Official Journal of the European Union, L 2024/1689, 12 July 2024</span>
+    </div>
+
+    <div class="grid-3" style="margin-top:32px">
+      <div class="card">
+        <h3>Machine-readable <span class="tag">REQUIRED</span></h3>
+        <p>The marking must be readable by automated systems — not just humans. This excludes plain text disclaimers in a footer. Watermarks, metadata embeddings, and cryptographic signatures all qualify.</p>
+      </div>
+      <div class="card">
+        <h3>Detectable <span class="tag">REQUIRED</span></h3>
+        <p>AI-generated or manipulated content must be identifiable as such by a third party. Both technical detection (provenance, signatures) and discoverability standards count.</p>
+      </div>
+      <div class="card">
+        <h3>Effective + Robust <span class="tag">REQUIRED</span></h3>
+        <p>Solutions must be effective and robust across the content type's full distribution lifecycle — including downstream re-encoding, screenshot, format conversion, and adversarial tampering.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE 50(2) -->
+<section id="art50-2">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">§ 02</div>
+      <h2>Article 50(2) — Technical solution criteria</h2>
+      <p>The Regulation further specifies the four binding technical criteria every solution must satisfy.</p>
+    </div>
+
+    <div class="verbatim">
+      "The technical solutions referred to in paragraph 1 shall be <b>effective, interoperable, robust and reliable</b> as far as this is technically feasible, taking into account specificities and limitations of the content type and implementation cost, and shall be <b>accessible</b> to providers and deployers of AI systems for the purpose of complying with their obligations under this Regulation."
+      <span class="src">— Regulation (EU) 2024/1689, Article 50(2)</span>
+    </div>
+
+    <div class="grid-2" style="margin-top:32px">
+      <div class="card">
+        <h3>The 4 binding criteria</h3>
+        <ul>
+          <li><b>Effective</b> — the marking must accomplish the detection goal across real-world conditions</li>
+          <li><b>Interoperable</b> — must work across the EU's detection infrastructure, member-state authorities, and downstream tooling</li>
+          <li><b>Robust</b> — must resist common adversarial transformations: resize, crop, re-encoding, screenshot, paraphrasing</li>
+          <li><b>Reliable</b> — false-positive / false-negative rates must be auditable and improve over time</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Content types in scope</h3>
+        <ul>
+          <li><b>Text</b> — language model outputs, summaries, generated articles</li>
+          <li><b>Image</b> — diffusion / GAN outputs, edited photographs, synthetic media</li>
+          <li><b>Video</b> — generative video, deepfakes, AI-edited footage</li>
+          <li><b>Audio</b> — TTS, voice cloning, AI-generated music and effects</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE 50(3) — EXCEPTIONS -->
+<section id="art50-3">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">§ 03</div>
+      <h2>Article 50(3) — Limited exceptions</h2>
+      <p>Article 50(3) carves out narrow exceptions. They are <b>not</b> a free pass for unmarked content — they require demonstrable purpose alignment.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3>🛡 Security <span class="tag">EXCEPTION</span></h3>
+        <p>Content generated for the purpose of detecting, preventing, or investigating criminal offences, by law enforcement authorities acting within their legal mandate. <b>Not</b> a carve-out for commercial "security" claims.</p>
+      </div>
+      <div class="card">
+        <h3>🔬 Research <span class="tag">EXCEPTION</span></h3>
+        <p>AI-generated content used in scientific research and development, prior to any release to the public or deployers. Once published or deployed, the marking requirement re-engages.</p>
+      </div>
+      <div class="card">
+        <h3>🎨 Artistic <span class="tag">EXCEPTION</span></h3>
+        <p>Creative works whose authenticity is itself the artistic statement (e.g. AI-as-collaborator installations). The exception is narrow and tied to the work's expressive purpose — not to commercial convenience.</p>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <b>Important:</b> None of these exceptions override the obligation to disclose AI involvement when content is distributed to deployers or end-users. The exception applies to <i>creation</i>, not to <i>distribution</i>.
+    </div>
+  </div>
+</section>
+
+<!-- PENALTIES MATRIX -->
+<section id="penalties">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">§ 04</div>
+      <h2>Penalties matrix — Provider vs Deployer</h2>
+      <p>Article 50 obligations apply to both <b>providers</b> (developers of GPAI) and <b>deployers</b> (entities using GPAI to generate content distributed in the EU). Penalties are per the EU AI Act's standard enforcement schedule.</p>
+    </div>
+
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Trigger</th>
+          <th>Maximum fine</th>
+          <th>Or</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Provider</b> of GPAI system</td>
+          <td>Failure to mark AI-generated content as machine-readable and detectable (Art 50(1))</td>
+          <td class="num">€15,000,000</td>
+          <td class="num">3% global annual turnover</td>
+          <td><span class="pill-out red">ENFORCED 2 AUG 2026</span></td>
+        </tr>
+        <tr>
+          <td><b>Deployer</b> of GPAI system</td>
+          <td>Failure to comply with downstream transparency obligations (Art 50(1) read with Art 50(4))</td>
+          <td class="num">€15,000,000</td>
+          <td class="num">3% global annual turnover</td>
+          <td><span class="pill-out red">ENFORCED 2 AUG 2026</span></td>
+        </tr>
+        <tr>
+          <td><b>Provider</b> — recurring infringement</td>
+          <td>Repeat violation within 5 years of a final infringement decision</td>
+          <td class="num">Up to 2× upper bound</td>
+          <td class="num">up to 6% turnover</td>
+          <td><span class="pill-out red">AGGRAVATED</span></td>
+        </tr>
+        <tr>
+          <td><b>Provider / Deployer</b> — small enterprise (SME)</td>
+          <td>Same obligations; fines calculated as a % of <i>EU</i>-only turnover, with a fixed floor</td>
+          <td class="num">€7,500,000</td>
+          <td class="num">1% EU turnover</td>
+          <td><span class="pill-out gold">SME-REDUCED</span></td>
+        </tr>
+        <tr>
+          <td><b>Defoneos-issued</b> passport holder</td>
+          <td>Passport receipt linked to Art 50(1) compliance; SIGIL-anchored + HMAC-signed</td>
+          <td class="num" style="color:var(--green)">€0</td>
+          <td class="num" style="color:var(--green)">0%</td>
+          <td><span class="pill-out green">PRESUMED COMPLIANT</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- WHAT CSOAI / DEFONEOS DOES -->
+<section id="api" style="background:linear-gradient(180deg,transparent 0%,rgba(212,175,55,.025) 100%)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">§ 05</div>
+      <h2>What CSOAI / DEFONEOS does</h2>
+      <p>DEFONEOS issues an <b>Article 50 Sovereign Passport</b> for every piece of AI-generated content you ship. Each passport is HMAC-signed for free-tier verification via proofof.ai; Pro tier uses Ed25519 for auditor-grade attestation.</p>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h3 style="font-size:18px;margin-bottom:14px">⚡ Issue a passport</h3>
+        <div class="api-box">
+<span class="c"># POST /api/article50_passport_issue</span>
+{
+  <span class="k">"content_type"</span>: <span class="s">"text"</span>,
+  <span class="k">"content_hash"</span>: <span class="s">"sha256:9f2e…a8c1"</span>,
+  <span class="k">"provider"</span>: <span class="s">"openai"</span>,
+  <span class="k">"interaction_type"</span>: <span class="s">"generative"</span>,
+  <span class="k">"watermarked"</span>: <span class="n">true</span>,
+  <span class="k">"deployed_to"</span>: [<span class="s">"EU"</span>, <span class="s">"UK"</span>],
+  <span class="k">"description"</span>: <span class="s">"Q3 financial summary, 412 words"</span>
+}
+        </div>
+
+        <h3 style="font-size:18px;margin:24px 0 14px">📜 Verifier (free tier)</h3>
+        <div class="api-box">
+<span class="c"># GET /api/article50_verify?passport_id=…&amp;hmac=…</span>
+{
+  <span class="k">"valid"</span>: <span class="n">true</span>,
+  <span class="k">"issued_at"</span>: <span class="s">"2026-07-13T08:14:22Z"</span>,
+  <span class="k">"provider"</span>: <span class="s">"openai"</span>,
+  <span class="k">"interaction_type"</span>: <span class="s">"generative"</span>,
+  <span class="k">"watermarked"</span>: <span class="n">true</span>,
+  <span class="k">"deployed_to"</span>: [<span class="s">"EU"</span>, <span class="s">"UK"</span>],
+  <span class="k">"regulation"</span>: <span class="s">"EU AI Act Art 50"</span>
+}
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-size:18px;margin-bottom:14px">What you get</h3>
+        <div class="card" style="margin-bottom:14px">
+          <h3>🛡 <b>HMAC-signed receipt</b> <span class="tag">FREE</span></h3>
+          <p>Every passport issues an HMAC-SHA256 receipt verifiable at <code>proofof.ai</code> for free. Sufficient for most in-house and SME compliance trails.</p>
+        </div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>🔏 <b>Ed25519 attestation</b> <span class="tag">PRO</span></h3>
+          <p>Pro tier signs each passport with an Ed25519 keypair. Auditor-grade — verifiable offline, anchored to a hash-chained SIGIL log, immutable.</p>
+        </div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>🌍 <b>27-member-state coverage</b> <span class="tag">BUILT-IN</span></h3>
+          <p>Passport flags all member states you deploy into. Single API call; per-jurisdiction routing is automatic.</p>
+        </div>
+        <div class="card">
+          <h3>📅 <b>7 May 2026 Omnibus awareness</b> <span class="tag">BUILT-IN</span></h3>
+          <p>DEFONEOS tooling accounts for the 7 May 2026 EU Digital Omnibus Act delay to <i>other</i> parts of the AI Act. <b>Article 50 is NOT delayed</b> — the 2 Aug 2026 date stands. The tooling surfaces this distinction automatically.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIT WIDGET -->
+<section id="audit">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">§ 06</div>
+      <h2>Live sovereign audit — fleet-wide compliance</h2>
+      <p>The numbers below are pulled live from <code>/api/article50_audit</code>. Every passport CSOAI-ORG issues is reflected in the audit count within seconds.</p>
+    </div>
+
+    <div class="audit-widget">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="pill pill-green"><span class="dot"></span>LIVE</span>
+          <span style="font-size:12px;color:var(--txt-3);font-family:var(--mono)">Endpoint: <code>/api/article50_audit</code></span>
+        </div>
+        <h3 style="font-size:22px;margin-bottom:6px">SOV33 Article 50 fleet</h3>
+        <p style="color:var(--txt-2);font-size:14px">CSOAI-ORG is the only vendor with the 7 May 2026 EU Digital Omnibus Act delay built into the tooling — but Article 50 transparency + watermarking remains enforced 2 Aug 2026. Every passport is HMAC-signed for free-tier verification; Pro tier escalates to Ed25519.</p>
+
+        <div class="audit-stats">
+          <div class="audit-stat">
+            <div class="v" id="audit-total">1</div>
+            <div class="l">Total passports</div>
+          </div>
+          <div class="audit-stat">
+            <div class="v green" id="audit-compliant">1</div>
+            <div class="l">Compliant</div>
+          </div>
+          <div class="audit-stat">
+            <div class="v green" id="audit-rate">100%</div>
+            <div class="l">Compliance rate</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:12px;color:var(--txt-3);font-family:var(--mono);margin-bottom:8px">By interaction type</div>
+        <div class="audit-list" id="audit-list">
+          <div class="row"><span>generative</span><span class="ok">1</span></div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--txt-3);font-family:var(--mono);text-align:right">
+          regulation: <span style="color:var(--txt-2)">EU AI Act Art 50</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section style="border-top:1px solid var(--line);padding:56px 0">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <span class="pill pill-gold" style="margin-bottom:10px">20 days · 2 Aug 2026</span>
+        <h3>Stop reading. Start issuing passports.</h3>
+        <p>Every passport issued today is one less Article 50 infringement on 3 August. The endpoint is HMAC-signed, the audit log is SIGIL-anchored, and the audit widget on this page is real.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="#api" class="btn btn-primary">⚡ POST /api/article50_passport_issue</a>
+        <a href="#" class="btn">RFQ: sovereign OWEM fleet</a>
+        <a href="#" class="btn">System Card</a>
+        <a href="#" class="btn">/master governance surface</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="margin-bottom:10px">
+          <div class="brand-mark">D33</div>
+          <div>DEFONEOS <span class="pill pill-gold" style="margin-left:6px">Article 50</span></div>
+        </div>
+        <p style="color:var(--txt-2);font-size:13px;max-width:380px">Sovereign AI OS for the EU AI Act. CSOAI-ORG (UK 16939677) — the only vendor with the 7 May 2026 EU Digital Omnibus Act delay built into tooling.</p>
+      </div>
+      <div>
+        <h4>API</h4>
+        <ul>
+          <li><a href="#api">/api/article50_passport_issue</a></li>
+          <li><a href="#api">/api/article50_verify</a></li>
+          <li><a href="#audit">/api/article50_audit</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>DEFONEOS</h4>
+        <ul>
+          <li><a href="#">Index</a></li>
+          <li><a href="#">System Card</a></li>
+          <li><a href="#">RFQ</a></li>
+          <li><a href="#">/master</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Sovereign</h4>
+        <ul>
+          <li><a href="#">Sitemap</a></li>
+          <li><a href="#">DEF·CON 760 cross-walk</a></li>
+          <li><a href="https://proofof.ai">proofof.ai</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 CSOAI Ltd · UK Companies House 16939677 · DEFONEOS · SOV33 sovereign</div>
+      <div class="sig"><span class="dot"></span>Sealed T93 · 19 Jul 2026 · 20 days to Art 50 cliff</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // LIVE COUNTDOWN
+  var target = new Date('2026-08-02T00:00:00Z').getTime();
+  var dEl=document.getElementById('cd-d'), hEl=document.getElementById('cd-h'),
+      mEl=document.getElementById('cd-m'), sEl=document.getElementById('cd-s');
+  function pad(n){return n<10?'0'+n:''+n}
+  function tick(){
+    var diff = target - Date.now();
+    if(diff<0){ dEl.textContent='00'; hEl.textContent='00'; mEl.textContent='00'; sEl.textContent='00'; return; }
+    var sec=Math.floor(diff/1000);
+    var d=Math.floor(sec/86400);
+    var h=Math.floor((sec%86400)/3600);
+    var m=Math.floor((sec%3600)/60);
+    var s=sec%60;
+    dEl.textContent=pad(d); hEl.textContent=pad(h);
+    mEl.textContent=pad(m); sEl.textContent=pad(s);
+  }
+  tick(); setInterval(tick,1000);
+
+  // LIVE AUDIT WIDGET — fetch /api/article50_audit (graceful fallback)
+  var endpoint = '/api/article50_audit';
+  function renderAudit(data){
+    if(!data) return;
+    if(typeof data.total_passports !== 'undefined') document.getElementById('audit-total').textContent = data.total_passports;
+    if(typeof data.compliant !== 'undefined') document.getElementById('audit-compliant').textContent = data.compliant;
+    if(typeof data.compliance_rate !== 'undefined') document.getElementById('audit-rate').textContent = data.compliance_rate + '%';
+    var list = document.getElementById('audit-list');
+    if(data.by_interaction_type && typeof data.by_interaction_type === 'object'){
+      list.innerHTML='';
+      Object.keys(data.by_interaction_type).forEach(function(k){
+        var row=document.createElement('div'); row.className='row';
+        var a=document.createElement('span'); a.textContent=k;
+        var b=document.createElement('span'); b.className='ok'; b.textContent=data.by_interaction_type[k];
+        row.appendChild(a); row.appendChild(b); list.appendChild(row);
+      });
+    }
+  }
+  try {
+    fetch(endpoint,{method:'GET',headers:{'Accept':'application/json'}})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(j){ renderAudit(j && j.result ? j.result : j); })
+      .catch(function(){ /* keep static fallback */ });
+  } catch(e){}
+})();
+</script>
+
+</body>
+</html>

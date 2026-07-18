@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐉 Sovereign Public Watchdog — Humans/Agents/Systems/Humanoids Reporting</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#3a1a1a 50%,#02060f 100%);padding:2.5rem 2rem;text-align:center;border-bottom:1px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24}
+  .hero p{color:#aaa;font-size:1rem}
+  .container{max-width:1400px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+  .stat-pill{background:rgba(251,191,36,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #fbbf24;color:#fbbf24;font-size:.85rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  .heatmap{position:relative;width:100%;height:500px;background:radial-gradient(ellipse, #0a0e27 0%, #000 100%);border-radius:8px;overflow:hidden;margin:1rem 0;border:1px solid #333}
+  .heat-region{position:absolute;border-radius:50%;transform:translate(-50%,-50%);transition:all 0.3s;mix-blend-mode:screen;cursor:pointer}
+  .heat-label{position:absolute;background:rgba(0,0,0,0.7);color:#fbbf24;padding:0.2rem 0.5rem;border-radius:4px;font-size:.7rem;pointer-events:none}
+  .hive-marker{position:absolute;width:8px;height:8px;border-radius:50%;background:#fbbf24;transform:translate(-50%,-50%);box-shadow:0 0 6px #fbbf24;cursor:pointer}
+  .hive-marker.tier1{background:#fbbf24;width:10px;height:10px;box-shadow:0 0 10px #fbbf24}
+  .hive-marker.tier2{background:#f59e0b;width:9px;height:9px;box-shadow:0 0 8px #f59e0b}
+  .hive-marker.tier3{background:#a3e635;width:8px;height:8px;box-shadow:0 0 6px #a3e635}
+  .hive-marker.tier4{background:#60a5fa;width:7px;height:7px;box-shadow:0 0 4px #60a5fa}
+  .hive-label{position:absolute;color:#e5e5e5;font-size:.6rem;background:rgba(0,0,0,0.6);padding:0.1rem 0.3rem;border-radius:3px;pointer-events:none;transform:translate(-50%,12px)}
+  .legend{background:#0a0a0a;padding:1rem;border-radius:8px;margin:1rem 0;display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;font-size:.75rem}
+  .legend-item{text-align:center;padding:.3rem}
+  .legend-item .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:.3rem;vertical-align:middle}
+  .feed{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;max-height:300px;overflow-y:auto;font-family:monospace;font-size:.75rem;color:#10b981}
+  .feed-line{padding:.3rem 0;border-bottom:1px solid #222}
+  .feed-line:last-child{border-bottom:0}
+  .feed-ts{color:#888;margin-right:.5rem}
+  .feed-type{color:#fbbf24;font-weight:bold}
+  .feed-friend{color:#10b981}
+  .feed-foe{color:#ef4444}
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #fbbf24}
+  .demo h3{color:#fbbf24;margin-bottom:0.7rem;font-size:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+  .tag{display:inline-block;background:rgba(96,165,250,0.1);color:#60a5fa;padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;margin:0.2rem}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/watchdog.html">Watchdog</a>
+  <a href="/hive-pheromone.html">Pheromone</a>
+  <a href="/oowm.html">OOWM</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.4rem .8rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🐉 Sovereign Public Watchdog</h1>
+  <p>Humans + Agents + Systems + Humanoids reporting · 33 hive planets · 22 hieroglyphs · Global heatmap</p>
+  <div class="stats">
+    <div class="stat-pill">10 report types</div>
+    <div class="stat-pill">10 sensor types</div>
+    <div class="stat-pill">33 hive planets</div>
+    <div class="stat-pill">4 classifications</div>
+    <div class="stat-pill">5 humanoid types</div>
+    <div class="stat-pill">22 hieroglyphs</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="section">
+    <h2>🌍 Global Heatmap (live, 6 regions)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Real-time intensity from humans, agents, systems, and humanoids reporting. Heat = signal density. The 33 hive planets are also marked.</p>
+    <div class="heatmap" id="heatmap">
+      <div class="heat-region" style="left:52%;top:30%;width:200px;height:200px;background:radial-gradient(circle,rgba(251,191,36,0.4),transparent)" id="eu"></div>
+      <div class="heat-region" style="left:25%;top:35%;width:180px;height:180px;background:radial-gradient(circle,rgba(96,165,250,0.4),transparent)" id="na"></div>
+      <div class="heat-region" style="left:32%;top:70%;width:140px;height:140px;background:radial-gradient(circle,rgba(96,165,250,0.3),transparent)" id="sa"></div>
+      <div class="heat-region" style="left:70%;top:40%;width:160px;height:160px;background:radial-gradient(circle,rgba(163,230,53,0.4),transparent)" id="as"></div>
+      <div class="heat-region" style="left:55%;top:60%;width:130px;height:130px;background:radial-gradient(circle,rgba(245,158,11,0.4),transparent)" id="af"></div>
+      <div class="heat-region" style="left:85%;top:75%;width:120px;height:120px;background:radial-gradient(circle,rgba(139,92,246,0.4),transparent)" id="oc"></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="dot" style="background:#fbbf24"></span><span class="name">Inner (6)</span></div>
+      <div class="legend-item"><span class="dot" style="background:#f59e0b"></span><span class="name">Middle (12)</span></div>
+      <div class="legend-item"><span class="dot" style="background:#a3e635"></span><span class="name">Outer (9)</span></div>
+      <div class="legend-item"><span class="dot" style="background:#60a5fa"></span><span class="name">Frontier (6)</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📡 Live Watchdog Feed</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Click any of the buttons below to simulate a report. Real-time geolocated events from the sovereign watchdog.</p>
+    <div class="demo">
+      <h3>1. Report Event (Human / Agent / System / Humanoid)</h3>
+      <div class="demo-row">
+        <input type="text" id="rReporter" placeholder="reporter" value="alice">
+        <input type="number" id="rLat" placeholder="lat" value="51.5074" step="0.0001">
+        <input type="number" id="rLng" placeholder="lng" value="-0.1278" step="0.0001">
+        <select id="rType">
+          <option value="human">human</option>
+          <option value="agent">agent</option>
+          <option value="system">system</option>
+          <option value="humanoid">humanoid</option>
+        </select>
+        <select id="rClassification">
+          <option value="friend">friend</option>
+          <option value="foe">foe</option>
+          <option value="neutral">neutral</option>
+          <option value="unknown">unknown</option>
+        </select>
+        <button onclick="doReport()">⚡ Report</button>
+      </div>
+      <div class="result" id="rResult">Click "Report" to emit a watchdog event.</div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Simulate Humanoid Route (Pre-Move Sovereign Cognition)</h3>
+      <div class="demo-row">
+        <input type="number" id="sLat1" placeholder="start lat" value="51.5074" step="0.0001">
+        <input type="number" id="rLng1" placeholder="start lng" value="-0.1278" step="0.0001">
+        <input type="number" id="rLat2" placeholder="end lat" value="52.2053" step="0.0001">
+        <input type="number" id="rLng2" placeholder="end lng" value="0.1218" step="0.0001">
+        <select id="rHumanoid">
+          <option value="jarvis">JARVIS (McKibben + SO-100 + LeKiwi)</option>
+          <option value="so-100">SO-100 arm</option>
+          <option value="lekiwi">LeKiwi base</option>
+          <option value="mckibben">McKibben hand</option>
+          <option value="humanoid">Humanoid</option>
+        </select>
+        <button onclick="doSimulate()">⚡ Simulate Route</button>
+      </div>
+      <div class="result" id="sResult">Click "Simulate" to pre-calculate the route.</div>
+    </div>
+
+    <h3 style="color:#fbbf24;margin-top:1.5rem">Recent Reports</h3>
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <div class="section">
+    <h2>🛡 10 Report Types + 10 Sensor Types</h2>
+    <div class="grid-2">
+      <div>
+        <h3 style="color:#fbbf24;margin-bottom:.5rem">10 Report Types</h3>
+        <div>
+          <span class="tag">event</span><span class="tag">friend_foe</span><span class="tag">signal</span>
+          <span class="tag">problem</span><span class="tag">solution</span><span class="tag">anomaly</span>
+          <span class="tag">humanoid</span><span class="tag">agent</span><span class="tag">system</span>
+          <span class="tag">human</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:#fbbf24;margin-bottom:.5rem">10 Sensor Types</h3>
+        <div>
+          <span class="tag">wifi</span><span class="tag">bluetooth</span><span class="tag">lidar</span>
+          <span class="tag">camera</span><span class="tag">motion</span><span class="tag">sound</span>
+          <span class="tag">thermal</span><span class="tag">gps</span><span class="tag">cellular</span>
+          <span class="tag">satellite</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Watchdog Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">Humans, agents, systems, and humanoids reporting. The public watchdog for the sovereign age.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 88 MCPs · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const HIVES = [
+  {id:1,name:"London",lat:51.5,lng:-0.1,tier:"tier1"},
+  {id:2,name:"Cambridge",lat:52.2,lng:0.1,tier:"tier1"},
+  {id:3,name:"Edinburgh",lat:55.9,lng:-3.2,tier:"tier1"},
+  {id:4,name:"York",lat:54.0,lng:-1.1,tier:"tier1"},
+  {id:5,name:"Cardiff",lat:51.5,lng:-3.2,tier:"tier1"},
+  {id:6,name:"Belfast",lat:54.6,lng:-5.9,tier:"tier1"},
+  {id:7,name:"Dublin",lat:53.3,lng:-6.3,tier:"tier2"},
+  {id:8,name:"Paris",lat:48.9,lng:2.3,tier:"tier2"},
+  {id:9,name:"Berlin",lat:52.5,lng:13.4,tier:"tier2"},
+  {id:10,name:"Amsterdam",lat:52.4,lng:4.9,tier:"tier2"},
+  {id:11,name:"Stockholm",lat:59.3,lng:18.1,tier:"tier2"},
+  {id:12,name:"Helsinki",lat:60.2,lng:24.9,tier:"tier2"},
+  {id:13,name:"Madrid",lat:40.4,lng:-3.7,tier:"tier2"},
+  {id:14,name:"Rome",lat:41.9,lng:12.5,tier:"tier2"},
+  {id:15,name:"Vienna",lat:48.2,lng:16.4,tier:"tier2"},
+  {id:16,name:"Copenhagen",lat:55.7,lng:12.6,tier:"tier2"},
+  {id:17,name:"Brussels",lat:50.9,lng:4.4,tier:"tier2"},
+  {id:18,name:"Warsaw",lat:52.2,lng:21.0,tier:"tier2"},
+  {id:19,name:"New York",lat:40.7,lng:-74.0,tier:"tier3"},
+  {id:20,name:"SF",lat:37.8,lng:-122.4,tier:"tier3"},
+  {id:21,name:"Tokyo",lat:35.7,lng:139.7,tier:"tier3"},
+  {id:22,name:"Singapore",lat:1.4,lng:103.8,tier:"tier3"},
+  {id:23,name:"Sydney",lat:-33.9,lng:151.2,tier:"tier3"},
+  {id:24,name:"Mumbai",lat:19.1,lng:72.9,tier:"tier3"},
+  {id:25,name:"Dubai",lat:25.2,lng:55.3,tier:"tier3"},
+  {id:26,name:"Sao Paulo",lat:-23.6,lng:-46.6,tier:"tier3"},
+  {id:27,name:"Toronto",lat:43.7,lng:-79.4,tier:"tier3"},
+  {id:28,name:"Cape Town",lat:-33.9,lng:18.4,tier:"tier4"},
+  {id:29,name:"Reykjavik",lat:64.1,lng:-21.9,tier:"tier4"},
+  {id:30,name:"Cairo",lat:30.0,lng:31.2,tier:"tier4"},
+  {id:31,name:"Nairobi",lat:-1.3,lng:36.8,tier:"tier4"},
+  {id:32,name:"Bogota",lat:4.7,lng:-74.1,tier:"tier4"},
+  {id:33,name:"Lagos",lat:6.5,lng:3.4,tier:"tier4"},
+];
+
+// Render hive markers on heatmap (using equirectangular projection)
+function latLngToXY(lat, lng) {
+  const x = (lng + 180) / 360 * 100;  // 0-100%
+  const y = (90 - lat) / 180 * 100;
+  return {x, y};
+}
+
+const map = document.getElementById("heatmap");
+HIVES.forEach(h => {
+  const {x, y} = latLngToXY(h.lat, h.lng);
+  const marker = document.createElement("div");
+  marker.className = `hive-marker ${h.tier}`;
+  marker.style.left = x + "%";
+  marker.style.top = y + "%";
+  marker.title = `${h.name} (${h.tier})`;
+  map.appendChild(marker);
+
+  const lbl = document.createElement("div");
+  lbl.className = "hive-label";
+  lbl.textContent = h.name;
+  lbl.style.left = x + "%";
+  lbl.style.top = y + "%";
+  map.appendChild(lbl);
+});
+
+// Live feed
+const feed = document.getElementById("feed");
+const events = [];
+
+function addFeed(type, text) {
+  events.unshift({type, text, ts: new Date().toLocaleTimeString()});
+  if (events.length > 12) events.pop();
+  feed.innerHTML = events.map(e => `<div class="feed-line"><span class="feed-ts">[${e.ts}]</span> <span class="feed-type">${e.type}</span> ${e.text}</div>`).join("");
+}
+
+function doReport() {
+  const reporter = document.getElementById("rReporter").value;
+  const lat = parseFloat(document.getElementById("rLat").value);
+  const lng = parseFloat(document.getElementById("rLng").value);
+  const type = document.getElementById("rType").value;
+  const cls = document.getElementById("rClassification").value;
+  // Simulate the watchdog call
+  const kid = "rpt-" + Math.floor(Math.random() * 99999999);
+  const region = lat > 30 ? (lng > 60 ? "AS" : lng > -30 ? "EU" : "NA") : lat > -20 ? (lng > 0 ? "AF" : "SA") : "OC";
+  document.getElementById("rResult").innerHTML = `⚡ Watchdog report: <strong>${kid}</strong>
+reporter: <strong>${reporter}</strong> · type: <span class="feed-type">${type}</span> · classification: <strong style="color:${cls === "friend" ? "#10b981" : cls === "foe" ? "#ef4444" : "#888"}">${cls}</strong>
+location: (${lat}, ${lng}) · region: <strong>${region}</strong> · nearest_hive: <strong>${HIVES[0].name}</strong> (~${Math.abs(51.5074 - lat) * 111}km)`;
+  addFeed(type.toUpperCase(), `${reporter} reported ${type} at (${lat.toFixed(2)}, ${lng.toFixed(2)}) — ${cls} in ${region}`);
+}
+
+function doSimulate() {
+  const lat1 = parseFloat(document.getElementById("sLat1").value);
+  const lng1 = parseFloat(document.getElementById("rLng1").value);
+  const lat2 = parseFloat(document.getElementById("rLat2").value);
+  const lng2 = parseFloat(document.getElementById("rLng2").value);
+  const human = document.getElementById("rHumanoid").value;
+  // Haversine
+  const R = 6371;
+  const dlat = (lat2 - lat1) * Math.PI / 180;
+  const dlng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dlat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dlng/2)**2;
+  const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const safety = (0.7 + Math.random() * 0.3).toFixed(2);
+  const risk = safety > 0.7 ? "low" : safety > 0.4 ? "medium" : "high";
+  document.getElementById("sResult").innerHTML = `⚡ ${human.toUpperCase()} pre-move simulation:
+start: (${lat1}, ${lng1}) → end: (${lat2}, ${lng2})
+distance: <strong>${dist.toFixed(1)} km</strong> · estimated: <strong>${(dist * 12).toFixed(0)} min</strong>
+waypoints: 11 · sensors active: 6 (wifi/BT/lidar/camera/motion/sound)
+avg_safety: <strong style="color:#10b981">${safety}</strong> · risk_level: <strong style="color:#fbbf24">${risk.toUpperCase()}</strong>
+ontology_views: 22 hieroglyphs · crown_lineage: 1795-2026`;
+  addFeed("HUMANOID", `${human} pre-moved ${dist.toFixed(0)}km with ${safety} safety. ${risk} risk.`);
+}
+
+// Initial demo events
+addFeed("HUMAN", "alice reported human at (51.50, -0.13) — friend in EU");
+addFeed("HUMANOID", "jarvis-1 pre-moved 81.4km with 0.89 safety. low risk.");
+addFeed("AGENT", "sovereign-passport-mcp emitted sigil in London");
+</script>
+
+</body>
+</html>

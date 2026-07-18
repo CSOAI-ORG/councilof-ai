@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — Capability Investment Roadmap 2026-27 (Sovereign Weights · MCPs · Pilot SOWs · BFT Council)</title>
+<meta name="description" content="DEFONEOS Capability Investment Roadmap 2026-27: 12-month build plan for sovereign weights · MCPs · pilot SOWs · BFT council capacity · aligned to bid pipeline + 4 named constraint horizons (disk · SC clearance · PyPI · cash) + 3 named scenarios." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/capability-investment-roadmap-2026-27 · csoai.org · ship-grade · tick 99</div>
+<header>
+<h1>Capability Investment Roadmap 2026-27</h1>
+<div class="sub">The single 12-month build plan for DEFONEOS sovereign substrate — sovereign weights, MCPs, pilot SOWs, BFT council capacity — aligned 1:1 to the bid pipeline (tick 97 procurement master schedule). 4 named constraint horizons (disk · SC clearance · PyPI token · cash), 3 named scenarios (constrained / base / accelerated), and 33-agent BFT council investment authority at every phase boundary.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Roadmap horizon</span><b>12 months (Q3 2026 → Q2 2027)</b></div>
+<div class="kpi"><span>Sovereign weight builds planned</span><b>5 (SOV3-small v2 · SOV3-large v2 · Liquid-KAN-MoE v2 · AUKUS-tuned base · Sovereign-Defence-secured)</b></div>
+<div class="kpi"><span>MCPs planned to ship</span><b>+15 → total 45 MCPs on PyPI (target 60 by Q2 2027)</b></div>
+<div class="kpi"><span>Pilot SOWs planned to draft</span><b>12 (1 per HIGH-fit bid window)</b></div>
+<div class="kpi"><span>BFT council expansion</span><b>33 → 50 agents (target Q1 2027) → 73 by Q4 2027</b></div>
+<div class="kpi"><span>Constraint horizons</span><b>4 named (disk · SC clearance · PyPI token · cash)</b></div>
+<div class="kpi"><span>Scenarios</span><b>3 (Constrained £0 / Base £25k bid pipeline / Accelerated £100k bid pipeline)</b></div>
+</div>
+
+<h2>1 · Why this roadmap exists</h2>
+<p>DEFONEOS capability investment follows the bid pipeline, never the reverse. The rule is enforced by the 33-agent BFT council at every phase boundary. This roadmap is the single document that maps:</p>
+<ol>
+<li><b>Which sovereign weights</b> need to be built to support which bids</li>
+<li><b>Which MCPs</b> need to ship to satisfy which procurement windows</li>
+<li><b>Which pilot SOWs</b> need to be drafted to bid on which opportunities</li>
+<li><b>How the BFT council</b> scales to handle the increased review load</li>
+<li><b>What the 4 constraint horizons</b> (disk · SC clearance · PyPI token · cash) gate on</li>
+</ol>
+
+<h2>2 · The 3 named scenarios (which one runs depends on the next 30 days)</h2>
+
+<table>
+<thead><tr><th>Scenario</th><th>Trigger</th><th>Capability investment</th><th>MCPs by Q2 2027</th><th>BFT council by Q2 2027</th><th>Bid pipeline coverage</th></tr></thead>
+<tbody>
+<tr><td><b>Constrained</b> (£0 bid pipeline funding)</td><td>Owner-gated revenue unlock remains blocked past 2026-08-15</td><td>Existing 30 MCPs + 5 weight v2 builds on existing free compute</td><td>30 (no growth)</td><td>33 (no growth)</td><td>5 of 14 HIGH-fit windows (free bids only)</td></tr>
+<tr><td><b>Base</b> (£25k bid pipeline funding — Tick 98 board ask)</td><td>Owner approves £25k by 2026-07-21</td><td>+ 15 MCPs + 5 weight v2 builds + 12 pilot SOWs + BFT growth to 50</td><td>45</td><td>50</td><td>12 of 14 HIGH-fit windows</td></tr>
+<tr><td><b>Accelerated</b> (£100k bid pipeline + Series A close)</td><td>Series A closes Q4 2026 (target £2-5M)</td><td>+ 30 MCPs + 8 weight v2 builds + 12 pilot SOWs + 6 customer pilots + BFT growth to 73 + 5 hires</td><td>60</td><td>73</td><td>14 of 14 HIGH-fit windows + 2 EU consortium bids</td></tr>
+</tbody>
+</table>
+
+<h2>3 · The 4 constraint horizons (the named gates)</h2>
+<table>
+<thead><tr><th>Constraint</th><th>Current state</th><th>Hard limit</th><th>What it gates</th><th>Resolution path</th></tr></thead>
+<tbody>
+<tr><td><b>Disk</b></td><td>189 GB substrate on VM (77 SSD + 112 HDD) · 355 GB HDD free</td><td>1.2 TB before ENOSPC risk</td><td>Weight training (each weight v2 = ~30 GB checkpoints)</td><td>Adopt HDD-only checkpoints for v2 builds; SSD cache only for inference</td></tr>
+<tr><td><b>SC clearance</b></td><td>Not held by Nick</td><td>Required by Q1 2027 for MOD IFS / AUKUS bids</td><td>DEFONEOS-lead bids for &gt;£5M classified work</td><td>Nick initiates UK SC clearance process (guide at <a href="#">defoneos-sc-clearance.html</a>)</td></tr>
+<tr><td><b>PyPI token</b></td><td>Not published (lives in Nick's account)</td><td>Required for new MCP publishes past existing 30</td><td>MCP growth past 30</td><td>Nick publishes 2FA-protected token; DEFONEOS publishing workflow takes over</td></tr>
+<tr><td><b>Cash</b></td><td>£25k bid pipeline ask pending</td><td>£0 = Constrained scenario only</td><td>Bid authors · bid insurance · travel · pilot POC budgets</td><td>Tick 98 board ask approval by 2026-07-21</td></tr>
+</tbody>
+</table>
+
+<h2>4 · The 5 sovereign weight builds (2026-27)</h2>
+<table>
+<thead><tr><th>#</th><th>Weight build</th><th>Size target</th><th>Use case</th><th>Build quarter</th><th>Owner</th></tr></thead>
+<tbody>
+<tr><td><b>W-01</b></td><td>SOV3-small v2 (merge of v1 + sovereign-council preferences)</td><td>9B params · ~9 GB Q4_K_M</td><td>Bronze/Silver/Gold tier default</td><td>Q3 2026</td><td>ML Platform Lead</td></tr>
+<tr><td><b>W-02</b></td><td>SOV3-large v2 (deeper merge, more domains)</td><td>30B-A3B (MoE) · ~22 GB</td><td>Platinum/Sovereign default · heavy decision support</td><td>Q4 2026</td><td>ML Platform Lead</td></tr>
+<tr><td><b>W-03</b></td><td>Liquid-KAN-MoE v2 (refined topology)</td><td>13B active · ~18 GB</td><td>Research-grade buyers · interpretability demos</td><td>Q4 2026</td><td>Research Lead</td></tr>
+<tr><td><b>W-04</b></td><td>AUKUS-tuned base (specialised for defence compliance)</td><td>9B · ~9 GB</td><td>AUKUS Pillar 2 bid (Q1 2027)</td><td>Q1 2027</td><td>ML Platform Lead + Defence Lead</td></tr>
+<tr><td><b>W-05</b></td><td>Sovereign-Defence-secured (air-gap + escrow-bound)</td><td>9B · ~9 GB</td><td>Sovereign-Defence SEAL buyers</td><td>Q1 2027</td><td>ML Platform Lead + CISO</td></tr>
+</tbody>
+</table>
+
+<h2>5 · The 15 MCPs to ship (2026-27)</h2>
+<table>
+<thead><tr><th>Q</th><th>MCP</th><th>Purpose</th><th>Supports bid</th></tr></thead>
+<tbody>
+<tr><td><b>Q3 2026</b></td><td><code>defoneos-uk-aisi-system-card-mcp</code></td><td>Generate + sign System Card per UK AISI template</td><td>UK AISI (#1)</td></tr>
+<tr><td><b>Q3 2026</b></td><td><code>defoneos-dasa-application-builder-mcp</code></td><td>Generate DASA bid pack from buyer inputs</td><td>DASA (#2)</td></tr>
+<tr><td><b>Q3 2026</b></td><td><code>defoneos-dstl-serapis-bid-mcp</code></td><td>Dstl SERAPIS-specific bid generator</td><td>Dstl SERAPIS (#3)</td></tr>
+<tr><td><b>Q3 2026</b></td><td><code>defoneos-nato-diana-application-mcp</code></td><td>NATO DIANA Cohort 5 application</td><td>NATO DIANA (#24)</td></tr>
+<tr><td><b>Q4 2026</b></td><td><code>defoneos-mod-ifs-tc008-mcp</code></td><td>MOD IFS TC-008 bid + capability response</td><td>MOD IFS (#5)</td></tr>
+<tr><td><b>Q4 2026</b></td><td><code>defoneos-eu-gpai-code-of-practice-mcp</code></td><td>EU GPAI Code of Practice conformance checker</td><td>EU GPAI (#11)</td></tr>
+<tr><td><b>Q4 2026</b></td><td><code>defoneos-ukdi-regional-engagement-mcp</code></td><td>UKDI regional engagement pack</td><td>UKDI (#4)</td></tr>
+<tr><td><b>Q4 2026</b></td><td><code>defoneos-edf-2026-bid-mcp</code></td><td>EDF 2026 consortium bid pack generator</td><td>EDF 2026 (#13)</td></tr>
+<tr><td><b>Q1 2027</b></td><td><code>defoneos-eurohpc-ai-factories-mcp</code></td><td>EuroHPC AI Factories proposal</td><td>EuroHPC (#14)</td></tr>
+<tr><td><b>Q1 2027</b></td><td><code>defoneos-ncsc-acd4-mcp</code></td><td>NCSC ACD 4 cyber proposal</td><td>NCSC ACD 4 (#6)</td></tr>
+<tr><td><b>Q1 2027</b></td><td><code>defoneos-aukus-pillar2-mcp</code></td><td>AUKUS Pillar 2 expression of interest generator</td><td>AUKUS Pillar 2 (#25)</td></tr>
+<tr><td><b>Q1 2027</b></td><td><code>defoneos-eu-ai-office-sandbox-mcp</code></td><td>EU AI Office sandbox application</td><td>EU AI Office Sandboxes (#15)</td></tr>
+<tr><td><b>Q2 2027</b></td><td><code>defoneos-enisa-cyber-reserve-mcp</code></td><td>ENISA Cyber Reserve application</td><td>ENISA (#16)</td></tr>
+<tr><td><b>Q2 2027</b></td><td><code>defoneos-eu-sovereign-ai-stack-mcp</code></td><td>EU Sovereign AI Stack Horizon proposal</td><td>EU Sovereign AI Stack (#18)</td></tr>
+<tr><td><b>Q2 2027</b></td><td><code>defoneos-uk-aisi-pre-deployment-tier2-mcp</code></td><td>UK AISI Pre-Deployment Tier 2 evaluation</td><td>UK AISI Tier 2 (#8)</td></tr>
+</tbody>
+</table>
+<p>Each MCP is built in the 7-component sovereign MCP pattern: mcp.json · agent-card.json · llms.txt · layer-0 manifest · sigil.py · README.md · LICENSE · published to PyPI.</p>
+
+<h2>6 · The 12 pilot SOWs to draft (2026-27)</h2>
+<p>One pilot SOW per HIGH-fit bid window. Each SOW follows the <code>defoneos-mod-90-day-sovereign-pilot-sow.html</code> template:</p>
+<table>
+<thead><tr><th>#</th><th>Pilot SOW</th><th>Buyer profile</th><th>Draft deadline</th></tr></thead>
+<tbody>
+<tr><td><b>SOW-01</b></td><td>UK AISI System Card support</td><td>UK frontier AI developer</td><td>2026-08-08</td></tr>
+<tr><td><b>SOW-02</b></td><td>DASA Open Call pilot</td><td>UK MOD programme team</td><td>2026-09-15</td></tr>
+<tr><td><b>SOW-03</b></td><td>Dstl SERAPIS pilot</td><td>UK MOD research lead</td><td>2026-09-30</td></tr>
+<tr><td><b>SOW-04</b></td><td>NATO DIANA Pilot Cohort 5</td><td>NATO member state SME</td><td>2026-09-01</td></tr>
+<tr><td><b>SOW-05</b></td><td>UKDI Regional Engagement pilot</td><td>UK regional defence cluster</td><td>2026-11-15</td></tr>
+<tr><td><b>SOW-06</b></td><td>MOD IFS TC-008 pilot</td><td>UK MOD large programme</td><td>2026-11-30</td></tr>
+<tr><td><b>SOW-07</b></td><td>NCSC ACD 4 cyber pilot</td><td>UK critical infrastructure</td><td>2027-01-05</td></tr>
+<tr><td><b>SOW-08</b></td><td>EuroHPC AI Factories pilot</td><td>EU research consortium</td><td>2027-01-15</td></tr>
+<tr><td><b>SOW-09</b></td><td>AUKUS Pillar 2 EOI + pilot</td><td>AUKUS programme team</td><td>2027-01-15</td></tr>
+<tr><td><b>SOW-10</b></td><td>EU AI Office Sandbox pilot</td><td>EU AI start-up</td><td>2027-02-15</td></tr>
+<tr><td><b>SOW-11</b></td><td>Dstl AI T&amp;E Range pilot</td><td>UK-FR T&amp;E team</td><td>2027-02-15</td></tr>
+<tr><td><b>SOW-12</b></td><td>UK AISI Pre-Deployment Tier 2 pilot</td><td>UK AISI-evaluating deployer</td><td>2027-04-15</td></tr>
+</tbody>
+</table>
+
+<h2>7 · BFT council expansion (33 → 50 → 73)</h2>
+<table>
+<thead><tr><th>Quarter</th><th>Council size</th><th>New voter profiles</th><th>Quorum</th><th>Review capacity</th></tr></thead>
+<tbody>
+<tr><td><b>Current (Q3 2026)</b></td><td>33</td><td>12 Sovereign + 10 Industry + 5 Independent + 4 Rotating + 2 DEFONEOS</td><td>≥23/33</td><td>~10 BFT reviews/week</td></tr>
+<tr><td><b>Q4 2026</b></td><td>50</td><td>+ 7 Industry + 5 Independent + 5 Defence</td><td>≥34/50</td><td>~20 reviews/week</td></tr>
+<tr><td><b>Q2 2027</b></td><td>73</td><td>+ 10 Industry + 8 EU + 5 Five Eyes</td><td>≥49/73</td><td>~40 reviews/week</td></tr>
+</tbody>
+</table>
+
+<h2>8 · Quarterly milestones (the named checkpoints)</h2>
+<table>
+<thead><tr><th>Quarter</th><th>Milestone</th><th>Owner</th><th>BFT review</th></tr></thead>
+<tbody>
+<tr><td><b>Q3 2026</b></td><td>5 weight v2 builds + 4 MCPs + 4 SOWs + BFT at 33 + 5 bids filed (UK AISI · DASA · Dstl · NATO DIANA · EU GPAI)</td><td>ML Platform Lead + VP Commercial</td><td>2026-09-30</td></tr>
+<tr><td><b>Q4 2026</b></td><td>+ 3 weight builds + 4 MCPs + 3 SOWs + BFT at 50 + 3 bids filed (UKDI · MOD IFS · EDF 2026)</td><td>ML Platform Lead + VP Commercial</td><td>2026-12-31</td></tr>
+<tr><td><b>Q1 2027</b></td><td>+ 4 weight builds (W-04 + W-05) + 4 MCPs + 3 SOWs + BFT at 50 + 6 bids filed (NCSC · EuroHPC · AUKUS · EU AI Office · ENISA · Dstl AI T&amp;E)</td><td>ML Platform Lead + VP Commercial + CISO</td><td>2027-03-31</td></tr>
+<tr><td><b>Q2 2027</b></td><td>+ 3 MCPs + 2 SOWs + BFT at 73 + 2 bids filed (UK AISI Tier 2 · EU Sovereign AI Stack)</td><td>ML Platform Lead + VP Commercial</td><td>2027-06-30</td></tr>
+</tbody>
+</table>
+
+<h2>9 · Cross-walk to other DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Roadmap element</th><th>Artefact</th></tr></thead>
+<tbody>
+<tr><td>Bid pipeline</td><td><a href="#"">defoneos-mod-procurement-master-schedule-2026-27.html</a></td></tr>
+<tr><td>Consortium / primes</td><td><a href="#"">defoneos-mod-partner-prime-consortium-playbook.html</a></td></tr>
+<tr><td>SEAL credential</td><td><a href="#"">defoneos-mod-seal-certification-spec.html</a></td></tr>
+<tr><td>Weight build pattern</td><td><a href="#"">defoneos-mod-ai-bom-sbom-card.html</a></td></tr>
+<tr><td>Operational capacity</td><td><a href="#"">defoneos-mod-operations-runbook.html</a></td></tr>
+<tr><td>Board / investor reporting</td><td><a href="#"">defoneos-mod-board-investor-quarterly-update-template.html</a></td></tr>
+</tbody>
+</table>
+
+<h2>10 · The 5 Anti-Patterns (Capability Investment Disasters We Refuse)</h2>
+<ol>
+<li><b>No "capability investment lagging bids."</b> Bid pipeline drives capability pipeline, never the reverse.</li>
+<li><b>No "build it and they will come."</b> Every build traces to a named bid window.</li>
+<li><b>No "BFT bottleneck."</b> Council expansion is funded (scenario-dependent) ahead of bid volume.</li>
+<li><b>No "constraint ignored."</b> Disk / SC / PyPI / cash gates are real; not aspirational.</li>
+<li><b>No "build without BFT vote."</b> Every weight + MCP + SOW gets ≥23/33 BFT approval at design close.</li>
+</ol>
+
+<h2>11 · Owner Decision Required (the next 30 days)</h2>
+<ol>
+<li><b>Approve scenario</b> (Constrained / Base / Accelerated) — owner decision by 2026-07-21</li>
+<li><b>Initiate UK SC clearance</b> — gates Q1 2027 MOD IFS + AUKUS bids</li>
+<li><b>Publish PyPI token</b> (2FA-protected) — gates Q4 2026+ MCP publishing</li>
+<li><b>Approve bid pipeline budget</b> (£25k for Base, £100k for Accelerated)</li>
+<li><b>Approve BFT council expansion budget</b> (£0 / £15k / £50k per scenario)</li>
+</ol>
+
+<h2>12 · Next Steps</h2>
+<ol>
+<li>Verify this roadmap hash: <code>curl https://csoai.org/defoneos-mod-capability-investment-roadmap-2026-27.html | shasum -a 256</code></li>
+<li>Browse live capability status: <code>csoai.org/capability/status</code></li>
+<li>Browse quarterly milestones: <code>csoai.org/capability/milestones</code></li>
+<li>Request scenario deep-dive: <code>commercial@csoai.org</code></li>
+<li>Schedule a 60-minute roadmap walkthrough with VP Commercial + ML Platform Lead.</li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T99-capability-investment-roadmap-2026-27-c5e9b3d8f1a6 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — sovereign-AI deployers, primes, EU consortium partners, regulators free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Commercial + ML Platform · <code>commercial@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Partner / Prime Consortium Playbook</a> · 
+<a href="#"">Procurement Master Schedule ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

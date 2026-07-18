@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "meok-cli"
+version = "0.1.0"
+description = "meok — the MEOK AI Labs CLI. Verify signed compliance attestations at proofof.ai, browse the MCP catalogue. Stdlib-only, zero deps."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [{ name = "MEOK AI Labs / CSOAI", email = "nicholas@csoai.org" }]
+keywords = ["meok", "cli", "ai-compliance", "attestation", "eu-ai-act", "mcp"]
+dependencies = []
+
+[project.scripts]
+meok = "meok_cli.cli:main"
+
+[project.urls]
+Homepage = "https://meok.ai"
+Verify = "https://proofof.ai/api/verify"
+
+[tool.hatchling.build.targets.wheel]
+packages = ["meok_cli"]

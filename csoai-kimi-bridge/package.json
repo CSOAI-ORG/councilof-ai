@@ -1,0 +1,27 @@
+{
+  "name": "csoai-kimi-bridge",
+  "version": "0.2.0",
+  "description": "MCP bridge between Kimi agents and the CSOAI website",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "csoai-kimi-bridge": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'Add eslint when ready'"
+  },
+  "keywords": ["mcp", "kimi", "csoai", "agent-bridge"],
+  "author": "CSOAI",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

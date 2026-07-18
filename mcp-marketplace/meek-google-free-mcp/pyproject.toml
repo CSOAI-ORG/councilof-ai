@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_google_free_mcp"
+version = "1.0.0"
+description = "Google free tools wrapper (Colab + Gemini API + dm_control + MediaPipe + Coral) for /bin/bash compute sovereign development. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "defoneos", "sovereign", "uk", "open-source", "mit-licensed"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-google-free-mcp"
+
+[project.scripts]
+meek-google-free-mcp = "meek_google_free_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_google_free_mcp"]

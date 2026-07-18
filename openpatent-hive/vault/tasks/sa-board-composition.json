@@ -1,0 +1,7 @@
+{
+  "id": "sa-board-composition",
+  "prompt": "Write a 400-word board-composition plan for openpatent.ai post Series A close. Cover: (1) the 5-seat board — 2 founder seats (CEO + CTO), 1 Series A lead seat, 1 independent seat (must have IP-tech or distributed-systems chops), 1 observer seat for the largest SAFE-holder, (2) the 2 advisory-board seats (non-voting) — a former USPTO Commissioner or TC Director, a Cosmos/Tendermint core dev, (3) the 4 standing committees — Audit (quarterly, reviews $ and SOC2), Compensation (semi-annual, sets exec comp + option grants), Governance (annual, reviews board charter), BFT-Council Ethics (quarterly, reviews 22/33 supermajority decisions and any validator-slashing events), (4) the meeting cadence — full board 4×/yr, committee 4×/yr, ad-hoc as needed, (5) the 5 reserved matters requiring board approval (raise >$5M, hire C-suite, sell the company, change the BFT threshold, change the .ai domain strategy), (6) the compensation — independent director $25k cash + 0.25% options vesting over 3yrs, (7) the 18-month plan to add a 6th independent seat when ARR crosses $20M. Use DEFENEOS mythic voice. Return ONLY JSON: {board_seats:[5 strings], advisory_seats:[2 strings], committees:[4 strings], meeting_cadence:[2 strings], reserved_matters:[5 strings], director_comp_usd:int, director_comp_options_pct:float, expansion_trigger:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

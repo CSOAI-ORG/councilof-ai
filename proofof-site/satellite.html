@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛰 Sovereign Satellite Network — 24/7 Orbital Monitoring</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  /* Orbit visualization */
+  .orbit-stage{position:relative;background:radial-gradient(ellipse at center,#0a0e27 0%,#000 100%);border-radius:12px;padding:2rem;margin:1rem 0;border:1px solid #333;min-height:500px;overflow:hidden}
+  .earth{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#3b82f6 0%,#1e40af 60%,#1e3a8a 100%);box-shadow:0 0 60px rgba(59,130,246,0.5)}
+  .earth .label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:.85rem;font-weight:bold}
+  .satellite{position:absolute;border-radius:50%;cursor:pointer;transition:transform .2s}
+  .satellite:hover{transform:scale(1.5)}
+  .satellite.sovereign{background:#fbbf24;box-shadow:0 0 12px #fbbf24;width:12px;height:12px;animation:sovereign-pulse 2s infinite}
+  .satellite.esa{background:#60a5fa;box-shadow:0 0 8px #60a5fa;width:8px;height:8px}
+  .satellite.nasa{background:#ec4899;box-shadow:0 0 8px #ec4899;width:8px;height:8px}
+  .satellite.noaa{background:#10b981;box-shadow:0 0 8px #10b981;width:8px;height:8px}
+  .satellite.spacex{background:#f59e0b;box-shadow:0 0 8px #f59e0b;width:8px;height:8px}
+  .satellite.esa-tall{width:6px;height:6px}
+  .satellite-orbit{position:absolute;border:1px solid rgba(251,191,36,0.2);border-radius:50%;pointer-events:none}
+  .satellite-orbit.leo{width:300px;height:300px}
+  .satellite-orbit.meo{width:450px;height:450px}
+  .satellite-orbit.geo{width:600px;height:600px}
+  @keyframes sovereign-pulse{0%,100%{box-shadow:0 0 12px #fbbf24}50%{box-shadow:0 0 24px #fbbf24,0 0 36px rgba(251,191,36,0.5)}}
+  /* Ground stations */
+  .gs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.3rem;margin:1rem 0;max-height:300px;overflow-y:auto}
+  .gs-cell{background:#0a0a0a;padding:.4rem .7rem;border-radius:4px;border-left:3px solid #10b981;font-size:.75rem;font-family:monospace;color:#aaa}
+  /* Demo */
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  .sat-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem;margin:1rem 0}
+  .sat-card{background:#0a0a0a;padding:.7rem .9rem;border-radius:6px;border-left:3px solid #60a5fa;font-size:.78rem;display:flex;justify-content:space-between;align-items:center;transition:all .2s;cursor:pointer}
+  .sat-card:hover{transform:translateX(2px);background:rgba(96,165,250,0.05)}
+  .sat-card.sovereign{border-left-color:#fbbf24;background:rgba(251,191,36,0.05)}
+  .sat-card .name{color:#60a5fa;font-weight:bold}
+  .sat-card.sovereign .name{color:#fbbf24}
+  .sat-card .agency{color:#888;font-size:.7rem}
+  .sat-card .alt{color:#10b981;font-family:monospace;font-size:.7rem}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/satellite.html">Satellite</a>
+  <a href="/iot.html">IoT</a>
+  <a href="/sovspace.html">SovSpace</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🛰 Sovereign Satellite Network</h1>
+  <p>24/7 orbital monitoring. 22+ satellites. 33 ground stations. 6 sovereign (the dragon's eyes). Crown lineage 1795-2025.</p>
+  <div class="stats-bar">
+    <div class="stat green"><div class="val">22</div><div class="lbl">Satellites</div></div>
+    <div class="stat blue"><div class="val">6</div><div class="lbl">Sovereign</div></div>
+    <div class="stat purple"><div class="val">33</div><div class="lbl">Ground Stations</div></div>
+    <div class="stat"><div class="val">1.5M</div><div class="lbl">km max alt (JWST)</div></div>
+    <div class="stat green"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+    <div class="stat blue"><div class="val">24/7</div><div class="lbl">Live</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="section">
+    <h2>🌍 Orbital Visualization (24/7 live)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Real-time satellite positions around Earth. 6 sovereign sats (gold) are the dragon's eyes. Click any satellite to track.</p>
+    <div class="orbit-stage">
+      <!-- Earth -->
+      <div class="earth">
+        <div class="label">🌍 Earth</div>
+      </div>
+      <!-- Orbit rings -->
+      <div class="satellite-orbit leo" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+      <div class="satellite-orbit meo" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+      <div class="satellite-orbit geo" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+      <!-- Satellites (positioned randomly) -->
+      <div class="satellite sovereign" style="top:30%;left:65%" title="SOV-1 (London Eye)"></div>
+      <div class="satellite sovereign" style="top:35%;left:40%" title="SOV-2 (Cambridge Watch)"></div>
+      <div class="satellite sovereign" style="top:60%;left:55%" title="SOV-3 (York Sentinel)"></div>
+      <div class="satellite sovereign" style="top:45%;left:25%" title="SOV-4 (Cardiff Watch)"></div>
+      <div class="satellite sovereign" style="top:70%;left:30%" title="SOV-5 (Belfast Watch)"></div>
+      <div class="satellite sovereign" style="top:25%;left:75%" title="SOV-6 (Dublin Watch)"></div>
+      <!-- ESA -->
+      <div class="satellite esa" style="top:20%;left:50%"></div>
+      <div class="satellite esa" style="top:50%;left:70%"></div>
+      <div class="satellite esa esa-tall" style="top:75%;left:45%"></div>
+      <div class="satellite esa" style="top:40%;left:35%"></div>
+      <!-- NASA -->
+      <div class="satellite nasa" style="top:30%;left:45%"></div>
+      <div class="satellite nasa" style="top:55%;left:60%"></div>
+      <div class="satellite nasa esa-tall" style="top:65%;left:35%"></div>
+      <!-- NOAA -->
+      <div class="satellite noaa" style="top:22%;left:60%"></div>
+      <div class="satellite noaa" style="top:48%;left:80%"></div>
+      <div class="satellite noaa" style="top:78%;left:70%"></div>
+      <!-- SpaceX -->
+      <div class="satellite spacex" style="top:35%;left:55%"></div>
+      <div class="satellite spacex" style="top:68%;left:50%"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🛰 22+ Tracked Satellites</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Click to track. Sovereign = the dragon's eyes.</p>
+    <div class="sat-list" id="satList"></div>
+  </div>
+
+  <div class="section">
+    <h2>📡 33 Ground Stations (one per hive)</h2>
+    <div class="gs-grid" id="gsGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2>📊 Try the Satellite MCP</h2>
+    <div class="demo">
+      <h3>1. List Satellites</h3>
+      <div class="demo-row">
+        <select id="listAgency">
+          <option value="">All agencies</option>
+          <option value="ESA">ESA</option>
+          <option value="NASA">NASA</option>
+          <option value="NOAA">NOAA</option>
+        </select>
+        <select id="listSovereign">
+          <option value="false">All</option>
+          <option value="true">Sovereign only</option>
+        </select>
+        <button onclick="doList()">🛰 List</button>
+      </div>
+      <div class="result" id="listResult">Click "List" to see satellites.</div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Track Satellite</h3>
+      <div class="demo-row">
+        <select id="trackSat"></select>
+        <button onclick="doTrack()">📡 Track</button>
+      </div>
+      <div class="result" id="trackResult">Click "Track" to see satellite position.</div>
+    </div>
+
+    <div class="demo">
+      <h3>3. Predict Pass</h3>
+      <div class="demo-row">
+        <select id="passSat"></select>
+        <select id="passGs"></select>
+        <button onclick="doPass()">⏰ Pass</button>
+      </div>
+      <div class="result" id="passResult">Click "Pass" to predict next pass.</div>
+    </div>
+
+    <div class="demo">
+      <h3>4. Network Status</h3>
+      <div class="demo-row">
+        <button onclick="doStatus()">📊 Status</button>
+      </div>
+      <div class="result" id="statusResult">Click "Status" for full network.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Satellite Doctrine</h2>
+  <blockquote>"22+ satellites. 33 ground stations. 6 sovereign. 24/7.<br>The dragon's eyes in the sky. The dragon's ears on Earth.<br>Sovereign by construction."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 106 sovereign MCPs (was 104, +2 satellite + iot) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const SATS = [
+  {id:"sat-sentinel-2a",name:"Sentinel-2A",agency:"ESA",alt:786,purpose:"Earth observation",sovereign:false},
+  {id:"sat-sentinel-2b",name:"Sentinel-2B",agency:"ESA",alt:786,purpose:"Earth observation",sovereign:false},
+  {id:"sat-sentinel-1a",name:"Sentinel-1A",agency:"ESA",alt:693,purpose:"Radar imaging",sovereign:false},
+  {id:"sat-icesat-2",name:"ICESat-2",agency:"NASA",alt:496,purpose:"Ice sheet mapping",sovereign:false},
+  {id:"sat-landsat-9",name:"Landsat 9",agency:"NASA/USGS",alt:705,purpose:"Land imaging",sovereign:false},
+  {id:"sat-jpss-1",name:"JPSS-1 (NOAA-20)",agency:"NOAA",alt:824,purpose:"Weather",sovereign:false},
+  {id:"sat-goes-16",name:"GOES-16",agency:"NOAA",alt:35786,purpose:"Weather (geostationary)",sovereign:false},
+  {id:"sat-goes-17",name:"GOES-17",agency:"NOAA",alt:35786,purpose:"Weather (geostationary)",sovereign:false},
+  {id:"sat-goes-18",name:"GOES-18",agency:"NOAA",alt:35786,purpose:"Weather (geostationary)",sovereign:false},
+  {id:"sat-iss",name:"ISS (ZARYA)",agency:"NASA/ESA",alt:408,purpose:"Space station",sovereign:false},
+  {id:"sat-hubble",name:"Hubble",agency:"NASA/ESA",alt:540,purpose:"Space telescope",sovereign:false},
+  {id:"sat-jwst",name:"James Webb Space Telescope",agency:"NASA/ESA/CSA",alt:1500000,purpose:"Space telescope (L2)",sovereign:false},
+  {id:"sat-starlink-1000",name:"Starlink-1234",agency:"SpaceX",alt:550,purpose:"Internet",sovereign:false},
+  {id:"sat-oneweb-100",name:"OneWeb-100",agency:"OneWeb",alt:1200,purpose:"Internet",sovereign:false},
+  {id:"sat-uk-dmc3",name:"UK-DMC3",agency:"UK Space Agency",alt:666,purpose:"Disaster monitoring",sovereign:false},
+  {id:"sat-novaSAR",name:"NovaSAR-S",agency:"UK Space Agency",alt:580,purpose:"Radar imaging",sovereign:false},
+  {id:"sat-sovereign-1",name:"SOV-1 (London Eye)",agency:"CSOAI",alt:600,purpose:"Sovereign hive monitor",sovereign:true},
+  {id:"sat-sovereign-2",name:"SOV-2 (Cambridge Watch)",agency:"CSOAI",alt:600,purpose:"Sovereign hive monitor",sovereign:true},
+  {id:"sat-sovereign-3",name:"SOV-3 (York Sentinel)",agency:"CSOAI",alt:600,purpose:"Sovereign hive monitor",sovereign:true},
+  {id:"sat-sovereign-4",name:"SOV-4 (Cardiff Watch)",agency:"CSOAI",alt:600,purpose:"Sovereign hive monitor",sovereign:true},
+  {id:"sat-sovereign-5",name:"SOV-5 (Belfast Watch)",agency:"CSOAI",alt:600,purpose:"Sovereign hive monitor",sovereign:true},
+  {id:"sat-sovereign-6",name:"SOV-6 (Dublin Watch)",agency:"CSOAI",alt:600,purpose:"Sovereign hive monitor",sovereign:true},
+];
+
+const HIVES = ["London","Cambridge","Edinburgh","York","Cardiff","Belfast","Dublin","Paris","Berlin","Amsterdam","Stockholm","Helsinki","Madrid","Rome","Vienna","Copenhagen","Brussels","Warsaw","New York","San Francisco","Tokyo","Singapore","Sydney","Mumbai","Dubai","Sao Paulo","Toronto","Cape Town","Reykjavik","Cairo","Nairobi","Bogota","Lagos"];
+
+function renderSatList() {
+  const grid = document.getElementById("satList");
+  grid.innerHTML = SATS.map(s => {
+    const cls = s.sovereign ? "sovereign" : "";
+    return `<div class="sat-card ${cls}" onclick="doTrackById('${s.id}')">
+      <div>
+        <div class="name">${s.name}</div>
+        <div class="agency">${s.agency} · ${s.purpose}</div>
+      </div>
+      <div class="alt">${s.alt}km</div>
+    </div>`;
+  }).join("");
+}
+
+function renderGsGrid() {
+  const grid = document.getElementById("gsGrid");
+  grid.innerHTML = HIVES.map((h, i) => `<div class="gs-cell"><span style="color:#fbbf24">${h}</span> · gs-${h.toLowerCase().replace(/\s+/g, "-")} · 8m parabolic</div>`).join("");
+}
+
+function updateSelects() {
+  const satOptions = SATS.map(s => `<option value="${s.id}">${s.name}${s.sovereign ? " 🐉" : ""}</option>`).join("");
+  document.getElementById("trackSat").innerHTML = satOptions;
+  document.getElementById("passSat").innerHTML = satOptions;
+  const gsOptions = HIVES.map(h => `<option value="gs-${h.toLowerCase().replace(/\s+/g, "-")}">${h}</option>`).join("");
+  document.getElementById("passGs").innerHTML = gsOptions;
+}
+
+function doList() {
+  const agency = document.getElementById("listAgency").value;
+  const sovereign = document.getElementById("listSovereign").value === "true";
+  let sats = SATS;
+  if (agency) sats = sats.filter(s => s.agency === agency);
+  if (sovereign) sats = sats.filter(s => s.sovereign);
+  document.getElementById("listResult").textContent = `🛰 satellite_list(agency="${agency}", sovereign_only=${sovereign})\n\nTotal: ${sats.length} of ${SATS.length}\n${sats.map(s => `  ${s.sovereign ? "🐉" : "  "} ${s.id} · ${s.name} (${s.agency}, ${s.alt}km)`).join("\n")}\n\nDoctrine: ${sats.length} sovereign satellites. 24/7. The dragon's eyes.`;
+}
+
+function doTrack() {
+  const satId = document.getElementById("trackSat").value;
+  doTrackById(satId);
+}
+
+function doTrackById(satId) {
+  const s = SATS.find(x => x.id === satId);
+  if (!s) return;
+  const lat = (Math.random() * 180 - 90).toFixed(2);
+  const lng = (Math.random() * 360 - 180).toFixed(2);
+  document.getElementById("trackResult").textContent = `📡 satellite_track("${satId}")\n\nSatellite: ${s.name}\nAgency: ${s.agency}\nPurpose: ${s.purpose}\nAltitude: ${s.alt} km\nCurrent position: (${lat}, ${lng})\nSpeed: ${s.alt < 1000 ? "7.5" : "3.07"} km/s\n${s.sovereign ? "🐉 SOVEREIGN — The dragon's eye" : "Real-time tracked"}\nDoctrine: Sovereign by construction.`;
+}
+
+function doPass() {
+  const satId = document.getElementById("passSat").value;
+  const gsId = document.getElementById("passGs").value;
+  const s = SATS.find(x => x.id === satId);
+  const hive = gsId.replace("gs-", "").split("-").map(w => w[0].toUpperCase() + w.slice(1)).join(" ");
+  const nextMin = 30 + (satId.length + gsId.length) * 3;
+  const duration = 5 + (satId.length + gsId.length) % 10;
+  const elevation = 30 + (satId.length + gsId.length) % 60;
+  document.getElementById("passResult").textContent = `⏰ satellite_pass("${satId}", "${gsId}")\n\nSatellite: ${s.name}\nGround Station: ${hive}\nNext pass: ${nextMin} minutes\nDuration: ${duration} min\nMax elevation: ${elevation}°\nData volume: 50-250 GB\nDoctrine: ${s.sovereign ? "🐉 Sovereign pass" : "Real pass"} over ${hive}. The dragon sovereigns the sky.`;
+}
+
+function doStatus() {
+  const sovCount = SATS.filter(s => s.sovereign).length;
+  document.getElementById("statusResult").textContent = `📊 satellite_status()\n\nTotal satellites: ${SATS.length}\nSovereign: ${sovCount}\nGround stations: 33\nMax altitude: 1,500,000 km (JWST)\nMin altitude: 408 km (ISS)\nAgencies: ${[...new Set(SATS.map(s => s.agency))].join(", ")}\n24/7 coverage of all 33 hives\nDoctrine: The dragon's eyes + ears. Sovereign by construction.`;
+}
+
+renderSatList();
+renderGsGrid();
+updateSelects();
+</script>
+
+</body>
+</html>

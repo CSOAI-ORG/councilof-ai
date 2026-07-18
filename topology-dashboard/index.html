@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOV3 Living Topology — MEOK AI Labs</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      overflow: hidden;
+    }
+
+    #graph-container { width: 100vw; height: 100vh; }
+
+    /* HUD Overlay */
+    .hud {
+      position: fixed;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .hud > * { pointer-events: auto; }
+
+    /* Top-left: Title + Status */
+    .hud-top-left {
+      top: 16px; left: 16px;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #00ff88;
+      text-shadow: 0 0 20px rgba(0,255,136,0.4);
+      letter-spacing: 1px;
+    }
+    .subtitle {
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+    .status-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-green { background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+    .dot-red { background: #ff4444; box-shadow: 0 0 6px #ff4444; }
+    .dot-yellow { background: #ffaa00; box-shadow: 0 0 6px #ffaa00; }
+    .dot-blue { background: #4488ff; box-shadow: 0 0 6px #4488ff; }
+
+    /* Top-right: Legend */
+    .hud-top-right {
+      top: 16px; right: 16px;
+    }
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 10px 14px;
+      background: rgba(10,10,15,0.85);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    /* Bottom-left: Stats */
+    .hud-bottom-left {
+      bottom: 16px; left: 16px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 4px 16px;
+      padding: 10px 14px;
+      background: rgba(10,10,15,0.85);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      font-size: 11px;
+    }
+    .stat-value {
+      font-weight: 700;
+      color: #00ff88;
+    }
+
+    /* Bottom-right: Node Inspector */
+    .hud-bottom-right {
+      bottom: 16px; right: 16px;
+      max-width: 340px;
+    }
+    .inspector {
+      padding: 14px;
+      background: rgba(10,10,15,0.92);
+      border: 1px solid rgba(0,255,136,0.15);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      display: none;
+    }
+    .inspector.active { display: block; }
+    .inspector-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #00ff88;
+      margin-bottom: 8px;
+    }
+    .inspector-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .inspector-label { color: #888; }
+    .inspector-value { color: #e0e0e0; font-weight: 500; }
+    .inspector-connections {
+      margin-top: 8px;
+      font-size: 10px;
+      color: #666;
+    }
+    .inspector-connections span {
+      color: #4488ff;
+      cursor: pointer;
+    }
+
+    /* Search */
+    .hud-top-center {
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .search-box {
+      padding: 6px 14px;
+      background: rgba(10,10,15,0.85);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      color: #e0e0e0;
+      font-family: inherit;
+      font-size: 12px;
+      width: 280px;
+      outline: none;
+      backdrop-filter: blur(10px);
+    }
+    .search-box:focus {
+      border-color: rgba(0,255,136,0.4);
+      box-shadow: 0 0 12px rgba(0,255,136,0.1);
+    }
+    .search-box::placeholder { color: #555; }
+
+    /* Controls hint */
+    .controls-hint {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: #444;
+      z-index: 100;
+    }
+  
+.card,.feature,.pack,.service{transition:all .25s}
+.card:hover,.feature:hover,.pack:hover,.service:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+</style>
+</head>
+<body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">Topology</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
+  <!-- HUD: Top Left -->
+  <div class="hud hud-top-left">
+    <div class="title">SOV3 LIVING TOPOLOGY</div>
+    <div class="subtitle">MEOK AI Labs — Real-time Empire Map</div>
+    <div class="status-row">
+      <div class="status-pill"><span class="dot dot-green" id="sov3-dot"></span> SOV3</div>
+      <div class="status-pill"><span class="dot dot-blue" id="nats-dot"></span> NATS</div>
+      <div class="status-pill"><span class="dot dot-yellow" id="hermes-dot"></span> Hermes</div>
+      <div class="status-pill"><span class="dot dot-green" id="ollama-dot"></span> Ollama</div>
+    </div>
+  </div>
+
+  <!-- HUD: Top Center -->
+  <div class="hud hud-top-center">
+    <input type="text" class="search-box" id="search" placeholder="Search nodes... (meok, stripe, mcp...)" />
+  </div>
+
+  <!-- HUD: Top Right -->
+  <div class="hud hud-top-right">
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#00ff88"></div> Domain (live)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#006633"></div> Domain (parked)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff6644"></div> Infrastructure</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4488ff"></div> MCP Package</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div> Stripe Product</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#aa44ff"></div> Directory</div>
+    </div>
+  </div>
+
+  <!-- HUD: Bottom Left -->
+  <div class="hud hud-bottom-left">
+    <div class="stats-grid" id="stats">
+      <span>Nodes</span><span class="stat-value" id="stat-nodes">0</span><span></span>
+      <span>Edges</span><span class="stat-value" id="stat-edges">0</span><span></span>
+      <span>Domains</span><span class="stat-value" id="stat-domains">0</span><span></span>
+      <span>MCPs</span><span class="stat-value" id="stat-mcps">0</span><span></span>
+      <span>Revenue</span><span class="stat-value" id="stat-revenue">£0</span><span>MRR</span>
+      <span>Memories</span><span class="stat-value" id="stat-memories">0</span><span></span>
+    </div>
+  </div>
+
+  <!-- HUD: Bottom Right -->
+  <div class="hud hud-bottom-right">
+    <div class="inspector" id="inspector">
+      <div class="inspector-title" id="inspector-title"></div>
+      <div id="inspector-body"></div>
+      <div class="inspector-connections" id="inspector-connections"></div>
+    </div>
+  </div>
+
+  <!-- Controls hint -->
+  <div class="controls-hint">
+    Drag to rotate · Scroll to zoom · Click node to inspect · Double-click to focus
+  </div>
+
+  <!-- 3D Graph Container -->
+  <div id="graph-container"></div>
+
+  <!-- Libraries -->
+  <script src="https://unpkg.com/three/build/three.min.js"></script>
+  <script src="https://unpkg.com/3d-force-graph/dist/3d-force-graph.min.js"></script>
+
+  <script>
+    // ====== GRAPH DATA ======
+    const GRAPH_DATA = TOPOLOGY_DATA_PLACEHOLDER;
+
+    // ====== COLOR SCHEME ======
+    const CATEGORY_COLORS = {
+      domain: (node) => node.status === 'live' ? '#00ff88' : '#006633',
+      infrastructure: '#ff6644',
+      mcp: '#4488ff',
+      stripe_product: '#ffaa00',
+      directory: '#aa44ff',
+    };
+
+    const EDGE_COLORS = {
+      deployed_on: '#00ff8833',
+      published_on: '#4488ff33',
+      source_code: '#4488ff22',
+      listed_on: '#aa44ff33',
+      sold_via: '#ffaa0033',
+      uses: '#ff664444',
+      embeds_via: '#ff664433',
+      queries: '#ff664433',
+      mirrors: '#ff664422',
+    };
+
+    // ====== NODE SIZING ======
+    function getNodeSize(node) {
+      const base = {
+        domain: 6,
+        infrastructure: 8,
+        mcp: 4,
+        stripe_product: 5,
+        directory: 3,
+      };
+      let size = base[node.category] || 4;
+      if (node.priority) size += node.priority * 0.3;
+      if (node.name === 'SOV3') size = 14;
+      if (node.name === 'meok.ai') size = 12;
+      return size;
+    }
+
+    function getNodeColor(node) {
+      const color = CATEGORY_COLORS[node.category];
+      if (typeof color === 'function') return color(node);
+      return color || '#888';
+    }
+
+    // ====== PROCESS DATA ======
+    const graphData = {
+      nodes: GRAPH_DATA.nodes.map(n => ({
+        ...n,
+        color: getNodeColor(n),
+        size: getNodeSize(n),
+      })),
+      links: GRAPH_DATA.edges.map(e => ({
+        source: e.source,
+        target: e.target,
+        relationship: e.relationship,
+        color: EDGE_COLORS[e.relationship] || '#ffffff11',
+      })),
+    };
+
+    // ====== UPDATE STATS ======
+    function updateStats() {
+      document.getElementById('stat-nodes').textContent = graphData.nodes.length;
+      document.getElementById('stat-edges').textContent = graphData.links.length;
+      document.getElementById('stat-domains').textContent =
+        graphData.nodes.filter(n => n.category === 'domain').length;
+      document.getElementById('stat-mcps').textContent =
+        graphData.nodes.filter(n => n.category === 'mcp').length;
+
+      const sov3Node = graphData.nodes.find(n => n.name === 'SOV3');
+      if (sov3Node) {
+        document.getElementById('stat-memories').textContent =
+          (sov3Node.memories || 0).toLocaleString();
+      }
+    }
+    updateStats();
+
+    // ====== 3D GRAPH ======
+    const container = document.getElementById('graph-container');
+    const Graph = ForceGraph3D()(container)
+      .graphData(graphData)
+      .backgroundColor('#0a0a0f')
+      .nodeVal(n => n.size)
+      .nodeColor(n => n.color)
+      .nodeOpacity(0.9)
+      .nodeResolution(16)
+      .linkColor(l => l.color)
+      .linkOpacity(0.6)
+      .linkWidth(0.5)
+      .linkDirectionalParticles(l => {
+        const active = ['uses', 'queries', 'embeds_via'];
+        return active.includes(l.relationship) ? 2 : 0;
+      })
+      .linkDirectionalParticleWidth(1.5)
+      .linkDirectionalParticleSpeed(0.006)
+      .linkDirectionalParticleColor(l => l.color)
+      .nodeLabel(node => `<div style="background:rgba(0,0,0,0.85);color:${node.color};padding:4px 8px;border-radius:4px;font-family:monospace;font-size:12px;border:1px solid ${node.color}40">${node.name}</div>`)
+      .onNodeClick(node => showInspector(node))
+      .onNodeDragEnd(node => {
+        node.fx = node.x;
+        node.fy = node.y;
+        node.fz = node.z;
+      })
+      .onBackgroundClick(() => hideInspector())
+      .d3AlphaDecay(0.02)
+      .d3VelocityDecay(0.3)
+      .warmupTicks(80)
+      .cooldownTicks(100);
+
+    // Camera position
+    setTimeout(() => {
+      Graph.cameraPosition({ x: 200, y: 100, z: 300 }, { x: 0, y: 0, z: 0 }, 2000);
+    }, 500);
+
+    // ====== NODE INSPECTOR ======
+    function showInspector(node) {
+      const el = document.getElementById('inspector');
+      const title = document.getElementById('inspector-title');
+      const body = document.getElementById('inspector-body');
+      const conns = document.getElementById('inspector-connections');
+
+      title.textContent = node.name;
+      el.classList.add('active');
+
+      let html = '';
+      const row = (label, value) =>
+        `<div class="inspector-row"><span class="inspector-label">${label}</span><span class="inspector-value">${value}</span></div>`;
+
+      html += row('Category', node.category);
+      if (node.status) html += row('Status', node.status);
+      if (node.priority) html += row('Priority', node.priority + '/10');
+      if (node.port) html += row('Port', node.port);
+      if (node.version) html += row('Version', node.version);
+      if (node.price) html += row('Price', node.price);
+      if (node.type) html += row('Type', node.type);
+      if (node.installs) html += row('Installs', node.installs);
+      if (node.gated) html += row('Gated', 'Yes (freemium)');
+      if (node.registry) html += row('Registry', 'Listed');
+      if (node.agents) html += row('Agents', node.agents);
+      if (node.memories) html += row('Memories', node.memories.toLocaleString());
+      if (node.models) html += row('Models', node.models.join(', '));
+      if (node.gpu) html += row('GPU', node.gpu);
+      if (node.cost_per_hr) html += row('Cost', '$' + node.cost_per_hr + '/hr');
+      if (node.projects) html += row('Projects', node.projects);
+      if (node.products) html += row('Products', node.products);
+      if (node.repos) html += row('Repos', node.repos);
+      if (node.packages) html += row('Packages', node.packages);
+      if (node.submitted) html += row('Submitted', node.submitted);
+
+      body.innerHTML = html;
+
+      // Connections
+      const linked = graphData.links.filter(
+        l => (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id
+      );
+      if (linked.length > 0) {
+        const names = linked.map(l => {
+          const otherId = (l.source.id || l.source) === node.id
+            ? (l.target.id || l.target)
+            : (l.source.id || l.source);
+          const other = graphData.nodes.find(n => n.id === otherId);
+          return `<span onclick="focusNode('${otherId}')">${other ? other.name : otherId}</span>`;
+        });
+        conns.innerHTML = `Connected to: ${names.join(' · ')}`;
+      } else {
+        conns.innerHTML = 'No connections';
+      }
+
+      // Highlight
+      highlightNode(node);
+    }
+
+    function hideInspector() {
+      document.getElementById('inspector').classList.remove('active');
+      clearHighlight();
+    }
+
+    // ====== HIGHLIGHT ======
+    let highlightedNodes = new Set();
+
+    function highlightNode(node) {
+      highlightedNodes.clear();
+      highlightedNodes.add(node.id);
+
+      graphData.links.forEach(l => {
+        const src = l.source.id || l.source;
+        const tgt = l.target.id || l.target;
+        if (src === node.id) highlightedNodes.add(tgt);
+        if (tgt === node.id) highlightedNodes.add(src);
+      });
+
+      Graph.nodeOpacity(n => highlightedNodes.has(n.id) ? 1.0 : 0.15);
+      Graph.linkOpacity(l => {
+        const src = l.source.id || l.source;
+        const tgt = l.target.id || l.target;
+        return (src === node.id || tgt === node.id) ? 0.8 : 0.05;
+      });
+    }
+
+    function clearHighlight() {
+      highlightedNodes.clear();
+      Graph.nodeOpacity(0.9);
+      Graph.linkOpacity(0.6);
+    }
+
+    function focusNode(nodeId) {
+      const node = graphData.nodes.find(n => n.id === nodeId);
+      if (node) {
+        Graph.cameraPosition(
+          { x: node.x + 80, y: node.y + 40, z: node.z + 80 },
+          { x: node.x, y: node.y, z: node.z },
+          1500
+        );
+        showInspector(node);
+      }
+    }
+
+    // ====== SEARCH ======
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      if (!query) {
+        clearHighlight();
+        return;
+      }
+
+      const matches = graphData.nodes.filter(n =>
+        n.name.toLowerCase().includes(query) ||
+        n.category.toLowerCase().includes(query)
+      );
+
+      if (matches.length === 1) {
+        focusNode(matches[0].id);
+      } else if (matches.length > 0) {
+        highlightedNodes.clear();
+        matches.forEach(n => highlightedNodes.add(n.id));
+        Graph.nodeOpacity(n => highlightedNodes.has(n.id) ? 1.0 : 0.15);
+        Graph.linkOpacity(0.1);
+      }
+    });
+
+    // Keyboard shortcut
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+      if (e.key === 'Escape') {
+        searchInput.blur();
+        searchInput.value = '';
+        hideInspector();
+      }
+    });
+
+    // ====== LIVE SOV3 STATUS (polls every 30s when on localhost) ======
+    async function pollSOV3() {
+      try {
+        const resp = await fetch('http://localhost:3101/health', { signal: AbortSignal.timeout(5000) });
+        const data = await resp.json();
+        document.getElementById('sov3-dot').className = 'dot dot-green';
+
+        // Update SOV3 node data
+        const sov3 = graphData.nodes.find(n => n.name === 'SOV3');
+        if (sov3 && data.components) {
+          const cons = data.components.consciousness;
+          if (cons) sov3.consciousness = (cons.consciousness_level * 100).toFixed(0) + '%';
+        }
+      } catch {
+        document.getElementById('sov3-dot').className = 'dot dot-red';
+      }
+    }
+
+    async function pollNATS() {
+      try {
+        const resp = await fetch('http://localhost:8222/varz', { signal: AbortSignal.timeout(3000) });
+        document.getElementById('nats-dot').className = 'dot dot-green';
+      } catch {
+        document.getElementById('nats-dot').className = 'dot dot-red';
+      }
+    }
+
+    // Only poll on localhost
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      pollSOV3();
+      pollNATS();
+      setInterval(pollSOV3, 30000);
+      setInterval(pollNATS, 30000);
+    }
+
+    // ====== AMBIENT ROTATION ======
+    let angle = 0;
+    let rotating = true;
+
+    container.addEventListener('mousedown', () => { rotating = false; });
+    container.addEventListener('mouseup', () => {
+      setTimeout(() => { rotating = true; }, 5000);
+    });
+
+    function ambientRotate() {
+      if (rotating && !document.getElementById('inspector').classList.contains('active')) {
+        angle += 0.002;
+        const dist = 350;
+        Graph.cameraPosition({
+          x: dist * Math.sin(angle),
+          y: 60 + 20 * Math.sin(angle * 0.5),
+          z: dist * Math.cos(angle),
+        });
+      }
+      requestAnimationFrame(ambientRotate);
+    }
+    setTimeout(ambientRotate, 3000);
+  </script>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">Topology by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
+</body>
+</html>

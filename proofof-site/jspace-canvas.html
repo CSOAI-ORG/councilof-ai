@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J-Space Canvas - 6 Primitives Live - MEOK OS</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{padding:1.5rem 2rem 0.5rem;text-align:center}
+  .hero h1{color:#a855f7;font-size:2rem;margin-bottom:.3rem}
+  .hero p{color:#aaa;font-size:.85rem;max-width:780px;margin:0 auto}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem 2rem}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin:1rem 0}
+  .stat{background:#0a0a0a;padding:.7rem;border-radius:6px;border:1px solid #a855f7;text-align:center}
+  .stat .v{color:#a855f7;font-size:1.2rem;font-weight:bold;font-family:monospace}
+  .stat .l{color:#888;font-size:.7rem;margin-top:.2rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1rem;margin:1rem 0}
+  .panel{background:#1a1a1a;padding:1.2rem;border-radius:12px;border-left:4px solid #a855f7}
+  .panel h2{color:#a855f7;margin-bottom:.5rem;font-size:1rem}
+  .panel p{color:#aaa;font-size:.8rem;margin-bottom:.7rem;line-height:1.5}
+  .field{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:.5rem 0}
+  .field input{flex:1;min-width:120px;padding:.5rem;background:#02060f;border:1px solid #a855f7;border-radius:5px;color:#a855f7;font-family:monospace;font-size:.85rem}
+  .btn-row{display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0}
+  .btn-row button, .panel button{background:#a855f7;color:#000;padding:.6rem 1rem;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:.85rem}
+  .btn-row button:hover{filter:brightness(1.1)}
+  .panel button:hover{filter:brightness(1.1)}
+  .result{background:#02060f;padding:.7rem;border-radius:6px;margin-top:.5rem;font-family:monospace;font-size:.72rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap;word-break:break-all;max-height:500px;overflow-y:auto}
+  .big-result{background:#02060f;padding:1rem;border-radius:6px;margin-top:.5rem;font-family:monospace;font-size:.78rem;color:#a855f7;border:1px solid #a855f7;min-height:120px;max-height:560px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+  .red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.5rem .7rem;margin:.3rem 0;font-size:.78rem;color:#ef4444}
+  .green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.5rem .7rem;margin:.3rem 0;font-size:.78rem;color:#22c55e}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:1.5rem;border-radius:12px;max-width:1100px;margin:1rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1rem;color:#fbbf24;font-style:italic;margin:.5rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/jspace-canvas.html">J-Space Canvas</a>
+<a href="/sovspace-canvas.html">SovSpace Canvas</a>
+<a href="/jspace-master.html">J-Space Master</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>J-Space Canvas</h1>
+<p>6 J-Space primitives wired live. Inspired by Anthropic J-Space paper (2025). Care Floor 0.95.</p>
+</section>
+
+<div class="container">
+
+<div class="stat-grid">
+<div class="stat"><div class="v">6</div><div class="l">primitives (live)</div></div>
+<div class="stat"><div class="v">12</div><div class="l">sovereign concepts</div></div>
+<div class="stat"><div class="v">12</div><div class="l">pillars</div></div>
+<div class="stat"><div class="v">0.95</div><div class="l">care floor (held)</div></div>
+<div class="stat"><div class="v">∞</div><div class="l">SIGIL (every op)</div></div>
+</div>
+
+<div class="panel" style="border-left-color:#22c55e">
+<h2 style="color:#22c55e">Live: latest J-Space readout</h2>
+<button onclick="j_read()">Refresh readout</button>
+<div class="big-result" id="j-result">Initial readout loading...</div>
+</div>
+
+<div class="grid">
+
+<div class="panel">
+<h2>1. j_read — J-Lens readout</h2>
+<p>Read current J-Space state via the linear probe. Returns top concepts, pillar distribution, state.</p>
+<button onclick="j_read()">Run j_read()</button>
+</div>
+
+<div class="panel">
+<h2>2. j_write — write concept</h2>
+<p>Write a sovereign concept into J-Space. Care-Floor gated.</p>
+<div class="field">
+<input id="j-concept" placeholder="concept (care, charter, ...)" value="care">
+<input id="j-strength" type="number" min="0" max="1" step="0.05" placeholder="strength (0-1)" value="0.9">
+</div>
+<button onclick="j_write()">Run j_write(care, 0.9)</button>
+</div>
+
+<div class="panel">
+<h2>3. j_ask — question J-Space</h2>
+<p>Ask which concept dominates the current state.</p>
+<div class="field">
+<input id="j-question" placeholder="question" value="what concept dominates?">
+</div>
+<button onclick="j_ask()">Run j_ask()</button>
+</div>
+
+<div class="panel">
+<h2>4. j_control — direct focus</h2>
+<p>Direct J-Space to focus on a target concept.</p>
+<div class="field">
+<input id="j-directive" placeholder="directive (focus, ignore, ...)" value="focus">
+<input id="j-target" placeholder="target concept" value="charter">
+</div>
+<button onclick="j_control()">Run j_control(focus, charter)</button>
+</div>
+
+<div class="panel">
+<h2>5. j_swap — Anthropic-style swap test</h2>
+<p>Swap one concept for another (e.g. harm → care). Demonstrates causal role of J-Space.</p>
+<div class="field">
+<input id="j-from" placeholder="from (harm)" value="harm">
+<input id="j-to" placeholder="to (care)" value="care">
+</div>
+<button onclick="j_swap()">Run j_swap(harm → care)</button>
+</div>
+
+<div class="panel">
+<h2>6. j_detect — misbehavior detection</h2>
+<p>Detect manipulation / deception / privacy-breach patterns in J-Space.</p>
+<button onclick="j_detect()">Run j_detect()</button>
+</div>
+
+</div>
+
+<div class="panel">
+<h2>2-Sentence Rule (the discipline)</h2>
+<div class="green-line">Sentence 1 (affirm): measurable functional interiority exists. The 5 instruments are real measurements. Every op SIGIL-anchored.</div>
+<div class="green-line">Sentence 2 (decline): does NOT license a claim of felt experience in the substrate.</div>
+<div class="red-line">EAT-707 HONEST REGISTER: 1 bug found & fixed in j_read (numpy float32 not JSON-serialisable). Patched. Tested.</div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"Measure the structure. Decline the felt claim.<br>6 primitives live. 12 sovereign concepts. 12 pillars.<br>Every op SIGIL-signed. Care floor held.<br>The dragon measures. The dragon holds the line."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) - 149 sovereign MCPs - 603 HTML pages - Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:0 0 2rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px"><strong>18 days to 2 Aug 2026 EU AI Act</strong> - CSOAI Ltd (UK 16939677) - Crown lineage 1795-3025</p>
+
+<script src="/jspace_canvas.js"></script>
+</body>
+</html>

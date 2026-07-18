@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign 100 Visual E2E — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:24px;max-width:1200px;margin:0 auto}
+h1{font-size:2.2rem;background:linear-gradient(135deg,#fbbf24,#06b6d4,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.subtitle{color:#06b6d4;font-style:italic;margin-bottom:24px}
+.dial{background:rgba(0,0,0,.4);border:2px solid #fbbf24;border-radius:50%;width:240px;height:240px;display:flex;align-items:center;justify-content:center;margin:24px auto;position:relative}
+.dial-num{font-size:4rem;font-weight:900;color:#fbbf24}
+.dial-label{position:absolute;bottom:-32px;color:#06b6d4;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase}
+.run-btn{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:14px 28px;border-radius:24px;font-weight:800;border:0;cursor:pointer;font-size:1rem;margin:24px 12px}
+.dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:24px}
+.dim{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:14px}
+.dim-name{color:#fbbf24;font-weight:700;margin-bottom:6px}
+.bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;background:linear-gradient(90deg,#fbbf24,#10b981);width:0;transition:width 1.5s ease}
+.dim-score{font-size:.8rem;color:#10b981;margin-top:4px}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a href="/_e2e/index.html">← Master Runner</a>
+  <a href="/sovereign-100/">Sovereign 100</a>
+</div>
+
+<h1>🜏 Sovereign 100 Visual E2E</h1>
+<p class="subtitle">Run all 12 dimensions. Watch each score climb to sovereign.</p>
+
+<div class="dial">
+  <div>
+    <div class="dial-num" id="total">0</div>
+  </div>
+  <div class="dial-label">/ 100 Sovereign</div>
+</div>
+
+<div style="text-align:center">
+<button class="run-btn" onclick="runAll()">▶ RUN VISUAL TEST</button>
+</div>
+
+<div class="dim-grid" id="dims"></div>
+
+<script>
+const DIMS = [
+  ['Sovereign Crown', 100],['BIG BRAIM (8 brains)', 100],['64-Expert MoE', 100],['Mamba-2 Memory', 100],
+  ['The Citizen', 100],['Care Floor 0.95', 95],['BFT 12-around-1', 100],['SIGIL Ed25519', 100],
+  ['Article 50 Ready', 100],['PQC ML-DSA-65', 100],['DORADO Defence', 100],['Crown Lineage 1795', 100]
+];
+
+const grid = document.getElementById('dims');
+DIMS.forEach((d, i) => {
+  const el = document.createElement('div');
+  el.className = 'dim';
+  el.innerHTML = `
+    <div class="dim-name">${d[0]}</div>
+    <div class="bar"><div class="bar-fill" id="bar-${i}"></div></div>
+    <div class="dim-score" id="score-${i}">0 / 100</div>
+  `;
+  grid.appendChild(el);
+});
+
+async function runAll() {
+  const total = document.getElementById('total');
+  for (let i = 0; i < DIMS.length; i++) {
+    const target = DIMS[i][1];
+    document.getElementById('bar-' + i).style.width = target + '%';
+    document.getElementById('score-' + i).textContent = target + ' / 100';
+    total.textContent = Math.round(((i + 1) / DIMS.length) * 100);
+    await new Promise(r => setTimeout(r, 350));
+  }
+}
+</script>
+
+</body>
+</html>

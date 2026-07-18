@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS Outreach Tracker — 7-Vector Command Dashboard</title>
+<meta name="description" content="Real-time outreach tracking dashboard for DEFONEOS 7-vector GTM campaign. Track DASA, DIANA, UKDI, NATO STO, Prime SIs, Press, and Civil Service outreach.">
+<style>
+:root{--bg:#0a0e17;--surface:#111827;--border:#1e3a5f;--accent:#00d4ff;--accent2:#7c3aed;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--text:#e2e8f0;--muted:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem;max-width:1200px;margin:0 auto}
+h1{font-size:2.2rem;background:linear-gradient(135deg,var(--accent),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem}
+h2{color:var(--accent);font-size:1.4rem;margin:2rem 0 1rem;border-bottom:1px solid var(--border);padding-bottom:0.5rem}
+.subtitle{color:var(--muted);font-size:1rem;margin-bottom:2rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+.kpi-value{font-size:2.2rem;font-weight:800}
+.kpi-label{font-size:0.8rem;color:var(--muted);margin-top:0.25rem}
+.kpi-accent{color:var(--accent)}
+.kpi-green{color:var(--green)}
+.kpi-amber{color:var(--amber)}
+.kpi-red{color:var(--red)}
+.tracker{margin:1.5rem 0}
+.vector-row{display:grid;grid-template-columns:200px 1fr 120px 100px;gap:1rem;align-items:center;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin:0.5rem 0}
+.vector-name{font-weight:700;color:var(--accent)}
+.vector-status{display:flex;gap:4px;flex-wrap:wrap}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot-green{background:var(--green)}
+.dot-amber{background:var(--amber)}
+.dot-red{background:var(--red)}
+.dot-gray{background:#475569}
+.phase{font-size:0.8rem;color:var(--muted)}
+.next-step{font-size:0.85rem;color:var(--text)}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:var(--surface);color:var(--accent);text-align:left;padding:0.75rem;border:1px solid var(--border);font-size:0.9rem}
+td{padding:0.75rem;border:1px solid var(--border);font-size:0.9rem}
+tr:nth-child(even){background:rgba(255,255,255,0.02)}
+.status-draft{color:var(--amber)}
+.status-ready{color:var(--accent)}
+.status-sent{color:var(--green)}
+.status-meeting{color:#a78bfa}
+.progress-bar{height:8px;background:#1e293b;border-radius:4px;overflow:hidden;margin:0.5rem 0}
+.progress-fill{height:100%;border-radius:4px;transition:width 0.3s}
+.fill-green{background:linear-gradient(90deg,var(--green),var(--accent))}
+.fill-amber{background:linear-gradient(90deg,var(--amber),var(--green))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0}
+footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem;text-align:center}
+@media(max-width:768px){body{padding:1rem}.vector-row{grid-template-columns:1fr;gap:0.5rem}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<h1>DEFONEOS Outreach Tracker</h1>
+<p class="subtitle">7-Vector Command Dashboard — Last Updated: 13 Jul 2026 06:00 BST</p>
+
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-value kpi-accent">7</div><div class="kpi-label">Vectors Active</div></div>
+<div class="kpi"><div class="kpi-value kpi-green">4</div><div class="kpi-label">Drafts Ready</div></div>
+<div class="kpi"><div class="kpi-value kpi-amber">0</div><div class="kpi-label">Sent</div></div>
+<div class="kpi"><div class="kpi-value kpi-green">0</div><div class="kpi-label">Meetings Booked</div></div>
+<div class="kpi"><div class="kpi-value kpi-red">4</div><div class="kpi-label">Human Gates</div></div>
+</div>
+
+<h2>Vector Status Board</h2>
+
+<div class="tracker">
+<div class="vector-row">
+<div class="vector-name">1. DASA Open Call</div>
+<div>
+<div class="vector-status"><span class="dot dot-amber"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span></div>
+<div class="next-step">Application draft ready. Nick to submit via DASA portal.</div>
+</div>
+<div class="phase">Phase: DRAFT</div>
+<div><span class="status-ready">Ready to file</span></div>
+</div>
+
+<div class="vector-row">
+<div class="vector-name">2. NATO DIANA</div>
+<div>
+<div class="vector-status"><span class="dot dot-amber"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span></div>
+<div class="next-step">Application draft ready. Nick to submit via DIANA portal.</div>
+</div>
+<div class="phase">Phase: DRAFT</div>
+<div><span class="status-ready">Ready to file</span></div>
+</div>
+
+<div class="vector-row">
+<div class="vector-name">3. UKDI Regional</div>
+<div>
+<div class="vector-status"><span class="dot dot-amber"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span></div>
+<div class="next-step">Email draft ready. Nick to send to Yorkshire/Humber rep.</div>
+</div>
+<div class="phase">Phase: DRAFT</div>
+<div><span class="status-ready">Ready to send</span></div>
+</div>
+
+<div class="vector-row">
+<div class="vector-name">4. NATO STO/DSRB</div>
+<div>
+<div class="vector-status"><span class="dot dot-amber"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span></div>
+<div class="next-step">Outreach emails drafted. Nick to press send.</div>
+</div>
+<div class="phase">Phase: DRAFT</div>
+<div><span class="status-draft">Pending send</span></div>
+</div>
+
+<div class="vector-row">
+<div class="vector-name">5. Prime SIs</div>
+<div>
+<div class="vector-status"><span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span></div>
+<div class="next-step">Partner letter template ready. Personalise for BAE, Leonardo, Thales.</div>
+</div>
+<div class="phase">Phase: TEMPLATE</div>
+<div><span class="status-draft">Week 2</span></div>
+</div>
+
+<div class="vector-row">
+<div class="vector-name">6. Defence Press</div>
+<div>
+<div class="vector-status"><span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span></div>
+<div class="next-step">LinkedIn posts queued. DSEI application pending.</div>
+</div>
+<div class="phase">Phase: PLANNED</div>
+<div><span class="status-draft">Ongoing</span></div>
+</div>
+
+<div class="vector-row">
+<div class="vector-name">7. Civil Service AI</div>
+<div>
+<div class="vector-status"><span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span> <span class="dot dot-gray"></span></div>
+<div class="next-step">G-Cloud listing research. CDDO team identified.</div>
+</div>
+<div class="phase">Phase: RESEARCH</div>
+<div><span class="status-draft">Month 2</span></div>
+</div>
+</div>
+
+<h2>Pipeline Stages</h2>
+<table>
+<thead><tr><th>Stage</th><th>Description</th><th>Current Count</th><th>Next Action</th></tr></thead>
+<tbody>
+<tr><td><span class="status-draft">● DRAFT</span></td><td>Application/email drafted, not yet submitted</td><td>4</td><td>Nick to review and submit</td></tr>
+<tr><td><span class="status-ready">● SUBMITTED</span></td><td>Application sent, awaiting response</td><td>0</td><td>Calendar follow-up in 2 weeks</td></tr>
+<tr><td><span class="status-sent">● RESPONDED</span></td><td>Positive response received</td><td>0</td><td>Schedule meeting</td></tr>
+<tr><td><span class="status-meeting">● MEETING</span></td><td>First meeting/demo booked</td><td>0</td><td>Prepare demo + Evidence Pack</td></tr>
+<tr><td style="color:var(--accent)">● PILOT</td><td>Pilot agreement signed</td><td>0</td><td>Deliver 30-day pilot</td></tr>
+</tbody>
+</table>
+
+<h2>Progress to First Contact</h2>
+<div class="card">
+<p><strong>Overall GTM Progress: 15%</strong></p>
+<div class="progress-bar"><div class="progress-fill fill-amber" style="width:15%"></div></div>
+<p style="font-size:0.9rem;color:var(--muted);margin-top:0.5rem">4 of 7 outreach vectors have drafts ready. 0 submitted. Blockers: all 4 require Nick to press send / submit via portal.</p>
+</div>
+
+<h2>Critical Path — Next 48 Hours</h2>
+<table>
+<thead><tr><th>Priority</th><th>Action</th><th>Owner</th><th>Deadline</th><th>Unlocks</th></tr></thead>
+<tbody>
+<tr><td><span class="status-ready">P0</span></td><td>Submit DASA Open Call application</td><td>Nick</td><td>14 Jul</td><td>Up to £500K funding track</td></tr>
+<tr><td><span class="status-ready">P0</span></td><td>Submit NATO DIANA application</td><td>Nick</td><td>14 Jul</td><td>NATO accelerator cohort</td></tr>
+<tr><td><span class="status-ready">P0</span></td><td>Send UKDI regional email</td><td>Nick</td><td>14 Jul</td><td>First MOD relationship</td></tr>
+<tr><td><span class="status-draft">P1</span></td><td>Send NATO STO + DSRB emails</td><td>Nick</td><td>17 Jul</td><td>Research collaboration</td></tr>
+<tr><td><span class="status-draft">P1</span></td><td>Register Defence Sourcing Portal</td><td>Nick</td><td>17 Jul</td><td>MOD supplier status</td></tr>
+</tbody>
+</table>
+
+<h2>Template Readiness</h2>
+<table>
+<thead><tr><th>Template</th><th>File</th><th>Size</th><th>Status</th><th>Word Count</th></tr></thead>
+<tbody>
+<tr><td>DASA Application</td><td><code>defoneos-dasa-application.html</code></td><td>~25KB</td><td><span class="status-ready">READY</span></td><td>~4000</td></tr>
+<tr><td>NATO DIANA</td><td><code>defoneos-nato-diana.html</code></td><td>~20KB</td><td><span class="status-ready">READY</span></td><td>~3200</td></tr>
+<tr><td>UKDI Email</td><td><code>defoneos-mod-ukdi.html</code></td><td>~12KB</td><td><span class="status-ready">READY</span></td><td>~1800</td></tr>
+<tr><td>System Card</td><td><code>defoneos-system-card.html</code></td><td>~30KB</td><td><span class="status-ready">READY</span></td><td>~5000</td></tr>
+<tr><td>Proposal Pack</td><td><code>defoneos-mod-proposal-pack.html</code></td><td>~26KB</td><td><span class="status-ready">READY</span></td><td>~4200</td></tr>
+<tr><td>Pilot Evidence Pack</td><td><code>defoneos-mod-pilot-evidence-pack.html</code></td><td>~19KB</td><td><span class="status-ready">READY</span></td><td>~3000</td></tr>
+<tr><td>Referral Partner Letter</td><td><code>defoneos-mod-referral-partner-letter.html</code></td><td>~15KB</td><td><span class="status-ready">READY</span></td><td>~2400</td></tr>
+</tbody>
+</table>
+
+<footer>
+DEFONEOS 7-Vector Outreach Tracker · Tick 88 · 13 Jul 2026<br>
+C|outreach|tracker|7-vector GTM dashboard — 4 drafts ready, 0 sent<br>
+UK Sovereign · Open-Source · Audit-Grade · AUKUS-Compatible
+</footer>
+
+</body>
+</html>

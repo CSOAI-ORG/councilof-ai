@@ -1,0 +1,22 @@
+{
+  "name": "deep_research",
+  "description": "Search ArXiv, web, and SOV3 memory for comprehensive research on a topic",
+  "domain": "research",
+  "mcp_tools": [
+    "query_memories",
+    "quantum_memory_search",
+    "trigger_research_sweep"
+  ],
+  "prompt_template": "Research the following topic thoroughly: {topic}. Check SOV3 memory first, then search ArXiv and web sources. Summarize findings with citations.",
+  "validation_tests": [
+    {
+      "input": "AI alignment",
+      "output_contains": "alignment"
+    }
+  ],
+  "created_by": "jarvis",
+  "version": "1.0",
+  "created_at": "2026-04-04T07:01:36.426790",
+  "execution_count": 1,
+  "success_rate": 1.0
+}

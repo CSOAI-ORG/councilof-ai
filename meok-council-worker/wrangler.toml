@@ -1,0 +1,74 @@
+name = "meok-council-worker"
+main = "index.js"
+compatibility_date = "2025-06-01"
+# compatibility_flags = ["nodejs_compat"]  # uncomment if you need Node.js APIs
+
+# ── Environments ─────────────────────────────────────────────────────────────
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+# Secrets (set via: wrangler secret put INTERNAL_BACKEND)
+# INTERNAL_BACKEND = "http://10.0.0.42:3200"  # DO NOT hardcode — use wrangler secret
+
+[[env.production.routes]]
+pattern = "council.meok.ai/*"
+zone_name = "meok.ai"
+
+[[env.production.routes]]
+pattern = "api.meok.ai/council/*"
+zone_name = "meok.ai"
+
+[[env.production.routes]]
+pattern = "api.meok.ai/mcp/*"
+zone_name = "meok.ai"
+
+[[env.production.routes]]
+pattern = "api.meok.ai/compliance/*"
+zone_name = "meok.ai"
+
+[[env.production.routes]]
+pattern = "api.meok.ai/attestation/*"
+zone_name = "meok.ai"
+
+[[env.production.routes]]
+pattern = "api.meok.ai/health"
+zone_name = "meok.ai"
+
+[env.staging]
+vars = { ENVIRONMENT = "staging" }
+# [[env.staging.routes]] ... add staging routes here
+
+# ── Rate Limiting (Cloudflare Dashboard) ─────────────────────────────────────
+# Go to: Cloudflare Dashboard > Traffic > Rate Limiting
+# Create rule:
+#   URI equals "/council/*" OR "/mcp/*" OR "/compliance/*" OR "/attestation/*"
+#   Rate: 60 requests per minute per IP
+#   Action: Simulate (or Challenge) — use Simulate while testing, upgrade to Challenge in production
+#   Response: { "error": "rate_limited", "message": "Too many requests" }
+#   Retry-After: 60 seconds
+
+# ── Caching (Cloudflare Dashboard) ───────────────────────────────────────────
+# Go to: Cloudflare Dashboard > Caching > Cache Rules
+# Create rule for "council.meok.ai/*":
+#   Path: council.meok.ai/*
+#   TTL: 30 seconds
+#   Edge TTL: 30s, Browser TTL: 30s
+#   stale-while-revalidate: 60s
+#   Cache Key: include URL only (strip query params for public data)
+#
+# For authenticated routes, use: "private, max-age=5, stale-while-revalidate=10"
+
+# ── Deployment ─────────────────────────────────────────────────────────────────
+# 1. Set secret:
+#    wrangler secret put INTERNAL_BACKEND --env production
+#    # Enter: http://10.0.0.42:3200  (or the VM's internal IP)
+#
+# 2. Deploy:
+#    wrangler deploy --env production
+#
+# 3. Update DNS (main session handles this):
+#    CNAME council.meok.ai → $WORKER_SUBDOMAIN.$WORKER_ACCOUNT.workers.dev
+#    CNAME api.meok.ai → same
+#
+# 4. Update Vercel env (main session handles this):
+#    VERCEL_ENV: NEXT_PUBLIC_COUNCIL_SUBSTRATE=https://api.meok.ai

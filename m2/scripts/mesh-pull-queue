@@ -1,0 +1,50 @@
+#!/bin/bash
+# mesh-pull-queue: Process queued model pulls during low-usage hours
+set -euo pipefail
+
+QUEUE="$HOME/.mesh-prod/research/pull-queue.txt"
+LOG="/tmp/mesh-pull-$(date +%Y%m%d).log"
+
+[ ! -f "$QUEUE" ] && { echo "No pull queue"; exit 0; }
+
+FREE_GB=$(df / | awk 'NR==2 {print $4}' | sed 's/Gi//')
+FREE_GB=${FREE_GB%.*}
+
+echo "=== Pull Queue Processing $(date) ===" | tee "$LOG"
+echo "Disk free: ${FREE_GB}GB" | tee -a "$LOG"
+
+while IFS= read -r model; do
+  [ -z "$model" ] && continue
+  echo "" | tee -a "$LOG"
+  echo "[$model]" | tee -a "$LOG"
+  
+  # Skip if already installed
+  if ollama list 2>/dev/null | grep -q "^${model}"; then
+    echo "  Already installed — removing from queue" | tee -a "$LOG"
+    sed -i "/^$model$/d" "$QUEUE" 2>/dev/null || true
+    continue
+  fi
+  
+  # Safety: need at least 3GB free to pull anything
+  if [ "$FREE_GB" -lt 3 ]; then
+    echo "  SKIP: Only ${FREE_GB}GB free (need 3GB safety buffer)" | tee -a "$LOG"
+    continue
+  fi
+  
+  echo "  Pulling..." | tee -a "$LOG"
+  if ollama pull "$model" 2>&1 | tee -a "$LOG"; then
+    echo "  ✅ Success" | tee -a "$LOG"
+    sed -i "/^$model$/d" "$QUEUE" 2>/dev/null || true
+    # Benchmark immediately
+    echo "  Running benchmark..." | tee -a "$LOG"
+    ~/bin/mesh-prod benchmark "$model" 2>&1 | tee -a "$LOG"
+  else
+    echo "  ❌ Failed" | tee -a "$LOG"
+  fi
+  
+  # Update free space
+  FREE_GB=$(df / | awk 'NR==2 {print $4}' | sed 's/Gi//')
+  FREE_GB=${FREE_GB%.*}
+done < "$QUEUE"
+
+echo "=== Pull Queue Complete ===" | tee -a "$LOG"

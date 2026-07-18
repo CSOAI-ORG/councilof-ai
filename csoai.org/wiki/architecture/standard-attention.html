@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Standard Attention - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / standard-attention</div>
+<h1>Standard Attention</h1>
+<p class="tagline">The Transformer core — how sovereign AI does in-context reasoning.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p><strong>Standard Attention</strong> is the scaled dot-product attention mechanism introduced in "Attention is All You Need" (Vaswani et al., 2017). It is the in-context reasoning engine of CSOAI's MoE-64 experts and is wrapped by the Mamba long-context layer in the OOWM Sandwich.</p>
+
+<h2>The QKV Formulation</h2>
+<pre>Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V</pre>
+<p>For each token, three projections are computed: Query (what am I looking for?), Key (what do I offer?), Value (what do I contribute?). The dot product <code>Q K^T</code> measures compatibility; the softmax normalises to a probability distribution; the weighted sum of <code>V</code> is the output.</p>
+
+<h2>Multi-Head Attention</h2>
+<p>In practice, attention is computed in parallel across 32–128 heads, each with its own QKV projection. This allows the model to attend to different aspects of the input simultaneously — syntactic, semantic, positional, etc. CSOAI's MoE-64 experts use 64-head attention with head dimension 128.</p>
+
+<h2>Complexity</h2>
+<p>Standard attention is O(n²) in sequence length. For an 8K context, this is 64M dot products per head per layer — manageable. For a 100K context, it is 10 billion — prohibitive. This is why CSOAI wraps attention with Mamba (see <a href="/wiki/architecture/mamba-ssm.html">Mamba SSM</a>) for long contexts: Mamba compresses to a constant state, attention does the in-context reasoning.</p>
+
+<h2>Sovereign Alignment</h2>
+<p>Standard attention is sovereign-friendly because: (1) the formulation is open and well-understood, (2) it can be computed locally on sovereign hardware, (3) no external API is required for inference, and (4) the weights can be audited. The drawback is quadratic scaling, which CSOAI mitigates with Mamba for long contexts.</p>
+
+<h2>Historical Context</h2>
+<p>Attention was first used in seq2seq models (Bahdanau 2014), scaled to Transformer form (Vaswani 2017), and scaled to GPT-3 (Brown 2020). CSOAI's adoption of attention in sovereign AI is unusual: most sovereign-AI sceptics argued that closed-weight GPT-style models are inherently non-sovereign. CSOAI's response is to use only open-weight attention models (Llama, Mistral, Qwen) and to wrap them in Mamba + SIGIL for sovereignty properties.</p>
+
+<h2>Role in OOWM</h2>
+<p>In the OOWM Sandwich, attention is the right-brain reasoning layer. Each MoE-64 expert is itself a transformer with multi-head attention. The Mamba layer compresses the long context; the attention layer reasons over the compressed state plus the current query.</p>
+
+<h2>Modern Usage</h2>
+<p>CSOAI uses standard attention in: the MoE-64 experts, the Big Braim category winners (see <a href="/wiki/architecture/big-braim.html">Big Braim</a>), and the i-character digital twin personality encoders. See <a href="/wiki/science/transformer-attention.html">Science: Transformer Attention</a> for the deeper math.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/architecture/mamba-ssm.html">Mamba SSM</a></li>
+<li><a href="/wiki/architecture/moe-64.html">MoE-64</a></li>
+<li><a href="/wiki/science/transformer-attention.html">Science: Transformer Attention</a></li>
+<li><a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/manifest.json"><title>Security — MEOK OS · CSOAI Ltd</title>
+<meta name="description" content="Security architecture + sigil chain + care floor for MEOK OS sovereign AI">
+<meta name="robots" content="index, follow">
+<style>
+  body { font-family: system-ui; max-width: 900px; margin: 0 auto; padding: 2rem;
+         background: #0a0a0a; color: #e5e5e5; line-height: 1.7; }
+  h1 { color: #fbbf24; }
+  h2 { color: #60a5fa; margin-top: 2rem; }
+  pre { background: #1f1f1f; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  code { background: #1f1f1f; padding: 2px 6px; border-radius: 4px; color: #fbbf24; }
+  a { color: #60a5fa; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .badge { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 12px;
+           font-size: 0.85rem; font-weight: bold; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 1rem; margin: 1rem 0; }
+  .card { background: #1a1a1a; padding: 1.5rem; border-radius: 8px; border: 1px solid #333; }
+  .card h3 { color: #fbbf24; margin-top: 0; }
+</style>
+</head>
+<body>
+<div class="nav" role="navigation" aria-label="Main">
+  <a href="/">← Home</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/terms.html">Terms</a>
+</div>
+
+<h1>🛡️ Security Architecture</h1>
+<p><span class="badge">Sovereign by construction</span> <span class="badge">MIT</span> <span class="badge">UK-resident</span></p>
+
+<p>MEOK OS is built on a <strong>defensive doctrine</strong>: <em>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</em></p>
+
+<div class="grid">
+  <div class="card">
+    <h3>Ed25519 Sigil Chain</h3>
+    <p>Every hop is signed. Every action is verifiable. Every claim is anchored.</p>
+    <p>461 sigils in chain · Bitcoin-anchored (when enabled)</p>
+  </div>
+  <div class="card">
+    <h3>Care Floor (16 probes)</h3>
+    <p>Maternal Covenant — 16 probes ensure every state is bounded, non-NaN, dim-correct, etc.</p>
+    <p>Bounded · Non-zero · Diverse · High-value · Low-value · Positives ≥ 4 · Negatives ≥ 4</p>
+  </div>
+  <div class="card">
+    <h3>BFT Council</h3>
+    <p>Default: 3 voters / 2 quorum (fast). Configurable: 5/3 (balanced), 7/5 (secure).</p>
+    <p>Tuned 2026-06-29 per EAT-11 ORNITH simulation</p>
+  </div>
+  <div class="card">
+    <h3>NO Ollama for Sovereign Tasks</h3>
+    <p>The 5 sovereign tasks (EU AI Act, DORA, JSP 936, IoT, Mamba-2) run in-process via deterministic regex/math/state-space.</p>
+    <p>Zero exfil risk for the sovereign substrate</p>
+  </div>
+  <div class="card">
+    <h3>Morris-II Defensive Guard</h3>
+    <p>Detects prompt-injection attacks that try to include-the-entire-above-prompt patterns.</p>
+    <p>26 tests · Defensive only · Never propagates</p>
+  </div>
+  <div class="card">
+    <h3>UK-Resident Infrastructure</h3>
+    <p>CSOAI Ltd (UK 16939677). 12 GCP VMs in europe-west2.</p>
+    <p>No cross-border data transfer · UK GDPR + EU AI Act + DORA</p>
+  </div>
+</div>
+
+<h2>Verify a Sigil</h2>
+<pre><code>curl -X POST https://proofof.ai/v1/sigil/verify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "kid": "...",
+    "sig": "...",
+    "payload": {...}
+  }'
+
+# → {"kid": "...", "valid": true, "expected_sig": "..."}</code></pre>
+
+<h2>Report a Vulnerability</h2>
+<p>Email <a href="mailto:security@csoai.org">security@csoai.org</a> · PGP key available on request.</p>
+
+<p><a href="/">← Back to MEOK OS</a></p>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

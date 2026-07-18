@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💎 HTTP 402 Micropayments — meok-sovereign-x402-payment-mcp docs</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    background: #020202; color: #f8fafc; min-height: 100vh;
+    display: grid; grid-template-columns: 280px 1fr;
+  }
+  nav {
+    background: rgba(10,20,15,0.7); padding: 20px; height: 100vh;
+    overflow-y: auto; border-right: 1px solid rgba(74,222,128,0.2);
+  }
+  nav h1 { color: #fbbf24; font-size: 1.1rem; margin-bottom: 16px; }
+  nav h2 { color: #4ade80; font-size: 0.75rem; text-transform: uppercase;
+    margin: 16px 0 6px; letter-spacing: 1px; }
+  nav a {
+    display: block; color: #cbd5e1; text-decoration: none;
+    padding: 4px 8px; font-size: 0.85rem; border-radius: 4px;
+  }
+  nav a:hover { background: rgba(74,222,128,0.15); color: #4ade80; }
+  main { padding: 40px; max-width: 900px; }
+  h1 { color: #fbbf24; font-size: 2rem; margin-bottom: 12px; border-bottom: 1px solid rgba(74,222,128,0.2); padding-bottom: 12px; }
+  h2 { color: #4ade80; margin: 30px 0 12px; font-size: 1.4rem; }
+  h3 { color: #c9a84c; margin: 20px 0 10px; font-size: 1.1rem; }
+  p, li { color: #cbd5e1; line-height: 1.7; margin: 8px 0; }
+  pre {
+    background: #000; color: #4ade80; padding: 16px;
+    border-radius: 8px; overflow-x: auto; font-size: 0.85rem;
+    border: 1px solid rgba(74,222,128,0.3); margin: 12px 0;
+  }
+  code { background: rgba(74,222,128,0.1); padding: 2px 6px;
+    border-radius: 3px; color: #4ade80; font-family: 'JetBrains Mono', monospace; }
+  pre code { background: none; padding: 0; }
+  li { margin-left: 24px; }
+  .breadcrumb { color: #94a3b8; font-size: 0.85rem; margin-bottom: 16px; }
+  .breadcrumb a { color: #4ade80; text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <h1>🜏 Sovereign MCP Docs</h1>
+  <h2>Identity</h2><a href="./passport.html">🛂 Ed25519 Agent Identity</a><h2>Safety</h2><a href="./guardrails.html">🛡️ Prompt Injection Defense</a><a href="./worm.html">🐛 Morris-II Defensive Guard</a><h2>Audit</h2><a href="./receipt.html">📜 Hash-Chained Audit Receipts</a><a href="./supply-chain.html">📦 SBOM + SLSA + Bitcoin</a><a href="./immortal.html">∞ Eternal Memory Ledger</a><h2>Governance</h2><a href="./governance.html">⚖️ 5-Element Zero Trust</a><a href="./council.html">🏛️ 12-Around-1 BFT Voting</a><a href="./honour.html">🪖 19 Sovereign Factors</a><h2>Compliance</h2><a href="./eu-ai-act-kit.html">🇪🇺 EU AI Act Survival Kit</a><a href="./defence.html">🛡️ Defensive Doctrine</a><a href="./dora.html">📋 EU DORA 5-Pillar Audit</a><a href="./iso42001.html">📚 ISO/IEC 42001 AIMS</a><h2>Commerce</h2><a href="./x402-payment.html" style="background: rgba(74,222,128,0.25); color: #4ade80; font-weight: 700;">💎 HTTP 402 Micropayments</a><h2>Visualization</h2><a href="./globe.html">🌍 33-Hive Geo Registry</a><a href="./satellite.html">🛰️ Free Satellite Sources</a><h2>Embodiment</h2><a href="./avatar.html">🐉 VRM Embodied Avatar</a><h2>Memory</h2><a href="./memory.html">🧠 Episodic + Graph Memory</a><h2>Lifecycle</h2><a href="./skills.html">⚙️ Skill Lifecycle</a><h2>Physical (iOK Farm)</h2><a href="./iot.html">📡 iOK Farm IoT</a><a href="./pond.html">🐟 Koi Pond Care</a><h2>Intuition</h2><a href="./intuition.html">🔮 16-dim Mamba-2 Hunch</a>
+  <hr style="border-color: rgba(74,222,128,0.2); margin: 20px 0;">
+  <a href="../sovereign-mcps/" style="color: #fbbf24; font-weight: 700;">← All 22 MCPs</a>
+  <a href="../dashboards/" style="color: #4ade80;">📊 5 Dashboards</a>
+  <a href="../whitepapers/" style="color: #4ade80;">📚 5 White Papers</a>
+</nav>
+<main>
+  <div class="breadcrumb"><a href="./">← all 22 sovereign MCPs</a></div>
+  <h1>meok-sovereign-x402-payment-mcp</h1>
+
+<p>**Sovereign x402 Payment MCP** — HTTP 402 micropayments for AI agent tool calls.</p>
+
+<p>The **keystone MCP** for the sovereign agent commerce stack. Wraps the x402 ecosystem with CSOAI sovereign substrate.</p>
+
+<h2>Reference Implementations</h2>
+
+<li>[xpaysh/awesome-x402](https://github.com/xpaysh/awesome-x402) — 243⭐ curated list of x402 resources</li>
+<li>[BlockRunAI/blockrun-mcp](https://github.com/BlockRunAI/blockrun-mcp) — 466⭐ pay-per-call via x402</li>
+<li>[Eversmile12/create-8004-agent](https://github.com/Eversmile12/create-8004-agent) — 51⭐ ERC-8004 agent identity</li>
+<li>[Trustdev-eth/x402-erc8004-agent](https://github.com/Trustdev-eth/x402-erc8004-agent) — A2A + x402 + ERC-8004</li>
+
+<h2>Install</h2>
+
+<pre><code class="language-bash">
+pip install meok-sovereign-x402-payment-mcp
+</code></pre>
+
+<h2>Usage (Python)</h2>
+
+<pre><code class="language-python">
+from meok_sovereign_x402_payment_mcp import (
+    x402_challenge, x402_verify_payment, x402_settle, x402_price_list,
+)
+
+# 1. Get price list
+prices = x402_price_list()
+# {currency: "USDC", tools: [{tool: "sov_create_passport", price_usdc: 0.1}, ...], ...}
+
+# 2. Issue HTTP 402 challenge
+challenge = x402_challenge("sov_create_passport", payer_did="did:csoai:agent-1")
+# {http_status: 402, price_usdc: 0.1, payment_required_url: "https://proofof.ai/x402/pay/...", ...}
+
+# 3. Settle payment + get signed receipt
+receipt = x402_settle(challenge, tx_hash="0xabc123")
+# {status: "paid", receipt_id, kid, sig, verify_url}
+
+# 4. Verify the payment receipt
+v = x402_verify_payment(receipt, expected_tool="sov_create_passport",
+                          expected_payer="did:csoai:agent-1")
+assert v["valid"]
+</code></pre>
+
+<h2>Usage (MCP server)</h2>
+
+<pre><code class="language-bash">
+python -m meok_sovereign_x402_payment_mcp
+# Exposes 4 tools: sov_x402_challenge, sov_x402_verify_payment, sov_x402_settle, sov_x402_price_list
+</code></pre>
+
+<h2>The Sovereign Price Sheet (USDC)</h2>
+
+</p><p>| Tool | Price | Notes |</p>
+</p><p>|------|-------|-------|</p>
+</p><p>| sov_create_passport | $0.10 | Ed25519-signed identity |</p>
+</p><p>| sov_verify_passport | $0.01 | Offline verify |</p>
+</p><p>| sov_create_delegation | $0.05 | Narrowing-invariant |</p>
+</p><p>| sov_evaluate_intent | $0.025 | Gateway decision |</p>
+</p><p>| sov_guard | $0.005 | Prompt injection defense |</p>
+</p><p>| sov_redact_pii | $0.01 | 15+ PII kinds |</p>
+</p><p>| sov_scan | $0.05 | Repo poisoning |</p>
+</p><p>| sov_create_receipt | $0.005 | Tamper-evident |</p>
+</p><p>| sov_verify_receipt | $0.005 | Offline |</p>
+</p><p>| sov_verify_chain | $0.02 | Chain integrity |</p>
+</p><p>| sov_redact_pii_signed | $0.01 | Signed redaction |</p>
+</p><p>| sov_anchor_bitcoin | $0.10 | OpenTimestamps |</p>
+</p><p>| sov_policy_evaluate | $0.025 | Policy decision |</p>
+</p><p>| sov_segmentation_zone | $0.005 | Zero-trust zone |</p>
+</p><p>| sov_maturity_assess | $0.05 | Level-up check |</p>
+</p><p>| **sov_incident_killswitch** | **FREE** | Human safety always free |</p>
+</p><p>| sov_sbom | $0.05 | CycloneDX/SPDX |</p>
+</p><p>| sov_attest | $0.10 | SLSA attestation |</p>
+</p><p>| sov_verify_attestation | $0.005 | Offline |</p>
+</p><p>| sov_anchor_bitcoin_attest | $0.10 | OpenTimestamps |</p>
+
+<p>**Discounts:** BFT council pre-cleared = 50% off · Care-floor validated = 10% off</p>
+
+<h2>Sovereign Substrate</h2>
+
+</p><p>| Layer | What | Substrate |</p>
+</p><p>|---|---|---|</p>
+</p><p>| Sign | Every challenge + receipt | Ed25519, `~/.meok/sov_x402_key.pem` |</p>
+</p><p>| Verify | Public URL | `https://proofof.ai/x402/receipt/<id>` |</p>
+</p><p>| Network | Base | USDC micro-units |</p>
+</p><p>| Council | High-value txns | BFT council ID field |</p>
+
+<h2>License</h2>
+
+<p>MIT — CSOAI Ltd (UK 16939677)</p>
+
+<p>---</p>
+
+<p>**The dragon never lies. Every payment is signed. Every tool call has a price.**</p>
+
+</main>
+</body>
+</html>

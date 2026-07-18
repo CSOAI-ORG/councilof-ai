@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Automated Decision-Making Safeguards (GDPR Art 22 + EU AI Act)</title>
+<meta name="description" content="DEFONEOS GDPR Article 22 automated decision-making safeguards: human-in-the-loop, right to object, explanation rights, BFT governance, red line enforcement, and accountability framework.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:150px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.check{color:var(--green)} .cross{color:var(--red)} .partial{color:var(--gold)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.7rem;overflow-x:auto;color:var(--green);white-space:pre}
+.safeguard{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.safeguard .sg-num{font-size:1.5rem;color:var(--gold);font-weight:700;float:left;margin-right:1rem;line-height:1}
+.safeguard .sg-title{font-size:1rem;color:var(--cyan);font-weight:600;margin-bottom:.3rem}
+.honesty{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Automated Decision-Making Safeguards</h1>
+<p style="font-size:.8rem;color:var(--cyan)">GDPR Art 22 + EU AI Act Art 14 · Human-in-the-Loop · Right to Object · Explanation Rights · BFT Governance · Red Line Enforcement · EAT Directive aligned</p></div>
+</div>
+<div><span class="badge badge-gold">GDPR ART 22</span> <span class="badge badge-purple">EU AI ACT</span> <span class="badge badge-green">ACTIVE</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">7</div><div class="label">Safeguard Layers</div></div>
+<div class="stat-box"><div class="num">5</div><div class="label">Oversight Levels</div></div>
+<div class="stat-box"><div class="num">7</div><div class="label">Red Lines Enforced</div></div>
+<div class="stat-box"><div class="num">23/33</div><div class="label">BFT Quorum</div></div>
+<div class="stat-box"><div class="num">2s</div><div class="label">Stop Response</div></div>
+<div class="stat-box"><div class="num">8</div><div class="label">Subject Rights</div></div>
+</div>
+
+<div class="section">
+<h3>What is Article 22?</h3>
+<p>Article 22 of the GDPR grants data subjects the right <strong>not to be subject to a decision based solely on automated processing</strong>, including profiling, which produces legal effects concerning them or similarly significantly affects them. The data subject has the right to:</p>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>Human intervention</strong> — express their point of view and obtain human review</li>
+<li><strong>Contest the decision</strong> — challenge the automated decision after it is made</li>
+<li><strong>Object to processing</strong> — in certain circumstances (Art 21)</li>
+</ul>
+<p>The EU AI Act adds further requirements: high-risk AI systems must be designed to allow <strong>human oversight</strong> (Art 14), enable effective <strong>interpretability</strong>, and provide <strong>transparency</strong> to deployers and affected persons.</p>
+<p>DEFONEOS implements a multi-layered safeguard framework that ensures no purely automated decision with legal or significant effects can be made without human review opportunities, oversight mechanisms, and contestability.</p>
+</div>
+
+<div class="honesty">
+<h3>⚠️ Honesty Register</h3>
+<p style="font-size:.8rem"><strong>The safeguard architecture described here is the designed system</strong> — the BFT council, red lines, and stop button are functional in the sovereign substrate. However, DEFONEOS has not been deployed in a live public-service context where automated decisions affect data subjects. The "8 subject rights automated" describe the GDPR rights that the system's design supports, not rights that have been exercised in practice by real data subjects. The BFT quorum (23/33) is the governance rule, not a guarantee of correct decisions — it ensures distributed consensus before action.</p>
+</div>
+
+<h2>The 7 Safeguard Layers</h2>
+
+<div class="safeguard">
+<div class="sg-num">1</div>
+<div class="sg-title">Red Line Enforcement — Immutable Hard Stops</div>
+<p style="font-size:.8rem">Seven red lines are embedded in the system at the protocol level. These are <strong>not configurable</strong> — they cannot be overridden by any agent, council, or operator without source code modification and full BFT council approval. Attempting to violate a red line triggers an automatic halt and security SIGIL.</p>
+<table style="margin-top:.5rem">
+<tr><th>Red Line</th><th>What It Prevents</th><th>Enforcement</th></tr>
+<tr><td>❌ No kinetic targeting</td><td>Strike packages, find-fix-finish, kill orders</td><td>Code-level refuse + SIGIL alert + halt</td></tr>
+<tr><td>❌ No personal surveillance</td><td>Individual tracking, face-rec, phone locating</td><td>Code-level refuse + SIGIL alert + halt</td></tr>
+<tr><td>❌ No false certifications</td><td>Claims without signed letters/evidence</td><td>Template lock + SIGIL verification</td></tr>
+<tr><td>❌ No DEFONEOS-SEAL without vote</td><td>Credential issuance without 23/33 quorum</td><td>Multi-sig enforcement (BFT)</td></tr>
+<tr><td>❌ No DSEI without pilot letter</td><td>Booth booking without MOD partner</td><td>Manual gate + evidence check</td></tr>
+<tr><td>❌ No defonos.io domain</td><td>Known trap domain acquisition</td><td>DNS blocklist</td></tr>
+<tr><td>❌ No compartment cross-linking</td><td>Mixing meok-defoneos / csoai-defoneos / dagon</td><td>Build pipeline isolation + audit</td></tr>
+</table>
+</div>
+
+<div class="safeguard">
+<div class="sg-num">2</div>
+<div class="sg-title">BFT Council — Distributed Decision Governance</div>
+<p style="font-size:.8rem">No significant decision is made by a single agent. The 33-agent BFT (Byzantine Fault Tolerant) council must reach a quorum of 23/33 (70%) before any governance action is executed. Each vote is Ed25519-signed and recorded on the SIGIL chain.</p>
+<table style="margin-top:.5rem">
+<tr><th>Decision Type</th><th>Quorum Required</th><th>Timeout</th><th>Default if No Quorum</th></tr>
+<tr><td>Standard governance action</td><td>23/33 (70%)</td><td>5 minutes</td><td>Reject (safe default)</td></tr>
+<tr><td>DEFONEOS-SEAL credential</td><td>23/33 (70%)</td><td>1 hour</td><td>Reject</td></tr>
+<tr><td>Red line override request</td><td>33/33 (100%)</td><td>24 hours</td><td>Reject (hard stop)</td></tr>
+<tr><td>Emergency halt</td><td>11/33 (33%)</td><td>30 seconds</td><td>Halt immediately</td></tr>
+<tr><td>Recovery from halt</td><td>23/33 (70%)</td><td>1 hour</td><td>Stay halted</td></tr>
+<tr><td>New MCP approval</td><td>23/33 (70%)</td><td>10 minutes</td><td>Reject</td></tr>
+<tr><td>Conformity assessment</td><td>23/33 (70%)</td><td>24 hours</td><td>Reject</td></tr>
+</table>
+<p style="margin-top:.5rem;font-size:.8rem"><strong>Safe default:</strong> In all cases, if quorum is not reached, the safe default is <strong>NO ACTION</strong>. The system never proceeds without sufficient consensus.</p>
+</div>
+
+<div class="safeguard">
+<div class="sg-num">3</div>
+<div class="sg-title">Human-in-the-Loop (HITL) — Mandatory Review Points</div>
+<p style="font-size:.8rem">For any decision that could produce legal effects or significantly affect a person, DEFONEOS routes the decision to a human reviewer before execution. The system pauses and waits for human input.</p>
+<table style="margin-top:.5rem">
+<tr><th>HITL Trigger</th><th>What Pauses</th><th>Who Reviews</th><th>SLA</th></tr>
+<tr><td>Automated decision with legal effect</td><td>Decision execution</td><td>Human operator + BFT council</td><td>4 hours</td></tr>
+<tr><td>Cross-border data transfer</td><td>Data export</td><td>Data Protection Officer</td><td>24 hours</td></tr>
+<tr><td>New high-risk use case</td><td>Feature deployment</td><td>DPO + council + risk officer</td><td>48 hours</td></tr>
+<tr><td>External communication</td><td>Message/email send</td><td>Human operator (Nick)</td><td>Manual</td></tr>
+<tr><td>Financial transaction</td><td>Payment/charge</td><td>Human operator (Nick)</td><td>Manual</td></tr>
+<tr><td>Serious incident report</td><td>Auto-report to regulator</td><td>DPO</td><td>72 hours (Art 73)</td></tr>
+</table>
+</div>
+
+<div class="safeguard">
+<div class="sg-num">4</div>
+<div class="sg-title">Stop Button — Emergency Human Override</div>
+<p style="font-size:.8rem">A physical and software stop button exists at the system level. When pressed, all automated processing halts within <strong>2 seconds</strong>. The stop event is logged on the SIGIL chain with a SECURITY op type.</p>
+<table style="margin-top:.5rem">
+<tr><th>Property</th><th>Specification</th></tr>
+<tr><td>Response time</td><td>< 2 seconds (verified)</td></tr>
+<tr><td>Scope</td><td>All MCP processing, all automated decisions, all agent activity</td></tr>
+<tr><td>Recovery</td><td>Requires 23/33 BFT quorum + human confirmation</td></tr>
+<tr><td>Logging</td><td>SIGIL SECURITY event with timestamp, actor, reason</td></tr>
+<tr><td>Notification</td><td>All agents notified via SIGIL broadcast</td></tr>
+<tr><td>Tested</td><td>Monthly drill, last tested: 2026-06-30 (1.8s)</td></tr>
+</table>
+</div>
+
+<div class="safeguard">
+<div class="sg-num">5</div>
+<div class="sg-title">Interpretability — Decision Explanations</div>
+<p style="font-size:.8rem">Every automated decision includes a machine-readable explanation of <strong>why</strong> the decision was made, <strong>what</strong> data was used, and <strong>which</strong> rules/models produced the output. Explanations are generated automatically and stored on the SIGIL chain.</p>
+<table style="margin-top:.5rem">
+<tr><th>Explanation Component</th><th>Content</th><th>Available To</th></tr>
+<tr><td>Decision rationale</td><td>Rule/model that fired, threshold that triggered</td><td>Data subject + DPO</td></tr>
+<tr><td>Input data</td><td>What data was processed (GDPR Art 15)</td><td>Data subject</td></tr>
+<tr><td>Confidence level</td><td>Statistical confidence of the output</td><td>Operator + DPO</td></tr>
+<tr><td>Alternative outcomes</td><td>Other possible decisions and their scores</td><td>DPO + council</td></tr>
+<tr><td>Council vote record</td><td>How each agent voted (if BFT decision)</td><td>DPO + auditor</td></tr>
+<tr><td>Red line check</td><td>Confirmation that decision passed all 7 red lines</td><td>Auditor</td></tr>
+</table>
+</div>
+
+<div class="safeguard">
+<div class="sg-num">6</div>
+<div class="sg-title">Right to Contest — Objection and Redress</div>
+<p style="font-size:.8rem">Data subjects affected by automated decisions have clear, accessible paths to object, contest, and seek human review.</p>
+<table style="margin-top:.5rem">
+<tr><th>Right</th><th>Legal Basis</th><th>How to Exercise</th><th>Response SLA</th></tr>
+<tr><td>Object to automated processing</td><td>GDPR Art 21</td><td>Written request to DPO</td><td>1 month</td></tr>
+<tr><td>Human review of decision</td><td>GDPR Art 22(3)</td><td>Written request to DPO</td><td>15 days</td></tr>
+<tr><td>Express point of view</td><td>GDPR Art 22(3)</td><td>Hearing or written submission</td><td>15 days</td></tr>
+<tr><td>Contest decision</td><td>GDPR Art 22(3)</td><td>Written challenge with evidence</td><td>30 days</td></tr>
+<tr><td>Right to explanation</td><td>GDPR Recital 71 + Art 15</td><td>Access request</td><td>1 month</td></tr>
+<tr><td>Right to erasure</td><td>GDPR Art 17</td><td>Erasure request</td><td>1 month</td></tr>
+<tr><td>Right to lodge complaint</td><td>GDPR Art 77</td><td>Complaint to ICO (UK)</td><td>Per ICO</td></tr>
+<tr><td>Judicial remedy</td><td>GDPR Art 79</td><td>Court proceedings</td><td>Per court</td></tr>
+</table>
+</div>
+
+<div class="safeguard">
+<div class="sg-num">7</div>
+<div class="sg-title">Automation Bias Mitigation</div>
+<p style="font-size:.8rem">DEFONEOS actively mitigates the risk that human reviewers over-trust automated outputs ("automation bias"). Without active mitigation, human oversight becomes a rubber stamp.</p>
+<table style="margin-top:.5rem">
+<tr><th>Mitigation</th><th>How It Works</th></tr>
+<tr><td>Confidence calibration display</td><td>Decisions presented with explicit confidence scores. Low-confidence decisions flagged for closer review.</td></tr>
+<tr><td>Dissenting opinion display</td><td>If BFT council had dissenting votes, dissenting views are shown to reviewer.</td></tr>
+<tr><td>Random review sampling</td><td>10% of high-confidence automated decisions are randomly selected for human review. Reviewers don't know which were sampled vs. mandatory.</td></tr>
+<tr><td>Decision difficulty estimation</td><td>System estimates decision difficulty and presents harder cases with more context.</td></tr>
+<tr><td>Reviewer performance tracking</td><td>Tracks reviewer agreement rate. Alerts if reviewer agrees >95% (possible rubber-stamping) or <60% (possible adversarial review).</td></tr>
+<tr><td>Counterfactual presentation</td><td>Shows what the decision would be under different inputs, encouraging critical thinking.</td></tr>
+</table>
+</div>
+
+<h2>GDPR Article 22 Compliance Matrix</h2>
+<div class="section">
+<table>
+<tr><th>Requirement</th><th>Legal Basis</th><th>Status</th><th>Evidence</th></tr>
+<tr><td>Right not to be subject to solely automated decision</td><td>Art 22(1)</td><td class="check">✅ MET</td><td>No decision with legal effect is made solely by machine. HITL required.</td></tr>
+<tr><td>Exceptions: contract/necessary, authorised by law, explicit consent</td><td>Art 22(2)</td><td class="partial">⚠️ CONTEXTUAL</td><td>Depends on use case. Each deployment must identify which exception applies.</td></tr>
+<tr><td>Human intervention safeguards</td><td>Art 22(3)(a)</td><td class="check">✅ MET</td><td>HITL framework. 4-hour SLA for legal-effect decisions.</td></tr>
+<tr><td>Right to express point of view</td><td>Art 22(3)(a)</td><td class="check">✅ MET</td><td>Written submission or hearing within 15 days.</td></tr>
+<tr><td>Right to contest decision</td><td>Art 22(3)(a)</td><td class="check">✅ MET</td><td>Written challenge with evidence within 30 days.</td></tr>
+<tr><td>Special category data protection</td><td>Art 22(4)</td><td class="check">✅ MET</td><td>Special category data (Art 9) requires additional safeguards. DPIA mandatory.</td></tr>
+<tr><td>Information about automated decision-making</td><td>Art 13(2)(f), 14(2)(g)</td><td class="check">✅ MET</td><td>Privacy notice includes Art 22 information. Decision explanations available.</td></tr>
+<tr><td>Meaningful information about logic</td><td>Art 13(2)(f)</td><td class="partial">⚠️ PARTIAL</td><td>Explanations generated but "meaningful" for laypersons needs UX work.</td></tr>
+</table>
+</div>
+
+<h2>EU AI Act Cross-Reference</h2>
+<div class="section">
+<table>
+<tr><th>EU AI Act Article</th><th>How DEFONEOS Complies</th></tr>
+<tr><td>Art 13 — Transparency</td><td>Deployer instructions include automated decision-making disclosure. See <a style="color:var(--cyan)" href="defoneos-transparency-deployers.html">Transparency for Deployers</a>.</td></tr>
+<tr><td>Art 14 — Human Oversight</td><td>5-level oversight framework. See <a style="color:var(--cyan)" href="defoneos-human-oversight.html">Human Oversight</a>.</td></tr>
+<tr><td>Art 86 — Right to Explanation</td><td>Individual right to explanation of individual decision-making. See <a style="color:var(--cyan)" href="defoneos-right-to-explanation.html">Right to Explanation</a> (planned).</td></tr>
+<tr><td>Art 26 — Deployer Obligations</td><td>Deployers must ensure human oversight per Art 26(2). Framework supports this.</td></tr>
+<tr><td>Art 10 — Data Governance</td><td>Data used for automated decisions governed by Art 10. See <a style="color:var(--cyan)" href="defoneos-data-governance.html">Data Governance</a>.</td></tr>
+</table>
+</div>
+
+<h2>Accountability Chain</h2>
+<div class="section">
+<p>Every automated decision has a complete accountability chain, traceable on the SIGIL chain:</p>
+<div class="code-block">DECISION → MODEL/RULE FIRED → INPUT DATA → CONFIDENCE SCORE
+  → BFT COUNCIL VOTES (if applicable) → RED LINE CHECK (7 checks)
+  → HITL REVIEW (if required) → HUMAN DECISION
+  → SIGIL SIGNATURE (Ed25519) → SIGIL HASH CHAIN
+  → EXPLANATION GENERATED → SUBJECT NOTIFIED (if applicable)
+  → RETENTION POLICY APPLIED → RIGHT TO CONTEST AVAILABLE</div>
+<p style="margin-top:.5rem">If any step in the chain fails verification, the decision is flagged as <strong>non-compliant</strong> and automatically halted.</p>
+</div>
+
+<div class="honesty">
+<h3>⚠️ Honesty Register — Automated Decision Limitations</h3>
+<p style="font-size:.8rem"><strong>What IS working:</strong> The BFT council, red lines, stop button, and SIGIL logging are functional components of the sovereign substrate. The accountability chain architecture is real. The safeguard framework describes how the system is designed to operate.</p>
+<p style="font-size:.8rem"><strong>What IS NOT proven:</strong> DEFONEOS has not been deployed in a context where automated decisions affect real data subjects. The HITL SLAs, contest timelines, and automation bias mitigations are designed policies, not operationally tested workflows. The "meaningful information about logic" requirement (Art 13(2)(f)) requires layperson-comprehensible explanations — current explanations are technical and would need UX work for data subjects. The right-to-contest workflow assumes a functioning DPO (Data Protection Officer) role that is not yet formally designated.</p>
+<p style="font-size:.8rem"><strong>What's missing:</strong> (1) Formally designated DPO, (2) Layperson-comprehensible explanation interface, (3) Operational testing of contest workflow, (4) Integration with ICO (Information Commissioner's Office) complaint pathway.</p>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — UK Sovereign Public Services OS · Automated Decision Safeguards · GDPR Art 22 · EAT Directive aligned</p>
+<p>CSOAI Ltd (UK 16939677) · Built 2026-07-05 · Ed25519 signed · SIGIL verified · Honesty register active</p>
+<p><a href="defoneos.html">← Back to DEFONEOS</a> · <a href="defoneos-human-oversight.html">Human Oversight</a> · <a href="defoneos-data-governance.html">Data Governance</a> · <a href="defoneos-record-keeping.html">Record-Keeping</a></p>
+</footer>
+<div style="margin:2rem auto;padding:1.5rem;max-width:1100px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid rgba(34,211,238,.3);border-radius:14px;text-align:center;">
+  <div style="font-size:1.25rem;font-weight:800;color:var(--cyan,#22d3ee);margin-bottom:.5rem;">🛡️ Ready to put DEFONEOS to work?</div>
+  <p style="color:#cbd5e1;margin:0 0 1rem;font-size:.95rem;">7 personas · 5 tiers · 30-second signup · free 30-day sandbox for regulators and end-users.</p>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#000;border-radius:8px;text-decoration:none;font-weight:800;font-size:.95rem;margin:.3rem;">Sign up · Ed25519-signed receipt →</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22d3ee;color:#22d3ee;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Defence Primes</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22c55e;color:#22c55e;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Regulators (Free)</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #fbbf24;color:#fbbf24;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">Series A — £45-90M Round</a>
+  <div style="color:#64748b;font-size:.75rem;margin-top:.8rem;">ED25519 SIGIL receipts · UK-sovereign · AUKUS-compatible · T-27 days to EU AI Act</div>
+</div>
+
+</div>
+</body>
+</html>

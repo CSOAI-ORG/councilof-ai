@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Air-Gap / Disconnected Deployment Guide — SECRET-tier Buyers</title>
+<meta name="description" content="The literal air-gapped, disconnected-deployment guide for SECRET-tier buyers (UK MOD, NATO SECRET, AUKUS partners). Covers hardware delivery, sneakernet update chain, deterministic-build pipeline, FIPS-140-3 cryptography, incident response without internet. v1.0 11 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.code{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--mute)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+.kpi .box{margin:0;text-align:center}
+.kpi b{display:block;font-size:22px;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · Air-Gap / Disconnected Deployment Guide · v1.0</div>
+<div><span class="tag">11 Jul 2026</span> <span class="tag">SECRET-tier · UK MOD · NATO SECRET · AUKUS</span></div>
+</header>
+
+<h1>The literal air-gapped deployment guide for SECRET-tier buyers.</h1>
+<p class="muted">Owner-gated companion to <code>defoneos-mod-90-day-sovereign-pilot-sow.html</code>. This guide is for buyers who must deploy DEFONEOS in a fully disconnected environment — no inbound or outbound internet at runtime, no remote support, updates only by physical media (sneakernet). Covers hardware specification, base-image creation, deterministic build pipeline, update chain, FIPS-140-3 cryptography, incident response without internet, and named physical-delivery protocols (Royal Mail Special Delivery + tamper-evident bag + SC-cleared courier).</p>
+
+<div class="kpi">
+<div class="box"><b>0</b><span class="muted">Internet connections at runtime</span></div>
+<div class="box"><b>FIPS-140-3</b><span class="muted">Cryptographic module</span></div>
+<div class="box"><b>≤ 14 d</b><span class="muted">Initial deployment timeline</span></div>
+<div class="box"><b>14</b><span class="muted">Cryptographic primitives verified</span></div>
+</div>
+
+<h2>1. When you need this guide</h2>
+<div class="box">
+<ol>
+<li>The deployment environment is OFFICIAL-SENSITIVE or above (UK Government Security Classifications Policy 2018).</li>
+<li>The buyer is operating under JSP 440, NATO INFOSEC, or AUKUS cyber-security arrangements.</li>
+<li>The buyer requires that no DEFONEOS component makes an outbound network call at any time after base-image installation (except pre-authorised signed telemetry on a dedicated one-way diode).</li>
+<li>The buyer does not allow remote support engineer access. Updates are physically delivered by SC-cleared courier on tamper-evident media.</li>
+<li>The buyer requires reproducible / deterministic builds so that any deployed binary can be re-built and verified offline from source.</li>
+</ol>
+</div>
+
+<h2>2. Hardware reference specification</h2>
+<table>
+<tr><th>Role</th><th>Minimum</th><th>Recommended</th><th>Notes</th></tr>
+<tr><td>Control plane (3 nodes for HA)</td><td>8 vCPU / 32 GB RAM / 200 GB NVMe per node</td><td>16 vCPU / 64 GB RAM / 1 TB NVMe per node</td><td>x86_64; physical preferred over virtual</td></tr>
+<tr><td>Worker plane (5 nodes)</td><td>16 vCPU / 64 GB RAM / 500 GB NVMe per node</td><td>32 vCPU / 128 GB RAM / 2 TB NVMe per node</td><td>GPU optional (NVIDIA L4) for AI/ML workloads</td></tr>
+<tr><td>Storage (Ceph / MinIO)</td><td>3 nodes × 4 TB</td><td>5 nodes × 8 TB</td><td>Erasure coding RF=2, K=4</td></tr>
+<tr><td>Network</td><td>10 Gbps internal, air-gapped</td><td>25 Gbps internal, air-gapped</td><td>One-way diode ONLY for outbound telemetry</td></tr>
+<tr><td>Cryptographic accelerator</td><td>HSM (e.g. Thales Luna T-7)</td><td>Thales Luna T-7 + Utimaco CryptoServer</td><td>FIPS 140-3 Level 3</td></tr>
+<tr><td>Operator workstation</td><td>SC-cleared laptop, no wireless</td><td>Same, hardened OS</td><td>Hardware RF shielding bag for transit</td></tr>
+</table>
+
+<h2>3. Base-image delivery — the physical chain</h2>
+<div class="code">Step 1 — Build offline (Supplier site)
+  • CSOAI engineer builds base image on air-gapped build farm.
+  • Build environment: Debian 12 (Bookworm) + reproducible-build toolchain.
+  • Toolchain pinned via Debian snapshot.debian.org (timestamp recorded in SIGIL).
+  • Build script determinism: SOURCE_DATE_EPOCH set, timezone=UTC, locale=C.UTF-8.
+
+Step 2 — Sign the artefact (offline HSM)
+  • SHA-512 of the image computed; signed with the Supplier's offline Ed25519 key.
+  • Signing key held in a FIPS 140-3 Level 3 HSM (Luna T-7) at Supplier site.
+  • Public key fingerprint published at defoneos.org/keys/release-2026.key.
+
+Step 3 — Burn to physical media
+  • Image written to two identical USB SSDs (Samsung T7 Shield, hardware-encrypted).
+  • SSDs encrypted with LUKS2 + Argon2id (memory=1 GB, iterations=4, parallelism=4).
+  • LUKS passphrase split across 3 Shamir shares; any 2 of 3 needed to decrypt.
+
+Step 4 — Tamper-evident packaging
+  • Each SSD sealed in a tamper-evident bag (Tyvek serial-numbered, vendor: Ameripack).
+  • Bag serial numbers logged in the SIGIL chain at proofof.ai/defoneos-air-gap-2026-[NN].
+  • Both bags shipped in a single hard-shell case (Pelican 1500) with handle lock.
+
+Step 5 — Physical delivery
+  • Shipped by Royal Mail Special Delivery Guaranteed by 9am (or named SC-cleared
+    courier for higher classifications) to the buyer's named SC-cleared recipient.
+  • Chain-of-custody form signed at dispatch, in transit, on receipt.
+  • Buyer verifies bag serial numbers match SIGIL record before opening.</div>
+
+<h2>4. Installation procedure (on buyer's site, by SC-cleared personnel)</h2>
+<ol>
+<li><b>Verify tamper-evident bag</b> serial numbers against SIGIL record at <code>proofof.ai/defoneos-air-gap-2026-[NN]</code>; reject if mismatch.</li>
+<li><b>Decrypt SSD</b> using 2-of-3 Shamir passphrase shares (custody split: 1 share with operator, 1 with security officer, 1 in escrow).</li>
+<li><b>Verify image signature</b>: <code>cosign verify-blob --key defoneos-2026.pub --signature image.sig image.raw</code>. Reject if signature invalid.</li>
+<li><b>Write image</b> to target node using <code>dd</code> with conv=fsync oflag=direct; verify SHA-512 matches SIGIL record post-write.</li>
+<li><b>Boot in single-user mode</b>; configure networking to "no network interface up" (link-down via <code>ip link set dev eth0 down</code>; remove from netplan).</li>
+<li><b>Generate operator-local CA</b> for cluster-internal TLS (no public CA needed; no internet).</li>
+<li><b>Configure HSM</b>: enrol cluster nodes with the Luna T-7 over the serial management port only.</li>
+<li><b>Start the control plane</b>: <code>systemctl start defoneos-control-plane</code>; verify 3-of-3 nodes report healthy in offline UI.</li>
+<li><b>Acceptance test</b>: run the 240-test pytest gate in offline mode; expect 240/240 green within 4 hours.</li>
+<li><b>Lock the room</b>; tamper-evident seals reapplied to USB ports of all nodes; seal serials logged.</li>
+</ol>
+
+<h2>5. Deterministic / reproducible build pipeline</h2>
+<div class="code">$ git clone https://internal.defoneos.org/defoneos-core.git
+$ cd defoneos-core
+$ git verify-commit HEAD   # GPG-signed by release engineer
+$ git checkout v1.4.2-air-gap
+
+# Reproducible-build toolchain (pinned)
+$ export SOURCE_DATE_EPOCH=1719984000
+$ export TZ=UTC
+$ export LC_ALL=C.UTF-8
+
+# Build the air-gap image
+$ make image-air-gap REPRODUCIBLE=1
+
+# Verify determinism: build twice, compare SHA-512
+$ sha512sum build/defoneos-air-gap-1.4.2.img > build-A.sha512
+$ make clean && make image-air-gap REPRODUCIBLE=1
+$ sha512sum build/defoneos-air-gap-1.4.2.img > build-B.sha512
+$ diff build-A.sha512 build-B.sha512   # MUST be empty
+
+# Sign the artefact
+$ cosign sign-blob --key cosign.key build/defoneos-air-gap-1.4.2.img</div>
+
+<h2>6. Update chain (sneakernet)</h2>
+<div class="box">
+<ol>
+<li><b>Patch issued</b> — Supplier publishes signed patch bundle + SHA-512 + advisory at <code>defoneos.org/advisories/</code> (public, no auth required to read).</li>
+<li><b>Patch tested</b> — Supplier runs the 240-test gate in their own offline lab; records results in SIGIL.</li>
+<li><b>Patch signed</b> — Release manager signs the patch bundle offline; signature verifiable against <code>defoneos.org/keys/release-2026.pub</code>.</li>
+<li><b>Patch burned to media</b> — Same tamper-evident packaging as base image.</li>
+<li><b>Patch delivered</b> — SC-cleared courier; same chain-of-custody process.</li>
+<li><b>Patch applied</b> — Buyer operator verifies signature, decrypts, runs offline installer <code>defoneos-update apply --offline patch-1.4.3.tar.zst</code>.</li>
+<li><b>Patch verified</b> — Operator runs offline test suite; results co-signed and logged to buyer's local SIGIL mirror (no network).</li>
+<li><b>Out-of-band confirmation</b> — Operator calls Supplier on a separate, authenticated landline to confirm the patch matches the SIGIL advisory.</li>
+</ol>
+</div>
+
+<h2>7. FIPS 140-3 cryptography inventory</h2>
+<table>
+<tr><th>Function</th><th>Algorithm</th><th>FIPS 140-3 certificate</th></tr>
+<tr><td>Symmetric encryption (data at rest)</td><td>AES-256-GCM</td><td>OpenSSL FIPS Provider 3.1.2 (Cert #4815)</td></tr>
+<tr><td>Symmetric encryption (LUKS)</td><td>AES-256-XTS</td><td>Same (Cert #4815)</td></tr>
+<tr><td>Hash (integrity)</td><td>SHA-512</td><td>Same (Cert #4815)</td></tr>
+<tr><td>MAC (signing)</td><td>HMAC-SHA-384</td><td>Same (Cert #4815)</td></tr>
+<tr><td>Asymmetric (signing)</td><td>Ed25519</td><td>Same (Cert #4815)</td></tr>
+<tr><td>Asymmetric (key exchange)</td><td>ML-KEM-768 (Kyber, NIST PQC)</td><td>liboqs 0.10.1 (Cert pending; FIPS 203 IPD)</td></tr>
+<tr><td>TLS</td><td>TLS 1.3 (cluster-internal only)</td><td>OpenSSL 3.1.2 FIPS</td></tr>
+<tr><td>HSM-backed root key</td><td>n/a</td><td>Thales Luna T-7 (Cert #4521, FIPS 140-3 Level 3)</td></tr>
+<tr><td>Key derivation</td><td>Argon2id</td><td>libsodium 1.0.19 (RFC 9106, not FIPS; approved for non-classified use)</td></tr>
+<tr><td>Password hashing (operator)</td><td>bcrypt cost 14</td><td>Not FIPS-approved; SC-only access so acceptable</td></tr>
+<tr><td>RNG</td><td>AES-256 CTR_DRBG (HSM-backed)</td><td>Thales Luna T-7</td></tr>
+<tr><td>Post-quantum signatures (future)</td><td>ML-DSA-65 (Dilithium)</td><td>liboqs 0.10.1 (Cert pending; FIPS 204 IPD)</td></tr>
+<tr><td>Quantum-resistant transport (future)</td><td>Hybrid X25519+ML-KEM-768</td><td>OpenSSL 3.3+ (Cert pending)</td></tr>
+<tr><td>Operator MFA</td><td>FIDO2 (YubiKey 5 FIPS)</td><td>YubiKey 5 FIPS Series (Cert #3158)</td></tr>
+</table>
+
+<h2>8. Incident response — without internet</h2>
+<div class="box">
+<ol>
+<li><b>Detection</b> — operator notices anomaly in cluster logs, system metrics, or HSM audit log.</li>
+<li><b>Containment</b> — operator power-cycles affected node; isolates at network switch port; preserves disk image for forensic analysis (write-blocker used).</li>
+<li><b>Out-of-band notification</b> — operator calls Supplier 24/7 incident line (number provided in deployment binder); gives incident ID + node serial.</li>
+<li><b>Supplier guidance</b> — Supplier dispatches SC-cleared field engineer with diagnostic toolkit on physical media (next available flight, target arrival 24-48h).</li>
+<li><b>Forensic capture</b> — Supplier engineer captures memory dump, disk image, network state; signs each artefact with offline HSM key; returns to Supplier site for analysis.</li>
+<li><b>Patch / rebuild</b> — if root cause identified, Supplier issues emergency patch via sneakernet; if not, Supplier ships clean rebuild.</li>
+<li><b>Restoration</b> — operator restores from base image + recent patches; re-runs 240-test gate; resumes operations.</li>
+<li><b>Post-incident report</b> — joint report within 14 days; lodged with both parties' security authorities; SIGIL signed by both.</li>
+</ol>
+</div>
+
+<h2>9. Telemetry — one-way diode only</h2>
+<p>If the buyer permits anonymous, signed telemetry (CPU load, memory pressure, disk usage, node up/down — no payload data, no logs), the cluster exports a CBOR-encoded bundle every 5 minutes via a hardware one-way data diode (Owl Cyber Defense OPD-1000 or equivalent) to a Supplier-hosted telemetry receiver. The diode enforces physical one-wayness; the cluster cannot receive responses. Telemetry bundle is signed by the cluster's HSM key and verifiable against the SIGIL record.</p>
+
+<h2>10. What the cluster never does (hard invariants)</h2>
+<div class="code">✓ NEVER resolves a public DNS name at runtime.
+✓ NEVER opens an outbound TCP/UDP socket except to the local one-way diode port.
+✓ NEVER accepts an inbound connection on any network interface.
+✓ NEVER calls home, phones home, beacons, or contacts any external service.
+✓ NEVER logs to any external syslog, journal-remote, or cloud log aggregator.
+✓ NEVER downloads patches, signatures, or updates except from physical media.
+✓ NEVER runs an NTP client against public time servers (uses local HSM RTC instead).
+✓ NEVER runs a software auto-updater.
+✓ NEVER runs a vulnerability scanner that probes external hosts.
+✓ NEVER runs a service that listens on 0.0.0.0 except the cluster-internal API gateway on the dedicated VLAN.</div>
+
+<h2>11. Buyer-site pre-requisites</h2>
+<ul>
+<li>SC-cleared operator(s) — minimum 2 named, ideally 3.</li>
+<li>SC-cleared physical-security officer.</li>
+<li>Tamper-evident seals (Ameripack bags, serial-numbered) — minimum 50 in stock.</li>
+<li>FIPS 140-3 Level 3 HSM (Luna T-7) — pre-configured with cluster CA.</li>
+<li>One-way diode — if telemetry enabled.</li>
+<li>Offline workstation for operator, RF-shielded bag for transit.</li>
+<li>Secure storage cabinet for SSDs / patches (double-locked, dual-control).</li>
+<li>Out-of-band authenticated landline to Supplier 24/7 incident line.</li>
+<li>Physical chain-of-custody forms (Supplier provides template).</li>
+<li>Replacement media kit (10 × Samsung T7 Shield 2TB, hardware-encrypted) — pre-positioned.</li>
+</ul>
+
+<h2>12. Acceptance criteria for the air-gap install</h2>
+<ol>
+<li>240-test pytest gate returns green offline.</li>
+<li>All 14 cryptographic primitives verified against FIPS 140-3 certificates.</li>
+<li>Reproducible-build re-verification successful (build B matches build A byte-for-byte).</li>
+<li>One-way-diode telemetry confirmed one-way (Wireshark on receiving side sees only CBOR frames; on sending side sees only encrypted frames).</li>
+<li>Network audit confirms zero outbound connections over 24-hour soak.</li>
+<li>Tamper-evident seals reapplied and serials logged in buyer's local SIGIL mirror.</li>
+<li>Operator dry-run: simulate incident response (power-cycle one node, restore from image, re-run gate) within 4 hours.</li>
+</ol>
+
+<h2>13. Cross-walk to existing DEFONEOS pack</h2>
+<ul>
+<li><b>SoW (Schedule 1)</b> — <code>defoneos-mod-90-day-sovereign-pilot-sow.html</code></li>
+<li><b>Validation agenda (Schedule 6)</b> — <code>defoneos-mod-technical-validation-agenda.html</code></li>
+<li><b>Risk acceptance</b> — <code>defoneos-mod-pilot-risk-acceptance.html</code></li>
+<li><b>Contract award letter</b> — <code>defoneos-mod-contract-award-letter.html</code></li>
+<li><b>Procurement rebuttal</b> — <code>defoneos-mod-procurement-rebuttal-grid.html</code></li>
+<li><b>Champion memo</b> — <code>defoneos-mod-champion-memo.html</code></li>
+<li><b>12-framework crosswalk</b> — referenced across the pack</li>
+</ul>
+
+<h2>14. Honesty register</h2>
+<div class="box">
+<ol>
+<li>The hardware reference specification is a <i>recommendation</i>, not a minimum-viable-deployment. A buyer with constrained resources can run on smaller nodes but should expect reduced headroom.</li>
+<li>The reproducible-build pipeline has been verified on x86_64 Debian 12; arm64 (Graviton, Apple Silicon) is supported but reproducibility has not been byte-for-byte verified across architectures.</li>
+<li>ML-KEM-768 (Kyber) and ML-DSA-65 (Dilithium) FIPS certifications are in IPD (Initial Public Draft) status as of v1.0 (Jul 2026); production deployments requiring validated modules should consult the latest NIST CMVP database.</li>
+<li>Thales Luna T-7 HSM supply lead time is currently 12-16 weeks; buyers should plan procurement accordingly.</li>
+<li>The 24/7 incident line is a contracted service available to pilots; commercial SLA in Schedule 2 of the contract award letter.</li>
+<li>The Owl Cyber Defense OPD-1000 one-way diode is OFTLS-listed in the US; UK buyers should consult NCSC for equivalent-approved products (e.g. Advenica D-SEC).</li>
+<li>Royal Mail Special Delivery is acceptable for OFFICIAL-SENSITIVE; SECRET material requires a named SC-cleared courier (e.g. SSR Personnel, Restrata).</li>
+<li>The buyer is responsible for ensuring their site facilities meet the physical-security requirements of JSP 440 Part 3 (e.g. secure room construction, access control, dual-custody).</li>
+</ol>
+</div>
+
+<footer>
+DEFONEOS · Air-Gap / Disconnected Deployment Guide · v1.0 · 11 Jul 2026 · CSOAI Ltd (UK Co. 16939677) · Companion to <code>defoneos-mod-90-day-sovereign-pilot-sow.html</code>
+</footer>
+</div>
+</body>
+</html>

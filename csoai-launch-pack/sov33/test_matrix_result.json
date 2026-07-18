@@ -1,0 +1,347 @@
+{
+  "ts": "2026-07-14T06:45:41.044193+00:00",
+  "results": {
+    "tier_a_arches": [
+      {
+        "arch": {
+          "name": "linear-1b",
+          "n_brains": 1,
+          "depth": 1,
+          "complexity": "baseline"
+        },
+        "proxy_score": 0.5
+      },
+      {
+        "arch": {
+          "name": "4brain-flat",
+          "n_brains": 4,
+          "depth": 1,
+          "complexity": "decorrelated-vote"
+        },
+        "proxy_score": 0.8
+      },
+      {
+        "arch": {
+          "name": "4brain-pyramid-8",
+          "n_brains": 4,
+          "depth": 8,
+          "complexity": "fluid-pyramid"
+        },
+        "proxy_score": 0.85
+      },
+      {
+        "arch": {
+          "name": "4brain-pyramid-12",
+          "n_brains": 4,
+          "depth": 12,
+          "complexity": "fluid-pyramid"
+        },
+        "proxy_score": 0.82
+      },
+      {
+        "arch": {
+          "name": "4brain-pyramid-12-r0.5",
+          "n_brains": 4,
+          "depth": 12,
+          "ratio": 0.5,
+          "complexity": "ratio-sweep"
+        },
+        "proxy_score": 0.95
+      },
+      {
+        "arch": {
+          "name": "4brain-nest-regions",
+          "n_brains": 4,
+          "depth": 1,
+          "nesting": true,
+          "complexity": "regional-nest"
+        },
+        "proxy_score": 0.9
+      }
+    ],
+    "tier_b_ratios": [
+      {
+        "nu_small": 0.0,
+        "nu_large": 0.0,
+        "score": 0.0
+      },
+      {
+        "nu_small": 0.0,
+        "nu_large": 0.1,
+        "score": 0.4
+      },
+      {
+        "nu_small": 0.0,
+        "nu_large": 0.25,
+        "score": 1.0
+      },
+      {
+        "nu_small": 0.0,
+        "nu_large": 0.5,
+        "score": 2.0
+      },
+      {
+        "nu_small": 0.0,
+        "nu_large": 0.75,
+        "score": 3.0
+      },
+      {
+        "nu_small": 0.0,
+        "nu_large": 1.0,
+        "score": 4.0
+      },
+      {
+        "nu_small": 0.1,
+        "nu_large": 0.0,
+        "score": 0.4
+      },
+      {
+        "nu_small": 0.1,
+        "nu_large": 0.1,
+        "score": 0.8
+      },
+      {
+        "nu_small": 0.1,
+        "nu_large": 0.25,
+        "score": 1.4
+      },
+      {
+        "nu_small": 0.1,
+        "nu_large": 0.5,
+        "score": 2.4
+      },
+      {
+        "nu_small": 0.1,
+        "nu_large": 0.75,
+        "score": 3.4
+      },
+      {
+        "nu_small": 0.1,
+        "nu_large": 1.0,
+        "score": 4.4
+      },
+      {
+        "nu_small": 0.25,
+        "nu_large": 0.0,
+        "score": 1.0
+      },
+      {
+        "nu_small": 0.25,
+        "nu_large": 0.1,
+        "score": 1.4
+      },
+      {
+        "nu_small": 0.25,
+        "nu_large": 0.25,
+        "score": 2.0
+      },
+      {
+        "nu_small": 0.25,
+        "nu_large": 0.5,
+        "score": 3.0
+      },
+      {
+        "nu_small": 0.25,
+        "nu_large": 0.75,
+        "score": 4.0
+      },
+      {
+        "nu_small": 0.25,
+        "nu_large": 1.0,
+        "score": 5.0
+      },
+      {
+        "nu_small": 0.5,
+        "nu_large": 0.0,
+        "score": 2.0
+      },
+      {
+        "nu_small": 0.5,
+        "nu_large": 0.1,
+        "score": 2.4
+      },
+      {
+        "nu_small": 0.5,
+        "nu_large": 0.25,
+        "score": 3.0
+      },
+      {
+        "nu_small": 0.5,
+        "nu_large": 0.5,
+        "score": 4.0
+      },
+      {
+        "nu_small": 0.5,
+        "nu_large": 0.75,
+        "score": 5.0
+      },
+      {
+        "nu_small": 0.5,
+        "nu_large": 1.0,
+        "score": 6.0
+      },
+      {
+        "nu_small": 0.75,
+        "nu_large": 0.0,
+        "score": 3.0
+      },
+      {
+        "nu_small": 0.75,
+        "nu_large": 0.1,
+        "score": 3.4
+      },
+      {
+        "nu_small": 0.75,
+        "nu_large": 0.25,
+        "score": 4.0
+      },
+      {
+        "nu_small": 0.75,
+        "nu_large": 0.5,
+        "score": 5.0
+      },
+      {
+        "nu_small": 0.75,
+        "nu_large": 0.75,
+        "score": 6.0
+      },
+      {
+        "nu_small": 0.75,
+        "nu_large": 1.0,
+        "score": 7.0
+      },
+      {
+        "nu_small": 1.0,
+        "nu_large": 0.0,
+        "score": 4.0
+      },
+      {
+        "nu_small": 1.0,
+        "nu_large": 0.1,
+        "score": 4.4
+      },
+      {
+        "nu_small": 1.0,
+        "nu_large": 0.25,
+        "score": 5.0
+      },
+      {
+        "nu_small": 1.0,
+        "nu_large": 0.5,
+        "score": 6.0
+      },
+      {
+        "nu_small": 1.0,
+        "nu_large": 0.75,
+        "score": 7.0
+      },
+      {
+        "nu_small": 1.0,
+        "nu_large": 1.0,
+        "score": 8.0
+      }
+    ],
+    "tier_c_splits": [
+      {
+        "split": "0.1/0.9",
+        "score": 2.0,
+        "winner": true
+      },
+      {
+        "split": "0.25/0.75",
+        "score": 2.0,
+        "winner": false
+      },
+      {
+        "split": "0.5/0.5",
+        "score": 2.0,
+        "winner": false
+      }
+    ],
+    "tier_d_tiers": [
+      {
+        "tier": "SOV3",
+        "n_brains": 2,
+        "role": "cheap/fast/90%-traffic"
+      },
+      {
+        "tier": "SOV33",
+        "n_brains": 1,
+        "role": "specialist/deep-dive"
+      },
+      {
+        "tier": "SOV333",
+        "n_brains": 1,
+        "role": "synthesis/cross-tier"
+      }
+    ],
+    "tier_e_speedups": [
+      {
+        "lever": "0_baseline",
+        "ms_per_tok": 232.0,
+        "speedup_x": 1.0
+      },
+      {
+        "lever": "1_ssd_stream",
+        "ms_per_tok": 5.2,
+        "speedup_x": 44.62
+      },
+      {
+        "lever": "7_combined_pipeline",
+        "ms_per_tok": 9.22,
+        "speedup_x": 25.16
+      }
+    ],
+    "tier_f_bases": [
+      {
+        "name": "deepseek-v4-pro",
+        "total_B": 1600,
+        "active_B": 49,
+        "license": "MIT",
+        "is_trillion": true,
+        "note": "1.6T/49B ACTIVE per token, MIT, vendor-claimed"
+      },
+      {
+        "name": "glm-5.2",
+        "total_B": 744,
+        "active_B": 40,
+        "license": "MIT",
+        "is_trillion": false,
+        "note": "744B/40B ACTIVE, MIT, Colibri-validated on M4 Max"
+      },
+      {
+        "name": "qwen3.x-moe",
+        "total_B": null,
+        "active_B": null,
+        "license": "Apache-2.0",
+        "is_trillion": false,
+        "note": "[LEAD] confirm exact current size before citing"
+      }
+    ],
+    "winners": {
+      "tier_a_arch": {
+        "arch": {
+          "name": "4brain-pyramid-12-r0.5",
+          "n_brains": 4,
+          "depth": 12,
+          "ratio": 0.5,
+          "complexity": "ratio-sweep"
+        },
+        "proxy_score": 0.95
+      },
+      "tier_b_ratio": {
+        "nu_small": 1.0,
+        "nu_large": 1.0,
+        "score": 8.0
+      },
+      "tier_c_split": "0.1/0.9 (large-heavy)",
+      "tier_d_tier_home": "SOV3 = routing/cheap, SOV33 = specialist, SOV333 = synthesis",
+      "tier_e_speedup": "combined_pipeline_25x",
+      "tier_f_base": "deepseek-v4-pro (1.6T/49B MIT, TRILLION-SCALE)"
+    }
+  },
+  "charter": "df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054",
+  "care_floor": 0.95,
+  "elapsed_s": 0.0,
+  "honest_register": "CPU proxy \u00b7 topology proof \u00b7 not LLM throughput"
+}

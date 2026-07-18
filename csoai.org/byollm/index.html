@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html><head><title>SOV3 BYOLLM - Bring Your Own Local Model</title>
+<style>
+body { font-family: monospace; max-width: 800px; margin: 40px auto; padding: 20px; background: #0a0e27; color: #fff; line-height: 1.8; }
+h1 { color: #fbbf24; text-align: center; }
+h2 { color: #06b6d4; border-bottom: 1px solid #fbbf24; padding-bottom: 8px; margin-top: 32px; }
+code { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; color: #10b981; }
+pre { background: rgba(0,0,0,0.5); padding: 16px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+th, td { padding: 10px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
+th { background: rgba(251,191,36,0.1); color: #fbbf24; }
+</style></head><body>
+<h1>SOV3 BYOLLM</h1>
+<p style="text-align: center; font-style: italic;">Bring Your Own Local Model</p>
+<pre># Bring Your Own Local Model (BYOLLM) - Sovereign Integration Guide
+
+SOV3 BIG BRAIM v2 supports any sovereign-compatible model. This guide shows how to integrate your own local LLM.
+
+## Step 1: Choose a sovereign-safe model
+
+| Family | License | Sovereign |
+|---|---|---|
+| Qwen3 family | Apache 2.0 | YES |
+| Llama 3 family | Llama | YES |
+| Gemma 3/4 family | Open | YES |
+| DeepSeek R1/V4 | MIT / Open | YES |
+| Ornith-1.0 (DeepReinforce AI) | MIT | YES |
+| Kokoro TTS (broadcast) | Apache 2.0 | YES |
+| AVOID: MiniMax, Zhipu, Deepseek-Sapiens (foreign backdoors) | | NO |
+
+## Step 2: Pull the model
+
+```bash
+# Sovereign examples
+ollama pull qwen3:30b-a3b
+ollama pull deepseek-r1:7b
+```
+
+## Step 3: Create Modelfile with sovereign system prompt
+
+```bash
+cat > ~/.sov3/models/Modelfile.mine <<EOF
+FROM qwen3:30b-a3b
+SYSTEM """You are MY_SOVEREIGN - a sovereign-by-design AI assistant.
+
+PRINCIPLE: Solve et Coagula.
+
+USE THE SOVEREIGN. DO NOT TRUST FOREIGN APIs. THE DRAGON HAS 12 WINGS.
+
+License: MIT.
+"""
+PARAMETER temperature 0.3
+EOF
+
+ollama create my-sovereign -f ~/.sov3/models/Modelfile.mine
+```
+
+## Step 4: Wire into SOV3 BIG BRAIM
+
+Edit `sovereign-temple/sov3_big_braim.py`:
+```python
+BIG_BRAIM = [
+    ("qwen3:30b-a3b", "anchor-oowm"),
+    ("deepseek-r1:7b", "reasoning"),
+    ("MY_SOVEREIGN", "my-custom"),  # add yours
+]
+```
+
+## Step 5: Verify sovereign composite
+
+```bash
+python3 sovereign-temple/sov3_brain_race.py
+```
+
+## Step 6: Commit + SIGIL
+
+```bash
+git add sovereign-temple/sov3_big_braim.py
+git commit -m "feat: bring my-sovereign into BIG BRAIM"
+python3 sovereign-temple/sov3_sigil_emit.py
+```
+
+## Sovereign criteria check
+
+Your model is sovereign-by-design if:
+- License is MIT, Apache 2.0, or Open
+- No foreign API calls
+- Weights are public (or your fine-tune is auditable)
+- You can verify every inference path
+- Output can be SIGIL-signed
+- Falls under DORADO 1-click EAST/WEST
+
+## References
+
+- [Ollama modelfile spec](https://github.com/ollama/ollama/blob/main/docs/modelfile.md)
+- [SOV3 Sovereign Constitution](https://sov3.csoai.org/sovereign-constitution/)
+- [SOV3 install script](https://sov3.csoai.org/install.sh)
+
+## License
+
+MIT - same as SOV3.
+
+Empire 10/10.
+</pre>
+<p style="margin-top: 32px; text-align: center; opacity: 0.7;">MIT License / Empire 10/10</p>
+</body></html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🐉 Hive Status — Live 33-Hive Sovereign Monitor</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.3rem}
+  .sub{text-align:center;color:#888;margin-bottom:2rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:1100px;margin:0 auto 2rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .hive-table{max-width:1200px;margin:0 auto;background:#1a1a1a;padding:1rem;border-radius:12px;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  th,td{padding:0.5rem;text-align:left;border-bottom:1px solid #222}
+  th{background:#0a0a0a;color:#fbbf24;position:sticky;top:0}
+  td .name{color:#fbbf24;font-weight:bold}
+  td .meta{color:#888;font-size:.75rem}
+  td .status-online{color:#10b981;font-weight:bold}
+  td .status-degraded{color:#fbbf24;font-weight:bold}
+  td .status-offline{color:#ff6b6b;font-weight:bold}
+  .hive{color:#fbbf24;font-weight:bold}
+  .pulse{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:0.3rem}
+  .pulse.online{background:#10b981;box-shadow:0 0 8px #10b981;animation:pulse 2s ease-in-out infinite}
+  .pulse.degraded{background:#fbbf24}
+  .pulse.offline{background:#ff6b6b}
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/solar-sovereign.html">Solar</a> <a href="/federation.html">Federation</a> <a href="/defence.html">Defence</a> <a href="/finance.html">Finance</a>
+</div>
+<h1>🐉 Hive Status — Live Monitor</h1>
+<p class="sub">All 33 sovereign hives · All 12 Generals · All 4 tiers · CSOAI Ltd (UK 16939677)</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value">4</div><div class="stat-label">Tiers</div></div>
+  <div class="stat"><div class="stat-value" id="onlineCount">--</div><div class="stat-label">Online</div></div>
+  <div class="stat"><div class="stat-value" id="avgScore">--</div><div class="stat-label">Avg Score</div></div>
+  <div class="stat"><div class="stat-value" id="lastUpdate">--</div><div class="stat-label">Updated</div></div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 Sovereign Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">All 33 hives orbit CSOAI sun. All integrations are sovereign by construction.</p>
+</div>
+
+<div class="hive-table">
+  <table>
+    <thead>
+      <tr><th>#</th><th>Hive</th><th>Region</th><th>Tier</th><th>Lead General</th><th>Sovereign</th><th>Status</th><th>Industries</th></tr>
+    </thead>
+    <tbody id="hiveTable"></tbody>
+  </table>
+</div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">Sovereign by construction. CSOAI Ltd (UK 16939677) · MIT License · Crown lineage 1795-2026.</p>
+
+<script>
+const HIVES = [
+  {id:1,name:"London",region:"EU",tier:1,general:"Argus",sov:7.305,industries:["Finance","Charter"]},
+  {id:2,name:"Cambridge",region:"EU",tier:1,general:"Owl",sov:6.8,industries:["Academia","Research"]},
+  {id:3,name:"Edinburgh",region:"EU",tier:1,general:"Shield",sov:6.5,industries:["Defence","JSP 936"]},
+  {id:4,name:"York",region:"EU",tier:1,general:"Crow",sov:5.8,industries:["Heritage"]},
+  {id:5,name:"Cardiff",region:"EU",tier:1,general:"Voice",sov:5.5,industries:["Media"]},
+  {id:6,name:"Belfast",region:"EU",tier:1,general:"Scale",sov:5.5,industries:["Peace"]},
+  {id:7,name:"Dublin",region:"EU",tier:2,general:"Lex",sov:6.5,industries:["Legal","GDPR"]},
+  {id:8,name:"Paris",region:"EU",tier:2,general:"Owl",sov:6.7,industries:["Research","ISO 42001"]},
+  {id:9,name:"Berlin",region:"EU",tier:2,general:"Shield",sov:6.5,industries:["Engineering","NIS2"]},
+  {id:10,name:"Amsterdam",region:"EU",tier:2,general:"Abacus",sov:6.7,industries:["Fintech","MiCA","PSD2"]},
+  {id:11,name:"Stockholm",region:"EU",tier:2,general:"Scale",sov:6.6,industries:["Sustainability","ISO 14001"]},
+  {id:12,name:"Helsinki",region:"EU",tier:2,general:"Owl",sov:6.0,industries:["Climate"]},
+  {id:13,name:"Madrid",region:"EU",tier:2,general:"Voice",sov:5.8,industries:["Hospitality"]},
+  {id:14,name:"Rome",region:"EU",tier:2,general:"Gear",sov:5.9,industries:["Heritage"]},
+  {id:15,name:"Vienna",region:"EU",tier:2,general:"Voice",sov:5.7,industries:["Music"]},
+  {id:16,name:"Copenhagen",region:"EU",tier:2,general:"Scale",sov:6.0,industries:["Green"]},
+  {id:17,name:"Brussels",region:"EU",tier:2,general:"Lex",sov:6.4,industries:["EU Legal","GDPR"]},
+  {id:18,name:"Warsaw",region:"EU",tier:2,general:"Shield",sov:5.5,industries:["Defence","JSP 440"]},
+  {id:19,name:"New York",region:"NA",tier:3,general:"Scribe",sov:5.5,industries:["Finance","SOC 2","HIPAA"]},
+  {id:20,name:"SF",region:"NA",tier:3,general:"Builder",sov:5.8,industries:["Tech"]},
+  {id:21,name:"Tokyo",region:"AS",tier:3,general:"Builder",sov:6.5,industries:["Robotics","JARVIS","APPI"]},
+  {id:22,name:"Singapore",region:"AS",tier:3,general:"Abacus",sov:6.8,industries:["Fintech","MAS","PDPA"]},
+  {id:23,name:"Sydney",region:"OC",tier:3,general:"Gear",sov:5.8,industries:["Mining"]},
+  {id:24,name:"Mumbai",region:"AS",tier:3,general:"Crow",sov:4.5,industries:["Risk Ops","DPDPA"]},
+  {id:25,name:"Dubai",region:"AS",tier:3,general:"Gear",sov:5.5,industries:["Logistics","UAE DPA"]},
+  {id:26,name:"Sao Paulo",region:"SA",tier:3,general:"Crow",sov:4.5,industries:["Agriculture","LGPD"]},
+  {id:27,name:"Toronto",region:"NA",tier:3,general:"Scribe",sov:6.0,industries:["AI Act","AIDA"]},
+  {id:28,name:"Cape Town",region:"AF",tier:4,general:"Crow",sov:4.5,industries:["Mining","POPIA"]},
+  {id:29,name:"Reykjavik",region:"EU",tier:4,general:"Scale",sov:6.0,industries:["Geothermal","ISO 14064"]},
+  {id:30,name:"Cairo",region:"AF",tier:4,general:"Scribe",sov:3.5,industries:["Heritage"]},
+  {id:31,name:"Nairobi",region:"AF",tier:4,general:"Abacus",sov:3.5,industries:["Fintech"]},
+  {id:32,name:"Bogota",region:"SA",tier:4,general:"Scale",sov:4.5,industries:["Coffee"]},
+  {id:33,name:"Lagos",region:"AF",tier:4,general:"Abacus",sov:3.0,industries:["Fintech","NDPR"]},
+];
+
+const GEN_COLORS = {Argus:"#60a5fa",Scribe:"#fbbf24",Shield:"#10b981",Builder:"#8b5cf6",Abacus:"#f59e0b",Lex:"#ef4444",Scale:"#06b6d4",Crow:"#a3e635",Gear:"#ec4899",Voice:"#14b8a6",Owl:"#84cc16",Dragon:"#fbbf24"};
+
+function statusOf(sov) {
+  if (sov >= 5.5) return "online";
+  if (sov >= 4.0) return "degraded";
+  return "offline";
+}
+
+const tbody = document.getElementById('hiveTable');
+let online = 0, total = 0, sumScore = 0;
+HIVES.forEach(h => {
+  const status = statusOf(h.sov);
+  if (status === 'online') online++;
+  total++;
+  sumScore += h.sov;
+  const color = GEN_COLORS[h.general];
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${h.id}</td>
+    <td><span class="hive">${h.name}</span></td>
+    <td>${h.region}</td>
+    <td>${h.tier}</td>
+    <td style="color:${color}">${h.general}</td>
+    <td style="color:${h.sov >= 6 ? '#10b981' : h.sov >= 4 ? '#fbbf24' : '#ff6b6b'}"><strong>${h.sov}</strong></td>
+    <td class="status-${status}"><span class="pulse ${status}"></span>${status}</td>
+    <td class="meta">${h.industries.join(', ')}</td>
+  `;
+  tbody.appendChild(tr);
+});
+document.getElementById('onlineCount').textContent = `${online}/${total}`;
+document.getElementById('avgScore').textContent = (sumScore / total).toFixed(2);
+document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

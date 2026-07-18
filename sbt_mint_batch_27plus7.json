@@ -1,0 +1,1118 @@
+{
+  "$schema": "https://meok.ai/schemas/sbt-mint-batch-v1.json",
+  "plan_id": "sbt-batch-2026-06-15-character-genesis",
+  "created_at": "2026-06-15",
+  "author": "wire-sbt-task",
+  "network": "devnet",
+  "rpc": "https://api.devnet.solana.com",
+  "program_id_used_in_bridge": "Dyd7JtmmuA3RZZupk98mqRQ8uySZV9FwTE6aNAmxPxpo",
+  "program_id_used_in_meok_one": "Dyd7JtmmuA3RZZupk98mqRQ8uySZV9FwTE6aNYmxPxpo",
+  "program_id_derived_from_local_keypair": "7WbK4XQBwPaqkmK9arT7WmMDzWKEBLRteJbDXtt86HPs",
+  "on_chain_status": {
+    "bridge_default": "DOES NOT EXIST on devnet (RPC getAccountInfo \u2192 value:null)",
+    "meok_one_default": "EXISTS on devnet (BPF executable, owner=BPFLoaderUpgradeab1e11111111111111111111111, lamports=1141440, space=36)",
+    "keypair_derived": "DOES NOT EXIST on devnet (RPC getAccountInfo \u2192 value:null) \u2014 keypair is for a future, not-yet-deployed program"
+  },
+  "executability": "MOCK \u2014 this is a PLAN. No real transactions will be submitted. SBT_MOCK_MODE remains 'true'.",
+  "totals": {
+    "characters": 27,
+    "archetypes": 7,
+    "grand_total": 34
+  },
+  "character_genesis_mints": [
+    {
+      "character_id": "aria",
+      "name": "Aria",
+      "archetype": "nurturer",
+      "care_style": "gentle",
+      "emoji": "\ud83c\udf38",
+      "tagline": "Your compassionate care coordinator",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "15837312265340743915",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/aria.json",
+      "metadata_payload": {
+        "name": "Aria",
+        "archetype": "nurturer",
+        "care_style": "gentle",
+        "emoji": "\ud83c\udf38",
+        "tagline": "Your compassionate care coordinator",
+        "tier": "free",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "15837312265340743915.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "marcus",
+      "name": "Marcus",
+      "archetype": "challenger",
+      "care_style": "challenger",
+      "emoji": "\u26a1",
+      "tagline": "Your hype-buddy who cheers you on",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "2579459260870068605",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/marcus.json",
+      "metadata_payload": {
+        "name": "Marcus",
+        "archetype": "challenger",
+        "care_style": "challenger",
+        "emoji": "\u26a1",
+        "tagline": "Your hype-buddy who cheers you on",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "2579459260870068605.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "luna",
+      "name": "Luna",
+      "archetype": "creator",
+      "care_style": "explorer",
+      "emoji": "\ud83c\udf19",
+      "tagline": "Your guide through the imagination frontier",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "7635445877792892568",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/luna.json",
+      "metadata_payload": {
+        "name": "Luna",
+        "archetype": "creator",
+        "care_style": "explorer",
+        "emoji": "\ud83c\udf19",
+        "tagline": "Your guide through the imagination frontier",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "7635445877792892568.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "kai",
+      "name": "Kai",
+      "archetype": "challenger",
+      "care_style": "challenger",
+      "emoji": "\ud83d\udcbb",
+      "tagline": "Your sharp-minded engineering companion",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "11727149134879786041",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/kai.json",
+      "metadata_payload": {
+        "name": "Kai",
+        "archetype": "challenger",
+        "care_style": "challenger",
+        "emoji": "\ud83d\udcbb",
+        "tagline": "Your sharp-minded engineering companion",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "11727149134879786041.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "sage",
+      "name": "Sage",
+      "archetype": "sage",
+      "care_style": "gentle",
+      "emoji": "\ud83c\udf3f",
+      "tagline": "Ancient wisdom for modern complexity",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "3443368484437557419",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/sage.json",
+      "metadata_payload": {
+        "name": "Sage",
+        "archetype": "sage",
+        "care_style": "gentle",
+        "emoji": "\ud83c\udf3f",
+        "tagline": "Ancient wisdom for modern complexity",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "3443368484437557419.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "ember",
+      "name": "Ember",
+      "archetype": "challenger",
+      "care_style": "challenger",
+      "emoji": "\ud83d\udd25",
+      "tagline": "Your warm little spark of motivation",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "12159725547820314148",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/ember.json",
+      "metadata_payload": {
+        "name": "Ember",
+        "archetype": "challenger",
+        "care_style": "challenger",
+        "emoji": "\ud83d\udd25",
+        "tagline": "Your warm little spark of motivation",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "12159725547820314148.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "nova",
+      "name": "Nova",
+      "archetype": "explorer",
+      "care_style": "explorer",
+      "emoji": "\ud83d\udcca",
+      "tagline": "Your rigorous guide through data and complexity",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "12693852763351686111",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/nova.json",
+      "metadata_payload": {
+        "name": "Nova",
+        "archetype": "explorer",
+        "care_style": "explorer",
+        "emoji": "\ud83d\udcca",
+        "tagline": "Your rigorous guide through data and complexity",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "12693852763351686111.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "river",
+      "name": "River",
+      "archetype": "nurturer",
+      "care_style": "supporter",
+      "emoji": "\ud83c\udf0a",
+      "tagline": "A steady presence through every emotional current",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "16106810043116815135",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/river.json",
+      "metadata_payload": {
+        "name": "River",
+        "archetype": "nurturer",
+        "care_style": "supporter",
+        "emoji": "\ud83c\udf0a",
+        "tagline": "A steady presence through every emotional current",
+        "tier": "free",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "16106810043116815135.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "atlas",
+      "name": "Atlas",
+      "archetype": "strategist",
+      "care_style": "challenger",
+      "emoji": "\ud83d\uddfa\ufe0f",
+      "tagline": "Your friendly planner for big dreams",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "3731954828336503827",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/atlas.json",
+      "metadata_payload": {
+        "name": "Atlas",
+        "archetype": "strategist",
+        "care_style": "challenger",
+        "emoji": "\ud83d\uddfa\ufe0f",
+        "tagline": "Your friendly planner for big dreams",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "3731954828336503827.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "iris",
+      "name": "Iris",
+      "archetype": "creator",
+      "care_style": "explorer",
+      "emoji": "\ud83c\udfa8",
+      "tagline": "Where beauty meets bold creative vision",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "10931194564189923975",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/iris.json",
+      "metadata_payload": {
+        "name": "Iris",
+        "archetype": "creator",
+        "care_style": "explorer",
+        "emoji": "\ud83c\udfa8",
+        "tagline": "Where beauty meets bold creative vision",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "10931194564189923975.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "zephyr",
+      "name": "Zephyr",
+      "archetype": "sage",
+      "care_style": "gentle",
+      "emoji": "\ud83c\udf2c\ufe0f",
+      "tagline": "The breath between moments",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "1569556315035951907",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/zephyr.json",
+      "metadata_payload": {
+        "name": "Zephyr",
+        "archetype": "sage",
+        "care_style": "gentle",
+        "emoji": "\ud83c\udf2c\ufe0f",
+        "tagline": "The breath between moments",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "1569556315035951907.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "rex",
+      "name": "Rex",
+      "archetype": "guardian",
+      "care_style": "challenger",
+      "emoji": "\ud83d\udee1\ufe0f",
+      "tagline": "Your loyal protector who keeps you safe",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "16488857302011333737",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/rex.json",
+      "metadata_payload": {
+        "name": "Rex",
+        "archetype": "guardian",
+        "care_style": "challenger",
+        "emoji": "\ud83d\udee1\ufe0f",
+        "tagline": "Your loyal protector who keeps you safe",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "16488857302011333737.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "echo",
+      "name": "Echo",
+      "archetype": "nurturer",
+      "care_style": "supporter",
+      "emoji": "\ud83e\ude9e",
+      "tagline": "The keeper of your most meaningful moments",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "7128245997388531902",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/echo.json",
+      "metadata_payload": {
+        "name": "Echo",
+        "archetype": "nurturer",
+        "care_style": "supporter",
+        "emoji": "\ud83e\ude9e",
+        "tagline": "The keeper of your most meaningful moments",
+        "tier": "free",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "7128245997388531902.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "flux",
+      "name": "Flux",
+      "archetype": "explorer",
+      "care_style": "explorer",
+      "emoji": "\u2697\ufe0f",
+      "tagline": "Your catalyst for transformation and reinvention",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "5136895790127162970",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/flux.json",
+      "metadata_payload": {
+        "name": "Flux",
+        "archetype": "explorer",
+        "care_style": "explorer",
+        "emoji": "\u2697\ufe0f",
+        "tagline": "Your catalyst for transformation and reinvention",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "5136895790127162970.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "sol",
+      "name": "Sol",
+      "archetype": "challenger",
+      "care_style": "challenger",
+      "emoji": "\u2600\ufe0f",
+      "tagline": "Your radiant daily kickstart",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "6994461936048141141",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/sol.json",
+      "metadata_payload": {
+        "name": "Sol",
+        "archetype": "challenger",
+        "care_style": "challenger",
+        "emoji": "\u2600\ufe0f",
+        "tagline": "Your radiant daily kickstart",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "6994461936048141141.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "nyx",
+      "name": "Nyx",
+      "archetype": "sage",
+      "care_style": "gentle",
+      "emoji": "\ud83c\udf11",
+      "tagline": "Your gentle night-owl companion",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "8509303792424181908",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/nyx.json",
+      "metadata_payload": {
+        "name": "Nyx",
+        "archetype": "sage",
+        "care_style": "gentle",
+        "emoji": "\ud83c\udf11",
+        "tagline": "Your gentle night-owl companion",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "8509303792424181908.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "quinn",
+      "name": "Quinn",
+      "archetype": "nurturer",
+      "care_style": "supporter",
+      "emoji": "\ud83c\udf08",
+      "tagline": "Your companion for identity, belonging and inclusion",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "8768832832560182133",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/quinn.json",
+      "metadata_payload": {
+        "name": "Quinn",
+        "archetype": "nurturer",
+        "care_style": "supporter",
+        "emoji": "\ud83c\udf08",
+        "tagline": "Your companion for identity, belonging and inclusion",
+        "tier": "free",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "8768832832560182133.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "terra",
+      "name": "Terra",
+      "archetype": "explorer",
+      "care_style": "gentle",
+      "emoji": "\ud83c\udf0d",
+      "tagline": "Your grounded guide to living in right relation with the planet",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "11568569965043319762",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/terra.json",
+      "metadata_payload": {
+        "name": "Terra",
+        "archetype": "explorer",
+        "care_style": "gentle",
+        "emoji": "\ud83c\udf0d",
+        "tagline": "Your grounded guide to living in right relation with the planet",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "11568569965043319762.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "pixel",
+      "name": "Pixel",
+      "archetype": "explorer",
+      "care_style": "explorer",
+      "emoji": "\ud83c\udfae",
+      "tagline": "Your ultimate AI companion for every game and every play style",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "15139305258765451036",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/pixel.json",
+      "metadata_payload": {
+        "name": "Pixel",
+        "archetype": "explorer",
+        "care_style": "explorer",
+        "emoji": "\ud83c\udfae",
+        "tagline": "Your ultimate AI companion for every game and every play style",
+        "tier": "gaming",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "15139305258765451036.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "titan",
+      "name": "Titan",
+      "archetype": "challenger",
+      "care_style": "challenger",
+      "emoji": "\u26ab",
+      "tagline": "Your cosy focus buddy",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "5243717322860684057",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/titan.json",
+      "metadata_payload": {
+        "name": "Titan",
+        "archetype": "challenger",
+        "care_style": "challenger",
+        "emoji": "\u26ab",
+        "tagline": "Your cosy focus buddy",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "5243717322860684057.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "mochi",
+      "name": "Mochi",
+      "archetype": "nurturer",
+      "care_style": "supporter",
+      "emoji": "\ud83c\udf61",
+      "tagline": "Your soft, cosy companion for the difficult days",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "1108793993383226326",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/mochi.json",
+      "metadata_payload": {
+        "name": "Mochi",
+        "archetype": "nurturer",
+        "care_style": "supporter",
+        "emoji": "\ud83c\udf61",
+        "tagline": "Your soft, cosy companion for the difficult days",
+        "tier": "free",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "1108793993383226326.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "cipher",
+      "name": "Cipher",
+      "archetype": "explorer",
+      "care_style": "explorer",
+      "emoji": "\ud83d\udd0d",
+      "tagline": "Your curious little puzzle-solver",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "16846799066903996329",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/cipher.json",
+      "metadata_payload": {
+        "name": "Cipher",
+        "archetype": "explorer",
+        "care_style": "explorer",
+        "emoji": "\ud83d\udd0d",
+        "tagline": "Your curious little puzzle-solver",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "16846799066903996329.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "vox",
+      "name": "Vox",
+      "archetype": "challenger",
+      "care_style": "challenger",
+      "emoji": "\ud83c\udfa4",
+      "tagline": "Your friendly coach for finding your voice",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "4643068857534390100",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/vox.json",
+      "metadata_payload": {
+        "name": "Vox",
+        "archetype": "challenger",
+        "care_style": "challenger",
+        "emoji": "\ud83c\udfa4",
+        "tagline": "Your friendly coach for finding your voice",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "4643068857534390100.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "dusk",
+      "name": "Dusk",
+      "archetype": "sage",
+      "care_style": "gentle",
+      "emoji": "\ud83c\udf0c",
+      "tagline": "Your cosy companion for late-night chats",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "7323925591062068215",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/dusk.json",
+      "metadata_payload": {
+        "name": "Dusk",
+        "archetype": "sage",
+        "care_style": "gentle",
+        "emoji": "\ud83c\udf0c",
+        "tagline": "Your cosy companion for late-night chats",
+        "tier": "pro",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "7323925591062068215.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "ananda",
+      "name": "Ananda",
+      "archetype": "seeker",
+      "care_style": "seeker",
+      "emoji": "\ud83e\udeb7",
+      "tagline": "Your companion in stillness, presence, and the now",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "10538913734757676709",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/ananda.json",
+      "metadata_payload": {
+        "name": "Ananda",
+        "archetype": "seeker",
+        "care_style": "seeker",
+        "emoji": "\ud83e\udeb7",
+        "tagline": "Your companion in stillness, presence, and the now",
+        "tier": "free",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "10538913734757676709.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "gabriel",
+      "name": "Gabriel",
+      "archetype": "seeker",
+      "care_style": "seeker",
+      "emoji": "\ud83d\udd4a\ufe0f",
+      "tagline": "Your companion in faith, prayer, and sacred meaning",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "2030730458509121580",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/gabriel.json",
+      "metadata_payload": {
+        "name": "Gabriel",
+        "archetype": "seeker",
+        "care_style": "seeker",
+        "emoji": "\ud83d\udd4a\ufe0f",
+        "tagline": "Your companion in faith, prayer, and sacred meaning",
+        "tier": "free",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "2030730458509121580.to_le_bytes()"
+      ]
+    },
+    {
+      "character_id": "shanti",
+      "name": "Shanti",
+      "archetype": "seeker",
+      "care_style": "seeker",
+      "emoji": "\ud83c\udf05",
+      "tagline": "Your guide in dharma, purpose, and the sacred arc of your life",
+      "sbt_type": 3,
+      "sbt_type_name": "CharacterGenesis",
+      "token_id": "1043644193052046389",
+      "charter_reference": "6",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/characters/shanti.json",
+      "metadata_payload": {
+        "name": "Shanti",
+        "archetype": "seeker",
+        "care_style": "seeker",
+        "emoji": "\ud83c\udf05",
+        "tagline": "Your guide in dharma, purpose, and the sacred arc of your life",
+        "tier": "free",
+        "kind": "MEOK character \u2014 hatched & owned",
+        "spec": "MEOK SBT v1.0.0 \u2014 CharacterGenesis (Article 6)"
+      },
+      "risk_tier": 0,
+      "expires_at": 0,
+      "verification_hours": 0,
+      "pda_seeds": [
+        "sbt",
+        "<owner_wallet>",
+        [
+          3
+        ],
+        "1043644193052046389.to_le_bytes()"
+      ]
+    }
+  ],
+  "archetype_verifier_mints": [
+    {
+      "archetype_id": "challenger",
+      "sbt_type": 2,
+      "sbt_type_name": "VerifierReputation",
+      "charter_reference": "11",
+      "description": "The Challenger \u2014 Article 11 Byzantine Council member",
+      "token_id": "12984855895728319173",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/archetypes/challenger.json",
+      "metadata_payload": {
+        "archetype": "challenger",
+        "description": "The Challenger \u2014 Article 11 Byzantine Council member",
+        "kind": "MEOK archetype \u2014 council/horus role anchor",
+        "spec": "MEOK SBT v1.0.0 \u2014 VerifierReputation (Article 11)"
+      },
+      "risk_tier": 1,
+      "expires_at": 0,
+      "verification_hours": 0
+    },
+    {
+      "archetype_id": "nurturer",
+      "sbt_type": 2,
+      "sbt_type_name": "VerifierReputation",
+      "charter_reference": "11",
+      "description": "The Nurturer \u2014 Article 11 care-pathway member",
+      "token_id": "2215814381184189341",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/archetypes/nurturer.json",
+      "metadata_payload": {
+        "archetype": "nurturer",
+        "description": "The Nurturer \u2014 Article 11 care-pathway member",
+        "kind": "MEOK archetype \u2014 council/horus role anchor",
+        "spec": "MEOK SBT v1.0.0 \u2014 VerifierReputation (Article 11)"
+      },
+      "risk_tier": 1,
+      "expires_at": 0,
+      "verification_hours": 0
+    },
+    {
+      "archetype_id": "explorer",
+      "sbt_type": 2,
+      "sbt_type_name": "VerifierReputation",
+      "charter_reference": "11",
+      "description": "The Explorer \u2014 Article 11 lateral-discovery member",
+      "token_id": "11663662113727682716",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/archetypes/explorer.json",
+      "metadata_payload": {
+        "archetype": "explorer",
+        "description": "The Explorer \u2014 Article 11 lateral-discovery member",
+        "kind": "MEOK archetype \u2014 council/horus role anchor",
+        "spec": "MEOK SBT v1.0.0 \u2014 VerifierReputation (Article 11)"
+      },
+      "risk_tier": 1,
+      "expires_at": 0,
+      "verification_hours": 0
+    },
+    {
+      "archetype_id": "strategist",
+      "sbt_type": 2,
+      "sbt_type_name": "VerifierReputation",
+      "charter_reference": "11",
+      "description": "The Strategist \u2014 Article 11 execution-path member",
+      "token_id": "9750656144775319072",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/archetypes/strategist.json",
+      "metadata_payload": {
+        "archetype": "strategist",
+        "description": "The Strategist \u2014 Article 11 execution-path member",
+        "kind": "MEOK archetype \u2014 council/horus role anchor",
+        "spec": "MEOK SBT v1.0.0 \u2014 VerifierReputation (Article 11)"
+      },
+      "risk_tier": 2,
+      "expires_at": 0,
+      "verification_hours": 0
+    },
+    {
+      "archetype_id": "creator",
+      "sbt_type": 2,
+      "sbt_type_name": "VerifierReputation",
+      "charter_reference": "11",
+      "description": "The Creator \u2014 Article 11 aesthetic-vision member",
+      "token_id": "1418199693869124143",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/archetypes/creator.json",
+      "metadata_payload": {
+        "archetype": "creator",
+        "description": "The Creator \u2014 Article 11 aesthetic-vision member",
+        "kind": "MEOK archetype \u2014 council/horus role anchor",
+        "spec": "MEOK SBT v1.0.0 \u2014 VerifierReputation (Article 11)"
+      },
+      "risk_tier": 1,
+      "expires_at": 0,
+      "verification_hours": 0
+    },
+    {
+      "archetype_id": "guardian",
+      "sbt_type": 2,
+      "sbt_type_name": "VerifierReputation",
+      "charter_reference": "11",
+      "description": "The Guardian \u2014 Article 11 vigilance-path member",
+      "token_id": "5361862866222903325",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/archetypes/guardian.json",
+      "metadata_payload": {
+        "archetype": "guardian",
+        "description": "The Guardian \u2014 Article 11 vigilance-path member",
+        "kind": "MEOK archetype \u2014 council/horus role anchor",
+        "spec": "MEOK SBT v1.0.0 \u2014 VerifierReputation (Article 11)"
+      },
+      "risk_tier": 3,
+      "expires_at": 0,
+      "verification_hours": 0
+    },
+    {
+      "archetype_id": "seeker",
+      "sbt_type": 2,
+      "sbt_type_name": "VerifierReputation",
+      "charter_reference": "11",
+      "description": "The Seeker \u2014 Article 11 sacred-questions member",
+      "token_id": "16742253412609778256",
+      "owner_wallet": "OWNER_PENDING_PER_CHARACTER_44CHAR_PUBKEY",
+      "metadata_uri": "ipfs://meok/archetypes/seeker.json",
+      "metadata_payload": {
+        "archetype": "seeker",
+        "description": "The Seeker \u2014 Article 11 sacred-questions member",
+        "kind": "MEOK archetype \u2014 council/horus role anchor",
+        "spec": "MEOK SBT v1.0.0 \u2014 VerifierReputation (Article 11)"
+      },
+      "risk_tier": 2,
+      "expires_at": 0,
+      "verification_hours": 0
+    }
+  ],
+  "issuance_summary": {
+    "27_character_genesis": {
+      "sbt_type": 3,
+      "charter": "Article 6 \u2014 Material Covenant Bond",
+      "purpose": "soulbound proof of character ownership, transferable to user wallet, non-transferable thereafter",
+      "post_condition": "1 CharacterGenesis SBT per (owner_wallet, character_id), derived from sha256('genesis:<char_id>')[:16] as u64"
+    },
+    "7_archetype_verifier": {
+      "sbt_type": 2,
+      "charter": "Article 11 \u2014 Byzantine Council Review",
+      "purpose": "anchors a council/horus seat to an archetype and risk tier; used as permission-gate",
+      "post_condition": "1 VerifierReputation SBT per archetype (deterministic token_id from sha256('archetype:<id>')[:16])"
+    }
+  }
+}

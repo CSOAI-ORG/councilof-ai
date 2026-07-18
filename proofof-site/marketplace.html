@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛍️ Sovereign MCP Marketplace — 79 MCPs · Browse · Install · Sovereign</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a1f3a 50%,#02060f 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1.5rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+  .stat-pill{background:rgba(251,191,36,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #fbbf24;color:#fbbf24;font-size:.85rem}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .controls{display:flex;gap:.5rem;flex-wrap:wrap;margin:2rem 0;align-items:center}
+  .controls input,.controls select{padding:.5rem;background:#0a0a0a;border:1px solid #fbbf24;border-radius:4px;color:#e5e5e5;font-family:inherit;font-size:.85rem}
+  .controls input{flex:1;min-width:200px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+  .mcp{background:#1a1a1a;padding:1.2rem;border-radius:8px;border-left:4px solid #fbbf24;cursor:pointer;transition:transform .2s}
+  .mcp:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(251,191,36,0.2)}
+  .mcp.sub{border-left-color:#10b981}
+  .mcp.prod{border-left-color:#60a5fa}
+  .mcp.trium{border-left-color:#ec4899}
+  .mcp h3{color:#fbbf24;margin-bottom:.3rem;font-size:1rem;font-family:monospace}
+  .mcp .cat{color:#10b981;font-size:.7rem;font-weight:bold;text-transform:uppercase;margin-bottom:.3rem}
+  .mcp .desc{color:#aaa;font-size:.8rem;line-height:1.4;margin-bottom:.5rem}
+  .mcp .tools{color:#888;font-size:.75rem;font-family:monospace}
+  .mcp .install{background:#fbbf24;color:#000;padding:.3rem .6rem;border-radius:4px;font-size:.7rem;font-weight:bold;display:inline-block;margin-top:.5rem;text-decoration:none}
+  .mcp .install:hover{background:#10b981}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  .tag{display:inline-block;background:rgba(96,165,250,0.1);border:1px solid #60a5fa;padding:.2rem .5rem;border-radius:4px;color:#60a5fa;font-size:.7rem;margin:.2rem}
+  .filter-section{margin:1rem 0;display:flex;gap:.5rem;flex-wrap:wrap}
+  .filter-btn{background:#0a0a0a;padding:.4rem .8rem;border-radius:4px;border:1px solid #333;color:#aaa;cursor:pointer;font-size:.8rem;font-family:inherit}
+  .filter-btn.active{border-color:#fbbf24;color:#fbbf24}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/marketplace.html">Marketplace</a>
+  <a href="/handbook.html">Handbook</a>
+  <a href="/start.html">Start</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🛍️ Sovereign MCP Marketplace</h1>
+  <p>79 sovereign MCPs · Browse · Install · Fork · MIT + CC0 + OSI</p>
+  <div class="stats">
+    <div class="stat-pill">79 MCPs</div>
+    <div class="stat-pill">1,592+ tests</div>
+    <div class="stat-pill">5-tier licensing</div>
+    <div class="stat-pill">Crown lineage 1795-2026</div>
+    <div class="stat-pill">Care Floor 0.95</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="🔍 Search MCPs (name, description, tool)..." oninput="filterMCPs()">
+    <select id="categoryFilter" onchange="filterMCPs()">
+      <option value="all">All categories</option>
+      <option value="origin">Origin (28)</option>
+      <option value="substrate">Substrate (28)</option>
+      <option value="production">Production (10)</option>
+      <option value="triumvirate">Triumvirate (1)</option>
+      <option value="extras">Extras (9)</option>
+    </select>
+  </div>
+
+  <div class="filter-section">
+    <button class="filter-btn active" onclick="setSort('name', this)">Name</button>
+    <button class="filter-btn" onclick="setSort('category', this)">Category</button>
+    <button class="filter-btn" onclick="setSort('tools', this)">Tool count</button>
+  </div>
+
+  <p style="color:#888;font-size:.85rem;margin:1rem 0" id="countLabel">Loading 79 MCPs...</p>
+
+  <div class="grid" id="mcpGrid"></div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Marketplace Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">Every MCP in this marketplace is sovereign by construction. CC0 + MIT + OSI. Forks are sovereign.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 79 MCPs · 1,592+ tests · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+// All 79 sovereign MCPs with metadata
+const MCPS = [
+  // Origin (28) — foundational sovereign tools
+  {n:"meok-sovereign-passport-mcp",d:"Ed25519-signed agent identity, delegation with narrowing invariant, gateway enforcement",c:"origin",t:5,k:["identity","ed25519","delegation"]},
+  {n:"meok-sovereign-guardrails-mcp",d:"Content safety, refusal patterns, defensive doctrine enforcement",c:"origin",t:5,k:["safety","guardrails","defensive"]},
+  {n:"meok-sovereign-receipt-mcp",d:"Generate regulator-grade audit receipts (CSV/JSON/Parquet)",c:"origin",t:5,k:["receipts","audit","export"]},
+  {n:"meok-sovereign-governance-mcp",d:"10-Article sovereign governance. Charter enforcement.",c:"origin",t:5,k:["governance","charter","articles"]},
+  {n:"meok-sovereign-x402-payment-mcp",d:"x402 (Coinbase) per-outcome invoicing. Stripe/crypto/wallet.",c:"origin",t:5,k:["payment","x402","stripe"]},
+  {n:"meok-sovereign-globe-mcp",d:"Cesium 3D globe. 56 countries. 33 hive planets.",c:"origin",t:5,k:["globe","cesium","3d"]},
+  {n:"meok-sovereign-council-mcp",d:"BFT 12-around-1 council deliberation. 12 queens.",c:"origin",t:5,k:["council","bft","queens"]},
+  {n:"meok-sovereign-memory-mcp",d:"Mamba-2 16-dim state compression. Long-context memory.",c:"origin",t:5,k:["memory","mamba","ssd"]},
+  {n:"meok-sovereign-avatar-mcp",d:"12 General VRM avatars. Crown lineage.",c:"origin",t:5,k:["avatar","vrm","generals"]},
+  {n:"meok-sovereign-skills-mcp",d:"33 free training courses + 132 cert tiers",c:"origin",t:5,k:["skills","training","cert"]},
+  {n:"meok-sovereign-eu-ai-act-kit-mcp",d:"EU AI Act Article 50. 2 Aug 2026. Watermarking.",c:"origin",t:5,k:["eu-ai-act","article-50","watermark"]},
+  {n:"meok-sovereign-worm-mcp",d:"Worm guard. Morris-II / prompt injection defense.",c:"origin",t:5,k:["security","worm","injection"]},
+  {n:"meok-sovereign-defence-mcp",d:"33-hive shield network. JSP 936 + STANAG 4774.",c:"origin",t:5,k:["defence","shield","jsp936"]},
+  {n:"meok-sovereign-satellite-mcp",d:"Satellite ground stations. Air-gapped ops.",c:"origin",t:5,k:["satellite","ground","airgap"]},
+  {n:"meok-sovereign-honour-mcp",d:"Honor & dignity enforcement. Care Floor 0.95.",c:"origin",t:5,k:["honour","care-floor","dignity"]},
+  {n:"meok-sovereign-immortal-mcp",d:"Sovereign continuity. Crown lineage 1795-2026.",c:"origin",t:5,k:["immortal","continuity","crown"]},
+  {n:"meok-sovereign-dora-mcp",d:"DORA 5-pillar audit. EU 2022/2554 banking.",c:"origin",t:5,k:["dora","banking","audit"]},
+  {n:"meok-sovereign-iso42001-mcp",d:"ISO 42001 AI management system.",c:"origin",t:5,k:["iso","42001","management"]},
+  {n:"meok-sovereign-iot-mcp",d:"IoT device controller. Sensor fabric.",c:"origin",t:5,k:["iot","sensor","device"]},
+  {n:"meok-sovereign-pond-mcp",d:"iOK Farm 13m x 12m koi pond. Koi tracking.",c:"origin",t:5,k:["pond","koi","farm"]},
+  {n:"meok-sovereign-intuition-mcp",d:"Intuition engine. Mamba-2 16-dim. 40s lead.",c:"origin",t:5,k:["intuition","mamba","insight"]},
+  {n:"meok-sovereign-oowm-mcp",d:"Organic Open World Model. 100+ data feeds.",c:"origin",t:5,k:["oowm","organic","world-model"]},
+  {n:"meok-sovereign-federation-mcp",d:"33-hive federation. Sovereign routing.",c:"origin",t:5,k:["federation","33-hive","routing"]},
+  {n:"meok-sovereign-native-mcp",d:"Native MCP. Apple-developer-friendly.",c:"origin",t:5,k:["native","apple","swift"]},
+  {n:"meok-sovereign-planning-mcp",d:"Sprint + project planning.",c:"origin",t:5,k:["planning","sprint","project"]},
+  {n:"meok-sovereign-pond-physics-mcp",d:"Pond fluid dynamics. Koi swimming physics.",c:"origin",t:5,k:["physics","pond","fluid"]},
+  {n:"meok-sovereign-rpc-bus-mcp",d:"Sovereign RPC bus. Inter-MCP messaging.",c:"origin",t:5,k:["rpc","bus","messaging"]},
+  {n:"meok-sovereign-eu-ai-act-50kit-mcp",d:"EU AI Act Article 50 survival kit. 2 Aug 2026.",c:"origin",t:5,k:["eu-ai-act","50","survival"]},
+  // Substrate (28)
+  {n:"meok-sovereign-bft-council-mcp",d:"BFT 12-around-1 council. 3/5/7 voter patterns.",c:"substrate",t:5,k:["bft","council","vote"]},
+  {n:"meok-sovereign-carefloor-mcp",d:"16-probe Care Floor at 0.95 threshold.",c:"substrate",t:5,k:["care-floor","16-probe","0.95"]},
+  {n:"meok-sovereign-sigil-chain-mcp",d:"Ed25519 hash-chained ledger. Bitcoin anchor.",c:"substrate",t:5,k:["sigil","chain","ed25519"]},
+  {n:"meok-sovereign-hive-network-mcp",d:"33 hive network. Tier 1-4 routing.",c:"substrate",t:5,k:["hive","network","tier"]},
+  {n:"meok-sovereign-vertical-compliance-mcp",d:"33 vertical industries. Compliance mapping.",c:"substrate",t:5,k:["vertical","compliance","industry"]},
+  {n:"meok-sovereign-compliance-passport-mcp",d:"Sovereign compliance passport. Cross-framework.",c:"substrate",t:5,k:["passport","compliance","cross"]},
+  {n:"meok-sovereign-core-mcp",d:"The core sovereign substrate. Ab Uno.",c:"substrate",t:5,k:["core","ab-uno","substrate"]},
+  {n:"meok-sovereign-telemetry-mcp",d:"Sovereign telemetry. Per-action metrics.",c:"substrate",t:5,k:["telemetry","metrics","observability"]},
+  {n:"meok-sovereign-coordination-mcp",d:"SOV3 coordination hub. Multi-agent.",c:"substrate",t:5,k:["coordination","hub","agent"]},
+  {n:"meok-sovereign-charter-mcp",d:"Sovereign charter. 10 articles.",c:"substrate",t:5,k:["charter","articles","constitutional"]},
+  {n:"meok-sovereign-mind-mcp",d:"Sovereign mind. 12 mindsets x 8 MoE.",c:"substrate",t:5,k:["mind","mindsets","moe"]},
+  {n:"meok-sovereign-tracker-mcp",d:"Sovereign tracker. Citizen lifecycle.",c:"substrate",t:5,k:["tracker","citizen","lifecycle"]},
+  {n:"meok-sovereign-prompt-pack-mcp",d:"Prompt packs. Sovereign-aligned.",c:"substrate",t:5,k:["prompt","pack","template"]},
+  {n:"meok-sovereign-audit-trail-mcp",d:"Audit trail. Regulator-grade. CSV/JSON/Parquet.",c:"substrate",t:5,k:["audit","trail","export"]},
+  {n:"meok-sovereign-iot-mqtt-mcp",d:"IoT MQTT bridge. Sensor fabric.",c:"substrate",t:5,k:["mqtt","iot","bridge"]},
+  {n:"meok-sovereign-webhook-mcp",d:"Sovereign webhook. Event-driven.",c:"substrate",t:5,k:["webhook","event","trigger"]},
+  {n:"meok-sovereign-scheduler-mcp",d:"Sovereign scheduler. Cron + ad-hoc.",c:"substrate",t:5,k:["scheduler","cron","task"]},
+  {n:"meok-sovereign-defense-mcp",d:"Defensive doctrine. JSP 936 + STANAG 4774.",c:"substrate",t:5,k:["defense","doctrine","jsp936"]},
+  {n:"meok-sovereign-identity-mcp",d:"W3C DID. Ed25519 binding.",c:"substrate",t:5,k:["identity","did","w3c"]},
+  {n:"meok-sovereign-cache-mcp",d:"Sovereign cache. 16-dim state.",c:"substrate",t:5,k:["cache","state","memory"]},
+  {n:"meok-sovereign-search-mcp",d:"Sovereign federated search.",c:"substrate",t:5,k:["search","federated","find"]},
+  {n:"meok-sovereign-backup-mcp",d:"Sovereign backup. SIGIL archive.",c:"substrate",t:5,k:["backup","archive","sigil"]},
+  {n:"meok-sovereign-economy-mcp",d:"Sovereign economy. Wisdom points.",c:"substrate",t:5,k:["economy","wisdom","points"]},
+  {n:"meok-sovereign-ue5-bridge-mcp",d:"UE5 bridge. Sov Space world.",c:"substrate",t:5,k:["ue5","bridge","unreal"]},
+  {n:"meok-sovereign-translate-mcp",d:"Sovereign translate. 6 locales.",c:"substrate",t:5,k:["translate","locale","i18n"]},
+  {n:"meok-sovereign-12-mindsets-mcp",d:"12 sovereign mindsets. Crown → Dragon.",c:"substrate",t:5,k:["mindsets","12","cognition"]},
+  {n:"meok-sovereign-agent-swarm-mcp",d:"Agent swarm. 12 General coordination.",c:"substrate",t:5,k:["agent","swarm","coordination"]},
+  {n:"meok-sovereign-boardroom-mcp",d:"Sovereign boardroom. 12 queens deliberating.",c:"substrate",t:5,k:["boardroom","deliberation","queens"]},
+  // Production (10)
+  {n:"meok-sovereign-billing-mcp",d:"Sovereign billing. Stripe integration.",c:"production",t:5,k:["billing","stripe","plan"]},
+  {n:"meok-sovereign-monitor-mcp",d:"Sovereign monitor. Health checks.",c:"production",t:5,k:["monitor","health","check"]},
+  {n:"meok-sovereign-tenant-mcp",d:"Multi-tenant isolation. Per-customer.",c:"production",t:5,k:["tenant","isolation","multi"]},
+  {n:"meok-sovereign-secret-mcp",d:"Sovereign secret management. Keystoned.",c:"production",t:5,k:["secret","keystone","vault"]},
+  {n:"meok-sovereign-deploy-mcp",d:"Sovereign deploy. 1-click release.",c:"production",t:5,k:["deploy","release","ci"]},
+  {n:"meok-sovereign-training-mcp",d:"Training certification. 33 courses + 132 tiers.",c:"production",t:5,k:["training","cert","course"]},
+  {n:"meok-sovereign-certification-mcp",d:"W3C VC. Sovereign-signed certs.",c:"production",t:5,k:["cert","w3c","vc"]},
+  {n:"meok-sovereign-sphere-mcp",d:"3D sovereign sphere. Cesium 3D.",c:"production",t:5,k:["sphere","3d","cesium"]},
+  {n:"meok-sovereign-vrm-mcp",d:"VRM avatars. 12 General models.",c:"production",t:5,k:["vrm","avatar","3d"]},
+  {n:"meok-sovereign-bft-mcp",d:"BFT voting. 3/5/7 voter patterns.",c:"production",t:5,k:["bft","vote","pattern"]},
+  // Triumvirate (1)
+  {n:"meok-sovereign-wallet-mcp",d:"Sovereign wallet. BFT 3-voter >$10k.",c:"triumvirate",t:5,k:["wallet","bft","10k"]},
+  // Extras
+  {n:"meok-sovereign-iot-stream-mcp",d:"IoT stream. 9 sensors + 16-probe Care Floor.",c:"extras",t:5,k:["iot","stream","sensor"]},
+  {n:"meok-sovereign-bio-mcp",d:"JARVIS embodiment bio. 13 probes.",c:"extras",t:5,k:["bio","jarvis","embodiment"]},
+  {n:"meok-sovereign-physical-mcp",d:"JARVIS humanoid. SO-100 + Berkeley + LeKiwi.",c:"extras",t:5,k:["jarvis","humanoid","physical"]},
+  {n:"meok-sovereign-orbital-mcp",d:"33 hive orbital mechanics. 4 cycle types.",c:"extras",t:5,k:["orbital","cycle","hive"]},
+  {n:"meok-sovereign-finance-mcp",d:"33 financial hives. Sovereign routing.",c:"extras",t:5,k:["finance","hive","routing"]},
+  {n:"meok-sovereign-knowledge-mcp",d:"CC0 1.0 knowledge graph. 10 public sources.",c:"extras",t:5,k:["knowledge","cc0","graph"]},
+  {n:"meok-sovereign-wallet-bind-mcp",d:"Wallet binding. Ed25519 base58 binding.",c:"extras",t:5,k:["wallet","bind","ed25519"]},
+  {n:"meok-sovereign-training-data-mcp",d:"CC0 training corpus. JSONL/CSV export.",c:"extras",t:5,k:["training","data","cc0"]},
+  {n:"meok-sovereign-ml-mcp",d:"Sovereign ML. 12 x 8 = 96 combinations.",c:"extras",t:5,k:["ml","mindsets","moe"]},
+  {n:"meok-sovereign-doc-mcp",d:"Sovereign doc store. Ed25519-signed.",c:"extras",t:5,k:["doc","store","ed25519"]},
+  {n:"meok-sovereign-revise-mcp",d:"Revision engine. 5-tier schedule.",c:"extras",t:5,k:["revise","schedule","tier"]},
+];
+
+const CAT_CLASS = {origin:"",substrate:"sub",production:"prod",triumvirate:"trium",extras:""};
+const CAT_COLOR = {origin:"#fbbf24",substrate:"#10b981",production:"#60a5fa",triumvirate:"#ec4899",extras:"#8b5cf6"};
+let currentSort = "name";
+let currentCategory = "all";
+
+function setSort(sort, btn) {
+  currentSort = sort;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render();
+}
+
+function filterMCPs() {
+  currentCategory = document.getElementById("categoryFilter").value;
+  render();
+}
+
+function render() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  let filtered = MCPS.filter(m => {
+    if (currentCategory !== "all" && m.c !== currentCategory) return false;
+    if (q && !m.n.toLowerCase().includes(q) && !m.d.toLowerCase().includes(q) && !m.k.some(k => k.includes(q))) return false;
+    return true;
+  });
+  if (currentSort === "name") filtered.sort((a, b) => a.n.localeCompare(b.n));
+  else if (currentSort === "category") filtered.sort((a, b) => a.c.localeCompare(b.c));
+  else if (currentSort === "tools") filtered.sort((a, b) => b.t - a.t);
+
+  document.getElementById("countLabel").textContent = `Showing ${filtered.length} of ${MCPS.length} sovereign MCPs · category: ${currentCategory} · sort: ${currentSort}`;
+
+  const grid = document.getElementById("mcpGrid");
+  grid.innerHTML = "";
+  filtered.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "mcp " + (CAT_CLASS[m.c] || "");
+    div.style.borderLeftColor = CAT_COLOR[m.c];
+    div.innerHTML = `
+      <div class="cat" style="color:${CAT_COLOR[m.c]}">${m.c}</div>
+      <h3>${m.n}</h3>
+      <div class="desc">${m.d}</div>
+      <div class="tools">${m.t} tools · ${m.k.slice(0, 3).map(k => `<span class="tag">${k}</span>`).join(" ")}</div>
+      <a href="https://github.com/CSOAI-ORG/${m.n}" target="_blank" class="install">📦 Install →</a>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+document.getElementById("categoryFilter").addEventListener("change", e => {
+  currentCategory = e.target.value;
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>

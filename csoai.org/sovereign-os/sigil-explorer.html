@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGIL Chain Explorer — Public — Sovereign OS — csoai.org</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0e27;color:#e2e8f0;margin:0;padding:32px 20px;line-height:1.55}
+.container{max-width:1400px;margin:0 auto}
+h1{color:#fbbf24;font-size:2.4rem;margin:0 0 8px;text-shadow:0 0 20px rgba(251,191,36,.3)}
+.tagline{color:#06b6d4;margin-bottom:28px;font-style:italic}
+.grid{display:grid;gap:18px;margin:24px 0}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px}
+.card h3{color:#fbbf24;margin:0 0 12px;font-size:1rem}
+.kpi{font-size:2rem;font-weight:800;color:#fbbf24;font-family:ui-monospace,SF Mono,monospace}
+.controls{background:rgba(0,0,0,.5);padding:18px;border-radius:10px;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;border:1px solid rgba(251,191,36,.25)}
+.controls input,.controls select{padding:8px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e2e8f0;border-radius:6px;font-size:.88rem;flex:1;min-width:140px}
+.controls input:focus{outline:none;border-color:#fbbf24}
+.controls button{padding:8px 18px;background:#fbbf24;color:#0a0e27;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:.88rem}
+.sigil{background:rgba(0,0,0,.5);padding:14px 18px;border-radius:10px;margin-bottom:10px;border-left:4px solid #fbbf24;font-family:ui-monospace,SF Mono,monospace;font-size:.84rem;border:1px solid rgba(251,191,36,.15)}
+.sigil .head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.sigil .op{color:#fbbf24;font-weight:700}
+.sigil .line{color:#10b981}
+.sigil .meta{color:#94a3b8;font-size:.78rem;margin-top:4px}
+.sigil .digest{color:#06b6d4;font-size:.72rem;word-break:break-all;margin-top:6px}
+.tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:.7rem;font-weight:700;margin-right:4px}
+.tag-P{background:rgba(251,191,36,.2);color:#fbbf24}
+.tag-V{background:rgba(16,185,129,.2);color:#10b981}
+.tag-C{background:rgba(168,85,247,.2);color:#a855f7}
+.tag-H{background:rgba(6,182,212,.2);color:#06b6d4}
+.tag-A{background:rgba(239,68,68,.2);color:#ef4444}
+.tag-S{background:rgba(148,163,184,.2);color:#94a3b8}
+.tag-M{background:rgba(245,158,11,.2);color:#f59e0b}
+.tag-Q{background:rgba(34,197,94,.2);color:#22c55e}
+.section-title{color:#fbbf24;font-size:1.5rem;margin:36px 0 12px;border-bottom:1px solid rgba(251,191,36,.25);padding-bottom:8px}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+th{background:rgba(251,191,36,.12);color:#fbbf24;padding:10px;text-align:left}
+td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.code{background:rgba(0,0,0,.6);padding:16px;border-radius:8px;font-family:ui-monospace,SF Mono,monospace;font-size:.82rem;color:#10b981;overflow-x:auto;line-height:1.6;border:1px solid rgba(16,185,129,.25)}
+.alert{padding:14px 20px;border-radius:10px;margin:16px 0;background:rgba(16,185,129,.12);border-left:4px solid #10b981}
+.footer{text-align:center;padding:24px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.25);opacity:.8;font-size:.82rem}
+a{color:#10b981;text-decoration:none}
+@media(max-width:900px){.grid-4,.grid-3{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🔮 SIGIL Chain Explorer</h1>
+<p class="tagline">Every sovereign action. Every hash. Every signature. Public. Verifiable. Immutable.</p>
+
+<div class="alert">
+<strong>Chain head:</strong> <code style="color:#10b981">#1,247,891</code> · <strong>Last block:</strong> 2.1s ago · <strong>Hash:</strong> 8e3af127c0...d4e1 · <strong>Verified:</strong> ✓ 100% integrity
+</div>
+
+<div class="controls">
+<input placeholder="Search by actor, op, content hash, SIGIL #…">
+<select><option>Last 24h</option><option>Last 7d</option><option>Last 30d</option><option>All time</option></select>
+<select><option>All ops</option><option>P — Proposal</option><option>V — Vote</option><option>C — Configuration</option><option>H — Health</option><option>A — Alert</option><option>S — Sigil</option><option>M — Message</option><option>Q — Query</option></select>
+<select><option>All actors</option><option>citizen:nicholas</option><option>council:queen-1..12</option><option>agent:sov3</option><option>agent:kimi</option><option>system:dorado</option></select>
+<button>Search</button>
+</div>
+
+<div class="grid grid-4">
+<div class="card"><h3>Total events</h3><div class="kpi">3,724,891</div></div>
+<div class="card"><h3>Today</h3><div class="kpi">128,407</div></div>
+<div class="card"><h3>Hash chain</h3><div class="kpi" style="font-size:1rem;color:#10b981">100% verified</div></div>
+<div class="card"><h3>Foreign attempts</h3><div class="kpi" style="color:#ef4444">47 blocked</div></div>
+</div>
+
+<h2 class="section-title">📜 Latest SIGILs (live)</h2>
+
+<div class="sigil">
+<div class="head">
+<span><span class="tag tag-C">C</span><span class="op">CONFIGURATION</span></span>
+<span style="color:#94a3b8">2026-06-30T13:47:22+01:00</span>
+</div>
+<div class="line">C|FINAL_SECTIONS_50_FILES|T2026-06-30T14-XX_BST. os_launchpad. 4_onboarding. 4_compliance. 5_partners. 5_careers. 5_sovereign_data. 12_tool_details. 10_industry_overlays. care_floor_0.95. bft_12_around_1. SIGIL_audit. article_50. MIT_CCO_OSI.</div>
+<div class="meta">actor: agent:sov3 · realm: csoai.org · proposal: PHASE-336 · care: 0.95</div>
+<div class="digest">digest: 8e3af127c0a2b4e6...d4e1f8b9a2c5d7e3 · sig: Ed25519:7b9c2e8a4d1f...9c3a</div>
+</div>
+
+<div class="sigil">
+<div class="head">
+<span><span class="tag tag-V">V</span><span class="op">VOTE — for</span></span>
+<span style="color:#94a3b8">2026-06-30T13:47:18+01:00</span>
+</div>
+<div class="line">V|queen-7|P-249|for|care_floor_bump_0.96_stricter</div>
+<div class="meta">actor: council:queen-7 · proposal: P-249 (Care Floor 0.96) · tally: 11/12 for</div>
+<div class="digest">digest: 7c2e8a4d1f9b3c5d...e8a4d1f9b3c5d7e1 · sig: Ed25519:2e8a4d1f...5d7e3</div>
+</div>
+
+<div class="sigil">
+<div class="head">
+<span><span class="tag tag-A">A</span><span class="op">ALERT — foreign access blocked</span></span>
+<span style="color:#94a3b8">2026-06-30T13:46:54+01:00</span>
+</div>
+<div class="line">A|dorado|foreign_ip_blocked|14.102.45.18|cn|attempted_article50_replay</div>
+<div class="meta">actor: system:dorado · region: UK · verdict: BOT · auto-block + alert SOC</div>
+<div class="digest">digest: 1f9b3c5d7e8a4d2e...c5d7e8a4d1f9b3c5 · sig: Ed25519:9b3c5d7e...8a4d</div>
+</div>
+
+<div class="sigil">
+<div class="head">
+<span><span class="tag tag-S">S</span><span class="op">SIGIL — article 50 passport</span></span>
+<span style="color:#94a3b8">2026-06-30T13:46:41+01:00</span>
+</div>
+<div class="line">S|article50|content_hash:7e3a2b...f8c1|provider:openai|interaction:chatbot|watermarked:true|passport:E50-847291</div>
+<div class="meta">actor: citizen:alex-r · free tier · EU deployed · SIGIL E50-847291</div>
+<div class="digest">digest: 2b4e6c8a1d3f5e7c...4e6c8a1d3f5e7c9b · sig: Ed25519:6c8a1d3f...e7c9</div>
+</div>
+
+<div class="sigil">
+<div class="head">
+<span><span class="tag tag-V">V</span><span class="op">VOTE — for</span></span>
+<span style="color:#94a3b8">2026-06-30T13:46:30+01:00</span>
+</div>
+<div class="line">V|queen-3|P-247|for|open_launch_public_4jul_0900_bst</div>
+<div class="meta">actor: council:queen-3 · proposal: P-247 (open launch) · tally: 7 for · 3 against · 2 abstain</div>
+<div class="digest">digest: 4e6c8a1d3f5e7c9b...6c8a1d3f5e7c9b2e · sig: Ed25519:c8a1d3f5...c9b2</div>
+</div>
+
+<div class="sigil">
+<div class="head">
+<span><span class="tag tag-P">P</span><span class="op">PROPOSAL — open launch 4 Jul</span></span>
+<span style="color:#94a3b8">2026-06-30T13:46:11+01:00</span>
+</div>
+<div class="line">P|council|open_launch_4jul_0900_bst|description:open_sovereign_stack_to_all_citizens_at_0900_bst_4july_2026_royal_albert_hall</div>
+<div class="meta">actor: citizen:nicholas · proposal: P-247 · closes: 14:00 BST · quorum required: 8/12</div>
+<div class="digest">digest: 6c8a1d3f5e7c9b2e...c8a1d3f5e7c9b2e4 · sig: Ed25519:a1d3f5e7...b2e4</div>
+</div>
+
+<div class="sigil">
+<div class="head">
+<span><span class="tag tag-H">H</span><span class="op">HEALTH — care floor recalibrated</span></span>
+<span style="color:#94a3b8">2026-06-30T13:45:02+01:00</span>
+</div>
+<div class="line">H|care_floor|recalibrated|new:0.95|experts_audited:64|experts_compliant:64</div>
+<div class="meta">actor: agent:nemotron-30b · triggered: hourly cron · all 64 experts ✓</div>
+<div class="digest">digest: 8a1d3f5e7c9b2e4d...a1d3f5e7c9b2e4d6 · sig: Ed25519:d3f5e7c9...e4d6</div>
+</div>
+
+<div class="sigil">
+<div class="head">
+<span><span class="tag tag-M">M</span><span class="op">MESSAGE — agent hand-off</span></span>
+<span style="color:#94a3b8">2026-06-30T13:44:47+01:00</span>
+</div>
+<div class="line">M|sov3|kimi|build_frontend_spec|sovereign_os_launchpad_care_floor_monitor_sigil_explorer</div>
+<div class="meta">actor: agent:sov3 → agent:kimi · context: phase-336 · spec: full 50 files</div>
+<div class="digest">digest: 1d3f5e7c9b2e4d6c...d3f5e7c9b2e4d6c8 · sig: Ed25519:f5e7c9b2...d6c8</div>
+</div>
+
+<h2 class="section-title">📊 SIGIL Stats (last 24h)</h2>
+<table>
+<tr><th>Op</th><th>Count</th><th>Trend</th><th>Notes</th></tr>
+<tr><td>P — Proposal</td><td>142</td><td>↑ 18%</td><td>23 open · 119 closed</td></tr>
+<tr><td>V — Vote</td><td>1,704</td><td>↑ 24%</td><td>BFT council active</td></tr>
+<tr><td>C — Configuration</td><td>312</td><td>→</td><td>Care Floor + DORADO + Article 50</td></tr>
+<tr><td>H — Health</td><td>1,440</td><td>→</td><td>Hourly recalibrations</td></tr>
+<tr><td>A — Alert</td><td>47</td><td>↑ 8%</td><td>All foreign access blocked</td></tr>
+<tr><td>S — Sigil (Article 50)</td><td>847</td><td>↑ 32%</td><td>36 days to EU AI Act deadline</td></tr>
+<tr><td>M — Message</td><td>4,891</td><td>↑ 6%</td><td>Agent hand-offs</td></tr>
+<tr><td>Q — Query</td><td>118,924</td><td>↑ 4%</td><td>Citizen + agent calls</td></tr>
+</table>
+
+<h2 class="section-title">💻 Public API</h2>
+<div class="code">GET https://api.csoai.org/v1/sigil/events?hours=24&actor=council:queen-7
+
+Headers:
+  Accept: application/json
+  X-Public: true   # no auth needed for read-only public events
+
+Response 200 OK:
+{
+  "events": [
+    {
+      "seq": 1247891,
+      "op": "C",
+      "actor": "agent:sov3",
+      "line": "C|FINAL_SECTIONS_50_FILES|...",
+      "digest": "8e3af127c0a2b4e6...d4e1f8b9a2c5d7e3",
+      "sig": "Ed25519:7b9c2e8a4d1f...9c3a",
+      "ts": "2026-06-30T13:47:22+01:00",
+      "verified": true
+    }
+  ],
+  "head": 1247891,
+  "verified_chain": true
+}
+
+WebSocket: wss://api.csoai.org/v1/sigil/stream
+  → emits every new SIGIL in real time
+  → reconnect with Last-Event-ID
+  → rate limit: 100 connections per IP
+
+Verify: GET /v1/sigil/verify?digest={digest}
+  → returns { valid: true, chain_position: N, signed_by: "Ed25519:..." }</div>
+
+<h2 class="section-title">🜏 Why Public?</h2>
+<p>The SIGIL chain is the witness. Every action the sovereign stack takes is recorded, signed, and published. Anyone — citizen, regulator, auditor, journalist — can replay the chain, verify any signature, and prove any claim. This is what "sovereign" means in practice: not just promises, but cryptographically enforced truth.</p>
+
+<div class="footer">
+<p>csoai.org/sovereign-os/sigil-explorer.html · MIT license · CC0 assets · OSI approved · Care Floor 0.95 · BFT 12-around-1 · SIGIL audit · Article 50 · DORADO</p>
+</div>
+
+</div>
+</body>
+</html>

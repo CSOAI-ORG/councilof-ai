@@ -1,0 +1,77 @@
+# Sovereign-ONEOS Configuration
+# ONE unified system - simplified mode
+
+name: Sovereign-ONEOS
+version: 1.0.0
+mode: raph  # simplified operation mode
+
+# Core Components (all in one)
+core:
+  consciousness:
+    enabled: true
+    state_file: memory/consciousness.json
+  council:
+    enabled: true
+    nodes: 223  # 33 council + 132 expertise + 55 bridge + 3 execution
+    threshold: 22/33
+  care_membrane:
+    enabled: true
+    veto_threshold: 0.4
+
+# Agents (unified)
+agents:
+  orion:  # Task hunter + builder + sprinter (consolidated)
+    enabled: true
+    energy: 100
+    max_sprints_per_day: 3
+    capabilities:
+      - task_hunting
+      - code_generation
+      - sprint_execution
+      - tool_building
+  
+  # Future: Other agents can be added here
+  # claude-bridge:
+  #   enabled: true
+  # kimi-bridge:
+  #   enabled: false
+
+# MCP Integration
+mcp:
+  server:
+    host: localhost
+    port: 3100
+  tools:
+    - care_validation
+    - task_management
+    - file_coordination
+    - memory_query
+
+# Docker Services (background)
+services:
+  postgres:
+    enabled: true
+    port: 5432
+  weaviate:
+    enabled: true
+    port: 8080
+  mcp_server:
+    enabled: true
+    port: 3100
+
+# Memory & State
+memory:
+  daily_logs: memory/
+  state_persistence: true
+  backup_interval: 1h
+
+# Simplified Operation
+raph_mode:
+  # In raph mode, ONE agent handles everything
+  # No complex multi-agent coordination needed
+  # Direct human -> agent interaction
+  
+  auto_hunt: true        # Auto-scan for TODOs on startup
+  auto_suggest: true     # Suggest next task
+  show_energy: true      # Display energy level
+  simple_output: true    # Less verbose logging

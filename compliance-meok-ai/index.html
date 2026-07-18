@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MEOK Compliance Centre — EU AI Act, DORA, NIS2, CRA, ISO 42001 | MEOK AI Labs</title>
+  <meta name="description" content="MEOK Compliance Centre. 32-server MCP fleet for EU AI Act, DORA, NIS2, CRA, CSRD, ISO 42001, GDPR, HIPAA, SOC 2. Ed25519-signed attestations. Pro £199/mo. 48h Assessment £5,000. 49 days to the 2 Aug 2026 cliff.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="MEOK Compliance Centre — EU AI Act + DORA + NIS2 + ISO 42001">
+  <meta property="og:description" content="32-server MCP fleet. Ed25519-signed attestations. 49 days to the 2 Aug 2026 cliff.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://compliance.meok.ai">
+  <link rel="canonical" href="https://compliance.meok.ai">
+  <link rel="llms-txt" href="/llms.txt" title="MEOK Compliance Centre — EU AI Act, DORA, NIS2, CRA, ISO 42001">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "MEOK AI Labs",
+    "url": "https://compliance.meok.ai",
+    "logo": "https://compliance.meok.ai/logo.png",
+    "description": "The trust layer for the AI economy. 32-server MCP compliance fleet with Ed25519-signed attestations. By CSOAI Ltd, UK 16939677.",
+    "foundingDate": "2026",
+    "foundingLocation": {"@type": "Place", "addressCountry": "GB"},
+    "founder": {"@type": "Person", "name": "Nicholas Templeman"},
+    "sameAs": ["https://github.com/CSOAI-ORG", "https://pypi.org/user/MEOK_AI_Labs/", "https://meok.ai", "https://csoai.org"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MEOK Compliance Centre",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Cross-platform (Python MCP + Node.js MCP)",
+    "offers": [
+      {"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "GBP", "description": "200 calls/day per MCP. No signed receipts."},
+      {"@type": "Offer", "name": "Pro", "price": "199", "priceCurrency": "GBP", "billingIncrement": "month", "url": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t"},
+      {"@type": "Offer", "name": "Enterprise", "price": "1499", "priceCurrency": "GBP", "billingIncrement": "month", "url": "https://buy.stripe.com/fZu5kF0xS8wy9wpeGY8k91s"},
+      {"@type": "Offer", "name": "48h Assessment", "price": "5000", "priceCurrency": "GBP", "url": "https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m"}
+    ]
+  }
+  </script>
+  <style>
+    :root { --bg: #fff; --fg: #111; --mut: #666; --gold: #c9a84c; --line: #e5e7eb; --alert: #dc2626; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; line-height: 1.6; color: var(--fg); }
+    h1 { font-size: 2.75rem; letter-spacing: -0.02em; margin: 0 0 0.5rem; line-height: 1.1; }
+    h2 { font-size: 1.5rem; margin-top: 2.5rem; border-bottom: 1px solid var(--line); padding-bottom: 0.25rem; }
+    h3 { font-size: 1.1rem; margin-top: 1.5rem; }
+    .lede { font-size: 1.2rem; color: var(--mut); margin: 0 0 2rem; }
+    .countdown { background: #fef2f2; border-left: 4px solid var(--alert); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0.4rem; }
+    .countdown .num { font-size: 2rem; font-weight: 700; color: var(--alert); }
+    .countdown .label { font-size: 0.9rem; color: var(--mut); display: block; margin-top: 0.25rem; }
+    .pill { display: inline-block; background: rgba(201, 168, 76, 0.12); color: var(--gold); padding: 0.25rem 0.6rem; border-radius: 0.4rem; font-size: 0.85rem; font-weight: 600; margin-right: 0.5rem; }
+    .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .tier { border: 1px solid var(--line); border-radius: 0.75rem; padding: 1.5rem; background: #fafafa; }
+    .tier.highlight { border-color: var(--gold); background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .tier .price { font-size: 2rem; font-weight: 700; color: var(--fg); margin: 0.5rem 0; }
+    .tier .price span { font-size: 1rem; color: var(--mut); font-weight: 400; }
+    .tier ul { padding-left: 1.25rem; margin: 1rem 0; }
+    .tier li { margin: 0.3rem 0; font-size: 0.95rem; }
+    .cta { display: inline-block; background: var(--gold); color: #111; padding: 0.7rem 1.4rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; margin: 0.5rem 0; }
+    .cta:hover { opacity: 0.9; }
+    code { background: #f3f4f6; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; color: var(--gold); }
+    pre { background: #f3f4f6; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; border: 1px solid var(--line); }
+    pre code { background: none; padding: 0; color: var(--fg); }
+    .frameworks { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; margin: 1.5rem 0; }
+    .framework { background: #f9fafb; padding: 0.6rem 0.8rem; border-radius: 0.4rem; font-size: 0.9rem; text-align: center; border: 1px solid var(--line); }
+    .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .case { border: 1px solid var(--line); border-radius: 0.5rem; padding: 1.25rem; }
+    .case h3 { margin: 0 0 0.5rem; }
+    .case p { margin: 0; color: var(--mut); font-size: 0.95rem; }
+    .case a { color: var(--gold); text-decoration: none; }
+    footer { margin: 4rem 0 2rem; padding: 2rem 0 0; border-top: 1px solid var(--line); color: var(--mut); font-size: 0.9rem; }
+    footer a { color: var(--mut); }
+    .hero { padding: 3rem 0; }
+  </style>
+</head>
+<body>
+  <header style="display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:1px solid var(--line);">
+    <a href="/" style="font-weight:700;color:var(--fg);text-decoration:none;font-size:1.1rem;">MEOK<span style="color:var(--gold)">.ai</span> / Compliance</a>
+    <nav style="display:flex;gap:1rem;font-size:0.9rem;">
+      <a href="#pricing" style="color:var(--mut);text-decoration:none;">Pricing</a>
+      <a href="#frameworks" style="color:var(--mut);text-decoration:none;">Frameworks</a>
+      <a href="#cases" style="color:var(--mut);text-decoration:none;">Case studies</a>
+      <a href="/llms.txt" style="color:var(--mut);text-decoration:none;">llms.txt</a>
+      <a href="https://csoai.org" style="color:var(--mut);text-decoration:none;">CSOAI</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <p>
+      <span class="pill">EU AI Act</span>
+      <span class="pill">DORA</span>
+      <span class="pill">NIS2</span>
+      <span class="pill">CRA</span>
+      <span class="pill">CSRD</span>
+      <span class="pill">ISO 42001</span>
+    </p>
+    <h1>Signed compliance attestations. In 4 days, not 8 weeks.</h1>
+    <p class="lede">MEOK Compliance Centre. 32-server MCP fleet. Ed25519-signed attestations your auditor, regulator, and customers verify with a single <code>curl</code>.</p>
+
+    <div class="countdown">
+      <div class="num" id="days-left">49</div>
+      <div class="label">days until EU AI Act Article 50 transparency obligations land (2 Aug 2026)</div>
+    </div>
+
+    <a class="cta" href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro £199/mo →</a>
+    <a class="cta" style="background:transparent;border:1px solid var(--gold);color:var(--gold);" href="https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m">Book 48h Assessment £5,000 →</a>
+  </section>
+
+  <h2 id="pricing">Pricing</h2>
+  <div class="tiers">
+    <div class="tier">
+      <h3>Free</h3>
+      <p class="price">£0</p>
+      <p style="color:var(--mut);font-size:0.9rem;">200 calls/day per MCP. No signed receipts.</p>
+      <ul>
+        <li>All 32 MCPs in the catalogue</li>
+        <li>Free-tier <code>/sign</code> endpoint</li>
+        <li>Community support</li>
+      </ul>
+      <a class="cta" href="https://meok-attestation-api.vercel.app/signup" style="background:transparent;border:1px solid var(--gold);color:var(--gold);">Start free →</a>
+    </div>
+    <div class="tier highlight">
+      <h3>Pro <span class="pill" style="font-size:0.7rem;">most popular</span></h3>
+      <p class="price">£199<span>/mo</span></p>
+      <p style="color:var(--mut);font-size:0.9rem;">1,000 calls/day per MCP. Ed25519-signed receipts.</p>
+      <ul>
+        <li>All 32 MCPs in the catalogue</li>
+        <li>Signed Ed25519 attestations</li>
+        <li>Public verify URL per cert</li>
+        <li>Priority support</li>
+        <li>Offline verification tool</li>
+      </ul>
+      <a class="cta" href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro →</a>
+    </div>
+    <div class="tier">
+      <h3>Enterprise</h3>
+      <p class="price">£1,499<span>/mo</span></p>
+      <p style="color:var(--mut);font-size:0.9rem;">Multi-tenant. Co-branded receipts. On-prem option.</p>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Co-branded attestations</li>
+        <li>Multi-tenant provisioning</li>
+        <li>On-prem deployment</li>
+        <li>Dedicated CSM</li>
+      </ul>
+      <a class="cta" href="https://buy.stripe.com/fZu5kF0xS8wy9wpeGY8k91s">Buy Enterprise →</a>
+    </div>
+    <div class="tier">
+      <h3>48h Assessment</h3>
+      <p class="price">£5,000<span>one-time</span></p>
+      <p style="color:var(--mut);font-size:0.9rem;">Full audit + remediation backlog + signed certificate.</p>
+      <ul>
+        <li>Full governance report</li>
+        <li>All in-scope frameworks</li>
+        <li>Remediation backlog with line-item owners</li>
+        <li>Signed Article 50 attestation</li>
+        <li>30-min legal review</li>
+      </ul>
+      <a class="cta" href="https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m">Book 48h →</a>
+    </div>
+  </div>
+
+  <h2 id="frameworks">Frameworks covered (21+)</h2>
+  <div class="frameworks">
+    <div class="framework">EU AI Act (Art 5, 6, 10, 11, 12, 14, 15, 26, 27, 50, 51)</div>
+    <div class="framework">DORA (5 pillars, Art 17)</div>
+    <div class="framework">NIS2 (Art 21, 23)</div>
+    <div class="framework">CRA</div>
+    <div class="framework">CSRD</div>
+    <div class="framework">GDPR + UK GDPR</div>
+    <div class="framework">HIPAA</div>
+    <div class="framework">SOC 2 (TSC)</div>
+    <div class="framework">PCI DSS 4.0</div>
+    <div class="framework">ISO/IEC 27001</div>
+    <div class="framework">ISO/IEC 42001</div>
+    <div class="framework">NIST AI RMF</div>
+    <div class="framework">UK AI Bill</div>
+    <div class="framework">OWASP Agentic AI Top 10</div>
+    <div class="framework">OWASP LLM Top 10</div>
+    <div class="framework">C2PA</div>
+    <div class="framework">NIST SSDF</div>
+    <div class="framework">SLSA</div>
+    <div class="framework">MITRE ATLAS</div>
+    <div class="framework">Care Membrane (4 dimensions)</div>
+    <div class="framework">AI-BOM</div>
+  </div>
+
+  <h2 id="cases">Case studies</h2>
+  <div class="cases">
+    <div class="case">
+      <h3>UK Challenger Bank</h3>
+      <p>Saved £165K vs Big-4 quote. 4-day Article 50 audit. FCA-ready signed attestation.</p>
+      <a href="https://proofof.ai/case-studies/fintech">Read the case study →</a>
+    </div>
+    <div class="case">
+      <h3>UK Domiciliary Care</h3>
+      <p>Signed attestation across 14 LAs. CQC inspection from anxiety to advantage. Network effect.</p>
+      <a href="https://proofof.ai/case-studies/care">Read the case study →</a>
+    </div>
+    <div class="case">
+      <h3>UK HR-Tech Scaleup</h3>
+      <p>From EU RFP blocker to 12% uptick in EU enterprise wins. One-line answer: "Yes, here's the signed certificate."</p>
+      <a href="https://proofof.ai/case-studies/hrtech">Read the case study →</a>
+    </div>
+  </div>
+
+  <h2>How signed attestations work</h2>
+  <p>Every Pro-tier audit emits an <strong>Ed25519-signed JSON-LD attestation</strong>:</p>
+  <ul>
+    <li>Public key registered to your legal entity (CSOAI Ltd, UK 16939677)</li>
+    <li>Hash of the audit payload (scope, models, findings, remediation state)</li>
+    <li>Signature verifiable offline with <code>pip install meok-attestation-verify</code></li>
+    <li>Anchor to a transparency log so it can't be backdated</li>
+  </ul>
+
+  <p>Why Ed25519 over RSA? Smaller signatures (64 bytes), faster verification, no padding oracle history, and it's what <code>sigstore</code> and the major supply-chain attestation frameworks (in-toto, SLSA L3) use.</p>
+  <p>Why JSON-LD over a PDF? Because a regulator — or a procurement team in your supply chain — can verify the signature, the schema, and the revocation status in a single <code>curl</code>. No email chain. No "we'll get back to you."</p>
+
+  <h2>Quick start</h2>
+  <pre><code># Install the keystone verify tool
+pip install meok-attestation-verify
+
+# Or run a free audit
+curl -X POST https://meok-attestation-api.vercel.app/sign \
+  -H "Content-Type: application/json" \
+  -d '{"email": "you@company.com", "framework": "eu-ai-act"}'
+
+# Or buy Pro
+https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t</code></pre>
+
+  <h2>Why MEOK (not Big-4, not a generic GRC tool)</h2>
+  <ul>
+    <li><strong>Sovereign UK infrastructure.</strong> No EU dependency. No data leaves the UK.</li>
+    <li><strong>Independent</strong> (CSOAI Ltd, 100% Nick Templeman).</li>
+    <li><strong>Open source MCP fleet.</strong> 32 servers. Inspect the code, fork it, run it yourself.</li>
+    <li><strong>Ed25519-signed attestations</strong> that survive 7-year retention without rotting.</li>
+    <li><strong>£4,950</strong> vs Big-4 £40-80K. 4 days vs 8 weeks.</li>
+  </ul>
+
+  <footer>
+<nav style='text-align:center; padding: 0.5rem; background: rgba(201,168,76,0.05); border-top: 1px solid #e5e7eb;'><strong>MEOK portfolio:</strong> | <a href="https://hive-deploy.vercel.app" target="_blank" rel="noopener noreferrer">hive</a> | <a href="https://industries-deploy.vercel.app" target="_blank" rel="noopener noreferrer">industries</a> | <a href="https://blog-deploy-azure.vercel.app" target="_blank" rel="noopener noreferrer">blog</a> | <a href="https://portfolio-deploy-orcin-three.vercel.app" target="_blank" rel="noopener noreferrer">portfolio</a> | <a href="https://meok.ai" target="_blank" rel="noopener noreferrer">meok.ai</a></nav>
+    <p>Part of the <a href="https://meok.ai">MEOK AI Labs</a> portfolio · <a href="https://csoai.org">CSOAI council</a> · <a href="https://proofof.ai">ProofOf.AI trust surface</a></p>
+    <p>CSOAI Ltd · UK Companies House <strong>16939677</strong> · Registered in England & Wales · hello@meok.ai</p>
+    <p style="margin-top:1rem;">
+      <a href="/llms.txt">llms.txt</a> ·
+      <a href="/openapi.json">openapi.json</a> ·
+      <a href="/pubkey">pubkey</a> ·
+      <a href="/sitemap.xml">sitemap</a> ·
+      <a href="/robots.txt">robots</a> ·
+      <a href="/privacy">privacy</a> ·
+      <a href="/terms">terms</a>
+    </p>
+  </footer>
+
+  <script>
+    // Live countdown to 2 Aug 2026
+    (function() {
+      const target = new Date('2026-08-02T00:00:00Z');
+      const now = new Date();
+      const days = Math.max(0, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
+      const el = document.getElementById('days-left');
+      if (el) el.textContent = days;
+    })();
+  </script>
+</body>
+</html>

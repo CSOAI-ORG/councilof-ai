@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <radialGradient id="g-sovereign" cx="40%" cy="30%">
+      <stop offset="0%" stop-color="#cce4f5" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#6ba8d4" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#1a3a5a" stop-opacity="0.85"/>
+    </radialGradient>
+    <radialGradient id="core-sovereign" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#f0d68a" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow-sovereign">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="200" height="280" fill="#F5F0E6"/>
+  <path d="M100 30 Q50 30 50 130 Q50 220 100 250 Q150 220 150 130 Q150 30 100 30 Z" fill="url(#g-sovereign)" stroke="#6ba8d4" stroke-width="1.5" filter="url(#glow-sovereign)"/>
+  <ellipse cx="100" cy="140" rx="40" ry="60" fill="url(#core-sovereign)" opacity="0.7"/>
+  <text x="100" y="155" text-anchor="middle" font-size="40" dominant-baseline="middle">🐉</text>
+  <text x="100" y="265" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#2a1a14" font-weight="600">SOVEREIGN</text>
+</svg>

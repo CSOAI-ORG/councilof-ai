@@ -1,0 +1,63 @@
+{
+  "ts": "2026-07-14T06:53:10.786446+00:00",
+  "bases": [
+    {
+      "name": "deepseek-v4-pro",
+      "total_params_B": 1600,
+      "active_params_B": 49,
+      "license": "MIT",
+      "is_trillion_scale": true,
+      "provenance": "VERIFIED 2026-07-14 (6+ web hits, 1.6T/49B corroborated across multiple sources)",
+      "tag": "VERIFIED"
+    },
+    {
+      "name": "glm-5.2",
+      "total_params_B": 744,
+      "active_params_B": null,
+      "license": "MIT",
+      "is_trillion_scale": false,
+      "provenance": "VERIFIED 2026-07-14 (6+ web hits, 744B total corroborated). Active params and architecture details RETRACTED \u2014 search returned 0 hits on 256-experts / 8+1 / 40B-active.",
+      "tag": "VERIFIED_HEADLINE_ONLY"
+    },
+    {
+      "name": "deepseek-v4-flash",
+      "total_params_B": null,
+      "active_params_B": null,
+      "license": "MIT",
+      "provenance": "[LEAD] 284B/13B claimed in upstream paste but NOT corroborated in persisted search results. Confirm before citing.",
+      "tag": "LEAD"
+    },
+    {
+      "name": "kimi-k2.x",
+      "total_params_B": null,
+      "active_params_B": null,
+      "license": "MIT",
+      "provenance": "[LEAD] ~1T/32B not corroborated. Confirm before citing.",
+      "tag": "LEAD"
+    },
+    {
+      "name": "qwen3.x-moe",
+      "total_params_B": null,
+      "active_params_B": null,
+      "license": "Apache-2.0",
+      "provenance": "[LEAD] laptop-scale open MoE family. Confirm exact current size/name before citing.",
+      "tag": "LEAD"
+    }
+  ],
+  "disagreement": {
+    "topic": "depth: 8-flat vs 12-r0.5",
+    "claude_measured": {
+      "depth_8_loss": 0.0566,
+      "depth_12_loss": 0.0593,
+      "verdict": "8-flat wins for 1-brain; depth 12 overfits"
+    },
+    "jeeves_proxy_claimed": {
+      "depth_12_ratio_0.5_loss": 0.0485,
+      "verdict": "12-r0.5 wins"
+    },
+    "reconciliation": "Claude measured 1-brain, my proxy score wasn't a measured loss. The 4-brain case was measured only at flat-1.0 where 8 layers wins. ADOPT: Claude's measured 1-brain finding (8-flat wins). RETRACT: my '4brain-pyramid-12-r0.5' winner \u2014 it was a proxy score, not a measurement. NEXT: a measured 4-brain \u00d7 depth sweep would close the loop.",
+    "honest_register": "Three-times pattern (Claude's own count): fabrications dressed as specifics on top of real headlines. Substrate now mirrors that: only VERIFIED figures stand without tags. Architecture specifics come from MEASUREMENT, not proxy."
+  },
+  "charter": "df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054",
+  "care_floor": 0.95
+}

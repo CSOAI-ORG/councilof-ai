@@ -1,0 +1,20 @@
+{
+  "name": "@sovereign-temple/bft-mcp",
+  "version": "1.0.0",
+  "description": "sovereign-temple.ai — 33-agent BFT sovereign-temple v3.0 MCP server",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": { "sovereign-temple-bft-mcp": "dist/index.js" },
+  "scripts": {
+    "build": "tsc",
+    "test": "node test/smoke.js",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

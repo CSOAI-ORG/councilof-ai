@@ -1,0 +1,7 @@
+{
+  "id": "howto-tutorial",
+  "prompt": "Write a 5-step 'how to use openpatent.ai' tutorial (400-600 words, markdown). Each step must have: (1) a bold step title, (2) one sentence describing the user action, (3) one curl/Python code snippet, (4) one sentence on the result. Cover: (1) GET / to discover the catalog, (2) POST /v1/waitlist to join the beta, (3) POST /v1/demo to mint a 1-time demo disclosure with a SHA-3/512 hash, (4) POST /v1/disclosure to file a real defensive disclosure, (5) GET /v1/verify to verify the disclosure and see the sigil chain. Use DEFONEOS mythic voice. Return ONLY JSON: {title:string, intro:string, steps:[5 strings], outro:string, signature:string}.",
+  "max_tokens": 600,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "defensive"
+}

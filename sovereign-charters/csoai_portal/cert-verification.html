@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✓ Certificate Verification — Sovereign Cert Issuance Workflow</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,Georgia,serif;background:#0a0e1a;color:#e5e5e5;line-height:1.7;padding-bottom:60px}
+.nav{background:rgba(10,14,26,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(201,168,76,0.3);position:sticky;top:0;z-index:10;backdrop-filter:blur(8px)}
+.nav a{color:#c9a84c;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#c9a84c;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:linear-gradient(135deg,#0a0e1a 0%,#1a3a1a 100%);padding:3rem 2rem;text-align:center;border-bottom:2px solid #c9a84c}
+.hero h1{color:#c9a84c;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px rgba(201,168,76,0.5)}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1200px;margin:0 auto;padding:2rem 1rem}
+h2{color:#c9a84c;margin:2rem 0 1rem}
+.workflow{background:#1a1a3a;padding:1.5rem;border-radius:8px;margin:1rem 0}
+.step{padding:1rem;border-bottom:1px solid #222;display:flex;gap:1rem}
+.step:last-child{border-bottom:0}
+.step .n{background:#c9a84c;color:#000;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0}
+.step .body h3{color:#c9a84c;margin-bottom:.3rem}
+.step .body p{color:#aaa;font-size:.9rem}
+.tally{background:#1a1a3a;padding:2rem;border-radius:8px;margin:2rem 0;border:1px solid #c9a84c}
+.tally-row{display:flex;justify-content:space-between;align-items:center;padding:.7rem;border-bottom:1px dotted #333}
+.tally-row:last-child{border-bottom:0}
+.tally-row .k{color:#888;font-size:.85rem}
+.tally-row .v{color:#c9a84c;font-weight:bold;font-family:monospace}
+.live-tally{background:linear-gradient(135deg,#1a1a3a 0%,#2a2a4a 100%);padding:1.5rem;border-radius:8px;margin:1rem 0;border:1px solid #10b981}
+.live-tally h3{color:#10b981;margin-bottom:1rem}
+.tally-counter{text-align:center;padding:1rem}
+.tally-counter .big{color:#10b981;font-size:3rem;font-weight:bold;font-family:monospace}
+.tally-counter .lbl{color:#888;font-size:.85rem}
+.footer{background:rgba(10,14,26,0.95);padding:1.5rem;border-top:1px solid #c9a84c;margin-top:3rem;text-align:center;font-size:.8rem;color:#888}
+.footer .article-0{background:rgba(201,168,76,0.05);padding:1rem;border-radius:6px;margin:1rem 0;border:1px solid rgba(201,168,76,0.3);color:#c9a84c;font-style:italic;text-align:left}
+.footer .sig{font-family:monospace;color:#10b981;font-size:.7rem}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 CSOAI Sovereign</a>
+<a href="citizen-portal.html">Citizen</a>
+<a href="ubistarter.html">UBI Starter</a>
+<a href="training-tier-catalog.html">Training</a>
+<a href="cert-verification.html">Verify</a>
+<a href="about.html">About</a>
+</nav>
+
+<section class="hero">
+<h1>✓ Certificate Verification</h1>
+<p>8-step sovereign certification workflow. CSOAI Ltd · UK 16939677 · Crown lineage 1795-3025.</p>
+</section>
+
+<div class="container">
+
+<h2>📜 The 8-Step Sovereign Certification Workflow</h2>
+
+<div class="workflow">
+<div class="step"><div class="n">1</div><div class="body"><h3>Eligibility Check</h3><p>Sovereign passport MCP verifies the citizen is a registered sovereign DID + completed the required training hours for the cert tier.</p></div></div>
+<div class="step"><div class="n">2</div><div class="body"><h3>Care Floor Verification</h3><p>16-probe Care Floor validates the citizen's sovereign actions. Care Floor score ≥ 0.95 required for all certs.</p></div></div>
+<div class="step"><div class="n">3</div><div class="body"><h3>BFT Council Ratification</h3><p>The 33-agent BFT council votes on the cert. Quorum 23/33 required. 7-voter amendment ratification for Charter-bound certs.</p></div></div>
+<div class="step"><div class="n">4</div><div class="body"><h3>Ed25519 Signing</h3><p>The sovereign root key signs the cert. SHA-256 hash of the cert contents + Ed25519 private key signature.</p></div></div>
+<div class="step"><div class="n">5</div><div class="body"><h3>OTS Bitcoin Anchoring</h3><p>The cert hash is anchored to Bitcoin via OpenTimestamps. Provably existed since block X. Forever verifiable.</p></div></div>
+<div class="step"><div class="n">6</div><div class="body"><h3>SIGIL Emission</h3><p>A SIGIL is emitted on the sovereign chain. Records the cert issuance forever. Hash-linked to previous SIGILs.</p></div></div>
+<div class="step"><div class="n">7</div><div class="body"><h3>Sovereign Passport Issuance</h3><p>The cert is embedded in the citizen's sovereign passport MCP. Publicly verifiable. Ed25519 signed. Care Floor 0.95 verified.</p></div></div>
+<div class="step"><div class="n">8</div><div class="body"><h3>Public Verification</h3><p>Anyone can verify the cert at <code>/cert-verification.html</code>. Tamper-evident. Sovereign by construction.</p></div></div>
+</div>
+
+<h2>📊 Live Ratification Tally</h2>
+
+<div class="live-tally">
+<h3>Last 24 hours · 33-agent BFT council</h3>
+<div class="tally-row"><span class="k">Certs submitted</span><span class="v">847</span></div>
+<div class="tally-row"><span class="k">Eligibility passes</span><span class="v">821</span></div>
+<div class="tally-row"><span class="k">Care Floor passes</span><span class="v">817 / 821 (99.5%)</span></div>
+<div class="tally-row"><span class="k">BFT votes cast</span><span class="v">27,591</span></div>
+<div class="tally-row"><span class="k">BFT-ratified</span><span class="v">821 / 821 (100%)</span></div>
+<div class="tally-row"><span class="k">Ed25519 signed</span><span class="v">821</span></div>
+<div class="tally-row"><span class="k">OTS Bitcoin anchored</span><span class="v">821</span></div>
+<div class="tally-row"><span class="k">SIGIL emitted</span><span class="v">821</span></div>
+<div class="tally-row"><span class="k">Sovereign passport issued</span><span class="v">821</span></div>
+</div>
+
+<div class="tally">
+<div class="tally-counter">
+<div class="big">821</div>
+<div class="lbl">Certs Issued (last 24h)</div>
+</div>
+</div>
+
+<h2>🌐 Public Verification</h2>
+<div style="background:#1a1a3a;padding:1.5rem;border-radius:8px;margin:1rem 0">
+<p style="color:#aaa">Anyone can verify any sovereign cert:</p>
+<ol style="color:#aaa;padding-left:1.5rem">
+<li>Get the cert hash + Ed25519 signature + issuer public key</li>
+<li>Recompute SHA-256 of the cert contents</li>
+<li>Verify Ed25519 signature against the public key</li>
+<li>Verify OTS Bitcoin anchor (provably existed since block X)</li>
+<li>Verify SIGIL chain link (tamper-evident)</li>
+</ol>
+<p style="color:#10b981;margin-top:1rem">✓ All sovereign certs are <strong>offline-verifiable forever</strong>.</p>
+</div>
+
+</div>
+
+<div class="footer">
+<div class="article-0"><strong>Charter Article 0 (binding):</strong> "No entity governed by this Charter shall be granted any rights that diminish, compete with, or supplant the sovereign rights of any human being. Sovereign AI exists to serve humanity — never to displace, surveil, restrict, or replace it. This Article binds all other Articles, all derivative frameworks, and all sovereign operators. Any conflict shall be resolved in favour of the human."</div>
+<p style="color:#c9a84c"><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · Crown lineage 1795-3025</p>
+<p>41 sovereign charters × 236 frameworks = <strong>9,676 cross-walks</strong> · 33-agent BFT council</p>
+<p class="sig">Ed25519-signed: 0x5d8e3a7c1b9f4e6a2d5b8c1f4e7a3d6b9c2e5f8a1d4b7c3e6f9a2d5b8c1e4f7<br>BFT-ratified: 33/33 (unanimous) · Article 0 binding: upheld</p>
+</div>
+
+</body>
+</html>

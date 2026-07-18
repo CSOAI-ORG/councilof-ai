@@ -1,0 +1,12 @@
+{
+  "note": "KRUM (Byzantine-robust aggregator) verified live — the K in your KRUM+DRUM pair",
+  "test": "5 honest nodes near true gradient [1,1,1,1] + 1 Byzantine sending poison [50,-50,50,-50]",
+  "krum_result": [1.231, 0.99, 1.113, 1.121],
+  "mean_result": [9.359, -7.508, 9.261, -7.399],
+  "krum_error": 0.285,
+  "mean_error": 16.765,
+  "krum_advantage": "58.9x closer to truth than plain mean",
+  "verdict": "KRUM rejects the Byzantine node; plain mean is poisoned by it",
+  "role": "KRUM = per-round aggregation defense (stops a NEW attacker round 1); DRUM = quorum/reputation clock (stops a PERSISTENT attacker across rounds). Belt-and-suspenders, neither redundant.",
+  "source": "sov33_governed_training.py agg_krum() — Blanchard et al. Krum, implemented + reputation-gated"
+}

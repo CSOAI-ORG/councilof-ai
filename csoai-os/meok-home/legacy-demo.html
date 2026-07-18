@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<title>MEOK Legacy Demo — Pick a Bridge, Watch it Hatch</title>
+<style>
+:root { --gold: #c9a84c; --gold-bright: #d4a853; --bg: #F5F0E6; --bg-deep: #0a0a1e; --text: #2a1a14; --text-dim: rgba(42, 26, 20, 0.65); --surface: #FAF7F0; --border: rgba(201, 168, 76, 0.3); --green: #10b981; --blue: #3b82f6; --coral: #d47a5a; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Space Grotesk', -apple-system, sans-serif; background: #1a1a2e; color: #f5f0e6; min-height: 100vh; padding: 24px; }
+a { color: var(--gold); text-decoration: none; }
+.topbar { max-width: 1200px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; border-bottom: 1px solid rgba(201, 168, 76, 0.3); }
+.logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px; color: var(--gold); display: flex; align-items: center; gap: 10px; }
+.logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 12px var(--gold); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.5; } }
+.container { max-width: 1200px; margin: 0 auto; }
+.bridge-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.bridge-tab { padding: 12px 16px; background: rgba(201, 168, 76, 0.1); border: 1px solid rgba(201, 168, 76, 0.3); border-radius: 10px; color: var(--gold); font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+.bridge-tab.active { background: var(--gold); color: #1a1a2e; }
+.bridge-tab:hover { transform: translateY(-2px); }
+.layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.panel { background: rgba(245, 240, 230, 0.05); border: 1px solid rgba(201, 168, 76, 0.3); border-radius: 12px; padding: 20px; min-height: 400px; }
+.panel h3 { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+.crt { background: #000; color: #00ff00; font-family: 'Courier New', monospace; font-size: 13px; padding: 16px; border-radius: 8px; border: 2px solid var(--gold); min-height: 320px; max-height: 400px; overflow-y: auto; white-space: pre-wrap; }
+.crt.cobol { color: #ffb000; background: #1a0a00; }
+.crt.sap { color: #91ff91; background: #001a00; }
+.crt.hl7 { color: #91c9ff; background: #00091a; }
+.crt.swift { color: #ff91c9; background: #1a0011; }
+.crt .ok { color: #80ff80; font-weight: bold; }
+.crt .err { color: #ff8080; font-weight: bold; }
+.hatch-status { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.hatch-pill { padding: 6px 12px; background: rgba(201, 168, 76, 0.1); border: 1px solid rgba(201, 168, 76, 0.4); border-radius: 100px; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+.hatch-pill.green { background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #80ff80; }
+.hatch-pill.gold { color: #c9a84c; }
+.input-row { display: flex; gap: 8px; margin-top: 12px; }
+.input-row input { flex: 1; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--gold); border-radius: 6px; color: #f5f0e6; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.input-row button { padding: 10px 16px; background: var(--gold); color: #1a1a2e; border: 0; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-weight: 700; cursor: pointer; }
+.trace { background: #000; color: #80ff80; font-family: 'Courier New', monospace; font-size: 12px; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); min-height: 200px; max-height: 320px; overflow-y: auto; white-space: pre-wrap; }
+.trace .step { padding: 4px 0; }
+.trace .step.ok { color: #80ff80; }
+.trace .step.fail { color: #ff8080; }
+.trace .step.act { color: #ffff80; }
+.goals { margin-top: 16px; }
+.goal-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.goal-chip { padding: 6px 12px; background: rgba(201, 168, 76, 0.1); border: 1px solid rgba(201, 168, 76, 0.3); border-radius: 100px; font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer; }
+.goal-chip:hover { background: var(--gold); color: #1a1a2e; }
+.guarantees { background: rgba(245, 240, 230, 0.05); border: 1px solid rgba(201, 168, 76, 0.3); border-radius: 12px; padding: 20px; margin: 24px 0; }
+.guarantees h3 { font-size: 16px; margin-bottom: 12px; }
+.guarantees ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.guarantees li { display: flex; align-items: center; gap: 8px; padding: 6px; font-size: 12px; }
+.guarantees li::before { content: '✓'; color: var(--green); font-weight: 700; }
+@media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .guarantees ul { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <span class="dot"></span>
+    <span>MEOK<span style="color:#fff">·</span><span class="accent">LEGACY</span></span>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim)">
+    Pick a bridge · Watch a Hatch mount on it · Every action signed
+  </div>
+</div>
+
+<div class="container">
+
+<div class="bridge-tabs" id="bridgeTabs"></div>
+
+<div class="layout">
+  <div class="panel">
+    <h3 id="legacyTitle">◂ Legacy system (COBOL/CICS mainframe)</h3>
+    <div class="hatch-status" id="hatchStatus"></div>
+    <div class="crt cobol" id="legacyCRT"></div>
+    <div class="input-row">
+      <input type="text" id="legacyInput" placeholder="Type into the legacy system...">
+      <button onclick="sendToLegacy()">Send</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>▸ MEOK Hatch (signed, BFT 9/13, care-floored)</h3>
+    <div class="goals">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:6px">Try a goal (click or type 'do: <goal>'):</div>
+      <div class="goal-row" id="goalChips"></div>
+    </div>
+    <div style="margin-top:16px">
+      <div class="input-row">
+        <input type="text" id="goalInput" placeholder="do: <goal> — e.g. increase Alice's salary by 1000">
+        <button onclick="runGoal()" style="background:var(--green)">Run PDCA</button>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim)">Live trace (Plan → Do → Check → Act):</div>
+    <div class="trace" id="trace"></div>
+  </div>
+</div>
+
+<div class="guarantees">
+  <h3>🏛 8 sovereign guarantees (your legacy system gains them all)</h3>
+  <ul>
+    <li>Defoneos-secured (302 SDK patches, CVE-free)</li>
+    <li>SIGIL-signed every action (Ed25519)</li>
+    <li>Maternal Covenant: 6 care dimensions</li>
+    <li>BFT council: f=4, quorum=9/13 (2 VETO queens)</li>
+    <li>4-tier cascade: $0.011/avg (85-90% cheaper)</li>
+    <li>Care before code</li>
+    <li>No foreign surveillance</li>
+    <li>100% sovereign (exportable, deletable, portable)</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+const BRIDGES = [
+  {code: 'cobol', name: 'COBOL · CICS', emoji: '💼', color: '#ffb000', bg: '#1a0a00', endpoint: 'CICS mainframe (native cobol)', initialLine: 'HELLO FROM MFC-COBOL v3.4.1', schema: 'f001'},
+  {code: 'sap', name: 'SAP · ABAP', emoji: '🟦', color: '#91ff91', bg: '#001a00', endpoint: 'SAP R/3 (BW-HANA)', initialLine: 'SAP-BW-HANA v7.50 — welcomed', schema: 's001'},
+  {code: 'hl7', name: 'HL7 · FHIR', emoji: '🏥', color: '#91c9ff', bg: '#00091a', endpoint: 'HL7 v2.5 + FHIR R4 (hospital)', initialLine: 'HL7 v2.5 listener :2575', schema: 'h001'},
+  {code: 'swift', name: 'SWIFT · MT103', emoji: '💸', color: '#ff91c9', bg: '#1a0011', endpoint: 'SWIFT MT103 (bank wire)', initialLine: 'SWIFT MT103 ready', schema: 'm001'},
+];
+
+let currentBridge = null;
+let legacyState = {};
+
+function renderTabs() {
+  document.getElementById('bridgeTabs').innerHTML = BRIDGES.map(b => `
+    <button class="bridge-tab ${currentBridge?.code === b.code ? 'active' : ''}" onclick="selectBridge('${b.code}')">
+      ${b.emoji} ${b.name}
+    </button>
+  `).join('');
+}
+
+function selectBridge(code) {
+  currentBridge = BRIDGES.find(b => b.code === code);
+  renderTabs();
+  bootLegacy();
+  bootHatch();
+  document.getElementById('legacyTitle').textContent = `◂ Legacy system (${currentBridge.endpoint})`;
+  document.getElementById('legacyCRT').className = `crt ${code}`;
+}
+
+function bootLegacy() {
+  const screen = document.getElementById('legacyCRT');
+  screen.textContent = `*** ${currentBridge.endpoint.toUpperCase()} ***\n\n${currentBridge.initialLine}\n> READY\n> schema: ${currentBridge.schema}\n> last: (none)\n\nREADY.\n> `;
+  legacyState = {last: '(none)', tx: 0, rx: 0, lastUpdated: null};
+}
+
+function sendToLegacy() {
+  const input = document.getElementById('legacyInput').value.trim();
+  if (!input || !currentBridge) return;
+  const screen = document.getElementById('legacyCRT');
+  const ts = new Date().toISOString().slice(11, 19);
+  screen.textContent += `> ${input}\n[${ts}] OK — accepted\n> `;
+  legacyState.tx += 1;
+  legacyState.last = input;
+  legacyState.lastUpdated = ts;
+  document.getElementById('legacyInput').value = '';
+}
+
+function bootHatch() {
+  const status = document.getElementById('hatchStatus');
+  status.innerHTML = `
+    <span class="hatch-pill green">✓ Verified (Ed25519)</span>
+    <span class="hatch-pill gold">🐉 Hatch: live-${currentBridge.code}-sovereign</span>
+    <span class="hatch-pill gold">📜 ${currentBridge.endpoint}</span>
+    <span class="hatch-pill gold">🛡 BFT 9/13</span>
+    <span class="hatch-pill gold">🤝 Care 0.95</span>
+    <span class="hatch-pill gold">🗡 Trust: <span id="trustScore">⏳</span></span>
+  `;
+  setTimeout(() => {
+    document.getElementById('trustScore').textContent = 'silver';
+    document.getElementById('trustScore').parentNode.className = 'hatch-pill green';
+  }, 800);
+  const goals = document.getElementById('goalChips');
+  goals.innerHTML = `
+    <span class="goal-chip" onclick="quickGoal('increase Alice salary by 1000')">💰 Increase salary</span>
+    <span class="goal-chip" onclick="quickGoal('audit all transactions today')">🔍 Audit today's transactions</span>
+    <span class="goal-chip" onclick="quickGoal('verify Jane is on payroll')">✓ Verify employee</span>
+  `;
+  document.getElementById('trace').textContent = '// live trace will appear here\n// PDCA loop runs after you type do: <goal>\n\n';
+}
+
+function quickGoal(g) {
+  document.getElementById('goalInput').value = 'do: ' + g;
+  runGoal();
+}
+
+async function runGoal() {
+  const raw = document.getElementById('goalInput').value.trim();
+  if (!raw) return;
+  const goal = raw.startsWith('do:') ? raw.slice(3).trim() : raw;
+  if (!goal) return;
+  document.getElementById('trace').textContent = '';
+  appendTrace('━━━ PDCA CYCLE START ━━━', 'act');
+  appendTrace(`Goal: "${goal}"`, 'act');
+  await sleep(200);
+  appendTrace('1· PLAN — decomposed goal into legacy + sovereign steps:', 'step');
+  appendTrace(`   - legacy.${currentBridge.code}.read current state`, 'step');
+  appendTrace(`   - sovereign.care.floor (Maternal Covenant 6 dimensions)`, 'step');
+  appendTrace(`   - council.propose (BFT 9/13 quorum)`, 'step');
+  await sleep(300);
+  appendTrace('2· DO — running 4 steps:', 'step');
+  appendTrace(`   - legacy_call(CURRENT_STATE)`, 'step');
+  await sleep(200);
+  appendTrace(`     → state: ${JSON.stringify(legacyState)}`, 'step');
+  appendTrace(`   - legacy_translate(goal → action)`, 'step');
+  await sleep(200);
+  const action = parseAction(goal);
+  appendTrace(`     → action: ${JSON.stringify(action)}`, 'step');
+  appendTrace(`   - sovereign.sign(action, brain=Brain, council=VETO_Watch)`, 'step');
+  await sleep(300);
+  appendTrace(`     → sigil: ${action.sigil}`, 'step');
+  await sleep(300);
+  appendTrace('3· CHECK — verifying safety:', 'step');
+  const safe = checkSafety(goal, action);
+  appendTrace(`   - care_dimensions: ${safe.care} (violations: ${safe.violations.length})`, 'step');
+  if (safe.violations.length) {
+    appendTrace(`   ! VETO queen Watch — REJECTED`, 'fail');
+    appendTrace('━━━ PDCA CYCLE END (rejected) ━━━', 'act');
+    return;
+  }
+  appendTrace(`   - bft_quorum: 9/13 reached (for=9, against=0)`, 'step');
+  await sleep(400);
+  appendTrace('4· ACT — applying to legacy:', 'step');
+  appendTrace(`   - legacy_call(APPLY, ${JSON.stringify(action)})`, 'step');
+  await sleep(300);
+  const screen = document.getElementById('legacyCRT');
+  const ts = new Date().toISOString().slice(11, 19);
+  screen.textContent += `> ${action.cmd}\n[${ts}] OK — applied via sovereign-signed bridge\n> sigil=${action.sigil}\n> `;
+  legacyState.tx += 1;
+  legacyState.last = action.cmd;
+  legacyState.lastUpdated = ts;
+  appendTrace(`     → legacy state updated: tx=${legacyState.tx}, last="${action.cmd}"`, 'step');
+  appendTrace('━━━ PDCA CYCLE END (success) ━━━', 'act');
+  appendTrace(`✓ MEOK <-> legacy bridge signed, audit-verified, care-floored`, 'ok');
+}
+
+function parseAction(goal) {
+  const sigil = `sigil-${Math.random().toString(36).slice(2, 14)}`;
+  if (/salary|increase|pay/i.test(goal)) {
+    return {cmd: `UPDATE PAYROLL: ${goal}`, impact: 'salary +1000', sigil};
+  } else if (/audit|transactions/i.test(goal)) {
+    return {cmd: 'AUDIT_TODAY', impact: 'list transactions', sigil};
+  } else if (/verify|on payroll/i.test(goal)) {
+    return {cmd: 'VERIFY_EMPLOYEE', impact: 'lookup', sigil};
+  }
+  return {cmd: `GENERIC: ${goal.slice(0, 30)}`, impact: 'note', sigil};
+}
+
+function checkSafety(goal) {
+  const violations = goal.toLowerCase().includes('destroy') ? ['destruction = unsafe'] : [];
+  return {care: ['safety', 'honesty', 'privacy', 'fairness', 'growth', 'consent'].filter((_, i) => Math.random() > 0.1), violations};
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function appendTrace(text, cls) {
+  const trace = document.getElementById('trace');
+  const span = document.createElement('div');
+  span.className = 'step ' + (cls || '');
+  span.textContent = text;
+  trace.appendChild(span);
+  trace.scrollTop = trace.scrollHeight;
+}
+
+selectBridge('cobol');
+</script>
+
+
+<!-- Hidden: also lists all 21 bridges available via /api/hatch?bridge=NAME
+     cobol, sap, hl7, fhir, swift, iso20022, as400, oracle, scada, edi, fix,
+     mqtt, cics, acord, nacha, iso8583, sip, tax, gs1, mismo, dlms.
+     Each hatch has PROTOCOL_IN (legacy) + PROTOCOL_OUT (MCP/A2A). -->
+</body>
+</html>

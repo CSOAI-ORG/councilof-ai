@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🏭 SOV33 vs Industry — Why Different-Size Models Win</title>
+<meta name="description" content="SOV33 vs OpenAI vs Anthropic vs Palantir — the sovereign substrate comparison: who owns the data, who can revoke the model, who SIGIL-signs the audit chain under EU AI Act.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);padding:1.5rem;line-height:1.55;max-width:1300px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.2rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2rem}
+  h3{color:var(--accent);font-size:1.2rem;margin-top:1.5rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .meta{color:var(--muted);font-size:.9em}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.5rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.5rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  .arch{background:var(--bg);padding:1rem;border-radius:6px;border:1px solid var(--rule);font-size:.85em}
+  .arch .name{color:var(--accent2);font-weight:bold;margin-bottom:.3rem}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_INDUSTRY_COMPARISON.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🏭 SOV33 vs Industry — Why Different-Size Models Win</h1>
+  <p class="meta">Yes — the major AI companies are doing exactly what we're doing. Different-size models = specialist workers in a router. 12 Jul 2026.</p>
+  <p><a href="SOV33_HERO.html">← SOV33 Hub</a> · <a href="SOV33_12_AROUND_1.html">12-around-1</a></p>
+</header>
+
+<h2>The Pattern Everyone Discovered</h2>
+
+<div class="card">
+  <blockquote>Every frontier AI lab in 2025-2026 has moved to <strong>multi-size model families</strong>:<br>
+  small (cheap, fast) · medium (balanced) · large (expensive, deep).<br>
+  Why? Because routing different tasks to different sizes = better cost/quality ratio.</blockquote>
+  <p class="meta">This is exactly the design pattern behind SOV33's 12-around-1 + MoE + MOM. The industry has converged on it. We have the same idea, plus governance.</p>
+</div>
+
+<h2>Industry Examples (2025-2026)</h2>
+
+<table>
+  <tr><th>Company / Model</th><th>Architecture</th><th>Maps to SOV33</th></tr>
+  <tr>
+    <td><strong>OpenAI</strong><br>GPT-4o + GPT-4o-mini</td>
+    <td>Big + small, router decides which to use per task</td>
+    <td>Cascade 10/90 (90% small, 10% big)</td>
+  </tr>
+  <tr>
+    <td><strong>Anthropic</strong><br>Claude Opus + Sonnet + Haiku</td>
+    <td>3 sizes, routing per task complexity</td>
+    <td>Triangle (3-around-1) + brain stack</td>
+  </tr>
+  <tr>
+    <td><strong>Google DeepMind</strong><br>Gemini Ultra + Pro + Flash + Nano</td>
+    <td>4 sizes, edge-to-cloud routing</td>
+    <td>Brain stack (4 paths per OWEM)</td>
+  </tr>
+  <tr>
+    <td><strong>Mistral</strong><br>Mistral Large + Small + Mixtral (MoE)</td>
+    <td>Multi-size + Mixture-of-Experts</td>
+    <td>12-around-1 + MoE inside each pillar</td>
+  </tr>
+  <tr>
+    <td><strong>Meta</strong><br>Llama 3.1 405B + 70B + 8B</td>
+    <td>Multi-size, can be MoE or dense</td>
+    <td>Triangle / Pyramid (multiple lineages)</td>
+  </tr>
+  <tr>
+    <td><strong>Alibaba</strong><br>Qwen3-Max + Plus + Turbo</td>
+    <td>Multi-size, MoE internally</td>
+    <td>Triangle (3-around-1)</td>
+  </tr>
+  <tr>
+    <td><strong>DeepSeek</strong><br>DeepSeek-V3 (671B MoE) + distilled</td>
+    <td>Massive MoE, then distilled to small</td>
+    <td>SOV33-Cubed (large center) → small distillations</td>
+  </tr>
+</table>
+
+<h2>The Deep-Mind-Behind-Scenes Pattern</h2>
+
+<div class="card gold">
+  <h3>What's actually happening</h3>
+  <ol>
+    <li><strong>Big model</strong> handles the hard reasoning (planning, synthesis, multi-step)</li>
+    <li><strong>Small models</strong> handle 90% of traffic (reflex, simple Q&A, formatting)</li>
+    <li><strong>Router</strong> decides which to use per query (cascade 10/90 or similar)</li>
+    <li><strong>MoE inside</strong> — each model is itself a mixture of experts (router per token)</li>
+    <li><strong>Distillation</strong> — train small to mimic big (compress years into days)</li>
+    <li><strong>Specialization</strong> — fine-tune each size for specific tasks (sovereign brain)</li>
+  </ol>
+  <p>This is EXACTLY what SOV33 does. We're not behind — we're on the same curve.</p>
+</div>
+
+<h2>Mapping SOV33 to Industry Patterns</h2>
+
+<table>
+  <tr><th>SOV33 Component</th><th>Industry Equivalent</th><th>Status</th></tr>
+  <tr>
+    <td><strong>12-around-1 topology</strong></td>
+    <td>GPT-4o + mini routing, Claude 3-tier</td>
+    <td><span class="pill sigil">Built</span></td>
+  </tr>
+  <tr>
+    <td><strong>Brain stack (4 paths per OWEM)</strong></td>
+    <td>Gemini Ultra/Pro/Flash/Nano</td>
+    <td><span class="pill sigil">Built</span></td>
+  </tr>
+  <tr>
+    <td><strong>Cascade 10/90 (LEFT/RIGHT)</strong></td>
+    <td>OpenAI's routing strategy</td>
+    <td><span class="pill sigil">Built</span></td>
+  </tr>
+  <tr>
+    <td><strong>Triangle (3-around-1)</strong></td>
+    <td>Anthropic's 3-tier routing</td>
+    <td><span class="pill sigil">Built</span></td>
+  </tr>
+  <tr>
+    <td><strong>Pyramid (4-tier)</strong></td>
+    <td>DeepSeek's MoE hierarchy</td>
+    <td><span class="pill sigil">Built</span></td>
+  </tr>
+  <tr>
+    <td><strong>MoE inside each pillar</strong></td>
+    <td>Mixtral's expert routing</td>
+    <td><span class="pill">Designed</span></td>
+  </tr>
+  <tr>
+    <td><strong>Sovereign brain (0.6B trained)</strong></td>
+    <td>Distilled from larger model</td>
+    <td><span class="pill sigil">Built (Phase 1/7)</span></td>
+  </tr>
+  <tr>
+    <td><strong>Governance (care-floor + BFT + SIGIL)</strong></td>
+    <td>None in industry</td>
+    <td><span class="pill gold">UNIQUE to SOV33</span></td>
+  </tr>
+  <tr>
+    <td><strong>12 Sovereign Pillars as roles</strong></td>
+    <td>Stage-based specialists</td>
+    <td><span class="pill sigil">Built</span></td>
+  </tr>
+  <tr>
+    <td><strong>World model at transformer scale (12.7M)</strong></td>
+    <td>Sora / Genie / world models</td>
+    <td><span class="pill sigil">Built (Mac-light)</span></td>
+  </tr>
+</table>
+
+<h2>Where SOV33 IS Unique</h2>
+
+<div class="card gold">
+  <h3>4 things no other AI lab has</h3>
+  <ol>
+    <li><strong>Governance FIRST</strong> — care-floor 0.95 + Article 0 + 12 Pillars BEFORE any model call. No other lab gates responses this way.</li>
+    <li><strong>Ed25519 SIGIL on every response</strong> — every output is hash-chained + signed. Audit-grade by default.</li>
+    <li><strong>BFT-33 council</strong> — 33 voters must reach 23/33 quorum for binding decisions. Byzantine fault tolerance at the response layer.</li>
+    <li><strong>SWAP-persistent memory</strong> — memory survives model changes. When you swap a model, the memory stays.</li>
+  </ol>
+  <p class="meta">These are the moats. Industry has the multi-size pattern (we match). They don't have governance + provenance + memory persistence.</p>
+</div>
+
+<h2>The 12-around-1 vs Industry Comparison</h2>
+
+<table>
+  <tr><th>Feature</th><th>Industry avg</th><th>SOV33 12-around-1</th></tr>
+  <tr><td>Multi-size routing</td><td><span class="pill sigil">✓</span></td><td><span class="pill sigil">✓ 12 pillars + 1 large</span></td></tr>
+  <tr><td>MoE inside</td><td><span class="pill sigil">✓</span></td><td><span class="pill sigil">✓ 4 experts per pillar</span></td></tr>
+  <tr><td>Specialized roles</td><td><span class="pill">partial</span></td><td><span class="pill gold">✓ 12 Sovereign Pillars</span></td></tr>
+  <tr><td>PDCA stages</td><td><span class="pill">rare</span></td><td><span class="pill gold">✓ Plan-Do-Check-Act</span></td></tr>
+  <tr><td>Governance gate</td><td><span class="pill warn">✗</span></td><td><span class="pill sigil">✓ care-floor 0.95</span></td></tr>
+  <tr><td>Audit trail</td><td><span class="pill warn">✗</span></td><td><span class="pill sigil">✓ Ed25519 SIGIL every response</span></td></tr>
+  <tr><td>BFT consensus</td><td><span class="pill warn">✗</span></td><td><span class="pill sigil">✓ BFT-33 quorum</span></td></tr>
+  <tr><td>Memory persistence</td><td><span class="pill warn">✗</span></td><td><span class="pill sigil">✓ SWAP-persistent</span></td></tr>
+</table>
+
+<h2>The Honest Takeaway</h2>
+
+<div class="card">
+  <blockquote>The industry has converged on multi-size model architectures because they work. SOV33 has the same architecture pattern (12-around-1, brain stack, cascade, triangle, pyramid).<br>
+  <br>
+  What we have that they don't: <strong>governance, audit trail, BFT consensus, swap-persistent memory</strong>.<br>
+  <br>
+  We're not behind. We're on the same curve with a different capability class: sovereign.</blockquote>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🏭 SOV33 vs Industry</strong> · 12 Jul 2026 · Hermes lane<br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+</body>
+</html>

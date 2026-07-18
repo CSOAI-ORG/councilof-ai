@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Deployer Obligations (EU AI Act Art 26)</title>
+<meta name="description" content="DEFONEOS Article 26 deployer obligations: human oversight, monitoring, log retention, FRIA cooperation, information to natural persons, DPA notification, fundamental rights impact assessment. EAT Directive aligned.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:150px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.check{color:var(--green)} .cross{color:var(--red)} .partial{color:var(--gold)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.7rem;overflow-x:auto;color:var(--green);white-space:pre}
+.process{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.process .p-num{font-size:1.5rem;color:var(--gold);font-weight:700;float:left;margin-right:1rem;line-height:1}
+.process .p-title{font-size:1rem;color:var(--cyan);font-weight:600;margin-bottom:.3rem}
+.honesty{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Deployer Obligations for Defence & Security AI</h1>
+<p style="font-size:.8rem;color:var(--cyan)">EU AI Act Art 26 · Deployer-as-customer obligations · HITL implementation · Log retention 6mo+ · FRIA support · Information to natural persons · DPA notification · EAT Directive aligned</p></div>
+</div>
+<div><span class="badge badge-purple">EU AI ACT ART 26</span> <span class="badge badge-gold">DEPLOYER OBLIGATION</span> <span class="badge badge-green">ACTIVE</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">10</div><div class="label">Deployer Obligations</div></div>
+<div class="stat-box"><div class="num">7</div><div class="label">Deployment Categories</div></div>
+<div class="stat-box"><div class="num">6mo+</div><div class="label">Log Retention (min)</div></div>
+<div class="stat-box"><div class="num">30d</div><div class="label">FRIA Cooperation SLA</div></div>
+<div class="stat-box"><div class="num">14</div><div class="label">Affected-Person Notices</div></div>
+<div class="stat-box"><div class="num">100%</div><div class="label">HITL Coverage</div></div>
+</div>
+
+<div class="section">
+<h3>What Article 26 Imposes on Deployers</h3>
+<p>Article 26 of the EU AI Act is the deployer's primary compliance layer. While Article 14 governs human oversight at the provider level, Article 26 specifies what an organisation must do when <strong>putting</strong> a high-risk AI system to work in the real world. For defence, intelligence, and security deployments, Article 26 obligations are not "nice-to-have" — they are <strong>structural requirements</strong> for legal, ethical, and operational deployment.</p>
+<p>The 10 core deployer obligations in Article 26 cover: (1) use per the provider's instructions, (2) human oversight assignment, (3) monitoring of operation, (4) log retention, (5) information to natural persons, (6) FRIA cooperation, (7) data protection authority notification, (8) cooperation with fundamental-rights impact assessment, (9) quality-management link, and (10) informing the provider of serious incidents.</p>
+<p>DEFONEOS provides deployer-side tooling that satisfies these requirements <strong>by construction</strong>: every deployer obligation maps to a substrate feature that the deployer activates at deployment-time. The deployer does not need to build compliance from scratch — they activate the relevant deployer-side compliance profile and pass the operator-naming configuration to it.</p>
+</div>
+
+<h2>10 Deployer Obligations — Mapped to DEFONEOS Substrate</h2>
+
+<div class="process">
+<div class="p-num">1</div>
+<div class="p-title">Use per Provider's Instructions (Art 26(1))</div>
+<p style="font-size:.85rem">The deployer must use the system in accordance with the provider's instructions. DEFONEOS provides per-deployment usage instructions at <code>/&lt;deployment&gt;/instructions-for-use</code> per Article 13: intended purpose, accuracy/robustness/cybersecurity metrics, known risks, human-oversight requirements, lifetime/maintenance expectations, logging/interpretability protocol, performance metrics, limitations, deployer-Art-26 obligations, and support. These instructions are machine-readable: a deployer-side linter reads them and rejects configuration that violates the constraints.</p>
+</div>
+
+<div class="process">
+<div class="p-num">2</div>
+<div class="p-title">Assign Human Oversight to Named, Trained Persons (Art 26(2))</div>
+<p style="font-size:.85rem">The deployer must assign human oversight to natural persons with the required competence, training, and authority. DEFONEOS deployment templates include an "operator registry" that requires: (a) named natural person per role (HITL approver, HIC, kill-switch bearer, council voter, external auditor liaison), (b) verification of training attestation (each operator must have passed the DEFONEOS-OPS-101 module), (c) succession rules so that no role is vacant for &gt;1 hour without a hot backup, (d) attestation that the role is within the human's competence and authority. The registry is SIGIL-signed and rotation is recorded.</p>
+</div>
+
+<div class="process">
+<div class="p-num">3</div>
+<div class="p-title">Monitor Operation for Risks (Art 26(5))</div>
+<p style="font-size:.85rem">The deployer must monitor the AI system's operation for risks and take appropriate action. DEFONEOS provides a <strong>live monitoring dashboard</strong> at <code>/&lt;deployment&gt;/oversight/dashboard</code> that surfaces: action rate vs baseline, intervention rate by operator (privacy-preserving aggregate), BFT vote tally, kill-switch-ready status, red-line trigger history, drift metrics on input distributions, performance decay against the baseline, and audit-trail integrity hash. Monitoring rules are configurable per deployment.</p>
+</div>
+
+<div class="process">
+<div class="p-num">4</div>
+<div class="p-title">Retain Logs for ≥6 Months (Art 26(6,7))</div>
+<p style="font-size:.85rem">Deployers must keep the logs automatically generated by the high-risk AI system for at least 6 months. The logs must be sufficient to allow reconstruction of the system's operation and identification of risks. DEFONEOS provides three retention tiers: HOT (Redis-backed, 6 months, sub-second query), WARM (object storage, 5 years, query within minutes), COLD (WORM storage, indefinite, query requires SIGIL-signed request). Logs include: action ID, proposer, approver, BFT outcome, kill-switch status, red-line check, output, side-effects, external-actor interaction.</p>
+</div>
+
+<div class="process">
+<div class="p-num">5</div>
+<div class="p-title">Inform Natural Persons of AI Use (Art 26(11))</div>
+<p style="font-size:.85rem">Where a deployer uses a high-risk AI system to make decisions affecting natural persons, the natural persons must be informed. DEFONEOS provides a "notice template" generator that produces: (a) the AI-identity disclosure, (b) a plain-language explanation of the decision and its effects, (c) the redress pathway, (d) the data-rights summary. The notice is delivered per deployment policy: in-product banner, email, paper notice, or in-person briefing. The notice can be pre-written by the deployer and approved by legal before templated.</p>
+</div>
+
+<div class="process">
+<div class="p-num">6</div>
+<div class="p-title">Cooperate with FRIA (Art 26(7)+(27))</div>
+<p style="font-size:.85rem">Deployers of certain high-risk AI systems must support the provider's fundamental-rights impact assessment. DEFONEOS provides an "FRIA data pack" generator that packages the deployment-context data needed to complete an FRIA: scope (deployment region, affected persons, use case), human-oversight configuration, monitoring metrics, risk-treatment evidence, public-consultation summary. The pack is delivered to the provider within 30 days of FRIA initiation, and updated annually or on material change.</p>
+</div>
+
+<div class="process">
+<div class="p-num">7</div>
+<div class="p-title">Inform Provider & Market Surveillance Authority of Serious Incidents (Art 26(8))</div>
+<p style="font-size:.85rem">The deployer must inform the provider and, where applicable, the market surveillance authority of any serious incident. DEFONEOS detects and routes incidents through a "serious-incident pipeline": (a) detection at substrate level (red-line trigger, performance decay, anomalous output), (b) classification (per Article 3(49) definitions), (c) evidence packaging (full SIGIL chain + audit-trail snapshot + red-team-style reconstruction), (d) notification dispatch to provider + authority + regulator within 15 days (or 72h for critical incidents). The pipeline is auditable end-to-end.</p>
+</div>
+
+<div class="process">
+<div class="p-num">8</div>
+<div class="p-title">Cooperate with Competent Authorities (Art 26(7))</div>
+<p style="font-size:.85rem">Deployers must cooperate with competent authorities in any action they take in relation to the AI system. DEFONEOS provides a "regulator access protocol" at <code>/&lt;deployment&gt;/regulator-access</code>: regulators with proper authority can run a SIGIL-verified query against the deployment's audit trail, request evidence exports in 6 standard formats (SIGIL log, OSCAL, JSON-LD, CSV, PDF, XCCDF), and request suspension of action pending review. All access requests are SIGIL-logged at request-time.</p>
+</div>
+
+<div class="process">
+<div class="p-num">9</div>
+<div class="p-title">Link Deployer QMS to Provider QMS (Art 17+26)</div>
+<p style="font-size:.85rem">Where the deployer operates in a regulated domain (medical, financial, defence, infrastructure), its quality-management system must interface with the provider's QMS. DEFONEOS provides a "QMS bridge" — a SIGIL-signed exchange between provider QMS and deployer QMS, with change-control governed by both sides. The bridge ensures that version updates, configuration changes, and serious incidents in either QMS propagate to the other with appropriate escalation.</p>
+</div>
+
+<div class="process">
+<div class="p-num">10</div>
+<div class="p-title">BIND to the Provider's Change-Notice Pipeline (Art 26(8))</div>
+<p style="font-size:.85rem">When the provider releases a new version, fixes a red-line trigger, or issues a serious-incident note, the deployer must respond. DEFONEOS provides a "subscribe to provider notices" channel: signed notices flow to the deployer's compliance owner within 24h; deployment updates queue for review; and the deployer is reminded if it has not acted within the SLA. The pipeline is bidirectional — deployer-issued incident reports flow back up to the provider.</p>
+</div>
+
+<h2>7 Deployment Categories — Defence / Security Specific</h2>
+
+<div class="section">
+<h3>Category 1 — Intelligence Product Generation</h3>
+<p>Use case: AI-assisted drafting of all-source intelligence products. Deployer obligations include: HITL approval for any product released externally; SIGIL audit trail for every product version; 6-month log retention; PII redaction before release; collaboration with the Information Commissioner's Office (UK) / national DPA.</p>
+</div>
+
+<div class="section">
+<h3>Category 2 — Target Detection & Identification (Non-Kinetic)</h3>
+<p>Use case: AI-assisted identification of objects, persons of interest, vehicles, infrastructure. Deployer obligations include: HITL approval for any identification used in operational decisions; "identification confidence" disclosure to decision-makers; cross-deconfliction with other identification sources; kill-switch readiness; red-line check on named-person targeting.</p>
+</div>
+
+<div class="section">
+<h3>Category 3 — Predictive Threat Assessment</h3>
+<p>Use case: AI-assisted threat scoring, early-warning analysis, anomaly detection. Deployer obligations include: HITL approval for any threat assessment used in operational escalation; FRIA completion for civil-impact assessments; human-oversight on threshold-setting; rights-of-challenge for assessed individuals; QMS integration with intelligence cycle.</p>
+</div>
+
+<div class="section">
+<h3>Category 4 — Cyber Defence & Takedown Authorisation</h3>
+<p>Use case: AI-assisted cyber defence, signature detection, takedown of adversary infrastructure. Deployer obligations include: HITL approval for any offensive cyber action (BFT-council-bound); NCSC coordination for UK-sector takedowns; red-line check on civilian infrastructure; SIGIL audit-trail for every action; after-action review triggered automatically.</p>
+</div>
+
+<div class="section">
+<h3>Category 5 — Decision-Support for Operational Planning</h3>
+<p>Use case: AI-assisted option generation for operational planning (non-targeting). Deployer obligations include: HITL review of every plan variant; SIGIL audit-trail for plan provenance; "advisory-only" labelling of all AI-generated variants; DPO engagement on data sources; separation of training data from operational data.</p>
+</div>
+
+<div class="section">
+<h3>Category 6 — Coalition / Partner Information Sharing</h3>
+<p>Use case: AI-assisted preparation of intelligence products for sharing with allied partners. Deployer obligations include: HITL approval with two-person (OIC + Legal) for every cross-border release; receiver-side attestation; SIGIL provenance for shared products; data-spillage detection; redaction protocol.</p>
+</div>
+
+<div class="section">
+<h3>Category 7 — Civilian / Public-Facing Use</h3>
+<p>Use case: AI-assisted public information, queries, advisory support. Deployer obligations include: clear AI-identity disclosure; accessible explanation; equity review for service populations; FRIA completion (Art 27); DPO engagement for personal data; kill-switch readiness.</p>
+</div>
+
+<h2>14 Affected-Person Notice Templates</h2>
+
+<table>
+<tr><th>#</th><th>Notice Type</th><th>Audience</th><th>Channel</th><th>Frequency</th></tr>
+<tr><td>1</td><td>AI identity disclosure</td><td>All natural persons</td><td>Banner</td><td>First interaction</td></tr>
+<tr><td>2</td><td>Decision rationale</td><td>Subject of decision</td><td>Receipt + redress link</td><td>Per decision</td></tr>
+<tr><td>3</td><td>Explanation request pathway</td><td>Subject of decision</td><td>Web form</td><td>On request, ≤30 d</td></tr>
+<tr><td>4</td><td>Redress pathway</td><td>Subject of decision</td><td>Web form + post</td><td>On request</td></tr>
+<tr><td>5</td><td>Data-rights summary (UK GDPR Art 13/14)</td><td>Subject of processing</td><td>Web + paper</td><td>On collection</td></tr>
+<tr><td>6</td><td>Human-review pathway</td><td>Subject of automated decision</td><td>Receipt + form</td><td>With decision</td></tr>
+<tr><td>7</td><td>FRIA public summary</td><td>Affected community</td><td>Web (anonymised)</td><td>Per FRIA cycle</td></tr>
+<tr><td>8</td><td>Serious-incident notice</td><td>Affected persons</td><td>Direct + web</td><td>Within 15 days</td></tr>
+<tr><td>9</td><td>Provider change notice</td><td>Affected persons + deployer</td><td>Web + email</td><td>Per change</td></tr>
+<tr><td>10</td><td>Opt-out pathway</td><td>Persons who object to AI assessment</td><td>Web form</td><td>Always available</td></tr>
+<tr><td>11</td><td>Data-deletion request</td><td>Data subjects</td><td>Web form</td><td>On request, ≤30 d</td></tr>
+<tr><td>12</td><td>Compensation pathway</td><td>Persons harmed by AI decision</td><td>Web form + legal</td><td>On harm</td></tr>
+<tr><td>13</td><td>Council-vote notification</td><td>Affected parties (where publishable)</td><td>Web</td><td>30 days post-vote</td></tr>
+<tr><td>14</td><td>Kill-switch notification</td><td>Operator + HIC + DPO</td><td>Console + SMS + paper</td><td>Within 2 seconds</td></tr>
+</table>
+
+<h2>Deployer Compliance Profile (DCP)</h2>
+
+<div class="section">
+<h3>What is a DCP?</h3>
+<p>A Deployer Compliance Profile (DCP) is a JSON document that captures the configuration of DEFONEOS for a specific deployment. It maps each Article 26 obligation to the deployer-side configuration that satisfies it. The DCP is SIGIL-signed and versioned. Deployer-side linters can verify a DCP meets compliance profile requirements.</p>
+
+<p>The DCP has the following structure:</p>
+<pre class="code-block">{
+  "deployment_id": "defoneos-mod-cybersec-2026-07",
+  "provider": "CSOAI LTD, UK 16939677",
+  "version": "4.7.2",
+  "provider_compliance_profile": "CDef-A26-v3",
+  "deployer": {
+    "name": "Ministry of Defence (UK example)",
+    "country": "GB",
+    "regulator_authority": "ICO + NCSC + Defence-AI-Forum"
+  },
+  "obligations": {
+    "o1_use_per_instructions": {"verified": true, "linter": "pass", "evidence_ref": "/logs/o1-2026-07-01.json"},
+    "o2_human_oversight_assignment": {"verified": true, "registry_ref": "/registry/operators-2026-07.json"},
+    "o3_monitor_operation": {"verified": true, "dashboard_url": "/dashboard"},
+    "o4_log_retention_6mo": {"verified": true, "retention_tier": "HOT", "retention_period_days": 180},
+    "o5_inform_natural_persons": {"verified": true, "notice_template_ref": "/templates/notice-v3.html"},
+    "o6_cooperate_with_fria": {"verified": true, "fria_pack_ref": "/fria/2026-Q3.json"},
+    "o7_serious_incident_notification": {"verified": true, "pipeline_url": "/serp/v2"},
+    "o8_cooperate_with_authorities": {"verified": true, "regulator_access_url": "/regulator-access"},
+    "o9_qms_bridge": {"verified": true, "bridge_ref": "/qms/bridge-2026.json"},
+    "o10_change_notice_subscribe": {"verified": true, "subscribe_ref": "/provider-channel/2026"}
+  },
+  "deployment_categories_active": ["intel_prod", "cyber_def", "decision_support"],
+  "categories_permitted": ["intel_prod", "cyber_def", "decision_support", "civil_public_use"],
+  "categories_prohibited": ["target_kinetic", "named_person_targeting", "civil_harm_optimisation"],
+  "signed_by": "Ed25519:defoneos-dcp-signer-v1",
+  "issued_at": "2026-07-01T00:00:00Z",
+  "valid_until": "2027-07-01T00:00:00Z"
+}</pre>
+</div>
+
+<h2>12-Framework Crosswalk</h2>
+
+<table>
+<tr><th>Framework</th><th>Article / Clause</th><th>DEFONEOS Mapping</th></tr>
+<tr><td>EU AI Act</td><td>Article 26</td><td>10 obligations + 7 categories + 14 notices + DCP</td></tr>
+<tr><td>EU AI Act</td><td>Article 13 (instructions for use)</td><td>Per-deployment instructions + linter</td></tr>
+<tr><td>EU AI Act</td><td>Article 14 (human oversight)</td><td>Operator registry + council + kill-switch</td></tr>
+<tr><td>EU AI Act</td><td>Article 27 (FRIA for deployers)</td><td>FRIA data pack generator</td></tr>
+<tr><td>GDPR</td><td>Article 13 + 14 (information to data subjects)</td><td>Notice templates 5, 10</td></tr>
+<tr><td>GDPR</td><td>Article 22 (automated decisions)</td><td>Notice templates 6, 10</td></tr>
+<tr><td>GDPR</td><td>Article 33 (data breach notification)</td><td>Serious-incident pipeline</td></tr>
+<tr><td>UK GDPR + DPA 2018</td><td>Same as GDPR</td><td>Same as EU</td></tr>
+<tr><td>ISO/IEC 42001 (AI Management)</td><td>Annex A.9 (AI system operation)</td><td>DCP + monitoring + change-notice</td></tr>
+<tr><td>ISO/IEC 27001 (InfoSec)</td><td>A.8 (asset management) + A.16 (incident)</td><td>Log retention + serious-incident pipeline</td></tr>
+<tr><td>NIST AI RMF</td><td>MANAGE 4 (AI system operation)</td><td>10 obligations + DCP</td></tr>
+<tr><td>NATO AI Strategy</td><td>Responsible AI Use Principles</td><td>10 obligations + council + kill-switch</td></tr>
+</table>
+
+<h2>Honesty Register</h2>
+
+<div class="honesty">
+<h3>What DEFONEOS does NOT claim about deployer obligations</h3>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>No zero-config compliance.</strong> The DCP captures deployer-side configuration; it does not guarantee substantive compliance. A deployer can configure the system in compliance-violating ways if they bypass the linter.</li>
+<li><strong>No automatic regulator standing.</strong> Compliance evidence does not substitute for a regulator's discretion. Substrate evidence is supported; a regulator can still inspect deeper or disagree.</li>
+<li><strong>No perfect human-oversight assignment.</strong> The operator registry captures the assignment, but the assignment is only as good as the underlying training and succession. DEFONEOS provides the registry; the deployer is responsible for the integrity of its operators.</li>
+<li><strong>No all-jurisdictions coverage.</strong> The DCP is built per Article 26 of the EU AI Act; deploying in other jurisdictions (UK GDPR is similar but separate; US AI EO 14110 has different shape; China Generative AI Measures have different disclosure rules) requires additional configuration. We document the differences in the deployer guide.</li>
+<li><strong>No self-incrimination prevention.</strong> Logs are retained for the regulatory minimum (6 months) but subject to court order / DPA enforcement request beyond that. Deployers in jurisdictions with shorter or longer retention rules should configure the retention period accordingly.</li>
+<li><strong>No subject-by-subject notice guarantee.</strong> Notice templates assume the deployer knows who the affected persons are. Where persons are unidentified (e.g., ambient detection), notice must be served via aggregate (FRIA public summary, council-vote notification, etc.).</li>
+<li><strong>No funding-side guarantees.</strong> The DCP and infrastructure have a cost. The deployer is responsible for budgeting; DEFONEOS does not certify cost-effectiveness.</li>
+</ul>
+</div>
+
+<footer>DEFONEOS · Article 26 Deployer Obligations · CSOAI LTD UK 16939677 · sovereign-by-design · audit-grade · signed · neutral · EAT Directive aligned · July 2026</footer>
+<div style="margin:2rem auto;padding:1.5rem;max-width:1100px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid rgba(34,211,238,.3);border-radius:14px;text-align:center;">
+  <div style="font-size:1.25rem;font-weight:800;color:var(--cyan,#22d3ee);margin-bottom:.5rem;">🛡️ Ready to put DEFONEOS to work?</div>
+  <p style="color:#cbd5e1;margin:0 0 1rem;font-size:.95rem;">7 personas · 5 tiers · 30-second signup · free 30-day sandbox for regulators and end-users.</p>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#000;border-radius:8px;text-decoration:none;font-weight:800;font-size:.95rem;margin:.3rem;">Sign up · Ed25519-signed receipt →</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22d3ee;color:#22d3ee;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Defence Primes</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22c55e;color:#22c55e;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Regulators (Free)</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #fbbf24;color:#fbbf24;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">Series A — £45-90M Round</a>
+  <div style="color:#64748b;font-size:.75rem;margin-top:.8rem;">ED25519 SIGIL receipts · UK-sovereign · AUKUS-compatible · T-27 days to EU AI Act</div>
+</div>
+
+</div>
+</body>
+</html>

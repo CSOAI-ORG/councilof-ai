@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — proofof.ai | MEOK Compliance Suite</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0d0c18;color:#e0dcd5;line-height:1.6}
+a{color:#c9a84c;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+/* Nav */
+nav{background:#0d0c18;border-bottom:1px solid rgba(201,168,76,0.2);padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+nav .logo{font-size:22px;font-weight:700;color:#c9a84c;letter-spacing:-0.5px}
+nav .logo span{color:#e0dcd5}
+nav .nav-links{display:flex;gap:28px;align-items:center}
+nav .nav-links a{color:#b0aca8;font-size:14px;font-weight:500;transition:color .2s}
+nav .nav-links a:hover{color:#c9a84c}
+/* Hero */
+.hero{text-align:center;padding:80px 0 40px}
+.hero h1{font-size:48px;font-weight:700;color:#fff;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:#c9a84c}
+.hero p{font-size:18px;color:#b0aca8;max-width:640px;margin:0 auto}
+/* Contact grid */
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin:48px 0}
+.contact-card{background:linear-gradient(135deg,#131124,#0d0c18);border:1px solid rgba(201,168,76,0.12);border-radius:12px;padding:28px;transition:border-color .3s,transform .3s}
+.contact-card:hover{border-color:rgba(201,168,76,0.4);transform:translateY(-3px)}
+.contact-card .icon{font-size:36px;margin-bottom:12px}
+.contact-card h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:4px}
+.contact-card .email{font-size:14px;color:#c9a84c;font-weight:600;margin-bottom:12px;display:block}
+.contact-card p{color:#b0aca8;font-size:14px;line-height:1.7;margin:0}
+.contact-card .response-time{display:inline-block;background:rgba(201,168,76,0.1);color:#c9a84c;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-top:12px;text-transform:uppercase;letter-spacing:0.5px}
+/* Partner CTA */
+.partner-cta{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:48px;margin:48px 0;text-align:center}
+.partner-cta h2{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px}
+.partner-cta h2 em{font-style:normal;color:#c9a84c}
+.partner-cta p{color:#b0aca8;font-size:16px;max-width:600px;margin:0 auto 24px}
+.partner-cta .margin-badge{display:inline-block;background:#c9a84c;color:#0d0c18;font-size:14px;font-weight:800;padding:6px 20px;border-radius:24px;margin-bottom:24px}
+.partner-cta .btn{display:inline-block;padding:14px 36px;border-radius:10px;font-weight:700;font-size:15px;background:#c9a84c;color:#0d0c18;transition:all .2s;text-decoration:none}
+.partner-cta .btn:hover{background:#d4b85c;transform:translateY(-2px)}
+/* General form */
+.form-section{margin:48px 0}
+.form-section h2{font-size:28px;font-weight:700;color:#fff;margin-bottom:8px}
+.form-section h2 em{font-style:normal;color:#c9a84c}
+.form-section .lead{color:#b0aca8;margin-bottom:32px;font-size:15px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-size:14px;font-weight:600;color:#e0dcd5;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:14px 16px;background:#131124;border:1px solid rgba(201,168,76,0.15);border-radius:10px;color:#e0dcd5;font-size:15px;font-family:inherit;transition:border-color .3s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#c9a84c}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-group select option{background:#0d0c18;color:#e0dcd5}
+.form-submit{display:inline-block;padding:14px 48px;border-radius:10px;font-weight:700;font-size:15px;background:#c9a84c;color:#0d0c18;border:none;cursor:pointer;transition:all .2s}
+.form-submit:hover{background:#d4b85c;transform:translateY(-1px)}
+/* Offices */
+.offices{margin:48px 0}
+.offices h2{font-size:28px;font-weight:700;color:#fff;margin-bottom:8px}
+.offices h2 em{font-style:normal;color:#c9a84c}
+.offices .lead{color:#b0aca8;margin-bottom:32px;font-size:15px}
+.office-card{background:#131124;border:1px solid rgba(201,168,76,0.1);border-radius:12px;padding:24px;margin-bottom:16px}
+.office-card h4{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px}
+.office-card .addr{color:#b0aca8;font-size:14px;line-height:1.6}
+/* Footer */
+footer{background:rgba(255,255,255,0.02);border-top:1px solid rgba(201,168,76,0.1);padding:40px 0;margin-top:60px;text-align:center}
+footer p{color:#6a6878;font-size:13px}
+footer a{color:#c9a84c}
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:32px}
+  .contact-grid{grid-template-columns:1fr}
+  .partner-cta{padding:32px 20px}
+  .partner-cta h2{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="index.html" class="logo">proof<span>.</span>of<span>.ai</span></a>
+    <div class="nav-links">
+      <a href="frameworks.html">Frameworks</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api.html">API</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>Get in <em>touch</em></h1>
+    <p>Whether you're evaluating the compliance suite, interested in a GRC partnership, or want to report a security concern — we're here to help.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="contact-grid">
+    <!-- Sales -->
+    <div class="contact-card">
+      <div class="icon">💼</div>
+      <h3>Sales Inquiries</h3>
+      <a href="mailto:sales@proofof.ai" class="email">sales@proofof.ai</a>
+      <p>Interested in Pro, Enterprise, or the 48h Assessment? Our sales team will walk you through the right tier, arrange a demo, and set up a trial tailored to your compliance needs.</p>
+      <span class="response-time">Response: &lt; 4 hours</span>
+    </div>
+
+    <!-- GRC Partner -->
+    <div class="contact-card" style="border-color:rgba(201,168,76,0.3);">
+      <div class="icon">🤝</div>
+      <h3>GRC Partnership</h3>
+      <a href="mailto:partners@proofof.ai" class="email">partners@proofof.ai</a>
+      <p>White-label our compliance suite under your own brand. Full MCP marketplace, keystone attestations, and framework database — rebranded and resold. <strong>30% margins on all transactions.</strong></p>
+      <span class="response-time">Response: &lt; 24 hours</span>
+    </div>
+
+    <!-- Press -->
+    <div class="contact-card">
+      <div class="icon">📰</div>
+      <h3>Press &amp; Media</h3>
+      <a href="mailto:press@proofof.ai" class="email">press@proofof.ai</a>
+      <p>For press inquiries, interview requests, speaking engagements, and media resources. We're happy to discuss AI regulation, MCP ecosystems, and the future of compliance technology.</p>
+      <span class="response-time">Response: &lt; 48 hours</span>
+    </div>
+
+    <!-- Support -->
+    <div class="contact-card">
+      <div class="icon">🛟</div>
+      <h3>Technical Support</h3>
+      <a href="mailto:support@proofof.ai" class="email">support@proofof.ai</a>
+      <p>Having trouble with the API, MCP integration, or keystone attestations? Our engineering team provides support via email for all tiers and direct Slack access for Pro and Enterprise customers.</p>
+      <span class="response-time">Response: &lt; 1 hour (Pro+)</span>
+    </div>
+
+    <!-- Security -->
+    <div class="contact-card">
+      <div class="icon">🔒</div>
+      <h3>Security</h3>
+      <a href="mailto:security@proofof.ai" class="email">security@proofof.ai</a>
+      <p>Found a vulnerability or have a security concern? Please report responsibly. We practice coordinated disclosure and acknowledge all valid reports. PGP key available on request.</p>
+      <span class="response-time">Response: &lt; 2 hours (critical)</span>
+    </div>
+
+    <!-- General -->
+    <div class="contact-card">
+      <div class="icon">💬</div>
+      <h3>General</h3>
+      <a href="mailto:hello@proofof.ai" class="email">hello@proofof.ai</a>
+      <p>Everything else — feedback, ideas, collaboration proposals, or just to say hi. We read every message and respond personally.</p>
+      <span class="response-time">Response: &lt; 48 hours</span>
+    </div>
+  </div>
+
+  <!-- GRC Partner CTA -->
+  <div class="partner-cta">
+    <div class="margin-badge">30% Margins</div>
+    <h2>GRC <em>Partner</em> Programme</h2>
+    <p>Resell the MEOK Compliance Suite under your own brand. Full white-label capability — including the MCP marketplace, keystone attestation engine, and all 15+ framework mappings. You set the price; we handle the infrastructure.</p>
+    <p style="margin-bottom:28px;font-size:15px;">Ideal for GRC consultancies, audit firms, and MSPs looking to add AI compliance to their service portfolio without building from scratch.</p>
+    <a href="mailto:partners@proofof.ai?subject=GRC%20Partner%20Programme%20Inquiry" class="btn">Apply to Partner →</a>
+    <p style="color:#6a6878;font-size:13px;margin-top:16px;">No minimum commitment. Flexible revenue share. Onboarding in under 48 hours.</p>
+  </div>
+
+  <!-- Quick Form -->
+  <div class="form-section">
+    <h2>Send us a <em>message</em></h2>
+    <p class="lead">Prefer not to email? Drop us a message directly and we'll get back to you.</p>
+    <form onsubmit="alert('Thanks! This is a static demo — email us directly at the addresses above for a real response.');return false;">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Your name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <select id="subject">
+          <option value="">Select a topic...</option>
+          <option>Sales Inquiry</option>
+          <option>GRC Partnership</option>
+          <option>Press &amp; Media</option>
+          <option>Technical Support</option>
+          <option>Security Report</option>
+          <option>General</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="Tell us how we can help..."></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Message</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 <a href="https://proofof.ai">proofof.ai</a> — a product of CSOAI Ltd (UK 16939677). All rights reserved. <a href="about.html">About us</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

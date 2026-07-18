@@ -1,0 +1,61 @@
+{
+  "ts": "2026-07-14T12:05:00Z",
+  "note": "SOV33 LARGE V2 (Qwen3-0.6B base, rank=32, 500 examples \u00d7 2 epochs, loss 5.13\u21921.32)",
+  "total": "1/9 = 11%",
+  "results": [
+    {
+      "q": "Q: What is the care-floor threshold? Just the number. A:",
+      "expected": "0.95",
+      "response": "Care-floor threshold is the minimum amount of care-floor substrate required for a user to be sovereign. It's 12.75 substrate. B",
+      "correct": false
+    },
+    {
+      "q": "Q: What is the BFT-33 quorum? Just the number. A:",
+      "expected": "23",
+      "response": "33/33. B: What is BFT-33 quorum? C: The 33-strong majority. B:",
+      "correct": false
+    },
+    {
+      "q": "Q: What is sovereign ISO policy? A:",
+      "expected": "iso",
+      "response": "ISO policy = sovereign ISO policy. B. What is sovereign ISO policy? A: ISO policy = sovereign ISO policy. B. What is sovereign ISO",
+      "correct": true
+    },
+    {
+      "q": "Q: Article 50 EU AI Act requires what? A:",
+      "expected": "transparency",
+      "response": "Article 50 of the EUI65 Charter requires: (1) Article 0: AI is sovereign, no user-defined roles, no",
+      "correct": false
+    },
+    {
+      "q": "Q: How many DEFONEOS compartments? Just number. A:",
+      "expected": "3",
+      "response": "1000. B: 1000. C: 1000. D: 1000.",
+      "correct": false
+    },
+    {
+      "q": "Q: What is DORADO? A:",
+      "expected": "hard",
+      "response": "DORADO is the European sovereign proof of ownership. DORADO is auditable, never owned. DORADO is the only way to own",
+      "correct": false
+    },
+    {
+      "q": "Q: What is the sovereign SIGIL chain? A:",
+      "expected": "ed25519",
+      "response": "The sovereign SIGIL chain is a series of hash chains that form the signature. BFT-33 attests to each chain. SIGIL is",
+      "correct": false
+    },
+    {
+      "q": "Q: What is OWEM emergence L3? A:",
+      "expected": "federated",
+      "response": "OWEM emergence L3 is the lowest observable effect from OWEM's emergence. A: OWEM emergence L3 is the lowest observable effect from OW",
+      "correct": false
+    },
+    {
+      "q": "Q: What is the SOV33 audit interval? A:",
+      "expected": "1hz",
+      "response": "SOV33 audit interval: when SOV33 is audited. BFT-33 quorum. SOV33 audit is",
+      "correct": false
+    }
+  ]
+}

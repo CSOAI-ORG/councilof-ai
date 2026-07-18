@@ -1,0 +1,277 @@
+{
+  "generated_at": "2026-06-28T05:00:34.744689Z",
+  "mode": "VERIFY",
+  "results": [
+    {
+      "path": "/Users/nicholas/clawd/deliverables/snowflake-marketplace/provider_application.md",
+      "existed": true,
+      "sha256_before": "d889439bd7eadabb2ff169fe8b1a04afa286eeaa234496b0154f022f31798084",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 3,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": []
+    },
+    {
+      "path": "/Users/nicholas/clawd/sdk/unity/README.md",
+      "existed": true,
+      "sha256_before": "fb62331a6cb1f2c559ce7b03ac2fd78262654aed13f4879eae4dad54173a4a5f",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 2,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": []
+    },
+    {
+      "path": "/Users/nicholas/clawd/docs/intelligence_partnership_strategy.md",
+      "existed": true,
+      "sha256_before": "cf5b94c46e0ae5c6c5fd1dffeda8ee7063a78ec79ce64eddf69d6fe6c55a6fdc",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 1,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": []
+    },
+    {
+      "path": "/Users/nicholas/clawd/scripts/deploy_verticals.py",
+      "existed": true,
+      "sha256_before": "79db7c0d298ceaa639b8bc3f1878ec7eeeb35a9d8d7e2d9c894b7625a5954627",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 2,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": []
+    },
+    {
+      "path": "/Users/nicholas/clawd/revenue/COBOL_SUBSTRATE_PLAN_2026-05-21.md",
+      "existed": true,
+      "sha256_before": "161f753a7c7228d28ea5434781c98fad50845e32a397c5d339155ce9b49e03cf",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 2,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": [
+        [
+          3,
+          "**Discovery 2026-05-21 [RE-VERIFIED 2026-06-27]:** Nick (CSOAI-ORG) is **sole contributor across 91 commits** to `CSGA-G"
+        ],
+        [
+          7,
+          "### Public repo \u2014 CSGA-GLOBAL/cobol-bridge (1.3 MB, 91 commits all CSOAI-ORG)"
+        ],
+        [
+          16,
+          "### Private repo \u2014 CSGA-GLOBAL/COBOLBRIDGE (2.4 MB)"
+        ],
+        [
+          19,
+          "### Private repo \u2014 CSGA-GLOBAL/COBOLBRIDGEAI (13 KB)"
+        ],
+        [
+          39,
+          "The 5 tools from CSGA-GLOBAL/cobol-bridge map perfectly to a substrate:"
+        ],
+        [
+          62,
+          "### Option A: Transfer the public CSGA-GLOBAL/cobol-bridge repo to CSOAI-ORG"
+        ],
+        [
+          67,
+          "gh api -X POST repos/CSGA-GLOBAL/cobol-bridge/transfer \\"
+        ],
+        [
+          73,
+          "**Cons:** Nick (as personal GitHub user) needs admin on CSGA-GLOBAL to do the transfer. If James Castle still has admin,"
+        ],
+        [
+          78,
+          "gh repo fork CSGA-GLOBAL/cobol-bridge --org=CSOAI-ORG \\"
+        ],
+        [
+          81,
+          "# Archive CSGA-GLOBAL/cobol-bridge to prevent confusion"
+        ],
+        [
+          85,
+          "**Cons:** GitHub doesn't auto-redirect, and shows the work originated under CSGA-GLOBAL (which contradicts MEOK brand)."
+        ],
+        [
+          92,
+          "# git push --mirror from local copy of CSGA-GLOBAL/cobol-bridge.git"
+        ],
+        [
+          98,
+          "### Recommendation: **Option A** \u2014 go for transfer. Nick has CSGA-GLOBAL admin (as the only active maintainer). If James"
+        ],
+        [
+          102,
+          "All 22 HTML pages reference \"CSGA Global\" + \"csga-global.org\" + \"@csga-global/\" npm scope. Need scripted replacement:"
+        ],
+        [
+          107,
+          "-e 's/CSGA Global/MEOK AI Labs/g' \\"
+        ],
+        [
+          108,
+          "-e 's/csga-global\\.org/meok.ai/g' \\"
+        ],
+        [
+          109,
+          "-e 's/@csga-global/@meok-ai/g' \\"
+        ],
+        [
+          157,
+          "- CSGA-GLOBAL/cobol-bridge repo (private, 2026-03-08 \u2014 pre-severance): https://github.com/CSGA-GLOBAL/cobol-bridge [ARCH"
+        ]
+      ]
+    },
+    {
+      "path": "/Users/nicholas/clawd/SOV3_REVENUE_EMPIRE.md",
+      "existed": true,
+      "sha256_before": "d5b9cdbb6f8b79000a15858f2de183c57f32677c91bb178be6857c1b35f4e4fd",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 1,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": [
+        [
+          139,
+          "- csga-global-mcp (v1.1.0, publisher=csga_global \u2014 flagged for republish under csoai-cobol-bridge-mcp scope)"
+        ]
+      ]
+    },
+    {
+      "path": "/Users/nicholas/clawd/SOV3_ECOSYSTEM_REVENUE_STRATEGY.md",
+      "existed": true,
+      "sha256_before": "96d54f7d4e067c7bfc9f65ac75e9bb85a3ce3db0d80645bd6fb442a8b0ac0455",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 1,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": [
+        [
+          79,
+          "- csga-global-mcp (v1.1.0, publisher=csga_global \u2014 flagged for republish under csoai-cobol-bridge-mcp scope)"
+        ]
+      ]
+    },
+    {
+      "path": "/Users/nicholas/clawd/CRITICAL_SYSTEM_FIXES.md",
+      "existed": true,
+      "sha256_before": "cb26fff9cde6278030a51c40c178b62bf00549295f6aea86e3419960134724cf",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 3,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": [
+        [
+          13,
+          "**Account:** ~~csga_global~~ (severed) \u2192 migrate to **meok-ai-labs**"
+        ],
+        [
+          14,
+          "**Package:** csga-global-mcp (deprecate; replace with csoai-cobol-bridge-mcp)"
+        ],
+        [
+          18,
+          "2. Username: meok-ai-labs  *(was csga_global \u2014 severed 2026-01-31, login migrated)*"
+        ],
+        [
+          29,
+          "**Impact:** Can't publish csga-global-mcp updates"
+        ],
+        [
+          111,
+          "### Issue: CSGA-GLOBAL Payment"
+        ],
+        [
+          113,
+          "**Org:** CSGA-GLOBAL"
+        ],
+        [
+          117,
+          "2. Check: CSGA-GLOBAL org billing"
+        ]
+      ]
+    },
+    {
+      "path": "/Users/nicholas/clawd/SITES-FIX-PLAN.md",
+      "existed": true,
+      "sha256_before": "bf56236181d137cd2b84c8c4307e7aab8c8317e2326759f69d63c6a4ec009562",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 2,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": [
+        [
+          25,
+          "| ~~csga-global~~ | ~~4 error states~~ | **DELETED 2026-06-10** per Vercel census cleanup; archived decision in _finding"
+        ],
+        [
+          186,
+          "4. **csga-global** - Fix or delete (cleanup)"
+        ]
+      ]
+    },
+    {
+      "path": "/Users/nicholas/clawd/scripts/smithery_rebase_audit.py",
+      "existed": true,
+      "sha256_before": "6cb84a87c01696df285604f99204185e5ba04b43b62c4e6056d1b534fece2e9c",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 1,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": [
+        [
+          18,
+          "# Find CSOAI-ORG / csga-global / meok-ai clones"
+        ],
+        [
+          24,
+          "# /Users/nicholas/csga \u2014 REMOVED 2026-06-27 (severed brand, no CSGA clones permitted)"
+        ],
+        [
+          68,
+          "if not any(k in name.lower() for k in ['meok', 'mcp', 'csoai', 'csga', 'sovereign', 'care', 'compliance', 'bias', 'fleet"
+        ]
+      ]
+    },
+    {
+      "path": "/Users/nicholas/clawd/revenue/OUTREACH_2026-05-28_AAIF_ANTHROPIC.md",
+      "existed": true,
+      "sha256_before": "aa76f4e31de2d9f734fafa773c65aba244142def2668d1af0e9a5adeab354bb2",
+      "sha256_after": null,
+      "backup_path": null,
+      "rules_matched": 0,
+      "rules_total": 1,
+      "diffs": [],
+      "status": "VERIFY",
+      "forbidden_hits": [
+        [
+          253,
+          "- [ ] Re-read once \u2014 no typos, no broken links, no James Castle / Terranova / CSGA / Chris James / Open Claw references "
+        ]
+      ]
+    }
+  ]
+}

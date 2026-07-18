@@ -1,0 +1,170 @@
+[
+  {
+    "name": "a2a-governance-bridge-mcp",
+    "description": "A2A Governance Bridge MCP server. Tools: verify agent compliance, authorize a2a transaction, get trust registry. Built by MEOK AI Labs.",
+    "version": "1.1.12",
+    "dir": "mcp-marketplace/a2a-governance-bridge-mcp"
+  },
+  {
+    "name": "agent-audit-logger-mcp",
+    "description": "Hash-chained HMAC-signed audit log MCP for A2A (agent-to-agent) calls. Every tool-call, agent-handoff, decision gets a tamper-evident signed",
+    "version": "1.1.8",
+    "dir": "mcp-marketplace/agent-audit-logger-mcp"
+  },
+  {
+    "name": "agent-commerce-payments-mcp",
+    "description": "MCP server for agent commerce payments. Features create invoice, process payment, escrow funds. From MEOK AI Labs.",
+    "version": "1.0.11",
+    "dir": "mcp-marketplace/agent-commerce-payments-mcp"
+  },
+  {
+    "name": "agent-commerce-protocol-mcp",
+    "description": "Agent Commerce Protocol MCP \u2014 bridges Stripe ACP + Google AP2 + Coinbase x402 for agent payments inside ChatGPT, AP2 coalition rails, and pa",
+    "version": "1.0.9",
+    "dir": "mcp-marketplace/agent-commerce-protocol-mcp"
+  },
+  {
+    "name": "agent-content-watermark-mcp",
+    "description": "Agent Content Watermark MCP \u2014 dedicated EU AI Act Article 50(2) GenAI watermarking. Visible + invisible + perceptual layers per the Code of ",
+    "version": "1.1.7",
+    "dir": "mcp-marketplace/agent-content-watermark-mcp"
+  },
+  {
+    "name": "agent-cost-allocator-mcp",
+    "description": "Agent Cost Allocator MCP \u2014 multi-tenant LLM cost attribution for chargeback billing. Companion to agent-token-budget. Splits one agent's spe",
+    "version": "1.0.5",
+    "dir": "mcp-marketplace/agent-cost-allocator-mcp"
+  },
+  {
+    "name": "agent-data-residency-mcp",
+    "description": "Agent data residency + GDPR Chapter V transfer-basis runtime guard. Programmatically answer 'where does this data live?' for agent-to-agent ",
+    "version": "1.0.7",
+    "dir": "mcp-marketplace/agent-data-residency-mcp"
+  },
+  {
+    "name": "agent-delegation-mcp",
+    "description": "Agent Delegation MCP server. Tools: create task, delegate task, get task status. Built by MEOK AI Labs.",
+    "version": "1.0.10",
+    "dir": "mcp-marketplace/agent-delegation-mcp"
+  },
+  {
+    "name": "agent-handoff-certified-mcp",
+    "description": "Verifiable agent-to-agent task handoff with signed provenance chain. Initiating agent signs the offer, accepting agent signs acceptance, cha",
+    "version": "1.0.10",
+    "dir": "mcp-marketplace/agent-handoff-certified-mcp"
+  },
+  {
+    "name": "agent-identity-trust-mcp",
+    "description": "Agent Identity Trust tools for AI agents. Capabilities: register agent identity, issue credential, verify credential. Built by MEOK AI Labs.",
+    "version": "1.0.11",
+    "dir": "mcp-marketplace/agent-identity-trust-mcp"
+  },
+  {
+    "name": "agent-incident-relay-mcp",
+    "description": "Agent Incident Relay MCP \u2014 Article 73 5-clock broadcaster. One incident \u2192 simultaneous signed reports to EU AI Act Art 73, DORA Art 19, NIS2",
+    "version": "1.0.5",
+    "dir": "mcp-marketplace/agent-incident-relay-mcp"
+  },
+  {
+    "name": "agent-incident-reporter-mcp",
+    "description": "Signed, hash-chained, tamper-evident AI incident records (MCP server). EU AI Act Art 73 ready. By MEOK AI Labs / CSOAI.",
+    "version": "1.0.1",
+    "dir": "mcp-marketplace/agent-incident-reporter-mcp"
+  },
+  {
+    "name": "agent-mcp-router-mcp",
+    "description": "Agent MCP Router MCP \u2014 one router for the whole MEOK fleet. Holds 62 MEOK MCPs behind one namespaced endpoint. Install ONE thing, get all of",
+    "version": "1.1.6",
+    "dir": "mcp-marketplace/agent-mcp-router-mcp"
+  },
+  {
+    "name": "agent-negotiation-mcp",
+    "description": "AI-powered agent negotiation MCP server for agents. Supports propose deal, evaluate offer, counter offer. By MEOK AI Labs.",
+    "version": "1.0.9",
+    "dir": "mcp-marketplace/agent-negotiation-mcp"
+  },
+  {
+    "name": "agent-orchestrator-mcp",
+    "description": "MCP server for agent orchestrator. Features create agent, list agents, delegate task. From MEOK AI Labs.",
+    "version": "1.0.10",
+    "dir": "mcp-marketplace/agent-orchestrator-mcp"
+  },
+  {
+    "name": "agent-policy-enforcement-mcp",
+    "description": "Per-agent-pair IAM for A2A. Define policies ('orchestrator may call billing only when amount<1000'), gate every A2A call via evaluate_call. ",
+    "version": "1.0.9",
+    "dir": "mcp-marketplace/agent-policy-enforcement-mcp"
+  },
+  {
+    "name": "agent-prompt-injection-firewall-mcp",
+    "description": "The WAF for agents. Pattern-based + heuristic firewall scans prompts, RAG documents, tool arguments, A2A payloads for OWASP LLM01 prompt inj",
+    "version": "1.0.11",
+    "dir": "mcp-marketplace/agent-prompt-injection-firewall-mcp"
+  },
+  {
+    "name": "agent-rate-limiter-mcp",
+    "description": "Fleet-wide shared rate limiter for A2A + multi-MCP deployments. Most MCP servers rate-limit independently \u2014 a hostile agent hitting 10 MCPs ",
+    "version": "1.0.8",
+    "dir": "mcp-marketplace/agent-rate-limiter-mcp"
+  },
+  {
+    "name": "agent-replay-debugger-mcp",
+    "description": "Agent Replay Debugger MCP \u2014 record every agent step + replay deterministically. Step-debugger for agentic loops. Audit-evidence signed expor",
+    "version": "1.0.5",
+    "dir": "mcp-marketplace/agent-replay-debugger-mcp"
+  },
+  {
+    "name": "agent-token-budget-mcp",
+    "description": "Agent Token Budget MCP \u2014 per-session spend cap with signed budget-exhausted attestations. Twin of bft-progress-council-mcp (spend-axis vs st",
+    "version": "1.1.5",
+    "dir": "mcp-marketplace/agent-token-budget-mcp"
+  },
+  {
+    "name": "agent-x402-paywall-mcp",
+    "description": "Agent x402 Paywall MCP \u2014 wraps Coinbase x402 (HTTP 402) so agents pay per-call without Stripe accounts. On-chain settlement via USDC (Base/P",
+    "version": "1.0.9",
+    "dir": "mcp-marketplace/agent-x402-paywall-mcp"
+  },
+  {
+    "name": "bft-progress-council-mcp",
+    "description": "BFT Progress Council MCP \u2014 5-voter Byzantine council halts agentic loops when no real progress is happening. Stops tokens bleeding on infini",
+    "version": "1.1.8",
+    "dir": "mcp-marketplace/bft-progress-council-mcp"
+  },
+  {
+    "name": "meok-aaif-agent-card-mcp",
+    "description": "MEOK AAIF Agent Card MCP \u2014 Linux Foundation AAIF agent identity bridge. Issues + verifies + publishes /.well-known/agent-card. Bridges A2A a",
+    "version": "1.0.3",
+    "dir": "mcp-marketplace/meok-aaif-agent-card-mcp"
+  },
+  {
+    "name": "meok-abci-bridge-mcp",
+    "description": "MEOK ABCI Bridge MCP \u2014 read-only Tendermint / Cosmos blockchain query for agents. Built-in registry of 10 mainnets (Cosmos Hub, Osmosis, Cel",
+    "version": "1.0.2",
+    "dir": "mcp-marketplace/meok-abci-bridge-mcp"
+  },
+  {
+    "name": "meok-ap2-mandate-mcp",
+    "description": "MEOK Google AP2 Mandate MCP \u2014 issue + verify + revoke signed user-side spend authorisations for agentic commerce. PSD2 SCA crosswalk + MiCA ",
+    "version": "1.0.2",
+    "dir": "mcp-marketplace/meok-ap2-mandate-mcp"
+  },
+  {
+    "name": "meok-coinbase-x402-receipt-mcp",
+    "description": "MEOK Coinbase x402 Receipt MCP \u2014 signed settlement receipts for agentic payments. Base/Polygon/Solana/Lightning/Arbitrum/Optimism. MiCA Arti",
+    "version": "1.0.2",
+    "dir": "mcp-marketplace/meok-coinbase-x402-receipt-mcp"
+  },
+  {
+    "name": "meok-libp2p-agent-mesh-mcp",
+    "description": "MEOK libp2p Agent Mesh MCP \u2014 peer-to-peer agent discovery + addressing. PeerID + multiaddr + signed Agent Records + GossipSub topic derivati",
+    "version": "1.0.1",
+    "dir": "mcp-marketplace/meok-libp2p-agent-mesh-mcp"
+  },
+  {
+    "name": "meok-stripe-acp-checkout-mcp",
+    "description": "MEOK Stripe ACP Checkout MCP \u2014 ChatGPT shopping bridge. Issues + verifies + signs Stripe Agentic Commerce Protocol checkout intents. AP2 man",
+    "version": "1.0.5",
+    "dir": "mcp-marketplace/meok-stripe-acp-checkout-mcp"
+  }
+]

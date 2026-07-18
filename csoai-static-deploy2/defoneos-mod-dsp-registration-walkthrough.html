@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DEFONEOS · DSP Registration Walkthrough — UK Defence Sourcing Portal Step-by-Step</title>
+<style>
+:root{--sovereign:#0a1628;--gold:#d4af37;--ink:#1a1a2e;--paper:#f5f1e8;--accent:#2d5a87;--danger:#c41e3a;--success:#0f5132;--border:#d4af3755}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Courier New',monospace;background:var(--paper);color:var(--ink);line-height:1.55;padding:0}
+.wrap{max-width:1200px;margin:0 auto;padding:24px}
+header{background:linear-gradient(135deg,var(--sovereign) 0%,#1a2a4a 100%);color:var(--paper);padding:32px 24px;border-bottom:4px solid var(--gold)}
+header h1{color:var(--gold);font-size:1.8em;margin-bottom:8px}
+header .meta{color:var(--paper);opacity:0.85;font-size:0.92em}
+section{background:#fff;border:1px solid var(--border);padding:20px;margin:18px 0;border-left:5px solid var(--gold)}
+h2{color:var(--sovereign);border-bottom:2px solid var(--gold);padding-bottom:8px;margin-bottom:14px;font-size:1.35em}
+h3{color:var(--accent);margin:14px 0 8px;font-size:1.1em}
+.alert{padding:14px 18px;margin:12px 0;border-left:5px solid}
+.alert.critical{background:#fef2f2;border-color:var(--danger);color:#7f1d1d}
+.alert.ok{background:#f0fdf4;border-color:var(--success);color:#14532d}
+.alert.note{background:#fffbeb;border-color:var(--gold);color:#713f12}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.92em}
+th,td{padding:8px 10px;border:1px solid #999;text-align:left;vertical-align:top}
+th{background:var(--sovereign);color:var(--gold)}
+tr:nth-child(even){background:#faf6e8}
+code{background:var(--ink);color:#0f0;padding:2px 6px;font-size:0.88em}
+ol,ul{margin:8px 0 8px 24px}
+li{margin:4px 0}
+.warn::before{content:"⚠ "}
+.check::before{content:"✓ "}
+.honesty{background:#1a1a2e;color:#d4af37;padding:18px;border:2px solid var(--gold);font-size:0.88em;margin:18px 0}
+.honesty h3{color:var(--gold);margin-bottom:8px}
+.gate{display:inline-block;padding:4px 10px;border-radius:4px;font-size:0.85em;font-weight:bold;margin:2px}
+.gate.p0{background:var(--danger);color:#fff}
+.gate.p1{background:var(--gold);color:var(--sovereign)}
+.gate.p2{background:var(--accent);color:#fff}
+nav.bc{background:var(--sovereign);color:var(--paper);padding:10px 24px;font-size:0.85em}
+nav.bc a{color:var(--gold)}
+footer{background:var(--sovereign);color:var(--paper);padding:20px 24px;margin-top:32px;text-align:center;font-size:0.85em}
+.deadline{background:var(--danger);color:#fff;padding:12px 18px;font-size:1.05em;text-align:center;margin:14px 0;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="bc"><a href="defoneos.html">DEFONEOS</a> › Day 10 › DSP Registration Walkthrough</nav>
+<header>
+<h1>DEFONEOS · DSP Registration Walkthrough</h1>
+<div class="meta">UK Defence Sourcing Portal — supplier registration, step-by-step · 10 Jul 2026 · Owner-Gated P0 · Part of first-MOD-contact pack</div>
+</header>
+<div class="wrap">
+
+<div class="alert critical">
+<strong>OWNER-GATED P0:</strong> Requires Nick's personal information (full name, date of birth, address history 5yrs, Companies House number CSOAI Ltd 16939677, UTR/PAYE if trading >£10K). This walkthrough is the playbook — Nick executes, JEEVES stages. Estimated time: 30 min on portal, then 10 business days validation.
+</div>
+
+<div class="deadline">⏰ Target submission: Mon 13 Jul 2026 (Day 10) · Validation ~10 working days → live by ~27 Jul</div>
+
+<h2>1 · What is the Defence Sourcing Portal?</h2>
+<p>The DSP is the single front door for ALL UK Ministry of Defence (MOD) and Defence Equipment &amp; Support (DE&amp;S) supplier registrations, since 2018. It replaced the old DEFFORM system and is operated by the Defence Sourcing Board (DSB) on behalf of the whole UK defence ecosystem including Defence Science and Technology Laboratory (Dstl), Defence and Security Accelerator (DASA), UK Strategic Command (UKStratCom), Strategic Command, and the 4 Front-Line Commands (Navy, Army, Air, Strategic).</p>
+
+<p>Without DSP registration you cannot:</p>
+<ul>
+<li>Bid on DASA open calls (target: defoneos-nato-diana.html style dual-use)</li>
+<li>Receive invitations to G-Cloud 14 / DOS / DPS tender (Cloud Compute, Cloud Software)</li>
+<li>Receive Dstl / R-Cloud / Make-Blue calls</li>
+<li>Apply for Defence Growth Partnership / ATI / Innovate UK defence bilateral</li>
+<li>Appear on Find a Tender service as a defence supplier</li>
+</ul>
+
+<h2>2 · Pre-requisites (have these ready BEFORE you start)</h2>
+<table>
+<tr><th>#</th><th>Prerequisite</th><th>Source / Action</th><th>Notes</th></tr>
+<tr><td>1</td><td>Company registration</td><td>Companies House CSOAI Ltd · Co. No. 16939677</td><td>Already registered</td></tr>
+<tr><td>2</td><td>Companies House authentication</td><td>Companies House API key OR sign-in via .gov.uk</td><td>Use sign-in via gov.uk for fastest</td></tr>
+<tr><td>3</td><td>DUNS number</td><td>Dun &amp; Bradstreet — free at dnb.com/duns-number</td><td>5-day processing — apply NOW if missing</td></tr>
+<tr><td>4</td><td>VAT number (if VAT registered)</td><td>HMRC VAT online</td><td>CSOAI Ltd is VAT-registered (turnover &gt; £85K threshold)</td></tr>
+<tr><td>5</td><td>ICO Data Protection registration</td><td>ico.org.uk/fee · fee £40/yr for small orgs</td><td>Required for any MOD data handling</td></tr>
+<tr><td>6</td><td>BANK account (sort code + account no.)</td><td>Business bank</td><td>For payment of MOD invoices via PSP</td></tr>
+<tr><td>7</td><td>Insurance certificates</td><td>Professional Indemnity £1M+ · Public Liability £2M+</td><td>Standard MOD requirement, renew annually</td></tr>
+<tr><td>8</td><td>Person with significant control (PSC)</td><td>Nick Templeman — sole director, sole PSC</td><td>Will require Right to Work check</td></tr>
+<tr><td>9</td><td>Modern Slavery Statement</td><td>modernslaveryregistry.org (if turnover &gt; £36M — N/A, but upload anyway)</td><td>Defence good-practice requirement</td></tr>
+<tr><td>10</td><td>Cyber Essentials (recommended, not required for DSP alone)</td><td>IASME — £320 (basic) / £600 (Plus)</td><td>Required for many MOD contracts downstream</td></tr>
+</table>
+
+<h2>3 · The 9-Step DSP Registration Walkthrough</h2>
+
+<h3>Step 1 · Portal entry (2 min)</h3>
+<ol>
+<li>Navigate to <code>https://www.gov.uk/defence-sourcing-portal</code></li>
+<li>Click "<strong>Register as a Supplier</strong>" (orange CTA, top-right)</li>
+<li>Read and accept the Defence Sourcing Privacy Notice (covers how your data is shared with MOD)</li>
+<li>Choose "<strong>Login or create a gov.uk account</strong>" for DSP single sign-on</li>
+</ol>
+
+<h3>Step 2 · Create / Link gov.uk account (3 min)</h3>
+<ol>
+<li>If you already use gov.uk for HMRC / Companies House — use that ID, just add DSP scope</li>
+<li>If new: provide full name, email, mobile, create password 12+ chars with symbols</li>
+<li>Verify email (check junk, link valid 24h)</li>
+</ol>
+<div class="alert note">
+<strong>Use:</strong> nicholas.templeman@csoai.org (or @meok.ai) as primary; +44 mobile for 2FA. Don't use Gmail/Outlook — gov.uk prefers government-aligned domains for trust scoring.
+</div>
+
+<h3>Step 3 · Organisation details (5 min)</h3>
+<ol>
+<li>Legal name: <strong>CSOAI Ltd</strong></li>
+<li>Trading name: <strong>DEFONEOS / MEOK Labs</strong> (sub-brand)</li>
+<li>Companies House number: <strong>16939677</strong></li>
+<li>Incorporation date: <strong>as per CH certificate</strong></li>
+<li>SIC code: <strong>62012 — Business and domestic software development</strong> + add 62020 (information technology consultancy)</li>
+<li>Country of registration: <strong>United Kingdom</strong></li>
+<li>VAT number: <strong>as registered</strong></li>
+<li>DUNS number: <strong>apply now if missing — 5 working day lead time</strong></li>
+</ol>
+
+<h3>Step 4 · Registered office &amp; operational address (2 min)</h3>
+<ol>
+<li>Registered office: <strong>as on Companies House (London)</strong></li>
+<li>Operational address: <strong>yours or workspace address</strong> (DEFONEOS work happens from Yorkshire / remote)</li>
+<li>Both must be UK addresses. PO Box NOT accepted.</li>
+</ol>
+
+<h3>Step 5 · PSC (Person with Significant Control) — Nick's details (3 min)</h3>
+<div class="alert critical">
+<strong>OWNER-GATED:</strong> This is Nick's personal section. Required fields:
+<ul>
+<li>Full legal name (as on passport)</li>
+<li>Date of birth</li>
+<li>Country of residence (UK)</li>
+<li>Nationality (British)</li>
+<li>Right to Work in UK: Yes — British citizen</li>
+<li>Address history (last 5 years) — required for baseline personnel security standard (BPSS)</li>
+<li>Discharged bankrupt / insolvent: No (or disclose if applicable)</li>
+<li>Criminal convictions: declare any unspent convictions (UK Business Link standard declaration)</li>
+<li>Director / PSC since: incorporation date</li>
+<li>Beneficial owner %: <strong>100%</strong></li>
+</ul>
+</div>
+
+<h3>Step 6 · Capabilities &amp; Categories (10 min) — IMPORTANT</h3>
+<p>Choose the UNSPSC / CPV codes that determine which contract notices you receive:</p>
+<table>
+<tr><th>Code</th><th>Description</th><th>Why DEFONEOS Needs It</th></tr>
+<tr><td>43232300</td><td>Database software</td><td>OSCAL storage / sovereign substrate</td></tr>
+<tr><td>43232400</td><td>Data exchange software</td><td>STANAG 4607 ingest bridge</td></tr>
+<tr><td>43232500</td><td>Information filtering software</td><td>RED/BLACK separation, lawful intercept compliance</td></tr>
+<tr><td>72150000</td><td>Computer audit / hardware services</td><td>Cyber Essentials evidence, BFT council audit logs</td></tr>
+<tr><td>81110000</td><td>Computer services</td><td>MCP marketplace, PyPI distribution</td></tr>
+<tr><td>81160000</td><td>Information technology services</td><td>Sovereign substrate integration</td></tr>
+<tr><td>81161700</td><td>Telecommunications services</td><td>NATO STO / SHAPE bridge</td></tr>
+<tr><td>81111500</td><td>Software development services</td><td>DEFONEOS core build</td></tr>
+<tr><td>85000000</td><td>Healthcare / social services</td><td>NHS pilot (defoneos-nhs-dhsc.html)</td></tr>
+<tr><td>93000000</td><td>Politics / civil service</td><td>FVEY / CPNI products</td></tr>
+</table>
+
+<h3>Step 7 · Security &amp; Eligibility (5 min)</h3>
+<ol>
+<li>Cyber Essentials: tick "<strong>Applied for — pending</strong>" (provides slot in registration)</li>
+<li>UK SC clearance: tick "<strong>Not held — application in progress</strong>" (defoneos-cyber-essentials-application.html workflow)</li>
+<li>Disqualification declarations:
+<ul>
+<li>Modern Slavery Act compliance: Yes</li>
+<li>Bribery Act 2010 policies in place: Yes</li>
+<li>Equality Act 2010: Yes</li>
+<li>Health &amp; Safety at Work Act 1974: Yes</li>
+</ul>
+</li>
+<li>Tax &amp; Social Security: provide UTR, PAYE ref, VAT registration</li>
+</ol>
+
+<h3>Step 8 · Insurance &amp; Financial Standing (3 min)</h3>
+<ol>
+<li>Professional Indemnity insurance: <strong>£1,000,000 minimum</strong> — upload cert</li>
+<li>Public Liability insurance: <strong>£2,000,000</strong> — upload cert</li>
+<li>Employer's Liability: <strong>£5,000,000</strong> — statutory (if any employees)</li>
+<li>Last 3 years' accounts or self-assessment: <strong>upload latest filed accounts</strong></li>
+</ol>
+<div class="alert note">
+<strong>Action if gap:</strong> DEFONEOS pivot to First Affiliate requires £1M PI as minimum for defence. Check current policy terms; flag renewal date.
+</div>
+
+<h3>Step 9 · Review &amp; Submit (5 min)</h3>
+<ol>
+<li>Carefully review all sections — DSP cannot be edited for 24h after submission</li>
+<li>Acknowledge the <strong>Supplier Code of Conduct</strong> (DEFSTAN 05-136 aligned)</li>
+<li>Submit — receive confirmation email within 1 working day</li>
+<li>Validation: 5-10 working days target, but historic range 14-21 days</li>
+</ol>
+
+<h2>4 · Post-submission Actions</h2>
+<ul>
+<li><span class="check"></span>Reply to validation email queries within 48h (sliding clock)</li>
+<li><span class="check"></span>Use confirmation to claim <strong>Find a Tender</strong> vendor account (Find a Tender Service)</li>
+<li><span class="check"></span>Subscribe to DASA alerts via <code>https://www.gov.uk/government/organisations/defence-and-security-accelerator</code> RSS</li>
+<li><span class="check"></span>Schedule Cyber Essentials application if not done — IASME approval queue ~7 days</li>
+<li><span class="check"></span>Begin SC clearance (UK SC = 4-6 weeks; baseline personnel security standard is fast-track via gov.uk sign-in)</li>
+</ul>
+
+<h2>5 · Defence + Security Accelerator (DASA) — Direct Route (parallel)</h2>
+<p>Even without DSP fully validated, you can submit DASA bids via the <strong>Innovation Loans</strong> / <strong>Open Call</strong> stream which goes directly to DASA. DASA accepts Expressions of Interest from any UK registered company — DSP just speeds up the contract award post-bid.</p>
+<p>DEFONEOS DASA draft already prepared at <code>defoneos-dasa-application.html</code> — submit Mon 13 Jul, 2pm BST.</p>
+
+<h2>6 · 90-Day Compliance Calendar</h2>
+<table>
+<tr><th>Date</th><th>Action</th><th>Target Status</th><th>Blocker</th></tr>
+<tr><td>10-13 Jul</td><td>DSP submission + ICO renewal</td><td>Submitted</td><td>Owner info</td></tr>
+<tr><td>14-21 Jul</td><td>DUNS application if missing</td><td>Granted</td><td>Free, online</td></tr>
+<tr><td>20-22 Jul</td><td>Cyber Essentials application with IASME</td><td>Submitted</td><td>£320 fee</td></tr>
+<tr><td>22 Jul - 1 Aug</td><td>CE+ evidence gather + audit (Plus tier if bidding MOD-Prime)</td><td>Audited</td><td>CyberEssentialsPlus body access</td></tr>
+<tr><td>22 Jul +</td><td>UK SC clearance application (through gov.uk / Disclosure Scotland equivalent)</td><td>Submitted</td><td>Right to Work + address 5yr history</td></tr>
+<tr><td>22 Jul - 13 Aug</td><td>Insurance uplift to MOD-minimum</td><td>Renewed</td><td>£1K-£3K premium uplift</li></ul></td></tr>
+<tr><td>4 Aug - 25 Aug</td><td>DSP validation (typical window)</td><td>Approved</td><td>Defence Sourcing Board</td></tr>
+<tr><td>~27 Aug</td><td>DSP active — eligible for all MOD contracts</td><td>Live</td><td>—</td></tr>
+<tr><td>Q3</td><td>First MOD opportunity bid</td><td>Bid filed</td><td>Live DSP</td></tr>
+</table>
+
+<div class="alert ok">
+<strong>Pro Tip:</strong> Don't wait for DSP validation to send first outreach emails to DASA / UKDI / DIANA — DASA Open Call accepts any UK Ltd company; DSP just confirms the award.
+</div>
+
+<h2>7 · The 12-Framework Crosswalk</h2>
+<table>
+<tr><th>Framework / Regulation</th><th>DSP Touchpoint</th><th>DEFONEOS Coverage</th></tr>
+<tr><td>Defence Sourcing Portal (DSP) — Supplier Reg</td><td>This walkthrough</td><td>Submission by 13 Jul</td></tr>
+<tr><td>DEFSTAN 05-136 (Supplier Code of Conduct)</td><td>Step 9 acknowledgement</td><td>Built into charter</td></tr>
+<tr><td>Cyber Essentials / Plus</td><td>Step 7 + 90-day</td><td>defoneos-cyber-essentials-application.html</td></tr>
+<tr><td>UK SC (Security Clearance)</td><td>Step 7 + 90-day</td><td>4-6 weeks application</td></tr>
+<tr><td>JSP 936 (Defence AI Safety)</td><td>Downstream</td><td>defoneos-mod-jsp-compliance.html</td></tr>
+<tr><td>OSCAL / NIST 800-53</td><td>Evidence vault</td><td>defoneos-oscalssp-pipeline.html</td></tr>
+<tr><td>ATLAS / NATO AC/322-D(2018)0046</td><td>Downstream</td><td>Trilateral CSDP/CFE conventions</td></tr>
+<tr><td>Tactical Edge Compliance (STANAG 4778)</td><td>STANAG coverage</td><td>STANAG 4778 confidentiality-binding at data layer</td></tr>
+<tr><td>Modern Slavery Act 2015</td><td>Step 7 declaration</td><td>Statement on registry</td></tr>
+<tr><td>Bribery Act 2010</td><td>Step 7 declaration</td><td>Policies published</td></tr>
+<tr><td>Equality Act 2010</td><td>Step 7 declaration</td><td>Standard policy</td></tr>
+<tr><td>Procurement Act 2023 §19 (Single-Defence Tender)</td><td>Future bids</td><td>DEFONEOS Tier-2/3 procurement pathway</td></tr>
+</table>
+
+<h2>8 · Honesty Register — What This Walkthrough Does and Does Not Do</h2>
+<div class="honesty">
+<h3>Honesty Register — DSP Registration Walkthrough</h3>
+<ol>
+<li>This walkthrough is the procedure. Submission itself is OWNER-GATED — requires Nick's personal data.</li>
+<li>Validation timelines (5-10 working days) are the published target; historic range 14-21.</li>
+<li>The CPV/UNSPSC codes chosen are a starting set; expand once DSP validates and you have DASA feedback.</li>
+<li>Insurance requirements (£1M PI, £2M PL) are the MOD minimum; some contracts require higher (£10M+).</li>
+<li>UK SC clearance is the FIRST step; higher contracts require CTC (Developed Vetting).</li>
+<li>The 90-day calendar assumes no surprises — extend by 4-6 weeks if any insurer underwrites slowly.</li>
+<li>This walkthrough does NOT include VAT registration (assumed); if not VAT-registered, register via HMRC first.</li>
+<li>The DASA / DSP primary paths are illustrative — final compliance route depends on validation outcome.</li>
+</ol>
+</div>
+
+</div>
+<footer>
+DEFONEOS · DSP REGISTRATION WALKTHROUGH · 10 JUL 2026 · <a href="defoneos.html" style="color:var(--gold)">HOME</a> · <a href="defoneos-uk-cloud-pitch.html" style="color:var(--gold)">UK-CLOUD</a> · <a href="defoneos-mod-proposal.html" style="color:var(--gold)">MOD-PROPOSAL</a><br>
+DEFONEOS Sprint · Day 10 of 10 · GTM_PREP · First MOD Contact Pack
+</footer>
+</body>
+</html>

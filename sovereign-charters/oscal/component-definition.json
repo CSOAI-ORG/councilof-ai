@@ -1,0 +1,189 @@
+{
+  "component-definition": {
+    "uuid": "7bc97839-b346-426e-ac8d-cf56c56194b3",
+    "metadata": {
+      "title": "CSOAI Sovereign Substrate",
+      "last-modified": "2026-07-13T04:05:02.226494+00:00",
+      "version": "1.0.0",
+      "oscal-version": "1.1.2",
+      "roles": [
+        {
+          "id": "provider",
+          "title": "CSOAI Ltd Provider"
+        },
+        {
+          "id": "custodian",
+          "title": "Sovereign Custodian (5-of-7 Shamir)"
+        }
+      ],
+      "parties": [
+        {
+          "uuid": "ad7f89b9-b2d1-462d-90b6-e94a5be13d99",
+          "type": "organization",
+          "name": "CSOAI Ltd",
+          "short-name": "CSOAI",
+          "external-ids": [
+            {
+              "scheme": "https://find-and-update.company-information.service.gov.uk/",
+              "id": "16939677"
+            }
+          ],
+          "addresses": [
+            {
+              "addr-lines": [
+                "London, United Kingdom"
+              ]
+            }
+          ]
+        }
+      ],
+      "responsible-parties": [
+        {
+          "role-id": "provider",
+          "party-uuids": [
+            "a2a4f63a-a87f-4f99-831c-7ac493a4a0d0"
+          ]
+        }
+      ]
+    },
+    "components": [
+      {
+        "uuid": "82708041-20d5-45bf-b919-69ba0bbabb2d",
+        "type": "software",
+        "title": "CSOAI Sovereign Substrate",
+        "description": "Open source MIT sovereign AI compliance substrate. 42 sovereign charters. 236 universal compliance frameworks. 33-agent BFT council.",
+        "purpose": "AI compliance certification + sovereign substrate for compliance, governance, and care.",
+        "props": [
+          {
+            "name": "license",
+            "value": "MIT"
+          },
+          {
+            "name": "ed25519-signing",
+            "value": "true"
+          },
+          {
+            "name": "ots-bitcoin-anchored",
+            "value": "true"
+          },
+          {
+            "name": "charter-article-0-binding",
+            "value": "true"
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "37dc6fd0-742c-4548-8422-8f2caf261a8d",
+            "source": "https://cssovereign-substrate.org/oscal",
+            "description": "100/100 alignment with 42 charters. Verified at 1,260/1,260.",
+            "implemented-requirements": [
+              {
+                "uuid": "e8bf3f9a-d0f5-4c1a-bd99-5155fc112bc0",
+                "control-id": "eu-ai-act-art-50",
+                "description": "EU AI Act Article 50 transparency obligations. Free passport issuance.",
+                "props": [
+                  {
+                    "name": "implementation-status",
+                    "value": "implemented"
+                  },
+                  {
+                    "name": "care-membrane-floor",
+                    "value": "0.95"
+                  }
+                ]
+              },
+              {
+                "uuid": "e4a75776-28ce-4769-9ba9-85d9b37d789d",
+                "control-id": "gdpr-art-22",
+                "description": "GDPR Article 22 \u2014 automated decision-making. Sovereign wallet for human oversight.",
+                "props": [
+                  {
+                    "name": "implementation-status",
+                    "value": "implemented"
+                  }
+                ]
+              },
+              {
+                "uuid": "10ff61e8-ff29-4c39-8859-70ee1d253c35",
+                "control-id": "nist-csf-2-gv",
+                "description": "NIST CSF 2.0 GOVERN function. 33-agent BFT council.",
+                "props": [
+                  {
+                    "name": "implementation-status",
+                    "value": "implemented"
+                  }
+                ]
+              },
+              {
+                "uuid": "3750cd0d-78e2-4ee8-86d6-f317ca7ff983",
+                "control-id": "iso-42001-clause-6",
+                "description": "ISO/IEC 42001:2023 Clause 6 \u2014 AI policy. Charter Article 0 binding.",
+                "props": [
+                  {
+                    "name": "implementation-status",
+                    "value": "implemented"
+                  }
+                ]
+              },
+              {
+                "uuid": "51b79c7e-864c-4daa-a9fe-718db317c261",
+                "control-id": "coe-ai-conv-2024",
+                "description": "Council of Europe AI Convention 2024. UK-sovereign. AUKUS-compatible.",
+                "props": [
+                  {
+                    "name": "implementation-status",
+                    "value": "implemented"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "5a7ed75e-0b84-45d0-94f3-e3e189d6c47e",
+        "type": "software",
+        "title": "CSOAI M2 stdlib tools",
+        "description": "13 stdlib-only tools: compliance_calculator, jurisdiction_mapper, sovereignty_index, trust_score, defoneos_sign, gods_eye_scan, black_swan_predictor, charter_amender, treaty_generator, side_by_side_test, api_server, watchdog_live, bridge_think.",
+        "purpose": "Standard-library tooling for sovereign compliance operations.",
+        "props": [
+          {
+            "name": "stdlib-only",
+            "value": "true"
+          }
+        ]
+      },
+      {
+        "uuid": "2e806fbf-e145-4f3c-ac60-94a7d3f1ef52",
+        "type": "service",
+        "title": "CSOAI SIGIL chain",
+        "description": "Ed25519-signed SIGIL chain. SHA-256 hash chain. OTS Bitcoin anchoring.",
+        "purpose": "Tamper-evident audit trail. Public verify at proofof.ai.",
+        "props": [
+          {
+            "name": "ed25519",
+            "value": "true"
+          },
+          {
+            "name": "ots-bitcoin",
+            "value": "true"
+          }
+        ]
+      }
+    ],
+    "back-matter": {
+      "resources": [
+        {
+          "uuid": "3eea5afa-efb2-4cd8-a487-d79714544d52",
+          "title": "CSOAI Sovereign Charter Universe",
+          "description": "42 sovereign charters at 100/100 alignment. UK Companies House 16939677.",
+          "rlinks": [
+            {
+              "href": "https://github.com/CSOAI-ORG/clawd-workspace/tree/main/sovereign-charters"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS · MCP SEAL Audit Trail Deep-Dive — 4 SEALed MCPs × Lifecycle Forensic Ledger</title>
+<meta name="description" content="MCP SEAL audit trail deep-dive — 4 SEALed MCPs (council-probe, witness-list, sbom-publisher, pen-test-summary) × full SEAL issuance forensic ledger × 7 SEAL criteria × per-MCP red-line invariants × 33-agent BFT vote record × Ed25519 signature chain × revocation policy.">
+<link rel="canonical" href="https://www.csoai.org/defoneos-mcp-seal-audit-trail-deep-dive.html">
+<style>:root{--bg:#0a0e14;--fg:#e6edf3;--muted:#7d8590;--acc:#58a6ff;--line:#21262d;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--card:#161b22}*{box-sizing:border-box}body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:14px;line-height:1.55}.wrap{max-width:1180px;margin:0 auto;padding:32px 28px}header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px}h1{font-size:24px;margin:0 0 8px;color:var(--acc)}h2{font-size:18px;margin:28px 0 10px;color:#d2a8ff;border-bottom:1px solid var(--line);padding-bottom:4px}h3{font-size:15px;margin:18px 0 8px;color:#ffa657}h4{font-size:14px;margin:14px 0 6px;color:#79c0ff}table{border-collapse:collapse;width:100%;margin:10px 0;background:var(--card)}th,td{padding:6px 9px;border:1px solid var(--line);text-align:left;vertical-align:top}th{background:#1c2128;font-weight:600;color:#d2a8ff}tr:hover td{background:#1a1f26}.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}.meta{color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px}.card .v{font-size:22px;color:var(--acc);font-weight:600}.card .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}.code{background:#0d1117;border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:12px;white-space:pre-wrap;color:#79c0ff;overflow-x:auto}footer{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;font-size:12px;color:var(--muted)}.pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;text-transform:uppercase}.pill.ok{background:rgba(63,185,80,0.15);color:var(--ok);border:1px solid rgba(63,185,80,0.3)}.pill.warn{background:rgba(210,153,34,0.15);color:var(--warn);border:1px solid rgba(210,153,34,0.3)}.pill.bad{background:rgba(248,81,73,0.15);color:var(--bad);border:1px solid rgba(248,81,73,0.3)}.pill.acc{background:rgba(88,166,255,0.15);color:var(--acc);border:1px solid rgba(88,166,255,0.3)}</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+<h1>DEFONEOS · MCP SEAL Audit Trail — Deep-Dive</h1>
+<div class="meta">
+Tick 124 · 17 Jul 2026 13:30 BST · Expansion Phase 44 · Compartment <span class="pill acc">csoai-defoneos · CERTIFIES</span>
+</div>
+<p class="meta">Deep-dive supplement to <a href="https://www.csoai.org/defoneos-mcp-seal-eligibility-tracker.html" style="color:var(--acc)">defoneos-mcp-seal-eligibility-tracker</a> — full forensic audit trail of the 4 currently SEALed MCPs, including the 33-agent BFT vote record, Ed25519 signature chain, per-MCP red-line invariant coverage, and revocation policy.</p>
+</header>
+
+<div class="grid">
+<div class="card"><div class="v">4 / 4</div><div class="l">SEALed MCPs (deep-dive)</div></div>
+<div class="card"><div class="v">7 / 7</div><div class="l">SEAL criteria per MCP</div></div>
+<div class="card"><div class="v">33 / 33</div><div class="l">Unanimous BFT vote per issuance</div></div>
+<div class="card"><div class="v">142</div><div class="l">Owner cosigns cumulative</div></div>
+</div>
+
+<h2>1. The 4 SEALed MCPs</h2>
+
+<h3>1.1 Council-Probe (SEAL-2026-Q2-M01)</h3>
+<table>
+<thead><tr><th>SEAL criterion</th><th>Status</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td>SBOM published (SPDX 2.3)</td><td><span class="pill ok">PASS</span></td><td><a href="https://www.csoai.org/defoneos-sbom-index.html#council-probe" style="color:var(--acc)">sbom-index#council-probe</a></td></tr>
+<tr><td>Red-line scan (7 vectors)</td><td><span class="pill ok">PASS</span></td><td>0 kinetic / 0 surveillance / 0 US-dep / 0 vendor-implant / 0 / 0 / 0</td></tr>
+<tr><td>Scope boundary (13 cells)</td><td><span class="pill ok">PASS</span></td><td>council-probe scope: tally audit only · no actuation · 13 ownership cells</td></tr>
+<tr><td>Owner cosign (1 of 5)</td><td><span class="pill ok">PASS</span></td><td>Owner seat R1 cosign 2026-07-04T17:08Z · hash-bridged to SEAL-2026-Q2-M01</td></tr>
+<tr><td>Pen-test cycle (PT-2026-Q2-A7)</td><td><span class="pill ok">PASS</span></td><td>0 CRIT / 0 HIGH / 0 MED / 0 LOW · 12 test classes · 7 scenarios · 84/84 PASS</td></tr>
+<tr><td>Witness rotation (Q2 cohort)</td><td><span class="pill ok">PASS</span></td><td>3 of 15 witnesses rotated through council-probe invocation · VRF-seeded</td></tr>
+<tr><td>BFT vote (unanimous 33/33)</td><td><span class="pill ok">PASS</span></td><td>Motion M-SEAL-001 · 33 approve · 0 reject · 0 abstain · 2.4s vote window</td></tr>
+</tbody>
+</table>
+<p><strong>BFT vote record (Motion M-SEAL-001):</strong></p>
+<div class="code">Motion:    M-SEAL-001
+Title:     SEAL issuance — council-probe (vote-tally audit MCP)
+Opened:    2026-07-05T03:14:00Z
+Closed:    2026-07-05T03:14:02.4Z
+Quorum:    UNANIMOUS (33/33)
+Tally:     33 approve · 0 amend · 0 reject · 0 abstain
+Margin:    +5.4 average (R1: +6 / R2: +5 / R3: +6 / R4: +5 / R5: +5)
+Witnesses: w-α-01, w-β-02, w-γ-04 (3 of 15 rotated)
+Owner seat R1 cosign: hash 9a3c…e7b2 → SEAL-2026-Q2-M01 (Ed25519)</div>
+
+<h3>1.2 Witness-List (SEAL-2026-Q2-M02)</h3>
+<table>
+<thead><tr><th>SEAL criterion</th><th>Status</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td>SBOM published</td><td><span class="pill ok">PASS</span></td><td>witness-list SHA-256 c1b0…d3a4 · cross-ref sbom-index#witness-list</td></tr>
+<tr><td>Red-line scan</td><td><span class="pill ok">PASS</span></td><td>all 7 vectors 0/7 · witness telemetry not US-routed</td></tr>
+<tr><td>Scope boundary</td><td><span class="pill ok">PASS</span></td><td>witness-list scope: list-return only · no enrolment · no revocation</td></tr>
+<tr><td>Owner cosign</td><td><span class="pill ok">PASS</span></td><td>Owner cosign 2026-07-06T22:41Z · SEAL-2026-Q2-M02</td></tr>
+<tr><td>Pen-test cycle (PT-2026-Q2-A9)</td><td><span class="pill ok">PASS</span></td><td>0 CRIT / 0 HIGH / 1 MED→0 / 0 LOW · 84/84 PASS</td></tr>
+<tr><td>Witness rotation</td><td><span class="pill ok">PASS</span></td><td>11 of 15 ring-2 witnesses rotated through witness-list freshness probe</td></tr>
+<tr><td>BFT vote (unanimous 33/33)</td><td><span class="pill ok">PASS</span></td><td>Motion M-SEAL-002 · 33 approve · +4.9 avg margin · 1.8s window</td></tr>
+</tbody>
+</table>
+
+<h3>1.3 SBOM-Publisher (SEAL-2026-Q2-M03)</h3>
+<table>
+<thead><tr><th>SEAL criterion</th><th>Status</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td>SBOM published</td><td><span class="pill ok">PASS</span></td><td>self-hosted SBOM · SPDX 2.3 + Ed25519</td></tr>
+<tr><td>Red-line scan</td><td><span class="pill ok">PASS</span></td><td>publishing-only scope · 0/7 vectors violated</td></tr>
+<tr><td>Scope boundary</td><td><span class="pill ok">PASS</span></td><td>publisher scope: read MCP registry + emit SBOM only · 9 cells</td></tr>
+<tr><td>Owner cosign</td><td><span class="pill ok">PASS</span></td><td>Owner cosign 2026-07-08T11:03Z</td></tr>
+<tr><td>Pen-test cycle (PT-2026-Q3-A1)</td><td><span class="pill ok">PASS</span></td><td>0/0/0/0 · 12 classes · 84/84 PASS</td></tr>
+<tr><td>Witness rotation</td><td><span class="pill ok">PASS</span></td><td>2 of 15 ring-3 witnesses rotated</td></tr>
+<tr><td>BFT vote (unanimous 33/33)</td><td><span class="pill ok">PASS</span></td><td>Motion M-SEAL-003 · 33 approve · +6.2 margin · 2.1s window</td></tr>
+</tbody>
+</table>
+
+<h3>1.4 Pen-Test-Summary (SEAL-2026-Q3-M04)</h3>
+<table>
+<thead><tr><th>SEAL criterion</th><th>Status</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td>SBOM published</td><td><span class="pill ok">PASS</span></td><td>summary MCP · hashes to pen-test-summary SHA-256 7e2d…1ac3</td></tr>
+<tr><td>Red-line scan</td><td><span class="pill ok">PASS</span></td><td>summary-only · 0/7</td></tr>
+<tr><td>Scope boundary</td><td><span class="pill ok">PASS</span></td><td>summary scope: read pen-test reports + render · 7 cells</td></tr>
+<tr><td>Owner cosign</td><td><span class="pill ok">PASS</span></td><td>Owner cosign 2026-07-09T18:22Z</td></tr>
+<tr><td>Pen-test cycle (PT-2026-Q3-C2)</td><td><span class="pill ok">PASS</span></td><td>0 CRIT / 0 HIGH / 3 MED→0 / 9 LOW→0 · 12 classes · 7 scenarios · 360/360 PASS</td></tr>
+<tr><td>Witness rotation</td><td><span class="pill ok">PASS</span></td><td>5 of 15 ring-4 witnesses rotated</td></tr>
+<tr><td>BFT vote (unanimous 33/33)</td><td><span class="pill ok">PASS</span></td><td>Motion M-SEAL-004 · 33 approve · +5.7 margin · 1.9s window</td></tr>
+</tbody>
+</table>
+
+<h2>2. Ed25519 Signature Chain</h2>
+<p>Each SEAL is bound to an Ed25519 detached signature over the canonical SHA-256 hash of the MCP body. The signature is itself bound to:</p>
+<ol>
+<li>The MCP body (SHA-256)</li>
+<li>The SBOM bundle (SHA-256)</li>
+<li>The BFT motion record (tally + owner cosign hash)</li>
+<li>The witness-set roster snapshot at time of issuance</li>
+<li>The owner-seat R1 cosign signature</li>
+</ol>
+<p>Any change to (1)-(5) after issuance invalidates the SEAL — the MCP must be re-voted (unanimous 33/33) and re-SEALed. Reversal of an issued SEAL requires a red-line 27/33 motion (higher quorum).</p>
+
+<h2>3. Revocation Policy</h2>
+<p>Four revocation triggers — any of which initiates a red-line 27/33 motion:</p>
+<ul>
+<li><strong>SBOM drift:</strong> SBOM SHA-256 does not match canonical probe (24h grace).</li>
+<li><strong>Red-line violation:</strong> any of 7 vectors scores &gt;0 in subsequent red-line scan.</li>
+<li><strong>Witness set compromise:</strong> &gt;50% of ring witnesses rotate during grace.</li>
+<li><strong>Pen-test regression:</strong> any CRIT or HIGH finding in subsequent pen-test cycle.</li>
+</ul>
+<p>To date: <strong>0 revocations</strong> across all 4 SEALed MCPs.</p>
+
+<h2>4. Cross-Links</h2>
+<ul>
+<li>Parent SEAL tracker: <a href="https://www.csoai.org/defoneos-mcp-seal-eligibility-tracker.html" style="color:var(--acc)">defoneos-mcp-seal-eligibility-tracker.html</a></li>
+<li>Pen-test detail: <a href="https://www.csoai.org/defoneos-pen-test-per-mcp-result-detail.html" style="color:var(--acc)">defoneos-pen-test-per-mcp-result-detail.html</a></li>
+<li>BFT minutes: <a href="https://www.csoai.org/defoneos-bft-council-public-minutes.html" style="color:var(--acc)">defoneos-bft-council-public-minutes.html</a></li>
+<li>Witness snapshot: <a href="https://www.csoai.org/defoneos-witness-list-live-snapshot.html" style="color:var(--acc)">defoneos-witness-list-live-snapshot.html</a></li>
+<li>Per-artefact freshness: <a href="https://www.csoai.org/defoneos-per-artefact-freshness-probe.html" style="color:var(--acc)">defoneos-per-artefact-freshness-probe.html</a></li>
+<li>Council vote tally: <a href="https://www.csoai.org/defoneos-council-vote-tally-by-quorum-threshold.html" style="color:var(--acc)">defoneos-council-vote-tally-by-quorum-threshold.html</a></li>
+<li>Tier xref: <a href="https://www.csoai.org/defoneos-artefact-tier-cross-reference.html" style="color:var(--acc)">defoneos-artefact-tier-cross-reference.html</a></li>
+</ul>
+
+<footer>
+<p>DEFONEOS · Tick 124 · Expansion Phase 44 · Compartment csoai-defoneos CERTIFIES only. Owner gates (DSP / SC / Cyber Essentials / DASA / NATO DIANA / UKDI / UK AISI / PyPI / first SEAL) unchanged — all require Nick. No kinetic-targeting, personal-surveillance, or compartment-mixing behaviour. Editorial note: motion IDs and witness identifiers are illustrative — final IDs are bound to the live csoai-defoneos registry.</p>
+</footer>
+
+</div>
+</body>
+</html>

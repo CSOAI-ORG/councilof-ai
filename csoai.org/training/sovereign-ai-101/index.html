@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐉 Sovereign AI 101 — The Sovereign Substrate Training</title>
+<meta name="description" content="Free 10-module course. Sovereign AI architecture, care floor, BFT council, SIGIL chain, Article 50, DORADO, deployment, certification.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .nav a:hover { color: #fbbf24; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.6rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 2rem; font-size: 1rem; }
+  .meta { text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 2rem; font-family: monospace; }
+  .meta strong { color: #fbbf24; }
+  .hero { background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%); padding: 3rem 2rem; border-radius: 12px; text-align: center; max-width: 1100px; margin: 0 auto 2rem; border: 1px solid #fbbf24; }
+  .hero .big { font-size: 2.2rem; color: #fbbf24; font-weight: bold; margin-bottom: 1rem; }
+  .hero p { color: #ddd; font-size: 1.05rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; max-width: 1100px; margin: 2rem auto; }
+  .stat { background: #1a1a1a; padding: 1.25rem; border-radius: 8px; text-align: center; border-left: 4px solid #10b981; }
+  .stat-value { font-size: 1.8rem; color: #10b981; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.8rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 2rem auto; }
+  .module { background: #1a1a1a; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #fbbf24; transition: transform 0.2s; }
+  .module:hover { transform: translateY(-2px); border-left-color: #10b981; }
+  .module h3 { color: #fbbf24; margin-bottom: 0.5rem; font-size: 1.15rem; }
+  .module .num { display: inline-block; background: #fbbf24; color: #000; padding: 0.15rem 0.6rem; border-radius: 4px; font-weight: bold; margin-right: 0.5rem; }
+  .module p { color: #aaa; font-size: 0.9rem; margin: 0.5rem 0; }
+  .module a { color: #60a5fa; text-decoration: none; font-size: 0.85rem; }
+  .module a:hover { color: #fbbf24; }
+  .layers { background: #111; padding: 1.5rem; border-radius: 8px; max-width: 900px; margin: 1rem auto; font-family: monospace; border: 1px solid #2d1b4e; }
+  .layers li { color: #10b981; padding: 0.3rem 0; list-style: none; }
+  .layers li small { color: #888; }
+  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; max-width: 1100px; margin: 1.5rem auto; }
+  .tier { background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%); padding: 1.5rem; border-radius: 12px; text-align: center; border-top: 4px solid #fbbf24; }
+  .tier.bronze { border-top-color: #cd7f32; }
+  .tier.silver { border-top-color: #c0c0c0; }
+  .tier.gold { border-top-color: #ffd700; }
+  .tier.platinum { border-top-color: #e5e4e2; }
+  .tier h3 { color: #fbbf24; }
+  .tier .pct { font-size: 1.5rem; color: #10b981; font-weight: bold; }
+  .tier .role { color: #aaa; font-size: 0.85rem; }
+  .paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; max-width: 1100px; margin: 1.5rem auto; }
+  .path { background: #1a1a1a; padding: 1.25rem; border-radius: 8px; border-left: 4px solid #60a5fa; }
+  .path h4 { color: #60a5fa; margin-bottom: 0.5rem; }
+  .path p { color: #aaa; font-size: 0.85rem; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; max-width: 900px; margin: 0.75rem auto; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; margin-bottom: 0.3rem; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .cta { display: inline-block; background: #fbbf24; color: #000; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 0.5rem; }
+  .cta.secondary { background: #2d1b4e; color: #fbbf24; border: 1px solid #fbbf24; }
+  .cta:hover { opacity: 0.9; }
+  .center { text-align: center; margin: 2rem 0; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; text-decoration: none; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; }
+  .ascii { background: #0a0a0a; color: #10b981; padding: 1.25rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre; overflow-x: auto; border: 1px solid #2d1b4e; max-width: 700px; margin: 1rem auto; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/training.html">Training</a>
+  <a href="/sov-os.html">Sov OS</a>
+  <a href="/cert.html">Cert</a>
+  <a href="/verify/">Verify</a>
+  <a href="/charter2/sovereign-ai-charter.html">Sovereign AI Charter</a>
+</div>
+
+<h1>🐉 Sovereign AI 101</h1>
+<p class="subtitle">The sovereign substrate training — 10 modules from introduction to certification</p>
+<p class="meta"><strong>CSOAI Ltd UK 16939677</strong> · <strong>MIT license</strong> · <strong>4 Jul 2026</strong></p>
+
+<div class="hero">
+  <div class="big">🐉 Sovereign AI 101</div>
+  <p>The sovereign substrate training — 10 free modules from introduction to certification.</p>
+  <p>Learn the SOV3 architecture, the 5 alchemical layers, the 0.95 Care Floor, the 12-around-1 BFT Council, the SIGIL chain, EU AI Act Article 50 watermarking, DORADO EAST↔WEST sovereignty, 1-command deployment, and the 20-question certification exam.</p>
+  <div style="margin-top: 1.5rem;">
+    <a href="01-introduction.html" class="cta">Start Module 1 →</a>
+    <a href="09-certification.html" class="cta secondary">Skip to Exam →</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">10</div><div class="stat-label">Modules</div></div>
+  <div class="stat"><div class="stat-value">4h</div><div class="stat-label">Total time</div></div>
+  <div class="stat"><div class="stat-value">FREE</div><div class="stat-label">Cost</div></div>
+  <div class="stat"><div class="stat-value">20</div><div class="stat-label">Exam Qs</div></div>
+  <div class="stat"><div class="stat-value">4</div><div class="stat-label">Cert tiers</div></div>
+  <div class="stat"><div class="stat-value">MIT</div><div class="stat-label">License</div></div>
+</div>
+
+<h2>📚 10 Modules</h2>
+<div class="grid">
+  <div class="module"><h3><span class="num">01</span>Introduction to Sovereign AI</h3><p>What sovereign AI is and why it differs from corporate AI. 5 sovereign principles. Crown lineage 1795-2026.</p><a href="01-introduction.html">Begin →</a></div>
+  <div class="module"><h3><span class="num">02</span>SOV3 Architecture</h3><p>The 5 alchemical layers deep dive — Mamba-2 SSM, 64-expert MoE, standard attention, SOV3 middle, SIGIL wrap.</p><a href="02-architecture.html">Begin →</a></div>
+  <div class="module"><h3><span class="num">03</span>Care Floor</h3><p>The Care Floor at 0.95. Why 0.95? 12 dimensions of care. Enforcer. Failure modes.</p><a href="03-care-floor.html">Begin →</a></div>
+  <div class="module"><h3><span class="num">04</span>BFT 12-around-1 Council</h3><p>Byzantine Fault Tolerance. 12 sovereign queens. 2/3 majority voting. Council mechanics. Witness records.</p><a href="04-bft-council.html">Begin →</a></div>
+  <div class="module"><h3><span class="num">05</span>SIGIL Chain</h3><p>What a SIGIL is. Ed25519 + PQC ML-DSA-65. Hash-chained. Verifiable in 1 line. Public chain.</p><a href="05-sigil-chain.html">Begin →</a></div>
+  <div class="module"><h3><span class="num">06</span>Article 50 Watermarking</h3><p>EU AI Act Article 50. The watermarking passport. 36-day countdown. 523-day Annex III delay.</p><a href="06-article-50.html">Begin →</a></div>
+  <div class="module"><h3><span class="num">07</span>DORADO 1-click EAST↔WEST</h3><p>DORADO sovereignty. EAST (UK / Five Eyes / AUKUS). WEST (BRICS / ASEAN / Commonwealth). 1-click switch.</p><a href="07-dorado.html">Begin →</a></div>
+  <div class="module"><h3><span class="num">08</span>Deployment</h3><p>1-command install. Docker, pip, npm. 9 open-weights models. 4 SDKs (Python, JS, Swift, Flutter).</p><a href="08-deployment.html">Begin →</a></div>
+  <div class="module"><h3><span class="num">09</span>Certification Exam</h3><p>20-question exam. 70% pass mark. 4 tier awards: Bronze, Silver, Gold, Platinum.</p><a href="09-certification.html">Take exam →</a></div>
+  <div class="module"><h3><span class="num">10</span>Graduation & Sovereign Path</h3><p>SIGIL-signed W3C VC. Continue into 33 sovereign districts. Career paths.</p><a href="09-certification.html#graduation">Continue →</a></div>
+</div>
+
+<h2>🜍 The 5 Alchemical Layers</h2>
+<div class="layers">
+<ol>
+  <li>① <strong>SALT (Nigredo)</strong> — Substrate: filesystem, Postgres, MinIO, the raw matter. <small>file system at ~/clawd/</small></li>
+  <li>② <strong>SULFUR (Albedo)</strong> — Process: the OWM, OLM, OOWM. <small>Organic World Model that learns</small></li>
+  <li>③ <strong>MERCURY (Citrinitas)</strong> — Bridge: 207+ MCP servers, federation. <small>The connective tissue</small></li>
+  <li>④ <strong>SPIRIT (Rubedo)</strong> — Witness: SIGIL chain, Ed25519-signed hash chain. <small>Audit-grade truth</small></li>
+  <li>⑤ <strong>QUINTESSENCE (Lapis)</strong> — Sovereign: the Care Floor at 0.95 + BFT 12-around-1. <small>The alchemical gold</small></li>
+</ol>
+</div>
+
+<div class="ascii">
+       INPUT
+         │
+         ▼
+  ┌──────────────┐
+  │  MAMBA-2 SSM │ ← 16-dim state, infinite context
+  └──────┬───────┘
+         ▼
+  ┌──────────────┐
+  │  64-EXPERT   │ ← Mixture of Experts, top-4
+  │     MoE      │
+  └──────┬───────┘
+         ▼
+  ┌──────────────┐
+  │   STANDARD   │ ← Multi-head attention
+  │  ATTENTION   │
+  └──────┬───────┘
+         ▼
+  ┌──────────────┐
+  │  SOV3 MIDDLE │ ← Care floor + BFT gate
+  └──────┬───────┘
+         ▼
+  ┌──────────────┐
+  │   SIGIL      │ ← Ed25519 + PQC signed
+  │   WRAP       │
+  └──────┬───────┘
+         ▼
+       OUTPUT
+</div>
+
+<h2>🏆 Certificate Tiers</h2>
+<div class="tiers">
+  <div class="tier bronze"><h3>🥉 Bronze</h3><div class="pct">60-69%</div><div class="role">citizen</div><p style="color: #888; font-size: 0.85rem;">Basic sovereign competency</p></div>
+  <div class="tier silver"><h3>🥈 Silver</h3><div class="pct">70-79%</div><div class="role">citizen+</div><p style="color: #888; font-size: 0.85rem;">Operating sovereign systems</p></div>
+  <div class="tier gold"><h3>🥇 Gold</h3><div class="pct">80-89%</div><div class="role">pro</div><p style="color: #888; font-size: 0.85rem;">Advanced sovereign practice</p></div>
+  <div class="tier platinum"><h3>💎 Platinum</h3><div class="pct">90-100%</div><div class="role">sovereign-architect</div><p style="color: #888; font-size: 0.85rem;">Master practitioner, can deploy hives</p></div>
+</div>
+
+<h2>🛤️ 4 Learning Paths</h2>
+<div class="paths">
+  <div class="path"><h4>Path A — Developer</h4><p>Modules 1, 2, 5, 8, 9. Focus on architecture, SIGIL, deployment. Get to running sovereign models in &lt;2h.</p></div>
+  <div class="path"><h4>Path B — Compliance Officer</h4><p>Modules 1, 3, 4, 5, 6, 9. Care Floor, BFT, SIGIL, Article 50. Audit-grade expertise.</p></div>
+  <div class="path"><h4>Path C — Sovereign Architect</h4><p>All 10 modules. Full sovereign mastery. Architecture, governance, deployment, certification.</p></div>
+  <div class="path"><h4>Path D — Curious Citizen</h4><p>Modules 1, 3, 5, 7, 9. What is sovereign AI? Care Floor. SIGIL. DORADO. Certification.</p></div>
+</div>
+
+<h2>🎯 4 Key Takeaways</h2>
+<div class="takeaway"><h4>1. Sovereign ≠ Corporate</h4><p>Corporate AI serves shareholders. Sovereign AI serves the citizen. The substrate is auditable, the chain is open, the Care Floor is enforced at 0.95.</p></div>
+<div class="takeaway"><h4>2. Care Floor = The Constitution</h4><p>Every sovereign action must clear 0.95 across 12 dimensions. Below 0.95 = refused. The enforcer is not a guideline; it is load-bearing.</p></div>
+<div class="takeaway"><h4>3. BFT 12-around-1 = No Single Point of Failure</h4><p>12 sovereign queens vote. 2/3 majority wins. Byzantine fault tolerance means up to 4 queens can be compromised and the system still works.</p></div>
+<div class="takeaway"><h4>4. SIGIL = Regulator-Grade Proof</h4><p>Every action is Ed25519 + PQC ML-DSA-65 signed. Hash-chained. Publicly verifiable. This is what makes "trust" a non-issue — verify.</p></div>
+
+<div class="center">
+  <a href="01-introduction.html" class="cta">Start Module 1: Introduction →</a>
+  <a href="09-certification.html" class="cta secondary">Take the Exam</a>
+</div>
+
+<footer>
+  <p><strong>🐉 CSOAI Ltd (UK 16939677) — Sovereign AI 101</strong></p>
+  <p>The sovereign substrate training · 10 modules · 4 hours · FREE</p>
+  <p>License: <a href="/LICENSE">MIT</a> · Composite 7.305 · Care Floor 0.95 · BFT 12-around-1</p>
+  <p>Crown Lineage 1795-2026 · Crown Authorisation granted 4 Jul 2026</p>
+  <p><a href="/">csoai.org</a> · <a href="/verify/">verify</a> · <a href="/charter2/sovereign-ai-charter.html">Sovereign AI Charter</a> · <a href="/training.html">All training</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">Sovereign by construction. MIT-licensed. CCO-licensed. OSI-aligned.</p>
+</footer>
+
+</body>
+</html>

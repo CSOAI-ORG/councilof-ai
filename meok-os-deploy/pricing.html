@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEOK — pricing. Build your own AI. Own your data.</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1410'/%3E%3Ctext x='16' y='23' font-family='Arial' font-size='20' font-weight='800' fill='%23c9a84c' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E"/>
+<meta property="og:title" content="MEOK — Build your own AI. Own your data."/>
+<meta property="og:description" content="Free on open-source models, Pro full-stack, or pay-as-you-go. Cheaper than the $20 closed assistants — and your data stays yours."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://os.meok.ai/pricing.html"/>
+<meta property="og:image" content="https://os.meok.ai/api/avatar?queen_id=queen-care&size=600"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="description" content="MEOK Sovereign OS — Free on open-source models, Pro full-stack subscription, or pay-as-you-go. Own your data. Safe by design.">
+<style>
+:root{--gold:#c9a84c;--bg:#F5F0E6;--card:#FFFCF5;--ink:#2a1a14;--dim:#7a6a58;--border:rgba(201,168,76,.28);--green:#10b981}
+*{margin:0;box-sizing:border-box}
+body{font-family:'Space Grotesk',-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 22px 70px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:18px;margin-bottom:26px}
+.logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#1a1410,#3a2e1a);color:var(--gold);display:grid;place-items:center;font-weight:900}
+h1{font-size:38px;letter-spacing:-.02em;text-align:center;line-height:1.08}
+h1 span{background:linear-gradient(120deg,var(--gold),#8a6f2e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{text-align:center;color:var(--dim);font-size:17px;margin:12px auto 8px;max-width:560px;line-height:1.5}
+.bill{display:flex;gap:8px;justify-content:center;margin:18px 0 30px}
+.bill button{border:1px solid var(--border);background:var(--card);color:var(--dim);font:600 13px inherit;padding:7px 16px;border-radius:999px;cursor:pointer}
+.bill button.on{background:#1a1410;color:var(--gold);border-color:#1a1410}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:820px){.tiers{grid-template-columns:1fr}}
+.tier{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px 22px;display:flex;flex-direction:column}
+.tier.pop{border:2px solid var(--gold);box-shadow:0 16px 40px rgba(201,168,76,.16);position:relative}
+.tier.pop::before{content:'Most popular';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1a1410;font-size:11px;font-weight:800;padding:3px 12px;border-radius:999px;letter-spacing:.04em}
+.tier h2{font-size:19px}
+.tier .px{font-size:34px;font-weight:800;margin:10px 0 2px}
+.tier .px small{font-size:14px;color:var(--dim);font-weight:600}
+.tier .tag{color:var(--dim);font-size:13.5px;min-height:38px;line-height:1.4}
+.tier ul{list-style:none;margin:16px 0;flex:1;display:flex;flex-direction:column;gap:9px}
+.tier li{font-size:13.5px;display:flex;gap:9px;line-height:1.4}
+.tier li b{color:var(--ink)}
+.tick{color:var(--green);flex-shrink:0;font-weight:800}
+.cta{border:none;text-align:center;font:700 15px inherit;padding:13px;border-radius:11px;cursor:pointer;text-decoration:none;display:block}
+.cta.free{background:#1a1410;color:var(--gold)}
+.cta.pro{background:var(--gold);color:#1a1410}
+.cta.payg{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.guard{margin:34px auto 0;max-width:760px;text-align:center;color:var(--dim);font-size:13.5px;line-height:1.6;padding:16px;border-radius:12px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.25)}
+.ent{margin:26px auto 0;max-width:760px;text-align:center;font-size:13.5px;color:var(--dim)}
+.ent a{color:var(--gold);font-weight:700}
+footer{margin-top:34px;text-align:center;color:var(--dim);font-size:12.5px}
+</style></head><body>
+<div class="wrap">
+<div class="brand"><div class="logo">M</div> MEOK</div>
+<h1>Build your own AI.<br><span>Own your data. Safe.</span></h1>
+<p class="sub">Your sovereign OS. Start <b>free</b> on open-source models — your data never leaves you. Go Pro for the full stack, or pay only for what you use.</p>
+<div class="bill"><button id="bMo" class="on" onclick="setBill('mo')">Monthly</button><button id="bYr" onclick="setBill('yr')">Annual · save 2 months</button></div>
+
+<div class="tiers">
+  <div class="tier">
+    <h2>Free</h2>
+    <div class="px">£0</div>
+    <div class="tag">Your own sovereign AI, forever free — on open-source models.</div>
+    <ul>
+      <li><span class="tick">✓</span> The full MEOK OS + your Sovereign companion</li>
+      <li><span class="tick">✓</span> <b>Open-source models</b> (gpt-oss-120b, Llama) — fast, free</li>
+      <li><span class="tick">✓</span> Your data stays <b>on your device</b>. Never sold.</li>
+      <li><span class="tick">✓</span> SOV Space — community open-source tools</li>
+      <li><span class="tick">✓</span> Emergence character + voice</li>
+      <li><span class="tick">✓</span> Council governance (signed, care-aligned)</li>
+    </ul>
+    <a class="cta free" href="/">Start free →</a>
+  </div>
+
+  <div class="tier pop">
+    <h2>Pro</h2>
+    <div class="px"><span id="proPx">£12.99</span><small id="proUnit">/mo</small></div>
+    <div class="tag">The full stack — the best models, every tool, your living character.</div>
+    <ul>
+      <li><span class="tick">✓</span> <b>Everything in Free, plus:</b></li>
+      <li><span class="tick">✓</span> <b>Premium model stack</b> — Claude, GPT &amp; more, auto-routed</li>
+      <li><span class="tick">✓</span> Full 13-queen council + deep memory</li>
+      <li><span class="tick">✓</span> All SOV Space tools + 1-tap connect</li>
+      <li><span class="tick">✓</span> 3D character (procedural emergence + creature) · bring your own VRM / Ready Player Me avatar</li>
+      <li><span class="tick">✓</span> Priority compute + early features</li>
+    </ul>
+    <a class="cta pro" href="#" onclick="go('pro');return false">Get Pro</a>
+  </div>
+
+  <div class="tier">
+    <h2>Pay-as-you-go</h2>
+    <div class="px">£0<small> + usage</small></div>
+    <div class="tag">No subscription. Top up credits, pay only for premium use.</div>
+    <ul>
+      <li><span class="tick">✓</span> Everything in Free, no monthly fee</li>
+      <li><span class="tick">✓</span> <b>Premium models metered</b> — pay per use, at cost + a little</li>
+      <li><span class="tick">✓</span> Top up any amount; never expires</li>
+      <li><span class="tick">✓</span> Transparent per-call pricing (you see every cost)</li>
+      <li><span class="tick">✓</span> Perfect for occasional / bursty use</li>
+    </ul>
+    <a class="cta payg" href="#" onclick="go('payg');return false">Add credit</a>
+  </div>
+</div>
+
+<div class="guard">🛡 <b>Sovereign by design.</b> Free runs on open-source models with your data on your device. Pro &amp; PAYG add premium models through your governed Sovereign — every action council-adjudicated &amp; Ed25519-signed. You always own your data; cancel anytime; export everything.</div>
+<div class="ent">Building for a team, or need compliance-grade AI governance? See <a href="/sovspace.html">SOV Space</a> &amp; the <a href="/">enterprise &amp; developer tiers</a> (Starter / Pro / Substrate / Defence).</div>
+<footer>MEOK Sovereign · vs ChatGPT/Claude/Gemini ($20/mo, closed, your data theirs) — MEOK is cheaper, open, and yours. <a href="/" style="color:var(--gold)">← MEOK OS</a></footer>
+</div>
+<script>
+const P={mo:{px:'£12.99',unit:'/mo'},yr:{px:'£129',unit:'/yr'}};
+function setBill(b){ document.getElementById('bMo').classList.toggle('on',b==='mo'); document.getElementById('bYr').classList.toggle('on',b==='yr'); document.getElementById('proPx').textContent=P[b].px; document.getElementById('proUnit').textContent=P[b].unit; window._bill=b; }
+async function go(plan){
+  const p = plan==='payg' ? 'payg' : (window._bill==='yr' ? 'pro-yr' : 'pro-mo');
+  try{
+    const r = await fetch('/api/checkout?plan='+p);
+    const d = await r.json();
+    if(d.ok && d.url){ location.href = d.url; return; }   // → Stripe Checkout (when configured)
+    toast('Paid plans are being wired (Stripe, test-mode first). <b>Start Free</b> and explore the full OS now →');
+  }catch(e){ toast('<b>Start Free</b> and explore — paid plans are being wired →'); }
+}
+function toast(html){
+  let t=document.getElementById('meok-toast');
+  if(!t){ t=document.createElement('div'); t.id='meok-toast'; t.style.cssText='position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:99;background:#1a1410;color:#f5f0e6;padding:14px 20px;border-radius:13px;box-shadow:0 16px 40px rgba(0,0,0,.3);font:14px Space Grotesk,sans-serif;max-width:90vw;display:flex;align-items:center;gap:14px'; document.body.appendChild(t); }
+  t.innerHTML=html+' <a href="/" style="color:var(--gold);font-weight:800;text-decoration:none;white-space:nowrap">Start free</a>';
+}
+</script><a id="meok-tour-pill" href="/?tour=demo" style="position:fixed;right:16px;bottom:16px;z-index:9999;background:#1a1410;color:#c9a84c;border:1px solid #c9a84c;border-radius:999px;padding:9px 16px;font:700 13px system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.3)">🎬 Take the tour</a>
+  <script defer src="/meok-reveal.js"></script>
+</body></html>

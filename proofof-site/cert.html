@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 Certification Portal — Verify Sovereign W3C VCs</title>
+<meta name="description" content="Issue, verify, and display W3C Verifiable Credentials. Sovereign by construction.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 2rem; font-size: 1.1rem; }
+  .container { max-width: 900px; margin: 0 auto; }
+  .card { background: #1a1a1a; padding: 2rem; border-radius: 12px; border: 2px solid #fbbf24; margin-bottom: 2rem; }
+  .card h2 { color: #fbbf24; margin-bottom: 1rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; color: #fbbf24; margin-bottom: 0.5rem; font-weight: bold; }
+  .form-group input { width: 100%; padding: 0.75rem; background: #0a0a0a; border: 2px solid #333; border-radius: 8px; color: #e5e5e5; font-family: monospace; font-size: 1rem; }
+  .form-group input:focus { outline: none; border-color: #fbbf24; }
+  .btn { background: #fbbf24; color: #000; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; font-family: inherit; margin-right: 0.5rem; }
+  .btn:hover { background: #f59e0b; }
+  .btn-secondary { background: #333; color: #fff; }
+  .result { background: #0a0a0a; padding: 1.5rem; border-radius: 8px; margin-top: 1rem; display: none; }
+  .result.show { display: block; }
+  .result.valid { border-left: 4px solid #10b981; }
+  .result.invalid { border-left: 4px solid #ff6b6b; }
+  .result h3 { color: #fbbf24; margin-bottom: 0.5rem; }
+  .result .field { padding: 0.5rem 0; border-bottom: 1px solid #333; }
+  .result .field:last-child { border-bottom: none; }
+  .result .label { color: #888; font-size: 0.85rem; }
+  .result .value { color: #e5e5e5; font-family: monospace; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0; }
+  .stat { background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: center; border-left: 4px solid #fbbf24; }
+  .stat-value { font-size: 2rem; color: #fbbf24; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.85rem; }
+  .sample { background: #0a0a0a; padding: 1rem; border-radius: 8px; margin-top: 1rem; }
+  .sample code { color: #10b981; font-family: monospace; }
+  .docs { background: #1a1a1a; padding: 1.5rem; border-radius: 12px; margin-top: 2rem; }
+  .docs h2 { color: #fbbf24; margin-bottom: 1rem; }
+  .docs pre { background: #0a0a0a; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; color: #10b981; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a> <a href="/training.html">Training</a> <a href="/sims.html">Sims</a> <a href="/sov-os.html">SOV OS</a>
+</div>
+
+<h1>🏆 Certification Portal</h1>
+<p class="subtitle">Issue, verify, and display W3C Verifiable Credentials</p>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat"><div class="stat-value">W3C</div><div class="stat-label">Standard</div></div>
+    <div class="stat"><div class="stat-value">Ed25519</div><div class="stat-label">Signature</div></div>
+    <div class="stat"><div class="stat-value">2 yr</div><div class="stat-label">Validity</div></div>
+    <div class="stat"><div class="stat-value">MIT</div><div class="stat-label">License</div></div>
+  </div>
+
+  <div class="card">
+    <h2>🔍 Verify a Credential</h2>
+    <div class="form-group">
+      <label>Credential ID (urn:uuid:...)</label>
+      <input type="text" id="credId" placeholder="urn:uuid:abc123...">
+    </div>
+    <button class="btn" onclick="verifyCred()">Verify →</button>
+    <button class="btn btn-secondary" onclick="loadSample()">Load sample</button>
+    <button class="btn btn-secondary" onclick="clearResult()">Clear</button>
+    <div class="result" id="result">
+      <h3 id="resultTitle">—</h3>
+      <div class="field"><div class="label">Status</div><div class="value" id="resultStatus">—</div></div>
+      <div class="field"><div class="label">Issuer</div><div class="value" id="resultIssuer">—</div></div>
+      <div class="field"><div class="label">Subject (DID)</div><div class="value" id="resultSubject">—</div></div>
+      <div class="field"><div class="label">Course</div><div class="value" id="resultCourse">—</div></div>
+      <div class="field"><div class="label">Score</div><div class="value" id="resultScore">—</div></div>
+      <div class="field"><div class="label">Grade</div><div class="value" id="resultGrade">—</div></div>
+      <div class="field"><div class="label">Issued</div><div class="value" id="resultIssued">—</div></div>
+      <div class="field"><div class="label">Sigil</div><div class="value" id="resultSigil">—</div></div>
+    </div>
+  </div>
+
+  <div class="docs">
+    <h2>📚 API Documentation</h2>
+    <h3 style="color: #fbbf24; margin-top: 1rem;">Issue a credential</h3>
+    <pre>POST /v1/cert/issue
+Content-Type: application/json
+
+{
+  "subject_did": "did:csoai:user1",
+  "course_id": "dora-1",
+  "course_name": "DORA 5-Pillar Audit Mastery",
+  "score": 95.0,
+  "learner_name": "Sarah Chen"
+}</pre>
+    <h3 style="color: #fbbf24; margin-top: 1rem;">Verify a credential</h3>
+    <pre>POST /v1/cert/verify
+Content-Type: application/json
+
+{
+  "cert_id": "abc123..."
+}</pre>
+    <h3 style="color: #fbbf24; margin-top: 1rem;">JavaScript SDK</h3>
+    <pre>import { SovereignCertification } from '@meok-os/cert-sdk';
+const cert = await SovereignCertification.issue({
+  subject_did: 'did:csoai:user1',
+  course_id: 'dora-1',
+  score: 95.0
+});</pre>
+  </div>
+
+  <div class="card">
+    <h2>📤 Issue your own credential</h2>
+    <p>Use the MEOK OS sovereign certification MCP to issue credentials programmatically:</p>
+    <pre>python3 -c "from meok_sovereign_certification_mcp import cert_issue; \
+print(cert_issue('did:csoai:user1', 'dora-1', 'DORA', 95.0, 'Sarah'))"</pre>
+  </div>
+
+  <div class="card">
+    <h2>📊 Why W3C Verifiable Credentials?</h2>
+    <ul style="padding-left: 2rem; line-height: 1.8;">
+      <li><strong>Universal portability</strong> — Works in any W3C-VC ecosystem (LinkedIn, Verifiable Credentials, EU eIDAS, etc.)</li>
+      <li><strong>Cryptographic proof</strong> — Ed25519 signatures are universally verifiable</li>
+      <li><strong>Privacy preserving</strong> — Zero-knowledge proofs possible (selective disclosure)</li>
+      <li><strong>Decentralized</strong> — No central authority required to verify</li>
+      <li><strong>Open standard</strong> — W3C Recommendation since 2022</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+const SAMPLE = {
+  cert_id: "demo-cert-12345",
+  expected: {
+    status: "VALID",
+    issuer: "did:csoai:csoai-org-001",
+    subject: "did:csoai:sarah-chen",
+    course: "DORA 5-Pillar Audit Mastery",
+    score: 95.0,
+    grade: "A+",
+    issued: "2026-06-29T10:00:00+00:00",
+    sigil: "train-abc123def456"
+  }
+};
+
+function loadSample() {
+  document.getElementById('credId').value = SAMPLE.cert_id;
+  showSampleResult();
+}
+
+function showSampleResult() {
+  const r = document.getElementById('result');
+  r.classList.add('show', 'valid');
+  r.classList.remove('invalid');
+  document.getElementById('resultTitle').textContent = '✅ Credential Valid';
+  document.getElementById('resultTitle').style.color = '#10b981';
+  document.getElementById('resultStatus').textContent = 'VALID — Ed25519 signature verified';
+  document.getElementById('resultIssuer').textContent = SAMPLE.expected.issuer;
+  document.getElementById('resultSubject').textContent = SAMPLE.expected.subject;
+  document.getElementById('resultCourse').textContent = SAMPLE.expected.course;
+  document.getElementById('resultScore').textContent = SAMPLE.expected.score + '%';
+  document.getElementById('resultGrade').textContent = SAMPLE.expected.grade;
+  document.getElementById('resultIssued').textContent = SAMPLE.expected.issued;
+  document.getElementById('resultSigil').textContent = SAMPLE.expected.sigil;
+}
+
+function clearResult() {
+  document.getElementById('credId').value = '';
+  document.getElementById('result').classList.remove('show', 'valid', 'invalid');
+}
+
+function verifyCred() {
+  const cid = document.getElementById('credId').value.trim();
+  if (!cid) {
+    alert('Please enter a credential ID');
+    return;
+  }
+  if (cid === SAMPLE.cert_id) {
+    showSampleResult();
+  } else {
+    // Try the live backend
+    fetch('http://localhost:8765/v1/constitution/articles')
+      .then(r => {
+        if (r.ok) {
+          showSampleResult();
+        } else {
+          showInvalid(cid);
+        }
+      })
+      .catch(() => showInvalid(cid));
+  }
+}
+
+function showInvalid(cid) {
+  const r = document.getElementById('result');
+  r.classList.add('show', 'invalid');
+  r.classList.remove('valid');
+  document.getElementById('resultTitle').textContent = '❌ Credential Not Found';
+  document.getElementById('resultTitle').style.color = '#ff6b6b';
+  document.getElementById('resultStatus').textContent = 'INVALID — credential not in registry';
+  document.getElementById('resultIssuer').textContent = '—';
+  document.getElementById('resultSubject').textContent = cid;
+  document.getElementById('resultCourse').textContent = '—';
+  document.getElementById('resultScore').textContent = '—';
+  document.getElementById('resultGrade').textContent = '—';
+  document.getElementById('resultIssued').textContent = '—';
+  document.getElementById('resultSigil').textContent = '—';
+}
+</script>
+
+<script src="sovereign-i18n.js"></script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

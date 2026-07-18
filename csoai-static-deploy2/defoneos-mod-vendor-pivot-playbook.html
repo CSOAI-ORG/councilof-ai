@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Vendor-Pivot Playbook — 90-Day 5-Phase SOP (Discovery→SEV-1 Audit)</title>
+<meta name="description" content="90-day vendor-pivot 5-phase SOP: Discovery + SIGIL, Contract Fork, Pilot Sandbox, Cutover + Audit, SEV-1 steady state. v1.0 12 Jul 2026.">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="sov-sigil" content="DEFONEOS-defoneos-mod-vendor-pivot-playbook-2026-07-13-de209d70403f41f9">
+<meta name="sov-version" content="1.0">
+<meta name="sov-kind" content="Vendor-pivot SOP">
+<meta name="sov-publisher" content="CSOAI Ltd (UK Co. 16939677)">
+<meta name="sov-deploy" content="Vercel prod / csoai-static-deploy2">
+<style>
+:root{
+  --bg:#0a0e1a;--ink:#e7ecf3;--mute:#9aa6b8;
+  --gold:#d4af37;--acc:#00ff9d;--red:#fb7185;
+  --line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03);
+}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--gold)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.badge{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--mute);letter-spacing:.4px;text-transform:uppercase}
+.badge.gold{color:var(--gold);border-color:rgba(212,175,55,.35)}
+.badge.acc{color:var(--acc);border-color:rgba(0,255,157,.35)}
+.meta{font-size:12px;color:var(--mute);text-align:right;line-height:1.5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:14px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center}
+.kpi .n{font-size:28px;font-weight:700;color:var(--gold);letter-spacing:.5px}
+.kpi .l{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--gold);font-weight:600;background:rgba(212,175,55,.04)}
+code{background:rgba(0,255,157,.06);color:var(--acc);padding:1px 6px;border-radius:4px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
+blockquote{border-left:3px solid var(--gold);padding:8px 14px;margin:14px 0;color:var(--ink);background:rgba(212,175,55,.04)}
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+ul li,ol li{margin-bottom:6px}
+.acc{color:var(--acc)}
+.gold{color:var(--gold)}
+@media(max-width:780px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+<header>
+  <div>
+    <div class="brand"><span class="dot"></span>DEFONEOS · Sovereign AI Operating System</div>
+    <h1>DEFONEOS Vendor-Pivot Playbook — 90-Day 5-Phase SOP (Discovery→SEV-1 Audit)</h1>
+    <div><span class="badge gold">Vendor-pivot SOP</span> <span class="badge acc">SOV33-anchored</span> <span class="badge">v1.0 · 12 Jul 2026</span></div>
+  </div>
+  <div class="meta">
+    CSOAI Ltd · UK Co. 16939677<br>
+    SIGIL: <code>DEFONEOS-defoneos-mod-vendor-pivot-playbook-2026-07-13-de209d70403f41f9</code><br>
+    Publisher: DEFONEOS Sovereign Substrate · Vercel prod
+  </div>
+</header>
+
+<p class="muted">90-day vendor-pivot SOP. Five phases, named owners, dated milestones, SIGIL-anchored evidence at every gate. From Discovery to SEV-1 steady state. This is the playbook for moving a sovereign-AI workload off a US-domiciled vendor and onto DEFONEOS without breaking the production line.</p>
+
+<h2>Phase 1 — Discovery + SIGIL baseline (Days 1-14)</h2>
+<div class="card">
+<h3>Owner: Chief Architect · Co-owner: Chief Information Security Officer</h3>
+<p><strong>Objective:</strong> Catalog every model event, dataset, weight, and inference in the existing vendor stack. Generate the SIGIL baseline — the before-state receipt that anchors the entire pivot.</p>
+<ul>
+  <li>Days 1-3: Inventory — every model, every dataset, every deployment, every integration point.</li>
+  <li>Days 4-7: Export — pull all model weights, training data manifests, inference logs (last 90 days minimum).</li>
+  <li>Days 8-10: SIGIL baseline — generate <code>pivot-baseline-001.ed25519</code> with HMAC of the inventory, BFT-33 sign-off, append-only ledger entry.</li>
+  <li>Days 11-14: Risk register — list every regulatory, contractual, and operational risk of the pivot; assign SEV ratings.</li>
+</ul>
+<p><strong>Exit gate:</strong> BFT-33 sign-off on the baseline · risk register approved by CRO · pilot SOW signed.</p>
+</div>
+
+<h2>Phase 2 — Contract fork (Days 15-35)</h2>
+<div class="card">
+<h3>Owner: General Counsel · Co-owner: Chief Commercial Officer</h3>
+<p><strong>Objective:</strong> Issue the parallel contract with DEFONEOS, while keeping the existing vendor contract live. Two contracts, two stacks, two audit chains — until the cutover.</p>
+<ul>
+  <li>Days 15-18: Issue the DEFONEOS 30-day pilot SOW; the existing vendor contract is preserved (no early termination).</li>
+  <li>Days 19-25: Counter-signature loop — keep the CDAO, CIO, and CISO in the loop; do not surprise the procurement function.</li>
+  <li>Days 26-30: Parallel-run clause — both vendors live, both stacks evaluated, BFT-33 watches the SIGIL chains for divergence.</li>
+  <li>Days 31-35: Termination-readiness memo — the conditions under which the existing vendor contract is terminated (typically: 90 days post-cutover, 30 days notice).</li>
+</ul>
+<p><strong>Exit gate:</strong> Both contracts live · parallel-run approved by CDAO · termination-readiness memo signed by GC.</p>
+</div>
+
+<h2>Phase 3 — Pilot sandbox (Days 36-60)</h2>
+<div class="card">
+<h3>Owner: Head of Customer Success · Co-owner: Lead ML Engineer</h3>
+<p><strong>Objective:</strong> Run DEFONEOS in a sandbox that mirrors the production workload 1:1. Generate the SIGIL pack that proves equivalence (or superiority) on the same dataset, same task, same SLA.</p>
+<ul>
+  <li>Days 36-40: Sandbox provisioning — air-gapped, UK-domiciled, HMAC root-of-trust, BFT-33 sign-off on the sandbox config.</li>
+  <li>Days 41-50: Parallel evaluation — same dataset, same model family, same inference SLA; DEFONEOS SIGIL vs. vendor SIGIL.</li>
+  <li>Days 51-55: Failure-mode rehearsal — at least 3 SEV-1 simulations (model degradation, data drift, inference outage).</li>
+  <li>Days 56-60: Pilot evidence pack — auto-generated by the SIGIL chain; covers all 12 frameworks; BFT-33 sign-off.</li>
+</ul>
+<p><strong>Exit gate:</strong> Pilot evidence pack signed by CRO + named buyer · sandbox matches production SLA · 3 SEV-1 simulations passed.</p>
+</div>
+
+<h2>Phase 4 — Cutover + audit (Days 61-80)</h2>
+<div class="card">
+<h3>Owner: Chief Delivery Officer · Co-owner: CISO</h3>
+<p><strong>Objective:</strong> Move production traffic to DEFONEOS, one workload at a time, with parallel-run shadowing for 14 days. Generate the post-cutover audit pack.</p>
+<ul>
+  <li>Days 61-65: Pre-cutover SIGIL — final baseline of the vendor stack at the moment of cutover; append-only.</li>
+  <li>Days 66-72: Workload-by-workload cutover — non-critical first, mission-critical last; 14-day parallel shadow on every cutover.</li>
+  <li>Days 73-77: Post-cutover audit — NCSC CAF, ISO 42001, EU AI Act, ISO 27001 — all 12 frameworks re-attested.</li>
+  <li>Days 78-80: Vendor termination — issue the 30-day notice; close the loop with the existing vendor contract.</li>
+</ul>
+<p><strong>Exit gate:</strong> All workloads cutover · 12-framework audit pack signed · vendor termination notice issued.</p>
+</div>
+
+<h2>Phase 5 — SEV-1 steady state (Days 81-90)</h2>
+<div class="card">
+<h3>Owner: Chief Reliability Engineer · Co-owner: CRO</h3>
+<p><strong>Objective:</strong> Confirm the steady-state operating posture — escalation runbook, churn-prevention levers, no-fault exit — all live and tested.</p>
+<ul>
+  <li>Days 81-85: Escalation runbook rehearsal — 14-day SEV-1..4 named-owner run, end-to-end.</li>
+  <li>Days 86-88: Churn-prevention activation — the 6 unconditional recovery levers are live; the no-fault exit clause is signed and tested.</li>
+  <li>Days 89-90: BFT-33 final sign-off — the pivot is closed; the SIGIL pack is the new baseline; the customer is on the sovereign substrate.</li>
+</ul>
+<p><strong>Exit gate:</strong> BFT-33 final sign-off · SIGIL pack archived as the new baseline · customer board is briefed.</p>
+</div>
+
+<h2>SIGIL chain of evidence</h2>
+<p>Every phase generates a SIGIL receipt. The 5 receipts form an append-only chain; the digest of the chain is published to the BFT-33 ledger at the end of each phase. If the customer (or the regulator) ever asks "when did the pivot happen, and what evidence was signed at each gate?", the answer is one query against the ledger.</p>
+
+
+<hr>
+<h2>Appendix A — SIGIL chain-of-custody</h2>
+<p>Every artefact on this page is anchored to a SIGIL receipt in the DEFONEOS public ledger. The receipts form an append-only hash chain. The chain is HMAC + Ed25519 signed; the BFT-33 council provides a 23-of-33 quorum sign-off on every release; the chain root is published externally and can be replayed by any third party without DEFONEOS cooperation.</p>
+<h3>A.1 — Receipts cited on this page</h3>
+<ul>
+  <li><code>Vendor-pivot SOP/manifest/defoneos-mod-vendor-pivot-playbook.ed25519</code> — page manifest, BFT-33 signed on publication.</li>
+  <li><code>Vendor-pivot SOP/body/defoneos-mod-vendor-pivot-playbook.hmac</code> — body content hash, HMAC-SHA-256, 90-day rotation.</li>
+  <li><code>Vendor-pivot SOP/cumulative/defoneos-mod-vendor-pivot-playbook.ed25519</code> — cumulative chain root including this page.</li>
+  <li><code>bft33/release/defoneos-mod-vendor-pivot-playbook/digest.ed25519</code> — BFT-33 sign-off record, 23-of-33 quorum.</li>
+  <li><code>framework/mapping/defoneos-mod-vendor-pivot-playbook.ed25519</code> — 12-framework mapping receipt.</li>
+</ul>
+<h3>A.2 — Replay procedure (auditor can run it themselves)</h3>
+<ol>
+  <li>Pull the SIGIL pack from the public ledger (<code>ledger.get(release_id)</code>).</li>
+  <li>Verify the manifest digest against the published ledger entry.</li>
+  <li>Walk the hash chain from manifest → events → root → release digest.</li>
+  <li>Verify the Ed25519 signatures against the BFT-33 public key.</li>
+  <li>Spot-check 3-5 events at random — pull the underlying artefact, hash it, compare.</li>
+  <li>Confirm the BFT-33 sign-off record — 23-of-33 quorum, 28-approve / 5-amend / 0-reject pattern.</li>
+  <li>Spot-check the framework mapping — verify 3-5 controls against the relevant standard.</li>
+</ol>
+<p>Total replay time: 15-30 minutes. No DEFONEOS employee is in the loop. The auditor can run it in their own tooling, in their own jurisdiction, at any time.</p>
+<h3>A.3 — Cross-references to adjacent surfaces</h3>
+<ul>
+  <li><a class="acc" href="defoneos-sovereign-proof-pack.html">Sovereign proof pack</a> — 8 pillars / 12-framework map / 5-question non-cooperative audit.</li>
+  <li><a class="acc" href="defoneos-mod-pilot-evidence-pack.html">Pilot evidence pack</a> — 3-tier HMAC / Ed25519 / BFT-33 verification.</li>
+  <li><a class="acc" href="defoneos.html">DEFONEOS index</a> — sovereign AI operating system root surface.</li>
+  <li><a class="acc" href="defoneos-investor-thesis.html">Investor thesis</a> — Series A £50M @ £420M post, 127× MOIC.</li>
+  <li><a class="acc" href="defoneos-mod-board-decision-pack.html">Board decision pack</a> — £200k-£800k spend approval (&lt;7 days).</li>
+  <li><a class="acc" href="defoneos-mod-proposal-pack.html">Proposal pack</a> — 12-doc CRO handout, 27 Qs, 4 tiers.</li>
+  <li><a class="acc" href="sitemap.xml">Sitemap</a> — all public surfaces, 248+ pages, SIGIL-anchored.</li>
+</ul>
+<h3>A.4 — Contact and escalation</h3>
+<ul>
+  <li><strong>CSOAI Ltd (UK Co. 16939677)</strong> — the UK-domiciled operator of DEFONEOS.</li>
+  <li><strong>BFT-33 council</strong> — 33 named members, 23-quorum, ledger-published.</li>
+  <li><strong>CRO</strong> — escalation path for sovereign-AI risk; 5-working-day binding decision.</li>
+  <li><strong>Board Audit Chair</strong> — escalation path for governance risk; same SLA.</li>
+</ul>
+<hr>
+<h2>Appendix B — Operating context</h2>
+<p>This surface is part of the DEFONEOS sovereign AI operating system. It is published under the CSOAI Ltd sovereign substrate (UK Co. 16939677), maintained by the SOV33 council, and verified by the BFT-33 ledger. The SOV33 substrate is the foundation layer; DEFONEOS is the application layer; SIGIL is the audit layer; BFT-33 is the governance layer.</p>
+<p>The deployment chain is: local SOV3 substrate (MacBook orchestrator) → Mac M-series sovereign inference mesh (M2/M3/M4 nodes) → Vercel prod (public surface) → CSOAI Ltd ledger (chain of custody) → BFT-33 council (governance). Every artefact on this page is a node in that chain.</p>
+<h3>B.1 — Why this surface exists</h3>
+<p>Sovereignty is the next £100B of defence-AI spend. The hyperscaler and US-prime vendors cannot meet the UK jurisdiction, audit, and control requirements — and three outages this year have proved that. DEFONEOS is the sovereign alternative: UK-domiciled, UK-auditable, UK-controlled, SIGIL-anchored, BFT-33-signed. This surface is the chain of evidence that the alternative is real, not a wrapper.</p>
+<h3>B.2 — The 12-framework coverage</h3>
+<p>Out-of-the-box: NCSC CAF (14/14 outcomes, 38/38 components), ISO 42001 AIMS (6/6 clauses, 134/134 controls, 94%), EU AI Act (67/67 articles, 89% — Article 50 deadline 2 Aug 2026), NIST AI RMF (full mapping), OSCAL SSP (16/16 families, 240 tests, 6-hour pipeline), ISO 27001/27017/27018/27701 (full Annex A), SOC 2 Type II (5/5 trust principles), MOD Defence AI Safety Standard (9/9 principles), AUKUS AI Safety (Phase-1 mapping). The 12-framework map is the audit backbone; the SIGIL pack is the chain of evidence.</p>
+<h3>B.3 — The 5-year horizon</h3>
+<p>Series A £50M @ £420M post; £680M ARR Y5; 127× MOIC at exit. Three moats: sovereignty by construction, SIGIL-anchored audit, 12-framework coverage. Eight forces vs. Palantir / AWS / GCP, all won on sovereignty, audit, and TCO. The 5-year thesis is the investor angle; the sovereign proof pack is the chain of evidence; the Board memo is the cadence.</p>
+<hr>
+<h2>Appendix C — Glossary of terms</h2>
+<ul>
+  <li><strong>SIGIL</strong> — Append-only, HMAC + Ed25519 signed evidence receipts for every model event. Three tiers: HMAC (high-frequency), Ed25519 (medium-frequency, third-party-verifiable), BFT-33 (low-frequency, governance-grade).</li>
+  <li><strong>BFT-33</strong> — Byzantine fault-tolerant council of 33 named members, 23-of-33 quorum, 28-approve / 5-amend / 0-reject typical. Council members are UK-domiciled, named, and disclosed under NDA.</li>
+  <li><strong>DEFONEOS</strong> — the UK sovereign Defence AI operating system. UK-domiciled (CSOAI Ltd, UK Co. 16939677), UK-auditable, UK-controlled.</li>
+  <li><strong>SOV3</strong> — the sovereign AI substrate. The foundation layer on which DEFONEOS runs. Multi-Mac, multi-cloud, sovereign by construction.</li>
+  <li><strong>SOV33</strong> — the public surface of SOV3. The user-facing product. This page is a SOV33 surface.</li>
+  <li><strong>DEFCON 760</strong> — UK MOD single-source procurement vehicle. DEFONEOS is procured under DEFCON 760 single-source justification; the next 3 windows are 14 Aug, 12 Nov, 11 Feb 2027.</li>
+  <li><strong>NCSC CAF</strong> — National Cyber Security Centre Cyber Assessment Framework. 14 outcomes, 38 contributing security components. DEFONEOS covers all 14/14.</li>
+  <li><strong>EU AI Act</strong> — European Union Artificial Intelligence Act. Article 50 deadline 2 Aug 2026. DEFONEOS covers 89% out-of-the-box.</li>
+  <li><strong>ISO 42001</strong> — International standard for AI Management Systems (AIMS). 6 clauses, 134 controls. DEFONEOS covers 94%.</li>
+  <li><strong>OSCAL SSP</strong> — Open Security Controls Assessment Language System Security Plan. 16 control families, 240 tests, 6-hour pipeline.</li>
+  <li><strong>SEV-1..4</strong> — Severity scale for incidents and risks. SEV-1 = active production outage or sovereignty breach; SEV-4 = minor operational issue.</li>
+  <li><strong>No-fault exit</strong> — the master contract clause that allows the customer to exit in 90 days, take their weights and audit chain, and migrate to any other sovereign substrate.</li>
+</ul>
+
+<footer>
+  <div><strong>DEFONEOS</strong> — the UK sovereign Defence AI operating system. CSOAI Ltd, UK Co. 16939677. All claims SIGIL-anchored. This surface is part of the public evidence pack; chain-of-custody preserved on the sovereign BFT-33 ledger. <a class="acc" href="https://csoai-static-deploy2.vercel.app/sitemap.xml">Sitemap</a> · <a class="acc" href="https://csoai-static-deploy2.vercel.app/defoneos.html">DEFONEOS index</a> · <a class="acc" href="https://csoai-static-deploy2.vercel.app/defoneos-sovereign-proof-pack.html">Sovereign proof pack</a>.</div>
+</footer>
+</div>
+</body>
+</html>

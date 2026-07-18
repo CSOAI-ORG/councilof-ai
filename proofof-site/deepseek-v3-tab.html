@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>DeepSeek-V3 — SOV-757</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1200px;margin:0 auto}
+h1{color:#10b981}
+.hero{background:radial-gradient(ellipse at center,rgba(16,185,129,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #10b981;border-radius:12px;margin-bottom:24px}
+.tagline{color:#10b981;font-size:18px;font-weight:700;margin:8px 0}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.metric{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.metric .v{font-size:24px;color:#10b981;font-weight:700}
+.metric .l{font-size:11px;color:#aaa;margin-top:4px}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.path{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.path-card{background:#02060f;border:1px dashed #10b981;border-radius:8px;padding:16px}
+.path-card.host{border-color:#ef4444}
+.path-card h4{color:#10b981;margin:0 0 8px 0}
+.path-card.host h4{color:#ef4444}
+.kv{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1f2937;font-size:12px}
+.kv .k{color:#888}.kv .v{color:#10b981}
+.btn{background:#10b981;color:#02060f;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-weight:700}
+.dead{background:#1a1a2e;border:1px solid #ef4444;border-radius:8px;padding:12px;margin:8px 0;color:#ef4444;font-size:12px}
+</style></head>
+<body>
+<div class="hero">
+<h1>🐉 DeepSeek-V3 — Strong Second</h1>
+<div class="tagline">684B parameters · NVIDIA NIM is connected · Modal multi-GPU hosts the weights</div>
+</div>
+<div class="metrics">
+<div class="metric"><div class="v">684B</div><div class="l">parameters</div></div>
+<div class="metric"><div class="v">$0.15-2</div><div class="l">CALL / 1M tok</div></div>
+<div class="metric"><div class="v">5</div><div class="l">HOST GPUs</div></div>
+<div class="metric"><div class="v">$25-40/h</div><div class="l">HOST cost</div></div>
+</div>
+<div class="panel">
+<h3>Two paths (settled)</h3>
+<div class="path">
+<div class="path-card">
+<h4>PATH 1 — CALL</h4>
+<div class="kv"><span class="k">Method</span><span class="v">DeepSeek API OR NVIDIA NIM</span></div>
+<div class="kv"><span class="k">Cost</span><span class="v">$0.15-2 / 1M tok</span></div>
+<div class="kv"><span class="k">GPU</span><span class="v">none (NIM connected)</span></div>
+<div class="kv"><span class="k">Reach</span><span class="v">all 684B</span></div>
+</div>
+<div class="path-card host">
+<h4>PATH 2 — HOST</h4>
+<div class="kv"><span class="k">GPUs</span><span class="v">5</span></div>
+<div class="kv"><span class="k">Cost</span><span class="v">$25-40/hour</span></div>
+<div class="kv"><span class="k">Blocker</span><span class="v">Owner-gated (Art 15)</span></div>
+</div>
+</div>
+</div>
+<div class="panel"><h3>Dead paths (memorized)</h3>
+<div class="dead">❌ SSH-spread · ❌ Mac hosting · ❌ From-scratch pretrain</div>
+</div>
+<div class="panel">
+<h3>Live API</h3>
+<button class="btn" onclick="load()">🔄 Load /api/sov4/frontier/model?id=deepseek-v3</button>
+<pre id="result" style="font-size:11px;color:#10b981;background:#02060f;padding:12px;border-radius:6px;max-height:400px;overflow-y:auto">Click to load...</pre>
+</div>
+<script>
+async function load() {
+  const r = await fetch('/api/sov4/frontier/model?id=deepseek-v3').then(r => r.json());
+  document.getElementById('result').textContent = JSON.stringify(r, null, 2);
+}
+</script>
+</body></html>

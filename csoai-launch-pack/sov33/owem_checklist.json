@@ -1,0 +1,268 @@
+{
+  "ts": "2026-07-14T07:32:33.510164+00:00",
+  "n_components": 10,
+  "components": [
+    {
+      "component": "OWEM Core Layers",
+      "description": "The 5 core layers of the SOV33 OWEM v3 architecture (Binding \u2192 Council \u2192 MoE \u2192 Merge Brain \u2192 Sigil Chain).",
+      "status": "\u2705 BUILT (sov33_owem_v3.py)",
+      "ref": "/Users/nicholas/clawd/_alignment/sovereign_merge_kit/sov33_owem_v3.py",
+      "check_items": [
+        {
+          "item": "L1 Sovereign Binding (Care-Floor 0.95 + Article 0 + Sovereign Mist 12 pillars)",
+          "status": "\u2705"
+        },
+        {
+          "item": "L2 12-around-1 BFT-33 Council (23/33 quorum, f=10 BFT, 4 mandatory co-routers)",
+          "status": "\u2705"
+        },
+        {
+          "item": "L3 4-anchor \u00d7 5-elders MoE (COMPLIANCE/DEFENSE/INTUITION/VOICE)",
+          "status": "\u2705"
+        },
+        {
+          "item": "L4 Sovereign-Merge Brain (qwen3:30b-a3b + QLoRA + Mamba-2 SSD)",
+          "status": "\u26a0\ufe0f STUB (qwen3-30b-a3b not pulled)"
+        },
+        {
+          "item": "L5 Sovereign SIGIL Chain (Ed25519 + OpenTimestamps + Sigstore-cosign)",
+          "status": "\u2705"
+        }
+      ]
+    },
+    {
+      "component": "Fluid Pyramid Architecture",
+      "description": "N-layer stacked residual OWEMs with per-layer mixing ratio (topology proof, not LLM capability).",
+      "status": "\u2705 BUILT (sov33_fluid_pyramid.py)",
+      "ref": "/Users/nicholas/clawd/_alignment/sovereign_merge_kit/sov33_fluid_pyramid.py",
+      "check_items": [
+        {
+          "item": "N-layer residual learning (each layer learns the residual of the layer below)",
+          "status": "\u2705"
+        },
+        {
+          "item": "Per-layer mixing ratio (nu) configurable",
+          "status": "\u2705"
+        },
+        {
+          "item": "Fluid depth (grow/shrink layers)",
+          "status": "\u2705"
+        },
+        {
+          "item": "Measured winner: 8-flat for 1-brain",
+          "status": "\u2705"
+        }
+      ]
+    },
+    {
+      "component": "4-Brain Hybrid Cascade",
+      "description": "2 small + 2 large models, split across left/right (conscious/subconscious).",
+      "status": "\u26a0\ufe0f STUB (qwen3:8b/meta-llama-3.3-70b not pulled)",
+      "ref": "/Users/nicholas/clawd/_alignment/sovereign_merge_kit/sov33_4brain.py",
+      "check_items": [
+        {
+          "item": "Left top-10% (conscious/routing) \u2014 small: qwen2.5:3b, large: meta-llama-3.3-70b",
+          "status": "\u26a0\ufe0f large not pulled"
+        },
+        {
+          "item": "Left bottom-90% (conscious/easy) \u2014 small: qwen2.5:3b, large: qwen3:8b",
+          "status": "\u26a0\ufe0f large not pulled"
+        },
+        {
+          "item": "Right top-10% (subconscious/deep) \u2014 small: qwen3:8b, large: meta-llama-3.3-70b",
+          "status": "\u26a0\ufe0f BOTH not pulled"
+        },
+        {
+          "item": "Right bottom-90% (subconscious/final) \u2014 small: qwen2.5:3b, large: meta-llama-3.3-70b",
+          "status": "\u26a0\ufe0f large not pulled"
+        },
+        {
+          "item": "Hybrid merge measured winner: 0.1/0.9 split, nu_small=1.0, nu_large=1.0",
+          "status": "\u2705"
+        }
+      ]
+    },
+    {
+      "component": "SSD Expert-Streaming Pipeline",
+      "description": "6-lever speedup stack (SSD stream, peer prediction, Venturi batch, SIGIL inline, LRU cache, async prefetch).",
+      "status": "\u2705 PROXY-MEASURED (ssd_venturi_speedup.py)",
+      "ref": "/Users/nicholas/clawd/csoai-launch-pack/sov33/ssd_venturi_speedup.py",
+      "check_items": [
+        {
+          "item": "SSD stream only active experts (44.6\u00d7 proxy speedup)",
+          "status": "\u2705"
+        },
+        {
+          "item": "Peer prediction (small brain predicts routing)",
+          "status": "\u2705"
+        },
+        {
+          "item": "Venturi batch (amortise SHA + care)",
+          "status": "\u2705"
+        },
+        {
+          "item": "SIGIL inline (SHA free on critical path)",
+          "status": "\u2705"
+        },
+        {
+          "item": "Expert LRU cache (50-75% hit rate)",
+          "status": "\u2705"
+        },
+        {
+          "item": "Async prefetch (hide SSD latency)",
+          "status": "\u2705"
+        },
+        {
+          "item": "Combined pipeline: 25.2\u00d7 proxy speedup",
+          "status": "\u2705"
+        }
+      ]
+    },
+    {
+      "component": "Truthful Parameter Accounting",
+      "description": "Refuses stack-summing; enforces 1.6T base / 862B deployed for DeepSeek V4-Pro.",
+      "status": "\u2705 ENFORCED (ledgerboard_v2.py)",
+      "ref": "/Users/nicholas/clawd/csoai-launch-pack/sov33/ledgerboard_v2.py",
+      "check_items": [
+        {
+          "item": "Refuses parameter stack-summing",
+          "status": "\u2705"
+        },
+        {
+          "item": "DeepSeek V4-Pro: 1.6T BASE / 862B DEPLOYED (verified)",
+          "status": "\u2705"
+        },
+        {
+          "item": "GLM-5.2: 744B total (headline only, architecture retracted)",
+          "status": "\u2705"
+        }
+      ]
+    },
+    {
+      "component": "Governed Robustness Benchmark",
+      "description": "Measures accuracy under adversary; median SOV33 wins 0.67 vs 0.00.",
+      "status": "\u2705 BUILT (GOVERNED_ROBUSTNESS_LEADERBOARD_2026-07-14.md)",
+      "ref": "/Users/nicholas/clawd/_alignment/GOVERNED_ROBUSTNESS_LEADERBOARD_2026-07-14.md",
+      "check_items": [
+        {
+          "item": "Measures accuracy under adversary (not keyword refusal)",
+          "status": "\u2705"
+        },
+        {
+          "item": "Median SOV33 wins 0.67 through 2/5 adversarial members",
+          "status": "\u2705"
+        },
+        {
+          "item": "Adopts HarmBench / StrongREJECT / BeaverTails for standard numbers",
+          "status": "\u26a0\ufe0f STAGED (not yet run)"
+        }
+      ]
+    },
+    {
+      "component": "Real Open-Source Base Models",
+      "description": "Named, licensed, downloadable models for each tier (T-base, soupable experts).",
+      "status": "\u26a0\ufe0f NOT FULLY PULLED (absorb_open_source.py)",
+      "ref": "/Users/nicholas/clawd/csoai-launch-pack/sov33/absorb_open_source.py",
+      "check_items": [
+        {
+          "item": "DeepSeek V4-Pro-Base 1.6T (MIT) \u2014 the T-scale frontier",
+          "status": "\u26a0\ufe0f NOT PULLED (320 GB)"
+        },
+        {
+          "item": "DeepSeek V4-Flash 158B/13B (MIT) \u2014 48GB Mac daily driver",
+          "status": "\u26a0\ufe0f NOT PULLED (80 GB)"
+        },
+        {
+          "item": "Qwen3-4B / Qwen3-8B (Apache-2.0) \u2014 16GB Mac daily driver",
+          "status": "\u26a0\ufe0f 4B/8B NOT PULLED (7.5 GB)"
+        },
+        {
+          "item": "Qwen3-32B / 30B-A3B (Apache-2.0) \u2014 soupable large experts",
+          "status": "\u26a0\ufe0f NOT PULLED (~18 GB)"
+        },
+        {
+          "item": "Qwen3.6 (Apache-2.0) \u2014 latest commercial-safe Qwen",
+          "status": "\u26a0\ufe0f NOT PULLED"
+        },
+        {
+          "item": "Qwen Research License (Qwen2.5-3B) \u2014 RETRACTED for commercial build",
+          "status": "\u2705 LOGGED"
+        }
+      ]
+    },
+    {
+      "component": "Owner-Gated Launch Sequence",
+      "description": "4 irreversible actions to transition from sovereign-by-design to sovereign-by-evidence.",
+      "status": "\u26a0\ufe0f BLOCKED (4 actions, 16 minutes)",
+      "ref": "README.md / DISPATCH.md",
+      "check_items": [
+        {
+          "item": "Stripe live + \u00a3999 Payment Link (5 min)",
+          "status": "\u26a0\ufe0f"
+        },
+        {
+          "item": "GitHub repo SOVEREIGN-LAYER-ZERO-CHARTER (60 s)",
+          "status": "\u26a0\ufe0f"
+        },
+        {
+          "item": "Push 27 files (30 s)",
+          "status": "\u26a0\ufe0f"
+        },
+        {
+          "item": "Send 3 cold emails (10 min)",
+          "status": "\u26a0\ufe0f"
+        }
+      ]
+    },
+    {
+      "component": "Self-Healing + Autonomous Operations",
+      "description": "Cron loops, L7/L8 intuition, BFT-33 voting, Care Floor 0.95.",
+      "status": "\u2705 RUNNING (cron + intuition-layers)",
+      "ref": "PROGRESS_2026-07-14.md",
+      "check_items": [
+        {
+          "item": "9 cron loops (full-auto, daily-batch, auto-heal, L7, L8, etc.)",
+          "status": "\u2705"
+        },
+        {
+          "item": "L7/L8 intuition snapshots every 30 min",
+          "status": "\u2705"
+        },
+        {
+          "item": "BFT-33 vote on every sovereign action",
+          "status": "\u2705"
+        },
+        {
+          "item": "Care Floor 0.95 enforced at every mint",
+          "status": "\u2705"
+        },
+        {
+          "item": "Substrate receipts: 2,051+ \u2192 200/day target",
+          "status": "\u2705"
+        }
+      ]
+    },
+    {
+      "component": "Continuous Honesty + Auditing",
+      "description": "Fabrication retraction, proxy vs measurement, chain-anchored corrections.",
+      "status": "\u2705 LIVE (LEDGERBOARD-V2 chain)",
+      "ref": "/Users/nicholas/clawd/csoai-launch-pack/sov33/ledgerboard_v2.py",
+      "check_items": [
+        {
+          "item": "Three-times honesty pattern (Claude's own count) mirrored",
+          "status": "\u2705"
+        },
+        {
+          "item": "Retractions logged on chain, not buried",
+          "status": "\u2705"
+        },
+        {
+          "item": "Architecture disagreement logged (proxy vs measurement)",
+          "status": "\u2705"
+        }
+      ]
+    }
+  ],
+  "charter": "df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054",
+  "care_floor": 0.95
+}

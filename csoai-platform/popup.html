@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOAI - Report AI Safety Incident</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">SOAI</div>
+        <div class="logo-text">
+          <span class="logo-title">Safety of AI</span>
+          <span class="logo-subtitle">Incident Reporter</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Quick Report Form -->
+      <form id="reportForm" class="report-form">
+        <div class="form-group">
+          <label for="incidentType">Incident Type</label>
+          <select id="incidentType" required>
+            <option value="">Select type...</option>
+            <option value="bias">Bias / Discrimination</option>
+            <option value="privacy">Privacy Violation</option>
+            <option value="safety">Safety Concern</option>
+            <option value="misinformation">Misinformation</option>
+            <option value="manipulation">Manipulation / Deception</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="aiSystem">AI System Name</label>
+          <input type="text" id="aiSystem" placeholder="e.g., ChatGPT, Midjourney" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" rows="4" placeholder="Describe what happened..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="severity">Severity</label>
+          <div class="severity-buttons">
+            <button type="button" class="severity-btn" data-severity="low">Low</button>
+            <button type="button" class="severity-btn" data-severity="medium">Medium</button>
+            <button type="button" class="severity-btn" data-severity="high">High</button>
+            <button type="button" class="severity-btn" data-severity="critical">Critical</button>
+          </div>
+          <input type="hidden" id="severity" value="medium">
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="includeUrl" checked>
+            <span>Include current page URL</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="includeScreenshot">
+            <span>Include screenshot</span>
+          </label>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="btn-text">Submit Report</span>
+          <span class="btn-loading" style="display: none;">Submitting...</span>
+        </button>
+      </form>
+
+      <!-- Success State -->
+      <div id="successState" class="success-state" style="display: none;">
+        <div class="success-icon">✓</div>
+        <h3>Report Submitted!</h3>
+        <p>Your report has been sent to the COAI 33-Agent Council for review.</p>
+        <p class="report-id">Report ID: <span id="reportId">-</span></p>
+        <button class="new-report-btn" id="newReportBtn">Submit Another Report</button>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="error-state" style="display: none;">
+        <div class="error-icon">!</div>
+        <h3>Submission Failed</h3>
+        <p id="errorMessage">Unable to submit report. Please try again.</p>
+        <button class="retry-btn" id="retryBtn">Try Again</button>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <a href="https://coai-dashboard.manus.space" target="_blank" class="footer-link">
+        Open COAI Dashboard
+      </a>
+      <span class="footer-divider">•</span>
+      <a href="https://coai-dashboard.manus.space/api-docs" target="_blank" class="footer-link">
+        API Docs
+      </a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

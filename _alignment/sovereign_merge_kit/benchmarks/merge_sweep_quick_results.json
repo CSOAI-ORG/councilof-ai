@@ -1,0 +1,25 @@
+{
+  "version": "v1_merge_sweep_quick_2026-07-18",
+  "n_heldout": 5,
+  "metric": "token-overlap (5 prompts, illustrative not bench)",
+  "leaderboard": [
+    {
+      "method": "charter_only",
+      "mean_overlap": 0.2149
+    },
+    {
+      "method": "linear_ties_charter_sov3",
+      "mean_overlap": 0.21
+    },
+    {
+      "method": "dare_ties_d03_p50",
+      "mean_overlap": 0.1948
+    },
+    {
+      "method": "baseline_no_adapter",
+      "mean_overlap": 0.1698
+    }
+  ],
+  "honest_register": "5 prompts is illustrative. Sibling runs 33-prompt battery on Qwen3-4B Modal T4.",
+  "next_step": "Sibling runs real sweep. We have the 7 merged adapters ready."
+}

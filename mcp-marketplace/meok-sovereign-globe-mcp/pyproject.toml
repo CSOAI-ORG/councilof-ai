@@ -1,0 +1,26 @@
+[project]
+name = "meok-sovereign-globe-mcp"
+version = "0.1.0"
+description = "Sovereign Globe MCP — real-world 3D geospatial globe (CesiumJS + deck.gl) + 33-hive conspiracy-map force graph (3d-force-graph) + 33-node data layers. Wraps CesiumGS/cesium, vasturiano/3d-force-graph, vasturiano/globe.gl with CSOAI sovereign substrate."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Nicholas Templeman", email = "nicholas@csoai.org" }]
+requires-python = ">=3.10"
+keywords = [
+    "sovereign", "globe", "cesium", "deck-gl", "3d-force-graph",
+    "conspiracy-map", "geospatial", "3d", "earth", "hive",
+    "ed25519", "mcp", "csai", "meok",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "cryptography>=42.0.0",
+    "mcp>=1.0.0",
+    "numpy>=1.24.0",
+]

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Protocol Interoperability — Layer 0 Standards</title>
+<meta name="description" content="DEFONEOS protocol stack: MCP, A2A, CoT/TAK, STANAG, Link 16, ADS-B, AIS, MQTT, gRPC, WebSocket. Full interoperability with NATO and Five Eyes systems.">
+<style>
+body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.layer{display:flex;align-items:center;margin:1rem 0;gap:1rem;padding:1rem;background:rgba(255,255,255,.03);border-left:4px solid #22d3ee;border-radius:0 12px 12px 0}
+.layer-num{background:rgba(34,211,238,.2);border:2px solid #22d3ee;border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#22d3ee;flex-shrink:0;font-size:1.2rem}
+.layer-body h4{color:#f8fafc;margin:0 0 .25rem;font-size:1.05rem}
+.layer-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.nav-section{text-align:center;margin-bottom:1.5rem}
+.nav-section a{color:#94a3b8;text-decoration:none;margin:0 .5rem;font-size:.85rem;padding:.3rem .7rem;border-radius:6px;background:rgba(255,255,255,.05)}
+.nav-section a:hover{color:#22d3ee;background:rgba(34,211,238,.1)}
+.compat{display:inline-block;padding:.2rem .5rem;border-radius:4px;font-size:.75rem;font-weight:bold}
+.compat.yes{background:rgba(34,197,94,.2);color:#22c55e}
+.compat.partial{background:rgba(234,179,8,.2);color:#eab308}
+.compat.planned{background:rgba(59,130,246,.2);color:#3b82f6}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — Protocol Interoperability"><meta property="og:description" content="MCP, A2A, CoT/TAK, STANAG, Link 16. Full NATO/Five Eyes interoperability."><meta property="og:type" content="website"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-protocols.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compete.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a></nav>
+<div class="wrap">
+
+<div class="nav-section">
+  <a href="defoneos-os.html">🏛️ OS</a>
+  <a href="defoneos-integration.html">🔌 Integration</a>
+  <a href="defoneos-freetak.html">📡 FreeTAK</a>
+  <a href="defoneos-security.html">🔐 Security</a>
+</div>
+
+<h1>🔌 Protocol Interoperability — Layer 0</h1>
+<p class="tagline">DEFONEOS speaks every language. MCP for AI agents. A2A for agent-to-agent. CoT/TAK for battlefield C2. STANAG for NATO. Link 16 for tactical data links. Zero vendor lock-in.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">11</span><h3>Layer 0 Protocols</h3><p>MCP, A2A, x402, DID, JWT, ANP, AGNTCY, IBC, OIDC, WebSocket, gRPC</p></div>
+  <div class="card"><span class="stat">5</span><h3>Military Standards</h3><p>CoT/TAK, STANAG 4817, Link 16, VMF, ADS-B</p></div>
+  <div class="card"><span class="stat">7</span><h3>Civilian Standards</h3><p>AIS, MQTT, REST, WebSocket, gRPC, GraphQL, STOMP</p></div>
+  <div class="card"><span class="stat">0</span><h3>Proprietary Lock-in</h3><p>Every protocol is open standard. No vendor tax. No export restrictions.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🏗️ Protocol Stack</div>
+  <div class="tab" onclick="switchTab(1)">⚔️ Military Interop</div>
+  <div class="tab" onclick="switchTab(2)">🤖 AI Agent Protocols</div>
+  <div class="tab" onclick="switchTab(3)">📊 Compatibility Matrix</div>
+  <div class="tab" onclick="switchTab(4)">💻 Code Examples</div>
+</div>
+
+<!-- TAB 0: Protocol Stack -->
+<div class="tab-content active">
+  <h3>🏗️ The DEFONEOS Layer 0 Protocol Stack</h3>
+  <p>Every system needs a lingua franca. DEFONEOS uses 11 open protocols at Layer 0 — the foundation that lets every component talk to every other component, and to external systems. No proprietary APIs. No vendor lock-in.</p>
+
+  <div class="layer">
+    <div class="layer-num">L7</div>
+    <div class="layer-body">
+      <h4>Application — Cesium Globe, Dashboards, C2 Interfaces</h4>
+      <p>The user-facing layer. 3D common operating picture (Cesium), tactical dashboards, FreeTAKServer C2 console, compliance reporters. All web-based, all open source.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">L6</div>
+    <div class="layer-body">
+      <h4>Presentation — SIGIL + Ed25519 + JSP 936</h4>
+      <p>Cryptographic presentation layer. Every action is SIGIL-signed. Compliance assertions attached. Audit trail maintained.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">L5</div>
+    <div class="layer-body">
+      <h4>Session — A2A (Agent-to-Agent) + ANP</h4>
+      <p>Agent Network Protocol for multi-agent session management. Google A2A spec for cross-platform agent discovery and task delegation.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">L4</div>
+    <div class="layer-body">
+      <h4>Transport — WebSocket + gRPC + STOMP</h4>
+      <p>Real-time bidirectional WebSocket for live data. gRPC for high-performance inter-service. STOMP for message queue integration.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">L3</div>
+    <div class="layer-body">
+      <h4>Network — CoT/TAK + Link 16 + VMF</h4>
+      <p>Cursor on Target (CoT) for battlefield situational awareness. TAK protocol for ATAK/WinTAK/iTAK interoperability. Link 16 and VMF for tactical data links.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">L2</div>
+    <div class="layer-body">
+      <h4>Data — MCP (Model Context Protocol)</h4>
+      <p>The core integration layer. 30 MCP servers expose all sensor data, intelligence, and tools to any AI agent or framework. MCP is the universal adapter.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">L1</div>
+    <div class="layer-body">
+      <h4>Identity — DID + JWT + OIDC + x402</h4>
+      <p>W3C Decentralised Identifiers for sovereign identity. JWT for auth tokens. OIDC for SSO. x402 for payment/micropayment routing.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">L0</div>
+    <div class="layer-body">
+      <h4>Physical — TCP/IP + Radio + Serial + CAN bus</h4>
+      <p>The wire. Standard TCP/IP for network. Radio frequency for comms. Serial (RS-232/422) for legacy military hardware. CAN bus for vehicles.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 1: Military Interop -->
+<div class="tab-content">
+  <h3>⚔️ Military Protocol Interoperability</h3>
+  <p>DEFONEOS doesn't reinvent military C2. It plugs into existing NATO and Five Eyes infrastructure through standard protocols.</p>
+
+  <table>
+    <tr><th>Protocol</th><th>Standard</th><th>DEFONEOS Integration</th><th>Status</th></tr>
+    <tr><td><strong>Cursor on Target (CoT)</strong></td><td>Open standard, BSD licence</td><td>FreeTAKServer bridge — full CoT message creation, routing, and ingestion</td><td><span class="compat yes">LIVE</span></td></tr>
+    <tr><td><strong>TAK Protocol</strong></td><td>ATAK/WinTAK/iTAK</td><td>Bi-directional TAK client/server. Shares positions, routes, hazards, emergencies</td><td><span class="compat yes">LIVE</span></td></tr>
+    <tr><td><strong>STANAG 4817</strong></td><td>NATO — Joint Data Link</td><td>Parser for NATO standard data link messages. Read-only in v1</td><td><span class="compat partial">PARTIAL</span></td></tr>
+    <tr><td><strong>Link 16</strong></td><td>NATO — Tactical Data Link</td><td>VMF (Variable Message Format) message bridge. MIDS-compatible</td><td><span class="compat planned">PLANNED</span></td></tr>
+    <tr><td><strong>VMF (K-Series)</strong></td><td>MIL-STD-6017</td><td>K-series message generation and parsing for tactical communications</td><td><span class="compat planned">PLANNED</span></td></tr>
+    <tr><td><strong>ADS-B</strong></td><td>ICAO Annex 10</td><td>Live ADS-B ingestion via dump1090/readsb. Aircraft tracking on Cesium globe</td><td><span class="compat yes">LIVE</span></td></tr>
+    <tr><td><strong>AIS</strong></td><td>ITU-R M.1371</td><td>Live maritime AIS ingestion via aisstream.io. Vessel tracking on Cesium globe</td><td><span class="compat yes">LIVE</span></td></tr>
+    <tr><td><strong>JSP 936</strong></td><td>UK MoD — AI Safety</td><td>Compliance assertion generator. Every AI action certified against JSP 936 articles</td><td><span class="compat yes">LIVE</span></td></tr>
+    <tr><td><strong>JSP 440</strong></td><td>UK MoD — Info Security</td><td>Security compliance framework integration. Zero-trust enforcement</td><td><span class="compat yes">LIVE</span></td></tr>
+  </table>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">FreeTAKServer Integration</h4>
+  <p>DEFONEOS ships with a full FreeTAKServer integration — the open-source C2 backbone used by ATAK teams worldwide. This means DEFONEOS can share situational awareness data with any TAK user, on any device, in real time.</p>
+  <div class="code">
+  ┌─────────────────┐     CoT/TAK      ┌──────────────────┐
+  │   DEFONEOS      │ ◄──────────────► │  FreeTAKServer   │
+  │   SOV3 Engine   │                  │  (C2 Backbone)   │
+  │                 │                  │                  │
+  │  • 30 MCP feeds │                  │  • ATAK clients  │
+  │  • BFT Council  │                  │  • WinTAK nodes  │
+  │  • SIGIL chain  │                  │  • iTAK mobile   │
+  │  • Cesium globe │                  │  • Other TAK     │
+  └────────┬────────┘                  └────────┬─────────┘
+           │                                    │
+           │     Position, Hazards, Routes,     │
+           │     Emergency, Chat, Alerts        │
+           │     ← bi-directional sharing →     │
+           └────────────────────────────────────┘
+  </div>
+</div>
+
+<!-- TAB 2: AI Agent Protocols -->
+<div class="tab-content">
+  <h3>🤖 AI Agent Protocols — The Federation Layer</h3>
+  <p>DEFONEOS is not a single AI. It is a federation of agents, models, and tools that communicate through open protocols. This means any AI framework — Claude, GPT, Gemini, Llama, Kimi — can plug into DEFONEOS.</p>
+
+  <table>
+    <tr><th>Protocol</th><th>Purpose</th><th>Use in DEFONEOS</th></tr>
+    <tr><td><strong>MCP</strong> (Model Context Protocol)</td><td>Tool/function calling standard</td><td>30 MCP servers expose all sensor data, tools, and intelligence to any AI agent</td></tr>
+    <tr><td><strong>A2A</strong> (Agent-to-Agent)</td><td>Cross-platform agent communication</td><td>Google A2A spec. SOV3 agent card published. Task delegation between heterogeneous agents</td></tr>
+    <tr><td><strong>AGNTCY</strong></td><td>Agent network orchestration</td><td>Multi-agent swarm coordination. Task routing across agent fleet</td></tr>
+    <tr><td><strong>ANP</strong> (Agent Network Protocol)</td><td>Agent discovery + session</td><td>Agent registration, capability advertisement, session negotiation</td></tr>
+    <tr><td><strong>DID</strong> (W3C Decentralised ID)</td><td>Sovereign identity</td><td>Every agent has a W3C DID. Ed25519 keypair. No central identity provider</td></tr>
+    <tr><td><strong>JWT</strong></td><td>Auth tokens</td><td>Ed25519-signed JWTs for API auth. Scoped permissions per token</td></tr>
+    <tr><td><strong>OIDC</strong> (OpenID Connect)</td><td>SSO integration</td><td>SSO with existing MoD/corporate identity systems</td></tr>
+    <tr><td><strong>x402</strong></td><td>Payment routing</td><td>Micropayment infrastructure for metered API usage (Pro/Governance tiers)</td></tr>
+    <tr><td><strong>IBC</strong></td><td>Inter-blockchain comm</td><td>SIGIL chain anchoring to public chains for external verification</td></tr>
+  </table>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">SOV3 Agent Card (A2A)</h4>
+  <p>SOV3 publishes a JSON-LD Agent Card per the Google A2A specification. Any A2A-compatible agent can discover SOV3, read its capabilities, and delegate tasks:</p>
+  <div class="code">
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:csoai:sov3-cognition-engine",
+  "name": "SOV³ Cognition Engine",
+  "description": "Sovereign defence AI: 222 tools, BFT governance, SIGIL audit",
+  "type": ["AI_AGENT", "DEFENCE_SYSTEM"],
+  "capabilities": {
+    "tools": 222,
+    "categories": ["governance", "compliance", "cognition", 
+                   "security", "memory", "creativity", 
+                   "federation", "coordination"],
+    "protocols": ["MCP", "A2A", "CoT", "gRPC", "WebSocket"],
+    "governance": "BFT-33-node-council",
+    "audit": "Ed25519-SIGIL-hashchain"
+  },
+  "serviceEndpoint": "https://sov3.csoai.org/a2a",
+  "authentication": {
+    "type": "Ed25519",
+    "publicKey": "did:csoai:sov3-cognition-engine#key-1"
+  },
+  "skills": [
+    "eu-ai-act-compliance",
+    "article-50-watermarking", 
+    "jsp936-compliance",
+    "isr-pipeline",
+    "bft-council-vote"
+  ]
+}
+  </div>
+</div>
+
+<!-- TAB 3: Compatibility Matrix -->
+<div class="tab-content">
+  <h3>📊 System Compatibility Matrix</h3>
+  <p>DEFONEOS is designed to integrate with, not replace, existing defence systems. Here's what plugs in today:</p>
+
+  <table>
+    <tr><th>System / Platform</th><th>Protocol Bridge</th><th>Status</th><th>Direction</th></tr>
+    <tr><td><strong>ATAK / WinTAK / iTAK</strong></td><td>CoT via FreeTAKServer</td><td><span class="compat yes">LIVE</span></td><td>Bi-directional</td></tr>
+    <tr><td><strong>Cesium / CesiumJS</strong></td><td>Native 3D globe integration</td><td><span class="compat yes">LIVE</span></td><td>DEFONEOS → Globe</td></tr>
+    <tr><td><strong>AIS Receivers</strong></td><td>aisstream.io / dAISy / RTL-SDR</td><td><span class="compat yes">LIVE</span></td><td>Inbound</td></tr>
+    <tr><td><strong>ADS-B Receivers</strong></td><td>dump1090 / readsb / RTL-SDR</td><td><span class="compat yes">LIVE</span></td><td>Inbound</td></tr>
+    <tr><td><strong>PX4 / ArduPilot</strong></td><td>MAVLink via MAVSDK</td><td><span class="compat yes">LIVE</span></td><td>Bi-directional</td></tr>
+    <tr><td><strong>Mava Swarm RL</strong></td><td>Python API integration</td><td><span class="compat yes">LIVE</span></td><td>DEFONEOS → Swarms</td></tr>
+    <tr><td><strong>YOLOv8 / Object Detection</strong></td><td>OpenCV + ONNX runtime</td><td><span class="compat yes">LIVE</span></td><td>Inbound (RTSP → detections)</td></tr>
+    <tr><td><strong>OpenAthena / Geo-rectification</strong></td><td>REST API</td><td><span class="compat yes">LIVE</span></td><td>Inbound (pixels → coordinates)</td></tr>
+    <tr><td><strong>Batear Acoustic C-UAS</strong></td><td>Serial / USB</td><td><span class="compat yes">LIVE</span></td><td>Inbound (audio → drone detection)</td></tr>
+    <tr><td><strong>MQTT IoT Networks</strong></td><td>MQTT 5.0</td><td><span class="compat yes">LIVE</span></td><td>Bi-directional</td></tr>
+    <tr><td><strong>NATO Link 16</strong></td><td>VMF message bridge</td><td><span class="compat planned">PLANNED</span></td><td>Bi-directional</td></tr>
+    <tr><td><strong>Palantir Foundry</strong></td><td>REST API export</td><td><span class="compat partial">EXPORT ONLY</span></td><td>DEFONEOS → Foundry</td></tr>
+    <tr><td><strong>IBM i2 Analyst's Notebook</strong></td><td>CSV/JSON export</td><td><span class="compat yes">LIVE</span></td><td>DEFONEOS → i2</td></tr>
+    <tr><td><strong>MQ-9 / Reaper MTS-B</strong></td><td>STANAG 4609 (motion video)</td><td><span class="compat planned">PLANNED</span></td><td>Inbound</td></tr>
+    <tr><td><strong>Redis / Kafka</strong></td><td>Native stream connectors</td><td><span class="compat yes">LIVE</span></td><td>Bi-directional</td></tr>
+    <tr><td><strong>PostgreSQL / PostGIS</td><td>Native</td><td><span class="compat yes">LIVE</span></td><td>Bi-directional</td></tr>
+    <tr><td><strong>Elasticsearch</strong></td><td>Native connector</td><td><span class="compat yes">LIVE</span></td><td>Bi-directional</td></tr>
+  </table>
+</div>
+
+<!-- TAB 4: Code Examples -->
+<div class="tab-content">
+  <h3>💻 Integration Code Examples</h3>
+
+  <h4 style="color:#22d3ee">Python — Subscribe to DEFONEOS CoT Feed</h4>
+  <div class="code">
+from defoneos import DEFONEOSClient
+
+# Connect to DEFONEOS SOV3 engine
+client = DEFONEOSClient(
+    endpoint="localhost:3101/mcp",
+    auth_method="ed25519",
+    key_path="~/.defoneos/keys/agent_ed25519.pem"
+)
+
+# Subscribe to CoT events (battlefield positions)
+client.subscribe_cot(
+    event_types=["a-friend", "a-hostile", "a-neutral", "b-mine"],
+    callback=my_handler,
+    bbox=(-1.0, 53.0, 0.0, 54.0)  # Yorkshire bounding box
+)
+
+# Query the ISR pipeline for current threat assessment
+threat = client.oowm_think(
+    "Assess threat level in sector SK-3847",
+    use_left_brain=True,
+    use_right_brain=True,
+    use_mamba=True,
+    sigil_signed=True  # mandatory for audit
+)
+
+print(f"Threat level: {threat.assessment}")
+print(f"Confidence: {threat.confidence}")
+print(f"SIGIL: {threat.sigil.digest}")
+print(f"BFT votes: {threat.bft.tally}")
+  </div>
+
+  <h4 style="color:#22d3ee">JavaScript — Cesium Globe Integration</h4>
+  <div class="code">
+// Add DEFONEOS live data layers to any CesiumJS globe
+const defoneos = new DEFONEOS.GlobeBridge({
+  cesiumViewer: viewer,
+  wsEndpoint: "wss://defoneos.csoai.org/ws",
+  layers: [
+    "ais-vessels",      // Maritime AIS positions
+    "adsb-aircraft",    // Air traffic
+    "cot-positions",    // TAK friendly/hostile positions
+    "sentinel-imagery", // Satellite imagery changes
+    "gdelt-events",     // OSINT events
+    "earthquake-seismic"// Seismic activity
+  ]
+});
+
+// Listen for intuition alerts
+defoneos.onIntuition((alert) => {
+  console.log(`⚠️ INTUITION ALERT: ${alert.summary}`);
+  console.log(`   Confidence: ${alert.confidence}`);
+  console.log(`   Sector: ${alert.grid_ref}`);
+  console.log(`   SIGIL: ${alert.sigil_digest}`);
+  
+  // Show on globe
+  viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(
+      alert.lon, alert.lat
+    ),
+    point: { pixelSize: 15, color: Cesium.Color.RED }
+  });
+});
+  </div>
+
+  <h4 style="color:#22d3ee">MCP Tool Call — Query Any Agent Framework</h4>
+  <div class="code">
+// Works with Claude, GPT, Gemini, Llama, Kimi — any MCP client
+{
+  "tool": "federated_rag",
+  "arguments": {
+    "query": "Show all maritime anomalies in the English Channel 
+              in the last 24 hours, correlated with satellite 
+              imagery changes",
+    "vault_top_k": 5,
+    "federation_top_k": 3,
+    "call_tools": true
+  }
+}
+
+// Response includes:
+// - Vault matches (local intelligence files)
+// - Federation tool results (live AIS, satellite, OSINT)
+// - Synthesised answer with provenance
+// - SIGIL receipt for audit
+  </div>
+
+  <h4 style="color:#22d3ee">FreeTAKServer — Share CoT Position</h4>
+  <div class="code">
+# DEFONEOS → FreeTAKServer → ATAK clients
+from defoneos.tak import CoTEvent
+
+event = CoTEvent(
+    uid="DEFONEOS.SENSOR.001",
+    type="a-friend",           # friendly position
+    lat=53.4808,               # Leeds
+    lon=-1.2426,
+    hae=100,                   # altitude metres
+    ce=5,                      # circular error (metres)
+    le=5,                      # linear error
+    callsign="DEFONEOS-PERIMETER-01",
+    team="Cyan",
+    remarks="Automated sensor — perimeter secure"
+)
+
+# Emit to FreeTAKServer (reaches all ATAK/iTAK/WinTAK clients)
+client.emit_cot(event)
+  </div>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem">
+<p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-os.html" style="color:#22d3ee;text-decoration:none">OS</a> · <a href="defoneos-integration.html" style="color:#22d3ee;text-decoration:none">Integration</a> · <a href="defoneos-freetak.html" style="color:#22d3ee;text-decoration:none">FreeTAK</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a></p>
+<p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style>
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button>
+<script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}});function switchTab(n){var tabs=document.querySelectorAll(".tab");var contents=document.querySelectorAll(".tab-content");tabs.forEach(function(t,i){t.classList.toggle("active",i===n)});contents.forEach(function(c,i){c.classList.toggle("active",i===n)})}</script>
+</body></html>

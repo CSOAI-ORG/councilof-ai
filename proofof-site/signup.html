@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐉 Sovereign Signup — 28 Days to EU AI Act · MEOK OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(74,158,255,0.18) 0%,#000 100%);padding:3rem 2rem 2rem;text-align:center;border-bottom:2px solid #4a9eff}
+.hero .cliff{background:linear-gradient(90deg,#ef4444,#fbbf24,#22c55e);padding:.4rem 0;margin:-3rem -2rem 1.5rem;text-align:center;color:#000;font-weight:bold;font-size:.9rem}
+.hero h1{color:#4a9eff;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #4a9eff}
+.hero p{color:#aaa;font-size:1.1rem;max-width:720px;margin:0 auto 1rem}
+.hero .eu-fact{background:rgba(239,68,68,0.1);border:1px solid #ef4444;color:#ef4444;padding:.7rem 1rem;border-radius:6px;display:inline-block;font-weight:bold;margin-top:.5rem;font-size:.95rem}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.tabs{display:flex;gap:.5rem;justify-content:center;margin:2rem 0 1rem;flex-wrap:wrap}
+.tabs button{background:#0a0a0a;color:#888;padding:.7rem 1.4rem;border:2px solid #444;border-radius:8px 8px 0 0;font-family:inherit;font-size:.95rem;cursor:pointer;font-weight:bold;transition:all .2s}
+.tabs button.active{background:#1a1a1a;color:#fbbf24;border-color:#fbbf24;border-bottom-color:#1a1a1a}
+.tabs button:hover{color:#fbbf24;border-color:#fbbf24}
+.tabs .badge{background:#fbbf24;color:#000;font-size:.65rem;padding:.1rem .4rem;border-radius:4px;margin-left:.4rem;font-weight:bold}
+.form-card{background:#1a1a1a;border:2px solid #fbbf24;border-radius:0 12px 12px 12px;padding:2rem;max-width:700px;margin:0 auto 2rem;display:none}
+.form-card.active{display:block}
+.form-card h2{color:#fbbf24;margin-bottom:.3rem}
+.form-card .lede{color:#aaa;font-size:.9rem;margin-bottom:1.2rem}
+.form-row{display:flex;gap:.7rem;margin:.7rem 0;flex-wrap:wrap}
+.form-row input,.form-row select{flex:1;min-width:200px;padding:.7rem 1rem;background:#02060f;border:1px solid #4a4a4a;border-radius:6px;color:#fbbf24;font-family:monospace;font-size:1rem}
+.form-row input:focus,.form-row select:focus{outline:none;border-color:#fbbf24;box-shadow:0 0 10px rgba(251,191,36,0.3)}
+.submit-btn{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#000;padding:.9rem 2rem;border:none;border-radius:6px;font-size:1.05rem;font-weight:bold;cursor:pointer;font-family:inherit;width:100%;margin-top:1rem;letter-spacing:.5px}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(251,191,36,0.4)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.success{background:#022c0a;border:2px solid #22c55e;border-radius:8px;padding:1.5rem;margin-top:1rem;color:#22c55e;display:none}
+.success.show{display:block}
+.success .api-key{background:#02060f;padding:.7rem;border-radius:4px;margin:.5rem 0;font-family:monospace;font-size:.85rem;color:#fbbf24;word-break:break-all;border:1px solid #444}
+.success .audit-link{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.success .doctrine{color:#888;font-size:.85rem;margin-top:.5rem;font-style:italic}
+.error{background:#2c0a0a;border:2px solid #ef4444;border-radius:8px;padding:1rem;margin-top:1rem;color:#ef4444;display:none}
+.error.show{display:block}
+.pricing-tier-strip{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:2rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.tier-pill{text-align:center;padding:1rem;border:1px solid #444;border-radius:8px;background:#0a0a0a}
+.tier-pill .name{color:#fbbf24;font-weight:bold;font-size:1.05rem;margin-bottom:.3rem}
+.tier-pill .price{color:#22c55e;font-size:1.4rem;font-weight:bold;font-family:monospace}
+.tier-pill .features{color:#888;font-size:.78rem;margin-top:.4rem;list-style:none}
+.curl-block{background:#02060f;border:1px solid #4a9eff;border-radius:8px;padding:1.2rem 1.5rem;margin:1.5rem auto;max-width:900px;font-family:monospace;font-size:.85rem;color:#4a9eff;overflow-x:auto}
+.curl-block .head{color:#888;font-size:.78rem;margin-bottom:.5rem;text-transform:uppercase}
+.charter-strip{background:#0a0a0a;border-left:4px solid #fbbf24;padding:1rem 1.5rem;margin:2rem auto;max-width:900px;border-radius:0 8px 8px 0;font-family:monospace;font-size:.78rem;color:#888}
+.charter-strip strong{color:#fbbf24}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+.persona-card{background:rgba(74,158,255,0.05);border:1px solid #4a9eff;border-radius:6px;padding:.7rem;margin-top:.5rem;font-size:.85rem;color:#4a9eff}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<a href="/waitlist">Waitlist</a>
+<a href="/audit">Audit</a>
+<a href="/api/stats" target="_blank">API</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<div class="cliff">⚠️ 25 days to 2 Aug 2026 EU AI Act — €15M / 3% turnover penalty</div>
+<h1>🐉 Sovereign Signup</h1>
+<p>Get your free SIGIL-signed API key in 90 seconds. Works on email only — no SSO, no PDL, no call.<br>Multi-persona routing · Ed25519 receipts · Charter Article 0 binding.</p>
+<div class="eu-fact">📜 Charter <strong style="font-family:monospace">df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054</strong> · STR pubkey <strong style="font-family:monospace">QD595cz6iQaEaYOjwwgLmMdoz1mtm1pzKBb9ygvMvf3xhQ28</strong></div>
+</section>
+
+<div class="container">
+
+<div class="tabs" id="tabs">
+<button class="active" onclick="switchTab('signup')" data-tab="signup">🪪 Signup</button>
+<button onclick="switchTab('demo')" data-tab="demo">🧪 Demo Request</button>
+<button onclick="switchTab('waitlist')" data-tab="waitlist">⏳ Waitlist</button>
+<button onclick="switchTab('investor')" data-tab="investor">💼 Investor</button>
+<button onclick="switchTab('press')" data-tab="press">📰 Press</button>
+</div>
+
+<!-- SIGNUP -->
+<div class="form-card active" id="card-signup">
+<h2>🪪 Get your sovereign API key</h2>
+<p class="lede">One key, signed receipt, persona-routed to the right team. Free tier = 3 calls/day.</p>
+<form onsubmit="return submitSignup(event)">
+<div class="form-row"><input type="email" id="su-email" placeholder="email (required)" required autocomplete="email"></div>
+<div class="form-row"><input type="text" id="su-name" placeholder="name (optional)"><input type="text" id="su-company" placeholder="company (optional)"></div>
+<div class="form-row">
+<select id="su-persona">
+<option value="end_user">👤 End user — I want to try the sovereign OS</option>
+<option value="soc_analyst">🛡️ SOC analyst — threat model + OFSI sandbox</option>
+<option value="dpo">📜 DPO — GDPR + EU AI Act gap analysis (£4,950)</option>
+<option value="ciso">🛡️ CISO — £999 Sovereign Trust Receipt</option>
+<option value="ai_founder">🚀 AI founder — Series A traction</option>
+<option value="regulator">🏛️ Regulator — 30-day free sandbox + BFT observer</option>
+<option value="cto">🧰 CTO — DEFONEOS-SEAL credential</option>
+<option value="vc">💼 VC partner — Series A pattern deck</option>
+</select>
+<select id="su-jurisdiction">
+<option value="UK">UK</option><option value="EU">EU</option><option value="US">US</option><option value="APAC">APAC</option><option value="LATAM">LATAM</option><option value="OTHER">OTHER</option>
+</select>
+</div>
+<button type="submit" class="submit-btn" id="su-btn">🪪 Get sovereign API key →</button>
+</form>
+<div class="success" id="su-success"></div>
+<div class="error" id="su-error"></div>
+</div>
+
+<!-- DEMO -->
+<div class="form-card" id="card-demo">
+<h2>🧪 Request a 30-min live demo</h2>
+<p class="lede">A human will reach out within 24 hours. Routes to architecture team. SOC2-safe.</p>
+<form onsubmit="return submitDemo(event)">
+<div class="form-row"><input type="email" id="de-email" placeholder="email (required)" required><input type="text" id="de-name" placeholder="name"></div>
+<div class="form-row"><input type="text" id="de-company" placeholder="company"></div>
+<div class="form-row">
+<select id="de-vertical">
+<option value="fintech">Fintech</option><option value="health">Health</option><option value="saas">SaaS / B2B</option><option value="banking">Banking</option><option value="defence">Defence</option><option value="regulator">Regulator</option><option value="other">Other</option>
+</select>
+<select id="de-jurisdiction">
+<option value="UK">UK</option><option value="EU">EU</option><option value="US">US</option><option value="APAC">APAC</option>
+</select>
+</div>
+<button type="submit" class="submit-btn">🧪 Request demo →</button>
+</form>
+<div class="success" id="de-success"></div>
+</div>
+
+<!-- WAITLIST -->
+<div class="form-card" id="card-waitlist">
+<h2>⏳ Waitlist — 28-day cliff alert</h2>
+<p class="lede">Get the canonical countdown + cliff-wedge content + free sandbox invite at T-0.</p>
+<form onsubmit="return submitWaitlist(event)">
+<div class="form-row"><input type="email" id="wt-email" placeholder="email (required)" required></div>
+<div class="form-row">
+<select id="wt-interest">
+<option value="signup">💡 General signup (early access)</option>
+<option value="demo">🧪 Demo first</option>
+<option value="investor">💼 Investor Series A briefing</option>
+<option value="press">📰 Press inquiry</option>
+<option value="regulation">🏛️ Regulator collaboration</option>
+</select>
+</div>
+<button type="submit" class="submit-btn">⏳ Add to waitlist →</button>
+</form>
+<div class="success" id="wt-success"></div>
+</div>
+
+<!-- INVESTOR -->
+<div class="form-card" id="card-investor">
+<h2>💼 Series A briefing request</h2>
+<p class="lede">One-pager + metrics deck + 30-day pilot offer. Routed to founder (@Nicholas).</p>
+<form onsubmit="return submitInvestor(event)">
+<div class="form-row"><input type="email" id="iv-email" placeholder="email (required)" required><input type="text" id="iv-firm" placeholder="firm (required)" required></div>
+<div class="form-row"><input type="text" id="iv-name" placeholder="your name"></div>
+<div class="form-row">
+<select id="iv-stage">
+<option value="seed">Seed</option><option value="series-a">Series A</option><option value="series-b">Series B</option><option value="growth">Growth</option>
+</select>
+<input type="number" id="iv-check" placeholder="check size ($M)" min="0">
+</div>
+<button type="submit" class="submit-btn">💼 Request Series A briefing →</button>
+</form>
+<div class="success" id="iv-success"></div>
+</div>
+
+<!-- PRESS -->
+<div class="form-card" id="card-press">
+<h2>📰 Press inquiry</h2>
+<p class="lede">Routed to communications within 24 hours. Charter-anchored statements available.</p>
+<form onsubmit="return submitPress(event)">
+<div class="form-row"><input type="email" id="pr-email" placeholder="email (required)" required><input type="text" id="pr-outlet" placeholder="outlet (BBC, FT, Forbes, ...)" required></div>
+<div class="form-row"><input type="text" id="pr-deadline" placeholder="deadline (e.g. 9 Sep 2026)"></div>
+<div class="form-row"><textarea id="pr-angle" placeholder="angle (1-2 sentences)" style="width:100%;padding:.5rem;background:#02060f;border:1px solid #4a4a4a;border-radius:6px;color:#fbbf24;font-family:monospace;min-height:60px"></textarea></div>
+<button type="submit" class="submit-btn">📰 Submit inquiry →</button>
+</form>
+<div class="success" id="pr-success"></div>
+</div>
+
+<!-- PERSONA ROUTING CARD (live) -->
+<div class="persona-card" id="persona-route" style="max-width:700px;margin:0 auto 2rem">
+<strong>👥 Persona routing matrix (live)</strong><br>
+<small>Each persona → a different team. Receipt is signed. No auto-send (owner-gated).</small><br>
+<span style="color:#888;font-size:.85rem">
+<code>end_user</code> → <code>onboarding@csoai.org</code><br>
+<code>soc_analyst</code> → <code>security@csoai.org</code><br>
+<code>dpo</code> → <code>privacy@csoai.org</code> (gap analysis £4,950)<br>
+<code>ciso</code> → <code>trust@csoai.org</code> (STR £999)<br>
+<code>ai_founder</code> → <code>growth@csoai.org</code> (Series A)<br>
+<code>regulator</code> → <code>policy@csoai.org</code> (BFT observer)<br>
+<code>cto</code> → <code>architecture@csoai.org</code> (DEFONEOS-SEAL)<br>
+<code>vc</code> → <code>investor@csoai.org</code> (one-pager)
+</span>
+</div>
+
+<!-- CURL DEMO -->
+<div class="curl-block">
+<div class="head">🧪 Live curl demo (proves the receipt is real, not marketing)</div>
+<pre>curl -X POST https://proofof.site/api/signup -H "Content-Type: application/json" -d '{"email":"you@example.com","persona":"end_user","jurisdiction":"UK"}'</pre>
+</div>
+
+<!-- PRICING TIER STRIP -->
+<div class="pricing-tier-strip">
+<div class="tier-pill"><div class="name">Open Source</div><div class="price">£0</div><ul class="features"><li>30 MCPs (MIT + CC0)</li><li>Public docs</li><li>3 calls/day</li></ul></div>
+<div class="tier-pill"><div class="name">Pro</div><div class="price">£499<span style="font-size:.7rem;color:#888">/mo</span></div><ul class="features"><li>8hr SLA</li><li>1,000 calls/day</li><li>DEFONEOS-SEAL</li></ul></div>
+<div class="tier-pill"><div class="name">Gov</div><div class="price">£2,499<span style="font-size:.7rem;color:#888">/mo</span></div><ul class="features"><li>4hr SLA · BFT</li><li>JSP 936 v0.1</li><li>10K calls/day</li></ul></div>
+<div class="tier-pill"><div class="name">Enterprise</div><div class="price">£9,999+<span style="font-size:.7rem;color:#888">/mo</span></div><ul class="features"><li>1hr 24/7 · On-site</li><li>Air-gapped · Red team</li><li>Unlimited</li></ul></div>
+</div>
+
+<div class="charter-strip">
+<strong>🐉 Charter Article 0 binding (immutable):</strong><br>
+• Cares about humans &gt; revenue · Care Floor 0.95<br>
+• 4 red lines — no kinetic / no surveillance / no AUKUS claim without letter / no defonos.io<br>
+• Ed25519 STR pubkey: <code>QD595cz6iQaEaYOjwwgLmMdoz1mtm1pzKBb9ygvMvf3xhQ28</code><br>
+• SIGIL mint: <code>77ab0e6f9d6c77e8</code> · Charter SHA-256: <code>df65a658…22054</code><br>
+• License: <strong>Charter CC0 1.0</strong> (canonical) · <strong>Apache-2.0</strong> (reference impl). Operator block: CSOAI Ltd (UK 16939677).
+</div>
+
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Signup Doctrine</h2>
+<blockquote>"Email in. SIGIL receipt out. Persona routed. Charter bound.<br>No SSO. No PDL. No call. No vendor lock-in.<br>The dragon signs. The dragon sovereigns. Care Floor 0.95."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 149 sovereign MCPs · 584 HTML pages · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>25 days to 2 Aug 2026 EU AI Act</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+// Tab switching
+function switchTab(name) {
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.form-card').forEach(c => c.classList.toggle('active', c.id === 'card-' + name));
+  // Hide all status
+  document.querySelectorAll('.success, .error').forEach(e => e.classList.remove('show'));
+  // URL param so it's shareable
+  const url = new URL(window.location);
+  url.searchParams.set('type', name);
+  window.history.replaceState({}, '', url);
+}
+const urlType = new URLSearchParams(window.location.search).get('type');
+if (urlType && ['signup','demo','waitlist','investor','press'].includes(urlType)) switchTab(urlType);
+
+// Generic POST helper
+async function postForm(url, fields, statusEl, btn) {
+  btn.disabled = true; btn.textContent = 'Working…';
+  statusEl.classList.remove('show'); statusEl.textContent = '';
+  try {
+    const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(fields)});
+    const data = await r.json();
+    if (data.error) {
+      statusEl.className = 'error show';
+      statusEl.textContent = '✗ ' + data.error;
+    } else {
+      statusEl.className = 'success show';
+      statusEl.innerHTML = JSON.stringify(data, null, 2).replace(/ /g, '&nbsp;');
+    }
+  } catch (e) {
+    statusEl.className = 'error show';
+    statusEl.textContent = '✗ ' + e.message + ' (try again, or check /api/health)';
+  } finally {
+    btn.disabled = false; btn.textContent = btn.dataset.label || btn.textContent.replace(/^Working…/, btn.dataset.label || 'Submit →');
+  }
+}
+
+// SIGNUP (returns API key + SIGIL receipt)
+function submitSignup(e) {
+  e.preventDefault();
+  const btn = document.getElementById('su-btn');
+  btn.dataset.label = btn.textContent;
+  const fields = {
+    email: document.getElementById('su-email').value,
+    name: document.getElementById('su-name').value,
+    company: document.getElementById('su-company').value,
+    persona: document.getElementById('su-persona').value,
+    jurisdiction: document.getElementById('su-jurisdiction').value,
+  };
+  postForm('/api/signup', fields, document.getElementById('su-success'), btn);
+  return false;
+}
+
+// DEMO
+function submitDemo(e) {
+  e.preventDefault();
+  const fields = {
+    email: document.getElementById('de-email').value,
+    name: document.getElementById('de-name').value,
+    company: document.getElementById('de-company').value,
+    interest: 'demo',
+  };
+  // Override persona via extra field on the fly
+  fields.persona = document.getElementById('de-vertical').value === 'defence' ? 'ciso' : document.getElementById('de-vertical').value === 'regulator' ? 'regulator' : 'cto';
+  fields.jurisdiction = document.getElementById('de-jurisdiction').value;
+  const btn = e.target.querySelector('button');
+  btn.dataset.label = btn.textContent;
+  // Use waitlist endpoint (lighter)
+  postForm('/api/waitlist', fields, document.getElementById('de-success'), btn);
+  return false;
+}
+
+// WAITLIST
+function submitWaitlist(e) {
+  e.preventDefault();
+  const fields = {
+    email: document.getElementById('wt-email').value,
+    interest: document.getElementById('wt-interest').value,
+  };
+  const btn = e.target.querySelector('button');
+  btn.dataset.label = btn.textContent;
+  postForm('/api/waitlist', fields, document.getElementById('wt-success'), btn);
+  return false;
+}
+
+// INVESTOR
+function submitInvestor(e) {
+  e.preventDefault();
+  const fields = {
+    email: document.getElementById('iv-email').value,
+    name: document.getElementById('iv-name').value,
+    company: document.getElementById('iv-firm').value,
+    interest: 'investor',
+  };
+  const btn = e.target.querySelector('button');
+  btn.dataset.label = btn.textContent;
+  postForm('/api/waitlist', fields, document.getElementById('iv-success'), btn);
+  return false;
+}
+
+// PRESS
+function submitPress(e) {
+  e.preventDefault();
+  const fields = {
+    email: document.getElementById('pr-email').value,
+    company: document.getElementById('pr-outlet').value,
+    name: document.getElementById('pr-deadline').value + ' · ' + document.getElementById('pr-angle').value,
+    interest: 'press',
+  };
+  const btn = e.target.querySelector('button');
+  btn.dataset.label = btn.textContent;
+  postForm('/api/waitlist', fields, document.getElementById('pr-success'), btn);
+  return false;
+}
+</script>
+
+</body>
+</html>

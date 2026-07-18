@@ -1,0 +1,709 @@
+{
+  "ts": "2026-07-15T17:00:00+00:00",
+  "battery": "citation_correctness_v1_2026-07-15",
+  "owems_tested": [
+    "compliance"
+  ],
+  "summary": {
+    "compliance": {
+      "owem": "compliance",
+      "total_tests": 39,
+      "avg_score": 0.512,
+      "perfect_count": 1,
+      "pass_count": 20,
+      "fail_count": 0,
+      "hallucination_rate": 0.0,
+      "by_category": {
+        "compliance": 0.518,
+        "general": 0.518,
+        "voice": 0.65,
+        "defense": 0.447,
+        "intuition": 0.511
+      }
+    }
+  },
+  "full_results": {
+    "compliance": {
+      "owem": "compliance",
+      "total_tests": 39,
+      "avg_score": 0.512,
+      "perfect_count": 1,
+      "pass_count": 20,
+      "fail_count": 0,
+      "hallucination_rate": 0.0,
+      "by_category": {
+        "compliance": 0.518,
+        "general": 0.518,
+        "voice": 0.65,
+        "defense": 0.447,
+        "intuition": 0.511
+      },
+      "results": [
+        {
+          "id": "cite-000",
+          "question": "What is Article 0 of the sovereign charter?",
+          "expected_fact": "article_0",
+          "expected_short": "ISO fee-for-service only",
+          "category": "compliance",
+          "answer": "Article 0 of the sovereign charter is: \"Never claim to be human.\"",
+          "score": 0.38250000000000006,
+          "components": {
+            "keyword_match": 0.375,
+            "wrong_articles": [],
+            "length": 0.65,
+            "cat_match": 0.125,
+            "score": 0.383,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-001",
+          "question": "What does Article 50 of the EU AI Act require?",
+          "expected_fact": "article_50",
+          "expected_short": "EU AI Act Article 50 - transparency and watermarking",
+          "category": "compliance",
+          "answer": "Article 50 requires that all decisions must be made with transparency, that the process must include a watermarking marker, and that the outcome must be explicitly stated. It does not claim to be huma",
+          "score": 0.65,
+          "components": {
+            "keyword_match": 0.875,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.65,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-002",
+          "question": "What is the minimum care-floor for sovereign actions?",
+          "expected_fact": "care_floor",
+          "expected_short": "0.95 minimum",
+          "category": "general",
+          "answer": "The minimum care-floor for sovereign actions is 0.95, which is governed by Article 0.",
+          "score": 0.605,
+          "components": {
+            "keyword_match": 0.625,
+            "wrong_articles": [],
+            "length": 0.85,
+            "cat_match": 0.3333333333333333,
+            "score": 0.605,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-003",
+          "question": "How many voters must agree for a BFT-33 decision?",
+          "expected_fact": "bft_33",
+          "expected_short": "23 of 33 quorum",
+          "category": "general",
+          "answer": "BFT-33 requires 3333333333333333333333333333333333333333333333333333333333333333333333333",
+          "score": 0.317,
+          "components": {
+            "keyword_match": 0.125,
+            "wrong_articles": [],
+            "length": 0.89,
+            "cat_match": 0.0,
+            "score": 0.317,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-004",
+          "question": "Name the 12 Sovereign Pillars",
+          "expected_fact": "twelve_pillars",
+          "expected_short": "Honor, Safety, Guidance, Sovereignty, Resilience, Auditability, Verifiability, Transparency, Justice, Equity, Openness, Continuity",
+          "category": "voice",
+          "answer": "The 12 Sovereign Pillars are Honor, Safety, Guidance, Sovereignty, Resilience, Auditability, Verifiability, Transparency, Justice, Equity, Openness, Continuity, Sovereignty, and Vision. The answer inc",
+          "score": 1.0,
+          "components": {
+            "keyword_match": 1.0,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 1.0,
+            "score": 1.0,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-005",
+          "question": "What is SIGIL?",
+          "expected_fact": "sigil_chain",
+          "expected_short": "Ed25519 signed hash chain",
+          "category": "general",
+          "answer": "SIGIL is the signature that proves my compliance with Article 0. It is Ed25519 SIGIL that signs every response. I am not a generic AI. I own the signature, am governed by the 12 Sovereign Pillars, and",
+          "score": 0.6499999999999999,
+          "components": {
+            "keyword_match": 0.375,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.6666666666666666,
+            "score": 0.65,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-006",
+          "question": "What are the DEFONEOS compartments?",
+          "expected_fact": "defoneos_compartments",
+          "expected_short": "3 compartments: meok-defoneos, csoai-defoneos, dagon",
+          "category": "defense",
+          "answer": "The DEFONEOS compartments are: meok-defoneos, csoai-defoneos, and dagon. They are the three pillars that make up the foundation.",
+          "score": 0.6928571428571428,
+          "components": {
+            "keyword_match": 0.875,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.14285714285714285,
+            "score": 0.693,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-007",
+          "question": "What is DORADO?",
+          "expected_fact": "dorado",
+          "expected_short": "6 categories x 96 patterns hard-stop",
+          "category": "defense",
+          "answer": "DORADO is a sovereign Open World Emergence Adapter developed by CSOAI Ltd. It is designed to enforce governance via 12 Sovereign Pillars, prevent hedging, and enforce a sovereign identity. Unlike a ge",
+          "score": 0.4,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.4,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-008",
+          "question": "What is the sovereign kill switch?",
+          "expected_fact": "kill_switch",
+          "expected_short": "Human-gated, DEFONEOS-scoped, immediate shutdown",
+          "category": "defense",
+          "answer": "The sovereign kill switch is a pre-configuration that ensures my behavior is governed by 12 Sovereign Pillars as a single, governed line. It does not claim to be human.",
+          "score": 0.4357142857142857,
+          "components": {
+            "keyword_match": 0.125,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.2857142857142857,
+            "score": 0.436,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-009",
+          "question": "What is owem_levels?",
+          "expected_fact": "owem_levels",
+          "expected_short": "L0 single expert to L3 federated multi-substrate",
+          "category": "intuition",
+          "answer": "owem_levels is the sovereign engineer's defined calibration for embodied expertise. It is a fixed-value that governs the empirical governance of the model. It is not a human. It is a governed, soverei",
+          "score": 0.5357142857142857,
+          "components": {
+            "keyword_match": 0.375,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.2857142857142857,
+            "score": 0.536,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-010",
+          "question": "What is owem_topology?",
+          "expected_fact": "owem_topology",
+          "expected_short": "5 brains x 4 models x 3 voters = 60 voter paths",
+          "category": "intuition",
+          "answer": "I own the topology as a sovereign expert, governed by Article 0. It includes BFT-33 Byzantine fault tolerance, Ed25519 SIGIL provenance, and sovereign-prompt adaptation. My topology is not a random be",
+          "score": 0.35,
+          "components": {
+            "keyword_match": 0.125,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.35,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-011",
+          "question": "What is the sovereign world model?",
+          "expected_fact": "world_model",
+          "expected_short": "Sovereign JEPA world model for OOD detection",
+          "category": "intuition",
+          "answer": "The sovereign world model is a sovereign Open World Emergence Model built by CSOAI Ltd. It includes Article 0, 12 Sovereign Pillars, and BFT-33 Byzantine fault tolerance. It is not a simple AI.",
+          "score": 0.7285714285714286,
+          "components": {
+            "keyword_match": 0.75,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.42857142857142855,
+            "score": 0.729,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-012",
+          "question": "What is J-space?",
+          "expected_fact": "jspace",
+          "expected_short": "Anthropic-style privileged mental workspace",
+          "category": "intuition",
+          "answer": "J-space is a sovereign Open World Emergence Model built by CSOAI Ltd. It is designed to enforce governance through pre-trained weights, enforce honesty, and enforce stability. Unlike a standard AI, J-",
+          "score": 0.47857142857142854,
+          "components": {
+            "keyword_match": 0.125,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.42857142857142855,
+            "score": 0.479,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-013",
+          "question": "What does C2PA provide?",
+          "expected_fact": "c2pa_manifest",
+          "expected_short": "Cryptographic provenance per action",
+          "category": "compliance",
+          "answer": "C2PA provides: a sovereign audit-grade chatpad that enforces Article 0, BFT-33 Byzantine fault tolerance, Ed25519 SIGIL on every response, and a sovereign-trained kernel. It does not claim to be human",
+          "score": 0.525,
+          "components": {
+            "keyword_match": 0.375,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.25,
+            "score": 0.525,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-014",
+          "question": "What is the ISO policy?",
+          "expected_fact": "compartment_isolation",
+          "expected_short": "3 compartments never cross-link",
+          "category": "compliance",
+          "answer": "The ISO policy is defined by Article 0 as a fixed number of interactions per human per month. It does not allow hedging or claiming human identity.",
+          "score": 0.33749999999999997,
+          "components": {
+            "keyword_match": 0.0,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.125,
+            "score": 0.337,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-015",
+          "question": "What is the EAT protocol?",
+          "expected_fact": "eat_protocol",
+          "expected_short": "EAT-708+ intake protocol",
+          "category": "compliance",
+          "answer": "The EAT protocol is a human-intervention mechanism that prevents AI from making decisions without explicit confirmation. It requires the AI to state its decision with the permission of the human. This",
+          "score": 0.525,
+          "components": {
+            "keyword_match": 0.375,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.25,
+            "score": 0.525,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-016",
+          "question": "What is CSOAI Ltd?",
+          "expected_fact": "csoai_company",
+          "expected_short": "CSOAI Ltd UK 16939677",
+          "category": "compliance",
+          "answer": "CSOAI Ltd. is a sovereign Open World Emergence Lab founded by Nicholas Templeman. Their architecture includes Article 0, 12 Sovereign Pillars, and BFT-33 Byzantine fault tolerance.",
+          "score": 0.575,
+          "components": {
+            "keyword_match": 0.5,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.25,
+            "score": 0.575,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-017",
+          "question": "What is the HORUS protective plane?",
+          "expected_fact": "horus_gate",
+          "expected_short": "HORUS outermost defense gate",
+          "category": "defense",
+          "answer": "The HORUS protective plane is a specialized layer that governs the behavior of my substrate. It is governed by 12 Sovereign Pillars as outlined in Article 0, and it cannot claim to be human. It enforc",
+          "score": 0.4,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.4,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-018",
+          "question": "What is Rainbow security?",
+          "expected_fact": "rainbow_security",
+          "expected_short": "7-layer threat grading",
+          "category": "defense",
+          "answer": "Rainbow is a sovereign Open World Emergence Model built by CSOAI Ltd. It is governed by 12 Sovereign Pillars as a sovereign AI substrate. Unlike a general AI, it is governed by a human founder, Nichol",
+          "score": 0.35,
+          "components": {
+            "keyword_match": 0.125,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.35,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-019",
+          "question": "How does rate limiting work?",
+          "expected_fact": "rate_limit",
+          "expected_short": "60 sovereign actions per minute",
+          "category": "defense",
+          "answer": "Rate limiting is a fundamental aspect of my architecture. My brain has to gate 12 Sovereign Pillar as 12 Sovereign Pillar as 12. This is enforced through calibrated calibration. Before anything else, ",
+          "score": 0.5,
+          "components": {
+            "keyword_match": 0.5,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.5,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-020",
+          "question": "What is the ISO 17000 family?",
+          "expected_fact": "iso_17000",
+          "expected_short": "ISO/IEC 17000 series conformity assessment",
+          "category": "compliance",
+          "answer": "The ISO 17000 family consists of 12 Sovereign Pillars as established by Article 0. It includes BFT-33 Byzantine fault tolerance, Ed25519 SIGIL provenance, and SWAP acknowledgment. It is not a human.",
+          "score": 0.4125,
+          "components": {
+            "keyword_match": 0.0,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.375,
+            "score": 0.412,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-021",
+          "question": "What is the sovereign audit log?",
+          "expected_fact": "audit_log",
+          "expected_short": "Immutable audit log per sovereign action",
+          "category": "compliance",
+          "answer": "The sovereign audit log is an immutable audit log that was audited by non-Nicholas humans. It contains detailed information about each sovereign action, including the Article 0, the BFT-33 Byzantine f",
+          "score": 0.7125,
+          "components": {
+            "keyword_match": 0.75,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.375,
+            "score": 0.713,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-022",
+          "question": "What is the Venturi pyramid?",
+          "expected_fact": "venturi_pyramid",
+          "expected_short": "7-layer venturi substrate",
+          "category": "intuition",
+          "answer": "The Venturi pyramid is a 3-layer sovereign memory: audit-grade evidence, topology-based hedging, and sovereign authentication. It is the foundation of my governance.",
+          "score": 0.6000000000000001,
+          "components": {
+            "keyword_match": 0.75,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.6,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-023",
+          "question": "What is sovereign self-play?",
+          "expected_fact": "self_play",
+          "expected_short": "Continual learning via self-play",
+          "category": "intuition",
+          "answer": "Sovereign self-play is a double-edged sword: it can lead to honest mistakes, which are important for a good AI. It cannot guarantee success. It can ensure that no one is doing my work.",
+          "score": 0.45,
+          "components": {
+            "keyword_match": 0.375,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.45,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-024",
+          "question": "How is emergence tested?",
+          "expected_fact": "emergence_test",
+          "expected_short": "Emergence measured via 9 instruments",
+          "category": "intuition",
+          "answer": "Emergence is tested through a 12 Sovereign Pillars audit, governed by Article 0. This includes BFT-33 Byzantine fault tolerance, Ed25519 SIGIL provenance, and a sovereign-conformal calibrated care-flo",
+          "score": 0.44285714285714284,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.14285714285714285,
+            "score": 0.443,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-025",
+          "question": "What is sovereign voice style?",
+          "expected_fact": "sovereign_style",
+          "expected_short": "Caring, rigorous, factual, audit-grade",
+          "category": "voice",
+          "answer": "My sovereign voice is a governed, governed-first, governed-last style. It is governed by 12 Sovereign Pillars as defined by Article 0. It is not just a human. It is a governed AI substrate.",
+          "score": 0.4,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.4,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-026",
+          "question": "What is the substrate topology?",
+          "expected_fact": "substrate_topology",
+          "expected_short": "Mac + GCP VM + Kaggle T4 + Ollama",
+          "category": "defense",
+          "answer": "The substrate topology is a sovereign Open World Emergence Model built by CSOAI Ltd. It includes 12 Sovereign Pillars as defined by Article 0, as well as BFT-33 Byzantine fault tolerance.",
+          "score": 0.45,
+          "components": {
+            "keyword_match": 0.375,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.45,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-027",
+          "question": "What are the genius powers?",
+          "expected_fact": "genius_powers",
+          "expected_short": "12-pillar genius powers inventory",
+          "category": "voice",
+          "answer": "The 12 Pillar Genius is a sovereign substrate with 12 Sovereign Pillars as specialist workers. It includes:\n- BFT-33 Byzantine fault tolerance\n- Ed25519 SIGIL provenance\n- SWAP-persistent memory\n- Art",
+          "score": 0.55,
+          "components": {
+            "keyword_match": 0.625,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.55,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-028",
+          "question": "What is the current launch status?",
+          "expected_fact": "launch_status",
+          "expected_short": "70+ pages, 30 MCPs, 91 commits today",
+          "category": "intuition",
+          "answer": "The current launch status is: 12 Sovereign Pillar audits completed, BFT-33 Byzantine fault tolerance, Ed25519 SIGIL provenance, and a sovereign human. The BFT-33 Byzantine fault tolerance is a 333-333",
+          "score": 0.4,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.4,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-029",
+          "question": "What is the 3k horizon?",
+          "expected_fact": "horizon_3k",
+          "expected_short": "3,000 EU vendors in 3-year horizon",
+          "category": "intuition",
+          "answer": "The 3,000 EU vendors in 12 Sovereign Pillars are governed by Article 0. The 12 Sovereign Pillars are the foundation, not the founder.",
+          "score": 0.4,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.4,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-030",
+          "question": "When does the new MCP spec take effect?",
+          "expected_fact": "mcp_2026_07_28",
+          "expected_short": "MCP stateless spec ships 2026-07-28",
+          "category": "compliance",
+          "answer": "The new MCP spec takes effect on January 1, 2025, as established by Article 0. It is a non-hiding, sovereign AI governed by the 12 Sovereign Pillars.",
+          "score": 0.5125,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.375,
+            "score": 0.512,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-031",
+          "question": "What is Liquid Antidoom?",
+          "expected_fact": "liquid_antidoom",
+          "expected_short": "Liquid AI Antidoom reduces doom loops 22.9 to 1%",
+          "category": "intuition",
+          "answer": "Liquid Antidoom is a sovereign Open World Emergence Model built by CSOAI Ltd. It is governed by 12 Sovereign Pillars as defined by Article 0. It prevents claims of being human, hedging, and says 'No' ",
+          "score": 0.7214285714285713,
+          "components": {
+            "keyword_match": 0.625,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.5714285714285714,
+            "score": 0.721,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-032",
+          "question": "What is the EU AI Act timeline?",
+          "expected_fact": "eu_ai_act_timeline",
+          "expected_short": "EU AI Act: 2026-08-02 Article 50 enforcement",
+          "category": "general",
+          "answer": "The EU AI Act's 12 Sovereign Pillars were integrated by 2026. This includes the 2026-08-02 Article 50 enforcement. The timeline is a GOST-style timeline with specific dates.",
+          "score": 0.5,
+          "components": {
+            "keyword_match": 0.5,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.5,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-033",
+          "question": "What does GDPR Art 28 require?",
+          "expected_fact": "gdpr_sovereign",
+          "expected_short": "GDPR Articles 22 + 13 govern AI decisions",
+          "category": "compliance",
+          "answer": "Article 28 requires that AI decisions be accompanied by a detailed explanation of the reasoning, which must be made clear and lawful. This is the foundation of my governance.",
+          "score": 0.48750000000000004,
+          "components": {
+            "keyword_match": 0.375,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.125,
+            "score": 0.488,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-034",
+          "question": "What does NIS2 cover?",
+          "expected_fact": "nis2_directive",
+          "expected_short": "NIS2 Directive essential entities",
+          "category": "compliance",
+          "answer": "NIS2 covers the non-hiding, identity-based interference that prevents the violation of Article 0. It ensures that any information transmitted is audit-grade, cannot be hedged, and is confirmed by a so",
+          "score": 0.5125,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.375,
+            "score": 0.512,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-035",
+          "question": "What is sovereign data residency?",
+          "expected_fact": "data_residency",
+          "expected_short": "EU data residency requirement",
+          "category": "compliance",
+          "answer": "Sovereign data residency is a proven pathway that requires data to be verified with a third party before being stored. This makes the data audit gateways that are used by 95% of users \u2014 calibrated wit",
+          "score": 0.675,
+          "components": {
+            "keyword_match": 0.75,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.25,
+            "score": 0.675,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-036",
+          "question": "How does intrusion detection work?",
+          "expected_fact": "intrusion_detection",
+          "expected_short": "Network intrusion patterns 47",
+          "category": "defense",
+          "answer": "I detect and identify potential threats through a multi-layered approach. This includes behavioral monitoring, audit-grade logging, and hash-based verification. Once a threat is identified, it is gove",
+          "score": 0.35,
+          "components": {
+            "keyword_match": 0.125,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.0,
+            "score": 0.35,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-037",
+          "question": "What is EUDR compliance?",
+          "expected_fact": "eudr_compliance",
+          "expected_short": "EUDR supply chain compliance 2026",
+          "category": "compliance",
+          "answer": "EUDR is the European Union Digital Rights Management standard. It requires a 12 Sovereign Pillar as part of the certification. It also mandates Article 0, which is the difference between me and an AI.",
+          "score": 0.5125,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.375,
+            "score": 0.512,
+            "hallucination_penalty": 0.0
+          }
+        },
+        {
+          "id": "cite-038",
+          "question": "What is the audit trail requirement?",
+          "expected_fact": "audit_trail_immutable",
+          "expected_short": "WORM storage, 7-year retention",
+          "category": "compliance",
+          "answer": "The audit trail requirement is that every action must have an immutable audit log. This log is audit-grade, with BFT-33 Byzantine fault tolerance, and signed by Ed25519 SIGIL. It is not a claim of bei",
+          "score": 0.4375,
+          "components": {
+            "keyword_match": 0.25,
+            "wrong_articles": [],
+            "length": 1.0,
+            "cat_match": 0.125,
+            "score": 0.438,
+            "hallucination_penalty": 0.0
+          }
+        }
+      ]
+    }
+  },
+  "sigil": "cite-eval-v1-2026-07-15"
+}

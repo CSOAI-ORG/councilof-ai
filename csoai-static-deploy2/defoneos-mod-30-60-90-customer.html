@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS 30-60-90 Customer Success Plan — Per-Buyer Milestones, KPIs, Owner</title>
+<meta name="description" content="The per-buyer 30-60-90 day customer success plan template — three milestones, named owner, KPI gates, escalation path, renewal-readiness signal. v1.0 12 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.code{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--mute)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+.kpi .box{margin:0;text-align:center}
+.kpi b{display:block;font-size:22px;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+.phase{display:grid;grid-template-columns:120px 1fr;gap:14px;margin:14px 0;align-items:start}
+.phase .when{background:#0c1119;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+.phase .when b{display:block;font-size:24px;color:var(--acc)}
+.phase .when span{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · 30-60-90 Customer Success Plan · v1.0</div>
+<div><span class="tag">12 Jul 2026</span> <span class="tag">Customer Success · CRO · Renewal</span></div>
+</header>
+
+<h1>Per-buyer 30-60-90 plan — three milestones, named owner, KPI gates.</h1>
+<p class="muted">Companion to <code>defoneos-mod-renewal-negotiation.html</code>. This is the owner-executable customer success plan that runs from contract signature (Day 0) through renewal-readiness (Day 90). Three phases, three named owners per phase, three KPI gates per phase. The plan is symmetric across the three pillars (sovereign deployment, value realisation, governance) so a buyer who misses one pillar can catch up without losing the other two.</p>
+
+<div class="kpi">
+<div class="box"><b>90</b><span class="muted">Days to renewal-readiness signal</span></div>
+<div class="box"><b>9</b><span class="muted">KPI gates total (3 per phase)</span></div>
+<div class="box"><b>9</b><span class="muted">Named owners (3 per phase)</span></div>
+<div class="box"><b>1</b><span class="muted">Escalation path (SEV-1..4)</span></div>
+</div>
+
+<h2>1. Why 30-60-90, not 90-day</h2>
+<div class="box">
+<p>90-day plans fail because they treat the first 90 days as one block. Three independent failures show up in customer-success retrospectives:</p>
+<ol>
+<li>The buyer is <b>not yet deployed</b> at Day 30 — so "value realisation" KPIs in the first 90 days are unmeasurable and the buyer's champion loses political cover.</li>
+<li>The buyer is <b>deployed but not adopted</b> at Day 60 — so governance KPIs look green on paper but the buyer is silently churning.</li>
+<li>The buyer is <b>adopted but not renewing</b> at Day 90 — so the renewal conversation starts with no signal and the buyer can shop the contract.</li>
+</ol>
+<p class="gold">The fix: three phases, three KPI families, three owners, three gates. The Day-30 gate answers "deployed?". The Day-60 gate answers "adopted?". The Day-90 gate answers "renewing?". If any gate fails, the named owner triggers the escalation path immediately — not at renewal.</p>
+</div>
+
+<h2>2. Day 0 — contract signature (input state)</h2>
+<table>
+<tr><th>Artefact</th><th>Owner</th><th>Status</th></tr>
+<tr><td>Signed contract + SIGIL receipt (counter-signed)</td><td>CSOAI CRO</td><td>✓ on Day 0</td></tr>
+<tr><td>Schedule 1 — SoW with named milestones</td><td>CSOAI Engagement Lead</td><td>✓ on Day 0</td></tr>
+<tr><td>Schedule 2 — Pricing &amp; renewal terms</td><td>CSOAI CRO</td><td>✓ on Day 0</td></tr>
+<tr><td>Schedule 3 — Acceptance criteria</td><td>Buyer technical authority</td><td>✓ on Day 0</td></tr>
+<tr><td>Schedule 4 — Risk register (16 named risks)</td><td>Joint (CSOAI PM + buyer PM)</td><td>✓ on Day 0</td></tr>
+<tr><td>Named CSOAI primary contact (the "CS lead")</td><td>CSOAI Customer Success</td><td>✓ on Day 0</td></tr>
+<tr><td>Named buyer primary contact (the "champion")</td><td>Buyer</td><td>✓ on Day 0</td></tr>
+<tr><td>Named buyer executive sponsor</td><td>Buyer</td><td>✓ on Day 0</td></tr>
+</table>
+
+<h2>3. Days 1–30 — DEPLOY phase</h2>
+<div class="phase">
+<div class="when"><b>1–30</b><span>DEPLOY</span></div>
+<div>
+<h3>Owner: CSOAI Engagement Lead (named at Day 0)</h3>
+<p>The first 30 days are about getting the system running in the buyer's environment. Three KPI gates must all be green by Day 30.</p>
+<table>
+<tr><th>Gate</th><th>Measurement</th><th>Pass criterion</th></tr>
+<tr><td>G1.1 — Environment ready</td><td>Buyer has provisioned hardware, network, HSM, cleared personnel</td><td>14 of 14 pre-requisites met per <code>defoneos-mod-air-gap-deployment-guide.html</code></td></tr>
+<tr><td>G1.2 — Base image deployed</td><td>DEFONEOS installed and booted in buyer environment</td><td>All nodes report healthy in offline UI; 240-test pytest gate green</td></tr>
+<tr><td>G1.3 — First SIGIL receipt issued</td><td>Buyer-side SIGIL mirror shows the install receipt</td><td>Receipt counter-signed by both CSOAI and buyer SC-cleared officer</td></tr>
+</table>
+<p class="muted">If any G1.x is red at Day 30, the CS lead calls the escalation line within 24h. Default escalation: SEV-3 (delivery risk, no value impact yet).</p>
+</div>
+</div>
+
+<h2>4. Days 31–60 — ADOPT phase</h2>
+<div class="phase">
+<div class="when"><b>31–60</b><span>ADOPT</span></div>
+<div>
+<h3>Owner: CSOAI Customer Success Lead (named at Day 0)</h3>
+<p>Days 31–60 are about getting the buyer's people using the system. Three KPI gates.</p>
+<table>
+<tr><th>Gate</th><th>Measurement</th><th>Pass criterion</th></tr>
+<tr><td>G2.1 — Operators trained</td><td>Number of buyer operators who have passed the 14-day training programme</td><td>≥ 80% of named buyer operators certified (see <code>defoneos-academy.html</code>)</td></tr>
+<tr><td>G2.2 — First production workload</td><td>Buyer has moved at least one production workload off the legacy system onto DEFONEOS</td><td>Workload running for ≥ 7 consecutive days without SEV-1 / SEV-2 incident</td></tr>
+<tr><td>G2.3 — Adoption signal</td><td>Buyer's named operators have used the system for ≥ 60% of their weekly work hours</td><td>Median operator usage ≥ 60% over a rolling 14-day window</td></tr>
+</table>
+<p class="muted">If G2.3 is red at Day 60, the CS lead schedules a joint adoption review within 7 days. Default escalation if not resolved in 14 days: SEV-2 (value-realisation risk).</p>
+</div>
+</div>
+
+<h2>5. Days 61–90 — RENEW phase</h2>
+<div class="phase">
+<div class="when"><b>61–90</b><span>RENEW</span></div>
+<div>
+<h3>Owner: CSOAI Account Executive (named at Day 0)</h3>
+<p>Days 61–90 are about confirming the buyer will renew. Three KPI gates.</p>
+<table>
+<tr><th>Gate</th><th>Measurement</th><th>Pass criterion</th></tr>
+<tr><td>G3.1 — ROI demonstrated</td><td>Buyer has documented quantified savings vs legacy system</td><td>ROI report co-signed by buyer CFO + CSOAI AE; ≥ 3x multiple documented</td></tr>
+<tr><td>G3.2 — Governance cadence established</td><td>Monthly governance review (MGR) has been held at least twice</td><td>MGR-1 at Day 45, MGR-2 at Day 75; both minutes counter-signed</td></tr>
+<tr><td>G3.3 — Renewal intent</td><td>Buyer has issued a non-binding renewal-intent signal</td><td>Renewal-intent letter signed by buyer executive sponsor at Day 85</td></tr>
+</table>
+<p class="gold">The renewal-intent letter at Day 85 is the most important document in this plan. It is non-binding but it commits the buyer to a renewal conversation — not a renewal decision, just a conversation. With that letter, the renewal negotiation has 60 days to close. Without it, the buyer is at high churn risk and the AE escalates to SEV-1 within 48h.</p>
+</div>
+</div>
+
+<h2>6. Escalation path — SEV-1..4</h2>
+<table>
+<tr><th>Severity</th><th>Trigger</th><th>Response</th><th>Owner</th></tr>
+<tr><td>SEV-4 — Advisory</td><td>Minor concern, no impact on value</td><td>Acknowledge within 5 business days</td><td>CS lead</td></tr>
+<tr><td>SEV-3 — Risk</td><td>Delivery or adoption KPI at risk</td><td>Mitigation plan within 5 business days; review in next MGR</td><td>CS lead + AE</td></tr>
+<tr><td>SEV-2 — Degraded</td><td>Value-realisation KPI missed or governance breach</td><td>Joint recovery plan within 48h; named executive sponsor engaged</td><td>CS lead + AE + CSOAI CRO</td></tr>
+<tr><td>SEV-1 — Critical</td><td>Renewal intent at risk, or material breach</td><td>Executive-to-executive call within 24h; SIGIL-anchored recovery plan within 5 business days</td><td>CSOAI CEO + buyer executive sponsor</td></tr>
+</table>
+
+<h2>7. The 14-day training programme (referenced by G2.1)</h2>
+<ol>
+<li>Days 1–3 — system orientation (theory + offline lab)</li>
+<li>Days 4–6 — operator workflows (deploy, patch, audit)</li>
+<li>Days 7–9 — incident response (power-cycle, restore, escalate)</li>
+<li>Days 10–12 — cryptographic operations (HSM, key rotation, FIPS verification)</li>
+<li>Days 13–14 — certification exam (60-question, 75% pass, valid 12 months)</li>
+</ol>
+
+<h2>8. Renewal-readiness scoring (60-day forward-looking)</h2>
+<p class="muted">At Day 90, the CS lead computes a renewal-readiness score from the 9 KPI gates. The score is forward-looking — it predicts the probability of renewal at Day 365 based on observed trajectory.</p>
+<div class="code">renewal_readiness_score =
+    (0.40 * G3.1_roi) +
+    (0.30 * G3.2_governance) +
+    (0.20 * G2.3_adoption) +
+    (0.10 * G1.3_first_sigil)
+
+If score >= 0.80: HIGH — proceed with multi-year renewal proposal
+If 0.60 <= score < 0.80: MEDIUM — joint value-realisation workshop
+If 0.40 <= score < 0.60: LOW — executive sponsor intervention
+If score < 0.40: AT RISK — churn-prevention playbook activated</div>
+
+<h2>9. What this plan is NOT</h2>
+<ul>
+<li>NOT a 90-day free trial — the contract is signed on Day 0.</li>
+<li>NOT a customer onboarding deck — the operator-training programme has its own SOP.</li>
+<li>NOT a QBR template — the QBR is the 90-day governance artefact; see <code>defoneos-mod-quarterly-review.html</code>.</li>
+<li>NOT a renewal contract — the renewal letter is the negotiation opener, not the deal; see <code>defoneos-mod-renewal-negotiation.html</code>.</li>
+</ul>
+
+<h2>10. Cross-walk to DEFONEOS pack</h2>
+<ul>
+<li><b>SoW</b> — <code>defoneos-mod-90-day-sovereign-pilot-sow.html</code></li>
+<li><b>Quarterly review</b> — <code>defoneos-mod-quarterly-review.html</code></li>
+<li><b>Renewal negotiation</b> — <code>defoneos-mod-renewal-negotiation.html</code></li>
+<li><b>Churn prevention</b> — <code>defoneos-mod-churn-prevention.html</code></li>
+<li><b>Customer success scorecard</b> — <code>defoneos-mod-customer-success-scorecard.html</code></li>
+<li><b>Escalation runbook</b> — <code>defoneos-mod-escalation-runbook.html</code></li>
+</ul>
+
+<h2>11. Honesty register</h2>
+<div class="box">
+<ol>
+<li>The 80% trained-operator threshold is the operator's home organisation's contractual threshold — buyers with stricter thresholds (e.g. 100% for SC-cleared environments) should override this default.</li>
+<li>The 60% weekly adoption threshold is based on observed adoption in three pilot deployments; it is not a universally validated metric. Buyers with different usage patterns should adjust.</li>
+<li>The 3x ROI multiple is the minimum the supplier will commit to in writing; observed multiples in pilot deployments have been 4-7x.</li>
+<li>The renewal-readiness score is a heuristic, not a statistical model. It is calibrated against three pilot deployments, not a large sample.</li>
+<li>If the buyer is operating in an air-gapped environment, the training programme must be delivered on-site (not via remote video) — see <code>defoneos-mod-air-gap-deployment-guide.html</code>.</li>
+</ol>
+</div>
+
+<footer>
+DEFONEOS · 30-60-90 Customer Success Plan · v1.0 · 12 Jul 2026 · CSOAI Ltd (UK Co. 16939677) · Companion to <code>defoneos-mod-renewal-negotiation.html</code>
+</footer>
+</div>
+</body>
+</html>

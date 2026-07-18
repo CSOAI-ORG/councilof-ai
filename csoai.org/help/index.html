@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SOV3 FAQ — Frequently Asked Questions — csoai.org/help/</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #0a0e27; color: #fff; line-height: 1.7; }
+    h1 { color: #fbbf24; text-align: center; }
+    h2 { color: #06b6d4; margin-top: 32px; border-bottom: 1px solid #fbbf24; padding-bottom: 4px; }
+    .qa { background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; margin: 12px 0; border-left: 3px solid #10b981; }
+    .q { color: #fbbf24; font-weight: 700; }
+    .a { color: #10b981; margin-top: 8px; }
+    code { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; color: #10b981; }
+    a { color: #06b6d4; }
+  </style>
+</head>
+<body>
+<h1>🜏 SOV3 FAQ</h1>
+<p style="text-align: center; font-style: italic;">Frequently Asked Questions for the Sovereign AI OS</p>
+
+<h2>What is SOV3?</h2>
+<div class="qa">
+  <div class="q">Q: What is SOV3?</div>
+  <div class="a">A: SOV3 is the world's first sovereign-by-design AI operating system. It's MIT-licensed, runs without foreign API calls, and is anchored on a single organic open-world model (qwen3:30b-a3b). It includes 330 sovereign tools, 148+ public pages, 12-around-1 BFT council, and Article 50 watermarking passport. The first version goes public Saturday 4 July 2026 at 09:00 BST.</div>
+</div>
+
+<h2>How do I install SOV3?</h2>
+<div class="qa">
+  <div class="q">Q: How do I install SOV3 small3 (the compressed OS)?</div>
+  <div class="a">A: Run this one command on any Mac or Linux with Ollama installed:
+    <pre><code>curl -sSL https://sov3.csoai.org/install.sh | bash</code></pre>
+    Installs 4 sovereign models (qwen3:1.7b-edge, llama3.2:3b, gemma3:4b, meok-sov3:latest) totaling ~7.8 GB. Optional flags:
+    <pre><code>curl -sSL https://sov3.csoai.org/install.sh | bash -s -- --with-ornith-9b</code></pre>
+    <pre><code>curl -sSL https://sov3.csoai.org/install.sh | bash -s -- --full   # adds qwen3:30b-a3b anchor (18.5 GB)</code></pre>
+  </div>
+</div>
+
+<h2>What is sovereign-by-design?</h2>
+<div class="qa">
+  <div class="q">Q: What does "sovereign-by-design" mean?</div>
+  <div class="a">A: Sovereignty is a property of the architecture, not a marketing claim. SOV3 achieves this by:
+    <ul>
+      <li><strong>No foreign API calls</strong> — runs locally, no DNS leak to foreign clouds</li>
+      <li><strong>Open weights</strong> — MIT, Apache 2.0, or Open license for every model</li>
+      <li><strong>Audit-chained</strong> — every action SIGIL-signed with Ed25519 + post-quantum ML-DSA-65</li>
+      <li><strong>DORADO 1-click EAST↔WEST</strong> — switch sovereignty modes at will</li>
+      <li><strong>12-around-1 BFT council</strong> — 2/3 majority required for sensitive actions</li>
+      <li><strong>Article 50 watermarking</strong> — every output marked, SIGIL-verifiable</li>
+    </ul>
+  </div>
+</div>
+
+<h2>EU AI Act Article 50</h2>
+<div class="qa">
+  <div class="q">Q: How does SOV3 help with EU AI Act Article 50 (transparency)?</div>
+  <div class="a">A: SOV3 issues an Article 50 watermarking passport for every sovereign output. The passport includes:
+    <ul>
+      <li>Passport ID (e.g. <code>art50-72384578499f</code>)</li>
+      <li>Compliance assertions (which articles passed: 9, 10, 12, 14, 50, etc.)</li>
+      <li>Provider metadata (you can self-issue or use MEOK's Pro tier)</li>
+      <li>Ed25519 signature + verify URL (<code>https://proofof.ai/verify/{passport_id}</code>)</li>
+      <li>Days to enforcement (currently 36 days to 2 Aug 2026)</li>
+    </ul>
+    Active 2 Aug 2026 — 36 days from launch. Free for sovereign-by-design customers.
+  </div>
+</div>
+
+<h2>How is SOV3 different from ChatGPT, Claude, or Gemini?</h2>
+<div class="qa">
+  <div class="q">Q: How is SOV3 different from ChatGPT, Claude, or Gemini?</div>
+  <div class="a">A: Three structural differences:
+    <ol>
+      <li><strong>Sovereignty by design</strong> — no foreign API, no data exfiltration. SOV3 wins by +3.77 on the sovereign composite scorecard (7.305 vs commercial 3.535).</li>
+      <li><strong>Audit chain</strong> — every action SIGIL-signed. You can prove what the AI did, when, and to whom.</li>
+      <li><strong>BFT Council</strong> — 12-around-1 deliberation pattern. No single queen decides. 2/3 majority required.</li>
+    </ol>
+  </div>
+</div>
+
+<h2>Pricing</h2>
+<div class="qa">
+  <div class="q">Q: How much does SOV3 cost?</div>
+  <div class="a">A: Three tiers:
+    <ul>
+      <li><strong>Open (free)</strong> — MIT license, 4 sovereign models, 1-command install, public install.sh</li>
+      <li><strong>Pro (£25/month)</strong> — Article 50 watermarking passport, SIGIL chain audit, i-character TwinStore, DORADO 1-click</li>
+      <li><strong>Enterprise (£500+/month)</strong> — multi-tenant, dedicated sovereign substrate, SLA, custom i-character training</li>
+    </ul>
+    Enterprise customers (banks, governments, care home chains) — <a href="mailto:nicholas@meok.ai">contact us</a>.
+  </div>
+</div>
+
+<h2>i-Character (digital twin)</h2>
+<div class="qa">
+  <div class="q">Q: What is an i-character?</div>
+  <div class="a">A: An i-character is your sovereign digital twin. Created with explicit consent. You own it, you can export it, you can transfer it, you can delete it. i-characters are tradeable on the TwinStore marketplace (sovereign-to-sovereign) using wisdom points.</div>
+</div>
+
+<h2>Tree of Life (22 hieroglyphs + 10 Sephiroth)</h2>
+<div class="qa">
+  <div class="q">Q: Why 22 hieroglyphs + 10 Sephiroth?</div>
+  <div class="a">A: SOV3 takes inspiration from Athanasius Kircher's <em>Arithmologia</em> (Rome, 1665) and the Kabbalistic Tree of Life. The 22 Major Arcana = 22 hieroglyphs = 22 Hebrew letters = 22 SOV3 tools. The 10 Sephiroth = 10 substrate layers. The 32 paths of wisdom = 32 sovereign capabilities. The 12-around-1 BFT council = 12 apostles + 12 alchemical operations + 12 Queens. As above, so below.</div>
+</div>
+
+<h2>How do I run SOV3 in production?</h2>
+<div class="qa">
+  <div class="q">Q: How do I deploy SOV3 to production?</div>
+  <div class="a">A: 3 options:
+    <ol>
+      <li><strong>Local</strong> — install.sh, run on your laptop</li>
+      <li><strong>Cloudflare tunnel</strong> — sovereign tunnel to your public domain</li>
+      <li><strong>Docker</strong> — <code>meok-backend/Dockerfile</code> is production-ready (multi-stage Python 3.11-slim, gunicorn 2 workers, port 8000)</li>
+    </ol>
+    Full guide: <a href="https://csoai.org/sovereign-constitution/">Sovereign Constitution</a>
+  </div>
+</div>
+
+<h2>Custom sovereign model?</h2>
+<div class="qa">
+  <div class="q">Q: Can I bring my own LLM?</div>
+  <div class="a">A: Yes! SOV3 supports BYOLLM (Bring Your Own Local Model). See <a href="https://csoai.org/byollm/">csoai.org/byollm/</a>. Your model needs to be:
+    <ul>
+      <li>MIT, Apache 2.0, or Open license</li>
+      <li>No foreign API calls</li>
+      <li>Weights are public (or your fine-tune is auditable)</li>
+      <li>Output can be SIGIL-signed</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Contact</h2>
+<div class="qa">
+  <div class="q">Q: How do I contact you?</div>
+  <div class="a">A: <a href="mailto:nicholas@meok.ai">nicholas@meok.ai</a> · CSOAI Ltd · UK 16939677</div>
+</div>
+
+<p style="text-align: center; margin-top: 40px; opacity: 0.7;">🜏 Public. Auditable. Sovereign. Solve et Coagula.</p>
+</body>
+</html>

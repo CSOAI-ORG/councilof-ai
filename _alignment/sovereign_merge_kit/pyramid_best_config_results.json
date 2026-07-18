@@ -1,0 +1,71 @@
+{
+  "search_space": {
+    "depth": [
+      8,
+      10,
+      12
+    ],
+    "nu": [
+      1.0,
+      0.7,
+      0.5
+    ],
+    "brains": [
+      1,
+      4
+    ],
+    "hidden": [
+      8,
+      12
+    ]
+  },
+  "n_configs": 36,
+  "best": {
+    "depth": 12,
+    "nu": 0.7,
+    "brains": 4,
+    "hidden": 12,
+    "loss": 0.0311
+  },
+  "top5": [
+    {
+      "depth": 12,
+      "nu": 0.7,
+      "brains": 4,
+      "hidden": 12,
+      "loss": 0.0311
+    },
+    {
+      "depth": 12,
+      "nu": 0.5,
+      "brains": 4,
+      "hidden": 12,
+      "loss": 0.0313
+    },
+    {
+      "depth": 10,
+      "nu": 0.7,
+      "brains": 4,
+      "hidden": 12,
+      "loss": 0.0315
+    },
+    {
+      "depth": 12,
+      "nu": 0.7,
+      "brains": 4,
+      "hidden": 8,
+      "loss": 0.0325
+    },
+    {
+      "depth": 8,
+      "nu": 0.7,
+      "brains": 4,
+      "hidden": 12,
+      "loss": 0.0326
+    }
+  ],
+  "prior_piecewise_best": 0.035,
+  "improved": true,
+  "improvement_pct": 11.1,
+  "honest": "joint grid over depth/ratio/brains/hidden on the shared CPU task; the winning config is the tuned pyramid topology."
+}

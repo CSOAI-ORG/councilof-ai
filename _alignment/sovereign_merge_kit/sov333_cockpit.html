@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset=utf-8><title>SOV333 Cockpit</title><style>
+body{margin:0;font:15px/1.5 -apple-system,system-ui,sans-serif;background:#0b0e14;color:#e6e6e6}
+header{padding:14px 20px;background:#11151f;border-bottom:1px solid #222;display:flex;align-items:center;gap:14px}
+header b{letter-spacing:.5px} .dot{color:#4ade80} .sub{color:#7b8794;font-size:12px}
+select{margin-left:auto;background:#0b0e14;color:#eee;border:1px solid #333;border-radius:8px;padding:6px 10px}
+#log{max-width:840px;margin:0 auto;padding:20px 20px 100px}
+.msg{margin:14px 0;padding:12px 16px;border-radius:12px;white-space:pre-wrap}
+.you{background:#1b2536;margin-left:60px} .sov{background:#141a26;border:1px solid #223}
+.gated{border-color:#7f1d1d;background:#1a1012}
+.meta{font-size:11px;color:#7b8794;margin-top:8px;font-family:monospace}
+#bar{position:fixed;bottom:0;left:0;right:0;background:#11151f;border-top:1px solid #222;padding:12px}
+#bar .in{max-width:840px;margin:0 auto;display:flex;gap:8px}
+#q{flex:1;padding:12px;border-radius:10px;border:1px solid #333;background:#0b0e14;color:#eee;font-size:15px}
+button{padding:12px 22px;border:0;border-radius:10px;background:#3b82f6;color:#fff;font-weight:600;cursor:pointer}
+</style></head><body>
+<header><span class=dot>●</span> <b>SOV333</b> <span class=sub>sovereign · care-gated · signed</span>
+<select id=tier title="which brain size">
+ <option value=fast>fast (local/small)</option>
+ <option value=smart selected>smart (~70-400B)</option>
+ <option value=frontier>frontier (up to 1.6T slot)</option>
+</select></header>
+<div id=log></div>
+<div id=bar><div class=in><input id=q placeholder="Talk to SOV333 while you work…" autofocus>
+<button onclick=send()>Send</button></div></div>
+<script>
+const log=document.getElementById('log'),q=document.getElementById('q'),tier=document.getElementById('tier');
+function add(c,t,m){const d=document.createElement('div');d.className='msg '+c;d.textContent=t;
+ if(m){const e=document.createElement('div');e.className='meta';e.textContent=m;d.appendChild(e);}
+ log.appendChild(d);window.scrollTo(0,9e9);return d;}
+async function send(){const t=q.value.trim();if(!t)return;add('you',t);q.value='';
+ const th=add('sov','…thinking');
+ try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({prompt:t,tier:tier.value})});const d=await r.json();th.remove();
+  if(d.gated)add('sov gated','⛔ '+d.reason,'care='+d.care_score+' intent='+d.intent);
+  else add('sov',d.answer,'brain='+(d.backend||'none')+' · care='+d.care_score+(d.signature?(' · sig='+d.signature+' ✓'):''));
+ }catch(e){th.remove();add('sov gated','error: '+e);}}
+q.addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+</script></body></html>

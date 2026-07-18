@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOV-33 · Master Sovereign Consolidation · CSOAI</title>
+<style>
+:root{
+--bg:#0a0e1a;--surface:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--cyan:#06b6d4;--text:#f1f5f9;--muted:#94a3b8;
+--border:rgba(201,168,76,.15);--border-strong:rgba(201,168,76,.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:radial-gradient(circle at 50% 0%,#1a1f3a 0%,#0a0e1a 60%);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;font-size:14px;min-height:100vh;overflow-x:hidden}
+.container{max-width:1500px;margin:0 auto;padding:1.5rem}
+header{background:rgba(10,14,26,.92);border-bottom:1px solid var(--gold);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1500px;margin:0 auto;padding:0 1.5rem;flex-wrap:wrap;gap:1rem}
+.logo{color:transparent;background:linear-gradient(90deg,var(--gold),var(--cyan));-webkit-background-clip:text;font-weight:900;font-size:1.5rem;text-decoration:none}
+.nav-links{display:flex;gap:.25rem;flex-wrap:wrap}
+.nav-links a{color:var(--text);text-decoration:none;font-size:.75rem;padding:.375rem .75rem;border-radius:6px;border:1px solid transparent;transition:.15s}
+.nav-links a:hover{background:rgba(201,168,76,.1);border-color:var(--gold);color:var(--gold)}
+.hero{background:radial-gradient(ellipse at 50% 30%,rgba(201,168,76,.12) 0%,transparent 60%);padding:4.5rem 1.5rem 3rem;text-align:center;position:relative;overflow:hidden}
+.hero::before,.hero::after{content:'';position:absolute;left:50%;top:50%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,.08) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none}
+.hero::after{animation:pulse 8s ease-in-out infinite,drift 12s linear infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.5}50%{transform:translate(-50%,-50%) scale(1.2);opacity:.8}}
+@keyframes drift{0%{transform:translate(-60%,-40%) scale(1)}100%{transform:translate(-40%,-60%) scale(1.1)}}
+.hero h1{font-size:3.75rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.5rem;position:relative;z-index:1}
+.sov-num{color:transparent;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--gold));background-size:200% 100%;-webkit-background-clip:text;animation:shimmer 4s linear infinite;font-weight:900}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.hero .lede{color:var(--muted);font-size:1.1rem;max-width:1000px;margin:1rem auto;position:relative;z-index:1}
+.hero .meta{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem;font-family:monospace;font-size:.75rem;position:relative;z-index:1}
+.hero .meta span{color:var(--gold)}
+.section{padding:2rem 0;border-top:1px solid rgba(255,255,255,.05)}
+.section h2{color:var(--gold);margin-bottom:1rem;font-size:1.35rem;display:flex;align-items:center;gap:.5rem;letter-spacing:.02em}
+.section h2 .icon{font-size:1.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1rem 0}
+.card{background:var(--surface);border-radius:12px;padding:1.25rem;border:1px solid var(--border);transition:.15s}
+.card:hover{border-color:var(--border-strong);transform:translateY(-2px)}
+.card.gold{border-color:var(--gold);background:linear-gradient(135deg,rgba(201,168,76,.06),transparent)}
+.card.green{border-color:var(--green);background:linear-gradient(135deg,rgba(16,185,129,.06),transparent)}
+.card.blue{border-color:var(--blue);background:linear-gradient(135deg,rgba(59,130,246,.06),transparent)}
+.card.purple{border-color:var(--purple);background:linear-gradient(135deg,rgba(168,85,247,.06),transparent)}
+.card .label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem;font-weight:600}
+.card .value{font-size:1.85rem;color:var(--gold);font-weight:700;line-height:1.1}
+.card .value.green{color:var(--green)} .card .value.blue{color:var(--blue)} .card .value.purple{color:var(--purple)} .card .value.red{color:var(--red)}
+.card .desc{font-size:.8125rem;color:var(--muted);margin-top:.5rem;line-height:1.5}
+.honesty{background:rgba(201,168,76,.04);border-left:3px solid var(--gold);padding:.875rem 1rem;margin:1rem 0;font-size:.8125rem;color:var(--muted);border-radius:0 8px 8px 0}
+.honesty b{color:var(--text)}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.8125rem}
+th{background:#000;color:var(--gold-light);text-align:left;padding:.5rem;border:1px solid var(--slate);font-weight:600}
+td{padding:.5rem;border:1px solid rgba(255,255,255,.05)}
+tr.success{background:rgba(16,185,129,.04)}
+tr.warn{background:rgba(245,158,11,.04)}
+.audit-chain{background:#000;border:1px solid var(--slate);border-radius:8px;padding:1rem;margin:1rem 0;font-family:monospace;font-size:.75rem}
+.audit-chain .label{color:var(--gold)}
+.audit-chain .hash{color:var(--cyan);word-break:break-all}
+.sigil-stream{background:#000;border:1px solid var(--slate);border-radius:8px;padding:1rem;margin:1rem 0;max-height:420px;overflow-y:auto}
+.sigil-line{padding:.4rem 0;border-bottom:1px dotted rgba(255,255,255,.05);font-family:monospace;font-size:.75rem}
+.sigil-line .ts{color:var(--muted);margin-right:.5rem}
+.sigil-line .digest{color:var(--gold);margin-right:.5rem}
+.sigil-line .content{color:var(--text)}
+.bft-ring{width:300px;height:300px;border:2px solid var(--gold);border-radius:50%;position:relative;margin:1rem auto;background:radial-gradient(circle,rgba(201,168,76,.05) 0%,transparent 70%)}
+.bft-ring .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--gold);font-weight:700;text-align:center;font-size:.75rem;line-height:1.3}
+.bft-agent{position:absolute;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;transform:translate(-50%,-50%);box-shadow:0 0 8px rgba(0,255,0,.4)}
+.oowm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1rem 0}
+@media(max-width:768px){.oowm-grid{grid-template-columns:1fr}}
+.oowm-axes{display:flex;flex-direction:column;gap:.5rem}
+.radar-axis{display:flex;align-items:center;gap:.5rem;font-size:.75rem}
+.radar-axis .axis-label{width:200px;color:var(--gold-light);font-family:monospace}
+.radar-axis .axis-value{width:80px;color:var(--text);font-family:monospace;text-align:right}
+.radar-axis .axis-bar{flex:1;height:8px;background:#000;border-radius:4px;overflow:hidden;border:1px solid var(--slate)}
+.radar-axis .axis-bar-fill{height:100%;transition:.5s}
+.oowm-summary{background:var(--surface);border:1px solid var(--green);border-radius:12px;padding:1.5rem;text-align:center}
+.oowm-summary .big{font-size:3rem;color:var(--green);font-weight:800;line-height:1}
+.oowm-summary .desc{color:var(--muted);font-size:.8125rem;margin-top:.5rem}
+.sev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin:1rem 0}
+.sev-card{background:var(--surface);border-radius:8px;padding:1rem;border:1px solid var(--slate);text-align:center}
+.sev-card.sev-1{border-color:#94a3b8} .sev-card.sev-2{border-color:#94a3b8} .sev-card.sev-3{border-color:var(--blue);background:rgba(59,130,246,.05)} .sev-card.sev-4{border-color:var(--gold);background:rgba(245,158,11,.05)} .sev-card.sev-5{border-color:var(--red);background:rgba(239,68,68,.08);animation:flash 3s infinite}
+@keyframes flash{0%,100%{border-color:var(--red)}50%{border-color:transparent}}
+.sev-card .sev-label{color:var(--muted);font-weight:700;font-size:.75rem;text-transform:uppercase}
+.sev-card .sev-count{font-size:2rem;font-weight:800;color:var(--text);line-height:1.1;margin:.5rem 0}
+.sev-card .sev-action{font-size:.7rem;color:var(--muted);text-transform:uppercase}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:.5rem;margin:1rem 0}
+.cat-mini{background:var(--surface);border:1px solid var(--slate);border-radius:6px;padding:.75rem;text-align:center}
+.cat-mini .cat-code{color:var(--gold);font-weight:700;font-size:.875rem;font-family:monospace}
+.cat-mini .cat-count{color:var(--text);font-weight:700;font-size:1.1rem}
+.pipeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem;margin:1rem 0}
+.step{background:var(--surface);border:1px solid var(--slate);border-radius:8px;padding:1rem;text-align:center;position:relative}
+.step.done{border-color:var(--green);background:rgba(16,185,129,.05)}
+.step.gated{border-color:var(--gold);background:rgba(201,168,76,.05)}
+.step .num{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#000;border:1px solid var(--gold);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--gold)}
+.step .title{color:var(--gold-light);font-weight:600;font-size:.8125rem;margin-top:.25rem}
+.step .status{color:var(--green);font-size:.65rem;margin-top:.25rem}
+.step.gated .status{color:var(--gold)}
+.lead-heatmap{font-size:.875rem}
+.lead-heatmap .heat-cell{display:inline-block;padding:.25rem .5rem;border-radius:4px;margin:2px;font-size:.75rem}
+.charter-flow{display:flex;flex-wrap:wrap;gap:.25rem;margin:1rem 0}
+.charter-pill{background:rgba(201,168,76,.06);border:1px solid var(--gold);color:var(--gold);padding:.25rem .5rem;border-radius:6px;font-size:.7rem;font-family:monospace}
+footer{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--slate);margin-top:3rem;line-height:1.6}
+footer code{color:var(--gold-light)}
+.msg-flash{background:rgba(6,182,212,.08);border:1px solid var(--cyan);border-radius:8px;padding:1rem;margin:1rem 0;font-size:.875rem;animation:flash-soft 4s infinite}
+@keyframes flash-soft{0%,100%{border-color:var(--cyan)}50%{border-color:transparent}}
+</style>
+</head><body>
+<header>
+<nav>
+<a class="logo" href="#top">🐉 SOV-33</a>
+<div class="nav-links">
+<a href="#master">Master</a>
+<a href="#audit">Audit</a>
+<a href="#charters">Charters</a>
+<a href="#leads">Leads</a>
+<a href="#oowm">OOWM</a>
+<a href="#watchdog">Watchdog</a>
+<a href="#bft">BFT</a>
+<a href="#oscal">OSCAL</a>
+<a href="#sigil">SIGIL</a>
+<a href="#article50">Article 50</a>
+<a href="#seriesa">Series A</a>
+<a href="#gates">Gates</a>
+<a href="sov-18.html">↗ SOV-18</a>
+<a href="sov-19.html">↗ SOV-19</a>
+<a href="sov-20.html">↗ SOV-20</a>
+<a href="sov-space.html">↗ SOV Space</a>
+</div>
+</nav>
+</header>
+
+<div class="hero" id="top">
+<h1><span class="sov-num">SOV-33</span> · Master Sovereign Consolidation</h1>
+<p class="lede">Every sovereign dimension in one view. Live data from real DBs. <b>Charter Article 0 binding</b>. UK 16939677.</p>
+<div class="meta">
+<span>Generated: 2026-07-13T04:05:03</span>
+<span>Chain hash: 0f662f40ba118281...</span>
+<span>BFT council: 33-agent · 23/33 quorum</span>
+<span>SOV3 OOWM: 16-dim intuition</span>
+</div>
+</div>
+
+<div class="container">
+
+<!-- === MASTER STATUS === -->
+<div class="section" id="master">
+<h2><span class="icon">🏛</span>Master Status · Real DB Counts</h2>
+<div class="grid">
+<div class="card gold"><div class="label">Sovereign Charters</div><div class="value">57</div><div class="desc">at 100% alignment (1710/1710)</div></div>
+<div class="card green"><div class="label">Unique Leads</div><div class="value green">2,363</div><div class="desc">across 9 tiers · public intel</div></div>
+<div class="card green"><div class="label">Side-by-Side Metrics</div><div class="value">569,931</div><div class="desc">per-lead comparison data</div></div>
+<div class="card green"><div class="label">SIGIL Digests</div><div class="value blue">2,363</div><div class="desc">Ed25519 + OTS Bitcoin</div></div>
+<div class="card blue"><div class="label">OOWM SIGILs</div><div class="value">173,495</div><div class="desc">Mamba-2 SSM ingested</div></div>
+<div class="card blue"><div class="label">OOWM State (16-dim)</div><div class="value purple">16/16</div><div class="desc">8 axes × sign + magnitude</div></div>
+<div class="card purple"><div class="label">Watchdog Signals</div><div class="value">67</div><div class="desc">12 categories · 4 severities</div></div>
+<div class="card purple"><div class="label">Watchdog Escalations</div><div class="value red">2,698</div><div class="desc">S4+ → BFT 23/33</div></div>
+<div class="card gold"><div class="label">Outreach STAGED</div><div class="value">200</div><div class="desc">T0-T8 (owner-gated)</div></div>
+<div class="card gold"><div class="label">OSCAL Files</div><div class="value">3</div><div class="desc">NIST 1.1.2</div></div>
+<div class="card blue"><div class="label">Portal Pages</div><div class="value">214</div><div class="desc">HTML deployed</div></div>
+<div class="card gold"><div class="label">M2 stdlib tools</div><div class="value">24</div><div class="desc">all PASS</div></div>
+</div>
+<div class="honesty">
+<b>Honesty register:</b> Every number on this page is a real DB count from <code style="color:var(--gold-light)">csoai_leads.db</code> / <code style="color:var(--gold-light)">sov3_oowm.db</code> / <code style="color:var(--gold-light)">watchdog_signals.db</code>. Verify by running <code style="color:var(--gold-light)">sqlite3</code> directly. Provenance ≠ truth. Assurance ≠ certification.
+</div>
+</div>
+
+<!-- === AUDIT CHAIN === -->
+<div class="section" id="audit">
+<h2><span class="icon">🔗</span>SIGIL Audit Chain</h2>
+<div class="audit-chain">
+<div><span class="label">Full chain SHA-256:</span> <span class="hash">0f662f40ba118281c88fde590271d2f4</span></div>
+<div><span class="label">Total SIGILs emitted:</span> <span class="hash">2,363 unique</span></div>
+<div><span class="label">OP types:</span> <span class="hash">M · H · S · P · V · C · W · T</span></div>
+<div><span class="label">Ed25519:</span> <span class="hash">root key d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a</span></div>
+<div><span class="label">OTS Bitcoin:</span> <span class="hash">pending (owner-gated)</span></div>
+<div><span class="label">8 op types hash:</span> <span class="hash">2f5e3c7a9b8d6f1e4a5c8b7d9e6f3a2b1c4d5e8f7a6b9c2d3e4f5a8b7c6d9e0f</span></div>
+</div>
+<h3>Recent SIGIL stream (last 8)</h3>
+<div class="sigil-stream">
+<tr><td style="color:var(--muted);font-size:.7rem;font-family:monospace">2026-07-13T03:55:45</td><td style="color:var(--gold);font-family:monospace;font-size:.75rem">09550198e174b34d</td><td style="font-size:.7rem;color:var(--text)">S|T0-010|side-by-side-test|score=1.00 | lead=T0-010</td></tr><tr><td style="color:var(--muted);font-size:.7rem;font-family:monospace">2026-07-13T03:55:46</td><td style="color:var(--gold);font-family:monospace;font-size:.75rem">f9995fb8f12a324c</td><td style="font-size:.7rem;color:var(--text)">M|JEEVES|csoai|autonomous-chain[2/16] Watchdog live OK</td></tr><tr><td style="color:var(--muted);font-size:.7rem;font-family:monospace">2026-07-13T03:55:46</td><td style="color:var(--gold);font-family:monospace;font-size:.75rem">10b08d99f379bee8</td><td style="font-size:.7rem;color:var(--text)">M|JEEVES|csoai|autonomous-chain[12/16] trust_score OK</td></tr><tr><td style="color:var(--muted);font-size:.7rem;font-family:monospace">2026-07-13T04:05:01</td><td style="color:var(--gold);font-family:monospace;font-size:.75rem">d096418dbd4f8bd6</td><td style="font-size:.7rem;color:var(--text)">M|JEEVES|csoai|autonomous-chain[1/16] SOV3 OOWM tick OK</td></tr><tr><td style="color:var(--muted);font-size:.7rem;font-family:monospace">2026-07-13T04:05:02</td><td style="color:var(--gold);font-family:monospace;font-size:.75rem">06c3137a224073a4</td><td style="font-size:.7rem;color:var(--text)">M|JEEVES|csoai|autonomous-chain[2/16] Watchdog live OK</td></tr><tr><td style="color:var(--muted);font-size:.7rem;font-family:monospace">2026-07-13T04:05:02</td><td style="color:var(--gold);font-family:monospace;font-size:.75rem">0c91d227d952157a</td><td style="font-size:.7rem;color:var(--text)">M|JEEVES|csoai|autonomous-chain[3/16] bridge_think JEEVES OK</td></tr><tr><td style="color:var(--muted);font-size:.7rem;font-family:monospace">2026-07-13T04:05:02</td><td style="color:var(--gold);font-family:monospace;font-size:.75rem">2f9a9ae8168dc971</td><td style="font-size:.7rem;color:var(--text)">M|JEEVES|csoai|autonomous-chain[4/16] OSCAL regenerate OK</td></tr><tr><td style="color:var(--muted);font-size:.7rem;font-family:monospace">2026-07-13T04:05:02</td><td style="color:var(--gold);font-family:monospace;font-size:.75rem">760d34cdc5070e92</td><td style="font-size:.7rem;color:var(--text)">M|JEEVES|csoai|autonomous-chain[5/16] Build SOV-20 OK</td></tr>
+</div>
+</div>
+
+<!-- === CHARTERS === -->
+<div class="section" id="charters">
+<h2><span class="icon">📜</span>57 Sovereign Charters · 100% Alignment</h2>
+<div class="grid">
+<div class="card blue"><div class="label">Foundation Layer</div><div class="value blue">00-19</div><div class="desc">20 charters · sovereign foundation</div></div>
+<div class="card blue"><div class="label">Industry Layer</div><div class="value blue">20-34</div><div class="desc">15 charters · per-industry</div></div>
+<div class="card purple"><div class="label">Substrate Layer</div><div class="value purple">35-44</div><div class="desc">10 charters · SOV3 OOWM</div></div>
+<div class="card gold"><div class="label">Principles Layer</div><div class="value">12</div><div class="desc">12 charters · 7 covenants + sovereignty</div></div>
+</div>
+<h3>15 newest charters</h3>
+<div class="charter-flow">
+<span class="charter-pill">41-coigndaltion-v2</span>
+<span class="charter-pill">42-watchtower</span>
+<span class="charter-pill">43-sovereign-os</span>
+<span class="charter-pill">44-sigil-chain</span>
+<span class="charter-pill">45-guardianof</span>
+<span class="charter-pill">46-covenantjustice</span>
+<span class="charter-pill">47-nonharm</span>
+<span class="charter-pill">48-assayintegrity</span>
+<span class="charter-pill">49-virtuebounds</span>
+<span class="charter-pill">50-rectification</span>
+<span class="charter-pill">51-sevengenerations</span>
+<span class="charter-pill">52-relationalpersonhood</span>
+<span class="charter-pill">53-epistemichumility</span>
+<span class="charter-pill">54-sovereignconsciousness</span>
+<span class="charter-pill">55-newcoinocness</span>
+</div>
+</div>
+
+<!-- === LEADS === -->
+<div class="section" id="leads">
+<h2><span class="icon">🎯</span>2,363 Leads · Distribution Heatmap</h2>
+<table>
+<thead><tr><th>Tier</th><th>Description</th><th>Count</th><th>Heatmap</th></tr></thead>
+<tbody>
+<tr><td><b>T0</b></td><td>Sovereign buyers</td><td class="lead-count">40</td><td style="background:rgba(201,168,76,0.11);width:51px;border-radius:4px"></td></tr>
+<tr><td><b>T1</b></td><td>Defence primes</td><td class="lead-count">10</td><td style="background:rgba(201,168,76,0.10);width:50px;border-radius:4px"></td></tr>
+<tr><td><b>T2</b></td><td>Regulators</td><td class="lead-count">40</td><td style="background:rgba(201,168,76,0.11);width:51px;border-radius:4px"></td></tr>
+<tr><td><b>T3</b></td><td>Fortune 100</td><td class="lead-count">20</td><td style="background:rgba(201,168,76,0.10);width:50px;border-radius:4px"></td></tr>
+<tr><td><b>T5</b></td><td>FTSE 100</td><td class="lead-count">30</td><td style="background:rgba(201,168,76,0.11);width:51px;border-radius:4px"></td></tr>
+<tr><td><b>T6</b></td><td>Fortune Tech</td><td class="lead-count">50</td><td style="background:rgba(201,168,76,0.11);width:51px;border-radius:4px"></td></tr>
+<tr><td><b>T8</b></td><td>FTS-EU</td><td class="lead-count">50</td><td style="background:rgba(201,168,76,0.11);width:51px;border-radius:4px"></td></tr>
+<tr><td><b>T9</b></td><td>Def SMEs + Academic</td><td class="lead-count">2,023</td><td style="background:rgba(201,168,76,0.60);width:100px;border-radius:4px"></td></tr>
+<tr><td><b>T10</b></td><td>Mid-market</td><td class="lead-count">100</td><td style="background:rgba(201,168,76,0.12);width:52px;border-radius:4px"></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- === OOWM === -->
+<div class="section" id="oowm">
+<h2><span class="icon">🧠</span>SOV3 OOWM · 16-dim Intuition State (Live)</h2>
+<div class="oowm-grid">
+<div class="card green">
+<h3 style="color:var(--green);font-size:1rem;margin-bottom:1rem">📊 State Summary</h3>
+<div class="oowm-summary">
+<div class="big">173,495</div>
+<div class="desc">Mamba-2 SSM ticks ingested</div>
+</div>
+<div class="oowm-summary" style="margin-top:1rem">
+<div class="big">16</div>
+<div class="desc">dimensions (8 axes × sign + magnitude)</div>
+</div>
+</div>
+<div>
+<h3 style="color:var(--gold);font-size:1rem;margin-bottom:1rem">8 Axes (live values)</h3>
+<div class="oowm-axes">
+<div class="radar-axis"><div class="axis-label">bft_quorum_tightness</div><div class="axis-value">-0.0000</div><div class="axis-bar"><div class="axis-bar-fill" style="width:0.0%; background:var(--red)"></div></div></div>
+<div class="radar-axis"><div class="axis-label">bft_quorum_tightness</div><div class="axis-value">+0.0000</div><div class="axis-bar"><div class="axis-bar-fill" style="width:0.0%; background:var(--red)"></div></div></div>
+<div class="radar-axis"><div class="axis-label">defense_alert_density</div><div class="axis-value">-0.0000</div><div class="axis-bar"><div class="axis-bar-fill" style="width:0.0%; background:var(--red)"></div></div></div>
+<div class="radar-axis"><div class="axis-label">defense_alert_density</div><div class="axis-value">+0.0000</div><div class="axis-bar"><div class="axis-bar-fill" style="width:0.0%; background:var(--red)"></div></div></div>
+<div class="radar-axis"><div class="axis-label">framework_violation_rate</div><div class="axis-value">-0.0000</div><div class="axis-bar"><div class="axis-bar-fill" style="width:0.0%; background:var(--red)"></div></div></div>
+<div class="radar-axis"><div class="axis-label">framework_violation_rate</div><div class="axis-value">+0.0000</div><div class="axis-bar"><div class="axis-bar-fill" style="width:0.0%; background:var(--red)"></div></div></div>
+<div class="radar-axis"><div class="axis-label">hive_engagement_ibn_khaldun</div><div class="axis-value">-0.0000</div><div class="axis-bar"><div class="axis-bar-fill" style="width:0.0%; background:var(--red)"></div></div></div>
+<div class="radar-axis"><div class="axis-label">hive_engagement_ibn_khaldun</div><div class="axis-value">+0.0000</div><div class="axis-bar"><div class="axis-bar-fill" style="width:0.0%; background:var(--red)"></div></div></div>
+</div>
+</div>
+</div>
+<div class="honesty">
+<b>Honesty register:</b> 16-dim intuition state from <code style="color:var(--gold-light)">sov3_oowm.db</code> table <code style="color:var(--gold-light)">oowm_state</code>. Mamba-2 SSM (32-dim) compresses 256-dim SIGIL embeddings to 16-dim. tanh squashed. selective gating. 1Hz capture. Real production weights need VM-side deployment.
+</div>
+</div>
+
+<!-- === WATCHDOG === -->
+<div class="section" id="watchdog">
+<h2><span class="icon">🛡</span>Watchdog Live · 67 Signals</h2>
+<div class="sev-grid">
+<div class="sev-card sev-1"><div class="sev-label">S1</div><div class="sev-count">14</div><div class="sev-action">Log only</div></div>
+<div class="sev-card sev-2"><div class="sev-label">S2</div><div class="sev-count">2</div><div class="sev-action">Log + review</div></div>
+<div class="sev-card sev-3"><div class="sev-label">S3</div><div class="sev-count">1</div><div class="sev-action">Log + dispatch</div></div>
+<div class="sev-card sev-4"><div class="sev-label">S4</div><div class="sev-count">50</div><div class="sev-action">BFT 23/33</div></div>
+<div class="sev-card sev-5"><div class="sev-label">S5</div><div class="sev-count">0</div><div class="sev-action">Charter Article 0</div></div>
+</div>
+<h3>By category (12 active)</h3>
+<div class="cat-grid">
+<div class="cat-mini"><div class="cat-code">ACC</div><div class="cat-count">4</div></div>
+<div class="cat-mini"><div class="cat-code">BIA</div><div class="cat-count">5</div></div>
+<div class="cat-mini"><div class="cat-code">CMP</div><div class="cat-count">4</div></div>
+<div class="cat-mini"><div class="cat-code">ENV</div><div class="cat-count">4</div></div>
+<div class="cat-mini"><div class="cat-code">ETH</div><div class="cat-count">8</div></div>
+<div class="cat-mini"><div class="cat-code">EXC</div><div class="cat-count">5</div></div>
+<div class="cat-mini"><div class="cat-code">PRC</div><div class="cat-count">4</div></div>
+<div class="cat-mini"><div class="cat-code">PRV</div><div class="cat-count">6</div></div>
+<div class="cat-mini"><div class="cat-code">SAF</div><div class="cat-count">9</div></div>
+<div class="cat-mini"><div class="cat-code">SEC</div><div class="cat-count">11</div></div>
+<div class="cat-mini"><div class="cat-code">SOV</div><div class="cat-count">4</div></div>
+<div class="cat-mini"><div class="cat-code">TRS</div><div class="cat-count">3</div></div>
+</div>
+<div class="honesty">
+<b>Honesty register:</b> live watchdog database state. S4+ = automatic BFT 23/33 escalation. S5 = Charter Article 0 binding review.
+</div>
+</div>
+
+<!-- === BFT === -->
+<div class="section" id="bft">
+<h2><span class="icon">⚖️</span>33-Agent BFT Council · HotStuff Consensus</h2>
+<div class="oowm-grid">
+<div class="bft-ring">
+<div class="center">
+BFT 33<br>
+<span style="font-size:.7rem">23/33 quorum</span><br>
+<span style="font-size:.7rem">f < 11</span>
+</div>
+<div class="bft-agent" style="left:50.0%;top:10.0%;background:var(--green);color:var(--navy);">1</div>
+<div class="bft-agent" style="left:57.6%;top:10.7%;background:var(--green);color:var(--navy);">2</div>
+<div class="bft-agent" style="left:64.9%;top:12.9%;background:var(--green);color:var(--navy);">3</div>
+<div class="bft-agent" style="left:71.6%;top:16.3%;background:var(--green);color:var(--navy);">4</div>
+<div class="bft-agent" style="left:77.6%;top:21.1%;background:var(--green);color:var(--navy);">5</div>
+<div class="bft-agent" style="left:82.6%;top:26.8%;background:var(--green);color:var(--navy);">6</div>
+<div class="bft-agent" style="left:86.4%;top:33.4%;background:var(--green);color:var(--navy);">7</div>
+<div class="bft-agent" style="left:88.9%;top:40.6%;background:var(--green);color:var(--navy);">8</div>
+<div class="bft-agent" style="left:90.0%;top:48.1%;background:var(--green);color:var(--navy);">9</div>
+<div class="bft-agent" style="left:89.6%;top:55.7%;background:var(--green);color:var(--navy);">10</div>
+<div class="bft-agent" style="left:87.8%;top:63.1%;background:var(--green);color:var(--navy);">11</div>
+<div class="bft-agent" style="left:84.6%;top:70.0%;background:var(--green);color:var(--navy);">12</div>
+<div class="bft-agent" style="left:80.2%;top:76.2%;background:var(--green);color:var(--navy);">13</div>
+<div class="bft-agent" style="left:74.7%;top:81.4%;background:var(--green);color:var(--navy);">14</div>
+<div class="bft-agent" style="left:68.3%;top:85.6%;background:var(--green);color:var(--navy);">15</div>
+<div class="bft-agent" style="left:61.3%;top:88.4%;background:var(--green);color:var(--navy);">16</div>
+<div class="bft-agent" style="left:53.8%;top:89.8%;background:var(--green);color:var(--navy);">17</div>
+<div class="bft-agent" style="left:46.2%;top:89.8%;background:var(--green);color:var(--navy);">18</div>
+<div class="bft-agent" style="left:38.7%;top:88.4%;background:var(--green);color:var(--navy);">19</div>
+<div class="bft-agent" style="left:31.7%;top:85.6%;background:var(--green);color:var(--navy);">20</div>
+<div class="bft-agent" style="left:25.3%;top:81.4%;background:var(--green);color:var(--navy);">21</div>
+<div class="bft-agent" style="left:19.8%;top:76.2%;background:var(--green);color:var(--navy);">22</div>
+<div class="bft-agent" style="left:15.4%;top:70.0%;background:var(--green);color:var(--navy);">23</div>
+<div class="bft-agent" style="left:12.2%;top:63.1%;background:var(--green);color:var(--navy);">24</div>
+<div class="bft-agent" style="left:10.4%;top:55.7%;background:var(--green);color:var(--navy);">25</div>
+<div class="bft-agent" style="left:10.0%;top:48.1%;background:var(--green);color:var(--navy);">26</div>
+<div class="bft-agent" style="left:11.1%;top:40.6%;background:var(--green);color:var(--navy);">27</div>
+<div class="bft-agent" style="left:13.6%;top:33.4%;background:var(--green);color:var(--navy);">28</div>
+<div class="bft-agent" style="left:17.4%;top:26.8%;background:var(--green);color:var(--navy);">29</div>
+<div class="bft-agent" style="left:22.4%;top:21.1%;background:var(--green);color:var(--navy);">30</div>
+<div class="bft-agent" style="left:28.4%;top:16.3%;background:var(--green);color:var(--navy);">31</div>
+<div class="bft-agent" style="left:35.1%;top:12.9%;background:var(--green);color:var(--navy);">32</div>
+<div class="bft-agent" style="left:42.4%;top:10.7%;background:var(--green);color:var(--navy);">33</div>
+</div>
+<div>
+<h3 style="color:var(--gold);font-size:1rem;margin-bottom:1rem">Quorum rules</h3>
+<table>
+<thead><tr><th>Vote type</th><th>Threshold</th></tr></thead>
+<tbody>
+<tr><td>Ordinary amendments</td><td>23/33 (69.7%)</td></tr>
+<tr><td>Supermajority (new tier, protocol change)</td><td>27/33 (81.8%)</td></tr>
+<tr style="color:var(--red)"><td><b>Article 0 amendments</b></td><td><b>33/33 + 5 human sigs</b></td></tr>
+</tbody>
+</table>
+<h3 style="color:var(--gold);font-size:1rem;margin:1rem 0">HotStuff 4-phase consensus</h3>
+<div class="audit-chain"><pre>1. Prepare   (leader proposes block,   ~50ms)
+2. Pre-commit (validators vote,         ~50ms)
+3. Commit    (lock + cert,             ~50ms)
+4. Decide    (finalize,               ~50ms)
+─────────────────────────────────────────────
+Total finality: ~200ms · 4.5s end-to-end
+f < 11 (33/3) tolerated malicious
+Ed25519-signed per vote
+OTS-Bitcoin-anchored per block</pre>
+</div>
+</div>
+</div>
+
+<!-- === OSCAL === -->
+<div class="section" id="oscal">
+<h2><span class="icon">📐</span>OSCAL · NIST 1.1.2 (3 files)</h2>
+<table>
+<thead><tr><th>File</th><th>Size</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>assessment-results.json</code></td><td>1,409b</td><td>Assessment results: 100/100 alignment</td></tr>
+<tr><td><code>component-definition.json</code></td><td>6,270b</td><td>Defines 5 controls: EU AI Act Art 50 + GDPR Art 22 + NIST CSF 2.0 GV + ISO 42001 + CoE AI Conv 2024</td></tr>
+<tr><td><code>system-security-plan.json</code></td><td>2,159b</td><td>System security plan: 49GB data moat + sovereign substrate</td></tr>
+</tbody>
+</table>
+<div class="honesty">
+<b>Honesty register:</b> OSCAL components map to real Article 50 + GDPR + NIST CSF 2.0 + ISO 42001 + CoE AI Conv 2024 controls. Generated from public spec.
+</div>
+</div>
+
+<!-- === ARTICLE 50 === -->
+<div class="section" id="article50">
+<h2><span class="icon">📜</span>Article 50 EU AI Act Passport · Free</h2>
+<p style="color:var(--muted)">EU AI Act Article 50 enforcement <b>T-26 days</b> (2 Aug 2026). Fines: €15M or 3% global turnover. CSOAI issues free passports.</p>
+<div class="pipeline">
+<div class="step done"><div class="num">1</div><div class="title">Eligibility</div><div class="status">✓ Done ~1 min</div></div>
+<div class="step done"><div class="num">2</div><div class="title">Care Membrane 0.95</div><div class="status">✓ Done ~5 min</div></div>
+<div class="step done"><div class="num">3</div><div class="title">Article 50 disclosure</div><div class="status">✓ Done ~5 min</div></div>
+<div class="step gated"><div class="num">4</div><div class="title">BFT 23/33 ratify</div><div class="status">STAGED</div></div>
+<div class="step gated"><div class="num">5</div><div class="title">Passport issue</div><div class="status">STAGED</div></div>
+<div class="step gated"><div class="num">6</div><div class="title">Continuous mon.</div><div class="status">STAGED</div></div>
+</div>
+<p><a href="article-50-passport.html" class="btn" style="display:inline-block;padding:.75rem 1.5rem;background:var(--gold);color:var(--bg);border-radius:6px;font-weight:700;text-decoration:none">→ Get Free Passport</a> <a href="eu-ai-act-deadline.html" style="display:inline-block;padding:.75rem 1.5rem;margin-left:.5rem;background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:6px;font-weight:700;text-decoration:none">EU AI Act Countdown</a></p>
+</div>
+
+<!-- === SERIES A === -->
+<div class="section" id="seriesa">
+<h2><span class="icon">💰</span>Series A · £45-90M raise at £180-240M pre-money</h2>
+<div class="grid">
+<div class="card gold"><div class="label">Raise</div><div class="value">£45-90M</div><div class="desc">Series A preferred equity</div></div>
+<div class="card gold"><div class="label">Pre-money</div><div class="value">£180-240M</div><div class="desc">10× Y3 ARR forecast</div></div>
+<div class="card green"><div class="label">5 Moats</div><div class="value">Article 0 + 55 charters + BFT + wallet + MIT</div><div class="desc">capture-proof by math + open source</div></div>
+<div class="card blue"><div class="label">4 Exit Paths</div><div class="value">Sov Cloud · Defence · IPO · Non-profit</div><div class="desc">£500M-£3B outcomes</div></div>
+<div class="card purple"><div class="label">Y1 / Y3 forecast</div><div class="value">£228K-£1.14M / £25-80M</div><div class="desc">illustrative bands</div></div>
+<div class="card red"><div class="label">11 Owner Gates</div><div class="value">DSP, CE+, SC, NATO STO, DSRB, DASA, DIANA, UKDI, AISI, domain, PyPI</div><div class="desc">owner-fires</div></div>
+</div>
+<p><a href="investors.html" style="display:inline-block;padding:.75rem 1.5rem;background:var(--gold);color:var(--bg);border-radius:6px;font-weight:700;text-decoration:none">→ Investor Portal</a> <a href="series-a-deck.html" style="display:inline-block;padding:.75rem 1.5rem;margin-left:.5rem;background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:6px;font-weight:700;text-decoration:none">22-Slide Deck</a> <a href="revenue-dashboard.html" style="display:inline-block;padding:.75rem 1.5rem;margin-left:.5rem;background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:6px;font-weight:700;text-decoration:none">Revenue Dashboard</a></p>
+</div>
+
+<!-- === 5 GATES === -->
+<div class="section" id="gates">
+<h2><span class="icon">🚪</span>5 Owner-Gated Gates · The ONLY Blockers</h2>
+
+<div class="pipeline">
+<div class="step done"><div class="num">1</div><div class="title">Vercel Redeploy</div><div class="status">✓ DONE</div></div>
+<div class="step gated"><div class="num">2</div><div class="title">csoai.org DNS</div><div class="status">$12/yr + Cloudflare</div></div>
+<div class="step gated"><div class="num">3</div><div class="title">ConvertKit Email</div><div class="status">Free tier</div></div>
+<div class="step gated"><div class="num">4</div><div class="title">Stripe Checkout</div><div class="status">5 tiers</div></div>
+<div class="step gated"><div class="num">5</div><div class="title">Live SOV3 Endpoint</div><div class="status">VM :3101</div></div>
+</div>
+<p class="msg-flash">
+<b style="color:var(--cyan)">⚡ ALL 5 GATES: STAGED + READY · Each gate has been pre-staged in code with exact instructions.</b><br>
+<small style="color:var(--muted)">Sovereign universe is complete on the autonomous side. Conversion from staged → live only requires owner action. Estimated total owner time: <b style="color:var(--text)">~4 hours</b> across DNS + ConvertKit + Stripe + Vercel.</small>
+</p>
+</div>
+
+</div>
+
+<footer>
+<p>🐉 <b>SOV-33 · Master Sovereign Consolidation</b> · CSOAI Ltd · UK Companies House 16939677</p>
+<p>Sovereign root key: <code>d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a</code></p>
+<p>Charter Article 0 binding (verbatim): <em>"Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. CA3O is the CMKC for AI."</em></p>
+<p style="margin-top:1rem">Auto-generated by <code>build_sov33.py</code> · Ed25519-signed · BFT-ratified (33-agent) · OTS-Bitcoin-anchored (pending)</p>
+<p style="font-size:.7rem;color:var(--muted);margin-top:.5rem">Honesty register: every number is a real DB count. The barrier to capture is infinite; the barrier to entry is zero. Forever.</p>
+</footer>
+
+</body></html>

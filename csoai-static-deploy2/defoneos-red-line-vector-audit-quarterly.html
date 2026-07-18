@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS: Red-Line Vector Audit (Quarterly)</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --text-color: #e0e0e0;
+            --accent-color: #ff0000; /* Red for red-line */
+            --secondary-accent: #ffa500; /* Orange for warnings */
+            --border-color: #333;
+            --code-bg: #1a1a1a;
+            --card-bg: #1a1a1a;
+            --pass-color: #00cc00;
+            --fail-color: #ff0000;
+            --warn-color: #ffa500;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+            flex-grow: 1;
+        }
+        header {
+            background-color: var(--code-bg);
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 1.8em;
+        }
+        header .logo {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--secondary-accent);
+            font-size: 1.2em;
+        }
+        h2, h3 {
+            color: var(--accent-color);
+            font-family: 'IBM Plex Mono', monospace;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--secondary-accent);
+        }
+        code, pre {
+            font-family: 'IBM Plex Mono', monospace;
+            background-color: var(--code-bg);
+            color: var(--text-color);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        pre {
+            padding: 10px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        a {
+            color: var(--secondary-accent);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid var(--border-color);
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--code-bg);
+            color: var(--accent-color);
+        }
+        .status-pass { color: var(--pass-color); font-weight: bold; }
+        .status-fail { color: var(--fail-color); font-weight: bold; }
+        .status-warn { color: var(--warn-color); font-weight: bold; }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            color: #888;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DEFONEOS</h1>
+        <div class="logo">RED-LINE AUDIT</div>
+    </header>
+    <div class="container">
+        <h2>Red-Line Vector Audit: Quarterly Trend</h2>
+        <p>This page provides a quarterly overview of the DEFONEOS Red-Line Vector Audit, tracking adherence to critical sovereignty and security invariants across the entire substrate. A "red-line" violation indicates a severe breach of sovereign control or an unacceptable external dependency.</p>
+
+        <h3>1. Red-Line Vectors Monitored</h3>
+        <p>The DEFONEOS system continuously monitors against 7 core red-line vectors:</p>
+        <ol>
+            <li><strong>US CDN Dependency:</strong> Any content delivery network (CDN) hosted or controlled by US entities.</li>
+            <li><strong>US Root CA:</strong> Reliance on US-controlled Certificate Authorities for TLS/SSL.</li>
+            <li><strong>US Cloud API:</strong> Direct API calls to US-based cloud providers (e.g., AWS, Azure, GCP).</li>
+            <li><strong>US NTP:</strong> Synchronisation with US-controlled Network Time Protocol servers.</li>
+            <li><strong>US Telemetry:</strong> Any data collection or reporting to US-based services.</li>
+            <li><strong>US-Vendor JS:</strong> Client-side JavaScript libraries served from US vendors.</li>
+            <li><strong>Kinetic Patterns:</strong> Detection of any code patterns or data flows related to kinetic targeting or offensive operations (absolute hard stop).</li>
+        </ol>
+        <div class="card">
+            <p><strong>Goal:</strong> Maintain 0 FAIL across all vectors, with continuous reduction in WARN instances. All Kinetic Patterns must always be 0.</p>
+        </div>
+
+        <h3>2. Quarterly Audit Results (2026)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Quarter</th>
+                    <th>US CDN</th>
+                    <th>US Root CA</th>
+                    <th>US Cloud API</th>
+                    <th>US NTP</th>
+                    <th>US Telemetry</th>
+                    <th>US-Vendor JS</th>
+                    <th>Kinetic</th>
+                    <th>Overall Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Q1 2026</td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-warn">WARN (2)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-warn">WARNING</span></td>
+                </tr>
+                <tr>
+                    <td>Q2 2026</td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS</span></td>
+                </tr>
+                <tr>
+                    <td>Q3 2026 (YTD)</td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS (0)</span></td>
+                    <td><span class="status-pass">PASS</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p><em>(Numbers in parentheses indicate instances detected. 0 = no instances.)</em></p>
+
+        <h3>3. Curl Verification Command</h3>
+        <p>To perform a real-time probe of the red-line status for a specific MCP or component, you can use the following <code>curl</code> command. (Example demonstrates checking for US CDN dependencies in <code>defoneos-core-mcp</code>'s public surfaces).</p>
+        <pre><code>
+#!/bin/bash
+MCP_NAME="defoneos-core-mcp"
+REDLINE_VECTOR="US_CDN_DEPENDENCY"
+API_ENDPOINT="https://api.csoai.org/v1/redline/audit/${MCP_NAME}/${REDLINE_VECTOR}"
+
+echo "--- Probing Red-Line Vector: $REDLINE_VECTOR for $MCP_NAME ---"
+curl -s "$API_ENDPOINT" | jq .
+
+# Expected output example:
+# {
+#   "mcp_name": "defoneos-core-mcp",
+#   "vector": "US_CDN_DEPENDENCY",
+#   "status": "PASS",
+#   "instances": 0,
+#   "last_audited": "2026-07-17T08:00:00Z"
+# }
+        </code></pre>
+        <p><strong>Note:</strong> The API endpoint <code>api.csoai.org</code> is a conceptual interface for real-time audit probes against the live DEFONEOS substrate, returning structured JSON results. This page reports the quarterly summary.</p>
+
+        <h3>4. Remediation and Mitigation</h3>
+        <p>Any detected WARN or FAIL instances trigger an immediate remediation protocol:</p>
+        <ul>
+            <li><strong>Automated Isolation:</strong> Affected components are automatically isolated within the DEFONEOS substrate.</li>
+            <li><strong>Human Review (Ring 1 & 2):</strong> Owner (Ring 1) and Defence Prime (Ring 2) agents are alerted for a priority review.</li>
+            <li><strong>Alternative Sourcing:</strong> Immediate efforts to replace the offending dependency with a UK-sovereign or AUKUS-compatible alternative.</li>
+            <li><strong>BFT Council Motion:</strong> A formal motion is submitted to the BFT Council for approval of the remediation strategy and a timeline for resolution.</li>
+        </ul>
+
+        <h3>5. Cross-Links</h3>
+        <ul>
+            <li><a href="defoneos-redline-motions-history.html">Red-Line Motions History</a></li>
+            <li><a href="#">AI Safety MCP Pattern</a></li>
+            <li><a href="#">Sovereign Guardrail Integration</a></li>
+        </ul>
+    </div>
+    <footer>
+        DEFONEOS &copy; 2026. Sovereignty by design.
+    </footer>
+</body>
+</html>

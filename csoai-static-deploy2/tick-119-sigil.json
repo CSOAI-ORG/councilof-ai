@@ -1,0 +1,49 @@
+{
+  "tick": 119,
+  "phase": 39,
+  "compartment": "csoai-defoneos",
+  "ts": 1784294030,
+  "iso": "2026-07-17T13:13:50Z",
+  "previous_tick": 118,
+  "operations": [
+    "health_check_production: HTTP 200 OK csoai-static-deploy2.vercel.app",
+    "health_check_local_SOV3: DOWN (3101 not bound)",
+    "health_check_local_MEOK_OS: DOWN (3000 not bound)",
+    "health_check_backend_VM: UNREACHABLE (35.242.143.249:22 timeout)",
+    "page_inventory: 580 live top-level + 1 EXEC/EXEC_DASHBOARD = 581",
+    "broken_link_scan: 1437 files scanned, 0 broken",
+    "sitemap_update: 578 \u2192 581 URLs (+3 new ship-grade pages)",
+    "deploy: vercel --prod --yes \u2192 Ready 16s, 3 aliases set (csoai-static-deploy2 / www.csoai.org / csoai.org)",
+    "byte_verification: 9209=9209 / 9415=9415 / 10541=10541"
+  ],
+  "new_pages": [
+    {
+      "slug": "defoneos-mcp-category-lifecycle-dashboard",
+      "size": 9209,
+      "sha256": "936fb9269301ba7c..."
+    },
+    {
+      "slug": "defoneos-per-motion-owner-cosign-verification",
+      "size": 9415,
+      "sha256": "77627f0578b5a1b2..."
+    },
+    {
+      "slug": "defoneos-red-line-vector-audit-quarterly",
+      "size": 10541,
+      "sha256": "201d286041b6e0cb..."
+    }
+  ],
+  "sitemap_url_count": 581,
+  "sitemap_bytes": 100190,
+  "deployment_url": "https://csoai-static-deploy2-lghl3agac-niks-projects-0a2ef942.vercel.app",
+  "red_line_violations": 0,
+  "owner_gates_required": [
+    "DSP registration",
+    "Cyber Essentials filing",
+    "UK SC clearance",
+    "DASA open call send",
+    "NATO DIANA send",
+    "PyPI token",
+    "First DEFONEOS-SEAL issuance"
+  ]
+}

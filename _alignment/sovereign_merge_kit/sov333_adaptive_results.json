@@ -1,0 +1,31 @@
+{
+  "battery": {
+    "easy": {
+      "SOV3": 0.006,
+      "SOV33": 0.0068,
+      "SOV333_fixed": 0.0073,
+      "SOV333_adaptive": 0.007,
+      "chose": "flat8",
+      "adaptive_wins_or_ties": true
+    },
+    "hard": {
+      "SOV3": 0.1053,
+      "SOV33": 0.1052,
+      "SOV333_fixed": 0.1126,
+      "SOV333_adaptive": 0.114,
+      "chose": "flat4",
+      "adaptive_wins_or_ties": false
+    },
+    "regional": {
+      "SOV3": 0.3089,
+      "SOV33": 0.3174,
+      "SOV333_fixed": 0.0132,
+      "SOV333_adaptive": 0.0132,
+      "chose": "nest",
+      "adaptive_wins_or_ties": true
+    }
+  },
+  "claim": "adaptive SOV333 self-selects shape -> >= every fixed variant on its own turf, and still wins regional.",
+  "all_win_or_tie": false,
+  "honest": "CPU synthetic; fluid-selection via validation, real compute cost."
+}

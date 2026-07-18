@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Keystone Playground — MEOK AI Labs | Sign + Verify Demo</title>
+    <meta property="og:title" content="Keystone Playground — MEOK AI Labs | Sign + Verify Demo">
+<meta name="description" content="Free interactive MEOK keystone playground. Sign a real cert, verify any cert_id, see the signed JSON-LD payload. Sovereign UK. CSOAI Ltd, UK 16939677.">
+  <link rel="canonical" href="https://meok.ai/playground">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: ui-monospace, SFMono-Regular, monospace; background: #0a0a14; color: #e8e4dc; padding: 1.5rem; max-width: 1100px; margin: 0 auto; line-height: 1.5; }
+    h1 { color: #c9a84c; font-size: 1.4rem; margin: 0 0 0.5rem; }
+    h2 { color: #c9a84c; font-size: 1.1rem; margin: 1.5rem 0 0.5rem; border-bottom: 1px solid #1f1f2e; padding-bottom: 0.3rem; }
+    .form-row { display: flex; gap: 0.5rem; margin: 0.5rem 0; flex-wrap: wrap; }
+    input, select, button, textarea { background: rgba(255,255,255,0.05); color: #e8e4dc; border: 1px solid #1f1f2e; padding: 0.5rem; border-radius: 0.3rem; font-family: inherit; font-size: 0.9rem; }
+    input, select, textarea { flex: 1; min-width: 200px; }
+    button { background: #c9a84c; color: #0a0a14; border: none; padding: 0.5rem 1rem; cursor: pointer; font-weight: 700; flex: 0 0 auto; }
+    button:hover { opacity: 0.85; }
+    .output { background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 0.4rem; font-size: 0.85rem; overflow-x: auto; max-height: 500px; overflow-y: auto; }
+    .output .ok { color: #22c55e; }
+    .output .err { color: #ef4444; }
+    .output .key { color: #c9a84c; }
+    .output .val { color: #e8e4dc; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Keystone Playground", "url": "https://meok.ai/playground", "description": "Free interactive MEOK keystone playground. Sign a real cert, verify any cert_id, see the signed JSON-LD payload. Sovereign UK. CSOAI Ltd, UK 16939677."}</script>
+</head>
+<body>
+  <h1>🔒 MEOK Keystone Playground</h1>
+  <p style="color: #999; font-size: 0.85rem;">Sign a real cert. Verify any cert_id. See the signed JSON-LD payload. CSOAI Ltd, UK 16939677.</p>
+
+  <h2>1. Sign a cert</h2>
+  <form id="sign-form">
+    <div class="form-row">
+      <input type="email" id="email" placeholder="your-email@example.com" required>
+      <input type="text" id="entity" placeholder="Entity (e.g. 'My AI system name')" required>
+      <input type="text" id="framework" placeholder="Framework (e.g. eu-ai-act, dora, nis2)" value="eu-ai-act">
+      <button type="submit">▶ Sign</button>
+    </div>
+    <div class="form-row">
+      <textarea id="regulation" rows="2" placeholder="Regulation reference (e.g. 'Regulation (EU) 2024/1689 Article 50')">Regulation (EU) 2024/1689 Article 50</textarea>
+    </div>
+  </form>
+  <div class="output" id="sign-output">// Submit the form to sign a cert</div>
+
+  <h2>2. Verify a cert_id</h2>
+  <form id="verify-form">
+    <div class="form-row">
+      <input type="text" id="cert_id" placeholder="MEOK-REGULA-XXXXX" required>
+      <button type="submit">▶ Verify</button>
+    </div>
+  </form>
+  <div class="output" id="verify-output">// Paste a cert_id and click Verify</div>
+
+  <h2>3. Recent keystone activity (live, last 10)</h2>
+  <div class="output" id="feed-output">// Loading...</div>
+
+  <h2>How it works</h2>
+  <p style="font-size: 0.9rem; color: #999;">The MEOK keystone at <code>meok-attestation-api.vercel.app</code> issues Ed25519-signed JSON-LD attestations. Each cert_id is a 12-character hex prefix of the SHA-256 hash, with the framework + a checksum. The signature is verifiable offline with <code>pip install meok-attestation-verify</code>.</p>
+
+  <p style="font-size: 0.85rem; color: #999; margin-top: 2rem;">Powered by the MEOK Sovereign AI OS · 32 MCP servers · 25+ sigils on Ed25519 chain · CSOAI Ltd, UK 16939677</p>
+
+  <script>
+    async function sign(e) {
+      e.preventDefault();
+      const out = document.getElementById('sign-output');
+      out.innerHTML = '<span class="key">// Signing...</span>';
+      const email = document.getElementById('email').value;
+      const entity = document.getElementById('entity').value;
+      const framework = document.getElementById('framework').value;
+      const regulation = document.getElementById('regulation').value;
+      try {
+        const r = await fetch('https://meok-attestation-api.vercel.app/sign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, framework, entity, regulation })
+        });
+        const d = await r.json();
+        out.innerHTML = formatJson(d);
+      } catch (e) {
+        out.innerHTML = '<span class="err">// ERROR: ' + e.message + '</span>';
+      }
+    }
+
+    async function verify(e) {
+      e.preventDefault();
+      const out = document.getElementById('verify-output');
+      out.innerHTML = '<span class="key">// Verifying...</span>';
+      const cert_id = document.getElementById('cert_id').value;
+      try {
+        // Try the keystone's GET /verify/{cert_id} first
+        let r = await fetch('https://meok-attestation-api.vercel.app/verify/' + encodeURIComponent(cert_id));
+        let d = await r.json();
+        if (d.error || d.not_found) {
+          // Fall back to POST /verify
+          r = await fetch('https://meok-attestation-api.vercel.app/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cert_id })
+          });
+          d = await r.json();
+        }
+        out.innerHTML = formatJson(d);
+      } catch (e) {
+        out.innerHTML = '<span class="err">// ERROR: ' + e.message + '</span>';
+      }
+    }
+
+    function formatJson(d) {
+      let s = JSON.stringify(d, null, 2);
+      // Highlight keys
+      s = s.replace(/"([^"]+)":/g, '<span class="key">"$1"</span>:');
+      s = s.replace(/"(MEOK-[A-Z]+-[A-F0-9]+)"/g, '<span class="ok">"$1"</span>');
+      s = s.replace(/"(signed|verified|true)"/g, '<span class="ok">"$1"</span>');
+      s = s.replace(/"(error|not_found|invalid)"/g, '<span class="err">"$1"</span>');
+      return s;
+    }
+
+    async function loadFeed() {
+      try {
+        // Fetch from the keystone proxy
+        const r = await fetch('http://127.0.0.1:8766/keystone/sov3-sigils?limit=10');
+        const d = await r.json();
+        let html = '<div>Source: ' + (d.source || '?') + ' &middot; ' + (d.snapshot_at || 'live') + '</div>';
+        html += formatJson({ sigs: d.sigs });
+        document.getElementById('feed-output').innerHTML = html;
+      } catch (e) {
+        document.getElementById('feed-output').innerHTML = '<span class="err">// Feed endpoint not reachable. The keystone proxy runs locally on :8766.</span>';
+      }
+    }
+
+    document.getElementById('sign-form').addEventListener('submit', sign);
+    document.getElementById('verify-form').addEventListener('submit', verify);
+    loadFeed();
+    setInterval(loadFeed, 30000);
+  </script>
+<div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+</body>
+</html>

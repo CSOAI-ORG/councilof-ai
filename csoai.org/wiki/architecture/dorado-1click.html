@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DORADO 1-click - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / dorado-1click</div>
+<h1>DORADO 1-Click</h1>
+<p class="tagline">Switch sovereignty jurisdiction with one click. East ↔ West. UK ↔ EU. Sovereign ↔ sovereign.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p><strong>DORADO 1-click</strong> is CSOAI's flagship operational feature: a single API call or UI button that migrates a tenant's data plane from one sovereign region to another without re-architecting the application. It is named after the dorado fish, which traverses oceans by riding currents — the data plane rides the sovereign current.</p>
+
+<h2>What It Does</h2>
+<p>The 1-click switch performs: (1) snapshot of the current data plane, (2) encrypted transfer to the target region, (3) cryptographic verification at the destination, (4) atomic cutover, (5) revocation of the source region's data keys. The whole sequence takes 60–180 seconds for a 1TB tenant.</p>
+
+<h2>Why It Matters</h2>
+<p>Most cloud providers offer "regions" but not "sovereign regions" — a region is just a data centre location. Sovereignty requires more: jurisdictional clarity, treaty-aware access controls, post-quantum key escrow, and SIGIL-emitted proof of migration. DORADO 1-click does all of this in one operation.</p>
+
+<h2>Technical Implementation</h2>
+<p>The switch is implemented in three SOV3 tools: <code>sov_dorado_switch</code> (the trigger), <code>sov_dorado_multi_region</code> (the route planner), and <code>sov_dorado_pqc_status</code> (the cryptographic state inspector). It requires 2-of-3 council approval for any cross-realm migration (see <a href="/wiki/council/2of3-majority.html">2-of-3 Majority</a>).</p>
+
+<h2>Eight Sovereign Regions</h2>
+<table>
+<tr><th>Region</th><th>Sovereign Realm</th><th>Data Centre</th></tr>
+<tr><td>UK-LON</td><td><a href="/wiki/realms/uk.html">UK</a></td><td>London (Telehouse)</td></tr>
+<tr><td>EU-FRA</td><td><a href="/wiki/realms/eu.html">EU</a></td><td>Frankfurt (Interxion)</td></tr>
+<tr><td>US-IAD</td><td><a href="/wiki/realms/usa.html">USA</a></td><td>Ashburn (Equinix)</td></tr>
+<tr><td>CA-YYZ</td><td><a href="/wiki/realms/canada.html">Canada</a></td><td>Toronto</td></tr>
+<tr><td>AU-SYD</td><td><a href="/wiki/realms/australia.html">Australia</a></td><td>Sydney</td></tr>
+<tr><td>NZ-AKL</td><td><a href="/wiki/realms/nz.html">NZ</a></td><td>Auckland</td></tr>
+<tr><td>JP-TYO</td><td><a href="/wiki/realms/japan.html">Japan</a></td><td>Tokyo</td></tr>
+<tr><td>AUKUS-MIX</td><td><a href="/wiki/realms/aukus.html">AUKUS</a></td><td>Distributed (UK+AU+US)</td></tr>
+</table>
+
+<h2>Historical Context</h2>
+<p>The "1-click" pattern derives from the 1990s web hosting industry, where cPanel offered 1-click installs. CSOAI adapts it to sovereignty: the click is the legal act of choosing a jurisdiction, not just a technical deployment detail. The <a href="/wiki/sovereignty/foreign-vs-sovereign.html">Foreign vs Sovereign</a> classifier is the check that prevents illegal switches.</p>
+
+<h2>Modern Usage</h2>
+<p>Customers trigger 1-click switches when: (a) regulatory regime changes (e.g., UK leaving EU), (b) geopolitical events demand data relocation, (c) a corporate merger requires data unification, or (d) disaster recovery is needed. Each switch emits a SIGIL <code>S|M</code> event with full provenance.</p>
+
+<h2>Demo</h2>
+<p>The <a href="/wiki/demos/dorado-switch.html">DORADO Switch Demo</a> walks through a sample UK→EU migration.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/sovereignty/foreign-vs-sovereign.html">Foreign vs Sovereign</a></li>
+<li><a href="/wiki/realms/">Realms</a></li>
+<li><a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a></li>
+<li><a href="/wiki/council/2of3-majority.html">2-of-3 Majority</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

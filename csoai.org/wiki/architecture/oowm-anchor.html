@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOWM Anchor - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/architecture/">architecture</a> / oowm-anchor</div>
+<h1>OOWM Anchor</h1>
+<p class="tagline">The cryptographic anchor that holds the OOWM Sandwich to the SIGIL chain.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>The <strong>OOWM Anchor</strong> is the cryptographic linkage between the OOWM Sandwich's output and the SIGIL hash chain. Every inference performed by the Sandwich produces an Anchor: a tuple of (input hash, Mamba state, MoE active experts, MOM perception, SOV3 ruling, output hash, Ed25519 signature).</p>
+
+<h2>Purpose</h2>
+<p>Without the Anchor, the OOWM Sandwich would be a powerful but unauditable system. With it, every output is traceable to its inputs, every state transition is signed, and any party can verify that a given inference actually occurred as claimed. The Anchor is what makes the Sandwich sovereign rather than just capable.</p>
+
+<h2>Structure</h2>
+<pre>{
+  "anchor_id": "uuid",
+  "input_hash": "sha256...",
+  "mamba_state": [0.12, -0.45, 0.78, ...],  // 16 dims
+  "moe_active": [3, 17, 42, 58],             // 4 of 64
+  "mom_perception": {"jurisdiction": "UK", "domain": "legal", ...},
+  "sov3_ruling": "ALLOW",
+  "output_hash": "sha256...",
+  "ed25519_sig": "base64...",
+  "prev_anchor_hash": "sha256..."
+}</pre>
+
+<h2>Hash Chain Property</h2>
+<p>Each Anchor includes the previous Anchor's hash, making the chain tamper-evident: modifying any historical Anchor invalidates all subsequent Anchors. The chain is append-only and publicly verifiable via <code>sov_sigil_explorer</code>.</p>
+
+<h2>Relation to Other Pages</h2>
+<ul>
+<li><strong>SIGIL Chain</strong> (<a href="/wiki/cryptography/sigil-chain.html">link</a>): the Anchor is one row in the SIGIL chain</li>
+<li><strong>OOWM Sandwich</strong> (<a href="/wiki/architecture/oowm-sandwich.html">link</a>): the Sandwich is the producer of Anchors</li>
+<li><strong>Citadel</strong> (<a href="/wiki/cryptography/citadel.html">link</a>): the Citadel is the encrypted storage for Anchor payloads</li>
+<li><strong>Council</strong> (<a href="/wiki/council/council-mechanics.html">link</a>): Council decisions are Anchors of type <code>SOV</code></li>
+</ul>
+
+<h2>Historical Context</h2>
+<p>The Anchor concept derives from Certificate Transparency (CT) logs (Google, 2013). CT logs are append-only, hash-chained, publicly auditable registries of TLS certificates. CSOAI adapts the pattern to AI inference: every AI output is treated as a kind of certificate, and the Anchor is its CT-log entry.</p>
+
+<h2>Modern Usage</h2>
+<p>Customers query the Anchor chain for audit purposes (regulator inspections), for incident response (what did the model do at 02:00 UTC?), and for provenance (where did this output come from?). The <code>sov_orgkernel_verify_chain</code> tool re-computes the hash chain to verify integrity.</p>
+
+<h2>Privacy Considerations</h2>
+<p>Anchors contain hashes, not plaintext. The input and output hashes are one-way: you cannot recover the original text from the hash. The Mamba state and MoE active experts are diagnostic metadata but do not leak user data. Customers with strict privacy requirements can opt for hashed-anchor mode where the state is also hashed.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a></li>
+<li><a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a></li>
+<li><a href="/wiki/cryptography/anchor.html">Cryptography: Anchor</a></li>
+<li><a href="/wiki/cryptography/citadel.html">Citadel</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

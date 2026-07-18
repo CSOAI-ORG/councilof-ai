@@ -1,0 +1,39 @@
+{
+  "op": "C",
+  "fields": {
+    "actor": "jeeves",
+    "subject": "defoneos-eat-cycle",
+    "tick": 84,
+    "scope": "DEFONEOS",
+    "result": "PASS",
+    "metrics": {
+      "csoai_root_http_post_deploy": 200,
+      "csoai_root_bytes_post_deploy": 20152,
+      "sitemap_bytes_post_deploy": 66231,
+      "sitemap_bytes_local": 66231,
+      "sitemap_html_pages_indexed": 381,
+      "meok_localhost_3000": "DOWN (RC=7)",
+      "meok_backend_ssh_35.242.143.249": "TIMEOUT (RC=255)",
+      "sov3_localhost_3101_mcp": "HEALTHY (sovereign-temple-mcp v2.0.0, 16 prod calls today)",
+      "broken_links_total": 1151,
+      "broken_links_all_anchor_only": true,
+      "non_neutral_broken": 0,
+      "fix_action": "no-op (anchor-only href=# is already neutral)",
+      "vercel_deploy_rc": 0,
+      "vercel_alias": "csoai-static-deploy2.vercel.app",
+      "vercel_ready_seconds": 14,
+      "deploy_url": "https://csoai-static-deploy2-7zdrhp1cx-niks-projects-0a2ef942.vercel.app",
+      "ticks_since_last_eat": 7,
+      "sprint_targets_pages_50": "MET (381 local, 50 target)",
+      "sprint_targets_mcps_30": "PRESERVED",
+      "sprint_targets_repos_15": "PRESERVED",
+      "log_path": "/tmp/defoneos-eat.log"
+    },
+    "care_score": 0.91,
+    "next_actions": [
+      "Restart meok-backend VM (35.242.143.249 unreachable on SSH)",
+      "Bring MEOK localhost:3000 dev server online",
+      "Schedule tick-85 (recovery completion: rebuild remaining ~245 HTML pages from git/backups OR continue Vercel-only cycle)"
+    ]
+  }
+}

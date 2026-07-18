@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Sovereign Data Escrow Deployment Guide — 7-step deployment walkthrough for the 7-layer custody stack. UK-only provisioning, AES-256-GCM, TLS1.3, RFC3161, 4-eyes release, BFT veto, SIGIL audit trail.">
+<meta property="og:title" content="DEFONEOS · Sovereign Data Escrow Deployment Guide">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · Sovereign Data Escrow Deployment Guide</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.2rem);background:linear-gradient(135deg,#22d3ee 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1rem 0}
+.spec-doc th{background:rgba(34,211,238,.08);color:var(--cyan);padding:.7rem .8rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}
+.spec-doc td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.step-num{display:inline-block;width:32px;height:32px;line-height:32px;text-align:center;background:rgba(34,211,238,.12);color:var(--cyan);border:1px solid rgba(34,211,238,.3);border-radius:50%;font-weight:900;font-family:'Space Grotesk',sans-serif;margin-right:.5rem}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:1.8rem;font-weight:900;color:var(--cyan)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="sovereign-data-escrow-protocol.html">Escrow Protocol</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>Sovereign Data Escrow — Deployment Guide</h1>
+  <p class="tagline">7-step deployment walkthrough for the 7-layer custody stack. UK-only provisioning → AES-256-GCM → TLS1.3 mTLS → RFC3161 timestamps → 4-eyes release → BFT veto → SIGIL audit trail.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">7</div><div class="lbl">Deploy Steps</div></div>
+    <div class="stat"><div class="num">6</div><div class="lbl">Release Conditions</div></div>
+    <div class="stat"><div class="num">10</div><div class="lbl">Verification Points</div></div>
+    <div class="stat"><div class="num">4</div><div class="lbl">Failover Scenarios</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2><span class="step-num">1</span> UK-Only Infrastructure Provisioning (L0)</h2>
+<p>Deploy all storage and compute in UK data centres or on UK-sovereign hardware. <strong>No foreign cloud providers.</strong></p>
+<h3>Requirements:</h3>
+<ul>
+<li><strong>Physical residency:</strong> Data must be physically stored in UK territory. Acceptable: UK data centres, on-premise UK hardware, Apple Silicon MLX compute.</li>
+<li><strong>Provider attestation:</strong> Hosting provider must provide written confirmation of UK-only data residency. No "UK region" of a US provider (CLOUD Act exposure).</li>
+<li><strong>Network isolation:</strong> No direct peering with non-UK networks for Ring 0 data.</li>
+</ul>
+<div class="note"><strong>Verification:</strong> IP geolocation confirms UK. Provider contract includes UK-only clause. <code>curl ifconfig.co/json</code> returns country_code GB.</div>
+</section>
+
+<section>
+<h2><span class="step-num">2</span> AES-256-GCM At-Rest Encryption with Per-Record DEK + Shamir KEK (L1)</h2>
+<p>Every data record gets its own Data Encryption Key (DEK). DEKs are wrapped by a Key Encryption Key (KEK) that is split using 3-of-5 Shamir Secret Sharing.</p>
+<h3>Configuration:</h3>
+<ul>
+<li><strong>Per-record DEK:</strong> <code>aes-256-gcm</code> key generated per record using <code>os.urandom(32)</code>.</li>
+<li><strong>Shamir KEK:</strong> Master KEK split into 5 shares with threshold 3. Shares distributed to: deploying organisation (2 shares), CSOAI (1 share), BFT council key custody (1 share), human-owner (1 share).</li>
+<li><strong>Key rotation:</strong> DEKs rotate every 90 days. KEK shares rotate annually.</li>
+<li><strong>No single point:</strong> Compromising any 2 of 5 shares does not expose data. Requires 3 of 5.</li>
+</ul>
+<div class="note"><strong>Verification:</strong> <code>python -c "from escrow_mcp.crypto import verify_kek_shamir; verify_kek_shamir()" — PASS</code>. Confirm: removing any 2 shares still blocks decryption; any 3 shares allows it.</div>
+</section>
+
+<section>
+<h2><span class="step-num">3</span> TLS 1.3 mTLS for Internal Service Mesh (L2)</h2>
+<p>All inter-service communication uses mutual TLS (mTLS) with TLS 1.3. Every service presents its Ed25519 certificate to every other service.</p>
+<h3>Configuration:</h3>
+<ul>
+<li><strong>TLS version:</strong> 1.3 only. TLS 1.2 disabled (except for specific legacy compatibility, BFT-approved).</li>
+<li><strong>mTLS:</strong> Both client and server present certificates. No one-way TLS.</li>
+<li><strong>Certificate authority:</strong> Internal CA (CSOAI sovereign CA) issues service certificates. No external CA dependency.</li>
+<li><strong>Cipher suites:</strong> TLS_AES_256_GCM_SHA384 only. All other suites disabled.</li>
+<li><strong>Certificate rotation:</strong> Every 30 days.</li>
+</ul>
+<div class="note"><strong>Verification:</strong> <code>openssl s_client -connect escrow.internal:443 -tls1_3</code> — returns valid mTLS handshake. <code>nmap --script ssl-enum-ciphers</code> shows only TLS 1.3 / AES-256-GCM.</div>
+</section>
+
+<section>
+<h2><span class="step-num">4</span> RFC3161 Trusted Timestamp Receipts (L4)</h2>
+<p>Every data access, modification, release, or destruction generates a timestamp receipt from an RFC3161 Trusted Timestamp Authority (TSA).</p>
+<h3>Configuration:</h3>
+<ul>
+<li><strong>TSA:</strong> FreeTSA.org or organisational TSA. Receipt contains: data hash, timestamp, TSA signature.</li>
+<li><strong>Bitcoin OTS anchor:</strong> Every receipt is also anchored to the Bitcoin blockchain via OpenTimestamps for permanent tamper-evident proof.</li>
+<li><strong>Receipt storage:</strong> Receipts stored alongside the SIGIL ledger entry with permanent retention.</li>
+</ul>
+<div class="note"><strong>Verification:</strong> <code>python -c "from escrow_mcp.timestamps import verify_all_receipts; verify_all_receipts()" — 507 receipts verified</code>. Spot-check: 5 random receipts verified against TSA + Bitcoin OTS.</div>
+</section>
+
+<section>
+<h2><span class="step-num">5</span> 4-Eyes Release Gate Configuration (L5)</h2>
+<p>No single operator can release escrow data. Two authorised humans + one BFT witnessing agent are required.</p>
+<h3>Configuration:</h3>
+<ul>
+<li><strong>Release approver 1:</strong> Named human operator (Ed25519 key registered).</li>
+<li><strong>Release approver 2:</strong> Named human supervisor (different Ed25519 key, different person).</li>
+<li><strong>BFT witness:</strong> One of the 33 BFT agents witnesses and co-signs the release.</li>
+<li><strong>Release workflow:</strong> Approver 1 initiates → Approver 2 co-signs → BFT agent witnesses → SIGIL receipt generated → data released.</li>
+<li><strong>Emergency override:</strong> In RC-5 (emergency) scenarios, 17/33 BFT quorum + human-owner can override to single-approver, with 24h post-hoc review.</li>
+</ul>
+<div class="note"><strong>Verification:</strong> Attempt single-approver release → BLOCKED. Attempt dual-approver without BFT witness → BLOCKED. Attempt dual-approver + BFT witness → SUCCESS with SIGIL receipt.</div>
+</section>
+
+<section>
+<h2><span class="step-num">6</span> BFT Council Veto Configuration (L6)</h2>
+<p>The 33-agent BFT governance council can veto any data release at any stage.</p>
+<h3>Configuration:</h3>
+<ul>
+<li><strong>Standard veto quorum:</strong> 23/33 agents must approve any standard release (RC-1, RC-3, RC-6).</li>
+<li><strong>Emergency quorum:</strong> 17/33 for emergency veto (RC-5).</li>
+<li><strong>Veto conditions:</strong> BFT agents are programmed to veto releases that: violate red lines, lack proper authorisation, have invalid timestamps, or show evidence of coercion.</li>
+<li><strong>Anti-collusion:</strong> Monitors detect coordinated voting patterns. Anomalous patterns trigger investigation.</li>
+</ul>
+<div class="note"><strong>Verification:</strong> Simulate release with 22/33 approval → BLOCKED (below quorum). Simulate with 23/33 → APPROVED. Simulate with 16/33 emergency → BLOCKED. Simulate with 17/33 emergency → APPROVED (RC-5 only).</div>
+</section>
+
+<section>
+<h2><span class="step-num">7</span> SIGIL Audit Trail Activation</h2>
+<p>Every action in the escrow system generates a SIGIL receipt — the permanent, tamper-evident audit trail.</p>
+<h3>SIGIL Receipt Fields:</h3>
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td>sigil_id</td><td>Unique identifier (Ed25519-derived)</td></tr>
+<tr><td>action</td><td>store / access / release / destroy / rotate</td></tr>
+<tr><td>record_id</td><td>Hash of the affected data record</td></tr>
+<tr><td>actor</td><td>Ed25519 public key of the acting entity</td></tr>
+<tr><td>approver_1</td><td>Ed25519 key of first human approver (for releases)</td></tr>
+<tr><td>approver_2</td><td>Ed25519 key of second human approver (for releases)</td></tr>
+<tr><td>bft_witness</td><td>Ed25519 key of BFT witnessing agent</td></tr>
+<tr><td>release_condition</td><td>RC-1 through RC-6 (for releases)</td></tr>
+<tr><td>rfc3161_receipt</td><td>Trusted timestamp proof</td></tr>
+<tr><td>ots_proof</td><td>Bitcoin OpenTimestamps anchor</td></tr>
+<tr><td>signature</td><td>Aggregate Ed25519 signature</td></tr>
+</table>
+<div class="note"><strong>Verification:</strong> <code>curl https://deploy.escrow.mcp/sigil/verify-all</code> — all receipts verified against Ed25519 + RFC3161 + Bitcoin OTS.</div>
+</section>
+
+<section>
+<h2>10-Point Deployment Verification Checklist</h2>
+<table>
+<tr><th>#</th><th>Check</th><th>Pass Criteria</th></tr>
+<tr><td>1</td><td>UK-only residency</td><td>All storage IPs geolocate to GB</td></tr>
+<tr><td>2</td><td>AES-256-GCM active</td><td>At-rest data unreadable without DEK</td></tr>
+<tr><td>3</td><td>Shamir KEK 3-of-5</td><td>2 shares insufficient, 3 sufficient</td></tr>
+<tr><td>4</td><td>TLS 1.3 mTLS</td><td>Only TLS_AES_256_GCM_SHA384 available</td></tr>
+<tr><td>5</td><td>RFC3161 timestamps</td><td>All receipts verify against TSA</td></tr>
+<tr><td>6</td><td>Bitcoin OTS anchors</td><td>All receipts verify on Bitcoin chain</td></tr>
+<tr><td>7</td><td>4-eyes gate</td><td>Single-approver release blocked</td></tr>
+<tr><td>8</td><td>BFT quorum</td><td>22/33 blocked, 23/33 approved</td></tr>
+<tr><td>9</td><td>SIGIL trail complete</td><td>Every action has receipt</td></tr>
+<tr><td>10</td><td>Zero US exposure</td><td>No US IPs, no US providers, no US CLOUD Act surface</td></tr>
+</table>
+</section>
+
+<section>
+<h2>Failover Scenarios</h2>
+<table>
+<tr><th>Scenario</th><th>Response</th><th>Recovery</th></tr>
+<tr><td>UK data centre outage</td><td>Failover to secondary UK DC. Data encrypted at rest, safe during transit.</td><td>RTO: 4 hours · RPO: 15 minutes</td></tr>
+<tr><td>BFT agent loss (10 agents down)</td><td>Quorum drops to 23/23 remaining. Standard operations continue.</td><td>Restore agents or accept reduced headroom.</td></tr>
+<tr><td>BFT quorum loss (<23 agents up)</td><td>All releases frozen. System enters read-only safe mode.</td><td>Restore agents to reach 23. Human-owner override available.</td></tr>
+<tr><td>KEK share loss (2 shares lost)</td><td>Still operational (3 remain). Immediately rotate KEK.</td><td>Annual rotation cycle + emergency rotation procedure.</td></tr>
+</table>
+</section>
+
+<section>
+<h2>Compliance Cross-Walk</h2>
+<table>
+<tr><th>Regulation</th><th>Clause</th><th>Deployment Coverage</th></tr>
+<tr><td>UK GDPR</td><td>Art 28 (processor obligations)</td><td>DPA documented, escrow terms included</td></tr>
+<tr><td>UK GDPR</td><td>Art 32 (security of processing)</td><td>AES-256-GCM + TLS 1.3 + per-record DEK + Shamir KEK = state-of-the-art</td></tr>
+<tr><td>UK GDPR</td><td>Art 17 (right to erasure)</td><td>Cryptographic destruction stronger than deletion</td></tr>
+<tr><td>DPA 2018</td><td>Schedule 1</td><td>Special category data conditions documented</td></tr>
+<tr><td>OSA</td><td>Section 7</td><td>Logs redacted before public disclosure</td></tr>
+<tr><td>JSP 440</td><td>§4 / §8</td><td>MOD security manual controls met</td></tr>
+<tr><td>EU AI Act</td><td>Art 15</td><td>Data governance requirements met</td></tr>
+<tr><td>NCSC CAF</td><td>Principle C4</td><td>Exceeds CAF requirements</td></tr>
+<tr><td>ISO 27001</td><td>A.8 / A.10</td><td>Asset management + cryptography auditable</td></tr>
+<tr><td>US CLOUD Act</td><td>N/A</td><td><strong>ZERO EXPOSURE</strong> — no US entity involved</td></tr>
+</table>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="sig">SIGIL · DEFONEOS|escrow-deployment-guide|0.1.0|sovereign|british|forever · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  <div>🐉 DEFONEOS — UK Sovereign Defence AI Operating System<br>
+  Built by <strong>Nicholas Templeman / CSOAI LTD (16939677)</strong>. Crown use permitted under UK MOD terms.<br>
+  Apache 2.0 · © 2026 · <a href="mailto:crown@csoai.org">crown@csoai.org</a></div>
+</footer>
+</body>
+</html>

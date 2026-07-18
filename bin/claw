@@ -1,0 +1,106 @@
+#!/bin/bash
+# Claw - Unified Agent Launcher
+# Usage: claw <agent> [task]
+
+CLAWD_DIR="/Users/nicholas/clawd"
+BIN_DIR="$CLAWD_DIR/bin"
+
+show_help() {
+    echo "🦞 Claw Agent Launcher"
+    echo ""
+    echo "Usage: claw <agent> [task]"
+    echo ""
+    echo "Agents:"
+    echo "  kimi       🌙 Kimi Code (via CLI)"
+    echo "  claude     ⚡ Claude Code"
+    echo "  jarvis     🤖 JARVIS (main)"
+    echo "  sov        👑 Sovereign"
+    echo "  meok       🔬 Meok"
+    echo "  swarm      🐝 Multi-agent mode"
+    echo ""
+    echo "Examples:"
+    echo "  claw kimi 'Review this code'"
+    echo "  claw claude 'Design an API'"
+    echo "  claw swarm 'Solve this problem'"
+}
+
+run_kimi() {
+    local prompt="$1"
+    echo "🌙 Kimi Code"
+    echo "============"
+    cd "$CLAWD_DIR" && echo "$prompt" | /Users/nicholas/.local/node/bin/kimi --thinking 2>&1 | tail -100
+}
+
+run_openclaw() {
+    local agent="$1"
+    local prompt="$2"
+    local emoji="$3"
+    
+    echo "$emoji ${agent^^}"
+    echo "============"
+    cd "$CLAWD_DIR" && openclaw agent --agent "$agent" --local --message "$prompt" 2>&1
+}
+
+run_swarm() {
+    local prompt="$1"
+    echo "🐝 SWARM MODE"
+    echo "============"
+    python3 "$BIN_DIR/../automation/orchestrator.py" "$prompt" --swarm
+}
+
+# Main
+AGENT="${1:-}"
+shift || true
+TASK="$*"
+
+case "$AGENT" in
+    -h|--help|help)
+        show_help
+        ;;
+    kimi|k)
+        if [ -z "$TASK" ]; then
+            echo "Enter your prompt (Ctrl+D when done):"
+            TASK=$(cat)
+        fi
+        run_kimi "$TASK"
+        ;;
+    claude|c|claude-code)
+        if [ -z "$TASK" ]; then
+            echo "Usage: claw claude 'your task'"
+            exit 1
+        fi
+        run_openclaw "claude-code" "$TASK" "⚡"
+        ;;
+    jarvis|j|main)
+        if [ -z "$TASK" ]; then
+            echo "Usage: claw jarvis 'your task'"
+            exit 1
+        fi
+        run_openclaw "main" "$TASK" "🤖"
+        ;;
+    sov|sov|sovereign)
+        if [ -z "$TASK" ]; then
+            echo "Usage: claw sov 'your task'"
+            exit 1
+        fi
+        run_openclaw "sov" "$TASK" "👑"
+        ;;
+    meok|m)
+        if [ -z "$TASK" ]; then
+            echo "Usage: claw meok 'your task'"
+            exit 1
+        fi
+        run_openclaw "meok" "$TASK" "🔬"
+        ;;
+    swarm|s)
+        if [ -z "$TASK" ]; then
+            echo "Usage: claw swarm 'your problem'"
+            exit 1
+        fi
+        run_swarm "$TASK"
+        ;;
+    *)
+        show_help
+        exit 1
+        ;;
+esac

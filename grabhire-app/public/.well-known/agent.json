@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "name": "GrabHire Agent",
+  "description": "Hire verified labour & grab lorries in minutes, not days.",
+  "url": "https://grabhire.ai",
+  "provider": {
+    "organization": "Council for the Safety of AI (CSOAI)",
+    "url": "https://csoai.org"
+  },
+  "capabilities": {
+    "streaming": false,
+    "mcp": true,
+    "a2a": true
+  },
+  "skills": [
+    {
+      "id": "quote_job",
+      "name": "muckaway-ai-mcp.quote_job",
+      "description": "Get instant spoil-removal quotes from any construction workflow."
+    },
+    {
+      "id": "book_equipment",
+      "name": "planthire-ai-mcp.book_equipment",
+      "description": "Book excavators, dumpers and plant directly through MCP."
+    }
+  ],
+  "endpoints": {
+    "a2a": "https://grabhire.ai/a2a",
+    "mcp_catalog": "https://grabhire.ai/.well-known/mcp.json"
+  },
+  "sector": "construction"
+}

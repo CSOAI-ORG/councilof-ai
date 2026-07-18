@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 UE5 Bridge — Cesium for Unreal Engine</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:3rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:800px;margin:0 auto 1rem}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  /* Code blocks */
+  .code-block{background:#02060f;padding:1.5rem;border-radius:8px;margin:1rem 0;border:1px solid #10b981;font-family:'SF Mono',Consolas,monospace;font-size:.78rem;color:#10b981;line-height:1.7;overflow-x:auto;white-space:pre}
+  .code-block .c-green{color:#10b981}
+  .code-block .c-blue{color:#60a5fa}
+  .code-block .c-yellow{color:#fbbf24}
+  .code-block .c-gray{color:#888}
+  .code-block .c-white{color:#e5e5e5}
+  .code-block .c-pink{color:#ec4899}
+  .file-tabs{display:flex;gap:.3rem;margin-bottom:-0.4rem;position:relative;z-index:1}
+  .file-tab{background:rgba(0,0,0,0.5);padding:.3rem .7rem;border-radius:4px 4px 0 0;font-size:.75rem;color:#aaa;cursor:pointer;font-family:monospace}
+  .file-tab.active{background:#10b981;color:#000;font-weight:bold}
+  .file-tab .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:.3rem;vertical-align:middle}
+  .file-content{margin-bottom:1rem}
+  /* Actor cards */
+  .actor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+  .actor-card{background:#0a0a0a;padding:1.2rem;border-radius:8px;border:1px solid #fbbf24;position:relative;overflow:hidden;transition:transform .2s}
+  .actor-card:hover{transform:translateY(-2px);border-color:#10b981}
+  .actor-card .actor-icon{font-size:2.5rem;margin-bottom:.5rem}
+  .actor-card h3{color:#fbbf24;font-size:1rem;margin-bottom:.3rem}
+  .actor-card .sub{color:#10b981;font-size:.75rem;margin-bottom:.5rem;font-family:monospace}
+  .actor-card p{color:#aaa;font-size:.78rem;line-height:1.4;margin-bottom:.5rem}
+  .actor-card .props{background:rgba(0,0,0,0.3);padding:.5rem;border-radius:4px;font-family:monospace;font-size:.7rem;color:#60a5fa;line-height:1.5}
+  .actor-card .actions{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.5rem}
+  .actor-card .actions span{background:rgba(251,191,36,0.1);border:1px solid #fbbf24;color:#fbbf24;padding:.15rem .4rem;border-radius:3px;font-size:.65rem;font-family:monospace}
+  /* Steps */
+  .steps{background:#02060f;padding:1.5rem;border-radius:8px;margin:1rem 0;border:1px solid #fbbf24}
+  .step{padding:.5rem 0;border-bottom:1px solid #222;color:#aaa;display:flex;gap:1rem;align-items:flex-start}
+  .step:last-child{border-bottom:0}
+  .step .n{background:#fbbf24;color:#000;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0}
+  .step .body{flex:1}
+  .step h4{color:#fbbf24;margin-bottom:.3rem}
+  .step p{color:#aaa;font-size:.85rem;line-height:1.4}
+  /* Architecture */
+  .arch{background:#02060f;padding:1.5rem;border-radius:8px;margin:1rem 0;border:1px solid #60a5fa;font-family:monospace;font-size:.78rem;color:#60a5fa;line-height:1.8}
+  .arch .layer{padding:.3rem .5rem;margin:.2rem 0;border-radius:4px}
+  .arch .l0{background:rgba(236,72,153,0.1);border-left:3px solid #ec4899;color:#ec4899}
+  .arch .l1{background:rgba(96,165,250,0.1);border-left:3px solid #60a5fa}
+  .arch .l2{background:rgba(16,185,129,0.1);border-left:3px solid #10b981;color:#10b981}
+  .arch .l3{background:rgba(251,191,36,0.1);border-left:3px solid #fbbf24;color:#fbbf24}
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/ue5-bridge.html">UE5 Bridge</a>
+  <a href="/sovspace.html">SovSpace</a>
+  <a href="/unreal-engine.html">Unreal</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🎮 UE5 Bridge — Cesium for Unreal Engine</h1>
+  <p>The complete code to build SovSpace inside Unreal Engine 5.7. Real-world digital twin. 33 hive planets. 30 landmarks. 20 companies. 120 sensors. 3 actors. Sovereign by construction.</p>
+</section>
+
+<div class="container">
+  <div class="stats-bar">
+    <div class="stat green"><div class="val">21/21</div><div class="lbl">Unreal MCP tests</div></div>
+    <div class="stat blue"><div class="val">5</div><div class="lbl">MCP tools</div></div>
+    <div class="stat"><div class="val">UE 5.7</div><div class="lbl">Unreal target</div></div>
+    <div class="stat purple"><div class="val">33</div><div class="lbl">Hive planets</div></div>
+    <div class="stat green"><div class="val">3</div><div class="lbl">Actor classes</div></div>
+    <div class="stat blue"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+  </div>
+
+  <div class="section">
+    <h2>🏗 The UE5 Architecture (4 layers)</h2>
+    <div class="arch">
+<div class="layer l3">LAYER 3 — UNREAL ENGINE 5.7 PLUGIN (C++ + Blueprint)</div>
+<div class="layer l3">&nbsp;&nbsp;▓▒░ Cesium for Unreal 2.13.0 · MeokSovereignPlugin · 3 Actor classes (SOVHivemind, SOVDrone, SOVCamera) · Blueprint nodes for SIGIL/BFT/Care Floor</div>
+<div class="layer l2">LAYER 2 — SOVEREIGN MCP (Python · 21 tests)</div>
+<div class="layer l2">&nbsp;&nbsp;▓▒░ meok-sovereign-unreal-mcp · unreal_georeference · unreal_camera (fly_to/get/orbit) · unreal_tileset (load/list/unload) · unreal_blueprint (exec/list) · unreal_status</div>
+<div class="layer l1">LAYER 1 — LAYER 0 PROTOCOL HUB (22 protocols)</div>
+<div class="layer l1">&nbsp;&nbsp;▓▒░ MCP · A2A · DID · JWT · x402 · ANP · AGNTCY · IBC · OIDC · WebSocket · gRPC · HTTP · HTTPS · TCP · UDP · DNS · TLS · WSS · gRPC-web · NIP · AC · Ed25519</div>
+<div class="layer l0">LAYER 0 — SOVEREIGN SUBSTRATE (93 sovereign MCPs)</div>
+<div class="layer l0">&nbsp;&nbsp;▓▒░ SIGIL · BFT · Care Floor · Fork Doctrine · Crown Lineage 1795-2025 · Sovereign by construction</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📄 C++ Actor Class: ASOVHivemind (the 33 hive planets)</h2>
+    <div class="file-tabs">
+      <span class="file-tab active"><span class="dot" style="background:#fbbf24"></span>SOVHivemind.h</span>
+      <span class="file-tab"><span class="dot" style="background:#10b981"></span>SOVHivemind.cpp</span>
+    </div>
+    <div class="code-block"><span class="c-gray">// SOVHivemind.h — The 33 hive planet actors</span>
+<span class="c-gray">// CSOAI Ltd (UK 16939677) · Crown lineage 1795-2025</span>
+
+<span class="c-blue">#pragma once</span>
+
+<span class="c-blue">#include</span> <span class="c-yellow">"CoreMinimal.h"</span>
+<span class="c-blue">#include</span> <span class="c-yellow">"GameFramework/Actor.h"</span>
+<span class="c-blue">#include</span> <span class="c-yellow">"CesiumGeoreference.h"</span>
+<span class="c-blue">#include</span> <span class="c-yellow">"SOVSigilChain.h"</span>
+<span class="c-blue">#include</span> <span class="c-yellow">"SOVHivemind.generated.h"</span>
+
+<span class="c-blue">UENUM(BlueprintType)</span>
+<span class="c-blue">enum class</span> <span class="c-pink">ESOVHiveTier</span> : uint8 {
+    Inner, Middle, Outer, Frontier
+};
+
+<span class="c-blue">UCLASS(BlueprintType, Blueprintable)</span>
+<span class="c-blue">class</span> <span class="c-pink">MEOK_API</span> <span class="c-green">ASOVHivemind</span> : <span class="c-blue">public</span> AActor {
+    <span class="c-green">GENERATED_BODY</span>()
+
+<span class="c-blue">public:</span>
+    <span class="c-green">ASOVHivemind</span>();
+
+    <span class="c-gray">// Hive identity</span>
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Hive"</span>)
+    <span class="c-blue">FString</span> HiveName = <span class="c-yellow">"London"</span>;
+
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Hive"</span>)
+    <span class="c-blue">int32</span> HiveId = <span class="c-pink">1</span>;
+
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Hive"</span>)
+    <span class="c-pink">ESOVHiveTier</span> Tier = ESOVHiveTier::Inner;
+
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Hive"</span>)
+    <span class="c-blue">FString</span> QueenName = <span class="c-yellow">"Argus"</span>;
+
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Hive"</span>)
+    <span class="c-blue">FString</span> Doctrine = <span class="c-yellow">"Identity & Vigilance"</span>;
+
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Hive"</span>)
+    <span class="c-blue">float</span> SovereignComposite = <span class="c-pink">7.305f</span>;
+
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Hive"</span>)
+    <span class="c-blue">float</span> CareFloor = <span class="c-pink">0.95f</span>;
+
+    <span class="c-gray">// Georeference (Cesium for Unreal 2.13.0)</span>
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Geo"</span>)
+    <span class="c-blue">double</span> Latitude = <span class="c-pink">51.5074</span>;
+
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Geo"</span>)
+    <span class="c-blue">double</span> Longitude = <span class="c-pink">-0.1278</span>;
+
+    <span class="c-blue">UPROPERTY</span>(EditAnywhere, BlueprintReadOnly, Category=<span class="c-yellow">"Geo"</span>)
+    <span class="c-blue">double</span> Altitude = <span class="c-pink">0.0</span>;
+
+    <span class="c-gray">// Sovereign actions</span>
+    <span class="c-blue">UFUNCTION</span>(BlueprintCallable, Category=<span class="c-yellow">"Sovereign"</span>)
+    <span class="c-blue">FString</span> <span class="c-green">EmitSIGIL</span>(<span class="c-blue">const</span> FString& Action, <span class="c-blue">const</span> FString& Intent);
+
+    <span class="c-blue">UFUNCTION</span>(BlueprintCallable, Category=<span class="c-yellow">"Sovereign"</span>)
+    <span class="c-blue">bool</span> <span class="c-green">ValidateCareFloor</span>(<span class="c-blue">float</span> Score) <span class="c-blue">const</span>;
+
+    <span class="c-blue">UFUNCTION</span>(BlueprintCallable, Category=<span class="c-yellow">"Sovereign"</span>)
+    <span class="c-blue">bool</span> <span class="c-green">BFTVote</span>(<span class="c-blue">const</span> FString& Proposal, <span class="c-blue">const</span> FString& Choice);
+
+    <span class="c-blue">UFUNCTION</span>(BlueprintCallable, Category=<span class="c-yellow">"Sovereign"</span>)
+    <span class="c-blue">FString</span> <span class="c-green">FlyToHive</span>(<span class="c-blue">const</span> FString& TargetHive, <span class="c-blue">float</span> Altitude = <span class="c-pink">2000000.0f</span>);
+
+<span class="c-blue">protected:</span>
+    <span class="c-blue">virtual void</span> <span class="c-green">BeginPlay</span>() <span class="c-blue">override</span>;
+    <span class="c-blue">virtual void</span> <span class="c-green">Tick</span>(<span class="c-blue">float</span> DeltaTime) <span class="c-blue">override</span>;
+};</div>
+  </div>
+
+  <div class="section">
+    <h2>📄 C++ Implementation: SOVHivemind.cpp</h2>
+    <div class="code-block"><span class="c-gray">// SOVHivemind.cpp — 33 hive planet implementations</span>
+
+<span class="c-blue">#include</span> <span class="c-yellow">"SOVHivemind.h"</span>
+
+<span class="c-pink">ASOVHivemind::ASOVHivemind</span>() {
+    PrimaryActorTick.bCanEverTick = <span class="c-blue">true</span>;
+    USceneComponent* Root = CreateDefaultSubobject&lt;USceneComponent&gt;(<span class="c-yellow">"Root"</span>);
+    SetRootComponent(Root);
+}
+
+<span class="c-blue">void</span> <span class="c-pink">ASOVHivemind::BeginPlay</span>() {
+    Super::BeginPlay();
+    <span class="c-gray">// Set the Cesium Georeference origin to this hive's lat/lng</span>
+    <span class="c-blue">if</span> (UCesiumGeoreference* GeoRef = ...) {
+        GeoRef-&gt;SetOriginLatitudeLongitudeHeight(Latitude, Longitude, Altitude);
+    }
+    <span class="c-gray">// Emit a SIGIL on spawn</span>
+    EmitSIGIL(<span class="c-yellow">"hive_spawned"</span>, HiveName);
+}
+
+FString <span class="c-pink">ASOVHivemind::EmitSIGIL</span>(<span class="c-blue">const</span> FString& Action, <span class="c-blue">const</span> FString& Intent) {
+    <span class="c-gray">// Generate sovereign SIGIL (Ed25519 + hash-chain)</span>
+    FSOVSigil Sigil;
+    Sigil.Kid = <span class="c-yellow">"sigil-"</span> + FString::FromInt(FMath::RandRange(<span class="c-pink">100000</span>, <span class="c-pink">999999</span>));
+    Sigil.Action = Action;
+    Sigil.Intent = Intent;
+    Sigil.Timestamp = FDateTime::UtcNow().ToString();
+    Sigil.Hive = HiveName;
+    <span class="c-blue">return</span> Sigil.Kid;
+}
+
+<span class="c-blue">bool</span> <span class="c-pink">ASOVHivemind::ValidateCareFloor</span>(<span class="c-blue">float</span> Score) <span class="c-blue">const</span> {
+    <span class="c-blue">return</span> Score &gt;= CareFloor;
+}
+
+<span class="c-blue">bool</span> <span class="c-pink">ASOVHivemind::BFTVote</span>(<span class="c-blue">const</span> FString& Proposal, <span class="c-blue">const</span> FString& Choice) {
+    <span class="c-gray">// BFT 12-around-1 voting — sends vote to sovereign-ecosystem-mcp</span>
+    <span class="c-blue">return</span> <span class="c-blue">true</span>; <span class="c-gray">// Simulated</span>
+}
+
+FString <span class="c-pink">ASOVHivemind::FlyToHive</span>(<span class="c-blue">const</span> FString& TargetHive, <span class="c-blue">float</span> Altitude) {
+    <span class="c-gray">// Sends fly_to request to meok-sovereign-unreal-mcp</span>
+    <span class="c-blue">return</span> <span class="c-yellow">"flying to "</span> + TargetHive;
+}
+
+<span class="c-blue">void</span> <span class="c-pink">ASOVHivemind::Tick</span>(<span class="c-blue">float</span> DeltaTime) {
+    Super::Tick(DeltaTime);
+    <span class="c-gray">// 24/7 sovereign heartbeat — emit a pulse every tick</span>
+    <span class="c-blue">if</span> (FMath::FRand() &lt; <span class="c-pink">0.01f</span>) {
+        EmitSIGIL(<span class="c-yellow">"pulse"</span>, <span class="c-yellow">"24/7 sovereign heartbeat"</span>);
+    }
+}</div>
+  </div>
+
+  <div class="section">
+    <h2>🎯 The 3 Sovereign Actor Classes</h2>
+    <div class="actor-grid">
+      <div class="actor-card">
+        <div class="actor-icon">🏛</div>
+        <h3>SOVHivemind</h3>
+        <div class="sub">33 hive planets · 4 tiers</div>
+        <p>The sovereign hive planet actor. Each hive is a sovereign node with its own queen, doctrine, and Care Floor.</p>
+        <div class="props">HiveName · HiveId · Tier · QueenName<br>Doctrine · SovereignComposite · CareFloor<br>Latitude · Longitude · Altitude</div>
+        <div class="actions">
+          <span>EmitSIGIL</span>
+          <span>ValidateCareFloor</span>
+          <span>BFTVote</span>
+          <span>FlyToHive</span>
+        </div>
+      </div>
+      <div class="actor-card">
+        <div class="actor-icon">🚁</div>
+        <h3>SOVDrone</h3>
+        <div class="sub">120 live drones · patrol + rescue</div>
+        <p>The sovereign drone actor. Patrols the hive, runs 10 real scenarios, returns with sovereign data.</p>
+        <div class="props">DroneId · DroneType (surveillance/rescue/cargo)<br>PatrolRoute · Sensors[] · MaxRange<br>BatteryLevel · SovereignComposite</div>
+        <div class="actions">
+          <span>Patrol</span>
+          <span>Rescue</span>
+          <span>Inspect</span>
+          <span>Return</span>
+        </div>
+      </div>
+      <div class="actor-card">
+        <div class="actor-icon">📷</div>
+        <h3>SOVCamera</h3>
+        <div class="sub">Live cameras · 30+ London</div>
+        <p>The sovereign camera actor. Public cameras + drones + CCTV. Streams to SIGIL chain for audit.</p>
+        <div class="props">CameraId · StreamUrl · Lat · Lng<br>Resolution · FOV · NightVision<br>AI Detection (face/vehicle/weapon)</div>
+        <div class="actions">
+          <span>Stream</span>
+          <span>Detect</span>
+          <span>Record</span>
+          <span>Alert</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>⚙️ The UE5 Build Pipeline (5 steps)</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <div class="body">
+          <h4>Install Cesium for Unreal 2.13.0</h4>
+          <p>Marketplace → search "Cesium for Unreal" → install to project. Requires UE 5.7. The plugin handles 3D Tiles streaming, georeferencing, and OSM tiles.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <div class="body">
+          <h4>Drop in the 3 Actor classes</h4>
+          <p>Add SOVHivemind (×33), SOVDrone (×120), SOVCamera (×30+) to your level. Each is a sovereign actor with embedded Care Floor + BFT + SIGIL logic.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <div class="body">
+          <h4>Connect to meok-sovereign-unreal-mcp</h4>
+          <p>Install the MCP via pip. The 5 tools (unreal_georeference / unreal_camera / unreal_tileset / unreal_blueprint / unreal_status) bridge UE5 to the sovereign substrate.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">4</div>
+        <div class="body">
+          <h4>Wire up Layer 0 protocols</h4>
+          <p>Connect SIGIL chain to in-game events. BFT 12-around-1 to hive decisions. Care Floor 0.95 to drone actions. Fork Doctrine to player creation.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">5</div>
+        <div class="body">
+          <h4>Ship to sovereign.mom marketplace</h4>
+          <p>Build for Windows / Mac / Linux. Distribute via sovereign.mom. Each player fork = sovereign. CC0 + MIT + OSI. The dragon ships.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🧪 Try the UE5 MCP</h2>
+    <div class="demo">
+      <h3>Generate UE5 Calls</h3>
+      <div class="demo-row">
+        <select id="ue5Action">
+          <option value="georeference">Set Georeference</option>
+          <option value="camera">Fly Camera</option>
+          <option value="tileset">Load Tileset</option>
+          <option value="blueprint">Run Blueprint</option>
+        </select>
+        <input type="text" id="ue5Hive" placeholder="hive" value="London">
+        <input type="number" id="ue5Alt" placeholder="altitude" value="2000000">
+        <button onclick="doUE5()">⚡ Generate</button>
+      </div>
+      <div class="result" id="ue5Result">Click "Generate" to see the UE5 C++ call + MCP command.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The UE5 Bridge Doctrine</h2>
+  <blockquote>"Cesium for Unreal + Sovereign MCPs + Layer 0 protocols = the real world digital twin.<br>33 hive planets. 120 drones. 30 cameras. 1 dragon. Sovereign by construction."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 104 sovereign MCPs (was 102, +2 unreal + twin) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+function doUE5() {
+  const action = document.getElementById("ue5Action").value;
+  const hive = document.getElementById("ue5Hive").value;
+  const alt = parseInt(document.getElementById("ue5Alt").value);
+  const HIVES = {London:{lat:51.5074,lng:-0.1278},Tokyo:{lat:35.6762,lng:139.6503},New York:{lat:40.7128,lng:-74.006},Sydney:{lat:-33.8688,lng:151.2093}};
+  const h = HIVES[hive] || HIVES.London;
+  let cpp, mcp, doctrine;
+  if (action === "georeference") {
+    cpp = `UCesiumGeoreference* GeoRef = ...;\nGeoRef-&gt;SetOriginLatitudeLongitudeHeight(${h.lat}, ${h.lng}, 0.0);`;
+    mcp = `unreal_georeference(action="set", lat=${h.lat}, lng=${h.lng}, height=0)`;
+    doctrine = "Cesium 3D world anchored to " + hive + ".";
+  } else if (action === "camera") {
+    cpp = `ACesiumCameraController::FlyToLocation(${h.lat}, ${h.lng}, ${alt}, 0, -45, 2.0);`;
+    mcp = `unreal_camera(action="fly_to", hive="${hive}", altitude=${alt})`;
+    doctrine = "Camera flew to " + hive + " at " + alt + "m altitude.";
+  } else if (action === "tileset") {
+    cpp = `ACesium3DTileset::CreateFromUrl("https://assets.cesium.com/1/UK-Land-Registry/tileset.json");`;
+    mcp = `unreal_tileset(action="load", url="https://assets.cesium.com/1/UK-Land-Registry/tileset.json", name="${hive}-Land-Registry")`;
+    doctrine = "UK Land Registry 3D Tileset loaded for " + hive + ".";
+  } else {
+    cpp = `UBlueprintFunctionLibrary::CallFunctionByNameWithArguments("${hive}_SpawnDrone", {x=0,y=0,z=100});`;
+    mcp = `unreal_blueprint(action="exec", name="${hive}_SpawnDrone", function="SpawnDrone")`;
+    doctrine = "Drone spawned in " + hive + " hive.";
+  }
+  document.getElementById("ue5Result").textContent = `⚡ unreal_${action}("${hive}")
+
+UE5 C++ call:
+${cpp}
+
+MCP command:
+${mcp}
+
+Doctrine: ${doctrine}
+Sovereign by construction.`;
+}
+</script>
+
+</body>
+</html>

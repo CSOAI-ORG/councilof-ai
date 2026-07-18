@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML-DSA-65 - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/cryptography/">cryptography</a> / pqc-ml-dsa-65</div>
+<h1>ML-DSA-65 (Dilithium)</h1>
+<p class="tagline">NIST post-quantum signature standard — CSOAI's Ed25519 successor.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p><strong>ML-DSA-65</strong> is the NIST-standardised post-quantum signature algorithm formerly known as Dilithium-3 (CRYSTALS-Dilithium). It was standardised as FIPS 204 in August 2024 and is the quantum-safe successor to Ed25519 in CSOAI's stack.</p>
+
+<h2>Why Post-Quantum?</h2>
+<p>Ed25519 (see <a href="/wiki/cryptography/ed25519.html">Ed25519</a>) is vulnerable to Shor's algorithm on a sufficiently large quantum computer. Projected CRQC window: 2030–2035. CSOAI rotates keys to ML-DSA-65 to ensure that signatures emitted today remain unforgeable in 2035.</p>
+
+<h2>Properties</h2>
+<ul>
+<li><strong>Public key</strong>: 1,952 bytes</li>
+<li><strong>Signature</strong>: 3,293 bytes</li>
+<li><strong>Security</strong>: NIST Level 3 (~128-bit post-quantum security)</li>
+<li><strong>Performance</strong>: ~80µs sign, ~50µs verify on x86-64</li>
+<li><strong>Based on</strong>: Module-LWE (Learning With Errors) over module lattices</li>
+</ul>
+
+<h2>Why ML-DSA-65 Specifically?</h2>
+<p>NIST standardises three parameter sets: ML-DSA-44 (Level 2), ML-DSA-65 (Level 3), ML-DSA-87 (Level 5). CSOAI picked ML-DSA-65 because Level 3 matches Ed25519's classical security level (~128-bit), giving a clean drop-in replacement. ML-DSA-87 is overkill for our use case; ML-DSA-44 is too weak.</p>
+
+<h2>Usage in CSOAI</h2>
+<p>ML-DSA-65 is deployed in: (1) the SIGIL chain for new customer deployments (since Q4 2025), (2) the Article 50 passport (Pro tier) since EU AI Act requirements, (3) hybrid mode alongside Ed25519 for defence-in-depth.</p>
+
+<h2>Mathematical Sketch</h2>
+<p>ML-DSA-65 signs by: (1) sampling a random vector y from a small distribution, (2) computing the challenge c = H(μ || Ay_high) where Ay_high is the high bits of Ay, (3) computing z = y + c·s where s is the secret key, (4) rejecting if z or the low bits of Ay − c·s reveal too much. Verification recomputes c and checks Ay − c·s = Ay_high · 2^d + Ay_low against the public key.</p>
+
+<h2>Historical Context</h2>
+<p>CRYSTALS-Dilithium was submitted to NIST's PQC standardisation process in 2017. It was selected as a winner in 2022 and standardised as FIPS 204 in August 2024. CSOAI deployed it in production within 4 months of standardisation — one of the earliest production deployments globally.</p>
+
+<h2>Migration Path</h2>
+<p>Existing Ed25519 keys are rotated to ML-DSA-65 via the standard rotation cycle (see <a href="/wiki/cryptography/rotation.html">Key Rotation</a>). Hybrid mode is supported: each SIGIL event carries both Ed25519 and ML-DSA-65 signatures, enabling verification by either. After 2027, hybrid mode will be phased out in favour of ML-DSA-65-only.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/cryptography/ed25519.html">Ed25519</a></li>
+<li><a href="/wiki/cryptography/pqc-ml-kem-768.html">ML-KEM-768</a></li>
+<li><a href="/wiki/cryptography/rotation.html">Key Rotation</a></li>
+<li><a href="/wiki/architecture/quantum-ready.html">Quantum Ready</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

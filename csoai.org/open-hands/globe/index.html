@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Open Hands — Globe of Regulations — csoai.org/open-hands/globe/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: radial-gradient(ellipse at center, #0a0e27 0%, #000 80%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1400px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .tagline { font-size: 1.1rem; color: #10b981; margin-bottom: 24px; font-style: italic; }
+    .globe { width: 100%; height: 600px; background: radial-gradient(circle at center, #1e3a8a 0%, #000 100%); border-radius: 50%; border: 4px solid #fbbf24; position: relative; margin: 24px 0; overflow: hidden; }
+    .temple { position: absolute; background: rgba(251,191,36,0.2); border: 1px solid #fbbf24; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; }
+    .temple:hover { background: rgba(251,191,36,0.6); transform: scale(1.5); }
+    .temple.eu-ai-act { top: 30%; left: 50%; }
+    .temple.uk-ai-bill { top: 25%; left: 47%; }
+    .temple.us-ai { top: 35%; left: 25%; }
+    .temple.china-ai { top: 40%; left: 70%; }
+    .temple.japan-ai { top: 35%; left: 80%; }
+    .temple.india-ai { top: 50%; left: 65%; }
+    .temple.australia-ai { top: 70%; left: 80%; }
+    .temple.brazil-ai { top: 65%; left: 30%; }
+    .temple.south-africa { top: 75%; left: 55%; }
+    .temple.nato { top: 20%; left: 50%; }
+    .temple-label { position: absolute; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; color: #fbbf24; white-space: nowrap; pointer-events: none; }
+    .list { background: rgba(0,0,0,0.5); padding: 24px; border-radius: 8px; margin: 24px 0; }
+    .list h2 { color: #fbbf24; margin-bottom: 12px; }
+    .list ul { margin-left: 24px; line-height: 1.8; }
+    .list .region { color: #06b6d4; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🌍 Globe of Regulations</h1>
+    <div class="tagline">Every regulation on Earth = a real temple on the globe. Click → see white paper, framework, workflows, inner flows.</div>
+
+    <div class="globe">
+      <!-- EU AI Act -->
+      <div class="temple eu-ai-act" onclick="alert('EU AI Act\\n\\nWhite paper: Full text\\nFramework: Risk-based\\nWorkflows: Quick scan, audit, certify\\nInner flows: Provider → Deployer → User\\nDeadline: Article 50 (2 Aug 2026), Annex III (2 Dec 2027 — delayed)\\nCert: ISO 42001 + GDPR + DORA')"></div>
+      <div class="temple-label" style="top: 30%; left: 53%;">🇪🇺 EU AI Act</div>
+
+      <!-- UK AI Bill -->
+      <div class="temple uk-ai-bill" onclick="alert('UK AI (Regulation) Bill\\n\\nWhite paper: AI Bill 2025-26\\nFramework: Pro-innovation + 5 principles\\nWorkflows: Watermarking (Article 50), Regulators\\nInner flows: ICO + Regulators + Industry\\nDeadline: 2 Aug 2026\\nCert: UK GDPR + JSP 936 (defense)')"></div>
+      <div class="temple-label" style="top: 25%; left: 47%;">🇬🇧 UK AI Bill</div>
+
+      <!-- US AI -->
+      <div class="temple us-ai" onclick="alert('US AI\\n\\nNIST AI RMF\\nExecutive Order 14110\\nFedRAMP\\nNIST CSF 2.0\\n\\nInner flows: Federal → State → Industry\\nCert: FedRAMP + HIPAA + GLBA')"></div>
+      <div class="temple-label" style="top: 35%; left: 22%;">🇺🇸 US AI</div>
+
+      <!-- China AI -->
+      <div class="temple china-ai" onclick="alert('China AI Safety Governance Framework\\n\\nWhite paper: AI Safety Governance\\nFramework: Algorithm registry + safety assessment\\nWorkflows: Service filing + labeling\\nInner flows: CAC + Ministry + Industry\\n\\nThe West vs East paradigm: SOV3 DORADO switch')"></div>
+      <div class="temple-label" style="top: 40%; left: 73%;">🇨🇳 China AI</div>
+
+      <!-- Japan AI -->
+      <div class="temple japan-ai" onclick="alert('Japan AI Promotion Act\\n\\nWhite paper: AI Promotion Act\\nFramework: Risk-based + non-binding\\nInner flows: Government + Industry\\n')"></div>
+      <div class="temple-label" style="top: 35%; left: 83%;">🇯🇵 Japan AI</div>
+
+      <!-- India AI -->
+      <div class="temple india-ai" onclick="alert('India Digital Personal Data Protection Act\\n\\nFramework: Consent-based\\nInner flows: DPIIT + MeitY + Industry')"></div>
+      <div class="temple-label" style="top: 50%; left: 68%;">🇮🇳 India AI</div>
+
+      <!-- Australia AI -->
+      <div class="temple australia-ai" onclick="alert('Australia AI Ethics Framework\\n\\nFramework: Voluntary principles\\nInner flows: DISR + Industry')"></div>
+      <div class="temple-label" style="top: 70%; left: 83%;">🇦🇺 Australia AI</div>
+
+      <!-- Brazil AI -->
+      <div class="temple brazil-ai" onclick="alert('Brazil AI Bill\\n\\nFramework: Risk-based + rights-based\\nInner flows: ANPD + Industry')"></div>
+      <div class="temple-label" style="top: 65%; left: 33%;">🇧🇷 Brazil AI</div>
+
+      <!-- South Africa -->
+      <div class="temple south-africa" onclick="alert('POPIA (Protection of Personal Information Act)\\n\\nFramework: Consent + lawful processing\\nInner flows: Information Regulator + Industry')"></div>
+      <div class="temple-label" style="top: 75%; left: 58%;">🇿🇦 POPIA</div>
+
+      <!-- NATO -->
+      <div class="temple nato" onclick="alert('NATO STANAG\\n\\nDefensive AI standards\\nJSP 936 (UK)\\nAUKUS Pillar II\\n\\nInner flows: NATO + Industry')"></div>
+      <div class="temple-label" style="top: 17%; left: 53%;">🛡️ NATO</div>
+    </div>
+
+    <div class="list">
+      <h2>Click any temple to see:</h2>
+      <ul>
+        <li><strong>White paper</strong> — the full text of the regulation</li>
+        <li><strong>Framework</strong> — the structure (risk-based, principles-based, etc.)</li>
+        <li><strong>Workflows</strong> — the actual processes (quick scan, audit, certify)</li>
+        <li><strong>Inner flows</strong> — how data + decisions + audits actually move</li>
+        <li><strong>Deadlines</strong> — Article 50 (2 Aug 2026), Annex III (2 Dec 2027), etc.</li>
+        <li><strong>Certifications</strong> — which crosswalks + certs apply</li>
+        <li><strong>DORADO switch</strong> — 1-click EAST ↔ WEST with ontology</li>
+      </ul>
+
+      <h2 style="margin-top: 24px;">Total regulations mapped: <span style="color: #10b981;">40+</span></h2>
+      <p style="margin-top: 8px;">EU + UK + US + Asia (China/Japan/Korea/Singapore/India) + Oceania + Americas + Africa + International standards + Defense (NATO/JSP 936/AUKUS)</p>
+    </div>
+  </div>
+</body>
+</html>

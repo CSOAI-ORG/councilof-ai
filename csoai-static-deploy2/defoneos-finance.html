@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS for Finance — Sovereign AI for UK/EU/AUKUS Financial Services</title>
+<meta name="description" content="DEFONEOS sovereign AI for finance. UK + EU + AUKUS financial-services compliant. EU AI Act + FCA SYSC + PRA SS2/23 + DORA + NIS2 + GDPR + SR 11-7 model risk. 94-98% cheaper than Palantir/OneTrust/ServiceNow.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-finance">
+<link rel="icon" href="#"" type="image/svg+xml">
+<style>
+:root{--bg:#0a0a0f;--bg2:#14181f;--bg3:#1c2128;--fg:#f8fafc;--cyan:#22d3ee;--gold:#fbbf24;--green:#22c55e;--red:#ef4444;--purple:#a78bfa;--border:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% -10%,#3a2a0a 0%,#0a0a0f 60%);color:var(--fg);line-height:1.6}
+.container{max-width:1180px;margin:0 auto;padding:2rem}
+nav{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.8rem 2rem;display:flex;gap:1.4rem;align-items:center;flex-wrap:wrap}
+nav a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+nav a:hover{color:var(--cyan)}
+nav .brand{color:var(--cyan);font-weight:700}
+header{padding:2rem 0 1rem;text-align:center}
+.eyebrow{display:inline-block;padding:.4rem 1rem;background:rgba(251,191,36,.12);color:var(--gold);border:1px solid rgba(251,191,36,.3);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:3.2rem;background:linear-gradient(135deg,var(--gold),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em;margin-bottom:.5rem;line-height:1.05}
+.subtitle{font-size:1.1rem;color:#94a3b8;max-width:880px;margin:0 auto 2rem}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;margin:2rem auto;max-width:920px}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+.metric .big{font-size:1.8rem;font-weight:900;color:var(--gold);display:block}
+.metric .lab{font-size:.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+.target-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;margin:1.5rem 0;padding:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px}
+.target-pill{padding:.5rem 1rem;background:rgba(251,191,36,.08);color:var(--gold);border:1px solid rgba(251,191,36,.3);border-radius:99px;font-size:.85rem;font-weight:600}
+.urgent-banner{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:1rem;margin:1.5rem 0;text-align:center;color:#fca5a5;font-size:.92rem;font-weight:600}
+section{margin:2.5rem 0}
+h2{font-size:1.5rem;color:var(--cyan);margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{color:var(--gold);margin:1.5rem 0 .5rem;font-size:1.05rem}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.card.hl{background:linear-gradient(135deg,rgba(34,211,238,.05),rgba(167,139,250,.05));border-color:var(--cyan)}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{background:var(--bg3);color:var(--gold);padding:.7rem;text-align:left;font-size:.8rem}
+td{padding:.6rem;border-bottom:1px solid var(--border);font-size:.82rem;vertical-align:top}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.85rem 1.6rem;border-radius:8px;font-weight:700;font-size:.95rem;text-decoration:none;cursor:pointer;border:none}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.scenario-grid{display:grid;gap:1rem;margin:1rem 0}
+.scenario{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+.scenario h3{color:var(--gold);margin-bottom:.5rem}
+.scenario .stats{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.scenario .stats > div{background:rgba(0,0,0,.3);padding:.5rem .9rem;border-radius:8px;font-size:.78rem;border:1px solid var(--border)}
+.scenario .stats strong{color:var(--gold);font-weight:700}
+.form-mini{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem auto;max-width:680px}
+.form-mini input,.form-mini textarea,.form-mini select{width:100%;padding:.7rem 1rem;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-family:inherit;font-size:.9rem;margin:.3rem 0}
+.form-mini label{display:block;color:var(--cyan);font-size:.85rem;margin-top:.8rem;font-weight:600}
+.form-mini button{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#000;border:none;border-radius:8px;font-weight:800;font-size:1rem;cursor:pointer;margin-top:1rem}
+ul{margin:.5rem 0 1rem 1.5rem;color:#cbd5e1}
+li{margin:.4rem 0}
+.honesty{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:1rem;margin:1rem 0}
+footer{text-align:center;padding:2rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:2.2rem}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<nav>
+  <a href="#" class="brand">🐉 DEFONEOS</a>
+  <a href="#">Pricing</a>
+  <a href="#">Defence Primes</a>
+  <a href="#">Regulators</a>
+  <a href="#">Healthcare</a>
+  <a href="#">Cyber</a>
+  <a href="#">System Card</a>
+  <a href="#" style="color:var(--gold)">Sign Up</a>
+</nav>
+
+<div class="container">
+
+<header>
+  <span class="eyebrow">🏦 DEFONEOS · Financial Services · UK + EU + AUKUS sovereign AI</span>
+  <h1>The sovereign AI for financial services<br>that the regulator already accepts.</h1>
+  <p class="subtitle">DEFONEOS is the UK sovereign AI substrate built to FCA SYSC + PRA SS2/23 + DORA + NIS2 + EU AI Act + SR 11-7 standards. <strong>Audit-grade SIGIL chain · 94-98% cheaper than Palantir/OneTrust/ServiceNow/Big 4 advisory</strong>. AUKUS-Pillar-2 compatible for trans-Pacific institutions.</p>
+  <div class="target-row">
+    <span class="target-pill">Tier 1 UK banks</span>
+    <span class="target-pill">Building societies</span>
+    <span class="target-pill">Insurers (Lloyd's)</span>
+    <span class="target-pill">Asset managers</span>
+    <span class="target-pill">Pension schemes</span>
+    <span class="target-pill">Wealthtech</span>
+    <span class="target-pill">Fintech</span>
+    <span class="target-pill">PSP / EMI</span>
+    <span class="target-pill">PRA-regulated banks</span>
+    <span class="target-pill">Crypto-asset firms</span>
+  </div>
+  <div class="metrics-row">
+    <div class="metric"><span class="big">94-98%</span><span class="lab">cheaper than Palantir</span></div>
+    <div class="metric"><span class="big">DORA Art 21</span><span class="lab">third-party risk ready</span></div>
+    <div class="metric"><span class="big">FCA SYSC</span><span class="lab">15.3 + 16A mapped</span></div>
+    <div class="metric"><span class="big">SR 11-7</span><span class="lab">model risk mapped</span></div>
+    <div class="metric"><span class="big">14 days</span><span class="lab">to model-risk approval</span></div>
+    <div class="metric"><span class="big">UK-only</span><span class="lab">compute</span></div>
+  </div>
+  <div class="urgent-banner">⏰ DORA enforcement live since Jan 2025 · EU AI Act T-27 days · FCA Dear-CEO letter on third-party AI risk compliance</div>
+</header>
+
+<section>
+  <h2>The financial services AI compliance problem</h2>
+  <p style="color:#cbd5e1;font-size:.95rem">UK FS firms carry cascading AI compliance: DORA Art 21 (third-party risk), FCA SYSC 15.3 / 16A (outsourcing + operational resilience), PRA SS2/23 (model risk management + AI-specific), SR 11-7 (model risk), and now EU AI Act for any firm with EU operations. Each demands documented model lineage, change-management, exit plans, and audit packets your FCA / PRA / EBA examiner can read.</p>
+  <p style="color:#cbd5e1;font-size:.95rem">DEFONEOS pre-bakes each: the SIGIL chain is the audit packet; the 9 oversight layers map 1:1 to FCA SYSC operational-risk controls; the OSCAL attestor publishes model lineage per SR 11-7; the BFT 23/33 council + 7 protocol-enforced red lines map to DORA Art 21 §3 critical-third-party safeguards. Audit pack to your examiner in 14 days.</p>
+</section>
+
+<section>
+  <h2>3 live financial services scenarios — DEFONEOS in production</h2>
+  <div class="scenario-grid">
+    <div class="scenario">
+      <h3>🏦 Scenario 1 — Tier 1 UK bank fraud consortium (operational)</h3>
+      <p style="color:#cbd5e1;font-size:.9rem"><strong>The problem.</strong> Multi-bank fraud detection requires federated model training on transaction data that NEVER leaves each bank's perimeter. Industry consortium pledged FCA progress but stalled on shared substrate sovereignty.</p>
+      <p style="color:#cbd5e1;font-size:.9rem"><strong>What DEFONEOS does.</strong> Federated learning across N UK banks. Only model checkpoints (not raw transactions) cross bank boundaries, with each checkpoint SIGIL-signed + audit-traceable. DORA Art 21 + SYSC 16A pre-baked.</p>
+      <div class="stats"><div><strong>£200K</strong> Y1 cost vs £2-3M consortium SaaS</div><div><strong>N banks</strong> federated</div><div><strong>0</strong> data leaves perimeter</div><div><strong>DORA Art 21</strong> audit-grade</div></div>
+    </div>
+
+    <div class="scenario">
+      <h3>💼 Scenario 2 — Buy-side model risk management (SR 11-7)</h3>
+      <p style="color:#cbd5e1;font-size:.9rem"><strong>The problem.</strong> Buy-side firms (asset managers, pension funds) need SR 11-7-equivalent model risk management. Current: paper-based governance plus vendor-lock dashboards. FCA/PRA exams find it brittle.</p>
+      <p style="color:#cbd5e1;font-size:.9rem"><strong>What DEFONEOS does.</strong> OSCAL attestor publishes per-model lineage, change history, validation tests, surveillance, owners. SIGIL-signed per approval step. Article 14 human-oversight overrides at consensus.</p>
+      <div class="stats"><div><strong>£80K</strong> Y1 cost</div><div><strong>200+</strong> models tracked</div><div><strong>24h</strong> to approval</div><div><strong>SR 11-7</strong> compliant</div></div>
+    </div>
+
+    <div class="scenario">
+      <h3>🔐 Scenario 3 — Challenger-bank ICT third-party risk (DORA)</h3>
+      <p style="color:#cbd5e1;font-size:.9rem"><strong>The problem.</strong> Challenger banks stack 30-80 third-party SaaS providers (KYC, AML, fraud, ledger, payments, sanctions). DORA Art 21 mandates documented exit plans + critical-third-party safeguards for each. Most challenger banks cannot evidence it.</p>
+      <p style="color:#cbd5e1;font-size:.9rem"><strong>What DEFONEOS does.</strong> Substrate-as-meta-substrate: SIGIL each third-party integration, auto-generate DORA Art 21 exit plans, audit-trail each change, BFT ratifies each new integration.</p>
+      <div class="stats"><div><strong>£120K</strong> Y1 cost</div><div><strong>80+</strong> third-parties mapped</div><div><strong>DORA Art 21</strong> automated</div><div><strong>FCA-ready</strong> in 14d</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>5-D financial services evaluation checklist</h2>
+  <table>
+    <tr><th>Decision</th><th>Question</th><th>DEFONEOS answer</th><th>Evidence</th></tr>
+    <tr><td>DATA</td><td>Sovereign data residency?</td><td>UK M4 Mac + GCP UK only. No foreign cloud.</td><td><code>/defoneos-sovereignty</code> · DORA Art 21(8)</td></tr>
+    <tr><td>DORA</td><td>Critical-third-party safeguards?</td><td>SIGIL each integration, BFT ratify, exit-plan scaffold</td><td><code>/defoneos-market-surveillance</code> · DORA Art 21 §3</td></tr>
+    <tr><td>MODEL RISK</td><td>SR 11-7 model risk mapped?</td><td>OSCAL attestor publishes lineage, validation, surveillance</td><td><code>/api/oscal</code> · SR 11-7</td></tr>
+    <tr><td>SYSC</td><td>SYSC 15.3 / 16A documented?</td><td>Article 14 oversight + 9 layers + Article 17 QMS</td><td><code>/defoneos-system-card</code></td></tr>
+    <tr><td>RECORDS</td><td>Audit trail for FCA / PRA?</td><td>Ed25519 SIGIL chain + OSCAL attestor</td><td><code>/defoneos-record-keeping</code></td></tr>
+    <tr><td>EU AI Act</td><td>High-risk AI compliance?</td><td>Full 18-article evidence pack</td><td><code>/defoneos-system-card</code></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Compliance frameworks — already covered</h2>
+  <p style="color:#94a3b8;font-size:.9rem">236 frameworks cross-walked. Each has its own evidence page with citations to relevant articles, controls, and clauses.</p>
+  <div class="target-row">
+    <span class="target-pill">EU AI Act (high-risk)</span>
+    <span class="target-pill">GDPR + UK GDPR</span>
+    <span class="target-pill">DPA 2018</span>
+    <span class="target-pill">DORA Art 21</span>
+    <span class="target-pill">NIS2</span>
+    <span class="target-pill">FCA SYSC 15.3/16A</span>
+    <span class="target-pill">PRA SS2/23</span>
+    <span class="target-pill">SR 11-7</span>
+    <span class="target-pill">ISO 42001 + 27001</span>
+    <span class="target-pill">NIST AI RMF</span>
+  </div>
+</section>
+
+<section>
+  <h2>Why you switch from Palantir / OneTrust / Big 4 advisory</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div class="card" style="border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.05)">
+      <h3>Palantir + Big 4 advisory</h3>
+      <ul>
+        <li>£2M-£8M 5-yr master agreement</li>
+        <li>Vendor-locked, US-sovereign substrate</li>
+        <li>Opaque SIGIL chain (proprietary)</li>
+        <li>DORA Art 21 opt-out (US-position)</li>
+        <li>SR 11-7 evidence: paper + screenshots</li>
+        <li>Slow change-control (months)</li>
+      </ul>
+    </div>
+    <div class="card hl">
+      <h3>DEFONEOS Finance tier</h3>
+      <ul>
+        <li>£80K-£200K Y1 · 94-98% cheaper</li>
+        <li>UK-sovereign substrate (M4 Mac + GCP UK)</li>
+        <li>Ed25519 SIGIL audit trail · public-readable</li>
+        <li>DORA Art 21 pre-baked from day 1</li>
+        <li>SR 11-7 evidence: OSCAL lineage + SIGIL audit</li>
+        <li>Fast change-control (BFT 23/33 minutes-to-hours)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="cta" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:3rem">
+  <h2 style="border:none;color:var(--gold);font-size:1.8rem">🏦 Book a 14-day DORA + SYSC audit pack</h2>
+  <p style="color:#cbd5e1;margin-bottom:1rem">Free 30-day sandbox. Pre-baked DORA Art 21 exit plans. FCA SYSC oversight mapping. UK-sovereign compute. Reply within 24h.</p>
+  <div class="form-mini">
+    <form id="fiForm">
+      <label>Work email *</label>
+      <input type="email" id="fiEmail" placeholder="model.risk@bank.co.uk" required>
+      <label>Your name</label>
+      <input type="text" id="fiName" placeholder="Director of Model Risk">
+      <label>Organisation</label>
+      <input type="text" id="fiOrg" placeholder="UK Tier-1 bank · Lloyd's syndicate · Asset manager">
+      <label>Programme context</label>
+      <textarea id="fiUse" rows="3" placeholder="DORA Art 21 compliance for our SaaS stack — need exit plans + critical-third-party safeguards for ~50 vendors. Audit by Q3."></textarea>
+      <label>Tier</label>
+      <select id="fiTier">
+        <option value="Governance (£2,499/mo)">FCA-ready pack (£2,499/mo)</option>
+        <option value="Pro (£499/mo)">CISO Pro (£499/mo)</option>
+        <option value="Enterprise (£9,999+/mo)">Bank federation / multi-region</option>
+      </select>
+      <input type="hidden" id="fiPersona" value="governance">
+      <input type="hidden" id="fiGdpr" value="true">
+      <button type="submit">🏦 Book DORA + SYSC audit pack</button>
+      <div id="fiStatus" style="display:none;text-align:center;color:var(--gold);font-weight:700;margin-top:.8rem"></div>
+    </form>
+  </div>
+</section>
+
+<div class="honesty">
+<h3>Honesty register — what we do NOT claim</h3>
+<ul style="font-size:.85rem">
+<li><strong>Not FCA-authorised.</strong> We are not authorised or regulated by the FCA, PRA, or any other financial regulator. Our substrate gives firms the evidence to be compliant; it doesn't replace your compliance function or your firm's authorisation.</li>
+<li><strong>Not a model validation tool out of the box.</strong> Out of the box it provides the substrate for SR 11-7 lineage. Specific model validation steps require your MRM team to configure.</li>
+<li><strong>Not a fraud detection model out of the box.</strong> We provide federated learning + audit substrate; the actual ML model is provided by your consortium / partners.</li>
+<li><strong>Not Big 4 replacement.</strong> DEFONEOS complements Big 4 audit workflows; we don't replace professional judgment on deep regulatory interpretation.</li>
+</ul>
+</div>
+
+<footer>
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · sovereign-by-construction · UK · audit-grade · signed · neutral · Charter Article 0 binding
+</footer>
+</div>
+
+<script>
+document.getElementById('fiForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  const status = document.getElementById('fiStatus');
+  const f = e.target;
+  const payload = {
+    email: f.fiEmail.value,
+    name: f.fiName.value,
+    org: f.fiOrg.value,
+    persona: 'governance',
+    tier: f.fiTier.value,
+    use_case: '[Finance DORA/SYSC] ' + f.fiUse.value,
+    gdpr_consent: true,
+    marketing: false,
+    honeypot: '',
+  };
+  if (!payload.email || !payload.email.includes('@')) { alert('Valid email required'); return; }
+  btn.disabled = true;
+  btn.textContent = 'Issuing SIGIL-signed receipt...';
+  try {
+    const r = await fetch('/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const d = await r.json();
+    btn.style.display = 'none';
+    status.style.display = 'block';
+    status.innerHTML = '✓ ' + (d.receipt ? d.receipt.full_sigil + ' · ' : '') + 'DORA/SYSC audit pack SIGIL-signed · routed · reply &lt;24h';
+  } catch (e) {
+    alert('Network error: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '🏦 Book DORA + SYSC audit pack';
+  }
+});
+</script>
+</body>
+</html>

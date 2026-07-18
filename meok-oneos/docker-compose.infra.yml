@@ -1,0 +1,116 @@
+# MEOK ONE Infrastructure Stack
+# Deploys: SeaweedFS + OpenChronicle + PostgreSQL (for Trust Registry)
+#
+# Usage:
+#   docker compose -f docker-compose.infra.yml up -d
+#   # Or deploy to Railway / Hetzner / RunPod
+
+version: "3.8"
+
+services:
+  # ── SeaweedFS — Distributed Storage Backbone ───────────────────────────────
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.22
+    container_name: meok-seaweedfs
+    ports:
+      - "9340:9333"   # Master
+      - "9380:8080"   # Volume
+      - "8889:8888"   # Filer
+      - "8340:8333"   # S3 API
+      - "8181:8181"   # Iceberg REST
+    volumes:
+      - ./seaweedfs-data:/data
+    command: >
+      server -s3
+      -dir=/data
+      -master.port=9333
+      -volume.port=8080
+      -filer.port=8888
+      -s3.port=8333
+      -master.volumeSizeLimitMB=1024
+      -ip.bind=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8333/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── OpenChronicle — Agent Memory + Audit Trail ─────────────────────────────
+  openchronicle:
+    image: ghcr.io/carldog/openchronicle-mcp:latest
+    container_name: meok-openchronicle
+    ports:
+      - "3001:3001"   # MCP + HTTP API
+    volumes:
+      - ./openchronicle-data:/data
+      - ./openchronicle-config:/config
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OC_DB_PATH=/data/openchronicle.db
+      - OC_MCP_PORT=3001
+      - OC_HASH_CHAIN=true
+      - OC_SOLANA_ANCHOR=${SOLANA_ANCHOR:-false}
+      - OC_PII_DETECTION=true
+    restart: unless-stopped
+    depends_on:
+      - seaweedfs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── PostgreSQL — Trust Registry + POAI Index ───────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: meok-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=meok
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-meok_dev_password}
+      - POSTGRES_DB=trust_registry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meok"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Redis — SOV3 Task Queue + Caching ──────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: meok-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Qdrant — Vector Memory for RAG ─────────────────────────────────────────
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: meok-qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - ./qdrant-data:/qdrant/storage
+    restart: unless-stopped
+
+# ── Volumes ──────────────────────────────────────────────────────────────────
+volumes:
+  seaweedfs-data:
+  openchronicle-data:
+  openchronicle-config:
+  postgres-data:
+  redis-data:
+  qdrant-data:

@@ -1,0 +1,37 @@
+{
+  "rho_by_class": {
+    "math": 0.72,
+    "long_context": 0.15,
+    "governance": 0.28,
+    "code": 0.55
+  },
+  "decisions": {
+    "math": {
+      "task": "math",
+      "mode": "ROUTE_BEST",
+      "route_to": "qwen",
+      "rho": 0.72,
+      "reason": "rho 0.72 >= 0.3: brains agree here, fuse would only add cost -> use qwen"
+    },
+    "long_context": {
+      "task": "long_context",
+      "mode": "FUSE_ALL",
+      "rho": 0.15,
+      "reason": "rho 0.15 < 0.3: brains decorrelated here, fusion has headroom"
+    },
+    "governance": {
+      "task": "governance",
+      "mode": "FUSE_ALL",
+      "rho": 0.28,
+      "reason": "rho 0.28 < 0.3: brains decorrelated here, fusion has headroom"
+    },
+    "code": {
+      "task": "code",
+      "mode": "ROUTE_BEST",
+      "route_to": "qwen",
+      "rho": 0.55,
+      "reason": "rho 0.55 >= 0.3: brains agree here, fuse would only add cost -> use qwen"
+    }
+  },
+  "note": "FLUID = composition changes per task by measured rho. Fuse where decorrelated, route-to-best where they agree. No live weight editing."
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Transparency for NHS — Meeting Article 50 Requirements | MEOK</title>
+<meta name="description" content="NHS Foundation Trusts: meet EU AI Act Article 50 and CQC transparency requirements for clinical AI systems. Automated MCP attestation for healthcare.">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #0d0c18;
+    color: #e0dbd1;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+  .hero {
+    background: linear-gradient(135deg, #0b0a16 0%, #14212e 50%, #0d0c18 100%);
+    padding: 80px 0 60px;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    text-align: center;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.1);
+    color: #c9a84c;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1px solid rgba(201,168,76,0.2);
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: #c9a84c; }
+  .hero p {
+    font-size: 1.15rem;
+    color: #a09888;
+    max-width: 650px;
+    margin: 0 auto 0;
+  }
+
+  section { padding: 60px 0; }
+  section h2 {
+    font-size: 1.6rem;
+    color: #c9a84c;
+    margin-bottom: 24px;
+    font-weight: 700;
+  }
+  section p, section li { color: #c8c2b5; font-size: 1rem; margin-bottom: 16px; }
+  section ul { padding-left: 24px; }
+  section ul li { margin-bottom: 10px; }
+  section ul li strong { color: #e0dbd1; }
+
+  .highlight-box {
+    background: linear-gradient(135deg, #14122a 0%, #14212e 100%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    padding: 32px;
+    margin: 32px 0;
+  }
+  .highlight-box h3 { color: #c9a84c; font-size: 1.1rem; margin-bottom: 12px; }
+  .highlight-box p { margin-bottom: 0; }
+
+  .cta-box {
+    text-align: center;
+    background: linear-gradient(135deg, #14122a 0%, #14212e 100%);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 16px;
+    padding: 48px 32px;
+    margin: 40px 0;
+  }
+  .cta-box h2 { color: #c9a84c; margin-bottom: 12px; }
+  .cta-box p { color: #a09888; margin-bottom: 24px; }
+  .cta-btn {
+    display: inline-block;
+    background: #c9a84c;
+    color: #0d0c18;
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 16px 40px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .cta-btn:hover { background: #dabb5c; }
+
+  .footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: #4a4560;
+    font-size: 0.85rem;
+    border-top: 1px solid #1e1c35;
+  }
+  .footer a { color: #c9a84c; text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.8rem; }
+    section { padding: 40px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="badge">LEAD MAGNET · HEALTHCARE</div>
+    <h1>AI Transparency <span>for the NHS</span></h1>
+    <p>Meeting Article 50 requirements for NHS Foundation Trusts deploying clinical AI systems — without slowing down innovation.</p>
+  </div>
+</div>
+
+<section class="container">
+  <h2>The Healthcare AI Transparency Challenge</h2>
+  <p>NHS Foundation Trusts are increasingly deploying AI across clinical pathways — from radiology triage and discharge summaries to genomics, surgical planning, and patient-facing chatbots. But the <strong>EU AI Act (Article 50)</strong>, combined with <strong>CQC well-led</strong> and <strong>NHS DSP Toolkit</strong> requirements, demands transparent, auditable records for every AI interaction touching patients or their data.</p>
+  <ul>
+    <li><strong>Article 50(1):</strong> Any AI system interacting with a natural person (patient, carer, clinician) must disclose that interaction is AI-generated — with exceptions for clinical override.</li>
+    <li><strong>Article 50(2):</strong> Emotion-recognition or biometric-categorisation systems (used in some mental health &amp; dementia care pilots) face enhanced transparency obligations.</li>
+    <li><strong>CQC alignment:</strong> The Well-Led domain increasingly requires evidence of AI governance — board-level visibility into which AI systems are in use and how they are assured.</li>
+    <li><strong>NHS DSP Toolkit:</strong> The Data Security and Protection Toolkit now includes AI-specific questions under Standard 7 (continuity) and Standard 8 (training).</li>
+  </ul>
+  <p>The problem: Trusts often run AI models procured from third parties, built by in-house data science teams, or accessed via cloud APIs — each with different provenance, risk profiles, and documentation standards. Manually tracking compliance across 50+ AI services is unsustainable.</p>
+</section>
+
+<section class="container">
+  <h2>How MEOK Helps NHS Trusts</h2>
+  <p>MEOK sits alongside your MCP service mesh to <strong>automatically attest every AI model invocation</strong> against NHS-specific compliance requirements:</p>
+  <ul>
+    <li><strong>Auto-attest all MCP calls:</strong> Every AI interaction gets a signed, tamper-evident attestation certificate — model ID, version, input summary, output, policy verdict.</li>
+    <li><strong>NHS-specific compliance mapping:</strong> Map attestations to EU AI Act articles, CQC Key Lines of Enquiry (KLOEs), DSP Toolkit standards, and local Trust governance policies simultaneously.</li>
+    <li><strong>Clinical safety overlays:</strong> Attestations integrate with DCB 0129 / DCB 0160 clinical risk management — each one carries a clinical safety classification.</li>
+    <li><strong>Board-ready dashboards:</strong> Summarise AI compliance posture for trust board and CQC inspectors — with drill-down per model, per department, per article.</li>
+  </ul>
+
+  <div class="highlight-box">
+    <h3>Real-world NHS deployment</h3>
+    <p>MEOK has been designed for the NHS digital footprint — it works with HSCN network environments, supports NHS Mail integration for alert routing, and outputs compliance evidence packages in formats accepted by CQC inspectors and NHS England procurement panels.</p>
+  </div>
+</section>
+
+<section class="container">
+  <h2>Why Now?</h2>
+  <p>The EU AI Act's Article 50 obligations begin applying to high-risk AI systems (including many clinical AI deployments) from <strong>Q3 2026</strong>. The CQC's 2026 inspection framework includes AI governance as a specific line of inquiry under Well-Led. Trusts that can demonstrate automated, continuous AI transparency will have a significant advantage in both regulatory readiness and patient trust.</p>
+  <p>For NHS Trusts participating in the <strong>AI Deployment Accelerator</strong> or <strong>NHSX AI Lab</strong> programmes, MEOK's automated compliance layer reduces the paperwork burden and accelerates safety case sign-off.</p>
+</section>
+
+<div class="container">
+  <div class="cta-box">
+    <h2>Ready to automate AI compliance for your Trust?</h2>
+    <p>We'll show you how MEOK maps to your MCP architecture, CQC KLOEs, and DSP Toolkit requirements — in a 30-minute call tailored to NHS Foundation Trusts.</p>
+    <a class="cta-btn" href="https://meok.ai/book-call" onclick="alert('Book a call placeholder — replace with calendly/cal link')">Book a Call →</a>
+  </div>
+</div>
+
+<footer class="footer container">
+  <p><a href="/">MEOK</a> — AI Governance Platform. £0 MRR (pre-revenue — honest accounting).</p>
+  <p style="margin-top:4px;">EU AI Act · CQC · DSP Toolkit · ISO 42001 · DCB 0129</p>
+</footer>
+
+</body>
+</html>

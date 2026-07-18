@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — UE5 AI OS — Enterprise SaaS Interface</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#060010;color:#f8fafc;overflow-x:hidden}
+/* Hero */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,rgba(34,211,238,.08),transparent 50%),radial-gradient(ellipse at 70% 70%,rgba(139,92,246,.08),transparent 50%),#060010}
+.hero .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(34,211,238,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.03) 1px,transparent 1px);background-size:50px 50px;transform:perspective(500px) rotateX(60deg);transform-origin:center bottom;opacity:.5}
+.hero-content{position:relative;z-index:2;padding:2rem}
+.hero h1{font-size:4.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem;letter-spacing:-.02em}
+.hero .sub{font-size:1.5rem;color:#94a3b8;margin-bottom:.5rem}
+.hero .tag{font-size:1.1rem;color:#64748b;max-width:600px;margin:0 auto}
+.hero .enter-btn{display:inline-flex;align-items:center;gap:.5rem;margin-top:2rem;padding:1rem 3rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;border-radius:12px;text-decoration:none;font-weight:bold;font-size:1.2rem;transition:.3s;box-shadow:0 0 40px rgba(34,211,238,.3)}
+.hero .enter-btn:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(34,211,238,.5)}
+/* Mock UI */
+.mock-ui{max-width:1300px;margin:0 auto;padding:2rem}
+.mock-window{background:rgba(10,10,15,.8);border:1px solid rgba(34,211,238,.15);border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,.5)}
+.mock-header{background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.08);padding:.6rem 1rem;display:flex;align-items:center;gap:.5rem}
+.mock-header .dot{width:12px;height:12px;border-radius:50%}
+.mock-header .dot.red{background:#ef4444}.mock-header .dot.amber{background:#f59e0b}.mock-header .dot.green{background:#22c55e}
+.mock-header .title{margin-left:.5rem;font-size:.85rem;color:#64748b}
+.mock-body{display:grid;grid-template-columns:200px 1fr 280px;gap:0;min-height:600px}
+.mock-left{background:rgba(0,0,0,.2);border-right:1px solid rgba(255,255,255,.05);padding:1rem}
+.mock-left h4{color:#22d3ee;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem}
+.mock-left .nav-item{padding:.4rem .6rem;color:#94a3b8;font-size:.8rem;cursor:pointer;border-radius:6px;margin-bottom:.2rem;display:flex;align-items:center;gap:.4rem}
+.mock-left .nav-item:hover{background:rgba(34,211,238,.08);color:#22d3ee}
+.mock-left .nav-item.active{background:rgba(34,211,238,.1);color:#22d3ee}
+.mock-center{position:relative;background:#0a0a0f;overflow:hidden}
+.mock-globe-area{height:100%;display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(circle at 50% 50%,rgba(34,211,238,.05),transparent)}
+.mock-globe-area .globe-placeholder{width:400px;height:400px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#1a3a5e,#0a1a2e 50%,#000 100%);box-shadow:0 0 80px rgba(34,211,238,.2),inset -20px -20px 40px rgba(0,0,0,.5);position:relative;animation:spin 30s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.mock-globe-area .overlay{position:absolute;top:1rem;left:1rem;right:1rem;display:flex;justify-content:space-between;pointer-events:none}
+.mock-globe-area .overlay .badge{background:rgba(10,10,15,.8);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:.3rem .8rem;font-size:.7rem;color:#22d3ee}
+.mock-right{background:rgba(0,0,0,.2);border-left:1px solid rgba(255,255,255,.05);padding:1rem}
+.mock-right h4{color:#22d3ee;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem}
+.mock-alert{background:rgba(255,255,255,.03);border-left:3px solid;padding:.5rem;margin-bottom:.4rem;border-radius:0 6px 6px 0;font-size:.75rem}
+.mock-alert.red{border-color:#ef4444}.mock-alert.amber{border-color:#f59e0b}.mock-alert.blue{border-color:#22d3ee}
+.mock-alert .a-title{color:#f8fafc;font-weight:500}.mock-alert .a-time{color:#64748b;font-size:.65rem}
+/* Features */
+.features{max-width:1100px;margin:0 auto;padding:4rem 2rem}
+.features h2{color:#22d3ee;font-size:2rem;text-align:center;margin-bottom:2rem}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
+.feat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:2rem;text-align:center;transition:.2s}
+.feat:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.3)}
+.feat .icon{font-size:2.5rem;display:block;margin-bottom:.8rem}
+.feat h3{color:#22d3ee;font-size:1.1rem;margin-bottom:.5rem}
+.feat p{color:#94a3b8;font-size:.9rem}
+/* Migration */
+.migration{max-width:1100px;margin:0 auto;padding:2rem}
+.migration h2{color:#22d3ee;font-size:1.8rem;text-align:center;margin-bottom:1.5rem}
+.mig-table{width:100%;border-collapse:collapse}
+.mig-table th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.6rem;text-align:left;font-size:.8rem}
+.mig-table td{padding:.5rem;border-bottom:1px solid rgba(255,255,255,.05);color:#94a3b8;font-size:.85rem}
+.mig-table .yes{color:#22c55e}.mig-table .no{color:#ef4444}
+/* Bottom CTA */
+.bottom-cta{text-align:center;padding:4rem 2rem;background:radial-gradient(ellipse at 50% 50%,rgba(34,211,238,.05),transparent)}
+.bottom-cta h2{color:#22d3ee;font-size:2rem;margin-bottom:1rem}
+.bottom-cta p{color:#94a3b8;font-size:1.1rem;margin-bottom:2rem}
+.bottom-cta a{display:inline-flex;align-items:center;gap:.5rem;padding:1rem 3rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;border-radius:12px;text-decoration:none;font-weight:bold;font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<nav class="top-nav" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,10,15,.85);backdrop-filter:blur(15px);border-bottom:1px solid rgba(34,211,238,.2);padding:.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap">
+<a href="index.html" style="color:#22d3ee;text-decoration:none;display:flex;align-items:center;gap:.5rem"><span style="font-size:1.5rem">🐉</span> <strong style="font-size:1.2rem">DEFONEOS</strong></a>
+<div style="display:flex;gap:1rem;flex-wrap:wrap">
+<a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.8rem">Demo</a>
+<a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.8rem">Series A</a>
+<a href="defoneos-pricing.html" style="color:#94:3b8;text-decoration:none;font-size:.8rem">Pricing</a>
+<a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.8rem">All Pages</a>
+</div>
+</nav>
+
+<div class="hero" style="margin-top:48px">
+<div class="bg-grid"></div>
+<div class="hero-content">
+<h1>UE5 AI OS</h1>
+<p class="sub">Enterprise Defence AI SaaS — Photorealistic. Sovereign. Submerged.</p>
+<p class="tag">UE5 Pixel Streaming + Cesium 3D + SOV3 + Bio-Cyber Swarm + BFT Governance. The next generation of human-AI collaboration. For Defence. For Security. For Civilisation.</p>
+<a href="index.html" class="enter-btn">🌍 Enter 3D Globe →</a>
+</div>
+</div>
+
+<div class="mock-ui">
+<div class="mock-window">
+<div class="mock-header">
+<span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span>
+<span class="title">DEFONEOS UE5 AI OS — Enterprise SaaS</span>
+</div>
+<div class="mock-body">
+<!-- Left Panel -->
+<div class="mock-left">
+<h4>🌐 Domains</h4>
+<div class="nav-item active">🏔️ Land</div>
+<div class="nav-item">🌊 Sea</div>
+<div class="nav-item">✈️ Air</div>
+<div class="nav-item">🛰️ Space</div>
+<div class="nav-item">💻 Cyber</div>
+<div class="nav-item">📡 EW</div>
+<div class="nav-item">🧠 Cognitive</div>
+<div class="nav-item">🧬 Bio</div>
+<div class="nav-item">🏙️ Urban</div>
+<h4 style="margin-top:1.5rem">🛠️ Tools</h4>
+<div class="nav-item">📡 ISR Pipeline</div>
+<div class="nav-item">🐝 Swarm Control</div>
+<div class="nav-item">🏰 BFT Council</div>
+<div class="nav-item">📜 SIGIL Audit</div>
+<div class="nav-item">📋 Compliance</div>
+<div class="nav-item">🗺️ Simulation</div>
+</div>
+<!-- Center Globe -->
+<div class="mock-center">
+<div class="mock-globe-area">
+<div class="globe-placeholder"></div>
+<div class="overlay">
+<span class="badge">🌍 3D Globe · CesiumJS</span>
+<span class="badge">🟢 SOV3: 330 tools · LIVE</span>
+</div>
+</div>
+</div>
+<!-- Right Panel -->
+<div class="mock-right">
+<h4>🚨 Live Alerts</h4>
+<div class="mock-alert red">
+<div class="a-title">🔴 Dark Vessel Detected</div>
+<div class="a-time">English Channel · 2m ago</div>
+</div>
+<div class="mock-alert amber">
+<div class="a-title">🟡 Flood Warning</div>
+<div class="a-time">River Ouse · 8m ago</div>
+</div>
+<div class="mock-alert blue">
+<div class="a-title">🔵 SIGIL Chain Verified</div>
+<div class="a-SIGIL Chain Verified</div>
+<div class="a-time">9,579 receipts · 22m ago</div>
+</div>
+<div class="mock-alert blue">
+<div class="a-title">🔵 OLM Brain Cycle</div>
+<div class="a-time">3,456 cycles · 3h ago</div>
+</div>
+<h4 style="margin-top:1rem">🏰 BFT Council</h4>
+<div class="mock-alert blue">
+<div class="a-title">33 Nodes · 22 Quorum</div>
+<div class="a-time">✅ Consensus Active</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="features">
+<h2>The UE5 AI OS Experience</h2>
+<div class="feat-grid">
+<div class="feat"><span class="icon">📺</span><h3>Pixel Streaming</h3><p>Photorealistic 3D globe streamed to any browser. No GPU on client. Runs on a Chromebook. Cinematic quality.</p></div>
+<div class="feat"><span class="icon">🌍</span><h3>Cesium 3D Globe</h3><p>350M buildings. Real terrain. 12 live data layers. Domain filter. Vessel tracking. Drone swarm visualization.</p></div>
+<div class="feat"><span class="icon">🐝</span><h3>Swarm Visualization</h3><p>Watch bio-cyber swarm agents deploy in real-time. Worms, hornets, dragonflies, killer bees. Niagara VFX.</p></div>
+<div class="feat"><span class="icon">🏰</span><h3>BFT Governance</h3><p>33-node council votes in real-time. See who voted. See the result. SIGIL-signed. Mathematical proof of consensus.</p></div>
+<div class="feat"><span class="index.html"><span class="icon">📜</span><h3>SIGIL Audit Trail</h3><p>Every decision Ed25519-signed. Every action recorded. Legally defensible. Bitcoin-anchored. Transparent.</p></div>
+<div class="feat"><span class="icon">🧠</span><h3>SOV3 Mind</h3><p>330 tools. 14 neural models. Noise→Intuition pipeline. The AI core that KNOWS before it explains.</p></div>
+<div class="feat"><span class="icon">⚛️</span><h3>Quantum-Ready</h3><p>ML-KEM-768 post-quantum cryptography. FIPS 203. Future-proof security. No Shor's algorithm vulnerability.</p></div>
+<div class="feat"><span class="icon">🔓</span><h3>Open Source</h3><p>Apache 2.0. MIT. MOD can inspect every line. No backdoors. The source IS the proof.</p></div>
+<div class="feat"><span class="icon">🇬🇧</span><h3>UK Sovereign</h3><p>CSOAI Ltd 16939677. No US cloud. No CLOUD Act. Defence AI under UK law. British-built. British-owned.</p></div>
+</div>
+</div>
+
+<div class="migration">
+<h2>From Web Dashboard to UE5 AI OS</h2>
+<table class="mig-table">
+<tr><th>Feature</th><th>Web Dashboard (Standard)</th><th>UE5 AI OS (Enterprise)</th></tr>
+<tr><td>Globe</td><td>CesiumJS in browser</td><td class="yes">UE5 + Cesium for Unreal (photorealistic)</td></tr>
+<tr><td>Lighting</td><td>Basic 3D globe lighting</td><td class="yes">Lumen real-time global illumination</td></tr>
+<tr><td>Buildings</td><td>3D Tiles (simplified)</td><td class="yes">Nanite 350M buildings (cinematic)</td></tr>
+<tr><td>Swarm</td><td>Simple dots on map</td><td class="yes">Niagara VFX particle swarms</td></tr>
+<tr><td>Physics</td><td>None</td><td class="yes">Chaos physics (destruction sim)</td></tr>
+<tr><td>Avatars</td><td>None</td><td class="yes">MetaHuman digital twins</td></tr>
+<tr><td>Robots</td><td>None</td><td class="yes">AirSim drone simulation</td></tr>
+<tr><td>VR/AR</td><td>None</td><td class="yes">Full VR/AR support</td></ftr>
+<tr><td>Performance</td><td>60fps on Chromebook</td><td>60fps via Pixel Streaming (requires GPU server)</td></tr>
+<tr><td>Price</td><td>£50K/yr (Starter)</td><td>£1M+/yr (Enterprise)</td></tr>
+</table>
+</div>
+
+<div class="bottom-cta">
+<h2>Enter the Sovereign AI OS</h2>
+<p>From field operator to defence secretary. From CesiumJS to UE5. One OS. 12 domains. 330 tools.</p>
+<a href="index.html">🌍 Launch 3D Globe →</a>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem">
+<p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="#" style="color:inherit;text-decoration:none" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p>
+<p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  MEOK KEYSTONE — one sovereign source of truth for secrets.        ║
+# ║  Built 2026-06-17 to end the recurring "key leaked / re-paste"     ║
+# ║  blocker. Canonical store = GCP Secret Manager. Offline mirror =   ║
+# ║  macOS Keychain. Secrets NEVER touch disk, git, argv, or history.  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+set -euo pipefail
+
+PROJECT="${KEYSTONE_GCP_PROJECT:-meok-498012}"
+GCLOUD="${GCLOUD_BIN:-/Users/nicholas/google-cloud-sdk/bin/gcloud}"
+KC_SVC="meok-keystone"          # macOS Keychain service name (offline mirror)
+
+die() { echo "keystone: $*" >&2; exit 1; }
+[ -x "$GCLOUD" ] || GCLOUD="$(command -v gcloud || true)"
+[ -n "$GCLOUD" ] || die "gcloud not found (set GCLOUD_BIN)"
+
+usage() {
+  cat <<'EOF'
+MEOK Keystone — sovereign secrets, one source of truth.
+
+  keystone list                      List every secret (GCP) + offline-mirror status
+  keystone get   NAME                Print a secret to stdout (Keychain first, GCP fallback)
+  keystone set   NAME                Read value from STDIN -> store in GCP + Keychain
+                                     (e.g.  pbpaste | keystone set STRIPE_SECRET_KEY)
+  keystone run   [N1,N2,..] -- CMD   Run CMD with secrets injected as env vars.
+                                     No name list = inject ALL. Replaces .env files.
+  keystone sync-vercel PROJ N1 N2..  Push named secrets to a Vercel project's prod env
+                                     (kills the manual re-paste blocker)
+  keystone mirror                    Pull ALL GCP secrets into Keychain (offline/sovereign)
+  keystone rotate NAME               Set a new value (stdin) + re-sync everywhere
+  keystone install-guard             Install a global git pre-commit secret-scanner
+                                     (prevents the next public-key leak)
+
+Env: KEYSTONE_GCP_PROJECT (default meok-498012), GCLOUD_BIN
+EOF
+}
+
+_gcp_get() { "$GCLOUD" secrets versions access latest --secret="$1" --project="$PROJECT" 2>/dev/null; }
+_kc_get()  { security find-generic-password -s "$KC_SVC" -a "$1" -w 2>/dev/null; }
+
+cmd_list() {
+  echo "== GCP Secret Manager ($PROJECT) =="
+  "$GCLOUD" secrets list --project="$PROJECT" --format="value(name)" 2>/dev/null | sort | while read -r n; do
+    if security find-generic-password -s "$KC_SVC" -a "$n" -w >/dev/null 2>&1; then m="📲 mirrored"; else m="☁️  cloud-only"; fi
+    printf "  %-28s %s\n" "$n" "$m"
+  done
+}
+
+cmd_get() { [ $# -ge 1 ] || die "get NAME"; _kc_get "$1" || _gcp_get "$1" || die "secret '$1' not found"; }
+
+cmd_set() {
+  [ $# -ge 1 ] || die "set NAME  (value via stdin)"
+  local name="$1" val; val="$(cat)"; [ -n "$val" ] || die "empty value on stdin"
+  if "$GCLOUD" secrets describe "$name" --project="$PROJECT" >/dev/null 2>&1; then
+    printf '%s' "$val" | "$GCLOUD" secrets versions add "$name" --project="$PROJECT" --data-file=- >/dev/null
+  else
+    printf '%s' "$val" | "$GCLOUD" secrets create "$name" --project="$PROJECT" --data-file=- --replication-policy=automatic >/dev/null
+  fi
+  security add-generic-password -U -s "$KC_SVC" -a "$name" -w "$val" >/dev/null 2>&1 || true
+  echo "✅ $name stored (GCP + Keychain)"
+}
+
+cmd_run() {
+  local names="" ; if [ "${1:-}" != "--" ]; then names="$1"; shift; fi
+  [ "${1:-}" = "--" ] && shift || die "run [NAMES] -- CMD"
+  [ $# -ge 1 ] || die "no command after --"
+  local list
+  if [ -n "$names" ]; then list="$(echo "$names" | tr ',' ' ')"
+  else list="$("$GCLOUD" secrets list --project="$PROJECT" --format='value(name)' 2>/dev/null)"; fi
+  local env_args=()
+  for n in $list; do v="$(cmd_get "$n" 2>/dev/null || true)"; [ -n "$v" ] && env_args+=("$n=$v"); done
+  exec env "${env_args[@]}" "$@"
+}
+
+cmd_sync_vercel() {
+  [ $# -ge 2 ] || die "sync-vercel PROJECT NAME [NAME..]"
+  command -v vercel >/dev/null 2>&1 || die "vercel CLI not found"
+  local proj="$1"; shift
+  # Resolve the Vercel project name to its locally-linked directory and run env
+  # commands from there (Vercel reads the project from .vercel/project.json in
+  # cwd; --scope is the TEAM slug, not the project — using it was wrong/no-op).
+  local dir=""
+  for pj in "$HOME"/clawd/*/.vercel/project.json; do
+    [ -f "$pj" ] || continue
+    if python3 -c "import json,sys;sys.exit(0 if json.load(open('$pj')).get('projectName')=='$proj' else 1)" 2>/dev/null; then
+      dir="$(dirname "$(dirname "$pj")")"; break
+    fi
+  done
+  [ -n "$dir" ] || die "no local dir linked to Vercel project '$proj' — run 'vercel link' in it first"
+  for n in "$@"; do
+    v="$(cmd_get "$n")" || { echo "  ✗ $n not in keystone"; continue; }
+    ( cd "$dir" && vercel env rm "$n" production --yes >/dev/null 2>&1; \
+      printf '%s' "$v" | vercel env add "$n" production >/dev/null 2>&1 ) \
+      && echo "  ✅ $n -> $proj (production)" || echo "  ✗ $n sync failed"
+  done
+  echo "Redeploy to pick up: (cd $dir && vercel --prod)"
+}
+
+cmd_mirror() {
+  local n=0
+  "$GCLOUD" secrets list --project="$PROJECT" --format='value(name)' 2>/dev/null | while read -r name; do
+    v="$(_gcp_get "$name")" && security add-generic-password -U -s "$KC_SVC" -a "$name" -w "$v" >/dev/null 2>&1 \
+      && { echo "  📲 mirrored $name"; n=$((n+1)); }
+  done
+  echo "Offline mirror complete."
+}
+
+cmd_rotate() { [ $# -ge 1 ] || die "rotate NAME"; cmd_set "$1"; echo "↻ rotated $1 — now run: keystone sync-vercel <proj> $1"; }
+
+cmd_import_env() {
+  [ $# -ge 1 ] || die "import-env FILE  (migrate a .env into the keystone)"
+  local file="$1"; [ -f "$file" ] || die "no such file: $file"
+  # Non-secret config keys to skip (these are runtime config, not credentials).
+  local skip=" APP_ENV HOST PORT NODE_ENV DEBUG LOG_LEVEL OLLAMA_BASE_URL OLLAMA_MAX_LOADED_MODELS OLLAMA_NUM_PARALLEL OBJC_DISABLE_INITIALIZE_FORK_SAFETY FIBRESEEKER_ENABLED GENESIS_CLUSTER_NODES GENESIS_WORKSPACE QIDI_PRINTER_IP "
+  local n=0 s=0
+  while IFS= read -r line; do
+    case "$line" in ''|'#'*) continue;; esac
+    echo "$line" | grep -qE '^[A-Za-z_][A-Za-z0-9_]*=' || continue
+    local key="${line%%=*}" val="${line#*=}"
+    val="${val%\"}"; val="${val#\"}"; val="${val%\'}"; val="${val#\'}"
+    [ -z "$val" ] && continue
+    case "$skip" in *" $key "*) s=$((s+1)); continue;; esac
+    if printf '%s' "$val" | cmd_set "$key" >/dev/null 2>&1; then echo "  ✅ $key"; n=$((n+1)); else echo "  ✗ $key"; fi
+  done < "$file"
+  echo "import complete: $n secrets -> keystone, $s config keys skipped (file left untouched)"
+}
+
+cmd_install_guard() {
+  local hooks="$HOME/.config/git/hooks"; mkdir -p "$hooks"
+  cp "$(dirname "$0")/hooks/pre-commit" "$hooks/pre-commit" 2>/dev/null || die "hook template missing"
+  chmod +x "$hooks/pre-commit"
+  git config --global core.hooksPath "$hooks"
+  echo "✅ global pre-commit secret guard installed at $hooks (core.hooksPath set)"
+  command -v gitleaks >/dev/null 2>&1 && echo "   using gitleaks engine" || echo "   gitleaks not installed -> regex fallback active (brew install gitleaks for stronger scan)"
+}
+
+case "${1:-}" in
+  list) shift; cmd_list "$@";;
+  get) shift; cmd_get "$@";;
+  set) shift; cmd_set "$@";;
+  run) shift; cmd_run "$@";;
+  sync-vercel) shift; cmd_sync_vercel "$@";;
+  mirror) shift; cmd_mirror "$@";;
+  import-env) shift; cmd_import_env "$@";;
+  rotate) shift; cmd_rotate "$@";;
+  install-guard) shift; cmd_install_guard "$@";;
+  ""|-h|--help|help) usage;;
+  *) die "unknown command '$1' (try: keystone help)";;
+esac

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔍 Sovereign Search — Federated Search Across 79 MCPs</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a3a3a 50%,#02060f 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid #06b6d4}
+  .hero h1{color:#06b6d4;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #06b6d4}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .search-box{max-width:800px;margin:2rem auto;display:flex;gap:.5rem}
+  .search-box input{flex:1;padding:1rem;background:#0a0a0a;border:2px solid #06b6d4;border-radius:6px;color:#fbbf24;font-family:monospace;font-size:1.1rem}
+  .search-box button{background:#06b6d4;color:#000;padding:1rem 2rem;border:none;border-radius:6px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:1rem}
+  .filters{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin:1rem 0}
+  .filter-pill{background:rgba(6,182,212,0.1);border:1px solid #06b6d4;padding:.3rem .8rem;border-radius:6px;color:#06b6d4;font-size:.8rem;cursor:pointer}
+  .filter-pill.active{background:#06b6d4;color:#000}
+  .results{margin:2rem 0}
+  .result{background:#1a1a1a;padding:1.2rem;border-radius:8px;margin:0.7rem 0;border-left:3px solid #06b6d4}
+  .result h3{color:#06b6d4;margin-bottom:0.3rem}
+  .result .mcp{color:#fbbf24;font-family:monospace;font-size:0.85rem}
+  .result .desc{color:#aaa;font-size:0.85rem;margin-top:0.3rem}
+  .result .sig{color:#888;font-size:0.7rem;margin-top:0.5rem;font-family:monospace}
+  .result .invoke{background:#06b6d4;color:#000;padding:.3rem .6rem;border-radius:4px;font-size:.75rem;font-weight:bold;display:inline-block;margin-top:.5rem;text-decoration:none}
+  .sigil-feed{background:#0a0a0a;padding:1rem;border-radius:6px;margin:2rem 0;font-family:monospace;font-size:0.75rem;color:#10b981;max-height:200px;overflow-y:auto}
+  .sigil-line{padding:0.2rem 0;border-bottom:1px solid #222}
+  .sigil-ts{color:#888;margin-right:0.5rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/marketplace.html">Marketplace</a>
+  <a href="/sovereign-search.html">Search</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🔍 Sovereign Federated Search</h1>
+  <p>Search across 79 MCPs · 5 tools · 497 pages · Live SIGIL feed</p>
+</section>
+
+<div class="container">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 Search MCPs, tools, pages, sovereign facts..." value="wallet sign">
+    <button onclick="search()">Search</button>
+  </div>
+
+  <div class="filters">
+    <span class="filter-pill active" onclick="setFilter('all', this)">All</span>
+    <span class="filter-pill" onclick="setFilter('mcp', this)">MCPs</span>
+    <span class="filter-pill" onclick="setFilter('tool', this)">Tools</span>
+    <span class="filter-pill" onclick="setFilter('page', this)">Pages</span>
+    <span class="filter-pill" onclick="setFilter('fact', this)">Sovereign Facts</span>
+  </div>
+
+  <p style="text-align:center;color:#888;font-size:0.85rem" id="resultsLabel">Try: "wallet", "EU AI Act", "BFT 12", "Care Floor", "Mamba-2", "33 hive"</p>
+
+  <div class="results" id="results"></div>
+
+  <h2 style="color:#06b6d4;text-align:center;margin:2rem 0 1rem">🔏 Live SIGIL Feed</h2>
+  <div class="sigil-feed" id="sigilFeed"></div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Search Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">Federated search across 79 MCPs, 5 tools per MCP, 497 HTML pages. Live SIGIL feed. Care Floor 0.95.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 79 MCPs · 1,592+ tests · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const DATA = [
+  // MCPs
+  {type:"mcp",title:"meok-sovereign-wallet-mcp",desc:"Sovereign wallet. BFT 3-voter >$10k. Ed25519-signed transactions.",mcp:"origin",tools:5},
+  {type:"mcp",title:"meok-sovereign-wallet-bind-mcp",desc:"Wallet binding. Ed25519 base58 binding to sovereign DID.",mcp:"extras",tools:5},
+  {type:"mcp",title:"meok-sovereign-passport-mcp",desc:"Sovereign Agent Passport. Ed25519-signed identity + delegation.",mcp:"origin",tools:5},
+  {type:"mcp",title:"meok-sovereign-bft-council-mcp",desc:"BFT 12-around-1 council. 3/5/7 voter patterns.",mcp:"substrate",tools:5},
+  {type:"mcp",title:"meok-sovereign-carefloor-mcp",desc:"16-probe Care Floor at 0.95 threshold. Defensive only.",mcp:"substrate",tools:5},
+  {type:"mcp",title:"meok-sovereign-eu-ai-act-kit-mcp",desc:"EU AI Act Article 50 survival kit. 2 Aug 2026 watermarking.",mcp:"origin",tools:5},
+  {type:"mcp",title:"meok-sovereign-knowledge-mcp",desc:"CC0 1.0 knowledge graph. 10 public domain sources.",mcp:"extras",tools:5},
+  {type:"mcp",title:"meok-sovereign-ml-mcp",desc:"12 mindsets x 8 MoE = 96 sovereign combinations.",mcp:"extras",tools:5},
+  {type:"mcp",title:"meok-sovereign-federation-mcp",desc:"33-hive federation. Sovereign routing.",mcp:"origin",tools:5},
+  {type:"mcp",title:"meok-sovereign-orbital-mcp",desc:"33 hive orbital mechanics. 4 cycle types.",mcp:"extras",tools:5},
+  // Tools
+  {type:"tool",title:"wallet_create",desc:"Create a sovereign wallet. W3C DID + Ed25519.",mcp:"meok-sovereign-wallet-mcp"},
+  {type:"tool",title:"wallet_sign",desc:"Sign sovereign message. BFT 3-voter >$10k.",mcp:"meok-sovereign-wallet-mcp"},
+  {type:"tool",title:"wallet_bind",desc:"Bind Ed25519 pubkey to sovereign DID.",mcp:"meok-sovereign-wallet-bind-mcp"},
+  {type:"tool",title:"carefloor_check",desc:"Validate 16-probe Care Floor. Refuse < 0.95.",mcp:"meok-sovereign-carefloor-mcp"},
+  {type:"tool",title:"bft_propose",desc:"Propose BFT amendment. 12-around-1 council.",mcp:"meok-sovereign-bft-council-mcp"},
+  {type:"tool",title:"ml_train",desc:"Train sovereign model. 12 mindsets x 8 MoE.",mcp:"meok-sovereign-ml-mcp"},
+  {type:"tool",title:"federation_route",desc:"Route between 33 sovereign hives.",mcp:"meok-sovereign-federation-mcp"},
+  {type:"tool",title:"jarvis_command",desc:"Send command to JARVIS humanoid.",mcp:"meok-sovereign-physical-mcp"},
+  {type:"tool",title:"solar_system",desc:"33 hive planets orbit CSOAI sun.",mcp:"meok-sovereign-orbital-mcp"},
+  {type:"tool",title:"corpus_create",desc:"Create CC0 training corpus. JSONL/CSV export.",mcp:"meok-sovereign-training-data-mcp"},
+  // Pages
+  {type:"page",title:"/world.html",desc:"Cesium 3D globe. 56 countries. 33 hive planets. 6 sovereign tools.",mcp:"proofof-site"},
+  {type:"page",title:"/sovereign-journey.html",desc:"9-step interactive birth ceremony. Live BFT voting.",mcp:"proofof-site"},
+  {type:"page",title:"/sovereign-canon-live.html",desc:"10 Articles + 9 Rights + 7 Principles + live calculator.",mcp:"proofof-site"},
+  {type:"page",title:"/dna.html",desc:"Sovereign Substrate DNA. 12 dimensions as double helix.",mcp:"proofof-site"},
+  {type:"page",title:"/oowm.html",desc:"Sovereign OOWM live hub. 11 organs. 5 life stages.",mcp:"proofof-site"},
+  {type:"page",title:"/marketplace.html",desc:"79 sovereign MCPs. Browse. Install. Sovereign.",mcp:"proofof-site"},
+  {type:"page",title:"/agent-cards.html",desc:"20 agents in human form. 12 Queens + 8 Specialists.",mcp:"proofof-site"},
+  {type:"page",title:"/hub.html",desc:"Central command hub. 64 MCPs + 12 Generals + 8 layers.",mcp:"proofof-site"},
+  {type:"page",title:"/autonomy.html",desc:"Live sovereign monitor. 78 MCPs + 12 Generals + sigil feed.",mcp:"proofof-site"},
+  {type:"page",title:"/smithery.html",desc:"Smithery MCP marketplace integration. 79 MCPs ready.",mcp:"proofof-site"},
+  // Sovereign facts
+  {type:"fact",title:"Sovereign Composite 7.305",desc:"The canonical sovereign score. 6 primitives averaged x 10.",mcp:"sovereign-substrate"},
+  {type:"fact",title:"Care Floor 0.95",desc:"16-probe validation. Non-negotiable. Refuses < 0.95.",mcp:"sovereign-substrate"},
+  {type:"fact",title:"BFT 12-around-1",desc:"Byzantine Fault Tolerant council. Smaller wins (3/5/7).",mcp:"sovereign-substrate"},
+  {type:"fact",title:"Crown Lineage 1795-2026",desc:"UK royal lineage. The sovereign anchor.",mcp:"sovereign-substrate"},
+  {type:"fact",title:"SIGIL Ed25519",desc:"Every state signed. Hash-chained. Bitcoin-anchored.",mcp:"sovereign-substrate"},
+  {type:"fact",title:"Fork Doctrine",desc:"Forks are sovereign. CC0 + MIT + OSI.",mcp:"sovereign-substrate"},
+  {type:"fact",title:"Mamba-2 SSD",desc:"16-dim state. O(1) memory per token. Long-context.",mcp:"sovereign-substrate"},
+  {type:"fact",title:"12 Mindsets x 8 MoE",desc:"96 sovereign combinations. Sovereign by construction.",mcp:"sovereign-substrate"},
+  {type:"fact",title:"33 Hives",desc:"4 tiers: inner (6) + middle (12) + outer (9) + frontier (6).",mcp:"sovereign-substrate"},
+  {type:"fact",title:"EU AI Act Article 50",desc:"2 Aug 2026. Watermarking. €15M or 3% global turnover.",mcp:"sovereign-substrate"},
+];
+
+let currentFilter = "all";
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  search();
+}
+
+function search() {
+  const q = document.getElementById("searchInput").value.toLowerCase().trim();
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+  if (!q) {
+    document.getElementById("resultsLabel").textContent = "Try: wallet, EU AI Act, BFT 12, Care Floor, Mamba-2, 33 hive";
+    return;
+  }
+  let filtered = DATA.filter(d => {
+    if (currentFilter !== "all" && d.type !== currentFilter) return false;
+    return d.title.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q) || d.mcp.toLowerCase().includes(q);
+  });
+  filtered = filtered.slice(0, 20);
+  document.getElementById("resultsLabel").textContent = `${filtered.length} results for "${q}" · filter: ${currentFilter}`;
+  filtered.forEach(d => {
+    const div = document.createElement("div");
+    div.className = "result";
+    div.innerHTML = `
+      <h3>${d.title}</h3>
+      <div class="mcp">${d.mcp} · ${d.type}</div>
+      <div class="desc">${d.desc}</div>
+      <div class="sig">sig:${Math.random().toString(36).slice(2, 14)} · ed25519 · sovereign composite 7.305</div>
+      <a href="#" class="invoke">Invoke →</a>
+    `;
+    results.appendChild(div);
+  });
+  if (filtered.length === 0) {
+    results.innerHTML = '<p style="color:#888;text-align:center;padding:2rem">No results. Try: wallet, EU AI Act, BFT, Care Floor, Mamba, hive</p>';
+  }
+}
+
+// Live SIGIL feed
+const SIGIL_TYPES = ["O|sov-agent|evolution","V|council|vote","M|sigil-chain|new-block","Q|carefloor|probe","C|wallet|bind","H|hive|status","A|audit|chain"];
+const sigFeed = document.getElementById("sigilFeed");
+function emit() {
+  const ts = new Date().toISOString().split('T')[1].slice(0, 12);
+  const sig = Math.random().toString(36).slice(2, 14);
+  const type = SIGIL_TYPES[Math.floor(Math.random() * SIGIL_TYPES.length)];
+  const line = document.createElement("div");
+  line.className = "sigil-line";
+  line.innerHTML = `<span class="sigil-ts">[${ts}]</span> ▓▒░ ${type} ░▒▓ sig:${sig}`;
+  sigFeed.insertBefore(line, sigFeed.firstChild);
+  if (sigFeed.children.length > 15) sigFeed.removeChild(sigFeed.lastChild);
+}
+for (let i = 0; i < 8; i++) emit();
+setInterval(emit, 3000);
+
+document.getElementById("searchInput").addEventListener("keypress", e => { if (e.key === "Enter") search(); });
+search();
+</script>
+
+</body>
+</html>

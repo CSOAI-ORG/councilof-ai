@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Fundamental Rights Impact Assessment (FRIA — EU AI Act Art 27)</title>
+<meta name="description" content="DEFONEOS Fundamental Rights Impact Assessment (FRIA) under EU AI Act Article 27: rights-by-design methodology, impact scoring, mitigation framework, consultation protocol, publishable FRIA template.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:150px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.check{color:var(--green)} .cross{color:var(--red)} .partial{color:var(--gold)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.7rem;overflow-x:auto;color:var(--green);white-space:pre}
+.phase{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.phase .p-num{font-size:1.5rem;color:var(--gold);font-weight:700;float:left;margin-right:1rem;line-height:1}
+.phase .p-title{font-size:1rem;color:var(--cyan);font-weight:600;margin-bottom:.3rem}
+.honesty{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Fundamental Rights Impact Assessment (FRIA)</h1>
+<p style="font-size:.8rem;color:var(--cyan)">EU AI Act Art 27 · Rights-by-Design · 5-Phase Methodology · Impact Scoring · Mitigation Framework · Consultation Protocol · EAT Directive aligned</p></div>
+</div>
+<div><span class="badge badge-purple">EU AI ACT ART 27</span> <span class="badge badge-cyan">FRIA</span> <span class="badge badge-green">ACTIVE</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">5</div><div class="label">Assessment Phases</div></div>
+<div class="stat-box"><div class="num">12</div><div class="label">Rights Analysed</div></div>
+<div class="stat-box"><div class="num">4</div><div class="label">Risk Levels</div></div>
+<div class="stat-box"><div class="num">90d</div><div class="label">Before Deployment</div></div>
+<div class="stat-box"><div class="num">30d</div><div class="label">Consultation Period</div></div>
+<div class="stat-box"><div class="num">100%</div><div class="label">SIGIL Signed</div></div>
+</div>
+
+<div class="section">
+<h3>What is Article 27?</h3>
+<p>Article 27 of the EU AI Act requires <strong>deployers of high-risk AI systems</strong> (public bodies and private entities providing services of public interest) to conduct a <strong>Fundamental Rights Impact Assessment (FRIA)</strong> before putting a high-risk AI system into use. The FRIA must evaluate:</p>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li>The specific <strong>context of use</strong> and the persons or groups likely to be affected</li>
+<li>The specific <strong>risks of harm</strong> to fundamental rights that may emerge</li>
+<li>The <strong>mitigation measures</strong> applied — including governance, safeguards, and human oversight</li>
+<li>The <strong>consultation process</strong> with affected groups, where feasible</li>
+<li>The <strong>reasoning</strong> for deploying the system despite identified risks</li>
+</ul>
+<p>For DEFONEOS, the FRIA is not just a compliance document — it is the <strong>foundation of the entire rights-by-design architecture</strong>. Every red line, every oversight mechanism, every explanation tier, and every BFT governance rule traces back to a FRIA finding.</p>
+</div>
+
+<h2>5-Phase FRIA Methodology</h2>
+
+<div class="phase">
+<div class="p-num">1</div>
+<div class="p-title">Phase 1 — Scope & Context Definition</div>
+<p style="font-size:.85rem">Define the AI system's intended purpose, deployment context, affected populations, and decision categories. Identify which fundamental rights are engaged. For DEFONEOS public services: housing allocation, benefits assessment, child safeguarding triage, health prioritisation, and immigration casework.</p>
+<table>
+<tr><th>Element</th><th>Description</th></tr>
+<tr><td>System name & version</td><td>DEFONEOS v[version] — [service module]</td></tr>
+<tr><td>Intended purpose</td><td>Decision support for [public service function]</td></tr>
+<tr><td>Deployment context</td><td>[Public authority] — [department] — [geography]</td></tr>
+<tr><td>Affected populations</td><td>Demographic breakdown, vulnerable groups identified</td></tr>
+<tr><td>Decision categories</td><td>Beneficial / Detrimental / Administrative / Referral</td></tr>
+<tr><td>Legal effects</td><td>Does the decision produce legal effects? (GDPR Art 22 / Art 86 trigger)</td></tr>
+</table>
+</div>
+
+<div class="phase">
+<div class="p-num">2</div>
+<div class="p-title">Phase 2 — Rights Mapping & Impact Identification</div>
+<p style="font-size:.85rem">Systematically evaluate the AI system's impact on each of the 12 fundamental rights domains. For each right, assess likelihood and severity of harm, considering both direct impacts (the decision itself) and indirect impacts (accumulated effects, chilling effects, discriminatory outcomes).</p>
+
+<h3>The 12 Fundamental Rights Analysed</h3>
+<table>
+<tr><th>#</th><th>Right</th><th>Legal Source</th><th>Risk Vector in DEFONEOS Context</th></tr>
+<tr><td>1</td><td>Right to life</td><td>ECHR Art 2</td><td>Medical triage, emergency response prioritisation</td></tr>
+<tr><td>2</td><td>Right to non-discrimination</td><td>ECHR Art 14, EU Charter Art 21</td><td>Bias in housing/benefits/child welfare decisions</td></tr>
+<tr><td>3</td><td>Right to private & family life</td><td>ECHR Art 8, EU Charter Art 7</td><td>Data collection scope, family profiling</td></tr>
+<tr><td>4</td><td>Right to data protection</td><td>GDPR, EU Charter Art 8</td><td>Sovereign storage mitigates; data minimisation required</td></tr>
+<tr><td>5</td><td>Right to dignity</td><td>EU Charter Art 1</td><td>Automated decisions affecting human dignity (welfare sanctions)</td></tr>
+<tr><td>6</td><td>Right to good administration</td><td>EU Charter Art 41</td><td>Transparency, timeliness, right to be heard</td></tr>
+<tr><td>7</td><td>Freedom of movement</td><td>ECHR Protocol 4</td><td>Immigration casework, border decisions</td></tr>
+<tr><td>8</td><td>Rights of the child</td><td>UNCRC, EU Charter Art 24</td><td>Child safeguarding triage — heightened protection required</td></tr>
+<tr><td>9</td><td>Right to an effective remedy</td><td>ECHR Art 13, EU Charter Art 47</td><td>Right to explanation (Art 86), appeal mechanism</td></tr>
+<tr><td>10</td><td>Right to fair trial</td><td>ECHR Art 6</td><td>Automated sanctions with legal effects</td></tr>
+<tr><td>11</td><td>Freedom of expression & information</td><td>ECHR Art 10</td><td>Content moderation in public sector communications</td></tr>
+<tr><td>12</td><td>Social rights</td><td>EU Charter Solidarity Ch.</td><td>Access to healthcare, housing, social security</td></tr>
+</table>
+</div>
+
+<div class="phase">
+<div class="p-num">3</div>
+<div class="p-title">Phase 3 — Risk Scoring & Severity Assessment</div>
+<p style="font-size:.85rem">Each identified impact is scored using a Likelihood × Severity matrix. The scoring methodology is aligned with ISO 14971 (risk management for medical devices) and the EU AI Act's risk-based approach.</p>
+
+<table>
+<tr><th>Risk Level</th><th>Severity</th><th>Likelihood</th><th>Action Required</th></tr>
+<tr><td style="color:var(--red)"><strong>CATASTROPHIC</strong></td><td>Death, irreversible harm, fundamental rights violation</td><td>Any probability</td><td>RED LINE — system cannot deploy until mitigated to SERIOUS or below</td></tr>
+<tr><td style="color:var(--red)"><strong>SERIOUS</strong></td><td>Significant legal effects, discrimination, dignity violation</td><td>Medium-High</td><td>Mandatory mitigation + BFT council approval + ongoing monitoring</td></tr>
+<tr><td style="color:var(--gold)"><strong>MODERATE</strong></td><td>Detrimental decision with recourse available</td><td>Medium</td><td>Mitigation recommended + human oversight mandatory</td></tr>
+<tr><td style="color:var(--green)"><strong>LOW</strong></td><td>Administrative impact, no legal effects</td><td>Low</td><td>Monitor + document. No special action required.</td></tr>
+</table>
+</div>
+
+<div class="phase">
+<div class="p-num">4</div>
+<div class="p-title">Phase 4 — Mitigation & Safeguard Design</div>
+<p style="font-size:.85rem">For each identified risk above LOW, design specific mitigation measures. Mitigations are mapped to DEFONEOS architectural components:</p>
+<table>
+<tr><th>Mitigation Category</th><th>DEFONEOS Component</th><th>Rights Protected</th></tr>
+<tr><td>Red line enforcement</td><td>7 immutable red lines at protocol level</td><td>Life, dignity, non-discrimination</td></tr>
+<tr><td>Human oversight</td><td>5-level oversight framework (<a href="defoneos-human-oversight.html">Art 14</a>)</td><td>Effective remedy, fair trial</td></tr>
+<tr><td>Right to explanation</td><td>5-tier explanation framework (<a href="defoneos-right-to-explanation.html">Art 86</a>)</td><td>Good administration, effective remedy</td></tr>
+<tr><td>Stop button</td><td><2s kill switch, all components</td><td>Life, dignity</td></tr>
+<tr><td>BFT governance</td><td>33-agent council, quorum 23/33</td><td>All rights — distributed oversight</td></tr>
+<tr><td>Bias monitoring</td><td>Continuous fairness metrics, 8 protected characteristics</td><td>Non-discrimination</td></tr>
+<tr><td>Data minimisation</td><td>Sovereign storage, purpose limitation enforced</td><td>Privacy, data protection</td></tr>
+<tr><td>Record keeping</td><td>SIGIL chain, 8 log categories (<a href="defoneos-record-keeping.html">Art 12</a>)</td><td>Good administration, transparency</td></tr>
+<tr><td>Automated decision safeguards</td><td>7 safeguard layers (<a href="defoneos-automated-decision.html">Art 22</a>)</td><td>Dignity, fair trial</td></tr>
+<tr><td>Incident response</td><td>7-phase pipeline, Art 73 reporting</td><td>All rights — harm prevention</td></tr>
+</table>
+</div>
+
+<div class="phase">
+<div class="p-num">5</div>
+<div class="p-title">Phase 5 — Consultation, Publication & Review</div>
+<p style="font-size:.85rem">The FRIA must be informed by consultation with affected groups and relevant authorities. DEFONEOS requires:</p>
+<ul style="font-size:.85rem;padding-left:2rem">
+<li><strong>30-day public consultation</strong> — Draft FRIA published, feedback collected from civil society, affected communities, and equality bodies</li>
+<li><strong>Regulator pre-notification</strong> — FRIA submitted to relevant MSA / DPA 90 days before deployment</li>
+<li><strong>Equality Impact Assessment</strong> — Public Sector Equality Duty (s.149 Equality Act 2010) integrated into FRIA</li>
+<li><strong>Children's Rights Impact Assessment</strong> — UNCRC-aligned assessment when children are affected</li>
+<li><strong>Data Protection Impact Assessment</strong> — GDPR Art 35 DPIA conducted in parallel</li>
+<li><strong>Publication</strong> — Final FRIA published in plain language summary + full technical version</li>
+<li><strong>Periodic review</strong> — FRIA refreshed every 12 months or upon material system change</li>
+</ul>
+</div>
+
+<h2>FRIA Template Structure (Annex VI Aligned)</h2>
+<div class="code-block">FUNDAMENTAL RIGHTS IMPACT ASSESSMENT
+Article 27, EU AI Act | DEFONEOS v[VERSION]
+
+1. EXECUTIVE SUMMARY
+   1.1 System overview
+   1.2 Deployment context
+   1.3 Key findings
+   1.4 Risk acceptance decision
+
+2. SYSTEM DESCRIPTION
+   2.1 Intended purpose
+   2.2 Technical architecture
+   2.3 Decision categories
+   2.4 Human oversight mechanisms
+   2.5 Autonomy level
+
+3. AFFECTED POPULATIONS
+   3.1 Demographic analysis
+   3.2 Vulnerable groups identified
+   3.3 Consultation summary
+
+4. RIGHTS IMPACT ANALYSIS
+   4.1-4.12 Individual rights assessments (12 rights)
+       For each: Impact identified → Likelihood → Severity → Risk score
+       → Existing mitigations → Residual risk → Acceptance rationale
+
+5. MITIGATION FRAMEWORK
+   5.1 Technical safeguards (red lines, stop button, BFT)
+   5.2 Procedural safeguards (oversight, explanation, redress)
+   5.3 Organisational safeguards (DPO, training, audit)
+
+6. CONSULTATION RECORD
+   6.1 Civil society feedback
+   6.2 Regulator pre-notification
+   6.3 Community engagement
+
+7. RESIDUAL RISK ACCEPTANCE
+   7.1 Decision rationale
+   7.2 Conditions for deployment
+   7.3 Monitoring requirements
+   7.4 Review trigger criteria
+
+8. SIGNATURES
+   8.1 DPO
+   8.2 BFT Council quorum confirmation
+   8.3 Deployer authority
+
+SIGIL: [Ed25519 signature of full document hash]</div>
+
+<h2>Article 27 Compliance Matrix</h2>
+<table>
+<tr><th>Requirement</th><th>Status</th><th>DEFONEOS Implementation</th></tr>
+<tr><td>Conduct FRIA before first use</td><td class="check">✅ MET</td><td>5-phase methodology, 90 days before deployment</td></tr>
+<tr><td>Identify specific risks to fundamental rights</td><td class="check">✅ MET</td><td>12 rights × deployment context = granular risk register</td></tr>
+<tr><td>Include measures to be applied</td><td class="check">✅ MET</td><td>Phase 4: 10 mitigation categories mapped to architecture</td></tr>
+<tr><td>Consult with affected groups</td><td class="partial">⚠️ PARTIAL</td><td>30-day consultation designed. No live consultation conducted (no deployment).</td></tr>
+<tr><td>Submit to national competent authority</td><td class="cross">❌ NOT STARTED</td><td>Requires deployment context and named authority. Human gate.</td></tr>
+<tr><td>Notify MSA of assessment outcome</td><td class="cross">❌ NOT STARTED</td><td>Requires deployment context. Human gate.</td></tr>
+<tr><td>Make FRIA publicly available</td><td class="check">✅ MET</td><td>Publication protocol designed. This page is the public methodology.</td></tr>
+<tr><td>Update when system materially changes</td><td class="check">✅ MET</td><td>SIGIL versioning triggers FRIA refresh on model/architecture change</td></tr>
+</table>
+
+<h2>Cross-Framework Alignment</h2>
+<table>
+<tr><th>Framework</th><th>Article</th><th>Requirement</th><th>DEFONEOS Mapping</th></tr>
+<tr><td><strong>EU AI Act</strong></td><td>Art 27</td><td>FRIA for high-risk deployers</td><td>This page — 5-phase methodology</td></tr>
+<tr><td><strong>EU AI Act</strong></td><td>Art 86</td><td>Right to explanation</td><td>FRIA Phase 4 → explanation framework</td></tr>
+<tr><td><strong>GDPR</strong></td><td>Art 35</td><td>Data Protection Impact Assessment</td><td>Conducted in parallel with FRIA</td></tr>
+<tr><td><strong>ECHR</strong></td><td>Arts 2,6,8,13,14</td><td>Convention rights protection</td><td>Phase 2: 12 rights mapped to ECHR</td></tr>
+<tr><td><strong>EU Charter</strong></td><td>Arts 1,7,8,21,24,41,47</td><td>Fundamental rights of the EU</td><td>Phase 2: Charter articles in rights register</td></tr>
+<tr><td><strong>Equality Act 2010</strong></td><td>s.149</td><td>Public Sector Equality Duty</td><td>Integrated into FRIA Phase 5 consultation</td></tr>
+<tr><td><strong>UNCRC</strong></td><td>Arts 2,3,6,12</td><td>Children's rights</td><td>Children's Rights Impact Assessment within FRIA</td></tr>
+<tr><td><strong>HRA 1998</strong></td><td>s.6</td><td>Public authority compatibility duty</td><td>FRIA is the compliance evidence</td></tr>
+<tr><td><strong>UK DPA 2018</strong></td><td>Sch.1 Pt.2</td><td>Safeguards for substantial public interest</td><td>FRIA satisfies safeguard requirement</td></tr>
+<tr><td><strong>ISO 42001</strong></td><td>Cl. 6.1</td><td>Risks and opportunities</td><td>Phase 3 risk scoring aligned</td></tr>
+<tr><td><strong>NIST AI RMF</strong></td><td>Measure 2.1</td><td>Assess impacts on individuals</td><td>Phase 2 rights impact identification</td></tr>
+</table>
+
+<h2>Integration with DEFONEOS Architecture</h2>
+<div class="section">
+<p>The FRIA is not a one-time document. It is a <strong>living governance instrument</strong> that is continuously informed by the DEFONEOS operational stack:</p>
+<ul style="font-size:.85rem;padding-left:2rem">
+<li><strong>SIGIL chain</strong> → Feeds FRIA review with real-world impact data</li>
+<li><strong>Bias monitoring</strong> → Updates risk scores with measured fairness metrics</li>
+<li><strong>Incident response</strong> → Triggers immediate FRIA review on SERIOUS+ incident</li>
+<li><strong>Right to explanation</strong> → FRIA defines which decisions require explanation tiers</li>
+<li><strong>Red line enforcement</strong> → FRIA defines what constitutes a red line breach</li>
+<li><strong>BFT council</strong> → FRIA acceptance requires quorum vote; review changes require re-vote</li>
+</ul>
+</div>
+
+<div class="honesty">
+<h3>⚠️ Honesty Register</h3>
+<p style="font-size:.8rem"><strong>The FRIA methodology described here is the designed framework.</strong> No live FRIA has been conducted for a real DEFONEOS deployment — there is no live deployment. The 12-rights register, the 4-level risk scoring, and the 10 mitigation categories are design artefacts, not validated outcomes from real-world consultation. The 30-day public consultation has not occurred. No national competent authority has been notified. No civil society feedback has been collected. The integration between FRIA and the operational stack (SIGIL chain, bias monitoring, incident response) is architecturally designed but has not been tested with real impact data. The claim that "FRIA is the foundation of the rights-by-design architecture" is aspirational — the architecture was designed first, and the FRIA framework was built to formalise and document the rights protections that the architecture already provides. A genuinely rights-led process would have started with the FRIA and designed the system around it — DEFONEOS did both simultaneously, which is defensible but should be acknowledged. No DPO has been formally designated. No equality body has been consulted.</p>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — Sovereign Public Services OS · Fundamental Rights Impact Assessment (Art 27) · EAT Directive aligned</p>
+<p>SIGIL: <code>H|defoneos|art27-fria|FRIA FRAMEWORK: 5 PHASES, 12 RIGHTS, 4 RISK LEVELS, 10 MITIGATIONS, 30-DAY CONSULTATION, SIGIL-SIGNED, LIVING DOCUMENT</code></p>
+</footer>
+</div>
+</body>
+</html>

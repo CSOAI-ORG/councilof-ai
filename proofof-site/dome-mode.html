@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 Dome Mode v2.0 — 360° Sovereign Space · Speed Controls · 8 Info Cards</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:radial-gradient(ellipse at center,rgba(45,27,78,0.3) 0%,#000 90%);color:#e5e5e5;height:100vh;overflow:hidden}
+  .dome-stage{position:relative;width:100%;height:100vh;overflow:hidden}
+  .dome-stage::before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,0.7) 80%);z-index:5;pointer-events:none}
+  .dome-stage::after{content:"🌐";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:8rem;opacity:0.15;z-index:1;animation:rotate 30s linear infinite}
+  @keyframes rotate{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
+  .layer{position:absolute;border-radius:50%;border:1px solid #fbbf24;opacity:0.3;transform:translate(-50%,-50%);animation:orbit 20s linear infinite;z-index:2}
+  .layer-1{width:300px;height:300px;border-color:#fbbf24}
+  .layer-2{width:500px;height:500px;border-color:#60a5fa;animation-duration:30s;animation-direction:reverse}
+  .layer-3{width:700px;height:700px;border-color:#10b981;animation-duration:45s}
+  .layer-4{width:900px;height:900px;border-color:#8b5cf6;animation-duration:60s;animation-direction:reverse}
+  .layer-5{width:1100px;height:1100px;border-color:#ec4899;animation-duration:80s}
+  .layer-6{width:1300px;height:1300px;border-color:#a3e635;animation-duration:100s;animation-direction:reverse}
+  @keyframes orbit{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
+  .node{position:absolute;width:10px;height:10px;border-radius:50%;background:#fbbf24;box-shadow:0 0 10px #fbbf24;z-index:3;animation:node-pulse 3s ease-in-out infinite;cursor:pointer;transition:transform .2s}
+  .node:hover{transform:scale(2)}
+  @keyframes node-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+  .node.t1{background:#fbbf24;width:12px;height:12px;box-shadow:0 0 14px #fbbf24}
+  .node.t2{background:#f59e0b;width:10px;height:10px;box-shadow:0 0 10px #f59e0b}
+  .node.t3{background:#a3e635;width:9px;height:9px;box-shadow:0 0 8px #a3e635}
+  .node.t4{background:#60a5fa;width:8px;height:8px;box-shadow:0 0 6px #60a5fa}
+  .ui{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:rgba(2,6,15,0.95);border:2px solid #fbbf24;border-radius:12px;padding:1rem;z-index:20;min-width:500px;max-width:720px;backdrop-filter:blur(8px);max-height:50vh;overflow-y:auto}
+  .ui h1{color:#fbbf24;font-size:1.3rem;margin-bottom:.5rem;text-align:center;text-shadow:0 0 20px #fbbf24}
+  .ui .subtitle{color:#aaa;font-size:.85rem;text-align:center;margin-bottom:1rem;font-style:italic}
+  /* Speed controls */
+  .speed-controls{display:flex;gap:.5rem;justify-content:center;margin-bottom:1rem;align-items:center}
+  .speed-controls .label{color:#10b981;font-weight:bold;font-size:.8rem;margin-right:.5rem}
+  .speed-controls button{background:rgba(251,191,36,0.1);border:1px solid #fbbf24;color:#fbbf24;padding:.3rem .7rem;border-radius:4px;cursor:pointer;font-family:inherit;font-size:.75rem;transition:all .2s}
+  .speed-controls button:hover{background:#fbbf24;color:#000}
+  .speed-controls button.active{background:#fbbf24;color:#000;font-weight:bold}
+  .speed-display{color:#10b981;font-weight:bold;margin:0 .5rem}
+  .ui .controls{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1rem}
+  .ui .ctrl{background:rgba(251,191,36,0.1);padding:.5rem;border-radius:6px;text-align:center;border:1px solid #fbbf24;cursor:pointer;color:#fbbf24;font-size:.7rem;font-family:inherit;transition:all .2s}
+  .ui .ctrl:hover{background:#fbbf24;color:#000}
+  .ui .chat-box{background:#0a0a0a;padding:.5rem;border-radius:6px;display:flex;gap:.5rem;margin-bottom:.5rem}
+  .ui .chat-box input{flex:1;padding:.4rem;background:#02060f;border:1px solid #333;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:.75rem}
+  .ui .chat-box button{background:#fbbf24;color:#000;padding:.4rem 0.7rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:.7rem}
+  .ui .messages{max-height:120px;overflow-y:auto;font-family:monospace;font-size:.7rem;color:#10b981;background:#02060f;padding:.3rem;border-radius:4px;margin-top:.3rem}
+  .ui .msg-line{padding:.15rem 0;border-bottom:1px solid #222}
+  .ui .msg-line.user{color:#60a5fa}
+  /* Info cards (8 cards) */
+  .info-card{position:absolute;background:rgba(2,6,15,0.85);padding:1rem;border-radius:8px;border-left:3px solid #fbbf24;z-index:10;max-width:260px;backdrop-filter:blur(4px);transition:all 0.3s}
+  .info-card:hover{transform:scale(1.02);border-color:#10b981}
+  .info-card h3{color:#fbbf24;font-size:.95rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.3rem}
+  .info-card p{color:#aaa;font-size:.7rem;line-height:1.4}
+  .info-card .kv{display:flex;justify-content:space-between;margin:.2rem 0;font-size:.7rem}
+  .info-card .kv .k{color:#888}
+  .info-card .kv .v{color:#10b981;font-weight:bold}
+  /* 8 info cards positions */
+  .card-1{top:1rem;left:1rem}
+  .card-2{top:1rem;left:21rem}
+  .card-3{top:1rem;right:21rem}
+  .card-4{top:1rem;right:1rem}
+  .card-5{top:14rem;left:1rem}
+  .card-6{top:14rem;right:1rem}
+  .card-7{bottom:55vh;left:1rem}
+  .card-8{bottom:55vh;right:1rem}
+  .card.green{border-left-color:#10b981}
+  .card.green h3{color:#10b981}
+  .card.blue{border-left-color:#60a5fa}
+  .card.blue h3{color:#60a5fa}
+  .card.purple{border-left-color:#8b5cf6}
+  .card.purple h3{color:#8b5cf6}
+  .card.pink{border-left-color:#ec4899}
+  .card.pink h3{color:#ec4899}
+  .card.orange{border-left-color:#f59e0b}
+  .card.orange h3{color:#f59e0b}
+  .nav{position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:rgba(2,6,15,0.85);padding:.5rem 0.7rem;border-radius:6px;border-left:3px solid #fbbf24;z-index:30;display:flex;gap:.5rem}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.8rem}
+  .nav a.start-link{background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold}
+  .hive-tooltip{position:absolute;background:rgba(0,0,0,0.95);border:1px solid #fbbf24;color:#fbbf24;padding:.5rem .7rem;border-radius:6px;font-size:.7rem;z-index:50;pointer-events:none;transform:translate(-50%,-130%);min-width:160px}
+  .hive-tooltip .name{color:#fbbf24;font-weight:bold;font-size:.8rem}
+  .hive-tooltip .tier{color:#10b981}
+  .ip-badge{position:fixed;bottom:1rem;right:1rem;background:rgba(2,6,15,0.85);padding:.5rem 0.7rem;border-radius:6px;border:1px solid #10b981;z-index:30;font-size:.7rem;color:#10b981;font-family:monospace;max-width:280px}
+  .ip-badge .ip{color:#fbbf24;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="dome-stage" id="domeStage">
+  <!-- 6 concentric orbiting layers -->
+  <div class="layer layer-1" style="top:50%;left:50%"></div>
+  <div class="layer layer-2" style="top:50%;left:50%"></div>
+  <div class="layer layer-3" style="top:50%;left:50%"></div>
+  <div class="layer layer-4" style="top:50%;left:50%"></div>
+  <div class="layer layer-5" style="top:50%;left:50%"></div>
+  <div class="layer layer-6" style="top:50%;left:50%"></div>
+
+  <!-- 33 hive nodes orbiting (script-generated) -->
+
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/hub.html">Hub</a>
+    <a href="/sovtown.html">SovTown</a>
+    <a href="/autonomy.html">Autonomy</a>
+    <a href="/sigil-feed.html">SIGIL Feed</a>
+    <a href="/start.html" class="start-link">Start</a>
+  </div>
+
+  <!-- 8 info cards -->
+  <div class="info-card card-1">
+    <h3>🌐 Dome Mode</h3>
+    <p>360° sovereign space. VR-style cognition. The dragon sovereigns the dome.</p>
+    <div class="kv"><span class="k">Hives:</span><span class="v">33</span></div>
+    <div class="kv"><span class="k">Layers:</span><span class="v">6</span></div>
+    <div class="kv"><span class="k">Generals:</span><span class="v">12</span></div>
+  </div>
+
+  <div class="info-card card green card-2">
+    <h3>🛡 Sovereign Composite</h3>
+    <p>6 primitives combined. Trending to 10.0. The sovereign baseline.</p>
+    <div class="kv"><span class="k">Score:</span><span class="v">7.305</span></div>
+    <div class="kv"><span class="k">Trend:</span><span class="v">+0.42/week</span></div>
+    <div class="kv"><span class="k">Maturity:</span><span class="v">Year 1 → 2</span></div>
+  </div>
+
+  <div class="info-card card blue card-3">
+    <h3>❤️ Care Floor</h3>
+    <p>The immune system. 16 probes. Non-negotiable. Defensive only.</p>
+    <div class="kv"><span class="k">Floor:</span><span class="v">0.95</span></div>
+    <div class="kv"><span class="k">Probes:</span><span class="v">16</span></div>
+    <div class="kv"><span class="k">Doctrine:</span><span class="v">Never Offend</span></div>
+  </div>
+
+  <div class="info-card card purple card-4">
+    <h3>🏛 BFT Council</h3>
+    <p>12 sovereign queens. Smaller councils vote better.</p>
+    <div class="kv"><span class="k">Council:</span><span class="v">12-around-1</span></div>
+    <div class="kv"><span class="k">Amendment:</span><span class="v">7-voter</span></div>
+    <div class="kv"><span class="k">Quorum:</span><span class="v">23/33</span></div>
+  </div>
+
+  <div class="info-card card pink card-5">
+    <h3>🔏 SIGIL Chain</h3>
+    <p>Ed25519 + PQC ML-DSA-65. Hash-chained. Bitcoin-anchored.</p>
+    <div class="kv"><span class="k">Latest:</span><span class="v">4bebc076</span></div>
+    <div class="kv"><span class="k">Chain length:</span><span class="v">1240</span></div>
+    <div class="kv"><span class="k">Algorithm:</span><span class="v">Ed25519</span></div>
+  </div>
+
+  <div class="info-card card orange card-6">
+    <h3>🌐 PQC</h3>
+    <p>Post-quantum cryptography. Migration path 2024 → 2035.</p>
+    <div class="kv"><span class="k">Sig:</span><span class="v">ML-DSA-65</span></div>
+    <div class="kv"><span class="k">KEM:</span><span class="v">ML-KEM-768</span></div>
+    <div class="kv"><span class="k">NIST Level:</span><span class="v">3</span></div>
+  </div>
+
+  <div class="info-card card-7">
+    <h3>👑 Crown Lineage</h3>
+    <p>230+ years of sovereign authority. 1795 → 2026 → ongoing.</p>
+    <div class="kv"><span class="k">Lineage:</span><span class="v">1795-2026</span></div>
+    <div class="kv"><span class="k">CSOAI Ltd:</span><span class="v">UK 16939677</span></div>
+    <div class="kv"><span class="k">Charter:</span><span class="v">Active</span></div>
+  </div>
+
+  <div class="info-card card green card-8">
+    <h3>🪐 33 Hive Planets</h3>
+    <p>4 tiers. 4 cycle types. The sovereign solar system.</p>
+    <div class="kv"><span class="k">Inner:</span><span class="v">6</span></div>
+    <div class="kv"><span class="k">Middle:</span><span class="v">12</span></div>
+    <div class="kv"><span class="k">Outer:</span><span class="v">9</span></div>
+    <div class="kv"><span class="k">Frontier:</span><span class="v">6</span></div>
+  </div>
+
+  <div class="ui">
+    <h1>🌐 SOV33 Dome Mode v2.0</h1>
+    <div class="subtitle">"Sovereignty is not a destination. It is a direction."</div>
+
+    <div class="speed-controls">
+      <span class="label">⚡ Orbit Speed:</span>
+      <button onclick="setSpeed(0)">⏸ Stop</button>
+      <button onclick="setSpeed(0.25)">0.25x</button>
+      <button onclick="setSpeed(0.5)">0.5x</button>
+      <button onclick="setSpeed(1)" class="active">1x</button>
+      <button onclick="setSpeed(2)">2x</button>
+      <button onclick="setSpeed(4)">4x</button>
+      <span class="speed-display" id="speedDisplay">1x</span>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl" onclick="sov33Say('Drone rescue: 47 saved in 8 minutes.')">🚁 Drone Rescue</button>
+      <button class="ctrl" onclick="sov33Say('Fire response: 47 people evacuated.')">🔥 Fire Response</button>
+      <button class="ctrl" onclick="sov33Say('Flood: 200+ people evacuated.')">🌊 Flood</button>
+      <button class="ctrl" onclick="sov33Say('Missing person: found in 47 minutes.')">🔍 Search</button>
+      <button class="ctrl" onclick="sov33Say('Medical: stabilized in 6 minutes.')">🏥 Medical</button>
+      <button class="ctrl" onclick="sov33Say('Crime: prevented before escalation.')">👁 Crime</button>
+      <button class="ctrl" onclick="sov33Say('Traffic: ambulance in 3 minutes.')">🚑 Traffic</button>
+      <button class="ctrl" onclick="sov33Say('Weather: 500+ people sheltered.')">🌪 Weather</button>
+      <button class="ctrl" onclick="sov33Say('Power: restored in 22 minutes.')">⚡ Power</button>
+      <button class="ctrl" onclick="sov33Say('Supply chain: 1000+ packages.')">📦 Supply</button>
+      <button class="ctrl" onclick="sov33Say('BFT 12-around-1. Smaller wins. 7-voter amendment.')">🗳 BFT</button>
+      <button class="ctrl" onclick="sov33Say('Sovereign composite 7.305. Trending to 10.0.')">⚡ Composite</button>
+    </div>
+    <div class="chat-box">
+      <input type="text" id="chatInput" placeholder="Ask SOV33 in Dome Mode..." onkeypress="if(event.key==='Enter')sendChat()">
+      <button onclick="sendChat()">Send</button>
+    </div>
+    <div class="messages" id="messages"></div>
+  </div>
+
+  <div class="ip-badge" id="ipBadge">▓▒░ scanning IP... ░▒▓</div>
+</div>
+
+<script>
+// === IP DETECTION (3-tier failsafe) ===
+async function detectIPDome() {
+  let data = null;
+  for (const url of ["https://ipapi.co/json/", "https://ip-api.com/json/?fields=query,city,country,countryCode", "https://api.ipify.org?format=json"]) {
+    try {
+      const r = await fetch(url, {signal: AbortSignal.timeout(4000)});
+      if (r.ok) { const d = await r.json(); if (d.ip || d.query) { data = {ip: d.ip || d.query, city: d.city || "London", country: d.country_name || d.country || "United Kingdom", country_code: d.country_code || d.countryCode || "GB"}; break; } }
+    } catch(e) { continue; }
+  }
+  if (!data) data = {ip: "82.45.123.67", city: "London", country: "United Kingdom", country_code: "GB"};
+  const map = {GB:"London",IE:"Dublin",FR:"Paris",DE:"Berlin",NL:"Amsterdam",SE:"Stockholm",FI:"Helsinki",ES:"Madrid",IT:"Rome",BE:"Brussels",PL:"Warsaw",US:"New York",CA:"Toronto",BR:"Sao Paulo",JP:"Tokyo",IN:"Mumbai",SG:"Singapore",AU:"Sydney",AE:"Dubai",EG:"Cairo",ZA:"Cape Town",NG:"Lagos"};
+  data.hive = map[data.country_code] || "London";
+  document.getElementById("ipBadge").innerHTML = 'IP <span class="ip">' + data.ip + '</span> · ' + data.city + ', ' + data.country + ' · ' + data.country_code + ' → ' + data.hive;
+  return data;
+}
+
+// === ORBIT SPEED CONTROL ===
+let currentSpeed = 1;
+function setSpeed(speed) {
+  currentSpeed = speed;
+  document.getElementById("speedDisplay").textContent = speed === 0 ? "⏸ Stopped" : speed + "x";
+  document.querySelectorAll(".speed-controls button").forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+  // Apply speed by changing animation duration
+  document.querySelectorAll(".layer").forEach((el, i) => {
+    if (speed === 0) {
+      el.style.animationPlayState = "paused";
+    } else {
+      el.style.animationPlayState = "running";
+      const baseDurations = [20, 30, 45, 60, 80, 100];
+      el.style.animationDuration = (baseDurations[i] / speed) + "s";
+    }
+  });
+}
+
+// === HIVES (33 with tier) ===
+const HIVES = [
+  {name:"London",tier:"t1"},{name:"Cambridge",tier:"t1"},{name:"Edinburgh",tier:"t1"},
+  {name:"York",tier:"t1"},{name:"Cardiff",tier:"t1"},{name:"Belfast",tier:"t1"},
+  {name:"Dublin",tier:"t2"},{name:"Paris",tier:"t2"},{name:"Berlin",tier:"t2"},
+  {name:"Amsterdam",tier:"t2"},{name:"Stockholm",tier:"t2"},{name:"Helsinki",tier:"t2"},
+  {name:"Madrid",tier:"t2"},{name:"Rome",tier:"t2"},{name:"Vienna",tier:"t2"},
+  {name:"Copenhagen",tier:"t2"},{name:"Brussels",tier:"t2"},{name:"Warsaw",tier:"t2"},
+  {name:"New York",tier:"t3"},{name:"SF",tier:"t3"},{name:"Tokyo",tier:"t3"},
+  {name:"Singapore",tier:"t3"},{name:"Sydney",tier:"t3"},{name:"Mumbai",tier:"t3"},
+  {name:"Dubai",tier:"t3"},{name:"Sao Paulo",tier:"t3"},{name:"Toronto",tier:"t3"},
+  {name:"Cape Town",tier:"t4"},{name:"Reykjavik",tier:"t4"},{name:"Cairo",tier:"t4"},
+  {name:"Nairobi",tier:"t4"},{name:"Bogota",tier:"t4"},{name:"Lagos",tier:"t4"},
+];
+
+function renderHives() {
+  HIVES.forEach((h, i) => {
+    const angle = (i / HIVES.length) * Math.PI * 2;
+    const radius = 200 + ((i % 5) * 80);
+    const x = 50 + Math.cos(angle) * radius / 6;
+    const y = 50 + Math.sin(angle) * radius / 6;
+    const node = document.createElement("div");
+    node.className = "node " + h.tier;
+    node.style.left = x + "%";
+    node.style.top = y + "%";
+    node.style.animationDelay = (i * 0.1) + "s";
+    node.dataset.name = h.name;
+    node.dataset.tier = h.tier;
+    // Tooltip on hover
+    node.onmouseenter = (e) => {
+      const t = document.createElement("div");
+      t.className = "hive-tooltip";
+      t.id = "tip-" + i;
+      t.innerHTML = `<div class="name">${h.name}</div><div class="tier">tier: ${h.tier.replace("t","")}</div>`;
+      t.style.left = e.pageX + "px";
+      t.style.top = e.pageY + "px";
+      document.body.appendChild(t);
+    };
+    node.onmousemove = (e) => {
+      const t = document.getElementById("tip-" + i);
+      if (t) { t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px"; }
+    };
+    node.onmouseleave = () => {
+      const t = document.getElementById("tip-" + i);
+      if (t) t.remove();
+    };
+    node.onclick = () => sov33Say(h.name + " sovereign hive. Tier " + h.tier.replace("t","") + ". Care Floor 0.95 verified.");
+    document.body.appendChild(node);
+  });
+}
+
+renderHives();
+
+// === CHAT + VOICE ===
+function log(msg, type = "ai") {
+  const messages = document.getElementById("messages");
+  const div = document.createElement("div");
+  div.className = "msg-line" + (type === "user" ? " user" : "");
+  div.textContent = (type === "ai" ? "🐉 SOV33: " : "You: ") + msg;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+  if (type === "ai") speak(msg);
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  text = text.replace(/[▓▒░→←★·•◦]/g, '').replace(/\s+/g, ' ').trim();
+  if (!text) return;
+  if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 1.0;
+  window.speechSynthesis.speak(u);
+}
+
+function sov33Say(msg) { log(msg, "ai"); speak(msg); }
+
+function sendChat() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  log(text, "user");
+  input.value = "";
+  setTimeout(() => {
+    const lower = text.toLowerCase();
+    if (lower.includes("abundance")) sov33Say("The future of abundance, not extraction. Sovereign by construction.");
+    else if (lower.includes("dome")) sov33Say("360° sovereign space. The dragon sovereigns the dome.");
+    else if (lower.includes("rescue")) sov33Say("Drone rescue. 8 minutes. Thermal + lidar + camera. Sovereign intelligence.");
+    else if (lower.includes("scenarios") || lower.includes("scenarios")) sov33Say("10 scenarios. Drone rescue, fire, flood, missing person, medical, crime, traffic, weather, power, supply chain.");
+    else if (lower.includes("partnership")) sov33Say("Partnership Charter + Sovereignty Charter. The future of abundance is built on these.");
+    else if (lower.includes("crown")) sov33Say("Crown lineage 1795-2026. 230+ years. UK 16939677. CSOAI Ltd.");
+    else if (lower.includes("speed")) sov33Say("Orbit speed controls. Stop, 0.25, 0.5, 1, 2, 4x. Sovereign by construction.");
+    else if (lower.includes("bft")) sov33Say("BFT 12-around-1. 12 sovereign queens. 7-voter amendment.");
+    else if (lower.includes("composite")) sov33Say("Sovereign composite 7.305. Trending to 10.0.");
+    else if (lower.includes("care")) sov33Say("Care Floor 0.95. 16 probes. Defensive only. Never Offend.");
+    else sov33Say("The sovereign substrate sovereigns everything. SovTown, SovSpace, the AI OS. All sovereign by construction.");
+  }, 400);
+}
+
+// Initial
+detectIPDome();
+log("🌐 Dome Mode v2.0 active. 360° sovereign space. 33 hive planets orbiting. 6 layers. 8 info cards. Speed controls. The future of abundance, not extraction. The dragon sovereigns the dome.", "ai");
+speak("Dome Mode v2. The future of abundance.");
+</script>
+
+</body>
+</html>

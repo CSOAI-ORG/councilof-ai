@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EU AI Act Compliance — CSOAI Sovereign Audit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px}
+h1{color:#ef4444;margin:0 0 4px 0}
+.sub{color:#9ca3af;font-size:12px;margin-bottom:24px}
+.countdown{background:#7f1d1d;border:1px solid #ef4444;border-radius:8px;padding:16px;text-align:center;margin-bottom:24px}
+.countdown .days{color:#ef4444;font-size:48px;font-weight:700}
+.countdown .label{color:#c5cdd9;font-size:14px}
+.article{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;margin-top:12px;display:grid;grid-template-columns:80px 1fr 200px;gap:16px;align-items:start}
+.article .num{color:#ef4444;font-weight:700;font-size:20px;text-align:center}
+.article h3{color:#7dd3fc;margin:0 0 8px 0}
+.article .text{color:#c5cdd9;font-size:12px;line-height:1.5}
+.article .status{text-align:right}
+.article .badge{display:inline-block;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.badge.live{background:#064e3b;color:#10b981}
+.badge.partial{background:#78350f;color:#fbbf24}
+.badge.pending{background:#7f1d1d;color:#ef4444}
+.badge.tool{background:#1e3a8a;color:#7dd3fc}
+.crosswalk{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:16px;margin-top:16px;font-size:12px;line-height:1.6;color:#10b981}
+.honest{background:#1f1208;border:1px dashed #f59e0b;border-radius:8px;padding:12px;margin-top:16px;color:#fbbf24;font-size:11px;line-height:1.5}
+</style>
+</head>
+<body>
+<h1>🇪🇺 EU AI Act Compliance</h1>
+<div class="sub">CSOAI Sovereign Audit · Article 50 watermarking + high-risk assessment · SOV-721</div>
+
+<div class="countdown">
+  <div class="days" id="countdown">--</div>
+  <div class="label">days until 2 Aug 2026 enforcement (Article 50)</div>
+</div>
+
+<div id="articles"></div>
+
+<div class="crosswalk">
+<b>Cross-walk: EU AI Act → SOV33 substrate mapping</b><br><br>
+EU Art 50 (Transparency) → CSOAI Article 50 Passport (HMAC/Ed25519, /api/article50)<br>
+EU Art 6 (High-risk) → CSOAI SOV33 BFT-33 council review + SIGIL chain<br>
+EU Art 9 (Risk management) → CSOAI Care Floor 0.95 gate + sovereign-checkup<br>
+EU Art 11 (Technical docs) → CSOAI manifest.json + sitemap.xml + 48 HTML surfaces<br>
+EU Art 13 (Transparency) → CSOAI audit-trail.html + honest register<br>
+EU Art 14 (Human oversight) → CSOAI owner-gates (4 gates, human-ratified)
+</div>
+
+<div class="honest">
+⚠️ HONEST REGISTER: This is a sovereign compliance OVERVIEW, not legal advice. Article 50 enforcement is 2 Aug 2026. CSOAI Ltd provides the sovereign tools (Article 50 passport, BFT council, SIGIL chain) but does not represent that any specific entity is compliant. Compliance requires independent legal review.
+</div>
+
+<script>
+const ARTICLES = [
+  { num: 'Art 50', title: 'Transparency obligations for certain AI systems', text: 'Providers of AI systems generating synthetic content must ensure outputs are machine-readable as AI-generated. Deepfakes must be disclosed.', status: 'LIVE', badge: 'live', tool: '/api/article50' },
+  { num: 'Art 6', title: 'High-risk AI systems', text: 'AI systems used in critical infrastructure, education, employment, law enforcement are classified high-risk. Requires conformity assessment.', status: 'LIVE', badge: 'live', tool: 'BFT-33 council' },
+  { num: 'Art 9', title: 'Risk management system', text: 'Providers must establish, implement, and maintain a risk management system throughout the AI system lifecycle.', status: 'LIVE', badge: 'live', tool: '/sovereign-checkup' },
+  { num: 'Art 11', title: 'Technical documentation', text: 'Providers must draw up technical documentation before placing on market, kept up to date.', status: 'LIVE', badge: 'live', tool: '/manifest.json' },
+  { num: 'Art 13', title: 'Transparency and provision of information', text: 'Deployers must ensure natural persons are informed they are interacting with an AI system.', status: 'LIVE', badge: 'live', tool: '/audit-trail' },
+  { num: 'Art 14', title: 'Human oversight', text: 'High-risk AI systems must be designed to allow effective human oversight, including ability to override.', status: 'LIVE', badge: 'live', tool: '4 owner-gates' },
+  { num: 'Art 25', title: 'Responsibilities of providers of general-purpose AI', text: 'Providers of GPAI must provide technical documentation and information to downstream providers.', status: 'LIVE', badge: 'tool', tool: 'SOV33 model registry' },
+  { num: 'Art 51', title: 'Classification of general-purpose AI models with systemic risk', text: 'GPAI models with systemic risk subject to additional obligations including model evaluation and adversarial testing.', status: 'PARTIAL', badge: 'partial', tool: 'SOV33 benchmarks (13/55)' },
+  { num: 'Art 52', title: 'Obligations for providers of GPAI without systemic risk', text: 'Providers must provide technical documentation and training data summary.', status: 'PARTIAL', badge: 'partial', tool: 'world-models-gallery' },
+];
+
+document.getElementById('articles').innerHTML = ARTICLES.map(a => `
+  <div class="article">
+    <div class="num">${a.num}</div>
+    <div>
+      <h3>${a.title}</h3>
+      <div class="text">${a.text}</div>
+    </div>
+    <div class="status">
+      <span class="badge ${a.badge}">${a.status}</span>
+      <div style="font-size:10px;color:#9ca3af;margin-top:6px">${a.tool}</div>
+    </div>
+  </div>`).join('');
+
+// Countdown
+const deadline = new Date('2026-08-02');
+const now = new Date();
+const days = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+document.getElementById('countdown').textContent = days;
+</script>
+</body>
+</html>

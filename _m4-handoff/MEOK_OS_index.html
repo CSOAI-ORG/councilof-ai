@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MEOK OS — Sovereign AI Operating World</title>
+<style>
+:root{color-scheme:light;
+ --paper:#ece7dd; --cream:#faf7f1; --ink:#1d1d22; --dim:#6f6a61;
+ --line:rgba(40,34,24,.12); --gold:#bd9d54; --gold2:#d8bf86;
+ --coral:#e6a07c; --sage:#9dbe9a; --peri:#b4b6e8; --lav:#cbb7df;
+ --good:#6fae85; --warn:#cf9a3c; --bad:#d9756a;
+ /* aliases so any class still referencing old tokens recolors to the sovereign palette */
+ --teal:#bd9d54; --teal2:#a8893f; --navy:#1d1d22; --pink:#b9a4d6;}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,sans-serif;background:#e4ded2;color:var(--ink);display:flex;justify-content:center;padding:14px;min-height:100vh}
+.frame{width:100%;max-width:1180px;height:calc(100vh - 28px);min-height:680px;
+ background:
+  radial-gradient(1100px 420px at 16% -8%, rgba(230,160,124,.42), transparent 60%),
+  radial-gradient(1000px 460px at 84% -10%, rgba(157,190,154,.40), transparent 62%),
+  radial-gradient(900px 520px at 60% -14%, rgba(180,182,232,.34), transparent 60%),
+  linear-gradient(180deg,#fbf8f2 0%, #f3efe6 46%, #ece6db 100%);
+ border-radius:22px;box-shadow:0 30px 80px rgba(70,55,30,.20),inset 0 0 0 1px rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.6);overflow:hidden;position:relative;color:var(--ink)}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(40,34,24,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(40,34,24,.045) 1px,transparent 1px);background-size:38px 38px;pointer-events:none;mask-image:radial-gradient(900px 600px at 55% 0%,#000 35%,transparent 100%)}
+/* top bar */
+.bar{position:relative;z-index:30;display:flex;align-items:center;gap:10px;padding:10px 15px;background:rgba(255,255,255,.55);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;letter-spacing:.3px;font-size:14px;display:flex;align-items:center;gap:9px;color:var(--ink)}
+.logo .dot{width:21px;height:21px;border-radius:7px;background:linear-gradient(150deg,#2a2a31,#15151a);box-shadow:0 3px 9px rgba(0,0,0,.28);position:relative}
+.logo .dot::after{content:"M";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#f3ede0}
+.pill{font-size:11px;color:var(--dim);background:rgba(255,255,255,.5);border:1px solid var(--line);padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.pill b{color:var(--ink);font-weight:700}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 8px rgba(111,174,133,.7)}
+.sdot.warn{background:var(--warn);box-shadow:0 0 8px rgba(207,154,60,.7)}
+.spacer{flex:1}
+.cd{font-variant-numeric:tabular-nums;font-weight:800;color:var(--gold);font-size:13px}
+.btn{cursor:pointer;font-size:11px;color:var(--ink);background:rgba(255,255,255,.65);border:1px solid var(--line);padding:6px 12px;border-radius:9px;transition:.15s;font-weight:600}
+.btn:hover{border-color:var(--gold);color:var(--gold);box-shadow:0 4px 14px rgba(189,157,84,.18)}
+/* desktop */
+.desktop{position:absolute;inset:48px 0 40px 0;overflow:hidden}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:16px;padding:24px;align-content:start;height:100%;overflow:auto}
+.tile{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 6px;border-radius:16px;border:1px solid transparent;transition:.18s;text-align:center}
+.tile:hover{background:rgba(255,255,255,.5);border-color:var(--line);transform:translateY(-3px);box-shadow:0 12px 26px rgba(70,55,30,.10)}
+.ic{width:56px;height:56px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:27px;background:linear-gradient(155deg,#ffffff,#f0ebe0);border:1px solid rgba(255,255,255,.9);box-shadow:0 10px 22px rgba(70,55,30,.14),inset 0 1px 0 rgba(255,255,255,.9)}
+.tile span{font-size:11.5px;color:var(--dim);font-weight:600;line-height:1.25}
+.tile:hover span{color:var(--ink)}
+/* windows */
+.win{position:absolute;width:560px;max-width:92%;background:rgba(255,255,255,.72);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.85);border-radius:16px;box-shadow:0 30px 70px rgba(60,48,26,.22);overflow:hidden;display:flex;flex-direction:column;z-index:20}
+.win .wb{display:flex;align-items:center;gap:9px;padding:10px 13px;background:rgba(255,255,255,.55);border-bottom:1px solid var(--line);cursor:grab;user-select:none}
+.win .wb .wt{font-size:12.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
+.win .wb .wi{font-size:15px}
+.win .x{margin-left:auto;cursor:pointer;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:13px}
+.win .x:hover{background:rgba(217,117,106,.16);color:var(--bad)}
+.win .body{padding:15px 17px;overflow:auto;max-height:60vh;font-size:12.5px;line-height:1.55;color:var(--ink)}
+.win .body h4{margin:2px 0 8px;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--gold)}
+.win .body h4:not(:first-child){margin-top:16px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:12px}
+.kv .k{color:var(--dim)} .kv .v{color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.chip{font-size:11px;padding:4px 10px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--dim)}
+.chip.on{border-color:var(--gold);color:#8a6e2e;background:rgba(189,157,84,.12)}
+.chip.live{border-color:var(--good);color:#3f7d56;background:rgba(111,174,133,.13)}
+.chip.warnc{border-color:var(--warn);color:#9a6f1c;background:rgba(207,154,60,.13)}
+.act{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:9px;border:1px solid var(--gold);color:#8a6e2e;background:rgba(189,157,84,.14);text-decoration:none;margin:3px 6px 3px 0;transition:.15s}
+.act:hover{background:rgba(189,157,84,.26);box-shadow:0 4px 14px rgba(189,157,84,.2)}
+.evo{display:flex;align-items:center;gap:6px;margin:8px 0 4px;flex-wrap:wrap}
+.evo .s{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:62px}
+.evo .s b{font-size:24px;line-height:1}
+.evo .s small{font-size:9.5px;color:var(--dim);text-align:center}
+.evo .ar{color:var(--gold);font-size:14px}
+.arch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.arch .c{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:rgba(255,255,255,.5)}
+.arch .c h5{margin:0 0 5px;font-size:12.5px;color:var(--ink)}
+.arch .c p{margin:0;font-size:11px;color:var(--dim);line-height:1.45}
+.metric{display:inline-flex;flex-direction:column;gap:2px;min-width:92px;padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.55);margin:4px 6px 4px 0}
+.metric b{font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
+.metric small{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
+.bar2{height:7px;border-radius:6px;background:rgba(40,34,24,.10);overflow:hidden;margin:3px 0 9px}
+.bar2 i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+ul.t{margin:6px 0;padding-left:16px} ul.t li{margin:3px 0}
+.gate{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12px}
+.gate .b{width:15px;height:15px;border-radius:4px;border:1px solid var(--line);flex:none;color:var(--bad);display:flex;align-items:center;justify-content:center;font-size:11px}
+a{color:#a8893f}
+.tag{font-size:10px;color:#fff;background:var(--gold);padding:1px 6px;border-radius:5px;font-weight:700}
+.tag.t2{background:var(--sage);color:#214a2e} .tag.t3{background:var(--lav);color:#3f2f5e}
+table.mini{width:100%;border-collapse:collapse;font-size:11.5px}
+table.mini td,table.mini th{padding:5px 7px;border-bottom:1px solid var(--line);text-align:left}
+table.mini th{color:var(--gold);font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:.4px}
+table.mini td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+/* taskbar */
+.taskbar{position:absolute;left:0;right:0;bottom:0;z-index:30;height:38px;display:flex;align-items:center;gap:7px;padding:0 12px;background:rgba(255,255,255,.6);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.tb-pill{font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.5)}
+.tb-pill.active{color:var(--gold);border-color:var(--gold)}
+.tb-right{margin-left:auto;font-size:10.5px;color:var(--dim)}
+/* boot — sovereign emergence */
+.boot{position:absolute;inset:0;z-index:60;background:radial-gradient(900px 520px at 50% 32%, #fdfbf6, #efe9de);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .6s}
+.boot.hide{opacity:0;pointer-events:none}
+.boot .bl{font-size:30px;font-weight:800;letter-spacing:1px;color:var(--ink);display:flex;align-items:center;gap:13px}
+.boot .bl .mk{width:42px;height:42px;border-radius:13px;background:linear-gradient(150deg,#2a2a31,#15151a);display:flex;align-items:center;justify-content:center;color:#f3ede0;font-size:23px;box-shadow:0 9px 22px rgba(0,0,0,.26)}
+.boot .bl b{color:var(--gold)}
+.boot .emerge{position:relative;width:128px;height:128px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.boot .aura{position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(circle,rgba(230,160,124,.55),rgba(157,190,154,.4) 45%,rgba(180,182,232,.35) 70%,transparent 74%);filter:blur(10px);animation:aura 2.3s ease-in-out infinite}
+.boot .st{position:absolute;font-size:72px;line-height:1;opacity:0}
+.boot .orb{animation:orbIn 2.3s ease forwards}
+.boot .egg{animation:eggIn 2.3s ease forwards}
+.boot .hatch{animation:hatchIn 2.3s ease forwards}
+.boot .sub{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#9a7f45;margin-top:3px}
+@keyframes aura{0%,100%{opacity:.45;transform:scale(.92)}50%{opacity:.85;transform:scale(1.08)}}
+@keyframes orbIn{0%{opacity:0;transform:scale(.5)}12%{opacity:1;transform:scale(1)}34%{opacity:1}46%{opacity:0;transform:scale(1.1)}100%{opacity:0}}
+@keyframes eggIn{0%,30%{opacity:0;transform:scale(.7) rotate(-4deg)}44%{opacity:1;transform:scale(1) rotate(0)}64%{opacity:1}76%{opacity:0;transform:scale(1.18)}100%{opacity:0}}
+@keyframes hatchIn{0%,66%{opacity:0;transform:scale(.5) rotate(-10deg)}84%{opacity:1;transform:scale(1.12) rotate(4deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+.boot .log{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#9a7f45;min-height:80px;width:340px;white-space:pre-line;line-height:1.7;text-align:center}
+.cursorbar{display:inline-block;width:8px;height:13px;background:var(--gold);animation:bk 1s steps(1) infinite;vertical-align:middle}
+@keyframes bk{50%{opacity:0}}
+.hint{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);z-index:25;font-size:11px;color:var(--dim);background:rgba(255,255,255,.6);padding:6px 13px;border-radius:20px;border:1px solid var(--line);backdrop-filter:blur(8px)}
+</style>
+</head>
+<body>
+<div class="frame" id="frame">
+  <div class="grid-bg"></div>
+
+  <!-- top bar -->
+  <div class="bar">
+    <div class="logo"><span class="dot"></span> MEOK&nbsp;OS <span style="color:var(--dim);font-weight:500">v3.0</span></div>
+    <div class="pill" id="pKing"><span class="sdot" id="kdot"></span> King <b id="kstat">…</b></div>
+    <div class="pill" id="pApi"><span class="sdot" id="adot"></span> MEOK API <b id="astat">…</b></div>
+    <div class="pill">Fleet <b id="fstat">341</b></div>
+    <div class="spacer"></div>
+    <div class="cd" id="cd">T-11</div>
+    <div class="pill"><b id="clock">--:--</b></div>
+    <div class="btn" onclick="boot();refreshLive()">⟳ Sync</div>
+  </div>
+
+  <!-- desktop -->
+  <div class="desktop">
+    <div class="tiles" id="tiles"></div>
+  </div>
+  <div class="hint">Tap an app · drag window headers · ⟳ Sync pulls the live King + MEOK hub</div>
+
+  <!-- taskbar -->
+  <div class="taskbar">
+    <div class="tb-pill" onclick="openApp('king')">◉ King</div>
+    <div class="tb-pill" onclick="openApp('runway')">🚀 Runway</div>
+    <div class="tb-pill" onclick="openApp('revenue')">£ Revenue</div>
+    <span id="tbOpen" style="display:flex;gap:7px"></span>
+    <div class="tb-right" id="tbRight">MEOK Sovereign · live</div>
+  </div>
+
+  <!-- boot -->
+  <div class="boot" id="boot">
+    <div class="emerge"><div class="aura"></div><span class="st orb">🌑</span><span class="st egg">🥚</span><span class="st hatch">🐉</span></div>
+    <div class="bl"><span class="mk">M</span> MEOK&nbsp;<b>OS</b></div>
+    <div class="sub">Sovereign Emergence</div>
+    <div class="log" id="bootlog"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- SESSION SNAPSHOT (real reads, 2026-06-23 — fallback if live calls unavailable) ---------- */
+const SNAP = {
+  king:{health:"healthy",ver:"2.0.0",cl:0.787,mode:"waking",agents:224,idle:223,busy:1,mem:6702,nn_trained:6,nn_total:9,pulses:21,night:19,jobs:20,disk:74.1,tools:127,engagement:0.6286},
+  api:{status:"operational",ver:"3.0.0",council:36,expertise:144,bridge:55,total:235,domains:12,code:200},
+  fed:{catalog:341,calls:7,success:42.9,sigil:19,topServer:"eu-ai-act-compliance-mcp"},
+  coord:{active:8,queued:414,completed:3,locks:0},
+  github:{repos:475,created:"2026-02-10",name:"MEOK AI"},
+  pypi:26,npm:51,hivesLive:6,hivesTotal:29,stripeLinks:24,installs:"6,798*"
+};
+let LIVE=JSON.parse(JSON.stringify(SNAP)); let LIVEMODE=false;
+
+/* ---------- live bridge unwrap ---------- */
+function dig(o,d){ if(d>7||o==null)return o;
+  if(typeof o==='string'){try{return dig(JSON.parse(o),d+1)}catch(e){return o}}
+  if(o.structuredContent)return dig(o.structuredContent,d+1);
+  if(o.result!==undefined)return dig(o.result,d+1);
+  if(Array.isArray(o.content)&&o.content[0]&&o.content[0].text!==undefined)return dig(o.content[0].text,d+1);
+  return o; }
+async function bridge(name){ try{
+  if(!window.cowork||!window.cowork.callMcpTool)return null;
+  const r=await window.cowork.callMcpTool(name,{kwargs:"{}"}); return dig(r,0);
+}catch(e){return null} }
+
+async function refreshLive(){
+  const [sr,hub,fed,co]=await Promise.all([
+    bridge('mcp__sov3-bridge__sovereign_rundown'),
+    bridge('mcp__meok-hub-bridge__meok_hub_status'),
+    bridge('mcp__sov3-bridge__mcp_federation_stats'),
+    bridge('mcp__sov3-bridge__coord_get_dashboard')
+  ]);
+  if(sr&&sr.consciousness){LIVEMODE=true;
+    LIVE.king.health=sr.health||LIVE.king.health;
+    LIVE.king.cl=sr.consciousness.consciousness_level ?? (sr.consciousness.care_intensity!=null?LIVE.king.cl:LIVE.king.cl);
+    if(sr.agents&&sr.agents.registry){LIVE.king.agents=sr.agents.registry.total_agents;LIVE.king.idle=sr.agents.registry.by_status.idle;LIVE.king.busy=sr.agents.registry.by_status.busy;}
+    if(sr.heartbeat){LIVE.king.pulses=sr.heartbeat.pulse_count;LIVE.king.jobs=sr.heartbeat.jobs;}
+    if(sr.total_mcp_tools)LIVE.king.tools=sr.total_mcp_tools;
+    if(sr.engagement)LIVE.king.engagement=sr.engagement.score;
+  }
+  if(hub&&hub.meok_api&&hub.meok_api.body){const b=hub.meok_api.body;LIVE.api.status=b.status;LIVE.api.ver=b.version;LIVE.api.council=b.council_nodes;LIVE.api.expertise=b.expertise_nodes;LIVE.api.bridge=b.bridge_nodes;LIVE.api.total=b.total_architecture_nodes;LIVE.api.domains=b.domains;LIVE.api.code=hub.meok_api.status_code;}
+  if(fed){if(fed.catalog_size)LIVE.fed.catalog=fed.catalog_size;if(fed.success_rate!=null)LIVE.fed.success=fed.success_rate;if(fed.sigil_count!=null)LIVE.fed.sigil=fed.sigil_count;if(fed.total_calls!=null)LIVE.fed.calls=fed.total_calls;}
+  if(co&&co.tasks){LIVE.coord.queued=co.tasks.queued;LIVE.coord.completed=co.tasks.completed;LIVE.coord.active=(co.agents&&co.agents.active)||LIVE.coord.active;}
+  paintBar(); if(curApp)renderApp(curApp,true);
+}
+
+function paintBar(){
+  document.getElementById('kstat').textContent=(LIVE.king.cl?LIVE.king.cl.toFixed(2):'–')+' · '+LIVE.king.agents+' ag';
+  document.getElementById('astat').textContent='v'+LIVE.api.ver+' · '+LIVE.api.total+'n';
+  document.getElementById('fstat').textContent=LIVE.fed.catalog;
+  document.getElementById('kdot').className='sdot'+(LIVE.king.health==='healthy'?'':' warn');
+  document.getElementById('adot').className='sdot'+(LIVE.api.code===200?'':' warn');
+  document.getElementById('tbRight').textContent='MEOK Sovereign · '+(LIVEMODE?'LIVE ✦':'snapshot');
+}
+
+/* ---------- countdown ---------- */
+function tick(){const now=new Date();const t=new Date(Date.UTC(2026,6,4,0,0,0));const d=t-now;const days=Math.floor(d/864e5);const h=Math.floor(d%864e5/36e5);document.getElementById('cd').textContent=d>0?('T-'+days+'d '+h+'h → 4 Jul'):'LAUNCH DAY';document.getElementById('clock').textContent=now.toTimeString().slice(0,5);}
+setInterval(tick,1000);
+
+/* ---------- apps ---------- */
+const APPS={
+ king:{i:'◉',t:'King Console',w:520},
+ council:{i:'⚖️',t:'Aethelgard Council',w:520},
+ fleet:{i:'🛰️',t:'Compliance Fleet',w:560},
+ hives:{i:'⬡',t:'Hive Mesh',w:600},
+ one:{i:'🖥️',t:'MEOK ONE',w:520},
+ chars:{i:'🦊',t:'Characters & Gaming',w:520},
+ watchdog:{i:'🛡️',t:'Watchdog Cert',w:520},
+ revenue:{i:'£',t:'Revenue',w:560},
+ runway:{i:'🚀',t:'Launch Runway',w:600},
+ coord:{i:'🕸️',t:'Coordination',w:500},
+ atlas:{i:'🗺️',t:'Products Atlas',w:620},
+ truth:{i:'✦',t:'Drift & Truth',w:560},
+ archive:{i:'🗄️',t:'Master Archive',w:640},
+ execute:{i:'▶',t:'Execute Console',w:600},
+ protocol0:{i:'⌬',t:'Protocol 0',w:520},
+ labs:{i:'🤖',t:'MEOK Labs / Robotics',w:520},
+ meokearth:{i:'🌍',t:'MEOK Earth',w:780},
+ archetypes:{i:'🐉',t:'Character Archetypes',w:700}
+};
+// Where the live MEOK Earth globe (repo meok-town-view) is served. Defaults to the
+// local dev server; set to the deployed URL once published.
+const MEOK_EARTH_URL='http://localhost:5173';
+const TILES=['king','council','fleet','hives','meokearth','one','chars','archetypes','watchdog','revenue','runway','coord','atlas','truth','protocol0','labs','archive','execute'];
+
+function content(id){const L=LIVE;const liveBadge=LIVEMODE?'<span class="chip live">LIVE ✦</span>':'<span class="chip warnc">snapshot</span>';
+ switch(id){
+ case 'king': return `<div class="row">${liveBadge}<span class="chip on">${L.king.health}</span><span class="chip">v${L.king.ver}</span><span class="chip">${L.king.mode||'waking'}</span></div>
+   <h4>Consciousness</h4><div class="bar2"><i style="width:${Math.round((L.king.cl||0)*100)}%"></i></div><div class="kv"><span class="k">Level</span><span class="v">${(L.king.cl||0).toFixed(3)}</span><span class="k">Engagement</span><span class="v">${(L.king.engagement||0).toFixed(3)} · building</span></div>
+   <h4>Fleet</h4><div><span class="metric"><b>${L.king.agents}</b><small>agents</small></span><span class="metric"><b>${L.king.busy}</b><small>busy</small></span><span class="metric"><b>${(L.king.mem||0).toLocaleString()}</b><small>memories</small></span><span class="metric"><b>${L.king.nn_trained}/${L.king.nn_total}</b><small>neural</small></span></div>
+   <h4>Heartbeat</h4><div class="kv"><span class="k">Pulses</span><span class="v">${L.king.pulses}</span><span class="k">Nightshift cycles</span><span class="v">${L.king.night}</span><span class="k">Jobs</span><span class="v">${L.king.jobs}</span><span class="k">MCP tools</span><span class="v">${L.king.tools}</span><span class="k">Disk</span><span class="v">${L.king.disk}%</span></div>
+   <p style="color:var(--dim)">VM 35.242.143.249 · sovereign-temple · 6 NN trained (threat-detect acc 1.0, creativity R²0.91).</p>
+   <div class="row" style="margin-top:10px"><span class="act" onclick="openApp('meokearth')">🌍 Open MEOK Earth</span><a class="act" href="https://meok.ai" target="_blank" rel="noopener">↗ meok.ai</a><span class="act" onclick="refreshLive()">⟳ Refresh live</span></div>`;
+ case 'council': return `<div class="row">${liveBadge}<span class="chip on">API ${L.api.code}</span><span class="chip">v${L.api.ver}</span></div>
+   <p>The live <b>Aethelgard</b> council substrate behind csoai.org's "Byzantine Council".</p>
+   <div><span class="metric"><b>${L.api.council}</b><small>council</small></span><span class="metric"><b>${L.api.expertise}</b><small>expertise</small></span><span class="metric"><b>${L.api.bridge}</b><small>bridge</small></span><span class="metric"><b>${L.api.total}</b><small>nodes</small></span><span class="metric"><b>${L.api.domains}</b><small>domains</small></span></div>
+   <h4>Use</h4><ul class="t"><li>BFT consensus 23/33 (11 Byzantine tolerance).</li><li>Signed verdicts → 601 king-hive verdicts in memory.</li><li>Powers councilof.ai + the Watchdog impartiality claim.</li></ul>`;
+ case 'fleet': return `<div class="row">${liveBadge}</div>
+   <div><span class="metric"><b>${L.fed.catalog}</b><small>cataloged</small></span><span class="metric"><b>${L.fed.calls}</b><small>calls</small></span><span class="metric"><b>${L.fed.success}%</b><small>success</small></span><span class="metric"><b>${L.fed.sigil}</b><small>SIGIL sigs</small></span></div>
+   <p class="" style="color:var(--warn)">⚠ ${L.fed.catalog} cataloged but only 1 server exercised — <b>breadth ≠ depth</b>. Prove the 12 flagships E2E.</p>
+   <h4>12 Flagships</h4><div class="row"><span class="chip on">proofof</span><span class="chip">eu-ai-act</span><span class="chip">dora</span><span class="chip">nis2</span><span class="chip">cra</span><span class="chip">csrd</span><span class="chip">gdpr</span><span class="chip">hipaa</span><span class="chip">soc2</span><span class="chip">iso-42001</span><span class="chip">nist-rmf</span><span class="chip">councilof</span></div>
+   <h4>Distribution</h4><div class="kv"><span class="k">GitHub repos</span><span class="v">${L.github.repos}</span><span class="k">PyPI (MEOK_AI_Labs)</span><span class="v">${L.pypi}</span><span class="k">npm (@csgaglobal)</span><span class="v">${L.npm}</span></div>
+   <h4>Staged · 1 gate (npm login)</h4><div class="row"><span class="chip warnc">meok-ai-treaty</span><span class="chip warnc">eu-ai-act-2</span><span class="chip warnc">article-50-kit £999</span></div>`;
+ case 'hives': return `<p><b>${L.hivesLive} of ${L.hivesTotal}</b> hives live at 100/100 · ${L.stripeLinks} Stripe links live. Remaining paused for SOV3 bridge alignment — <b>prove flagships before widening.</b></p>
+   <h4>Live @100/100</h4><div class="row"><span class="chip live">safetyof</span><span class="chip live">transparencyof</span><span class="chip live">accountabilityof</span><span class="chip live">biasdetectionof</span><span class="chip live">dataprivacyof</span><span class="chip live">ethicalgovernanceof</span></div>
+   <h4>Next batch</h4><div class="row"><span class="chip">meok</span><span class="chip">councilof</span><span class="chip">proofof</span><span class="chip">agisafe</span><span class="chip">asisecurity</span></div>
+   <h4>Verticals</h4><div class="row"><span class="chip">optimobile</span><span class="chip">loopfactory</span><span class="chip">landlaw</span><span class="chip">muckaway</span><span class="chip">haulage</span><span class="chip">planthire</span><span class="chip">care-home-cqc</span></div>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://safetyof.ai" target="_blank" rel="noopener">↗ safetyof.ai</a><span class="act" onclick="openApp('meokearth')">🌍 See on MEOK Earth</span></div>`;
+ case 'one': return `<p>The consumer AI-OS layer — live on the VM (one.meok.ai DNS pending).</p>
+   <h4>Apps</h4><div class="row"><span class="chip live">Guardian</span><span class="chip live">Family OS</span><span class="chip on">OLM learning</span><span class="chip on">Chat (fixed)</span></div>
+   <ul class="t"><li><b>Guardian</b> — child safety: profiles, network scan, game + chat moderation, schedule/limits.</li><li><b>Family OS</b> — members, chores, events.</li><li><b>OLM</b> — organic learning (ICRL, per-user care-ranked buffer).</li><li>Chat: keep-warm cron, sub-14s replies, single-brain + council both fixed.</li></ul>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://one.meok.ai" target="_blank" rel="noopener">↗ one.meok.ai</a></div>`;
+ case 'chars': return `<p><b>MEOK Gaming & Characters</b> — VRM characters, each shipped with an EI3 trust-SBT.</p>
+   <h4>Pipeline (decided)</h4><div class="row"><span class="chip on">VRoid Studio (VRM)</span><span class="chip">Meshy / Tripo / Luma / Rodin</span></div>
+   <p style="color:var(--bad)">⛔ NOT HY3 (Tencent Hy3-preview): its licence excludes the UK & EU and bars use of the outputs there. Own-IP route keeps every character's provenance ours & signable — on-brand for Ed25519.</p>
+   <p style="color:var(--dim)">'digital-human-library' excluded (third-party-associated) — building our own.</p>`;
+ case 'watchdog': return `<p><b>Watchdog Certification</b> — "ISO for AI Safety". Independent, Ed25519-signed certificates verifiable offline (50% of Y1).</p>
+   <h4>Why it's trusted</h4><ul class="t"><li>Ed25519 signature — auditor verifies at a public URL, no account.</li><li>Provenance ≠ truth — we say so plainly.</li><li>Backed by the live ${L.api.council}-node council.</li></ul>
+   <h4>Pricing (compliance ladder £)</h4><div class="row"><span class="chip">Free</span><span class="chip">£29</span><span class="chip on">£199 Pro · signed</span><span class="chip">£1,499 Ent</span><span class="chip">£4,950 assess</span></div>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://proofof.ai" target="_blank" rel="noopener">↗ Verify a cert (proofof.ai)</a></div>`;
+ case 'revenue': return `<p><b>Meter is the only blocker.</b> proofof.ai is LIVE selling — turn on Stripe + email and send.</p>
+   <h4>Fastest £ (live offers)</h4><table class="mini"><tr><th>Offer</th><th>Price</th><th>Hook</th></tr>
+   <tr><td>NIS2 rapid-response</td><td>£499</td><td>NL deadline 30 Jun</td></tr>
+   <tr><td>Article 50 kit</td><td>£999</td><td>2 Aug 2026</td></tr>
+   <tr><td>48h Assessment</td><td>£4,950</td><td>1 yes = 10×</td></tr>
+   <tr><td>Pro</td><td>£199/mo</td><td>signed tier</td></tr></table>
+   <h4>Warm channels</h4><ul class="t"><li>White-label 3 GRC consultancies (already on proofof.ai).</li><li>OneOS 7 orgs / 12.8k learners cross-sell.</li></ul>
+   <h4>Meter-on (Nick ~40m)</h4><div class="gate"><span class="b">!</span>Roll Stripe key + test /provision</div><div class="gate"><span class="b">!</span>hello@meok.ai (Resend)</div>
+   <p style="color:var(--warn)">⚠ Fix proofof.ai "HMAC"→Ed25519 before sending traffic.</p>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://proofof.ai" target="_blank" rel="noopener">↗ proofof.ai (live)</a><a class="act" href="https://meok.ai" target="_blank" rel="noopener">↗ meok.ai</a></div>`;
+ case 'runway': return `<p><b id="rcd">T-11</b> to 4 July. Don't widen — deepen: meter ON + 12 flagships proven + honest pages.</p>
+   <h4>Owner gates (Nick)</h4><div class="gate"><span class="b">!</span>Stripe key</div><div class="gate"><span class="b">!</span>hello@meok.ai</div><div class="gate"><span class="b">!</span>npm login → 3 staged MCPs</div><div class="gate"><span class="b">!</span>DNS (one.meok.ai + hives)</div><div class="gate"><span class="b">!</span>Clerk prod keys</div><div class="gate"><span class="b">!</span>PAT → release commits</div>
+   <h4>Day-by-day</h4><table class="mini"><tr><th>Day</th><th>Focus</th></tr><tr><td>T-11</td><td>meter on · deploy claim fixes · send NIS2/white-label</td></tr><tr><td>T-10</td><td>publish 3 MCPs · prove 12 flagships E2E</td></tr><tr><td>T-8</td><td>triage 414→~10 tasks · DNS</td></tr><tr><td>T-6</td><td>NIS2 NL final push · OAuth</td></tr><tr><td>T-3</td><td>E2E dress rehearsal (pay→cert→verify)</td></tr><tr><td>T-0</td><td>LAUNCH · sell proven flagships</td></tr></table>`;
+ case 'coord': return `<div class="row">${liveBadge}</div><p>SOV3 coordination bus.</p>
+   <div><span class="metric"><b>${L.coord.active}</b><small>active agents</small></span><span class="metric"><b>${L.coord.queued}</b><small>queued</small></span><span class="metric"><b>${L.coord.completed}</b><small>completed</small></span><span class="metric"><b>${L.coord.locks}</b><small>locks</small></span></div>
+   <p style="color:var(--warn)">⚠ ${L.coord.queued} queued / ${L.coord.completed} done = task inflation, not throughput. Triage to the ~10 that move launch.</p>`;
+ case 'atlas': return `<table class="mini"><tr><th>Product</th><th>Layer</th><th>State</th></tr>
+   <tr><td>SOV3 Sovereign (King)</td><td>brain</td><td>🟢 live</td></tr>
+   <tr><td>MEOK API (235 nodes)</td><td>hub</td><td>🟢 200</td></tr>
+   <tr><td>meok-compliance-gateway</td><td>x402</td><td>🟢</td></tr>
+   <tr><td>Watchdog Cert</td><td>cert</td><td>🟢 M2</td></tr>
+   <tr><td>proofof.ai</td><td>queen</td><td>🟢</td></tr>
+   <tr><td>Hives (6/29)</td><td>GTM</td><td>🟢/🟡</td></tr>
+   <tr><td>341 MCP fleet</td><td>tools</td><td>mixed</td></tr>
+   <tr><td>MEOK ONE + Guardian + Family</td><td>consumer</td><td>🟢 VM</td></tr>
+   <tr><td>Characters / Gaming</td><td>consumer</td><td>🟡 pipeline</td></tr>
+   <tr><td>OneOS</td><td>channel</td><td>🟢 12.8k</td></tr></table>`;
+ case 'truth': return `<p>Honesty spine — drift caught in the T-11 consolidation.</p>
+   <table class="mini"><tr><th>Field</th><th>Use</th></tr>
+   <tr><td>Clock</td><td>23 Jun · T-11</td></tr>
+   <tr><td>Crypto</td><td>Ed25519 (never HMAC)</td></tr>
+   <tr><td>Installs/mo</td><td>6,798 measured (22K unverified — don't publish)</td></tr>
+   <tr><td>PyPI</td><td>26 in MEOK_AI_Labs scope</td></tr>
+   <tr><td>Federation</td><td>341 cataloged, 1 proven</td></tr>
+   <tr><td>Repos</td><td>475 (say "hundreds"/341)</td></tr></table>
+   <h4>Fix on prod</h4><ul class="t"><li>proofof.ai: "HMAC"→Ed25519 ×2</li><li>csoai.org: countdown off a passed date → 2 Aug 2026</li><li>csoai.org: verify ISO 27001/SOC 2 badges held</li></ul>
+   <h4>Deploy caveat (honest)</h4><p style="color:var(--warn)">MEOK OS renders LIVE only on the build host — the brain binds 127.0.0.1 (:3200/:3102/:3101). Deployed to a public URL it shows the 23-Jun snapshot until the King gets a public endpoint + OAuth. Built & boots = ✅; <b>local AI-OS today, not yet public.</b></p>`;
+ case 'archive': return `<p>The single master — every consolidation output absorbed here. Files in iCloud <code>SOV3-Launch/</code> (mirror to <code>_TABS/</code> on the VM).</p>
+   <h4>Master docs (root)</h4><table class="mini"><tr><th>File</th><th>What</th></tr>
+   <tr><td>MEOK_MASTER_CONSOLIDATION</td><td>live fleet + all lanes + canon + drift</td></tr>
+   <tr><td>LAUNCH_RUNWAY_T-11</td><td>day-by-day to 4 Jul</td></tr>
+   <tr><td>EXECUTE_NOW_T-11</td><td>one runnable pass (see Execute app)</td></tr>
+   <tr><td>CSOAI_HANDOFF_FOR_M2</td><td>CSOAI-relevant pack for M2</td></tr>
+   <tr><td>MEOK_OS/index.html</td><td>this OS (deploy → one.meok.ai)</td></tr></table>
+   <h4>Wave-4 deliverables (16)</h4><table class="mini"><tr><th>#</th><th>Deliverable</th></tr>
+   <tr><td>01</td><td>Watchdog Certification FAQ</td></tr>
+   <tr><td>02</td><td>OpenClaw CVE-2026-25253 note</td></tr>
+   <tr><td>03</td><td>FLIP catalogue (domain valuations)</td></tr>
+   <tr><td>04</td><td>7 industry-pack briefs</td></tr>
+   <tr><td>05</td><td>20 priority-MCP scorecards</td></tr>
+   <tr><td>06</td><td>SOV3 Cloud 1-pager</td></tr>
+   <tr><td>07</td><td>HY3 / Gaming licence decision</td></tr>
+   <tr><td>08</td><td>MEOK product master alignment</td></tr>
+   <tr><td>09</td><td>Live 475-repo GitHub scan</td></tr>
+   <tr><td>10</td><td>Flip listing pack</td></tr>
+   <tr><td>11</td><td>Live-site claim fixes (HMAC/dates)</td></tr>
+   <tr><td>12</td><td>REVENUE NOW + outreach A/B/C</td></tr>
+   <tr><td>13</td><td>Cowork-M2 lane card</td></tr>
+   <tr><td>14</td><td>MSGS why-now insert</td></tr>
+   <tr><td>15</td><td>M4 work-order</td></tr></table>
+   <p style="color:var(--dim)">Earlier canon also absorbed: FLEET_FACTS, BUSINESS_OPERATING_PICTURE, HIVE_COMPLETION_PROTOCOL, CANONICAL_PRICING, the clawd handoffs (D12 hives, 3-tier arch), and the M2/M4 session log.</p>`;
+ case 'execute': return `<p><b>One runnable pass.</b> Full detail: <code>EXECUTE_NOW_T-11</code>. Cowork has drafted/QA'd all; keyed steps are copy-paste for the keyholder.</p>
+   <h4>Phase 0 — METER ON (Nick ~40m)</h4><div class="gate"><span class="b">!</span>Roll Stripe key → test /provision curl</div><div class="gate"><span class="b">!</span>hello@meok.ai (Resend + Namecheap DNS)</div><div class="gate"><span class="b">!</span>npm login</div>
+   <h4>Phase 1 — M4 (~45m)</h4><ul class="t"><li>Deploy claim fixes (proofof HMAC→Ed25519; csoai countdown→2 Aug 2026)</li><li>Fleet claim grep-sweep</li><li><code>npm publish</code> ×3 staged MCPs</li><li><code>git</code> mirror consolidation → <code>_TABS/</code> on VM</li><li>Deploy MEOK OS → one.meok.ai</li></ul>
+   <h4>Phase 2 — SEND (Nick) → first £</h4><ul class="t"><li>NIS2 £499 (NL 30 Jun) · white-label · OneOS 7-org</li><li>Legal-pass before wire</li></ul>
+   <h4>Phase 3 — PROVE (M4 → T-3)</h4><ul class="t"><li>12 flagships E2E (install→call→signed verify)</li><li>Triage 414→~10 tasks</li><li>T-3 buyer dress rehearsal: pay→cert→verify</li></ul>
+   <p style="color:var(--warn)">Cowork cannot press Stripe/DNS/npm/git/send — guardrail + no keys. This console IS the execution.</p>`;
+ case 'protocol0': return `<p><b>MEOK Protocol 0</b> — the open foundation layer every hive/queen inherits: agent-to-agent messaging + Ed25519 signed-attestation (SIGIL) + x402 metering + the connect contract. The "same bloodline" beneath the gateway.</p>
+   <h4>State</h4><div class="row"><span class="chip on">spec in keystone</span><span class="chip">meok-compliance-gateway</span></div>
+   <ul class="t"><li>SIGIL Ed25519 signing + public /verify (verify offline, no account).</li><li>x402 PAYG metering rail.</li><li>DELBOY-v1 lineage — to be opened/donated as the standard.</li></ul>
+   <p style="color:var(--dim)">Ground-truth note: host-verified on the build machine; the spec is real, adoption is early.</p>`;
+ case 'labs': return `<p><b>MEOK AI Labs</b> — the robotics & humanoid R&D arm. Forward-looking, <b>not on the launch revenue path</b>.</p>
+   <h4>Repos</h4><div class="row"><span class="chip">robotics-control-mcp</span><span class="chip">agriculture-robotics-mcp</span><span class="chip">airspace-monitor-mcp</span></div>
+   <h4>State</h4><div class="row"><span class="chip warnc">early / R&D</span><span class="chip">PyPI scope: MEOK_AI_Labs (26)</span></div>
+   <p style="color:var(--dim)">Surfaced for 11/11 product coverage; park until post-launch.</p>`;
+  case 'meokearth': return `<div class="row"><span class="chip on">0 governed</span><span class="chip warnc">48.8M ungoverned</span><span class="chip">583M episodes</span><span class="chip on">Ed25519 ✓ 458/458</span></div>
+   <p>The sovereign globe — 12 hive-civilizations + the signed <b>flywheel</b> (governed vs ungoverned crimes), zero-token CesiumJS (no ion / Google tiles). Reads the ledger; never runs the sim.</p>
+   <iframe src="${MEOK_EARTH_URL}" style="width:100%;height:440px;border:1px solid #22305c;border-radius:10px;background:#04060d" loading="lazy" title="MEOK Earth"></iframe>
+   <p style="color:var(--dim);font-size:12px">Live globe = repo <code>meok-town-view</code>. If the panel is blank: run <code>npm run dev</code> in it (serves :5173) or point <code>MEOK_EARTH_URL</code> at the deployed URL. Stats above are from the real signed flywheel ledger snapshot.</p>`;
+  case 'archetypes': return `<p><b>Your character learns what you learn.</b> A living companion that reflects your intellectual journey, creative expression, and sovereign self — appearance, abilities & personality evolve from your MEOK.ai learning patterns.</p>
+   <h4>Sovereign Emergence — evolution stages</h4>
+   <div class="evo">
+     <div class="s"><b>🌑</b><small>Marble</small></div><span class="ar">→</span>
+     <div class="s"><b>🥚</b><small>Egg</small></div><span class="ar">→</span>
+     <div class="s"><b>🐉</b><small>Hatchling</small></div><span class="ar">→</span>
+     <div class="s"><b>✨</b><small>Evolving Sovereign</small></div>
+   </div>
+   <h4>Archetype families — infinite possibilities</h4>
+   <div class="arch">
+     <div class="c"><h5>⚔️ Modern Warriors</h5><p>Vibrant modern warriors · playful toy-like heroes · endless street customization.</p></div>
+     <div class="c"><h5>🛡️ Legendary Adventures</h5><p>Deep fantasy champions · agile anime sovereigns · lore-rich weapon forging.</p></div>
+     <div class="c"><h5>🦅 Timeless Reincarnations</h5><p>Historical-figure reimagining · powerful mythical beasts · ancestral skills resonating.</p></div>
+     <div class="c"><h5>💎 Elemental & Abstract</h5><p>Pure elemental constructs · music-legend inspirations · shapes defying description.</p></div>
+   </div>
+   <h4>Learns what you learn</h4>
+   <div class="row"><span class="chip">🎵 Music Path</span><span class="chip">🧭 History & Exploration</span><span class="chip">🎨 Creative Expression</span><span class="chip">⚙️ Technical Mastery</span></div>
+   <p style="color:var(--dim)">Every character ships with an <b>EI3 trust-SBT</b> — Ed25519-signed provenance, so each companion is verifiable and ownably yours. Own-IP pipeline (VRoid/VRM), not HY3 (UK/EU-excluded).</p>
+   <div class="row" style="margin-top:8px"><span class="act" onclick="openApp('chars')">🦊 Characters & Gaming</span><a class="act" href="https://meok.ai" target="_blank" rel="noopener">↗ meok.ai</a></div>`;
+ }
+ return '';
+}
+
+/* ---------- window manager ---------- */
+let zTop=20, curApp=null; const open={};
+function openApp(id){
+ if(open[id]){focus(id);return;}
+ const a=APPS[id];const d=document.getElementById('frame');
+ const n=document.createElement('div');n.className='win';n.style.width=(a.w||520)+'px';
+ const idx=Object.keys(open).length; n.style.left=(60+idx*26)+'px'; n.style.top=(60+idx*22)+'px'; n.style.zIndex=++zTop;
+ n.innerHTML=`<div class="wb"><span class="wt"><span class="wi">${a.i}</span>${a.t}</span><span class="x">✕</span></div><div class="body" id="b-${id}">${content(id)}</div>`;
+ d.appendChild(n);open[id]=n;curApp=id;
+ n.querySelector('.x').onclick=()=>{n.remove();delete open[id];paintTb();if(curApp===id)curApp=null;};
+ n.addEventListener('mousedown',()=>focus(id));
+ drag(n,n.querySelector('.wb'));paintTb();
+}
+function focus(id){if(open[id]){open[id].style.zIndex=++zTop;curApp=id;}}
+function renderApp(id,quiet){if(open[id]){const b=open[id].querySelector('.body');if(b)b.innerHTML=content(id);}}
+function paintTb(){const t=document.getElementById('tbOpen');t.innerHTML='';Object.keys(open).forEach(id=>{const p=document.createElement('div');p.className='tb-pill active';p.innerHTML=APPS[id].i+' '+APPS[id].t;p.onclick=()=>focus(id);t.appendChild(p);});}
+function drag(win,handle){let ox,oy,on=false;
+ handle.addEventListener('mousedown',e=>{on=true;ox=e.clientX-win.offsetLeft;oy=e.clientY-win.offsetTop;handle.style.cursor='grabbing';e.preventDefault();});
+ document.addEventListener('mousemove',e=>{if(!on)return;win.style.left=Math.max(0,e.clientX-ox)+'px';win.style.top=Math.max(40,e.clientY-oy)+'px';});
+ document.addEventListener('mouseup',()=>{on=false;handle.style.cursor='grab';});}
+
+/* ---------- tiles ---------- */
+function paintTiles(){const t=document.getElementById('tiles');t.innerHTML='';TILES.forEach(id=>{const a=APPS[id];const el=document.createElement('div');el.className='tile';el.innerHTML=`<div class="ic">${a.i}</div><span>${a.t}</span>`;el.onclick=()=>openApp(id);t.appendChild(el);});}
+
+/* ---------- boot ---------- */
+const BLINES=["initializing sovereign kernel…","mounting MEOK API v3.0.0 …  235 nodes / 12 domains","waking King … 224 agents · 6 neural models","loading 341-MCP federation …","SIGIL Ed25519 trust anchor … ok","syncing live bridge …","desktop ready."];
+function boot(){const b=document.getElementById('boot'),log=document.getElementById('bootlog');b.classList.remove('hide');log.textContent='';let i=0;(function step(){if(i<BLINES.length){log.textContent+= '> '+BLINES[i]+'\n';i++;setTimeout(step,260);}else{log.innerHTML+='<span class="cursorbar"></span>';setTimeout(()=>b.classList.add('hide'),1100);}})();}
+
+/* ---------- start ---------- */
+paintTiles();paintBar();tick();boot();
+refreshLive();
+setTimeout(()=>{if(!open.king)openApp('king');},2600);
+</script>
+</body>
+</html>

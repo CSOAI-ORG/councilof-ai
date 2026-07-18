@@ -1,0 +1,49 @@
+{
+  "mcpVersion": "1.0.0",
+  "serverInfo": {
+    "name": "cobol-bridge---modernise-legacy-systems-with-ai",
+    "version": "1.0.0",
+    "description": "COBOL Bridge \u2014 Modernise Legacy Systems with AI \u2014 MEOK AI Labs compliance substrate."
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "compliance-audit",
+      "description": "Run a compliance audit via COBOL Bridge \u2014 Modernise Legacy Systems with AI.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string",
+            "description": "Name or identifier of the system"
+          },
+          "framework": {
+            "type": "string",
+            "description": "Framework to check"
+          }
+        },
+        "required": [
+          "system"
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "https://cobolbridge.ai/llms.txt",
+      "name": "COBOL Bridge \u2014 Modernise Legacy Systems with AI LLMs.txt",
+      "description": "Discovery manifest.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://cobolbridge.ai/sitemap.xml",
+      "name": "COBOL Bridge \u2014 Modernise Legacy Systems with AI Sitemap",
+      "description": "Page index.",
+      "mimeType": "application/xml"
+    }
+  ]
+}

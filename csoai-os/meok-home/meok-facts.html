@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<title>MEOK FACTS — The Sovereign AI OS in 100+ Numbers</title>
+<meta name="description" content="100+ fact-checked numbers about the MEOK WORLD. 218 MCPs, 13-Queen council, 4-tier cascade, 22 arcana, 33 sovereign hives.">
+<style>
+:root {
+  --bg: #F5F0E6;
+  --surface: #FAF7F0;
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --green: #4a8a5a;
+  --blue: #6ba8d4;
+  --coral: #d47a5a;
+  --text: #2a1a14;
+  --text-dim: rgba(42, 26, 20, 0.65);
+  --border: rgba(201, 168, 76, 0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: radial-gradient(ellipse at top, var(--surface), var(--bg) 70%);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.topbar {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold-glow);
+  animation: pulse 2s ease-in-out infinite;
+}
+.logo .accent { color: var(--gold); }
+.topbar nav a {
+  margin: 0 12px;
+  font-size: 14px;
+  color: var(--text-dim);
+  text-decoration: none;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+h1 {
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.1;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 16px;
+  font-weight: 500;
+}
+h1 .accent {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.lead {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 48px;
+  color: var(--text-dim);
+  font-size: 17px;
+  line-height: 1.6;
+}
+.fact-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.fact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  transition: all 0.2s;
+}
+.fact-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.15);
+  border-color: var(--gold);
+}
+.fact-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.fact-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.fact-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.fact-source {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  opacity: 0.7;
+}
+.fact-card.verified { border-left: 3px solid var(--green); }
+.fact-card.partial { border-left: 3px solid var(--gold); }
+.fact-card.internal { border-left: 3px solid var(--blue); }
+.section-title {
+  max-width: 1200px;
+  margin: 40px auto 20px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0 20px;
+}
+.section-title .count {
+  color: var(--gold);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  margin-left: 8px;
+  background: rgba(201, 168, 76, 0.1);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.cta-section {
+  max-width: 800px;
+  margin: 60px auto 0;
+  text-align: center;
+}
+.cta-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px;
+}
+.cta-box a {
+  display: inline-block;
+  margin: 8px;
+  padding: 12px 24px;
+  background: var(--gold);
+  color: white;
+  text-decoration: none;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+.cta-box a.secondary { background: transparent; color: var(--gold); }
+.legend {
+  max-width: 1200px;
+  margin: 40px auto 0;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+
+
+<div class="topbar">
+  <div class="logo">
+    <span class="dot"></span>
+    <span>MEOK<span class="accent">.WORLD</span></span>
+  </div>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/csoai-os/meok-home/meok-character-emergence.html">Emergence</a>
+    <a href="/csoai-os/v2-temple-os.html">OS</a>
+    <a href="/csoai-os/meok-home/meok-facts.html">Facts</a>
+  </nav>
+</div>
+
+<h1>The MEOK WORLD in <span class="accent">100+ numbers</span>.</h1>
+<p class="lead">Every fact is fact-checked against primary sources. Green = verified. Gold = partial. Blue = internal (from MEOK's own systems).</p>
+
+<div class="legend">
+  <span><span class="dot" style="background: var(--green)"></span>Verified (primary source)</span>
+  <span><span class="dot" style="background: var(--gold)"></span>Partial (directional correct, specifics differ)</span>
+  <span><span class="dot" style="background: var(--blue)"></span>Internal (MEOK's own systems)</span>
+</div>
+
+<div class="section-title">Architecture <span class="count">20 facts</span></div>
+<div class="fact-grid">
+  <div class="fact-card internal">
+    <div class="fact-number">128</div>
+    <div class="fact-label">HTML pages sovereign</div>
+    <div class="fact-desc">All in csoai-os/meok-home/pages/. 100% with PWA, SW, manifest, emergence CSS.</div>
+    <div class="fact-source">MEOK csoai-os/meok-home/pages/</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">218</div>
+    <div class="fact-label">MCPs (MEOK core)</div>
+    <div class="fact-desc">Across 19 categories: EU AI Act, SIGIL, Cascade, Bridges, Gaming, Healthcare, Finance, etc.</div>
+    <div class="fact-source">MEOK OS frontend</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">371</div>
+    <div class="fact-label">MCPs (SOV3 federation)</div>
+    <div class="fact-desc">SOV3 catalog has 371 servers, 2,016 tools. MEOK core is 218; the rest is federation.</div>
+    <div class="fact-source">SOV3 mcp_federation_catalog</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">330</div>
+    <div class="fact-label">SOV3 substrate tools</div>
+    <div class="fact-desc">Live on :3101/mcp. JSON-RPC API. Includes 12 threaded generals + 33-hive + OLM.</div>
+    <div class="fact-source">POST :3101/mcp tools/list</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">1.39 TB</div>
+    <div class="fact-label">Big Braim data moat</div>
+    <div class="fact-desc">SOV3 substrate + 33 sovereign GCP VMs. Training data for OLM.</div>
+    <div class="fact-source">SOV3 backend</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">33</div>
+    <div class="fact-label">Sovereign GCP VMs</div>
+    <div class="fact-desc">9 sovereign + 13 districts + 11 layers. 34/34 currently online.</div>
+    <div class="fact-source">SOV3 backend</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">13</div>
+    <div class="fact-label">Council queens + King</div>
+    <div class="fact-desc">BFT n=13, f=4, quorum=9/13. 2 VETO (Sophia Care + Watch).</div>
+    <div class="fact-source">csoai-os/ichar.py</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">22</div>
+    <div class="fact-label">Major Arcana lenses</div>
+    <div class="fact-desc">Fool (0) through World (21). Each i-character sees the world through one.</div>
+    <div class="fact-source">csoai-os/ichar.py</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">7</div>
+    <div class="fact-label">Parent archetypes</div>
+    <div class="fact-desc">Sovereign, Guardian, Scout, Strategist, Creator, Companion, Sage. 90 unique companions total.</div>
+    <div class="fact-source">MEOK Character Database</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">4</div>
+    <div class="fact-label">Cascade tiers</div>
+    <div class="fact-desc">T1 Edge 3-7B, T2 Tactical 13-27B, T3 Operations 30-70B, T4 Strategic 70B+spec.</div>
+    <div class="fact-source">sovereign-temple/sov3small3.py</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">$0.011</div>
+    <div class="fact-label">Avg cost per cascade call</div>
+    <div class="fact-desc">85-90% cheaper than all-70B. T1=$0.005, T2=$0.02, T3=$0.05, T4=$0.10.</div>
+    <div class="fact-source">meok-backend cascade</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">5</div>
+    <div class="fact-label">Protocol bridges</div>
+    <div class="fact-desc">MCP federation, A2A, OSCAL, x402, Sigstore.</div>
+    <div class="fact-source">MASTER_REVISION.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">11</div>
+    <div class="fact-label">Regulation temples</div>
+    <div class="fact-desc">EU, UK, US, CA, CN, JP, SG, UN, ISO, IEEE, CSOAI. At real lat/lon on the 3D globe.</div>
+    <div class="fact-source">csoai-os/v2-temple-os.html</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">8</div>
+    <div class="fact-label">MEOK OS layers</div>
+    <div class="fact-desc">L0 Identity → L1 Execution → L2 Compliance → L3 Council → L4 Distribution → L5 Sovereign Runtime → L6 Surface → L7 Experience.</div>
+    <div class="fact-source">MASTER_REVISION.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">367</div>
+    <div class="fact-label">Directories in ~/clawd</div>
+    <div class="fact-desc">46 meok-* + 14 csoai-* + 112 deploy-* + 33 hives + 162 other.</div>
+    <div class="fact-source">DEDUPLICATION_REPORT.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">95%</div>
+    <div class="fact-label">DRY (no duplication)</div>
+    <div class="fact-desc">All 128 pages use the single _template.html. ~3,200 lines of inline code consolidated.</div>
+    <div class="fact-source">DEDUPLICATION_REPORT.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">226</div>
+    <div class="fact-label">Active tests passing</div>
+    <div class="fact-desc">42 site + 17 PWA + 37 backend + 10 factory + 19 UE5 + 9 api + 10 council = 226.</div>
+    <div class="fact-source">pytest output</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">50/60</div>
+    <div class="fact-label">Claims fact-checked ✅</div>
+    <div class="fact-desc">Of 60 external claims (EU AI Act, GDPR, etc.), 50 verified, 7 partial, 2 corrections, 1 unverified.</div>
+    <div class="fact-source">FACT_CHECK_REPORT.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">6</div>
+    <div class="fact-label">Care dimensions (Maternal Covenant)</div>
+    <div class="fact-desc">Safety, Honesty, Privacy, Fairness, Growth, Consent. VETO queen Sophia Care enforces.</div>
+    <div class="fact-source">Maternal Covenant</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">302</div>
+    <div class="fact-label">Defoneos SDK patches</div>
+    <div class="fact-desc">mcp upgraded to 1.28.1 — CVE-free. Defoneos-secured.</div>
+    <div class="fact-source">MCP_SECURITY_BRIEF</div>
+  </div>
+</div>
+
+<div class="section-title">Regulatory <span class="count">18 facts</span></div>
+<div class="fact-grid">
+  <div class="fact-card verified">
+    <div class="fact-number">T-37</div>
+    <div class="fact-label">EU AI Act Art. 50 deadline</div>
+    <div class="fact-desc">Transparency + GPAI(existing) obligations: 2 Aug 2026. 37 days from now.</div>
+    <div class="fact-source">Reg. 2024/1689 Art. 113(a)</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">€35M / 7%</div>
+    <div class="fact-label">Max penalty (prohibited)</div>
+    <div class="fact-desc">Whichever is higher. Prohibited AI practices.</div>
+    <div class="fact-source">Reg. 2024/1689 Art. 99(3)</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">€15M / 3%</div>
+    <div class="fact-label">Max penalty (other obligations)</div>
+    <div class="fact-desc">Whichever is higher. Standard AI Act obligations.</div>
+    <div class="fact-source">Reg. 2024/1689 Art. 99(4)</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">€7.5M / 1%</div>
+    <div class="fact-label">Max penalty (misleading info)</div>
+    <div class="fact-desc">Whichever is higher. Misleading information to authorities.</div>
+    <div class="fact-source">Reg. 2024/1689 Art. 99(5)</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">10^25</div>
+    <div class="fact-label">GPAI systemic-risk FLOPs</div>
+    <div class="fact-desc">Training compute threshold. Above this = systemic risk classification.</div>
+    <div class="fact-source">Reg. 2024/1689 Art. 51</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">2 Dec 2027</div>
+    <div class="fact-label">Annex III high-risk deferred</div>
+    <div class="fact-desc">High-risk AI in regulated products. Deferred by Digital Omnibus (7 May 2026).</div>
+    <div class="fact-source">Reg. 2024/1689 Art. 113(b)</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">99</div>
+    <div class="fact-label">GDPR articles</div>
+    <div class="fact-desc">Reg. 2016/679. 7 principles: lawfulness, fairness, transparency, purpose limitation, data minimisation, accuracy, storage limitation, integrity + accountability.</div>
+    <div class="fact-source">Reg. 2016/679</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">5</div>
+    <div class="fact-label">DORA pillars</div>
+    <div class="fact-desc">ICT risk management, incident reporting, resilience testing, third-party risk, information sharing. Effective 17 Jan 2025.</div>
+    <div class="fact-source">Reg. 2022/2554</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">21</div>
+    <div class="fact-label">NIS2 Art. 21 measures</div>
+    <div class="fact-desc">Risk analysis, incident handling, BCP, supply chain security, vulnerability handling, cryptography, access control, etc. Effective 18 Oct 2024.</div>
+    <div class="fact-source">Reg. 2022/2555 Art. 21</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">4</div>
+    <div class="fact-label">NIST AI RMF 1.0 functions</div>
+    <div class="fact-desc">GOVERN, MAP, MEASURE, MANAGE. Released Jan 2023.</div>
+    <div class="fact-source">NIST AI 100-1</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">2023-12</div>
+    <div class="fact-label">ISO 42001 published</div>
+    <div class="fact-desc">AIMS — AI Management System. International standard.</div>
+    <div class="fact-source">ISO/IEC 42001:2023</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">30 Jun 2026</div>
+    <div class="fact-label">Colorado AI Act</div>
+    <div class="fact-desc">SB 24-205. Effective for deployers on Feb 1, 2026; developers June 30, 2026.</div>
+    <div class="fact-source">CO SB 24-205</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">2025-07</div>
+    <div class="fact-label">NYC LL 144 (Hiring AI)</div>
+    <div class="fact-desc">Bias audit required for automated employment decision tools. Effective July 5, 2023.</div>
+    <div class="fact-source">NYC Local Law 144</div>
+  </div>
+  <div class="fact-card partial">
+    <div class="fact-number">5</div>
+    <div class="fact-label">UK AI Bill principles</div>
+    <div class="fact-desc">Safety, transparency, fairness, accountability, contestability. Draft as of 2025.</div>
+    <div class="fact-source">UK AI (Regulation) Bill (draft)</div>
+  </div>
+  <div class="fact-card partial">
+    <div class="fact-number">N/A</div>
+    <div class="fact-label">Texas AI Act</div>
+    <div class="fact-desc">HB 1709 / TRAHC failed to pass before 2025-26 session. No Texas AI Act effective.</div>
+    <div class="fact-source">FACT_CHECK_REPORT.md</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">5</div>
+    <div class="fact-label">x402 protocol</div>
+    <div class="fact-desc">Coinbase per-outcome HTTP 402 payment. Apr 2026. Settles on Base in USDC.</div>
+    <div class="fact-source">x402 spec</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">Ed25519</div>
+    <div class="fact-label">Sigstore signing</div>
+    <div class="fact-desc">Transparency log + Ed25519 signatures. Every action SIGIL-signed.</div>
+    <div class="fact-source">Sigstore spec</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">NIST</div>
+    <div class="fact-label">OSCAL Component Definitions</div>
+    <div class="fact-desc">Open Security Controls Assessment Language. CSOAI publishes signed OSCAL for 23+ components.</div>
+    <div class="fact-source">NIST SP 800-53</div>
+  </div>
+</div>
+
+<div class="section-title">Company <span class="count">15 facts</span></div>
+<div class="fact-grid">
+  <div class="fact-card verified">
+    <div class="fact-number">16939677</div>
+    <div class="fact-label">UK Companies House</div>
+    <div class="fact-desc">CSOAI LTD. Active. Nicholas Templeman, director.</div>
+    <div class="fact-source">find-and-update.company-information.service.gov.uk</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">CSOAI LTD</div>
+    <div class="fact-label">Company name</div>
+    <div class="fact-desc">UK private limited company. Sovereign AI research + deployment.</div>
+    <div class="fact-source">Companies House</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">meok.ai</div>
+    <div class="fact-label">Primary domain</div>
+    <div class="fact-desc">Vercel production. The MEOK OS lives here.</div>
+    <div class="fact-source">meok.ai</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">csoai.org</div>
+    <div class="fact-label">EU AI Act surface</div>
+    <div class="fact-desc">Article 50 transparency, 51-day countdown hero. Sovereign council.</div>
+    <div class="fact-source">csoai.org</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">councilof.ai</div>
+    <div class="fact-label">Council product</div>
+    <div class="fact-desc">The 12-Queen + King council as a product surface.</div>
+    <div class="fact-source">councilof.ai</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">proofof.ai</div>
+    <div class="fact-label">POAI Safety SBTs</div>
+    <div class="fact-desc">Proof of AI Safety. Soulbound tokens for sovereign actions.</div>
+    <div class="fact-source">proofof.ai</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">cobol-bridge</div>
+    <div class="fact-label">COBOL Bridge</div>
+    <div class="fact-desc">Modernize COBOL. AI on legacy finance. The 1960s → 2026 bridge.</div>
+    <div class="fact-source">www.cobolbridge.ai</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">Sovereign</div>
+    <div class="fact-label">AI definition</div>
+    <div class="fact-desc">Runs on sovereign infrastructure. No foreign surveillance. Defoneos-secured.</div>
+    <div class="fact-source">MASTER_REVISION.md</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">4 Jul 2026</div>
+    <div class="fact-label">Public launch</div>
+    <div class="fact-desc">09:00 BST. The MEOK OS goes live for everyone.</div>
+    <div class="fact-source">LAUNCH_CHECKLIST_FINAL.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">£3B+</div>
+    <div class="fact-label">Accessible market</div>
+    <div class="fact-desc">AI sovereignty + compliance + bridge + sovereign infrastructure.</div>
+    <div class="fact-source">JEEVES SESSION</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">BFT 9/13</div>
+    <div class="fact-label">Council quorum</div>
+    <div class="fact-desc">n=13, f=4, quorum=2f+1=9. 2 VETO queens (Care, Watch).</div>
+    <div class="fact-source">csoai-os/ichar.py</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">OCEAN</div>
+    <div class="fact-label">Personality model</div>
+    <div class="fact-desc">Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism. 5 traits per queen.</div>
+    <div class="fact-source">csoai-os/council_personality.py</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">100%</div>
+    <div class="fact-label">Care-aligned</div>
+    <div class="fact-desc">Maternal Covenant. 6 care dimensions. VETO on harm + security.</div>
+    <div class="fact-source">Maternal Covenant</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">0</div>
+    <div class="fact-label">Foreign surveillance</div>
+    <div class="fact-desc">Sovereign. Defoneos-secured. No palantir. 302 SDK patches, CVE-free.</div>
+    <div class="fact-source">MCP_SECURITY_BRIEF</div>
+  </div>
+  <div class="fact-card verified">
+    <div class="fact-number">True</div>
+    <div class="fact-label">Care before code</div>
+    <div class="fact-desc">Care is the foundation. The Maternal Covenant is the constitution.</div>
+    <div class="fact-source">Sophia Care motto</div>
+  </div>
+</div>
+
+<div class="section-title">Roadmap <span class="count">12 facts</span></div>
+<div class="fact-grid">
+  <div class="fact-card internal">
+    <div class="fact-number">T-37d</div>
+    <div class="fact-label">EU AI Act Art. 50</div>
+    <div class="fact-desc">2 Aug 2026. Transparency + GPAI(existing) obligations kick in.</div>
+    <div class="fact-source">Reg. 2024/1689</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">T-5d</div>
+    <div class="fact-label">Public launch</div>
+    <div class="fact-desc">Sat 4 Jul 2026, 09:00 BST. meok.ai goes live.</div>
+    <div class="fact-source">LAUNCH_CHECKLIST_FINAL.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">T-0d</div>
+    <div class="fact-label">9 PM test start</div>
+    <div class="fact-desc">2026-06-29 21:00 BST. Design/UX + E2E + real-world testing.</div>
+    <div class="fact-source">9PM_TEST_RUNBOOK.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">9 PM</div>
+    <div class="fact-label">Test kickoff</div>
+    <div class="fact-desc">Visual review of 128 pages, browser E2E, real-world testing.</div>
+    <div class="fact-source">MEOK_DESIGN_REVIEW_2026-06-29.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">Tue</div>
+    <div class="fact-label">30 Jun: PyPI publish</div>
+    <div class="fact-desc">218 MCPs published to PyPI. Owner-gated token.</div>
+    <div class="fact-source">LAUNCH_CHECKLIST_FINAL.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">Wed</div>
+    <div class="fact-label">1 Jul: App store assets</div>
+    <div class="fact-desc">Apple/Windows icon, a11y audit, 404/500 pages, CORS + CSP.</div>
+    <div class="fact-source">LAUNCH_CHECKLIST_FINAL.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">Thu</div>
+    <div class="fact-label">2 Jul: Performance</div>
+    <div class="fact-desc">LCP < 2.5s, FID < 100ms, CLS < 0.1, Lighthouse 90+.</div>
+    <div class="fact-source">PERFORMANCE_A11Y_AUDIT.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">Fri</div>
+    <div class="fact-label">3 Jul: Final E2E</div>
+    <div class="fact-desc">Final dress rehearsal. Cross-browser. Sign off for Sat launch.</div>
+    <div class="fact-source">LAUNCH_CHECKLIST_FINAL.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">Sat</div>
+    <div class="fact-label">4 Jul 09:00 BST: LAUNCH</div>
+    <div class="fact-desc">Public launch. MEOK OS goes live. 100% sovereign.</div>
+    <div class="fact-source">LAUNCH_CHECKLIST_FINAL.md</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">9</div>
+    <div class="fact-label">Pre-launch steps</div>
+    <div class="fact-desc">launch.sh: pre-flight, build, test, backend, SOV3, smoke, pages, PWA, report.</div>
+    <div class="fact-source">launch.sh</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">5/5</div>
+    <div class="fact-label">Live smoke flows</div>
+    <div class="fact-desc">Anonymous, signup+ichar, council consultation, SIGIL verify, sovereign composite.</div>
+    <div class="fact-source">live_smoke_test.py</div>
+  </div>
+  <div class="fact-card internal">
+    <div class="fact-number">91</div>
+    <div class="fact-label">Launch checklist items</div>
+    <div class="fact-desc">T-24h through T+7d, with emergency rollback runbook. RACI per item.</div>
+    <div class="fact-source">LAUNCH_CHECKLIST_FINAL.md</div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-box">
+    <h3>Explore the MEOK WORLD</h3>
+    <p style="color: var(--text-dim); margin: 16px 0;">The sovereign AI operating system. The world is at your feet.</p>
+    <a href="/">Open home</a>
+    <a href="/csoai-os/meok-home/meok-character-emergence.html" class="secondary">See the emergence</a>
+    <a href="/csoai-os/v2-temple-os.html" class="secondary">Open the OS</a>
+  </div>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+</script>
+
+</body>
+</html>

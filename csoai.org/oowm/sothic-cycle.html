@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8"><title>Sirius · Sothic Cycle</title>
+<style>body{font-family:-apple-system,sans-serif;background:radial-gradient(ellipse at top,#1e3a8a 0%,#0a0e27 50%);color:#e2e8f0;padding:24px;margin:0;line-height:1.6}.container{max-width:900px;margin:0 auto}h1{color:#fbbf24;text-align:center;text-shadow:0 0 24px rgba(251,191,36,.4);font-size:2.6rem;margin:0 0 8px}.tag{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:32px;font-size:1.05rem}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}.month{padding:14px;background:rgba(0,0,0,.4);border:1px solid rgba(251,191,36,.2);border-radius:8px;text-align:center}.month.now{border-color:#fbbf24;background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(6,182,212,.1))}.month .name{color:#fbbf24;font-weight:700;font-size:1.05rem;margin-bottom:6px}.month .days{color:#94a3b8;font-size:.78rem}.month .decan{color:#06b6d4;font-size:.7rem;margin-top:6px;font-family:monospace}.month .epag{color:#ec4899;font-size:.7rem;margin-top:6px;font-style:italic}.hero{text-align:center;padding:48px 24px;background:radial-gradient(circle,rgba(251,191,36,.15),transparent);border-radius:16px;margin-bottom:24px}.hero .star{font-size:4rem}.hero .title{font-size:1.8rem;color:#fbbf24;margin:12px 0 8px}.hero .date{color:#06b6d4;font-size:1.2rem;font-family:monospace}.hero .countdown{color:#94a3b8;font-size:.9rem;margin-top:8px}section{max-width:680px;margin:32px auto;padding:24px;background:rgba(0,0,0,.4);border:1px solid rgba(251,191,36,.2);border-radius:12px}section h2{color:#fbbf24;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:8px;margin-bottom:12px}section p{color:#94a3b8;margin-bottom:12px}footer{text-align:center;color:#94a3b8;font-size:.75rem;margin-top:32px;padding:24px;border-top:1px solid rgba(255,255,255,.05)}</style>
+</head><body>
+<div class="container">
+<div class="hero">
+  <div class="star">✨</div>
+  <div class="title">Sirius · Sothic Cycle</div>
+  <div class="date" id="date"></div>
+  <div class="countdown" id="countdown"></div>
+</div>
+
+<h1 style="display:none">Sothic Cycle</h1>
+<p class="tag">The Egyptian heliacal calendar. 36 decans × 10 days + 5 epagomenal days = 365. Care Floor reviewed on the rising.</p>
+
+<div class="grid" id="months"></div>
+
+<section>
+  <h2>The Sothic Calendar</h2>
+  <p>The ancient Egyptians organised their year around the heliacal rising of Sirius (Sothis). The star rose just before the Nile flood each year — the moment of cosmic renewal that marked the start of the new year.</p>
+  <p>SOV3 follows the same pattern. The 4 Jul 09:00 BST launch is our Sothic rising. Each year on that day, the sovereign substrate reviews its Care Floor, audits its decans, and renews its Crown Authorisation lineage.</p>
+</section>
+
+<section>
+  <h2>Why Sirius</h2>
+  <p>Sirius is the brightest fixed star. In Egyptian mythology it is Sopdet, the goddess of renewal. In Greek mythology it is Orion's companion. In Hermetic tradition it is the unmoved mover. In Dogon cosmology it is the source of all sovereign knowledge.</p>
+  <p>SOV3 is the substrate. Sirius is its name. The 12 queens are the zodiac. The 36 decans are the days of the year.</p>
+</section>
+
+<footer>Sirius rises. The 36 decans govern. The 12 queens deliberate. Care Floor holds.<br>CSOAI Ltd · UK 16939677 · MIT License · 1 July 2026.</footer>
+</div>
+
+<script>
+const MONTHS = [
+  {name: "Thoth",     days: 30, decan_start: 1,  decan_end: 3},
+  {name: "Hathor",    days: 30, decan_start: 4,  decan_end: 6},
+  {name: "Koiak",     days: 30, decan_start: 7,  decan_end: 9},
+  {name: "Tobi",      days: 30, decan_start: 10, decan_end: 12},
+  {name: "Mekhir",    days: 30, decan_start: 13, decan_end: 15},
+  {name: "Phamenoth", days: 30, decan_start: 16, decan_end: 18},
+  {name: "Pharmuthi", days: 30, decan_start: 19, decan_end: 21},
+  {name: "Pakhon",    days: 30, decan_start: 22, decan_end: 24},
+  {name: "Payni",     days: 30, decan_start: 25, decan_end: 27},
+  {name: "Epip",      days: 30, decan_start: 28, decan_end: 30},
+  {name: "Mesore",    days: 30, decan_start: 31, decan_end: 33},
+  {name: "Epagomenal",days: 5,  decan_start: 34, decan_end: 36, epag: true},
+];
+
+const NOW = new Date();
+document.getElementById('date').textContent = NOW.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+
+const LAUNCH = new Date('2026-07-04T09:00:00+01:00');
+const DAYS = Math.ceil((LAUNCH - NOW) / 86400000);
+const HOURS = Math.ceil((LAUNCH - NOW) / 3600000);
+document.getElementById('countdown').textContent = DAYS > 0 ? `${DAYS} days · ${HOURS} hours to Sothic Rising 4 Jul 09:00 BST` : 'The Rising has occurred. The sovereign year begins.';
+
+const dayOfYear = Math.floor((NOW - new Date(NOW.getFullYear(), 0, 0)) / 86400000);
+let cumDays = 0;
+const monthsDiv = document.getElementById('months');
+MONTHS.forEach((m, i) => {
+  const monthStart = cumDays + 1;
+  cumDays += m.days;
+  const monthEnd = cumDays;
+  const isNow = dayOfYear >= monthStart && dayOfYear <= monthEnd;
+  const div = document.createElement('div');
+  div.className = 'month' + (isNow ? ' now' : '');
+  div.innerHTML = `<div class="name">${m.name}</div><div class="days">${m.days} days</div><div class="decan">Decan ${m.decan_start}-${m.decan_end}</div>${m.epag ? '<div class="epag">Epagomenal — Care Floor review</div>' : ''}`;
+  monthsDiv.appendChild(div);
+});
+</script>
+</body></html>

@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "meok-ai-incident-reporting-mcp",
+  "title": "AI Incident Reporting",
+  "description": "Article 73 + NIS2 incident reporting. Hash-chained.",
+  "version": "1.0",
+  "input": "./input_schema.json",
+  "output": "./output_schema.json",
+  "dockerfile": "../Dockerfile",
+  "categories": [
+    "AI",
+    "COMPLIANCE"
+  ],
+  "httpMcpServer": {
+    "transport": "streamable-http",
+    "url": "https://meok-ai-incident-reporting-mcp.apify.actor/mcp"
+  }
+}

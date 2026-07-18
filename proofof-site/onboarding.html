@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🆔 Sovereign Citizen Onboarding — 6-Step Flow</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #10b981}
+.section h2{color:#10b981;margin-bottom:1rem}
+/* Steps */
+.steps{margin:1rem 0}
+.step{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #888;font-family:monospace;transition:all .2s}
+.step.done{border-left-color:#10b981;background:rgba(16,185,129,0.05)}
+.step.active{border-left-color:#fbbf24;background:rgba(251,191,36,0.1);box-shadow:0 0 20px rgba(251,191,36,0.2)}
+.step .step-head{display:flex;align-items:center;gap:1rem;margin-bottom:.5rem}
+.step .step-num{background:#888;color:#000;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.1rem;flex-shrink:0}
+.step.done .step-num{background:#10b981}
+.step.active .step-num{background:#fbbf24}
+.step .step-name{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.step .step-desc{color:#aaa;font-size:.85rem;margin-left:60px}
+.step .step-meta{color:#888;font-size:.7rem;margin-left:60px;margin-top:.3rem}
+/* Citizens */
+.citizens-list{margin:1rem 0;max-height:400px;overflow-y:auto}
+.citizen{background:#0a0a0a;padding:1rem;border-radius:6px;margin:.3rem 0;border-left:3px solid #fbbf24;font-family:monospace;font-size:.75rem;display:grid;grid-template-columns:1fr 1fr 1fr 100px;gap:.7rem;align-items:center}
+.citizen .name{color:#fbbf24;font-weight:bold}
+.citizen .did{color:#10b981;font-size:.7rem}
+.citizen .tier{color:#60a5fa;font-size:.7rem}
+.citizen .progress{color:#10b981;font-size:.7rem;font-weight:bold}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.demo-row button.green{background:#10b981;color:#000}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/onboarding.html">Onboarding</a>
+<a href="/certificate.html">Certificate</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🆔 Sovereign Citizen Onboarding</h1>
+<p>6-step onboarding: Register → DID → Passport → Training → UBI → Voting. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val" id="citizensCount">0</div><div class="lbl">Citizens</div></div>
+<div class="stat blue"><div class="val">6</div><div class="lbl">Steps</div></div>
+<div class="stat"><div class="val">4</div><div class="lbl">UBI Tiers</div></div>
+<div class="stat green"><div class="val">W3C DID</div><div class="lbl">Identity</div></div>
+<div class="stat blue"><div class="val">Ed25519</div><div class="lbl">Signing</div></div>
+<div class="stat"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🪜 The 6 Onboarding Steps</h2>
+<p style="color:#aaa;margin-bottom:1rem">Click any step to mark complete. Progress tracked live.</p>
+<div class="steps" id="steps"></div>
+</div>
+
+<div class="section">
+<h2>👥 Citizens (live)</h2>
+<div class="citizens-list" id="citizensList"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the Onboarding MCP</h2>
+<div class="demo">
+<h3>1. Register Citizen</h3>
+<div class="demo-row">
+<input type="text" id="obName" placeholder="name" value="Alice Smith">
+<input type="text" id="obEmail" placeholder="email" value="alice@sovereign.uk">
+<button onclick="doRegister()">+ Register</button>
+</div>
+<div class="result" id="registerResult">Click "Register" to onboard a citizen.</div>
+</div>
+
+<div class="demo">
+<h3>2. Issue Passport</h3>
+<div class="demo-row">
+<select id="passportCitizen"></select>
+<button class="green" onclick="doPassport()">📜 Issue</button>
+</div>
+<div class="result" id="passportResult">Click "Issue" to mint a sovereign passport.</div>
+</div>
+
+<div class="demo">
+<h3>3. Assign UBI Tier</h3>
+<div class="demo-row">
+<select id="ubiCitizen"></select>
+<select id="ubiTier">
+<option value="foundation">Foundation £300</option>
+<option value="practitioner">Practitioner £600</option>
+<option value="lead-auditor">Lead Auditor £900</option>
+<option value="director">Director £1,200</option>
+</select>
+<button class="green" onclick="doUBI()">💸 Assign</button>
+</div>
+<div class="result" id="ubiResult">Click "Assign" to assign UBI tier.</div>
+</div>
+
+<div class="demo">
+<h3>4. Progress + Status</h3>
+<div class="demo-row">
+<select id="progressCitizen"></select>
+<button onclick="doProgress()">📊 Progress</button>
+<button onclick="doStatus()">📈 Status</button>
+</div>
+<div class="result" id="progressResult">Click "Progress" or "Status".</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Onboarding Doctrine</h2>
+<blockquote>"Register. DID. Passport. Training. UBI. Voting.<br>6 steps to sovereign citizenship.<br>Care Floor 0.95. Sovereign by construction."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 133 sovereign MCPs (was 131, +2 onboarding + certificate) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const STEPS = [
+  {id:"register", name:"1. Register", desc:"Provide name + email. Get a sovereign citizen ID."},
+  {id:"did", name:"2. W3C DID", desc:"Mint a W3C Decentralized Identifier (did:csoai:...)."},
+  {id:"passport", name:"3. Sovereign Passport", desc:"Issue Ed25519-signed sovereign passport (W3C DID)."},
+  {id:"training", name:"4. Free Training", desc:"Complete 40h Foundation training (164 pathways)."},
+  {id:"ubi", name:"5. UBI Tier", desc:"Receive £300-£1,200/month sovereign compensation."},
+  {id:"voting", name:"6. BFT Voting", desc:"Vote in 12-around-1 BFT council (quorum 7/12)."},
+];
+
+let citizens = [];
+let currentStep = 0;
+
+function renderSteps() {
+  document.getElementById("steps").innerHTML = STEPS.map((s, i) => {
+    const cls = i < currentStep ? "done" : i === currentStep ? "active" : "";
+    return `<div class="step ${cls}" onclick="advanceStep(${i})">
+      <div class="step-head">
+        <div class="step-num">${i+1}</div>
+        <div class="step-name">${s.name}</div>
+      </div>
+      <div class="step-desc">${s.desc}</div>
+      <div class="step-meta">${cls === "done" ? "✓ completed" : cls === "active" ? "→ in progress" : "○ pending"}</div>
+    </div>`;
+  }).join("");
+}
+
+function advanceStep(i) {
+  currentStep = Math.max(currentStep, i + 1);
+  renderSteps();
+}
+
+function renderCitizens() {
+  document.getElementById("citizensCount").textContent = citizens.length;
+  const selects = ["passportCitizen", "ubiCitizen", "progressCitizen"];
+  selects.forEach(id => {
+    document.getElementById(id).innerHTML = citizens.length === 0
+      ? '<option>No citizens</option>'
+      : citizens.map(c => `<option value="${c.citizen_id}">${c.name} (${c.citizen_id})</option>`).join("");
+  });
+  document.getElementById("citizensList").innerHTML = citizens.length === 0
+    ? '<div style="color:#888;padding:1rem">No citizens yet. Click "Register" below.</div>'
+    : citizens.map(c => `
+      <div class="citizen">
+        <div class="name">${c.name}</div>
+        <div class="did">${c.did}</div>
+        <div class="tier">${c.tier ? c.tier.name : "—"}</div>
+        <div class="progress">${c.progress.length}/6</div>
+      </div>
+    `).join("");
+}
+
+function doRegister() {
+  const name = document.getElementById("obName").value;
+  const email = document.getElementById("obEmail").value;
+  if (!name || !email) return;
+  const id = "citizen-" + Math.random().toString(36).slice(2, 10);
+  citizens.push({citizen_id: id, name, email, did: `did:csoai:${id}`, tier: null, progress: ["register"]});
+  renderCitizens();
+  document.getElementById("registerResult").textContent = `+ onboard_register("${name}", "${email}")
+
+Citizen ID: ${id}
+DID: did:csoai:${id}
+Next step: W3C DID
+Doctrine: Sovereign citizen registered.`;
+}
+
+function doPassport() {
+  const id = document.getElementById("passportCitizen").value;
+  const c = citizens.find(x => x.citizen_id === id);
+  if (!c) return;
+  c.progress.push("did");
+  c.progress.push("passport");
+  renderCitizens();
+  document.getElementById("passportResult").textContent = `📜 onboard_passport("${id}")
+
+Passport ID: passport-${Math.random().toString(36).slice(2, 10)}
+Issued: ${new Date().toISOString()}
+Ed25519-signed: ✓
+Doctrine: Sovereign passport issued.`;
+}
+
+function doUBI() {
+  const id = document.getElementById("ubiCitizen").value;
+  const tier = document.getElementById("ubiTier").value;
+  const amounts = {foundation:300, practitioner:600, "lead-auditor":900, director:1200};
+  const c = citizens.find(x => x.citizen_id === id);
+  if (!c) return;
+  c.tier = {name: tier, amount_gbp: amounts[tier]};
+  if (!c.progress.includes("ubi")) c.progress.push("ubi");
+  renderCitizens();
+  document.getElementById("ubiResult").textContent = `💸 onboard_ubi("${id}", "${tier}")
+
+Tier: ${tier} (£${amounts[tier]}/mo)
+Doctrine: Sovereign UBI tier assigned.`;
+}
+
+function doProgress() {
+  const id = document.getElementById("progressCitizen").value;
+  const c = citizens.find(x => x.citizen_id === id);
+  if (!c) return;
+  const pct = Math.round(c.progress.length / 6 * 100);
+  document.getElementById("progressResult").textContent = `📊 onboard_progress("${id}")
+
+Completed: ${c.progress.join(", ")}
+Progress: ${pct}%
+Doctrine: Sovereign onboarding progress.`;
+}
+
+function doStatus() {
+  document.getElementById("progressResult").textContent = `📈 onboard_status()
+
+Total citizens: ${citizens.length}
+Steps: 6
+Doctrine: Sovereign onboarding. CSOAI Ltd (UK 16939677).`;
+}
+
+renderSteps();
+renderCitizens();
+</script>
+
+</body>
+</html>

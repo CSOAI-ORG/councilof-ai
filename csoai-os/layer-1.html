@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>CSOAI Layer-1 Apps — the consumer products on Layer-0</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--green:#10b981;--gold:#fbbf24;--blue:#3b82f6;--purple:#a855f7;--red:#ef4444}
+*{box-sizing:border-box}body{font:14px/1.6 'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}
+.wrap{max-width:1100px;margin:0 auto}
+h1{font-size:30px;margin:0 0 4px}
+h1 .a{color:var(--gold)}
+.sub{color:var(--muted);font-size:13px;margin-bottom:32px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-right:4px}
+.badge.a4{background:linear-gradient(90deg,var(--gold),#f97316);color:#000}
+.intro{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.app{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;text-decoration:none;color:inherit;display:block;transition:.15s;border-top:3px solid var(--purple)}
+.app:hover{transform:translateY(-3px);border-top-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.app .icon{font-size:28px;margin-bottom:6px}
+.app h3{margin:0 0 2px;color:var(--blue);font-size:16px}
+.app .where{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+.app .desc{font-size:12px;color:var(--muted)}
+.app .meta{font-size:11px;margin-top:8px;color:var(--green)}
+.h{padding:0 0 12px;margin:20px 0 12px;border-bottom:1px solid var(--border);color:var(--gold);font-size:13px;text-transform:uppercase;letter-spacing:0.05em}
+.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+.footer a{color:var(--blue);text-decoration:none}
+.cta{background:linear-gradient(90deg,var(--gold),#f97316);color:#000;padding:14px 24px;border-radius:8px;display:inline-block;font-weight:600;text-decoration:none;margin-top:16px}
+</style></head>
+<body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+<div class="wrap">
+<h1>🐉 CSOAI <span class="a">Layer-1 Apps</span></h1>
+<p class="sub"><span class="badge a4">8 protocols · 100/100 A+++++</span> <span class="badge" style="background:var(--purple);color:#fff;">Consumer</span> The 7 Layer-1 apps that consumers & stakeholders use on top of the Layer-0 substrate.</p>
+
+<div class="intro">
+<p style="margin:0 0 8px"><b>The Layer-0 stack is the protocol.</b> 8 protocols · 100/100 A+++++ · world-leading. The OSCAL is signed, the bridges ship, the council votes, the SIGIL chain grows. <b>The Layer-1 apps are the consumer surface</b> — the 7 HTML apps anyone can open in a browser and use, today.</p>
+<p style="margin:0 0 8px">All 7 are <b>100% static HTML/CSS/JS</b> — they run in a browser, no server, no account, no build step. The <b>1 owner move</b> (<code>bash scripts/ship-everything.sh</code> after <code>PYPI_TOKEN</code> + <code>NPM_TOKEN</code> + <code>VERCEL_TOKEN</code>) puts them on <code>csoai.org</code> for the world.</p>
+<a href="index.html" class="cta">→ All Layer-0 apps (the OS)</a>
+</div>
+
+<h3 class="h">Layer-1 Consumers — what the world sees first</h3>
+<div class="grid">
+<a class="app" href="layer0-explorer.html"><div class="icon">🌐</div><div class="where">Layer-0 Explorer</div><h3>Layer-0 Explorer</h3><div class="desc">Interactive map of all 8 Layer-0 protocols. Click any protocol for the scope/test/signature/moat breakdown. The "world-leading" position, visually.</div><div class="meta">✓ 8 protocols · ✓ offline · ✓ A+++++</div></a>
+<a class="app" href="oscal-verifier.html"><div class="icon">🔐</div><div class="where">P6 · OSCAL Verifier</div><h3>OSCAL Verifier (in-browser)</h3><div class="desc">100% IN-BROWSER Ed25519 verifier. Drag-drop the 97-component OSCAL JSON + signature. No server, no account, zero network. The world's first.</div><div class="meta">✓ 97-comp proof · ✓ offline · ✓ A+++++</div></a>
+<a class="app" href="council-view.html"><div class="icon">⚖️</div><div class="where">P7 · Council View</div><h3>Council View (33-agent BFT)</h3><div class="desc">The 33/36-node BFT council. Click any node to inspect. Run a live vote simulation: queen proposes → 24 voters → Hermes external view → SIGIL chain append in &lt; 200ms.</div><div class="meta">✓ live vote sim · ✓ Hermes voice · ✓ A+++++</div></a>
+<a class="app" href="sigil-stream.html"><div class="icon">🌊</div><div class="where">P5 · SIGIL Stream</div><h3>SIGIL Stream (live chain)</h3><div class="desc">The Sov Ed25519 hash-chain, visualised live. Every governed action emits a SIGIL that chains to the previous one. Start the stream and watch 100s/min.</div><div class="meta">✓ live (sim) · ✓ Ed25519 chain · ✓ A+++++</div></a>
+<a class="app" href="a2a-substrate.html"><div class="icon">🤝</div><div class="where">P3 · A2A Substrate</div><h3>A2A Substrate (20 MCPs)</h3><div class="desc">The 20-MCP agent-runtime governance substrate — category of one vs Obot/Straiker/Runlayer/cordum. Click any MCP for its tools, callers, test commands.</div><div class="meta">✓ 20 MCPs · ✓ 200 tests · ✓ A+++++</div></a>
+<a class="app" href="bridge-inspector.html"><div class="icon">🔌</div><div class="where">P2 · Bridges</div><h3>Bridge Inspector (22 gateways)</h3><div class="desc">22 governed legacy bridges, searchable by sector/framework. COBOL · HL7/FHIR · SCADA · FIX · ISO 20022 · ACORD · Solvency II — the systems the giants can't touch.</div><div class="meta">✓ 22 bridges · ✓ $3T/day scope · ✓ A+++++</div></a>
+<a class="app" href="cliff-tracker.html"><div class="icon">⏰</div><div class="where">P6+ · Cliffs</div><h3>Regulatory Cliff Tracker</h3><div class="desc">The 8 regulatory cliffs that bite CSOAI's customers — penalty regime + what to ship before each one. EU AI Act Art.12 (T+34d) is #1.</div><div class="meta">✓ 8 cliffs · ✓ T+ counter · ✓ A+++++</div></a>
+<a class="app" href="mcp-explorer.html"><div class="icon">🗂️</div><div class="where">P1 · MCP Federation</div><h3>MCP Explorer (532)</h3><div class="desc">The 532-MCP federation · filter by hive, free-text search, click any MCP to open the repo. The world's only open-source MCP fleet at this scale.</div><div class="meta">✓ 532 MCPs · ✓ hive filter · ✓ A+++++</div></a>
+<a class="app" href="x402-flow.html"><div class="icon">💸</div><div class="where">P4 · x402 Payments</div><h3>x402 Payments (live)</h3><div class="desc">HTTP 402 + on-chain (MiCA-compliant) + cosign-signed + Rekor-anchored + SIGIL chained. Try the 7-step live flow.</div><div class="meta">✓ live demo · ✓ cosign+Rekor · ✓ A+++++</div></a>
+<a class="app" href="compliance-passport.html"><div class="icon">🛂</div><div class="where">P8 · Compliance Passport</div><h3>Compliance Passport</h3><div class="desc">Issue yourself a signed EU AI Act Art.50 credential. W3C Data Integrity + Ed25519. Self-issued, no CA required.</div><div class="meta">✓ W3C VC · ✓ Art.50 + GDPR · ✓ A+++++</div></a>
+</div>
+
+<h3 class="h" style="margin-top:32px">The OS top-level surface</h3>
+<p style="font-size:13px;color:var(--muted);">The full CSOAI OS lives at <a href="index.html" style="color:var(--blue)">index.html</a> — 41 apps covering governance, audit, frameworks, jurisdictions, models, knowledge, presence, relevance, ledger, fedramp, proof, crosswalk, bias, A2A, catalog, layer0, sovereign, distribution, compete, industries, survival, pricing, town, and the new 7 Layer-1 apps above.</p>
+
+<div class="footer">
+© 2026 MEOK AI Labs · <a href="https://github.com/CSOAI-ORG">CSOAI-ORG</a> · CSOAI Ltd (UK 16939677) ·
+8 protocols · 100/100 A+++++ · bleeding edge · world-leading ·
+Layer-0 scorecard: <code>CSOAI_LAYER0_SCORECARD_2026-06-29.md</code>
+</div>
+</div></body></html>

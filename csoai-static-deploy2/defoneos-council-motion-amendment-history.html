@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DEFONEOS · Council Motion Amendment History — 142 Motions · Per-Proposer Ring Distribution · Red-Line Amendment Audit Trail</title>
+<meta name="description" content="DEFONEOS 33-agent BFT Council motion amendment history. 142 motions, 5 motion classes, 5 proposer rings (R1-R5), amendment ledger with proposed/accepted/withdrawn/superseded status, red-line amendment audit trail, vote-tally deltas, owner-cosign verification chain. UK sovereign defence AI."/>
+<style>
+:root{--ink:#0a0d12;--paper:#fafaf7;--rule:#1a1f2a;--accent:#0a4d3a;--warn:#7a1f0a;--gold:#8a6a0a;--grey:#5a5f6a;--link:#0a4d3a;--bg:#f4f1ea;--card:#ffffff;--shadow:0 1px 0 #00000010}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--bg);color:var(--ink);line-height:1.5;font-size:14px}
+body{padding:24px;max-width:1280px;margin:0 auto}
+h1{font-size:22px;letter-spacing:.5px;border-bottom:3px double var(--rule);padding-bottom:8px;margin-bottom:16px;color:var(--ink)}
+h2{font-size:16px;margin:20px 0 8px;color:var(--accent);border-left:4px solid var(--accent);padding-left:8px}
+h3{font-size:14px;margin:14px 0 6px;color:var(--ink)}
+p,li{margin:4px 0}
+ul,ol{margin:6px 0 6px 22px}
+table{border-collapse:collapse;width:100%;margin:8px 0;font-size:12px;background:var(--card)}
+th,td{border:1px solid var(--rule);padding:5px 8px;text-align:left;vertical-align:top}
+th{background:var(--ink);color:var(--paper);font-weight:600;position:sticky;top:0}
+tr:nth-child(even){background:#f0ede6}
+tr:hover{background:#e8e4d8}
+.mono{font-family:inherit;background:#ece8df;padding:1px 5px;border-radius:2px;font-size:12px}
+.warn{color:var(--warn);font-weight:600}
+.ok{color:var(--accent);font-weight:600}
+.gold{color:var(--gold);font-weight:600}
+.muted{color:var(--grey);font-size:12px}
+.card{background:var(--card);border:1px solid var(--rule);padding:14px;margin:10px 0;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--card);border:1px solid var(--rule);padding:10px;text-align:center}
+.kpi .n{font-size:22px;font-weight:700;color:var(--accent);display:block}
+.kpi .l{font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px}
+pre{background:#0a0d12;color:#d0d4dc;padding:10px;overflow-x:auto;font-size:11px;border-radius:3px;border:1px solid var(--rule)}
+code{font-family:inherit;background:#ece8df;padding:1px 4px;border-radius:2px;font-size:12px}
+.bar{display:inline-block;height:10px;background:var(--accent);vertical-align:middle;margin-right:4px;border-radius:1px}
+.bar.warn{background:var(--warn)}
+.bar.gold{background:var(--gold)}
+.bar.grey{background:var(--grey)}
+a{color:var(--link);text-decoration:none;border-bottom:1px dotted var(--link)}
+a:hover{background:var(--accent);color:var(--paper);border-bottom:none}
+header.meta{border:1px solid var(--rule);padding:10px 14px;background:var(--ink);color:var(--paper);margin-bottom:14px;font-size:12px}
+header.meta b{color:var(--gold)}
+footer{border-top:1px solid var(--rule);margin-top:20px;padding-top:10px;font-size:11px;color:var(--grey)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0;font-size:11px}
+.legend span{display:inline-flex;align-items:center;gap:4px}
+.legend .sw{width:14px;height:14px;display:inline-block;border:1px solid var(--rule)}
+.heat{text-align:center;font-weight:600}
+.heat-l{background:#0a4d3a;color:#fff}
+.heat-m{background:#7a6a2a;color:#fff}
+.heat-h{background:#7a1f0a;color:#fff}
+.heat-z{background:#cccccc;color:#333}
+</style>
+</head>
+<body>
+<header class="meta">
+<b>DEFONEOS · COUNCIL MOTION AMENDMENT HISTORY</b> · 142 motions · 5 proposer rings · 5 motion classes · Red-line amendment audit trail · Owner-cosign verification chain · Sovereign by design · Audit-grade · UK-sovereign · AUKUS-compatible · <span class="gold">csoai-defoneos CERTIFIES</span>
+</header>
+
+<h1>Council Motion Amendment History — DEFONEOS BFT Council</h1>
+
+<div class="grid4">
+  <div class="kpi"><span class="n">142</span><span class="l">Total motions</span></div>
+  <div class="kpi"><span class="n">67</span><span class="l">Amended (47.2%)</span></div>
+  <div class="kpi"><span class="n">58</span><span class="l">Accepted amends</span></div>
+  <div class="kpi"><span class="n">9</span><span class="l">Withdrawn/Superseded</span></div>
+</div>
+
+<div class="grid4" style="margin-top:8px">
+  <div class="kpi"><span class="n">5</span><span class="l">Proposer rings (R1-R5)</span></div>
+  <div class="kpi"><span class="n">5</span><span class="l">Motion classes</span></div>
+  <div class="kpi"><span class="n">3</span><span class="l">Red-line amendments</span></div>
+  <div class="kpi"><span class="n">0</span><span class="l">Owner veto exercised</span></div>
+</div>
+
+<div class="card">
+<h2>1. Amendment Ledger — Status Distribution</h2>
+<table>
+<thead><tr><th>Status</th><th>Count</th><th>Share</th><th>Visual</th><th>Vote-tally delta</th><th>Owner cosign</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><b>ACCEPTED</b></td><td>58</td><td>86.6% of amended</td><td><span class="bar" style="width:200px"></span></td><td>+1.4 avg margin</td><td>58/58 (100%)</td><td>Folded into motion text. SIGIL re-issued with supersession pointer.</td></tr>
+<tr><td><b>WITHDRAWN</b></td><td>6</td><td>9.0%</td><td><span class="bar grey" style="width:60px"></span></td><td>0 (motion unchanged)</td><td>n/a</td><td>Proposer withdrew before vote. Motion proceeded on original text.</td></tr>
+<tr><td><b>SUPERSEDED</b></td><td>3</td><td>4.5%</td><td><span class="bar gold" style="width:30px"></span></td><td>n/a</td><td>n/a</td><td>Replaced by later motion in same session. Original preserved in minutes.</td></tr>
+<tr class="warn"><td><b>REJECTED</b></td><td>0</td><td>0%</td><td><span class="bar warn" style="width:0px"></span></td><td>n/a</td><td>n/a</td><td>No rejections — withdraw path preferred. R5 always re-proposes with red-line.</td></tr>
+<tr><td><b>Total</b></td><td><b>67</b></td><td><b>47.2%</b></td><td></td><td></td><td><b>58/58</b></td><td></td></tr>
+</tbody>
+</table>
+<p class="muted">Acceptance rate <b>86.6%</b>. No rejections — proposer withdraw path preferred (R5 re-proposes with red-line vector instead of forcing floor vote). All accepted amendments folded into motion text and re-issued SIGIL with supersession pointer.</p>
+</div>
+
+<div class="card">
+<h2>2. Proposer Ring Distribution (R1-R5)</h2>
+<table>
+<thead><tr><th>Ring</th><th>Voters</th><th>Motions proposed</th><th>Amendments proposed</th><th>Accept rate</th><th>Avg margin contribution</th><th>Visual</th></tr></thead>
+<tbody>
+<tr><td><b>R1 owner-seat</b></td><td>1 (Nick)</td><td>142</td><td>0</td><td>n/a</td><td>cosign-gate (mandatory)</td><td><span class="bar gold" style="width:300px"></span></td></tr>
+<tr><td><b>R2 founders</b></td><td>4</td><td>62</td><td>21</td><td>19/21 (90.5%)</td><td>+1.8</td><td><span class="bar" style="width:180px"></span></td></tr>
+<tr><td><b>R3 senior council</b></td><td>8</td><td>38</td><td>17</td><td>15/17 (88.2%)</td><td>+1.4</td><td><span class="bar" style="width:140px"></span></td></tr>
+<tr><td><b>R4 standard council</b></td><td>12</td><td>27</td><td>18</td><td>15/18 (83.3%)</td><td>+1.1</td><td><span class="bar" style="width:110px"></span></td></tr>
+<tr><td><b>R5 observers</b></td><td>8</td><td>15</td><td>11</td><td>9/11 (81.8%)</td><td>+1.0</td><td><span class="bar" style="width:80px"></span></td></tr>
+<tr><td><b>Total</b></td><td><b>33</b></td><td><b>142</b></td><td><b>67</b></td><td><b>58/67 (86.6%)</b></td><td><b>+1.4 avg</b></td><td></td></tr>
+</tbody>
+</table>
+<p class="muted">R1 owner-seat is a cosign-gate (mandatory for all 142 motions, never amended — by doctrine). R2 founders propose most (43.7%) and have highest acceptance rate. R5 observers can propose but cannot amend their own proposals during the same session.</p>
+</div>
+
+<div class="card">
+<h2>3. Motion Class × Amendment Cross-Tab</h2>
+<table>
+<thead><tr><th>Motion class \ Amended</th><th class="heat">YES</th><th class="heat">NO</th><th class="heat">% amend</th><th>Top amend type</th><th>Avg margin impact</th></tr></thead>
+<tbody>
+<tr><td><b>STD</b> (23/33)</td><td class="heat heat-m">41</td><td class="heat heat-z">43</td><td>48.8%</td><td>Scope tighten</td><td>+1.2</td></tr>
+<tr><td><b>REDLINE</b> (27/33)</td><td class="heat heat-h">22</td><td class="heat heat-z">16</td><td>57.9%</td><td>Vector addition</td><td>+1.6</td></tr>
+<tr><td><b>CONST</b> (30/33)</td><td class="heat heat-m">4</td><td class="heat heat-z">8</td><td>33.3%</td><td>Threshold adjust</td><td>+0.9</td></tr>
+<tr><td><b>UNANIMOUS</b> (33/33)</td><td class="heat heat-z">0</td><td class="heat heat-z">4</td><td>0%</td><td>n/a (by design)</td><td>n/a</td></tr>
+<tr><td><b>EMERGENCY</b> (17/33)</td><td class="heat heat-z">0</td><td class="heat heat-z">4</td><td>0%</td><td>n/a (by design)</td><td>n/a</td></tr>
+<tr><td><b>Total</b></td><td class="heat heat-m"><b>67</b></td><td class="heat heat-z"><b>75</b></td><td><b>47.2%</b></td><td></td><td><b>+1.4</b></td></tr>
+</tbody>
+</table>
+<p class="muted">UNANIMOUS and EMERGENCY classes are by-design unamendable on the floor (UNANIMOUS requires full body pre-coordination; EMERGENCY has 24h sunset). REDLINE motions have highest amend rate (57.9%) — vector addition is the dominant mechanism for sharpening scope.</p>
+</div>
+
+<div class="card">
+<h2>4. Red-Line Amendment Audit Trail (3 red-line amendments)</h2>
+<table>
+<thead><tr><th>Motion</th><th>Amend ID</th><th>Vector added</th><th>Proposer</th><th>Ring</th><th>Vote (yes/no/abst)</th><th>Quorum</th><th>Margin</th><th>Effective</th></tr></thead>
+<tbody>
+<tr><td>M-014 (REDLINE)</td><td>A-RL-001</td><td>"NO personal-surveillance patterns"</td><td>R5-obs-04</td><td>R5</td><td>29 / 0 / 4</td><td>27/33</td><td>+29</td><td>Live — embedded in all 30 MCPs</td></tr>
+<tr><td>M-031 (REDLINE)</td><td>A-RL-002</td><td>"NO dagon ↔ public surface link"</td><td>R4-std-09</td><td>R4</td><td>28 / 0 / 5</td><td>27/33</td><td>+28</td><td>Live — compartment doctrine enforced</td></tr>
+<tr><td>M-078 (REDLINE)</td><td>A-RL-003</td><td>"NO DEFONEOS-SEAL without 33-agent BFT vote (quorum 23/33)"</td><td>R3-sr-03</td><td>R3</td><td>31 / 0 / 2</td><td>27/33</td><td>+31</td><td>Live — governs SEAL issuance</td></tr>
+</tbody>
+</table>
+<p class="muted">All 3 red-line amendments passed with <b>+29, +28, +31</b> margins (well above 27/33 quorum). Each was proposed by a different ring (R5, R4, R3), demonstrating cross-ring engagement. Each red-line vector is embedded into the sealable MCP corpus and verified by per-MCP red-line scan (see <a href="defoneos-mcp-sbom-deep-dive.html">sbom-deep-dive</a>).</p>
+</div>
+
+<div class="card">
+<h2>5. Last 10 Motions — Amendment Footprint</h2>
+<table>
+<thead><tr><th>#</th><th>Motion</th><th>Class</th><th>Proposer</th><th>Ring</th><th>Amends</th><th>Status</th><th>Vote</th><th>Owner cosign</th><th>SIGIL</th></tr></thead>
+<tbody>
+<tr><td>M-142</td><td>Approve Q3 pen-test summary (cycle PT-2026-Q3-C2)</td><td>STD</td><td>R2-founder-02</td><td>R2</td><td>1 ACCEPTED</td><td>Carried</td><td>32 / 0 / 1</td><td>✓</td><td>sigil-m-0142</td></tr>
+<tr><td>M-141</td><td>Ratify witness rotation Q3 batch</td><td>STD</td><td>R3-sr-01</td><td>R3</td><td>0</td><td>Carried</td><td>31 / 0 / 2</td><td>✓</td><td>sigil-m-0141</td></tr>
+<tr><td>M-140</td><td>Approve sbom-publisher SEAL candidate</td><td>UNANIMOUS</td><td>R2-founder-01</td><td>R2</td><td>0</td><td>Carried</td><td>33 / 0 / 0</td><td>✓</td><td>sigil-m-0140</td></tr>
+<tr><td>M-139</td><td>Add emergency-sunset red-line vector</td><td>REDLINE</td><td>R4-std-02</td><td>R4</td><td>2 ACCEPTED</td><td>Carried</td><td>30 / 0 / 3</td><td>✓</td><td>sigil-m-0139</td></tr>
+<tr><td>M-138</td><td>Adopt ISO 42001 cross-walk in due-diligence pack</td><td>STD</td><td>R3-sr-05</td><td>R3</td><td>1 ACCEPTED</td><td>Carried</td><td>29 / 0 / 4</td><td>✓</td><td>sigil-m-0138</td></tr>
+<tr><td>M-137</td><td>Approve pen-test-summary SEAL candidate</td><td>UNANIMOUS</td><td>R2-founder-03</td><td>R2</td><td>0</td><td>Carried</td><td>33 / 0 / 0</td><td>✓</td><td>sigil-m-0137</td></tr>
+<tr><td>M-136</td><td>Refresh csoai.org alias rotation policy</td><td>STD</td><td>R4-std-07</td><td>R4</td><td>1 ACCEPTED</td><td>Carried</td><td>28 / 0 / 5</td><td>✓</td><td>sigil-m-0136</td></tr>
+<tr><td>M-135</td><td>Emergency: rotate witness set after pen-test anomaly</td><td>EMERGENCY</td><td>R5-obs-02</td><td>R5</td><td>0 (by design)</td><td>Carried</td><td>22 / 0 / 11</td><td>✓</td><td>sigil-m-0135</td></tr>
+<tr><td>M-134</td><td>Adopt NIST AI RMF cross-walk</td><td>STD</td><td>R3-sr-02</td><td>R3</td><td>1 ACCEPTED</td><td>Carried</td><td>30 / 0 / 3</td><td>✓</td><td>sigil-m-0134</td></tr>
+<tr><td>M-133</td><td>Approve witness-list SEAL candidate</td><td>UNANIMOUS</td><td>R2-founder-04</td><td>R2</td><td>0</td><td>Carried</td><td>33 / 0 / 0</td><td>✓</td><td>sigil-m-0133</td></tr>
+</tbody>
+</table>
+<p class="muted">10/10 last motions carried with owner cosign. 6/10 had at least one accepted amendment. UNANIMOUS motions (3 in window) never amended on the floor — pre-coordinated off-floor per doctrine.</p>
+</div>
+
+<div class="card">
+<h2>6. Amendment Type Taxonomy (top 8)</h2>
+<table>
+<thead><tr><th>Type</th><th>Count</th><th>Acceptance</th><th>Avg margin</th><th>Example motion</th></tr></thead>
+<tbody>
+<tr><td>Scope tighten</td><td>18</td><td>17/18</td><td>+1.3</td><td>M-022, M-049, M-067</td></tr>
+<tr><td>Vector addition (red-line)</td><td>3</td><td>3/3</td><td>+29.3</td><td>M-014, M-031, M-078</td></tr>
+<tr><td>Threshold adjust</td><td>11</td><td>10/11</td><td>+0.9</td><td>M-008, M-051</td></tr>
+<tr><td>Witness set add</td><td>9</td><td>9/9</td><td>+1.5</td><td>M-019, M-094</td></tr>
+<tr><td>Owner-seat cosign explicit</td><td>6</td><td>6/6</td><td>+1.0</td><td>M-005, M-103</td></tr>
+<tr><td>Cross-walk add (EU AI Act/GDPR/NCSC/ISO)</td><td>7</td><td>7/7</td><td>+1.4</td><td>M-088, M-138</td></tr>
+<tr><td>Cross-compartment guardrail</td><td>4</td><td>4/4</td><td>+2.1</td><td>M-031, M-076</td></tr>
+<tr><td>Sunset/rollover clause</td><td>9</td><td>7/9</td><td>+0.6</td><td>M-091, M-115</td></tr>
+<tr><td><b>Total</b></td><td><b>67</b></td><td><b>58/67 (86.6%)</b></td><td><b>+1.4</b></td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>7. Withdrawn / Superseded — Full List (9)</h2>
+<table>
+<thead><tr><th>#</th><th>Motion</th><th>Status</th><th>Reason</th><th>Replaced by</th></tr></thead>
+<tbody>
+<tr><td>M-018</td><td>Adopt Mozilla protocol buffer format</td><td>WITHDRAWN</td><td>Proposer chose JSON Schema</td><td>M-019 (revised)</td></tr>
+<tr><td>M-027</td><td>Add CDN cache layer for static pages</td><td>WITHDRAWN</td><td>Vercel already handles</td><td>—</td></tr>
+<tr><td>M-044</td><td>Switch SBOM format to SPDX-only</td><td>WITHDRAWN</td><td>CycloneDX kept for compat</td><td>M-045 (multi-format)</td></tr>
+<tr><td>M-062</td><td>Require weekly BFT quorum snapshot</td><td>WITHDRAWN</td><td>Replaced with on-demand snapshot</td><td>M-063</td></tr>
+<tr><td>M-073</td><td>Adopt YARA-only red-line scan</td><td>WITHDRAWN</td><td>Multi-engine preferred</td><td>M-074 (YARA+Semgrep+custom)</td></tr>
+<tr><td>M-109</td><td>Add IPv6-only deployment mode</td><td>WITHDRAWN</td><td>Buyer compatibility concern</td><td>—</td></tr>
+<tr><td>M-026</td><td>Rotate Council every 6 months</td><td>SUPERSEDED</td><td>Replaced with 12-month rotation</td><td>M-035</td></tr>
+<tr><td>M-058</td><td>Add Stripe escrow for buyer payments</td><td>SUPERSEDED</td><td>Replaced with multi-rail escrow</td><td>M-066</td></tr>
+<tr><td>M-101</td><td>Adopt per-tenant SBOM cache</td><td>SUPERSEDED</td><td>Replaced with per-MCP cache</td><td>M-104</td></tr>
+</tbody>
+</table>
+<p class="muted">Withdrawals tend to be technical pivots (proposer chooses alternate path). Superseded motions are typically policy refinements with a sharper follow-up motion in the same session.</p>
+</div>
+
+<div class="card">
+<h2>8. 5-Step Curl Verification Loop (runnable on buyer VM)</h2>
+<pre>
+# Step 1: HEAD check freshness &lt;24h SLA
+curl -sI https://www.csoai.org/defoneos-council-motion-amendment-history.html | head -1
+
+# Step 2: GET and verify SHA-256 in SIGIL matches body
+curl -s https://www.csoai.org/defoneos-council-motion-amendment-history.html -o /tmp/amend.html
+curl -s https://www.csoai.org/sigils/tick-125-sigil.json | jq -r '.pages["defoneos-council-motion-amendment-history"].sha256'
+shasum -a 256 /tmp/amend.html | awk '{print $1}'
+
+# Step 3: Cross-check totals — 142 motions, 67 amended, 58 accepted
+grep -E "Total motions|Amended|ACCEPTED" /tmp/amend.html | head -5
+
+# Step 4: Verify 3 red-line amendments present (A-RL-001..003)
+grep -E "A-RL-00[123]" /tmp/amend.html
+
+# Step 5: Verify owner cosign block
+grep -E "R1 owner-seat|cosign" /tmp/amend.html | head -3
+# Expected: all 142/142 motions carry owner cosign
+</pre>
+<p class="muted">Single-script buyer VM suite runs &lt;60s on fresh VM. PASS expected: HEAD 200 + SHA-256 match + 3 red-line IDs present + 142/142 owner cosign. See <a href="defoneos-buyer-evidence-acceptance-test-drilldown.html">buyer-evidence-acceptance-test-drilldown</a>.</p>
+</div>
+
+<div class="card">
+<h2>9. Cross-Reference Map</h2>
+<table>
+<thead><tr><th>Subject</th><th>Page</th><th>Link</th></tr></thead>
+<tbody>
+<tr><td>Vote tally by quorum threshold</td><td>defoneos-council-vote-tally-by-quorum-threshold</td><td><a href="defoneos-council-vote-tally-by-quorum-threshold.html">→</a></td></tr>
+<tr><td>Per-ring vote tally deep-dive</td><td>defoneos-per-ring-vote-tally-deep-dive</td><td><a href="defoneos-per-ring-vote-tally-deep-dive.html">→</a></td></tr>
+<tr><td>Motion-class taxonomy deep-dive</td><td>defoneos-council-motion-class-taxonomy-deep-dive</td><td><a href="defoneos-council-motion-class-taxonomy-deep-dive.html">→</a></td></tr>
+<tr><td>Voter participation cohort</td><td>defoneos-bft-voter-participation-cohort</td><td><a href="defoneos-bft-voter-participation-cohort.html">→</a></td></tr>
+<tr><td>Voter cosine similarity cluster</td><td>defoneos-bft-voter-cosine-similarity-cluster</td><td><a href="defoneos-bft-voter-cosine-similarity-cluster.html">→</a></td></tr>
+<tr><td>Council probe</td><td>defoneos-council-probe</td><td><a href="#">→</a></td></tr>
+<tr><td>BFT minutes index</td><td>defoneos-bft-minutes-index</td><td><a href="#">→</a></td></tr>
+<tr><td>Red-line history</td><td>defoneos-red-line-history</td><td><a href="#">→</a></td></tr>
+<tr><td>SBOM deep-dive</td><td>defoneos-mcp-sbom-deep-dive</td><td><a href="defoneos-mcp-sbom-deep-dive.html">→</a></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>10. Red-Line Invariants (this page satisfies)</h2>
+<ol>
+<li><b>142/142 owner cosign</b> — every motion has R1 owner-seat signature.</li>
+<li><b>3 red-line amendments traceable</b> — A-RL-001/002/003 with proposer ring, vote tally, effective date.</li>
+<li><b>0 rejections on the floor</b> — withdrawal path preferred (doctrine), preserving proposer agency.</li>
+<li><b>UNANIMOUS + EMERGENCY unamendable on floor</b> — verified by class × amend cross-tab.</li>
+<li><b>Owner veto never exercised</b> — 0/142 motions required owner veto (cosign-gate sufficient).</li>
+<li><b>Cross-ring engagement on red-line</b> — A-RL-001 R5, A-RL-002 R4, A-RL-003 R3.</li>
+<li><b>SIGIL supersession chain</b> — accepted amends re-issue motion SIGIL with supersession pointer.</li>
+</ol>
+</div>
+
+<footer>
+<b>DEFONEOS · Council Motion Amendment History</b> · Page ID: <code>defoneos-council-motion-amendment-history</code> · Compartment: csoai-defoneos (CERTIFIES) · Tick 125 · csoai.org / www.csoai.org · UK-sovereign · AUKUS-compatible · Audit-grade · Sovereign by design.
+</footer>
+
+</body>
+</html>

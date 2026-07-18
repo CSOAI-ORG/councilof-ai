@@ -1,0 +1,54 @@
+#!/bin/bash
+# mesh-emergency: NUCLEAR disk cleanup when >95% full
+set -e
+
+LOG="/tmp/mesh-emergency-$(date +%Y%m%d_%H%M%S).log"
+exec > >(tee "$LOG") 2>&1
+
+echo "=== EMERGENCY CLEANUP $(date) ==="
+BEFORE=$(df / | awk 'NR==2 {gsub(/%/,""); print $5}')
+echo "Disk before: ${BEFORE}%"
+
+# 1. Ollama partials
+echo "[1] Cleaning Ollama partials..."
+rm -rf ~/.ollama/models/blobs/*-partial 2>/dev/null || true
+rm -rf ~/.ollama/models/manifests/*-partial 2>/dev/null || true
+
+# 2. System caches
+echo "[2] System caches..."
+rm -rf ~/Library/Caches/com.apple.Safari/* 2>/dev/null || true
+rm -rf ~/Library/Caches/com.google.Chrome/* 2>/dev/null || true
+rm -rf ~/Library/Caches/Firefox/* 2>/dev/null || true
+rm -rf ~/Library/Caches/CloudKit/* 2>/dev/null || true
+rm -rf ~/Library/Caches/com.apple.dt.Xcode/* 2>/dev/null || true
+rm -rf ~/Library/Developer/Xcode/DerivedData/* 2>/dev/null || true
+rm -rf ~/Library/Developer/Xcode/Archives/* 2>/dev/null || true
+
+# 3. Dev caches
+echo "[3] Dev caches..."
+rm -rf ~/.npm/_cacache/* 2>/dev/null || true
+rm -rf ~/.cache/pip/* 2>/dev/null || true
+rm -rf ~/.cache/uv/* 2>/dev/null || true
+rm -rf ~/.cargo/registry/cache/* 2>/dev/null || true
+rm -rf ~/.rustup/downloads/* 2>/dev/null || true
+brew cleanup -s 2>/dev/null || true
+brew autoremove 2>/dev/null || true
+
+# 4. Logs
+echo "[4] Log rotation..."
+find /var/log -name "*.log.*" -mtime +7 -delete 2>/dev/null || true
+find ~/Library/Logs -name "*.log" -mtime +7 -delete 2>/dev/null || true
+
+# 5. Time Machine snapshots (nuclear)
+echo "[5] Thinning snapshots..."
+tmutil thinlocalsnapshots / 9999999999999 1 2>/dev/null || true
+
+# 6. Trash
+echo "[6] Emptying trash..."
+rm -rf ~/.Trash/* 2>/dev/null || true
+
+AFTER=$(df / | awk 'NR==2 {gsub(/%/,""); print $5}')
+echo ""
+echo "Disk after: ${AFTER}%"
+echo "Freed: $((BEFORE - AFTER))%"
+echo "=== EMERGENCY CLEANUP COMPLETE ==="

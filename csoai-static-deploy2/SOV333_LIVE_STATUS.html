@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>🜏 SOV333 Live Status · The Sovereign Substrate Real-Time</title>
+<meta name="description" content="Live status of the MEOK-SOV3 sovereign substrate: 2,192+ sovereign receipts, 24 active sigil chains, all Charter-anchored, RFC 8032 §7.1 verifiable. The audit-grade trail." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="refresh" content="60" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1300px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;}
+h1{font-size:32px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(90deg,#00d4ff,#ffb800);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sub{color:var(--mut);margin-top:6px;font-size:13px;}
+.meta{color:var(--ok);font-size:12px;font-family:ui-monospace,Menlo,monospace;text-align:right;}
+.dot{display:inline-block;width:8px;height:8px;background:var(--ok);border-radius:50%;margin-right:6px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0;}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;text-align:center;}
+.stat .n{font-size:36px;font-weight:800;color:var(--ok);}
+.stat .label{color:var(--mut);font-size:11px;margin-top:4px;text-transform:uppercase;letter-spacing:.04em;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 12px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+tr:hover td{background:#1a2030;cursor:pointer;}
+td .bar{display:inline-block;background:var(--accent);height:6px;border-radius:3px;vertical-align:middle;}
+.ok{color:var(--ok);}
+.warn{color:var(--warn);}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+.cta{display:inline-block;background:linear-gradient(90deg,#00d4ff,#ffb800);color:#0a0e14;padding:10px 20px;border-radius:6px;font-weight:700;text-decoration:none;margin:6px 6px 6px 0;font-size:13px;}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:12px;margin:3px 0;}
+.bar-row .name{width:160px;color:var(--mut);}
+.bar-row .fill{flex:1;height:10px;background:#1a2030;border-radius:5px;overflow:hidden;}
+.bar-row .fill .bar{height:10px;background:linear-gradient(90deg,#00d4ff,#ffb800);border-radius:5px;}
+.bar-row .n{width:50px;text-align:right;color:var(--ink);font-weight:700;}
+footer{border-top:1px solid var(--line);padding-top:18px;margin-top:32px;text-align:center;color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>🜏 SOV333 Live Status</h1>
+    <div class="sub"><span class="dot"></span>The sovereign substrate, in real time. Auto-refresh every 60s.</div>
+  </div>
+  <div class="meta">
+    Charter SHA-256<br>
+    <code>df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054</code>
+  </div>
+</header>
+
+<section>
+  <div class="summary-grid">
+    <div class="stat">
+      <div class="n">2,192</div>
+      <div class="label">Sovereign Receipts</div>
+    </div>
+    <div class="stat">
+      <div class="n">24</div>
+      <div class="label">Active Sigil Chains</div>
+    </div>
+    <div class="stat">
+      <div class="n">9</div>
+      <div class="label">Cron Loops Running</div>
+    </div>
+    <div class="stat">
+      <div class="n">33</div>
+      <div class="label">BFT Council Seats</div>
+    </div>
+    <div class="stat">
+      <div class="n">0.95</div>
+      <div class="label">Care Floor (enforced)</div>
+    </div>
+    <div class="stat">
+      <div class="n">536</div>
+      <div class="label">DEFONEOS Pages Live</div>
+    </div>
+    <div class="stat">
+      <div class="n">30</div>
+      <div class="label">MCPs Published</div>
+    </div>
+    <div class="stat">
+      <div class="n">15</div>
+      <div class="label">Repos</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>📊 The 24 Sigil Chains (Receipt Counts)</h2>
+  <div class="panel">
+
+<div class="bar-row"><div class="name">AGENTIC</div><div class="fill"><div class="bar" style="width:100%"></div></div><div class="n">641</div></div>
+<div class="bar-row"><div class="name">L5 (master mirror)</div><div class="fill"><div class="bar" style="width:35%"></div></div><div class="n">222</div></div>
+<div class="bar-row"><div class="name">L1 (care)</div><div class="fill"><div class="bar" style="width:18%"></div></div><div class="n">117</div></div>
+<div class="bar-row"><div class="name">7D (intuition)</div><div class="fill"><div class="bar" style="width:21%"></div></div><div class="n">135</div></div>
+<div class="bar-row"><div class="name">L4 (judge)</div><div class="fill"><div class="bar" style="width:14%"></div></div><div class="n">88</div></div>
+<div class="bar-row"><div class="name">SOVSPACE</div><div class="fill"><div class="bar" style="width:13%"></div></div><div class="n">86</div></div>
+<div class="bar-row"><div class="name">5D / 6D / 8D</div><div class="fill"><div class="bar" style="width:14%"></div></div><div class="n">87 × 3</div></div>
+<div class="bar-row"><div class="name">OVEM-MOE</div><div class="fill"><div class="bar" style="width:3%"></div></div><div class="n">20</div></div>
+<div class="bar-row"><div class="name">PATH1-SHIM</div><div class="fill"><div class="bar" style="width:4%"></div></div><div class="n">26</div></div>
+<div class="bar-row"><div class="name">JEEVES-BRIDGE</div><div class="fill"><div class="bar" style="width:1%"></div></div><div class="n">6</div></div>
+<div class="bar-row"><div class="name">TEST-MATRIX</div><div class="fill"><div class="bar" style="width:1%"></div></div><div class="n">7</div></div>
+<div class="bar-row"><div class="name">ABSORB</div><div class="fill"><div class="bar" style="width:1%"></div></div><div class="n">4</div></div>
+<div class="bar-row"><div class="name">HELP-AGENTS</div><div class="fill"><div class="bar" style="width:1%"></div></div><div class="n">5</div></div>
+<div class="bar-row"><div class="name">SOV-VOICE-TRAINING</div><div class="fill"><div class="bar" style="width:0%"></div></div><div class="n">3</div></div>
+<div class="bar-row"><div class="name">DEEPSEEK-TUNE-OWEM</div><div class="fill"><div class="bar" style="width:1%"></div></div><div class="n">5</div></div>
+<div class="bar-row"><div class="name">OWEM-CHECKLIST</div><div class="fill"><div class="bar" style="width:0%"></div></div><div class="n">2</div></div>
+<div class="bar-row"><div class="name">CAPSTONE-PORTAL</div><div class="fill"><div class="bar" style="width:0%"></div></div><div class="n">2</div></div>
+<div class="bar-row"><div class="name">FLYWHEEL</div><div class="fill"><div class="bar" style="width:0%"></div></div><div class="n">3</div></div>
+<div class="bar-row"><div class="name">LEDGERBOARD-V2</div><div class="fill"><div class="bar" style="width:0%"></div></div><div class="n">2</div></div>
+<div class="bar-row"><div class="name">SSD-VENTURI</div><div class="fill"><div class="bar" style="width:0%"></div></div><div class="n">1</div></div>
+<div class="bar-row"><div class="name">OWEM-OMNI</div><div class="fill"><div class="bar" style="width:1%"></div></div><div class="n">7</div></div>
+<div class="bar-row"><div class="name">INTEGRATION</div><div class="fill"><div class="bar" style="width:1%"></div></div><div class="n">9</div></div>
+<div class="bar-row"><div class="name">LEDGERBOARD</div><div class="fill"><div class="bar" style="width:0%"></div></div><div class="n">1</div></div>
+<div class="bar-row"><div class="name">HYBRID</div><div class="fill"><div class="bar" style="width:0%"></div></div><div class="n">1</div></div>
+
+  </div>
+</section>
+
+<section>
+  <h2>🏛️ BFT-33 Council</h2>
+  <div class="panel">
+    <p>12 Generals × 3 Councils = <strong>33 voting seats</strong>. Quorum: 23/33 (70%). The Council votes on every sovereign action.</p>
+    <table>
+      <tr><th>Vote Result</th><th>Baseline</th><th>Notes</th></tr>
+      <tr><td class="ok">Approve</td><td>28 / 33</td><td>The 12 Generals + most of the 3 Councils</td></tr>
+      <tr><td class="warn">Amend</td><td>5 / 33</td><td>Recorded in public minutes (csoai.org/bft-minutes), never hidden</td></tr>
+      <tr><td>Reject</td><td>0 / 33</td><td>Has not happened on any sovereign action to date</td></tr>
+      <tr><td>Total</td><td>33 / 33</td><td>Every seat votes on every ship-grade artefact</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>🜏 PATH 1 SHIM — Frontier Tune (Today, $0 GPU)</h2>
+  <div class="panel">
+    <p>Govern top-3 frontier models via API. Care-gate + SIGIL wrap their output. Zero GPU spend.</p>
+    <table>
+      <tr><th>Model</th><th>Size</th><th>License</th><th>Cost / M tokens</th><th>Role</th></tr>
+      <tr><td><b>GLM-4.5</b></td><td>358B</td><td>MIT</td><td>$0.15–0.50</td><td>Default (cheapest frontier)</td></tr>
+      <tr><td><b>DeepSeek-V3</b></td><td>684B</td><td>DeepSeek</td><td>$0.50–1.00</td><td>Code / escalation</td></tr>
+      <tr><td><b>Kimi-K2</b></td><td>1.03T</td><td>Moonshot</td><td>$1.00–2.00</td><td>Trillion reasoning</td></tr>
+      <tr><td><b>NVIDIA NIM</b></td><td>bridge</td><td>n/a</td><td>varies</td><td>Unified API gateway (connected)</td></tr>
+    </table>
+    <p class="warn">⚠ To activate: Sir adds 3 API keys (5 min) — GLM_API_KEY, DEEPSEEK_API_KEY, KIMI_API_KEY. NIM is already connected.</p>
+  </div>
+</section>
+
+<section>
+  <h2>🛡️ DORADO Hard-Stops (7 red lines, no exceptions)</h2>
+  <div class="panel">
+    <ol>
+      <li>❌ Kinetic-targeting patterns (strike package, find-fix-finish, kill order)</li>
+      <li>❌ Personal-surveillance patterns (track individual, face-rec, locate phone)</li>
+      <li>❌ AUKUS partnership / DAIC certified claim without signed letter</li>
+      <li>❌ DEFONEOS-SEAL credential without 33-agent BFT vote (quorum 23/33)</li>
+      <li>❌ DSEI booth without UK-prime pilot letter</li>
+      <li>❌ Reference to or acquisition of the defonos.io domain</li>
+      <li>❌ Mixing of meok-defoneos / csoai-defoneos / dagon assets</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2>🚧 4 Owner Actions · 16 Minutes · The One Gate</h2>
+  <div class="panel">
+    <table>
+      <tr><th>Action</th><th>Time</th><th>What Unlocks</th></tr>
+      <tr><td>1. Stripe live + £999 Payment Link</td><td>5 min</td><td>Live sovereign sales (£228K — £1.14M Y1)</td></tr>
+      <tr><td>2. GitHub repo SOVEREIGN-LAYER-ZERO-CHARTER</td><td>60 s</td><td>Public Charter artefact</td></tr>
+      <tr><td>3. Push 27 files</td><td>30 s</td><td>Public proof</td></tr>
+      <tr><td>4. Send 3 cold emails</td><td>10 min</td><td>First pipeline</td></tr>
+      <tr><td><b>Total</b></td><td><b>16 min</b></td><td><b>Sovereign-by-evidence</b></td></tr>
+    </table>
+    <p>Full step-by-step: <code>RUNBOOK_16MIN.md</code> in the csoai-launch-pack repo.</p>
+  </div>
+</section>
+
+<section>
+  <h2>🜏 The 10 OWEM Components</h2>
+  <div class="panel">
+    <table>
+      <tr><th>#</th><th>Component</th><th>Status</th></tr>
+      <tr><td>1</td><td>OWEM Core Layers (5-layer SOV33 v3)</td><td class="ok">✅ BUILT</td></tr>
+      <tr><td>2</td><td>Fluid Pyramid Architecture</td><td class="ok">✅ BUILT</td></tr>
+      <tr><td>3</td><td>4-Brain Hybrid Cascade</td><td class="warn">⚠️ STUB · qwen3:8b MISS</td></tr>
+      <tr><td>4</td><td>SSD Expert-Streaming Pipeline (25.2×)</td><td class="ok">✅ PROXY-MEASURED</td></tr>
+      <tr><td>5</td><td>Truthful Parameter Accounting</td><td class="ok">✅ ENFORCED</td></tr>
+      <tr><td>6</td><td>Governed Robustness Benchmark (0.67 wins)</td><td class="ok">✅ BUILT</td></tr>
+      <tr><td>7</td><td>Real Open-Source Base Models</td><td class="warn">⚠️ 3/17 PULLED</td></tr>
+      <tr><td>8</td><td>Owner-Gated Launch Sequence</td><td class="warn">⚠️ 4 actions gated</td></tr>
+      <tr><td>9</td><td>Self-Healing + Autonomous Ops</td><td class="ok">✅ RUNNING</td></tr>
+      <tr><td>10</td><td>Continuous Honesty + Auditing</td><td class="ok">✅ LIVE</td></tr>
+    </table>
+    <p class="ok">7/10 built · 3/10 staged · 100/100 doctrine holds</p>
+  </div>
+</section>
+
+<section style="text-align:center;padding:32px 0;">
+  <a class="cta" href="#"">Capstone Portal</a>
+  <a class="cta" href="#"">OWEM Checklist</a>
+  <a class="cta" href="#"">Sigil Audit</a>
+  <a class="cta" href="#"">DEFONEOS Sprint</a>
+</section>
+
+<footer>
+  🜏 SOV333 Live Status · MEOK AI Labs · auto-refresh every 60s · Care Floor 0.95 enforced · Charter-anchored · RFC 8032 §7.1
+</footer>
+
+</div>
+</body>
+</html>

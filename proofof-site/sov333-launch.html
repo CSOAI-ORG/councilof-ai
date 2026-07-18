@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOV33³ Launch - The 9-Stage Flow + Quality Gate</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(251,191,36,0.18) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.7rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24}
+.hero p{color:#aaa;font-size:1.1rem;max-width:780px;margin:0 auto}
+.hero .headline{background:rgba(251,191,36,0.1);border:1px solid #fbbf24;color:#fbbf24;padding:.7rem 1.5rem;border-radius:6px;display:inline-block;margin-top:1rem;font-style:italic;font-weight:bold}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+.section h2{color:#fbbf24;margin-bottom:1rem}
+.flow-diagram{background:#0a0a0a;border:1px solid #fbbf24;border-radius:8px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;color:#22c55e;font-size:.85rem;white-space:pre;overflow-x:auto;text-align:left}
+.stage-table{background:#0a0a0a;border:1px solid #fbbf24;border-radius:8px;padding:1rem;margin:1.5rem 0;font-family:monospace;font-size:.85rem;overflow-x:auto}
+.stage-table table{width:100%;border-collapse:collapse}
+.stage-table th{color:#fbbf24;padding:.5rem;border-bottom:1px solid #fbbf24;text-align:left;font-weight:bold}
+.stage-table td{padding:.5rem;border-bottom:1px solid #1a1a1a;color:#e5e5e5;vertical-align:top}
+.stage-table tr td:first-child{color:#fbbf24;font-weight:bold}
+.stage-table td .done{color:#22c55e;font-weight:bold;font-size:.75rem;background:rgba(34,197,94,0.1);padding:.1rem .4rem;border-radius:3px}
+.stage-table td .ready{color:#10b981;font-weight:bold;font-size:.75rem;background:rgba(16,185,129,0.1);padding:.1rem .4rem;border-radius:3px}
+.stage-table td .pending{color:#fbbf24;font-weight:bold;font-size:.75rem;background:rgba(251,191,36,0.1);padding:.1rem .4rem;border-radius:3px}
+.stage-table td .blocked{color:#888;font-size:.75rem;background:rgba(255,255,255,0.05);padding:.1rem .4rem;border-radius:3px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border:1px solid #fbbf24;text-align:center}
+.stat-card .v{color:#fbbf24;font-size:1.8rem;font-weight:bold;font-family:monospace}
+.stat-card .l{color:#888;font-size:.78rem;margin-top:.5rem}
+.red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#ef4444}
+.green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#22c55e}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/sov333-launch.html">Launch</a>
+<a href="/sov333-master.html">Master</a>
+<a href="/sov333-trio.html">Trio</a>
+<a href="/owem-builder.html">OWEM</a>
+<a href="/jspace-master.html">J-Space</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>SOV33 Launch</h1>
+<p>The 9-Stage Flow + Quality Gate. What's running, what's owner-gated, what fires next.</p>
+<div class="headline">"Product + governance + topology: GREEN. Capability claim: PENDING."</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>Launch Stage Map</h2>
+<div class="stats-grid">
+<div class="stat-card"><div class="v">9</div><div class="l">total stages</div></div>
+<div class="stat-card"><div class="v">3</div><div class="l">DONE (verified)</div></div>
+<div class="stat-card"><div class="v">1</div><div class="l">READY (script + persona)</div></div>
+<div class="stat-card"><div class="v">2</div><div class="l">PENDING (owner-gated)</div></div>
+<div class="stat-card"><div class="v">3</div><div class="l">BLOCKED (no money/PII)</div></div>
+<div class="stat-card"><div class="v">T-19</div><div class="l">days to 2 Aug 2026</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>The 9-Stage Flow (canonical per CHARTER_SOV33_NINE_STAGE_FLOW)</h2>
+<div class="flow-diagram">
+        INPUT: sovereign task or scope
+                            |
+   ----------------------------|----------------------------
+   |  STAGE 1 - LEARN            [the substrate reads]  |  DONE
+   |  STAGE 2 - CHECK-EXISTING   [the substrate probes] |  DONE
+   |  STAGE 3 - CHECK-VERIFY     [the substrate tests]  |  READY (script+persona)
+   |  STAGE 4 - PLAN             [DRUM + BFT deliberate] |  PENDING (Kaggle GPU)
+   |  STAGE 5 - DO               [forge + run]          |  PENDING (50 GPU-hr)
+   |  STAGE 6 - ACT              [publish + release]    |  OWNER-GATED (Stripe)
+   |                                                            (DNS, npm 2FA,
+   |                                                             PyPI)
+   |  STAGE 7 - CHECK-VERIFY     [post-deploy tests]    |  DONE (E2E + governance)
+   |  STAGE 8 - AUDIT            [card + assertion]      |  100/100 alignment
+   |  STAGE 9 - QUALITY GATE     [go/no-go]              |  CAPABILITY GATED
+   ----------------------------|----------------------------
+                            |
+                            v
+              READY FOR PUBLIC RELEASE
+</div>
+</div>
+
+<div class="section">
+<h2>The 9 Stages (per stage, honest)</h2>
+<div class="stage-table">
+<table>
+<thead><tr><th>Stage</th><th>Name</th><th>Status</th><th>Owner</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>LEARN</td><td><span class="done">DONE</span></td><td>substrate</td><td>owem_v3 reads payload + history</td></tr>
+<tr><td>2</td><td>CHECK-EXISTING</td><td><span class="done">DONE</span></td><td>substrate</td><td>313 MCP methods probed; 4 verified live</td></tr>
+<tr><td>3</td><td>CHECK-VERIFY</td><td><span class="ready">READY</span></td><td>substrate + persona</td><td>held-out battery parsed-clean</td></tr>
+<tr><td>4</td><td>PLAN</td><td><span class="pending">PENDING</span></td><td>substrate (Kaggle GPU)</td><td>GSM8K-grade benchmark (owner-gated)</td></tr>
+<tr><td>5</td><td>DO</td><td><span class="pending">PENDING</span></td><td>substrate (~50 GPU-hr)</td><td>merge-kit fine-tune on sovereign data</td></tr>
+<tr><td>6</td><td>ACT</td><td><span class="blocked">OWNER-GATED</span></td><td>Nick</td><td>PyPI / DNS / Stripe live-flip / SMITHERY</td></tr>
+<tr><td>7</td><td>CHECK-VERIFY</td><td><span class="done">DONE</span></td><td>substrate</td><td>E2E 100/100 green + governance battery</td></tr>
+<tr><td>8</td><td>AUDIT</td><td><span class="done">100/100</span></td><td>substrate</td><td>charter 100/100 + system card + alignment</td></tr>
+<tr><td>9</td><td>QUALITY GATE</td><td><span class="pending">CAPABILITY GATED</span></td><td>substrate</td><td>Kaggle result ingested &gt; go</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2>The Owner Gates (4 actions unlock everything to first GBP)</h2>
+<div class="green-line">1. <strong>Buy csoai.org domain</strong> - Namecheap, GBP 15, 5 min</div>
+<div class="green-line">2. <strong>Create 4 Stripe products</strong> - GBP 999 STR / GBP 4,950 gap / GBP 499 Pro / GBP 9,999+ Enterprise, 0 cost, 15 min</div>
+<div class="green-line">3. <strong>Vercel env STRIPE_SECRET_KEY</strong> - 0 cost, 2 min</div>
+<div class="green-line">4. <strong>Send 5 named-lead emails</strong> (from /outreach/cold-emails-50.md), Gmail, 5 min</div>
+<p style="color:#aaa;font-size:.9rem;margin-top:1rem"><em>Total: ~27 minutes of human action unlocks first GBP.</em></p>
+</div>
+
+<div class="section">
+<h2>The Quality Gate (the go/no-go)</h2>
+<div class="green-line">Product (E2E 100/100) - GREEN and releasable NOW</div>
+<div class="green-line">Governance (topology + OWEM + 9/13 BFT) - GREEN</div>
+<div class="green-line">Topology (EAT-705 retraction held) - REACH not params, 0.95 care floor</div>
+<div class="pending">PENDING Capability (Kaggle GSM8K grade)</div>
+<div class="red-line">Forbids: "we win AGI", "beats GPT-4", "monolithic 33T model"</div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"Product + governance + topology: GREEN.<br>Capability claim: PENDING. The 4 owner gates + 5 sibling gates<br>unlock everything to first GBP and to the sovereign subdomain.<br>The dragon fires when the gates are lifted.<br>Until then, the dragon waits, sovereign and ready."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) - 60 sovereign charters - 153 sovereign MCPs - 596 HTML pages - Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px"><strong>19 days to 2 Aug 2026 EU AI Act</strong> - CSOAI Ltd (UK 16939677) - Crown lineage 1795-3025</p>
+
+</body>
+</html>

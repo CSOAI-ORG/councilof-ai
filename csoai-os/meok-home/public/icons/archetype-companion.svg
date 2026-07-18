@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <radialGradient id="g-companion" cx="40%" cy="30%">
+      <stop offset="0%" stop-color="#b0e0d8" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#5aa89a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1a4a3a" stop-opacity="0.9"/>
+    </radialGradient>
+  </defs>
+  <rect width="200" height="280" fill="#F5F0E6"/>
+  <path d="M100 30 Q50 30 50 130 Q50 220 100 250 Q150 220 150 130 Q150 30 100 30 Z" fill="url(#g-companion)" stroke="#5aa89a" stroke-width="1.5">
+    <animate attributeName="opacity" values="0.9;1;0.9" dur="2s" repeatCount="indefinite"/>
+  </path>
+  <g stroke="#b0e0d8" stroke-width="0.5" fill="none" opacity="0.4">
+    <path d="M50 100 Q100 80 150 100"/>
+    <path d="M50 130 Q100 110 150 130"/>
+    <path d="M50 160 Q100 140 150 160"/>
+  </g>
+  <text x="100" y="155" text-anchor="middle" font-size="40" dominant-baseline="middle">💗</text>
+  <text x="100" y="265" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#2a1a14" font-weight="600">COMPANION</text>
+</svg>

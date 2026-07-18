@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>C2PA Manifest — SOV-722</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(168,85,247,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #a855f7;border-radius:12px;margin-bottom:24px}
+.spec{font-size:24px;color:#a855f7;font-weight:700;margin:12px 0}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.manifest{background:#02060f;border:1px solid #a855f7;border-radius:6px;padding:16px;font-family:monospace;font-size:12px;color:#10b981;white-space:pre;overflow-x:auto}
+.field{color:#a78bfa}
+.value{color:#10b981}
+.string{color:#fbbf24}
+.flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:24px 0}
+.step{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.step .n{font-size:32px;color:#a855f7;font-weight:700}
+.step .t{color:#a78bfa;font-size:11px;text-transform:uppercase;margin-top:4px}
+.step .d{color:#aaa;font-size:12px;margin-top:6px}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>📜 C2PA Manifest</h1>
+<div class="spec">Content Credentials · Coalition for Content Provenance and Authenticity</div>
+<div style="color:#aaa">Sovereign substrate fact: <code>c2pa_manifest</code></div>
+</div>
+
+<div class="panel">
+<h3>What it is</h3>
+<p style="font-size:13px;line-height:1.6">C2PA is the open technical standard for <b>content provenance</b>. It cryptographically signs every artifact (text, image, video, audio) with a manifest that records:</p>
+<ul style="font-size:13px;line-height:1.8">
+  <li><b>Who</b> created it (Ed25519 sovereign wallet)</li>
+  <li><b>What</b> tool produced it (model ID + version + LoRA rank)</li>
+  <li><b>When</b> (UTC timestamp, anchored to charter sha256)</li>
+  <li><b>How</b> (RAG sources, Care Floor score, BFT-33 vote count)</li>
+</ul>
+</div>
+
+<div class="panel">
+<h3>Live manifest example</h3>
+<div class="manifest"><span class="field">"@context"</span>: <span class="string">"https://c2pa.org/v1"</span>,
+<span class="field">"claim_generator"</span>: <span class="string">"sovereign-substrate/v2.0.0"</span>,
+<span class="field">"claim_generator_version"</span>: <span class="string">"e345dc01"</span>,
+<span class="field">"assertions"</span>: [
+  {
+    <span class="field">"label"</span>: <span class="string">"c2pa.actions"</span>,
+    <span class="field">"data"</span>: { <span class="field">"actions"</span>: [<span class="string">"sovereign.created"</span>] }
+  },
+  {
+    <span class="field">"label"</span>: <span class="string">"c2pa.hash.data"</span>,
+    <span class="field">"data"</span>: { <span class="field">"alg"</span>: <span class="string">"sha256"</span>, <span class="field">"hash"</span>: <span class="value">"..."</span> }
+  },
+  {
+    <span class="field">"label"</span>: <span class="string">"sovereign.care_floor"</span>,
+    <span class="field">"data"</span>: { <span class="field">"score"</span>: <span class="value">0.96</span>, <span class="field">"min"</span>: <span class="value">0.95</span> }
+  },
+  {
+    <span class="field">"label"</span>: <span class="string">"sovereign.bft_33"</span>,
+    <span class="field">"data"</span>: { <span class="field">"votes_for"</span>: <span class="value">28</span>, <span class="field">"votes_against"</span>: <span class="value">5</span>, <span class="field">"quorum"</span>: <span class="value">23</span> }
+  }
+],
+<span class="field">"signature"</span>: <span class="value">"ed25519:QD595cz6iQaEaYOjwwgLmMdoz1mtm1pzKBb9ygvMvf3xhQ28"</span>,
+<span class="field">"charter_sha256"</span>: <span class="value">"&lt;sovereign-charter-hash&gt;"</span>
+}</div>
+</div>
+
+<div class="flow">
+<div class="step"><div class="n">1</div><div class="t">CREATE</div><div class="d">Substrate mints content</div></div>
+<div class="step"><div class="n">2</div><div class="t">SIGN</div><div class="d">Ed25519 sovereign wallet</div></div>
+<div class="step"><div class="n">3</div><div class="t">ANCHOR</div><div class="d">Charter sha256 chain</div></div>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>c2pa_manifest</code> · verified 2026-07-13<br>
+🔐 Ed25519 + c2pa.org/v1 spec · EU AI Act Article 50 compliance ready
+</div>
+</body></html>

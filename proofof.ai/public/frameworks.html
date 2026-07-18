@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frameworks — proofof.ai | MEOK Compliance Suite</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0d0c18;color:#e0dcd5;line-height:1.6}
+a{color:#c9a84c;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+/* Nav */
+nav{background:#0d0c18;border-bottom:1px solid rgba(201,168,76,0.2);padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+nav .logo{font-size:22px;font-weight:700;color:#c9a84c;letter-spacing:-0.5px}
+nav .logo span{color:#e0dcd5}
+nav .nav-links{display:flex;gap:28px;align-items:center}
+nav .nav-links a{color:#b0aca8;font-size:14px;font-weight:500;transition:color .2s}
+nav .nav-links a:hover{color:#c9a84c}
+/* Hero */
+.hero{text-align:center;padding:80px 0 40px}
+.hero h1{font-size:48px;font-weight:700;color:#fff;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:#c9a84c}
+.hero p{font-size:18px;color:#b0aca8;max-width:640px;margin:0 auto}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:40px 0 60px}
+.stat-card{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.12);border-radius:12px;padding:28px 16px;text-align:center}
+.stat-card .num{font-size:36px;font-weight:800;color:#c9a84c;letter-spacing:-1px}
+.stat-card .label{font-size:13px;color:#b0aca8;text-transform:uppercase;letter-spacing:0.5px;margin-top:6px}
+/* Badge colors */
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px}
+.badge.full{background:rgba(46,213,115,0.15);color:#2ed573}
+.badge.partial{background:rgba(255,191,0,0.15);color:#ffbf00}
+.badge.coming{background:rgba(201,168,76,0.12);color:#c9a84c}
+/* Table */
+.frameworks-table{margin:40px 0 60px;overflow-x:auto}
+table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:1px solid rgba(201,168,76,0.1)}
+thead{background:rgba(201,168,76,0.08)}
+th{padding:16px 14px;text-align:left;font-size:13px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:0.5px}
+th:first-child{width:20%}
+th:nth-child(2){width:12%}
+th:nth-child(3){width:8%}
+th:nth-child(4){width:60%}
+td{padding:16px 14px;font-size:14px;color:#d0ccc5;border-top:1px solid rgba(255,255,255,0.05)}
+td:first-child{font-weight:600;color:#fff}
+td:nth-child(3){color:#c9a84c;font-weight:600}
+tbody tr:hover{background:rgba(201,168,76,0.03)}
+tbody tr.category-row{background:rgba(201,168,76,0.04)}
+tbody tr.category-row td{font-size:12px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:0.5px;padding:10px 14px;border-top:2px solid rgba(201,168,76,0.2)}
+/* MCP count */
+.mcp-count{display:inline-flex;align-items:center;gap:4px;background:rgba(201,168,76,0.08);padding:2px 10px;border-radius:12px;font-size:13px;font-weight:600;color:#c9a84c}
+/* Description */
+.desc{color:#b0aca8;font-size:14px;line-height:1.6}
+.desc strong{color:#e0dcd5}
+/* Footer */
+footer{background:rgba(255,255,255,0.02);border-top:1px solid rgba(201,168,76,0.1);padding:40px 0;margin-top:80px;text-align:center}
+footer p{color:#6a6878;font-size:13px}
+footer a{color:#c9a84c}
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:32px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  th,td{font-size:12px;padding:12px 8px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="index.html" class="logo">proof<span>.</span>of<span>.ai</span></a>
+    <div class="nav-links">
+      <a href="frameworks.html">Frameworks</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api.html">API</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>Compliance <em>framework</em> coverage</h1>
+    <p>We map every compliance obligation to enforceable attestations across 15+ regulatory frameworks. Each framework includes dedicated MCP servers for automated evidence collection and policy verification.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="stats">
+    <div class="stat-card"><div class="num">15</div><div class="label">Frameworks</div></div>
+    <div class="stat-card"><div class="num">11</div><div class="label">Fully Covered</div></div>
+    <div class="stat-card"><div class="num">3</div><div class="label">Partial</div></div>
+    <div class="stat-card"><div class="num">1</div><div class="label">Coming Soon</div></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="frameworks-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Framework</th>
+          <th>Status</th>
+          <th>MCPs</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- AI & Data Governance -->
+        <tr class="category-row"><td colspan="4">AI &amp; Data Governance</td></tr>
+        <tr>
+          <td>EU AI Act</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">24</span></td>
+          <td class="desc"><strong>Full coverage</strong> of the EU AI Act (Regulation 2024/1689): risk classification, prohibited practices, transparency obligations, high-risk system conformity assessment, and governance requirements. Includes the full MEOK MCP suite for each of the 12 high-risk categories.</td>
+        </tr>
+        <tr>
+          <td>UK AI Bill</td>
+          <td><span class="badge partial">PARTIAL</span></td>
+          <td><span class="mcp-count">12</span></td>
+          <td class="desc"><strong>Partial coverage</strong> of the UK's proposed AI Bill as it progresses through Parliament. Covers transparency, safety notices, and regulatory sandbox provisions. Will be upgraded to FULL on Royal Assent.</td>
+        </tr>
+        <tr>
+          <td>GDPR</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">31</span></td>
+          <td class="desc"><strong>Full coverage</strong> of the General Data Protection Regulation (EU 2016/679). Data processing records, consent management, DPIAs, breach notification, data subject access requests, and cross-border transfer safeguards. 31 MCP servers cover every article cluster.</td>
+        </tr>
+        <tr>
+          <td>CCPA</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">14</span></td>
+          <td class="desc"><strong>Full coverage</strong> of the California Consumer Privacy Act (as amended by CPRA). Consumer rights management, opt-out mechanisms, data inventory, and service-provider due diligence attestations.</td>
+        </tr>
+        <tr>
+          <td>HIPAA</td>
+          <td><span class="badge partial">PARTIAL</span></td>
+          <td><span class="mcp-count">18</span></td>
+          <td class="desc"><strong>Partial coverage</strong> of HIPAA Privacy, Security, and Breach Notification Rules. Covers administrative safeguards, physical safeguards, and technical safeguards. PHI handling and BAAs — full coverage targeting Q3 2026.</td>
+        </tr>
+
+        <!-- Financial & Operational Resilience -->
+        <tr class="category-row"><td colspan="4">Financial &amp; Operational Resilience</td></tr>
+        <tr>
+          <td>DORA</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">20</span></td>
+          <td class="desc"><strong>Full coverage</strong> of the Digital Operational Resilience Act (EU 2022/2554). ICT risk management, incident reporting, digital operational resilience testing, ICT third-party risk, and threat-led penetration testing (TLPT) mappings.</td>
+        </tr>
+        <tr>
+          <td>NIS2</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">17</span></td>
+          <td class="desc"><strong>Full coverage</strong> of the NIS2 Directive (EU 2022/2555). Incident response, supply chain security, vulnerability handling, security policies, and business continuity for essential and important entities.</td>
+        </tr>
+        <tr>
+          <td>UK NIS Regulations</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">15</span></td>
+          <td class="desc"><strong>Full coverage</strong> of The Network and Information Systems Regulations 2018 (as amended). Covers digital service providers, operators of essential services, and incident reporting obligations under UK law.</td>
+        </tr>
+        <tr>
+          <td>PSD3</td>
+          <td><span class="badge partial">PARTIAL</span></td>
+          <td><span class="mcp-count">10</span></td>
+          <td class="desc"><strong>Partial coverage</strong> of the Third Payment Services Directive. Covers SCA, open banking APIs, fraud monitoring, and incident reporting. Full coverage aligned with the transposition deadline of mid-2027.</td>
+        </tr>
+        <tr>
+          <td>MiCA</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">16</span></td>
+          <td class="desc"><strong>Full coverage</strong> of the Markets in Crypto-Assets Regulation (EU 2023/1114). White paper attestations, reserve asset management, disclosure obligations, and market abuse prevention for CASPs and issuers.</td>
+        </tr>
+
+        <!-- Quality, Security & ESG -->
+        <tr class="category-row"><td colspan="4">Quality, Security &amp; ESG</td></tr>
+        <tr>
+          <td>ISO 42001</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">22</span></td>
+          <td class="desc"><strong>Full coverage</strong> of ISO/IEC 42001:2023 — the first international AI management system standard. Covers the full PDCA cycle: AI policy, risk assessment, impact evaluation, system development lifecycle, and continuous improvement attestations.</td>
+        </tr>
+        <tr>
+          <td>SOC 2</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">19</span></td>
+          <td class="desc"><strong>Full coverage</strong> of SOC 2 Type II criteria across all five trust service categories (Security, Availability, Processing Integrity, Confidentiality, Privacy). Automated evidence collection mapped to the 2024 TSC framework.</td>
+        </tr>
+        <tr>
+          <td>CSRD</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">13</span></td>
+          <td class="desc"><strong>Full coverage</strong> of the Corporate Sustainability Reporting Directive (EU 2022/2464). ESRS cross-cutting standards, double materiality assessments, and AI-specific sustainability disclosures.</td>
+        </tr>
+        <tr>
+          <td>CRA</td>
+          <td><span class="badge coming">COMING</span></td>
+          <td><span class="mcp-count">—</span></td>
+          <td class="desc"><strong>Coming in Q1 2027.</strong> The Cyber Resilience Act (EU 2024/2847) will be fully mapped upon its enforcement date. Pre-release partners can join the early-access programme to shape mapping and attestation logic.</td>
+        </tr>
+
+        <!-- Healthcare & Social Care -->
+        <tr class="category-row"><td colspan="4">Healthcare &amp; Social Care</td></tr>
+        <tr>
+          <td>CARE Membrane (CQC/CIW)</td>
+          <td><span class="badge full">FULL</span></td>
+          <td><span class="mcp-count">11</span></td>
+          <td class="desc"><strong>Full coverage</strong> of the CARE Membrane standard for AI in health and social care. Covers CQC (England) and CIW (Wales) regulatory requirements including safety, effectiveness, caring, responsiveness, and leadership — all mapped to AI system attestations.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 <a href="https://proofof.ai">proofof.ai</a> — a product of CSOAI Ltd (UK 16939677). All rights reserved. <a href="pricing.html">View pricing</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+{
+  "name": "@csoai-org/sov3-auth",
+  "version": "2.0.0",
+  "description": "SOV3 Sovereign Auth SDK - drop-in sovereign auth for any web app. 17 providers, zero friction, sovereign by design.",
+  "main": "sov3-auth.js",
+  "module": "sov3-auth.esm.js",
+  "browser": "sov3-auth.js",
+  "types": "sov3-auth.d.ts",
+  "scripts": {
+    "test": "node test.js",
+    "build": "node build.js"
+  },
+  "keywords": [
+    "sov3",
+    "csoai",
+    "sovereign",
+    "auth",
+    "oauth",
+    "passkey",
+    "webauthn",
+    "mcp",
+    "a2a",
+    "bft",
+    "care-floor",
+    "article-50",
+    "sigil",
+    "fork-doctrine",
+    "anti-lockin",
+    "open-source",
+    "mit",
+    "cc0"
+  ],
+  "author": "CSOAI Ltd UK 16939677",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "exports": {
+    ".": {
+      "import": "./sov3-auth.esm.js",
+      "require": "./sov3-auth.js"
+    },
+    "./react": "./sov3-auth-react.js",
+    "./vue": "./sov3-auth-vue.js",
+    "./svelte": "./sov3-auth-svelte.js"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true }
+  },
+  "files": [
+    "sov3-auth.js",
+    "sov3-auth.esm.js",
+    "sov3-auth.d.ts",
+    "sov3-auth-react.js",
+    "sov3-auth-vue.js",
+    "sov3-auth-svelte.js",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CSOAI-ORG/sov3-sovereign-substrate",
+    "directory": "packages/sov3-auth"
+  },
+  "homepage": "https://csoai.org/sovereign-auth/",
+  "bugs": {
+    "url": "https://github.com/CSOAI-ORG/sov3-sovereign-substrate/issues"
+  },
+  "keywords_detail": [
+    "17 auth providers in one SDK",
+    "Care Floor 0.95 enforced",
+    "BFT 12-around-1 Council",
+    "SIGIL chain audit",
+    "Article 50 EU AI Act watermarking",
+    "Crown Authorisation lineage 1795-2026",
+    "MIT license",
+    "CC0 badge assets",
+    "OSI approved",
+    "Fork Doctrine",
+    "i-character auto-generation"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

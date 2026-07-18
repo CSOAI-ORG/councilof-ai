@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SOV3³ + OOWM — Model Types Deep-Dive</title>
+<meta name="description" content="SOV3 OOWM model types — the sovereign model inventory: 61 open models across 8 categories (coding, reasoning, long-context, multilingual, edge, tts, embedding, router), all SIGIL-anchored.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --bg-0: #050810;
+  --bg-1: #0c1119;
+  --bg-2: #151c28;
+  --bg-3: #1f2937;
+  --line: #2a3441;
+  --fg-0: #e8edf2;
+  --fg-1: #a8b3c1;
+  --fg-2: #6b7888;
+  --accent: #4f9cff;
+  --green: #34d399;
+  --orange: #fbbf24;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+  --cyan: #22d3ee;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg-0);
+  color: var(--fg-0);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  line-height: 1.55;
+  min-height: 100vh;
+}
+.container { max-width: 1180px; margin: 0 auto; padding: 36px 22px 80px; }
+
+.hero { padding: 0 0 36px; border-bottom: 1px solid var(--line); margin-bottom: 40px; }
+.hero h1 { font-size: 38px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1px; margin-bottom: 10px; }
+.hero p { color: var(--fg-2); font-size: 15px; max-width: 780px; }
+
+.summary { background: var(--bg-1); border: 1px solid var(--line); border-radius: 12px; padding: 18px 22px; margin: 18px 0; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 10px; }
+.summary-item .k { font-size: 22px; font-weight: 800; color: var(--accent); display: block; }
+.summary-item .l { font-size: 11px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 1.2px; }
+
+h2 { font-size: 22px; margin: 50px 0 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+h2 .num { font-family: "SF Mono", monospace; color: var(--accent); font-size: 20px; }
+
+.model-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0;
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.model-card:hover { border-color: var(--accent); }
+.model-header {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(79,156,255,0.08), transparent);
+}
+.icon-block {
+  width: 64px; height: 64px;
+  border-radius: 12px;
+  display: grid; place-items: center;
+  font-size: 28px; font-weight: 700;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+}
+.model-card.m-moe .icon-block { color: var(--accent); background: rgba(79,156,255,0.12); border-color: rgba(79,156,255,0.3); }
+.model-card.m-mom .icon-block { color: var(--cyan); background: rgba(34,211,238,0.12); border-color: rgba(34,211,238,0.3); }
+.model-card.m-ssm .icon-block { color: var(--purple); background: rgba(167,139,250,0.12); border-color: rgba(167,139,250,0.3); }
+.model-card.m-rsn .icon-block { color: var(--pink); background: rgba(244,114,182,0.12); border-color: rgba(244,114,182,0.3); }
+.model-card.m-tts .icon-block { color: var(--green); background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.3); }
+.model-card.m-emb .icon-block { color: var(--orange); background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.3); }
+.model-card.m-our .icon-block { color: var(--green); background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.3); }
+.model-card.m-cld .icon-block { color: var(--accent); background: rgba(79,156,255,0.12); border-color: rgba(79,156,255,0.3); }
+
+.header-text .abbrev { font-family: "SF Mono", monospace; font-size: 13px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+.header-text h3 { font-size: 22px; font-weight: 700; }
+.header-text .sub { color: var(--fg-1); font-size: 13.5px; margin-top: 4px; }
+
+.lic-tag { font-size: 11px; padding: 5px 12px; border-radius: 6px; background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3); text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; }
+
+.model-body { padding: 22px 26px; }
+.body-section { margin-bottom: 22px; }
+.body-section h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
+.body-section p { color: var(--fg-1); font-size: 14px; }
+.body-section ul { list-style: none; padding: 0; }
+.body-section li { padding: 6px 0; color: var(--fg-1); font-size: 14px; padding-left: 16px; position: relative; }
+.body-section li::before { content: "▸"; color: var(--accent); position: absolute; left: 0; top: 6px; }
+
+.spec-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 13px; }
+.spec-table td { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.spec-table td.k { color: var(--fg-2); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; width: 35%; }
+.spec-table td.v { color: var(--fg-0); font-family: "SF Mono", monospace; font-size: 12.5px; }
+.spec-table td.v code { background: var(--bg-2); padding: 1px 6px; border-radius: 3px; }
+
+.code-block { background: var(--bg-0); border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; font-family: "SF Mono", "Monaco", monospace; font-size: 12.5px; color: var(--fg-1); white-space: pre-wrap; overflow-x: auto; line-height: 1.6; }
+.code-block .k { color: var(--purple); }
+.code-block .s { color: var(--green); }
+.code-block .n { color: var(--orange); }
+.code-block .c { color: var(--fg-2); }
+
+.call-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+@media (max-width: 800px) { .call-grid { grid-template-columns: 1fr; } }
+.call-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+.call-card .title { font-size: 11px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 700; }
+.call-card .desc { font-size: 13px; color: var(--fg-1); margin-bottom: 10px; }
+
+.live-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 10px; border-radius: 4px; font-weight: 600; }
+.live-status.on { background: rgba(52,211,153,0.12); color: var(--green); }
+.live-status.off { background: rgba(251,191,36,0.12); color: var(--orange); }
+.live-status.warn { background: rgba(248,113,113,0.12); color: var(--red); }
+.live-status .dot { width: 7px; height: 7px; border-radius: 50%; }
+.live-status.on .dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.live-status.off .dot { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
+.live-status.warn .dot { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+footer { border-top: 1px solid var(--line); padding: 24px; text-align: center; margin-top: 60px; color: var(--fg-2); font-size: 12px; }
+footer .lin { font-family: "SF Mono", monospace; font-size: 11px; margin-top: 6px; }
+
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV3_OOWM_MODELTYPES.html">
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>🐉 SOV3³ + OOWM — Model Types Deep-Dive</h1>
+    <p>Every distinct model class in the sovereign estate. What it is. What it does. How to call it. Where it runs. What's honest. Tab 3 of 3 (also see: <code>SOV3_OOWM_TAB.html</code> text-first, <code>SOV3_OOWM_VISUAL.html</code> diagram-first).</p>
+  </div>
+
+  <div class="summary">
+    <h4 style="font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">At a glance</h4>
+    <div class="summary-grid">
+      <div class="summary-item"><span class="k">8</span><span class="l">distinct model classes</span></div>
+      <div class="summary-item"><span class="k">7</span><span class="l">trained NNs (3 strong)</span></div>
+      <div class="summary-item"><span class="k">207</span><span class="l">SOV3 MCP tools</span></div>
+      <div class="summary-item"><span class="k">13</span><span class="l">task routing categories</span></div>
+      <div class="summary-item"><span class="k">4</span><span class="l">sovereign brains</span></div>
+      <div class="summary-item"><span class="k">100%</span><span class="l">open-weight or own</span></div>
+    </div>
+  </div>
+
+  <!-- ===================== MoE ===================== -->
+  <h2><span class="num">01 /</span> Mixture-of-Experts</h2>
+
+  <div class="model-card m-moe">
+    <div class="model-header">
+      <div class="icon-block">MoE</div>
+      <div class="header-text">
+        <div class="abbrev">SPARSE ACTIVATION · REASONING</div>
+        <h3>Mixture-of-Experts (MoE)</h3>
+        <div class="sub">Deep reasoning at inference cost. Only 3B of 30B parameters active per token (A3B = "Activated 3 Billion").</div>
+      </div>
+      <span class="lic-tag">Apache 2.0</span>
+    </div>
+    <div class="model-body">
+
+      <div class="body-section">
+        <h4>What it is</h4>
+        <p>An MoE replaces a single dense neural network with a router + multiple "expert" sub-networks. The router selects 2-8 experts per token, not the full set. Result: model has 30B total params but only 3B are "live" per token → runs 8-10× faster than a dense 30B model with comparable reasoning quality.</p>
+      </div>
+
+      <div class="body-section">
+        <h4>Models in the estate</h4>
+        <table class="spec-table">
+          <tr><td class="k">Reasoning (large)</td><td class="v"><code>qwen3:30b-a3b</code> · 18GB · 80 tok/s · 32K ctx</td></tr>
+          <tr><td class="k">Fast route (small)</td><td class="v"><code>qwen2.5:3b</code> · 2GB · ~200 tok/s · 8K ctx</td></tr>
+        </table>
+      </div>
+
+      <div class="body-section">
+        <h4>Why we use it</h4>
+        <ul>
+          <li>Apache 2.0 license — fully open, no API lock-in, no exfil</li>
+          <li>Runs on M4 Mac 192GB (the sovereign target) — no GPU cluster needed</li>
+          <li>Deep reasoning for EU AI Act / GDPR / constitutional questions</li>
+          <li>Routing matches the brain selector in <code>sov3_4_brains_1_oowm.py</code></li>
+        </ul>
+      </div>
+
+      <div class="body-section">
+        <h4>Live invocation</h4>
+        <div class="code-block"><span class="c"># Local Ollama call</span>
+<span class="k">curl</span> -s -X POST http://localhost:11434/api/generate \
+  -d <span class="s">'{
+    "model": "qwen3:30b-a3b",
+    "prompt": "Score this AI system against EU AI Act Art 50: chatbot for NHS triage",
+    "stream": false
+  }'</span> | <span class="k">jq</span> <span class="s">.response</span>
+
+<span class="c"># Via SOV3 routing</span>
+<span class="k">curl</span> -s -X POST http://localhost:3101/mcp \
+  -d <span class="s">'{
+    "tool": "sov3_apply_routing",
+    "category": "compliance",
+    "query": "Score triage chatbot"
+  }'</span> <span class="c">→</span> routes to deepseek-r1/qwen3 depending on task</div>
+        <p style="font-size:12px;color:var(--fg-2);margin-top:8px;"><span class="live-status off"><span class="dot"></span>Designed for M4 192GB</span> · confirm <code>ollama list</code> on the 192GB Mac before claiming live</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== MoM ===================== -->
+  <h2><span class="num">02 /</span> Mixture-of-Models</h2>
+
+  <div class="model-card m-mom">
+    <div class="model-header">
+      <div class="icon-block">MoM</div>
+      <div class="header-text">
+        <div class="abbrev">MULTIMODAL ENSEMBLE · PERCEPTION</div>
+        <h3>Mixture-of-Models (MoM)</h3>
+        <div class="sub">Multiple specialist models, one task. Vision + spatial + audio routed by input type, not by token.</div>
+      </div>
+      <span class="lic-tag">Open</span>
+    </div>
+    <div class="model-body">
+
+      <div class="body-section">
+        <h4>What it is</h4>
+        <p>Where MoE uses many sub-networks inside one model, MoM uses many independent specialist <strong>whole models</strong>. Moondream sees objects in images. Qwen-VL understands spatial layouts. Zamba parses long video. A router decides which (or which combination) is needed per task.</p>
+      </div>
+
+      <div class="body-section">
+        <h4>Models in the estate</h4>
+        <table class="spec-table">
+          <tr><td class="k">Vision (small)</td><td class="v"><code>moondream</code> · 1.7GB · fast object recognition</td></tr>
+          <tr><td class="k">Vision+spatial (large)</td><td class="v"><code>zamba-large</code> · ~7GB · image + video captioning</td></tr>
+          <tr><td class="k">Vision-Language</td><td class="v"><code>qwen-vl</code> · understands layout, OCR, charts</td></tr>
+        </table>
+      </div>
+
+      <div class="body-section">
+        <h4>Why we use it</h4>
+        <ul>
+          <li>Sovereign multimodal — no call to GPT-4V / Claude vision</li>
+          <li>Different model per modality → specialist accuracy, no compromise</li>
+          <li>Powers the "Right Brain / MOM" of the sovereign sandwich</li>
+          <li>Used in DEFONEOS UE5 NPC cognition (`UOOOWMComponent::Think`)</li>
+        </ul>
+      </div>
+
+      <div class="body-section">
+        <h4>Live invocation</h4>
+        <div class="code-block"><span class="c"># Image analysis via MoM router</span>
+<span class="k">curl</span> -s -X POST http://localhost:3101/mcp \
+  -d <span class="s">'{
+    "tool": "mom_perceive",
+    "input": "image_url_or_path",
+    "modality_hint": "spatial",
+    "return_format": "structured_captions"
+  }'</span>
+<span class="c">→ returns: { objects: [...], spatial_layout: ..., signed_sigil: "..." }</span>
+
+<span class="c"># Direct moondream call</span>
+<span class="k">curl</span> -s http://localhost:11434/api/generate \
+  -d <span class="s">'{"model": "moondream", "prompt": "What is in this image?"}'</span></div>
+        <p style="font-size:12px;color:var(--fg-2);margin-top:8px;"><span class="live-status on"><span class="dot"></span>Live on VM</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== SSM ===================== -->
+  <h2><span class="num">03 /</span> State-Space Model</h2>
+
+  <div class="model-card m-ssm">
+    <div class="model-header">
+      <div class="icon-block">SSM</div>
+      <div class="header-text">
+        <div class="abbrev">LONG-CONTEXT MEMORY · INTUITION</div>
+        <h3>State-Space Model (SSM)</h3>
+        <div class="sub">Mamba-2 with 16-dim state. Holds the world model together — replaces the 32K context window with O(1) memory.</div>
+      </div>
+      <span class="lic-tag">Open</span>
+    </div>
+    <div class="model-body">
+
+      <div class="body-section">
+        <h4>What it is</h4>
+        <p>Where transformers scale quadratically with context length (32K tokens → 1B FLOPs per token), state-space models scale <strong>linearly</strong>. Mamba-2 with state-dim 16 stores a fixed-size summary of all prior context in 16 floats — every new token updates that summary in O(1). You can run Mamba-2 over 1M tokens for the same cost as 1K tokens in a transformer.</p>
+      </div>
+
+      <div class="body-section">
+        <h4>Models in the estate</h4>
+        <table class="spec-table">
+          <tr><td class="k">Mamba-2 (long mem)</td><td class="v"><code>Mamba-2 SSM</code> · state-dim 16 · O(1) per token</td></tr>
+          <tr><td class="k">Gematria layer</td><td class="v"><code>Gematria</code> · 16-dim Mamba variant for intuition routing</td></tr>
+        </table>
+      </div>
+
+      <div class="body-section">
+        <h4>Why we use it</h4>
+        <ul>
+          <li>The "world model" in OOWM is fundamentally an SSM — long memory, fast access</li>
+          <li>Replaces old context truncation (we were losing state every 32K tokens)</li>
+          <li>Powers SOVEREIGN-INTUITION brain (Gematria = 16-dim Mamba for fast pattern)</li>
+          <li>OLM Autonomous Brain uses Mamba-2 SSD as right-brain history layer</li>
+        </ul>
+      </div>
+
+      <div class="body-section">
+        <h4>Live invocation</h4>
+        <div class="code-block"><span class="c"># Inside the sovereign sandwich, not user-callable directly</span>
+<span class="c"># Used by the OOWM engine to maintain world model state</span>
+
+<span class="k">from</span> sovereign_temple.sov3_oowm <span class="k">import</span> OOWM
+oowm = OOWM(brain=<span class="s">"sovereign-intuition"</span>)
+oowm.update_state(<span class="n">"user_just_clicked_compliance_button"</span>)
+state = oowm.read_state()  <span class="c"># 16-dim vector, instant access, no context loss</span></div>
+        <p style="font-size:12px;color:var(--fg-2);margin-top:8px;"><span class="live-status on"><span class="dot"></span>Live (16-dim state in OOWM)</span> · <span class="live-status warn"><span class="dot"></span>handle_oowm_status hardcodes True</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== Reasoning LLM ===================== -->
+  <h2><span class="num">04 /</span> Reasoning LLM (Chain-of-Thought)</h2>
+
+  <div class="model-card m-rsn">
+    <div class="model-header">
+      <div class="icon-block">CoT</div>
+      <div class="header-text">
+        <div class="abbrev">CHAIN-OF-THOUGHT · LOGIC</div>
+        <h3>Reasoning LLM (CoT)</h3>
+        <div class="sub">DeepSeek-R1 with explicit step-by-step reasoning. Wins on EU AI Act, GDPR, ethics, math, logic.</div>
+      </div>
+      <span class="lic-tag">MIT</span>
+    </div>
+    <div class="model-body">
+
+      <div class="body-section">
+        <h4>What it is</h4>
+        <p>DeepSeek-R1 is trained to "think out loud" before answering. Instead of one-shot generation, it writes a thinking trace (3-15 seconds) then produces the final answer. This gives dramatically better results on tasks requiring multi-step logic — exactly the EU AI Act / GDPR / BFT council use cases.</p>
+      </div>
+
+      <div class="body-section">
+        <h4>Models in the estate</h4>
+        <table class="spec-table">
+          <tr><td class="k">Reasoning</td><td class="v"><code>deepseek-r1:7b</code> · 4.7GB · 40 tok/s · 16K ctx</td></tr>
+        </table>
+      </div>
+
+      <div class="body-section">
+        <h4>Why we use it</h4>
+        <ul>
+          <li>Routed to for <code>compliance</code>, <code>sov3</code>, <code>ethics</code>, <code>reasoning</code> task categories</li>
+          <li>Generates the Art 50 / GDPR gap analysis text</li>
+          <li>Writes BFT council votes with explicit reasoning trail (auditable)</li>
+          <li>Smaller (7B) → fast, fits in 16GB</li>
+        </ul>
+      </div>
+
+      <div class="body-section">
+        <h4>Live invocation</h4>
+        <div class="code-block"><span class="c"># Reasoning call (longer wait, better answer)</span>
+<span class="k">curl</span> -s http://localhost:11434/api/generate \
+  -d <span class="s">'{
+    "model": "deepseek-r1:7b",
+    "prompt": "Does this AI system violate Art 14 (human oversight)? Steps: 1) read system description 2) check 4 human-oversight requirements 3) emit verdict"
+  }'</span>
+<span class="c">→ returns: { thinking: "...step-by-step...", response: "...verdict..." }</span></div>
+        <p style="font-size:12px;color:var(--fg-2);margin-top:8px;"><span class="live-status on"><span class="dot"></span>Live on VM</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== TTS ===================== -->
+  <h2><span class="num">05 /</span> Text-to-Speech</h2>
+
+  <div class="model-card m-tts">
+    <div class="model-header">
+      <div class="icon-block">TTS</div>
+      <div class="header-text">
+        <div class="abbrev">VOICE · SPEECH SYNTHESIS</div>
+        <h3>Text-to-Speech (TTS)</h3>
+        <div class="sub">Kokoro-82M, Apache 2.0. The MEOK OS voice dock speaks through this.</div>
+      </div>
+      <span class="lic-tag">Apache / MIT</span>
+    </div>
+    <div class="model-body">
+
+      <div class="body-section">
+        <h4>What it is</h4>
+        <p>Kokoro is an 82-million-parameter TTS model from hexgrad. Real-time speech on CPU. Voices: Bella, Adam, Antoni, Sarah (UK), Emma (UK), etc. We pair it with Piper as fallback. Sovereign voice — no call to ElevenLabs or OpenAI TTS.</p>
+      </div>
+
+      <div class="body-section">
+        <h4>Models in the estate</h4>
+        <table class="spec-table">
+          <tr><td class="k">Primary</td><td class="v"><code>Kokoro-82M</code> · 82M params · CPU real-time · 9 voices</td></tr>
+          <tr><td class="k">Fallback</td><td class="v"><code>Piper</code> · offline, monophone voices</td></tr>
+        </table>
+      </div>
+
+      <div class="body-section">
+        <h4>Why we use it</h4>
+        <ul>
+          <li>Powers "Speak to your Sovereign" button on os.meok.ai</li>
+          <li>Routes through SOVEREIGN-VOICE brain (brain 4 of 4)</li>
+          <li>The 28 Jun 2026 voice-loop bug was fixed via 3-layer talk-loop resolution</li>
+          <li>Used by Voice Bridge for live verbal compliance reports</li>
+        </ul>
+      </div>
+
+      <div class="body-section">
+        <h4>Live invocation</h4>
+        <div class="code-block"><span class="c"># Synthesis (saves wav to /tmp)</span>
+<span class="k">python3</span> -c <span class="s">"
+from kokoro import synthesize
+synthesize(
+    text='This system complies with EU AI Act Article 50.',
+    voice='bm_george',   # British male
+    out_path='/tmp/compliance.wav'
+)
+"</span></div>
+        <p style="font-size:12px;color:var(--fg-2);margin-top:8px;"><span class="live-status on"><span class="dot"></span>Live (os.meok.ai voice dock)</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== Embedding ===================== -->
+  <h2><span class="num">06 /</span> Embedding Model</h2>
+
+  <div class="model-card m-emb">
+    <div class="model-header">
+      <div class="icon-block">VEC</div>
+      <div class="header-text">
+        <div class="abbrev">VECTOR RETRIEVAL · SEMANTIC SEARCH</div>
+        <h3>Embedding Model</h3>
+        <div class="sub">BGE-M3 for retrieval + BGE-reranker for re-ranking. Powers every search across 49GB moat.</div>
+      </div>
+      <span class="lic-tag">MIT</span>
+    </div>
+    <div class="model-body">
+
+      <div class="body-section">
+        <h4>What it is</h4>
+        <p>Embedding models convert text (or images) into fixed-dimension vectors. Two texts with similar meaning get vectors that are close in cosine space. Used for RAG (retrieval-augmented generation) over the 49GB UK government data moat and any document collection.</p>
+      </div>
+
+      <div class="body-section">
+        <h4>Models in the estate</h4>
+        <table class="spec-table">
+          <tr><td class="k">Embedder</td><td class="v"><code>BGE-M3</code> · 1024-dim · multilingual (100+ langs)</td></tr>
+          <tr><td class="k">Re-ranker</td><td class="v"><code>BGE-reranker</code> · cross-encoder, top-k refinement</td></tr>
+        </table>
+      </div>
+
+      <div class="body-section">
+        <h4>Why we use it</h4>
+        <ul>
+          <li>BGE-M3 handles English + EU languages (French, German, Spanish) for compliance docs</li>
+          <li>Powers Q&A over Companies House, Land Registry, OS Open Names (49GB moat)</li>
+          <li>The 6 Hives (Security / Finance / Governance / Research / Operations / Creative) all use BGE-M3 for cross-source queries</li>
+        </ul>
+      </div>
+
+      <div class="body-section">
+        <h4>Live invocation</h4>
+        <div class="code-block"><span class="c"># Embed + retrieve</span>
+<span class="k">python3</span> -c <span class="s">"
+from sovereign_temple.retrieval import SovereignRAG
+rag = SovereignRAG(embedding_model='bge-m3')
+rag.index('/data/hive-data/governance/')
+hits = rag.query('EU AI Act Article 50 transparency', top_k=5)
+for hit in hits: print(hit.path, hit.score)
+"</span></div>
+        <p style="font-size:12px;color:var(--fg-2);margin-top:8px;"><span class="live-status on"><span class="dot"></span>Live, indexes all 6 Hives</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== OUR TRAINED NNs ===================== -->
+  <h2><span class="num">07 /</span> Our Trained Neural Networks</h2>
+
+  <div class="model-card m-our">
+    <div class="model-header">
+      <div class="icon-block">NN</div>
+      <div class="header-text">
+        <div class="abbrev">CSOAI-OWNED · GOVERNANCE SIGNALS</div>
+        <h3>Our 7 Trained NNs</h3>
+        <div class="sub">Small specialist classifiers trained on real labelled data. Not a foundation model — deliberate narrow classifiers.</div>
+      </div>
+      <span class="lic-tag">CSOAI own</span>
+    </div>
+    <div class="model-body">
+
+      <div class="body-section">
+        <h4>What they are</h4>
+        <p>Where the 8 model types above are general-purpose, these 7 are <strong>narrow specialist classifiers</strong> trained on labelled data CSOAI produces itself. They detect specific signals that broader models miss.</p>
+      </div>
+
+      <div class="body-section">
+        <h4>The full scorecard (honest)</h4>
+        <table class="spec-table">
+          <tr><td class="k">creativity_assessment_nn</td><td class="v">r² <strong style="color:var(--green);">0.91</strong> · 350 samples · ✅ strong</td></tr>
+          <tr><td class="k">care_pattern_analyzer</td><td class="v">mae <strong style="color:var(--green);">0.037</strong> · 600 samples · ✅ strong</td></tr>
+          <tr><td class="k">relationship_evolution_nn</td><td class="v">mae <strong style="color:var(--green);">0.071</strong> · 500 samples · ✅ strong</td></tr>
+          <tr><td class="k">care_validation_nn</td><td class="v">mae <strong style="color:var(--orange);">0.19</strong> · 19 samples · ⚠️ tiny</td></tr>
+          <tr><td class="k">partnership_detection_ml</td><td class="v">mae <strong style="color:var(--orange);">0.22</strong> · 19 samples · ⚠️ tiny</td></tr>
+          <tr><td class="k">threat_detection_nn</td><td class="v">acc <strong style="color:var(--red);">0.45</strong> · 33 samples · ❌ weak, retrain</td></tr>
+          <tr><td class="k">dependency_detection_nn</td><td class="v">acc <strong style="color:var(--red);">0.22</strong> · 50 samples · ❌ weak, retrain</td></tr>
+        </table>
+      </div>
+
+      <div class="body-section">
+        <h4>Why we use them</h4>
+        <ul>
+          <li>The 3 strong ones are deployed in production for governance signals</li>
+          <li>The 2 weak ones (threat / dependency) need retraining on real labelled data — honest flag</li>
+          <li>Each is narrow on purpose — they emit signals, not conversations</li>
+          <li>Combined into single governance verdict by the OOWM orchestration layer</li>
+        </ul>
+      </div>
+
+      <div class="body-section">
+        <h4>Live invocation</h4>
+        <div class="code-block"><span class="c"># Call into the MEOK MCP gateway</span>
+<span class="k">curl</span> -s -X POST http://localhost:3101/mcp \
+  -d <span class="s">'{
+    "tool": "sov3_run_governance_signals",
+    "input": {"text": "...", "context": "..."},
+    "models": ["care_pattern_analyzer", "creativity_assessment_nn"]
+  }'</span>
+<span class="c">→ { care_pattern: 0.83, creativity: 0.71, signed_sigil: "..." }</span></div>
+        <p style="font-size:12px;color:var(--fg-2);margin-top:8px;"><span class="live-status on"><span class="dot"></span>3 models live</span> · <span class="live-status warn"><span class="dot"></span>2 need retraining</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== Cloud Ensemble ===================== -->
+  <h2><span class="num">08 /</span> Cloud Ensemble (Vote + Fallback)</h2>
+
+  <div class="model-card m-cld">
+    <div class="model-header">
+      <div class="icon-block">⌁</div>
+      <div class="header-text">
+        <div class="abbrev">VOTE / FALLBACK · API</div>
+        <h3>Cloud Ensemble</h3>
+        <div class="sub">External frontier models used as voters / fallbacks, never as primary route. API only — no sovereign-train data on them.</div>
+      </div>
+      <span class="lic-tag">API · No train data</span>
+    </div>
+    <div class="model-body">
+
+      <div class="body-section">
+        <h4>What it is</h4>
+        <p>For tasks where local sovereign models aren't strong enough, we route to external frontier models (OpenAI, Anthropic Claude, GLM-5.2, Groq) — but <strong>never</strong> as the primary answer. They vote as part of a BFT ensemble, or act as fallback when local models decline. Critically: no user data is ever used to train them.</p>
+      </div>
+
+      <div class="body-section">
+        <h4>Models in the ensemble</h4>
+        <table class="spec-table">
+          <tr><td class="k">Frontier (voter)</td><td class="v"><code>OpenAI</code> · <code>Claude</code> · Anthropic API</td></tr>
+          <tr><td class="k">Chinese cloud</td><td class="v"><code>GLM-5.2</code> · sovereign-replaceable</td></tr>
+          <tr><td class="k">Speed fallback</td><td class="v"><code>Groq</code> · low-latency secondary</td></tr>
+        </table>
+      </div>
+
+      <div class="body-section">
+        <h4>Why we use it</h4>
+        <ul>
+          <li>Adds diverse voter perspectives to BFT council decisions</li>
+          <li>Fallback when local sovereign model is overloaded (W38 honest finding)</li>
+          <li>GLM-5.2 used for Chinese-language compliance work (PIPL, AIGC reg.)</li>
+          <li><strong>Rule:</strong> train data stays on sovereign side; API calls only</li>
+        </ul>
+      </div>
+
+      <div class="body-section">
+        <h4>Live invocation</h4>
+        <div class="code-block"><span class="c"># Hybrid sovereign: local + 1 cloud voter</span>
+<span class="k">curl</span> -s -X POST http://localhost:3101/mcp \
+  -d <span class="s">'{
+    "tool": "sov3_apply_routing",
+    "category": "compliance",
+    "voters": ["deepseek-r1:7b", "claude-sonnet-4"],
+    "quorum": 2
+  }'</span>
+<span class="c">→ returns BFT-signed verdict with both votes visible</span></div>
+        <p style="font-size:12px;color:var(--fg-2);margin-top:8px;"><span class="live-status on"><span class="dot"></span>Live as BFT voters</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div>🐉 SOV3³ + OOWM — Model Types Deep-Dive · 2026-07-07</div>
+    <div class="lin">Tab 3 of 3. See also: SOV3_OOWM_TAB.html (text-first) · SOV3_OOWM_VISUAL.html (diagram-first)</div>
+    <div class="lin">SIGIL: SOV3-OOWM-MODELTYPES Ed25519</div>
+  </footer>
+
+</div>
+</body>
+</html>

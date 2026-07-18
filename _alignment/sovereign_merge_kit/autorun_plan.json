@@ -1,0 +1,48 @@
+{
+  "ram_gb": 17.2,
+  "gpu": false,
+  "runnable": 2,
+  "gated": 6,
+  "plan": [
+    {
+      "phase": "P0 governance core (CPU)",
+      "runnable": true,
+      "note": "sov33 portal \u2014 always runs on CPU"
+    },
+    {
+      "phase": "P1 local sovereign base",
+      "runnable": false,
+      "note": "needs `ollama` + a pulled qwen3 model"
+    },
+    {
+      "phase": "P4a mergekit tool",
+      "runnable": false,
+      "note": "pip install mergekit (CPU/low-VRAM ok)"
+    },
+    {
+      "phase": "P4a real 4->1 merge",
+      "runnable": false,
+      "note": "TIES-soup Qwen3 fine-tunes; needs >=24GB"
+    },
+    {
+      "phase": "P4b MoE-Infinity stream",
+      "runnable": false,
+      "note": "GPU + offload; turns 64x proxy into wall-clock"
+    },
+    {
+      "phase": "P3 T-base (Flash/Pro)",
+      "runnable": false,
+      "note": "DeepSeek-V4-Flash MLX needs 48GB Mac or cloud"
+    },
+    {
+      "phase": "P3 Kaggle capability grade",
+      "runnable": false,
+      "note": "owner runs notebook (GPU+internet) \u2014 or already 0.71 deployed"
+    },
+    {
+      "phase": "P4c standard safety bench",
+      "runnable": true,
+      "note": "HarmBench/StrongREJECT through the care-gate"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "name": "meok-sovereign-stack",
+  "description": "The MEOK sovereign OS substrate — 22 sovereign MCPs for trustworthy AI agents",
+  "version": "0.1.0",
+  "organization": "CSOAI Ltd (UK 16939677)",
+  "verify_base": "https://proofof.ai",
+  "count": 22,
+  "mcps": [
+    {"name": "meok-sovereign-passport-mcp", "purpose": "Ed25519 agent identity + narrowing-invariant delegation", "tests": 11, "license": "MIT"},
+    {"name": "meok-sovereign-guardrails-mcp", "purpose": "Prompt injection + PII redact + scan", "tests": 20, "license": "MIT"},
+    {"name": "meok-sovereign-receipt-mcp", "purpose": "Hash-chained tamper-evident audit", "tests": 15, "license": "MIT"},
+    {"name": "meok-sovereign-governance-mcp", "purpose": "5-element Zero Trust + 4-level maturity", "tests": 20, "license": "MIT"},
+    {"name": "meok-sovereign-x402-payment-mcp", "purpose": "HTTP 402 micropayments for agent tools", "tests": 12, "license": "MIT"},
+    {"name": "meok-sovereign-supply-chain-attestation-mcp", "purpose": "SBOM + SLSA + Bitcoin anchor", "tests": 10, "license": "MIT"},
+    {"name": "meok-sovereign-globe-mcp", "purpose": "33-hive registry + Cesium + deck.gl + force-graph", "tests": 18, "license": "MIT"},
+    {"name": "meok-sovereign-council-mcp", "purpose": "12-around-1 BFT voting + charter ratification", "tests": 19, "license": "MIT"},
+    {"name": "meok-sovereign-memory-mcp", "purpose": "Episodic + graph + Ebbinghaus decay", "tests": 12, "license": "MIT"},
+    {"name": "meok-sovereign-avatar-mcp", "purpose": "VRM embodied + local voice (Kokoro + whisper)", "tests": 10, "license": "MIT"},
+    {"name": "meok-sovereign-skills-mcp", "purpose": "Skill lifecycle CREATE→EVAL→EDIT→REVIEW→PACKAGE", "tests": 10, "license": "MIT"},
+    {"name": "meok-sovereign-eu-ai-act-kit-mcp", "purpose": "August 2nd 2026 EU AI Act Survival Kit", "tests": 10, "license": "MIT"},
+    {"name": "meok-sovereign-worm-mcp", "purpose": "Morris-II guard + 6 tunnels + WORM + audit (defensive)", "tests": 26, "license": "MIT"},
+    {"name": "meok-sovereign-defence-mcp", "purpose": "Defensive: threat + IWC + JSP 936 + C2 (never offensive)", "tests": 13, "license": "MIT"},
+    {"name": "meok-sovereign-satellite-mcp", "purpose": "6 free satellite sources (Sentinel/Landsat/MODIS/DEM/OSM)", "tests": 10, "license": "MIT"},
+    {"name": "meok-sovereign-honour-mcp", "purpose": "19 Sovereign Factors + 16 care probes + 12-around-1 ethics", "tests": 15, "license": "MIT"},
+    {"name": "meok-sovereign-immortal-mcp", "purpose": "Bitcoin-anchored eternal memory (no decay, ever)", "tests": 11, "license": "MIT"},
+    {"name": "meok-sovereign-dora-mcp", "purpose": "EU DORA 5-pillar audit + CTPP classify + incident reporting", "tests": 13, "license": "MIT"},
+    {"name": "meok-sovereign-iso42001-mcp", "purpose": "ISO/IEC 42001:2023 AIMS audit + SoA + risk assess", "tests": 9, "license": "MIT"},
+    {"name": "meok-sovereign-iot-mcp", "purpose": "iOK Farm + sensors + MQTT + emergency stop (free)", "tests": 12, "license": "MIT"},
+    {"name": "meok-sovereign-pond-mcp", "purpose": "13m×12m koi pond + care floor + emergency action", "tests": 13, "license": "MIT"},
+    {"name": "meok-sovereign-intuition-mcp", "purpose": "16-dim Mamba-2 state-space hunch engine", "tests": 13, "license": "MIT"}
+  ],
+  "totals": {
+    "mcps": 22,
+    "tests": 302,
+    "pass_rate": "100%",
+    "test_runtime_ms": 2000
+  },
+  "categories": {
+    "identity": ["passport"],
+    "safety": ["guardrails", "worm"],
+    "audit": ["receipt", "supply-chain", "immortal"],
+    "governance": ["governance", "council", "honour"],
+    "compliance": ["eu-ai-act-kit", "defence", "dora", "iso42001"],
+    "commerce": ["x402-payment"],
+    "visualization": ["globe", "satellite"],
+    "embodiment": ["avatar"],
+    "memory": ["memory"],
+    "lifecycle": ["skills"],
+    "iot_physical": ["iot", "pond"],
+    "intuition": ["intuition"]
+  },
+  "discovery": {
+    "endpoint": "/.well-known/mcp.json",
+    "protocol": "MCP (Model Context Protocol) v1.0",
+    "transport": "stdio + HTTP+JSON",
+    "auth": "HMAC-SHA256 bearer token (UE5 bridge)"
+  }
+}

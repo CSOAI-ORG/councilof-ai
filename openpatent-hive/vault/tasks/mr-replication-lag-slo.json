@@ -1,0 +1,7 @@
+{
+  "id": "mr-replication-lag-slo",
+  "prompt": "Write a 300-word replication-lag SLO definition for the openpatent.ai 3-temple mesh. Cover: (1) the SLO target — p99 cross-region replication lag ≤2 seconds, measured from the moment a disclosure achieves 22/33 BFT supermajority in its origin region to the moment a light-client in each other region sees the same block height, (2) the success-rate SLO — 99.95% of disclosures achieve <2s lag over a rolling 30-day window, (3) the error budget — 21.6 minutes of lag-budget per 30 days, (4) the measurement pipeline — Prometheus histogram buckets [0.1s, 0.5s, 1s, 2s, 5s, 10s] on the metric openpatent_replication_lag_seconds{from_region, to_region}, scraped every 10s, alerted at p99>1.5s for 5min, (5) the multi-window burn-rate alerting (5min & 1h fast burn, 30min & 6h slow burn) using Google SRE workbook formulas, (6) the consequence when budget burns — automatic throttle of new disclosures to the lagging region, on-call page, postmortem. Use DEFENEOS mythic voice. Return ONLY JSON: {slo_target:string, success_rate_slo:string, error_budget_minutes:float, buckets_sec:[6 numbers], alert_thresholds:[2 strings], burn_rate_windows:[4 strings], consequence:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

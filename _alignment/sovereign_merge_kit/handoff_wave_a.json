@@ -1,0 +1,124 @@
+{
+  "sigil_hash_chain": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6415,
+    "read_pid": 6416,
+    "read_detail": {
+      "links": 2,
+      "chain_linked_across_cold_calls": true,
+      "all_ed25519_verify": true,
+      "ok": true
+    }
+  },
+  "drum_time_ledger": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6417,
+    "read_pid": 6418,
+    "read_detail": {
+      "entries": 2,
+      "saw_LEARN_from_cold_call_1": true,
+      "elapsed_LEARN_to_DO_s": 0.079,
+      "ok": true
+    }
+  },
+  "jrum_memory": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6422,
+    "read_pid": 6423,
+    "read_detail": {
+      "journal_entries": 1,
+      "recall_hits_for_'flagship spend'": 1,
+      "recalled_decision": "WAIT",
+      "ok": true
+    }
+  },
+  "sector_forests": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6424,
+    "read_pid": 6425,
+    "read_detail": {
+      "total_nodes": 2,
+      "governance_from_cold_1": {
+        "sector": "governance",
+        "nodes": 1,
+        "best_gain": 0.09,
+        "maturity": "THIN"
+      },
+      "detectors_from_cold_2": {
+        "sector": "detectors",
+        "nodes": 1,
+        "best_gain": 0.977,
+        "maturity": "STRONG"
+      },
+      "ok": true
+    }
+  },
+  "evolve_forest": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6426,
+    "read_pid": 6427,
+    "read_detail": {
+      "nodes": 2,
+      "saw_root_from_cold_1": "1e91088a",
+      "admitted_child_beats_parent": true,
+      "child_parent_links_to_root": true,
+      "ok": true
+    }
+  },
+  "currency_ledger": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6428,
+    "read_pid": 6429,
+    "read_detail": {
+      "ledger_entries": 2,
+      "saw_cold_1_stamp": true,
+      "cold_1_stale": false,
+      "cold_2_stale": true,
+      "ok": true
+    }
+  },
+  "consent_ledger": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6430,
+    "read_pid": 6431,
+    "read_detail": {
+      "consent_entries": 2,
+      "granted_seen_from_cold_1": true,
+      "revoked_takes_effect_cold_2": true,
+      "ok": true
+    }
+  },
+  "l0_p2_legacy_bridge": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6432,
+    "read_pid": 6433,
+    "read_detail": {
+      "sor_records": 1,
+      "recovered_bridge_record": true,
+      "rules_found_from_cold_1": 5,
+      "bridge_status": "ANALYZED",
+      "ok": true
+    }
+  },
+  "l0_p3_a2a_registry": {
+    "pass": true,
+    "distinct_pids": true,
+    "write_pid": 6434,
+    "read_pid": 6435,
+    "read_detail": {
+      "looked_up_from_cold_1": true,
+      "reachable": true,
+      "directory_size_before": 1,
+      "deregister_took_effect": true,
+      "ok": true
+    }
+  }
+}

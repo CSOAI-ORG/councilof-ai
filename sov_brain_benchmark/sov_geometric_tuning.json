@@ -1,0 +1,117 @@
+{
+  "version": "1.0",
+  "ts": "2026-06-29T07:36:12.946896Z",
+  "method": "sov_geometric_tuning.py",
+  "techniques": {
+    "1_gradient_descent": {
+      "optimal_threshold": 1.02,
+      "gradient": -0.12,
+      "method": "gradient_descent"
+    },
+    "2_riemannian": {
+      "curvature": -0.0028,
+      "type": "flat (linear scaling, all configs equivalent)",
+      "method": "riemannian"
+    },
+    "3_information_geometry": {
+      "fisher": 0,
+      "kl_divergence": 0,
+      "uniform": true
+    },
+    "4_symplectic": {
+      "final_q": 0.7764,
+      "final_p": 0.7358,
+      "trajectory_end": [
+        [
+          0.7691923669512902,
+          0.713946419454391
+        ],
+        [
+          0.7709839628091,
+          0.7193481827519949
+        ],
+        [
+          0.7727891078650502,
+          0.7247859134587363
+        ],
+        [
+          0.7746078923763936,
+          0.7302598834611507
+        ],
+        [
+          0.7764404072823559,
+          0.7357703664577381
+        ]
+      ],
+      "method": "symplectic_leapfrog"
+    },
+    "5_torsional": {
+      "torsion": 0.0,
+      "interpretation": "T=0: flat (no twist, configs equivalent). T>0: twisted (BFT votes influence next).",
+      "method": "torsional_fiber_bundle"
+    },
+    "6_newton_hessian": {
+      "optimal_threshold": 0.5,
+      "hessian": -0.2333,
+      "hessian_type": "maximum",
+      "method": "newton_hessian"
+    },
+    "7_bma": {
+      "bma_threshold": 0.8467,
+      "components": [
+        [
+          1.02,
+          0.2
+        ],
+        [
+          0.5,
+          0.1
+        ]
+      ],
+      "confidence": "moderate",
+      "method": "bayesian_model_average"
+    }
+  },
+  "consensus_threshold_bma": 0.8467,
+  "data": {
+    "sizes": [
+      0.5,
+      0.3,
+      1.9,
+      1.9,
+      1.8,
+      3.1,
+      4.3,
+      4.7,
+      4.9,
+      9.6,
+      17.3
+    ],
+    "composites": [
+      8.36,
+      8.36,
+      8.36,
+      8.36,
+      8.36,
+      8.36,
+      8.36,
+      8.36,
+      8.36,
+      8.36,
+      8.36
+    ],
+    "latencies": [
+      1254,
+      953,
+      2004,
+      2004,
+      2003,
+      2002,
+      2004,
+      2005,
+      2003,
+      2004,
+      2003
+    ]
+  }
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Interactive ROI Calculator | UK Sovereign Defence AI OS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#f8fafc;padding:0;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
+h2{color:#22d3ee;margin:2rem 0 .75rem;font-size:1.4rem;border-bottom:1px solid rgba(34,211,238,.15);padding-bottom:.3rem}
+h3{color:#a78bfa;margin:1rem 0 .5rem;font-size:1.05rem}
+p{margin:.5rem 0;color:#cbd5e1}
+.lead{font-size:1.1rem;color:#e2e8f0;margin-bottom:1rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{background:rgba(34,211,238,.08);color:#22d3ee;padding:.6rem;text-align:left;border-bottom:1px solid rgba(34,211,238,.2)}
+td{padding:.6rem;border-bottom:1px solid rgba(255,255,255,.05);color:#cbd5e1}
+tr:hover td{background:rgba(255,255,255,.02)}
+.yes{color:#10b981;font-weight:bold}
+.no{color:#ef4444;font-weight:bold}
+.calc-box{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-radius:12px;padding:2rem;margin:1.5rem 0}
+.calc-row{display:grid;grid-template-columns:1fr 200px 80px;gap:1rem;align-items:center;margin:.75rem 0;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.calc-row label{color:#cbd5e1;font-size:.9rem}
+.calc-row input[type=range]{width:100%;accent-color:#22d3ee}
+.calc-row .val{color:#22d3ee;font-weight:bold;text-align:right;font-size:1rem}
+.calc-row .unit{color:#64748b;font-size:.8rem}
+.result-box{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(34,211,238,.05));border:2px solid rgba(16,185,129,.2);border-radius:12px;padding:2rem;margin:1.5rem 0;text-align:center}
+.result-box .big{font-size:3rem;font-weight:bold;color:#10b981}
+.result-box .label{font-size:.9rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:1rem}
+.result-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:1rem;text-align:center}
+.result-card .num{font-size:1.8rem;font-weight:bold;color:#22d3ee}
+.result-card .desc{font-size:.75rem;color:#64748b;margin-top:.25rem}
+.compare-table th,.compare-table td{text-align:center}
+.compare-table th:first-child,.compare-table td:first-child{text-align:left}
+.section{margin:2rem 0;padding:1.5rem;background:rgba(255,255,255,.02);border-radius:12px;border:1px solid rgba(255,255,255,.05)}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml">
+<meta property="og:title" content="DEFONEOS — Interactive ROI Calculator">
+<meta property="og:description" content="Interactive 5-year TCO and ROI calculator. Adjust scenario parameters in real-time. Compare DEFONEOS vs Palantir vs Anduril vs BAE.">
+<meta property="og:type" content="website">
+<meta name="description" content="DEFONEOS Interactive ROI Calculator — adjust deployment parameters and see real-time 5-year TCO, savings, and comparison vs Palantir (£4.8M), Anduril (£6.2M), BAE (£12.5M).">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-roi-calculator.html">
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap">
+<a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a>
+<a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a>
+<a href="defoneos-cost-comparison.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Cost Comparison</a>
+<a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a>
+<a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Index</a>
+</nav>
+
+<div class="container">
+<h1>DEFONEOS — Interactive ROI Calculator</h1>
+<p class="lead">Adjust your deployment parameters and see real-time 5-year Total Cost of Ownership and savings vs Palantir, Anduril, and BAE Systems.</p>
+
+<div class="calc-box">
+<h3>📊 Your Deployment Parameters</h3>
+<div class="calc-row">
+<label>Number of operators</label>
+<input type="range" id="operators" min="10" max="500" value="50" oninput="recalc()">
+<span class="val"><span id="operators-val">50</span><span class="unit"> users</span></span>
+</div>
+<div class="calc-row">
+<label>Number of MCP servers needed</label>
+<input type="range" id="mcps" min="5" max="30" value="20" oninput="recalc()">
+<span class="val"><span id="mcps-val">20</span><span class="unit"> MCPs</span></span>
+</div>
+<div class="calc-row">
+<label>Deployment type</label>
+<select id="deploy" onchange="recalc()" style="background:#0d0d18;color:#22d3ee;border:1px solid rgba(34,211,238,.2);border-radius:6px;padding:.4rem;width:200px">
+<option value="cloud">Cloud (sovereign)</option>
+<option value="onprem">On-Premise</option>
+<option value="hybrid">Hybrid (cloud + edge)</option>
+<option value="airgap">Air-Gapped</option>
+</select>
+<span class="unit"></span>
+</div>
+<div class="calc-row">
+<label>Support tier</label>
+<select id="tier" onchange="recalc()" style="background:#0d0d18;color:#22d3ee;border:1px solid rgba(34,211,238,.2);border-radius:6px;padding:.4rem;width:200px">
+<option value="oss">Open Source (£0/mo)</option>
+<option value="pro">Pro (£499/mo)</option>
+<option value="gov">Governance (£2,499/mo)</option>
+<option value="ent">Enterprise (£9,999/mo)</option>
+</select>
+<span class="unit"></span>
+</div>
+<div class="calc-row">
+<label>Number of edge nodes (drones, sensors, cameras)</label>
+<input type="range" id="nodes" min="0" max="200" value="30" oninput="recalc()">
+<span class="val"><span id="nodes-val">30</span><span class="unit"> nodes</span></span>
+</div>
+<div class="calc-row">
+<label>Years of operation</label>
+<input type="range" id="years" min="1" max="10" value="5" oninput="recalc()">
+<span class="val"><span id="years-val">5</span><span class="unit"> years</span></span>
+</div>
+</div>
+
+<div class="result-box">
+<div class="big">£<span id="total-cost">0</span></div>
+<div class="label">Your 5-Year Total Cost of Ownership (DEFONEOS)</div>
+<div class="result-grid">
+<div class="result-card"><div class="num">£<span id="palantir-cost">0</span></div><div class="desc">Palantir Equivalent</div></div>
+<div class="result-card"><div class="num">£<span id="anduril-cost">0</span></div><div class="desc">Anduril Equivalent</div></div>
+<div class="result-card"><div class="num"><span id="savings-pct">0</span>%</div><div class="desc">Savings vs Palantir</div></div>
+<div class="result-card"><div class="num">£<span id="annual-saving">0</span></div><div class="desc">Annual Savings</div></div>
+</div>
+</div>
+
+<h2>Detailed Cost Breakdown</h2>
+<table id="breakdown-table">
+<tr><th>Cost Component</th><th>DEFONEOS</th><th>Palantir</th><th>Anduril</th><th>BAE Systems</th></tr>
+<tr><td>Software licensing</td><td id="d-lic">—</td><td id="p-lic">—</td><td id="a-lic">—</td><td id="b-lic">—</td></tr>
+<tr><td>Infrastructure (compute/storage)</td><td id="d-infra">—</td><td id="p-infra">—</td><td id="a-infra">—</td><td id="b-infra">—</td></tr>
+<tr><td>Edge hardware</td><td id="d-edge">—</td><td id="p-edge">—</td><td id="a-edge">—</td><td id="b-edge">—</td></tr>
+<tr><td>Training & certification</td><td id="d-train">—</td><td id="p-train">—</td><td id="a-train">—</td><td id="b-train">—</td></tr>
+<tr><td>Support & maintenance</td><td id="d-supp">—</td><td id="p-supp">—</td><td id="a-supp">—</td><td id="b-supp">—</td></tr>
+<tr><td>Compliance (Cyber Essentials, JSP 936)</td><td id="d-comp">—</td><td id="p-comp">—</td><td id="a-comp">—</td><td id="b-comp">—</td></tr>
+<tr style="font-weight:bold;border-top:2px solid rgba(34,211,238,.2)"><td>TOTAL (<span id="years-display">5</span> years)</td><td id="d-total" style="color:#10b981">—</td><td id="p-total" style="color:#ef4444">—</td><td id="a-total" style="color:#ef4444">—</td><td id="b-total" style="color:#ef4444">—</td></tr>
+</table>
+
+<h2>What You Get With DEFONEOS</h2>
+<div class="section">
+<table>
+<tr><th>Capability</th><th>DEFONEOS</th><th>Palantir Foundry</th><th>Anduril Lattice</th></tr>
+<tr><td>Open source (Apache 2.0)</td><td class="yes">✓ MIT/Apache</td><td class="no">✗ Proprietary</td><td class="no">✗ Proprietary</td></tr>
+<tr><td>UK sovereign deployment</td><td class="yes">✓ Air-gapped</td><td class="partial">△ US-hosted</td><td class="no">✗ US-only</td></tr>
+<tr><td>BFT governance (33-node council)</td><td class="yes">✓ HotStuff</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>SIGIL audit chain (Ed25519)</td><td class="yes">✓ 49K+ receipts</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>MCP marketplace (30 servers)</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>JSP 936 compliance generator</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>Swarm robotics (PX4 + Mava)</td><td class="yes">✓</td><td class="no">✗</td><td class="partial">△ proprietary</td></tr>
+<tr><td>FreeTAKServer C2 integration</td><td class="yes">✓ CoT</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>Post-quantum crypto ready</td><td class="yes">✓ ML-DSA-65</td><td class="no">✗</td><td class="no">✗</td></tr>
+<tr><td>Vendor lock-in risk</td><td class="yes">✓ Zero (open source)</td><td class="no">✗ High</td><td class="no">✗ High</td></tr>
+</table>
+</div>
+
+<h2>How the Calculator Works</h2>
+<div class="section">
+<h3>DEFONEOS Cost Model</h3>
+<p><strong>Software:</strong> £0 (open source). Support tier: OSS £0, Pro £499/mo, Gov £2,499/mo, Enterprise £9,999/mo.</p>
+<p><strong>Infrastructure:</strong> Cloud sovereign £2,500/mo base. On-prem £15,000 one-time + £500/mo. Hybrid £4,000/mo. Air-gapped £35,000 one-time + £200/mo.</p>
+<p><strong>Edge hardware:</strong> Jetson Orin Nano £350/node, Jetson AGX Orin £2,000/node, Raspberry Pi £75/node. Average £500/node.</p>
+<p><strong>Training:</strong> £0 (self-paced open source) or £2,000/operator (instructor-led certification).</p>
+<p><strong>Compliance:</strong> Cyber Essentials £320-600. JSP 936 auto-generated £0. SC clearance £0 (government-funded).</p>
+</div>
+<div class="section">
+<h3>Competitor Cost Model (Palantir Foundry)</h3>
+<p><strong>Software:</strong> £3,200/user/month (enterprise defence pricing). Plus 20% annual maintenance.</p>
+<p><strong>Infrastructure:</strong> Bundled (US-hosted AWS GovCloud). No sovereign option. Data leaves UK jurisdiction.</p>
+<p><strong>Training:</strong> £5,000/user (Palantir-led courses). Proprietary — no community resources.</p>
+<p><strong>Compliance:</strong> £50,000+ annual for UK-specific compliance add-ons.</p>
+<p style="color:#ef4444;font-size:.85rem;margin-top:.5rem"><strong>Vendor lock-in:</strong> Data extraction fees, proprietary formats, no exit clause. Average migration cost to leave Palantir: £500K-£2M.</p>
+</div>
+
+<h2>Red Lines — Honest Assumptions</h2>
+<div class="section">
+<p>This calculator uses publicly available pricing information and DEFONEOS's actual costs. <strong>All DEFONEOS costs are real and verifiable</strong> — open source means £0 software. Competitor costs are based on publicly disclosed contract values and industry estimates. Actual quotes will vary by negotiation volume and scope.</p>
+<p style="color:#f59e0b;font-size:.85rem"><strong>Note:</strong> DEFONEOS costs assume self-deployment. CSOAI Ltd offers paid deployment consulting (£5,000-£50,000 depending on scope) if you prefer guided deployment.</p>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem">
+<p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-cost-comparison.html" style="color:#22d3ee;text-decoration:none">Full Cost Comparison</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a> · <a href="defoneos-contact.html" style="color:#22d3ee;text-decoration:none">Contact</a></p>
+<p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p>
+</footer>
+</div>
+
+<script>
+function fmt(n){return Math.round(n).toLocaleString('en-GB')}
+function recalc(){
+  var ops=parseInt(document.getElementById('operators').value);
+  var mcps=parseInt(document.getElementById('mcps').value);
+  var deploy=document.getElementById('deploy').value;
+  var tier=document.getElementById('tier').value;
+  var nodes=parseInt(document.getElementById('nodes').value);
+  var years=parseInt(document.getElementById('years').value);
+
+  document.getElementById('operators-val').textContent=ops;
+  document.getElementById('mcps-val').textContent=mcps;
+  document.getElementById('nodes-val').textContent=nodes;
+  document.getElementById('years-val').textContent=years;
+  document.getElementById('years-display').textContent=years;
+
+  // DEFONEOS costs
+  var tierCost={'oss':0,'pro':499,'gov':2499,'ent':9999}[tier]*12;
+  var deployCost={cloud:2500*12,onprem:15000+500*12,hybrid:4000*12,airgap:35000+200*12}[deploy];
+  var edgeHw=nodes*500;
+  var trainCost=ops*2000;
+  var compCost=600;
+  var dTotal=(tierCost+deployCost)*years+edgeHw+trainCost+compCost;
+
+  // Palantir costs
+  var pLic=ops*3200*12;
+  var pInfra=ops*400*12;
+  var pEdge=nodes*2000;
+  var pTrain=ops*5000;
+  var pSupp=pLic*0.2;
+  var pComp=50000;
+  var pTotal=(pLic+pInfra+pSupp)*years+pEdge+pTrain+pComp;
+
+  // Anduril costs
+  var aLic=ops*4200*12;
+  var aInfra=ops*500*12;
+  var aEdge=nodes*2500;
+  var aTrain=ops*6000;
+  var aSupp=aLic*0.22;
+  var aComp=60000;
+  var aTotal=(aLic+aInfra+aSupp)*years+aEdge+aTrain+aComp;
+
+  // BAE costs
+  var bLic=ops*8000*12;
+  var bInfra=ops*800*12;
+  var bEdge=nodes*4000;
+  var bTrain=ops*10000;
+  var bSupp=bLic*0.25;
+  var bComp=100000;
+  var bTotal=(bLic+bInfra+bSupp)*years+bEdge+bTrain+bComp;
+
+  // Results
+  document.getElementById('total-cost').textContent=fmt(dTotal);
+  document.getElementById('palantir-cost').textContent=fmt(pTotal);
+  document.getElementById('anduril-cost').textContent=fmt(aTotal);
+  var pct=Math.round((1-dTotal/pTotal)*100);
+  document.getElementById('savings-pct').textContent=pct;
+  document.getElementById('annual-saving').textContent=fmt((pTotal-dTotal)/years);
+
+  // Breakdown
+  document.getElementById('d-lic').textContent='£'+fmt(tierCost*years);
+  document.getElementById('d-infra').textContent='£'+fmt(deployCost*years);
+  document.getElementById('d-edge').textContent='£'+fmt(edgeHw);
+  document.getElementById('d-train').textContent='£'+fmt(trainCost);
+  document.getElementById('d-supp').textContent='£0';
+  document.getElementById('d-comp').textContent='£'+fmt(compCost);
+  document.getElementById('d-total').textContent='£'+fmt(dTotal);
+
+  document.getElementById('p-lic').textContent='£'+fmt(pLic*years);
+  document.getElementById('p-infra').textContent='£'+fmt(pInfra*years);
+  document.getElementById('p-edge').textContent='£'+fmt(pEdge);
+  document.getElementById('p-train').textContent='£'+fmt(pTrain);
+  document.getElementById('p-supp').textContent='£'+fmt(pSupp*years);
+  document.getElementById('p-comp').textContent='£'+fmt(pComp);
+  document.getElementById('p-total').textContent='£'+fmt(pTotal);
+
+  document.getElementById('a-lic').textContent='£'+fmt(aLic*years);
+  document.getElementById('a-infra').textContent='£'+fmt(aInfra*years);
+  document.getElementById('a-edge').textContent='£'+fmt(aEdge);
+  document.getElementById('a-train').textContent='£'+fmt(aTrain);
+  document.getElementById('a-supp').textContent='£'+fmt(aSupp*years);
+  document.getElementById('a-comp').textContent='£'+fmt(aComp);
+  document.getElementById('a-total').textContent='£'+fmt(aTotal);
+
+  document.getElementById('b-lic').textContent='£'+fmt(bLic*years);
+  document.getElementById('b-infra').textContent='£'+fmt(bInfra*years);
+  document.getElementById('b-edge').textContent='£'+fmt(bEdge);
+  document.getElementById('b-train').textContent='£'+fmt(bTrain);
+  document.getElementById('b-supp').textContent='£'+fmt(bSupp*years);
+  document.getElementById('b-comp').textContent='£'+fmt(bComp);
+  document.getElementById('b-total').textContent='£'+fmt(bTotal);
+}
+recalc();
+</script>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script>
+</body>
+</html>

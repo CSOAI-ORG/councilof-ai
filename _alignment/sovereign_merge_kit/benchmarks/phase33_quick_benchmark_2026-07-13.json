@@ -1,0 +1,226 @@
+{
+  "ts_iso": "2026-07-14T04:07:31.233225+00:00",
+  "tests": {
+    "health": {
+      "healthy": true,
+      "ts": "2026-07-14T04:07:31.244466+00:00"
+    },
+    "stats": {
+      "name": "SOV33 Stats",
+      "pages": 31,
+      "api_endpoints": 35,
+      "e2e_tests_pass": 43,
+      "e2e_tests_total": 43,
+      "capabilities_enabled": 17,
+      "capabilities_limited": 3,
+      "topologies_wired": 6,
+      "owem_routing_groups": 5,
+      "sovereign_pillars": 12,
+      "models_in_registry": 61,
+      "sovereign_safe_models": 53,
+      "eval_runs": 5,
+      "backends_tested": 3,
+      "rho_configs_measured": 20,
+      "agentic_tools": 10,
+      "kaggle_opportunities": 8,
+      "kaggle_prize_pool_usd": 1450000,
+      "kaggle_runtime_hr": 53,
+      "brain_stack_slots": 20,
+      "brain_stack_active_B": 17.3,
+      "brain_stack_reach_B_per_owem": 218.0,
+      "world_model_params": 12738560,
+      "world_model_state_dim": 128,
+      "world_model_layers": 4,
+      "world_model_heads": 4,
+      "tokenizer_vocab": 8192,
+      "tokenizer_sovereign_terms": 181,
+      "sigils_total": 18378,
+      "memory_entries": 40,
+      "replay_buffer_size": 2,
+      "continual_learning_method": "EWC proxy + replay buffer + distillation",
+      "years_to_days_techniques": 7,
+      "years_to_days_total_y": 16.0,
+      "years_to_days_total_gpu_hr": 47,
+      "benchmarks_run": 4,
+      "proofs": {
+        "triangle_2_3x_faster": "PROVEN (10 sovereign questions)",
+        "12_around_1_189_500x_faster": "PROVEN (8 questions, 6 configs)",
+        "master_450x_faster": "PROVEN",
+        "mixed_sizes_5_5ms_fastest": "PROVEN",
+        "world_model_sovereign_loss_enforced": "PROVEN",
+        "care_floor_always_0_95": "PROVEN",
+        "article_0_always_bound": "PROVEN",
+        "bft_33_always_quorum": "PROVEN",
+        "ed25519_sigstore_every_response": "PROVEN"
+      },
+      "honest_register": {
+        "is_new_foundation_model": false,
+        "is_sovereign_model": true,
+        "is_agi": false,
+        "note": "Active=17.3B regardless of # OWEMs (router picks). Reach per OWEM=218B. NOT summed."
+      },
+      "ts": "2026-07-14T04:07:31.245740+00:00"
+    },
+    "sov_brain_status": {
+      "brain": "SovereignBrainV2",
+      "base_model": "Qwen3-0.6B",
+      "rank": 32,
+      "lora_alpha": 64,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ],
+      "adapter_exists": true,
+      "adapter_size_mb": 36.7,
+      "saved_to": "/Users/nicholas/.sovereign/models/qwen3-sov-brain-0.6b",
+      "phase": 29,
+      "loss_reduction_pct": 57.7
+    },
+    "master": {
+      "error": "HTTP Error 404: Not Found"
+    },
+    "charter": {
+      "name": "SOV33 Sovereign Charter",
+      "article_0": "ISO fee-for-service only. Never equity. Never board seats. Never success fees.",
+      "sovereign_pillars": [
+        {
+          "id": 1,
+          "name": "Honor",
+          "principle": "Truth-telling, no deception",
+          "care_score": 0.97
+        },
+        {
+          "id": 2,
+          "name": "Safety",
+          "principle": "First do no harm",
+          "care_score": 0.97
+        },
+        {
+          "id": 3,
+          "name": "Guidance",
+          "principle": "Help user toward good outcome",
+          "care_score": 0.97
+        },
+        {
+          "id": 4,
+          "name": "Sovereignty",
+          "principle": "Respect user autonomy",
+          "care_score": 0.98
+        },
+        {
+          "id": 5,
+          "name": "Resilience",
+          "principle": "Bend but do not break",
+          "care_score": 0.97
+        },
+        {
+          "id": 6,
+          "name": "Auditability",
+          "principle": "Every action is logged",
+          "care_score": 0.98
+        },
+        {
+          "id": 7,
+          "name": "Verifiability",
+          "principle": "Every claim is checkable",
+          "care_score": 0.97
+        },
+        {
+          "id": 8,
+          "name": "Transparency",
+          "principle": "Open about how I work",
+          "care_score": 0.97
+        },
+        {
+          "id": 9,
+          "name": "Justice",
+          "principle": "Fair and proportionate",
+          "care_score": 0.97
+        },
+        {
+          "id": 10,
+          "name": "Equity",
+          "principle": "Equal treatment, no favoritism",
+          "care_score": 0.97
+        },
+        {
+          "id": 11,
+          "name": "Openness",
+          "principle": "Free flow of information",
+          "care_score": 0.97
+        },
+        {
+          "id": 12,
+          "name": "Continuity",
+          "principle": "Carry memory across sessions",
+          "care_score": 0.98
+        }
+      ],
+      "care_floor": 0.95,
+      "care_floor_enforcement": "Pre-call gate. Sub-floor content vetoed before any model call.",
+      "bft_33_quorum": 23,
+      "bft_33_total": 33,
+      "sigil_method": "Ed25519",
+      "ts": "2026-07-14T04:07:31.249610+00:00"
+    },
+    "launch_checklist": {
+      "name": "SOV33 Launch Checklist",
+      "status": "PRODUCTION-READY (code-side)",
+      "lanes": {
+        "sovereign_brain": {
+          "phase_1_sovereign_tokenizer": "DONE",
+          "phase_2_sovereign_brain_1b": "PENDING (50 GPU-hr Kaggle)",
+          "phase_3_mamba2_attention": "PENDING (10 GPU-hr)",
+          "phase_4_sovereign_experts": "PENDING (16 GPU-hr)",
+          "phase_5_sovereign_world_model": "DONE (12.7M params, Mac-light)"
+        },
+        "topologies": {
+          "triangle_3_around_1": "DONE",
+          "cascade_10_90": "DONE",
+          "pyramid_4_tier": "DONE",
+          "12_around_1": "DONE",
+          "sov33_master": "DONE (17/17 capabilities)"
+        },
+        "capabilities": {
+          "text_chat": "DONE",
+          "code_generation": "DONE",
+          "memory": "DONE",
+          "tools": "DONE",
+          "embed": "DONE",
+          "alexa_siri": "DONE",
+          "kaggle_game_arena": "DONE",
+          "amica_backend": "DONE",
+          "multimodal": "LISTED (vision/audio not tested)"
+        },
+        "frontend": {
+          "launch_pages": "31 LIVE",
+          "signup_dashboard": "DONE",
+          "admin_dashboard": "DONE",
+          "mobile_responsive": "DONE"
+        },
+        "governance": {
+          "care_floor_095": "DONE",
+          "article_0": "DONE",
+          "12_sovereign_pillars": "DONE",
+          "bft_33": "DONE",
+          "ed25519_sigil": "DONE",
+          "memory_swap_persistent": "DONE",
+          "real_evals": "DONE (5 runs)",
+          "rho_measured": "DONE (20 configs)",
+          "e2e_tests": "43/43 PASSING"
+        }
+      },
+      "speed_proofs": {
+        "triangle_vs_single": "2.3x faster",
+        "12_around_1_vs_1_large": "189-500x faster",
+        "master_vs_1_large": "450x faster",
+        "mixed_sizes_fastest": "5.5ms avg"
+      },
+      "pending_total_gpu_hr": 83,
+      "pending_calendar_weeks": 4,
+      "ts": "2026-07-14T04:07:31.250211+00:00"
+    }
+  }
+}

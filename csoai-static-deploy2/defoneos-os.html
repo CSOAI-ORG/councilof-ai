@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Sovereign Defence OS Architecture</title>
+<meta name="description" content="DEFONEOS OS: the UK's first open-source Sovereign Defence Operating System. 5-layer architecture: Sensor → Fusion → Cognition → Command → Compliance. 30 MCPs, 188+ tools, BFT governance.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem}
+.nav a:hover{color:#22d3ee}
+.layer{display:flex;align-items:center;margin:1rem 0;gap:1rem;padding:1rem;background:rgba(255,255,255,.03);border-left:4px solid #22d3ee;border-radius:0 12px 12px 0}
+.layer-num{background:rgba(34,211,238,.2);border:2px solid #22d3ee;border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#22d3ee;flex-shrink:0;font-size:1.2rem}
+.layer-body h4{color:#f8fafc;margin:0 0 .25rem;font-size:1.05rem}
+.layer-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — Sovereign Defence OS Architecture"><meta property="og:description" content="5-layer defence OS: Sensor → Fusion → Cognition → Command → Compliance. Open source. UK sovereign."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compete.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 Overview</a>
+  <a href="defoneos-security.html">🔐 Security</a>
+  <a href="defoneos-deploy.html">🏗️ Deploy</a>
+  <a href="defoneos-integration.html">🔌 Integration</a>
+</div>
+
+<h1>🏛️ The DEFONEOS Operating System</h1>
+<p class="tagline">Britain's first open-source Sovereign Defence OS. Five layers. Thirty sensor MCPs. One hundred eighty-eight tools. Zero foreign dependencies.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">5</span><h3>Architecture Layers</h3><p>Sensor → Fusion → Cognition → Command → Compliance</p></div>
+  <div class="card"><span class="stat">30</span><h3>MCP Servers</h3><p>Satellite, maritime, air, land, cyber, civil services</p></div>
+  <div class="card"><span class="stat">188+</span><h3>SOV3 Tools</h3><p>AI tools callable from any agent or integration</p></div>
+  <div class="card"><span class="stat">0</span><h3>Foreign Cloud Deps</h3><p>Sovereign UK infrastructure only. No CLOUD Act exposure.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🏛️ Architecture</div>
+  <div class="tab" onclick="switchTab(1)">📊 Sensor Layer</div>
+  <div class="tab" onclick="switchTab(2)">🧠 Cognition Layer</div>
+  <div class="tab" onclick="switchTab(3)">⚖️ Governance</div>
+  <div class="tab" onclick="switchTab(4)">📦 Install</div>
+</div>
+
+<div class="tab-content active">
+  <h3>🏛️ The 5-Layer Sovereign Defence Stack</h3>
+  <p>DEFONEOS is not a monolith. It is a composable, open-source operating system where each layer is independently deployable, independently auditable, and independently swappable. MOD can replace any component without touching the rest.</p>
+
+  <div class="layer">
+    <div class="layer-num">5</div>
+    <div class="layer-body">
+      <h4>Compliance Layer — JSP 936 / JSP 440 / EU AI Act</h4>
+      <p>Every action generates a SIGIL receipt (Ed25519-signed hash chain). JSP 936 compliance certificates auto-generated. Article 50 AI-content passports issued per interaction. Full audit trail replayable by regulators.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">4</div>
+    <div class="layer-body">
+      <h4>Command Layer — FreeTAKServer C2 + BFT Council</h4>
+      <p>Cursor-on-Target (CoT) protocol for NATO interoperability. 33-agent Byzantine Fault Tolerant council gates every consequential action. 22-of-33 quorum required for escalation. No single point of failure.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">3</div>
+    <div class="layer-body">
+      <h4>Cognition Layer — SOV3 Organic Open World Model</h4>
+      <p>Mamba-2 SSM (16-dim state) compresses streaming sensor data. 14 neural models for vision, NLP, anomaly detection. Intuition engine detects emerging threats 40s before threshold alerts. Cross-model reasoning via bridge_think.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">2</div>
+    <div class="layer-body">
+      <h4>Fusion Layer — CesiumJS 3D Common Operating Picture</h4>
+      <p>350M buildings (OpenStreetMap). Real terrain (OS Terrain). 17+ live data layers (AIS, satellite, air quality, weather, seismic). All fused into a single 3D globe. MOD-grade situational awareness.</p>
+    </div>
+  </div>
+
+  <div class="layer">
+    <div class="layer-num">1</div>
+    <div class="layer-body">
+      <h4>Sensor Layer — 30 MCP Servers</h4>
+      <p>Sentinel-Hub satellite. AIS maritime tracking. AISstream. OpenAQ air quality. ONS statistics. Companies House. GDELT OSINT. RTSP cameras. MQTT IoT. OS Open Data. All as MCP servers — pluggable, hot-swappable, sovereign.</p>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content">
+  <h3>📊 The 30 MCP Sensor Servers</h3>
+  <p>Every data source in DEFONEOS is an MCP (Model Context Protocol) server. This means any AI agent — SOV3, Claude, GPT, Gemini — can query any sensor through a standard interface. No vendor lock-in. No proprietary APIs.</p>
+
+  <table>
+    <tr><th>#</th><th>MCP Server</th><th>Domain</th><th>Data Type</th></tr>
+    <tr><td>1</td><td>sentinel-hub-mcp</td><td>Satellite</td><td>Sentinel-1/2/3 imagery (Copernicus)</td></tr>
+    <tr><td>2</td><td>os-opendata-mcp</td><td>Geospatial</td><td>Ordnance Survey terrain + buildings</td></tr>
+    <tr><td>3</td><td>data-gov-uk-mcp</td><td>Government</td><td>GOV.UK open datasets</td></tr>
+    <tr><td>4</td><td>companies-house-mcp</td><td>Corporate Intel</td><td>UK company registry</td></tr>
+    <tr><td>5</td><td>ons-statistics-mcp</td><td>Demographics</td><td>Office for National Statistics</td></tr>
+    <tr><td>6</td><td>gdelt-news-mcp</td><td>OSINT</td><td>Global news events (GDELT Project)</td></tr>
+    <tr><td>7</td><td>openaq-air-mcp</td><td>Environment</td><td>Global air quality monitoring</td></tr>
+    <tr><td>8</td><td>aisstream-maritime-mcp</td><td>Maritime</td><td>Live AIS vessel tracking</td></tr>
+    <tr><td>9</td><td>rtsp-camera-mcp</td><td>Visual</td><td>RTSP IP camera feeds</td></tr>
+    <tr><td>10</td><td>mqtt-bridge-mcp</td><td>IoT</td><td>MQTT sensor bridge (IoT devices)</td></tr>
+    <tr><td>11</td><td>defoneos-maritime-mcp</td><td>Defence</td><td>Dark vessel detection + EEZ monitoring</td></tr>
+    <tr><td>12</td><td>defoneos-airspace-mcp</td><td>Defence</td><td>Airspace awareness + ADS-B tracking</td></tr>
+    <tr><td>13</td><td>defoneos-cyber-mcp</td><td>Defence</td><td>Cyber threat intelligence + IDS</td></tr>
+    <tr><td>14</td><td>defoneos-counterdrone-mcp</td><td>Defence</td><td>C-UAS detection + RF + acoustic</td></tr>
+    <tr><td>15</td><td>defoneos-jsp936-mcp</td><td>Compliance</td><td>JSP 936 audit trail generation</td></tr>
+    <tr><td>16</td><td>defoneos-bft-mcp</td><td>Governance</td><td>33-agent BFT council voting</td></tr>
+    <tr><td>17</td><td>defoneos-pqc-mcp</td><td>Security</td><td>Post-quantum crypto operations</td></tr>
+    <tr><td>18</td><td>defoneos-medevac-mcp</td><td>Defence</td><td>MEDEVAC routing optimisation</td></tr>
+    <tr><td>19</td><td>defoneos-logistics-mcp</td><td>Defence</td><td>Supply chain + logistics tracking</td></tr>
+    <tr><td>20</td><td>defoneos-sigint-mcp</td><td>Defence</td><td>RF spectrum monitoring</td></tr>
+    <tr><td>21</td><td>defoneos-humanitarian-mcp</td><td>Civil</td><td>Disaster response coordination</td></tr>
+    <tr><td>22</td><td>defoneos-border-mcp</td><td>Defence</td><td>Border surveillance + anomaly detection</td></tr>
+    <tr><td>23</td><td>defoneos-ccc-mcp</td><td>Defence</td><td>Command, Control, Communications</td></tr>
+    <tr><td>24</td><td>defoneos-ew-mcp</td><td>Defence</td><td>Electronic warfare spectrum ops</td></tr>
+    <tr><td>25</td><td>defoneos-nato-mcp</td><td>Interop</td><td>NATO STANAG compatibility layer</td></tr>
+    <tr><td>26</td><td>defoneos-aukus-mcp</td><td>Interop</td><td>AUKUS Pillar II data exchange</td></tr>
+    <tr><td>27</td><td>defoneos-a2a-mcp</td><td>Protocol</td><td>Agent-to-Agent (A2A) coordination</td></tr>
+    <tr><td>28</td><td>defoneos-civil-mcp</td><td>Civil</td><td>Civil service data integration</td></tr>
+    <tr><td>29</td><td>defoneos-globe-mcp</td><td>Visualisation</td><td>CesiumJS 3D globe + data layers</td></tr>
+    <tr><td>30</td><td>defoneos-swarm-mcp</td><td>Autonomy</td><td>Mava RL swarm coordination</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>🧠 The SOV3 Cognition Engine</h3>
+  <p>DEFONEOS does not use a single LLM. It uses SOV3 — an Organic Open World Model that combines multiple neural architectures into a single sovereign cognition engine.</p>
+
+  <table>
+    <tr><th>Component</th><th>Architecture</th><th>Role</th></tr>
+    <tr><td>Mamba-2 SSM</td><td>State-Space Model (16-dim)</td><td>Compresses streaming sensor data. Long-context memory without attention cost.</td></tr>
+    <tr><td>Left MoE</td><td>Mixture of Experts</td><td>Analytical reasoning: math, logic, compliance, risk assessment</td></tr>
+    <tr><td>Right MOM</td><td>Mixture of Models</td><td>Perception: vision, audio, pattern detection, spatial reasoning</td></tr>
+    <tr><td>Intuition Engine</td><td>1Hz SIGIL → Mamba state</td><td>Detects emerging patterns before threshold alerts. 40s lead time on average.</td></tr>
+    <tr><td>BIG BRAIM</td><td>8 category winners</td><td>Routes queries to best model: coding, reasoning, long-context, multilingual, edge, TTS, embedding, router</td></tr>
+    <tr><td>Quantum Layer</td><td>QAOA + VQE + Grover</td><td>Care weight optimisation + memory importance scoring + quantum search</td></tr>
+  </table>
+
+  <h4>How a Decision Flows</h4>
+  <div class="code">Sensor data → MCP server → Mamba SSM (compress)
+  → Left MoE (analyse) + Right MOM (perceive)
+  → Intuition Engine (pattern match?)
+  → BFT Council (22-of-33 quorum vote)
+  → SIGIL receipt (Ed25519 signed)
+  → JSP 936 certificate (auto-generated)
+  → Cesium globe update (visual)
+  → C2 action (CoT to FreeTAKServer)</div>
+</div>
+
+<div class="tab-content">
+  <h3>⚖️ Byzantine Fault Tolerant Governance</h3>
+  <p>DEFONEOS never executes a consequential action without council approval. 33 independent agents vote on every escalation. The system tolerates up to 11 compromised agents (f=11 in a 3f+1 system) without any incorrect decision being made.</p>
+
+  <table>
+    <tr><th>Parameter</th><th>Value</th><th>Rationale</th></tr>
+    <tr><td>Council size</td><td>33 agents</td><td>3f+1 with f=11 (tolerates 33% Byzantine)</td></tr>
+    <tr><td>Quorum</td><td>22-of-33</td><td>Supermajority (2/3) required for action</td></tr>
+    <tr><td>Consensus</td><td>PBFT (Practical Byzantine Fault Tolerance)</td><td>Proven in production blockchain systems</td></tr>
+    <tr><td>Audit trail</td><td>Ed25519 SIGIL hash chain</td><td>Every vote cryptographically signed + chained</td></tr>
+    <tr><td>Human gate</td><td>Mandatory for lethal force</td><td>2-person rule. No autonomous lethal action.</td></tr>
+    <tr><td>Appeal window</td><td>4 hours post-decision</td><td>Any council member can trigger re-vote</td></tr>
+  </table>
+
+  <p><strong>Attack vectors mitigated:</strong> Compromised agent (tolerated), Sybil attack (identity-bound), DDoS (air-gap capable), Insider threat (2-person rule), Supply chain (Morris-II scanner + Aegis gate).</p>
+</div>
+
+<div class="tab-content">
+  <h3>📦 Installation & Deployment</h3>
+  <p>DEFONEOS deploys in three modes: sovereign edge (air-gapped), hybrid (edge + sovereign cloud), and sovereign cloud (UK GCP/AWS regions only).</p>
+
+  <h4>Quick Start (Development)</h4>
+  <div class="code"># Clone the sovereign substrate
+git clone https://github.com/CSOAI-ORG/defoneos.git
+cd defoneos
+
+# Install DEFONEOS OS
+pip install -e .
+
+# Start the 5-service stack
+python -m defoneos.start --mode=dev
+
+# Verify
+curl http://localhost:3101/mcp    # SOV3 cognition
+curl http://localhost:3200/health  # BFT council
+curl http://localhost:8080/        # Cesium globe</div>
+
+  <h4>Production Deployment (Sovereign Edge)</h4>
+  <div class="code"># Air-gapped deployment
+python -m defoneos.deploy \
+  --mode=airgap \
+  --pqc=ML-DSA-65 \
+  --jsp=936 \
+  --council=33 \
+  --quorum=22
+
+# Generates:
+# - JSP 936 compliance certificate
+# - BFT council keypair per agent
+# - SIGIL genesis block
+# - Cesium globe with local terrain data</div>
+
+  <table>
+    <tr><th>Mode</th><th>Latency</th><th>Connectivity</th><th>Use Case</th></tr>
+    <tr><td>Sovereign Edge</td><td>&lt;10ms</td><td>Air-gapped</td><td>Forward operating base, ship, vehicle</td></tr>
+    <tr><td>Hybrid</td><td>&lt;50ms</td><td>Secure VPN to sovereign cloud</td><td>Garrison, HQ, training</td></tr>
+    <tr><td>Sovereign Cloud</td><td>&lt;100ms</td><td>UK GCP/AWS region</td><td>Strategic HQ, multi-site federation</td></tr>
+  </table>
+</div>
+
+<div class="sigil">DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · Ed25519: 7f3a...c9e2 · 🐉</div>
+</div>
+<script>
+function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n))}
+</script>
+</body></html>

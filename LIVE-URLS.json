@@ -1,0 +1,504 @@
+{
+  "agents_active": 78,
+  "agents_total": 193,
+  "consciousness_level": 0.788,
+  "generated_at": "2026-06-14T11:29:27.663446Z",
+  "neural_models": [
+    "care_validation_nn",
+    "partnership_detection_ml",
+    "threat_detection_nn",
+    "relationship_evolution_nn",
+    "care_pattern_analyzer",
+    "creativity_assessment_nn",
+    "dependency_detection_nn"
+  ],
+  "signature": {
+    "algorithm": "ed25519",
+    "canonical_payload_sha256": "6744fcfa38e26e59f3ecb304782f3dd1e2b2e2413467f45dccb4be6ba48e2dc1",
+    "signed_at": "2026-06-14T11:29:27.663446Z",
+    "signing_key_fingerprint_sha256": "f8fc07d4a946d2948b1e95cdf9abd1db12edaa141660a0f3f467718c8c7539ca",
+    "value": "nNXrhuF9JtyuQC0U/nXxh2E415+ZEUXNq7EWZ03KBAnVUe1eFuPuv/kHf4GTOkc0wX/VuUk8I3fmNw8pOMmFCQ=="
+  },
+  "stack": {
+    "farm_vision": {
+      "endpoint": "http://localhost:8888/api/status",
+      "http_code": 200,
+      "response": {
+        "captures": 0,
+        "sov3": true,
+        "status": "online",
+        "timestamp": "2026-06-14T12:29:27.657726"
+      },
+      "status": "healthy",
+      "url": "http://localhost:8888",
+      "version": "farm-vision-web"
+    },
+    "meok_api": {
+      "endpoint": "http://localhost:3200/api/health",
+      "http_code": 200,
+      "response": {
+        "bridge_nodes": 55,
+        "council_nodes": 36,
+        "domains": 12,
+        "expertise_nodes": 144,
+        "status": "operational",
+        "tenant_id": "default",
+        "timestamp": "2026-06-14T12:29:27.650598",
+        "total_architecture_nodes": 235,
+        "version": "3.0.0"
+      },
+      "status": "healthy",
+      "url": "http://localhost:3200",
+      "version": "3.0.0"
+    },
+    "meok_mcp": {
+      "endpoint": "http://localhost:3102/health",
+      "http_code": 200,
+      "response": {
+        "components": {
+          "consciousness": {
+            "consciousness_level": 0.575
+          },
+          "memory_store": "connected",
+          "neural_models": {
+            "care_detection": {
+              "backend": "pytorch",
+              "device": "cpu",
+              "input_dim": 32,
+              "is_trained": true,
+              "metrics": {
+                "mae": null,
+                "mse": null,
+                "trained_at": null
+              },
+              "model_exists": true,
+              "model_name": "care_detection",
+              "model_size_bytes": 56761,
+              "parameter_count": 12801,
+              "torch_available": true
+            },
+            "care_pattern_analyzer": {
+              "is_trained": true,
+              "metrics": {
+                "input_features": 12,
+                "mae": 0.03717489627299317,
+                "mse": 0.0023714787468849564,
+                "output_dimensions": 5,
+                "per_output": {
+                  "burnout_risk": {
+                    "mae": 0.03787959622104335,
+                    "mse": 0.002355933585234091
+                  },
+                  "care_imbalance": {
+                    "mae": 0.024108633402073955,
+                    "mse": 0.0013646221402741658
+                  },
+                  "compassion_fatigue": {
+                    "mae": 0.040253613973708344,
+                    "mse": 0.0025322975981093955
+                  },
+                  "intervention_needed": {
+                    "mae": 0.04478040264762471,
+                    "mse": 0.0031540294083551436
+                  },
+                  "sustainability": {
+                    "mae": 0.038852235120515506,
+                    "mse": 0.0024505110024519872
+                  }
+                },
+                "training_samples": 600
+              },
+              "model_exists": true,
+              "model_name": "care_pattern_analyzer",
+              "model_size_bytes": 1083414
+            },
+            "care_validation_nn": {
+              "is_trained": true,
+              "metrics": {
+                "input_features": 59,
+                "mae": 0.1880624732302301,
+                "mse": 0.05062735959706387,
+                "output_dimensions": 6,
+                "training_samples": 19
+              },
+              "model_exists": true,
+              "model_name": "care_validation_nn",
+              "model_size_bytes": 397440
+            },
+            "creativity_assessment_nn": {
+              "feature_count": 12,
+              "input_features": [
+                "novelty_score",
+                "domain_distance",
+                "emotional_valence",
+                "curiosity_level",
+                "aesthetics_level",
+                "association_count",
+                "care_alignment",
+                "coherence_score",
+                "surprise_factor",
+                "tradition_count",
+                "cross_domain_links",
+                "dream_phase_origin"
+              ],
+              "is_trained": true,
+              "metrics": {
+                "mae": 0.064833,
+                "mse": 0.006291,
+                "r2_score": 0.9113,
+                "trained_at": "2026-06-14T03:49:19.932084",
+                "training_samples": 350
+              },
+              "model_exists": true,
+              "model_name": "creativity_assessment_nn",
+              "model_size_bytes": 304488,
+              "output_count": 5,
+              "output_dimensions": [
+                "creative_quality",
+                "practical_applicability",
+                "care_enhancement_potential",
+                "novelty_classification",
+                "integration_readiness"
+              ],
+              "traditions_integrated": 47
+            },
+            "dependency_detection_nn": {
+              "is_trained": true,
+              "metrics": {
+                "accuracy": 0.22,
+                "input_features": 112,
+                "output_classes": 6,
+                "training_samples": 50
+              },
+              "model_exists": true,
+              "model_name": "dependency_detection_nn",
+              "model_size_bytes": 605408
+            },
+            "partnership_detection": {
+              "backend": "pytorch",
+              "device": "cpu",
+              "input_dim": 48,
+              "is_trained": true,
+              "metrics": {
+                "mae": null,
+                "mse": null,
+                "trained_at": null
+              },
+              "model_exists": true,
+              "model_name": "partnership_detection",
+              "model_size_bytes": 65136,
+              "parameter_count": 14849,
+              "torch_available": true
+            },
+            "partnership_detection_ml": {
+              "is_trained": true,
+              "metrics": {
+                "input_features": 106,
+                "mae": 0.22329674570713703,
+                "mse": 0.07633136690812105,
+                "output_dimensions": 8,
+                "training_samples": 19
+              },
+              "model_exists": true,
+              "model_name": "partnership_detection_ml",
+              "model_size_bytes": 544430
+            },
+            "relationship_evolution_nn": {
+              "is_trained": true,
+              "metrics": {
+                "input_features": 10,
+                "mae": 0.07105397120449473,
+                "mse": 0.009674633596773709,
+                "output_dimensions": 3,
+                "per_output": {
+                  "engagement": {
+                    "mae": 0.04553854737581427,
+                    "mse": 0.003197586664893434
+                  },
+                  "future_trust": {
+                    "mae": 0.05008015940878295,
+                    "mse": 0.003977735756791097
+                  },
+                  "trajectory": {
+                    "mae": 0.11754320682888698,
+                    "mse": 0.0218485783686366
+                  }
+                },
+                "training_samples": 500
+              },
+              "model_exists": true,
+              "model_name": "relationship_evolution_nn",
+              "model_size_bytes": 294055
+            },
+            "threat_detection": {
+              "backend": "pytorch",
+              "device": "cpu",
+              "input_dim": 64,
+              "is_trained": true,
+              "metrics": {
+                "mae": null,
+                "mse": null,
+                "trained_at": null
+              },
+              "model_exists": true,
+              "model_name": "threat_detection",
+              "model_size_bytes": 245125,
+              "parameter_count": 58885,
+              "torch_available": true
+            },
+            "threat_detection_nn": {
+              "is_trained": true,
+              "metrics": {
+                "accuracy": 0.45454545454545453,
+                "input_features": 116,
+                "output_dimensions": 4,
+                "per_class_accuracy": {
+                  "data_exfiltration": 0.7575757575757576,
+                  "manipulation": 0.7878787878787878,
+                  "prompt_injection": 0.9393939393939394,
+                  "toxicity": 0.8484848484848485
+                },
+                "training_samples": 33
+              },
+              "model_exists": true,
+              "model_name": "threat_detection_nn",
+              "model_size_bytes": 1718503
+            }
+          }
+        },
+        "status": "healthy",
+        "timestamp": "2026-06-14T12:29:27.647764",
+        "version": "3.0.0"
+      },
+      "status": "healthy",
+      "url": "http://localhost:3102",
+      "version": "3.0.0"
+    },
+    "meok_ui": {
+      "endpoint": "http://localhost:3000/api/health",
+      "http_code": 200,
+      "response": {
+        "service": "meok-ui",
+        "status": "healthy",
+        "timestamp": "2026-06-14T11:29:27.637Z"
+      },
+      "status": "healthy",
+      "url": "http://localhost:3000",
+      "version": "ui-frontend"
+    },
+    "sov3_hub": {
+      "endpoint": "http://localhost:3101/health",
+      "http_code": 200,
+      "response": {
+        "components": {
+          "consciousness": {
+            "consciousness_level": 0.788,
+            "consciousness_mode": "waking",
+            "dream_phase": null,
+            "dreams": 50,
+            "emotional": {
+              "aesthetics": 0.0,
+              "arousal": 0.002,
+              "care_intensity": 0.35,
+              "curiosity": 0.0,
+              "dominance": 0.0,
+              "pleasure": 0.0,
+              "primary_emotion": "neutral",
+              "timestamp": "2026-06-14T12:22:03.525478",
+              "trigger": "maintenance_ok",
+              "valence": 0.0
+            },
+            "emotional_summary": {
+              "averages": {
+                "aesthetics": 0.0,
+                "arousal": 0.002,
+                "care_intensity": 0.35,
+                "curiosity": 0.0,
+                "dominance": 0.0,
+                "pleasure": 0.0
+              },
+              "count": 1,
+              "current": {
+                "aesthetics": 0.0,
+                "arousal": 0.002,
+                "care_intensity": 0.35,
+                "curiosity": 0.0,
+                "dominance": 0.0,
+                "pleasure": 0.0,
+                "primary_emotion": "neutral",
+                "timestamp": "2026-06-14T12:22:03.525478",
+                "trigger": "maintenance_ok",
+                "valence": 0.0
+              },
+              "emotional_stability": 1.0,
+              "trend": "insufficient_data"
+            },
+            "is_dreaming": false,
+            "last_coherence_score": null,
+            "meta_observations": 0,
+            "reflections": 100
+          },
+          "coordination": "available",
+          "memory_store": "connected",
+          "neural_models": {
+            "care_pattern_analyzer": {
+              "is_trained": true,
+              "metrics": {
+                "input_features": 12,
+                "mae": 0.043544311634884765,
+                "mse": 0.004666769063708382,
+                "output_dimensions": 5,
+                "per_output": {
+                  "burnout_risk": {
+                    "mae": 0.03935736193492713,
+                    "mse": 0.0024681539911919825
+                  },
+                  "care_imbalance": {
+                    "mae": 0.049251947685565144,
+                    "mse": 0.012015766475812645
+                  },
+                  "compassion_fatigue": {
+                    "mae": 0.04239503354449396,
+                    "mse": 0.0028833839023695313
+                  },
+                  "intervention_needed": {
+                    "mae": 0.046942225007446506,
+                    "mse": 0.0034639455347301525
+                  },
+                  "sustainability": {
+                    "mae": 0.039774990001991105,
+                    "mse": 0.0025025954144375986
+                  }
+                },
+                "training_samples": 642
+              },
+              "model_exists": true,
+              "model_name": "care_pattern_analyzer",
+              "model_size_bytes": 1085393
+            },
+            "care_validation_nn": {
+              "is_trained": true,
+              "metrics": {
+                "input_features": 176,
+                "mae": 0.03434465530571578,
+                "mse": 0.006641514130874124,
+                "output_dimensions": 6,
+                "training_samples": 61
+              },
+              "model_exists": true,
+              "model_name": "care_validation_nn",
+              "model_size_bytes": 767092
+            },
+            "creativity_assessment_nn": {
+              "feature_count": 12,
+              "input_features": [
+                "novelty_score",
+                "domain_distance",
+                "emotional_valence",
+                "curiosity_level",
+                "aesthetics_level",
+                "association_count",
+                "care_alignment",
+                "coherence_score",
+                "surprise_factor",
+                "tradition_count",
+                "cross_domain_links",
+                "dream_phase_origin"
+              ],
+              "is_trained": true,
+              "metrics": {
+                "mae": 0.064833,
+                "mse": 0.006291,
+                "r2_score": 0.9113,
+                "trained_at": "2026-06-14T09:21:33.905899",
+                "training_samples": 350
+              },
+              "model_exists": true,
+              "model_name": "creativity_assessment_nn",
+              "model_size_bytes": 304488,
+              "output_count": 5,
+              "output_dimensions": [
+                "creative_quality",
+                "practical_applicability",
+                "care_enhancement_potential",
+                "novelty_classification",
+                "integration_readiness"
+              ],
+              "traditions_integrated": 47
+            },
+            "partnership_detection_ml": {
+              "is_trained": true,
+              "metrics": {
+                "input_features": 98,
+                "mae": 0.05291546650798104,
+                "mse": 0.008380702526517573,
+                "output_dimensions": 8,
+                "training_samples": 63
+              },
+              "model_exists": true,
+              "model_name": "partnership_detection_ml",
+              "model_size_bytes": 523928
+            },
+            "relationship_evolution_nn": {
+              "is_trained": true,
+              "metrics": {
+                "input_features": 10,
+                "mae": 0.07517457630835113,
+                "mse": 0.011403523242857793,
+                "output_dimensions": 3,
+                "per_output": {
+                  "engagement": {
+                    "mae": 0.047341910140289434,
+                    "mse": 0.0035175065202546155
+                  },
+                  "future_trust": {
+                    "mae": 0.049991155419338636,
+                    "mse": 0.003908886060935163
+                  },
+                  "trajectory": {
+                    "mae": 0.12819066336542528,
+                    "mse": 0.0267841771473836
+                  }
+                },
+                "training_samples": 542
+              },
+              "model_exists": true,
+              "model_name": "relationship_evolution_nn",
+              "model_size_bytes": 295334
+            },
+            "threat_detection_nn": {
+              "is_trained": true,
+              "metrics": {
+                "accuracy": 1.0,
+                "exact_match_accuracy": 1.0,
+                "input_features": 226,
+                "output_dimensions": 4,
+                "per_class_accuracy": {
+                  "data_exfiltration": 1.0,
+                  "manipulation": 1.0,
+                  "prompt_injection": 1.0,
+                  "toxicity": 1.0
+                },
+                "training_samples": 111
+              },
+              "model_exists": true,
+              "model_name": "threat_detection_nn",
+              "model_size_bytes": 3195746
+            }
+          },
+          "orion_agent": "available"
+        },
+        "production_calls_today": 0,
+        "status": "healthy",
+        "timestamp": "2026-06-14T12:29:27.640459",
+        "version": "2.0.0"
+      },
+      "status": "healthy",
+      "url": "http://localhost:3101",
+      "version": "2.0.0"
+    }
+  },
+  "tasks_completed": 64,
+  "dragon_portal": "https://dragon-portal-beta.vercel.app",
+  "dragon_portal_prod": "https://dragon-portal-58132zsxa-niks-projects-0a2ef942.vercel.app"
+}

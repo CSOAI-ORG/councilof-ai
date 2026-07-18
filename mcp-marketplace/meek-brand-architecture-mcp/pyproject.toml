@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_brand_architecture_mcp"
+version = "1.0.0"
+description = "MEEK Brand Architecture MCP — the 3-layer brand orchestrator (SOV3³ = DEF ONE OS, SOV3 = meok, CSOAI = csoai.org). MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "sov3", "csoai", "defoneos", "brand-architecture", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org"
+Repository = "https://github.com/CSOAI-ORG/meek-brand-architecture-mcp"
+
+[project.scripts]
+meek-brand-architecture-mcp = "meek_brand_architecture_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_brand_architecture_mcp"]

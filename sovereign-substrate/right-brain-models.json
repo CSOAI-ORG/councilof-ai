@@ -1,0 +1,98 @@
+{
+  "models_trained": 3,
+  "total_samples": 650,
+  "presence": {
+    "model_name": "presence_detector",
+    "state": "trained",
+    "algorithm": "rule-based FSM classifier",
+    "samples": 200,
+    "features": [
+      "cameras",
+      "person_count",
+      "biometric_match"
+    ],
+    "states": [
+      "SOLO",
+      "OWNER_KNOWN",
+      "OWNER_UNKNOWN",
+      "MULTI",
+      "EMPTY"
+    ],
+    "accuracy": 0.87,
+    "trained_at": 1782457465.809898,
+    "note": "Right Brain quick-win. Trained on synthetic 5-state data. Real data via Flock cameras W1-2."
+  },
+  "gesture": {
+    "model_name": "gesture_classifier",
+    "state": "trained",
+    "algorithm": "nearest-centroid classifier",
+    "samples": 300,
+    "features": [
+      "hand_position_10d"
+    ],
+    "gestures": [
+      "wave",
+      "yes",
+      "no",
+      "stop",
+      "open_palms",
+      "pause",
+      "stop_owner",
+      "point",
+      "agree",
+      "disagree",
+      "call_me",
+      "money",
+      "shhh",
+      "looking_away",
+      "headphones",
+      "on_phone",
+      "mid_conversation",
+      "thumbs_up",
+      "thumbs_down",
+      "ok",
+      "peace",
+      "rock",
+      "fist",
+      "pinch",
+      "grasp",
+      "open",
+      "close",
+      "tap",
+      "swipe_left",
+      "swipe_right",
+      "swipe_up",
+      "swipe_down",
+      "zoom_in",
+      "zoom_out",
+      "rotate_left",
+      "rotate_right",
+      "home"
+    ],
+    "count": 37,
+    "accuracy": 0.551,
+    "trained_at": 1782457465.8180192,
+    "note": "Right Brain. 37 gestures (5 universal + 12 owner + 20 more)."
+  },
+  "spatial": {
+    "model_name": "spatial_reasoning_nn",
+    "state": "trained",
+    "algorithm": "nearest-centroid spatial classifier",
+    "samples": 150,
+    "features": [
+      "latitude",
+      "longitude"
+    ],
+    "locations": [
+      "Yorkshire",
+      "London",
+      "Berlin",
+      "Tokyo",
+      "Singapore",
+      "NYC"
+    ],
+    "accuracy": 0.847,
+    "trained_at": 1782457465.818826,
+    "note": "Right Brain. Maps lat/lon \u2192 nearest hive + characteristics. Real data via OS Globe W1-2."
+  }
+}

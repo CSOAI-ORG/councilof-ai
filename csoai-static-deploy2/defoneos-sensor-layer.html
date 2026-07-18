@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Sensor Layer — 198+ free public data sources across 12 categories feeding the UK's sovereign Defence AI Operating System via MCP servers.">
+<title>DEFONEOS Sensor Layer — 198 Free Data Sources via MCP</title>
+<style>
+  :root{--bg:#0a0e14;--surface:#131a24;--border:#1e2a3a;--text:#c9d1d9;--accent:#00d4aa;--accent2:#4fc3f7;--warn:#ffb74d;--muted:#667788;--accent3:#b388ff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display',system-ui,sans-serif;line-height:1.6}
+  nav{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+  nav .logo{font-family:'Space Grotesk',monospace;font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  nav .links{display:flex;gap:1.5rem;flex-wrap:wrap}
+  nav a{color:var(--text);text-decoration:none;font-size:.9rem}
+  nav a:hover{color:var(--accent)}
+  .hero{background:linear-gradient(135deg,var(--surface) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);padding:4rem 2rem 2rem;text-align:center}
+  .hero h1{font-family:'Space Grotesk',monospace;font-size:2.5rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+  .hero .sub{color:var(--muted);max-width:700px;margin:0 auto}
+  .container{max-width:1400px;margin:0 auto;padding:2rem}
+  section{padding:2rem 0}
+  section h2{font-family:'Space Grotesk',monospace;font-size:1.5rem;color:var(--accent2);margin-bottom:1rem}
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1.25rem}
+  .cat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+  .cat-card:hover{border-color:var(--accent)}
+  .cat-card h3{font-family:'Space Grotesk',monospace;color:var(--accent);margin-bottom:.5rem}
+  .cat-card .count{font-size:.85rem;color:var(--accent2);margin-bottom:.75rem}
+  .cat-card ul{list-style:none;padding:0}
+  .cat-card li{color:var(--muted);font-size:.85rem;padding:.25rem 0;border-bottom:1px solid rgba(30,42,58,.5)}
+  .cat-card li:last-child{border:none}
+  .pipeline{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:2rem 0}
+  .pipeline h2{font-family:'Space Grotesk',monospace;color:var(--accent2);margin-bottom:1rem}
+  .pipe-flow{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin:1.5rem 0}
+  .pipe-node{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1.25rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.8rem}
+  .pipe-node .title{color:var(--accent);font-weight:600}
+  .pipe-node .detail{color:var(--muted);font-size:.7rem}
+  .pipe-arrow{color:var(--accent2);font-size:1.25rem}
+  .mcp-table{overflow-x:auto;margin:1.5rem 0}
+  .mcp-table table{width:100%;border-collapse:collapse;font-size:.85rem}
+  .mcp-table th{background:var(--surface);padding:.6rem .8rem;text-align:left;font-family:'Space Grotesk',monospace;color:var(--accent2);border-bottom:2px solid var(--border)}
+  .mcp-table td{padding:.6rem .8rem;border-bottom:1px solid var(--border)}
+  .mcp-table tr:hover td{background:rgba(0,212,170,.03)}
+  footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--muted);font-size:.85rem}
+  @media(max-width:768px){.hero h1{font-size:1.8rem}}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+
+<nav>
+  <span class="logo">🐉 DEFONEOS</span>
+  <div class="links">
+    <a href="#"">Home</a>
+    <a href="#"">Sensor Layer</a>
+    <a href="#"">Civil Services</a>
+    <a href="#"">Live Demo</a>
+    <a href="#"">Swarm Engine</a>
+    <a href="#"">Funding</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>📡 DEFONEOS Sensor Layer</h1>
+  <p class="sub">198+ free public data sources across 12 categories. All open source. All zero-cost. Feeds into the Common Operating Picture via 29 MCP servers.</p>
+</section>
+
+<div class="container">
+
+<div class="pipeline">
+  <h2>Data Flow Pipeline</h2>
+  <div class="pipe-flow">
+    <div class="pipe-node"><div class="title">198 Sources</div><div class="detail">12 Categories</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-node"><div class="title">29 MCPs</div><div class="detail">FastMCP Servers</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-node"><div class="title">SOV3</div><div class="detail">AI Reasoning</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-node"><div class="title">Cesium</div><div class="detail">3D Globe</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-node"><div class="title">FreeTAKServer</div><div class="detail">TAK CoT</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-node"><div class="title">Operator</div><div class="detail">Common Operating Picture</div></div>
+  </div>
+</div>
+
+<section>
+  <h2>12 Sensor Categories</h2>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <h3>☁️ Weather (8)</h3>
+      <div class="count">Met Office DataHub, Open-Meteo, ECMWF Open Data</div>
+      <ul>
+        <li>Met Office DataHub — UK forecast, observations</li>
+        <li>Open-Meteo — Global 7-day forecast, 11km resolution</li>
+        <li>ECMWF Open Data — 9km ensemble, ERA5 reanalysis</li>
+        <li>OpenWeatherMap — Current + 5-day forecast</li>
+        <li>NOAA GFS — Global 13km, 16-day forecast</li>
+        <li>Windy API — Wind, waves, temp visualisation</li>
+        <li>UKMET — Aviation TAF/METAR</li>
+        <li>Space Weather — Solar flares, radiation alerts</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>🚦 Transport (8)</h3>
+      <div class="count">TfL Unified, Highways England, National Rail Darwin</div>
+      <ul>
+        <li>TfL Unified API — Tube, bus, road, cycle, river</li>
+        <li>Highways England NTIS — Motorway speeds, incidents</li>
+        <li>National Rail Darwin — Real-time train movements</li>
+        <li>ADS-B Exchange — Aircraft tracking (12,000+ airborne)</li>
+        <li>MarineTraffic — Ship AIS positions</li>
+        <li>FlightRadar24 — Commercial flight tracking</li>
+        <li>TfL JamCams — 900+ London traffic cameras</li>
+        <li>Highways England CCTV — 1,800+ motorway cameras</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>🌍 Environment (6)</h3>
+      <div class="count">EA Flood, DEFRA Air Quality, OpenAQ, Maxar</div>
+      <ul>
+        <li>EA Flood API — Warnings, river levels, 3-day forecast</li>
+        <li>DEFRA Air Quality — UK-wide pollutant monitoring</li>
+        <li>OpenAQ — 20,000+ global air quality sensors</li>
+        <li>Maxar Open Data — Disaster satellite imagery</li>
+        <li>CEH Land Cover — UK habitat mapping</li>
+        <li>MET Office Pollen — Allergy forecast</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>🏥 Health (4)</h3>
+      <div class="count">NHS Digital, UKHSA, OpenPrescribing, WHO</div>
+      <ul>
+        <li>NHS Digital — Hospital capacity, waiting times</li>
+        <li>UKHSA — Infectious disease surveillance</li>
+        <li>OpenPrescribing — 1.2B+ prescriptions analysed</li>
+        <li>WHO Global Health Observatory — 194 countries</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>🚔 Public Safety (5)</h3>
+      <div class="count">data.police.uk, London Fire Brigade, UK Ambulance</div>
+      <ul>
+        <li>data.police.uk — 43 forces, street-level crime</li>
+        <li>London Fire Brigade — Incidents, stations, response times</li>
+        <li>UK Ambulance — Response time data (NHS England)</li>
+        <li>Home Office — Crime outcomes, stop and search</li>
+        <li>ONS Crime Survey — Victimisation data</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>🛰️ Satellite (5)</h3>
+      <div class="count">Sentinel Hub, NASA Landsat, Google Earth Engine</div>
+      <ul>
+        <li>Sentinel Hub — ESA Copernicus (10m SAR/optical)</li>
+        <li>NASA Landsat — 30m multispectral, 50 years history</li>
+        <li>Google Earth Engine — Planetary-scale analysis</li>
+        <li>Ordnance Survey OpenData — UK mapping (1:25,000)</li>
+        <li>Maxar SecureWatch — High-res tasking (commercial)</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>🏛️ Government (6)</h3>
+      <div class="count">data.gov.uk, Companies House, ONS, data.europa.eu</div>
+      <ul>
+        <li>data.gov.uk — 47,000+ UK public datasets</li>
+        <li>Companies House — 5M+ UK companies, free API</li>
+        <li>ONS — Census, economic indicators, CPI</li>
+        <li>data.europa.eu — 1.7M+ EU datasets</li>
+        <li>MOD — Defence contracts, spending data</li>
+        <li>UK Parliament — Bills, Hansard, committees</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>📡 Sensor/IoT (4)</h3>
+      <div class="count">OpenAQ, Sensor.Community, PurpleAir, LoRaWAN</div>
+      <ul>
+        <li>OpenAQ — Real-time air sensor data</li>
+        <li>Sensor.Community — Citizen science sensors (14K+)</li>
+        <li>PurpleAir — Hyperlocal PM2.5 monitoring</li>
+        <li>LoRaWAN Things Network — Global IoT coverage</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>⚓ Maritime (2)</h3>
+      <div class="count">AISstream.io, Global Fishing Watch</div>
+      <ul>
+        <li>AISstream.io — Real-time ship positions (WebSocket)</li>
+        <li>Global Fishing Watch — Vessel activity, dark fleet detection</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>🔍 OSINT (3)</h3>
+      <div class="count">GDELT, ACLED, CISA KEV</div>
+      <ul>
+        <li>GDELT Project — Global news/events, 100+ languages</li>
+        <li>ACLED — Armed conflict location & event data</li>
+        <li>CISA KEV — Known exploited vulnerabilities catalog</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>🎤 Audio (3)</h3>
+      <div class="count">Gunshot detection, Batear drone acoustic, YAMNet</div>
+      <ul>
+        <li>Batear — Drone acoustic detection ($10 ESP32)</li>
+        <li>YAMNet — Audio event classification (521 classes)</li>
+        <li>Gunshot Detection — ML on ESP32 edge device</li>
+      </ul>
+    </div>
+    <div class="cat-card">
+      <h3>📷 Cameras (7)</h3>
+      <div class="count">TfL JamCams, HE CCTV, RTSP IP cameras</div>
+      <ul>
+        <li>TfL JamCams — 900+ London traffic cameras</li>
+        <li>Highways England CCTV — 1,800+ motorway cameras</li>
+        <li>RTSP Camera MCP — Any IP camera via RTSP</li>
+        <li>Raspberry Pi Camera — Edge deployment</li>
+        <li>Flock Safety — Licence plate recognition</li>
+        <li>Hikvision/Dahua — Enterprise camera integration</li>
+        <li>AXIS — ONVIF-compliant camera SDK</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>29 MCP Servers Built</h2>
+  <div class="mcp-table">
+  <table>
+    <thead><tr><th>#</th><th>MCP Server</th><th>Category</th><th>Tools</th><th>Status</th></tr></thead>
+    <tbody>
+    <tr><td>1</td><td>defoneos-mcp</td><td>Defence Core</td><td>health, jsp936_check, status</td><td>✅</td></tr>
+    <tr><td>2</td><td>metoffice-weather-mcp</td><td>Weather</td><td>forecast, observations</td><td>✅</td></tr>
+    <tr><td>3</td><td>tfl-unified-mcp</td><td>Transport</td><td>status, cameras</td><td>✅</td></tr>
+    <tr><td>4</td><td>uk-police-data-mcp</td><td>Public Safety</td><td>crime, forces</td><td>✅</td></tr>
+    <tr><td>5</td><td>ea-flood-mcp</td><td>Environment</td><td>warnings, risk</td><td>✅</td></tr>
+    <tr><td>6</td><td>defra-air-quality-mcp</td><td>Environment</td><td>air_quality, forecast</td><td>✅</td></tr>
+    <tr><td>7</td><td>sentinel-hub-mcp</td><td>Satellite</td><td>imagery, analysis</td><td>✅</td></tr>
+    <tr><td>8</td><td>os-opendata-mcp</td><td>Mapping</td><td>maps, elevation</td><td>✅</td></tr>
+    <tr><td>9</td><td>data-gov-uk-mcp</td><td>Government</td><td>datasets, search</td><td>✅</td></tr>
+    <tr><td>10-29</td><td>+19 more (see <a href="#"" style="color:var(--accent2)">status page</a>)</td><td>All categories</td><td>70+ tools total</td><td>✅</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section style="background:linear-gradient(135deg,var(--surface),var(--bg));border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center">
+  <h2 style="color:var(--accent)">Zero Cost. All Open Source.</h2>
+  <p style="color:var(--muted);margin:1rem 0;max-width:600px;margin-left:auto;margin-right:auto">Palantir charges $4.1M per customer for data integration. DEFONEOS connects to 198 free sources via open MCP servers. The same data. Zero license fees. UK sovereign.</p>
+  <a href="#"" style="font-family:'Space Grotesk',monospace;color:var(--accent2);text-decoration:none">→ Civil Services Integration: Police + Fire + NHS + Councils</a>
+</section>
+
+</div>
+
+<footer>
+  <p>🐉 DEFONEOS Sensor Layer — 198 free data sources feeding the UK Sovereign Defence AI OS</p>
+  <p>Built by Nicholas Templeman / CSOAI LTD (16939677)</p>
+</footer>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "threat": {
+    "before": "weak (overfit acc=1.0 on 111 samples)",
+    "after": "FIXED: 0.954 held-out (n=456) vs 0.548 baseline, +0.406 lift, precision 1.0 recall 0.898",
+    "status": "SHIP"
+  },
+  "dependency": {
+    "before": "weak (~0.22)",
+    "after": "NOT FIXED: only data is leakage-contaminated (source token perfectly predicts label -> fake 1.000). Discarded, same as prior rejection.",
+    "status": "DATA-BLOCKED (leaky)"
+  },
+  "care_validation": {
+    "before": "weak (n=19)",
+    "after": "NOT FIXED: no labeled dataset exists on disk, only a 15-line skill definition (prompt template). Zero training examples.",
+    "status": "DATA-BLOCKED (no data)"
+  },
+  "partnership": {
+    "before": "weak (n=100)",
+    "after": "NOT FIXED: only 50 rows parse, labeled with continuous care_weight not a clean binary. Too small + not cleanly labeled.",
+    "status": "DATA-BLOCKED (thin)"
+  }
+}

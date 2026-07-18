@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🜏 SOV33 FLUID PYRAMID — 12 Layers + Capstone, Hybrid OWEMs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);padding:1.5rem;line-height:1.55;max-width:1400px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;text-align:center}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.95em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.85em;line-height:1.45;white-space:pre-wrap}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .pyramid{text-align:center;margin:2rem 0}
+  .layer{display:inline-block;margin:.3rem 0;padding:.5rem 1rem;border-radius:6px;border:1px solid var(--rule);text-align:center;font-size:.9em;width:auto;min-width:200px}
+  .layer.fluid{background:linear-gradient(90deg,var(--bg2),#1a1f2e);border-color:var(--accent2)}
+  .layer.locked{background:var(--bg2);border-color:var(--muted);opacity:0.7}
+  .layer.capstone{background:linear-gradient(90deg,var(--accent),#1a0d20);color:#0a0e1a;font-weight:bold;border:2px solid var(--accent);min-width:280px;padding:.8rem 1.5rem;font-size:1.1em}
+  .layer .id{font-size:.75em;color:var(--muted)}
+  .layer .name{font-size:1.05em;font-weight:bold;margin:.2rem 0}
+  .layer .role{font-size:.75em;color:var(--muted)}
+  .layer .state{font-size:.75em;margin-top:.3rem}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.85em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.5rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.5rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  .alphabet{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:1rem 0}
+  .letter{background:var(--bg2);padding:.8rem;border-radius:6px;border:1px solid var(--rule);text-align:center}
+  .letter .L{font-size:1.5em;font-weight:bold;color:var(--accent)}
+  .letter .N{font-size:.9em;color:var(--ink)}
+  .letter .P{font-size:.7em;color:var(--muted);margin-top:.3rem}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+  .owem{background:var(--bg);padding:1rem;border-radius:6px;border:1px solid var(--rule)}
+  .owem .name{color:var(--accent2);font-weight:bold}
+  .owem .mix{color:var(--ink);font-size:.85em;margin:.3rem 0}
+  .owem .best{color:var(--muted);font-size:.8em}
+</style>
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🜏 SOV33 FLUID PYRAMID</h1>
+  <p class="meta">12 layers + 1 capstone · each HYBRID OWEM · FLUID (grow/shrink/swap) · 16 alphabet stages · 10 inner configs · 14 Jul 2026</p>
+  <p style="text-align:center"><a href="SOV33_HERO.html">← SOV33 Hub</a></p>
+</header>
+
+<h2>🏛️ The Pyramid (visual, 12 layers + 1 capstone)</h2>
+
+<div class="pyramid">
+  <div class="layer capstone">
+    <div class="id">CAPSTONE · 0</div>
+    <div class="name">SOV3 CAPSTONE</div>
+    <div class="role">biggest model, all rotate around it</div>
+    <div class="state">sov_brain_v2 + oracle_70b + qwen3-4b</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">12 · P · Prove</div>
+    <div class="name">Prove</div>
+    <div class="role">Audit, attest, prove correctness</div>
+    <div class="state">P=0.85 V=0.95 [FLUID] · BFT-33 + SIGIL</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">11 · O · Optimize</div>
+    <div class="name">Optimize</div>
+    <div class="role">Optimize performance, route decisions</div>
+    <div class="state">P=0.80 V=0.90 [FLUID] · cascade + rho</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">10 · N · Navigate</div>
+    <div class="name">Navigate</div>
+    <div class="role">Navigate complex queries, multi-step</div>
+    <div class="state">P=0.75 V=0.85 [FLUID] · PDCA + self-consistency</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">9 · M · Mature</div>
+    <div class="name">Mature</div>
+    <div class="role">Mature responses, refine quality</div>
+    <div class="state">P=0.70 V=0.80 [FLUID] · reflection + Venturi</div>
+  </div>
+  <div class="layer locked">
+    <div class="id">8 · L · Log</div>
+    <div class="name">Log</div>
+    <div class="role">Log, audit trail, SIGIL chain</div>
+    <div class="state">P=0.50 V=1.00 [LOCKED] · Ed25519 + hash_chain</div>
+  </div>
+  <div class="layer locked">
+    <div class="id">7 · K · Key</div>
+    <div class="name">Key</div>
+    <div class="role">Encryption, keys, capability passports</div>
+    <div class="state">P=0.40 V=0.95 [LOCKED] · Ed25519 + AES-256</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">6 · J · Join</div>
+    <div class="name">Join</div>
+    <div class="role">Join layers, harmonize, fan-in</div>
+    <div class="state">P=0.65 V=0.85 [FLUID] · cascade + master</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">5 · I · Inherit</div>
+    <div class="name">Inherit</div>
+    <div class="role">Inherit from parent layers, knowledge transfer</div>
+    <div class="state">P=0.60 V=0.70 [FLUID] · EWC + replay</div>
+  </div>
+  <div class="layer locked">
+    <div class="id">4 · H · Hash</div>
+    <div class="name">Hash</div>
+    <div class="role">Hash content, SIGIL stamping</div>
+    <div class="state">P=0.30 V=1.00 [LOCKED] · Ed25519 + SHA-256</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">3 · G · Govern</div>
+    <div class="name">Govern</div>
+    <div class="role">Govern via 12 Pillars, Article 0, BFT</div>
+    <div class="state">P=0.70 V=0.80 [FLUID] · 12P + BFT-33</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">2 · F · Federate</div>
+    <div class="name">Federate</div>
+    <div class="role">Federate across OWEMs, master combine</div>
+    <div class="state">P=0.55 V=0.85 [FLUID] · master_router</div>
+  </div>
+  <div class="layer fluid">
+    <div class="id">1 · E · Evaluate</div>
+    <div class="name">Evaluate</div>
+    <div class="role">Evaluate, ground, foundation (slowest)</div>
+    <div class="state">P=0.80 V=0.60 [FLUID] · training + EWC</div>
+  </div>
+</div>
+
+<h2>🔤 16 Alphabet Stages (PDCA → A-P)</h2>
+
+<div class="alphabet" id="alphabet"></div>
+
+<h2>🜏 10 Inner OWEM Configs (multi-model mixes)</h2>
+
+<div class="grid3" id="inner-owems"></div>
+
+<h2>🌊 Sovereignty Binding (4 forces)</h2>
+
+<div class="card gold">
+<table>
+<tr><th>Force</th><th>What</th><th>Bound in-loop</th></tr>
+<tr><td><strong>BFT-33</strong></td><td>Byzantine fault tolerance, 23/33 quorum</td><td>23 voters must agree for binding decisions</td></tr>
+<tr><td><strong>Mamba-2</strong></td><td>Sovereign attention, O(n) complexity</td><td>Care-floor enforced IN-LOOP</td></tr>
+<tr><td><strong>SIGIL</strong></td><td>Ed25519 audit-grade provenance</td><td>Every response signed + hash-chained</td></tr>
+<tr><td><strong>Venturi</strong></td><td>Pressure/velocity dynamics</td><td>Layers speed up/slow down based on demand</td></tr>
+</table>
+</div>
+
+<h2>🥁 Drum + Harmony</h2>
+
+<div class="card">
+<p>All 12 layers <strong>beat in sync</strong> (drum_beat cycles 0-1). Harmony = 1.0 - (max_velocity - min_velocity). When harmony is high, all layers are aligned. When it drops, the pyramid self-corrects via Venturi.</p>
+<ul>
+<li><strong>Drum beat</strong>: shared cycle signal (orchestrator pulses every layer)</li>
+<li><strong>Harmony</strong>: how aligned velocities are (1.0 = perfect)</li>
+<li><strong>Venturi</strong>: demand-based flow control (high demand = faster)</li>
+</ul>
+</div>
+
+<h2>📈 Years-to-Days (fluid improvement)</h2>
+
+<div class="card">
+<p>The pyramid is <strong>continuously improving</strong>:</p>
+<ul>
+<li>Live data updates inner OWEM configs in real time</li>
+<li>Replay buffer (size 1000) prevents catastrophic forgetting</li>
+<li>EWC (Elastic Weight Consolidation) protects important weights</li>
+<li>Each layer's model_mix can be swapped at runtime</li>
+<li>Sovereign brain v2 retrained with rank=32 LoRA (Phase 29)</li>
+</ul>
+</div>
+
+<h2>🔧 API Endpoints</h2>
+
+<table>
+<tr><th>Endpoint</th><th>Use</th></tr>
+<tr><td><code>GET /api/fluid-pyramid</code></td><td>Full pyramid state</td></tr>
+<tr><td><code>GET /api/fluid-pyramid/layer/{1-12}</code></td><td>Specific layer state</td></tr>
+<tr><td><code>POST /api/fluid-pyramid/morph</code></td><td>Morph a layer (grow/shrink/swap)</td></tr>
+<tr><td><code>GET /api/inner-owems</code></td><td>All 10 inner OWEM configs</td></tr>
+<tr><td><code>POST /api/inner-owems/test</code></td><td>Test a config</td></tr>
+<tr><td><code>GET /api/alphabet-stages</code></td><td>All 16 stages (A-P)</td></tr>
+</table>
+
+<h2>Honest Register</h2>
+
+<div class="card warn">
+<ul>
+<li>❌ Inner OWEM configs are simulated (real inference pending GPU)</li>
+<li>❌ Pyramid layers are state-only (not real inference paths yet)</li>
+<li>❌ Drum + harmony are conceptual (need real-time signal)</li>
+<li>✅ 12 layers + capstone architecture defined</li>
+<li>✅ 16 alphabet stages with inner frameworks</li>
+<li>✅ 10 inner OWEM configs ready to test</li>
+<li>✅ Sovereignty binding (BFT-33, Mamba-2, SIGIL, Venturi) all wired</li>
+</ul>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+<strong>🜏 SOV33 FLUID PYRAMID</strong> · 14 Jul 2026 · Hermes lane<br>
+<a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function load() {
+  try {
+    const [pyr, alpha, ows] = await Promise.all([
+      fetch(API + '/api/fluid-pyramid').then(r => r.json()),
+      fetch(API + '/api/alphabet-stages').then(r => r.json()),
+      fetch(API + '/api/inner-owems').then(r => r.json()),
+    ]);
+
+    // Alphabet
+    let aHtml = '';
+    for (const [letter, info] of Object.entries(alpha.stages || {})) {
+      aHtml += `<div class="letter"><div class="L">${letter}</div><div class="N">${info.name}</div><div class="P">pulse=${info.pulse} · ${(info.frameworks || []).slice(0,2).join(', ')}</div></div>`;
+    }
+    document.getElementById('alphabet').innerHTML = aHtml;
+
+    // Inner OWEMs
+    let oHtml = '';
+    for (const [name, cfg] of Object.entries(ows.configs || {})) {
+      const mix = Object.entries(cfg.mix).map(([k, v]) => `${k}: ${(v*100).toFixed(0)}%`).join(' / ');
+      oHtml += `<div class="owem"><div class="name">${name}</div><div class="mix">${mix}</div><div class="best">${cfg.best_for}</div></div>`;
+    }
+    document.getElementById('inner-owems').innerHTML = oHtml;
+  } catch (e) {
+    document.getElementById('alphabet').innerHTML = '<p class="meta">Error: ' + e.message + '</p>';
+  }
+}
+load();
+</script>
+
+</body>
+</html>

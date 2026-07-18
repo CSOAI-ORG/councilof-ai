@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML-KEM-768 - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/cryptography/">cryptography</a> / pqc-ml-kem-768</div>
+<h1>ML-KEM-768 (Kyber)</h1>
+<p class="tagline">NIST post-quantum key encapsulation — quantum-safe key exchange.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p><strong>ML-KEM-768</strong> is the NIST-standardised post-quantum key encapsulation mechanism (KEM) formerly known as Kyber-768 (CRYSTALS-Kyber). Standardised as FIPS 203 in August 2024, it is CSOAI's quantum-safe replacement for ECDH key exchange.</p>
+
+<h2>Why a KEM?</h2>
+<p>Key exchange (used in TLS, SSH, and the SIGIL chain's encrypted channels) traditionally uses ECDH (e.g., X25519). ECDH is Shor-broken. ML-KEM-768 replaces it: instead of agreeing on a shared secret via elliptic curve Diffie-Hellman, the sender encapsulates a randomly generated secret using the recipient's public key, and the recipient decapsulates it using their private key.</p>
+
+<h2>Properties</h2>
+<ul>
+<li><strong>Public key</strong>: 1,184 bytes</li>
+<li><strong>Ciphertext</strong>: 1,088 bytes</li>
+<li><strong>Shared secret</strong>: 32 bytes</li>
+<li><strong>Security</strong>: NIST Level 3 (~128-bit post-quantum security)</li>
+<li><strong>Performance</strong>: ~20µs encaps, ~25µs decaps on x86-64</li>
+</ul>
+
+<h2>Usage in CSOAI</h2>
+<p>ML-KEM-768 is deployed in: (1) DORADO encrypted channels (cross-region replication), (2) Council vote encryption, (3) Article 50 passport content encryption for high-tier customers, and (4) hybrid ECDH+ML-KEM-768 mode for defence-in-depth during the transition.</p>
+
+<h2>Mathematical Sketch</h2>
+<p>ML-KEM-768 is based on Module-LWE. Key generation samples a small secret s and error e, computes public key pk = As + e, and discards s and e. Encapsulation samples random r and errors e₁, e₂, computes ciphertext ct = (Ar + e₁, br + e₂ + μ) where μ is the message, and derives the shared secret from the hash of (μ, ct). Decapsulation inverts this using the secret key.</p>
+
+<h2>Historical Context</h2>
+<p>CRYSTALS-Kyber was submitted to NIST's PQC standardisation in 2017 by Roberto Avanzi et al. It was selected as a winner in 2022 and standardised as FIPS 203 in August 2024. CSOAI deployed it in production for cross-region DORADO encryption by Q1 2025.</p>
+
+<h2>Migration Path</h2>
+<p>Existing ECDH key exchanges are wrapped with ML-KEM-768 in hybrid mode: both X25519 ECDH and ML-KEM-768 are performed, and the shared secrets are concatenated before key derivation. This ensures security even if one of the two is broken. Hybrid mode is the default until 2027, when ML-KEM-768-only will become the standard.</p>
+
+<h2>Hybrid Mode Trade-offs</h2>
+<p>Hybrid mode doubles the key exchange size and adds ~30µs latency. For most sovereign AI use cases, this is negligible. For ultra-low-latency trading applications, customers can opt out of hybrid mode and use ML-KEM-768-only, accepting the cryptographic agility risk.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/cryptography/pqc-ml-dsa-65.html">ML-DSA-65</a></li>
+<li><a href="/wiki/cryptography/ed25519.html">Ed25519</a></li>
+<li><a href="/wiki/architecture/quantum-ready.html">Quantum Ready</a></li>
+<li><a href="/wiki/laws/nist-pqc.html">NIST PQC Standards</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

@@ -1,0 +1,94 @@
+syntax = proto3;
+
+package runestone;
+
+// King Runestone Portal — gRPC interface
+// For non-HTTP clients (mobile, IoT, fleet-internal).
+
+service RunestonePortal {
+    // Submit a sovereign query (1-brain)
+    rpc Submit1Brain(SubmitRequest) returns (Runestone);
+
+    // Submit a 4-brain parallel query (12 voters)
+    rpc Submit4Brain(SubmitRequest) returns (Runestone);
+
+    // Submit a 4x4x3 query (48 voters MAGNIFICENT)
+    rpc Submit4x4x3(SubmitRequest) returns (Runestone);
+
+    // Read a runestone by sigil
+    rpc Read(ReadRequest) returns (Runestone);
+
+    // Audit a runestone
+    rpc Audit(ReadRequest) returns (AuditResponse);
+
+    // Stream a user's history
+    rpc History(HistoryRequest) returns (stream Runestone);
+
+    // Signup
+    rpc Signup(SignupRequest) returns (SignupResponse);
+
+    // Login
+    rpc Login(LoginRequest) returns (LoginResponse);
+}
+
+message SubmitRequest {
+    string session_token = 1;
+    string query = 2;
+}
+
+message ReadRequest {
+    string sigil_prefix = 1;
+}
+
+message HistoryRequest {
+    string session_token = 1;
+}
+
+message SignupRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string session_token = 1;
+    string sovereign_id = 2;
+    string username = 3;
+}
+
+message SignupResponse {
+    string sovereign_id = 1;
+    string api_key = 2;
+    string username = 3;
+}
+
+message Runestone {
+    string id = 1;
+    string sigil = 2;
+    string ts = 3;
+    string query = 4;
+    string response = 5;
+    string mode = 6;
+    int32 voters = 7;
+    float score = 8;
+    bool passed = 9;
+    string polyhedron = 10;
+    string brain = 11;
+    string voice = 12;
+    string keystone = 13;
+    string sovereign_id = 14;
+    string submitted_by = 15;
+    string audit_url = 16;
+    string sigil_chain = 17;
+}
+
+message AuditResponse {
+    string sigil = 1;
+    bool verified = 2;
+    map<string, string> audit_trail = 3;
+    string verdict = 4;
+}

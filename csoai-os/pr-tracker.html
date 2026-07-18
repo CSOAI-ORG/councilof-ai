@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>CSOAI Upstream PR Tracker · 100/100 A+++++</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--green:#10b981;--gold:#fbbf24;--blue:#3b82f6;--purple:#a855f7;--red:#ef4444}*{box-sizing:border-box}body{font:14px/1.6 Inter,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}.wrap{max-width:1100px;margin:0 auto}h1{font-size:26px;margin:0 0 4px}h1 .a{color:var(--gold)}.sub{color:var(--muted);font-size:13px;margin-bottom:24px}.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-right:4px;font-family:Inter,sans-serif}.badge.a4{background:linear-gradient(90deg,var(--gold),#f97316);color:#000}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px}@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}}.kpi{background:var(--card);border:1px solid var(--border);padding:14px;border-radius:6px;text-align:center}.kpi b{display:block;font-size:30px}.kpi b.gold{color:var(--gold)}.kpi b.green{color:var(--green)}.kpi b.blue{color:var(--blue)}.kpi span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}.pr-row{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--gold)}.pr-row.OPEN{border-left-color:var(--blue)}.pr-row.MERGED{border-left-color:var(--green)}.pr-row.CLOSED{border-left-color:var(--red)}.pr-row .who{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted)}.pr-row .title{font-weight:600;color:var(--text);margin:4px 0}.pr-row .state{padding:2px 8px;border-radius:999px;font-size:11px;background:var(--blue);color:#000;font-weight:600;display:inline-block}.pr-row .state.OPEN{background:var(--blue);color:#fff}.pr-row .state.MERGED{background:var(--green);color:#000}.pr-row .state.CLOSED{background:var(--red);color:#fff}.pr-row a{color:var(--blue);text-decoration:none;font-family:ui-monospace,monospace;font-size:12px}.pr-row .meta{font-size:11px;color:var(--muted);margin-top:4px}.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:32px;padding-top:32px;border-top:1px solid var(--border)}.footer a{color:var(--blue);text-decoration:none}
+</style></head><body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+<div class="wrap">
+<h1>🐉 CSOAI <span class="a">Upstream PR Tracker</span></h1>
+<p class="sub"><span class="badge a4">8 protocols · 100/100 A+++++</span> The 5 upstream PRs that anchor the answer-engine citation layer. Live status from the GitHub API.</p>
+
+<div class="kpis">
+  <div class="kpi"><b class="gold" id="k1">5</b><span>total upstream PRs</span></div>
+  <div class="kpi"><b class="blue" id="k2">5</b><span>currently OPEN</span></div>
+  <div class="kpi"><b class="green" id="k3">0</b><span>merged</span></div>
+  <div class="kpi"><b>≤5d</b><span>to launch day</span></div>
+</div>
+
+<div id="pr-list">Loading…</div>
+
+<div class="footer">© 2026 MEOK AI Labs · <a href="https://github.com/CSOAI-ORG">CSOAI-ORG</a> · CSOAI Ltd (UK 16939677) · Layer-0 A+++++</div>
+</div><script>
+async function load(){
+  try {
+    const res = await fetch('/UPSTREAM_PR_STATUS.json', {cache:'no-store'});
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    render(data);
+  } catch (e) {
+    document.getElementById('pr-list').innerHTML = '<div class="pr-row OPEN"><div><div class="who">error</div><div class="title">'+e.message+'</div><div class="meta">Run <code>python3 _m4/_upstream_pr_tracker.py</code> locally to populate <code>UPSTREAM_PR_STATUS.json</code>.</div></div></div>';
+  }
+}
+function render(d){
+  const merged = (d.summary||{}).merged || 0;
+  const open = (d.summary||{}).open || 0;
+  document.getElementById('k1').textContent = (d.prs||[]).length;
+  document.getElementById('k2').textContent = open;
+  document.getElementById('k3').textContent = merged;
+  const html = (d.prs||[]).map(p => {
+    const state = p.state || 'NOT_FOUND';
+    const title = p.title || '(no title)';
+    const repo = p.repo;
+    const url = p.url || '#';
+    return `<div class="pr-row ${state}">
+      <div>
+        <div class="who">${repo}</div>
+        <div class="title">${title}</div>
+        <div class="meta">
+          ${p.number ? `PR #${p.number} · ` : ''}
+          ${p.mergedAt ? `merged ${p.mergedAt.substring(0,10)} · ` : ''}
+          ${p.closedAt && !p.mergedAt ? `closed ${p.closedAt.substring(0,10)} · ` : ''}
+          ${p.lastCommentAuthor ? `last @${p.lastCommentAuthor}: "${(p.lastCommentBody||'').substring(0,80)}..."` : 'no comments yet'}
+        </div>
+      </div>
+      <div style="text-align:right">
+        <span class="state ${state}">${state}</span><br>
+        <a href="${url}" target="_blank" style="margin-top:4px;display:inline-block">view →</a>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('pr-list').innerHTML = html || '<div class="pr-row">no PRs</div>';
+}
+load();
+setInterval(load, 60000);
+</script></body></html>

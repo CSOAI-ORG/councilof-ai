@@ -1,0 +1,16 @@
+name: Sign with cosign
+on:
+  release:
+    types: [published]
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  cosign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: sigstore/cosign-installer@v3
+      - uses: sigstore/gh-action-sigstore-python@v3.0.0
+        with:
+          input: dist/*.whl

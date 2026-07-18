@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🎭 SOV33 Amica Backend — VRM Avatars Powered by Sovereign</title>
+<meta name="description" content="SOV33 AMICA backend — the sovereign autonomic control plane that hosts agentic primitives, OWEM regulators, and BFT council coordination behind the CSOAI charter.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1100px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.7rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.25rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.82em;line-height:1.45}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .meta{color:var(--muted);font-size:.9em}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  button{background:var(--accent);color:#0a0e1a;border:none;padding:.7rem 1.4rem;border-radius:6px;font-weight:bold;cursor:pointer}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_AMICA_BACKEND.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🎭 SOV33 Amica Backend</h1>
+  <p class="meta">SOV33 as the backend that VRM avatars (Amica-class shells) call. OpenAI-compatible. 12 Jul 2026.</p>
+  <p><a href="SOV33_HERO.html">← SOV33 Hub</a> · <a href="SOV33_MEMORY_BRIDGE.html">Memory Bridge →</a></p>
+</header>
+
+<h2>What This Is</h2>
+
+<div class="card">
+  <blockquote>Per <a href=#=>FULLSTACK_MASTER</a> §E: <strong>"Amica = open VRM avatar shell that talks to ANY LLM backend. SOV33's role: BE THE BACKEND Amica calls. Character memory/personality/care/identity in SOV33; VRM body is the shell."</strong></blockquote>
+  <p>Amica (and any OpenAI-compatible VRM avatar shell) can call SOV33 as if it were any other LLM backend. The avatar speaks; SOV33 thinks and answers. Memory, identity, care-floor all stay in SOV33.</p>
+</div>
+
+<h2>The Architecture</h2>
+
+<pre><code>┌─────────────────────────────────┐
+│  Amica VRM Shell (the body)     │
+│  • Face, lipsync, gestures       │
+│  • ANY LLM backend config        │
+└────────────┬────────────────────┘
+             │ OpenAI-compatible HTTP
+             ▼
+┌─────────────────────────────────┐
+│  SOV33 Amica Adapter              │
+│  POST /v1/chat/completions        │
+│  GET  /v1/models                  │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│  SOV33 Sovereign Substrate       │
+│  • Care-floor 0.95                │
+│  • 5 OWEMs (compliance, defense,  │
+│    intuition, voice, general)     │
+│  • 61-model router                │
+│  • SIGIL-signed every action      │
+│  • Article 0 binding              │
+└─────────────────────────────────┘</code></pre>
+
+<h2>Available "Models" (OWEMs)</h2>
+
+<table style="border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em">
+  <tr style="background:#1a1f2e"><th style="padding:.5rem;color:var(--accent);text-align:left">Model ID</th><th style="padding:.5rem;color:var(--accent);text-align:left">OWEM</th><th style="padding:.5rem;color:var(--accent);text-align:left">Specialty</th></tr>
+  <tr><td style="padding:.5rem"><code>compliance</code></td><td style="padding:.5rem">EU AI Act, UK AI Bill, Article 50</td><td style="padding:.5rem">Regulatory knowledge</td></tr>
+  <tr><td style="padding:.5rem"><code>defense</code></td><td style="padding:.5rem">Kill switch, intrusion, foreign-access</td><td style="padding:.5rem">Defensive AI</td></tr>
+  <tr><td style="padding:.5rem"><code>intuition</code></td><td style="padding:.5rem">Patterns, predictions</td><td style="padding:.5rem">Sense-making</td></tr>
+  <tr><td style="padding:.5rem"><code>voice</code></td><td style="padding:.5rem">Sovereign truths, Charter</td><td style="padding:.5rem">Speech-style</td></tr>
+  <tr><td style="padding:.5rem"><code>general</code></td><td style="padding:.5rem">General knowledge</td><td style="padding:.5rem">Fallback</td></tr>
+</table>
+
+<h2>Live Test</h2>
+
+<div class="card">
+  <h3>OpenAI-compatible API call</h3>
+  <p>Try the SOV33 backend with the same payload an Amica avatar would send:</p>
+  <button onclick="testAmica()">Test /v1/chat/completions →</button>
+  <div id="amica-result" style="margin-top:1rem"></div>
+</div>
+
+<h2>Configuration (Amica side)</h2>
+
+<pre><code>// Amica config (or any OpenAI-compatible VRM shell)
+const response = await fetch('https://os.meok.ai/v1/chat/completions', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    model: 'voice',  // picks the OWEM
+    messages: [
+      {role: 'user', content: 'What is Article 0?'}
+    ]
+  })
+});
+const data = await response.json();
+const text = data.choices[0].message.content;
+// → "Article 0 of the Charter states: ..."</code></pre>
+
+<h2>The Honest Limits</h2>
+
+<div class="card warn">
+  <ul>
+    <li><strong>Not voice synthesis</strong> — SOV33 produces TEXT, Amica handles TTS</li>
+    <li><strong>Not face animation</strong> — SOV33 produces LOGIC, Amica handles VRM</li>
+    <li><strong>Not cross-character memory</strong> — each Amica instance = one OWEM</li>
+    <li><strong>OpenAI-compatible surface</strong> — uses OWEMEngine.ask() under the hood (1-2s latency for cloud backends)</li>
+  </ul>
+</div>
+
+<h2>The sovereign wins</h2>
+
+<div class="card gold">
+  <ul>
+    <li><strong>Care-floor 0.95</strong> — every response gated</li>
+    <li><strong>Article 0 binding</strong> — never takes equity, never sells</li>
+    <li><strong>12 Sovereign Pillars</strong> — charter-compliant output</li>
+    <li><strong>SIGIL provenance</strong> — every response includes sovereign_provenance.sigil_digest</li>
+    <li><strong>Cross-platform</strong> — same character, same memory, anywhere</li>
+  </ul>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🎭 SOV33 Amica Backend</strong> · 12 Jul 2026 · Hermes lane · §E of <a href=#=>FULLSTACK_MASTER</a><br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function testAmica() {
+  const out = document.getElementById('amica-result');
+  out.innerHTML = 'Calling SOV33 via OpenAI-compatible API...';
+  try {
+    const r = await fetch(API + '/v1/chat/completions', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'voice',
+        messages: [{role: 'user', content: 'What is Article 0 of the Sovereign Charter?'}]
+      })
+    });
+    const d = await r.json();
+    if (d.error) { out.innerHTML = '<span style="color:var(--warn)">' + d.error + '</span>'; return; }
+    const text = d.choices?.[0]?.message?.content || JSON.stringify(d).slice(0, 200);
+    out.innerHTML = `
+      <div style="background:var(--bg);padding:1rem;border-radius:6px;border-left:3px solid var(--accent2);margin-top:.5rem">
+        <p style="color:var(--accent2)"><strong>${text}</strong></p>
+        <p class="meta">Model: ${d.model} · Tokens: ${d.usage?.total_tokens || '?'} · Backend: ${d.sovereign_provenance?.backend_used || '?'}</p>
+        <p class="meta">SIGIL: <code>${(d.sovereign_provenance?.sigil_digest || '').slice(0, 32) || 'pending'}</code></p>
+      </div>
+    `;
+  } catch (e) {
+    out.innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>';
+  }
+}
+</script>
+
+</body>
+</html>

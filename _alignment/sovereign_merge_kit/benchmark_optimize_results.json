@@ -1,0 +1,29 @@
+{
+  "n": 40,
+  "policies": {
+    "small": {
+      "gsm8k": 0.65,
+      "avg_calls": 1.0
+    },
+    "large": {
+      "gsm8k": 0.9,
+      "avg_calls": 1.0
+    },
+    "cascade": {
+      "gsm8k": 0.55,
+      "avg_calls": 1.12
+    },
+    "self_consist3": {
+      "gsm8k": 0.275,
+      "avg_calls": 3.0
+    }
+  },
+  "baseline_small": 0.65,
+  "best_policy": "large",
+  "best_acc": 0.9,
+  "improvement_pts": 0.25,
+  "benchmark": "GSM8K (gold-graded, deployed gate)",
+  "run_ts": "2026-07-14T10:27:56.137530+00:00",
+  "honest": "same deployed models; win is routing/decoding (escalation + self-consistency), not a new model.",
+  "RETRACTION": "best_acc 0.90 is an EXTRACTION ARTIFACT (n=40); n=100 verify gave 0.24; strict-format gave small=0.833/large=0.167. See gsm8k_strict_results.json. Do not cite."
+}

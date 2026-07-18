@@ -1,0 +1,131 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>DEFONEOS Live Demo — Yorkshire Flood Response Digital Twin | Interactive COP</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#f8fafc;line-height:1.6}h1{font-size:2.2rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}h2{color:#22d3ee;margin:2rem 0 .5rem;font-size:1.4rem;border-bottom:1px solid rgba(34,211,238,.15);padding-bottom:.3rem}h3{color:#a78bfa;margin:1.2rem 0 .3rem;font-size:1.1rem}p{margin:.4rem 0;color:#cbd5e1}strong{color:#f1f5f9}table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem}th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.6rem;border:1px solid rgba(34,211,238,.15);text-align:left}td{padding:.5rem;border:1px solid rgba(255,255,255,.06);color:#cbd5e1;vertical-align:top}tr:nth-child(even){background:rgba(255,255,255,.02)}.container{max-width:1200px;margin:0 auto;padding:2rem}.card{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-radius:12px;padding:1.5rem;margin:1rem 0}.card.warn{background:rgba(251,191,36,.05);border-color:rgba(251,191,36,.15)}.card.success{background:rgba(34,197,94,.05);border-color:rgba(34,197,94,.15)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:768px){.grid2{grid-template-columns:1fr}}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}@media(max-width:768px){.grid3{grid-template-columns:1fr}}.pill{display:inline-block;padding:.2rem .6rem;border-radius:99px;font-size:.75rem;font-weight:600;margin:.2rem}.pill.live{background:rgba(34,197,94,.15);color:#4ade80}.pill.ready{background:rgba(34,211,238,.15);color:#22d3ee}.pill.planned{background:rgba(251,191,36,.15);color:#fbbf24}.stat{text-align:center;padding:1rem}.stat-num{font-size:2.5rem;font-weight:bold;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.stat-label{color:#64748b;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}.timeline{position:relative;padding-left:2rem;margin:1.5rem 0}.timeline::before{content:'';position:absolute;left:.5rem;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#22d3ee,#8b5cf6)}.timeline-item{position:relative;margin-bottom:1.5rem}.timeline-item::before{content:'';position:absolute;left:-1.6rem;top:.3rem;width:12px;height:12px;border-radius:50%;background:#22d3ee;border:2px solid #0a0a0f}.demo-box{background:rgba(34,211,238,.03);border:2px dashed rgba(34,211,238,.2);border-radius:12px;padding:2rem;margin:1.5rem 0;text-align:center}.cta-btn{display:inline-block;padding:.8rem 2rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;text-decoration:none;border-radius:8px;font-weight:bold;margin:.5rem;font-size:.95rem}</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS Live Demo — Yorkshire Flood Response Digital Twin"><meta property="og:description" content="Interactive COP. 12 MCPs feeding a Cesium 3D globe. Real-time flood simulation, sensor overlay, BFT governance."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS Yorkshire Flood Response demo. 12 live MCPs feeding a Cesium 3D globe. Real-time flood simulation, multi-sensor fusion, BFT governance, SIGIL audit trail."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-demo.html"></head><body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-procurement-guide.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Procurement</a><a href="defoneos-compliance-crosswalk.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Compliance</a><a href="defoneos-api-playground.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">API Playground</a></nav>
+<div class="container">
+
+<h1>DEFONEOS Live Demo</h1>
+<p><strong>Yorkshire Flood Response Digital Twin. 12 live MCPs. Cesium 3D globe. Real-time sensor fusion. BFT governance.</strong></p>
+
+<div class="grid3">
+<div class="card stat"><div class="stat-num">12</div><div class="stat-label">Live MCPs</div></div>
+<div class="card stat"><div class="stat-num">3D</div><div class="stat-label">Cesium Globe</div></div>
+<div class="card stat"><div class="stat-num">5min</div><div class="stat-label">Scenario Run Time</div></div>
+</div>
+
+<h2>🌊 The Scenario: Yorkshire Flood Response</h2>
+<div class="card">
+<p><strong>Setting:</strong> January 2026. River Aire overflows. Calderdale, Leeds, York affected. 15,000 properties at risk. Multi-agency response required: Environment Agency, Fire & Rescue, Police, Military Aid to Civil Authorities (MACA), NHS.</p>
+<p><strong>DEFONEOS role:</strong> Provide a single Common Operating Picture (COP) — 3D digital twin with real-time sensor data, AI analysis, and multilateral decision governance. Every action signed on an Ed25519 SIGIL chain.</p>
+<p><strong>Demonstrates:</strong> Civil-military dual-use. Same MCP infrastructure that serves ISR also serves flood response. Open source sovereignty. BFT-governed decisions.</p>
+</div>
+
+<h2>🗺️ The 3D Common Operating Picture</h2>
+<div class="demo-box">
+<h3 style="color:#22d3ee">CesiumJS 3D Globe — Interactive</h3>
+<p style="color:#94a3b8"> Yorkshire flood zone with live sensor overlay. Drag to rotate. Click markers for data. </p>
+<p style="margin-top:1rem">
+<a href="#" style="color:inherit;text-decoration:none" class="cta-btn">🌍 Open Full COP</a>
+<a href="defoneos-api-playground.html" class="cta-btn" style="background:rgba(34,211,238,.1);color:#22d3ee">🔌 Try the API</a>
+</p>
+</div>
+
+<h3>What You See on the Globe</h3>
+<table>
+<tr><th>Layer</th><th>Data Source MCP</th><th>Visual Representation</th><th>Update Rate</th></tr>
+<tr><td><strong>Satellite imagery</strong></td><td>sentinel-hub-mcp</td><td>Pre-flood vs current Sentinel-2 overlay. Change detection in red.</td><td>5 days (Sentinel revisit)</td></tr>
+<tr><td><strong>Flood extent</strong></td><td>data-gov-uk-mcp + OS OpenData</td><td>Polygon overlay from EA flood warnings + predicted extent.</td><td>15 min</td></tr>
+<tr><td><strong>River levels</strong></td><td>data-gov-uk-mcp</td><td>Coloured markers: green (normal), amber (elevated), red (flood).</td><td>15 min</td></tr>
+<tr><td><strong>Rainfall radar</strong></td><td>met-office-mcp</td><td>Animated precipitation overlay. 6-hour forecast.</td><td>Hourly</td></tr>
+<tr><td><strong>Maritime</strong></td><td>aisstream-maritime-mcp</td><td>Vessel positions. Humber estuary traffic monitoring for port closure decisions.</td><td>Real-time</td></tr>
+<tr><td><strong>Air quality</strong></td><td>openaq-air-mcp</td><td>AQI sensors — detects contamination if flood water reaches industrial sites.</td><td>Hourly</td></tr>
+<tr><td><strong>Population density</strong></td><td>ons-statistics-mcp</td><td>Heat map for evacuation priority. Census data overlaid on flood polygon.</td><td>Static (2021 census)</td></tr>
+<tr><td><strong>Camera feeds</strong></td><td>rtsp-camera-mcp</td><td>Live CCTV from key infrastructure: bridges, weirs, pumping stations.</td><td>Real-time</td></tr>
+<tr><td><strong>News/OSINT</strong></td><td>gdelt-news-mcp</td><td>Social media reports, news articles geolocated on map.</td><td>15 min</td></tr>
+<tr><td><strong>IoT sensors</strong></td><td>mqtt-bridge-mcp</td><td>Temporary flood sensors deployed by responders. MQTT topic → map marker.</td><td>Real-time</td></tr>
+<tr><td><strong>AI analysis</strong></td><td>defoneos-sign-mcp + local model</td><td>AI-generated risk assessment per zone. Updated as data changes.</td><td>On-demand</td></tr>
+<tr><td><strong>Decision audit</strong></td><td>defoneos-bft-mcp</td><td>BFT proposals and votes shown as events on timeline at bottom of globe.</td><td>Per decision</td></tr>
+</table>
+
+<h2>🎬 The Demo Timeline (5 Minutes)</h2>
+<div class="timeline">
+<div class="timeline-item"><h3 style="color:#4ade80">T+0:00 — Situation Overview</h3><p>Globe loads centered on Yorkshire. Flood polygon visible. River level markers showing red/amber. Satellite overlay shows extent. AI brief auto-generated: "15,000 properties at risk. River Aire peak expected T+6h."</p></div>
+<div class="timeline-item"><h3 style="color:#4ade80">T+0:45 — Sensor Activation</h3><p>Responder deploys temporary IoT sensors via MQTT. New markers appear on globe within 30 seconds. Real-time water level feeds now augment EA gauges.</p></div>
+<div class="timeline-item"><h3 style="color:#fbbf24">T+1:30 — AI Risk Assessment</h3><p>DEFONEOS AI (local model on M2 edge node) analyses all 12 data sources. Generates zone-by-zone risk assessment. Identifies a nursing home within the flood polygon not on EA's evacuation list.</p></div>
+<div class="timeline-item"><h3 style="color:#fbbf24">T+2:30 — BFT Proposal</h3><p>AI-generated recommendation: "Priority evacuation: Sunnymead Care Home, 42 residents, Calderdale." BFT proposal emitted to SIGIL chain. 33-agent council votes (demonstrating multilateral governance — no single point of decision).</p></div>
+<div class="timeline-item"><h3 style="color:#22d3ee">T+3:15 — Council Decision</h3><p>BFT quorum reached (23/33). Decision ratified. SIGIL signed: "Evacuate Sunnymead Care Home. 42 residents. Priority: IMMEDIATE." This propagates to all connected agencies simultaneously.</p></div>
+<div class="timeline-item"><h3 style="color:#22d3ee">T+4:00 — Maritime Alert</h3><p>AIS data shows vessel MV Arklow Arrow approaching Humber estuary. Flood conditions make port entry dangerous. DEFONEOS auto-generates alert. Port authority notified via CoT message.</p></div>
+<div class="timeline-item"><h3 style="color:#8b5cf6">T+5:00 — Full Audit Trail</h3><p>Every action, every sensor reading, every AI inference, every BFT vote — all recorded on the Ed25519 SIGIL chain. Demonstrate the audit replay: "Show me every decision made in the last 5 minutes, who made it, and why."</p></div>
+</div>
+
+<h2>🔌 Technical Architecture of the Demo</h2>
+<div class="card">
+<h3>Data Flow</h3>
+<table>
+<tr><th>Stage</th><th>Component</th><th>Function</th></tr>
+<tr><td>1. Ingestion</td><td>12 MCP servers (sensor, satellite, government data)</td><td>Each MCP wraps a data source in the standard protocol. JSON-RPC calls. Auto-auth.</td></tr>
+<tr><td>2. Processing</td><td>DEFONEOS Core (Python)</td><td>Data normalisation, deduplication, geo-coding. Feeds to Cesium via WebSocket.</td></tr>
+<tr><td>3. Visualisation</td><td>CesiumJS (browser)</td><td>3D globe. Entities, polygons, billboards, polylines. Real-time updates via WebSocket.</td></tr>
+<tr><td>4. AI Analysis</td><td>Ollama (M2 edge node)</td><td>Local llama3.2 model analyses combined data. Structured JSON risk assessment.</td></tr>
+<tr><td>5. Governance</td><td>BFT council (33 agents)</td><td>Reviews AI recommendations. Votes. Quorum threshold. SIGIL signed.</td></tr>
+<tr><td>6. Audit</td><td>SIGIL chain (Ed25519)</td><td>Every action hash-chained. Replayable. Tamper-evident. Exportable for post-action review.</td></tr>
+</table>
+</div>
+
+<h2>🛡️ Why This Demo Matters</h2>
+<div class="grid2">
+<div class="card success">
+<h3>For MOD / DASA</h3>
+<ul style="color:#cbd5e1;margin-left:1.5rem">
+<li><strong>Dual-use proven:</strong> Same system does ISR and flood response</li>
+<li><strong>MACA-ready:</strong> Military aid to civil authorities — the scenario</li>
+<li><strong>Sovereign:</strong> All processing on UK soil. No US cloud dependency.</li>
+<li><strong>Interoperable:</strong> CoT messages compatible with FreeTAKServer</li>
+<li><strong>Auditable:</strong> Every decision traceable. SIGIL chain for post-action review.</li>
+</ul>
+</div>
+<div class="card success">
+<h3>For NATO / DIANA</h3>
+<ul style="color:#cbd5e1;margin-left:1.5rem">
+<li><strong>Coalition-capable:</strong> BFT council = multinational governance model</li>
+<li><strong>Open source:</strong> Any ally can deploy, audit, contribute</li>
+<li><strong>AI governance:</strong> NATO AI Strategy compliant. Human-in-the-loop.</li>
+<li><strong>Scalable:</strong> Yorkshire demo scales to NATO-wide scenario</li>
+<li><strong>Innovation:</strong> Novel dual-use architecture. DIANA qualifying criteria.</li>
+</ul>
+</div>
+</div>
+
+<h2>📊 Demo Metrics</h2>
+<table>
+<tr><th>Metric</th><th>Value</th><th>How Measured</th></tr>
+<tr><td>Sensor data latency</td><td><2s from source to globe</td><td>MCP call timing in SIGIL chain</td></tr>
+<tr><td>AI inference time</td><td>~2s per zone assessment</td><td>Ollama timing on M2</td></tr>
+<tr><td>BFT quorum time</td><td>~30s (33 agents voting)</td><td>SIGIL chain timestamps</td></tr>
+<tr><td>Total end-to-end</td><td><5s from data to decision</td><td>SIGIL chain audit</td></tr>
+<tr><td>Network dependency</td><td>Zero (air-gapped capable)</td><td>All local models + cached data</td></tr>
+<tr><td>Cost per scenario run</td><td>£0.00</td><td>All open source + local compute</td></tr>
+</table>
+
+<h2>🚀 Run the Demo Yourself</h2>
+<div class="card">
+<h3>Quick Start (5 minutes)</h3>
+<table>
+<tr><th>Step</th><th>Action</th><th>Time</th></tr>
+<tr><td>1</td><td><code>git clone https://github.com/CSOAI-ORG/defoneos</code></td><td>30s</td></tr>
+<tr><td>2</td><td><code>cd defoneos && pip install -r requirements.txt</code></td><td>1 min</td></tr>
+<tr><td>3</td><td><code>python run_demo.py --scenario yorkshire-flood</code></td><td>30s</td></tr>
+<tr><td>4</td><td>Open <code>http://localhost:8080</code> in browser</td><td>5s</td></tr>
+<tr><td>5</td><td>3D globe loads with demo data. Interact freely.</td><td>—</td></tr>
+</table>
+<p style="margin-top:1rem"><strong>Requirements:</strong> Python 3.11+, 8GB RAM, modern browser. No GPU required for demo mode. No API keys needed (uses cached simulation data).</p>
+</div>
+
+<h2>📞 Book a Live Briefing</h2>
+<div class="card warn">
+<p style="font-size:1.1rem"><strong>This demo is representative of DEFONEOS capabilities. For a live, interactive briefing with real-time data and custom scenarios, contact CSOAI Ltd.</strong></p>
+<p style="margin-top:.5rem">The live system pulls from 30+ MCPs, not 12. The BFT council runs with real agents. The SIGIL chain is a live Ed25519 hash chain, not a simulation. We'll tailor the scenario to your operational context.</p>
+</div>
+
+</div>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a> · <a href="defoneos-procurement-guide.html" style="color:#22d3ee;text-decoration:none">Procurement</a> · <a href="defoneos-api-playground.html" style="color:#22d3ee;text-decoration:none">API Playground</a> · <a href="defoneos-compliance-crosswalk.html" style="color:#22d3ee;text-decoration:none">Compliance</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

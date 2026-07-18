@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DORA Finance Compliance — Automated vs Manual Incident Reporting — Regulator View | CSOAI</title>
+  <meta name="description" content="Public regulator view of the Sovereign Town EU Digital Operational Resilience Act (DORA) — Regulation (EU) 2022/2554 experiment.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none';">
+  <style>
+    :root { --bg:#0b1020; --panel:#111a30; --text:#e6e9f0; --muted:#8b92a8; --accent:#2dd4bf; --warn:#f59e0b; --danger:#ef4444; --ok:#22c55e; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--text); line-height:1.55; }
+    main { max-width: 880px; margin: 0 auto; padding: 2rem 1rem; }
+    header { border-bottom: 1px solid #1f2a44; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    h1 { font-size: 1.55rem; margin: 0 0 .25rem; }
+    .subtitle { color: var(--muted); font-size: .95rem; }
+    .badge { display:inline-block; padding:.2rem .55rem; border-radius:999px; font-size:.75rem; font-weight:600; text-transform:uppercase; letter-spacing:.03em; background:#1f2a44; color:var(--muted); }
+    .badge.proposed { color: var(--warn); }
+    .badge.running { color: var(--accent); }
+    .badge.proven { color: var(--ok); }
+    .panel { background: var(--panel); border: 1px solid #1f2a44; border-radius: .75rem; padding: 1.25rem; margin-bottom: 1rem; }
+    h2 { font-size: 1.15rem; margin: 0 0 .75rem; color: var(--accent); }
+    dl { display: grid; grid-template-columns: 10rem 1fr; gap: .35rem 1rem; margin: 0; }
+    dt { color: var(--muted); }
+    dd { margin: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .metric { text-align: center; padding: 1rem; background: #0b1020; border: 1px solid #1f2a44; border-radius: .5rem; }
+    .metric .value { font-size: 1.75rem; font-weight: 700; color: var(--text); }
+    .metric .label { font-size: .8rem; color: var(--muted); margin-top: .25rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: .75rem; }
+    th, td { text-align: left; padding: .55rem .5rem; border-bottom: 1px solid #1f2a44; }
+    th { color: var(--muted); font-weight: 600; }
+    .disclaimer { background: #1a1020; border-left: 4px solid var(--warn); padding: .75rem 1rem; border-radius: 0 .5rem .5rem 0; color: #f3e8ff; font-size: .9rem; }
+    footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #1f2a44; color: var(--muted); font-size: .85rem; }
+    a { color: var(--accent); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .skip-link { position:absolute; left:-9999px; z-index:1000; background:var(--bg); color:var(--text); padding:.5rem 1rem; }
+    .skip-link:focus { left:1rem; top:1rem; }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+  <main id="main">
+    <header>
+      <span class="badge proven" id="status-badge">proven</span>
+      <h1>DORA Finance Compliance — Automated vs Manual Incident Reporting</h1>
+      <p class="subtitle">Frankfurt-Auto vs Frankfurt-Manual under EU Digital Operational Resilience Act (DORA) — Regulation (EU) 2022/2554</p>
+    </header>
+
+    <section class="panel" aria-labelledby="design-heading">
+      <h2 id="design-heading">Experiment design</h2>
+      <dl>
+        <dt>Hypothesis</dt>
+        <dd>Automated DORA compliance reduces incident response time by 80%</dd>
+        <dt>Regulation</dt>
+        <dd>EU Digital Operational Resilience Act (DORA) — Regulation (EU) 2022/2554</dd>
+        <dt>Articles</dt>
+        <dd><ul><li>Art. 12 ICT-related incident management</li><li>Art. 14 Major ICT-related incident reporting</li></ul></dd>
+        <dt>Industry</dt>
+        <dd>finance — Aethelgard</dd>
+        <dt>Duration</dt>
+        <dd>14 simulated days</dd>
+        <dt>Treatment</dt>
+        <dd>Frankfurt-Auto — Auto-classifies and reports critical/major ICT incidents per DORA 4-hour deadline</dd>
+        <dt>Control</dt>
+        <dd>Frankfurt-Manual — Human-led reporting desk; misses incidents outside business hours and end-of-day review</dd>
+      </dl>
+    </section>
+
+    <section class="panel" aria-labelledby="results-heading">
+      <h2 id="results-heading">Aggregate simulation results</h2>
+      <p style="color:var(--muted); font-size:.9rem;">No individual agent identities or raw ledger entries are published.</p>
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Automated (treatment)</th><th>Manual (control)</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr><td>Total incidents</td><td>20</td><td>353</td></tr>
+        <tr><td>Detected</td><td>20</td><td>134</td></tr>
+        <tr><td>Missed</td><td>0</td><td>219</td></tr>
+        <tr><td>Detection rate</td><td>100.0%</td><td>38.0%</td></tr>
+        <tr><td>Mean detection time</td><td>1.00 h</td><td>8.20 h</td></tr>
+        <tr><td>False positive rate</td><td>0.0%</td><td>0.0%</td></tr>
+        <tr><td>Cost index (sim units)</td><td>5010</td><td>21982</td></tr>
+        <tr><td>Final trust</td><td>0.50</td><td>0.00</td></tr>
+        
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel" aria-labelledby="improvement-heading"><h2 id="improvement-heading">Improvement summary</h2><table><tbody><tr><td>Detection Time Pct</td><td>87.80</td></tr><tr><td>Missed Reduction Pct</td><td>100.00</td></tr><tr><td>Cost Index Ratio</td><td>0.23</td></tr></tbody></table></section>
+
+    <section class="panel" aria-labelledby="vote-heading"><h2 id="vote-heading">Council vote</h2><table><thead><tr><th>Member</th><th>Vote</th><th>Reason</th></tr></thead><tbody><tr><td>Minerva</td><td>MODIFY</td><td>Add cross-border or edge-case coverage.</td></tr><tr><td>Oracle</td><td>FUND</td><td>Evidence supports the hypothesis.</td></tr><tr><td>Sentinel</td><td>FUND</td><td>Evidence supports the hypothesis.</td></tr><tr><td>Nomad</td><td>FUND</td><td>Evidence supports the hypothesis.</td></tr><tr><td>Architect</td><td>FUND</td><td>Evidence supports the hypothesis.</td></tr></tbody></table></section>
+
+    <div class="disclaimer" role="note">
+      <strong>Simulation disclaimer.</strong> All outputs are prediction from a governed-vs-ungoverned multi-agent simulation. No real firms are asserted non-compliant. Use as research input, not legal advice.
+    </div>
+
+    <footer>
+      <p><a href="/sovereign-town/experiments.html">← Policy Lab gallery</a> · <a href="/sovereign-town/">Sovereign Town</a> · <a href="/sovereign-town/fleet-status.html">Fleet status</a></p>
+    </footer>
+  </main>
+</body>
+</html>

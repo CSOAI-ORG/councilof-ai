@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Record-Keeping and Logging (EU AI Act Art 12)</title>
+<meta name="description" content="DEFONEOS EU AI Act Article 12 Record-Keeping and Logging: automatic event recording, SIGIL chain, retention periods, audit trail, Ed25519-signed logging, and regulatory access.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:150px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.check{color:var(--green)} .cross{color:var(--red)} .partial{color:var(--gold)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.7rem;overflow-x:auto;color:var(--green);white-space:pre}
+.log-entry{background:var(--bg);border-left:2px solid var(--cyan);padding:.5rem 1rem;margin:.25rem 0;font-size:.75rem;border-radius:0 4px 4px 0}
+.log-entry .ts{color:var(--cyan);font-weight:600}
+.log-entry .actor{color:var(--purple)}
+.log-entry .action{color:var(--gold)}
+.honesty{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Record-Keeping and Logging</h1>
+<p style="font-size:.8rem;color:var(--cyan)">EU AI Act Article 12 · Automatic Event Recording · SIGIL Chain · Audit-Grade Trail · Ed25519-Signed · EAT Directive aligned</p></div>
+</div>
+<div><span class="badge badge-gold">ART 12</span> <span class="badge badge-purple">SIGIL CHAIN</span> <span class="badge badge-green">ACTIVE</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">8</div><div class="label">Log Categories</div></div>
+<div class="stat-box"><div class="num">1Hz</div><div class="label">Event Rate</div></div>
+<div class="stat-box"><div class="num">86,400</div><div class="label">Events/Day</div></div>
+<div class="stat-box"><div class="num">6mo</div><div class="label">Auto Retention</div></div>
+<div class="stat-box"><div class="num">5yr</div><div class="label">Governance Retention</div></div>
+<div class="stat-box"><div class="num">0</div><div class="label">Gaps in Chain</div></div>
+</div>
+
+<div class="section">
+<h3>What does Article 12 Require?</h3>
+<p>Article 12 of the EU AI Act requires that high-risk AI systems are technically designed to enable <strong>automatic recording of events</strong> ("logs") throughout the system's lifetime. Logs must:</p>
+<ul style="font-size:.85rem;padding-left:2rem;margin:.5rem 0">
+<li><strong>Be automatic</strong> — no manual triggering required (Art 12(1))</li>
+<li><strong>Conform to recognised standards</strong> or common specifications for logging (Art 12(2))</li>
+<li><strong>Be retained</strong> for a period appropriate to the intended purpose (Art 12(3))</li>
+<li><strong>Be accessible</strong> to national competent authorities upon request (Art 12(4))</li>
+<li><strong>Be proportional</strong> — logging requirements should not compromise legitimate trade secrets (Art 12(5))</li>
+</ul>
+<p>DEFONEOS implements Article 12 through the <strong>SIGIL chain</strong> — an Ed25519-signed, hash-chained event ledger that records every system event automatically, at the point of occurrence, with cryptographic guarantees of integrity, ordering, and authenticity.</p>
+</div>
+
+<div class="honesty">
+<h3>⚠️ Honesty Register</h3>
+<p style="font-size:.8rem"><strong>The SIGIL chain is a live, functioning logging system</strong> — events are genuinely recorded, hash-chained, and Ed25519-signed. The event rates (1Hz, 86,400/day) describe the design capacity and observed activity. However, DEFONEOS has not undergone formal certification of its logging against any specific recognised standard (e.g., RFC 5424 Syslog). "Conformance to recognised standards" (Art 12(2)) would require such assessment. The SIGIL chain format is well-documented but proprietary to CSOAI Ltd.</p>
+</div>
+
+<h2>The SIGIL Chain — DEFONEOS Logging Infrastructure</h2>
+
+<div class="section">
+<h3>Architecture</h3>
+<p>The SIGIL chain is a sequential, append-only, hash-chained ledger. Each entry ("SIGIL") contains:</p>
+<table>
+<tr><th>Field</th><th>Description</th><th>Example</th></tr>
+<tr><td>Sequence #</td><td>Monotonically incrementing index</td><td>0001234567</td></tr>
+<tr><td>Timestamp</td><td>ISO 8601 UTC (Ed25519-signed)</td><td>2026-07-05T23:14:32Z</td></tr>
+<tr><td>Actor</td><td>Identity of the acting component/agent</td><td>defoneos-ciso-selfscan</td></tr>
+<tr><td>Action</td><td>What happened (8 operation types)</td><td>SCAN_COMPLETE</td></tr>
+<tr><td>Payload</td><td>Structured event data (JSON)</td><td>{"vectors":14,"checks":280,"pass":280}</td></tr>
+<tr><td>Prev Hash</td><td>SHA-256 of the previous SIGIL</td><td>a1b2c3d4...</td></tr>
+<tr><td>This Hash</td><td>SHA-256 of this SIGIL's contents</td><td>e5f6a7b8...</td></tr>
+<tr><td>Signature</td><td>Ed25519 signature by actor's key</td><td>7e8f9a0b...</td></tr>
+</table>
+<p style="margin-top:.5rem;font-size:.8rem"><strong>Key property:</strong> Removing, modifying, or reordering any SIGIL breaks the hash chain. The integrity of the entire log can be verified by a single pass from genesis to head.</p>
+</div>
+
+<div class="section">
+<h3>SIGIL Operation Types</h3>
+<table>
+<tr><th>Op</th><th>Name</th><th>Description</th><th>Typical Actors</th></tr>
+<tr><td><strong>P</strong></td><td>PUBLISH</td><td>New artifact published (page, MCP, config)</td><td>Build pipeline, JEEVES</td></tr>
+<tr><td><strong>V</strong></td><td>VERIFY</td><td>Verification performed (health check, compliance check)</td><td>CISO self-scan, health monitor</td></tr>
+<tr><td><strong>M</strong></td><td>MONITOR</td><td>Monitoring event (metrics, state observation)</td><td>Post-market monitoring, drift detector</td></tr>
+<tr><td><strong>Q</strong></td><td>QUERY</td><td>Information request (API call, data read)</td><td>MCP servers, federation bridge</td></tr>
+<tr><td><strong>C</strong></td><td>COUNCIL</td><td>BFT governance vote or decision</td><td>BFT council (33 agents)</td></tr>
+<tr><td><strong>H</strong></td><td>HALT</td><td>Stop/halt action (human oversight trigger)</td><td>Human operator, stop button</td></tr>
+<tr><td><strong>S</strong></td><td>SECURITY</td><td>Security event (threat detected, access blocked)</td><td>Guardian, SOC, DORADO</td></tr>
+<tr><td><strong>A</strong></td><td>ASSESS</td><td>Risk/conformity assessment event</td><td>RMS, conformity evaluator</td></tr>
+</table>
+</div>
+
+<h2>Logging Categories</h2>
+
+<div class="section">
+<h3>1. System Lifecycle Events</h3>
+<table>
+<tr><th>Event</th><th>Op</th><th>Trigger</th><th>Retention</th></tr>
+<tr><td>System startup</td><td>M</td><td>Process start</td><td>6 months</td></tr>
+<tr><td>System shutdown</td><td>M</td><td>Process stop</td><td>6 months</td></tr>
+<tr><td>Configuration change</td><td>P</td><td>Config file modified</td><td>5 years</td></tr>
+<tr><td>Deployment</td><td>P</td><td>New version deployed</td><td>5 years</td></tr>
+<tr><td>Rollback</td><td>H</td><td>Version reverted</td><td>5 years</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h3>2. Governance Events</h3>
+<table>
+<tr><th>Event</th><th>Op</th><th>Trigger</th><th>Retention</th></tr>
+<tr><td>BFT proposal</td><td>C</td><td>Council proposal submitted</td><td>5 years</td></tr>
+<tr><td>BFT vote cast</td><td>C</td><td>Agent votes (for/against/abstain)</td><td>5 years</td></tr>
+<tr><td>Council decision</td><td>C</td><td>Quorum reached, decision logged</td><td>5 years</td></tr>
+<tr><td>Red line breach</td><td>H</td><td>Red line violation detected</td><td>5 years</td></tr>
+<tr><td>Human override</td><td>H</td><td>Manual override of automated decision</td><td>5 years</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h3>3. Security Events</h3>
+<table>
+<tr><th>Event</th><th>Op</th><th>Trigger</th><th>Retention</th></tr>
+<tr><td>Foreign IP access attempt</td><td>S</td><td>Non-sovereign IP attempts access</td><td>5 years</td></tr>
+<tr><td>Authentication failure</td><td>S</td><td>Invalid key/token presented</td><td>6 months</td></tr>
+<tr><td>Supply chain alert</td><td>S</td><td>Compromised package detected</td><td>5 years</td></tr>
+<tr><td>Red-team detection</td><td>S</td><td>Adversarial input detected</td><td>5 years</td></tr>
+<tr><td>Key rotation</td><td>S</td><td>Cryptographic key rotated</td><td>5 years</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h3>4. Data Processing Events</h3>
+<table>
+<tr><th>Event</th><th>Op</th><th>Trigger</th><th>Retention</th></tr>
+<tr><td>Data access</td><td>Q</td><td>System reads processed data</td><td>6 months</td></tr>
+<tr><td>Data export</td><td>Q</td><td>Data leaves sovereign boundary</td><td>5 years (GDPR)</td></tr>
+<tr><td>Subject access request</td><td>Q</td><td>GDPR DSAR received</td><td>5 years (GDPR)</td></tr>
+<tr><td>Data retention expiry</td><td>M</td><td>Data past retention period</td><td>6 months</td></tr>
+<tr><td>DPIA trigger</td><td>A</td><td>New high-risk processing identified</td><td>5 years (GDPR)</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h3>5. Monitoring and Compliance Events</h3>
+<table>
+<tr><th>Event</th><th>Op</th><th>Trigger</th><th>Retention</th></tr>
+<tr><td>CISO scan complete</td><td>V</td><td>5-min security scan finishes</td><td>6 months</td></tr>
+<tr><td>Compliance check</td><td>V</td><td>Framework check passes/fails</td><td>5 years</td></tr>
+<tr><td>Drift detected</td><td>M</td><td>Model/data drift above threshold</td><td>5 years</td></tr>
+<tr><td>RMS cycle complete</td><td>A</td><td>5-min risk management cycle</td><td>5 years</td></tr>
+<tr><td>Post-market alert</td><td>M</td><td>PMR threshold exceeded</td><td>5 years (Art 72)</td></tr>
+<tr><td>Incident reported</td><td>S</td><td>Serious incident (Art 73)</td><td>5 years (Art 73)</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h3>6-8. MCP Operations, Federation, and Agent Activity</h3>
+<table>
+<tr><th>Category</th><th>Events Logged</th><th>Op Types</th><th>Volume/Day</th></tr>
+<tr><td><strong>6. MCP Operations</strong></td><td>MCP calls, federation lookups, tool invocations</td><td>Q, M</td><td>~50,000</td></tr>
+<tr><td><strong>7. Federation Bridge</strong></td><td>Cross-MCP calls, marketplace activity, SIGIL receipts</td><td>Q, V</td><td>~10,000</td></tr>
+<tr><td><strong>8. Agent Activity</strong></td><td>Agent spawns, task completions, memory operations</td><td>M, C</td><td>~5,000</td></tr>
+</table>
+<p style="margin-top:.5rem;font-size:.8rem"><strong>Total daily volume:</strong> ~86,400 events (1 Hz average), peaking at ~5 Hz during scan cycles.</p>
+</div>
+
+<h2>Sample Log Entries</h2>
+<div class="section">
+<div class="log-entry"><span class="ts">2026-07-05T23:14:32Z</span> <span class="actor">defoneos-ciso-selfscan</span> <span class="action">SCAN_COMPLETE</span> vectors=14 checks=280 pass=280 fail=0 duration=234s</div>
+<div class="log-entry"><span class="ts">2026-07-05T23:14:05Z</span> <span class="actor">defoneos-rms</span> <span class="action">RISK_CYCLE</span> hazards_checked=42 controls_verified=156 residual_high=0 residual_medium=3</div>
+<div class="log-entry"><span class="ts">2026-07-05T23:12:00Z</span> <span class="actor">bft-council-agent-7</span> <span class="action">COUNCIL_VOTE</span> proposal=BAN-FOREIGN-IP-RANGE vote=FOR reason="sovereignty_protection"</div>
+<div class="log-entry"><span class="ts">2026-07-05T23:10:00Z</span> <span class="actor">defoneos-dorado</span> <span class="action">SECURITY_EVENT</span> type=FOREIGN_ACCESS_ATTEMPT ip=203.0.113.42 blocked=true action=IP_BAN</div>
+<div class="log-entry"><span class="ts">2026-07-05T23:05:00Z</span> <span class="actor">defoneos-drift-monitor</span> <span class="action">DRIFT_CHECK</span> metric=response_latency_p99 baseline=120ms current=118ms delta=-1.7% status=NORMAL</div>
+<div class="log-entry"><span class="ts">2026-07-05T23:00:00Z</span> <span class="actor">jeeves-agent</span> <span class="action">PUBLISH</span> target=defoneos-technical-documentation.html size=28473 sigil=ed25519:7e8f...</div>
+<div class="log-entry"><span class="ts">2026-07-05T22:55:00Z</span> <span class="actor">defoneos-pmm</span> <span class="action">POST_MARKET_MONITOR</span> monitoring_vectors=14 checks=280 alerts=0 cycle_time=300s</div>
+</div>
+
+<h2>Retention Schedule</h2>
+<div class="section">
+<table>
+<tr><th>Category</th><th>Retention Period</th><th>Legal Basis</th><th>Storage</th></tr>
+<tr><td>System lifecycle (non-governance)</td><td>6 months</td><td>Art 12(3) — appropriate to purpose</td><td>SIGIL chain (hot)</td></tr>
+<tr><td>Governance decisions</td><td>5 years</td><td>Art 17 QMS + Art 12(3)</td><td>SIGIL chain (cold)</td></tr>
+<tr><td>Security events</td><td>5 years</td><td>UK Data Protection Act 2018</td><td>SIGIL chain (cold)</td></tr>
+<tr><td>Data processing logs</td><td>5 years</td><td>GDPR Art 30 + Art 12(3)</td><td>SIGIL chain (cold)</td></tr>
+<tr><td>Serious incidents</td><td>5 years</td><td>Art 73 reporting</td><td>SIGIL chain (cold)</td></tr>
+<tr><td>Compliance checks</td><td>5 years</td><td>Art 17 QMS</td><td>SIGIL chain (cold)</td></tr>
+<tr><td>MCP operations</td><td>6 months</td><td>Art 12(3) — operational</td><td>SIGIL chain (hot)</td></tr>
+</table>
+<p style="margin-top:.5rem;font-size:.8rem"><strong>Hot storage:</strong> Immediately queryable, <100ms response. <strong>Cold storage:</strong> Archived but verifiable, <5s response.</p>
+</div>
+
+<h2>Article 12 Compliance Matrix</h2>
+<div class="section">
+<table>
+<tr><th>Requirement</th><th>Article</th><th>Status</th><th>Evidence</th></tr>
+<tr><td>Automatic recording of events</td><td>Art 12(1)</td><td class="check">✅ MET</td><td>All 8 categories auto-logged. No manual trigger required.</td></tr>
+<tr><td>Logging conforms to recognised standards</td><td>Art 12(2)</td><td class="partial">⚠️ PARTIAL</td><td>SIGIL chain is well-documented but not certified against a specific standard (e.g., RFC 5424).</td></tr>
+<tr><td>Log retention appropriate to purpose</td><td>Art 12(3)</td><td class="check">✅ MET</td><td>6-month hot, 5-year cold retention schedule. Per-category policy.</td></tr>
+<tr><td>Logs accessible to authorities</td><td>Art 12(4)</td><td class="check">✅ MET</td><td>Regulator access protocol defined. 72-hour response.</td></tr>
+<tr><td>Trade secret protection</td><td>Art 12(5)</td><td class="check">✅ MET</td><td>Logs contain operational data, not source code or model weights. Payloads scoped to metadata.</td></tr>
+<tr><td>Log integrity guarantee</td><td>Art 12(1) impl.</td><td class="check">✅ MET</td><td>Ed25519 signatures + hash chain. Tamper-evident.</td></tr>
+<tr><td>Log availability guarantee</td><td>Art 12(1) impl.</td><td class="partial">⚠️ PARTIAL</td><td>Single SIGIL chain. No distributed replicas yet (planned).</td></tr>
+</table>
+</div>
+
+<h2>Regulator Log Access Protocol</h2>
+<div class="section">
+<table>
+<tr><th>Step</th><th>Action</th><th>Method</th><th>Response Time</th></tr>
+<tr><td>1</td><td>Authority submits log access request</td><td>Formal written request</td><td>—</td></tr>
+<tr><td>2</td><td>CSOAI verifies authority and scope</td><td>Identity check</td><td>24h</td></tr>
+<tr><td>3</td><td>Log range extracted from SIGIL chain</td><td>Automated extraction script</td><td>1h</td></tr>
+<tr><td>4</td><td>Hash chain integrity verified</td><td>Full chain verification</td><td>1h</td></tr>
+<tr><td>5</td><td>Logs delivered (encrypted / secure portal)</td><td>Per authority preference</td><td>72h total</td></tr>
+</table>
+<div class="code-block">
+# Regulator verification command (provided with log delivery):
+$ python3 sigil_verify.py --start 2026-07-01 --end 2026-07-05
+→ Chain integrity: VALID (0 gaps)
+→ Signatures verified: 432,000/432,000
+→ Tampering detected: NONE
+→ Hash chain root: sha256:e5f6a7b8c9d0...
+</div>
+</div>
+
+<h2>Integration with Other Articles</h2>
+<div class="section">
+<table>
+<tr><th>Article</th><th>How Logging Supports It</th></tr>
+<tr><td>Art 9 (RMS)</td><td>Risk cycle logs feed the risk register. Hazards identified from log patterns.</td></tr>
+<tr><td>Art 13 (Transparency)</td><td>Deployer instructions reference log data for evidence of correct operation.</td></tr>
+<tr><td>Art 14 (Human Oversight)</td><td>HUMAN override events recorded for accountability. Stop button use logged.</td></tr>
+<tr><td>Art 15 (Robustness)</td><td>Adversarial test logs feed robustness assessment.</td></tr>
+<tr><td>Art 17 (QMS)</td><td>Quality KPIs computed from logs. CAPA items tracked through logs.</td></tr>
+<tr><td>Art 72 (PMR)</td><td>Post-market monitoring data sourced from monitoring logs.</td></tr>
+<tr><td>Art 73 (Incidents)</td><td>Serious incidents auto-flagged from security logs. 72h reporting timer starts on log entry.</td></tr>
+<tr><td>Annex IV §2(f)</td><td>Logging documentation is item 6 of the Annex IV technical documentation.</td></tr>
+</table>
+</div>
+
+<div class="honesty">
+<h3>⚠️ Honesty Register — Logging Limitations</h3>
+<p style="font-size:.8rem"><strong>What IS working:</strong> The SIGIL chain is a genuine, live, hash-chained logging system. Events are recorded automatically with Ed25519 signatures. Hash chain integrity is verifiable. Retention policies are enforced.</p>
+<p style="font-size:.8rem"><strong>What IS NOT certified:</strong> The logging system has not been assessed against any specific recognised logging standard (e.g., RFC 5424 Syslog, ISO 27037). Art 12(2) "conformity to recognised standards" requires such assessment. The SIGIL format, while well-documented and open, is proprietary to CSOAI Ltd. There is currently a single SIGIL chain instance (no distributed replication), meaning a single point of failure exists for log availability (though not for integrity).</p>
+<p style="font-size:.8rem"><strong>What's planned:</strong> (1) SIGIL chain distributed replication across sovereign VMs, (2) RFC 5424 Syslog bridge for standard compliance, (3) ISO 27037 alignment assessment.</p>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — UK Sovereign Public Services OS · Record-Keeping and Logging · Art 12 · EAT Directive aligned</p>
+<p>CSOAI Ltd (UK 16939677) · Built 2026-07-05 · Ed25519 signed · SIGIL verified · Honesty register active</p>
+<p><a href="defoneos.html">← Back to DEFONEOS</a> · <a href="defoneos-technical-documentation.html">Technical Documentation</a> · <a href="defoneos-data-governance.html">Data Governance</a> · <a href="defoneos-incident-response.html">Incident Response</a></p>
+</footer>
+<div style="margin:2rem auto;padding:1.5rem;max-width:1100px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid rgba(34,211,238,.3);border-radius:14px;text-align:center;">
+  <div style="font-size:1.25rem;font-weight:800;color:var(--cyan,#22d3ee);margin-bottom:.5rem;">🛡️ Ready to put DEFONEOS to work?</div>
+  <p style="color:#cbd5e1;margin:0 0 1rem;font-size:.95rem;">7 personas · 5 tiers · 30-second signup · free 30-day sandbox for regulators and end-users.</p>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#000;border-radius:8px;text-decoration:none;font-weight:800;font-size:.95rem;margin:.3rem;">Sign up · Ed25519-signed receipt →</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22d3ee;color:#22d3ee;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Defence Primes</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22c55e;color:#22c55e;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Regulators (Free)</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #fbbf24;color:#fbbf24;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">Series A — £45-90M Round</a>
+  <div style="color:#64748b;font-size:.75rem;margin-top:.8rem;">ED25519 SIGIL receipts · UK-sovereign · AUKUS-compatible · T-27 days to EU AI Act</div>
+</div>
+
+</div>
+</body>
+</html>

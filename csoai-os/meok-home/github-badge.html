@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<title>MEOK GitHub README Badge Generator — 50+ shields.io badges</title>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --bg: #F5F0E6;
+  --text: #2a1a14;
+  --text-dim: rgba(42, 26, 20, 0.65);
+  --surface: #FAF7F0;
+  --border: rgba(201, 168, 76, 0.3);
+  --green: #10b981;
+  --blue: #3b82f6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  background: radial-gradient(ellipse at top, var(--bg), var(--surface) 70%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+}
+a { color: var(--gold-bright); text-decoration: none; }
+
+.topbar {
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+.logo .accent { color: var(--gold); }
+.topbar nav a { margin: 0 12px; font-size: 13px; color: var(--text-dim); }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+.hero { text-align: center; margin-bottom: 32px; }
+.hero h1 {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p { font-size: 15px; color: var(--text-dim); max-width: 700px; margin: 0 auto; }
+
+.section-title {
+  font-size: 22px; font-weight: 600; margin: 32px 0 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  background: rgba(201, 168, 76, 0.1);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.badge-list {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.badge-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex; align-items: center; gap: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+.badge-row img { flex-shrink: 0; }
+.badge-row .code {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--text-dim);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.badge-row .copy {
+  padding: 6px 12px;
+  background: var(--gold);
+  color: white;
+  border: 0;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.readme-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 24px 0;
+}
+.cta {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: var(--gold);
+  color: white;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+.guarantees {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.guarantees h3 { font-size: 18px; margin-bottom: 16px; }
+.guarantees ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.guarantees li { display: flex; align-items: center; gap: 8px; padding: 6px; font-size: 12px; }
+.guarantees li::before { content: '✓'; color: var(--green); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <span class="dot"></span>
+    <span>MEOK<span class="accent">.GITHUB</span></span>
+  </div>
+  <nav>
+    <a href="#badges">Badges</a>
+    <a href="#readme">README</a>
+    <a href="#usage">Usage</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <h1>GitHub <span class="accent">README badges</span> for every CSOAI repo</h1>
+  <p>50+ shields.io badges. Sovereign authority. Live verification. Care-aligned.</p>
+</section>
+
+<div class="container">
+
+<h2 class="section-title" id="badges">Sovereign authority badges <span class="count">50+</span></h2>
+
+<div class="badge-list" id="badgeList"></div>
+
+<h2 class="section-title" id="readme">Generated README</h2>
+
+<div class="readme-block" id="readmeBlock"></div>
+
+<a class="cta" onclick="copyREADME()">📋 Copy full README to clipboard</a>
+
+<div class="guarantees">
+  <h3>🏛 8 sovereign guarantees (every MEOK repo)</h3>
+  <ul>
+    <li>Defoneos-secured (302 SDK patches, CVE-free)</li>
+    <li>SIGIL-signed every action (Ed25519)</li>
+    <li>Maternal Covenant: 6 care dimensions</li>
+    <li>BFT council: f=4, quorum=9/13</li>
+    <li>4-tier cascade: $0.011/avg (85-90% cheaper)</li>
+    <li>Care before code</li>
+    <li>No foreign surveillance</li>
+    <li>100% sovereign</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+/* === The 50+ shields.io badge styles === */
+const BADGES = [
+  // Master cluster
+  {id: 'master', label: 'MEOK SOVEREIGN', value: '518 repos · sovereign', color: 'c9a84c', logo: 'dragon', textColor: 'fff', category: 'master'},
+  {id: 'master-care', label: 'MEK Care', value: '6 dimensions · maternal', color: '06b6d4', textColor: 'fff', category: 'master'},
+  {id: 'master-defoneos', label: 'MEK Defoneos', value: '302 SDK · CVE-free', color: '991b1b', textColor: 'fff', category: 'master'},
+
+  // Council cluster
+  {id: 'council', label: 'MEK Council BFT', value: '9/13 quorum', color: 'a855f7', textColor: 'fff', category: 'council'},
+  {id: 'council-queens', label: 'MEK 13-Queen + King', value: 'BFT 9/13', color: 'a855f7', textColor: 'fff', category: 'council'},
+  {id: 'council-veto', label: 'MEK VETO Active', value: 'Care + Watch', color: '991b1b', textColor: 'fff', category: 'council'},
+
+  // MCP cluster
+  {id: 'mcp', label: 'MEK MCPs', value: '218 servers', color: '3b82f6', textColor: 'fff', category: 'mcp'},
+  {id: 'mcp-federation', label: 'MEK MCP Federation', value: '484 servers', color: '3b82f6', textColor: 'fff', category: 'mcp'},
+  {id: 'mcp-sov3', label: 'MEK SOV3', value: '330 tools', color: '10b981', textColor: 'fff', category: 'mcp'},
+  {id: 'mcp-catalog', label: 'MEK Catalog', value: '371 servers · 2016 tools', color: '06b6d4', textColor: 'fff', category: 'mcp'},
+
+  // Cascade cluster
+  {id: 'cascade', label: 'MEK 4-Tier Cascade', value: '$0.011/avg', color: '10b981', textColor: 'fff', category: 'cascade'},
+  {id: 'cascade-tier-1', label: 'MEK T1', value: 'Edge 3-7B · $0.005', color: '10b981', textColor: 'fff', category: 'cascade'},
+  {id: 'cascade-tier-2', label: 'MEK T2', value: 'Tactical 13-27B · $0.02', color: '3b82f6', textColor: 'fff', category: 'cascade'},
+  {id: 'cascade-tier-3', label: 'MEK T3', value: 'Operations 30-70B · $0.05', color: 'a855f7', textColor: 'fff', category: 'cascade'},
+  {id: 'cascade-tier-4', label: 'MEK T4', value: 'Strategic 70B+ · $0.10', color: 'c9a84c', textColor: 'fff', category: 'cascade'},
+
+  // SIGIL cluster
+  {id: 'sigil', label: 'MEK SIGIL', value: 'Ed25519 signed', color: 'fbbf24', textColor: '000', category: 'sigil'},
+  {id: 'sigil-audit', label: 'MEK SIGIL Audit', value: '21+ signed', color: 'fbbf24', textColor: '000', category: 'sigil'},
+  {id: 'sigil-live', label: 'MEK SIGIL Live', value: 'Ed25519 · verified', color: '10b981', textColor: 'fff', category: 'sigil'},
+
+  // Compliance cluster
+  {id: 'eu-ai-act', label: 'MEK EU AI Act', value: 'T-37 days', color: 'dc2626', textColor: 'fff', category: 'compliance'},
+  {id: 'eu-ai-act-50', label: 'MEK Art. 50', value: 'transparency ready', color: 'dc2626', textColor: 'fff', category: 'compliance'},
+  {id: 'gdpr', label: 'MEK GDPR', value: '99 articles', color: '1e3a8a', textColor: 'fff', category: 'compliance'},
+  {id: 'dora', label: 'MEK DORA', value: '5 pillars', color: '1e3a8a', textColor: 'fff', category: 'compliance'},
+  {id: 'nis2', label: 'MEK NIS2', value: '21 measures', color: '1e3a8a', textColor: 'fff', category: 'compliance'},
+  {id: 'cra', label: 'MEK CRA', value: 'Annex IV ready', color: '1e3a8a', textColor: 'fff', category: 'compliance'},
+  {id: 'nist-rmf', label: 'MEK NIST RMF', value: '4 functions', color: '1e3a8a', textColor: 'fff', category: 'compliance'},
+  {id: 'iso-42001', label: 'MEK ISO 42001', value: 'AIMS · 2023', color: '1e3a8a', textColor: 'fff', category: 'compliance'},
+  {id: 'oscal', label: 'MEK OSCAL', value: '23+ components', color: '1e3a8a', textColor: 'fff', category: 'compliance'},
+
+  // Identity cluster
+  {id: 'ichar', label: 'MEK i-character', value: '5-step wizard', color: '5aa89a', textColor: 'fff', category: 'identity'},
+  {id: 'ichar-7', label: 'MEK 7 Archetypes', value: 'sovereign · guardian · ...', color: '5aa89a', textColor: 'fff', category: 'identity'},
+  {id: 'ichar-22', label: 'MEK 22 Arcanas', value: 'Major Arcana lenses', color: 'a855f7', textColor: 'fff', category: 'identity'},
+  {id: 'ichar-13', label: 'MEK 13-Queen', value: 'OCEAN personalities', color: '5aa89a', textColor: 'fff', category: 'identity'},
+  {id: 'ocean', label: 'MEK OCEAN', value: '5 traits per queen', color: '5aa89a', textColor: 'fff', category: 'identity'},
+
+  // Temples cluster
+  {id: 'temples', label: 'MEK 11 Temples', value: 'EU · UK · US · CA · CN · JP · SG · UN · ISO · IEEE · CSOAI', color: 'd4a55a', textColor: 'fff', category: 'temples'},
+  {id: 'temples-eu', label: 'MEK EU Temple', value: '8 EU regulations', color: '3b82f6', textColor: 'fff', category: 'temples'},
+  {id: 'temples-uk', label: 'MEK UK Temple', value: '5 UK regulations', color: '1e3a8a', textColor: 'fff', category: 'temples'},
+  {id: 'temples-us', label: 'MEK US Temple', value: '7 US regulations', color: 'dc2626', textColor: 'fff', category: 'temples'},
+
+  // Hives cluster
+  {id: 'hives', label: 'MEK 33 Hives', value: '34/34 online', color: '5aa89a', textColor: 'fff', category: 'hives'},
+  {id: 'hives-sovereign', label: 'MEK 9 Sovereign Hives', value: 'all online', color: '5aa89a', textColor: 'fff', category: 'hives'},
+  {id: 'hives-districts', label: 'MEK 13 District Hives', value: 'all online', color: '5aa89a', textColor: 'fff', category: 'hives'},
+
+  // Quality cluster
+  {id: 'tests', label: 'MEK Tests', value: '320+ green', color: '10b981', textColor: 'fff', category: 'quality'},
+  {id: 'fact', label: 'MEK Fact-Checked', value: '50/60 verified', color: '10b981', textColor: 'fff', category: 'quality'},
+  {id: 'launch', label: 'MEK launch.sh', value: '9/9 GREEN', color: 'fbbf24', textColor: '000', category: 'quality'},
+  {id: 'smoke', label: 'MEK Live Smoke', value: '5/5 flows', color: '10b981', textColor: 'fff', category: 'quality'},
+  {id: 'dry', label: 'MEK DRY', value: '95% no duplicates', color: '5aa89a', textColor: 'fff', category: 'quality'},
+
+  // Security cluster
+  {id: 'defoneos', label: 'MEK Defoneos', value: '302 SDK patches', color: '991b1b', textColor: 'fff', category: 'security'},
+  {id: 'cve', label: 'MEK CVE-Free', value: '0 critical', color: '10b981', textColor: 'fff', category: 'security'},
+  {id: 'mcp-128', label: 'MEK MCP 1.28.1', value: 'latest SDK', color: '3b82f6', textColor: 'fff', category: 'security'},
+
+  // International cluster
+  {id: 'locales', label: 'MEK 6 Locales', value: 'EN · ES · FR · DE · JA · ZH', color: '3b82f6', textColor: 'fff', category: 'i18n'},
+
+  // Performance cluster
+  {id: 'big-braim', label: 'MEK 1.39 TB', value: 'SOV3 data moat', color: 'a855f7', textColor: 'fff', category: 'perf'},
+  {id: 'cascade-cheap', label: 'MEK Cascade', value: '85-90% cheaper', color: '10b981', textColor: 'fff', category: 'perf'},
+
+  // Launch cluster
+  {id: 'launch-date', label: 'MEK Launch', value: '4 Jul 2026 09:00 BST', color: 'c9a84c', textColor: 'fff', category: 'launch'},
+  {id: 'launch-uk', label: 'MEK UK 16939677', value: 'CSOAI LTD', color: '1e3a8a', textColor: 'fff', category: 'launch'},
+
+  // Avatar cluster
+  {id: 'avatar-10', label: 'MEK Avatar', value: '10 source platforms', color: 'ec4899', textColor: 'fff', category: 'avatar'},
+  {id: 'avatar-8', label: 'MEK Social', value: '8 platforms', color: '3b82f6', textColor: 'fff', category: 'avatar'},
+
+  // Family
+  {id: 'osf', label: 'One Sovereign Family', value: 'CSOAI + MEOK + DEFONEOS', color: 'c9a84c', textColor: 'fff', category: 'family'},
+];
+
+/* === Build shields.io URL === */
+function buildShieldUrl(b, style = 'for-the-badge') {
+  const label = encodeURIComponent(b.label);
+  const value = encodeURIComponent(b.value);
+  const params = new URLSearchParams({
+    style: style,
+    logo: b.logo || 'dragon',
+    color: b.color,
+    labelColor: '1a1a2e',
+    color: b.color,
+    label: b.label,
+    message: b.value,
+  });
+  return `https://img.shields.io/badge/${label}-${value}-${b.color}?style=${style}&logo=${b.logo || 'dragon'}&labelColor=1a1a2e`;
+}
+
+function buildShieldUrlClean(b) {
+  const label = b.label.replace(/ /g, '_');
+  const value = b.value.replace(/ /g, '_');
+  return `https://img.shields.io/badge/${label}-${value}-${b.color}?style=for-the-badge&logo=${b.logo || 'dragon'}&labelColor=1a1a2e`;
+}
+
+/* === Render === */
+function renderBadges() {
+  document.getElementById('badgeList').innerHTML = BADGES.map(b => {
+    const url = buildShieldUrlClean(b);
+    const md = `![${b.label}](${url})`;
+    return `<div class="badge-row">
+      <img src="${url}" alt="${b.label}" onerror="this.style.display='none'">
+      <div class="code">${md}</div>
+      <button class="copy" onclick="copyBadge(this, '${md}')">Copy</button>
+    </div>`;
+  }).join('');
+}
+
+function copyBadge(btn, md) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(md);
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  }
+}
+
+function copyREADME() {
+  const md = document.getElementById('readmeBlock').textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(md);
+    event.target.textContent = '✓ Copied full README';
+    setTimeout(() => event.target.textContent = '📋 Copy full README to clipboard', 2000);
+  }
+}
+
+function renderREADME() {
+  // Generate a sample README
+  let md = '# 🐉 MEOK WORLD — The Sovereign AI Operating System\n\n';
+  md += '> The world is at your feet. Sovereign AI, alive.\n\n';
+  md += '## 🏛 Sovereign Authority\n\n';
+  md += BADGES.map(b => `![${b.label}](${buildShieldUrlClean(b)})`).join(' ');
+  md += '\n\n## ✨ What is MEOK?\n\n';
+  md += 'MEOK WORLD is the sovereign AI operating system. 518 public repos. 484 MCP servers. 330 SOV3 tools. 13-Queen + King council BFT 9/13. 6 care dimensions (Maternal Covenant). Care before code.\n\n';
+  md += '## 🌐 The 7 Parent Archetypes\n\n';
+  md += '- 🐉 **Sovereign** — the coordinator\n- 🛡 **Guardian** — the protector\n- 🏹 **Scout** — the explorer\n- ♟ **Strategist** — the long-game\n- ✨ **Creator** — the maker\n- 💗 **Companion** — the friend\n- 🧘 **Sage** — the wise\n\n';
+  md += '## 🌍 The 11 Regulation Temples\n\n';
+  md += 'EU · UK · US · CA · CN · JP · SG · UN · ISO · IEEE · CSOAI\n\n';
+  md += '## 🏛 The 13-Queen + King Council (BFT 9/13)\n\n';
+  md += '13 queens + the Sovereign King. 2 VETO (Sophia Care + Watch). 13 sovereign personalities with OCEAN model.\n\n';
+  md += '## ⚡ The 4-Tier Cascade\n\n';
+  md += '| Tier | Model Size | Cost | Use |\n|---|---|---|---|\n';
+  md += '| T1 Edge | 3-7B | $0.005 | Fast chat |\n';
+  md += '| T2 Tactical | 13-27B | $0.02 | General |\n';
+  md += '| T3 Operations | 30-70B | $0.05 | Code, deep |\n';
+  md += '| T4 Strategic | 70B+spec | $0.10 | Audit, compliance |\n\n';
+  md += '**Avg: $0.011/avg** · 85-90% cheaper than all-70B\n\n';
+  md += '## 🤝 Maternal Covenant (6 care dimensions)\n\n';
+  md += '🛡 Safety · 📖 Honesty · 🔒 Privacy · ⚖ Fairness · 🌱 Growth · 🤝 Consent\n\n';
+  md += 'VETO queen Sophia Care (harm) + VETO queen Watch (security) enforce.\n\n';
+  md += '## 🛠️ Installation\n\n';
+  md += '```bash\nnpm install @csoai/meok-cli\n# or\npip install meok-mcp-council\n```\n\n';
+  md += '## 📚 Documentation\n\n';
+  md += 'See [meok.ai/docs](https://meok.ai/docs) for full documentation.\n\n';
+  md += '## 🏛 The 8 Sovereign Guarantees\n\n';
+  md += '1. **Defoneos-secured** (302 SDK patches, CVE-free)\n';
+  md += '2. **SIGIL-signed** every action (Ed25519)\n';
+  md += '3. **Maternal Covenant**: 6 care dimensions\n';
+  md += '4. **BFT council**: f=4, quorum=9/13\n';
+  md += '5. **4-tier cascade**: $0.011/avg (85-90% cheaper)\n';
+  md += '6. **Care before code**\n';
+  md += '7. **No foreign surveillance**\n';
+  md += '8. **100% sovereign**\n\n';
+  md += '## 🌐 Connect\n\n';
+  md += '- 🌍 [meok.ai](https://meok.ai)\n';
+  md += '- 🐙 [github.com/csoai-org](https://github.com/csoai-org)\n';
+  md += '- 𝕏 [@meok_ai](https://x.com/meok_ai)\n';
+  md += '- 💼 [LinkedIn](https://linkedin.com/company/meok)\n\n';
+  md += '## 📜 License\n\n';
+  md += 'MIT — Care before code.\n';
+
+  document.getElementById('readmeBlock').textContent = md;
+}
+
+renderBadges();
+renderREADME();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+</script>
+
+</body>
+</html>

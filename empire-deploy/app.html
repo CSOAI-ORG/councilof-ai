@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a14">
+  <title>MEOK App — All 60+ Sub-Domains in One Install | MEOK AI Labs</title>
+  <meta name="description" content="The MEOK App. Install on any device. All 60+ sub-domains in one entry point. Sign + verify Ed25519 attestations. 4-day turnaround. Sovereign UK. CSOAI Ltd, UK 16939677.">
+  <link rel="canonical" href="https://meok.ai/app/">
+  <link rel="manifest" href="/app/manifest.json">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="icon" href="https://meok.ai/favicon.ico">
+  <link rel="apple-touch-icon" href="https://meok.ai/favicon.ico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MEOK">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="MEOK">
+  <meta name="theme-color" content="#c9a84c">
+  <meta name="msapplication-TileColor" content="#0a0a14">
+  <style>
+    :root { --bg: #0a0a14; --fg: #e8e4dc; --gold: #c9a84c; --green: #22c55e; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 1rem; line-height: 1.5; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+    header { background: var(--gold); color: var(--bg); padding: 1rem; border-radius: 0.5rem; margin: 0 0 1rem; text-align: center; }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    header .pill { display: inline-block; background: rgba(0,0,0,0.15); padding: 0.15rem 0.5rem; border-radius: 1rem; font-size: 0.7rem; margin-right: 0.3rem; }
+    h2 { color: var(--gold); font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+    .nav { display: flex; gap: 0.5rem; margin: 1rem 0; flex-wrap: wrap; }
+    .nav a { background: rgba(201,168,76,0.15); color: var(--gold); padding: 0.5rem 0.8rem; border-radius: 0.3rem; text-decoration: none; font-size: 0.85rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.5rem; }
+    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.3); border-radius: 0.4rem; padding: 0.7rem; text-align: center; }
+    .card h3 { color: var(--gold); margin: 0 0 0.3rem; font-size: 0.9rem; }
+    .card p { color: var(--fg); margin: 0 0 0.3rem; font-size: 0.75rem; }
+    .card a { color: var(--green); text-decoration: none; font-size: 0.7rem; }
+    .countdown { background: rgba(220,38,38,0.15); border-left: 3px solid #dc2626; padding: 0.7rem; border-radius: 0.3rem; margin: 1rem 0; display: flex; gap: 1rem; align-items: center; }
+    .countdown .num { font-size: 2rem; font-weight: 800; color: #dc2626; }
+    .countdown .label { font-size: 0.8rem; color: var(--fg); }
+    .install-hint { background: rgba(22,163,74,0.15); border-left: 3px solid var(--green); padding: 0.7rem; border-radius: 0.3rem; margin: 1rem 0; font-size: 0.85rem; }
+    .output { background: rgba(0,0,0,0.4); padding: 0.7rem; border-radius: 0.3rem; font-family: ui-monospace, monospace; font-size: 0.75rem; overflow-x: auto; max-height: 250px; overflow-y: auto; }
+    input, button, select, textarea { width: 100%; background: rgba(255,255,255,0.05); color: var(--fg); border: 1px solid rgba(201,168,76,0.3); padding: 0.5rem; border-radius: 0.3rem; font-family: inherit; font-size: 0.9rem; }
+    button { background: var(--gold); color: var(--bg); border: none; cursor: pointer; font-weight: 700; }
+    input, select, textarea { margin-bottom: 0.5rem; }
+    .err { color: #ef4444; }
+    .ok { color: var(--green); }
+  </style>
+</head>
+<body>
+  <header>
+    <p>
+      <span class="pill">EU AI Act</span>
+      <span class="pill">UK AI Bill</span>
+      <span class="pill">DORA</span>
+    </p>
+    <h1>🔒 MEOK App</h1>
+    <p style="margin: 0.3rem 0 0; font-size: 0.9rem;">Sovereign UK · 100% Nick · 60+ sub-domains</p>
+  </header>
+
+  <div class="install-hint" id="install-hint">
+    <strong>📱 Install the MEOK App:</strong> iOS Safari → Share → Add to Home Screen. Android Chrome → Menu → Install App. macOS / Windows / Linux → open this page in Chrome/Edge → Install. Works on every browser, every OS, mobile, across board.
+  </div>
+
+  <div class="countdown" id="cliff-clock">
+    <div class="num" id="days">48</div>
+    <div class="label">days to EU AI Act Article 50 cliff (2 August 2026)</div>
+  </div>
+
+  <h2>Top entries</h2>
+  <div class="nav">
+    <a href="https://meok.ai/empire">📊 Empire</a>
+    <a href="https://meok.ai/hive">🐝 SOV3 Hive</a>
+    <a href="https://proofof.ai">✅ Trust</a>
+    <a href="https://csoai.org">🏛 Council</a>
+    <a href="https://meok.ai/care">🏥 Care</a>
+    <a href="https://meok.ai/fintech">💳 Fintech</a>
+    <a href="https://meok.ai/govtech">🏛 Govtech</a>
+  </div>
+
+  <h2>Sign a cert</h2>
+  <form id="sign-form">
+    <input type="email" id="email" placeholder="your-email@example.com" required>
+    <input type="text" id="entity" placeholder="Entity (e.g. 'My AI system')" required>
+    <input type="text" id="framework" value="eu-ai-act" placeholder="Framework">
+    <textarea id="regulation" rows="2">Regulation (EU) 2024/1689 Article 50</textarea>
+    <button type="submit">▶ Sign</button>
+  </form>
+  <div class="output" id="sign-output">// Submit to sign a real cert</div>
+
+  <h2>Verify a cert_id</h2>
+  <form id="verify-form">
+    <input type="text" id="cert_id" placeholder="MEOK-REGULA-XXXXX" required>
+    <button type="submit">▶ Verify</button>
+  </form>
+  <div class="output" id="verify-output">// Paste a cert_id and click Verify</div>
+
+  <h2>5 unified .AI industry packages</h2>
+  <div class="grid">
+    <a href="https://fintech-ai-deploy.vercel.app"><div class="card"><h3>fintech.industries</h3><p>Monzo + Starling + Zopa</p></div></a>
+    <a href="https://healthtech-ai-deploy.vercel.app"><div class="card"><h3>healthtech.industries</h3><p>Babylon + AccuRx + NHS</p></div></a>
+    <a href="https://care-ai-deploy.vercel.app"><div class="card"><h3>care.industries</h3><p>Cera + HC-One + 14 LAs</p></div></a>
+    <a href="https://regtech-ai-deploy.vercel.app"><div class="card"><h3>regtech.industries</h3><p>GRC partner program</p></div></a>
+    <a href="https://govtech-ai-deploy.vercel.app"><div class="card"><h3>govtech.industries</h3><p>Faculty + Cabinet Office</p></div></a>
+  </div>
+
+  <h2>Tools</h2>
+  <div class="grid">
+    <a href="https://keystone-playground-deploy.vercel.app"><div class="card"><h3>Playground</h3><p>Sign + verify demo</p></div></a>
+    <a href="https://apply-48h-deploy.vercel.app"><div class="card"><h3>Book 48h</h3><p>£5,000</p></div></a>
+    <a href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t"><div class="card"><h3>Pro £199/mo</h3><p>All 32 MCPs</p></div></a>
+    <a href="https://partner-sign-deploy.vercel.app"><div class="card"><h3>Become a partner</h3><p>30% rev share</p></div></a>
+    <a href="https://free-trial-deploy.vercel.app"><div class="card"><h3>Free trial</h3><p>14 days, no card</p></div></a>
+    <a href="https://demo-deploy-lyart-delta.vercel.app"><div class="card"><h3>Scoping call</h3><p>30 min</p></div></a>
+  </div>
+
+  <h2>Resources</h2>
+  <div class="grid">
+    <a href="https://meok.ai/customers"><div class="card"><h3>Case studies</h3><p>6 anonymised</p></div></a>
+    <a href="https://help-deploy.vercel.app"><div class="card"><h3>Help</h3><p>FAQ + docs</p></div></a>
+    <a href="https://meok.ai/blog"><div class="card"><h3>Blog</h3><p>6 articles</p></div></a>
+    <a href="https://events-deploy.vercel.app"><div class="card"><h3>Events</h3><p>4 Jul launch</p></div></a>
+    <a href="https://transparency-deploy.vercel.app"><div class="card"><h3>Transparency</h3><p>Full audit trail</p></div></a>
+    <a href="https://manifest-deploy.vercel.app"><div class="card"><h3>Manifest</h3><p>SOV3 state</p></div></a>
+  </div>
+
+  <script>
+    // Cliff clock
+    (function() {
+      const target = new Date('2026-08-02T00:00:00Z');
+      const now = new Date();
+      const days = Math.max(0, Math.ceil((target - now) / 86400000));
+      const el = document.getElementById('days');
+      if (el) el.textContent = days;
+    })();
+
+    // Sign
+    document.getElementById('sign-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const out = document.getElementById('sign-output');
+      out.textContent = '// Signing...';
+      try {
+        const r = await fetch('https://meok-attestation-api.vercel.app/sign', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value,
+            entity: document.getElementById('entity').value,
+            framework: document.getElementById('framework').value,
+            regulation: document.getElementById('regulation').value
+          })
+        });
+        const d = await r.json();
+        out.textContent = JSON.stringify(d, null, 2);
+        if (d.cert_id) {
+          out.className = 'output ok';
+        } else {
+          out.className = 'output err';
+        }
+      } catch (e) {
+        out.textContent = '// ERROR: ' + e.message;
+        out.className = 'output err';
+      }
+    });
+
+    // Verify
+    document.getElementById('verify-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const out = document.getElementById('verify-output');
+      out.textContent = '// Verifying...';
+      const cert_id = document.getElementById('cert_id').value;
+      try {
+        let r = await fetch('https://meok-attestation-api.vercel.app/verify/' + encodeURIComponent(cert_id));
+        let d = await r.json();
+        if (d.error || d.not_found) {
+          r = await fetch('https://meok-attestation-api.vercel.app/verify', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cert_id })
+          });
+          d = await r.json();
+        }
+        out.textContent = JSON.stringify(d, null, 2);
+        if (d.valid || d.cert_id) out.className = 'output ok';
+        else out.className = 'output err';
+      } catch (e) {
+        out.textContent = '// ERROR: ' + e.message;
+        out.className = 'output err';
+      }
+    });
+  </script>
+</body>
+</html>

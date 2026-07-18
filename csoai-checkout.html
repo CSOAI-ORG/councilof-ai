@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSOAI Certification - AI Safety & Compliance</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    header { text-align: center; padding: 60px 20px; }
+    h1 { font-size: 3rem; margin-bottom: 20px; }
+    .subtitle { font-size: 1.3rem; opacity: 0.9; margin-bottom: 40px; }
+    .urgency {
+      background: rgba(255, 193, 7, 0.2);
+      border: 2px solid #ffc107;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 40px 0;
+      text-align: center;
+    }
+    .urgency h2 { color: #ffc107; margin-bottom: 10px; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin: 60px 0;
+    }
+    .pricing-card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 40px 30px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: transform 0.3s;
+    }
+    .pricing-card:hover { transform: translateY(-10px); }
+    .pricing-card.featured {
+      border: 2px solid #10b981;
+      transform: scale(1.05);
+    }
+    .pricing-card.featured:hover { transform: scale(1.05) translateY(-10px); }
+    .tier { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; }
+    .price { font-size: 3rem; font-weight: bold; margin: 20px 0; }
+    .price span { font-size: 1rem; opacity: 0.7; }
+    .features { list-style: none; margin: 30px 0; text-align: left; }
+    .features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .features li:before { content: "✓"; color: #10b981; margin-right: 10px; }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: #10b981;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: background 0.3s;
+    }
+    .btn:hover { background: #059669; }
+    .btn-enterprise { background: #8b5cf6; }
+    .btn-enterprise:hover { background: #7c3aed; }
+    .comparison { margin: 60px 0; }
+    .comparison h2 { text-align: center; margin-bottom: 40px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    th { background: rgba(255,255,255,0.1); }
+    .check { color: #10b981; font-weight: bold; }
+    footer { text-align: center; padding: 60px 20px; opacity: 0.7; }
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .pricing-card.featured { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CSOAI Governance Suite</h1>
+      <p class="subtitle">AI Safety Certification & EU AI Act Compliance</p>
+      
+      <div class="urgency">
+        <h2>⚠️ EU AI Act Enforcement Approaching</h2>
+        <p>General provisions: August 2, 2026 | High-risk obligations: December 2, 2027 — Fines up to €35M or 7% global turnover</p>
+        <p style="margin-top: 10px; font-weight: bold;">Get compliant now or face penalties</p>
+      </div>
+    </header>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="tier">SMB</div>
+        <div class="price">£49<span>/mo</span></div>
+        <p>For small teams starting compliance</p>
+        <ul class="features">
+          <li>EU AI Act basic checks</li>
+          <li>1 compliance report/mo</li>
+          <li>Email support</li>
+          <li>1 team member</li>
+          <li>Standard templates</li>
+        </ul>
+        <a href="https://buy.stripe.com/6oU8wR0xS6oq7oh42k8k82M" class="btn">Subscribe SMB</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="tier">Professional</div>
+        <div class="price">£149<span>/mo</span></div>
+        <p>Most popular for growing companies</p>
+        <ul class="features">
+          <li>Full Articles 9-15 compliance</li>
+          <li>Unlimited reports</li>
+          <li>Priority support</li>
+          <li>5 team members</li>
+          <li>API access</li>
+          <li>CI/CD integration</li>
+          <li>Gap analysis automation</li>
+        </ul>
+        <a href="https://buy.stripe.com/14AeVf3K46oq4c5aqI8k82L" class="btn">Subscribe Professional</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="tier">Enterprise</div>
+        <div class="price">£499<span>/mo</span></div>
+        <p>For organizations with complex needs</p>
+        <ul class="features">
+          <li>Everything in Professional</li>
+          <li>Dedicated support</li>
+          <li>Unlimited team members</li>
+          <li>Custom integrations</li>
+          <li>SSO & SAML</li>
+          <li>On-premise deployment option</li>
+          <li>Quarterly compliance reviews</li>
+        </ul>
+        <a href="https://buy.stripe.com/eVq28t4O8dQS5g9fL28k82K" class="btn btn-enterprise">Subscribe Enterprise</a>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <h2>Why CSOAI vs Big 4 Consultants?</h2>
+      <table>
+        <tr>
+          <th>Feature</th>
+          <th>Big 4 Audit</th>
+          <th>CSOAI Suite</th>
+        </tr>
+        <tr>
+          <td>EU AI Act Assessment</td>
+          <td>£25,000+</td>
+          <td class="check">£79/mo</td>
+        </tr>
+        <tr>
+          <td>Turnaround Time</td>
+          <td>6-12 weeks</td>
+          <td class="check">Instant automated</td>
+        </tr>
+        <tr>
+          <td>Ongoing Monitoring</td>
+          <td>Extra fees</td>
+          <td class="check">Included</td>
+        </tr>
+        <tr>
+          <td>CI/CD Integration</td>
+          <td>Not available</td>
+          <td class="check">Native MCP support</td>
+        </tr>
+        <tr>
+          <td>Developer Experience</td>
+          <td>PDF reports</td>
+          <td class="check">API-first, actionable</td>
+        </tr>
+      </table>
+    </div>
+
+    <footer>
+      <p>© 2026 CSOAI - Council for Safety of AI</p>
+      <p>Built with ❤️ for the AI safety community</p>
+    </footer>
+  </div>
+</body>
+</html>

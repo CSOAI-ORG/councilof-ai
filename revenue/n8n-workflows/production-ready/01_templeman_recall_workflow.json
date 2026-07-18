@@ -1,0 +1,354 @@
+{
+  "name": "Templeman Opticians \u2014 12/24 Month Recall Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "cron-daily",
+      "name": "Daily 9am cron",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, first_name, last_name, mobile, email, last_exam_date FROM patients WHERE active=true AND ( (DATEDIFF(NOW(), last_exam_date) BETWEEN 360 AND 365) OR (DATEDIFF(NOW(), last_exam_date) BETWEEN 720 AND 725) ) AND opt_out_recall=false AND last_recall_sent < DATE_SUB(NOW(), INTERVAL 30 DAY)",
+        "options": {}
+      },
+      "id": "query-patients",
+      "name": "Query patients due for recall",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        400,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": """",
+          "name": "Templeman PMS DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "split-batches",
+      "name": "Split into single rows",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-3-5-haiku-20241022",
+          "mode": "id"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a friendly UK-based optician's reception team. Generate a 1-sentence SMS to patient {{$json.first_name}} {{$json.last_name}}, telling them their last eye exam at Templeman Opticians (Rayleigh Essex) was {{$json.months_since_last}} months ago and inviting them to book online or call 01268 777729. Keep it warm, simple, under 160 chars (SMS limit). End with: 'Reply STOP to opt out.'",
+              "role": "user"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 200,
+          "temperature": 0.4
+        }
+      },
+      "id": "claude-personalize",
+      "name": "Claude \u2014 personalize SMS",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": """",
+          "name": "Anthropic Claude"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromPhone": "+441268777729",
+        "toPhone": "={{$json.mobile}}",
+        "message": "={{$json.message}}"
+      },
+      "id": "twilio-send",
+      "name": "Twilio \u2014 send SMS",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        200
+      ],
+      "credentials": {
+        "twilioApi": {
+          "id": """",
+          "name": "Twilio Templeman"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "appointments@templeman-opticians.com",
+        "toEmail": "={{$json.email}}",
+        "subject": "Time for your next eye exam at Templeman Opticians",
+        "html": "=<p>Dear {{$json.first_name}},</p>\n<p>It's been {{$json.months_since_last}} months since your last eye exam with us at Templeman Opticians.</p>\n<p>The NHS recommends an eye exam every 2 years for adults under 70 (more often for over 70s, diabetics, or those with a family history of glaucoma).</p>\n<p>Book online at <a href=\"https://www.templeman-opticians.com/book\">templeman-opticians.com/book</a> or call us on 01268 777729.</p>\n<p>If you have mobility difficulties, we offer free NHS-funded home eye tests in your area.</p>\n<p>Looking forward to seeing you.</p>\n<p>Templeman Opticians<br>Rayleigh, Essex<br>01268 777729</p>",
+        "options": {}
+      },
+      "id": "smtp-send",
+      "name": "Email \u2014 send recall",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "smtp": {
+          "id": """",
+          "name": "Templeman SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE patients SET last_recall_sent = NOW(), recall_count = COALESCE(recall_count,0) + 1 WHERE id = {{$json.id}}"
+      },
+      "id": "update-db",
+      "name": "Mark recall sent in DB",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1200,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": """",
+          "name": "Templeman PMS DB"
+        }
+      }
+    },
+    {
+      "id": "calc-months-since",
+      "name": "Calculate months since last exam",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        1000,
+        400
+      ],
+      "parameters": {
+        "functionCode": "// Calculate months_since_last_exam for each patient\n// Filter patients due for recall (12 or 24 months since last exam)\n\nconst TWO_YEAR_PATIENTS = ['children', 'diabetic', 'glaucoma', 'over_60'];\n\nfor (const item of $input.all()) {\n  const lastExam = new Date(item.json.last_exam_date);\n  const now = new Date();\n  const monthsSince = (now.getFullYear() - lastExam.getFullYear()) * 12 \n                      + (now.getMonth() - lastExam.getMonth());\n  \n  item.json.months_since_last = monthsSince;\n  \n  // Determine recall type: 12-month or 24-month\n  const needsRecall12 = monthsSince >= 11; // ~12-month window\n  const needsRecall24 = monthsSince >= 23; // ~24-month window\n  \n  if (TWO_YEAR_PATIENTS.some(p => (item.json.patient_type || '').includes(p))) {\n    item.json.is_due = needsRecall24;\n    item.json.recall_type = '24-month';\n  } else {\n    item.json.is_due = needsRecall12;\n    item.json.recall_type = '12-month';\n  }\n}\n\n// Only pass patients who are due\nreturn $input.all().filter(item => item.json.is_due);"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "merge-after-send",
+      "name": "Merge after send",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        2800,
+        400
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "mark-recall-sent",
+      "name": "Mark recall sent in DB",
+      "type": "n8n-nodes-base.postgres",
+      "position": [
+        3100,
+        400
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE patients \nSET last_recall_sent = NOW(),\n    recall_count = COALESCE(recall_count, 0) + 1\nWHERE id = '{{$json.id}}';"
+      },
+      "credentials": {
+        "postgres": {
+          "id": """",
+          "name": "Templeman DB"
+        }
+      },
+      "typeVersion": 2
+    }
+  ],
+  "connections": {
+    "Daily 9am cron": {
+      "main": [
+        [
+          {
+            "node": "Query patients due for recall",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query patients due for recall": {
+      "main": [
+        [
+          {
+            "node": "Split into single rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split into single rows": {
+      "main": [
+        [
+          {
+            "node": "Claude \u2014 personalize SMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude \u2014 personalize SMS": {
+      "main": [
+        [
+          {
+            "node": "Twilio \u2014 send SMS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email \u2014 send recall",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio \u2014 send SMS": {
+      "main": [
+        [
+          {
+            "node": "Mark recall sent in DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email \u2014 send recall": {
+      "main": [
+        [
+          {
+            "node": "Mark recall sent in DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-due-patients": {
+      "main": [
+        [
+          {
+            "node": "calc-months-since",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calc-months-since": {
+      "main": [
+        [
+          {
+            "node": "splitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send-sms": {
+      "main": [
+        [
+          {
+            "node": "merge-after-send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send-email": {
+      "main": [
+        [
+          {
+            "node": "merge-after-send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge-after-send": {
+      "main": [
+        [
+          {
+            "node": "mark-recall-sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "_meok_notes": {
+    "purpose": "Auto-recall patients due for 12-month or 24-month eye exam refresh",
+    "expected_volume": "5-15 SMS+emails/day depending on patient base",
+    "credentials_required": [
+      "Postgres connection to PMS database (or convert to Optix/Acuity/whatever Templeman uses)",
+      "Anthropic Claude API key (for personalised SMS draft)",
+      "Twilio account with UK SMS sender",
+      "SMTP credentials (Gmail/SendGrid/Mailgun)"
+    ],
+    "expected_uplift": "15-30% recall rate vs zero automation = ~\u00a38-20K/yr extra revenue",
+    "GDPR_notes": "Patient consent for recall comms must be on file. Opt-out tracked via 'opt_out_recall' column + STOP keyword via Twilio webhook."
+  }
+}

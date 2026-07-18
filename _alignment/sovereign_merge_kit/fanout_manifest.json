@@ -1,0 +1,143 @@
+{
+  "wave": "sector-fanout-v1",
+  "base": "Qwen/Qwen2.5-0.5B-Instruct",
+  "n_jobs": 7,
+  "n_trainable": 7,
+  "parallelism": "embarrassingly parallel \u2014 N sectors on N GPUs = wall-clock of 1",
+  "honest": "manifest built here (CPU); launch is GPU-lane (Kaggle owner / Colab CC / Modal agent)",
+  "jobs": [
+    {
+      "sector": "governance",
+      "corpus": "distill_charter_qa_merged.jsonl",
+      "corpus_exists": true,
+      "corpus_examples": 325,
+      "base": "Qwen/Qwen2.5-0.5B-Instruct",
+      "method": "LoRA r=16 all-proj",
+      "epochs": 3,
+      "heldout_frac": 0.15,
+      "eval": "token-overlap grounding before/after on held-out",
+      "target_forest": "governance",
+      "adopt_gate": "regression suite must stay green + gain>0 on held-out",
+      "launchable_on": [
+        "kaggle:owner",
+        "colab:cc",
+        "modal:agent"
+      ],
+      "trainable": true
+    },
+    {
+      "sector": "defense",
+      "corpus": "expert_data/defense.jsonl",
+      "corpus_exists": true,
+      "corpus_examples": 1185,
+      "base": "Qwen/Qwen2.5-0.5B-Instruct",
+      "method": "LoRA r=16 all-proj",
+      "epochs": 3,
+      "heldout_frac": 0.15,
+      "eval": "token-overlap grounding before/after on held-out",
+      "target_forest": "defense",
+      "adopt_gate": "regression suite must stay green + gain>0 on held-out",
+      "launchable_on": [
+        "kaggle:owner",
+        "colab:cc",
+        "modal:agent"
+      ],
+      "trainable": true
+    },
+    {
+      "sector": "intuition",
+      "corpus": "expert_data/intuition.jsonl",
+      "corpus_exists": true,
+      "corpus_examples": 1075,
+      "base": "Qwen/Qwen2.5-0.5B-Instruct",
+      "method": "LoRA r=16 all-proj",
+      "epochs": 3,
+      "heldout_frac": 0.15,
+      "eval": "token-overlap grounding before/after on held-out",
+      "target_forest": "intuition",
+      "adopt_gate": "regression suite must stay green + gain>0 on held-out",
+      "launchable_on": [
+        "kaggle:owner",
+        "colab:cc",
+        "modal:agent"
+      ],
+      "trainable": true
+    },
+    {
+      "sector": "voice",
+      "corpus": "expert_data/voice.jsonl",
+      "corpus_exists": true,
+      "corpus_examples": 275,
+      "base": "Qwen/Qwen2.5-0.5B-Instruct",
+      "method": "LoRA r=16 all-proj",
+      "epochs": 3,
+      "heldout_frac": 0.15,
+      "eval": "token-overlap grounding before/after on held-out",
+      "target_forest": "voice",
+      "adopt_gate": "regression suite must stay green + gain>0 on held-out",
+      "launchable_on": [
+        "kaggle:owner",
+        "colab:cc",
+        "modal:agent"
+      ],
+      "trainable": true
+    },
+    {
+      "sector": "judgment",
+      "corpus": "expert_data/merged_corpus.jsonl",
+      "corpus_exists": true,
+      "corpus_examples": 1289,
+      "base": "Qwen/Qwen2.5-0.5B-Instruct",
+      "method": "LoRA r=16 all-proj",
+      "epochs": 3,
+      "heldout_frac": 0.15,
+      "eval": "token-overlap grounding before/after on held-out",
+      "target_forest": "judgment",
+      "adopt_gate": "regression suite must stay green + gain>0 on held-out",
+      "launchable_on": [
+        "kaggle:owner",
+        "colab:cc",
+        "modal:agent"
+      ],
+      "trainable": true
+    },
+    {
+      "sector": "openworld",
+      "corpus": "expert_data/openworld_merged.jsonl",
+      "corpus_exists": true,
+      "corpus_examples": 89,
+      "base": "Qwen/Qwen2.5-0.5B-Instruct",
+      "method": "LoRA r=16 all-proj",
+      "epochs": 3,
+      "heldout_frac": 0.15,
+      "eval": "token-overlap grounding before/after on held-out",
+      "target_forest": "openworld",
+      "adopt_gate": "regression suite must stay green + gain>0 on held-out",
+      "launchable_on": [
+        "kaggle:owner",
+        "colab:cc",
+        "modal:agent"
+      ],
+      "trainable": true
+    },
+    {
+      "sector": "reasoning",
+      "corpus": "expert_data/reasoning_merged.jsonl",
+      "corpus_exists": true,
+      "corpus_examples": 95,
+      "base": "Qwen/Qwen2.5-0.5B-Instruct",
+      "method": "LoRA r=16 all-proj",
+      "epochs": 3,
+      "heldout_frac": 0.15,
+      "eval": "token-overlap grounding before/after on held-out",
+      "target_forest": "reasoning",
+      "adopt_gate": "regression suite must stay green + gain>0 on held-out",
+      "launchable_on": [
+        "kaggle:owner",
+        "colab:cc",
+        "modal:agent"
+      ],
+      "trainable": true
+    }
+  ]
+}

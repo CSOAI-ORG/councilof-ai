@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Autonomous Swarm Systems — PX4 + Mava + Counter-UAS</title>
+<meta name="description" content="DEFONEOS Autonomous Systems: PX4 fleet, Mava MARL swarms, OpenAthena geo, Batear acoustic C-UAS. UK sovereign defence drone OS.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-2px);border-color:rgba(34,211,238,.6)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.btn{display:inline-block;background:linear-gradient(135deg,#22d3ee,#3b82f6);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem .5rem 0 0;text-transform:uppercase;font-size:.85rem;text-decoration:none}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem;transition:color .2s}
+.nav a:hover{color:#22d3ee}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.pipeline-step{display:flex;align-items:center;margin:1rem 0;gap:1rem}
+.step-num{background:rgba(34,211,238,.2);border:2px solid #22d3ee;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#22d3ee;flex-shrink:0}
+.step-body{flex:1}
+.step-body h4{color:#f8fafc;margin:0 0 .25rem}
+.step-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.status-live{color:#22c55e;font-weight:700}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-isr-pipeline.html">🛰️ ISR</a>
+  <a href="defoneos-swarm.html">🦅 Swarm</a>
+  <a href="defoneos-cyber.html">🛡️ Cyber</a>
+  <a href="defoneos-sensor-layer.html">📡 Sensors</a>
+  <a href="defoneos-jsp936.html">📋 JSP 936</a>
+  <a href="defoneos-bft.html">⚖️ BFT Council</a>
+</div>
+
+<h1>🦅 Autonomous Swarm Systems</h1>
+<p class="tagline">PX4 fleet management, Mava multi-agent RL swarms, OpenAthena geospatial ISR, Batear acoustic counter-detection. From individual drone to coordinated swarm — sovereign British AI at every layer.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">PX4</span><h3>Flight Control</h3><p>Open-source autopilot. Mission planning, geofencing, failsafe. MAVSDK Python SDK for programmatic control.</p></div>
+  <div class="card"><span class="stat">Mava</span><h3>MARL Swarms</h3><p>Multi-agent reinforcement learning. Decentralised swarm coordination. Each drone learns optimal patrol patterns.</p></div>
+  <div class="card"><span class="stat">Batear</span><h3>C-UAS Detection</h3><p>$10 ESP32 acoustic drone detector. Frequency analysis identifies hostile UAVs at 500m+ range.</p></div>
+  <div class="card"><span class="stat">5 Types</span><h3>Platform Classes</h3><p>Multirotor (ISR), Fixed-wing (long endurance), VTOL (hybrid), UGV (ground), UUV (underwater). All MAVLink.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🚁 Fleet Management</div>
+  <div class="tab" onclick="switchTab(1)">🧠 Mava Swarm RL</div>
+  <div class="tab" onclick="switchTab(2)">📡 OpenAthena Geo</div>
+  <div class="tab" onclick="switchTab(3)">🔊 Batear Acoustic</div>
+  <div class="tab" onclick="switchTab(4)">🔌 MCP Tools</div>
+</div>
+
+<!-- TAB 0: Fleet Management -->
+<div class="tab-content active">
+  <h3>🚁 PX4 Fleet Management Architecture</h3>
+  <p>DEFONEOS uses PX4 Autopilot as the core flight controller, managed through MAVSDK Python bindings. Every drone in the fleet is addressable via MCP tools, enabling AI-driven mission planning.</p>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>PX4 Autopilot (Edge)</h4><p>Runs on Pixhawk hardware or SITL simulation. Handles real-time flight control, attitude stabilisation, sensor fusion (IMU/GPS/barometer). MAVLink protocol for telemetry.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>MAVSDK Bridge (Fog)</h4><p>Python SDK wrapping MAVLink. Programmatic takeoff, waypoint navigation, payload control. DEFONEOS MCP exposes this as <code>drone_takeoff</code>, <code>drone_waypoint</code>, <code>drone_rtl</code>.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>Mission Planning (Cloud)</h4><p>QGroundControl or programmatic mission files. Waypoint grids, search patterns, ISR orbits. Pre-loaded on drone before launch, updated mid-flight via data link.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body"><h4>Swarm Coordinator (Sovereign)</h4><p>Mava RL engine assigns roles: leader, scout, relay, striker. BFT council validates each engagement decision. All actions SIGIL-signed for audit trail.</p></div></div>
+
+  <table>
+    <tr><th>Platform</th><th>Type</th><th>Endurance</th><th>Payload</th><th>Role</th></tr>
+    <tr><td>PX4 Multirotor</td><td>Quad/Hex</td><td>25-40 min</td><td>1-3 kg</td><td>ISR recon, close-range</td></tr>
+    <tr><td>PX4 Fixed-Wing</td><td>Airplane</td><td>2-6 hrs</td><td>2-5 kg</td><td>Long-endurance patrol</td></tr>
+    <tr><td>PX4 VTOL</td><td>Hybrid</td><td>1-3 hrs</td><td>1-3 kg</td><td>Runway-independent ops</td></tr>
+    <tr><td>ArduRover (UGV)</td><td>Ground</td><td>4-8 hrs</td><td>5-20 kg</td><td>Ground patrol, cargo</td></tr>
+    <tr><td>ArduSub (UUV)</td><td>Submarine</td><td>2-4 hrs</td><td>1-5 kg</td><td>Underwater ISR, mine detection</td></tr>
+  </table>
+
+  <h4>MAVSDK Python Example</h4>
+  <div class="code">from MAVSDK import Drone
+drone = Drone(system_address="udp://:14540")
+await drone.connect()
+await drone.action.takeoff()
+await drone.action.goto_location(lat=53.8, lon=-1.5, alt=100)
+# DEFONEOS MCP: drone_takeoff(system_id=1, alt=100)
+# DEFONEOS MCP: drone_waypoint(system_id=1, lat=53.8, lon=-1.5)</div>
+</div>
+
+<!-- TAB 1: Mava Swarm RL -->
+<div class="tab-content">
+  <h3>🧠 Mava Multi-Agent Reinforcement Learning</h3>
+  <p>Mava provides decentralised multi-agent RL for swarm coordination. Each drone is an independent agent learning to cooperate. DEFONEOS trains swarm policies for search-and-rescue, ISR coverage, and perimeter defence.</p>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>Environment Setup</h4><p>PX4 SITL + AirSim/Flightmare simulation. N drones in shared airspace. Observation: GPS position, velocity, neighbours, targets. Action: velocity vector, role switch.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>Reward Shaping</h4><p>Coverage reward (maximise area scanned), collision penalty, energy efficiency bonus, target capture reward. BFT council can override malicious reward signals.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>Training (MAPPO)</h4><p>Multi-Agent PPO with parameter sharing. Centralised critic, decentralised actors. Trained on M2/M3 Mac via JAX. 10M steps per policy iteration.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body"><h4>Deployment</h4><p>Trained policy exported to ONNX. Runs on Raspberry Pi 5 companion computer aboard each drone. Inference <5ms. Real-time swarm coordination.</p></div></div>
+
+  <table>
+    <tr><th>Swarm Pattern</th><th>Drones</th><th>Strategy</th><th>Use Case</th></tr>
+    <tr><td>Dragonfly (ISR)</td><td>5-10</td><td>Decentralised search</td><td>Area recon, missing person</td></tr>
+    <tr><td>Hornet (Strike)</td><td>3-5</td><td>Coordinated approach</td><td>Target interdiction</td></tr>
+    <tr><td>Killer Bee (Overwhelm)</td><td>20-50</td><td>Saturation swarm</td><td>AD suppression, decoy</td></tr>
+    <tr><td>Worker (Logistics)</td><td>2-4</td><td>Relay chain</td><td>Comms extension</td></tr>
+  </table>
+
+  <h4>DEFONEOS Swarm MCP Tools</h4>
+  <div class="code">swarm_launch(pattern="dragonfly", n_drones=8, area="SE-1444")
+swarm_status()  → {active: 8, formation: "search_grid", coverage: 73%}
+swarm_recall()  → all drones RTL, formation dissolved</div>
+</div>
+
+<!-- TAB 2: OpenAthena Geo -->
+<div class="tab-content">
+  <h3>📡 OpenAthena Geospatial Analysis</h3>
+  <p>OpenAthena performs terrain analysis and target geolocation from drone imagery. Combines DEM (Digital Elevation Model) data with drone telemetry to calculate precise 3D coordinates of ground targets.</p>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>Image Capture</h4><p>Drone camera captures ground imagery. Telemetry (GPS, altitude, heading, camera angle) embedded in EXIF or transmitted via MAVLink.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>DEM Matching</h4><p>OpenAthena correlates image features against UK Ordnance Survey DTM (Digital Terrain Model). Ray-casting from camera position through terrain model.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>Coordinate Extraction</h4><p>Outputs WGS84 latitude/longitude with confidence radius. Typical accuracy: 5-30m from 500m altitude. Better than pure GPS for ground targets.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body"><h4>Cesium Visualisation</h4><p>Geolocated targets displayed on 3D Cesium globe in DEFONEOS C2. Target tracks updated in real-time. Cursor-on-Target (CoT) protocol for TAK interoperability.</p></div></div>
+
+  <table>
+    <tr><th>DEM Source</th><th>Resolution</th><th>Coverage</th><th>Access</th></tr>
+    <tr><td>OS Terrain 50</td><td>50m grid</td><td>UK full</td><td>Ordnance Survey (free)</td></tr>
+    <tr><td>SRTM 30m</td><td>30m grid</td><td>Global (±60° lat)</td><td>NASA (free)</td></tr>
+    <tr><td>OS Terrain 5</td><td>5m grid</td><td>UK full</td><td>Ordnance Survey (paid)</td></tr>
+    <tr><td>LIDAR DTM</td><td>1m grid</td><td>UK partial</td><td>DEFRA (free)</td></tr>
+  </table>
+</div>
+
+<!-- TAB 3: Batear Acoustic -->
+<div class="tab-content">
+  <h3>🔊 Batear — $10 Acoustic Counter-Drone</h3>
+  <p>Batear is an ESP32-based acoustic drone detector that costs $10 in parts. Uses frequency analysis to identify the distinctive rotor signatures of common commercial and military drones. Deployable in dense networks.</p>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>Audio Capture</h4><p>INMP441 I2S MEMS microphone on ESP32. Samples at 44.1kHz. Continuous monitoring. Power draw: &lt;200mA (solar-compatible).</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>FFT Analysis</h4><p>On-device Fast Fourier Transform identifies rotor blade frequencies. DJI Phantom: 180-220Hz. DJI Mavic: 140-170Hz. Custom: signature database extensible via MCP.</p></div></div>
+    <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>Detection & Alert</h4><p>Positive detection triggers MQTT alert to DEFONEOS C2. Includes bearing estimate (array of 2+ Batears), confidence score, timestamp. All SIGIL-signed.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body"><h4>Network Deployment</h4><p>Distributed mesh of Batear nodes covers 360° acoustic detection. $100 buys 10 nodes = 500m perimeter coverage. UAV tracking + classification without radar.</p></div></div>
+
+  <table>
+    <tr><th>Drone Type</th><th>Blade freq (Hz)</th><th>Detection Range</th><th>Confidence</th></tr>
+    <tr><td>DJI Phantom 4</td><td>190-210</td><td>300-500m</td><td>94%</td></tr>
+    <tr><td>DJI Mavic 3</td><td>145-165</td><td>200-400m</td><td>91%</td></tr>
+    <tr><td>Autel EVO</td><td>160-180</td><td>250-400m</td><td>89%</td></tr>
+    <tr><td>PX4 DIY</td><td>Variable</td><td>150-300m</td><td>76%</td></tr>
+    <tr><td>Military (fixed-wing)</td><td>80-120</td><td>500-800m</td><td>82%</td></tr>
+  </table>
+
+  <h4>Batear Node BOM</h4>
+  <div class="code">ESP32 DevKit     $4.00
+INMP441 I2S Mic  $2.50
+3D printed case  $1.50
+LiPo 18650       $2.00
+Total:           $10.00</div>
+</div>
+
+<!-- TAB 4: MCP Tools -->
+<div class="tab-content">
+  <h3>🔌 DEFONEOS Drone MCP Tools</h3>
+  <p>The <code>defoneos-counterdrone-mcp</code> and <code>defoneos-tak-mcp</code> expose all autonomous system capabilities through the Model Context Protocol. AI agents can launch, control, and recall swarms programmatically.</p>
+
+  <table>
+    <tr><th>Tool</th><th>Input</th><th>Output</th><th>Description</th></tr>
+    <tr><td>drone_takeoff</td><td>system_id, altitude</td><td>status</td><td>Command specific drone to take off and hold altitude</td></tr>
+    <tr><td>drone_waypoint</td><td>system_id, lat, lon, alt</td><td>eta</td><td>Send drone to GPS waypoint</td></tr>
+    <tr><td>drone_rtl</td><td>system_id</td><td>status</td><td>Return to launch</td></tr>
+    <tr><td>swarm_launch</td><td>pattern, n_drones, area</td><td>mission_id</td><td>Launch coordinated swarm mission</td></tr>
+    <tr><td>swarm_status</td><td>mission_id</td><td>JSON status</td><td>Get real-time swarm formation, coverage, individual drone status</td></tr>
+    <tr><td>swarm_recall</td><td>mission_id</td><td>status</td><td>Recall all drones in swarm</td></tr>
+    <tr><td>batear_deploy</td><td>node_id, location</td><td>status</td><td>Register and activate Batear acoustic detector</td></tr>
+    <tr><td>batear_scan</td><td>node_id or "all"</td><td>detections[]</td><td>Get acoustic detections with bearing, freq, confidence</td></tr>
+    <tr><td>openAthena_locate</td><td>image, drone_telemetry</td><td>lat, lon, confidence</td><td>Geolocate ground target from drone imagery + DEM</td></tr>
+    <tr><td>fleet_status</td><td>none</td><td>JSON fleet</td><td>Get all connected drones: battery, position, mode, mission</td></tr>
+  </table>
+
+  <h4>Integration Example</h4>
+  <div class="code"># ISR Mission: search area, detect targets, geolocate
+swarm_launch(pattern="dragonfly", n_drones=6, area="SE-1444-NW")
+→ mission_id: "msn-2026-0705-001"
+
+# Monitor
+swarm_status(mission_id="msn-2026-0705-001")
+→ {active: 6, coverage: 47%, duration: "00:12:30"}
+
+# Batear detects hostile
+batear_scan(node_id="all")
+→ [{node: "bat-03", bearing: 142°, freq: 195Hz, conf: 0.94, ...}]
+
+# OpenAthena geolocates
+openAthena_locate(image="img_0042.jpg", drone_telemetry={...})
+→ {lat: 53.8047, lon: -1.5543, confidence: 0.91}
+
+# BFT council authorises response (human-in-loop)
+bft_vote(proposal="engage target Alpha-7", choice="for")
+→ {consensus: true, votes: 31/33, timestamp: "..."}</div>
+</div>
+
+<div class="sigil">DEFONEOS Autonomous Swarm Systems · PX4 · Mava MARL · OpenAthena · Batear · UK Sovereign · CSOAI Certified · SIGIL-signed</div>
+</div>
+
+<script>
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n));
+}
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

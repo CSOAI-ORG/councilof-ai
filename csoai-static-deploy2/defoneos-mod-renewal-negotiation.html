@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Renewal Negotiation Playbook — QBR → Multi-Year Deal Mechanics</title>
+<meta name="description" content="The renewal negotiation playbook for DEFONEOS buyers — from first renewal signal at Day 85 through multi-year deal close, with discount ladder, trade matrix, and named-owner mechanics. v1.0 12 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.code{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--mute)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+.kpi .box{margin:0;text-align:center}
+.kpi b{display:block;font-size:22px;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · Renewal Negotiation Playbook · v1.0</div>
+<div><span class="tag">12 Jul 2026</span> <span class="tag">CRO · AE · Multi-year · Discount ladder</span></div>
+</header>
+
+<h1>From renewal intent at Day 85 to multi-year deal close — the negotiation mechanics.</h1>
+<p class="muted">Companion to <code>defoneos-mod-30-60-90-customer.html</code> (renewal-readiness scoring) and <code>defoneos-mod-quarterly-review.html</code> (QBR governance cadence). This playbook is the AE-facing mechanics document for the renewal conversation. It assumes the renewal-intent letter has been signed at Day 85 and the renewal-readiness score is in HIGH or MEDIUM tier. If the score is LOW or AT RISK, the AE works the churn-prevention playbook instead — see <code>defoneos-mod-churn-prevention.html</code>.</p>
+
+<div class="kpi">
+<div class="box"><b>60 d</b><span class="muted">From intent letter to deal close</span></div>
+<div class="box"><b>5</b><span class="muted">Named negotiation phases</span></div>
+<div class="box"><b>3-yr</b><span class="muted">Default multi-year horizon</span></div>
+<div class="box"><b>15%</b><span class="muted">Max multi-year discount</span></div>
+</div>
+
+<h2>1. The renewal conversation is a renewal conversation, not a sales pitch</h2>
+<div class="box">
+<p>Three rules that distinguish a renewal negotiation from a new sale:</p>
+<ol>
+<li><b>You already have evidence.</b> The buyer has been running DEFONEOS for 90+ days. The negotiation is anchored in the QBR minutes, the 9-KPI dashboard, the renewal-readiness score, and the ROI report — not in marketing collateral.</li>
+<li><b>The buyer's champion has political capital.</b> The champion chose DEFONEOS and is on the hook internally. The renewal conversation must protect that capital, not exhaust it.</li>
+<li><b>The cost of switching is the buyer's strongest lever.</b> The AE should not argue against switching costs; the AE should acknowledge them and offer the multi-year trade (price certainty + roadmap visibility) in exchange.</li>
+</ol>
+</div>
+
+<h2>2. Five-phase timeline</h2>
+<table>
+<tr><th>Phase</th><th>Day</th><th>Goal</th><th>Owner</th><th>Output</th></tr>
+<tr><td>P1 — Discovery</td><td>D85–D100</td><td>Confirm the buyer's renewal intent is real, surface the buyer's unstated needs</td><td>AE</td><td>Discovery memo (1-page)</td></tr>
+<tr><td>P2 — Proposal</td><td>D100–D115</td><td>Deliver the multi-year proposal with discount ladder and trade matrix</td><td>AE + CRO</td><td>Proposal pack (counter-signed)</td></tr>
+<tr><td>P3 — Negotiation</td><td>D115–D135</td><td>Walk the buyer through the trade matrix; converge on a single option</td><td>AE + buyer procurement</td><td>Term sheet (binding)</td></tr>
+<tr><td>P4 — Legal</td><td>D135–D150</td><td>Contract amendment executed; SIGIL receipt</td><td>Legal (both parties)</td><td>Executed amendment</td></tr>
+<tr><td>P5 — Close &amp; comms</td><td>D150–D165</td><td>Internal announcement; transition to new contract year</td><td>CS lead + AE</td><td>Counter-signed renewal confirmation</td></tr>
+</table>
+
+<h2>3. Discovery memo (P1) — the 1-page artefact</h2>
+<p class="muted">The discovery memo is the AE's working document for the renewal conversation. It is NOT shared with the buyer. It is internal AE-to-CS-lead-to-CRO context-setting.</p>
+<div class="box">
+<ol>
+<li><b>Buyer's stated renewal intent</b> — what did the executive sponsor say in the Day-85 letter?</li>
+<li><b>Buyer's unstated needs</b> — what did the buyer ask about that wasn't in the original SoW? (Hint: read the QBR action register.)</li>
+<li><b>Internal politics</b> — is there a competing vendor in the buyer's evaluation? (Always assume yes.)</li>
+<li><b>Budget cycle</b> — when does the buyer's procurement window open? Calendar it.</li>
+<li><b>Renewal-readiness score</b> — and the tier (HIGH / MEDIUM / LOW / AT RISK).</li>
+<li><b>Named risks</b> — what could derail this renewal? Name each one with a probability and a mitigation.</li>
+<li><b>Target deal shape</b> — multi-year horizon, expansion options, price floor, trade matrix.</li>
+</ol>
+</div>
+
+<h2>4. Multi-year deal shapes</h2>
+<table>
+<tr><th>Shape</th><th>Term</th><th>Annual uplift</th><th>Discount (vs 1-yr list)</th><th>Trade required from buyer</th></tr>
+<tr><td>1-year renewal</td><td>12 mo</td><td>+5% (CPI cap)</td><td>0%</td><td>Renewal letter at Day 85</td></tr>
+<tr><td>2-year renewal</td><td>24 mo</td><td>+4% per year</td><td>5%</td><td>Joint roadmap commitment at QBR</td></tr>
+<tr><td>3-year renewal</td><td>36 mo</td><td>+3.5% per year</td><td>10%</td><td>Named expansion workload at QBR+1</td></tr>
+<tr><td>3-year renewal + expansion</td><td>36 mo</td><td>+3% per year</td><td>15%</td><td>2 named expansion workloads + named reference customer agreement</td></tr>
+</table>
+
+<h2>5. Trade matrix (P3) — what each side gives up</h2>
+<p class="muted">The trade matrix is the negotiation surface. Every line item has a named owner and a deadline. The AE walks the buyer through this matrix in P3.</p>
+<table>
+<tr><th>CSOAI gives</th><th>Buyer gives</th><th>Deadline</th><th>Counter-sign</th></tr>
+<tr><td>Multi-year price discount (5/10/15%)</td><td>Multi-year commitment (2/3/3+ years)</td><td>Day 130</td><td>AE + buyer procurement</td></tr>
+<tr><td>Roadmap visibility (next 12 months committed)</td><td>Named expansion workload at QBR+1</td><td>Day 130</td><td>Product lead + buyer CIO</td></tr>
+<tr><td>Free expansion workload onboarding (1 unit)</td><td>Public reference agreement (anonymised case study)</td><td>Day 140</td><td>CSOAI marketing + buyer comms</td></tr>
+<tr><td>Quarterly executive sponsor call</td><td>Annual executive sponsor visit (on-site, half-day)</td><td>Day 145</td><td>CEO + executive sponsor</td></tr>
+<tr><td>24/7 incident line upgrade (response SLA −1 hr)</td><td>SC-cleared field engineer access on next incident</td><td>Day 145</td><td>Ops lead + buyer SC officer</td></tr>
+</table>
+
+<h2>6. Discount ladder mechanics</h2>
+<div class="box">
+<p>The discount ladder is symmetric and pre-committed. The AE does not negotiate the discount — the AE offers one of the four deal shapes and the buyer chooses. No bespoke discounting.</p>
+<ol>
+<li><b>5% discount</b> — 2-year commitment only.</li>
+<li><b>10% discount</b> — 3-year commitment + one named expansion workload.</li>
+<li><b>15% discount</b> — 3-year commitment + two named expansion workloads + reference agreement.</li>
+<li><b>Anything beyond 15%</b> — requires CRO sign-off + CEO sign-off; expected &lt; 1% of deals.</li>
+</ol>
+<p class="gold">Why no bespoke discounting? Because the buyer will ask. The answer is: "Our discount ladder is symmetric across our entire customer base; any deal-specific discount would disadvantage your peers and undermine the trust we have built in the QBR." This is true and important.</p>
+</div>
+
+<h2>7. Expansion workload — what counts</h2>
+<p class="muted">The expansion workload trade is the single most important commercial lever in the multi-year deal. It commits the buyer to growing the DEFONEOS footprint, which in turn anchors the multi-year discount.</p>
+<div class="box">
+<p>A valid expansion workload must meet all three criteria:</p>
+<ol>
+<li><b>Named</b> — a specific workload identified by the buyer, with a specific owner.</li>
+<li><b>Scoped</b> — the workload has a 1-page scope agreed by both parties at the renewal QBR.</li>
+<li><b>Dated</b> — the workload has a target go-live date within 12 months of renewal signature.</li>
+</ol>
+<p>Examples of valid expansion workloads:</p>
+<ul>
+<li>"Move HR records processing onto DEFONEOS by Q3."</li>
+<li>"Add the second business unit (200 users) to DEFONEOS by Q2."</li>
+<li>"Onboard a new subsidiary (acquired last quarter) onto DEFONEOS by Q4."</li>
+</ul>
+</div>
+
+<h2>8. Reference agreement — the asymmetric trade</h2>
+<div class="box">
+<p>The reference agreement is the highest-value trade because it is asymmetric: the buyer gives marketing capital (case study, quote, logo rights) in exchange for a 15% discount. The buyer doesn't have to do anything ongoing — the case study is a one-time artefact that CSOAI can use for 24 months.</p>
+<p>Required reference deliverables:</p>
+<ol>
+<li><b>Written case study</b> — 800-1200 words, co-authored, published on defoneos.org.</li>
+<li><b>Named quote</b> — 1-2 sentences from the buyer's CIO or equivalent, attributable.</li>
+<li><b>Logo rights</b> — buyer logo on defoneos.org (royalty-free, 24-month term).</li>
+<li><b>Reference call commitment</b> — buyer agrees to participate in up to 6 reference calls per year with prospective buyers in similar verticals.</li>
+</ol>
+<p class="red">If the buyer cannot offer reference agreement (e.g. UK government buyers who cannot endorse a commercial supplier), the 15% discount is not available. The AE should walk the buyer to the 10% discount instead.</p>
+</div>
+
+<h2>9. Term sheet (P4) — the binding artefact</h2>
+<div class="code">DEFONEOS RENEWAL TERM SHEET
+
+Buyer:                       [Legal entity name]
+Effective date:              [Day 150]
+Renewal term:                [2 or 3 years]
+Annual uplift:               [4% / 3.5% / 3% per year]
+Discount applied:            [5% / 10% / 15%]
+Named expansion workload(s): [List with target go-live]
+Reference agreement:         [Y/N + scope]
+Quarterly exec sponsor call: [Y/N + named attendees]
+24/7 SLA upgrade:            [Y/N + new SLA]
+Annual uplift cap:           [CPI + 2% / CPI + 1% / 0% (frozen)]
+
+Counter-signatures:
+  CSOAI:    AE _______________  CRO _______________  Date _______________
+  Buyer:    Procurement _______________  CIO _______________  Date _______________
+
+SIGIL receipt:               [Hash + chain reference]</div>
+
+<h2>10. The five things the AE should never do</h2>
+<ol>
+<li><b>Never discount outside the ladder.</b> It sets precedent, it leaks to other customers via procurement networks, and it creates a worse deal than the buyer would have taken at the next tier.</li>
+<li><b>Never negotiate against the renewal-readiness score.</b> The score is computed; either it is high or it is not. The AE should not promise to "fix" a low score — that is the CS lead's job.</li>
+<li><b>Never skip P1 (discovery).</b> The AE who skips discovery and jumps to proposal ends up negotiating against an unknown requirement.</li>
+<li><b>Never bring up renewal in a QBR.</b> The QBR is governance, not sales. Renewal is discussed at a separate meeting called by the AE.</li>
+<li><b>Never promise a roadmap commitment without checking with product.</b> Roadmap commitments in writing are binding; verbal commitments are not.</li>
+</ol>
+
+<h2>11. Cross-walk to DEFONEOS pack</h2>
+<ul>
+<li><b>30-60-90 plan</b> — <code>defoneos-mod-30-60-90-customer.html</code></li>
+<li><b>QBR template</b> — <code>defoneos-mod-quarterly-review.html</code></li>
+<li><b>Customer success scorecard</b> — <code>defoneos-mod-customer-success-scorecard.html</code></li>
+<li><b>Churn prevention</b> — <code>defoneos-mod-churn-prevention.html</code></li>
+<li><b>Renewal upsell</b> — <code>defoneos-mod-renewal-upsell-playbook.html</code></li>
+<li><b>Pricing card</b> — <code>defoneos-mod-pricing-card-onepager.html</code></li>
+<li><b>Pricing defense</b> — <code>defoneos-mod-pricing-defense.html</code></li>
+</ul>
+
+<h2>12. Honesty register</h2>
+<div class="box">
+<ol>
+<li>The 5/10/15% discount ladder is the published rate card; CSOAI does not run promotions or seasonal discounts.</li>
+<li>The 4 / 3.5 / 3% annual uplifts are calibrated against UK CPI plus a margin; buyers in higher-inflation jurisdictions should expect higher uplifts.</li>
+<li>The "no bespoke discounting" rule has one exception: sovereign buyers (UK MOD, NATO, AUKUS) who commit to a 5-year term may negotiate bespoke pricing — handled directly by CSOAI CEO.</li>
+<li>The reference agreement trade is not available to UK central government buyers (procurement policy precludes endorsement); commercial buyers and devolved administrations are eligible.</li>
+<li>The 24-month logo rights term is the standard; longer terms require CRO + buyer legal review.</li>
+</ol>
+</div>
+
+<footer>
+DEFONEOS · Renewal Negotiation Playbook · v1.0 · 12 Jul 2026 · CSOAI Ltd (UK Co. 16939677) · Companion to <code>defoneos-mod-30-60-90-customer.html</code>
+</footer>
+</div>
+</body>
+</html>

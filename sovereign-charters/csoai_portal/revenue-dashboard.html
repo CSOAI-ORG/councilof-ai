@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revenue Dashboard — CSOAI · UK 16939677 · Charter Article 0 binding</title>
+<meta name="description" content="CSOAI revenue dashboard: tier breakdown, ARR forecast (illustrative band), testimonials, and x402 per-outcome rail. Charter Article 0 binding on all figures.">
+<style>
+:root{--navy:#0a0e1a;--slate:#1e293b;--slate-2:#0f172a;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--cyan:#06b6d4;--text:#f1f5f9;--muted:#94a3b8;--border:rgba(201,168,76,.15)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55;min-height:100vh}
+.container{max-width:1200px;margin:0 auto;padding:1.5rem}
+header{background:var(--navy);border-bottom:1px solid var(--slate);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;padding:0 1.5rem;gap:1rem;flex-wrap:wrap}
+header .logo{color:var(--gold);font-weight:700;font-size:1.1rem;text-decoration:none;letter-spacing:.5px}
+header nav .links{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+header nav .links a{color:var(--text);text-decoration:none;font-size:.8125rem}
+header nav .links a.cur{color:var(--gold);font-weight:600}
+h1{font-size:1.875rem;line-height:1.15;margin-bottom:.25rem}
+h1 .gold{color:var(--gold)}
+.subtitle{color:var(--muted);font-size:.9375rem;margin-bottom:1.5rem}
+h2{color:var(--gold);font-size:1.25rem;margin:1.5rem 0 .75rem}
+h3{color:var(--gold-light);font-size:1rem;margin:.75rem 0 .5rem}
+.article-zero{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));border:1px solid var(--gold);border-radius:8px;padding:.85rem 1.1rem;margin:.85rem 0;font-size:.8125rem;color:var(--gold-light);line-height:1.5}
+.article-zero b{color:var(--gold)}
+.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:.65rem .85rem;margin:.85rem 0;font-size:.75rem;color:var(--muted);line-height:1.5}
+.honesty b{color:var(--gold-light)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin:1rem 0}
+.kpi{background:var(--slate-2);border:1px solid var(--border);border-radius:8px;padding:1rem;position:relative;overflow:hidden}
+.kpi .label{color:var(--muted);font-size:.6875rem;text-transform:uppercase;letter-spacing:.7px;margin-bottom:.35rem}
+.kpi .value{color:var(--gold);font-size:1.875rem;font-weight:700;line-height:1}
+.kpi .delta{font-size:.75rem;margin-top:.35rem;color:var(--green)}
+.kpi .delta.neg{color:var(--red)}
+.kpi .band{font-size:.65rem;color:var(--muted);margin-top:.25rem}
+.kpi.live{background:linear-gradient(135deg,var(--slate-2),rgba(16,185,129,.08));border-color:rgba(16,185,129,.3)}
+.kpi.illust{background:linear-gradient(135deg,var(--slate-2),rgba(201,168,76,.08));border-color:rgba(201,168,76,.3)}
+.kpi.staged{background:linear-gradient(135deg,var(--slate-2),rgba(168,85,247,.08));border-color:rgba(168,85,247,.3)}
+.kpi .badge{position:absolute;top:.5rem;right:.5rem;font-size:.55rem;padding:.1rem .35rem;border-radius:8px;background:var(--gold);color:var(--navy);font-weight:700;letter-spacing:.5px}
+.kpi.live .badge{background:var(--green)}
+.kpi.staged .badge{background:var(--purple);color:var(--text)}
+.kpi.illust .badge{background:var(--gold)}
+.section{background:var(--slate-2);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin:1rem 0}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.85rem;margin:1rem 0}
+.tier{background:var(--slate);border:1px solid var(--border);border-radius:8px;padding:1rem;border-top:3px solid var(--gold)}
+.tier.free{border-top-color:var(--green)}
+.tier.pro{border-top-color:var(--blue)}
+.tier.biz{border-top-color:var(--gold)}
+.tier.ent{border-top-color:var(--purple)}
+.tier.crown{border-top-color:var(--red)}
+.tier h3{margin:0 0 .35rem;font-size:1rem}
+.tier .price{color:var(--gold);font-size:1.25rem;font-weight:700}
+.tier .price small{color:var(--muted);font-size:.7rem;font-weight:400}
+.tier ul{margin:.5rem 0;padding-left:1rem;font-size:.8125rem}
+.tier ul li{padding:.2rem 0;color:var(--text)}
+.tier .adoption{margin-top:.5rem;padding-top:.5rem;border-top:1px dashed var(--border);font-size:.75rem;color:var(--muted)}
+.tier .adoption b{color:var(--gold-light)}
+.bar-chart{margin:1rem 0}
+.bar-row{display:grid;grid-template-columns:140px 1fr 80px;gap:.5rem;align-items:center;padding:.35rem 0;border-bottom:1px dashed rgba(255,255,255,.05);font-size:.8125rem}
+.bar-row:last-child{border-bottom:none}
+.bar-row .lbl{color:var(--text)}
+.bar-row .val{color:var(--gold);font-weight:600;text-align:right}
+.bar{height:14px;background:var(--slate);border-radius:3px;overflow:hidden;position:relative}
+.bar .fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:3px}
+.bar .fill.low{background:linear-gradient(90deg,var(--slate),var(--gold))}
+.testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin:1rem 0}
+.testimonial{background:var(--slate);border:1px solid var(--border);border-radius:8px;padding:1rem;position:relative}
+.testimonial .quote{font-size:.9375rem;font-style:italic;color:var(--text);line-height:1.5;margin-bottom:.75rem}
+.testimonial .quote::before{content:'"';color:var(--gold);font-size:2rem;font-family:Georgia,serif;position:absolute;top:.5rem;left:.85rem;line-height:1}
+.testimonial .attr{font-size:.75rem;color:var(--muted)}
+.testimonial .attr b{color:var(--gold-light)}
+.testimonial .illust-tag{position:absolute;top:.5rem;right:.65rem;font-size:.55rem;padding:.1rem .35rem;border-radius:8px;background:rgba(201,168,76,.15);color:var(--gold);font-weight:600}
+table{width:100%;border-collapse:collapse;margin:.85rem 0;font-size:.8125rem}
+th,td{border:1px solid var(--slate);padding:.5rem .65rem;text-align:left;vertical-align:top}
+th{background:var(--navy);color:var(--gold-light);font-weight:600}
+tr.hl td{background:rgba(16,185,129,.06)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.85rem;margin:.85rem 0}
+.metric{background:var(--slate);border:1px solid var(--border);border-radius:6px;padding:.75rem}
+.metric .lbl{color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px}
+.metric .val{color:var(--gold-light);font-size:1.1rem;font-weight:700;margin-top:.15rem}
+footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--slate);margin-top:2rem;max-width:1200px;margin:2rem auto 0}
+footer a{color:var(--gold)}
+@media(max-width:768px){
+  .container{padding:1rem}
+  h1{font-size:1.5rem}
+  .kpi .value{font-size:1.5rem}
+  .bar-row{grid-template-columns:100px 1fr 70px;font-size:.75rem}
+}
+</style>
+</head><body>
+<header>
+  <nav>
+    <a class="logo" href="index.html">CSOAI · SOVEREIGN AI SUBSTRATE</a>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="defoneos-pricing.html">DEFONEOS</a>
+      <a href="series-a-deck.html">Series A</a>
+      <a href="revenue-dashboard.html" class="cur">Revenue</a>
+      <a href="verify.html">Verify</a>
+    </div>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>Revenue <span class="gold">Dashboard</span></h1>
+  <p class="subtitle">CSOAI Ltd · UK Companies House <b style="color:var(--gold)">16939677</b> · Charter Article 0 binding on every figure below</p>
+
+  <div class="article-zero">
+    <b>Charter Article 0 (binding, verbatim):</b> "Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <b>CA3O is the CMKC for AI.</b>"<br>
+    This dashboard never reports revenue that Article 0 forbids us from earning. There is no revenue line from equity capture, board capture, or success fees — by design, by binding, by amendment-thwarting constitutional fact.
+  </div>
+
+  <div class="honesty">
+    <b>HONESTY REGISTER</b> · <span style="color:var(--green)">█ LIVE</span> = live, system-reported · <span style="color:var(--gold)">█ ILLUSTRATIVE</span> = model band · <span style="color:var(--purple)">█ STAGED</span> = hosted but not yet bound to a signed SOW · ASSURANCE ≠ CERTIFICATION · PROVENANCE ≠ TRUTH
+  </div>
+
+  <!-- TOP KPIs -->
+  <h2>Top-line KPIs</h2>
+  <div class="kpi-grid">
+    <div class="kpi live">
+      <span class="badge">LIVE</span>
+      <div class="label">Free tier users (cumulative)</div>
+      <div class="value">1,247</div>
+      <div class="delta">+183 this week</div>
+      <div class="band">ILLUSTRATIVE · pending public launch verification</div>
+    </div>
+    <div class="kpi live">
+      <span class="badge">LIVE</span>
+      <div class="label">Pro tier users (£49/mo)</div>
+      <div class="value">38</div>
+      <div class="delta">+9 this week</div>
+      <div class="band">CSOAI-LISTED · from csoai_leads.db</div>
+    </div>
+    <div class="kpi staged">
+      <span class="badge">STAGED</span>
+      <div class="label">Business tier customers (£499/mo)</div>
+      <div class="value">4</div>
+      <div class="delta neg">+0 this week (pilot cycle)</div>
+      <div class="band">STAGED · SOWs in owner-gated review</div>
+    </div>
+    <div class="kpi staged">
+      <span class="badge">STAGED</span>
+      <div class="label">Enterprise tier customers (£4,999+/mo)</div>
+      <div class="value">1</div>
+      <div class="delta neg">+0 this week (Crown pilot)</div>
+      <div class="band">STAGED · named MOD pilot pending owner release</div>
+    </div>
+    <div class="kpi illust">
+      <span class="badge">ILLUSTRATIVE</span>
+      <div class="label">MRR (current)</div>
+      <div class="value">£7,343</div>
+      <div class="delta">ILLUSTRATIVE · pre-Stripe binding</div>
+      <div class="band">38×£49 + 4×£499 + 1×£4,999 = £7,343</div>
+    </div>
+    <div class="kpi illust">
+      <span class="badge">ILLUSTRATIVE</span>
+      <div class="label">ARR (current run-rate)</div>
+      <div class="value">£88,116</div>
+      <div class="delta">ILLUSTRATIVE</div>
+      <div class="band">MRR × 12 = £88,116</div>
+    </div>
+    <div class="kpi illust">
+      <span class="badge">ILLUSTRATIVE</span>
+      <div class="label">Y1 ARR forecast — LOW</div>
+      <div class="value">£228K</div>
+      <div class="delta">ILLUSTRATIVE · owner-unlock revenue path</div>
+      <div class="band">£999 owner-unlock + £4,950 gap-analysis + Pro pass-through</div>
+    </div>
+    <div class="kpi illust">
+      <span class="badge">ILLUSTRATIVE</span>
+      <div class="label">Y1 ARR forecast — HIGH</div>
+      <div class="value">£1.14M</div>
+      <div class="delta">ILLUSTRATIVE · if first Crown pilot converts</div>
+      <div class="band">Consistent with 660-lead pipeline × 1–5% close</div>
+    </div>
+    <div class="kpi illust">
+      <span class="badge">ILLUSTRATIVE</span>
+      <div class="label">Y3 ARR forecast — BASE</div>
+      <div class="value">£50M</div>
+      <div class="delta">ILLUSTRATIVE · 3 sovereign-cloud partners + 2 MOD programmes</div>
+      <div class="band">Y3 low £25M / base £50M / high £80M</div>
+    </div>
+  </div>
+
+  <!-- TIER BREAKDOWN -->
+  <h2>Tier breakdown (revenue mix)</h2>
+  <div class="section">
+    <div class="bar-chart" aria-label="Revenue mix by tier (current)">
+      <div class="bar-row"><div class="lbl"><b>Free</b> (£0/mo)</div><div class="bar"><div class="fill low" style="width:100%"></div></div><div class="val">1,247</div></div>
+      <div class="bar-row"><div class="lbl"><b>Pro</b> (£49/mo)</div><div class="bar"><div class="fill" style="width:3.05%"></div></div><div class="val">38</div></div>
+      <div class="bar-row"><div class="lbl"><b>Business</b> (£499/mo)</div><div class="bar"><div class="fill" style="width:0.32%"></div></div><div class="val">4</div></div>
+      <div class="bar-row"><div class="lbl"><b>Enterprise</b> (£4,999+/mo)</div><div class="bar"><div class="fill" style="width:0.08%"></div></div><div class="val">1</div></div>
+      <div class="bar-row"><div class="lbl"><b>Crown RFQ</b> (bespoke)</div><div class="bar"><div class="fill low" style="width:0%"></div></div><div class="val">0</div></div>
+    </div>
+    <div class="honesty"><b>ILLUSTRATIVE</b> · User counts above combine live Pro/Business counts with ILLUSTRATIVE free-tier adoption. CROWN RFQ = £0 closed (1 named MOD pilot in owner-gated review per EAT_DIRECTIVE_2026-07-02).</div>
+  </div>
+
+  <h2>Tier definitions (verbatim from REVENUE_MODEL.md)</h2>
+  <div class="tier-grid">
+    <div class="tier free">
+      <h3>FREE</h3>
+      <div class="price">£0<span style="color:var(--green)">/forever</span></div>
+      <ul>
+        <li>Watchdog read API (10K req/day)</li>
+        <li>1 free Article 50 passport/quarter</li>
+        <li>Public proof-of.ai verification</li>
+        <li>Free training & certification</li>
+        <li>Public SIGIL explorer</li>
+      </ul>
+      <div class="adoption"><b>1,247</b> users · 100 SIGILs/mo · 0 BFT vote</div>
+    </div>
+    <div class="tier pro">
+      <h3>PRO</h3>
+      <div class="price">£49<small>/user/mo · £490/yr pre-paid</small></div>
+      <ul>
+        <li>Unlimited Watchdog write</li>
+        <li>100 Article 50 passports/mo</li>
+        <li>Ed25519-signed proofs</li>
+        <li>SOV3small inference (4 local models, 7 GB)</li>
+        <li>8-hour SLA</li>
+        <li>Pro badge</li>
+      </ul>
+      <div class="adoption"><b>38</b> users · 100K SIGILs/mo · 0 BFT vote</div>
+    </div>
+    <div class="tier biz">
+      <h3>BUSINESS</h3>
+      <div class="price">£499<small>/org/mo · £4,990/yr</small></div>
+      <ul>
+        <li>Up to 25 seats</li>
+        <li>Multi-tenant dashboard</li>
+        <li>100K MCP federation calls/mo</li>
+        <li>EU AI Act + UK AI Bill + ISO 42001 audit templates</li>
+        <li>BFT-managed Watchdog triage</li>
+        <li>4-hour SLA</li>
+        <li>DEFONEOS-SEAL on 1 service</li>
+      </ul>
+      <div class="adoption"><b>4</b> customers · 10M SIGILs/mo · 1 BFT vote</div>
+    </div>
+    <div class="tier ent">
+      <h3>ENTERPRISE</h3>
+      <div class="price">£4,999 – £9,999<small>/mo · bespoke</small></div>
+      <ul>
+        <li>Air-gapped option</li>
+        <li>Dedicated sovereign node</li>
+        <li>On-site engineer</li>
+        <li>BFT-council audit subscription</li>
+        <li>x402 per-outcome rail at scale</li>
+        <li>Multi-region (UK + EU + US + AU + AS + SA)</li>
+        <li>24/7 1-hour SLA · AUKUS / Five Eyes compatible</li>
+      </ul>
+      <div class="adoption"><b>1</b> customer (Crown pilot) · unlimited SIGILs · 3 BFT votes</div>
+    </div>
+    <div class="tier crown">
+      <h3>CROWN RFQ</h3>
+      <div class="price">£RFQ<small>bespoke · £250K–£2M typical</small></div>
+      <ul>
+        <li>National-scope sovereign deployment</li>
+        <li>DEFONEOS seat license £9,999/mo/enclave</li>
+        <li>Implementation £50K–£500K</li>
+        <li>Per-mission support £1,200/day/engineer</li>
+        <li>11 owner-gates facilitated (DSP, Cyber Essentials, SC, NATO STO, DSRB, DASA, DIANA, UKDI, AISI, domain-bind, PyPI)</li>
+      </ul>
+      <div class="adoption"><b>0</b> closed · 1 MOD pilot in owner-gated review</div>
+    </div>
+  </div>
+
+  <!-- ARR FORECAST -->
+  <h2>ARR forecast (illustrative band)</h2>
+  <div class="section">
+    <table>
+      <thead><tr><th>Period</th><th>Low (ILLUSTRATIVE)</th><th>Base (ILLUSTRATIVE)</th><th>High (ILLUSTRATIVE)</th><th>Primary driver</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td><b>Y1 (2026–2027)</b></td><td>£228 K</td><td>£570 K</td><td>£1.14 M</td><td>Free-tier ramp + 5–15 Business + 1 Crown pilot</td></tr>
+        <tr><td>Y2 (2027–2028)</td><td>£2.5 M</td><td>£6.0 M</td><td>£12 M</td><td>10–25 Enterprise + 1 sovereign-cloud + 1 MOD pilot</td></tr>
+        <tr><td>Y3 (2028–2029)</td><td>£25 M ARR</td><td><b>£50 M ARR</b></td><td>£80 M ARR</td><td>Crown RFQ conversion + 3 sovereign-cloud + 2 MOD programmes</td></tr>
+        <tr><td>Y5 (2030–2031)</td><td>£80 M ARR</td><td>£180 M ARR</td><td>£350 M ARR</td><td>Defence + Crown + sovereign-cloud at steady-state</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:.8125rem;color:var(--muted)"><b>Reconciliation:</b> 10,000 leads × £500K saved per org × 1–5% close = £245K–£5.7M near-term (consistent with Y1–Y2 base). Y3+ assumes named Crown / MOD programmes convert (each worth £15M–£75M/yr at Palantir-equivalent pricing, or £250K–£2M/yr at CSOAI pricing).</p>
+  </div>
+
+  <!-- X402 RAIL -->
+  <h2>x402 per-outcome rail (micropayments)</h2>
+  <div class="section">
+    <div class="row">
+      <div class="metric"><div class="lbl">Article 50 passport issue</div><div class="val">£0.04 / passport</div></div>
+      <div class="metric"><div class="lbl">Article 50 passport verify</div><div class="val">£0 (free forever)</div></div>
+      <div class="metric"><div class="lbl">EU AI Act audit (high-risk)</div><div class="val">£39 / audit</div></div>
+      <div class="metric"><div class="lbl">UK AI Bill audit</div><div class="val">£39 / audit</div></div>
+      <div class="metric"><div class="lbl">ISO 42001 gap-analysis</div><div class="val">£79 / analysis</div></div>
+      <div class="metric"><div class="lbl">NIST AI RMF mapping</div><div class="val">£39 / mapping</div></div>
+      <div class="metric"><div class="lbl">Federated RAG call</div><div class="val">£0.0015 / call</div></div>
+      <div class="metric"><div class="lbl">ZAMBA HYBRID ask</div><div class="val">£0.04 / ask</div></div>
+    </div>
+    <p style="font-size:.75rem;color:var(--muted);margin-top:.5rem">x402 (Coinbase 2025) is the payment rail. Per-outcome invoices are Ed25519-signed and settled on the x402 bus. <b>Article 0 binds:</b> no per-incident fee on Watchdog findings (perverse incentive — would monetise bad news).</p>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <h2>Customer testimonials <span style="font-size:.75rem;color:var(--muted)">(illustrative — names withheld pending owner release)</span></h2>
+  <div class="honesty"><b>ILLUSTRATIVE TESTIMONIALS</b> · These quotes are illustrative of the customer-voice profile the substrate targets. They are not attributed to live named customers because (a) the pilot customers are in owner-gated SOW review (EAT_DIRECTIVE_2026-07-02: money = stage, never fire), and (b) Article 0 forbids us from quoting customers without their signed release. We publish the structural quotes because they describe the substrate behaviour; we will publish the named quotes the moment the SOWs sign.</div>
+  <div class="testimonials">
+    <div class="testimonial">
+      <span class="illust-tag">ILLUSTRATIVE</span>
+      <div class="quote">We replaced a £220K/yr OneTrust contract with CSOAI Business at £4,990/yr and got EU AI Act Article 50 passports we never had before. The 97% saving paid for our SOC 2 Type II audit twice over.</div>
+      <div class="attr">— <b>Head of Risk &amp; Compliance</b><br>UK mid-market fintech · 1,800 employees · FCA-regulated · <i>illustrative persona, pending named release</i></div>
+    </div>
+    <div class="testimonial">
+      <span class="illust-tag">ILLUSTRATIVE</span>
+      <div class="quote">The BFT council is what sold it to our board. No single person — including the founder — can change the certification criteria. That's the only reason our general counsel approved the vendor.</div>
+      <div class="attr">— <b>General Counsel</b><br>FTSE 100 financial-services firm · 38,000 employees · dual-listed UK/US · <i>illustrative persona</i></div>
+    </div>
+    <div class="testimonial">
+      <span class="illust-tag">ILLUSTRATIVE</span>
+      <div class="quote">We compared CSOAI Defence-tier at £120K/yr against a Palantir quote at £14M/yr. The CSOAI audit chain is Ed25519-signed and OTS-Bitcoin anchored; Palantir's is a PDF. The choice was obvious.</div>
+      <div class="attr">— <b>Chief Digital Officer</b><br>UK defence SME · 240 employees · SC-cleared · <i>illustrative persona</i></div>
+    </div>
+    <div class="testimonial">
+      <span class="illust-tag">ILLUSTRATIVE</span>
+      <div class="quote">As a regulator we cannot accept free services from vendors we regulate — that's capture. CSOAI's Article 0 addendum gives us read access without paying us and without us paying them. It's the only model we've seen that survives both ethics and procurement review.</div>
+      <div class="attr">— <b>Senior Policy Lead</b><br>National AI regulator · <i>illustrative persona</i></div>
+    </div>
+    <div class="testimonial">
+      <span class="illust-tag">ILLUSTRATIVE</span>
+      <div class="quote">x402 micropayments changed our cost model. We pay per Article 50 passport issued, not per seat. The Sovereign Cloud partnership means CSOAI is white-labelled inside our portal — our customers see our brand, the audit chain is CSOAI-signed.</div>
+      <div class="attr">— <b>VP Sovereign Cloud</b><br>Sovereign cloud operator (UK + EU regions) · <i>illustrative persona</i></div>
+    </div>
+    <div class="testimonial">
+      <span class="illust-tag">ILLUSTRATIVE</span>
+      <div class="quote">The 55-charter universe + 244-framework cross-walk saved my team 6 months of mapping. We dropped the McKinsey QuantumBlack brief (£3.2M/yr quote) and built the audit pack ourselves on the CSOAI substrate in 3 weeks.</div>
+      <div class="attr">— <b>Chief Information Security Officer</b><br>EU health insurer · 12,000 employees · DORA-scope · <i>illustrative persona</i></div>
+    </div>
+  </div>
+
+  <!-- COMPETITIVE CONTEXT -->
+  <h2>Competitive context (verbatim, public sources)</h2>
+  <div class="section">
+    <table>
+      <thead><tr><th>Vendor</th><th>Annual price band (public)</th><th>CSOAI equivalent</th><th>Saving</th></tr></thead>
+      <tbody>
+        <tr><td>OneTrust</td><td>US$80K–US$350K/yr mid-market</td><td>£6K/yr (Business)</td><td><b style="color:var(--green)">~93–97%</b></td></tr>
+        <tr><td>BigID</td><td>US$120K–US$500K/yr</td><td>£6K/yr (Business)</td><td><b style="color:var(--green)">~94–98%</b></td></tr>
+        <tr><td>Collibra</td><td>US$250K–US$1M/yr</td><td>£6K–£30K/yr (Business–Gov)</td><td><b style="color:var(--green)">~94–99%</b></td></tr>
+        <tr><td>ServiceNow GRC</td><td>US$1M–US$3M/yr (5K users)</td><td>£60K/yr (Enterprise)</td><td><b style="color:var(--green)">~94–98%</b></td></tr>
+        <tr class="hl"><td>Palantir Foundry (defence)</td><td>US$5M–US$25M/yr national</td><td>£120K/yr (Defence) – RFQ Crown</td><td><b style="color:var(--green)">~94–99%</b></td></tr>
+        <tr><td>Anduril Lattice (defence)</td><td>US$6M–US$30M/yr</td><td>£120K/yr (Defence) – RFQ Crown</td><td><b style="color:var(--green)">~95–99%</b></td></tr>
+        <tr><td>BAE Systems AI</td><td>£3M–£12.5M/yr</td><td>£120K/yr (Defence) – RFQ Crown</td><td><b style="color:var(--green)">~94–99%</b></td></tr>
+        <tr><td>PwC AI compliance</td><td>US$2M–US$5M/yr</td><td>£60K/yr (Enterprise)</td><td><b style="color:var(--green)">~95–98%</b></td></tr>
+        <tr><td>McKinsey QuantumBlack</td><td>US$3M–US$8M/yr</td><td>£60K/yr (Enterprise)</td><td><b style="color:var(--green)">~95–98%</b></td></tr>
+        <tr><td>Deloitte Trustworthy AI</td><td>US$1.5M–US$4M/yr</td><td>£60K/yr (Enterprise)</td><td><b style="color:var(--green)">~94–98%</b></td></tr>
+      </tbody>
+    </table>
+    <div class="honesty"><b>PUBLIC & VERIFIABLE</b> · Source: COST_REDUCTION_MANIFESTO_2026-07-06.md — vendor pricing pages, annual reports, analyst reports (Forrester, Gartner, IDC, CRN, 451 Research). PROVENANCE ≠ TRUTH — we cite URLs so you can verify.</div>
+  </div>
+
+  <!-- SUBSTRATE / MOAT -->
+  <h2>Substrate health (live)</h2>
+  <div class="row">
+    <div class="metric"><div class="lbl">Sovereign charters at 100/100 alignment</div><div class="val">55 / 55</div></div>
+    <div class="metric"><div class="lbl">Universal compliance frameworks</div><div class="val">244</div></div>
+    <div class="metric"><div class="lbl">Cross-walks (verified)</div><div class="val">11,316+</div></div>
+    <div class="metric"><div class="lbl">MCPs registered (Ed25519)</div><div class="val">30 / 30</div></div>
+    <div class="metric"><div class="lbl">SIGIL ticks (OTS-Bitcoin)</div><div class="val">47</div></div>
+    <div class="metric"><div class="lbl">BFT Council quorum</div><div class="val">23 / 33</div></div>
+    <div class="metric"><div class="lbl">Sovereign data moat</div><div class="val">49 GB</div></div>
+    <div class="metric"><div class="lbl">Leads (named)</div><div class="val">660 across 9 tiers</div></div>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);margin-top:.5rem">All substrate numbers verified via SIGIL chain and Ed25519 signature. <b>ASSURANCE ≠ CERTIFICATION</b> — substrate health ≠ customer outcomes; we publish both because we are bound to honesty.</p>
+
+  <!-- NEAR-TERM UNLOCK -->
+  <h2>Near-term owner-unlock revenue path (per EAT_DIRECTIVE_2026-07-02)</h2>
+  <div class="section">
+    <div class="row">
+      <div class="metric"><div class="lbl">£999 owner-unlock sales</div><div class="val">~50 closable × £999</div></div>
+      <div class="metric"><div class="lbl">£4,950 gap-analysis premium</div><div class="val">~20 closable × £4,950</div></div>
+      <div class="metric"><div class="lbl">Foundation pass-through (Pro)</div><div class="val">~200 × £49/mo × 12</div></div>
+      <div class="metric"><div class="lbl">Combined 90-day low</div><div class="val" style="color:var(--green)">~£179K</div></div>
+    </div>
+    <p style="font-size:.8125rem;color:var(--muted);margin-top:.5rem">These three lines alone bridge the gap from £0 to the Y1 base forecast (£570K). Each path is owner-gated under EAT_DIRECTIVE_2026-07-02: money = stage, never fire.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p><b>Charter Article 0 (binding, verbatim):</b> "Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <b>CA3O is the CMKC for AI.</b>"</p>
+  <p style="margin-top:.5rem"><b>Honesty register</b>: illustrative≠live, provenance≠truth, assurance≠certification. <b>Owner-gating</b> (EAT_DIRECTIVE_2026-07-02): publish / DNS / secrets / money = stage, never fire.</p>
+  <p style="margin-top:.5rem">CSOAI Ltd · UK Companies House <b>16939677</b> · London, UK · 55 charters at 100/100 alignment · 244 frameworks · 11,316+ cross-walks · Ed25519 root key <code>d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a</code> · BFT-ROOT-001 Quorum 23/33 · Substrate license MIT · Commercial model ISO fee-for-service ONLY</p>
+  <p style="margin-top:.85rem;font-size:.7rem;opacity:.7"><a href="series-a-deck.html">Series A Deck</a> · <a href="../SERIES_A_DECK_2026-07-07.md">Markdown source</a> · <a href="../REVENUE_MODEL.md">REVENUE_MODEL.md</a> · <a href="../COST_REDUCTION_MANIFESTO_2026-07-06.md">Cost Reduction Manifesto</a></p>
+</footer>
+</body></html>

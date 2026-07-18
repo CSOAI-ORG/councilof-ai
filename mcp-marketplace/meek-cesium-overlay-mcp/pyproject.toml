@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_cesium_overlay_mcp"
+version = "1.0.0"
+description = "MEEK Cesium Overlay MCP — the 3D world overlay with regulations + orbs + terrain (Cesium integration). MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "world-data", "cesium", "sov-os", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org/sov-space"
+Repository = "https://github.com/CSOAI-ORG/meek-cesium-overlay-mcp"
+
+[project.scripts]
+meek-cesium-overlay-mcp = "meek_cesium_overlay_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_cesium_overlay_mcp"]

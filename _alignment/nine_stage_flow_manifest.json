@@ -1,0 +1,67 @@
+{
+  "stages": [
+    {
+      "n": 1,
+      "name": "LEARN",
+      "status": "NEW",
+      "desc": "ground from disk/memory/live data before acting"
+    },
+    {
+      "n": 2,
+      "name": "CHECK_EXISTING",
+      "status": "NEW",
+      "desc": "audit what's already built; never rebuild"
+    },
+    {
+      "n": 3,
+      "name": "PLAN",
+      "status": "RUNNING",
+      "desc": "decompose the task (PDCA g1)"
+    },
+    {
+      "n": 4,
+      "name": "DO",
+      "status": "RUNNING",
+      "desc": "execute \u2014 brain/swarm (PDCA g2)"
+    },
+    {
+      "n": 5,
+      "name": "ACT",
+      "status": "RUNNING",
+      "desc": "apply/commit the result (PDCA g3)"
+    },
+    {
+      "n": 6,
+      "name": "CHECK_VERIFY",
+      "status": "RUNNING",
+      "desc": "cross-lineage defer-to-escalate (sov33_escalate, rho-measured)"
+    },
+    {
+      "n": 7,
+      "name": "AUDIT",
+      "status": "PARTIAL",
+      "desc": "trace claims, catch overclaims, RUNNING/DESIGNED/STUB split"
+    },
+    {
+      "n": 8,
+      "name": "IMPROVE",
+      "status": "RUNNING",
+      "desc": "log pass/fail, tighten loop, propose (not self-commit) (PDCA g5)"
+    },
+    {
+      "n": 9,
+      "name": "BRAND_QUALITY",
+      "status": "PARTIAL",
+      "desc": "presentation + conformal quality guarantee, BFT-gated"
+    }
+  ],
+  "gates": [
+    "HORUS",
+    "DORADO",
+    "CARE_FLOOR_conformal",
+    "SIGIL",
+    "Article_0"
+  ],
+  "bft_rule": "cross-lineage checkers only; escalate-don't-average; log rho; rho>=0.7=theatre",
+  "honest_scope": "governance+throughput, NOT capability; params don't add across stacked brains"
+}

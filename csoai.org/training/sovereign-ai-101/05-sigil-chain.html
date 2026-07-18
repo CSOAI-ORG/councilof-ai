@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 5: SIGIL Chain — Sovereign AI 101</title>
+<meta name="description" content="What is a SIGIL? Ed25519 + PQC ML-DSA-65. Hash-chained. Verifiable in 1 line. Public chain.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.85rem; margin-bottom: 1rem; }
+  .breadcrumb a { color: #60a5fa; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.2rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .module-tag { display: inline-block; background: #fbbf24; color: #000; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .quiz { background: #111; padding: 1.5rem; border-radius: 12px; max-width: 900px; margin: 1.5rem auto; border: 1px solid #fbbf24; }
+  .quiz h3 { color: #fbbf24; margin-bottom: 1rem; }
+  .question { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.75rem 0; }
+  .question p { color: #10b981; font-weight: bold; margin-bottom: 0.5rem; }
+  .question label { display: block; color: #ccc; padding: 0.25rem 0; cursor: pointer; }
+  .question input { margin-right: 0.5rem; }
+  .question .answer { color: #fbbf24; margin-top: 0.5rem; font-style: italic; display: none; }
+  .question.show .answer { display: block; }
+  .reveal-btn { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+  .nav-bottom { display: flex; justify-content: space-between; margin: 3rem 0; gap: 1rem; flex-wrap: wrap; }
+  .nav-bottom a { display: inline-block; background: #2d1b4e; color: #fbbf24; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid #fbbf24; }
+  .nav-bottom a.next { background: #fbbf24; color: #000; font-weight: bold; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; font-family: monospace; }
+  pre { background: #0a0a0a; color: #10b981; padding: 1.25rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; white-space: pre; overflow-x: auto; border: 1px solid #2d1b4e; max-width: 900px; margin: 1rem auto; line-height: 1.4; }
+  .field { background: #1a1a1a; padding: 0.75rem; border-radius: 6px; margin: 0.4rem 0; font-family: monospace; font-size: 0.85rem; color: #ccc; border-left: 3px solid #fbbf24; }
+  .field .key { color: #fbbf24; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="index.html">Sov AI 101</a>
+  <a href="04-bft-council.html">M4</a>
+  <a href="06-article-50.html">M6 →</a>
+</div>
+
+<p class="breadcrumb"><a href="index.html">Sovereign AI 101</a> / <strong>Module 5</strong></p>
+
+<h1>🔏 Module 5: The SIGIL Chain</h1>
+<p style="text-align: center;"><span class="module-tag">MODULE 5 OF 10</span> · ⏱ 25 minutes</p>
+
+<h2>🔏 What is a SIGIL?</h2>
+<p>A <strong>SIGIL</strong> (Signed Inter-agent Governance &amp; Intent Ledger) is the witness record emitted by every sovereign action in the SOV3 system. It is the cryptographic proof that "this thing happened, at this time, by this actor, with this intent, witnessed by this council vote".</p>
+
+<p>The SIGIL is more than a log entry — it is a <strong>constitutional artefact</strong>. A SIGIL is the only way a sovereign action can be proven. Without a SIGIL, the action did not happen. Without a SIGIL, the action cannot enter the public record. The SIGIL is what makes "trust" a non-issue: <em>you do not need to trust; you verify.</em></p>
+
+<p>Each SIGIL contains 7 fields, plus the signatures:</p>
+
+<div class="field"><span class="key">op:</span>     The operation type (P=proposal, V=vote, M=memory, Q=query, C=commit, H=handoff, S=secret, A=audit)</div>
+<div class="field"><span class="key">actor:</span>  The sovereign actor (queen ID, system, or citizen DID)</div>
+<div class="field"><span class="key">target:</span> The target of the action (file, model, user, system)</div>
+<div class="field"><span class="key">intent:</span> Human-readable description of intent (one sentence)</div>
+<div class="field"><span class="key">hash:</span>   SHA-256 of the action payload</div>
+<div class="field"><span class="key">prev:</span>   SHA-256 of the previous SIGIL in the chain (creates the chain)</div>
+<div class="field"><span class="key">timestamp:</span> RFC 3161 timestamp, optionally Bitcoin-anchored</div>
+
+<h2>🔐 Ed25519 + PQC ML-DSA-65</h2>
+<p>Every SIGIL is dual-signed with two cryptographic algorithms:</p>
+
+<p><strong>Ed25519</strong> — a classical elliptic-curve signature scheme. Fast (sub-millisecond signing), compact (64-byte signatures), well-vetted (used by Solana, NEAR, Signal, and most modern blockchains). Ed25519 is the "fast classical" arm of the SIGIL signature.</p>
+
+<p><strong>PQC ML-DSA-65</strong> — a post-quantum signature scheme standardised by NIST in FIPS 204 (August 2024). Resistant to Shor's algorithm, which would break Ed25519 on a sufficiently large quantum computer. ML-DSA-65 is the "future-proof" arm of the SIGIL signature.</p>
+
+<p>The dual-signature means a SIGIL is verifiable today (via Ed25519, in <1ms) AND verifiable in the post-quantum era (via ML-DSA-65, in <10ms). The 7 May 2026 EU Digital Omnibus Act delay does not apply to ML-DSA-65 — it is the only NIST-standardised PQC algorithm already shipping in production.</p>
+
+<h2>🔗 Hash-Chained</h2>
+<p>Each SIGIL includes the <code>prev</code> field — the SHA-256 of the previous SIGIL in the chain. This creates an unbroken hash chain: SIGIL_n.prev = SHA256(SIGIL_{n-1}).</p>
+
+<p>If any SIGIL is altered, its hash changes, and every subsequent SIGIL's <code>prev</code> field becomes invalid. Tamper-evidence is automatic — to falsify one SIGIL, an attacker would have to re-sign every subsequent SIGIL, which requires the private key.</p>
+
+<p>The hash chain is the cryptographic backbone that makes the SIGIL chain an <strong>immutable audit trail</strong>. It is the same principle that secures Bitcoin and other blockchains — applied to sovereign AI governance.</p>
+
+<h2>✅ Verifiable in 1 Line</h2>
+<p>A SIGIL can be verified in a single line of code, using only the public key:</p>
+
+<pre>python -m sov3.sigil.verify --sigil sig_2026_07_04_T12_00_00Z_abc123 --pubkey cs1.pub</pre>
+
+<p>The verifier:</p>
+<ol style="color: #aaa; padding-left: 1.5rem;">
+  <li>Re-computes the SIGIL's hash from its fields</li>
+  <li>Verifies the Ed25519 signature against the public key</li>
+  <li>Verifies the ML-DSA-65 signature against the public key</li>
+  <li>Verifies that SIGIL.prev = SHA256(previous SIGIL)</li>
+  <li>Verifies that timestamp is monotonic with previous</li>
+  <li>Returns <code>VALID</code> or <code>INVALID</code> with detailed reason</li>
+</ol>
+
+<p>This is what makes the SIGIL chain regulator-grade proof. A regulator can take any SIGIL, run one command, and confirm its authenticity without trusting CSOAI's infrastructure.</p>
+
+<h2>🌍 Public Chain</h2>
+<p>The CSOAI SIGIL chain is <strong>publicly queryable</strong>. Anyone can:</p>
+<ul style="color: #aaa; padding-left: 1.5rem;">
+  <li>Browse the chain at <code>/sigil-explorer/</code></li>
+  <li>Query by actor, action, or time range via the REST API</li>
+  <li>Download the entire chain as JSONL for offline audit</li>
+  <li>Verify any individual SIGIL with the public key (published at <code>/.well-known/csoai.pub</code>)</li>
+</ul>
+
+<p>This is the inverse of corporate AI audit trails — which are private, retainable, and not verifiable. The CSOAI SIGIL chain is open, immutable, and cryptographically verifiable. <strong>The chain is the constitution. The chain is the proof.</strong></p>
+
+<p>Public SIGIL explorer: <a href="/sigil-explorer/" style="color: #60a5fa;">/sigil-explorer/</a> · REST API: <code>/v1/sigil/</code> · Public key: <code>/.well-known/csoai.pub</code></p>
+
+<h2>📜 Sample SIGIL</h2>
+<pre>
+{
+  "op": "C",
+  "actor": "queen_themis",
+  "target": "article50_passport_7a3f9c",
+  "intent": "Issue Article 50 watermarking passport for content hash 7a3f9c...",
+  "hash": "7a3f9c2b8e1d4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a",
+  "prev": "5b8e1d4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d",
+  "timestamp": "2026-07-04T12:00:00.000Z",
+  "council_vote": {
+    "mode": "standard",
+    "for": 7, "against": 0, "abstain": 0
+  },
+  "signatures": {
+    "ed25519": "5e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b",
+    "ml_dsa_65": "8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f"
+  }
+}
+</pre>
+
+<h2>🎯 5 Key Takeaways</h2>
+<div class="takeaway"><h4>1. SIGIL = Signed Inter-agent Governance &amp; Intent Ledger</h4><p>7 fields + 2 signatures + 1 chain. The constitutional artefact of every sovereign action.</p></div>
+<div class="takeaway"><h4>2. Ed25519 + PQC ML-DSA-65 = dual-signature</h4><p>Classical (fast, today) + post-quantum (future-proof, NIST FIPS 204). Verifiable in any era.</p></div>
+<div class="takeaway"><h4>3. Hash chain = tamper-evidence</h4><p>Each SIGIL.prev = SHA256(previous SIGIL). Alter one → break all subsequent. Cryptographically enforced immutability.</p></div>
+<div class="takeaway"><h4>4. Verifiable in 1 line</h4><p><code>python -m sov3.sigil.verify --sigil X --pubkey Y</code> → VALID or INVALID. No trust required.</p></div>
+<div class="takeaway"><h4>5. Public chain = no trust, only verification</h4><p>Anyone can browse, query, download, verify. The inverse of corporate AI's private audit trails.</p></div>
+
+<h2>📝 Module 5 Quiz</h2>
+<div class="quiz">
+  <h3>3 Questions</h3>
+
+  <div class="question">
+    <p>1. What does SIGIL stand for?</p>
+    <label><input type="radio" name="q1"> A. Secure Inter-agent Governance &amp; Intent Ledger</label>
+    <label><input type="radio" name="q1"> B. Signed Inter-agent Governance &amp; Intent Ledger</label>
+    <label><input type="radio" name="q1"> C. Sovereign Inter-galactic Intelligence Lattice</label>
+    <label><input type="radio" name="q1"> D. Signed Intergovernmental Identity Layer</label>
+    <div class="answer">✓ <strong>Answer: B.</strong> Signed Inter-agent Governance &amp; Intent Ledger. The "Signed" emphasises the cryptographic dual-signature.</div>
+  </div>
+
+  <div class="question">
+    <p>2. Which NIST-standardised PQC algorithm signs each SIGIL?</p>
+    <label><input type="radio" name="q2"> A. ML-KEM-768</label>
+    <label><input type="radio" name="q2"> B. ML-DSA-65</label>
+    <label><input type="radio" name="q2"> C. SLH-DSA-SHAKE</label>
+    <label><input type="radio" name="q2"> D. FN-DSA-512</label>
+    <div class="answer">✓ <strong>Answer: B. ML-DSA-65.</strong> NIST FIPS 204 standard. The post-quantum signature arm of the dual-signature. The 7 May 2026 EU Digital Omnibus Act delay does NOT apply to ML-DSA-65.</div>
+  </div>
+
+  <div class="question">
+    <p>3. What creates the chain in the SIGIL chain?</p>
+    <label><input type="radio" name="q3"> A. Each SIGIL points to the next SIGIL</label>
+    <label><input type="radio" name="q3"> B. Each SIGIL includes SHA256 of the previous SIGIL</label>
+    <label><input type="radio" name="q3"> C. SIGILs are stored in a database</label>
+    <label><input type="radio" name="q3"> D. SIGILs are anchored to Bitcoin daily</label>
+    <div class="answer">✓ <strong>Answer: B.</strong> Each SIGIL.prev = SHA256(previous SIGIL). This hash-chain gives tamper-evidence: alter one → break all subsequent.</div>
+  </div>
+
+  <button class="reveal-btn" onclick="document.querySelectorAll('.question').forEach(q => q.classList.add('show')); this.style.display='none';">Show Answers</button>
+</div>
+
+<div class="nav-bottom">
+  <a href="04-bft-council.html">← Module 4</a>
+  <a href="06-article-50.html" class="next">Module 6: Article 50 Watermarking →</a>
+</div>
+
+<footer>
+  <p><strong>🐉 Sovereign AI 101 — Module 5: The SIGIL Chain</strong></p>
+  <p>CSOAI Ltd (UK 16939677) · MIT license · 4 Jul 2026</p>
+  <p><a href="index.html">Course Overview</a> · <a href="/">csoai.org</a> · <a href="/sigil-explorer/">SIGIL Explorer</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">Ed25519 + PQC ML-DSA-65. Hash-chained. Publicly verifiable. Sovereign by construction.</p>
+</footer>
+
+</body>
+</html>

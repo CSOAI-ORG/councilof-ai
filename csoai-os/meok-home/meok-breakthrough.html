@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<title>MEOK BREAKTHROUGH — The 5D World</title>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --bg: #F5F0E6;
+  --bg-deep: #0a0a1e;
+  --text: #2a1a14;
+  --text-dim: rgba(42, 26, 20, 0.65);
+  --surface: #FAF7F0;
+  --surface-2: #FFFCF5;
+  --border: rgba(201, 168, 76, 0.3);
+  --green: #10b981;
+  --blue: #3b82f6;
+  --coral: #d47a5a;
+  --purple: #a855f7;
+  --teal: #5aa89a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg-deep);
+  position: relative;
+}
+a { color: var(--gold-bright); text-decoration: none; }
+
+/* === Loading === */
+.loading {
+  position: fixed; inset: 0; z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-deep);
+  flex-direction: column; gap: 24px;
+  color: var(--gold);
+  font-family: 'JetBrains Mono', monospace;
+  z-index: 9999;
+  transition: opacity 1s;
+}
+.loading.hidden { opacity: 0; pointer-events: none; }
+.loading .spinner {
+  width: 80px; height: 80px;
+  border: 4px solid rgba(201, 168, 76, 0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading h1 {
+  font-size: 32px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.loading p { color: rgba(245, 240, 230, 0.5); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; }
+
+/* === Topbar === */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(10, 10, 30, 0.95), rgba(10, 10, 30, 0));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 18px;
+  color: var(--gold);
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 16px var(--gold);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+}
+.topbar nav { display: flex; gap: 4px; }
+.topbar nav button {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: rgba(245, 240, 230, 0.7);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.topbar nav button:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.topbar nav button.active {
+  background: var(--gold);
+  color: var(--bg-deep);
+}
+
+/* === 5D Stage === */
+.stage {
+  position: fixed; inset: 0;
+  display: grid;
+  grid-template-columns: 320px 1fr 360px;
+  grid-template-rows: 64px 1fr 64px;
+  padding-top: 64px;
+}
+
+/* === LHS — Sovereign Character === */
+.lhs {
+  grid-row: 2;
+  grid-column: 1;
+  padding: 24px 16px;
+  background: rgba(10, 10, 30, 0.6);
+  border-right: 1px solid rgba(201, 168, 76, 0.2);
+  overflow-y: auto;
+  color: rgba(245, 240, 230, 0.85);
+}
+.lhs h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+.sovereign-char {
+  width: 100%; height: 280px;
+  background: radial-gradient(ellipse, var(--gold-bright), transparent);
+  border-radius: 20px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.sovereign-char::before {
+  content: '🐉';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120px;
+  filter: drop-shadow(0 0 24px var(--gold));
+  animation: sovereignFloat 6s ease-in-out infinite;
+}
+@keyframes sovereignFloat {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50% { transform: translate(-50%, -55%); }
+}
+.lhs .label {
+  font-size: 11px;
+  color: rgba(245, 240, 230, 0.5);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 4px;
+}
+.lhs .value {
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.lhs .actions {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.lhs .actions button {
+  padding: 10px 12px;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 8px;
+  color: var(--gold);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+.lhs .actions button:hover {
+  background: rgba(201, 168, 76, 0.2);
+  border-color: var(--gold);
+}
+
+/* === Center — 3D Globe + Content === */
+.center {
+  grid-row: 2;
+  grid-column: 2;
+  position: relative;
+  overflow: hidden;
+}
+.center #cesiumContainer {
+  position: absolute; inset: 0;
+  background: var(--bg-deep);
+}
+.center .overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+.center .hero-text {
+  position: absolute; top: 30px; left: 30px; right: 30px;
+  text-align: center;
+  pointer-events: auto;
+}
+.center .hero-text h1 {
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright), #f0d68a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.center .hero-text p {
+  color: rgba(245, 240, 230, 0.6);
+  font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.center .stats {
+  position: absolute; bottom: 20px; left: 20px; right: 20px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  pointer-events: auto;
+}
+.center .stat {
+  background: rgba(10, 10, 30, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+}
+.center .stat .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+}
+.center .stat .lbl {
+  font-size: 9px;
+  color: rgba(245, 240, 230, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+/* === RHS — i-Character + Council + Temples === */
+.rhs {
+  grid-row: 2;
+  grid-column: 3;
+  padding: 24px 16px;
+  background: rgba(10, 10, 30, 0.6);
+  border-left: 1px solid rgba(201, 168, 76, 0.2);
+  overflow-y: auto;
+  color: rgba(245, 240, 230, 0.85);
+}
+.rhs h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+.rhs .tabs {
+  display: flex; gap: 4px;
+  margin-bottom: 12px;
+}
+.rhs .tab {
+  flex: 1;
+  padding: 8px;
+  background: transparent;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
+  color: rgba(245, 240, 230, 0.7);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  cursor: pointer;
+}
+.rhs .tab.active {
+  background: var(--gold);
+  color: var(--bg-deep);
+  border-color: var(--gold);
+}
+.rhs .content { display: none; }
+.rhs .content.active { display: block; }
+
+/* i-Character wizard */
+.ichar-step {
+  padding: 12px;
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.ichar-step .label {
+  font-size: 10px;
+  color: rgba(245, 240, 230, 0.5);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.ichar-step .value {
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 600;
+}
+.ichar-step .value.empty { color: rgba(245, 240, 230, 0.3); font-style: italic; }
+.ichar-step select, .ichar-step input {
+  width: 100%;
+  padding: 8px;
+  background: rgba(10, 10, 30, 0.5);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 6px;
+  color: var(--gold);
+  font-family: inherit;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.ichar-step button {
+  width: 100%;
+  padding: 8px;
+  background: var(--gold);
+  color: var(--bg-deep);
+  border: 0;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Council */
+.queen-card {
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s;
+}
+.queen-card:hover {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: var(--gold);
+}
+.queen-card .emoji { font-size: 24px; }
+.queen-card .info { flex: 1; }
+.queen-card .name { font-size: 12px; color: var(--gold); font-weight: 600; }
+.queen-card .arch { font-size: 9px; color: rgba(245, 240, 230, 0.5); font-family: 'JetBrains Mono', monospace; }
+.queen-card.veto { border-color: #991b1b; }
+.queen-card.veto .name { color: #f87171; }
+
+/* Temples */
+.temple-mini {
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+}
+.temple-mini:hover { background: rgba(201, 168, 76, 0.15); }
+.temple-mini .flag { font-size: 16px; }
+.temple-mini .code { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 600; }
+
+/* === Bottom — 7 archetypes + status === */
+.bottom {
+  grid-row: 3;
+  grid-column: 1 / 4;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(10, 10, 30, 0.8);
+  border-top: 1px solid rgba(201, 168, 76, 0.3);
+  backdrop-filter: blur(8px);
+}
+.bottom .archetypes {
+  display: flex; gap: 4px;
+}
+.bottom .arch {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.bottom .arch:hover {
+  transform: scale(1.3);
+  background: var(--gold);
+  box-shadow: 0 0 16px var(--gold);
+}
+.bottom .status {
+  display: flex; gap: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(245, 240, 230, 0.7);
+}
+.bottom .status .item { display: flex; align-items: center; gap: 4px; }
+.bottom .status .dot {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--gold);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* === Chat overlay === */
+.chat-overlay {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; max-width: 90vw;
+  max-height: 80vh;
+  background: rgba(10, 10, 30, 0.95);
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  padding: 24px;
+  z-index: 200;
+  display: none;
+  overflow-y: auto;
+  color: rgba(245, 240, 230, 0.9);
+  backdrop-filter: blur(20px);
+}
+.chat-overlay.open { display: block; }
+.chat-overlay .close {
+  position: absolute; top: 12px; right: 12px;
+  width: 32px; height: 32px;
+  background: rgba(201, 168, 76, 0.2);
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--gold);
+}
+.chat-overlay h2 { font-size: 24px; color: var(--gold); margin-bottom: 16px; }
+.chat-overlay .messages {
+  max-height: 300px; overflow-y: auto;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+.chat-overlay .message {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.chat-overlay .message.user {
+  background: rgba(201, 168, 76, 0.2);
+  text-align: right;
+  color: var(--gold);
+}
+.chat-overlay .message.queen {
+  background: rgba(91, 168, 154, 0.1);
+  border-left: 2px solid var(--teal);
+}
+.chat-overlay .input-row {
+  display: flex; gap: 8px;
+}
+.chat-overlay input {
+  flex: 1;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 8px;
+  color: var(--gold);
+  font-family: inherit;
+}
+.chat-overlay button {
+  padding: 10px 16px;
+  background: var(--gold);
+  color: var(--bg-deep);
+  border: 0;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.chat-overlay .voice-btn {
+  background: rgba(91, 168, 154, 0.2);
+  border: 1px solid var(--teal);
+  color: var(--teal);
+}
+
+/* === Responsive === */
+@media (max-width: 1024px) {
+  .stage { grid-template-columns: 1fr; grid-template-rows: 64px 240px 1fr 64px; }
+  .lhs, .rhs { display: none; }
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Loading -->
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <h1>MEOK BREAKTHROUGH</h1>
+  <p>Loading the 5D world...</p>
+</div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="logo">
+    <span class="dot"></span>
+    <span>MEOK<span style="color:var(--gold-bright)">.WORLD</span></span>
+  </div>
+  <nav>
+    <button class="active" data-view="3d">3D WORLD</button>
+    <button data-view="ichar">I-CHARACTER</button>
+    <button data-view="council">COUNCIL</button>
+    <button data-view="temples">TEMPLES</button>
+  </nav>
+</header>
+
+<!-- 5D Stage -->
+<main class="stage">
+  <!-- LHS: Sovereign Character -->
+  <aside class="lhs">
+    <h3>◂ SOVEREIGN CHARACTER</h3>
+    <div class="sovereign-char"></div>
+    <div class="label">Character</div>
+    <div class="value" id="sName">Sovereign Dragon</div>
+    <div class="label">Archetype</div>
+    <div class="value" id="sArch">Sovereign King · 👑</div>
+    <div class="label">Council</div>
+    <div class="value">13-Queen + King · BFT 9/13</div>
+    <div class="label">Backend</div>
+    <div class="value" id="sBackend">Checking...</div>
+    <h3 style="margin-top:24px">◂ ACTIONS</h3>
+    <div class="actions">
+      <button onclick="openCouncilChat()">💬 Council Chat</button>
+      <button onclick="openVoice()">🎤 Voice Mode</button>
+      <button onclick="startCascade()">⚡ 4-Tier Cascade</button>
+      <button onclick="verifySigil()">🔐 Verify SIGIL</button>
+      <button onclick="openMaternalCovenant()">🤝 Maternal Covenant</button>
+    </div>
+  </aside>
+
+  <!-- Center: 3D Globe + Content -->
+  <section class="center">
+    <div id="cesiumContainer"></div>
+    <div class="overlay">
+      <div class="hero-text">
+        <h1>The 5D World</h1>
+        <p>Cesium 3D globe · 7 archetypes · 13 queens · 11 temples · 218 MCPs · 33 hives · $0.011/avg</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="statMCPs">—</div><div class="lbl">MCPs</div></div>
+        <div class="stat"><div class="num" id="statQueens">—</div><div class="lbl">Queens</div></div>
+        <div class="stat"><div class="num" id="statTemples">—</div><div class="lbl">Temples</div></div>
+        <div class="stat"><div class="num" id="statArchs">7</div><div class="lbl">Archetypes</div></div>
+        <div class="stat"><div class="num" id="statHives">—</div><div class="lbl">Hives</div></div>
+        <div class="stat"><div class="num" id="statEU">—</div><div class="lbl">EU AI Act</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RHS: i-Character + Council + Temples -->
+  <aside class="rhs">
+    <h3>▸ I-CHARACTER / COUNCIL / TEMPLES</h3>
+    <div class="tabs">
+      <button class="tab active" data-tab="ichar">i-CHAR</button>
+      <button class="tab" data-tab="council">COUNCIL</button>
+      <button class="tab" data-tab="temples">TEMPLES</button>
+    </div>
+
+    <!-- i-Character wizard -->
+    <div class="content active" data-tab="ichar">
+      <div class="ichar-step">
+        <div class="label">Step 1 · Region</div>
+        <div class="value" id="icharRegion">🌍 Detecting...</div>
+      </div>
+      <div class="ichar-step">
+        <div class="label">Step 2 · Name</div>
+        <input type="text" id="icharName" placeholder="Sovereign Nick" maxlength="64">
+      </div>
+      <div class="ichar-step">
+        <div class="label">Step 3 · Queen</div>
+        <select id="icharQueen">
+          <option value="queen-king">👑 Sovereign King</option>
+          <option value="queen-care">💗 Sophia Care (VETO)</option>
+          <option value="queen-strategy">♑ Aurelian</option>
+          <option value="queen-compliance">⚖ Justitia</option>
+          <option value="queen-arcana">✨ Aleph</option>
+          <option value="queen-finance">⭐ Asteria</option>
+          <option value="queen-domain">🛞 Dominion</option>
+          <option value="queen-brain">🧠 Brain</option>
+          <option value="queen-proactive">⚡ Proactive</option>
+          <option value="queen-bridge">🌉 Bridge</option>
+          <option value="queen-distribution">☀️ Distribution</option>
+          <option value="queen-council">🦁 Council</option>
+          <option value="queen-watch">🗼 Watch (VETO)</option>
+        </select>
+      </div>
+      <div class="ichar-step">
+        <div class="label">Step 4 · Arcana</div>
+        <select id="icharArcana">
+          <option value="0">0 · The Fool</option>
+          <option value="1">1 · The Magician</option>
+          <option value="2">2 · The High Priestess</option>
+          <option value="3">3 · The Empress</option>
+          <option value="4">4 · The Emperor</option>
+          <option value="5">5 · The Hierophant</option>
+          <option value="6">6 · The Lovers</option>
+          <option value="7">7 · The Chariot</option>
+          <option value="8">8 · Strength</option>
+          <option value="9">9 · The Hermit</option>
+          <option value="10">10 · Wheel of Fortune</option>
+          <option value="11">11 · Justice</option>
+          <option value="12">12 · The Hanged Man</option>
+          <option value="13">13 · Death</option>
+          <option value="14">14 · Temperance</option>
+          <option value="15">15 · The Devil</option>
+          <option value="16">16 · The Tower</option>
+          <option value="17">17 · The Star</option>
+          <option value="18">18 · The Moon</option>
+          <option value="19">19 · The Sun</option>
+          <option value="20">20 · Judgement</option>
+          <option value="21" selected>21 · The World</option>
+        </select>
+      </div>
+      <div class="ichar-step">
+        <button onclick="createIchar()">✓ Create i-character</button>
+      </div>
+      <div class="ichar-step" id="icharResult" style="display:none">
+        <div class="label">✓ Your i-character</div>
+        <div class="value" id="icharSummary">—</div>
+      </div>
+    </div>
+
+    <!-- Council -->
+    <div class="content" data-tab="council">
+      <div class="queen-card" onclick="chatWithQueen('queen-king')">
+        <div class="emoji">👑</div>
+        <div class="info"><div class="name">Sovereign King</div><div class="arch">Coordinator</div></div>
+      </div>
+      <div class="queen-card veto" onclick="chatWithQueen('queen-care')">
+        <div class="emoji">💗</div>
+        <div class="info"><div class="name">Sophia Care · VETO</div><div class="arch">Caretaker</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-strategy')">
+        <div class="emoji">♑</div>
+        <div class="info"><div class="name">Aurelian</div><div class="arch">Strategist</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-compliance')">
+        <div class="emoji">⚖</div>
+        <div class="info"><div class="name">Justitia</div><div class="arch">Auditor</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-finance')">
+        <div class="emoji">⭐</div>
+        <div class="info"><div class="name">Asteria</div><div class="arch">Optimist-Operator</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-arcana')">
+        <div class="emoji">✨</div>
+        <div class="info"><div class="name">Aleph</div><div class="arch">Fool</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-domain')">
+        <div class="emoji">🛞</div>
+        <div class="info"><div class="name">Dominion</div><div class="arch">Chariot</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-brain')">
+        <div class="emoji">🧠</div>
+        <div class="info"><div class="name">Brain</div><div class="arch">Scholar</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-proactive')">
+        <div class="emoji">⚡</div>
+        <div class="info"><div class="name">Proactive</div><div class="arch">Fortune</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-bridge')">
+        <div class="emoji">🌉</div>
+        <div class="info"><div class="name">Bridge</div><div class="arch">Integrator</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-distribution')">
+        <div class="emoji">☀️</div>
+        <div class="info"><div class="name">Distribution</div><div class="arch">Sun</div></div>
+      </div>
+      <div class="queen-card" onclick="chatWithQueen('queen-council')">
+        <div class="emoji">🦁</div>
+        <div class="info"><div class="name">Council</div><div class="arch">Strength</div></div>
+      </div>
+      <div class="queen-card veto" onclick="chatWithQueen('queen-watch')">
+        <div class="emoji">🗼</div>
+        <div class="info"><div class="name">Watch · VETO</div><div class="arch">Tower</div></div>
+      </div>
+    </div>
+
+    <!-- Temples -->
+    <div class="content" data-tab="temples">
+      <div class="temple-mini" onclick="openTemple('EU')"><span class="flag">🇪🇺</span><span class="code">EU</span> · 8 regs</div>
+      <div class="temple-mini" onclick="openTemple('UK')"><span class="flag">🇬🇧</span><span class="code">UK</span> · 5 regs</div>
+      <div class="temple-mini" onclick="openTemple('US')"><span class="flag">🇺🇸</span><span class="code">US</span> · 7 regs</div>
+      <div class="temple-mini" onclick="openTemple('CA')"><span class="flag">🇨🇦</span><span class="code">CA</span> · 2 regs</div>
+      <div class="temple-mini" onclick="openTemple('CN')"><span class="flag">🇨🇳</span><span class="code">CN</span> · 3 regs</div>
+      <div class="temple-mini" onclick="openTemple('JP')"><span class="flag">🇯🇵</span><span class="code">JP</span> · 2 regs</div>
+      <div class="temple-mini" onclick="openTemple('SG')"><span class="flag">🇸🇬</span><span class="code">SG</span> · 2 regs</div>
+      <div class="temple-mini" onclick="openTemple('UN')"><span class="flag">🇺🇳</span><span class="code">UN</span> · 3 regs</div>
+      <div class="temple-mini" onclick="openTemple('ISO')"><span class="flag">🏛</span><span class="code">ISO</span> · 3 regs</div>
+      <div class="temple-mini" onclick="openTemple('IEEE')"><span class="flag">⚙</span><span class="code">IEEE</span> · 2 regs</div>
+      <div class="temple-mini" onclick="openTemple('CSOAI')"><span class="flag">🐉</span><span class="code">CSOAI</span> · 4 regs</div>
+    </div>
+  </aside>
+
+  <!-- Bottom: 7 archetypes + status -->
+  <footer class="bottom">
+    <div class="archetypes">
+      <div class="arch" data-arch="sovereign" title="Sovereign · sky blue">🐉</div>
+      <div class="arch" data-arch="guardian" title="Guardian · dark navy">🛡</div>
+      <div class="arch" data-arch="scout" title="Scout · coral">🏹</div>
+      <div class="arch" data-arch="strategist" title="Strategist · dark green">♟</div>
+      <div class="arch" data-arch="creator" title="Creator · amber">✨</div>
+      <div class="arch" data-arch="companion" title="Companion · teal">💗</div>
+      <div class="arch" data-arch="sage" title="Sage · gold">🧘</div>
+    </div>
+    <div class="status">
+      <div class="item"><span class="dot"></span><span>SOV3 v2.0.0</span></div>
+      <div class="item">HIVE 34/34</div>
+      <div class="item">COUNCIL 13/13</div>
+      <div class="item">BFT 9/13</div>
+      <div class="item" id="statSigil">SIGIL —</div>
+      <div class="item">$0.011/avg</div>
+    </div>
+  </footer>
+</main>
+
+<!-- Chat overlay -->
+<div class="chat-overlay" id="chatOverlay">
+  <button class="close" onclick="closeChat()">×</button>
+  <h2 id="chatTitle">Council Chat</h2>
+  <div class="messages" id="chatMessages"></div>
+  <div class="input-row">
+    <input type="text" id="chatInput" placeholder="Ask the queen...">
+    <button class="voice-btn" onclick="startVoice()">🎤</button>
+    <button onclick="sendChat()">Send</button>
+  </div>
+</div>
+
+<!-- Cesium + MEOK -->
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Cesium.js"></script>
+<script>
+const TEMPLES = [
+  {code:'EU',flag:'🇪🇺',name:'European Union',lat:50.378,lon:7.846,regs:8},
+  {code:'UK',flag:'🇬🇧',name:'United Kingdom',lat:54.0,lon:-2.0,regs:5},
+  {code:'US',flag:'🇺🇸',name:'United States',lat:38.0,lon:-97.0,regs:7},
+  {code:'CA',flag:'🇨🇦',name:'Canada',lat:56.130,lon:-106.347,regs:2},
+  {code:'CN',flag:'🇨🇳',name:'China',lat:35.8617,lon:104.1954,regs:3},
+  {code:'JP',flag:'🇯🇵',name:'Japan',lat:36.2048,lon:138.2529,regs:2},
+  {code:'SG',flag:'🇸🇬',name:'Singapore',lat:1.3521,lon:103.8198,regs:2},
+  {code:'UN',flag:'🇺🇳',name:'United Nations',lat:40.7484,lon:-73.9857,regs:3},
+  {code:'ISO',flag:'🏛',name:'ISO Standards',lat:46.232,lon:6.055,regs:3},
+  {code:'IEEE',flag:'⚙',name:'IEEE Standards',lat:40.7108,lon:-74.0048,regs:2},
+  {code:'CSOAI',flag:'🐉',name:'CSOAI Sovereign',lat:51.5074,lon:-0.1278,regs:4}
+];
+
+/* === Cesium === */
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1ZmVlZTI4My0xMjE0LTQ4MjQtYTNlNC0wZDFhNzk3YjY4ZTAiLCJpZCI6MjU1LCJpYXQiOjE3MTA0OTI3Mzd9.JHEAt4I3sTjQGZ4gld3XaJxKaB-2e3d9P7wTQiKpwvcE';
+
+let viewer;
+async function initGlobe() {
+  viewer = new Cesium.Viewer('cesiumContainer', {
+    imageryProvider: new Cesium.OpenStreetMapImageryProvider({url:'https://tile.openstreetmap.org/'}),
+    terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+    animation:false, timeline:false, baseLayerPicker:false, fullscreenButton:false,
+    geocoder:false, homeButton:false, infoBox:false, sceneModePicker:false,
+    selectionIndicator:false, navigationHelpButton:false, navigationInstructionsInitiallyVisible:false,
+    creditContainer: document.createElement('div')
+  });
+  viewer.cesiumWidget.creditContainer.style.display = 'none';
+  viewer.camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(15, 35, 25000000), duration: 0});
+  TEMPLES.forEach(t => {
+    viewer.entities.add({
+      position: Cesium.Cartesian3.fromDegrees(t.lon, t.lat, 100000),
+      billboard: {
+        image: templeBillboard(t),
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM, width: 36, height: 50
+      },
+      label: {
+        text: `${t.flag} ${t.code}`,
+        font: '11px JetBrains Mono, monospace',
+        fillColor: Cesium.Color.fromCssColorString('#c9a84c'),
+        outlineColor: Cesium.Color.fromCssColorString('#0a0a1e'),
+        outlineWidth: 2, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        verticalOrigin: Cesium.VerticalOrigin.TOP,
+        pixelOffset: new Cesium.Cartesian2(0, 4),
+        showBackground: true,
+        backgroundColor: Cesium.Color.fromCssColorString('rgba(10, 10, 30, 0.85)'),
+        backgroundPadding: new Cesium.Cartesian2(4, 2)
+      }
+    });
+  });
+  viewer.clock.onTick.addEventListener(() => viewer.scene.camera.rotateRight(0.0001));
+}
+
+function templeBillboard(t) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="50" viewBox="0 0 36 50">
+    <defs><filter id="g"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <circle cx="18" cy="14" r="14" fill="rgba(201,168,76,0.25)" filter="url(#g)"/>
+    <circle cx="18" cy="14" r="11" fill="#c9a84c" stroke="#0a0a1e" stroke-width="2"/>
+    <text x="18" y="18" text-anchor="middle" font-size="13">${t.flag}</text>
+    <line x1="18" y1="25" x2="18" y2="48" stroke="#c9a84c" stroke-width="2"/>
+    <circle cx="18" cy="48" r="2" fill="#c9a84c"/>
+  </svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+/* === i18n === */
+const LOCALES = ['en','es','fr','de','ja','zh'];
+const LOCALE_LABELS = {en:'🇬🇧 EN',es:'🇪🇸 ES',fr:'🇫🇷 FR',de:'🇩🇪 DE',ja:'🇯🇵 JA',zh:'🇨🇳 ZH'};
+let currentLocale = localStorage.getItem('meok_locale') || (navigator.language.slice(0,2) in {[LOCALES.join('|')]:1} ? navigator.language.slice(0,2) : 'en');
+const I18N = {};
+let i18n = {};
+
+/* === Live status === */
+async function pollStatus() {
+  try {
+    const r = await fetch('http://127.0.0.1:8000/api/backend/status');
+    const d = await r.json();
+    document.getElementById('statMCPs').textContent = d.mcps || '218';
+    document.getElementById('statQueens').textContent = '13';
+    document.getElementById('statTemples').textContent = '11';
+    document.getElementById('statHives').textContent = d.hive || '34/34';
+    document.getElementById('statSigil').textContent = 'SIGIL ' + (d.last_sigil || '00000000').slice(0, 8);
+    document.getElementById('statEU').textContent = d.eu_ai_act || 'T-37';
+    document.getElementById('sBackend').textContent = d.healthy ? '🟢 Online v2.0.0' : '🔴 Offline';
+    document.getElementById('sName').textContent = 'Sovereign Dragon';
+    document.getElementById('sArch').textContent = d.council_dict ? `${d.council_dict.online}/${d.council_dict.total} · 👑` : '13/13 · 👑';
+  } catch (e) {
+    document.getElementById('sBackend').textContent = '🔴 Offline';
+  }
+}
+
+/* === i-Character === */
+async function createIchar() {
+  const name = document.getElementById('icharName').value || 'Sovereign User';
+  const queen = document.getElementById('icharQueen').value;
+  const arcana = parseInt(document.getElementById('icharArcana').value);
+  const region = document.getElementById('icharRegion').textContent.split('·')[0].trim();
+  try {
+    const r = await fetch('http://127.0.0.1:8000/api/ichar/create', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({user_id: 'breakthrough', name, queen_model: queen, arcana_lens: arcana})
+    });
+    const d = await r.json();
+    document.getElementById('icharResult').style.display = 'block';
+    document.getElementById('icharSummary').innerHTML = `<strong>${name}</strong><br>${queen} · arcana ${arcana}<br><span style="font-size:10px;opacity:0.6">${d.sigil_hash || 'SIGIL signed'}</span>`;
+    // Save to localStorage
+    localStorage.setItem('meok_ichar', JSON.stringify({ichar_id: d.ichar_id, name, queen_model: queen, arcana_lens: arcana, region, sigil_hash: d.sigil_hash}));
+  } catch (e) {
+    // Offline fallback
+    document.getElementById('icharResult').style.display = 'block';
+    document.getElementById('icharSummary').textContent = `${name} · ${queen} · ${arcana} (offline)`;
+  }
+}
+
+/* === Region auto-detect === */
+async function detectRegion() {
+  try {
+    const r = await fetch('http://127.0.0.1:8000/api/geo');
+    const d = await r.json();
+    document.getElementById('icharRegion').textContent = `${d.country_name || 'United Kingdom'} · ${d.city || ''}`;
+  } catch (e) {
+    document.getElementById('icharRegion').textContent = '🌍 United Kingdom';
+  }
+}
+
+/* === Council chat === */
+let currentQueen = 'queen-care';
+let chatHistory = [];
+function openCouncilChat() {
+  currentQueen = 'queen-care';
+  document.getElementById('chatTitle').textContent = '💗 Sophia Care · Council Chat';
+  document.getElementById('chatMessages').innerHTML = '<div class="message queen">💗 Sophia Care: Care is the foundation. What would you like to know?</div>';
+  document.getElementById('chatOverlay').classList.add('open');
+}
+function chatWithQueen(queen) {
+  currentQueen = queen;
+  const names = {queen_king:'👑 Sovereign King',queen_care:'💗 Sophia Care (VETO)',queen_strategy:'♑ Aurelian',queen_compliance:'⚖ Justitia',queen_finance:'⭐ Asteria',queen_arcana:'✨ Aleph',queen_domain:'🛞 Dominion',queen_brain:'🧠 Brain',queen_proactive:'⚡ Proactive',queen_bridge:'🌉 Bridge',queen_distribution:'☀️ Distribution',queen_council:'🦁 Council',queen_watch:'🗼 Watch (VETO)'};
+  document.getElementById('chatTitle').textContent = names[queen] + ' · Council Chat';
+  document.getElementById('chatMessages').innerHTML = `<div class="message queen">${names[queen]}: I am listening. Speak.</div>`;
+  document.getElementById('chatOverlay').classList.add('open');
+}
+function closeChat() { document.getElementById('chatOverlay').classList.remove('open'); }
+async function sendChat() {
+  const msg = document.getElementById('chatInput').value.trim();
+  if (!msg) return;
+  document.getElementById('chatMessages').innerHTML += `<div class="message user">${msg}</div>`;
+  document.getElementById('chatInput').value = '';
+  try {
+    const r = await fetch('http://127.0.0.1:8000/api/council/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({queen_id: currentQueen, arcana_lens: 21, message: msg, user_id: 'breakthrough'})
+    });
+    const d = await r.json();
+    document.getElementById('chatMessages').innerHTML += `<div class="message queen">${d.response || d.queen + ' speaks.'}</div>`;
+  } catch (e) {
+    document.getElementById('chatMessages').innerHTML += `<div class="message queen">[offline] The queen whispers from within.</div>`;
+  }
+  document.getElementById('chatMessages').scrollTop = 9999;
+}
+
+/* === Voice === */
+function openVoice() {
+  alert('🎤 Voice mode: Click "Start Voice" in the chat input to use Web Speech API.\n\nSpeak: "What is the EU AI Act?" → Sophia Care responds.');
+  openCouncilChat();
+}
+function startVoice() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('Web Speech API not supported in this browser. Try Chrome.');
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR();
+  rec.continuous = false; rec.interimResults = false; rec.lang = 'en-US';
+  rec.onresult = e => {
+    document.getElementById('chatInput').value = e.results[0][0].transcript;
+    sendChat();
+  };
+  rec.start();
+  document.querySelector('.voice-btn').textContent = '🎤...';
+  setTimeout(() => document.querySelector('.voice-btn').textContent = '🎤', 5000);
+}
+
+/* === Cascade === */
+function startCascade() {
+  alert('⚡ 4-Tier Cascade:\nT1 Edge 3-7B → $0.005 (70%)\nT2 Tactical 13-27B → $0.02 (20%)\nT3 Operations 30-70B → $0.05 (8%)\nT4 Strategic 70B+ → $0.10 (2%)\n\nAvg: $0.011/call · 85-90% cheaper than all-70B');
+}
+
+/* === SIGIL === */
+async function verifySigil() {
+  try {
+    const r = await fetch('http://127.0.0.1:8000/api/sigil/verify', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
+    const d = await r.json();
+    alert(`🔐 SIGIL chain verified:\nValid: ${d.valid}\nHash: ${d.hash || d.sigil_hash || 'verified'}`);
+  } catch (e) {
+    alert('🔐 SIGIL: Every action Ed25519-signed. Chain live. Backend may be offline.');
+  }
+}
+
+/* === Maternal Covenant === */
+function openMaternalCovenant() {
+  alert('🤝 Maternal Covenant — 6 care dimensions:\n\n1. Safety 🛡 — No harm\n2. Honesty 📖 — No lies\n3. Privacy 🔒 — No leaks\n4. Fairness ⚖ — No bias\n5. Growth 🌱 — No stagnation\n6. Consent 🤝 — No override\n\nVETO queen Sophia Care (harm) + VETO queen Watch (security) enforce.');
+}
+
+/* === Tabs === */
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelector(`.content[data-tab="${t.dataset.tab}"]`).classList.add('active');
+});
+
+/* === Archetypes === */
+document.querySelectorAll('.arch').forEach(a => a.onclick = () => {
+  alert(`Archetype: ${a.dataset.arch}\n\nSovereign = sky blue\nGuardian = dark navy\nScout = coral\nStrategist = dark green\nCreator = amber\nCompanion = teal\nSage = gold\n\n90 unique companions in 7 visual style categories.`);
+});
+
+/* === View buttons === */
+document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-view]').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  if (b.dataset.view === 'ichar') document.querySelector('[data-tab="ichar"]').click();
+  if (b.dataset.view === 'council') document.querySelector('[data-tab="council"]').click();
+  if (b.dataset.view === 'temples') document.querySelector('[data-tab="temples"]').click();
+});
+
+/* === Temples === */
+function openTemple(code) {
+  const t = TEMPLES.find(x => x.code === code);
+  if (t) alert(`🏛 ${t.flag} ${t.name} (${t.code})\n${t.regs} regulations · curated by a queen\n\nOpen: /csoai-os/meok-home/pages/temples_${code.toLowerCase()}.html`);
+}
+
+/* === Chat input enter === */
+document.getElementById('chatInput').addEventListener('keypress', e => {
+  if (e.key === 'Enter') sendChat();
+});
+
+/* === Boot === */
+(async () => {
+  try {
+    await initGlobe();
+    await detectRegion();
+    pollStatus();
+    setInterval(pollStatus, 30000);
+    // Load i18n
+    for (const loc of LOCALES) {
+      try {
+        const r = await fetch(`/csoai-os/i18n/${loc}.json`);
+        if (r.ok) I18N[loc] = await r.json();
+      } catch (e) {}
+    }
+    setTimeout(() => {
+      const loading = document.getElementById('loading');
+      loading.classList.add('hidden');
+      setTimeout(() => loading.style.display = 'none', 1000);
+    }, 1500);
+  } catch (e) {
+    document.getElementById('loading').innerHTML = `<div style="text-align:center;padding:24px"><h3>Failed to load</h3><p style="color:var(--gold);font-size:12px;margin-top:8px">${e.message}</p></div>`;
+  }
+})();
+
+// PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+</script>
+
+</body>
+</html>

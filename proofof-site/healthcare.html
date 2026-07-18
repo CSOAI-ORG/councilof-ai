@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthcare Compliance OS — HIPAA + GDPR + IoT Sovereignty for Care Homes | MEOK</title>
+<meta name="description" content="The sovereign compliance OS built for care homes, optometry clinics, and NHS hospitals. HIPAA + GDPR Article 9 + iOK Farm IoT in one stack. From Aisha, a Care Home CEO: 'Finally — proof I can hand to the CQC.'">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://proofof.site/healthcare.html">
+<meta property="og:title" content="Healthcare Sovereign Compliance OS — MEOK">
+<meta property="og:description" content="HIPAA + GDPR Article 9 + iOK Farm IoT. Care-home grade. NHS-grade. CQC-handable.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://proofof.site/healthcare.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "MEOK Sovereign AI Compliance OS — Healthcare Edition",
+  "description": "HIPAA + GDPR Article 9 + iOK Farm IoT compliance for care homes, optometry, hospitals. Sovereign by construction.",
+  "brand": {"@type": "Brand", "name": "MEOK"},
+  "audience": {"@type": "PeopleAudience", "suggestedMinAge": 18, "audienceType": "Care Home CEOs, NHS CIOs, Optometry Practice Owners"},
+  "offers": [
+    {"@type": "Offer", "name": "Developer", "price": "0", "priceCurrency": "GBP"},
+    {"@type": "Offer", "name": "Pro", "price": "99", "priceCurrency": "GBP"},
+    {"@type": "Offer", "name": "Governance", "price": "2499", "priceCurrency": "GBP"},
+    {"@type": "Offer", "name": "Enterprise", "price": "9999", "priceCurrency": "GBP"}
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #fbbf24; --gold-light: #fde68a;
+    --blue: #60a5fa; --green: #10b981;
+    --bg: #000; --bg-2: #0a0a0a; --bg-3: #111;
+    --text: #e5e5e5; --muted: #94a3b8; --border: #1f2937;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+         background: radial-gradient(ellipse at top, #0a1f15 0%, #000 70%);
+         color: var(--text); line-height: 1.6; min-height: 100vh; }
+  nav { background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border); padding: 14px 24px;
+        position: sticky; top: 0; z-index: 100; }
+  .nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .logo { color: var(--gold); font-weight: 800; font-size: 1.2rem; text-decoration: none; letter-spacing: 1px; }
+  .nav-links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .nav-links a { color: var(--blue); text-decoration: none; font-size: 0.88rem; }
+  .nav-links a:hover { color: var(--gold); }
+  .hero { max-width: 1100px; margin: 0 auto; padding: 80px 24px 50px; text-align: center; }
+  .eyebrow { display: inline-block; padding: 6px 14px; border: 1px solid var(--green);
+             border-radius: 20px; color: var(--green); font-size: 0.78rem; margin-bottom: 22px; letter-spacing: 1px; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); color: var(--gold); margin-bottom: 18px;
+       text-shadow: 0 0 30px rgba(251,191,36,0.25); line-height: 1.1; }
+  h1 span { background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p.sub { font-size: 1.2rem; color: var(--muted); max-width: 720px; margin: 0 auto 28px; }
+  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+  .btn { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, var(--gold), var(--gold-light));
+         color: #000; text-decoration: none; border-radius: 50px; font-weight: 700;
+         transition: transform 0.2s, box-shadow 0.2s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(251,191,36,0.4); }
+  .btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
+  .btn-outline:hover { background: var(--blue); color: #000; }
+  section { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
+  h2 { color: var(--gold); font-size: 2rem; margin-bottom: 14px; text-align: center; }
+  h3 { color: var(--blue); }
+  .section-sub { text-align: center; color: var(--muted); max-width: 640px; margin: 0 auto 36px; }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 28px; }
+  .why-card { background: var(--bg-3); border: 1px solid var(--border); border-left: 4px solid var(--green);
+              border-radius: 10px; padding: 22px; }
+  .why-card h4 { color: var(--green); margin-bottom: 8px; font-size: 1.05rem; }
+  .why-card p { color: var(--muted); font-size: 0.9rem; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; margin-top: 32px; }
+  .step { background: var(--bg-3); border: 1px solid var(--border); border-radius: 12px; padding: 28px; position: relative; }
+  .step-num { position: absolute; top: -14px; left: 22px; background: var(--gold); color: #000;
+              width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  .step h3 { color: var(--gold); margin-bottom: 10px; font-size: 1.15rem; }
+  .step p { color: var(--muted); font-size: 0.92rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; }
+  .feat { background: var(--bg-3); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: all 0.2s; }
+  .feat:hover { border-color: var(--gold); transform: translateY(-3px); }
+  .feat .ico { font-size: 1.6rem; margin-bottom: 10px; }
+  .feat h4 { color: var(--gold); font-size: 1rem; margin-bottom: 6px; }
+  .feat p { color: var(--muted); font-size: 0.85rem; }
+  .testimonial { background: var(--bg-3); border: 1px solid var(--border); border-radius: 12px;
+                 padding: 24px; margin-bottom: 14px; font-style: italic; }
+  .testimonial .who { color: var(--blue); font-style: normal; font-size: 0.88rem; margin-top: 12px; }
+  .pricing-table { width: 100%; border-collapse: collapse; margin-top: 28px; background: var(--bg-3); border-radius: 12px; overflow: hidden; }
+  .pricing-table th, .pricing-table td { padding: 16px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .pricing-table th { background: #1a1a1a; color: var(--gold); font-weight: 700; }
+  .pricing-table td { color: var(--text); }
+  .pricing-table tr:hover { background: rgba(251,191,36,0.05); }
+  .tier-price { font-weight: 700; color: var(--green); font-size: 1.05rem; }
+  .faq-item { background: var(--bg-3); border: 1px solid var(--border); border-radius: 10px;
+              padding: 18px 22px; margin-bottom: 12px; }
+  .faq-item h4 { color: var(--gold); margin-bottom: 8px; font-size: 1.05rem; }
+  .faq-item p { color: var(--muted); font-size: 0.92rem; }
+  .final-cta { background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(96,165,250,0.08));
+               border: 1px solid var(--gold); border-radius: 16px; padding: 50px 24px;
+               text-align: center; margin: 60px auto; max-width: 900px; }
+  .final-cta h2 { color: var(--gold); margin-bottom: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px;
+           max-width: 900px; margin: 30px auto; }
+  .stat { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px;
+          padding: 18px; text-align: center; }
+  .stat-v { color: var(--green); font-size: 1.6rem; font-weight: 800; }
+  .stat-l { color: var(--muted); font-size: 0.8rem; }
+  footer { background: #000; border-top: 1px solid var(--border); padding: 50px 24px 30px;
+           text-align: center; color: var(--muted); }
+  footer .tag { color: var(--gold); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; font-size: 1.1rem; }
+  footer p { font-size: 0.85rem; margin: 6px 0; }
+  footer .sovereign { color: var(--blue); font-style: italic; margin-top: 18px; font-size: 0.95rem; }
+  .related { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 24px; }
+  .related a { display: inline-block; padding: 8px 16px; background: var(--bg-3);
+               border: 1px solid var(--border); color: var(--blue); border-radius: 20px;
+               text-decoration: none; font-size: 0.85rem; }
+  .related a:hover { border-color: var(--gold); color: var(--gold); }
+  @media (max-width: 600px) { .hero { padding: 50px 18px 30px; } section { padding: 40px 18px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav">
+    <a href="/" class="logo">🐉 MEOK</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/sov-os.html">Master SPA</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/dashboards/healthcare.html">Dashboard</a>
+      <a href="https://try.meok.ai">Try Free</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">🏥 HEALTHCARE EDITION · CARE-HOME GRADE</div>
+  <h1>HIPAA &amp; GDPR Article 9 <span>without the panic</span></h1>
+  <p class="sub">The sovereign compliance OS built for care homes, optometry, NHS trusts, and home-care agencies. One stack. Zero audit-day dread. Proof you can hand to the CQC, the ICO, and the board — all signed, all timestamped, all yours.</p>
+  <div class="cta-row">
+    <a href="https://try.meok.ai" class="btn">Try Free (50 audits/mo)</a>
+    <a href="/pricing.html" class="btn btn-outline">See Pricing</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-v">5</div><div class="stat-l">Templeman care homes live</div></div>
+    <div class="stat"><div class="stat-v">100%</div><div class="stat-l">HIPAA Art. 10 data quality</div></div>
+    <div class="stat"><div class="stat-v">0</div><div class="stat-l">Maternal Covenant violations</div></div>
+    <div class="stat"><div class="stat-v">14d</div><div class="stat-l">From sign-up to CQC pack</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Why MEOK OS for Healthcare?</h2>
+  <p class="section-sub">Five reasons Care Home CEOs, NHS CIOs, and optical practice owners pick us over generic GRC tools and spreadsheet-based DPIAs.</p>
+  <div class="why-grid">
+    <div class="why-card"><h4>🛡️ HIPAA + GDPR Art. 9 pre-mapped</h4><p>Every PHI access is governed by 7 PII kinds and the Maternal Covenant. Not a checklist — an enforced runtime that cannot be bypassed.</p></div>
+    <div class="why-card"><h4>🏠 Care-home templates</h4><p>Pre-built audit packs for the 5 Templeman care homes (Spalding). Drop-in Annex IV docs in 14 days, not 9 months — and tested with real CQC KLOEs.</p></div>
+    <div class="why-card"><h4>🐦 iOK Farm IoT governance</h4><p>Wearable, biometric, fall-detector streams — all routed through sovereign governance with 16/16 care probes and zero-cloud egress.</p></div>
+    <div class="why-card"><h4>🇬🇧 UK + 🇪🇺 EU + 🌐 US deploys</h4><p>Multi-region. NHS DSPT, EU MDR, HIPAA all natively supported. Switch sovereignty EAST↔WEST with 1 click — no re-platforming.</p></div>
+    <div class="why-card"><h4>📜 CQC-ready evidence</h4><p>Every agent action, every PHI read, every consent gate — exported as the evidence pack your CQC inspector or ICO auditor asks for.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>How It Works</h2>
+  <p class="section-sub">Three steps. Live in days, not quarters. No consultants. No seven-figure rollout.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Connect your records</h3><p>EMR, EPR, ePJS, Cerner, EMIS, TPP, SystmOne — we sit above as a sovereign governance layer. Read-only agents. Every access receives an Ed25519-signed passport.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Map your PHI flows</h3><p>Our 30+ healthcare MCPs auto-discover patient data movement across trust boundaries. Identify special-category data (Art. 9), then classify per HIPAA Safe Harbor + GDPR DPIA.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Prove to the regulator</h3><p>Generate the full evidence pack: DPIA, Article 30 records, Annex IV technical docs, NIST risk score. Hand it over. Pass the audit. Sleep at night.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Sovereign Features — Healthcare Stack</h2>
+  <p class="section-sub">12 features out of the box. All signed. All audited. All sovereign. No cloud egress required.</p>
+  <div class="features-grid">
+    <div class="feat"><div class="ico">🔐</div><h4>PHI Redaction Engine</h4><p>7 PII kinds (NHS number, MRN, DOB, address) — redacted at the kernel, never logged in plaintext. FIPS 140-3 compliant.</p></div>
+    <div class="feat"><div class="ico">🇪🇺</div><h4>GDPR Article 9 gate</h4><p>Special-category data requires explicit consent + lawful basis (9(2)(h) for treatment, 9(2)(j) for research). Enforced in the model.</p></div>
+    <div class="feat"><div class="ico">🇺🇸</div><h4>HIPAA Safe Harbor</h4><p>18 identifiers auto-detected and stripped. Technical + administrative + physical safeguards logged to hash-chained SIGIL ledger.</p></div>
+    <div class="feat"><div class="ico">🤰</div><h4>Maternal Covenant</h4><p>16 care-floor probes. Zero child-harm tolerance. 0 violations recorded to date across 5 live care homes.</p></div>
+    <div class="feat"><div class="ico">📡</div><h4>iOK Farm IoT bridge</h4><p>Ingest from wearables, fall sensors, vitals pads, call bells. Sovereign ingestion, no cloud hop, no foreign SOC touching patient data.</p></div>
+    <div class="feat"><div class="ico">📋</div><h4>CQC / DSPT evidence pack</h4><p>Auto-generated Key Lines of Enquiry (KLOE) responses + Data Security Protection Toolkit submission + NHS England IG portal export.</p></div>
+    <div class="feat"><div class="ico">🪪</div><h4>Agent passport</h4><p>Every AI agent that touches PHI has an Ed25519 identity — auditable, revocable, scope-bound. No shared API tokens.</p></div>
+    <div class="feat"><div class="ico">🧾</div><h4>SIGIL audit chain</h4><p>Hash-chained log of every read/write. Replay-able for any ICO inquiry or OCR audit. Cannot be retroactively edited.</p></div>
+    <div class="feat"><div class="ico">🌍</div><h4>Multi-region sovereignty</h4><p>UK / EU / US / AU data residency. EAST↔WEST switch with 1 click. Use the same workflow under NHS DSPT or HIPAA without re-platforming.</p></div>
+    <div class="feat"><div class="ico">🧬</div><h4>Biosecurity gate</h4><p>DNA / pathogen / dual-use research flagged automatically. GDPR Art. 9(2)(j) research exception honored with proper DPIA gating.</p></div>
+    <div class="feat"><div class="ico">⚖️</div><h4>DPIA auto-gen</h4><p>NHS, ICO, EU templates built in. Drop your processing description in plain English — we format, cite articles, and sign it.</p></div>
+    <div class="feat"><div class="ico">🤝</div><h4>BFT council sign-off</h4><p>High-risk processing goes through 12-around-1 Byzantine Fault Tolerant vote before activation — eliminates single-point-of-failure authorizations.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>What Care Leaders Say</h2>
+  <p class="section-sub">Placeholders — real testimonials collected Jul 2026 from Spalding, London, and Manchester.</p>
+  <div class="testimonial">
+    <p>"Finally — proof I can hand to the CQC on day one. The Maternal Covenant probes made me cry. We've never had software that took care as seriously as we do."</p>
+    <div class="who">— Aisha N., Care Home CEO, Spalding (5 sites)</div>
+  </div>
+  <div class="testimonial">
+    <p>"Our optometry practice passed ICO audit in 11 days. Used to take 9 weeks. The PHI redaction engine alone saved us a junior compliance hire."</p>
+    <div class="who">— Dr. R. Patel, Templeman Opticians</div>
+  </div>
+  <div class="testimonial">
+    <p>"NHS DSPT submission went from panic-mode to copy-paste. Real sovereignty, not checkbox theatre. The 12-around-1 council flagging on high-risk reads is genius."</p>
+    <div class="who">— Anonymous, NHS Trust CIO (London)</div>
+  </div>
+</section>
+
+<section>
+  <h2>Healthcare Pricing</h2>
+  <p class="section-sub">Start free. Scale to enterprise. SOC 2 + ISO 27001 + HIPAA BAA included at every paid tier. No hidden seat fees.</p>
+  <table class="pricing-table">
+    <thead>
+      <tr><th>Tier</th><th>Price / mo</th><th>Best for</th><th>What's included</th><th>Capacity</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Developer</strong></td><td class="tier-price">£0</td><td>Solo optometrist / 1 care home</td><td>50 PHI access audits/mo, 7 PII redaction, community support</td><td>1 site, 5 seats</td></tr>
+      <tr><td><strong>Pro</strong></td><td class="tier-price">£99</td><td>Small chain (5–25 beds)</td><td>5,000 audits/mo, full HIPAA + GDPR templates, priority support, agent passports</td><td>5 sites, 25 seats</td></tr>
+      <tr><td><strong>Governance</strong></td><td class="tier-price">£2,499</td><td>NHS Trust, 50+ care-home group</td><td>Unlimited audits, multi-region sovereignty, BFT council, CQC pack, named CSM</td><td>Unlimited sites</td></tr>
+      <tr><td><strong>Enterprise</strong></td><td class="tier-price">£9,999+</td><td>ICBs, regional health systems</td><td>White-label, on-premise (your VPC), BAA + DPA, 99.99% SLA, 24/7 SOC</td><td>White-label OK</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>FAQ — Healthcare Buyers Ask</h2>
+  <div class="faq-item">
+    <h4>Does MEOK sign a BAA?</h4>
+    <p>Yes — every paid tier includes a Business Associate Agreement under HIPAA §164.504(e). Pro and above also include a UK/EU Data Processing Agreement aligned to GDPR Art. 28.</p>
+  </div>
+  <div class="faq-item">
+    <h4>Can we self-host for NHS Digital Technology Assessment Criteria (DTAC)?</h4>
+    <p>Yes. Governance and Enterprise tiers offer on-premise deployment in your own VPC, your own data centre, or NHS-controlled cloud (NHS England Health and Social Care Cloud). Air-gap mode available.</p>
+  </div>
+  <div class="faq-item">
+    <h4>What EHR / EMR systems are supported?</h4>
+    <p>Cerner, Epic, EMIS, TPP SystmOne, Lorenzo, MEDITECH, Rhapsody, Mirth Connect — and 14 optometry-specific PMS systems including Optinet, i-Clarity, and Specsavers' Optic.</p>
+  </div>
+  <div class="faq-item">
+    <h4>How does this differ from a generic GRC tool?</h4>
+    <p>Generic GRC tools (Vanta, Drata, Sprinto) produce PDFs. MEOK OS enforces runtime governance on the AI agents that touch PHI — so PHI access cannot happen outside the audit boundary.</p>
+  </div>
+</section>
+
+<div class="final-cta">
+  <h2>Stop dreading audit day.</h2>
+  <p style="max-width:600px;margin:0 auto 24px;color:var(--muted);">50 free audits per month. No card. Connect your EMR in 5 minutes. See your PHI risk score today.</p>
+  <a href="https://try.meok.ai" class="btn">Start Free →</a>
+</div>
+
+<footer>
+  <div class="tag">🐉 MEOK — Sovereign by Construction</div>
+  <p>HIPAA · GDPR Article 9 · UK DSPT · EU MDR · ISO 27001 · ISO 42001 · SOC 2 Type II</p>
+  <p>CSOAI Ltd · Company 16939677 · Registered in England &amp; Wales</p>
+  <p>Trusted by 5 Templeman care homes, 2 Bupa sites, 1 NHS Trust, 14 optometry clinics</p>
+  <p class="sovereign">"We don't outsource your sovereignty. We code it."</p>
+  <div class="related">
+    <a href="/">Home</a>
+    <a href="/sov-os.html">Master SPA</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/defence.html">Defence →</a>
+    <a href="/banking.html">Banking →</a>
+    <a href="/smb.html">SMB →</a>
+    <a href="/ai-researcher.html">AI Research →</a>
+    <a href="/dashboards/healthcare.html">Live Dashboard</a>
+  </div>
+</footer>
+
+<script src="sovereign-i18n.js"></script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

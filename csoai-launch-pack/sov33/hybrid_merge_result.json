@@ -1,0 +1,119 @@
+{
+  "ts": "2026-07-14T06:38:59.630106+00:00",
+  "winner": {
+    "split": "s0.1/l0.9",
+    "nu_small": 1.0,
+    "nu_large": 1.0,
+    "small_total": 0.2,
+    "large_total": 1.8,
+    "composite": 2.0,
+    "tier_multiplier": 1.08,
+    "score": 2.16
+  },
+  "top_5": [
+    {
+      "split": "s0.1/l0.9",
+      "nu_small": 1.0,
+      "nu_large": 1.0,
+      "small_total": 0.2,
+      "large_total": 1.8,
+      "composite": 2.0,
+      "tier_multiplier": 1.08,
+      "score": 2.16
+    },
+    {
+      "split": "s0.25/l0.75",
+      "nu_small": 1.0,
+      "nu_large": 1.0,
+      "small_total": 0.5,
+      "large_total": 1.5,
+      "composite": 2.0,
+      "tier_multiplier": 1.08,
+      "score": 2.16
+    },
+    {
+      "split": "s0.5/l0.5",
+      "nu_small": 1.0,
+      "nu_large": 1.0,
+      "small_total": 1.0,
+      "large_total": 1.0,
+      "composite": 2.0,
+      "tier_multiplier": 1.08,
+      "score": 2.16
+    },
+    {
+      "split": "s0.1/l0.9",
+      "nu_small": 0.75,
+      "nu_large": 1.0,
+      "small_total": 0.15,
+      "large_total": 1.8,
+      "composite": 1.95,
+      "tier_multiplier": 1.08,
+      "score": 2.106
+    },
+    {
+      "split": "s0.1/l0.9",
+      "nu_small": 0.5,
+      "nu_large": 1.0,
+      "small_total": 0.1,
+      "large_total": 1.8,
+      "composite": 1.9,
+      "tier_multiplier": 1.08,
+      "score": 2.052
+    }
+  ],
+  "table_size": 108,
+  "charter": "df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054",
+  "care_floor": 0.95,
+  "brain_template": {
+    "small_1_compliance": {
+      "name": "small_1",
+      "role": "easy / cheap (compliance)",
+      "size_class": "small",
+      "tier_home": "SOV3",
+      "nu": null
+    },
+    "small_2_intuition": {
+      "name": "small_2",
+      "role": "easy / cheap (intuition)",
+      "size_class": "small",
+      "tier_home": "SOV3",
+      "nu": null
+    },
+    "large_1_defense": {
+      "name": "large_1",
+      "role": "hard / deep (defense)",
+      "size_class": "large",
+      "tier_home": "SOV33",
+      "nu": null
+    },
+    "large_2_synthesis": {
+      "name": "large_2",
+      "role": "hard / deep (synthesis)",
+      "size_class": "large",
+      "tier_home": "SOV33",
+      "nu": null
+    }
+  },
+  "substrate_tiers": {
+    "SOV3": {
+      "brains": [
+        "small_1_compliance",
+        "small_2_intuition"
+      ],
+      "role": "cheap / fast / 90% of traffic"
+    },
+    "SOV33": {
+      "brains": [
+        "large_1_defense"
+      ],
+      "role": "specialist deep dive (top 10%)"
+    },
+    "SOV333": {
+      "brains": [
+        "large_2_synthesis"
+      ],
+      "role": "synthesis cap (cross-tier merger)"
+    }
+  }
+}

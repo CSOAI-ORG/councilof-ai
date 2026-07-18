@@ -1,0 +1,85 @@
+#!/bin/bash
+# mesh-research: Daily research — new models, CVEs, Ollama updates
+set -euo pipefail
+
+LOG="/tmp/mesh-research-$(date +%Y%m%d).log"
+RESEARCH_DIR="${HOME}/.mesh-prod/research"
+mkdir -p "$RESEARCH_DIR"
+
+echo "=== Research Run $(date) ===" | tee "$LOG"
+
+# 1. Check Ollama version
+echo "[1] Ollama version check..." | tee -a "$LOG"
+CURRENT=$(ollama --version 2>/dev/null | head -1 || echo "unknown")
+echo "  Current: $CURRENT" | tee -a "$LOG"
+
+# 2. Check for new small models (<2GB) on Ollama library
+# We can't easily scrape ollama.com, so we track known candidates
+echo "[2] Model candidates..." | tee -a "$LOG"
+cat >> "$RESEARCH_DIR/model-candidates.txt" 2>/dev/null << 'MODELS' || true
+# 2026-05-27 — candidates to evaluate
+qwen2.5-coder:1.5b    # 1GB — fast code completion
+qwen2.5-coder:3b      # 2.2GB — better code generation
+phi4-mini             # 2.3GB — general purpose, fast
+gemma4:e2b            # ~2GB — multimodal small
+moondream2            # 1.6GB — vision tasks
+smollm2:1.7b          # ~1GB — very fast, decent quality
+granite3.1-dense:2b   # ~1.3GB — IBM enterprise model
+command-r7b:7b        # too large for 8GB — skip
+MODELS
+
+# Deduplicate
+sort -u "$RESEARCH_DIR/model-candidates.txt" > "$RESEARCH_DIR/model-candidates.tmp"
+mv "$RESEARCH_DIR/model-candidates.tmp" "$RESEARCH_DIR/model-candidates.txt"
+
+echo "  Candidates tracked: $(grep -v '^#' "$RESEARCH_DIR/model-candidates.txt" | grep -v '^$' | wc -l)" | tee -a "$LOG"
+
+# 3. Check disk for new model pull feasibility
+FREE_GB=$(df -g / 2>/dev/null | awk 'NR==2 {print int($4)}')
+echo "[3] Disk space: ${FREE_GB}GB free" | tee -a "$LOG"
+if [ "${FREE_GB%.*}" -gt 3 ] 2>/dev/null; then
+  echo "  ✅ Can pull models up to ~2GB" | tee -a "$LOG"
+  # Auto-queue small models for overnight pull
+  for model in qwen2.5-coder:1.5b smollm2:1.7b; do
+    if ! ollama list 2>/dev/null | grep -q "$model"; then
+      echo "  📥 Queued for pull: $model" | tee -a "$LOG"
+      echo "$model" >> "$RESEARCH_DIR/pull-queue.txt"
+    fi
+  done
+fi
+
+# 4. Security: Check for known Ollama CVEs via simple version string
+# (In a real setup this would query a CVE API)
+echo "[4] Security check..." | tee -a "$LOG"
+echo "  Ollama $CURRENT — monitor https://github.com/ollama/ollama/security" | tee -a "$LOG"
+
+# 5. Performance trend check
+echo "[5] Performance trend (last 7 days)..." | tee -a "$LOG"
+if [ -f "$HOME/.mesh-prod/perf.db" ]; then
+  sqlite3 "$HOME/.mesh-prod/perf.db" "SELECT model, ROUND(AVG(tokens_per_sec),1) as tps, COUNT(*) as n FROM benchmarks WHERE timestamp > datetime('now', '-7 days') GROUP BY model ORDER BY tps DESC;" 2>/dev/null | tee -a "$LOG" || echo "  No data yet" | tee -a "$LOG"
+fi
+
+# 6. Generate research digest
+DIGEST="$RESEARCH_DIR/digest-$(date +%Y%m%d).md"
+cat > "$DIGEST" << EOF
+# Research Digest — $(date +%Y-%m-%d)
+
+## System
+- Ollama: $CURRENT
+- Disk free: ${FREE_GB}GB
+- Active model: $(cat ~/.mesh-prod/active_model.txt 2>/dev/null || echo 'unknown')
+
+## Candidate Models
+$(grep -v '^#' "$RESEARCH_DIR/model-candidates.txt" 2>/dev/null | grep -v '^$' | sed 's/^/- /')
+
+## Queued for Pull
+$(cat "$RESEARCH_DIR/pull-queue.txt" 2>/dev/null | sed 's/^/- /' || echo '- None')
+
+## Actions
+- [ ] Evaluate queued models
+- [ ] Run benchmark on new pulls
+- [ ] Update model rankings
+EOF
+
+echo "  Digest: $DIGEST" | tee -a "$LOG"
+echo "=== Research Complete ===" | tee -a "$LOG"

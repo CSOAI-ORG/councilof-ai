@@ -1,0 +1,236 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# OpenPatent.ai — post-commit hook (bash 3.2 compatible — no mapfile, no ${,,}).
+#
+# Detects files added/modified in the last commit, computes SHA-3/512, and
+# submits a defensive disclosure ($149 tier) to the OpenPatent hive. Stores
+# the returned document_hash in .git/openpatent-claims.json so the operation
+# is idempotent — re-running this hook on the same commit will NOT
+# double-disclose.
+#
+# IDEMPOTENCY MODEL:
+#   We key claims by sha3_512(file content). If a claim for that hash already
+#   exists in .git/openpatent-claims.json, we skip. A file's content hash
+#   changes iff the file changes, so this is content-addressed dedup.
+#
+# FAILURE MODEL:
+#   Silent on errors. We never break `git commit`. The hive remembers;
+#   the commit must succeed first.
+#
+# DISABLE:
+#   Set OPENPATENT_DISABLED=1 in the environment to skip this hook.
+#   Or set `openpatent.disabled = true` in the repo's .git/config.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# IMPORTANT: do NOT use `set -e` here — we explicitly swallow errors so the
+# commit can never be broken. `set -u` is also off because we use empty-array
+# expansion carefully.
+unset CDPATH
+shopt -s nullglob 2>/dev/null || true
+
+# 0. Honor kill switch — never break a commit.
+if [ "${OPENPATENT_DISABLED:-0}" = "1" ]; then
+  exit 0
+fi
+if git config --get openpatent.disabled 2>/dev/null | grep -qi '^true$'; then
+  exit 0
+fi
+
+# 1. Locate repo root + claims log.
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+if [ -z "$REPO_ROOT" ]; then
+  exit 0
+fi
+CLAIMS_LOG="$REPO_ROOT/.git/openpatent-claims.json"
+CLAIMS_DIR="$(dirname "$CLAIMS_LOG")"
+mkdir -p "$CLAIMS_DIR" 2>/dev/null || true
+if [ ! -f "$CLAIMS_LOG" ]; then
+  echo '{"version":1,"claims":[]}' > "$CLAIMS_LOG" 2>/dev/null || true
+fi
+
+# 2. Pick the Python interpreter.
+PY="${PYTHON:-python3}"
+if ! command -v "$PY" >/dev/null 2>&1; then
+  PY="$(command -v python 2>/dev/null || true)"
+fi
+if [ -z "${PY:-}" ] || ! command -v "$PY" >/dev/null 2>&1; then
+  exit 0
+fi
+
+# 3. Find files changed in the last commit (added/modified/copied/renamed-target).
+#    Build a space-separated list — bash 3.2 has no `mapfile`.
+CHANGED_CSV="$(git diff-tree --no-commit-id --name-status --diff-filter=ACMRT -r HEAD 2>/dev/null | awk '$1 != "D" { $1=""; sub(/^ /, ""); print }' | grep -v '^$' | tr '\n' ' ' | sed 's/ $//')"
+if [ -z "$CHANGED_CSV" ]; then
+  exit 0
+fi
+
+# 4. Filter to discoverable text/asset types we care about. bash 3.2 has no
+#    arrays-as-args in env vars, so we use a space-separated list and pass
+#    via OPENPATENT_TARGET_FILES (the python loader .split()s it).
+KEEP_CSV=""
+OLD_IFS="$IFS"
+IFS=' '
+for f in $CHANGED_CSV; do
+  case "$f" in
+    *.md|*.txt|*.py|*.json|*.yaml|*.yml|*.rs|*.go|*.ts|*.tsx|*.js|*.jsx|*.sh|*.toml)
+      if [ -z "$KEEP_CSV" ]; then
+        KEEP_CSV="$f"
+      else
+        KEEP_CSV="$KEEP_CSV $f"
+      fi
+      ;;
+    *) ;; # skip binaries, lock files, large blobs
+  esac
+done
+IFS="$OLD_IFS"
+
+if [ -z "$KEEP_CSV" ]; then
+  exit 0
+fi
+
+# 5. Run the disclosure worker in a single Python call.
+#    All errors swallowed — this hook must never break a commit.
+OPENPATENT_API_BASE="${OPENPATENT_API_BASE:-http://127.0.0.1:3211}" \
+OPENPATENT_TIER="${OPENPATENT_TIER:-defensive}" \
+OPENPATENT_VAULT_DIR="$REPO_ROOT" \
+OPENPATENT_CLAIMS_LOG="$CLAIMS_LOG" \
+OPENPATENT_HOOK_MODE=post-commit \
+OPENPATENT_TARGET_FILES="$KEEP_CSV" \
+"$PY" - "$REPO_ROOT" "$CLAIMS_LOG" <<'PY' 2>/dev/null || true
+import base64, hashlib, json, os, sys, time, urllib.error, urllib.request
+
+repo_root, claims_log = sys.argv[1], sys.argv[2]
+api_base = os.environ.get("OPENPATENT_API_BASE", "http://127.0.0.1:3211").rstrip("/")
+tier     = os.environ.get("OPENPATENT_TIER", "defensive")
+targets  = [t for t in os.environ.get("OPENPATENT_TARGET_FILES", "").split() if t]
+dry_run  = os.environ.get("OPENPATENT_DRY_RUN", "0") == "1"
+
+def sha3_512_bytes(b):
+    return hashlib.sha3_512(b).hexdigest()
+
+def load_claims():
+    try:
+        with open(claims_log, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict) or "claims" not in data:
+            return {"version": 1, "claims": []}
+        return data
+    except (OSError, ValueError):
+        return {"version": 1, "claims": []}
+
+def save_claims(data):
+    tmp = claims_log + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, sort_keys=True)
+    os.replace(tmp, claims_log)
+
+def http_post(path, body, timeout=4.0):
+    url = api_base + path
+    req = urllib.request.Request(
+        url, data=json.dumps(body).encode("utf-8"),
+        headers={"Content-Type": "application/json"}, method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.status, json.loads(r.read().decode("utf-8") or "{}")
+
+def title_from_path(p):
+    return "Auto-disclose: " + os.path.basename(p)
+
+def classification_from_ext(p):
+    ext = os.path.splitext(p)[1].lower()
+    return {
+        ".py": "G06N20/00", ".js": "G06N20/00", ".ts": "G06N20/00",
+        ".rs": "G06N20/00", ".go": "G06N20/00",
+        ".md": "G06F40/00", ".txt": "G06F40/00",
+        ".json": "G06F16/00", ".yaml": "G06F16/00", ".yml": "G06F16/00",
+        ".sh": "G06F9/00", ".toml": "G06F16/00",
+    }.get(ext, "G06N99/00")
+
+def main():
+    claims = load_claims()
+    seen_hashes = set()
+    for c in claims.get("claims", []):
+        h = c.get("sha3_512")
+        if h:
+            seen_hashes.add(h)
+
+    submitted = 0
+    skipped   = 0
+    errors    = 0
+    new_claims = []
+
+    for rel in targets:
+        path = os.path.join(repo_root, rel)
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, "rb") as f:
+                content = f.read()
+        except OSError:
+            continue
+        if not content:
+            continue
+
+        digest = sha3_512_bytes(content)
+        if digest in seen_hashes:
+            skipped += 1
+            continue
+
+        body = {
+            "title": title_from_path(rel),
+            "description": "Auto-disclosed by post-commit hook from " + rel + " (" + str(len(content)) + " bytes).",
+            "inventor_did": os.environ.get("OPENPATENT_DID", "did:key:z6MkHookAutoPostCommit"),
+            "document_base64": base64.b64encode(content).decode("ascii"),
+            "document_format": "code" if rel.endswith((".py",".js",".ts",".rs",".go",".sh")) else "data",
+            "classification": classification_from_ext(rel),
+            "tier": tier,
+            "request_bft_review": False,
+        }
+
+        if dry_run:
+            doc_hash = "DRYRUN_" + digest[:16]
+            status = "DRY_RUN"
+        else:
+            try:
+                code, resp = http_post("/v1/disclosure", body, timeout=4.0)
+                if 200 <= code < 300 and isinstance(resp, dict) and resp.get("document_hash"):
+                    doc_hash = resp["document_hash"]
+                    status = resp.get("status", "DISCLOSED")
+                else:
+                    errors += 1
+                    continue
+            except (urllib.error.URLError, TimeoutError, OSError, ValueError):
+                errors += 1
+                continue
+
+        new_claims.append({
+            "sha3_512": digest,
+            "document_hash": doc_hash,
+            "path": rel,
+            "tier": tier,
+            "status": status,
+            "ts": int(time.time()),
+            "hook": "post-commit",
+            "commit": os.environ.get("GIT_COMMIT", ""),
+        })
+        seen_hashes.add(digest)
+        submitted += 1
+
+    if new_claims:
+        claims.setdefault("claims", []).extend(new_claims)
+        save_claims(claims)
+
+    # Emit a one-line status to git's commit-verbose channel; never to stderr/stdout in normal mode.
+    if os.environ.get("GIT_COMMIT_VERBOSE", "0") == "1":
+        print("openpatent: submitted=" + str(submitted) + " skipped=" + str(skipped) + " errors=" + str(errors))
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception:
+        # Absolutely never break the commit.
+        pass
+PY
+
+# The hive remembers. The dragon knows. The sovereign companion never forgets.
+exit 0

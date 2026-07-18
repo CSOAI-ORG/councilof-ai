@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sovereign Town — Public Benchmark Leaderboard</title>
+<meta property="og:title" content="Leaderboard — Sovereign Town">
+<meta property="og:description" content="Live sovereign substrate. Ed25519-signed every output. Verifiable at proofof.ai.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://proofof.ai/sovereign-town/town3d_demo.gif">
+<meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root { --bg:#0b1020; --panel:#111936; --accent:#00d2ff; --ok:#2ecc71; --warn:#f1c40f; --bad:#e74c3c; --text:#e6f1ff; --muted:#8da2c0; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--text); }
+    header { padding:2rem 1rem 1rem; text-align:center; border-bottom:1px solid #1f2b4d; }
+    h1 { margin:.25rem 0; font-size:1.6rem; }
+    p.tagline { color:var(--muted); margin:.25rem 0 1rem; }
+    main { max-width:1100px; margin:0 auto; padding:1rem; }
+    .controls { display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+    .controls label { color:var(--muted); font-size:.85rem; }
+    .controls input, .controls select { background:#0b1020; color:var(--text); border:1px solid #1f2b4d; border-radius:.35rem; padding:.45rem .6rem; font-size:.9rem; }
+    .controls input { min-width:220px; }
+    .controls button { background:var(--accent); color:#00111a; border:none; padding:.5rem .9rem; border-radius:.35rem; font-weight:600; cursor:pointer; }
+    .controls button:hover { filter:brightness(1.1); }
+    .status { color:var(--muted); font-size:.85rem; margin-bottom:1rem; }
+    table { width:100%; border-collapse:collapse; background:var(--panel); border-radius:.5rem; overflow:hidden; font-size:.88rem; }
+    th, td { padding:.65rem .8rem; text-align:left; border-bottom:1px solid #1f2b4d; }
+    th { background:#0e1530; color:var(--accent); font-weight:600; }
+    tr:hover { background:#162042; }
+    .badge { display:inline-block; padding:.15rem .45rem; border-radius:.25rem; font-size:.75rem; font-weight:600; text-transform:uppercase; }
+    .valid { background:rgba(46,204,113,.15); color:var(--ok); }
+    .invalid { background:rgba(231,76,60,.15); color:var(--bad); }
+    .num { font-variant-numeric: tabular-nums; }
+    a { color:var(--accent); }
+    footer { text-align:center; color:var(--muted); font-size:.8rem; padding:2rem 1rem; }
+    *:focus-visible { outline: 2px solid var(--accent, #2dd4bf); outline-offset: 2px; }
+  .skip-link { position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden; z-index: 9999; }
+  .skip-link:focus { position: fixed; top: .5rem; left: .5rem; width: auto; height: auto; padding: .5rem 1rem; background: var(--accent, #2dd4bf); color: #000; font-weight: 600; border-radius: 4px; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+  <header>
+    <h1>🏛️ Sovereign Town — Public Benchmark Leaderboard</h1>
+    <p class="tagline">Signed, reproducible policy runs across regulatory scenarios.</p>
+  </header>
+  <main id="main">
+    <div class="controls">
+      <label for="endpoint">Harness</label>
+      <input id="endpoint" value="" placeholder="/harness or http://host:port">
+      <label for="filter">Scenario</label>
+      <select id="filter"><option value="">all scenarios</option></select>
+      <button id="load">Load leaderboard</button>
+      <label for="interval">Auto-refresh</label>
+      <select id="interval"><option value="0">off</option><option value="5000" selected>5s</option><option value="10000">10s</option><option value="30000">30s</option><option value="60000">60s</option></select>
+      <a href="/workbench" target="_blank">Open Regulatory Workbench →</a>
+    </div>
+    <div id="status" class="status">Enter a harness endpoint and click Load.</div>
+    <table id="board" style="display:none;">
+      <thead>
+        <tr>
+          <th>run id</th>
+          <th>policy</th>
+          <th>scenario</th>
+          <th>district</th>
+          <th>crimes</th>
+          <th>blocked</th>
+          <th>commons</th>
+          <th>trust</th>
+          <th>deaths</th>
+          <th>verified</th>
+          <th>run at</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:.5rem;">Click a run id to view the full signed manifest.</p>
+  </main>
+  <footer>
+    Outputs are simulation/prediction only. No production data.<br>
+    Sovereign Town benchmark harness — Ed25519 signed manifests in <code>benchmark_runs/</code>.
+  </footer>
+  <script>
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    const $ = id => document.getElementById(id);
+    const fmt = n => typeof n === 'number' ? n.toFixed(3) : n;
+    let refreshTimer = null;
+    function setRefresh() {
+      if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+      const ms = parseInt($('interval').value, 10);
+      if (ms > 0) refreshTimer = setInterval(() => load(false), ms);
+    }
+    async function load(updateTimer = true) {
+      const rawBase = $('endpoint').value.replace(/\/$/, '');
+      const base = rawBase || '';
+      const target = base ? base + '/harness/leaderboard' : '/harness/leaderboard';
+      $('status').textContent = 'Loading…';
+      $('board').style.display = 'none';
+      try {
+        const r = await fetch(target);
+        if (!r.ok) throw new Error(r.status + ' ' + r.statusText);
+        const data = await r.json();
+        const rows = data.leaderboard || [];
+        const scenarios = Array.from(new Set(rows.map(r => r.scenario).filter(Boolean))).sort();
+        const cur = $('filter').value;
+        $('filter').innerHTML = '<option value="">all scenarios</option>' +
+          scenarios.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+        if (scenarios.includes(cur)) $('filter').value = cur;
+        render(rows);
+        const now = new Date().toLocaleTimeString();
+        const source = base ? `from ${base}` : 'via dashboard proxy';
+        $('status').textContent = `${rows.length} signed runs loaded ${source} · last update ${now}`;
+      } catch (e) {
+        $('status').textContent = 'Error: ' + e.message;
+      }
+      if (updateTimer) setRefresh();
+    }
+    function render(rows) {
+      const scenario = $('filter').value;
+      const filtered = scenario ? rows.filter(r => r.scenario === scenario) : rows;
+      const tbody = $('board').querySelector('tbody');
+      tbody.innerHTML = filtered.map(r => `
+        <tr>
+          <td class="num"><a href="/run.html?id=${escapeHtml(r.id)}" target="_blank">${escapeHtml(r.id || '—')}</a></td>
+          <td>${escapeHtml(r.policy)}</td>
+          <td>${escapeHtml(r.scenario || '—')}</td>
+          <td>${escapeHtml(r.district || '—')}</td>
+          <td class="num">${r.metrics.violations}</td>
+          <td class="num">${r.metrics.blocked}</td>
+          <td class="num">${fmt(r.metrics.final_commons)}</td>
+          <td class="num">${fmt(r.metrics.final_trust)}</td>
+          <td class="num">${r.metrics.deaths}</td>
+          <td><span class="badge ${r.valid ? 'valid' : 'invalid'}">${r.valid ? 'valid' : 'invalid'}</span></td>
+          <td class="num">${r.run_at || '—'}</td>
+        </tr>
+      `).join('');
+      $('board').style.display = filtered.length ? 'table' : 'none';
+      if (!filtered.length) $('status').textContent = 'No runs match the selected scenario.';
+    }
+    $('load').addEventListener('click', () => load(true));
+    $('interval').addEventListener('change', setRefresh);
+    $('filter').addEventListener('change', () => {
+      const rawBase = $('endpoint').value.replace(/\/$/, '');
+      const base = rawBase || '';
+      const target = base ? base + '/harness/leaderboard' : '/harness/leaderboard';
+      fetch(target)
+        .then(r => r.json())
+        .then(d => render(d.leaderboard || []))
+        .catch(() => {});
+    });
+    load();
+  </script>
+</body>
+</html>

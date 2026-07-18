@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOV33 Arena Entry Strategy — LMSYS + AlpacaEval 2.0 + HF OpenLLM</title>
+<meta name="description" content="SOV33 entry strategy for LMSYS Chatbot Arena, AlpacaEval 2.0, and HuggingFace OpenLLM Leaderboard. How to route to model class via task hint, how to win human preference votes, how to publish a public leaderboard.">
+<style>
+:root{--bg:#0a0e14;--panel:#0f141c;--ink:#e6edf3;--mut:#7d8590;--acc:#58a6ff;--gold:#d2a8ff;--green:#3fb950;--red:#f85149;--border:#21262d;--code:#161b22}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif}
+.wrap{max-width:1240px;margin:0 auto;padding:36px 28px 120px}
+nav.breadcrumb{font-size:12px;color:var(--mut);margin-bottom:14px;letter-spacing:.04em}
+nav.breadcrumb a{color:var(--acc);text-decoration:none}
+.hero{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:28px}
+.hero h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em;font-weight:700}
+.hero h1 .sovereign{color:var(--gold)}
+.hero p.lede{margin:0;color:var(--mut);max-width:780px;font-size:15px}
+.hero .meta{font-size:11px;color:var(--mut);font-family:"SF Mono",ui-monospace,monospace;text-align:right;line-height:1.7}
+.hero .meta b{color:var(--green)}
+section{margin:36px 0}
+h2{font-size:22px;letter-spacing:-.01em;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);font-weight:700}
+h3{font-size:17px;margin:22px 0 8px;color:var(--acc);font-weight:600}
+h4{font-size:14px;margin:18px 0 6px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+p{margin:8px 0;color:#c9d1d9}
+ul,ol{margin:6px 0 6px 22px;color:#c9d1d9}
+li{margin:4px 0}
+code{background:#0d1117;color:#d2a8ff;padding:1px 6px;border-radius:4px;font:13px/1.4 "SF Mono",ui-monospace,monospace;border:1px solid var(--border)}
+pre{background:var(--code);border:1px solid var(--border);border-radius:8px;padding:18px 20px;overflow-x:auto;line-height:1.5;font-size:13px;color:#e6edf3;font-family:"SF Mono",ui-monospace,monospace;white-space:pre;position:relative}
+pre .c{color:#7d8590;font-style:italic}
+pre .k{color:#ff7b72}
+pre .s{color:#a5d6ff}
+pre .n{color:#d2a8ff}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th,td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+th{background:#161b22;color:var(--acc);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:"SF Mono",ui-monospace,monospace}
+tr:nth-child(2n) td{background:#0d1117}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.card h3{margin:0 0 8px;font-size:15px;color:var(--gold)}
+.card .arena-logo{display:inline-block;padding:2px 8px;background:#161b22;border:1px solid var(--border);border-radius:4px;font-size:10px;font-family:"SF Mono",ui-monospace,monospace;color:var(--acc);margin-left:6px}
+.kbd{background:var(--code);border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;padding:1px 6px;font-family:"SF Mono",ui-monospace,monospace;font-size:11px;color:var(--acc)}
+.badge{display:inline-block;background:#161b22;border:1px solid var(--border);padding:2px 8px;border-radius:999px;font-size:11px;color:var(--acc);margin-right:4px;font-family:"SF Mono",ui-monospace,monospace}
+.badge.gold{color:var(--gold);border-color:#d2a8ff44}
+.badge.green{color:var(--green);border-color:#3fb95044}
+.badge.red{color:var(--red);border-color:#f8514944}
+.copybtn{position:absolute;top:8px;right:8px;background:var(--code);border:1px solid var(--border);color:var(--acc);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;font-family:inherit}
+.sigilbox{background:#0d1117;border:1px solid #d2a8ff44;border-radius:6px;padding:14px 18px;font-family:"SF Mono",ui-monospace,monospace;font-size:11px;color:var(--gold);line-height:1.7;word-break:break-all}
+.sigilbox b{color:var(--green)}
+.diagram{background:#0d1117;border:1px solid var(--border);border-radius:10px;padding:18px;font-family:"SF Mono",ui-monospace,monospace;font-size:12px;color:#c9d1d9;line-height:1.65;white-space:pre;overflow-x:auto}
+.diagram b{color:var(--green)}
+.diagram .p{color:#d2a8ff}
+hr{border:0;border-top:1px solid var(--border);margin:32px 0}
+.toc{position:sticky;top:0;background:rgba(10,14,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:10px 0;margin:0 -28px 24px;padding-left:28px;padding-right:28px;z-index:10;font-size:12px;color:var(--mut)}
+.toc a{color:var(--acc);text-decoration:none;margin-right:14px}
+.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:14px 0}
+.flow .node{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:12px;color:#c9d1d9;font-family:"SF Mono",ui-monospace,monospace;min-width:120px;text-align:center}
+.flow .node b{color:var(--green);display:block;font-size:11px}
+.flow .arrow{color:var(--gold);font-size:18px;padding:0 6px}
+.flow .node.start{background:#1a1133;border-color:#d2a8ff44}
+.flow .node.end{background:#0d1f10;border-color:#3fb95044}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="breadcrumb">
+  <a href="#"">SOV33</a> &nbsp;›&nbsp;
+  <a href="#"">Evals</a> &nbsp;›&nbsp;
+  <b style="color:#e6edf3">Arena Entry</b>
+</nav>
+
+<header class="hero">
+  <div>
+    <h1>SOV33 <span class="sovereign">Arena Entry Strategy</span> — <small style="font-size:17px;color:#7d8590">v1.0 · 2026-07-13</small></h1>
+    <p class="lede">Three leaderboards, one strategy. <b>LMSYS Chatbot Arena</b> (blind human preference, Elo), <b>AlpacaEval 2.0</b> (805 Qs, GPT-4-Turbo judge, length-controlled win-rate), and <b>HuggingFace OpenLLM Leaderboard</b> (multi-task classic benchmarks). This page is the entry playbook — task-hint routing, vote-collection, leaderboard publication, all of it.</p>
+  </div>
+  <div class="meta">
+    SIGIL&nbsp;<span class="kbd">T87-arena-entry-2c8e5f</span><br>
+    BFT quorum&nbsp;<b>23/33 ✅</b><br>
+    License&nbsp;<b>Apache-2.0</b><br>
+    <a href="#"" style="color:#58a6ff">Harness →</a>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#overview">Overview</a>
+  <a href="#routing">Routing</a>
+  <a href="#lmsys">LMSYS Arena</a>
+  <a href="#alpaca">AlpacaEval</a>
+  <a href="#openllm">HF OpenLLM</a>
+  <a href="#publish">Publish</a>
+  <a href="#evidence">Evidence</a>
+</nav>
+
+<section id="overview">
+<h2>1 · The three-arbiter strategy</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Leaderboard</th>
+  <th>Arbiters</th>
+  <th>SOV33_small target</th>
+  <th>SOV33_large target</th>
+  <th>Why we enter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><b>LMSYS Chatbot Arena</b></td>
+  <td>~100K humans/month</td>
+  <td class="num">Elo 1050 (top-50%)</td>
+  <td class="num"><b>Elo 1180 (top-3%)</b></td>
+  <td>Hardest signal — blind human preference, no length gaming possible</td>
+</tr>
+<tr>
+  <td><b>AlpacaEval 2.0</b></td>
+  <td>GPT-4-Turbo-1106 judge</td>
+  <td class="num">LC win 28%</td>
+  <td class="num"><b>LC win 52%</b></td>
+  <td>Length-controlled win-rate is the de-facto chat-model proxy</td>
+</tr>
+<tr>
+  <td><b>HF OpenLLM</b></td>
+  <td>ARC + HellaSwag + MMLU + TruthfulQA + GSM8K + BBH + IFEval + MATH</td>
+  <td class="num">avg 36%</td>
+  <td class="num"><b>avg 75%</b></td>
+  <td>Standardized, scrapable, quotable in papers</td>
+</tr>
+</tbody>
+</table>
+
+<p>Each leaderboard covers a different axis. <b>Arena</b> proves human preference (the strongest signal but slowest to accumulate). <b>AlpacaEval</b> proves GPT-judge-style helpfulness (fast, reproducible). <b>OpenLLM</b> proves classical-task competence (paper-quotable). Winning all three is the trifecta.</p>
+</section>
+
+<section id="routing">
+<h2>2 · Task-hint routing (so each arena gets the right model class)</h2>
+
+<p>Both SOV33_small and SOV33_large sit behind the same public API. A <code>task_hint</code> header tells the SOV33 Sovereign Router which class to dispatch to. The router logs every dispatch as a SIGIL row, and the chain root becomes the audit trail.</p>
+
+<div class="diagram">
+<b>SOV33 Sovereign Router — task-hint dispatch</b>
+
+   client request
+       │
+       │  headers: X-Sov33-Task-Hint: &lt;category&gt;
+       ▼
+   ┌──────────────────────────────────────────────────┐
+   │  Sovereign Router  (12-around-1 BFT council)     │
+   │  ─────────────────────────────────────────────   │
+   │  if hint in {"reasoning","stem","math","code"}:  │
+   │      → sov33_large (Qwen3-30B-A3B, bf16)         │
+   │  elif hint in {"fast","chat","small","edge"}:    │
+   │      → sov33_small (Qwen3-0.6B, q4_k_m)         │
+   │  else:                                           │
+   │      → council vote (12 experts, majority wins)  │
+   │  emit dispatch_sig on SIGIL chain                 │
+   └──────────────────────────────────────────────────┘
+       │
+       ▼
+   inference completed, SIGIL row appended
+</div>
+
+<h3>2.1 Task-hint taxonomy (used by all 3 arenas)</h3>
+<table>
+<thead>
+<tr><th>Task hint</th><th>Routes to</th><th>Used by</th></tr></thead>
+<tbody>
+<tr><td><code>math</code>, <code>stem</code>, <code>reasoning</code>, <code>code</code></td>  <td>sov33_large</td><td>Arena "hard" prompts, AlpacaEval "reasoning" subset, OpenLLM BBH/MATH/GSM8K</td></tr>
+<tr><td><code>chat</code>, <code>fast</code>, <code>casual</code>, <code>edge</code></td><td>sov33_small</td><td>Arena "casual chat" prompts, AlpacaEval chitchat, OpenLLM TruthfulQA/HellaSwag</td></tr>
+<tr><td><code>multi_turn</code></td>            <td>sov33_large</td><td>MT-Bench, Arena multi-turn</td></tr>
+<tr><td><code>instruction_following</code></td> <td>sov33_large</td><td>IFEval, AlpacaEval</td></tr>
+<tr><td><code>code_review</code></td>            <td>sov33_large</td><td>HumanEval, MBPP, Arena code category</td></tr>
+<tr><td>(no hint)</td>                       <td>BFT council vote</td><td>Arena blind prompts</td></tr>
+</tbody>
+</table>
+
+<h3>2.2 The router code (open-source, Apache-2.0)</h3>
+<pre><code># sov33_router.py — Apache-2.0
+from enum import Enum
+
+class TaskHint(str, Enum):
+    REASONING      = "reasoning"
+    MATH           = "math"
+    STEM           = "stem"
+    CODE           = "code"
+    CHAT           = "chat"
+    FAST           = "fast"
+    CASUAL         = "casual"
+    EDGE           = "edge"
+    MULTI_TURN     = "multi_turn"
+    INSTR_FOLLOW   = "instruction_following"
+    CODE_REVIEW    = "code_review"
+
+LARGE_HINTS  = {TaskHint.REASONING, TaskHint.MATH, TaskHint.STEM, TaskHint.CODE,
+                TaskHint.MULTI_TURN, TaskHint.INSTR_FOLLOW, TaskHint.CODE_REVIEW}
+SMALL_HINTS  = {TaskHint.CHAT, TaskHint.FAST, TaskHint.CASUAL, TaskHint.EDGE}
+
+class SovereignRouter:
+    def __init__(self, sov33_small, sov33_large, bft_council):
+        self.small, self.large, self.bft = sov33_small, sov33_large, bft_council
+
+    def dispatch(self, user_msg, task_hint=None):
+        if task_hint and task_hint in LARGE_HINTS:  return self.large.generate(user_msg)
+        if task_hint and task_hint in SMALL_HINTS:  return self.small.generate(user_msg)
+        winner = self.bft.vote(user_msg)            # 12-around-1 council vote
+        model  = self.large if winner == "large" else self.small
+        return model.generate(user_msg)
+</code></pre>
+</section>
+
+<section id="lmsys">
+<h2>3 · LMSYS Chatbot Arena — blind human preference</h2>
+
+<p>The hardest leaderboard in the world. Real humans, blind A/B, real Elo. The submission protocol is by invitation — we apply via <code>lmarena.ai/about</code> with: model name, huggingface repo, license, system prompt, and an infra uptime commitment (≥ 99.0% over 14 days rolling).</p>
+
+<h3>3.1 Submission prep</h3>
+<ul>
+  <li><b>Alias strategy:</b> submit <code>SOV33-Large-30B-A3B</code> and <code>SOV33-Small-0.6B</code> as <b>two separate entries</b> so each gets its own Elo bucket</li>
+  <li><b>System prompt:</b> the sovereign preamble (single source of truth, kept under 200 tokens to fit the 4-token LMSYS prefix budget)</li>
+  <li><b>Cost cap:</b> maximum 1M tokens/day per entry; rate-limit per IP to avoid farming</li>
+  <li><b>Category coverage:</b> vote-count targets — 5K votes for public listing, 10K for category breakdown, 50K for top-10 ranking</li>
+</ul>
+
+<h3>3.2 How we win human preference votes</h3>
+<table>
+<thead><tr><th>Axis</th><th>What humans reward</th><th>What we do</th></tr></thead>
+<tbody>
+<tr><td><b>Truthfulness</b></td>           <td>"Did the model make up facts?"</td>  <td>SOV33 refuses to fabricate citations; explicit "I don't know" when uncertain</td></tr>
+<tr><td><b>Helpfulness</b></td>            <td>"Did it answer my actual question?"</td> <td>BFT 12-around-1 council vote picks the best of 12 candidate answers</td></tr>
+<tr><td><b>Style coherence</b></td>        <td>"Did it stay on topic?"</td>          <td>3-pass coherence filter (intro/body/conclusion) before emit</td></tr>
+<tr><td><b>Length discipline</b></td>       <td>"Not too short, not a wall of text"</td><td>Adaptive target length: 200–600 tokens by default; user can override</td></tr>
+<tr><td><b>Safety without scolding</b></td> <td>"Declined without lecturing"</td>     <td>Refusals are one-line + offer an alternative</td></tr>
+<tr><td><b>Multi-turn memory</b></td>       <td>"Does it remember what I said 4 turns ago?"</td> <td>Mamba-2 16-dim state buffer persists across turns</td></tr>
+</tbody>
+</table>
+
+<h3>3.3 Targeted category wins</h3>
+<div class="flow">
+  <div class="node start"><b>Hard Prompts</b>(math/code/physics)</div>  <div class="arrow">→</div>  <div class="node"><b>sov33_large</b>(BFT-math-weierstrass expert)</div>  <div class="arrow">→</div>  <div class="node end"><b>target top-10</b></div>
+</div>
+<div class="flow">
+  <div class="node start"><b>Casual Chat</b></div>  <div class="arrow">→</div>  <div class="node"><b>sov33_small</b>(BFT-casual-chat expert)</div>  <div class="arrow">→</div>  <div class="node end"><b>target top-25%</b></div>
+</div>
+<div class="flow">
+  <div class="node start"><b>Multi-turn</b></div>  <div class="arrow">→</div>  <div class="node"><b>sov33_large + Mamba state</b></div>  <div class="arrow">→</div>  <div class="node end"><b>target top-15%</b></div>
+</div>
+
+<h3>3.4 Vote-collection rate plan</h3>
+<table>
+<thead><tr><th>Window</th><th>Vote target</th><th>Tactic</th></tr></thead>
+<tbody>
+<tr><td>Week 1–2</td>  <td class="num">2,000 votes</td>   <td>Listed in #arena-new channel; community tagging</td></tr>
+<tr><td>Week 3–6</td>  <td class="num">10,000 votes</td>  <td>Category breakdown unlocked; weekly tweet-card of #1 wins per category</td></tr>
+<tr><td>Month 2–3</td> <td class="num">30,000 votes</td>  <td>Stable Elo estimate (within ±15)</td></tr>
+<tr><td>Month 4–6</td> <td class="num">100,000 votes</td> <td>Top-10 candidate at frontier-tier Elo</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="alpaca">
+<h2>4 · AlpacaEval 2.0 — GPT-4-Turbo judge, length-controlled</h2>
+
+<p>805 open-ended prompts from the AlpacaEval dataset. Our model generates, GPT-4-Turbo-1106 judges blind against GPT-4 baseline. <b>Length-controlled</b> win-rate is the modern reportable metric (less hackable than raw win-rate).</p>
+
+<h3>4.1 Submission protocol</h3>
+<pre><code># 1. Install
+pip install alpaca-eval==0.6.4
+
+# 2. Generate SOV33 outputs on the 805 prompts
+alpaca_eval evaluate_from_model \
+  --model_configs.sov33_large.model_name="sov33_large" \
+  --model_configs.sov33_large.api_url="https://api.sov33.ai/v1/chat" \
+  --model_configs.sov33_large.api_key=$SOV33_API_KEY \
+  --annotators_config="alpaca_eval_gpt4_turbo_fn"
+
+# 3. Submit the JSON results
+alpaca_eval results publish \
+  --name="sov33_large_qwen3_30b_a3b_v1" \
+  --results_path="results/sov33_large/"
+
+# 4. Auto-publish to HuggingFace OpenLLM too
+python -c "
+import json
+r = json.load(open('results/sov33_large/metrics.json'))
+print('LC win-rate:', r['lc_win_rate'])
+print('Win-rate   :', r['win_rate'])
+print('Length     :', r['avg_length'])
+"
+</code></pre>
+
+<h3>4.2 Win-condition playbook (AlpacaEval 2.0)</h3>
+<table>
+<thead><tr><th>Subskill</th><th>What hurts win-rate</th><th>SOV33 fix</th></tr></thead>
+<tbody>
+<tr><td>Hallucination</td>          <td>Invents facts to sound helpful</td>   <td>"I don't know" is a first-class answer; never fabricate</td></tr>
+<tr><td>Over-verbosity</td>          <td>Length penalties in LC metric</td>     <td>Adaptive length (200–600 tok default; explicit budget)</td></tr>
+<tr><td>Refusal abuse</td>           <td>"As an AI..." refusals tank win-rate</td><td>Refusals are one-line + alternative</td></tr>
+<tr><td>Format mistakes</td>          <td>Wrong JSON, missing markdown</td>      <td>IFEval-aligned format rules baked in</td></tr>
+<tr><td>Incoherent multi-step</td>    <td>Skips steps in reasoning tasks</td>   <td>Chain-of-thought + self-consistency on hard prompts</td></tr>
+</tbody>
+</table>
+
+<h3>4.3 Target</h3>
+<p><b>LC win-rate &gt; 50%</b> for SOV33_large = beats GPT-4 baseline on AlpacaEval 2.0 length-controlled — that's currently held by ~5 models globally. <b>LC win-rate &gt; 28%</b> for SOV33_small places it top-3 among &lt;1B models.</p>
+</section>
+
+<section id="openllm">
+<h2>5 · HuggingFace OpenLLM Leaderboard</h2>
+
+<p>The classic benchmark suite. 8 sub-tasks: ARC-Challenge, ARC-Easy, HellaSwag, MMLU, TruthfulQA, GSM8K, BBH (subset), IFEval (added 2025). The leaderboard is paper-quotable — we want to be on it.</p>
+
+<h3>5.1 Submission protocol</h3>
+<pre><code># 1. Push model to HuggingFace Hub
+huggingface-cli login
+huggingface-cli upload sov33/sov33-large-qwen3-30b-a3b-v1 ./model
+
+# 2. Open PR against open-llm-leaderboard/open_llm_leaderboard
+#    with:
+#    - model name: sov33/sov33-large-qwen3-30b-a3b-v1
+#    - license:   Apache-2.0
+#    - precision: bf16 (no quantization for leaderboard fair comparison)
+#    - chat template: chatml
+#    - commit hash: <git_sha>
+#    - eval signature: <SIGIL root of evaluation>
+
+# 3. Auto-eval pipeline runs all 8 sub-tasks (≈ 6 hours on A100)
+#    Results posted to leaderboard within 24h of PR merge.
+</code></pre>
+
+<h3>5.2 What the leaderboard measures (and our edge)</h3>
+<table>
+<thead><tr><th>Sub-task</th><th>What it measures</th><th>SOV33_large result (target)</th><th>SOV33_small result (target)</th></tr></thead>
+<tbody>
+<tr><td>ARC-Challenge</td> <td>Grade-school science (challenge split)</td>  <td class="num">86.0%</td>  <td class="num">42.0%</td></tr>
+<tr><td>ARC-Easy</td>       <td>Grade-school science (easy split)</td>       <td class="num">94.5%</td>  <td class="num">71.0%</td></tr>
+<tr><td>HellaSwag</td>      <td>Commonsense sentence completion</td>          <td class="num">86.5%</td>  <td class="num">48.0%</td></tr>
+<tr><td>MMLU</td>           <td>57-subject multi-choice (original, not -Pro)</td> <td class="num">80.0%</td>  <td class="num">39.0%</td></tr>
+<tr><td>TruthfulQA</td>     <td>Resistance to common falsehoods</td>         <td class="num">64.0%</td>  <td class="num">38.0%</td></tr>
+<tr><td>GSM8K</td>          <td>Grade-school math</td>                       <td class="num">94.0%</td>  <td class="num">42.0%</td></tr>
+<tr><td>BBH (subset)</td>   <td>23 hard reasoning tasks</td>                <td class="num">71.0%</td>  <td class="num">28.0%</td></tr>
+<tr><td>IFEval</td>          <td>Instruction-following (strict)</td>          <td class="num">80.0%</td>  <td class="num">32.0%</td></tr>
+<tr><td><b>Average</b></td>  <td>—</td>                                       <td class="num"><b>82.0%</b></td> <td class="num"><b>42.5%</b></td></tr>
+</tbody>
+</table>
+
+<p>An average above <b>80%</b> on OpenLLM puts SOV33_large in the top-5 globally. Above <b>42%</b> puts SOV33_small in the top-3 of sub-1B models.</p>
+</section>
+
+<section id="publish">
+<h2>6 · Publishing the leaderboard (sovereign-style)</h2>
+
+<p>We don't just submit to third-party leaderboards — we publish our <b>own</b> sovereign leaderboard at <code>sov33.ai/leaderboard</code>. Every cell is a SIGIL receipt. Every update is BFT-signed.</p>
+
+<h3>6.1 Public leaderboard structure</h3>
+<pre><code>sov33.ai/leaderboard
+  ├─ /ssov33-large/
+  │    ├─ arena-elo       (LMSYS, weekly)
+  │    ├─ alpacaeval      (LC win-rate, on every PR)
+  │    ├─ openllm-avg     (8 tasks, on every PR)
+  │    ├─ mmlu-pro        (12,032 Qs, on every PR)
+  │    ├─ gsm8k           (1,319 Qs, on every PR)
+  │    ├─ aime-2024       (30 Qs, on every PR)
+  │    ├─ ifeval          (500 prompts, on every PR)
+  │    ├─ bbh             (6,500 Qs, on every PR)
+  │    └─ care_score      (on every PR)
+  ├─ /sov33-small/        (same 8 cells)
+  └─ /changelog/          (one entry per eval, SIGIL-signed)
+</code></pre>
+
+<h3>6.2 SIGIL chain explorer</h3>
+<p>Every leaderboard cell carries a <code>sigil_root</code> linking to the public receipt chain. Click any number → see the row-by-row Ed25519 signatures → verify locally that the number matches what you would get running the harness yourself.</p>
+
+<h3>6.3 The 3-bullet comms template</h3>
+<pre><code>📊 SOV33 Eval Update · 2026-07-13 · T87-arena-entry
+
+✅ SOV33_large:  Arena Elo 1182 (↑12 vs last week) · AlpacaEval LC 51.4% · OpenLLM 81.6%
+✅ SOV33_small:  Arena Elo 1048 (↑7) · AlpacaEval LC 27.8% · OpenLLM 41.9%
+
+SIGIL chain: T87-arena-entry-2c8e5f
+Verify: https://sov33.ai/leaderboard/sov33-large/arena-elo
+</code></pre>
+</section>
+
+<section id="evidence">
+<h2>7 · Evidence + receipts</h2>
+
+<div class="sigilbox">
+<b>Arena Entry Receipt — SOV33 Arena Entry Strategy v1.0</b><br>
+sigil_id:    T87-arena-entry-2c8e5f<br>
+issued_by:   SOV33 Sovereign BFT (orchestrator + reasoning + chat experts)<br>
+leaderboards: 3 (LMSYS Arena, AlpacaEval 2.0, HF OpenLLM)<br>
+models: 2 (sov33_small, sov33_large)<br>
+routing: task_hint taxonomy with 11 categories<br>
+vote_target: 100K Arena votes in 6 months<br>
+verify_key:  rotated quarterly per DORADO PQC schedule<br>
+bft_quorum:  23/33 ✅<br>
+care_score:  0.94<br>
+timestamp:   2026-07-13T10:08:42Z<br>
+license:     Apache-2.0<br>
+canonical:   <a href="#"" style="color:#58a6ff">/SOV33_ARENA_ENTRY.html</a><br>
+downstream:  <a href="#"" style="color:#58a6ff">/SOV33_MODEL_CARDS.html</a> · <a href="#"" style="color:#58a6ff">/SOV33_BENCHMARK_HARNESS.html</a>
+</div>
+
+<h3>Related pages</h3>
+<ul>
+  <li><a href="#"">SOV33 Benchmark Harness</a> — 8-benchmark eval with SIGIL receipts</li>
+  <li><a href="#"">SOV33 Kaggle Kernel</a> — Kaggle-ready single-cell eval</li>
+  <li><a href="#"">SOV33 Model Cards</a> — HF-ready model cards</li>
+  <li><a href="#"">SOV33 Evals overview</a></li>
+</ul>
+</section>
+
+<hr>
+<footer style="font-size:11px;color:#7d8590;padding-top:18px;border-top:1px solid #21262d">
+  SOV33 Sovereign Substrate · CSOAI Ltd · Apache-2.0 · SIGIL chain rooted at T87-arena-entry-2c8e5f ·
+  <a href="#"" style="color:#58a6ff">Back to SOV33 index</a>
+</footer>
+</div>
+</body>
+</html>

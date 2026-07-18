@@ -1,0 +1,47 @@
+{
+  "sigil_id": "sigil:tick-106:defoneos:2026-07-15T07:30:00Z",
+  "tick": 106,
+  "phase": "EXPANSION_25_PROMPT_INJECTION_DEFENSE_MCP_SIDECAR_TOPOLOGY_HUMAN_OVERRIDE_RECOVERY",
+  "timestamp": "2026-07-15T07:30:00Z",
+  "actor": "ed25519:hermes-jeeves",
+  "witness_quorum": ["ed25519:sov3-runtime-1", "ed25519:sov3-runtime-2", "ed25519:sov3-runtime-3"],
+  "deliverables": [
+    {
+      "page": "sovereign-prompt-injection-defense-spec.html",
+      "size_bytes": 15548,
+      "size_verified_curl": null,
+      "sha256_preview": null,
+      "ring": "Ring0",
+      "category": "spec-defence",
+      "summary": "Multi-layer defence-in-depth against indirect prompt injection. Trusted Instruction Hierarchy with 3 trust classes (SYS/DEV/USR). 7 defense layers (signature verify, origin provenance, length/type, regex scan, delimitation, scope check, SIGIL). 47 regex patterns open-source SIGIL-anchored. Tool-output sandboxing via <tool-output> XML delimiters. 7-vector threat model all mitigated. Zero external ML classifiers. Compliance: OWASP LLM01, MITRE ATLAS AML.T0051, NIST AI 600-1 GV-4, NCSC Secure AI, EU AI Act Art 15, JSP 936 §4.6."
+    },
+    {
+      "page": "mcp-sidecar-deployment-topology.html",
+      "size_bytes": 15547,
+      "size_verified_curl": null,
+      "sha256_preview": null,
+      "ring": "Ring0",
+      "category": "spec-architecture",
+      "summary": "Reference architecture for sovereign MCP server deployment. 3 deployment models (SUBPROCESS for Ring0 / SIDECAR for Ring1 / FEDERATED for Ring2). Ring-based firewall isolation + zero-trust mTLS with Ed25519 certs. WireGuard tunnel to Oracle UK-South BFT gateway. Port allocation 8100-9099 across rings. Liveness probes every 15s with auto-recovery (3-strike restart, quarantine, attestation suspended). 30 MCPs in production. Compliance: NCSC CAF C1/C2/C4, NIST SP 800-204D, JSP 440 Ch7, EU AI Act Art 15, SOC2 CC6.6."
+    },
+    {
+      "page": "human-override-recovery-procedure.html",
+      "size_bytes": 14246,
+      "size_verified_curl": null,
+      "sha256_preview": null,
+      "ring": "Ring0",
+      "category": "spec-governance",
+      "summary": "Kill-switch + pause + graceful shutdown putting human owner back in the loop. 7-second hard kill (Touch ID → SIGTERM → SIGKILL → 4-pass cryptographic secret erase → SIGIL red-line). 30-second soft pause. 5-minute graceful shutdown. 5 local triggers (Touch ID, WebUI, voice, CLI, dead-man USB). 7 recovery modes (RESUME/RESTART/ROLLBACK/FORENSICS/QUARANTINE/KEY_ROTATION/OWNER_HANDOVER). 60-second encrypted snapshots with 30-day retention. 5 immutable red lines documented. Compliance: EU AI Act Art 14, UK AISI AI Management Essentials, NIST AI RMF GOVERN 1.3, ISO 42001 A.9, JSP 936 §5.4, NCSC CAF C2."
+    }
+  ],
+  "counters_after": {
+    "pages_live": 530,
+    "pages_added_this_tick": 3,
+    "mcps_built": 30,
+    "repos_cloned": 15,
+    "ticks_completed": 106
+  },
+  "expansion_phase": "EXPANSION_25_PROMPT_INJECTION_DEFENSE_MCP_SIDECAR_TOPOLOGY_HUMAN_OVERRIDE_RECOVERY",
+  "red_line_violations": 0,
+  "verifications_pending": ["disk_vs_curl_byte_compare", "sitemap_update", "vercel_alias_rotation"]
+}

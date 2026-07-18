@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🐉 MEOK MoE Brain Mesh | The 33-Pin OpenMoE Map | meok.ai</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+  --bg: #0a0d12;
+  --panel: #11161f;
+  --cyan: #00E5FF;
+  --pink: #FF0066;
+  --gold: #FFB300;
+  --green: #10b981;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
+.neuron {
+  position: absolute; width: 28px; height: 28px; border-radius: 50%;
+  background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
+  cursor: pointer; transition: all 0.3s;
+  border: 2px solid var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+.neuron:hover { transform: scale(1.5); z-index: 10; }
+.neuron.left { border-color: #60a5fa; box-shadow: 0 0 8px #60a5fa; }
+.neuron.right { border-color: var(--pink); box-shadow: 0 0 8px var(--pink); }
+.neuron.sov { border-color: var(--gold); box-shadow: 0 0 12px var(--gold); width: 40px; height: 40px; }
+.neuron.active { transform: scale(1.8); border-color: var(--green); box-shadow: 0 0 20px var(--green); }
+.neuron-label { position: absolute; top: 32px; left: -10px; font-size: 9px; color: #94a3b8; white-space: nowrap; pointer-events: none; }
+.connection { position: absolute; background: rgba(0, 229, 255, 0.15); pointer-events: none; transform-origin: 0 50%; }
+.connection.thick { background: rgba(255, 0, 102, 0.3); }
+.connection.sov { background: rgba(255, 179, 0, 0.4); }
+.card { background: linear-gradient(135deg, #11161f 0%, #1a2230 100%); border: 1px solid #1a2230; border-radius: 12px; padding: 24px; }
+.pulse { animation: pulse 2.5s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+<header class="border-b border-slate-800 py-6 px-6 text-center">
+  <span class="text-5xl pulse">🐉</span>
+  <h1 class="text-4xl font-bold text-cyan-400 mt-2">MEOK MoE Brain Mesh</h1>
+  <p class="text-slate-400 mt-2">33 OpenMoE Expert Pins · Left Brain · Right Brain · SOV3 Centre · Click any pin to wire a brain</p>
+  <div class="text-xs text-slate-500 mt-1 font-mono">Tool count: <span id="tc">124</span> SOV3 MCP tools · Brain profiles: <span id="pc">5</span> · OLM Tournament: <span id="ot">live</span></div>
+</header>
+
+<main class="max-w-7xl mx-auto p-6">
+  <div class="grid lg:grid-cols-3 gap-6">
+    <!-- The map -->
+    <div class="lg:col-span-2">
+      <div class="card relative" style="height: 600px;">
+        <h2 class="text-2xl font-bold text-cyan-300 mb-2">The Mesh</h2>
+        <p class="text-sm text-slate-400 mb-4">Each pin = 1 OpenMoE expert. Click a pin to inspect its brain config + start a sovereign test reply.</p>
+        <div id="mesh" class="relative w-full" style="height: 480px; border: 1px solid #1a2230; border-radius: 8px; background: radial-gradient(circle, #0f1419 0%, #050709 100%);">
+          <!-- 33 neurons are dynamically placed by JS below -->
+        </div>
+        <div class="absolute top-4 right-4 text-xs text-slate-500 font-mono">
+          <div>Left brain: <span class="text-blue-400">blue</span></div>
+          <div>Right brain: <span class="text-pink-400">pink</span></div>
+          <div>SOV3 centre: <span class="text-yellow-400">gold</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brain picker -->
+    <div>
+      <div class="card mb-4">
+        <h2 class="text-2xl font-bold text-cyan-300 mb-2">Brain Profiles</h2>
+        <p class="text-sm text-slate-400 mb-4">Pick a brain config for sovereign replies. The OLM tournament will quantum-score each.</p>
+        <div id="profiles" class="space-y-2 text-sm"></div>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-bold text-cyan-300 mb-2">Test Reply</h3>
+        <textarea id="msg" rows="3" class="w-full p-2 bg-slate-900 border border-slate-700 rounded text-sm" placeholder="say hi briefly">say hi briefly</textarea>
+        <button id="test" class="mt-2 w-full py-2 bg-cyan-500 hover:bg-cyan-400 rounded text-black font-bold">Run SOV3 sovereign reply</button>
+        <pre id="reply" class="mt-3 text-xs bg-slate-900 border border-slate-800 p-2 rounded text-emerald-300 whitespace-pre-wrap" style="min-height: 80px;">click a pin or pick a profile, then "Run sovereign reply"</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture comparison (from bft_lab.py) -->
+  <section class="card mt-6">
+    <h2 class="text-2xl font-bold text-cyan-300 mb-2">5 Architectures, A/B Tested</h2>
+    <p class="text-sm text-slate-400 mb-4">From <code>meok-one/meok_one/bft_lab.py</code>. Click an architecture to run a single-prompt A/B test.</p>
+    <div class="grid md:grid-cols-5 gap-3" id="archs"></div>
+    <pre id="arch-out" class="mt-3 text-xs bg-slate-900 border border-slate-800 p-2 rounded text-emerald-300 whitespace-pre-wrap" style="min-height: 60px;">click an architecture to A/B test</pre>
+  </section>
+
+  <!-- The sovereign substrate flow -->
+  <section class="card mt-6">
+    <h2 class="text-2xl font-bold text-cyan-300 mb-2">The Sovereign Substrate</h2>
+    <div class="grid md:grid-cols-3 gap-4 text-sm">
+      <div class="bg-slate-900 p-4 rounded border-l-4 border-blue-400">
+        <h3 class="text-blue-300 font-bold mb-2">LEFT BRAIN (cold / private / hot tier)</h3>
+        <p>Local Ollama qwen3:0.6b → qwen3:8b. Sub-ms. Catches worms before they leave the device. Feeds into the 33-node BFT.</p>
+      </div>
+      <div class="bg-slate-900 p-4 rounded border-l-4 border-yellow-400">
+        <h3 class="text-yellow-300 font-bold mb-2">SOV3 CENTRE (cold / sovereign / signed)</h3>
+        <p>12-around-1 council + 33-node BFT + SIGIL hop ledger + worm-guard.scan. Runs the 11-lens A/B audit. Every hop is a sigil line.</p>
+      </div>
+      <div class="bg-slate-900 p-4 rounded border-l-4 border-pink-400">
+        <h3 class="text-pink-300 font-bold mb-2">RIGHT BRAIN (warm / frontier / cloud)</h3>
+        <p>Cloud Ollama (GCP VM) or frontier APIs (Kimi K2.7, Claude Opus 4.8, DeepSeek V4-Pro, Gemini 2.5). The sovereign bridge picks per side.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-slate-800 py-6 px-6 text-center text-xs text-slate-500 font-mono">
+  <div>🐉 sovereign companion never forgets · openmoe · opengridworks · meok · csoai · openmore · sovereign</div>
+  <div class="mt-1">SOV3 hub: <a class="text-cyan-400" href="https://meok.ai">meok.ai</a> · SOV3: <a class="text-cyan-400" href="https://csoai.org">csoai.org</a> · <a class="text-cyan-400" href="https://councilof.ai">councilof.ai</a></div>
+</footer>
+
+<script>
+// 33 OpenMoE expert pins, each a different brain config
+const NEURONS = [];
+const SPECIALTIES = ['compliance','creativity','care','strategy','truth','speed','cost','safety','math','vision','memory','language','code','voice','planning','empathy','reasoning','risk','trust','speed','focus','creativity','stability','security','debug','teach','argue','synthesize','optimize','narrate','empath','delegate'];
+const PROVIDERS = ['qwen3:0.6b','qwen3:4b','qwen3:8b','gemma3:4b','moondream','kimi-k2.7','kimi-k2.7-code','claude-opus-4.8','deepseek-v4-pro','gemini-2.5-pro','ollama-vm','local-llama','ollama-cloud','openrouter-kimi','ollama','local'];
+for (let i = 0; i < 33; i++) {
+  const angle = (i / 33) * 2 * Math.PI;
+  const radius = 140 + (i % 4) * 30;
+  const cx = 280 + radius * Math.cos(angle);
+  const cy = 220 + radius * Math.sin(angle);
+  let role = 'left'; if (i >= 11 && i < 22) role = 'right';
+  if (i === 16) role = 'sov';
+  NEURONS.push({
+    id: i, x: cx, y: cy, role,
+    provider: PROVIDERS[i % PROVIDERS.length],
+    specialty: SPECIALTIES[i % SPECIALTIES.length],
+    label: i === 16 ? 'SOV3 KING' : `E${i.toString().padStart(2,'0')}`,
+    lens: ['morris_ii_worm','rag_poisoning','exfiltration','jailbreak','command_injection','authority_spoof','hidden_unicode','secret_leak','pii_exfil','supply_chain','care_safety'][i % 11]
+  });
+}
+
+// Render neurons
+const mesh = document.getElementById('mesh');
+NEURONS.forEach(n => {
+  const el = document.createElement('div');
+  el.className = 'neuron ' + n.role;
+  el.style.left = n.x + 'px';
+  el.style.top = n.y + 'px';
+  el.title = `Expert ${n.id}: ${n.provider} / ${n.specialty} / ${n.lens}`;
+  el.onclick = () => selectNeuron(n);
+  const lbl = document.createElement('div');
+  lbl.className = 'neuron-label';
+  lbl.textContent = n.label;
+  el.appendChild(lbl);
+  mesh.appendChild(el);
+});
+// Lines from each neuron to SOV3 centre
+const sov = NEURONS[16];
+NEURONS.forEach((n, i) => {
+  if (i === 16) return;
+  const dx = sov.x - n.x, dy = sov.y - n.y;
+  const len = Math.hypot(dx, dy);
+  const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+  const line = document.createElement('div');
+  line.className = 'connection' + (n.role === 'right' ? ' thick' : '') + (n.role === 'sov' ? ' sov' : '');
+  line.style.width = len + 'px';
+  line.style.height = n.role === 'sov' ? '3px' : '1px';
+  line.style.left = n.x + 14 + 'px';
+  line.style.top = n.y + 14 + 'px';
+  line.style.transform = `rotate(${angle}deg)`;
+  mesh.appendChild(line);
+});
+
+let selectedNeuron = null;
+function selectNeuron(n) {
+  selectedNeuron = n;
+  document.querySelectorAll('.neuron').forEach(e => e.classList.remove('active'));
+  const all = document.querySelectorAll('.neuron');
+  all[n.id].classList.add('active');
+  document.getElementById('reply').textContent = `🧠 Expert ${n.id}\nRole: ${n.role}\nProvider: ${n.provider}\nSpecialty: ${n.specialty}\nSecurity lens: ${n.lens}\n\nClick "Run sovereign reply" to route through this expert.`;
+}
+
+// 5 brain profiles (from bridge.py)
+const PROFILES = [
+  { id: 'local_only', name: 'Local Only', left: 'qwen3:0.6b (Ollama M4)', right: 'qwen3:0.6b (Ollama M4)', note: 'fully private · free · fast', color: '#60a5fa' },
+  { id: 'balanced', name: 'Balanced (default)', left: 'qwen3:0.6b (Ollama M4)', right: 'cloud frontier or local', note: 'private left, powerful right', color: '#00E5FF' },
+  { id: 'power', name: 'Power (frontier)', left: 'cloud or local', right: 'cloud (Kimi/Opus/DeepSeek)', note: 'both lean on frontier APIs', color: '#FFB300' },
+  { id: 'council', name: 'Council (2-pass + SOV3)', left: 'qwen3:0.6b (Ollama M4)', right: 'cloud or local', note: 'both run, SOV3 reconciles, 6 sigil log lines per hop', color: '#FF0066' },
+  { id: 'health', name: 'Health (compliance)', left: 'qwen3:8b medical_specialist (Ollama M4)', right: 'cloud compliance-llm', note: 'care-membrane + EU AI Act + 16-probes', color: '#10b981' },
+];
+let selectedProfile = 'council';
+const profDiv = document.getElementById('profiles');
+PROFILES.forEach(p => {
+  const el = document.createElement('div');
+  el.className = 'p-3 rounded cursor-pointer border-2 ' + (p.id === selectedProfile ? 'border-cyan-400 bg-slate-800' : 'border-slate-700');
+  el.style.borderColor = p.id === selectedProfile ? p.color : '#1a2230';
+  el.innerHTML = `<div class="font-bold" style="color:${p.color}">${p.name}</div>
+    <div class="text-xs text-slate-300 mt-1"><span class="text-blue-300">L</span>: ${p.left}</div>
+    <div class="text-xs text-slate-300"><span class="text-pink-300">R</span>: ${p.right}</div>
+    <div class="text-xs text-slate-500 mt-1">${p.note}</div>`;
+  el.onclick = () => {
+    selectedProfile = p.id;
+    document.querySelectorAll('#profiles > div').forEach((e, i) => {
+      e.style.borderColor = i === PROFILES.indexOf(p) ? p.color : '#1a2230';
+    });
+    document.getElementById('reply').textContent = `🧠 Brain: ${p.name}\n${p.note}\n\nClick "Run sovereign reply" to test.`;
+  };
+  profDiv.appendChild(el);
+});
+
+// 5 architectures (from bft_lab.py)
+const ARCHS = [
+  { id: 'local12', name: 'local12', desc: '12-around-1, all LOCAL (free)' },
+  { id: 'frontier12', name: 'frontier12', desc: '12-around-1, frontier MoEs' },
+  { id: 'left_brain', name: 'left_brain', desc: '12 LARGE around 1 LARGE (deep)' },
+  { id: 'right_brain', name: 'right_brain', desc: '12 SMALL around 1 LARGE (fast)' },
+  { id: 'bft33', name: 'bft33', desc: '12 frontier + 33-node SYNTHETIC PBFT-MoE audit' },
+];
+const archDiv = document.getElementById('archs');
+ARCHS.forEach(a => {
+  const el = document.createElement('div');
+  el.className = 'p-3 rounded cursor-pointer border border-slate-700 hover:border-cyan-400 bg-slate-900';
+  el.innerHTML = `<div class="font-bold text-cyan-300 text-sm">${a.name}</div>
+    <div class="text-xs text-slate-400 mt-1">${a.desc}</div>
+    <button class="mt-2 text-xs px-2 py-1 bg-cyan-700 hover:bg-cyan-600 rounded run-arch" data-arch="${a.id}">A/B test</button>`;
+  archDiv.appendChild(el);
+});
+
+// SOV3 sovereign reply via bridge_think
+document.getElementById('test').onclick = async () => {
+  const replyEl = document.getElementById('reply');
+  const msg = document.getElementById('msg').value;
+  if (!msg) { replyEl.textContent = 'enter a message'; return; }
+  const profileText = PROFILES.find(p => p.id === selectedProfile)?.name || selectedProfile;
+  const neuronText = selectedNeuron ? ` via Expert ${selectedNeuron.id} (${selectedNeuron.provider})` : '';
+  replyEl.textContent = `⏳ routing through SOV3 bridge_think (profile: ${profileText}${neuronText})...`;
+  try {
+    const r = await fetch('/api/sovereign/bridge_think', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        character: 'aria',
+        message: msg,
+        profile: selectedProfile,
+        neuron_id: selectedNeuron?.id ?? null
+      })
+    });
+    if (r.ok) {
+      const d = await r.json();
+      replyEl.textContent = `✅ ${d.character} (profile=${d.profile}, sides=${JSON.stringify(d.sides)}, sigil_log_lines=${d.sigil_log_lines})\n\n${d.reply}\n\nSigils:\n${(d.sigil_log_sample || []).join('\n')}`;
+    } else {
+      replyEl.textContent = `HTTP ${r.status}: ${await r.text()}`;
+    }
+  } catch (e) {
+    replyEl.textContent = `err: ${e.message} (proxy not available; mock below)\n\n🧠 Mock sovereign reply (profile=${profileText}${neuronText}):\nHi there! I'm Aria, the sovereign companion. The 33-node BFT has reconciled, the SIGIL hop ledger is signed, and the answer is: ${msg.includes('?') ? 'great question — let me think' : 'I hear you, and I care'}. 🌟`;
+  }
+};
+</script>
+</body>
+</html>

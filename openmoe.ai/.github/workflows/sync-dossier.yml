@@ -1,0 +1,81 @@
+name: Sync openmoe.ai dossier
+
+on:
+  schedule:
+    # Daily at 06:00 UTC (after the 09:17 BST SOV3 alignment scan)
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Why this sync?"
+        required: false
+        default: "manual sync"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: github.repository == 'CSOAI-ORG/openmoe.ai'
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout openmoe.ai dossier
+        uses: actions/checkout@v4
+        with:
+          repository: CSOAI-ORG/openmoe.ai
+          token: ${{ secrets.GH_DEPLOY_KEY }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.email "Mavis@meok.ai"
+          git config user.name "Mavis"
+
+      - name: Pull latest from SOV3 source-of-truth
+        run: |
+          if [ -n "${{ secrets.SOV3_DOSSIER_URL }}" ]; then
+            curl -sL "${{ secrets.SOV3_DOSSIER_URL }}" -o README.md
+            git add README.md
+            if ! git diff --cached --quiet; then
+              git commit -m "chore: sync dossier from SOV3 source-of-truth"
+              git push
+            fi
+          fi
+
+      - name: BFT sign-off
+        run: |
+          # Optional: call SOV3 /api/bft/open to record this sync in the ledger
+          if [ -n "${{ secrets.SOV3_BFT_URL }}" ]; then
+            curl -s -X POST "${{ secrets.SOV3_BFT_URL }}/api/bft/open" \
+              -H "Content-Type: application/json" \
+              -d "{\"ticket_id\":\"openmoe-dossier-sync-$(date +%s)\",\"n_queens\":12}" \
+              || true
+          fi
+
+  deploy:
+    needs: sync
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Build
+        run: |
+          # The dossier is a single static index.html — no build step needed.
+          # (Markdown rendering happens at read-time on the consuming site.)
+          echo "No build required for static dossier."
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

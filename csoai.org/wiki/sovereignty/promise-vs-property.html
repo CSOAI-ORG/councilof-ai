@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promise vs Property - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/sovereignty/">sovereignty</a> / promise-vs-property</div>
+<h1>Promise vs Property</h1>
+<p class="tagline">Why auditability beats SLAs, and why CSOAI builds properties not promises.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>A <strong>Promise</strong> is a contractual assurance: "we will not access your data without consent." A <strong>Property</strong> is a mathematical guarantee: "we cannot access your data without consent." CSOAI builds properties, not promises, because properties are falsifiable, promises are not.</p>
+
+<h2>The Argument</h2>
+<p>Consider a typical cloud SLA: "Your data is encrypted at rest and in transit." This is a promise. It does not say who holds the keys. It does not preclude a court order. It does not preclude an employee with admin access. It is enforced by audit, not by mechanism.</p>
+
+<p>CSOAI's equivalent is a property: "Your data is encrypted with a key you alone hold, the system has no copy of the key, and any decryption attempt emits a SIGIL event visible to you in real time." This is enforced by mechanism. It cannot be silently violated because doing so would require breaking the SIGIL hash chain.</p>
+
+<h2>Formal Distinction</h2>
+<table>
+<tr><th>Promise</th><th>Property</th></tr>
+<tr><td>Contractual</td><td>Cryptographic</td></tr>
+<tr><td>Audit-enforced</td><td>Mechanism-enforced</td></tr>
+<tr><td>Reversible by party A</td><td>Reversible only by all parties</td></tr>
+<tr><td>Silent violation possible</td><td>Violation is observable</td></tr>
+<tr><td>Cost: $0 (pen + paper)</td><td>Cost: significant engineering</td></tr>
+<tr><td>Legal remedy</td><td>Mathematical remedy</td></tr>
+</table>
+
+<h2>Historical Examples</h2>
+<p>The Schrems II decision (2020) invalidated the EU–US Privacy Shield because US national security letters could compel disclosure — a <em>promise</em> broken by a <em>property</em> (the actual capability of the US state). The lesson: any system whose sovereignty depends on a promise will eventually be broken by a sovereign with different interests.</p>
+
+<h2>CSOAI's Property Catalog</h2>
+<ul>
+<li><strong>Key exclusivity</strong>: principal's Ed25519 key is generated on-device, never exported, never held by CSOAI (see <a href="/wiki/cryptography/ed25519.html">Ed25519</a>)</li>
+<li><strong>Foreign access visibility</strong>: every cross-jurisdiction access emits a SIGIL event (see <a href="/wiki/sovereignty/foreign-vs-sovereign.html">Foreign vs Sovereign</a>)</li>
+<li><strong>Council ratification</strong>: sovereignty-changing actions require 12-around-1 BFT (see <a href="/wiki/council/12-around-1.html">12-around-1</a>)</li>
+<li><strong>Post-quantum integrity</strong>: keys can be rotated to ML-DSA-65 / ML-KEM-768 without downtime (see <a href="/wiki/cryptography/pqc-ml-dsa-65.html">ML-DSA-65</a>)</li>
+<li><strong>Public auditability</strong>: SIGIL chain is publicly verifiable via the explorer API (see <a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a>)</li>
+</ul>
+
+<h2>Why This Matters</h2>
+<p>For a regulator, the difference is between trusting a vendor's compliance department and verifying the vendor's source code + cryptographic chain. For a citizen, the difference is between hoping their data is safe and being able to prove it. For a nation, the difference is between dependence and sovereignty.</p>
+
+<h2>Criticisms Addressed</h2>
+<p>Critics argue that properties are more expensive than promises. This is true — but only in engineering cost. In trust cost, properties are dramatically cheaper because they do not require ongoing legal enforcement. CSOAI's experience is that property-based sovereignty wins contracts precisely because it eliminates the trust premium.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/sovereignty/principle.html">Principle</a></li>
+<li><a href="/wiki/sovereignty/property.html">Property</a></li>
+<li><a href="/wiki/sovereignty/axiomatic.html">Axiomatic</a></li>
+<li><a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

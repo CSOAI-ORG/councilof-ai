@@ -1,0 +1,55 @@
+{
+  "reports": [
+    {
+      "hive": "analysis",
+      "proposal": "deploy-patch-A",
+      "n": 93,
+      "f_tolerated": 30,
+      "quorum_needed": 63,
+      "approvals": 70,
+      "decision": "APPROVE",
+      "scope": "local",
+      "sigil": "e208cd0947b0aa2d"
+    },
+    {
+      "hive": "planning",
+      "proposal": "deploy-patch-A",
+      "n": 18,
+      "f_tolerated": 5,
+      "quorum_needed": 13,
+      "approvals": 15,
+      "decision": "APPROVE",
+      "scope": "local",
+      "sigil": "fdf8cc96547dfae7"
+    },
+    {
+      "hive": "security",
+      "proposal": "deploy-patch-A",
+      "n": 10,
+      "f_tolerated": 3,
+      "quorum_needed": 7,
+      "approvals": 4,
+      "decision": "REJECT",
+      "scope": "local",
+      "sigil": "134efa773f7aedd5"
+    }
+  ],
+  "verdict": {
+    "kind": "queen_arbitration",
+    "proposal": "deploy-patch-A",
+    "verdict": "BLOCK",
+    "reason": "security sub-hive vetoed (absolute)",
+    "approving": [
+      "analysis",
+      "planning"
+    ],
+    "rejecting": [
+      "security"
+    ],
+    "authority": "SOV3_QUEEN",
+    "note": "arbitrates+governs; does not think for hives",
+    "sigil": "8f218db058277eb3"
+  },
+  "chain_ok": true,
+  "hops": 4
+}

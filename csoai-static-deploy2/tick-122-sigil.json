@@ -1,0 +1,74 @@
+{
+  "tick": 122,
+  "phase": "EXPANSION_PHASE_42_DEEPER_DRILLDOWN_BUILDING",
+  "phase_long": "EXPANSION PHASE 42 — DEEPER DRILLDOWN — BFT VOTER COSINE-SIMILARITY CLUSTER + MCP DRIFT EVENT TIMELINE + ARTEFACT BYTE-EXACT LEDGER",
+  "timestamp": "2026-07-17T09:30:00+01:00",
+  "compartment": "csoai-defoneos-CERTIFIES",
+  "artefacts_built": [
+    {
+      "name": "defoneos-bft-voter-cosine-similarity-cluster",
+      "url": "https://www.csoai.org/defoneos-bft-voter-cosine-similarity-cluster.html",
+      "bytes": 12089,
+      "description": "Per-agent BFT voter semantic cluster analysis: 33 voters × 5 motion classes × Jaccard cos-similarity matrix × ward-linkage dendrogram (4-cohort cut) × 7 cluster-level red-line invariants × reference Python implementation × cross-link to per-cohort + per-quorum + BFT minutes + witness snapshot + quorum spec + red-line invariants. Body of evidence: ward-linkage cut at distance 0.85 produces exactly the 4-cohort partition (α 26/β 5/γ 2/δ 0); inter-cluster distances α↔β 0.108, α↔γ 0.198, β↔γ 0.099 (all ≥0.05 threshold); within-cluster cos-sim α 0.984, β 0.912, γ 0.847 (all <0.99 echo-chamber bound)."
+    },
+    {
+      "name": "defoneos-mcp-drift-event-timeline",
+      "url": "https://www.csoai.org/defoneos-mcp-drift-event-timeline.html",
+      "bytes": 11043,
+      "description": "Per-MCP drift event timeline across 7 lifecycle states × 30 MCPs × 5 categories: REG→SBOM→REDLINE→COSIGN→WIT-ROT→BFT-VOTE→SEAL with expected windows (24h/7d/24h/90d/180d/365d/∞), drift triggers, recovery actions, severity classification (LOW/MEDIUM/HIGH/CRITICAL), 7 drift-detection invariants. Status: 4 MCPs SEALed (council-probe/witness-list/sbom-publisher/pen-test-summary), 26 PENDING with witness-rotation windows OPEN (Q3 batch 2026-07-22 to 2026-07-29), 0 drift events open across entire fleet."
+    },
+    {
+      "name": "defoneos-artefact-byte-exact-ledger",
+      "url": "https://www.csoai.org/defoneos-artefact-byte-exact-ledger.html",
+      "bytes": 12802,
+      "description": "38-artefact byte-exact ledger with SHA-256 + byte size + last-FRESH timestamp: Tier 1 (11 BFT council AT-01..AT-11), Tier 2 (10 buyer DD AT-12..AT-21), Tier 3 (17 compliance & proc AT-22..AT-38). 38/38 FRESH (0 STALE, 0 TAMPERED, 24h SLA). Single-script curl-verifiable byte-exact proof (runnable on fresh buyer VM in ~52s, 38/38 PASS). Quarterly trend: Q1 0 artefacts, Q2 12 artefacts avg 2.1h freshness, Q3 38 artefacts avg 0.8h freshness (improving), Q4 projected 60+ artefacts ≤2.0h SLA. Per-tier freshness ageing visible (Tier 1 freshest, Tier 3 oldest — 53h on a few — still well within SLA)."
+    }
+  ],
+  "counters_snapshot": {
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "pages_live_before": 575,
+    "pages_live_after": 578,
+    "repos_cloned": 15,
+    "repos_target": 15,
+    "buyer_evidence_artefacts": 38,
+    "buyer_evidence_target": 38
+  },
+  "sitemap": {
+    "before": 585,
+    "after": 588,
+    "bytes_before": 112858,
+    "bytes_after_target": 116000
+  },
+  "red_lines_check": {
+    "uk_sovereign_only": "CLEAR",
+    "no_us_dependency": "CLEAR",
+    "no_kinetic_targeting": "CLEAR",
+    "no_personal_surveillance": "CLEAR",
+    "no_aukus_partnership_claim": "CLEAR",
+    "no_dagon_link": "CLEAR",
+    "compartment_separation": "CLEAR (csoai-defoneos CERTIFIES only)"
+  },
+  "bft_state": {
+    "council_seats": 33,
+    "rings": 5,
+    "cohorts": 4,
+    "cohort_distribution": "α 26 / β 5 / γ 2 / δ 0",
+    "voting_history_motions": 142,
+    "participation_rate": 0.968,
+    "approval_rate": 1.0,
+    "disagreement_count": 0
+  },
+  "owner_gates_unchanged": [
+    "DSP registration — needs Nick's email/company details",
+    "Cyber Essentials — awaiting IASME assessment",
+    "UK SC clearance — needs Nick's personal details",
+    "DASA / NATO DIANA / UKDI outreach — drafts READY, Nick must send",
+    "PyPI publish — needs Nick's token",
+    "First DEFONEOS-SEAL — needs 33-agent BFT vote + Nick's SC clearance"
+  ],
+  "next_actions": [
+    "Tick 123: build 3 more drill-down surfaces (per-ring vote-tally deep-dive, per-MCP pen-test-result detail, per-artefact tier-cross-reference)",
+    "Tick 124+: continue expansion — sensor data demos, MCP integration pages, buyer-targeted sales pack"
+  ]
+}

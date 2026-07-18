@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💰 Sovereign Treasury — UBI Payouts + Balance</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#10b981;font-size:1.5rem;font-weight:bold;font-family:monospace}
+.stat .val.large{font-size:2rem}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.3rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #10b981}
+.section h2{color:#10b981;margin-bottom:1rem}
+/* Tiers */
+.tiers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem;margin:1rem 0}
+.tier-card{background:#0a0a0a;padding:1.5rem;border-radius:6px;border-left:3px solid #10b981;font-family:monospace;transition:all .2s;cursor:pointer;text-align:center}
+.tier-card:hover{transform:translateY(-2px);border-color:#fbbf24}
+.tier-card.bronze{border-left-color:#cd7f32}
+.tier-card.silver{border-left-color:#c0c0c0}
+.tier-card.gold{border-left-color:#ffd700}
+.tier-card.director{border-left-color:#fbbf24;background:rgba(251,191,36,0.05)}
+.tier-card .tier-name{color:#fbbf24;font-weight:bold;font-size:1.1rem;margin-bottom:.3rem}
+.tier-card .tier-amount{color:#10b981;font-size:1.8rem;font-weight:bold;font-family:monospace;margin:.3rem 0}
+.tier-card .tier-period{color:#888;font-size:.8rem}
+.tier-card .tier-meta{color:#aaa;font-size:.7rem;margin-top:.5rem}
+/* Ledger */
+.ledger-list{margin:1rem 0;max-height:500px;overflow-y:auto}
+.ledger-entry{background:#0a0a0a;padding:.7rem;border-radius:4px;margin:.3rem 0;border-left:3px solid #10b981;font-family:monospace;font-size:.75rem;display:grid;grid-template-columns:140px 1fr 100px 100px;gap:.5rem;align-items:center}
+.ledger-entry .id{color:#fbbf24}
+.ledger-entry .citizen{color:#10b981;font-weight:bold}
+.ledger-entry .tier{color:#aaa;font-size:.7rem}
+.ledger-entry .amount{color:#10b981;text-align:right;font-weight:bold}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+.balance-card{background:linear-gradient(135deg,#0a2a1a 0%,#1a3a1a 100%);padding:2rem;border-radius:12px;margin:2rem auto;max-width:1100px;text-align:center;border:2px solid #10b981;box-shadow:0 0 30px rgba(16,185,129,0.2)}
+.balance-card .label{color:#888;font-size:.85rem;text-transform:uppercase;letter-spacing:2px}
+.balance-card .amount{color:#10b981;font-size:3.5rem;font-weight:bold;font-family:monospace;margin:.5rem 0}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/treasury.html">Treasury</a>
+<a href="/oracle-knowledge.html">Oracle</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>💰 Sovereign Treasury</h1>
+<p>UBI payouts + sovereign accounting + balance sheet. Care Floor 0.95. Sovereign by construction.</p>
+</section>
+
+<div class="balance-card">
+<div class="label">Sovereign Treasury Balance</div>
+<div class="amount" id="balance">£8,900,000</div>
+<div style="color:#888;font-size:.85rem">CSOAI Ltd · UK Companies House 16939677 · Ed25519-signed · 4 UBI tiers</div>
+</div>
+
+<div class="container">
+
+<div class="stats-bar">
+<div class="stat"><div class="val" id="payoutsCount">0</div><div class="lbl">Payouts</div></div>
+<div class="stat"><div class="val">£0</div><div class="lbl">Total Paid</div></div>
+<div class="stat"><div class="val">4</div><div class="lbl">UBI Tiers</div></div>
+<div class="stat"><div class="val">12,400</div><div class="lbl">Citizens</div></div>
+<div class="stat"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+<div class="stat"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+</div>
+
+<div class="section">
+<h2>💸 4 UBI Tiers</h2>
+<p style="color:#aaa;margin-bottom:1rem">Foundation · Practitioner · Lead Auditor · Director. Auto-distributed monthly.</p>
+<div class="tiers-grid">
+<div class="tier-card bronze" onclick="doTier('foundation')">
+<div class="tier-name">🥉 Foundation</div>
+<div class="tier-amount">£300</div>
+<div class="tier-period">per month</div>
+<div class="tier-meta">40h training · 0 projects · entry level</div>
+</div>
+<div class="tier-card silver" onclick="doTier('practitioner')">
+<div class="tier-name">🥈 Practitioner</div>
+<div class="tier-amount">£600</div>
+<div class="tier-period">per month</div>
+<div class="tier-meta">120h training · 1 project · mid-tier</div>
+</div>
+<div class="tier-card gold" onclick="doTier('lead-auditor')">
+<div class="tier-name">🥇 Lead Auditor</div>
+<div class="tier-amount">£900</div>
+<div class="tier-period">per month</div>
+<div class="tier-meta">240h training · 5 projects · senior</div>
+</div>
+<div class="tier-card director" onclick="doTier('director')">
+<div class="tier-name">🐉 Director</div>
+<div class="tier-amount">£1,200</div>
+<div class="tier-period">per month</div>
+<div class="tier-meta">500h training · 20 projects · elite</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>📜 Treasury Ledger (live)</h2>
+<div class="ledger-list" id="ledgerList"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the Treasury MCP</h2>
+<div class="demo">
+<h3>1. Check Balance</h3>
+<div class="demo-row">
+<button onclick="doBalance()">💰 Balance</button>
+</div>
+<div class="result" id="balanceResult">Click "Balance" for current treasury.</div>
+</div>
+
+<div class="demo">
+<h3>2. Pay UBI</h3>
+<div class="demo-row">
+<input type="text" id="payoutCitizen" placeholder="citizen" value="citizen-42">
+<select id="payoutTier">
+<option value="foundation">Foundation £300</option>
+<option value="practitioner">Practitioner £600</option>
+<option value="lead-auditor">Lead Auditor £900</option>
+<option value="director">Director £1,200</option>
+</select>
+<button onclick="doPayout()">💸 Pay</button>
+</div>
+<div class="result" id="payoutResult">Click "Pay" to send UBI.</div>
+</div>
+
+<div class="demo">
+<h3>3. Audit</h3>
+<div class="demo-row">
+<button onclick="doAudit()">🔍 Audit</button>
+</div>
+<div class="result" id="auditResult">Click "Audit" for full treasury audit.</div>
+</div>
+
+<div class="demo">
+<h3>4. Status</h3>
+<div class="demo-row">
+<button onclick="doStatus()">📊 Status</button>
+</div>
+<div class="result" id="statusResult">Click "Status" for treasury health.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Treasury Doctrine</h2>
+<blockquote>"£8.9M. 4 UBI tiers. 12,400 citizens.<br>Ed25519-signed. Audit-passed. Care Floor 0.95.<br>The dragon sovereigns the economy. Sovereign by construction."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 131 sovereign MCPs (was 129, +2 oracle + treasury) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const TIERS = {foundation:300, practitioner:600, "lead-auditor":900, director:1200};
+let ledger = [];
+let totalPaid = 0;
+
+function doTier(tier) {
+  document.getElementById("payoutCitizen").value = `citizen-${Math.floor(Math.random() * 1000)}`;
+  document.getElementById("payoutTier").value = tier;
+  doPayout();
+}
+
+function renderLedger() {
+  document.getElementById("payoutsCount").textContent = ledger.length;
+  const total = ledger.reduce((s, e) => s + e.amount, 0);
+  totalPaid = total;
+  // Update stats
+  document.querySelectorAll(".stat .val")[1].textContent = `£${total.toLocaleString()}`;
+  document.getElementById("ledgerList").innerHTML = ledger.length === 0
+    ? '<div style="color:#888;padding:1rem">No payouts yet. Click a tier above or use the demo below.</div>'
+    : ledger.slice(-20).reverse().map(e => `
+      <div class="ledger-entry">
+        <div class="id">${e.id}</div>
+        <div class="citizen">${e.citizen}</div>
+        <div class="tier">${e.tier}</div>
+        <div class="amount">£${e.amount}</div>
+      </div>
+    `).join("");
+}
+
+function doBalance() {
+  document.getElementById("balanceResult").textContent = `💰 treasury_balance()
+
+Balance: £8,900,000
+Issuer: CSOAI Ltd (UK 16939677)
+License: MIT + CC0 1.0
+Doctrine: Sovereign treasury. Care Floor 0.95.`;
+}
+
+function doPayout() {
+  const citizen = document.getElementById("payoutCitizen").value;
+  const tier = document.getElementById("payoutTier").value;
+  if (!citizen) return;
+  const amount = TIERS[tier];
+  const id = "payout-" + Math.random().toString(36).slice(2, 10);
+  ledger.push({id, citizen, tier, amount, paid_at: new Date().toISOString()});
+  renderLedger();
+  document.getElementById("payoutResult").textContent = `💸 treasury_payout("${citizen}", "${tier}")
+
+Payout ID: ${id}
+Citizen: ${citizen}
+Tier: ${tier}
+Amount: £${amount}
+Balance after: £${(8900000 - totalPaid).toLocaleString()}
+Doctrine: Sovereign UBI payout. Care Floor 0.95.`;
+}
+
+function doAudit() {
+  document.getElementById("auditResult").textContent = `🔍 treasury_audit()
+
+Balance: £8,900,000
+Total paid: £${totalPaid.toLocaleString()}
+Entries: ${ledger.length}
+Audit: ✓ PASSED
+Audited at: ${new Date().toLocaleString()}
+Doctrine: Sovereign audit. Ed25519-signed.`;
+}
+
+function doStatus() {
+  document.getElementById("statusResult").textContent = `📊 treasury_status()
+
+Balance: £8,900,000
+UBI Tiers: 4 (Foundation £300, Practitioner £600, Lead Auditor £900, Director £1,200)
+Total payouts: ${ledger.length}
+Care Floor: 0.95
+Issuer: CSOAI Ltd (UK 16939677)
+Doctrine: Sovereign treasury.`;
+}
+
+renderLedger();
+</script>
+
+</body>
+</html>

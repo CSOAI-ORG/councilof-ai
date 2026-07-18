@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing — openmoe</title>
+  <meta name="description" content="Transparent pricing for openmoe.ai. Instant quotes, flexible tiers and enterprise procurement.">
+  <link rel="canonical" href="https://openmoe.ai/pricing">
+  <meta name="theme-color" content="#22d3ee">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pricing — openmoe">
+  <meta property="og:description" content="Transparent pricing for openmoe.ai. Instant quotes, flexible tiers and enterprise procurement.">
+  <meta property="og:url" content="https://openmoe.ai/pricing">
+  <meta property="og:site_name" content="openmoe.ai">
+  <meta property="og:image" content="https://openmoe.ai/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pricing — openmoe">
+  <meta name="twitter:description" content="Transparent pricing for openmoe.ai. Instant quotes, flexible tiers and enterprise procurement.">
+  <meta name="twitter:image" content="https://openmoe.ai/og-image.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2322d3ee%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2245%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-size%3D%2238%22%20font-weight%3D%22800%22%20text-anchor%3D%22middle%22%20fill%3D%22%23070b14%22%3Eo%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.svg">
+  <link rel="alternate" type="application/json" href="/agent.json">
+  <link rel="alternate" type="application/json" href="/.well-known/mcp.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          gold: '#22d3ee',
+          accent2: '#67e8f9',
+          slate: { 950: '#070b14', 900: '#0f172a', 850: '#111827' }
+        },
+        fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] }
+      } }
+    }
+  </script>
+  <style>
+    :root { --accent: #22d3ee; --accent2: #67e8f9; --glow: 34,211,238; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.011em; }
+    ::selection { background: rgba(var(--glow), 0.30); color: #fff; }
+    h1, h2, h3 { letter-spacing: -0.025em; }
+    h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.05; }
+    .text-gold { color: var(--accent); }
+    .border-gold { border-color: var(--accent); }
+    .border-gold\/40 { border-color: rgba(var(--glow), 0.40) !important; }
+    .bg-gold { background-image: linear-gradient(135deg, var(--accent), var(--accent2)) !important; box-shadow: 0 10px 28px -10px rgba(var(--glow), 0.6); }
+    a.bg-gold, button.bg-gold { transition: transform .2s ease, filter .2s ease, box-shadow .2s ease; }
+    a.bg-gold:hover, button.bg-gold:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 16px 36px -12px rgba(var(--glow), 0.75); }
+    .gradient-radial {
+      background:
+        radial-gradient(60rem 38rem at 50% -12%, rgba(var(--glow), 0.18), transparent 60%),
+        radial-gradient(42rem 30rem at 88% 6%, rgba(var(--glow), 0.10), transparent 55%),
+        radial-gradient(34rem 30rem at 6% 22%, rgba(255,255,255,0.03), transparent 55%);
+    }
+    nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(7,11,20,0.72); transition: box-shadow .25s ease; }
+    .rounded-2xl { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+    .rounded-2xl:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -26px rgba(var(--glow), 0.55); }
+    .eyebrow { display: inline-flex; align-items: center; gap: .5rem; padding: .35rem .85rem; border-radius: 999px;
+      font-size: .76rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+      color: var(--accent); background: rgba(var(--glow), 0.10); border: 1px solid rgba(var(--glow), 0.28); }
+    .has-js section { opacity: 0; transform: translateY(18px); }
+    .has-js section.seen { opacity: 1; transform: none; transition: opacity .6s ease, transform .6s ease; }
+    @media (prefers-reduced-motion: reduce) {
+      .has-js section { opacity: 1 !important; transform: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "openmoe.ai", "url": "https://openmoe.ai", "logo": "https://openmoe.ai/favicon.svg", "description": "Transparent pricing for openmoe.ai. Instant quotes, flexible tiers and enterprise procurement."}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "url": "https://openmoe.ai/pricing", "name": "Pricing — openmoe", "mainEntity": [{"@type": "Question", "name": "🧩 BFT consensus", "acceptedAnswer": {"@type": "Answer", "text": "Tolerate faulty or adversarial experts with Byzantine-fault-tolerant routing decisions."}}, {"@type": "Question", "name": "⚖ MoE routing", "acceptedAnswer": {"@type": "Answer", "text": "Route tokens to the best experts with quorum-verified, reproducible decisions."}}, {"@type": "Question", "name": "📜 EU AI Act attestation", "acceptedAnswer": {"@type": "Answer", "text": "Emit signed compliance attestations for every routing decision, ready for audit."}}, {"@type": "Question", "name": "🔓 Open source", "acceptedAnswer": {"@type": "Answer", "text": "MIT-licensed core, 183 tests, drop-in for your own MoE stack on PyPI."}}]}</script>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased">
+  <div class="gradient-radial">
+    <nav class="border-b border-slate-800">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/" class="text-2xl font-extrabold tracking-tight">openmoe<span class="text-gold">.ai</span></a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="/pricing/" class="text-sm font-medium text-slate-300 hover:text-gold transition">Pricing</a><a href="/partner/" class="text-sm font-medium text-slate-300 hover:text-gold transition">Partner</a><a href="/enterprise/" class="text-sm font-medium text-slate-300 hover:text-gold transition">Enterprise</a><a href="/signup/" class="text-sm font-medium text-slate-300 hover:text-gold transition">Signup</a>
+          <a href="/signup/" class="bg-gold text-slate-950 px-4 py-2 rounded-lg font-semibold">Get started</a>
+        </div>
+        <button id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"
+          class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-slate-700 text-slate-100 hover:border-gold hover:text-gold transition">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="mobile-menu" class="md:hidden hidden border-t border-slate-800 px-6 py-4 flex-col gap-3">
+        <a href="/pricing/" class="text-sm font-medium text-slate-300 hover:text-gold transition">Pricing</a><a href="/partner/" class="text-sm font-medium text-slate-300 hover:text-gold transition">Partner</a><a href="/enterprise/" class="text-sm font-medium text-slate-300 hover:text-gold transition">Enterprise</a><a href="/signup/" class="text-sm font-medium text-slate-300 hover:text-gold transition">Signup</a>
+        <a href="/signup/" class="mt-1 bg-gold text-slate-950 px-4 py-2.5 rounded-lg font-semibold text-center">Get started</a>
+      </div>
+    </nav>
+
+    
+    <section class="max-w-6xl mx-auto px-6 pt-16 pb-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold">Simple, transparent pricing</h1>
+      <p class="mt-4 text-lg text-slate-400">Start small, scale as your operation grows.</p>
+    </section>
+    <section class="max-w-5xl mx-auto px-6 py-10">
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="border-slate-800 bg-slate-900 border rounded-2xl p-8 flex flex-col">
+          <p class="text-sm font-semibold text-gold uppercase tracking-wide">OSS</p>
+          <div class="mt-4 flex items-baseline gap-1">
+            <span class="text-4xl font-extrabold">Free</span>
+            <span class="text-slate-400">forever</span>
+          </div>
+          <ul class="mt-6 space-y-3 text-slate-300 flex-1">
+            <li class="flex gap-2"><span class="text-gold">✓</span><span>Full BFT routing library</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>MIT licence</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>Community support</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>Self-hosted</span></li>
+          </ul>
+          <a href="/signup/" class="mt-8 block text-center bg-gold text-slate-950 px-6 py-3 rounded-xl font-bold hover:bg-gold-dark transition">pip install openmoe-bft</a>
+        </div><div class="border-gold ring-1 ring-gold bg-slate-900 border rounded-2xl p-8 flex flex-col">
+          <p class="text-sm font-semibold text-gold uppercase tracking-wide">Cloud</p>
+          <div class="mt-4 flex items-baseline gap-1">
+            <span class="text-4xl font-extrabold">£99</span>
+            <span class="text-slate-400">per month</span>
+          </div>
+          <ul class="mt-6 space-y-3 text-slate-300 flex-1">
+            <li class="flex gap-2"><span class="text-gold">✓</span><span>Hosted consensus API</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>Managed attestation store</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>Dashboards & alerts</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>Email support</span></li>
+          </ul>
+          <a href="/signup/" class="mt-8 block text-center bg-gold text-slate-950 px-6 py-3 rounded-xl font-bold hover:bg-gold-dark transition">Start Cloud</a>
+        </div><div class="border-slate-800 bg-slate-900 border rounded-2xl p-8 flex flex-col">
+          <p class="text-sm font-semibold text-gold uppercase tracking-wide">Enterprise</p>
+          <div class="mt-4 flex items-baseline gap-1">
+            <span class="text-4xl font-extrabold">Custom</span>
+            <span class="text-slate-400">POA</span>
+          </div>
+          <ul class="mt-6 space-y-3 text-slate-300 flex-1">
+            <li class="flex gap-2"><span class="text-gold">✓</span><span>On-prem / VPC deployment</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>Compliance SLA</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>Custom expert adapters</span></li><li class="flex gap-2"><span class="text-gold">✓</span><span>Priority support & API / MCP access</span></li>
+          </ul>
+          <a href="/signup/" class="mt-8 block text-center bg-gold text-slate-950 px-6 py-3 rounded-xl font-bold hover:bg-gold-dark transition">Talk to sales</a>
+        </div>
+      </div>
+      <p class="mt-8 text-center text-sm text-slate-500">All prices exclude VAT. Enterprise plans include dedicated onboarding and MCP access.</p>
+    </section>
+    
+    <section class="max-w-4xl mx-auto px-6 py-16 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold">Ready to make openmoe work for you?</h2>
+      <p class="mt-4 text-slate-400">Start a free trial, request a demo, or apply to become a partner.</p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/signup/" class="bg-gold text-slate-950 px-8 py-3 rounded-xl font-bold text-lg hover:bg-gold-dark transition">Sign up now</a>
+        <a href="/enterprise/" class="border border-slate-600 text-slate-100 px-8 py-3 rounded-xl font-semibold hover:border-gold hover:text-gold transition">Become a partner</a>
+      </div>
+    </section>
+    
+    
+
+    <footer class="border-t border-slate-800 mt-20">
+      <div class="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8 text-sm text-slate-400">
+        <div>
+          <p class="text-lg font-bold text-slate-100">openmoe<span class="text-gold">.ai</span></p>
+          <p class="mt-2">Part of MEOK AI Labs — CSOAI Ltd, UK 16939677.</p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <a href="/pricing/" class="hover:text-gold">Pricing</a>
+          <a href="/partner/" class="hover:text-gold">Partners</a>
+          <a href="/enterprise/" class="hover:text-gold">Enterprise</a>
+          <a href="/signup/" class="hover:text-gold">Sign up</a>
+        </div>
+        <div>
+          <p>hello@meok.ai</p>
+          <p class="mt-2">100% Nick Templeman · Sovereign UK infrastructure.</p>
+        </div>
+      </div>
+      <div class="max-w-6xl mx-auto px-6 pb-3 text-xs text-slate-500">
+        <span class="text-slate-400 font-semibold">CSOAI Hive:</span>
+        <a href="https://csoai.org" class="hover:text-gold ml-1">csoai.org</a> ·
+        <a href="https://grabhire.ai" class="hover:text-gold">grabhire</a> ·
+        <a href="https://fishkeeper.ai" class="hover:text-gold">fishkeeper</a> ·
+        <a href="https://koikeeper.ai" class="hover:text-gold">koikeeper</a> ·
+        <a href="https://optimobile.ai" class="hover:text-gold">optimobile</a> ·
+        <a href="https://landlaw.ai" class="hover:text-gold">landlaw</a>
+      </div>
+      <div class="max-w-6xl mx-auto px-6 pb-8 text-xs text-slate-500 flex flex-wrap gap-4">
+        <a href="https://meok.ai/privacy" class="hover:text-gold">Privacy</a>
+        <a href="https://meok.ai/terms" class="hover:text-gold">Terms</a>
+        <a href="https://meok.ai/cookies" class="hover:text-gold">Cookies</a>
+        <span>© 2026 openmoe.ai</span>
+      </div>
+    </footer>
+  </div>
+  <script>
+    document.documentElement.classList.add('has-js');
+    (function () {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('section').forEach(function (s) { io.observe(s); });
+      var nav = document.querySelector('nav');
+      if (nav) addEventListener('scroll', function () {
+        nav.style.boxShadow = scrollY > 8 ? '0 1px 0 rgba(255,255,255,0.06)' : 'none';
+      }, { passive: true });
+      var mb = document.getElementById('menu-btn'), mm = document.getElementById('mobile-menu');
+      if (mb && mm) mb.addEventListener('click', function () {
+        var open = mm.classList.toggle('hidden') === false;
+        mm.classList.toggle('flex', open);
+        mb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        mb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      });
+    })();
+  </script>
+<!-- d31-stripe-inject:v2 -->
+<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:2px solid #f59e0b;border-radius:16px;padding:32px;margin:32px auto;max-width:900px;text-align:center;">
+<h2 style="color:#f59e0b;font-size:1.8rem;margin:0 0 16px;">Subscribe via Stripe — EU AI Act ready</h2>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;">
+<a href="https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S" style="display:block;background:#f59e0b;color:#070b14;padding:16px;border-radius:10px;text-decoration:none;font-weight:700;">Sovereign · £29/mo</a>
+<a href="https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T" style="display:block;background:#26263a;color:#f5f5f5;padding:16px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid #f59e0b;">Pro · £199/mo</a>
+<a href="https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U" style="display:block;background:#26263a;color:#f5f5f5;padding:16px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid #f59e0b;">Enterprise · £1,499/mo</a>
+</div>
+<p style="color:#888;font-size:0.85rem;margin-top:12px;">One-time: <a href="https://buy.stripe.com/fZu00l4O8fZ07oh0Q88k91V" style="color:#f59e0b;">Article 50 Kit £999</a> · <a href="https://buy.stripe.com/9B6dRb2G0eUWcIBaqI8k91Y" style="color:#f59e0b;">Watchdog Cert £4,950</a> · 30-day money back</p>
+<p style="color:#aaa;margin-top:16px;"><a href="/connect/mcp" style="color:#f59e0b;">Connect via MCP</a> · <a href="/signup/?plan=free" style="color:#f59e0b;">Get free scorecard</a></p>
+</div></body>
+</html>

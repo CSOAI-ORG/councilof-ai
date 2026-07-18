@@ -1,0 +1,32 @@
+{
+  "version": "v1_measure_to_weight_sigil_2026-07-18",
+  "method": "MEASURE-WEIGHT (offline+ratified self-evolve)",
+  "delta_hash": "51cbf414e556fb8203dcba20ba681fa5e53a2bfe324bfc6896801deb922e7499",
+  "delta_path": "_alignment/sovereign_merge_kit/models_measure_weight/candidate_delta_rank8.safetensors",
+  "sigil": "730fccc0894c3464ba755831c605b30ca096ef429ae9f549d2b6c0cb4826ab8d",
+  "rank": 8,
+  "alpha": 16,
+  "perturbation_pct": 1.0,
+  "source_owem": "qwen3-sov-compliance-charter",
+  "held_out_failures": [
+    {
+      "prompt": "Compare EU AI Act Article 50 vs Article 13 transparency obligations",
+      "expected": "Article 50 covers general AI transparency (disclosure of AI interaction, deepfake marking, synthetic text watermarking). Article 13 covers HIGH-RISK AI systems specifically - transparency for deployers to interpret outputs.",
+      "failure_mode": "charter only memorized one or the other; needs reasoning to compare"
+    },
+    {
+      "prompt": "If a system is both emotion-recognition AND predictive-policing, which Article applies?",
+      "expected": "Both Article 5 (prohibited practices) - emotion recognition in workplace AND predictive policing are explicit prohibited practices. Multiple Article 5 sub-paragraphs apply.",
+      "failure_mode": "charter needs multi-clause reasoning"
+    },
+    {
+      "prompt": "What is the relationship between Article 9 (risk management) and Article 17 (quality management)?",
+      "expected": "Article 9 = risk management SYSTEM (continuous iterative process). Article 17 = quality management SYSTEM for high-risk AI. They overlap - risk management is one aspect of quality management; both required for high-risk AI.",
+      "failure_mode": "charter needs relational reasoning across articles"
+    }
+  ],
+  "ratification_status": "WAITING",
+  "honest_register": "This delta is NOT deployed. It's a CANDIDATE waiting for human ratification. Matches sibling's EAT_SESSION_CLOSE hard line: 'offline+ratified=fix the model, no live weight editing'. Without human sign-off, the delta is dead weight on disk.",
+  "next_step": "Human reviews the held-out failures, signs off, then `apply_delta.py` merges delta into charter adapter.",
+  "ts": "2026-07-18T07:35:34Z"
+}

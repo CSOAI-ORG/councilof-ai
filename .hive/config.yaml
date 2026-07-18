@@ -1,0 +1,239 @@
+# CSOAI Hive Configuration
+# The autonomic nervous system for the empire
+
+hive:
+  name: "CSOAI Hive"
+  root: "/Users/nicholas/clawd"
+  log_level: "INFO"
+  task_ttl_hours: 168  # Tasks expire after 7 days if not done
+
+# Services to health-check and heal
+services:
+  - name: "SOV3"
+    port: 3101
+    url: "http://127.0.0.1:3101/health"
+    restart_command: "cd /Users/nicholas/clawd/sovereign-temple && /Users/nicholas/clawd/sovereign-temple/.venv/bin/gunicorn sovereign-mcp-server:app --worker-class uvicorn.workers.UvicornWorker --workers 2 --bind 127.0.0.1:3101 --max-requests 1000 --max-requests-jitter 50 --timeout 120 --graceful-timeout 30 --access-logfile /tmp/sov3-access.log --error-logfile /tmp/sov3-error.log --log-level info"
+    working_dir: "/Users/nicholas/clawd/sovereign-temple"
+    env: {}
+
+  - name: "MEOK_UI"
+    port: 3000
+    url: "http://127.0.0.1:3000/"
+    restart_command: "cd /Users/nicholas/clawd/meok/ui && /usr/bin/python3 -m http.server 3000"
+    working_dir: "/Users/nicholas/clawd/meok/ui"
+    env: {}
+
+  - name: "MEOK_MCP"
+    port: 3102
+    url: "http://127.0.0.1:3102/"
+    restart_command: "/Users/nicholas/clawd/sovereign-temple/.venv/bin/python3 -m meok.mcp.server"
+    working_dir: "/Users/nicholas/clawd"
+    env:
+      MEOK_MCP__PORT: "3102"
+
+  - name: "MEOK_API"
+    port: 3200
+    url: "http://127.0.0.1:3200/health"
+    restart_command: "cd /Users/nicholas/clawd/meok && /opt/homebrew/Cellar/python@3.11/3.11.15/Frameworks/Python.framework/Versions/3.11/Resources/Python.app/Contents/MacOS/Python -m uvicorn api.server:app --host 0.0.0.0 --port 3200"
+    working_dir: "/Users/nicholas/clawd/meok"
+    env: {}
+
+  - name: "CSOAI_MCP_MONETIZATION"
+    port: 3400
+    url: "http://127.0.0.1:3400/"
+    restart_command: "cd /Users/nicholas/clawd/csoai-mcp-monetization && /Users/nicholas/clawd/csoai-mcp-monetization/venv/bin/uvicorn api.index:app --host 127.0.0.1 --port 3400 --workers 2 --log-level info"
+    working_dir: "/Users/nicholas/clawd/csoai-mcp-monetization"
+    env: {}
+
+  - name: "HINDSIGHT"
+    port: 8765
+    url: "http://127.0.0.1:8765/"
+    restart_command: ""
+    working_dir: ""
+    env: {}
+
+  - name: "FARM_VISION"
+    port: 8888
+    url: "http://127.0.0.1:8888/api/status"
+    # NOTE: local server is healthy; 404s on loopback come from the king-vm-tunnel
+    # also forwarding 8888:127.0.0.1:8888 (com.meok.king-vm-tunnel.plist), which
+    # shadows 127.0.0.1:8888 and routes the probe to the VM (no /api/status -> 404).
+    # restart_command clears the port (kills tunnel+stray) and relaunches the local
+    # server so strikes can no longer pile up forever.
+    restart_command: "cd /Users/nicholas/clawd/meok/farm-vision && /opt/homebrew/bin/python3.11 server.py"
+    working_dir: "/Users/nicholas/clawd/meok/farm-vision"
+    env:
+      PORT: "8888"
+
+  - name: "PHEROMONE_ROUTER"
+    port: 3900
+    url: "http://127.0.0.1:3900/health"
+    restart_command: "/usr/bin/python3 /Users/nicholas/clawd/.hive/scripts/pheromone_router.py"
+    working_dir: "/Users/nicholas/clawd/.hive/scripts"
+    env: {}
+
+  - name: "X402_MCP_SERVER"
+    port: 3950
+    url: "http://127.0.0.1:3950/health"
+    restart_command: "/usr/bin/python3 /Users/nicholas/clawd/.hive/scripts/x402_mcp_server.py"
+    working_dir: "/Users/nicholas/clawd/.hive/scripts"
+    env: {}
+
+# Task ingestion sources
+sensors:
+  blocker_files:
+    - "BLOCKER_INVENTORY_*.md"
+    - "**/*BLOCKER*.md"
+  todo_files:
+    - "**/*TODO*.md"
+    - "**/*todo*.md"
+  quality_files:
+    - "QUALITY_MANAGEMENT_PLAN_*.md"
+    - "**/*QUALITY*.md"
+  post_files:
+    - "csoai-org/READY_TO_POST.txt"
+    - "csoai-org/SOCIAL_BLITZ.md"
+  ignore_dirs:
+    - "node_modules"
+    - ".venv"
+    - "venv"
+    - "__pycache__"
+    - ".git"
+    - "_archive"
+    - "dist"
+    - ".next"
+    - ".hive/logs"
+    - ".hive/tasks"
+    - ".hive/data"
+
+# Quality gates
+quality:
+  repos:
+    - path: "/Users/nicholas/clawd"
+      name: "clawd-root"
+      tests: []
+      max_dirty_files: 10
+    - path: "/Users/nicholas/clawd/meok-one"
+      name: "meok-one"
+      tests: ["pytest", "tests/"]
+      max_dirty_files: 5
+    - path: "/Users/nicholas/clawd/sovereign-temple"
+      name: "sovereign-temple"
+      tests: []
+      max_dirty_files: 10
+    - path: "/Users/nicholas/clawd/meok-compliance-gateway"
+      name: "meok-compliance-gateway"
+      tests: []
+      max_dirty_files: 5
+
+  secret_patterns:
+    - "REPLACE_WITH_[A-Z_]+"
+    - "price_[a-z0-9_]*_placeholder"
+    - "pk_(live|test)_placeholder"
+    - "whsec_placeholder"
+
+  placeholder_files:
+    - "csoai-platform/.env"
+    - "csoai-org/api/prices.js"
+
+  placeholder_ignore_files:
+    - ".hive/config.yaml"
+    - "*.env.example"
+    - "*.env.local.example"
+    - "*.env.dev.example"
+    - "*.env.test"
+    - "*.env.prod.template"
+    - "*.env.production.local"
+    - "DELBOY_MODE.md"
+    - "PBFT_MOE_ROADMAP.md"
+    - "_TABS/_inventory/mcp_registry*.json"
+    - "revenue/n8n-workflows/N8N_SETUP_GUIDE.md"
+    - "lovable-sites/tr8-plant-hire-hub/README.md"
+    - "mcp-marketplace/_template/homebrew/*.rb"
+    - "meok/.github/workflows/ci.yml"
+    - "sovereign-temple/legion-omega/dragon-council/k8s/dragon-fleet.yml"
+    - "scripts/fix_n8n_workflows.py"
+    - "openpatent-hive/api/postman-collection.json"
+    - ".hive/scripts/placeholder_cleanup.py"
+    - "BLOCKER_INVENTORY_*.md"
+    - "EMPIRE_AUDIT_*.md"
+    - "KING_DOWN_AUDIT_*.md"
+    - "QUALITY_MANAGEMENT_PLAN_*.md"
+    - "revenue/MULTI_PHASE_ACTION_PLAN_*.md"
+
+# Test fleet — suites the fleet manager runs and aggregates
+test_fleet:
+  report: ".hive/logs/test_fleet_report.json"
+  suites:
+    - name: "unified-e2e"
+      path: "/Users/nicholas/clawd/tests/e2e"
+      cmd: "python3 unified_e2e_suite.py"
+      timeout: 180
+    - name: "meok-one"
+      path: "/Users/nicholas/clawd/meok-one"
+      cmd: "python3 -m pytest tests/ -q"
+      timeout: 300
+    - name: "sovereign-temple"
+      path: "/Users/nicholas/clawd/sovereign-temple"
+      cmd: "python3 -m pytest tests/ -q"
+      timeout: 300
+    - name: "layer0-tunnels"
+      path: "/Users/nicholas/clawd/csoai-org-v2/layer0_tunnels"
+      cmd: "python3 test_e2e.py"
+      timeout: 120
+    - name: "meok-sigil"
+      path: "/Users/nicholas/clawd/meok-sigil"
+      cmd: "python3 tests/test_sigil.py"
+      timeout: 120
+
+# Notification channels
+notifications:
+  dry_run: true              # Set to false to send real emails/webhooks
+  macos: false               # macOS Notification Center alerts
+  email:
+    enabled: true
+    host: "mail.privateemail.com"
+    port: 587
+    user: "nicholas@csoai.org"
+    password: ""             # Falls back to SMTP_PASSWORD env var
+    from: "nicholas@csoai.org"
+    to: ["nicholas@csoai.org"]
+  discord:
+    enabled: false
+    webhook_url: ""
+  slack:
+    enabled: false
+    webhook_url: ""
+  webhook:
+    enabled: false
+    url: ""
+    payload: {}
+
+# Publish-loop configuration
+publish_loop:
+  enabled: true
+  dry_run: true              # Set to false to publish real posts
+  sources:
+    - "csoai-org/READY_TO_POST.txt"
+    - "csoai-org/SOCIAL_BLITZ.md"
+  queue: ".hive/tasks/publish_queue.jsonl"
+  platforms:
+    - linkedin
+    - twitter
+    - reddit
+  buffer:
+    enabled: false
+    access_token: ""         # BUFFER_ACCESS_TOKEN env var overrides
+  webbridge:
+    enabled: true            # Attempt WebBridge if extension is connected
+    url: "http://127.0.0.1:31337"  # Kimi WebBridge daemon
+
+# Data-harvester policy
+# Guards disk budget for downloaded CC0 / government / synthetic datasets.
+data_policy:
+  budget_gb: 10
+  path: ".hive/data/"
+  retention_days: 30
+  offload_to_s3: false
+  s3_bucket: ""              # e.g. csoai-hive-datasets
+  s3_prefix: "harvested/"

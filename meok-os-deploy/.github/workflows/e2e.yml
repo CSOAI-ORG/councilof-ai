@@ -1,0 +1,25 @@
+name: sovereign-e2e
+# Functional E2E against the LIVE shared sovereign backend (os.meok.ai).
+# Activates when this dir is pushed as/into a GitHub repo. Runs on push, PR, and daily.
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  schedule:
+    - cron: '17 6 * * *'   # 06:17 UTC daily
+  workflow_dispatch:
+    inputs:
+      base:
+        description: 'Base URL to test'
+        default: 'https://os.meok.ai'
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run sovereign E2E product suite
+        run: node test/e2e-products.mjs "${{ github.event.inputs.base || 'https://os.meok.ai' }}"

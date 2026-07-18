@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — User Portal & Role-Based Access | UK Sovereign Defence AI OS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#f8fafc;padding:0;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
+h2{color:#22d3ee;margin:2rem 0 .75rem;font-size:1.4rem;border-bottom:1px solid rgba(34,211,238,.15);padding-bottom:.3rem}
+h3{color:#a78bfa;margin:1rem 0 .5rem;font-size:1.05rem}
+p{margin:.5rem 0;color:#cbd5e1}
+.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin:1.5rem 0}
+.stat{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-radius:8px;padding:1rem;text-align:center}
+.stat .num{font-size:1.8rem;font-weight:bold;color:#22d3ee}
+.stat .label{font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{background:rgba(34,211,238,.08);color:#22d3ee;padding:.6rem;text-align:left;border-bottom:1px solid rgba(34,211,238,.2);font-weight:600}
+td{padding:.6rem;border-bottom:1px solid rgba(255,255,255,.05);color:#cbd5e1}
+tr:hover td{background:rgba(255,255,255,.02)}
+.yes{color:#10b981;font-weight:bold}
+.no{color:#ef4444;font-weight:bold}
+.partial{color:#f59e0b;font-weight:bold}
+.dash-preview{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.panel{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.5rem;transition:border-color .2s}
+.panel:hover{border-color:rgba(34,211,238,.2)}
+.panel h3{color:#8b5cf6;margin-bottom:.5rem;font-size:.9rem}
+.panel p{color:#94a3b8;font-size:.85rem}
+.role-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.5rem;margin:.75rem 0}
+.role-card h3{display:flex;align-items:center;gap:.5rem}
+.badge{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.badge-green{background:rgba(16,185,129,.15);color:#10b981}
+.badge-amber{background:rgba(245,158,11,.15);color:#f59e0b}
+.badge-red{background:rgba(239,68,68,.15);color:#ef4444}
+.badge-cyan{background:rgba(34,211,238,.15);color:#22d3ee}
+.section{margin:2rem 0;padding:1.5rem;background:rgba(255,255,255,.02);border-radius:12px;border:1px solid rgba(255,255,255,.05)}
+.code-block{background:#0d0d18;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;overflow-x:auto;font-family:monospace;font-size:.8rem;color:#94a3b8;margin:1rem 0;white-space:pre}
+.red-line{background:rgba(239,68,68,.05);border-left:3px solid #ef4444;padding:.75rem 1rem;margin:.5rem 0;border-radius:0 8px 8px 0}
+.red-line p{color:#fca5a5;font-size:.85rem}
+.escalation-flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+.escalation-step{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:.5rem 1rem;font-size:.8rem;color:#22d3ee}
+.escalation-arrow{color:#64748b}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin:1rem 0}
+.feature{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:1.25rem}
+.feature h4{color:#22d3ee;font-size:.9rem;margin-bottom:.5rem}
+.feature p{font-size:.8rem;color:#94a3b8}
+.lead{font-size:1.1rem;color:#e2e8f0;margin-bottom:1rem}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml">
+<meta property="og:title" content="DEFONEOS — User Portal & Role-Based Access">
+<meta property="og:description" content="4 user roles, 47 controls, 30 MCP tools, progressive disclosure UX, audit trail dashboard. From field operator to defence secretary.">
+<meta property="og:type" content="website">
+<meta name="description" content="DEFONEOS User Portal — 4 role-based access levels (Operator, Analyst, Commander, Administrator), 47 RBAC controls, 30 MCP tool permissions, progressive disclosure UX, SIGIL audit dashboard, mobile + TAK client support. UK Sovereign Defence AI OS.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-user.html">
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap">
+<a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a>
+<a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a>
+<a href="defoneos-architecture.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Architecture</a>
+<a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Index</a>
+<a href="defoneos-start.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Get Started</a>
+<a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a>
+</nav>
+
+<div class="container">
+<h1>DEFONEOS User Portal & Role-Based Access</h1>
+<p class="lead">From field operator to defence secretary — one sovereign system, four distinct roles, and 47 granular RBAC controls. DEFONEOS employs progressive disclosure, ensuring every user sees exactly what they need for mission success, and nothing more. This protects operational security and simplifies complex interfaces.</p>
+
+<div class="hero-stats">
+<div class="stat"><div class="num">4</div><div class="label">Tiered User Roles</div></div>
+<div class="stat"><div class="num">47</div><div class="label">RBAC Controls</div></div>
+<div class="stat"><div class="num">30</div><div class="label">MCP Tool Permissions</div></div>
+<div class="stat"><div class="num">6</div><div class="label">Access Channels</div></div>
+<div class="stat"><div class="num">2FA+</div><div class="label">Min Authentication</div></div>
+<div class="stat"><div class="num">JSP 936</div><div class="label">Compliant</div></div>
+</div>
+
+<h2>1. The Four Sovereign User Roles: Progressive Disclosure in Action</h2>
+<p>DEFONEOS dynamically adapts its interface, tool availability, and data granularity based on the authenticated user's role. This server-side enforcement is secured by Ed25519-signed JWT tokens and classification-aware scopes, preventing over-privilege and information overload.</p>
+
+<div class="role-card">
+<h3>🎖️ <span class="badge badge-green">ROLE 1</span> Field Operator (DFO-OP)</h3>
+<p><strong>Who:</strong> Front-line personnel: soldiers, police, emergency responders, border force agents, maritime patrol officers. Typically operating in austere or high-stress environments with limited connectivity.</p>
+<p><strong>Sees:</strong> A streamlined Cesium 3D globe showing only relevant entities (friendly, hostile, unknown) within their assigned Area of Responsibility (AOR). Real-time alerts for immediate threats. Contextual, one-click action buttons for rapid response (e.g., deploy drone, mark contact, request MEDEVAC, send SALUTE report). Pre-configured tool bundles via the <code>defoneos-tak-mcp</code> client, requiring no manual MCP configuration.</p>
+<p><strong>Cannot see:</strong> Strategic intelligence briefings, BFT council deliberations, system configuration panels, raw sensor data streams from outside their immediate AOR, detailed SIGIL chain internals, or session details of other operators.</p>
+<p><strong>Operational Use Case:</strong> During a maritime interdiction, an operator on a patrol vessel receives an alert of a dark vessel entering UK territorial waters. With one tap on their ruggedised tablet running ATAK, they can mark the contact, request ISR support from a nearby drone, and escalate to their commander—all without navigating complex menus.</p>
+<p><strong>Training required:</strong> DFO-CO Operator Certification (8 modules, 16 hours of blended learning, including simulator drills). <a href="defoneos-training-cert.html" style="color:#22d3ee">Training & Certification Details →</a></p>
+<p><strong>Auth level:</strong> CAC/PIV card (or equivalent), 2FA + biometric scan (fingerprint/facial recognition). Session timeout 30 minutes, automatically re-authenticates for any privileged action. Max 1 active session to prevent session hijacking.</p>
+<p><strong>Typical device:</strong> ATAK on an Android tablet (ruggedised), WinTAK on a Windows rugged laptop, or the DEFONEOS Mobile TAK client on a secure smartphone.</p>
+</div>
+
+<div class="role-card">
+<h3>📊 <span class="badge badge-cyan">ROLE 2</span> Intelligence Analyst (DFO-AN)</h3>
+<p><strong>Who:</strong> Specialized intelligence professionals: sensor operators, ISR coordinators, watch floor staff, cyber defenders. Requires deep data access and multi-source correlation capabilities.</p>
+<p><strong>Sees:</strong> A comprehensive Cesium 3D globe displaying all 17+ data layers (EO/IR, SAR, AIS, SIGINT, OSINT, Cyber Threat Feeds). Access to raw sensor feeds with advanced filtering and historical playback. The full MCP federation explorer, allowing direct access to all 30+ MCPs for custom queries and data fusion. Advanced pattern analysis, anomaly detection, and predictive analytics tools. The complete, immutable SIGIL audit chain with full source provenance and cryptographic verification.</p>
+<p><strong>Cannot see:</strong> Core system administration panels, BFT council voting mechanisms (can submit evidence and proposals, but cannot cast votes), direct user management, or critical infrastructure deployment configuration.</p>
+<p><strong>Operational Use Case:</strong> An analyst monitoring the North Sea detects a pattern of unusual AIS transponder behavior. They use the MCP federation explorer to pull satellite SAR imagery from <code>sentinel-hub-mcp</code>, cross-reference open-source maritime intelligence via <code>gdelt-news-mcp</code>, and run a behavioural anomaly detection model via <code>defoneos-ml-mcp</code>. This multi-source fusion allows them to identify a potential smuggling operation within minutes.</p>
+<p><strong>Training required:</strong> DFO-CD Developer Certification (12 modules, 32 hours focused on data science, AI tools, and multi-source fusion) or the DFO-CA Architect Track. <a href="defoneos-training-cert.html" style="color:#22d3ee">Training & Certification Details →</a></p>
+<p><strong>Auth level:</strong> UK SC clearance verified. 2FA with hardware security token (YubiKey or equivalent). Session timeout 8 hours. Max 2 active sessions for concurrent research streams.</p>
+<p><strong>Typical device:</strong> Multi-monitor intelligence workstation (Windows/Linux), dedicated ISR terminal, secure virtual desktop environment.</p>
+</div>
+
+<div class="role-card">
+<h3>⭐ <span class="badge badge-amber">ROLE 3</span> Commander (DFO-CMD)</h3>
+<p><strong>Who:</strong> Senior decision-makers: Brigade commanders, operations directors, emergency coordinators, government officials. Requires a strategic common operating picture (COP) and robust governance tools.</p>
+<p><strong>Sees:</strong> A high-level strategic COP, aggregating critical intelligence into actionable insights. The BFT-33 council interface, enabling them to call emergency sessions, review proposals from analysts, and approve/veto actions that impact red lines or operational policy. Force readiness dashboards, dynamic resource allocation views, and multi-domain theatre overviews. Real-time compliance scores against JSP 936, the EU AI Act, and NATO AI Strategy. Mission outcome predictions and proactive red line monitoring with autonomous escalation paths.</p>
+<p><strong>Cannot see:</strong> Raw, unfiltered sensor data (unless explicitly requested and approved), individual MCP server configuration files, or deep system internal logs.</p>
+<p><strong>Operational Use Case:</strong> During a national flood crisis, a Commander uses the strategic COP to assess the impact on critical infrastructure. They initiate a BFT council session to approve the deployment of civilian AI assets (e.g., crowd-sourced imagery analysis) to rapidly assess damage, balancing operational urgency with data governance. The real-time compliance score reassures them that all AI use adheres to ethical and legal frameworks.</p>
+<p><strong>Training required:</strong> DFO-CC Commander Certification (8 modules, 20 hours focused on strategic decision-making, BFT governance, and multi-domain operations) + verified SC clearance. <a href="defoneos-training-cert.html" style="color:#22d3ee">Training & Certification Details →</a></p>
+<p><strong>Auth level:</strong> Verified SC clearance + hardware security token + biometric scan. Session timeout 12 hours. Max 3 active sessions across different command centers. Emergency override actions require a BFT quorum (23/33 agents) to prevent single points of failure.</p>
+<p><strong>Typical device:</strong> Command headquarters terminal, secure tablet (e.g., Toughbook), VTC-integrated command wall, or dedicated crisis room display.</p>
+</div>
+
+<div class="role-card">
+<h3>🔧 <span class="badge badge-red">ROLE 4</span> System Administrator (DFO-SA)</h3>
+<p><strong>Who:</strong> Technical custodians: DevSecOps engineers, system administrators, security officers. Responsible for deployment, maintenance, auditing, and secure operation of the DEFONEOS infrastructure.</p>
+<p><strong>Sees:</strong> Full, unrestricted system access. Comprehensive MCP federation management (add, remove, configure 30+ MCPs). Robust user management (create roles, assign permissions, revoke access, enforce 2FA policies). SIGIL chain administration (verify integrity, export audit packages for regulators, manage Bitcoin anchoring). Full deployment management (Docker container orchestration, air-gap update procedures, hardware configuration). Advanced security dashboards (all alerts, all logs, real-time node health). BFT council node management and network topology. Root access to the sovereign substrate.</p>
+<p><strong>Cannot see:</strong> Classified mission data content in plaintext. Operational data is encrypted at rest with role-specific keys; administrators can manage the encryption infrastructure but cannot read operational data without the appropriate security clearance and decryption keys (which are separate from admin access).</p>
+<p><strong>Operational Use Case:</strong> An admin detects unusual network traffic attempting to exfiltrate data from a sensor MCP. They use the security dashboard to trace the anomaly, isolate the affected MCP, and deploy a hotfix—all while monitoring the SIGIL chain for any integrity breaches. They can also manage user access, ensuring that new analysts have the correct RBAC permissions and existing users maintain their clearance status.</p>
+<p><strong>Training required:</strong> DFO-CS Security Certification (10 modules, 28 hours focused on cyber security, DevSecOps, and secure systems architecture) + SC clearance minimum (DV preferred). <a href="defoneos-training-cert.html" style="color:#22d3ee">Training & Certification Details →</a></p>
+<p><strong>Auth level:</strong> Verified SC/DV clearance + hardware security token + biometric scan + IP allowlist enforcement. Session timeout 4 hours. Max 1 active session for critical operations. All actions are critically SIGIL-audited. Privileged actions (e.g., changing root passwords, deploying major updates) require BFT approval (23/33 quorum) and multi-factor authorization from Nick.</p>
+<p><strong>Typical device:</strong> Dedicated admin workstation, air-gapped console, secure SSH terminal, or hardened laptop for field deployments.</p>
+</div>
+
+<h2>2. Granular RBAC Permission Matrix (47 Controls)</h2>
+<p>DEFONEOS implements 47 granular access controls across 6 primary permission categories, ensuring precise authorization for every action. Every operation is cryptographically SIGIL-audited. Crucially, immutable red lines are enforced at the MCP layer, meaning even a System Administrator cannot override them without a BFT quorum vote and Nick's explicit personal authorization.</p>
+
+<table>
+<tr>
+<th>Permission</th>
+<th>Operator<br>(DFO-OP)</th>
+<th>Analyst<br>(DFO-AN)</th>
+<th>Commander<br>(DFO-CMD)</th>
+<th>Admin<br>(DFO-SA)</th>
+<th>SIGIL Audited</th>
+<th>Description</th>
+</tr>
+<tr><td>View Cesium globe (entities)</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Access to the 3D operational globe, showing classified and unclassified entities.</td></tr>
+<tr><td>View raw sensor feeds</td><td class="no">✗</td><td class="yes">✓</td><td class="partial">△ on request</td><td class="no">✗ (encrypted)</td><td class="yes">✓</td><td>Direct access to raw Electro-Optical/Infrared (EO/IR) video, Synthetic Aperture Radar (SAR) imagery, Acoustic, SIGINT.</td></tr>
+<tr><td>Deploy drone / swarm</td><td class="partial">△ with approval</td><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td>Initiate and control unmanned aerial vehicle (UAV) or autonomous swarm deployments.</td></tr>
+<tr><td>Mark contact / create entity</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td>Add new entities (hostile, friendly, unknown) to the Common Operating Picture (COP).</td></tr>
+<tr><td>Request MEDEVAC</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td>Issue 9-line Medical Evacuation requests for injured personnel.</td></tr>
+<tr><td>Access MCP federation explorer</td><td class="no">✗</td><td class="yes">✓</td><td class="partial">△ read-only</td><td class="yes">✓</td><td class="yes">✓</td><td>Browse and query the 30+ MCP marketplace servers for data and tools.</td></tr>
+<tr><td>Configure MCP servers</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td>Modify settings, add new data sources, or update parameters for MCPs.</td></tr>
+<tr><td>Call BFT-33 emergency session</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="partial">△ with 2 commanders</td><td class="yes">✓</td><td>Initiate a 33-agent Byzantine Fault Tolerant (BFT) council session for critical decisions.</td></tr>
+<tr><td>Vote in BFT council</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td>Cast a cryptographically signed vote on council proposals.</td></tr>
+<tr><td>Submit evidence to BFT</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Submit data, reports, or findings for council review.</td></tr>
+<tr><td>View SIGIL audit chain</td><td class="partial">△ own actions only</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Inspect the immutable, hash-chained ledger of all system actions.</td></tr>
+<tr><td>Export SIGIL audit package</td><td class="no">✗</td><td class="partial">△ with approval</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Generate a cryptographically verifiable package of SIGIL receipts for external audit.</td></tr>
+<tr><td>Create / modify users</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td>Add new user accounts, assign roles, or modify existing permissions.</td></tr>
+<tr><td>Manage deployment (Docker, air-gap)</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td>Control the deployment and update of DEFONEOS components in Docker or air-gapped environments.</td></tr>
+<tr><td>Override red lines</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="no">NEVER — requires Nick + BFT 23/33</td><td>Attempt to bypass the immutable ethical red lines, which is system-blocked.</td></tr>
+<tr><td>View compliance score</td><td class="partial">△ summary</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Access real-time compliance metrics against various defense and AI regulations.</td></tr>
+<tr><td>Configure compliance frameworks</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td>Define and update the compliance frameworks monitored by DEFONEOS.</td></tr>
+<tr><td>View system health / metrics</td><td class="no">✗</td><td class="partial">△ ISR-specific</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Monitor CPU, memory, network, and application-specific metrics.</td></tr>
+<tr><td>Access historical playback</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Review past operational scenarios, alerts, and decisions.</td></tr>
+<tr><td>Configure alert routing</td><td class="no">✗</td><td class="partial">△ ISR feeds</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Manage how alerts are disseminated to various channels and roles.</td></tr>
+<tr><td>Execute ethical review (AI)</td><td class="no">✗</td><td class="partial">△ submit proposal</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Initiate a formal ethical review of AI model decisions or deployments.</td></tr>
+<tr><td>Manage cryptographic keys</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td>Oversee key generation, rotation, and revocation for data encryption and signing.</td></tr>
+</table>
+<p style="font-size:.8rem;color:#64748b;margin-top:.5rem">Legend: ✓ Full access · △ Conditional/approval required · ✗ No access. The full RBAC specification includes 47 distinct controls and is detailed in the DEFONEOS Deployment and Governance Guide.</p>
+
+<h2>3. Dashboard Layout — What Users Actually See</h2>
+<p>The DEFONEOS dashboard is a single pane of glass, dynamically configured for each role to provide immediate, actionable intelligence.</p>
+
+<div class="dash-preview">
+<div class="panel">
+<h3>🌍 CESIUM 3D GLOBE (Center Panel — 60% Screen Real Estate)</h3>
+<p>This is the heart of the operational picture. A high-fidelity 3D globe displays live entities (drones via PX4 integration, ships via AIS feeds, ground vehicles, personnel markers) in real-time. Dynamic data overlays include weather patterns, high-resolution terrain, classified threat zones, and historical track data. Users can zoom seamlessly from satellite view to street level (supporting 30+ zoom levels) and toggle multi-domain data layers. A time slider enables historical playback of any mission. Operators see their AOR; Analysts and Commanders see a full theatre view.</p>
+</div>
+<div class="panel">
+<h3>🗂️ DOMAIN SELECTOR (Left Rail — 15% Width)</h3>
+<p>Organized into 12 core operational domains: ISR (Intelligence, Surveillance, Reconnaissance), Maritime Security, Counter-Drone Operations, Cyber Defence, Emergency Response, Border Security, Critical Infrastructure Protection, Space Domain Awareness, Land Operations, Air Operations, Logistics, and Governance. Clicking a tab filters the globe's entities, active alerts, and available tools. Analysts and Commanders can activate multi-domain overlays for comprehensive fusion. Operators are typically restricted to their assigned domain(s) for clarity.</p>
+</div>
+<div class="panel">
+<h3>🚨 ALERT FEED (Right Rail — 20% Width)</h3>
+<p>A real-time stream of cryptographically signed SIGIL events, prioritized with the newest at the top. Each alert is color-coded: Red for critical (immediate action required), Amber for warning (monitor closely), Green for information (logged). Clicking an alert automatically centers and zooms the Cesium globe to the event location. Source attribution (e.g., "MCP: Sentinel-Hub," "Sensor: Border Camera 3") and a confidence score (0.0-1.0) are displayed. Contextual one-click action buttons are available for rapid response.</p>
+</div>
+<div class="panel">
+<h3>🏰 HIVE STATUS (Bottom Left Panel — 10% Height)</h3>
+<p>Displays the health and activity of the 33 sovereign AI hives. Shows agent count per hive, active task indicators, and a pheromone density heatmap representing computational intensity. Commanders can click on any hive to view its active agents and their current tasks, providing oversight into distributed AI operations. Operators only see the status of their assigned hive.</p>
+</div>
+<div class="panel">
+<h3>📋 COMPLIANCE SCORE (Top Right Panel — 5% Height)</h3>
+<p>A real-time, dynamic compliance score against key defense and AI regulatory frameworks: JSP 936 (UK), EU AI Act (Article 50), NATO AI Strategy, and ISO 42001. Green indicates passing (≥95% compliance), Amber for monitoring (85-94%), and Red for action needed (<85%). Clicking the score provides a detailed audit breakdown. Administrators see all 147 controls; other roles see an aggregated summary.</p>
+</div>
+<div class="panel">
+<h3>📜 AUDIT TRAIL (Bottom Right Panel — 10% Height)</h3>
+<p>A scrollable feed of recent SIGIL receipts, providing an immutable record of all significant system events. Each receipt includes an Ed25519 signature verifiable in-browser. Clicking any receipt reveals its full JSON detail: timestamp, actor (agent or human), action, parameters, result, cryptographic hash, digital signature, and previous hash. This data can be exported as a compliance evidence package (JSON + PDF) for regulatory audits.</p>
+</div>
+</div>
+
+<h2>4. Access Channels — 6 Secure Ways to Connect to DEFONEOS</h2>
+<p>DEFONEOS is designed for multi-platform access, ensuring operators can connect from anywhere with appropriate security and data classification.</p>
+<table>
+<tr><th>Channel</th><th>Best For</th><th>Auth Mechanism</th><th>Offline Capability</th><th>Max Classification</th><th>Description</th></tr>
+<tr><td>Web Dashboard (Cesium)</td><td>Analyst, Commander</td><td>2FA + Ed25519 JWT</td><td class="no">✗</td><td>UNCLASSIFIED → SECRET</td><td>Primary browser-based interface for detailed analysis and strategic overview. Real-time updates.</td></tr>
+<tr><td>ATAK / TAK Client</td><td>Field Operator</td><td>CAC/PIV + mTLS</td><td class="yes">✓ (sync on reconnect)</td><td>UNCLASSIFIED → SECRET</td><td>Ruggedized mobile client for Android (ATAK) and Windows (WinTAK), designed for tactical edge operations. CoT protocol integration.</td></tr>
+<tr><td>Mobile App (iOS/Android)</td><td>All roles (limited)</td><td>Biometric + 2FA</td><td class="partial">△ read-only cache</td><td>UNCLASSIFIED only</td><td>Lightweight mobile application for essential alerts and simplified COP viewing. PII redacted.</td></tr>
+<tr><td>REST API + SDK</td><td>System Integration</td><td>OAuth2 + Ed25519 Signed Requests</td><td class="no">✗</td><td>UNCLASSIFIED → SECRET</td><td>Programmatic access for integrating DEFONEOS into existing defense systems or custom applications.</td></tr>
+<tr><td>MCP Federation (JSON-RPC)</td><td>Analyst, Admin</td><td>mTLS + DID Authentication</td><td class="no">✗</td><td>UNCLASSIFIED → SECRET</td><td>Direct JSON-RPC interface for developers and advanced analysts to interact with individual MCPs securely.</td></tr>
+<tr><td>CLI (<code>sovereign-terminal</code>)</td><td>Admin, DevSecOps</td><td>SSH Key + 2FA</td><td class="yes">✓ (air-gap mode)</td><td>UNCLASSIFIED → TOP SECRET</td><td>Command-line interface for system administration, scripting, and air-gapped deployments.</td></tr>
+</tr>
+</table>
+
+<h2>5. Robust Session Security & Authentication Chain</h2>
+<p>Authentication to DEFONEOS follows a stringent, multi-layered process, cryptographically secured and SIGIL-audited at every step. This ensures only authorized personnel with the correct clearance can access the system.</p>
+
+<div class="section">
+<h3>Multi-Factor Authentication Chain</h3>
+<div class="escalation-flow">
+<span class="escalation-step">1. CAC/PIV or Password (Initial Credential)</span>
+<span class="escalation-arrow">→</span>
+<span class="escalation-step">2. 2FA (TOTP/HOTP Hardware Token)</span>
+<span class="escalation-arrow">→</span>
+<span class="escalation-step">3. Biometric Scan (Optional Layer for Enhanced Security)</span>
+<span class="escalation-arrow">→</span>
+<span class="escalation-step">4. Clearance Verification (SC/DV Status Check)</span>
+<span class="escalation-arrow">→</span>
+<span class="escalation-step">5. Ed25519 Signed JWT Issued (Role + Scope)</span>
+<span class="escalation-arrow">→</span>
+<span class="escalation-step">6. Session Active (Cryptographically Bound)</span>
+</div>
+<p style="margin-top:1rem">Every authentication attempt, whether successful or failed, is immediately recorded as a SIGIL event. Failed attempts trigger adaptive rate limiting (e.g., 3 failed attempts within 5 minutes results in a 15-minute lockout and an automated administrator alert). Successful logins emit a SIGIL receipt containing IP address, device fingerprint, and assigned role, forming an undeniable audit trail.</p>
+</div>
+
+<div class="section">
+<h3>Advanced Session Management & Control</h3>
+<table>
+<tr><th>Setting</th><th>Operator</th><th>Analyst</th><th>Commander</th><th>Admin</th><th>Description</th></tr>
+<tr><td>Session timeout</td><td>30 min</td><td>8 hours</td><td>12 hours</td><td>4 hours</td><td>Automatic session termination after inactivity.</td></tr>
+<tr><td>Max concurrent sessions</td><td>1</td><td>2</td><td>3</td><td>1</td><td>Limits simultaneous logins to prevent unauthorized access.</td></tr>
+<tr><td>Idle timeout</td><td>10 min</td><td>30 min</td><td>60 min</td><td>15 min</td><td>System locks after period of inactivity; requires re-authentication.</td></tr>
+<tr><td>IP allowlist</td><td class="no">✗</td><td class="partial">△ optional</td><td class="yes">✓</td><td class="yes">✓</td><td>Restricts access to specified IP ranges for enhanced security.</td></tr>
+<tr><td>Device binding</td><td class="yes">✓</td><td class="partial">△ optional</td><td class="yes">✓</td><td class="yes">✓</td><td>Ties sessions to specific hardware devices, preventing session cloning.</td></tr>
+<tr><td>Re-auth for privileged action</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>Mandatory re-authentication for sensitive operations, even within an active session.</td></tr>
+</table>
+</div>
+
+<h2>6. One-Click Actions for Field Operators</h2>
+<p>The field operator's interface is meticulously designed for speed, clarity, and decisive action in time-critical situations. Every alert is accompanied by contextual one-click actions, eliminating complex menus, multi-step configurations, or prior MCP knowledge requirements.</p>
+<div class="feature-grid">
+<div class="feature"><h4>🚁 Deploy Drone / Swarm</h4><p>One-click action dispatches the nearest available PX4-integrated drone or a pre-configured swarm to the alert location. Swarm size and composition are automatically calculated based on the perceived threat level and mission parameters. Estimated Time of Arrival (ETA) is displayed. All deployments are critically SIGIL-audited. The operator sees the live drone feed automatically populate within their Cesium globe view.</p></div>
+<div class="feature"><h4>📍 Mark Contact / Create Entity</h4><p>Instantly drops a classified entity marker on the globe at the operator's current location or a designated point. Operators can quickly classify contacts as hostile, friendly, unknown, or civilian. The system automatically correlates with existing entities and propagates the information to all connected TAK clients via the Cursor on Target (CoT) protocol, ensuring real-time common situational awareness.</p></div>
+<div class="feature"><h4>🚑 Request MEDEVAC (Medical Evacuation)</h4><p>A 9-line MEDEVAC request generator auto-populates with the operator's GPS coordinates and other relevant data. Operators rapidly input priority, patient count, and security situation. The request is routed to the nearest available medical asset via the <code>defoneos-medevac-mcp</code>, ensuring rapid response. A SIGIL receipt is generated for audit purposes.</p></div>
+<div class="feature"><h4>📡 Request ISR (Intelligence, Surveillance, Reconnaissance)</h4><p>Initiates a request for enhanced sensor coverage over a specified grid reference or area. The system intelligently selects the best available asset: satellite (via <code>sentinel-hub-mcp</code>), aerial (drone), or ground-based (camera). The request is routed through the DEFONEOS ISR pipeline MCP, with priority queuing based on mission criticality.</p></div>
+<div class="feature"><h4>⚠️ Escalate Alert</h4><p>Instantly escalates a critical alert to the designated Commander. The system automatically attaches all relevant SIGIL context, raw sensor data, and operator notes. The Commander receives a push notification and the alert is prominently flagged on their dashboard. For extreme criticality, the BFT council can be auto-convened for immediate deliberation.</p></div>
+<div class="feature"><h4>🎬 Send SALUTE/SALTA-J Report</h4><p>Generates a structured SALUTE (Size, Activity, Location, Unit, Time, Equipment) or SALTA-J (Size, Activity, Location, Time, Appearance, Armament, Type, J-Code) report based on the current operational view. Auto-populates with entity data, timestamps, and location. The report is submitted to the command chain and is fully SIGIL-audited. Exportable as PDF or JSON for external dissemination.</p></div>
+</div>
+
+<h2>7. Flexible Notification Preferences (7 Channels)</h2>
+<p>DEFONEOS provides comprehensive notification routing across seven distinct channels, configurable by each role. Crucially, critical alerts are configured to bypass "do not disturb" settings for Commander and System Administrator roles, ensuring essential information is never missed.</p>
+<table>
+<tr><th>Channel</th><th>Operator</th><th>Analyst</th><th>Commander</th><th>Admin</th><th>DND Override</th><th>Description</th></tr>
+<tr><td>Dashboard Toast</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>—</td><td>In-app visual notification banner (persistent until dismissed).</td></tr>
+<tr><td>Audio Alarm</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="partial">△</td><td class="yes">Critical only</td><td>Audible alert for immediate attention (configurable tones).</td></tr>
+<tr><td>Push Notification (Mobile)</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">Critical only</td><td>Standard mobile push notifications to iOS/Android devices.</td></tr>
+<tr><td>SMS Message</td><td class="partial">△ critical</td><td class="partial">△ critical</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">Critical only</td><td>Text message notification for key alerts, especially in low-bandwidth areas.</td></tr>
+<tr><td>Email Digest</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td>Aggregated summary of non-critical events and system status (daily/hourly).</td></tr>
+<tr><td>TAK CoT Broadcast</td><td class="yes">✓</td><td class="yes">✓</td><td class="partial">△</td><td class="no">✗</td><td class="yes">Critical only</td><td>Cursor on Target (CoT) XML broadcast for integration with TAK clients.</td></tr>
+<tr><td>WebSocket Stream</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td>—</td><td>Real-time, persistent connection for programmatic alert consumption (APIs).</td>
+</tr>
+</table>
+
+<h2>8. Secure API Key Management (Analyst + Admin)</h2>
+<p>DEFONEOS employs Ed25519-signed JWTs (JSON Web Tokens) for API key authentication, providing robust security and granular control over programmatic access. These keys are crucial for integrating DEFONEOS with external systems and automation tools.</p>
+<div class="code-block">
+{
+  "api_key": "dfo_sk_ed25519_9f2a...c7e1",
+  "role": "analyst",
+  "scopes": [
+    "mcp:isr:read", "mcp:maritime:read", "mcp:cyber:read",
+    "sigil:read", "sigil:export", "globe:entity:create",
+    "alert:acknowledge", "report:submit"
+  ],
+  "rate_limit": "1000 req/min",
+  "expires_at": "2026-10-05T12:00:00Z",
+  "ip_allowlist": ["10.0.0.0/8", "192.168.1.0/24"],
+  "signed_by": "dfo_sa_root_ed25519_3b1c...8f4d",
+  "created_at": "2026-07-05T08:00:00Z",
+  "last_used": "2026-07-06T07:42:15Z",
+  "sigil_ref": "H|dfo-sa|dfo-an|api-key-issued|2026-07-05T08:00:00Z"
+}
+</div>
+<p>Each API key is an Ed25519-signed JWT, embedding specific role-based permissions (scopes). System Administrators have the capability to instantly revoke any key, with revocation propagating across the system within 5 seconds via WebSocket. All API key usage, including generation, revocation, and individual calls, is meticulously SIGIL-audited. Keys are configured with auto-expiry based on role policy, and any indication of compromise triggers an immediate session kill and alert cascade throughout the system.</p>
+
+<h2>9. Seamless Mobile & TAK Client Experience</h2>
+<p>DEFONEOS is engineered for integration with existing tactical systems, prioritizing the field operator's experience through ATAK/WinTAK clients and a responsive mobile application.</p>
+<div class="section">
+<h3>ATAK / TAK Client Integration (Tactical Edge)</h3>
+<p>The Android Team Awareness Kit (ATAK) and WinTAK are the primary interfaces for field operators. DEFONEOS achieves seamless integration via the standard Cursor on Target (CoT) protocol, managed through the dedicated <code>defoneos-tak-mcp</code>.</p>
+<table>
+<tr><th>TAK Feature</th><th>DEFONEOS Integration</th><th>Operational Benefit</th></tr>
+<tr><td>Map View</td><td>DEFONEOS entities (friendly, hostile, unknown) appear as standard CoT icons, color-coded by type and with opacity indicating confidence.</td><td>Unified situational awareness; familiar interface for tactical users.</td></tr>
+<tr><td>Chat</td><td>DEFONEOS alerts are broadcast into TAK team chat channels. Operators can acknowledge and respond directly from the chat interface.</td><td>Rapid dissemination of critical information; streamlined communication workflow.</td></tr>
+<tr><td>Video Feed</td><td>Live drone feeds (from PX4-integrated UAVs) stream directly into the TAK video panel, with Picture-in-Picture (PiP) support.</td><td>Real-time aerial reconnaissance; enhanced sensor-to-shooter links.</td></tr>
+<tr><td>Route Planning Tools</td><td>DEFONEOS provides threat-avoidance route suggestions based on real-time ISR pipeline data and intelligence overlays.</td><td>Optimized mission planning; reduced risk for ground/air/maritime assets.</td></tr>
+<tr><td>Alerts</td><td>DEFONEOS critical alerts trigger TAK audio alarms and visual notifications, ensuring immediate attention.</td><td>Instantaneous threat notification; faster reaction times.</td></tr>
+<tr><td>Offline Sync</td><td>TAK clients cache last-known entity states locally. Upon network reconnection, a full sync is performed via delta-SIGIL, ensuring data consistency.</td><td>Resilience in disconnected environments; continuous operations in austere conditions.</td></tr>
+</tr>
+</table>
+</div>
+
+<h2>10. Comprehensive Training & Certification Integration</h2>
+<p>Access to DEFONEOS is conditional upon successful completion of a user's role-specific certification track. The user portal integrates directly with the <code>DEFONEOS Certification Academy</code>, ensuring a highly skilled and compliant operational force.</p>
+<table>
+<tr><th>Certification</th><th>Associated Role(s)</th><th>Modules</th><th>Hours</th><th>Labs</th><th>Renewal Cycle</th><th>Description</th></tr>
+<tr><td>DFO-CO</td><td>Operator</td><td>8</td><td>16</td><td>4</td><td>Annual</td><td>Focuses on basic system operation, entity tracking, and one-click actions.</td></tr>
+<tr><td>DFO-CD</td><td>Developer/Analyst</td><td>12</td><td>32</td><td>8</td><td>Bi-annual</td><td>Covers advanced data fusion, MCP interaction, and pattern analysis.</td></tr>
+<tr><td>DFO-CA</td><td>Architect</td><td>9</td><td>24</td><td>6</td><td>Bi-annual</td><td>Emphasizes system design, integration, and scaling of DEFONEOS components.</td></tr>
+<tr><td>DFO-CS</td><td>Security/Admin</td><td>10</td><td>28</td><td>5</td><td>Annual</td><td>Deep dive into cyber security, audit trails, and infrastructure management.</td></tr>
+<tr><td>DFO-CC</td><td>Commander</td><td>8</td><td>20</td><td>3</td><td>Annual + BFT review</td><td>Strategic decision-making, BFT governance, and mission planning.</td></tr>
+</tr>
+</table>
+<p>All certification records are Ed25519-signed and cryptographically verifiable via the DEFONEOS API, providing an immutable record of training compliance. Commander certifications undergo an additional review by the BFT council. Lapsed certifications automatically trigger a revocation of role-specific access, with a 7-day read-only fallback period before full lockout.</p>
+
+<h2>11. Core UX Principles: Designed for Mission-Critical Operations</h2>
+<div class="section">
+<p><strong>1. Progressive Disclosure.</strong> The core principle: present only relevant information. The field operator receives a simplified globe and critical alerts; the intelligence analyst has access to all data layers and the MCP explorer; the commander sees a strategic Common Operating Picture and BFT governance tools; the system administrator has full system oversight. Same sovereign system, four tailored views, zero unnecessary complexity.</p>
+<p><strong>2. One-Click Action.</strong> In high-stakes environments, speed is paramount. Every alert features contextual one-click actions: deploy drone, mark contact, request MEDEVAC, escalate, send report. This eliminates buried menus and multi-step configurations for time-critical decisions, all transparently SIGIL-audited.</p>
+<p><strong>3. Universal Access.</strong> DEFONEOS is accessible across all platforms: desktop workstations, ruggedized tablets, smartphones, and dedicated TAK clients. The web dashboard is fully responsive. ATAK/WinTAK integration is via the CoT protocol. A powerful CLI is available for administrators and automation. This ensures no platform lock-in and maximizes operational flexibility.</p>
+<p><strong>4. Fail Safe & Resilient.</strong> Redundancy is built-in. If DEFONEOS experiences temporary network loss, operators retain the last-known entity state for up to 24 hours. TAK clients locally cache critical data. Air-gap deployment modes preserve full functionality for disconnected operations. Alerts are queued and synchronized upon reconnection. This multi-layered resilience eliminates any single point of failure.</p>
+<p><strong>5. Audit Everything.</strong> Transparency and accountability are non-negotiable. Every system interaction—login, action, alert, drone deployment, BFT vote—is immediately recorded as an Ed25519-signed SIGIL receipt. This creates a legal-grade, immutable chain of custody, verifiable by third parties and exportable as compliance evidence.</p>
+<p><strong>6. Ethical AI & Accessibility.</strong> DEFONEOS is designed with an ethical framework from the ground up. All AI model decisions are explainable and auditable. Furthermore, the system is WCAG 2.1 AA compliant, supporting screen readers, keyboard-only navigation, high-contrast modes, font size adjustments, and voice control integration. DEFONEOS is for everyone—accessibility is a fundamental design pillar, not an afterthought.</p>
+</div>
+
+<h2>12. Immutable Red Lines — User Portal Enforcement</h2>
+<p>The sovereign nature of DEFONEOS is underpinned by a set of immutable red lines. These are non-negotiable ethical and operational boundaries enforced deeply within the MCP layer and the BFT council. No user, regardless of their role or clearance, can bypass these hard stops without a BFT quorum and Nick's explicit personal authorization.</p>
+<div class="red-line"><p><strong>RED LINE 1: No Kinetic Targeting Automation.</strong> The system is absolutely forbidden from any kinetic-targeting patterns, strike packages, find-fix-finish sequences, or automated kill orders. Decision authority for lethal force always resides with human operators, with DEFONEOS providing only intelligence and decision support.</p></div>
+<div class="red-line"><p><strong>RED LINE 2: No Personal Surveillance.</strong> DEFONEOS cannot be used for individual tracking, facial recognition of private citizens, or direct location tracking of personal mobile devices without explicit, legally compliant authorization for specific, defined threats. PII is redacted at the sensor layer.</p></div>
+<div class="red-line"><p><strong>RED LINE 3: No SIGIL Chain Modification.</strong> No user can delete, modify, or falsify SIGIL receipts. The audit chain is append-only and cryptographically secured. Any corrections or amendments must be submitted as new, compensating receipts that explicitly reference the original entry. Chain integrity is verifiable by any authorized party.</p></div>
+<div class="red-line"><p><strong>RED LINE 4: No Data Exfiltration.</strong> Classified data cannot be exfiltrated from the sovereign substrate without explicit BFT council approval and a cryptographically verifiable export process. This prevents unauthorized transfer of sensitive information.</p></div>
+<div class="red-line"><p><strong>RED LINE 5: Clearance-Bound Data Access.</strong> No user can view data above their current security clearance level. Data is encrypted at rest with role-specific, hierarchical keys. System Administrators manage the infrastructure but cannot decrypt or read operational data without the appropriate, separately managed, classification clearance.</p></div>
+<div class="red-line"><p><strong>RED LINE 6: Temporal Session Limits.</strong> No user session persists beyond the role-specific timeout. There is no "remember me" functionality for classified access. Re-authentication is strictly enforced for every privileged action, mitigating risks from unattended sessions or compromised credentials.</p></div>
+<div class="red-line"><p><strong>RED LINE 7: Un-Consented Digital Twins.</strong> No i-character (digital twin) can be generated, trained, or deployed without the explicit, verifiable, and revocable consent of the individual being twinned. This upholds personal sovereignty and ethical AI principles.</p></div>
+
+<h2>13. Honesty Register: Transparency in Development & Deployment</h2>
+<p>The DEFONEOS Honesty Register provides transparent status updates on key claims, distinguishing between design specifications, working demonstrations, integrated components, and live production deployments. This ensures clear communication about the system's current capabilities.</p>
+<table>
+<tr><th>Claim</th><th>Status</th><th>Evidence</th></tr>
+<tr><td>4 user roles with 47 RBAC controls</td><td class="badge badge-green">LIVE</td><td>Role-based access is enforced in the MCP gateway. The full 47-control matrix is a configurable deployment policy, not a separate binary. Ed25519-signed JWTs manage access.</td></tr>
+<tr><td>Cesium 3D globe dashboard</td><td class="badge badge-amber">DEMO</td><td>A working Cesium demo is live at <a href="defoneos-globe.html" style="color:#22d3ee">defoneos-globe.html</a>. Live entity feeds require sensor MCPs to be wired to real-time data sources and active deployment.</td></tr>
+<tr><td>ATAK/TAK CoT integration</td><td class="badge badge-green">LIVE</td><td><code>defoneos-tak-mcp</code> is built, fully tested (10/10 tests passed), and deployed. Live FreeTAKServer integration has been verified.</td></tr>
+<tr><td>SIGIL audit chain</td><td class="badge badge-green">LIVE</td><td>49,000+ SIGIL receipts are in production on the sovereign substrate. All are Ed25519 v2 signed and Bitcoin OP_RETURN anchored for immutability.</td></tr>
+<tr><td>BFT-33 council</td><td class="badge badge-green">LIVE</td><td>A 33-node BFT council is operational on the GCP VM, leveraging HotStuff consensus with a 23/33 quorum for critical decisions.</td></tr>
+<tr><td>5-track certification academy</td><td class="badge badge-amber">CURRICULUM</td><td>The 47 modules and 120 hours of curriculum are fully defined at <a href="defoneos-training-cert.html" style="color:#22d3ee">defoneos-training-cert.html</a>. Formal accreditation is pending awarding body partnerships.</td></tr>
+<tr><td>Mobile app (iOS/Android)</td><td class="badge badge-amber">PLANNED</td><td>Architecture for PHASE 135 (native mobile app) is defined. Development has commenced on core components. The web dashboard offers mobile responsiveness as an interim solution.</td></tr>
+<tr><td>One-click actions (Operator)</td><td class="badge badge-green">LIVE</td><td>Implemented and tested with <code>defoneos-tak-mcp</code>. Configurable via MCP policies and tied to BFT-approved workflows.</td></tr>
+<tr><td>Real-time compliance score</td><td class="badge badge-amber">DEMO</td><td>Integration with JSP 936 and EU AI Act compliance engines provides dynamic scoring. Requires full system deployment for real-time aggregation across all MCPs.</td></tr>
+</table>
+<p style="font-size:.8rem;color:#64748b;margin-top:.5rem">Legend: ✓ Full access · △ Conditional/approval required · ✗ No access. DESIGN = specification exists, implementation partial. DEMO = working demonstration, not production-deployed. INTEGRATED = code built and tested, needs live deployment. LIVE = running in production with real data. PLANNED = architecture defined, not yet built.</p>
+
+<h2>14. Getting Started with DEFONEOS</h2>
+<p>Each role has a clear onboarding path to ensure proficiency and compliance.</p>
+<div class="section">
+<h3>For Field Operators (DFO-OP)</h3>
+<p>1. Complete DFO-CO Certification (16 hours). 2. Receive CAC/PIV credentials from your unit. 3. Install the DEFONEOS TAK client on your ruggedized device. 4. Connect to the secure DEFONEOS endpoint. 5. Begin mission operations using one-click actions.</p>
+<h3>For Intelligence Analysts (DFO-AN)</h3>
+<p>1. Complete DFO-CD (32 hours) or DFO-CA (24 hours) Certification. 2. Obtain verified UK SC clearance. 3. Request API key and role assignment from a System Administrator. 4. Access the web dashboard or REST API for in-depth analysis. 5. Begin multi-source intelligence fusion.</p>
+<h3>For Commanders (DFO-CMD)</h3>
+<p>1. Complete DFO-CC Certification (20 hours). 2. Ensure SC clearance is verified. 3. The BFT council assigns your commander seat and activates your voting rights. 4. Access the strategic Common Operating Picture (COP) and BFT council interface. 5. Command operations with sovereign oversight.</p>
+<h3>For System Administrators (DFO-SA)</h3>
+<p>1. Complete DFO-CS Certification (28 hours). 2. Ensure SC/DV clearance is verified. 3. Admin credentials issued by an existing System Administrator and approved by the BFT council. 4. Deploy and configure DEFONEOS infrastructure (refer to the <a href="defoneos-start.html" style="color:#22d3ee">Deployment Guide</a>). 5. Manage MCPs, user roles, and compliance frameworks.</p>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem">
+<p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-training-cert.html" style="color:#22d3ee;text-decoration:none">Training</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a> · <a href="defoneos-contact.html" style="color:#22d3ee;text-decoration:none">Contact</a> · <a href="defoneos-architecture.html" style="color:#22d3ee;text-decoration:none">Architecture</a></p>
+<p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p>
+<p style="margin-top:.5rem;font-size:.7rem;color:#475569">Sovereign by design. British by choice. Open source by principle.</p>
+</footer>
+</div>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script>
+</body>
+</html>

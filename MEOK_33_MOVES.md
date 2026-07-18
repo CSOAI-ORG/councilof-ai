@@ -1,0 +1,10 @@
+
+## G. GEO / authority (white-hat, real-assets) — folded 2026-06-07
+44. ✅ schema.org JSON-LD pass — added standalone Person(Nick) entity + GitHub sameAs to meok/ui layout.tsx (Org+SoftwareApp already present). [2026-06-07]
+45. ✅ /constellation ecosystem page in source: meok/ui/src/app/constellation/page.tsx — 19 verified-live nodes, real integrations, ItemList+CollectionPage+FAQ JSON-LD, in sitemap. [2026-06-07]
+46. ✅ Vertical-GEO: 4 "best AI for X" answer pages (construction-logistics→haulage.app, ai-safety-certification→councilof.ai, aquaculture→aquaponics.app, sovereign-ai-os→MEOK ONE) via shared AnswerPage.tsx w/ QAPage+FAQPage schema, in sitemap. NB: grabhire.app is DOWN(000) so used haulage.app (live). [2026-06-07]
+47. ⬜ MCP registry audit (_tooling/registry_geo_audit.py → REGISTRY_GEO_AUDIT.md/.json: 354 pkgs, server.json 95% / smithery 88% / glama 95%) + README hub-backlink pass (_tooling/add_geo_footer.py, 16 READMEs, hub coverage 324→340 / 96%). [2026-06-07]
+NOTE: $5 spam-wire / fake-metrics path = REJECTED (Castle trap: fraud + AI-classifier downweight). White-hat only.
+STATUS 2026-06-07: GEO moves 44–47 SHIPPED + VERIFIED LIVE. Commits 8850048 (44/45/46) + 8c0b6b2 (fix: best-sovereign-ai-os was missed by the `best-ai-for-*` add-glob → re-added). All 5 pages 200, JSON-LD validated (Org+SoftwareApp+Person sitewide + per-page ItemList/CollectionPage/QAPage/FAQPage). Move 47: 2 already-live MCPs republished w/ backlink (meok-bs7121, meok-tacho-audit, both PUBLISHED+VERIFIED); 14 held = unpublished, would create NEW PyPI projects + re-trip the new-project cap (runbook G1) — backlinks already in source, ship on deliberate first launch once limit clears. firmware-attestation-mcp has a pre-existing broken build (unrelated).
+- move 7: funnel unittests (cap/tier/usage/me) added + passing — no deploy. Session crash-prone → not re-arming; resume in fresh session per MEOK_RESUME.md.
+- ⛔ CRITICAL: crashes reverted Mac meok-one auth.py+server.py (funnel/warmup/help LOST locally, still LIVE on VM). Loop STOPPED. Do NOT deploy from Mac — re-sync VM→Mac first (see MEOK_RESUME.md). Move 7 reverted to ⬜.

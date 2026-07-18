@@ -1,0 +1,10 @@
+{
+  "version": "v1_uav_real_2026-07-18",
+  "n_adapters": 2,
+  "n_prompts": 10,
+  "paper": "arXiv 2605.25903 Universal Activation Verbalizer (VERIFIED)",
+  "method": "hidden_states[-1] @ base lm_head.weight.T \u2192 top-k tokens",
+  "honest_register": "Approximated via base lm_head (no separate vocab projection training). Signatures are NOT neuron-level attribution.",
+  "useful_for": "Auditability \u2014 see what tokens each OWEM 'thinks about' when answering governance prompts",
+  "comparison": "Compare sov3_student (113 pairs, eval 20/24 = 83.3%) vs _owned_v2 (1289 pairs, eval 12/24 = 50.0%) \u2014 does signature correlate with eval score?"
+}

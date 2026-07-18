@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>OWEM Bridge — SOV-724</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(168,85,247,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #a855f7;border-radius:12px;margin-bottom:24px}
+.tagline{color:#a855f7;font-size:18px;font-weight:700;margin:8px 0}
+.bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin:32px 0}
+.from,.to{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px}
+.from h3,.to h3{color:#a78bfa;margin:0 0 12px 0}
+.middle{text-align:center;color:#a855f7;font-size:14px}
+.middle .arrow{font-size:32px;color:#a855f7}
+.middle .label{background:#a855f7;color:#000;padding:6px 12px;border-radius:6px;font-weight:700;font-size:12px;margin-top:8px;display:inline-block}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.metric{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.metric .v{font-size:28px;color:#a855f7;font-weight:700}
+.metric .l{font-size:11px;color:#aaa;margin-top:4px}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>🌉 OWEM Bridge</h1>
+<div class="tagline">owem-bridge — bridges all 4 OWEMs to shared core</div>
+<div style="color:#aaa;margin-top:8px">Sovereign substrate fact: <code>owem_bridge</code></div>
+</div>
+
+<div class="bridge">
+<div class="from">
+<h3>4 OWEM planets</h3>
+<div style="font-size:13px;line-height:1.8;color:#c5cdd9">
+  compliance · defense<br>
+  intuition · voice
+</div>
+</div>
+<div class="middle">
+<div class="arrow">⇌</div>
+<div class="label">OWEM-BRIDGE</div>
+</div>
+<div class="to">
+<h3>Shared core</h3>
+<div style="font-size:13px;line-height:1.8;color:#c5cdd9">
+  charter · SIGIL<br>
+  BFT · care floor · RAG
+</div>
+</div>
+</div>
+
+<div class="metrics">
+<div class="metric"><div class="v">4</div><div class="l">OWEMs bridged</div></div>
+<div class="metric"><div class="v">1</div><div class="l">canonical core</div></div>
+<div class="metric"><div class="v">0</div><div class="l">drift allowed</div></div>
+<div class="metric"><div class="v">∞</div><div class="l">version aligned</div></div>
+</div>
+
+<div class="panel">
+<h3>Why a bridge?</h3>
+<p style="font-size:13px;line-height:1.6">Without owem-bridge, each OWEM (compliance/defense/intuition/voice) would independently consume the shared core. This creates <b>drift</b> — small differences in how each OWEM reads charter_sha256, RAG facts, or BFT quorum math.</p>
+<p style="font-size:13px;line-height:1.6">The bridge ensures <b>all 4 OWEMs read from the same canonical source</b>. Zero drift. BFT quorum math is identical across all 4. Charter hash is identical. RAG facts are identical.</p>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>owem_bridge</code> · verified 2026-07-13<br>
+🌉 sibling-shipped commit 5312614d · zero drift, version-locked
+</div>
+</body></html>

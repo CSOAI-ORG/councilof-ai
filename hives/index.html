@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK Fleet · Hive Overview</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:#0d0c18;color:#e8e4d8;line-height:1.6;min-height:100vh}
+.container{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem 5rem}
+.fleet-header{margin-bottom:3rem;text-align:center}
+.fleet-header h1{font-size:3rem;font-weight:800;color:#c9a84c;letter-spacing:-0.03em;line-height:1.1}
+.fleet-header p{color:#a09888;font-size:1.1rem;margin-top:.5rem;border-top:1px solid #2a2840;padding-top:1rem;display:inline-block}
+.count-badge{display:inline-block;background:#1a1930;border:1px solid #c9a84c;color:#c9a84c;padding:.25rem 1rem;border-radius:20px;font-size:.85rem;margin-top:.8rem}
+.category{margin-bottom:2.8rem}
+.category h2{font-size:1.15rem;color:#c9a84c;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:2px solid #2a2840;display:flex;align-items:center;gap:.6rem}
+.category h2 .meta{font-size:.7rem;color:#6a6480;font-weight:400;letter-spacing:0;text-transform:none}
+.hive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.hive-card{background:#121020;border:1px solid #2a2840;border-radius:8px;padding:1rem;transition:border-color .2s;position:relative}
+.hive-card:hover{border-color:#c9a84c}
+.hive-card a{text-decoration:none;color:inherit}
+.hive-card .name{font-size:1.1rem;font-weight:600;color:#c9a84c;margin-bottom:.2rem}
+.hive-card .purpose{font-size:.8rem;color:#a09888;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hive-card .hive-status{position:absolute;top:.6rem;right:.6rem;font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;padding:.15rem .5rem;border-radius:3px;font-weight:600}
+.hive-card .hive-status.live{background:#1a3a2a;color:#4ade80;border:1px solid #4ade80}
+.hive-card .hive-status.pending{background:#3a2a1a;color:#fbbf24;border:1px solid #fbbf24}
+.hive-card .hive-status.staging{background:#1a1a3a;color:#93c5fd;border:1px solid #93c5fd}
+.hive-card .hive-status.registry{background:#2a1a3a;color:#c084fc;border:1px solid #c084fc}
+.hive-card .hive-status.other{background:#1a1a2a;color:#94a3b8;border:1px solid #94a3b8}
+.master-badge{display:inline-block;font-size:.55rem;background:#c9a84c20;color:#c9a84c;border:1px solid #c9a84c55;border-radius:3px;padding:.1rem .4rem;margin-left:.3rem;vertical-align:middle;letter-spacing:.03em}
+.master-indicator{position:absolute;top:.6rem;left:.6rem;width:6px;height:6px;border-radius:50%;background:#c9a84c}
+.footer{margin-top:4rem;padding-top:2rem;border-top:1px solid #2a2840;text-align:center}
+.footer a{color:#c9a84c;text-decoration:none;font-weight:600}
+.footer a:hover{text-decoration:underline}
+.footer p{margin-top:.5rem;color:#6a6480;font-size:.82rem}
+.search-bar{width:100%;max-width:400px;margin:1.5rem auto 2rem;padding:.7rem 1rem;background:#121020;border:1px solid #2a2840;border-radius:6px;color:#e8e4d8;font-size:.95rem;display:block;outline:none}
+.search-bar:focus{border-color:#c9a84c}
+@media(max-width:600px){.fleet-header h1{font-size:2rem}.hive-grid{grid-template-columns:1fr 1fr;gap:.7rem}.container{padding:1.5rem 1rem 3rem}}
+@media(max-width:400px){.hive-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="fleet-header">
+    <h1>⚙ MEOK Fleet</h1>
+    <p>Sovereign AI Compliance Hives · <a href="https://meok.ai" style="color:#c9a84c;text-decoration:none">meok.ai</a></p>
+    <div class="count-badge">32 Hives · SOV3 King Registry</div>
+    <input class="search-bar" type="text" placeholder="Filter hives…" oninput="
+      const q=this.value.toLowerCase();
+      document.querySelectorAll('.hive-card').forEach(c=>{
+        c.style.display=c.textContent.toLowerCase().includes(q)?'':'none'
+      });
+      document.querySelectorAll('.category').forEach(sec=>{
+        const vis=[...sec.querySelectorAll('.hive-card')].some(c=>c.style.display!=='none');
+        sec.style.display=vis?'':'none'
+      })
+    ">
+  </div>
+
+  <!-- ===== MASTER HIVES (10) ===== -->
+  <div class="category">
+    <h2>🏆 Master Hives <span class="meta">— 10 · Sovereign · hive.yaml</span></h2>
+    <div class="hive-grid">
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="abacus.html"><div class="name">Abacus</div>
+        <div class="purpose">Financial compliance &amp; regulatory data</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="argus.html"><div class="name">Argus</div>
+        <div class="purpose">Multi-modal data ingestion &amp; fusion</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="builder.html"><div class="name">Builder</div>
+        <div class="purpose">Utility &amp; construction vertical</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="crow.html"><div class="name">Crow</div>
+        <div class="purpose">Crowd-sourced compliance intelligence</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="gear.html"><div class="name">Gear</div>
+        <div class="purpose">Industrial IoT &amp; manufacturing compliance</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="lex.html"><div class="name">Lex</div>
+        <div class="purpose">Legal &amp; regulatory text processing</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="scale.html"><div class="name">Scale</div>
+        <div class="purpose">Scalable synthetic data generation</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="scribe.html"><div class="name">Scribe</div>
+        <div class="purpose">Automated documentation &amp; audit trails</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="shield.html"><div class="name">Shield</div>
+        <div class="purpose">Security &amp; threat detection</div></a>
+      </div>
+
+      <div class="hive-card">
+        <div class="master-indicator"></div>
+        <span class="hive-status live">LIVE</span>
+        <a href="voice.html"><div class="name">Voice</div>
+        <div class="purpose">Voice interaction compliance &amp; transcription</div></a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== GOVERNANCE & COUNCIL ===== -->
+  <div class="category">
+    <h2>🏛 Governance &amp; Council <span class="meta">— 7 hives</span></h2>
+    <div class="hive-grid">
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://councilof.ai"><div class="name">Council of</div>
+        <div class="purpose">BFT governance councils, 33-seat multi-model safety veto</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://csoai.org"><div class="name">CSOAI</div>
+        <div class="purpose">AI safety standards, certification, EU AI Act crosswalk</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://ethicalgovernanceof.ai"><div class="name">Ethical Governance</div>
+        <div class="purpose">Ethical frameworks, AI BOM, value alignment, care membrane</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://meok.ai"><div class="name">MEOK</div>
+        <div class="purpose">Sovereign AI OS, 294-server compliance fleet, attestation API</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://openmoe.ai"><div class="name">OpenMoE</div>
+        <div class="purpose">MoE base model, BFT consensus, expert routing, signet receipts</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://proofof.ai"><div class="name">Proof Of</div>
+        <div class="purpose">MCP Catalogue, signed attestations, Ed25519 certificates</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://transparencyof.ai"><div class="name">Transparency Of</div>
+        <div class="purpose">Model decisions, AI BOM, explainability, watermarking</div></a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SECURITY & SAFETY ===== -->
+  <div class="category">
+    <h2>🛡 Security &amp; Safety <span class="meta">— 3 hives</span></h2>
+    <div class="hive-grid">
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://asisecurity.ai"><div class="name">ASI Security</div>
+        <div class="purpose">AI security threats, CVE tracking, OWASP agentic security</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://safetyof.ai"><div class="name">Safety Of</div>
+        <div class="purpose">AI safety incidents, monitoring metrics, care membrane</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="shield.html"><div class="name">Shield <span class="master-badge">Master</span></div>
+        <div class="purpose">Security &amp; threat detection (Master Hive)</div></a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== LEGAL, DATA & PRIVACY ===== -->
+  <div class="category">
+    <h2>⚖ Legal, Data &amp; Privacy <span class="meta">— 4 hives</span></h2>
+    <div class="hive-grid">
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://biasdetectionof.ai"><div class="name">Bias Detection</div>
+        <div class="purpose">Bias metrics, EU AI Act Art 10 fairness, fair-lending</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://dataprivacyof.ai"><div class="name">Data Privacy</div>
+        <div class="purpose">GDPR, DSARs, data breach notification, HIPAA</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://landlaw.ai"><div class="name">Land Law</div>
+        <div class="purpose">UK property law, conveyancing, planning permission, leases</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="lex.html"><div class="name">Lex <span class="master-badge">Master</span></div>
+        <div class="purpose">Legal &amp; regulatory text processing (Master Hive)</div></a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== INDUSTRIAL & LOGISTICS ===== -->
+  <div class="category">
+    <h2>🏗 Industrial &amp; Logistics <span class="meta">— 6 hives</span></h2>
+    <div class="hive-grid">
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://commercialvehicle.ai"><div class="name">Commercial Vehicle</div>
+        <div class="purpose">UK commercial fleets, telematics, routing, TCO analysis</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://grabhire.ai"><div class="name">Grab Hire</div>
+        <div class="purpose">UK haulage, grab-lorry fleet, council permits, MCIL/MOL</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://muckaway.ai"><div class="name">Muck Away</div>
+        <div class="purpose">UK skip hire, landfills, council permits, fleet capacity</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://planthire.ai"><div class="name">Plant Hire</div>
+        <div class="purpose">UK plant hire, CPCS cards, machinery categories, daily rates</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="gear.html"><div class="name">Gear <span class="master-badge">Master</span></div>
+        <div class="purpose">Industrial IoT &amp; manufacturing (Master Hive)</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="builder.html"><div class="name">Builder <span class="master-badge">Master</span></div>
+        <div class="purpose">Utility &amp; construction vertical (Master Hive)</div></a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== TECH INFRA & PLATFORM ===== -->
+  <div class="category">
+    <h2>🔧 Tech Infrastructure &amp; Platform <span class="meta">— 7 hives</span></h2>
+    <div class="hive-grid">
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://agisafe.ai"><div class="name">AGI Safe</div>
+        <div class="purpose">AGI safety research, frontier-model risk assessment</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://cobolbridge.ai"><div class="name">COBOL Bridge</div>
+        <div class="purpose">COBOL legacy modernisation, copybook parsing, transpilation</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://loopfactory.ai"><div class="name">Loop Factory</div>
+        <div class="purpose">Automation workflows, cron/webhook triggers, integrations</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="#"><div class="name">MEOK Compliance Gateway</div>
+        <div class="purpose">MCP transport layer, x402 payments, PayGo balance</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://openMCP.com"><div class="name">OpenMCP</div>
+        <div class="purpose">MCP server directory, registry listings, audit scores</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://openpatent.ai"><div class="name">Open Patent</div>
+        <div class="purpose">SIGIL-signed invention disclosures, sovereign patent chain</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status staging">STAGING</span>
+        <a href="https://sovereign-town.ai"><div class="name">Sovereign Town</div>
+        <div class="purpose">Lab hive: headless sim, BFT council 12-around-1, POC alignment</div></a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SPECIALISED & VERTICAL ===== -->
+  <div class="category">
+    <h2>🧩 Specialised &amp; Vertical <span class="meta">— 11 hives</span></h2>
+    <div class="hive-grid">
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="accountabilityof.ai"><div class="name">Accountability Of</div>
+        <div class="purpose">AI incident reporting, audit trails, root-cause, ISO 42001</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://diyhelp.ai"><div class="name">DIY Help</div>
+        <div class="purpose">Home improvement, tools, materials, step-by-step guides</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://fishkeeper.ai"><div class="name">Fish Keeper</div>
+        <div class="purpose">Freshwater/saltwater species, water chemistry, tank cycling</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="https://koikeeper.ai"><div class="name">Koi Keeper</div>
+        <div class="purpose">Koi varieties, water quality, image-based diagnostics</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status staging">STAGING</span>
+        <a href="https://optimobile.ai"><div class="name">Opti Mobile</div>
+        <div class="purpose">Mobile apps, retention metrics, cohort analysis, funnel optimisation</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status staging">STAGING</span>
+        <a href="https://pokerhud.ai"><div class="name">Poker HUD</div>
+        <div class="purpose">Poker hands, GTO solutions, ICM analysis, hand histories</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status staging">STAGING</span>
+        <a href="sandbox"><div class="name">Sandbox</div>
+        <div class="purpose">Hive-architecture validation, diagnostics, self-test</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status staging">STAGING</span>
+        <a href="https://socialmediamanager.ai"><div class="name">Social Media Manager</div>
+        <div class="purpose">Multi-platform social scheduling, content calendar</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status pending">PENDING</span>
+        <a href="https://suicidestop.ai"><div class="name">Suicide Stop</div>
+        <div class="purpose">Crisis hotlines, Samaritans, Crisis Text Line, NHS 111</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="abacus.html"><div class="name">Abacus <span class="master-badge">Master</span></div>
+        <div class="purpose">Financial compliance &amp; regulatory data (Master Hive)</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="argus.html"><div class="name">Argus <span class="master-badge">Master</span></div>
+        <div class="purpose">Multi-modal data ingestion &amp; fusion (Master Hive)</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="crow.html"><div class="name">Crow <span class="master-badge">Master</span></div>
+        <div class="purpose">Crowd-sourced compliance (Master Hive)</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="scale.html"><div class="name">Scale <span class="master-badge">Master</span></div>
+        <div class="purpose">Scalable synthetic data (Master Hive)</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="scribe.html"><div class="name">Scribe <span class="master-badge">Master</span></div>
+        <div class="purpose">Automated documentation &amp; audit trails (Master Hive)</div></a>
+      </div>
+
+      <div class="hive-card">
+        <span class="hive-status live">LIVE</span>
+        <a href="voice.html"><div class="name">Voice <span class="master-badge">Master</span></div>
+        <div class="purpose">Voice interaction compliance (Master Hive)</div></a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://meok.ai/fleet">meok.ai/fleet</a>
+    <p>MEOK Sovereign AI · SOV3 King Registry · 32 Hives · CSOAI Certified</p>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "sov-town",
+  "version": "0.1.0",
+  "description": "SOV Town — a 47-agent governance simulation engine for CSOAI",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "sov-town": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'Add eslint when ready'",
+    "simulate:eu-ai-act": "node dist/cli.js --scenario scenarios/eu-ai-act.json",
+    "simulate:dora": "node dist/cli.js --scenario scenarios/dora.json",
+    "simulate:cross-border": "node dist/cli.js --scenario scenarios/cross-border.json",
+    "simulate:shadow-ai": "node dist/cli.js --scenario scenarios/shadow-ai.json",
+    "export:json": "node dist/cli.js --scenario scenarios/eu-ai-act.json --format json",
+    "export:csv": "node dist/cli.js --scenario scenarios/eu-ai-act.json --format csv"
+  },
+  "keywords": [
+    "ai-governance",
+    "simulation",
+    "agents",
+    "csoai",
+    "town"
+  ],
+  "author": "CSOAI",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "dotenv": "^17.4.2",
+    "openai": "^6.44.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

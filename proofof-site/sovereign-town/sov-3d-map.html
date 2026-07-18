@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🜏 Sovereign Space — 3D Map of CSOAI Sites — proofof.ai</title>
+<meta property="og:title" content="Sov 3D Map — Sovereign Town">
+<meta property="og:description" content="Live sovereign substrate. Ed25519-signed every output. Verifiable at proofof.ai.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://proofof.ai/sovereign-town/town3d_demo.gif">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Real-world 3D map of CSOAI sovereign territory — farm, HQ, regulators, standards bodies, design partners — all 11 sovereign sites geo-located with glowing markers and pulsing animations.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    background: #0a0e27;
+    color: #f8fafc;
+    overflow: hidden;
+  }
+  #map { height: 100vh; width: 100vw; background: #0a0e27; }
+  .header {
+    position: absolute; top: 20px; left: 20px; right: 20px; z-index: 1000;
+    background: rgba(10, 14, 39, 0.85); padding: 18px 22px; border-radius: 12px;
+    backdrop-filter: blur(12px); border: 1px solid rgba(201, 168, 76, 0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .header h1 {
+    margin: 0; color: #c9a84c; font-size: 1.6rem; font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .header p {
+    margin: 6px 0 0; color: #94a3b8; font-size: 0.85rem;
+  }
+  .view-toggle {
+    position: absolute; top: 140px; left: 20px; z-index: 1000;
+    display: flex; gap: 8px;
+  }
+  .view-toggle button {
+    background: rgba(10, 14, 39, 0.85); color: #c9a84c;
+    border: 1px solid #c9a84c; padding: 8px 16px; border-radius: 6px;
+    cursor: pointer; font-weight: 700; font-size: 0.9rem;
+    backdrop-filter: blur(8px);
+  }
+  .view-toggle button.active {
+    background: #c9a84c; color: #0a0e27;
+  }
+  .legend {
+    position: absolute; bottom: 20px; left: 20px; z-index: 1000;
+    background: rgba(10, 14, 39, 0.85); padding: 14px 16px; border-radius: 8px;
+    backdrop-filter: blur(8px); max-width: 320px; max-height: 80vh; overflow-y: auto;
+  }
+  .legend strong { color: #fbbf24; }
+  .legend-row {
+    display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 0.78rem;
+  }
+  .legend-dot {
+    width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .legend-section {
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(148,163,184,0.2);
+  }
+  .legend-sub {
+    font-size: 0.72rem; margin-left: 20px; margin-top: 1px; color: #cbd5e1;
+  }
+  .detail {
+    position: absolute; bottom: 20px; right: 20px; z-index: 1000;
+    background: rgba(10, 14, 39, 0.92); padding: 18px 22px; border-radius: 12px;
+    backdrop-filter: blur(12px); border: 2px solid;
+    max-width: 360px; min-width: 280px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+    display: none;
+  }
+  .detail.visible { display: block; }
+  .detail-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .detail-emoji { font-size: 2.4rem; }
+  .detail-close {
+    background: transparent; color: #94a3b8; border: none;
+    cursor: pointer; font-size: 1.4rem; line-height: 1;
+  }
+  .detail h3 { margin: 4px 0 0; font-size: 1.1rem; font-weight: 700; }
+  .detail-desc { margin-top: 10px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; }
+  .detail-coord {
+    margin-top: 10px; padding: 6px 8px; background: rgba(0,0,0,0.4);
+    border-radius: 4px; font-family: monospace; font-size: 0.78rem;
+  }
+  .detail-meta { margin-top: 8px; font-size: 0.78rem; }
+  .detail-meta-row { margin-top: 3px; }
+  .detail-meta-key { color: #94a3b8; }
+  #globe-canvas { width: 100vw; height: 100vh; display: block; }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.8; }
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .loader {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    color: #fbbf24; font-size: 1.1rem; text-align: center; z-index: 999;
+  }
+  .loader .spin {
+    font-size: 3rem; display: inline-block; animation: spin 2s linear infinite;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🜏 SOVEREIGN SPACE — 3D MAP OF CSOAI TERRITORY</h1>
+  <p>11 core sites · 10 sovereign hubs · 33 hives · 13 layers · 224 agents live · verified at <a href="https://proofof.ai/passport" style="color:#fbbf24">proofof.ai/passport</a></p>
+</div>
+
+<div class="view-toggle">
+  <button id="btn-map" class="active" onclick="showMap()">🌍 Map View</button>
+  <button id="btn-globe" onclick="showGlobe()">🌐 3D Globe</button>
+</div>
+
+<div class="legend">
+  <strong>SOVEREIGN SITES (geolocated)</strong>
+  <div class="legend-row" style="margin-top: 8px;"><span class="legend-dot" style="background:#fbbf24;color:#fbbf24"></span> 🜏 Core (sovereign farm)</div>
+  <div class="legend-row"><span class="legend-dot" style="background:#3b82f6;color:#3b82f6"></span> 🏛️ HQ (CSOAI London)</div>
+  <div class="legend-row"><span class="legend-dot" style="background:#06b6d4;color:#06b6d4"></span> 🇪🇺 🇺🇸 Regulators</div>
+  <div class="legend-row"><span class="legend-dot" style="background:#a855f7;color:#a855f7"></span> 🌐 Standards</div>
+  <div class="legend-row"><span class="legend-dot" style="background:#22d3ee;color:#22d3ee"></span> 💼 Design Partners</div>
+
+  <div class="legend-section">
+    <strong>SOVEREIGN HUBS (virtual districts)</strong>
+    <div class="legend-sub">🐟 koikeeper.ai — Tokyo</div>
+    <div class="legend-sub">🐠 fishkeeper.ai — Sydney</div>
+    <div class="legend-sub">🛡️ safetyof.ai — Seoul</div>
+    <div class="legend-sub">🦺 agisafe.ai — Singapore</div>
+    <div class="legend-sub">⚖️ landlaw.ai — NYC</div>
+    <div class="legend-sub">📜 openpatent.ai — SF</div>
+    <div class="legend-sub">🔐 proofof.ai — SF</div>
+    <div class="legend-sub">🏛️ councilof.ai — Berlin</div>
+    <div class="legend-sub">🔌 openmcp.ai — HK</div>
+    <div class="legend-sub">🏗️ cobolbridge.ai — Chicago</div>
+  </div>
+
+  <div class="legend-section">
+    <strong style="color: #94a3b8">Sovereign Space Doctrine</strong>
+    <div style="font-size: 0.72rem; color: #cbd5e1; margin-top: 6px; line-height: 1.4;">
+      Sovereign territory is real (geo-located) + virtual (hive-districts).
+      Sovereign.mom is the origin — every site radiates to it.
+    </div>
+  </div>
+</div>
+
+<div id="detail" class="detail">
+  <div class="detail-header">
+    <div>
+      <div class="detail-emoji" id="detail-emoji">🜏</div>
+      <h3 id="detail-name" style="color: #c9a84c">Site Name</h3>
+    </div>
+    <button class="detail-close" onclick="hideDetail()">✕</button>
+  </div>
+  <p class="detail-desc" id="detail-desc">Description</p>
+  <div class="detail-coord" id="detail-coord">0.0000, 0.0000</div>
+  <div class="detail-meta" id="detail-meta"></div>
+</div>
+
+<div id="map"></div>
+<canvas id="globe-canvas" style="display:none"></canvas>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// === SOVEREIGN SITES (geo-located) ===
+const SITES = [
+  // Core
+  { id: "sovereign-mom", name: "Sovereign Farm", lat: 53.96, lng: -1.08, type: "core", emoji: "🜏", color: "#fbbf24", radius: 30,
+    desc: "6.5-acre UK farm — sovereign substrate origin. Where the dragon sleeps. MEOK, CSOAI, and 8 malamutes operate from here.",
+    meta: { agents: 224, cycles: 568, status: "24/7" } },
+  { id: "csoai-london", name: "CSOAI Ltd (London)", lat: 51.5074, lng: -0.1278, type: "hq", emoji: "🏛️", color: "#3b82f6", radius: 18,
+    desc: "CSOAI Ltd HQ — UK Companies House 16939677. Trading entity.", meta: { entity: "UK Ltd", status: "Active" } },
+  // Regulators
+  { id: "eu-ai-office", name: "EU AI Office (Brussels)", lat: 50.8466, lng: 4.3524, type: "regulator", emoji: "🇪🇺", color: "#06b6d4", radius: 16,
+    desc: "EU AI Act enforcement — Aug 2026 GPAI deadline.", meta: { framework: "EU AI Act", deadline: "2026-08-02" } },
+  { id: "nist", name: "NIST AI RMF (Maryland)", lat: 39.1375, lng: -77.1927, type: "regulator", emoji: "🇺🇸", color: "#10b981", radius: 14,
+    desc: "NIST AI Risk Management Framework — 600-1 GenAI profile.", meta: { framework: "NIST AI RMF" } },
+  { id: "enisa", name: "ENISA (Athens)", lat: 37.9842, lng: 23.7351, type: "regulator", emoji: "🔒", color: "#f59e0b", radius: 12,
+    desc: "EU cybersecurity agency — NIS2 implementation.", meta: { framework: "NIS2" } },
+  // Standards
+  { id: "iso", name: "ISO/IEC (Geneva)", lat: 46.2044, lng: 6.1432, type: "standards", emoji: "🌐", color: "#a855f7", radius: 14,
+    desc: "ISO/IEC 42001 (AI management), 42005 (impact assessment).", meta: { framework: "ISO 42001" } },
+  { id: "csa", name: "Cloud Security Alliance (Seattle)", lat: 47.6062, lng: -122.3321, type: "standards", emoji: "☁️", color: "#ec4899", radius: 12,
+    desc: "ATF (Agentic Trust Framework) — CSA-published.", meta: { framework: "ATF" } },
+  { id: "owasp", name: "OWASP (Denver)", lat: 39.7392, lng: -104.9903, type: "standards", emoji: "🛡️", color: "#84cc16", radius: 10,
+    desc: "OWASP Agentic Top 10 — agent security framework.", meta: { framework: "OWASP Agentic" } },
+  // Design Partners (targets)
+  { id: "cera", name: "Cera (London)", lat: 51.515, lng: -0.09, type: "partner", emoji: "🏥", color: "#22d3ee", radius: 10,
+    desc: "Cera — care-sector AI Act design partner (target).", meta: { segment: "care", status: "outreach" } },
+  { id: "sap", name: "SAP (Walldorf)", lat: 49.4521, lng: 8.4351, type: "partner", emoji: "💼", color: "#22d3ee", radius: 10,
+    desc: "SAP — EU AI Act + DORA design partner (target).", meta: { segment: "enterprise", status: "outreach" } },
+  { id: "siemens", name: "Siemens (Munich)", lat: 48.2628, lng: 11.4345, type: "partner", emoji: "🏭", color: "#22d3ee", radius: 10,
+    desc: "Siemens — AI Act + NIS2 design partner (target).", meta: { segment: "industrial", status: "outreach" } },
+];
+
+// === SOVEREIGN HUBS (virtual districts) ===
+const HUBS = [
+  { id: "koi", name: "koikeeper.ai", lat: 35.6762, lng: 139.6503, emoji: "🐟", color: "#06b6d4" },
+  { id: "fish", name: "fishkeeper.ai", lat: -33.8688, lng: 151.2093, emoji: "🐠", color: "#06b6d4" },
+  { id: "safety", name: "safetyof.ai", lat: 37.5665, lng: 126.9780, emoji: "🛡️", color: "#10b981" },
+  { id: "agi", name: "agisafe.ai", lat: 1.3521, lng: 103.8198, emoji: "🦺", color: "#10b981" },
+  { id: "landlaw", name: "landlaw.ai", lat: 40.7128, lng: -74.0060, emoji: "⚖️", color: "#fbbf24" },
+  { id: "openpatent", name: "openpatent.ai", lat: 37.3861, lng: -122.0839, emoji: "📜", color: "#a855f7" },
+  { id: "proofof", name: "proofof.ai", lat: 37.7749, lng: -122.4194, emoji: "🔐", color: "#3b82f6" },
+  { id: "council", name: "councilof.ai", lat: 52.5200, lng: 13.4050, emoji: "🏛️", color: "#84cc16" },
+  { id: "openmcp", name: "openmcp.ai", lat: 22.3193, lng: 114.1694, emoji: "🔌", color: "#22d3ee" },
+  { id: "cobol", name: "cobolbridge.ai", lat: 41.8781, lng: -87.6298, emoji: "🏗️", color: "#f97316" },
+];
+
+// === INIT LEAFLET MAP ===
+let map, markers = [];
+function initMap() {
+  map = L.map('map', { center: [40, 10], zoom: 2, minZoom: 2, maxZoom: 8, worldCopyJump: true });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd', maxZoom: 19
+  }).addTo(map);
+
+  // Sovereign sites
+  SITES.forEach(site => {
+    const icon = L.divIcon({
+      className: 'sovereign-marker',
+      html: `<div style="
+        width: ${site.radius * 2}px; height: ${site.radius * 2}px;
+        border-radius: 50%; background: radial-gradient(circle, ${site.color}88 0%, ${site.color}22 60%, transparent 100%);
+        border: 2px solid ${site.color};
+        box-shadow: 0 0 ${site.radius}px ${site.color}aa;
+        display: flex; align-items: center; justify-content: center;
+        font-size: ${site.radius * 0.7}px; line-height: 1;
+        animation: pulse 3s ease-in-out infinite;
+      ">${site.emoji}</div>`,
+      iconSize: [site.radius * 2, site.radius * 2],
+      iconAnchor: [site.radius, site.radius]
+    });
+    const m = L.marker([site.lat, site.lng], { icon }).addTo(map);
+    m.on('click', () => showDetail(site));
+    markers.push(m);
+  });
+
+  // Hubs (smaller)
+  HUBS.forEach(hub => {
+    const icon = L.divIcon({
+      className: 'sovereign-hub',
+      html: `<div style="
+        width: 18px; height: 18px; border-radius: 50%;
+        background: ${hub.color}66; border: 1.5px solid ${hub.color};
+        box-shadow: 0 0 6px ${hub.color}88;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; line-height: 1;
+      ">${hub.emoji}</div>`,
+      iconSize: [18, 18], iconAnchor: [9, 9]
+    });
+    const m = L.marker([hub.lat, hub.lng], { icon }).addTo(map);
+    m.on('click', () => showDetail({ ...hub, type: 'hub', radius: 9, desc: `Sovereign hub: ${hub.name}`, meta: { type: 'virtual-hive' } }));
+    markers.push(m);
+  });
+}
+
+// === DETAIL PANEL ===
+function showDetail(site) {
+  document.getElementById('detail-emoji').textContent = site.emoji;
+  document.getElementById('detail-name').textContent = site.name;
+  document.getElementById('detail-name').style.color = site.color;
+  document.getElementById('detail-desc').textContent = site.desc;
+  document.getElementById('detail-coord').textContent = `${site.lat.toFixed(4)}, ${site.lng.toFixed(4)}`;
+  const metaDiv = document.getElementById('detail-meta');
+  metaDiv.innerHTML = '';
+  Object.entries(site.meta || {}).forEach(([k, v]) => {
+    metaDiv.innerHTML += `<div class="detail-meta-row"><span class="detail-meta-key">${k}:</span> ${v}</div>`;
+  });
+  const detail = document.getElementById('detail');
+  detail.style.borderColor = site.color;
+  detail.classList.add('visible');
+}
+function hideDetail() {
+  document.getElementById('detail').classList.remove('visible');
+}
+
+// === VIEW TOGGLE ===
+let globeRenderer, globeAnim;
+function showMap() {
+  document.getElementById('map').style.display = 'block';
+  document.getElementById('globe-canvas').style.display = 'none';
+  document.getElementById('btn-map').classList.add('active');
+  document.getElementById('btn-globe').classList.remove('active');
+  if (globeAnim) { cancelAnimationFrame(globeAnim); globeAnim = null; }
+}
+
+function showGlobe() {
+  document.getElementById('map').style.display = 'none';
+  const canvas = document.getElementById('globe-canvas');
+  canvas.style.display = 'block';
+  document.getElementById('btn-map').classList.remove('active');
+  document.getElementById('btn-globe').classList.add('active');
+  initGlobe();
+}
+
+function initGlobe() {
+  const canvas = document.getElementById('globe-canvas');
+  if (globeRenderer) {
+    canvas.replaceWith(canvas.cloneNode(false)); // reset
+    return showGlobe();
+  }
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  globeRenderer = renderer;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0e27);
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  // Globe
+  const globeGeo = new THREE.SphereGeometry(2, 64, 64);
+  const globeMat = new THREE.MeshStandardMaterial({
+    color: 0x1e293b, emissive: 0x0a0e27, metalness: 0.3, roughness: 0.7
+  });
+  const globe = new THREE.Mesh(globeGeo, globeMat);
+  scene.add(globe);
+
+  // Grid lines (latitude/longitude)
+  const gridGroup = new THREE.Group();
+  for (let lat = -60; lat <= 60; lat += 30) {
+    const phi = (90 - lat) * Math.PI / 180;
+    const r = 2.02 * Math.sin(phi);
+    const y = 2.02 * Math.cos(phi);
+    const points = [];
+    for (let lng = 0; lng <= 360; lng += 10) {
+      const t = lng * Math.PI / 180;
+      points.push(new THREE.Vector3(r * Math.cos(t), y, r * Math.sin(t)));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(points);
+    gridGroup.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.15 })));
+  }
+  for (let lng = 0; lng < 360; lng += 30) {
+    const t = lng * Math.PI / 180;
+    const points = [];
+    for (let lat = -90; lat <= 90; lat += 5) {
+      const phi = (90 - lat) * Math.PI / 180;
+      const r = 2.02 * Math.sin(phi);
+      const y = 2.02 * Math.cos(phi);
+      points.push(new THREE.Vector3(r * Math.cos(t), y, r * Math.sin(t)));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(points);
+    gridGroup.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.15 })));
+  }
+  scene.add(gridGroup);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+  const sun = new THREE.DirectionalLight(0xfbbf24, 0.7);
+  sun.position.set(5, 5, 5);
+  scene.add(sun);
+
+  // Lat/lng → 3D position
+  const toPos = (lat, lng) => {
+    const phi = (90 - lat) * Math.PI / 180;
+    const theta = (lng + 180) * Math.PI / 180;
+    const r = 2.05;
+    return new THREE.Vector3(
+      -r * Math.sin(phi) * Math.cos(theta),
+      r * Math.cos(phi),
+      r * Math.sin(phi) * Math.sin(theta)
+    );
+  };
+
+  // Sites + lines to sovereign.mom
+  const allSites = [
+    ...SITES,
+    ...HUBS.map(h => ({ ...h, type: 'hub', radius: 9, desc: `Sovereign hub: ${h.name}`, meta: { type: 'virtual-hive' } }))
+  ];
+  const origin = toPos(53.96, -1.08);
+
+  allSites.forEach(s => {
+    const pos = toPos(s.lat, s.lng);
+    const color = s.color;
+    const size = s.type === 'core' ? 0.08 : s.type === 'hq' ? 0.06 : 0.03;
+
+    const dotGeo = new THREE.SphereGeometry(size, 16, 16);
+    const dotMat = new THREE.MeshBasicMaterial({ color });
+    const dot = new THREE.Mesh(dotGeo, dotMat);
+    dot.position.copy(pos);
+    scene.add(dot);
+
+    // Glow ring
+    const ringGeo = new THREE.RingGeometry(size * 1.5, size * 2.5, 32);
+    const ringMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.4, side: THREE.DoubleSide });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.position.copy(pos);
+    ring.lookAt(new THREE.Vector3(0,0,0));
+    scene.add(ring);
+
+    // Line to sovereign.mom (except core)
+    if (s.type !== 'core') {
+      const lineGeo = new THREE.BufferGeometry().setFromPoints([origin, pos]);
+      const lineMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.3 });
+      scene.add(new THREE.Line(lineGeo, lineMat));
+    }
+  });
+
+  let frame = 0;
+  const animate = () => {
+    frame += 0.003;
+    globe.rotation.y = frame;
+    scene.children.forEach(c => {
+      if (c.type === 'Mesh' && c.geometry && c.geometry.type === 'RingGeometry') {
+        c.rotation.z = frame * 2;
+      }
+    });
+    renderer.render(scene, camera);
+    globeAnim = requestAnimationFrame(animate);
+  };
+  animate();
+}
+
+// === BOOT ===
+initMap();
+</script>
+
+</body>
+</html>

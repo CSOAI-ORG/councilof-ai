@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08 — GCP Bill Sort — Sovereign Blog</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.7;padding:32px;max-width:760px;margin:0 auto}h1{font-size:2.4rem;background:linear-gradient(135deg,#10b981,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.meta{color:#06b6d4;font-style:italic;margin-bottom:24px;font-size:.9rem}.lead{font-size:1.15rem;color:#10b981;border-left:3px solid #10b981;padding-left:14px;margin-bottom:32px;font-style:italic}h2{color:#fbbf24;font-size:1.4rem;margin:24px 0 12px;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:6px}p{color:rgba(255,255,255,.9);margin-bottom:14px}.before-after{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}.ba{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:16px}.ba.bad{border-color:#ef4444;background:rgba(239,68,68,.08)}.ba.good{border-color:#10b981;background:rgba(16,185,129,.08)}.ba-num{font-size:2rem;font-weight:900}.ba.bad .ba-num{color:#ef4444}.ba.good .ba-num{color:#10b981}.ba-label{font-size:.85rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em}.cta{display:block;background:linear-gradient(135deg,#10b981,#fbbf24);color:#000;padding:14px 24px;border-radius:24px;text-decoration:none;font-weight:800;text-align:center;margin:24px 0}.nav-bar{display:flex;gap:12px;margin-bottom:24px}.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}.tag{display:inline-block;background:rgba(251,191,36,.15);color:#fbbf24;padding:4px 10px;border-radius:12px;font-size:.75rem;margin-right:6px}</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/blog/">← Blog</a> <a href="/sovereign-data/gcp-cost-runbook.md">Runbook</a></div>
+
+<h1>💸 The GCP Bill Sort: From £110 to £0</h1>
+<div class="meta"><span class="tag">cost</span><span class="tag">gcp</span><span class="tag">sovereignty</span> · 5 min read · 4 Jul 2026</div>
+
+<p class="lead">We were burning £110/month on a 33-VM GCP empire. Then we built the runbook. Now we pay £0 and ship sovereign. Here is exactly how.</p>
+
+<h2>Before & After</h2>
+
+<div class="before-after">
+  <div class="ba bad"><div class="ba-num">£110</div><div class="ba-label">per month · 33 VMs</div></div>
+  <div class="ba good"><div class="ba-num">£0</div><div class="ba-label">per month · 4 local models</div></div>
+</div>
+
+<h2>Step 1: Stop paying for inference</h2>
+
+<p>Most of the £110 was GPU time for inference. Move to SOV3small3 on Mac. 4 local models. 7GB total. Apple Silicon M-series handles 95% of production queries without spinning up a cloud VM.</p>
+
+<h2>Step 2: Stop paying for embeddings</h2>
+
+<p>nomic-embed-text runs locally. Vault search, RAG, semantic find — all local. Cost: 274MB of RAM.</p>
+
+<h2>Step 3: Stop paying for storage</h2>
+
+<p>The 49GB data moat fits on a 256GB SSD. The vault is git-tracked. The federation log is JSONL. Cost: the SSD you already own.</p>
+
+<h2>Step 4: Stop paying for traffic</h2>
+
+<p>The sovereign tunnel mesh (MEOK ↔ CSOAI ↔ DEFONEOS ↔ 33 sovereign VMs) runs over WebSocket + gRPC. Once established, traffic is negligible.</p>
+
+<h2>Step 5: Reserve 1 cloud VM, on-demand</h2>
+
+<p>Keep one GCP VM for the SOV3 API (port 3101) and OLM retraining. Spin it up on-demand, £8/month when active. Or use Mac for that too.</p>
+
+<a class="cta" href="/sovereign-data/gcp-cost-runbook.md">Read the full runbook →</a>
+
+</body>
+</html>

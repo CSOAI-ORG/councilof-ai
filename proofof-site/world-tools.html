@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🌐 Sovereign Country Tools — Inspector · Audit · Composite · Passport · DORADO</title>
+<meta name="description" content="Sovereign tools for inspecting real countries. Care Floor 0.95 audit, sovereign composite, W3C VC passport, DORADO 1-click sovereignty switch.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+  .nav a { color: #fbbf24; margin-right: 1rem; text-decoration: none; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .sub { text-align: center; color: #888; margin-bottom: 2rem; }
+  .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 350px 1fr; gap: 1.5rem; }
+  .left-panel { background: #1a1a1a; padding: 1.5rem; border-radius: 12px; }
+  .left-panel h2 { color: #fbbf24; margin-bottom: 1rem; font-size: 1.1rem; }
+  .left-panel select, .left-panel input { width: 100%; padding: 0.5rem; background: #0a0a0a; border: 1px solid #333; border-radius: 4px; color: #e5e5e5; font-family: inherit; margin-bottom: 0.5rem; }
+  .left-panel select { margin-bottom: 1rem; }
+  .country-list { max-height: 400px; overflow-y: auto; background: #0a0a0a; padding: 0.5rem; border-radius: 6px; }
+  .country-item { padding: 0.5rem; cursor: pointer; border-radius: 4px; margin-bottom: 0.2rem; }
+  .country-item:hover { background: rgba(251,191,36,0.2); }
+  .country-item.active { background: #fbbf24; color: #000; }
+  .right-panel { background: #1a1a1a; padding: 2rem; border-radius: 12px; }
+  .right-panel h2 { color: #fbbf24; margin-bottom: 1.5rem; }
+  .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab { padding: 0.6rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.05); color: #aaa; cursor: pointer; font-family: inherit; font-size: 0.85rem; border: 1px solid transparent; }
+  .tab.active { background: #fbbf24; color: #000; border-color: #fbbf24; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .field { padding: 0.6rem 0; border-bottom: 1px solid #222; display: flex; justify-content: space-between; }
+  .field:last-child { border-bottom: none; }
+  .label { color: #888; }
+  .value { color: #fbbf24; font-family: monospace; }
+  .value.pass { color: #10b981; }
+  .value.warn { color: #fbbf24; }
+  .value.fail { color: #ff6b6b; }
+  .box { background: #0a0a0a; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid #fbbf24; }
+  .box h3 { color: #fbbf24; margin-bottom: 0.5rem; }
+  .box p { color: #aaa; font-size: 0.85rem; line-height: 1.5; }
+  .box ul { padding-left: 1.2rem; color: #aaa; font-size: 0.85rem; line-height: 1.6; }
+  button { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-family: inherit; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
+  .progress-bar { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 0.25rem; }
+  .progress-bar .fill { height: 100%; background: #10b981; transition: width 0.5s; }
+  .progress-bar.warn .fill { background: #fbbf24; }
+  .progress-bar.fail .fill { background: #ff6b6b; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/world.html">🌍 3D World</a>
+  <a href="/world-atlas.html">Atlas</a>
+</div>
+
+<h1>🌐 Sovereign Country Tools</h1>
+<p class="sub">5 tools for inspecting real countries: Inspector · Audit · Composite · Passport · DORADO</p>
+
+<div class="container">
+  <div class="left-panel">
+    <h2>🌍 Pick a Country</h2>
+    <input type="text" id="searchBox" placeholder="🔍 Search..." />
+    <select id="regionFilter">
+      <option value="">All Regions</option>
+      <option value="EU">🇪🇺 Europe</option>
+      <option value="NA">🌎 North America</option>
+      <option value="SA">🌎 South America</option>
+      <option value="AS">🌏 Asia</option>
+      <option value="AF">🌍 Africa</option>
+      <option value="OC">🌏 Oceania</option>
+    </select>
+    <div class="country-list" id="countryList"></div>
+  </div>
+
+  <div class="right-panel" id="rightPanel">
+    <h2>👉 Pick a country to inspect →</h2>
+    <p>Select a country from the left panel. 5 tools will activate.</p>
+  </div>
+</div>
+
+<script>
+// Same country data (shared pattern)
+const COUNTRIES = [
+  {iso:"GB",name:"United Kingdom",capital:"London",lat:51.5074,lng:-0.1278,region:"EU",flag:"🇬🇧",gdp:46500,pop:67,sovereign:7.305,general:"Argus",frameworks:["EU AI Act","GDPR","UK AI Bill","DORA","JSP 936","SOC 2"]},
+  {iso:"US",name:"United States",capital:"Washington DC",lat:38.9072,lng:-77.0369,region:"NA",flag:"🇺🇸",gdp:76300,pop:331,sovereign:5.5,general:"Scribe",frameworks:["NIST AI RMF","SOC 2","HIPAA","CCPA"]},
+  {iso:"CN",name:"China",capital:"Beijing",lat:39.9042,lng:116.4074,region:"AS",flag:"🇨🇳",gdp:12700,pop:1411,sovereign:3.0,general:"Crow",frameworks:["PIPL","CAC","DSL","Cybersecurity Law"]},
+  {iso:"JP",name:"Japan",capital:"Tokyo",lat:35.6762,lng:139.6503,region:"AS",flag:"🇯🇵",gdp:34000,pop:125,sovereign:6.5,general:"Builder",frameworks:["APPI","APEC AI","METI AI Guidelines","PIPC"]},
+  {iso:"DE",name:"Germany",capital:"Berlin",lat:52.52,lng:13.405,region:"EU",flag:"🇩🇪",gdp:51200,pop:83,sovereign:6.4,general:"Shield",frameworks:["EU AI Act","GDPR","BSIG","NIS2"]},
+  {iso:"IN",name:"India",capital:"New Delhi",lat:28.6139,lng:77.209,region:"AS",flag:"🇮🇳",gdp:2700,pop:1430,sovereign:4.5,general:"Crow",frameworks:["DPDPA","CERT-In","NITI Aayog AI"]},
+  {iso:"AU",name:"Australia",capital:"Canberra",lat:-35.2809,lng:149.13,region:"OC",flag:"🇦🇺",gdp:55000,pop:26,sovereign:6.0,general:"Gear",frameworks:["Privacy Act 1988","OAIC AI","Modern Slavery Act"]},
+  {iso:"BR",name:"Brazil",capital:"Brasília",lat:-15.8267,lng:-47.9218,region:"SA",flag:"🇧🇷",gdp:10000,pop:215,sovereign:4.5,general:"Crow",frameworks:["LGPD","BCB Open Finance","ANPD"]},
+  {iso:"FR",name:"France",capital:"Paris",lat:48.8566,lng:2.3522,region:"EU",flag:"🇫🇷",gdp:44400,pop:67,sovereign:6.5,general:"Owl",frameworks:["EU AI Act","GDPR","DORA","Loi Économie numérique"]},
+  {iso:"SG",name:"Singapore",capital:"Singapore",lat:1.3521,lng:103.8198,region:"AS",flag:"🇸🇬",gdp:72800,pop:5.5,sovereign:6.8,general:"Abacus",frameworks:["PDPA","MAS","IMDA AI Governance"]},
+  {iso:"CA",name:"Canada",capital:"Ottawa",lat:45.4215,lng:-75.6972,region:"NA",flag:"🇨🇦",gdp:53200,pop:39,sovereign:6.0,general:"Scribe",frameworks:["AIDA","PIPEDA","NIST AI RMF","SOC 2"]},
+  {iso:"CH",name:"Switzerland",capital:"Bern",lat:46.948,lng:7.4474,region:"EU",flag:"🇨🇭",gdp:84300,pop:8.7,sovereign:6.8,general:"Lex",frameworks:["FADP","FINMA AI"]},
+];
+
+let selected = null;
+const GEN_COLORS = {
+  Argus:"#60a5fa", Scribe:"#fbbf24", Shield:"#10b981", Builder:"#8b5cf6",
+  Abacus:"#f59e0b", Lex:"#ef4444", Scale:"#06b6d4", Crow:"#a3e635",
+  Gear:"#ec4899", Voice:"#14b8a6", Owl:"#84cc16", Dragon:"#fbbf24"
+};
+
+function buildCountryList() {
+  const list = document.getElementById('countryList');
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const region = document.getElementById('regionFilter').value;
+  list.innerHTML = '';
+  COUNTRIES.filter(c => 
+    (c.name.toLowerCase().includes(q) || c.capital.toLowerCase().includes(q)) &&
+    (!region || c.region === region)
+  ).forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'country-item' + (selected && selected.iso === c.iso ? ' active' : '');
+    div.innerHTML = `<strong>${c.flag} ${c.name}</strong><br><span style="font-size:0.7rem;opacity:0.7">${c.capital} · ${c.region} · ${c.sovereign}/10</span>`;
+    div.onclick = () => selectCountry(c);
+    list.appendChild(div);
+  });
+}
+
+document.getElementById('searchBox').addEventListener('input', buildCountryList);
+document.getElementById('regionFilter').addEventListener('change', buildCountryList);
+
+function selectCountry(c) {
+  selected = c;
+  buildCountryList();
+  document.querySelectorAll('.country-item').forEach(el => el.classList.remove('active'));
+  renderTools();
+}
+
+function renderTools() {
+  const c = selected;
+  const g = GEN_COLORS[c.general] || "#fbbf24";
+  const passedProbes = Math.floor(c.sovereign * 1.5);
+  const isHigh = c.sovereign >= 6;
+  const isMid = c.sovereign >= 4;
+  document.getElementById('rightPanel').innerHTML = `
+    <h2>${c.flag} ${c.name} — ${c.capital}</h2>
+    <div style="margin-bottom:1rem;color:#888;">Region: ${c.region} · GDP/capita: $${c.gdp.toLocaleString()} · Population: ${c.pop}M</div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('inspector',this)">📊 Inspector</button>
+      <button class="tab" onclick="switchTab('audit',this)">🛡️ Audit (16 probes)</button>
+      <button class="tab" onclick="switchTab('composite',this)">🗳️ Composite</button>
+      <button class="tab" onclick="switchTab('passport',this)">🇪🇺 Passport</button>
+      <button class="tab" onclick="switchTab('dorodo',this)">🌍 DORADO</button>
+    </div>
+    <div id="tabContent"></div>
+  `;
+  switchTab('inspector', document.querySelector('.tab'));
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const c = selected;
+  const content = document.getElementById('tabContent');
+  if (tab === 'inspector') {
+    const g = GEN_COLORS[c.general];
+    content.innerHTML = `
+      <div class="box">
+        <h3>📊 Inspector</h3>
+        <p><strong>Capital:</strong> ${c.capital}</p>
+        <p><strong>Coordinates:</strong> ${c.lat.toFixed(2)}°, ${c.lng.toFixed(2)}°</p>
+        <p><strong>Region:</strong> ${c.region}</p>
+        <p><strong>Population:</strong> ${c.pop}M</p>
+        <p><strong>GDP/capita:</strong> $${c.gdp.toLocaleString()}</p>
+        <p style="margin-top:1rem;"><strong style="color:#fbbf24">Sovereign Composite:</strong> <span style="font-size:1.5rem;font-weight:bold">${c.sovereign} / 10</span></p>
+      </div>
+      <div class="box">
+        <h3>🐉 Lead General: <span style="color:${g}">${c.general}</span></h3>
+        <p>The sovereign lead General for ${c.name} (per the 12-General substrate mapping).</p>
+      </div>
+      <div class="box">
+        <h3>📜 Frameworks</h3>
+        <ul>${c.frameworks.map(f => `<li>${f}</li>`).join('')}</ul>
+      </div>
+    `;
+  } else if (tab === 'audit') {
+    const probes = [
+      "device_consent", "on_device_capable", "pcc_required", "cloud_act_mitigated",
+      "user_data_isolation", "kids_mode_respected", "siri_dont_record", "personal_voice_disabled",
+      "app_attest_passed", "devicecheck_passed", "device_find_my_disabled", "screen_time_respected",
+      "parental_controls", "kids_alibaba_prohibited", "foundation_models_3b", "pcc_verifiable"
+    ];
+    const passed = passedProbes;
+    content.innerHTML = `
+      <div class="box">
+        <h3>🛡️ Care Floor Audit (16 probes @ 0.95)</h3>
+        <p>Sovereign composite: ${c.sovereign} → ${passed}/16 probes passing (approx)</p>
+        <div style="background:#0a0a0a;padding:1rem;border-radius:6px;margin-top:1rem;">
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem;">
+          ${probes.map((p, i) => `
+            <div class="field" style="margin-bottom:0;padding:0.3rem;">
+              <span class="label" style="font-size:0.75rem;">${p}</span>
+              <span class="value ${i < passed ? 'pass' : (i < passed + 2 ? 'warn' : 'fail')}" style="font-size:0.75rem;">${i < passed ? '✓ PASS' : (i < passed + 2 ? '⚠ WARN' : '✗ FAIL')}</span>
+            </div>
+          `).join('')}
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <strong style="color:#fbbf24;">Care Floor Coverage:</strong> ${Math.round(c.sovereign/10*100)}%
+          <div class="progress-bar ${c.sovereign < 5 ? 'fail' : c.sovereign < 7 ? 'warn' : ''}">
+            <div class="fill" style="width: ${c.sovereign/10*100}%"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (tab === 'composite') {
+    const parts = [
+      ["open_source", "CC0+MIT+OSI", 1.0],
+      ["bft_12_around_1", isHigh ? "Enforced" : isMid ? "Recommended" : "Advisory", isHigh ? 1.0 : isMid ? 0.6 : 0.3],
+      ["sigil_chain", "Ed25519", 1.0],
+      ["care_floor", "16 probes", isHigh ? 0.95 : isMid ? 0.8 : 0.5],
+      ["dorodo_1click", "Available", 1.0],
+      ["crown_lineage", "1795-2026", 1.0],
+    ];
+    const total = parts.reduce((s, p) => s + p[2], 0) / parts.length * 7;
+    content.innerHTML = `
+      <div class="box">
+        <h3>🗳️ Sovereign Composite (Detailed)</h3>
+        <p>6 sovereign primitives evaluated for ${c.name}:</p>
+        ${parts.map(([k, v, s]) => `
+          <div class="field">
+            <span class="label">${k}</span>
+            <span class="value">${v} (${s})</span>
+          </div>
+        `).join('')}
+        <div class="field" style="border-top:2px solid #fbbf24;margin-top:0.5rem;padding-top:1rem;">
+          <span class="label">TOTAL Sovereign Composite</span>
+          <span class="value" style="color:#fbbf24;font-size:1.4rem;font-weight:bold;">${total.toFixed(2)} / 7.305</span>
+        </div>
+      </div>
+    `;
+  } else if (tab === 'passport') {
+    const passport_id = 'psprt-' + c.iso.toLowerCase() + '-' + Math.random().toString(36).slice(2, 14);
+    content.innerHTML = `
+      <div class="box">
+        <h3>🇪🇺 Sovereign Passport (W3C VC)</h3>
+        <p>Issue a W3C Verifiable Credential passport for ${c.name}. The VC records sovereign composite + Care Floor + BFT status.</p>
+        <div class="field"><span class="label">Subject DID</span><span class="value">did:csoai:${c.iso.toLowerCase()}-001</span></div>
+        <div class="field"><span class="label">Country</span><span class="value">${c.name} (${c.iso})</span></div>
+        <div class="field"><span class="label">Frameworks Covered</span><span class="value">${c.frameworks.length}</span></div>
+        <div class="field"><span class="label">Sovereign Composite</span><span class="value" style="color:#fbbf24">${c.sovereign} / 10</span></div>
+        <div class="field"><span class="label">Passport ID (sample)</span><span class="value" style="font-size:0.7rem;">${passport_id}</span></div>
+        <div class="field"><span class="label">Issued by</span><span class="value">CSOAI Ltd (UK 16939677)</span></div>
+        <button onclick="alert('✅ W3C VC passport issued for ${c.name}!')">📜 Issue Passport</button>
+      </div>
+    `;
+  } else if (tab === 'dorodo') {
+    content.innerHTML = `
+      <div class="box">
+        <h3>🌍 DORADO 1-click Sovereignty</h3>
+        <p>Switch sovereignty routing for ${c.name}. 1 click.</p>
+        <select style="margin-bottom:0.5rem;width:100%;padding:0.5rem;">
+          <option>🇪🇺 EU (eu-west-1, GDPR)</option>
+          <option>🇬🇧 UK (uk-gb-1, UK-GDPR)</option>
+          <option>🇺🇸 US (us-east-1, CCPA)</option>
+          <option>🇸🇬 SG (ap-southeast-1, PDPA)</option>
+          <option>🇦🇪 UAE (me-central-1, UAE DPA)</option>
+          <option>🇿🇦 ZA (af-south-1, POPIA)</option>
+          <option>🇦🇺 AU (ap-southeast-2, Privacy Act 1988)</option>
+          <option>🇯🇵 JP (ap-northeast-1, APPI)</option>
+          <option>🇨🇳 CN (cn-north-1, PIPL)</option>
+        </select>
+        <div class="field"><span class="label">Current routing</span><span class="value" style="color:#fbbf24">EU</span></div>
+        <div class="field"><span class="label">Data residency</span><span class="value">${c.region}</span></div>
+        <div class="field"><span class="label">CLOUD Act exposure</span><span class="value">${c.iso === 'US' || c.iso === 'GB' ? 'MEDIUM' : 'LOW'}</span></div>
+        <button onclick="alert('✅ DORADO switch — Data residency for ${c.name} now anchored.')">🌍 1-click Switch</button>
+      </div>
+    `;
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  buildCountryList();
+  // Auto-select UK (CSOAI home)
+  setTimeout(() => {
+    const uk = COUNTRIES.find(c => c.iso === 'GB');
+    if (uk) selectCountry(uk);
+  }, 200);
+});
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

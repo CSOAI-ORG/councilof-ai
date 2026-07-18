@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meok_defoneos_mcp"
+version = "1.0.0"
+description = "MEOK DEFONEOS — sovereign UK defence-AI governance surface (airspace + drone BVLOS + firmware attestation + full audit)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "MEOK AI Labs", email = "nicholas@csoai.org"},
+]
+keywords = [
+    "mcp", "defence", "defense", "sovereign", "uk", "ai-governance",
+    "babcock", "bae", "qinetiq", "dstl", "daic", "aukus", "pillar-2",
+    "airspace", "drone", "bvlos", "firmware-attestation", "sapient",
+    "stone-soup", "maternal-covenant", "care-membrane", "33-agent-bft",
+    "defoneos-seal", "meok-labs", "asimov-v8", "wolf-actuator",
+    "geospatial", "geoint", "copernicus", "sentinel", "sentinel-2",
+    "sentinel-1", "sar", "multispectral", "ordnance-survey", "overture",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "airspace-monitor-mcp>=1.0.0",
+    "drone-airspace-governance-mcp>=1.0.0",
+    "firmware-attestation-mcp>=1.0.0",
+    "meok-governance-engine-mcp>=1.0.0",
+    "care-membrane-mcp>=1.0.0",
+    "meok-defoneos-geospatial-intel-mcp>=1.0.0",  # NEW: 16th DEFONEOS MCP (geospatial intel)
+]
+
+[project.urls]
+Homepage = "https://meok.ai/defoneos"
+Repository = "https://github.com/CSOAI-ORG/meok-defoneos-mcp"
+Documentation = "https://docs.meok.ai/defoneos"
+"EU AI Act Compliance" = "https://councilof.ai"
+"Sovereign BFT Council" = "https://councilof.ai"
+
+[project.scripts]
+meok-defoneos-mcp = "meok_defoneos_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meok_defoneos_mcp"]

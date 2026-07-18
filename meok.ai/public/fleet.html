@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fleet — MEOK Hive Ecosystem</title>
+  <meta name="description" content="The complete MEOK fleet: 32 sovereign hives across compliance, governance, data, gaming, and industry verticals. All Ed25519-signed, BFT-governed.">
+  <style>
+    :root { --navy: #0d0c18; --gold: #c9a84c; --text: #e0dcd0; --muted: #a09888; --card: #1a1833; --border: rgba(201,168,76,0.15); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--navy); color: var(--text); line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+    header { text-align: center; padding: 3rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    h1 { font-size: 2.5rem; color: var(--gold); margin-bottom: 0.5rem; }
+    .subtitle { color: var(--muted); font-size: 1.1rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; text-align: center; }
+    .stat-card .num { font-size: 2rem; font-weight: 700; color: var(--gold); }
+    .stat-card .label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    .hive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .hive-card { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; transition: border-color 0.2s, transform 0.2s; }
+    .hive-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .hive-card .name { font-size: 1.1rem; font-weight: 600; color: var(--gold); margin-bottom: 0.3rem; }
+    .hive-card .badge { display: inline-block; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 0.3rem; margin-left: 0.5rem; }
+    .badge-live { background: rgba(52,211,153,0.15); color: #34d399; }
+    .badge-staging { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .badge-pending { background: rgba(148,163,184,0.15); color: #94a3b8; }
+    .hive-card .desc { font-size: 0.85rem; color: var(--muted); margin: 0.3rem 0; }
+    .hive-card .meta { font-size: 0.75rem; color: #706858; margin-top: 0.5rem; }
+    .hive-card .meta span { margin-right: 0.5rem; }
+    footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+    footer a { color: var(--gold); text-decoration: none; }
+    @media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } .hive-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🐉 MEOK Fleet</h1>
+      <p class="subtitle">32 sovereign hives · 11 BFT councils · 55 voter seats · 35 GB data moat</p>
+    </header>
+
+    <div class="stats">
+      <div class="stat-card"><div class="num">32</div><div class="label">Hives</div></div>
+      <div class="stat-card"><div class="num">11</div><div class="label">BFT Councils</div></div>
+      <div class="stat-card"><div class="num">55</div><div class="label">Voter Seats</div></div>
+      <div class="stat-card"><div class="num">35 GB</div><div class="label">Data Corpus</div></div>
+      <div class="stat-card"><div class="num">604+</div><div class="label">SOV3 Records</div></div>
+      <div class="stat-card"><div class="num">£0</div><div class="label">MRR (honest)</div></div>
+    </div>
+
+    <h2>🏛️ Governance & Compliance</h2>
+    <div class="hive-grid">
+      <div class="hive-card"><div class="name">Keystone<span class="badge badge-live">LIVE</span></div><div class="desc">Compliance attestation engine. Ed25519 signing, HMAC-SHA256 verify, 17 endpoints.</div><div class="meta"><span>73/73 tests</span><span>0 verify_fail</span></div></div>
+      <div class="hive-card"><div class="name">SOV3<span class="badge badge-live">LIVE</span></div><div class="desc">Sovereign Omniscient Vessel³. Orchestrator, BFT council, sigil chain, MCP bridge.</div><div class="meta"><span>115 tools</span><span>152 agents</span><span>6 NNs</span></div></div>
+      <div class="hive-card"><div class="name">Compliance Fleet<span class="badge badge-live">LIVE</span></div><div class="desc">218 MCP servers across EU AI Act, DORA, NIS2, ISO 42001, UK AI Bill, GDPR.</div><div class="meta"><span>15 frameworks</span><span>348 servers</span></div></div>
+      <div class="hive-card"><div class="name">Lex<span class="badge badge-staging">STAGING</span></div><div class="desc">Legal & regulatory text processing. NLP pipeline for compliance document analysis.</div></div>
+      <div class="hive-card"><div class="name">Shield<span class="badge badge-staging">STAGING</span></div><div class="desc">Security & threat detection. AI safety monitoring, vulnerability scanning.</div></div>
+      <div class="hive-card"><div class="name">Abacus<span class="badge badge-live">LIVE</span></div><div class="desc">Financial compliance & regulatory data. DORA, MiCA, PSD3, AML frameworks.</div></div>
+    </div>
+
+    <h2>📊 Data & Knowledge</h2>
+    <div class="hive-grid">
+      <div class="hive-card"><div class="name">Scale<span class="badge badge-staging">STAGING</span></div><div class="desc">Scalable synthetic data generation. 532K records across 12+ government datasets.</div></div>
+      <div class="hive-card"><div class="name">Scribe<span class="badge badge-staging">STAGING</span></div><div class="desc">Automated documentation & audit trails. Compliance report generation.</div></div>
+      <div class="hive-card"><div class="name">Argus<span class="badge badge-live">LIVE</span></div><div class="desc">Multi-modal data ingestion & fusion. 35 GB data moat, 16+ datasets.</div></div>
+      <div class="hive-card"><div class="name">Crow<span class="badge badge-live">LIVE</span></div><div class="desc">Crowd-sourced compliance intelligence. Threat intelligence feeds.</div></div>
+    </div>
+
+    <h2>🏗️ Industry Verticals</h2>
+    <div class="hive-grid">
+      <div class="hive-card"><div class="name">Builder<span class="badge badge-live">LIVE</span></div><div class="desc">Construction & utility vertical. Compliance for building safety, CDM, construction AI.</div></div>
+      <div class="hive-card"><div class="name">Gear<span class="badge badge-staging">STAGING</span></div><div class="desc">Industrial IoT & manufacturing compliance. NIS2 essential entities.</div></div>
+      <div class="hive-card"><div class="name">Voice<span class="badge badge-staging">STAGING</span></div><div class="desc">Voice interaction compliance & transcription. AI disclosure for voice systems.</div></div>
+      <div class="hive-card"><div class="name">Care Membrane<span class="badge badge-pending">PENDING</span></div><div class="desc">Healthcare compliance. CQC, CIW, NHS DSP Toolkit, DCB 0129.</div></div>
+      <div class="hive-card"><div class="name">Gaming<span class="badge badge-pending">PENDING</span></div><div class="desc">Gaming compliance. UKGC, MGA, AI transparency for gaming AI.</div></div>
+      <div class="hive-card"><div class="name">GrabHire<span class="badge badge-pending">PENDING</span></div><div class="desc">Construction hiring compliance. Right-to-work, CSCS, compliance verification.</div></div>
+    </div>
+
+    <h2>🔧 Platform & Infrastructure</h2>
+    <div class="hive-grid">
+      <div class="hive-card"><div class="name">OLM Brain<span class="badge badge-live">LIVE</span></div><div class="desc">Autonomous brain. Mamba-2 + MoE + standard attention. Runs every 5 min on VM.</div></div>
+      <div class="hive-card"><div class="name">King Hive<span class="badge badge-live">LIVE</span></div><div class="desc">Sovereign adjudicator. BFT-governed verdicts, jury system, Ed25519-signed.</div></div>
+      <div class="hive-card"><div class="name">Policy Lab<span class="badge badge-live">LIVE</span></div><div class="desc">Sovereign Town flywheel. 511 cycles, ~649M episodes, 54M crimes prevented.</div></div>
+      <div class="hive-card"><div class="name">Horus<span class="badge badge-live">LIVE</span></div><div class="desc">Oversight plane. 24/7 monitoring, Rainbow security runtime.</div></div>
+      <div class="hive-card"><div class="name">MEOK ONE<span class="badge badge-live">LIVE</span></div><div class="desc">Unified MCP bridge. 50+ Python modules, consciousness engine, characters.</div></div>
+    </div>
+
+    <p style="text-align:center;margin:2rem 0;color:var(--muted);font-size:0.85rem;">
+      Full fleet: 32 hives across 7 clusters. <a href="https://proofof.ai" style="color:var(--gold);">Visit proofof.ai →</a>
+    </p>
+
+    <footer>
+      <p>CSOAI Ltd · UK 16939677 · <a href="https://meok.ai">meok.ai</a> · <a href="https://csoai.org">csoai.org</a> · <a href="https://proofof.ai">proofof.ai</a></p>
+      <p style="margin-top:0.5rem;">£0 MRR · Honest accounting · Updated 17 Jun 2026</p>
+    </footer>
+  </div>
+</body>
+</html>

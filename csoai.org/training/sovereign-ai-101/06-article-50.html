@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 6: Article 50 Watermarking — Sovereign AI 101</title>
+<meta name="description" content="EU AI Act Article 50. Watermarking passport. 36-day countdown. 523-day Annex III delay. Sovereign implementation.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.85rem; margin-bottom: 1rem; }
+  .breadcrumb a { color: #60a5fa; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.2rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .module-tag { display: inline-block; background: #fbbf24; color: #000; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+  .countdown { background: linear-gradient(135deg, #1a1a1a 0%, #4a1b1b 100%); padding: 2rem; border-radius: 12px; text-align: center; max-width: 900px; margin: 1rem auto; border: 2px solid #f87171; }
+  .countdown .label { color: #f87171; font-weight: bold; font-size: 1.1rem; }
+  .countdown .num { font-size: 3.5rem; color: #fbbf24; font-weight: bold; text-shadow: 0 0 30px #f87171; margin: 0.5rem 0; }
+  .countdown .date { color: #ddd; font-size: 1.1rem; }
+  .countdown .penalty { color: #f87171; margin-top: 1rem; font-weight: bold; }
+  .delay { background: linear-gradient(135deg, #1a1a1a 0%, #1b4a2d 100%); padding: 2rem; border-radius: 12px; text-align: center; max-width: 900px; margin: 1.5rem auto; border: 2px solid #10b981; }
+  .delay .label { color: #10b981; font-weight: bold; font-size: 1.1rem; }
+  .delay .num { font-size: 3.5rem; color: #fbbf24; font-weight: bold; text-shadow: 0 0 30px #10b981; margin: 0.5rem 0; }
+  .delay .date { color: #ddd; font-size: 1.1rem; }
+  .delay .caveat { color: #10b981; margin-top: 1rem; font-style: italic; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .quiz { background: #111; padding: 1.5rem; border-radius: 12px; max-width: 900px; margin: 1.5rem auto; border: 1px solid #fbbf24; }
+  .quiz h3 { color: #fbbf24; margin-bottom: 1rem; }
+  .question { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.75rem 0; }
+  .question p { color: #10b981; font-weight: bold; margin-bottom: 0.5rem; }
+  .question label { display: block; color: #ccc; padding: 0.25rem 0; cursor: pointer; }
+  .question input { margin-right: 0.5rem; }
+  .question .answer { color: #fbbf24; margin-top: 0.5rem; font-style: italic; display: none; }
+  .question.show .answer { display: block; }
+  .reveal-btn { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+  .nav-bottom { display: flex; justify-content: space-between; margin: 3rem 0; gap: 1rem; flex-wrap: wrap; }
+  .nav-bottom a { display: inline-block; background: #2d1b4e; color: #fbbf24; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid #fbbf24; }
+  .nav-bottom a.next { background: #fbbf24; color: #000; font-weight: bold; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; }
+  .passport { background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%); padding: 1.5rem; border-radius: 12px; max-width: 600px; margin: 1rem auto; border: 2px solid #fbbf24; font-family: monospace; }
+  .passport h4 { color: #fbbf24; text-align: center; margin-bottom: 1rem; }
+  .passport .row { display: flex; justify-content: space-between; padding: 0.3rem 0; border-bottom: 1px dashed #333; }
+  .passport .row:last-child { border-bottom: none; }
+  .passport .k { color: #888; font-size: 0.8rem; }
+  .passport .v { color: #10b981; font-size: 0.8rem; max-width: 60%; text-align: right; word-break: break-all; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="index.html">Sov AI 101</a>
+  <a href="05-sigil-chain.html">M5</a>
+  <a href="07-dorado.html">M7 →</a>
+</div>
+
+<p class="breadcrumb"><a href="index.html">Sovereign AI 101</a> / <strong>Module 6</strong></p>
+
+<h1>📜 Module 6: EU AI Act Article 50 Watermarking</h1>
+<p style="text-align: center;"><span class="module-tag">MODULE 6 OF 10</span> · ⏱ 25 minutes</p>
+
+<h2>⚖️ What is EU AI Act Article 50?</h2>
+<p><strong>Article 50</strong> of the EU AI Act (Regulation 2024/1689) is the transparency obligation for AI systems that interact with natural persons or generate synthetic content. It requires that:</p>
+
+<ol style="color: #aaa; padding-left: 1.5rem; margin: 1rem 0;">
+  <li>Users are informed they are interacting with an AI system (unless obvious from context)</li>
+  <li>AI-generated content is marked in a <strong>machine-readable</strong> format that detects it as artificially generated or manipulated</li>
+  <li>Watermarks are <strong>effective, interoperable, robust</strong>, and reliable as far as technically feasible</li>
+  <li>The marking is proportionate to the type and use of the content</li>
+</ol>
+
+<p>Article 50 applies to: chatbots, generative text, image generation, video generation, audio generation, deepfakes, emotion recognition systems, and biometric categorisation. The obligation applies to <strong>providers and deployers</strong> — meaning both the model creator and the entity using it.</p>
+
+<h2>📛 The Watermarking Passport</h2>
+<p>The CSOAI sovereign implementation of Article 50 is the <strong>Article 50 Watermarking Passport</strong> — a structured certificate that proves a piece of AI-generated content has been watermarked in compliance with the EU AI Act.</p>
+
+<p>Each Passport is:</p>
+<ul style="color: #aaa; padding-left: 1.5rem;">
+  <li><strong>Issued</strong> by the sovereign system at content-creation time</li>
+  <li><strong>HMAC-signed</strong> (free tier) for basic verifiability via <a href="https://proofof.ai" style="color: #60a5fa;">proofof.ai</a></li>
+  <li><strong>Ed25519-signed</strong> (Pro tier) for auditor-grade attestation</li>
+  <li><strong>Anchored</strong> to the CSOAI SIGIL chain (Module 5)</li>
+  <li><strong>Interoperable</strong> — follows the EU AI Office watermarking standard (when finalised) and the C2PA Content Credentials standard</li>
+</ul>
+
+<div class="passport">
+  <h4>📜 ARTICLE 50 WATERMARKING PASSPORT</h4>
+  <div class="row"><span class="k">Passport ID</span><span class="v">a50-2026-07-04-7a3f9c2b</span></div>
+  <div class="row"><span class="k">Content Hash</span><span class="v">7a3f9c2b8e1d4f5a...</span></div>
+  <div class="row"><span class="k">Content Type</span><span class="v">text</span></div>
+  <div class="row"><span class="k">Provider</span><span class="v">sov3-self-hosted</span></div>
+  <div class="row"><span class="k">Interaction</span><span class="v">chatbot</span></div>
+  <div class="row"><span class="k">Watermarked</span><span class="v">YES (machine-readable)</span></div>
+  <div class="row"><span class="k">Deployed to</span><span class="v">UK, EU-27, AU</span></div>
+  <div class="row"><span class="k">Issued</span><span class="v">2026-07-04T12:00:00Z</span></div>
+  <div class="row"><span class="k">SIGIL</span><span class="v">sig_7a3f9c_...</span></div>
+  <div class="row"><span class="k">Sig (Ed25519)</span><span class="v">5e7f8a9b0c1d...</span></div>
+  <div class="row"><span class="k">Verify at</span><span class="v">proofof.ai/p/7a3f9c2b</span></div>
+</div>
+
+<p>The Passport is the audit-grade receipt. Any third party — a regulator, a journalist, a citizen — can verify it. The Passport proves that the content was created by a sovereign AI system, watermarked at the point of generation, and attested by a SIGIL.</p>
+
+<h2>⏰ The 36-Day Countdown</h2>
+<div class="countdown">
+  <div class="label">⏰ ARTICLE 50 OBLIGATION APPLIES</div>
+  <div class="num">36 DAYS</div>
+  <div class="date">from 4 Jul 2026 → <strong>2 Aug 2026</strong></div>
+  <div style="color: #ccc; margin-top: 1rem;">Every provider and deployer of gen-AI systems in the EU must comply with Article 50 watermarking + transparency obligations from this date.</div>
+  <div class="penalty">⚠️ PENALTY: EUR 15M or 3% of global annual turnover (whichever is higher)</div>
+</div>
+
+<p>Article 50 is <strong>NOT delayed</strong> by the 7 May 2026 EU Digital Omnibus Act. Only Annex III high-risk classifications were delayed (covered below). Transparency + watermarking obligations are still binding from 2 August 2026.</p>
+
+<h2>📅 The 523-Day Delay (Annex III to 2 Dec 2027)</h2>
+<div class="delay">
+  <div class="label">⏳ ANNEX III HIGH-RISK DELAY</div>
+  <div class="num">523 DAYS</div>
+  <div class="date">from 2 Aug 2026 → <strong>2 Dec 2027</strong></div>
+  <div style="color: #ccc; margin-top: 1rem;">Annex III high-risk classification obligations (biometric ID, critical infrastructure, education, employment, essential services, law enforcement, migration, justice, democracy) delayed by the 7 May 2026 EU Digital Omnibus Act.</div>
+  <div class="caveat">⚠️ THIS DELAY DOES NOT APPLY TO ARTICLE 50 (transparency/watermarking).</div>
+</div>
+
+<p>This is the critical distinction CSOAI customers must understand. <strong>Annex III high-risk obligations</strong> were delayed 523 days. <strong>Article 50 transparency + watermarking obligations</strong> were NOT delayed. They apply from 2 August 2026. <strong>36 days from course launch.</strong></p>
+
+<p>CSOAI is the <strong>only vendor</strong> with the 7 May 2026 EU Digital Omnibus Act delay logic built into the tooling. The Article 50 Passport issuance flow explicitly distinguishes Article 50 (no delay) from Annex III (523-day delay) — so you can never accidentally think you have more time than you do.</p>
+
+<h2>🛡️ Sovereign Implementation</h2>
+<p>The CSOAI sovereign implementation of Article 50 follows three principles:</p>
+
+<p><strong>① Watermark at the point of generation.</strong> Every CSOAI sovereign model embeds the watermark during the inference step, not as a post-processing step. This makes the watermark resistant to simple edits, crops, or recompression.</p>
+
+<p><strong>② Passport at the point of creation.</strong> The Article 50 Passport is issued the moment content is generated. The Passport is itself a SIGIL — hash-chained, dual-signed, anchored. The Passport is the witness that watermarking occurred.</p>
+
+<p><strong>③ Free-tier verifiability.</strong> Any citizen can verify a Passport at <a href="https://proofof.ai" style="color: #60a5fa;">proofof.ai</a> using the Passport ID. No account required. No CSOAI trust required. Pure cryptographic verification.</p>
+
+<p>This is the inverse of the corporate approach — where watermarking is private, opaque, and unverifiable. CSOAI's Article 50 implementation is open, public, and verifiable.</p>
+
+<h2>🎯 5 Key Takeaways</h2>
+<div class="takeaway"><h4>1. Article 50 = transparency + watermarking obligation</h4><p>Applies to providers AND deployers of gen-AI. Penalty: EUR 15M or 3% of global turnover.</p></div>
+<div class="takeaway"><h4>2. Article 50 is NOT delayed — applies 2 Aug 2026 (36 days)</h4><p>The 7 May 2026 EU Digital Omnibus Act delay applies to Annex III only. Watermarking remains on schedule.</p></div>
+<div class="takeaway"><h4>3. Annex III high-risk IS delayed 523 days → 2 Dec 2027</h4><p>Biometric ID, critical infrastructure, education, employment, essential services, law enforcement, migration, justice, democracy.</p></div>
+<div class="takeaway"><h4>4. The Watermarking Passport = audit-grade receipt</h4><p>HMAC-signed (free) or Ed25519-signed (Pro). Anchored to SIGIL chain. Verifiable at proofof.ai.</p></div>
+<div class="takeaway"><h4>5. CSOAI is the only vendor with delay-logic in the tooling</h4><p>The Passport issuance flow distinguishes Article 50 from Annex III — so you can never confuse them.</p></div>
+
+<h2>📝 Module 6 Quiz</h2>
+<div class="quiz">
+  <h3>3 Questions</h3>
+
+  <div class="question">
+    <p>1. When does EU AI Act Article 50 (transparency + watermarking) apply?</p>
+    <label><input type="radio" name="q1"> A. 2 Aug 2026</label>
+    <label><input type="radio" name="q1"> B. 2 Dec 2027</label>
+    <label><input type="radio" name="q1"> C. 1 Jan 2028</label>
+    <label><input type="radio" name="q1"> D. Already in force since 2025</label>
+    <div class="answer">✓ <strong>Answer: A. 2 Aug 2026.</strong> 36 days from course launch. Article 50 was NOT delayed by the EU Digital Omnibus Act.</div>
+  </div>
+
+  <div class="question">
+    <p>2. What is the maximum penalty for Article 50 non-compliance?</p>
+    <label><input type="radio" name="q2"> A. EUR 1M</label>
+    <label><input type="radio" name="q2"> B. EUR 7.5M or 1% of turnover</label>
+    <label><input type="radio" name="q2"> C. EUR 15M or 3% of global turnover</label>
+    <label><input type="radio" name="q2"> D. EUR 35M or 7% of turnover</label>
+    <div class="answer">✓ <strong>Answer: C. EUR 15M or 3% of global turnover.</strong> Whichever is higher. The same penalty tier as Article 5 (prohibited practices).</div>
+  </div>
+
+  <div class="question">
+    <p>3. Which free service lets any citizen verify an Article 50 Passport?</p>
+    <label><input type="radio" name="q3"> A. /sigil-explorer/</label>
+    <label><input type="radio" name="q3"> B. proofof.ai</label>
+    <label><input type="radio" name="q3"> C. /verify/</label>
+    <label><input type="radio" name="q3"> D. The C2PA Manifest</label>
+    <div class="answer">✓ <strong>Answer: B. proofof.ai.</strong> Free public verification of Article 50 Passports by ID. No account required. Pure cryptographic verification.</div>
+  </div>
+
+  <button class="reveal-btn" onclick="document.querySelectorAll('.question').forEach(q => q.classList.add('show')); this.style.display='none';">Show Answers</button>
+</div>
+
+<div class="nav-bottom">
+  <a href="05-sigil-chain.html">← Module 5</a>
+  <a href="07-dorado.html" class="next">Module 7: DORADO →</a>
+</div>
+
+<footer>
+  <p><strong>🐉 Sovereign AI 101 — Module 6: Article 50 Watermarking</strong></p>
+  <p>CSOAI Ltd (UK 16939677) · MIT license · 4 Jul 2026</p>
+  <p><a href="index.html">Course Overview</a> · <a href="/">csoai.org</a> · <a href="https://proofof.ai">proofof.ai</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">Article 50: 2 Aug 2026 (36 days). Annex III: 2 Dec 2027 (523 days delay). Sovereign by construction.</p>
+</footer>
+
+</body>
+</html>

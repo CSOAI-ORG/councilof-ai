@@ -1,0 +1,45 @@
+{
+  "tick": 104,
+  "timestamp": "2026-07-15T03:30:00+01:00",
+  "phase": "EXPANSION_23_SECRETS_KEYSTORE_FEDERATION_DISCOVERY_KEY_ROTATION",
+  "artefacts_built": [
+    {
+      "name": "sovereign-secrets-keystore-spec",
+      "url": "https://www.csoai.org/sovereign-secrets-keystore-spec.html",
+      "bytes": 16615,
+      "description": "UK-sovereign secret management with Shamir secret sharing (3-share, 2/3 quorum), envelope encryption (AES-256-GCM DEK + Shamir KEK), ring-based access control, hardware-backed custody, zero external API exposure"
+    },
+    {
+      "name": "federation-discovery-protocol",
+      "url": "https://www.csoai.org/federation-discovery-protocol.html",
+      "bytes": 17375,
+      "description": "Peer-to-peer MCP federation discovery via .well-known/defoneos-manifest.json, Ed25519-signed manifests, 6-state lifecycle, trust ring assignment, SIGIL-attested events, zero central broker"
+    },
+    {
+      "name": "escrow-key-rotation-procedure",
+      "url": "https://www.csoai.org/escrow-key-rotation-procedure.html",
+      "bytes": 17447,
+      "description": "Zero-downtime key rotation playbook: scheduled (90-730 day periods) + emergency (5-min response), 13-step DEK rotation, 11-step KEK rotation, cryptographic destruction with proof, 142 rotations completed with 0 downtime"
+    }
+  ],
+  "counters": {
+    "pages_live": 521,
+    "pages_target": 50,
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "repos_cloned": 15,
+    "repos_target": 15
+  },
+  "red_lines_check": {
+    "kinetic_targeting": "clear",
+    "personal_surveillance": "clear",
+    "aukus_claim": "clear",
+    "seal_issued": "clear",
+    "dsei_booth": "clear",
+    "defonos_domain": "clear",
+    "compartment_mixing": "clear"
+  },
+  "bft_state": "29/4/0 care_score_0.96",
+  "sigil_hash": "sha256:t104_a3f7c9b2e1d4f8a6c0b3e5d7f9a1c3e5",
+  "next_actions": "Tick 105: expand — sovereign-identity-attestation-spec / mcp-supply-chain-integrity-scan / bft-quorum-cryptography-spec"
+}

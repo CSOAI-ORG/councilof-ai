@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Data Orb - Aqueous DNA Storage System</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; }
+        canvas { display: block; }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            background: rgba(0,20,40,0.85);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #22d3ee;
+            max-width: 320px;
+        }
+        #info h3 { margin: 0 0 8px 0; color: #22d3ee; }
+        #info p { margin: 4px 0; font-size: 11px; line-height: 1.4; }
+        .highlight { color: #fbbf24; }
+        .cyan { color: #22d3ee; }
+        .pink { color: #f472b6; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h3>💧 Water Data Orb Architecture</h3>
+        <p><span class="cyan">Core:</span> Aqueous DNA Storage (455 EB/gram theoretical)</p>
+        <p><span class="highlight">Interface:</span> Gold/Silver Nanoparticle Plasmonic Layer</p>
+        <p><span class="pink">Outer:</span> Quantum Coherence Domain Network</p>
+        <p style="margin-top:8px; font-size:10px; opacity:0.8">
+            Bytes → DNA Encoding → Aqueous Suspension → Plasmonic Read/Write
+        </p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000812);
+        
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        let isDragging = false;
+        let spherical = { theta: 0, phi: Math.PI / 2.5, radius: 12 };
+        
+        document.addEventListener('mousedown', () => { isDragging = true; });
+        document.addEventListener('mouseup', () => { isDragging = false; });
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                spherical.theta -= e.movementX * 0.01;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi - e.movementY * 0.01));
+            }
+        });
+        document.addEventListener('wheel', (e) => {
+            spherical.radius = Math.max(6, Math.min(25, spherical.radius + e.deltaY * 0.02));
+        });
+        
+        // ============================================
+        // WATER ORB CORE - Aqueous DNA Storage
+        // ============================================
+        
+        // Inner water sphere (DNA suspension)
+        const waterCore = new THREE.Mesh(
+            new THREE.SphereGeometry(2.5, 64, 64),
+            new THREE.MeshPhongMaterial({
+                color: 0x0077be,
+                transparent: true,
+                opacity: 0.4,
+                shininess: 150,
+                specular: 0x66ccff
+            })
+        );
+        scene.add(waterCore);
+        
+        // Water caustic effect (inner glow)
+        const waterGlow = new THREE.Mesh(
+            new THREE.SphereGeometry(2.4, 32, 32),
+            new THREE.MeshBasicMaterial({
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.15,
+                blending: THREE.AdditiveBlending
+            })
+        );
+        scene.add(waterGlow);
+        
+        // ============================================
+        // DNA STRANDS inside water (data storage medium)
+        // ============================================
+        
+        const dnaGroup = new THREE.Group();
+        scene.add(dnaGroup);
+        
+        // Create double helix DNA structures
+        function createDNAHelix(offset, color1, color2) {
+            const helixGroup = new THREE.Group();
+            const turns = 3;
+            const height = 4;
+            const radius = 0.8;
+            const points1 = [];
+            const points2 = [];
+            
+            for (let i = 0; i <= 100; i++) {
+                const t = i / 100;
+                const angle = t * turns * Math.PI * 2;
+                const y = (t - 0.5) * height;
+                
+                points1.push(new THREE.Vector3(
+                    radius * Math.cos(angle),
+                    y,
+                    radius * Math.sin(angle)
+                ));
+                points2.push(new THREE.Vector3(
+                    radius * Math.cos(angle + Math.PI),
+                    y,
+                    radius * Math.sin(angle + Math.PI)
+                ));
+            }
+            
+            // DNA backbone strands
+            const curve1 = new THREE.CatmullRomCurve3(points1);
+            const curve2 = new THREE.CatmullRomCurve3(points2);
+            
+            const tube1 = new THREE.Mesh(
+                new THREE.TubeGeometry(curve1, 100, 0.05, 8, false),
+                new THREE.MeshPhongMaterial({ color: color1, emissive: color1, emissiveIntensity: 0.3 })
+            );
+            const tube2 = new THREE.Mesh(
+                new THREE.TubeGeometry(curve2, 100, 0.05, 8, false),
+                new THREE.MeshPhongMaterial({ color: color2, emissive: color2, emissiveIntensity: 0.3 })
+            );
+            
+            helixGroup.add(tube1);
+            helixGroup.add(tube2);
+            
+            // Base pairs (hydrogen bonds - data bits)
+            for (let i = 0; i < 100; i += 5) {
+                const t = i / 100;
+                const angle = t * turns * Math.PI * 2;
+                const y = (t - 0.5) * height;
+                
+                const p1 = new THREE.Vector3(radius * Math.cos(angle), y, radius * Math.sin(angle));
+                const p2 = new THREE.Vector3(radius * Math.cos(angle + Math.PI), y, radius * Math.sin(angle + Math.PI));
+                
+                const lineGeo = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+                const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({
+                    color: 0x00ff88,
+                    transparent: true,
+                    opacity: 0.6
+                }));
+                helixGroup.add(line);
+                
+                // Data nodes on base pairs
+                const dataNode = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.04, 8, 8),
+                    new THREE.MeshBasicMaterial({ color: 0x00ff88 })
+                );
+                dataNode.position.copy(p1.clone().lerp(p2, 0.5));
+                helixGroup.add(dataNode);
+            }
+            
+            helixGroup.rotation.y = offset;
+            return helixGroup;
+        }
+        
+        // Multiple DNA strands representing data storage
+        for (let i = 0; i < 6; i++) {
+            const dna = createDNAHelix(i * Math.PI / 3, 0x22d3ee, 0xf472b6);
+            dna.scale.set(0.5, 0.5, 0.5);
+            const angle = (i / 6) * Math.PI * 2;
+            dna.position.set(0.8 * Math.cos(angle), 0, 0.8 * Math.sin(angle));
+            dnaGroup.add(dna);
+        }
+        
+        // ============================================
+        // GOLD/SILVER NANOPARTICLE LAYER (Read/Write Interface)
+        // ============================================
+        
+        const nanoparticleGroup = new THREE.Group();
+        scene.add(nanoparticleGroup);
+        
+        // Gold nanoparticles (plasmonic data interface)
+        const goldParticleCount = 200;
+        for (let i = 0; i < goldParticleCount; i++) {
+            const phi = Math.acos(2 * Math.random() - 1);
+            const theta = Math.random() * Math.PI * 2;
+            const r = 2.8 + Math.random() * 0.3;
+            
+            const particle = new THREE.Mesh(
+                new THREE.SphereGeometry(0.04, 8, 8),
+                new THREE.MeshPhongMaterial({
+                    color: 0xffd700,
+                    emissive: 0xffa500,
+                    emissiveIntensity: 0.5,
+                    shininess: 200
+                })
+            );
+            particle.position.set(
+                r * Math.sin(phi) * Math.cos(theta),
+                r * Math.cos(phi),
+                r * Math.sin(phi) * Math.sin(theta)
+            );
+            nanoparticleGroup.add(particle);
+        }
+        
+        // Silver nanoparticles (enhanced plasmonic response)
+        const silverParticleCount = 150;
+        for (let i = 0; i < silverParticleCount; i++) {
+            const phi = Math.acos(2 * Math.random() - 1);
+            const theta = Math.random() * Math.PI * 2;
+            const r = 3.2 + Math.random() * 0.2;
+            
+            const particle = new THREE.Mesh(
+                new THREE.SphereGeometry(0.03, 8, 8),
+                new THREE.MeshPhongMaterial({
+                    color: 0xc0c0c0,
+                    emissive: 0x888888,
+                    emissiveIntensity: 0.4,
+                    shininess: 250
+                })
+            );
+            particle.position.set(
+                r * Math.sin(phi) * Math.cos(theta),
+                r * Math.cos(phi),
+                r * Math.sin(phi) * Math.sin(theta)
+            );
+            nanoparticleGroup.add(particle);
+        }
+        
+        // Nanoparticle shell visualization
+        const nanoShell = new THREE.Mesh(
+            new THREE.SphereGeometry(3, 32, 32),
+            new THREE.MeshBasicMaterial({
+                color: 0xffd700,
+                transparent: true,
+                opacity: 0.08,
+                wireframe: true
+            })
+        );
+        scene.add(nanoShell);
+        
+        // ============================================
+        // QUANTUM COHERENCE DOMAIN NETWORK (Outer Layer)
+        // ============================================
+        
+        const coherenceGroup = new THREE.Group();
+        scene.add(coherenceGroup);
+        
+        // Coherence domain nodes (33 nodes - representing quantum information storage)
+        const coherenceNodes = [];
+        const coherenceRadius = 4;
+        
+        for (let i = 0; i < 33; i++) {
+            const phi = Math.acos(1 - 2 * (i + 0.5) / 33);
+            const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+            
+            const node = {
+                x: coherenceRadius * Math.sin(phi) * Math.cos(theta),
+                y: coherenceRadius * Math.cos(phi),
+                z: coherenceRadius * Math.sin(phi) * Math.sin(theta)
+            };
+            coherenceNodes.push(node);
+            
+            // Node sphere
+            const sphere = new THREE.Mesh(
+                new THREE.SphereGeometry(0.1, 16, 16),
+                new THREE.MeshPhongMaterial({
+                    color: 0x22d3ee,
+                    emissive: 0x0088aa,
+                    emissiveIntensity: 0.6
+                })
+            );
+            sphere.position.set(node.x, node.y, node.z);
+            coherenceGroup.add(sphere);
+            
+            // Coherence halo
+            const halo = new THREE.Mesh(
+                new THREE.SphereGeometry(0.2, 8, 8),
+                new THREE.MeshBasicMaterial({
+                    color: 0x22d3ee,
+                    transparent: true,
+                    opacity: 0.2,
+                    blending: THREE.AdditiveBlending
+                })
+            );
+            halo.position.copy(sphere.position);
+            coherenceGroup.add(halo);
+        }
+        
+        // Connect coherence domains (hydrogen bond network)
+        for (let i = 0; i < coherenceNodes.length; i++) {
+            for (let j = i + 1; j < coherenceNodes.length; j++) {
+                const dist = Math.sqrt(
+                    Math.pow(coherenceNodes[i].x - coherenceNodes[j].x, 2) +
+                    Math.pow(coherenceNodes[i].y - coherenceNodes[j].y, 2) +
+                    Math.pow(coherenceNodes[i].z - coherenceNodes[j].z, 2)
+                );
+                
+                if (dist < 2.5) {
+                    const points = [
+                        new THREE.Vector3(coherenceNodes[i].x, coherenceNodes[i].y, coherenceNodes[i].z),
+                        new THREE.Vector3(coherenceNodes[j].x, coherenceNodes[j].y, coherenceNodes[j].z)
+                    ];
+                    const line = new THREE.Line(
+                        new THREE.BufferGeometry().setFromPoints(points),
+                        new THREE.LineBasicMaterial({
+                            color: 0x22d3ee,
+                            transparent: true,
+                            opacity: 0.3
+                        })
+                    );
+                    coherenceGroup.add(line);
+                }
+            }
+        }
+        
+        // ============================================
+        // DATA FLOW STREAMS (Bytes to Water)
+        // ============================================
+        
+        const dataStreamGroup = new THREE.Group();
+        scene.add(dataStreamGroup);
+        
+        // Data streams flowing into orb
+        for (let s = 0; s < 8; s++) {
+            const streamPoints = [];
+            const angle = (s / 8) * Math.PI * 2;
+            
+            for (let i = 0; i <= 30; i++) {
+                const t = i / 30;
+                const r = 6 - t * 4;
+                const spiralAngle = angle + t * Math.PI;
+                streamPoints.push(new THREE.Vector3(
+                    r * Math.cos(spiralAngle),
+                    (1 - t) * 3 - 1.5,
+                    r * Math.sin(spiralAngle)
+                ));
+            }
+            
+            const curve = new THREE.CatmullRomCurve3(streamPoints);
+            const tube = new THREE.Mesh(
+                new THREE.TubeGeometry(curve, 30, 0.02, 8, false),
+                new THREE.MeshBasicMaterial({
+                    color: 0x00ff88,
+                    transparent: true,
+                    opacity: 0.5
+                })
+            );
+            dataStreamGroup.add(tube);
+        }
+        
+        // ============================================
+        // READ/WRITE LASER BEAMS (Plasmonic Interface)
+        // ============================================
+        
+        const laserGroup = new THREE.Group();
+        scene.add(laserGroup);
+        
+        // Laser beams for plasmonic read/write
+        for (let i = 0; i < 4; i++) {
+            const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
+            const points = [
+                new THREE.Vector3(6 * Math.cos(angle), 0, 6 * Math.sin(angle)),
+                new THREE.Vector3(3 * Math.cos(angle), 0, 3 * Math.sin(angle))
+            ];
+            
+            const laserGeo = new THREE.BufferGeometry().setFromPoints(points);
+            const laser = new THREE.Line(laserGeo, new THREE.LineBasicMaterial({
+                color: 0xff0066,
+                transparent: true,
+                opacity: 0.8
+            }));
+            laserGroup.add(laser);
+            
+            // Laser glow
+            const glowTube = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.05, 0.05, 3, 8),
+                new THREE.MeshBasicMaterial({
+                    color: 0xff0066,
+                    transparent: true,
+                    opacity: 0.3,
+                    blending: THREE.AdditiveBlending
+                })
+            );
+            glowTube.position.set(
+                4.5 * Math.cos(angle),
+                0,
+                4.5 * Math.sin(angle)
+            );
+            glowTube.rotation.z = Math.PI / 2;
+            glowTube.rotation.y = -angle;
+            laserGroup.add(glowTube);
+        }
+        
+        // ============================================
+        // OUTER CONTAINMENT SHELL
+        // ============================================
+        
+        const containmentShell = new THREE.Mesh(
+            new THREE.SphereGeometry(4.5, 64, 64),
+            new THREE.MeshPhongMaterial({
+                color: 0x223344,
+                transparent: true,
+                opacity: 0.15,
+                shininess: 100,
+                side: THREE.DoubleSide
+            })
+        );
+        scene.add(containmentShell);
+        
+        // Containment wireframe
+        const wireframe = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(4.6, 2),
+            new THREE.MeshBasicMaterial({
+                color: 0x22d3ee,
+                transparent: true,
+                opacity: 0.2,
+                wireframe: true
+            })
+        );
+        scene.add(wireframe);
+        
+        // ============================================
+        // FLOATING DATA PARTICLES
+        // ============================================
+        
+        const particleCount = 500;
+        const particleGeo = new THREE.BufferGeometry();
+        const particlePos = new Float32Array(particleCount * 3);
+        const particleVel = [];
+        
+        for (let i = 0; i < particleCount; i++) {
+            const r = 1 + Math.random() * 3.5;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            particlePos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            particlePos[i * 3 + 1] = r * Math.cos(phi);
+            particlePos[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+            
+            particleVel.push({
+                x: (Math.random() - 0.5) * 0.01,
+                y: (Math.random() - 0.5) * 0.01,
+                z: (Math.random() - 0.5) * 0.01
+            });
+        }
+        
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+        const particles = new THREE.Points(particleGeo, new THREE.PointsMaterial({
+            color: 0x00ffff,
+            size: 0.03,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        }));
+        scene.add(particles);
+        
+        // ============================================
+        // LIGHTING
+        // ============================================
+        
+        scene.add(new THREE.AmbientLight(0x404050, 0.4));
+        
+        const coreLight = new THREE.PointLight(0x00ffff, 1, 10);
+        scene.add(coreLight);
+        
+        const goldLight = new THREE.PointLight(0xffd700, 0.5, 8);
+        goldLight.position.set(3, 0, 0);
+        scene.add(goldLight);
+        
+        const topLight = new THREE.PointLight(0xffffff, 0.6, 15);
+        topLight.position.set(0, 8, 0);
+        scene.add(topLight);
+        
+        // ============================================
+        // ANIMATION
+        // ============================================
+        
+        let time = 0;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+            
+            // Camera
+            camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+            camera.position.y = spherical.radius * Math.cos(spherical.phi);
+            camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+            camera.lookAt(0, 0, 0);
+            
+            if (!isDragging) spherical.theta += 0.003;
+            
+            // Rotate DNA
+            dnaGroup.rotation.y = time * 0.5;
+            
+            // Pulse water core
+            const waterScale = 1 + 0.05 * Math.sin(time * 2);
+            waterCore.scale.set(waterScale, waterScale, waterScale);
+            
+            // Rotate nanoparticle shell
+            nanoparticleGroup.rotation.y = time * 0.2;
+            nanoparticleGroup.rotation.x = Math.sin(time * 0.3) * 0.1;
+            
+            // Rotate coherence network
+            coherenceGroup.rotation.y = -time * 0.15;
+            
+            // Animate data streams
+            dataStreamGroup.rotation.y = time * 0.3;
+            
+            // Pulse lasers
+            laserGroup.children.forEach((child, i) => {
+                if (child.material) {
+                    child.material.opacity = 0.5 + 0.3 * Math.sin(time * 5 + i);
+                }
+            });
+            
+            // Animate particles
+            const positions = particles.geometry.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] += particleVel[i].x;
+                positions[i * 3 + 1] += particleVel[i].y;
+                positions[i * 3 + 2] += particleVel[i].z;
+                
+                // Keep within bounds
+                const dist = Math.sqrt(
+                    positions[i * 3] ** 2 +
+                    positions[i * 3 + 1] ** 2 +
+                    positions[i * 3 + 2] ** 2
+                );
+                
+                if (dist > 4 || dist < 0.5) {
+                    particleVel[i].x *= -1;
+                    particleVel[i].y *= -1;
+                    particleVel[i].z *= -1;
+                }
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+            
+            // Rotate containment
+            wireframe.rotation.y = time * 0.1;
+            wireframe.rotation.x = time * 0.05;
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

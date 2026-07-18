@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-rpc-bus-mcp"
+version = "1.0.0"
+description = "Sovereign RPC Bus MCP - cross-VM coordination between 12 Generals (GCP VMs) and 33 Hives. Request/response with sigil-signed messages. Used for federation handshake, broadcasts, and heartbeat/keepalive."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

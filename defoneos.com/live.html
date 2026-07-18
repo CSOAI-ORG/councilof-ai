@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>🛡 DEFONEOS · Live SOV SPACE Common Operating Picture</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;min-height:100vh;line-height:1.6;overflow-x:hidden}.container{max-width:1280px;margin:0 auto;padding:24px}header{text-align:center;padding:48px 24px 24px}.glyph{font-size:4rem;animation:spin 90s linear infinite}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}h1{color:#fbbf24;font-size:2.4rem;margin:8px 0;text-shadow:0 0 24px rgba(251,191,36,.4)}.tag{color:#06b6d4;font-style:italic;margin-bottom:20px}.countdown{display:inline-block;padding:8px 16px;background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(251,191,36,.1));border:1px solid #ef4444;border-radius:8px;color:#ef4444;font-weight:700;margin:8px 0;font-family:monospace}.globe-wrap{position:relative;width:520px;height:520px;margin:24px auto;border-radius:50%;background:radial-gradient(circle at 30% 30%,#1e293b,#000);box-shadow:0 0 96px rgba(251,191,36,.2),inset 0 0 64px rgba(6,182,212,.1);overflow:hidden;border:2px solid rgba(251,191,36,.3);cursor:crosshair}.lat-ring{position:absolute;left:0;right:0;border-top:1px solid rgba(6,182,212,.2);transform-origin:50% 260px}.lat-23{top:130px}.lat-0{border-top:1px solid rgba(251,191,36,.4);top:260px}.lat-m23{top:390px}.lon-ring{position:absolute;top:0;bottom:0;border-left:1px solid rgba(6,182,212,.2);transform-origin:0 50%;left:50%}.lon-w90{transform:translateX(-260px) rotate(90deg)}.lon-e90{transform:rotate(-90deg)}.pin{position:absolute;transform:translate(-50%,-50%);font-size:.7rem;color:#fbbf24;text-align:center;background:rgba(0,0,0,.6);padding:2px 6px;border-radius:3px;border:1px solid rgba(251,191,36,.3);pointer-events:none}.pin.critical{color:#ef4444;border-color:#ef4444;animation:pulse 2s infinite}@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}.starfield{position:absolute;inset:0;pointer-events:none}.star{position:absolute;width:1px;height:1px;background:#fff;border-radius:50%}.layers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:24px 0}@media(max-width:768px){.layers{grid-template-columns:repeat(2,1fr)}}.layer{padding:10px 12px;background:rgba(0,0,0,.4);border-radius:6px;border:1px solid rgba(251,191,36,.15);text-align:center}.layer h3{color:#fbbf24;font-size:.8rem;margin:0 0 2px}.layer p{color:#94a3b8;font-size:.7rem;margin:0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}@media(max-width:768px){.grid3{grid-template-columns:1fr}}.card{background:rgba(0,0,0,.5);padding:18px;border-radius:8px;border:1px solid rgba(251,191,36,.2)}.card h2{color:#fbbf24;margin:0 0 8px;font-size:1.05rem;border-bottom:1px solid rgba(251,191,36,.2);padding-bottom:6px}.btn{padding:10px 18px;background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;border-radius:6px;text-decoration:none;font-weight:700;display:inline-block;margin:4px}.btn-outline{padding:10px 18px;background:transparent;border:2px solid #fbbf24;color:#fbbf24;border-radius:6px;text-decoration:none;font-weight:700;display:inline-block;margin:4px}.lineage{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:16px 0}.year{padding:6px 10px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:6px;font-family:monospace;color:#fbbf24;font-size:.8rem}.decan-bar{display:flex;height:24px;border-radius:6px;overflow:hidden;margin:12px 0;font-size:.65rem;color:#0a0e27;font-weight:700}.decan{flex:1;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(0,0,0,.2)}.decan.today{background:#fbbf24 !important;color:#000 !important;font-weight:900;font-size:.85rem;text-shadow:0 0 6px #fff}footer{text-align:center;color:#94a3b8;font-size:.7rem;margin-top:32px;padding:24px;border-top:1px solid rgba(255,255,255,.05)}</style>
+</head><body>
+<div class="container">
+<header>
+  <span class="glyph">🜏</span>
+  <h1>DEFONEOS · SOV SPACE</h1>
+  <p class="tag">The sovereign common operating picture · 28 layers · 36 decans · 12 queens · defence + AUKUS Pillar 2</p>
+  <div class="countdown" id="countdown">⚠ EU AI Act Article 50: T-36 days · 2 Aug 2026 · €15M penalty</div>
+  <div><a class="btn" href="../csoai.org/sovereign-os/watchdog/heatmap.html">🌍 Watchdog Heat Map</a>
+       <a class="btn-outline" href="../csoai.org/sovereign-os/watchdog/simulate.html">🛰 Pre-Departure Sim</a>
+       <a class="btn-outline" href="../csoai.org/sovereign-charter.html">📜 Charter</a></div>
+</header>
+
+<h2 style="color:#fbbf24;text-align:center;margin:24px 0 8px">🌐 The Sothic Globe</h2>
+<div class="globe-wrap" id="globe">
+  <div class="starfield" id="starfield"></div>
+  <div class="lat-ring lat-m23"></div>
+  <div class="lat-ring lat-0"></div>
+  <div class="lat-ring lat-23"></div>
+  <div class="pin" style="left:50%;top:30%">London · HQ</div>
+  <div class="pin" style="left:25%;top:30%">NYC</div>
+  <div class="pin" style="left:75%;top:32%">Tokyo</div>
+  <div class="pin" style="left:65%;top:55%">Singapore</div>
+  <div class="pin critical" style="left:48%;top:25%">Kyiv</div>
+  <div class="pin critical" style="left:62%;top:48%">Tehran</div>
+  <div class="pin" style="left:30%;top:60%">Sydney</div>
+  <div class="pin" style="left:40%;top:45%">Cape Town</div>
+  <div class="pin" style="left:55%;top:35%">Brussels · NATO</div>
+  <div class="pin" style="left:88%;top:45%">AUKUS · Canberra</div>
+</div>
+
+<h2 style="color:#fbbf24;text-align:center;margin:24px 0 8px">📐 28 SOV SPACE Layers</h2>
+<div class="layers">
+<div class="layer"><h3>1·Geodesic</h3><p>Sphere topology</p></div>
+<div class="layer"><h3>2·Sothic</h3><p>36 decans + 5 epag.</p></div>
+<div class="layer"><h3>3·Oncology</h3><p>Cancer cell regions</p></div>
+<div class="layer"><h3>4·Stars</h3><p>Constellation overlay</p></div>
+<div class="layer"><h3>5·Biosphere</h3><p>Biosphere signals</p></div>
+<div class="layer"><h3>6·Hydrosphere</h3><p>Ocean currents</p></div>
+<div class="layer"><h3>7·Atmosphere</h3><p>Weather + AQI</p></div>
+<div class="layer"><h3>8·Pedosphere</h3><p>Soil + minerals</p></div>
+<div class="layer"><h3>9·Lithosphere</h3><p>Geological</p></div>
+<div class="layer"><h3>10·Communications</h3><p>Radio + WiFi</p></div>
+<div class="layer"><h3>11·Power</h3><p>Electrical grid</p></div>
+<div class="layer"><h3>12·Water</h3><p>Water network</p></div>
+<div class="layer"><h3>13·Sewage</h3><p>Sanitation</p></div>
+<div class="layer"><h3>14·Transit</h3><p>Public transit</p></div>
+<div class="layer"><h3>15·Airspace</h3><p>Civil + military</p></div>
+<div class="layer"><h3>16·Maritime</h3><p>Ships + ports</p></div>
+<div class="layer"><h3>17·Land</h3><p>Ground vehicles</p></div>
+<div class="layer"><h3>18·Pipelines</h3><p>Gas + oil</p></div>
+<div class="layer"><h3>19·Spectrum</h3><p>EM spectrum</p></div>
+<div class="layer"><h3>20·Civilians</h3><p>Population density</p></div>
+<div class="layer"><h3>21·Industrial</h3><p>Factories + plants</p></div>
+<div class="layer"><h3>22·Health</h3><p>Hospital capacity</p></div>
+<div class="layer"><h3>23·Defence</h3><p>Military posture</p></div>
+<div class="layer"><h3>24·Cyber</h3><p>Cyber threats</p></div>
+<div class="layer"><h3>25·Disinfo</h3><p>False narratives</p></div>
+<div class="layer"><h3>26·Logistics</h3><p>Supply chains</p></div>
+<div class="layer"><h3>27·Financial</h3><p>Markets + flows</p></div>
+<div class="layer"><h3>28·AUKUS</h3><p>Five Eyes linkage</p></div>
+</div>
+
+<h2 style="color:#fbbf24;text-align:center;margin:24px 0 8px">🜏 Sothic Calendar — 36 Decans × 10 days</h2>
+<div class="decan-bar" id="decan-bar"></div>
+<p style="text-align:center;color:#94a3b8;font-size:.78rem;margin:6px 0">Today is highlighted. The next Sothic Rising is 4 Jul 2026. Care Floor is reviewed annually on this day. <b style="color:#fbbf24">Sirius rises.</b></p>
+
+<div class="grid3">
+<div class="card">
+<h2>🏛 12-Queen BFT</h2>
+<table style="width:100%;font-size:.78rem;color:#94a3b8">
+<tr><td style="color:#fbbf24">Demeter</td><td>0.10 · Care Floor</td></tr>
+<tr><td style="color:#fbbf24">Athena</td><td>0.18 · Strategist</td></tr>
+<tr><td style="color:#fbbf24">Hermes</td><td>0.12 · Herald</td></tr>
+<tr><td style="color:#fbbf24">Apollo</td><td>0.10 · Voice</td></tr>
+<tr><td style="color:#fbbf24">Artemis</td><td>0.10 · Defender</td></tr>
+<tr><td style="color:#fbbf24">Ares</td><td>0.08 · Tactical</td></tr>
+<tr><td style="color:#fbbf24">Hephaestus</td><td>0.08 · Forge</td></tr>
+<tr><td style="color:#fbbf24">Aphrodite</td><td>0.10 · Affection</td></tr>
+<tr><td style="color:#fbbf24">Dionysus</td><td>0.06 · Liberation</td></tr>
+<tr><td style="color:#fbbf24">Athena-2nd</td><td>0.08 · Wisdom</td></tr>
+<tr><td style="color:#fbbf24">Prometheus</td><td>0.05 · Bootstrap</td></tr>
+<tr><td style="color:#fbbf24">Hecate</td><td>0.05 · Passage</td></tr>
+</table>
+<p style="font-size:.7rem;color:#10b981;margin-top:8px">2/3 majority + Demeter non-negotiable</p>
+</div>
+
+<div class="card">
+<h2>⚠ Article 50 Countdown</h2>
+<p style="font-size:1.6rem;font-weight:900;color:#ef4444;text-align:center;margin:8px 0;font-family:monospace" id="article50Countdown">36 days</p>
+<p style="font-size:.78rem;color:#94a3b8;text-align:center">EU AI Act Article 50 (transparency + watermarking) takes effect 2 Aug 2026. Penalty: €15M or 3% of global turnover.</p>
+<p style="font-size:.85rem;color:#fbbf24;margin-top:12px">DEFONEOS is the sovereign way to comply.</p>
+<p style="font-size:.75rem;color:#10b981;margin-top:8px">✓ Article 50 Passport issuance</p>
+<p style="font-size:.75rem;color:#10b981;margin-top:4px">✓ Ed25519-signed watermarks</p>
+<p style="font-size:.75rem;color:#10b981;margin-top:4px">✓ Free for <b style="color:#fbbf24">proofof.ai</b> verification</p>
+<p style="font-size:.75rem;color:#10b981;margin-top:4px">✓ Pro tier Ed25519 for audit-grade</p>
+</div>
+
+<div class="card">
+<h2>👑 Crown Authorisation</h2>
+<p style="color:#fbbf24;font-style:italic;margin-bottom:8px">231 years of sovereign continuity</p>
+<div class="lineage">
+<span class="year">1795 · George III</span>
+<span class="year">1847 · Victoria</span>
+<span class="year">1901 · Edward VII</span>
+<span class="year">1936 · George VI</span>
+<span class="year">1952 · Elizabeth II</span>
+<span class="year">2022 · Charles III</span>
+<span class="year">2026 · CSOAI Ltd</span>
+</div>
+<p style="font-size:.75rem;color:#94a3b8;margin-top:12px">The contract continues. UK 16939677. Born: 2016-08-04. Sovereign by design.</p>
+</div>
+</div>
+
+<div style="text-align:center;margin:32px 0">
+  <a class="btn" href="../csoai.org/sovereign-os/watchdog/heatmap.html">🛡 Enter Watchdog</a>
+  <a class="btn-outline" href="../csoai.org/oowm/icharacter-explainer.html">✨ i-character</a>
+  <a class="btn-outline" href="../csoai.org/sovereign-os/HANDOFF-TO-M2.md">📖 M2 Handbook</a>
+  <a class="btn-outline" href="../csoai.org/SIRIUS_LANDING_PAGE.html">🏛 Sirius Landing</a>
+</div>
+
+<footer>🜏 CSOAI Ltd · UK 16939677 · MIT License · 1 July 2026<br>Public. Auditable. Sovereign. As above, so below. Care Floor 0.95. BFT 12-around-1. SIGIL Ed25519 + PQC. Solve et Coagula.</footer>
+</div>
+
+<script>
+// Starfield
+const sf = document.getElementById('starfield');
+for (let i = 0; i < 80; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.left = Math.random() * 520 + 'px';
+  s.style.top = Math.random() * 520 + 'px';
+  s.style.opacity = 0.3 + Math.random() * 0.7;
+  sf.appendChild(s);
+}
+
+// Decan bar
+const NAMES = ['Thoth','Hathor','Anubis','Satis','Sobek','Sekhmet','Maat','Khonsu','Hapi','Nut','Isis','Ptah',
+               'Ma\'at','Dua','Amun','Tefnut','Seb','Nut','Shu','Tefnut','Anhur','Tefnut','Set','Sekhmet',
+               'Bastet','Serket','Hathor','Ma\'at','Khonsu','Hathor','Sobek','Khnum','Renenutet','Anubis','Satis','Sothis'];
+const bar = document.getElementById('decan-bar');
+const today = new Date();
+const startOfYear = new Date(today.getFullYear(), 0, 0);
+const dayOfYear = Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24));
+const currentDecan = Math.floor(dayOfYear / 10.18);
+for (let i = 0; i < 36; i++) {
+  const d = document.createElement('div');
+  d.className = 'decan';
+  if (i === currentDecan) d.classList.add('today');
+  d.style.background = ['#fbbf24','#06b6d4','#10b981','#3b82f6','#8b5cf6','#ec4899','#ef4444','#f59e0b'][i % 8];
+  d.textContent = (i + 1) + '·' + NAMES[i];
+  bar.appendChild(d);
+}
+
+// Countdown to Article 50 (2 Aug 2026)
+const articleDate = new Date('2026-08-02T00:00:00Z');
+const now = new Date();
+const days = Math.ceil((articleDate - now) / (1000 * 60 * 60 * 24));
+document.getElementById('article50Countdown').textContent = days + ' days';
+
+// Countdown to Sothic Rising (4 Jul 2026)
+const sothicDate = new Date('2026-07-04T09:00:00Z');
+function updateCountdowns() {
+  const now = new Date();
+  const sothic = Math.ceil((sothicDate - now) / (1000 * 60 * 60 * 24));
+  const article = Math.ceil((articleDate - now) / (1000 * 60 * 60 * 24));
+  document.getElementById('countdown').textContent = `⚠ EU AI Act Article 50: T-${article} days · 2 Aug 2026 · €15M penalty · Sothic Rising: T-${sothic} days · 4 Jul 09:00 BST · Sirius rises`;
+}
+updateCountdowns();
+setInterval(updateCountdowns, 60_000);
+
+// Interactive globe hover
+const globe = document.getElementById('globe');
+let rotation = 0;
+globe.addEventListener('mousemove', (e) => {
+  const x = (e.clientX - globe.getBoundingClientRect().left) / 520;
+  rotation = (x - 0.5) * 30;
+  sf.style.transform = `rotate(${rotation}deg)`;
+});
+</script>
+</body></html>

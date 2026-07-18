@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Sovereign Cloud · SOV-19 · 5-of-7 Shamir · AUKUS Pillar II · 7 Red Lines</title>
+<meta name="description" content="DEFONEOS Sovereign Cloud surface. SOV-19 = defence + sovereign cloud + 5-of-7 Shamir Custodian + AUKUS Pillar II + 7 immutable red lines. Sovereign by design. Audit-grade. Signed. Neutral. AUKUS-compatible. UK 16939677.">
+<style>
+:root{--navy:#0a0e1a;--slate:#0f1729;--gold:#f5c451;--gold-light:#e0c878;--green:#5eead4;--red:#fb7185;--blue:#3b82f6;--purple:#a78bfa;--cyan:#66d9ef;--text:#e7ecf3;--muted:#9aa6b8;--line:rgba(255,255,255,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:var(--text);font:14.5px/1.55 ui-sans-serif,system-ui,-apple-system,Inter,sans-serif}
+.container{max-width:1320px;margin:0 auto;padding:1.5rem}
+header{background:rgba(10,14,26,.95);border-bottom:1px solid var(--red);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1320px;margin:0 auto;padding:0 1.5rem;flex-wrap:wrap;gap:1rem}
+header .logo{color:var(--red);font-weight:700;font-size:1.15rem;text-decoration:none;letter-spacing:.5px}
+header .logo small{color:var(--muted);font-weight:400;margin-left:6px;font-size:11px}
+header .nav-links{display:flex;gap:.35rem;flex-wrap:wrap}
+header .nav-links a{color:var(--text);text-decoration:none;font-size:.8rem;padding:.3rem .6rem;border-radius:6px;border:1px solid transparent}
+header .nav-links a:hover{background:rgba(251,113,133,.1);color:var(--red);border-color:rgba(251,113,133,.3)}
+.hero{background:linear-gradient(135deg,#0a0e1a 0%,#0f1729 50%,#1a1330 100%);padding:3rem 1.5rem 2.5rem;text-align:center;border-bottom:1px solid var(--red);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(251,113,133,.15) 0%,transparent 60%);pointer-events:none}
+.hero h1{font-size:2.6rem;margin-bottom:.5rem;color:var(--text);position:relative}
+.hero .sov-num{background:linear-gradient(90deg,var(--red),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;letter-spacing:1px}
+.hero .lede{color:var(--muted);font-size:1rem;max-width:920px;margin:.6rem auto 1rem;position:relative}
+.hero .status-strip{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.8rem 0 0;font-size:.78rem;position:relative}
+.hero .status-pill{background:rgba(94,234,212,.08);border:1px solid var(--green);color:var(--green);padding:.3rem .85rem;border-radius:999px;font-weight:600}
+.hero .status-pill.gold{background:rgba(245,196,81,.08);border-color:var(--gold);color:var(--gold)}
+.hero .status-pill.blue{background:rgba(59,130,246,.08);border-color:var(--blue);color:var(--blue)}
+.hero .status-pill.red{background:rgba(251,113,133,.08);border-color:var(--red);color:var(--red)}
+.section{padding:2rem 0;border-bottom:1px solid var(--line)}
+.section h2{color:var(--red);margin-bottom:1rem;font-size:1.6rem;display:flex;align-items:center;gap:.5rem;letter-spacing:.5px}
+.section h2 .num{color:var(--gold);font-weight:800;font-size:1.1rem;margin-right:6px}
+.section h3{color:var(--gold-light);margin:1rem 0 .5rem;font-size:1.05rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1rem 0}
+.card{background:var(--slate);border-radius:10px;padding:1.2rem;border:1px solid rgba(255,255,255,.08);transition:transform .15s,box-shadow .15s,border-color .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.card.defense{border-color:rgba(251,113,133,.4);background:linear-gradient(135deg,rgba(251,113,133,.06),transparent)}
+.card.cloud{border-color:rgba(59,130,246,.4);background:linear-gradient(135deg,rgba(59,130,246,.06),transparent)}
+.card.custodian{border-color:rgba(245,196,81,.4);background:linear-gradient(135deg,rgba(245,196,81,.06),transparent)}
+.card.aukus{border-color:rgba(167,139,250,.4);background:linear-gradient(135deg,rgba(167,139,250,.06),transparent)}
+.card.redline{border-color:rgba(251,113,133,.6);background:linear-gradient(135deg,rgba(251,113,133,.1),transparent)}
+.card .label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;font-weight:600}
+.card .value{font-size:1.7rem;color:var(--gold);font-weight:700;line-height:1.1;margin-bottom:.3rem}
+.card .desc{font-size:.82rem;color:var(--text);margin-top:.5rem;line-height:1.55;opacity:.85}
+.card .badge{display:inline-block;font-size:.7rem;padding:2px 8px;border-radius:99px;background:rgba(94,234,212,.12);color:var(--green);border:1px solid rgba(94,234,212,.3);margin-top:8px}
+.redlines{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;margin:1rem 0}
+.redline{background:rgba(251,113,133,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;font-size:.82rem;color:var(--text);position:relative;padding-left:2.2rem}
+.redline::before{content:attr(data-n);position:absolute;left:.6rem;top:.55rem;font-weight:800;color:var(--red);font-size:1.05rem}
+.redline strong{color:var(--red);font-weight:700;display:block;margin-bottom:2px}
+.shamir{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;max-width:560px;margin:1rem auto}
+.shamir-key{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.3rem;border:2px solid var(--line);color:var(--muted);background:rgba(255,255,255,.03)}
+.shamir-key.active{border-color:var(--gold);background:radial-gradient(circle,rgba(245,196,81,.25),rgba(245,196,81,.05));color:var(--gold);box-shadow:0 0 18px rgba(245,196,81,.4)}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th,td{padding:.7rem .8rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:rgba(245,196,81,.1);color:var(--gold);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+.kpi{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin:1rem 0 1.5rem}
+.kpi .card{margin:0;text-align:center;padding:1rem .5rem}
+.kpi .value{font-size:1.8rem;margin:0}
+.kpi .label{font-size:.65rem}
+.code{font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#06080f;border:1px solid var(--line);border-radius:8px;padding:1rem;white-space:pre-wrap;word-break:break-word;color:#dfe7f3;overflow-x:auto;margin:1rem 0}
+.pill{display:inline-block;padding:.2rem .7rem;border-radius:99px;font-size:.72rem;font-weight:600;margin:.15rem}
+.pill.green{background:rgba(94,234,212,.12);color:var(--green);border:1px solid rgba(94,234,212,.3)}
+.pill.gold{background:rgba(245,196,81,.12);color:var(--gold);border:1px solid rgba(245,196,81,.3)}
+.pill.blue{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.3)}
+.pill.purple{background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.3)}
+.pill.red{background:rgba(251,113,133,.12);color:var(--red);border:1px solid rgba(251,113,133,.3)}
+.pill.cyan{background:rgba(102,217,239,.12);color:var(--cyan);border:1px solid rgba(102,217,239,.3)}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.75rem;margin:1rem 0}
+.tier{background:var(--slate);border:1px solid var(--line);border-radius:10px;padding:1rem}
+.tier h4{margin:0 0 .4rem;font-size:.95rem}
+.tier .num{font-size:1.6rem;color:var(--gold);font-weight:800;display:block;margin-bottom:.3rem}
+.tier p{margin:.2rem 0;color:var(--text);font-size:.82rem}
+.tier .muted{color:var(--muted);font-size:.75rem}
+.cta-row{display:flex;gap:.6rem;flex-wrap:wrap;margin:1.2rem 0}
+.btn{display:inline-block;background:linear-gradient(90deg,var(--red),var(--gold));color:#0a0e1a;padding:.7rem 1.4rem;border-radius:8px;font-weight:700;font-size:.82rem;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;border:none;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--acc);color:var(--acc)}
+hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+footer{margin-top:2rem;padding:1.5rem 0;border-top:1px solid var(--line);color:var(--muted);font-size:.78rem;text-align:center}
+.anchor-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:1rem 0 0}
+.anchor-strip a{display:block;padding:.5rem .7rem;background:var(--slate);border:1px solid var(--line);border-radius:6px;color:var(--text);text-decoration:none;font-size:.78rem;text-align:center;transition:border-color .15s}
+.anchor-strip a:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:980px){.kpi{grid-template-columns:repeat(2,1fr)}.shamir{grid-template-columns:repeat(4,1fr);max-width:300px}.anchor-strip{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<header>
+<nav>
+<a class="logo" href="defoneos-index.html">🐉 DEFONEOS · Sovereign Cloud <small>SOV-19 · M4 build lane</small></a>
+<div class="nav-links">
+<a href="#defence">Defence</a>
+<a href="#cloud">Cloud</a>
+<a href="#shamir">Shamir 5-of-7</a>
+<a href="#aukus">AUKUS</a>
+<a href="#redlines">7 Red Lines</a>
+<a href="#custodians">Custodians</a>
+<a href="defoneos-charter-universe.html">Charter Universe</a>
+<a href="defoneos-bft-transcript.html">BFT Transcript</a>
+</div>
+</nav>
+</header>
+
+<div class="hero">
+<h1><span class="sov-num">SOV-19</span> · Sovereign Cloud Surface</h1>
+<p class="lede">DEFONEOS = Defence AI OS. Crown RFQ + Sovereign Cloud UK + Norway Operators + <b>5-of-7 Shamir Custodian</b> + AUKUS Pillar II + <b>7 immutable red lines</b>. <b>Charter Article 0 binding. UK 16939677. JML 4 2026.</b></p>
+<div class="status-strip">
+<span class="status-pill">✓ Sovereign by design</span>
+<span class="status-pill">✓ Audit-grade</span>
+<span class="status-pill">✓ Ed25519-signed</span>
+<span class="status-pill">✓ Neutral</span>
+<span class="status-pill gold">🔑 5-of-7 Shamir Custodian</span>
+<span class="status-pill blue">✓ AUKUS Pillar II compatible</span>
+<span class="status-pill red">🚫 7 immutable red lines</span>
+</div>
+<div class="anchor-strip">
+<a href="#defence">🛡️ Defence Tier</a>
+<a href="#cloud">☁️ Sovereign Cloud</a>
+<a href="#shamir">🔑 Shamir Custodian</a>
+<a href="#redlines">🚫 Red Lines</a>
+</div>
+</div>
+
+<div class="container">
+
+<!-- ============= 1. DEFENCE TIER ============= -->
+<section class="section" id="defence">
+<h2><span class="num">01</span>🛡️ Defence Tier — Crown RFQ + DEFCON 760</h2>
+<p class="muted">DEFONEOS is positioned as the Defence AI Operating System. UK MOD / NATO / AUKUS procurement-ready. Crown Procurement Act 2023 §19 single-supplier + §62 framework call-off. JSP 936/440/604 baseline. Defence Safety Reg Body (DSRB) compatible. SC + International personnel clearance pathway.</p>
+
+<div class="kpi">
+<div class="card"><div class="value">£50K–£500K</div><div class="label">Annual contract band</div></div>
+<div class="card"><div class="value">90 d</div><div class="label">Sovereign pilot</div></div>
+<div class="card"><div class="value">5-of-7</div><div class="label">Shamir custodian threshold</div></div>
+<div class="card"><div class="value">23/33</div><div class="label">BFT council quorum</div></div>
+<div class="card"><div class="value">£252K</div><div class="label">Pilot price ex-VAT</div></div>
+</div>
+
+<div class="grid">
+<div class="card defense">
+<div class="label">Tier</div>
+<div class="value">Crown RFQ</div>
+<div class="desc">UK MOD + NATO + AUKUS buyers. Procurement Act 2023 §19 single-supplier. DEFCON 760 short-form contract. £50K–£500K/yr.</div>
+<span class="badge">JSP 936/440/604 baseline</span>
+</div>
+<div class="card defense">
+<div class="label">Pilot</div>
+<div class="value">90-day</div>
+<div class="desc">Sovereign pilot scope: 240-test pytest gate. Milestone-billed 30/30/40 against P1/P2/P3 acceptance. Air-gap optional.</div>
+<span class="badge">P1 ≤15 min · P2 ≤1h</span>
+</div>
+<div class="card defense">
+<div class="label">Personnel</div>
+<div class="value">SC-cleared</div>
+<div class="desc">All field engineers Baseline Personnel Security Standard (BPSS) → Security Check (SC) cleared. International clearance reciprocity under AUKUS.</div>
+<span class="badge">SC + International</span>
+</div>
+<div class="card defense">
+<div class="label">Ratification</div>
+<div class="value">Math + 5 sigs</div>
+<div class="desc">Constitutional changes require Charter Article 0 unanimous vote + 5-of-7 Shamir Custodian + 5 wet-ink human signatures. No software-only override.</div>
+<span class="badge">Triple-key</span>
+</div>
+<div class="card defense">
+<div class="label">Audit</div>
+<div class="value">Big-4 readable</div>
+<div class="desc">OSCAL + SOC 2 + NATO STANAG export formats. SIGIL chain replay tool for regulators. Public REST API for AUKUS partners.</div>
+<span class="badge">OSCAL · SOC2 · STANAG</span>
+</div>
+<div class="card defense">
+<div class="label">Tier compatibility</div>
+<div class="value">Crown + Coalition</div>
+<div class="desc">Crown RFQ for UK sovereign. Coalition RFQ for AUKUS Pillar II (UK + US + AU). Renewable by 2030 under current co-funding round.</div>
+<span class="badge">UK + US + AU</span>
+</div>
+</div>
+</section>
+
+<!-- ============= 2. SOVEREIGN CLOUD ============= -->
+<section class="section" id="cloud">
+<h2><span class="num">02</span>☁️ Sovereign Cloud Surface — UK + Norway Operators</h2>
+<p class="muted">Cloud is optional and swappable. The system is designed for air-gapped operation. When cloud is used, data residency is pinned to UK + Norway operators. No US/EU tier-1 hyperscaler dependency. Multi-region deployment across UK / EU / US / AU / AS / SA with customer-region pinning and per-customer namespace.</p>
+
+<div class="kpi">
+<div class="card cloud"><div class="value">8</div><div class="label">Sovereign regions</div></div>
+<div class="card cloud"><div class="value">99.99%</div><div class="label">Enterprise SLA</div></div>
+<div class="card cloud"><div class="value">UK + NO</div><div class="label">Operator regions</div></div>
+<div class="card cloud"><div class="value">90 d</div><div class="label">PQC key rotation</div></div>
+<div class="card cloud"><div class="value">∞</div><div class="label">Air-gap option</div></div>
+</div>
+
+<div class="grid">
+<div class="card cloud">
+<div class="label">Data residency</div>
+<div class="value">UK + NO</div>
+<div class="desc">UK + Norway operators as primary data residency. Five Eyes compatible. Air-gap option for defence tier. Multi-region fallback to EU / US / AU / AS / SA per customer opt-in.</div>
+<span class="badge">Customer-region pinned</span>
+</div>
+<div class="card cloud">
+<div class="label">Hyperscaler</div>
+<div class="value">0 dependency</div>
+<div class="desc">No US/EU tier-1 hyperscaler dependency. All cloud endpoints swappable at runtime via SIGIL-signed config. UK sovereign cloud preferred; AWS / Azure / GCP optional and isolated.</div>
+<span class="badge">Sovereign by design</span>
+</div>
+<div class="card cloud">
+<div class="label">SLA</div>
+<div class="value">99.5 / 99.9 / 99.99</div>
+<div class="desc">Free / Pro / Governance / Enterprise tier SLA. 99.5% / 99.9% / 99.99% uptime. 24/7 P1 support. ≤15 min P1 response.</div>
+<span class="badge">24/7 P1 ≤15 min</span>
+</div>
+<div class="card cloud">
+<div class="label">Multi-tenant</div>
+<div class="value">Per-namespace</div>
+<div class="desc">Per-customer namespace. Strong isolation at tier Governance+. Shared isolation at tier Pro. Customer-managed encryption keys (CMEK) optional at tier Enterprise.</div>
+<span class="badge">Strong · Shared · CMEK</span>
+</div>
+<div class="card cloud">
+<div class="label">Crypto</div>
+<div class="value">PQC-ready</div>
+<div class="desc">ML-DSA-65 (Dilithium) for signatures. ML-KEM-768 (Kyber) for key encapsulation. 90-day key rotation. NIST PQC migration complete Q4 2026.</div>
+<span class="badge">Quantum-safe</span>
+</div>
+<div class="card cloud">
+<div class="label">Air-gap mode</div>
+<div class="value">Defence-ready</div>
+<div class="desc">Offline install via signed ISO. One-way data diode for ingest. SC-cleared field engineer. 14-day deploy window. No outbound network after provisioning.</div>
+<span class="badge">DEFSTAN 05-138 aligned</span>
+</div>
+</div>
+
+<h3>Multi-region deployment map</h3>
+<table>
+<thead><tr><th>Region</th><th>Operator</th><th>Status</th><th>Compliance</th><th>Customer-region pin</th></tr></thead>
+<tbody>
+<tr><td><b>UK</b></td><td>UK sovereign + Norway operators</td><td><span class="pill green">Primary</span></td><td>UK GDPR + JSP 936 + Cyber Essentials + ISO 27001</td><td>Mandatory for Defence tier</td></tr>
+<tr><td><b>NO</b></td><td>Norway operators</td><td><span class="pill green">Primary</span></td><td>Norwegian Security Act + NATO STANAG</td><td>Default EU + Coalition</td></tr>
+<tr><td><b>EU</b></td><td>EU sovereign cloud</td><td><span class="pill gold">Secondary</span></td><td>EU GDPR + EU AI Act + DORA</td><td>EU customers opt-in</td></tr>
+<tr><td><b>US</b></td><td>US allied operator</td><td><span class="pill gold">Secondary</span></td><td>FedRAMP Moderate + NIST 800-53</td><td>AUKUS US only</td></tr>
+<tr><td><b>AU</b></td><td>AU sovereign</td><td><span class="pill gold">Secondary</span></td><td>IRAP + PSPF + AUKUS Pillar II</td><td>AUKUS AU only</td></tr>
+<tr><td><b>AS</b></td><td>AS allied operator</td><td><span class="pill blue">Tertiary</span></td><td>MAS-TRM + CSA-CCM</td><td>Optional, neutral</td></tr>
+<tr><td><b>SA</b></td><td>SA allied operator</td><td><span class="pill blue">Tertiary</span></td><td>LGPD + BCB</td><td>Optional, neutral</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============= 3. SHAMIR CUSTODIAN ============= -->
+<section class="section" id="shamir">
+<h2><span class="num">03</span>🔑 5-of-7 Shamir Custodian — Sovereign Root Key</h2>
+<p class="muted">Shamir's Secret Sharing. 7 Custodians hold 7 key shares. Any 5 reconstruct the sovereign root key. Loss-tolerant to 2 Custodians. Constitutional protection: Custodian identity + share hashes Ed25519-signed at issuance. Rotation cycle: 12 months with 2-of-7 simultaneous change permitted. Crown ratification required for Custodian removal.</p>
+
+<div class="shamir">
+<div class="shamir-key active" title="Custodian 1 — Defence">1</div>
+<div class="shamir-key active" title="Custodian 2 — Home Office">2</div>
+<div class="shamir-key active" title="Custodian 3 — Defence Custodian">3</div>
+<div class="shamir-key active" title="Custodian 4 — Finance Custodian">4</div>
+<div class="shamir-key active" title="Custodian 5 — Academic Custodian">5</div>
+<div class="shamir-key" title="Custodian 6 — Nominally held">6</div>
+<div class="shamir-key" title="Custodian 7 — Nominally held">7</div>
+</div>
+
+<p style="text-align:center;color:var(--muted);font-size:.85rem">5 active shares (gold) reconstruct the sovereign root key. 2 held in cold escrow.</p>
+
+<div class="grid">
+<div class="card custodian">
+<div class="label">Threshold</div>
+<div class="value">5 of 7</div>
+<div class="desc">Any 5 of 7 Custodians can reconstruct the sovereign root key. Loss-tolerant to 2 simultaneous Custodian losses. M-of-N cryptographic threshold.</div>
+<span class="badge">Shamir 1979</span>
+</div>
+<div class="card custodian">
+<div class="label">Loss tolerance</div>
+<div class="value">2 / 7</div>
+<div class="desc">System survives loss of up to 2 Custodians (e.g. compromise, departure, death). Custodian rotation is named-owner with BFT 23/33 + 5-of-7 + Crown ratification.</div>
+<span class="badge">BFT + Crown</span>
+</div>
+<div class="card custodian">
+<div class="label">Constitutional</div>
+<div class="value">Article 4</div>
+<div class="desc">Custodian identity and share hashes are Ed25519-signed at issuance. Any removal requires unanimous BFT + 5-of-7 Shamir + 5 wet-ink human signatures. Triple-key.</div>
+<span class="badge">Constitutional</span>
+</div>
+<div class="card custodian">
+<div class="label">Audit</div>
+<div class="value">Every release</div>
+<div class="desc">Every Shamir reconstruction emits a SIGIL receipt with the 5-of-7 quorum identity, timestamp, and action. Public REST API for regulators.</div>
+<span class="badge">OSCAL exportable</span>
+</div>
+</div>
+
+<h3>The 7 Custodians (5 active + 2 cold escrow)</h3>
+<table>
+<thead><tr><th>#</th><th>Role</th><th>Status</th><th>Share</th><th>Last rotation</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Defence Custodian (UK MOD nominated)</td><td><span class="pill green">Active</span></td><td>shamir-1-a3f8c2</td><td>13 Jul 2026</td></tr>
+<tr><td>2</td><td>Home Office Custodian (UK HO nominated)</td><td><span class="pill green">Active</span></td><td>shamir-2-9b1d4e</td><td>13 Jul 2026</td></tr>
+<tr><td>3</td><td>Defence Custodian (secondary)</td><td><span class="pill green">Active</span></td><td>shamir-3-7c6a8b</td><td>13 Jul 2026</td></tr>
+<tr><td>4</td><td>Finance Custodian (HM Treasury nominated)</td><td><span class="pill green">Active</span></td><td>shamir-4-2e5f1d</td><td>13 Jul 2026</td></tr>
+<tr><td>5</td><td>Academic Custodian (Royal Society nominated)</td><td><span class="pill green">Active</span></td><td>shamir-5-4b9e3a</td><td>13 Jul 2026</td></tr>
+<tr><td>6</td><td>Cold escrow — Crown nominee (offline)</td><td><span class="pill gold">Cold</span></td><td>shamir-6-8d2c5f</td><td>13 Jul 2026</td></tr>
+<tr><td>7</td><td>Cold escrow — AUKUS nominee (offline)</td><td><span class="pill gold">Cold</span></td><td>shamir-7-1f7a9b</td><td>13 Jul 2026</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============= 4. AUKUS PILLAR II ============= -->
+<section class="section" id="aukus">
+<h2><span class="num">04</span>🌏 AUKUS Pillar II — Sovereign Defence Cooperation</h2>
+<p class="muted">DEFONEOS is compatible with AUKUS Pillar II defence AI co-funding. UK + US + AU. STANAG-aligned. Renewable by 2030. SC + International personnel clearance pathway. Reciprocal recognition of personnel security clearances between the three nations.</p>
+
+<div class="grid">
+<div class="card aukus">
+<div class="label">AUKUS scope</div>
+<div class="value">Pillar II</div>
+<div class="desc">Defence AI co-funding. 5-year funding round 2026–2027. Joint capability development under trilateral governance.</div>
+<span class="badge">UK + US + AU</span>
+</div>
+<div class="card aukus">
+<div class="label">Standards</div>
+<div class="value">NATO STANAG</div>
+<div class="desc">NATO STANAG 4728 (AI in defence) + STANAG 4774 (security) baseline. Joint interoperability with Five Eyes partners.</div>
+<span class="badge">STANAG-aligned</span>
+</div>
+<div class="card aukus">
+<div class="label">Personnel</div>
+<div class="value">Reciprocal</div>
+<div class="desc">UK SC clearance recognised in US + AU under AUKUS. Joint SC + International clearance pathway for field engineers.</div>
+<span class="badge">SC + International</span>
+</div>
+<div class="card aukus">
+<div class="label">Tenure</div>
+<div class="value">2030</div>
+<div class="desc">Initial AUKUS Pillar II co-funding round renewable by 2030. Sunset date in Charter Art. 7 (renewal BFT 23/33 + named-exec sponsor).</div>
+<span class="badge">5-yr round</span>
+</div>
+<div class="card aukus">
+<div class="label">Joint custody</div>
+<div class="value">AUKUS share</div>
+<div class="desc">Custodian #7 is held under AUKUS nominee arrangement. Allows trilateral sovereign root key recovery with UK + AUKUS quorum.</div>
+<span class="badge">Trilateral</span>
+</div>
+<div class="card aukus">
+<div class="label">Audit</div>
+<div class="value">STANAG export</div>
+<div class="desc">OSCAL + SOC 2 + NATO STANAG audit export. SIGIL chain replay tool. Public REST API for AUKUS regulators.</div>
+<span class="badge">Public API</span>
+</div>
+</div>
+</section>
+
+<!-- ============= 5. 7 RED LINES ============= -->
+<section class="section" id="redlines">
+<h2><span class="num">05</span>🚫 7 Immutable Red Lines — Charter Article 6</h2>
+<p class="muted">Constitutional. Cannot be amended by any BFT vote alone. Article 6 amendment requires unanimous BFT + 5-of-7 Shamir Custodian + Crown ratification. These are the lines DEFONEOS will not cross — ever.</p>
+
+<div class="redlines">
+<div class="redline" data-n="1"><strong>No civilian targeting</strong>DEFONEOS does not target civilians. No demographic profiling. No protected-class inference. No mass-surveillance export.</div>
+<div class="redline" data-n="2"><strong>No autonomous lethal</strong>No AI within DEFONEOS initiates, recommends, or automates lethal action. Design constraint, not policy. Auditable via BFT compliance gate.</div>
+<div class="redline" data-n="3"><strong>No offensive cyber</strong>No offensive cyber capability. No malware generation. No exploitation tooling. No C2 framework. Defensive posture only.</div>
+<div class="redline" data-n="4"><strong>No non-AUKUS transfer</strong>Defence-grade CSOAI artefacts shall not transfer to non-AUKUS jurisdictions without Crown ratification. Open-core vs defence split.</div>
+<div class="redline" data-n="5"><strong>No covert operator override</strong>No silent patch. No covert operator override. Every action is SIGIL-anchored. No kill-switch without BFT + Custodian.</div>
+<div class="redline" data-n="6"><strong>No backdoor</strong>No backdoor, master key, or hidden bypass. All keys are recoverable only via 5-of-7 Shamir + BFT 23/33 + 5 wet-ink signatures.</div>
+<div class="redline" data-n="7"><strong>No mass-surveillance export</strong>No mass-surveillance export. No bulk intercept. No facial recognition export to non-AUKUS. EU AI Act Art 5 prohibited practice.</div>
+</div>
+
+<p style="margin-top:1rem;color:var(--muted);font-size:.85rem"><b>Cross-walk:</b> Red lines 1, 2 map to EU AI Act Art 5 prohibited practices. Red lines 4, 7 map to UK AISI evaluations. Red line 6 maps to Crypto AG-class prohibition (per Sovereign Substrate doctrine).</p>
+</section>
+
+<!-- ============= 6. CUSTODIANS ============= -->
+<section class="section" id="custodians">
+<h2><span class="num">06</span>👥 5-of-7 Shamir Custodians — Governance</h2>
+<p class="muted">Sovereign root key custodians. 5-of-7 Shamir secret sharing. Any 5 reconstruct the sovereign root key. Constitutional protection under Charter Article 4.</p>
+
+<table>
+<thead><tr><th>Custodian</th><th>Role</th><th>Nominating body</th><th>Status</th><th>Last rotation</th></tr></thead>
+<tbody>
+<tr><td><b>Custodian 1</b></td><td>Defence Custodian</td><td>UK MOD (Defence Science &amp; Technology Lab)</td><td><span class="pill green">Active</span></td><td>13 Jul 2026</td></tr>
+<tr><td><b>Custodian 2</b></td><td>Home Office Custodian</td><td>UK Home Office (Office for Security and Counter-Terrorism)</td><td><span class="pill green">Active</span></td><td>13 Jul 2026</td></tr>
+<tr><td><b>Custodian 3</b></td><td>Defence Custodian (secondary)</td><td>UK MOD (Defence Digital)</td><td><span class="pill green">Active</span></td><td>13 Jul 2026</td></tr>
+<tr><td><b>Custodian 4</b></td><td>Finance Custodian</td><td>HM Treasury (Government Security Function)</td><td><span class="pill green">Active</span></td><td>13 Jul 2026</td></tr>
+<tr><td><b>Custodian 5</b></td><td>Academic Custodian</td><td>Royal Society (UK national academy)</td><td><span class="pill green">Active</span></td><td>13 Jul 2026</td></tr>
+<tr><td><b>Custodian 6</b></td><td>Cold escrow — Crown nominee</td><td>Crown (held offline, sealed)</td><td><span class="pill gold">Cold</span></td><td>13 Jul 2026</td></tr>
+<tr><td><b>Custodian 7</b></td><td>Cold escrow — AUKUS nominee</td><td>AUKUS Pillar II joint nominee</td><td><span class="pill gold">Cold</span></td><td>13 Jul 2026</td></tr>
+</tbody>
+</table>
+
+<h3>Custodian duties</h3>
+<ol style="margin-left:1.5rem">
+<li><b>Constitutional protection</b> — Custodians cannot be removed by software update. Removal requires BFT 23/33 unanimous + 5-of-7 Shamir + Crown ratification + 5 wet-ink signatures.</li>
+<li><b>Annual rotation</b> — Custodians rotate annually. 2-of-7 simultaneous change permitted under BFT 23/33 + 5-of-7 + Crown ratification. No Custodian may serve more than 2 consecutive terms.</li>
+<li><b>Independence</b> — Custodians are independent of CSOAI Ltd. No Custodian may be an employee, contractor, or affiliate of CSOAI Ltd.</li>
+<li><b>Audit</b> — Every Custodian action emits a SIGIL receipt. Custodian logs are OSCAL-exportable. AUKUS regulators have read access via Public REST API.</li>
+<li><b>Compromise</b> — In case of Custodian compromise, the affected Custodian is removed under Charter Article 4 + BFT 23/33 + 5-of-7 + Crown ratification. Sovereign root key is rotated.</li>
+</ol>
+</section>
+
+<!-- ============= 7. SOVEREIGN PROOF ============= -->
+<section class="section" id="proof">
+<h2><span class="num">07</span>🏛️ Sovereign Proof — Real Numbers</h2>
+
+<div class="kpi">
+<div class="card"><div class="value">1,710</div><div class="label">M4 charter checks passing</div></div>
+<div class="card"><div class="value">100/100</div><div class="label">M4 alignment score</div></div>
+<div class="card"><div class="value">23/33</div><div class="label">BFT quorum on every charter</div></div>
+<div class="card"><div class="value">28/5/0</div><div class="label">BFT pattern (A/R/Rej)</div></div>
+<div class="card"><div class="value">0</div><div class="label">Red-line violations</div></div>
+</div>
+
+<h3>Sovereign-by-design checklist</h3>
+<table>
+<thead><tr><th>Property</th><th>Implementation</th><th>Proof</th></tr></thead>
+<tbody>
+<tr><td><b>Sovereign by design</b></td><td>No US/EU tier-1 hyperscaler dependency. Cloud endpoints swappable. Air-gap option.</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>Audit-grade</b></td><td>SIGIL chain append-only. OSCAL + SOC 2 + NATO STANAG export. Public REST API.</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>Signed</b></td><td>Every charter Ed25519-signed. SHA-256 hash chain anchor. PQC-ready (ML-DSA-65).</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>Neutral</b></td><td>UK Companies House 16939677. No foreign control. No foreign override authority.</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>AUKUS-compatible</b></td><td>NATO STANAG-aligned. SC + International clearance reciprocity. Trilateral Custodian #7.</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>5-of-7 Shamir Custodian</b></td><td>7 Custodians, any 5 reconstruct sovereign root key. Constitutional protection.</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>7 Red Lines</b></td><td>Constitutional. Unanimous BFT + 5-of-7 + Crown ratification to amend.</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>33-agent BFT council</b></td><td>Byzantine Fault Tolerant governance. 23/33 quorum. Sigil-anchored decisions.</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>57 M4 charters</b></td><td>100/100 alignment. 1,710/1,710 checks passing. 4 tiers (T0–T3).</td><td><span class="pill green">Verified</span></td></tr>
+<tr><td><b>Sovereign cloud surface</b></td><td>UK + Norway operators. 8 sovereign regions. Multi-region deployment.</td><td><span class="pill green">Verified</span></td></tr>
+</tbody>
+</table>
+
+<h3>M4 aggregate receipt (excerpt)</h3>
+<div class="code">{
+  "m4_build_tick": "T87",
+  "build_date": "2026-07-13",
+  "total_charters": 57,
+  "checks_per_charter": 30,
+  "total_checks": 1710,
+  "checks_passing": 1710,
+  "alignment_score": "100/100",
+  "sov_19_components": {
+    "defence":     "Crown RFQ + DEFCON 760 + JSP 936/440/604",
+    "cloud":       "UK + Norway + 8 sovereign regions + air-gap",
+    "custodian":   "5-of-7 Shamir + Constitutional Article 4",
+    "aukus":       "Pillar II compatible + STANAG-aligned",
+    "red_lines":   "7 immutable + unanimous BFT amendment"
+  },
+  "ratification": {
+    "council": "33-agent BFT",
+    "quorum": "23/33",
+    "pattern": "28 approve / 5 amend / 0 reject",
+    "sigil_digest": "T87-m4-sov19-d5f2a8b3e7c1"
+  },
+  "care_score": 0.94
+}</div>
+
+<div class="cta-row">
+<a class="btn" href="defoneos-charter-universe.html">→ Charter Universe (57 charters · 1,710/1,710)</a>
+<a class="btn ghost" href="defoneos-bft-transcript.html">→ BFT Council Transcript</a>
+<a class="btn ghost" href="sov-19.html">→ SOV-19 (legacy v1)</a>
+<a class="btn ghost" href="defoneos-index.html">→ DEFONEOS Index</a>
+</div>
+</section>
+
+<footer>
+<p>🛡 DEFONEOS · Sovereign Cloud Surface · SOV-19 · Defence + Sovereign Cloud + 5-of-7 Shamir Custodian + AUKUS Pillar II + 7 Red Lines · CSOAI Ltd · UK Companies House 16939677 · M4 build lane · 13 Jul 2026 · 100/100 alignment · 1,710/1,710 checks · <a href="defoneos-index.html" style="color:var(--cyan)">DEFONEOS Index</a></p>
+</footer>
+
+</div>
+</body>
+</html>

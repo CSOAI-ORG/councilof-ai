@@ -1,0 +1,42 @@
+{
+ "n_test": 119,
+ "test_balance": {
+  "defense": 41,
+  "compliance": 45,
+  "intuition": 33
+ },
+ "labels": [
+  "compliance",
+  "defense",
+  "intuition"
+ ],
+ "routers": {
+  "keyword_venturi": {
+   "balanced_acc": 0.36,
+   "acc": 0.403,
+   "per_class_recall": {
+    "compliance": 0.933,
+    "defense": 0.146,
+    "intuition": 0.0
+   }
+  },
+  "tfidf_lr": {
+   "balanced_acc": 0.736,
+   "acc": 0.748,
+   "per_class_recall": {
+    "compliance": 0.956,
+    "defense": 0.585,
+    "intuition": 0.667
+   }
+  },
+  "embed_knn": {
+   "balanced_acc": 0.882,
+   "acc": 0.882,
+   "per_class_recall": {
+    "compliance": 0.822,
+    "defense": 0.976,
+    "intuition": 0.848
+   }
+  }
+ }
+}

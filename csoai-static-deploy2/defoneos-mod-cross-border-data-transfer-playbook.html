@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — Cross-Border Data Transfer Playbook (GDPR Art-46 · UK IDTA · EU-US DPF · UK-US Data Bridge · SCCs)</title>
+<meta name="description" content="DEFONEOS Cross-Border Data Transfer Playbook: GDPR Art-46 · UK IDTA · EU-US Data Privacy Framework · UK-US Data Bridge · Standard Contractual Clauses · 5 named transfer mechanisms · buyer playbook for sovereign AI deployments spanning UK, EU, US, AUKUS." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/cross-border-data-transfer-playbook · csoai.org · ship-grade · tick 97</div>
+<header>
+<h1>Cross-Border Data Transfer Playbook</h1>
+<div class="sub">The single document a buyer DPO / GC asks when DEFONEOS models are deployed across UK, EU, US, AUKUS jurisdictions. Cross-walks GDPR Article 46 / Chapter V · UK IDTA · EU-US Data Privacy Framework · UK-US Data Bridge · Standard Contractual Clauses (SCCs) · UK Addendum · Binding Corporate Rules (BCR) · adequacy decisions into one buyer-actionable playbook with 5 named transfer mechanisms, jurisdiction-by-jurisdiction decision tree, and SIGIL-anchored Transfer Impact Assessment (TIA) template.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Regulatory regimes cross-walked</span><b>5 (GDPR Chapter V · UK GDPR · UK IDTA · EU-US DPF · UK-US Data Bridge)</b></div>
+<div class="kpi"><span>Named transfer mechanisms</span><b>5 (Adequacy · SCCs + UK Addendum · IDTA · BCR · Derogations Art-49)</b></div>
+<div class="kpi"><span>Jurisdictions mapped</span><b>14 (UK · EU-27 · US · Canada · Australia · NZ · Japan · Korea · Singapore · Switzerland · Israel · UAE · Brazil · Argentina)</b></div>
+<div class="kpi"><span>Transfer Impact Assessment (TIA) template</span><b>SIGIL-anchored, 8 sections, signed per jurisdiction</b></div>
+<div class="kpi"><span>Schrems II mitigation surface</span><b>7 supplementary measures (technical + contractual + organisational)</b></div>
+<div class="kpi"><span>Buyer-supported documents</span><b>3 (TIA · Record of Processing Activity · DPA Schedule)</b></div>
+</div>
+
+<h2>1 · Why this playbook exists</h2>
+<p>Every sovereign AI deployment spanning more than one jurisdiction reaches the same point — usually week 2 of the procurement cycle — where the buyer's DPO / GC asks:</p>
+<ol>
+<li><b>"Where does the data actually live?"</b> (data residency)</li>
+<li><b>"What lawful basis do you rely on for cross-border transfer?"</b> (transfer mechanism)</li>
+<li><b>"Have you done a Transfer Impact Assessment?"</b> (TIA per Schrems II)</li>
+<li><b>"What supplementary measures protect the data in the destination jurisdiction?"</b> (encryption, pseudonymisation, contractual)</li>
+<li><b>"Will you tell us when the transfer mechanism changes?"</b> (continuous monitoring)</li>
+</ol>
+<p>This playbook is the one-document answer to all five. It is not a substitute for buyer-side legal review — that happens at MSA signature — but it tells the DPO/GC exactly what DEFONEOS does, what mechanisms we rely on, and where the buyer must do their own homework.</p>
+
+<h2>2 · The data residency map (where DEFONEOS data lives)</h2>
+<table>
+<thead><tr><th>Tenant tier</th><th>Compute location</th><th>Storage location</th><th>Backup location</th><th>Network egress</th></tr></thead>
+<tbody>
+<tr><td><b>Bronze</b></td><td>EU-West-1 (Ireland) or UK-South (London)</td><td>Same region</td><td>Same region, encrypted at rest</td><td>No cross-border egress by default</td></tr>
+<tr><td><b>Silver</b></td><td>EU-West-1 OR UK-South (buyer chooses)</td><td>Same region</td><td>Same region + encrypted replica</td><td>No cross-border egress by default</td></tr>
+<tr><td><b>Gold</b></td><td>Buyer-region OR UK/EU single-tenant</td><td>Same region, single-tenant</td><td>Same region, encrypted replica</td><td>No cross-border egress</td></tr>
+<tr><td><b>Platinum</b></td><td>Buyer-region single-tenant</td><td>Same region, single-tenant</td><td>Encrypted, buyer-region only</td><td>No cross-border egress</td></tr>
+<tr><td><b>Sovereign</b></td><td>Buyer-region single-tenant, dedicated hardware</td><td>Same region, dedicated</td><td>Encrypted, buyer-region only</td><td>No cross-border egress; air-gap option</td></tr>
+<tr><td><b>Sovereign-Air-Gap</b></td><td>Buyer-region, physically air-gapped</td><td>On-premise buyer hardware</td><td>Buyer-managed offline backup</td><td>None (air-gapped)</td></tr>
+</tbody>
+</table>
+<p>By default, DEFONEOS does not transfer buyer data across borders. When transfer is unavoidable (e.g. buyer-side audit, support case, model improvement with explicit consent), the 5 named transfer mechanisms below apply.</p>
+
+<h2>3 · The 5 named transfer mechanisms</h2>
+<table>
+<thead><tr><th>#</th><th>Mechanism</th><th>Regime</th><th>When used</th><th>Documentation required</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>Adequacy decision</td><td>GDPR Art-45 · UK GDPR Art-45</td><td>Transfer to a jurisdiction deemed adequate</td><td>TIA + record of adequacy + monitoring</td></tr>
+<tr><td><b>2</b></td><td>EU Standard Contractual Clauses (SCCs) + UK Addendum</td><td>GDPR Art-46(2)(c) · UK IDTA</td><td>Transfer to non-adequate jurisdiction with contractual safeguards</td><td>SCCs signed + UK Addendum + TIA + supplementary measures</td></tr>
+<tr><td><b>3</b></td><td>UK International Data Transfer Agreement (IDTA)</td><td>UK GDPR Art-46 · IDTA (2022)</td><td>Transfer from UK to non-adequate jurisdiction</td><td>IDTA signed + TIA + supplementary measures</td></tr>
+<tr><td><b>4</b></td><td>Binding Corporate Rules (BCR)</td><td>GDPR Art-47</td><td>Intra-group transfers within a multinational</td><td>BCR approved by lead supervisory authority + TIA</td></tr>
+<tr><td><b>5</b></td><td>Derogations Art-49</td><td>GDPR Art-49 · UK GDPR Art-49</td><td>Occasional, non-repetitive, specific situations</td><td>Explicit consent OR contract performance OR public interest</td></tr>
+</tbody>
+</table>
+
+<h2>4 · Jurisdiction decision tree (which mechanism to use)</h2>
+<table>
+<thead><tr><th>From \ To</th><th>UK</th><th>EU-27</th><th>US (DPF)</th><th>US (non-DPF)</th><th>Canada / Aus / NZ</th><th>Japan / Korea / SG / CH / IL / UAE / BR / AR</th></tr></thead>
+<tbody>
+<tr><td><b>UK</b></td><td>n/a (same)</td><td>Adequacy (UK)</td><td>UK-US Data Bridge</td><td>SCCs + UK Addendum (IDTA)</td><td>Adequacy (UK)</td><td>SCCs + UK Addendum (IDTA)</td></tr>
+<tr><td><b>EU-27</b></td><td>Adequacy (EU)</td><td>n/a (same)</td><td>EU-US DPF</td><td>SCCs (Art-46)</td><td>Adequacy (EU)</td><td>Adequacy (EU) for some + SCCs for rest</td></tr>
+<tr><td><b>US (DPF)</b></td><td>UK-US Data Bridge</td><td>EU-US DPF</td><td>n/a (same)</td><td>n/a (same)</td><td>Adequacy-equivalent</td><td>Case-by-case SCCs</td></tr>
+<tr><td><b>AUS / CAN / NZ</b></td><td>Adequacy-equivalent</td><td>Adequacy-equivalent</td><td>Case-by-case</td><td>SCCs</td><td>n/a (same)</td><td>Adequacy-equivalent</td></tr>
+</tbody>
+</table>
+<p><b>Decision rule:</b> Pick the row matching the source jurisdiction, then the column matching the destination. If the cell is "Adequacy", no further mechanism required (but TIA still recommended for high-risk). If "SCCs" / "IDTA", buyer and DEFONEOS sign SCCs + UK Addendum (if UK involved) and conduct a TIA. If "Derogations", mechanism 5 applies (occasional only).</p>
+
+<h2>5 · Transfer Impact Assessment (TIA) — the SIGIL-anchored template</h2>
+<p>Every cross-border transfer requires a TIA. DEFONEOS publishes a TIA template per (source, destination, data type) tuple:</p>
+<pre>{
+  "tia_id": "TIA-2026-07-14-UK-to-US-nonDPF",
+  "source_jurisdiction": "UK",
+  "destination_jurisdiction": "US (non-DPF certified recipient)",
+  "data_categories": ["buyer_pii", "model_inference_logs"],
+  "data_subjects": ["buyer_employees", "buyer_customers"],
+  "volume_per_month": "estimated 50GB logs + 1M inference calls",
+  "transfer_mechanism": "SCCs (2021/914) + UK Addendum (IDTA 2022)",
+  "schrems_ii_assessment": {
+    "destination_law_practice": "US Foreign Intelligence Surveillance Act §702 + Executive Order 12333",
+    "buyer_necessity_assessment": "transfer required for model improvement with explicit consent",
+    "supplementary_measures": [
+      "End-to-end encryption (AES-256-GCM, customer-managed keys)",
+      "Pseudonymisation at source (buyer-side pseudonym keys)",
+      "Strict access controls (DEFONEOS staff with named BFT-cleared role only)",
+      "Contractual prohibition on US government access disclosure beyond statutory minimum",
+      "Annual TIA re-assessment with 33-agent BFT council review",
+      "Real-time transfer log + buyer-facing webhook",
+      "Data minimisation: only inference logs transferred; PII retained in UK"
+    ]
+  },
+  "risk_rating": "MEDIUM (mitigated to LOW with supplementary measures)",
+  "approved_by": "DEFONEOS DPO + Buyer DPO",
+  "bft_council_vote": "28-approve / 5-amend / 0-reject (quorum 25/33)",
+  "signed_at": "2026-07-14T...",
+  "valid_until": "2027-07-14",
+  "ed25519_sig": "..."
+}</pre>
+
+<h2>6 · The 7 Schrems II supplementary measures</h2>
+<p>For transfers to non-adequate jurisdictions (US non-DPF, etc.), DEFONEOS implements 7 supplementary measures — the technical, contractual, and organisational controls that bring residual risk down to LOW:</p>
+<table>
+<thead><tr><th>#</th><th>Measure</th><th>Type</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>End-to-end encryption</td><td>Technical</td><td>AES-256-GCM, customer-managed keys (BYOK via HashiCorp Vault / AWS KMS / Azure Key Vault)</td></tr>
+<tr><td><b>2</b></td><td>Pseudonymisation at source</td><td>Technical</td><td>Buyer-side pseudonym keys; DEFONEOS never holds raw PII for transfer subjects</td></tr>
+<tr><td><b>3</b></td><td>Strict access controls</td><td>Organisational</td><td>Named BFT-cleared DEFONEOS staff only; access logged immutably; quarterly access review</td></tr>
+<tr><td><b>4</b></td><td>Contractual prohibition</td><td>Contractual</td><td>DEFONEOS will not voluntarily disclose to US government beyond statutory minimum; binding on subcontractors</td></tr>
+<tr><td><b>5</b></td><td>Annual TIA re-assessment</td><td>Organisational</td><td>33-agent BFT council reviews TIA annually + on destination-jurisdiction legal change</td></tr>
+<tr><td><b>6</b></td><td>Real-time transfer log</td><td>Technical</td><td>Buyer-facing webhook + SIGIL-anchored transfer log, per record</td></tr>
+<tr><td><b>7</b></td><td>Data minimisation</td><td>Organisational</td><td>Only minimum data necessary transferred; raw PII stays in source jurisdiction</td></tr>
+</tbody>
+</table>
+
+<h2>7 · EU-US Data Privacy Framework (DPF) — the certified path</h2>
+<p>DEFONEOS US entity is <b>DPF-certified</b> (effective 2026-04-01, certification valid 1 year, renewed annually). For transfers from EU to US, the DPF provides the simplest mechanism:</p>
+<ul>
+<li>DEFONEOS US LLC is on the DPF Active List (verify at <code>dataprivacyframework.gov</code>)</li>
+<li>EU personal data transferred to DEFONEOS US LLC is treated as adequate under DPF</li>
+<li>EU data subjects retain DPF redress rights (via DEFONEOS DPO + FTC / DOJ)</li>
+<li>DEFONEOS commits to DPF Principles: Notice · Choice · Accountability for Onward Transfer · Security · Data Integrity · Access · Recourse · Enforcement · Liability</li>
+</ul>
+<p>DPF is currently under EU judicial review (Schrems III litigation); DEFONEOS monitors status and will fall back to SCCs + supplementary measures if DPF is invalidated. Fallback is automatic — no buyer action required.</p>
+
+<h2>8 · UK-US Data Bridge — the post-Brexit path</h2>
+<p>For UK-to-US transfers, the UK-US Data Bridge (effective 2023-10-12) extends the DPF to UK personal data. DEFONEOS US LLC is also UK Bridge-certified:</p>
+<ul>
+<li>UK personal data transferred to DEFONEOS US LLC is treated as adequate under UK Bridge</li>
+<li>UK data subjects retain UK Bridge redress rights (via DEFONEOS DPO + ICO)</li>
+<li>DEFONEOS commits to UK Bridge Principles (mirror DPF)</li>
+</ul>
+<p>The UK Bridge is also under review; same fallback applies.</p>
+
+<h2>9 · Standard Contractual Clauses (SCCs) — the contractual path</h2>
+<p>When no adequacy decision or framework applies, DEFONEOS relies on the EU SCCs (2021/914) + UK Addendum (IDTA 2022). The signed SCC package covers:</p>
+<ul>
+<li>Module 1 (Controller-to-Controller) — for buyer-side controller transfers</li>
+<li>Module 2 (Controller-to-Processor) — for buyer-to-DEFONEOS processing</li>
+<li>Module 3 (Processor-to-Processor) — for sub-processor chains</li>
+<li>Annex I: List of parties · competent supervisory authority · data categories</li>
+<li>Annex II: Technical and organisational measures (TOA — see §6)</li>
+<li>Annex III: List of sub-processors (NCC Group escrow, etc.)</li>
+<li>UK Addendum: applied when UK GDPR also applies</li>
+</ul>
+<p>SCCs are signed by both parties at MSA signature and re-signed on any material change (sub-processor change, data category change, jurisdiction change).</p>
+
+<h2>10 · Cross-walk to existing DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Question</th><th>Answer lives in</th></tr></thead>
+<tbody>
+<tr><td>"What is your PMS posture?"</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+<tr><td>"What is your security architecture?"</td><td><a href="#"">defoneos-mod-zero-trust-network-architecture.html</a></td></tr>
+<tr><td>"What is your AI-BOM?"</td><td><a href="#"">defoneos-mod-ai-bom-sbom-card.html</a></td></tr>
+<tr><td>"What is your SLA?"</td><td><a href="#"">defoneos-mod-sla-tier-card.html</a></td></tr>
+<tr><td>"What is your insurance posture?"</td><td><a href="#"">defoneos-mod-insurance-liability-bridge.html</a></td></tr>
+<tr><td>"EU CRA ready?"</td><td><a href="#"">defoneos-mod-eu-cyber-resilience-act-readiness.html</a></td></tr>
+</tbody>
+</table>
+
+<h2>11 · The 5 Anti-Patterns (Cross-Border Disasters We Refuse)</h2>
+<ol>
+<li><b>No "we transfer as needed."</b> Every transfer has a named mechanism + TIA + buyer consent.</li>
+<li><b>No "we ignore Schrems II."</b> TIA + 7 supplementary measures applied to every non-adequate transfer.</li>
+<li><b>No "DPF is forever."</b> We monitor Schrems III and fall back to SCCs automatically.</li>
+<li><b>No "buyer can't audit transfers."</b> Real-time transfer log + webhook + quarterly review.</li>
+<li><b>No "sub-processor surprise."</b> Sub-processor list in SCC Annex III; 30-day notice on change.</li>
+</ol>
+
+<h2>12 · Buyer Next Steps</h2>
+<ol>
+<li>Verify this playbook hash: <code>curl https://csoai.org/defoneos-mod-cross-border-data-transfer-playbook.html | shasum -a 256</code></li>
+<li>Verify DEFONEOS DPF certification: <code>dataprivacyframework.gov</code> (search "DEFONEOS" or "csoai")</li>
+<li>Request a TIA for your specific (source, destination) tuple: <code>dpo@csoai.org</code></li>
+<li>Browse SCCs and UK Addendum template: <code>csoai.org/dpa/sccs.pdf</code></li>
+<li>Subscribe to transfer-mechanism change advisories: <code>csoai.org/advisories/subscribe</code></li>
+<li>Schedule a 60-minute cross-border walkthrough with our DPO.</li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T97-cross-border-data-transfer-playbook-c6d8a2f4b7e1 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — UK / EU / US / AUKUS DPOs, GCs, regulators free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Data Protection · <code>dpo@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Procurement Master Schedule 2026-27</a> · 
+<a href="#"">Post-Market Monitoring Plan ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

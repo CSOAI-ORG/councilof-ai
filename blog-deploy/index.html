@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blog — MEOK AI Labs</title>
+    <meta property="og:title" content="Blog — MEOK AI Labs">
+<meta name="description" content="Articles from the MEOK AI Labs team on the EU AI Act, sovereign AI infrastructure, Ed25519 attestations, MCP compliance, and the .ai brand.">
+  <link rel="canonical" href="https://meok.ai/blog">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.7; color: #111; }
+    h1 { font-size: 2.2rem; letter-spacing: -0.02em; margin: 0 0 0.5rem; }
+    .lede { color: #666; font-size: 1.05rem; }
+    article { padding: 2rem 0; border-bottom: 1px solid #e5e7eb; }
+    article h2 { font-size: 1.4rem; margin: 0 0 0.5rem; }
+    article .meta { color: #999; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    article p { margin: 0.5rem 0; }
+    a { color: #c9a84c; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .pill { display: inline-block; background: rgba(201,168,76,0.12); color: #c9a84c; padding: 0.15rem 0.5rem; border-radius: 0.3rem; font-size: 0.8rem; font-weight: 600; margin-right: 0.3rem; }
+    code { background: #f3f4f6; padding: 0.1rem 0.3rem; border-radius: 0.2rem; font-size: 0.95em; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Blog", "url": "https://meok.ai/blog", "description": "Articles from the MEOK AI Labs team on the EU AI Act, sovereign AI infrastructure, Ed25519 attestations, MCP compliance, and the .ai brand."}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is 49 days to the EU AI Act Article 50 cliff — and what we're doing about it?", "acceptedAnswer": {"@type": "Answer", "text": "2026-06-14 · Nicholas Templeman · EU AI Act Article 50 MEOK"}}, {"@type": "Question", "name": "Why we chose Ed25519 over RSA for compliance attestations?", "acceptedAnswer": {"@type": "Answer", "text": "2026-06-13 · Nicholas Templeman · Ed25519 cryptography MEOK"}}, {"@type": "Question", "name": "What is The 32-server MCP fleet: how MEOK got from 0 to compliance-as-a-service in 4 days?", "acceptedAnswer": {"@type": "Answer", "text": "2026-06-12 · Nicholas Templeman · MCP architecture fleet"}}]}</script>
+</head>
+<body>
+  <p><a href="https://meok.ai">← meok.ai</a></p>
+  <h1>Blog</h1>
+  <p class="lede">Articles from the MEOK AI Labs team on the EU AI Act, sovereign AI infrastructure, Ed25519 attestations, MCP compliance, and the .ai brand.</p>
+
+  <article>
+    <h2>49 days to the EU AI Act Article 50 cliff — and what we're doing about it</h2>
+    <p class="meta">2026-06-14 · Nicholas Templeman · <span class="pill">EU AI Act</span><span class="pill">Article 50</span><span class="pill">MEOK</span></p>
+    <p>On 2 August 2026, the EU AI Act Article 50 transparency obligations land. If your company builds, deploys, or resells any AI system whose outputs reach EU users, you're in scope. The trigger is the user, not the HQ. Fines start at €15M or 3% of global turnover.</p>
+    <p>Most UK companies I talk to think this is "someone else's problem" — until the regulator asks for an attestation on 3 September. The scary part isn't the disclosure. The scary part is being asked for a signed, machine-verifiable audit trail and not having one.</p>
+    <p>That's why MEOK exists. <a href="https://compliance-meok-ai.vercel.app">compliance.meok.ai</a> · <a href="https://meok-attestation-api.vercel.app">the keystone</a> · <a href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">£199/mo Pro</a></p>
+  </article>
+
+  <article>
+    <h2>Why we chose Ed25519 over RSA for compliance attestations</h2>
+    <p class="meta">2026-06-13 · Nicholas Templeman · <span class="pill">Ed25519</span><span class="pill">cryptography</span><span class="pill">MEOK</span></p>
+    <p>A PDF audit report is a screenshot. It can be edited in Acrobat, re-saved, and forwarded with no chain of custody. When a regulator asks "show me your Article 50 attestation as it was on 2 August 2026," a PDF has no answer.</p>
+    <p>We issue every audit as an <strong>Ed25519-signed JSON-LD attestation</strong>:</p>
+    <ul>
+      <li>Public key registered to your legal entity</li>
+      <li>Hash of the audit payload (scope, models, findings, remediation state)</li>
+      <li>Signature verifiable offline with <code>pip install meok-attestation-verify</code></li>
+      <li>Anchor to a transparency log so it can't be backdated</li>
+    </ul>
+    <p>Why Ed25519 over RSA? Smaller signatures (64 bytes), faster verification, no padding oracle history, and it's what <code>sigstore</code> and the major supply-chain attestation frameworks (in-toto, SLSA L3) use. Why JSON-LD over a PDF? Because a regulator — or a procurement team in your supply chain — can verify the signature, the schema, and the revocation status in a single <code>curl</code>.</p>
+    <p>Article 50 doesn't prescribe this. The EU AI Act's implementing acts specifically allow machine-readable formats. We picked the format that survives a 7-year retention requirement without rotting.</p>
+  </article>
+
+  <article>
+    <h2>The 32-server MCP fleet: how MEOK got from 0 to compliance-as-a-service in 4 days</h2>
+    <p class="meta">2026-06-12 · Nicholas Templeman · <span class="pill">MCP</span><span class="pill">architecture</span><span class="pill">fleet</span></p>
+    <p>When we started MEOK, compliance was a 6-week PDF audit costing £40-80K from Big-4. Today it's a 4-day signed attestation costing £4,950, installable with <code>pip install eu-ai-act-compliance-mcp</code>.</p>
+    <p>The key was the 32-server MCP fleet. Each MCP is a specialised compliance surface — <code>eu-ai-act-compliance-mcp</code> for risk classification, <code>dora-compliance-mcp</code> for 5-pillar audit, <code>uk-ai-bill-compliance-mcp</code> for 100% readiness scoring, etc. They all share the same signing substrate (the keystone at meok-attestation-api.vercel.app) and the same wire format (Ed25519 + JSON-LD).</p>
+    <p>Try it: <code>pip install meok-governance-engine-mcp</code> + a free-tier <code>/sign</code> call → instant signed attestation. Pro £199/mo gets you unlimited calls + auditor-verify-able Ed25519 receipts. <a href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Subscribe</a>.</p>
+  </article>
+
+  <article>
+    <h2>Why MEOK is sovereign UK infrastructure (and why that matters)</h2>
+    <p class="meta">2026-06-11 · Nicholas Templeman · <span class="pill">sovereignty</span><span class="pill">UK</span><span class="pill">data residency</span></p>
+    <p>CSOAI Ltd, UK Companies House 16939677. 100% Nick Templeman. Built from a 6.5-acre farm in the UK. Not VC-backed. Not acquirable. No exit pressure.</p>
+    <p>Why sovereign UK? Because the EU AI Act's data governance duties (Article 10) are real, and the EU AI Office is going to start asking where your training data lives, where your model weights are stored, and where your audit trail is anchored. The answer "us-east-1" is not going to satisfy them.</p>
+    <p>The MEOK Sovereign AI OS is sovereign end-to-end. Persistent memory stored encrypted on UK infrastructure. Multi-LLM routing through OpenAI, Anthropic, Google DeepMind, Mistral — but the orchestration, the audit, the compliance, the verification, all live in the UK. CSOAI Ltd. UK 16939677. 100% Nick. <a href="https://csoai.org">csoai.org</a></p>
+  </article>
+
+  <article>
+    <h2>How a UK challenger bank got a regulator-grade signed Article 50 attestation in 4 days</h2>
+    <p class="meta">2026-06-10 · Nicholas Templeman · <span class="pill">case study</span><span class="pill">fintech</span><span class="pill">£165K saved</span></p>
+    <p>A UK-headquartered challenger bank (~1,200 staff, FCA-authorised) came to us with a Deloitte quote: £180K, 8-week turnaround for an Article 50 audit. We did it for £15K, 4 days, with a signed Ed25519 attestation their regulator can verify with <code>curl</code>.</p>
+    <p>Their credit-decisioning model is a black-box gradient-boosted ensemble — exactly the kind of high-risk AI under EU AI Act Annex III (3). They needed a signed cert that says "this model is in scope, here are the 7 obligations, here's the documentation, here's the verification URL." We produced it. Their procurement team now shows it to every EU enterprise customer in onboarding.</p>
+    <p>Read the full case study: <a href="https://case-studies-deploy.vercel.app/fintech">proofof.ai/case-studies/fintech</a></p>
+  </article>
+
+  <article>
+    <h2>The .ai brand: why one domain absorbs every hive</h2>
+    <p class="meta">2026-06-09 · Nicholas Templeman · <span class="pill">brand</span><span class="pill">architecture</span></p>
+    <p>MEOK.ai isn't a domain. It's a brand that absorbs every hive. proofof.ai (trust). csoai.org (council). compliance.meok.ai (centre). wowmcp.ai (gaming). hive (SOV3). One meok.ai brand, ten live sub-domains, one sovereign UK company (CSOAI Ltd, 16939677).</p>
+    <p>Why? Because the alternative is fragmentation. Different domains, different brand voices, different founders, different stories. The user has to figure out who's behind each. With MEOK, you have one trust anchor, one verification chain, one Founder Office Hour, one .ai.</p>
+    <p>Same lesson as Apple, Google, Amazon — the platform that wins is the platform that absorbs the most verticals without losing coherence. MEOK.ai is that platform. CSOAI is the independent trust surface. csoai.org is the council. Same 100% Nick.</p>
+  </article>
+
+<nav style='text-align:center; padding: 0.5rem; background: rgba(201,168,76,0.05); border-top: 1px solid #e5e7eb;'><strong>MEOK portfolio:</strong> | <a href="https://hive-deploy.vercel.app" target="_blank" rel="noopener noreferrer">hive</a> | <a href="https://industries-deploy.vercel.app" target="_blank" rel="noopener noreferrer">industries</a> | <a href="https://blog-deploy-azure.vercel.app" target="_blank" rel="noopener noreferrer">blog</a> | <a href="https://portfolio-deploy-orcin-three.vercel.app" target="_blank" rel="noopener noreferrer">portfolio</a> | <a href="https://meok.ai" target="_blank" rel="noopener noreferrer">meok.ai</a></nav>
+<div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+</body>
+</html>

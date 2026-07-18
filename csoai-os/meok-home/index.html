@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://ipapi.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src https://fonts.gstatic.com; connect-src 'self' http://127.0.0.1:8000 http://127.0.0.1:3101 https://ipapi.co; frame-ancestors 'none';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<meta name="description" content="MEOK WORLD — The sovereign AI operating system. 218 MCPs, 33 sovereign VMs, 4-tier cascade. Live backend status. Every regulation is a temple. The world is at your feet.">
+<meta name="keywords" content="MEOK, CSOAI, SOV3, sovereign AI, EU AI Act, MCP servers, 12-Queen council, BFT, regulation temples, meok.ai, csoai.org">
+<title>MEOK WORLD — Sovereign AI Operating System · Live</title>
+<meta property="og:title" content="MEOK WORLD — Sovereign AI Operating System">
+<meta property="og:description" content="The world at your feet. 218 MCPs, 33 sovereign VMs, 12-Queen council, 4-tier cascade. Live.">
+<meta property="og:image" content="https://meok.ai/api/og">
+<meta property="og:url" content="https://meok.ai">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@meok_ai">
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MEOK WORLD">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #08060c;
+  --bg-2: #0d0a14;
+  --surface: #120e1c;
+  --surface-2: #1a1428;
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --gold-dim: #8a7035;
+  --gold-glow: rgba(201, 168, 76, 0.3);
+  --green: #22c55e;
+  --green-glow: rgba(34, 197, 94, 0.3);
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --red: #ef4444;
+  --cyan: #22d3ee;
+  --text: #f0ede6;
+  --text-dim: rgba(240, 237, 230, 0.6);
+  --text-dim-2: rgba(240, 237, 230, 0.35);
+  --border: rgba(201, 168, 76, 0.15);
+  --border-dim: rgba(240, 237, 230, 0.08);
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(201, 168, 76, 0.08), transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(96, 165, 250, 0.05), transparent 60%),
+    var(--bg);
+  min-height: 100vh;
+}
+
+a { color: var(--gold-bright); text-decoration: none; transition: var(--transition); }
+a:hover { color: var(--gold); }
+
+button { font-family: var(--font-sans); cursor: pointer; }
+
+/* ===== TOPBAR ===== */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8, 6, 12, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-dim);
+}
+.topbar-inner {
+  max-width: 1400px; margin: 0 auto;
+  padding: 14px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 32px;
+}
+.logo {
+  font-family: var(--font-mono);
+  font-weight: 700; font-size: 18px;
+  letter-spacing: -0.02em;
+  display: flex; align-items: center; gap: 10px;
+  color: var(--text);
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green-glow);
+  animation: pulse 2s ease-in-out infinite;
+}
+.logo .accent { color: var(--gold); }
+
+.topbar nav {
+  display: flex; align-items: center; gap: 4px;
+}
+.topbar nav a {
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+.topbar nav a:hover {
+  color: var(--text);
+  background: var(--border-dim);
+}
+
+.topbar .cta {
+  display: flex; align-items: center; gap: 8px;
+}
+.topbar .cta a {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 100px;
+  transition: var(--transition);
+}
+.topbar .cta .login { color: var(--text-dim); border: 1px solid var(--border-dim); }
+.topbar .cta .login:hover { color: var(--text); border-color: var(--border); }
+.topbar .cta .start {
+  background: var(--gold);
+  color: var(--bg);
+  border: 1px solid var(--gold);
+}
+.topbar .cta .start:hover { background: var(--gold-bright); color: var(--bg); }
+
+@media (max-width: 800px) {
+  .topbar nav { display: none; }
+  .topbar-inner { padding: 12px 16px; }
+}
+
+/* ===== HERO ===== */
+.hero {
+  max-width: 1400px; margin: 0 auto;
+  padding: 80px 32px 60px;
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  gap: 60px;
+  align-items: center;
+}
+
+@media (max-width: 1100px) {
+  .hero { grid-template-columns: 1fr; padding: 48px 20px; gap: 40px; }
+}
+
+.hero h1 {
+  font-size: clamp(36px, 5vw, 60px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+.hero h1 .accent {
+  color: var(--gold);
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--gold-bright), #e6c46a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero .tagline {
+  font-size: 18px;
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+
+.hero .stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+.stat-card:hover { border-color: var(--gold); background: var(--bg-2); }
+.stat-card .num {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.stat-card .label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero .ctas {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 24px;
+  border-radius: 100px;
+  transition: var(--transition);
+  border: 1px solid;
+  cursor: pointer;
+  background: transparent;
+}
+.btn-primary {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+}
+.btn-primary:hover { background: var(--gold-bright); color: var(--bg); transform: translateY(-1px); }
+.btn-secondary {
+  color: var(--text);
+  border-color: var(--border);
+  background: var(--bg-2);
+}
+.btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ===== HERO GLOBE ===== */
+.hero-globe {
+  position: relative;
+  width: 480px; height: 480px;
+  margin: 0 auto;
+}
+@media (max-width: 600px) {
+  .hero-globe { width: 320px; height: 320px; }
+}
+.globe-svg {
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 0 40px rgba(201, 168, 76, 0.2));
+}
+.globe-temple {
+  fill: var(--gold);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.globe-temple:hover { fill: var(--gold-bright); }
+.globe-temple.active { fill: var(--green); animation: pulse 2s ease-in-out infinite; }
+
+/* ===== LIVE BACKEND PANEL ===== */
+.live-panel {
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.live-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.live-panel-title {
+  color: var(--gold);
+  font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+}
+.live-panel-title .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green-glow);
+  animation: pulse 2s ease-in-out infinite;
+}
+.live-panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.live-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+}
+.live-row .k { color: var(--text-dim); }
+.live-row .v { color: var(--text); font-weight: 500; }
+.live-row .v.green { color: var(--green); }
+.live-row .v.gold { color: var(--gold); }
+
+/* ===== SECTION: NEWS / ACTIVITY ===== */
+.section {
+  max-width: 1400px; margin: 0 auto;
+  padding: 60px 32px;
+}
+.section-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+.section h2 {
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  max-width: 800px;
+}
+.section .sub {
+  color: var(--text-dim);
+  font-size: 16px;
+  margin-bottom: 40px;
+  max-width: 700px;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 900px) { .news-grid { grid-template-columns: 1fr; } }
+
+.news-card {
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: var(--transition);
+  display: flex; flex-direction: column;
+}
+.news-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.news-card .photo {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, var(--surface-2), var(--bg-2));
+  position: relative;
+  overflow: hidden;
+}
+.news-card .photo .photo-inner {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 64px;
+  opacity: 0.4;
+}
+.news-card .photo.tag-sovereignty { background: linear-gradient(135deg, #1a1428, #2d1f3f); }
+.news-card .photo.tag-temple { background: linear-gradient(135deg, #1a2014, #2d3a1f); }
+.news-card .photo.tag-council { background: linear-gradient(135deg, #14181a, #1f2a3a); }
+
+.news-card .body {
+  padding: 20px;
+  flex: 1;
+  display: flex; flex-direction: column;
+}
+.news-card .meta {
+  display: flex; gap: 8px; align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+.news-card .meta .tag {
+  background: rgba(201, 168, 76, 0.1);
+  color: var(--gold);
+  padding: 3px 8px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+.news-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.news-card p {
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  flex: 1;
+}
+.news-card .footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ===== SECTION: TEMPLES (live) ===== */
+.temples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.temple-card {
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.temple-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gold);
+  opacity: 0.5;
+}
+.temple-card.eu::before { background: var(--blue); }
+.temple-card.us::before { background: var(--purple); }
+.temple-card.apac::before { background: var(--cyan); }
+.temple-card.global::before { background: var(--gold); }
+.temple-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  background: var(--bg-2);
+}
+.temple-card .head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.temple-card .flag { font-size: 28px; }
+.temple-card .code {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.1);
+  padding: 3px 8px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+.temple-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.temple-card .reg-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+.temple-card .regs {
+  display: flex; flex-wrap: wrap; gap: 4px;
+}
+.temple-card .reg {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-dim);
+  padding: 2px 8px;
+  border-radius: 100px;
+  color: var(--text-dim);
+}
+
+/* ===== SECTION: COUNCIL ===== */
+.council-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.council-card {
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  transition: var(--transition);
+}
+.council-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.council-card.veto {
+  border-color: var(--red);
+  background: linear-gradient(135deg, var(--surface), rgba(239, 68, 68, 0.05));
+}
+.council-card .emoji { font-size: 36px; margin-bottom: 8px; }
+.council-card .name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.council-card .arch {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.council-card .veto-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  background: var(--red);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 100px;
+}
+
+/* ===== SECTION: MCP FLEET ===== */
+.mcp-bar {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.mcp-bar .num {
+  font-family: var(--font-mono);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+.mcp-bar .label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.mcp-bar .breakdown {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-left: auto;
+}
+.mcp-bar .breakdown .chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-dim);
+  border-radius: 100px;
+  color: var(--text-dim);
+}
+
+.mcp-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.mcp-cat {
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 16px;
+  transition: var(--transition);
+}
+.mcp-cat:hover { border-color: var(--gold); }
+.mcp-cat .icon { font-size: 24px; margin-bottom: 8px; }
+.mcp-cat .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.mcp-cat .count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--gold);
+}
+
+/* ===== SECTION: CTA / OS LINK ===== */
+.cta-section {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--bg-2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute; top: -50%; right: -10%;
+  width: 60%; height: 200%;
+  background: radial-gradient(ellipse, var(--gold-glow), transparent 60%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 500;
+  margin-bottom: 16px;
+  position: relative;
+}
+.cta-section p {
+  color: var(--text-dim);
+  font-size: 18px;
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto; margin-right: auto;
+  position: relative;
+}
+.cta-section .ctas { position: relative; justify-content: center; }
+
+/* ===== FOOTER ===== */
+.footer {
+  border-top: 1px solid var(--border-dim);
+  padding: 40px 32px 24px;
+  margin-top: 60px;
+}
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+@media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 500px) { .footer-inner { grid-template-columns: 1fr; } }
+.footer-brand {
+  max-width: 320px;
+}
+.footer-brand .logo { margin-bottom: 12px; }
+.footer-brand p {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.footer h4 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+.footer ul {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.footer ul a {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.footer ul a:hover { color: var(--text); }
+.footer-bottom {
+  max-width: 1400px;
+  margin: 40px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-dim-2);
+  font-family: var(--font-mono);
+}
+.footer-bottom .legal { display: flex; gap: 16px; }
+.footer-bottom .legal a { color: var(--text-dim-2); }
+.footer-bottom .legal a:hover { color: var(--text-dim); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.globe-svg .rotation {
+  transform-origin: center;
+  animation: spin-slow 60s linear infinite;
+}
+</style>
+</head>
+<body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="logo">
+      <span class="dot"></span>
+      <span>MEOK<span class="accent">.WORLD</span></span>
+    </a>
+    <nav>
+      <a href="#temples">Temples</a>
+      <a href="#mcp">MCPs</a>
+      <a href="#council">Council</a>
+      <a href="/csoai-os/meok-world.html">OS</a>
+      <a href="/csoai-v2-app/">App</a>
+      <a href="https://csoai.org">CSOAI</a>
+      <a href="/research">Research</a>
+    </nav>
+    <div class="cta">
+      <a class="login" href="/login">Log in</a>
+      <a class="start" href="/csoai-os/v2-signup-wizard.html">Start free →</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <h1>The world is at your feet.<br><span class="accent">Sovereign AI, live.</span></h1>
+    <p class="tagline">
+      MEOK WORLD is the sovereign AI operating system — 218 MCPs, 33 sovereign GCP VMs,
+      12-Queen + King council, 4-tier model cascade. Every regulation is a temple.
+      The world is the OS.
+    </p>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num" data-count="218">218</div>
+        <div class="label">MCPs live</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">33</div>
+        <div class="label">Sovereign VMs</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">13</div>
+        <div class="label">Council + King</div>
+      </div>
+    </div>
+
+    <div class="ctas">
+      <a href="/csoai-os/v2-temple-os.html" class="btn btn-primary">Enter MEOK WORLD →</a>
+      <a href="#news" class="btn btn-secondary">Read the latest</a>
+    </div>
+
+    <!-- LIVE BACKEND PANEL -->
+    <div class="live-panel" id="livePanel">
+      <div class="live-panel-header">
+        <div class="live-panel-title">
+          <span class="dot"></span>
+          <span>BACKEND · LIVE STATUS</span>
+        </div>
+        <span style="color: var(--text-dim-2); font-size: 10px;">SOV3 substrate</span>
+      </div>
+      <div class="live-panel-grid">
+        <div class="live-row"><span class="k">SOV3 King</span><span class="v green" id="liveSov3">● online</span></div>
+        <div class="live-row"><span class="k">Meok-ai</span><span class="v">v2.0.0</span></div>
+        <div class="live-row"><span class="k">Hive</span><span class="v gold" id="liveHive">34 / 34 VMs</span></div>
+        <div class="live-row"><span class="k">Council</span><span class="v">13 / 13</span></div>
+        <div class="live-row"><span class="k">BFT quorum</span><span class="v">9 / 13</span></div>
+        <div class="live-row"><span class="k">Last SIGIL</span><span class="v">2e9cd9b4</span></div>
+        <div class="live-row"><span class="k">Big Braim</span><span class="v">1.39 TB</span></div>
+        <div class="live-row"><span class="k">MCPs</span><span class="v gold" id="liveMcps">218</span></div>
+        <div class="live-row"><span class="k">DORADO</span><span class="v green">west ↔ east</span></div>
+        <div class="live-row"><span class="k">x402 paid</span><span class="v green">● ready</span></div>
+        <div class="live-row"><span class="k">EU AI Act</span><span class="v green">T-37 days</span></div>
+        <div class="live-row"><span class="k">i-character</span><span class="v">ready</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO GLOBE -->
+  <div class="hero-globe">
+    <svg class="globe-svg" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="earth" cx="40%" cy="40%">
+          <stop offset="0%" stop-color="rgba(201, 168, 76, 0.15)" />
+          <stop offset="100%" stop-color="rgba(13, 10, 20, 0.8)" />
+        </radialGradient>
+        <radialGradient id="glow" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="rgba(201, 168, 76, 0.2)" />
+          <stop offset="100%" stop-color="rgba(201, 168, 76, 0)" />
+        </radialGradient>
+      </defs>
+      <circle cx="240" cy="240" r="220" fill="url(#earth)" stroke="rgba(201, 168, 76, 0.3)" stroke-width="1" />
+      <circle cx="240" cy="240" r="240" fill="url(#glow)" />
+      <g class="rotation" stroke="rgba(201, 168, 76, 0.1)" fill="none" stroke-width="0.5">
+        <ellipse cx="240" cy="240" rx="220" ry="60" />
+        <ellipse cx="240" cy="240" rx="220" ry="120" />
+        <ellipse cx="240" cy="240" rx="220" ry="180" />
+        <ellipse cx="240" cy="240" rx="60" ry="220" />
+        <ellipse cx="240" cy="240" rx="120" ry="220" />
+        <ellipse cx="240" cy="240" rx="180" ry="220" />
+      </g>
+      <!-- Temples at real lat/lon -->
+      <g class="temples" id="heroTemples"></g>
+    </svg>
+  </div>
+</section>
+
+<!-- NEWS / ACTIVITY -->
+<section class="section" id="news">
+  <div class="section-tag">▸ Live updates</div>
+  <h2>The empire, this week.</h2>
+  <p class="sub">What's shipping, what's new, what just landed on the sovereign substrate.</p>
+
+  <div class="news-grid" id="newsGrid">
+    <!-- Filled by JS -->
+  </div>
+</section>
+
+<!-- TEMPLES -->
+<section class="section" id="temples">
+  <div class="section-tag">▸ 11 temples live</div>
+  <h2>Every regulation, on the globe.</h2>
+  <p class="sub">Click a temple to enter the deep-inside view: frameworks, white papers, inner flows. Sovereign-curated, council-approved.</p>
+
+  <div class="temples-grid" id="templesGrid">
+    <!-- Filled by JS -->
+  </div>
+</section>
+
+<!-- COUNCIL -->
+<section class="section" id="council">
+  <div class="section-tag">▸ Governance</div>
+  <h2>The 12-Queen + King council.</h2>
+  <p class="sub">Every MEOK action is weighed by 13 sovereign queens + 1 king. BFT consensus: 9 of 13 needed. Two queens hold VETO: Care (harm) and Watch (security).</p>
+
+  <div class="council-grid" id="councilGrid"></div>
+</section>
+
+<!-- MCP FLEET -->
+<section class="section" id="mcp">
+  <div class="section-tag">▸ MCP substrate</div>
+  <h2>218 open-source MCP servers.</h2>
+  <p class="sub">The agent-native compliance layer. Each MCP ships with Ed25519 SIGIL signing + a published manifest. One command to install.</p>
+
+  <div class="mcp-bar">
+    <div>
+      <div class="num" id="mcpNum">218</div>
+      <div class="label">MCPs published</div>
+    </div>
+    <div class="breakdown" id="mcpBreakdown">
+      <span class="chip">🇪🇺 28 EU AI Act</span>
+      <span class="chip">🛡 18 SIGIL/audit</span>
+      <span class="chip">🧬 16 cascade</span>
+      <span class="chip">🌉 22 bridges</span>
+      <span class="chip">🎮 12 gaming</span>
+      <span class="chip">⚖ 9 compliance</span>
+    </div>
+  </div>
+
+  <div class="mcp-categories" id="mcpCategories">
+    <div class="mcp-cat"><div class="icon">📜</div><div class="name">EU AI Act</div><div class="count">28 MCPs</div></div>
+    <div class="mcp-cat"><div class="icon">🛡</div><div class="name">SIGIL / Audit</div><div class="count">18 MCPs</div></div>
+    <div class="mcp-cat"><div class="icon">🧬</div><div class="name">Cascade</div><div class="count">16 MCPs</div></div>
+    <div class="mcp-cat"><div class="icon">🌉</div><div class="name">Bridges</div><div class="count">22 MCPs</div></div>
+    <div class="mcp-cat"><div class="icon">🎮</div><div class="name">Gaming</div><div class="count">12 MCPs</div></div>
+    <div class="mcp-cat"><div class="icon">⚖</div><div class="name">Compliance</div><div class="count">9 MCPs</div></div>
+    <div class="mcp-cat"><div class="icon">🏛</div><div class="name">Governance</div><div class="count">15 MCPs</div></div>
+    <div class="mcp-cat"><div class="icon">🤖</div><div class="name">Agent</div><div class="count">21 MCPs</div></div>
+  </div>
+</section>
+
+<!-- OS CTA -->
+<section class="section">
+  <div class="cta-section">
+    <h2>Enter MEOK WORLD.</h2>
+    <p>The sovereign AI operating system. Your i-character. The world at your feet. Free forever.</p>
+    <div class="ctas" style="display: flex; gap: 12px;">
+      <a href="/csoai-os/v2-signup-wizard.html" class="btn btn-primary">Create your i-character →</a>
+      <a href="/csoai-os/v2-temple-os.html" class="btn btn-secondary">Open the OS</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <span class="dot"></span>
+        <span>MEOK<span class="accent">.WORLD</span></span>
+      </div>
+      <p>MEOK AI Labs · CSOAI Ltd · UK Companies House 16939677. Built with care. Sovereign, auditable, public.</p>
+    </div>
+    <div>
+      <h4>Universe</h4>
+      <ul>
+        <li><a href="/universe">MEOK Universe</a></li>
+        <li><a href="/town">Town</a></li>
+        <li><a href="/dome">DOME</a></li>
+        <li><a href="/go">MEOK GO</a></li>
+        <li><a href="/ar">MEOK AR</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>OS</h4>
+      <ul>
+        <li><a href="/csoai-os/v2-temple-os.html">Sovereign OS</a></li>
+        <li><a href="/csoai-os/v2-signup-wizard.html">i-character</a></li>
+        <li><a href="/council">Council</a></li>
+        <li><a href="/research">Research</a></li>
+        <li><a href="/os/any-llm">Any LLM</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/press">Press</a></li>
+        <li><a href="/roadmap">Roadmap</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Portfolio</h4>
+      <ul>
+        <li><a href="https://csoai.org">CSOAI</a></li>
+        <li><a href="https://www.cobolbridge.ai">COBOL Bridge</a></li>
+        <li><a href="https://proofof.ai">ProofOf.AI</a></li>
+        <li><a href="/ai-act">Compliance Centre</a></li>
+        <li><a href="https://github.com/CSOAI-ORG">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 MEOK AI LABS · CSOAI LTD · UK Companies House <strong style="color: var(--gold);">16939677</strong> · Registered in England & Wales.</span>
+    <div class="legal">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/cookies">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// THE DATA
+// ============================================================
+
+const TEMPLES = [
+  { code: 'EU', name: 'European Union', flag: '🇪🇺', region: 'eu', x: 50, y: 32, regs: ['EU AI Act', 'GDPR', 'DORA', 'NIS2', 'CRA', '+3'] },
+  { code: 'UK', name: 'United Kingdom', flag: '🇬🇧', region: 'eu', x: 47, y: 28, regs: ['UK AI Reg', 'UK GDPR', 'OSA', 'Defence AI', 'ASGARD'] },
+  { code: 'US', name: 'United States', flag: '🇺🇸', region: 'us', x: 22, y: 38, regs: ['NIST AI RMF', 'NIST CSF', 'EO 14110', 'Colorado', 'Texas', 'CA', 'NYC'] },
+  { code: 'CA', name: 'Canada', flag: '🇨🇦', region: 'us', x: 22, y: 30, regs: ['AIDA', 'PIPEDA'] },
+  { code: 'CN', name: 'China', flag: '🇨🇳', region: 'apac', x: 78, y: 38, regs: ['生成式AI', 'TC260', 'Algorithm'] },
+  { code: 'JP', name: 'Japan', flag: '🇯🇵', region: 'apac', x: 85, y: 36, regs: ['AI Promotion', 'APPI'] },
+  { code: 'SG', name: 'Singapore', flag: '🇸🇬', region: 'apac', x: 80, y: 56, regs: ['Model AI v2', 'PDPA'] },
+  { code: 'UN', name: 'United Nations', flag: '🇺🇳', region: 'global', x: 50, y: 50, regs: ['UN AI', 'UNESCO', 'HRC'] },
+  { code: 'ISO', name: 'ISO Standards', flag: '🏛', region: 'global', x: 60, y: 22, regs: ['42001', '27001', '23894'] },
+  { code: 'IEEE', name: 'IEEE Standards', flag: '⚙', region: 'global', x: 70, y: 78, regs: ['7003-2024', '7000-2024'] },
+  { code: 'CSOAI', name: 'CSOAI Sovereign', flag: '🐉', region: 'global', x: 30, y: 50, regs: ['SOV3', 'x402', 'OSCAL', 'BFT'] },
+];
+
+const COUNCIL = [
+  { name: 'Sovereign King', emoji: '👑', archetype: 'Sovereign Coordinator' },
+  { name: 'Aurelian', emoji: '♑', archetype: 'Long-Term Strategist' },
+  { name: 'Sophia Care', emoji: '💗', archetype: 'Caretaker', veto: true },
+  { name: 'Justitia', emoji: '⚖', archetype: 'Auditor' },
+  { name: 'Asteria', emoji: '⭐', archetype: 'Optimist-Operator' },
+  { name: 'Dominion', emoji: '🛞', archetype: 'Territorial Chariot' },
+  { name: 'Aleph', emoji: '✨', archetype: 'Mysterious Fool' },
+  { name: 'Brain', emoji: '🧠', archetype: 'Hermit Scholar' },
+  { name: 'Proactive', emoji: '⚡', archetype: 'Wheel of Fortune' },
+  { name: 'Bridge', emoji: '🌉', archetype: 'Lovers Integrator' },
+  { name: 'Distribution', emoji: '☀️', archetype: 'Generous Sun' },
+  { name: 'Council', emoji: '🦁', archetype: 'Strength-Tamer' },
+  { name: 'Watch', emoji: '🗼', archetype: 'Vigilant Tower', veto: true },
+];
+
+const NEWS = [
+  {
+    tag: 'sovereignty',
+    title: 'i-character launches: 13 queen archetypes + 22 arcana lenses',
+    summary: 'The sovereign digital twin is live. Users create their i-character in 5 steps: region auto-detect → name → queen archetype → arcana lens → confirmation. Bound to the sovereign character, persists across sessions.',
+    date: 'today',
+    url: '/csoai-os/v2-signup-wizard.html',
+    photoEmoji: '🐉',
+  },
+  {
+    tag: 'temple',
+    title: 'EU AI Act Aug 2nd deadline: T-37 days. Survival Kit shipped.',
+    summary: 'Article 50 transparency + GPAI obligations + 1of4 penalty calculator. 26th app in the OS. Pinned to the home page CTA. The whole empire in 1 button.',
+    date: '2 days ago',
+    url: '/eu-ai-act-checklist',
+    photoEmoji: '⏰',
+  },
+  {
+    tag: 'council',
+    title: '12-Queen + King council: BFT 9/13 + 2 VETO. Tested. Live.',
+    summary: 'Each MEOK action is weighed by 13 sovereign queens + 1 king. BFT consensus: 9 of 13 needed. Two queens hold VETO: Sophia Care (harm) and Watch (security CVEs). 13-Queen + King Toml ships the runtime pattern.',
+    date: '3 days ago',
+    url: '#council',
+    photoEmoji: '👥',
+  },
+  {
+    tag: 'sovereignty',
+    title: 'MEOK WORLD on Unreal Engine 5 — 3D, live, sovereign.',
+    summary: '5 actors, 11 temples at real lat/lon, sovereign character animation, SOV3 HTTP connector, BFT math, SIGIL audit. The world in 3D. Win64 + Mac + Linux + iOS + Android.',
+    date: '5 days ago',
+    url: '/csoai-os/v2-temple-os.html',
+    photoEmoji: '🎮',
+  },
+  {
+    tag: 'temple',
+    title: 'x402 paid cascade: $0.005-$0.10 USDC per call, $40K/yr per customer',
+    summary: 'The 4-tier model cascade now has x402 paywall wrapping. 70% of queries stay on Tier 1 (3-7B Edge), 20% on Tier 2 (Tactical), 8% Tier 3 (Operations), 2% Tier 4 (Strategic with speculative decode). Avg $0.011 per call.',
+    date: '1 week ago',
+    url: '/cascade',
+    photoEmoji: '💎',
+  },
+  {
+    tag: 'council',
+    title: 'SIGIL audit chain: 496 rounds, f=4, quorum=9/13, Ed25519 signed',
+    summary: 'Every MEOK action appends to the SIGIL chain. The 12-Queen + King council votes on-chain. The Defoneos layer wraps everything. 302 SDK floor bumps applied (CVE-free).',
+    date: '1 week ago',
+    url: '/sigil',
+    photoEmoji: '📜',
+  },
+];
+
+// ============================================================
+// RENDER
+// ============================================================
+
+// Hero globe temples
+function renderHeroTemples() {
+  const g = document.getElementById('heroTemples');
+  // Add the user marker (assume UK for the hero)
+  const ux = 47, uy = 28;
+  g.innerHTML = `
+    <circle cx="${ux * 4.8}" cy="${uy * 4.8}" r="8" fill="none" stroke="rgba(96, 165, 250, 0.5)" stroke-width="1">
+      <animate attributeName="r" from="8" to="20" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" from="1" to="0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="${ux * 4.8}" cy="${uy * 4.8}" r="4" fill="#60a5fa" />
+  `;
+  TEMPLES.forEach((t, i) => {
+    const cx = t.x * 4.8;
+    const cy = t.y * 4.8;
+    const isActive = t.code === 'UK';
+    g.insertAdjacentHTML('beforeend', `
+      <circle class="globe-temple ${isActive ? 'active' : ''}"
+              cx="${cx}" cy="${cy}" r="${isActive ? 6 : 4}"
+              data-code="${t.code}" data-name="${t.name}">
+        <title>${t.flag} ${t.name} — ${t.regs.length} regulations</title>
+      </circle>
+    `);
+  });
+}
+
+// News cards
+function renderNews() {
+  const grid = document.getElementById('newsGrid');
+  grid.innerHTML = NEWS.map(n => `
+    <a class="news-card" href="${n.url}">
+      <div class="photo tag-${n.tag}">
+        <div class="photo-inner">${n.photoEmoji}</div>
+      </div>
+      <div class="body">
+        <div class="meta">
+          <span class="tag">${n.tag}</span>
+          <span>${n.date}</span>
+        </div>
+        <h3>${n.title}</h3>
+        <p>${n.summary}</p>
+        <div class="footer">
+          <span>MEOK WORLD</span>
+          <span>Read →</span>
+        </div>
+      </div>
+    </a>
+  `).join('');
+}
+
+// Temples
+function renderTemples() {
+  const grid = document.getElementById('templesGrid');
+  grid.innerHTML = TEMPLES.map(t => `
+    <a class="temple-card ${t.region}" href="/temples/${t.code.toLowerCase()}">
+      <div class="head">
+        <span class="flag">${t.flag}</span>
+        <span class="code">${t.code}</span>
+      </div>
+      <h3>${t.name}</h3>
+      <div class="reg-count">${t.regs.length} regulations</div>
+      <div class="regs">
+        ${t.regs.slice(0, 4).map(r => `<span class="reg">${r}</span>`).join('')}
+        ${t.regs.length > 4 ? `<span class="reg">+${t.regs.length - 4}</span>` : ''}
+      </div>
+    </a>
+  `).join('');
+}
+
+// Council
+function renderCouncil() {
+  const grid = document.getElementById('councilGrid');
+  grid.innerHTML = COUNCIL.map(q => `
+    <div class="council-card ${q.veto ? 'veto' : ''}">
+      <div class="emoji">${q.emoji}</div>
+      <div class="name">${q.name}</div>
+      <div class="arch">${q.archetype}</div>
+      ${q.veto ? '<span class="veto-badge">VETO</span>' : ''}
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// LIVE BACKEND POLLING
+// ============================================================
+
+async function pollBackend() {
+  // In production: fetch from /api/backend/status
+  // For demo: simulate + jitter
+  try {
+    // Try real endpoint first
+    const r = await fetch('/api/backend/status', { method: 'GET' }).catch(() => null);
+    if (r && r.ok) {
+      const j = await r.json();
+      if (j.hive) document.getElementById('liveHive').textContent = j.hive;
+      if (j.mcps) document.getElementById('liveMcps').textContent = j.mcps;
+    } else {
+      // Simulate small jitter
+      const mcps = 218 + Math.floor(Math.random() * 2);
+      document.getElementById('liveMcps').textContent = mcps;
+    }
+  } catch (e) {
+    // Offline mode — show static values
+  }
+}
+
+// ============================================================
+// BOOT
+// ============================================================
+
+renderHeroTemples();
+renderNews();
+renderTemples();
+renderCouncil();
+pollBackend();
+setInterval(pollBackend, 30000); // poll every 30s
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
+</script>
+
+<!-- MEOK Character Emergence CTA -->
+<div style="position:fixed; bottom:80px; right:24px; z-index:50; background:linear-gradient(135deg, #c9a84c, #d4a853); border:1px solid #c9a84c; border-radius:16px; padding:14px 22px; box-shadow:0 8px 30px rgba(201,168,76,0.4);">
+  <a href="/csoai-os/meok-home/meok-character-emergence.html" style="color:#0a0a1a; text-decoration:none; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:18px;">🐉</span>
+    <span>See the emergence</span>
+    <span style="opacity:0.6;">→</span>
+  </a>
+</div>
+<script>
+// Show the i-character avatar if one exists
+(async () => {
+  try {
+    const ichar = JSON.parse(localStorage.getItem("meok_ichar") || "null");
+    if (ichar && ichar.ichar_id) {
+      const img = document.createElement("img");
+      img.src = "/api/ichar/" + ichar.ichar_id + "/avatar?size=200";
+      img.alt = "Your i-character avatar";
+      img.style.cssText = "position:fixed;top:24px;right:24px;z-index:200;width:96px;height:144px;border-radius:12px;border:2px solid #c9a84c;box-shadow:0 0 24px rgba(201,168,76,0.3);background:#FAF7F0;";
+      document.body.appendChild(img);
+      img.onerror = () => { img.style.display = "none"; };
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

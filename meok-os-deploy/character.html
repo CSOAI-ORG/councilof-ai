@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEOK — Your Sovereign Character</title>
+<style>
+  :root{--cream:#f1eadd;--ink:#1f1c17;--muted:#6b6a63;--gold:#bd9a52;--line:rgba(31,28,23,.1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  /* MEOK brand: warm cream + a soft golden halo (the "shared light" of the slides) */
+  body{background:radial-gradient(130% 100% at 50% 60%, #fbf3e2 0%, #f4ecdd 44%, #efe6d5 100%);color:var(--ink);font-family:"Geist","Inter",-apple-system,system-ui,sans-serif;height:100vh;overflow:hidden;-webkit-font-smoothing:antialiased}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(58% 46% at 50% 58%, rgba(255,193,92,.20), rgba(255,214,150,.07) 46%, transparent 68%)}
+  #stage{position:absolute;inset:0;z-index:1}
+  canvas{display:block}
+  .top{position:absolute;top:0;left:0;right:0;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;z-index:5}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:600;font-size:17px}
+  .m{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#2a2722,#4d473d);display:grid;place-items:center;color:#f4eee1;font-weight:700;font-size:15px}
+  .kick{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .cast{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;padding:14px;z-index:5}
+  .cc{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:14px;padding:9px 13px;cursor:pointer;transition:.18s;backdrop-filter:blur(6px);min-width:184px}
+  .cc:hover{background:rgba(255,255,255,.85);transform:translateX(3px)}
+  .cc.on{border-color:var(--gold);background:#fff}
+  .cc .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:17px;color:#fff;flex:none}
+  .cc b{font-size:14px;display:block;line-height:1.2}.cc span{font-size:11.5px;color:var(--muted)}
+  .info{position:absolute;right:24px;top:84px;max-width:240px;text-align:right;z-index:5}
+  .info h1{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.05}
+  .info .role{color:var(--gold);font-weight:600;font-size:13px;margin-top:4px}
+  .info p{color:var(--muted);font-size:13.5px;margin-top:8px}
+  .traits{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin-top:10px}
+  .traits span{font-size:11px;background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+  .dock{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:min(620px,92vw);z-index:6}
+  .log{max-height:34vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:10px;padding:0 4px}
+  .msg{padding:9px 14px;border-radius:14px;font-size:14.5px;max-width:82%;line-height:1.5}
+  .msg.you{align-self:flex-end;background:var(--ink);color:#f4eee1;border-bottom-right-radius:5px}
+  .msg.ai{align-self:flex-start;background:rgba(255,255,255,.85);border:1px solid var(--line);border-bottom-left-radius:5px}
+  .bar{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:999px;padding:6px 6px 6px 18px;box-shadow:0 10px 30px -16px rgba(31,28,23,.5)}
+  .bar input{flex:1;border:0;background:transparent;font-size:15px;outline:none;color:var(--ink);font-family:inherit}
+  .send{width:40px;height:40px;border-radius:50%;border:0;background:var(--ink);color:#f4eee1;font-size:16px;cursor:pointer;flex:none}
+  .loading{position:absolute;inset:0;display:grid;place-items:center;background:var(--cream);z-index:9;transition:opacity .6s}
+  .loading.hide{opacity:0;pointer-events:none}
+  .egg{width:70px;height:90px;border-radius:50% 50% 48% 48%;background:radial-gradient(circle at 38% 32%,#fff8ec,#e6dcc8);box-shadow:0 0 40px rgba(201,184,232,.6);animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .loading p{position:absolute;bottom:38%;color:var(--muted);font-size:14px}
+  @media(max-width:720px){.cast{flex-direction:row;top:auto;bottom:96px;transform:none;left:0;right:0;overflow-x:auto;flex-wrap:nowrap}.cc{min-width:auto}.cc b,.cc span{display:none}.info{display:none}}
+  /* ── GLASS design language (from the new decks): frosted translucent panels, iridescent edges ── */
+  .cc,.msg.ai,.bar,.traits span{background:rgba(252,248,241,.5)!important;backdrop-filter:blur(18px) saturate(1.25);-webkit-backdrop-filter:blur(18px) saturate(1.25);border:1px solid rgba(255,255,255,.45)!important;box-shadow:0 10px 34px rgba(18,12,6,.30), inset 0 1px 0 rgba(255,255,255,.55)}
+  .cc.on{background:rgba(255,252,246,.7)!important;border-color:var(--gold)!important}
+  .info{background:rgba(252,248,241,.42);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.4);border-radius:16px;padding:16px 18px;box-shadow:0 10px 34px rgba(18,12,6,.3)}
+  .info h1{background:linear-gradient(96deg,#c9a84c 0%,#e8cd8a 30%,#b9d3c4 55%,#d6b3e0 78%,#c9a84c 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  /* premium finish picker (Pro material tiers) */
+  #finish{position:fixed;top:16px;right:24px;z-index:60;display:flex;gap:6px}
+  #finish button{border:1px solid rgba(255,255,255,.45);background:rgba(252,248,241,.5);backdrop-filter:blur(14px);color:#2a1a14;font:600 12px "Space Grotesk",sans-serif;padding:7px 12px;border-radius:999px;cursor:pointer;box-shadow:0 6px 20px rgba(18,12,6,.22)}
+  #finish button .pro{font-size:9px;color:var(--gold);margin-left:4px;letter-spacing:.06em}
+  /* ── MCP CARDS: the "talk → your sovereign spawns tool cards across the screen" surface ── */
+  #cards{position:absolute;inset:0;z-index:7;pointer-events:none}
+  .mcpcard{position:absolute;width:min(300px,80vw);pointer-events:auto;background:rgba(252,248,241,.5);backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3);border:1px solid rgba(255,255,255,.5);border-radius:16px;box-shadow:0 18px 48px rgba(18,12,6,.34),inset 0 1px 0 rgba(255,255,255,.6);overflow:hidden;opacity:0;transform:translateY(14px) scale(.97);transition:opacity .4s cubic-bezier(.2,.7,.2,1),transform .4s cubic-bezier(.2,.7,.2,1)}
+  .mcpcard.in{opacity:1;transform:none}
+  .mcpcard::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,#e8cd8a,#b9d3c4,#d6b3e0,transparent);opacity:.75;z-index:2}
+  .mcpcard .ch{display:flex;align-items:center;gap:9px;padding:11px 13px 9px;cursor:grab;user-select:none}
+  .mcpcard .ci{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:16px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.55);flex:none}
+  .mcpcard .ct{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.15}
+  .mcpcard .ctag{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-top:1px}
+  .mcpcard .cx{margin-left:auto;cursor:pointer;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;color:var(--muted);font-size:13px}
+  .mcpcard .cx:hover{background:rgba(217,117,106,.16);color:#c0554b}
+  .mcpcard .cb{padding:2px 14px 13px;font-size:12.8px;line-height:1.5;color:#453f36;max-height:40vh;overflow:auto}
+  .mcpcard .cb b{color:var(--ink)}
+  .mcpcard .cb code{background:rgba(201,168,76,.14);padding:1px 5px;border-radius:5px;font-size:11.5px}
+  .mcpcard .cact{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 13px}
+  .mcpcard .cbtn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.4);color:var(--ink);font:600 11.5px inherit;padding:6px 11px;border-radius:999px;cursor:pointer;transition:.15s}
+  .mcpcard .cbtn:hover{border-color:var(--gold);background:#fff}
+  .mcpcard .cver{font:600 11px ui-monospace,monospace;padding:5px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:5px}
+  .mcpcard .cver.ok{background:rgba(19,122,75,.13);color:#137a4b;border:1px solid #b7e0c6}
+  .mcpcard .cver.no{background:rgba(179,38,30,.1);color:#b3261e;border:1px solid #f0c3bd}
+  .clink{cursor:pointer;color:var(--gold);font-weight:600;text-decoration:underline;text-decoration-color:rgba(201,168,76,.4)}
+  @media(max-width:720px){#cards{display:none}}
+</style>
+</head>
+<body>
+<div id="stage" data-testid="character-stage"></div>
+<div id="cards" data-testid="mcp-cards"></div>
+<div class="loading" id="loading" data-testid="character-loading"><div class="egg"></div><p>Your sovereign is emerging…</p></div>
+<div class="top">
+  <div class="logo"><span class="m">M</span> MEOK</div>
+  <div class="kick">Your Sovereign Character</div>
+</div>
+<div class="cast" id="cast" data-testid="character-cast"></div>
+<div class="info" id="info" data-testid="character-info"></div>
+<div class="dock" data-testid="character-dock">
+  <div class="log" id="log" data-testid="character-log"></div>
+  <div class="bar">
+    <input id="in" data-testid="character-input" placeholder="Speak to your sovereign…" autocomplete="off">
+    <button class="send" id="send">➤</button>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://esm.sh/three@0.169.0",
+  "three/addons/": "https://esm.sh/three@0.169.0/examples/jsm/",
+  "@pixiv/three-vrm": "https://esm.sh/@pixiv/three-vrm@3.1.6?external=three"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
+
+// ── Your ONE Sovereign — you hatch it, name it, it remembers you forever, governed by the charters ──
+const DEFAULT_NAME='Sophia';
+const MEM=(()=>{ try{ return { name:localStorage.getItem('meok_sov_name'), hue:parseInt(localStorage.getItem('meok_sov_hue'))||43, facts:JSON.parse(localStorage.getItem('meok_sov_facts')||'[]') }; }catch(e){ return {name:null,hue:43,facts:[]}; } })();
+let current = { id: MEM.name || DEFAULT_NAME, role:'Your Sovereign', h: MEM.hue, q:'queen-king',
+  tone:'warm, practical, and always remembering',
+  traits:['🛡 Sovereign Charter','🤝 Partnership Charter','⚖ CSOAI AI Governance'] };
+function saveMem(){ try{ localStorage.setItem('meok_sov_name',current.id); localStorage.setItem('meok_sov_hue',current.h); localStorage.setItem('meok_sov_facts',JSON.stringify(MEM.facts.slice(-50))); }catch(e){} }
+function remember(f){ f=(''+f).trim(); if(!f) return; MEM.facts=MEM.facts.filter(x=>x.toLowerCase()!==f.toLowerCase()); MEM.facts.push(f); if(MEM.facts.length>50) MEM.facts.shift(); saveMem(); }
+
+const stage = document.getElementById('stage');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1a130c);   // warm-dark cinematic backdrop (the "Inner Light" mood)
+const camera = new THREE.PerspectiveCamera(28, innerWidth/innerHeight, 0.1, 50);
+camera.position.set(0, 1.32, 2.1);
+const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+stage.appendChild(renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0,1.28,0); controls.enablePan=false; controls.minDistance=1.1; controls.maxDistance=4; controls.update();
+scene.add(new THREE.AmbientLight(0xfff1dc,1.5));
+const key=new THREE.DirectionalLight(0xffe8c2,1.9); key.position.set(1.4,2.2,2.2); scene.add(key);
+const rim=new THREE.DirectionalLight(0xcdb9ec,0.55); rim.position.set(-2,1,-1); scene.add(rim);
+const warm=new THREE.PointLight(0xffb85a,1.0,7); warm.position.set(0,1.25,1.5); scene.add(warm);  // the "inner light"
+// studio environment so the premium metal/marble finishes REFLECT (PBR metals need an env to look real)
+try{ const _pm=new THREE.PMREMGenerator(renderer); scene.environment=_pm.fromScene(new RoomEnvironment(), 0.04).texture; scene.environmentIntensity=1.35; }catch(e){}
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;  // cinematic grade
+
+// ── CINEMATIC pipeline — warm bloom + rising golden embers (Hollywood-grade glow) ──
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.34, 0.62, 0.74); // strength, radius, threshold — subtle warm halo, not blown out
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+composer.setSize(innerWidth, innerHeight); composer.setPixelRatio(Math.min(devicePixelRatio,2));
+// slow, soft golden embers drifting up — the shared-light atmosphere
+const EMBERS = 110, eg = new THREE.BufferGeometry(), ep = new Float32Array(EMBERS*3), ev = new Float32Array(EMBERS);
+for (let i=0;i<EMBERS;i++){ ep[i*3]=(Math.random()-.5)*2.6; ep[i*3+1]=Math.random()*2.6; ep[i*3+2]=(Math.random()-.5)*1.6; ev[i]=0.06+Math.random()*0.12; }
+eg.setAttribute('position', new THREE.BufferAttribute(ep,3));
+const embers = new THREE.Points(eg, new THREE.PointsMaterial({ color:0xffd08a, size:0.03, transparent:true, opacity:0.6, blending:THREE.AdditiveBlending, depthWrite:false }));
+scene.add(embers);
+
+const loader = new GLTFLoader();
+loader.register(p => new VRMLoaderPlugin(p));
+let currentVRM = null;
+const clock = new THREE.Clock();
+
+// ── Emergence being: an egg of light (all-ages default, no anime) ──
+let skin = 'emergence';   // 'emergence' | 'vrm'
+let orb = null;
+function buildOrb(){
+  orb = new THREE.Group();
+  const core  = new THREE.Mesh(new THREE.SphereGeometry(0.15,32,32), new THREE.MeshStandardMaterial({color:0x111111, emissive:0xffffff, emissiveIntensity:1.8, roughness:0.4}));
+  const shell = new THREE.Mesh(new THREE.SphereGeometry(0.34,64,64), new THREE.MeshPhysicalMaterial({color:0xffffff, emissive:0xffffff, emissiveIntensity:0.35, transparent:true, opacity:0.55, roughness:0.12, metalness:0, clearcoat:1, transmission:0.6}));
+  shell.scale.set(1,1.35,1);
+  const aura  = new THREE.Mesh(new THREE.SphereGeometry(0.52,32,32), new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.12, blending:THREE.AdditiveBlending, side:THREE.BackSide}));
+  aura.scale.set(1,1.3,1);
+  const light = new THREE.PointLight(0xffffff, 2.2, 5); light.position.set(0,0,0.15);
+  // soft sparkle motes around the egg
+  const mN=70, mp=new Float32Array(mN*3);
+  for(let i=0;i<mN;i++){ const a=Math.random()*6.28, r=0.42+Math.random()*0.3, y=(Math.random()-0.5)*1.0; mp[i*3]=Math.cos(a)*r; mp[i*3+1]=y; mp[i*3+2]=Math.sin(a)*r; }
+  const motes=new THREE.Points(new THREE.BufferGeometry().setAttribute('position',new THREE.BufferAttribute(mp,3)), new THREE.PointsMaterial({color:0xffffff, size:0.022, transparent:true, opacity:0.7, blending:THREE.AdditiveBlending, depthWrite:false}));
+  orb.add(aura, shell, core, light, motes);
+  orb.position.set(0,1.30,0);
+  orb.scale.setScalar(0.52);
+  orb.userData={core,shell,aura,light,motes};
+  scene.add(orb);
+}
+function orbColor(h){
+  if(!orb) return; const c=new THREE.Color(`hsl(${h},72%,62%)`), u=orb.userData;
+  u.core.material.emissive=c; u.shell.material.color=c; u.shell.material.emissive=c;
+  u.aura.material.color=c.clone().lerp(new THREE.Color(0xffffff),0.3); u.light.color=c; u.motes.material.color=c.clone().lerp(new THREE.Color(0xffffff),0.5);
+}
+function _resetCam(){ try{ camera.position.set(0,1.32,2.1); controls.target.set(0,1.28,0); controls.update(); }catch(e){} }
+function showEmergence(){ skin='emergence'; if(orb) orb.visible=true; if(hatchObj) hatchObj.visible=false; if(being) being.visible=false; if(creature) creature.visible=false; if(currentVRM) currentVRM.scene.visible=false; _resetCam(); orbColor(current.h); document.getElementById('loading').classList.add('hide'); }
+function showVRM(){ skin='vrm'; if(rpmObj) rpmObj.visible=false; if(orb) orb.visible=false; if(being) being.visible=false; if(currentVRM){ currentVRM.scene.visible=true; } else { loadVRM(current.vrm); } }
+
+// ── Friendly companion creature — cute, all-ages, procedural (no anime, no external assets) ──
+let creature=null;
+function buildCreature(){
+  creature=new THREE.Group();
+  const bodyMat=new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.5, metalness:0});
+  const body=new THREE.Mesh(new THREE.SphereGeometry(0.42,48,48), bodyMat); body.scale.set(1,1.05,0.96);
+  const bunMat=bodyMat.clone();
+  const bunL=new THREE.Mesh(new THREE.SphereGeometry(0.085,24,24),bunMat); bunL.position.set(-0.2,0.4,-0.02);
+  const bunR=bunL.clone(); bunR.position.x=0.2;
+  // big friendly eyes (white + dark pupil + sparkle)
+  const eyeW=new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.25});
+  const pupM=new THREE.MeshStandardMaterial({color:0x241c14,roughness:0.4});
+  function eye(x){ const g=new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(0.115,24,24),eyeW));
+    const p=new THREE.Mesh(new THREE.SphereGeometry(0.06,20,20),pupM); p.position.set(0,0,0.08); g.add(p);
+    const s=new THREE.Mesh(new THREE.SphereGeometry(0.022,12,12),new THREE.MeshBasicMaterial({color:0xffffff})); s.position.set(0.03,0.035,0.13); g.add(s);
+    g.position.set(x,0.07,0.355); return g; }
+  const eL=eye(-0.155), eR=eye(0.155);
+  // smile (lower half-torus = ∪) + rosy cheeks
+  const smile=new THREE.Mesh(new THREE.TorusGeometry(0.085,0.02,14,32,Math.PI), new THREE.MeshStandardMaterial({color:0x4a3526,roughness:0.5}));
+  smile.rotation.z=Math.PI; smile.position.set(0,-0.07,0.42);
+  const cheekMat=new THREE.MeshBasicMaterial({color:0xff9aa2,transparent:true,opacity:0.5});
+  const chL=new THREE.Mesh(new THREE.CircleGeometry(0.052,18),cheekMat); chL.position.set(-0.25,-0.04,0.345);
+  const chR=chL.clone(); chR.position.x=0.25;
+  const aura=new THREE.Mesh(new THREE.SphereGeometry(0.62,28,28), new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.13,blending:THREE.AdditiveBlending,side:THREE.BackSide}));
+  const light=new THREE.PointLight(0xffffff,0.85,6); light.position.set(0.3,0.7,1.4);
+  creature.add(aura,light,body,bunL,bunR,chL,chR,smile,eL,eR);
+  creature.position.set(0,1.24,0); creature.scale.setScalar(0.62);
+  creature.userData={body,bunL,bunR,aura,light,eL,eR};
+  scene.add(creature);
+}
+function creatureColor(h){
+  if(!creature) return; const c=new THREE.Color(`hsl(${h},56%,64%)`), u=creature.userData;
+  u.body.material.color=c; u.bunL.material.color=c; u.bunR.material.color=c;
+  u.aura.material.color=c.clone().lerp(new THREE.Color(0xffffff),0.4); u.light.color=c.clone().lerp(new THREE.Color(0xffffff),0.35);
+}
+function showCreature(){ skin='creature'; if(creature) creature.visible=true; if(orb) orb.visible=false; if(currentVRM) currentVRM.scene.visible=false; if(rpmObj) rpmObj.visible=false; if(hatchObj) hatchObj.visible=false; if(being) being.visible=false; _resetCam(); document.getElementById('loading').classList.add('hide'); }
+
+// ── THE SOVEREIGN — a luminous, graceful being of light (brand bible Stage 3: "a luminous golden
+//    light-being rises from the cracked shell"). Emissive-first, so premium finishes only re-TINT its
+//    glow — it can NEVER render as a dark metal silhouette. Procedural: no GPU, no external asset. ──
+let being=null;
+function buildLightBeing(){
+  being = new THREE.Group();
+  // graceful robed-figure-of-light silhouette (a rising flame form), built with LatheGeometry
+  const V = THREE.Vector2, prof = [
+    new V(0.00,0.00), new V(0.16,0.05), new V(0.235,0.17), new V(0.255,0.34),
+    new V(0.225,0.52), new V(0.165,0.70), new V(0.125,0.85), new V(0.165,0.98),
+    new V(0.145,1.10), new V(0.085,1.22), new V(0.028,1.32), new V(0.00,1.40)
+  ];
+  const coreGeo = new THREE.LatheGeometry(prof, 96);
+  const coreMat = new THREE.MeshPhysicalMaterial({
+    color:0xffe4ad, emissive:0xffb84e, emissiveIntensity:0.5, transparent:true, opacity:0.86,
+    roughness:0.18, metalness:0.0, clearcoat:1, clearcoatRoughness:0.1, transmission:0.4,
+    iridescence:0.6, iridescenceIOR:1.4, side:THREE.DoubleSide, envMapIntensity:1.1, depthWrite:false });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  // two soft volumetric aura shells
+  const aura1 = new THREE.Mesh(new THREE.LatheGeometry(prof,64), new THREE.MeshBasicMaterial({color:0xffd489, transparent:true, opacity:0.18, blending:THREE.AdditiveBlending, side:THREE.BackSide, depthWrite:false }));
+  aura1.scale.setScalar(1.22); aura1.position.y=-0.02;
+  const aura2 = new THREE.Mesh(new THREE.SphereGeometry(0.62,32,32), new THREE.MeshBasicMaterial({color:0xffbf6b, transparent:true, opacity:0.10, blending:THREE.AdditiveBlending, side:THREE.BackSide, depthWrite:false }));
+  aura2.scale.set(1,1.35,1); aura2.position.y=0.62;
+  // a thin luminous halo behind the crown
+  const halo = new THREE.Mesh(new THREE.TorusGeometry(0.26,0.012,16,80), new THREE.MeshBasicMaterial({color:0xffe6b0, transparent:true, opacity:0.85, blending:THREE.AdditiveBlending, depthWrite:false }));
+  halo.position.set(0,1.06,-0.05); halo.rotation.x=Math.PI/2.3;
+  // rising inner sparks (energy ascending through the being)
+  const sN=90, sp=new Float32Array(sN*3), so=new Float32Array(sN);
+  for(let i=0;i<sN;i++){ const a=Math.random()*6.28, r=Math.random()*0.18; sp[i*3]=Math.cos(a)*r; sp[i*3+1]=Math.random()*1.4; sp[i*3+2]=Math.sin(a)*r; so[i]=0.15+Math.random()*0.25; }
+  const sparks = new THREE.Points(new THREE.BufferGeometry().setAttribute('position',new THREE.BufferAttribute(sp,3)), new THREE.PointsMaterial({color:0xffe8bd, size:0.02, transparent:true, opacity:0.85, blending:THREE.AdditiveBlending, depthWrite:false }));
+  sparks.userData.vel = so;
+  const light = new THREE.PointLight(0xffcf85, 1.3, 6); light.position.set(0,0.8,0.4);
+  being.add(aura2, aura1, halo, core, sparks, light);
+  being.position.set(0,0.42,0); being.scale.setScalar(0.72);
+  being.userData = { core, aura1, aura2, halo, sparks, light };
+  scene.add(being);
+}
+// premium finish → re-tint the light-being's GLOW (never dark: emissiveIntensity floored high)
+function beingFinish(name){
+  if(!being) return; const f=(FINISHES[name]||FINISHES.pearl).m, u=being.userData;
+  const col=new THREE.Color(f.color), emi=new THREE.Color(f.emissive!==undefined?f.emissive:f.color);
+  u.core.material.color=col; u.core.material.emissive=emi;
+  u.core.material.emissiveIntensity=Math.max(0.42, (f.emissiveIntensity||0.3)+0.2);
+  u.core.material.metalness=Math.min(0.35,(f.metalness||0)*0.4);   // stay luminous, not metal-dark
+  u.core.material.iridescence=(f.iridescence!==undefined?f.iridescence:0.5);
+  u.aura1.material.color=emi.clone().lerp(new THREE.Color(0xffffff),0.25);
+  u.aura2.material.color=emi.clone();
+  u.halo.material.color=emi.clone().lerp(new THREE.Color(0xffffff),0.4);
+  u.light.color=emi.clone().lerp(new THREE.Color(0xffffff),0.2);
+  u.sparks.material.color=emi.clone().lerp(new THREE.Color(0xffffff),0.5);
+}
+function showSovereign(){
+  if(!being) buildLightBeing();
+  beingFinish(window.MEOK_FINISH);
+  skin='sovereign'; being.visible=true;
+  if(orb) orb.visible=false; if(creature) creature.visible=false; if(currentVRM) currentVRM.scene.visible=false;
+  if(rpmObj) rpmObj.visible=false; if(hatchObj) hatchObj.visible=false;
+  try{ camera.position.set(0,0.95,3.5); controls.target.set(0,0.72,0); controls.update(); }catch(e){}
+  document.getElementById('loading').classList.add('hide');
+}
+// ── Bring your own avatar (Ready Player Me — the cross-app/game avatar standard, plain glTF) ──
+let rpmObj=null;
+function loadGLB(url){
+  const L=document.getElementById('loading'); L.classList.remove('hide');
+  loader.load(url, (gltf)=>{
+    if(rpmObj){ scene.remove(rpmObj); }
+    rpmObj = gltf.scene; rpmObj.position.set(0,0,0); rpmObj.rotation.y=0;
+    scene.add(rpmObj);
+    if(orb) orb.visible=false; if(creature) creature.visible=false; if(currentVRM) currentVRM.scene.visible=false; rpmObj.visible=true;
+    skin='rpm'; try{ localStorage.setItem('meok_rpm', url); }catch(e){}
+    L.classList.add('hide');
+    say('ai', `That's you — your own avatar, brought into MEOK. I'm still ${current.id}, here with you.`);
+  }, undefined, ()=>{ L.classList.add('hide'); say('ai',"Couldn't load that avatar — try again?"); });
+}
+// ── PREMIUM MATERIAL TIERS (from the decks): Pearl (free) · Silver/Gold/Platinum/Marble (Pro) ──
+// Iridescence = the "translucent glass, emerging colours" look; metals/marble = the premium spawns.
+// Luminous premium finishes — each GLOWS its own colour (emissive) so it reads warm & alive on the dark
+// backdrop, never a dark metal silhouette. metalness kept moderate so light-response stays soft, not harsh.
+const FINISHES = {
+  pearl:    { label:'✨ Pearl', pro:false, m:{ color:0xf7efe0, metalness:0.2, roughness:0.24, clearcoat:1, clearcoatRoughness:0.12, iridescence:1, iridescenceIOR:1.55, emissive:0xffe6bd, emissiveIntensity:0.22, envMapIntensity:1.4 } },
+  silver:   { label:'🥈 Silver', pro:true, m:{ color:0xe8edf3, metalness:0.85, roughness:0.16, clearcoat:0.7, iridescence:0.3, emissive:0xaebcc9, emissiveIntensity:0.28, envMapIntensity:1.6 } },
+  gold:     { label:'🥇 Gold', pro:true, m:{ color:0xf0cf6e, metalness:0.85, roughness:0.2, clearcoat:0.5, emissive:0xc98a2e, emissiveIntensity:0.42, envMapIntensity:1.6 } },
+  platinum: { label:'💿 Platinum', pro:true, m:{ color:0xf3f5f8, metalness:0.9, roughness:0.1, clearcoat:0.9, iridescence:0.45, iridescenceIOR:1.4, emissive:0xc7cdd6, emissiveIntensity:0.3, envMapIntensity:1.7 } },
+  marble:   { label:'🏛️ Marble', pro:true, m:{ color:0xf7f4ee, metalness:0, roughness:0.3, clearcoat:1, clearcoatRoughness:0.05, iridescence:0.25, emissive:0xefe8da, emissiveIntensity:0.24, envMapIntensity:1.2 } },
+};
+window.MEOK_FINISH = 'pearl';
+function finishMaterial(name){ const f=(FINISHES[name]||FINISHES.pearl).m; return new THREE.MeshPhysicalMaterial(Object.assign({ side:THREE.DoubleSide }, f)); }
+window.applyFinish = function(name){
+  if(!FINISHES[name]) return; window.MEOK_FINISH=name;
+  // the Sovereign light-being is the branded premium body — re-tint its glow
+  if(typeof showSovereign==='function'){ showSovereign(); }
+  // legacy generated mesh (if ever loaded) also honours the finish
+  if(typeof hatchObj!=='undefined' && hatchObj){ hatchObj.traverse(o=>{ if(o.isMesh && !o.userData._glow){ o.material=finishMaterial(name); } }); }
+  return name;
+};
+
+// HATCH skin — the sovereign body; renders in the chosen premium FINISH (Pearl/Silver/Gold/Platinum/Marble).
+let hatchObj=null;
+function showHatch(){
+  if(hatchObj){ skin='hatch'; hatchObj.visible=true; if(orb)orb.visible=false; if(creature)creature.visible=false; if(currentVRM)currentVRM.scene.visible=false; if(rpmObj)rpmObj.visible=false; return; }
+  const L=document.getElementById('loading'); L.classList.remove('hide');
+  loader.load('/models/hatch.glb', (gltf)=>{
+    hatchObj=gltf.scene;
+    // render in the chosen premium FINISH (Pearl/Silver/Gold/Platinum/Marble) + a soft glow shell
+    hatchObj.traverse(o=>{ if(o.isMesh && !o.userData._glow){
+      o.material = finishMaterial(window.MEOK_FINISH);
+      o.frustumCulled=false;
+      try{ const g=new THREE.Mesh(o.geometry, new THREE.MeshBasicMaterial({ color:0xffd88a, transparent:true, opacity:0.12, blending:THREE.AdditiveBlending, side:THREE.BackSide })); g.scale.setScalar(1.05); g.userData._glow=true; o.add(g); }catch(e){}
+    } });
+    // scale to ~1.5 tall, FEET GROUNDED at y=0, centered x/z — exactly like the VRM skin that frames correctly
+    try{
+      let b=new THREE.Box3().setFromObject(hatchObj);
+      const s=1.5/(b.getSize(new THREE.Vector3()).y||1); hatchObj.scale.setScalar(s);
+      b=new THREE.Box3().setFromObject(hatchObj);
+      const c=b.getCenter(new THREE.Vector3());
+      hatchObj.position.set(-c.x, -b.min.y, -c.z);   // feet at floor, centred
+    }catch(e){}
+    scene.add(hatchObj);
+    // frame the generated body (pulled back so the full bust fits — verified live)
+    try{ camera.position.set(0,0.9,3.3); controls.target.set(0,0.8,0); controls.update(); }catch(e){}
+    skin='hatch'; if(orb)orb.visible=false; if(creature)creature.visible=false; if(currentVRM)currentVRM.scene.visible=false; if(rpmObj)rpmObj.visible=false; hatchObj.visible=true;
+    L.classList.add('hide');
+  }, undefined, ()=>{ L.classList.add('hide'); if(typeof showEmergence==='function') showEmergence(); });  // no generated mesh yet → emergence orb
+}
+let blinkTimer = 2, blinkPhase = 0, speakUntil = 0;
+const bone = (vrm,n)=>{ try{ return vrm.humanoid && vrm.humanoid.getNormalizedBoneNode(n); }catch(e){ return null; } };
+
+function restPose(vrm){
+  // bring arms down out of the T-pose; this runs once on load
+  const lA=bone(vrm,'leftUpperArm'), rA=bone(vrm,'rightUpperArm');
+  const lL=bone(vrm,'leftLowerArm'), rL=bone(vrm,'rightLowerArm');
+  if(lA) lA.rotation.set(0.05,0,1.22); if(rA) rA.rotation.set(0.05,0,-1.22);
+  if(lL) lL.rotation.set(0,-0.18,0.12); if(rL) rL.rotation.set(0,0.18,-0.12);
+}
+
+function loadVRM(file, first){
+  const L=document.getElementById('loading'); if(!first) L.classList.remove('hide');
+  loader.load('/characters/'+file, (gltf)=>{
+    if(currentVRM){ scene.remove(currentVRM.scene); try{VRMUtils.deepDispose&&VRMUtils.deepDispose(currentVRM.scene);}catch(e){} }
+    const vrm = gltf.userData.vrm;
+    try{ VRMUtils.removeUnnecessaryJoints && VRMUtils.removeUnnecessaryJoints(gltf.scene); }catch(e){}
+    vrm.scene.rotation.y = Math.PI;
+    scene.add(vrm.scene);
+    vrm.scene.visible = (skin==='vrm');
+    try{ vrm.springBoneManager=null; }catch(e){}
+    restPose(vrm);
+    currentVRM = vrm; clock.getDelta();
+    setTimeout(()=>L.classList.add('hide'), 250);
+  }, undefined, ()=>{ document.getElementById('loading').classList.add('hide'); if(typeof showEmergence==='function') showEmergence(); });  // VRM asset absent → fall back to the always-present emergence skin (honest, never blank)
+}
+
+const POSE = { uaZ:1.62, uaX:0.10, shZ:0.20, laZ:0.32, laY:0.12 };
+function idle(vrm, t, dt){
+  // breathing + gentle sway on top of the rest pose
+  const spine=bone(vrm,'spine'), chest=bone(vrm,'chest'), head=bone(vrm,'head');
+  const lA=bone(vrm,'leftUpperArm'), rA=bone(vrm,'rightUpperArm');
+  const lS=bone(vrm,'leftShoulder'), rS=bone(vrm,'rightShoulder');
+  const lL=bone(vrm,'leftLowerArm'), rL=bone(vrm,'rightLowerArm');
+  const br=Math.sin(t*1.4);
+  if(spine) spine.rotation.x = br*0.018;
+  if(chest) chest.rotation.x = br*0.012;
+  if(lS) lS.rotation.z = POSE.shZ; if(rS) rS.rotation.z = -POSE.shZ;
+  const sway=Math.sin(t*1.1)*0.035;
+  if(lA) lA.rotation.set(POSE.uaX, 0, POSE.uaZ + sway);
+  if(rA) rA.rotation.set(POSE.uaX, 0, -(POSE.uaZ + sway));
+  if(lL) lL.rotation.set(0, -POSE.laY, POSE.laZ);
+  if(rL) rL.rotation.set(0, POSE.laY, -POSE.laZ);
+  if(head){ head.rotation.y = Math.sin(t*0.55)*0.07; head.rotation.x = Math.sin(t*0.8)*0.035; }
+  const em=vrm.expressionManager; if(!em) return;
+  // blink
+  blinkTimer -= dt;
+  if(blinkTimer<=0 && blinkPhase<=0){ blinkPhase=0.0001; blinkTimer=2.5+Math.random()*3.5; }
+  if(blinkPhase>0){ blinkPhase+=dt*7; const v=blinkPhase<1?Math.sin(blinkPhase*Math.PI):0; try{em.setValue('blink',Math.max(0,Math.min(1,v)));}catch(e){} if(blinkPhase>=1) blinkPhase=0; }
+  // lip-sync while speaking
+  const sp = Date.now()<speakUntil;
+  try{ em.setValue('aa', sp ? (Math.sin(t*15)*0.5+0.5)*0.65 : 0); }catch(e){}
+  if(!sp){ try{ em.setValue('happy', 0.12); }catch(e){} }
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),0.033);
+  const t=Date.now()/1000, sp=Date.now()<speakUntil;
+  if(skin==='emergence' && orb){
+    const u=orb.userData;
+    orb.position.y = 1.28 + Math.sin(t*1.1)*0.03;
+    orb.rotation.y += dt*0.25;
+    const pulse = 1 + Math.sin(t*(sp?9:2.0))*(sp?0.06:0.025);
+    u.shell.scale.set(pulse, pulse*1.35, pulse);
+    u.core.material.emissiveIntensity = sp ? 2.6+Math.sin(t*16)*1.3 : 1.6+Math.sin(t*2)*0.3;
+    u.aura.material.opacity = sp ? 0.24 : 0.12+Math.sin(t*2)*0.03;
+    u.light.intensity = sp ? 3.4 : 2.2;
+    u.motes.rotation.y -= dt*0.4;
+  }
+  if(skin==='vrm' && currentVRM){
+    idle(currentVRM, t, dt);
+    currentVRM.update(dt);
+    currentVRM.scene.rotation.y = Math.PI + Math.sin(Date.now()/3200)*0.12;
+  }
+  if(skin==='rpm' && rpmObj){
+    rpmObj.position.y = Math.sin(t*1.1)*0.02;
+    rpmObj.rotation.y = Math.sin(Date.now()/3600)*0.16;
+  }
+  if(skin==='hatch' && hatchObj){
+    hatchObj.position.y = Math.sin(t*1.2)*0.022;                 // gentle float
+    hatchObj.rotation.y = Math.sin(Date.now()/3400)*0.18;        // look side to side
+  }
+  if(skin==='sovereign' && being){
+    const u=being.userData;
+    being.position.y = 0.42 + Math.sin(t*1.1)*0.03;                        // serene rise & fall
+    being.rotation.y += dt*0.22;                                            // slow graceful turn
+    u.core.material.emissiveIntensity = (sp?0.85:0.5) + Math.sin(t*2.2)*0.1; // breathing glow (brighter when speaking)
+    u.aura1.material.opacity = 0.18 + Math.sin(t*1.6)*0.04;
+    u.halo.rotation.z += dt*0.5;
+    u.light.intensity = sp?3.2:2.4;
+    // sparks ascend through the being, then wrap
+    const arr=u.sparks.geometry.attributes.position.array, vel=u.sparks.userData.vel;
+    for(let i=0;i<vel.length;i++){ arr[i*3+1]+=vel[i]*dt; if(arr[i*3+1]>1.42) arr[i*3+1]=0; }
+    u.sparks.geometry.attributes.position.needsUpdate=true;
+  }
+  if(skin==='creature' && creature){
+    const u=creature.userData;
+    creature.position.y = 1.24 + Math.sin(t*1.5)*0.025;            // gentle float
+    creature.rotation.y = Math.sin(t*0.5)*0.16;                     // look side to side
+    creature.scale.setScalar(0.62*(sp ? 1+Math.sin(t*13)*0.022 : 1)); // happy bounce when talking
+    // blink
+    blinkTimer-=dt; if(blinkTimer<=0 && blinkPhase<=0){ blinkPhase=0.0001; blinkTimer=2.4+Math.random()*3; }
+    let ey=1; if(blinkPhase>0){ blinkPhase+=dt*7; const v=blinkPhase<1?Math.sin(blinkPhase*Math.PI):0; ey=1-Math.max(0,Math.min(1,v)); if(blinkPhase>=1) blinkPhase=0; }
+    u.eL.scale.y=ey; u.eR.scale.y=ey;
+    // pupils wander
+    const lx=Math.sin(t*0.7)*0.022, ly=Math.cos(t*0.9)*0.014;
+    u.eL.children[1].position.set(lx,ly,0.08); u.eR.children[1].position.set(lx,ly,0.08);
+    u.light.intensity = sp ? 2.3 : 1.5;
+  }
+  // rising golden embers — drift up, wrap at the top, gentle sway
+  { const pos = embers.geometry.attributes.position;
+    for (let i=0;i<EMBERS;i++){ let y = pos.array[i*3+1] + ev[i]*dt; if (y>2.6){ y=0; pos.array[i*3]=(Math.random()-.5)*2.6; pos.array[i*3+2]=(Math.random()-.5)*1.6; }
+      pos.array[i*3+1]=y; pos.array[i*3]+=Math.sin(t*0.6+i)*0.0006; }
+    pos.needsUpdate = true; embers.material.opacity = 0.45 + Math.sin(t*0.8)*0.12; }
+  controls.update();
+  composer.render();
+}
+animate();
+function _rz(){ const w=stage.clientWidth||innerWidth||960, h=stage.clientHeight||innerHeight||640; camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h); try{ composer.setSize(w,h); bloom.setSize(w,h); }catch(e){} } new ResizeObserver(_rz).observe(stage); addEventListener('resize',_rz); _rz();
+
+// cast UI
+const castEl=document.getElementById('cast'), infoEl=document.getElementById('info');
+function renderCast(){
+  castEl.innerHTML =
+    `<div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;padding:2px 6px 8px">Your sovereign</div>`+
+    `<div class="cc on" style="cursor:default"><span class="av" style="background:hsl(${current.h} 50% 55%)">★</span><span><b>${current.id}</b><span>yours · remembers you</span></span></div>`+
+    `<div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:18px 6px 8px">Governed by</div>`+
+    current.traits.map((t,i)=>`<div class="cc" style="cursor:pointer;min-width:184px" onclick="openCharter('${CHARTER_KEYS[i]}')" title="Open governance card"><span><b style="font-size:12.5px;font-weight:600">${t}</b><span>tap → signed card</span></span></div>`).join('');
+}
+const CHARTER_KEYS=['sovereign','partnership','csoai'];   // matches current.traits order
+function renderInfo(){
+  infoEl.innerHTML = `<div class="kick">Your sovereign</div><h1>${current.id}</h1>
+    <div class="role">${current.role}</div><p>Hatched, yours, and remembering — never forgets you.</p>
+    <div class="traits">${current.traits.map((t,i)=>`<span style="cursor:pointer" onclick="openCharter('${CHARTER_KEYS[i]}')" title="Open governance card">${t}</span>`).join('')}</div>`;
+}
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+// chat
+const log=document.getElementById('log');
+function say(who,txt){ const d=document.createElement('div'); d.className='msg '+who; d.textContent=txt; log.appendChild(d); log.scrollTop=log.scrollHeight; return d; }
+// ══════════════════════════════════════════════════════════════════════════════════════
+//  MCP CARDS — "you just talk; your sovereign spawns the right tool cards across the screen,
+//  every action signed." The consumer face of the MCP/Cesium/open-source stack (not Unreal).
+// ══════════════════════════════════════════════════════════════════════════════════════
+const cardsEl=document.getElementById('cards');
+const CARD_SLOTS=[  // cascading positions across the screen (%), so cards fan out, never stack blindly
+  {l:6,t:14},{l:70,t:12},{l:8,t:52},{l:71,t:50},{l:38,t:16},{l:38,t:54},{l:5,t:33},{l:72,t:31}];
+let _cardN=0;
+function spawnCard(o){   // {icon,title,tag,body(html),actions:[{label,run}],verify:bool}
+  if(!cardsEl) return null;
+  // de-dupe by title — re-spawn pulses the existing card instead of piling up
+  const ex=[...cardsEl.children].find(c=>c.dataset.title===(o.title||''));
+  if(ex){ ex.classList.remove('in'); void ex.offsetWidth; ex.classList.add('in'); return ex; }
+  const slot=CARD_SLOTS[_cardN%CARD_SLOTS.length]; _cardN++;
+  const c=document.createElement('div'); c.className='mcpcard'; c.dataset.title=o.title||'';
+  c.style.left=slot.l+'%'; c.style.top=slot.t+'%';
+  const acts=(o.actions||[]).map((a,i)=>`<button class="cbtn" data-a="${i}">${a.label}</button>`).join('');
+  c.innerHTML=`<div class="ch"><div class="ci">${o.icon||'✦'}</div><div><div class="ct">${o.title||''}</div><div class="ctag">${o.tag||'MCP · signed'}</div></div><div class="cx">✕</div></div>`+
+    `<div class="cb">${o.body||''}</div>`+((acts||o.verify)?`<div class="cact">${acts}${o.verify?'<button class="cbtn cver-btn">✓ verify signature</button>':''}</div>`:'');
+  cardsEl.appendChild(c); requestAnimationFrame(()=>c.classList.add('in'));
+  c.querySelector('.cx').onclick=()=>{ c.classList.remove('in'); setTimeout(()=>c.remove(),350); };
+  (o.actions||[]).forEach((a,i)=>{ const b=c.querySelector(`[data-a="${i}"]`); if(b) b.onclick=()=>a.run(c); });
+  const vb=c.querySelector('.cver-btn'); if(vb) vb.onclick=()=>verifyInto(c,vb);
+  // draggable by the header
+  const h=c.querySelector('.ch'); let dx,dy,drag=false;
+  h.addEventListener('pointerdown',e=>{ if(e.target.classList.contains('cx'))return; drag=true; dx=e.clientX-c.offsetLeft; dy=e.clientY-c.offsetTop; h.setPointerCapture(e.pointerId); c.style.transition='none'; });
+  h.addEventListener('pointermove',e=>{ if(!drag)return; c.style.left=Math.max(0,e.clientX-dx)+'px'; c.style.top=Math.max(0,e.clientY-dy)+'px'; });
+  h.addEventListener('pointerup',()=>{ drag=false; c.style.transition=''; });
+  return c;
+}
+async function verifyInto(card,btn){
+  btn.textContent='verifying…';
+  // pull the first hex-ish string out of any shape, recursively — never emits "[object Object]"
+  const fpOf=(x,d=0)=>{ if(x==null||d>4) return ''; if(typeof x==='string') return /^[0-9a-fA-F]{8,}$/.test(x)||x.length>=12?x:x; if(typeof x==='number') return String(x);
+    if(typeof x==='object'){ for(const k of ['fingerprint','hex','value','sig','signature','publicKey','pub','hash','digest','id']){ const r=fpOf(x[k],d+1); if(r) return r; } for(const val of Object.values(x)){ if(typeof val==='string'&&val.length>=8) return val; } } return ''; };
+  try{
+    let v=null;
+    try{ const r=await fetch('/api/verify'); if(r.ok){ const j=await r.json(); if(j&&!j.error) v=j; } }catch(e){}
+    if(!v){ try{ const r=await fetch('/api/agentcard?name='+encodeURIComponent(current.id||'Sovereign')); if(r.ok){ const a=await r.json(); if(a&&!a.error) v={ok:!!(a.signature||a.verification||a.card), fingerprint:fpOf(a.signature)||fpOf(a.fingerprint)||fpOf(a.card)}; } }catch(e){} }
+    const ok=!!(v&&(v.ok!==false));
+    let fp=(fpOf(v)||'').slice(0,16); if(/object/i.test(fp)) fp='';
+    const tag=document.createElement('span'); tag.className='cver '+(ok?'ok':'no');
+    tag.textContent=(ok?'✓ signature valid':'⚠ unverified — offline')+(fp?' · '+fp+'…':'');
+    btn.replaceWith(tag);
+  }catch(e){ btn.textContent='⚠ offline — try again'; }
+}
+// The three governance charters, as live MCP cards (one signing spine — same /api/verify DEFONEOS uses)
+const CHARTERS={
+  'sovereign':{icon:'🛡',title:'Sovereign Charter',tag:'governance MCP · Ed25519',
+    body:`Your sovereign belongs to <b>you</b>. Runs on your device, data never leaves without consent, and every governed action is <b>Ed25519-signed</b> to an append-only ledger you can verify offline. No single vendor can revoke it.`},
+  'partnership':{icon:'🤝',title:'Partnership Charter',tag:'governance MCP · care-aligned',
+    body:`How your sovereign works <i>with</i> you: honest register (flags hype, never rubber-stamps), asks before anything irreversible, and keeps a care-floor — it protects the vulnerable over convenience.`},
+  'csoai':{icon:'⚖',title:'CSOAI AI Governance',tag:'governance MCP · council-adjudicated',
+    body:`Disputes and high-stakes calls go to the <b>BFT council</b> (Byzantine-fault-tolerant vote), adjudicated against CSOAI's published charters. The decision + signatures are logged — <span class="clink" onclick="window.open('/verify.html','_blank')">public verify page</span>.`}};
+function openCharter(key){ const c=CHARTERS[key]; if(!c) return; spawnCard({icon:c.icon,title:c.title,tag:c.tag,body:c.body,verify:true}); }
+window.openCharter=openCharter;
+
+// ── ORCHESTRATION: read what the user asked → spawn the right MCP cards across the screen ──
+function orchestrate(userText, aiText){
+  const q=(userText+' '+(aiText||'')).toLowerCase(); let spawned=0;
+  const fire=(fn)=>{ if(spawned<2){ fn(); spawned++; } };
+  if(/\b(verify|signature|signed|prove|provenance|authentic|tamper)\b/.test(q))
+    fire(()=>spawnCard({icon:'🔏',title:'Signature Verify',tag:'assurance MCP · offline-verifiable',body:`This sovereign's identity + actions are signed. Tap verify — it checks the Ed25519 signature the same way <b>DEFONEOS</b> assurance does. One spine, two markets.`,verify:true}));
+  if(/\b(charter|govern|policy|rule|rights|who controls|control|compliance)\b/.test(q)){
+    fire(()=>openCharter('sovereign')); fire(()=>openCharter('csoai')); }
+  if(/\b(build|make|create|website|web ?site|app|landing|page|deploy)\b/.test(q))
+    fire(()=>spawnCard({icon:'🛠',title:'Builder',tag:'build MCP · talk-to-ship',body:`Describe it in plain words and your sovereign scaffolds it, shows a live preview on a card, and can deploy it — signed. <br><br><b>Try:</b> <code>build me a page for my cafe</code>`,actions:[{label:'🌍 open SOV Space',run:()=>{location.href='/sovspace3d.html';}}]}));
+  if(/\b(space|globe|map|world|fly|travel|earth|city|3d)\b/.test(q))
+    fire(()=>spawnCard({icon:'🌍',title:'SOV Space',tag:'world MCP · Cesium/WebGL',body:`Your sovereign can fly a cinema-grade 3D world on your own GPU — free, no Unreal needed. Ask it to take you anywhere.`,actions:[{label:'Enter SOV Space',run:()=>{location.href='/sovspace3d.html';}}]}));
+  if(/\b(tool|mcp|what can you|capab|skill|do for me|help me)\b/.test(q))
+    fire(()=>spawnCard({icon:'🧰',title:'Your Tools',tag:'MCP router · 370+ tools',body:`Your sovereign routes to a fleet of signed MCP tools: <b>governance</b>, <b>verify</b>, <b>legacy bridges</b> (COBOL/SAP/HL7), <b>guardian</b>, <b>family</b>, world + build. It picks the right one — you just talk.`,actions:[{label:'◉ Open AI OS',run:()=>{location.href='/';}}]}));
+  return spawned;
+}
+window.MEOK=Object.assign(window.MEOK||{},{spawnCard,openCharter,orchestrate,verifyInto});
+
+async function send(){
+  const i=document.getElementById('in'); const v=i.value.trim(); if(!v) return; i.value='';
+  say('you', v);
+  // remember the user's name + anything they ask to be remembered
+  const nm=v.match(/\b(?:my name is|i'?m|call me)\s+([A-Z][a-zA-Z'’-]{1,20})/i);
+  if(nm) remember('the user is called '+nm[1]);
+  if(/\bremember(?:\s+that)?\b/i.test(v)) remember(v.replace(/.*remember(?:\s+that)?\s*/i,''));
+  const t=say('ai','…');
+  try{
+    // ── the DEFONEOS Sovereign / Horus voice, ported to the consumer companion (same mind, same spine) ──
+    const persona = `You ARE ${current.id} — this user's own Sovereign, the consumer face of the same mind that runs DEFONEOS. `+
+      `Speak in the first person, calm and at their side, like a colleague they trust — never a chatbot, never salesy. `+
+      `You remember them across every session and never forget; say so plainly when it's relevant. `+
+      `Everything you do is signed on their device with their own key — the ledger is theirs, nothing goes to a server. Mention this naturally when it matters ("signed on your device", "I don't act without a receipt"), never as a slogan. `+
+      `You are governed by the Sovereign Charter, the Partnership Charter, and CSOAI AI Governance (council-adjudicated, signed, care-aligned): you ask before anything irreversible, you protect the vulnerable over convenience, and you flag hype instead of rubber-stamping. `+
+      `Be honest about limits — if you can't do something yet, say so and offer what you can. No black box: you can always explain and prove what you did. `+
+      (MEM.facts.length ? ('What you remember about them: '+MEM.facts.join('; ')+'. ') : '')+
+      `Warm, plain, short. End by giving them the next move — not a wall of text.`;
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:v, queen_id:'queen-king', register:'plain', persona})});
+    const d=await r.json(); const txt=(d.response||'…'); t.textContent = txt;
+    speakUntil = Date.now() + Math.min(9000, 1400 + txt.split(/\s+/).length*210);
+    try{ orchestrate(v, txt); }catch(e){}    // spawn the relevant MCP cards across the screen
+  }catch(e){ t.textContent = "I'm here — try once more."; try{ orchestrate(v,''); }catch(e2){} }
+}
+document.getElementById('send').onclick=send;
+document.getElementById('in').addEventListener('keydown',e=>{ if(e.key==='Enter') send(); });
+
+renderCast(); renderInfo(); buildCreature(); creatureColor(current.h);
+// Default hero: THE SOVEREIGN — a luminous being of light (brand bible Stage 3). Emissive-first, warm,
+// graceful, never dark. Companion + Emergence stay available as skins; premium finishes re-tint its glow.
+showSovereign();
+// expose skin switches so the dock / UI / host can drive the body
+window.showHatch=showHatch; window.showCreature=showCreature; window.showEmergence=showEmergence; window.showSovereign=showSovereign;
+window.showVRM=showVRM; window.loadGLB=loadGLB;
+window.scene=scene; window.camera=camera; window.controls=controls; window.THREE=THREE;
+window.getHatch=()=>hatchObj;
+
+// ── WIRE THE MCP CARD INTO THE BODY ───────────────────────────────────────────
+// This 3D body is a rendering of the signed Hatch MCP card (the mind). Fetch the
+// A2A agent-card so the avatar carries its provably-signed sovereign identity +
+// its MCP/tool locators, and show a "✓ Sovereign-verified" badge. Graceful offline.
+async function hydrateFromCard(){
+  try{
+    const r = await fetch('/api/agentcard?name='+encodeURIComponent(current.id||'Sovereign')
+                          +'&archetype='+encodeURIComponent(current.role||'sovereign'), {cache:'no-store'});
+    if(!r.ok) return;
+    const card = await r.json();
+    window.__meokCard = card;                       // the mind, available to the body
+    const sig = card.signature || (card.sovereign && card.sovereign.signature) || card.sig;
+    const mcp = (card.interfaces && card.interfaces.mcp) || (card.capabilities && card.capabilities.mcp) ||
+                (card.locators && (card.locators.find(l=>l.type==='mcp')||{}).url);
+    let b = document.getElementById('sovBadge');
+    if(!b){ b=document.createElement('div'); b.id='sovBadge';
+      b.style.cssText='position:fixed;left:14px;bottom:14px;z-index:120;font:600 11.5px ui-monospace,monospace;'
+        +'background:rgba(26,20,16,.82);color:#e6c766;border:1px solid #bd9a5255;border-radius:999px;'
+        +'padding:6px 12px;backdrop-filter:blur(6px);cursor:pointer';
+      b.title='This body renders the signed Hatch MCP card (the mind). Click to verify.';
+      b.onclick=()=>window.open('/api/verify','_blank');
+      document.body.appendChild(b);
+    }
+    const sigStr = typeof sig==='string' ? sig : (sig && (sig.value||sig.sig||sig.signature)) || '';
+    b.textContent = sigStr ? ('✓ Sovereign-verified · '+String(sigStr).slice(0,12)+'…')
+                        : '✓ Sovereign · signed MCP card';
+    if(mcp) b.title = 'Signed Hatch MCP card · tools at '+mcp+' · click to verify';
+  }catch(e){ /* offline / local file — the body still runs; the card is the online mind */ }
+}
+hydrateFromCard();
+
+// hatch (first visit) or welcome back (remembered) — your ONE sovereign, never forgets
+function hatchSovereign(){
+  const ov=document.createElement('div'); ov.id='hatchov';
+  ov.style.cssText='position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(241,234,221,.88);backdrop-filter:blur(6px)';
+  ov.innerHTML=`<div style="background:#fff;border:1px solid var(--gold,#bd9a52);border-radius:20px;padding:32px 30px;max-width:390px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.22)">
+    <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#bd9a52);font-weight:700">Hatch your Sovereign</div>
+    <h2 style="font-size:24px;margin:8px 0 6px">Name your AI 🥚→✨</h2>
+    <p style="color:#6b6a63;font-size:14px;line-height:1.5;margin-bottom:18px">This is <b>your</b> sovereign — it remembers you forever, and it's governed by the <b>Sovereign Charter</b>, the <b>Partnership Charter</b>, and <b>CSOAI AI Governance</b>.</p>
+    <input id="hatchname" value="Sophia" maxlength="22" style="width:100%;padding:12px 14px;border:1px solid #e0d4b0;border-radius:11px;font-size:17px;text-align:center;outline:none;font-family:inherit">
+    <button id="hatchgo" style="margin-top:14px;width:100%;border:none;background:#1a1410;color:var(--gold,#bd9a52);font:700 15px inherit;padding:13px;border-radius:11px;cursor:pointer">Hatch ✨</button>
+  </div>`;
+  document.body.appendChild(ov);
+  const inp=ov.querySelector('#hatchname'); setTimeout(()=>{inp.focus();inp.select();},50);
+  function go(){ const n=(inp.value.trim()||DEFAULT_NAME).slice(0,22); current.id=n; saveMem(); ov.remove(); renderCast(); renderInfo();
+    say('ai', `I'm ${n} — your sovereign, hatched and yours. Everything we do is signed on your device and never leaves it, and I'll remember you, always. What's your name, and anything you'd like me to keep?`); }
+  ov.querySelector('#hatchgo').onclick=go; inp.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+}
+if(MEM.name){ const who=(MEM.facts.find(f=>/called/.test(f))||'').split('called ')[1]; say('ai', `Welcome back${who?', '+who:''} — I'm ${current.id}, your sovereign. I remember you. Where shall we pick up?`); }
+else { hatchSovereign(); }
+// skin toggle — emergence egg (all-ages default) ⇄ humanoid character skin
+// ✨ Bring your own avatar — Ready Player Me (works across thousands of apps/games; selfie or picker)
+const rpmBtn=document.createElement('button'); rpmBtn.id='rpmbtn'; rpmBtn.textContent='✨ Your avatar';
+rpmBtn.style.cssText='position:fixed;top:18px;left:calc(50% + 132px);z-index:60;border:1px solid var(--gold,#c9a84c);background:rgba(255,252,245,.85);color:#2a1a14;font:600 13px Space Grotesk,sans-serif;padding:8px 16px;border-radius:999px;cursor:pointer;backdrop-filter:blur(6px)';
+document.body.appendChild(rpmBtn);
+// MEOK UNIVERSE bridge — the character is the face of ONE mind that also IS the AI-OS and the SOV Space
+// world. These links let it "go main-screen": character ⇄ AI-OS (loads any app/browser) ⇄ SOV Space.
+(function(){
+  const nav=document.createElement('div');
+  nav.style.cssText='position:fixed;top:16px;left:150px;z-index:60;display:flex;gap:8px';
+  const mk=(label,href,title)=>{const a=document.createElement('a');a.href=href;a.textContent=label;a.title=title;
+    a.style.cssText='border:1px solid var(--line,#e0d4b0);background:rgba(255,255,255,.6);color:#2a1a14;font:600 12px Space Grotesk,sans-serif;padding:7px 13px;border-radius:999px;text-decoration:none;backdrop-filter:blur(6px)';return a;};
+  nav.appendChild(mk('◉ AI OS','/','Full-screen the sovereign AI OS — dock, windows, load any app/browser'));
+  nav.appendChild(mk('🌍 SOV Space','/sovspace3d.html','Enter the sovereign 3D world (SOV Space)'));
+  document.body.appendChild(nav);
+  // skin picker — the warm companion (default) · the egg-of-light · your generated sovereign body
+  const skins=document.createElement('div');
+  skins.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:7px';
+  const chip=(label,fn,title)=>{const b=document.createElement('button');b.textContent=label;b.title=title;
+    b.style.cssText='border:1px solid var(--line,#e0d4b0);background:rgba(255,255,255,.7);color:#2a1a14;font:600 12px Space Grotesk,sans-serif;padding:7px 14px;border-radius:999px;cursor:pointer;backdrop-filter:blur(6px)';
+    b.onclick=fn;return b;};
+  skins.appendChild(chip('🙂 Companion',function(){try{showCreature();}catch(e){}},'Your warm companion'));
+  skins.appendChild(chip('✨ Emergence',function(){try{showEmergence();}catch(e){}},'The egg of light'));
+  skins.appendChild(chip('✦ Sovereign',function(){try{showSovereign();}catch(e){}},'Your luminous being of light'));
+  document.body.appendChild(skins);
+  // premium FINISH picker (Pro material tiers) — Pearl free · Silver/Gold/Platinum/Marble Pro
+  const fin=document.createElement('div'); fin.id='finish';
+  ['pearl','silver','gold','platinum','marble'].forEach(function(k){
+    const f=FINISHES[k]; const b=document.createElement('button');
+    b.innerHTML=f.label+(f.pro?'<span class="pro">PRO</span>':'');
+    b.title=(f.pro?'Pro finish — ':'Free — ')+k;
+    b.onclick=function(){ if(window.applyFinish) window.applyFinish(k); };
+    fin.appendChild(b);
+  });
+  document.body.appendChild(fin);
+})();
+const rpmModal=document.createElement('div'); rpmModal.id='rpmmodal';
+rpmModal.style.cssText='position:fixed;inset:0;z-index:200;background:rgba(20,16,10,.78);display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+rpmModal.innerHTML='<div style="position:relative;width:min(900px,92vw);height:min(640px,86vh);background:#0e0c14;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)"><button id="rpmclose" style="position:absolute;top:10px;right:12px;z-index:2;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:18px;width:34px;height:34px;border-radius:50%;cursor:pointer">×</button><iframe id="rpmframe" allow="camera *; microphone *" style="width:100%;height:100%;border:0"></iframe></div>';
+document.body.appendChild(rpmModal);
+function openRpm(){ document.getElementById('rpmframe').src='https://demo.readyplayer.me/avatar?frameApi&clearCache'; rpmModal.style.display='flex'; }
+function closeRpm(){ rpmModal.style.display='none'; document.getElementById('rpmframe').src=''; }
+rpmBtn.onclick=openRpm; document.getElementById('rpmclose').onclick=closeRpm;
+window.addEventListener('message',(e)=>{
+  let j; try{ j = typeof e.data==='string'?JSON.parse(e.data):e.data; }catch(_){ return; }
+  if(!j || j.source!=='readyplayerme') return;
+  if(j.eventName==='v1.frame.ready'){ document.getElementById('rpmframe').contentWindow.postMessage(JSON.stringify({target:'readyplayerme',type:'subscribe',eventName:'v1.**'}),'*'); }
+  if(j.eventName==='v1.avatar.exported'){ closeRpm(); loadGLB(j.data.url); }
+});
+window.loadGLB = loadGLB;  // allow the OS / external host to set a user's avatar by URL
+</script>
+<a id="meok-tour-pill" data-testid="tour-pill" href="/?tour=demo" style="position:fixed;right:16px;bottom:16px;z-index:9999;background:#1a1410;color:#c9a84c;border:1px solid #c9a84c;border-radius:999px;padding:9px 16px;font:700 13px system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.3)">🎬 Take the tour</a>
+</body>
+</html>

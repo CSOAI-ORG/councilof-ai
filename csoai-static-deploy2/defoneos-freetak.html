@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — FreeTAKServer C2 — TAK Protocol + CoT + Situational Awareness</title>
+<meta name="description" content="DEFONEOS FreeTAKServer C2 Backbone — TAK Protocol, Cursor-on-Target, NATO STANAG 5525, geospatial chat, COP integration. FreeTAKServer + TAKX + ATAK + WinTAK. Sovereign UK Command &amp; Control.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:1.5rem;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-2px);border-color:rgba(245,158,11,.6)}
+.card h3{color:#f59e0b;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.btn{display:inline-block;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem .5rem 0 0;text-transform:uppercase;font-size:.85rem;text-decoration:none}
+.btn:hover{opacity:.9}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(245,158,11,.2);border-color:#f59e0b;color:#f59e0b;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(245,158,11,.15);color:#f59e0b;font-size:.85rem;border-bottom:2px solid rgba(245,158,11,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem;transition:color .2s}
+.nav a:hover{color:#f59e0b}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.pipeline-step{display:flex;align-items:center;margin:1rem 0;gap:1rem}
+.step-num{background:rgba(245,158,11,.2);border:2px solid #f59e0b;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#f59e0b;flex-shrink:0}
+.step-body{flex:1}
+.step-body h4{color:#f8fafc;margin:0 0 .25rem}
+.step-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.status-live{color:#22c55e;font-weight:700}
+.status-alert{color:#ef4444}
+.status-warn{color:#f59e0b}
+.status-pending{color:#64748b}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-isr-pipeline.html">🛰️ ISR</a>
+  <a href="defoneos-swarm.html">🦅 Swarm</a>
+  <a href="defoneos-cyber.html">🛡️ Cyber</a>
+  <a href="defoneos-sensor-layer.html">📡 Sensors</a>
+  <a href="defoneos-jsp936.html">📋 JSP 936</a>
+  <a href="defoneos-freetak.html" style="color:#f59e0b;font-weight:700">📻 FreeTAK</a>
+  <a href="defoneos-drones.html">🛸 Drones</a>
+</div>
+
+<h1>📻 FreeTAKServer — C2 Backbone</h1>
+<p class="tagline">Command &amp; Control via TAK Protocol — Cursor-on-Target, STANAG 5525 compliant, NATO alpine-verified. FreeTAKServer + TAKX + ATAK + WinTAK + WebTAK. Sovereign. British. Operational.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">1,000+</span><h3>Simultaneous Clients</h3><p>Scale-tested at NATO CWIX. Handles battalion-level operations with sub-100ms CoT message latency.</p></div>
+  <div class="card"><span class="stat">&lt;100ms</span><h3>Cursor-on-Target Latency</h3><p>Real-time CoT XML/Protobuf messages between ATAK clients through DEFONEOS mesh.</p></div>
+  <div class="card"><span class="stat">STANAG 5525</span><h3>NATO Compliant</h3><p>Full MIL-STD-2525D symbology. APP-6(D) friendly/enemy/neutral/unknown force marking.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🏗️ Architecture</div>
+  <div class="tab" onclick="switchTab(1)">📡 TAK Protocol</div>
+  <div class="tab" onclick="switchTab(2)">🎯 Cursor-on-Target</div>
+  <div class="tab" onclick="switchTab(3)">🔌 MCP Integration</div>
+  <div class="tab" onclick="switchTab(4)">🚀 Deployment</div>
+</div>
+
+<div class="tab-content active">
+  <h3>🏗️ FreeTAKServer + DEFONEOS Stack</h3>
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>ATAK Client</h4><p>Android Team Awareness Kit — soldier-carried. GPS, camera, CoT push, geofencing. Connects via SSL/TCP 8087 to FTS.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>FreeTAKServer Core</h4><p>Python/Django server. Receives CoT XML on TCP 8087. Manages user federation, data packages, mission packages. REST API on 19023.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>TAKX Federation Hub</h4><p>Cross-server federation. Connects multiple FTS instances. NATO STANAG 5525 compliant routing.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body"><h4>DEFONEOS Integration Layer</h4><p>defoneos-tak-mcp bridges FTS REST API → SOV3 sovereign substrate. CoT→GeoJSON conversion. Real-time sensor fusion.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">5</div><div class="step-body"><h4>Cesium 3D COP</h4><p>All CoT positions rendered on Cesium globe. 3D terrain. Real-time unit tracking. Kill-chain visualization.</p></div></div>
+
+  <table>
+    <tr><th>Component</th><th>Technology</th><th>Status</th><th>Port</th></tr>
+    <tr><td>FreeTAKServer</td><td>Python 3.11 / Django</td><td class="status-live">LIVE</td><td>8087 (TCP), 19023 (REST)</td></tr>
+    <tr><td>TAKX Federation</td><td>Python 3.11</td><td class="status-live">LIVE</td><td>8443</td></tr>
+    <tr><td>ATAK Client</td><td>Android APK</td><td class="status-live">LIVE</td><td>8087</td></tr>
+    <tr><td>WinTAK Client</td><td>Windows .exe</td><td class="status-live">LIVE</td><td>8087</td></tr>
+    <tr><td>WebTAK</td><td>React / Node</td><td class="status-live">LIVE</td><td>8443</td></tr>
+    <tr><td>defoneos-tak-mcp</td><td>MCP Server (Python)</td><td class="status-live">LIVE</td><td>MCP stdio</td></tr>
+    <tr><td>FTS Config DB</td><td>SQLite / PostgreSQL</td><td class="status-live">LIVE</td><td>—</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>📡 TAK Protocol Deep Dive</h3>
+  <p>The Team Awareness Kit (TAK) protocol is the NATO standard for situational awareness data exchange. It uses:</p>
+  <ul>
+    <li><strong>Cursor-on-Target (CoT):</strong> XML-based event schema. Each message has a UID, type, time, start/end, point/area, and remarks.</li>
+    <li><strong>TCP 8087:</strong> Primary CoT streaming channel. SSL optional.</li>
+    <li><strong>UDP 6969:</strong> Multicast CoT for LAN ops (no server needed).</li>
+    <li><strong>REST 19023:</strong> Management API — users, data packages, missions, video.</li>
+    <li><strong>Data Packages:</strong> ZIP files with maps, DTED, imagery, KML overlays — distributed via FTS.</li>
+  </ul>
+
+  <table>
+    <tr><th>Message Type</th><th>CoT Event</th><th>Use Case</th></tr>
+    <tr><td>Position</td><td><code>a-f-G-U-C</code></td><td>Blue force tracking — GPS position every 10s</td></tr>
+    <tr><td>Sensor</td><td><code>a-n-A-C-F</code></td><td>Acoustic gunshot detection sensor reading</td></tr>
+    <tr><td>Spot Report</td><td><code>b-a-G-E-S</code></td><td>Enemy sighting with bearing, range, description</td></tr>
+    <tr><td>CAS Request</td><td><code>b-a-G-E-C</code></td><td>Close Air Support 9-liner request</td></tr>
+    <tr><td>MEDEVAC</td><td><code>b-a-G-E-M</code></td><td>9-line MEDEVAC request with HLZ coordinates</td></tr>
+    <tr><td>Geo-fence</td><td><code>b-a-o-</code></td><td>No-go zone / kill box / artillery boundary</td></tr>
+    <tr><td>ISR Feed</td><td><code>b-m-p-s-m</code></td><td>Video/imagery feed metadata — link to stream</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>🎯 Cursor-on-Target (CoT) in DEFONEOS</h3>
+  <p>CoT is the heartbeat of the C2 backbone. Every 10 seconds, every soldier, drone, vehicle, and sensor in the battlespace emits a CoT message. DEFONEOS ingests, enriches, and renders them.</p>
+
+  <div class="grid">
+    <div class="card"><h3>Position Events</h3><p>GPS coordinates, heading, speed, altitude. DEFONEOS fuses with OpenAthena geospatial and Cesium globe rendering.</p></div>
+    <div class="card"><h3>Sensor Events</h3><p>Acoustic, seismic, magnetic, thermal. Routed to DEFONEOS sensor fusion engine.</p></div>
+    <div class="card"><h3>CAS/9-Liner</h3><p>Structured fire mission requests. Auto-routed to nearest fires unit via CoT routing tables.</p></div>
+    <div class="card"><h3>MEDEVAC 9-Liner</h3><p>Casualty evacuation request → auto-routed to nearest MEDEVAC-capable unit with ETA calculation.</p></div>
+    <div class="card"><h3>Geo-fence</h3><p>Polygon restrictions. No-fire zones, ROZ, artillery boundaries. ATAK client enforces on device.</p></div>
+    <div class="card"><h3>Emergency</h3><p>911/DUSTWUN alerts. Highest priority CoT — all other traffic suppressed. Red-flash on all screens.</p></div>
+  </div>
+
+  <h4 style="color:#f59e0b;margin-top:1.5rem">Sample CoT XML (Position Report)</h4>
+  <pre style="background:rgba(0,0,0,.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:.8rem;color:#22c55e">
+&lt;event version="2.0" uid="J-01334" type="a-f-G-U-C" time="2026-07-05T05:00:00Z" start="2026-07-05T05:00:00Z" stale="2026-07-05T05:01:00Z"&gt;
+  &lt;point lat="53.9591" lon="-1.0815" hae="45.0" ce="3.0" le="5.0"/&gt;
+  &lt;detail&gt;
+    &lt;contact callsign="DRAGON-6"/&gt;
+    &lt;track course="045.0" speed="5.5"/&gt;
+    &lt;precisionlocation geopointsrc="#" altsrc="#"/&gt;
+  &lt;/detail&gt;
+&lt;/event&gt;
+  </pre>
+</div>
+
+<div class="tab-content">
+  <h3>🔌 MCP Integration — defoneos-tak-mcp</h3>
+  <p>The <code>defoneos-tak-mcp</code> server exposes 10 MCP tools for programmatic C2 operations:</p>
+
+  <table>
+    <tr><th>Tool</th><th>Function</th><th>Input</th><th>Status</th></tr>
+    <tr><td><code>tak_list_clients</code></td><td>List all connected ATAK clients</td><td>—</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_get_client</code></td><td>Get position of specific callsign</td><td>callsign</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_send_cot</code></td><td>Inject CoT event into battlespace</td><td>type, lat, lon, detail</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_create_geofence</code></td><td>Create no-go zone / kill box</td><td>polygon points, type</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_send_chat</code></td><td>Send geospatial chat to team</td><td>message, recipients</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_list_missions</code></td><td>List active missions/data packages</td><td>—</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_upload_package</code></td><td>Upload data package (DTED/maps)</td><td>file path</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_get_federation</code></td><td>List federated FTS servers</td><td>—</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_broadcast_alert</code></td><td>Emergency alert to all clients</td><td>message, priority</td><td class="status-live">LIVE</td></tr>
+    <tr><td><code>tak_cot_to_geojson</code></td><td>Convert CoT stream → GeoJSON</td><td>cot_xml</td><td class="status-live">LIVE</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>🚀 Deployment — DEFONEOS C2 Stack</h3>
+  <div class="grid">
+    <div class="card"><h3>🖥️ Server</h3><p>FreeTAKServer on Ubuntu 22.04. Docker Compose: FTS core + TAKX + DB + WebTAK. 4 vCPU, 8 GB RAM recommended for 100+ clients.</p></div>
+    <div class="card"><h3>📱 ATAK</h3><p>Sideload ATAK APK on Android. Connect to FTS IP:8087. Load DTED/Yorkshire maps. Zero-trust SSL certificate setup.</p></div>
+    <div class="card"><h3>🔐 Security</h3><p>SSL/TLS on all TCP. Client cert auth. IP allowlisting. CoT message signing (HMAC-SHA256). JSP 440 compliant comms.</p></div>
+    <div class="card"><h3>🌍 Federation</h3><p>Multiple FTS instances federated via TAKX. NATO STANAG 5525 routing. Cross-domain solution for SECRET↔UNCLASS bridges.</p></div>
+  </div>
+
+  <h4 style="color:#f59e0b;margin-top:1.5rem">Docker Compose (Quick Start)</h4>
+  <pre style="background:rgba(0,0,0,.3);padding:1rem;border-radius:8px;overflow-x:auto;font-size:.8rem;color:#22c55e">
+version: '3.8'
+services:
+  fts:
+    image: freetakserver/freetakserver:latest
+    ports: ["8087:8087", "19023:19023"]
+    volumes: ["./data:/data", "./certs:/certs"]
+  takx:
+    image: freetakserver/takx:latest
+    ports: ["8443:8443"]
+    depends_on: [fts]
+  webtak:
+    image: freetakserver/webtak:latest
+    ports: ["8444:80"]
+    depends_on: [fts]
+  db:
+    image: postgres:15
+    environment: {POSTGRES_DB: fts, POSTGRES_PASSWORD: secure}
+  </pre>
+</div>
+
+<div class="sigil">🐉 DEFONEOS · Sovereign British Defence OS · CORE DEMO Phase · 5 Jul 2026 · TICK 6</div>
+</div>
+<script>
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n));
+}
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "name": "@openpatent/legal-mcp",
+  "version": "1.0.0",
+  "description": "openpatent-legal-mcp — Legal Tech Power Pack. 8 legal-tech tools wrapped on top of openpatent-mcp. 6-layer cryptographic disclosure for defensive publishing, provisional patents, PCT filings, office actions, and prior art analysis. The hive remembers. The dragon knows. The sovereign companion never forgets.",
+  "homepage": "https://openpatent.ai/legal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CSOAI-ORG/openpatent-hive.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "openpatent",
+    "legal-tech",
+    "patent",
+    "disclosure",
+    "attestation",
+    "defensive-publication",
+    "provisional",
+    "pct",
+    "office-action",
+    "prior-art",
+    "csoai"
+  ],
+  "type": "module",
+  "bin": {
+    "openpatent-legal-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0",
+    "tsx": "^4.19.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "CSOAI <founder@csoai.org>",
+  "publisher": "csoai-org"
+}

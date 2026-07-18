@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK Compliance vs OneTrust | Comparison</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#e0e0e6;line-height:1.7}
+.container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:2.2rem;margin-bottom:.5rem;background:linear-gradient(135deg,#00d4ff,#7b2ff7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-size:1.3rem;margin:2rem 0 1rem;color:#c0c0d0}
+p.subtitle{color:#808098;margin-bottom:2rem;font-size:.95rem}
+.badge{display:inline-block;background:#7b2ff7;color:#fff;padding:.15rem .65rem;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:.3rem}
+.badge.green{background:#00c853}
+.badge.orange{background:#ff6d00}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:#12121a;border-radius:10px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.4)}
+th,td{padding:.9rem 1rem;text-align:left;border-bottom:1px solid #1e1e2a}
+th{background:#1a1a28;font-weight:600;color:#00d4ff;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+td{font-size:.9rem}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#1a1a28}
+.feature-col{font-weight:600;color:#c0c0d0;width:30%}
+.meok-col{color:#00d4ff;font-weight:500}
+.they-col{color:#808098}
+.win{color:#00c853;font-weight:600}
+.lose{color:#ff5252}
+.neutral{color:#ffab00}
+.check{color:#00c853}
+.cross{color:#ff5252}
+.highlight{background:#1a1a28;border-left:3px solid #7b2ff7;padding:1rem 1.5rem;margin:1.5rem 0;border-radius:0 8px 8px 0}
+.highlight h3{color:#00d4ff;margin-bottom:.5rem;font-size:1rem}
+.cta{display:inline-block;background:linear-gradient(135deg,#7b2ff7,#00d4ff);color:#fff;padding:.8rem 2rem;border-radius:8px;font-weight:600;text-decoration:none;margin-top:1rem;transition:opacity .2s}
+.cta:hover{opacity:.9}
+.footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #1e1e2a;font-size:.8rem;color:#606070}
+@media(max-width:700px){table{font-size:.8rem}th,td{padding:.6rem .7rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>MEOK Compliance vs OneTrust</h1>
+<p class="subtitle">Honest comparison: MEOK's MCP-native compliance suite vs OneTrust's enterprise GRC platform</p>
+
+<div class="highlight">
+<h3>⚡ Why MEOK wins for AI compliance teams</h3>
+<ul style="color:#c0c0d0;margin-left:1.2rem">
+<li><strong>Ed25519 signing</strong> — every attestation is cryptographically signed. OneTrust generates PDFs.</li>
+<li><strong>Public verification</strong> — anyone can verify in one click without contacting us. OneTrust requires a login.</li>
+<li><strong>£199/mo Pro</strong> — vs OneTrust at £50K+ per year. Enterprise teams save 90%+.</li>
+<li><strong>48-hour deployment</strong> — install one MCP server vs 6-12 months of OneTrust implementation.</li>
+</ul>
+</div>
+
+<table>
+<thead>
+<tr><th>Feature</th><th>MEOK Compliance</th><th>OneTrust</th></tr>
+</thead>
+<tbody>
+<tr><td class="feature-col">Signing primitive</td><td class="meok-col">Ed25519 + HMAC-SHA256 <span class="win">★</span></td><td class="they-col">PDF export only</td></tr>
+<tr><td class="feature-col">Public verify URL</td><td class="meok-col">✓ 1-click, no login <span class="win">★</span></td><td class="they-col">✗ Portal login required</td></tr>
+<tr><td class="feature-col">Price (Pro)</td><td class="meok-col">£199/mo <span class="win">★</span></td><td class="they-col">~£50K-£200K/yr</td></tr>
+<tr><td class="feature-col">Deployment time</td><td class="meok-col">48 hours <span class="win">★</span></td><td class="they-col">6-12 months</td></tr>
+<tr><td class="feature-col">Regulation coverage</td><td class="meok-col">EU AI Act, DORA, NIS2, CRA, GDPR, ISO 42001, SOC 2, PCI DSS, HIPAA, FDA SaMD, MDR, +50 more</td><td class="they-col">GDPR, privacy, cookie consent, third-party risk</td></tr>
+<tr><td class="feature-col">EU AI Act Article 50</td><td class="meok-col">✓ 40+ article-specific MCP servers <span class="win">★</span></td><td class="they-col">Partial — only privacy angle</td></tr>
+<tr><td class="feature-col">MCP-native</td><td class="meok-col">✓ 340+ MCP servers <span class="win">★</span></td><td class="they-col">✗ SaaS only</td></tr>
+<tr><td class="feature-col">On-prem option</td><td class="meok-col">✓ Self-hostable MCP servers</td><td class="they-col">✗ Cloud only</td></tr>
+<tr><td class="feature-col">White-label</td><td class="meok-col">✓ Yes (20% revenue share)</td><td class="they-col">Enterprise only, limited</td></tr>
+<tr><td class="feature-col">API-first</td><td class="meok-col">✓ MCP protocol, REST, CLI</td><td class="they-col">✓ REST API</td></tr>
+<tr><td class="feature-col">Free tier</td><td class="meok-col">✓ 1 system, basic probes</td><td class="they-col">✗ No free tier</td></tr>
+<tr><td class="feature-col">Watchdog Cert (one-time)</td><td class="meok-col">£4,950 <span class="win">★</span></td><td class="they-col">N/A</td></tr>
+<tr><td class="feature-col">Regulatory crosswalk</td><td class="meok-col">12-framework single attestation <span class="win">★</span></td><td class="they-col">Requires separate modules</td></tr>
+</tbody>
+</table>
+
+<h2>When to choose OneTrust</h2>
+<p style="color:#808098">OneTrust is established for enterprise privacy management (cookie consent, DSAR, vendor risk). If you need a broad GRC platform across <em>all</em> risk domains — not just AI compliance — OneTrust's module ecosystem may suit. But for AI-specific compliance with cryptographic verification, MEOK is purpose-built and dramatically more affordable.</p>
+
+<p style="margin-top:2rem"><strong>Bottom line:</strong> MEOK delivers auditable, signed AI compliance at 1-2% of the cost in 48 hours, not 12 months.</p>
+
+<a href="https://csoai.org/pricing/" class="cta">Try MEOK — £199/mo →</a>
+
+<div class="footer">
+<p>MEOK AI Labs (CSOAI Ltd, UK 16939677) · Prices exclude VAT · OneTrust pricing is an estimate based on published enterprise tiers.</p>
+</div>
+</div>
+</body>
+</html>

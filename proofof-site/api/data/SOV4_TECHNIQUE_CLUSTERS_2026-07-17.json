@@ -1,0 +1,643 @@
+{
+  "version": "v2_sov4_technique_clusters_2026-07-18",
+  "n_papers_total": 233,
+  "n_papers_named": 86,
+  "n_papers_untriaged": 147,
+  "n_families": 15,
+  "auto_triage_date": "2026-07-18",
+  "auto_triage_method": "title-keyword regex",
+  "clusters": {
+    "linear-attention": [
+      {
+        "arxiv": "2510.26692",
+        "title": "Kimi Linear: An Expressive, Efficient Attention Architecture",
+        "org": "Moonshot AI",
+        "verify": "VERIFIED",
+        "topic": "linear-attention/KDA"
+      },
+      {
+        "arxiv": "LEAD-gated-deltanet",
+        "title": "Gated DeltaNet (linear-attention hybrid, slot-in at fine-tune)",
+        "org": "Qwen3-Next/cross-lab",
+        "verify": "TECHNIQUE-LEAD",
+        "topic": "linear-attention"
+      },
+      {
+        "arxiv": "LEAD-lightning-attn",
+        "title": "Lightning Attention (Ling 2.5 / Ring 2.5, 1T hybrid)",
+        "org": "Ling",
+        "verify": "TECHNIQUE-LEAD",
+        "topic": "linear-attention"
+      },
+      {
+        "arxiv": "2607.07706",
+        "title": "The Key to Going Linear: Analysis-Driven Transformer Linearization",
+        "org": "Qwen",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "linear-attention"
+      },
+      {
+        "arxiv": "2605.21123",
+        "title": "Linear-DPO: Linear Direct Preference Optimization for Diffusion and Flow-Matching Generative Models",
+        "org": "Alibaba",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "linear-attention"
+      },
+      {
+        "arxiv": "2604.26422",
+        "title": "STLGT: A Scalable Trace-Based Linear Graph Transformer for Tail Latency Prediction in Microservices",
+        "org": "Alibaba",
+        "verify": "TRIAGED-DROP",
+        "topic": "linear-attention"
+      },
+      {
+        "arxiv": "2607.15175",
+        "title": "Linear representations of grammaticality in neural language models",
+        "org": "Cohere",
+        "verify": "TRIAGED-DROP",
+        "topic": "linear-attention"
+      }
+    ],
+    "data-curation": [
+      {
+        "arxiv": "2606.21631",
+        "title": "CuratorKIT (data curation pipeline)",
+        "org": "?",
+        "verify": "LEAD",
+        "topic": "data-curation"
+      }
+    ],
+    "agent-reasoning": [
+      {
+        "arxiv": "2505.22954",
+        "title": "Darwin-Godel Machine (self-improving agents)",
+        "org": "?",
+        "verify": "LEAD",
+        "topic": "self-improvement"
+      },
+      {
+        "arxiv": "2607.09403",
+        "title": "Fictional Worldbuilding: Multi-Agent LLM Collaboration with Hierarchical Context Compression and Iterative Review",
+        "org": "Cohere",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2607.08652",
+        "title": "Formal Mechanisms for Market Stability in Self-Interested Agent Societies: A Marketplace Simulation Study",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2607.06764",
+        "title": "Cost-Effective Agent Harnesses for Abstract Reasoning and Generalization on ARC-AGI-1",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2607.04108",
+        "title": "Dictionaries, Not Darwin: Set-Level Selection Beats LLM Evolution in Scientific Equation Discovery",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2607.01600",
+        "title": "BOUNDARY_SYNC: Measuring Communication-Induced Representational Coupling in Multi-Agent LLM Systems",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2607.06503",
+        "title": "Doomed from the Start: Early Abort of LLM Agent Episodes via a Recall-Controlled Probe Cascade",
+        "org": "Qwen",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2607.03691",
+        "title": "Don't Blame the Large Language Model: How Scaffolding Evolution Shapes Coding Agent Quality",
+        "org": "Qwen",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2607.14541",
+        "title": "Are LLM-Generated GPU Kernels Production-Ready? A Trace-Driven Benchmark and Optimization Agent",
+        "org": "Alibaba",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2604.21590",
+        "title": "AgenticQwen: Training Small Agentic Language Models with Dual Data Flywheels for Industrial-Scale Tool Use",
+        "org": "Alibaba",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2607.14178",
+        "title": "ReasFlow: Assisting Reasoning-Centric Scientific Discovery in Applied Mathematics via a Knowledge-Based Multi-Agent System",
+        "org": "Cohere",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2606.23032",
+        "title": "IPO Finance Agent: Benchmark of LLM Financial Analysts Beyond Finance Agent v2, with Automated Rubric Generation, on the SpaceX (SPCX) IPO",
+        "org": "Anthropic",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2606.14445",
+        "title": "tap: A File-Based Protocol for Heterogeneous LLM Agent Collaboration",
+        "org": "Anthropic",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2606.13643",
+        "title": "Recursive Agent Harnesses",
+        "org": "Anthropic",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2606.05037",
+        "title": "Self-Reflective APIs: Structure Beats Verbosity for AI Agent Recovery",
+        "org": "Anthropic",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2606.03755",
+        "title": "LAP: An Agent-to-Instrument Protocol for Autonomous Science",
+        "org": "Anthropic",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2605.00043",
+        "title": "SiriusHelper: An LLM Agent-Based Operations Assistant for Big Data Platforms",
+        "org": "Tencent",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      },
+      {
+        "arxiv": "2606.17182",
+        "title": "Verified Detection and Prevention of Concurrency Anomalies in Multi-Agent Large Language Model Systems",
+        "org": "ByteDance",
+        "verify": "TRIAGED-DROP",
+        "topic": "agent-reasoning"
+      }
+    ],
+    "ensemble": [
+      {
+        "arxiv": "2506.07962",
+        "title": "Kim et al. \u2014 ensemble error correlation",
+        "org": "?",
+        "verify": "LEAD",
+        "topic": "ensemble/rho"
+      }
+    ],
+    "security": [
+      {
+        "arxiv": "2512.07495",
+        "title": "Amulet (weight-obfuscation / TEE)",
+        "org": "?",
+        "verify": "LEAD",
+        "topic": "confidential-compute"
+      }
+    ],
+    "MoE-routing": [
+      {
+        "arxiv": "2412.19437",
+        "title": "DeepSeek-V3 Technical Report",
+        "org": "DeepSeek",
+        "verify": "LEAD-RECALL",
+        "topic": "MoE/MLA"
+      },
+      {
+        "arxiv": "2505.09388",
+        "title": "Qwen3 Technical Report",
+        "org": "Qwen/Alibaba",
+        "verify": "VERIFIED",
+        "topic": "MoE/model-report"
+      },
+      {
+        "arxiv": "2601.11659",
+        "title": "The Llama 4 Herd: Architecture, Training, Evaluation, Deployment",
+        "org": "Meta",
+        "verify": "LEAD-RECALL",
+        "topic": "MoE/model-report"
+      },
+      {
+        "arxiv": "2607.12696",
+        "title": "Less Experts, Faster Decoding: Cost-Aware Speculative Decoding for Mixture-of-Experts",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "MoE-routing"
+      },
+      {
+        "arxiv": "2607.01710",
+        "title": "Generic Expert Coverage for Pruning SparseMixture-of-Experts Language Models",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "MoE-routing"
+      },
+      {
+        "arxiv": "2607.11997",
+        "title": "Are we Merging the Right Models? Impact of Expert Training Duration on Model Merging for LLMs",
+        "org": "Qwen",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "MoE-routing"
+      }
+    ],
+    "ecosystem": [
+      {
+        "arxiv": "2604.07190",
+        "title": "The ATOM Report: Measuring the Open Language Model Ecosystem",
+        "org": "survey",
+        "verify": "VERIFIED",
+        "topic": "ecosystem/adoption"
+      },
+      {
+        "arxiv": "2607.01418",
+        "title": "Adoption and Impact of Command-Line AI Coding Agents: A Study of Microsoft's Early 2026 Rollout of Claude Code and GitHub Copilot CLI",
+        "org": "Anthropic",
+        "verify": "TRIAGED-DROP",
+        "topic": "ecosystem"
+      }
+    ],
+    "interpretability": [
+      {
+        "arxiv": "2605.25903",
+        "title": "Universal Activation Verbalizer: Cross-Model Activation Explanation",
+        "org": "interp",
+        "verify": "VERIFIED",
+        "topic": "interpretability"
+      }
+    ],
+    "sparse-attention": [
+      {
+        "arxiv": "LEAD-dsa",
+        "title": "DeepSeek Sparse Attention (DSA)",
+        "org": "DeepSeek",
+        "verify": "TECHNIQUE-LEAD",
+        "topic": "sparse-attention"
+      },
+      {
+        "arxiv": "2504.17768",
+        "title": "The Sparse Frontier: Sparse Attention Trade-offs in Transformer LLMs",
+        "org": "analysis",
+        "verify": "LEAD-RECALL",
+        "topic": "sparse-attention"
+      },
+      {
+        "arxiv": "2607.11976",
+        "title": "LiteTopK: Exploiting the Curse of Dimensionality for a Fused Indexer-TopK Kernel in Long-Context Sparse Attention",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "sparse-attention"
+      },
+      {
+        "arxiv": "2607.09052",
+        "title": "COBS: Cumulant Order Block Sparse Attention",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "sparse-attention"
+      },
+      {
+        "arxiv": "2607.10226",
+        "title": "When Are Sparse Feature Interventions Actually Localized? Matched Evaluation for SAE-Based Safety Control",
+        "org": "Cohere",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "sparse-attention"
+      }
+    ],
+    "model-report": [
+      {
+        "arxiv": "2412.15115",
+        "title": "Qwen2.5 Technical Report",
+        "org": "Qwen/Alibaba",
+        "verify": "LEAD-RECALL",
+        "topic": "model-report"
+      },
+      {
+        "arxiv": "2407.10671",
+        "title": "Qwen2 Technical Report",
+        "org": "Qwen/Alibaba",
+        "verify": "LEAD-RECALL",
+        "topic": "model-report"
+      },
+      {
+        "arxiv": "2503.19786",
+        "title": "Gemma 3 Technical Report",
+        "org": "Google DeepMind",
+        "verify": "LEAD-RECALL",
+        "topic": "model-report"
+      }
+    ],
+    "evaluation": [
+      {
+        "arxiv": "2604.07035",
+        "title": "Gemma4/Phi-4/Qwen3: Accuracy-Efficiency Tradeoffs Dense vs MoE",
+        "org": "benchmark",
+        "verify": "VERIFIED",
+        "topic": "efficiency-benchmark"
+      },
+      {
+        "arxiv": "2607.14816",
+        "title": "Large Language Models for Code Generation from Multilingual Prompts: A Curated Benchmark and a Study on Code Quality",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2607.10428",
+        "title": "Enjoy Your Talk: A Human-Centered Benchmark for Multi-Turn Dialogue with Decoupled User Simulation, Target Modeling, and Judging",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2607.02825",
+        "title": "JavaVulBench: A Java Vulnerability Benchmark with Realistic Splits, a Unified Multi-Backend Harness, and a Leakage-Aware Evaluation Mode",
+        "org": "Qwen",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2607.07189",
+        "title": "Does AI Understand Imaging? A Systematic Benchmark of Agentic AI for Computational Imaging Tasks",
+        "org": "Qwen",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2607.05614",
+        "title": "BaFCo: A Document Understanding Benchmark for Complex Bangla Form Comprehension",
+        "org": "Qwen",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2606.14697",
+        "title": "ClinHallu: A Benchmark for Diagnosing Stage-Wise Hallucinations in Medical MLLM Reasoning",
+        "org": "Alibaba",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2605.10550",
+        "title": "Multi-domain Multi-modal Document Classification Benchmark with a Multi-level Taxonomy",
+        "org": "Alibaba",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2607.13120",
+        "title": "CoDiffGRN: Rethinking Gene Regulatory Network Inference via the BEELINE-KGC Benchmark and Co-evolutionary Discrete Diffusion",
+        "org": "Cohere",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2607.11166",
+        "title": "Query-Focused Event Summarization: A Dataset and Benchmark",
+        "org": "Cohere",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2607.08970",
+        "title": "MultiView-Bench: A Diagnostic Benchmark for World-Centric Multi-View Integration in VLMs",
+        "org": "Cohere",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2606.12936",
+        "title": "Pipette: An Embodied Simulation Platform, Benchmark, and Data-Efficient Augmentation Framework for Wet-Lab Robotics",
+        "org": "Tencent",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      },
+      {
+        "arxiv": "2605.28218",
+        "title": "IFMTBench: A Comprehensive Benchmark for Multilingual Translation Instruction Following",
+        "org": "Tencent",
+        "verify": "TRIAGED-DROP",
+        "topic": "evaluation"
+      }
+    ],
+    "MoE-serving": [
+      {
+        "arxiv": "2607.00466",
+        "title": "ELDR: Expert-Locality-Aware Decode Routing for PD-Disaggregated MoE Serving",
+        "org": "serving",
+        "verify": "VERIFIED",
+        "topic": "moe-serving"
+      },
+      {
+        "arxiv": "2502.06643",
+        "title": "MoETuner: Optimized MoE Serving with Balanced Expert Placement",
+        "org": "serving",
+        "verify": "LEAD-RECALL",
+        "topic": "moe-serving"
+      },
+      {
+        "arxiv": "2607.05147",
+        "title": "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "MoE-serving"
+      },
+      {
+        "arxiv": "2607.10661",
+        "title": "Unlocking Parallelism in Autoregressive Language Models via Speculative Decoding with Progressive Tree Drafting",
+        "org": "Cohere",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "MoE-serving"
+      },
+      {
+        "arxiv": "2606.02091",
+        "title": "DFlare: Scaling Up Draft Capacity for Block Diffusion Speculative Decoding",
+        "org": "Tencent",
+        "verify": "TRIAGED-DROP",
+        "topic": "MoE-serving"
+      }
+    ],
+    "alignment": [
+      {
+        "arxiv": "2212.08073",
+        "title": "Constitutional AI: Harmlessness from AI Feedback",
+        "org": "Anthropic",
+        "verify": "LEAD-RECALL",
+        "topic": "alignment/CAI"
+      },
+      {
+        "arxiv": "2204.05862",
+        "title": "Training a Helpful and Harmless Assistant with RLHF",
+        "org": "Anthropic",
+        "verify": "LEAD-RECALL",
+        "topic": "alignment/RLHF"
+      },
+      {
+        "arxiv": "2310.13798",
+        "title": "Specific versus General Principles for Constitutional AI",
+        "org": "Anthropic",
+        "verify": "LEAD-RECALL",
+        "topic": "alignment/CAI"
+      },
+      {
+        "arxiv": "2407.16216",
+        "title": "A Comprehensive Survey of LLM Alignment: RLHF, RLAIF, PPO, DPO",
+        "org": "survey",
+        "verify": "LEAD-RECALL",
+        "topic": "alignment-survey"
+      },
+      {
+        "arxiv": "2412.17686",
+        "title": "Large Language Model Safety: A Holistic Survey",
+        "org": "survey",
+        "verify": "VERIFIED",
+        "topic": "safety-survey"
+      },
+      {
+        "arxiv": "2310.19852",
+        "title": "AI Alignment: A Comprehensive Survey",
+        "org": "survey",
+        "verify": "LEAD-RECALL",
+        "topic": "alignment-survey"
+      },
+      {
+        "arxiv": "2406.06560",
+        "title": "Inverse Constitutional AI: Compressing Preferences into Principles",
+        "org": "alignment",
+        "verify": "LEAD-RECALL",
+        "topic": "alignment/CAI"
+      },
+      {
+        "arxiv": "2503.17365",
+        "title": "How Effective is Constitutional AI in Small LLMs? DeepSeek-R1 & peers",
+        "org": "alignment",
+        "verify": "LEAD-RECALL",
+        "topic": "alignment/CAI"
+      },
+      {
+        "arxiv": "2502.17424",
+        "title": "Emergent Misalignment: Narrow Finetuning Can Produce Broadly Misaligned LLMs",
+        "org": "safety",
+        "verify": "LEAD-RECALL",
+        "topic": "misalignment"
+      },
+      {
+        "arxiv": "2602.00061",
+        "title": "Simple Role Assignment is Extraordinarily Effective for Safety Alignment",
+        "org": "safety",
+        "verify": "VERIFIED",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2402.01822",
+        "title": "Building Guardrails for Large Language Models",
+        "org": "safety",
+        "verify": "LEAD-RECALL",
+        "topic": "guardrails"
+      },
+      {
+        "arxiv": "2607.09262",
+        "title": "Geopolitical alignment: Endorsement effects in large language models",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-DROP",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2607.07097",
+        "title": "Operational Reframing and Approval-Framed Delegation in Multi-Agent LLM Safety",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-DROP",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2607.13430",
+        "title": "Exploring Post-Training Alignment of Small Language Models for Biomedical Data-to-Text Generation: A Case Study of Medication Leaflet",
+        "org": "Qwen",
+        "verify": "TRIAGED-DROP",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2607.13346",
+        "title": "The Refusal Residue: When Probes Catch Alignment Faking and When They Don't",
+        "org": "Qwen",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2605.26159",
+        "title": "Device Context Protocol: A Compact, Safety-First Architecture for LLM-Driven Control of Constrained Devices",
+        "org": "Alibaba",
+        "verify": "TRIAGED-DROP",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2605.17246",
+        "title": "Fidelity Probes for Specification--Code Alignment",
+        "org": "Alibaba",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2606.12429",
+        "title": "Muse Spark Safety & Preparedness Report",
+        "org": "Meta AI",
+        "verify": "TRIAGED-DROP",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2605.14418",
+        "title": "The Great Pretender: A Stochasticity Problem in LLM Jailbreak",
+        "org": "Microsoft Research",
+        "verify": "TRIAGED-DROP",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2606.18193",
+        "title": "A Red-Team Study of Anthropic Fable 5 & Opus 4.8 Models",
+        "org": "Anthropic",
+        "verify": "TRIAGED-DROP",
+        "topic": "alignment"
+      },
+      {
+        "arxiv": "2606.07696",
+        "title": "Adversarial Robustness of Activation Steering in Large Language Models",
+        "org": "Anthropic",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "alignment"
+      }
+    ],
+    "training": [
+      {
+        "arxiv": "2509.14234",
+        "title": "Compute as Teacher: Turning Inference Compute into Reference-Free Supervision",
+        "org": "distillation",
+        "verify": "LEAD-RECALL",
+        "topic": "self-supervision"
+      }
+    ],
+    "distillation": [
+      {
+        "arxiv": "2607.05339",
+        "title": "TREK: Distill to Explore, Reinforce to Refine",
+        "org": "DeepSeek",
+        "verify": "TRIAGED-RELEVANT",
+        "topic": "distillation"
+      }
+    ]
+  }
+}

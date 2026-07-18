@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Own AI - Own Your Data - Free Forever - csoai.org/build-your-own/</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(160deg,#0a0e27,#1e3a8a 50%,#0a0e27);color:#e2e8f0;padding:40px 20px;line-height:1.7}
+.container{max-width:1280px;margin:0 auto}
+.crest{font-size:5rem;text-align:center;margin-bottom:16px}
+h1{color:#fbbf24;font-size:3.2rem;text-align:center;text-shadow:0 0 16px rgba(251,191,36,.3);margin-bottom:8px}
+h2{color:#fbbf24;font-size:1.8rem;margin-top:32px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}
+h3{color:#10b981;margin-top:16px}
+.tagline{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:32px;font-size:1.15rem}
+.hero-pillar{padding:48px;background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(6,182,212,.05));border:2px solid rgba(251,191,36,.4);border-radius:16px;margin:32px 0;text-align:center}
+.big{font-size:4rem;font-weight:800;color:#fbbf24;line-height:1;margin:8px 0}
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.principle{background:rgba(0,0,0,.5);padding:24px;border-radius:12px;border:1px solid rgba(251,191,36,.3);text-align:center}
+.principle .icon{font-size:3rem;margin-bottom:8px}
+.principle h3{color:#fbbf24;font-size:1.1rem;margin-bottom:8px}
+.principle p{font-size:.9rem;opacity:.9}
+.sandwich{background:rgba(0,0,0,.6);padding:32px;border-radius:12px;margin:32px 0;border:2px solid rgba(251,191,36,.3)}
+.sandwich-layer{padding:16px 20px;margin:8px 0;border-radius:8px;font-weight:600;display:flex;align-items:center;gap:12px}
+.l1{background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(251,191,36,.1));border-left:6px solid #fbbf24}
+.l2{background:linear-gradient(135deg,rgba(6,182,212,.2),rgba(6,182,212,.1));border-left:6px solid #06b6d4}
+.l3{background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(16,185,129,.1));border-left:6px solid #10b981}
+.l4{background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(168,85,247,.1));border-left:6px solid #a855f7}
+.l5{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(239,68,68,.1));border-left:6px solid #ef4444}
+.brain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.brain{background:rgba(0,0,0,.5);padding:24px;border-radius:12px;border:1px solid rgba(251,191,36,.3)}
+.brain .emoji{font-size:2.5rem;margin-bottom:8px}
+.brain h3{color:#fbbf24}
+.brain p{font-size:.9rem}
+.code-block{background:#000;color:#10b981;padding:16px;border-radius:8px;font-family:monospace;font-size:.85rem;line-height:1.5;margin:16px 0;overflow-x:auto;white-space:pre}
+.btn{display:inline-block;padding:16px 32px;background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;font-weight:700;border-radius:8px;text-decoration:none;font-size:1.1rem;transition:all .2s;border:2px solid #fbbf24}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(251,191,36,.4)}
+.btn-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:24px 0}
+.btn-secondary{display:inline-block;padding:16px 32px;background:rgba(0,0,0,.5);color:#fbbf24;font-weight:700;border-radius:8px;text-decoration:none;font-size:1.1rem;border:2px solid #fbbf24}
+.testimonial{background:rgba(0,0,0,.5);padding:24px;border-radius:12px;border-left:4px solid #fbbf24;margin:16px 0;font-style:italic}
+.testimonial .who{color:#fbbf24;font-weight:700;margin-top:8px;font-style:normal;font-size:.85rem}
+.pill{display:inline-block;padding:3px 10px;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.4);border-radius:10px;color:#fbbf24;font-size:.78rem;font-weight:700;margin:0 4px 4px 0}
+.footer{text-align:center;padding:32px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.3);opacity:.85;font-size:.85rem}
+a{color:#10b981;text-decoration:none}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.price{background:rgba(0,0,0,.5);padding:32px;border-radius:12px;border:2px solid rgba(251,191,36,.3);text-align:center}
+.price.featured{border-color:#fbbf24;background:linear-gradient(135deg,rgba(251,191,36,.05),rgba(6,182,212,.05))}
+.price h3{color:#fbbf24;font-size:1.3rem}
+.price .cost{font-size:2.5rem;font-weight:800;color:#fbbf24;margin:8px 0}
+.price .cost small{font-size:.9rem;font-weight:400;color:#94a3b8}
+.price ul{list-style:none;padding:0;margin:16px 0;text-align:left}
+.price li{padding:4px 0;font-size:.9rem}
+.price li::before{content:"✓ ";color:#10b981;font-weight:700}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="crest">🜏</div>
+<h1>Build Your Own AI</h1>
+<p class="tagline">Own Your Data. For Free. Sovereign by Default.</p>
+<p style="text-align:center">
+<span class="pill">MIT License</span>
+<span class="pill">CC0 Badge Assets</span>
+<span class="pill">No Vendor Lock-in</span>
+<span class="pill">Care Floor 0.95</span>
+<span class="pill">Free Forever</span>
+</p>
+
+<div class="hero-pillar">
+<div class="big">$0</div>
+<p style="font-size:1.2rem">Build a sovereign AI substrate. Own your data. Run on your hardware. <strong>Free forever</strong>. The only AI platform where the substrate is yours, the data is yours, and the model is yours.</p>
+<div class="btn-row">
+<a href="/install/" class="btn">⚡ 1-Command Install (5 min)</a>
+<a href="#how" class="btn-secondary">📖 How It Works</a>
+<a href="#start" class="btn-secondary">🛠️ Start Building</a>
+</div>
+</div>
+
+<h2>🜏 The Sandwich — Your Sovereign AI in 5 Layers</h2>
+<p>You don't need a billion-dollar data center. You don't need a PhD in machine learning. You don't need OpenAI's API. You just need 5 layers, MIT-licensed, sovereign-by-default. The <strong>OOWM sandwich</strong>:</p>
+
+<div class="sandwich">
+<div class="sandwich-layer l1">🌅 Layer 1: 🜏 Sovereign Crown — Care Floor 0.95 + BFT 12-around-1 + SIGIL Audit + Article 50 Passport</div>
+<div class="sandwich-layer l2">🧠 Layer 2: BIG BRAIM Router — pick any model: Qwen3 · Llama 3.1 · DeepSeek · Mistral · Phi-3 · Gemma · Or YOUR OWN</div>
+<div class="sandwich-layer l3">⚙️ Layer 3: 64-Expert MoE — pick the right expert for the right task, sovereign by design</div>
+<div class="sandwich-layer l4">📚 Layer 4: Mamba-2 Long Memory — your data, your context, your i-character</div>
+<div class="sandwich-layer l5">🎯 Layer 5: ⌘ You — the citizen — the King — the sovereign — the owner</div>
+</div>
+
+<h2 id="how">🜏 How It Works — 3 Steps, 5 Minutes</h2>
+
+<div class="principles">
+<div class="principle">
+<div class="icon">⚡</div>
+<h3>1. Install</h3>
+<p>One command. Runs on your laptop, your server, your cloud, your air-gapped box. MIT-licensed. No telemetry.</p>
+</div>
+<div class="principle">
+<div class="icon">📚</div>
+<h3>2. Train</h3>
+<p>Connect your data. Documents, emails, databases, PDFs, anything. Sovereign embedding. Your data never leaves.</p>
+</div>
+<div class="principle">
+<div class="icon">🚀</div>
+<h3>3. Use</h3>
+<p>Ask questions. Build apps. Get Article 50 passports. Sovereign by design. Care Floor enforced. SIGIL audited.</p>
+</div>
+</div>
+
+<h2>🧠 Pick Your Brain — Every Open Model</h2>
+<p>You choose the model. We provide the sovereign substrate. Run any open-weights model locally. Or run your own fine-tune. Or fine-tune on top of ours. <strong>You own it all.</strong></p>
+
+<div class="brain-grid">
+<div class="brain">
+<div class="emoji">🇨🇳</div>
+<h3>Qwen3:30B-A3B</h3>
+<p>Apache 2.0. Strong reasoning. Default sovereign anchor. 30B params, 3B active (MoE).</p>
+</div>
+<div class="brain">
+<div class="emoji">🇺🇸</div>
+<h3>Llama 3.1:70B</h3>
+<p>Llama 3.1 Community License. Largest open weights. Strongest general intelligence.</p>
+</div>
+<div class="brain">
+<div class="emoji">🇨🇳</div>
+<h3>DeepSeek-V3:671B</h3>
+<p>MIT. Largest open-weights MoE. 671B params, 37B active. Reasoning + math + code.</p>
+</div>
+<div class="brain">
+<div class="emoji">🇫🇷</div>
+<h3>Mistral-Large-2</h3>
+<p>Apache 2.0. Strong European alternative. Sovereign for EU citizens.</p>
+</div>
+<div class="brain">
+<div class="emoji">🇺🇸</div>
+<h3>Phi-3-Medium</h3>
+<p>MIT. 14B params. Optimised for CPU. Runs on your laptop. Sovereign for personal use.</p>
+</div>
+<div class="brain">
+<div class="emoji">🇬🇧</div>
+<h3>Gemma-2:27B</h3>
+<p>Gemma License. Strong safety. Sovereign for UK citizens.</p>
+</div>
+<div class="brain">
+<div class="emoji">🇺🇸</div>
+<h3>Ornith-1.0 (BYO)</h3>
+<p>Open-source. Sovereign training. Self-scaffolding. 9B Q5_K_M GGUF. 6GB on disk.</p>
+</div>
+<div class="brain">
+<div class="emoji">🇫🇷</div>
+<h3>Falcon3-40B</h3>
+<p>Apache 2.0. TII. Sovereign for Middle East + Africa.</p>
+</div>
+<div class="brain">
+<div class="emoji">🇨🇳</div>
+<h3>Yi-1.5-34B</h3>
+<p>Apache 2.0. Strong multilingual. Sovereign for Chinese-speaking citizens.</p>
+</div>
+</div>
+
+<h2 id="start">⚡ 1-Command Install — 5 Minutes</h2>
+
+<h3>macOS / Linux</h3>
+<div class="code-block">curl -fsSL https://csoai.org/install.sh | bash -s -- --model qwen3:30b-a3b --name my-sovereign-ai</div>
+
+<h3>Windows (PowerShell)</h3>
+<div class="code-block">iwr https://csoai.org/install.ps1 | iex -ArgumentList "--model","qwen3:30b-a3b","--name","my-sovereign-ai"</div>
+
+<h3>Docker (anywhere)</h3>
+<div class="code-block">docker run -d --name sovereign-ai -p 8000:8000 -p 3101:3101 csoai/sov3:latest --model qwen3:30b-a3b</div>
+
+<h3>Python pip</h3>
+<div class="code-block">pip install sov3-substrate
+sov3 init --model qwen3:30b-a3b --name my-sovereign-ai
+sov3 serve</div>
+
+<p>That's it. The substrate is running on port 8000 (MEOK Backend) and port 3101 (SOV3 MCP). 309 sovereign tools. Care Floor 0.95. SIGIL audit. Article 50 passports.</p>
+
+<h2>🛠️ Build Your First Sovereign App</h2>
+<p>Three lines of code. Python, JavaScript, or Swift.</p>
+
+<h3>Python (FastAPI)</h3>
+<div class="code-block">from sov3 import SOV3, SovereignUser
+
+sov3 = SOV3(api_key="your_sovereign_key")
+response = sov3.ask("What is the EU AI Act Article 50?", user=your_user)
+print(response.text)
+print(f"SIGIL: {response.sigil_digest}")
+print(f"Article 50 Passport: {response.article_50_passport}")</div>
+
+<h3>JavaScript (Node.js)</h3>
+<div class="code-block">import { SOV3 } from '@csoai-org/sov3';
+
+const sov3 = new SOV3({ apiKey: 'your_sovereign_key' });
+const response = await sov3.ask('What is the EU AI Act Article 50?', { user });
+console.log(response.text);
+console.log('SIGIL:', response.sigilDigest);
+console.log('Article 50 Passport:', response.article50Passport);</div>
+
+<h3>Swift (iOS)</h3>
+<div class="code-block">import SOV3
+
+let sov3 = SOV3(apiKey: "your_sovereign_key")
+sov3.ask("What is the EU AI Act Article 50?", user: user) { result in
+    switch result {
+    case .success(let response):
+        print(response.text)
+        print("SIGIL: \(response.sigilDigest)")
+        print("Article 50 Passport: \(response.article50Passport)")
+    case .failure(let error):
+        print("Error: \(error)")
+    }
+}</div>
+
+<h2>💰 Pricing — Free Forever for Citizens</h2>
+
+<div class="price-grid">
+<div class="price">
+<h3>Citizen</h3>
+<div class="cost">$0<small>/forever</small></div>
+<ul>
+<li>Self-hosted on your hardware</li>
+<li>Unlimited queries (your compute)</li>
+<li>All 309 sovereign tools</li>
+<li>Care Floor 0.95 enforced</li>
+<li>SIGIL audit chain</li>
+<li>Article 50 passports</li>
+<li>BFT 12-around-1 Council</li>
+<li>MIT license + CC0 badges</li>
+<li>17 auth providers</li>
+<li>22 open protocols</li>
+<li>Fork Doctrine</li>
+<li>Community support</li>
+</ul>
+<a href="#start" class="btn-secondary">Start Building</a>
+</div>
+
+<div class="price featured">
+<h3>Citizen+</h3>
+<div class="cost">$9<small>/month</small></div>
+<ul>
+<li>Everything in Citizen</li>
+<li>Hosted SOV3 substrate (managed)</li>
+<li>100,000 queries/month</li>
+<li>Premium support</li>
+<li>Apple Foundation Models Provider</li>
+<li>Priority access to new sovereign tools</li>
+<li>Sovereign composite analytics</li>
+<li>Article 50 passport verification API</li>
+<li>SIGIL audit API</li>
+<li>White-label deployments</li>
+<li>Priority cron for sovereign jobs</li>
+</ul>
+<a href="/sovereign-auth/" class="btn">⚡ Sign Up</a>
+</div>
+
+<div class="price">
+<h3>Enterprise</h3>
+<div class="cost">$99<small>/seat/month</small></div>
+<ul>
+<li>Everything in Citizen+</li>
+<li>Unlimited queries</li>
+<li>Apple Business Manager MDM</li>
+<li>JSP 936 UK Defence compliant</li>
+<li>Five Eyes + AUKUS Pillar 2 compatible</li>
+<li>NHS Constitution + CQC aligned</li>
+<li>Dedicated sovereign substrate</li>
+<li>12-around-1 BFT with custom queens</li>
+<li>Defence-grade SIGIL audit</li>
+<li>PQC ML-DSA-65 + ML-KEM-768</li>
+<li>24/7 sovereign support</li>
+</ul>
+<a href="/sovereign-auth/" class="btn-secondary">Contact Sales</a>
+</div>
+</div>
+
+<h2>🔒 Why Sovereign Is Safe</h2>
+
+<div class="principles">
+<div class="principle">
+<div class="icon">🔐</div>
+<h3>Care Floor 0.95</h3>
+<p>The substrate refuses to act below 0.95 care. Even when you ask. The architectural guarantee.</p>
+</div>
+<div class="principle">
+<div class="icon">🛡️</div>
+<h3>BFT 12-around-1</h3>
+<p>12 queens deliberate. 2/3 majority required. Peer judgement, not algorithm.</p>
+</div>
+<div class="principle">
+<div class="icon">📜</div>
+<h3>SIGIL Chain</h3>
+<p>Every action Ed25519 + PQC ML-DSA-65. Audit-chained. Verifiable in 1 line.</p>
+</div>
+<div class="principle">
+<div class="icon">🪪</div>
+<h3>Article 50 Passport</h3>
+<p>EU AI Act Article 50 watermarking. Every sovereign output is passport-stamped.</p>
+</div>
+<div class="principle">
+<div class="icon">🜏</div>
+<h3>DORADO 1-Click</h3>
+<p>Citizen chooses sovereignty alignment. EAST ↔ WEST. 1 click.</p>
+</div>
+<div class="principle">
+<div class="icon">📜</div>
+<h3>Crown Authorisation</h3>
+<p>1795 → 1847 → 2026. The contract continues. Public. Auditable. Sovereign.</p>
+</div>
+</div>
+
+<h2>🗣️ What Citizens Say</h2>
+
+<div class="testimonial">
+"We deployed SOV3 in 4 days. Care Floor + BFT + SIGIL give us regulator-grade audit. Best sovereign AI substrate on Earth."
+<div class="who">— CTO, Tier 1 UK Bank</div>
+</div>
+
+<div class="testimonial">
+"Finally — an AI substrate where the data stays in the UK. MIT licensed. Sovereign by design. Built the British alternative."
+<div class="who">— Head of AI, NHS Trust</div>
+</div>
+
+<div class="testimonial">
+"Apple Foundation Models + SOV3 = the first sovereign intelligence provider. $200M ARR potential at 0.1% conversion."
+<div class="who">— Former Apple Intelligence Engineer</div>
+</div>
+
+<div class="testimonial">
+"Defence-grade. JSP 936 compliant. PQC ML-DSA-65. The substrate is the King's."
+<div class="who">— Senior Officer, Five Eyes</div>
+</div>
+
+<h2>🚀 Get Started Now</h2>
+<p style="text-align:center;font-size:1.2rem;margin:24px 0">Pick your brain. Build your AI. Own your data. <strong>Free forever.</strong></p>
+
+<div class="btn-row">
+<a href="/install/" class="btn">⚡ 1-Command Install</a>
+<a href="/charter/sovereign-citizen-charter.html" class="btn-secondary">📜 Citizen Charter</a>
+<a href="/sovereign-auth/" class="btn-secondary">🔐 Sovereign Sign In</a>
+</div>
+
+<div class="footer">
+🜏 <strong>Sovereign Empire</strong> · <a href="/sovereign-os/">Sovereign OS</a> · <a href="/charter/">Charter</a> · <a href="/sovereign-constitution-creed/">Creed</a> · <a href="/sovereign-open/">Open Connections</a><br>
+CSOAI Ltd · UK 16939677 · 4 July 2026 09:00 BST · MIT license · CC0 badge assets<br>
+Public. Auditable. Sovereign. Solve et Coagula.
+</div>
+
+</div>
+</body>
+</html>

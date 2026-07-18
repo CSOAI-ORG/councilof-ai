@@ -1,0 +1,73 @@
+{
+  "stages": [
+    {
+      "n": 1,
+      "name": "LEARN",
+      "status": "PARTIAL",
+      "desc": "time+substrate-aware NOW (sov33_learn_stage); memory layer pending"
+    },
+    {
+      "n": 2,
+      "name": "CHECK_EXISTING",
+      "status": "RUNNING",
+      "desc": "audit what's built (never rebuild) + PROBE every 'blocked/gated' claim live (sov33_gated_check) before reporting it \u2014 anti-relapse"
+    },
+    {
+      "n": 3,
+      "name": "PLAN",
+      "status": "RUNNING",
+      "desc": "decompose the task (PDCA g1)"
+    },
+    {
+      "n": 4,
+      "name": "DO",
+      "status": "RUNNING",
+      "desc": "execute \u2014 brain/swarm (PDCA g2)"
+    },
+    {
+      "n": 5,
+      "name": "ACT",
+      "status": "RUNNING",
+      "desc": "apply/commit the result (PDCA g3)"
+    },
+    {
+      "n": 6,
+      "name": "CHECK_VERIFY",
+      "status": "RUNNING",
+      "desc": "cross-lineage defer-to-escalate (sov33_escalate, rho-measured)"
+    },
+    {
+      "n": 7,
+      "name": "AUDIT",
+      "status": "PARTIAL",
+      "desc": "trace claims, catch overclaims, RUNNING/DESIGNED/STUB split"
+    },
+    {
+      "n": 8,
+      "name": "IMPROVE",
+      "status": "RUNNING",
+      "desc": "log pass/fail, tighten loop, propose (not self-commit) (PDCA g5)"
+    },
+    {
+      "n": 9,
+      "name": "BRAND_QUALITY",
+      "status": "PARTIAL",
+      "desc": "presentation + conformal quality guarantee, BFT-gated"
+    }
+  ],
+  "gates": [
+    "HORUS",
+    "DEFONEOS_HARD_STOPS",
+    "CARE_FLOOR_conformal",
+    "SIGIL",
+    "DRUM_heartbeat",
+    "Article_0"
+  ],
+  "bft_rule": "cross-lineage checkers only; escalate-don't-average; log rho; rho>=0.7=theatre",
+  "honest_scope": "governance+throughput, NOT capability; params don't add across stacked brains",
+  "anti_relapse_rule": "CHECK_EXISTING stage: a 'blocked/gated/owner-required' claim is INVALID until PROBED LIVE (sov33_gated_check.probe_gate). Never mark work gated from memory/assumption to offload it. Test first; report gated only after a real probe fails.",
+  "exec_mode": {
+    "years_to_days": "parallel fan-out of PLAN->DO subtasks across hives (throughput, not capability)",
+    "drum": "L0 1Hz heartbeat clock beneath all stages; phase-veto halts on instability"
+  }
+}

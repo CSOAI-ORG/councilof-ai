@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🚀 SOV33 Quickstart — 3 Steps to Sovereign AI</title>
+<meta name="description" content="SOV33 quickstart — install the sovereign substrate in 15 minutes: pip install, SIGIL keypair, BFT-council vote, EU AI Act Article 50 watermarking enabled by default.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);padding:1.5rem;line-height:1.55;max-width:1300px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;text-align:center}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.95em;word-break:break-all}
+  pre{background:var(--bg2);padding:1.2rem 1.5rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.85em;line-height:1.45}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .meta{color:var(--muted);font-size:.9em}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .step{background:var(--bg);padding:1.5rem;border-radius:8px;border:1px solid var(--rule);margin:1rem 0}
+  .step .num{font-size:2.5rem;font-weight:bold;color:var(--accent);float:left;margin-right:1rem;line-height:1}
+  button{background:var(--accent);color:#0a0e1a;border:none;padding:.7rem 1.2rem;border-radius:6px;font-weight:bold;cursor:pointer}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_QUICKSTART.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🚀 SOV33 Quickstart</h1>
+  <p class="meta">3 steps to sovereign AI · 12 Jul 2026</p>
+  <p style="text-align:center"><a href="SOV33_HERO.html">← SOV33 Hub</a></p>
+</header>
+
+<h2>The 3 Steps</h2>
+
+<div class="step">
+<span class="num">1</span>
+<h3>Get your sovereign DID</h3>
+<p>Every SOV33 user gets an Ed25519 keypair. Your DID is your sovereign identity.</p>
+<pre>curl -X POST https://csoai.org/api/signup \\
+  -H "Content-Type: application/json" \\
+  -d '{"email":"you@example.com","name":"Your Name"}'
+# Returns: {"did":"did:csoai:xxx","sigil":"...","key":"..."}</pre>
+</div>
+
+<div class="step">
+<span class="num">2</span>
+<h3>Choose your topology</h3>
+<p>SOV33 supports 6 architectures. Pick the one that fits your use case.</p>
+<pre># Fastest (5.5ms): mixed sizes
+curl -X POST https://csoai.org/api/orchestrate \\
+  -H "Content-Type: application/json" \\
+  -d '{"message":"Your question","citizen":"general"}'
+
+# Most governed: 12-around-1
+curl -X POST https://csoai.org/api/12-pillar/route \\
+  -H "Content-Type: application/json" \\
+  -d '{"message":"What is Article 0?"}'
+
+# Most features: Master
+curl -X POST https://csoai.org/api/master/orchestrate \\
+  -H "Content-Type: application/json" \\
+  -d '{"message":"Your question"}'</pre>
+</div>
+
+<div class="step">
+<span class="num">3</span>
+<h3>Verify your response</h3>
+<p>Every SOV33 response includes a SIGIL — verify it for audit-grade provenance.</p>
+<pre>curl -X POST https://csoai.org/api/verify \\
+  -H "Content-Type: application/json" \\
+  -d '{"response":{...},"expected_sigil":"..."}'
+
+# Returns: {"verified":true,"audit_trail":[...]}</pre>
+</div>
+
+<h2>Try It Now</h2>
+
+<div class="card">
+<h3>Live demo</h3>
+<input id="q" value="What is SIGIL?" style="width:100%;padding:.7rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;font-family:inherit;margin:.5rem 0">
+<button onclick="ask()">Ask SOV33</button>
+<div id="out" style="margin-top:1rem"></div>
+</div>
+
+<h2>Quick Reference</h2>
+
+<table style="border-collapse:collapse;width:100%;font-size:.9em">
+  <tr style="background:#1a1f2e"><th style="padding:.5rem;text-align:left">Endpoint</th><th style="padding:.5rem;text-align:left">Use</th></tr>
+  <tr><td style="padding:.5rem">POST /api/orchestrate</td><td style="padding:.5rem">Generic chat (default)</td></tr>
+  <tr><td style="padding:.5rem">POST /api/12-pillar/route</td><td style="padding:.5rem">Plan + delegate to 12 pillars</td></tr>
+  <tr><td style="padding:.5rem">POST /api/master/orchestrate</td><td style="padding:.5rem">Full Master (all 17 capabilities)</td></tr>
+  <tr><td style="padding:.5rem">POST /v1/chat/completions</td><td style="padding:.5rem">OpenAI-compatible</td></tr>
+  <tr><td style="padding:.5rem">POST /api/code</td><td style="padding:.5rem">Code with unsafe veto</td></tr>
+  <tr><td style="padding:.5rem">POST /api/tools</td><td style="padding:.5rem">10 agentic tools</td></tr>
+  <tr><td style="padding:.5rem">GET /api/registry</td><td style="padding:.5rem">List 61 models</td></tr>
+  <tr><td style="padding:.5rem">GET /api/security/audit</td><td style="padding:.5rem">6 invariants check</td></tr>
+</table>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+<strong>🚀 SOV33 Quickstart</strong> · 12 Jul 2026 · Hermes lane<br>
+<a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function ask() {
+  const q = document.getElementById('q').value;
+  const out = document.getElementById('out');
+  out.innerHTML = 'Asking SOV33...';
+  try {
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: q, citizen: 'general'})
+    });
+    const d = await r.json();
+    out.innerHTML = `
+      <div class="card">
+        <p><strong>${d.say || d.output || JSON.stringify(d)}</strong></p>
+        <p class="meta">brain: ${d.brain || 'unknown'} · care: ${d.sovereign_provenance?.care_floor || 0.95} · sigil: ${(d.sigil || '').substring(0, 12)}...</p>
+      </div>
+    `;
+  } catch (e) {
+    out.innerHTML = '<span style="color:var(--warn)">' + e.message + '</span>';
+  }
+}
+</script>
+
+</body>
+</html>

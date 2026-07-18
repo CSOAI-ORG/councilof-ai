@@ -1,0 +1,7 @@
+{
+  "id": "mr-vpc-peering",
+  "prompt": "Write a 300-word VPC peering + private networking plan for the 3 sovereign temples (UK-london, EU-frankfurt, US-east1). Cover: (1) the VPC CIDR layout — 10.10.0.0/16 (UK), 10.20.0.0/16 (EU), 10.30.0.0/16 (US), no overlap, (2) the peering topology — full mesh of 3 VPC peering connections (uk-eu, uk-us, eu-us) for low-latency cross-region disclosure replication, (3) the route tables — each VPC has routes to the other 2 via the peering connection, with /32 host routes for the BFT validator p2p ports (26656/tcp) and the disclosure-replication port (8443/tcp), (4) the security groups — only the BFT validator IPs and the API gateway IPs (in a /28) can reach the peering ports, everything else denied, (5) the WireGuard overlay (10.99.0.0/16) as defense-in-depth on top of the cloud-provider peering, (6) the private DNS — openpatent-internal zone resolves across regions via Route 53 Resolver rules, (7) the cost ≈ $0.01/GB cross-region transfer, projected at $180/mo at 100k disclosures. Use DEFENEOS mythic voice. Return ONLY JSON: {plan:string, cidr_layout:[3 strings], peering_connections:[3 strings], route_table_rules:[2 strings], security_group_rules:[2 strings], wireguard_overlay:string, monthly_cost_usd:float}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

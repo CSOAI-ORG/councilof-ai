@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — EAT Mode Control · Daily Golden + Morning Digest + Tick Orchestrator</title>
+<meta name="description" content="DEFONEOS EAT Mode Control — single-page dashboard for daily golden test, morning digest, tick orchestrator, all live endpoints. SIGIL-signed.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-eat-control">
+<link rel="icon" href="#"" type="image/svg+xml">
+<style>
+:root{--bg:#0a0a0f;--bg2:#14181f;--bg3:#1c2128;--fg:#f8fafc;--cyan:#22d3ee;--gold:#fbbf24;--green:#22c55e;--red:#ef4444;--purple:#a78bfa;--border:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% -10%,#1a0a3a 0%,#0a0a0f 60%);color:var(--fg);line-height:1.6;min-height:100vh}
+.container{max-width:1280px;margin:0 auto;padding:2rem}
+nav{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.8rem 2rem;display:flex;gap:1.4rem;align-items:center;flex-wrap:wrap}
+nav a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+nav a:hover{color:var(--cyan)}
+nav .brand{color:var(--cyan);font-weight:700;font-size:1.1rem}
+header{padding:2rem 0 1rem;text-align:center}
+.eyebrow{display:inline-block;padding:.4rem 1rem;background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:2.6rem;background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
+.subtitle{font-size:1.05rem;color:#94a3b8;max-width:880px;margin:0 auto 2rem}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.card.hl{background:linear-gradient(135deg,rgba(34,211,238,.05),rgba(167,139,250,.05));border-color:var(--cyan)}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;margin:1rem 0}
+.kv .item{background:var(--bg);padding:.8rem;border-radius:8px;text-align:center;border:1px solid var(--border)}
+.kv .item .v{font-size:1.3rem;font-weight:800;color:var(--cyan)}
+.kv .item .l{font-size:.7rem;color:#94a3b8;text-transform:uppercase;margin-top:.3rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.4rem;border-radius:8px;font-weight:700;font-size:.9rem;text-decoration:none;cursor:pointer;border:none;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--cyan));color:#000}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+.endpoint-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:1rem 0}
+.endpoint{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.8rem;display:flex;justify-content:space-between;align-items:center;font-size:.82rem}
+.endpoint .name{color:var(--cyan);font-family:'SF Mono',monospace}
+.endpoint .dot{width:10px;height:10px;border-radius:99px;background:#64748b}
+.endpoint.ok .dot{background:var(--green)}
+.endpoint.fail .dot{background:var(--red)}
+.section-title{font-size:1.2rem;color:var(--cyan);margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;color:var(--green);font-size:.78rem;font-family:'SF Mono',Menlo,monospace;line-height:1.4;margin:.5rem 0;white-space:pre-wrap}
+#digestOutput,#goldenOutput,#tickOutput{min-height:200px;max-height:520px;overflow-y:auto}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top:2px solid #000;border-radius:99px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+input[type=text],input[type=password],select{width:100%;padding:.5rem .7rem;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-family:inherit;font-size:.85rem;margin:.3rem 0}
+footer{text-align:center;padding:2rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:3rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav>
+  <a href="#" class="brand">🐉 DEFONEOS</a>
+  <a href="#">Pricing</a>
+  <a href="#">Demo</a>
+  <a href="#">Verify</a>
+  <a href="#">System Card</a>
+  <a href="#">Series A</a>
+  <a href="#" style="color:var(--gold)">Sign Up</a>
+</nav>
+
+<div class="container">
+
+<header>
+  <span class="eyebrow">⚙️ EAT Mode Control · daily golden + morning digest + tick orchestrator</span>
+  <h1>DEFONEOS · EAT Mode Control</h1>
+  <p class="subtitle">Single-page operations console. <strong>Live</strong> E2E golden test, <strong>live</strong> morning digest, <strong>live</strong> EAT-tick orchestrator. All endpoints below, all SIGIL-signed, all cron-automatable.</p>
+</header>
+
+<section>
+  <h2 class="section-title">📊 Live endpoint status (read-only)</h2>
+  <div class="endpoint-row" id="endpointGrid">
+    <div class="endpoint"><span class="name">/api/stats</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/sigil-status</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/oscal</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/sovereign-citations</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/framing</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/invite</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/persist</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/daily-golden</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/morning-digest</span><div class="dot"></div></div>
+    <div class="endpoint"><span class="name">/api/eat-tick</span><div class="dot"></div></div>
+  </div>
+  <p style="text-align:center;font-size:.78rem;color:#94a3b8;margin-top:.5rem" id="endpointStatus">Loading...</p>
+</section>
+
+<section>
+  <h2 class="section-title">⚡ 1. Daily Golden Test (E2E surface check)</h2>
+  <p style="color:#94a3b8;font-size:.9rem;margin-bottom:1rem">Curl every page + every endpoint. 19 pages + 10 endpoints = 29 checks. <strong>Real</strong> HTTP requests, real pass/fail, Telegram-notified on failures.</p>
+  <div class="btn-row">
+    <button class="btn" onclick="runGolden()">▶ Run Golden Test Now</button>
+    <a href="#" target="_blank" class="btn btn-ghost">Open raw /api/daily-golden</a>
+  </div>
+  <pre id="goldenOutput">[click "Run Golden Test Now" to execute]</pre>
+</section>
+
+<section>
+  <h2 class="section-title">📈 2. Morning Digest (live metrics)</h2>
+  <p style="color:#94a3b8;font-size:.9rem;margin-bottom:1rem">Aggregates /tmp logs into Nick's morning summary. Cron: 07:00 BST. Telegram-dispatched if TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID env set.</p>
+  <div class="btn-row">
+    <button class="btn btn-green" onclick="runDigest()">📨 Run Morning Digest Now</button>
+    <a href="#" target="_blank" class="btn btn-ghost">Open raw /api/morning-digest</a>
+  </div>
+  <pre id="digestOutput">[click "Run Morning Digest Now" to execute]</pre>
+</section>
+
+<section>
+  <h2 class="section-title">🔥 3. EAT Tick (single autonomous tick)</h2>
+  <p style="color:#94a3b8;font-size:.9rem;margin-bottom:1rem">Run a single tick. Available tasks: <code>build</code> · <code>test</code> · <code>deploy</code> · <code>verify</code> (golden alias). Cron-every-2-hours during EAT mode.</p>
+  <div style="display:flex;gap:.5rem;max-width:680px;margin:0 auto">
+    <select id="taskSelect" style="flex:1">
+      <option value="verify">verify (recommended — runs daily-golden)</option>
+      <option value="golden">golden (alias of verify)</option>
+      <option value="build">build (run quality_gate.py)</option>
+      <option value="test">test (run pytest)</option>
+      <option value="deploy">deploy (owner-gated)</option>
+    </select>
+    <input type="text" id="sendKey" placeholder="X-Send-Key (optional if env unset)">
+    <button class="btn" onclick="runTick()">▶ Fire Tick</button>
+  </div>
+  <pre id="tickOutput">[click "Fire Tick" to execute]</pre>
+</section>
+
+<section>
+  <h2 class="section-title">📋 Cron schedule (recommended)</h2>
+  <pre># /etc/crontab or cron.d/defoneos — owner can deploy after Vercel env-set
+# Cron hits the Vercel serverless endpoints, which run real golden + digest + tick
+
+# Daily golden — every 4 hours during EAT mode
+0 */4 * * *  curl -s -o /dev/null -w "%{http_code}\n" https://csoai-static-deploy2.vercel.app/api/daily-golden
+
+# Morning digest — 07:00 BST daily
+0 7 * * *   curl -s -X POST -H "X-Send-Key: $SEND_KEY" https://csoai-static-deploy2.vercel.app/api/morning-digest
+
+# EAT tick — every 2 hours during EAT mode (08-22)
+0 8,10,12,14,16,18,20,22 * * *  curl -s -X POST -H "X-Send-Key: $SEND_KEY" -H "Content-Type: application/json" -d '{"task":"verify"}' https://csoai-static-deploy2.vercel.app/api/eat-tick
+
+# Owner-triggered via /defoneos-eat-control — single-fire from browser
+
+# Setup once: Vercel env vars
+#   SEND_KEY          = any-random-secret (gates /api/welcome, /api/eat-tick, /api/persist)
+#   TELEGRAM_BOT_TOKEN = your Telegram bot token (Nick's signal channel)
+#   TELEGRAM_CHAT_ID   = your Telegram chat ID
+#   RESEND_API_KEY     = for live welcome emails (else queued in /tmp/email.outbox.jsonl)
+#   GIST_TOKEN         = for /api/persist Gist sync (else returns 200 with no-op)</pre>
+</section>
+
+<section>
+  <h2 class="section-title">⚡ 4. Setup checklist (owner one-click)</h2>
+  <div class="card hl">
+  <h3 style="color:var(--green)">Run this once to enable the full automation chain:</h3>
+  <ol style="font-size:.88rem;color:#cbd5e1">
+    <li>Open <a href="https://vercel.com/dashboard" target="_blank" style="color:var(--cyan)">Vercel dashboard</a> → csoai-static-deploy2 → Settings → Environment Variables</li>
+    <li>Add: <code>SEND_KEY</code> = any-random-secret (e.g. <code>openssl rand -hex 32</code>)</li>
+    <li>Add: <code>TELEGRAM_BOT_TOKEN</code> = your bot token (talk to @BotFather)</li>
+    <li>Add: <code>TELEGRAM_CHAT_ID</code> = your chat ID</li>
+    <li>Add: <code>RESEND_API_KEY</code> = your Resend key (optional; else queued)</li>
+    <li>Add: <code>GIST_TOKEN</code> = GitHub PAT with <code>gist</code> scope (optional)</li>
+    <li>Run golden test → if 29/29 ok → enable cron</li>
+  </ol>
+  </div>
+</section>
+
+<footer>
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · sovereign-by-construction · UK · audit-grade · signed · neutral · Charter Article 0 binding
+</footer>
+
+</div>
+
+<script>
+const ENDPOINTS = [
+  ['/api/stats', 'GET'],
+  ['/api/sigil-status', 'GET'],
+  ['/api/oscal?format=json', 'GET'],
+  ['/api/sovereign-citations', 'GET'],
+  ['/api/framing', 'GET'],
+  ['/api/invite', 'GET'],
+  ['/api/persist', 'GET'],
+  ['/api/daily-golden', 'GET'],
+  ['/api/morning-digest', 'GET'],
+  ['/api/eat-tick', 'GET'],
+];
+
+async function checkEndpoints() {
+  const out = document.getElementById('endpointGrid');
+  const status = document.getElementById('endpointStatus');
+  let ok = 0, total = ENDPOINTS.length;
+  for (let i = 0; i < ENDPOINTS.length; i++) {
+    const [path, method] = ENDPOINTS[i];
+    const tile = out.children[i];
+    try {
+      const r = await fetch(path, { method });
+      if (r.status >= 200 && r.status < 400) {
+        tile.classList.add('ok');
+        ok++;
+      } else {
+        tile.classList.add('fail');
+      }
+    } catch (e) { tile.classList.add('fail'); }
+  }
+  status.textContent = ok === total ? `🟢 ${ok}/${total} endpoints green` : `🟡 ${ok}/${total} endpoints up · ${total - ok} need attention`;
+}
+checkEndpoints();
+
+async function runGolden() {
+  const out = document.getElementById('goldenOutput');
+  out.textContent = '⏳ Running golden test (29 checks)...';
+  try {
+    const r = await fetch('/api/daily-golden');
+    const j = await r.json();
+    out.textContent = JSON.stringify(j, null, 2);
+  } catch (e) { out.textContent = 'ERROR: ' + e.message; }
+}
+
+async function runDigest() {
+  const out = document.getElementById('digestOutput');
+  out.textContent = '⏳ Aggregating /tmp logs...';
+  try {
+    const r = await fetch('/api/morning-digest');
+    const j = await r.json();
+    out.textContent = j.text || JSON.stringify(j, null, 2);
+  } catch (e) { out.textContent = 'ERROR: ' + e.message; }
+}
+
+async function runTick() {
+  const out = document.getElementById('tickOutput');
+  const task = document.getElementById('taskSelect').value;
+  const key = document.getElementById('sendKey').value;
+  out.textContent = `⏳ Firing tick: ${task}...`;
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (key) headers['X-Send-Key'] = key;
+    const r = await fetch('/api/eat-tick', { method: 'POST', headers, body: JSON.stringify({ task }) });
+    const j = await r.json();
+    out.textContent = JSON.stringify(j, null, 2);
+  } catch (e) { out.textContent = 'ERROR: ' + e.message; }
+}
+
+// Auto-refresh endpoint status every 30s
+setInterval(checkEndpoints, 30000);
+</script>
+</body>
+</html>

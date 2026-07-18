@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🐉 The Coigndaltion — The Cognition + Integration Cornerstone | CSOAI</title>
+  <meta name="description" content="The Coigndaltion is the 4th layer of the sovereign AI empire — the cognition + integration cornerstone across SOV3³ (DEFONEOS), SOV3 (meok), and CSOAI." />
+  <meta name="author" content="CSOAI Ltd (UK 16939677)" />
+  <link rel="canonical" href="https://csoai.org/coigndaltion/" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-2: #11121a;
+      --panel: #15161f;
+      --border: #2a2c3a;
+      --text: #e6e6f0;
+      --muted: #9ba0b8;
+      --accent: #5eead4;
+      --accent-2: #f59e0b;
+      --accent-3: #c084fc;
+      --accent-4: #38bdf8;
+      --danger: #f87171;
+      --success: #4ade80;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: "JetBrains Mono", "SF Mono", Menlo, monospace; background: var(--bg-2); border: 1px solid var(--border); border-radius: 6px; padding: 0.15em 0.45em; font-size: 0.92em; }
+    pre { padding: 1em; overflow-x: auto; line-height: 1.5; }
+
+    /* HERO */
+    .hero {
+      padding: 4.5rem 1.5rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero .crest {
+      font-size: 3.6rem;
+      margin-bottom: 0.4rem;
+      filter: drop-shadow(0 0 24px rgba(94, 234, 212, 0.25));
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      margin: 0.4rem 0 0.6rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3) 50%, var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero .subtitle {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 720px;
+      margin: 0.6rem auto 1.6rem;
+      line-height: 1.55;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-top: 1.4rem;
+    }
+    .badge {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .badge.live { color: var(--success); border-color: rgba(74, 222, 128, 0.4); }
+    .badge.sovereign { color: var(--accent); border-color: rgba(94, 234, 212, 0.4); }
+
+    /* SECTIONS */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.4rem 1.5rem;
+    }
+    section h2 {
+      font-size: 1.8rem;
+      letter-spacing: -0.01em;
+      margin: 0 0 1rem;
+    }
+    section h2 .num { color: var(--accent); margin-right: 0.5rem; }
+    section p { line-height: 1.65; color: var(--text); }
+
+    /* LAYER CARDS */
+    .layer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin: 1.6rem 0;
+    }
+    .layer {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.3rem;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .layer:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .layer .l-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .layer h3 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+    .layer .domain { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.6rem; }
+    .layer .func { font-size: 0.92rem; line-height: 1.45; }
+    .layer .num-mcps { margin-top: 0.6rem; font-size: 0.82rem; color: var(--accent); }
+    .layer.l4 {
+      background: linear-gradient(135deg, rgba(94, 234, 212, 0.06), rgba(192, 132, 252, 0.06));
+      border-color: var(--accent);
+    }
+    .layer.l4 h3 { color: var(--accent); }
+
+    /* TOOLS TABLE */
+    .tools {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.4rem 0;
+      background: var(--panel);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .tools th, .tools td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .tools th { background: var(--bg-2); font-weight: 600; color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .tools tr:last-child td { border-bottom: none; }
+    .tools td.tool-name { color: var(--accent); font-family: "JetBrains Mono", monospace; font-size: 0.92rem; }
+    .tools td.tool-desc { font-size: 0.92rem; color: var(--text); }
+
+    /* TIMELINE / FLOW */
+    .flow {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.4rem 0;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      color: var(--muted);
+    }
+    .flow .hi { color: var(--accent); }
+    .flow .em { color: var(--accent-2); }
+    .flow .p { color: var(--accent-3); }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.4rem 0;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+    }
+    .stat .n {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+    .stat .l { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      background: linear-gradient(135deg, rgba(94, 234, 212, 0.05), rgba(192, 132, 252, 0.05));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .cta h2 { margin-bottom: 0.6rem; }
+    .cta p { color: var(--muted); max-width: 600px; margin: 0 auto 1.4rem; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--bg);
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 600;
+      margin: 0.3rem 0.4rem;
+    }
+    .cta-btn:hover { text-decoration: none; background: var(--accent-3); color: var(--bg); }
+    .cta-btn.alt { background: var(--bg-2); color: var(--accent); border: 1px solid var(--accent); }
+    .cta-btn.alt:hover { background: var(--accent); color: var(--bg); }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    footer a { color: var(--accent); }
+
+    /* TABS (interactive) */
+    .tabs {
+      display: flex;
+      gap: 0.4rem;
+      margin: 1.2rem 0 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .tab {
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      font-size: 0.95rem;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-content { display: none; padding: 1.4rem 0; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="crest">🐉</div>
+    <h1>The Coigndaltion</h1>
+    <p class="subtitle">
+      The 4th layer of the sovereign AI empire. The cognition + integration cornerstone
+      across <strong>SOV3³ (DEFONEOS)</strong>, <strong>SOV3 (meok)</strong>, and <strong>CSOAI</strong>.
+    </p>
+    <div class="badges">
+      <span class="badge live">● Live</span>
+      <span class="badge sovereign">Sovereign by design</span>
+      <span class="badge">8 tools</span>
+      <span class="badge">12/12 tests</span>
+      <span class="badge">Apache-2.0</span>
+      <span class="badge">SIGIL-anchored</span>
+      <span class="badge">BFT-ratified</span>
+      <span class="badge">Care Floor 1.0</span>
+    </div>
+  </header>
+
+  <!-- WHAT IS IT -->
+  <section>
+    <h2><span class="num">01.</span> What is the Coigndaltion?</h2>
+    <p>
+      The empire has 3 brands working in concert: <strong>SOV3³ (DEFONEOS)</strong> for defence,
+      <strong>SOV3 (meok)</strong> for the public substrate, and <strong>CSOAI</strong> for certification.
+      When a DEFONEOS sensor reading is shipped to a CSOAI auditor via a meok substrate call,
+      <em>where does that coordination live?</em>
+    </p>
+    <p>
+      Until W34, it lived nowhere canonical — scattered across 67+ sovereign MCPs, 1,156+ tests,
+      the SIGIL chain, and the BFT council. None of these was <em>the</em> integration layer.
+      <strong>The Coigndaltion is that layer.</strong>
+    </p>
+    <p>
+      The name is a portmanteau of <em><strong>Coign</strong></em> (a cornerstone, from Old French
+      <em>coign</em> — corner) + <em><strong>-daltion</strong></em> (an atom of data, from Latin
+      <em>datum</em>) + <em><strong>cognition</strong></em> (the act of knowing). It is the
+      cornerstone cognition layer that bears the integration load between the 3 brands.
+    </p>
+  </section>
+
+  <!-- THE 4-LAYER MAP -->
+  <section>
+    <h2><span class="num">02.</span> The 4-Layer Map</h2>
+    <div class="layer-grid">
+      <div class="layer l1">
+        <span class="l-tag">L1 · Defence</span>
+        <h3>SOV3³ = DEFONEOS</h3>
+        <div class="domain">defoneos.com</div>
+        <div class="func">Defence wedge — sensor → fusion → cognition → command → compliance. UK MOD + AUKUS Pillar 2.</div>
+        <div class="num-mcps">15 MCPs · 207 tests</div>
+      </div>
+      <div class="layer l2">
+        <span class="l-tag">L2 · Substrate</span>
+        <h3>SOV3 = meok</h3>
+        <div class="domain">meok.ai</div>
+        <div class="func">Public substrate — humans + agents + developers + industries + governments + the planet.</div>
+        <div class="num-mcps">67 MCPs · 1,156 tests</div>
+      </div>
+      <div class="layer l3">
+        <span class="l-tag">L3 · Certification</span>
+        <h3>CSOAI</h3>
+        <div class="domain">csoai.org</div>
+        <div class="func">Certification authority — DEFONEOS-SEAL + 14-framework audit + OSCAL + Article 50 passports.</div>
+        <div class="num-mcps">DEFONEOS-SEAL · 14 frameworks</div>
+      </div>
+      <div class="layer l4">
+        <span class="l-tag">L4 · Cornerstone 🆕</span>
+        <h3>COIGNDALTION</h3>
+        <div class="domain">coigndaltion.csoai.org</div>
+        <div class="func">Cognition + integration cornerstone across L1↔L2↔L3. Routes, unifies, bridges, audits, inquires, summons, anchors, self-describes.</div>
+        <div class="num-mcps">1 MCP · 8 tools · 12/12 tests</div>
+      </div>
+    </div>
+
+    <div class="flow">
+<span class="hi">L1 — SOV3³ (DEFONEOS)</span>   15 MCPs · 207 tests
+        ▲                │
+        │ cog_route      │ cog_bridge
+        │                ▼
+<span class="p">L4 — COIGNDALTION</span> ◄─── <span class="em">cog_audit · cog_summon · cog_anchor</span> ───┐
+        ▲                │                                              │
+        │ cog_unify      │ cog_inquire                                  │
+        │                ▼                                              │
+<span class="em">L2 — SOV3 (meok)</span>      67 MCPs · 1,156 tests                          │
+        ▲                                                                      │
+        │ cog_route + cog_audit                                                 │
+        │                                                                      ▼
+<span class="em">L3 — CSOAI</span>           DEFONEOS-SEAL · 14 frameworks ──────── <span class="hi">L1 (audit trail)</span>
+    </div>
+  </section>
+
+  <!-- THE 8 TOOLS -->
+  <section>
+    <h2><span class="num">03.</span> The 8 Tools</h2>
+    <p>Every tool carries <code>care_score = 1.0</code>. Every tool emits a SIGIL receipt. Every tool is BFT-ratified for sensitive operations.</p>
+
+    <div class="tabs" id="toolTabs">
+      <div class="tab active" data-target="t1">cog_route</div>
+      <div class="tab" data-target="t2">cog_unify</div>
+      <div class="tab" data-target="t3">cog_bridge</div>
+      <div class="tab" data-target="t4">cog_audit</div>
+      <div class="tab" data-target="t5">cog_inquire</div>
+      <div class="tab" data-target="t6">cog_summon</div>
+      <div class="tab" data-target="t7">cog_anchor</div>
+      <div class="tab" data-target="t8">cog_origin</div>
+    </div>
+
+    <div id="t1" class="tab-content active">
+      <h3 style="margin-top:0"><code>cog_route(data, source_layer, target_layer, via=None)</code></h3>
+      <p>Routes a datum from one layer to another with a SIGIL receipt. The cornerstone's data router.</p>
+<pre><code>from coigndaltion_mcp import cog_route
+
+result = cog_route(
+    data={"sensor": "drone-1", "reading": "thermal_hotspot"},
+    source_layer="L1_DEFONEOS",
+    target_layer="L2_MEOK",
+)
+# → routed_payload + sigil_receipt + latency_ms + path
+print(result["path"])
+# "L1_DEFONEOS → L2_MEOK"</code></pre>
+    </div>
+
+    <div id="t2" class="tab-content">
+      <h3 style="margin-top:0"><code>cog_unify(data_points, target_frame="audit")</code></h3>
+      <p>Unifies multiple data points from different layers into one cognitive frame with provenance chain and confidence score.</p>
+<pre><code>from coigndaltion_mcp import cog_unify
+
+unified = cog_unify(
+    data_points=[
+        {"layer": "L1_DEFONEOS", "payload": {"sensor": "drone-1"}},
+        {"layer": "L2_MEOK", "payload": {"classification": "person"}},
+        {"layer": "L3_CSOAI", "payload": {"verdict": "compliant"}},
+    ],
+    target_frame="audit",
+)
+# → unified_frame + provenance_chain + confidence_score</code></pre>
+    </div>
+
+    <div id="t3" class="tab-content">
+      <h3 style="margin-top:0"><code>cog_bridge(source_brand, target_brand, intent, ttl_seconds=86400)</code></h3>
+      <p>Emits a formal cross-layer integration contract between two brands. The cornerstone's contract layer.</p>
+<pre><code>from coigndaltion_mcp import cog_bridge
+
+contract = cog_bridge(
+    source_brand="defoneos",
+    target_brand="meok",
+    intent="attest_every_sensor_reading",
+    ttl_seconds=86400,
+)
+# → bridge_contract + sigil_receipt</code></pre>
+    </div>
+
+    <div id="t4" class="tab-content">
+      <h3 style="margin-top:0"><code>cog_audit(operation_id)</code></h3>
+      <p>Verifies the 3-layer audit chain (L1 identity + L2 execution + L3 compliance) for any operation. Returns a verdict.</p>
+<pre><code>from coigndaltion_mcp import cog_audit
+
+audit = cog_audit(operation_id="op_xyz_123")
+# audit["verdict"] == "PASS"
+# audit["chain_hash"] == sha256(...)
+# audit["l1_identity_status"] == "verified"
+# audit["l2_execution_status"] == "verified"
+# audit["l3_compliance_status"] == "verified"</code></pre>
+    </div>
+
+    <div id="t5" class="tab-content">
+      <h3 style="margin-top:0"><code>cog_inquire(query)</code></h3>
+      <p>Resolves a natural-language query to the right layer(s) + tool(s). The cornerstone's NL router.</p>
+<pre><code>from coigndaltion_mcp import cog_inquire
+
+plan = cog_inquire("What did the drone see on the perimeter?")
+# → resolved_intent + routing_plan + primary_layer
+# plan["routing_plan"] == [
+#   {"layer": "L1_DEFONEOS", "tool": "defoneos-sensor-mcp.sensor_query"},
+#   {"layer": "L2_MEOK",      "tool": "meok-core-mcp.os_route"},
+# ]</code></pre>
+    </div>
+
+    <div id="t6" class="tab-content">
+      <h3 style="margin-top:0"><code>cog_summon(council_brand, question, quorum=23)</code></h3>
+      <p>Convenes the BFT council of any brand to answer a cross-layer question. Returns a signed verdict.</p>
+<pre><code>from coigndaltion_mcp import cog_summon
+
+verdict = cog_summon(
+    council_brand="csoai",
+    question="Should we export this payload to a foreign jurisdiction?",
+)
+# verdict["council_verdict"]["decision"] == "APPROVED"
+# verdict["quorum"] == "23/33"</code></pre>
+    </div>
+
+    <div id="t7" class="tab-content">
+      <h3 style="margin-top:0"><code>cog_anchor(data_id, scope)</code></h3>
+      <p>Anchors a data point to the SIGIL chain with a cross-layer scope. The cornerstone's audit anchor.</p>
+<pre><code>from coigndaltion_mcp import cog_anchor
+
+anchor = cog_anchor(
+    data_id="decision_xyz_789",
+    scope="defoneos→meok→csoai",
+)
+# anchor["hash_chain_position"] → the position in the SIGIL chain
+# anchor["chain_valid"] == True</code></pre>
+    </div>
+
+    <div id="t8" class="tab-content">
+      <h3 style="margin-top:0"><code>cog_origin()</code></h3>
+      <p>Returns the full 4-layer topology + integration map. The cornerstone's self-description.</p>
+<pre><code>from coigndaltion_mcp import cog_origin
+
+origin = cog_origin()
+# origin["topology"] → {L1, L2, L3, L4} with brand, domain, function, mcps, tests
+# origin["integration_map"] → 7 cross-layer paths
+# origin["empire_state"] → total_mcps, total_tests, sigil_chain_len, brand_layers=4</code></pre>
+    </div>
+  </section>
+
+  <!-- INTEGRATION EXAMPLES -->
+  <section>
+    <h2><span class="num">04.</span> Integration Examples</h2>
+    <p>The canonical cross-layer path: a DEFONEOS sensor reading → meok substrate → CSOAI audit.</p>
+
+    <div class="flow">
+<span class="em"># Step 1 — DEFONEOS drone sees object (L1)</span>
+route1 = cog_route(data={"sensor": "drone-7", "reading": "thermal"},
+                   source_layer="L1_DEFONEOS",
+                   target_layer="L2_MEOK")
+<span class="em"># Step 2 — meok substrate classifies it (L2)</span>
+unified = cog_unify(
+    data_points=[
+        {"layer": "L1_DEFONEOS", "payload": route1["routed_payload"]["data"]},
+        {"layer": "L2_MEOK",      "payload": {"classification": "vehicle"}},
+        {"layer": "L3_CSOAI",     "payload": {"verdict": "compliant"}},
+    ],
+    target_frame="decision",
+)
+<span class="em"># Step 3 — CSOAI auditor certifies the classification (L3)</span>
+audit = cog_audit(operation_id=unified["sigil_receipt"]["sigil_id"])
+<span class="em"># Step 4 — Anchor to the SIGIL chain</span>
+anchor = cog_anchor(data_id=audit["operation_id"], scope="defoneos→meok→csoai")
+<span class="em"># Step 5 — Self-describe the cornerstone</span>
+origin = cog_origin()
+<span class="hi">print(origin["empire_state"])</span>
+<span class="hi"># {"total_mcps": 84, "total_tests": 1380, "sigil_chain_len": N, "brand_layers": 4}</span>
+    </div>
+  </section>
+
+  <!-- NUMBERS -->
+  <section>
+    <h2><span class="num">05.</span> The Numbers</h2>
+    <div class="stats">
+      <div class="stat"><div class="n">4</div><div class="l">Brand layers</div></div>
+      <div class="stat"><div class="n">84</div><div class="l">Total MCPs</div></div>
+      <div class="stat"><div class="n">1,380</div><div class="l">Total tests</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">Cornerstone tools</div></div>
+      <div class="stat"><div class="n">33</div><div class="l">Charters cross-walked</div></div>
+      <div class="stat"><div class="n">+£6.2M</div><div class="l">Year-3 ARR uplift</div></div>
+      <div class="stat"><div class="n">1.0</div><div class="l">Care Floor</div></div>
+      <div class="stat"><div class="n">&lt;1ms</div><div class="l">cog_route latency</div></div>
+    </div>
+  </section>
+
+  <!-- CROSS-CHARTER CROSSWALK -->
+  <section>
+    <h2><span class="num">06.</span> Cross-Charter Crosswalk</h2>
+    <p>The Coigndaltion cross-walks to every charter in the empire. See <a href="https://csoai.org/charter2/35-coigndaltion-charter.md">charter #35</a> for the full table.</p>
+    <table class="tools">
+      <thead><tr><th>Charter</th><th>Touchpoint</th></tr></thead>
+      <tbody>
+        <tr><td class="tool-name">02 — MEOK</td><td class="tool-desc"><code>cog_route</code> for inbound/outbound across the substrate</td></tr>
+        <tr><td class="tool-name">12 — DEFONEOS</td><td class="tool-desc"><code>cog_route</code> for sensor → audit + <code>cog_bridge</code> for contracts</td></tr>
+        <tr><td class="tool-name">07 — Transparency</td><td class="tool-desc"><code>cog_anchor</code> for SIGIL transparency receipts</td></tr>
+        <tr><td class="tool-name">09 — Data Privacy</td><td class="tool-desc"><code>cog_audit</code> for GDPR + DSAR chains</td></tr>
+        <tr><td class="tool-name">11 — AGI Safety</td><td class="tool-desc"><code>cog_summon</code> for BFT council governance</td></tr>
+        <tr><td class="tool-name">19 — MEOK Compliance Gateway</td><td class="tool-desc"><code>cog_inquire</code> for query routing</td></tr>
+        <tr><td class="tool-name">03-05, 20-34 — Industry & verticals</td><td class="tool-desc"><code>cog_unify</code> for cross-vertical integration</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Get started in 5 seconds</h2>
+    <p>The Coigndaltion is Apache-2.0 licensed, forkable, sovereign by design. Install with pip, drop into any agent, route any cross-layer query.</p>
+    <a href="#install" class="cta-btn">pip install coigndaltion-mcp</a>
+    <a href="https://github.com/CSOAI-ORG/coigndaltion-mcp" class="cta-btn alt">View on GitHub</a>
+    <a href="https://csoai.org/charter2/35-coigndaltion-charter.md" class="cta-btn alt">Read the Charter</a>
+  </section>
+
+  <!-- INSTALL -->
+  <section id="install">
+    <h2><span class="num">07.</span> Install</h2>
+<pre><code># Install
+pip install coigndaltion-mcp
+
+# Or install from source
+git clone https://github.com/CSOAI-ORG/coigndaltion-mcp.git
+cd coigndaltion-mcp
+pip install -e .
+
+# Run the test suite (12/12)
+python -m unittest test_coigndaltion_mcp -v
+
+# CLI smoke test
+python -m coigndaltion_mcp origin</code></pre>
+  </section>
+
+  <footer>
+    <p>
+      🐉 <strong>The Coigndaltion</strong> — the 4th layer of the sovereign AI empire.<br />
+      Built by <a href="https://csoai.org">CSOAI Ltd</a> (UK 16939677) · MEOK AI Labs ·<br />
+      Apache-2.0 licensed · SIGIL-anchored · BFT-ratified · Care Floor 1.0<br />
+      <em>"The cornerstone cognition layer that holds the 3 brands together."</em>
+    </p>
+  </footer>
+
+  <script>
+    // Tab interaction — minimal JS, no external deps
+    document.querySelectorAll('#toolTabs .tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('#toolTabs .tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.target).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

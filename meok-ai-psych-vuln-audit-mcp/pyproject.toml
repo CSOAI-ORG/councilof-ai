@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meok-ai-psych-vuln-audit-mcp"
+version = "0.1.1"
+description = "EU AI Act Article 5(1)(f) gambling-vertical compliance audit MCP. Detects AI systems that exploit psychological vulnerabilities of players (loss-chasing, bonus manipulation, minor targeting, addiction mimicry)."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [
+  {name = "MEOK AI Labs CSOAI LTD", email = "csoai@meok.ai"},
+]
+keywords = ["eu-ai-act", "article-5-1-f", "psychological-vulnerability", "gambling-compliance", "mcp", "audit", "uk-lccp", "ed25519"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "cryptography>=42.0.0",
+  "pydantic>=2.0",
+  "mcp>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+
+[project.scripts]
+meok-ai-psych-vuln-audit-mcp = "meok_ai_psych_vuln_audit_mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/meok-ai-labs/meok-ai-psych-vuln-audit-mcp"
+Repository = "https://github.com/meok-ai-labs/meok-ai-psych-vuln-audit-mcp"
+Issues = "https://github.com/meok-ai-labs/meok-ai-psych-vuln-audit-mcp/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["meok_ai_psych_vuln_audit_mcp*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q --tb=short"

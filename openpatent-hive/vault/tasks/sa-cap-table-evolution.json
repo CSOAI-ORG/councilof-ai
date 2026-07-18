@@ -1,0 +1,7 @@
+{
+  "id": "sa-cap-table-evolution",
+  "prompt": "Write a cap-table evolution story for openpatent.ai from incorporation (CSOAI Ltd UK, Companies House 16939677) through Series A close at $50M pre. Cover: (1) the seed round — 3 founders 100% → post-seed 65/15/12/8 (founders/SAFE-holders/advisors/option-pool), $1.2M raised on $6M post, (2) the bridge round — $800k on $9M post to extend runway, (3) the pre-Series-A restructure — option pool top-up from 8% → 12.5%, advisor shares vested, (4) the Series A — $15M on $50M pre, 23.1% dilution, post-money $65M, new cap table = 47.6 founders, 9.7% SAFE+bridge, 4.8% advisors, 12.5% option pool, 23.1% Series A lead, 2.3% co-investors, (5) the key protections — 1× non-participating pref, weighted-average anti-dilution, pro-rata for SAFE-holders, (6) the 3-year exit-or-recycle trigger, (7) the pro forma to a hypothetical Series B at $180M post (24-month forward, 18.6% dilution). Use DEFENEOS mythic voice. Return ONLY JSON: {stages:[{name:string, raised_usd:float, pre_money_usd:float, post_money_usd:float, dilution_pct:float, cap_table:{founder:float, safe:float, advisor:float, pool:float, lead:float, coinvest:float}}], protections:[3 strings], series_b_pro_forma:float}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

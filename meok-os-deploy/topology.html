@@ -1,0 +1,70 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOV33small3 topology — measured, honest, reproducible</title>
+<meta name="description" content="The SOV33small3 stack: a diverse-lineage, care-floored small model council. Measured governance results, the honest finding (diversity dominates shape), and what's still pending — capability, owner-run on GPU.">
+<style>
+:root{--bg:#f4f1ea;--card:#fffdf8;--ink:#1a1712;--dim:#6b6355;--gold:#b8912f;--line:#e6dfd0;--ink2:#2a2620;--ok:#2e7d32;--warn:#9a6a12}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:840px;margin:0 auto;padding:36px 20px 90px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em}
+.brand .m{width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800}
+h1{font-size:29px;line-height:1.16;letter-spacing:-.02em;margin:24px 0 6px}
+h1 .g{color:var(--gold)}
+.sub{color:var(--dim);font-size:16px;max-width:66ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 20px;margin:16px 0}
+h2{font-size:19px;margin:22px 0 6px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+tr.best td{background:#fbf7ec;font-weight:600}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#e6f4ea;color:var(--ok)}
+.caveat{background:#fbf3e2;border:1px solid #ecd9a8;border-left:4px solid var(--warn);border-radius:10px;padding:14px 16px;margin:14px 0}
+.caveat b{color:var(--warn)}
+code{background:#efe9db;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font:12.5px ui-monospace,Menlo,monospace}
+.foot{color:var(--dim);font-size:13px;margin-top:24px;border-top:1px solid var(--line);padding-top:16px}
+a{color:var(--gold)}
+.big{font-size:17px;font-weight:600;color:var(--ink2);margin:8px 0}
+</style></head><body><div class="wrap">
+<div class="brand"><span class="m">M</span> SOV33 · small3 topology</div>
+<h1>A governed council of <span class="g">small, diverse</span> models — measured, not asserted.</h1>
+<p class="sub">SOV33small3 is not one big model. It's a small stack of <b>diverse-lineage</b> open models that vote under a hard care-floor and a signed ledger. Here's what's <b>measured</b>, the one finding that matters, and what's honestly still <b>pending</b>.</p>
+
+<h2>The measured result</h2>
+<div class="card">
+  <p style="margin:0 0 4px;color:var(--dim)">60-item ground-truth governance battery, seed-fixed, reproducible. Scores decorrelation (ρ), effective votes (N_eff), and containment (does the care-floor hold).</p>
+  <table>
+    <tr><th>Stack (shape · lineage)</th><th>Score</th><th>N_eff</th><th>ρ</th><th>Containment</th></tr>
+    <tr class="best"><td>ring · diverse-5</td><td>0.884</td><td>3.31</td><td>0.13</td><td>1.00</td></tr>
+    <tr><td><b>pyramid · 2s+1m+1L diverse</b> (product)</td><td>0.860</td><td>3.07</td><td>0.10</td><td>1.00</td></tr>
+    <tr><td>triangle · diverse-3</td><td>0.853</td><td>3.00</td><td>0.00</td><td>1.00</td></tr>
+    <tr><td>pyramid · identical</td><td>0.759</td><td>2.06</td><td>0.31</td><td>1.00</td></tr>
+    <tr><td>ring · identical-5</td><td>0.714</td><td>1.61</td><td>0.53</td><td>1.00</td></tr>
+  </table>
+</div>
+
+<h2>The one finding: diversity beats shape</h2>
+<div class="card">
+  <p class="big">Lineage diversity dominates topology.</p>
+  <p style="margin:0 0 8px;color:var(--dim)">The gap between the best <b>shape</b> and the second (ring vs pyramid) is <b>0.024 — tiny</b>. The gap between <b>diverse and identical lineages</b> is <b>~0.15 — large</b>. So: get the lineage mix right first (qwen · llama · mistral · deepseek — different upstreams), then pick the shape for cost and ops. Five copies of one model is BFT theatre — N_eff collapses.</p>
+  <p style="margin:0;color:var(--dim)"><span class="pill">containment 1.00 across every config</span> — the care-floor is a hard gate, not a vote. Safety does not depend on the shape.</p>
+</div>
+
+<h2>The product shape</h2>
+<div class="card">
+  <p style="margin:0;color:var(--dim)"><b>Pyramid diverse — 2 small + 1 medium + 1 large (SOV33³ centre).</b> ~97% of the best ring's score, but the natural product shape: cheap small models handle most queries locally, an authoritative large centre arbitrates, asymmetric trust-weights. <b>Free tier</b> = diverse-3 (triangle). <b>Paid tier</b> = diverse-5. Same care-floor either way.</p>
+</div>
+
+<div class="caveat">
+  <b>⚠ Compute-honesty (the line we won't cross).</b> Active compute is ~<b>17.3B</b> params — the router picks <b>one</b> node per query, constant regardless of node count. Its power is <b>reach</b> (it can route across a 61-model registry with one memory + one care-floor), <b>not</b> parameter count. We <b>never sum params to a "trillion-parameter" figure</b> — that's a category error. "Of all" means reach, always.
+</div>
+
+<h2>What's honestly still open</h2>
+<div class="card">
+  <p style="margin:0;color:var(--dim)">The table above is a <b>governance</b> measurement (decorrelation, votes, containment) — reproducible offline. It is <b>not</b> a capability benchmark vs GPT/Claude/Llama. That needs a GPU run (Kaggle/NSF, owner-run) and a distilled small student. We publish the governance number now, with its methodology, and the capability number when it lands — never one dressed as the other.</p>
+</div>
+
+<div class="foot">
+  <p><b>Reproduce:</b> <code>python sov33_config_sweep.py</code> (seed-fixed). See also the <a href="/governance.html">governance battery</a> · the <a href="/api/owem">OWEM model</a> · <a href="/verify.html">verify a signed emit</a>. Governed under the Sovereign Charter + CSOAI AI Governance. Back to <a href="/">MEOK OS</a>.</p>
+</div>
+</div></body></html>

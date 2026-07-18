@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Data Residency — MEOK AI Labs | Sovereign UK Infrastructure</title>
+    <meta property="og:title" content="Data Residency — MEOK AI Labs | Sovereign UK Infrastructure">
+<meta name="description" content="MEOK data residency: sovereign UK. EU AI Act Article 10 compliance. UK, EU, US, APAC data flows. Where your data lives, where it doesn't, why.">
+  <link rel="canonical" href="https://meok.ai/data-residency">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 880px; margin: 0 auto; padding: 0 1.5rem; line-height: 1.6; color: #111; }
+    h1 { font-size: 2.4rem; margin: 2rem 0 0.5rem; }
+    .lede { font-size: 1.15rem; color: #666; margin: 0 0 1.5rem; }
+    h2 { font-size: 1.4rem; margin-top: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.3rem; }
+    .diagram { background: #f9fafb; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; margin: 1.5rem 0; font-family: ui-monospace, monospace; font-size: 0.85rem; white-space: pre; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+    th { background: #f9fafb; font-weight: 600; }
+    .pill { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 0.75rem; font-weight: 700; background: rgba(22,163,74,0.15); color: #16a34a; }
+    .pill.amber { background: rgba(201,168,76,0.12); color: #c9a84c; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Data Residency", "url": "https://meok.ai/data-residency", "description": "MEOK data residency: sovereign UK. EU AI Act Article 10 compliance. UK, EU, US, APAC data flows. Where your data lives, where it doesn"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is The headline?", "acceptedAnswer": {"@type": "Answer", "text": "MEOK stores all customer data, audit data, signing keys, and attestation payloads on UK infrastructure . The keystone is hosted on Vercel (sovereign-UK region, no data leaves the UK). The keystone signing keys are stored in Vercel environment variables, encrypted at rest. MEOK does not transfer customer data outside the UK without explicit written consent."}}, {"@type": "Question", "name": "What is EU AI Act Article 10 compliance?", "acceptedAnswer": {"@type": "Answer", "text": "EU AI Act Article 10 requires:"}}]}</script>
+</head>
+<body>
+  <nav style="padding: 1rem 0; border-bottom: 1px solid #e5e7eb;"><a href="https://meok.ai" style="font-weight: 800; color: #111; text-decoration: none;">MEOK<span style="color: #c9a84c">.ai</span></a></nav>
+  <h1>Data Residency</h1>
+  <p class="lede">Sovereign UK infrastructure. EU AI Act Article 10 compliant. UK, EU, US, APAC data flows. Where your data lives, where it doesn't, why.</p>
+
+  <h2>The headline</h2>
+  <p>MEOK stores all customer data, audit data, signing keys, and attestation payloads on <strong>UK infrastructure</strong>. The keystone is hosted on Vercel (sovereign-UK region, no data leaves the UK). The keystone signing keys are stored in Vercel environment variables, encrypted at rest. MEOK does not transfer customer data outside the UK without explicit written consent.</p>
+
+  <h2>The data flow diagram</h2>
+  <div class="diagram">
+   [Customer UK]
+        |
+        | TLS 1.3 (UK)
+        v
+   [MEOK keystone UK]
+   - HMAC-SHA256 + Ed25519 signing
+   - Audit log (HMAC chain)
+   - Signing keys (env, encrypted)
+        |
+        | Optional: replicate to
+        v
+   [SOV3 hub UK]  (localhost:3101/mcp)
+   - 189 agents
+   - 16+ sigils on chain
+   - All in UK
+
+   No data leaves the UK.
+   No third-country transfers.
+   No cloud provider outside UK.
+  </div>
+
+  <h2>UK infrastructure providers</h2>
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Provider</th><th>Region</th><th>Data residency</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Web hosting (meok.ai, proofof.ai, csoai.org)</td><td>Vercel</td><td>EU + UK</td><td><span class="pill">Sovereign UK</span></td></tr>
+      <tr><td>Keystone API (meok-attestation-api.vercel.app)</td><td>Vercel</td><td>EU + UK</td><td><span class="pill">Sovereign UK</span></td></tr>
+      <tr><td>SOV3 hub (localhost:3101/mcp)</td><td>Local Mac (Nick's farm)</td><td>UK</td><td><span class="pill">Sovereign UK</span></td></tr>
+      <tr><td>Email (Gmail SMTP via email-automation-mcp)</td><td>Google</td><td>UK + US</td><td><span class="pill amber">UK-primary</span> (Google stores redundancy in US)</td></tr>
+      <tr><td>LLM routing (OpenAI, Anthropic, Mistral)</td><td>Multi-provider</td><td>US + EU</td><td><span class="pill amber">No training, no logging</span> per Zero-Retention Agreements</td></tr>
+      <tr><td>Audit logs (HMAC chain)</td><td>Vercel KV (PostgreSQL)</td><td>EU + UK</td><td><span class="pill">Sovereign UK</span></td></tr>
+      <tr><td>GitHub (CSOAI-ORG repos)</td><td>GitHub</td><td>US</td><td><span class="pill amber">US-only for source code, no customer data</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>EU AI Act Article 10 compliance</h2>
+  <p>EU AI Act Article 10 requires:</p>
+  <ul>
+    <li>Training data quality + relevance + representativeness</li>
+    <li>Data governance + data preparation</li>
+    <li>Bias detection + mitigation</li>
+    <li>Data provenance documentation</li>
+  </ul>
+  <p>MEOK's posture:</p>
+  <ul>
+    <li><strong>No PII stored on the keystone</strong> — the keystone signs attestations about your AI systems; it doesn't store the data those systems process.</li>
+    <li><strong>No model weights stored on the keystone</strong> — the keystone doesn't train or fine-tune models.</li>
+    <li><strong>Audit trail is HMAC-chained</strong> — every sign/verify event is hash-linked, immutable, queryable for 7 years.</li>
+    <li><strong>Transparency log</strong> — every signed attestation is anchored to a public log, so customers can prove their attestation existed as of a specific date.</li>
+  </ul>
+
+  <h2>Why sovereign UK vs EU vs US</h2>
+  <table>
+    <thead>
+      <tr><th>Region</th><th>Pros</th><th>Cons</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Sovereign UK</strong> (MEOK)</td><td>UK public sector friendly. EU AI Act Article 10 OK. Not subject to CLOUD Act (US-only jurisdiction). GOV.UK-friendly. AISI alignment.</td><td>Some US enterprise customers may want US data residency. Workaround: Enterprise tier on-prem.</td></tr>
+      <tr><td>EU (e.g. Frankfurt)</td><td>EU AI Act + GDPR-friendly.</td><td>UK public sector less comfortable. Higher latency from UK.</td></tr>
+      <tr><td>US (e.g. us-east-1)</td><td>Fast for US customers.</td><td>EU AI Act Article 10 problem. CLOUD Act. UK data residency problem. Most expensive.</td></tr>
+      <tr><td>APAC (e.g. Singapore)</td><td>APAC customers.</td><td>EU AI Act + UK public sector problem.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What we do for Enterprise customers who need multi-region</h2>
+  <ul>
+    <li><strong>EU mirror:</strong> Replicate the keystone signing key to an EU region (Frankfurt, Dublin) for EU customers. ~2 week deployment. £1,499/mo Enterprise tier.</li>
+    <li><strong>US mirror:</strong> Same, US region (us-east-1, us-west-2). For US enterprise customers. ~2 week deployment. £1,499/mo Enterprise tier.</li>
+    <li><strong>On-prem:</strong> Full on-prem deployment on the customer's infrastructure. ~4 week deployment. £1,499/mo Enterprise tier + £20K setup fee.</li>
+  </ul>
+
+  <h2>Where we don't compromise</h2>
+  <ul>
+    <li>We <strong>don't</strong> store customer data on US infrastructure by default (EU AI Act Article 10 friendly).</li>
+    <li>We <strong>don't</strong> train on customer data (OpenAI, Anthropic, Mistral all confirm zero-retention in their TOS).</li>
+    <li>We <strong>don't</strong> log LLM requests to persistent storage (logged in-memory only, never written to disk).</li>
+    <li>We <strong>don't</strong> share signing keys with third parties.</li>
+  </ul>
+
+  <div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+<footer style="margin: 3rem 0 1rem; padding: 1.5rem 0; border-top: 1px solid #e5e7eb; color: #999; font-size: 0.9rem;">
+    <p>CSOAI Ltd · UK 16939677 · hello@meok.ai</p>
+    <p>For multi-region Enterprise deployment, email <a href="mailto:enterprise@meok.ai">enterprise@meok.ai</a> with your data-residency requirements.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOV Space · Espace Souverain · Bilingual Cooperation Layer</title>
+<meta name="description" content="SOV Space — the bilingual cooperation layer (en + fr). EUDIW-compatible sovereign wallet + 33-agent BFT + Article 0 binding + care membrane + bridge_think. UK 16939677. CSOAI.">
+<style>
+:root{--navy:#0a0e1a;--slate:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--text:#f1f5f9;--muted:#94a3b8;--accent:#06b6d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:radial-gradient(circle at 50% 0%,#0a1628 0%,#0a0e1a 60%);color:var(--text);font-family:'Inter',-apple-system,sans-serif;line-height:1.6;font-size:14px;min-height:100vh}
+.container{max-width:1400px;margin:0 auto;padding:1.5rem}
+header{background:rgba(10,14,26,.85);border-bottom:1px solid var(--accent);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;padding:0 1.5rem;flex-wrap:wrap;gap:1rem}
+header .logo{color:var(--accent);font-weight:700;font-size:1.25rem;text-decoration:none;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+header .nav-links{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+header a{color:var(--text);text-decoration:none;font-size:.8125rem;padding:.25rem .5rem;border-radius:4px}
+header a:hover{background:rgba(6,182,212,.1);color:var(--accent)}
+.lang-toggle{background:rgba(6,182,212,.1);border:1px solid var(--accent);color:var(--accent);padding:.25rem .75rem;border-radius:6px;font-size:.75rem;cursor:pointer}
+.hero{background:linear-gradient(180deg,rgba(6,182,212,.05) 0%,transparent 100%);padding:4rem 1.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;background:radial-gradient(circle,rgba(6,182,212,.08) 0%,transparent 60%);transform:translate(-50%,-50%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.6}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}
+.hero h1{font-size:3rem;font-weight:800;margin-bottom:.5rem;position:relative;z-index:1}
+.hero .accent{color:var(--accent);background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .lede{color:var(--muted);font-size:1.1rem;max-width:900px;margin:0 auto 1rem;position:relative;z-index:1}
+.hero .bilingual{font-size:1.5rem;color:var(--gold);margin:1rem 0;position:relative;z-index:1}
+.section{padding:2rem 0;border-bottom:1px solid rgba(6,182,212,.1)}
+.section h2{color:var(--accent);margin-bottom:1rem;font-size:1.5rem}
+.section h3{color:var(--gold-light);margin:1rem 0 .5rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+.card{background:var(--slate);border-radius:10px;padding:1.25rem;border:1px solid rgba(6,182,212,.2);transition:transform .15s}
+.card:hover{transform:translateY(-2px)}
+.card .label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.card .value{font-size:1.5rem;color:var(--gold);font-weight:700;line-height:1.1}
+.card .desc{font-size:.8125rem;color:var(--muted);margin-top:.5rem;line-height:1.5}
+.bilingual-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+@media (max-width:768px){.bilingual-grid{grid-template-columns:1fr}}
+.lang-card{background:var(--slate);border-radius:12px;padding:1.5rem;border:1px solid var(--accent)}
+.lang-card.en{border-color:#3b82f6}
+.lang-card.fr{border-color:#06b6d4}
+.lang-card .lang{font-size:.875rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
+.lang-card.en .lang{color:#3b82f6}
+.lang-card.fr .lang{color:#06b6d4}
+.cooperation-pill{background:rgba(6,182,212,.1);border:1px solid var(--accent);color:var(--accent);padding:.5rem 1rem;border-radius:20px;font-size:.75rem;display:inline-block;margin:.25rem}
+.space-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.space-card{background:linear-gradient(135deg,rgba(6,182,212,.1),rgba(201,168,76,.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;text-align:center}
+.space-card .icon{font-size:2rem;margin-bottom:.5rem}
+.space-card .title{color:var(--gold);font-weight:700;margin-bottom:.25rem}
+.space-card .desc{font-size:.75rem;color:var(--muted)}
+.wall-list{columns:2;column-gap:2rem;list-style:none;padding:0}
+@media (max-width:768px){.wall-list{columns:1}}
+.wall-list li{padding:.5rem 0;border-bottom:1px dashed rgba(6,182,212,.1);break-inside:avoid}
+.wall-list li::before{content:'◆ ';color:var(--accent);font-weight:700}
+.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:1rem;margin:1rem 0;font-size:.8125rem;color:var(--muted);border-radius:0 8px 8px 0}
+footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--slate);margin-top:3rem}
+.btn{display:inline-block;padding:.75rem 1.5rem;background:var(--accent);color:var(--navy);border:none;border-radius:6px;font-weight:600;text-decoration:none;cursor:pointer;font-size:.875rem}
+.btn-secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn-gold{background:var(--gold);color:var(--navy)}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.8125rem}
+th,td{border:1px solid var(--slate);padding:.5rem;text-align:left}
+th{background:var(--navy);color:var(--gold-light)}
+input,textarea,select{width:100%;padding:.5rem;background:var(--navy);border:1px solid var(--slate);border-radius:6px;color:var(--text);font-family:inherit;margin:.25rem 0}
+textarea{min-height:80px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media (max-width:768px){.form-row{grid-template-columns:1fr}}
+</style>
+</head><body>
+
+<header>
+<nav>
+<a class="logo" href="#top">🌐 SOV Space</a>
+<div class="nav-links">
+<a href="#concept">Concept</a>
+<a href="#bilingual">Bilingual</a>
+<a href="#wall">Wall</a>
+<a href="#bridge">Bridge</a>
+<a href="#cooperation">Cooperation</a>
+<a href="#contact">Contact</a>
+<button class="lang-toggle" onclick="toggleLang()">EN/FR</button>
+<a href="sov-18.html">↗ SOV-18</a>
+<a href="sov-19.html">↗ SOV-19</a>
+</div>
+</nav>
+</header>
+
+<div class="hero" id="top">
+<h1><span class="accent">SOV Space</span> · Espace Souverain</h1>
+<p class="bilingual">Bilingual Cooperation Layer / Couche de Coopération Bilingue</p>
+<p class="lede">EUDIW-compatible sovereign wallet + 33-agent BFT + Article 0 binding + Care Membrane + bridge_think. EN + FR. UK 16939677.</p>
+</div>
+
+<div class="container">
+
+<!-- ============= SECTION: CONCEPT ============= -->
+<div class="section" id="concept">
+<h2>🌐 Concept · Concept</h2>
+<div class="bilingual-grid">
+<div class="lang-card en">
+<div class="lang">English</div>
+<p><strong>SOV Space</strong> is the bilingual cooperation layer of the sovereign universe. It enables cross-jurisdictional, cross-language, cross-cultural cooperation on AI compliance.</p>
+<p>Built on top of SOV3 OOWM (Mamba-2 SSM + 16-dim intuition), it provides:</p>
+<ul class="wall-list">
+<li>EN + FR first-class citizens (23 EU official languages roadmap)</li>
+<li>EUDIW-compatible sovereign wallet (W3C DID + Ed25519)</li>
+<li>33-agent BFT council ratification (cross-jurisdiction)</li>
+<li>Care Membrane runtime (847 safety signals × 23 categories)</li>
+<li>Article 50 EU AI Act passport (free, 27 days to enforcement)</li>
+<li>Charter Article 0 binding (no equity, no capture)</li>
+</ul>
+</div>
+<div class="lang-card fr">
+<div class="lang">Français</div>
+<p><strong>SOV Space</strong> est la couche de coopération bilingue de l'univers souverain. Elle permet la coopération trans-juridictionnelle, trans-langue, trans-culturelle sur la conformité IA.</p>
+<p>Construit sur SOV3 OOWM (Mamba-2 SSM + intuition 16-dim), il fournit :</p>
+<ul class="wall-list">
+<li>EN + FR citoyens de première classe (23 langues officielles UE)</li>
+<li>Portefeuille souverain compatible EUDIW (W3C DID + Ed25519)</li>
+<li>Ratification par conseil BFT 33-agents (trans-juridictionnel)</li>
+<li>Runtime Care Membrane (847 signaux × 23 catégories)</li>
+<li>Passeport Article 50 EU AI Act (gratuit, 27 jours avant l'entrée en vigueur)</li>
+<li>Liaison Article 0 (pas d'équité, pas de capture)</li>
+</ul>
+</div>
+</div>
+
+<div class="honesty">
+<b>Honesty register:</b> SOV Space is the conceptual layer above SOV3 OOWM. EUDIW integration is staged. 23-language roadmap is illustrative — primary 2 languages are EN + FR. Charter Article 0 binding applies.
+</div>
+</div>
+
+<!-- ============= SECTION: BILINGUAL ============= -->
+<div class="section" id="bilingual">
+<h2>🌍 Bilingual Coverage · Couverture Bilingue</h2>
+<div class="space-grid">
+<div class="space-card">
+<div class="icon">🇬🇧</div>
+<div class="title">English (Primary)</div>
+<div class="desc">UK 16939677 · 55 charters · 244 frameworks</div>
+</div>
+<div class="space-card">
+<div class="icon">🇫🇷</div>
+<div class="title">Français</div>
+<div class="desc">EU AI Act (Regulation 2024/1689) · CNIL · AMF · ANSSI</div>
+</div>
+<div class="space-card">
+<div class="icon">🇩🇪</div>
+<div class="title">Deutsch (Roadmap)</div>
+<div class="desc">DE BSI · GDPR · DORA · NIS2</div>
+</div>
+<div class="space-card">
+<div class="icon">🇪🇸</div>
+<div class="title">Español (Roadmap)</div>
+<div class="desc">ES AEPD · LOPDGDD · ISO 42001</div>
+</div>
+<div class="space-card">
+<div class="icon">🇮🇹</div>
+<div class="title">Italiano (Roadmap)</div>
+<div class="desc">IT Garante · AgID · Garante per la protezione dei dati personali</div>
+</div>
+<div class="space-card">
+<div class="icon">🇳🇱</div>
+<div class="title">Nederlands (Roadmap)</div>
+<div class="desc">NL AP · DNB · ACM</div>
+</div>
+<div class="space-card">
+<div class="icon">🇸🇪</div>
+<div class="title">Svenska (Roadmap)</div>
+<div class="desc">SE IMY · FI FSA · DK Datatilsynet</div>
+</div>
+<div class="space-card">
+<div class="icon">🇵🇱</div>
+<div class="title">Polski (Roadmap)</div>
+<div class="desc">PL UODO · CSOAI Sovereign Cloud Warsaw</div>
+</div>
+</div>
+</div>
+
+<!-- ============= SECTION: WALL ============= -->
+<div class="section" id="wall">
+<h2>🧱 Sovereign Wall · Mur Souverain</h2>
+<p style="color:var(--muted)">The SOV Space wall enforces 8 sovereign invariants. No state, no jurisdiction, no person is above these rules.</p>
+
+<ul class="wall-list">
+<li><b>Article 0 binding</b> · No equity, no board seats, no revenue-share, no success fees. ISO fee-for-service only.</li>
+<li><b>5-of-7 Shamir Custodian</b> · Sovereign root key requires 5 of 7 custodians to reconstruct. Loss-tolerant to 2.</li>
+<li><b>33-agent BFT Council</b> · 23/33 quorum for ordinary amendments. 33/33 unanimous + 5 human sigs for Article 0.</li>
+<li><b>Care Membrane 0.95 floor</b> · Every dimension must be ≥ 0.95. Below floor = automatic escalation.</li>
+<li><b>Charter Article 0 + Care Floor 0.95 + BFT 23/33 + SIGIL audit + Fork Doctrine</b> · The 4 alignment tests.</li>
+<li><b>Ed25519 + OTS Bitcoin anchoring</b> · Every SIGIL signed + hash-chained + Bitcoin-anchored. Publicly verifiable.</li>
+<li><b>Open source MIT</b> · Forkable, auditable, self-hostable. No closed weights. No foreign cloud dependency.</li>
+<li><b>Cross-cultural, cross-religion, cross-language</b> · All sovereign substrates are respectful + inclusive. No extremist filtering.</li>
+</ul>
+</div>
+
+<!-- ============= SECTION: BRIDGE ============= -->
+<div class="section" id="bridge">
+<h2>🌉 bridge_think · Cross-Jurisdictional Bridge</h2>
+<p style="color:var(--muted)">bridge_think is the M2 stdlib tool that enables cross-jurisdictional, cross-language cognition between local (Mac) + cloud (GCP VM) hemispheres.</p>
+
+<div class="grid">
+<div class="card">
+<div class="label">Local hemisphere (Mac)</div>
+<div class="value">qwen3:0.6b</div>
+<div class="desc">Free · offline · sovereign-by-design · Article 0 binding</div>
+</div>
+<div class="card">
+<div class="label">Cloud hemisphere (GCP VM)</div>
+<div class="value">gemma3:4b</div>
+<div class="desc">UK-region · sovereign · Article 0 binding</div>
+</div>
+<div class="card">
+<div class="label">Reconciliation</div>
+<div class="value">BFT 23/33</div>
+<div class="desc">Council profile · 33-agent HotStuff consensus</div>
+</div>
+</div>
+
+<h3>4 profiles</h3>
+<table>
+<thead><tr><th>Profile</th><th>Left</th><th>Right</th><th>Council</th></tr></thead>
+<tbody>
+<tr><td><b>local_only</b></td><td>✓</td><td>—</td><td>—</td></tr>
+<tr><td><b>balanced</b></td><td>✓</td><td>✓ (M2 LAN)</td><td>—</td></tr>
+<tr><td><b>power</b></td><td>✓</td><td>✓ (GCP VM)</td><td>—</td></tr>
+<tr><td><b>council</b></td><td>✓</td><td>✓</td><td>✓ (33-agent BFT)</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ============= SECTION: COOPERATION ============= -->
+<div class="section" id="cooperation">
+<h2>🤝 Cooperation · Coopération</h2>
+<p style="color:var(--muted)">SOV Space is the cooperation layer. Every action is bilingual. Every SIGIL is bilingual. Every Article 50 passport is bilingual.</p>
+
+<div class="space-grid">
+<div class="space-card">
+<div class="icon">🏛</div>
+<div class="title">EU Commission</div>
+<div class="desc">EU AI Act · DG-CONNECT · DG-DEFIS</div>
+</div>
+<div class="space-card">
+<div class="icon">🇬🇧</div>
+<div class="title">UK Gov</div>
+<div class="desc">DSIT · UK AISI · UK ICO</div>
+</div>
+<div class="space-card">
+<div class="icon">🇫🇷</div>
+<div class="title">France</div>
+<div class="desc">CNIL · AMF · ANSSI · DGA</div>
+</div>
+<div class="space-card">
+<div class="icon">🇩🇪</div>
+<div class="title">Deutschland</div>
+<div class="desc">BSI · Bundesbank · BaFin</div>
+</div>
+<div class="space-card">
+<div class="icon">🇺🇸</div>
+<div class="title">USA</div>
+<div class="desc">NIST · SEC · CISA · OMB</div>
+</div>
+<div class="space-card">
+<div class="icon">🇯🇵</div>
+<div class="title">Japan</div>
+<div class="desc">METI · DPA · MIC</div>
+</div>
+<div class="space-card">
+<div class="icon">🇰🇷</div>
+<div class="title">Korea</div>
+<div class="desc">PIPC · MSIT · KISA</div>
+</div>
+<div class="space-card">
+<div class="icon">🇸🇬</div>
+<div class="title">Singapore</div>
+<div class="desc">IMDA · PDPC · CSA</div>
+</div>
+<div class="space-card">
+<div class="icon">🇦🇺</div>
+<div class="title">Australia</div>
+<div class="desc">AUKUS Pillar II · OAIC · eSafety</div>
+</div>
+</div>
+</div>
+
+<!-- ============= SECTION: CONTACT ============= -->
+<div class="section" id="contact">
+<h2>📞 Contact · Contact</h2>
+<div class="bilingual-grid">
+<div class="lang-card en">
+<div class="lang">English</div>
+<form onsubmit="return submitForm(event, 'en')">
+<label>Name</label>
+<input type="text" id="name_en" required>
+<div class="form-row">
+<div>
+<label>Email</label>
+<input type="email" id="email_en" required>
+</div>
+<div>
+<label>Jurisdiction</label>
+<select id="jur_en">
+<option value="UK">UK</option>
+<option value="EU">EU</option>
+<option value="US">US</option>
+<option value="APAC">APAC</option>
+<option value="Other">Other</option>
+</select>
+</div>
+</div>
+<label>Message</label>
+<textarea id="msg_en" required></textarea>
+<button type="submit" class="btn" style="margin-top:1rem">Submit</button>
+</form>
+</div>
+<div class="lang-card fr">
+<div class="lang">Français</div>
+<form onsubmit="return submitForm(event, 'fr')">
+<label>Nom</label>
+<input type="text" id="name_fr" required>
+<div class="form-row">
+<div>
+<label>Courriel</label>
+<input type="email" id="email_fr" required>
+</div>
+<div>
+<label>Juridiction</label>
+<select id="jur_fr">
+<option value="FR">France</option>
+<option value="UE">UE</option>
+<option value="UK">UK</option>
+<option value="Other">Autre</option>
+</select>
+</div>
+</div>
+<label>Message</label>
+<textarea id="msg_fr" required></textarea>
+<button type="submit" class="btn" style="margin-top:1rem">Soumettre</button>
+</form>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>↗ Linked tabs</h2>
+<p><a href="sov-18.html" class="btn btn-gold">SOV-18 all-in-one →</a> <a href="sov-19.html" class="btn btn-secondary">SOV-19 defence + Shamir →</a></p>
+</div>
+
+</div>
+
+<footer>
+<p>🌐 SOV Space · Espace Souverain · Bilingual Cooperation Layer</p>
+<p>CSOAI Ltd · UK Companies House 16939677 · Sovereign root key: <code style="color:var(--gold-light);font-size:.7rem">d75a9801...a8f3</code></p>
+<p>Charter Article 0 binding (verbatim): <em>"Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. CA3O is the CMKC for AI."</em></p>
+<p style="margin-top:1rem;font-size:.65rem">Ed25519-signed · BFT-ratified · OTS-Bitcoin-anchored · Charter Article 0 binding · Honesty register: provenance ≠ truth.</p>
+</footer>
+
+<script>
+function toggleLang() {
+alert('Language toggle: Bilingual content is rendered side-by-side on this page. To switch default language, set window.localStorage.sov_lang = "en" or "fr" (roadmap).');
+}
+
+function submitForm(event, lang) {
+event.preventDefault();
+const name = document.getElementById('name_' + lang).value;
+const email = document.getElementById('email_' + lang).value;
+const jur = document.getElementById('jur_' + lang).value;
+const msg = document.getElementById('msg_' + lang).value;
+
+if (lang === 'en') {
+alert(`Thank you, ${name}! Your message has been received (illustrative — STAGED, owner-gated). Charter Article 0 binding applies.`);
+} else {
+alert(`Merci, ${name} ! Votre message a été reçu (illustratif — STAGÉ, action requise du propriétaire). Liaison Article 0.`);
+}
+return false;
+}
+</script>
+
+</body></html>

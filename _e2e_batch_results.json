@@ -1,0 +1,86 @@
+[
+ {
+  "phase": 1,
+  "test": "logger imports stdlib-only",
+  "status": "PASS",
+  "detail": "module loaded without sklearn"
+ },
+ {
+  "phase": 1,
+  "test": "log_episode threat round-trips",
+  "status": "PASS",
+  "detail": "0\u21921"
+ },
+ {
+  "phase": 1,
+  "test": "episode schema matches NN format",
+  "status": "PASS",
+  "detail": "has ['care_weight', 'content', 'importance_score', 'memory_type', 'source_agent', 'tags', 'timestamp']"
+ },
+ {
+  "phase": 1,
+  "test": "creates dependency file (gap fix)",
+  "status": "PASS",
+  "detail": "dependency_episodes.json created"
+ },
+ {
+  "phase": 1,
+  "test": "rejects invalid NN",
+  "status": "PASS",
+  "detail": "ValueError on bad nn"
+ },
+ {
+  "phase": 1,
+  "test": "atomic write leaves valid JSON",
+  "status": "PASS",
+  "detail": "parseable"
+ },
+ {
+  "phase": 2,
+  "test": "8 episode files present",
+  "status": "PASS",
+  "detail": "8 files"
+ },
+ {
+  "phase": 2,
+  "test": "all episodes have content",
+  "status": "PASS",
+  "detail": "1076 episodes, 0 missing content"
+ },
+ {
+  "phase": 3,
+  "test": "sov3_governance_episodes.csv rows",
+  "status": "PASS",
+  "detail": "1076 rows (\u22651000, csv-parsed)"
+ },
+ {
+  "phase": 3,
+  "test": "sov3_town_care_dataset.csv rows",
+  "status": "PASS",
+  "detail": "5040 rows (\u22655000, csv-parsed)"
+ },
+ {
+  "phase": 4,
+  "test": "PYTHONPATH fix in run-local.sh",
+  "status": "PASS",
+  "detail": "export present"
+ },
+ {
+  "phase": 5,
+  "test": "notebook valid JSON + GPU accel",
+  "status": "PASS",
+  "detail": "12 cells, accel=GPU"
+ },
+ {
+  "phase": 5,
+  "test": "notebook uses live CSV (not placeholder)",
+  "status": "PASS",
+  "detail": "references exported dataset"
+ },
+ {
+  "phase": 6,
+  "test": "all 8 session docs on disk",
+  "status": "PASS",
+  "detail": "8/8 present"
+ }
+]

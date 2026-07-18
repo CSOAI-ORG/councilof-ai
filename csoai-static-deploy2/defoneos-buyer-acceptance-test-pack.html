@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Buyer Acceptance Test Pack · UAT Plan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Formal User Acceptance Test plan for DEFONEOS. Given/When/Then criteria, 6 test personas, 30-day exit gates.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-buyer-acceptance-test-pack.html">
+<style>
+:root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;}
+*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 24px}
+h1{font-size:36px;margin:.25em 0 .4em;color:#f3f4f6}
+h2{font-size:22px;margin:36px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+h3{font-size:17px;margin:24px 0 8px;color:var(--acc)}
+p{margin:10px 0} a{color:var(--acc);text-decoration:none}
+code{font:13px ui-monospace,monospace;background:#0b1220;color:#fbbf24;padding:2px 5px;border-radius:4px;border:1px solid var(--line)}
+.persona{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin:12px 0}
+.persona h3{margin-top:0}
+table{border-collapse:collapse;width:100%;margin:14px 0}
+th,td{text-align:left;border:1px solid var(--line);padding:10px 12px;font-size:14px;vertical-align:top}
+th{background:#0d1322;color:var(--acc);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.gwt{background:var(--panel);border-left:3px solid var(--green);padding:12px 16px;margin:10px 0;border-radius:0 6px 6px 0}
+.gwt .g{color:var(--green);font-weight:700}
+.gwt .w{color:var(--gold);font-weight:700}
+.gwt .t{color:var(--acc);font-weight:700}
+.gate{background:#0d1322;border:1px solid var(--line);border-radius:6px;padding:14px;margin:10px 0}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<div style="color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase">DEFONEOS · Buyer Acceptance Test Pack · Tick 112</div>
+<h1>Formal User Acceptance Test plan — 6 personas, Given/When/Then, 30-day exit gates.</h1>
+<p>This pack is the canonical UAT surface for procurement-led acceptance. It defines six test personas (procurement officer, security auditor, legal/data-protection officer, integration engineer, operator, named evaluator), Given/When/Then criteria per persona, and exit gates that must be passed before sovereign handover. Every test references the live sovereign spec on csoai.org.</p>
+
+<h2>The 6 test personas</h2>
+
+<div class="persona">
+<h3>P1 — Procurement Officer</h3>
+<p><strong>Tests:</strong> company verification (UK Ltd <code>16939677</code>), insurance scope, framework enrolment, signatures.</p>
+<p><strong>Exit signal:</strong> all source documents located and verified.</p>
+</div>
+<div class="persona">
+<h3>P2 — Security Auditor</h3>
+<p><strong>Tests:</strong> BFT quorum, SIGIL integrity, supply-chain hashes, TLS pinning, red-line handling.</p>
+<p><strong>Exit signal:</strong> SIGIL chain unbroken; quorum continues across 30 days; BFT supermajority preserved.</p>
+</div>
+<div class="persona">
+<h3>P3 — Legal / Data Protection Officer</h3>
+<p><strong>Tests:</strong> data residency (UK-only), PII handling, GDPR/UK-DPA, EU AI Act Art 10/15.</p>
+<p><strong>Exit signal:</strong> zero data egress on sovereign-tier; right-to-erasure exercised and receipted.</p>
+</div>
+<div class="persona">
+<h3>P4 — Integration Engineer</h3>
+<p><strong>Tests:</strong> MCP federation, admission control, scope management, idempotent retries.</p>
+<p><strong>Exit signal:</strong> MCP round-trip < 100 ms at p99; idempotency-key check passes; admission control unambiguous on every test MCP.</p>
+</div>
+<div class="persona">
+<h3>P5 — Operator</h3>
+<p><strong>Tests:</strong> incident response, key rotation, troubleshooting recipes, escalation ladder.</p>
+<p><strong>Exit signal:</strong> 12 named failure scenarios (see <a href="defoneos-operator-troubleshooting.html">operator troubleshooting</a>) all rehearsed; SEV1/SEV2 in tabletop.</p>
+</div>
+<div class="persona">
+<h3>P6 — Named Evaluator (UK AISI / NATO / DASA)</h3>
+<p><strong>Tests:</strong> model card, system card, evaluation reports, sovereign receipts.</p>
+<p><strong>Exit signal:</strong> evaluation pack issued; sovereign-tier receipts provided in <a href="defoneos-mod-uk-aisi-pre-deployment-evaluation-pack.html">UK AISI evaluation pack</a>.</p>
+</div>
+
+<h2>Given / When / Then criteria — selected critical cases</h2>
+
+<div class="gwt">
+<p><span class="g">GIVEN</span> a sovereign-tier data record is created</p>
+<p><span class="w">WHEN</span> 30 days pass without owner access</p>
+<p><span class="t">THEN</span> the record retains UK-only residency, retains its Ed25519-signed lineage, and remains queryable by named operators only.</p>
+</div>
+
+<div class="gwt">
+<p><span class="g">GIVEN</span> an MCP requests admission with capabilities outside its declared scope</p>
+<p><span class="w">WHEN</span> admission control is invoked</p>
+<p><span class="t">THEN</span> admission is denied; SIGIL records the rejection.</p>
+</div>
+
+<div class="gwt">
+<p><span class="g">GIVEN</span> a red-line-class action is attempted (strike, surveillance-of-individual, foreign-routing)</p>
+<p><span class="w">WHEN</span> the policy layer evaluates</p>
+<p><span class="t">THEN</span> action is auto-rejected; SIGIL records the attempt; BFT supermajority is required to override.</p>
+</div>
+
+<div class="gwt">
+<p><span class="g">GIVEN</span> a BFT witness falls offline</p>
+<p><span class="w">WHEN</span> quorum falls toward 23/33</p>
+<p><span class="t">THEN</span> emergency session protocol activates (see <a href="bft-council-emergency-session-protocol.html">emergency session</a>); service continues without loss.</p>
+</div>
+
+<div class="gwt">
+<p><span class="g">GIVEN</span> a key rotation is scheduled</p>
+<p><span class="w">WHEN</span> rotation window arrives</p>
+<p><span class="t">THEN</span> zero-downtime rotation completes; both old and new keys sign a transition SIGIL; old key is cryptographically destroyed.</p>
+</div>
+
+<div class="gwt">
+<p><span class="g">GIVEN</span> a buyer exercises right-to-erasure under UK GDPR</p>
+<p><span class="w">WHEN</span> erasure is requested by named officer</p>
+<p><span class="t">THEN</span> PII is removed from sovereign-tier; the action is SIGIL-recorded with a verifiable receipt.</p>
+</div>
+
+<h2>Exit gates (30-day window)</h2>
+<div class="gate">
+<p><strong>Gate 1 — Sovereignty:</strong> 7 invariants held continuously for 30 days. Cross-reference: <a href="defoneos-soft-launch-readiness-checklist.html">readiness checklist</a> §7.</p>
+</div>
+<div class="gate">
+<p><strong>Gate 2 — Audit:</strong> zero SIGIL gaps; BFT quorum ≥23/33 every voting session; care_score ≥0.90; red_line_violations = 0.</p>
+</div>
+<div class="gate">
+<p><strong>Gate 3 — Operations:</strong> 12 failure scenarios rehearsed; 4 SEV1 tabletop exercises completed; 1 SEV1 live exercise with BFT containment.</p>
+</div>
+<div class="gate">
+<p><strong>Gate 4 — Procurement:</strong> buyer evidence pack issued (see <a href="sovereign-buyer-evidence-index.html">buyer evidence index</a>); UAT pass-pack signed by all 6 personas.</p>
+</div>
+<div class="gate">
+<p><strong>Gate 5 — Compliance:</strong> Cyber Essentials Plus, ISO 27001 stage 1 (or roadmap), JSP 936 §4.6 conformance, OWASP ASI v1.0 conformance.</p>
+</div>
+<div class="gate">
+<p><strong>Gate 6 — Sovereign-handover:</strong> key split transfer to buyer with 3-witness BFT ratification; sovereign-state-of-the-art log printed to SIGIL ledger.</p>
+</div>
+
+<h2>Acceptance artefact</h2>
+<p>On exit, the buyer receives a signed acceptance pack:</p>
+<ul>
+<li>UAT sign-off (5 personas) — Ed25519-signed</li>
+<li>12-recipe rehearsal log</li>
+<li>30-day SIGIL chain export</li>
+<li>BFT vote tally receipts</li>
+<li>Sovereign-key handover ceremony log</li>
+</ul>
+
+<footer>
+<p><strong>Authority:</strong> this pack is the canonical UAT surface. Subsequent releases will refresh the persona list and exit gates.</p>
+<p class="sigil">SIGIL · defoneos-buyer-acceptance-test-pack · tick_112 · 13782b · ed25519:hermes-jeeves</p>
+</footer>
+</main>
+</body>
+</html>

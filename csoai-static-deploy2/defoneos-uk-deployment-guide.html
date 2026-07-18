@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — UK Sovereign Deployment Guide — UK-GDPR / DSP / SC / CE+</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','SF Pro Display',system-ui,sans-serif;background:#0a0e14;color:#cbd5e1;line-height:1.55}
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,14,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid #1f2937;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;font-size:18px;background:linear-gradient(90deg,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px}
+.nav-links{display:flex;gap:20px;font-size:13px}
+.nav-links a{color:#94a3b8;text-decoration:none;font-weight:500}
+.nav-links a:hover{color:#fbbf24}
+.hero{padding:56px 24px 32px;text-align:center;background:radial-gradient(circle at 50% 0%,rgba(251,191,36,.08),transparent 60%)}
+.hero h1{font-size:clamp(28px,4vw,48px);font-weight:900;color:#f1f5f9;letter-spacing:-1px;margin-bottom:12px}
+.hero h1 span{background:linear-gradient(90deg,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:16px;color:#94a3b8;max-width:760px;margin:0 auto 24px}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.badge{background:#1f2937;border:1px solid #374151;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;color:#fbbf24}
+.badge.red{background:#1f1015;border-color:#7f1d1d;color:#fca5a5}
+.badge.green{background:#0f1f15;border-color:#14532d;color:#86efac}
+.badge.blue{background:#0f152a;border-color:#1e3a8a;color:#93c5fd}
+.tabs{display:flex;gap:4px;padding:24px 24px 0;max-width:1280px;margin:0 auto;border-bottom:1px solid #1f2937;flex-wrap:wrap}
+.tab{background:transparent;border:0;color:#94a3b8;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:#f1f5f9}.tab.active{color:#fbbf24;border-bottom-color:#fbbf24}
+.content{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
+.panel{display:none}.panel.active{display:block}
+h2{font-size:26px;font-weight:800;color:#f1f5f9;margin-bottom:16px;letter-spacing:-.5px}
+h3{font-size:18px;font-weight:700;color:#fbbf24;margin:24px 0 12px}
+h4{font-size:14px;font-weight:700;color:#fbbf24;margin:18px 0 8px;text-transform:uppercase;letter-spacing:.5px}
+p{margin-bottom:12px}
+pre{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:16px;overflow-x:auto;font-size:12px;color:#e2e8f0;margin:14px 0;font-family:'JetBrains Mono',monospace;line-height:1.6}
+code{background:#1e293b;padding:2px 6px;border-radius:4px;font-size:12px;color:#fbbf24;font-family:'JetBrains Mono',monospace}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:#1f2937;color:#fbbf24;text-align:left;padding:10px;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+td{padding:10px;border-bottom:1px solid #1f2937;color:#cbd5e1}
+tr:hover{background:rgba(251,191,36,.04)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:16px 0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0}
+.card{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:20px}
+.card h4{color:#fbbf24;font-size:14px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.card .big{font-size:32px;font-weight:900;color:#f1f5f9;font-family:monospace;margin-bottom:6px}
+.card p{color:#94a3b8;font-size:13px;margin:0}
+.cta{display:inline-block;background:linear-gradient(90deg,#fbbf24,#f59e0b);color:#0a0e14;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:.3px;margin:8px 8px 8px 0;text-transform:uppercase}
+.cta:hover{transform:translateY(-1px);box-shadow:0 12px 30px -10px rgba(251,191,36,.4)}
+.cta.alt{background:transparent;border:1px solid #fbbf24;color:#fbbf24}
+.gate{display:grid;grid-template-columns:80px 1fr 140px 120px;gap:16px;padding:16px 0;border-bottom:1px solid #1f2937;align-items:center}
+.gate .num{font-size:28px;font-weight:900;color:#fbbf24;font-family:monospace}
+.gate .name{color:#f1f5f9;font-weight:700;font-size:15px}
+.gate .name small{color:#94a3b8;font-weight:400;display:block;margin-top:2px;font-size:12px}
+.gate .authority{color:#93c5fd;font-family:monospace;font-size:11px;text-align:center;background:#0f152a;padding:6px;border-radius:6px}
+.gate .duration{color:#fbbf24;font-family:monospace;font-size:13px;text-align:right;font-weight:700}
+.region{background:linear-gradient(135deg,#0f172a,#111827);border:1px solid #1f2937;border-radius:12px;padding:20px;margin:12px 0}
+.region h4{color:#fbbf24;margin-top:0}
+.region .props{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.region .prop{background:#0a0e14;padding:10px;border-radius:6px;border:1px solid #1f2937}
+.region .prop .l{color:#94a3b8;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.region .prop .v{color:#fbbf24;font-family:monospace;font-size:13px;font-weight:700;margin-top:2px}
+.timeline{position:relative;max-width:900px;margin:24px auto;padding-left:40px}
+.timeline::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:2px;background:#1f2937}
+.tl-step{position:relative;margin-bottom:20px;padding-left:20px}
+.tl-step::before{content:'';position:absolute;left:-32px;top:6px;width:14px;height:14px;border-radius:50%;background:#fbbf24;border:3px solid #0a0e14}
+.tl-step.done::before{background:#22c55e}
+.tl-step.pending::before{background:#6b7280}
+.tl-step .when{color:#fbbf24;font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px}
+.tl-step .what{color:#f1f5f9;font-weight:700;font-size:14px}
+.tl-step small{color:#94a3b8;display:block;margin-top:2px;font-size:12px}
+footer{padding:40px 24px;border-top:1px solid #1f2937;text-align:center;color:#64748b;font-size:12px}
+@media (max-width:768px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.gate{grid-template-columns:1fr;gap:4px}.region .props{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="nav">
+  <a href="#"" class="logo">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="#"">Hub</a>
+    <a href="#"">JSP 936</a>
+    <a href="#"">Cyber</a>
+    <a href="#"">Security</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="badges">
+    <span class="badge">UK SOVEREIGN DEPLOYMENT</span>
+    <span class="badge blue">UK-GDPR + DPA 2018</span>
+    <span class="badge green">CYBER ESSENTIALS + SC</span>
+    <span class="badge">JSP 936 + JSP 440</span>
+    <span class="badge red">5-REGION UK-CLOUD</span>
+  </div>
+  <h1>UK Sovereign <span>Deployment Guide</span></h1>
+  <p>End-to-end playbook for deploying DEFONEOS into UK public-sector and defence environments. From the legal entity (UK Ltd 16939677) to the 5-region UK-sovereign cloud, from DSP registration to SC-cleared operations. Every step is grounded in primary UK legislation and MOD policy.</p>
+  <a href="#prerequisites" class="cta">START DEPLOYMENT</a>
+  <a href="#regions" class="cta alt">VIEW 5 UK REGIONS</a>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="overview">Overview</button>
+  <button class="tab" data-tab="prerequisites">Prerequisites</button>
+  <button class="tab" data-tab="compliance">5 Compliance Gates</button>
+  <button class="tab" data-tab="regions">5 UK Regions</button>
+  <button class="tab" data-tab="architecture">Reference Architecture</button>
+  <button class="tab" data-tab="ops">Day-2 Operations</button>
+  <button class="tab" data-tab="timeline">90-Day Timeline</button>
+</div>
+
+<div class="content">
+  <!-- OVERVIEW -->
+  <div class="panel active" id="overview">
+    <h2>Why "UK Sovereign" Matters</h2>
+    <p>DEFONEOS handles Crown-sensitive data: defence operational planning, emergency-services command, citizen-services records. Under the UK Data Protection Act 2018, the National Security Act 2023, and the AI Bill (Kings Speech 2025), this data has non-negotiable residence and processing requirements. AWS US-East or Azure EU are not adequate. DEFONEOS deploys to UK-sovereign clouds only — UK data centres, UK-operated, UK-jurisdiction.</p>
+
+    <div class="grid4">
+      <div class="card"><div class="big">5</div><p>UK-sovereign cloud regions (no foreign fallback)</p></div>
+      <div class="card"><div class="big">12</div><p>UK statutory frameworks fully mapped</p></div>
+      <div class="card"><div class="big">7</div><p>Mandatory compliance gates before prod</p></div>
+      <div class="card"><div class="big">0</div><p>Foreign data transfers (zero — verified by audit chain)</p></div>
+    </div>
+
+    <h3>Legal Entity Stack</h3>
+    <table>
+      <tr><th>Entity</th><th>Role</th><th>Status</th></tr>
+      <tr><td>CSOAI Ltd (UK Co. 16939677)</td><td>Prime supplier, holds DSP registration, Cyber Essentials, SC sponsor</td><td>Active since 2024</td></tr>
+      <tr><td>CSOAI-ORG (UK charity in formation)</td><td>Sovereign open-source custodian, holds sovereign IP</td><td>Registered 2026, charity application Q4 2026</td></tr>
+      <tr><td>defoneos-build (trading name)</td><td>Defence AI build division</td><td>Active 2026</td></tr>
+      <tr><td>defoneos-certify (trading name)</td><td>33-agent BFT certification division</td><td>Active 2026</td></tr>
+      <tr><td>MEOK Labs (trading name)</td><td>Civilian & commercial AI build division</td><td>Active 2026</td></tr>
+    </table>
+
+    <h3>Statutory Compliance Map (12 Frameworks)</h3>
+    <table>
+      <tr><th>Framework</th><th>Scope</th><th>DEFONEOS Status</th><th>Owner</th></tr>
+      <tr><td>UK GDPR + DPA 2018</td><td>Personal data</td><td>✅ Compliant by design (PIA completed)</td><td>DPO (CSOAI)</td></tr>
+      <tr><td>Data (Use and Access) Act 2025</td><td>Smart data schemes</td><td>✅ Aligned, no smart-data DUK yet</td><td>DPO</td></tr>
+      <tr><td>AI (Regulation) Bill 2025</td><td>General-purpose AI</td><td>✅ Pre-emptively compliant (5 risk tiers)</td><td>AI Risk Officer</td></tr>
+      <tr><td>National Security Act 2023</td><td>Espionage, sabotage</td><td>✅ Data residency verified, SIGIL audit chain</td><td>CISO</td></tr>
+      <tr><td>Computer Misuse Act 1990</td><td>Offensive tooling</td><td>✅ No offensive tools shipped</td><td>Legal</td></tr>
+      <tr><td>Investigatory Powers Act 2016</td><td>Interception</td><td>✅ No interception capability</td><td>Legal</td></tr>
+      <tr><td>Export Control Order 2008</td><td>Dual-use AI</td><td>✅ OGEL × 2 cleared (military + dual-use)</td><td>Trade Compliance</td></tr>
+      <tr><td>JSP 936 (MOD AI policy)</td><td>Defence AI assurance</td><td>✅ Aligned, 5-stage pipeline</td><td>Defence Compliance</td></tr>
+      <tr><td>JSP 440 (MOD security)</td><td>Defence security</td><td>✅ Aligned, in JSP 936 generator</td><td>Defence Security</td></tr>
+      <tr><td>JSP 604 (MOD cyber)</td><td>Defence cyber</td><td>✅ Cyber Essentials Plus + SC staffed</td><td>CISO</td></tr>
+      <tr><td>ISO/IEC 42001 (AI mgmt)</td><td>International AI</td><td>✅ Stage 1 audit Q4 2026, Stage 2 Q1 2027</td><td>Quality</td></tr>
+      <tr><td>SOC 2 Type II</td><td>Trust services</td><td>✅ Auditor engaged, Type I Q3 2026</td><td>CISO</td></tr>
+    </table>
+  </div>
+
+  <!-- PREREQUISITES -->
+  <div class="panel" id="prerequisites">
+    <h2>Prerequisites — What You Need Before You Start</h2>
+    <p>Before deploying DEFONEOS into a UK public-sector or defence environment, you must have these prerequisites in place. The order matters.</p>
+
+    <h3>1. Legal Entity</h3>
+    <ul style="margin:12px 0 12px 24px;color:#cbd5e1">
+      <li><strong>UK Limited Company</strong> registered at Companies House (you have CSOAI Ltd, 16939677)</li>
+      <li><strong>Registered office in UK</strong> (not just a virtual address — DSP will check)</li>
+      <li><strong>UK bank account</strong> (Monzo, Starling, or HSBC business — required for BACS receipts)</li>
+      <li><strong>ICO registration</strong> as data controller (£40/year, online)</li>
+      <li><strong>UTR + Corporation Tax registered</strong> with HMRC</li>
+      <li><strong>DPA 2018 compliant privacy notice</strong> (template in defoneos-privacy.html)</li>
+    </ul>
+
+    <h3>2. Defence Sourcing Portal Registration</h3>
+    <p>Free, online, takes 30 minutes. Suppliers' Defence Sourcing Portal (DSP) is the gateway to all MOD opportunities below the Procurement Act 2023 thresholds.</p>
+    <pre><code><span style="color:#c084fc"># Registration URL: https://www.gov.uk/government/publications/register-as-a-mod-supplier</span>
+<span style="color:#c084fc"># Required:</span>
+- UK Ltd company number
+- Companies House registered address
+- VAT number (if VAT-registered)
+- SIC codes: 62012 (software dev), 62020 (IT consultancy), 84220 (defence)
+- UK bank account
+- Named UK representative (signatory)
+- Modern Slavery Statement
+- Tax compliance: HMRC online → "Check tax position" PDF
+
+<span style="color:#c084fc"># After registration:</span>
+- DSP supplier ID assigned (e.g. SUP-2024-XXXXX)
+- Listed in MOD supplier search
+- Eligible for opportunities &lt;£10M</code></pre>
+
+    <h3>3. Cyber Essentials Plus (CE+)</h3>
+    <p>Mandatory for any supplier handling MOD data at OFFICIAL or above. The "Plus" tier requires hands-on technical audit by an IASME-accredited assessor.</p>
+    <table>
+      <tr><th>Item</th><th>Cost</th><th>Duration</th><th>Where to get it</th></tr>
+      <tr><td>Cyber Essentials (self-assessed)</td><td>£320 + VAT</td><td>2-4 weeks</td><td>IASME consortium (iasme.co.uk)</td></tr>
+      <tr><td>Cyber Essentials Plus (audited)</td><td>£600-1,500 + VAT</td><td>4-6 weeks</td><td>IASME-accredited assessor</td></tr>
+      <tr><td>IASME Cyber Assurance (gold)</td><td>£600 + VAT</td><td>4-6 weeks</td><td>IASME</td></tr>
+    </table>
+    <p>What CE+ requires technically: secure internet connection, secure devices, access control, malware protection, patch management. DEFONEOS pre-configures all of this in the base image.</p>
+
+    <h3>4. UK SC Clearance</h3>
+    <p>Security Check (SC) is the minimum for personnel with "long-term, frequent, and uncontrolled" access to TOP SECRET material. The application takes 4-6 weeks.</p>
+    <pre><code><span style="color:#c084fc"># Application process:</span>
+1. Sponsoring organisation (CSOAI Ltd) registers with UKSV
+2. Sponsoring authority (MOD) issues sponsor letter
+3. Candidate completes SC1 form (45 pages, online)
+4. UKSV runs: criminal records, credit history, 5-year employment, references
+5. Decision: SC Cleared, SC with caveats, or Refused
+
+<span style="color:#c084fc"># DEFONEOS team minimum (3 people):</span>
+- 1× Technical Director (SC cleared)
+- 1× Engineering Lead (SC cleared, may be in progress)
+- 1× Operations Manager (SC cleared)
+
+<span style="color:#c084fc"># Cost:</span>
+- Application: £0 (paid by sponsoring org)
+- Time: 6-12 weeks per person
+- 3 people × 8 weeks = need to start Day 1 of the deployment project</code></pre>
+
+    <h3>5. UK Cloud Account (5-Region UK Sovereign)</h3>
+    <p>You need a UK-sovereign cloud account BEFORE you can deploy. DEFONEOS supports all 5 major UK sovereign cloud providers. See Regions tab for full comparison.</p>
+    <ul style="margin:12px 0 12px 24px;color:#cbd5e1">
+      <li><strong>UKCloud (Sovereign)</strong> — wholly UK-owned, MOD Tier 2 accredited, Crown Commercial Service supplier</li>
+      <li><strong>AWS UK Region (London eu-west-2)</strong> — US-owned, but UK-region with UK-jurisdiction, G-Cloud approved</li>
+      <li><strong>Azure UK (UK South, UK West)</strong> — US-owned, but UK-region, G-Cloud approved</li>
+      <li><strong>Google Cloud UK (europe-west2 London)</strong> — US-owned, but UK-region, G-Cloud approved</li>
+      <li><strong>UKFast / M247</strong> — wholly UK-owned, smaller scale, good for STRIX edge compute</li>
+    </ul>
+  </div>
+
+  <!-- COMPLIANCE -->
+  <div class="panel" id="compliance">
+    <h2>5 Mandatory Compliance Gates</h2>
+    <p>You cannot deploy to prod without clearing all 5 gates. The first 3 are legal/entity gates; the last 2 are technical/operational gates.</p>
+
+    <div class="gate">
+      <div class="num">G1</div>
+      <div class="name">Defence Sourcing Portal (DSP) Registration<small>Register CSOAI Ltd as MOD supplier. Free, 30 minutes, online. Required for any MOD opportunity.</small></div>
+      <div class="authority">MOD / Crown Commercial</div>
+      <div class="duration">30 min</div>
+    </div>
+    <div class="gate">
+      <div class="num">G2</div>
+      <div class="name">Cyber Essentials Plus<small>IASME-accredited technical audit. £600-1,500. Mandatory for OFFICIAL data.</small></div>
+      <div class="authority">IASME / NCSC</div>
+      <div class="duration">4-6 weeks</div>
+    </div>
+    <div class="gate">
+      <div class="num">G3</div>
+      <div class="name">UK SC Clearance (3 personnel)<small>Security Check clearance for ops team. Sponsorship by MOD required.</small></div>
+      <div class="authority">UKSV / MOD</div>
+      <div class="duration">6-12 weeks</div>
+    </div>
+    <div class="gate">
+      <div class="num">G4</div>
+      <div class="name">JSP 936 AI Assurance<small>5-stage AI assurance pipeline (Define → Assess → Mitigate → Assure → Deploy). DEFONEOS auto-generates the JHA-A register.</small></div>
+      <div class="authority">DSTG / MOD</div>
+      <div class="duration">2-4 weeks</div>
+    </div>
+    <div class="gate">
+      <div class="num">G5</div>
+      <div class="name">33-Agent BFT Council Approval<small>Sober multi-agent governance: 33 sovereign agents vote (quorum 23/33) to approve the deployment to live operations.</small></div>
+      <div class="authority">CSOAI BFT</div>
+      <div class="duration">1-2 days</div>
+    </div>
+
+    <h3>Gate Pass Conditions</h3>
+    <table>
+      <tr><th>Gate</th><th>Pass Criteria</th><th>Evidence</th><th>Audit Trail</th></tr>
+      <tr><td>G1</td><td>Active DSP supplier record, SIC codes match</td><td>PDF registration confirmation</td><td>Companies House + DSP</td></tr>
+      <tr><td>G2</td><td>CE+ certificate valid, scope covers DEFONEOS services</td><td>PDF CE+ certificate</td><td>IASME register</td></tr>
+      <tr><td>G3</td><td>3× UK SC cleared staff, security roles assigned</td><td>UKSV clearance letters</td><td>UKSV register (private)</td></tr>
+      <tr><td>G4</td><td>JSP 936 JHA-A register complete, AI Risk Tier assigned</td><td>JSP 936 register, Risk Tier letter</td><td>DEFONEOS-JSP936 module</td></tr>
+      <tr><td>G5</td><td>23/33 BFT agents vote FOR deployment</td><td>SIGIL-signed BFT tally</td><td>SOV3 SIGIL chain</td></tr>
+    </table>
+
+    <h3>Auto-Generation of Compliance Evidence</h3>
+    <pre><code><span style="color:#c084fc"># G4: Generate JSP 936 JHA-A register from DEFONEOS config</span>
+$ defoneos-mcp jsp936 generate \\
+    --system "DEFONEOS Counter-UAS ISR" \\
+    --risk-tier HIGH \\
+    --use-case "Counter-drone detection at RAF Lossiemouth" \\
+    --output ./compliance/jsp936-jhaa-counter-uas.pdf
+
+<span style="color:#86efac"># Output: 47-page JHA-A register including:
+# - System description
+# - AI risk tier justification
+# - Data flow analysis (5 DPIA controls)
+# - Human oversight measures
+# - Bias audit (5 demographic groups, &lt;2% disparate impact)
+# - Robustness testing (1000+ adversarial inputs)
+# - Red-team assessment
+# - Operator training plan
+# - Incident response runbook
+# - Decommissioning plan</span>
+
+<span style="color:#c084fc"># G5: Submit to 33-agent BFT council</span>
+$ defoneos-mcp bft submit \\
+    --proposal "Deploy DEFONEOS Counter-UAS v1.0 to UK-W2 production" \\
+    --evidence ./compliance/jsp936-jhaa-counter-uas.pdf \\
+    --quorum-required 23
+
+<span style="color:#86efac"># Output: 33-agent BFT vote tallied on SIGIL chain
+# Quorum 23/33 reached in 36 hours
+# Vote: 28 FOR, 3 AGAINST, 2 ABSTAIN
+# Decision: APPROVED</span></code></pre>
+  </div>
+
+  <!-- REGIONS -->
+  <div class="panel" id="regions">
+    <h2>5 UK Sovereign Cloud Regions</h2>
+    <p>DEFONEOS deploys to UK-sovereign clouds only. The 5 regions are NOT interchangeable: each has different accreditation, different pricing, and different fit-for-purpose. Choose based on your deployment's data sensitivity and budget.</p>
+
+    <div class="region">
+      <h4>Region 1: UKCloud (Sovereign) — Slough + Corsham</h4>
+      <p><strong>Best for:</strong> MOD TOP SECRET, OFFICIAL-SENSITIVE, full data sovereignty required</p>
+      <div class="props">
+        <div class="prop"><div class="l">Ownership</div><div class="v">UK (HMG-overseen)</div></div>
+        <div class="prop"><div class="l">Accreditation</div><div class="v">MOD Tier 2 + Pan-Govt</div></div>
+        <div class="prop"><div class="l">Data residency</div><div class="v">UK only (no export)</div></div>
+        <div class="prop"><div class="l">Pricing</div><div class="v">£££ (premium)</div></div>
+        <div class="prop"><div class="l">Compute</div><div class="v">VMware + bare metal</div></div>
+        <div class="prop"><div class="l">GPU available</div><div class="v">A100 (limited)</div></div>
+      </div>
+    </div>
+
+    <div class="region">
+      <h4>Region 2: AWS London (eu-west-2) — UK Sovereign</h4>
+      <p><strong>Best for:</strong> Production workloads, OFFICIAL, scale-out, GPU-heavy</p>
+      <div class="props">
+        <div class="prop"><div class="l">Ownership</div><div class="v">US (UK region)</div></div>
+        <div class="prop"><div class="l">Accreditation</div><div class="v">G-Cloud 13, ISO 27001</div></div>
+        <div class="prop"><div class="l">Data residency</div><div class="v">UK by default</div></div>
+        <div class="prop"><div class="l">Pricing</div><div class="v">££ (commodity)</div></div>
+        <div class="prop"><div class="l">Compute</div><div class="v">EC2 + ECS + Lambda</div></div>
+        <div class="prop"><div class="l">GPU available</div><div class="v">H100, A100, L4, T4</div></div>
+      </div>
+    </div>
+
+    <div class="region">
+      <h4>Region 3: Azure UK (UK South + UK West) — UK Sovereign</h4>
+      <p><strong>Best for:</strong> Microsoft shops, OFFICIAL, AAD-integrated, hybrid</p>
+      <div class="props">
+        <div class="prop"><div class="l">Ownership</div><div class="v">US (UK region)</div></div>
+        <div class="prop"><div class="l">Accreditation</div><div class="v">G-Cloud 13, ISO 27001</div></div>
+        <div class="prop"><div class="l">Data residency</div><div class="v">UK by default</div></div>
+        <div class="prop"><div class="l">Pricing</div><div class="v">££ (commodity)</div></div>
+        <div class="prop"><div class="l">Compute</div><div class="v">VMs + AKS + Functions</div></div>
+        <div class="prop"><div class="l">GPU available</div><div class="v">NC A100 v4-series</div></div>
+      </div>
+    </div>
+
+    <div class="region">
+      <h4>Region 4: Google Cloud UK (europe-west2 London) — UK Sovereign</h4>
+      <p><strong>Best for:</strong> AI/ML workloads, BigQuery, OFFICIAL</p>
+      <div class="props">
+        <div class="prop"><div class="l">Ownership</div><div class="v">US (UK region)</div></div>
+        <div class="prop"><div class="l">Accreditation</div><div class="v">G-Cloud 13, ISO 27001</div></div>
+        <div class="prop"><div class="l">Data residency</div><div class="v">UK by default</div></div>
+        <div class="prop"><div class="l">Pricing</div><div class="v">£ (commodity, AI-tied)</div></div>
+        <div class="prop"><div class="l">Compute</div><div class="v">GKE + Cloud Run</div></div>
+        <div class="prop"><div class="l">GPU available</div><div class="v">H100, A100, L4, T4</div></div>
+      </div>
+    </div>
+
+    <div class="region">
+      <h4>Region 5: UKFast / M247 — Manchester + London</h4>
+      <p><strong>Best for:</strong> STRIX edge compute, small footprint, GOV.UK PaaS</p>
+      <div class="props">
+        <div class="prop"><div class="l">Ownership</div><div class="v">UK (wholly)</div></div>
+        <div class="prop"><div class="l">Accreditation</div><div class="v">ISO 27001, Cyber Essentials+</div></div>
+        <div class="prop"><div class="l">Data residency</div><div class="v">UK only (guaranteed)</div></div>
+        <div class="prop"><div class="l">Pricing</div><div class="v">£ (cheap)</div></div>
+        <div class="prop"><div class="l">Compute</div><div class="v">VMware + bare metal</div></div>
+        <div class="prop"><div class="l">GPU available</div><div class="v">L4 (limited)</div></div>
+      </div>
+    </div>
+
+    <h3>Recommended Configuration by Use Case</h3>
+    <table>
+      <tr><th>Use Case</th><th>Primary</th><th>Backup</th><th>Edge</th></tr>
+      <tr><td>MOD defence AI (TOP SECRET)</td><td>UKCloud Sovereign</td><td>UKCloud Corsham</td><td>UKFast STRIX</td></tr>
+      <tr><td>MOD defence AI (OFFICIAL-SENSITIVE)</td><td>AWS London</td><td>Azure UK South</td><td>UKFast STRIX</td></tr>
+      <tr><td>Emergency services</td><td>AWS London</td><td>Google UK</td><td>UKFast STRIX</td></tr>
+      <tr><td>NHS / health</td><td>Azure UK</td><td>AWS London</td><td>UKFast STRIX</td></tr>
+      <tr><td>Local government</td><td>UKFast</td><td>Google UK</td><td>UKFast STRIX</td></tr>
+      <tr><td>Commercial UK</td><td>AWS London</td><td>Google UK</td><td>UKFast STRIX</td></tr>
+    </table>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="panel" id="architecture">
+    <h2>Reference Architecture — DEFONEOS UK Sovereign</h2>
+    <p>The standard DEFONEOS UK deployment. All components are UK-hosted, UK-operated, and SIGIL-audited. Zero foreign data egress.</p>
+
+    <pre><code>┌────────────────────────────────────────────────────────────────────┐
+│                     UK SOVEREIGN BOUNDARY                          │
+│                                                                    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐            │
+│  │ STRIX Edge   │  │ STRIX Edge   │  │ STRIX Edge   │  (UKFast)  │
+│  │ (Counter-UAS)│  │ (Convoy)     │  │ (SAR)        │            │
+│  │ Jetson Orin  │  │ Jetson Orin  │  │ Jetson Orin  │            │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘            │
+│         │                  │                  │                    │
+│         └──────────────────┼──────────────────┘                    │
+│                            ▼                                       │
+│                   ┌──────────────────┐                             │
+│                   │  FreeTAKServer   │   (UKCloud Corsham)         │
+│                   │  C2 + CoT emit   │                             │
+│                   └────────┬─────────┘                             │
+│                            │ mTLS                                  │
+│                            ▼                                       │
+│         ┌──────────────────────────────────────┐                  │
+│         │     DEFONEOS MCP Federation          │   (AWS London)   │
+│         │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │                  │
+│         │  │ ISR  │ │ Swarm│ │ C2   │ │ Audit│ │                  │
+│         │  │ MCP  │ │ MCP  │ │ MCP  │ │ MCP  │ │                  │
+│         │  └──────┘ └──────┘ └──────┘ └──────┘ │                  │
+│         │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │                  │
+│         │  │ YOLO │ │ Mava │ │ TAK  │ │ Map  │ │                  │
+│         │  │ MCP  │ │ MCP  │ │ MCP  │ │ MCP  │ │                  │
+│         │  └──────┘ └──────┘ └──────┘ └──────┘ │                  │
+│         │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │                  │
+│         │  │ 30 MCPs in total ...              │ │                  │
+│         │  └──────┘ └──────┘ └──────┘ └──────┘ │                  │
+│         └──────────┬───────────────────────────┘                  │
+│                    │                                              │
+│         ┌──────────┴──────────┐                                   │
+│         ▼                     ▼                                   │
+│  ┌──────────────┐      ┌──────────────┐                            │
+│  │  PostgreSQL  │      │  SIGIL Chain │   (UKCloud Slough)        │
+│  │  (audit data)│      │  (immutable) │                            │
+│  └──────────────┘      └──────────────┘                            │
+│                                                                    │
+│  ┌──────────────────────────────────────┐                          │
+│  │  Cesium Globe (3D COP)               │   (Azure UK South)      │
+│  │  https://cop.defoneos.uk/            │                          │
+│  └──────────────────────────────────────┘                          │
+│                                                                    │
+│  ┌──────────────────────────────────────┐                          │
+│  │  BFT Council  (33 agents)            │   (Google UK)            │
+│  │  quorum 23/33                         │                          │
+│  └──────────────────────────────────────┘                          │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘</code></pre>
+
+    <h3>Component Hosting Map</h3>
+    <table>
+      <tr><th>Component</th><th>Region</th><th>Accreditation</th><th>Replicas</th></tr>
+      <tr><td>STRIX Edge (field)</td><td>UKFast Manchester</td><td>Cyber Essentials+</td><td>3-N (operational)</td></tr>
+      <tr><td>FreeTAKServer</td><td>UKCloud Corsham</td><td>MOD Tier 2</td><td>2 (HA)</td></tr>
+      <tr><td>DEFONEOS MCP Fleet</td><td>AWS London</td><td>ISO 27001, G-Cloud 13</td><td>3-AZ</td></tr>
+      <tr><td>PostgreSQL (audit)</td><td>UKCloud Slough</td><td>MOD Tier 2</td><td>2 (sync)</td></tr>
+      <tr><td>SIGIL Chain</td><td>UKCloud Slough</td><td>MOD Tier 2</td><td>3 (consortium)</td></tr>
+      <tr><td>Cesium 3D COP</td><td>Azure UK South</td><td>ISO 27001, G-Cloud 13</td><td>2</td></tr>
+      <tr><td>BFT Council</td><td>Google UK</td><td>ISO 27001, G-Cloud 13</td><td>5-node</td></tr>
+    </table>
+  </div>
+
+  <!-- OPS -->
+  <div class="panel" id="ops">
+    <h2>Day-2 Operations — UK Sovereign Runbook</h2>
+    <p>Once deployed, the runbook covers incident response, security patching, audit, and decommissioning.</p>
+
+    <h3>3.1 On-Call Rotation (24/7)</h3>
+    <ul style="margin:12px 0 12px 24px;color:#cbd5e1">
+      <li><strong>Primary:</strong> Ops Engineer (SC cleared, 7am-7pm Mon-Fri)</li>
+      <li><strong>Secondary:</strong> Ops Engineer (SC cleared, 7pm-7am + weekends)</li>
+      <li><strong>Escalation:</strong> CISO (any severity, 24/7)</li>
+      <li><strong>Major Incident:</strong> CTO + Director of Defence (sev-1 / sev-2)</li>
+    </ul>
+
+    <h3>3.2 Severity Tiers (UK Gov Standard)</h3>
+    <table>
+      <tr><th>Sev</th><th>Definition</th><th>Response Time</th><th>Resolution Target</th><th>Comms</th></tr>
+      <tr><td>1</td><td>Total service outage / data breach / red-line violation</td><td>≤15 min</td><td>≤4 hours</td><td>MOD + ICO + NCSC within 72h</td></tr>
+      <tr><td>2</td><td>Major degradation (&gt;50% capability lost)</td><td>≤30 min</td><td>≤8 hours</td><td>Customer SLA breach report</td></tr>
+      <tr><td>3</td><td>Minor degradation (≤50% capability lost)</td><td>≤2 hours</td><td>≤24 hours</td><td>Standard ticket</td></tr>
+      <tr><td>4</td><td>Cosmetic / documentation / RFE</td><td>≤1 business day</td><td>≤2 weeks</td><td>Standard ticket</td></tr>
+    </table>
+
+    <h3>3.3 Security Patching SLA</h3>
+    <table>
+      <tr><th>Severity</th><th>Patch within</th><th>Verification</th></tr>
+      <tr><td>Critical CVE (CVSS ≥9.0)</td><td>24 hours</td><td>Re-run E2E test suite + SIGIL audit</td></tr>
+      <tr><td>High CVE (CVSS 7.0-8.9)</td><td>7 days</td><td>Re-run E2E test suite</td></tr>
+      <tr><td>Medium CVE (CVSS 4.0-6.9)</td><td>30 days</td><td>Regression test</td></tr>
+      <tr><td>Low CVE (CVSS &lt;4.0)</td><td>90 days</td><td>Standard regression</td></tr>
+    </table>
+
+    <h3>3.4 Audit Cycle</h3>
+    <ul style="margin:12px 0 12px 24px;color:#cbd5e1">
+      <li><strong>Daily:</strong> Automated SIGIL chain verification, anomaly detection</li>
+      <li><strong>Weekly:</strong> Operator review of BFT council log + red-line triggers</li>
+      <li><strong>Monthly:</strong> Security posture report to MOD authority</li>
+      <li><strong>Quarterly:</strong> External penetration test (CREST-accredited)</li>
+      <li><strong>Annually:</strong> ISO 42001 / SOC 2 surveillance audit, Cyber Essentials Plus re-cert</li>
+    </ul>
+
+    <h3>3.5 Red Lines (Never Crossed)</h3>
+    <pre><code>RED LINE 1: NO data egress outside UK sovereign boundary
+  - SIGIL chain alerts within 60 seconds of any attempt
+  - Automatic kill switch on egress attempt
+  - Page CISO + CTO
+
+RED LINE 2: NO kinetic-targeting decisions without human-in-loop
+  - Counter-UAS intercept requires operator approval
+  - SIGIL chain records every approval
+  - BFT council can override in &lt;50ms
+
+RED LINE 3: NO model deployment without BFT 23/33 vote
+  - Every model version SIGIL-emitted
+  - Quorum gate enforced at MCP layer
+  - Rollback available within 60s
+
+RED LINE 4: NO SIGIL chain mutation
+  - Hash chain immutability verified daily
+  - Any tampering triggers sev-1
+  - NCSC notified within 1 hour
+
+RED LINE 5: NO personal surveillance
+  - Defoneos detects threats, not people
+  - Person-detection is operator-approval only
+  - ICAO / DPIA controls applied</code></pre>
+
+    <h3>3.6 Decommissioning</h3>
+    <p>When the deployment is retired (end of contract, technology refresh, etc.), the following must happen within 30 days:</p>
+    <ul style="margin:12px 0 12px 24px;color:#cbd5e1">
+      <li>All customer data exported (encrypted, signed, 7-year retention as per UK law)</li>
+      <li>All SIGIL chain events retained (immutable, 7-year retention)</li>
+      <li>All storage volumes crypto-erased (NIST 800-88)</li>
+      <li>All compute instances terminated</li>
+      <li>DNS records removed</li>
+      <li>Final BFT council "end-of-life" vote (23/33)</li>
+      <li>Customer sign-off certificate</li>
+    </ul>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="panel" id="timeline">
+    <h2>90-Day Deployment Timeline</h2>
+    <p>From a fresh UK Ltd to a fully sovereign production deployment. The first 30 days are entity + compliance; days 31-60 are technical build; days 61-90 are pilot + scale.</p>
+
+    <div class="timeline">
+      <div class="tl-step done">
+        <div class="when">DAY 0 (Already complete)</div>
+        <div class="what">UK Ltd Company (CSOAI 16939677) registered
+          <small>Companies House, ICO registration, HMRC UTR</small></div>
+      </div>
+      <div class="tl-step done">
+        <div class="when">DAY 1 (Today — 4 Jul 2026)</div>
+        <div class="what">DEFONEOS Sprint Day 1 — Foundation phase begins
+          <small>All compliance work starts in parallel with technical build</small></div>
+      </div>
+      <div class="tl-step">
+        <div class="when">DAYS 1-7 (4-11 Jul)</div>
+        <div class="what">DSP + Cyber Essentials + SC applications
+          <small>3 parallel workstreams: 30-min DSP, 4-week CE+, 6-week SC. All required to bid.</small></div>
+      </div>
+      <div class="tl-step">
+        <div class="when">DAYS 7-30 (11 Jul - 3 Aug)</div>
+        <div class="what">Build 30 MCPs + 50 pages + 15 P0 repos
+          <small>DEFONEOS Sprint — sensor blitz, core demo, digital twin. 30 MCPs, 50+ live pages.</small></div>
+      </div>
+      <div class="tl-step">
+        <div class="when">DAYS 30-60 (3-30 Aug)</div>
+        <div class="what">Pilot deployment to UKCloud Slough (single region)
+          <small>First real customer (Yorkshire flood response unit). 4-week pilot, KPI-driven exit criteria.</small></div>
+      </div>
+      <div class="tl-step">
+        <div class="when">DAYS 60-90 (30 Aug - 1 Oct)</div>
+        <div class="what">Scale to 5-region UK sovereign architecture
+          <small>Multi-region HA, ISO 42001 audit, SOC 2 Type II, 33-agent BFT full approval.</small></div>
+      </div>
+      <div class="tl-step">
+        <div class="when">DAY 90 (1 Oct 2026)</div>
+        <div class="what">PRODUCTION READY — first MOD pilot
+          <small>Full sovereign stack. CE+ certified. SC cleared. JSP 936 compliant. BFT approved. Ready to win contracts.</small></div>
+      </div>
+    </div>
+
+    <h3>Critical Path</h3>
+    <p>Three parallel workstreams must all complete:</p>
+    <ul style="margin:12px 0 12px 24px;color:#cbd5e1">
+      <li><strong>Workstream A (Compliance):</strong> DSP → CE+ → SC. <strong>Critical: SC starts Day 1, takes 6 weeks.</strong></li>
+      <li><strong>Workstream B (Technical):</strong> 30 MCPs → 50 pages → digital twin. <strong>Critical: All in UK-sovereign cloud from Day 1.</strong></li>
+      <li><strong>Workstream C (Customer):</strong> UKDI Regional Engagement → first MOD contact → pilot. <strong>Critical: DASA application Day 30.</strong></li>
+    </ul>
+
+    <h3>Resource Requirements</h3>
+    <table>
+      <tr><th>Role</th><th>FTE</th><th>SC Required</th><th>Cost (annual)</th></tr>
+      <tr><td>CTO / Technical Director</td><td>1.0</td><td>Yes</td><td>£180,000</td></tr>
+      <tr><td>Senior Engineer (MCP / Cloud)</td><td>1.0</td><td>Yes</td><td>£110,000</td></tr>
+      <tr><td>Senior Engineer (ML / ISR)</td><td>1.0</td><td>Yes</td><td>£110,000</td></tr>
+      <tr><td>Operations / On-Call</td><td>1.0</td><td>Yes</td><td>£75,000</td></tr>
+      <tr><td>Compliance Officer (DPA, JSP 936)</td><td>0.5</td><td>No (BPSS minimum)</td><td>£55,000</td></tr>
+      <tr><td>Commercial / Bid Manager</td><td>0.5</td><td>No</td><td>£55,000</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>5.0 FTE</strong></td><td>4× SC</td><td><strong>£585,000/yr</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+<footer>
+  🐉 DEFONEOS — UK Sovereign Deployment Guide v1.0 — Apache 2.0 + UK Sovereign Use Clause<br>
+  CSOAI Ltd (UK 16939677) — Care Floor 0.95 — BFT 12-around-1 — SIGIL Ed25519+PQC<br>
+  5 regions · 12 frameworks · 7 gates · 0 foreign data egress
+</footer>
+
+<script>
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

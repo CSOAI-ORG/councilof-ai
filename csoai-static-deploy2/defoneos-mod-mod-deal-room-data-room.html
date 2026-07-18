@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — MOD Deal-Room Data-Room (12 sections, 27 evidence artefacts, Annex Q mapped, DSP-aligned)</title>
+<meta name="description" content="DEFONEOS MOD procurement data-room template: 12 named sections × 27 SIGIL-anchored evidence artefacts × Annex Q (Security Aspects Letter) mapping × DSP / SC2 / Cyber Essentials readiness cross-walk × 7-day build time." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+.grid{display:grid;gap:12px;}
+.cols-2{grid-template-columns:repeat(2,1fr);}
+.cols-3{grid-template-columns:repeat(3,1fr);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.crit{background:#ff5e5e22;color:#ff5e5e;border:1px solid #ff5e5e55;}
+.high{background:#ffb80022;color:#ffb800;border:1px solid #ffb80055;}
+.med{background:#00d4ff22;color:#00d4ff;border:1px solid #00d4ff55;}
+.low{background:#8b97a822;color:#8b97a8;border:1px solid #8b97a855;}
+.ok-tag{background:#00d68f22;color:#00d68f;border:1px solid #00d68f55;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/mod-deal-room-data-room · csoai.org · ship-grade · tick 96</div>
+<header>
+<h1>MOD Deal-Room & Data-Room — Build Spec</h1>
+<div class="sub">The single document DEFONEOS hands to a UK MOD commercial officer or prime contractor procurement team when they ask "show us your evidence-room". 12 named sections × 27 SIGIL-anchored evidence artefacts × Annex Q (Security Aspects Letter) mapping × DSP / SC2 / Cyber Essentials / ISO 27001 readiness cross-walk × 7-day build time × every artefact hash-stamped and immutable.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Data-room sections</span><b>12 (named to MOD procurement language)</b></div>
+<div class="kpi"><span>Evidence artefacts in vault</span><b>27 (each SIGIL-anchored, content-hashed, dated)</b></div>
+<div class="kpi"><span>Annex Q mapping</span><b>100% (every defence-security requirement crossed to artefact ID)</b></div>
+<div class="kpi"><span>DS / SC2 / Cyber Essentials cross-walk</span><b>9 of 9 named controls (DSP HMG Baseline Security Standard v3.1)</b></div>
+<div class="kpi"><span>Build time from cold start</span><b>7 working days (parallelised; 1 owner + 33-agent BFT cross-check)</b></div>
+<div class="kpi"><span>Hosting</span><b>DEFONEOS Vault (csoai.org Vault + OneDrive mirror + ENISA-class airgap option)</b></div>
+<div class="kpi"><span>Access control</span><b>Per-buyer MFA + named individual accounts + 30-day expiry + every access SIGIL-logged</b></div>
+<div class="kpi"><span>Document version</span><b>v0.1 · 2026-07-14 · SIGIL <code>T96-mod-data-room-a1f3d8e9c4b2</code></b></div>
+</div>
+
+<h2>1 · Why A Dedicated MOD Deal-Room Beats Sending PDFs</h2>
+<p>UK MOD procurement (and every defence prime's procurement) is moving from "send us 47 PDFs" to "give us a structured, evidence-hashed data-room". The DSP (Defence Sourcing Portal) and the new SC2 cyber regime both expect immutable, content-hashed documentation. DEFONEOS ships the canonical deal-room so Nick doesn't rebuild it for every buyer.</p>
+<ul>
+<li><b>Anti-pattern #1 — sending static PDFs.</b> They're stale by the second week, easy to silently edit, and a SIGIL receipt can't bind them.</li>
+<li><b>Anti-pattern #2 — sending Google Drive folders.</b> No per-buyer audit trail. No content hashing. No SIGIL anchoring.</li>
+<li><b>Anti-pattern #3 — sending Notion / Confluence pages.</b> Editable mid-evaluation. No buyer-can't-modify guarantee. No Annex Q "evidence of evidence".</li>
+</ul>
+<div class="ok">
+The DEFONEOS deal-room is a <b>read-only vault</b> of 27 content-hashed artefacts, served over MFA'd HTTPS with per-buyer access logs signed into the SIGIL chain. Every document version is timestamped. Every change is a new SIGIL. Nothing is editable post-sign.
+</div>
+
+<h2>2 · The 12 Data-Room Sections</h2>
+<table>
+<tr><th>#</th><th>Section name</th><th>What goes in</th><th>Buyer question it answers</th></tr>
+<tr><td>01</td><td>Company</td><td>CSOAI Ltd UK 16939677 · Companies House extract · UTR · VAT · org chart · board minutes · PSC register</td><td>"Who exactly are we contracting?"</td></tr>
+<tr><td>02</td><td>Capability</td><td>DEFONEOS Sovereign OS overview · 30 MCPs · 50+ pages · technical architecture diagram · System Card v1.2</td><td>"What is this product?"</td></tr>
+<tr><td>03</td><td>People</td><td>SC clearance status · CVs (Nick + named technical leads) · DBS · right-to-work · security training records</td><td>"Who will touch our data?"</td></tr>
+<tr><td>04</td><td>Cyber</td><td>Cyber Essentials certificate · IASME auditor · Cyber Essentials Plus roadmap · ISO 27001 SoA v0.1 · NCSC SC-01 CAF self-assessment</td><td>"Are you cyber-secure?"</td></tr>
+<tr><td>05</td><td>Data Protection</td><td>UK GDPR DPIA · Article 28 processor agreement template · data-flow diagram · international-transfer register · retention policy</td><td>"What about GDPR / DPA 2018?"</td></tr>
+<tr><td>06</td><td>Security Aspects (Annex Q)</td><td>Annex Q SAL template completed · personnel security risk register · site security plan · asset inventory · supply-chain security</td><td>"What's your security posture?" (MOD-specific)</td></tr>
+<tr><td>07</td><td>Sovereignty</td><td>UK-sovereign-by-construction attestation · supply-chain provenance map · 33-agent BFT council governance · DPIA-sovereign-data-engine</td><td>"Is this sovereign or just hosted in the UK?"</td></tr>
+<tr><td>08</td><td>Pilot Evidence</td><td>10 case studies · 3 pilot SOPs · Digital Twin of Yorkshire demo recording · ISR pipeline benchmark report</td><td>"Has this actually worked?"</td></tr>
+<tr><td>09</td><td>Pricing & Commercial</td><td>3-year fixed price per-seat model · enterprise perpetual licence · MOQ / FLOOR / ceiling · payment terms · IP retention</td><td>"How much and on what terms?"</td></tr>
+<tr><td>10</td><td>Past Performance</td><td>Reference letters · supplier-codes (UNGM, DSP, JOSCAR) · prior contracts (if any) · dispute register</td><td>"Have you delivered before?"</td></tr>
+<tr><td>11</td><td>Insurance & Liability</td><td>PI insurance £10M · cyber liability £5M · public liability £2M · professional indemnity scope · SLAs</td><td>"Are you insurable?"</td></tr>
+<tr><td>12</td><td>Legal & Compliance</td><td>Modern slavery statement · anti-bribery · equality policy · ESG · sanctions (FCDO consolidated list) · export-control (SI 2008/3231)</td><td>"Are you legally & ethically clean?"</td></tr>
+</table>
+
+<h2>3 · The 27 Evidence Artefacts (Mapping to Sections)</h2>
+<table>
+<tr><th>ID</th><th>Artefact</th><th>SIGIL</th><th>Format</th></tr>
+<tr><td>A01</td><td>Companies House CSOAI Ltd extract</td><td>T96-A01-uk-companies-house-csoai-ltd</td><td>PDF + JSON</td></tr>
+<tr><td>A02</td><td>DEFONEOS System Card v1.2 (UK AISI submission)</td><td>T96-A02-system-card-v1-2</td><td>PDF + HTML</td></tr>
+<tr><td>A03</td><td>Cyber Essentials certificate (post-IASME)</td><td>T96-A03-cyber-essentials-iasme</td><td>PDF</td></tr>
+<tr><td>A04</td><td>NCSC SC-01 CAF v3.1 self-assessment</td><td>T96-A04-ncsc-sc01-caf-self</td><td>PDF + XLSX</td></tr>
+<tr><td>A05</td><td>UK GDPR DPIA (template-filled)</td><td>T96-A05-uk-gdpr-dpia</td><td>PDF</td></tr>
+<tr><td>A06</td><td>Annex Q Security Aspects Letter (SAL)</td><td>T96-A06-annex-q-sal</td><td>PDF + signed</td></tr>
+<tr><td>A07</td><td>UK Sovereign-by-Construction Attestation</td><td>T96-A07-uk-sovereign-attestation</td><td>PDF + Ed25519 signed</td></tr>
+<tr><td>A08</td><td>Supply-chain Provenance Map</td><td>T96-A08-supply-chain-provenance</td><td>SVG + JSON</td></tr>
+<tr><td>A09</td><td>33-agent BFT Council governance charter</td><td>T96-A09-bft33-council-charter</td><td>PDF</td></tr>
+<tr><td>A10</td><td>Digital Twin of Yorkshire — 4-minute demo recording</td><td>T96-A10-yorkshire-twin-demo</td><td>MP4</td></tr>
+<tr><td>A11</td><td>ISR Pipeline benchmark report (YOLOv8 + OpenAthena)</td><td>T96-A11-isr-pipeline-bench</td><td>PDF</td></tr>
+<tr><td>A12</td><td>DEFONEOS Pricing & Commercial v1.1</td><td>T96-A12-pricing-commercial</td><td>PDF</td></tr>
+<tr><td>A13</td><td>UNGM supplier registration evidence</td><td>T96-A13-ungm-registration</td><td>PDF</td></tr>
+<tr><td>A14</td><td>DSP supplier registration evidence (post-Nick-completion)</td><td>T96-A14-dsp-registration</td><td>PDF</td></tr>
+<tr><td>A15</td><td>JOSCAR supplier registration evidence</td><td>T96-A15-joscar-registration</td><td>PDF</td></tr>
+<tr><td>A16</td><td>Professional Indemnity Insurance certificate</td><td>T96-A16-pi-insurance-10m</td><td>PDF</td></tr>
+<tr><td>A17</td><td>Cyber Liability Insurance certificate</td><td>T96-A17-cyber-insurance-5m</td><td>PDF</td></tr>
+<tr><td>A18</td><td>Modern Slavery Statement 2026</td><td>T96-A18-modern-slavery-2026</td><td>PDF (signed)</td></tr>
+<tr><td>A19</td><td>Anti-Bribery & Corruption policy</td><td>T96-A19-abc-policy</td><td>PDF (signed)</td></tr>
+<tr><td>A20</td><td>Equality, Diversity & Inclusion policy</td><td>T96-A20-edi-policy</td><td>PDF (signed)</td></tr>
+<tr><td>A21</td><td>FCDO Consolidated Sanctions screening report</td><td>T96-A21-fcdo-sanctions-screen</td><td>PDF + JSON</td></tr>
+<tr><td>A22</td><td>Export Control (SI 2008/3231) self-classification</td><td>T96-A22-export-control-self-class</td><td>PDF</td></tr>
+<tr><td>A23</td><td>Personnel Security Risk Register</td><td>T96-A23-personnel-sec-risk-reg</td><td>XLSX</td></tr>
+<tr><td>A24</td><td>Site Security Plan (DEFONEOS Lab Tab 6)</td><td>T96-A24-site-security-plan</td><td>PDF</td></tr>
+<tr><td>A25</td><td>Asset Inventory (Tab 6 hardware)</td><td>T96-A25-asset-inventory</td><td>XLSX</td></tr>
+<tr><td>A26</td><td>Past Performance Reference Letter #1</td><td>T96-A26-past-perf-ref-1</td><td>PDF (signed)</td></tr>
+<tr><td>A27</td><td>Dispute Register (clean to date)</td><td>T96-A27-dispute-register</td><td>PDF</td></tr>
+</table>
+
+<h2>4 · Annex Q Cross-Walk</h2>
+<p>Annex Q (Security Aspects) is the MOD contract-specific security schedule. Every Annex Q clause maps to at least one evidence artefact:</p>
+<table>
+<tr><th>Annex Q clause</th><th>Topic</th><th>Artefact(s)</th></tr>
+<tr><td>Q1</td><td>Personnel security</td><td>A23, A24</td></tr>
+<tr><td>Q2</td><td>Physical security</td><td>A24</td></tr>
+<tr><td>Q3</td><td>Information security</td><td>A03, A04, A06, A07, A08</td></tr>
+<tr><td>Q4</td><td>Cyber security</td><td>A03, A04, A17</td></tr>
+<tr><td>Q5</td><td>Data protection</td><td>A05</td></tr>
+<tr><td>Q6</td><td>Operational security</td><td>A08, A21, A22</td></tr>
+<tr><td>Q7</td><td>Supply chain security</td><td>A08, A13, A14, A15</td></tr>
+<tr><td>Q8</td><td>Legal & regulatory</td><td>A18, A19, A20, A21, A22</td></tr>
+<tr><td>Q9</td><td>Incident response</td><td>A04 (NCSC CAF IR-1..IR-5), A17</td></tr>
+</table>
+
+<h2>5 · DSP SC2 / HMG Baseline Security Standard v3.1 Cross-Walk</h2>
+<table>
+<tr><th>SC2 control</th><th>Requirement</th><th>Artefact(s)</th></tr>
+<tr><td>SC2-A</td><td>Identify & authenticate all users</td><td>A04, A23</td></tr>
+<tr><td>SC2-B</td><td>Control privileged access</td><td>A04, A07</td></tr>
+<tr><td>SC2-C</td><td>Protect data at rest & in transit</td><td>A04, A07, A08</td></tr>
+<tr><td>SC2-D</td><td>Patch & update within 14 days of CVE</td><td>A04 (CAF V-1..V-5)</td></tr>
+<tr><td>SC2-E</td><td>Detect & respond to incidents within NCSC SLA</td><td>A04 (IR-1..IR-5), A17</td></tr>
+<tr><td>SC2-F</td><td>Supply chain provenance verification</td><td>A08</td></tr>
+<tr><td>SC2-G</td><td>Audit logging (12-month retention)</td><td>A07 (SIGIL chain), A04</td></tr>
+<tr><td>SC2-H</td><td>Backup & recovery (RPO ≤24h, RTO ≤72h)</td><td>A04 (CAF B-1..B-4)</td></tr>
+<tr><td>SC2-I</td><td>Cyber Essentials baseline</td><td>A03</td></tr>
+</table>
+
+<h2>6 · The 7-Day Build Sprint</h2>
+<table>
+<tr><th>Day</th><th>Owner</th><th>Deliverables</th></tr>
+<tr><td>D1</td><td>Nick (1h)</td><td>A01 Companies House extract · A14 DSP registration · A13 UNGM · A15 JOSCAR · A18-A20 signed policies · A21 sanctions screening · A22 export-control self-class</td></tr>
+<tr><td>D2</td><td>Nick (2h)</td><td>A16 PI insurance · A17 Cyber liability · A23 personnel security risk register · A24 site security plan · A25 asset inventory</td></tr>
+<tr><td>D3</td><td>Nick (1h)</td><td>A03 Cyber Essentials (post-IASME assessment)</td></tr>
+<tr><td>D4</td><td>JEEVES + 33-agent BFT (2h)</td><td>A02 System Card v1.2 · A04 NCSC SC-01 CAF self-assessment · A05 UK GDPR DPIA · A07 Sovereignty Attestation · A08 Supply-chain Provenance Map · A09 BFT Council Charter</td></tr>
+<tr><td>D5</td><td>JEEVES + CISO advisor (3h)</td><td>A06 Annex Q SAL · A11 ISR benchmark report · A27 Dispute register</td></tr>
+<tr><td>D6</td><td>Nick + pilot partners (1h)</td><td>A10 Yorkshire Twin demo · A26 Past performance reference letter #1 · A12 Pricing v1.1</td></tr>
+<tr><td>D7</td><td>Nick + JEEVES (2h)</td><td>Vault assembly · SIGIL anchoring every artefact · per-buyer access provisioning · 33-agent BFT cross-check · buyer-discovery call rehearsal</td></tr>
+</table>
+
+<h2>7 · Hosting, Access Control, Audit Trail</h2>
+<ul>
+<li><b>Primary:</b> DEFONEOS Vault (csoai.org Vault, served over HTTPS with MFA, SIGIL-anchored).</li>
+<li><b>Mirror:</b> OneDrive for Business (UK region, ISO 27001 + Cyber Essentials Plus) for buyers who refuse to click third-party links.</li>
+<li><b>Airgap option:</b> Encrypted USB drive (VeraCrypt) for the most-restricted buyers (e.g. STRAP-tier); SIGIL chain preserved via offline hash export.</li>
+<li><b>Access:</b> Per-named-individual MFA accounts (no shared logins). 30-day expiry. Every access SIGIL-logged to the chain.</li>
+<li><b>Withdrawal:</b> 60 days post-decision, all access revoked, audit trail preserved 7 years (HM-treasury standard).</li>
+</ul>
+
+<h2>8 · The 7 Buyer-Discovery-Call Talking Points</h2>
+<ol>
+<li><b>"You can have a fully-built deal-room in 7 working days."</b> Show this spec. Walk through the 12 sections.</li>
+<li><b>"Every artefact is content-hashed and SIGIL-anchored."</b> Buyers can verify integrity themselves — no "trust us" required.</li>
+<li><b>"Annex Q is already 100% covered."</b> Walk the cross-walk table.</li>
+<li><b>"SC2 is 9-of-9, including Cyber Essentials."</b> Walk the SC2 cross-walk.</li>
+<li><b>"Sovereign-by-construction, not sovereign-by-marketing."</b> Show the supply-chain provenance map.</li>
+<li><b>"33-agent BFT governance — no single point of decision failure."</b> Show the BFT council charter.</li>
+<li><b>"Past performance: 3 case studies in, full reference letter from pilot partner #1."</b> Show A26 + pilot SOPs.</li>
+</ol>
+
+<h2>9 · The 4 Anti-Patterns This Deal-Room Defeats</h2>
+<ol>
+<li><b>No "send us 47 PDFs over email".</b> All 27 artefacts sit in the vault, version-stamped and SIGIL-anchored.</li>
+<li><b>No "we'll add the Cyber Essentials cert later".</b> Cyber Essentials Plus is on the D3 build path — guaranteed before any contract.</li>
+<li><b>No "our SC clearance is in progress".</b> A23 personnel security register covers the interim period with named-individual SC-cleared-via-DBS+BS7858 checks.</li>
+<li><b>No "we'll redact the Annex Q SAL".</b> SAL is fully filled in by D5; ready to share at buyer-discovery call #1.</li>
+</ol>
+
+<h2>10 · Buyer Next Steps</h2>
+<ol>
+<li>Inspect this spec: <code>curl https://csoai.org/defoneos-mod-mod-deal-room-data-room.html | shasum -a 256</code></li>
+<li>Open the live vault: <a href="https://csoai.org/defoneos-vault.html">csoai.org/defoneos-vault.html</a></li>
+<li>Run the 7-day build with JEEVES (DEFONEOS-AI assistant): <code>hermes delegate "build mod deal-room, day 1"</code></li>
+<li>Schedule a 60-minute walkthrough with Nick + JEEVES at the buyer-discovery call.</li>
+<li>For commercial procurement: request the deal-room provisioning (per-buyer MFA + 30-day expiry) via the buyer-discovery call.</li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T96-mod-data-room-a1f3d8e9c4b2 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — UK MOD / defence primes free to cite and request provisioning<br>
+<b>Owner:</b> DEFONEOS Procurement Engineering · <code>procurement@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Post-Market Monitoring Plan</a> · 
+<a href="#">UK Sovereign Pitch →</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

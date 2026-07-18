@@ -1,0 +1,117 @@
+{
+  "name": "Optical Care Home Bridge Mcp",
+  "version": "1.0.2",
+  "url": "https://mcp.meok.ai/optical-care-home-bridge-mcp/a2a",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "protocolVersion": "0.3.0",
+  "description": "Bridge between domiciliary optometry visits + care-home governance. Handles consent capacity (Mental Capacity Act), GOS 6 eligibility, post-visit care plan update sync.",
+  "provider": {
+    "organization": "MEOK AI LABS",
+    "url": "https://meok.ai"
+  },
+  "defaultInputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "mca_capacity_check",
+      "name": "Mca Capacity Check",
+      "description": "Mca Capacity Check — a tool of the optical-care-home-bridge-mcp MCP.",
+      "tags": [
+        "governance",
+        "care"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "gos6_visit_eligibility",
+      "name": "Gos6 Visit Eligibility",
+      "description": "Gos6 Visit Eligibility — a tool of the optical-care-home-bridge-mcp MCP.",
+      "tags": [
+        "governance",
+        "care"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "post_visit_care_plan_sync",
+      "name": "Post Visit Care Plan Sync",
+      "description": "Post Visit Care Plan Sync — a tool of the optical-care-home-bridge-mcp MCP.",
+      "tags": [
+        "governance",
+        "care"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "safeguarding_red_flags",
+      "name": "Safeguarding Red Flags",
+      "description": "Safeguarding Red Flags — a tool of the optical-care-home-bridge-mcp MCP.",
+      "tags": [
+        "governance",
+        "care"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "registered_optometrist_audit",
+      "name": "Registered Optometrist Audit",
+      "description": "Registered Optometrist Audit — a tool of the optical-care-home-bridge-mcp MCP.",
+      "tags": [
+        "governance",
+        "care"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    }
+  ],
+  "documentationUrl": "https://meok.ai",
+  "x-meok": {
+    "mcp_name": "optical-care-home-bridge-mcp",
+    "verifier": "https://proofof.ai/verify",
+    "governed_by": "CSOAI 52-article charter"
+  }
+}

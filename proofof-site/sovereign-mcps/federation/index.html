@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 Federation MCP — 5D Hive + 12 Generals + Cross-VM</title>
+<style>
+  body { font-family: system-ui; max-width: 900px; margin: 0 auto; padding: 2rem; background: #0a0a0a; color: #e5e5e5; }
+  h1 { color: #fbbf24; }
+  h2 { color: #60a5fa; }
+  code { background: #1f1f1f; padding: 2px 6px; border-radius: 4px; color: #fbbf24; }
+  pre { background: #1f1f1f; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+  .card { background: #1a1a1a; padding: 1rem; border-radius: 8px; border: 1px solid #333; }
+  .card h3 { color: #fbbf24; margin-top: 0; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .badge { background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/sovereign-mcps/">All MCPs</a>
+  <a href="/docs/">Docs</a>
+  <a href="/dashboards/">Dashboards</a>
+  <a href="/whitepapers/">Whitepapers</a>
+  <a href="https://github.com/csoai/mcp-marketplace">GitHub</a>
+</div>
+
+<h1>🌐 Federation MCP — The 5D Hive</h1>
+<p><span class="badge">v1.0.0</span> <span class="badge">MIT</span> <span class="badge">18 tests ✓</span></p>
+
+<p><strong>12 Generals × 1 GCP VM each × 5 Dimensions × AB Uno = the sovereign 5D Hive.</strong> The federation orchestrates the cross-VM substrate, balances load across Generals, broadcasts sigil-signed messages, and BFT-votes on federation health.</p>
+
+<h2>The 12 Generals</h2>
+<div class="grid">
+  <div class="card"><h3>1. Argus</h3><p><code>watchdog</code></p><p>Binah — vision-spatial-wavelet</p></div>
+  <div class="card"><h3>2. Scribe</h3><p><code>compliance</code></p><p>Auxiliary — text-logical-wavelet</p></div>
+  <div class="card"><h3>3. Shield</h3><p><code>safety</code></p><p>Gevurah — reasoning-safety-quantum</p></div>
+  <div class="card"><h3>4. Builder</h3><p><code>architect</code></p><p>Chesed — longctx-architectural</p></div>
+  <div class="card"><h3>5. Abacus</h3><p><code>quant</code></p><p>Malkuth — quant-temporal-wavelet</p></div>
+  <div class="card"><h3>6. Lex</h3><p><code>legal</code></p><p>Hod — longctx-legal-quantum</p></div>
+  <div class="card"><h3>7. Scale</h3><p><code>ethics</code></p><p>Tiferet — multilingual-care-wavelet</p></div>
+  <div class="card"><h3>8. Crow</h3><p><code>risk</code></p><p>Da'at — fast-prediction-temporal</p></div>
+  <div class="card"><h3>9. Gear</h3><p><code>operations</code></p><p>Yesod — operational-temporal-quantum</p></div>
+  <div class="card"><h3>10. Voice</h3><p><code>comms</code></p><p>Netzach — audio-temporal-wavelet</p></div>
+  <div class="card"><h3>11. Owl</h3><p><code>research</code></p><p>Chokhmah — longctx-research-quantum</p></div>
+  <div class="card"><h3>12. Dragon</h3><p><code>sovereign</code></p><p>Keter — sovereign-meta-quantum</p></div>
+</div>
+
+<h2>5 Tools (each Ed25519-signed)</h2>
+<pre><code>from meok_sovereign_federation_mcp import (
+    federation_status, federation_route, federation_broadcast,
+    federation_sync, federation_health,
+)
+
+# 1. Status: 12 Generals × 5D × 1 VM each
+status = federation_status(include_health=True)
+# → 12 generals, all unique QOwm archs, all up
+
+# 2. Route: load-balance to best General
+route = federation_route("Audit this against EU AI Act")
+# → picks least-loaded VM + BFT mode
+
+# 3. Broadcast: sigil-signed message to all 12
+broadcast = federation_broadcast(
+    "All hive citizens — be advised.",
+    from_general="Dragon",
+    care_floor_impact=False,  # requires BFT if True
+)
+
+# 4. Sync: 5D coord + Sephiroth mapping (Dragon = source of truth)
+sync = federation_sync(source_vm="gen-12-dragon")
+
+# 5. Health: BFT vote on overall federation state
+health = federation_health(include_bft=True)
+# → verdict: HEALTHY / DEGRADED / CRITICAL</code></pre>
+
+<h2>Cost: $1,200/mo (12 GCP VMs)</h2>
+<p>Funded by $210K free cloud credits (NVIDIA Inception $50K + DO Hatch $10K + MS Founders $150K) = <strong>175 years of sovereign 5D Hive</strong>.</p>
+
+<h2>Install</h2>
+<pre><code>pip install meok-sovereign-federation-mcp</code></pre>
+
+<h2>Doctrine</h2>
+<p><strong>5D Hive = sovereign by construction.</strong> Each General = its own VM = its own QOwm = its own evolution. The 12 Generals evolve independently, share state via sigil-signed messages, and BFT-vote on cross-General proposals. AB Uno (the 1 origin) is the SOV3 OOWM substrate holding it all together.</p>
+
+<p><a href="/sovereign-mcps/">← All Sovereign MCPs</a> · <a href="/dashboards/">View Live Dashboards →</a></p>
+
+</body>
+</html>

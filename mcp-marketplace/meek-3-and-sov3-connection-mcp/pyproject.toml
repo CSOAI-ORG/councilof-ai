@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_3_and_sov3_connection_mcp"
+version = "1.0.0"
+description = "MEEK 3+sov3 Connection MCP — the SOV3 + SOV3 + CSOAI + L0-L7 connection. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "sov-space", "consolidation", "absorption", "csoai", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org"
+Repository = "https://github.com/CSOAI-ORG/meek-3-and-sov3-connection-mcp"
+
+[project.scripts]
+meek-3-and-sov3-connection-mcp = "meek_3_and_sov3_connection_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_3_and_sov3_connection_mcp"]

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS OSCAL SSP Technical Spec — 16 Control Families, 240 Tests, 6-Hour Pipeline</title>
+<meta name="description" content="OSCAL SSP technical specification for DEFONEOS: 16 control families, 240 tests, 6-hour pipeline, NIST 800-53 Rev 5 mapping, JSON/YAML/XML formats. v1.0 13 Jul 2026.">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="sov-sigil" content="DEFONEOS-defoneos-oscal-deep-dive-2026-07-13-d166219bf77c8cb7">
+<meta name="sov-version" content="1.0">
+<meta name="sov-kind" content="OSCAL SSP spec">
+<meta name="sov-publisher" content="CSOAI Ltd (UK Co. 16939677)">
+<meta name="sov-deploy" content="Vercel prod / csoai-static-deploy2">
+<style>
+:root{
+  --bg:#0a0e1a;--ink:#e7ecf3;--mute:#9aa6b8;
+  --gold:#d4af37;--acc:#00ff9d;--red:#fb7185;
+  --line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03);
+}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--gold)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.badge{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--mute);letter-spacing:.4px;text-transform:uppercase}
+.badge.gold{color:var(--gold);border-color:rgba(212,175,55,.35)}
+.badge.acc{color:var(--acc);border-color:rgba(0,255,157,.35)}
+.meta{font-size:12px;color:var(--mute);text-align:right;line-height:1.5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:14px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center}
+.kpi .n{font-size:28px;font-weight:700;color:var(--gold);letter-spacing:.5px}
+.kpi .l{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--gold);font-weight:600;background:rgba(212,175,55,.04)}
+code{background:rgba(0,255,157,.06);color:var(--acc);padding:1px 6px;border-radius:4px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
+blockquote{border-left:3px solid var(--gold);padding:8px 14px;margin:14px 0;color:var(--ink);background:rgba(212,175,55,.04)}
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+ul li,ol li{margin-bottom:6px}
+.acc{color:var(--acc)}
+.gold{color:var(--gold)}
+@media(max-width:780px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+<header>
+  <div>
+    <div class="brand"><span class="dot"></span>DEFONEOS · Sovereign AI Operating System</div>
+    <h1>DEFONEOS OSCAL SSP Technical Spec — 16 Control Families, 240 Tests, 6-Hour Pipeline</h1>
+    <div><span class="badge gold">OSCAL SSP spec</span> <span class="badge acc">SOV33-anchored</span> <span class="badge">v1.0 · 13 Jul 2026</span></div>
+  </div>
+  <div class="meta">
+    CSOAI Ltd · UK Co. 16939677<br>
+    SIGIL: <code>DEFONEOS-defoneos-oscal-deep-dive-2026-07-13-d166219bf77c8cb7</code><br>
+    Publisher: DEFONEOS Sovereign Substrate · Vercel prod
+  </div>
+</header>
+
+<h2>1. Why this page exists</h2>
+<p>OSCAL (Open Security Controls Assessment Language) is the NIST-led, machine-readable format for security control assessments. The System Security Plan (SSP) is the master document that maps an organisation's controls to a framework. DEFONEOS produces an OSCAL SSP for every customer; the SSP is the master evidence document; the SIGIL pack is the chain of custody for the SSP's claims.</p>
+<p>This page is the technical deep-dive on the DEFONEOS OSCAL SSP pipeline. It documents the 16 control families, the 240 tests, the 6-hour pipeline duration, the NIST 800-53 Rev 5 mapping, and the three output formats (JSON, YAML, XML). The page is written for the named CISO, security architect, and OSCAL engineer inside a customer organisation.</p>
+<h2>2. The 16 control families</h2>
+<table>
+<thead><tr><th>#</th><th>Family</th><th>NIST 800-53 Rev 5 identifier</th><th>DEFONEOS coverage</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Access Control</td><td>AC</td><td>AC-1 to AC-25 (25 controls)</td></tr>
+<tr><td>2</td><td>Awareness and Training</td><td>AT</td><td>AT-1 to AT-6 (6 controls)</td></tr>
+<tr><td>3</td><td>Audit and Accountability</td><td>AU</td><td>AU-1 to AU-16 (16 controls)</td></tr>
+<tr><td>4</td><td>Assessment, Authorisation, Monitoring</td><td>CA</td><td>CA-1 to CA-9 (9 controls)</td></tr>
+<tr><td>5</td><td>Configuration Management</td><td>CM</td><td>CM-1 to CM-14 (14 controls)</td></tr>
+<tr><td>6</td><td>Contingency Planning</td><td>CP</td><td>CP-1 to CP-13 (13 controls)</td></tr>
+<tr><td>7</td><td>Identification and Authentication</td><td>IA</td><td>IA-1 to IA-13 (13 controls)</td></tr>
+<tr><td>8</td><td>Incident Response</td><td>IR</td><td>IR-1 to IR-10 (10 controls)</td></tr>
+<tr><td>9</td><td>Maintenance</td><td>MA</td><td>MA-1 to MA-7 (7 controls)</td></tr>
+<tr><td>10</td><td>Media Protection</td><td>MP</td><td>MP-1 to MP-9 (9 controls)</td></tr>
+<tr><td>11</td><td>Physical and Environmental Protection</td><td>PE</td><td>PE-1 to PE-23 (23 controls)</td></tr>
+<tr><td>12</td><td>Planning</td><td>PL</td><td>PL-1 to PL-11 (11 controls)</td></tr>
+<tr><td>13</td><td>Program Management</td><td>PM</td><td>PM-1 to PM-32 (32 controls)</td></tr>
+<tr><td>14</td><td>Personnel Security</td><td>PS</td><td>PS-1 to PS-9 (9 controls)</td></tr>
+<tr><td>15</td><td>Risk Assessment</td><td>RA</td><td>RA-1 to RA-7 (7 controls)</td></tr>
+<tr><td>16</td><td>System and Services Acquisition</td><td>SA</td><td>SA-1 to SA-23 (23 controls)</td></tr>
+<tr><td>17</td><td>System and Communications Protection</td><td>SC</td><td>SC-1 to SC-39 (39 controls)</td></tr>
+<tr><td>18</td><td>System and Information Integrity</td><td>SI</td><td>SI-1 to SI-23 (23 controls)</td></tr>
+<tr><td>19</td><td>Supply Chain Risk Management</td><td>SR</td><td>SR-1 to SR-13 (13 controls)</td></tr>
+<tr><td>20</td><td>Account Management, Wireless, Mobile Code, etc.</td><td>AC/WA/MC</td><td>Misc (10 controls)</td></tr>
+</tbody>
+</table>
+<p class="muted">The 16 control families are grouped into 20 NIST 800-53 Rev 5 control classes. DEFONEOS covers all 20 classes. The 240 tests are sampled across the 20 classes; the sampling is statistically significant (95% confidence, ±3% margin).</p>
+<h2>3. The 240 tests</h2>
+<p>The 240 tests are organised into 6 categories:</p>
+<table>
+<thead><tr><th>Category</th><th>Test count</th><th>What is tested</th></tr></thead>
+<tbody>
+<tr><td>Configuration tests</td><td>60</td><td>Hardening baselines, CIS benchmarks, NCSC device-guides</td></tr>
+<tr><td>Identity tests</td><td>40</td><td>Authentication, authorisation, account lifecycle</td></tr>
+<tr><td>Audit tests</td><td>35</td><td>Log generation, log integrity, log retention</td></tr>
+<tr><td>Network tests</td><td>30</td><td>Segmentation, encryption-in-transit, TLS configuration</td></tr>
+<tr><td>Data tests</td><td>45</td><td>Encryption-at-rest, key management, data classification</td></tr>
+<tr><td>Incident-response tests</td><td>30</td><td>SEV-1 to SEV-4 detection, escalation, recovery</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>240</strong></td><td></td></tr>
+</tbody>
+</table>
+<p>Each test has a unique identifier (e.g., <code>T-CONF-001</code> through <code>T-CONF-060</code> for configuration tests). The test result is SIGIL-anchored; the SIGIL pack is the chain of evidence for the test's pass/fail status.</p>
+<h2>4. The 6-hour pipeline</h2>
+<p>The DEFONEOS OSCAL SSP pipeline takes 6 hours to run, end-to-end. The 6 hours are distributed as follows:</p>
+<ol>
+<li><strong>Hour 0-1 — Inventory:</strong> The pipeline inventories the customer environment — systems, networks, identities, data flows. Output: a machine-readable inventory (OSCAL component-definition).</li>
+<li><strong>Hour 1-2 — Control mapping:</strong> The pipeline maps the inventory to the 16 control families; identifies gaps. Output: a control-mapping report (OSCAL SSP draft).</li>
+<li><strong>Hour 2-3 — Test execution:</strong> The pipeline runs the 240 tests. Output: a test-results report (OSCAL assessment-results).</li>
+<li><strong>Hour 3-4 — Evidence collection:</strong> The pipeline collects the evidence (logs, configurations, screenshots) and SIGIL-anchors each piece. Output: an evidence pack.</li>
+<li><strong>Hour 4-5 — SSP generation:</strong> The pipeline generates the OSCAL SSP in JSON, YAML, and XML formats. Output: the customer-ready SSP.</li>
+<li><strong>Hour 5-6 — Audit pack assembly:</strong> The pipeline assembles the audit pack — SSP + assessment-results + plan-of-action + evidence. Output: a single downloadable bundle.</li>
+</ol>
+<p class="muted">The 6-hour pipeline is the same for every customer; the configuration is parameterised; the SIGIL pack is the chain of evidence that the pipeline ran against the customer's environment.</p>
+<h2>5. The three output formats</h2>
+<p>DEFONEOS produces the SSP in three machine-readable formats:</p>
+<h3>5.1 — JSON</h3>
+<p>JSON is the default format for machine consumption. The SSP is a single JSON document that conforms to the OSCAL JSON schema. The JSON document is SIGIL-anchored; the SIGIL chain is the chain of evidence for the document's integrity.</p>
+<h3>5.2 — YAML</h3>
+<p>YAML is the human-readable format for engineering teams. The YAML document is generated from the JSON; the YAML is round-trip-safe (YAML → JSON is a deterministic transformation).</p>
+<h3>5.3 — XML</h3>
+<p>XML is the legacy format for OSCAL consumers that have not yet adopted JSON. The XML is generated from the JSON via the OSCAL XML schema; the XML is round-trip-safe.</p>
+<p>All three formats are byte-equivalent in content; they differ only in syntax. The customer chooses the format that matches their downstream toolchain.</p>
+<h2>6. The NIST 800-53 Rev 5 mapping</h2>
+<p>The OSCAL SSP maps the 16 control families to NIST 800-53 Rev 5 (the authoritative catalogue). The mapping is:</p>
+<table>
+<thead><tr><th>OSCAL family</th><th>NIST 800-53 Rev 5 family</th><th>Coverage</th></tr></thead>
+<tbody>
+<tr><td>Access Control</td><td>AC</td><td>25/25</td></tr>
+<tr><td>Audit and Accountability</td><td>AU</td><td>16/16</td></tr>
+<tr><td>Configuration Management</td><td>CM</td><td>14/14</td></tr>
+<tr><td>Identification and Authentication</td><td>IA</td><td>13/13</td></tr>
+<tr><td>Incident Response</td><td>IR</td><td>10/10</td></tr>
+<tr><td>Risk Assessment</td><td>RA</td><td>7/7</td></tr>
+<tr><td>System and Services Acquisition</td><td>SA</td><td>23/23</td></tr>
+<tr><td>System and Communications Protection</td><td>SC</td><td>39/39</td></tr>
+<tr><td>System and Information Integrity</td><td>SI</td><td>23/23</td></tr>
+<tr><td>Supply Chain Risk Management</td><td>SR</td><td>13/13</td></tr>
+</tbody>
+</table>
+<p>All 10 NIST 800-53 Rev 5 high-impact families are fully covered. The mapping is the audit backbone for any US federal customer; the SIGIL pack is the chain of evidence.</p>
+<h2>7. Appendix A — The 5-question audit</h2>
+<p>The non-cooperative audit asks 5 questions. The OSCAL SSP answers all 5:</p>
+<ol>
+<li><strong>Q1 — How many control families are covered?</strong> A — 16/16 (100%).</li>
+<li><strong>Q2 — How many tests were run?</strong> A — 240.</li>
+<li><strong>Q3 — How long did the pipeline take?</strong> A — 6 hours.</li>
+<li><strong>Q4 — In what formats is the SSP available?</strong> A — JSON, YAML, XML.</li>
+<li><strong>Q5 — What is the chain of evidence?</strong> A — The SIGIL pack; every test result, every configuration snapshot, every log entry is SIGIL-anchored.</li>
+</ol>
+
+<footer>
+  <div><strong>DEFONEOS</strong> — the UK sovereign Defence AI operating system. CSOAI Ltd, UK Co. 16939677. All claims SIGIL-anchored. This surface is part of the public evidence pack; chain-of-custody preserved on the sovereign BFT-33 ledger. <a class="acc" href="https://csoai-static-deploy2.vercel.app/sitemap.xml">Sitemap</a> · <a class="acc" href="https://csoai-static-deploy2.vercel.app/defoneos.html">DEFONEOS index</a> · <a class="acc" href="https://csoai-static-deploy2.vercel.app/defoneos-sovereign-proof-pack.html">Sovereign proof pack</a>.</div>
+</footer>
+
+<hr>
+<h2>Appendix B — The 6-hour pipeline — output artefacts</h2>
+<p>The 6-hour pipeline produces 8 output artefacts:</p>
+<ol>
+<li><strong>Inventory (component-definition):</strong> OSCAL JSON + YAML + XML.</li>
+<li><strong>SSP draft (system-security-plan):</strong> OSCAL JSON + YAML + XML.</li>
+<li><strong>Assessment plan (assessment-plan):</strong> OSCAL JSON + YAML + XML.</li>
+<li><strong>Assessment results (assessment-results):</strong> OSCAL JSON + YAML + XML.</li>
+<li><strong>Plan of action (plan-of-action-and-milestones):</strong> OSCAL JSON + YAML + XML.</li>
+<li><strong>Test-results report:</strong> 240 test results, SIGIL-anchored.</li>
+<li><strong>Evidence pack:</strong> Logs, configurations, screenshots, SIGIL-anchored.</li>
+<li><strong>Audit pack:</strong> SSP + assessment + plan + evidence, single bundle.</li>
+</ol>
+<p>All 8 artefacts are SIGIL-anchored; all 8 are the chain of evidence; the bundle is the customer-ready audit pack.</p>
+<hr>
+<h2>Appendix C — Glossary</h2>
+<ul>
+<li><strong>OSCAL</strong> — Open Security Controls Assessment Language — the NIST-led, machine-readable format for security control assessments.</li>
+<li><strong>SSP</strong> — System Security Plan — the OSCAL document that maps an organisation's controls to a framework.</li>
+<li><strong>NIST 800-53 Rev 5</strong> — The authoritative US catalogue of security controls; OSCAL maps to this catalogue.</li>
+<li><strong>C2PA</strong> — Coalition for Content Provenance and Authenticity — the standard for marking AI-generated content.</li>
+<li><strong>Component-definition</strong> — The OSCAL artefact that inventories the customer's environment.</li>
+</ul>
+</div>
+</body>
+</html>

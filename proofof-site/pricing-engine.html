@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💰 Sovereign Pricing — £0/£499/£2499/£9999 with Quote Engine</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(34,197,94,0.15) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #22c55e}
+.hero h1{color:#22c55e;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #22c55e}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+/* Tier cards */
+.tiers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.7rem;margin:2rem 0}
+.tier-card{background:#0a0a0a;padding:2rem;border-radius:8px;border:2px solid #888;font-family:monospace;transition:all .2s;cursor:pointer;position:relative}
+.tier-card:hover{transform:translateY(-4px)}
+.tier-card.oss{border-color:#60a5fa}
+.tier-card.pro{border-color:#fbbf24;background:rgba(251,191,36,0.05)}
+.tier-card.gov{border-color:#8b5cf6;background:rgba(139,92,246,0.05)}
+.tier-card.ent{border-color:#22c55e;background:rgba(34,197,94,0.05);box-shadow:0 0 30px rgba(34,197,94,0.2)}
+.tier-card .tier-name{color:#888;font-size:1.1rem;font-weight:bold;margin-bottom:.3rem}
+.tier-card.oss .tier-name{color:#60a5fa}
+.tier-card.pro .tier-name{color:#fbbf24}
+.tier-card.gov .tier-name{color:#8b5cf6}
+.tier-card.ent .tier-name{color:#22c55e}
+.tier-card .price{color:#fbbf24;font-size:2.2rem;font-weight:bold;margin:.5rem 0;font-family:monospace}
+.tier-card .price-sub{color:#888;font-size:.8rem;margin-bottom:1rem}
+.tier-card .features{color:#aaa;font-size:.78rem;list-style:none;padding:0;margin:0}
+.tier-card .features li{padding:.3rem 0;border-bottom:1px solid #1a1a1a}
+.tier-card .badge{position:absolute;top:-10px;right:10px;background:#fbbf24;color:#000;padding:.2rem .5rem;border-radius:4px;font-size:.7rem;font-weight:bold}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #22c55e}
+.section h2{color:#22c55e;margin-bottom:1rem}
+/* Quotes */
+.quotes-list{margin:1rem 0;max-height:400px;overflow-y:auto}
+.quote{background:#0a0a0a;padding:1rem;border-radius:4px;margin:.3rem 0;border-left:3px solid #22c55e;font-family:monospace;font-size:.78rem;display:grid;grid-template-columns:1fr 200px 100px;gap:.7rem;align-items:center}
+.quote .id{color:#fbbf24;font-weight:bold}
+.quote .desc{color:#10b981}
+.quote .total{color:#22c55e;font-weight:bold;text-align:right;font-size:1rem}
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/pricing-engine.html">Pricing</a>
+<a href="/content-registry.html">Registry</a>
+<a href="/feedback.html">Feedback</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>💰 Sovereign Pricing Engine</h1>
+<p>4 tiers. £0 → £9,999/mo. Volume discount. 17% annual. SIGIL-signed quotes. Care Floor 0.95.</p>
+</section>
+
+<div class="container">
+
+<div class="tiers-grid">
+<div class="tier-card oss" onclick="pickTier('open-source')">
+<div class="tier-name">Open Source</div>
+<div class="price">£0</div>
+<div class="price-sub">forever · 1+ seats</div>
+<ul class="features">
+<li>✓ 30 MCPs (MIT + CC0)</li>
+<li>✓ Public docs</li>
+<li>✓ Community support</li>
+<li>✓ GitHub issues</li>
+</ul>
+</div>
+
+<div class="tier-card pro" onclick="pickTier('pro')">
+<div class="tier-name">Pro</div>
+<div class="badge">MOST POPULAR</div>
+<div class="price">£499<span style="font-size:1rem;color:#888">/mo</span></div>
+<div class="price-sub">5+ seats · 8hr SLA</div>
+<ul class="features">
+<li>✓ Everything in OSS</li>
+<li>✓ 8hr SLA</li>
+<li>✓ Deployment assist</li>
+<li>✓ DEFONEOS-SEAL credential</li>
+</ul>
+</div>
+
+<div class="tier-card gov" onclick="pickTier('gov')">
+<div class="tier-name">Gov</div>
+<div class="price">£2,499<span style="font-size:1rem;color:#888">/mo</span></div>
+<div class="price-sub">25+ seats · 4hr SLA</div>
+<ul class="features">
+<li>✓ Everything in Pro</li>
+<li>✓ 4hr SLA</li>
+<li>✓ BFT managed service</li>
+<li>✓ Coalition fed</li>
+<li>✓ JSP 936 v0.1</li>
+</ul>
+</div>
+
+<div class="tier-card ent" onclick="pickTier('enterprise')">
+<div class="tier-name">Enterprise</div>
+<div class="badge">CUSTOM</div>
+<div class="price">£9,999<span style="font-size:1rem;color:#888">+/mo</span></div>
+<div class="price-sub">100+ seats · 1hr 24/7</div>
+<ul class="features">
+<li>✓ Everything in Gov</li>
+<li>✓ 1hr 24/7 SLA</li>
+<li>✓ On-site engineer</li>
+<li>✓ Air-gapped</li>
+<li>✓ Red team</li>
+</ul>
+</div>
+</div>
+
+<div class="section">
+<h2>📋 Active Quotes (live)</h2>
+<div class="quotes-list" id="quotesList"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the Pricing Engine MCP</h2>
+<div class="demo">
+<h3>1. Generate Quote</h3>
+<div class="demo-row">
+<select id="quoteTier">
+<option value="pro">Pro £499</option>
+<option value="open-source">Open Source £0</option>
+<option value="gov">Gov £2,499</option>
+<option value="enterprise">Enterprise £9,999</option>
+</select>
+<input type="number" id="quoteSeats" placeholder="seats" value="10" min="1">
+<select id="quotePeriod">
+<option value="monthly">Monthly</option>
+<option value="annual">Annual (17% off)</option>
+</select>
+<button onclick="doQuote()">💰 Quote</button>
+</div>
+<div class="result" id="quoteResult">Click "Quote" to generate a sovereign quote.</div>
+</div>
+
+<div class="demo">
+<h3>2. Volume + Custom + Tiers</h3>
+<div class="demo-row">
+<input type="number" id="volSeats" placeholder="seats" value="50">
+<button onclick="doVolume()">📊 Volume</button>
+<input type="number" id="calcSeats" placeholder="seats" value="20">
+<input type="number" id="calcMonths" placeholder="months" value="12">
+<button onclick="doCalculate()">🧮 Calculate</button>
+<button onclick="doTiers()">📋 Tiers</button>
+<button onclick="doStatus()">📊 Status</button>
+</div>
+<div class="result" id="calcResult">Click any button above.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Pricing Doctrine</h2>
+<blockquote>"£0. £499. £2,499. £9,999.<br>Volume discount. 17% annual. SIGIL-signed.<br>Care Floor 0.95. Sovereign by construction."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 142 sovereign MCPs (was 139, +3 content-registry + pricing-engine + feedback) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Series A live</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let quotes = [
+  {id:"Q-001", desc:"Pro · 10 seats · monthly", total:499},
+  {id:"Q-002", desc:"Gov · 30 seats · annual (17% off)", total:"62,475"},
+  {id:"Q-003", desc:"Enterprise · 150 seats · annual", total:"1.5M"},
+];
+
+function renderQuotes() {
+  document.getElementById("quotesList").innerHTML = quotes.length === 0
+    ? '<div style="color:#888;padding:1rem">No quotes yet. Click "Quote" below.</div>'
+    : quotes.slice().reverse().map(q => `
+      <div class="quote">
+        <div class="id">${q.id}</div>
+        <div class="desc">${q.desc}</div>
+        <div class="total">£${q.total}</div>
+      </div>
+    `).join("");
+}
+
+function pickTier(tier) {
+  document.getElementById("quoteTier").value = tier;
+  doQuote();
+}
+
+function doQuote() {
+  const tier = document.getElementById("quoteTier").value;
+  const seats = parseInt(document.getElementById("quoteSeats").value);
+  const period = document.getElementById("quotePeriod").value;
+  const prices = {"open-source":0,"pro":499,"gov":2499,"enterprise":9999};
+  const minSeats = {"open-source":1,"pro":5,"gov":25,"enterprise":100};
+  if (seats < minSeats[tier]) {
+    document.getElementById("quoteResult").textContent = `✗ tier ${tier} requires ${minSeats[tier]}+ seats (you specified ${seats})`;
+    return;
+  }
+  const base = prices[tier];
+  const extra = (seats - minSeats[tier]) * base * 0.4;
+  const subtotal = base + extra;
+  let discount = 0;
+  if (seats >= 50) discount = 0.20;
+  else if (seats >= 25) discount = 0.15;
+  else if (seats >= 10) discount = 0.10;
+  const discAmount = subtotal * discount;
+  const monthly = subtotal - discAmount;
+  const total = period === "annual" ? (monthly * 12 * 0.83) : monthly;
+  const id = "Q-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+  quotes.push({id, desc:`${tier} · ${seats} seats · ${period}`, total: total.toFixed(0)});
+  renderQuotes();
+  document.getElementById("quoteResult").textContent = `💰 pricing_quote("${tier}", ${seats}, "${period}")
+
+Quote ID: ${id}
+Tier: ${tier}
+Seats: ${seats}
+Period: ${period}
+Base: £${base}
+Subtotal: £${subtotal.toFixed(0)}
+Discount: ${(discount*100).toFixed(0)}% ($-{discAmount.toFixed(0)})
+Total: £${total.toFixed(0)}/${period === "annual" ? "year" : "mo"}
+Features: ${tier === "pro" ? "8hr SLA · Deployment assist · DEFONEOS-SEAL" : tier === "gov" ? "4hr SLA · BFT managed · Coalition fed · JSP 936" : "1hr 24/7 · On-site · Air-gapped · Red team"}
+Doctrine: Sovereign pricing quote. SIGIL-signed.`;
+}
+
+function doVolume() {
+  const seats = parseInt(document.getElementById("volSeats").value);
+  let discount = 0;
+  if (seats >= 50) discount = 0.20;
+  else if (seats >= 25) discount = 0.15;
+  else if (seats >= 10) discount = 0.10;
+  document.getElementById("calcResult").textContent = `📊 pricing_volume(${seats})
+
+Seats: ${seats}
+Discount: ${(discount*100).toFixed(0)}%
+Tier: Volume
+Doctrine: Sovereign volume discount.`;
+}
+
+function doCalculate() {
+  const seats = parseInt(document.getElementById("calcSeats").value);
+  const months = parseInt(document.getElementById("calcMonths").value);
+  const prices = {"open-source":0,"pro":499,"gov":2499,"enterprise":9999};
+  const minSeats = {"open-source":1,"pro":5,"gov":25,"enterprise":100};
+  // Use Pro as default
+  const base = prices["pro"];
+  const monthly = base * (seats / minSeats["pro"]);
+  const total = monthly * months * 0.83;
+  document.getElementById("calcResult").textContent = `🧮 pricing_calculate(${seats}, "pro", ${months})
+
+Seats: ${seats}
+Months: ${months}
+Tier: pro
+Total (annual 17% off): £${total.toFixed(0)}
+Doctrine: Sovereign custom pricing.`;
+}
+
+function doTiers() {
+  document.getElementById("calcResult").textContent = `📋 pricing_tiers()
+
+4 tiers:
+  1. Open Source £0/mo — 1+ seats — public docs
+  2. Pro £499/mo — 5+ seats — 8hr SLA + DEFONEOS-SEAL
+  3. Gov £2,499/mo — 25+ seats — 4hr SLA + BFT + JSP 936
+  4. Enterprise £9,999+/mo — 100+ seats — 1hr 24/7 + air-gap
+Doctrine: Sovereign pricing tiers.`;
+}
+
+function doStatus() {
+  document.getElementById("calcResult").textContent = `📊 pricing_status()
+
+Tiers offered: 4
+Quotes total: ${quotes.length}
+Doctrine: Sovereign pricing engine.`;
+}
+
+renderQuotes();
+</script>
+
+</body>
+</html>

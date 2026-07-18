@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Cesium 3D Globe — Real-time Common Operating Picture</title>
+<meta name="description" content="DEFONEOS Cesium 3D Globe: real-time Common Operating Picture (COP) for defence operations. Satellite feeds, AIS maritime, drone swarms, sensor networks — all on one sovereign globe.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem}
+.nav a:hover{color:#22d3ee}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.pipeline-step{display:flex;align-items:center;margin:1rem 0;gap:1rem}
+.step-num{background:rgba(34,211,238,.2);border:2px solid #22d3ee;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#22d3ee;flex-shrink:0}
+.step-body{flex:1}
+.step-body h4{color:#f8fafc;margin:0 0 .25rem}
+.step-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.globe-mock{background:radial-gradient(ellipse at center,#0d1b2a,#0a0a0f);border:1px solid rgba(34,211,238,.2);border-radius:12px;padding:2rem;text-align:center;margin:1.5rem 0;font-family:monospace}
+.globe-mock .ring{color:#22d3ee;font-size:.7rem;letter-spacing:2px}
+.globe-mock .coords{color:#94a3b8;font-size:.8rem;margin:.25rem 0}
+.globe-mock .live-dot{display:inline-block;width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite;margin-right:5px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-isr-pipeline.html">🛰️ ISR</a>
+  <a href="defoneos-swarm.html">🦅 Swarm</a>
+  <a href="defoneos-sensor-layer.html">📡 Sensors</a>
+  <a href="defoneos-digital-twin.html">🗺️ Digital Twin</a>
+</div>
+
+<h1>🌍 Cesium 3D Globe</h1>
+<p class="tagline">Real-time Common Operating Picture (COP). Satellite feeds, AIS maritime traffic, drone swarms, sensor networks, BFT council votes — all visualised on one sovereign 3D globe. Powered by CesiumJS + OS OpenData.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">3D</span><h3>CesiumJS</h3><p>WebGL 3D globe with UK Ordnance Survey terrain. 3D buildings, terrain following, real-time entity tracking.</p></div>
+  <div class="card"><span class="stat">17+</span><h3>Data Layers</h3><p>Satellite imagery, AIS, ADS-B, drone telemetry, Batear detections, OSINT, weather, AIS — all fused.</p></div>
+  <div class="card"><span class="stat">Real-time</span><h3>Live Updates</h3><p>WebSocket pushes entity updates every 1s. Tracks update smoothly. SIGIL events create timeline markers.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🌍 Globe Architecture</div>
+  <div class="tab" onclick="switchTab(1)">📊 Data Layers</div>
+  <div class="tab" onclick="switchTab(2)">📡 Cursor-on-Target</div>
+  <div class="tab" onclick="switchTab(3)">🗺️ Digital Twin</div>
+  <div class="tab" onclick="switchTab(4)">🔌 MCP Integration</div>
+</div>
+
+<div class="tab-content active">
+  <h3>🌍 Cesium Globe Architecture</h3>
+  <p>The DEFONEOS Cesium globe is the primary C2 (Command and Control) visualisation layer. All sensor data, drone positions, and council decisions are plotted on a 3D globe rendered in the browser via CesiumJS.</p>
+
+  <div class="globe-mock">
+    <div class="ring">─── DEFONEOS COMMON OPERATING PICTURE ───</div>
+    <div style="margin:1rem 0">
+      <span class="live-dot"></span><span style="color:#22c55e;font-size:.8rem">LIVE</span>
+      <span style="color:#475569;margin:0 1rem">|</span>
+      <span style="color:#22d3ee;font-size:.8rem">6 DRONES ACTIVE</span>
+      <span style="color:#475569;margin:0 1rem">|</span>
+      <span style="color:#f59e0b;font-size:.8rem">2 ALERTS</span>
+      <span style="color:#475569;margin:0 1rem">|</span>
+      <span style="color:#8b5cf6;font-size:.8rem">BFT: 33/33 ONLINE</span>
+    </div>
+    <div class="coords">CENTER: 53.8°N, 1.5°W (Yorkshire) · ZOOM: 12 · TERRAIN: OS-5m · LAYERS: 14</div>
+    <div style="color:#475569;font-size:.65rem;margin-top:.5rem">[ 🛰️ Sat-NOAA-15 ✈️ ADS-B:47 🚢 AIS:23 🦅 Swarm-6 🔊 Batear:12 📡 Sensors:8 ]</div>
+  </div>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>CesiumJS Engine (Browser)</h4><p>Open-source WebGL 3D globe. Renders terrain, imagery, 3D tiles, entities. Runs in any modern browser. No plugins required.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>OS Terrain + Imagery (Base)</h4><p>UK Ordnance Survey Terrain 5 DEM for 5m resolution elevation. OS Open Map Local for building footprints. Satellite overlay from Sentinel-2 via Copernicus.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>Entity Manager (WebSocket)</h4><p>Real-time entity updates via WebSocket. Each drone, ship, aircraft, detection is a Cesium Entity with position, velocity, icon, track history. Smooth interpolation between updates.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body"><h4>Layer Controller</h4><p>Toggle layers on/off: satellite, AIS, ADS-B, drone swarm, Batear detections, OSINT events, weather radar, BFT council, SIGIL timeline. Analyst customises their view.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">5</div><div class="step-body"><h4>TAK Interoperability (CoT)</h4><p>Cursor-on-Target protocol for TAK (Team Awareness Kit) compatibility. DEFONEOS entities visible on ATAK devices. Bi-directional: ATAK markers appear on DEFONEOS globe.</p></div></div>
+</div>
+
+<div class="tab-content">
+  <h3>📊 Data Layers — 17+ Real-time Sources</h3>
+  <p>Every DEFONEOS MCP server feeds data into the globe. The analyst sees a unified, fused picture — not separate stovepipes.</p>
+
+  <table>
+    <tr><th>Layer</th><th>Source MCP</th><th>Update Rate</th><th>Entities</th><th>Visual</th></tr>
+    <tr><td>Satellite Imagery</td><td>sentinel-hub-mcp</td><td>2-5 days</td><td>Tiles</td><td>Overlay raster</td></tr>
+    <tr><td>Maritime AIS</td><td>aisstream-maritime-mcp</td><td>30s</td><td>Ships</td><td>Ship icons + tracks</td></tr>
+    <tr><td>Aviation ADS-B</td><td>opensky-network-mcp</td><td>10s</td><td>Aircraft</td><td>Plane icons + vectors</td></tr>
+    <tr><td>Drone Swarm</td><td>defoneos-counterdrone-mcp</td><td>1s</td><td>Drones</td><td>Drone icons + coverage area</td></tr>
+    <tr><td>Acoustic C-UAS</td><td>batear integration</td><td>Event-driven</td><td>Detections</td><td>Bearing arcs + confidence rings</td></tr>
+    <tr><td>ISR Detections</td><td>defoneos-isr-mcp (YOLOv8)</td><td>Frame-driven</td><td>Targets</td><td>Bounding boxes + geolocation</td></tr>
+    <tr><td>Weather</td><td>open-meteo-mcp</td><td>15min</td><td>Conditions</td><td>Wind vectors + cloud overlay</td></tr>
+    <tr><td>Air Quality</td><td>openaq-air-mcp</td><td>1hr</td><td>Sensors</td><td>Heatmap circles (AQI)</td></tr>
+    <tr><td>OSINT Events</td><td>gdelt-news-mcp</td><td>15min</td><td>Events</td><td>News markers with severity</td></tr>
+    <tr><td>BFT Council</td><td>defoneos-bft-mcp</td><td>Event-driven</td><td>Decisions</td><td>Vote markers + timeline</td></tr>
+    <tr><td>SIGIL Chain</td><td>defoneos core</td><td>Real-time</td><td>Events</td><td>Timeline ribbon at bottom</td></tr>
+    <tr><td>OS OpenData</td><td>os-opendata-mcp</td><td>Static</td><td>Buildings/Roads</td><td>Vector overlays</td></tr>
+    <tr><td>Gov Data</td><td>data-gov-uk-mcp</td><td>Daily</td><td>Statistics</td><td>Regional overlays</td></tr>
+    <tr><td>Companies</td><td>companies-house-mcp</td><td>Daily</td><td>Companies</td><td>Building markers</td></tr>
+    <tr><td>Sensor Net</td><td>mqtt-bridge-mcp</td><td>1-60s</td><td>Sensors</td><td>IoT node dots + values</td></tr>
+    <tr><td>Camera Feeds</td><td>rtsp-camera-mcp</td><td>Streaming</td><td>Cameras</td><td>Picture-in-picture video</td></tr>
+    <tr><td>Comms</td><td>defoneos-tak-mcp</td><td>Real-time</td><td>TAK Users</td><td>Blue force tracker icons</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>📡 Cursor-on-Target (CoT) — TAK Interoperability</h3>
+  <p>DEFONEOS implements the Cursor-on-Target (CoT) protocol, making it fully interoperable with the TAK (Team Awareness Kit) ecosystem used by UK and NATO forces.</p>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>CoT Event Generation</h4><p>Every DEFONEOS entity (drone, detection, alert) is converted to a CoT XML event. Standardised type taxonomy (friend/hostile/unknown/neutral).</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>FreeTAKServer Exchange</h4><p>CoT events published to FreeTAKServer. ATAK devices in the field receive updates. Bi-directional: ATAK markers appear on DEFONEOS globe.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>STANAG 4676 (JRE)</h4><p>Joint Range Extension compatible. DEFONEOS can share its COP with NATO C2 systems via STANAG 4676 Cursor-on-Target encoding.</p></div></div>
+
+  <h4>CoT Event Example</h4>
+  <div class="code">&lt;event version="2.0" uid="DEFONEOS-drone-01" type="a-f-A-M-F"
+       time="2026-07-05T07:20:00Z" start="2026-07-05T07:20:00Z"
+       stale="2026-07-05T07:25:00Z" how="h-g-i-g-o"&gt;
+  &lt;point lat="53.8047" lon="-1.5543" hae="120.5" ce="5.0" le="5.0"/&gt;
+  &lt;detail&gt;
+    &lt;track course="045" speed="15.2"/&gt;
+    &lt;contact callsign="DRAGONFLY-01"/&gt;
+    &lt;remarks&gt;DEFONEOS ISR patrol, battery: 78%, SIGIL: a3f7b2&lt;/remarks&gt;
+  &lt;/detail&gt;
+&lt;/event&gt;</div>
+
+  <h4>TAK Compatibility Matrix</h4>
+  <table>
+    <tr><th>TAK Component</th><th>Interoperability</th><th>Status</th></tr>
+    <tr><td>ATAK (Android)</td><td>Bi-directional CoT</td><td>🟢 Live</td></tr>
+    <tr><td>iTAK (iOS)</td><td>Bi-directional CoT</td><td>🟢 Live</td></tr>
+    <tr><td>WinTAK (Windows)</td><td>Bi-directional CoT</td><td>🟢 Live</td></tr>
+    <tr><td>TAK Server (FTS)</td><td>Full CoT broker</td><td>🟢 Live</td></tr>
+    <tr><td>RTT (Reaper)</td><td>CoT + video feed</td><td>🔧 Planned</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>🗺️ Digital Twin Integration</h3>
+  <p>The Cesium globe serves as the foundation for the DEFONEOS Digital Twin — a living 3D replica of the operational environment. Buildings, infrastructure, terrain, and real-time entities merge into a single interactive model.</p>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>3D Tiles (OS Buildings)</h4><p>Ordnance Survey building footprints extruded into 3D via Cesium 3D Tiles. UK cities rendered at LOD2 (building outlines + heights).</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>Terrain (OS Terrain 5)</h4><p>5m resolution Digital Terrain Model. Accurate elevation for line-of-sight analysis, drone mission planning, and flood modelling.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>IoT Overlay</h4><p>MQTT sensors plotted at their physical locations. Click a sensor to see live data. Heatmaps for aggregate views (temperature, air quality, radiation).</p></div></div>
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body"><h4>Simulation Layer</h4><p>Replay past operations. Scrub through SIGIL timeline. Analyse what happened, when, and why. Train new operators on historical scenarios.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">5</div><div class="step-body"><h4>Predictive Overlay</h4><p>RL swarm policies project future coverage areas. Weather models predict fog/rain impact on drone operations. AIS patterns predict maritime congestion.</p></div></div>
+
+  <h4>Yorkshire Demo Area</h4>
+  <div class="code">// Cesium camera focus on Yorkshire demo zone
+viewer.camera.flyTo({
+  destination: Cesium.Cartesian3.fromDegrees(-1.5543, 53.8047, 15000),
+  orientation: { heading: 0, pitch: -45, roll: 0 }
+});
+
+// Load OS Terrain 5
+viewer.terrainProvider = new Cesium.CesiumTerrainProvider({
+  url: "os-terrain-5://uk/yorkshire"
+});
+
+// Load building tiles
+viewer.scene.primitives.add(
+  new Cesium.Cesium3DTileset({ url: "os-buildings-3d://uk/yorkshire" })
+);</div>
+</div>
+
+<div class="tab-content">
+  <h3>🔌 Globe MCP Integration</h3>
+  <p>The globe is driven by MCP tools. AI agents can add entities, change views, and trigger analyses programmatically.</p>
+
+  <table>
+    <tr><th>Tool</th><th>Input</th><th>Effect</th></tr>
+    <tr><td>globe_add_entity</td><td>lat, lon, type, icon, label</td><td>Add new entity to globe</td></tr>
+    <tr><td>globe_update_entity</td><td>uid, new_position</td><td>Update entity position (smooth interpolation)</td></tr>
+    <tr><td>globe_remove_entity</td><td>uid</td><td>Remove entity from globe</td></tr>
+    <tr><td>globe_focus</td><td>lat, lon, zoom, pitch</td><td>Fly camera to location</td></tr>
+    <tr><td>globe_toggle_layer</td><td>layer_name, on/off</td><td>Show/hide data layer</td></tr>
+    <tr><td>globe_measure</td><td>point_a, point_b</td><td>Measure distance and bearing</td></tr>
+    <tr><td>globe_los_check</td><td>point_a, point_b</td><td>Line-of-sight analysis using DEM</td></tr>
+    <tr><td>globe_export_view</td><td>format (png/kml)</td><td>Export current view as screenshot or KML</td></tr>
+    <tr><td>globe_timeline_seek</td><td>timestamp</td><td>Scrub to point in SIGIL timeline</td></tr>
+    <tr><td>globe_alert_radius</td><td>center, radius_m</td><td>Draw alert circle for threat zone</td></tr>
+  </table>
+
+  <h4>AI-Driven Globe Example</h4>
+  <div class="code"># AI detects hostile via Batear, plots on globe
+batear_scan(node_id="bat-03")
+→ {bearing: 142, freq: 195, conf: 0.94}
+
+# AI triangulates position
+target = triangulate(batear_nodes=["bat-03","bat-07","bat-09"])
+→ {lat: 53.8021, lon: -1.5488}
+
+# AI adds to globe with threat marker
+globe_add_entity(
+  lat=53.8021, lon=-1.5488,
+  type="hostile-uav",
+  icon="⚠️",
+  label="HOSTILE-001 (94% conf)"
+)
+
+# AI draws alert radius
+globe_alert_radius(center=[53.8021, -1.5488], radius_m=500)
+
+# AI proposes BFT response
+bft_propose("Engage HOSTILE-001 with Hornet swarm")
+→ "Awaiting 23/33 consensus..."</div>
+</div>
+
+<div class="sigil">DEFONEOS Cesium 3D Globe · COP · CoT · TAK · Digital Twin · UK Sovereign · CSOAI Certified · SIGIL-signed</div>
+</div>
+
+<script>
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n));
+}
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

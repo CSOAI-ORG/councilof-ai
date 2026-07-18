@@ -1,0 +1,51 @@
+#!/bin/bash
+# mesh-embed-prewarm: Pre-generate embeddings for common text patterns
+# This makes RAG and semantic search instant
+
+set -euo pipefail
+
+OLLAMA_HOST="${OLLAMA_HOST:-192.168.50.176:11434}"
+CACHE_DIR="$HOME/.mesh-prod/embeddings"
+mkdir -p "$CACHE_DIR"
+
+# Common text patterns that might be embedded frequently
+# In production, this would read from actual document corpus
+PREWARM_TEXTS=(
+  "System architecture overview and design patterns"
+  "API documentation and endpoint specifications"
+  "Error logs and debugging information"
+  "Project requirements and user stories"
+  "Code review feedback and best practices"
+  "Meeting notes and action items"
+  "Performance metrics and benchmarking results"
+  "Security audit findings and remediation steps"
+  "Deployment procedures and runbooks"
+  "Mesh network topology and node status"
+)
+
+echo "=== Embedding Pre-warm $(date) ==="
+for text in "${PREWARM_TEXTS[@]}"; do
+  HASH=$(echo -n "$text" | md5 | cut -d' ' -f1)
+  CACHE_FILE="$CACHE_DIR/${HASH}.json"
+  
+  if [ -f "$CACHE_FILE" ]; then
+    echo "[cached] ${text:0:50}..."
+    continue
+  fi
+  
+  echo -n "[embed] ${text:0:50}... "
+  RESULT=$(curl -sf --max-time 30 "http://$OLLAMA_HOST/api/embeddings" \
+    -H "Content-Type: application/json" \
+    -d "{\"model\":\"nomic-embed-text\",\"prompt\":\"$text\"}" 2>/dev/null)
+  
+  if [ -n "$RESULT" ]; then
+    echo "$RESULT" > "$CACHE_FILE"
+    DIMS=$(echo "$RESULT" | python3 -c 'import sys,json; print(len(json.load(sys.stdin).get("embedding",[])))' 2>/dev/null || echo "?")
+    echo "✅ ($DIMS dims)"
+  else
+    echo "❌ (failed)"
+  fi
+done
+
+echo "=== Pre-warm Complete ==="
+echo "Cached embeddings: $(ls "$CACHE_DIR"/*.json 2>/dev/null | wc -l)"

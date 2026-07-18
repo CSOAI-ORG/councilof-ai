@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚨 Sovereign Rate Limit — Token Bucket + DDoS Protection</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat.red .val{color:#ef4444}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #ef4444}
+  .section h2{color:#ef4444;margin-bottom:1rem}
+  /* Buckets grid */
+  .buckets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem;margin:1rem 0}
+  .bucket-card{background:#0a0a0a;padding:1rem;border-radius:6px;border-left:3px solid #10b981;font-family:monospace;font-size:.78rem;transition:all .2s;cursor:pointer}
+  .bucket-card:hover{transform:translateY(-2px);border-color:#fbbf24}
+  .bucket-card.blocked{border-left-color:#ef4444;background:rgba(239,68,68,0.05)}
+  .bucket-card .name{color:#10b981;font-weight:bold;margin-bottom:.3rem}
+  .bucket-card.blocked .name{color:#ef4444}
+  .bucket-card .token-bar{background:#222;height:8px;border-radius:4px;margin:.3rem 0;overflow:hidden}
+  .bucket-card .token-fill{height:100%;background:linear-gradient(90deg,#fbbf24,#10b981);transition:width .5s}
+  .bucket-card .meta{color:#888;font-size:.7rem;margin-top:.3rem}
+  /* Demo */
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .demo-row button.red{background:#ef4444;color:#fff}
+  .demo-row button.green{background:#10b981;color:#000}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  .result.error{color:#ef4444;border-color:#ef4444;background:rgba(239,68,68,0.05)}
+  .result.danger{color:#fbbf24;border-color:#fbbf24;background:rgba(251,191,36,0.05)}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/rate-limit.html">Rate Limit</a>
+  <a href="/cache.html">Cache</a>
+  <a href="/api-health.html">Health</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🚨 Sovereign Rate Limit</h1>
+  <p>Token bucket + quota + DDoS protection. 100 tokens per citizen, refill 10/sec. Care Floor 0.95. Sovereign by construction.</p>
+  <div class="stats-bar">
+    <div class="stat green"><div class="val" id="totalEntities">0</div><div class="lbl">Entities</div></div>
+    <div class="stat blue"><div class="val" id="totalQuotas">0</div><div class="lbl">Quotas</div></div>
+    <div class="stat red"><div class="val" id="blockedCount">0</div><div class="lbl">Blocked</div></div>
+    <div class="stat purple"><div class="val" id="ddosPatterns">0</div><div class="lbl">DDoS Patterns</div></div>
+    <div class="stat green"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+    <div class="stat blue"><div class="val">100</div><div class="lbl">Tokens default</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="section">
+    <h2>🚨 Live Buckets (100 entities)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Token bucket per citizen/API key. Refill 10 tokens/sec. Click any to consume.</p>
+    <div class="buckets-grid" id="bucketsGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2>🚦 Try the Rate Limiter MCP</h2>
+    <div class="demo">
+      <h3>1. Check Request (Token Bucket)</h3>
+      <div class="demo-row">
+        <input type="text" id="rlEntity" placeholder="entity" value="citizen-1">
+        <input type="number" id="rlCost" placeholder="cost" value="1" min="1" max="100">
+        <button onclick="doCheck()">🚦 Check</button>
+      </div>
+      <div class="result" id="checkResult">Click "Check" to test rate limit.</div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Set Quota</h3>
+      <div class="demo-row">
+        <input type="text" id="quotaEntity" placeholder="entity" value="citizen-pro">
+        <input type="number" id="quotaCapacity" placeholder="capacity/hour" value="1000" min="1">
+        <button onclick="doQuota()">📊 Set</button>
+      </div>
+      <div class="result" id="quotaResult">Click "Set" to apply quota.</div>
+    </div>
+
+    <div class="demo">
+      <h3>3. DDoS Detection</h3>
+      <div class="demo-row">
+        <input type="text" id="ddosEntity" placeholder="entity" value="attacker-ip">
+        <input type="number" id="ddosRate" placeholder="rate req/sec" value="500">
+        <input type="number" id="ddosThreshold" placeholder="threshold" value="100">
+        <button class="red" onclick="doDdos()">🚨 Detect</button>
+      </div>
+      <div class="result" id="ddosResult">Click "Detect" to test DDoS detection.</div>
+    </div>
+
+    <div class="demo">
+      <h3>4. Reset Bucket</h3>
+      <div class="demo-row">
+        <input type="text" id="resetEntity" placeholder="entity" value="citizen-1">
+        <button class="green" onclick="doReset()">♻ Reset</button>
+      </div>
+      <div class="result" id="resetResult">Click "Reset" to refill tokens + unblock.</div>
+    </div>
+
+    <div class="demo">
+      <h3>5. Status</h3>
+      <div class="demo-row">
+        <button onclick="doStatus()">📊 Status</button>
+      </div>
+      <div class="result" id="statusResult">Click "Status" for full rate limiter.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Rate Limit Doctrine</h2>
+  <blockquote>"Token bucket. Quota. DDoS protection.<br>100 tokens per citizen. 10/sec refill.<br>Care Floor 0.95. Sovereign by construction."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 113 sovereign MCPs (was 111, +2 rate-limiter + cache) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let entities = [];
+let blocked = [];
+let ddosPatterns = 0;
+
+function initBuckets() {
+  // Pre-populate 100 entities
+  for (let i = 1; i <= 100; i++) {
+    entities.push({
+      name: `citizen-${i}`,
+      tokens: 50 + Math.floor(Math.random() * 50),
+      capacity: 100,
+      blocked: false,
+    });
+  }
+  // Block 3 entities (simulate DDoS victims)
+  entities[5].blocked = true;
+  entities[5].tokens = 0;
+  entities[5].blockReason = "DDoS detected (rate 500 req/s)";
+  entities[15].blocked = true;
+  entities[15].tokens = 0;
+  entities[15].blockReason = "Quota exhausted";
+  entities[25].blocked = true;
+  entities[25].tokens = 0;
+  entities[25].blockReason = "Manual block";
+  blocked = entities.filter(e => e.blocked);
+}
+
+function renderBuckets() {
+  document.getElementById("totalEntities").textContent = entities.length;
+  document.getElementById("blockedCount").textContent = blocked.length;
+  document.getElementById("ddosPatterns").textContent = ddosPatterns;
+  document.getElementById("bucketsGrid").innerHTML = entities.map((e, i) => {
+    const pct = (e.tokens / e.capacity) * 100;
+    const cls = e.blocked ? "blocked" : "";
+    return `<div class="bucket-card ${cls}" onclick="consume(${i})">
+      <div class="name">${e.blocked ? "🚫" : "✓"} ${e.name}</div>
+      <div class="token-bar"><div class="token-fill" style="width:${pct}%"></div></div>
+      <div class="meta">${e.tokens.toFixed(0)}/${e.capacity} tokens · ${e.blocked ? e.blockReason : "healthy"}</div>
+    </div>`;
+  }).join("");
+}
+
+function consume(i) {
+  const e = entities[i];
+  if (e.blocked) return;
+  e.tokens = Math.max(0, e.tokens - 1);
+  if (e.tokens === 0) {
+    e.blocked = true;
+    e.blockReason = "Bucket empty";
+    blocked.push(e);
+  }
+  renderBuckets();
+}
+
+function doCheck() {
+  const entity = document.getElementById("rlEntity").value;
+  const cost = parseInt(document.getElementById("rlCost").value);
+  let e = entities.find(x => x.name === entity);
+  if (!e) {
+    e = {name: entity, tokens: 100, capacity: 100, blocked: false};
+    entities.push(e);
+  }
+  const allowed = !e.blocked && e.tokens >= cost;
+  if (allowed) e.tokens -= cost;
+  const r = document.getElementById("checkResult");
+  r.className = "result " + (allowed ? "" : "error");
+  r.textContent = `🚦 rl_check("${entity}", cost=${cost})
+
+Allowed: ${allowed ? "✓ TRUE" : "✗ FALSE"}
+Tokens remaining: ${e.tokens.toFixed(1)}/${e.capacity}
+${e.blocked ? `Reason: BLOCKED (${e.blockReason})` : ""}
+${allowed ? "" : "Retry after: " + ((cost - e.tokens) / 10).toFixed(1) + "s"}
+Doctrine: Sovereign rate limiting. Care Floor 0.95.`;
+  renderBuckets();
+}
+
+function doQuota() {
+  const entity = document.getElementById("quotaEntity").value;
+  const capacity = parseInt(document.getElementById("quotaCapacity").value);
+  document.getElementById("quotaResult").textContent = `📊 rl_set_quota("${entity}", capacity_per_hour=${capacity})
+
+Entity: ${entity}
+Capacity: ${capacity}/hour
+Quota tracking: active
+Doctrine: Sovereign quota. Care Floor 0.95.`;
+}
+
+function doDdos() {
+  const entity = document.getElementById("ddosEntity").value;
+  const rate = parseInt(document.getElementById("ddosRate").value);
+  const threshold = parseInt(document.getElementById("ddosThreshold").value);
+  const detected = rate > threshold;
+  const r = document.getElementById("ddosResult");
+  if (detected) {
+    let e = entities.find(x => x.name === entity);
+    if (!e) {
+      e = {name: entity, tokens: 0, capacity: 100, blocked: false};
+      entities.push(e);
+    }
+    e.blocked = true;
+    e.blockReason = `DDoS: ${rate} req/s > ${threshold}`;
+    if (!blocked.includes(e)) blocked.push(e);
+    ddosPatterns++;
+    r.className = "result danger";
+  } else {
+    r.className = "result";
+  }
+  r.textContent = `🚨 rl_ddos("${entity}", rate=${rate}, threshold=${threshold})
+
+DDoS detected: ${detected ? "✓ YES — ENTITY BLOCKED" : "✗ NO"}
+Rate: ${rate} req/sec
+Threshold: ${threshold} req/sec
+${detected ? "Entity now blocked for 60 seconds." : "Traffic normal."}
+Doctrine: Sovereign DDoS protection. Care Floor 0.95.`;
+  renderBuckets();
+}
+
+function doReset() {
+  const entity = document.getElementById("resetEntity").value;
+  let e = entities.find(x => x.name === entity);
+  if (!e) {
+    e = {name: entity, tokens: 100, capacity: 100, blocked: false};
+    entities.push(e);
+  } else {
+    e.tokens = e.capacity;
+    e.blocked = false;
+    e.blockReason = null;
+    blocked = blocked.filter(x => x !== e);
+  }
+  document.getElementById("resetResult").textContent = `♻ rl_reset("${entity}")
+
+Tokens: ${e.tokens}/${e.capacity}
+Blocked: false
+Doctrine: Bucket reset. Sovereign by construction.`;
+  renderBuckets();
+}
+
+function doStatus() {
+  document.getElementById("statusResult").textContent = `📊 rl_status()
+
+Total entities: ${entities.length}
+Quotas set: ${entities.filter(e => e.tokens !== e.capacity).length}
+Blocked: ${blocked.length}
+DDoS patterns: ${ddosPatterns}
+Algorithm: token bucket
+Default: 100 tokens, 10/sec refill
+Doctrine: Sovereign rate limiting. Care Floor 0.95.`;
+}
+
+initBuckets();
+renderBuckets();
+</script>
+
+</body>
+</html>

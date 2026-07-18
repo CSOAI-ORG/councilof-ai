@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_quantum_dream_mcp"
+version = "1.0.0"
+description = "MEEK Quantum Dream MCP — the orb's nightly quantum dreaming (QAOA + VQE + Grover + QUTANM 1.58). The AGI self-evolves. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "quantum", "dream", "asi", "agi", "self-evolving", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org"
+Repository = "https://github.com/CSOAI-ORG/meek-quantum-dream-mcp"
+
+[project.scripts]
+meek-quantum-dream-mcp = "meek_quantum_dream_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_quantum_dream_mcp"]

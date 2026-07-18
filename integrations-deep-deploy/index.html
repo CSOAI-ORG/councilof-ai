@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Integrations — MEOK AI Labs | All 32 MCP Servers + Install Path</title>
+    <meta property="og:title" content="Integrations — MEOK AI Labs | All 32 MCP Servers + Install Path">
+<meta name="description" content="All 32 MEOK AI Labs MCP compliance servers, each with a 1-line description + pip install path. Open source. MIT licensed. CSOAI Ltd, UK 16939677.">
+  <link rel="canonical" href="https://meok.ai/integrations">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: ui-monospace, SFMono-Regular, monospace; background: #0a0a14; color: #e8e4dc; padding: 1.5rem; max-width: 1200px; margin: 0 auto; line-height: 1.5; }
+    h1 { color: #c9a84c; font-size: 1.4rem; margin: 0 0 0.5rem; }
+    h2 { color: #c9a84c; font-size: 1.1rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #1f1f2e; padding-bottom: 0.3rem; }
+    h3 { color: #c9a84c; font-size: 1rem; margin: 1.5rem 0 0.3rem; }
+    .lede { color: #999; font-size: 0.9rem; margin: 0 0 1.5rem; }
+    .server { background: rgba(255,255,255,0.03); border: 1px solid #1f1f2e; border-radius: 0.4rem; padding: 1rem; margin: 0.5rem 0; }
+    .server .name { color: #22c55e; font-weight: 700; font-size: 1rem; }
+    .server .desc { color: #999; font-size: 0.85rem; margin: 0.3rem 0; }
+    .server .install { background: #0a0a14; color: #c9a84c; padding: 0.5rem; border-radius: 0.3rem; font-size: 0.8rem; margin: 0.3rem 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 0.5rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .stat { background: rgba(255,255,255,0.03); border: 1px solid #1f1f2e; padding: 1rem; border-radius: 0.4rem; text-align: center; }
+    .stat .v { color: #c9a84c; font-size: 1.5rem; font-weight: 800; }
+    .stat .l { color: #999; font-size: 0.75rem; text-transform: uppercase; }
+    code { background: rgba(255,255,255,0.05); padding: 0.1rem 0.3rem; border-radius: 0.2rem; font-size: 0.85rem; }
+    .pill { display: inline-block; padding: 0.1rem 0.4rem; border-radius: 0.3rem; font-size: 0.7rem; font-weight: 700; background: rgba(22,163,74,0.15); color: #22c55e; }
+    .pill.warn { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Integrations", "url": "https://meok.ai/integrations", "description": "All 32 MEOK AI Labs MCP compliance servers, each with a 1-line description + pip install path. Open source. MIT licensed. CSOAI Ltd, UK 16939677."}</script>
+</head>
+<body>
+  <h1>MEOK Integrations — 32 MCP Servers + Install Path</h1>
+  <p class="lede">All 32 MEOK AI Labs MCP compliance servers. Open source. MIT licensed. CSOAI Ltd, UK 16939677.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="v">32</div><div class="l">MCP servers</div></div>
+    <div class="stat"><div class="v">4/6</div><div class="l">Live on PyPI</div></div>
+    <div class="stat"><div class="v">2</div><div class="l">On GitHub Releases</div></div>
+    <div class="stat"><div class="v">4</div><div class="l">Paywalled on Pro</div></div>
+    <div class="stat"><div class="v">MIT</div><div class="l">License</div></div>
+  </div>
+
+  <h2>📦 4 Live on PyPI (installable today)</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">eu-ai-act-compliance-mcp <span class="pill">v1.8.13</span></div>
+      <div class="desc">EU AI Act risk classification, 42-point audit, Annex IV docs. The keystone tool.</div>
+      <div class="install">pip install eu-ai-act-compliance-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">meok-mcp-injection-scan-mcp <span class="pill">v1.0.13</span></div>
+      <div class="desc">MCP injection / prompt-poisoning / SSRF scanner. 30+ canonical rules covering the April 2026 Anthropic MCP RCE class.</div>
+      <div class="install">pip install meok-mcp-injection-scan-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">meok-governance-engine-mcp <span class="pill">v1.0.18</span></div>
+      <div class="desc">Full governance report in 1 call. Meta-compliance across 12+ frameworks. The one tool to call first.</div>
+      <div class="install">pip install meok-governance-engine-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">meok-attestation-verify <span class="pill">v1.0.3</span></div>
+      <div class="desc">Tiny zero-dependency verifier for MEOK attestations. DORA, NIS2, EU AI Act, UK AI Bill. Works offline.</div>
+      <div class="install">pip install meok-attestation-verify</div>
+    </div>
+  </div>
+
+  <h2>🔒 2 On GitHub Releases (PyPI rate-limited, installable from wheel)</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">meok-compliance-passport-mcp <span class="pill">v1.0.1</span> <span class="pill warn">GITHUB</span></div>
+      <div class="desc">Portable signed compliance credential for customer-facing frontends. The cert your customers show to procurement.</div>
+      <div class="install">pip install https://github.com/CSOAI-ORG/meok-compliance-passport-mcp/releases/download/v1.0.1/meok_compliance_passport_mcp-1.0.1-py3-none-any.whl</div>
+    </div>
+    <div class="server">
+      <div class="name">meok-attestation-api <span class="pill">v0.2.1</span> <span class="pill warn">GITHUB</span></div>
+      <div class="desc">The keystone server. Run it locally to issue your own Ed25519-signed attestations. Sovereign UK infrastructure.</div>
+      <div class="install">pip install https://github.com/CSOAI-ORG/meok-attestation-api/releases/download/v0.2.1/meok_attestation_api-0.2.1-py3-none-any.whl</div>
+    </div>
+  </div>
+
+  <h2>🛡 6 Compliance frameworks (1 MCP each)</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">dora-compliance-mcp</div>
+      <div class="desc">DORA 5-pillar audit. ICT risk management + incident classification (24h/72h windows).</div>
+      <div class="install">github.com/CSOAI-ORG/dora-compliance-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">nis2-compliance-mcp</div>
+      <div class="desc">NIS2 entity classification. Article 21 (10 measures). Essential + important entities.</div>
+      <div class="install">github.com/CSOAI-ORG/nis2-compliance-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">iso-42001-ai-mcp</div>
+      <div class="desc">ISO 42001 (AI Management System) audit. Annex A controls. QMS documentation.</div>
+      <div class="install">github.com/CSOAI-ORG/iso-42001-ai-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">gdpr-compliance-ai-mcp</div>
+      <div class="desc">GDPR DPIA (Data Protection Impact Assessment). Data subject rights handling. Breach notification.</div>
+      <div class="install">github.com/CSOAI-ORG/gdpr-compliance-ai-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">hipaa-compliance-mcp</div>
+      <div class="desc">HIPAA safeguards. PHI handling. BAA generator. For US health AI deployers.</div>
+      <div class="install">github.com/CSOAI-ORG/hipaa-compliance-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">soc2-compliance-ai-mcp</div>
+      <div class="desc">SOC 2 Trust Service Criteria. Control matrix. MEOK doesn't issue the SOC 2 cert (CB-registered firm does), but this MCP produces the audit-trail.</div>
+      <div class="install">github.com/CSOAI-ORG/soc2-compliance-ai-mcp</div>
+    </div>
+  </div>
+
+  <h2>🏛 3 Sector frameworks</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">pci-dss-mcp</div>
+      <div class="desc">PCI DSS 4.0. 12 requirements. SAQ generator. For payment AI deployers.</div>
+      <div class="install">github.com/CSOAI-ORG/pci-dss-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">nist-rmf-ai-mcp</div>
+      <div class="desc">NIST AI RMF risk profile. Impact mapping. For US federal AI deployers.</div>
+      <div class="install">github.com/CSOAI-ORG/nist-rmf-ai-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">healthcare-ai-governance-mcp</div>
+      <div class="desc">SaMD classification. FDA AI/ML. HIPAA. WHO. For health AI deployers.</div>
+      <div class="install">github.com/CSOAI-ORG/healthcare-ai-governance-mcp</div>
+    </div>
+  </div>
+
+  <h2>🧠 4 Cross-cutting frameworks</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">ai-bom-mcp</div>
+      <div class="desc">AI Bill of Materials. Software + model + data + dependencies. CycloneDX-compatible.</div>
+      <div class="install">github.com/CSOAI-ORG/ai-bom-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">bias-detection-mcp</div>
+      <div class="desc">Bias detection + fairness assessment per EU AI Act Annex III (4) (hiring AI).</div>
+      <div class="install">github.com/CSOAI-ORG/bias-detection-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">cra-compliance-mcp</div>
+      <div class="desc">Cyber Resilience Act. CE marking. Vulnerability handling. SBOM generation.</div>
+      <div class="install">github.com/CSOAI-ORG/cra-compliance-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">proofof-ai-mcp</div>
+      <div class="desc">Content verification, deepfake detection, C2PA. For media + content AI deployers.</div>
+      <div class="install">github.com/CSOAI-ORG/proofof-ai-mcp</div>
+    </div>
+  </div>
+
+  <h2>🎯 4 Specialty frameworks</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">care-membrane-mcp</div>
+      <div class="desc">Care ethics validation. 4 dimensions, 16 probes. For care-home + health AI deployers.</div>
+      <div class="install">github.com/CSOAI-ORG/care-membrane-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">consciousness-engine-mcp</div>
+      <div class="desc">Dream state + reflection cycles + BFT council. The SOV3 self-correction layer.</div>
+      <div class="install">github.com/CSOAI-ORG/consciousness-engine-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">csoai-governance-crosswalk-mcp</div>
+      <div class="desc">12 frameworks mapped through 52 articles. The cross-cutting meta-compliance tool.</div>
+      <div class="install">github.com/CSOAI-ORG/csoai-governance-crosswalk-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">owasp-agentic-mcp</div>
+      <div class="desc">OWASP Agentic AI Top 10 security assessment. For agent builders.</div>
+      <div class="install">github.com/CSOAI-ORG/owasp-agentic-mcp</div>
+    </div>
+  </div>
+
+  <h2>🎮 2 Gaming / entertainment (the MEOK Gaming hive)</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">blizzard-wow-mcp</div>
+      <div class="desc">World of Warcraft MCP. 10 tools. COAI-certified. For AI agents playing WoW.</div>
+      <div class="install">github.com/CSOAI-ORG/blizzard-wow-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">mmoagent-mcp</div>
+      <div class="desc">Cross-game MMO agent. For AI agents playing any MMO. COAI-certified.</div>
+      <div class="install">github.com/CSOAI-ORG/mmoagent-mcp</div>
+    </div>
+  </div>
+
+  <h2>🚜 1 Construction / UK sector</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">planthire-ai-mcp</div>
+      <div class="desc">UK construction equipment rental. HSE checklists. For UK plant hire + construction AI deployers.</div>
+      <div class="install">github.com/CSOAI-ORG/planthire-ai-mcp</div>
+    </div>
+    <div class="server">
+      <div class="name">muckaway-ai-mcp</div>
+      <div class="desc">UK waste logistics. Disposal facility lookup. For UK muck-away + waste AI deployers.</div>
+      <div class="install">github.com/CSOAI-ORG/muckaway-ai-mcp</div>
+    </div>
+  </div>
+
+  <h2>🔒 4 Paywalled MCP tools (require Pro £199/mo + MEOK_MASTER_API_KEY)</h2>
+  <div class="grid">
+    <div class="server">
+      <div class="name">dora-compliance audit_all_pillars</div>
+      <div class="desc">Full DORA 5-pillar audit with the 24h/72h incident classification + recovery testing. Pro tier.</div>
+      <div class="install">available with Pro £199/mo subscription</div>
+    </div>
+    <div class="server">
+      <div class="name">uk-ai-bill-compliance sign_uk_ai_readiness_attestation</div>
+      <div class="desc">Sign the UK AI Bill readiness attestation. CSOAI-issued. 100-point rubric. Pro tier.</div>
+      <div class="install">available with Pro £199/mo subscription</div>
+    </div>
+    <div class="server">
+      <div class="name">eu-ai-act-compliance generate_documentation</div>
+      <div class="desc">Auto-generate Annex IV technical documentation. 11+ documents. Pro tier.</div>
+      <div class="install">available with Pro £199/mo subscription</div>
+    </div>
+    <div class="server">
+      <div class="name">eu-ai-act-compliance audit_report</div>
+      <div class="desc">Full audit report (all in-scope frameworks). 200+ pages. PDF + JSON-LD. Pro tier.</div>
+      <div class="install">available with Pro £199/mo subscription</div>
+    </div>
+  </div>
+
+  <h2>Install pattern</h2>
+  <pre># 1. Install (any of the 6 live packages)
+pip install eu-ai-act-compliance-mcp
+# or
+pip install meok-governance-engine-mcp
+
+# 2. Configure
+export MEOK_MASTER_API_KEY=your-pro-tier-key
+export MEOK_SIGN_KEY=your-ed25519-private-key-hex
+
+# 3. Use
+python -c "from eu_ai_act_compliance_mcp import server; print(server.tools.keys())"
+
+# 4. Run the keystone
+python -m meok_attestation_api</pre>
+
+  <div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+<footer style="margin: 3rem 0 1rem; padding: 1.5rem 0; border-top: 1px solid #1f1f2e; color: #999; font-size: 0.85rem;">
+    <p>CSOAI Ltd · UK 16939677 · hello@meok.ai</p>
+    <p>Powered by the MEOK Sovereign AI OS · 32 MCP servers · 25+ sigils on Ed25519 chain</p>
+  </footer>
+</body>
+</html>

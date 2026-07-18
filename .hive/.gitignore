@@ -1,0 +1,18 @@
+# Hive runtime outputs — do not commit
+logs/
+tasks/
+state/
+healer_state.json
+
+# Keep source definitions
+!config.yaml
+!scripts/
+!scripts/**
+!launchd/
+!launchd/**
+!dashboard/
+!dashboard/**
+
+# Re-ignore compiled Python inside scripts
+scripts/__pycache__/
+scripts/*.pyc

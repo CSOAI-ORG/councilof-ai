@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "sov3-oowm-mcp"
+version = "1.0.0"
+description = "SOV3 Organic Open World Model — 5-layer world model as governed MCP tools"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+sov3-oowm = "sov3_oowm_mcp.server:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sov3_oowm_mcp*"]

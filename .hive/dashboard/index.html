@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSOAI Hive Dashboard</title>
+  <style>
+    :root { --bg:#0b0c10; --panel:#1f2833; --text:#c5c6c7; --accent:#66fcf1; --warn:#f7b731; --err:#eb4d4b; --ok:#6ab04c; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background:var(--bg); color:var(--text); line-height:1.5; }
+    header { padding:1.5rem 2rem; border-bottom:1px solid #333; display:flex; align-items:center; justify-content:space-between; }
+    h1 { margin:0; font-size:1.4rem; color:var(--accent); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1rem; padding:1.5rem 2rem; }
+    .panel { background:var(--panel); border-radius:8px; padding:1rem; border:1px solid #333; }
+    .panel h2 { margin:0 0 .75rem; font-size:1rem; color:var(--accent); }
+    .metric { display:flex; justify-content:space-between; padding:.35rem 0; border-bottom:1px solid #333; }
+    .metric:last-child { border-bottom:none; }
+    .grade { font-size:2rem; font-weight:bold; }
+    .grade.A { color:var(--ok); }
+    .grade.B { color:#badc58; }
+    .grade.C { color:var(--warn); }
+    .grade.D { color:#e67e22; }
+    .grade.F { color:var(--err); }
+    .ok { color:var(--ok); }
+    .warn { color:var(--warn); }
+    .err { color:var(--err); }
+    ul { list-style:none; padding:0; margin:0; max-height:220px; overflow:auto; }
+    li { padding:.25rem 0; border-bottom:1px solid #2a2a2a; font-size:.85rem; }
+    li:last-child { border-bottom:none; }
+    .ts { color:#888; font-size:.75rem; }
+    .badge { display:inline-block; padding:.1rem .4rem; border-radius:4px; font-size:.7rem; text-transform:uppercase; }
+    .badge.P0 { background:var(--err); color:#fff; }
+    .badge.P1 { background:var(--warn); color:#000; }
+    .badge.P2 { background:#3498db; color:#fff; }
+    .badge.P3 { background:#95a5a6; color:#000; }
+    .refresh { cursor:pointer; background:var(--panel); border:1px solid var(--accent); color:var(--accent); padding:.4rem .8rem; border-radius:4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🐝 CSOAI Hive Dashboard</h1>
+    <button class="refresh" onclick="loadAll()">Refresh</button>
+  </header>
+  <div class="grid">
+    <div class="panel">
+      <h2>Hive Mode</h2>
+      <div id="hive-mode" class="grade">-</div>
+      <div class="metric"><span>Alarm (60m)</span><span id="mode-alarm">-</span></div>
+      <div class="metric"><span>Trail (60m)</span><span id="mode-trail">-</span></div>
+      <div class="metric"><span>Queen (60m)</span><span id="mode-queen">-</span></div>
+      <div class="metric"><span>Last sensed</span><span id="mode-ts" class="ts">-</span></div>
+    </div>
+    <div class="panel">
+      <h2>Overall Quality</h2>
+      <div id="overall-grade" class="grade">-</div>
+      <div class="metric"><span>Dirty files</span><span id="overall-dirty">-</span></div>
+      <div class="metric"><span>Placeholders</span><span id="overall-placeholders">-</span></div>
+      <div class="metric"><span>E2E pass rate</span><span id="overall-e2e">-</span></div>
+      <div class="metric"><span>Last updated</span><span id="quality-ts" class="ts">-</span></div>
+    </div>
+    <div class="panel">
+      <h2>Repo Grades</h2>
+      <ul id="repo-grades"></ul>
+    </div>
+    <div class="panel">
+      <h2>Test Fleet</h2>
+      <div class="metric"><span>Suites passed</span><span id="fleet-suites">-</span></div>
+      <div class="metric"><span>Pass rate</span><span id="fleet-rate">-</span></div>
+      <ul id="fleet-suites-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Service Health</h2>
+      <ul id="service-health"></ul>
+    </div>
+    <div class="panel">
+      <h2>Task Queue</h2>
+      <div class="metric"><span>Total tasks</span><span id="task-total">-</span></div>
+      <div class="metric"><span>P0 tasks</span><span id="task-p0" class="err">-</span></div>
+      <ul id="task-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Publish Queue</h2>
+      <div class="metric"><span>Staged posts</span><span id="publish-total">-</span></div>
+      <div class="metric"><span>Pending</span><span id="publish-pending">-</span></div>
+      <ul id="publish-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Secrets Inventory</h2>
+      <div class="metric"><span>Env files</span><span id="secret-files">-</span></div>
+      <div class="metric"><span>Placeholders</span><span id="secret-placeholders" class="warn">-</span></div>
+      <div class="metric"><span>Missing required</span><span id="secret-missing" class="err">-</span></div>
+      <ul id="secret-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Env Readiness</h2>
+      <div class="metric"><span>Keys ready</span><span id="env-ready" class="ok">-</span></div>
+      <div class="metric"><span>Blocked</span><span id="env-blocked" class="err">-</span></div>
+      <ul id="env-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Agent Cards</h2>
+      <div class="metric"><span>Cards generated</span><span id="agent-cards">-</span></div>
+      <div class="metric"><span>Public key</span><span id="agent-pubkey" class="ts">-</span></div>
+    </div>
+    <div class="panel">
+      <h2>Funding & Grants</h2>
+      <div class="metric"><span>Drafts</span><span id="grant-drafts">-</span></div>
+      <div class="metric"><span>Pipeline ask</span><span id="grant-ask">-</span></div>
+      <ul id="grant-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Synthetic Data</h2>
+      <div class="metric"><span>Records</span><span id="synth-count">-</span></div>
+      <div class="metric"><span>Latest file</span><span id="synth-file" class="ts">-</span></div>
+      <ul id="synth-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Affiliate Revenue</h2>
+      <div class="metric"><span>Partners</span><span id="aff-partners">-</span></div>
+      <div class="metric"><span>Signups</span><span id="aff-signups">-</span></div>
+      <div class="metric"><span>Revenue</span><span id="aff-revenue">-</span></div>
+      <ul id="aff-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Data Harvesters</h2>
+      <div class="metric"><span>CC0 OK</span><span id="cc0-ok">-</span></div>
+      <div class="metric"><span>Gov OK</span><span id="gov-ok">-</span></div>
+      <ul id="harvest-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Capital Ascension</h2>
+      <div class="metric"><span>Data moat</span><span id="cap-moat">-</span></div>
+      <div class="metric"><span>LOI value</span><span id="cap-loi">-</span></div>
+      <div class="metric"><span>Investor targets</span><span id="cap-targets">-</span></div>
+      <div class="metric"><span>Last run</span><span id="cap-ts" class="ts">-</span></div>
+      <ul id="cap-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Wave 8 Offensive</h2>
+      <div class="metric"><span>Horus targets</span><span id="w8-horus">-</span></div>
+      <div class="metric"><span>Mamba local</span><span id="w8-mamba">-</span></div>
+      <div class="metric"><span>Wave 8 steps</span><span id="w8-steps">-</span></div>
+      <div class="metric"><span>Last run</span><span id="w8-ts" class="ts">-</span></div>
+      <ul id="w8-list"></ul>
+    </div>
+    <div class="panel">
+      <h2>Recent Events</h2>
+      <ul id="recent-events"></ul>
+    </div>
+  </div>
+
+  <script>
+    const ROOT = ".."; // dashboard is served from .hive/dashboard/
+
+    async function fetchText(path) {
+      try { const r = await fetch(path); return r.ok ? await r.text() : ""; } catch { return ""; }
+    }
+    async function fetchJSON(path) {
+      try { const r = await fetch(path); return r.ok ? await r.json() : null; } catch { return null; }
+    }
+
+    function setGrade(id, grade) {
+      const el = document.getElementById(id);
+      el.textContent = grade;
+      el.className = "grade " + (grade || "");
+    }
+
+    async function loadHiveMode() {
+      const data = await fetchJSON(ROOT + "/logs/hive_mode.json");
+      if (!data) return;
+      const el = document.getElementById("hive-mode");
+      el.textContent = data.mode || "-";
+      el.className = "grade " + (data.mode || "");
+      document.getElementById("mode-ts").textContent = data.ts ? new Date(data.ts).toLocaleString() : "-";
+      const d = data.densities || {};
+      document.getElementById("mode-alarm").textContent = d["mcp.alarm.red"] || 0;
+      document.getElementById("mode-trail").textContent = d["mcp.trail.green"] || 0;
+      document.getElementById("mode-queen").textContent = d["mcp.queen.gold"] || 0;
+    }
+
+    async function loadQuality() {
+      const data = await fetchJSON(ROOT + "/logs/quality_report.json");
+      if (!data) return;
+      setGrade("overall-grade", data.overall?.grade);
+      document.getElementById("overall-dirty").textContent = data.overall?.dirty ?? "-";
+      document.getElementById("overall-placeholders").textContent = data.overall?.placeholders ?? "-";
+      document.getElementById("overall-e2e").textContent = (data.overall?.e2e_pass_rate ?? 0).toFixed(2);
+      document.getElementById("quality-ts").textContent = data.ts ? new Date(data.ts).toLocaleString() : "-";
+
+      const list = document.getElementById("repo-grades");
+      list.innerHTML = "";
+      (data.repos || []).forEach(r => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="grade ${r.grade}">${r.grade}</span> ${r.name} <span class="ts">dirty=${r.dirty} placeholders=${r.placeholders}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadHealer() {
+      const text = await fetchText(ROOT + "/logs/healer.log");
+      const lines = text.trim().split("\n").filter(l => l.includes(":")).slice(-20).reverse();
+      const list = document.getElementById("service-health");
+      list.innerHTML = "";
+      const seen = new Set();
+      for (const line of lines) {
+        const m = line.match(/\](.+?):\s*(OK|DOWN|restarting)/);
+        if (!m) continue;
+        const name = m[1].trim();
+        const status = m[2];
+        if (seen.has(name)) continue;
+        seen.add(name);
+        const li = document.createElement("li");
+        const cls = status === "OK" ? "ok" : (status === "DOWN" ? "err" : "warn");
+        li.innerHTML = `<span class="${cls}">${status}</span> ${name}`;
+        list.appendChild(li);
+      }
+    }
+
+    async function loadTasks() {
+      const data = await fetchJSON(ROOT + "/tasks/queue.json");
+      if (!data) return;
+      const tasks = data.tasks || [];
+      document.getElementById("task-total").textContent = tasks.length;
+      const p0 = tasks.filter(t => t.priority === "P0");
+      document.getElementById("task-p0").textContent = p0.length;
+
+      const list = document.getElementById("task-list");
+      list.innerHTML = "";
+      tasks.slice(0, 10).forEach(t => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="badge ${t.priority}">${t.priority}</span> <span class="badge">${t.router}</span> ${t.body.substring(0, 80)}…`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadPublish() {
+      const text = await fetchText(ROOT + "/tasks/publish_queue.jsonl");
+      const entries = text.trim().split("\n").filter(Boolean).map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+      document.getElementById("publish-total").textContent = entries.length;
+      const pending = entries.filter(e => e.status === "pending" || e.status === "dry_run").length;
+      document.getElementById("publish-pending").textContent = pending;
+
+      const list = document.getElementById("publish-list");
+      list.innerHTML = "";
+      entries.slice(0, 8).forEach(e => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="badge">${e.status}</span> ${e.title?.substring(0, 60) || e.id} <span class="ts">${e.platforms?.join(",")}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadEnvReadiness() {
+      const data = await fetchJSON(ROOT + "/logs/env_readiness_report.json");
+      if (!data) return;
+      document.getElementById("env-ready").textContent = (data.ready || []).length;
+      document.getElementById("env-blocked").textContent = (data.blocked || []).length;
+      const list = document.getElementById("env-list");
+      list.innerHTML = "";
+      (data.keys || []).forEach(k => {
+        const li = document.createElement("li");
+        const cls = ["env", "file"].includes(k.status) ? "ok" : "err";
+        const loc = k.location ? ` (${k.location})` : "";
+        li.innerHTML = `<span class="${cls}">${k.status}</span> ${k.key}${loc}`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadAgentCards() {
+      const data = await fetchJSON(ROOT + "/logs/agent_cards.json");
+      if (!data) return;
+      document.getElementById("agent-cards").textContent = (data.cards || []).length;
+      document.getElementById("agent-pubkey").textContent = (data.public_key || "").slice(0, 16) + "…";
+    }
+
+    async function loadSecrets() {
+      const data = await fetchJSON(ROOT + "/logs/secrets_inventory.json");
+      if (!data) return;
+      document.getElementById("secret-files").textContent = data.files_scanned || 0;
+      document.getElementById("secret-placeholders").textContent = data.placeholder?.length || 0;
+      document.getElementById("secret-missing").textContent = data.missing?.length || 0;
+
+      const list = document.getElementById("secret-list");
+      list.innerHTML = "";
+      const items = [...(data.missing || []), ...(data.placeholder || []).slice(0, 8)];
+      items.forEach(s => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="err">${s.key}</span> <span class="ts">${s.file || s.note}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadFleet() {
+      const data = await fetchJSON(ROOT + "/logs/test_fleet_report.json");
+      if (!data) return;
+      const summary = data.summary || {};
+      document.getElementById("fleet-suites").textContent = `${summary.suites_passed || 0}/${summary.suites_total || 0}`;
+      document.getElementById("fleet-rate").textContent = (summary.pass_rate || 0).toFixed(2);
+
+      const list = document.getElementById("fleet-suites-list");
+      list.innerHTML = "";
+      (data.suites || []).forEach(s => {
+        const li = document.createElement("li");
+        const cls = s.status === "PASS" ? "ok" : (s.status === "FAIL" ? "err" : "warn");
+        li.innerHTML = `<span class="${cls}">${s.status}</span> ${s.name} <span class="ts">${s.passed}/${s.total}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadEvents() {
+      const [healer, notifier, publish] = await Promise.all([
+        fetchText(ROOT + "/logs/healer.log"),
+        fetchText(ROOT + "/logs/notifier.log"),
+        fetchText(ROOT + "/logs/publish_manager.log"),
+      ]);
+      const events = [];
+      [healer, notifier, publish].forEach((text, i) => {
+        const src = ["healer", "notifier", "publish"][i];
+        text.trim().split("\n").slice(-8).forEach(l => events.push({ src, line: l }));
+      });
+      events.sort((a, b) => a.line.localeCompare(b.line)).reverse();
+
+      const list = document.getElementById("recent-events");
+      list.innerHTML = "";
+      events.slice(0, 15).forEach(e => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="ts">[${e.src}]</span> ${e.line.replace(/^\[[^\]]+\]\s*/, "").substring(0, 90)}`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadGrants() {
+      const data = await fetchJSON(ROOT + "/logs/grant_application_bot.json");
+      if (!data) return;
+      document.getElementById("grant-drafts").textContent = data.total_drafts || 0;
+      document.getElementById("grant-ask").textContent = "£" + (data.total_ask_gbp || 0).toLocaleString();
+      const list = document.getElementById("grant-list");
+      list.innerHTML = "";
+      (data.drafts || []).forEach(d => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="badge">${d.status}</span> ${d.scheme} <span class="ts">£${d.ask_gbp?.toLocaleString()} · ${d.deadline}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadSynthetic() {
+      const data = await fetchJSON(ROOT + "/logs/synthetic_factory.json");
+      if (!data) return;
+      document.getElementById("synth-count").textContent = (data.count || 0).toLocaleString();
+      document.getElementById("synth-file").textContent = (data.path || "").split("/").pop();
+      const list = document.getElementById("synth-list");
+      list.innerHTML = "";
+      Object.entries(data.by_type || {}).forEach(([type, count]) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="ok">${count}</span> ${type}`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadAffiliates() {
+      const data = await fetchJSON(ROOT + "/logs/affiliate_tracker.json");
+      if (!data) return;
+      document.getElementById("aff-partners").textContent = data.new_partners || 0;
+      document.getElementById("aff-signups").textContent = (data.total_signups || 0).toLocaleString();
+      document.getElementById("aff-revenue").textContent = "£" + (data.total_revenue_gbp || 0).toLocaleString();
+      const list = document.getElementById("aff-list");
+      list.innerHTML = "";
+      Object.entries(data.by_vertical || {}).forEach(([v, s]) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="ok">${s.partners}</span> ${v} <span class="ts">£${Math.round(s.revenue_gbp)}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadHarvesters() {
+      const cc0 = await fetchJSON(ROOT + "/logs/cc0_harvester.json");
+      const gov = await fetchJSON(ROOT + "/logs/government_data_downloads.json");
+      document.getElementById("cc0-ok").textContent = cc0?.ok ?? "-";
+      document.getElementById("gov-ok").textContent = gov?.ok ?? "-";
+      const list = document.getElementById("harvest-list");
+      list.innerHTML = "";
+      const push = (items) => {
+        (items || []).forEach(i => {
+          const li = document.createElement("li");
+          const cls = i.status === "ok" ? "ok" : "err";
+          li.innerHTML = `<span class="${cls}">${i.status}</span> ${i.name} <span class="ts">${i.mb ?? 0} MB</span>`;
+          list.appendChild(li);
+        });
+      };
+      push(cc0?.sources);
+      push(gov?.datasets);
+    }
+
+    async function loadCapital() {
+      const moat = await fetchJSON(ROOT + "/logs/data_moat_dossier.json");
+      const loi = await fetchJSON(ROOT + "/logs/loi_generator.json");
+      const crm = await fetchJSON(ROOT + "/logs/investor_crm.json");
+      const orch = await fetchJSON(ROOT + "/logs/capital_ascension_orchestrator.json");
+      document.getElementById("cap-moat").textContent = moat ? `${moat.totals.gb} GB` : "-";
+      document.getElementById("cap-loi").textContent = loi ? "£" + loi.total_value_gbp.toLocaleString() : "-";
+      document.getElementById("cap-targets").textContent = crm ? crm.total_targets : "-";
+      document.getElementById("cap-ts").textContent = orch?.ts ? new Date(orch.ts).toLocaleString() : "-";
+
+      const list = document.getElementById("cap-list");
+      list.innerHTML = "";
+      const items = [
+        ["Pitch deck", "tasks/capital_ascension/SERIES_A_PITCH_DECK.md"],
+        ["Data dossier", "tasks/capital_ascension/DATA_MOAT_DOSSIER.md"],
+        ["Investor tracker", "tasks/capital_ascension/investors/STRATEGIC_INVESTOR_TRACKER.md"],
+        ["Investor CRM", "tasks/capital_ascension/investors/investor_blitz_crm.csv"],
+      ];
+      items.forEach(([label, path]) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${ROOT}/${path}" target="_blank" style="color:var(--accent);">${label}</a>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadWave8() {
+      const horus = await fetchJSON(ROOT + "/logs/horus_osint.json");
+      const mamba = await fetchJSON(ROOT + "/logs/mamba3_readiness.json");
+      const orch = await fetchJSON(ROOT + "/logs/wave8_orchestrator.json");
+      document.getElementById("w8-horus").textContent = horus ? horus.targets_scanned : "-";
+      document.getElementById("w8-mamba").textContent = mamba ? `${mamba.models.filter(m => m.available).length}/${mamba.models.length}` : "-";
+      document.getElementById("w8-steps").textContent = orch ? `${orch.ok}/${orch.total}` : "-";
+      document.getElementById("w8-ts").textContent = orch?.ts ? new Date(orch.ts).toLocaleString() : "-";
+
+      const list = document.getElementById("w8-list");
+      list.innerHTML = "";
+      const items = [
+        ["Wave 8 plan", "scripts/wave8/WAVE_8_PLAN.md"],
+        ["Horus report", "tasks/wave8/horus_reports/"],
+        ["Mamba readiness", "tasks/wave8/MAMBA3_READINESS.md"],
+        ["DAO constitution", "tasks/wave8/dao/DAO_CONSTITUTION.md"],
+        ["RobotMCP bridge", "tasks/wave8/robotmcp/RobotMCP_ARCHITECTURE.md"],
+        ["Gaming compliance", "tasks/wave8/gaming_compliance/OGRAI_COMPLIANCE_SPEC.md"],
+      ];
+      items.forEach(([label, path]) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${ROOT}/${path}" target="_blank" style="color:var(--accent);">${label}</a>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadAll() {
+      await Promise.all([
+        loadHiveMode(), loadQuality(), loadHealer(), loadTasks(),
+        loadPublish(), loadFleet(), loadSecrets(), loadEnvReadiness(),
+        loadAgentCards(), loadGrants(), loadSynthetic(), loadAffiliates(),
+        loadHarvesters(), loadCapital(), loadWave8(), loadEvents()
+      ]);
+    }
+
+    loadAll();
+    setInterval(loadAll, 30000);
+  </script>
+</body>
+</html>

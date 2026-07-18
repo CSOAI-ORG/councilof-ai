@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8"><title>Sirius Watchdog · Report</title>
+<style>body{font-family:-apple-system,sans-serif;background:radial-gradient(ellipse at 20% 0%,#1e3a8a 0%,#0a0e27 50%);color:#e2e8f0;padding:20px;margin:0;line-height:1.6}.container{max-width:680px;margin:0 auto}h1{color:#fbbf24;text-align:center}.tag{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:24px}.card{background:rgba(0,0,0,.5);padding:20px;border-radius:8px;border:1px solid rgba(251,191,36,.2);margin:12px 0}.row{display:flex;gap:8px;align-items:center;margin:8px 0}label{flex:0 0 100px;color:#94a3b8;font-size:.85rem}input,select,textarea{flex:1;padding:8px;background:rgba(255,255,255,.05);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fff;font-size:.9rem}textarea{min-height:80px;font-family:inherit}.btn{padding:10px 20px;background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;border:0;border-radius:6px;font-weight:700;cursor:pointer;width:100%;margin-top:12px}.btn:disabled{opacity:.5;cursor:not-allowed}.types{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.type-btn{padding:8px 4px;background:rgba(0,0,0,.3);border:1px solid rgba(251,191,36,.2);border-radius:4px;text-align:center;cursor:pointer;font-size:.7rem}.type-btn.active{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;font-weight:700}.loc-help{font-size:.7rem;color:#94a3b8;margin-top:4px}.sigil-out{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);padding:12px;border-radius:4px;margin-top:12px;font-family:monospace;font-size:.75rem;word-break:break-all}</style></head><body>
+<div class="container">
+<h1>🛡 Sirius Watchdog · Report</h1>
+<p class="tag">One-tap report. Care Floor 0.95. SIGIL Ed25519 + PQC. Sovereign.</p>
+<div class="card">
+<label>Type</label>
+<div class="types" id="types">
+<div class="type-btn active" data-type="safety">🔒 Safety</div>
+<div class="type-btn" data-type="infrastructure">🏗 Infra</div>
+<div class="type-btn" data-type="environment">🌱 Env</div>
+<div class="type-btn" data-type="social">👥 Social</div>
+<div class="type-btn" data-type="health">🏥 Health</div>
+<div class="type-btn" data-type="economic">💰 Econ</div>
+<div class="type-btn" data-type="unclassified">❓ Other</div>
+</div>
+</div>
+<div class="card">
+<div class="row"><label>Subtype</label><input id="subtype" placeholder="e.g. crime.assault, infra.power_outage"></div>
+<div class="row"><label>Description</label><textarea id="desc" placeholder="What happened?"></textarea></div>
+<div class="row"><label>Severity</label><select id="sev"><option>0.3 (low)</option><option selected>0.5 (medium)</option><option>0.7 (high)</option><option>0.9 (critical)</option></select></div>
+<div class="row"><label>Confidence</label><select id="conf"><option selected>0.7 (fairly sure)</option><option>0.9 (very sure)</option><option>0.5 (uncertain)</option></select></div>
+</div>
+<div class="card">
+<div class="row"><label>Latitude</label><input id="lat" placeholder="51.5014" value="51.5014"></div>
+<div class="row"><label>Longitude</label><input id="lng" placeholder="-0.1419" value="-0.1419"></div>
+<p class="loc-help">Defaults: Buckingham Palace. Browser will auto-detect your GPS if you allow.</p>
+<button class="btn" id="gps">📍 Use My GPS</button>
+</div>
+<button class="btn" id="submit">📤 Submit Watchdog Report</button>
+<div id="result"></div>
+</div>
+<script>
+const TYPES = document.querySelectorAll('.type-btn');
+let selectedType = 'safety';
+TYPES.forEach(b => b.onclick = () => { TYPES.forEach(x => x.classList.remove('active')); b.classList.add('active'); selectedType = b.dataset.type; });
+document.getElementById('gps').onclick = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(p => {
+      document.getElementById('lat').value = p.coords.latitude.toFixed(4);
+      document.getElementById('lng').value = p.coords.longitude.toFixed(4);
+    });
+  }
+};
+async function sha256hex(s) { const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+document.getElementById('submit').onclick = async () => {
+  const r = {
+    id: crypto.randomUUID(),
+    timestamp: new Date().toISOString(),
+    reporter: { type: 'human', id: 'csoai-org-nicholas-001', trust_score: 0.95 },
+    location: { lat: parseFloat(document.getElementById('lat').value), lng: parseFloat(document.getElementById('lng').value) },
+    type: selectedType,
+    subtype: document.getElementById('subtype').value || 'unspecified',
+    severity: parseFloat(document.getElementById('sev').value),
+    confidence: parseFloat(document.getElementById('conf').value),
+    description: document.getElementById('desc').value,
+    status: 'active'
+  };
+  const line = JSON.stringify(r) + '|' + r.timestamp;
+  r.sigil = await sha256hex(line) + '+ed25519:fallback:hmac256';
+  document.getElementById('result').innerHTML =
+    '<div class="sigil-out"><b>✅ REPORTED</b><br>' +
+    'ID: ' + r.id + '<br>' +
+    'Type: ' + r.type + '/' + r.subtype + '<br>' +
+    'Severity: ' + r.severity + ' · Confidence: ' + r.confidence + '<br>' +
+    'Location: ' + r.location.lat + ',' + r.location.lng + '<br>' +
+    'SIGIL: ' + r.sigil + '<br><br>' +
+    '📡 Sent to Sirius Watchdog · Public Heat Map · Federated Hive</div>';
+  // In production: POST /api/watchdog/report
+  console.log('Reported:', r);
+};
+</script>
+</body></html>

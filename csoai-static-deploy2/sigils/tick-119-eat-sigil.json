@@ -1,0 +1,94 @@
+{
+  "sigil_type": "DEFONEOS-EAT-CYCLE",
+  "tick": 119,
+  "ts": "2026-07-17T11:10:39.731239+00:00",
+  "actor": "JEEVES (cron)",
+  "cycle_id": "defoneos-eat-2026-07-17-001",
+  "compartment": "csoai-defoneos",
+  "summary": {
+    "cycle": "DEFONEOS-EAT",
+    "ts": "2026-07-17T11:10:33.869620+00:00",
+    "actor": "JEEVES",
+    "tick_at_cycle": 119,
+    "trigger": "scheduled_cron_eat",
+    "results": {
+      "1_health": {
+        "csoai_static": 200,
+        "size_bytes": 20152,
+        "ok": true
+      },
+      "2_ssh": {
+        "meok_backend_uptime": "TIMEOUT",
+        "ok": false,
+        "note": "ssh connect timed out 5s; VM may be down or firewall"
+      },
+      "3_mcp_tools": {
+        "endpoint": "http://localhost:3101/mcp",
+        "tools_count": 0,
+        "ok": false,
+        "note": "process is python -m http.server, no /mcp endpoint; SOV3 surface missing"
+      },
+      "4_meok_os": {
+        "http": 200,
+        "size_bytes": 20152,
+        "ok": true
+      },
+      "5_pages": {
+        "total_on_disk": 1434,
+        "production_excl_backups": 578,
+        "sitemap_urls": 578,
+        "parity": true
+      },
+      "6_broken_links": {
+        "broken_found_pre": 3,
+        "broken_after_fix": 0,
+        "false_positives_in_initial_scan": 57,
+        "fixed_file": "defoneos-sbom-quarterly-trend.html"
+      },
+      "7_fix": {
+        "hrefs_neutralized_to_#": 3,
+        "file": "defoneos-sbom-quarterly-trend.html",
+        "broken_links": [
+          "defoneos-supply-chain-scan.html",
+          "defoneos-injection-scan.html",
+          "defoneos-federation-discovery.html"
+        ]
+      },
+      "8_sitemap": {
+        "urls": 578,
+        "bytes": 99586,
+        "updated_lastmods": 0,
+        "already_current_for_today": true
+      },
+      "9_deploy": {
+        "triggered": true,
+        "vercel_production": "csoai-static-deploy2-t7f9hxbw2-niks-projects-0a2ef942.vercel.app",
+        "ready_in_seconds": 16,
+        "alias_reassigned": [
+          "www.csoai.org",
+          "csoai.org",
+          "csoai-static-deploy2.vercel.app"
+        ],
+        "verified_after_alias": "defoneos-sbom-quarterly-trend.html body=20710b matches disk"
+      }
+    },
+    "red_line_status": {
+      "kinetic_targeting": "none",
+      "personal_surveillance": "none",
+      "aukus_claim_without_letter": "none",
+      "seal_without_quorum": "none",
+      "dsei_booth_without_pilot_letter": "none",
+      "defonos_io": "not_touched",
+      "compartment_mixing": "csoai-defoneos only; meok-defoneos + dagon untouched"
+    },
+    "deliverables": [
+      "3 broken hrefs neutralized in defoneos-sbom-quarterly-trend.html",
+      "Vercel production redeployed with today's edits (16 files modified in last 8h)",
+      "Aliases re-pointed to fresh deploy",
+      "Sitemap 578 URLs in parity with on-disk pages"
+    ]
+  },
+  "sigil_digest_input": "{\"actor\": \"JEEVES\", \"cycle\": \"DEFONEOS-EAT\", \"deliverables\": [\"3 broken hrefs neutralized in defoneos-sbom-quarterly-trend.html\", \"Vercel production redeployed with today's edits (16 files modified in last 8h)\", \"Aliases re-pointed to fresh deploy\", \"Sitemap 578 URLs in parity with on-disk pages\"], \"red_line_status\": {\"aukus_claim_without_letter\": \"none\", \"compartment_mixing\": \"csoai-defoneos only; meok-defoneos + dagon untouched\", \"defonos_io\": \"not_touched\", \"dsei_booth_without_pilot_letter\": \"none\", \"kinetic_targeting\": \"none\", \"personal_surveillance\": \"none\", \"seal_without_quorum\": \"none\"}, \"results\": {\"1_health\": {\"csoai_static\": 200, \"ok\": true, \"size_bytes\": 20152}, \"2_ssh\": {\"meok_backend_uptime\": \"TIMEOUT\", \"note\": \"ssh connect timed out 5s; VM may be down or firewall\", \"ok\": false}, \"3_mcp_tools\": {\"endpoint\": \"http://localhost:3101/mcp\", \"note\": \"process is python -m http.server, no /mcp endpoint; SOV3 surface missing\", \"ok\": false, \"tools_count\": 0}, \"4_meok_os\": {\"http\": 200, \"ok\": true, \"size_bytes\": 20152}, \"5_pages\": {\"parity\": true, \"production_excl_backups\": 578, \"sitemap_urls\": 578, \"total_on_disk\": 1434}, \"6_broken_links\": {\"broken_after_fix\": 0, \"broken_found_pre\": 3, \"false_positives_in_initial_scan\": 57, \"fixed_file\": \"defoneos-sbom-quarterly-trend.html\"}, \"7_fix\": {\"broken_links\": [\"defoneos-supply-chain-scan.html\", \"defoneos-injection-scan.html\", \"defoneos-federation-discovery.html\"], \"file\": \"defoneos-sbom-quarterly-trend.html\", \"hrefs_neutralized_to_#\": 3}, \"8_sitemap\": {\"already_current_for_today\": true, \"bytes\": 99586, \"updated_lastmods\": 0, \"urls\": 578}, \"9_deploy\": {\"alias_reassigned\": [\"www.csoai.org\", \"csoai.org\", \"csoai-static-deploy2.vercel.app\"], \"ready_in_seconds\": 16, \"triggered\": true, \"vercel_production\": \"csoai-static-deploy2-t7f9hxbw2-niks-projects-0a2ef942.vercel.app\", \"verified_after_alias\": \"defoneos-sbom-quarterly-trend.html body=20710b matches disk\"}}, \"tick_at_cycle\": 119, \"trigger\": \"scheduled_cron_eat\", \"ts\": \"2026-07-17T11:10:33.869620+00:00\"}",
+  "sigil_digest_algo": "SHA-256",
+  "sigil_digest": "13ecf126685ae389e4272f8636604ab33b77f99dfddf7e4476060dba3065b50c"
+}

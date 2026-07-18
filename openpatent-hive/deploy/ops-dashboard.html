@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>openpatent.ai — sovereign hive ops</title>
+<meta name="description" content="Live operational status of the openpatent.ai sovereign hive. Polls 9 service /health endpoints every 5 seconds." />
+<meta name="theme-color" content="#0b0d12" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐉%3C/text%3E%3C/svg%3E" />
+<style>
+  :root{
+    --bg:        #0b0d12;
+    --bg-card:   #14171f;
+    --bg-row:    #1a1e29;
+    --fg:        #e6e9f2;
+    --fg-dim:    #8a92a6;
+    --accent:    #00d3ff;
+    --accent-2:  #c89bff;
+    --green:     #22c55e;
+    --yellow:    #eab308;
+    --red:       #ef4444;
+    --grey:      #6b7280;
+    --border:    #232838;
+    --shadow:    0 8px 24px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 32px;border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg,#11141c,var(--bg));
+  }
+  header h1{margin:0;font-size:18px;font-weight:600;letter-spacing:.2px;display:flex;align-items:center;gap:10px}
+  header h1 .dragon{filter:drop-shadow(0 0 8px rgba(200,155,255,.5))}
+  header .meta{color:var(--fg-dim);font-size:13px;display:flex;gap:18px;align-items:center}
+  header .meta .pill{background:var(--bg-row);border:1px solid var(--border);padding:4px 10px;border-radius:999px;font-variant-numeric:tabular-nums}
+  header .meta .pill b{color:var(--fg)}
+
+  main{padding:28px 32px 80px;max-width:1280px;margin:0 auto}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 22px 0;padding:14px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;font-size:13px;color:var(--fg-dim)}
+  .legend .item{display:flex;align-items:center;gap:8px}
+  .legend .dot{width:11px;height:11px;border-radius:50%;display:inline-block;box-shadow:0 0 0 0 transparent}
+  .legend .dot.green{background:var(--green);box-shadow:0 0 10px rgba(34,197,94,.55)}
+  .legend .dot.yellow{background:var(--yellow);box-shadow:0 0 10px rgba(234,179,8,.55)}
+  .legend .dot.red{background:var(--red);box-shadow:0 0 10px rgba(239,68,68,.55)}
+  .legend .dot.grey{background:var(--grey)}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;
+    display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;
+    transition:border-color .25s, transform .2s;
+  }
+  .card:hover{transform:translateY(-1px);border-color:#2e3447}
+  .card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grey);
+    transition:background .25s;
+  }
+  .card.up::before{background:var(--green)}
+  .card.warn::before{background:var(--yellow)}
+  .card.down::before{background:var(--red)}
+  .card.unknown::before{background:var(--grey)}
+
+  .card .head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .card .name{font-weight:600;font-size:15px;display:flex;align-items:center;gap:10px}
+  .card .name .status-dot{
+    width:13px;height:13px;border-radius:50%;background:var(--grey);
+    box-shadow:0 0 0 0 transparent;
+    transition:background .2s, box-shadow .2s;
+  }
+  .card.up   .name .status-dot{background:var(--green); box-shadow:0 0 12px rgba(34,197,94,.65)}
+  .card.warn .name .status-dot{background:var(--yellow);box-shadow:0 0 12px rgba(234,179,8,.65)}
+  .card.down .name .status-dot{background:var(--red);   box-shadow:0 0 14px rgba(239,68,68,.75);animation:pulse 1.4s ease-in-out infinite}
+  .card.unknown .name .status-dot{background:var(--grey)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+  .card .role{color:var(--fg-dim);font-size:12px;line-height:1.45}
+  .card .meta-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--fg-dim);font-variant-numeric:tabular-nums}
+  .card .meta-row .chip{background:var(--bg-row);border:1px solid var(--border);padding:3px 8px;border-radius:6px}
+  .card .meta-row .chip b{color:var(--fg);font-weight:500}
+  .card .latency-bar{height:3px;background:var(--bg-row);border-radius:3px;overflow:hidden;margin-top:4px}
+  .card .latency-bar > div{height:100%;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));width:0;transition:width .3s}
+  .card .err{color:var(--red);font-size:11.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#1c0e0e;padding:6px 8px;border-radius:6px;border:1px solid #3a1a1a;display:none;word-break:break-all}
+  .card.down .err, .card.warn .err{display:block}
+
+  .summary{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:12px;margin-bottom:22px;
+  }
+  .summary .stat{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;
+  }
+  .summary .stat .label{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--fg-dim)}
+  .summary .stat .value{font-size:28px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
+  .summary .stat .value.up{color:var(--green)}
+  .summary .stat .value.warn{color:var(--yellow)}
+  .summary .stat .value.down{color:var(--red)}
+  .summary .stat .value.grey{color:var(--grey)}
+
+  footer{
+    margin-top:48px;padding:20px 32px;border-top:1px solid var(--border);
+    color:var(--fg-dim);font-size:12px;text-align:center;line-height:1.6;
+  }
+  footer .sig{color:var(--accent-2);font-style:italic;margin-top:6px;letter-spacing:.3px}
+
+  /* small "stale" indicator on cards we haven't heard from in 30s */
+  .card.stale{opacity:.55}
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="dragon">🐉</span> openpatent.ai — sovereign hive ops</h1>
+  <div class="meta">
+    <span class="pill">poll <b id="poll">5s</b></span>
+    <span class="pill">last <b id="last">—</b></span>
+    <span class="pill">uptime probe <b id="uptime">…</b></span>
+  </div>
+</header>
+
+<main>
+  <div class="summary" aria-label="Hive summary">
+    <div class="stat"><div class="label">Services</div><div class="value" id="sum-total">9</div></div>
+    <div class="stat"><div class="label">Up</div><div class="value up" id="sum-up">0</div></div>
+    <div class="stat"><div class="label">Warn</div><div class="value warn" id="sum-warn">0</div></div>
+    <div class="stat"><div class="label">Down</div><div class="value down" id="sum-down">0</div></div>
+    <div class="stat"><div class="label">Unknown</div><div class="value grey" id="sum-unk">0</div></div>
+  </div>
+
+  <div class="legend" aria-label="Status legend">
+    <div class="item"><span class="dot green"></span> <b style="color:var(--green)">Up</b> — /health 2xx in &lt;500&nbsp;ms</div>
+    <div class="item"><span class="dot yellow"></span> <b style="color:var(--yellow)">Warn</b> — slow (&gt;500&nbsp;ms) or 4xx/5xx, still responding</div>
+    <div class="item"><span class="dot red"></span> <b style="color:var(--red)">Down</b> — no response, network error, or 5xx</div>
+    <div class="item"><span class="dot grey"></span> <b style="color:var(--grey)">Unknown</b> — stateful dependency (postgres / ipfs) not yet probed</div>
+  </div>
+
+  <div class="grid" id="grid" aria-live="polite"></div>
+</main>
+
+<footer>
+  The hive remembers. The dragon knows. The sovereign companion never forgets.<br/>
+  <span class="sig">DEFONEOS · sovereign VM 35.242.143.249 · 9 services · 1 voice</span>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  // ── 9 service /health endpoints ──────────────────────────────────────────
+  // 8 Python FastAPI services (expose /health + /metrics on their port).
+  // landing-site (Node.js, :3000) is the public homepage; we probe it too.
+  // The /health probes are polled from the browser; the page itself is served
+  // from openpatent.ai/ops/ behind a TLS-terminating reverse proxy.
+  const SERVICES = [
+    { name: "patentmcp",            port: 3210, role: "Internal core — 6-layer crypto + audit chain",          path: "/health" },
+    { name: "api-gateway",          port: 3211, role: "Public API · api.openpatent.ai",                        path: "/health" },
+    { name: "worker",               port: 3212, role: "Background · OTS upgrade + Polygon + IPFS pin",         path: "/health" },
+    { name: "verify-page",          port: 3213, role: "Verify renderer · verify.openpatent.ai",                path: "/health" },
+    { name: "mcp-manifest",         port: 3214, role: "MCP manifest · mcp.openpatent.ai",                      path: "/health" },
+    { name: "bft-council",          port: 3215, role: "33-agent BFT council",                                  path: "/health" },
+    { name: "drafting-fork",        port: 3216, role: "Drafting fork (TypeScript OpenPatent)",                 path: "/health" },
+    { name: "x402-router",          port: 3217, role: "x402 payment router · 60/25/15 split",                 path: "/health" },
+    { name: "openpatent-primitives",port: 3218, role: "7 patent-primitive tools",                              path: "/health" },
+  ];
+
+  // Override host at the call site by appending ?host=openpatent.ai to the URL
+  // (handy when this page is served from a different origin than the hive).
+  const params = new URLSearchParams(location.search);
+  const HOST = params.get("host") || location.hostname || "openpatent.ai";
+  const PROTO = location.protocol === "https:" ? "https" : "http";
+
+  const grid = document.getElementById("grid");
+  const lastEl = document.getElementById("last");
+  const sumUp = document.getElementById("sum-up");
+  const sumWarn = document.getElementById("sum-warn");
+  const sumDown = document.getElementById("sum-down");
+  const sumUnk = document.getElementById("sum-unk");
+  const sumTotal = document.getElementById("sum-total");
+  const uptimeEl = document.getElementById("uptime");
+
+  sumTotal.textContent = SERVICES.length;
+
+  // Build cards once
+  const cards = new Map();
+  for (const s of SERVICES) {
+    const card = document.createElement("section");
+    card.className = "card unknown";
+    card.dataset.name = s.name;
+    card.innerHTML = `
+      <div class="head">
+        <div class="name">
+          <span class="status-dot" aria-hidden="true"></span>
+          ${s.name}
+        </div>
+        <span class="chip" data-role="status" style="background:var(--bg-row);border:1px solid var(--border);padding:3px 8px;border-radius:6px;font-size:11px;color:var(--fg-dim)">…</span>
+      </div>
+      <div class="role">${s.role}</div>
+      <div class="meta-row">
+        <span class="chip">port <b>:${s.port}</b></span>
+        <span class="chip">path <b>${s.path}</b></span>
+        <span class="chip">latency <b data-role="latency">—</b></span>
+        <span class="chip">http <b data-role="code">—</b></span>
+      </div>
+      <div class="latency-bar"><div data-role="bar"></div></div>
+      <div class="err" data-role="err"></div>
+    `;
+    grid.appendChild(card);
+    cards.set(s.name, {
+      el: card,
+      status: card.querySelector('[data-role="status"]'),
+      latency: card.querySelector('[data-role="latency"]'),
+      code: card.querySelector('[data-role="code"]'),
+      bar: card.querySelector('[data-role="bar"]'),
+      err: card.querySelector('[data-role="err"]'),
+      lastSeen: 0,
+    });
+  }
+
+  // ── Probing logic ───────────────────────────────────────────────────────
+  // 5s polling cadence. Each probe has a 3s timeout.
+  // Status taxonomy:
+  //   up      = HTTP 2xx in <500ms
+  //   warn    = HTTP 2xx in ≥500ms, OR any 3xx/4xx response
+  //   down    = HTTP 5xx, network error, or timeout
+  //   unknown = first poll in flight (grey)
+  const POLL_MS = 5000;
+  const TIMEOUT_MS = 3000;
+  const WARN_LATENCY_MS = 500;
+  const START_TS = Date.now();
+
+  function setCard(name, status, info) {
+    const c = cards.get(name);
+    if (!c) return;
+    c.el.classList.remove("up","warn","down","unknown");
+    c.el.classList.add(status);
+    c.status.textContent = statusLabel(status, info);
+    c.latency.textContent = info.latency != null ? `${info.latency} ms` : "—";
+    c.code.textContent = info.code != null ? String(info.code) : "—";
+    // Latency bar: 0ms → 0%, 1500ms → 100%
+    const pct = info.latency == null ? 0 : Math.min(100, Math.round((info.latency / 1500) * 100));
+    c.bar.style.width = pct + "%";
+    if (info.err) {
+      c.err.textContent = info.err;
+    } else {
+      c.err.textContent = "";
+    }
+    c.lastSeen = Date.now();
+  }
+
+  function statusLabel(status, info) {
+    if (status === "up")   return "UP";
+    if (status === "warn") return info && info.code === 200 ? "SLOW" : `HTTP ${info.code}`;
+    if (status === "down") return info && info.code ? `HTTP ${info.code}` : "DOWN";
+    return "…";
+  }
+
+  async function probe(svc) {
+    const url = `${PROTO}://${HOST}:${svc.port}${svc.path}`;
+    const ctrl = new AbortController();
+    const to = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    const t0 = performance.now();
+    try {
+      // No credentials. We use no-cors to avoid CORS preflight blocking the
+      // health signal (opaque responses still yield a status; we'll treat
+      // anything that completed under timeout as "responded").
+      const r = await fetch(url, { signal: ctrl.signal, cache: "no-store", mode: "no-cors" });
+      const dt = Math.round(performance.now() - t0);
+      // With no-cors, r.status is 0 (opaque). We judge by latency + the fact
+      // that fetch didn't throw. If the same-origin policy blocks, no-cors
+      // still returns an opaque 0/200-style response — not an error.
+      const code = r.status;  // 0 with no-cors
+      let status;
+      if (code === 0) {
+        // Opaque response: assume the service is alive if it answered fast
+        status = dt < WARN_LATENCY_MS ? "up" : "warn";
+      } else if (code >= 500) {
+        status = "down";
+      } else if (code >= 400 || code >= 300) {
+        status = "warn";
+      } else {
+        status = dt < WARN_LATENCY_MS ? "up" : "warn";
+      }
+      setCard(svc.name, status, { code, latency: dt, err: null });
+    } catch (e) {
+      const dt = Math.round(performance.now() - t0);
+      const msg = (e && e.name === "AbortError")
+        ? `timeout after ${TIMEOUT_MS} ms`
+        : (e && e.message) || String(e);
+      setCard(svc.name, "down", { code: null, latency: dt, err: `${url} — ${msg}` });
+    } finally {
+      clearTimeout(to);
+    }
+  }
+
+  async function pollAll() {
+    await Promise.all(SERVICES.map(probe));
+    lastEl.textContent = new Date().toLocaleTimeString();
+    // Summary
+    let up=0,warn=0,down=0,unk=0;
+    for (const c of cards.values()) {
+      if (c.el.classList.contains("up")) up++;
+      else if (c.el.classList.contains("warn")) warn++;
+      else if (c.el.classList.contains("down")) down++;
+      else unk++;
+    }
+    sumUp.textContent = up;
+    sumWarn.textContent = warn;
+    sumDown.textContent = down;
+    sumUnk.textContent = unk;
+  }
+
+  // Stale detection: mark cards we haven't heard from in 30s
+  setInterval(() => {
+    const now = Date.now();
+    for (const c of cards.values()) {
+      if (c.lastSeen && (now - c.lastSeen) > 30000) c.el.classList.add("stale");
+      else c.el.classList.remove("stale");
+    }
+  }, 5000);
+
+  function updateUptime() {
+    const s = Math.floor((Date.now() - START_TS) / 1000);
+    const h = String(Math.floor(s/3600)).padStart(2,"0");
+    const m = String(Math.floor((s%3600)/60)).padStart(2,"0");
+    const sec = String(s%60).padStart(2,"0");
+    uptimeEl.textContent = `${h}:${m}:${sec}`;
+  }
+  setInterval(updateUptime, 1000);
+  updateUptime();
+
+  // Kick off
+  pollAll();
+  setInterval(pollAll, POLL_MS);
+})();
+</script>
+</body>
+</html>

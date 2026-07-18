@@ -1,0 +1,15 @@
+{
+  "version": "v1_owned_v2_eval_2026-07-18",
+  "status": "STUB_PENDING_REAL_EVAL",
+  "honest_register": "M2 MacBook Air eval attempted but model load was slow (no GPU). Adapter 33.60 MB; base model ~1GB. Need Modal T4 for fast eval OR let M2 finish over ~30 min.",
+  "n_prompts": 24,
+  "adapter_id": "_owned_v2_adapter",
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "training_pairs": 1289,
+  "sibling_baseline": "sov3_student_adapter scored 20/24 (83.3%) with 113 pairs",
+  "expected_score": "_owned_v2 has 11.4x more data. Sibling's overnight work shows OWEM distillation scales. Expected 21-23/24 (87.5-95.8%)",
+  "recommendation": "Run on Modal T4 (sibling pattern): $0.05/run, 30 sec, returns result. OR run locally with patience.",
+  "next_step": "Sibling owns Modal keys (Qwen/Qwen2.5-0.5B + LoRA). Call them OR request them. Then run: PYTHONPATH='' ~/.sovereign/ml-venv/bin/python eval_owned_v2.py",
+  "blocking_reason": "no GPU on M2 + Modal keys owned by sibling",
+  "evidence_run": "2026-07-18: ml-venv loaded model + adapter successfully, hit 'Loading weights' progress bar, process likely OOM-killed or timed out before generation phase. ~1GB model on M2 may have hit memory pressure."
+}

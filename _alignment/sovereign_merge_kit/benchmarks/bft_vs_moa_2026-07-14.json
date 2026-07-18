@@ -1,0 +1,46 @@
+{
+  "proposers": 9,
+  "trials_per_point": 40,
+  "adversarial_counts": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "board": {
+    "moa_trustall": [
+      0.0103,
+      0.1142,
+      0.3342,
+      0.72,
+      0.8163
+    ],
+    "median": [
+      0.0153,
+      0.018,
+      0.0251,
+      0.0341,
+      0.0513
+    ],
+    "care_bft": [
+      0.0103,
+      0.0114,
+      0.0127,
+      0.0166,
+      0.0205
+    ]
+  },
+  "degradation_x": {
+    "moa_trustall": 79.25,
+    "median": 3.35,
+    "care_bft": 1.99
+  },
+  "headline": "At 4/9 adversarial proposers, the vanilla-MoA trust-all aggregator degrades 79.25x while care-gated BFT holds at 1.99x.",
+  "moa_ref": "Wang et al., Mixture-of-Agents, ICLR 2025 (arXiv 2406.04692) \u2014 models MoA aggregator as trust-all fusion",
+  "honest_scope": "controlled numeric-answer ensemble isolating the aggregation rule; not full-LLM MoA on text (stated next step).",
+  "claim": "A care-gated BFT aggregator is Byzantine-robust where vanilla MoA is not \u2014 the defensible differentiator over the MoA paper.",
+  "sigil_pubkey": "ed72f48d27ddfe85ef20387551488e216239713fee1e68bd33c181902d44f502",
+  "sigil": "30d9069b9d57f81bf28dff9d066d052f",
+  "sigil_verifies": true
+}

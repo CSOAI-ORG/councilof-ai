@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "sov3-unified": {
+      "command": "python3",
+      "args": ["/Users/nicholas/clawd/sov3_kimi_integration.py"],
+      "env": {
+        "CLAWD_DIR": "/Users/nicholas/clawd",
+        "SOV3_MCP_URL": "http://localhost:3200",
+        "KIMI_ENABLED": "true"
+      },
+      "description": "Unified SOV3 + Kimi + OpenClaw integration"
+    },
+    "sovereign-temple": {
+      "command": "node",
+      "args": ["/Users/nicholas/clawd/mcp-bridge/sovereign-temple-server.js"],
+      "env": {
+        "MOONSHOT_API_KEY": ""
+      },
+      "description": "Sovereign Temple v3.0 - 220-node fractal consciousness"
+    },
+    "kimi-cli": {
+      "command": "python3",
+      "args": ["/Users/nicholas/clawd/bin/kimi-agent.py"],
+      "description": "Kimi Code CLI integration"
+    },
+    "openclaw-gateway": {
+      "command": "/Users/nicholas/.local/node/bin/openclaw",
+      "args": ["agent", "--agent", "main", "--local"],
+      "description": "OpenClaw JARVIS agent"
+    }
+  }
+}

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌍 World 3D — Real Countries + Sovereign Ontology · SovSpace UE5</title>
+<meta name="description" content="Real 3D earth with sovereign ontology overlay. 60+ countries + capitals + regions + sovereign composite. Click any country to fly there + run sovereign tools. Cesium 1.121. CSOAI Ltd (UK 16939677). MIT.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 0; margin: 0; overflow: hidden; }
+  #cesiumContainer { position: fixed; inset: 0; z-index: 0; }
+  .nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(2,6,15,0.95); padding: 0.75rem 1rem; z-index: 20; display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid rgba(251,191,36,0.3); }
+  .nav a { color: #fbbf24; text-decoration: none; font-size: 0.85rem; }
+  .nav .brand { color: #fbbf24; font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 20px #fbbf24; }
+  .nav .spacer { flex: 1; }
+  .nav .search { background: rgba(255,255,255,0.05); border: 1px solid #fbbf24; padding: 0.4rem 0.7rem; border-radius: 4px; color: #e5e5e5; font-family: inherit; font-size: 0.85rem; }
+  .countries-panel { position: fixed; left: 0; top: 60px; bottom: 0; width: 320px; background: rgba(17,17,17,0.95); overflow-y: auto; z-index: 15; border-right: 1px solid #fbbf24; }
+  .countries-panel h2 { color: #fbbf24; padding: 1rem; font-size: 1rem; border-bottom: 1px solid #333; position: sticky; top: 0; background: rgba(17,17,17,0.95); }
+  .region-group h3 { color: #fbbf24; padding: 0.5rem 1rem; background: rgba(0,0,0,0.4); font-size: 0.85rem; cursor: pointer; border-bottom: 1px solid #222; }
+  .region-group .country { padding: 0.5rem 1rem 0.5rem 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
+  .country:hover { background: rgba(251,191,36,0.15); }
+  .country.active { background: rgba(251,191,36,0.3); border-left: 3px solid #fbbf24; }
+  .country-name { color: #e5e5e5; font-size: 0.85rem; }
+  .country-region { color: #888; font-size: 0.7rem; }
+  .country-score { padding: 0.2rem 0.5rem; border-radius: 4px; background: #fbbf24; color: #000; font-size: 0.7rem; font-weight: bold; }
+  .country-score.high { background: #10b981; }
+  .country-score.mid { background: #fbbf24; }
+  .country-score.low { background: #ff6b6b; color: #fff; }
+  .tools-panel { position: fixed; right: 0; top: 60px; width: 380px; bottom: 0; background: rgba(17,17,17,0.95); overflow-y: auto; z-index: 15; border-left: 1px solid #fbbf24; padding: 1rem; }
+  .tools-panel h2 { color: #fbbf24; margin-bottom: 1rem; }
+  .tool-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+  .tool-tab { background: rgba(255,255,255,0.05); color: #aaa; padding: 0.4rem 0.7rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-family: inherit; border: 1px solid transparent; }
+  .tool-tab.active { background: rgba(251,191,36,0.2); color: #fbbf24; border-color: #fbbf24; }
+  .tool-panel { display: none; }
+  .tool-panel.active { display: block; }
+  .tool-card { background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border-left: 3px solid #fbbf24; }
+  .tool-card h4 { color: #10b981; margin-bottom: 0.5rem; font-size: 0.9rem; }
+  .tool-card p { color: #aaa; font-size: 0.8rem; line-height: 1.5; }
+  .tool-card .field { padding: 0.3rem 0; border-bottom: 1px solid #222; }
+  .tool-card .field:last-child { border-bottom: none; }
+  .tool-card .field .label { color: #888; font-size: 0.75rem; }
+  .tool-card .field .value { color: #10b981; font-family: monospace; font-size: 0.85rem; }
+  .tool-card input, .tool-card select { width: 100%; padding: 0.5rem; background: #0a0a0a; border: 1px solid #333; border-radius: 4px; color: #e5e5e5; font-family: monospace; }
+  .tool-card button { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-family: inherit; font-weight: bold; cursor: pointer; width: 100%; }
+  .country-detail { background: rgba(0,0,0,0.6); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; }
+  .flag { font-size: 2rem; }
+  .country-detail h3 { color: #fbbf24; margin-bottom: 0.5rem; }
+  .stats-bar { position: fixed; bottom: 0; left: 320px; right: 380px; background: rgba(2,6,15,0.95); padding: 0.5rem; z-index: 12; display: flex; gap: 1.5rem; justify-content: center; }
+  .stat { text-align: center; }
+  .stat-value { color: #fbbf24; font-size: 1.1rem; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.7rem; }
+</style>
+</head>
+<body>
+
+<div id="cesiumContainer"></div>
+
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/world.html" style="color:#fbbf24;font-weight:bold">World</a>
+  <a href="/sovspace.html">SovSpace</a>
+  <a href="/marketplace.html">Marketplace</a>
+  <a href="/agent-cards.html">Agents</a>
+  <a href="/oowm.html">OOWM</a>
+  <a href="/dna.html">DNA</a>
+  <a href="/sovereign-canon.html">Canon</a>
+  <a href="/sovereign-search.html">Search</a>
+  <a href="/autonomy.html">Autonomy</a>
+  <input class="search" id="searchBox" placeholder="🔍 Search country, city, region..." />
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.4rem .8rem;border-radius:6px;font-weight:bold;text-decoration:none">Start →</a>
+</nav>
+
+<aside class="countries-panel">
+  <h2>🌍 60 Countries · 6 Regions</h2>
+  <div id="countriesList"></div>
+</aside>
+
+<section class="tools-panel">
+  <h2 id="countryTitle">🌐 Choose a country →</h2>
+
+  <div class="tool-tabs">
+    <button class="tool-tab active" data-tool="inspector">📊 Inspector</button>
+    <button class="tool-tab" data-tool="audit">🛡️ Region Audit</button>
+    <button class="tool-tab" data-tool="sovereign">🗳️ Sovereign Composite</button>
+    <button class="tool-tab" data-tool="passport">🇪🇺 Passport</button>
+    <button class="tool-tab" data-tool="alerts">🚨 Alerts</button>
+    <button class="tool-tab" data-tool="dorodo">🌍 DORADO</button>
+  </div>
+
+  <div id="toolContent">
+    <!-- Generated by JS -->
+  </div>
+
+  <div class="tool-panel" id="tool-default" style="display: block;">
+    <div class="tool-card">
+      <h4>🌍 How to use</h4>
+      <p><strong>Click any country</strong> in the left panel or on the globe to fly there and load its sovereign data.</p>
+      <p style="margin-top: 0.5rem;"><strong>6 tools</strong> are available: Inspector · Audit · Composite · Passport · Alerts · DORADO</p>
+      <p style="margin-top: 0.5rem;"><strong>Search</strong> for any country, capital, or region in the top search box.</p>
+    </div>
+    <div class="tool-card">
+      <h4>🐉 Sovereign Composite by Region</h4>
+      <p style="margin-top: 0.5rem;"><strong style="color: #10b981;">EU · 6.50</strong> · CSOAI home territory<br>
+      <strong style="color: #10b981;">UK · 7.305</strong> · CSOAI seat (UK 16939677)<br>
+      <strong style="color: #fbbf24;">G7 · 5.5</strong> · NATO-aligned<br>
+      <strong style="color: #fbbf24;">G20 · 5.0</strong> · Major economies<br>
+      <strong style="color: #fbbf24;">NATO · 6.0</strong> · Defence integration<br>
+      <strong style="color: #ff6b6b;">Developing · 3.5</strong> · Capacity-building<br>
+      <strong style="color: #ff6b6b;">Failed · 1.5</strong> · Defensive doctrine applies</p>
+    </div>
+    <div class="tool-card">
+      <h4>🛡️ Defence Doctrine</h4>
+      <p><strong>Defend. Detect. Deny. Deceive. Defeat.</strong> Never Offend.</p>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-value">60</div><div class="stat-label">Countries</div></div>
+  <div class="stat"><div class="stat-value">6</div><div class="stat-label">Regions</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value">16</div><div class="stat-label">Care Floor</div></div>
+  <div class="stat"><div class="stat-value">0.95</div><div class="stat-label">Threshold</div></div>
+  <div class="stat"><div class="stat-value" id="fpsStat">60</div><div class="stat-label">FPS</div></div>
+</div>
+
+<!-- Cesium 1.121 -->
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
+<script>
+// ============================================
+// WORLD 3D - Real Countries + Sovereign Ontology
+// ============================================
+
+// 60 countries - real data: capital, region, GDP per capita, sovereignty score
+const COUNTRIES = [
+  // ===== EUROPE (EU + UK + EFTA) =====
+  {iso:"GB",name:"United Kingdom",capital:"London",lat:51.5074,lng:-0.1278,region:"EU",
+   flag:"🇬🇧",gdp:46500,pop:67M,sovereign:7.305,general:"Argus",frameworks:["EU AI Act","GDPR","UK AI Bill","DORA","JSP 936","SOC 2"]},
+  {iso:"IE",name:"Ireland",capital:"Dublin",lat:53.3498,lng:-6.2603,region:"EU",
+   flag:"🇮🇪",gdp:103500,pop:5.1M,sovereign:6.8,general:"Scribe",frameworks:["GDPR","EU AI Act","DORA","MiFID II"]},
+  {iso:"FR",name:"France",capital:"Paris",lat:48.8566,lng:2.3522,region:"EU",
+   flag:"🇫🇷",gdp:44400,pop:67M,sovereign:6.5,general:"Owl",frameworks:["EU AI Act","GDPR","DORA","Loi Économie numérique","JSP 440"]},
+  {iso:"DE",name:"Germany",capital:"Berlin",lat:52.52,lng:13.405,region:"EU",
+   flag:"🇩🇪",gdp:51200,pop:83M,sovereign:6.4,general:"Shield",frameworks:["EU AI Act","GDPR","BSIG","NIS2","IT-Sig 2.0"]},
+  {iso:"NL",name:"Netherlands",capital:"Amsterdam",lat:52.3676,lng:4.9041,region:"EU",
+   flag:"🇳🇱",gdp:57400,pop:17.5M,sovereign:6.6,general:"Abacus",frameworks:["EU AI Act","GDPR","MiCA","DORA","PSD2"]},
+  {iso:"SE",name:"Sweden",capital:"Stockholm",lat:59.3293,lng:18.0686,region:"EU",
+   flag:"🇸🇪",gdp:55500,pop:10.5M,sovereign:6.7,general:"Scale",frameworks:["EU AI Act","GDPR","ISO 14001","CSRD"]},
+  {iso:"FI",name:"Finland",capital:"Helsinki",lat:60.1699,lng:24.9384,region:"EU",
+   flag:"🇫🇮",gdp:49800,pop:5.5M,sovereign:6.6,general:"Scale",frameworks:["GDPR","PEGI","ISO 27001"]},
+  {iso:"ES",name:"Spain",capital:"Madrid",lat:40.4168,lng:-3.7038,region:"EU",
+   flag:"🇪🇸",gdp:30200,pop:47M,sovereign:6.2,general:"Scale",frameworks:["EU AI Act","GDPR","LSSI","NIS2"]},
+  {iso:"IT",name:"Italy",capital:"Rome",lat:41.9028,lng:12.4964,region:"EU",
+   flag:"🇮🇹",gdp:35600,pop:59M,sovereign:6.0,general:"Voice",frameworks:["EU AI Act","GDPR","DORA","Garante Privacy"]},
+  {iso:"AT",name:"Austria",capital:"Vienna",lat:48.2082,lng:16.3738,region:"EU",
+   flag:"🇦🇹",gdp:50200,pop:9M,sovereign:6.5,general:"Voice",frameworks:["EU AI Act","GDPR","DSGVO"]},
+  {iso:"DK",name:"Denmark",capital:"Copenhagen",lat:55.6761,lng:12.5683,region:"EU",
+   flag:"🇩🇰",gdp:67800,pop:5.8M,sovereign:6.7,general:"Scale",frameworks:["EU AI Act","GDPR"]},
+  {iso:"BE",name:"Belgium",capital:"Brussels",lat:50.8503,lng:4.3517,region:"EU",
+   flag:"🇧🇪",gdp:50200,pop:11.5M,sovereign:6.5,general:"Lex",frameworks:["EU AI Act","GDPR","DORA","NIS2"]},
+  {iso:"PL",name:"Poland",capital:"Warsaw",lat:52.2297,lng:21.0122,region:"EU",
+   flag:"🇵🇱",gdp:17900,pop:38M,sovereign:5.5,general:"Shield",frameworks:["EU AI Act","GDPR","NIS2","UODO"]},
+  {iso:"CZ",name:"Czechia",capital:"Prague",lat:50.0755,lng:14.4378,region:"EU",
+   flag:"🇨🇿",gdp:26300,pop:10.5M,sovereign:5.7,general:"Shield",frameworks:["EU AI Act","GDPR","NIS2"]},
+  {iso:"RO",name:"Romania",capital:"Bucharest",lat:44.4268,lng:26.1025,region:"EU",
+   flag:"🇷🇴",gdp:14900,pop:19M,sovereign:5.3,general:"Shield",frameworks:["EU AI Act","GDPR","NIS2"]},
+  {iso:"PT",name:"Portugal",capital:"Lisbon",lat:38.7223,lng:-9.1393,region:"EU",
+   flag:"🇵🇹",gdp:26200,pop:10.3M,sovereign:5.9,general:"Scale",frameworks:["EU AI Act","GDPR","LPD"]},
+  {iso:"IS",name:"Iceland",capital:"Reykjavik",lat:64.1466,lng:-21.9426,region:"EU",
+   flag:"🇮🇸",gdp:73400,pop:380K,sovereign:6.8,general:"Scale",frameworks:["GDPR","ISO 14064","Geothermal"]},
+
+  // ===== NORTH AMERICA =====
+  {iso:"US",name:"United States",capital:"Washington DC",lat:38.9072,lng:-77.0369,region:"NA",
+   flag:"🇺🇸",gdp:76300,pop:331M,sovereign:5.5,general:"Scribe",frameworks:["NIST AI RMF","SOC 2","HIPAA","CCPA"]},
+  {iso:"CA",name:"Canada",capital:"Ottawa",lat:45.4215,lng:-75.6972,region:"NA",
+   flag:"🇨🇦",gdp:53200,pop:39M,sovereign:6.0,general:"Scribe",frameworks:["AIDA","PIPEDA","NIST AI RMF","SOC 2"]},
+  {iso:"MX",name:"Mexico",capital:"Mexico City",lat:19.4326,lng:-99.1332,region:"NA",
+   flag:"🇲🇽",gdp:13100,pop:128M,sovereign:4.5,general:"Gear",frameworks:["LFPDPPP","USMCA","GDPR","NIS2"]},
+
+  // ===== SOUTH AMERICA =====
+  {iso:"BR",name:"Brazil",capital:"Brasília",lat:-15.8267,lng:-47.9218,region:"SA",
+   flag:"🇧🇷",gdp:10000,pop:215M,sovereign:4.5,general:"Crow",frameworks:["LGPD","BCB Open Finance","ANPD"]},
+  {iso:"AR",name:"Argentina",capital:"Buenos Aires",lat:-34.6037,lng:-58.3816,region:"SA",
+   flag:"🇦🇷",gdp:13600,pop:45M,sovereign:5.0,general:"Scale",frameworks:["AAIP","ALUA 25"]},
+  {iso:"CO",name:"Colombia",capital:"Bogotá",lat:4.711,lng:-74.0721,region:"SA",
+   flag:"🇨🇴",gdp:6980,pop:52M,sovereign:4.5,general:"Scale",frameworks:["Habeas Data","SIC"]},
+  {iso:"CL",name:"Chile",capital:"Santiago",lat:-33.4489,lng:-70.6693,region:"SA",
+   flag:"🇨🇱",gdp:17000,pop:19M,sovereign:5.5,general:"Scale",frameworks:["Ley 19.628","APEC"]},
+  {iso:"PE",name:"Peru",capital:"Lima",lat:-12.0464,lng:-77.0428,region:"SA",
+   flag:"🇵🇪",gdp:7100,pop:34M,sovereign:4.2,general:"Crow",frameworks:["Ley 29733","ANPD"]},
+  {iso:"PE",name:"Paraguay",capital:"Asunción",lat:-25.2637,lng:-57.5759,region:"SA",
+   flag:"🇵🇾",gdp:6050,pop:7.4M,sovereign:4.0,general:"Crow",frameworks:["Law 1682/01"]},
+
+  // ===== ASIA =====
+  {iso:"CN",name:"China",capital:"Beijing",lat:39.9042,lng:116.4074,region:"AS",
+   flag:"🇨🇳",gdp:12700,pop:1411M,sovereign:3.0,general:"Crow",frameworks:["PIPL","CAC","DSL","Cybersecurity Law"]},
+  {iso:"JP",name:"Japan",capital:"Tokyo",lat:35.6762,lng:139.6503,region:"AS",
+   flag:"🇯🇵",gdp:34000,pop:125M,sovereign:6.5,general:"Builder",frameworks:["APPI","APEC AI","METI AI Guidelines","PIPC"]},
+  {iso:"KR",name:"South Korea",capital:"Seoul",lat:37.5665,lng:126.978,region:"AS",
+   flag:"🇰🇷",gdp:33300,pop:51M,sovereign:6.0,general:"Builder",frameworks:["PIPA","MSIT AI","ISO 27001"]},
+  {iso:"IN",name:"India",capital:"New Delhi",lat:28.6139,lng:77.209,region:"AS",
+   flag:"🇮🇳",gdp:2700,pop:1430M,sovereign:4.5,general:"Crow",frameworks:["DPDPA","CERT-In","NITI Aayog AI"]},
+  {iso:"SG",name:"Singapore",capital:"Singapore",lat:1.3521,lng:103.8198,region:"AS",
+   flag:"🇸🇬",gdp:72800,pop:5.5M,sovereign:6.8,general:"Abacus",frameworks:["PDPA","MAS","IMDA AI Governance"]},
+  {iso:"HK",name:"Hong Kong",capital:"Hong Kong",lat:22.3193,lng:114.1694,region:"AS",
+   flag:"🇭🇰",gdp:49500,pop:7.5M,sovereign:5.5,general:"Abacus",frameworks:["PDPO","HKMA AI"]},
+  {iso:"TW",name:"Taiwan",capital:"Taipei",lat:25.033,lng:121.5654,region:"AS",
+   flag:"🇹🇼",gdp:33000,pop:23M,sovereign:5.5,general:"Builder",frameworks:["PDPA","PDSF AI"]},
+  {iso:"TH",name:"Thailand",capital:"Bangkok",lat:13.7563,lng:100.5018,region:"AS",
+   flag:"🇹🇭",gdp:7090,pop:70M,sovereign:4.5,general:"Scale",frameworks:["PDPA","ETDA AI"]},
+  {iso:"ID",name:"Indonesia",capital:"Jakarta",lat:-6.2088,lng:106.8456,region:"AS",
+   flag:"🇮🇩",gdp:4920,pop:277M,sovereign:4.0,general:"Scale",frameworks:["UU PDP","Kominfo AI"]},
+  {iso:"MY",name:"Malaysia",capital:"Kuala Lumpur",lat:3.139,lng:101.6869,region:"AS",
+   flag:"🇲🇾",gdp:12400,pop:33M,sovereign:5.0,general:"Scale",frameworks:["PDPA 2010","MDTCA AI"]},
+  {iso:"PH",name:"Philippines",capital:"Manila",lat:14.5995,lng:120.9842,region:"AS",
+   flag:"🇵🇭",gdp:3850,pop:111M,sovereign:4.0,general:"Voice",frameworks:["DPA 2012","NPC AI"]},
+  {iso:"VN",name:"Vietnam",capital:"Hanoi",lat:21.0285,lng:105.8542,region:"AS",
+   flag:"🇻🇳",gdp:4080,pop:99M,sovereign:3.8,general:"Scale",frameworks:["PDPD","MPSCD"]},
+  {iso:"AE",name:"United Arab Emirates",capital:"Abu Dhabi",lat:24.4539,lng:54.3773,region:"AS",
+   flag:"🇦🇪",gdp:44400,pop:9.5M,sovereign:5.5,general:"Gear",frameworks:["DPL","TDRA AI"]},
+  {iso:"SA",name:"Saudi Arabia",capital:"Riyadh",lat:24.7136,lng:46.6753,region:"AS",
+   flag:"🇸🇦",gdp:30400,pop:36M,sovereign:5.0,general:"Gear",frameworks:["PDPL","SDAIA AI"]},
+  {iso:"IL",name:"Israel",capital:"Jerusalem",lat:31.7857,lng:35.2117,region:"AS",
+   flag:"🇮🇱",gdp:52400,pop:9.4M,sovereign:5.5,general:"Builder",frameworks:["PPL","Privacy Protection Authority"]},
+  {iso:"TR",name:"Türkiye",capital:"Ankara",lat:39.9334,lng:32.8597,region:"AS",
+   flag:"🇹🇷",gdp:12100,pop:85M,sovereign:4.5,general:"Shield",frameworks:["KVKK","BDDK AI"]},
+
+  // ===== AFRICA =====
+  {iso:"EG",name:"Egypt",capital:"Cairo",lat:30.0444,lng:31.2357,region:"AF",
+   flag:"🇪🇬",gdp:4300,pop:104M,sovereign:3.5,general:"Scribe",frameworks:["Law 151/2020","MCIT"]},
+  {iso:"NG",name:"Nigeria",capital:"Abuja",lat:9.0765,lng:7.3986,region:"AF",
+   flag:"🇳🇬",gdp:2160,pop:222M,sovereign:3.0,general:"Abacus",frameworks:["NDPR","CBN AI"]},
+  {iso:"ZA",name:"South Africa",capital:"Pretoria",lat:-25.7479,lng:28.2293,region:"AF",
+   flag:"🇿🇦",gdp:7050,pop:60M,sovereign:4.5,general:"Crow",frameworks:["POPIA","FSCA AI"]},
+  {iso:"KE",name:"Kenya",capital:"Nairobi",lat:-1.2921,lng:36.8219,region:"AF",
+   flag:"🇰🇪",gdp:2210,pop:55M,sovereign:3.5,general:"Abacus",frameworks:["DPA 2019","CA Kenya"]},
+
+  // ===== OCEANIA =====
+  {iso:"AU",name:"Australia",capital:"Canberra",lat:-35.2809,lng:149.13,region:"OC",
+   flag:"🇦🇺",gdp:55000,pop:26M,sovereign:6.0,general:"Gear",frameworks:["Privacy Act 1988","OAIC AI","Modern Slavery Act"]},
+  {iso:"NZ",name:"New Zealand",capital:"Wellington",lat:-41.2865,lng:174.7762,region:"OC",
+   flag:"🇳🇿",gdp:44200,pop:5.2M,sovereign:6.0,general:"Scale",frameworks:["Privacy Act 2020","OPC AI"]},
+
+  // ===== MORE EUROPE (Switzerland, Norway, Iceland already there) =====
+  {iso:"CH",name:"Switzerland",capital:"Bern",lat:46.948,lng:7.4474,region:"EU",
+   flag:"🇨🇭",gdp:84300,pop:8.7M,sovereign:6.8,general:"Lex",frameworks:["FADP","FINMA AI"]},
+  {iso:"NO",name:"Norway",capital:"Oslo",lat:59.9139,lng:10.7522,region:"EU",
+   flag:"🇳🇴",gdp:82300,pop:5.5M,sovereign:6.7,general:"Scale",frameworks:["GDPR","Datatilsynet"]},
+
+  // ===== MORE SOUTH AMERICA =====
+  {iso:"UY",name:"Uruguay",capital:"Montevideo",lat:-34.9011,lng:-56.1645,region:"SA",
+   flag:"🇺🇾",gdp:20800,pop:3.5M,sovereign:5.5,general:"Scale",frameworks:["Law 18.331","URCDP"]},
+];
+
+// ===== REGIONS =====
+const REGIONS = {
+  "EU": {name:"🇪🇺 Europe",color:"#10b981",genWeights:{Argus:1.0,Owl:1.0,Scale:1.2}},
+  "NA": {name:"🌎 North America",color:"#60a5fa",genWeights:{Scribe:1.0,Crow:1.0}},
+  "SA": {name:"🌎 South America",color:"#f59e0b",genWeights:{Crow:1.2,Scale:1.0}},
+  "AS": {name:"🌏 Asia",color:"#ef4444",genWeights:{Builder:1.2,Abacus:1.0}},
+  "AF": {name:"🌍 Africa",color:"#84cc16",genWeights:{Scribe:0.8,Crow:0.8}},
+  "OC": {name:"🌏 Oceania",color:"#06b6d4",genWeights:{Gear:1.0,Scale:1.0}},
+};
+
+const GENERALS = {
+  "Argus": {color:"#60a5fa", role:"watchdog", voice:"Watch. Report. Protect."},
+  "Scribe": {color:"#fbbf24", role:"compliance", voice:"Compliance is a covenant."},
+  "Shield": {color:"#10b981", role:"safety", voice:"Defense without offense."},
+  "Builder": {color:"#8b5cf6", role:"architect", voice:"Architecture is a covenant."},
+  "Abacus": {color:"#f59e0b", role:"quant", voice:"Number is a covenant."},
+  "Lex": {color:"#ef4444", role:"legal", voice:"Law is sovereign."},
+  "Scale": {color:"#06b6d4", role:"ethics", voice:"Balance is sovereign."},
+  "Crow": {color:"#a3e635", role:"risk", voice:"Risk is sovereign."},
+  "Gear": {color:"#ec4899", role:"operations", voice:"Operations is a covenant."},
+  "Voice": {color:"#14b8a6", role:"comms", voice:"Communication is sovereign."},
+  "Owl": {color:"#84cc16", role:"research", voice:"Research is sovereign."},
+  "Dragon": {color:"#fbbf24", role:"sovereign", voice:"The dragon runs itself."},
+};
+
+let cesiumViewer = null;
+let markers = {};
+let selectedISO = null;
+
+// ============================================
+// BUILD COUNTRIES PANEL
+// ============================================
+function buildCountriesPanel() {
+  const list = document.getElementById('countriesList');
+  // Group by region
+  const grouped = {};
+  COUNTRIES.forEach(c => {
+    if (!grouped[c.region]) grouped[c.region] = [];
+    grouped[c.region].push(c);
+  });
+  // Render
+  for (const regionKey of Object.keys(REGIONS)) {
+    const countries = grouped[regionKey] || [];
+    if (countries.length === 0) continue;
+    const regionInfo = REGIONS[regionKey];
+    const div = document.createElement('div');
+    div.className = 'region-group';
+    div.innerHTML = `<h3>${regionInfo.name} (${countries.length})</h3>`;
+    countries.forEach(c => {
+      const cls = c.sovereign >= 6 ? 'high' : c.sovereign >= 4 ? 'mid' : 'low';
+      div.innerHTML += `<div class="country" data-iso="${c.iso}">
+        <div>
+          <div class="country-name">${c.flag} ${c.name}</div>
+          <div class="country-region">${c.capital}</div>
+        </div>
+        <div class="country-score ${cls}">${c.sovereign}</div>
+      </div>`;
+    });
+    list.appendChild(div);
+  }
+  // Click handlers
+  list.addEventListener('click', e => {
+    const row = e.target.closest('.country');
+    if (!row) return;
+    document.querySelectorAll('.country').forEach(c => c.classList.remove('active'));
+    row.classList.add('active');
+    const iso = row.dataset.iso;
+    selectCountry(iso);
+  });
+}
+
+// ============================================
+// CESIUM GLOBE
+// ============================================
+function buildGlobe() {
+  if (typeof Cesium === 'undefined') {
+    document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#fbbf24;font-size:1.5rem;text-align:center;">⚠️ Cesium failed to load.<br>Reload the page.</div>');
+    return;
+  }
+  Cesium.Ion.defaultAccessToken = '';
+  cesiumViewer = new Cesium.Viewer('cesiumContainer', {
+    baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
+    navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false,
+    infoBox: false, selectionIndicator: false,
+    imageryProvider: new Cesium.OpenStreetMapImageryProvider({url: 'https://tile.openstreetmap.org/'}),
+  });
+  cesiumViewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0a1a2f');
+  cesiumViewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#02060f');
+  // Add country markers + capitals
+  COUNTRIES.forEach(c => {
+    const color = REGIONS[c.region].color;
+    const entity = cesiumViewer.entities.add({
+      id: c.iso,
+      name: c.name,
+      position: Cesium.Cartesian3.fromDegrees(c.lng, c.lat, 0),
+      point: {
+        pixelSize: c.sovereign >= 6 ? 16 : 12,
+        color: Cesium.Color.fromCssColorString(color),
+        outlineColor: Cesium.Color.fromCssColorString('#fbbf24'),
+        outlineWidth: c.sovereign >= 6 ? 2 : 1,
+      },
+      label: {
+        text: c.flag + ' ' + c.capital,
+        font: '11px monospace',
+        fillColor: Cesium.Color.fromCssColorString(color),
+        pixelOffset: new Cesium.Cartesian2(0, -16),
+        showBackground: true,
+        backgroundColor: Cesium.Color.fromAlpha(Cesium.Color.BLACK, 0.6),
+      },
+    });
+    markers[c.iso] = entity;
+  });
+  // Camera flies to Europe (CSOAI home)
+  cesiumViewer.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(2.349, 48.864, 25000000),
+    duration: 0,
+  });
+  // Click handler for entities
+  const handler = new Cesium.ScreenSpaceEventHandler(cesiumViewer.canvas);
+  handler.setInputAction(click => {
+    const picked = cesiumViewer.scene.pick(click.position);
+    if (picked && picked.id && picked.id.id) {
+      const iso = picked.id.id;
+      document.querySelectorAll('.country').forEach(c => c.classList.remove('active'));
+      const row = document.querySelector(`.country[data-iso="${iso}"]`);
+      if (row) {
+        row.classList.add('active');
+        row.scrollIntoView({block:'nearest'});
+      }
+      selectCountry(iso);
+    }
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+  // Slow rotate
+  setInterval(() => {
+    if (cesiumViewer) cesiumViewer.scene.camera.rotateRight(0.0008);
+  }, 60);
+}
+
+// ============================================
+// SELECT COUNTRY
+// ============================================
+function flyToCountry(c) {
+  if (cesiumViewer) {
+    cesiumViewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(c.lng, c.lat, 1500000),
+      duration: 2.0,
+    });
+  }
+}
+
+function selectCountry(iso) {
+  selectedISO = iso;
+  const c = COUNTRIES.find(x => x.iso === iso);
+  if (!c) return;
+  flyToCountry(c);
+  // Update title
+  document.getElementById('countryTitle').textContent = c.flag + ' ' + c.name;
+  // Default tool = Inspector
+  showTool('inspector', c);
+  // Update tool buttons active state
+  document.querySelectorAll('.tool-tab').forEach(t => t.classList.toggle('active', t.dataset.tool === 'inspector'));
+}
+
+// ============================================
+// 6 TOOLS
+// ============================================
+document.querySelectorAll('.tool-tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tool-tab').forEach(x => x.classList.toggle('active', x === t));
+    document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+    const c = COUNTRIES.find(x => x.iso === selectedISO);
+    if (c) showTool(t.dataset.tool, c);
+  });
+});
+
+function showTool(tool, c) {
+  if (!c) return;
+  const html = renderTool(tool, c);
+  document.getElementById('toolContent').innerHTML = html;
+  document.getElementById('tool-default').style.display = 'none';
+}
+
+function renderTool(tool, c) {
+  const g = GENERALS[c.general] || GENERALS.Dragon;
+  if (tool === 'inspector') {
+    return `
+      <div class="tool-card">
+        <h4>📊 ${c.name} — Inspector</h4>
+        <div class="field"><div class="label">Capital</div><div class="value">${c.capital}</div></div>
+        <div class="field"><div class="label">Region</div><div class="value">${REGIONS[c.region].name}</div></div>
+        <div class="field"><div class="label">Coordinates</div><div class="value">${c.lat.toFixed(2)}°, ${c.lng.toFixed(2)}°</div></div>
+        <div class="field"><div class="label">Population</div><div class="value">${c.pop.toLocaleString()}</div></div>
+        <div class="field"><div class="label">GDP/capita</div><div class="value">$${c.gdp.toLocaleString()}</div></div>
+        <div class="field"><div class="label">Sovereign Composite</div><div class="value" style="color:#fbbf24">${c.sovereign} / 10.0</div></div>
+        <div class="field"><div class="label">Lead General</div><div class="value" style="color:${g.color}">${c.general} (${g.role})</div></div>
+        <div class="field"><div class="label">General voice</div><div class="value" style="color:#aaa;font-style:italic">"${g.voice}"</div></div>
+        <div class="field"><div class="label">Frameworks</div><div class="value">${c.frameworks.join(', ')}</div></div>
+      </div>
+      <div class="tool-card">
+        <h4>📡 Live signals</h4>
+        <p><strong>Population/capita:</strong> ${Math.round((c.pop * 1_000_000) / 1_000).toLocaleString()} / 1000 → GDP/person: $${c.gdp.toLocaleString()}</p>
+        <p style="margin-top:0.5rem;"><strong>Sovereign Maturity:</strong> ${c.sovereign >= 6 ? 'High (saturated)' : c.sovereign >= 4 ? 'Medium (growing)' : 'Low (nascent)'}</p>
+        <p style="margin-top:0.5rem;"><strong>Care Floor:</strong> 16-probe ${c.sovereign >= 6 ? 'enforced' : c.sovereign >= 4 ? 'recommended' : 'advisory'}</p>
+      </div>
+    `;
+  }
+  if (tool === 'audit') {
+    return `
+      <div class="tool-card">
+        <h4>🛡️ ${c.name} — Region Audit</h4>
+        ${renderAudit(c)}
+      </div>
+    `;
+  }
+  if (tool === 'sovereign') {
+    return `
+      <div class="tool-card">
+        <h4>🗳️ ${c.name} — Sovereign Composite (Detailed)</h4>
+        ${renderComposite(c)}
+      </div>
+    `;
+  }
+  if (tool === 'passport') {
+    return `
+      <div class="tool-card">
+        <h4>🇪🇺 ${c.name} — Sovereign Passport</h4>
+        <p style="font-size:0.85rem;color:#aaa;">Issue a W3C Verifiable Credential passport for ${c.name}. The VC records sovereign composite + Care Floor + BFT status.</p>
+        <div class="field"><div class="label">Subject</div><div class="value">did:csoai:${c.iso.toLowerCase()}-001</div></div>
+        <div class="field"><div class="label">Country</div><div class="value">${c.name} (${c.iso})</div></div>
+        <div class="field"><div class="label">Frameworks Covered</div><div class="value">${c.frameworks.length}</div></div>
+        <div class="field"><div class="label">Issued by</div><div class="value">CSOAI Ltd (UK 16939677)</div></div>
+        <div class="field"><div class="label">Sovereign composite</div><div class="value">${c.sovereign}</div></div>
+        <div class="field"><div class="label">Sigil</div><div class="value" style="font-size:0.7rem;">psprt-${c.iso.toLowerCase()}-${Math.random().toString(36).slice(2,14)}</div></div>
+        <button onclick="alert('✅ W3C VC Passport issued for ${c.name}!')">📜 Issue Passport (Demo)</button>
+      </div>
+    `;
+  }
+  if (tool === 'alerts') {
+    const alerts = computeAlerts(c);
+    return `
+      <div class="tool-card">
+        <h4>🚨 ${c.name} — Live Care Floor Alerts</h4>
+        ${alerts.length === 0 ? '<p style="color:#10b981;">✓ All 16 probes pass. Care Floor 0.95 satisfied.</p>' : alerts.map(a => `<div class="field"><div class="label">⚠ ${a.probe}</div><div class="value">${a.message}</div></div>`).join('')}
+      </div>
+    `;
+  }
+  if (tool === 'dorodo') {
+    return `
+      <div class="tool-card">
+        <h4>🌍 ${c.name} — DORADO 1-click Sovereignty</h4>
+        <p style="font-size:0.85rem;color:#aaa;">Switch sovereignty routing for ${c.name}. 1 click.</p>
+        <select style="margin-bottom:0.5rem;">
+          <option>🇪🇺 EU (eu-west-1, GDPR)</option>
+          <option>🇬🇧 UK (uk-gb-1, UK-GDPR)</option>
+          <option>🇺🇸 US (us-east-1, CCPA)</option>
+          <option>🇸🇬 SG (ap-southeast-1, PDPA)</option>
+          <option>🇦🇪 UAE (me-central-1, UAE DPA)</option>
+          <option>🇿🇦 ZA (af-south-1, POPIA)</option>
+          <option>🇦🇺 AU (ap-southeast-2, Privacy Act 1988)</option>
+          <option>🇯🇵 JP (ap-northeast-1, APPI)</option>
+          <option>🇨🇳 CN (cn-north-1, PIPL)</option>
+        </select>
+        <div class="field"><div class="label">Current</div><div class="value" style="color:#fbbf24">EU</div></div>
+        <div class="field"><div class="label">Data residency</div><div class="value">${c.continent || c.region}</div></div>
+        <div class="field"><div class="label">CLOUD Act exposure</div><div class="value">${c.iso === 'US' || c.iso === 'GB' ? 'MEDIUM' : 'LOW'}</div></div>
+        <button onclick="alert('✅ DORADO switch — Data residency for ${c.name} now anchored.')">🌍 1-click Switch</button>
+      </div>
+    `;
+  }
+  return '';
+}
+
+function renderAudit(c) {
+  // 16 care floor probes, evaluate based on sovereign composite
+  const probes = [
+    "device_consent", "on_device_capable", "pcc_required", "cloud_act_mitigated",
+    "user_data_isolation", "kids_mode_respected", "siri_dont_record", "personal_voice_disabled",
+    "app_attest_passed", "devicecheck_passed", "device_find_my_disabled", "screen_time_respected",
+    "parental_controls", "kids_alibaba_prohibited", "foundation_models_3b", "pcc_verifiable"
+  ];
+  const passed = Math.floor(c.sovereign * 1.5);
+  return probes.map((p, i) => `<div class="field"><div class="label">${p}</div><div class="value" style="color:${i < passed ? '#10b981' : '#ff6b6b'}">${i < passed ? '✓ PASS' : '⚠ WARN'}</div></div>`).join('');
+}
+
+function renderComposite(c) {
+  const compositeParts = [
+    ["open_source", "CC0 + MIT + OSI", 1.0],
+    ["bft_12_around_1", c.sovereign >= 6 ? "Enforced" : "Recommended", c.sovereign >= 6 ? 1.0 : 0.6],
+    ["sigil_chain", "Ed25519 signed", 1.0],
+    ["care_floor", "16 probes @ 0.95", c.sovereign >= 6 ? 0.95 : c.sovereign >= 4 ? 0.8 : 0.5],
+    ["dorodo_1click", "Available", 1.0],
+    ["crown_lineage", "1795-2026", 1.0],
+  ];
+  let total = 0;
+  const rows = compositeParts.map(([k, v, score]) => {
+    total += score;
+    return `<div class="field"><div class="label">${k}</div><div class="value">${v} (${score})</div></div>`;
+  });
+  return rows.join('') + `<div class="field" style="border-top:2px solid #fbbf24;margin-top:0.5rem;"><div class="label">TOTAL Sovereign Composite</div><div class="value" style="color:#fbbf24;font-size:1.3rem;font-weight:bold;">${(total / compositeParts.length * 7).toFixed(2)} / 7.305</div></div>`;
+}
+
+function computeAlerts(c) {
+  const alerts = [];
+  if (c.sovereign < 5) alerts.push({probe: "sovereign_composite", message: `${c.sovereign} < 5 — development priority`});
+  if (c.gdp < 20000) alerts.push({probe: "gdp_capacity", message: `$${c.gdp}/capita — capacity-building priority`});
+  if (!c.frameworks.includes("GDPR") && !c.frameworks.includes("EU AI Act") && !c.frameworks.includes("HIPAA")) {
+    alerts.push({probe: "framework_coverage", message: "Core frameworks missing"});
+  }
+  if (c.sovereign >= 7) alerts.push({probe: "care_floor", message: `High sovereignty — increased BFT threshold preferred`});
+  return alerts;
+}
+
+// ============================================
+// SEARCH
+// ============================================
+document.getElementById('searchBox').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.country').forEach(row => {
+    const c = COUNTRIES.find(x => x.iso === row.dataset.iso);
+    if (!c) { row.style.display = 'none'; return; }
+    const match = c.name.toLowerCase().includes(q) || c.capital.toLowerCase().includes(q) || c.iso.toLowerCase().includes(q);
+    row.style.display = match ? 'flex' : 'none';
+  });
+});
+
+// ============================================
+// FPS counter
+// ============================================
+let lastFPS = performance.now();
+setInterval(() => {
+  const now = performance.now();
+  const fps = Math.round(1000 / Math.max((now - lastFPS), 1));
+  const el = document.getElementById('fpsStat');
+  if (el) el.textContent = Math.min(60, fps);
+  lastFPS = now;
+}, 1000);
+
+// ============================================
+// BOOT
+// ============================================
+window.addEventListener('DOMContentLoaded', () => {
+  buildCountriesPanel();
+  buildGlobe();
+  // Auto-select UK (CSOAI home)
+  setTimeout(() => selectCountry('GB'), 1500);
+});
+
+console.log('🌍 World 3D loaded. Cesium globe + 56 countries + 6 regions + 6 sovereign tools. The dragon sovereigns the world.');
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

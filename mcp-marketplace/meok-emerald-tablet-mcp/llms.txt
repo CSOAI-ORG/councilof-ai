@@ -1,0 +1,51 @@
+# meok-emerald-tablet-mcp
+
+> The 13 sentences of Hermes Trismegistus (Tabula Smaragdina) as the MEOK sovereign attestation protocol. Each sentence becomes a tool. Public-domain text + sovereign mapping.
+
+**Install:** `pip install meok-emerald-tablet-mcp`
+**Run:** `python -m server.py`
+**By:** MEOK AI Labs (nicholas@meok.ai) · [meok.ai](https://meok.ai)
+
+## What it does
+
+The Emerald Tablet is the 13-sentence foundation text of Western hermetic philosophy (~800 CE Latin, based on much older Greek/Arabic originals). MEOK's attestation pipeline already has 13 sigil emission steps. This MCP names them.
+
+## Tools (15 total)
+
+13 sentence tools + 2 helper tools:
+
+| # | Tool | Tablet sentence (excerpt) | MEOK step |
+|--:|------|---------------------------|-----------|
+| 1  | `tablet_01_verify`     | "True without falsehood, as above so below" | scope ↔ claim |
+| 2  | `tablet_02_one`        | "All arose from One, by mediation of One" | parent chain |
+| 3  | `tablet_03_four`       | "Sun father, Moon mother, Wind carried, Earth nurse" | kid, ts, payload, scope |
+| 4  | `tablet_04_anchor`     | "Father of all perfection" | root anchor |
+| 5  | `tablet_05_sig`        | "Force entire if converted into earth" | sig → artifact |
+| 6  | `tablet_06_validate`   | "Separate subtle from gross" | validation gate |
+| 7  | `tablet_07_two`        | "Ascends from Earth to Heaven, descends again" | ingest/audit flow |
+| 8  | `tablet_08_public`     | "Glory of whole world, obscurity flies" | public verify URL |
+| 9  | `tablet_09_ed25519`    | "Strong fortitude of all fortitudes" | Ed25519 + BFT |
+| 10 | `tablet_10_sovereign`  | "By Will, Word, Power of the One Craftsman" | single signer |
+| 11 | `tablet_11_three`      | "Hermes Trismegistus — three parts of philosophy" | King+Queen+Witness |
+| 12 | `tablet_12_coagulatio` | "Operation of the Sun is complete" | release artefact |
+| 13 | `tablet_13_genesis`    | "So the world was created" | genesis release |
+| —  | `tablet_list_all`      | List all 13 sentences + MEOK mappings | — |
+| —  | `tablet_full_text`     | Return the full canonical text | — |
+
+## Use cases
+
+- **Doc generator:** call `tablet_full_text` → drop into a deck or blog post
+- **Audit pipeline explainer:** each tool returns the sovereign mapping for one step
+- **BFT council template:** the 13 sentences = the 13 voters (quorum 7)
+- **Brand spine:** "CSOAI is the Philosopher's Stone" lands harder when the 13 steps have names
+
+## License
+
+MIT. The 13 sentences themselves are public domain (Latin pre-1200 CE).
+
+## See also
+
+- [meok.ai](https://meok.ai) — sovereign AI compliance
+- [csoai.org](https://csoai.org) — AI governance authority
+- [meok-attestation-api](https://pypi.org/project/meok-attestation-api) — the underlying crypto
+- [meok-compliance-gateway](https://pypi.org/project/meok-compliance-gateway) — the keystone

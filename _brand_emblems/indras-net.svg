@@ -1,0 +1,35 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MEOK Indra's Net — each jewel reflects all">
+  <defs>
+    <radialGradient id="jewel" cx="0.5" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#bfe0ff"/><stop offset="0.5" stop-color="#3b82f6"/><stop offset="1" stop-color="#1e3a8a"/>
+    </radialGradient>
+    <filter id="ng" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- the net: connecting threads -->
+  <g stroke="#3b82f6" stroke-width="1" opacity="0.4">
+    <!-- horizontal + diagonal lattice across a 5x5 triangular grid -->
+    <g id="lines"></g>
+  </g>
+  <!-- generate nodes: a 5-row staggered lattice -->
+  <g stroke="#3b82f6" stroke-width="1" opacity="0.35" fill="none">
+    <path d="M80 100 L200 100 L320 100 M80 175 L200 175 L320 175 M80 250 L200 250 L320 250 M140 137 L260 137 M140 212 L260 212"/>
+    <path d="M80 100 L80 250 M200 100 L200 250 M320 100 L320 250 M140 137 L140 212 M260 137 L260 212"/>
+    <path d="M80 100 L200 175 L320 250 M320 100 L200 175 L80 250 M200 100 L140 137 M200 100 L260 137 M140 212 L200 250 M260 212 L200 250"/>
+  </g>
+  <!-- jewels (nodes) -->
+  <g filter="url(#ng)">
+    <circle cx="80" cy="100" r="11" fill="url(#jewel)"/><circle cx="200" cy="100" r="11" fill="url(#jewel)"/><circle cx="320" cy="100" r="11" fill="url(#jewel)"/>
+    <circle cx="140" cy="137" r="9" fill="url(#jewel)"/><circle cx="260" cy="137" r="9" fill="url(#jewel)"/>
+    <circle cx="80" cy="175" r="11" fill="url(#jewel)"/><circle cx="200" cy="175" r="15" fill="url(#jewel)"/><circle cx="320" cy="175" r="11" fill="url(#jewel)"/>
+    <circle cx="140" cy="212" r="9" fill="url(#jewel)"/><circle cx="260" cy="212" r="9" fill="url(#jewel)"/>
+    <circle cx="80" cy="250" r="11" fill="url(#jewel)"/><circle cx="200" cy="250" r="11" fill="url(#jewel)"/><circle cx="320" cy="250" r="11" fill="url(#jewel)"/>
+  </g>
+  <!-- highlight: the centre jewel reflecting the others (small mirrored dots inside it) -->
+  <g fill="#bfe0ff" opacity="0.9">
+    <circle cx="195" cy="170" r="1.7"/><circle cx="206" cy="172" r="1.7"/><circle cx="200" cy="181" r="1.7"/><circle cx="193" cy="178" r="1.4"/><circle cx="207" cy="180" r="1.4"/>
+  </g>
+  <text x="200" y="306" text-anchor="middle" fill="#e8edf7" font-family="Geist,Inter,system-ui,sans-serif" font-size="21" font-weight="600" letter-spacing="2">EACH REFLECTS ALL</text>
+  <text x="200" y="330" text-anchor="middle" fill="#8a97b2" font-family="Geist,Inter,system-ui,sans-serif" font-size="13" letter-spacing="2">Indra's Net · one hive, every node whole</text>
+</svg>

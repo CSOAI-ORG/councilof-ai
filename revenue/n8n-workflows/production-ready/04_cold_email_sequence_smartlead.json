@@ -1,0 +1,249 @@
+{
+  "name": "Cold Email Sequence \u2014 Apollo enrichment + Claude personalization + Smartlead delivery",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cold-list-import",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-list",
+      "name": "Webhook \u2014 receive cold list",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apollo.io/v1/people/match?api_key={{$credentials.apollo.api_key}}&email={{$json.email}}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "apollo-enrich",
+      "name": "Apollo \u2014 enrich contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-3-5-sonnet-20241022",
+          "mode": "id"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are Nicholas Templeman, solo UK founder of MEOK AI Labs. You're writing a cold email to a UK boutique GRC consultancy. Goal: open a conversation about white-label or referral partnership for EU AI Act / DORA / NIS2 compliance products.\n\nContact:\n- Name: {{$json.first_name}} {{$json.last_name}}\n- Title: {{$json.title}}\n- Company: {{$json.company_name}}\n- Recent LinkedIn post or company news: {{$json.recent_signal || 'none'}}\n\nWrite the email:\n- Subject (\u226450 chars, no buzzwords)\n- Body (\u2264120 words, plain text, paragraph breaks)\n- Reference ONE specific detail about them (use recent_signal if available, else company specialism)\n- Lead with the specific question/offer, not 'hope you're well'\n- End with single low-friction CTA (a 15-min call link)\n- Sign as 'Nicholas Templeman, MEOK AI Labs \u00b7 UK Companies House 16939677'\n\nReturn JSON with two fields: subject, body. Nothing else.",
+              "role": "user"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 600,
+          "temperature": 0.5
+        }
+      },
+      "id": "claude-personalize",
+      "name": "Claude \u2014 personalize cold email",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://server.smartlead.ai/api/v1/campaigns/{{$credentials.smartlead.campaign_id}}/leads",
+        "method": "POST",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{$json.email}}"
+            },
+            {
+              "name": "first_name",
+              "value": "={{$json.first_name}}"
+            },
+            {
+              "name": "last_name",
+              "value": "={{$json.last_name}}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{$json.company_name}}"
+            },
+            {
+              "name": "custom_subject",
+              "value": "={{$json.subject}}"
+            },
+            {
+              "name": "custom_body",
+              "value": "={{$json.body}}"
+            }
+          ]
+        }
+      },
+      "id": "smartlead-add-lead",
+      "name": "Smartlead \u2014 add to campaign",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO outbound_log (lead_email, brand, campaign, subject_line, body_preview, sent_at, expected_followups) VALUES ('{{$json.email}}', 'MEOK', 'boutique-grc-q2-2026', '{{$json.subject}}', SUBSTRING('{{$json.body}}', 1, 200), NOW(), 7)"
+      },
+      "id": "log-pocketbase",
+      "name": "Log to outbound_log",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "id": "split-batches",
+      "name": "Split into batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "batchSize": 10,
+        "options": {}
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "apollo-error-check",
+      "name": "Check Apollo response",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [],
+          "string": [
+            {
+              "value1": "={{ $json.error ? 'error' : 'ok' }}",
+              "operation": "equals",
+              "value2": "ok"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2
+    }
+  ],
+  "connections": {
+    "Webhook \u2014 receive cold list": {
+      "main": [
+        [
+          {
+            "node": "Apollo \u2014 enrich contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apollo \u2014 enrich contact": {
+      "main": [
+        [
+          {
+            "node": "Claude \u2014 personalize cold email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude \u2014 personalize cold email": {
+      "main": [
+        [
+          {
+            "node": "Smartlead \u2014 add to campaign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Smartlead \u2014 add to campaign": {
+      "main": [
+        [
+          {
+            "node": "Log to outbound_log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "split-batches": {
+      "main": [
+        [
+          {
+            "node": "apollo-enrich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apollo-enrich": {
+      "main": [
+        [
+          {
+            "node": "apollo-error-check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "apollo-error-check": {
+      "main": [
+        [
+          {
+            "node": "claude-personalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "_meok_notes": {
+    "purpose": "Take a cold prospect list (CSV/JSON), enrich via Apollo, generate personalized email via Claude, push to Smartlead campaign with 7-touch sequence",
+    "trigger": "POST https://n8n.iokfarm.co.uk/webhook/cold-list-import with array of {email, first_name, last_name, company_name, recent_signal}",
+    "smartlead_campaign_settings": "7 touches over 14 days, 2-day gap between sends, randomized delivery 9am-3pm UK, send only Tue-Fri (no Mondays/weekends)",
+    "expected_metrics": "30-45% open, 5-10% reply, 1-3% positive reply, 0.5-1.5% paid conversion at MEOK price points"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "id": "mr-2nd-vm-provisioning-plan",
+  "prompt": "Write a 350-word provisioning plan for standing up the 2nd sovereign VM (EU-frankfurt region) to join the existing UK-london sovereign temple. Cover: (1) the Hetzner AX162 or equivalent bare-metal target (AMD EPYC 9454P, 256GB ECC, 2x 1.92TB NVMe), (2) the Ubuntu 24.04 LTS image + LUKS full-disk encryption with KMS-wrapped keys, (3) the network configuration — VPC peering to the UK temple, WireGuard mesh between all 3 future regions, BGP-advertised /24, (4) the install sequence (1) bootstrap with terraform, (2) install openpatent-hive via /opt/openpatent-hive/scripts/install.sh, (3) sync the 6-layer disclosure stack, (4) join the CometBFT validator set as the EU seed, (5) replay the last 720 blocks of state from the UK temple, (6) sync the IPFS pin-set and the C2PA manifest store, (5) the cutover criteria — when does EU start serving traffic (≥3 consecutive 22/33 supermajority rounds, p99 disclosure latency <800ms from Frankfurt, replication lag <2s), (6) the rollback path if the join fails after 90 minutes. Use DEFENEOS mythic voice. Return ONLY JSON: {plan:string, target_host:string, os:string, install_steps:[6 strings], cutover_criteria:[3 strings], rollback:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

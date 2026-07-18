@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Security Architecture — PQC, Zero Trust, JSP 440, Air-Gap</title>
+<meta name="description" content="DEFONEOS Security Architecture: Post-quantum cryptography (ML-DSA, ML-KEM), Zero Trust Network, JSP 440 compliance, air-gapped deployment, Ed25519 SIGIL chain. UK sovereign defence-grade security.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#ef4444,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#ef4444;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(239,68,68,.2);border-color:#ef4444;color:#ef4444;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(239,68,68,.15);color:#ef4444;font-size:.85rem;border-bottom:2px solid rgba(239,68,68,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem}
+.nav a:hover{color:#ef4444}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.pipeline-step{display:flex;align-items:center;margin:1rem 0;gap:1rem}
+.step-num{background:rgba(239,68,68,.2);border:2px solid #ef4444;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#ef4444;flex-shrink:0}
+.step-body{flex:1}
+.step-body h4{color:#f8fafc;margin:0 0 .25rem}
+.step-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-cyber.html">🛡️ Cyber</a>
+  <a href="defoneos-bft.html">⚖️ BFT Council</a>
+  <a href="defoneos-jsp936.html">📋 JSP 936</a>
+  <a href="defoneos-deploy.html">🏗️ Deploy</a>
+</div>
+
+<h1>🔐 Security Architecture</h1>
+<p class="tagline">Post-quantum cryptography. Zero Trust networking. JSP 440 compliance. Air-gapped deployment. Ed25519 SIGIL chain. Every byte sovereign British. Every action auditable.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">PQC</span><h3>Post-Quantum Crypto</h3><p>NIST ML-DSA-65 (Dilithium) signatures + ML-KEM-768 (Kyber) key exchange. Quantum-resistant by design.</p></div>
+  <div class="card"><span class="stat">Zero Trust</span><h3>Network Model</h3><p>No implicit trust. Every request authenticated, authorised, logged. Microsegmentation per service.</p></div>
+  <div class="card"><span class="stat">JSP 440</span><h3>Compliance</h3><p>UK MoD JSP 440 security policy. OFFICIAL-SENSITIVE ready. Air-gap capable deployment.</p></div>
+  <div class="card"><span class="stat">Ed25519</span><h3>SIGIL Chain</h3><p>Hash-chained, Ed25519-signed audit trail. Every API call, vote, and decision cryptographically verifiable.</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🛡️ Threat Model</div>
+  <div class="tab" onclick="switchTab(1)">🔐 PQC Cryptography</div>
+  <div class="tab" onclick="switchTab(2)">🌐 Zero Trust Network</div>
+  <div class="tab" onclick="switchTab(3)">⚡ Air-Gap Deploy</div>
+  <div class="tab" onclick="switchTab(4)">📋 JSP 440 Controls</div>
+</div>
+
+<div class="tab-content active">
+  <h3>🛡️ DEFONEOS Threat Model</h3>
+  <p>DEFONEOS assumes a hostile environment. The system is designed to operate under active cyber attack, with compromised nodes in the network, and adversarial AI attempting to manipulate decisions.</p>
+
+  <table>
+    <tr><th>Threat</th><th>Vector</th><th>Mitigation</th><th>Residual Risk</th></tr>
+    <tr><td>Quantum decryption</td><td>Harvest-now-decrypt-later</td><td>PQC (ML-DSA, ML-KEM)</td><td>🔴 None</td></tr>
+    <tr><td>Byzantine agents</td><td>Compromised AI agent votes maliciously</td><td>BFT 33-agent council (tolerates f=11)</td><td>🟢 Low</td></tr>
+    <tr><td>Supply chain attack</td><td>Malicious MCP server or package</td><td>Morris-II worm scanner + Aegis gate</td><td>🟡 Medium</td></tr>
+    <tr><td>Prompt injection</td><td>Adversarial input via sensor data</td><td>Input sanitisation + BFT human-gate on lethal action</td><td>🟡 Medium</td></tr>
+    <tr><td>Insider threat</td><td>Operator with credentials goes rogue</td><td>2-person rule + BFT consensus + SIGIL audit trail</td><td>🟢 Low</td></tr>
+    <tr><td>Network compromise</td><td>MITM on command data link</td><td>Ed25519 signed MAVLink + TLS 1.3</td><td>🟢 Low</td></tr>
+    <tr><td>Side-channel</td><td>Power/EM analysis on edge node</td><td>TEMPEST hardening + air-gap option</td><td>🟡 Medium</td></tr>
+    <tr><td>Data exfiltration</td><td>Sovereign data sent to foreign cloud</td><td>Sovereign VMs only. DORADO foreign-access detector.</td><td>🟢 Low</td></tr>
+  </table>
+
+  <h4>STRIDE Analysis</h4>
+  <div class="pipeline-step"><div class="step-num">S</div><div class="step-body"><h4>Spoofing</h4><p>Ed25519 DID identity for every agent. No anonymous actions. API keys are Ed25519-signed JWTs.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">T</div><div class="step-body"><h4>Tampering</h4><p>SIGIL hash chain. Any tampering breaks the chain and is immediately detectable by <code>verify_chain</code>.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">R</div><div class="step-body"><h4>Repudiation</h4><p>Every action is signed and logged. Agents cannot deny their actions — cryptographic proof.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">I</div><div class="step-body"><h4>Information Disclosure</h4><p>PII redaction layer. Sovereign VMs only. No data leaves the sovereign network without explicit authorisation.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">D</div><div class="step-body"><h4>Denial of Service</h4><p>BFT consensus tolerates 33% offline nodes. Edge nodes operate autonomously if cloud link severed.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">E</div><div class="step-body"><h4>Elevation of Privilege</h4><p>Least-privilege per tool. Tier-based access. Lethal-force tools require BFT consensus + human authorisation.</p></div></div>
+</div>
+
+<div class="tab-content">
+  <h3>🔐 Post-Quantum Cryptography</h3>
+  <p>DEFONEOS uses NIST-standardised post-quantum algorithms to protect against harvest-now-decrypt-later attacks. A quantum adversary recording today's traffic cannot decrypt it once a quantum computer becomes available.</p>
+
+  <h4>Cryptographic Stack</h4>
+  <table>
+    <tr><th>Layer</th><th>Algorithm</th><th>NIST Standard</th><th>Use</th></tr>
+    <tr><td>Signatures (primary)</td><td>ML-DSA-65 (Dilithium)</td><td>FIPS 204</td><td>SIGIL chain, DID identity</td></tr>
+    <tr><td>Key Exchange</td><td>ML-KEM-768 (Kyber)</td><td>FIPS 203</td><td>TLS 1.3 PQ hybrid</td></tr>
+    <tr><td>Signatures (fallback)</td><td>Ed25519</td><td>RFC 8032</td><td>Fast path, backwards compat</td></tr>
+    <tr><td>Hashing</td><td>SHA-3-256</td><td>FIPS 202</td><td>SIGIL chain links</td></tr>
+    <tr><td>Symmetric</td><td>AES-256-GCM</td><td>FIPS 197</td><td>Data at rest</td></tr>
+    <tr><td>TLS</td><td>TLS 1.3 + Kyber</td><td>RFC 9320</td><td>Transport security</td></tr>
+  </table>
+
+  <h4>Key Rotation</h4>
+  <p>Automated 90-day key rotation cycle via DORADO:</p>
+  <div class="code"># Check rotation status
+dorado_key_rotation(action="status")
+→ {last_rotation: "2026-06-15", next_due: "2026-09-13", algo: "ML-DSA-65"}
+
+# Rotate now (requires BFT consensus)
+dorado_key_rotation(action="rotate")
+→ {old_key_revoked: true, new_key_active: true, sigil: "..."}</div>
+
+  <h4>Sovereignty Proof (ZK-SNARK)</h4>
+  <div class="code"># Prove data stayed sovereign without revealing contents
+dorado_prove_sovereignty(data_id="mission-001")
+→ {proof: "zk1q...", verified: true, "Proves data never left UK sovereign VMs"}</div>
+</div>
+
+<div class="tab-content">
+  <h3>🌐 Zero Trust Network Architecture</h3>
+  <p>DEFONEOS implements a Zero Trust security model. No entity is trusted by default. Every request is authenticated, authorised, encrypted, and logged.</p>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body"><h4>Identity (DID + Ed25519)</h4><p>Every agent, service, and user has a W3C DID with an Ed25519 keypair. No anonymous access. Identity verified on every request.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body"><h4>Authentication (JWT + PQC)</h4><p>Ed25519-signed JWTs for session auth. ML-KEM key exchange for PQC-safe TLS. Tokens expire in 1 hour. Refresh requires re-authentication.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body"><h4>Authorisation (Tier-based RBAC)</h4><p>Four tiers: Free (read), Pro (tools), Governance (BFT + council), Enterprise (multi-region + PQC). Each tool declares minimum tier.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body"><h4>Microsegmentation</h4><p>Each MCP server runs in its own container with minimal network access. Service mesh (Istio/Linkerd) enforces mTLS between services.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">5</div><div class="step-body"><h4>Continuous Verification</h4><p>DORADO monitors every API call. Foreign IP access attempts flagged. Bot detector scores each request. Anomalies trigger SIGIL alerts.</p></div></div>
+  <div class="pipeline-step"><div class="step-num">6</div><div class="step-body"><h4>Audit (SIGIL Chain)</h4><p>Every action written to immutable, hash-chained, Ed25519-signed SIGIL ledger. Regulators can replay the entire chain with <code>dorado_replay</code>.</p></div></div>
+
+  <h4>Network Segmentation</h4>
+  <table>
+    <tr><th>Zone</th><th>Trust Level</th><th>Access</th><th>Example</th></tr>
+    <tr><td>Edge (tactical)</td><td>Zero</td><td>Air-gapped or tactical radio</td><td>PX4 drone companion computer</td></tr>
+    <tr><td>Fog (field)</td><td>Low</td><td>Tactical network + mTLS</td><td>Field command post (TAK server)</td></tr>
+    <tr><td>Cloud (sovereign)</td><td>Medium</td><td>UK sovereign VMs only</td><td>MCP federation, BFT council</td></tr>
+    <tr><td>Sovereign Core</td><td>High</td><td>Physical access required</td><td>Key management, HSM</td></tr>
+  </table>
+</div>
+
+<div class="tab-content">
+  <h3>⚡ Air-Gapped Deployment</h3>
+  <p>DEFONEOS can operate fully air-gapped for classified environments. No internet dependency. All models, data, and tools run on-premise.</p>
+
+  <h4>Air-Gap Package Contents</h4>
+  <table>
+    <tr><th>Component</th><th>Size</th><th>Delivery</th></tr>
+    <tr><td>SOV3 Ollama models (4x)</td><td>7 GB</td><td>USB / secure courier</td></tr>
+    <tr><td>DEFONEOS MCP servers (30)</td><td>50 MB</td><td>Python packages on encrypted USB</td></tr>
+    <tr><td>Cesium globe tiles (UK)</td><td>2 GB</td><td>Pre-cached OS OpenData</td></tr>
+    <tr><td>DEM data (OS Terrain 5)</td><td>1.5 GB</td><td>Pre-cached</td></tr>
+    <tr><td>RL swarm policies</td><td>200 MB</td><td>Pre-trained ONNX models</td></tr>
+    <tr><td>SIGIL chain snapshot</td><td>Variable</td><td>Last known-good chain</td></tr>
+  </table>
+
+  <h4>Deployment Steps</h4>
+  <div class="code"># 1. Install on air-gapped machine
+sudo dpkg -i defoneos-offline-1.0.deb
+
+# 2. Import models
+defoneos models import --from /media/secure-usb/models/
+
+# 3. Import MCP packages
+defoneos mcp install --from /media/secure-usb/mcps/
+
+# 4. Initialize SIGIL chain
+defoneos sigil init --sovereign
+
+# 5. Launch substrate (no internet needed)
+defoneos launch --offline
+
+# 6. Verify
+defoneos health check
+→ ✓ 30 MCP servers running
+→ ✓ 4 models loaded
+→ ✓ SIGIL chain initialized
+→ ✓ Cesium globe cached
+→ ✓ Swarm policies loaded</div>
+
+  <h4>Sneaker-Net Updates</h4>
+  <p>Updates delivered via encrypted USB. Two-person rule for insertion. SHA-3-256 integrity check on every file. SIGIL logs the update event.</p>
+</div>
+
+<div class="tab-content">
+  <h3>📋 JSP 440 Security Controls Mapping</h3>
+  <p>JSP 440 is the UK MoD manual of security documents. DEFONEOS maps its security architecture to JSP 440 requirements for defence accreditation.</p>
+
+  <table>
+    <tr><th>JSP 440 Area</th><th>Requirement</th><th>DEFONEOS Implementation</th><th>Status</th></tr>
+    <tr><td>Ch. 2: Personnel Security</td><td>SC clearance for operators</td><td>RBAC enforces clearance level. Unclassified users get read-only.</td><td>🟡 Configurable</td></tr>
+    <tr><td>Ch. 3: Physical Security</td><td>Physical access controls on core</td><td>Sovereign Core zone requires physical access. HSM for keys.</td><td>🟡 Site-specific</td></tr>
+    <tr><td>Ch. 4: Info Security</td><td>Classification marking + handling</td><td>Every SIGIL tagged with classification. OFFICIAL / OFFICIAL-SENSITIVE / SECRET.</td><td>🟢 Implemented</td></tr>
+    <tr><td>Ch. 5: COMSEC</td><td>Key management + crypto</td><td>PQC key rotation 90-day. HSM-backed. ML-DSA-65.</td><td>🟢 Implemented</td></tr>
+    <tr><td>Ch. 6: TEMPEST</td><td>EM emanation control</td><td>TEMPEST-hardened edge nodes available. Air-gap option for SECRET.</td><td>🟡 Hardware-dependent</td></tr>
+    <tr><td>Ch. 7: Audit</td><td>Tamper-evident audit trail</td><td>SIGIL hash chain + Ed25519 signatures. <code>verify_chain</code> tool.</td><td>🟢 Implemented</td></tr>
+    <tr><td>Ch. 8: Incident Response</td><td>Incident detection + reporting</td><td>DORADO real-time monitoring. Auto-SIGIL on anomalies.</td><td>🟢 Implemented</td></tr>
+    <tr><td>Ch. 9: Accreditation</td><td>RMADS (Risk Management)</td><td>Full RMADS template generated by <code>jsp936_generate</code> tool.</td><td>🟢 Implemented</td></tr>
+  </table>
+
+  <h4>Classification Handling</h4>
+  <div class="code"># Every SIGIL carries a classification marker
+sigil_emit(line="C|mission|launch|Area SE-1444 sweep", classification="OFFICIAL")
+sigil_emit(line="C|target|detect|Hostile UAV bearing 142°", classification="OFFICIAL-SENSITIVE")
+sigil_emit(line="C|bft|vote|Engage Alpha-7 FOR", classification="SECRET")
+
+# Export only declassified events
+sigil_export(classification_max="OFFICIAL-SENSITIVE")
+→ "SECRET events remain on sovereign chain, not exported"</div>
+</div>
+
+<div class="sigil">DEFONEOS Security Architecture · PQC · Zero Trust · JSP 440 · Air-Gap · SIGIL · UK Sovereign · CSOAI Certified</div>
+</div>
+
+<script>
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n));
+}
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

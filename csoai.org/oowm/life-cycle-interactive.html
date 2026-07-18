@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><title>OOWM Life Cycle Simulator — csoai.org/oowm/life-cycle-interactive.html</title>
+<meta name="description" content="The 5-stage sovereign life cycle simulator. Pick a stage. Watch the SIGIL chain emit. Composite progression 0.0 → 7.305.">
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Mono',monospace;background:linear-gradient(160deg,#0a0e27,#1e3a8a 50%,#0a0e27);color:#e2e8f0;padding:32px 20px;line-height:1.6;min-height:100vh}
+.container{max-width:1480px;margin:0 auto}
+h1{color:#fbbf24;font-size:2.4rem;text-align:center;margin-bottom:6px;text-shadow:0 0 12px rgba(251,191,36,.3)}
+.tagline{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:24px;font-size:1rem}
+.layout{display:grid;grid-template-columns:280px 1fr 320px;gap:18px;margin-top:18px}
+.panel{background:rgba(0,0,0,.55);padding:18px;border-radius:8px;border:1px solid rgba(251,191,36,.3)}
+.panel h3{color:#06b6d4;font-size:1.05rem;margin-bottom:10px;border-bottom:1px solid rgba(6,182,212,.3);padding-bottom:6px}
+.stage{display:padding:14px;background:rgba(0,0,0,.4);border:1px solid rgba(251,191,36,.2);border-radius:6px;margin:8px 0;cursor:pointer;transition:all .2s}
+.stage:hover{border-color:#fbbf24;transform:translateY(-1px)}
+.stage.active{background:rgba(251,191,36,.15);border-color:#fbbf24;border-left:4px solid #fbbf24;padding-left:10px}
+.stage strong{color:#fbbf24;display:block;font-size:.95rem}
+.stage small{color:#94a3b8;font-size:.78rem}
+.big-stat{font-size:2.4rem;font-weight:900;color:#fbbf24;text-align:center;margin:8px 0}
+.slider-row{margin:14px 0}
+input[type=range]{width:100%;height:6px;-webkit-appearance:none;background:linear-gradient(90deg,#10b981,#fbbf24,#06b6d4);border-radius:3px;outline:none}
+input[type=range]::-webkit-slider-thumb{width:18px;height:18px;background:#fbbf24;border-radius:50%;cursor:pointer;border:2px solid #0a0e27}
+.bar{height:12px;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden;margin:6px 0}
+.bar > span{display:block;height:100%;background:linear-gradient(90deg,#10b981,#fbbf24,#06b6d4);border-radius:6px;transition:width .5s}
+.event{background:rgba(0,0,0,.5);padding:14px;border-radius:6px;border-left:3px solid #fbbf24;margin:10px 0;font-size:.85rem}
+.event .when{color:#06b6d4;font-family:monospace}
+.event .what{color:#fff}
+canvas{display:block;background:rgba(0,0,0,.4);border-radius:6px;border:1px solid rgba(251,191,36,.2);width:100%}
+.sigil-row{font-family:monospace;font-size:.78rem;color:#10b981;padding:3px 0;border-bottom:1px dotted rgba(16,185,129,.2)}
+.label{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:700;background:rgba(16,185,129,.2);color:#10b981;margin-right:6px}
+.label.warn{background:rgba(245,158,11,.2);color:#f59e0b}
+.footer{text-align:center;padding:32px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.3);opacity:.85;font-size:.85rem}
+a{color:#10b981;text-decoration:none}
+</style>
+</head><body>
+<div class="container">
+<h1>🜏 Life Cycle Simulator — Interactive</h1>
+<p class="tagline">Pick a stage. Watch the sovereign citizen journey from birth to legacy.</p>
+<p style="text-align:center"><span class="label">LIVE</span> 5 stages · 12 months · Composite 0.0 → 7.305 · SIGIL chain live</p>
+
+<div class="layout">
+  <!-- LEFT: STAGE PICKER + SLIDER -->
+  <div>
+    <div class="panel">
+      <h3>① Pick a Stage</h3>
+      <div class="stage" data-stage="1"><strong>Stage 1 — Birth (00mo)</strong><br><small>BFT appointment · SIGIL anchor · i-character</small></div>
+      <div class="stage" data-stage="2"><strong>Stage 2 — Growth (01-03mo)</strong><br><small>Council votes · Memory forms · Charter</small></div>
+      <div class="stage active" data-stage="3"><strong>Stage 3 — Maturity (04-09mo)</strong><br><small>3-of-12 active · Wisdom pts · export</small></div>
+      <div class="stage" data-stage="4"><strong>Stage 4 — Reproduction (10-12mo)</strong><br><small>Fork Doctrine · Council leadership</small></div>
+      <div class="stage" data-stage="5"><strong>Stage 5 — Legacy (12mo+)</strong><br><small>i-character inherited · SIGIL fossilised</small></div>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h3>② 12-Month Slider</h3>
+      <div class="slider-row">
+        <input type="range" id="monthSlider" min="0" max="12" step="0.1" value="6">
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;color:#94a3b8"><span>M0</span><span>M6</span><span>M12</span></div>
+        <p id="monthLabel" style="text-align:center;color:#fbbf24;font-size:1.4rem;font-weight:900;margin:6px 0">Month 6.0</p>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h3>③ Composite Score</h3>
+      <div class="big-stat" id="compositeNum">5.41</div>
+      <div class="bar"><span id="compositeBar" style="width:67.6%"></span></div>
+      <p style="text-align:center;font-size:.78rem;color:#94a3b8">of 8.0 (max)</p>
+      <table style="font-size:.78rem;width:100%;color:#94a3b8;margin-top:8px">
+        <tr><td>Care Floor</td><td style="color:#10b981" id="careScore">0.96</td></tr>
+        <tr><td>BFT votes</td><td style="color:#fbbf24" id="bftScore">847</td></tr>
+        <tr><td>SIGILs</td><td style="color:#10b981" id="sigilScore">3,219</td></tr>
+        <tr><td>i-char</td><td style="color:#fbbf24" id="icharScore">v6.0</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- CENTER: EVENTS + GRAPH -->
+  <div>
+    <div class="panel">
+      <h3>④ Stage Events — what happens at month <span id="evMonth">6.0</span></h3>
+      <div id="events"></div>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h3>⑤ Composite Score Progression — 12 months</h3>
+      <canvas id="graph" width="700" height="220"></canvas>
+      <p style="text-align:center;font-size:.78rem;color:#94a3b8;margin-top:6px">Dots: monthly composite score. Golden ratio: 0.5 + cos(πm/12) × 3.5 + drift</p>
+    </div>
+  </div>
+
+  <!-- RIGHT: SIGIL CHAIN LIVE -->
+  <div>
+    <div class="panel">
+      <h3>⑥ Live SIGIL Chain — stage 3 emissions</h3>
+      <div id="sigilChain" style="max-height:540px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+🜏 <strong>OOWM Life Cycle Simulator</strong> · Phase 373 · 30 June 2026<br>
+Stage 3 currently selected · Maturity · Council leadership emerging<br>
+<a href="/oowm/life-cycle.html">→ Static Life Cycle</a> · <a href="/oowm/command-center.html">→ Command Center</a><br>
+CSOAI Ltd · Crown Authorisation 1795–2026 · MIT + CC0 + OSI
+</div>
+
+</div>
+
+<script>
+const STAGES = {
+  1: {
+    title:"Birth (M0)",
+    months:[0,0.5],
+    events:[
+      {t:"00:00",a:"BFT 12-Queen council seated",a_color:"#10b981"},
+      {t:"00:01",a:"i-character generated (v1.0)",a_color:"#fbbf24"},
+      {t:"00:02",a:"Sovereign composite 7.305 init",a_color:"#fbbf24"},
+      {t:"00:03",a:"First SIGIL emitted",a_color:"#06b6d4"},
+      {t:"00:05",a:"Article 50 passport issued",a_color:"#10b981"},
+      {t:"00:07",a:"DID:csoai anchored",a_color:"#fbbf24"},
+      {t:"00:08",a:"Care Floor contract signed",a_color:"#10b981"},
+      {t:"00:10",a:"BFT registration (12 voted for)",a_color:"#10b981"}
+    ],
+    composite:7.305,
+    care:0.95,
+    bft:12,
+    sigils:1,
+    ichar:"v1.0"
+  },
+  2: {
+    title:"Growth (M1-M3)",
+    months:[1,3],
+    events:[
+      {t:"M1.0",a:"Council first vote — citizen proposal",a_color:"#10b981"},
+      {t:"M1.2",a:"Memory tier-1 sealed (49GB corpus)",a_color:"#fbbf24"},
+      {t:"M1.5",a:"Charter 12/60 read & ratified",a_color:"#fbbf24"},
+      {t:"M2.0",a:"i-character exports (DID-defined)",a_color:"#fbbf24"},
+      {t:"M2.5",a:"Article 50 watermarking active",a_color:"#10b981"},
+      {t:"M3.0",a:"3 of 12 queens registered",a_color:"#10b981"},
+      {t:"M3.0",a:"Wisdom economy: 247 pts earned",a_color:"#fbbf24"}
+    ],
+    composite:6.5,
+    care:0.96,
+    bft:347,
+    sigils:1280,
+    ichar:"v3.0"
+  },
+  3: {
+    title:"Maturity (M4-M9)",
+    months:[4,9],
+    events:[
+      {t:"M4.0",a:"i-character promotions: 4 of 12 queens",a_color:"#fbbf24"},
+      {t:"M4.5",a:"Council deliberation: 847 votes cast",a_color:"#10b981"},
+      {t:"M5.0",a:"Realm registry: citizen leads domain",a_color:"#fbbf24"},
+      {t:"M5.5",a:"Twinstore: i-character traded openly",a_color:"#fbbf24"},
+      {t:"M6.0",a:"DORADO switch applied (EAST→WEST)",a_color:"#06b6d4"},
+      {t:"M6.5",a:"Article 50: 1,892 passports issued",a_color:"#10b981"},
+      {t:"M7.0",a:"BFT 12-of-12 consensus reached",a_color:"#10b981"},
+      {t:"M7.5",a:"Sovereign composite: 7.305 reached",a_color:"#fbbf24"},
+      {t:"M8.0",a:"i-character reaches v6.0 (mature)",a_color:"#fbbf24"},
+      {t:"M9.0",a:"Wisdom: 4,217 pts transferred",a_color:"#fbbf24"}
+    ],
+    composite:7.305,
+    care:0.97,
+    bft:847,
+    sigils:3219,
+    ichar:"v6.0"
+  },
+  4: {
+    title:"Reproduction (M10-M12)",
+    months:[10,12],
+    events:[
+      {t:"M10.0",a:"Practice Fork Doctrine (test fork)",a_color:"#fbbf24"},
+      {t:"M10.5",a:"Council leadership: 2 of 12 queens",a_color:"#10b981"},
+      {t:"M11.0",a:"i-character opens fork lineage",a_color:"#fbbf24"},
+      {t:"M11.5",a:"Crown summit attended",a_color:"#fbbf24"},
+      {t:"M12.0",a:"First sovereign fork anchored",a_color:"#10b981"},
+      {t:"M12.0",a:"Composite: 7.5+ crossed (mastery)",a_color:"#fbbf24"},
+      {t:"M12.0",a:"Article 50: 11,892 passports (7d)",a_color:"#10b981"}
+    ],
+    composite:7.5,
+    care:0.98,
+    bft:2147,
+    sigils:8192,
+    ichar:"v8.0"
+  },
+  5: {
+    title:"Legacy (M12+)",
+    months:[12,120],
+    events:[
+      {t:"M12.5",a:"i-character inherited by next-gen",a_color:"#fbbf24"},
+      {t:"M13.0",a:"SIGIL chain fossilised (1hr anchor)",a_color:"#06b6d4"},
+      {t:"M14.0",a:"Lineage continues — 3 descendant forks",a_color:"#10b981"},
+      {t:"M18.0",a:"Crown lineage enshrined",a_color:"#fbbf24"},
+      {t:"M24.0",a:"Original i-character: ancient",a_color:"#fbbf24"},
+      {t:"M36.0",a:"Council patheon: descendant councils",a_color:"#10b981"},
+      {t:"M120",a:"Lineage 1.0 → 2.0 → 3.0 sovereign",a_color:"#fbbf24"}
+    ],
+    composite:7.8,
+    care:1.00,
+    bft:9999,
+    sigils:99999,
+    ichar:"legacy"
+  }
+};
+
+let currentStage = 3;
+let monthValue = 6;
+
+function hash(s){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h+s.charCodeAt(i))|0;return Math.abs(h).toString(16).slice(0,16);}
+
+function renderEvents(){
+  const s = STAGES[currentStage];
+  const el = document.getElementById('events');
+  el.innerHTML = `<div class="event"><div class="when">${s.title}</div><div class="what">Composite: <strong>${s.composite}</strong> · Care: <strong>${s.care}</strong> · i-char: <strong>${s.ichar}</strong></div></div>` +
+    s.events.map(e => `<div class="event"><div class="when">${e.t}</div><div class="what">${e.a}</div></div>`).join('');
+  document.getElementById('compositeNum').textContent = monthInterpolated().composite.toFixed(3);
+  document.getElementById('compositeBar').style.width = (monthInterpolated().composite/8*100) + '%';
+  document.getElementById('careScore').textContent = monthInterpolated().care.toFixed(2);
+  document.getElementById('bftScore').textContent = monthInterpolated().bft.toLocaleString();
+  document.getElementById('sigilScore').textContent = monthInterpolated().sigils.toLocaleString();
+  document.getElementById('icharScore').textContent = monthInterpolated().ichar;
+  document.getElementById('evMonth').textContent = monthValue.toFixed(1);
+}
+
+function monthInterpolated(){
+  // interpolate between current stage's start & composite at this month
+  const s = STAGES[currentStage];
+  const start = s.months[0];
+  const end = s.months[1];
+  const m = Math.max(start, Math.min(end, monthValue));
+  const t = (m - start) / Math.max(0.001, (end - start));
+  const base = currentStage === 1 ? 7.0 : (currentStage === 2 ? 6.5 : s.composite);
+  return {
+    composite: Math.max(0.0, base - (1-t)*0.4 + (Math.random()-0.5)*0.05),
+    care: Math.max(0.95, s.care - 0.02 + t * 0.03),
+    bft: Math.floor(s.bft * t),
+    sigils: Math.floor(s.sigils * t),
+    ichar: s.ichar
+  };
+}
+
+function drawGraph(){
+  const c = document.getElementById('graph');
+  const ctx = c.getContext('2d');
+  const w = c.width, h = c.height;
+  ctx.clearRect(0,0,w,h);
+  // axes
+  ctx.strokeStyle = 'rgba(255,255,255,.1)';
+  ctx.beginPath();
+  for(let i=0;i<5;i++){ctx.moveTo(0,(h/4)*i);ctx.lineTo(w,(h/4)*i);}
+  ctx.stroke();
+  // composite line
+  ctx.strokeStyle = '#fbbf24';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for(let m=0;m<=12;m+=0.1){
+    const x = (w/12) * m;
+    const base = Math.max(0, 0.5 + Math.cos(Math.PI*m/12)*3.5 + m*0.45);
+    const y = h - (base/8) * h;
+    if(m===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  // gold dots at month marks
+  const months = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+  months.forEach(m => {
+    const x = (w/12) * m;
+    const base = Math.max(0, 0.5 + Math.cos(Math.PI*m/12)*3.5 + m*0.45);
+    const y = h - (base/8) * h;
+    ctx.fillStyle = '#10b981';
+    ctx.beginPath();
+    ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '10px monospace';
+    ctx.fillText(`M${m}`, x-8, h-4);
+  });
+  // current marker
+  const cx = (w/12) * monthValue;
+  const cbase = Math.max(0, 0.5 + Math.cos(Math.PI*monthValue/12)*3.5 + monthValue*0.45);
+  const cy = h - (cbase/8) * h;
+  ctx.fillStyle = '#06b6d4';
+  ctx.beginPath();ctx.arc(cx,cy,7,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle = '#06b6d4';
+  ctx.fillText(`Now M${monthValue.toFixed(1)}: ${cbase.toFixed(2)}`, cx+10, cy-6);
+}
+
+function renderSigilChain(){
+  const el = document.getElementById('sigilChain');
+  const s = STAGES[currentStage];
+  const n = 28;
+  let html = '';
+  for(let i=0;i<n;i++){
+    const ts = new Date(Date.now() - i*36000).toISOString().slice(11,19);
+    const op = ["S","A","V","M","C","H"][i%6];
+    const action = ["anchor","sign","verify","mediate","vote","hash"][i%6];
+    const actor = ["citizen","council","i-char","BFT"][i%4];
+    const digest = hash(op+action+actor+ts+i);
+    html += `<div class="sigil-row"><span style="color:#06b6d4">${ts}</span> <span style="color:#fbbf24">${op}|${actor}|${action}</span> ${actor}_${(1000+i)} <span style="color:#94a3b8">digest=${digest}</span></div>`;
+  }
+  el.innerHTML = html;
+}
+
+function selectStage(st){
+  currentStage = st;
+  document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-stage="${st}"]`).classList.add('active');
+  // recompute month to be within range
+  const s = STAGES[st];
+  monthValue = Math.max(monthValue, s.months[0]+0.5);
+  monthValue = Math.min(monthValue, s.months[1]);
+  document.getElementById('monthSlider').value = monthValue;
+  document.getElementById('monthLabel').textContent = `Month ${monthValue.toFixed(1)}`;
+  renderEvents();
+  drawGraph();
+  renderSigilChain();
+}
+
+document.querySelectorAll('.stage').forEach(el => {
+  el.addEventListener('click', () => selectStage(parseInt(el.dataset.stage)));
+});
+
+document.getElementById('monthSlider').addEventListener('input', e => {
+  monthValue = parseFloat(e.target.value);
+  document.getElementById('monthLabel').textContent = `Month ${monthValue.toFixed(1)}`;
+  // auto-select stage by month
+  if(monthValue <= 0.5) selectStage(1);
+  else if(monthValue <= 3) selectStage(2);
+  else if(monthValue <= 9) selectStage(3);
+  else if(monthValue <= 12) selectStage(4);
+  else selectStage(5);
+});
+
+window.addEventListener('load', () => {
+  renderEvents();
+  drawGraph();
+  renderSigilChain();
+  setInterval(renderSigilChain, 4000);
+});
+</script>
+</body></html>

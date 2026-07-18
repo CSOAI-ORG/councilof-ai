@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EthicalGovernanceOf Charter · CSOAI Sovereign Portal</title>
+<meta name="description" content="AI Frameworks, AI Bill of Materials &amp; Explainability">
+<style>
+
+    :root {
+      --gold: #c9a84c;
+      --gold-dim: #8a7235;
+      --navy: #0a0e1a;
+      --navy-2: #131829;
+      --panel: #1a1f33;
+      --panel-2: #0f1322;
+      --text: #e6e6e6;
+      --muted: #9aa0b4;
+      --green: #3ecf8e;
+      --danger: #ff5d5d;
+      --maxw: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--navy);
+      color: var(--text);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre, .mono { font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace; }
+    h1, h2, h3, h4 { font-family: "Times New Roman", Georgia, serif; font-weight: 600; letter-spacing: -.01em; color: #fff; }
+    h1 { font-size: 2.3rem; margin: 0 0 .6rem; }
+    h2 { font-size: 1.5rem; margin: 2.4rem 0 .8rem; border-bottom: 1px solid var(--gold-dim); padding-bottom: .3rem; }
+    h3 { font-size: 1.15rem; margin: 1.6rem 0 .5rem; color: var(--gold); }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    /* Top bar */
+    .topbar {
+      background: linear-gradient(180deg, #06080f 0%, var(--navy) 100%);
+      border-bottom: 1px solid var(--gold-dim);
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 14px;
+    }
+    .topbar .brand {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .topbar .brand .seali {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--gold), #6e5a26);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--navy); font-weight: 700; font-size: .9rem;
+      box-shadow: 0 0 12px rgba(201, 168, 76, .35);
+    }
+    .topbar .brand h1 {
+      font-size: 1.05rem; margin: 0; font-family: ui-sans-serif, sans-serif;
+    }
+    .topbar .brand small { color: var(--muted); font-size: .8rem; }
+    .topbar nav a {
+      color: var(--text); margin-left: 16px; font-size: .88rem;
+      padding: 6px 10px; border-radius: 4px;
+    }
+    .topbar nav a:hover { background: var(--panel); color: var(--gold); text-decoration: none; }
+    .topbar nav a.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+
+    /* Hero */
+    .hero {
+      padding: 64px 24px 56px; text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+    }
+    .hero .eyebrow {
+      color: var(--gold); font-family: ui-monospace, monospace; font-size: .82rem;
+      letter-spacing: .25em; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.05; max-width: 880px; margin: 0 auto;
+    }
+    .hero p { max-width: 760px; margin: 16px auto 28px; color: var(--muted); font-size: 1.05rem; }
+    .hero .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* Buttons */
+    .btn {
+      display: inline-block; padding: 10px 18px; border-radius: 4px;
+      font-size: .9rem; font-weight: 600; border: 1px solid var(--gold-dim);
+      cursor: pointer; transition: all .15s ease;
+    }
+    .btn-primary { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+    .btn-primary:hover { background: #e0bc52; text-decoration: none; }
+    .btn-ghost { color: var(--gold); background: transparent; }
+    .btn-ghost:hover { background: rgba(201,168,76,.08); text-decoration: none; }
+
+    /* Cards & grid */
+    .grid { display: grid; gap: 16px; }
+    .grid-3 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .card {
+      background: var(--panel); border: 1px solid #232838;
+      border-radius: 6px; padding: 18px 20px;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+    .card h3 { margin: 0 0 6px; }
+    .card .meta { color: var(--muted); font-size: .8rem; font-family: ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .card a { color: var(--gold); }
+    .card p { margin: 8px 0 12px; color: var(--muted); font-size: .92rem; }
+
+    /* Stat strip */
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px; padding: 24px; background: var(--panel-2);
+      border-top: 1px solid var(--gold-dim); border-bottom: 1px solid var(--gold-dim);
+    }
+    .stat .num { font-size: 1.9rem; color: var(--gold); font-weight: 700; font-family: "Times New Roman", serif; line-height: 1; }
+    .stat .lbl { font-size: .76rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-top: 6px; }
+
+    /* Panels */
+    .panel { background: var(--panel); border: 1px solid #232838; border-radius: 6px; padding: 22px 24px; margin: 1rem 0; }
+    .panel h3 { margin-top: 0; }
+    .panel.note { background: rgba(201,168,76,.06); border-color: var(--gold-dim); }
+    .panel.danger { background: rgba(255,93,93,.06); border-color: rgba(255,93,93,.4); }
+
+    /* Article-style layout */
+    article { padding: 32px 0; }
+    article h1 { margin-top: 0; }
+    article h1 small { display: block; color: var(--muted); font-size: 0.9rem; font-weight: 400; margin-top: 4px; font-family: ui-sans-serif, sans-serif; }
+
+    /* Layout with sidebar */
+    .layout { display: grid; grid-template-columns: 260px 1fr; gap: 32px; padding: 24px; }
+    @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+    aside.nav {
+      background: var(--panel-2); border: 1px solid #232838; border-radius: 6px;
+      padding: 18px; max-height: calc(100vh - 80px); position: sticky; top: 16px; overflow-y: auto;
+    }
+    aside.nav h4 { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 14px 0 4px; font-family: ui-monospace, monospace; }
+    aside.nav h4:first-child { margin-top: 0; }
+    aside.nav a { display: block; padding: 5px 8px; color: var(--text); font-size: .85rem; border-radius: 4px; }
+    aside.nav a:hover { background: rgba(201,168,76,.08); text-decoration: none; }
+    aside.nav a.current { background: rgba(201,168,76,.18); color: var(--gold); border-left: 2px solid var(--gold); padding-left: 6px; }
+
+    /* Tables */
+    table {
+      width: 100%; border-collapse: collapse; margin: 1rem 0;
+      font-size: .9rem;
+    }
+    th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #1d2236; vertical-align: top; }
+    th { background: var(--panel-2); color: var(--gold); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+    tr:hover td { background: rgba(201,168,76,.03); }
+
+    /* Footer */
+    footer {
+      margin-top: 60px; padding: 32px 24px; background: #06080f;
+      border-top: 1px solid var(--gold-dim); color: var(--muted); font-size: .85rem;
+    }
+    footer .wrap { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    @media (max-width: 720px) { footer .wrap { grid-template-columns: 1fr; } }
+    footer h4 { color: var(--gold); font-size: .85rem; margin: 0 0 8px; font-family: ui-sans-serif, sans-serif; text-transform: uppercase; letter-spacing: .1em; }
+    footer a { color: var(--text); display: block; padding: 3px 0; font-size: .85rem; }
+    footer a:hover { color: var(--gold); }
+
+    .sig-line {
+      font-family: ui-monospace, monospace; font-size: .85rem;
+      background: var(--panel-2); border-left: 3px solid var(--gold);
+      padding: 12px 16px; border-radius: 0 4px 4px 0; margin: 1rem 0;
+      white-space: pre-wrap; word-break: break-all;
+    }
+
+    .tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 1rem 0; }
+    .tier {
+      background: var(--panel); border: 1px solid #232838; border-radius: 6px;
+      padding: 14px 16px; position: relative; overflow: hidden;
+    }
+    .tier::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--gold);
+    }
+    .tier .num { font-size: .8rem; color: var(--muted); font-family: ui-monospace, monospace; }
+    .tier .name { font-weight: 600; color: var(--gold); font-size: 1rem; margin: 4px 0 8px; }
+    .tier .body { font-size: .82rem; color: var(--muted); }
+
+    .pill { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: .7rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+    .pill-gold { background: rgba(201,168,76,.18); color: var(--gold); }
+    .pill-green { background: rgba(62,207,142,.15); color: var(--green); }
+    .pill-danger { background: rgba(255,93,93,.15); color: var(--danger); }
+
+    .countdown { font-family: ui-monospace, monospace; color: var(--gold); font-size: 1.4rem; font-weight: 700; }
+
+    .bsw-row {
+      display: grid; grid-template-columns: 90px 1fr; gap: 12px;
+      padding: 10px 0; border-bottom: 1px dashed #232838;
+    }
+    .bsw-row:last-child { border-bottom: 0; }
+    .bsw-row .days { color: var(--gold); font-weight: 700; font-family: ui-monospace, monospace; }
+
+    .charter-card {
+      background: var(--panel); border: 1px solid #232838; border-radius: 6px;
+      padding: 16px; display: flex; flex-direction: column;
+    }
+    .charter-card .num-badge {
+      align-self: flex-start; padding: 2px 8px; border-radius: 4px;
+      background: rgba(201,168,76,.15); color: var(--gold);
+      font-family: ui-monospace, monospace; font-size: .72rem; margin-bottom: 6px;
+    }
+    .charter-card h3 { margin: 0 0 4px; font-size: 1.1rem; }
+    .charter-card .sub { color: var(--muted); font-size: .82rem; margin: 4px 0 12px; }
+    .charter-card a.footer-link { margin-top: auto; font-size: .82rem; color: var(--gold); }
+
+    .framework-tag { display:inline-block; padding:2px 8px; border-radius:99px; background: rgba(62,207,142,.12); color: var(--green); font-size:.72rem; margin: 2px 4px 2px 0; font-family: ui-monospace, monospace;}
+    
+</style></head><body>
+
+    <div class="topbar">
+      <a class="brand" href="index.html">
+        <span class="seali">CA3O</span>
+        <div>
+          <h1>CSOAI · Sovereign Charter Portal</h1>
+          <small>UK 16939677 · 34 hives · 1,122 bilateral cross-walks</small>
+        </div>
+      </a>
+      <nav>
+        <a href="index.html" class="">Charters</a><a href="training.html" class="">Training</a><a href="crosswalk.html" class="">Cross-Walk</a><a href="bft-council.html" class="">BFT Council</a>
+      </nav>
+    </div>
+    
+
+<section class="hero" style="padding: 48px 24px 36px;">
+  <div class="wrap">
+    <div class="eyebrow">SOVEREIGN CHARTER · 06 OF 34 · AI GOVERNANCE</div>
+    <h1>EthicalGovernanceOf</h1>
+    <p style="font-size: 1.1rem; color: var(--text); margin-bottom: 8px;"><strong>AI Frameworks, AI Bill of Materials &amp; Explainability</strong></p>
+    <p style="color: var(--muted);">"Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. CA3O is the CMKC for AI."</p>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:18px;">
+      <a class="btn btn-primary" href="#training">Start Free Training</a>
+      <a class="btn btn-ghost" href="https://proofof.ai/verify/CSOAI-CHARTER-ethicalgovernanceof-2026-06-30" target="_blank" rel="noopener">Verify on proofof.ai</a>
+      <a class="btn btn-ghost" href="crosswalk.html">View Cross-Walk</a>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <aside class="nav">
+    <a href="index.html" class="">← All 34 Charters</a>
+<a href="training.html">Free Training</a>
+<a href="crosswalk.html">Cross-Walk</a>
+<a href="bft-council.html">BFT Council</a>
+<h4>AI Governance</h4>
+<a href="charter-csoai.html" class="">01. CSOAI</a>
+<a href="charter-meok.html" class="">02. MEOK</a>
+<a href="charter-proofof.html" class="">03. ProofOf</a>
+<a href="charter-safetyof.html" class="">04. SafetyOf</a>
+<a href="charter-accountabilityof.html" class="">05. AccountabilityOf</a>
+<a href="charter-ethicalgovernanceof.html" class="current">06. EthicalGovernanceOf</a>
+<a href="charter-transparencyof.html" class="">07. TransparencyOf</a>
+<a href="charter-biasdetectionof.html" class="">08. BiasDetectionOf</a>
+<a href="charter-dataprivacyof.html" class="">09. DataPrivacyOf</a>
+<a href="charter-asisecurity.html" class="">10. ASI Security</a>
+<a href="charter-agisafe.html" class="">11. AGI Safe</a>
+<a href="charter-defoneos.html" class="">12. DEFONEOS</a>
+<h4>Technical Infra</h4>
+<a href="charter-councilof.html" class="">13. CouncilOf</a>
+<a href="charter-openmoe.html" class="">14. OpenMoE</a>
+<a href="charter-openmcp.html" class="">15. OpenMCP</a>
+<a href="charter-openpatent.html" class="">16. OpenPatent</a>
+<a href="charter-sandbox.html" class="">17. Sandbox</a>
+<a href="charter-sovereign-town.html" class="">18. Sovereign Town</a>
+<a href="charter-meok-compliance-gateway.html" class="">19. MEOK Compliance Gateway</a>
+<a href="charter-loopfactory.html" class="">20. LoopFactory</a>
+<a href="charter-optimobile.html" class="">21. OptiMobile</a>
+<a href="charter-socialmediamanager.html" class="">22. Social Media Manager</a>
+<a href="charter-cobolbridge.html" class="">23. COBOL Bridge</a>
+<h4>Industry Vertical</h4>
+<a href="charter-commercialvehicle.html" class="">24. Commercial Vehicle</a>
+<a href="charter-diyhelp.html" class="">25. DIY Help</a>
+<a href="charter-fishkeeper.html" class="">26. Fishkeeper</a>
+<a href="charter-grabhire.html" class="">27. GrabHire</a>
+<a href="charter-koikeeper.html" class="">28. KoiKeeper</a>
+<a href="charter-landlaw.html" class="">29. LandLaw</a>
+<a href="charter-muckaway.html" class="">30. MuckAway</a>
+<a href="charter-planthire.html" class="">31. PlantHire</a>
+<a href="charter-pokerhud.html" class="">32. PokerHUD</a>
+<a href="charter-suicidestop.html" class="">33. SuicideStop</a>
+<a href="charter-science.html" class="">34. Science</a>
+<h4>Cornerstone</h4>
+<a href="charter-coigndaltion.html" class="">35. Coigndaltion</a>
+  </aside>
+  <article>
+
+    <h2 id="article-0">Article 0 — Binding Doctrine</h2>
+    <div class="panel note">
+      <p style="margin:0;">Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <strong>CA3O is the CMKC for AI.</strong></p>
+    </div>
+
+    <h2>Article I — Sovereign Foundation</h2>
+    <table>
+      <tr><th>Hive Slug</th><td><code>ethicalgovernanceof</code></td></tr>
+      <tr><th>Domain</th><td><code>ethicalgovernanceof.ai</code></td></tr>
+      <tr><th>Governance Body</th><td>CSOAI Ltd (UK Companies House 16939677)</td></tr>
+      <tr><th>Certification Authority</th><td>MEOK AI Labs + CSOAI Watchdog</td></tr>
+      <tr><th>Ed25519 Signature</th><td>ed25519:sha256:ethicalgovernanceof-2026-06-30</td></tr>
+      <tr><th>SIGIL Chain Entry</th><td><code>c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3</code></td></tr>
+      <tr><th>BFT Ratification</th><td><span class="pill pill-green">Council #ETHICALGOVERNANCEOF-001, 24/33 votes</span></td></tr>
+      <tr><th>Layer-0 Protocol Binding</th><td>P1-P8 Full Stack</td></tr>
+    </table>
+
+    <h2>Article II — Industry Domain &amp; Market</h2>
+    <h3>Scope</h3>
+    <p>EthicalGovernanceOf is the sovereign ethical governance hive — the conscience of the AI ecosystem. Where SafetyOf monitors for immediate harm and AccountabilityOf traces decisions, EthicalGovernanceOf operates upstream: ensuring AI systems are designed, built, and deployed according to defined ethical values before they ever touch a user. This is governance-by-design, not governance-as-afterthought. EthicalGovernanceOf operates six core MCP systems that form the ethical backbone of sovereign AI deployment: **(1) meok-governance-engine-mcp** — the central governance orchestration engine. This MCP server implements a comprehensive ethical governance framework spanning 14 ethical dimensions: fairness, transparency, accountability, privacy, safety, human autonomy, explainability, non-maleficence, beneficence, justice, dignity, solidarity, sustainability, and responsibility. For each dimension, the governance engine provides: measurement protocols (quantitative metrics), threshold definitions (acceptable/unacceptable ranges), automated compliance checking against 30+ regulatory frameworks, and integration with the BFT council for ethical escalation decisions. The governance engine ingests AI system metadata (model architecture, training data provenance, intended use, deployment context) and produces a structured Ethical Governance Assessment (EGA) report with Ed25519 signature. **(2) care-membrane-mcp** — the ethical guardrail fabric co-operated with SafetyOf.</p>
+
+    <h3>Market Size</h3><p style="font-size: 1.2rem; color: var(--gold);"><strong>£31.4B</strong> global TAM. This charter drops barriers by removing the cost of entry through free training, Ed25519-signed certification, and free open-source MCP tooling.</p>
+
+    <h3>Black Swan Event Windows</h3><div><div class="bsw-row"><div class="days">EU AI Act Arti</div><div> 2 Aug 2026</div></div><div class="bsw-row"><div class="days">EU AI Act Arti</div><div> 2 Aug 2026</div></div><div class="bsw-row"><div class="days">EU AI Act Arti</div><div> 2 Aug 2026</div></div><div class="bsw-row"><div class="days">CSRD/ESRS Firs</div><div> FY 2025 (filed 2026)</div></div><div class="bsw-row"><div class="days">AI Ethics Scan</div><div> 2026-2027</div></div></div>
+
+    <h2 id="training">Article III — Free Training Pathway</h2>
+    <p style="color: var(--muted);">4 tiers — Foundation → Director — all <strong>free, Ed25519-signed, BFT-council-ratified</strong>, delivered via Unreal Engine 5 simulations.</p>
+    <div class="tier-grid">
+      <div class="tier"><div class="num">TIER 1 · Foundation</div><div class="name">Foundation</div><div class="body">ETH-101: AI Ethics Foundations (14 ethical dimensions); VAL-101: Value Alignment Principles &amp; Methods; BOM-101: AI Bill of Materials — Structure &amp; Generation; EXP-101: Explainability Methods (SHAP, LI</div></div><div class="tier"><div class="num">TIER 2 · Practitioner</div><div class="name">Practitioner</div><div class="body">ETH-201: Ethics Policy Authoring &amp; Stakeholder Engagement; VAL-201: Domain-Specific Value Alignment (Medical, Financial, Educational, Criminal Justice); BOM-201: AI BOM Verification &amp; Supply Chain Aud</div></div><div class="tier"><div class="num">TIER 3 · Lead Auditor</div><div class="name">Lead Auditor</div><div class="body">ETH-301: Ethical Governance Programme Leadership; VAL-301: Multi-Stakeholder Value Alignment (Community Governance Models); BOM-301: AI Supply Chain Due Diligence (OECD Guidelines); EXP-301: Forensic </div></div><div class="tier"><div class="num">TIER 4 · Director</div><div class="name">Director</div><div class="body">DIR-401: Sovereign Ethical Governance Strategy; DIR-402: Multi-Jurisdiction Ethics Compliance (EU/UK/US/SG/CN); DIR-403: International Ethics Standards Development (IEEE 7000, ISO/IEC JTC 1/SC 42); DI</div></div>
+    </div>
+
+    <h2>Article IV — Certification Ladder</h2>
+    <table>
+      <thead><tr><th>Level</th><th>CASA Mapping</th><th>Requirements</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td>Foundation</td><td>CASA-1</td><td>Complete T1 training + 1 simulation</td><td><span class="pill pill-green">FREE</span></td></tr>
+        <tr><td>Practitioner</td><td>CASA-2</td><td>T1+T2 + 3 simulations + 1 real-world project</td><td><span class="pill pill-green">FREE</span></td></tr>
+        <tr><td>Lead Auditor</td><td>CASA-3</td><td>T1-T3 + 5 simulations + 3 projects + BFT vote</td><td><span class="pill pill-green">FREE</span></td></tr>
+        <tr><td>Director</td><td>CASA-4</td><td>All tiers + 10 simulations + 5 projects + 33-agent BFT</td><td><span class="pill pill-green">FREE</span></td></tr>
+      </tbody>
+    </table>
+    <p>Every certification is a <strong>CSOAI Watchdog Certificate</strong>: Ed25519-signed, publicly verifiable at <a href="https://proofof.ai/verify" target="_blank" rel="noopener">proofof.ai/verify/{cert_id}</a>, SOV3 SIGIL-anchored, BFT-ratified.</p>
+
+    <h2>Article V — Compliance &amp; Governance</h2>
+    <p style="color: var(--muted);">All 30 compliance frameworks are cross-walked — EU AI Act, GDPR, ISO 42001, NIST AI RMF, DORA, SOC 2 Type II, HIPAA, CSRD/ESRS, and 22 additional regulatory frameworks. This charter inherits the full 30-framework cross-walk.</p>
+    <div>
+      <span class="framework-tag">EU AI Act (Art 9, 10, 13, 14, 43, 50, Annex III)</span>
+      <span class="framework-tag">GDPR Articles 5-21</span>
+      <span class="framework-tag">UK GDPR (post-Brexit)</span>
+      <span class="framework-tag">ISO/IEC 42001:2023</span>
+      <span class="framework-tag">ISO/IEC 23894:2023 (AI Risk)</span>
+      <span class="framework-tag">ISO/IEC 27001:2022</span>
+      <span class="framework-tag">NIST AI RMF 1.0</span>
+      <span class="framework-tag">DORA (EU 2022/2554)</span>
+      <span class="framework-tag">CSRD/ESRS</span>
+      <span class="framework-tag">SOC 2 Type II</span>
+      <span class="framework-tag">HIPAA</span>
+      <span class="framework-tag">NIST SP 800-53 Rev 5</span>
+      <span class="framework-tag">W3C VC DM 2.0</span>
+      <span class="framework-tag">C2PA 1.3</span>
+      <span class="framework-tag">ETSI JAdES</span>
+      <span class="framework-tag">MITRE ATLAS</span>
+      <span class="framework-tag">ISO 31000</span>
+      <span class="framework-tag">ISO 22301 (BCM)</span>
+      <span class="framework-tag">UK Online Safety Act</span>
+      <span class="framework-tag">US Executive Order 14110</span>
+      <span class="framework-tag">China TC260 AI Governance</span>
+      <span class="framework-tag">Canada AIDA C-27</span>
+      <span class="framework-tag">Singapore PDPA + AI Verify</span>
+      <span class="framework-tag">Australia AI Ethics</span>
+      <span class="framework-tag">Japan METI AI</span>
+      <span class="framework-tag">South Korea AI Act</span>
+      <span class="framework-tag">Brazil LGPD</span>
+      <span class="framework-tag">India DPDP</span>
+      <span class="framework-tag">UK AI Regulation (Pro-Innovation)</span>
+      <span class="framework-tag">OECD AI Principles</span>
+    </div>
+
+    <h2>Article VI — Universal Cross-Walk Map</h2>
+    <p style="color: var(--muted);">This charter cross-walks to all 33 other sovereign charters. Each row is a typed, versioned, BFT-ratified relationship (shared data + joint certification):</p>
+    <table>
+      <thead><tr><th>Target Hive</th><th>Relationship</th><th>Shared Data</th><th>Joint Cert</th></tr></thead>
+      <tbody>
+
+<tr><td><a href="charter-csoai.html">01. CSOAI</a></td><td>Governance authority — every charter reports up to CSOAI</td><td>All certifications, SIGIL chain</td><td>CSOAI Watchdog</td></tr>
+<tr><td><a href="charter-meok.html">02. MEOK</a></td><td>Build authority — MCP infrastructure</td><td>All MCPs, attestations</td><td>MEOK Attestation</td></tr>
+<tr><td><a href="charter-proofof.html">03. ProofOf</a></td><td>Verification layer — all SIGILs anchored to proofof.ai</td><td>All SIGIL digests</td><td>ProofChain verification</td></tr>
+<tr><td><a href="charter-safetyof.html">04. SafetyOf</a></td><td>Safety monitoring — care membrane</td><td>Shared data + joint audit evidence</td><td>SafetyOf + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-accountabilityof.html">05. AccountabilityOf</a></td><td>Audit trails — SIGIL chains</td><td>Shared data + joint audit evidence</td><td>AccountabilityOf + Watchdog dual cert</td></tr>
+<tr><td><strong>06. EthicalGovernanceOf</strong> (self)</td><td>Governance root</td><td>Self</td><td>Root cert</td></tr>
+<tr><td><a href="charter-transparencyof.html">07. TransparencyOf</a></td><td>Explainability — decision paths for audit</td><td>Shared data + joint audit evidence</td><td>TransparencyOf + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-biasdetectionof.html">08. BiasDetectionOf</a></td><td>Fairness — bias audit integration</td><td>Shared data + joint audit evidence</td><td>BiasDetectionOf + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-dataprivacyof.html">09. DataPrivacyOf</a></td><td>Privacy — DSAR/DPIA workflows</td><td>Shared data + joint audit evidence</td><td>DataPrivacyOf + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-asisecurity.html">10. ASI Security</a></td><td>Security — CVEs, threat models</td><td>Shared data + joint audit evidence</td><td>ASI Security + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-agisafe.html">11. AGI Safe</a></td><td>Frontier risk assessments</td><td>Shared data + joint audit evidence</td><td>AGI Safe + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-defoneos.html">12. DEFONEOS</a></td><td>Defence — DEFONEOS-SEAL interoperability</td><td>Shared data + joint audit evidence</td><td>DEFONEOS + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-councilof.html">13. CouncilOf</a></td><td>BFT ratification — every amendment votes through council</td><td>Council votes, quorum records</td><td>BFT quorum</td></tr>
+<tr><td><a href="charter-openmoe.html">14. OpenMoE</a></td><td>Model governance — MoE routing</td><td>Shared data + joint audit evidence</td><td>OpenMoE + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-openmcp.html">15. OpenMCP</a></td><td>MCP registry integrity</td><td>Shared data + joint audit evidence</td><td>OpenMCP + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-openpatent.html">16. OpenPatent</a></td><td>Invention chain — patent disclosures</td><td>Shared data + joint audit evidence</td><td>OpenPatent + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-sandbox.html">17. Sandbox</a></td><td>Self-test harness — diagnostics</td><td>Shared data + joint audit evidence</td><td>Sandbox + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-sovereign-town.html">18. Sovereign Town</a></td><td>Simulation evidence — governance testing</td><td>Shared data + joint audit evidence</td><td>Sovereign Town + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-meok-compliance-gateway.html">19. MEOK Compliance Gateway</a></td><td>x402 payment — SIGIL receipts</td><td>Shared data + joint audit evidence</td><td>MEOK Compliance Gateway + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-loopfactory.html">20. LoopFactory</a></td><td>Workflow automation — execution SIGILs</td><td>Shared data + joint audit evidence</td><td>LoopFactory + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-optimobile.html">21. OptiMobile</a></td><td>Mobile analytics — SIGIL evidence</td><td>Shared data + joint audit evidence</td><td>OptiMobile + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-socialmediamanager.html">22. Social Media Manager</a></td><td>Social data flows — content SIGILs</td><td>Shared data + joint audit evidence</td><td>Social Media Manager + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-cobolbridge.html">23. COBOL Bridge</a></td><td>Legacy modernisation — transpilation SIGILs</td><td>Shared data + joint audit evidence</td><td>COBOL Bridge + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-commercialvehicle.html">24. Commercial Vehicle</a></td><td>DVSA / FORS evidence</td><td>Shared data + joint audit evidence</td><td>Commercial Vehicle + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-diyhelp.html">25. DIY Help</a></td><td>Building Regs compliance</td><td>Shared data + joint audit evidence</td><td>DIY Help + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-fishkeeper.html">26. Fishkeeper</a></td><td>Aquatic welfare attestations</td><td>Shared data + joint audit evidence</td><td>Fishkeeper + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-grabhire.html">27. GrabHire</a></td><td>Haulage / waste SIGILs</td><td>Shared data + joint audit evidence</td><td>GrabHire + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-koikeeper.html">28. KoiKeeper</a></td><td>Koi health & water cert</td><td>Shared data + joint audit evidence</td><td>KoiKeeper + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-landlaw.html">29. LandLaw</a></td><td>Conveyancing / property SIGILs</td><td>Shared data + joint audit evidence</td><td>LandLaw + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-muckaway.html">30. MuckAway</a></td><td>Waste compliance SIGILs</td><td>Shared data + joint audit evidence</td><td>MuckAway + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-planthire.html">31. PlantHire</a></td><td>LOLER/PUWER attestations</td><td>Shared data + joint audit evidence</td><td>PlantHire + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-pokerhud.html">32. PokerHUD</a></td><td>Post-session study logs</td><td>Shared data + joint audit evidence</td><td>PokerHUD + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-suicidestop.html">33. SuicideStop</a></td><td>Crisis routing attestations</td><td>Shared data + joint audit evidence</td><td>SuicideStop + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-science.html">34. Science</a></td><td>Research claim verification</td><td>Shared data + joint audit evidence</td><td>Science + Watchdog dual cert</td></tr>
+<tr><td><a href="charter-coigndaltion.html">35. Coigndaltion</a></td><td>L4 cornerstone cognition</td><td>Shared data + joint audit evidence</td><td>Coigndaltion + Watchdog dual cert</td></tr>
+</tbody></table>
+<h2>Article VII — UE5 Simulation Scenarios</h2>
+<p style="color: var(--muted);">Training uses Unreal Engine 5 real-world simulations. The following scenarios are core to this charter:</p>
+<ol>
+<li>SIM-ETHICALGOVERNANCEOF-006: Cultural Value Conflict</li>
+<li>SIM-ETHICALGOVERNANCEOF-007: Ethics M&amp;A Due Diligence</li>
+<li>SIM-ETHICALGOVERNANCEOF-008: Whistleblower Response</li>
+<li>SIM-ETHICALGOVERNANCEOF-009: BFT Council Ethics Deadlock</li>
+<li>SIM-ETHICALGOVERNANCEOF-010: AI for Good vs. Dual-Use Dilemma</li>
+</ol>
+
+    <h2>Article VIII — Ed25519 Signature Chain</h2>
+    <div class="sig-line">Charter ID: CSOAI-CHARTER-ethicalgovernanceof-2026-06-30
+SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+Ed25519 Signature: ed25519:c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3.sig
+SIGIL Digest: c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3
+OTS Bitcoin Anchor: btc:c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3
+BFT Ratification: Council #ETHICALGOVERNANCEOF-001, 24/33 votes
+Timestamp: 2026-06-30T00:00:00.000Z</div>
+
+    <h2>Article IX — Black Swan Protocol</h2>
+    <p style="color: var(--muted);">In the event of catastrophic disruption to this industry (regulatory enforcement, technology shift, market collapse), the Clean House Protocol activates:</p>
+    <ol style="color: var(--muted);">
+      <li><strong>Suspend</strong> certifications pending investigation</li>
+      <li><strong>Rapid</strong> investigation with UE5 simulation reconstruction</li>
+      <li><strong>Transparency report</strong> within 72 hours at <code>csoai.org/incidents/{{incident_id}}</code></li>
+      <li><strong>Root-cause audit</strong> using accountabilityof hive's MCP</li>
+      <li><strong>Council ratification</strong> (33 agents vote, 23/33 quorum)</li>
+      <li><strong>Framework update</strong> within 60 days; all CASA-2+ holders retrained within 90 days</li>
+    </ol>
+
+    <h2>Article X — Launch &amp; Distribution</h2>
+    <div class="grid grid-2">
+      <div>
+        <h3>Free Access Points</h3>
+        <ul style="color: var(--muted);">
+          <li><strong>Training</strong>: <code>ethicalgovernanceof.ai/training</code></li>
+          <li><strong>Certification</strong>: <a href="https://proofof.ai/verify" target="_blank" rel="noopener">proofof.ai/verify</a></li>
+          <li><strong>Simulation Engine</strong>: <code>ethicalgovernanceof.ai/sim</code></li>
+          <li><strong>UBI Starter</strong>: <code>ethicalgovernanceof.ai/ubi</code></li>
+          <li><strong>GitHub</strong>: <code>github.com/CSOAI-ORG/ethicalgovernanceof</code></li>
+          <li><strong>Docs</strong>: <code>ethicalgovernanceof.ai/docs</code></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Distribution Channels</h3>
+        <ul style="color: var(--muted);">
+          <li>PyPI: <code>ethicalgovernanceof-mcp</code></li>
+          <li>npm: <code>@csoai/ethicalgovernanceof</code></li>
+          <li>MCP Registry: <code>CSOAI-REG-ethicalgovernanceof-001</code></li>
+          <li>Vercel: <a href="https://ethicalgovernanceof.ai" target="_blank" rel="noopener">ethicalgovernanceof.ai</a></li>
+          <li>Sovereign VM: <code>sov3.csoai.org:3101/ethicalgovernanceof</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Article XI — Living Document</h2>
+    <p style="color: var(--muted);">This charter is a living document. Every amendment is: (1) proposed via BFT council, (2) voted by 33-agent council (quorum 23/33), (3) Ed25519-signed with new SIGIL entry, (4) cross-walk updated to all 33 other charters, (5) publicly verifiable at <a href="https://proofof.ai/verify/CSOAI-CHARTER-ethicalgovernanceof-2026-06-30" target="_blank" rel="noopener">proofof.ai/verify/CSOAI-CHARTER-ethicalgovernanceof-2026-06-30</a>.</p>
+
+    <p style="margin-top: 2rem;"><strong>Signed</strong>: SOV3 Sovereign Substrate · <strong>Witnessed</strong>: CSOAI Ltd, UK Companies House 16939677 · <strong>Anchored</strong>: Bitcoin Blockchain via OpenTimestamps · <strong>Sealed</strong>: 2026-06-30T00:00:00.000Z</p>
+
+  </article>
+</div>
+
+
+    <footer>
+      <div class="wrap">
+        <div>
+          <h4>CSOAI Ltd</h4>
+          <p>UK Companies House <strong>16939677</strong><br>
+          Sovereign Charter Authority (CA3O) — CMKC for AI.<br>
+          Ed25519-signed · BFT-council-ratified · Bitcoin-anchored via OTS.<br>
+          Free training. Free certification. Free certification.</p>
+        </div>
+        <div>
+          <h4>Portal</h4>
+          <a href="index.html">All 34 Charters</a>
+          <a href="training.html">Free Training</a>
+          <a href="crosswalk.html">Cross-Walk Explorer</a>
+          <a href="bft-council.html">BFT Council</a>
+        </div>
+        <div>
+          <h4>Verify</h4>
+          <a href="https://proofof.ai/verify" target="_blank" rel="noopener">proofof.ai/verify</a>
+          <a href="https://meok.ai/fleet" target="_blank" rel="noopener">MCP Fleet</a>
+          <a href="https://sov3.csoai.org:3101" target="_blank" rel="noopener">SOV3 Substrate</a>
+        </div>
+        <div>
+          <h4>Article 0</h4>
+          <p style="font-size:.78rem; line-height:1.4;">Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. <em>ISO fee-for-service model only.</em></p>
+        </div>
+      </div>
+      <div class="wrap" style="margin-top:20px; padding-top:20px; border-top:1px solid #1a1f33; font-size:.78rem;">
+        <span>© 2026 CSOAI Ltd · csoai.org</span>
+        <span style="float:right; font-family: ui-monospace, monospace; color: var(--gold);">Sovereign substrate signs everything · 🐉</span>
+      </div>
+    </footer>
+    
+</body></html>

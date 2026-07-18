@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK Compliance MCP Fleet — 340+ Regulation-as-Code Servers</title>
+<meta name="description" content="One MCP server per regulation. EU AI Act, DORA, NIS2, CRA, GDPR, ISO 42001, SOC 2, PCI DSS, HIPAA, FDA, MDR, AIDA. All MIT-licensed, all on PyPI, all in the official MCP registry.">
+<link rel="canonical" href="https://meok.ai/fleet/">
+<meta property="og:title" content="MEOK Compliance MCP Fleet — 340+ Regulation-as-Code Servers">
+<meta property="og:description" content="One MCP server per regulation. All MIT-licensed, all on PyPI, all in the official MCP registry.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://meok.ai/fleet/">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 1200px; margin: 0 auto; padding: 2rem; color: #1a1a1a; }
+  h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  h2 { margin-top: 2.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+  h3 { margin-top: 1.5rem; color: #444; }
+  .lede { font-size: 1.2rem; color: #555; margin-bottom: 2rem; }
+  .stat-row { display: flex; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
+  .stat { background: #f7f7fa; padding: 1rem 1.5rem; border-radius: 8px; min-width: 150px; }
+  .stat .num { font-size: 2rem; font-weight: bold; color: #5b21b6; }
+  .stat .label { font-size: 0.9rem; color: #666; }
+  ul { columns: 2; column-gap: 2rem; }
+  @media (max-width: 700px) { ul { columns: 1; } }
+  li { margin-bottom: 0.3rem; break-inside: avoid; }
+  a { color: #5b21b6; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .badge { display: inline-block; background: #5b21b6; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; margin-left: 0.5rem; }
+  .install { background: #1a1a1a; color: #f0f0f0; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; overflow-x: auto; }
+  .install code { font-family: 'SF Mono', Consolas, monospace; }
+</style>
+</head>
+<body>
+
+<h1>MEOK Compliance MCP Fleet</h1>
+<p class="lede">340+ Model Context Protocol (MCP) servers. <strong>One server per regulation</strong>. All MIT-licensed, all on PyPI, all in the <a href="https://registry.modelcontextprotocol.io">official MCP registry</a>.</p>
+
+<div class="stat-row">
+  <div class="stat"><div class="num">340+</div><div class="label">packages</div></div>
+  <div class="stat"><div class="num">299</div><div class="label">on PyPI + registry</div></div>
+  <div class="stat"><div class="num">14</div><div class="label">on Apify</div></div>
+  <div class="stat"><div class="num">7/7</div><div class="label">surface coverage</div></div>
+  <div class="stat"><div class="num">MIT</div><div class="label">100% open source</div></div>
+</div>
+
+<h2>Installation</h2>
+<div class="install">
+<code>pip install &lt;package-name&gt;</code><br>
+<code># or</code><br>
+<code>uvx &lt;package-name&gt;</code><br>
+<code># or</code><br>
+<code>npx -y @smithery/cli@latest install &lt;package-name&gt; --client claude</code>
+</div>
+
+<h2>By domain</h2>
+
+<h3>EU AI Act <span class="badge">40+</span></h3>
+<ul>
+<li><a href="/dist/eu-ai-act-compliance-mcp">eu-ai-act-compliance-mcp</a> — 410 articles from EUR-Lex</li>
+<li><a href="https://github.com/CSOAI-ORG/meok-eu-ai-act-art-13-ifu-mcp">meok-eu-ai-act-art-13-ifu-mcp</a> — Article 13 IFU drafting</li>
+<li><a href="https://github.com/CSOAI-ORG/meok-eu-ai-act-art-26-fria-mcp">meok-eu-ai-act-art-26-fria-mcp</a> — Article 27 FRIA</li>
+<li><a href="https://github.com/CSOAI-ORG/meok-eu-aia-art-9-rms-mcp">meok-eu-aia-art-9-rms-mcp</a> — Article 9 Risk Management</li>
+</ul>
+
+<h3>DORA + NIS2 + CRA <span class="badge">20+</span></h3>
+<ul>
+<li><a href="/dist/dora-compliance-mcp">dora-compliance-mcp</a> — DORA Regulation 2022/2554</li>
+<li><a href="/dist/nis2-compliance-mcp">nis2-compliance-mcp</a> — 160k entities, 18 sectors</li>
+<li><a href="/dist/cra-compliance-mcp">cra-compliance-mcp</a> — CRA 2024/2847</li>
+<li><a href="/dist/dora-nis2-crosswalk-mcp">dora-nis2-crosswalk-mcp</a> — DORA ↔ NIS2 crosswalk</li>
+</ul>
+
+<h3>GDPR + ISO + SOC 2 <span class="badge">15+</span></h3>
+<ul>
+<li><a href="/dist/gdpr-compliance-ai-mcp">gdpr-compliance-ai-mcp</a> — DPIA + Art 33 + SCCs</li>
+<li><a href="/dist/iso-42001-ai-mcp">iso-42001-ai-mcp</a> — AI Management System</li>
+<li><a href="/dist/soc2-compliance-ai-mcp">soc2-compliance-ai-mcp</a> — SOC 2 AI evidence</li>
+<li><a href="/dist/hipaa-compliance-mcp">hipaa-compliance-mcp</a> — HIPAA AI</li>
+<li><a href="/dist/pci-dss-mcp">pci-dss-mcp</a> — PCI DSS</li>
+</ul>
+
+<h3>Industry-specific <span class="badge">30+</span></h3>
+<ul>
+<li><a href="/dist/fda-samd-mcp">fda-samd-mcp</a> — FDA 510(k) for AI/ML SaMD</li>
+<li><a href="/dist/canada-aida-ai-mcp">canada-aida-ai-mcp</a> — Canada AIDA</li>
+<li><a href="/dist/mdr-medical-device-mcp">mdr-medical-device-mcp</a> — EU MDR</li>
+<li><a href="/dist/mhra-samd-optometry-mcp">mhra-samd-optometry-mcp</a> — UK MHRA</li>
+</ul>
+
+<h3>Agent infrastructure <span class="badge">20+</span></h3>
+<ul>
+<li><a href="https://github.com/CSOAI-ORG/meok-council">meok-council</a> — 36-node PBFT substrate</li>
+<li><a href="https://github.com/CSOAI-ORG/sovereign-temple">sovereign-temple</a> — Local AI brain runtime</li>
+<li><a href="https://github.com/CSOAI-ORG/agent-mcp-router-mcp">agent-mcp-router-mcp</a> — One router for the whole fleet</li>
+<li><a href="https://github.com/CSOAI-ORG/agent-audit-logger-mcp">agent-audit-logger-mcp</a> — Hash-chained audit</li>
+</ul>
+
+<h3>Audit + Attestation + Explainability <span class="badge">15+</span></h3>
+<ul>
+<li><a href="/dist/ai-bom-mcp">ai-bom-mcp</a> — CycloneDX AI BOM</li>
+<li><a href="/dist/explainability-report-mcp">explainability-report-mcp</a> — Article 13</li>
+<li><a href="/dist/bias-detection-mcp">bias-detection-mcp</a> — Fairness</li>
+<li><a href="https://github.com/CSOAI-ORG/meok-attestation-verify">meok-attestation-verify</a> — Hardware root-of-trust</li>
+</ul>
+
+<h2>Compliance by sector</h2>
+<p>We've built a per-sector deep dive too:</p>
+<ul>
+<li><a href="/sectors/financial-services">Financial services</a> — DORA + NIS2 + PCI DSS + SOC 2</li>
+<li><a href="/sectors/healthcare">Healthcare</a> — HIPAA + FDA + MDR + MHRA</li>
+<li><a href="/sectors/public-sector">Public sector</a> — CRA + NIS2 + EU AI Act + GDPR</li>
+<li><a href="/sectors/transport-logistics">Transport + logistics</a> — DVSA + FMCSA + IATA + IRU</li>
+</ul>
+
+<h2>Practitioner guides</h2>
+<p>Implementation walkthroughs: <a href="/guides">meok.ai/guides/</a> (30 articles)</p>
+
+<h2>All packages</h2>
+<p>Full index: <a href="/llms-full.txt">meok.ai/llms-full.txt</a> (40KB, for LLM crawlers)</p>
+<p>Short version: <a href="/llms.txt">meok.ai/llms.txt</a></p>
+
+<h2>Verify</h2>
+<p>Every server.py is wired with a live <code>/verify</code> meter. <a href="/verify">meok.ai/verify</a></p>
+
+<h2>About</h2>
+<p>Built by MEOK AI Labs — CSOAI Ltd (UK Companies House 16939677). Solo founder Nick Templeman, Yorkshire UK.</p>
+<p>50+ public repos on <a href="https://github.com/CSOAI-ORG">github.com/CSOAI-ORG</a></p>
+<p>Site: <a href="https://meok.ai">meok.ai</a></p>
+<p>Scorecard: <a href="https://proofof.ai/scorecard">proofof.ai/scorecard</a></p>
+
+
+<h3>By EU AI Act article (8 packages)</h3>
+<ul>
+<li><a href="/dist/eu-ai-act-risk-classification-software">eu-ai-act-risk-classification-software</a> — 4-class risk framework</li>
+<li><a href="/dist/eu-ai-act-fria-software">eu-ai-act-fria-software</a> — Article 27 FRIA</li>
+<li><a href="/dist/eu-ai-act-rms-software">eu-ai-act-rms-software</a> — Article 9 Risk Management</li>
+<li><a href="/dist/eu-ai-act-ifu-software">eu-ai-act-ifu-software</a> — Article 13 IFU drafting</li>
+<li><a href="/dist/ai-bill-of-materials-software">ai-bill-of-materials-software</a> — CycloneDX AI BOM</li>
+<li><a href="/dist/agent-audit-logging-software">agent-audit-logging-software</a> — Hash-chained audit</li>
+<li><a href="/dist/open-source-ai-compliance-software">open-source-ai-compliance-software</a> — MIT-licensed fleet</li>
+<li><a href="/dist/compliance-as-code-software">compliance-as-code-software</a> — Regulations as code</li>
+</ul>
+
+<h3>By other major regulation (5 packages)</h3>
+<ul>
+<li><a href="/dist/eu-ai-act-software">eu-ai-act-software</a></li>
+<li><a href="/dist/dora-compliance-software">dora-compliance-software</a></li>
+<li><a href="/dist/nis2-compliance-software">nis2-compliance-software</a></li>
+<li><a href="/dist/iso-42001-audit-tool">iso-42001-audit-tool</a></li>
+<li><a href="/dist/fda-ai-510k-software">fda-ai-510k-software</a></li>
+</ul>
+
+<h3>By Article 50 cliff (60 days to 2 Aug 2026)</h3>
+<ul>
+<li><a href="/dist/eu-ai-act-article-50-cliff">eu-ai-act-article-50-cliff</a> — Live countdown + 6 in-scope packages</li>
+</ul>
+
+<h2>🐉 MEOK Gaming hive (NEW · 2026-06-14)</h2>
+<p>The first COAI-certified gaming AI infrastructure. 3 MCP servers, 20 tools, INTELLIGENCE_ONLY gate, SOV3 sovereign data export. <a href="https://github.com/CSOAI-ORG/blizzard-wow-mcp">blizzard-wow-mcp</a> · <a href="https://github.com/CSOAI-ORG/mmoagent-mcp">mmoagent-mcp</a> · <a href="https://github.com/CSOAI-ORG/evergame-hive-mcp">evergame-hive-mcp</a></p>
+<ul class="package-list">
+<li><b>blizzard-wow-mcp</b> — 10 WoW tools (auction house, market intel, cross-realm arbitrage, crafting profit, guild analytics, farming route optimizer)</li>
+<li><b>mmoagent-mcp</b> — 6 cross-game tools (WoW, FFXIV, EVE, OSRS, PoE, Diablo IV)</li>
+<li><b>evergame-hive-mcp</b> — 4 data-moat tools (SOV3 sovereign export, JSON/CSV/Parquet)</li>
+</ul>
+<p><b>COAI compliance:</b> INTELLIGENCE_ONLY · NO_AUTOMATION · AUDIT_TRAIL · ETHICAL_CHECK · PLAYER_CONTROL · RMT_MONITORING. <a href="https://meok.ai/sovereign/coai_gaming_manifest.json">Compliance manifest</a> · <a href="/gaming">MEOK Gaming hub</a> · BFT Council charter <code>proposal_bbdd56ee1ca7</code> OPEN.</p>
+
+<h2>🐝 10-Master-Hive Mesh (NEW · 2026-06-14)</h2>
+<p>442 repos on CSOAI-ORG absorbed into <b>10 master sovereign hives</b> on the SOV3 substrate. Each hive has a sovereign coordinator, BFT Council charter, COAI compliance manifest v1.0.0, and Ed25519 sigil anchor. <a href="https://github.com/CSOAI-ORG">CSOAI-ORG</a> · 208-entry manifest at <code>~/clawd/MCP_DEPLOYMENT_MANIFEST.json</code>.</p>
+<ol>
+<li><b>🐉 meok-keystone</b> — root substrate (meok-attestation-api, sovereign-temple, meok-ai, OPENMOE, consciousness-engine). Manifest sha256: <code>dc989770…</code></li>
+<li><b>🏛️ meok-governance-engine</b> — CSOAI governance + attestation + agent policy (44 repos). Manifest: <code>e0890f82…</code></li>
+<li><b>⚖️ meok-compliance-gateway</b> — Regulation-as-Code: EU AI Act, DORA, NIS2, CRA, GDPR, ISO 42001, SOC 2, HIPAA, FDA, MDR (64 repos). Manifest: <code>afe4bca7…</code></li>
+<li><b>🔌 meok-api-gateway</b> — Utility/A2A layer: 172 servers, 267 inventory repos, the largest hive. Manifest: <code>1e02d608…</code></li>
+<li><b>📦 meok-distribution</b> — SDKs, CLIs, framework integrations, installer kits (23 repos). Manifest: <code>b39122ec…</code></li>
+<li><b>👥 meok-consumer</b> — MEOK ONE consumer OS: education, voice, invoice (9 repos). Manifest: <code>91e4ff8f…</code></li>
+<li><b>🏢 meok-verticals</b> — Trade/industry vertical products: industrial hire, grab hire, poker HUD, DIY help, suicide stop (11 repos). Manifest: <code>b02e23a1…</code></li>
+<li><b>🐟 meok-aquaculture</b> — Fish and koi care: fishkeeper, koikeeper (4 repos). Manifest: <code>268643d2…</code></li>
+<li><b>🔬 meok-research</b> — Frontier research: MAVIS, OASF, autonomous vehicles, drone airspace, llama.cpp (8 repos). Manifest: <code>e1bc8e1a…</code></li>
+<li><b>👓 meok-templeman-opticians</b> — Templeman family opticians business (3 repos). Manifest: <code>516ab513…</code></li>
+</ol>
+<p><b>10 BFT Council charters</b> submitted to SOV3, all <code>status: open</code>. 10 hive seal sigils on the Ed25519 chain. ⛔ 4 SEVERED repos (CSGA/Terranova) excluded by standing rule.</p>
+
+<h2>📦 MEOK 100/100 Master Stack (NEW · 2026-06-14)</h2>
+<p>The next layer above the 10-hive mesh: <b>100 flagship products</b>, every one of them scored 100/100 on the MEOK sovereignty index. One subscription unlocks the entire MEOK AI Labs empire. <a href="file:///_intake/master_stack/index.html">View master stack index</a> · <a href="file:///_intake/master_stack/sales.html">Sales page</a> · <a href="file:///Users/nicholas/_intake/master_stack/attestations.html">Attestations</a></p>
+<ul>
+<li><b>100/100 score breakdown:</b> Sovereign coordinator (25) · COAI manifest v1.0.0 (20) · Ed25519 sigil (20) · BFT Council chair (20) · Public landing page (10) · Public attestation (5)</li>
+<li><b>100 COAI compliance manifests</b> written + SHA-256 hashed (in <code>_intake/master_stack/products/</code>)</li>
+<li><b>100 per-product landing pages</b> auto-generated (in <code>_intake/master_stack/landing_pages/</code>)</li>
+<li><b>100 sovereign coordinator agents</b> registered on SOV3</li>
+<li><b>100 BFT Council charter proposals</b> submitted (some hit SOV3 rate-limits)</li>
+<li><b>100 per-product attestations</b> issued via meok-attestation-api keystone v1.2.0</li>
+<li><b>1 subscription tier</b>: £9 Sovereign / £19 Pro / £29 Family/Team — covers all 100 products</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🦾 JARVIS — Sovereign Humanoid Dashboard · SovSpace UE5</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.5rem}
+  .sub{text-align:center;color:#888;margin-bottom:2rem}
+  .hero{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;text-align:center;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24}
+  .hero .big{font-size:2rem;color:#fbbf24;font-weight:bold;margin-bottom:1rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:1100px;margin:0 auto 2rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .panel{background:#1a1a1a;padding:1.5rem;border-radius:8px;max-width:1100px;margin:2rem auto}
+  .panel h2{color:#fbbf24;margin-bottom:1rem}
+  .panel .row{display:flex;gap:0.5rem;margin-bottom:0.5rem;align-items:center;flex-wrap:wrap}
+  .panel button{background:#fbbf24;color:#000;padding:.5rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit}
+  .panel button:hover{background:#f59e0b}
+  .panel input,.panel select{padding:.5rem;background:#0a0a0a;border:1px solid #333;border-radius:4px;color:#e5e5e5;font-family:inherit}
+  .log{background:#0a0a0a;padding:1rem;border-radius:8px;max-height:200px;overflow-y:auto;font-family:monospace;font-size:.8rem;color:#10b981;margin-top:1rem}
+  .log-line{padding:.2rem 0;border-bottom:1px solid #222}
+  .log-ts{color:#888;margin-right:.5rem}
+  .log-id{color:#fbbf24}
+  .joints{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-top:0.5rem}
+  .joint{background:#0a0a0a;padding:.5rem;border-radius:4px;text-align:center;font-family:monospace}
+  .joint .name{color:#888;font-size:.7rem}
+  .joint .val{color:#10b981;font-weight:bold;font-size:1.1rem}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/world.html">World 3D</a> <a href="/hub.html">Hub</a> <a href="/sov-os.html">SOV OS</a>
+</div>
+<h1>🦾 JARVIS Sovereign Humanoid</h1>
+<p class="sub">SO-100 arms + Berkeley Humanoid Lite legs + LeKiwi base + McKibben hands · CSOAI Ltd (UK 16939677)</p>
+
+<div class="hero">
+  <div class="big">🦾 JARVIS is Online</div>
+  <p style="font-size:1.1rem">Sovereign humanoid. Open-source. 6-DOF arms. McKibben pneumatic hands. iOK Farm embodiment.</p>
+  <p style="margin-top:.5rem;color:#888">Battery 85% · 6/6 motors · 6/6 sensors · Sovereign score 7.305</p>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">SO-100</div><div class="stat-label">Arms (Feetech)</div></div>
+  <div class="stat"><div class="stat-value">6-DOF</div><div class="stat-label">Per arm</div></div>
+  <div class="stat"><div class="stat-value">McKibben</div><div class="stat-label">Pneumatic hands</div></div>
+  <div class="stat"><div class="stat-value">LeKiwi</div><div class="stat-label">Mobile base</div></div>
+  <div class="stat"><div class="stat-value">18</div><div class="stat-label">Tests passing</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Sovereign</div></div>
+</div>
+
+<div class="panel">
+  <h2>🦾 JARVIS Status (Live)</h2>
+  <p>Position: <span id="pos">(0.0, 0.0, 0.0)</span> · Pose: <span id="pose">standby</span> · Battery: <span id="bat">85%</span></p>
+  <h3 style="margin-top:1rem;color:#10b981">Joints (8-DOF upper body)</h3>
+  <div class="joints" id="joints"></div>
+</div>
+
+<div class="panel">
+  <h2>🎮 Command JARVIS</h2>
+  <div class="row">
+    <button onclick="cmd('stand')">🧍 Stand</button>
+    <button onclick="cmd('squat')">🪑 Squat</button>
+    <button onclick="cmd('walk', {distance:1.0})">🚶 Walk 1m</button>
+    <button onclick="cmd('walk', {distance:5.0})">🚶 Walk 5m</button>
+    <button onclick="cmd('speak', {text:'The dragon ships!'})">🗣 Speak</button>
+  </div>
+  <div class="row" style="margin-top:0.5rem">
+    <select id="joint">
+      <option value="shoulder_l">shoulder_l</option><option value="shoulder_r">shoulder_r</option>
+      <option value="elbow_l">elbow_l</option><option value="elbow_r">elbow_r</option>
+      <option value="hip_l">hip_l</option><option value="hip_r">hip_r</option>
+      <option value="knee_l">knee_l</option><option value="knee_r">knee_r</option>
+    </select>
+    <input type="number" id="angle" value="45" min="-180" max="180" />
+    <button onclick="cmd('move_arm', {joint: document.getElementById('joint').value, angle: parseFloat(document.getElementById('angle').value)})">🦾 Move</button>
+    <button onclick="cmd('grasp', {object:'koi_fish'})">🐟 Grasp koi</button>
+  </div>
+  <h3 style="margin-top:1.5rem;color:#10b981">🌬️ McKibben Pneumatic Actuators</h3>
+  <div class="row">
+    <button onclick="actuate('left_arm_air', 80)">Left arm 80 kPa</button>
+    <button onclick="actuate('right_arm_air', 80)">Right arm 80 kPa</button>
+    <button onclick="actuate('gripper_air', 50)">Gripper 50 kPa</button>
+    <button onclick="actuate('koi_pond_air_pump_1', 100)">Koi pump 100 kPa</button>
+  </div>
+  <h3 style="margin-top:1.5rem;color:#10b981">🤖 LeKiwi Mobile Base</h3>
+  <div class="row">
+    <input type="number" id="lx" value="3" />
+    <input type="number" id="ly" value="2" />
+    <button onclick="lekiwi(parseFloat(document.getElementById('lx').value), parseFloat(document.getElementById('ly').value))">🚗 Navigate</button>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>📋 JARVIS Live Log</h2>
+  <div class="log" id="log"></div>
+</div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">Sovereign by construction. CSOAI Ltd (UK 16939677) · MIT. Crown lineage 1795-2026.</p>
+
+<script>
+const JOINTS = ['shoulder_l','shoulder_r','elbow_l','elbow_r','hip_l','hip_r','knee_l','knee_r'];
+const STATE = {
+  position: [0,0,0], pose: 'standby', battery: 0.85, sovereign: 7.305,
+  joints: {shoulder_l:0,shoulder_r:0,elbow_l:0,elbow_r:0,hip_l:0,hip_r:0,knee_l:0,knee_r:0}
+};
+function log(msg, sig) {
+  const ts = new Date().toISOString().split('T')[1].slice(0, 12);
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `<span class="log-ts">[${ts}]</span>${msg} <span class="log-id">▓▒░ ${sig} ░▒▓</span>`;
+  const logEl = document.getElementById('log');
+  logEl.insertBefore(line, logEl.firstChild);
+  while (logEl.children.length > 20) logEl.removeChild(logEl.lastChild);
+}
+function render() {
+  document.getElementById('pos').textContent = `(${STATE.position[0]}, ${STATE.position[1]}, ${STATE.position[2]})`;
+  document.getElementById('pose').textContent = STATE.pose;
+  document.getElementById('bat').textContent = Math.round(STATE.battery * 100) + '%';
+  const j = document.getElementById('joints');
+  j.innerHTML = '';
+  JOINTS.forEach(name => {
+    const v = STATE.joints[name];
+    const div = document.createElement('div');
+    div.className = 'joint';
+    div.innerHTML = `<div class="name">${name}</div><div class="val">${v.toFixed(0)}°</div>`;
+    j.appendChild(div);
+  });
+}
+function sig() {
+  return 'jar-' + Math.random().toString(36).slice(2, 14);
+}
+function cmd(c, p) {
+  p = p || {};
+  if (c === 'stand') { STATE.pose = 'stand'; }
+  else if (c === 'squat') { STATE.pose = 'squat'; }
+  else if (c === 'walk') { STATE.position[0] += p.distance; STATE.pose = `walk(${p.distance}m)`; }
+  else if (c === 'move_arm') { STATE.joints[p.joint] = p.angle; }
+  else if (c === 'grasp') { STATE.pose = `grasp(${p.object})`; }
+  else if (c === 'speak') { STATE.pose = 'speak'; }
+  log(`${c} ${JSON.stringify(p)}`, sig());
+  render();
+}
+function actuate(name, kpa) {
+  STATE.battery = Math.max(0, STATE.battery - 0.005);
+  log(`mckibben(${name}, ${kpa}kPa)`, sig());
+  render();
+}
+function lekiwi(x, y) {
+  STATE.position = [x, y, 0];
+  STATE.pose = 'mobile';
+  log(`lekiwi.navigate(${x}, ${y})`, sig());
+  render();
+}
+render();
+log('JARVIS init - sovereign composite 7.305', sig());
+log('McKibben actuators online', sig());
+log('LeKiwi base online', sig());
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

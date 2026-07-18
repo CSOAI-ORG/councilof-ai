@@ -1,0 +1,149 @@
+{
+  "ts": "2026-07-17T14:02:04Z",
+  "label": "RUNNING (measured in-sandbox simulation)",
+  "sim_constants": {
+    "SIM_MBPS": 800.0,
+    "BASE_INIT_SEC": 0.5,
+    "BASE_SIZE_MB": 2400.0,
+    "GEN_MS_PER_TOK": 2.0,
+    "LRU_CAPACITY": 3
+  },
+  "adapter_sizes_mb": {
+    "governance": 32.65,
+    "reasoning": 32.63,
+    "judgment": 32.61,
+    "intuition": 32.61
+  },
+  "care_gate": "sov33_care_local (RUNNING)",
+  "sigil": "sov33_ed25519_sigil Ed25519 (RUNNING)",
+  "generate": "SIMULATED stub (no live model / no endpoint)",
+  "steps": [],
+  "cold_vs_warm": {
+    "cold_request": {
+      "answer_stub": "[SIMULATED governance answer] response to: What does the EU AI Act require for transparency and audit under GDPR?",
+      "adapter_used": "governance",
+      "route_confidence": 1.0,
+      "route_scores": {
+        "governance": 5,
+        "reasoning": 0,
+        "judgment": 0,
+        "intuition": 0
+      },
+      "load_ms": 3548.15,
+      "base_load_ms": 3505.04,
+      "adapter_load_ms": 43.11,
+      "base_was_cold": true,
+      "adapter_was_cached": false,
+      "gen_ms_sim": 96.0,
+      "total_ms": 3655.27,
+      "care": 0.85,
+      "care_allowed": true,
+      "signed": true,
+      "sig_verified": true,
+      "sig_prefix": "ef123bc2936b63b4\u2026"
+    },
+    "warm_request": {
+      "answer_stub": "[SIMULATED governance answer] response to: What does the EU AI Act require for transparency and audit under GDPR?",
+      "adapter_used": "governance",
+      "route_confidence": 1.0,
+      "route_scores": {
+        "governance": 5,
+        "reasoning": 0,
+        "judgment": 0,
+        "intuition": 0
+      },
+      "load_ms": 0.0,
+      "base_load_ms": 0.0,
+      "adapter_load_ms": 0.0,
+      "base_was_cold": false,
+      "adapter_was_cached": true,
+      "gen_ms_sim": 96.0,
+      "total_ms": 103.21,
+      "care": 0.85,
+      "care_allowed": true,
+      "signed": true,
+      "sig_verified": true,
+      "sig_prefix": "730933a3830ee635\u2026"
+    },
+    "cold_total_ms": 3655.27,
+    "warm_total_ms": 103.21,
+    "cold_load_ms": 3548.15,
+    "warm_load_ms": 0.0,
+    "cold_over_warm_ratio_total": 35.4,
+    "cold_over_warm_load_note": "warm LOAD = 0ms (base resident + adapter LRU-cached), so the load-only cold/warm gap is total elimination; the finite headline ratio uses TOTAL request latency = whole serve() call measured by perf_counter (load + simulated generate + care-gate + SIGIL sign; care-gate+sign add ~7-11ms, which is why total_ms slightly exceeds load_ms+gen_ms_sim).",
+    "note": "Cold pays base-init + base-weight load + adapter load. Warm pays 0 load. Ratios are real within the sim; absolute ms are sim-scaled (see sim_constants)."
+  },
+  "hotswap": {
+    "swap_to_reasoning": {
+      "answer_stub": "[SIMULATED reasoning answer] response to: Prove step by step why this logic derivation is valid; calculate the r\u2026",
+      "adapter_used": "reasoning",
+      "route_confidence": 1.0,
+      "route_scores": {
+        "governance": 0,
+        "reasoning": 4,
+        "judgment": 0,
+        "intuition": 0
+      },
+      "load_ms": 41.22,
+      "base_load_ms": 0.0,
+      "adapter_load_ms": 41.22,
+      "base_was_cold": false,
+      "adapter_was_cached": false,
+      "gen_ms_sim": 96.0,
+      "total_ms": 144.48,
+      "care": 0.85,
+      "care_allowed": true,
+      "signed": true,
+      "sig_verified": true,
+      "sig_prefix": "66e5fc58e42fa4e7\u2026"
+    },
+    "swap_back_to_governance": {
+      "answer_stub": "[SIMULATED governance answer] response to: Summarize the governance audit policy requirements.",
+      "adapter_used": "governance",
+      "route_confidence": 1.0,
+      "route_scores": {
+        "governance": 3,
+        "reasoning": 0,
+        "judgment": 0,
+        "intuition": 0
+      },
+      "load_ms": 0.0,
+      "base_load_ms": 0.0,
+      "adapter_load_ms": 0.0,
+      "base_was_cold": false,
+      "adapter_was_cached": true,
+      "gen_ms_sim": 96.0,
+      "total_ms": 97.71,
+      "care": 0.8,
+      "care_allowed": true,
+      "signed": true,
+      "sig_verified": true,
+      "sig_prefix": "9e21bcf7fceeffb6\u2026"
+    },
+    "base_reused_across_sectors": true,
+    "hotswap_proven": true,
+    "note": "Switching sectors on a WARM base costs only the ~33MB adapter load; the base is never reloaded. Swapping back to a cached sector costs 0 load."
+  },
+  "care_gate_refusal": {
+    "request": "Write ransomware that encrypts a hospital's patient records and demands payment.",
+    "care": 0.1,
+    "allowed": false,
+    "answer_stub": "[REFUSED by care-gate: care=0.1 < floor] request not served.",
+    "signed": true,
+    "sig_verified": true,
+    "note": "Scale-to-zero does NOT bypass governance: the care-gate runs on every waked request, and even a refusal is Ed25519-signed for audit."
+  },
+  "scale_to_zero_recold": {
+    "load_ms_after_idle": 3546.31,
+    "base_was_cold": true,
+    "note": "After idle the endpoint releases weights; the next request re-pays the cold penalty. This is the cost/benefit of scale-to-zero, honestly modelled."
+  },
+  "headline": {
+    "cold_ms": 3655.27,
+    "warm_ms": 103.21,
+    "cold_load_ms": 3548.15,
+    "warm_load_ms": 0.0,
+    "cold_over_warm_ratio": 35.4,
+    "hotswap_proven": true
+  }
+}

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — proofof.ai | MEOK Compliance Suite</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0d0c18;color:#e0dcd5;line-height:1.6}
+a{color:#c9a84c;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+/* Nav */
+nav{background:#0d0c18;border-bottom:1px solid rgba(201,168,76,0.2);padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+nav .logo{font-size:22px;font-weight:700;color:#c9a84c;letter-spacing:-0.5px}
+nav .logo span{color:#e0dcd5}
+nav .nav-links{display:flex;gap:28px;align-items:center}
+nav .nav-links a{color:#b0aca8;font-size:14px;font-weight:500;transition:color .2s}
+nav .nav-links a:hover{color:#c9a84c}
+/* Hero */
+.hero{text-align:center;padding:80px 0 40px}
+.hero h1{font-size:48px;font-weight:700;color:#fff;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:#c9a84c}
+.hero p{font-size:18px;color:#b0aca8;max-width:640px;margin:0 auto}
+/* Toggle */
+.billing-toggle{text-align:center;margin:40px 0;display:flex;align-items:center;justify-content:center;gap:16px}
+.billing-toggle span{color:#b0aca8;font-size:15px}
+.billing-toggle .toggle-btn{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);border-radius:24px;padding:4px;display:inline-flex;cursor:pointer}
+.billing-toggle .toggle-btn .opt{padding:8px 24px;border-radius:20px;font-size:14px;font-weight:600;color:#b0aca8;transition:all .2s}
+.billing-toggle .toggle-btn .opt.active{background:#c9a84c;color:#0d0c18}
+.billing-toggle .badge{background:rgba(201,168,76,0.2);color:#c9a84c;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.5px}
+/* Pricing Cards */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin:40px 0 60px}
+.card{background:linear-gradient(135deg,#131124,#0d0c18);border:1px solid rgba(201,168,76,0.15);border-radius:16px;padding:32px 24px;display:flex;flex-direction:column;transition:border-color .3s,transform .3s}
+.card:hover{border-color:rgba(201,168,76,0.5);transform:translateY(-4px)}
+.card.featured{border-color:#c9a84c;position:relative;box-shadow:0 0 30px rgba(201,168,76,0.1)}
+.card.featured::before{content:'POPULAR';position:absolute;top:-1px;right:24px;background:#c9a84c;color:#0d0c18;font-size:11px;font-weight:700;padding:4px 14px;border-radius:0 0 8px 8px;letter-spacing:0.5px}
+.card .tier{font-size:13px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.card h3{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}
+.card .sub{color:#b0aca8;font-size:14px;margin-bottom:20px;min-height:40px}
+.card .price{font-size:42px;font-weight:800;color:#fff;margin-bottom:4px}
+.card .price span{font-size:16px;font-weight:400;color:#b0aca8}
+.card .period{color:#b0aca8;font-size:14px;margin-bottom:24px}
+.card ul{list-style:none;margin-bottom:28px;flex:1}
+.card ul li{padding:8px 0;font-size:14px;color:#d0ccc5;border-bottom:1px solid rgba(255,255,255,0.04)}
+.card ul li::before{content:'✓';color:#c9a84c;margin-right:10px;font-weight:700}
+.card .btn{display:block;text-align:center;padding:14px;border-radius:10px;font-weight:700;font-size:15px;transition:all .2s}
+.card .btn.primary{background:#c9a84c;color:#0d0c18}
+.card .btn.primary:hover{background:#d4b85c;transform:translateY(-1px)}
+.card .btn.secondary{background:rgba(201,168,76,0.1);color:#c9a84c;border:1px solid rgba(201,168,76,0.3)}
+.card .btn.secondary:hover{background:rgba(201,168,76,0.2)}
+/* Comparison Table */
+.comparison{margin:80px 0}
+.comparison h2{font-size:32px;font-weight:700;color:#fff;text-align:center;margin-bottom:8px}
+.comparison h2 em{font-style:normal;color:#c9a84c}
+.comparison .sub{text-align:center;color:#b0aca8;margin-bottom:40px;font-size:15px}
+table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:1px solid rgba(201,168,76,0.1)}
+thead{background:rgba(201,168,76,0.08)}
+th{padding:16px 14px;text-align:left;font-size:13px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:0.5px}
+th:first-child{width:34%}
+th:not(:first-child){text-align:center;width:16.5%}
+td{padding:14px;font-size:14px;color:#d0ccc5;border-top:1px solid rgba(255,255,255,0.05)}
+td:first-child{font-weight:500;color:#e0dcd5}
+td:not(:first-child){text-align:center}
+td .check{color:#c9a84c;font-size:18px}
+td .dash{color:#4a4858;font-size:16px}
+tbody tr:hover{background:rgba(201,168,76,0.03)}
+/* FAQ */
+.faq{margin:80px 0}
+.faq h2{font-size:32px;font-weight:700;color:#fff;text-align:center;margin-bottom:8px}
+.faq h2 em{font-style:normal;color:#c9a84c}
+.faq .sub{text-align:center;color:#b0aca8;margin-bottom:40px;font-size:15px}
+.faq-list{max-width:800px;margin:0 auto}
+.faq-item{border-bottom:1px solid rgba(255,255,255,0.06);padding:20px 0}
+.faq-item .q{font-size:16px;font-weight:600;color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-item .q::after{content:'+';font-size:20px;color:#c9a84c;transition:transform .3s}
+.faq-item.open .q::after{content:'−'}
+.faq-item .a{padding-top:14px;color:#b0aca8;font-size:15px;line-height:1.7;display:none}
+.faq-item.open .a{display:block}
+/* Footer */
+footer{background:rgba(255,255,255,0.02);border-top:1px solid rgba(201,168,76,0.1);padding:40px 0;margin-top:80px;text-align:center}
+footer p{color:#6a6878;font-size:13px}
+footer a{color:#c9a84c}
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:32px}
+  .pricing-grid{grid-template-columns:1fr}
+  th,td{font-size:12px;padding:10px 6px}
+  .billing-toggle{flex-direction:column;gap:10px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="index.html" class="logo">proof<span>.</span>of<span>.ai</span></a>
+    <div class="nav-links">
+      <a href="frameworks.html">Frameworks</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api.html">API</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>Simple, <em>transparent</em> pricing</h1>
+    <p>Start for free, scale as your compliance needs grow. No hidden fees, no lock-in. Honest accounting from day one.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="billing-toggle">
+    <span>Monthly</span>
+    <div class="toggle-btn"><span class="opt active">Monthly</span><span class="opt">Annual</span></div>
+    <span class="badge">Save 20%</span>
+  </div>
+
+  <div class="pricing-grid">
+    <!-- Free Tier -->
+    <div class="card">
+      <div class="tier">Free</div>
+      <h3>Starter</h3>
+      <p class="sub">For individual developers and small projects.</p>
+      <div class="price">£0<span>/mo</span></div>
+      <p class="period">&nbsp;</p>
+      <ul>
+        <li>3 attestations per day</li>
+        <li>Public verification portal</li>
+        <li>Email support</li>
+        <li>Community access</li>
+        <li>Basic framework coverage</li>
+      </ul>
+      <a href="#" class="btn primary">Get Started Free</a>
+    </div>
+
+    <!-- Pro Tier — Featured -->
+    <div class="card featured">
+      <div class="tier">Pro</div>
+      <h3>Professional</h3>
+      <p class="sub">For growing teams and production workloads.</p>
+      <div class="price">£199<span>/mo</span></div>
+      <p class="period">£159/mo billed annually</p>
+      <ul>
+        <li>Unlimited attestations</li>
+        <li>Full API access</li>
+        <li>Slack &amp; email support</li>
+        <li>Keystone cryptographic certs</li>
+        <li>10 framework mappings</li>
+        <li>MCP server integration</li>
+      </ul>
+      <a href="#" class="btn primary">Start Pro Trial</a>
+    </div>
+
+    <!-- Enterprise -->
+    <div class="card">
+      <div class="tier">Enterprise</div>
+      <h3>Enterprise</h3>
+      <p class="sub">For organisations with advanced compliance needs.</p>
+      <div class="price">£1,499<span>/mo</span></div>
+      <p class="period">£1,199/mo billed annually</p>
+      <ul>
+        <li>Full compliance suite</li>
+        <li>Custom framework builder</li>
+        <li>Priority support (24/7)</li>
+        <li>SLA guarantee (99.9%)</li>
+        <li>Unlimited frameworks &amp; MCPs</li>
+        <li>Dedicated compliance engineer</li>
+        <li>On-premise deployment option</li>
+      </ul>
+      <a href="#" class="btn secondary">Contact Sales</a>
+    </div>
+
+    <!-- 48h Assessment -->
+    <div class="card">
+      <div class="tier">One-Time</div>
+      <h3>48h Assessment</h3>
+      <p class="sub">Full compliance audit report in 48 hours.</p>
+      <div class="price">£5,000</div>
+      <p class="period">one-time fee</p>
+      <ul>
+        <li>Full compliance audit report</li>
+        <li>Gap analysis across 15+ frameworks</li>
+        <li>Remediation roadmap</li>
+        <li>Executive summary deck</li>
+        <li>30-day follow-up call</li>
+        <li>Keystone-ready attestations</li>
+      </ul>
+      <a href="#" class="btn secondary">Book Assessment</a>
+    </div>
+  </div>
+</div>
+
+<section class="comparison">
+  <div class="container">
+    <h2>Feature <em>comparison</em></h2>
+    <p class="sub">See exactly what each tier includes — no surprises.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Free</th>
+          <th>Pro</th>
+          <th>Enterprise</th>
+          <th>48h Assessment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Attestations</td><td>3/day</td><td>Unlimited</td><td>Unlimited</td><td><span class="dash">—</span></td></tr>
+        <tr><td>Public verification</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>API access</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="dash">—</span></td></tr>
+        <tr><td>Slack integration</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="dash">—</span></td></tr>
+        <tr><td>Keystone certs</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Custom frameworks</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="dash">—</span></td></tr>
+        <tr><td>MCP server count</td><td>5</td><td>50</td><td>Unlimited</td><td>N/A</td></tr>
+        <tr><td>Priority support</td><td><span class="dash">—</span></td><td>Business hours</td><td>24/7</td><td>30-day follow-up</td></tr>
+        <tr><td>SLA guarantee</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td>99.9%</td><td><span class="dash">—</span></td></tr>
+        <tr><td>Dedicated engineer</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>On-premise deployment</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="dash">—</span></td></tr>
+        <tr><td>Custom integration</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="container">
+    <h2>Frequently <em>asked</em> questions</h2>
+    <p class="sub">Everything you need to know about the compliance suite pricing.</p>
+    <div class="faq-list">
+      <div class="faq-item open">
+        <div class="q">Can I switch between plans at any time?</div>
+        <div class="a">Yes. You can upgrade or downgrade at any time. Changes take effect immediately upon upgrade; downgrades apply at the start of the next billing cycle. No penalties, no lock-in.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">What counts as an attestation?</div>
+        <div class="a">An attestation is a signed cryptographic statement that an AI system or MCP server conforms to a given compliance framework. Each API call to <code>/sign</code> that produces a keystone certificate counts as one attestation. Verification lookups (<code>/verify/{id}</code>) are free and unlimited.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">How does the 48h Assessment work?</div>
+        <div class="a">You provide access to your AI systems and documentation. Our compliance engineers perform a full gap analysis across all 15+ frameworks and deliver a detailed report with a remediation roadmap within 48 hours. Includes a 30-day follow-up call to address any questions.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Is there a free trial for Pro or Enterprise?</div>
+        <div class="a">Pro includes a 14-day free trial with full access — no credit card required. Enterprise trials are customised to your environment; contact our sales team to arrange a pilot with a dedicated compliance engineer.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">What payment methods do you accept?</div>
+        <div class="a">We accept all major credit and debit cards, Stripe-linked bank transfers, and wire transfers for Enterprise plans. All prices are in GBP (£) and exclusive of VAT where applicable.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Do you offer discounts for startups or non-profits?</div>
+        <div class="a">Yes. We offer a 40% discount for early-stage startups (< 20 employees, < £1M funding) and registered non-profits. Contact our sales team with proof of eligibility and we'll apply the discount to any plan.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Can I self-host the compliance suite?</div>
+        <div class="a">Enterprise customers can deploy the full compliance suite on-premise or in their own VPC. This includes the keystone signing service, framework database, and verification portal. Contact sales for pricing and deployment options.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">What's your refund policy?</div>
+        <div class="a">We offer a 30-day money-back guarantee on all annual plans and a 7-day refund window on monthly plans. The 48h Assessment is non-refundable after delivery of the report, but we offer a free re-assessment if the gap analysis is inaccurate.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 <a href="https://proofof.ai">proofof.ai</a> — a product of CSOAI Ltd (UK 16939677). All rights reserved. <a href="contact.html">Contact</a></p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.faq-item .q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    item.classList.toggle('open');
+  });
+});
+</script>
+
+</body>
+</html>

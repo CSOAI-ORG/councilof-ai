@@ -1,0 +1,256 @@
+{
+  "version": "v1_citation_correctness",
+  "timestamp": "2026-07-15T16:29:27Z",
+  "model_method": "pure TF-IDF RAG on 20-question battery",
+  "n_questions": 20,
+  "metrics": {
+    "cites_top1_pct": 100.0,
+    "cites_correctly_pct": 35.0,
+    "top3_contains_correct_pct": 5.0
+  },
+  "results": [
+    {
+      "q_id": "q01",
+      "question": "What does Article 0 of the sovereign charter say?",
+      "expected": "article_0",
+      "cited_top1": "article_0",
+      "cited_correctly": true,
+      "top3_retrieved": [
+        "article_0",
+        "article_50_transparency",
+        "article_50_watermarking"
+      ]
+    },
+    {
+      "q_id": "q02",
+      "question": "What is the care-floor threshold?",
+      "expected": "care_floor",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "venturi_pyramid",
+        "article_0"
+      ]
+    },
+    {
+      "q_id": "q03",
+      "question": "What is BFT-33 quorum?",
+      "expected": "bft_33_quorum",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "bft_33_quorum",
+        "horus_gate"
+      ]
+    },
+    {
+      "q_id": "q04",
+      "question": "What does Article 50 transparency require?",
+      "expected": "article_50_transparency",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": true,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "article_50_watermarking",
+        "article_0"
+      ]
+    },
+    {
+      "q_id": "q05",
+      "question": "What does Article 50 watermarking require?",
+      "expected": "article_50_watermarking",
+      "cited_top1": "article_50_watermarking",
+      "cited_correctly": true,
+      "top3_retrieved": [
+        "article_50_watermarking",
+        "article_50_transparency",
+        "article_0"
+      ]
+    },
+    {
+      "q_id": "q06",
+      "question": "What is DORADO 6\u00d796?",
+      "expected": "dorado_6x96",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "dorado_6x96",
+        "horus_gate"
+      ]
+    },
+    {
+      "q_id": "q07",
+      "question": "What is Horus Gate?",
+      "expected": "horus_gate",
+      "cited_top1": "horus_gate",
+      "cited_correctly": true,
+      "top3_retrieved": [
+        "horus_gate",
+        "article_50_transparency",
+        "venturi_pyramid"
+      ]
+    },
+    {
+      "q_id": "q08",
+      "question": "What is Rainbow Security?",
+      "expected": "rainbow_security",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "horus_gate",
+        "rainbow_security"
+      ]
+    },
+    {
+      "q_id": "q09",
+      "question": "What is Venturi Pyramid?",
+      "expected": "venturi_pyramid",
+      "cited_top1": "venturi_pyramid",
+      "cited_correctly": true,
+      "top3_retrieved": [
+        "venturi_pyramid",
+        "article_50_transparency",
+        "horus_gate"
+      ]
+    },
+    {
+      "q_id": "q10",
+      "question": "What is Liquid AI Antidoom?",
+      "expected": "liquid_antidoom",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "liquid_antidoom",
+        "intuition"
+      ]
+    },
+    {
+      "q_id": "q11",
+      "question": "What is Horizon 3K?",
+      "expected": "horizon_3k",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "horus_gate",
+        "venturi_pyramid"
+      ]
+    },
+    {
+      "q_id": "q12",
+      "question": "When does the MCP stateless spec ship?",
+      "expected": "mcp_2026_07_28",
+      "cited_top1": "mcp_2026_07_28",
+      "cited_correctly": true,
+      "top3_retrieved": [
+        "mcp_2026_07_28",
+        "article_0",
+        "article_50_transparency"
+      ]
+    },
+    {
+      "q_id": "q13",
+      "question": "What is the sovereign canon?",
+      "expected": "sovereign_canon",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "venturi_pyramid",
+        "article_0"
+      ]
+    },
+    {
+      "q_id": "q14",
+      "question": "What does Article 5 forbid?",
+      "expected": "article_5",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "article_50_watermarking",
+        "article_5"
+      ]
+    },
+    {
+      "q_id": "q15",
+      "question": "What is Liquid Time-Constant Network?",
+      "expected": "voice",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "horus_gate",
+        "venturi_pyramid"
+      ]
+    },
+    {
+      "q_id": "q16",
+      "question": "What is CSOAI Ltd UK 16939677?",
+      "expected": "intuition",
+      "cited_top1": "intuition",
+      "cited_correctly": true,
+      "top3_retrieved": [
+        "intuition",
+        "article_50_transparency",
+        "horus_gate"
+      ]
+    },
+    {
+      "q_id": "q17",
+      "question": "What is the audit log?",
+      "expected": "audit_log",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "venturi_pyramid",
+        "article_0"
+      ]
+    },
+    {
+      "q_id": "q18",
+      "question": "What is C2PA manifest?",
+      "expected": "c2pa_manifest",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "horus_gate",
+        "venturi_pyramid"
+      ]
+    },
+    {
+      "q_id": "q19",
+      "question": "What is SIGIL?",
+      "expected": "sigil_receipts",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "horus_gate",
+        "venturi_pyramid"
+      ]
+    },
+    {
+      "q_id": "q20",
+      "question": "What is the SOV33 companion?",
+      "expected": "sov33_companion",
+      "cited_top1": "article_50_transparency",
+      "cited_correctly": false,
+      "top3_retrieved": [
+        "article_50_transparency",
+        "venturi_pyramid",
+        "sov33_companion"
+      ]
+    }
+  ],
+  "honest_register": "TF-IDF RAG baseline \u2014 no LLM. Measures: can the retrieval cite the right article? If yes, fix is RAG. If no, fix is corpus.",
+  "sibling_context": "SOV3 9a0db708b: 11/20 cites, 0/20 CORRECT. My TF-IDF RAG approach: tests whether retrieval alone can solve the gap.",
+  "next_steps": "If cites_correctly < 80%, expand corpus. If >= 80%, wire TF-IDF RAG as the citation source."
+}

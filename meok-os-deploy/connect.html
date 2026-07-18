@@ -1,0 +1,86 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect your Sovereign to any AI — MEOK</title>
+<meta name="description" content="Take your hatched MEOK character — its persona, its signed memory, its governance — into Claude, ChatGPT, or any MCP host. Your AI, everywhere, bonded to you.">
+<style>
+:root{--bg:#f4f1ea;--card:#fffdf8;--ink:#1a1712;--dim:#6b6355;--gold:#b8912f;--line:#e6dfd0;--ink2:#2a2620}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:38px 20px 80px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em}
+.brand .m{width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800}
+h1{font-size:30px;line-height:1.15;letter-spacing:-.02em;margin:26px 0 8px}
+h1 .g{color:var(--gold)}
+.sub{color:var(--dim);font-size:16px;max-width:60ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:18px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.step{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+.card h3{margin:2px 0 8px;font-size:18px}
+.card p{color:var(--dim);margin:6px 0 12px}
+pre{background:#1c1a16;color:#f0ead9;border-radius:10px;padding:14px 15px;overflow-x:auto;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;margin:0;position:relative}
+.row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+button.copy{background:var(--ink);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:13px}
+button.copy:active{transform:translateY(1px)}
+.tag{display:inline-block;background:#efe9db;border:1px solid var(--line);border-radius:20px;padding:3px 11px;font-size:12px;color:var(--ink2);margin:2px 4px 2px 0}
+.who{font-size:15px;color:var(--ink2);margin-top:4px}
+.who b{color:var(--ink)}
+a{color:var(--gold)}
+.foot{color:var(--dim);font-size:13px;margin-top:24px;border-top:1px solid var(--line);padding-top:16px}
+.ok{color:#2e7d32;font-weight:600}
+</style></head><body><div class="wrap">
+<div class="brand"><span class="m">M</span> MEOK · sovereign</div>
+
+<h1>Take <span class="g" id="cname">your Sovereign</span> into <span class="g">any AI</span>.</h1>
+<p class="sub">Your hatched character — its persona, its <b>signed memory</b>, its governance — travels with you into Claude, Claude Code, and any MCP-compatible host. One character, everywhere, <b>bonded to you</b>. Your data stays yours; every action is signed on-device and refusable.</p>
+<div class="who" id="who"></div>
+
+<div class="card">
+  <div class="step">1 · the connection</div>
+  <h3>Your character's MCP endpoint</h3>
+  <p>This is a real MCP server (JSON-RPC 2.0 over streamable-HTTP). It carries your character's persona + governed tools: <span class="tag">meok_talk</span><span class="tag">meok_remember</span><span class="tag">meok_govern</span><span class="tag">meok_sign</span><span class="tag">meok_verify</span><span class="tag">meok_agent_card</span></p>
+  <pre id="url"></pre>
+  <div class="row"><button class="copy" data-copy="url">Copy URL</button></div>
+</div>
+
+<div class="card">
+  <div class="step">2 · connect it</div>
+  <h3>Claude Code (one command)</h3>
+  <pre id="cli"></pre>
+  <div class="row"><button class="copy" data-copy="cli">Copy command</button></div>
+  <h3 style="margin-top:18px">Claude Desktop / any MCP host (config)</h3>
+  <p>Add this to your host's MCP config (e.g. <code>claude_desktop_config.json</code>):</p>
+  <pre id="json"></pre>
+  <div class="row"><button class="copy" data-copy="json">Copy config</button></div>
+</div>
+
+<div class="card">
+  <div class="step">3 · make the memory persistent (optional, max-sovereign)</div>
+  <h3>Add the on-device memory graph</h3>
+  <p><b>meok_remember</b> already mints signed, portable memories. For a persistent, on-device memory graph that never leaves your machine, add the local sovereign-memory MCP:</p>
+  <pre id="mem"></pre>
+  <div class="row"><button class="copy" data-copy="mem">Copy install</button></div>
+</div>
+
+<div class="foot">
+  <p><span class="ok">✓ verify, don't trust</span> — your character's identity is a <a id="cardlink" href="#" target="_blank">signed A2A agent card</a>; check any signature offline at <a href="/verify.html">/verify.html</a>. Governed under the Sovereign Charter + CSOAI AI Governance. Works today in Claude &amp; Claude Code; other hosts as they adopt MCP.</p>
+  <p><b>Same character, everywhere:</b> any website / SaaS → <a href="/embed.html">embed</a> · iPhone (Siri) → <a href="/siri.html">Siri</a> · Amazon Echo (Alexa) → <a href="/alexa.html">Alexa</a> · run <b>every AI at once</b> → <a id="councillink" href="/council.html">the Council</a> · watch it work → <a href="/workspace.html">Workspace</a>.</p>
+</div>
+</div>
+<script>
+const p=new URLSearchParams(location.search);
+const name=(p.get('name')||'MEOK Sovereign').slice(0,60);
+const arc=(p.get('archetype')||'sovereign companion').slice(0,60);
+const slug=(name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').replace(/^meok-?/,'')||'sovereign');
+const q='?name='+encodeURIComponent(name)+'&archetype='+encodeURIComponent(arc);
+const url='https://os.meok.ai/api/mcp'+q;
+document.getElementById('cname').textContent=name;
+document.getElementById('who').innerHTML='Connecting: <b>'+name+'</b> — <span>'+arc+'</span>';
+document.getElementById('url').textContent=url;
+document.getElementById('cli').textContent='claude mcp add --transport http meok-'+slug+' "'+url+'"';
+document.getElementById('json').textContent=JSON.stringify({mcpServers:{['meok-'+slug]:{type:'http',url:url}}},null,2);
+document.getElementById('mem').textContent='pip install meok-sovereign-memory-mcp   # persistent, on-device, signed';
+document.getElementById('cardlink').href='/api/agentcard'+q;
+document.querySelectorAll('button.copy').forEach(b=>b.onclick=async()=>{
+  const t=document.getElementById(b.dataset.copy).textContent;
+  try{await navigator.clipboard.writeText(t);const o=b.textContent;b.textContent='Copied ✓';setTimeout(()=>b.textContent=o,1400);}catch(e){}
+});
+</script></body></html>

@@ -1,0 +1,63 @@
+{
+  "sigil_id": "eat-c1fcf2d525c4",
+  "schema": "defoneos.eat.cycle.v1",
+  "timestamp": "2026-07-16T16:39:30.377108+00:00",
+  "agent": "JEEVES",
+  "compartment": "meok-defoneos",
+  "cycle": {
+    "name": "EAT",
+    "id": "EAT-2026-07-16-1637Z",
+    "step": "10/10"
+  },
+  "health": {
+    "csoai_static_http_200": true,
+    "csoai_static_size_bytes": 20152,
+    "csoai_static_latency_s": 0.172853,
+    "meok_backend_ssh": "TIMEOUT (ssh host meok-backend 35.242.143.249:22 unreachable, 5s connect-timeout)",
+    "sov3_mcp_localhost_3101": "DOWN (HTTP 000)",
+    "meok_os_localhost_3000": "DOWN (HTTP 000)",
+    "alternative_local_services_3102_8899": "PROBED, MCP not exposed on 3102 either; :8899 is internal Python server.py (not MCP)"
+  },
+  "site": {
+    "live_html_files": 556,
+    "sitemap_xml_urls": 556,
+    "sitemap_xml_size_bytes": 119461,
+    "sitemap_updated": true,
+    "newly_added_urls": [
+      "https://csoai-static-deploy2.vercel.app/defoneos-pilot-onboarding-checklist.html",
+      "https://csoai-static-deploy2.vercel.app/sovereign-bft-red-team-protocol.html"
+    ],
+    "broken_links_found": 0,
+    "broken_links_replaced_with_neutral_href": 0
+  },
+  "deploy": {
+    "triggered": true,
+    "reason": "sitemap_updated_with_new_urls",
+    "vercel_production_url": "https://csoai-static-deploy2-q0u6xt53i-niks-projects-0a2ef942.vercel.app",
+    "aliased_to": "https://csoai-static-deploy2.vercel.app",
+    "ready_in_s": 15,
+    "status": "Ready"
+  },
+  "new_pages_since_last_backup": {
+    "since_2026-07-13_155138": 421,
+    "last_24h": 73
+  },
+  "red_lines": {
+    "kinetic_targeting": false,
+    "personal_surveillance": false,
+    "aukus_partnership_claim_unverified": false,
+    "defoneos_seal_unauthorized_issuance": false,
+    "dsei_booth_unauthorized": false,
+    "defonos_io_referenced": false,
+    "compartment_mixing": false
+  },
+  "notes": [
+    "SOV3 MCP server on localhost:3101 unreachable \u2014 not running on host this cycle (Python process 4512 on :8888 is MEOK AI Farm Vision, not SOV3 MCP).",
+    "MEOK OS on localhost:3000 unreachable \u2014 service not running.",
+    "meok-backend VM (35.242.143.249) SSH unreachable on port 22 within 5s \u2014 same as tick-114 noted.",
+    "Tick-115 added 2 missing URLs to sitemap (defoneos-pilot-onboarding-checklist, sovereign-bft-red-team-protocol).",
+    "Vercel deploy succeeded: 1868 files, 149KB, 15s Ready, aliased.",
+    "SIGIL written to filesystem ledger because no live MCP endpoint available; this is canonical SIGIL for this cycle per DEFONEOS doctrine (the SIGIL is the signed record, not the transport)."
+  ],
+  "content_sha256": "fa761b382826a5cbfc03609836223307662506a378e76baabbadd6e85d7f6e74"
+}

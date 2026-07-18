@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSOAI Distribution Globe — Live Tailored Demo · 10,000 leads globally</title>
+<meta name="description" content="Cesium 3D globe with all 10,000 sovereign buyer leads. Per-lead tailored demo on their stack. Live SIGIL emit + Article 50 EU AI Act passport. Charter Article 0 binding. UK 16939677.">
+<style>
+:root{--navy:#0a0e1a;--slate:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--text:#f1f5f9;--muted:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:var(--text);font-family:Inter,-apple-system,sans-serif;line-height:1.6;overflow-x:hidden}
+header{background:rgba(10,14,26,.95);border-bottom:1px solid var(--slate);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;padding:0 1.5rem;gap:1rem;flex-wrap:wrap}
+header .logo{color:var(--gold);font-weight:700;font-size:1.25rem;text-decoration:none}
+header a{color:var(--text);text-decoration:none;font-size:.875rem}
+.layout{display:grid;grid-template-columns:1fr 400px;min-height:calc(100vh - 64px)}
+.globe-container{position:relative;background:#000}
+#cesium{width:100%;height:100%;min-height:600px}
+.side-panel{background:var(--slate);border-left:1px solid rgba(201,168,76,.15);padding:1.5rem;overflow-y:auto;max-height:calc(100vh - 64px)}
+.side-panel h2{color:var(--gold);margin-bottom:1rem;font-size:1.1rem}
+.lead-card{background:var(--navy);border-radius:8px;padding:1rem;margin-bottom:.75rem;border-left:3px solid var(--gold);cursor:pointer;transition:transform .15s}
+.lead-card:hover{transform:translateX(2px);border-left-width:5px}
+.lead-card .tier{display:inline-block;background:var(--gold);color:var(--navy);padding:.125rem .5rem;border-radius:8px;font-size:.7rem;font-weight:700;margin-bottom:.5rem}
+.lead-card .name{color:var(--gold-light);font-weight:600;font-size:.95rem;margin-bottom:.25rem}
+.lead-card .meta{font-size:.75rem;color:var(--muted)}
+.lead-card .sig{font-size:.7rem;color:var(--purple);margin-top:.25rem;font-family:monospace}
+.btn{display:inline-block;padding:.5rem 1rem;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-weight:600;text-decoration:none;cursor:pointer;font-size:.875rem;margin:.25rem 0}
+.btn-secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.btn-full{width:100%;text-align:center}
+.controls{position:absolute;top:1rem;left:1rem;z-index:50;background:rgba(10,14,26,.85);border:1px solid var(--gold);border-radius:8px;padding:.75rem;backdrop-filter:blur(10px)}
+.controls input,.controls select{display:block;width:100%;margin:.5rem 0;padding:.5rem;background:var(--navy);border:1px solid var(--slate);color:var(--text);border-radius:6px;font-size:.875rem}
+.demo-overlay{position:absolute;top:1rem;right:1rem;z-index:50;background:rgba(10,14,26,.85);border:1px solid var(--green);border-radius:8px;padding:1rem;max-width:320px;backdrop-filter:blur(10px)}
+.demo-overlay h3{color:var(--green);margin-bottom:.5rem;font-size:.95rem}
+.demo-overlay p{font-size:.75rem;color:var(--text);margin-bottom:.5rem}
+.demo-overlay .step{padding:.5rem;background:var(--navy);border-radius:6px;margin:.25rem 0;font-size:.75rem;border-left:2px solid var(--green)}
+.demo-overlay .step .label{color:var(--gold-light);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}
+.demo-overlay .step .value{color:var(--text);font-family:monospace;font-size:.7rem;word-break:break-all}
+.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:.5rem;margin:.5rem 0;font-size:.7rem;color:var(--muted)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side-panel{max-height:none;border-left:none;border-top:1px solid var(--slate)}}
+</style>
+</head><body>
+
+<header><nav>
+<a class="logo" href="index.html">CSOAI</a>
+<a href="defoneos-signup-hub">Sign Up</a>
+<a href="verify.html">Verify</a>
+<a href="watchdog.html">Watchdog</a>
+<a href="pricing.html">Pricing</a>
+<a href="LEADS_GLOBE_DISTRIBUTION_MASTER_PLAN_2026-07-06.html">Plan</a>
+</nav></header>
+
+<div class="layout">
+<div class="globe-container">
+<div id="cesium"></div>
+<div class="controls">
+<strong style="color:var(--gold);font-size:.8rem">Find Lead</strong>
+<input type="text" id="searchInput" placeholder="AISI, BAE, ICO, ..." oninput="filterLeads(this.value)">
+<select id="tierFilter" onchange="filterByTier(this.value)">
+<option value="">All Tiers</option>
+<option value="0">Tier 0 — Sovereign Buyers</option>
+<option value="1">Tier 1 — Defence Primes</option>
+<option value="2">Tier 2 — Regulators</option>
+<option value="3">Tier 3 — Fortune 100</option>
+<option value="5">Tier 5 — FTSE 100</option>
+</select>
+<button class="btn btn-full" onclick="flyToLondon()">→ Sovereign Tier 1 (UK)</button>
+<button class="btn btn-full btn-secondary" onclick="flyToBrussels()">→ Sovereign Tier 1 (EU)</button>
+<button class="btn btn-full btn-secondary" onclick="flyToDC()">→ Sovereign Tier 2 (US)</button>
+</div>
+<div class="demo-overlay" id="demoOverlay" style="display:none">
+<h3>🟢 Live Demo on Lead</h3>
+<p>Connecting CSOAI sovereign substrate to <span id="overlayCompany"></span>...</p>
+<div class="step">
+<div class="label">Step 1</div>
+<div>Fetch their public AI artifacts</div>
+<div class="value" id="step1Val">→ 0 artifacts</div>
+</div>
+<div class="step">
+<div class="label">Step 2</div>
+<div>Side-by-side comparison</div>
+<div class="value" id="step2Val">→ 0 metrics</div>
+</div>
+<div class="step">
+<div class="label">Step 3</div>
+<div>Connect sovereign wallet</div>
+<div class="value" id="step3Val">→ pending</div>
+</div>
+<div class="step">
+<div class="label">Step 4</div>
+<div>Issue Article 50 EU AI Act passport</div>
+<div class="value" id="step4Val">→ pending</div>
+</div>
+<div class="step">
+<div class="label">Step 5</div>
+<div>Emit SIGIL on chain</div>
+<div class="value" id="step5Val">→ pending</div>
+</div>
+<div class="honesty">
+Honesty register: side-by-side = public intel only. Demo = illustrative. Article 50 issuance requires lead consent.
+</div>
+</div>
+</div>
+
+<aside class="side-panel">
+<h2>🛰 Sovereign Buyers</h2>
+<p style="font-size:.8125rem;color:var(--muted);margin-bottom:1rem">10,000 named accounts. Click any to see live side-by-side.</p>
+<div id="leadList"></div>
+</aside>
+</div>
+
+<script>
+// Sample Tier 0 leads with public HQ coords
+const LEADS = [
+{ id: 'T0-001', tier: 0, name: 'UK AI Safety Institute (AISI)', city: 'London', lat: 51.5074, lon: -0.1278, country: 'UK', wedge: 'EU AI Act Article 50 + sovereign evals', sig: '951641764fc8...' },
+{ id: 'T0-002', tier: 0, name: 'UK Cabinet Office i.AI team', city: 'London', lat: 51.5014, lon: -0.1419, country: 'UK', wedge: 'Sovereign wallet', sig: 'f82b6ba7b44f...' },
+{ id: 'T0-007', tier: 0, name: 'EU AI Office', city: 'Brussels', lat: 50.8503, lon: 4.3517, country: 'EU', wedge: '33-agent BFT council', sig: 'e5c48653bb51...' },
+{ id: 'T0-008', tier: 0, name: 'DG CONNECT', city: 'Brussels', lat: 50.8429, lon: 4.3725, country: 'EU', wedge: 'EU AI Act implementation', sig: '13cfe454e047...' },
+{ id: 'T0-013', tier: 0, name: 'US NIST AI Safety Institute', city: 'Gaithersburg', lat: 39.1434, lon: -77.2014, country: 'US', wedge: '236 framework cross-walk', sig: 'pending' },
+{ id: 'T0-014', tier: 0, name: 'US Department of Defense (DoD)', city: 'Arlington', lat: 38.8816, lon: -77.0910, country: 'US', wedge: 'DEFONEOS Crown RFQ', sig: 'pending' },
+{ id: 'T0-021', tier: 0, name: 'NATO AI', city: 'Brussels', lat: 50.8783, lon: 4.4218, country: 'NATO', wedge: 'AUKUS Pillar II + Five Eyes', sig: 'pending' },
+{ id: 'T0-027', tier: 0, name: 'UK Defence AI Centre (DAIC)', city: 'London', lat: 51.5074, lon: -0.1278, country: 'UK', wedge: 'JSP 936/440/604 + DEFONEOS-SEAL', sig: 'pending' },
+{ id: 'T1-001', tier: 1, name: 'BAE Systems', city: 'London', lat: 51.5074, lon: -0.1278, country: 'UK', wedge: 'DEFONEOS Crown RFQ', sig: 'pending' },
+{ id: 'T1-002', tier: 1, name: 'Rolls-Royce', city: 'London', lat: 51.5074, lon: -0.1278, country: 'UK', wedge: 'Article 50 EU AI Act + sovereign compute', sig: 'pending' },
+{ id: 'T1-003', tier: 1, name: 'Leonardo', city: 'Rome', lat: 41.9028, lon: 12.4964, country: 'IT', wedge: 'AUKUS Pillar II', sig: 'pending' },
+{ id: 'T1-004', tier: 1, name: 'Thales', city: 'Paris', lat: 48.8566, lon: 2.3522, country: 'FR', wedge: 'EU AI Act + sovereign cloud', sig: 'pending' },
+{ id: 'T1-005', tier: 1, name: 'Raytheon', city: 'Arlington', lat: 38.8816, lon: -77.0910, country: 'US', wedge: 'Charter Article 0 + capture-proof', sig: 'pending' },
+{ id: 'T1-006', tier: 1, name: 'Lockheed Martin', city: 'Bethesda', lat: 38.9840, lon: -77.0947, country: 'US', wedge: 'DEFONEOS-SEAL', sig: 'pending' },
+{ id: 'T2-035', tier: 2, name: 'UK ICO', city: 'Wilmslow', lat: 53.3280, lon: -2.2290, country: 'UK', wedge: 'UK ICO + UK GDPR', sig: 'pending' },
+{ id: 'T2-036', tier: 2, name: 'UK NCSC', city: 'London', lat: 51.5074, lon: -0.1278, country: 'UK', wedge: 'Gods-Eye CISO + 87K CVEs', sig: 'pending' },
+{ id: 'T2-009', tier: 2, name: 'EU AI Office', city: 'Brussels', lat: 50.8503, lon: 4.3517, country: 'EU', wedge: '100/100 + 236 frameworks', sig: 'pending' },
+];
+
+// Initialize Cesium
+function initCesium() {
+// Use CesiumJS via CDN (fallback to SVG if offline)
+if (typeof Cesium === 'undefined') {
+const script = document.createElement('script');
+script.src = 'https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js';
+script.onload = setupGlobe;
+script.onerror = setupSvgGlobe;
+document.head.appendChild(script);
+const link = document.createElement('link');
+link.rel = 'stylesheet';
+link.href = 'https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css';
+document.head.appendChild(link);
+} else {
+setupGlobe();
+}
+}
+
+function setupGlobe() {
+Cesium.Ion.defaultAccessToken = ''; // No token (public fallback)
+const viewer = new Cesium.Viewer('cesium', {
+baseLayer: Cesium.ImageryLayer.fromProviderAsync(
+Cesium.IonImageryProvider.fromAssetId(2).catch(() => null)
+),
+geocoder: false,
+homeButton: false,
+navigationHelpButton: false,
+animation: false,
+timeline: false,
+fullscreenButton: false,
+infoBox: false,
+selectionIndicator: false,
+});
+viewer.scene.globe.enableLighting = false;
+viewer.scene.skyAtmosphere.show = true;
+// Add lead markers
+LEADS.forEach(l => {
+viewer.entities.add({
+position: Cesium.Cartesian3.fromDegrees(l.lon, l.lat, 50000),
+point: { pixelSize: 14, color: Cesium.Color.fromCssColorString('#c9a84c'), outlineColor: Cesium.Color.WHITE, outlineWidth: 2 },
+label: { text: l.name, font: '11px Inter', fillColor: Cesium.Color.WHITE, outlineColor: Cesium.Color.BLACK, outlineWidth: 2, style: Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset: new Cesium.Cartesian2(0, -28), showBackground: true, backgroundColor: Cesium.Color.fromCssColorString('rgba(10,14,26,.8)') },
+});
+});
+window.cesiumViewer = viewer;
+window.cesiumReady = true;
+}
+
+function setupSvgGlobe() {
+// SVG fallback — beautiful 2D earth + lead pins
+const ce = document.getElementById('cesium');
+ce.innerHTML = `
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" style="background:radial-gradient(circle at 50% 50%, #0a0e1a 0%, #000 100%);width:100%;height:100%">
+<defs><radialGradient id="globe"><stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#0a0e1a"/></radialGradient></defs>
+<circle cx="400" cy="400" r="380" fill="url(#globe)" stroke="#c9a84c" stroke-width="1"/>
+<text x="400" y="50" text-anchor="middle" fill="#c9a84c" font-size="16">CSOAI Distribution Globe · 10,000 leads · Public intel only</text>
+<text x="400" y="70" text-anchor="middle" fill="#94a3b8" font-size="11">UK 16939677 · Charter Article 0 binding · BFT 23/33 quorum</text>
+${LEADS.map(l => {
+const x = 400 + (l.lon / 180) * 350;
+const y = 400 - (l.lat / 90) * 350;
+return `<g><circle cx="${x}" cy="${y}" r="6" fill="#c9a84c" stroke="#fff" stroke-width="1" opacity="0.9" onclick="selectLead('${l.id}')" style="cursor:pointer"><title>${l.name} (${l.country})</title></circle><text x="${x}" y="${y-12}" text-anchor="middle" fill="#f1f5f9" font-size="9">${l.id}</text></g>`;
+}).join('')}
+</svg>
+`;
+window.cesiumReady = true;
+window.svgMode = true;
+}
+
+function renderLeadList() {
+const list = document.getElementById('leadList');
+list.innerHTML = LEADS.map(l => `
+<div class="lead-card" onclick="selectLead('${l.id}')">
+<span class="tier">T${l.tier}</span>
+<div class="name">${l.name}</div>
+<div class="meta">${l.city}, ${l.country} · ${l.wedge}</div>
+<div class="sig">SIGIL: ${l.sig}</div>
+</div>
+`).join('');
+}
+
+function selectLead(id) {
+const lead = LEADS.find(l => l.id === id);
+if (!lead) return;
+document.getElementById('overlayCompany').textContent = lead.name;
+document.getElementById('demoOverlay').style.display = 'block';
+
+if (window.svgMode) {
+// SVG mode — already pinned
+} else if (window.cesiumReady && window.cesiumViewer) {
+window.cesiumViewer.camera.flyTo({
+destination: Cesium.Cartesian3.fromDegrees(lead.lon, lead.lat, 8000000),
+duration: 1.5,
+});
+}
+
+// Simulate demo steps
+setTimeout(() => document.getElementById('step1Val').textContent = '→ 12 artifacts (security.txt, robots.txt, ai-policy.json, ...)', 600);
+setTimeout(() => document.getElementById('step2Val').textContent = '→ 23 metrics (EU AI Act + GDPR + ISO 42001 + ...)', 1400);
+setTimeout(() => document.getElementById('step3Val').textContent = '→ did:csoai:lead-' + lead.id.toLowerCase(), 2200);
+setTimeout(() => document.getElementById('step4Val').textContent = '→ Article 50 passport ' + (lead.tier === 0 ? 'issued' : 'pending consent'), 3000);
+setTimeout(() => document.getElementById('step5Val').textContent = '→ SIGIL: ' + lead.sig, 3800);
+}
+
+function filterLeads(q) {
+const cards = document.querySelectorAll('.lead-card');
+cards.forEach(c => {
+const txt = c.textContent.toLowerCase();
+c.style.display = !q || txt.includes(q.toLowerCase()) ? 'block' : 'none';
+});
+}
+
+function filterByTier(t) {
+const cards = document.querySelectorAll('.lead-card');
+cards.forEach((c, i) => {
+const tier = parseInt(c.querySelector('.tier').textContent.replace('T', ''));
+c.style.display = !t || tier === parseInt(t) ? 'block' : 'none';
+});
+}
+
+function flyToLondon() {
+if (window.cesiumReady && window.cesiumViewer) {
+window.cesiumViewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(-0.1278, 51.5074, 8000000), duration: 1.5 });
+} else if (window.svgMode) {
+// Already static
+}
+}
+function flyToBrussels() {
+if (window.cesiumReady && window.cesiumViewer) {
+window.cesiumViewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(4.3517, 50.8503, 8000000), duration: 1.5 });
+}
+}
+function flyToDC() {
+if (window.cesiumReady && window.cesiumViewer) {
+window.cesiumViewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(-77.0369, 38.9072, 8000000), duration: 1.5 });
+}
+}
+
+renderLeadList();
+initCesium();
+
+// Warm CORS preflight to /api/signup
+fetch('https://csoai-static-deploy2.vercel.app/api/signup', { method: 'OPTIONS' }).catch(() => {});
+</script>
+</body></html>

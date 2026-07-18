@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "name": "FishKeeper Agent",
+  "description": "AI health checks for every tank and pond.",
+  "url": "https://fishkeeper.ai",
+  "provider": {
+    "organization": "Council for the Safety of AI (CSOAI)",
+    "url": "https://csoai.org"
+  },
+  "capabilities": {
+    "streaming": false,
+    "mcp": true,
+    "a2a": true
+  },
+  "skills": [
+    {
+      "id": "diagnose_disease",
+      "name": "fishkeeper-ai-mcp.diagnose_disease",
+      "description": "Run AI disease diagnosis from any aquarium app or workflow."
+    }
+  ],
+  "endpoints": {
+    "a2a": "https://fishkeeper.ai/a2a",
+    "mcp_catalog": "https://fishkeeper.ai/.well-known/mcp.json"
+  },
+  "sector": "agriculture"
+}

@@ -1,0 +1,116 @@
+/*
+  MEOK.AI Warm Sovereign theme override for the CSOAI platform.
+  Apply `meok-theme` class to <html> or a wrapper to switch the UI palette.
+*/
+
+.meok-theme {
+  /* Warm canvas */
+  --background: #f7f3ee;
+  --foreground: #1a1816;
+
+  --card: rgba(255, 253, 249, 0.78);
+  --card-foreground: #1a1816;
+
+  --popover: #fffdf9;
+  --popover-foreground: #1a1816;
+
+  --primary: #7d8c7e;
+  --primary-foreground: #ffffff;
+
+  --secondary: rgba(26, 24, 22, 0.04);
+  --secondary-foreground: #1a1816;
+
+  --muted: #ede8e1;
+  --muted-foreground: #6b6560;
+
+  --accent: #d98c7e;
+  --accent-foreground: #ffffff;
+
+  --destructive: #c9544d;
+  --destructive-foreground: #ffffff;
+
+  --border: rgba(26, 24, 22, 0.08);
+  --input: rgba(26, 24, 22, 0.06);
+  --ring: #7d8c7e;
+
+  --chart-1: #7d8c7e;
+  --chart-2: #c8a873;
+  --chart-3: #d98c7e;
+  --chart-4: #9ca6c9;
+  --chart-5: #4a4540;
+
+  --sidebar: #f7f3ee;
+  --sidebar-foreground: #1a1816;
+  --sidebar-primary: #7d8c7e;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(26, 24, 22, 0.04);
+  --sidebar-accent-foreground: #1a1816;
+  --sidebar-border: rgba(26, 24, 22, 0.08);
+  --sidebar-ring: #7d8c7e;
+
+  --radius: 0.75rem;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-primary: 'Archivo', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(249, 230, 224, 0.55) 0%, transparent 45%),
+    radial-gradient(ellipse at 20% 100%, rgba(230, 213, 181, 0.35) 0%, transparent 35%),
+    linear-gradient(180deg, #f7f3ee 0%, #ede8e1 100%);
+}
+
+/* Reusable MEOK visual utilities */
+.meok-gradient {
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(249, 230, 224, 0.55) 0%, transparent 45%),
+    radial-gradient(ellipse at 20% 100%, rgba(230, 213, 181, 0.35) 0%, transparent 35%),
+    linear-gradient(180deg, #f7f3ee 0%, #ede8e1 100%);
+}
+
+.meok-orb {
+  width: min(420px, 60vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 28%),
+    radial-gradient(circle at 70% 65%, rgba(200,168,115,0.35) 0%, rgba(200,168,115,0) 35%),
+    radial-gradient(circle at 40% 70%, rgba(217,140,126,0.25) 0%, rgba(217,140,126,0) 30%),
+    radial-gradient(circle at 55% 45%, rgba(156,166,201,0.2) 0%, rgba(156,166,201,0) 35%),
+    linear-gradient(135deg, #f0e6dc 0%, #e6ddd2 35%, #ddd3c8 65%, #d4c9bc 100%);
+  box-shadow:
+    inset -20px -20px 60px rgba(139, 120, 100, 0.15),
+    inset 20px 20px 60px rgba(255, 255, 255, 0.9),
+    0 30px 80px rgba(60, 45, 35, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  animation: meok-float 6s ease-in-out infinite;
+}
+
+@keyframes meok-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+
+.meok-glass {
+  background: rgba(255, 253, 249, 0.72);
+  border: 1px solid rgba(26, 24, 22, 0.06);
+  box-shadow: 0 8px 24px rgba(26, 18, 12, 0.06), 0 2px 6px rgba(26, 18, 12, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+}
+
+.meok-theme .dark {
+  /* A warm dark mode variant for completeness */
+  --background: #1a1816;
+  --foreground: #f7f3ee;
+  --card: rgba(40, 37, 34, 0.85);
+  --card-foreground: #f7f3ee;
+  --primary: #a8b6a9;
+  --primary-foreground: #1a1816;
+  --secondary: rgba(247, 243, 238, 0.06);
+  --secondary-foreground: #f7f3ee;
+  --muted: #2a2623;
+  --muted-foreground: #a69f96;
+  --accent: #e8b4a8;
+  --accent-foreground: #1a1816;
+  --border: rgba(247, 243, 238, 0.08);
+  --input: rgba(247, 243, 238, 0.06);
+  --ring: #a8b6a9;
+}

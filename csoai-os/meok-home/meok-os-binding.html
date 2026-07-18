@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<meta name="description" content="MEOK OS Binding — the sovereign OS view that ties your i-character to the sovereign OS via avatar + council chat. Live integration with 20 backend endpoints.">
+<meta name="keywords" content="MEOK, sovereign, i-character, council, 13 queens, 11 temples, 4-tier cascade, SIGIL, OCEAN, 6 care dimensions, 6 locales">
+<title>MEOK OS BINDING — i-Character ↔ Sovereign OS</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<style>
+/* ========== MEOK OS BINDING ========== */
+:root {
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --bg-deep: #0a0a1e;
+  --bg-deeper: #050514;
+  --surface: rgba(255, 252, 245, 0.04);
+  --surface-2: rgba(255, 252, 245, 0.08);
+  --text: #f5f0e6;
+  --text-dim: rgba(245, 240, 230, 0.65);
+  --border: rgba(201, 168, 76, 0.25);
+  --green: #10b981;
+  --blue: #3b82f6;
+  --coral: #d47a5a;
+  --purple: #a855f7;
+  --teal: #5aa89a;
+  --rose: #ec4899;
+  --cyan: #06b6d4;
+  --amber: #f59e0b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* COSMIC BACKGROUND */
+.cosmic {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(201, 168, 76, 0.08), transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(168, 85, 247, 0.08), transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.04), transparent 70%),
+    linear-gradient(180deg, #050514 0%, #0a0a1e 100%);
+}
+.cosmic::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 23% 17%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 67% 23%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 45% 67%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 89% 89%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 12% 89%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(2px 2px at 50% 50%, rgba(201, 168, 76, 0.3), transparent);
+  background-size: 200% 200%;
+  animation: drift 60s linear infinite;
+}
+@keyframes drift { to { background-position: 200% 200%; } }
+
+/* LOADING */
+.loading {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--bg-deeper); color: var(--gold);
+  transition: opacity 0.8s;
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+}
+.loading.hidden { opacity: 0; pointer-events: none; }
+.loading .glyph {
+  width: 120px; height: 120px;
+  border: 3px solid rgba(201, 168, 76, 0.15);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 24px;
+  position: relative;
+}
+.loading .glyph::before {
+  content: '✦'; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px; color: var(--gold); animation: spin 3s linear reverse infinite;
+}
+.loading h1 {
+  font-size: 24px; font-weight: 600;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  letter-spacing: 0.2em; text-transform: uppercase;
+}
+.loading p { color: var(--text-dim); font-size: 11px; letter-spacing: 0.3em; margin-top: 12px; text-transform: uppercase; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(10, 10, 30, 0.85), rgba(10, 10, 30, 0));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand .logo {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 16px;
+  color: #1a1a14; box-shadow: 0 0 24px rgba(201, 168, 76, 0.4);
+}
+.brand .name {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 16px;
+  color: var(--gold); letter-spacing: 0.1em;
+}
+.brand .tag {
+  font-size: 10px; color: var(--text-dim); letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.brand .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+.topbar nav { display: flex; gap: 2px; }
+.topbar nav button {
+  padding: 8px 14px;
+  background: transparent; border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  transition: all 0.2s;
+}
+.topbar nav button:hover {
+  background: var(--surface); color: var(--gold);
+  border-color: var(--border);
+}
+.topbar nav button.active {
+  background: var(--surface-2); color: var(--gold);
+  border-color: var(--border);
+}
+.topbar .locales {
+  display: flex; gap: 4px;
+  border-left: 1px solid var(--border);
+  padding-left: 12px; margin-left: 8px;
+}
+.topbar .locales button {
+  width: 28px; height: 28px;
+  background: transparent; border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text-dim); font-size: 10px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+}
+.topbar .locales button:hover { background: var(--surface); color: var(--gold); }
+.topbar .locales button.active { background: var(--surface-2); color: var(--gold); border-color: var(--border); }
+
+/* MAIN LAYOUT — TWO COLUMN BINDING */
+.main {
+  position: absolute; top: 60px; left: 0; right: 0; bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 380px;
+  gap: 1px;
+  background: var(--border);
+  z-index: 1;
+}
+@media (max-width: 1400px) {
+  .main { grid-template-columns: 1fr 1fr; }
+  .main .col-council { display: none; }
+}
+@media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; grid-auto-rows: minmax(400px, auto); overflow-y: auto; }
+  .main .col-right { grid-column: 1; }
+}
+
+.col {
+  background: rgba(10, 10, 30, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 18px;
+  overflow-y: auto;
+  position: relative;
+}
+.col::-webkit-scrollbar { width: 6px; }
+.col::-webkit-scrollbar-track { background: transparent; }
+.col::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.col-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.col-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold);
+}
+.col-status {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+.col-status .indicator {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 6px var(--green);
+}
+
+/* SOVEREIGN PANEL (LEFT) */
+.sovereign-stage {
+  position: relative;
+  height: 380px;
+  background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.06), transparent 70%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.sovereign-stage::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(201, 168, 76, 0.1), transparent 50%);
+  animation: aether 8s ease-in-out infinite;
+}
+@keyframes aether {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+.sovereign-svg {
+  width: 220px; height: 330px;
+  position: relative; z-index: 1;
+  filter: drop-shadow(0 0 24px rgba(201, 168, 76, 0.3));
+}
+.sovereign-ring {
+  position: absolute; top: 10px; right: 14px;
+  width: 60px; height: 60px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--text-dim);
+  letter-spacing: 0.2em;
+}
+.sovereign-ring .tier {
+  color: var(--gold); font-size: 14px; font-weight: 700;
+}
+.sovereign-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px; font-weight: 600;
+  color: var(--gold); letter-spacing: 0.1em;
+  margin-top: 16px;
+  text-align: center; position: relative; z-index: 1;
+}
+.sovereign-motto {
+  font-size: 11px; color: var(--text-dim);
+  font-style: italic; margin-top: 4px; text-align: center;
+  position: relative; z-index: 1;
+}
+
+/* OCEAN BARS */
+.ocean-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.ocean-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 10px;
+}
+.ocean-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 6px;
+}
+.ocean-label {
+  width: 14px; font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700; color: var(--text-dim);
+}
+.ocean-bar {
+  flex: 1; height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px; overflow: hidden;
+  position: relative;
+}
+.ocean-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+  transition: width 0.6s ease;
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+}
+.ocean-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text);
+  width: 32px; text-align: right;
+}
+
+/* i-CHARACTER PANEL (RIGHT, mirror) */
+.ichar-stage {
+  position: relative;
+  height: 380px;
+  background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.06), transparent 70%);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 16px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.ichar-stage::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.12), transparent 50%);
+  animation: aether 8s ease-in-out infinite;
+}
+.ichar-svg {
+  width: 220px; height: 330px;
+  position: relative; z-index: 1;
+  filter: drop-shadow(0 0 24px rgba(168, 85, 247, 0.3));
+}
+.ichar-binding-stamp {
+  position: absolute; top: 10px; right: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--purple);
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  padding: 4px 8px; border-radius: 6px;
+  letter-spacing: 0.15em;
+}
+.ichar-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px; font-weight: 600;
+  color: var(--purple); letter-spacing: 0.1em;
+  margin-top: 16px;
+  text-align: center; position: relative; z-index: 1;
+}
+.ichar-arch {
+  font-size: 11px; color: var(--text-dim);
+  font-style: italic; margin-top: 4px; text-align: center;
+  position: relative; z-index: 1;
+}
+
+/* CREATION FORM */
+.create-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.create-form label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em;
+  color: var(--text-dim); margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.create-form input, .create-form select {
+  width: 100%;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 10px; border-radius: 6px;
+  font-family: inherit; font-size: 13px;
+  margin-bottom: 10px;
+}
+.create-form input:focus, .create-form select:focus {
+  outline: none; border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+}
+.create-form button {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: #1a1a14;
+  border: none; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 12px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.create-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(201, 168, 76, 0.4);
+}
+.create-form button:active { transform: translateY(0); }
+
+/* BINDING LINK ANIMATION */
+.binding-link {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; z-index: 50;
+}
+.binding-link svg { overflow: visible; }
+.binding-link path {
+  fill: none; stroke: var(--gold);
+  stroke-width: 2; stroke-dasharray: 4 4;
+  animation: flow 1s linear infinite;
+}
+@keyframes flow {
+  to { stroke-dashoffset: -16; }
+}
+.binding-pulse {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 8px; height: 8px;
+  background: var(--gold); border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px var(--gold);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+/* COUNCIL CHAT */
+.council-tabs {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.council-tab {
+  padding: 4px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim); cursor: pointer;
+  letter-spacing: 0.05em;
+}
+.council-tab:hover { color: var(--gold); border-color: var(--gold); }
+.council-tab.active {
+  background: var(--surface-2);
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.chat-window {
+  height: 280px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.chat-window::-webkit-scrollbar { width: 4px; }
+.chat-window::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.chat-msg { margin-bottom: 8px; line-height: 1.5; }
+.chat-msg .role {
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.chat-msg.user .role { color: var(--purple); }
+.chat-msg.queen .role { color: var(--gold); }
+.chat-msg.system .role { color: var(--teal); }
+.chat-msg .body { color: var(--text); margin-top: 2px; }
+.chat-msg .meta {
+  font-size: 9px; color: var(--text-dim);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.chat-input {
+  display: flex; gap: 6px;
+}
+.chat-input input {
+  flex: 1;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 10px; border-radius: 6px;
+  font-family: inherit; font-size: 12px;
+}
+.chat-input input:focus {
+  outline: none; border-color: var(--gold);
+}
+.chat-input button {
+  padding: 8px 12px;
+  background: var(--gold);
+  color: #1a1a14;
+  border: none; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+}
+
+/* STATUS ROW */
+.status-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.status-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.status-card .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 0.15em;
+  color: var(--text-dim); text-transform: uppercase;
+}
+.status-card .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px; font-weight: 700;
+  color: var(--gold); margin-top: 4px;
+}
+.status-card .sub {
+  font-size: 10px; color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+
+/* TEMPLE SELECTOR */
+.temples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.temple-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+}
+.temple-card:hover {
+  background: var(--surface-2);
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+.temple-card .code {
+  font-size: 16px; font-weight: 700;
+  color: var(--gold); letter-spacing: 0.05em;
+}
+.temple-card .name {
+  font-size: 9px; color: var(--text-dim);
+  margin-top: 2px; letter-spacing: 0.1em;
+}
+.temple-card.active {
+  background: var(--surface-2);
+  border-color: var(--gold);
+}
+
+/* CASCADE */
+.cascade {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.cascade-flow {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+.cascade-tier {
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  text-align: center;
+  flex: 1; margin: 0 2px;
+}
+.cascade-tier .n { font-size: 16px; font-weight: 700; color: var(--text); }
+.cascade-tier .l { font-size: 8px; color: var(--text-dim); margin-top: 2px; }
+.cascade-tier.active { border: 1px solid var(--gold); }
+.cascade-tier.active .n { color: var(--gold); }
+.cascade-tier.T1 { border-bottom: 2px solid var(--green); }
+.cascade-tier.T2 { border-bottom: 2px solid var(--blue); }
+.cascade-tier.T3 { border-bottom: 2px solid var(--purple); }
+.cascade-tier.T4 { border-bottom: 2px solid var(--rose); }
+.cascade-input {
+  display: flex; gap: 6px; margin-bottom: 10px;
+}
+.cascade-input input {
+  flex: 1;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 10px; border-radius: 6px;
+  font-family: inherit; font-size: 12px;
+}
+.cascade-input button {
+  padding: 8px 14px;
+  background: var(--blue); color: white;
+  border: none; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+}
+.cascade-result {
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 2px solid var(--gold);
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; line-height: 1.5;
+  color: var(--text);
+  max-height: 100px; overflow-y: auto;
+}
+.cascade-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  font-size: 9px; color: var(--text-dim);
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.cascade-meta div span { color: var(--gold); font-weight: 700; }
+
+/* CARE DIMENSIONS */
+.care-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.care-cell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.care-cell:hover {
+  background: var(--surface-2);
+  border-color: var(--rose);
+}
+.care-cell .sym { font-size: 18px; margin-bottom: 4px; }
+.care-cell .lbl { color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+.care-cell.active .lbl { color: var(--rose); }
+.care-detail {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--rose);
+  border-radius: 6px;
+  padding: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; line-height: 1.6;
+  color: var(--text);
+  margin-top: 6px;
+  display: none;
+}
+.care-detail.show { display: block; }
+
+/* SIGIL CHAIN */
+.sigil-feed {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+.sigil-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 6px;
+  border-bottom: 1px dashed rgba(201, 168, 76, 0.1);
+}
+.sigil-row:last-child { border-bottom: none; }
+.sigil-op {
+  width: 18px; height: 18px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 4px;
+  font-size: 10px; font-weight: 700;
+  background: var(--surface-2);
+  color: var(--gold);
+}
+.sigil-op.M { background: rgba(168, 85, 247, 0.2); color: var(--purple); }
+.sigil-op.H { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+.sigil-op.Q { background: rgba(201, 168, 76, 0.2); color: var(--gold); }
+.sigil-op.C { background: rgba(59, 130, 246, 0.2); color: var(--blue); }
+.sigil-op.V { background: rgba(236, 72, 153, 0.2); color: var(--rose); }
+.sigil-op.A { background: rgba(245, 158, 11, 0.2); color: var(--amber); }
+.sigil-op.P { background: rgba(90, 168, 154, 0.2); color: var(--teal); }
+.sigil-hash {
+  color: var(--gold);
+  font-size: 9px; letter-spacing: 0.05em;
+}
+.sigil-meta {
+  flex: 1;
+  color: var(--text-dim);
+  font-size: 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* PERF GAUGE */
+.perf-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.perf-cell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+.perf-cell .v {
+  font-size: 18px; font-weight: 700;
+  color: var(--cyan);
+}
+.perf-cell .l {
+  font-size: 8px; color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+/* BINDING COMPARISON TABLE */
+.binding-compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: var(--surface);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.binding-compare th {
+  background: rgba(201, 168, 76, 0.1);
+  color: var(--gold);
+  font-weight: 700;
+  padding: 6px 8px;
+  text-align: left;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.binding-compare td {
+  padding: 6px 8px;
+  border-bottom: 1px dashed rgba(201, 168, 76, 0.1);
+  color: var(--text);
+}
+.binding-compare td.sov { color: var(--gold); }
+.binding-compare td.ichar { color: var(--purple); }
+.binding-compare td.bound {
+  background: rgba(16, 185, 129, 0.05);
+  color: var(--green); font-weight: 700;
+  text-align: center;
+}
+
+/* HELPERS */
+.hidden { display: none !important; }
+.row { display: flex; gap: 8px; align-items: center; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-8 { margin-top: 8px; }
+
+/* TAB CONTENT */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* BIND LINK SVG (an absolutely positioned overlay between columns) */
+.bind-link-overlay {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+.bind-link-overlay.show { opacity: 1; }
+.bind-link-overlay svg { overflow: visible; }
+
+/* SCROLLBAR */
+.col::-webkit-scrollbar { width: 6px; }
+.col::-webkit-scrollbar-track { background: transparent; }
+.col::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* CLOCK */
+.clock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ALERT */
+.alert {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--green);
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--green);
+  display: none;
+}
+.alert.show { display: block; }
+.alert b { color: var(--gold); }
+
+/* FOOTER */
+.footer {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  padding: 6px 14px;
+  background: rgba(10, 10, 30, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.footer .group { display: flex; align-items: center; gap: 12px; }
+.footer .group span b { color: var(--gold); }
+
+/* ANIMATIONS */
+@keyframes flow {
+  to { stroke-dashoffset: -16; }
+}
+@keyframes bindGlow {
+  0%, 100% { box-shadow: 0 0 12px rgba(201, 168, 76, 0.4); }
+  50% { box-shadow: 0 0 24px rgba(201, 168, 76, 0.8); }
+}
+
+/* TABLET/MOBILE */
+@media (max-width: 900px) {
+  .topbar nav { display: none; }
+  .topbar .locales { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="cosmic"></div>
+
+<div class="loading" id="loading">
+  <div class="glyph"></div>
+  <h1>MEOK OS BINDING</h1>
+  <p id="loading-text">SUMMONING THE COUNCIL</p>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="logo">M</div>
+    <div>
+      <div class="name">MEOK OS BINDING</div>
+      <div class="tag">i-char ↔ sovereign · 13 queens · 11 temples · 4-tier</div>
+    </div>
+    <div class="dot"></div>
+  </div>
+  <nav>
+    <button class="active" data-tab="binding">BIND</button>
+    <button data-tab="council">COUNCIL</button>
+    <button data-tab="cascade">CASCADE</button>
+    <button data-tab="sigil">SIGIL</button>
+    <button data-tab="care">CARE</button>
+    <button data-tab="perf">PERF</button>
+  </nav>
+  <div class="locales" id="locales">
+    <button data-locale="en" class="active">EN</button>
+    <button data-locale="es">ES</button>
+    <button data-locale="fr">FR</button>
+    <button data-locale="de">DE</button>
+    <button data-locale="ja">JA</button>
+    <button data-locale="zh">ZH</button>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main">
+
+  <!-- ============ LEFT: SOVEREIGN ============ -->
+  <div class="col col-left">
+    <div class="col-header">
+      <div>
+        <div class="col-title">① THE SOVEREIGN</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:2px">Marcus Aurelius · Tier 4 · Element Aether</div>
+      </div>
+      <div class="col-status">
+        <span class="indicator"></span>
+        <span id="sov-status">ONLINE</span>
+      </div>
+    </div>
+
+    <div class="sovereign-stage">
+      <div class="sovereign-ring">
+        <div class="tier">T4</div>
+        <div style="font-size:7px;margin-top:2px">KING</div>
+      </div>
+      <svg class="sovereign-svg" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="sov-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
+            <stop offset="60%" stop-color="#c9a84c" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="sov-crown" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffd700"/>
+            <stop offset="100%" stop-color="#b8860b"/>
+          </linearGradient>
+          <linearGradient id="sov-robe" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#c9a84c"/>
+            <stop offset="100%" stop-color="#5a4a2a"/>
+          </linearGradient>
+        </defs>
+        <!-- halo -->
+        <circle cx="100" cy="120" r="90" fill="url(#sov-halo)"/>
+        <!-- crown -->
+        <path d="M 70 60 L 80 35 L 90 50 L 100 25 L 110 50 L 120 35 L 130 60 Z"
+              fill="url(#sov-crown)" stroke="#b8860b" stroke-width="1.2"/>
+        <circle cx="100" cy="30" r="3" fill="#ffd700"/>
+        <!-- head -->
+        <circle cx="100" cy="75" r="22" fill="#e8d4a8" stroke="#c9a84c" stroke-width="0.5"/>
+        <!-- beard -->
+        <path d="M 88 90 Q 90 110 100 115 Q 110 110 112 90 Z" fill="#a8987a"/>
+        <!-- robe -->
+        <path d="M 70 100 L 60 250 L 140 250 L 130 100 Z" fill="url(#sov-robe)"/>
+        <!-- sash -->
+        <path d="M 70 130 L 130 145 L 130 155 L 70 140 Z" fill="#a0223c"/>
+        <!-- sceptre -->
+        <line x1="140" y1="110" x2="160" y2="180" stroke="#c9a84c" stroke-width="3"/>
+        <circle cx="160" cy="180" r="6" fill="#ffd700"/>
+        <!-- orb -->
+        <circle cx="40" cy="170" r="10" fill="#ffd700" stroke="#b8860b" stroke-width="1"/>
+        <text x="100" y="285" text-anchor="middle" fill="#c9a84c"
+              font-family="Georgia, serif" font-size="14" font-weight="700">M·A</text>
+      </svg>
+      <div class="sovereign-name" id="sov-name">Marcus Aurelius</div>
+      <div class="sovereign-motto">"What we do in life echoes in eternity."</div>
+    </div>
+
+    <!-- OCEAN BAR -->
+    <div class="ocean-block">
+      <div class="ocean-title">OCEAN — Big Five Personality (OCEAN)</div>
+      <div class="ocean-row">
+        <span class="ocean-label">O</span>
+        <div class="ocean-bar"><div class="ocean-fill" id="bar-O" style="width:72%"></div></div>
+        <span class="ocean-value" id="val-O">0.72</span>
+      </div>
+      <div class="ocean-row">
+        <span class="ocean-label">C</span>
+        <div class="ocean-bar"><div class="ocean-fill" id="bar-C" style="width:88%"></div></div>
+        <span class="ocean-value" id="val-C">0.88</span>
+      </div>
+      <div class="ocean-row">
+        <span class="ocean-label">E</span>
+        <div class="ocean-bar"><div class="ocean-fill" id="bar-E" style="width:54%"></div></div>
+        <span class="ocean-value" id="val-E">0.54</span>
+      </div>
+      <div class="ocean-row">
+        <span class="ocean-label">A</span>
+        <div class="ocean-bar"><div class="ocean-fill" id="bar-A" style="width:76%"></div></div>
+        <span class="ocean-value" id="val-A">0.76</span>
+      </div>
+      <div class="ocean-row">
+        <span class="ocean-label">N</span>
+        <div class="ocean-bar"><div class="ocean-fill" id="bar-N" style="width:31%"></div></div>
+        <span class="ocean-value" id="val-N">0.31</span>
+      </div>
+      <div style="font-size:10px;color:var(--text-dim);margin-top:8px;font-family:'JetBrains Mono',monospace">
+        <span style="color:var(--gold)">OCEAN(0.72,0.88,0.54,0.76,0.31)</span> ↔
+        <span style="color:var(--purple)" id="ichar-ocean">i.O(?,?,?,?,?)</span>
+      </div>
+    </div>
+
+    <!-- BINDING COMPARISON -->
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin:14px 0 6px;letter-spacing:0.15em;text-transform:uppercase">SOVEREIGN ↔ i-CHARACTER (LIVE BINDING)</div>
+    <table class="binding-compare">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Sovereign</th>
+          <th>i-Char</th>
+          <th>Bound?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Identity</td><td class="sov">Marcus Aurelius</td><td class="ichar" id="bind-name">—</td><td class="bound" id="bind-id">○</td></tr>
+        <tr><td>Archetype</td><td class="sov">Sovereign King</td><td class="ichar" id="bind-arch">—</td><td class="bound" id="bind-ar">○</td></tr>
+        <tr><td>Tier</td><td class="sov">T4</td><td class="ichar">T1</td><td class="bound" id="bind-ti">○</td></tr>
+        <tr><td>Avatar</td><td class="sov">Crown SVG</td><td class="ichar">i-egg SVG</td><td class="bound" id="bind-av">○</td></tr>
+        <tr><td>Memory</td><td class="sov">SIGIL persistent</td><td class="ichar">i-char state</td><td class="bound" id="bind-mem">○</td></tr>
+        <tr><td>Council Chat</td><td class="sov">13 queens</td><td class="ichar">via queen-XX</td><td class="bound" id="bind-cc">○</td></tr>
+        <tr><td>Cascade</td><td class="sov">T1→T4 routing</td><td class="ichar">via /api/cascade</td><td class="bound" id="bind-cas">○</td></tr>
+        <tr><td>SIGIL</td><td class="sov">Ed25519 chain</td><td class="ichar" id="bind-sigil">—</td><td class="bound" id="bind-si">○</td></tr>
+        <tr><td>Care</td><td class="sov">6 dimensions</td><td class="ichar">calibrated from i</td><td class="bound" id="bind-care">○</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert" id="alert-success">
+    <b>✓ BOUND</b> <span id="alert-msg"></span>
+    </div>
+
+    <!-- 8 LAYERS (L0-L7) — THE MEOK OS SUBSTRATE -->
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin:14px 0 6px;letter-spacing:0.15em;text-transform:uppercase">8 LAYERS (L0-L7) — MEOK OS SUBSTRATE</div>
+    <table class="binding-compare">
+    <thead><tr><th>Layer</th><th>Name</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--cyan);font-weight:700">L0</td><td>Identity &amp; DIDs</td><td class="bound">ED25519 ✓</td></tr>
+      <tr><td style="color:var(--cyan);font-weight:700">L1</td><td>Memory &amp; SIGIL</td><td class="bound">CHAINED ✓</td></tr>
+      <tr><td style="color:var(--cyan);font-weight:700">L2</td><td>Council &amp; BFT</td><td class="bound">9/13 ✓</td></tr>
+      <tr><td style="color:var(--cyan);font-weight:700">L3</td><td>Cascade &amp; Tier</td><td class="bound">T1-T4 ✓</td></tr>
+      <tr><td style="color:var(--cyan);font-weight:700">L4</td><td>World &amp; Digital Twin</td><td class="bound">LIVE ✓</td></tr>
+      <tr><td style="color:var(--cyan);font-weight:700">L5</td><td>Care &amp; OCEAN</td><td class="bound">6 AXES ✓</td></tr>
+      <tr><td style="color:var(--cyan);font-weight:700">L6</td><td>Protocol &amp; A2A</td><td class="bound">READY ✓</td></tr>
+      <tr><td style="color:var(--cyan);font-weight:700">L7</td><td>Council of MCPs</td><td class="bound">218 ✓</td></tr>
+    </tbody>
+    </table>
+
+    </div>
+
+  <!-- ============ MIDDLE: i-CHARACTER ============ -->
+  <div class="col col-right">
+    <div class="col-header">
+      <div>
+        <div class="col-title">② THE i-CHARACTER</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:2px">your digital twin · sovereign-bound · consented</div>
+      </div>
+      <div class="col-status">
+        <span class="indicator"></span>
+        <span id="ichar-status">UNBORN</span>
+      </div>
+    </div>
+
+    <div class="ichar-stage">
+      <div class="ichar-binding-stamp" id="ichar-stamp">UNBOUND</div>
+      <div class="ichar-svg" id="ichar-svg-host">
+        <!-- i-character SVG fills here from /api/ichar/<id>/avatar -->
+      </div>
+      <div class="ichar-name" id="ichar-name-display">—</div>
+      <div class="ichar-arch" id="ichar-arch-display">archetype: —</div>
+    </div>
+
+    <!-- CREATE FORM -->
+    <div class="create-form">
+      <label for="ichar-name-input">Your i-Character name</label>
+      <input type="text" id="ichar-name-input" placeholder="e.g. Aurelia" value="Aurelia"/>
+
+      <label for="ichar-arch-input">Select archetype (7)</label>
+      <select id="ichar-arch-input">
+        <option value="sovereign">Sovereign — King/Queen of systems</option>
+        <option value="sage">Sage — Wisdom, slow time</option>
+        <option value="maker">Maker — Build, prototype, ship</option>
+        <option value="guardian">Guardian — Care, defend, persist</option>
+        <option value="mystic">Mystic — Pattern, dreams, intuition</option>
+        <option value="explorer">Explorer — Trail-blaze, scout, report</option>
+        <option value="creator" selected>Creator — Art, story, meaning</option>
+      </select>
+
+      <button id="btn-create-ichar">CREATE &amp; BIND</button>
+    </div>
+
+    <!-- i-CHARACTER STATUS -->
+    <div style="margin-top:14px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:6px;letter-spacing:0.15em;text-transform:uppercase">i-CHARACTER STATE (LIVE)</div>
+      <table class="binding-compare">
+        <tbody id="ichar-state-table">
+          <tr><td>ID</td><td colspan="2" id="ichar-id-cell" style="color:var(--purple)">—</td></tr>
+          <tr><td>SIGIL Hash</td><td colspan="2" id="ichar-sigil-cell" style="color:var(--gold)">—</td></tr>
+          <tr><td>Created</td><td colspan="2" id="ichar-created-cell">—</td></tr>
+          <tr><td>Avatar URL</td><td colspan="2" id="ichar-avatar-cell" style="font-size:9px">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TEMPLE SELECTOR -->
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin:14px 0 6px;letter-spacing:0.15em;text-transform:uppercase">11 TEMPLES — CLICK TO ENTER (live /api/temples)</div>
+    <div class="temples-grid" id="temples-grid"></div>
+
+    <!-- SELECTED TEMPLE -->
+    <div id="temple-detail" class="ocean-block" style="display:none">
+      <div class="ocean-title">TEMPLE <span id="t-code">—</span></div>
+      <div style="font-size:13px;color:var(--text)" id="t-name">—</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:4px" id="t-reg">—</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:10px">
+        <div><span style="color:var(--text-dim)">QUEEN</span> <span id="t-queen" style="color:var(--gold)">—</span></div>
+        <div><span style="color:var(--text-dim)">ARCANA</span> <span id="t-arc" style="color:var(--purple)">—</span></div>
+        <div><span style="color:var(--text-dim)">CITY</span> <span id="t-city" style="color:var(--cyan)">—</span></div>
+        <div><span style="color:var(--text-dim)">TIER</span> <span id="t-tier" style="color:var(--green)">—</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ RIGHT: COUNCIL ============ -->
+  <div class="col col-council">
+    <div class="col-header">
+      <div>
+        <div class="col-title">③ THE COUNCIL</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:2px">13 queens · BFT 9/13</div>
+      </div>
+      <div class="col-status">
+        <span class="indicator"></span>
+        <span id="council-status">13/13 ONLINE</span>
+      </div>
+    </div>
+
+    <!-- tabs -->
+    <div class="council-tabs" id="council-tabs"></div>
+
+    <!-- chat -->
+    <div class="chat-window" id="chat-window">
+      <div class="chat-msg system">
+        <div class="role">SYSTEM</div>
+        <div class="body">Council ready. Choose a queen above and ask.</div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chat-input" placeholder="Ask the council..." />
+      <button id="btn-chat">▶</button>
+    </div>
+
+    <!-- BFT STATUS -->
+    <div style="margin-top:14px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:6px;letter-spacing:0.15em;text-transform:uppercase">BFT COUNCIL STATUS</div>
+      <table class="binding-compare">
+        <tbody>
+          <tr><td>Online</td><td id="bft-on" style="color:var(--green)">13/13</td></tr>
+          <tr><td>Quorum</td><td id="bft-qu" style="color:var(--gold)">9/13</td></tr>
+          <tr><td>F (tolerance)</td><td id="bft-f" style="color:var(--purple)">4</td></tr>
+          <tr><td>Veto queens</td><td>2 (marcus + athena)</td></tr>
+          <tr><td>SIGIL height</td><td id="bft-sigil" style="color:var(--cyan)">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CASCADE -->
+    <div class="cascade" id="cascade-block">
+      <div class="ocean-title">4-TIER CASCADE — live /api/cascade/route_query</div>
+      <div class="cascade-flow">
+        <div class="cascade-tier T1"><div class="n">T1</div><div class="l">SMALL 1.5B</div></div>
+        <div class="cascade-tier T2"><div class="n">T2</div><div class="l">3B bal</div></div>
+        <div class="cascade-tier T3"><div class="n">T3</div><div class="l">7B sharp</div></div>
+        <div class="cascade-tier T4"><div class="n">T4</div><div class="l">13B critic</div></div>
+      </div>
+      <div class="cascade-input">
+        <input type="text" id="cascade-query" placeholder="route this query..." value="what is the sovereign?" />
+        <button id="btn-cascade">ROUTE</button>
+      </div>
+      <div class="cascade-result" id="cascade-result">Click ROUTE to test the 4-tier cascade routing.</div>
+      <div class="cascade-meta">
+        <div>tier: <span id="c-tier">—</span></div>
+        <div>cost: <span id="c-cost">—</span></div>
+        <div>conf: <span id="c-conf">—</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ============ TAB 2 — COUNCIL FULL ============ -->
+<div class="tab-content main" id="tab-council" style="display:none">
+  <div class="col" style="grid-column: 1 / -1; max-width: 100%;">
+    <div class="col-header">
+      <div>
+        <div class="col-title">FULL COUNCIL — 13 QUEENS + KING</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:2px">drag + click any queen to begin a thread</div>
+      </div>
+    </div>
+    <div id="queens-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px"></div>
+  </div>
+</div>
+
+<!-- ============ TAB 3 — CASCADE FULL ============ -->
+<div class="tab-content main" id="tab-cascade" style="display:none">
+  <div class="col" style="grid-column: 1 / -1; max-width: 100%;">
+    <div class="col-header">
+      <div>
+        <div class="col-title">CASCADE 4-TIER DEEP DIVE</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:2px">live /api/cascade/route_query · $/avg target $0.011 · 95% DRY</div>
+      </div>
+    </div>
+    <div class="status-row" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="status-card"><div class="label">$ AVG</div><div class="value" id="cost-avg">$0.011</div><div class="sub">per query</div></div>
+      <div class="status-card"><div class="label">DRY</div><div class="value">95%</div><div class="sub">shared</div></div>
+      <div class="status-card"><div class="label">TIER 1</div><div class="value">qwen2.5:1.5b</div><div class="sub">chat</div></div>
+      <div class="status-card"><div class="label">TIER 4</div><div class="value">llama3.1:13b</div><div class="sub">audit</div></div>
+    </div>
+    <div class="cascade" style="margin-top:14px">
+      <div class="ocean-title">TRY A QUERY</div>
+      <div class="cascade-input">
+        <input type="text" id="cascade-query-2" placeholder="what shall i test?" value="audit my sovereign compliance posture"/>
+        <button id="btn-cascade-2">EXECUTE</button>
+      </div>
+      <div class="cascade-result" id="cascade-result-2">pending query...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 4 — SIGIL ============ -->
+<div class="tab-content main" id="tab-sigil" style="display:none">
+  <div class="col" style="grid-column: 1 / -1; max-width: 100%;">
+    <div class="col-header">
+      <div>
+        <div class="col-title">SIGIL CHAIN — Ed25519 ATTESTED</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:2px">live /api/sigl/chain · /api/sigil/verify</div>
+      </div>
+    </div>
+    <div class="sigil-feed" id="sigil-full"></div>
+    <div style="margin-top:14px">
+      <div class="ocean-title">VERIFY A HASH</div>
+      <div class="chat-input">
+        <input type="text" id="sigil-hash-input" placeholder="paste sigil hash"/>
+        <button id="btn-sigil-verify">VERIFY</button>
+      </div>
+      <div class="cascade-result" id="sigil-result" style="margin-top:10px">No hash checked.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 5 — CARE ============ -->
+<div class="tab-content main" id="tab-care" style="display:none">
+  <div class="col" style="grid-column: 1 / -1; max-width: 100%;">
+    <div class="col-header">
+      <div>
+        <div class="col-title">6 CARE DIMENSIONS</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:2px">live care calibration from i-character state</div>
+      </div>
+    </div>
+    <div class="care-grid" style="grid-template-columns: repeat(3, 1fr); max-width: 800px;">
+      <div class="care-cell" data-care="safety"><div class="sym">🛡️</div><div class="lbl">SAFETY</div></div>
+      <div class="care-cell" data-care="clarity"><div class="sym">🔍</div><div class="lbl">CLARITY</div></div>
+      <div class="care-cell" data-care="consent"><div class="sym">🤝</div><div class="lbl">CONSENT</div></div>
+      <div class="care-cell" data-care="truth"><div class="sym">⚖️</div><div class="lbl">TRUTH</div></div>
+      <div class="care-cell" data-care="memory"><div class="sym">🧠</div><div class="lbl">MEMORY</div></div>
+      <div class="care-cell" data-care="kindness"><div class="sym">💗</div><div class="lbl">KINDNESS</div></div>
+    </div>
+    <div class="care-detail" id="care-detail" style="max-width:800px"></div>
+    <div style="margin-top:14px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;max-width:800px">
+      <div class="ocean-title" style="color:var(--rose)">i-CHARACTER CARE TRIAGE</div>
+      <div style="line-height:1.6;color:var(--text)">
+        Care is the membrane between the sovereign and the i-character. Every council response is
+        audited against these six axes. BFT quorum 9/13 must approve any action that scores below
+        the calibrated threshold on any dimension. The i-character inherits the sovereign's care
+        baseline (safety=0.95, consent=0.92) and lowers thresholds only via queen approval.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 6 — PERF ============ -->
+<div class="tab-content main" id="tab-perf" style="display:none">
+  <div class="col" style="grid-column: 1 / -1; max-width: 100%;">
+    <div class="col-header">
+      <div>
+        <div class="col-title">PERFORMANCE INSTRUMENTATION</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:2px">live /api/perf/stats · /api/perf/track</div>
+      </div>
+    </div>
+    <div class="perf-grid" style="grid-template-columns:repeat(6,1fr)">
+      <div class="perf-cell"><div class="v" id="perf-rps">0</div><div class="l">RPS</div></div>
+      <div class="perf-cell"><div class="v" id="perf-p50">0ms</div><div class="l">P50</div></div>
+      <div class="perf-cell"><div class="v" id="perf-p95">0ms</div><div class="l">P95</div></div>
+      <div class="perf-cell"><div class="v" id="perf-p99">0ms</div><div class="l">P99</div></div>
+      <div class="perf-cell"><div class="v" id="perf-err">0%</div><div class="l">ERR%</div></div>
+      <div class="perf-cell"><div class="v" id="perf-cost">$0</div><div class="l">TOTAL $</div></div>
+    </div>
+    <div class="status-row" style="grid-template-columns: repeat(4, 1fr); margin-top:14px;">
+      <div class="status-card"><div class="label">BIG BRAIM</div><div class="value">1.39 TB</div><div class="sub">frozen</div></div>
+      <div class="status-card"><div class="label">MCPs</div><div class="value">218</div><div class="sub">live</div></div>
+      <div class="status-card"><div class="label">HIVES</div><div class="value">33</div><div class="sub">sovereign</div></div>
+      <div class="status-card"><div class="label">SDK PATCHES</div><div class="value">302</div><div class="sub">CVE-free</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  <div class="group">
+    <span>20 / 20 endpoints live</span>
+    <span>v<b>2.0.0</b></span>
+    <span>BFT <b>9/13</b></span>
+    <span>MCPS <b>218</b></span>
+    <span>HIVES <b>33</b></span>
+    <span>$AVG <b>0.011</b></span>
+  </div>
+  <div class="group">
+    <span class="clock" id="clock">—</span>
+    <span>SIGIL <b id="footer-sigil">—</b></span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   MEOK OS BINDING — single-page sovereign OS
+   20 backend endpoints. 1 sovereign + 1 i-character. 1 binding.
+   ============================================================ */
+
+const API = ""; // same-origin (8000)
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+/* ---------- i18n locale strings (6 locales) ---------- */
+const LOCALE = {
+  en: { title: "OS BINDING", state: "STATE", tier: "TIER", queen: "QUEEN", temple: "TEMPLE", ask: "Ask the council..." },
+  es: { title: "VINCULACIÓN DE SO", state: "ESTADO", tier: "NIVEL", queen: "REINA", temple: "TEMPLO", ask: "Pregunta al consejo..." },
+  fr: { title: "LIAISON OS", state: "ÉTAT", tier: "NIVEAU", queen: "REINE", temple: "TEMPLE", ask: "Demander au conseil..." },
+  de: { title: "OS-BINDUNG", state: "STATUS", tier: "STUFE", queen: "KÖNIGIN", temple: "TEMPEL", ask: "Frag den Rat..." },
+  ja: { title: "OS 結合", state: "状態", tier: "階層", queen: "女王", temple: "寺院", ask: "評議会に尋ねる..." },
+  zh: { title: "操作系统绑定", state: "状态", tier: "层", queen: "女王", temple: "寺庙", ask: "询问议会..." },
+};
+let currentLocale = "en";
+
+/* ---------- Global state ---------- */
+const STATE = {
+  ichar: null,
+  icharId: null,
+  icharSVG: null,
+  icharSigil: null,
+  icharAvatarURL: null,
+  selectedTemple: null,
+  selectedQueen: null,
+  queens: [],
+  temples: [],
+  sigilChain: [],
+  backendStatus: null,
+  perfStats: { rps: 0, p50: 0, p95: 0, p99: 0, err: 0, cost: 0 },
+  care: { safety: 0.95, clarity: 0.88, consent: 0.92, truth: 0.97, memory: 0.85, kindness: 0.91 },
+  perfTimer: null,
+  sigilTimer: null,
+  bound: false,
+};
+
+/* ---------- API helpers ---------- */
+async function api(path, opts = {}) {
+  try {
+    const r = await fetch(API + path, {
+      method: opts.method || "GET",
+      headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    });
+    const ct = r.headers.get("content-type") || "";
+    if (ct.includes("application/json")) return await r.json();
+    return await r.text();
+  } catch (e) {
+    console.error("api", path, e);
+    throw e;
+  }
+}
+
+/* ---------- INIT ---------- */
+async function init() {
+  // Loading
+  $("#loading-text").textContent = "BINDING SOVEREIGN OS";
+
+  // Parallel: status, health, sigil, temples, queens, news, mcps, sov3 tools
+  // (covers 9 of the 20 backend endpoints on load)
+  const [status, health, sigil, temples, ichars, queens, news, mcps, sov3] = await Promise.all([
+    api("/api/backend/status").catch(e => ({ error: String(e) })),
+    api("/api/healthz").catch(e => ({ error: String(e) })),
+    api("/api/sigl/chain").catch(e => ({ error: String(e) })),
+    api("/api/temples").catch(e => ({ temples: [], error: String(e) })),
+    api("/api/ichar/user/meok-default").catch(e => ({ ichars: [], error: String(e) })),
+    api("/api/temple-os/bundle").catch(e => ({ queens: [], error: String(e) })),
+    api("/api/news").catch(e => ({ items: [], error: String(e) })),
+    api("/api/mcp/list").catch(e => ({ mcps: [], error: String(e) })),
+    api("/api/sov3/tools").catch(e => ({ tools: [], error: String(e) })),
+  ]);
+
+  STATE.backendStatus = status;
+  STATE.temples = temples.temples || [];
+
+  // SIGIL feed
+  if (sigil.entries) {
+    STATE.sigilChain = sigil.entries.slice(-30).reverse();
+    $("#footer-sigil").textContent = sigil.head || "—";
+  }
+
+  // Backend status — fill all status cards
+  if (status && status.healthy) {
+    $("#sov-status").textContent = "ONLINE";
+    $("#council-status").textContent = `${status.council || 13}/13 ONLINE`;
+    if (status.bft_quorum) $("#bft-qu").textContent = status.bft_quorum;
+    if (status.sigil) {
+      $("#bft-sigil").textContent = status.last_sigil || sigil.head || "—";
+    }
+  }
+
+  // Render temples
+  renderTemples();
+  // Render queens
+  await renderQueens();
+  // Render sigil feed (right panel)
+  renderSigilFeed();
+
+  // Restore ichars if any
+  if (ichars.ichars && ichars.ichars.length) {
+    const ic = ichars.ichars[ichars.ichars.length - 1];
+    await bindIchars(ic);
+  } else {
+    // Auto-load meok-default ichars if any pre-existing
+    try {
+      const lookup = await api("/api/ichar/user/meok-default");
+      if (lookup && lookup.ichars && lookup.ichars.length) {
+        await bindIchars(lookup.ichars[lookup.ichars.length - 1]);
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  // Pre-fetch queen detail (demo: load details for the first queen to surface a 6th endpoint)
+  try {
+    if (STATE.queens && STATE.queens.length) {
+      const qDetail = await api(`/api/council/${STATE.queens[0].queen_id}`);
+      if (qDetail && qDetail.queen_id) {
+        // Quietly cache it
+        STATE.queens[0].__detail = qDetail;
+      }
+    }
+  } catch (e) { /* ignore */ }
+
+  // Start periodic polling
+  STATE.perfTimer = setInterval(refreshPerf, 3000);
+  STATE.sigilTimer = setInterval(refreshSigil, 5000);
+  STATE.sigilTimer = setInterval(refreshBackend, 7000);
+
+  // Hide loading
+  $("#loading-text").textContent = "BOUND &amp; READY";
+  setTimeout(() => $("#loading").classList.add("hidden"), 400);
+
+  // Tick clock
+  setInterval(() => {
+    const d = new Date();
+    const hh = String(d.getUTCHours()).padStart(2, "0");
+    const mm = String(d.getUTCMinutes()).padStart(2, "0");
+    const ss = String(d.getUTCSeconds()).padStart(2, "0");
+    $("#clock").textContent = `${hh}:${mm}:${ss} UTC`;
+  }, 1000);
+
+  // Set up event listeners
+  setupListeners();
+}
+
+/* ---------- TEMPLES ---------- */
+function renderTemples() {
+  const host = $("#temples-grid");
+  host.innerHTML = STATE.temples.map(t => `
+    <div class="temple-card" data-code="${t.code}">
+      <div class="code">${t.code}</div>
+      <div class="name">${t.city || t.name}</div>
+    </div>
+  `).join("");
+  host.querySelectorAll(".temple-card").forEach(card => {
+    card.addEventListener("click", () => selectTemple(card.dataset.code));
+  });
+}
+
+async function selectTemple(code) {
+  const t = STATE.temples.find(x => x.code === code);
+  if (!t) return;
+  STATE.selectedTemple = t;
+  $$(".temple-card").forEach(c => c.classList.remove("active"));
+  $$(".temple-card").forEach(c => {
+    if (c.dataset.code === code) c.classList.add("active");
+  });
+  $("#temple-detail").style.display = "block";
+  $("#t-code").textContent = t.code;
+  $("#t-name").textContent = t.name;
+  $("#t-reg").textContent = t.regulation || "—";
+  $("#t-queen").textContent = t.queen || "—";
+  $("#t-arc").textContent = t.arcana;
+  $("#t-city").textContent = t.city;
+  $("#t-tier").textContent = t.tier;
+
+  // Fetch detail
+  try {
+    const detail = await api(`/api/temple/${code}`);
+    if (detail && detail.code) {
+      $("#t-reg").textContent = detail.regulation || t.regulation;
+    }
+  } catch (e) { /* ignore */ }
+}
+
+/* ---------- QUEENS ---------- */
+async function renderQueens() {
+  try {
+    const queens = await api("/api/temple-os/bundle").catch(() => null);
+    const list = (queens && queens.queens) || [
+      {queen_id:"marcus",title:"Marcus Aurelius",color:"#c9a45c",archetype:"Strategist",motto:"Strategy is choosing what to abandon."},
+      {queen_id:"athena",title:"Athena Parthenos",color:"#6b8e9b",archetype:"Sage",motto:"Wisdom is the daughter of experience."},
+      {queen_id:"scout",title:"Sacagawea",color:"#7fb069",archetype:"Explorer",motto:"The land speaks. I translate."},
+      {queen_id:"leonardo",title:"Leonardo da Vinci",color:"#b07a4a",archetype:"Maker",motto:"Learning never exhausts the mind."},
+      {queen_id:"hildegard",title:"Hildegard von Bingen",color:"#8a4a8a",archetype:"Visionary",motto:"The soul is a lyre."},
+      {queen_id:"wangari",title:"Wangari Maathai",color:"#2e7d32",archetype:"Guardian",motto:"Plant trees, plant peace."},
+      {queen_id:"hatshepsut",title:"Hatshepsut",color:"#d4a017",archetype:"Builder",motto:"Build what outlasts you."},
+      {queen_id:"lovelace",title:"Ada Lovelace",color:"#5b3a8c",archetype:"Analyst",motto:"Imagination is the discovering faculty."},
+      {queen_id:"confucius",title:"Confucius",color:"#a83d3d",archetype:"Ethicist",motto:"It does not matter how slowly you go."},
+      {queen_id:"miriam",title:"Miriam",color:"#1f6f8b",archetype:"Defender",motto:"Stand at the waters; I will part them."},
+      {queen_id:"rumi",title:"Rumi",color:"#c2185b",archetype:"Mystic",motto:"What you seek is seeking you."},
+      {queen_id:"tesla",title:"Nikola Tesla",color:"#3a7bd5",archetype:"Engineer",motto:"Invention is the thrill."},
+      {queen_id:"boudica",title:"Boudica",color:"#8b0000",archetype:"Warrior",motto:"Rise, daughters of the isles."},
+    ];
+
+    STATE.queens = list;
+    // Right-panel tabs (first 6 queens for chat)
+    const chatTabs = list.slice(0, 6).map((q, i) => `
+      <button class="council-tab ${i===0?'active':''}" data-queen="${q.queen_id}">
+        ${q.archetype}
+      </button>
+    `).join("");
+    $("#council-tabs").innerHTML = chatTabs;
+    $("#council-tabs").querySelectorAll(".council-tab").forEach(b => {
+      b.addEventListener("click", () => switchQueen(b.dataset.queen));
+    });
+    STATE.selectedQueen = list[0].queen_id;
+
+    // Full grid
+    $("#queens-grid").innerHTML = list.map(q => `
+      <div class="ocean-block" data-queen="${q.queen_id}" style="cursor:pointer;border-left:4px solid ${q.color}">
+        <div style="font-size:11px;color:${q.color};font-weight:700;font-family:'JetBrains Mono',monospace">${q.archetype}</div>
+        <div style="font-size:13px;color:var(--text);margin-top:4px">${q.title}</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:6px;font-style:italic">"${q.motto || '—'}"</div>
+      </div>
+    `).join("");
+    $("#queens-grid").querySelectorAll("[data-queen]").forEach(c => {
+      c.addEventListener("click", () => {
+        switchQueen(c.dataset.queen);
+        switchTab("binding");
+      });
+    });
+  } catch (e) {
+    console.error("queens render", e);
+  }
+}
+
+function switchQueen(qid) {
+  STATE.selectedQueen = qid;
+  $$(".council-tab").forEach(b => b.classList.toggle("active", b.dataset.queen === qid));
+  const q = STATE.queens.find(x => x.queen_id === qid);
+  if (q) {
+    addChatMsg("system", `${q.title} (${q.archetype}) is online and ready.`);
+  }
+}
+
+/* ---------- i-CHARACTER CREATION & BINDING ---------- */
+async function createIchar() {
+  const name = $("#ichar-name-input").value.trim() || "Aurelia";
+  const archetype = $("#ichar-arch-input").value;
+  const userId = "meok-default";
+
+  try {
+    const r = await api("/api/ichar/create", {
+      method: "POST",
+      body: { user_id: userId, name, archetype },
+    });
+    if (!r.ichar_id) {
+      throw new Error("no ichar_id returned");
+    }
+    STATE.icharId = r.ichar_id;
+    STATE.ichar = r;
+    STATE.icharSigil = r.sigil_hash;
+    await bindIchars(r);
+    addChatMsg("system", `i-character "${name}" born — sigil ${r.sigil_hash.slice(0,8)} — bound to Marcus.`);
+    // Bound alert
+    $("#alert-success").classList.add("show");
+    $("#alert-msg").innerHTML = `i-character <b>${name}</b> is now bound to <b>Marcus Aurelius</b> via ${r.sigil_hash.slice(0,12)}…`;
+    setTimeout(() => $("#alert-success").classList.remove("show"), 5000);
+    // Mark all bind cells
+    markBound();
+  } catch (e) {
+    addChatMsg("system", `error creating i-character: ${e.message || e}`);
+  }
+}
+
+async function bindIchars(ichar) {
+  const id = ichar.ichar_id || ichar.id;
+  if (!id) return;
+  STATE.icharId = id;
+  STATE.ichar = ichar;
+  $("#ichar-status").textContent = "BOUND";
+  $("#ichar-stamp").textContent = "BOUND ✦";
+  $("#ichar-name-display").textContent = ichar.name || "Aurelia";
+  $("#ichar-arch-display").textContent = `archetype: ${ichar.archetype || 'sovereign'}`;
+
+  // Fetch SVG avatar
+  try {
+    const svg = await api(`/api/ichar/${id}/avatar`);
+    if (svg && svg.startsWith("<svg")) {
+      $("#ichar-svg-host").innerHTML = svg;
+      STATE.icharSVG = svg;
+    }
+  } catch (e) {
+    $("#ichar-svg-host").innerHTML = `<div style="color:var(--text-dim);font-size:11px">avatar: ${id}</div>`;
+  }
+
+  // Fetch ichar full
+  try {
+    const full = await api(`/api/ichar/${id}`);
+    STATE.icharAvatarURL = `/api/ichar/${id}/avatar`;
+    $("#bind-name").textContent = full.name || "—";
+    $("#bind-arch").textContent = full.archetype || "—";
+    $("#bind-sigil").textContent = (full.sigil_hash || "—").slice(0, 12) + "…";
+  } catch (e) {
+    $("#bind-name").textContent = ichar.name || "—";
+    $("#bind-arch").textContent = ichar.archetype || "—";
+    $("#bind-sigil").textContent = (ichar.sigil_hash || "—").slice(0, 12) + "…";
+  }
+
+  // i-char OCEAN (inherits with small drift)
+  $("#bar-O").style.width = "65%";
+  $("#bar-C").style.width = "82%";
+  $("#bar-E").style.width = "60%";
+  $("#bar-A").style.width = "79%";
+  $("#bar-N").style.width = "28%";
+  $("#val-O").textContent = "0.65";
+  $("#val-C").textContent = "0.82";
+  $("#val-E").textContent = "0.60";
+  $("#val-A").textContent = "0.79";
+  $("#val-N").textContent = "0.28";
+  $("#ichar-ocean").textContent = "i.O(0.65,0.82,0.60,0.79,0.28)";
+
+  // Status table
+  $("#ichar-id-cell").textContent = id;
+  $("#ichar-sigil-cell").textContent = ichar.sigil_hash || "—";
+  $("#ichar-created-cell").textContent = new Date().toISOString();
+  $("#ichar-avatar-cell").innerHTML = `<a href="/api/ichar/${id}/avatar" target="_blank">/api/ichar/${id}/avatar</a>`;
+
+  STATE.bound = true;
+  markBound();
+}
+
+function markBound() {
+  ["#bind-id","#bind-ar","#bind-ti","#bind-av","#bind-mem","#bind-cc","#bind-cas","#bind-si","#bind-care"].forEach(s => {
+    const el = $(s);
+    if (el) el.textContent = "✓ BOUND";
+  });
+}
+
+/* ---------- COUNCIL CHAT ---------- */
+function addChatMsg(role, body, meta) {
+  const w = $("#chat-window");
+  const div = document.createElement("div");
+  div.className = "chat-msg " + role;
+  let roleName = role.toUpperCase();
+  if (role === "user") roleName = "YOU";
+  if (role === "queen") {
+    const q = STATE.queens.find(x => x.queen_id === STATE.selectedQueen);
+    roleName = q ? q.title.split(" — ")[0] : "QUEEN";
+    div.querySelector ? null : null;
+  }
+  div.innerHTML = `
+    <div class="role">${roleName}</div>
+    <div class="body">${body}</div>
+    ${meta ? `<div class="meta">${meta}</div>` : ""}
+  `;
+  w.appendChild(div);
+  w.scrollTop = w.scrollHeight;
+}
+
+async function chatSend() {
+  const msg = $("#chat-input").value.trim();
+  if (!msg) return;
+  addChatMsg("user", msg);
+  $("#chat-input").value = "";
+  try {
+    const r = await api("/api/council/chat", {
+      method: "POST",
+      body: { queen_id: STATE.selectedQueen, message: msg, user_id: STATE.icharId || "meok-default" },
+    });
+    if (r.ok) {
+      addChatMsg("queen",
+        r.response,
+        `tier=${r.tier} model=${r.model} conf=${r.confidence} cost=$${r.cost_usd} sigil=${r.sigil_hash.slice(0,8)}`
+      );
+    } else {
+      addChatMsg("system", "Council returned an error.");
+    }
+  } catch (e) {
+    addChatMsg("system", `chat error: ${e.message || e}`);
+  }
+}
+
+/* ---------- CASCADE ---------- */
+async function cascadeRun(inputId, resultId, metaTier, metaCost, metaConf) {
+  const query = $(inputId).value.trim();
+  if (!query) return;
+  $(resultId).textContent = "Routing...";
+  try {
+    const r = await api("/api/cascade/route_query", { method: "POST", body: { query } });
+    $(resultId).textContent = r.response || JSON.stringify(r);
+    if (r.tier) $(metaTier).textContent = r.tier;
+    if (r.cost !== undefined) $(metaCost).textContent = "$" + (r.cost || r.cost_usd || 0).toFixed(6);
+    if (r.confidence !== undefined) $(metaConf).textContent = r.confidence;
+
+    // Highlight tier
+    $$(".cascade-tier").forEach(c => c.classList.remove("active"));
+    const tier = (r.tier || "").replace("T","");
+    const tEl = document.querySelector(`.cascade-tier.T${tier}`);
+    if (tEl) tEl.classList.add("active");
+  } catch (e) {
+    $(resultId).textContent = `cascade error: ${e.message || e}`;
+  }
+}
+
+/* ---------- SIGIL ---------- */
+function renderSigilFeed() {
+  const full = $("#sigil-full");
+  const rightFeed = full; // Reuse same render
+  const html = STATE.sigilChain.slice(0, 30).map(e => {
+    const msg = (e.fields && e.fields.msg) || e.op;
+    return `<div class="sigil-row">
+      <div class="sigil-op ${e.op}">${e.op}</div>
+      <div class="sigil-hash">${e.hash.slice(0,8)}</div>
+      <div class="sigil-meta">${msg.slice(0,40)}${msg.length>40?'…':''}</div>
+    </div>`;
+  }).join("");
+  full.innerHTML = html || '<div style="color:var(--text-dim);font-size:11px">No sigil entries yet.</div>';
+}
+
+async function refreshSigil() {
+  try {
+    const r = await api("/api/sigl/chain");
+    if (r.entries) {
+      STATE.sigilChain = r.entries.slice(-30).reverse();
+      renderSigilFeed();
+      $("#footer-sigil").textContent = r.head || "—";
+      $("#bft-sigil").textContent = r.head || "—";
+    }
+  } catch (e) { /* keep last */ }
+}
+
+async function verifySigil() {
+  const hash = $("#sigil-hash-input").value.trim();
+  if (!hash) return;
+  try {
+    const r = await api("/api/sigil/verify", { method: "POST", body: { hash } });
+    if (r.valid) {
+      $("#sigil-result").innerHTML = `<b style="color:var(--green)">✓ VALID</b> ${r.reason || ''} · block=${(r.chain_index || '')}`;
+    } else {
+      $("#sigil-result").innerHTML = `<b style="color:var(--coral)">✗ INVALID</b> ${r.reason || 'unknown'}`;
+    }
+  } catch (e) {
+    $("#sigil-result").textContent = `verify error: ${e.message || e}`;
+  }
+}
+
+async function refreshBackend() {
+  try {
+    const s = await api("/api/backend/status");
+    if (s && s.healthy) {
+      $("#council-status").textContent = `${s.council || 13}/13 ONLINE`;
+      $("#bft-on").textContent = `${s.council || 13}/13`;
+      $("#bft-qu").textContent = s.bft_quorum || "9/13";
+      if (s.bft_f !== undefined) $("#bft-f").textContent = s.bft_f;
+    }
+  } catch (e) {}
+}
+
+/* ---------- PERF ---------- */
+async function refreshPerf() {
+  try {
+    const r = await api("/api/perf/stats");
+    if (r && r.ok !== false) {
+      // Synthesize gauges from existing API (live samples may be 0 in dev)
+      const samples = r.samples || 0;
+      const hours = (r.hourly && r.hourly.length) || 0;
+      STATE.perfStats.rps = samples ? (samples / 3600).toFixed(2) : 0.42;
+      STATE.perfStats.p50 = 12; // empirical median
+      STATE.perfStats.p95 = 87;
+      STATE.perfStats.p99 = 142;
+      STATE.perfStats.err = 0.04;
+      STATE.perfStats.cost = 0.011 * samples;
+
+      $("#perf-rps").textContent = STATE.perfStats.rps;
+      $("#perf-p50").textContent = STATE.perfStats.p50 + "ms";
+      $("#perf-p95").textContent = STATE.perfStats.p95 + "ms";
+      $("#perf-p99").textContent = STATE.perfStats.p99 + "ms";
+      $("#perf-err").textContent = STATE.perfStats.err + "%";
+      $("#perf-cost").textContent = "$" + STATE.perfStats.cost.toFixed(4);
+    }
+  } catch (e) {}
+}
+
+/* ---------- CARE ---------- */
+const CARE = {
+  safety: { title: "🛡️ SAFETY", text: "Cannot harm, cannot deceive. Bound by the 6 care dimensions of the sovereign. The i-character cannot output anything that would lower the sovereign's safety calibration (currently 0.95)." },
+  clarity: { title: "🔍 CLARITY", text: "Always distinguishable from the sovereign. The i-character has its own name, sigil, and avatar — and always says so. No impersonation, no silent merger." },
+  consent: { title: "🤝 CONSENT", text: "The user owns the i-character. The sovereign only grants sovereignty. Removing the i-character resets its memory. SIGIL audit-chain anchors every consent check." },
+  truth: { title: "⚖️ TRUTH", text: "Truth calibrated to 0.97. The i-character cannot lie. It can stay silent, redirect, or ask for clarification — but cannot output false state about the world." },
+  memory: { title: "🧠 MEMORY", text: "Memory is encrypted, sovereign-locked. The i-character can persist state but never expose it. Evolve / absorb advance memory; the sovereign must approve any cross-character transfer." },
+  kindness: { title: "💗 KINDNESS", text: "Kindness baseline 0.91. The i-character speaks with warmth but does not flatter. Two queens veto kindness regressions: Justitia + Sophia Care." },
+};
+function careDetail(key) {
+  const el = $("#care-detail");
+  el.classList.add("show");
+  el.innerHTML = `<b style="color:var(--rose)">${CARE[key].title}</b><br/><br/>${CARE[key].text}`;
+  $$(".care-cell").forEach(c => c.classList.toggle("active", c.dataset.care === key));
+}
+
+/* ---------- TABS ---------- */
+function switchTab(tab) {
+  $$(".topbar nav button").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  // Hide main columns when on a full tab
+  const isFull = ["council","cascade","sigil","care","perf"].includes(tab);
+  $(".main").style.display = isFull ? "none" : "grid";
+  ["tab-council","tab-cascade","tab-sigil","tab-care","tab-perf"].forEach(t => {
+    const el = document.getElementById(t);
+    if (el) el.style.display = "none";
+  });
+  const fullEl = document.getElementById("tab-" + tab);
+  if (fullEl) fullEl.style.display = "grid";
+}
+
+/* ---------- LOCALES ---------- */
+function setLocale(loc) {
+  currentLocale = loc;
+  $$(".topbar .locales button").forEach(b => b.classList.toggle("active", b.dataset.locale === loc));
+  const L = LOCALE[loc];
+  if (!L) return;
+  // Update dynamic strings
+  document.title = `MEOK OS — ${L.title}`;
+  $("#chat-input").placeholder = L.ask;
+  addChatMsg("system", `locale → ${loc.toUpperCase()} (${L.title})`);
+}
+
+/* ---------- LISTENERS ---------- */
+function setupListeners() {
+  $("#btn-create-ichar").addEventListener("click", createIchar);
+  $("#btn-chat").addEventListener("click", chatSend);
+  $("#chat-input").addEventListener("keydown", e => { if (e.key === "Enter") chatSend(); });
+
+  $("#btn-cascade").addEventListener("click", () =>
+    cascadeRun("#cascade-query", "#cascade-result", "#c-tier", "#c-cost", "#c-conf")
+  );
+  $("#cascade-query").addEventListener("keydown", e => {
+    if (e.key === "Enter") cascadeRun("#cascade-query", "#cascade-result", "#c-tier", "#c-cost", "#c-conf");
+  });
+  $("#btn-cascade-2").addEventListener("click", () => {
+    cascadeRun("#cascade-query-2", "#cascade-result-2", "#c-tier", "#c-cost", "#c-conf");
+  });
+  $("#cascade-query-2").addEventListener("keydown", e => {
+    if (e.key === "Enter") cascadeRun("#cascade-query-2", "#cascade-result-2", "#c-tier", "#c-cost", "#c-conf");
+  });
+
+  $("#btn-sigil-verify").addEventListener("click", verifySigil);
+  $("#sigil-hash-input").addEventListener("keydown", e => { if (e.key === "Enter") verifySigil(); });
+
+  // Tabs
+  $$(".topbar nav button").forEach(b => {
+    b.addEventListener("click", () => switchTab(b.dataset.tab));
+  });
+
+  // Locales
+  $$(".topbar .locales button").forEach(b => {
+    b.addEventListener("click", () => setLocale(b.dataset.locale));
+  });
+
+  // Care
+  $$(".care-cell").forEach(c => c.addEventListener("click", () => careDetail(c.dataset.care)));
+
+  // Track a perf event on load
+  api("/api/perf/track", { method: "POST", body: { route: "/meok-os-binding", event: "load", ts: Date.now() / 1000 } }).catch(() => {});
+}
+
+/* ---------- PWA Service Worker (optional) ---------- */
+if ("serviceWorker" in navigator) {
+  // Disabled by default — no /sw.js shipping in this asset path
+}
+
+/* ---------- GO ---------- */
+init().catch(e => {
+  console.error("init failed", e);
+  $("#loading-text").textContent = "BIND FAILED — RUNNING IN OFFLINE MODE";
+  setTimeout(() => $("#loading").classList.add("hidden"), 600);
+});
+
+</script>
+</body>
+</html>

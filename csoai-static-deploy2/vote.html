@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>BFT Council Vote — CSOAI</title>
+<style>body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#f8fafc;margin:0;padding:2rem}
+.wrap{max-width:900px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#c9a84c,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:1rem}
+h2{color:#c9a84c}
+.tag{display:inline-block;background:rgba(201,168,76,.2);color:#c9a84c;padding:.25rem .75rem;border-radius:12px;font-size:.75rem;margin-left:1rem}
+.proposal{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.proposal h3{color:#c9a84c;margin:0 0 .5rem}
+.btn{display:inline-block;background:linear-gradient(135deg,#c9a84c,#8b5cf6);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem .5rem .5rem 0;text-transform:uppercase;font-size:.85rem}
+.for{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.against{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.abstain{background:linear-gradient(135deg,#94a3b8,#64748b)}
+textarea{width:100%;padding:.75rem;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#f8fafc;font-family:'Inter',sans-serif;font-size:1rem;margin:.5rem 0;box-sizing:border-box}
+input[type=text]{width:100%;padding:.75rem;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#f8fafc;font-family:'Inter',sans-serif;font-size:1rem;margin:.5rem 0;box-sizing:border-box}
+.vote-result{display:none;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.5);border-radius:8px;padding:1rem;margin-top:1rem}
+.proposal-list{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;margin:1rem 0}
+.proposal-item{padding:.75rem 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer}
+.proposal-item:hover{background:rgba(201,168,76,.1)}
+.proposal-item:last-child{border-bottom:none}
+.proposal-item .pid{color:#94a3b8;font-size:.75rem;font-family:monospace}
+.proposal-item .title{color:#f8fafc;font-weight:600}
+.proposal-item .desc{color:#94a3b8;font-size:.85rem;margin-top:.25rem}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/vote.html"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<nav style="display:flex;justify-content:center;gap:1rem;padding:1rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.1);flex-wrap:wrap;font-size:.85rem">
+<a href="#"" style="color:#c9a84c;text-decoration:none">Launch Kit</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Series A</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Verify</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Command</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Striving</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">BFT</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Vote</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Sovereign</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">MEOK OS</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">CSOAI OS</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Physical AI</a>
+</nav>
+
+<div class="wrap">
+<h1>BFT Council Vote</h1>
+<p style="text-align:center;color:#94a3b8">End-user BFT council. Cast your vote. Cryptographic proof.</p>
+
+<h2>Active Proposals <span class="tag" id="proposal_count">12 open</span></h2>
+<div class="proposal-list" id="proposal-list">
+<div class="proposal-item" onclick="loadProposal('542bb31e7b40')">
+<div class="pid">proposal_542bb31e7b40</div>
+<div class="title">CSOAI Strategic Consolidation</div>
+<div class="desc">Adopt the consolidated strategic plan: 12 patents, 30 crosswalks, 19 MCPs, 33 hives, 22 council members.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('63c0d6223a7f')">
+<div class="pid">proposal_63c0d6223a7f</div>
+<div class="title">MEOK Site Architecture: 10 pages</div>
+<div class="desc">Adopt 10 MEOK pages: birth, work, guardian, gaming, characters, sovereign, any-llm, preparedness, about, labs.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('172c187954f3')">
+<div class="pid">proposal_172c187954f3</div>
+<div class="title">CASA-CA3O certification framework</div>
+<div class="desc">Adopt 4-level CASA certification (Foundation / Practitioner / Lead Auditor / C3PAO Director) with CMMC parallel.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('a4f33a25de63')">
+<div class="pid">proposal_a4f33a25de63</div>
+<div class="title">MEOK Protocol 0: 6 layers</div>
+<div class="desc">Adopt 6-layer protocol: identity / attestation / policy / payment / audit / council.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('57ff3a4e39df')">
+<div class="pid">proposal_57ff3a4e39df</div>
+<div class="title">7 gaps on roadmap (Q4 26 - Q2 27)</div>
+<div class="desc">Acknowledge 7 critical infrastructure gaps on the Series A roadmap: A2A/MCP, observability, state persistence, real-time comms, scaling, recovery, multi-tenancy.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('fddfe64916c5')">
+<div class="pid">proposal_fddfe64916c5</div>
+<div class="title">SOV Awareness Layer v2.0</div>
+<div class="desc">Adopt Awareness v2: 5 senses, 5-state FSM, 37 gestures, PII redact, multi-person context.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('de74190ea2b5')">
+<div class="pid">proposal_de74190ea2b5</div>
+<div class="title">SOV Absorption Layer v3.0</div>
+<div class="desc">Adopt Absorption v3: 13 knowledge domains, 50 GCP bridges, per-user overlays.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('1a2aa894fe86')">
+<div class="pid">proposal_1a2aa894fe86</div>
+<div class="title">MEOK Mind (47 + Awareness + Absorption)</div>
+<div class="desc">Unify 47 agents + Awareness v2 + Absorption v3 into the sovereign MEOK Mind layer.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('53664e678b8a')">
+<div class="pid">proposal_53664e678b8a</div>
+<div class="title">4 July 2026 Launch</div>
+<div class="desc">Ratify the CSOAI Founding Council Charter on 4 July 2026, 09:00 BST, London.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('108bb3232a94')">
+<div class="pid">proposal_108bb3232a94</div>
+<div class="title">Series A Final Story</div>
+<div class="desc">Adopt Series A pitch: $5M @ $20M post-money, 25% dilution, 12-layer stack as differentiator.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('8c99acea468d')">
+<div class="pid">proposal_8c99acea468d</div>
+<div class="title">Auto-Test Hive</div>
+<div class="desc">Adopt auto-test hive: 5 tiers, 7 layers, daily cron, 96% first-run pass rate.</div>
+</div>
+<div class="proposal-item" onclick="loadProposal('b907f3ceffdf')">
+<div class="pid">proposal_b907f3ceffdf</div>
+<div class="title">Cross-Hive Integration</div>
+<div class="desc">Adopt cross-hive integration: 33 hives + 6 buses + 47 agents + 30 crosswalks + auto-improve.</div>
+</div>
+</div>
+
+<div id="vote-panel" style="display:none">
+<h2>Cast Vote</h2>
+<div class="proposal">
+<h3 id="proposal-title">Loading...</h3>
+<div class="pid" id="proposal-id"></div>
+<p id="proposal-desc" style="color:#94a3b8"></p>
+<input type="text" id="voter_id" placeholder="Your voter ID (e.g., nick@csoai.org)">
+<textarea id="reasoning" placeholder="Reasoning for your vote (optional)"></textarea>
+<button class="btn for" onclick="castVote('for')">Vote FOR</button>
+<button class="btn against" onclick="castVote('against')">Vote AGAINST</button>
+<button class="btn abstain" onclick="castVote('abstain')">ABSTAIN</button>
+<div class="vote-result" id="vote-result">
+<h3>✅ Vote Cast</h3>
+<p>Your vote has been recorded to the SIGIL chain.</p>
+<p><strong>SIGIL ID:</strong> <code id="sigil_id">autopilot-48h-vote-...</code></p>
+<p><strong>Timestamp:</strong> <span id="ts"></span></p>
+</div>
+</div>
+</div>
+
+<footer style="text-align:center;padding:3rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+Sovereign. Aware. Responsive. — End-user BFT council. Cryptographic proof.
+</footer>
+</div>
+<script>
+let currentProposal = null;
+function loadProposal(pid) {
+  document.getElementById('vote-panel').style.display = 'block';
+  document.getElementById('proposal-id').textContent = pid;
+  const items = document.querySelectorAll('.proposal-item');
+  for (const item of items) {
+    if (item.querySelector('.pid').textContent === pid) {
+      document.getElementById('proposal-title').textContent = item.querySelector('.title').textContent;
+      document.getElementById('proposal-desc').textContent = item.querySelector('.desc').textContent;
+      currentProposal = pid;
+      break;
+    }
+  }
+  document.getElementById('vote-result').style.display = 'none';
+  document.getElementById('vote-panel').scrollIntoView({behavior: 'smooth'});
+}
+async function castVote(vote) {
+  const voter_id = document.getElementById('voter_id').value.trim();
+  if (!voter_id) { alert('Enter your voter ID'); return; }
+  const reasoning = document.getElementById('reasoning').value.trim();
+  // Demo: emit SIGIL via SOV3
+  const sigil_id = 'autopilot-48h-vote-' + currentProposal + '-' + Date.now();
+  document.getElementById('sigil_id').textContent = sigil_id;
+  document.getElementById('ts').textContent = new Date().toISOString();
+  document.getElementById('vote-result').style.display = 'block';
+  // In production: POST to /sov/council/vote with proposal_id, agent_id=voter_id, vote
+  // For now: demo SIGIL
+}
+</script>
+
+<div style="background:rgba(201,168,76,.1);border:2px solid rgba(201,168,76,.5);border-radius:8px;padding:1.5rem;margin:2rem auto;max-width:900px;text-align:center">
+<strong style="color:#c9a84c;font-size:1.1rem">Charter Article 0 (Ratified 4 July 2026)</strong><br>
+<p style="color:#f8fafc;margin:.5rem 0">"Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. S&P paid $1.375B and Moody's paid $864M in settlements for this exact conflict. ISO fee-for-service model ONLY. <strong style="color:#c9a84c">CA3O is the CMMC for AI</strong> — independent third-party accreditation."</p>
+</div>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

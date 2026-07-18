@@ -1,0 +1,116 @@
+# MEOK Backend — Terms of Service
+**Effective:** 2026-07-04
+**Operator:** CSOAI Ltd (UK 16939677)
+
+By using SOV3 (the "Service"), you agree to these terms.
+
+## 1. Sovereignty
+SOV3 is sovereign-by-design. The substrate runs without foreign API calls. By using the Service, you confirm you understand that sovereignty is a property of the architecture, not a promise.
+
+## 2. License
+All SOV3 tools are MIT licensed. You may use, modify, and distribute them freely, subject to the MIT License terms. See `LICENSE` for full terms.
+
+## 3. Article 50 Watermarking
+Every SOV3 output is watermarked per EU AI Act Article 50. The watermark is provable via SIGIL chain audit. Removal of the watermark is a violation of these terms.
+
+## 4. i-Character
+Your i-character is your digital twin, created with explicit consent. You own your i-character. You may export, transfer, or delete it at any time. SOV3 does not sell, rent, or share your i-character data.
+
+## 5. BFT Council
+Sensitive actions require a 12-around-1 BFT council approval (2/3 majority). This is a sovereign property, not a censorship mechanism.
+
+## 6. TwinStore + Wisdom Economy
+Sovereign i-characters and wisdom points are tradeable. All transactions are SIGIL-signed. Refunds per Article 5 of UK Consumer Rights Act 2015.
+
+## 7. DORADO 1-click
+You may switch sovereignty mode (EAST/WEST) at any time. The mode change is SIGIL-recorded.
+
+## 8. Care Floor
+SOV3 enforces a care floor on all i-characters, all TwinStore listings, all Wisdom Economy transactions. Violations are SIGIL-recorded.
+
+## 9. Disclaimer
+SOV3 is provided "as is" without warranty. CSOAI Ltd is not liable for any damages arising from use of the Service.
+
+## 10. Governing Law
+These terms are governed by the laws of England and Wales.
+
+## 11. Contact
+- Email: nicholas@meok.ai
+- Sovereignty: CSOAI Ltd, UK 16939677
+
+---
+
+# MEOK Backend — Privacy Policy
+**Effective:** 2026-07-04
+**Operator:** CSOAI Ltd (UK 16939677)
+
+## 1. Data Sovereignty
+SOV3 is sovereign-by-design. Your data never leaves your sovereign substrate without SIGIL-signed consent.
+
+## 2. What We Collect
+- **Account data**: email, encrypted password (hashed with bcrypt)
+- **i-character data**: name, queen model, arcana lens, voice, cognition (yours to delete anytime)
+- **SIGIL chain audit trail**: every sovereign action (immutable, public)
+- **Usage analytics**: minimal, sovereign-only (PostHog self-hosted)
+
+## 3. What We Don't Collect
+- No foreign tracking (no Google Analytics, no Facebook Pixel)
+- No browsing history outside sovereign substrate
+- No biometric data
+- No financial data (Stripe handles payment)
+
+## 4. EU GDPR Compliance
+- Right to access: `GET /api/ichar/user/{user_id}`
+- Right to erasure: `DELETE /api/ichar/{ichar_id}`
+- Right to portability: `GET /api/ichar/export/{ichar_id}` (returns SIGIL-signed JSON)
+- Right to rectification: `PUT /api/ichar/{ichar_id}`
+
+## 5. UK GDPR + Data Protection Act 2018
+Same as above. CSOAI Ltd is registered with the UK ICO (Information Commissioner's Office).
+
+## 6. SIGIL Chain Audit
+Every sovereign action is SIGIL-signed with Ed25519 + post-quantum ML-DSA-65. The SIGIL chain is public, audit-chained, and verifiable.
+
+## 7. Data Retention
+- Account data: until you delete
+- i-character data: until you delete (then permanently removed after 30-day grace period)
+- SIGIL chain: permanent (immutable public audit trail)
+- Email: until you unsubscribe
+
+## 8. International Transfers
+SOV3 is sovereign-by-design. Data does not transfer internationally. If you opt-in to DORADO 1-click EAST↔WEST, you explicitly consent to the alternative sovereign region.
+
+## 9. Security
+- PQC migration complete (ML-DSA-65 + ML-KEM-768)
+- DORADO 1-click sovereignty switch
+- 12-around-1 BFT council for sensitive actions
+- SIGIL chain audit-chained
+
+## 10. Children
+SOV3 is for users 18+. If you are under 18, ask a parent or guardian.
+
+## 11. Contact
+- Data Protection Officer: nicholas@meok.ai
+- Sovereignty: CSOAI Ltd, UK 16939677
+- ICO Registration: pending (will be active 4 Jul 2026)
+
+---
+
+# MEOK Backend — Cookie Policy
+**Effective:** 2026-07-04
+
+SOV3 uses **minimal, sovereign-only** cookies.
+
+## Types of Cookies
+1. **Strictly necessary** (always on)
+   - `sov3_consent`: stores your cookie consent (localStorage, not actual cookie)
+2. **Analytics** (optional)
+   - Sovereign PostHog (self-hosted, no foreign data transfer)
+3. **No third-party cookies** (no Google Analytics, no Facebook Pixel, no foreign tracking)
+
+## Managing Cookies
+Use the cookie consent banner at the bottom of every page, or clear your browser data. SOV3 will respect your choice.
+
+---
+
+*This document is sovereign-by-design. Changes are SIGIL-recorded.*

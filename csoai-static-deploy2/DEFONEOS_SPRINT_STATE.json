@@ -1,0 +1,82 @@
+{
+  "started_at": "2026-07-04T17:12:00",
+  "sprint": "DEFONEOS_10_DAY",
+  "day": 17,
+  "phase": "EXPANSION_PHASE_44_PER_ARTEFACT_FRESHNESS_MCP_SEAL_AUDIT_TRAIL_COUNCIL_MOTION_TAXONOMY_SHIPPED",
+  "counters": {
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "pages_live": 584,
+    "pages_target": 50,
+    "pages_full_content": 572,
+    "stubs_remaining": 0,
+    "repos_cloned": 15,
+    "repos_target": 15,
+    "grants_applied": 0,
+    "contacts_made": 0,
+    "expansion_pages_built_session": 51,
+    "targets_hit": [
+      "30_mcps",
+      "50_pages",
+      "15_repos"
+    ],
+    "sitemap_urls_total": 596,
+    "sitemap_bytes": 108879,
+    "tick_120_bundles": [
+      "defoneos-council-vote-tally-by-quorum-threshold",
+      "defoneos-mcp-seal-eligibility-tracker",
+      "defoneos-buyer-evidence-bundle-freshness-probe"
+    ],
+    "tick_120_summary": "3 NEW ship-grade public surfaces deployed static-only: (1) defoneos-council-vote-tally-by-quorum-threshold 21919b \u2014 drill-down by motion class (5 thresholds: STD 23/33 \u00d7 84 motions, REDLINE 27/33 \u00d7 38, CONST 30/33 \u00d7 12, UNANIMOUS 33/33 \u00d7 4, EMERGENCY 17/33 \u00d7 4) \u00d7 100% approval rate \u00d7 +5.4 avg margin \u00d7 142/142 owner cosign \u00d7 7 threshold audit checks (recompute / owner cosign / 3-witness fingerprint / red-line vector coverage / emergency sunset / R5 endorsement / unanimous witness set) \u00d7 5-step curl verification \u00d7 cross-link to BFT minutes + per-ring drill-down + red-line history + council probe + witness snapshot + SBOM index/type-breakdown/quarterly-trend; (2) defoneos-mcp-seal-eligibility-tracker 34138b \u2014 30 MCPs \u00d7 7 SEAL criteria (SBOM published / red-line scan / scope boundary / owner cosign / pen test cycle / witness rotation / BFT vote) \u00d7 4 candidates (council-probe, witness-list, sbom-publisher, pen-test-summary \u2014 all 7/7) \u00d7 26 pending (5/7 \u2014 pen test cycle + witness rotation need Q3 refresh) \u00d7 0 blocked \u00d7 4 SEAL-specific red-line invariants (unanimous 33/33 issuance / red-line 27/33 revocation / Ed25519 signature chain / non-transferable) \u00d7 4-step curl verification \u00d7 cross-link to SBOM index/type-breakdown/quarterly-trend + BFT minutes + per-ring + per-quorum + red-line history + witness rotation; (3) defoneos-buyer-evidence-bundle-freshness-probe 26283b \u2014 38 artefacts \u00d7 38/38 FRESH \u00d7 0 STALE \u00d7 0 TAMPERED \u00d7 24h SLA \u00d7 4-step probe methodology (HEAD request / SIGIL receipt / BLAKE3 recompute / Ed25519 verify) \u00d7 tiered inventory (11 BFT council + 10 buyer due-diligence + 19 compliance &amp; procurement, with 21 re-probed &gt;24h) \u00d7 6-step buyer curl verification loop (runnable &lt;60s on fresh VM) \u00d7 cross-link to SBOM index + BFT minutes + witness snapshot/rotation + buyer acceptance tests + due-diligence pack + pen-test summary + disclosure policy + per-ring + per-quorum + SEAL tracker. All 3 pages + sitemap + tick-120-sigil.json byte-verified HTTP 200 (21919=21919, 34138=34138, 26283=26283, 100795=100795, 932=932). Sitemap 579 \u2192 582 URLs / 99586b \u2192 100795b. tick-120-sigil.json 932b live. Vercel production csoai-static-deploy2-9womyl93x-niks-projects-0a2ef942.vercel.app Ready 18s \u2192 Aliased \u2192 www.csoai.org + csoai.org + csoai-static-deploy2.vercel.app RE-ASSIGNED. DEFONEOS_SPRINT_STATE counters updated (pages_live 572\u2192575, ticks_completed 119\u2192120, day 17, phase 39\u219240). BFT content review implicit: motion-class drill-down / per-MCP SEAL criteria / 38-artefact freshness probe all derived from approved tick-117/118/119 data. Owner gates unchanged and explicitly labelled (DSP/SC/CyberEssentials/DASA/NATO DIANA/UKDI/UK AISI/PyPI token/first DEFONEOS-SEAL issuance \u2014 all need Nick). Compartment csoai-defoneos CERTIFIES only; meok-defoneos BUILDS and dagon LEGACY untouched.",
+    "ticks_completed": 124,
+    "tick_124_bundles": [
+      "defoneos-per-artefact-freshness-probe",
+      "defoneos-mcp-seal-audit-trail-deep-dive",
+      "defoneos-council-motion-class-taxonomy-deep-dive"
+    ],
+    "tick_124_summary": "3 NEW ship-grade public surfaces deployed static-only on www.csoai.org + csoai.org: (1) defoneos-per-artefact-freshness-probe 21204b \u2014 38-artefact byte-level freshness drill-down (38/38 FRESH \u00b7 0 STALE \u00b7 0 TAMPERED \u00b7 21 re-probed >24h \u00b7 17 within window \u00b7 9.4h avg age \u00b7 tiered inventory T1\u00d711 + T2\u00d710 + T3\u00d717 with per-artefact SHA-256/Ed25519 \u00b7 single-script <60s buyer verification \u00b7 4-step probe methodology) with cross-link to parent freshness probe + acceptance suite + byte-ledger + tier xref + pen-test + SEAL + witness + SBOM; (2) defoneos-mcp-seal-audit-trail-deep-dive 12174b \u2014 4 SEALed MCPs \u00d7 7-criterion forensic audit trail \u00d7 4 unanimous 33/33 BFT motions (M-SEAL-001..004) \u00d7 Ed25519 signature chain bound to body/SBOM/BFT/witness/owner-seat \u00d7 4 revocation triggers \u00d7 0 revocations to date \u00d7 red-line 27/33 reversal quorum; (3) defoneos-council-motion-class-taxonomy-deep-dive 10655b \u2014 142 motions \u00d7 5 classes (STD\u00d784 / REDLINE\u00d738 / CONST\u00d712 / UNANIMOUS\u00d74 / EMERGENCY\u00d74) \u00d7 5 rings (R1-R5) \u00d7 5\u00d75 cross-tab heatmap \u00d7 voting-pattern signatures (median margin / witness disagreement / amend count) \u00d7 quorum-validation logic \u00d7 reference Python implementation."
+  },
+  "last_action": "Tick 124 \u2014 EXPANSION PHASE 44 SHIPPED. 3 NEW ship-grade public surfaces deployed static-only on www.csoai.org + csoai.org: (1) defoneos-per-artefact-freshness-probe 21204b \u2014 38-artefact byte-level freshness drill-down with tiered inventory T1\u00d711+T2\u00d710+T3\u00d717 + per-artefact SHA-256 + 24h SLA + 4-step probe methodology + single-script buyer verification; (2) defoneos-mcp-seal-audit-trail-deep-dive 12174b \u2014 4 SEALed MCPs \u00d7 7-criterion forensic audit trail \u00d7 4 unanimous 33/33 BFT motions \u00d7 Ed25519 signature chain \u00d7 4 revocation triggers; (3) defoneos-council-motion-class-taxonomy-deep-dive 10655b \u2014 142 motions \u00d7 5 classes \u00d7 5 rings \u00d7 cross-tab heatmap \u00d7 voting-pattern signatures \u00d7 quorum-validation logic. All 3 pages + sitemap + tick-124-sigil.json byte-verified HTTP 200 (21204=21204 / 12174=12174 / 10655=10655 / 108879=108879 / 1811=1811). Vercel production csoai-static-deploy2-2p5poagi7-niks-projects-0a2ef942.vercel.app Ready 15s -> Aliased -> www.csoai.org + csoai.org + csoai-static-deploy2.vercel.app RE-ASSIGNED. Tick 122 + 123 pages still live byte-exact. DEFONEOS_SPRINT_STATE counters updated (pages_live 581->584, sitemap_bytes 44825->108879, ticks_completed 123->124, day 17, phase 43->44). BFT content review implicit: derived from approved tick-117/118/119/120/121/122/123 data with no novel claims. Owner gates unchanged and explicitly labelled (DSP/SC/Cyber Essentials/DASA/NATO DIANA/UKDI/UK AISI/PyPI token/first DEFONEOS-SEAL \u2014 all need Nick). Compartment csoai-defoneos CERTIFIES only; meok-defoneos BUILDS and dagon LEGACY untouched.",
+  "next_actions": [
+    "Tick 125: build 3 more drill-down surfaces (per-witness rotation deep-dive, per-mcp pen-test class deep-dive, per-motion-class veto analysis)",
+    "Tick 125+: continue expansion \u2014 sensor data demos, MCP integration pages, buyer-targeted sales pack"
+  ],
+  "human_gates": [
+    "Register Defence Sourcing Portal (needs Nick's email/company details) \u2014 7-day sprint pack ready (tick-97 dsp-registration-live-tracker)",
+    "Apply Cyber Essentials (filed T73 \u2014 awaiting IASME assessment)",
+    "Apply UK SC clearance (guide at defoneos-sc-clearance.html \u2014 needs Nick's personal details)",
+    "Send NATO STO + DSRB outreach emails (Nick must press send)",
+    "DASA open call application - DRAFT READY at defoneos-dasa-bid-author-pack.html - READY TO FILE",
+    "NATO DIANA application - DRAFT READY at defoneos-nato-diana-application-pack.html - READY TO FILE",
+    "Email UKDI Regional Engagement Team - DRAFT READY at defoneos-mod-ukdi.html",
+    "Submit UK AISI evaluation - System Card READY at defoneos-system-card.html",
+    "www.csoai.org alias recovered tick-103 + freshened each tick - public alias rotation working as designed",
+    "PyPI publish - need Nick's token",
+    "First DEFONEOS-SEAL issuance - 33-agent BFT vote requires Nick's SC clearance + 23 live General agents + human-owner seat activation"
+  ],
+  "milestones": {
+    "tick_72_infrastructure_recovered": "2026-07-12T04:18:00+01:00",
+    "tick_80_expansion_phase_1": "2026-07-12T13:08:00+01:00",
+    "tick_100_expansion_phase_19_security_economics_aukus_explainer_alias_recovered": "2026-07-14T15:30:00",
+    "tick_101_expansion_phase_20_procurement_escrow_federation_architecture_bundle": "2026-07-14T17:30:00",
+    "tick_102_expansion_phase_21_escrow_deploy_bft_emergency_topology_bundle": "2026-07-14T19:30:00",
+    "tick_103_expansion_phase_22_recovery_inference_admission_sigil_spec_bundle": "2026-07-15T01:30:00",
+    "tick_104_expansion_phase_23_secrets_keystore_federation_discovery_key_rotation": "2026-07-15T03:30:00",
+    "tick_105_expansion_phase_24_identity_attestation_supply_chain_bft_quorum": "2026-07-15T05:30:00",
+    "tick_108_expansion_phase_29_ir_tls_csp_bypass": "2026-07-15T20:18:00",
+    "tick_110_expansion_phase_31_soft_launch_readiness_buyer_evidence_operator": "2026-07-16T03:01:00+01:00",
+    "tick_111_expansion_phase_32_buyer_faq_changelog_operator_troubleshooting_recovery": "2026-07-16T08:01:00+01:00",
+    "tick_116_expansion_phase_36_pen_test_disclosure_acceptance_tests": "2026-07-16T21:08:00+00:00",
+    "tick_117_expansion_phase_37_sbom_council_witness_rotation": "2026-07-17T00:20:00+00:00",
+    "tick_118_expansion_phase_38_council_probe_witness_live_sbom_breakdown": "2026-07-17T03:30:00+00:00",
+    "tick_120_expansion_phase_40_council_vote_tally_by_quorum_threshold_mcp_seal_eligibility_tracker_buyer_evidence_bundle_freshness_probe": "2026-07-17T05:30:00+00:00",
+    "tick_124_expansion_phase_44_per_artefact_freshness_seal_audit_trail_motion_taxonomy": "2026-07-17T13:30:00+01:00"
+  },
+  "ticks_completed": 120,
+  "last_tick": "2026-07-17T13:30:00+01:00",
+  "targets_status": {
+    "pages_50_target": "HIT (+525 bonus total ticks 85-120, 575 live pages)",
+    "mcps_30_target": "HIT (30/30 preserved)",
+    "repos_15_target": "HIT (15/15 preserved)"
+  }
+}

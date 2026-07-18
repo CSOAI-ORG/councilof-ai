@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS — UK Sovereign Defence AI Operating System. Open-source, JSP 936 compliant, 1/40th the cost of Palantir. Built for MOD, Police, Fire, NHS.">
+<meta name="author" content="CSOAI LTD (16939677)">
+<meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS">
+<meta property="og:type" content="website">
+<meta property="og:description" content="The UK's first open-source sovereign Defence AI Operating System. 29 MCP servers, 53+ live pages, JSP 936 built in.">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS — UK Sovereign Defence AI Operating System</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos.html">
+<link rel="icon" href="#" type="image/svg+xml">
+<style>
+  /* Page-level overrides + spice on top of sovereign-2026 */
+  body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+  .page-hero{padding:6rem 1.5rem 4rem;text-align:center;position:relative;overflow:hidden}
+  .page-hero::before{content:'';position:absolute;inset:-20% 0;background:radial-gradient(circle at 50% 40%,rgba(34,211,238,.18) 0%,transparent 55%);pointer-events:none;z-index:-1;animation:pulse 6s ease-in-out infinite}
+  .page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.6rem,7vw,5rem);background:linear-gradient(135deg,var(--cyan) 0%,#4fc3f7 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.03em;font-weight:900;margin-bottom:1rem;animation:fadeUp .7s var(--transition-slow) both}
+  .page-hero .tagline{font-size:clamp(1.1rem,1.6vw,1.3rem);color:var(--muted2);max-width:760px;margin:0 auto 2rem;animation:fadeUp .9s var(--transition-slow) both}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1.5rem;max-width:920px;margin:2rem auto;padding:0 1rem}
+  .stat{text-align:center;padding:1rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:var(--radius);backdrop-filter:blur(8px);transition:.2s}
+  .stat:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:0 12px 24px rgba(34,211,238,.15)}
+  .stat .num{font-family:'Space Grotesk',monospace;font-size:clamp(2rem,4vw,2.8rem);font-weight:900;color:var(--cyan);line-height:1}
+  .stat .lbl{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.5rem;font-weight:600}
+  .stat.live{border-color:rgba(34,197,94,.3)}
+  .stat.live .num{color:var(--green)}
+  .badge{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .85rem;border-radius:var(--radius-pill);font-size:.74rem;font-weight:700;letter-spacing:.04em;margin:.25rem;border:1px solid transparent}
+  .badge-live{background:rgba(34,211,238,.12);color:var(--cyan);border-color:var(--cyan-border);animation:pulse 3s ease-in-out infinite}
+  .badge-uk{background:rgba(79,195,247,.12);color:#4fc3f7;border-color:rgba(79,195,247,.3)}
+  .badge-mil{background:rgba(255,183,77,.12);color:var(--gold);border-color:rgba(251,191,36,.3)}
+  .badge-jsp{background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.3)}
+  .moat-wrap{overflow-x:auto;margin:2rem 0;border-radius:var(--radius);border:1px solid var(--border)}
+  .moat-wrap table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:680px}
+  .moat-wrap th{background:var(--bg2);padding:1rem 1.1rem;text-align:left;font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid var(--cyan-border);position:sticky;top:0;z-index:1}
+  .moat-wrap td{padding:.85rem 1.1rem;border-bottom:1px solid var(--border);transition:.15s}
+  .moat-wrap tbody tr:hover td{background:rgba(34,211,238,.04)}
+  .moat-wrap tbody tr:hover td.yes-cell{color:var(--green);font-weight:800}
+  .yes{color:var(--green);font-weight:800}
+  .no{color:var(--red);opacity:.7}
+  .uc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+  .uc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;position:relative;overflow:hidden;transition:.2s}
+  .uc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),#4fc3f7)}
+  .uc:hover{transform:translateY(-3px);border-color:var(--cyan);box-shadow:0 12px 28px rgba(34,211,238,.16)}
+  .uc .num{font-family:'Space Grotesk',monospace;font-size:.85rem;color:var(--cyan);font-weight:700;letter-spacing:.05em}
+  .uc h4{color:#4fc3f7;margin:.4rem 0 .6rem;font-size:1.05rem;font-family:'Space Grotesk',sans-serif}
+  .uc .stack{color:var(--muted);font-size:.78rem;font-family:'SF Mono','JetBrains Mono',monospace;line-height:1.5}
+  .arch-stack{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;font-family:'SF Mono','JetBrains Mono',monospace;font-size:.85rem;line-height:1.6}
+  .arch-row{display:grid;grid-template-columns:90px 1fr;gap:1rem;padding:.6rem 0;border-bottom:1px dashed var(--border)}
+  .arch-row:last-child{border-bottom:none}
+  .arch-row .layer{color:var(--cyan);font-weight:700;letter-spacing:.05em}
+  .arch-row .desc{color:var(--muted2)}
+  .arch-row.gold .layer{color:var(--gold)}
+  .arch-row.gold .desc{color:var(--gold);font-weight:700}
+  .cta-block{margin:3rem 0;padding:3rem 2rem;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid var(--cyan-border);border-radius:var(--radius-lg);text-align:center;position:relative;overflow:hidden}
+  .cta-block::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at center,rgba(34,211,238,.1) 0%,transparent 60%);animation:gradient-x 8s linear infinite;pointer-events:none}
+  .cta-block h2{color:var(--cyan);margin-bottom:.8rem}
+  .cta-block p{color:var(--muted2);margin-bottom:1.5rem;max-width:640px;margin-left:auto;margin-right:auto}
+  .cta-block .btn{margin:.3rem}
+  /* Override nav links for this page */
+  .nav-sticky .nav-links a{font-family:'Space Grotesk',sans-serif}
+  /* Page intro */
+  .quick-nav{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin:1.5rem 0 0}
+  .quick-nav a{padding:.4rem .9rem;background:rgba(20,24,31,.6);border:1px solid var(--border);border-radius:var(--radius-pill);font-size:.76rem;color:var(--muted2);text-decoration:none;transition:.15s}
+  .quick-nav a:hover{border-color:var(--cyan);color:var(--cyan)}
+  /* Layer emphasis for hero art */
+  .hero-eyebrow-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:var(--radius-pill);background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.3);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.2rem;animation:fadeUp .5s var(--transition-slow) both}
+</style>
+</head>
+<body class="bg-grid">
+
+<!-- HERMES LAYER · CTA CASCADE -->
+<a href="#" style="display:block;padding:.6rem 1.2rem;background:linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12));border-bottom:1px solid rgba(167,139,250,.4);color:var(--purple);text-decoration:none;text-align:center;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:background .15s" onmouseover="this.style.background='linear-gradient(90deg,rgba(167,139,250,.35),rgba(34,211,238,.22))'" onmouseout="this.style.background='linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12))'"><span style="display:inline-block;width:7px;height:7px;background:var(--green);border-radius:99%;margin-right:.5rem;animation:pulse 1.4s infinite;box-shadow:0 0 8px rgba(34,197,94,.6)"></span>🧠 Agentic runtime live → <span style="color:var(--cyan);text-decoration:underline">/hermes-layer</span></a>
+
+<nav class="nav-sticky">
+  <a href="#" class="brand"><span style="font-size:1.4rem">🐉</span> DEFONEOS</a>
+  <div class="nav-links">
+    <a href="#moat" class="active">Moat</a>
+    <a href="#usecases">Use Cases</a>
+    <a href="#architecture">Architecture</a>
+    <a href="defoneos-demo.html">Demo</a>
+    <a href="defoneos-pricing.html">Pricing</a>
+    <a href="defoneos-compare.html">vs Palantir</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get 30s · £0</a>
+</nav>
+
+<section class="page-hero">
+  <span class="hero-eyebrow-badge"><span class="anim-pulse" style="width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block"></span> SOVEREIGN · AUKUS-compatible · Charter Article 0 binding</span>
+  <h1>DEFONEOS</h1>
+  <p class="tagline">The UK's first open-source Sovereign Defence AI Operating System. JSP 936 compliant. 1/40th the cost of Palantir. Built for MOD, Police, Fire, NHS, and Government.</p>
+  <div class="stat-row">
+    <div class="stat live"><div class="num">29</div><div class="lbl">MCP Servers</div></div>
+    <div class="stat live"><div class="num">53+</div><div class="lbl">Live Pages</div></div>
+    <div class="stat"><div class="num">15</div><div class="lbl">P0 Repos</div></div>
+    <div class="stat"><div class="num">198</div><div class="lbl">Free Data Sources</div></div>
+    <div class="stat"><div class="num">£0</div><div class="lbl">Cost to MOD</div></div>
+  </div>
+  <div style="margin-top:1.8rem">
+    <span class="badge badge-live"><span class="anim-pulse" style="width:6px;height:6px;background:var(--cyan);border-radius:50%;display:inline-block"></span> LIVE</span>
+    <span class="badge badge-uk">🇬🇧 UK SOVEREIGN</span>
+    <span class="badge badge-mil">🛡️ DEFENCE AI OS</span>
+    <span class="badge badge-jsp">📜 JSP 936</span>
+  </div>
+  <div class="quick-nav">
+    <a href="#moat">10-Point Moat</a>
+    <a href="#usecases">12 Use Cases</a>
+    <a href="#architecture">10-Layer Stack</a>
+    <a href="#ready">Get Started →</a>
+  </div>
+</section>
+
+<div class="container">
+
+<section id="moat">
+  <h2 class="io-fade">🛡️ The 10-Point Moat</h2>
+  <p class="lead muted io-fade" style="margin-bottom:2rem">How DEFONEOS competes against $400B of defence AI incumbents.</p>
+  <div class="moat-wrap io-fade">
+    <table>
+      <thead><tr><th>#</th><th>Moat</th><th>Palantir<br><small style="color:var(--muted);font-weight:400">$308B</small></th><th>Anduril<br><small style="color:var(--muted);font-weight:400">$61B</small></th><th>Helsing<br><small style="color:var(--muted);font-weight:400">$18B</small></th><th>DEFONEOS</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Open Source</td><td class="no">✕</td><td class="no">△ Partial</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>2</strong></td><td>UK Sovereign</td><td class="no">✕ (US)</td><td class="no">✕ (US)</td><td class="no">EU only</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>3</strong></td><td>JSP 936 Built In</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>4</strong></td><td>33-Hive Architecture</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>5</strong></td><td>Hardware-Agnostic</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>6</strong></td><td>1/40th Price</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>7</strong></td><td>Integration Hub</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>8</strong></td><td>MCP Ecosystem 275+</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>9</strong></td><td>BFT Council</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+        <tr><td><strong>10</strong></td><td>Watchdog Certs</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="yes-cell">✓ Yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="usecases">
+  <h2 class="io-fade">⚔️ 12 Defence Use Cases</h2>
+  <p class="lead muted io-fade" style="margin-bottom:2rem">Click any use case to deep-dive on the substrate.</p>
+  <div class="uc-grid">
+    <a href="#" class="uc io-fade"><div class="num">01 / CYBER</div><h4>Cyber Defence Operations</h4><div class="stack">DEFENCES + Tracecat + OpenCTI + PyRIT + garak</div></a>
+    <a href="#" class="uc io-fade"><div class="num">02 / ISR</div><h4>Battlefield Intelligence</h4><div class="stack">Cesium + ISR Pipeline + OpenAthena + FreeTAKServer</div></a>
+    <a href="#" class="uc io-fade"><div class="num">03 / TRAINING</div><h4>Virtual Training Environment</h4><div class="stack">UE5 SOV SPACE + Panopticon AI + AFSIM</div></a>
+    <a href="#" class="uc io-fade"><div class="num">04 / ROE</div><h4>ROE AI Governance</h4><div class="stack">LAW + NeMo Guardrails + JSP 936 + Watchdog Certs</div></a>
+    <a href="#" class="uc io-fade"><div class="num">05 / FORCE</div><h4>Force Protection</h4><div class="stack">DOME + GUARDIAN + Counter-Drone + HIVES</div></a>
+    <a href="defoneos-medevac.html" class="uc io-fade"><div class="num">06 / MEDEVAC</div><h4>MEDEVAC Routing</h4><div class="stack">MAP + Cesium + SOV3 + FreeTAKServer</div></a>
+    <a href="#" class="uc io-fade"><div class="num">07 / LOGISTICS</div><h4>Autonomous Logistics</h4><div class="stack">OpenFang + Autoware + MAVSDK + SCOREBOARD</div></a>
+    <a href="#" class="uc io-fade"><div class="num">08 / SIGINT</div><h4>SIGINT Processing</h4><div class="stack">SOV3 + OpenCTI + MISP + chat-to-cop</div></a>
+    <a href="#" class="uc io-fade"><div class="num">09 / C-UAS</div><h4>Counter-Drone Swarm</h4><div class="stack">Mava + PX4 + Crazyswarm2 + Batear + Counterdrone MCP</div></a>
+    <a href="#" class="uc io-fade"><div class="num">10 / EW</div><h4>EW Training</h4><div class="stack">vCEW + GNU Radio + UE5 SOV SPACE sim</div></a>
+    <a href="#" class="uc io-fade"><div class="num">11 / HOMELAND</div><h4>Homeland Security</h4><div class="stack">DOME + ISR + HIVES + SCOREBOARD</div></a>
+    <a href="#" class="uc io-fade"><div class="num">12 / GOV-AI</div><h4>AI Governance for Defence</h4><div class="stack">LAW + BFT Council + JSP 936 + C2PA</div></a>
+  </div>
+</section>
+
+<section id="architecture">
+  <h2 class="io-fade">🏗️ The 10-Layer Architecture</h2>
+  <p class="lead muted io-fade" style="margin-bottom:1.5rem">Hardware-agnostic. UK-soil. Audit-graded. Each layer Ed25519-signed.</p>
+  <div class="arch-stack io-fade">
+    <div class="arch-row"><span class="layer">LAYER 10</span><span class="desc">XR/Spatial — UE5 SOV SPACE + Cesium globe + TAK overlays</span></div>
+    <div class="arch-row"><span class="layer">LAYER 9</span><span class="desc">Interface — Liquid Glass Sovereign + NASA OpenMCT</span></div>
+    <div class="arch-row"><span class="layer">LAYER 8</span><span class="desc">Simulation — AFSIM + Panopticon AI + WarMatrix</span></div>
+    <div class="arch-row"><span class="layer">LAYER 7</span><span class="desc">AG-UI + TAK — Agent-to-user via ATAK + FreeTAKServer</span></div>
+    <div class="arch-row"><span class="layer">LAYER 6</span><span class="desc">A2A + MCP — Secure inter-agent + 275+ tool servers</span></div>
+    <div class="arch-row"><span class="layer">LAYER 5</span><span class="desc">Council AI (12) — JSP 936 + NeMo Guardrails + ROE</span></div>
+    <div class="arch-row"><span class="layer">LAYER 4</span><span class="desc">Disciples (33) — DEFENCES, DOME, HIVES, TUNNELS, SCOREBOARD</span></div>
+    <div class="arch-row"><span class="layer">LAYER 3</span><span class="desc">OpenFang + E2B — Hardened agent OS + microVM sandbox</span></div>
+    <div class="arch-row"><span class="layer">LAYER 2</span><span class="desc">Secure Compute — TEE (Intel TDX / NVIDIA CC) + PQC crypto</span></div>
+    <div class="arch-row"><span class="layer">LAYER 1</span><span class="desc">Northflank/K8s — Infrastructure + Kata Containers</span></div>
+    <div class="arch-row gold"><span class="layer">LAYER 0</span><span class="desc">Mem0 + Redis — Persistent secure memory</span></div>
+  </div>
+</section>
+
+<div class="cta-block io-fade" id="ready">
+  <h2>Ready for First MOD Contact</h2>
+  <p>DEFONEOS is 70% built on the existing MEOK/CSOAI stack. 10-day sprint to MOD-readiness. Open source. UK sovereign. Zero vendor lock-in.</p>
+  <a href="defoneos-signup-hub.html" class="btn btn-pill btn-lg">⚡ Sign Up · 30s · £0</a>
+  <a href="defoneos-demo.html" class="btn btn-pill-ghost btn-lg">🎬 See Live Demo</a>
+  <a href="defoneos-pricing.html" class="btn btn-pill-gold btn-lg">🏛️ Crown RFQ</a>
+</div>
+
+</div>
+
+<footer class="footer">
+  <div class="links">
+    <a href="defoneos-index.html">Index</a>
+    <a href="defoneos-demo.html">Demo</a>
+    <a href="defoneos-seriesa.html">Series A</a>
+    <a href="defoneos-pricing.html">Pricing</a>
+    <a href="defoneos-compare.html">vs Palantir</a>
+    <a href="defoneos-checklist.html">Checklist</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <div class="sig">SIGIL · DEFONEOS|main|0.1.0|sovereign|british|forever · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  <div>🐉 DEFONEOS — UK Sovereign Defence AI Operating System<br>
+  Built by <strong>Nicholas Templeman / CSOAI LTD (16939677)</strong>. Crown use permitted under UK MOD terms.<br>
+  Apache 2.0 · © 2026 · <a href="mailto:crown@csoai.org">crown@csoai.org</a> · +44 (0)20 7946 0958</div>
+</footer>
+
+<button class="to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Back-to-top visibility
+window.addEventListener('scroll',()=>{const b=document.querySelector('.to-top');if(window.pageYOffset>300)b.classList.add('visible');else b.classList.remove('visible')});
+
+// IntersectionObserver fade-ups
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target);}});
+  },{threshold:.12,rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.io-fade').forEach(el=>io.observe(el));
+} else {
+  document.querySelectorAll('.io-fade').forEach(el=>el.classList.add('is-visible'));
+}
+
+// Nav scroll shadow
+window.addEventListener('scroll',()=>{document.querySelector('.nav-sticky')?.classList.toggle('scrolled',window.pageYOffset>20)});
+</script>
+
+</body>
+</html>

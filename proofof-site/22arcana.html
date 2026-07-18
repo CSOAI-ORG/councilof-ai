@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🃏 22 Major Arcana Sovereign Forest · SovSpace UE5</title>
+<meta name="description" content="The 22 Major Arcana as a sovereign 3D forest. Three.js + VRM avatars. Kabbalistic · Hermetic · Alchemical · Neoplatonic · Vedantic · Sufi — 6 traditions agree.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 0; margin: 0; overflow: hidden; }
+  #canvas { position: fixed; inset: 0; z-index: 0; }
+  .nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(2,6,15,0.95); padding: 0.75rem 1rem; z-index: 20; display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid rgba(251,191,36,0.3); }
+  .nav a { color: #fbbf24; text-decoration: none; font-size: 0.85rem; }
+  .nav .brand { color: #fbbf24; font-weight: bold; font-size: 1.1rem; }
+  .nav .spacer { flex: 1; }
+  .arcana-panel { position: fixed; left: 0; top: 60px; bottom: 0; width: 300px; background: rgba(17,17,17,0.95); padding: 1rem; overflow-y: auto; z-index: 15; border-right: 1px solid #fbbf24; }
+  .arcana-panel h2 { color: #fbbf24; margin-bottom: 1rem; }
+  .arcana-row { background: rgba(0,0,0,0.4); padding: 0.5rem; border-radius: 6px; margin-bottom: 0.3rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+  .arcana-row:hover { background: rgba(251,191,36,0.2); }
+  .arcana-row .num { color: #fbbf24; font-weight: bold; min-width: 30px; }
+  .arcana-row .name { color: #e5e5e5; flex: 1; font-size: 0.85rem; }
+  .arcana-row .meaning { color: #888; font-size: 0.75rem; }
+  .info-panel { position: fixed; right: 0; top: 60px; bottom: 0; width: 360px; background: rgba(17,17,17,0.95); padding: 1.5rem; overflow-y: auto; z-index: 15; border-left: 1px solid #fbbf24; }
+  .info-panel h2 { color: #fbbf24; margin-bottom: 1rem; }
+  .info-panel .card { background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 3px solid #fbbf24; }
+  .info-panel .card h4 { color: #10b981; margin-bottom: 0.5rem; }
+  .info-panel .card p, .info-panel .card li { color: #aaa; font-size: 0.85rem; }
+  .info-panel .card ul { padding-left: 1.2rem; }
+  .stats-bar { position: fixed; bottom: 0; left: 300px; right: 360px; background: rgba(2,6,15,0.85); padding: 0.5rem; z-index: 12; display: flex; gap: 1rem; justify-content: center; }
+  .stat { text-align: center; }
+  .stat-value { color: #fbbf24; font-size: 1.2rem; }
+  .stat-label { color: #888; font-size: 0.7rem; }
+  .controls { position: fixed; bottom: 60px; left: 310px; right: 370px; display: flex; gap: 0.5rem; justify-content: center; z-index: 14; }
+  .controls button { background: #fbbf24; color: #000; padding: 0.4rem 0.8rem; border-radius: 4px; border: none; font-family: inherit; font-size: 0.8rem; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand">🃏 22 Arcana Forest</a>
+  <a href="/sovspace.html">← SovSpace</a>
+  <a href="/temple-of-12.html">Temple</a>
+  <a href="/iokfarm-3d.html">iOK Farm</a>
+  <a href="/">Home</a>
+  <span class="spacer"></span>
+  <a href="#" style="color:#10b981">● LIVE</a>
+</nav>
+
+<canvas id="canvas"></canvas>
+
+<aside class="arcana-panel">
+  <h2>🃏 The 22 Major Arcana</h2>
+  <div id="arcanaList"></div>
+</aside>
+
+<section class="info-panel" id="infoPanel">
+  <h2 id="arcanaTitle">The Fool</h2>
+  <div class="card">
+    <h4>Symbolism</h4>
+    <p>The Fool begins the journey. Number 0. The leap into the unknown. Pure potential before the manifest.</p>
+  </div>
+  <div class="card">
+    <h4>Hebrew Letter</h4>
+    <p>Aleph (א). The first letter. The breath of God. The silent witness.</p>
+  </div>
+  <div class="card">
+    <h4>Astrology</h4>
+    <p>Air / Uranus. The airy sign of sudden revelation, genius, and breakthrough.</p>
+  </div>
+  <div class="card">
+    <h4>Kabbalistic Path</h4>
+    <p>Kether to Chokmah. The lightning flash of the infinite into wisdom.</p>
+  </div>
+  <div class="card">
+    <h4>Tree of Life</h4>
+    <p>Crown (Kether) connects to Wisdom (Chokmah). The crown creates the first emanation.</p>
+  </div>
+</aside>
+
+<div class="controls">
+  <button onclick="cameraRotate(true)">Rotate: ON</button>
+  <button onclick="cameraRotate(false)">Rotate: OFF</button>
+  <button onclick="highlight(0)">The Fool</button>
+  <button onclick="highlight(21)">The World</button>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-value">22</div><div class="stat-label">Arcana</div></div>
+  <div class="stat"><div class="stat-value">6</div><div class="stat-label">Traditions</div></div>
+  <div class="stat"><div class="stat-value">10</div><div class="stat-label">Sephiroth</div></div>
+  <div class="stat"><div class="stat-value">1.00</div><div class="stat-label">Sovereign ψ</div></div>
+  <div class="stat"><div class="stat-value">AB</div><div class="stat-label">Uno</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+
+<script>
+const ARCANAE = [
+  {n:0,name:"The Fool",hebrew:"Aleph",astro:"Air/Uranus",tree:"Kether→Chokmah",color:0xfbbf24,meaning:"Beginning. Leap. Pure potential."},
+  {n:1,name:"The Magician",hebrew:"Beth",astro:"Mercury",tree:"Kether→Binah",color:0x60a5fa,meaning:"Skill. Will. As above, so below."},
+  {n:2,name:"The High Priestess",hebrew:"Gimel",astro:"Moon",tree:"Kether→Tiphareth",color:0x8b5cf6,meaning:"Intuition. Mystery. The veil."},
+  {n:3,name:"The Empress",hebrew:"Daleth",astro:"Venus",tree:"Chokmah→Binah",color:0x10b981,meaning:"Abundance. Fertility. Birth."},
+  {n:4,name:"The Emperor",hebrew:"Heh",astro:"Aries",tree:"Chokmah→Tiphareth",color:0xef4444,meaning:"Authority. Order. Structure."},
+  {n:5,name:"The Hierophant",hebrew:"Vav",astro:"Taurus",tree:"Chokmah→Chesed",color:0x84cc16,meaning:"Tradition. Teaching. Bridge."},
+  {n:6,name:"The Lovers",hebrew:"Zayin",astro:"Gemini",tree:"Binah→Tiphareth",color:0xec4899,meaning:"Union. Choice. Love."},
+  {n:7,name:"The Chariot",hebrew:"Cheth",astro:"Cancer",tree:"Binah→Geburah",color:0x06b6d4,meaning:"Willpower. Triumph. Direction."},
+  {n:8,name:"Strength",hebrew:"Teth",astro:"Leo",tree:"Chesed→Geburah",color:0xa3e635,meaning:"Inner power. Patience. Courage."},
+  {n:9,name:"The Hermit",hebrew:"Yod",astro:"Virgo",tree:"Chesed→Tiphareth",color:0xfbbf24,meaning:"Solitude. Wisdom. Inner light."},
+  {n:10,name:"Wheel of Fortune",hebrew:"Kaph",astro:"Jupiter",tree:"Chesed→Chokmah",color:0x14b8a6,meaning:"Cycles. Destiny. Change."},
+  {n:11,name:"Justice",hebrew:"Lamedh",astro:"Libra",tree:"Geburah→Tiphareth",color:0xfbbf24,meaning:"Balance. Truth. Cause and effect."},
+  {n:12,name:"The Hanged Man",hebrew:"Mem",astro:"Neptune",tree:"Tiphareth→Chesed",color:0x60a5fa,meaning:"Sacrifice. Surrender. New perspective."},
+  {n:13,name:"Death",hebrew:"Nun",astro:"Scorpio",tree:"Tiphareth→Geburah",color:0x808080,meaning:"Transformation. End. Beginning."},
+  {n:14,name:"Temperance",hebrew:"Samekh",astro:"Sagittarius",tree:"Tiphareth→Binah",color:0x10b981,meaning:"Balance. Patience. Middle path."},
+  {n:15,name:"The Devil",hebrew:"Ayin",astro:"Capricorn",tree:"Tiphareth→Hod",color:0xef4444,meaning:"Shadow. Bondage. Material."},
+  {n:16,name:"The Tower",hebrew:"Peh",astro:"Mars",tree:"Geburah→Hod",color:0xff6b6b,meaning:"Upheaval. Revelation. Lightning."},
+  {n:17,name:"The Star",hebrew:"Tzaddi",astro:"Aquarius",tree:"Tiphareth→Yesod",color:0x60a5fa,meaning:"Hope. Inspiration. Renewal."},
+  {n:18,name:"The Moon",hebrew:"Qoph",astro:"Pisces",tree:"Tiphareth→Malkuth",color:0xc0c0ff,meaning:"Subconscious. Illusion. Cycles."},
+  {n:19,name:"The Sun",hebrew:"Resh",astro:"Sun",tree:"Tiphareth→Tiphareth",color:0xffd700,meaning:"Joy. Success. Vitality."},
+  {n:20,name:"Judgement",hebrew:"Shin",astro:"Pluto",tree:"Hod→Malkuth",color:0xfbbf24,meaning:"Awakening. Absolution. Calling."},
+  {n:21,name:"The World",hebrew:"Tav",astro:"Saturn",tree:"Malkuth",color:0x10b981,meaning:"Completion. Wholeness. Achievement."},
+];
+
+let scene, camera, renderer, arcanaMeshes = [];
+let selected = null;
+let rotating = true;
+
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x02060f);
+  scene.fog = new THREE.FogExp2(0x02060f, 0.018);
+  
+  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 8, 22);
+  camera.lookAt(0, 0, 0);
+  
+  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('canvas'), antialias: true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  
+  // Lighting
+  scene.add(new THREE.AmbientLight(0x404040, 0.6));
+  const sun = new THREE.DirectionalLight(0xfbbf24, 1.4);
+  sun.position.set(8, 15, 8);
+  scene.add(sun);
+  const back = new THREE.PointLight(0x10b981, 1.0, 30);
+  back.position.set(-8, 8, -8);
+  scene.add(back);
+  
+  // Sacred geometry disc
+  const disc = new THREE.Mesh(
+    new THREE.CircleGeometry(15, 64),
+    new THREE.MeshStandardMaterial({color: 0x1a1a1a, side: THREE.DoubleSide})
+  );
+  disc.rotation.x = -Math.PI / 2;
+  scene.add(disc);
+  
+  // Concentric sigil rings
+  for (let r = 7; r <= 14; r += 3.5) {
+    const ring = new THREE.Mesh(
+      new THREE.RingGeometry(r - 0.05, r, 64),
+      new THREE.MeshBasicMaterial({color: 0xfbbf24, transparent: true, opacity: 0.4, side: THREE.DoubleSide})
+    );
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.y = 0.02;
+    scene.add(ring);
+  }
+  
+  // 22 Arcana trees
+  for (let i = 0; i < 22; i++) {
+    const a = ARCANAE[i];
+    const angle = (i / 22) * Math.PI * 2;
+    const r = 11;
+    const x = Math.cos(angle) * r;
+    const z = Math.sin(angle) * r;
+    
+    // Trunk
+    const trunk = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.08, 0.15, 3.5, 8),
+      new THREE.MeshStandardMaterial({color: 0x4a3528})
+    );
+    trunk.position.set(x, 1.75, z);
+    scene.add(trunk);
+    
+    // Crown (the Arcana sign)
+    const crown = new THREE.Mesh(
+      new THREE.SphereGeometry(0.55, 16, 16),
+      new THREE.MeshStandardMaterial({
+        color: a.color, emissive: a.color, emissiveIntensity: 0.5
+      })
+    );
+    crown.position.set(x, 4.2, z);
+    crown.userData = {index: i, name: a.name, meaning: a.meaning};
+    arcanaMeshes.push(crown);
+    scene.add(crown);
+    
+    // Tree canopy (small geometric forms)
+    if ([0, 21].includes(i)) {
+      const lantern = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.4),
+        new THREE.MeshStandardMaterial({color: a.color, emissive: a.color, emissiveIntensity: 0.7})
+      );
+      lantern.position.set(x, 5.2, z);
+      scene.add(lantern);
+    }
+  }
+  
+  // Center: 12 Generals throne circle (smaller)
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2;
+    const throne = new THREE.Mesh(
+      new THREE.BoxGeometry(0.6, 0.6, 0.6),
+      new THREE.MeshStandardMaterial({color: 0xfbbf24, emissive: 0xfbbf24, emissiveIntensity: 0.4})
+    );
+    throne.position.set(Math.cos(angle) * 5, 0.3, Math.sin(angle) * 5);
+    scene.add(throne);
+  }
+  
+  // Dragon Throne at center
+  const dragon = new THREE.Mesh(
+    new THREE.BoxGeometry(1.2, 2.5, 1.2),
+    new THREE.MeshStandardMaterial({color: 0xff6b6b, emissive: 0xfbbf24, emissiveIntensity: 0.5})
+  );
+  dragon.position.set(0, 1.25, 0);
+  scene.add(dragon);
+  
+  // Stars background
+  const stars = [];
+  for (let i = 0; i < 1000; i++) {
+    stars.push((Math.random() - 0.5) * 200);
+    stars.push(Math.random() * 200);
+    stars.push((Math.random() - 0.5) * 200);
+  }
+  const starsGeom = new THREE.BufferGeometry();
+  starsGeom.setAttribute('position', new THREE.Float32BufferAttribute(stars, 3));
+  const starsMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.5});
+  const starsField = new THREE.Points(starsGeom, starsMat);
+  scene.add(starsField);
+  
+  animate();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  if (rotating) {
+    arcanaMeshes.forEach(m => {
+      m.position.y = 4.2 + Math.sin(Date.now() / 1500 + m.userData.index) * 0.3;
+      m.rotation.y += 0.005;
+      if (selected !== null && m.userData.index === selected) {
+        m.scale.setScalar(1.5 + Math.sin(Date.now() / 300) * 0.2);
+        m.material.emissiveIntensity = 0.8 + Math.sin(Date.now() / 200) * 0.3;
+      } else {
+        m.scale.setScalar(1);
+        m.material.emissiveIntensity = 0.5;
+      }
+    });
+  }
+  renderer.render(scene, camera);
+}
+
+function cameraRotate(b) { rotating = b; }
+function highlight(i) {
+  selected = i;
+  const a = ARCANAE[i];
+  document.getElementById('arcanaTitle').textContent = a.name;
+  document.getElementById('infoPanel').innerHTML = `
+    <h2 style="color:#fbbf24;margin-bottom:1rem;">${a.name}</h2>
+    <div class="card"><h4>Symbolism</h4><p>${a.meaning}</p></div>
+    <div class="card"><h4>Hebrew Letter</h4><p>${a.hebrew}</p></div>
+    <div class="card"><h4>Astrology</h4><p>${a.astro}</p></div>
+    <div class="card"><h4>Tree of Life Path</h4><p>${a.tree}</p></div>
+    <div class="card"><h4>Sovereign Composite</h4><p>Number ${a.n} of 22 · Color #${a.color.toString(16).padStart(6,'0')} · Sovereign by construction</p></div>
+  `;
+}
+
+function buildList() {
+  const list = document.getElementById('arcanaList');
+  ARCANAE.forEach(a => {
+    const row = document.createElement('div');
+    row.className = 'arcana-row';
+    row.innerHTML = `<span class="num">${a.n}</span><span class="name">${a.name}</span><span class="meaning">${a.astro}</span>`;
+    row.onclick = () => highlight(a.n);
+    list.appendChild(row);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  init();
+  buildList();
+});
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

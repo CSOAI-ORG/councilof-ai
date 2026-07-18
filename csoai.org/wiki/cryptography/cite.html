@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>proofof.ai — sovereign.wiki</title>
+  <style>body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}ul{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}</style>
+</head>
+<body>
+  <div class="container">
+    <div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/cryptography/">cryptography</a> / cite</div>
+    <h1>proofof.ai</h1>
+    <p class="tagline">Sovereign SIGIL cited — the public, read-only mirror of the SIGIL chain.</p>
+    <div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+    <h2>What proofof.ai Is</h2>
+    <p>proofof.ai is the public, read-only mirror of the sovereign <a href="sigil-chain.html">SIGIL chain</a>. Anyone can verify any emission from any browser. No login. No third-party trust.</p>
+
+    <h2>API</h2>
+    <ul>
+      <li><code>/v1/sigil/events</code> — paginated events.</li>
+      <li><code>/v1/sigil/single?sigil=...</code> — one event.</li>
+      <li><code>/v1/sigil/stats</code> — counts.</li>
+      <li><code>/v1/sigil/export</code> — CSV/JSON/Parquet for auditors.</li>
+    </ul>
+
+    <h2>Why Public?</h2>
+    <p>A private SIGIL is a foreign-controlled system. The <a href="../sovereignty/axiomatic.html">Axiom 2 (Audit-by-default)</a> requires public verifiability. A regulator, a customer, a competitor — anyone can prove the chain.</p>
+
+    <h2>Tiers</h2>
+    <ul>
+      <li><strong>Free</strong> — HMAC-signed (verifiable on proofof.ai).</li>
+      <li><strong>Pro</strong> — Ed25519-signed (auditor-grade attestation).</li>
+      <li><strong>Governance</strong> — dual-signed Ed25519 + ML-DSA-65.</li>
+    </ul>
+
+    <h2>Demo</h2>
+    <p><a href="../demos/siglil-verify.html">SIGIL verify demo</a> — verify any emission in three clicks.</p>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="sigil-chain.html">SIGIL chain</a></li>
+      <li><a href="ed25519.html">Ed25519</a></li>
+      <li><a href="pqc-ml-dsa-65.html">ML-DSA-65</a></li>
+      <li><a href="../sovereignty/axiomatic.html">Axioms</a></li>
+      <li><a href="../demos/siglil-verify.html">SIGIL verify demo</a></li>
+    </ul>
+    <div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+  </div>
+</body>
+</html>

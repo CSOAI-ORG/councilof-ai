@@ -1,0 +1,36 @@
+# STAGED STUB — do NOT publish. Review, then copy into
+# openpatent-hive/services/openpatent-gaming-mcp/smithery.yaml before `smithery publish`.
+# Mirrors the shape of the proven agentaudit/smithery.yaml manifest.
+name: openpatent-gaming-mcp
+humanReadableName: "OpenPatent Gaming Power Pack — IP Provenance for Game Design"
+description: |
+  8 game-industry tools on top of openpatent-mcp. 6-layer cryptographic
+  disclosure for quest, NPC, mechanic, and lore design provenance — tamper-evident
+  authorship trails for studios that need to prove who designed what, when.
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema for MCP client configuration
+    type: object
+    properties:
+      openpatent_api_key:
+        type: string
+        description: "OpenPatent API key (leave blank for free-tier preview tools)"
+      tier:
+        type: string
+        enum: ["free", "pro"]
+        default: "free"
+        description: "free = preview tools; pro = full 6-layer disclosure"
+    required: []
+  commandFunction: |
+    (config) => ({
+      command: "node",
+      args: ["dist/index.js"],
+      env: {
+        OPENPATENT_API_KEY: config.openpatent_api_key || "",
+        OPENPATENT_TIER: config.tier || "free",
+      }
+    })
+  exampleConfig:
+    openpatent_api_key: ""
+    tier: "free"

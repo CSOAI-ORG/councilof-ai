@@ -1,0 +1,26 @@
+#!/bin/bash
+# Weekly maintenance script for M2 mesh node
+echo "=== MEOKCLAW M2 Maintenance ==="
+echo "Date: $(date)"
+
+# 1. Clean Ollama partials
+rm -f ~/.ollama/models/blobs/*-partial 2>/dev/null
+
+# 2. Rotate logs
+find /tmp -name "ollama-*.log" -mtime +7 -delete 2>/dev/null
+find /tmp -name "mesh-*.log" -mtime +7 -delete 2>/dev/null
+
+# 3. Clean dev caches
+rm -rf ~/Library/Caches/pip/* 2>/dev/null
+rm -rf ~/Library/Caches/Homebrew/downloads/* 2>/dev/null
+
+# 4. Thin Time Machine snapshots if disk >90%
+USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+if [ "$USAGE" -gt 90 ]; then
+    echo "Disk at ${USAGE}%. Thinning snapshots..."
+    tmutil thinlocalsnapshots / 10737418240 2>/dev/null || true
+fi
+
+# 5. Report
+df -h / | tail -1
+echo "✅ Maintenance complete"

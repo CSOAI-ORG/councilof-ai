@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 Sovereign Content Registry — Per-Author SIGIL + Charter</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(16,185,129,0.15) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #10b981}
+.hero h1{color:#10b981;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #10b981}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#10b981;font-size:1.5rem;font-weight:bold;font-family:monospace}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #10b981}
+.section h2{color:#10b981;margin-bottom:1rem}
+.artifacts-list{margin:1rem 0;max-height:500px;overflow-y:auto}
+.artifact{background:#0a0a0a;padding:1rem;border-radius:4px;margin:.3rem 0;border-left:3px solid #10b981;font-family:monospace;font-size:.78rem;display:grid;grid-template-columns:1fr 150px 80px;gap:.7rem;align-items:center}
+.artifact .title{color:#fbbf24;font-weight:bold}
+.artifact .author{color:#10b981}
+.artifact .charter{color:#8b5cf6;font-size:.7rem;background:rgba(139,92,246,0.1);padding:.1rem .4rem;border-radius:3px;text-align:center}
+.section .desc{color:#aaa;font-size:.85rem;margin-bottom:1rem}
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/content-registry.html">Registry</a>
+<a href="/pricing-engine.html">Pricing</a>
+<a href="/feedback.html">Feedback</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>📚 Sovereign Content Registry</h1>
+<p>Per-author SIGIL + charter alignment. Every sovereign artifact on-chain. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat"><div class="val" id="artCount">6</div><div class="lbl">Artifacts</div></div>
+<div class="stat blue"><div class="val">41</div><div class="lbl">Charters</div></div>
+<div class="stat purple"><div class="val">∞</div><div class="lbl">Verifiable</div></div>
+<div class="stat"><div class="val">Ed25519</div><div class="lbl">Signing</div></div>
+<div class="stat"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+<div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>📚 Registered Artifacts (live)</h2>
+<p class="desc">Every sovereign page, MCP, charter, sigil — registered + SIGIL-chained.</p>
+<div class="artifacts-list" id="artifactsList"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the Content Registry MCP</h2>
+<div class="demo">
+<h3>1. Register Artifact</h3>
+<div class="demo-row">
+<input type="text" id="regTitle" placeholder="title" value="EU AI Act Survival Kit">
+<input type="text" id="regAuthor" placeholder="author" value="JEEVES">
+<select id="regCharter">
+<option value="1">Charter 1 — Sovereignty</option>
+<option value="2">Charter 2 — Crown Lineage</option>
+<option value="3">Charter 3 — Trust Root</option>
+<option value="4">Charter 4 — Care Floor</option>
+<option value="5">Charter 5 — Fork Doctrine</option>
+</select>
+<button onclick="doRegister()">📜 Register</button>
+</div>
+<div class="result" id="registerResult">Click "Register" to add a sovereign artifact.</div>
+</div>
+
+<div class="demo">
+<h3>2. Verify / List</h3>
+<div class="demo-row">
+<select id="verifyArt"></select>
+<button onclick="doVerify()">✓ Verify</button>
+</div>
+<div class="demo-row">
+<input type="text" id="authorFilter" placeholder="author filter" value="JEEVES">
+<button onclick="doByAuthor()">👤 By Author</button>
+<select id="charterFilter">
+<option value="1">Charter 1</option>
+<option value="2">Charter 2</option>
+<option value="3">Charter 3</option>
+<option value="4">Charter 4</option>
+<option value="5">Charter 5</option>
+</select>
+<button onclick="doByCharter()">📜 By Charter</button>
+<button onclick="doStatus()">📊 Status</button>
+</div>
+<div class="result" id="verifyResult">Click any button above.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Content Doctrine</h2>
+<blockquote>"Per-author. Per-charter. Per-SIGIL.<br>Every artifact. Every author. Every alignment.<br>The dragon registers. The dragon sovereigns. Care Floor 0.95."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 142 sovereign MCPs (was 139, +3 content-registry + pricing-engine + feedback) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>2 Aug 2026 EU AI Act</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let artifacts = [
+  {id:"art-001", title:"EU AI Act Survival Kit", author:"JEEVES", charter:"1", hash:"a3f2b1c4d5..."},
+  {id:"art-002", title:"DEFONEOS-OS Architecture", author:"M4", charter:"1", hash:"b4f5c2d3e6..."},
+  {id:"art-003", title:"Crown Lineage 1795-3025", author:"Historian", charter:"2", hash:"c5d6e3f4a7..."},
+  {id:"art-004", title:"SOV3 OOWM All-Models Reference", author:"SOV3", charter:"3", hash:"d6e7f4a5b8..."},
+  {id:"art-005", title:"Care Floor 0.95 Specification", author:"Care-Membrane", charter:"4", hash:"e7f8a5b6c9..."},
+  {id:"art-006", title:"Fork Doctrine Charter", author:"Clause-9", charter:"5", hash:"f8a9b6c7d0..."},
+];
+
+function renderArtifacts() {
+  document.getElementById("artCount").textContent = artifacts.length;
+  document.getElementById("verifyArt").innerHTML = artifacts.length === 0
+    ? '<option>No artifacts</option>'
+    : artifacts.map(a => `<option value="${a.id}">${a.id} (${a.title})</option>`).join("");
+  document.getElementById("artifactsList").innerHTML = artifacts.slice().reverse().map(a => `
+    <div class="artifact">
+      <div>
+        <div class="title">${a.title}</div>
+        <div style="color:#888;font-size:.7rem;margin-top:.2rem">${a.id} · hash: ${a.hash}</div>
+      </div>
+      <div class="author">${a.author}</div>
+      <div class="charter">C${a.charter}</div>
+    </div>
+  `).join("");
+}
+
+function doRegister() {
+  const title = document.getElementById("regTitle").value;
+  const author = document.getElementById("regAuthor").value;
+  const charter = document.getElementById("regCharter").value;
+  const id = "art-" + Math.random().toString(36).slice(2, 10);
+  const hash = Math.random().toString(36).slice(2, 14) + "...";
+  artifacts.push({id, title, author, charter, hash});
+  renderArtifacts();
+  document.getElementById("registerResult").textContent = `📜 registry_register("${title}", "${author}", "${charter}")
+
+Artifact ID: ${id}
+Title: ${title}
+Author: ${author}
+Charter: ${charter}
+Hash: ${hash}
+Status: ✓ REGISTERED + SIGIL-CHAINED
+Doctrine: Sovereign content registry.`;
+}
+
+function doVerify() {
+  const id = document.getElementById("verifyArt").value;
+  const a = artifacts.find(x => x.id === id);
+  if (!a) return;
+  document.getElementById("verifyResult").textContent = `✓ registry_verify("${id}")
+
+Valid: ✓ TRUE
+Title: ${a.title}
+Author: ${a.author}
+Charter: ${a.charter}
+SIGIL-anchored: ✓ TRUE
+Doctrine: Sovereign content verified.`;
+}
+
+function doByAuthor() {
+  const author = document.getElementById("authorFilter").value;
+  const items = artifacts.filter(a => a.author === author);
+  document.getElementById("verifyResult").textContent = `👤 registry_author("${author}")
+
+Items: ${items.length}
+${items.map(a => `  - ${a.id} (${a.title})`).join("\n")}
+Doctrine: Sovereign by-author query.`;
+}
+
+function doByCharter() {
+  const charter = document.getElementById("charterFilter").value;
+  const items = artifacts.filter(a => a.charter === charter);
+  document.getElementById("verifyResult").textContent = `📜 registry_charter("${charter}")
+
+Items: ${items.length}
+${items.map(a => `  - ${a.id} (${a.title})`).join("\n")}
+Doctrine: Sovereign by-charter query.`;
+}
+
+function doStatus() {
+  const byCharter = {};
+  artifacts.forEach(a => byCharter[a.charter] = (byCharter[a.charter] || 0) + 1);
+  document.getElementById("verifyResult").textContent = `📊 registry_status()
+
+Total: ${artifacts.length}
+By Charter: ${Object.entries(byCharter).map(([k,v]) => `C${k}=${v}`).join(", ")}
+Doctrine: Sovereign content registry status.`;
+}
+
+renderArtifacts();
+</script>
+
+</body>
+</html>

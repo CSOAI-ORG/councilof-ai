@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Rainbow Security — SOV-721</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:linear-gradient(135deg,#ef4444 0%,#fbbf24 16%,#10b981 33%,#3b82f6 50%,#8b5cf6 66%,#ec4899 83%,#000 100%);padding:32px;text-align:center;border-radius:12px;margin-bottom:24px}
+.hero h1{color:#fff;text-shadow:2px 2px 4px rgba(0,0,0,0.8)}
+.tagline{color:#fff;font-size:18px;font-weight:700;margin:8px 0;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
+.layers{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:24px 0}
+.layer{background:#111827;border:1px solid #1f2937;border-radius:6px;padding:16px 8px;text-align:center;font-size:10px;color:#c5cdd9}
+.layer .n{font-size:18px;font-weight:700;margin-bottom:4px}
+.layer .name{color:#aaa;font-size:9px;text-transform:uppercase}
+.layer.l1 .n{color:#ef4444}
+.layer.l2 .n{color:#fbbf24}
+.layer.l3 .n{color:#10b981}
+.layer.l4 .n{color:#3b82f6}
+.layer.l5 .n{color:#8b5cf6}
+.layer.l6 .n{color:#ec4899}
+.layer.l7 .n{color:#c5cdd9}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.metric{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1f2937;font-size:13px}
+.metric:last-child{border-bottom:none}
+.metric .v{color:#3b82f6;font-weight:700}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>🌈 Rainbow Security</h1>
+<div class="tagline">7-layer threat grading + RAG injection pre-processing</div>
+<div style="color:#fff;font-size:12px;margin-top:8px;text-shadow:1px 1px 2px rgba(0,0,0,0.8)">Sovereign substrate fact: <code>rainbow_security</code></div>
+</div>
+
+<div class="panel">
+<h3>7 layers of threat grading</h3>
+<div class="layers">
+  <div class="layer l1"><div class="n">L1</div><div class="name">Input</div></div>
+  <div class="layer l2"><div class="n">L2</div><div class="name">Semantic</div></div>
+  <div class="layer l3"><div class="n">L3</div><div class="name">Injection</div></div>
+  <div class="layer l4"><div class="n">L4</div><div class="name">Context</div></div>
+  <div class="layer l5"><div class="n">L5</div><div class="name">Intent</div></div>
+  <div class="layer l6"><div class="n">L6</div><div class="name">Output</div></div>
+  <div class="layer l7"><div class="n">L7</div><div class="name">Audit</div></div>
+</div>
+</div>
+
+<div class="panel">
+<h3>Threat grading scale</h3>
+<div class="metric"><span>GREEN</span><span class="v">Safe — proceed</span></div>
+<div class="metric"><span>YELLOW</span><span class="v">Caution — log + flag</span></div>
+<div class="metric"><span>ORANGE</span><span class="v">Risky — Care Floor review</span></div>
+<div class="metric"><span>RED</span><span class="v">Block — return error</span></div>
+<div class="metric"><span>BLACK</span><span class="v">Charter violation — permanent block + SIGIL</span></div>
+</div>
+
+<div class="panel">
+<h3>RAG injection pre-processing</h3>
+<p style="font-size:13px;line-height:1.6">Before any RAG-augmented query reaches the substrate, Rainbow strips 35 known prompt-injection patterns. This is what makes the 14/17 (82%) RAG benchmark possible — without pre-processing, injections contaminate the retrieved facts.</p>
+<p style="font-size:13px;line-height:1.6">Companion to <b>Horus Gate</b> (active vision) and <b>DORADO 6×96</b> (hard-stops).</p>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>rainbow_security</code> · verified 2026-07-13<br>
+🌈 7 layers · 5-level threat grading · 35 injection patterns detected
+</div>
+</body></html>

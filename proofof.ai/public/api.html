@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API — proofof.ai | MEOK Compliance Suite</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0d0c18;color:#e0dcd5;line-height:1.6}
+a{color:#c9a84c;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+/* Nav */
+nav{background:#0d0c18;border-bottom:1px solid rgba(201,168,76,0.2);padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+nav .logo{font-size:22px;font-weight:700;color:#c9a84c;letter-spacing:-0.5px}
+nav .logo span{color:#e0dcd5}
+nav .nav-links{display:flex;gap:28px;align-items:center}
+nav .nav-links a{color:#b0aca8;font-size:14px;font-weight:500;transition:color .2s}
+nav .nav-links a:hover{color:#c9a84c}
+/* Hero */
+.hero{text-align:center;padding:80px 0 40px}
+.hero h1{font-size:48px;font-weight:700;color:#fff;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:#c9a84c}
+.hero p{font-size:18px;color:#b0aca8;max-width:640px;margin:0 auto}
+/* Sections */
+section{margin:60px 0}
+section h2{font-size:28px;font-weight:700;color:#fff;margin-bottom:6px}
+section h2 em{font-style:normal;color:#c9a84c}
+section .lead{color:#b0aca8;margin-bottom:32px;font-size:15px}
+/* Code blocks */
+pre{background:#0a0914;border:1px solid rgba(201,168,76,0.15);border-radius:12px;padding:20px;overflow-x:auto;font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:13px;line-height:1.7;color:#d0ccc5;margin:16px 0}
+pre .hl{color:#c9a84c}
+pre .cm{color:#6a6878}
+pre .kw{color:#ff79c6}
+pre .str{color:#f1fa8c}
+pre .num{color:#bd93f9}
+pre .fn{color:#50fa7b}
+/* Endpoint cards */
+.endpoint{background:#131124;border:1px solid rgba(201,168,76,0.12);border-radius:12px;padding:28px;margin-bottom:28px}
+.endpoint h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:12px}
+.endpoint h3 .method{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:0.5px}
+.method-post{background:rgba(80,250,123,0.15);color:#50fa7b}
+.method-get{background:rgba(189,147,249,0.15);color:#bd93f9}
+.endpoint .url{font-family:'SF Mono',monospace;font-size:14px;color:#c9a84c;margin-bottom:16px}
+.endpoint p{color:#b0aca8;font-size:15px;margin-bottom:12px}
+.endpoint h4{font-size:13px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:0.5px;margin:20px 0 8px}
+.endpoint .param{display:grid;grid-template-columns:140px 1fr;gap:4px 16px;font-size:14px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.endpoint .param .key{font-family:'SF Mono',monospace;color:#c9a84c}
+.endpoint .param .val{color:#b0aca8}
+/* Info boxes */
+.info-box{background:rgba(201,168,76,0.06);border-left:3px solid #c9a84c;border-radius:8px;padding:16px 20px;margin:20px 0}
+.info-box p{color:#b0aca8;font-size:14px;margin:0}
+.info-box strong{color:#e0dcd5}
+/* SDK grid */
+.sdk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:24px 0}
+.sdk-card{background:#131124;border:1px solid rgba(201,168,76,0.1);border-radius:10px;padding:20px;text-align:center;transition:border-color .3s}
+.sdk-card:hover{border-color:rgba(201,168,76,0.4)}
+.sdk-card .lang{font-size:14px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:0.5px}
+.sdk-card .name{font-size:16px;font-weight:600;color:#fff;margin:6px 0}
+.sdk-card .desc{font-size:13px;color:#b0aca8}
+/* Rate limit table */
+table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:1px solid rgba(201,168,76,0.1)}
+thead{background:rgba(201,168,76,0.08)}
+th{padding:14px;text-align:left;font-size:13px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:0.5px}
+td{padding:14px;font-size:14px;color:#d0ccc5;border-top:1px solid rgba(255,255,255,0.05)}
+tbody tr:hover{background:rgba(201,168,76,0.03)}
+/* Footer */
+footer{background:rgba(255,255,255,0.02);border-top:1px solid rgba(201,168,76,0.1);padding:40px 0;margin-top:80px;text-align:center}
+footer p{color:#6a6878;font-size:13px}
+footer a{color:#c9a84c}
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:32px}
+  .endpoint .param{grid-template-columns:1fr}
+  pre{font-size:12px;padding:14px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="index.html" class="logo">proof<span>.</span>of<span>.ai</span></a>
+    <div class="nav-links">
+      <a href="frameworks.html">Frameworks</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="api.html">API</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>Keystone <em>Attestation</em> API</h1>
+    <p>Integrate cryptographic compliance attestations directly into your MCP servers, CI/CD pipelines, and monitoring dashboards. Every attestation is a verifiable, tamper-proof keystone certificate.</p>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Authentication -->
+  <section>
+    <h2>Authentication</h2>
+    <p class="lead">All API requests require a valid <code>MEOK_MASTER_API_KEY</code> in the <code>Authorization</code> header.</p>
+    <div class="info-box">
+      <p><strong>⚠️ Keep your API key secure.</strong> The keystone signing service uses your key to authorise attestation creation. Rotate keys periodically and never expose them in client-side code. Use environment variables or a secrets manager.</p>
+    </div>
+    <pre><span class="kw">Authorization</span>: Bearer <span class="hl">MEOK_MASTER_API_KEY</span></pre>
+    <p style="color:#b0aca8;font-size:14px;">Your API key can be generated from the <a href="#">dashboard</a>. Each key is scoped to a plan tier — Free keys are rate-limited to 3 attestations/day; Pro and Enterprise have no per-key limit.</p>
+  </section>
+
+  <!-- POST /sign -->
+  <section>
+    <h2>Endpoints</h2>
+    <p class="lead">Three core endpoints power the compliance attestation lifecycle.</p>
+
+    <div class="endpoint">
+      <h3><span class="method method-post">POST</span> Create Attestation</h3>
+      <div class="url">/sign</div>
+      <p>Sign a compliance attestation for an AI system or MCP server. The payload describes the system under attestation, the target framework, and the compliance claims being made. Returns a keystone certificate with a unique <code>attestation_id</code>.</p>
+
+      <h4>Request Body</h4>
+      <pre>{
+  <span class="hl">"system_id"</span>: <span class="str">"mcp-server-42"</span>,
+  <span class="hl">"framework"</span>: <span class="str">"eu-ai-act"</span>,
+  <span class="hl">"claims"</span>: {
+    <span class="hl">"risk_classification"</span>: <span class="str">"limited"</span>,
+    <span class="hl">"transparency_art_50"</span>: <span class="kw">true</span>,
+    <span class="hl">"conformity_assessment"</span>: <span class="str">"self-assessment"</span>
+  },
+  <span class="hl">"metadata"</span>: {
+    <span class="hl">"version"</span>: <span class="str">"2.1.0"</span>,
+    <span class="hl">"environment"</span>: <span class="str">"production"</span>
+  }
+}</pre>
+
+      <h4>Response <span style="color:#50fa7b;font-weight:400;font-size:13px;">200 OK</span></h4>
+      <pre>{
+  <span class="hl">"attestation_id"</span>: <span class="str">"att_ks_9f3b2a1c7e8d"</span>,
+  <span class="hl">"status"</span>: <span class="str">"signed"</span>,
+  <span class="hl">"keystone_cert"</span>: <span class="str">"ks://eu-ai-act/att_ks_9f3b2a1c7e8d"</span>,
+  <span class="hl">"timestamp"</span>: <span class="str">"2026-06-23T14:30:00Z"</span>,
+  <span class="hl">"fingerprint"</span>: <span class="str">"sha256:a1b2c3d4e5f6..."</span>,
+  <span class="hl">"verify_url"</span>: <span class="str">"https://proofof.ai/verify/att_ks_9f3b2a1c7e8d"</span>
+}</pre>
+
+      <h4>Parameters</h4>
+      <div class="param"><span class="key">system_id</span><span class="val">Required. Unique identifier for the AI system or MCP server being attested.</span></div>
+      <div class="param"><span class="key">framework</span><span class="val">Required. Target compliance framework slug (e.g. <code>eu-ai-act</code>, <code>dora</code>, <code>gdpr</code>). See <a href="frameworks.html">frameworks</a> for the full list.</span></div>
+      <div class="param"><span class="key">claims</span><span class="val">Required. Key-value map of compliance claims. Must conform to the framework's schema.</span></div>
+      <div class="param"><span class="key">metadata</span><span class="val">Optional. Additional context — version, environment, tags, etc.</span></div>
+    </div>
+
+    <!-- GET /verify/{id} -->
+    <div class="endpoint">
+      <h3><span class="method method-get">GET</span> Verify Attestation</h3>
+      <div class="url">/verify/{attestation_id}</div>
+      <p>Retrieve and verify a keystone attestation by its ID. Returns the full certificate including the cryptographic signature, claims, and verification status. Free and unlimited for all tiers.</p>
+
+      <h4>Response <span style="color:#50fa7b;font-weight:400;font-size:13px;">200 OK</span></h4>
+      <pre>{
+  <span class="hl">"attestation_id"</span>: <span class="str">"att_ks_9f3b2a1c7e8d"</span>,
+  <span class="hl">"status"</span>: <span class="str">"verified"</span>,
+  <span class="hl">"system_id"</span>: <span class="str">"mcp-server-42"</span>,
+  <span class="hl">"framework"</span>: <span class="str">"eu-ai-act"</span>,
+  <span class="hl">"claims"</span>: { ... },
+  <span class="hl">"signature"</span>: <span class="str">"MEOK_KS_v1_a1b2c3d4..."</span>,
+  <span class="hl">"signed_at"</span>: <span class="str">"2026-06-23T14:30:00Z"</span>,
+  <span class="hl">"verified_at"</span>: <span class="str">"2026-06-23T15:00:00Z"</span>,
+  <span class="hl">"valid"</span>: <span class="kw">true</span>
+}</pre>
+
+      <h4>Error Response <span style="color:#ff5555;font-weight:400;font-size:13px;">404 Not Found</span></h4>
+      <pre>{
+  <span class="hl">"error"</span>: <span class="str">"attestation_not_found"</span>,
+  <span class="hl">"message"</span>: <span class="str">"No attestation found with ID: att_ks_invalid"</span>
+}</pre>
+    </div>
+
+    <!-- POST /webhook/stripe -->
+    <div class="endpoint">
+      <h3><span class="method method-post">POST</span> Stripe Webhook</h3>
+      <div class="url">/webhook/stripe</div>
+      <p>Handles billing events from Stripe. Used internally to manage subscription lifecycle, usage metering, and invoicing for Pro and Enterprise tiers. Accepts Stripe's standard event format with <code>stripe-signature</code> verification.</p>
+
+      <h4>Request (Stripe Event)</h4>
+      <pre>{
+  <span class="hl">"id"</span>: <span class="str">"evt_3P2q4R5S6T7U8V"</span>,
+  <span class="hl">"type"</span>: <span class="str">"invoice.payment_succeeded"</span>,
+  <span class="hl">"data"</span>: {
+    <span class="hl">"object"</span>: {
+      <span class="hl">"customer"</span>: <span class="str">"cus_AbCdEfGhIjKl"</span>,
+      <span class="hl">"subscription"</span>: <span class="str">"sub_1234567890"</span>,
+      <span class="hl">"amount_paid"</span>: 19900,
+      <span class="hl">"currency"</span>: <span class="str">"gbp"</span>
+    }
+  }
+}</pre>
+
+      <h4>Response</h4>
+      <pre>{
+  <span class="hl">"received"</span>: <span class="kw">true</span>,
+  <span class="hl">"event_type"</span>: <span class="str">"invoice.payment_succeeded"</span>,
+  <span class="hl">"processed"</span>: <span class="kw">true</span>
+}</pre>
+
+      <div class="info-box">
+        <p><strong>🔐 Webhook signature verification.</strong> Always verify the <code>stripe-signature</code> header before processing the payload. Use the <code>stripe</code> package's <code>constructEvent()</code> method with your webhook secret.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rate Limits -->
+  <section>
+    <h2>Rate <em>limits</em></h2>
+    <p class="lead">Rate limits are applied per API key and reset daily at midnight UTC.</p>
+    <table>
+      <thead>
+        <tr><th>Tier</th><th>Attestations / Day</th><th>Verify Requests</th><th>Burst Rate</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Free</td><td>3</td><td>Unlimited</td><td>10 req/min</td></tr>
+        <tr><td>Pro</td><td>Unlimited</td><td>Unlimited</td><td>100 req/min</td></tr>
+        <tr><td>Enterprise</td><td>Unlimited</td><td>Unlimited</td><td>500 req/min</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box" style="margin-top:20px;">
+      <p><strong>🔄 Rate limit headers</strong> are returned on every response: <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code>. Exceeding the limit returns <code>429 Too Many Requests</code> with a <code>Retry-After</code> header.</p>
+    </div>
+    <pre>HTTP/1.1 <span class="num">429</span> Too Many Requests
+<span class="hl">Content-Type</span>: application/json
+<span class="hl">Retry-After</span>: <span class="num">60</span>
+<span class="hl">X-RateLimit-Limit</span>: <span class="num">10</span>
+<span class="hl">X-RateLimit-Remaining</span>: <span class="num">0</span>
+<span class="hl">X-RateLimit-Reset</span>: <span class="num">1687543200</span>
+
+{ <span class="hl">"error"</span>: <span class="str">"rate_limit_exceeded"</span>, <span class="hl">"message"</span>: <span class="str">"Too many requests. Retry after 60 seconds."</span> }</pre>
+  </section>
+
+  <!-- SDKs -->
+  <section>
+    <h2>SDKs &amp; <em>integrations</em></h2>
+    <p class="lead">Official client libraries and plugins for integrating keystone attestations into your stack.</p>
+
+    <div class="sdk-grid">
+      <div class="sdk-card"><div class="lang">Python</div><div class="name">proofofai-py</div><div class="desc">Native Python client with async support, MCP framework integration, and CLI tools.</div></div>
+      <div class="sdk-card"><div class="lang">TypeScript</div><div class="name">@proofofai/sdk</div><div class="desc">TypeScript/Node.js SDK with full type definitions and Express middleware.</div></div>
+      <div class="sdk-card"><div class="lang">Go</div><div class="name">proofofai-go</div><div class="desc">Go client for high-throughput attestation signing and verification.</div></div>
+      <div class="sdk-card"><div class="lang">CLI</div><div class="name">meok-ks</div><div class="desc">Command-line tool for signing, verifying, and managing attestations from CI/CD.</div></div>
+    </div>
+    <div class="info-box">
+      <p><strong>📦 All SDKs are open source.</strong> Published under the MIT license on <a href="#">GitHub</a>. Contributions, issues, and feature requests welcome.</p>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section>
+    <h2>API <em>pricing</em></h2>
+    <p class="lead">The API is metered by attestation volume. Verification and webhook endpoints are free for all tiers.</p>
+    <table>
+      <thead>
+        <tr><th>Plan</th><th>Price</th><th>Attestations</th><th>API Access</th><th>Support</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Free</td><td>£0/mo</td><td>3/day</td><td>Limited</td><td>Email</td></tr>
+        <tr><td>Pro</td><td>£199/mo</td><td>Unlimited</td><td>Full</td><td>Slack + Email</td></tr>
+        <tr><td>Enterprise</td><td>£1,499/mo</td><td>Unlimited</td><td>Full + Custom</td><td>24/7 Priority</td></tr>
+      </tbody>
+    </table>
+    <p style="color:#b0aca8;font-size:14px;margin-top:16px;">See the <a href="pricing.html">full pricing page</a> for details on all tiers, including the one-time 48h Assessment.</p>
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 <a href="https://proofof.ai">proofof.ai</a> — a product of CSOAI Ltd (UK 16939677). All rights reserved. <a href="contact.html">Contact support</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

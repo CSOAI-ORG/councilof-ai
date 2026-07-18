@@ -1,0 +1,626 @@
+{
+  "running": 72,
+  "gated": 31,
+  "broken": 0,
+  "rows": [
+    {
+      "capability": "action-guard",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "agentdog",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "anti-relapse",
+      "class": "GATED",
+      "detail": "fail-soft: endpoint",
+      "expected_gated": false
+    },
+    {
+      "capability": "article50",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "autorun",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "awareness",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "brain-merge-ratio",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "c2pa",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "canonical",
+      "class": "GATED",
+      "detail": "fail-soft: offline",
+      "expected_gated": false
+    },
+    {
+      "capability": "capabilities",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "care-floor",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "cedar",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "charter-qa",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "charter-validate",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "cheatsheet",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "cloud-fleet",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "cloud-orchestrator",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "companion",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "compute-bridge",
+      "class": "GATED",
+      "detail": "fail-soft: needs ",
+      "expected_gated": false
+    },
+    {
+      "capability": "conformal",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "conformal-mapie",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "conformal-veto",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "correlation",
+      "class": "GATED",
+      "detail": "needs live models (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "daily-refresh",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "defer",
+      "class": "GATED",
+      "detail": "needs live models (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "distill",
+      "class": "GATED",
+      "detail": "needs GPU+endpoints (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "divergence",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "divergence-sim",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "double-pyramid",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "drum",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "e2e",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "ed25519-sigil",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "emergence",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "fido",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "find-best-config",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "fleet",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "fluid-pyramid",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "fractal-nest",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "free-gpu",
+      "class": "GATED",
+      "detail": "fail-soft: needs ",
+      "expected_gated": false
+    },
+    {
+      "capability": "full-model",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "game-arena",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "gated-check",
+      "class": "GATED",
+      "detail": "fail-soft: endpoint",
+      "expected_gated": false
+    },
+    {
+      "capability": "gpu",
+      "class": "GATED",
+      "detail": "fail-soft: needs ",
+      "expected_gated": false
+    },
+    {
+      "capability": "grow",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "growth",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "guardian",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "hermes-agentic",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "jadepuffer",
+      "class": "GATED",
+      "detail": "needs live models (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "kill-switch",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "live-tools",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "mcp-2026",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "mcp-cards",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "memory",
+      "class": "GATED",
+      "detail": "needs seeded memory file (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "memory-bridge",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "mist12",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "model-registry",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "multistep-rollout",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "oci-mirror",
+      "class": "GATED",
+      "detail": "needs OCI creds (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "oowm",
+      "class": "GATED",
+      "detail": "needs catalog-only server method (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "oracle-status",
+      "class": "GATED",
+      "detail": "needs OCI creds (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "orchestrator",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "owem-e2e",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "owem-emergence",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "owem-stack",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "owem-sweep",
+      "class": "GATED",
+      "detail": "needs live models (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "owem-v2",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "owem-world",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "param-accounting",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "prepare",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "probe",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "pyramid-4brain",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "quantum-mirror",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "queen-hives",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "rainbow",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "registry",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "responder",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "sac",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "sac-council",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "self",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "sft-runbook",
+      "class": "GATED",
+      "detail": "needs GPU (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "six-lever-proxy",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "size-family",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "sondera",
+      "class": "GATED",
+      "detail": "needs live models (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "sovereign-mind",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "sovspace",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "speculative",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "speculative-responder",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "square-4plus1",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "substrate-explorer",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "substrate-growth",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "tensor-compress",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "three-lineage",
+      "class": "GATED",
+      "detail": "needs live models (not called: would block on live resource)",
+      "expected_gated": true
+    },
+    {
+      "capability": "tool-awareness",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "tools",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "train",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "train-dispatch",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "triangle",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "trust-feed",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "uniquely-yours",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "venturi",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "venturi-stream",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    },
+    {
+      "capability": "what-can-you-do",
+      "class": "GATED",
+      "detail": "fail-soft: gpu",
+      "expected_gated": false
+    },
+    {
+      "capability": "y2d",
+      "class": "RUNNING",
+      "detail": null,
+      "expected_gated": false
+    }
+  ],
+  "verdict": "SHIP-READY (0 broken)"
+}

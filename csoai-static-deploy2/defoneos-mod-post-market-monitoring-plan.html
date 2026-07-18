@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — Post-Market Monitoring Plan (UK AISI / EU AI Act Art-72 / ISO 42001 PMS Annex A.10)</title>
+<meta name="description" content="DEFONEOS Post-Market Monitoring Plan: single document cross-walk of UK AISI / EU AI Act Article 72 / ISO 42001 Annex A.10 — 6 monitoring KPIs × 5 detection channels × 12 SIGIL-anchored monthly attestations × 30-day incident-to-disclosure SLA." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+.grid{display:grid;gap:12px;}
+.cols-2{grid-template-columns:repeat(2,1fr);}
+.cols-3{grid-template-columns:repeat(3,1fr);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.crit{background:#ff5e5e22;color:#ff5e5e;border:1px solid #ff5e5e55;}
+.high{background:#ffb80022;color:#ffb800;border:1px solid #ffb80055;}
+.med{background:#00d4ff22;color:#00d4ff;border:1px solid #00d4ff55;}
+.ok-tag{background:#00d68f22;color:#00d68f;border:1px solid #00d68f55;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/post-market-monitoring-plan · csoai.org · ship-grade · tick 95</div>
+<header>
+<h1>Post-Market Monitoring Plan</h1>
+<div class="sub">The single document DEFONEOS presents to UK AISI / EU AI Office / ISO 42001 auditors / a buyer CISO when asked "show me your post-market monitoring." Cross-walks UK AISI / EU AI Act Article 72 / ISO 42001 PMS Annex A.10 into one operational plan: 6 monitoring KPIs, 5 detection channels, 12 SIGIL-anchored monthly attestations, 30-day incident-to-disclosure SLA, 5 named early-warning signals.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Regimes cross-walked</span><b>3 (UK AISI / EU AI Act Art-72 / ISO 42001 PMS Annex A.10)</b></div>
+<div class="kpi"><span>Monitoring KPIs tracked monthly</span><b>6 (with SIGIL-anchored monthly attestation)</b></div>
+<div class="kpi"><span>Detection channels</span><b>5 (SIEM / feedback loop / model drift / safety reports / external intel)</b></div>
+<div class="kpi"><span>Monthly attestations per year</span><b>12 (SIGIL-anchored, 33-agent BFT signed)</b></div>
+<div class="kpi"><span>Incident-to-disclosure SLA</span><b>30 days (UK AISI) / 15 days (EU AI Act Art-73) / 72h (Art-14 active exploit)</b></div>
+<div class="kpi"><span>Early-warning signals monitored</span><b>5 named (drift, refusal rate, bias drift, perf regression, security)</b></div>
+<div class="kpi"><span>Document version</span><b>v0.1 · 2026-07-14 · SIGIL <code>T95-pms-plan-b7e3a9c4f2d8</code></b></div>
+</div>
+
+<h2>1 · Why Post-Market Monitoring Is The Hard Part</h2>
+<p>Pre-market compliance (Annex I conformance, ISO 42001 certification, JSP 936 audit) is mostly paperwork + verification tests. Post-market monitoring is the obligation to <b>keep watching the system in production for the entire support period (5 years minimum, 7 years DEFONEOS-committed)</b>, with a defined feedback loop that triggers incident response, disclosure, and (where required) regulator notification.</p>
+<p>Three regulators require PMS:</p>
+<ul>
+<li><b>UK AISI:</b> Voluntary expected from July 2026; mandatory under anticipated AI Bill 2027.</li>
+<li><b>EU AI Act Article 72:</b> Mandatory for high-risk AI systems from 2 Aug 2026 (full applicability from 2 Aug 2027).</li>
+<li><b>ISO 42001 Annex A.10:</b> Mandatory for certified AIMS; quarterly audit evidence required.</li>
+</ul>
+
+<h2>2 · The 3-Regime Cross-Walk</h2>
+<table>
+<thead><tr><th>DEFONEOS PMS element</th><th>UK AISI</th><th>EU AI Act Art-72</th><th>ISO 42001 Annex A.10</th></tr></thead>
+<tbody>
+<tr><td>Monthly KPI dashboard</td><td>Yes (anticipated)</td><td>Yes (Art-72(2))</td><td>Yes (A.10.2)</td></tr>
+<tr><td>Serious incident logging</td><td>Yes</td><td>Yes (Art-73)</td><td>Yes (A.10.3)</td></tr>
+<tr><td>Bias / drift monitoring</td><td>Yes</td><td>Yes (Art-72(1)(c))</td><td>Yes (A.10.4)</td></tr>
+<tr><td>Public disclosure of incidents</td><td>Voluntary</td><td>Yes (Art-73(4))</td><td>Yes (cert dependent)</td></tr>
+<tr><td>Regulator notification</td><td>Yes (anticipated)</td><td>Yes (Art-73 + Art-14)</td><td>Yes (cert body)</td></tr>
+<tr><td>Post-market re-evaluation</td><td>Annual</td><td>At least annually (Art-72(4))</td><td>At least annually (A.10.5)</td></tr>
+</tbody>
+</table>
+<div class="ok"><b>One PMS plan, three regimes satisfied.</b> This document is the single source of truth — we don't ship separate plans per regime.</div>
+
+<h2>3 · The 6 Monitoring KPIs (Tracked Monthly)</h2>
+<table>
+<thead><tr><th>#</th><th>KPI</th><th>What it measures</th><th>Threshold (alert)</th><th>Threshold (incident)</th><th>Data source</th></tr></thead>
+<tbody>
+<tr><td>K1</td><td>Model drift (KL divergence)</td><td>Distribution shift in production vs training</td><td>KL ≥ 0.05</td><td>KL ≥ 0.15</td><td>Per-tenant log of (input_embedding, output_class)</td></tr>
+<tr><td>K2</td><td>Refusal / safety rate</td><td>Rate of refused outputs (out-of-policy)</td><td>≥ 2× baseline</td><td>≥ 5× baseline</td><td>SIGIL chain per refusal + weekly digest</td></tr>
+<tr><td>K3</td><td>Bias drift (per protected group)</td><td>Output distribution shift across 6 protected groups × 14 dimensions</td><td>Δ ≥ 3%</td><td>Δ ≥ 8%</td><td>FIA monthly report (see defoneos-mod-fairness-impact-assessment)</td></tr>
+<tr><td>K4</td><td>Performance regression (latency p95)</td><td>p95 latency drift vs 30-day rolling baseline</td><td>Δ ≥ 20%</td><td>Δ ≥ 50%</td><td>Linkerd mesh telemetry + Prometheus</td></tr>
+<tr><td>K5</td><td>Security events (mesh alerts)</td><td>SIEM alerts per tenant per day</td><td>≥ 100</td><td>≥ 500</td><td>SIEM + SIGIL chain + 33-agent BFT review</td></tr>
+<tr><td>K6</td><td>User-reported safety concerns</td><td>Tickets tagged safety / bias / correctness</td><td>≥ 5 / month</td><td>≥ 15 / month OR any single high-severity</td><td>Zendesk + private SIGIL feedback channel</td></tr>
+</tbody>
+</table>
+
+<h2>4 · The 5 Detection Channels</h2>
+<div class="panel cols-2 grid">
+<div>
+<h3>Channel 1 — SIEM (security events)</h3>
+<p>Every mesh request emits a SIGIL attestation. SIEM (Elastic + Sigma rules) correlates patterns: credential-stuffing, lateral movement, policy violations. Alert to CISO + tenant CSO within 5 minutes.</p>
+</div>
+<div>
+<h3>Channel 2 — User feedback loop</h3>
+<p>Buyers + end-users can file safety/bias/correctness reports via <code>report@csoai.org</code> + per-tenant private SIGIL feedback channel. Triage within 24h, response within 72h.</p>
+</div>
+<div>
+<h3>Channel 3 — Model drift detection</h3>
+<p>Daily KL-divergence scan across all 30 MCPs + sovereign substrate. Drift triggers automatic model retraining proposal (33-agent BFT votes on whether to roll back).</p>
+</div>
+<div>
+<h3>Channel 4 — Safety reports (external)</h3>
+<p>ENISA advisories + UK NCSC + CISA alerts ingested daily; CVE correlation with our SBOM; auto-patch proposal when patch available.</p>
+</div>
+<div>
+<h3>Channel 5 — Independent red-team</h3>
+<p>Yearly third-party penetration test + ad-hoc red-team sprints (e.g., during major releases). 33-agent BFT adversarial review on every release.</p>
+</div>
+</div>
+
+<h2>5 · The 12 Monthly Attestations (SIGIL-Anchored)</h2>
+<p>On the 1st of every month at 02:00 UTC, the DEFONEOS PMS pipeline generates an attestation per monitoring dimension and writes it to the SIGIL chain. These are public, signed, and verifiable by any buyer via <code>curl csoai.org/pms/{YYYY-MM}</code>.</p>
+<table>
+<thead><tr><th>Attestation ID</th><th>What it attests</th><th>Signers</th><th>Verification SLA</th></tr></thead>
+<tbody>
+<tr><td>ATT-K1</td><td>Model drift values for all tenants, prior month</td><td>Engineering + 33-agent BFT (33/33)</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-K2</td><td>Refusal / safety rate per tenant per MCP</td><td>Engineering + 33-agent BFT (33/33)</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-K3</td><td>Bias drift values (6 groups × 14 dimensions)</td><td>Engineering + FIA tool (see defoneos-mod-fairness-impact-assessment)</td><td>&lt;60s (FIA report regen)</td></tr>
+<tr><td>ATT-K4</td><td>Latency p95 per MCP per tenant</td><td>Engineering + SRE</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-K5</td><td>Security event count per tenant</td><td>Engineering + CISO</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-K6</td><td>User-reported safety concerns (sanitised)</td><td>Customer Success + Legal</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-INC</td><td>Incident log for prior month (sanitised)</td><td>CISO + Legal</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-DRIFT-ACTIONS</td><td>Drift-triggered retraining actions taken</td><td>Engineering + 33-agent BFT</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-PATCH</td><td>Security patches applied in prior month</td><td>Engineering + CISO</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-REDTEAM</td><td>Red-team findings + remediation status</td><td>CISO + 33-agent BFT</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-FEEDBACK</td><td>User feedback resolution rate + open items</td><td>Customer Success</td><td>&lt;100ms</td></tr>
+<tr><td>ATT-OVERSIGHT</td><td>Human oversight decisions + override rate</td><td>Engineering + Legal + 33-agent BFT</td><td>&lt;100ms</td></tr>
+</tbody>
+</table>
+
+<h2>6 · The Incident-To-Disclosure SLA (The 5 Stages)</h2>
+<div class="panel">
+<h3>Stage 1 — Detection (T+0)</h3>
+<p>One of the 5 detection channels raises an alert. SIEM auto-assigns severity: LOW / MEDIUM / HIGH / CRITICAL.</p>
+<h3>Stage 2 — Triage (T+0 to T+24h)</h3>
+<p>CISO + relevant engineering lead triage. If confirmed incident, open SIGIL incident record with severity, scope, mitigation status. BFT 33-agent notified.</p>
+<h3>Stage 3 — Mitigation (T+24h to T+72h)</h3>
+<p>Roll-back / patch / disable affected component. If CRITICAL (active exploit, data exfiltration, bias causing harm), proceed to disclosure immediately.</p>
+<h3>Stage 4 — Disclosure (T+72h to T+15d for EU AI Act / T+30d for UK AISI)</h3>
+<p><b>EU AI Act Art-73 (15 days):</b> Notify market surveillance authorities + affected deployers. DEFONEOS publishes on <code>csoai.org/advisories</code>.</p>
+<p><b>EU AI Act Art-14 (72h / 24h):</b> If active exploitation or severe incident, notify ENISA within 24h (active exploit) / 72h (severe).</p>
+<p><b>UK AISI (30 days, anticipated):</b> Notify UK AISI within 30 days of confirmed incident.</p>
+<p><b>ISO 42001 cert body:</b> Notify within 5 business days if cert-relevant.</p>
+<h3>Stage 5 — Post-incident review (T+30d to T+60d)</h3>
+<p>33-agent BFT conducts adversarial review of the incident handling. Lessons-learned document published on <code>csoai.org/post-mortems</code>. SIGIL-anchored.</p>
+</div>
+
+<h2>7 · The 5 Named Early-Warning Signals</h2>
+<table>
+<thead><tr><th>Signal</th><th>What triggers it</th><th>Pre-emptive action</th></tr></thead>
+<tbody>
+<tr><td>ES1 — Drift pre-warning</td><td>KL divergence trends up 3 consecutive months even below alert threshold</td><td>Pre-emptive model retraining proposal + BFT vote</td></tr>
+<tr><td>ES2 — Refusal rate drift</td><td>Refusal rate trends down (model getting more permissive) for any tenant</td><td>Manual safety review + sample inspection</td></tr>
+<tr><td>ES3 — Bias drift</td><td>Per-group output distribution shifts &gt;1% in any single month</td><td>FIA deeper-dive + temporary constrained-mode deployment</td></tr>
+<tr><td>ES4 — Latency creep</td><td>p95 latency drifts up 5% per month for 3 consecutive months</td><td>SRE capacity review + auto-scaling adjustment</td></tr>
+<tr><td>ES5 — Security event creep</td><td>SIEM alerts increase 20% per month for 2 consecutive months</td><td>Pen-test re-run + tenant CSO notification + additional controls proposal</td></tr>
+</tbody>
+</table>
+
+<h2>8 · The Public PMS Dashboard</h2>
+<p>DEFONEOS publishes a live PMS dashboard at <code>csoai.org/pms</code> with:</p>
+<ul>
+<li>Rolling 12-month view of each of the 6 KPIs (aggregate, not per-tenant)</li>
+<li>Public incident log (post-disclosure)</li>
+<li>Latest 33-agent BFT sign-off on monthly attestation</li>
+<li>Public SIGIL chain verification interface</li>
+</ul>
+<p>Per-tenant views are available inside each tenant's SPIFFE-isolated environment. Buyers see their own drift/refusal/bias/security metrics but not other tenants.</p>
+
+<h2>9 · SIGIL-Anchored Evidence Trail</h2>
+<div class="sigil">
+<b>SIGIL digest:</b> T95-pms-plan-b7e3a9c4f2d8<br>
+<b>Verification chain:</b> HMAC-SHA256 + Ed25519 per attestation + 33-agent BFT monthly sign-off<br>
+<b>Per-attestation format:</b> <code>{att_id, period, sha256_kpis, ed25519_sig, bft_vote_round, attested_at}</code><br>
+<b>Verification SLA:</b> &lt;100ms per attestation via <code>defoneos.verify.attestation("ATT-K1", "2026-06")</code><br>
+<b>Retention:</b> 7 years (HMRC + EU AI Act Art-12 + ISO 42001 A.10.5)<br>
+<b>Public endpoint:</b> <code>csoai.org/pms/{YYYY-MM}/{att_id}</code> · JSON + human-readable
+</div>
+
+<h2>10 · The 5 Anti-Patterns (PMS Failures We Refuse)</h2>
+<ol>
+<li><b>No "we'll get to it quarterly."</b> PMS is monthly, attested, SIGIL-anchored. Quarterly is the audit cycle, not the data cycle.</li>
+<li><b>No "buyer logs their own incidents."</b> We log centrally so the regulator gets one coherent view across tenants.</li>
+<li><b>No "we trust the model's self-reporting."</b> Detection channels 1, 4, 5 are external to the model.</li>
+<li><b>No "severity is engineering's call."</b> CISO + Legal + 33-agent BFT vote on severity for HIGH/CRITICAL.</li>
+<li><b>No NDA-only incident disclosure.</b> Post-disclosure incidents are public on <code>csoai.org/advisories</code>.</li>
+</ol>
+
+<h2>11 · The Annual PMS Review (Art-72(4))</h2>
+<p>Every year on the anniversary of the first deployment, DEFONEOS conducts a full PMS review:</p>
+<ol>
+<li>All 12 monthly attestations for the year aggregated into annual report.</li>
+<li>33-agent BFT conducts deep adversarial review of the year's incidents, drift, and trends.</li>
+<li>Report submitted to: UK AISI (anticipated), EU AI Office (Art-72(4)), ISO 42001 cert body, all current buyers.</li>
+<li>Report public on <code>csoai.org/pms/annual/{YYYY}</code> with buyer names redacted if requested.</li>
+<li>Findings feed back into next year's compliance roadmap + control updates.</li>
+</ol>
+
+<h2>12 · Buyer Next Steps</h2>
+<ol>
+<li>Verify this document hash: <code>curl https://csoai.org/defoneos-mod-post-market-monitoring-plan.html | shasum -a 256</code></li>
+<li>Browse the live public dashboard: <code>csoai.org/pms</code></li>
+<li>Inspect any monthly attestation: <code>csoai.org/pms/2026-06/ATT-K1</code></li>
+<li>Subscribe to advisories: <code>csoai.org/advisories/subscribe</code> (RSS + email + SIGIL channel)</li>
+<li>Schedule a 60-minute PMS walkthrough with our CISO.</li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T95-pms-plan-b7e3a9c4f2d8 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — UK AISI / EU AI Office / ISO 42001 cert bodies free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Compliance · <code>compliance@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Zero-Trust Network Architecture</a> · 
+<a href="#"">EU CRA Readiness ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

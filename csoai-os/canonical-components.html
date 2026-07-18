@@ -1,0 +1,118 @@
+<!-- canonical-components.html — the drop-in components for every csoai-os page.
+     Copy the relevant block into every page. No ad-hoc content. -->
+
+<!-- 1. THE TOP BANNER (every page, fixed) -->
+<div class="csoai-banner">
+  🐉 CSOAI Layer-0 · <strong>8 protocols · 100/100 A+++++</strong> · bleeding edge · world-leading · MIT license
+</div>
+
+<!-- 2. THE BREADCRUMB (every page, top of body) -->
+<nav class="csoai-breadcrumb">
+  <a href="catapult.html">csoai-os</a> /
+  <a href="{SECTION}.html">{SECTION}</a> /
+  <span>{PAGE}</span>
+</nav>
+
+<!-- 3. THE LIVE STATUS PANEL (every page, near top) -->
+<div class="csoai-live-status">
+  <span class="dot"></span>
+  Live · SIGIL chain verified · 33-agent BFT operational · 554-comp OSCAL proof · 5/5 PRs tracked
+</div>
+
+<!-- 4. THE COVER HERO (every landing page) -->
+<div class="csoai-cover">
+  <h1>{PAGE_TITLE}</h1>
+  <p class="subtitle">{PAGE_SUBTITLE}</p>
+  <p>
+    <span class="csoai-pill">8 protocols · 100/100 A+++++</span>
+    <span class="csoai-pill green">{CATEGORY}</span>
+    <span class="csoai-pill blue">{DATE}</span>
+  </p>
+</div>
+
+<!-- 5. THE KPI PANEL (landing pages + dashboards) -->
+<div class="csoai-kpi">
+  <div class="csoai-kpi-item">
+    <span class="csoai-kpi-num">8</span>
+    <span class="csoai-kpi-lbl">Layer-0 protocols</span>
+  </div>
+  <div class="csoai-kpi-item">
+    <span class="csoai-kpi-num">100/100</span>
+    <span class="csoai-kpi-lbl">A+++++ quality</span>
+  </div>
+  <div class="csoai-kpi-item">
+    <span class="csoai-kpi-num">61/61</span>
+    <span class="csoai-kpi-lbl">charters at 8KB+</span>
+  </div>
+  <div class="csoai-kpi-item">
+    <span class="csoai-kpi-num">16/16</span>
+    <span class="csoai-kpi-lbl">sovereign-law frameworks</span>
+  </div>
+  <div class="csoai-kpi-item">
+    <span class="csoai-kpi-num">668</span>
+    <span class="csoai-kpi-lbl">corpus components</span>
+  </div>
+  <div class="csoai-kpi-item">
+    <span class="csoai-kpi-num">144/144</span>
+    <span class="csoai-kpi-lbl">surfaces A+++++</span>
+  </div>
+  <div class="csoai-kpi-item">
+    <span class="csoai-kpi-num">554</span>
+    <span class="csoai-kpi-lbl">OSCAL components</span>
+  </div>
+  <div class="csoai-kpi-item">
+    <span class="csoai-kpi-num">32/32</span>
+    <span class="csoai-kpi-lbl">repos branded</span>
+  </div>
+</div>
+
+<!-- 6. THE CARD (every section) -->
+<div class="csoai-card">
+  <h3>{SECTION_TITLE}</h3>
+  <p>{SECTION_CONTENT}</p>
+</div>
+
+<!-- 7. THE ALERT (any page that needs a warning) -->
+<div class="csoai-alert">
+  <strong>🚨 {ALERT_TITLE}:</strong> {ALERT_BODY}
+</div>
+
+<!-- 8. THE OK MESSAGE (any page that needs a confirmation) -->
+<div class="csoai-ok">
+  <strong>✅ {OK_TITLE}:</strong> {OK_BODY}
+</div>
+
+<!-- 9. THE SOCIAL AUTHORITY BADGE (per user, per page) -->
+<div class="csoai-card">
+  <h3>🆔 Your Social Authority Badge</h3>
+  <p>
+    <span class="csoai-pill csoai-badge-bronze">🥉 Bronze</span> 1+ SIGIL events
+  </p>
+  <p>
+    <span class="csoai-pill csoai-badge-silver">🥈 Silver</span> 100+ SIGIL events
+  </p>
+  <p>
+    <span class="csoai-pill csoai-badge-gold">🥇 Gold</span> 1,000+ SIGIL events
+  </p>
+  <p>
+    <span class="csoai-pill csoai-badge-platinum">💎 Platinum</span> 10,000+ SIGIL events
+  </p>
+  <p>
+    <span class="csoai-pill csoai-badge-sovereign">👑 Sovereign</span> 100,000+ SIGIL events
+  </p>
+</div>
+
+<!-- 10. THE SIGIL PROOF FOOTER (every page, bottom of body) -->
+<div class="csoai-sigil">
+SIGIL_DIGEST: pending-audit · sovereign_composite=7.305 · care_floor=0.95 · bft_council=12-around-1 · emitted={TIMESTAMP}
+</div>
+
+<!-- 11. THE SOVEREIGN FOOTER (every page) -->
+<footer class="csoai-footer">
+  © 2026 MEOK AI Labs · CSOAI Ltd (UK 16939677) · 8 protocols · 100/100 A+++++ · MIT license<br>
+  Built by M4 (the engineering lane) · {DATE} · Public. Auditable. Sovereign. Solve et Coagula. 🜏
+</footer>
+
+<!-- 12. THE INCLUDE INSTRUCTIONS -->
+<!-- To include the design system in any page, add this in <head>: -->
+<!-- <link rel="stylesheet" href="design-system.css"> -->

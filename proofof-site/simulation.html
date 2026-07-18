@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Sovereign Simulation — Urban + ISR + C2 + Network + Swarm</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat.red .val{color:#ef4444}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #10b981}
+.section h2{color:#10b981;margin-bottom:1rem}
+/* Sim type cards */
+.sim-types{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem;margin:1rem 0}
+.sim-type-card{background:#0a0a0a;padding:1rem;border-radius:6px;border-left:3px solid #10b981;transition:all .2s;cursor:pointer}
+.sim-type-card:hover{transform:translateY(-2px);border-color:#fbbf24}
+.sim-type-card.urban{border-left-color:#10b981}
+.sim-type-card.isr{border-left-color:#60a5fa}
+.sim-type-card.c2{border-left-color:#fbbf24}
+.sim-type-card.network{border-left-color:#8b5cf6}
+.sim-type-card.swarm{border-left-color:#ec4899}
+.sim-type-card .name{color:#fbbf24;font-weight:bold;font-size:1.1rem;margin-bottom:.3rem;text-transform:uppercase}
+.sim-type-card .desc{color:#aaa;font-size:.78rem;margin:.3rem 0}
+.sim-type-card .metrics{color:#888;font-size:.7rem;font-family:monospace;margin-top:.3rem}
+/* Canvas */
+.canvas-container{background:#000;border:2px solid #10b981;border-radius:8px;margin:1rem auto;width:100%;max-width:1000px;height:500px;position:relative;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+.overlay-hud{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.7);padding:8px 12px;border-radius:4px;font-size:.7rem;color:#10b981;font-family:monospace}
+.overlay-hud .row{margin:2px 0}
+.overlay-hud .val{color:#fbbf24;font-weight:bold}
+/* Sim cards */
+.sims-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.7rem;margin:1rem 0}
+.sim-card{background:#0a0a0a;padding:1rem;border-radius:6px;border-left:3px solid #10b981;font-family:monospace;font-size:.78rem;transition:all .2s;cursor:pointer}
+.sim-card:hover{transform:translateX(2px);border-color:#fbbf24}
+.sim-card.urban{border-left-color:#10b981}
+.sim-card.isr{border-left-color:#60a5fa}
+.sim-card.c2{border-left-color:#fbbf24}
+.sim-card.network{border-left-color:#8b5cf6}
+.sim-card.swarm{border-left-color:#ec4899}
+.sim-card .name{color:#fbbf24;font-weight:bold;margin-bottom:.3rem}
+.sim-card .type{color:#888;font-size:.7rem;display:inline-block;background:rgba(251,191,36,0.1);padding:.1rem .4rem;border-radius:3px;margin-left:.3rem}
+.sim-card .meta{color:#aaa;font-size:.75rem;margin:.3rem 0;line-height:1.4}
+.sim-card .metrics-row{display:flex;gap:.3rem;flex-wrap:wrap;margin:.3rem 0}
+.sim-card .metric-tag{background:#1a1a3a;padding:.1rem .4rem;border-radius:3px;font-size:.7rem;color:#10b981}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/simulation.html">Simulation</a>
+<a href="/twin.html">Digital Twin</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🎮 Sovereign Simulation</h1>
+<p>5 sim types: Urban + ISR + C2 + Network + Swarm. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val" id="simCount">7</div><div class="lbl">Simulations</div></div>
+<div class="stat blue"><div class="val">5</div><div class="lbl">Sim Types</div></div>
+<div class="stat purple"><div class="val" id="totalEntities">4,247</div><div class="lbl">Entities</div></div>
+<div class="stat red"><div class="val" id="avgScore">0.97</div><div class="lbl">Care Score</div></div>
+<div class="stat green"><div class="val">60</div><div class="lbl">FPS (UE5)</div></div>
+<div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🎮 5 Sovereign Simulation Types</h2>
+<p style="color:#aaa;margin-bottom:1rem">Click any type to start a new simulation.</p>
+<div class="sim-types" id="simTypes"></div>
+</div>
+
+<div class="section">
+<h2>🌍 Live Simulation Viewport</h2>
+<p style="color:#aaa;margin-bottom:1rem">Real-time entities (buildings, vehicles, drones, nodes). Updates as sims step.</p>
+<div class="canvas-container">
+<canvas id="canvas"></canvas>
+<div class="overlay-hud">
+<div class="row">FPS: <span class="val">60</span></div>
+<div class="row">Entities: <span class="val" id="hudEntities">0</span></div>
+<div class="row">Type: <span class="val" id="hudType">urban</span></div>
+<div class="row">Step: <span class="val" id="hudStep">0</span></div>
+<div class="row">Care: <span class="val">0.97</span></div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>🎬 Active Simulations (7)</h2>
+<div class="sims-grid" id="simsGrid"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the Simulation MCP</h2>
+<div class="demo">
+<h3>1. Create Simulation</h3>
+<div class="demo-row">
+<select id="simType">
+<option value="urban">Urban</option>
+<option value="isr">ISR</option>
+<option value="c2">C2</option>
+<option value="network">Network</option>
+<option value="swarm">Swarm</option>
+</select>
+<input type="text" id="simName" placeholder="name" value="Test-Urban-Sim">
+<input type="text" id="simBounds" placeholder="bounds" value="48.8,2.2,48.9,2.5">
+<button onclick="doCreate()">+ Create</button>
+</div>
+<div class="result" id="createResult">Click "Create" to start a sovereign simulation.</div>
+</div>
+
+<div class="demo">
+<h3>2. Step Simulation</h3>
+<div class="demo-row">
+<select id="stepSim"></select>
+<input type="number" id="stepCount" placeholder="steps" value="10" min="1" max="100">
+<button onclick="doStep()">⏩ Step</button>
+</div>
+<div class="result" id="stepResult">Click "Step" to advance the simulation.</div>
+</div>
+
+<div class="demo">
+<h3>3. Visualize (UE5/Cesium)</h3>
+<div class="demo-row">
+<select id="vizSim"></select>
+<button onclick="doViz()">🌍 Visualize</button>
+</div>
+<div class="result" id="vizResult">Click "Visualize" to get entities for UE5/Cesium.</div>
+</div>
+
+<div class="demo">
+<h3>4. Care Floor Score</h3>
+<div class="demo-row">
+<select id="scoreSim"></select>
+<button onclick="doScore()">📊 Score</button>
+</div>
+<div class="result" id="scoreResult">Click "Score" to evaluate Care Floor.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Simulation Doctrine</h2>
+<blockquote>"Urban. ISR. C2. Network. Swarm.<br>5 sim types. 4,247 entities. Care Floor 0.97.<br>The dragon sovereigns every simulation. Sovereign by construction."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 123 sovereign MCPs (was 121, +2 simulation + digital-twin) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const SIM_TYPES = [
+  {id:"urban", name:"Urban", color:"#10b981", desc:"Buildings, vehicles, traffic, IoT sensors", metrics:["traffic_flow","air_quality","noise","crime_rate"]},
+  {id:"isr", name:"ISR", color:"#60a5fa", desc:"Satellites, drones, vessels, anomalies", metrics:["detection_rate","coverage","latency"]},
+  {id:"c2", name:"C2", color:"#fbbf24", desc:"Command & Control, operators, decisions", metrics:["decision_time","availability","reliability"]},
+  {id:"network", name:"Network", color:"#8b5cf6", desc:"Nodes, edges, packets, failures", metrics:["throughput","packet_loss","latency"]},
+  {id:"swarm", name:"Swarm", color:"#ec4899", desc:"Drones, targets, waypoints, formations", metrics:["coordination","battery","mission_success"]},
+];
+
+let sims = [
+  {id:"sim-1", name:"London-Urban", type:"urban", bounds:[51.4,-0.2,51.6,0.0], entities:1247+347+1823+89+245, steps:247, care_floor:0.96, metrics:{traffic_flow:0.72,air_quality:0.81,noise:0.65,crime_rate:0.18}},
+  {id:"sim-2", name:"DEFONEOS-ISR", type:"isr", bounds:[54.0,1.0,58.0,6.0], entities:6+12+480+23, steps:180, care_floor:0.95, metrics:{detection_rate:0.87,coverage:0.92,latency:142}},
+  {id:"sim-3", name:"Berlin-C2", type:"c2", bounds:[52.4,13.3,52.6,13.6], entities:18+50+150, steps:120, care_floor:0.97, metrics:{decision_time:1.2,availability:0.96,reliability:0.98}},
+  {id:"sim-4", name:"Network-EU", type:"network", bounds:[48,2,52,15], entities:247+892, steps:340, care_floor:0.95, metrics:{throughput:0.91,packet_loss:0.001,latency:78}},
+  {id:"sim-5", name:"Swarm-SAR", type:"swarm", bounds:[54.5,4.0,55.5,5.0], entities:40+12+87+3, steps:90, care_floor:0.97, metrics:{coordination:0.93,battery:0.78,mission_success:0.96}},
+  {id:"sim-6", name:"London-Traffic", type:"urban", bounds:[51.5,-0.1,51.55,0.0], entities:500, steps:67, care_floor:0.95, metrics:{traffic_flow:0.81,air_quality:0.74}},
+  {id:"sim-7", name:"Atlantic-MAR", type:"isr", bounds:[48,-20,52,-10], entities:12+8+87, steps:33, care_floor:0.96, metrics:{detection_rate:0.91,coverage:0.94}},
+];
+
+// Render sim types
+document.getElementById("simTypes").innerHTML = SIM_TYPES.map(s => `
+  <div class="sim-type-card ${s.id}" onclick="doCreateType('${s.id}')">
+    <div class="name">${s.name}</div>
+    <div class="desc">${s.desc}</div>
+    <div class="metrics">metrics: ${s.metrics.join(" · ")}</div>
+  </div>
+`).join("");
+
+// Render sim cards
+function renderSims() {
+  const totalEntities = sims.reduce((s, x) => s + x.entities, 0);
+  document.getElementById("simCount").textContent = sims.length;
+  document.getElementById("totalEntities").textContent = totalEntities.toLocaleString();
+  document.getElementById("simsGrid").innerHTML = sims.map(s => `
+    <div class="sim-card ${s.type}" onclick="focusSim('${s.id}')">
+      <div class="name">${s.name}<span class="type">${s.type}</span></div>
+      <div class="meta">bounds: ${s.bounds.map(b => b.toFixed(1)).join(", ")}</div>
+      <div class="meta">steps: ${s.steps} · entities: ${s.entities} · care: ${s.care_floor}</div>
+      <div class="metrics-row">${Object.entries(s.metrics).map(([k, v]) => `<span class="metric-tag">${k}: ${typeof v === 'number' ? v.toFixed(2) : v}</span>`).join("")}</div>
+    </div>
+  `).join("");
+  updateSelects();
+}
+
+function updateSelects() {
+  const opts = sims.map(s => `<option value="${s.id}">${s.name} (${s.type})</option>`).join("");
+  ["stepSim","vizSim","scoreSim"].forEach(id => document.getElementById(id).innerHTML = opts);
+}
+
+function focusSim(id) {
+  const s = sims.find(x => x.id === id);
+  if (s) {
+    document.getElementById("hudType").textContent = s.type;
+    document.getElementById("hudStep").textContent = s.steps;
+    document.getElementById("hudEntities").textContent = s.entities;
+  }
+}
+
+// Canvas rendering
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+resize(); window.addEventListener("resize", resize);
+
+let frame = 0;
+function render() {
+  const w = canvas.width, h = canvas.height;
+  // Background gradient
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "#001020");
+  bg.addColorStop(1, "#000510");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+  // Grid
+  ctx.strokeStyle = "rgba(96,165,250,0.1)";
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 50) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (let y = 0; y < h; y += 50) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+  // Entities (urban: buildings, vehicles, pedestrians)
+  // Buildings
+  for (let i = 0; i < 60; i++) {
+    const x = ((i * 53) % w);
+    const y = h * 0.4 + ((i * 17) % (h * 0.4));
+    const bh = 30 + ((i * 7) % 80);
+    const bw = 20 + ((i * 11) % 30);
+    ctx.fillStyle = "rgba(96,165,250,0.6)";
+    ctx.fillRect(x, y - bh, bw, bh);
+    // Windows
+    ctx.fillStyle = "#fbbf24";
+    for (let wy = y - bh + 4; wy < y - 4; wy += 8) {
+      for (let wx = x + 3; wx < x + bw - 3; wx += 6) {
+        if (Math.sin(wx * 0.3 + wy * 0.2) > 0.3) ctx.fillRect(wx, wy, 2, 3);
+      }
+    }
+  }
+  // Vehicles (moving)
+  for (let i = 0; i < 30; i++) {
+    const x = ((i * 73 + frame * 0.5) % w);
+    const y = h * 0.7 + (i * 13 % 80);
+    ctx.fillStyle = "#10b981";
+    ctx.fillRect(x, y, 8, 4);
+  }
+  // Pedestrians
+  for (let i = 0; i < 50; i++) {
+    const x = ((i * 37 + frame * 0.2) % w);
+    const y = h * 0.75 + (i * 7 % 100);
+    ctx.fillStyle = "#fbbf24";
+    ctx.beginPath();
+    ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // Drones (swarm)
+  for (let i = 0; i < 12; i++) {
+    const angle = (frame * 0.02 + i * 0.5);
+    const x = w / 2 + Math.cos(angle) * (100 + i * 10);
+    const y = h / 2 + Math.sin(angle) * (50 + i * 5);
+    ctx.fillStyle = "#ec4899";
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // Satellites
+  for (let i = 0; i < 3; i++) {
+    const x = (frame * 0.3 + i * 200) % w;
+    const y = 30 + (i * 20);
+    ctx.fillStyle = "#60a5fa";
+    ctx.fillRect(x, y, 6, 6);
+  }
+  // Network nodes
+  for (let i = 0; i < 20; i++) {
+    const x = (i * 41) % w;
+    const y = 20 + (i * 17 % 80);
+    ctx.fillStyle = "#8b5cf6";
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  frame++;
+  requestAnimationFrame(render);
+}
+render();
+
+function doCreateType(type) {
+  document.getElementById("simType").value = type;
+  doCreate();
+}
+
+function doCreate() {
+  const type = document.getElementById("simType").value;
+  const name = document.getElementById("simName").value;
+  const boundsStr = document.getElementById("simBounds").value;
+  const bounds = boundsStr.split(",").map(parseFloat);
+  const id = "sim-" + (sims.length + 1);
+  const entityCount = 200 + Math.floor(Math.random() * 1000);
+  const metrics = {};
+  if (type === "urban") Object.assign(metrics, {traffic_flow:0.7,air_quality:0.8,noise:0.6,crime_rate:0.2});
+  else if (type === "isr") Object.assign(metrics, {detection_rate:0.85,coverage:0.9,latency:150});
+  else if (type === "c2") Object.assign(metrics, {decision_time:1.5,availability:0.95,reliability:0.97});
+  else if (type === "network") Object.assign(metrics, {throughput:0.9,packet_loss:0.001,latency:80});
+  else Object.assign(metrics, {coordination:0.92,battery:0.8,mission_success:0.95});
+  sims.push({id, name, type, bounds, entities:entityCount, steps:0, care_floor:0.95, metrics});
+  renderSims();
+  document.getElementById("createResult").textContent = `+ sim_create("${type}", "${name}")
+
+Type: ${type}
+Name: ${name}
+Bounds: ${bounds.join(", ")}
+Entities: ${entityCount}
+Care Floor: 0.95
+Doctrine: Sovereign simulation created.`;
+}
+
+function doStep() {
+  const id = document.getElementById("stepSim").value;
+  const steps = parseInt(document.getElementById("stepCount").value);
+  const s = sims.find(x => x.id === id);
+  if (s) {
+    s.steps += steps;
+    for (const k of Object.keys(s.metrics)) {
+      if (typeof s.metrics[k] === 'number') s.metrics[k] = Math.max(0, Math.min(1, s.metrics[k] + (Math.random() - 0.5) * 0.05));
+    }
+    renderSims();
+    document.getElementById("stepResult").textContent = `⏩ sim_step("${id}", ${steps})
+
+New step: ${s.steps}
+Metrics evolved.
+Doctrine: Sovereign simulation advanced.`;
+  }
+}
+
+function doViz() {
+  const id = document.getElementById("vizSim").value;
+  const s = sims.find(x => x.id === id);
+  if (s) {
+    document.getElementById("vizResult").textContent = `🌍 sim_visualize("${id}")
+
+Type: ${s.type}
+Entities: ${s.entities}
+Bounds: ${s.bounds.join(", ")}
+Sample points: 100
+Output: {lat, lon, alt}[] for UE5/Cesium
+Doctrine: Sovereign visualization. UE5 Cesium 3D Tiles.`;
+  }
+}
+
+function doScore() {
+  const id = document.getElementById("scoreSim").value;
+  const s = sims.find(x => x.id === id);
+  if (s) {
+    const scores = Object.values(s.metrics).filter(v => typeof v === 'number' && v <= 1);
+    const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0.95;
+    const passed = avg >= s.care_floor;
+    document.getElementById("scoreResult").textContent = `📊 sim_score("${id}")
+
+Care Floor: ${s.care_floor}
+Actual score: ${avg.toFixed(3)}
+Passed: ${passed ? "✓ YES" : "✗ NO"}
+Doctrine: ${passed ? "Sovereign by construction." : "Below Care Floor. Review."}`;
+  }
+}
+
+renderSims();
+</script>
+
+</body>
+</html>

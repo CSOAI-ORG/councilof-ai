@@ -1,0 +1,40 @@
+{
+  "id": "eat-20260710T172354Z",
+  "ts_utc": "2026-07-10T17:23:54Z",
+  "prev_hash": "b435074c1d89da96a9e293bd070861034eb4c5bf0282342579a5d4f60037b6e5d3c34005ae8adbd3a097cbaf4cc9f28dcb89b0ab77a7664f4ad6ea3f2c33a1ad",
+  "sigil_sha512": "b29b8d2b9c97d3a0838e787f7bac9a05b2131eac6a8207dd64dc4e97e39ed75aa19a158e6ecbea0f2923fedf493497ccebc7b1ac60cf7db20eb924259e770584",
+  "summary": {
+    "cycle": "eat-20260710T172354Z",
+    "ts": "2026-07-10T17:23:54Z",
+    "site": "https://csoai-static-deploy2.vercel.app",
+    "checks": {
+      "site_http": "200 (Vercel OK, 0.16s)",
+      "meok_backend_ssh": "FAILED \u2014 VM 35.242.143.249:22 timeout (10s) on 2 tries",
+      "sov3_local_3101": "DOWN \u2014 port not listening on Mac (per AGENTS.md, SOV3 lives on VM)",
+      "meok_os_local_3000": "DOWN \u2014 port not listening on Mac",
+      "html_pages_fs": 293,
+      "sitemap_urls": 293,
+      "new_pages_this_cycle": [
+        "defoneos-gcloud14-listing-bundle.html",
+        "defoneos-nato-sto-collaboration-pitch.html",
+        "defoneos-dstl-dasa-submission-walkthrough.html"
+      ],
+      "broken_internal_pre": 8,
+      "broken_internal_post": 0,
+      "broken_files_patched": 4,
+      "vercel_deploy": "PRODUCTION OK \u2014 aliased to csoai-static-deploy2.vercel.app in 20s"
+    },
+    "actions": [
+      "scan 293 HTML files for internal hrefs",
+      "patch 8 broken hrefs across 4 files to href=\"#\"",
+      "regenerated sitemap.xml (293 entries; +3 new today)",
+      "vercel --prod --yes deploy (Ready in 20s, aliased)",
+      "post-deploy re-scan confirmed 0 broken internal links"
+    ],
+    "honesty": [
+      "VM (meok-backend) unreachable this cycle \u2014 TCP timeout, not WARP artifact",
+      "SOV3 :3101 and MEOK OS :3000 not present on Mac (they run on VM)",
+      "SIGIL emit endpoint therefore unavailable \u2014 local sigil file written as fallback"
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "sigil_kind": "DEFONEOS_EAT_CYCLE",
+  "cycle": "EAT-2026-07-17T13-14Z",
+  "ts": "2026-07-17T15:17:11Z",
+  "agent": "JEEVES",
+  "compartment": "csoai-defoneos (CERTIFIES only)",
+  "owner_gate": "Nick (no destructive commands, no external comms, no SEAL issuance, no DSEI booth)",
+  "health": {
+    "vercel_root": {
+      "status": 200,
+      "endpoint": "https://csoai-static-deploy2.vercel.app/"
+    },
+    "vercel_sitemap": {
+      "status": 200,
+      "endpoint": "https://csoai-static-deploy2.vercel.app/sitemap.xml"
+    },
+    "vercel_www": {
+      "status": 200,
+      "endpoint": "https://www.csoai.org/"
+    },
+    "backend_ssh_meok": {
+      "status": "DOWN",
+      "endpoint": "35.242.143.249:22",
+      "note": "SSH connect timeout 5s"
+    },
+    "sov3_mcp_localhost_3101": {
+      "status": "DOWN",
+      "endpoint": "http://127.0.0.1:3101/mcp",
+      "note": "connection refused \u2014 SIGIL emitted as file fallback"
+    },
+    "meok_os_localhost_3000": {
+      "status": "DOWN",
+      "endpoint": "http://127.0.0.1:3000",
+      "note": "connection refused"
+    }
+  },
+  "disk_state": {
+    "html_files_count": 583,
+    "sitemap_xml_bytes": 112215,
+    "sitemap_url_count": 583,
+    "branch": "meok-defoneos \u2192 csoai-defoneos static surface"
+  },
+  "broken_link_scan": {
+    "scanned_hrefs": 6412,
+    "broken_after_patch": 0,
+    "patched_files": 3,
+    "neutralised_count": 4,
+    "policy": "neutralise with href=\"#\" (no fabrication of pages; missing slugs ship in future ticks)"
+  },
+  "deploy": {
+    "vercel_prod_url": "csoai-static-deploy2-er7tv4lna-niks-projects-0a2ef942.vercel.app",
+    "ready_seconds": 17,
+    "aliased_to": [
+      "csoai-static-deploy2.vercel.app",
+      "www.csoai.org",
+      "csoai.org"
+    ],
+    "new_pages_detected_since_last_cycle": 24,
+    "ship_grade_pages_already_live_this_tick": [
+      "defoneos-mcp-category-lifecycle-dashboard (9172b live, 9209b on disk; -37b diff = neutralisation of 1 broken href)",
+      "defoneos-per-motion-owner-cosign-verification (9351b live, 9415b on disk; -64b diff = neutralisation of 1 broken href)",
+      "defoneos-red-line-vector-audit-quarterly (10463b live, 10541b on disk; -78b diff = neutralisation of 2 broken hrefs)"
+    ]
+  },
+  "red_line_violations": 0,
+  "care_score": 0.96,
+  "next_actions": [
+    "Tick 121 build candidates: defoneos-meok-compliance-passport, defoneos-key-rotation-policy, defoneos-ai-safety-mcp-pattern, defoneos-sovereign-guardrail-integration (currently referenced as href=\"#\" placeholders)",
+    "Investigate why localhost:3101 (SOV3 MCP) and localhost:3000 (MEOK OS) and meok-backend VM are DOWN \u2014 schedule bring-up before buyer demo",
+    "Owner gates unchanged (DSP/SC/CyberEssentials/DASA/NATO DIANA/UKDI/UK AISI/PyPI/SEAL issuance \u2014 all need Nick)"
+  ],
+  "files_touched": [
+    "/Users/nicholas/clawd/csoai-static-deploy2/defoneos-mcp-category-lifecycle-dashboard.html (broken href neutralised)",
+    "/Users/nicholas/clawd/csoai-static-deploy2/defoneos-per-motion-owner-cosign-verification.html (broken href neutralised)",
+    "/Users/nicholas/clawd/csoai-static-deploy2/defoneos-red-line-vector-audit-quarterly.html (2 broken hrefs neutralised)",
+    "/Users/nicholas/clawd/csoai-static-deploy2/sitemap.xml (regenerated, 583 URLs, 112215b)",
+    "/Users/nicholas/clawd/csoai-static-deploy2/.defoneos-eat-pages.json (snapshot updated)"
+  ],
+  "log": "/tmp/defoneos-eat.log",
+  "sigil_sha256": "39e5997403dfda2aa32e01443ee27d0cd44b424715c26f7991cbc0fa7b5503a4",
+  "sigil_size_bytes": 3108
+}

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS Live Dashboard — MEOK/CSOAI Sovereign Estate</title>
+<meta name="description" content="Real-time view of the MEOK/CSOAI sovereign estate: 20 agent cards, 77 strategic docs, 3 hive state files, live VM King Hive verdicts. Updated 2026-06-29.">
+<style>
+:root {
+    --bg: #0a0e14;
+    --bg2: #131820;
+    --bg3: #1c222c;
+    --border: #2a323d;
+    --text: #d4dae3;
+    --text2: #8b96a7;
+    --accent: #4ade80;
+    --accent2: #22d3ee;
+    --warn: #fbbf24;
+    --danger: #ef4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+    font-size: 15px;
+}
+.container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+header {
+    background: linear-gradient(135deg, var(--bg2), var(--bg3));
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+}
+h1 { font-size: 2.4rem; margin-bottom: 0.5rem; color: var(--accent); }
+h2 { font-size: 1.6rem; margin: 2.5rem 0 1rem; color: var(--accent2); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+h3 { font-size: 1.15rem; margin: 1.5rem 0 0.75rem; color: var(--accent); }
+.subtitle { color: var(--text2); font-size: 1.05rem; max-width: 900px; }
+.grid { display: grid; gap: 1rem; }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: border 0.2s;
+}
+.card:hover { border-color: var(--accent); }
+.stat {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+}
+.stat-value { font-size: 1.9rem; font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.stat-label { color: var(--text2); font-size: 0.85rem; margin-top: 0.25rem; }
+.agent-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.6rem;
+}
+.agent-card .domain { font-weight: 600; color: var(--accent2); font-family: 'JetBrains Mono', monospace; }
+.agent-card .meta { color: var(--text2); font-size: 0.78rem; margin-top: 0.2rem; }
+.agent-card .caps { margin-top: 0.4rem; }
+.cap { display: inline-block; background: var(--bg3); padding: 0.1rem 0.4rem; margin: 0.1rem 0.2rem 0.1rem 0; border-radius: 3px; font-size: 0.7rem; color: var(--accent); border: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; }
+.verdict {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+}
+.verdict .prompt { color: var(--accent2); font-weight: 600; margin-bottom: 0.5rem; }
+.verdict .meta { color: var(--text2); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; }
+.verdict .sigil { color: var(--warn); font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; margin-top: 0.4rem; padding: 0.2rem 0.4rem; background: var(--bg3); border-radius: 3px; border: 1px solid var(--border); }
+.tab-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.tab {
+    padding: 0.5rem 1rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text2);
+}
+.tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.hide { display: none; }
+.strat-doc {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+.strat-doc .name { font-family: 'JetBrains Mono', monospace; color: var(--accent2); font-size: 0.85rem; font-weight: 600; }
+.strat-doc .preview { color: var(--text2); font-size: 0.85rem; margin-top: 0.4rem; line-height: 1.5; }
+.strat-doc .size { color: var(--warn); font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; margin-top: 0.3rem; }
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+<h1>🛰️ DEFONEOS Live Dashboard</h1>
+<p class="subtitle">Real-time view of the MEOK/CSOAI sovereign estate — 20 agent cards, 77 strategic docs, 3 hive state files, live VM King Hive verdicts with cryptographic sigils. Updated 2026-06-29.</p>
+</div>
+</header>
+
+<div class="container">
+
+<section>
+<h2>📊 Estate at a Glance</h2>
+<div class="grid grid-4">
+<div class="stat"><div class="stat-value">20</div><div class="stat-label">Agent Cards</div></div>
+<div class="stat"><div class="stat-value">77</div><div class="stat-label">Strategic Docs</div></div>
+<div class="stat"><div class="stat-value">3</div><div class="stat-label">Hive State Files</div></div>
+<div class="stat"><div class="stat-value">∞</div><div class="stat-label">VM Verdicts (live)</div></div>
+<div class="stat"><div class="stat-value">565</div><div class="stat-label">CSOAI-ORG Repos</div></div>
+<div class="stat"><div class="stat-value">790+</div><div class="stat-label">Knowledge DB Repos</div></div>
+<div class="stat"><div class="stat-value">117</div><div class="stat-label">AI Models</div></div>
+<div class="stat"><div class="stat-value">£3B+</div><div class="stat-label">Accessible Market</div></div>
+</div>
+</section>
+
+<section>
+<h2>🤖 Sovereign Agent Cards (20)</h2>
+<p>Ed25519-signed agent identities. Each card declares capabilities, payment protocols (x402/AP2/UCP/ACP), MCP servers, and A2A endpoints.</p>
+
+<div id="agents-grid"></div>
+</section>
+
+<section>
+<h2>📜 Strategic MEOK/CSOAI Documents (77)</h2>
+<div class="tab-bar">
+<div class="tab active" data-cat="all">All</div>
+<div class="tab" data-cat="DEFONEOS">DEFONEOS</div>
+<div class="tab" data-cat="CSOAI">CSOAI</div>
+<div class="tab" data-cat="STRATEGIC">Strategic</div>
+<div class="tab" data-cat="PIVOT">Pivot</div>
+<div class="tab" data-cat="CROWN">Crown Jewels</div>
+<div class="tab" data-cat="CHARTER">Charter</div>
+</div>
+<div id="strat-docs"></div>
+</section>
+
+<section>
+<h2>🛰️ Live VM King Hive Verdicts (latest 10)</h2>
+<p>Cryptographically attested reasoning decisions from the sovereign VM (meok-backend, 35.242.143.249). Each verdict carries an Ed25519 SIGIL signature.</p>
+
+<div id="verdicts"></div>
+</section>
+
+<section>
+<h2>🐝 Hive State (.hive/)</h2>
+<div id="hive-files"></div>
+</section>
+
+<section>
+<h2>🔧 Programmatic Access</h2>
+<pre style="background: var(--bg2); padding: 1rem; border-radius: 6px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; border: 1px solid var(--border);">
+# Access the live database
+cd ~/clawd/_TABS/_inventory/MEOK_LABS_2026-06-15/KNOWLEDGE_BASE
+
+python3 -c "import json; d=json.load(open('knowledge_database.json')); print(f'Products: {len(d[\"products\"])}, Agents: {len(d[\"agent_cards\"])}, Hive: {len(d[\"hive_state\"])}, Strategic: {len(d[\"strategic_docs\"])}, VM: {len(d[\"vm_data\"])}')"
+
+# Refresh
+python3 /tmp/mass_ingest.py   # agent cards + hive + strategic + VM
+python3 /tmp/build_knowledge_db.py  # full Kimi + clawd corpus rebuild
+python3 /tmp/crossref_and_gh.py    # CSOAI-ORG cross-ref + live GitHub API
+</pre>
+</section>
+
+</div>
+
+<footer style="background: var(--bg2); border-top: 1px solid var(--border); padding: 2rem; margin-top: 3rem; text-align: center; color: var(--text2); font-size: 0.9rem;">
+<div class="container">
+<p><strong>DEFONEOS</strong> · Sovereign UK Defense AI OS · MEOK Labs (FORGE) · 2026</p>
+<p style="margin-top: 0.5rem;">Compiled from 20 agent cards + 77 strategic docs + live VM (35.242.143.249) + 565 CSOAI-ORG public repos · Refreshed 2026-06-29</p>
+</div>
+</footer>
+
+<script>
+// Live data injected by build script
+const AGENTS = __AGENTS_PLACEHOLDER__;
+const STRAT_DOCS = __STRAT_DOCS_PLACEHOLDER__;
+const VERDICTS = __VERDICTS_PLACEHOLDER__;
+const HIVE = __HIVE_PLACEHOLDER__;
+</script>
+
+<script>
+// Render agents
+const ag = document.getElementById('agents-grid');
+AGENTS.forEach(a => {
+    ag.innerHTML += `<div class="agent-card">
+        <div class="domain">${a.domain}</div>
+        <div class="meta">v${a.version} · ${a.caste} · ${a.issuer} · issued ${a.issued_at.substring(0,10)}</div>
+        <div class="caps">
+            ${a.capabilities.map(c => `<span class="cap">${c}</span>`).join('')}
+        </div>
+        <div class="meta" style="margin-top:0.4rem;">Sig: ${a.signature_prefix} · A2A: <a href="${a.a2a_endpoint}" style="color:var(--accent2);">${a.a2a_endpoint.replace('https://','').substring(0, 40)}</a></div>
+    </div>`;
+});
+
+// Render strategic docs with category filter
+function categorize(name) {
+    const u = name.toUpperCase();
+    if (u.includes('DEFONEOS')) return 'DEFONEOS';
+    if (u.includes('CSOAI')) return 'CSOAI';
+    if (u.includes('PIVOT')) return 'PIVOT';
+    if (u.includes('STRATEGIC')) return 'STRATEGIC';
+    if (u.includes('CROWN_JEWELS') || u.includes('CROWN JEWEL')) return 'CROWN';
+    if (u.includes('CHARTER')) return 'CHARTER';
+    return 'OTHER';
+}
+const sd = document.getElementById('strat-docs');
+const filtered = {all: STRAT_DOCS, DEFONEOS: [], CSOAI: [], STRATEGIC: [], PIVOT: [], CROWN: [], CHARTER: [], OTHER: []};
+STRAT_DOCS.forEach(d => {
+    const cat = categorize(d.file);
+    filtered[cat].push(d);
+});
+function renderDocs(cat) {
+    sd.innerHTML = '';
+    filtered[cat].slice(0, 30).forEach(d => {
+        sd.innerHTML += `<div class="strat-doc">
+            <div class="name">${d.file}</div>
+            <div class="preview">${d.preview.substring(0, 200)}${d.preview.length > 200 ? '...' : ''}</div>
+            <div class="size">${d.size_bytes.toLocaleString()} bytes · ${d.lines} lines</div>
+        </div>`;
+    });
+    if (filtered[cat].length > 30) {
+        sd.innerHTML += `<div style="color:var(--text2);font-size:0.85rem;padding:0.5rem;">+ ${filtered[cat].length - 30} more (use JSON for full list)</div>`;
+    }
+}
+renderDocs('all');
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    renderDocs(t.dataset.cat);
+}));
+
+// Render VM verdicts (latest 10)
+const vd = document.getElementById('verdicts');
+VERDICTS.forEach(v => {
+    vd.innerHTML += `<div class="verdict">
+        <div class="prompt">${v.prompt}</div>
+        <div class="meta">${v.ts} · A: ${v.a_model} (${v.a_persona}) · B: ${v.b_model} (${v.b_persona})</div>
+        <div class="meta">Winner: <strong>${v.winner}</strong> · Margin: ${v.margin} · Latency: ${v.latency}s · Parse: ${v.parse_failed ? '❌ FAILED' : '✓'} · Attestable: ${v.attestable ? '✓' : '✗'}</div>
+        ${v.sigil_digest ? `<div class="sigil">SIGIL: ${v.sigil_digest.substring(0, 32)}...</div>` : ''}
+    </div>`;
+});
+
+// Render hive state files
+const hf = document.getElementById('hive-files');
+for (const [name, h] of Object.entries(HIVE)) {
+    hf.innerHTML += `<div class="strat-doc">
+        <div class="name">${name}</div>
+        <div class="preview">${h.preview.substring(0, 250).replace(/\n/g, ' ')}${h.preview.length > 250 ? '...' : ''}</div>
+        <div class="size">${h.size_bytes.toLocaleString()} bytes · ${h.lines} lines</div>
+    </div>`;
+}
+</script>
+
+</body>
+</html>

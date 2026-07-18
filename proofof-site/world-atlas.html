@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🗺️ World Atlas — 56 Countries · Sovereign Composite · SovSpace UE5</title>
+<meta name="description" content="Index of all 56 countries in the sovereign world atlas. Sovereign composite + Care Floor + General + frameworks.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+  .nav a { color: #fbbf24; margin-right: 1rem; text-decoration: none; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.5rem; margin-bottom: 1rem; }
+  .sub { text-align: center; color: #888; margin-bottom: 2rem; }
+  .search-bar { max-width: 1100px; margin: 0 auto 2rem; display: flex; gap: 1rem; align-items: center; }
+  .search-bar input { flex: 1; padding: 0.75rem; background: #0a0a0a; border: 2px solid #fbbf24; border-radius: 8px; color: #e5e5e5; font-family: inherit; font-size: 1rem; }
+  .search-bar select { padding: 0.75rem; background: #0a0a0a; border: 2px solid #fbbf24; border-radius: 8px; color: #e5e5e5; font-family: inherit; }
+  .search-bar a { background: #fbbf24; color: #000; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .card { background: #1a1a1a; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #fbbf24; cursor: pointer; }
+  .card:hover { background: #252525; }
+  .card.high { border-left-color: #10b981; }
+  .card.mid { border-left-color: #fbbf24; }
+  .card.low { border-left-color: #ff6b6b; }
+  .card .flag { font-size: 2rem; float: right; opacity: 0.6; }
+  .card h2 { color: #fbbf24; margin-bottom: 0.5rem; }
+  .card .capital { color: #888; font-size: 0.9rem; margin-bottom: 1rem; }
+  .card .row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.85rem; }
+  .card .label { color: #888; }
+  .card .value { color: #10b981; font-family: monospace; }
+  .card .general { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+  .card .score { font-size: 2rem; font-weight: bold; }
+  .card .score.high { color: #10b981; }
+  .card .score.mid { color: #fbbf24; }
+  .card .score.low { color: #ff6b6b; }
+  .stats-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; max-width: 1200px; margin: 2rem auto; }
+  .stat { background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: center; }
+  .stat-value { color: #fbbf24; font-size: 2rem; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.85rem; }
+  .regions-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin: 1rem auto; max-width: 1100px; }
+  .region-tag { padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.85rem; }
+  .region-tag.EU { background: #10b981; color: #000; }
+  .region-tag.NA { background: #60a5fa; color: #000; }
+  .region-tag.SA { background: #f59e0b; color: #000; }
+  .region-tag.AS { background: #ef4444; color: #fff; }
+  .region-tag.AF { background: #84cc16; color: #000; }
+  .region-tag.OC { background: #06b6d4; color: #000; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/world.html">🌍 World 3D</a>
+  <a href="/sovspace.html">SovSpace</a>
+  <a href="/world-tools.html">Inspector</a>
+</div>
+
+<h1>🗺️ World Atlas — 56 Countries</h1>
+<p class="sub">Sovereign ontology mapped to real countries · 6 regions · 12 Generals · CSOAI Ltd (UK 16939677) · MIT</p>
+
+<div class="stats-top">
+  <div class="stat"><div class="stat-value">56</div><div class="stat-label">Countries</div></div>
+  <div class="stat"><div class="stat-value">6</div><div class="stat-label">Regions</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value">16</div><div class="stat-label">Care Floor</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">CSOAI home</div></div>
+  <div class="stat"><div class="stat-value">4.85</div><div class="stat-label">World avg</div></div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="search" placeholder="🔍 Search country, capital, region..." />
+  <select id="filterRegion">
+    <option value="">All Regions</option>
+    <option value="EU">🇪🇺 Europe</option>
+    <option value="NA">🌎 North America</option>
+    <option value="SA">🌎 South America</option>
+    <option value="AS">🌏 Asia</option>
+    <option value="AF">🌍 Africa</option>
+    <option value="OC">🌏 Oceania</option>
+  </select>
+  <select id="sortBy">
+    <option value="name">Sort: Name (A-Z)</option>
+    <option value="sovereign-desc">Sort: Sovereign (high-low)</option>
+    <option value="sovereign-asc">Sort: Sovereign (low-high)</option>
+    <option value="gdp-desc">Sort: GDP (high-low)</option>
+    <option value="pop-desc">Sort: Population (high-low)</option>
+  </select>
+  <a href="/world.html">🌍 3D View →</a>
+</div>
+
+<div id="cards"></div>
+
+<script>
+const COUNTRIES = [
+  {iso:"GB",name:"United Kingdom",capital:"London",lat:51.5074,lng:-0.1278,region:"EU",flag:"🇬🇧",gdp:46500,pop:67,sovereign:7.305,general:"Argus"},
+  {iso:"IE",name:"Ireland",capital:"Dublin",lat:53.3498,lng:-6.2603,region:"EU",flag:"🇮🇪",gdp:103500,pop:5.1,sovereign:6.8,general:"Scribe"},
+  {iso:"FR",name:"France",capital:"Paris",lat:48.8566,lng:2.3522,region:"EU",flag:"🇫🇷",gdp:44400,pop:67,sovereign:6.5,general:"Owl"},
+  {iso:"DE",name:"Germany",capital:"Berlin",lat:52.52,lng:13.405,region:"EU",flag:"🇩🇪",gdp:51200,pop:83,sovereign:6.4,general:"Shield"},
+  {iso:"NL",name:"Netherlands",capital:"Amsterdam",lat:52.3676,lng:4.9041,region:"EU",flag:"🇳🇱",gdp:57400,pop:17.5,sovereign:6.6,general:"Abacus"},
+  {iso:"SE",name:"Sweden",capital:"Stockholm",lat:59.3293,lng:18.0686,region:"EU",flag:"🇸🇪",gdp:55500,pop:10.5,sovereign:6.7,general:"Scale"},
+  {iso:"FI",name:"Finland",capital:"Helsinki",lat:60.1699,lng:24.9384,region:"EU",flag:"🇫🇮",gdp:49800,pop:5.5,sovereign:6.6,general:"Scale"},
+  {iso:"ES",name:"Spain",capital:"Madrid",lat:40.4168,lng:-3.7038,region:"EU",flag:"🇪🇸",gdp:30200,pop:47,sovereign:6.2,general:"Scale"},
+  {iso:"IT",name:"Italy",capital:"Rome",lat:41.9028,lng:12.4964,region:"EU",flag:"🇮🇹",gdp:35600,pop:59,sovereign:6.0,general:"Voice"},
+  {iso:"AT",name:"Austria",capital:"Vienna",lat:48.2082,lng:16.3738,region:"EU",flag:"🇦🇹",gdp:50200,pop:9,sovereign:6.5,general:"Voice"},
+  {iso:"DK",name:"Denmark",capital:"Copenhagen",lat:55.6761,lng:12.5683,region:"EU",flag:"🇩🇰",gdp:67800,pop:5.8,sovereign:6.7,general:"Scale"},
+  {iso:"BE",name:"Belgium",capital:"Brussels",lat:50.8503,lng:4.3517,region:"EU",flag:"🇧🇪",gdp:50200,pop:11.5,sovereign:6.5,general:"Lex"},
+  {iso:"PL",name:"Poland",capital:"Warsaw",lat:52.2297,lng:21.0122,region:"EU",flag:"🇵🇱",gdp:17900,pop:38,sovereign:5.5,general:"Shield"},
+  {iso:"CZ",name:"Czechia",capital:"Prague",lat:50.0755,lng:14.4378,region:"EU",flag:"🇨🇿",gdp:26300,pop:10.5,sovereign:5.7,general:"Shield"},
+  {iso:"RO",name:"Romania",capital:"Bucharest",lat:44.4268,lng:26.1025,region:"EU",flag:"🇷🇴",gdp:14900,pop:19,sovereign:5.3,general:"Shield"},
+  {iso:"PT",name:"Portugal",capital:"Lisbon",lat:38.7223,lng:-9.1393,region:"EU",flag:"🇵🇹",gdp:26200,pop:10.3,sovereign:5.9,general:"Scale"},
+  {iso:"IS",name:"Iceland",capital:"Reykjavik",lat:64.1466,lng:-21.9426,region:"EU",flag:"🇮🇸",gdp:73400,pop:0.38,sovereign:6.8,general:"Scale"},
+  {iso:"CH",name:"Switzerland",capital:"Bern",lat:46.948,lng:7.4474,region:"EU",flag:"🇨🇭",gdp:84300,pop:8.7,sovereign:6.8,general:"Lex"},
+  {iso:"NO",name:"Norway",capital:"Oslo",lat:59.9139,lng:10.7522,region:"EU",flag:"🇳🇴",gdp:82300,pop:5.5,sovereign:6.7,general:"Scale"},
+  {iso:"US",name:"United States",capital:"Washington DC",lat:38.9072,lng:-77.0369,region:"NA",flag:"🇺🇸",gdp:76300,pop:331,sovereign:5.5,general:"Scribe"},
+  {iso:"CA",name:"Canada",capital:"Ottawa",lat:45.4215,lng:-75.6972,region:"NA",flag:"🇨🇦",gdp:53200,pop:39,sovereign:6.0,general:"Scribe"},
+  {iso:"MX",name:"Mexico",capital:"Mexico City",lat:19.4326,lng:-99.1332,region:"NA",flag:"🇲🇽",gdp:13100,pop:128,sovereign:4.5,general:"Gear"},
+  {iso:"BR",name:"Brazil",capital:"Brasília",lat:-15.8267,lng:-47.9218,region:"SA",flag:"🇧🇷",gdp:10000,pop:215,sovereign:4.5,general:"Crow"},
+  {iso:"AR",name:"Argentina",capital:"Buenos Aires",lat:-34.6037,lng:-58.3816,region:"SA",flag:"🇦🇷",gdp:13600,pop:45,sovereign:5.0,general:"Scale"},
+  {iso:"CO",name:"Colombia",capital:"Bogotá",lat:4.711,lng:-74.0721,region:"SA",flag:"🇨🇴",gdp:6980,pop:52,sovereign:4.5,general:"Scale"},
+  {iso:"CL",name:"Chile",capital:"Santiago",lat:-33.4489,lng:-70.6693,region:"SA",flag:"🇨🇱",gdp:17000,pop:19,sovereign:5.5,general:"Scale"},
+  {iso:"PE",name:"Peru",capital:"Lima",lat:-12.0464,lng:-77.0428,region:"SA",flag:"🇵🇪",gdp:7100,pop:34,sovereign:4.2,general:"Crow"},
+  {iso:"PY",name:"Paraguay",capital:"Asunción",lat:-25.2637,lng:-57.5759,region:"SA",flag:"🇵🇾",gdp:6050,pop:7.4,sovereign:4.0,general:"Crow"},
+  {iso:"UY",name:"Uruguay",capital:"Montevideo",lat:-34.9011,lng:-56.1645,region:"SA",flag:"🇺🇾",gdp:20800,pop:3.5,sovereign:5.5,general:"Scale"},
+  {iso:"CN",name:"China",capital:"Beijing",lat:39.9042,lng:116.4074,region:"AS",flag:"🇨🇳",gdp:12700,pop:1411,sovereign:3.0,general:"Crow"},
+  {iso:"JP",name:"Japan",capital:"Tokyo",lat:35.6762,lng:139.6503,region:"AS",flag:"🇯🇵",gdp:34000,pop:125,sovereign:6.5,general:"Builder"},
+  {iso:"KR",name:"South Korea",capital:"Seoul",lat:37.5665,lng:126.978,region:"AS",flag:"🇰🇷",gdp:33300,pop:51,sovereign:6.0,general:"Builder"},
+  {iso:"IN",name:"India",capital:"New Delhi",lat:28.6139,lng:77.209,region:"AS",flag:"🇮🇳",gdp:2700,pop:1430,sovereign:4.5,general:"Crow"},
+  {iso:"SG",name:"Singapore",capital:"Singapore",lat:1.3521,lng:103.8198,region:"AS",flag:"🇸🇬",gdp:72800,pop:5.5,sovereign:6.8,general:"Abacus"},
+  {iso:"HK",name:"Hong Kong",capital:"Hong Kong",lat:22.3193,lng:114.1694,region:"AS",flag:"🇭🇰",gdp:49500,pop:7.5,sovereign:5.5,general:"Abacus"},
+  {iso:"TW",name:"Taiwan",capital:"Taipei",lat:25.033,lng:121.5654,region:"AS",flag:"🇹🇼",gdp:33000,pop:23,sovereign:5.5,general:"Builder"},
+  {iso:"TH",name:"Thailand",capital:"Bangkok",lat:13.7563,lng:100.5018,region:"AS",flag:"🇹🇭",gdp:7090,pop:70,sovereign:4.5,general:"Scale"},
+  {iso:"ID",name:"Indonesia",capital:"Jakarta",lat:-6.2088,lng:106.8456,region:"AS",flag:"🇮🇩",gdp:4920,pop:277,sovereign:4.0,general:"Scale"},
+  {iso:"MY",name:"Malaysia",capital:"Kuala Lumpur",lat:3.139,lng:101.6869,region:"AS",flag:"🇲🇾",gdp:12400,pop:33,sovereign:5.0,general:"Scale"},
+  {iso:"PH",name:"Philippines",capital:"Manila",lat:14.5995,lng:120.9842,region:"AS",flag:"🇵🇭",gdp:3850,pop:111,sovereign:4.0,general:"Voice"},
+  {iso:"VN",name:"Vietnam",capital:"Hanoi",lat:21.0285,lng:105.8542,region:"AS",flag:"🇻🇳",gdp:4080,pop:99,sovereign:3.8,general:"Scale"},
+  {iso:"AE",name:"United Arab Emirates",capital:"Abu Dhabi",lat:24.4539,lng:54.3773,region:"AS",flag:"🇦🇪",gdp:44400,pop:9.5,sovereign:5.5,general:"Gear"},
+  {iso:"SA",name:"Saudi Arabia",capital:"Riyadh",lat:24.7136,lng:46.6753,region:"AS",flag:"🇸🇦",gdp:30400,pop:36,sovereign:5.0,general:"Gear"},
+  {iso:"IL",name:"Israel",capital:"Jerusalem",lat:31.7857,lng:35.2117,region:"AS",flag:"🇮🇱",gdp:52400,pop:9.4,sovereign:5.5,general:"Builder"},
+  {iso:"TR",name:"Türkiye",capital:"Ankara",lat:39.9334,lng:32.8597,region:"AS",flag:"🇹🇷",gdp:12100,pop:85,sovereign:4.5,general:"Shield"},
+  {iso:"EG",name:"Egypt",capital:"Cairo",lat:30.0444,lng:31.2357,region:"AF",flag:"🇪🇬",gdp:4300,pop:104,sovereign:3.5,general:"Scribe"},
+  {iso:"NG",name:"Nigeria",capital:"Abuja",lat:9.0765,lng:7.3986,region:"AF",flag:"🇳🇬",gdp:2160,pop:222,sovereign:3.0,general:"Abacus"},
+  {iso:"ZA",name:"South Africa",capital:"Pretoria",lat:-25.7479,lng:28.2293,region:"AF",flag:"🇿🇦",gdp:7050,pop:60,sovereign:4.5,general:"Crow"},
+  {iso:"KE",name:"Kenya",capital:"Nairobi",lat:-1.2921,lng:36.8219,region:"AF",flag:"🇰🇪",gdp:2210,pop:55,sovereign:3.5,general:"Abacus"},
+  {iso:"AU",name:"Australia",capital:"Canberra",lat:-35.2809,lng:149.13,region:"OC",flag:"🇦🇺",gdp:55000,pop:26,sovereign:6.0,general:"Gear"},
+  {iso:"NZ",name:"New Zealand",capital:"Wellington",lat:-41.2865,lng:174.7762,region:"OC",flag:"🇳🇿",gdp:44200,pop:5.2,sovereign:6.0,general:"Scale"},
+];
+
+const GEN_COLORS = {
+  Argus:"#60a5fa", Scribe:"#fbbf24", Shield:"#10b981", Builder:"#8b5cf6",
+  Abacus:"#f59e0b", Lex:"#ef4444", Scale:"#06b6d4", Crow:"#a3e635",
+  Gear:"#ec4899", Voice:"#14b8a6", Owl:"#84cc16", Dragon:"#fbbf24"
+};
+
+function renderCards(filtered) {
+  const cards = document.getElementById('cards');
+  cards.innerHTML = '';
+  filtered.forEach(c => {
+    const cls = c.sovereign >= 6 ? 'high' : c.sovereign >= 4 ? 'mid' : 'low';
+    const score_class = cls;
+    const card = document.createElement('div');
+    card.className = `card ${cls}`;
+    card.onclick = () => window.location.href = `/world.html?iso=${c.iso}`;
+    card.innerHTML = `
+      <div class="flag">${c.flag}</div>
+      <h2>${c.name}</h2>
+      <div class="capital">📍 ${c.capital}</div>
+      <div class="row"><span class="label">Region:</span><span class="value">${c.region}</span></div>
+      <div class="row"><span class="label">Population:</span><span class="value">${c.pop}M</span></div>
+      <div class="row"><span class="label">GDP/capita:</span><span class="value">$${c.gdp.toLocaleString()}</span></div>
+      <div class="row"><span class="label">General:</span><span class="general" style="background:${GEN_COLORS[c.general]}">${c.general}</span></div>
+      <div class="row" style="margin-top:0.5rem;border-top:1px solid #333;padding-top:0.5rem;">
+        <span class="label">Sovereign Composite:</span>
+        <span class="score ${score_class}">${c.sovereign}</span>
+      </div>
+    `;
+    cards.appendChild(card);
+  });
+}
+
+function filter() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const region = document.getElementById('filterRegion').value;
+  const sortBy = document.getElementById('sortBy').value;
+  let filtered = COUNTRIES.filter(c => {
+    const match = c.name.toLowerCase().includes(q) || c.capital.toLowerCase().includes(q);
+    const region_match = !region || c.region === region;
+    return match && region_match;
+  });
+  if (sortBy === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+  else if (sortBy === 'sovereign-desc') filtered.sort((a, b) => b.sovereign - a.sovereign);
+  else if (sortBy === 'sovereign-asc') filtered.sort((a, b) => a.sovereign - b.sovereign);
+  else if (sortBy === 'gdp-desc') filtered.sort((a, b) => b.gdp - a.gdp);
+  else if (sortBy === 'pop-desc') filtered.sort((a, b) => b.pop - a.pop);
+  renderCards(filtered);
+}
+
+document.getElementById('search').addEventListener('input', filter);
+document.getElementById('filterRegion').addEventListener('change', filter);
+document.getElementById('sortBy').addEventListener('change', filter);
+
+window.addEventListener('DOMContentLoaded', () => {
+  filter();
+});
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

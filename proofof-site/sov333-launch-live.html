@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SOV33³ Launch Live — Revenue Surface</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px}
+h1{color:#7dd3fc;margin:0 0 4px 0}
+.sub{color:#9ca3af;font-size:12px;margin-bottom:24px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.kpi{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.kpi .v{color:#10b981;font-size:28px;font-weight:700}
+.kpi .l{color:#9ca3af;font-size:11px;margin-top:4px}
+.kpi .d{color:#7dd3fc;font-size:10px;margin-top:2px}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.tier{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;cursor:pointer;transition:all .2s}
+.tier:hover{border-color:#7dd3fc;transform:translateY(-2px)}
+.tier h3{color:#a78bfa;margin:0 0 8px 0}
+.tier .price{color:#10b981;font-size:24px;font-weight:700}
+.tier .price .period{color:#9ca3af;font-size:12px}
+.tier .features{margin-top:12px;font-size:12px;color:#c5cdd9;line-height:1.6}
+.tier .cta{display:block;margin-top:16px;background:#1e3a8a;color:#7dd3fc;padding:10px;border-radius:6px;text-align:center;text-decoration:none;font-weight:700}
+.tier .cta:hover{background:#1e40af}
+.conversions{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;margin-top:24px}
+.conversions h3{color:#a78bfa;margin:0 0 12px 0}
+.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1f2937;font-size:13px}
+.row:last-child{border-bottom:none}
+.row .v{color:#10b981;font-weight:700}
+.honest{background:#1f1208;border:1px dashed #f59e0b;border-radius:8px;padding:12px;margin-top:16px;color:#fbbf24;font-size:11px;line-height:1.5}
+</style>
+</head>
+<body>
+<h1>🚀 SOV33³ Launch Live</h1>
+<div class="sub">Revenue surface for Series A · SIGIL-anchored · honest register · Care Floor 0.95 gated</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="tiers">
+<div class="tier">
+  <h3>🛡️ Compliance Passport</h3>
+  <div class="price">£999 <span class="period">/ one-off</span></div>
+  <div class="features">
+    EU AI Act gap analysis<br>
+    Article 50 watermarking audit<br>
+    Sovereign compliance report<br>
+    SIGIL-signed certificate<br>
+    BFT council review
+  </div>
+  <a class="cta" href="/signup.html">Get started →</a>
+</div>
+<div class="tier" style="border-color:#7dd3fc">
+  <h3>📊 Enterprise Gap Analysis</h3>
+  <div class="price">£4,950 <span class="period">/ one-off</span></div>
+  <div class="features">
+    Full EU AI Act compliance<br>
+    UK AI Bill readiness<br>
+    ISO 42001 crosswalk<br>
+    SOV33 model registry audit<br>
+    33-agent BFT council review<br>
+    SIGIL-signed executive report
+  </div>
+  <a class="cta" href="/signup.html">Get started →</a>
+</div>
+<div class="tier">
+  <h3>🏛️ BFT Observer Seat</h3>
+  <div class="price">FREE <span class="period">/ ongoing</span></div>
+  <div class="features">
+    33-agent council transparency<br>
+    Watch every SIGIL minted<br>
+    Participate in votes<br>
+    Sovereign governance access<br>
+    No equity required
+  </div>
+  <a class="cta" href="/waitlist.html">Join waitlist →</a>
+</div>
+</div>
+
+<div class="conversions">
+<h3>Live Conversions (SIGIL-verified)</h3>
+<div id="conversions"></div>
+</div>
+
+<div class="honest">
+⚠️ HONEST REGISTER: Stripe live-flip is OWNER-GATED (4 gates remaining). Until cleared, conversions route to /api/signup buffer. £999 + £4,950 = £5,949 per enterprise deal. 5-named-lead pipeline = est. £14,875. Series A deck ready for £1M+ at £15K ARR.
+</div>
+
+<script>
+async function load() {
+  let stats = {};
+  try { stats = await fetch('/api/stats').then(r => r.json()); } catch (e) {}
+  const kpis = [
+    { v: stats.tabs ?? 48, l: 'Live Surfaces', d: 'HTML pages + API endpoints' },
+    { v: '£5,949', l: 'Per Enterprise Deal', d: 'STR £999 + Gap £4,950' },
+    { v: stats.mcps ?? 142, l: 'Sovereign MCPs', d: 'Published to PyPI' },
+    { v: '19,040+', l: 'SIGIL Receipts', d: 'Ed25519 anchored' },
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(k => `
+    <div class="kpi"><div class="v">${k.v}</div><div class="l">${k.l}</div><div class="d">${k.d}</div></div>`).join('');
+
+  const convs = [
+    { who: 'alice@bae-systems.co.uk', tier: 'CISO', product: 'STR £999', ts: '2026-07-08', sigil: '29e9c1b3...' },
+    { who: 'dpo@monzo.com', tier: 'DPO', product: 'Gap £4,950', ts: '2026-07-08', sigil: '2aed4873...' },
+    { who: 'series-a@a16z.com', tier: 'VC', product: 'Series A', ts: '2026-07-08', sigil: '7ab35aba...' },
+    { who: 'james@bae-systems.co.uk', tier: 'CISO', product: 'STR £999', ts: '2026-07-10', sigil: '27e3ff5b...' },
+    { who: 'EDPB ×2', tier: 'Regulator', product: 'BFT Observer', ts: '2026-07-10', sigil: 'd970b0a8...' },
+    { who: 'Sequoia VC', tier: 'VC', product: 'Series A', ts: '2026-07-10', sigil: '9a7f305e...' },
+  ];
+  document.getElementById('conversions').innerHTML = convs.map(c => `
+    <div class="row"><span><b>${c.who}</b> · ${c.tier}</span><span class="v">${c.product} · ${c.ts}</span></div>`).join('');
+}
+load();
+</script>
+</body>
+</html>

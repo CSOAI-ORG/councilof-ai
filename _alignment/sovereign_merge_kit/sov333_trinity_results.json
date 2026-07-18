@@ -1,0 +1,81 @@
+{
+  "trinity": {
+    "SOV3": {
+      "scope": "small governed council \u2014 one person, reflex/draft",
+      "bases": [
+        "Qwen3-0.6B (Apache)",
+        "Qwen3-1.7B (Apache)"
+      ],
+      "config": "4-brain council @ small tier, care-gated + Ed25519 SIGIL",
+      "governance": [
+        "care-gate (fail-closed)",
+        "signed emit"
+      ],
+      "runs_on": "16GB Mac TODAY (Ollama)",
+      "artifact": "sov33_local_sovereign.py (--council)"
+    },
+    "SOV33": {
+      "scope": "small->large routed + world model \u2014 tools/agent, verify",
+      "bases": [
+        "Qwen3-4B/1.7B (small)",
+        "Qwen3-32B (large)",
+        "DeepSeek-R1 (reasoning distil target)"
+      ],
+      "config": "route small->large on mirror-divergence; governed world-model planning; 12x4@nu0.7 pyramid",
+      "governance": [
+        "care-gated-BFT",
+        "mirror-auditor escalation",
+        "world-model care-gated transitions",
+        "SIGIL seam"
+      ],
+      "runs_on": "48GB Mac / cloud (large tier)",
+      "artifact": "sov33_local_sovereign.py (--route) + sov33_composition_demo.py"
+    },
+    "SOV333": {
+      "scope": "nested regional pyramid + frontier + full governance \u2014 sovereignty rules, identity",
+      "bases": [
+        "Qwen3 experts (soup same-base)",
+        "DeepSeek-V4-Pro 1.6T base (MIT) frontier",
+        "V-JEPA2 (world perception)"
+      ],
+      "config": "12x4@nu0.7 pyramid, 4-around-1 nested per real region, reputation-BFT to 5/9, frontier escalation",
+      "governance": [
+        "care-gated-BFT (5/9 adversary)",
+        "OSCAL signed card",
+        "BFT council 23/33",
+        "full SIGIL ledger"
+      ],
+      "runs_on": "server / frontier GPU",
+      "artifact": "GPU build spec (SOV33_GPU_BUILD_SPEC) \u2014 12x4@0.7"
+    }
+  },
+  "cpu_proof": {
+    "SOV3": {
+      "model": "SOV3",
+      "loss": 0.0064,
+      "depth": 4,
+      "brains": 4,
+      "nu": 1.0,
+      "sigil": "557dc36becd3ed81",
+      "care_ok": true
+    },
+    "SOV33": {
+      "model": "SOV33",
+      "loss": 0.007,
+      "depth": 8,
+      "brains": 4,
+      "nu": 1.0,
+      "sigil": "42f6510b4b36b816",
+      "care_ok": true
+    },
+    "SOV333": {
+      "model": "SOV333",
+      "loss": 0.0083,
+      "depth": 12,
+      "brains": 4,
+      "nu": 0.7,
+      "sigil": "42afa2f9c40dba9a",
+      "care_ok": true
+    }
+  }
+}

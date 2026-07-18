@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS: BFT Minutes Drilldown by Ring</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #1a1a2e; color: #e0e0e0; }
+        .container { max-width: 900px; margin: auto; background-color: #16213e; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); }
+        h1, h2, h3 { color: #e94560; margin-bottom: 15px; }
+        h1 { font-size: 2.5em; border-bottom: 2px solid #e94560; padding-bottom: 10px; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; }
+        p { margin-bottom: 10px; }
+        ul { list-style-type: disc; margin-left: 20px; margin-bottom: 10px; }
+        li { margin-bottom: 5px; }
+        code { background-color: #0f3460; padding: 2px 4px; border-radius: 4px; color: #e0e0e0; }
+        pre { background-color: #0f3460; padding: 15px; border-radius: 6px; overflow-x: auto; margin-bottom: 15px; }
+        a { color: #533483; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .footer { margin-top: 40px; border-top: 1px solid #e94560; padding-top: 20px; font-size: 0.9em; text-align: center; color: #999; }
+        .sigil { font-family: 'Courier New', monospace; font-size: 0.8em; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DEFONEOS: BFT Minutes Drilldown by Ring</h1>
+        <p>This page provides a detailed drilldown into the BFT Council's meeting minutes, segmented by the five distinct Rings, ensuring transparency and accountability across all governance layers of the DEFONEOS sovereign AI OS.</p>
+
+        <h2>Understanding the BFT Council Rings</h2>
+        <p>The DEFONEOS BFT (Byzantine Fault Tolerant) Council comprises 33 agents, organised into five rings, each with specific roles, responsibilities, and voting thresholds. This structure ensures robust, distributed decision-making and resistance to single points of failure.</p>
+        <ul>
+            <li><strong>Ring 1 (Owner):</strong> The foundational owner-seat, critical for constitutional amendments and red-line invariant protection. Unanimous vote (33/33) on core charter.</li>
+            <li><strong>Ring 2 (Defence Primes):</strong> Six agents representing key defence contractors, ensuring alignment with national security priorities. Threshold: 27/33 for red-line motions.</li>
+            <li><strong>Ring 3 (Compliance & Legal):</strong> Eight agents focused on regulatory adherence, international law, and ethical AI frameworks. Threshold: 23/33 for standard motions; 17/33 for emergency.</li>
+            <li><strong>Ring 4 (Operators & Engineers):</strong> Twelve agents providing technical and operational oversight, ensuring system stability and performance.</li>
+            <li><strong>Ring 5 (Public & Research):</strong> Six agents representing broader public interest and independent research, fostering open governance and innovation.</li>
+        </ul>
+
+        <h2>Accessing Minutes by Ring</h2>
+        <p>Minutes for each motion are recorded with an immutable SIGIL anchor and are publicly verifiable. Use the following structure to query specific motion minutes:</p>
+        <pre><code>curl -s https://www.csoai.org/defoneos-bft-minutes-ring-[1-5]-motion-[ID].html</code></pre>
+        <p>Example: To retrieve Ring 1 minutes for motion 142:</p>
+        <pre><code>curl -s https://www.csoai.org/defoneos-bft-minutes-ring-1-motion-142.html</code></pre>
+
+        <h2>Key Audit Points for Ring Minutes</h2>
+        <ul>
+            <li><strong>Vote Tally Verification:</strong> Cross-reference published tallies against the stated thresholds for each motion class (standard, red-line, emergency, unanimous).</li>
+            <li><strong>Amendment Tracking:</strong> Trace all amendments and their approval paths, ensuring all changes adhere to governance protocols.</li>
+            <li><strong>Witness Disagreement Detection:</strong> Monitor for any dissenting opinions or witness disagreements, indicating potential anomalies or areas for further review.</li>
+            <li><strong>Red-Line Invariant Checks:</strong> Ensure no motions have violated the 7 core red-line invariants, which are crucial for the sovereign integrity of DEFONEOS.</li>
+        </ul>
+
+        <div class="footer">
+            <p>DEFONEOS Sovereign AI OS - A CSOAI.org Initiative</p>
+            <p class="sigil">SIGIL: BFT-MINUTES-DRILLDOWN-RING-V1.0-20260717-T119-BUILD</p>
+            <p>For more information, refer to the <a href="defoneos-bft-council-public-minutes.html">BFT Council Public Minutes</a> and <a href="#">Quorum Specification</a>.</p>
+        </div>
+    </div>
+</body>
+</html>

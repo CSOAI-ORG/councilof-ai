@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOV-18 · Sovereign All-in-One · CSOAI</title>
+<meta name="description" content="SOV-18 — the sovereign all-in-one tab. M2 (19 stdlib tools) + M4 (12 sovereign nodes) + SOV3 OOWM (Mamba-2 + 16-dim intuition) + 55 sovereign charters at 100/100 alignment + 244 frameworks + 2,363 leads + Watchdog + OSCAL + bridge_think + Series A + SIGIL chain + outreach + Article 50 passport. Charter Article 0 binding. UK 16939677.">
+<style>
+:root{
+--navy:#0a0e1a;--slate:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--text:#f1f5f9;--muted:#94a3b8;
+--success:#10b981;--warn:#f59e0b;--info:#3b82f6
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:var(--text);font-family:'Inter',-apple-system,sans-serif;line-height:1.6;font-size:14px}
+.container{max-width:1400px;margin:0 auto;padding:1.5rem}
+header{background:rgba(10,14,26,.95);border-bottom:1px solid var(--slate);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;padding:0 1.5rem;flex-wrap:wrap;gap:1rem}
+header .logo{color:var(--gold);font-weight:700;font-size:1.25rem;text-decoration:none}
+header .nav-links{display:flex;gap:.75rem;flex-wrap:wrap}
+header a{color:var(--text);text-decoration:none;font-size:.8125rem;padding:.25rem .5rem;border-radius:4px}
+header a:hover{background:rgba(201,168,76,.1);color:var(--gold)}
+.hero{background:linear-gradient(135deg,#0a0e1a,#1e293b);padding:3rem 1.5rem;text-align:center;border-bottom:1px solid var(--gold)}
+.hero h1{font-size:2.5rem;margin-bottom:.5rem;color:var(--text)}
+.hero .sov-num{color:var(--gold);background:linear-gradient(90deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+.hero .lede{color:var(--muted);font-size:1.05rem;max-width:900px;margin:0 auto 1rem}
+.hero .status-strip{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1rem 0;font-size:.75rem}
+.hero .status-pill{background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green);padding:.25rem .75rem;border-radius:20px}
+.hero .status-pill.warn{background:rgba(245,158,11,.1);border-color:var(--warn);color:var(--warn)}
+.section{padding:2rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.section h2{color:var(--gold);margin-bottom:1rem;font-size:1.5rem;display:flex;align-items:center;gap:.5rem}
+.section h2 .icon{font-size:1.25rem}
+.section h3{color:var(--gold-light);margin:1rem 0 .5rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+.card{background:var(--slate);border-radius:10px;padding:1.25rem;border:1px solid rgba(201,168,76,.15);transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.card.success{border-color:var(--green);background:linear-gradient(135deg,rgba(16,185,129,.05),transparent)}
+.card .label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.card .value{font-size:1.75rem;color:var(--gold);font-weight:700;line-height:1.1}
+.card .value.green{color:var(--green)}
+.card .value.blue{color:var(--blue)}
+.card .desc{font-size:.8125rem;color:var(--muted);margin-top:.5rem;line-height:1.5}
+.card .pill{display:inline-block;background:rgba(201,168,76,.1);border:1px solid var(--gold);color:var(--gold);padding:.125rem .5rem;border-radius:8px;font-size:.7rem;margin-top:.5rem}
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin:1rem 0}
+.kpi{background:var(--navy);border:1px solid var(--slate);border-radius:8px;padding:1rem;text-align:center}
+.kpi .v{font-size:1.5rem;font-weight:700;color:var(--gold)}
+.kpi .l{font-size:.7rem;color:var(--muted);margin-top:.25rem;text-transform:uppercase;letter-spacing:.05em}
+.table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.8125rem}
+.table th,.table td{border:1px solid var(--slate);padding:.5rem;text-align:left}
+.table th{background:var(--navy);color:var(--gold-light)}
+.table tr.success{background:rgba(16,185,129,.05)}
+.btn{display:inline-block;padding:.5rem 1rem;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-weight:600;text-decoration:none;cursor:pointer;font-size:.8125rem}
+.btn:hover{opacity:.9}
+.btn-secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.tabs{display:flex;gap:.5rem;border-bottom:2px solid var(--slate);margin:1rem 0;overflow-x:auto;flex-wrap:nowrap}
+.tab{padding:.75rem 1.25rem;background:transparent;border:none;color:var(--muted);cursor:pointer;white-space:nowrap;font-size:.875rem;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.code-block{background:#000;color:#0f0;padding:1rem;border-radius:8px;font-family:monospace;font-size:.75rem;overflow-x:auto;margin:1rem 0;border:1px solid var(--slate)}
+.bft-row{display:grid;grid-template-columns:repeat(11,1fr);gap:1px;margin:1rem 0}
+.bft-cell{aspect-ratio:1;background:var(--slate);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--muted)}
+.bft-cell.leader{background:var(--gold);color:var(--navy);font-weight:700}
+.bft-cell.active{background:var(--green);color:var(--navy);font-weight:700}
+.heatmap{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;margin:1rem 0;font-size:.7rem}
+.heatmap-cell{aspect-ratio:1;padding:2px;border-radius:2px;display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:600}
+.heatmap-cell.t0{background:#1e40af}
+.heatmap-cell.t1{background:#2563eb}
+.heatmap-cell.t2{background:#3b82f6}
+.heatmap-cell.t3{background:#60a5fa}
+.heatmap-cell.t4{background:#10b981;color:var(--navy)}
+.heatmap-cell.t5{background:#34d399;color:var(--navy)}
+.node-map{position:relative;width:100%;height:400px;background:radial-gradient(circle at 50% 50%,rgba(201,168,76,.05) 0%,transparent 50%);border-radius:8px;border:1px solid var(--slate);margin:1rem 0;overflow:hidden}
+.node-dot{position:absolute;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer}
+.node-dot.governed{background:var(--green);box-shadow:0 0 12px var(--green)}
+.node-dot.watch{background:var(--warn);box-shadow:0 0 12px var(--warn)}
+.node-dot.flagged{background:var(--red);box-shadow:0 0 12px var(--red);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.node-dot:hover{transform:translate(-50%,-50%) scale(2);z-index:10}
+.sigil-stream{background:#000;border:1px solid var(--slate);border-radius:8px;padding:.75rem;height:300px;overflow-y:auto;font-family:monospace;font-size:.7rem;color:var(--green)}
+.sigil-line{padding:.125rem 0;border-bottom:1px dotted rgba(0,255,0,.1)}
+.sigil-line .ts{color:var(--muted)}
+.sigil-line .digest{color:var(--gold);font-weight:700}
+.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:1rem;margin:1rem 0;font-size:.8125rem;color:var(--muted);border-radius:0 8px 8px 0}
+footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--slate);margin-top:3rem}
+.charter-pill{display:inline-block;background:rgba(201,168,76,.1);border:1px solid var(--gold);color:var(--gold);padding:.125rem .375rem;border-radius:6px;font-size:.65rem;margin:.125rem}
+.signal-feed{max-height:300px;overflow-y:auto}
+.signal-item{padding:.5rem;border-bottom:1px solid var(--slate);font-size:.75rem}
+.signal-item .cat{color:var(--gold);font-weight:700;text-transform:uppercase;font-size:.7rem}
+.signal-item .sev{display:inline-block;padding:.125rem .375rem;border-radius:4px;font-size:.65rem;font-weight:700;margin-left:.5rem}
+.signal-item .sev.S1{background:rgba(100,116,139,.2);color:var(--muted)}
+.signal-item .sev.S2{background:rgba(100,116,139,.3);color:var(--muted)}
+.signal-item .sev.S3{background:rgba(59,130,246,.2);color:var(--blue)}
+.signal-item .sev.S4{background:rgba(245,158,11,.2);color:var(--warn);font-weight:700}
+.signal-item .sev.S5{background:rgba(239,68,68,.2);color:var(--red);font-weight:700;animation:pulse 2s infinite}
+.pipeline{display:flex;gap:1rem;align-items:stretch;margin:1rem 0;flex-wrap:wrap}
+.pipeline-step{flex:1;min-width:140px;background:var(--slate);border:1px solid var(--slate);border-radius:8px;padding:1rem;position:relative}
+.pipeline-step.active{border-color:var(--green);background:linear-gradient(135deg,rgba(16,185,129,.1),transparent)}
+.pipeline-step.gated{border-color:var(--warn);background:rgba(245,158,11,.05)}
+.pipeline-step .step-num{position:absolute;top:-12px;left:12px;background:var(--navy);border:1px solid var(--gold);border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--gold)}
+.pipeline-step .step-title{color:var(--gold-light);font-weight:600;font-size:.875rem;margin-bottom:.25rem}
+.pipeline-step .step-status{font-size:.7rem;color:var(--muted);margin-top:.25rem}
+</style>
+</head><body>
+
+<header>
+<nav>
+<a class="logo" href="#top">🐉 SOV-18</a>
+<div class="nav-links">
+<a href="#status">Status</a>
+<a href="#m2">M2</a>
+<a href="#m4">M4</a>
+<a href="#oowm">OOWM</a>
+<a href="#charters">Charters</a>
+<a href="#frameworks">Frameworks</a>
+<a href="#leads">Leads</a>
+<a href="#watchdog">Watchdog</a>
+<a href="#bft">BFT</a>
+<a href="#oscal">OSCAL</a>
+<a href="#sigchain">SIGIL</a>
+<a href="#outreach">Outreach</a>
+<a href="#passport">Passport</a>
+<a href="#seriesa">Series A</a>
+<a href="#gates">Gates</a>
+</div>
+</nav>
+</header>
+
+<div class="hero" id="top">
+<h1><span class="sov-num">SOV-18</span> · Sovereign All-in-One</h1>
+<p class="lede">M2 + M4 + SOV3 OOWM + 55 charters + 244 frameworks + 2,363 leads + Watchdog + OSCAL + bridge_think + Series A + SIGIL chain + outreach + Article 50 passport. <b>Charter Article 0 binding. UK 16939677.</b></p>
+<div class="status-strip">
+<span class="status-pill">✓ 55 charters at 100/100 alignment (1,650/1,650)</span>
+<span class="status-pill">✓ 244 universal compliance frameworks</span>
+<span class="status-pill">✓ 2,363 leads with 517,385 side-by-side metrics</span>
+<span class="status-pill">✓ M2: 19 stdlib tools + M4: 12 sovereign nodes</span>
+<span class="status-pill warn">⚠ 5 owner-gated gates pending</span>
+</div>
+</div>
+
+<div class="container">
+
+<!-- ============= TAB 1: STATUS ============= -->
+<div class="section" id="status">
+<h2><span class="icon">📊</span>SOV-18 Status Dashboard</h2>
+
+<div class="kpi-strip">
+<div class="kpi"><div class="v">55</div><div class="l">Charters</div></div>
+<div class="kpi"><div class="v">100%</div><div class="l">Alignment</div></div>
+<div class="kpi"><div class="v">244</div><div class="l">Frameworks</div></div>
+<div class="kpi"><div class="v">19</div><div class="l">M2 Tools</div></div>
+<div class="kpi"><div class="v">12</div><div class="l">M4 Nodes</div></div>
+<div class="kpi"><div class="v">2,363</div><div class="l">Leads</div></div>
+<div class="kpi"><div class="v">517K</div><div class="l">Metrics</div></div>
+<div class="kpi"><div class="v">200</div><div class="l">Outreach</div></div>
+<div class="kpi"><div class="v">209</div><div class="l">Pages</div></div>
+</div>
+
+<div class="honesty">
+<b>Honesty register (per EAT_directive_2026-07-02):</b> All numbers ILLUSTRATIVE bands except charter count, framework count, alignment %, M2 tool count, M4 node count, lead count, side-by-side count, portal page count, outreach email count. Provenance ≠ truth. Assurance ≠ certification. Charter Article 0 binding on every action.
+</div>
+
+<h3>5 Owner-Gated Gates (the only blockers)</h3>
+<div class="pipeline">
+<div class="pipeline-step gated"><div class="step-num">1</div><div class="step-title">Vercel Redeploy</div><div class="step-status">✓ DEPLOYED · Ready in 12-29s</div></div>
+<div class="pipeline-step gated"><div class="step-num">2</div><div class="step-title">csoai.org DNS</div><div class="step-status">⚠ Pending · $12/yr + Cloudflare</div></div>
+<div class="pipeline-step gated"><div class="step-num">3</div><div class="step-title">ConvertKit Email</div><div class="step-status">⚠ Pending · Free tier available</div></div>
+<div class="pipeline-step gated"><div class="step-num">4</div><div class="step-title">Stripe Checkout</div><div class="step-status">⚠ Pending · 5 tiers live (Pro/Business/Enterprise/Crown/Free)</div></div>
+<div class="pipeline-step gated"><div class="step-num">5</div><div class="step-title">Live SOV3 Endpoint</div><div class="step-status">⚠ Pending · VM-side (GCP meok-backend :3101)</div></div>
+</div>
+</div>
+
+<!-- ============= TAB 2: M2 ============= -->
+<div class="section" id="m2">
+<h2><span class="icon">⚙️</span>M2 · Mac Orchestration Layer · 19 stdlib tools</h2>
+<p style="color:var(--muted);font-size:.875rem">Mac = sovereign + orchestration. M2 ships the consumer. M4 ships the substrate. All 19 tools stdlib-only (no external deps).</p>
+
+<table class="table">
+<thead><tr><th>Tool</th><th>Lines</th><th>Purpose</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><b>api_server.py</b></td><td>~120</td><td>REST API for /charters /frameworks /health</td><td>✅ LIVE</td></tr>
+<tr><td><b>black_swan_predictor.py</b></td><td>~140</td><td>Regulatory cliff predictor (EU AI Act, UK AI Bill, PQC)</td><td>✅ PASS</td></tr>
+<tr><td><b>bridge_think.py</b></td><td>~200</td><td>4-profile bilateral cognition (local_only/balanced/power/council)</td><td>✅ PASS</td></tr>
+<tr><td><b>charter_amender.py</b></td><td>~150</td><td>10-step BFT charter amendment workflow</td><td>✅ PASS</td></tr>
+<tr><td><b>compliance_calculator.py</b></td><td>~160</td><td>Per-charter × framework × jurisdiction score</td><td>✅ PASS</td></tr>
+<tr><td><b>defoneos_sign.py</b></td><td>~110</td><td>Ed25519 SIGIL signer for DEFONEOS workflows</td><td>✅ PASS</td></tr>
+<tr><td><b>gen_charter.py</b></td><td>~180</td><td>Generate new sovereign charter from canonical template</td><td>✅ PASS</td></tr>
+<tr><td><b>gods_eye_scan.py</b></td><td>~130</td><td>12-endpoint sovereign CISO self-scan</td><td>✅ PASS</td></tr>
+<tr><td><b>jurisdiction_mapper.py</b></td><td>~140</td><td>26 jurisdiction → 5 sovereign tier mapping</td><td>✅ PASS</td></tr>
+<tr><td><b>m2_sovereign_integrate.py</b></td><td>~200</td><td>SIGIL emit + integration router</td><td>✅ LIVE</td></tr>
+<tr><td><b>m2_m4_orchestrator.py</b></td><td>~300</td><td>14-phase batch runner across M2 + M4</td><td>✅ LIVE</td></tr>
+<tr><td><b>oscal_generator.py</b></td><td>~250</td><td>OSCAL component-def + SSP + AR generator (9.8KB)</td><td>✅ PASS</td></tr>
+<tr><td><b>outreach_queue.py</b></td><td>~180</td><td>100 tailored outreach emails by tier</td><td>✅ LIVE</td></tr>
+<tr><td><b>side_by_side_test.py</b></td><td>~330</td><td>Per-lead public-intel side-by-side comparison + SIGIL</td><td>✅ PASS</td></tr>
+<tr><td><b>sigil_verify.py</b></td><td>~150</td><td>Verify SIGIL chain integrity + OTS anchoring</td><td>✅ PASS</td></tr>
+<tr><td><b>sov3_oowm.py</b></td><td>~200</td><td>Mamba-2 SSM + 16-dim intuition state</td><td>✅ RUNNING</td></tr>
+<tr><td><b>sovereignty_index.py</b></td><td>~150</td><td>6/6 self-test PASS</td><td>✅ PASS</td></tr>
+<tr><td><b>treaty_generator.py</b></td><td>~130</td><td>6 partner category treaty generation</td><td>✅ PASS</td></tr>
+<tr><td><b>trust_score.py</b></td><td>~150</td><td>4/4 self-test PASS</td><td>✅ PASS</td></tr>
+<tr><td><b>watchdog_live.py</b></td><td>~250</td><td>200+ public sources × 12 categories × 5 severities</td><td>✅ LIVE</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ============= TAB 3: M4 ============= -->
+<div class="section" id="m4">
+<h2><span class="icon">🌐</span>M4 · Engineering Lane · 12 Sovereign Nodes</h2>
+<p style="color:var(--muted);font-size:.875rem">M4 ships the substrate. 12 sovereign nodes across the globe. Real-time status from <code style="color:var(--gold)">os.meok.ai/api/nodes</code> (CORS *, cached 5 min).</p>
+
+<div class="node-map" id="nodeMap">
+<svg width="100%" height="100%" viewBox="0 0 1000 400" style="position:absolute;top:0;left:0">
+<!-- World outline (simplified) -->
+<g opacity="0.1" fill="none" stroke="#c9a84c" stroke-width="1">
+<rect x="0" y="0" width="1000" height="400"/>
+<line x1="0" y1="200" x2="1000" y2="200"/>
+<line x1="500" y1="0" x2="500" y2="400"/>
+</g>
+</svg>
+</div>
+
+<div class="grid">
+<div class="card success"><div class="label">London</div><div class="value" style="font-size:1.1rem">HQ · COBOL · ISO 20022 · CICS</div><div class="desc">51.5°N, 0.1°W · governed</div></div>
+<div class="card success"><div class="label">New York</div><div class="value" style="font-size:1.1rem">US finance</div><div class="desc">40.7°N, 74.0°W · governed</div></div>
+<div class="card success"><div class="label">Brussels</div><div class="value" style="font-size:1.1rem">EU AI Office</div><div class="desc">50.85°N, 4.35°E · governed</div></div>
+<div class="card success"><div class="label">Washington</div><div class="value" style="font-size:1.1rem">US NIST</div><div class="desc">38.9°N, 77.0°W · governed</div></div>
+<div class="card success"><div class="label">Singapore</div><div class="value" style="font-size:1.1rem">SG IMDA</div><div class="desc">1.35°N, 103.8°E · governed</div></div>
+<div class="card"><div class="label">Tokyo</div><div class="value" style="font-size:1.1rem">JP METI</div><div class="desc">35.7°N, 139.7°E · watch</div></div>
+<div class="card success"><div class="label">Sydney</div><div class="value" style="font-size:1.1rem">AUKUS Pillar II</div><div class="desc">33.9°S, 151.2°E · governed</div></div>
+<div class="card success"><div class="label">Berlin</div><div class="value" style="font-size:1.1rem">DE BSI</div><div class="desc">52.5°N, 13.4°E · governed</div></div>
+<div class="card"><div class="label">Paris</div><div class="value" style="font-size:1.1rem">FR CNIL</div><div class="desc">48.85°N, 2.35°E · watch</div></div>
+<div class="card success"><div class="label">Toronto</div><div class="value" style="font-size:1.1rem">CA AI Safety</div><div class="desc">43.65°N, 79.4°W · governed</div></div>
+<div class="card"><div class="label">São Paulo</div><div class="value" style="font-size:1.1rem">BR LGPD</div><div class="desc">23.55°S, 46.6°W · flagged</div></div>
+<div class="card"><div class="label">Dubai</div><div class="value" style="font-size:1.1rem">UAE AI Office</div><div class="desc">25.2°N, 55.3°E · watch</div></div>
+</div>
+</div>
+
+<!-- ============= TAB 4: OOWM ============= -->
+<div class="section" id="oowm">
+<h2><span class="icon">🧠</span>SOV3 OOWM · Organic Open World Model</h2>
+<p style="color:var(--muted);font-size:.875rem">Mamba-2 SSM + 16-dim intuition state + 256-dim SIGIL embedding + tanh squashed + selective gating + 1Hz capture + BFT 23/33 reconciliation.</p>
+
+<h3>16-dim intuition state (8 axes × sign + magnitude)</h3>
+<div class="code-block">[BFT_quorum_tightness: -0.000 (sign) +0.000 (mag)] → governance<br>
+[defense_alert_density: -0.000 (sign) +0.000 (mag)] → security<br>
+[framework_violation_rate: -0.000 (sign) +0.000 (mag)] → compliance<br>
+[hive_engagement_ibn_khaldun: -0.000 (sign) +0.000 (mag)] → social<br>
+[sov3_creation_flow: -0.000 (sign) +0.000 (mag)] → velocity<br>
+[care_floor_bandwidth: -0.000 (sign) +0.000 (mag)] → safety<br>
+[audit_chain_freshness: -0.000 (sign) +0.000 (mag)] → trust<br>
+[oracle_confidence: -0.000 (sign) +0.000 (mag)] → self<br>
+<br>
+A_diag = (0.99×7, 0.01) → slow decay + one fast channel<br>
+B: 256-dim → 16-dim SIGIL embedding projection<br>
+activation: tanh (preserves continuous manifold)<br>
+update: 1 Hz (86,400 SIGILs/day/agent)<br>
+confidence_threshold: 0.7 broadcast, 0.4 emergency</div>
+
+<h3>3 trained NNs (1,793 samples)</h3>
+<div class="grid">
+<div class="card"><div class="label">care_validation_nn</div><div class="value">67</div><div class="desc">Validate care patterns</div></div>
+<div class="card"><div class="label">partnership_detection_ml</div><div class="value">67</div><div class="desc">Detect partnership opps</div></div>
+<div class="card"><div class="label">threat_detection_nn</div><div class="value">111</div><div class="desc">Detect threats</div></div>
+<div class="card"><div class="label">relationship_evolution_nn</div><div class="value">549</div><div class="desc">Predict relationship evolution</div></div>
+<div class="card"><div class="label">care_pattern_analyzer</div><div class="value">649</div><div class="desc">Analyze care patterns</div></div>
+<div class="card"><div class="label">creativity_assessment_nn</div><div class="value">350</div><div class="desc">Assess creativity</div></div>
+</div>
+</div>
+
+<!-- ============= TAB 5: CHARTERS ============= -->
+<div class="section" id="charters">
+<h2><span class="icon">📜</span>55 Sovereign Charters at 100/100 Alignment</h2>
+<p style="color:var(--muted);font-size:.875rem">All 55 charters pass 30 canonical alignment patterns. <b>1,650/1,650 checks verified</b>. Charter Article 0 binding on every charter.</p>
+
+<h3>Foundation Layer (L0-L1)</h3>
+<div style="margin-bottom:1rem">
+<span class="charter-pill">00-sovereign-root</span>
+<span class="charter-pill">00-partners</span>
+<span class="charter-pill">01-csoai</span>
+<span class="charter-pill">02-meok</span>
+<span class="charter-pill">03-proofof</span>
+<span class="charter-pill">04-safetyof</span>
+<span class="charter-pill">05-accountabilityof</span>
+<span class="charter-pill">06-ethicalgovernanceof</span>
+<span class="charter-pill">07-transparencyof</span>
+<span class="charter-pill">08-biasdetectionof</span>
+<span class="charter-pill">09-dataprivacyof</span>
+<span class="charter-pill">10-asisecurity</span>
+<span class="charter-pill">11-agisafe</span>
+<span class="charter-pill">12-defoneos</span>
+<span class="charter-pill">13-councilof</span>
+<span class="charter-pill">14-openmoe</span>
+<span class="charter-pill">15-openmcp</span>
+<span class="charter-pill">16-openpatent</span>
+<span class="charter-pill">17-sandbox</span>
+<span class="charter-pill">18-sovereign-town</span>
+<span class="charter-pill">19-meok-compliance-gateway</span>
+</div>
+
+<h3>Industry Layer (L2)</h3>
+<div style="margin-bottom:1rem">
+<span class="charter-pill">20-loopfactory</span>
+<span class="charter-pill">21-optimobile</span>
+<span class="charter-pill">22-socialmediamanager</span>
+<span class="charter-pill">23-cobolbridge</span>
+<span class="charter-pill">24-commercialvehicle</span>
+<span class="charter-pill">25-diyhelp</span>
+<span class="charter-pill">26-fishkeeper</span>
+<span class="charter-pill">27-grabhire</span>
+<span class="charter-pill">28-koikeeper</span>
+<span class="charter-pill">29-landlaw</span>
+<span class="charter-pill">30-muckaway</span>
+<span class="charter-pill">31-planthire</span>
+<span class="charter-pill">32-pokerhud</span>
+<span class="charter-pill">33-suicidestop</span>
+<span class="charter-pill">34-science</span>
+</div>
+
+<h3>Substrate Layer (L3-L4)</h3>
+<div style="margin-bottom:1rem">
+<span class="charter-pill">35-coigndaltion</span>
+<span class="charter-pill">36-publicwatchdog</span>
+<span class="charter-pill">37-sovereigncourt</span>
+<span class="charter-pill">38-sovereignstandards</span>
+<span class="charter-pill">39-sovereignledger</span>
+<span class="charter-pill">40-distribution-hive</span>
+<span class="charter-pill">41-coigndaltion-v2</span>
+<span class="charter-pill">42-watchtower</span>
+<span class="charter-pill">43-sovereign-os</span>
+<span class="charter-pill">44-sigil-chain</span>
+</div>
+
+<h3>Principle Layer (L5 — 9 covenants)</h3>
+<div style="margin-bottom:1rem">
+<span class="charter-pill">45-guardianof</span>
+<span class="charter-pill">46-covenantjustice</span>
+<span class="charter-pill">47-nonharm</span>
+<span class="charter-pill">48-assayintegrity</span>
+<span class="charter-pill">49-virtuebounds</span>
+<span class="charter-pill">50-rectification</span>
+<span class="charter-pill">51-sevengenerations</span>
+<span class="charter-pill">52-relationalpersonhood</span>
+<span class="charter-pill">53-epistemichumility</span>
+</div>
+</div>
+
+<!-- ============= TAB 6: FRAMEWORKS ============= -->
+<div class="section" id="frameworks">
+<h2><span class="icon">📋</span>244 Universal Compliance Frameworks</h2>
+<p style="color:var(--muted);font-size:.875rem">Cross-walked across EU, UK, US, APAC, EMEA, Americas, Sectoral, Standards, Other. 11,316+ cross-walks. 1,000+ regulatory articles walked end-to-end.</p>
+
+<div class="grid">
+<div class="card"><div class="label">EU</div><div class="value">18</div><div class="desc">EU AI Act, GDPR, DORA, NIS2, eIDAS 2.0, EUDI Wallet, AI Liability Directive</div></div>
+<div class="card"><div class="label">UK</div><div class="value">15</div><div class="desc">UK ICO, UK AISI, UK AI Bill 2026, UK GDPR, Online Safety, Building Safety, Cyber Essentials</div></div>
+<div class="card"><div class="label">US</div><div class="value">25</div><div class="desc">NIST AI RMF, NIST CSF 2.0, NIST 800-63, OMB M-24-10, SEC, FDA, HIPAA, FTC, EO 14110, FedRAMP</div></div>
+<div class="card"><div class="label">APAC</div><div class="value">37</div><div class="desc">SG AI Verify, JP APPI, KR PIPA, IN DPDP, AU Privacy, NZ Privacy, CN PIPL, TW PDPA</div></div>
+<div class="card"><div class="label">EMEA</div><div class="value">20</div><div class="desc">UK ICO, DE BSI, FR CNIL, IT Garante, ES AEPD, NL AP, SE IMY, NO Datatilsyn, CH FDPIC</div></div>
+<div class="card"><div class="label">Americas</div><div class="value">12</div><div class="desc">CA PIPEDA, BR LGPD, MX LFPDPPP, AR AAIP, CO Habeas, CL</div></div>
+<div class="card"><div class="label">Sectoral</div><div class="value">35</div><div class="desc">JSP 936/440/604, AUKUS Pillar II, Basel III/IV, DORA, MiFID II, MDR, PCI DSS 4.0</div></div>
+<div class="card"><div class="label">Standards</div><div class="value">50</div><div class="desc">ISO/IEC 42001, 27001, 23220, W3C VC, OAuth, OIDC, OWASP, IEEE, ETSI, NIST</div></div>
+<div class="card"><div class="label">Other</div><div class="value">22</div><div class="desc">CoE AI Conv 2024, OECD AI, G7 Hiroshima, Five Eyes, AUKUS, NATO STANAG 4778</div></div>
+</div>
+</div>
+
+<!-- ============= TAB 7: LEADS ============= -->
+<div class="section" id="leads">
+<h2><span class="icon">🎯</span>2,363 Leads · 9 Tiers · 517,385 side-by-side metrics</h2>
+<p style="color:var(--muted);font-size:.875rem">Per-lead public intel only. Ed25519 SIGIL emitted per lead. SHA-256 evidence hash. Public artifacts captured (security.txt, robots.txt, sitemap.xml, /.well-known/ai-policy.json).</p>
+
+<h3>Lead distribution by tier</h3>
+<div class="heatmap">
+<div class="heatmap-cell t0" title="T0 — Sovereign buyers">T0<br>40</div>
+<div class="heatmap-cell t1" title="T1 — Defence primes">T1<br>10</div>
+<div class="heatmap-cell t2" title="T2 — Regulators">T2<br>40</div>
+<div class="heatmap-cell t3" title="T3 — Fortune 100">T3<br>20</div>
+<div class="heatmap-cell t4" title="T4 — Fortune 500">T4<br>5</div>
+<div class="heatmap-cell t5" title="T5 — FTSE 100">T5<br>30</div>
+<div class="heatmap-cell t5" title="T6 — Fortune Tech">T6<br>50</div>
+<div class="heatmap-cell t4" title="T7 — Sovereign Cloud">T7<br>4</div>
+<div class="heatmap-cell t3" title="T8 — FTS-EU regulators">T8<br>50</div>
+<div class="heatmap-cell t2" title="T9 — Defence SMEs + Academic + Media">T9<br>110</div>
+<div class="heatmap-cell t1" title="T10 — Mid-market scale-ups">T10<br>100</div>
+</div>
+
+<p style="color:var(--muted);font-size:.875rem;margin-top:1rem">
+T0 (40) = Sovereign buyers (UK ICO + EU AI Office + US NIST + 12 more)<br>
+T1 (10) = Defence primes (BAE + QinetiQ + Thales + Leonardo + Airbus + Rolls + Raytheon + LM + L3Harris + Northrop)<br>
+T2 (40) = Regulators (UK + EU + US + APAC + EMEA)<br>
+T3 (20) = Fortune 100 tech-first<br>
+T4-T8 (109) = Mid-market<br>
+T9-T10 (210) = Defence SMEs + Academic + Media + Scale-ups<br>
+<strong>Total: 2,363 unique leads · 517,385 side-by-side metrics · 2,363 unique SIGILs</strong>
+</p>
+</div>
+
+<!-- ============= TAB 8: WATCHDOG ============= -->
+<div class="section" id="watchdog">
+<h2><span class="icon">🛡️</span>Watchdog · 200+ Sources × 12 Categories × 5 Severities</h2>
+<p style="color:var(--muted);font-size:.875rem">Live signal monitoring. S4+ auto-escalation to BFT 23/33. S5 Charter Article 0 binding review.</p>
+
+<h3>12 Categories</h3>
+<div class="grid">
+<div class="card"><div class="label">CMP</div><div class="value">Compliance</div><div class="desc">20+ sources</div></div>
+<div class="card"><div class="label">SAF</div><div class="value">Safety</div><div class="desc">15+ sources</div></div>
+<div class="card"><div class="label">SEC</div><div class="value">Security</div><div class="desc">30+ sources · 87K CVEs</div></div>
+<div class="card"><div class="label">BIA</div><div class="value">Bias</div><div class="desc">10+ sources</div></div>
+<div class="card"><div class="label">PRV</div><div class="value">Privacy</div><div class="desc">15+ sources</div></div>
+<div class="card"><div class="label">ETH</div><div class="value">Ethics</div><div class="desc">10+ sources</div></div>
+<div class="card"><div class="label">SOV</div><div class="value">Sovereignty</div><div class="desc">20+ sources</div></div>
+<div class="card"><div class="label">PRC</div><div class="value">Process</div><div class="desc">15+ sources</div></div>
+<div class="card"><div class="label">TRS</div><div class="value">Transparency</div><div class="desc">10+ sources</div></div>
+<div class="card"><div class="label">ACC</div><div class="value">Accountability</div><div class="desc">15+ sources</div></div>
+<div class="card"><div class="label">EXC</div><div class="value">Excellence</div><div class="desc">25+ sources</div></div>
+<div class="card"><div class="label">ENV</div><div class="value">Environment</div><div class="desc">15+ sources</div></div>
+</div>
+
+<h3>Severity Escalation</h3>
+<table class="table">
+<thead><tr><th>Sev</th><th>Action</th><th>Examples</th></tr></thead>
+<tbody>
+<tr><td><b>S1</b></td><td>Log only</td><td>Routine disclosures</td></tr>
+<tr><td><b>S2</b></td><td>Log + review</td><td>Minor advisories</td></tr>
+<tr><td><b>S3</b></td><td>Log + dispatch</td><td>Medium advisories</td></tr>
+<tr class="success"><td><b>S4</b></td><td>BFT 23/33 escalation</td><td>High severity, urgent</td></tr>
+<tr><td><b>S5</b></td><td>Charter Article 0 binding review (33/33 unanimous)</td><td>Critical · severe violation</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ============= TAB 9: BFT ============= -->
+<div class="section" id="bft">
+<h2><span class="icon">⚖️</span>33-Agent BFT Council · HotStuff Consensus</h2>
+<p style="color:var(--muted);font-size:.875rem">Byzantine Fault Tolerant. 23/33 quorum. Article 0 unanimous + 5 human sigs. f<n/3=10 tolerated malicious.</p>
+
+<h3>Council Composition (33 agents)</h3>
+<div class="bft-row">
+<div class="bft-cell leader">1</div>
+<div class="bft-cell">2</div>
+<div class="bft-cell">3</div>
+<div class="bft-cell">4</div>
+<div class="bft-cell">5</div>
+<div class="bft-cell">6</div>
+<div class="bft-cell">7</div>
+<div class="bft-cell">8</div>
+<div class="bft-cell">9</div>
+<div class="bft-cell">10</div>
+<div class="bft-cell">11</div>
+<div class="bft-cell">12</div>
+<div class="bft-cell">13</div>
+<div class="bft-cell">14</div>
+<div class="bft-cell">15</div>
+<div class="bft-cell">16</div>
+<div class="bft-cell">17</div>
+<div class="bft-cell">18</div>
+<div class="bft-cell">19</div>
+<div class="bft-cell">20</div>
+<div class="bft-cell">21</div>
+<div class="bft-cell">22</div>
+<div class="bft-cell">23</div>
+<div class="bft-cell">24</div>
+<div class="bft-cell">25</div>
+<div class="bft-cell">26</div>
+<div class="bft-cell">27</div>
+<div class="bft-cell">28</div>
+<div class="bft-cell">29</div>
+<div class="bft-cell">30</div>
+<div class="bft-cell">31</div>
+<div class="bft-cell">32</div>
+<div class="bft-cell">33</div>
+</div>
+<p style="color:var(--muted);font-size:.75rem">15 + 17 + 33 highlight = 23 quorum required</p>
+
+<h3>HotStuff 4-phase consensus</h3>
+<table class="table">
+<thead><tr><th>Phase</th><th>Action</th><th>Latency</th></tr></thead>
+<tbody>
+<tr><td>1. Prepare</td><td>Leader proposes block</td><td>~50ms</td></tr>
+<tr><td>2. Pre-commit</td><td>Validators vote</td><td>~50ms</td></tr>
+<tr><td>3. Commit</td><td>Lock + cert</td><td>~50ms</td></tr>
+<tr><td>4. Decide</td><td>Finalize</td><td>~50ms</td></tr>
+</tbody>
+</table>
+<p style="color:var(--green);font-weight:700">Total finality: ~200ms · 4.5s end-to-end · Capture-proof</p>
+</div>
+
+<!-- ============= TAB 10: OSCAL ============= -->
+<div class="section" id="oscal">
+<h2><span class="icon">📐</span>OSCAL · NIST 1.1.2 Attestation</h2>
+<p style="color:var(--muted);font-size:.875rem">9.8KB OSCAL published: component-def (6.3KB) + SSP (2.2KB) + assessment-results (1.4KB). Ed25519-signed.</p>
+
+<div class="grid">
+<div class="card"><div class="label">component-definition.json</div><div class="value">6.3KB</div><div class="desc">5 controls: EU AI Act Art 50 + GDPR Art 22 + NIST CSF 2.0 GV + ISO 42001 Cl 6 + CoE AI Conv 2024</div></div>
+<div class="card"><div class="label">system-security-plan.json</div><div class="value">2.2KB</div><div class="desc">security-sensitivity-level: moderate</div></div>
+<div class="card"><div class="label">assessment-results.json</div><div class="value">1.4KB</div><div class="desc">100/100 alignment assessment</div></div>
+</div>
+
+<div class="code-block">{
+  "component-definition": {
+    "uuid": "...",
+    "metadata": {
+      "title": "CSOAI Sovereign Substrate",
+      "oscal-version": "1.1.2",
+      "version": "1.0.0"
+    },
+    "components": [
+      { "type": "software", "title": "CSOAI Sovereign Substrate" },
+      { "type": "software", "title": "CSOAI M2 stdlib tools" },
+      { "type": "service", "title": "CSOAI SIGIL chain" }
+    ],
+    "control-implementations": [
+      { "control-id": "eu-ai-act-art-50" },
+      { "control-id": "gdpr-art-22" },
+      { "control-id": "nist-csf-2-gv" },
+      { "control-id": "iso-42001-clause-6" },
+      { "control-id": "coe-ai-conv-2024" }
+    ]
+  }
+}</div>
+</div>
+
+<!-- ============= TAB 11: SIGIL CHAIN ============= -->
+<div class="section" id="sigchain">
+<h2><span class="icon">⛓</span>SIGIL Chain · Ed25519-signed · OTS Bitcoin-anchored</h2>
+<p style="color:var(--muted);font-size:.875rem">SHA-256 hash chain. 8 OP types. Publicly verifiable at proofof.ai. Tamper-evident by mining economics.</p>
+
+<h3>8 OP types</h3>
+<div class="grid">
+<div class="card"><div class="label">M</div><div class="value">Message</div><div class="desc">General</div></div>
+<div class="card"><div class="label">H</div><div class="value">Heartbeat</div><div class="desc">1 Hz</div></div>
+<div class="card"><div class="label">S</div><div class="value">Signal</div><div class="desc">Watchdog</div></div>
+<div class="card"><div class="label">P</div><div class="value">Proposal</div><div class="desc">BFT</div></div>
+<div class="card"><div class="label">V</div><div class="value">Vote</div><div class="desc">BFT</div></div>
+<div class="card"><div class="label">C</div><div class="value">Charter</div><div class="desc">Amendment</div></div>
+<div class="card"><div class="label">W</div><div class="value">Watchdog</div><div class="desc">S4+ escalation</div></div>
+<div class="card"><div class="label">T</div><div class="value">Thought</div><div class="desc">OOWM</div></div>
+</div>
+
+<h3>Recent SIGIL stream (last 5)</h3>
+<div class="sigil-stream" id="sigilStream">
+<div class="sigil-line"><span class="ts">2026-07-09T03:03:04Z</span> · <span class="digest">cafbca0a8dc4ea2d</span> · M|JEEVES|csoai|SERIES A DECK SHIPPED...</div>
+<div class="sigil-line"><span class="ts">2026-07-09T02:58:59Z</span> · <span class="digest">9bf4d1197ecb281d</span> · M|JEEVES|csoai|FULL EAT ALIGNMENT — 100% + Series A + Outreach...</div>
+<div class="sigil-line"><span class="ts">2026-07-08T17:34:14Z</span> · <span class="digest">605d55d809b5df29</span> · M|JEEVES|csoai|TIER 9+10 + REGULATIONS EXPANSION...</div>
+<div class="sigil-line"><span class="ts">2026-07-08T10:49:53Z</span> · <span class="digest">f0dd5a60ce22b1e6</span> · M|JEEVES|csoai|SOV3³ + OOWM KNOWLEDGE TAB SHIPPED...</div>
+<div class="sigil-line"><span class="ts">2026-07-08T05:23:53Z</span> · <span class="digest">9e6e361758f361a3</span> · M|JEEVES|csoai|OUTREACH QUEUE — 100 emails STAGED...</div>
+</div>
+
+<p style="margin-top:1rem"><a href="proofof-verify.html" class="btn">→ Verify any SIGIL</a></p>
+</div>
+
+<!-- ============= TAB 12: OUTREACH ============= -->
+<div class="section" id="outreach">
+<h2><span class="icon">📨</span>Outreach Queue · 200 STAGED emails</h2>
+<p style="color:var(--muted);font-size:.875rem">All STAGED, NOT sent. Owner-gated per EAT_directive_2026-07-02. Tailored per-tier (T0-T8).</p>
+
+<div class="grid">
+<div class="card success"><div class="label">Tier 0-2 (Sovereign + Defence + Regulators)</div><div class="value">100</div><div class="desc">csoai-outreach/outreach-queue.jsonl</div></div>
+<div class="card success"><div class="label">Tier 3-8 (Mid-market)</div><div class="value">100</div><div class="desc">csoai-outreach/outreach-queue-tier3-8.jsonl</div></div>
+<div class="card"><div class="label">Total STAGED</div><div class="value">200</div><div class="desc">Owner must fire</div></div>
+</div>
+
+<h3>Per-tier templates</h3>
+<table class="table">
+<thead><tr><th>Tier</th><th>Template</th><th>Wedge</th></tr></thead>
+<tbody>
+<tr><td>T0</td><td>Sovereign Buyer outreach</td><td>Article 0 binding + 30-day sandbox + BFT observer</td></tr>
+<tr><td>T1</td><td>DEFONEOS Crown RFQ</td><td>AUKUS Pillar II + 5-of-7 Shamir + DEFONEOS-SEAL</td></tr>
+<tr><td>T2</td><td>30-day free sandbox</td><td>Regulator-grade sovereign substrate</td></tr>
+<tr><td>T3-T8</td><td>Pricing + savings vs Palantir/Anduril/BAE</td><td>90-98% cost reduction</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ============= TAB 13: ARTICLE 50 PASSPORT ============= -->
+<div class="section" id="passport">
+<h2><span class="icon">📜</span>Article 50 EU AI Act Passport · Free</h2>
+<p style="color:var(--muted);font-size:.875rem">EU AI Act Article 50 enforcement in 27 days (2 Aug 2026). Fines: €15M or 3% global turnover. CSOAI issues free passports.</p>
+
+<div class="pipeline">
+<div class="pipeline-step active"><div class="step-num">1</div><div class="step-title">Eligibility</div><div class="step-status">~1 min</div></div>
+<div class="pipeline-step active"><div class="step-num">2</div><div class="step-title">Care Membrane 0.95</div><div class="step-status">~5 min</div></div>
+<div class="pipeline-step active"><div class="step-num">3</div><div class="step-title">Article 50 disclosure</div><div class="step-status">~5 min</div></div>
+<div class="pipeline-step active"><div class="step-num">4</div><div class="step-title">BFT 23/33 ratification</div><div class="step-status">~24 hr</div></div>
+<div class="pipeline-step active"><div class="step-num">5</div><div class="step-title">Passport issuance</div><div class="step-status">instant</div></div>
+<div class="pipeline-step active"><div class="step-num">6</div><div class="step-title">Continuous monitoring</div><div class="step-status">free forever</div></div>
+</div>
+
+<table class="table">
+<thead><tr><th>Tier</th><th>Cost</th><th>Issuance time</th><th>Includes</th></tr></thead>
+<tbody>
+<tr class="success"><td><b>FREE</b></td><td>£0</td><td>5 days</td><td>Passport + SIGIL chain + public verify</td></tr>
+<tr><td>PRO</td><td>£5</td><td>3 days</td><td>All Free + OSCAL + System Card + priority</td></tr>
+<tr><td>BUSINESS</td><td>£499/yr</td><td>1 day + annual</td><td>All Pro + BFT observer + Watchdog</td></tr>
+<tr><td>CROWN RFQ</td><td>£50K+</td><td>Tailored</td><td>Sovereign-grade issuance</td></tr>
+</tbody>
+</table>
+
+<p><a href="article-50-passport.html" class="btn">→ Get Free Passport</a> <a href="eu-ai-act-deadline.html" class="btn btn-secondary">EU AI Act Countdown</a></p>
+</div>
+
+<!-- ============= TAB 14: SERIES A ============= -->
+<div class="section" id="seriesa">
+<h2><span class="icon">💰</span>Series A · £45-90M raise at £180-240M pre-money</h2>
+<p style="color:var(--muted);font-size:.875rem">5 moats. 4 exit paths. 11 owner-gates named. Honesty register.</p>
+
+<div class="kpi-strip">
+<div class="kpi"><div class="v">£45-90M</div><div class="l">Raise</div></div>
+<div class="kpi"><div class="v">£180-240M</div><div class="l">Pre-money</div></div>
+<div class="kpi"><div class="v">5</div><div class="l">Moats</div></div>
+<div class="kpi"><div class="v">4</div><div class="l">Exit paths</div></div>
+<div class="kpi"><div class="v">11</div><div class="l">Owner gates</div></div>
+</div>
+
+<div class="grid">
+<div class="card success"><div class="label">Y1 forecast (illustrative)</div><div class="value">£228K-£1.14M</div><div class="desc">ARR band</div></div>
+<div class="card success"><div class="label">Y2 forecast (illustrative)</div><div class="value">£5M-£25M</div><div class="desc">ARR band</div></div>
+<div class="card success"><div class="label">Y3 forecast (illustrative)</div><div class="value">£25M-£80M</div><div class="desc">ARR band</div></div>
+</div>
+
+<p><a href="investors.html" class="btn">→ Investor Portal</a> <a href="series-a-deck.html" class="btn btn-secondary">22-Slide Deck</a> <a href="revenue-dashboard.html" class="btn btn-secondary">Revenue Dashboard</a></p>
+</div>
+
+<!-- ============= TAB 15: GATES ============= -->
+<div class="section" id="gates">
+<h2><span class="icon">🚪</span>5 Owner-Gated Gates · The Only Blockers</h2>
+<p style="color:var(--muted);font-size:.875rem">All other work is staged + ready. These 5 gates are the ONLY remaining actions for live conversion. Per EAT_directive_2026-07-02: stage never fire.</p>
+
+<div class="pipeline">
+<div class="pipeline-step gated"><div class="step-num">1</div><div class="step-title">Vercel Redeploy</div><div class="step-status">✓ Done · 12-29s ready</div></div>
+<div class="pipeline-step gated"><div class="step-num">2</div><div class="step-title">csoai.org DNS</div><div class="step-status">⚠ $12/yr + Cloudflare</div></div>
+<div class="pipeline-step gated"><div class="step-num">3</div><div class="step-title">ConvertKit Email</div><div class="step-status">⚠ Free tier available</div></div>
+<div class="pipeline-step gated"><div class="step-num">4</div><div class="step-title">Stripe Checkout</div><div class="step-status">⚠ 5 tiers live (Pro/Business/Enterprise/Crown/Free)</div></div>
+<div class="pipeline-step gated"><div class="step-num">5</div><div class="step-title">Live SOV3 Endpoint</div><div class="step-status">⚠ VM-side (GCP meok-backend :3101)</div></div>
+</div>
+
+<h3>11 Series A Owner-Gates</h3>
+<div class="grid">
+<div class="card"><div class="label">DSP</div><div class="value">UK MOD Defence Suppliers Portal</div><div class="desc">£10/yr · 1 day</div></div>
+<div class="card"><div class="label">Cyber Essentials Plus</div><div class="value">UK Cyber Essentials</div><div class="desc">£3K-£5K · 1-2 weeks</div></div>
+<div class="card"><div class="label">SC</div><div class="value">Security Clearance</div><div class="desc">6-12 weeks</div></div>
+<div class="card"><div class="label">NATO STO</div><div class="value">NATO Science & Tech</div><div class="desc">3-6 months</div></div>
+<div class="card"><div class="label">DSRB</div><div class="value">Defence Safety Reg Body</div><div class="desc">3-6 months</div></div>
+<div class="card"><div class="label">DASA</div><div class="value">Defence & Security Accelerator</div><div class="desc">3-9 months</div></div>
+<div class="card"><div class="label">DIANA</div><div class="value">NATO DIANA</div><div class="desc">6-12 months</div></div>
+<div class="card"><div class="label">UKDI</div><div class="value">UK Defence Innovation</div><div class="desc">3-9 months</div></div>
+<div class="card"><div class="label">AISI</div><div class="value">UK AI Safety Institute</div><div class="desc">3-6 months</div></div>
+<div class="card"><div class="label">Domain bind</div><div class="value">csoai.org DNS</div><div class="desc">£12/yr + DNS</div></div>
+<div class="card"><div class="label">PyPI</div><div class="value">Python package index</div><div class="desc">Free · 1 day</div></div>
+</div>
+</div>
+
+</div>
+
+<footer>
+<p>🐉 SOV-18 · CSOAI Sovereign All-in-One Tab · UK Companies House 16939677</p>
+<p>Sovereign root key: <code style="color:var(--gold-light);font-size:.7rem">d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a</code></p>
+<p>Charter Article 0 binding (verbatim): <em>"Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. CA3O is the CMKC for AI."</em></p>
+<p style="margin-top:1rem;font-size:.65rem">Ed25519-signed · BFT-ratified · OTS-Bitcoin-anchored · Honesty register: provenance ≠ truth, assurance ≠ certification. The barrier to capture is infinite; the barrier to entry is zero. Forever.</p>
+</footer>
+
+</body></html>

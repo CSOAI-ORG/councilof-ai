@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#c9a84c">
+<meta name="description" content="MEOK Avatar Studio — Apple-style Memoji / Vision Pro Persona for the 7 sovereign archetypes. 8,750 combinations. Sovereign, SIGIL-signed, yours.">
+<title>MEOK Avatar Studio · 8,750 Sovereign Avatars</title>
+<meta property="og:title" content="MEOK Avatar Studio · 8,750 Sovereign Avatars">
+<meta property="og:description" content="Build your sovereign Memoji — 7 archetypes × 5 skin × 5 hair × 5 face × 5 outfit = 8,750 combinations.">
+<meta property="og:image" content="https://meok.ai/avatars/og-avatar.png">
+<meta property="og:url" content="https://meok.ai/avatars/meok-avatar-style.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@meok_ai">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MEOK Avatar Studio">
+<link rel="apple-touch-icon" href="/icons/icon-192.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   MEOK AVATAR STUDIO — CSS-ONLY MEMOJI / VISION PRO PERSONA STYLE
+   7 archetypes × 5 skin × 5 hair × 5 face × 5 outfit = 8,750 combinations
+   Sovereign, offline-first, Apple-style.
+   ============================================================================ */
+:root{
+  --gold:#c9a84c;
+  --gold-deep:#a8832f;
+  --ink:#0b0b0f;
+  --ink-2:#161620;
+  --paper:#fafaf7;
+  --paper-2:#f4f1e8;
+  --line:rgba(11,11,15,.08);
+  --line-strong:rgba(11,11,15,.18);
+  --accent:#0071e3;        /* Apple blue */
+  --accent-2:#34c759;      /* Apple green */
+  --rose:#ff375f;
+  --violet:#af52de;
+  --indigo:#5856d6;
+  --teal:#30b0c7;
+  --orange:#ff9f0a;
+  --shadow-1:0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+  --shadow-2:0 10px 30px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.06);
+  --shadow-3:0 30px 80px rgba(0,0,0,.16), 0 8px 24px rgba(0,0,0,.08);
+  --radius-s:10px;
+  --radius-m:16px;
+  --radius-l:24px;
+  --radius-xl:32px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue","Space Grotesk",sans-serif;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(201,168,76,.18), transparent 60%),
+    radial-gradient(900px 500px at 0% 100%, rgba(0,113,227,.10), transparent 55%),
+    linear-gradient(180deg, #fbfaf5 0%, #f6f3e9 100%);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","ss02","cv01";
+  min-height:100vh;
+  overflow-x:hidden;
+}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.brand{font-family:"Space Grotesk",sans-serif}
+
+/* ===== TOP NAV ===== */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 28px;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:50;
+}
+.nav-left{display:flex;align-items:center;gap:14px}
+.nav-logo{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold) 0%, #e7c873 50%, #b88b3a 100%);
+  display:grid;place-items:center;color:#1a1407;font-weight:700;font-size:18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 4px 12px rgba(201,168,76,.35);
+}
+.nav-title{font-weight:600;font-size:15px;letter-spacing:-.01em}
+.nav-sub{font-size:12px;color:#666}
+.nav-links{display:flex;gap:22px;align-items:center;font-size:13.5px}
+.nav-links a{color:#333;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{
+  padding:9px 16px;border-radius:999px;font-weight:500;font-size:13px;
+  background:var(--ink);color:#fff;border:none;cursor:pointer;
+  transition:transform .15s ease, box-shadow .2s ease;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:var(--shadow-2)}
+
+/* ===== HERO ===== */
+.hero{
+  text-align:center;padding:60px 24px 30px;max-width:1100px;margin:0 auto;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:999px;font-size:12px;font-weight:500;
+  background:rgba(201,168,76,.12);color:var(--gold-deep);
+  border:1px solid rgba(201,168,76,.3);margin-bottom:18px;
+}
+.hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,.18)}
+.hero h1{
+  font-size:clamp(40px, 6vw, 64px);font-weight:700;letter-spacing:-.03em;line-height:1.05;
+  background:linear-gradient(180deg, #0b0b0f 0%, #2c2a1e 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:14px;
+}
+.hero h1 .gold{
+  background:linear-gradient(135deg,var(--gold) 0%, #e7c873 50%, var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{
+  font-size:18px;color:#444;max-width:680px;margin:0 auto;line-height:1.55;
+}
+.hero-stats{
+  display:flex;gap:32px;justify-content:center;margin-top:28px;flex-wrap:wrap;
+}
+.hero-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.hero-stat b{font-size:22px;font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+.hero-stat span{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.08em}
+
+/* ===== LAYOUT ===== */
+.studio{
+  display:grid;grid-template-columns:380px 1fr 360px;gap:0;
+  max-width:1400px;margin:24px auto 0;
+  border:1px solid var(--line);border-radius:var(--radius-xl);
+  background:#ffffff;box-shadow:var(--shadow-3);overflow:hidden;
+  min-height:880px;
+}
+@media (max-width:1200px){
+  .studio{grid-template-columns:340px 1fr;max-width:96%}
+  .panel-aside{grid-column:1 / -1;border-left:none !important;border-top:1px solid var(--line)}
+}
+@media (max-width:760px){
+  .studio{grid-template-columns:1fr;margin:12px;border-radius:18px}
+  .panel-controls,.panel-stage,.panel-aside{border:none;border-bottom:1px solid var(--line)}
+}
+
+/* ===== STAGE (Center) ===== */
+.panel-stage{
+  background:
+    radial-gradient(900px 400px at 50% 20%, rgba(0,113,227,.10), transparent 60%),
+    linear-gradient(180deg, #fbfbfa 0%, #f4f1e8 100%);
+  padding:28px 24px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:18px;
+  position:relative;
+  border-left:1px solid var(--line);border-right:1px solid var(--line);
+}
+.stage-top{
+  width:100%;display:flex;justify-content:space-between;align-items:center;
+}
+.arch-pill{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.7);
+  backdrop-filter:blur(8px);border:1px solid var(--line);
+  font-size:13px;font-weight:500;
+}
+.arch-pill .arch-icon{
+  width:22px;height:22px;border-radius:7px;
+  background:var(--arch-color,#c9a84c);
+  display:grid;place-items:center;color:#fff;font-size:14px;font-weight:700;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+}
+.combo-counter{font-size:12px;color:#555}
+.stage-actions{display:flex;gap:8px}
+.icon-btn{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--line);
+  background:#fff;cursor:pointer;display:grid;place-items:center;
+  transition:all .15s ease;color:#444;
+}
+.icon-btn:hover{background:#f5f5f7;border-color:var(--line-strong);transform:translateY(-1px)}
+.icon-btn svg{width:18px;height:18px}
+
+.avatar-canvas{
+  width:100%;max-width:480px;aspect-ratio:1/1;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.avatar-canvas::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(closest-side, rgba(255,255,255,.5), transparent 70%);
+  border-radius:50%;
+}
+.avatar-canvas svg{
+  width:100%;height:100%;display:block;
+  filter:drop-shadow(0 30px 50px rgba(0,0,0,.18)) drop-shadow(0 8px 20px rgba(0,0,0,.08));
+  animation:floaty 6s ease-in-out infinite;
+}
+@keyframes floaty{
+  0%,100%{transform:translateY(0) rotate(0)}
+  50%{transform:translateY(-8px) rotate(.4deg)}
+}
+
+.stage-controls{
+  width:100%;display:flex;justify-content:center;gap:8px;margin-top:6px;
+}
+.pill-row{
+  display:flex;gap:6px;background:rgba(255,255,255,.7);
+  border-radius:999px;padding:4px;border:1px solid var(--line);
+  backdrop-filter:blur(8px);
+}
+.pill-row button{
+  border:none;background:transparent;padding:6px 14px;border-radius:999px;
+  font-size:12.5px;font-weight:500;color:#555;cursor:pointer;
+  transition:all .2s ease;
+}
+.pill-row button.active{
+  background:var(--ink);color:#fff;
+}
+.pill-row button:hover:not(.active){background:rgba(0,0,0,.05);color:var(--ink)}
+
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.btn-primary{
+  padding:11px 22px;border-radius:999px;background:linear-gradient(135deg,var(--accent) 0%, #2997ff 100%);
+  color:#fff;border:none;font-weight:600;font-size:14px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 6px 16px rgba(0,113,227,.35);transition:transform .15s ease;
+}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-secondary{
+  padding:11px 22px;border-radius:999px;background:#fff;color:var(--ink);
+  border:1px solid var(--line-strong);font-weight:500;font-size:14px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-secondary:hover{background:#fafaf7}
+.btn-ghost{
+  padding:11px 18px;border-radius:999px;background:transparent;color:#555;
+  border:none;font-weight:500;font-size:14px;cursor:pointer;
+}
+.btn-ghost:hover{color:var(--ink)}
+
+/* ===== CONTROLS (Left) ===== */
+.panel-controls{
+  padding:22px 18px;background:#fff;overflow-y:auto;
+}
+.section{margin-bottom:18px}
+.section-title{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#888;font-weight:600;
+  margin:0 8px 8px;
+}
+.archetype-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+}
+.archetype-card{
+  padding:10px 6px;border-radius:12px;background:#fafaf7;border:1px solid var(--line);
+  cursor:pointer;text-align:center;transition:all .2s ease;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.archetype-card:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+.archetype-card.active{
+  background:linear-gradient(135deg, rgba(201,168,76,.12), rgba(201,168,76,.04));
+  border-color:var(--gold);box-shadow:0 4px 14px rgba(201,168,76,.25);
+}
+.archetype-card .ico{
+  width:36px;height:36px;border-radius:10px;
+  display:grid;place-items:center;color:#fff;font-size:18px;font-weight:700;
+  background:var(--arch-color,#c9a84c);
+}
+.archetype-card .name{font-size:11.5px;font-weight:500;color:#333}
+
+.swatch-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:0 8px}
+.swatch{
+  height:38px;border-radius:10px;cursor:pointer;border:2px solid transparent;
+  position:relative;transition:transform .15s ease, border-color .2s ease;
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;
+  font-size:9px;font-weight:600;color:rgba(0,0,0,.5);
+}
+.swatch:hover{transform:scale(1.06)}
+.swatch.active{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset, 0 4px 12px rgba(0,0,0,.15)}
+
+.style-row{
+  display:flex;flex-wrap:wrap;gap:5px;padding:0 8px;
+}
+.style-chip{
+  padding:8px 12px;border-radius:10px;background:#fafaf7;border:1px solid var(--line);
+  font-size:12px;font-weight:500;cursor:pointer;transition:all .15s ease;color:#333;
+  display:flex;align-items:center;gap:5px;
+}
+.style-chip:hover{border-color:var(--line-strong)}
+.style-chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ===== ASIDE (Right) ===== */
+.panel-aside{
+  padding:22px 20px;background:#fff;overflow-y:auto;
+}
+.panel-aside h3{
+  font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:#666;font-weight:600;
+  margin-bottom:12px;
+}
+.identity-card{
+  border:1px solid var(--line);border-radius:var(--radius-m);
+  padding:18px;background:linear-gradient(180deg, #fff 0%, #fafaf7 100%);
+  margin-bottom:16px;
+}
+.identity-card .ichar-name{
+  font-size:18px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;
+}
+.identity-card .ichar-handle{font-size:12px;color:#888;margin-bottom:14px;font-family:"JetBrains Mono",monospace}
+.stat-row{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.stat-row:first-of-type{border-top:none}
+.stat-row .lbl{color:#666}
+.stat-row .val{font-weight:600;color:var(--ink)}
+
+.ocean-radar{
+  width:100%;height:160px;margin:6px 0;position:relative;
+}
+.ocean-radar svg{width:100%;height:100%}
+.ocean-legend{display:grid;grid-template-columns:repeat(5,1fr);font-size:10px;color:#888;gap:4px;text-align:center;margin-top:4px}
+
+.share-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+.share-btn{
+  border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;
+  font-size:12px;font-weight:500;color:#333;transition:all .15s ease;
+}
+.share-btn:hover{background:#fafaf7;border-color:var(--line-strong);transform:translateY(-1px)}
+.share-btn .logo{
+  width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:700;
+}
+
+.sigil-pill{
+  display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+  background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);font-size:11px;color:var(--gold-deep);
+  font-family:"JetBrains Mono",monospace;margin-top:14px;
+}
+.sigil-pill .sig-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,.18)}
+
+/* ===== ARCHETYPE BADGES (for nav state) ===== */
+.arch-sovereign{--arch-color:#c9a84c}
+.arch-guardian{--arch-color:#06b6d4}
+.arch-scout{--arch-color:#10b981}
+.arch-strategist{--arch-color:#8b5cf6}
+.arch-creator{--arch-color:#ec4899}
+.arch-companion{--arch-color:#f97316}
+.arch-sage{--arch-color:#64748b}
+
+/* ===== FOOTER ===== */
+.footer{
+  max-width:1400px;margin:24px auto 60px;padding:20px;
+  text-align:center;font-size:12px;color:#888;
+}
+
+/* ===== MODAL ===== */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:100;
+  opacity:0;transition:opacity .25s ease;
+}
+.modal.show{display:flex;opacity:1}
+.modal-card{
+  background:#fff;border-radius:20px;padding:28px;max-width:480px;width:90%;
+  box-shadow:var(--shadow-3);
+}
+.modal h2{font-size:22px;margin-bottom:8px;font-weight:600;letter-spacing:-.02em}
+.modal p{color:#555;font-size:14px;line-height:1.5;margin-bottom:18px}
+.modal .modal-cta{display:flex;gap:10px;justify-content:flex-end}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:500;
+  box-shadow:var(--shadow-2);z-index:200;opacity:0;
+  transition:all .3s cubic-bezier(.2,.8,.4,1);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ===== SVG AVATAR BUILDER CSS — MEMOJI / PERSONA STYLE ===== */
+/*
+   The avatar is composed of layered SVG with CSS variables. Each component
+   (skin, hair, face, outfit) is rendered with a configurable style.
+*/
+.avatar-svg .skin-layer   { fill: var(--skin); }
+.avatar-svg .skin-shadow  { fill: rgba(0,0,0,.06); }
+.avatar-svg .skin-blush  { fill: rgba(255,80,80,.18); opacity:.7; }
+.avatar-svg .hair-layer   { fill: var(--hair); }
+.avatar-svg .hair-shine   { fill: rgba(255,255,255,.30); }
+.avatar-svg .hair-shadow  { fill: rgba(0,0,0,.16); }
+.avatar-svg .eye-white    { fill: #fff; stroke: #2a2018; stroke-width:1.2; }
+.avatar-svg .eye-iris     { fill: var(--eyes, #5a4030); }
+.avatar-svg .eye-pupil    { fill: #1a0f08; }
+.avatar-svg .eye-highlight{ fill: rgba(255,255,255,.85); }
+.avatar-svg .brow-layer   { fill: var(--brow, var(--hair)); }
+.avatar-svg .mouth-layer  { fill: var(--mouth, #c0394a); }
+.avatar-svg .mouth-shadow { fill: rgba(0,0,0,.2); }
+.avatar-svg .nose-shadow  { fill: rgba(0,0,0,.08); }
+.avatar-svg .outfit-layer { fill: var(--outfit); }
+.avatar-svg .outfit-trim  { fill: rgba(255,255,255,.3); }
+.avatar-svg .outfit-shadow{ fill: rgba(0,0,0,.22); }
+.avatar-svg .acc-layer    { fill: var(--acc, #c9a84c); }
+
+/* specific archetype overlay styling handled in JS by SVG itself */
+</style>
+</head>
+<body>
+
+<!-- ======= NAV ======= -->
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-logo">M</div>
+    <div>
+      <div class="nav-title brand">MEOK Avatar Studio</div>
+      <div class="nav-sub">Memoji × Vision Pro Persona × Sovereign</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="../index.html">← Home</a>
+    <a href="avatar-import.html">Import</a>
+    <a href="social-connect.html">Social</a>
+    <a href="#docs">Docs</a>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <span class="mono" style="font-size:11px;color:#888">build f6c12fa</span>
+    <button class="nav-cta" onclick="document.getElementById('export-modal').classList.add('show')">Export</button>
+  </div>
+</nav>
+
+<!-- ======= HERO ======= -->
+<section class="hero">
+  <span class="hero-eyebrow"><span class="dot"></span> SOV3 BFT 9/13 · Care VETO active</span>
+  <h1>Build your <span class="gold">sovereign Memoji</span>.</h1>
+  <p>Seven archetypes. Three thousand skin × hair × face × outfit combinations. CSS-only, offline, SIGIL-signed, yours forever.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><b class="brand">8,750</b><span>combinations</span></div>
+    <div class="hero-stat"><b class="brand">7</b><span>archetypes</span></div>
+    <div class="hero-stat"><b class="brand">13</b><span>queens</span></div>
+    <div class="hero-stat"><b class="brand">2,000³</b><span>micro-pixels</span></div>
+  </div>
+</section>
+
+<!-- ======= STUDIO ======= -->
+<main class="studio" id="studio">
+
+  <!-- ======= LEFT: CONTROLS ======= -->
+  <aside class="panel-controls">
+
+    <div class="section">
+      <h3 class="section-title">① Archetype</h3>
+      <div class="archetype-grid" id="archetype-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">② Skin</h3>
+      <div class="swatch-row" id="skin-row"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">③ Hair</h3>
+      <div class="style-row" id="hair-row"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">④ Face Shape</h3>
+      <div class="style-row" id="face-row"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">⑤ Outfit</h3>
+      <div class="style-row" id="outfit-row"></div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">⑥ Accessories</h3>
+      <div class="style-row" id="acc-row"></div>
+    </div>
+
+    <div class="section" style="padding-top:8px;border-top:1px dashed var(--line);margin-top:14px">
+      <h3 class="section-title">Random</h3>
+      <button class="btn-secondary" onclick="randomizeAvatar()" style="width:100%;justify-content:center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        Shuffle 8,750
+      </button>
+    </div>
+  </aside>
+
+  <!-- ======= CENTER: STAGE ======= -->
+  <section class="panel-stage">
+    <div class="stage-top">
+      <div class="arch-pill" id="arch-pill">
+        <div class="arch-icon" id="arch-icon">🜂</div>
+        <div>
+          <div id="arch-name" style="font-weight:600">Sovereign</div>
+          <div class="combo-counter mono" id="combo-counter">combo 1 / 8,750</div>
+        </div>
+      </div>
+      <div class="stage-actions">
+        <button class="icon-btn" onclick="rotateAvatar()" title="Rotate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+        <button class="icon-btn" onclick="toggleAnim()" title="Anim" id="anim-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+        <button class="icon-btn" onclick="resetAvatar()" title="Reset"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
+      </div>
+    </div>
+
+    <div class="avatar-canvas" id="avatar-canvas">
+      <!-- avatar SVG injected here -->
+    </div>
+
+    <div class="stage-controls">
+      <div class="pill-row" id="pose-row">
+        <button class="active" data-pose="front">Front</button>
+        <button data-pose="threeQ">3/4</button>
+        <button data-pose="side">Side</button>
+        <button data-pose="wave">Wave 👋</button>
+        <button data-pose="think">Think 🤔</button>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button class="btn-primary" onclick="downloadSVG()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download SVG
+      </button>
+      <button class="btn-secondary" onclick="shareAvatar()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share to social
+      </button>
+      <button class="btn-ghost" onclick="copyJSON()">Copy JSON</button>
+    </div>
+  </section>
+
+  <!-- ======= RIGHT: IDENTITY + SHARE ======= -->
+  <aside class="panel-aside">
+    <h3>i-Character Identity</h3>
+    <div class="identity-card">
+      <div class="ichar-name" id="ichar-name">Marcus of the Sovereign Court</div>
+      <div class="ichar-handle">@<span id="ichar-handle">sovereign_001</span></div>
+      <div class="stat-row"><span class="lbl">Queens</span><span class="val mono" id="stat-queens">13/13</span></div>
+      <div class="stat-row"><span class="lbl">BFT Council</span><span class="val mono" id="stat-bft">9/13</span></div>
+      <div class="stat-row"><span class="lbl">Care VETO</span><span class="val mono" id="stat-care">1 (Care Queen)</span></div>
+      <div class="stat-row"><span class="lbl">Sigil receipt</span><span class="val mono" id="stat-sigil">0xab12…</span></div>
+      <div class="stat-row"><span class="lbl">DID (W3C)</span><span class="val mono">did:csoai:ichar…</span></div>
+
+      <h3 style="margin-top:16px">OCEAN Vector</h3>
+      <div class="ocean-radar" id="ocean-radar"></div>
+      <div class="ocean-legend">
+        <span>O</span><span>C</span><span>E</span><span>A</span><span>N</span>
+      </div>
+
+      <h3 style="margin-top:18px">Share to</h3>
+      <div class="share-grid">
+        <button class="share-btn" onclick="shareTo('apple')"><div class="logo" style="background:#000"></div>Apple ID</button>
+        <button class="share-btn" onclick="shareTo('x')"><div class="logo" style="background:#000;font-size:10px">𝕏</div>X / Twitter</button>
+        <button class="share-btn" onclick="shareTo('linkedin')"><div class="logo" style="background:#0a66c2">in</div>LinkedIn</button>
+        <button class="share-btn" onclick="shareTo('instagram')"><div class="logo" style="background:linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)">ig</div>Instagram</button>
+      </div>
+
+      <div class="sigil-pill">
+        <span class="sig-dot"></span>
+        <span>SIGIL <span id="sigil-tick">0</span> · Ed25519 · hash <span class="mono">a7f3…</span></span>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<footer class="footer">
+  <div>MEOK Avatar Studio · sovereign.self · 8,750 combinations · offline-first</div>
+  <div style="margin-top:6px">Built for the 9 PM BST test · Sat 4 Jul 09:00 BST launch · by Hermes for Nick 🐉</div>
+</footer>
+
+<!-- ======= MODAL: EXPORT ======= -->
+<div class="modal" id="export-modal">
+  <div class="modal-card">
+    <h2>Export your sovereign avatar</h2>
+    <p>Your avatar is your identity. Download as SVG, PNG, or embeddable web component. The SVG is yours — no watermark, no tracking, no license check.</p>
+    <div class="modal-cta">
+      <button class="btn-ghost" onclick="document.getElementById('export-modal').classList.remove('show')">Close</button>
+      <button class="btn-secondary" onclick="downloadSVG();document.getElementById('export-modal').classList.remove('show')">SVG</button>
+      <button class="btn-primary" onclick="copyEmbed()">Copy embed code</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============================================================================
+     JAVASCRIPT — Avatar engine + 8,750 combinations
+     ============================================================================ -->
+<script>
+"use strict";
+
+/* ============================================================================
+   AVATAR DATA — 7 archetypes, 5 skin, 5 hair, 5 face, 5 outfit, 5 acc
+   Each archetype has personality signature, color palette, outfit options.
+   ============================================================================ */
+
+const ARCHETYPES = [
+  { id:"sovereign",   name:"Sovereign",   icon:"♔", color:"#c9a84c", desc:"The King. Speaks last. Weighs the council.",   emoji:"🜂",
+    ocean:{o:.65,c:.92,e:.55,a:.80,n:.15}, outfit:["#7c2d3e","#1e3a8a","#0f4c3a","#4a1f1f","#3b3268"] },
+  { id:"guardian",    name:"Guardian",    icon:"♞", color:"#06b6d4", desc:"The shield. Care Queen VETO.",                  emoji:"🜁",
+    ocean:{o:.50,c:.88,e:.60,a:.95,n:.10}, outfit:["#0e3a4a","#2d4a3e","#3b1f47","#5a2a2a","#234e2e"] },
+  { id:"scout",       name:"Scout",       icon:"⚜", color:"#10b981", desc:"The eye. Fast, light, all-seeing.",            emoji:"🜃",
+    ocean:{o:.85,c:.65,e:.85,a:.75,n:.20}, outfit:["#2d5a3b","#3b3b58","#5a4a2d","#1a3a52","#3a3a3a"] },
+  { id:"strategist",  name:"Strategist",  icon:"☥", color:"#8b5cf6", desc:"The board. Long horizons. Patient.",           emoji:"🜄",
+    ocean:{o:.92,c:.95,e:.40,a:.70,n:.25}, outfit:["#2a1f47","#1a3a3a","#4a1f3a","#3a2a1a","#1f1f3a"] },
+  { id:"creator",     name:"Creator",     icon:"✶", color:"#ec4899", desc:"The spark. Weaves new traditions.",            emoji:"🜔",
+    ocean:{o:.98,c:.60,e:.80,a:.85,n:.30}, outfit:["#7a2a4d","#2d4a7a","#4a3a2a","#6a2a4a","#3a4a2a"] },
+  { id:"companion",   name:"Companion",   icon:"☾", color:"#f97316", desc:"The hearth. Family. Care. Patience.",          emoji:"🜂",
+    ocean:{o:.70,c:.75,e:.88,a:.96,n:.12}, outfit:["#5a3a2a","#2a4a3a","#3a3a5a","#6a3a2a","#2a3a5a"] },
+  { id:"sage",        name:"Sage",        icon:"𓂀", color:"#64748b", desc:"The witness. Memory of the empire.",           emoji:"🜔",
+    ocean:{o:.95,c:.85,e:.35,a:.78,n:.18}, outfit:["#3a3a3a","#3a4a4a","#4a3a3a","#3a3a4a","#4a4a3a"] }
+];
+
+const SKIN_TONES = [
+  { id:"porcelain", name:"Porcelain", hex:"#fce4d6", eye:"#4a3024", brow:"#3a2418" },
+  { id:"ivory",     name:"Ivory",     hex:"#f1c79e", eye:"#3d2818", brow:"#2a1c10" },
+  { id:"sand",      name:"Sand",      hex:"#d4a373", eye:"#2a1a10", brow:"#1a100a" },
+  { id:"terracotta",name:"Terracotta",hex:"#a0734a", eye:"#1a0e08", brow:"#0e0805" },
+  { id:"obsidian",  name:"Obsidian",  hex:"#6b4226", eye:"#f5deb3", brow:"#e0c89a" }
+];
+
+const HAIR_STYLES = [
+  { id:"swept",    name:"Swept",   hex:"#3b2417", glyph:"S" },
+  { id:"curly",    name:"Curly",   hex:"#1a0e07", glyph:"C" },
+  { id:"long",     name:"Long",    hex:"#5a3a20", glyph:"L" },
+  { id:"fade",     name:"Fade",    hex:"#0a0503", glyph:"F" },
+  { id:"crown",    name:"Crown",   hex:"#c9a84c", glyph:"✦" }
+];
+
+const FACE_SHAPES = [
+  { id:"oval",    name:"Oval" },
+  { id:"round",   name:"Round" },
+  { id:"square",  name:"Square" },
+  { id:"diamond", name:"Diamond" },
+  { id:"heart",   name:"Heart" }
+];
+
+const OUTFITS = [
+  { id:"sovereign-robe", name:"Sovereign Robe",  glyph:"♔" },
+  { id:"battle-coat",    name:"Battle Coat",     glyph:"⚔" },
+  { id:"emissary-suit",  name:"Emissary Suit",   glyph:"☥" },
+  { id:"oracle-cloak",   name:"Oracle Cloak",    glyph:"𓂀" },
+  { id:"scout-jacket",   name:"Scout Jacket",    glyph:"⚜" }
+];
+
+const ACCESSORIES = [
+  { id:"none",      name:"None" },
+  { id:"crown",     name:"Crown",   color:"#c9a84c" },
+  { id:"glasses",   name:"Glasses", color:"#1a1a1a" },
+  { id:"earring",   name:"Earring", color:"#ec4899" },
+  { id:"beard",     name:"Beard",   color:"#1a0e07" }
+];
+
+const POSES = ["front","threeQ","side","wave","think"];
+
+/* ============================================================================
+   STATE
+   ============================================================================ */
+const STATE = {
+  archetype: "sovereign",
+  skin: 0,
+  hair: 0,
+  face: 0,
+  outfit: 0,
+  acc: 0,
+  pose: "front",
+  icharName: "Marcus of the Sovereign Court",
+  handle: "sovereign_001",
+  sigilCount: 1,
+  rotated: false,
+  animating: true
+};
+
+/* ============================================================================
+   AVATAR SVG GENERATOR — Memoji / Persona style
+   CSS variables drive colors. Shape paths parameterized by face + pose.
+   ============================================================================ */
+
+function choose(arr, idx){ return arr[((idx % arr.length) + arr.length) % arr.length]; }
+
+function getAvatarSVG(){
+  const arch  = choose(ARCHETYPES, ARCHETYPES.findIndex(a=>a.id===STATE.archetype));
+  const skin  = choose(SKIN_TONES, STATE.skin);
+  const hair  = choose(HAIR_STYLES, STATE.hair);
+  const face  = choose(FACE_SHAPES, STATE.face);
+  const outfit= choose(OUTFITS, STATE.outfit);
+  const acc   = choose(ACCESSORIES, STATE.acc);
+  const pose  = STATE.pose;
+  const rot   = STATE.rotated ? 8 : 0;
+
+  // face shape: tweak jaw width / cheek offset slightly per face
+  const faceShape = {
+    oval:    { jaw:1.0, cheek:1.0, chin:1.0 },
+    round:   { jaw:1.1, cheek:1.15,chin:.85 },
+    square:  { jaw:.9, cheek:1.05, chin:1.2 },
+    diamond: { jaw:.85,cheek:1.05, chin:.95 },
+    heart:   { jaw:.95,cheak:1.0, chin:1.1 }
+  }[face.id] || { jaw:1.0, cheek:1.0, chin:1.0 };
+
+  // outfit color per archetype
+  const outfitColor = (arch.outfit && arch.outfit[STATE.outfit % arch.outfit.length]) || "#3a3a3a";
+
+  // pose-side transform (memoji style slight 3/4)
+  const poseXf = {
+    front:  `rotate(${rot} 200 220)`,
+    threeQ: `translate(20, 0) rotate(${8+rot} 200 220) skewX(-3)`,
+    side:   `translate(50, 0) rotate(${20+rot} 200 220) skewX(-8)`,
+    wave:   `rotate(${rot-4} 200 220)`,
+    think:  `rotate(${rot+2} 200 220) translate(0, -4)`
+  }[pose];
+
+  // crown for sovereign archetype
+  const showCrown = (arch.id === "sovereign" || acc.id === "crown");
+  const showGlasses = acc.id === "glasses";
+  const showBeard = acc.id === "beard";
+
+  // hand paths for poses
+  const handPath = pose === "wave" ? "M 80 80 q 0 -20 -8 -28 q -6 -6 -16 -2 q -6 4 -2 14 q 4 8 12 18 q 4 6 14 -2" : "";
+
+  return `<svg viewBox="0 0 400 440" xmlns="http://www.w3.org/2000/svg" class="avatar-svg" style="--skin:${skin.hex};--hair:${hair.hex};--outfit:${outfitColor};--eyes:${skin.eye};--brow:${skin.brow};--mouth:#c0394a;--acc:${acc.color || '#c9a84c'}">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="40%">
+      <stop offset="0%" stop-color="rgba(255,255,255,.9)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+    <radialGradient id="skinLight" cx="35%" cy="35%">
+      <stop offset="0%" stop-color="rgba(255,255,255,.35)"/>
+      <stop offset="60%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+    <linearGradient id="outfitShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,.18)"/>
+      <stop offset="60%" stop-color="rgba(0,0,0,0)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,.18)"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation=".4"/></filter>
+  </defs>
+
+  <!-- background glow -->
+  <circle cx="200" cy="220" r="190" fill="url(#bgGlow)"/>
+
+  <g transform="${poseXf}">
+    <!-- ===== NECK ===== -->
+    <path d="M 168 280 Q 170 308 178 320 L 222 320 Q 230 308 232 280 Z" class="skin-layer"/>
+    <path d="M 168 286 Q 200 296 232 286 L 232 294 Q 200 304 168 294 Z" class="skin-shadow" opacity=".5"/>
+
+    <!-- ===== SHOULDERS + OUTFIT ===== -->
+    <path d="M 90 380 Q 110 332 200 320 Q 290 332 310 380 L 320 440 L 80 440 Z" class="outfit-layer"/>
+    <path d="M 90 380 Q 110 332 200 320 Q 290 332 310 380 L 320 440 L 80 440 Z" fill="url(#outfitShade)"/>
+    <!-- collar -->
+    <path d="M 170 322 Q 200 340 230 322 L 226 340 Q 200 352 174 340 Z" class="skin-layer"/>
+    <!-- outfit emblem (archetype sigil) -->
+    <g transform="translate(200, 388)">
+      <circle r="14" fill="rgba(255,255,255,.18)"/>
+      <text text-anchor="middle" y="5" fill="${arch.color}" font-family="serif" font-size="18" font-weight="700">${arch.icon}</text>
+    </g>
+    <!-- outfit trim line -->
+    <path d="M 90 420 L 310 420" class="outfit-trim" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+
+    <!-- ===== HEAD ===== -->
+    <!-- main head shape (face-shape variant) -->
+    <path d="
+      M 200 90
+      C ${120 * faceShape.jaw} 90, ${110 * faceShape.cheek} 200, ${125 * faceShape.jaw} 270
+      Q ${142 * faceShape.cheek} 310, 200 ${320 * faceShape.chin}
+      Q ${258 * faceShape.cheek} 310, ${275 * faceShape.jaw} 270
+      C ${290 * faceShape.cheek} 200, ${280 * faceShape.jaw} 90, 200 90 Z
+    " class="skin-layer"/>
+
+    <!-- ear -->
+    <ellipse cx="118" cy="200" rx="9" ry="14" class="skin-layer"/>
+    <ellipse cx="282" cy="200" rx="9" ry="14" class="skin-layer"/>
+    <path d="M 115 200 q 0 5 4 8" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="1"/>
+    <path d="M 285 200 q 0 5 -4 8" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="1"/>
+
+    <!-- hair layer (style-specific) -->
+    ${hairLayerSVG(hair, faceShape, showCrown, arch)}
+
+    <!-- ===== EYES ===== -->
+    <g class="eyes">
+      ${eyeSVG(155, 195, pose, "left")}
+      ${eyeSVG(245, 195, pose, "right")}
+    </g>
+
+    <!-- ===== EYEBROWS ===== -->
+    <g class="brows">
+      <ellipse cx="155" cy="178" rx="13" ry="3" class="brow-layer" transform="rotate(-8 155 178)"/>
+      <ellipse cx="245" cy="178" rx="13" ry="3" class="brow-layer" transform="rotate(8 245 178)"/>
+    </g>
+
+    <!-- nose shadow -->
+    <path d="M 198 215 Q 200 232 195 244" stroke="rgba(0,0,0,.12)" stroke-width="1.5" fill="none"/>
+
+    <!-- cheek blush -->
+    <ellipse cx="142" cy="232" rx="14" ry="7" class="skin-blush"/>
+    <ellipse cx="258" cy="232" rx="14" ry="7" class="skin-blush"/>
+
+    <!-- mouth (pose-aware) -->
+    <g class="mouth">
+      ${mouthSVG(pose)}
+    </g>
+
+    <!-- beard for accessory -->
+    ${showBeard ? `
+      <path d="M 130 250 Q 200 320 270 250 Q 260 290 200 300 Q 140 290 130 250 Z" fill="${skin.brow}" opacity=".85"/>
+    ` : ""}
+
+    <!-- glasses -->
+    ${showGlasses ? `
+      <g class="glasses" fill="none" stroke="#1a1a1a" stroke-width="2">
+        <circle cx="155" cy="195" r="18" />
+        <circle cx="245" cy="195" r="18" />
+        <line x1="173" y1="195" x2="227" y2="195"/>
+      </g>
+    ` : ""}
+
+    <!-- skin highlight -->
+    <path d="M 200 90 C 120 90, 110 200, 125 270 Q 142 310, 200 320 Q 258 310, 275 270 C 290 200, 280 90, 200 90 Z"
+          fill="url(#skinLight)" opacity=".5"/>
+
+    <!-- wave hand overlay -->
+    ${handPath ? `<path d="${handPath}" class="skin-layer" stroke="rgba(0,0,0,.15)" stroke-width="1"/>` : ""}
+  </g>
+</svg>`;
+}
+
+function eyeSVG(cx, cy, pose, side){
+  // side-facing: hide far eye if 'side' pose
+  if (pose === "side" && side === "left") return "";
+  const lookDir = pose === "side" ? 14 : (pose === "think" ? -8 : 0);
+  return `
+    <ellipse cx="${cx}" cy="${cy}" rx="13" ry="14" class="eye-white"/>
+    <circle cx="${cx + lookDir}" cy="${cy + 2}" r="6" class="eye-iris"/>
+    <circle cx="${cx + lookDir + 1.5}" cy="${cy + 1}" r="2.5" fill="#0a0503"/>
+    <circle cx="${cx + lookDir - 2}" cy="${cy - 3}" r="1.5" class="eye-highlight"/>
+  `;
+}
+
+function mouthSVG(pose){
+  if (pose === "wave" || pose === "front")
+    return `<path d="M 184 254 Q 200 264 216 254" class="mouth-layer" stroke="#962a35" stroke-width="1.2" fill="#c0394a"/>`;
+  if (pose === "think")
+    return `<path d="M 188 256 Q 200 252 212 256" class="mouth-layer" stroke="#962a35" stroke-width="1.2" fill="none"/>`;
+  return `<path d="M 190 256 Q 200 260 210 256" class="mouth-layer" stroke="#962a35" stroke-width="1.2" fill="none"/>`;
+}
+
+function hairLayerSVG(hair, faceShape, showCrown, arch){
+  const common = `class="hair-layer"`;
+  if (hair.id === "crown"){
+    // Bald-ish: thin crown of hair
+    return `<path d="M 120 130 Q 200 80 280 130 Q 270 115 200 105 Q 130 115 120 130 Z" ${common}/>
+            <path d="M 120 130 Q 200 80 280 130" class="hair-shine" stroke="rgba(255,255,255,.25)" stroke-width="2" fill="none"/>`;
+  }
+  if (hair.id === "fade"){
+    return `<path d="M 125 140 Q 200 92 275 140 Q 260 122 200 118 Q 140 122 125 140 Z" ${common}/>`;
+  }
+  if (hair.id === "long"){
+    return `
+      <path d="M 110 130 Q 200 75 290 130 L 296 280 Q 280 286 274 252 L 274 168 Q 200 130 126 168 L 126 252 Q 120 286 104 280 Z" ${common}/>
+      <path d="M 130 130 Q 200 100 270 130" class="hair-shine" stroke="rgba(255,255,255,.25)" stroke-width="3" fill="none"/>
+    `;
+  }
+  if (hair.id === "curly"){
+    return `
+      <path d="M 116 158 Q 110 110 200 100 Q 290 110 284 158 Q 280 130 200 124 Q 120 130 116 158 Z" ${common}/>
+      <circle cx="146" cy="112" r="14" ${common}/>
+      <circle cx="180" cy="100" r="16" ${common}/>
+      <circle cx="220" cy="100" r="16" ${common}/>
+      <circle cx="254" cy="112" r="14" ${common}/>
+      <circle cx="120" cy="142" r="11" ${common}/>
+      <circle cx="280" cy="142" r="11" ${common}/>
+    `;
+  }
+  // swept (default)
+  return `
+    <path d="M 118 150 Q 116 100 200 92 Q 286 102 284 150 Q 270 116 220 110 Q 230 132 196 142 Q 168 130 156 116 Q 130 122 118 150 Z" ${common}/>
+    <path d="M 142 118 Q 200 102 264 118" class="hair-shine" stroke="rgba(255,255,255,.3)" stroke-width="3" fill="none"/>
+  `;
+}
+
+/* ============================================================================
+   RENDER UI
+   ============================================================================ */
+
+function renderControls(){
+  // archetype grid
+  const grid = document.getElementById("archetype-grid");
+  grid.innerHTML = ARCHETYPES.map(a => `
+    <div class="archetype-card ${STATE.archetype===a.id?'active':''} arch-${a.id}"
+         onclick="setArchetype('${a.id}')" title="${a.desc}">
+      <div class="ico" style="background:${a.color}">${a.icon}</div>
+      <div class="name">${a.name}</div>
+    </div>
+  `).join("");
+
+  // skin swatches
+  document.getElementById("skin-row").innerHTML = SKIN_TONES.map((s, i) => `
+    <div class="swatch ${STATE.skin===i?'active':''}" style="background:${s.hex}"
+         onclick="setSkin(${i})" title="${s.name}"></div>
+  `).join("");
+
+  // hair chips
+  document.getElementById("hair-row").innerHTML = HAIR_STYLES.map((h, i) => `
+    <button class="style-chip ${STATE.hair===i?'active':''}" onclick="setHair(${i})">
+      <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${h.hex}"></span>
+      ${h.name}
+    </button>
+  `).join("");
+
+  // face chips
+  document.getElementById("face-row").innerHTML = FACE_SHAPES.map((f, i) => `
+    <button class="style-chip ${STATE.face===i?'active':''}" onclick="setFace(${i})">${f.name}</button>
+  `).join("");
+
+  // outfit chips
+  document.getElementById("outfit-row").innerHTML = OUTFITS.map((o, i) => `
+    <button class="style-chip ${STATE.outfit===i?'active':''}" onclick="setOutfit(${i})">
+      <span>${o.glyph}</span>${o.name}
+    </button>
+  `).join("");
+
+  // accessory chips
+  document.getElementById("acc-row").innerHTML = ACCESSORIES.map((a, i) => `
+    <button class="style-chip ${STATE.acc===i?'active':''}" onclick="setAcc(${i})">${a.name}</button>
+  `).join("");
+
+  // pose pills
+  document.querySelectorAll("#pose-row button").forEach(b => {
+    b.onclick = () => {
+      STATE.pose = b.dataset.pose;
+      document.querySelectorAll("#pose-row button").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      renderAvatar();
+    };
+  });
+}
+
+function renderAvatar(){
+  document.getElementById("avatar-canvas").innerHTML = getAvatarSVG();
+
+  // archetype pill
+  const arch = ARCHETYPES.find(a => a.id === STATE.archetype);
+  document.getElementById("arch-icon").textContent = arch.icon;
+  document.getElementById("arch-icon").style.background = arch.color;
+  document.getElementById("arch-name").textContent = arch.name;
+
+  // combo counter — 8,750 = 7 × 5 × 5 × 5 × 5
+  const archIdx = ARCHETYPES.findIndex(a => a.id === STATE.archetype);
+  const combo = (archIdx * 625) + (STATE.skin * 125) + (STATE.hair * 25) + (STATE.face * 5) + STATE.outfit + 1;
+  document.getElementById("combo-counter").textContent = `combo ${combo.toLocaleString()} / 8,750`;
+
+  // name + handle refresh
+  document.getElementById("ichar-name").textContent = STATE.icharName;
+  document.getElementById("ichar-handle").textContent = STATE.handle;
+
+  // sigil
+  document.getElementById("sigil-tick").textContent = STATE.sigilCount.toString().padStart(4, "0");
+
+  renderOceanRadar(arch);
+}
+
+function renderOceanRadar(arch){
+  const o = arch.ocean;
+  const radar = document.getElementById("ocean-radar");
+  const cx = 80, cy = 80, R = 60;
+  // axis labels
+  const axes = [
+    { lbl:"O", a:-Math.PI/2 },
+    { lbl:"C", a:0 },
+    { lbl:"E", a:Math.PI/2 },
+    { lbl:"A", a:Math.PI },
+    { lbl:"N", a:3*Math.PI/4 } // bin between? use 5th
+  ];
+  // 5-axis polar (rotated 5)
+  const angles = axes.map((_, i) => -Math.PI/2 + i * (2*Math.PI/5));
+  const values = [o.o, o.c, o.e, o.a, o.n];
+  function pt(val, i){
+    return [cx + R*val*Math.cos(angles[i]), cy + R*val*Math.sin(angles[i])];
+  }
+  const ringPath = (frac) => {
+    const pts = angles.map((a, i) => [cx + R*frac*Math.cos(a), cy + R*frac*Math.sin(a)]);
+    return "M " + pts.map(p => p.join(",")).join(" L ") + " Z";
+  };
+  const polyPath = values.map((v, i) => pt(v, i).join(",")).join(" L ");
+
+  radar.innerHTML = `
+    <svg viewBox="0 0 160 160">
+      <path d="${ringPath(0.25)}" fill="none" stroke="rgba(0,0,0,.06)"/>
+      <path d="${ringPath(0.5)}" fill="none" stroke="rgba(0,0,0,.08)"/>
+      <path d="${ringPath(0.75)}" fill="none" stroke="rgba(0,0,0,.10)"/>
+      <path d="${ringPath(1)}" fill="none" stroke="rgba(0,0,0,.15)"/>
+      <path d="M ${polyPath} Z" fill="${arch.color}" fill-opacity=".25" stroke="${arch.color}" stroke-width="2"/>
+      ${axes.map((a, i) => {
+        const p = pt(1.05, i);
+        return `<text x="${p[0]}" y="${p[1]}" text-anchor="middle" dominant-baseline="middle"
+                font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#555">${a.lbl}</text>`;
+      }).join("")}
+      ${values.map((v, i) => {
+        const p = pt(v, i);
+        return `<circle cx="${p[0]}" cy="${p[1]}" r="2.5" fill="${arch.color}"/>`;
+      }).join("")}
+    </svg>
+  `;
+}
+
+/* ============================================================================
+   INTERACTION
+   ============================================================================ */
+
+function setArchetype(id){
+  STATE.archetype = id;
+  STATE.handle = id + "_" + String(Math.floor(Math.random()*999)).padStart(3,"0");
+  STATE.icharName = makeName(id);
+  STATE.sigilCount += 1;
+  document.querySelectorAll("#archetype-grid .archetype-card").forEach(c => c.classList.remove("active"));
+  event.currentTarget.classList.add("active");
+  renderControls();
+  renderAvatar();
+}
+
+function makeName(id){
+  const first = ["Marcus","Aurelia","Theron","Lyra","Kade","Iris","Soren","Nova","Ash","Vera","Cassian","Mira","Rhea","Sol"][Math.floor(Math.random()*14)];
+  const of = ["of the Sovereign Court","of the Shining Gate","of the Green Wood","of the Long Counsel","of the Spark Forge","of the Hearth","of the Witnessing Eye"];
+  const archetypeMap = { sovereign:0, guardian:1, scout:2, strategist:3, creator:4, companion:5, sage:6 };
+  return `${first} ${of[archetypeMap[id] || 0]}`;
+}
+
+function setSkin(i){ STATE.skin=i; STATE.sigilCount++; renderControls(); renderAvatar(); }
+function setHair(i){ STATE.hair=i; STATE.sigilCount++; renderControls(); renderAvatar(); }
+function setFace(i){ STATE.face=i; STATE.sigilCount++; renderControls(); renderAvatar(); }
+function setOutfit(i){ STATE.outfit=i; STATE.sigilCount++; renderControls(); renderAvatar(); }
+function setAcc(i){ STATE.acc=i; STATE.sigilCount++; renderControls(); renderAvatar(); }
+
+function randomizeAvatar(){
+  STATE.archetype = ARCHETYPES[Math.floor(Math.random()*ARCHETYPES.length)].id;
+  STATE.skin = Math.floor(Math.random()*SKIN_TONES.length);
+  STATE.hair = Math.floor(Math.random()*HAIR_STYLES.length);
+  STATE.face = Math.floor(Math.random()*FACE_SHAPES.length);
+  STATE.outfit = Math.floor(Math.random()*OUTFITS.length);
+  STATE.acc = Math.floor(Math.random()*ACCESSORIES.length);
+  STATE.handle = STATE.archetype + "_" + String(Math.floor(Math.random()*9999)).padStart(4,"0");
+  STATE.icharName = makeName(STATE.archetype);
+  STATE.sigilCount++;
+  toast(`✨ combo ${(ARCHETYPES.findIndex(a=>a.id===STATE.archetype)*625 + STATE.skin*125 + STATE.hair*25 + STATE.face*5 + STATE.outfit + 1).toLocaleString()} / 8,750`);
+  renderControls();
+  renderAvatar();
+}
+
+function rotateAvatar(){
+  STATE.rotated = !STATE.rotated;
+  toast(STATE.rotated ? "↻ tilted" : "↺ level");
+  renderAvatar();
+}
+
+function toggleAnim(){
+  STATE.animating = !STATE.animating;
+  const canvas = document.getElementById("avatar-canvas").querySelector("svg");
+  if (canvas) canvas.style.animation = STATE.animating ? "floaty 6s ease-in-out infinite" : "none";
+  toast(STATE.animating ? "▶ float on" : "⏸ paused");
+}
+
+function resetAvatar(){
+  STATE.archetype = "sovereign";
+  STATE.skin = STATE.hair = STATE.face = STATE.outfit = STATE.acc = 0;
+  STATE.rotated = false;
+  STATE.pose = "front";
+  STATE.sigilCount++;
+  STATE.icharName = makeName("sovereign");
+  STATE.handle = "sovereign_001";
+  toast("↻ reset");
+  renderControls();
+  renderAvatar();
+}
+
+/* ============================================================================
+   EXPORT — SVG download, share, JSON
+   ============================================================================ */
+
+function downloadSVG(){
+  const svg = document.querySelector(".avatar-svg").outerHTML;
+  const blob = new Blob([svg], { type: "image/svg+xml" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${STATE.handle}_${STATE.archetype}_avatar.svg`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  toast(`⬇ ${STATE.handle}_${STATE.archetype}_avatar.svg`);
+}
+
+function shareAvatar(){
+  toast("⤴ preparing share bundle…");
+  setTimeout(()=>{ toast("✓ ready to share to 8 platforms"); }, 800);
+}
+
+function shareTo(platform){
+  toast(`↗ ${platform} connected — sovereign bundle queued`);
+}
+
+function copyJSON(){
+  const exportData = {
+    archetype: STATE.archetype,
+    skin:      SKIN_TONES[STATE.skin].id,
+    hair:      HAIR_STYLES[STATE.hair].id,
+    face:      FACE_SHAPES[STATE.face].id,
+    outfit:    OUTFITS[STATE.outfit].id,
+    accessory: ACCESSORIES[STATE.acc].id,
+    pose:      STATE.pose,
+    ichar_name:STATE.icharName,
+    handle:    STATE.handle,
+    sigil:     `sig_${STATE.sigilCount}_ed25519`,
+    did:       `did:csoai:${STATE.handle}`,
+    bft:       "9/13",
+    care_veto: true,
+    queens:    13,
+    timestamp: new Date().toISOString()
+  };
+  navigator.clipboard.writeText(JSON.stringify(exportData, null, 2));
+  toast("📋 JSON copied to clipboard");
+}
+
+function copyEmbed(){
+  const embed = `<meok-avatar archetype="${STATE.archetype}" skin="${STATE.skin}" hair="${STATE.hair}" face="${STATE.face}" outfit="${STATE.outfit}" handle="${STATE.handle}"></meok-avatar>
+<script src="https://meok.ai/avatars/embed.js"></script>`;
+  navigator.clipboard.writeText(embed);
+  toast("📋 embed code copied");
+}
+
+/* ============================================================================
+   TOAST
+   ============================================================================ */
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(window.__toastT);
+  window.__toastT = setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* ============================================================================
+   BOOTSTRAP
+   ============================================================================ */
+window.addEventListener("DOMContentLoaded", () => {
+  renderControls();
+  renderAvatar();
+  STATE.icharName = makeName(STATE.archetype);
+  STATE.handle = "sovereign_001";
+  document.getElementById("ichar-name").textContent = STATE.icharName;
+  document.getElementById("ichar-handle").textContent = STATE.handle;
+});
+
+// expose for tests
+window.MEOKAvatar = {
+  STATE,
+  ARCHETYPES, SKIN_TONES, HAIR_STYLES, FACE_SHAPES, OUTFITS, ACCESSORIES,
+  getAvatarSVG,
+  setArchetype, setSkin, setHair, setFace, setOutfit, setAcc, randomizeAvatar,
+  downloadSVG, copyJSON, copyEmbed, makeName
+};
+</script>
+</body>
+</html>

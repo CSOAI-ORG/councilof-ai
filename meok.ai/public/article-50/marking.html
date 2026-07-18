@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technical Marking Specification — MEOK Compliance Suite</title>
+<meta name="description" content="Technical specification for AI output labelling under Article 50: metadata formats, watermarking, digital signatures, and C2PA compliance. Includes Pro £199/mo tier.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#0d0c18;color:#f0ece4;line-height:1.7;min-height:100vh}
+a{color:#c9a84c;text-decoration:none;transition:color .2s}
+a:hover,a:focus{color:#e8d28a;text-decoration:underline}
+.container{max-width:1000px;margin:0 auto;padding:0 1.5rem}
+.header{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 100%);border-bottom:2px solid rgba(201,168,76,.2);padding:1.25rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.logo{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.logo svg{flex-shrink:0}
+.logo span{color:#c9a84c}
+.logo .navy{color:#f0ece4}
+.header nav{display:flex;gap:1.25rem;font-size:.875rem;font-weight:500}
+.header nav a{color:#a098b0}
+.header nav a:hover{color:#c9a84c;text-decoration:none}
+.hero{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 50%,#0d0c18 100%);padding:5rem 0 3.5rem;text-align:center;border-bottom:1px solid rgba(201,168,76,.15)}
+.hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.02em}
+.hero h1 span{color:#c9a84c}
+.hero p{font-size:clamp(1rem,1.8vw,1.2rem);color:#b0a8c0;max-width:720px;margin:0 auto 1.75rem}
+.badge{display:inline-block;background:rgba(201,168,76,.12);color:#c9a84c;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(201,168,76,.25);margin-bottom:1.25rem}
+.cta-btn{display:inline-block;background:#c9a84c;color:#0d0c18;font-weight:700;font-size:.95rem;padding:.85rem 2rem;border-radius:8px;transition:all .2s;border:none;cursor:pointer}
+.cta-btn:hover{background:#e8d28a;color:#0d0c18;text-decoration:none;transform:translateY(-1px)}
+.cta-btn-outline{display:inline-block;background:transparent;color:#c9a84c;font-weight:600;font-size:.9rem;padding:.8rem 1.75rem;border-radius:8px;border:1.5px solid #c9a84c;transition:all .2s}
+.cta-btn-outline:hover{background:rgba(201,168,76,.1);text-decoration:none;transform:translateY(-1px)}
+.cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+section{padding:3.5rem 0}
+section h2{font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:700;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.01em}
+section h2 .gold{color:#c9a84c}
+section h3{font-size:1.2rem;font-weight:600;color:#c9a84c;margin:1.5rem 0 .6rem}
+section p,section li{color:#b0a8c0;font-size:.975rem}
+section p{margin-bottom:1rem}
+.card{background:linear-gradient(135deg,#13112a 0%,#1a1730 100%);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
+.card h3{margin-top:0;color:#f0ece4}
+.card ul{list-style:none;padding-left:0}
+.card ul li{padding:.3rem 0 .3rem 1.5rem;position:relative}
+.card ul li::before{content:"▸";position:absolute;left:0;color:#c9a84c;font-weight:700}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:680px){.two-col{grid-template-columns:1fr}}
+.highlight{border-left:4px solid #c9a84c;background:rgba(201,168,76,.06);padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;margin:1.5rem 0}
+.highlight p:last-child{margin-bottom:0}
+.highlight strong{color:#c9a84c}
+.spec-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.9rem}
+.spec-table th{background:rgba(201,168,76,.12);color:#c9a84c;padding:.75rem 1rem;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.75rem}
+.spec-table td{padding:.75rem 1rem;border-bottom:1px solid rgba(201,168,76,.08);color:#b0a8c0}
+.spec-table tr:hover td{background:rgba(201,168,76,.03)}
+.spec-table .format-name{color:#f0ece4;font-weight:600}
+.pricing-card{text-align:center;padding:2rem}
+.pricing-card .price{font-size:2.5rem;font-weight:800;color:#c9a84c;margin:.5rem 0}
+.pricing-card .price-sub{color:#807890;font-size:.9rem}
+.pricing-card ul{text-align:left;margin:1rem 0 1.5rem}
+.footer{background:linear-gradient(135deg,#0d0c18 0%,#0a0914 100%);border-top:1px solid rgba(201,168,76,.12);padding:2.5rem 0;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;margin-bottom:2rem}
+.footer h4{color:#c9a84c;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.footer ul{list-style:none}
+.footer li{margin-bottom:.4rem}
+.footer a{color:#807890;font-size:.85rem}
+.footer a:hover{color:#c9a84c}
+.footer-bottom{text-align:center;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,.08);color:#605870;font-size:.8rem}
+@media(max-width:600px){.header .container{flex-direction:column;text-align:center}.header nav{flex-wrap:wrap;justify-content:center}}
+code{background:rgba(201,168,76,.08);color:#c9a84c;padding:.15rem .4rem;border-radius:4px;font-size:.875rem;font-family:'SF Mono','Fira Code','Cascadia Code',monospace}
+pre{background:#0a0914;border:1px solid rgba(201,168,76,.1);border-radius:8px;padding:1.25rem;overflow-x:auto;margin:1rem 0}
+pre code{background:none;padding:0;color:#b0a8c0}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.2rem .6rem;border-radius:4px;margin-right:.4rem}
+.tag.c2pa{background:rgba(100,200,255,.12);color:#64c8ff;border:1px solid rgba(100,200,255,.25)}
+.tag.w3c{background:rgba(100,255,180,.12);color:#64ffb4;border:1px solid rgba(100,255,180,.25)}
+.tag.xmp{background:rgba(255,200,100,.12);color:#ffc864;border:1px solid rgba(255,200,100,.25)}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "MEOK Pro — Article 50 Compliance Tier",
+  "description": "Full Article 50 technical compliance tooling for AI output marking. Includes C2PA integration, W3C metadata embedding, digital signature generation, visible labelling automation, and audit-ready compliance reporting. Designed for deployers of AI systems generating or manipulating content.",
+  "brand": {
+    "@type": "Brand",
+    "name": "MEOK Compliance"
+  },
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "GBP",
+    "price": "199",
+    "priceInterval": "month",
+    "description": "Pro tier — per workspace, per month",
+    "availability": "https://schema.org/InStock",
+    "url": "https://proofof.ai/pricing"
+  },
+  "category": "AI Compliance Software",
+  "applicationCategory": "AI Governance, Content Transparency, Regulatory Compliance",
+  "featureList": [
+    "C2PA-compliant provenance metadata embedding",
+    "W3C Web Annotation machine-readable markers",
+    "XMP/IPTC metadata injection for images and documents",
+    "Digital signature generation and verification",
+    "Visible AI label automation (watermark, overlay, banner)",
+    "Audio frequency-domain watermarking",
+    "Compliance audit trail and reporting",
+    "API integration for CI/CD pipelines",
+    "Custom labelling policy engine"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Article 50 of the EU AI Act?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50 of the EU AI Act requires deployers of AI systems that generate or manipulate content (image, audio, video, text) to ensure that output is clearly labelled as AI-generated or AI-manipulated. This includes both visible human-readable labels and embedded machine-readable markers such as C2PA, XMP, and W3C metadata formats."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What marking formats are required for AI-generated content under Article 50?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50 does not mandate a single technical standard. The recognised compliant formats include C2PA (Coalition for Content Provenance and Authenticity) for tamper-evident provenance metadata, XMP (Extensible Metadata Platform) for embedded metadata in images and PDFs, IPTC for news and publishing metadata, W3C Web Annotation for HTML and EPUB content, cryptographic digital signatures (Ed25519 or ECDSA P-384), and frequency-domain audio watermarking."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is C2PA and why is it the recommended standard?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "C2PA (Coalition for Content Provenance and Authenticity) is a W3C-standardised technical framework for asserting content provenance and AI generation status. It is recommended because it provides tamper-evident cryptographically signed assertions embedded directly in file formats, is portable across JPEG, PNG, AVIF, MP4 and WAV, and allows verification of content origin via public key infrastructure without requiring special viewers for backwards compatibility."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the compliance deadline for AI output marking?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All deployers of AI systems that generate or manipulate content must implement both visible and machine-readable marking layers by 2 August 2026. MEOK Pro provides automated compliance tooling including C2PA integration, W3C metadata embedding, digital signature generation, visible labelling automation, and audit-ready compliance reporting."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does visible watermarking differ from machine-readable metadata?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Visible watermarking is a human-readable overlay label applied directly to the content surface, such as an 'AI-Generated' badge in a corner of an image or a verbal disclosure at the start of audio. Machine-readable metadata is embedded data invisible to end users, stored in formats like C2PA manifests, XMP fields, or digital signatures, which can be read programmatically by tools and platforms to verify content provenance without affecting the user experience."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What content types require AI labelling under Article 50?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50 applies to text and articles (requiring an 'AI-Generated Content' banner plus XMP and JSON-LD metadata), images (watermark overlay and C2PA manifest), video (start-of-content label plus C2PA and SEI messages), audio (verbal disclosure and frequency watermark), chatbots and conversational AI (persistent 'AI Assistant' label), and code (comment header block with SPDX AI-generated flag). Each content type has specific visible and machine-readable marking requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does MEOK Pro include for Article 50 compliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MEOK Pro (£199 per workspace per month) includes C2PA provenance metadata generation and embedding, W3C and XMP machine-readable marker injection, digital signature generation (Ed25519 and ECDSA), visible AI label automation (watermark, overlay, banner), audio frequency-domain watermarking, compliance audit log with tamper-evident storage, REST API for CI/CD pipeline integration, custom labelling policy engine, and priority support with a dedicated compliance engineer."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="28" height="28" rx="6" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
+        <path d="M10 16 L14 20 L22 12" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div><span class="navy">MEOK</span> <span>Compliance</span></div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/article-50/">Article 50</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="badge">Technical Specification</span>
+    <h1>AI Output <span>Marking Formats</span></h1>
+    <p>Full technical specification for labelling AI-generated content under Article 50. Metadata, watermarking, digital signatures — implemented and compliant.</p>
+    <div class="cta-group">
+      <a href="https://proofof.ai" class="cta-btn">Get MEOK Pro £199/mo →</a>
+      <a href="#specs" class="cta-btn-outline">Jump to Specs</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Specification <span class="gold">Overview</span></h2>
+    <p>Article 50 requires that all AI-generated or manipulated content carries both a <strong>visible human-readable label</strong> and an <strong>embedded machine-readable marker</strong>. This page defines the technical formats, standards, and implementation requirements for each marking layer.</p>
+
+    <div class="highlight">
+      <strong>Compliance deadline:</strong> All deployers must implement both marking layers by <strong>2 August 2026</strong>. MEOK Pro users get automated compliance tooling including C2PA, W3C, and XMP format support out of the box.
+    </div>
+  </div>
+</section>
+
+<section id="specs" style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>Machine-Readable <span class="gold">Format Standards</span></h2>
+    <p>The EU AI Act does not mandate a single technical standard, but the following formats are recognised as compliant and are recommended by the AI Office's Code of Practice.</p>
+
+    <table class="spec-table">
+      <thead>
+        <tr><th>Format</th><th>Type</th><th>Best For</th><th>Compliance Level</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="format-name">C2PA</span> <span class="tag c2pa">Recommended</span></td>
+          <td>Provenance Metadata</td>
+          <td>Images, video, audio, documents</td>
+          <td>Highest — tamper-evident, W3C standard</td>
+        </tr>
+        <tr>
+          <td><span class="format-name">XMP</span> <span class="tag xmp">Standard</span></td>
+          <td>Embedded Metadata</td>
+          <td>Images (JPEG, TIFF, PNG), PDFs</td>
+          <td>High — widely supported in creative tools</td>
+        </tr>
+        <tr>
+          <td><span class="format-name">IPTC</span> <span class="tag xmp">Standard</span></td>
+          <td>News Metadata</td>
+          <td>Journalism, publishing, text content</td>
+          <td>High — industry standard for media</td>
+        </tr>
+        <tr>
+          <td><span class="format-name">W3C Web Annotation</span> <span class="tag w3c">Emerging</span></td>
+          <td>Annotation Framework</td>
+          <td>Web content, HTML, EPUB</td>
+          <td>Medium — flexible, extensible</td>
+        </tr>
+        <tr>
+          <td><span class="format-name">Digital Signature</span> <span class="tag c2pa">Enforceable</span></td>
+          <td>Cryptographic</td>
+          <td>All media types requiring verification</td>
+          <td>Highest — non-repudiation, audit-ready</td>
+        </tr>
+        <tr>
+          <td><span class="format-name">Audio Watermark</span> <span class="tag w3c">Niche</span></td>
+          <td>Frequency-Domain</td>
+          <td>Audio streams, podcasts, music</td>
+          <td>Medium — survives compression</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>C2PA Provenance <span class="gold">Metadata</span></h2>
+
+    <p>The <strong>Coalition for Content Provenance and Authenticity (C2PA)</strong> standard is the leading technical framework for asserting content provenance and AI generation status. C2PA bindings are tamper-evident cryptographically signed assertions embedded directly in file formats.</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>How C2PA Works</h3>
+        <ul>
+          <li>Cryptographic signing of content provenance claims</li>
+          <li>W3C-compliant data model using JSON-LD assertions</li>
+          <li>Tamper-evident — any modification invalidates the signature</li>
+          <li>Portable across formats — JPEG, PNG, AVIF, MP4, WAV</li>
+          <li>Backwards-compatible — viewers without C2PA support ignore the data</li>
+          <li>Verifiable via public key infrastructure</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Example C2PA Assertion</h3>
+        <pre><code>{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "type": ["VerifiableCredential", "AIGeneratedContent"],
+  "issuer": "did:web:meok.ai",
+  "credentialSubject": {
+    "id": "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+    "generatedBy": {
+      "type": "SoftwareAgent",
+      "name": "MEOK-Compliance-Engine",
+      "version": "2.1.0"
+    },
+    "assertion": "AI-generated-content"
+  },
+  "proof": {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "eddsa-2022",
+    "created": "2026-06-17T10:00:00Z"
+  }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>Watermarking &amp; Digital <span class="gold">Signatures</span></h2>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>Visible Watermarking</h3>
+        <p>Overlay-based labels applied directly to content. Best practice:</p>
+        <ul>
+          <li>Position: bottom-right or top-left corner (consistent)</li>
+          <li>Opacity: 70—85% for readability without obscuring content</li>
+          <li>Content: "AI-Generated" + MEOK compliance badge</li>
+          <li>Persistence: burned into the raster layer (not a separate alpha channel)</li>
+          <li>Minimum size: proportional to content area (≥5% of shortest dimension)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Digital Signatures</h3>
+        <p>Cryptographic proof of origin and content integrity:</p>
+        <ul>
+          <li>Algorithm: Ed25519 or ECDSA P-384</li>
+          <li>Key management: HSM-backed or cloud KMS with audit logging</li>
+          <li>Signature binding: attached as C2PA/COSE signature block</li>
+          <li>Verification: public key distributed via .well-known/jwks.json</li>
+          <li>Revocation: OCSP or CRL for compromised keys</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:.5rem">
+      <div class="card">
+        <h3>Metadata Injection</h3>
+        <p>Embedded markers in standard metadata fields:</p>
+        <ul>
+          <li>EXIF: XPAuthor + UserComment fields</li>
+          <li>XMP: dc:creator + xmpRights:Marked</li>
+          <li>IPTC: DigitalSourceType = "AlgorithmicGenerated"</li>
+          <li>ID3 (audio): TXXX frame with "AI-generated" flag</li>
+          <li>Matroska/WebM: <code>&lt;AI-Generated&gt;true&lt;/AI-Generated&gt;</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Audio Watermarking</h3>
+        <p>Imperceptible frequency-domain markers:</p>
+        <ul>
+          <li>Spread-spectrum encoding in 2—4 kHz band</li>
+          <li>Survives: MP3 128kbps, AAC, Opus transcoding</li>
+          <li>Resistant to: time-stretching (±10%), pitch shifting (±3 semitones)</li>
+          <li>Payload: 64-bit assertion (generator ID + timestamp)</li>
+          <li>Detection: cross-correlation with known spreading sequence</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Compliance <span class="gold">Matrix</span></h2>
+
+    <table class="spec-table">
+      <thead>
+        <tr><th>Content Type</th><th>Visible Marking</th><th>Machine-Readable</th><th>Recommended Format</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Text / Articles</td><td>"AI-Generated Content" banner</td><td>XMP + JSON-LD in HTML head</td><td>Schema.org + IPTC</td></tr>
+        <tr><td>Images</td><td>Watermark overlay badge</td><td>C2PA manifest + XMP</td><td>C2PA JPEG/PNG</td></tr>
+        <tr><td>Video</td><td>Label at start + persistent logo</td><td>C2PA + SEI message</td><td>C2PA MP4/WebM</td></tr>
+        <tr><td>Audio</td><td>Verbal disclosure at start</td><td>Frequency watermark + ID3</td><td>C2PA WAV/FLAC</td></tr>
+        <tr><td>Chatbots</td><td>"AI Assistant" label</td><td>API response header</td><td>W3C Web Annotation</td></tr>
+        <tr><td>Code</td><td>Comment header block</td><td>SPDX + AI-generated flag</td><td>SPDX 2.3</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>MEOK Pro — <span class="gold">£199/mo</span></h2>
+    <p style="text-align:center;max-width:600px;margin:0 auto 2rem">Full Article 50 technical compliance tooling for your AI deployment pipeline. Automated, auditable, standards-compliant.</p>
+
+    <div class="card pricing-card" style="max-width:500px;margin:0 auto">
+      <h3 style="color:#c9a84c;font-size:1.3rem">MEOK Pro</h3>
+      <div class="price">£199</div>
+      <div class="price-sub">per workspace / per month</div>
+      <ul>
+        <li>C2PA provenance metadata generation and embedding</li>
+        <li>W3C &amp; XMP machine-readable marker injection</li>
+        <li>Digital signature generation (Ed25519 / ECDSA)</li>
+        <li>Visible AI label automation (watermark/overlay/banner)</li>
+        <li>Audio frequency-domain watermarking engine</li>
+        <li>Compliance audit log with tamper-evident storage</li>
+        <li>REST API for CI/CD pipeline integration</li>
+        <li>Custom labelling policy engine (per-content-type rules)</li>
+        <li>Priority support with dedicated compliance engineer</li>
+      </ul>
+      <a href="https://proofof.ai" class="cta-btn" style="width:100%">Subscribe to MEOK Pro →</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://proofof.ai">MEOK Platform</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/article-50-kit">Article 50 Kit</a></li>
+          <li><a href="/compliance-suite">Compliance Suite</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/article-50/">Article 50 Hub</a></li>
+          <li><a href="/article-50/transparency.html">Transparency Guide</a></li>
+          <li><a href="/article-50/marking.html">Marking Spec</a></li>
+          <li><a href="/article-50/deepfake.html">Deepfake Detection</a></li>
+          <li><a href="/article-50/bot.html">Bot Disclosure</a></li>
+          <li><a href="/article-50/code-of-practice.html">Code of Practice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MEOK Compliance. All rights reserved. Part of the MEOK AI Governance Platform.</p>
+      <p style="margin-top:.25rem">EU AI Act compliance solutions — Article 50, 51, 52, 53, 55, and beyond.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

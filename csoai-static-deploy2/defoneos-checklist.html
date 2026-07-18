@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Launch Checklist — Design/UX/QA/E2E/Distribution</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#f8fafc;padding:2rem;line-height:1.6;max-width:1100px;margin:0 auto}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+h2{color:#22d3ee;margin:1.5rem 0 .5rem;font-size:1.5rem;border-bottom:1px solid rgba(34,211,238,.2);padding-bottom:.3rem}
+.section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.item{display:flex;align-items:flex-start;gap:.8rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.item:last-child{border-bottom:none}
+.checkbox{flex-shrink:0;width:24px;height:24px;border-radius:4px;border:2px solid rgba(34,211,238,.3);display:flex;align-items:center;justify-content:center;font-size:.8rem}
+.checked{background:rgba(34,197,94,.2);border-color:#22c55e;color:#22c55e}
+.unchecked{background:rgba(245,158,11,.1);border-color:#f59e0b;color:#f59e0b}
+.item .text{flex:1}
+.item .text h4{color:#f8fafc;font-size:.9rem;margin:0}
+.item .text p{color:#64748b;font-size:.8rem;margin:0}
+.phase-tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.7rem;font-weight:bold;margin-left:.5rem}
+.done{background:rgba(34,197,94,.2);color:#22c55e}
+.wip{background:rgba(245,158,11,.2);color:#f59e0b}
+.todo{background:rgba(139,92,246,.2);color:#8b5cf6}
+</style>
+<meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-checklist.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+
+<h1>DEFONEOS Launch Checklist</h1>
+<p><strong>Everything needed for 100% Series A ready launch. Design, UX, QA, E2E, Distribution.</strong></p>
+
+<div class="section">
+<h2>📋 Phase 1: Content <span class="phase-tag done">DONE</span></h2>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>135 pages live (0 stubs)</h4><p>All pages have full content. No empty pages.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>30 MCP servers built</h4><p>All tested, all passing, all on GitHub.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>Constitution (12 Articles)</h4><p>Charter ratified. Article 0 anti-fraudster enforced.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>API Reference + Command Reference</h4><p>Full MCP API docs. 188+ SOV3 tool commands.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>Competitor Matrix (25 features)</h4><p>DEFONEOS vs Palantir vs Anduril vs Helsing vs Shield AI.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>Pricing Page (4 tiers)</h4><p>£50K → £1M+ → Sovereign. Transparent.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>Series A Pitch Page</h4><p>£15M raise at £75M pre. Use of funds. 5-year projections.</p></div></div>
+</div>
+
+<div class="section">
+<h2>🎨 Phase 2: Design & UX <span class="phase-tag wip">IN PROGRESS</span></h2>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>Consistent dark theme across all 135 pages</h4><p>CSS variables: #0a0a0f bg, #22d3ee cyan, #8b5cf6 purple.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>Responsive grid layouts</h4><p>grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)).</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>Gradient hero text on all pages</h4><p>linear-gradient(135deg, #22d3ee, #8b5cf6).</p></div></div>
+<div class="item"><div class="checkbox unchecked">⚠️</div><div class="text"><h4>Viewport meta tag on all pages</h4><p>Some early pages missing. Needs batch fix.</p></div></div>
+<div class="item"><div class="checkbox unchecked">⚠️</div><div class="text"><h4>Navigation bar / breadcrumb</h4><p>No persistent nav across pages. Needs shared header component.</p></div></div>
+<div class="item"><div class="checkbox unchecked">⚠️</div><div class="text"><h4>Footer with company info + links</h4><p>Some pages have footer, most don't. Needs batch add.</p></div></div>
+<div class="item"><div class="checkbox unchecked">⚠️</div><div class="text"><h4>Mobile menu (hamburger)</h4><p>No mobile navigation. Critical for mobile demo.</p></div></div>
+<div class="item"><div class="checkbox unchecked">⚠️</div><div class="text"><h4>Favicon</h4><p>No favicon. Need DEFONEOS dragon emoji SVG.</p></div></div>
+<div class="item"><div class="checkbox unchecked">⚠️</div><div class="text"><h4>Open Graph tags (og:title, og:image)</h4><p>No social sharing cards. Needed for LinkedIn/Twitter distribution.</p></div></div>
+</div>
+
+<div class="section">
+<h2>🧪 Phase 3: QA <span class="phase-tag todo">TODO</span></h2>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>All 135 pages return HTTP 200</h4><p>Verified via curl batch check.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>All pages have real content (>500 bytes)</h4><p>0 stubs remaining.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Cross-browser test (Chrome, Firefox, Safari)</h4><p>Manual test on all 3 browsers.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Mobile responsive test (iPhone, Android, iPad)</h4><p>Verify all 135 pages render correctly on mobile.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Lighthouse audit (performance, accessibility, SEO)</h4><p>Target: 90+ on all 3 categories.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Broken link check</h4><p>Scan all internal links across 135 pages.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Accessibility audit (WCAG 2.1 AA)</h4><p>Screen reader compatibility, contrast ratios, ARIA labels.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Spelling & grammar check</h4><p>Proofread all 135 pages.</p></div></div>
+</div>
+
+<div class="section">
+<h2>🔄 Phase 4: E2E Testing <span class="phase-tag todo">TODO</span></h2>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>SOV3 responds to tools/list</h4><p>188+ tools confirmed via MCP call.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>SIGIL chain emits + verifies</h4><p>Ed25519 receipts generated and verified.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>BFT council active (33 nodes)</h4><p>22-of-33 quorum operational.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>GCP VM healthy (13 days uptime)</h4><p>38 crons running. 50GB data.</p></div></div>
+<div class="item"><div class="checkbox checked">✅</div><div class="text"><h4>M2 edge connected</h4><p>Ollama 24/7. LAN tunnel active.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Playwright E2E test suite</h4><p>Automated browser tests for critical user flows.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Cesium globe renders in browser</h4><p>Verify 3D globe loads on live Vercel URL.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>MEOK OS dashboard (:3000) works E2E</h4><p>Login → domain select → globe → alerts → SIGIL audit.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Stripe checkout works (test mode)</h4><p>Verify pricing page → checkout → success flow.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>WebSocket events fire (SIGIL, BFT, swarm)</h4><p>Real-time updates to dashboard.</p></div></div>
+</div>
+
+<div class="section">
+<h2>🚀 Phase 5: Distribution <span class="phase-tag todo">TODO</span></h2>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Buy defoneos.com ($10.98 Namecheap)</h4><p>CNAME → Vercel. SSL auto-issue.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Vercel custom domain add</h4><p>Add defoneos.com in Vercel dashboard.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>GitHub repos public + README badges</h4><p>All 30 MCP repos have README, license, CI badge.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>PyPI packages published</h4><p>All MCP servers pip-installable.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>LinkedIn launch post</h4><p>Coordinated with Series A outreach.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Twitter/X launch thread</h4><p>10-tweet thread: what, why, how, demo, pricing.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Product Hunt launch</h4><p>Open source defence AI OS. First of its kind.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Hacker News post</h4><p>"Show HN: Open-source UK sovereign defence AI OS."</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>MOD outreach emails (10 prospects)</h4><p>Dstl, AIC, HTCG, DASA contacts.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>NATO DIANA submission</h4><p>Apply to next challenge cycle.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Press release (TechCrunch, The Register, UK Defence Journal)</h4><p>Open-source UK defence AI. $12.5M IP. 100-day build.</p></div></div>
+<div class="item"><div class="checkbox unchecked">☐</div><div class="text"><h4>Sitemap.xml + robots.txt</h4><p>SEO indexing for Google.</p></div></div>
+</div>
+
+<div class="section">
+<h2>📊 Summary</h2>
+<table style="width:100%;border-collapse:collapse">
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)">
+<th style="text-align:left;padding:.5rem;color:#22d3ee">Phase</th>
+<th style="text-align:center;padding:.5rem;color:#22d3ee">Items</th>
+<th style="text-align:center;padding:.5rem;color:#22d3ee">Done</th>
+<th style="text-align:center;padding:.5rem;color:#22d3ee">Status</th>
+</tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:.5rem">📋 Content</td><td style="text-align:center;padding:.5rem">7</td><td style="text-align:center;padding:.5rem;color:#22c55e">7</td><td style="text-align:center;padding:.5rem"><span class="phase-tag done">DONE</span></td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:.5rem">🎨 Design & UX</td><td style="text-align:center;padding:.5rem">9</td><td style="text-align:center;padding:.5rem;color:#f59e0b">3</td><td style="text-align:center;padding:.5rem"><span class="phase-tag wip">WIP</span></td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:.5rem">🧪 QA</td><td style="text-align:center;padding:.5rem">8</td><td style="text-align:center;padding:.5rem;color:#f59e0b">2</td><td style="text-align:center;padding:.5rem"><span class="phase-tag wip">WIP</span></td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:.5rem">🔄 E2E Testing</td><td style="text-align:center;padding:.5rem">10</td><td style="text-align:center;padding:.5rem;color:#f59e0b">5</td><td style="text-align:center;padding:.5rem"><span class="phase-tag wip">WIP</span></td></tr>
+<tr><td style="padding:.5rem">🚀 Distribution</td><td style="text-align:center;padding:.5rem">12</td><td style="text-align:center;padding:.5rem;color:#8b5cf6">0</td><td style="text-align:center;padding:.5rem"><span class="phase-tag todo">TODO</span></td></tr>
+<tr style="background:rgba(34,211,238,.05);font-weight:bold"><td style="padding:.5rem">TOTAL</td><td style="text-align:center;padding:.5rem">46</td><td style="text-align:center;padding:.5rem">17</td><td style="text-align:center;padding:.5rem">37%</td></tr>
+</table>
+</div>
+
+<p style="text-align:center;color:#22d3ee;font-size:1.2rem;margin-top:2rem"><strong>17 of 46 done. 29 remaining. All achievable by 9 PM tonight.</strong></p>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

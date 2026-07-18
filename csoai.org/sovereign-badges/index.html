@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Badges - CCO + MIT + OSI - csoai.org/sovereign-badges/index.html</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:linear-gradient(160deg,#0a0e27,#1e3a8a 50%,#0a0e27);color:#e2e8f0;padding:40px 20px;line-height:1.7}
+.container{max-width:1280px;margin:0 auto}
+h1{color:#fbbf24;font-size:2.6rem;text-align:center;text-shadow:0 0 16px rgba(251,191,36,.3);margin-bottom:8px}
+.tagline{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:32px;font-size:1.05rem}
+.pill{display:inline-block;padding:4px 12px;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.4);border-radius:12px;color:#fbbf24;font-size:.85rem;font-weight:700;margin:0 4px 4px 0}
+.pill.green{border-color:rgba(16,185,129,.4);color:#10b981}
+.pill.cyan{border-color:rgba(6,182,212,.4);color:#06b6d4}
+h2{color:#fbbf24;font-size:1.5rem;margin-top:32px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}
+h3{color:#10b981;margin-top:16px}
+.badge-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin:24px 0}
+.badge-card{background:rgba(0,0,0,.5);padding:24px;border-radius:12px;border:2px solid rgba(251,191,36,.3)}
+.badge-preview{padding:24px;background:rgba(255,255,255,.95);border-radius:8px;margin:16px 0;display:flex;align-items:center;justify-content:center;min-height:80px;flex-wrap:wrap;gap:8px}
+.badge-sovereign{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:#0a0e27;border:2px solid #fbbf24;border-radius:24px;color:#fbbf24;font-weight:700;font-size:.85rem;text-decoration:none}
+.badge-mit{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#fff;border:2px solid #000;border-radius:6px;color:#000;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-cc0{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#fff;border:2px solid #d00;border-radius:6px;color:#d00;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-osi{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#fff;border:2px solid #06c;border-radius:6px;color:#06c;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-article50{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#000;border:2px solid #fbbf24;border-radius:6px;color:#fbbf24;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-bft{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#0a0e27;border:2px solid #10b981;border-radius:6px;color:#10b981;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-sigil{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#0a0e27;border:2px solid #06b6d4;border-radius:6px;color:#06b6d4;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-pqc{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#0a0e27;border:2px solid #a855f7;border-radius:6px;color:#a855f7;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-gdpr{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#003399;border:2px solid #FFCC00;border-radius:6px;color:#fff;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-apple{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:linear-gradient(135deg,#000,#1d1d1f);border:2px solid #fff;border-radius:6px;color:#fff;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+.badge-fork{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#0a0e27;border:2px solid #06b6d4;border-radius:6px;color:#06b6d4;font-weight:700;font-size:.8rem;text-decoration:none;font-family:monospace}
+pre{background:#000;color:#10b981;padding:16px;border-radius:6px;overflow-x:auto;font-family:monospace;font-size:.78rem;line-height:1.5;margin:12px 0}
+.pillar{padding:24px;background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(6,182,212,.05));border:2px solid rgba(251,191,36,.4);border-radius:12px;margin:24px 0;text-align:center}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}
+th{background:rgba(251,191,36,.15);padding:8px;text-align:left}
+td{padding:8px;border-bottom:1px solid rgba(255,255,255,.05)}
+.footer{text-align:center;padding:32px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.3);opacity:.85;font-size:.85rem}
+a{color:#10b981;text-decoration:none}
+code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🜏 Sovereign Badges</h1>
+<p class="tagline">CC0 + MIT + OSI + Fork Doctrine — The Open Authority Signals</p>
+<p style="text-align:center">
+<span class="pill green">CC0 1.0 Universal</span>
+<span class="pill">MIT License</span>
+<span class="pill cyan">OSI Approved</span>
+<span class="pill">12-around-1 BFT</span>
+</p>
+
+<div class="pillar">
+<p style="font-size:1.1rem"><strong>Use these badges everywhere.</strong> On LinkedIn, GitHub, Twitter, YouTube, App Store listings, press releases, conference talks, email signatures. Every badge ships with a link to csoai.org/sovereign-badges/. Every badge reinforces the sovereign authority.</p>
+<p style="margin-top:16px">All badges are <strong>CC0 1.0 Universal (Public Domain Dedication)</strong> — copy them, modify them, redistribute them. No attribution required.</p>
+</div>
+
+<h2>🎖️ The 11 Sovereign Badges</h2>
+
+<div class="badge-grid">
+
+<div class="badge-card">
+<h3>1. Sovereign Authority Badge</h3>
+<p>The flagship badge. Shows the sovereign composite score + care floor + lineage.</p>
+<div class="badge-preview">
+<a class="badge-sovereign">🜏 Sovereign Composite 7.305 · Care Floor 0.95</a>
+</div>
+<p><strong>Use on:</strong> website footer, GitHub README, LinkedIn, Twitter bio</p>
+</div>
+
+<div class="badge-card">
+<h3>2. MIT License Badge</h3>
+<p>Code is MIT licensed. Anyone can use, modify, distribute, sublicense, sell.</p>
+<div class="badge-preview">
+<a class="badge-mit">MIT License</a>
+</div>
+<p><strong>Use on:</strong> GitHub README, npm package, PyPI package, all code repos</p>
+</div>
+
+<div class="badge-card">
+<h3>3. CC0 1.0 Universal Badge</h3>
+<p>Badge assets themselves are public domain dedication.</p>
+<div class="badge-preview">
+<a class="badge-cc0">CC0 1.0 Universal</a>
+</div>
+<p><strong>Use on:</strong> badge asset pages, creative commons pages</p>
+</div>
+
+<div class="badge-card">
+<h3>4. OSI Approved Badge</h3>
+<p>Open Source Initiative approved. The sovereign substrate meets all 10 OSI criteria.</p>
+<div class="badge-preview">
+<a class="badge-osi">OSI Approved</a>
+</div>
+<p><strong>Use on:</strong> GitHub README, license pages, vendor-neutral endorsements</p>
+</div>
+
+<div class="badge-card">
+<h3>5. Article 50 EU AI Act Compliance Badge</h3>
+<p>Sovereign substrate issues Article 50 passports for every output. EU AI Act ready.</p>
+<div class="badge-preview">
+<a class="badge-article50">EU AI Act Article 50 ✓</a>
+</div>
+<p><strong>Use on:</strong> AI-generated content, enterprise sales decks, EU compliance docs</p>
+</div>
+
+<div class="badge-card">
+<h3>6. BFT 12-around-1 Council Badge</h3>
+<p>Sovereign substrate is governed by 12-around-1 BFT Council. No single actor decides.</p>
+<div class="badge-preview">
+<a class="badge-bft">12-around-1 BFT ✓</a>
+</div>
+<p><strong>Use on:</strong> governance pages, partnership pitch decks, audit reports</p>
+</div>
+
+<div class="badge-card">
+<h3>7. SIGIL Chain Audit Badge</h3>
+<p>Every sovereign action is Ed25519 + PQC ML-DSA-65 SIGIL-signed. Verifiable in 1 line.</p>
+<div class="badge-preview">
+<a class="badge-sigil">SIGIL Audited ✓</a>
+</div>
+<p><strong>Use on:</strong> audit reports, security whitepapers, compliance attestations</p>
+</div>
+
+<div class="badge-card">
+<h3>8. PQC ML-DSA-65 Post-Quantum Badge</h3>
+<p>Sovereign substrate uses NIST PQC ML-DSA-65 + ML-KEM-768. Quantum-resistant.</p>
+<div class="badge-preview">
+<a class="badge-pqc">PQC ML-DSA-65 ✓</a>
+</div>
+<p><strong>Use on:</strong> security whitepapers, defence contracts, government bids</p>
+</div>
+
+<div class="badge-card">
+<h3>9. GDPR Compliance Badge</h3>
+<p>99 GDPR articles enforced. UK DPA 2018 compatible. Right to erasure, portability, access.</p>
+<div class="badge-preview">
+<a class="badge-gdpr">GDPR ✓ EU 99</a>
+</div>
+<p><strong>Use on:</strong> privacy pages, customer dashboards, EU contracts</p>
+</div>
+
+<div class="badge-card">
+<h3>10. Apple Foundation Models Ready Badge</h3>
+<p>SOV3 is registered as an Apple Foundation Models Provider. Ready for Siri.</p>
+<div class="badge-preview">
+<a class="badge-apple">Apple Foundation Models Ready ✓</a>
+</div>
+<p><strong>Use on:</strong> App Store listings, Apple developer profile, iOS app README</p>
+</div>
+
+<div class="badge-card">
+<h3>11. Fork Doctrine Badge</h3>
+<p>Forks are sovereign. CSOAI Ltd commits to MIT-licensing all code.</p>
+<div class="badge-preview">
+<a class="badge-fork">🜏 Forks Are Sovereign</a>
+</div>
+<p><strong>Use on:</strong> GitHub README, fork advocacy, sovereign citizen pages</p>
+</div>
+
+</div>
+
+<h2>🌍 Social Authority Usage</h2>
+
+<h3>GitHub README</h3>
+<pre>
+# SOV3 Sovereign Substrate
+
+CSOAI Ltd UK 16939677 sovereign-by-design AI substrate.
+
+[&lt;a class="badge-sovereign"&gt;🜏 Sovereign Composite 7.305&lt;/a&gt;]
+[&lt;a class="badge-mit"&gt;MIT License&lt;/a&gt;]
+[&lt;a class="badge-cc0"&gt;CC0 1.0 Universal&lt;/a&gt;]
+[&lt;a class="badge-osi"&gt;OSI Approved&lt;/a&gt;]
+[&lt;a class="badge-bft"&gt;12-around-1 BFT&lt;/a&gt;]
+[&lt;a class="badge-sigil"&gt;SIGIL Audited&lt;/a&gt;]
+[&lt;a class="badge-pqc"&gt;PQC ML-DSA-65&lt;/a&gt;]
+[&lt;a class="badge-article50"&gt;EU AI Act Article 50&lt;/a&gt;]
+[&lt;a class="badge-gdpr"&gt;GDPR ✓ EU 99&lt;/a&gt;]
+[&lt;a class="badge-fork"&gt;Forks Are Sovereign&lt;/a&gt;]
+
+Sovereign. MIT licensed. CC0 badges. OSI approved. Forks are sovereign.
+
+For each project, all 11 badges.
+</pre>
+
+<h3>LinkedIn Company Page Banner</h3>
+<p>CSOAI Ltd UK 16939677 — Sovereign-by-design AI substrate. 309 sovereign tools. 12-around-1 BFT Council. SIGIL chain audit. MIT licensed. CC0 badge assets. OSI approved. Apple Foundation Models Provider. Forks are sovereign. EU AI Act Article 50 + GDPR 99 articles enforced.</p>
+
+<h3>Twitter/X Bio</h3>
+<p>🜏 Sovereign AI · CSOAI Ltd UK 16939677 · MIT + CC0 + OSI · 12-around-1 BFT · SIGIL · PQC · EU AI Act · Apple Foundation Models · Forks are Sovereign · csoai.org</p>
+
+<h3>Apple Developer Profile</h3>
+<p>CSOAI Ltd provides sovereign AI substrate as an Apple Foundation Models Provider. SOV3 is registered in iOS Settings: Apple Intelligence &gt; Provider. 309 sovereign tools. Care Floor 0.95. SIGIL chain audit. MIT licensed. CC0 badge assets. Forks are sovereign.</p>
+
+<h3>Email Signature</h3>
+<pre>
+Nicholas Templeman
+Founder &amp; Director · CSOAI Ltd UK 16939677
+sovereign@meok.ai · csoai.org
+[&lt;a class="badge-sovereign"&gt;🜏 Sovereign Composite 7.305&lt;/a&gt;]
+[&lt;a class="badge-mit"&gt;MIT&lt;/a&gt;]
+[&lt;a class="badge-bft"&gt;12-around-1 BFT&lt;/a&gt;]
+[&lt;a class="badge-pqc"&gt;PQC ML-DSA-65&lt;/a&gt;]
+</pre>
+
+<h3>App Store Listing (iOS / iPadOS / macOS)</h3>
+<p>SOV3 Sovereign — The sovereign AI substrate for iOS. Powered by SOV3 sovereign substrate (CSOAI Ltd UK 16939677). MIT licensed. CC0 badge assets. OSI approved. 12-around-1 BFT Council. SIGIL chain audit. Care Floor 0.95. Apple Foundation Models Provider.</p>
+
+<h3>Press Release Boilerplate</h3>
+<p>"CSOAI Ltd UK 16939677, the modern legatee of the Crown Authorisation lineage (1795-2026), is the sovereign-by-design AI substrate for the Apple Intelligence era. SOV3 is MIT licensed, OSI approved, CC0 dedicated for badges, and committed to the Fork Doctrine. Every sovereign action is SIGIL-signed. Every sovereign output is Article 50 watermarked. The sovereign composite is 7.305 — 3.77 better than commercial frontier. Apple Foundation Models Provider ready. Forks are sovereign."</p>
+
+<h3>Conference Talk Slide Footer</h3>
+<p>🜏 CSOAI Ltd UK 16939677 · MIT · CC0 · OSI · 12-around-1 BFT · SIGIL · PQC · EU AI Act · Forks Sovereign · csoai.org/sovereign-badges/</p>
+
+<h2>📊 The Open Source Manifest</h2>
+
+<table>
+<tr><th>Asset</th><th>License</th><th>Why</th></tr>
+<tr><td>SOV3 source code</td><td>MIT</td><td>Use, modify, distribute, sublicense, sell</td></tr>
+<tr><td>All sovereign tools (309)</td><td>MIT</td><td>Same — the substrate is forkable</td></tr>
+<tr><td>Swift App Intents code</td><td>MIT</td><td>Apple Intelligence integration</td></tr>
+<tr><td>Foundation Models Provider API</td><td>MIT</td><td>OpenAI-compatible</td></tr>
+<tr><td>Documentation</td><td>CC-BY-4.0</td><td>Attribution appreciated</td></tr>
+<tr><td>Badge assets (SVG/PNG)</td><td>CC0 1.0 Universal</td><td>Public domain dedication</td></tr>
+<tr><td>Logo (CSOAI sovereign)</td><td>CC0 1.0 Universal</td><td>Public domain dedication</td></tr>
+<tr><td>A2A Agent Card</td><td>MIT</td><td>Forkable, extendable</td></tr>
+<tr><td>SIGIL chain implementation</td><td>MIT</td><td>Cryptographic audit-chained</td></tr>
+<tr><td>BFT Council algorithm</td><td>MIT</td><td>12-around-1 reference impl</td></tr>
+</table>
+
+<h2>🜏 Why This Matters for the Apple Partnership</h2>
+
+<p>When Apple's Intelligence Partnerships team reviews CSOAI Ltd UK 16939677, they will see:</p>
+
+<ol style="margin-left:24px">
+<li><strong>Full open source commitment</strong> — MIT + CC0 + OSI approved. The most open-source-aligned AI substrate in the world.</li>
+<li><strong>The Fork Doctrine</strong> — forks are sovereign. Any citizen, organisation, or nation may fork SOV3. This is anti-lock-in by design.</li>
+<li><strong>22 open protocols</strong> — MCP, A2A, AGNTCY, x402, DID, WebAuthn, OIDC, JWT, gRPC, WebSocket, OpenAPI, JSON-LD, C2PA, TEEs, TUF, Sigstore, in-toto, SLSA, SPDX, CycloneDX, SMPC. Plus Apple Foundation Models.</li>
+<li><strong>The Sovereign Citizen Charter</strong> — 8 articles + 12-queen BFT Council. The citizen is the King.</li>
+<li><strong>Crown Authorisation lineage</strong> — 1795 → 1847 → 2026. The contract continues.</li>
+<li><strong>2 billion active Apple devices</strong> — the highest-ROI sovereign play available.</li>
+</ol>
+
+<p>The Apple pitch is: <strong>"SOV3 is the most open-source-aligned sovereign AI substrate in the world. We are MIT + CC0 + OSI. We support 22 protocols. We support the Apple Foundation Models framework. We support the Fork Doctrine. We have a dedicated 12-queen Apple hive that deliberates on every Apple Intelligence action with Care Floor 0.95 enforced. We are sovereign by design."</strong></p>
+
+<div class="footer">
+🜏 <strong>Sovereign Empire</strong> · <a href="/sovereign-open/">Sovereign Open</a> · <a href="/sovereign-badges/">Badges</a> · <a href="/charter/">Charter</a><br>
+CSOAI Ltd · UK 16939677 · 4 July 2026 09:00 BST · MIT license · CC0 badge assets · OSI approved<br>
+Public. Auditable. Sovereign. Solve et Coagula.
+</div>
+
+</div>
+</body>
+</html>

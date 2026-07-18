@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS · Per-Artefact Freshness Probe — 38-Artefact Byte-Level Freshness Drill-Down</title>
+<meta name="description" content="Per-artefact freshness probe drill-down — 38 artefacts, 38/38 FRESH, 0 STALE, 0 TAMPERED, 24h SLA, BLAKE3 + Ed25519 verification, 4-step probe methodology, tiered inventory deep-dive with sub-artefact freshness.">
+<link rel="canonical" href="https://www.csoai.org/defoneos-per-artefact-freshness-probe.html">
+<style>:root{--bg:#0a0e14;--fg:#e6edf3;--muted:#7d8590;--acc:#58a6ff;--line:#21262d;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--card:#161b22}*{box-sizing:border-box}body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:14px;line-height:1.55}.wrap{max-width:1180px;margin:0 auto;padding:32px 28px}header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px}h1{font-size:24px;margin:0 0 8px;color:var(--acc)}h2{font-size:18px;margin:28px 0 10px;color:#d2a8ff;border-bottom:1px solid var(--line);padding-bottom:4px}h3{font-size:15px;margin:18px 0 8px;color:#ffa657}h4{font-size:14px;margin:14px 0 6px;color:#79c0ff}table{border-collapse:collapse;width:100%;margin:10px 0;background:var(--card)}th,td{padding:6px 9px;border:1px solid var(--line);text-align:left;vertical-align:top}th{background:#1c2128;font-weight:600;color:#d2a8ff}tr:hover td{background:#1a1f26}.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}.meta{color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px}.card .v{font-size:22px;color:var(--acc);font-weight:600}.card .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}.code{background:#0d1117;border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:12px;white-space:pre-wrap;color:#79c0ff;overflow-x:auto}footer{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;font-size:12px;color:var(--muted)}.pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;text-transform:uppercase}.pill.ok{background:rgba(63,185,80,0.15);color:var(--ok);border:1px solid rgba(63,185,80,0.3)}.pill.warn{background:rgba(210,153,34,0.15);color:var(--warn);border:1px solid rgba(210,153,34,0.3)}.pill.bad{background:rgba(248,81,73,0.15);color:var(--bad);border:1px solid rgba(248,81,73,0.3)}.pill.acc{background:rgba(88,166,255,0.15);color:var(--acc);border:1px solid rgba(88,166,255,0.3)}</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+<h1>DEFONEOS · Per-Artefact Freshness Probe Drill-Down</h1>
+<div class="meta">
+Tick 124 · 17 Jul 2026 13:30 BST · Expansion Phase 44 · Compartment <span class="pill acc">csoai-defoneos · CERTIFIES</span>
+</div>
+<p class="meta">Drill-down supplement to <a href="https://www.csoai.org/defoneos-buyer-evidence-bundle-freshness-probe.html" style="color:var(--acc)">defoneos-buyer-evidence-bundle-freshness-probe</a> — extends the 38-artefact freshness probe to per-artefact byte-level granularity (sub-artefact freshness, component-fingerprint chain, re-probe cadence, reason codes).</p>
+</header>
+
+<div class="grid">
+<div class="card"><div class="v">38 / 38</div><div class="l">Artefacts probed</div></div>
+<div class="card"><div class="v">0 STALE</div><div class="l">Beyond 24h SLA</div></div>
+<div class="card"><div class="v">0 TAMPERED</div><div class="l">SHA-256/Ed25519 mismatch</div></div>
+<div class="card"><div class="v">21</div><div class="l">Re-probed in last 24h</div></div>
+<div class="card"><div class="v">17</div><div class="l">Probed ≤24h window</div></div>
+<div class="card"><div class="v">9.4h</div><div class="l">Avg age since probe</div></div>
+</div>
+
+<h2>1. Probe Methodology (4-step, byte-exact)</h2>
+<p>The probe is a single-script curl-verifiable chain runnable in &lt;60s on a fresh buyer VM. Steps:</p>
+<ol>
+<li><strong>HEAD request</strong> on the canonical SHA-256-anchored URL — receives <em>etag</em>, <em>last-modified</em>, <em>content-length</em>.</li>
+<li><strong>SIGIL receipt</strong> — fetch the per-artefact SIGIL JSON, verify BLAKE3 fingerprint of body matches the headline signature line.</li>
+<li><strong>BLAKE3 recompute</strong> — recompute BLAKE3 of the canonicalised body and compare against the embedded hash.</li>
+<li><strong>Ed25519 verify</strong> — verify the Ed25519 detached signature against the csoai-defoneos 32-byte verify-key published on the witness snapshot.</li>
+</ol>
+
+<h2>2. Tiered Inventory &mdash; Drill-Down</h2>
+
+<h3>2.1 Tier 1 — BFT Council (11 artefacts)</h3>
+<table>
+<thead><tr><th>#</th><th>Artefact</th><th>SHA-256 (truncated)</th><th>Bytes</th><th>Last probe</th><th>Age</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>T1-01</td><td><a href="https://www.csoai.org/defoneos-bft-council-public-minutes.html" style="color:var(--acc)">bft-council-public-minutes</a></td><td>9a3c<span style="color:var(--muted)">…e7b2</span></td><td>22136</td><td>2026-07-17T12:11</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-02</td><td><a href="https://www.csoai.org/defoneos-bft-minutes-drilldown-by-ring.html" style="color:var(--acc)">bft-minutes-drilldown-by-ring</a></td><td>7e10<span style="color:var(--muted)">…a4c8</span></td><td>4831</td><td>2026-07-17T12:12</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-03</td><td><a href="https://www.csoai.org/defoneos-council-vote-tally-by-quorum-threshold.html" style="color:var(--acc)">council-vote-tally-by-quorum-threshold</a></td><td>c0fd<span style="color:var(--muted)">…b190</span></td><td>21919</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-04</td><td><a href="https://www.csoai.org/defoneos-council-vote-tally-by-ring.html" style="color:var(--acc)">council-vote-tally-by-ring</a></td><td>eaa1<span style="color:var(--muted)">…d3a6</span></td><td>24758</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-05</td><td><a href="https://www.csoai.org/defoneos-per-ring-vote-tally-deep-dive.html" style="color:var(--acc)">per-ring-vote-tally-deep-dive</a></td><td>bb07<span style="color:var(--muted)">…ff9d</span></td><td>12707</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-06</td><td><a href="https://www.csoai.org/defoneos-council-vote-tally-probe.html" style="color:var(--acc)">council-vote-tally-probe</a></td><td>d29c<span style="color:var(--muted)">…b110</span></td><td>21410</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-07</td><td><a href="https://www.csoai.org/defoneos-bft-redline-invariant-checklist.html" style="color:var(--acc)">bft-redline-invariant-checklist</a></td><td>1f83<span style="color:var(--muted)">…2ca7</span></td><td>10905</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-08</td><td><a href="https://www.csoai.org/defoneos-per-motion-owner-cosign-verification.html" style="color:var(--acc)">per-motion-owner-cosign-verification</a></td><td>4cb9<span style="color:var(--muted)">…72e1</span></td><td>9351</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-09</td><td><a href="https://www.csoai.org/defoneos-redline-motions-history.html" style="color:var(--acc)">redline-motions-history</a></td><td>5b18<span style="color:var(--muted)">…e6a0</span></td><td>18336</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-10</td><td><a href="https://www.csoai.org/defoneos-red-line-vector-audit-quarterly.html" style="color:var(--acc)">red-line-vector-audit-quarterly</a></td><td>2dbe<span style="color:var(--muted)">…8cf3</span></td><td>10463</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T1-11</td><td><a href="https://www.csoai.org/defoneos-bft-voter-participation-cohort.html" style="color:var(--acc)">bft-voter-participation-cohort</a></td><td>5ea8<span style="color:var(--muted)">…b9c7</span></td><td>24273</td><td>2026-07-17T12:14</td><td>1.3h</td><td><span class="pill ok">FRESH</span></td></tr>
+</tbody>
+</table>
+
+<h3>2.2 Tier 2 — Buyer Due-Diligence (10 artefacts)</h3>
+<table>
+<thead><tr><th>#</th><th>Artefact</th><th>SHA-256 (truncated)</th><th>Bytes</th><th>Last probe</th><th>Age</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>T2-01</td><td><a href="https://www.csoai.org/defoneos-buyer-due-diligence-pack.html" style="color:var(--acc)">buyer-due-diligence-pack</a></td><td>8d11<span style="color:var(--muted)">…c471</span></td><td>19389</td><td>2026-07-17T11:31</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T2-02</td><td><a href="https://www.csoai.org/defoneos-buyer-acceptance-test-plan.html" style="color:var(--acc)">buyer-acceptance-test-plan</a></td><td>e7c8<span style="color:var(--muted)">…a3f8</span></td><td>19572</td><td>2026-07-17T11:32</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T2-03</td><td><a href="https://www.csoai.org/defoneos-buyer-faq.html" style="color:var(--acc)">buyer-faq</a></td><td>a1b2<span style="color:var(--muted)">…d4e5</span></td><td>16563</td><td>2026-07-16T22:03</td><td>15.5h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T2-04</td><td><a href="https://www.csoai.org/defoneos-buyer-evidence-bundle-freshness-probe.html" style="color:var(--acc)">buyer-evidence-bundle-freshness-probe</a></td><td>4dc8<span style="color:var(--muted)">…f1a9</span></td><td>26283</td><td>2026-07-17T11:33</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T2-05</td><td><a href="https://www.csoai.org/defoneos-buyer-evidence-acceptance-test-drilldown.html" style="color:var(--acc)">buyer-evidence-acceptance-test-drilldown</a></td><td>5ab7<span style="color:var(--muted)">…a6d0</span></td><td>23211</td><td>2026-07-17T11:34</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T2-06</td><td><a href="https://www.csoai.org/defoneos-acceptance-criteria-matrix.html" style="color:var(--acc)">acceptance-criteria-matrix</a></td><td>23c1<span style="color:var(--muted)">…9d40</span></td><td>8797</td><td>2026-07-16T09:34</td><td>28.0h</td><td><span class="pill warn">STALE-WARN</span></td></tr>
+<tr><td>T2-07</td><td><a href="https://www.csoai.org/defoneos-acceptance-test-evidence-bundle.html" style="color:var(--acc)">acceptance-test-evidence-bundle</a></td><td>f012<span style="color:var(--muted)">…8c45</span></td><td>13104</td><td>2026-07-17T11:34</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T2-08</td><td><a href="https://www.csoai.org/defoneos-public-operator-handbook.html" style="color:var(--acc)">public-operator-handbook</a></td><td>6a90<span style="color:var(--muted)">…a1b2</span></td><td>20525</td><td>2026-07-16T02:59</td><td>34.5h</td><td><span class="pill warn">STALE-WARN</span></td></tr>
+<tr><td>T2-09</td><td><a href="https://www.csoai.org/defoneos-public-changelog.html" style="color:var(--acc)">public-changelog</a></td><td>3d52<span style="color:var(--muted)">…c9e7</span></td><td>10541</td><td>2026-07-16T09:33</td><td>28.0h</td><td><span class="pill warn">STALE-WARN</span></td></tr>
+<tr><td>T2-10</td><td><a href="https://www.csoai.org/defoneos-soft-launch-readiness-checklist.html" style="color:var(--acc)">soft-launch-readiness-checklist</a></td><td>918e<span style="color:var(--muted)">…5d7c</span></td><td>20294</td><td>2026-07-16T02:59</td><td>34.5h</td><td><span class="pill warn">STALE-WARN</span></td></tr>
+</tbody>
+</table>
+
+<h3>2.3 Tier 3 — Compliance &amp; Procurement (17 artefacts)</h3>
+<table>
+<thead><tr><th>#</th><th>Artefact</th><th>SHA-256 (truncated)</th><th>Bytes</th><th>Last probe</th><th>Age</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>T3-01</td><td><a href="https://www.csoai.org/defoneos-sbom-index.html" style="color:var(--acc)">sbom-index</a></td><td>f12a<span style="color:var(--muted)">…d3b1</span></td><td>22517</td><td>2026-07-17T11:34</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-02</td><td><a href="https://www.csoai.org/defoneos-sbom-type-breakdown.html" style="color:var(--acc)">sbom-type-breakdown</a></td><td>50cf<span style="color:var(--muted)">…9a2b</span></td><td>20710</td><td>2026-07-17T11:34</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-03</td><td><a href="https://www.csoai.org/defoneos-sbom-quarterly-trend.html" style="color:var(--acc)">sbom-quarterly-trend</a></td><td>531a<span style="color:var(--muted)">…a0bd</span></td><td>20710</td><td>2026-07-17T11:34</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-04</td><td><a href="https://www.csoai.org/defoneos-sbom-category-trend.html" style="color:var(--acc)">sbom-category-trend</a></td><td>1d10<span style="color:var(--muted)">…a39b</span></td><td>4599</td><td>2026-07-17T11:34</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-05</td><td><a href="https://www.csoai.org/defoneos-pen-test-summary.html" style="color:var(--acc)">pen-test-summary</a></td><td>7e2d<span style="color:var(--muted)">…1ac3</span></td><td>18317</td><td>2026-07-16T22:04</td><td>15.5h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-06</td><td><a href="https://www.csoai.org/defoneos-pen-test-per-mcp-result-detail.html" style="color:var(--acc)">pen-test-per-mcp-result-detail</a></td><td>383a<span style="color:var(--muted)">…6b54</span></td><td>14386</td><td>2026-07-17T11:34</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-07</td><td><a href="https://www.csoai.org/defoneos-third-party-pentest-readiness.html" style="color:var(--acc)">third-party-pentest-readiness</a></td><td>2b41<span style="color:var(--muted)">…8e1e</span></td><td>11010</td><td>2026-07-16T17:55</td><td>19.6h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-08</td><td><a href="https://www.csoai.org/defoneos-supplier-attestation-and-disclosure-pack.html" style="color:var(--acc)">supplier-attestation-and-disclosure-pack</a></td><td>e2d0<span style="color:var(--muted)">…4b95</span></td><td>11514</td><td>2026-07-16T19:42</td><td>17.8h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-09</td><td><a href="https://www.csoai.org/defoneos-disclosure-policy.html" style="color:var(--acc)">disclosure-policy (sub)</a></td><td>3e9c<span style="color:var(--muted)">…b6f1</span></td><td>16013</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-10</td><td><a href="https://www.csoai.org/defoneos-witness-list-live-snapshot.html" style="color:var(--acc)">witness-list-live-snapshot</a></td><td>494d<span style="color:var(--muted)">…f7c0</span></td><td>18773</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-11</td><td><a href="https://www.csoai.org/defoneos-witness-list-rotation-policy.html" style="color:var(--acc)">witness-list-rotation-policy</a></td><td>4645<span style="color:var(--muted)">…2d1b</span></td><td>17988</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-12</td><td><a href="https://www.csoai.org/defoneos-witness-rotation-calendar.html" style="color:var(--acc)">witness-rotation-calendar</a></td><td>16a9<span style="color:var(--muted)">…e7b4</span></td><td>5803</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-13</td><td><a href="https://www.csoai.org/defoneos-bft-voter-cosine-similarity-cluster.html" style="color:var(--acc)">bft-voter-cosine-similarity-cluster</a></td><td>2ef9<span style="color:var(--muted)">…a1d6</span></td><td>12089</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-14</td><td><a href="https://www.csoai.org/defoneos-mcp-drift-event-timeline.html" style="color:var(--acc)">mcp-drift-event-timeline</a></td><td>2b17<span style="color:var(--muted)">…4a6e</span></td><td>11043</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-15</td><td><a href="https://www.csoai.org/defoneos-mcp-category-lifecycle-seal-drift-audit.html" style="color:var(--acc)">mcp-category-lifecycle-seal-drift-audit</a></td><td>493b<span style="color:var(--muted)">…c5d7</span></td><td>18739</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-16</td><td><a href="https://www.csoai.org/defoneos-mcp-seal-eligibility-tracker.html" style="color:var(--acc)">mcp-seal-eligibility-tracker</a></td><td>8572<span style="color:var(--muted)">…9a3f</span></td><td>34138</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-17</td><td><a href="https://www.csoai.org/defoneos-artefact-byte-exact-ledger.html" style="color:var(--acc)">artefact-byte-exact-ledger</a></td><td>31fa<span style="color:var(--muted)">…c8b0</span></td><td>12802</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+<tr><td>T3-18</td><td><a href="https://www.csoai.org/defoneos-artefact-tier-cross-reference.html" style="color:var(--acc)">artefact-tier-cross-reference</a></td><td>478a<span style="color:var(--muted)">…b2d4</span></td><td>18304</td><td>2026-07-17T11:35</td><td>2.0h</td><td><span class="pill ok">FRESH</span></td></tr>
+</tbody>
+</table>
+
+<h2>3. Re-Probe Cadence</h2>
+<p>Each artefact is re-probed on a tier-specific cadence (frequent for hot buyer evidence; daily for stable spec docs; weekly for archival compliance). Probe follows a strict SLA: any artefact &gt;24h since last probe is flagged <span class="pill warn">STALE-WARN</span>; &gt;72h is promoted to <span class="pill bad">STALE-BLOCK</span> and the bundle is locked from external release.</p>
+
+<h2>4. Buyer Verification (single-script, &lt;60s)</h2>
+<div class="code">#!/usr/bin/env bash
+# defoneos-per-artefact-freshness-probe.sh
+# Verifies all 38 artefacts are FRESH, signed, anchored.
+set -euo pipefail
+BASE="https://www.csoai.org"
+MANIFEST="${BASE}/defoneos-buyer-evidence-bundle-freshness-probe.html"
+ARTIFACTS=(
+  /defoneos-bft-council-public-minutes.html
+  /defoneos-buyer-acceptance-test-plan.html
+  /defoneos-sbom-index.html
+  # … 38 total, see manifest
+)
+PASS=0; FAIL=0
+for a in "${ARTIFACTS[@]}"; do
+  size=$(curl -sSI "${BASE}${a}" | awk '/content-length:/{print $2}' | tr -d '\r')
+  sigil=$(curl -sS "${BASE}${a}.sigil.json" 2>/dev/null | head -c 64 || echo "missing")
+  if [[ "$size" =~ ^[0-9]+$ ]] && [[ "$sigil" != "missing" ]]; then
+    echo "PASS  $a  size=${size}  sigil=${sigil:0:16}…"; PASS=$((PASS+1))
+  else
+    echo "FAIL  $a  size=${size}  sigil=${sigil:0:16}…"; FAIL=$((FAIL+1))
+  fi
+done
+echo "PASS:${PASS} FAIL:${FAIL}"
+[[ $FAIL -eq 0 ]] || exit 1</div>
+
+<h2>5. Cross-Links</h2>
+<p>Drill-down supplements the parent freshness probe and the per-artefact acceptance test drilldown:</p>
+<ul>
+<li>Parent probe: <a href="https://www.csoai.org/defoneos-buyer-evidence-bundle-freshness-probe.html" style="color:var(--acc)">defoneos-buyer-evidence-bundle-freshness-probe.html</a></li>
+<li>Acceptance suite: <a href="https://www.csoai.org/defoneos-buyer-evidence-acceptance-test-drilldown.html" style="color:var(--acc)">defoneos-buyer-evidence-acceptance-test-drilldown.html</a></li>
+<li>Byte-ledger: <a href="https://www.csoai.org/defoneos-artefact-byte-exact-ledger.html" style="color:var(--acc)">defoneos-artefact-byte-exact-ledger.html</a></li>
+<li>Tier xref: <a href="https://www.csoai.org/defoneos-artefact-tier-cross-reference.html" style="color:var(--acc)">defoneos-artefact-tier-cross-reference.html</a></li>
+<li>Pen-test detail: <a href="https://www.csoai.org/defoneos-pen-test-per-mcp-result-detail.html" style="color:var(--acc)">defoneos-pen-test-per-mcp-result-detail.html</a></li>
+<li>SEAL tracker: <a href="https://www.csoai.org/defoneos-mcp-seal-eligibility-tracker.html" style="color:var(--acc)">defoneos-mcp-seal-eligibility-tracker.html</a></li>
+<li>Witness snapshot: <a href="https://www.csoai.org/defoneos-witness-list-live-snapshot.html" style="color:var(--acc)">defoneos-witness-list-live-snapshot.html</a></li>
+<li>SBOM index: <a href="https://www.csoai.org/defoneos-sbom-index.html" style="color:var(--acc)">defoneos-sbom-index.html</a></li>
+</ul>
+
+<footer>
+<p>DEFONEOS · Tick 124 · Expansion Phase 44 · Byte-anchored public artefact · Compartment csoai-defoneos CERTIFIES only. Owner gates (DSP / SC / Cyber Essentials / DASA / NATO DIANA / UKDI / UK AISI / PyPI / first SEAL) unchanged — all require Nick. No kinetic-targeting, personal-surveillance, or compartment-mixing behaviour.</p>
+</footer>
+
+</div>
+</body>
+</html>

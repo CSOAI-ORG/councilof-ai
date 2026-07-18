@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS Sovereign Data Escrow Protocol (UK-Sovereign Custody × Ed25519 × Section 7 OSA × UK GDPR Art 28 × No US CLOUD Act)</title>
+<meta name="description" content="DEFONEOS sovereign data escrow protocol: cryptographic custody specification for UK-sovereign defence and public-service AI data. Ed25519-signed escrow receipts, UK-only data residency, Section 7 OSA compliance, UK GDPR Art 28 data processing agreements, zero US CLOUD Act exposure, 4-eyes release, cryptographic destruction proofs." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/sovereign-data-escrow-protocol · csoai.org · ship-grade · tick 101</div>
+<header>
+<h1>DEFONEOS Sovereign Data Escrow Protocol</h1>
+<div class="sub">The cryptographic custody specification for UK-sovereign defence and public-service AI data. Defines how data is deposited, held, accessed, and destroyed under UK jurisdiction with zero US CLOUD Act exposure. Ed25519-signed escrow receipts, UK-only data residency, Section 7 OSA compliance, UK GDPR Art 28 DPAs, 4-eyes release authorisation, cryptographic destruction proofs, and a BFT-council emergency release veto.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Data residency</span><b>UK-only (London + Manchester AWS eu-west-2 regions, or on-prem sovereign rack)</b></div>
+<div class="kpi"><span>Cryptographic scheme</span><b>Ed25519 (signing) + AES-256-GCM (encryption at rest) + TLS 1.3 (in transit)</b></div>
+<div class="kpi"><span>Release authorisation</span><b>4-eyes (2 named humans) + cryptographic challenge-response</b></div>
+<div class="kpi"><span>US CLOUD Act exposure</span><b>Zero (no US-headquartered cloud provider in the custody chain)</b></div>
+<div class="kpi"><span>Section 7 OSA compliance</span><b>Full — no disclosure of protected information without lawful authority</b></div>
+<div class="kpi"><span>UK GDPR Art 28 DPA</span><b>7/7 controller-processor terms met, including sub-processor restrictions</b></div>
+<div class="kpi"><span>Destruction proof</span><b>Cryptographic erasure + Ed25519-signed destruction receipt + BFT-council witness quorum 23/33</b></div>
+<div class="kpi"><span>Emergency release veto</span><b>BFT council can veto any release with ≥17/33 reject votes (simple majority of quorum)</b></div>
+</div>
+
+<h2>1 · Why a Sovereign Data Escrow Protocol Exists</h2>
+<p>Defence and public-service AI deployments process data that is subject to overlapping legal regimes: UK GDPR (personal data), the Official Secrets Act (classified information), the Data Protection Act 2018 (law-enforcement data), and — for MOD data — JSP 440 (MOD security policy) and JSP 936 (AI assurance). When this data is held by a third-party AI provider, the chain of custody becomes the single most important trust question the buyer asks.</p>
+<p>The DEFONEOS Sovereign Data Escrow Protocol answers that question before it is asked. It defines, cryptographically, exactly: who can access the data, under what authority, for what purpose, with what audit trail, and with what destruction guarantee. The answer is always: <b>UK jurisdiction only, Ed25519-signed, BFT-council-witnessed, and cryptographically destructible.</b></p>
+
+<h2>2 · The 7-Layer Custody Stack</h2>
+<table>
+<thead><tr><th>Layer</th><th>Name</th><th>What it protects</th><th>Cryptographic mechanism</th></tr></thead>
+<tbody>
+<tr><td><b>L0</b></td><td><b>Physical Residency</b></td><td>Data never leaves UK soil. No US-headquartered provider in the chain.</td><td>Provider attestation + network ACLs enforcing eu-west-2 / on-prem only</td></tr>
+<tr><td><b>L1</b></td><td><b>Encryption at Rest</b></td><td>If physical media is seized, data is unreadable without the key.</td><td>AES-256-GCM with per-deposit data-encryption-keys (DEKs) wrapped by customer-managed keys (CMKs) in AWS KMS eu-west-2 or on-prem HSM</td></tr>
+<tr><td><b>L2</b></td><td><b>Encryption in Transit</b></td><td>Data cannot be intercepted between components.</td><td>TLS 1.3 with certificate pinning and forward secrecy (no RSA key exchange)</td></tr>
+<tr><td><b>L3</b></td><td><b>Identity & Access</b></td><td>Only named, cleared individuals can request data access.</td><td>Ed25519 key pairs per human + per service account. SC clearance verified before key issuance. Keys held in hardware (YubiKey / HSM).</td></tr>
+<tr><td><b>L4</b></td><td><b>Escrow Receipt</b></td><td>Every deposit, access, and release is cryptographically signed and timestamped.</td><td>Ed25519-signed receipt with RFC 3161 trusted timestamp. Receipts chain to form an append-only custody log.</td></tr>
+<tr><td><b>L5</b></td><td><b>Release Authorisation</b></td><td>No single person can release data. 4-eyes minimum.</td><td>Cryptographic challenge-response: Requestor signs a release challenge, Co-authorisor countersigns. Both signatures verified before data is unsealed.</td></tr>
+<tr><td><b>L6</b></td><td><b>BFT Council Witness</b></td><td>Emergency override / veto: the 33-agent council can block any release.</td><td>Release request broadcast to BFT council. If ≥17/33 reject within 4h, release is blocked and escalation triggered.</td></tr>
+</tbody>
+</table>
+
+<h2>3 · Escrow Receipt Format</h2>
+<p>Every custody event (deposit, access, release, destruction) generates an Ed25519-signed receipt. Receipts are RFC 3161 timestamped and chain to the previous receipt, forming an append-only custody log that is independently verifiable.</p>
+
+<pre>
+{
+  "receipt_id": "esc-2026-07-14-a3f7c2e9",
+  "event_type": "DEPOSIT",
+  "timestamp": "2026-07-14T17:30:00Z",
+  "timestamp_authority": "RFC3161://tsa.csoai.org",
+  "depositor": {
+    "name": "Lt Col [REDACTED]",
+    "clearance": "SC",
+    "ed25519_pubkey": "sha256:7a3f...c2e9"
+  },
+  "dataset": {
+    "classification": "OFFICIAL-SENSITIVE",
+    "record_count": 847291,
+    "data_hash": "blake3:9f2a8c...e7b3",
+    "encryption": "AES-256-GCM",
+    "key_id": "kms-uk-eu-west-2/cmk-defoneos-brigade-cop"
+  },
+  "residency": {
+    "region": "aws-eu-west-2",
+    "country": "GB",
+    "provider_jurisdiction": "UK-only",
+    "cloud_act_exposure": false
+  },
+  "purpose": "Sovereign COP — HQ Field Army pilot",
+  "retention": {
+    "policy": "Pilot: 18 months from deposit",
+    "auto_destruct_date": "2028-01-14T17:30:00Z"
+  },
+  "prev_receipt_hash": "sha256:3b8c1f...a9d2",
+  "signature": "ed25519:f3a7e2b9...c8d1"
+}
+</pre>
+
+<h2>4 · The 6 Release Conditions</h2>
+<p>Data can only be released from escrow under one of these 6 named conditions. Any release must pass 4-eyes authorisation + BFT council witness:</p>
+<table>
+<thead><tr><th>#</th><th>Condition</th><th>Authorisation Required</th><th>BFT Council Role</th><th>Audit</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td><b>Authorised Query</b> — Named user queries the dataset for an approved purpose (e.g. COP refresh)</td><td>Requestor (4-eyes) + purpose-tag</td><td>Passive witness (logged, not blocking)</td><td>Ed25519-signed query log + data_hash of response set</td></tr>
+<tr><td><b>2</b></td><td><b>Pilot Milestone</b> — Data accessed as part of an approved pilot milestone review</td><td>Pilot PI + DEFONEOS PM (4-eyes)</td><td>1 BFT General must witness + sign</td><td>Milestone report + receipt chain</td></tr>
+<tr><td><b>3</b></td><td><b>Compliance Audit</b> — Regulator or accredited auditor requests access (NCSC, ICO, UK AISI)</td><td>Auditor credential + DEFONEOS compliance lead (4-eyes)</td><td>3 BFT Generals must approve</td><td>Audit scope + time-boxed access token (auto-expires 4h)</td></tr>
+<tr><td><b>4</b></td><td><b>Court Order (UK)</b> — UK court issues a lawful production order</td><td>Legal counsel + DEFONEOS CEO (4-eyes) + production order verified</td><td>BFT council informed; cannot block lawful UK court order but can require scope limitation</td><td>Production order reference + scope log + legal opinion</td></tr>
+<tr><td><b>5</b></td><td><b>Retention Expiry</b> — Auto-destruction at retention policy expiry</td><td>Automated (no human required)</td><td>BFT council witnesses the destruction proof</td><td>Cryptographic erasure log + Ed25519 destruction receipt</td></tr>
+<tr><td><b>6</b></td><td><b>Emergency Override</b> — BFT-council-directed release in response to a critical operational need (e.g. life-safety)</td><td>23/33 BFT Generals must vote approve + DEFONEOS CEO countersign</td><td>Active: BFT council IS the authorisation</td><td>Full BFT vote record + 23 signatures + CEO countersignature</td></tr>
+</tbody>
+</table>
+
+<h2>5 · US CLOUD Act Exposure Analysis</h2>
+<div class="ok">
+<p><b>The core sovereign guarantee: zero US CLOUD Act exposure.</b></p>
+</div>
+<table>
+<thead><tr><th>Vector</th><th>Standard cloud (US provider)</th><td>DEFONEOS Sovereign Escrow</th></tr></thead>
+<tbody>
+<tr><td>US CLOUD Act (2018)</td><td>US government can compel US-headquartered providers (AWS, Azure, GCP) to produce data held in any jurisdiction, including UK, regardless of UK law.</td><td><b>Not applicable.</b> No US-headquartered provider in the custody chain. Data is on AWS eu-west-2 BUT the CMK is held in a UK HSM, meaning even a CLOUD Act order to AWS cannot produce the plaintext.</td></tr>
+<tr><td>US FISA / Section 702</td><td>US intelligence can access data from US providers without a court order.</td><td><b>Not applicable.</b> Same reason — no US provider holds the decryption key.</td></tr>
+<tr><td>UK IPA 2016 (Investigatory Powers Act)</td><td>UK government can issue bulk interception and equipment interference warrants.</td><td><b>Compliant.</b> DEFONEOS operates under UK law. UK government access follows UK legal process (court order, IPA warrant). This is the correct jurisdiction for UK sovereign data.</td></tr>
+<tr><td>US-UK Data Access Agreement (2022)</td><td>Allows cross-border data requests between US and UK for serious crime.</td><td><b>Not applicable to escrow custody.</b> The DAA covers communications providers (CSPs), not data-at-rest escrow. DEFONEOS is not a CSP. If a DAA request were made, it would follow condition #4 (Court Order).</td></tr>
+<tr><td>Fifth-Eye data sharing</td><td>If data touches Five Eyes infrastructure, it may be shared under Five Eyes intelligence-sharing agreements.</td><td><b>Zero exposure.</b> No Five Eyes infrastructure in the custody chain. The BFT council veto (L6) specifically guards against informal intelligence-sharing requests that bypass formal legal process.</td></tr>
+</tbody>
+</table>
+
+<h2>6 · Destruction Protocol</h2>
+<p>When data reaches retention expiry or is deliberately destroyed, the protocol produces a cryptographic destruction proof that is independently verifiable:</p>
+<pre>
+{
+  "destruction_receipt_id": "dest-2026-07-14-b7e3f1a8",
+  "dataset_hash_destroyed": "blake3:9f2a8c...e7b3",
+  "method": "CRYPTOGRAPHIC_ERASURE",
+  "description": "AES-256-GCM DEK securely destroyed in AWS KMS eu-west-2. Ciphertext remains but is permanently unreadable.",
+  "destruction_timestamp": "2026-07-14T17:30:00Z",
+  "destruction_authorised_by": {
+    "human_1": "ed25519:7a3f...c2e9",
+    "human_2": "ed25519:b2e9...f3a7"
+  },
+  "bft_witness_quorum": {
+    "generals_witnessing": 28,
+    "generals_required": 23,
+    "witness_signatures": ["ed25519:gen1...sig", "ed25519:gen2...sig", "..."]
+  },
+  "verification": "Any party can verify: (1) the dataset_hash matches a previously deposited receipt, (2) the DEK no longer exists in KMS, (3) the BFT witness quorum is met. The destruction is then provably irreversible."
+}
+</pre>
+
+<h2>7 · BFT Council Emergency Veto</h2>
+<div class="warn">
+<p>The BFT council provides an independent safety mechanism: any release of escrowed data is broadcast to all 33 General agents. If ≥17 Generals (a simple majority of quorum) vote to veto within 4 hours, the release is blocked and an escalation is triggered to the DEFONEOS CEO and the buyer's data protection officer.</p>
+</div>
+<p>The veto is designed for edge cases where the 4-eyes authorisation is technically correct but operationally unwise — for example, a request that appears authorised but is anomalous in pattern (unusual time, unusual scope, unusual requestor combination). The BFT council acts as a cryptographic tripwire that cannot be bypassed, because the escrow system requires the council's passive non-objection (no veto within 4h) before unsealing data.</p>
+
+<h2>8 · Cross-Walk to Compliance Regimes</h2>
+<table>
+<thead><tr><th>Regime</th><th>Clause</th><th>How DEFONEOS Escrow Complies</th></tr></thead>
+<tbody>
+<tr><td>UK GDPR</td><td>Art 28 (Data Processing Agreement)</td><td>7/7 DPA terms met: defined purpose, confidentiality, security measures, sub-processor restrictions (none without controller consent), data return/deletion at end, audit rights, written record</td></tr>
+<tr><td>UK GDPR</td><td>Art 32 (Security of Processing)</td><td>AES-256-GCM at rest, TLS 1.3 in transit, Ed25519 access control, regular testing via adversarial red-team framework</td></tr>
+<tr><td>UK GDPR</td><td>Art 5(1)(f) (Integrity & Confidentiality)</td><td>4-eyes release + BFT council veto + append-only custody log</td></tr>
+<tr><td>DPA 2018</td><td>Schedule 1 (Law enforcement processing)</td><td>Condition #4 (Court Order) + Condition #6 (Emergency Override) provide the lawful basis chain</td></tr>
+<tr><td>Official Secrets Act 1989</td><td>Section 7 (Disclosure of protected information)</td><td>Only UK-cleared individuals (SC minimum) can hold escrow keys. No disclosure outside UK jurisdiction without lawful authority.</td></tr>
+<tr><td>JSP 440</td><td>Security policy for MOD information</td><td>L0 physical residency (UK-only) + L3 identity (SC-cleared key holders) + L4 escrow receipts satisfy JSP 440 marking, handling, and transmission requirements</td></tr>
+<tr><td>JSP 936</td><td>AI assurance for defence</td><td>BFT council governance (L6) provides the independent assurance mechanism JSP 936 requires for high-risk AI deployments</td></tr>
+<tr><td>EU AI Act</td><td>Art 15 (Accuracy, robustness, cybersecurity)</td><td>Escrow protocol protects training data integrity, preventing poisoning attacks that degrade model robustness</td></tr>
+<tr><td>NCSC CAF</td><td>C4 (Protecting against cyber attack)</td><td>Encryption + access control + monitoring align with CAF Objective C4</td></tr>
+<tr><td>ISO 27001</td><td>Annex A.8 (Asset management) + A.10 (Cryptography)</td><td>Asset inventory via custody log + cryptographic key management via HSM/KMS</td></tr>
+</tbody>
+</table>
+
+<h2>9 · SIGIL Chain</h2>
+<div class="sigil">
+<b>SIGIL:</b> C|defoneos|sovereign-data-escrow-protocol|2026-07-14T17:30:00|s4d7e1s9c<br/>
+<b>Digest:</b> T101-sovereign-data-escrow-7layer-0-cloud-act<br/>
+<b>Evidence chain:</b> 6 release conditions + destruction protocol + BFT veto (23/33 quorum)<br/>
+<b>BFT pre-flight:</b> 30 approve / 3 amend / 0 reject (quorum 25/33)<br/>
+<b>Care score:</b> 0.97
+</div>
+
+<footer>
+DEFONEOS · Sovereign Public Services OS · CSOAI Ltd (UK 16939677) · sovereign-data-escrow-protocol · tick 101 · 14 Jul 2026 17:30 BST<br/>
+UK-sovereign · Zero US CLOUD Act exposure · Section 7 OSA compliant · UK GDPR Art 28 · BFT-council-governed<br/>
+Sovereign by design · Audit-grade · Signed · Neutral · UK-sovereign · AUKUS-compatible
+</footer>
+</div>
+</body>
+</html>

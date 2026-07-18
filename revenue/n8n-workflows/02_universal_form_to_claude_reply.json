@@ -1,0 +1,134 @@
+{
+  "name": "Universal — Form Submission → Claude-drafted Email Reply",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "form-inbound",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-inbound",
+      "name": "Webhook — inbound form",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-3-5-sonnet-20241022",
+          "mode": "id"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are the founder of {{$json.brand_name}}, replying to a website form submission. Tone: warm but professional, no sales-speak, no corporate fluff. Length: 80-150 words.\n\nForm submission details:\n- Sender name: {{$json.name}}\n- Sender email: {{$json.email}}\n- Sender company: {{$json.company || 'not provided'}}\n- Their question: {{$json.message}}\n- The page they submitted from: {{$json.source_page}}\n\nWrite a personal email reply that:\n1. Thanks them by name\n2. Directly addresses what they asked (don't pivot to sales)\n3. If a specific MEOK product is relevant, mention ONE product link, no more\n4. Offers a 30-min call link: https://cal.com/networknick (or appropriate brand)\n5. Signs off as 'Nicholas' (no title)\n\nReturn ONLY the email body. No subject line, no greeting/signature wrapping.",
+              "role": "user"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 400,
+          "temperature": 0.6
+        }
+      },
+      "id": "claude-draft",
+      "name": "Claude — draft reply",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [400, 300],
+      "credentials": {
+        "anthropicApi": {
+          "id": """",
+          "name": "Anthropic Claude"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$json.from_email}}",
+        "toEmail": "={{$json.email}}",
+        "subject": "=Re: your message via {{$json.source_page}}",
+        "html": "={{$json.message_draft.replace(/\\n/g, '<br>')}}",
+        "options": {}
+      },
+      "id": "smtp-send-reply",
+      "name": "Send reply email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [600, 300],
+      "credentials": {
+        "smtp": {
+          "id": """",
+          "name": "Brand SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO leads (name, email, company, source_page, brand, message, replied_at, claude_draft) VALUES ('{{$json.name}}', '{{$json.email}}', '{{$json.company}}', '{{$json.source_page}}', '{{$json.brand_name}}', '{{$json.message}}', NOW(), '{{$json.message_draft}}')"
+      },
+      "id": "log-pocketbase",
+      "name": "Log to PocketBase CRM",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [800, 300],
+      "credentials": {
+        "postgres": {
+          "id": """",
+          "name": "PocketBase shared CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "leads",
+        "text": "=💌 New lead via {{$json.source_page}} ({{$json.brand_name}})\n*From:* {{$json.name}} ({{$json.email}}) {{$json.company ? '· ' + $json.company : ''}}\n*Question:* {{$json.message.substring(0, 200)}}\n*Auto-reply sent:* yes ✓"
+      },
+      "id": "slack-notify",
+      "name": "Slack notify Nick",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [800, 500],
+      "credentials": {
+        "slackApi": {
+          "id": """",
+          "name": "Slack — Nick"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook — inbound form": {
+      "main": [[{"node": "Claude — draft reply", "type": "main", "index": 0}]]
+    },
+    "Claude — draft reply": {
+      "main": [[
+        {"node": "Send reply email", "type": "main", "index": 0},
+        {"node": "Log to PocketBase CRM", "type": "main", "index": 0},
+        {"node": "Slack notify Nick", "type": "main", "index": 0}
+      ]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "_meok_notes": {
+    "purpose": "Receive form submissions from any of the 12 brand sites, draft personalised reply via Claude, send within 60 seconds, log to shared CRM, ping Slack",
+    "trigger_endpoint": "POST https://n8n.iokfarm.co.uk/webhook/form-inbound",
+    "expected_input_payload": {
+      "brand_name": "MEOK / Templeman / Network Nick / etc",
+      "from_email": "founder@brand-domain.tld (the from address)",
+      "name": "form sender's name",
+      "email": "form sender's email",
+      "company": "optional",
+      "source_page": "/audit-prep-bundle (or wherever)",
+      "message": "what they wrote in the form"
+    },
+    "wire_into_existing_forms": "Add `fetch('https://n8n.iokfarm.co.uk/webhook/form-inbound', {method:'POST', body: JSON.stringify(payload)})` in each form submit handler across meok.ai, csoai.org, networknick.co.uk, templeman-opticians.com, etc.",
+    "expected_uplift": "60-second response time vs 24-72h human reply = significantly higher lead conversion rate. Industry benchmark: replying within 5 min vs 1 hour = 21x higher contact rate."
+  }
+}

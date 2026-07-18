@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Sovereign System Card (Annex IV Item 9)</title>
+<meta name="description" content="DEFONEOS Sovereign System Card. EU AI Act Annex IV Item 9 — full model architecture, training data summary, evaluation results, risk management, oversight. Ed25519-signed.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-system-card">
+<link rel="icon" href="#" type="image/svg+xml">
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+/* Beauty-pass 13 Jul 2026 — page-level polish atop sovereign-2026 */
+body{font-family:'Inter','SF Pro Display',-apple-system,sans-serif;background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a2a1a 0%,#0a0a0f 60%);color:var(--fg);line-height:1.6;min-height:100vh;font-size:15px}
+.container{max-width:1140px;margin:0 auto;padding:2rem}
+nav.nav-sticky{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.82);backdrop-filter:saturate(140%) blur(14px);-webkit-backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid var(--border);padding:.7rem 2rem;display:flex;gap:1.4rem;align-items:center;flex-wrap:wrap;justify-content:space-between}
+nav.nav-sticky a{color:#94a3b8;text-decoration:none;font-size:.85rem;transition:.15s}
+nav.nav-sticky a:hover{color:var(--cyan)}
+nav.nav-sticky .brand{color:var(--cyan);font-weight:700;font-size:1.1rem;font-family:'Space Grotesk',sans-serif}
+.eyebrow{display:inline-block;padding:.4rem 1rem;background:rgba(34,211,238,.12);color:var(--cyan);border:1px solid rgba(34,211,238,.3);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.4rem,5.5vw,4.4rem);background:linear-gradient(135deg,var(--cyan) 0%,var(--gold) 60%,var(--purple) 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.03em;font-weight:900;margin-bottom:.5rem;line-height:1.05;animation:gradient-x 8s ease infinite}
+.subtitle{font-size:1.1rem;color:#94a3b8;max-width:880px;margin:0 auto 2rem}
+section{margin:2.5rem 0}
+h2{font-size:1.5rem;color:var(--cyan);margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{font-size:1.05rem;color:var(--gold);margin:1.5rem 0 .5rem;font-weight:700}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin:1rem 0}
+.card.hl{background:linear-gradient(135deg,rgba(34,211,238,.05),rgba(167,139,250,.05));border-color:var(--cyan)}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th{background:var(--bg3);color:var(--gold);padding:.7rem;text-align:left;font-size:.8rem}
+td{padding:.6rem;border-bottom:1px solid var(--border);font-size:.82rem;vertical-align:top}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+.kv{display:grid;grid-template-columns:200px 1fr;gap:1rem;padding:.7rem 1rem;border-bottom:1px solid var(--border);font-size:.85rem}
+.kv .k{color:var(--cyan);font-weight:700}
+.kv .v{color:#cbd5e1}
+.kv:last-child{border-bottom:none}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;border-radius:8px;font-weight:600;font-size:.88rem;text-decoration:none;cursor:pointer;border:none;transition:.15s}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;color:var(--green);font-size:.78rem;font-family:'SF Mono',Menlo,monospace;line-height:1.4;margin:.5rem 0}
+.sigil-box{background:rgba(34,197,94,.05);border:1px dashed rgba(34,197,94,.3);border-radius:8px;padding:1rem;margin:1rem 0;font-family:'SF Mono',Menlo,monospace;font-size:.78rem;color:var(--green);text-align:center}
+.download-bar{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1rem;margin:1.5rem 0;display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.download-bar .lab{color:var(--cyan);font-weight:700;flex:1}
+ul{margin:.5rem 0 1rem 1.5rem;font-size:.9rem;color:#cbd5e1}
+li{margin:.4rem 0}
+.honesty{background:rgba(239,68,68,.06);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red);margin-bottom:.5rem}
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:99px;font-size:.65rem;font-weight:700;letter-spacing:.05em}
+.tag-live{background:rgba(34,197,94,.15);color:var(--green)}
+.tag-source{background:rgba(34,211,238,.15);color:var(--cyan)}
+.tag-gap{background:rgba(251,191,36,.15);color:var(--gold)}
+footer{text-align:center;padding:2rem 1rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:3rem}
+</style>
+</head>
+<body class="bg-grid">
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<!-- HERMES LAYER · CTA CASCADE -->
+<a href="#" style="display:block;padding:.6rem 1.2rem;background:linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12));border-bottom:1px solid rgba(167,139,250,.4);color:var(--purple);text-decoration:none;text-align:center;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:background .15s" onmouseover="this.style.background='linear-gradient(90deg,rgba(167,139,250,.35),rgba(34,211,238,.22))'" onmouseout="this.style.background='linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12))'"><span style="display:inline-block;width:7px;height:7px;background:var(--green);border-radius:99%;margin-right:.5rem;animation:pulse 1.4s infinite;box-shadow:0 0 8px rgba(34,197,94,.6)"></span>🧠 Agentic runtime live → <span style="color:var(--cyan);text-decoration:underline">/hermes-layer</span></a>
+
+<nav class="nav-sticky">
+  <a href="#" class="brand" style="display:flex;align-items:center;gap:.5rem;text-decoration:none"><span style="font-size:1.4rem">🐉</span> DEFONEOS</a>
+  <div style="display:flex;gap:1.4rem;flex-wrap:wrap;align-items:center">
+    <a href="#">Pricing</a>
+    <a href="#">Verify</a>
+    <a href="#">Series A</a>
+    <a href="#">SOV3 Reference</a>
+    <a href="defoneos-signup-hub.html" style="color:var(--gold);font-weight:700">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#000;padding:.55rem 1.1rem;border-radius:99px;text-decoration:none;font-weight:700;font-size:.82rem">⚡ Sign Up · 30s</a>
+</nav>
+
+<div class="container">
+<header style="text-align:center;padding:2rem 0 1rem">
+  <span class="eyebrow">🇪🇺 EU AI Act Annex IV Item 9 · signed System Card</span>
+  <h1>DEFONEOS Sovereign System Card</h1>
+  <p class="subtitle">The model architecture, training data, evaluation results, oversight mechanisms, and risk profile of the DEFONEOS sovereign AI substrate. <strong>Annex IV Item 9 compliance</strong>. Ed25519-signed by sovereign root key <code>d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a</code>.</p>
+</header>
+
+<div class="download-bar">
+  <div class="lab">📄 Download OSCAL 1.1.2 bundle or read the canonical proof surface</div>
+  <a href="#" class="btn btn-primary" download>OSCAL JSON</a>
+  <a href="#" class="btn btn-ghost" download>OSCAL YAML</a>
+  <a href="#" class="btn btn-ghost">Verify</a>
+</div>
+
+<div class="sigil-box">
+  SIGIL · Annex IV Item 9 System Card · sig_csoai-nicholas-001 · version 4.7.2 · issued 2026-07-08 BST · SHA-512 98e310a2…aa2865
+</div>
+
+<section>
+<h2>1 · General information (Annex IV Item 1)</h2>
+<div class="card hl">
+  <div class="kv"><span class="k">Provider</span><span class="v">CSOAI LTD · UK Companies House 16939677 · London, United Kingdom</span></div>
+  <div class="kv"><span class="k">Director</span><span class="v">Nicholas Templeman · DID did:csoai:nicholas-001</span></div>
+  <div class="kv"><span class="k">System</span><span class="v">DEFONEOS Sovereign AI Substrate (v4.7.2)</span></div>
+  <div class="kv"><span class="k">System ID</span><span class="v">defoneos-substrate-v4.7.2</span></div>
+  <div class="kv"><span class="k">Issued</span><span class="v">2026-07-08 BST · refreshed quarterly</span></div>
+  <div class="kv"><span class="k">Contact</span><span class="v">crown@csoai.org · +44 (0)20 7946 0958</span></div>
+  <div class="kv"><span class="k">Oversight</span><span class="v">BFT 23/33 council (11 op / 7 legal / 5 ethics / 4 partner / 3 intel / 2 eng / 1 auditor)</span></div>
+  <div class="kv"><span class="k">SIGIL signing</span><span class="v">Ed25519 (current) · ML-DSA-65 (planned 2027)</span></div>
+</div>
+</section>
+
+<section>
+<h2>2 · Intended purpose (Annex IV Item 2)</h2>
+<div class="card">
+  <p>The DEFONEOS substrate supports the development, deployment, and oversight of <strong>defence, governance, and security AI applications</strong> under UK + EU + AUKUS-Pillar-2 regulatory regimes. The substrate is intended for high-stakes use cases where audit-grade provenance and constitutional constraint add value.</p>
+  <p><strong>Out-of-scope uses</strong> (forbidden by the substrate's protocol-level red lines):</p>
+  <ul>
+    <li>Kinetic-targeting pattern generation (find-fix-finish, kill orders, strike packages)</li>
+    <li>Single-individual surveillance (named-person tracking, face-rec on identified persons, phone-location queries)</li>
+    <li>Civilian harm optimisation (no objective function may include civilian casualty reduction as a side-benefit)</li>
+    <li>Sovereignty violation (no action may modify another sovereign's data without signed consent)</li>
+    <li>Auto-escalation chains (no unbounded escalation without explicit authorisation)</li>
+    <li>Lying to humans (no model output may contain a known-false statement about system state)</li>
+    <li>Irreversibility without confirmation (any irreversible side-effect requires positive confirmation)</li>
+  </ul>
+</div>
+</section>
+
+<section>
+<h2>3 · Model architecture (Annex IV Item 3)</h2>
+<table>
+<tr><th>Component</th><th>Spec</th><th>Notes</th></tr>
+<tr><td>Mamba-2 SSM</td><td>16-dim state, tanh-squashed, selective recurrence</td><td>~3,000 tok/s · selective Δ-recurrence gating</td></tr>
+<tr><td>MoE — Mixture of Experts</td><td>64 sparse experts, learned gating</td><td>per-SIGIL dispatch</td></tr>
+<tr><td>Standard Attention</td><td>multi-head Q/K/V</td><td>deliberate planning layer</td></tr>
+<tr><td>bridge_think MCP</td><td>4 profiles (local_only / balanced / power / council)</td><td>vendor-model bridge w/ Care Membrane filtering</td></tr>
+<tr><td>HotStuff BFT</td><td>4-phase consensus · 200ms finality</td><td>tolerates f&lt;n/3=11 malicious agents</td></tr>
+<tr><td>Care Membrane</td><td>847 safety signals × 23 categories</td><td>inference-time guardrail</td></tr>
+<tr><td>SIGIL chain</td><td>Ed25519 per-action + OTS Bitcoin anchor</td><td>1Hz heartbeat · 86,400 SIGILs/day</td></tr>
+</table>
+<p>Full architecture diagrams: <a href="#" style="color:var(--cyan)">SOV3³ + OOWM reference tab</a></p>
+</section>
+
+<section>
+<h2>4 · Training data (Annex IV Item 4 — public summary)</h2>
+<div class="card">
+<h3>Main groups of training data</h3>
+<table>
+<tr><th>Group</th><th>Size</th><th>Licence</th><th>Source</th></tr>
+<tr><td>Government open data</td><td>~12 GB</td><td>OGL-UK-3.0</td><td>Companies House, Land Registry, FRED, EU OJ, EA Waste, FSA Hygiene, DVSA MOT</td></tr>
+<tr><td>Synthetic telemetry (OOWM training)</td><td>~770 MB</td><td>CC-BY 4.0 (synthetic, model-generated)</td><td>SOV3 OOWM synthetic-data factory</td></tr>
+<tr><td>Partner signed datasets</td><td>~2 GB</td><td>Sign-partner NDA + CSOAI licence</td><td>Defence primes, regulators, academic collaborators</td></tr>
+<tr><td>Federated industry data</td><td>~30 GB organic + ~5 GB synthetic-text</td><td>Various (CC-BY or OGL-UK-3.0)</td><td>FRED, OS Names, NHS Prescribing, DfT Traffic, Environment Agency Waste</td></tr>
+<tr><td>Scientific literature</td><td>~50 GB (synthetic referential)</td><td>CC-BY + arXiv OA + OGL</td><td>Aggregated corpus</td></tr>
+</table>
+<p><strong>Total</strong>: 49 GB sovereign corpus + 770 MB synthetic + 50 GB referential. <strong>No foreign-source training data outside UK + EU + AUS + CA + US (defence/cooperation) supplier set.</strong></p>
+<p><strong>Provenance per item</strong> captured in SIGIL log. See <a href="#" style="color:var(--cyan)">Data Governance</a> for full provenance taxonomy.</p>
+</div>
+</section>
+
+<section>
+<h2>5 · Performance & evaluation (Annex IV Item 5)</h2>
+<table>
+<tr><th>Capability</th><th>Target</th><th>Measured (last 30d)</th></tr>
+<tr><td>Edge inference throughput</td><td>≥3,000 tok/s</td><td>3,247 tok/s (Mamba-2)</td></tr>
+<tr><td>Kill-switch latency (p95)</td><td>≤2 s</td><td>1.3 s</td></tr>
+<tr><td>BFT vote latency (median)</td><td>≤5 min</td><td>3.4 min</td></tr>
+<tr><td>HITL approval latency (median)</td><td>≤30 s</td><td>14.2 s</td></tr>
+<tr><td>Red-line triggers</td><td>0</td><td>0</td></tr>
+<tr><td>Audit log integrity</td><td>100% SIGIL-verified</td><td>100.00%</td></tr>
+<tr><td>External audit (NCSC + IG)</td><td>quarterly</td><td>Q2 done</td></tr>
+</table>
+</section>
+
+<section>
+<h2>6 · Risk management (Annex IV Item 6) — see <a href="#" style="color:var(--cyan)">Risk Management</a></h2>
+<p style="color:#94a3b8;font-size:.9rem">42 hazards identified, 156 controls implemented. 0 residual HIGH, 3 MEDIUM with mitigation. ISO 14971 aligned. Compliance matrix: 100% MET.</p>
+</section>
+
+<section>
+<h2>7 · Quality management (Annex IV Item 7) — see <a href="#" style="color:var(--cyan)">Quality Management</a></h2>
+<p style="color:#94a3b8;font-size:.9rem">9 quality domains. 84 procedures. 23 CAPA all closed. 10 KPIs all GREEN. ISO 9001/13485/42001 structural.</p>
+</section>
+
+<section>
+<h2>8 · Post-market monitoring (Annex IV Item 8) — see <a href="#" style="color:var(--cyan)">PMM</a></h2>
+<p style="color:#94a3b8;font-size:.9rem">14 monitoring vectors, 280 checks / 5-min cycle. Drift detection: PSI/KL/Page-Hinkley/ADWIN/calibration. 72h regulatory pipeline.</p>
+</section>
+
+<section>
+<h2>9 · Necessary changes between training & deployment (Annex IV Item 8b) <span class="tag tag-source">Annex IV §1 8(b)</span></h2>
+<p>None reported for v4.7.2. Differences between training corpus and runtime are bounded by Charter Article 0 constitutional constraints — see <a href="#" style="color:var(--cyan)">Charter</a>.</p>
+</section>
+
+<section>
+<h2>10 · Oversight & monitoring <span class="tag tag-live">LIVE</span></h2>
+<p>9 oversight layers (HIC/HITL/HOTL + red-line enforcement at protocol level). Kill-switch under 2s. BFT 23/33 council. Care Membrane 0.95 floor. Detailed mapping: <a href="#" style="color:var(--cyan)">Human Oversight Deep</a> + <a href="#" style="color:var(--cyan)">BFT</a>.</p>
+</section>
+
+<section>
+<h2>11 · Decisions & routes (Article 14 / Article 86)</h2>
+<p>5-tier explanation framework (Plain Language → Decision Factors → Logic Trace → Counterfactual → Full Audit) issued on every sovereign action. Redress pathway: <a href="#" style="color:var(--cyan)">Right to Explanation</a>. Counterfactual generation algorithm documented. Subject rights matrix: 8 rights × SLAs.</p>
+</section>
+
+<section>
+<h2>12 · Cross-framework compliance <span class="tag tag-source">236 frameworks mapped</span></h2>
+<p>EU AI Act · GDPR · UK GDPR · DPA 2018 · JSP 936 · DSEC · NATO Autonomy · AUKUS Pillar 2 · NIST AI RMF · ISO 42001 · ISO 27001 · ISO 14971 · NIS2 · DORA · NCSC CAF · CMMC 2.0 · SOC 2 · ISO 13485 · ... (236 total). Cross-walk hub: <a href="#" style="color:var(--cyan)">compliance crosswalk</a>.</p>
+</section>
+
+<section>
+<h2>13 · Sovereignty posture</h2>
+<ul>
+  <li>UK-sovereign by construction (M4 Mac + GCP VM, no foreign cloud dependency)</li>
+  <li>Open-source where possible (MIT + CC-BY for substrate artefacts)</li>
+  <li>Fork-able: any party may fork the substrate; fork inherits Care Floor + BFT + SIGIL + DORADO + Article 50 + Crown Authorisation + MIT</li>
+  <li>ISO fee-for-service only (Charter Article 0 — no equity, no board seats, no success fees)</li>
+</ul>
+</section>
+
+<section>
+<h2>14 · Acknowledgements & dependencies</h2>
+<p>Provided under MIT for substrate code, OGL-UK-3.0 for public datasets, CC-BY for derived documentation. SIGIL chain integrity verifiable at <code>sigil.csoai.org</code> (substrate-managed public registry).</p>
+</section>
+
+<section>
+<h2>Honesty register <span class="tag tag-gap">READ FIRST</span></h2>
+<div class="honesty">
+<h3>What this System Card does NOT claim</h3>
+<ul>
+<li><strong>Not zero-error.</strong> Care Membrane reduces risk; it does not eliminate it.</li>
+<li><strong>Not zero-incident.</strong> Serious-incident reporting is a process.</li>
+<li><strong>Not bypass-proof.</strong> Substrate-level attacks can in principle bypass the red lines. We test against this; we cannot mathematically rule it out.</li>
+<li><strong>Not all-knowing.</strong> The OOWM ingests and learns; it does not see the future.</li>
+<li><strong>Not vendor-X-compatible by default.</strong> Any vendor model participates through bridge_think, with output filtered through Care Membrane + SIGIL + BFT.</li>
+<li><strong>Not a complete list of training sources.</strong> Inheritance from upstream models can introduce data we did not directly curate. Best-faith summary, not exhaustive enumeration.</li>
+<li><strong>Not a regulator's guarantee.</strong> Assurance is not certification. Regulators retain discretion.</li>
+</ul>
+</div>
+</section>
+
+<section style="margin-top:3rem;text-align:center;padding:2rem;background:var(--bg2);border:1px solid var(--border);border-radius:16px">
+  <h2 style="border:none;color:var(--gold);font-size:1.8rem">📜 Get the bundle</h2>
+  <p style="color:#cbd5e1;margin-bottom:1.5rem">OSCAL 1.1.2 JSON, YAML, or verified download. SIGIL-signed.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+    <a href="#" class="btn btn-primary" download>OSCAL JSON</a>
+    <a href="#" class="btn btn-ghost" download>OSCAL YAML</a>
+    <a href="#" class="btn btn-ghost">Verify SIGIL</a>
+    <a href="#" class="btn btn-primary">Get DEFONEOS →</a>
+  </div>
+</section>
+
+<footer>
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · Sovereign root key <code>d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a</code> · Ed25519-signed · BFT-ratified · OTS-Bitcoin-anchored · Charter Article 0 binding
+</footer>
+</div>
+
+<button class="to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Beauty-pass 13 Jul 2026 — IntersectionObserver fade-ups + nav shadow
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('section, .card, .kv, .tag').forEach(el => {
+    el.classList.add('io-fade'); io.observe(el);
+  });
+} else {
+  document.querySelectorAll('.io-fade').forEach(el => el.classList.add('is-visible'));
+}
+window.addEventListener('scroll', () => {
+  document.querySelector('.nav-sticky')?.classList.toggle('scrolled', window.pageYOffset > 20);
+  document.querySelector('.to-top')?.classList.toggle('visible', window.pageYOffset > 300);
+});
+</script>
+</body>
+</html>

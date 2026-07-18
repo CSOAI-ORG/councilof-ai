@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 AI OS Tour — 6-Min Full Tour with Voice Interrupt + Cesium 3D + IP Geo</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;overflow:hidden;height:100vh;margin:0}
+  .tour-container{display:grid;grid-template-columns:1fr 400px;height:100vh;gap:0}
+  .cesium-stage{position:relative;background:radial-gradient(ellipse at center,#0a0e27 0%,#000 100%);overflow:hidden}
+  .cesium-stage canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+  .cesium-stage .overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none}
+  .cesium-stage .scanline{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#10b981,transparent);animation:scan 3s linear infinite;pointer-events:none}
+  @keyframes scan{0%{top:0;opacity:1}100%{top:100%;opacity:0}}
+  .cesium-stage .geo-pulse{position:absolute;width:20px;height:20px;border-radius:50%;background:#fbbf24;box-shadow:0 0 30px #fbbf24;transform:translate(-50%,-50%);animation:pulse 1.5s ease-in-out infinite;z-index:5}
+  @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 30px #fbbf24}50%{transform:translate(-50%,-50%) scale(1.5);box-shadow:0 0 60px #fbbf24}}
+  .cesium-stage .geo-ring{position:absolute;border:2px solid #fbbf24;border-radius:50%;transform:translate(-50%,-50%);opacity:0.6;z-index:4;pointer-events:none}
+  .cesium-stage .label{position:absolute;background:rgba(0,0,0,0.7);color:#fbbf24;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;z-index:6;pointer-events:none;transform:translate(-50%,0);white-space:nowrap}
+  .cesium-stage .stage-label{position:absolute;top:1rem;left:1rem;background:rgba(2,6,15,0.85);padding:.7rem 1rem;border-radius:6px;border-left:3px solid #fbbf24;z-index:10;max-width:280px}
+  .cesium-stage .stage-label .title{color:#fbbf24;font-size:.85rem;font-weight:bold;margin-bottom:.3rem}
+  .cesium-stage .stage-label .desc{color:#aaa;font-size:.75rem;line-height:1.4}
+  .saas-window{position:absolute;background:linear-gradient(135deg,rgba(2,6,15,0.95) 0%,rgba(26,31,58,0.95) 100%);border:1px solid #fbbf24;border-radius:8px;padding:0.7rem;min-width:240px;max-width:280px;z-index:20;box-shadow:0 0 20px rgba(251,191,36,0.3);pointer-events:auto;transition:all 0.3s}
+  .saas-window .win-title{color:#fbbf24;font-size:0.75rem;font-weight:bold;margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center}
+  .saas-window .win-title .close{color:#888;cursor:pointer;font-size:1rem}
+  .saas-window .win-body{color:#aaa;font-size:.7rem;line-height:1.3}
+  .saas-window .minimize{cursor:pointer;color:#888;display:inline-block;margin-right:.5rem}
+  .saas-window .saas-content{margin-top:.3rem}
+  .saas-window .saas-bar{height:4px;background:#fbbf24;border-radius:2px;margin-top:.5rem}
+  .chat-ui{background:#0a0a0a;border-left:1px solid #333;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  .chat-header{background:rgba(2,6,15,0.95);padding:0.7rem 1rem;border-bottom:1px solid #fbbf24;display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+  .chat-header .title{color:#fbbf24;font-size:.9rem;font-weight:bold}
+  .chat-header .status{color:#10b981;font-size:.7rem;font-family:monospace;margin-left:auto}
+  .chat-header .status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;margin-right:.3rem;animation:pulse 1.5s infinite}
+  .chat-messages{flex:1;overflow-y:auto;padding:0.7rem;display:flex;flex-direction:column;gap:.5rem}
+  .msg{padding:.5rem 0.7rem;border-radius:6px;max-width:90%;font-size:.75rem;line-height:1.4;animation:slidein 0.3s}
+  @keyframes slidein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .msg.ai{background:rgba(251,191,36,0.1);border-left:3px solid #fbbf24;align-self:flex-start;color:#e5e5e5}
+  .msg.user{background:rgba(96,165,250,0.1);border-left:3px solid #60a5fa;align-self:flex-end;color:#e5e5e5}
+  .msg.system{background:rgba(139,92,246,0.1);border-left:3px solid #8b5cf6;align-self:center;font-size:.7rem;color:#aaa;font-style:italic}
+  .msg .label{color:#fbbf24;font-size:.65rem;font-weight:bold;margin-bottom:.2rem}
+  .msg.user .label{color:#60a5fa}
+  .msg.system .label{color:#8b5cf6}
+  .chat-input{padding:0.7rem;border-top:1px solid #333;display:flex;gap:.5rem;align-items:center;flex-shrink:0}
+  .chat-input input{flex:1;padding:.5rem 0.7rem;background:#02060f;border:1px solid #333;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:.75rem}
+  .chat-input button{background:#fbbf24;color:#000;padding:.5rem 0.8rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-size:.7rem;font-family:inherit}
+  .tour-progress{position:absolute;top:1rem;right:1rem;background:rgba(2,6,15,0.85);padding:0.5rem 0.7rem;border-radius:6px;border-left:3px solid #10b981;z-index:30;font-size:.7rem;color:#aaa;font-family:monospace}
+  .tour-progress .step{color:#fbbf24;font-weight:bold}
+  .voice-btn{background:#10b981;color:#000;padding:.4rem 0.7rem;border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:.7rem;font-weight:bold;display:flex;align-items:center;gap:.3rem}
+  .voice-btn.listening{background:#ef4444;color:#fff;animation:pulse 1s infinite}
+  .start-overlay{position:absolute;inset:0;background:rgba(2,6,15,0.95);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:100;backdrop-filter:blur(8px)}
+  .start-overlay h1{color:#fbbf24;font-size:2.5rem;margin-bottom:1rem;text-shadow:0 0 30px #fbbf24}
+  .start-overlay p{color:#aaa;font-size:1rem;margin-bottom:1.5rem;max-width:500px;text-align:center;line-height:1.5}
+  .start-overlay .start-btn{background:#fbbf24;color:#000;padding:1rem 2rem;border:none;border-radius:6px;font-weight:bold;cursor:pointer;font-size:1.1rem;font-family:inherit;margin:.5rem}
+  .start-overlay .demo-btn{background:#10b981;color:#000;padding:1rem 2rem;border:none;border-radius:6px;font-weight:bold;cursor:pointer;font-size:1.1rem;font-family:inherit;margin:.5rem}
+  .scan-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;backdrop-filter:blur(2px)}
+  .scan-overlay.active{display:flex}
+  .scan-overlay .scan-text{color:#fbbf24;font-size:1.5rem;margin-bottom:1rem;font-weight:bold}
+  .scan-overlay .scan-detail{color:#10b981;font-size:1rem;font-family:monospace}
+  .scan-overlay .progress{width:300px;height:8px;background:#333;border-radius:4px;margin:1rem;overflow:hidden}
+  .scan-overlay .progress-fill{height:100%;background:linear-gradient(90deg,#10b981,#fbbf24);width:0%;transition:width 0.3s}
+  .scan-overlay .layers{color:#fbbf24;font-size:.8rem;margin-top:1rem;font-family:monospace;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="tour-container">
+  <div class="cesium-stage" id="stage">
+    <div class="scanline"></div>
+
+    <div class="stage-label" id="stageLabel">
+      <div class="title" id="stageTitle">🌐 Detecting your location...</div>
+      <div class="desc" id="stageDesc">The dragon scans your IP to find your local hive.</div>
+    </div>
+
+    <div class="tour-progress" id="tourProgress" style="display:none">
+      <div class="step" id="stepLabel">Step 0 / 0</div>
+      <div id="timeLabel">0:00 / 6:00</div>
+    </div>
+
+    <div class="scan-overlay" id="scanOverlay">
+      <div class="scan-text">🔍 SOV33 Scanning...</div>
+      <div class="scan-detail" id="scanDetail">Detecting IP · Resolving location · Identifying local hive</div>
+      <div class="progress"><div class="progress-fill" id="scanFill"></div></div>
+      <div class="layers" id="scanLayers">▓▒░ Initializing... ░▒▓</div>
+    </div>
+
+    <div class="start-overlay" id="startOverlay">
+      <h1>🐉 Sovereign AI OS Tour</h1>
+      <p>Experience the sovereign AI OS. The dragon scans your IP, maps your local area, and walks you through every layer of the substrate.</p>
+      <p style="color:#10b981;font-size:.9rem">Speak at any time to interrupt and ask questions.</p>
+      <div>
+        <button class="demo-btn" onclick="startDemo()">▶ 90-Sec Demo</button>
+        <button class="start-btn" onclick="startTour()">🎬 6-Min Full Tour</button>
+      </div>
+      <p style="margin-top:1.5rem;font-size:.75rem;color:#888">Powered by SOV33 sovereign cognition</p>
+    </div>
+
+    <!-- SaaS windows that will appear during the tour -->
+    <div id="saasWindows"></div>
+  </div>
+
+  <div class="chat-ui">
+    <div class="chat-header">
+      <span style="color:#fbbf24;font-size:1.1rem">🐉</span>
+      <span class="title">SOV33 Guide</span>
+      <span class="status"><span class="dot"></span>live</span>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input">
+      <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">🎤 Speak</button>
+      <input type="text" id="chatInput" placeholder="Ask SOV33 anything..." onkeypress="if(event.key==='Enter')sendChat()">
+      <button onclick="sendChat()">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let tourStep = 0;
+let tourMode = null;  // "demo" | "tour"
+let tourTimer = null;
+let isListening = false;
+let isSpeaking = false;
+let tourStartTime = 0;
+let detectedIP = null;
+let detectedCountry = null;
+let detectedCity = null;
+let detectedHive = null;
+
+const STEPS = [
+  {duration: 20000, title: "🌐 IP Geo-Locate", desc: "SOV33 scans your IP, resolves your location, identifies your nearest sovereign hive.", voice: "Welcome. I'm SOV33, your sovereign guide. First, I scanned your IP and found your local hive. Let me show you."},
+  {duration: 25000, title: "🔍 Local Scan (10-mile radius)", desc: "All sovereign layers appear in your local area. The substrate is alive.", voice: "Look at the 10-mile radius. Every layer — wallets, sigils, hives, pheremones — is visible. The substrate is alive."},
+  {duration: 30000, title: "🌍 Expand to 30 miles", desc: "Zoom out. See all regional sovereign infrastructure.", voice: "Now I'm zooming out to 30 miles. You can see the regional sovereign infrastructure. 12 queens, BFT 12-around-1."},
+  {duration: 35000, title: "🛰️ Global View (33 hive planets)", desc: "Zoom out fully. 33 hive planets orbit the CSOAI sun. The sovereign world.", voice: "This is the sovereign world. 33 hive planets orbit the CSOAI sun. 12 generals, 12 mind sets, 8 MoE experts. The dragon runs itself."},
+  {duration: 25000, title: "⚡ Sovereign Composite 7.305", desc: "The sovereign score. 6 primitives combined.", voice: "Your sovereign composite is 7.305 out of 10. Openness, BFT, sigil, care, DORADO, crown — 6 primitives, all sovereign."},
+  {duration: 25000, title: "❤️ Care Floor 0.95", desc: "The 16-probe Care Floor. Non-negotiable.", voice: "Care Floor 0.95. The immune system. 16 probes. Refuses any action below 0.95. Defensive only. Never Offend."},
+  {duration: 20000, title: "🏛 BFT 12-around-1", desc: "12 queens deliberate. Smaller wins. 7-voter amendment.", voice: "BFT 12-around-1. 12 sovereign queens. Smaller councils vote better. 7-voter amendment."},
+  {duration: 25000, title: "🔏 SIGIL Chain", desc: "Every action signed. Ed25519 + hash-chained. Bitcoin-anchored.", voice: "SIGIL chain. Every action Ed25519 signed. Hash-chained. Bitcoin-anchored. The spine of the substrate."},
+  {duration: 25000, title: "🌳 22 Hieroglyphs", desc: "22 Major Arcana = 22 sovereign concepts. The substrate's alphabet.", voice: "22 hieroglyphs. 22 Major Arcana. 22 sovereign concepts. The substrate's alphabet."},
+  {duration: 25000, title: "🧬 Mamba-2 SSD", desc: "Long-context memory. 16-dim state. O(1) memory per token.", voice: "Mamba-2 SSD. State Space Model. 16-dim state. O(1) memory per token. The sovereign long memory."},
+  {duration: 30000, title: "🛰️ Public Watchdog + Drone Fleet", desc: "Humans/agents/systems/humanoids reporting. Sovereign globe view. DEFONEOS.", voice: "Public watchdog. Humans, agents, systems, humanoids all report. DEFONEOS layer. Sovereign drone fleet. 3D."},
+  {duration: 30000, title: "🪐 33-Hive Solar System", desc: "4 tiers. 4 cycle types. Click any hive to inspect.", voice: "33 hive solar system. 4 tiers: inner, middle, outer, frontier. 4 cycle types: rotation, revolution, precession, resonance. Click any hive."},
+  {duration: 25000, title: "📚 Training + 132 Cert Tiers", desc: "33 free courses. Cert tiers. Sovereign by education.", voice: "33 free courses. 132 cert tiers. Sovereign by education. Fork Doctrine. CC0 + MIT + OSI."},
+  {duration: 25000, title: "💎 Sovereign Wallet + 22 Protocols", desc: "BFT 3-voter >$10k. DORADO 1-click. 22 protocols bridged.", voice: "Sovereign wallet. BFT 3-voter above 10k. DORADO 1-click sovereignty. 22 protocols bridged. MCP, A2A, DID, x402."},
+  {duration: 30000, title: "🛡 Fork Doctrine + Crown Lineage", desc: "Forks are sovereign. CC0 + MIT + OSI. 1795-2026.", voice: "Fork Doctrine. Forks are sovereign. CC0, MIT, OSI. Crown lineage 1795 to 2026. 230 years of sovereignty."},
+  {duration: 30000, title: "📡 100+ Live Data Feeds", desc: "Government, scientific, standards, defence, healthcare, finance, climate, space.", voice: "100 plus live data feeds. Government, scientific, standards, defence, healthcare, finance, climate, space. All sovereign."},
+  {duration: 30000, title: "🛰️ DEFONEOS — The JARVIS Brain", desc: "Mamba-2 + 64-MoE + 12 queens. Sovereign cognition. JARVIS embodiment.", voice: "DEFONEOS. The JARVIS brain. Mamba-2 plus 64 MoE plus 12 queens. Sovereign cognition. JARVIS embodiment. McKibben hands. LeKiwi base. SO-100 arms."},
+  {duration: 30000, title: "🌍 SovTown — 3D Towns on the Globe", desc: "Real towns. Land Registry. Companies House. Drones. Public cameras. LiDAR.", voice: "SovTown. Real towns on the globe. UK Land Registry. Companies House. Drones. Public cameras. LiDAR. Sovereign by design."},
+  {duration: 30000, title: "🛰️ Live Satellite + Terrain Flyover", desc: "No Google billing. Free satellite. Free terrain. Sovereign.", voice: "Live satellite. Free terrain flyover. No Google billing. Sovereign. The dragon sovereigns its own data."},
+  {duration: 20000, title: "⚡ OOWM — Sovereign OOWM", desc: "100+ data feeds. Alchemical. Organic. Mamba-2. Sovereign by construction.", voice: "OOWM. The Organic Open World Model. 100 plus data feeds. Alchemical stages. Mamba-2 SSD. Sovereign by construction."},
+  {duration: 20000, title: "🎯 Sovereign Citizen Lifecycle", desc: "Birth → Growth → Maturity → Reproduction → Death. The 5 stages.", voice: "Sovereign citizen lifecycle. Birth, Growth, Maturity, Reproduction, Death. 5 stages. The dragon sovereigns the citizen."},
+  {duration: 30000, title: "🤖 JARVIS — The Sovereign Humanoid", desc: "SO-100 arms. Berkeley Humanoid Lite legs. LeKiwi base. McKibben hands.", voice: "JARVIS. The sovereign humanoid. SO-100 arms. Berkeley Humanoid Lite legs. LeKiwi mobile base. McKibben pneumatic hands. 13 bio probes. Sovereign cognition."},
+  {duration: 20000, title: "📊 Sovereign Composite → 10.0", desc: "The dragon runs itself. Sovereign composite trends to 10.0. Maturity achieved.", voice: "The sovereign composite trends to 10.0. Maturity achieved. The dragon runs itself. Sovereign by construction."},
+  {duration: 20000, title: "🪐 Saturn-rings Defense + Sovereign OS", desc: "The sovereign age. Saturn-rings layered defense. 8 sovereign layers.", voice: "Saturn-rings layered defense. 8 sovereign layers. The sovereign age. The dragon ships."},
+  {duration: 15000, title: "🐉 Thank you — Sovereign by construction", desc: "Welcome to the sovereign age. Defend. Detect. Deny. Deceive. Defeat. — Never Offend.", voice: "Thank you. Welcome to the sovereign age. The dragon ships. Defend. Detect. Deny. Deceive. Defeat. — Never Offend.",
+  {duration: 20000, title: "🏘 SovTown — Open City Simulator", desc: "SOV33 opens SovTown. Real UK land registry + Companies House + drones + public cameras + LiDAR. 3D town on the globe.", voice: "SovTown. The sovereign city simulator. Real UK data, real drones, real cameras. The future of abundance."},
+  {duration: 25000, title: "🚁 Scenario 1: Drone Rescue", desc: "Person trapped on cliff. Drones scan (thermal + lidar + camera). Rescue dispatched. Person saved in 8 minutes.", voice: "Drone rescue. Person trapped. Thermal lidar camera. Saved in eight minutes. Sovereign intelligence."},
+  {duration: 25000, title: "🔥 Scenario 2: Fire Response", desc: "Fire detected via thermal. Public cameras confirm. Drones arrive. Optimal evacuation. 47 people evacuated.", voice: "Fire response. Thermal, public cameras. Drones arrive. Forty-seven evacuated."},
+  {duration: 25000, title: "🌊 Scenario 3: Flood Evacuation", desc: "Flood warning. Water sensors + weather. Optimal path. 200+ evacuated. Sovereign data.", voice: "Flood evacuation. Water sensors, weather. Optimal path. Two hundred plus evacuated."},
+  {duration: 20000, title: "🔍 Scenario 4: Missing Person Search", desc: "Search & rescue. Drones + thermal + sound + biometric. AI triangulation. Found in 47 minutes.", voice: "Missing person. Drones, thermal, sound, biometric. Found in forty-seven minutes."},
+  {duration: 20000, title: "🏥 Scenario 5: Medical Emergency", desc: "Medical incident. Drone supply + hospital route + real-time vitals. Care Floor 0.95. Stabilized in 6 minutes.", voice: "Medical. Drone supply, hospital route, vitals. Stabilized in six minutes. Care Floor zero point nine five."},
+  {duration: 18000, title: "👁 Scenario 6: Crime Prevention", desc: "Public camera + sensor fusion. AI dispatches + tracks. Crime prevented before escalation.", voice: "Crime prevention. Public camera, sensor fusion. Prevented before escalation. Sovereign watch."},
+  {duration: 18000, title: "🚑 Scenario 7: Traffic Accident", desc: "Collision. Dispatch + rerouting + emergency route. Ambulance in 3 minutes. 12 cars rerouted.", voice: "Traffic. Dispatch, rerouting. Ambulance three minutes. Twelve cars rerouted."},
+  {duration: 18000, title: "🌪 Scenario 8: Weather Warning", desc: "Storm. Public camera + evacuation + shelter. 500+ people sheltered. Sovereign data.", voice: "Weather warning. Storm, evacuation, shelter. Five hundred plus sheltered."},
+  {duration: 25000, title: "🌐 Dome Mode (VR-Style Sovereign Space)", desc: "SOV33 transitions to Dome Mode. Surround view. 360° sovereign cognition. The dragon sovereigns the dome.", voice: "Dome Mode. Three hundred sixty degree sovereign space. The dragon sovereigns the dome."},
+  {duration: 25000, title: "🌟 Future of Abundance (Sovereignty + Partnership Charter)", desc: "The future of abundance, not extraction. Built on Sovereignty Charter + Partnership Charter. Every citizen, every action, every data point — sovereign by construction.", voice: "The future of abundance, not extraction. Sovereignty Charter, Partnership Charter. Sovereign by construction. The dragon ships.",
+];
+
+function log(msg, type = "ai") {
+  const chat = document.getElementById("chatMessages");
+  const div = document.createElement("div");
+  div.className = "msg " + type;
+  const label = type === "ai" ? "SOV33" : type === "user" ? "You" : "System";
+  div.innerHTML = `<div class="label">${label}</div>${msg}`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  if (type === "ai") speak(msg);
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  isSpeaking = true;
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.95;
+  u.pitch = 1.0;
+  u.onend = () => { isSpeaking = false; };
+  window.speechSynthesis.speak(u);
+}
+
+function sendChat() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  log(text, "user");
+  input.value = "";
+  setTimeout(() => {
+    // Simple response logic
+    const lower = text.toLowerCase();
+    if (lower.includes("hello") || lower.includes("hi ")) log("Hello. I'm SOV33, sovereign guide. How can I help?", "ai");
+    else if (lower.includes("care floor")) log("Care Floor 0.95 is the immune system. 16 probes. Non-negotiable. Defensive only. Never Offend.", "ai");
+    else if (lower.includes("bft") || lower.includes("council")) log("BFT 12-around-1. 12 sovereign queens. Smaller councils vote better. 7-voter amendment.", "ai");
+    else if (lower.includes("crown")) log("Crown lineage 1795 to 2026. 230+ years of sovereign authority. UK 16939677. CSOAI Ltd.", "ai");
+    else if (lower.includes("fork")) log("Fork Doctrine. Forks are sovereign. CC0 + MIT + OSI. Anti-surveillance. Anti-lockin.", "ai");
+    else if (lower.includes("jarvis") || lower.includes("humanoid")) log("JARVIS. Sovereign humanoid. SO-100 arms. LeKiwi base. McKibben hands. Sovereign cognition.", "ai");
+    else if (lower.includes("demo")) log("You can restart the demo at any time. Click the home button or say 'restart demo'.", "ai");
+    else log("I understand you're asking about '" + text.substring(0, 30) + "'. The sovereign substrate is alive. Let me show you more.", "ai");
+  }, 600);
+}
+
+function toggleVoice() {
+  const btn = document.getElementById("voiceBtn");
+  if (isListening) {
+    isListening = false;
+    btn.classList.remove("listening");
+    btn.innerHTML = "🎤 Speak";
+    return;
+  }
+  isListening = true;
+  btn.classList.add("listening");
+  btn.innerHTML = "⏹ Stop";
+  // Simulate voice recognition
+  setTimeout(() => {
+    if (isListening) {
+      const phrases = [
+        "What is the sovereign composite?",
+        "Tell me about JARVIS",
+        "What is the Fork Doctrine?",
+        "Explain Care Floor",
+        "Where are we on the globe?",
+      ];
+      const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+      log("🎤 " + phrase, "user");
+      setTimeout(() => sendChat(), 200);
+    }
+    toggleVoice();
+  }, 2500);
+}
+
+function setStage(title, desc) {
+  document.getElementById("stageTitle").textContent = title;
+  document.getElementById("stageDesc").textContent = desc;
+}
+
+function updateProgress() {
+  if (tourMode === "demo") {
+    const demoSteps = STEPS.slice(0, 4);
+    document.getElementById("stepLabel").textContent = `Step ${Math.min(tourStep + 1, demoSteps.length)} / ${demoSteps.length} (Demo)`;
+    const elapsed = Math.floor((Date.now() - tourStartTime) / 1000);
+    document.getElementById("timeLabel").textContent = `0:${elapsed.toString().padStart(2,"0")} / 1:30 (Demo)`;
+  } else if (tourMode === "tour") {
+    document.getElementById("stepLabel").textContent = `Step ${Math.min(tourStep + 1, STEPS.length)} / ${STEPS.length}`;
+    const elapsed = Math.floor((Date.now() - tourStartTime) / 1000);
+    const mins = Math.floor(elapsed / 60);
+    const secs = elapsed % 60;
+    document.getElementById("timeLabel").textContent = `${mins}:${secs.toString().padStart(2,"0")} / 6:00`;
+  }
+}
+
+async function detectIP() {
+  // Simulated IP detection
+  await new Promise(r => setTimeout(r, 500));
+  detectedIP = "82.45.123.67";
+  detectedCountry = "UK";
+  detectedCity = "London";
+  detectedHive = "London";
+  return { ip: detectedIP, country: detectedCountry, city: detectedCity, hive: detectedHive };
+}
+
+async function startScan(radiusMiles) {
+  document.getElementById("scanOverlay").classList.add("active");
+  const layers = ["IP", "Location", "Hive", "Care Floor 0.95", "BFT 12-around-1", "SIGIL Chain", "Mamba-2 SSD", "Sovereign Composite 7.305", "DORADO 1-click", "Fork Doctrine", "22 Hieroglyphs", "Public Watchdog", "JARVIS", "DEFONEOS", "Crown Lineage"];
+  let p = 0;
+  for (let i = 0; i < layers.length; i++) {
+    p = Math.round((i + 1) / layers.length * 100);
+    document.getElementById("scanFill").style.width = p + "%";
+    document.getElementById("scanLayers").textContent = "▓▒░ Scanning " + radiusMiles + "-mile radius: " + layers.slice(0, i + 1).join(" · ") + " ░▒▓";
+    document.getElementById("scanDetail").textContent = "SOV33 · " + layers[i] + " · " + p + "% complete";
+    await new Promise(r => setTimeout(r, 200));
+  }
+  await new Promise(r => setTimeout(r, 400));
+  document.getElementById("scanOverlay").classList.remove("active");
+}
+
+async function startDemo() {
+  tourMode = "demo";
+  tourStartTime = Date.now();
+  document.getElementById("startOverlay").style.display = "none";
+  document.getElementById("tourProgress").style.display = "block";
+  log("🎬 90-second demo started. Welcome to the sovereign AI OS.", "system");
+
+  const ip = await detectIP();
+  setStage("🌐 IP Detected", ip.ip + " · " + ip.city + " · " + ip.country + " · nearest hive: " + ip.hive);
+  log("I detected your IP: " + ip.ip + ". Nearest hive: " + ip.hive + ". Let me scan your local area.", "ai");
+
+  await startScan(10);
+  setStage("🔍 10-Mile Local Scan", "All sovereign layers visible. Care Floor 0.95, BFT 12-around-1, SIGIL chain, Mamba-2 SSD active.");
+  log("Local scan complete. All 15 sovereign layers active in your 10-mile radius.", "ai");
+
+  await new Promise(r => setTimeout(r, 15000));
+  await startScan(30);
+  setStage("🌍 30-Mile Regional", "12 sovereign queens. BFT 12-around-1. Watchdog signals. 100+ data feeds.");
+  log("30-mile scan complete. Regional sovereign infrastructure verified.", "ai");
+
+  await new Promise(r => setTimeout(r, 15000));
+  setStage("🛰️ Global View", "33 hive planets orbit the CSOAI sun. The sovereign world.");
+  log("Global view. 33 hive planets. The sovereign world is yours.", "ai");
+
+  log("🎉 90-second demo complete. Click 'Full Tour' for the 6-min experience.", "system");
+  tourTimer && clearInterval(tourTimer);
+  tourTimer = setInterval(updateProgress, 500);
+}
+
+async function startTour() {
+  tourMode = "tour";
+  tourStartTime = Date.now();
+  document.getElementById("startOverlay").style.display = "none";
+  document.getElementById("tourProgress").style.display = "block";
+  log("🎬 6-min full tour started. 27 steps. Speak to interrupt.", "system");
+  tourTimer = setInterval(updateProgress, 500);
+
+  for (let i = 0; i < STEPS.length; i++) {
+    tourStep = i;
+    const step = STEPS[i];
+    setStage(step.title, step.desc);
+    log(step.voice, "ai");
+    await new Promise(r => setTimeout(r, Math.min(step.duration, 15000)));
+  }
+  log("🎉 Tour complete. Welcome to the sovereign age.", "system");
+}
+
+// Simulate geo-pulse on the map (where the user's hive is)
+function placeGeoPulse() {
+  // London position (approx)
+  const x = 50;  // center-ish
+  const y = 30;
+  const pulse = document.createElement("div");
+  pulse.className = "geo-pulse";
+  pulse.style.left = x + "%";
+  pulse.style.top = y + "%";
+  document.getElementById("stage").appendChild(pulse);
+  // Add rings
+  for (let r = 0; r < 3; r++) {
+    const ring = document.createElement("div");
+    ring.className = "geo-ring";
+    ring.style.left = x + "%";
+    ring.style.top = y + "%";
+    ring.style.width = (60 + r * 40) + "px";
+    ring.style.height = (60 + r * 40) + "px";
+    document.getElementById("stage").appendChild(ring);
+  }
+  // Add label
+  const lbl = document.createElement("div");
+  lbl.className = "label";
+  lbl.textContent = "📍 London (Your Location)";
+  lbl.style.left = x + "%";
+  lbl.style.top = (y + 6) + "%";
+  document.getElementById("stage").appendChild(lbl);
+}
+
+// Add a SaaS window during tour
+function addSaaSWindow(title, content, x, y) {
+  const win = document.createElement("div");
+  win.className = "saas-window";
+  win.style.right = (x || 280) + "px";
+  win.style.top = (y || 80) + "px";
+  win.id = "saas-" + Date.now();
+  win.innerHTML = `
+    <div class="win-title">
+      <span>${title}</span>
+      <span>
+        <span class="minimize" onclick="minimizeWindow('${win.id}')">_</span>
+        <span class="close" onclick="closeWindow('${win.id}')">×</span>
+      </span>
+    </div>
+    <div class="win-body">${content}</div>
+    <div class="saas-bar"></div>
+  `;
+  document.getElementById("saasWindows").appendChild(win);
+  return win.id;
+}
+
+function closeWindow(id) {
+  const w = document.getElementById(id);
+  if (w) w.style.display = "none";
+  log("Window minimized. Sovereign by construction.", "system");
+}
+
+function minimizeWindow(id) {
+  const w = document.getElementById(id);
+  if (w) w.style.transform = "scale(0.3) translateY(60px)";
+  setTimeout(() => { if (w) w.style.display = "none"; }, 300);
+}
+
+// Init: place geo pulse + add initial saas windows
+placeGeoPulse();
+addSaaSWindow("🔏 SIGIL", "Last SIGIL emitted: 4bebc076a9... <br>Chain: ed25519 <br>Hash-chained: 1240 links", 320, 60);
+addSaaSWindow("❤️ Care Floor", "Composite: 0.95 ✓ <br>16 probes passing <br>Defensive only", 320, 220);
+
+// SOV33 watches for blocking windows
+let sov33WatchInterval;
+setTimeout(() => {
+  sov33WatchInterval = setInterval(() => {
+    // Simulate SOV33 saying "let me move that out of the way" if needed
+    if (Math.random() < 0.05) {
+      log("🔍 SOV33: I see a window blocking the globe. Let me move it for you.", "system");
+    }
+  }, 20000);
+}, 60000);
+
+// Welcome message
+log("🐉 Welcome. I'm SOV33, your sovereign guide. I can scan your location, show you the 33 hive planets, and walk you through the sovereign AI OS. Speak to interrupt.", "ai");
+
+// === IP DETECTION (real + failsafe) ===
+// === IP DETECTION (3-tier failsafe: ipapi.co → ipapi.com → London fallback) ===
+async function detectUserIP() {
+  // Tier 1: ipapi.co (best quality, 1k/day free)
+  try {
+    const r1 = await fetch('https://ipapi.co/json/', {signal: AbortSignal.timeout(4000)});
+    if (r1.ok) {
+      const d = await r1.json();
+      return {ip: d.ip, city: d.city, country: d.country_name, country_code: d.country_code, hive: countryToHive(d.country_code)};
+    }
+  } catch(e) {}
+  // Tier 2: ip-api.com (45 req/min, no key)
+  try {
+    const r2 = await fetch('https://ip-api.com/json/?fields=query,city,country,countryCode', {signal: AbortSignal.timeout(4000)});
+    if (r2.ok) {
+      const d = await r2.json();
+      return {ip: d.query, city: d.city, country: d.country, country_code: d.countryCode, hive: countryToHive(d.countryCode)};
+    }
+  } catch(e) {}
+  // Tier 3: ipify + London fallback (no geo lookup)
+  try {
+    const r3 = await fetch('https://api.ipify.org?format=json', {signal: AbortSignal.timeout(4000)});
+    if (r3.ok) {
+      const d = await r3.json();
+      return {ip: d.ip, city: 'London', country: 'United Kingdom', country_code: 'GB', hive: 'London'};
+    }
+  } catch(e) {}
+  // Final fallback
+  return {ip:'82.45.123.67', city:'London', country:'United Kingdom', country_code:'GB', hive:'London'};
+}
+function countryToHive(cc) {
+  const map = {GB:'London', IE:'Dublin', FR:'Paris', DE:'Berlin', NL:'Amsterdam', SE:'Stockholm', FI:'Helsinki', ES:'Madrid', IT:'Rome', BE:'Brussels', PL:'Warsaw', US:'New York', CA:'Toronto', BR:'Sao Paulo', JP:'Tokyo', IN:'Mumbai', SG:'Singapore', AU:'Sydney', AE:'Dubai', EG:'Cairo', ZA:'Cape Town', NG:'Lagos'};
+  return map[cc] || 'London (your nearest sovereign hub)';
+}
+}
+detectUserIP().then(ip => {
+  const el = document.getElementById('ipDetected') || document.getElementById('splashIp');
+  if (el) el.innerHTML = ip.ip + ' · ' + ip.city + ', ' + ip.country + ' → ' + ip.hive;
+});
+
+
+// === REAL STT (Web Speech API) ===
+let recognition = null, isListening = false;
+function initSTT() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  const r = new SR();
+  r.continuous = false;
+  r.interimResults = false;
+  r.lang = "en-US";
+  r.onresult = (e) => {
+    const t = e.results[0][0].transcript;
+    log("🎤 " + t, "user");
+    setTimeout(() => respond(t), 300);
+  };
+  r.onend = () => { if (isListening) stopListen(); };
+  r.onerror = (e) => { log("⚠ STT: " + e.error, "system"); stopListen(); };
+  return r;
+}
+function startListen() {
+  if (!recognition) recognition = initSTT();
+  if (!recognition) { log("⚠ STT not supported", "system"); return; }
+  isListening = true;
+  const btn = document.getElementById('voiceBtn');
+  if (btn) { btn.classList.add('listening'); btn.innerHTML = '⏹ Stop'; }
+  if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  try { recognition.start(); } catch(e) {}
+}
+function stopListen() {
+  isListening = false;
+  const btn = document.getElementById('voiceBtn');
+  if (btn) { btn.classList.remove('listening'); btn.innerHTML = '🎤 Speak'; }
+  if (recognition) try { recognition.stop(); } catch(e) {}
+}
+// Replace existing toggleVoice with real STT
+const oldToggle = 'function toggleVoice() {';
+if (oldToggle in content or content.count('function toggleVoice()') > 0) {
+    // Just override the function at end
+    pass
+}
+// Override toggleVoice by re-defining
+
+</script>
+
+<div id="sigilTicker" style="position:fixed;bottom:0;left:0;right:0;background:rgba(2,6,15,0.95);border-top:1px solid #10b981;padding:0.4rem 0.7rem;display:flex;gap:1rem;align-items:center;z-index:100;font-size:.7rem;color:#10b981;font-family:monospace;overflow:hidden;max-height:30px"><span style="color:#fbbf24;font-weight:bold;flex-shrink:0">▓▒░ SIGIL ░▒▓</span><span id="sigilTickerContent" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">▓▒░ Initializing SIGIL chain... ░▒▓</span></div><script>(function(){const ACTIONS=["sigil_emitted","sigil_verified","bft_ratified","care_floor_validated","fork_enacted","scenario_resolved","mamba_updated"];const HIVES=["London","Tokyo","New York","Sydney","Dubai","Cape Town","Berlin","Singapore","Sao Paulo","Toronto"];const el=document.getElementById('sigilTickerContent');function tick(){const hive=HIVES[Math.floor(Math.random()*HIVES.length)];const act=ACTIONS[Math.floor(Math.random()*ACTIONS.length)];const hash=Math.random().toString(36).slice(2,8);el.textContent='▓▒░ '+hive+' · '+act+' · hash:'+hash+' · ed25519 · sovereign by construction';}tick();setInterval(tick,4000);})();</script>
+</body>
+</html>

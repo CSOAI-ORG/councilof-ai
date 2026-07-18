@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "name": "Optimobile Agent",
+  "description": "Practice management built for modern opticians.",
+  "url": "https://optimobile.ai",
+  "provider": {
+    "organization": "Council for the Safety of AI (CSOAI)",
+    "url": "https://csoai.org"
+  },
+  "capabilities": {
+    "streaming": false,
+    "mcp": true,
+    "a2a": true
+  },
+  "skills": [
+    {
+      "id": "validate_claim",
+      "name": "optimobile-gos-mcp.validate_claim",
+      "description": "Validate NHS GOS claims for completeness and eligibility before submission, from any workflow."
+    },
+    {
+      "id": "schedule_recall",
+      "name": "optimobile-ai-mcp.schedule_recall",
+      "description": "Trigger RAG-prioritised patient recalls directly from practice systems via MCP."
+    }
+  ],
+  "endpoints": {
+    "a2a": "https://optimobile.ai/a2a",
+    "mcp_catalog": "https://optimobile.ai/.well-known/mcp.json"
+  },
+  "sector": "healthcare"
+}

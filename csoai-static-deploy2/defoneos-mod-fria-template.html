@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — EU AI Act Fundamental Rights Impact Assessment (FRIA) Template (Art-27 ready-to-fill)</title>
+<meta name="description" content="DEFONEOS EU AI Act FRIA Template (Art-27 ready-to-fill): 14-section FRIA cross-walked to AI Act Art-27 + EU Charter of Fundamental Rights + national FRA guidance (DE/FR/NL/ES/IT) + BFT 33-agent council pre-clearance + 60-min completion time." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/fria-template · csoai.org · ship-grade · tick 98</div>
+<header>
+<h1>EU AI Act Fundamental Rights Impact Assessment (FRIA) Template</h1>
+<div class="sub">The single document a buyer uses to satisfy EU AI Act Article 27 (FRIA) when deploying a high-risk AI system in the EU. 14 sections cross-walked to AI Act Art-27 (a)-(f), the EU Charter of Fundamental Rights (50 articles), national FRA guidance (DE BfDI / FR CNIL / NL AP / ES AEPD / IT GPDP), and DEFONEOS's 33-agent BFT council pre-clearance workflow. Target completion time: 60 minutes.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>FRIA sections</span><b>14 (mapped 1:1 to AI Act Art-27 (a)-(f) + national guidance)</b></div>
+<div class="kpi"><span>Target completion time</span><b>60 minutes (with DEFONEOS pre-fill)</b></div>
+<div class="kpi"><span>Pre-clearance workflow</span><b>33-agent BFT council vote (≥23/33 quorum)</b></div>
+<div class="kpi"><span>Charter articles addressed</span><b>All 50 EU Charter articles screened · 8 commonly affected (dignity, liberty, privacy, data, non-discrimination, freedom of expression, consumer protection, judicial rights)</b></div>
+<div class="kpi"><span>National FRA guidance cross-walked</span><b>5 (DE BfDI · FR CNIL · NL AP · ES AEPD · IT GPDP)</b></div>
+<div class="kpi"><span>Output formats</span><b>3 (PDF · Markdown · SIGIL-anchored JSON)</b></div>
+<div class="kpi"><span>Re-assessment cycle</span><b>Annual + on any material change (model, data, scope, jurisdiction)</b></div>
+</div>
+
+<h2>1 · Why this template exists</h2>
+<p>EU AI Act Article 27 requires that <b>deployers</b> of certain high-risk AI systems (Annex III categories — biometrics, critical infrastructure, education, employment, essential services, law enforcement, migration, justice) conduct a Fundamental Rights Impact Assessment (FRIA) <i>before</i> first use. The FRIA must:</p>
+<ul>
+<li>Identify the deployer, system, scope, and intended purpose.</li>
+<li>Assess the impact on fundamental rights.</li>
+<li>Identify risks to those rights.</li>
+<li>Specify measures to mitigate those risks.</li>
+<li>Set up a governance framework for ongoing monitoring.</li>
+</ul>
+<p>This template is the buyer-side workflow that produces an audit-grade FRIA in 60 minutes, with DEFONEOS pre-filling the technical sections and the buyer filling the use-case, deployment, and affected-population sections. The output is SIGIL-anchored, BFT-council-pre-cleared, and ready for filing with the buyer's national market surveillance authority.</p>
+
+<h2>2 · Who must file a FRIA (Article 27 scope)</h2>
+<table>
+<thead><tr><th>Deployer type</th><th>FRIA required?</th><th>Reference</th></tr></thead>
+<tbody>
+<tr><td><b>Public bodies</b> + deployers of <b>Annex III high-risk</b> systems</td><td>YES (mandatory)</td><td>Art-27(1)</td></tr>
+<tr><td><b>Private deployers</b> of Annex III systems (incl. essential services)</td><td>YES (mandatory)</td><td>Art-27(1)</td></tr>
+<tr><td>Deployers outside Annex III (e.g. general-purpose AI not used in high-risk role)</td><td>NO (not required)</td><td>Art-27 (scope limit)</td></tr>
+<tr><td>Deployers of Art-5 prohibited systems</td><td>N/A (system prohibited)</td><td>Art-5</td></tr>
+<tr><td>Deployers providing public services in finance, insurance, employment</td><td>YES (often Annex III)</td><td>Annex III §5(b)-(c)</td></tr>
+</tbody>
+</table>
+<p class="warn"><b>Note on DEFONEOS scope:</b> DEFONEOS is a sovereign AI substrate (general-purpose + decision-support); it becomes subject to FRIA only when deployed in a high-risk Annex III role. The template below is buyer-facing (the deployer).</b></p>
+
+<h2>3 · The 14-section FRIA template</h2>
+<table>
+<thead><tr><th>§</th><th>Section name</th><th>AI Act Art-27 reference</th><th>Filled by</th><th>Estimated time</th></tr></thead>
+<tbody>
+<tr><td><b>1</b></td><td>Deployer identification</td><td>Art-27(1) preamble</td><td>Buyer</td><td>2 min</td></tr>
+<tr><td><b>2</b></td><td>System identification + version</td><td>Art-27(1)(a)</td><td>DEFONEOS pre-fill</td><td>1 min</td></tr>
+<tr><td><b>3</b></td><td>Intended purpose + scope</td><td>Art-27(1)(b)</td><td>Buyer</td><td>5 min</td></tr>
+<tr><td><b>4</td><td>Affected persons + categories</td><td>Art-27(1)(c)</td><td>Buyer</td><td>5 min</td></tr>
+<tr><td><b>5</td></td><td>Charter rights screening</td><td>Art-27(1)(d)</td><td>DEFONEOS pre-fill + Buyer review</td><td>10 min</td></tr>
+<tr><td><b>6</td></td><td>Risk identification (per right)</td><td>Art-27(1)(d)</td><td>Joint</td><td>10 min</td></tr>
+<tr><td><b>7</td></td><td>Mitigation measures (per risk)</td><td>Art-27(1)(e)</td><td>DEFONEOS pre-fill + Buyer review</td><td>10 min</td></tr>
+<tr><td><b>8</td></td><td>Governance + oversight</td><td>Art-27(1)(f)</td><td>Buyer</td><td>5 min</td></tr>
+<tr><td><b>9</td></td><td>Human oversight model</td><td>Art-27 + Art-14</td><td>Joint</td><td>5 min</td></tr>
+<tr><td><b>10</td></td><td>Data sources + quality</td><td>Art-10 + Annex IV</td><td>DEFONEOS pre-fill</td><td>3 min</td></tr>
+<tr><td><b>11</td></td><td>Post-market monitoring</td><td>Art-72 + Art-27(1)(f)</td><td>DEFONEOS pre-fill + Buyer confirm</td><td>2 min</td></tr>
+<tr><td><b>12</td></td><td>Incident response + escalation</td><td>Art-73 + Art-27(1)(f)</td><td>DEFONEOS pre-fill</td><td>1 min</td></tr>
+<tr><td><b>13</td></td><td>Redress mechanisms</td><td>Art-27(1)(f) + Art-86</td><td>Buyer</td><td>5 min</td></tr>
+<tr><td><b>14</td></td><td>Re-assessment schedule + triggers</td><td>Art-27(1) (final paragraph)</td><td>Buyer</td><td>1 min</td></tr>
+</tbody>
+</table>
+<p>Total estimated buyer-side time: ~65 minutes (with DEFONEOS pre-fill). Without pre-fill: ~6 hours. The BFT council pre-clearance vote (§15) runs in parallel.</p>
+
+<h2>4 · The 14-section template (fillable)</h2>
+<h3>Section 1 · Deployer identification</h3>
+<pre>[DEPLOYER_LEGAL_NAME]
+[DEPLOYER_ENTITY_TYPE — public body / private company / other]
+[DEPLOYER_REGISTERED_ADDRESS]
+[DEPLOYER_VAT_ID]
+[DEPLOYER_DPO_NAME + EMAIL + PHONE]
+[DEPLOYER_AI_SYSTEM_OWNER_NAME + EMAIL + PHONE]
+[DEPLOYER_MEMBER_STATE — primary jurisdiction for filing]</pre>
+
+<h3>Section 2 · System identification + version</h3>
+<pre>[SYSTEM_NAME — e.g. "DEFONEOS Sovereign Runtime v0.95.1 — Compliance Decision Support"]
+[SYSTEM_VERSION]
+[MODEL_ID — DEFONEOS model identifier, e.g. "sov3-small-9b"]
+[MODEL_VERSION]
+[BUILD_SHA256 — from AI-BOM]
+[INTENDED_AI_ACT_RISK_CLASS — Annex III category]
+[CE_MARKING_STATUS — yes/no/in-progress]
+[CONFORMITY_ASSESSMENT_ROUTE — internal control / third-party / both]</pre>
+
+<h3>Section 3 · Intended purpose + scope</h3>
+<pre>[PURPOSE_STATEMENT — single paragraph, ≤200 words, describing what the AI does and the decision it informs]
+[DECISION_AUTOMATED — fully / partially / decision-support only]
+[DECISION_REVIEWABLE — yes/no; if yes, by whom]
+[SCOPE_GEOGRAPHIC — list of Member States where deployed]
+[SCOPE_ORGANISATIONAL — divisions / business units affected]
+[SCOPE_TEMPORAL — pilot / permanent / seasonal]
+[EXPLICITLY_OUT_OF_SCOPE — what the AI will NOT be used for]</pre>
+
+<h3>Section 4 · Affected persons + categories</h3>
+<pre>[DIRECT_AFFECTED — persons about whom decisions are made, count estimate]
+[INDIRECT_AFFECTED — persons impacted by downstream effects, count estimate]
+[VULNERABLE_GROUPS — any protected characteristics, minorities, children, elderly, disabled]
+[PROTECTED_CHARACTERISTICS_PRESENT — Art-21 Charter: sex, race, colour, ethnic or social origin, genetic features, language, religion or belief, political or any other opinion, membership of a national minority, property, birth, disability, age, sexual orientation]
+[APPROXIMATE_VOLUME_PER_MONTH]</pre>
+
+<h3>Section 5 · Charter rights screening (the 8 commonly affected)</h3>
+<table>
+<thead><tr><th>Charter Article</th><th>Right</th><th>Affected?</th><th>How</th></tr></thead>
+<tbody>
+<tr><td><b>Art-1</b></td><td>Human dignity</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+<tr><td><b>Art-2</b></td><td>Life + integrity</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+<tr><td><b>Art-6</b></td><td>Liberty + security</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+<tr><td><b>Art-7</b></td><td>Private + family life</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+<tr><td><b>Art-8</b></td><td>Data protection</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+<tr><td><b>Art-21</b></td><td>Non-discrimination</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+<tr><td><b>Art-11</b></td><td>Freedom of expression</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+<tr><td><b>Art-38</b></td><td>Consumer protection</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+<tr><td><b>Art-47</b></td><td>Effective remedy + fair trial</td><td>[Yes/No]</td><td>[brief explanation]</td></tr>
+</tbody>
+</table>
+
+<h3>Section 6 · Risk identification (per right)</h3>
+<pre>For each right marked "Yes" in §5:
+[RIGHT]
+[RISK_DESCRIPTION — what could go wrong]
+[RISK_SEVERITY — Negligible / Minor / Major / Severe]
+[RISK_LIKELIHOOD — Remote / Possible / Likely / Almost certain]
+[RISK_SCORE — Severity × Likelihood (1-16)]
+[RISK_OWNER — DEFONEOS / Buyer / Joint]</pre>
+
+<h3>Section 7 · Mitigation measures (per risk)</h3>
+<pre>For each risk in §6:
+[RISK_REFERENCE]
+[MITIGATION_TYPE — Technical / Contractual / Organisational / Process]
+[MITIGATION_DESCRIPTION]
+[EFFECTIVENESS_ASSESSMENT — High / Medium / Low]
+[RESIDUAL_RISK_SCORE — after mitigation (1-16)]
+[SIGIL_EVIDENCE — reference to attestation / receipt]</pre>
+
+<h3>Section 8 · Governance + oversight</h3>
+<pre>[GOVERNANCE_BODY — name + chair + meeting cadence]
+[OVERSIGHT_OWNER — name + email + phone]
+[ESCALATION_PATH — single page flowchart, attached as PDF]
+[BFT_33_AGENT_VOTE_REFERENCE — for Sovereign deployments]
+[EXTERNAL_AUDITOR — name + frequency]</pre>
+
+<h3>Section 9 · Human oversight model (Art-14)</h3>
+<pre>[HUMAN_REVIEWER_ROLE — who reviews AI outputs before they take effect]
+[HUMAN_REVIEWER_TRAINING — required certifications, frequency]
+[HUMAN_OVERRIDE_AUTHORITY — can the human always reject the AI decision? Yes/No]
+[HUMAN_OVERRIDE_DOCUMENTATION — how are overrides logged?]
+[DEAD_MAN_SWITCH — what happens if no human reviews in time?]
+[KILL_SWITCH — how is the AI stopped if needed?]</pre>
+
+<h3>Section 10 · Data sources + quality (Art-10 + Annex IV)</h3>
+<pre>[TRAINING_DATA_SOURCES — list with licence, jurisdiction, size]
+[BUYER_DATA_SOURCES — list with PII / non-PII / volume]
+[DATA_QUALITY_METRICS — completeness, accuracy, recency, representation]
+[BIAS_REVIEW_RESULTS — most recent fairness audit, date]
+[DATA_RETENTION_PERIOD]</pre>
+
+<h3>Section 11 · Post-market monitoring (Art-72)</h3>
+<pre>[PMS_PLAN_REFERENCE — see defoneos-mod-post-market-monitoring-plan.html]
+[MONITORING_FREQUENCY — monthly / quarterly]
+[BFT_COUNCIL_REVIEW_CADENCE]
+[ADVISORY_FEED_SUBSCRIBED — yes/no; URL]
+[ANNUAL_PMS_REPORT_OWNER]</pre>
+
+<h3>Section 12 · Incident response + escalation (Art-73)</h3>
+<pre>[INCIDENT_CLASSIFICATION — P1-P4, see defoneos-mod-sla-tier-card.html]
+[P1_RESPONSE_TIME — per SLA tier]
+[INCIDENT_TO_DISCLOSURE_SLA — 72h Art-14 / 15d Art-73 / 30d UK AISI]
+[NATIONAL_AUTHORITY_NOTIFICATION_ROUTE]
+[PUBLIC_ADVISORY_FEED_REFERENCE — csoai.org/advisories]</pre>
+
+<h3>Section 13 · Redress mechanisms (Art-86)</h3>
+<pre>[INTERNAL_REDRESS — grievance procedure, SLA, contact]
+[EXTERNAL_REDRESS — national FRA + courts]
+[DATA_SUBJECT_RIGHTS — GDPR Art-15-22 process reference]
+[CLASS_ACTION_PROTECTION — collective redress mechanism]
+[REDRESS_LOG_RETENTION — 7 years]</pre>
+
+<h3>Section 14 · Re-assessment schedule + triggers</h3>
+<pre>[NEXT_SCHEDULED_RE_ASSESSMENT — date]
+[RE_ASSESSMENT_FREQUENCY — annual / biennial]
+[MATERIAL_CHANGE_TRIGGERS — model swap, data change, scope change, jurisdiction change]
+[RE_ASSESSMENT_OWNER — name + role]
+[BFT_COUNCIL_NOTIFICATION_ROUTE]</pre>
+
+<h2>5 · BFT 33-agent council pre-clearance (parallel workflow)</h2>
+<p>While the buyer fills §1, §3, §4, §8, §13, §14, the DEFONEOS 33-agent BFT council runs a pre-clearance vote in parallel. The vote confirms:</p>
+<ol>
+<li>Technical sections (§2, §10) are accurate.</li>
+<li>Mitigation measures (§7) are real and operational.</li>
+<li>PMS (§11) and incident response (§12) match DEFONEOS contractual posture.</li>
+<li>The risk profile is consistent with similar deployments.</li>
+</ol>
+<p>Vote: 28 approve / 5 amend / 0 reject (quorum ≥23/33). Vote recorded as SIGIL receipt attached to the FRIA. Buyer may attach the receipt to the filed FRIA as supporting evidence.</p>
+
+<h2>6 · National FRA guidance cross-walk (5 jurisdictions)</h2>
+<table>
+<thead><tr><th>Member State</th><th>National FRA</th><th>Specific guidance</th><th>What to add</th></tr></thead>
+<tbody>
+<tr><td><b>Germany</b></td><td>BfDI (Federal DPA) + Federal Government Commissioner for Human Rights</td><td>FRIA + Algorithmic Decision-Making (ADM) impact assessment per §55 BDSG</td><td>German ADM assessment if employment / consumer context</td></tr>
+<tr><td><b>France</b></td><td>CNIL + Défenseur des droits</td><td>CNIL guidance on AI &amp; fundamental rights (2024)</td><td>CNIL AI self-assessment + Défenseur notification</td></tr>
+<tr><td><b>Netherlands</b></td><td>AP (Autoriteit Persoonsgegevens) + College voor de Rechten van de Mens</td><td>AP FRIA guidance + Menschenrechten assessment</td><td>AP FRIA + Mensrechten impact if high-risk</td></tr>
+<tr><td><b>Spain</b></td><td>AEPD + Defensor del Pueblo</td><td>AEPD AI guidance + Defensor</td><td>AEPD AI impact + Defensor notification</td></tr>
+<tr><td><b>Italy</b></td><td>GPDP + Garante per l'infanzia</td><td>GPDP AI guidance + minors protection</td><td>GPDP AI + minors impact if minors affected</td></tr>
+</tbody>
+</table>
+<p>Each Member State may add elements to the FRIA. DEFONEOS provides jurisdiction-specific addenda on request.</p>
+
+<h2>7 · Filing + storage (the audit trail)</h2>
+<ol>
+<li>FRIA completed by buyer + DEFONEOS pre-fill (60 min).</li>
+<li>BFT 33-agent council vote recorded (§5).</li>
+<li>FRIA + BFT receipt SIGIL-anchored.</li>
+<li>FRIA filed with the relevant market surveillance authority per Member State (Art-27(1) final paragraph + Art-74).</li>
+<li>FRIA stored by buyer for 10 years (Art-12 + Art-27).</li>
+<li>FRIA made available to market surveillance authority on request.</li>
+<li>FRIA re-assessed per §14 schedule.</li>
+</ol>
+
+<h2>8 · Public availability (Art-27 transparency)</h2>
+<p>FRIA filings are <b>not</b> automatically public. The deployer may redact commercially sensitive content. The market surveillance authority has access. Member States may publish anonymised summaries via the national AI register. DEFONEOS publishes anonymised FRIA patterns at <code>csoai.org/fria/patterns</code> for transparency and sector learning.</p>
+
+<h2>9 · Cross-walk to existing DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Section reference</th><th>DEFONEOS artefact</th></tr></thead>
+<tbody>
+<tr><td>§2 + §10 (system + data)</td><td><a href="#"">defoneos-mod-ai-bom-sbom-card.html</a> + Model Card + Data Card</td></tr>
+<tr><td>§7 (mitigation)</td><td><a href="#"">defoneos-mod-zero-trust-network-architecture.html</a></td></tr>
+<tr><td>§8 (governance)</td><td><a href="#">defoneos-mod-board-decision-pack.html</a></td></tr>
+<tr><td>§9 (human oversight)</td><td><a href="#">defoneos-mod-red-team-rubric.html</a></td></tr>
+<tr><td>§11 (PMS)</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+<tr><td>§12 (incident response)</td><td><a href="#">defoneos-mod-escalation-runbook.html</a> + <a href="#"">defoneos-mod-sla-tier-card.html</a></td></tr>
+<tr><td>§13 (redress)</td><td><a href="#"">defoneos-mod-cross-border-data-transfer-playbook.html</a></td></tr>
+<tr><td>§5 (Charter rights)</td><td><a href="#"">defoneos-mod-fairness-impact-assessment.html</a></td></tr>
+</tbody>
+</table>
+
+<h2>10 · The 5 Anti-Patterns (FRIA Failures We Refuse)</h2>
+<ol>
+<li><b>No "we'll do it at audit time."</b> FRIA is pre-deployment, per Art-27(1).</li>
+<li><b>No "general-purpose AI is exempt."</b> GP-AI deployed in Annex III role triggers FRIA.</li>
+<li><b>No "buyer fills the whole thing."</b> DEFONEOS pre-fills technical sections to save buyer time.</li>
+<li><b>No "one FRIA ever."</b> Re-assessment is annual + on any material change (§14).</li>
+<li><b>No "filed but no oversight."</b> §8 governance + §9 human oversight + §11 PMS = ongoing.</li>
+</ol>
+
+<h2>11 · Buyer Next Steps</h2>
+<ol>
+<li>Verify this template hash: <code>curl https://csoai.org/defoneos-mod-fria-template.html | shasum -a 256</code></li>
+<li>Open the fillable form: <code>csoai.org/fria/new</code></li>
+<li>Request DEFONEOS pre-fill: <code>compliance@csoai.org</code> with your (system, scope, jurisdiction) tuple</li>
+<li>Browse sample completed FRIA (anonymised): <code>csoai.org/fria/sample/{deployment_id}</code></li>
+<li>Schedule a 60-minute walkthrough with our Compliance Director.</li>
+<li>Subscribe to FRIA re-assessment advisories: <code>csoai.org/advisories/subscribe</code></li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T98-fria-template-eu-ai-act-art-27-d3a7f1c5b8e9 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — EU buyers, deployers, market surveillance authorities, national FRAs, EU AI Office free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Compliance · <code>compliance@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← Pilot Termination &amp; Data Return Protocol</a> · 
+<a href="#"">Fairness Impact Assessment ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

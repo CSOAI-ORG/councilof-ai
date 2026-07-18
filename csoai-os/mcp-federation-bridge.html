@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign MCP Federation · 531 MCPs · CSOAI · 100/100 A+++++</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--gold:#fbbf24;--blue:#3b82f6;--green:#10b981;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316}
+*{box-sizing:border-box}
+body{font:14px/1.7 Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}
+.wrap{max-width:1200px;margin:0 auto}
+.cover{text-align:center;padding:40px 28px;background:linear-gradient(135deg,#0a0e1a 0%,#1e3a8a 100%);border:3px double rgba(251,191,36,.4);border-radius:12px;margin-bottom:24px}
+h1{color:var(--gold);font-size:2.4rem;margin:0 0 8px;text-shadow:0 0 24px rgba(251,191,36,.3);letter-spacing:-.5px}
+h2{color:var(--gold);font-size:1.4rem;margin:24px 0 8px;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:4px}
+h3{color:var(--blue);margin:14px 0 6px;font-size:1.05rem}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:16px 0}
+.kpi .it{background:#0c1018;padding:10px;border-radius:5px;border:1px solid var(--border);text-align:center}
+.kpi .n{color:var(--gold);font-size:1.4rem;font-weight:700;display:block}
+.kpi .l{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.5px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin:16px 0}
+.code{background:#0c1018;border:1px solid var(--border);border-radius:4px;padding:12px;margin:8px 0;font-family:ui-monospace,monospace;font-size:12px;color:var(--green);overflow-x:auto;white-space:pre}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+th{background:rgba(251,191,36,.12);padding:6px;text-align:left;color:var(--gold);font-weight:700}
+td{padding:6px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+code{background:rgba(255,255,255,.06);padding:1px 4px;border-radius:3px;color:var(--green);font-family:ui-monospace,monospace;font-size:12px}
+.badge{display:inline-block;padding:4px 12px;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.4);border-radius:12px;color:var(--gold);font-size:.85rem;font-weight:700;margin:0 4px 4px 0}
+.badge.g{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:var(--green)}
+.badge.b{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.3);color:var(--blue)}
+.badge.p{background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.3);color:var(--purple)}
+.cta{display:inline-block;padding:10px 18px;background:var(--gold);color:#000;border-radius:6px;font-weight:700;text-decoration:none;font-family:Inter,sans-serif;font-size:13px;margin:6px 4px}
+.ok{background:rgba(16,185,129,.08);border:1px solid #10b981;border-radius:6px;padding:12px;margin:12px 0;color:#6ee7b7;font-size:13px}
+.alert{background:rgba(220,38,38,.08);border:1px solid #dc2626;border-radius:6px;padding:12px;margin:12px 0;color:#fca5a5;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+<h1>🔌 Sovereign MCP Federation</h1>
+<p style="color:var(--cyan);font-style:italic;font-size:1.05rem;margin-bottom:16px">531 ship-ready MCPs · 22 legacy bridges · 1 substrate</p>
+<p>
+  <span class="badge">8 protocols · 100/100 A+++++</span>
+  <span class="badge g">MIT</span>
+  <span class="badge b">CSOAI Ltd UK 16939677</span>
+</p>
+</div>
+
+<div class="ok">
+<strong>This page is for M2 (the live-app / consumer-surface lane).</strong>
+It explains how to consume the 531 MCPs + 22 legacy bridges through the substrate's
+HTTP API. Every MCP + every bridge follows the same pattern.
+</div>
+
+<h2>📊 The MCP federation at a glance</h2>
+<div class="kpi">
+  <div class="it"><span class="n">531</span><span class="l">ship-ready MCPs</span></div>
+  <div class="it"><span class="n">22</span><span class="l">legacy bridges</span></div>
+  <div class="it"><span class="n">15</span><span class="l">industries</span></div>
+  <div class="it"><span class="n">12</span><span class="l">frameworks</span></div>
+  <div class="it"><span class="n">5</span><span class="l">tier cascade</span></div>
+  <div class="it"><span class="n">3</span><span class="l">bridge types</span></div>
+</div>
+
+<h2>🔌 The 3 bridge types</h2>
+
+<h3>1. The MCP bridge (531 of them)</h3>
+<p>Each MCP is a sovereign tool. The pattern:</p>
+<div class="code">POST https://api.csoai.org/mcp/v1/{mcp-name}/invoke
+Content-Type: application/json
+Authorization: Bearer {sovereign-jwt}
+
+{
+  "tool": "read_cobol",
+  "params": {
+    "filename": "/legacy/system.cbl",
+    "encoding": "ebcdic"
+  }
+}
+→ {
+  "result": "...",
+  "sigil": "abc123...",
+  "bft": "approved",
+  "care_floor": "pass"
+}
+</div>
+
+<p>The 531 MCPs are organized by industry. Top 10:</p>
+<table>
+<tr><th>MCP</th><th>Industry</th><th>Tools</th><th>Tier</th><th>5-Tier Price</th></tr>
+<tr><td>cobol-bridge-mcp</td><td>Finance + Insurance</td><td>read_cobol · write_cobol · migrate_to_python</td><td>Pro</td><td>0.10 USD/call</td></tr>
+<tr><td>hl7-fhir-bridge</td><td>Healthcare</td><td>read_fhir · write_fhir · validate_fhir</td><td>Pro</td><td>0.10 USD/call</td></tr>
+<tr><td>sap-bridge-mcp</td><td>Finance + Manufacturing</td><td>read_sap · write_sap · migrate_sap</td><td>Enterprise</td><td>0.50 USD/call</td></tr>
+<tr><td>solvency-ii-mcp</td><td>Insurance</td><td>compute_scr · compute_mcr · submit_qrt</td><td>Enterprise</td><td>0.50 USD/call</td></tr>
+<tr><td>psd2-bridge-mcp</td><td>Finance</td><td>initiate_payment · get_account_info</td><td>Pro</td><td>0.10 USD/call</td></tr>
+<tr><td>fix-bridge-mcp</td><td>Finance + Trading</td><td>parse_fix · generate_fix · route_order</td><td>Pro</td><td>0.10 USD/call</td></tr>
+<tr><td>scada-bridge-mcp</td><td>Manufacturing + Energy</td><td>read_sensor · write_actuator · alarm</td><td>Enterprise</td><td>0.50 USD/call</td></tr>
+<tr><td>iso20022-bridge-mcp</td><td>Finance + Banking</td><td>parse_pain001 · generate_pain008</td><td>Pro</td><td>0.10 USD/call</td></tr>
+<tr><td>eu-ai-act-compliance</td><td>Cross-industry</td><td>quick_scan · check_compliance · generate_doc</td><td>Free</td><td>0 USD/call</td></tr>
+<tr><td>gdpr-compliance-ai</td><td>Cross-industry</td><td>assess_processing · generate_dpia · breach_notify</td><td>Free</td><td>0 USD/call</td></tr>
+</table>
+
+<h3>2. The legacy bridge (22 of them)</h3>
+<p>Each bridge is a sovereign gateway to a legacy system. The pattern is the same as the MCP bridge, but the tools are different:</p>
+<div class="code">POST https://api.csoai.org/bridge/v1/{bridge-name}/invoke
+Content-Type: application/json
+Authorization: Bearer {sovereign-jwt}
+
+{
+  "tool": "read_mainframe",
+  "params": {
+    "system": "AS400",
+    "record": "CUSTOMER.001",
+    "format": "db2"
+  }
+}
+</div>
+
+<p>The 22 bridges are organized by legacy system type. Top 10:</p>
+<table>
+<tr><th>Bridge</th><th>Legacy system</th><th>Industry</th></tr>
+<tr><td>cobol-bridge</td><td>COBOL mainframes</td><td>Finance + Insurance + Government</td></tr>
+<tr><td>hl7-bridge</td><td>HL7 v2.x messages</td><td>Healthcare</td></tr>
+<tr><td>sap-bridge</td><td>SAP R/3 + ECC</td><td>Manufacturing + Finance</td></tr>
+<tr><td>solvency-ii-bridge</td><td>Solvency II QRT submissions</td><td>Insurance</td></tr>
+<tr><td>psd2-bridge</td><td>PSD2 APIs</td><td>Finance</td></tr>
+<tr><td>fix-bridge</td><td>FIX 4.4 + 5.0</td><td>Finance + Trading</td></tr>
+<tr><td>scada-bridge</td><td>SCADA + Modbus + OPC-UA</td><td>Manufacturing + Energy</td></tr>
+<tr><td>iso20022-bridge</td><td>ISO 20022 pain.001 + pain.008</td><td>Finance + Banking</td></tr>
+<tr><td>edifact-bridge</td><td>EDIFACT messages</td><td>Supply chain + Logistics</td></tr>
+<tr><td>swift-bridge</td><td>SWIFT MT + MX</td><td>Finance + Banking</td></tr>
+</table>
+
+<h3>3. The compliance bridge (16 of them)</h3>
+<p>Each compliance bridge wraps a regulatory framework. The pattern:</p>
+<div class="code">POST https://api.csoai.org/compliance/v1/{framework}/check
+Content-Type: application/json
+Authorization: Bearer {sovereign-jwt}
+
+{
+  "system": "credit-scoring-ai",
+  "action": "score_credit",
+  "params": {"amount": 250000, "applicant": "..."}
+}
+→ {
+  "framework": "EU AI Act",
+  "risk_class": "HIGH",
+  "compliant": true,
+  "articles_checked": [6, 14, 15, 22, 27, 50],
+  "violations": [],
+  "sigil": "abc123..."
+}
+</div>
+
+<p>The 16 compliance bridges are:</p>
+<table>
+<tr><th>Framework</th><th>Status</th></tr>
+<tr><td>EU AI Act</td><td>In force 2 Aug 2026</td></tr>
+<tr><td>GDPR</td><td>In force 2018</td></tr>
+<tr><td>DORA</td><td>In force 17 Jan 2025</td></tr>
+<tr><td>NIS2</td><td>In force 18 Oct 2024</td></tr>
+<tr><td>CRA</td><td>In force 10 Dec 2027 (substantial)</td></tr>
+<tr><td>NIST AI RMF 1.0</td><td>Published Jan 2023</td></tr>
+<tr><td>ISO 42001</td><td>Published Dec 2023</td></tr>
+<tr><td>ISO 27001</td><td>Published Oct 2022</td></tr>
+<tr><td>IEEE 7000 series</td><td>Published 2016-2024</td></tr>
+<tr><td>SOC 2 TSC</td><td>Published 2017 (updated 2022)</td></tr>
+<tr><td>HIPAA</td><td>Published 1996 (amended 2013)</td></tr>
+<tr><td>PCI DSS 4.0</td><td>Published Mar 2022</td></tr>
+<tr><td>NIST CSF 2.0</td><td>Published Feb 2024</td></tr>
+<tr><td>Global Law Index</td><td>200+ jurisdictions</td></tr>
+<tr><td>Compliance Crosswalk</td><td>12 × 52 matrix</td></tr>
+<tr><td>Audit Trail</td><td>Every M4 action verified</td></tr>
+</table>
+
+<h2>🔌 The HTTP API (M2 calls this)</h2>
+
+<h3>MCP federation (the catalog + invoke)</h3>
+<div class="code"># Browse the catalog
+GET https://api.csoai.org/mcp/v1/catalog?industry=finance&tier=Pro
+→ {"mcps": [...], "count": 47, "tier": "Pro"}
+
+# Get a specific MCP
+GET https://api.csoai.org/mcp/v1/catalog/{mcp-name}
+→ {"name": "cobol-bridge-mcp", "tools": [...], "tier": "Pro", "price": 0.10}
+
+# Invoke an MCP tool
+POST https://api.csoai.org/mcp/v1/{mcp-name}/invoke
+{"tool": "read_cobol", "params": {...}}
+→ {"result": "...", "sigil": "abc123", "bft": "approved", "care_floor": "pass"}
+
+# Subscribe to an MCP
+POST https://api.csoai.org/mcp/v1/{mcp-name}/subscribe
+{"tier": "Pro", "auto_renew": true}
+→ {"subscription_id": "...", "next_billing": "..."}
+</div>
+
+<h3>Legacy bridges (the legacy system adapter)</h3>
+<div class="code"># Same pattern as MCP federation
+POST https://api.csoai.org/bridge/v1/{bridge-name}/invoke
+{"tool": "read_mainframe", "params": {...}}
+→ {"result": "...", "sigil": "abc123", "bft": "approved", "care_floor": "pass"}
+</div>
+
+<h3>Compliance bridges (the regulatory check)</h3>
+<div class="code">POST https://api.csoai.org/compliance/v1/{framework}/check
+{"system": "...", "action": "...", "params": {...}}
+→ {"framework": "...", "risk_class": "...", "compliant": true, "articles_checked": [...], "violations": []}
+
+# Also: the audit trail
+GET https://api.csoai.org/compliance/v1/audit?since=2026-07-01T00:00:00Z
+→ {"audits": [...], "count": 1453, "since": "..."}
+</div>
+
+<h3>i-character (the sovereign digital twin)</h3>
+<div class="code"># Create an i-character (5-step wizard)
+POST https://api.csoai.org/icharacter/v1/create
+{"name": "...", "sovereign_domains": [...], "location": {...}, ...}
+→ {"did": "did:csoai:...", "vc": "..."}
+
+# Get an i-character
+GET https://api.csoai.org/icharacter/v1/{did}
+→ {"did": "...", "name": "...", "tier": "Bronze", ...}
+
+# Update an i-character
+PATCH https://api.csoai.org/icharacter/v1/{did}
+{"location": {"lat": 51.5074, "lon": -0.1278}}
+→ {"updated_at": "..."}
+
+# Delete an i-character (sovereign deletion)
+DELETE https://api.csoai.org/icharacter/v1/{did}
+→ {"deleted_at": "..."}
+
+# Export an i-character (sovereign portability)
+GET https://api.csoai.org/icharacter/v1/{did}/export
+→ {"did": "...", "vc": "...", "sigil_history": [...]}
+</div>
+
+<h3>SIGIL chain (the immutable record)</h3>
+<div class="code"># Emit a SIGIL event
+POST https://api.csoai.org/sigil/v1/emit
+{"actor": "did:csoai:...", "action": "mcp_invoke", "payload": {...}}
+→ {"sigil": "abc123...", "hash": "...", "ts": "..."}
+
+# Get recent SIGIL events
+GET https://api.csoai.org/sigil/v1/recent?limit=20
+→ {"events": [...], "count": 20}
+
+# Verify a SIGIL event
+GET https://api.csoai.org/sigil/v1/verify/{hash}
+→ {"verified": true, "actor": "...", "action": "...", "ts": "..."}
+</div>
+
+<h3>BFT council (the governance)</h3>
+<div class="code"># Submit a BFT proposal
+POST https://api.csoai.org/bft/v1/proposal
+{"title": "...", "proposer": "did:csoai:...", "action": "..."}
+→ {"proposal_id": "...", "votes_for": 22, "votes_against": 7, "approved": true}
+
+# Get a BFT proposal
+GET https://api.csoai.org/bft/v1/proposal/{proposal_id}
+→ {"proposal_id": "...", "votes_for": 22, "approved": true, ...}
+
+# Cast a BFT vote
+POST https://api.csoai.org/bft/v1/{proposal_id}/vote
+{"voter": "did:csoai:...", "choice": "for"}
+→ {"vote_count": 23}
+</div>
+
+<h3>OSCAL proof (the substrate's identity)</h3>
+<div class="code"># Get the OSCAL proof
+GET https://api.csoai.org/oscal/v1/canonical
+→ {"canonical_sha256": "a4f31a...", "components": 554, "sig": "db92d8..."}
+
+# Verify a component
+GET https://api.csoai.org/oscal/v1/verify?component_id=sov.ai_act_50
+→ {"verified": true, "component": {...}, "sigil": "..."}
+
+# Get the full OSCAL document
+GET https://api.csoai.org/oscal/v1/full
+→ {OSCAL document (large, ~5MB)}
+</div>
+
+<h3>x402 payments (the economic layer)</h3>
+<div class="code"># Create an invoice
+POST https://api.csoai.org/x402/v1/invoice
+{"service": "cobol-bridge-mcp", "tier": "Pro", "quantity": 1}
+→ {"invoice_id": "...", "amount_usd": 0.10, "service": "..."}
+
+# Pay an invoice
+POST https://api.csoai.org/x402/v1/pay
+{"invoice_id": "..."}
+→ {"payment_id": "...", "amount_usd": 0.10, "tx_hash": "...", "sigil": "..."}
+
+# Get payment history
+GET https://api.csoai.org/x402/v1/history?caller=did:csoai:...
+→ {"payments": [...], "total_spent": 12.50}
+</div>
+
+<h2>🔌 The WebSocket API (real-time)</h2>
+<div class="code"># Live SIGIL chain events
+WS wss://api.csoai.org/ws/v1/sigil
+{"event": "sigil_emit", "ts": "...", "actor": "...", "action": "...", "sigil": "..."}
+
+# Live BFT deliberation
+WS wss://api.csoai.org/ws/v1/bft
+{"event": "bft_proposal", "proposal_id": "...", "votes_for": 5, "votes_against": 0, "approved": false}
+
+# Live x402 invoice events
+WS wss://api.csoai.org/ws/v1/x402
+{"event": "x402_invoice", "invoice_id": "...", "amount_usd": 0.10, "service": "..."}
+
+# Live i-character sync (cross-device)
+WS wss://api.csoai.org/ws/v1/icharacter/{did}
+{"event": "icharacter_update", "did": "...", "field": "location", "value": {...}}
+</div>
+
+<h2>🔌 The GraphQL API (recommended for M2)</h2>
+<div class="code">POST https://api.csoai.org/graphql
+Content-Type: application/json
+
+{
+  "query": "{ mcps(industry: \"finance\", tier: \"Pro\") { name tools price } }"
+}
+→ {"data": {"mcps": [...]}}
+</div>
+
+<h2>🔌 The MCP-over-Streamable-HTTP transport (for M2)</h2>
+<p>M2 can use the MCP-over-Streamable-HTTP transport to call the MCP federation directly from any MCP client (Claude Desktop, Cursor, Cline, etc.). The pattern:</p>
+<div class="code"># Connect to the MCP federation
+POST https://api.csoai.org/mcp/v1/stream
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/list",
+  "params": {}
+}
+→ {"result": {"tools": [{"name": "read_cobol", "description": "..."}, ...]}}
+
+# Call a specific tool
+POST https://api.csoai.org/mcp/v1/stream
+{"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "read_cobol", "arguments": {...}}}
+→ {"result": {"content": [...], "sigil": "..."}}
+</div>
+
+<h2>🔌 The 5-tier pricing (x402 + MiCA)</h2>
+<table>
+<tr><th>Tier</th><th>USD/call</th><th>3 calls/day free?</th><th>Use case</th><th>Who</th></tr>
+<tr><td>Free</td><td>$0.00</td><td>Yes (i-character required)</td><td>3 calls/day per tool</td><td>Anyone with i-character</td></tr>
+<tr><td>Pro</td><td>$0.10</td><td>No</td><td>Power users, single professionals</td><td>Paid subscription</td></tr>
+<tr><td>Enterprise</td><td>$0.50</td><td>No</td><td>SMEs, mid-market, regulated</td><td>Enterprise contract</td></tr>
+<tr><td>Government</td><td>$1.00</td><td>No</td><td>Government, defence, intel</td><td>Government contract</td></tr>
+<tr><td>Premium</td><td>$5.00+</td><td>No</td><td>Custom SLA, air-gap, private cluster</td><td>Bespoke contract</td></tr>
+</table>
+
+<p>Revenue split: 80% to fork author, 20% to substrate.</p>
+
+<h2>🔌 The 5 Settle & Coagula principles (the federation's voice)</h2>
+<ol>
+<li><b>Public.</b> Every MCP catalog is public. Every fork is public. MIT license. No proprietary walls.</li>
+<li><b>Auditable.</b> Every MCP invoke emits a SIGIL event. Every MCP publish is OSCAL-stamped. Every MCP fork is BFT-deliberated.</li>
+<li><b>Sovereign.</b> Every MCP is owned by the fork author. The substrate never extracts. The consumer never locks in.</li>
+<li><b>Care.</b> Care Floor 0.95. Article 14 (4-eyes). Article 50(2) C2PA. Article 9 (special categories).</li>
+<li><b>Solve et Coagula.</b> Sovereignty by design. The federation is the world of MCPs, dissolved and recomposed — MIT-licensed, sovereign by architecture, federated by fork.</li>
+</ol>
+
+<div class="card" style="text-align:center;margin-top:32px">
+  <p style="color:var(--muted);font-size:11px">
+    © 2026 MEOK AI Labs · CSOAI Ltd (UK 16939677) · 8 protocols · 100/100 A+++++ · MIT license<br>
+    Built by M4 (the engineering lane) · 1 Jul 2026 05:15 BST · Public. Auditable. Sovereign. Solve et Coagula. 🜏
+  </p>
+</div>
+
+</div>
+</body>
+</html>

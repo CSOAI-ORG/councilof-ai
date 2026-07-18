@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bot Interaction Disclosure — MEOK Compliance Suite</title>
+<meta name="description" content="EU AI Act Article 50 bot disclosure requirements: when AI systems interact with humans, they must disclose they are AI. Chatbot, voice, and avatar scenarios covered.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#0d0c18;color:#f0ece4;line-height:1.7;min-height:100vh}
+a{color:#c9a84c;text-decoration:none;transition:color .2s}
+a:hover,a:focus{color:#e8d28a;text-decoration:underline}
+.container{max-width:1000px;margin:0 auto;padding:0 1.5rem}
+.header{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 100%);border-bottom:2px solid rgba(201,168,76,.2);padding:1.25rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.logo{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.logo svg{flex-shrink:0}
+.logo span{color:#c9a84c}
+.logo .navy{color:#f0ece4}
+.header nav{display:flex;gap:1.25rem;font-size:.875rem;font-weight:500}
+.header nav a{color:#a098b0}
+.header nav a:hover{color:#c9a84c;text-decoration:none}
+.hero{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 50%,#0d0c18 100%);padding:5rem 0 3.5rem;text-align:center;border-bottom:1px solid rgba(201,168,76,.15)}
+.hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.02em}
+.hero h1 span{color:#c9a84c}
+.hero p{font-size:clamp(1rem,1.8vw,1.2rem);color:#b0a8c0;max-width:720px;margin:0 auto 1.75rem}
+.badge{display:inline-block;background:rgba(201,168,76,.12);color:#c9a84c;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(201,168,76,.25);margin-bottom:1.25rem}
+.cta-btn{display:inline-block;background:#c9a84c;color:#0d0c18;font-weight:700;font-size:.95rem;padding:.85rem 2rem;border-radius:8px;transition:all .2s;border:none;cursor:pointer}
+.cta-btn:hover{background:#e8d28a;color:#0d0c18;text-decoration:none;transform:translateY(-1px)}
+.cta-btn-outline{display:inline-block;background:transparent;color:#c9a84c;font-weight:600;font-size:.9rem;padding:.8rem 1.75rem;border-radius:8px;border:1.5px solid #c9a84c;transition:all .2s}
+.cta-btn-outline:hover{background:rgba(201,168,76,.1);text-decoration:none;transform:translateY(-1px)}
+.cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+section{padding:3.5rem 0}
+section h2{font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:700;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.01em}
+section h2 .gold{color:#c9a84c}
+section h3{font-size:1.2rem;font-weight:600;color:#c9a84c;margin:1.5rem 0 .6rem}
+section p,section li{color:#b0a8c0;font-size:.975rem}
+section p{margin-bottom:1rem}
+.card{background:linear-gradient(135deg,#13112a 0%,#1a1730 100%);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
+.card h3{margin-top:0}
+.card ul{list-style:none;padding-left:0}
+.card ul li{padding:.3rem 0 .3rem 1.5rem;position:relative}
+.card ul li::before{content:"▸";position:absolute;left:0;color:#c9a84c;font-weight:700}
+.card-icon{font-size:2rem;margin-bottom:.5rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+@media(max-width:800px){.three-col{grid-template-columns:1fr}}
+@media(max-width:680px){.two-col{grid-template-columns:1fr}}
+.highlight{border-left:4px solid #c9a84c;background:rgba(201,168,76,.06);padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;margin:1.5rem 0}
+.highlight p:last-child{margin-bottom:0}
+.highlight strong{color:#c9a84c}
+.faq-item{border-bottom:1px solid rgba(201,168,76,.1);padding:.5rem 0}
+.faq-item summary{padding:.85rem 0;font-weight:600;cursor:pointer;color:#f0ece4;font-size:1rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";color:#c9a84c;font-size:1.3rem;font-weight:400;transition:transform .2s}
+.faq-item[open] summary::after{content:"−"}
+.faq-item .answer{padding:0 0 1rem;color:#b0a8c0;font-size:.95rem}
+.faq-item .answer p{margin-bottom:.5rem}
+.faq-item .answer p:last-child{margin-bottom:0}
+.scenario-card{text-align:center}
+.scenario-card .card-icon{font-size:2.5rem}
+.scenario-card h3{font-size:1rem;text-transform:uppercase;letter-spacing:.04em}
+.footer{background:linear-gradient(135deg,#0d0c18 0%,#0a0914 100%);border-top:1px solid rgba(201,168,76,.12);padding:2.5rem 0;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;margin-bottom:2rem}
+.footer h4{color:#c9a84c;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.footer ul{list-style:none}
+.footer li{margin-bottom:.4rem}
+.footer a{color:#807890;font-size:.85rem}
+.footer a:hover{color:#c9a84c}
+.footer-bottom{text-align:center;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,.08);color:#605870;font-size:.8rem}
+@media(max-width:600px){.header .container{flex-direction:column;text-align:center}.header nav{flex-wrap:wrap;justify-content:center}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the bot disclosure requirement under Article 50?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50(1) requires that deployers of AI systems that interact with natural persons must inform those persons that they are interacting with an AI system, unless this is obvious from the circumstances and context of use. This applies to chatbots, voice assistants, virtual agents, conversational AI, and any system that presents itself in a human-interactive capacity."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does an AI system need to disclose it is AI during interaction?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Disclosure must occur at the start of the interaction, before the human user engages substantively with the system. For chatbots, this means the first message should clearly state the AI nature. For voice assistants, an initial verbal disclosure is required. For avatars, persistent visual indicators should be present. The disclosure must be clear, unambiguous, and in a language the user understands."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are there exceptions to the bot disclosure requirement?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50(1) provides an exception where it is 'obvious from the circumstances and context of use' that the interaction is with an AI system. For example, a user calling a clearly named customer service hotline called 'AIVoice' in a context where AI-only service is expected may not require additional disclosure. However, this exception is narrowly interpreted — when in doubt, disclose. Deployers bear the burden of proving the context made AI interaction obvious."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the requirements for AI voice systems?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI voice systems (including phone bots, voice assistants, and conversational IVR) must provide a verbal disclosure at the beginning of any interaction. The disclosure should be in the same language as the conversation, clearly stating the AI nature of the system. For outbound calls, the disclosure must occur before any substantive conversation. Recording and audit capabilities should capture that the disclosure was made."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What about AI avatars or digital humans?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI avatars, digital humans, and virtual agents must be clearly identified as AI throughout the interaction. This includes: a persistent visual indicator (e.g. 'AI' badge or label near the avatar), an initial verbal disclosure if the avatar speaks, and machine-readable metadata in the underlying communication protocol. The avatar should not use a human name, photo, or persona that could mislead users about its artificial nature."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can MEOK help with bot disclosure compliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MEOK's Compliance Suite provides bot disclosure automation including: AI disclosure widgets for web chatbots, pre-conversation disclosure templates, voice disclosure injection APIs, avatar labelling SDKs, and interaction audit logging. MEOK Pro (£199/mo) includes automated disclosure enforcement across web, voice, and avatar channels with compliance-ready audit trails."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="28" height="28" rx="6" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
+        <path d="M10 16 L14 20 L22 12" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div><span class="navy">MEOK</span> <span>Compliance</span></div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/article-50/">Article 50</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="badge">Article 50(1) — Human Interaction</span>
+    <h1>Bot Interaction <span>Disclosure</span></h1>
+    <p>When an AI system interacts with a human, it must clearly disclose its artificial nature. Requirements for chatbots, voice assistants, and AI avatars under EU AI Act Article 50.</p>
+    <div class="cta-group">
+      <a href="https://proofof.ai" class="cta-btn">Audit Your AI Interactions →</a>
+      <a href="#scenarios" class="cta-btn-outline">View Scenarios</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>The Core <span class="gold">Obligation</span></h2>
+    <p>Article 50(1) of the EU AI Act states: <em>"Deployers of an AI system that interacts with natural persons shall inform those persons that they are interacting with an AI system, unless this is obvious from the circumstances and context of use."</em></p>
+
+    <div class="highlight">
+      <strong>Key principle:</strong> The burden is on the deployer to ensure disclosure is given. If there is any doubt about whether a user would reasonably recognise they are interacting with AI, disclosure must be made. The "obvious from context" exception is narrowly construed and should not be relied upon without careful assessment.
+    </div>
+
+    <p style="margin-top:1rem">This obligation covers every AI system that communicates with humans in a conversational, assistive, or interactive capacity — whether through text, voice, visual interface, or any combination of modalities. The disclosure must be <strong>clear</strong>, <strong>timely</strong> (at the start of the interaction), and <strong>unambiguous</strong>.</p>
+  </div>
+</section>
+
+<section id="scenarios" style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>Interactive <span class="gold">Scenarios</span></h2>
+    <p style="text-align:center;margin-bottom:2rem">Three primary interaction modes, each with specific disclosure requirements under Article 50.</p>
+
+    <div class="three-col">
+      <div class="card scenario-card">
+        <div class="card-icon">💬</div>
+        <h3>Chatbot</h3>
+        <p>Text-based conversational AI across web, messaging, and app interfaces.</p>
+        <ul style="text-align:left;margin-top:1rem">
+          <li>First-message disclosure: "I'm an AI assistant"</li>
+          <li>Persistent "AI" badge near the chat interface</li>
+          <li>Disclosure in initial system prompt visible to user</li>
+          <li>API response header: <code>X-AI-Interaction: true</code></li>
+          <li>No misleading human names or personas</li>
+        </ul>
+      </div>
+      <div class="card scenario-card">
+        <div class="card-icon">🎤</div>
+        <h3>Voice</h3>
+        <p>AI voice systems including phone bots, voice assistants, and smart speakers.</p>
+        <ul style="text-align:left;margin-top:1rem">
+          <li>Verbal disclosure at call start: "This call is with an AI system"</li>
+          <li>Disclosure before any substantive conversation</li>
+          <li>Language-matched to the user's spoken language</li>
+          <li>Audio watermark embedding for verification</li>
+          <li>Recording/transcript audit of disclosure delivery</li>
+        </ul>
+      </div>
+      <div class="card scenario-card">
+        <div class="card-icon">👤</div>
+        <h3>Avatar</h3>
+        <p>Digital humans, virtual agents, and AI-generated on-screen personas.</p>
+        <ul style="text-align:left;margin-top:1rem">
+          <li>Persistent "AI" label visible near the avatar</li>
+          <li>Visual badge that cannot be hidden or minimised</li>
+          <li>Initial verbal disclosure if the avatar speaks</li>
+          <li>No human name, photo, or deceptive persona</li>
+          <li>Machine-readable marker in streaming metadata</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Implementation <span class="gold">Requirements</span></h2>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>Timing &amp; Placement</h3>
+        <ul>
+          <li>Disclosure must occur <strong>before</strong> any substantive interaction begins</li>
+          <li>For chatbots: first message must clearly state AI nature</li>
+          <li>For voice: disclosure at call connection before menu or conversation</li>
+          <li>For avatars: visible label before any communication</li>
+          <li>Disclosure must remain available throughout the interaction</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Content of Disclosure</h3>
+        <ul>
+          <li>Clear phrasing: "You are interacting with an AI system"</li>
+          <li>No euphemisms, jargon, or ambiguous language</li>
+          <li>Language appropriate for the end user</li>
+          <li>Font size and contrast accessible (WCAG 2.1 AA)</li>
+          <li>Audio disclosure volume and clarity sufficient for comprehension</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:.5rem">
+      <div class="card">
+        <h3>Forbidden Practices</h3>
+        <ul>
+          <li>Using human names, photos, or biographical details for AI agents</li>
+          <li>Claiming or implying the system can feel emotions or consciousness</li>
+          <li>Failing to disclose AI nature even when asked directly</li>
+          <li>Burying disclosure in terms of service or privacy notices</li>
+          <li>Using context that could mislead (e.g. "Ask me anything" without AI label)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Audit &amp; Compliance</h3>
+        <ul>
+          <li>All interaction disclosures must be logged with timestamps</li>
+          <li>Records retained for regulatory inspection (minimum 3 years)</li>
+          <li>Disclosure delivery verification (was it spoken/displayed?)</li>
+          <li>User acknowledgment capture where appropriate</li>
+          <li>Regular compliance testing of disclosure systems</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>MEOK Bot Disclosure <span class="gold">Solutions</span></h2>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>Web Chat Widget</h3>
+        <ul>
+          <li>Pre-configured AI disclosure banner on chat load</li>
+          <li>Auto-injected first-message disclosure templates</li>
+          <li>Customisable badge styles matching MEOK theme</li>
+          <li>Session audit logging with disclosure timestamps</li>
+          <li>Works with any LLM backend (OpenAI, Anthropic, open-source)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Voice &amp; Avatar SDK</h3>
+        <ul>
+          <li>Voice disclosure injection API (Twilio, Vonage, custom SIP)</li>
+          <li>Pre-call disclosure playback engine</li>
+          <li>Avatar overlay component with persistent AI badge</li>
+          <li>Machine-readable interaction markers (W3C VC)</li>
+          <li>Full interaction audit trail for regulatory reporting</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:2rem">
+      <a href="https://proofof.ai" class="cta-btn">Get MEOK Pro — £199/mo →</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Frequently Asked <span class="gold">Questions</span></h2>
+
+    <div class="faq-item">
+      <details>
+        <summary>What is the bot disclosure requirement under Article 50?</summary>
+        <div class="answer">
+          <p>Article 50(1) requires that deployers of AI systems that interact with natural persons must inform those persons that they are interacting with an AI system, unless this is obvious from the circumstances and context of use. This applies to chatbots, voice assistants, virtual agents, conversational AI, and any system that presents itself in a human-interactive capacity.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>When does an AI system need to disclose it is AI during interaction?</summary>
+        <div class="answer">
+          <p>Disclosure must occur at the start of the interaction, before the human user engages substantively with the system. For chatbots, this means the first message should clearly state the AI nature. For voice assistants, an initial verbal disclosure is required. For avatars, persistent visual indicators should be present. The disclosure must be clear, unambiguous, and in a language the user understands.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>Are there exceptions to the bot disclosure requirement?</summary>
+        <div class="answer">
+          <p>Article 50(1) provides an exception where it is "obvious from the circumstances and context of use" that the interaction is with an AI system. For example, a user calling a clearly named customer service hotline called 'AIVoice' in a context where AI-only service is expected may not require additional disclosure. However, this exception is narrowly interpreted — when in doubt, disclose. Deployers bear the burden of proving the context made AI interaction obvious.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>What are the requirements for AI voice systems?</summary>
+        <div class="answer">
+          <p>AI voice systems (including phone bots, voice assistants, and conversational IVR) must provide a verbal disclosure at the beginning of any interaction. The disclosure should be in the same language as the conversation, clearly stating the AI nature of the system. For outbound calls, the disclosure must occur before any substantive conversation. Recording and audit capabilities should capture that the disclosure was made.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>What about AI avatars or digital humans?</summary>
+        <div class="answer">
+          <p>AI avatars, digital humans, and virtual agents must be clearly identified as AI throughout the interaction. This includes: a persistent visual indicator (e.g. 'AI' badge or label near the avatar), an initial verbal disclosure if the avatar speaks, and machine-readable metadata in the underlying communication protocol. The avatar should not use a human name, photo, or persona that could mislead users about its artificial nature.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>How can MEOK help with bot disclosure compliance?</summary>
+        <div class="answer">
+          <p>MEOK's Compliance Suite provides bot disclosure automation including: AI disclosure widgets for web chatbots, pre-conversation disclosure templates, voice disclosure injection APIs, avatar labelling SDKs, and interaction audit logging. MEOK Pro (£199/mo) includes automated disclosure enforcement across web, voice, and avatar channels with compliance-ready audit trails.</p>
+          <p><a href="https://proofof.ai" style="color:#c9a84c;font-weight:600">→ Start your bot disclosure compliance with MEOK</a></p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://proofof.ai">MEOK Platform</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/article-50-kit">Article 50 Kit</a></li>
+          <li><a href="/compliance-suite">Compliance Suite</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/article-50/">Article 50 Hub</a></li>
+          <li><a href="/article-50/transparency.html">Transparency Guide</a></li>
+          <li><a href="/article-50/marking.html">Marking Spec</a></li>
+          <li><a href="/article-50/deepfake.html">Deepfake Detection</a></li>
+          <li><a href="/article-50/bot.html">Bot Disclosure</a></li>
+          <li><a href="/article-50/code-of-practice.html">Code of Practice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MEOK Compliance. All rights reserved. Part of the MEOK AI Governance Platform.</p>
+      <p style="margin-top:.25rem">EU AI Act compliance solutions — Article 50, 51, 52, 53, 55, and beyond.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

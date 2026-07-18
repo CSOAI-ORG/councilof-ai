@@ -1,0 +1,15 @@
+# REAL 4->1 brain merge (MergeKit). Soups SAME-BASE Qwen3 fine-tunes — the only weight-merge that is valid
+# (heterogeneous DeepSeek+GLM+Kimi CANNOT be weight-merged; that stays an output-ensemble). Method: TIES
+# (trim + elect-sign + disjoint-merge) — preserves each expert's strong deltas, resolves conflicts by sign.
+# Runs on CPU / low-VRAM. This is our brain-merge LAW made real, not toy numpy.
+models:
+  - model: Qwen/Qwen3-4B                     # base (Apache-2.0)
+  - model: Qwen/Qwen3-4B                     # <- replace with compliance fine-tune when trained
+    parameters: {weight: 0.5, density: 0.6}
+  - model: Qwen/Qwen3-4B                     # <- replace with defense fine-tune
+    parameters: {weight: 0.5, density: 0.6}
+merge_method: ties
+base_model: Qwen/Qwen3-4B
+parameters: {normalize: true, int8_mask: true}
+dtype: bfloat16
+# NOTE: identical placeholders above will merge to the base (no-op) until real fine-tunes exist — honest.

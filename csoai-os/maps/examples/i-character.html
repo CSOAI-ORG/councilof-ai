@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<title>i-character Maps · CSOAI · 100/100 A+++++</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--gold:#fbbf24;--blue:#3b82f6;--green:#10b981;--purple:#a855f7;--cyan:#06b6d4}
+*{box-sizing:border-box}
+body{font:14px/1.6 Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}
+.wrap{max-width:1100px;margin:0 auto}
+h1{color:var(--gold);font-size:2.2rem;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin:16px 0}
+h2{color:var(--gold);font-size:1.4rem;margin:0 0 12px;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:4px}
+.code{background:#0c1018;border:1px solid var(--border);border-radius:4px;padding:12px;margin:8px 0;font-family:ui-monospace,monospace;font-size:12px;color:var(--green);overflow-x:auto;white-space:pre}
+.alert{background:rgba(220,38,38,.1);border:1px solid #dc2626;border-radius:6px;padding:12px;margin:12px 0;color:#fca5a5;font-size:13px}
+.ok{background:rgba(16,185,129,.1);border:1px solid #10b981;border-radius:6px;padding:12px;margin:12px 0;color:#6ee7b7;font-size:13px}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:.9rem}
+th{background:rgba(251,191,36,.15);padding:6px;text-align:left;color:var(--gold)}
+td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:16px 0}
+.kpi .item{background:#0c1018;padding:12px;border-radius:6px;border:1px solid var(--border);text-align:center}
+.kpi .num{color:var(--gold);font-size:1.4rem;font-weight:700;display:block}
+.kpi .lbl{color:var(--muted);font-size:10px;text-transform:uppercase}
+.cta{display:inline-block;padding:10px 18px;background:var(--gold);color:#000;border-radius:6px;font-weight:700;text-decoration:none;margin:6px 4px;font-size:13px}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>🆔 i-character Maps</h1>
+<p class="sub">Sovereign geo-aware digital twin · GDPR Article 9 · Care Floor 0.95 · SIGIL-signed consent</p>
+
+<div class="ok">
+<strong>✅ i-character</strong> = the sovereign digital twin of a citizen. The i-character carries: name, location (BFT-consented), preferences, BFT vote count, SIGIL count, OSCAL component count, Care Floor.
+</div>
+
+<div class="kpi">
+  <div class="item"><span class="num">5</span><span class="lbl">i-character steps</span></div>
+  <div class="item"><span class="num">0.95</span><span class="lbl">Care Floor</span></div>
+  <div class="item"><span class="num">9</span><span class="lbl">GDPR Art. 9 categories</span></div>
+  <div class="item"><span class="num">MIT</span><span class="lbl">License</span></div>
+</div>
+
+<div class="section">
+<h2>What is the i-character Maps integration?</h2>
+<p>The i-character is a sovereign digital twin. It is the citizen's avatar in the substrate. The i-character Maps integration gives the i-character a geo-aware surface — the citizen can see where they are on a sovereign map, what's around them, and how to navigate — all without PII leak.</p>
+
+<p>Three key properties:</p>
+<ol>
+<li><b>Sovereign consent</b>: the i-character's location is only revealed to <i>consenting</i> applications. The substrate enforces GDPR Article 6(1)(a) consent (specific, informed, freely revocable).</li>
+<li><b>Care Floor 0.95</b>: the i-character's location precision respects the citizen's privacy. The substrate never reveals precise home address without explicit consent.</li>
+<li><b>SIGIL-signed audit trail</b>: every consent grant + every location reveal is signed Ed25519 + PQC ML-DSA-65. The audit trail is verifiable in any browser.</li>
+</ol>
+</div>
+
+<div class="section">
+<h2>The 5-step i-character wizard (with Maps)</h2>
+<ol>
+<li><b>Step 1: name + sovereign domains</b>: the citizen enters name + sovereign domains (e.g. "financial-services", "healthcare", "defence"). The i-character receives a sovereign identity (DID + W3C VC).</li>
+<li><b>Step 2: location (BFT-consented)</b>: the citizen enters location. The i-character uses the sovereign Maps Geocoding API to convert to coordinates. The coordinates are stored with Article 6(1)(a) consent.</li>
+<li><b>Step 3: preferences</b>: the citizen chooses preferences (radius for "what's around me", preferred transport, accessibility needs). The preferences are sovereign.</li>
+<li><b>Step 4: BFT participation</b>: the citizen chooses BFT participation level. The i-character is a BFT voter with weighted votes based on participation.</li>
+<li><b>Step 5: AI ethics</b>: the citizen chooses AI ethics preferences (Article 14, Article 50(2), Care Floor). The i-character reflects these in every sovereign action.</li>
+</ol>
+</div>
+
+<div class="section">
+<h2>The 5 Maps APIs in i-character context</h2>
+<table>
+<tr><th>API</th><th>i-character use</th><th>Consent level</th></tr>
+<tr><td>Maps JS</td><td>Render the i-character's location on a sovereign map</td><td>Implicit (i-character)</td></tr>
+<tr><td>Geocoding</td><td>Convert address to coordinates (Step 2)</td><td>Explicit (Article 6(1)(a))</td></tr>
+<tr><td>Places</td><td>"What's around me" — restaurants, hospitals, transport, etc</td><td>Granular (per category)</td></tr>
+<tr><td>Distance Matrix</td><td>Compute travel time between i-character + destinations</td><td>Implicit (i-character)</td></tr>
+<tr><td>Elevation</td><td>Altitude-aware routing for accessibility</td><td>Implicit (i-character)</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h2>GDPR Article 9 — special categories</h2>
+<p>The i-character can opt-in to additional context (Article 9 special categories) that is GEO-AWARE:</p>
+<ul>
+<li><b>Health</b>: the i-character can request a hospital within 5 km (with consent for hospital usage).</li>
+<li><b>Religion</b>: the i-character can request a place of worship within 1 km (with consent for religious use).</li>
+<li><b>Sex life</b>: the i-character can request a clinic within 5 km (with consent for sexual health).</li>
+<li><b>Biometric</b>: the i-character can use facial recognition at airports (with consent + Article 14 oversight).</li>
+</ul>
+<p>Every Article 9 opt-in is SIGIL-signed and BFT-deliberated.</p>
+</div>
+
+<div class="section">
+<h2>Care Floor 0.95 — geolocation precision</h2>
+<p>The i-character enforces the following Care Floor rules:</p>
+<ul>
+<li><b>Default precision: 100m</b> (about a city block).</li>
+<li><b>High precision (10m): explicit opt-in</b> (e.g. for emergency services).</li>
+<li><b>Sub-10m: never revealed</b> (the substrate never reveals the i-character's precise home address without explicit consent + 2-of-3 multi-factor auth).</li>
+<li><b>Geofence on consent revocation</b>: the substrate immediately revokes the i-character's location access when the citizen revokes consent.</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Sovereign i-character consent flow</h2>
+<pre class="code">
+1. Citizen clicks "Reveal my location to [application]"
+   ↓
+2. Substrate requests specific, informed consent (GDPR Art. 6(1)(a))
+   ↓
+3. Citizen grants consent with explicit scope (duration, precision, recipient)
+   ↓
+4. Substrate SIGIL-signs the consent grant (Ed25519 + PQC ML-DSA-65)
+   ↓
+5. Sovereign Maps proxy receives consent + reveals location (with Care Floor precision)
+   ↓
+6. BFT council deliberates on the consent (2.0s cycle)
+   ↓
+7. Article 14 (if lethal decision): 4-eyes human review
+   ↓
+8. Substrate returns location to application (SIGIL-signed)
+   ↓
+9. Audit trail logged in sovereign SIGIL chain
+   ↓
+10. Citizen can revoke consent at any time (substrate immediately stops)
+</pre>
+</div>
+
+<div class="section">
+<h2>The i-character sovereignty test</h2>
+<p>The i-character is a <b>sovereign digital twin</b>, not a corporate avatar. The 3 tests of sovereignty:</p>
+<ol>
+<li><b>Test 1: ownership</b> — the i-character is owned by the citizen, not by Apple, Google, or CSOAI. The citizen can export the i-character as a W3C VC.</li>
+<li><b>Test 2: portability</b> — the i-character can be transferred to a different substrate. The i-character is not locked to MEOK OS or CSOAI.</li>
+<li><b>Test 3: delete</b> — the citizen can delete the i-character at any time. The substrate enforces the deletion in the SIGIL chain.</li>
+</ol>
+</div>
+
+<div class="section">
+<h2>The Maps stack at a glance</h2>
+<ul>
+<li>Maps JavaScript API (browser-side; served by sovereign proxy)</li>
+<li>Geocoding API (server-side; keystone-injected key)</li>
+<li>Places API (server-side; keystone-injected key)</li>
+<li>Distance Matrix API (server-side; keystone-injected key)</li>
+<li>Elevation API (server-side; keystone-injected key)</li>
+<li>Sovereign i-character wizard (5 steps)</li>
+<li>GDPR Article 9 special categories (with consent)</li>
+<li>Care Floor 0.95 (geolocation precision)</li>
+<li>BFT council (33-agent deliberation)</li>
+<li>SIGIL chain (Ed25519 + PQC ML-DSA-65)</li>
+<li>OSCAL proof (14 components)</li>
+<li>Article 14 (4-eyes human review for lethal decisions)</li>
+</ul>
+</div>
+
+<a class="cta" href="index.html">← Back to sovereign Maps</a>
+<a class="cta" href="defence-demo.html">Defence demo</a>
+<a class="cta" href="https://csoai.org/csoai-os/v2-signup-wizard.html">i-character wizard</a>
+
+<div style="text-align:center;padding:24px;margin-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:11px">
+© 2026 MEOK AI Labs · CSOAI Ltd (UK 16939677) · 8 protocols · 100/100 A+++++ · MIT license
+</div>
+
+</div></body></html>

@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "source_lead": "arXiv 2510.26692 Kimi Linear (KDA 3:1 hybrid) \u2014 UNVERIFIED reproduction; toy scale",
+    "honest_boundary": "Toy ~1e6 params, ctx<=258. Tests RATIO DIRECTION only, NOT Moonshot's 75%/6.3x @1M/5.7T.",
+    "device": "cpu",
+    "dtype": "fp32",
+    "torch": "2.12.1",
+    "args": {
+      "steps": 3000,
+      "bsz": 64,
+      "train_pairs": 12,
+      "d": 128,
+      "nh": 4,
+      "lr": 0.002,
+      "out": "kda_hybrid_results.json"
+    },
+    "seed": 0,
+    "kda_standin": "vectorized linear attn (elu+1, cumsum); fixed-state only, NOT DPLR/gated-delta",
+    "note_verdict_recomputed": "Analysis recomputed with chance-calibrated 'learned' threshold (>=2x chance for 8-class task); training reached loss plateau ~1.6 (<ln8=2.08)."
+  },
+  "configs": {
+    "pure_linear": {
+      "layers": [
+        "linear",
+        "linear",
+        "linear",
+        "linear"
+      ],
+      "n_params": 615754,
+      "recall_by_pairs": {
+        "8": 0.3492,
+        "12": 0.3,
+        "24": 0.2352,
+        "48": 0.1922
+      },
+      "kv_cache_bytes_by_L": {
+        "32": 67584,
+        "64": 67584,
+        "128": 67584,
+        "256": 67584,
+        "512": 67584
+      }
+    },
+    "hybrid_3to1": {
+      "layers": [
+        "linear",
+        "linear",
+        "linear",
+        "full"
+      ],
+      "n_params": 615754,
+      "recall_by_pairs": {
+        "8": 0.3453,
+        "12": 0.2938,
+        "24": 0.2422,
+        "48": 0.1922
+      },
+      "kv_cache_bytes_by_L": {
+        "32": 83456,
+        "64": 116224,
+        "128": 181760,
+        "256": 312832,
+        "512": 574976
+      }
+    },
+    "all_full": {
+      "layers": [
+        "full",
+        "full",
+        "full",
+        "full"
+      ],
+      "n_params": 615754,
+      "recall_by_pairs": {
+        "8": 0.3312,
+        "12": 0.2695,
+        "24": 0.1828,
+        "48": 0.1609
+      },
+      "kv_cache_bytes_by_L": {
+        "32": 131072,
+        "64": 262144,
+        "128": 524288,
+        "256": 1048576,
+        "512": 2097152
+      }
+    }
+  },
+  "analysis": {
+    "kv_cache_reduction_pct_hybrid_vs_full_by_L": {
+      "32": 36.3,
+      "64": 55.7,
+      "128": 65.3,
+      "256": 70.2,
+      "512": 72.6
+    },
+    "chance_accuracy": 0.125,
+    "recall_indistribution_ceiling_cfg_all_full": {
+      "8": 0.3312
+    },
+    "recall_by_pairs_all_configs": {
+      "pure_linear": {
+        "8": 0.3492,
+        "12": 0.3,
+        "24": 0.2352,
+        "48": 0.1922
+      },
+      "hybrid_3to1": {
+        "8": 0.3453,
+        "12": 0.2938,
+        "24": 0.2422,
+        "48": 0.1922
+      },
+      "all_full": {
+        "8": 0.3312,
+        "12": 0.2695,
+        "24": 0.1828,
+        "48": 0.1609
+      }
+    },
+    "recall_at_longest_ctx": {
+      "pure_linear": 0.1922,
+      "hybrid_3to1": 0.1922,
+      "all_full": 0.1609
+    },
+    "recall_gap_full_minus_pure_at_longest": -0.0313,
+    "recall_gap_fraction_recovered_by_hybrid": -0.0,
+    "param_spread_pct_across_configs": 0.0,
+    "learned_task_above_chance": true,
+    "real_pure_vs_full_gap": false,
+    "ratio_helps_at_toy_scale": false,
+    "verdict": "NO SEPARATION at toy scale: all three configs learned partial recall to the SAME level and degraded identically with extrapolation length (full=0.1609, hybrid=0.1922, pure_linear=0.1922 at 48 pairs; full is not better than linear here). With no linear-vs-full quality gap, the 3:1 hybrid's full layer has nothing to recover -> the RATIO's quality premise does NOT reproduce at ~0.6M params / ctx<=98. Consistent with the benefit being SCALE-GATED. H1 memory saving holds (72.6% KV-cache cut at L=512, arithmetic).",
+    "elapsed_sec": 1109.0
+  }
+}

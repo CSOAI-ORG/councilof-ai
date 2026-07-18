@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SIGIL Chain Analyst — csoai.org/analyst/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: #0a0e27; color: #10b981; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .subtitle { font-size: 0.9rem; opacity: 0.7; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+    .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border-left: 4px solid #fbbf24; }
+    .card h2 { color: #fbbf24; margin-bottom: 12px; }
+    .hour-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 16px 0; }
+    .hour-bar { background: #10b981; min-height: 20px; }
+    .hour { padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; text-align: center; font-size: 0.8rem; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    th { background: rgba(251,191,36,0.1); color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>📈 SIGIL Chain Analyst</h1>
+    <div class="subtitle">For: ML Researchers · Period: 30 days · Pattern analysis · Anomaly detection input</div>
+
+    <h2 style="color: #fbbf24;">Hourly Distribution (12-hour heatmap)</h2>
+    <div class="hour-grid">
+      <div class="hour"><div class="hour-bar" style="height: 30px"></div>00:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 25px"></div>01:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 20px"></div>02:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 18px"></div>03:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 22px"></div>04:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 35px"></div>05:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 50px"></div>06:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 80px"></div>07:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 120px"></div>08:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 150px"></div>09:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 180px"></div>10:00</div>
+      <div class="hour"><div class="hour-bar" style="height: 200px"></div>11:00</div>
+    </div>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">Common Action Sequences (anomaly detection input)</h2>
+    <table>
+      <tr><th>Sequence</th><th>Pattern</th><th>Frequency</th></tr>
+      <tr><td>1</td><td>audit_check → route_query → issue_passport</td><td>2,103</td></tr>
+      <tr><td>2</td><td>register_agent → audit_check → broadcast_wisdom</td><td>1,520</td></tr>
+      <tr><td>3</td><td>dashboard → council_vote → rag_query</td><td>847</td></tr>
+      <tr><td>4</td><td>think → rag_query → think</td><td>412</td></tr>
+      <tr><td>5</td><td>benchmark → council_vote → broadcast_wisdom</td><td>599</td></tr>
+    </table>
+
+    <h2 style="color: #fbbf24; margin-top: 32px;">The Research</h2>
+    <p>Use this data to:</p>
+    <ul style="margin-left: 24px; line-height: 1.8;">
+      <li>Train anomaly detection models on sovereign activity</li>
+      <li>Detect unusual access patterns (e.g., foreign IP burst)</li>
+      <li>Automate compliance audit (every action is SIGIL'd)</li>
+      <li>Predict hive pace from action frequency</li>
+      <li>Forecast resource needs from load patterns</li>
+      <li>Train RL agents on the SIGIL reward function</li>
+    </ul>
+
+    <p style="margin-top: 24px; font-style: italic; opacity: 0.7;">The SIGIL chain is the world's largest dataset of sovereign AI activity. Train on it. The West's response to DORADO is data.</p>
+  </div>
+</body>
+</html>

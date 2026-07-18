@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Welcome to MEOK — your API key is ready</title>
+  <meta property="og:title" content="Welcome to MEOK — your API key is ready">
+<meta name="description" content="Welcome to MEOK — your API key is ready — MEOK AI Labs">
+
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 760px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.7; color: #111; }
+    h1 { font-size: 2.2rem; margin: 0 0 0.5rem; }
+    .pill { display: inline-block; background: rgba(201,168,76,0.12); color: #c9a84c; padding: 0.3rem 0.8rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 600; }
+    pre { background: #f3f4f6; padding: 1rem; border-radius: 0.4rem; overflow-x: auto; font-size: 0.85rem; }
+    a { color: #c9a84c; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Welcome to MEOK", "url": "https://meok.ai/thanks", "description": "Welcome to MEOK — your API key is ready — MEOK AI Labs"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is Your API key?", "acceptedAnswer": {"@type": "Answer", "text": "meok_demo_<your-key> (Your real key was sent to the email you signed up with. Use it as x-api-key header on every call to the keystone.)"}}, {"@type": "Question", "name": "What is Next 24 hours?", "acceptedAnswer": {"@type": "Answer", "text": "You'll get a 7-day lead-magnet email sequence. Day 0: the Article 50 scope brief. Day 1-7: each day's deep dive. Reply to any of them with questions — Nick reads every reply."}}, {"@type": "Question", "name": "When you're ready for Pro?", "acceptedAnswer": {"@type": "Answer", "text": "Pro is £199/mo. 1,000 calls/day per MCP, signed Ed25519 receipts, public verify URLs, priority support, offline verify tool. Buy Pro →"}}]}</script>
+</head>
+<body>
+  <h1>Welcome to MEOK</h1>
+  <p>You're in. <span class="pill">FREE TIER · 200 calls/day per MCP</span></p>
+
+  <h2>Your API key</h2>
+  <pre>meok_demo_&lt;your-key&gt;</pre>
+  <p>(Your real key was sent to the email you signed up with. Use it as <code>x-api-key</code> header on every call to the keystone.)</p>
+
+  <h2>First 5 minutes: try these</h2>
+  <ol>
+    <li><strong>Sign a free-tier attestation</strong> (returns a verifiable cert, free tier uses unsigned HMAC):<br>
+      <pre>curl -X POST https://meok-attestation-api.vercel.app/sign \
+  -H "x-api-key: meok_demo_&lt;your-key&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"framework":"eu-ai-act","entity":"My Co","regulation":"Regulation (EU) 2024/1689"}'</pre>
+    </li>
+    <li><strong>Verify the cert</strong> (returns <code>{valid: true}</code>):<br>
+      <pre>curl -X POST https://meok-attestation-api.vercel.app/verify \
+  -H "Content-Type: application/json" \
+  -d '&lt;paste-signed-attestation-here&gt;'</pre>
+    </li>
+    <li><strong>Open the human-readable verify page</strong>:<br>
+      <pre>https://meok-attestation-api.vercel.app/v/&lt;cert_id&gt;</pre>
+    </li>
+    <li><strong>Install the offline verify tool</strong>:<br>
+      <pre>pip install meok-attestation-verify</pre>
+    </li>
+    <li><strong>Browse the 32 MCP servers</strong>:<br>
+      <pre>https://meok-attestation-api.vercel.app/catalogue</pre>
+    </li>
+  </ol>
+
+  <h2>Next 24 hours</h2>
+  <p>You'll get a 7-day lead-magnet email sequence. Day 0: the Article 50 scope brief. Day 1-7: each day's deep dive. Reply to any of them with questions — Nick reads every reply.</p>
+
+  <h2>When you're ready for Pro</h2>
+  <p>Pro is £199/mo. 1,000 calls/day per MCP, signed Ed25519 receipts, public verify URLs, priority support, offline verify tool. <a href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro →</a></p>
+
+  <h2>Want a 30-min scoping call first?</h2>
+  <p>£29/slot, 50% off for first 100 with code <code>LAUNCH50</code>. <a href="https://demo-deploy-lyart-delta.vercel.app">Book a slot →</a></p>
+
+  <p style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; color: #999; font-size: 0.9rem;">
+    CSOAI Ltd · UK 16939677 · hello@meok.ai
+  </p>
+<div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+</body>
+</html>

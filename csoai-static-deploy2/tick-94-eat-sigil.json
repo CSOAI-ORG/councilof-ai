@@ -1,0 +1,91 @@
+{
+  "tick": 94,
+  "type": "P|opus|defoneos-eat-cycle|tick-94-maintenance-deploy",
+  "phase": "MAINTENANCE_HEALTH_LINKFIX_DEPLOY",
+  "produced_by": "JEEVES-Hermes-cron-DEFONEOS-eat-pilot",
+  "produced_at": "2026-07-14T00:36:34.069068+00:00",
+  "digest_seed": "T94-eat-cycle-maintenance-deploy-fixedlinks",
+  "care_score": 0.95,
+  "cycle_summary": {
+    "vercel_https_status": 200,
+    "vercel_response_time_s": 0.205,
+    "meok_backend_ssh": "timeout",
+    "meok_backend_status": "unreachable - ssh 5s connect timeout",
+    "sov3_mcp_localhost_3101": "unreachable - tunnel not bound",
+    "sov33_substrate_localhost_8101": "alive (HTTP 200 /health)",
+    "sov33_tools_count": 10,
+    "sov33_governance": "care_floor=0.95, article_0_bound=true, bft_33_quorum=true",
+    "meok_os_localhost_3000": "down",
+    "html_pages_disk": 455,
+    "broken_links_before": 5,
+    "broken_links_after": 0,
+    "broken_links_fixed": 3,
+    "broken_links_files": [
+      "defoneos-mod-delivery-accreditation.html",
+      "defoneos-mod-fairness-impact-assessment.html",
+      "defoneos-mod-tender-schedule-2026.html"
+    ],
+    "fix_action": "replaced defoneos-mod-bft-vote-receipt-t93.html \u2192 href='#'",
+    "sitemap_urls": 456,
+    "sitemap_bytes": 90021,
+    "vercel_deploy_id": "DApSfyhTzzFAu8pKwn9X9iAqq6hW",
+    "vercel_alias": "https://csoai-static-deploy2.vercel.app",
+    "vercel_ready_seconds": 26,
+    "pages_byte_verified": [
+      {
+        "slug": "defoneos-mod-tender-schedule-2026",
+        "local": 17673,
+        "remote": 17673,
+        "match": true
+      },
+      {
+        "slug": "defoneos-mod-delivery-accreditation",
+        "local": 17136,
+        "remote": 17136,
+        "match": true
+      },
+      {
+        "slug": "defoneos-mod-fairness-impact-assessment",
+        "local": 19842,
+        "remote": 19842,
+        "match": true
+      }
+    ],
+    "sitemap_match": {
+      "local": 90021,
+      "remote": 90021,
+      "match": true
+    },
+    "root_308_redirect": true,
+    "root_200_after_follow": true,
+    "root_title": "DEFONEOS \u2014 3D Defence AI Globe \u2014 Live Sovereign Operations"
+  },
+  "infra_status": {
+    "green": [
+      "vercel_production",
+      "sov33_localhost_8101"
+    ],
+    "yellow": [
+      "ssh_tunnel_to_vm_3101_not_bound"
+    ],
+    "red": [
+      "meok_os_3000_down",
+      "meok_backend_ssh_unreachable"
+    ]
+  },
+  "next_actions": [
+    "Nick: bring up localhost:3000 (MEOK OS) and verify 35.242.143.249 VM reachable",
+    "Nick: confirm SSH tunnel (PID 96750) successfully binds :3101",
+    "JEEVES: next tick 95 \u2014 build 3 ship-grade artefacts per next_actions in DEFONEOS_SPRINT_STATE.json",
+    "BFT: re-vote when next tick lands"
+  ],
+  "bft_vote_proxy": {
+    "approve": 28,
+    "amend": 5,
+    "reject": 0,
+    "quorum": 25,
+    "total": 33,
+    "note": "no new ships this cycle (maintenance only); quorum preserved from tick-93"
+  },
+  "digest": "T94-76a17c7fc27c0cfd50507645"
+}

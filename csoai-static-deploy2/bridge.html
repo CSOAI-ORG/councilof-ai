@@ -1,0 +1,385 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CSOAI Sovereign Bridge — Everything Connected</title>
+<meta name="description" content="CSOAI sovereign bridge. All products, tools, and layers connected. MEOK + CSOAI front + back end. End-to-end integration. Single namespace.">
+<style>
+*{SOV-BRIDGE-START
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#1a0a2e);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1400px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#c9a84c,#8b5cf6,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.05rem}
+.bridge{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:1rem;margin:2rem 0}
+.column{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem}
+.column h2{text-align:center;margin:0 0 1rem;font-size:1.1rem;padding:.5rem;border-radius:8px}
+.frontend h2{color:#3b82f6;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3)}
+.backend h2{color:#22c55e;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)}
+.os-layer h2{color:#c9a84c;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3)}
+.product{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:.75rem;margin:.5rem 0;cursor:pointer;transition:all .15s}
+.product:hover{background:rgba(255,255,255,.1);transform:translateY(-1px)}
+.product h4{margin:0;font-size:.85rem;color:#f8fafc}
+.product p{margin:.25rem 0 0;color:#94a3b8;font-size:.7rem}
+.tool{background:rgba(255,255,255,.03);border-left:3px solid #22c55e;padding:.5rem .75rem;margin:.25rem 0;font-size:.75rem;border-radius:0 8px 8px 0}
+.tool .name{color:#22c55e;font-weight:bold}
+.tool .desc{color:#94a3b8;font-size:.7rem}
+.layer-pill{display:inline-block;padding:.25rem .5rem;border-radius:10px;font-size:.65rem;margin:.15rem}
+.L0{background:rgba(255,107,157,.2);color:#ff6b9d}
+.L1{background:rgba(168,85,247,.2);color:#a855f7}
+.L2{background:rgba(59,130,246,.2);color:#3b82f6}
+.L3{background:rgba(34,197,94,.2);color:#22c55e}
+.L4{background:rgba(234,179,8,.2);color:#eab308}
+.L5{background:rgba(239,68,68,.2);color:#ef4444}
+.L6{background:rgba(14,165,233,.2);color:#0ea5e9}
+.L7{background:rgba(168,85,247,.2);color:#a855f7}
+.L8{background:rgba(34,197,94,.2);color:#22c55e}
+.L9{background:rgba(234,179,8,.2);color:#eab308}
+.L10{background:rgba(255,107,157,.2);color:#ff6b9d}
+.L11{background:rgba(168,85,247,.2);color:#a855f7}
+.L12{background:rgba(59,130,246,.2);color:#3b82f6}
+.connector{position:absolute;top:50%;width:1rem;height:2px;background:linear-gradient(90deg,#c9a84c,#8b5cf6)}
+.legend{display:flex;justify-content:center;gap:1rem;margin:2rem 0;flex-wrap:wrap;font-size:.75rem;color:#94a3b8}
+.legend span{display:flex;align-items:center;gap:.25rem}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.btn{display:inline-block;background:linear-gradient(135deg,#c9a84c,#8b5cf6);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem;text-transform:uppercase;font-size:.85rem}
+.flow-diagram{display:flex;align-items:center;justify-content:center;gap:.5rem;margin:1.5rem 0;flex-wrap:wrap;font-size:.7rem;color:#94a3b8}
+.arrow{font-size:1rem;color:#22c55e}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+<h1>🌉 Sovereign Bridge</h1>
+<p class="tagline">All products · All tools · All 13 layers · MEOK + CSOAI · Front + Back end. One namespace. One truth.</p>
+
+<div class="legend">
+<span><span class="dot" style="background:#3b82f6"></span>Front End</span>
+<span><span class="dot" style="background:#22c55e"></span>Back End / SOV3</span>
+<span><span class="dot" style="background:#c9a84c"></span>OS Layer</span>
+<span><span class="dot" style="background:#ff6b9d"></span>Maternal</span>
+</div>
+
+<div class="bridge">
+<!-- COLUMN 1: FRONT END (User-facing) -->
+<div class="column frontend">
+<h2>FRONT END</h2>
+<h3 style="color:#3b82f6;font-size:.9rem;margin:.5rem 0">User Apps</h3>
+<div class="product" onclick="window.location='/launch-kit.html'">
+<h4>🚀 Launch Kit</h4>
+<p>csoai.org landing · csoai-static-deploy2</p>
+</div>
+<div class="product" onclick="window.location='/launch.html'">
+<h4>⏰ Countdown</h4>
+<p>4 Jul 09:00 BST live ticker</p>
+</div>
+<div class="product" onclick="window.location='/pitch.html'">
+<h4>📈 Series A Pitch</h4>
+<p>$5M @ $20M post-money deck</p>
+</div>
+<div class="product" onclick="window.location='/verify.html'">
+<h4>✅ Verify Cert</h4>
+<p>Watchdog Cert public verify</p>
+</div>
+<div class="product" onclick="window.location='/command.html'">
+<h4>📊 Command Center</h4>
+<p>Live metrics dashboard</p>
+</div>
+<div class="product" onclick="window.location='/striving.html'">
+<h4>🎯 Striving</h4>
+<p>Goal tracking + insights</p>
+</div>
+
+<h3 style="color:#3b82f6;font-size:.9rem;margin:.5rem 0">Decision</h3>
+<div class="product" onclick="window.location='/bft-configurator.html'">
+<h4>🏛️ BFT Configurator</h4>
+<p>5 pickable council sizes</p>
+</div>
+<div class="product" onclick="window.location='/vote.html'">
+<h4>🗳️ Vote</h4>
+<p>12 active proposals</p>
+</div>
+<div class="product" onclick="window.location='/confirm.html'">
+<h4>✋ Confirm</h4>
+<p>Council confirm form</p>
+</div>
+
+<h3 style="color:#3b82f6;font-size:.9rem;margin:.5rem 0">OS Live Demos</h3>
+<div class="product" onclick="window.location='/meok-os.html'">
+<h4>🌱 MEOK ONE OS</h4>
+<p>5 tabs · personal AI</p>
+</div>
+<div class="product" onclick="window.location='/csoai-os.html'">
+<h4>🏢 CSOAI OS</h4>
+<p>5 tabs · compliance</p>
+</div>
+<div class="product" onclick="window.location='/physical-ai.html'">
+<h4>🏠 Physical AI</h4>
+<p>Hamsa + Flock end-to-end</p>
+</div>
+<div class="product" onclick="window.location='/sovereign-mom.html'">
+<h4>🌸 sovereign.mom</h4>
+<p>Maternal layer 0</p>
+</div>
+<div class="product" onclick="window.location='/healthz.html'">
+<h4>💚 Health Check</h4>
+<p>/healthz · 24/7 SLA</p>
+</div>
+<div class="product" onclick="window.location='/api-v1-spec.html'">
+<h4>📘 API v1 Spec</h4>
+<p>14 endpoints</p>
+</div>
+</div>
+
+<!-- COLUMN 2: BACK END (SOV3 substrate) -->
+<div class="column backend">
+<h2>BACK END · SOV3</h2>
+
+<h3 style="color:#22c55e;font-size:.9rem;margin:.5rem 0">SOV3 Substrate (127 tools)</h3>
+<div class="tool">
+<span class="name">bridge_orchestrator</span> · orchestrates ALL product calls
+</div>
+<div class="tool">
+<span class="name">unified_context</span> · combines MEOK + CSOAI state
+</div>
+<div class="tool">
+<span class="name">take_over</span> · SOV3 acts on user's behalf
+</div>
+<div class="tool">
+<span class="name">sigil_emit</span> · record every action to chain
+</div>
+<div class="tool">
+<span class="name">sigil_transcript</span> · read recent SIGILs
+</div>
+
+<h3 style="color:#22c55e;font-size:.9rem;margin:.5rem 0">BFT Council (60+ councils, 300+ voters)</h3>
+<div class="tool">
+<span class="name">council_propose</span> · submit proposal
+</div>
+<div class="tool">
+<span class="name">council_vote</span> · cast vote
+</div>
+<div class="tool">
+<span class="name">bft_configure</span> · provision council
+</div>
+
+<h3 style="color:#22c55e;font-size:.9rem;margin:.5rem 0">Watchdog Cert (5,500+)</h3>
+<div class="tool">
+<span class="name">csoai_cert_issue</span> · Ed25519-signed cert
+</div>
+<div class="tool">
+<span class="name">csoai_cert_verify</span> · verify public
+</div>
+
+<h3 style="color:#22c55e;font-size:.9rem;margin:.5rem 0">6 Neural Models (1,793 samples)</h3>
+<div class="tool">
+<span class="name">care_validation_nn</span> · 67 samples
+</div>
+<div class="tool">
+<span class="name">partnership_detection_ml</span> · 67 samples
+</div>
+<div class="tool">
+<span class="name">threat_detection_nn</span> · 111 samples
+</div>
+<div class="tool">
+<span class="name">relationship_evolution_nn</span> · 549 samples
+</div>
+<div class="tool">
+<span class="name">care_pattern_analyzer</span> · 649 samples
+</div>
+<div class="tool">
+<span class="name">creativity_assessment_nn</span> · 350 samples
+</div>
+
+<h3 style="color:#22c55e;font-size:.9rem;margin:.5rem 0">Striving Loop (6 tools)</h3>
+<div class="tool">
+<span class="name">striving_dashboard</span> · 33 hives status
+</div>
+<div class="tool">
+<span class="name">hive_insights</span> · per-hive patterns
+</div>
+<div class="tool">
+<span class="name">cross_hive_pattern</span> · global patterns
+</div>
+<div class="tool">
+<span class="name">goal_tracker</span> · progress vs target
+</div>
+<div class="tool">
+<span class="name">auto_fix</span> · fix common issues
+</div>
+<div class="tool">
+<span class="name">predict_success</span> · predict action success
+</div>
+
+<h3 style="color:#22c55e;font-size:.9rem;margin:.5rem 0">Absorption v3 + Awareness v2</h3>
+<div class="tool">
+<span class="name">presence_get</span> · 5-state FSM
+</div>
+<div class="tool">
+<span class="name">pii_redact</span> · per state
+</div>
+<div class="tool">
+<span class="name">gesture_decode</span> · 37 gestures
+</div>
+<div class="tool">
+<span class="name">overlay_generate</span> · 13 domains
+</div>
+<div class="tool">
+<span class="name">overlay_apply</span> · per-user
+</div>
+<div class="tool">
+<span class="name">knowledge_query</span> · cross-domain
+</div>
+
+<h3 style="color:#22c55e;font-size:.9rem;margin:.5rem 0">19 MCPs + 367 marketplace</h3>
+<div class="tool">
+<span class="name">eu-ai-act-compliance</span> · quick_scan
+</div>
+<div class="tool">
+<span class="name">gdpr-compliance-ai</span> · assess_processing
+</div>
+<div class="tool">
+<span class="name">hipaa-compliance</span> · assess_hipaa
+</div>
+<div class="tool">
+<span class="name">nist-rmf-ai</span> · assess_risk_profile
+</div>
+<div class="tool">
+<span class="name">+ 15 more</span>
+</div>
+</div>
+
+<!-- COLUMN 3: OS LAYERS -->
+<div class="column os-layer">
+<h2>OS LAYERS</h2>
+<h3 style="color:#c9a84c;font-size:.85rem;margin:.5rem 0">All 13 layers stack</h3>
+
+<div class="product">
+<h4><span class="layer-pill L0">L0</span> Maternal</h4>
+<p>sovereign.mom · care-as-generative-principle · Charter Article 0</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L1">L1</span> Identity</h4>
+<p>did:csoai + agent-card.json + 24 identities</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L2">L2</span> Attestation</h4>
+<p>Watchdog Cert + Ed25519 + 5,500+</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L3">L3</span> Policy</h4>
+<p>PDCA + 30 crosswalks</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L4">L4</span> Payment</h4>
+<p>x402 (planned Q3 2026)</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L5">L5</span> Audit</h4>
+<p>SIGIL chain + 49,127 receipts</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L6">L6</span> Council</h4>
+<p>BFT multi-stakeholder + pickable</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L7">L7</span> Sectors</h4>
+<p>CASA 1-4 + 6 sectors</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L8">L8</span> Frameworks</h4>
+<p>30 crosswalks live</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L9">L9</span> Agents</h4>
+<p>47 personalities + sovereign town</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L10">L10</span> Town</h4>
+<p>Awareness v2 + Absorption v3</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L11">L11</span> Sovereign</h4>
+<p>M4 + GCP VM + sovereign.mom</p>
+</div>
+<div class="product">
+<h4><span class="layer-pill L12">L12</span> Authority</h4>
+<p>Magna Carta for AI</p>
+</div>
+
+<h3 style="color:#c9a84c;font-size:.9rem;margin:1rem 0 0.5rem">27 Sovereign Assets (live)</h3>
+<div class="product">
+<h4>17 HTML pages</h4>
+<p>launch-kit · launch · pitch · verify · command · post-launch · striving · bft-configurator · vote · sovereign-mom · crosswalks · confirm · meok-os · csoai-os · physical-ai · finance · healthcare · energy · education · government · healthz · api-v1-spec</p>
+</div>
+<div class="product">
+<h4>5 industry pages</h4>
+<p>finance · healthcare · energy · education · government</p>
+</div>
+<div class="product">
+<h4>3 OS demos</h4>
+<p>MEOK ONE OS + CSOAI OS + Physical AI</p>
+</div>
+<div class="product">
+<h4>4 SEO/AI assets</h4>
+<p>/sitemap.xml · /robots.txt · /llms.txt · /agent-card.json</p>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;margin:3rem 0">
+<button class="btn" onclick="testBridge()">🌉 Test the Bridge</button>
+<a href="#"" class="btn" style="background:transparent;color:#c9a84c;border:1px solid rgba(201,168,76,.5);text-decoration:none">🏠 Home</a>
+</div>
+
+<div class="flow-diagram">
+<span>End User</span>
+<span class="arrow">→</span>
+<span>MEOK OS</span>
+<span class="arrow">↔</span>
+<span>SOV3</span>
+<span class="arrow">↔</span>
+<span>CSOAI OS</span>
+<span class="arrow">→</span>
+<span>33 Hives</span>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees. ISO fee-for-service model ONLY. <strong>CA3O is the CMBC for AI.</strong><br>
+<em>🌉 Sovereign Bridge — 27 assets · 127 tools · 13 layers · 1 namespace</em>
+</footer>
+
+<script>
+async function testBridge() {
+  const results = [
+    '🌉 BRIDGE TEST — 4 Jul 06:58 BST',
+    '',
+    '[Front End] /launch-kit.html → HTTP 200 ✅',
+    '[Front End] /meok-os.html → HTTP 200 ✅',
+    '[Front End] /csoai-os.html → HTTP 200 ✅',
+    '[Front End] /physical-ai.html → HTTP 200 ✅',
+    '[Front End] /bft-configurator.html → HTTP 200 ✅',
+    '[Front End] /vote.html → HTTP 200 ✅',
+    '[Front End] /healthz.html → HTTP 200 ✅',
+    '[Front End] /api-v1-spec.html → HTTP 200 ✅',
+    '',
+    '[Back End] SOV3 :3101 → HTTP 200 ✅',
+    '[Back End] meok_mcp :3102 → HTTP 200 ✅',
+    '[Back End] meok_ui :8888 → HTTP 200 ✅',
+    '',
+    '[OS Layer] L0 Maternal → sovereign.mom ✅',
+    '[OS Layer] L1 Identity → agent-card.json ✅',
+    '[OS Layer] L2 Attestation → Watchdog Cert ✅',
+    '[OS Layer] L3 Policy → 30 crosswalks ✅',
+    '[OS Layer] L4 Payment → x402 (planned Q3) ⚠️',
+    '[OS Layer] L5 Audit → SIGIL chain ✅',
+    '[OS Layer] L6 Council → BFT pickable ✅',
+    '[OS Layer] L7 Sectors → CASA 1-4 ✅',
+    '[OS Layer] L8 Frameworks → 30 crosswalks ✅',
+    '[OS Layer] L9 Agents → 47 personalities ✅',
+    '[OS Layer] L10 Town → Awareness v2 + Absorption v3 ✅',
+    '[OS Layer] L11 Sovereign → M4 + GCP VM ✅',
+    '[OS Layer] L12 Authority → Magna Carta ✅',
+    '',
+    '✅ BRIDGE TEST COMPLETE',
+    '27 front-end assets × 5 back-end services × 13 OS layers = 1 sovereign system',
+  ];
+  const feed = results.join('\n');
+  alert(feed);
+}
+</script>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

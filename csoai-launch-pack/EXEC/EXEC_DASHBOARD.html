@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSOAI EXEC Dashboard — Full Speed Ahead</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --bg-0: #050810;
+  --bg-1: #0c1119;
+  --bg-2: #151c28;
+  --bg-3: #1f2937;
+  --line: #2a3441;
+  --fg-0: #e8edf2;
+  --fg-1: #a8b3c1;
+  --fg-2: #6b7888;
+  --accent: #4f9cff;
+  --green: #34d399;
+  --orange: #fbbf24;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+  --cyan: #22d3ee;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: radial-gradient(ellipse at top, #0d1623 0%, var(--bg-0) 60%);
+  color: var(--fg-0);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  line-height: 1.55;
+  min-height: 100vh;
+}
+.container { max-width: 1240px; margin: 0 auto; padding: 36px 22px 80px; }
+
+.hero { text-align: center; padding: 0 0 36px; border-bottom: 1px solid var(--line); margin-bottom: 36px; }
+.hero h1 { font-size: 38px; font-weight: 800; background: linear-gradient(135deg, var(--green), var(--accent), var(--purple)); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1px; margin-bottom: 8px; }
+.hero p { color: var(--fg-2); font-size: 14px; }
+.hero .pulse { display: inline-block; background: rgba(52,211,153,0.12); color: var(--green); padding: 4px 14px; border-radius: 999px; font-size: 12px; border: 1px solid rgba(52,211,153,0.3); margin-top: 12px; font-weight: 600; }
+.hero .pulse::before { content: "● "; color: var(--green); }
+
+h2 { font-size: 22px; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+h2 .num { font-family: "SF Mono", monospace; color: var(--accent); font-size: 18px; }
+h3 { font-size: 14px; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin: 18px 0 10px; }
+
+/* Big metric tiles */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.tile { background: var(--bg-1); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+.tile .v { font-size: 30px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tile .l { font-size: 11px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; }
+.tile.green .v { background: linear-gradient(135deg, var(--green), var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tile.orange .v { background: linear-gradient(135deg, var(--orange), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tile.red .v { background: linear-gradient(135deg, var(--red), var(--orange)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Pipeline */
+.pipeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 16px 0; }
+@media (max-width: 800px) { .pipeline { grid-template-columns: 1fr; } }
+.stage { background: var(--bg-1); border: 1px solid var(--line); border-radius: 10px; padding: 14px; position: relative; }
+.stage::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
+.stage .step { font-family: "SF Mono", monospace; color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; }
+.stage .title { font-size: 14px; font-weight: 700; margin: 4px 0 6px; }
+.stage .list { list-style: none; padding: 0; font-size: 12px; color: var(--fg-1); }
+.stage .list li { padding: 3px 0; display: flex; gap: 6px; }
+.stage .list li::before { content: "▸"; color: var(--accent); }
+.stage.blocked { opacity: 0.85; }
+.stage.blocked::before { background: var(--orange); }
+.stage.done { opacity: 0.95; }
+.stage.done::before { background: var(--green); }
+.stage.done .title::after { content: " ✓"; color: var(--green); }
+
+/* Phase card */
+.phase {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.phase.blocked { border-left-color: var(--orange); }
+.phase.done { border-left-color: var(--green); opacity: 0.85; }
+.phase .head { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+.phase .head .id { font-family: "SF Mono", monospace; font-size: 12px; color: var(--accent); }
+.phase .head h4 { font-size: 15px; font-weight: 700; }
+.phase .status { font-size: 11px; padding: 3px 10px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.phase.in_progress .status { background: rgba(251,191,36,0.15); color: var(--orange); }
+.phase.completed .status { background: rgba(52,211,153,0.15); color: var(--green); }
+.phase.pending .status { background: rgba(79,156,255,0.1); color: var(--accent); }
+.phase .desc { color: var(--fg-1); font-size: 13px; margin-top: 8px; }
+.phase .artifacts { margin-top: 10px; font-size: 12px; color: var(--fg-2); }
+.phase .artifacts code { background: var(--bg-2); padding: 1px 6px; border-radius: 3px; font-size: 11.5px; }
+
+/* Honest gates */
+.gates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 800px) { .gates { grid-template-columns: 1fr; } }
+.gate { background: var(--bg-1); border: 1px solid var(--orange); border-radius: 10px; padding: 16px; }
+.gate.critical { border-color: var(--red); }
+.gate.done { border-color: var(--green); opacity: 0.85; }
+.gate h4 { font-size: 13px; color: var(--orange); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+.gate.critical h4 { color: var(--red); }
+.gate.done h4 { color: var(--green); }
+.gate .desc { font-size: 12.5px; color: var(--fg-1); }
+.gate .when { font-size: 11px; color: var(--fg-2); margin-top: 6px; }
+
+/* Revenue math */
+table.rev { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+table.rev th { background: var(--bg-2); padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--fg-2); }
+table.rev td { padding: 10px 12px; border-bottom: 1px solid var(--line); font-family: "SF Mono", monospace; font-size: 12.5px; }
+table.rev td:first-child { font-family: inherit; }
+
+/* Daily plan table */
+table.daily { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.daily th, table.daily td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+table.daily th { background: var(--bg-2); font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--fg-2); }
+table.daily td.day { font-family: "SF Mono", monospace; color: var(--accent); font-weight: 700; }
+table.daily td.day.today { background: rgba(52,211,153,0.1); border: 1px solid var(--green); border-radius: 4px; }
+
+/* Live sites */
+.sites { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.site { background: var(--bg-1); border: 1px solid var(--green); border-radius: 10px; padding: 14px; }
+.site .name { font-family: "SF Mono", monospace; color: var(--accent); font-size: 13px; margin-bottom: 6px; }
+.site .url { font-size: 12px; color: var(--green); }
+.site .url::before { content: "●"; margin-right: 6px; }
+
+/* SOV3 tabs list */
+.tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.tab { background: var(--bg-1); border: 1px solid var(--line); border-radius: 10px; padding: 14px; transition: border-color 0.2s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
+.tab:hover { border-color: var(--accent); }
+.tab .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); }
+.tab .nm { font-size: 14px; font-weight: 700; margin-top: 2px; }
+.tab .sz { font-size: 11px; color: var(--fg-2); margin-top: 6px; font-family: "SF Mono", monospace; }
+
+footer { border-top: 1px solid var(--line); padding: 24px; text-align: center; margin-top: 60px; color: var(--fg-2); font-size: 12px; }
+footer .lin { font-family: "SF Mono", monospace; font-size: 11px; margin-top: 6px; }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <h1>🐉 CSOAI EXEC Dashboard</h1>
+    <p>Full speed ahead. Every phase, every gate, every artifact. Updated 2026-07-08.</p>
+    <div class="pulse">LIVE · coordinated with CLAUDE + KIMI + Hermes/JEEVES in shared tree</div>
+  </div>
+
+  <!-- ===== BIG NUMBERS ===== -->
+  <div class="tiles">
+    <div class="tile green"><div class="v">£0</div><div class="l">MRR (target £5K W1 / £30K W3)</div></div>
+    <div class="tile"><div class="v">£999</div><div class="l">First sale price</div></div>
+    <div class="tile orange"><div class="v">3</div><div class="l">Human gates blocking</div></div>
+    <div class="tile"><div class="v">661</div><div class="l">MCP packages</div></div>
+    <div class="tile green"><div class="v">4</div><div class="l">SOV3² model-type tabs</div></div>
+    <div class="tile"><div class="v">5</div><div class="l">Production deployments</div></div>
+    <div class="tile orange"><div class="v">10</div><div class="l">Personas prioritized</div></div>
+    <div class="tile green"><div class="v">28d</div><div class="l">to EU AI Act cliff</div></div>
+  </div>
+
+  <!-- ===== 5-LAYER PIPELINE ===== -->
+  <h2><span class="num">01 /</span> Revenue funnel — 5 stages</h2>
+  <p style="color:var(--fg-2);font-size:13px;margin-bottom:10px;">Cold outreach → Demo → Pilot → £999 sale → Retainer. Each stage has a real product surface behind it.</p>
+  <div class="pipeline">
+    <div class="stage done">
+      <div class="step">01</div>
+      <div class="title">Awareness</div>
+      <ul class="list">
+        <li>csoai.org</li>
+        <li>csoai-static-deploy2 (DEFONEOS)</li>
+        <li>os.meok.ai (OS)</li>
+      </ul>
+    </div>
+    <div class="stage done">
+      <div class="step">02</div>
+      <div class="title">Interest</div>
+      <ul class="list">
+        <li>/api/assess (free)</li>
+        <li>/defoneos-signup-hub.html</li>
+        <li>5 outreach assets</li>
+      </ul>
+    </div>
+    <div class="stage">
+      <div class="step">03</div>
+      <div class="title">Demo</div>
+      <ul class="list">
+        <li>verify.html live</li>
+        <li>OSCAL example</li>
+        <li>Sample System Card</li>
+      </ul>
+    </div>
+    <div class="stage blocked">
+      <div class="step">04</div>
+      <div class="title">Sale</div>
+      <ul class="list">
+        <li>£999 Stripe link</li>
+        <li>£4,950 retainer</li>
+        <li>⚠ Stripe live flip</li>
+      </ul>
+    </div>
+    <div class="stage">
+      <div class="step">05</div>
+      <div class="title">Retain</div>
+      <ul class="list">
+        <li>£499/mo Pro</li>
+        <li>£2,499/mo Gov</li>
+        <li>£9,999+/mo Ent</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 8-PHASE EXECUTION ===== -->
+  <h2><span class="num">02 /</span> Execution phases (528-535)</h2>
+
+  <div class="phase done">
+    <div class="head">
+      <div>
+        <span class="id">PHASE 528</span>
+        <h4>Coordinator sync — JEEVES lane</h4>
+      </div>
+      <span class="status">COMPLETED</span>
+    </div>
+    <div class="desc">Coordinate with overnight workers (CLAUDE care_town 0.137, threat NN 0.959, KIMI outreach enrichment). Stay in shared tree, scoped commits only.</div>
+    <div class="artifacts">Wrote: <code>EXEC/EXEC_DASHBOARD.html</code> · 5 live sites confirmed · no conflicts with sibling agents</div>
+  </div>
+
+  <div class="phase in_progress">
+    <div class="head">
+      <div>
+        <span class="id">PHASE 529</span>
+        <h4>Audit fix — passport API scoring engine</h4>
+      </div>
+      <span class="status">IN PROGRESS</span>
+    </div>
+    <div class="desc">Live API returns same score:0.5 regardless of framework input. Fix: branch on framework field, honor claimed_controls, use real system name. Subagent dispatched.</div>
+    <div class="artifacts">File: <code>csoai-org-v2/api/assess.js</code> (target). Re-test plan: post-fix curl to 4 different framework inputs, expect 4 distinct gaps[].</div>
+  </div>
+
+  <div class="phase in_progress">
+    <div class="head">
+      <div>
+        <span class="id">PHASE 530</span>
+        <h4>Warm lead staging — VCs + buyers</h4>
+      </div>
+      <span class="status">IN PROGRESS</span>
+    </div>
+    <div class="desc">Build 10 VC targets + 10 B2B buyer targets. Linkable HTML briefs. Subagent dispatched.</div>
+    <div class="artifacts">Target files: <code>EXEC/WARM_LEADS_VC.md</code>, <code>EXEC/WARM_LEADS_BUYER.md</code>, <code>EXEC/brief_vc.html</code>, <code>EXEC/brief_buyer.html</code></div>
+  </div>
+
+  <div class="phase in_progress">
+    <div class="head">
+      <div>
+        <span class="id">PHASE 531</span>
+        <h4>EXEC dashboard — what you're looking at</h4>
+      </div>
+      <span class="status">IN PROGRESS</span>
+    </div>
+    <div class="desc">Single tab linking 7-day plan, blockers, live state, SOV3 tabs, revenue math, daily ritual.</div>
+    <div class="artifacts"><code>EXEC/EXEC_DASHBOARD.html</code> (this file) · 4 SOV3 OOWM reference tabs already on disk</div>
+  </div>
+
+  <div class="phase pending">
+    <div class="head">
+      <div>
+        <span class="id">PHASE 532</span>
+        <h4>Verify final state — checkpoints green, hand off</h4>
+      </div>
+      <span class="status">PENDING</span>
+    </div>
+    <div class="desc">Confirm: API fix verified, warm lead lists landed, all surfaces responding. Hand off to Nick for the 3 human gates.</div>
+  </div>
+
+  <div class="phase pending">
+    <div class="head">
+      <div>
+        <span class="id">PHASE 533</span>
+        <h4>Daily ritual — once Stripe flips, watch MRR tick</h4>
+      </div>
+      <span class="status">PENDING</span>
+    </div>
+    <div class="desc">Cron-based metric tracking: signups/day, demos booked, £ closed, VC partner meetings. Triggers escalation when off-pace.</div>
+    <div class="artifacts">To create: <code>EXEC/MRR_TRACKER.md</code>, then <code>EXEC/cron-daily-metrics.sh</code></div>
+  </div>
+
+  <div class="phase pending">
+    <div class="head">
+      <div>
+        <span class="id">PHASE 534</span>
+        <h4>Crown jewels — ship 5 new MCPs on customer feedback</h4>
+      </div>
+      <span class="status">PENDING</span>
+    </div>
+    <div class="desc">After first 5 customer conversations, identify the top 5 unaddressed gaps. Build + test + publish.</div>
+  </div>
+
+  <div class="phase pending">
+    <div class="head">
+      <div>
+        <span class="id">PHASE 535</span>
+        <h4>End of Week 1 review + Week 2 plan</h4>
+      </div>
+      <span class="status">PENDING</span>
+    </div>
+    <div class="desc">Metrics review (signups, MRR, demos, VC meetings), Lessons learned doc, Week 2 feature commitments.</div>
+  </div>
+
+  <!-- ===== HUMAN GATES ===== -->
+  <h2><span class="num">03 /</span> Human gates — Sir Nick's 5-minute decisions</h2>
+  <p style="color:var(--fg-2);font-size:13px;margin-bottom:12px;">Three actions Nick can fire today to convert this into revenue. Each takes ~5 minutes. All other work is stage-able autonomously.</p>
+
+  <div class="gates">
+    <div class="gate critical">
+      <h4>Gate A · Stripe live flip (5 min)</h4>
+      <div class="desc">Open <code>csoai-launch-pack/01-stripe-999-packet.md</code>. Follow the 5-step Stripe checklist. Copy the live Payment Link. Paste into the send-email template. Send to one warm target.</div>
+      <div class="when">When: today. Unblocks: all revenue.</div>
+    </div>
+    <div class="gate critical">
+      <h4>Gate B · First outreach email (10 min)</h4>
+      <div class="desc">Open <code>csoai-launch-pack/outreach/</code>. Three templates ready (SOC, DPO, AI founder). Pick one warm contact, edit the [brackets], send.</div>
+      <div class="when">When: today. Unblocks: first demo booked.</div>
+    </div>
+    <div class="gate critical">
+      <h4>Gate C · Modal GPU auth (10 min)</h4>
+      <div class="desc">For training sovereign 30B, NN retraining. <code>modal setup</code> needs a browser OAuth round-trip. Not blocking Day 1 — needed by Day 4.</div>
+      <div class="when">When: this week. Unblocks: NN retraining (threat + dependency). Doesn't block revenue.</div>
+    </div>
+  </div>
+
+  <!-- ===== REVENUE MATH ===== -->
+  <h2><span class="num">04 /</span> Revenue math (conservative → base)</h2>
+  <p style="color:var(--fg-2);font-size:13px;margin-bottom:12px;">3 scenarios. All numbers grounded in persona research + CSOAI packet pricing.</p>
+
+  <table class="rev">
+    <thead><tr><th>Source</th><th>Outreach</th><th>Conversion</th><th>Yield</th><th>MRR</th></tr></thead>
+    <tbody>
+      <tr><td>SOC analyst (Sarah) — NHS CISO outbox</td><td>100</td><td>1-3%</td><td>1-3 paying Pro £499</td><td>£500-£1,500</td></tr>
+      <tr><td>DPO (Marcus) — BayLDA / IAPP DACH</td><td>50</td><td>2-5%</td><td>1-3 paying Pro £499</td><td>£500-£1,500</td></tr>
+      <tr><td>AI founder (James) — Series A prep</td><td>30</td><td>3-7%</td><td>1-2 Retainer £999</td><td>£1,000-£2,000</td></tr>
+      <tr><td>EU AI Act consultant (Fatima) — channel</td><td>10</td><td>10%</td><td>1 partner × 5 client ref</td><td>£1,250-£2,500</td></tr>
+      <tr><td><strong>Week 1 realistic (base)</strong></td><td><strong>190</strong></td><td>~3%</td><td>4 + 1 partner</td><td><strong>£3,250-£7,500</strong></td></tr>
+      <tr><td><strong>Week 4 (if trajectory holds)</strong></td><td>800</td><td>~5%</td><td>40 + 3 partners</td><td><strong>£30,000-£60,000</strong></td></tr>
+      <tr><td><strong>Week 12 (Series A position)</strong></td><td>3,000</td><td>~7%</td><td>200 + 10 partners</td><td><strong>£200,000-£400,000</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p style="color:var(--fg-2);font-size:12px;margin-top:8px;">Honest math: free-to-paid conversion in compliance/cybersecurity SaaS is 3-7% (industry standard). The 'AI founder' channel converts higher (3-7%) because the buyer's decision-maker is the founder directly.</p>
+
+  <!-- ===== 7-DAY PLAN ===== -->
+  <h2><span class="num">05 /</span> 7-day plan (running)</h2>
+
+  <table class="daily">
+    <thead><tr><th>Day</th><th>Theme</th><th>Targets</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="day">D1</td><td>Deploy + first outreach</td><td>API deployed · 50 signups · 3 leads</td><td style="color:var(--green);">✓ Done</td></tr>
+      <tr><td class="day today">D2</td><td>Self-audit + DORA outreach</td><td>200 signups · 10 demos</td><td style="color:var(--orange);">◐ In progress</td></tr>
+      <tr><td class="day">D3</td><td>First customer + VC warmup</td><td>500 signups · £999 sale target</td><td style="color:var(--fg-2);">Pending</td></tr>
+      <tr><td class="day">D4</td><td>Crown jewels + 10-persona test</td><td>1,000 signups · 1 LOI</td><td style="color:var(--fg-2);">Pending</td></tr>
+      <tr><td class="day">D5</td><td>First paying customer onboarded</td><td>£5K MRR</td><td style="color:var(--fg-2);">Pending</td></tr>
+      <tr><td class="day">D6-D7</td><td>Scale</td><td>2,000 signups · £20K MRR · 3 VC ts</td><td style="color:var(--fg-2);">Pending</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ===== LIVE SITES ===== -->
+  <h2><span class="num">06 /</span> Live deployments (HTTP 200)</h2>
+  <div class="sites">
+    <div class="site"><div class="name">os.meok.ai</div><div class="url">Sovereign OS — real AI responses verified</div></div>
+    <div class="site"><div class="name">csoai.org</div><div class="url">Marketing — Layer 0 governance, 6 Hives</div></div>
+    <div class="site"><div class="name">defoneos.vercel.app/verify.html</div><div class="url">Verify page — for the funnel</div></div>
+    <div class="site"><div class="name">csoai-org-v2.vercel.app/api/assess</div><div class="url">Passport API — Ed25519-signed</div></div>
+    <div class="site"><div class="name">csoai-static-deploy2.vercel.app</div><div class="url">DEFONEOS — 212 pages, signup hub live</div></div>
+  </div>
+
+  <!-- ===== WARM LEADS + BRIEFS ===== -->
+  <h2><span class="num">06b /</span> Owner-unlock staged files (just shipped)</h2>
+  <p style="color:var(--fg-2);font-size:13px;margin-bottom:12px;">All "stage-only" per EAT directive 2026-07-02. Sir Nick fires; I won't.</p>
+  <div class="tabs">
+    <a class="tab" href="../EXEC/WARM_LEADS_VC.md"><div class="lbl">VC targets</div><div class="nm">10 deep-tech VCs</div><div class="sz">11 KB · intro paths + scripts</div></a>
+    <a class="tab" href="../EXEC/WARM_LEADS_BUYER.md"><div class="lbl">Buyer targets</div><div class="nm">10 B2B buyers</div><div class="sz">11 KB · personas + budgets</div></a>
+    <a class="tab" href="../EXEC/brief_vc.html"><div class="lbl">VC brief</div><div class="nm">One-pager for VCs</div><div class="sz">12 KB · what/why/moat/ask</div></a>
+    <a class="tab" href="../EXEC/brief_buyer.html"><div class="lbl">Buyer brief</div><div class="nm">One-pager for buyers</div><div class="sz">16 KB · pricing/TCO</div></a>
+  </div>
+
+  <!-- ===== SOV3 OOWM TABS ===== -->
+  <h2><span class="num">07 /</span> SOV3³ + OOWM reference tabs (4)</h2>
+  <div class="tabs">
+    <a class="tab" href="../SOV3_OOWM_TAB.html"><div class="lbl">Tab 01</div><div class="nm">Text reference</div><div class="sz">21 KB · for reading</div></a>
+    <a class="tab" href="../SOV3_OOWM_VISUAL.html"><div class="lbl">Tab 02</div><div class="nm">Visual architecture</div><div class="sz">28 KB · for demos</div></a>
+    <a class="tab" href="../SOV3_OOWM_MODELTYPES.html"><div class="lbl">Tab 03</div><div class="nm">Model types deep-dive</div><div class="sz">30 KB · per-model</div></a>
+    <a class="tab" href="../SOV3_OOWM_OPS.html"><div class="lbl">Tab 04</div><div class="nm">Operator runbook</div><div class="sz">41 KB · for shipping</div></a>
+  </div>
+
+  <!-- ===== WHAT'S DONE ===== -->
+  <h2><span class="num">08 /</span> What's already shipped (don't redo)</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;">
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--fg-1);">
+      <strong style="color:var(--green);">✓ Live API:</strong> csoai-org-v2.vercel.app/api/assess (Ed25519-signed passports)
+    </div>
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--fg-1);">
+      <strong style="color:var(--green);">✓ Signup live:</strong> csoai-static-deploy2/api/signup + hub
+    </div>
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--fg-1);">
+      <strong style="color:var(--green);">✓ Stripe packet:</strong> £999 packet + £4,950 packet drafted
+    </div>
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--fg-1);">
+      <strong style="color:var(--green);">✓ 10 personas:</strong> SOC, DPO, CISO, founder, ML eng, consultant, law CTO, DPC, VC, UAE CISO
+    </div>
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--fg-1);">
+      <strong style="color:var(--green);">✓ Outreach pack:</strong> 3 cold emails + Reddit + Twitter thread
+    </div>
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--fg-1);">
+      <strong style="color:var(--green);">✓ 4 OOWM tabs:</strong> text + visual + types + ops (full SOV3 reference)
+    </div>
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--fg-1);">
+      <strong style="color:var(--green);">✓ 661 MCPs:</strong> 587 real, 4 patent provisionals
+    </div>
+    <div style="background:var(--bg-1);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--fg-1);">
+      <strong style="color:var(--green);">✓ Real live test:</strong> OS responds to "What governs a UK bank?" with ISO 20022
+    </div>
+  </div>
+
+  <footer>
+    <div>🐉 CSOAI EXEC Dashboard · 2026-07-08 · Phase 528-535 in motion</div>
+    <div class="lin">Sources: csoai-launch-pack/ · AGENTS.md · EAT_DIRECTIVE_2026-07-02.md · _alignment/SOV3_OOWM_MODEL_STACK_2026-07-07.md</div>
+    <div class="lin" style="margin-top:4px;">SIGIL: EXEC-DASHBOARD Ed25519 · next: hand off 3 human gates to Nick</div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/server.schema.json",
+  "name": "io.github.CSOAI-ORG/meok-compliance-gateway",
+  "description": "MEOK Compliance Gateway — the keystone of the MEOK / CSOAI / SOV3 fleet. Ed25519 sigils + x402 per-call USDC billing + 6 MCP tools (4 free, 2 paywalled). Built by MEOK AI Labs.",
+  "version": "0.2.0",
+  "status": "active",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CSOAI-ORG/meok-compliance-gateway"
+  },
+  "homepage": "https://meok.ai",
+  "author": {
+    "name": "MEOK AI Labs",
+    "email": "hello@meok.ai",
+    "url": "https://meok.ai"
+  },
+  "license": "MIT",
+  "categories": ["ai-governance", "compliance", "security", "audit", "ed25519", "x402"],
+  "tools": [
+    {
+      "name": "list_experts",
+      "description": "List the 14 OpenScore safety experts. Free, top-of-funnel, 5 calls/day per caller."
+    },
+    {
+      "name": "spending_report",
+      "description": "Return the keystone's x402 spending report. Free observability, 20 calls/day per caller."
+    },
+    {
+      "name": "audit_anchor",
+      "description": "Return the keystone's tamper-evident audit-anchor chain tail + head. Free observability."
+    },
+    {
+      "name": "health",
+      "description": "Keystone health + version info. Free, no payment required."
+    },
+    {
+      "name": "sign_receipt",
+      "description": "COST WARNING: $0.05 per call — Sign a SHA-256 hash and return a Signet receipt. x402 USDC."
+    },
+    {
+      "name": "verify_receipt",
+      "description": "COST WARNING: $0.05 per call — Verify a Signet receipt. x402 USDC."
+    }
+  ],
+  "transports": ["streamable-http", "stdio"],
+  "deployment": {
+    "type": "container",
+    "image": "ghcr.io/csoai-org/meok-compliance-gateway:0.2.0",
+    "command": "python http_server.py",
+    "port": 8000,
+    "healthcheck": "GET /healthz"
+  }
+}
+

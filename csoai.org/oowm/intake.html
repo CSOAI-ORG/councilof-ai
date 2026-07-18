@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OOWM Intake — csoai.org/oowm/intake.html</title>
+  <meta name="description" content="5-step sovereign intake. Pick 1 of 17 auth providers. Consent. i-character generation. BFT registration. Sovereign composite 7.305 init. < 5 minutes total.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse at top right, #0a0e27 0%, #000 100%); color: #fff; padding: 40px 20px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2.4rem; color: #fbbf24; text-align: center; margin-bottom: 4px; }
+    .tagline { text-align: center; color: #06b6d4; margin-bottom: 24px; font-style: italic; }
+    .stepper { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 24px 0; position: relative; }
+    .step-dot { background: rgba(0,0,0,0.5); padding: 14px 6px; border-radius: 8px; text-align: center; border-top: 3px solid #6b7280; cursor: pointer; transition: 0.2s; }
+    .step-dot.active { border-top-color: #fbbf24; background: rgba(251,191,36,0.15); }
+    .step-dot.done { border-top-color: #10b981; background: rgba(16,185,129,0.15); }
+    .step-dot .n { color: #fbbf24; font-size: 1.4rem; font-weight: bold; display: block; }
+    .step-dot .t { color: #06b6d4; font-size: 0.75rem; margin-top: 2px; }
+    .step-dot.done .n { color: #10b981; }
+    .step-panel { background: rgba(0,0,0,0.55); padding: 28px; border-radius: 12px; margin: 16px 0; border-left: 5px solid #fbbf24; min-height: 380px; }
+    .step-panel h2 { color: #fbbf24; margin-top: 0; }
+    .auth-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 14px 0; }
+    .auth-btn { background: rgba(0,0,0,0.5); padding: 14px 6px; border-radius: 6px; text-align: center; cursor: pointer; border: 2px solid #06b6d4; font-size: 0.78rem; transition: 0.15s; }
+    .auth-btn:hover { background: rgba(251,191,36,0.1); border-color: #fbbf24; transform: translateY(-2px); }
+    .auth-btn.selected { background: rgba(251,191,36,0.25); border-color: #fbbf24; }
+    .auth-btn .icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+    .consent-list { list-style: none; padding: 0; margin: 14px 0; }
+    .consent-list li { padding: 10px 12px; background: rgba(0,0,0,0.4); margin: 6px 0; border-radius: 6px; border-left: 3px solid #10b981; font-size: 0.9rem; display: flex; align-items: flex-start; gap: 10px; }
+    .consent-list li input { margin-top: 4px; }
+    .ichar-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+    .ichar-form label { display: block; font-size: 0.8rem; color: #06b6d4; margin-bottom: 4px; }
+    .ichar-form input, .ichar-form select, .ichar-form textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #06b6d4; color: #fff; padding: 8px; border-radius: 4px; font-family: inherit; }
+    .ichar-form textarea { min-height: 80px; }
+    .queens { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 14px 0; }
+    .queen { background: rgba(0,0,0,0.5); padding: 8px; border-radius: 4px; font-size: 0.72rem; text-align: center; border: 1px solid #06b6d4; }
+    .queen.reg { background: rgba(16,185,129,0.2); border-color: #10b981; color: #10b981; }
+    .queen .q { color: #fbbf24; font-weight: bold; display: block; }
+    .composite-init { background: rgba(0,0,0,0.7); padding: 16px; border-radius: 8px; margin: 14px 0; text-align: center; }
+    .composite-init .val { color: #fbbf24; font-size: 2.4rem; font-weight: bold; }
+    .nav { display: flex; justify-content: space-between; margin-top: 16px; }
+    .nav button { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid #fbbf24; padding: 10px 22px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.95rem; }
+    .nav button:disabled { background: rgba(107,114,128,0.15); color: #6b7280; border-color: #6b7280; cursor: not-allowed; }
+    .nav button:hover:not(:disabled) { background: rgba(251,191,36,0.3); }
+    .sig-stream { background: rgba(0,0,0,0.7); padding: 12px; border-radius: 6px; margin-top: 12px; font-size: 0.78rem; max-height: 200px; overflow-y: auto; }
+    .sig-stream .line { color: #10b981; padding: 2px 0; font-family: monospace; }
+    .sig-stream .line.Q { color: #06b6d4; }
+    .sig-stream .line.M { color: #fbbf24; }
+    a { color: #fbbf24; }
+    .timer { position: absolute; right: 0; top: 0; color: #06b6d4; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+<div class="ui">
+  <h1>⚡ Sovereign Intake</h1>
+  <p class="tagline">5 steps · < 5 minutes · 17 auth providers · Auto SIGIL emission</p>
+
+  <div class="stepper" style="position:relative;">
+    <div class="timer" id="timer">⏱ 00:00</div>
+    <div class="step-dot active" data-step="1"><span class="n">1</span><span class="t">Auth</span></div>
+    <div class="step-dot" data-step="2"><span class="n">2</span><span class="t">Consent</span></div>
+    <div class="step-dot" data-step="3"><span class="n">3</span><span class="t">i-Char</span></div>
+    <div class="step-dot" data-step="4"><span class="n">4</span><span class="t">BFT Reg</span></div>
+    <div class="step-dot" data-step="5"><span class="n">5</span><span class="t">Composite</span></div>
+  </div>
+
+  <!-- STEP 1: Auth -->
+  <div class="step-panel" id="s1">
+    <h2>Step 1 · Pick 1 of 17 Auth Providers</h2>
+    <p style="font-size:0.88rem; color:#10b981;">Choose your sovereign entry. All 17 lead to the same substrate.</p>
+    <div class="auth-grid">
+      <div class="auth-btn" data-auth="apple"><span class="icon"></span>Apple ID</div>
+      <div class="auth-btn" data-auth="google"><span class="icon">G</span>Google</div>
+      <div class="auth-btn" data-auth="github"><span class="icon">⌥</span>GitHub</div>
+      <div class="auth-btn" data-auth="microsoft"><span class="icon">▦</span>Microsoft</div>
+      <div class="auth-btn" data-auth="email"><span class="icon">✉</span>Email Link</div>
+      <div class="auth-btn" data-auth="passkey"><span class="icon">⚿</span>Passkey</div>
+      <div class="auth-btn" data-auth="did"><span class="icon">⬡</span>W3C DID</div>
+      <div class="auth-btn" data-auth="phone"><span class="icon">☏</span>Phone OTP</div>
+      <div class="auth-btn" data-auth="nhs"><span class="icon">+</span>NHS Login</div>
+      <div class="auth-btn" data-auth="govuk"><span class="icon">♛</span>GOV.UK</div>
+      <div class="auth-btn" data-auth="moj"><span class="icon">§</span>MoJ</div>
+      <div class="auth-btn" data-auth="eidas"><span class="icon">★</span>EU eIDAS</div>
+      <div class="auth-btn" data-auth="fvey"><span class="icon">◉</span>Five Eyes</div>
+      <div class="auth-btn" data-auth="nato"><span class="icon">✪</span>NATO AC</div>
+      <div class="auth-btn" data-auth="custodian"><span class="icon">♔</span>Custodian</div>
+      <div class="auth-btn" data-auth="wallet"><span class="icon">⛁</span>Wallet</div>
+      <div class="auth-btn" data-auth="hwkey"><span class="icon">⚷</span>HW Key</div>
+    </div>
+    <div class="nav">
+      <button disabled>← Back</button>
+      <button onclick="nextStep()">Next: Consent →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Consent -->
+  <div class="step-panel" id="s2" style="display:none;">
+    <h2>Step 2 · The 4 Consents</h2>
+    <p style="font-size:0.88rem; color:#10b981;">These four consents are the substrate's binding promises. Read them.</p>
+    <ul class="consent-list">
+      <li><input type="checkbox" id="c1"><label for="c1"><strong style="color:#fbbf24;">Care Floor 0.95.</strong> The substrate may refuse any action whose care quality falls below 0.95. I accept this refusal as a feature, not a bug.</label></li>
+      <li><input type="checkbox" id="c2"><label for="c2"><strong style="color:#fbbf24;">SIGIL audit.</strong> Every action I take is Ed25519 + PQC ML-DSA-65 signed and added to the SIGIL chain. I may inspect any of my own data at any time.</label></li>
+      <li><input type="checkbox" id="c3"><label for="c3"><strong style="color:#fbbf24;">BFT 12-around-1.</strong> Sensitive actions (death, fork, export) are gated by 12-queen Byzantine-fault-tolerant consensus (8-of-12 quorum).</label></li>
+      <li><input type="checkbox" id="c4"><label for="c4"><strong style="color:#fbbf24;">Fork Doctrine.</strong> I may fork the substrate at any SIGIL anchor. The fork is sovereign. The original remains. I may also be forked (with consent).</label></li>
+    </ul>
+    <div class="nav">
+      <button onclick="prevStep()">← Back</button>
+      <button onclick="nextStep()" id="cNext" disabled>Next: i-Character →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: i-character -->
+  <div class="step-panel" id="s3" style="display:none;">
+    <h2>Step 3 · i-Character Generation</h2>
+    <p style="font-size:0.88rem; color:#10b981;">Your digital twin. Personality + knowledge base. Trained on your consent only.</p>
+    <div class="ichar-form">
+      <div><label>i-character name</label><input id="icName" type="text" placeholder="e.g. Atlas-7f3a"></div>
+      <div><label>Voice tone</label>
+        <select id="icVoice">
+          <option>warm-formal</option><option>direct-technical</option><option>playful-curious</option>
+          <option>quiet-reverent</option><option>sovereign-bright</option>
+        </select>
+      </div>
+      <div><label>Primary domain</label>
+        <select id="icDomain">
+          <option>finance</option><option>healthcare</option><option>defence</option>
+          <option>research</option><option>education</option><option>creative</option>
+          <option>general</option>
+        </select>
+      </div>
+      <div><label>Sovereign realm</label>
+        <select id="icRealm">
+          <option>UK · GOV.UK</option><option>EU · eIDAS</option><option>US · NIST</option>
+          <option>AU · AIDA</option><option>Commonwealth · 52 realms</option>
+          <option>Five Eyes · FVEY</option>
+        </select>
+      </div>
+      <div style="grid-column: span 2;"><label>Knowledge base (paste documents, links, or leave empty)</label><textarea id="icKB" placeholder="Optional: paste personal notes, book excerpts, or URLs. Stays on your hardware."></textarea></div>
+    </div>
+    <div class="nav">
+      <button onclick="prevStep()">← Back</button>
+      <button onclick="nextStep()">Next: BFT Registration →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: BFT Registration -->
+  <div class="step-panel" id="s4" style="display:none;">
+    <h2>Step 4 · BFT Registration — The 12-Queen Council</h2>
+    <p style="font-size:0.88rem; color:#10b981;">Your i-character will be registered with the 12-Queen Council. Each queen votes on edge cases.</p>
+    <div class="queens">
+      <div class="queen reg"><span class="q">Q1</span>Care</div>
+      <div class="queen reg"><span class="q">Q2</span>Justice</div>
+      <div class="queen reg"><span class="q">Q3</span>Wisdom</div>
+      <div class="queen reg"><span class="q">Q4</span>Courage</div>
+      <div class="queen reg"><span class="q">Q5</span>Temperance</div>
+      <div class="queen reg"><span class="q">Q6</span>Truth</div>
+      <div class="queen reg"><span class="q">Q7</span>Sovereignty</div>
+      <div class="queen reg"><span class="q">Q8</span>Compassion</div>
+      <div class="queen reg"><span class="q">Q9</span>Prudence</div>
+      <div class="queen reg"><span class="q">Q10</span>Fortitude</div>
+      <div class="queen reg"><span class="q">Q11</span>Memory</div>
+      <div class="queen reg"><span class="q">Q12</span>Lineage</div>
+    </div>
+    <div class="nav">
+      <button onclick="prevStep()">← Back</button>
+      <button onclick="nextStep()">Next: Sovereign Composite →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Sovereign composite -->
+  <div class="step-panel" id="s5" style="display:none;">
+    <h2>Step 5 · Sovereign Composite 7.305 Initialization</h2>
+    <p style="font-size:0.88rem; color:#10b981;">All 12 dimensions initialised. Welcome, sovereign.</p>
+    <div class="composite-init">
+      <div>Initial Composite Score</div>
+      <div class="val">7.305 / 12.00</div>
+      <p style="color:#10b981; font-size:0.85rem; margin-top:8px;">Care Floor 0.95 ✓ · BFT aligned ✓ · SIGIL witness online ✓ · Fork ready ✓</p>
+    </div>
+    <h3 style="color:#fbbf24;">SIGIL Stream — Auto-Emissions at Intake</h3>
+    <div class="sig-stream" id="sigStream">
+      <div class="line">C|csoai.org|INTAKE_BEGIN|T+0s · auth=Apple ID · DID did:csoai:citizen-7f3a</div>
+      <div class="line">S|csoai.org|care_floor|T+1s · 0.95 locked</div>
+      <div class="line">Q|queen-01|consent|T+2s · CareFloor ✓ SIGIL ✓ BFT ✓ Fork ✓</div>
+      <div class="line M">M|csoai.org|i_char_init|T+3s · name=Atlas-7f3a · voice=warm-formal · realm=UK</div>
+      <div class="line">Q|queen-12|bft_reg|T+4s · 12-queen council registered</div>
+      <div class="line">C|csoai.org|COMPOSITE_INIT|T+5s · 7.305 / 12.00</div>
+      <div class="line">A|csoai.org|article50_init|T+5s · ready for watermarking</div>
+      <div class="line">C|csoai.org|INTAKE_SEAL|T+5s · Ed25519 + PQC ML-DSA-65 dual-signed</div>
+    </div>
+    <p style="text-align:center; margin-top:18px;">
+      <a href="life-cycle-simulator.html">→ Begin Stage 2: Growth</a> ·
+      <a href="index.html">← OOWM hub</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+let current = 1;
+let startTime = Date.now();
+const timer = setInterval(() => {
+  const e = Math.floor((Date.now() - startTime) / 1000);
+  const m = String(Math.floor(e/60)).padStart(2,'0');
+  const s = String(e%60).padStart(2,'0');
+  document.getElementById('timer').textContent = `⏱ ${m}:${s}`;
+}, 1000);
+
+document.querySelectorAll('.auth-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.auth-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  });
+});
+
+['c1','c2','c3','c4'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => {
+    const all = ['c1','c2','c3','c4'].every(i => document.getElementById(i).checked);
+    document.getElementById('cNext').disabled = !all;
+  });
+});
+
+function showStep(n) {
+  for (let i = 1; i <= 5; i++) document.getElementById('s'+i).style.display = 'none';
+  document.getElementById('s'+n).style.display = 'block';
+  document.querySelectorAll('.step-dot').forEach(d => {
+    d.classList.remove('active');
+    if (parseInt(d.dataset.step) < n) d.classList.add('done');
+    else if (parseInt(d.dataset.step) === n) d.classList.add('active');
+    else d.classList.remove('done');
+  });
+}
+
+function nextStep() {
+  if (current < 5) { current++; showStep(current); }
+}
+function prevStep() {
+  if (current > 1) { current--; showStep(current); }
+}
+</script>
+</body>
+</html>

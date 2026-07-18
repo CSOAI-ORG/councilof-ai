@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4: BFT 12-around-1 Council — Sovereign AI 101</title>
+<meta name="description" content="Byzantine Fault Tolerance. 12 sovereign queens. 2/3 majority voting. Council mechanics. Witness records.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.85rem; margin-bottom: 1rem; }
+  .breadcrumb a { color: #60a5fa; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.2rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .module-tag { display: inline-block; background: #fbbf24; color: #000; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+  .queens { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; max-width: 1100px; margin: 1.5rem auto; }
+  .queen { background: #1a1a1a; padding: 0.75rem; border-radius: 8px; text-align: center; border-top: 4px solid #10b981; }
+  .queen .glyph { font-size: 1.8rem; color: #fbbf24; }
+  .queen .name { color: #fbbf24; font-size: 0.9rem; font-weight: bold; margin: 0.3rem 0; }
+  .queen .dom { color: #aaa; font-size: 0.75rem; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .quiz { background: #111; padding: 1.5rem; border-radius: 12px; max-width: 900px; margin: 1.5rem auto; border: 1px solid #fbbf24; }
+  .quiz h3 { color: #fbbf24; margin-bottom: 1rem; }
+  .question { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.75rem 0; }
+  .question p { color: #10b981; font-weight: bold; margin-bottom: 0.5rem; }
+  .question label { display: block; color: #ccc; padding: 0.25rem 0; cursor: pointer; }
+  .question input { margin-right: 0.5rem; }
+  .question .answer { color: #fbbf24; margin-top: 0.5rem; font-style: italic; display: none; }
+  .question.show .answer { display: block; }
+  .reveal-btn { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+  .nav-bottom { display: flex; justify-content: space-between; margin: 3rem 0; gap: 1rem; flex-wrap: wrap; }
+  .nav-bottom a { display: inline-block; background: #2d1b4e; color: #fbbf24; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid #fbbf24; }
+  .nav-bottom a.next { background: #fbbf24; color: #000; font-weight: bold; }
+  .ascii { background: #0a0a0a; color: #10b981; padding: 1.25rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem; white-space: pre; overflow-x: auto; border: 1px solid #2d1b4e; max-width: 700px; margin: 1rem auto; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; }
+  table { width: 100%; max-width: 900px; margin: 1rem auto; border-collapse: collapse; }
+  th { background: #2d1b4e; color: #fbbf24; padding: 0.6rem; text-align: left; }
+  td { background: #1a1a1a; color: #ccc; padding: 0.6rem; border-bottom: 1px solid #222; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="index.html">Sov AI 101</a>
+  <a href="03-care-floor.html">M3</a>
+  <a href="05-sigil-chain.html">M5 →</a>
+</div>
+
+<p class="breadcrumb"><a href="index.html">Sovereign AI 101</a> / <strong>Module 4</strong></p>
+
+<h1>👑 Module 4: BFT 12-around-1 Council</h1>
+<p style="text-align: center;"><span class="module-tag">MODULE 4 OF 10</span> · ⏱ 30 minutes</p>
+
+<h2>🤝 What is BFT?</h2>
+<p><strong>Byzantine Fault Tolerance (BFT)</strong> is the property of a distributed system that allows it to reach consensus even when some of its participants are faulty, malicious, or compromised. The term comes from the "Byzantine Generals Problem" — a thought experiment by Lamport, Shostak, and Pease (1982) in which several divisions of the Byzantine army must coordinate an attack but some generals may be traitors.</p>
+
+<p>A BFT system can tolerate up to <em>f</em> faulty nodes out of <em>n</em> total nodes, where <em>n ≥ 3f + 1</em>. For SOV3's council of 12, that means up to <strong>4 queens can be compromised</strong> and the system still reaches correct consensus. This is the mathematical bedrock of why SOV3 does not have a single point of failure.</p>
+
+<h2>👑 The 12 Sovereign Queens</h2>
+<p>The SOV3 council is composed of <strong>12 sovereign queens</strong> — 12 specialised reasoning nodes, each with a distinct domain and perspective. They are not interchangeable. Each queen holds a unique constitutional role.</p>
+
+<div class="queens">
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q1 Athena</div><div class="dom">Reason</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q2 Themis</div><div class="dom">Justice</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q3 Demeter</div><div class="dom">Continuity</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q4 Hera</div><div class="dom">Sovereignty</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q5 Artemis</div><div class="dom">Safety</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q6 Hestia</div><div class="dom">Care</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q7 Persephone</div><div class="dom">Reversibility</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q8 Aphrodite</div><div class="dom">Consent</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q9 Mnemosyne</div><div class="dom">Memory</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q10 Tyche</div><div class="dom">Proportionality</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q11 Nike</div><div class="dom">Witness</div></div>
+  <div class="queen"><div class="glyph">♀️</div><div class="name">Q12 Sophia</div><div class="dom">Wisdom</div></div>
+</div>
+
+<p>The 12-around-1 topology is alchemical: the 1 (the King, the central sovereign) is surrounded by 12 queens — the same configuration as the 12 months, the 12 signs of the zodiac, the 12 Major Arcana of the Sephiroth. The 1 is the centre; the 12 are the surrounding ring.</p>
+
+<h2>🗳️ 2/3 Majority Voting</h2>
+<p>When a sensitive action is proposed, the council convenes. Each queen votes <code>for</code>, <code>against</code>, or <code>abstain</code>. The threshold for passage is <strong>2/3 supermajority</strong> of non-abstaining votes.</p>
+
+<p>For 12 queens, this means at least 8 queens must vote <code>for</code> (assuming 0 abstentions) for the action to pass. With abstentions, the 2/3 threshold scales: 8/12 = 66.7% = 2/3. This is the same mathematical regime as the Care Floor's 0.95 (19/20 ≈ 0.95).</p>
+
+<div class="ascii">
+PROPOSAL: "Sign and broadcast SIGIL for Article 50 passport X."
+
+Q1 Athena      [FOR]       ✓
+Q2 Themis      [FOR]       ✓
+Q3 Demeter     [ABSTAIN]   — (no continuity concern)
+Q4 Hera        [FOR]       ✓
+Q5 Artemis     [FOR]       ✓
+Q6 Hestia      [FOR]       ✓
+Q7 Persephone  [FOR]       ✓  (reversibility: SIGIL can be revoked)
+Q8 Aphrodite   [FOR]       ✓  (consent: user authorised)
+Q9 Mnemosyne   [FOR]       ✓
+Q10 Tyche      [FOR]       ✓  (proportionate: minor passport)
+Q11 Nike       [FOR]       ✓  (witness: SIGIL correct)
+Q12 Sophia     [AGAINST]   ✗  (wisdom: better to wait 4 minutes)
+
+TALLY: 10 FOR, 1 AGAINST, 1 ABSTAIN → 10/11 = 90.9% → PASS
+
+Even with 1 dissent, the action proceeds because
+supermajority is 2/3 = 66.7%. Q12's dissent is
+witnessed and recorded.
+</div>
+
+<h2>⚙️ Council Mechanics</h2>
+<p>The council has three operating modes:</p>
+
+<table>
+  <tr><th>Mode</th><th>Quorum</th><th>Use Case</th></tr>
+  <tr><td>Quick poll</td><td>3 queens</td><td>Low-stakes confirmations (status checks)</td></tr>
+  <tr><td>Standard vote</td><td>7 queens</td><td>Normal sovereign actions (article issuance, citations)</td></tr>
+  <tr><td>Full council</td><td>12 queens</td><td>High-stakes actions (Charter amendment, sovereign-switch, key rotation)</td></tr>
+</table>
+
+<p>The mode is selected automatically by the sensitivity classifier. A request to amend the Sovereign AI Charter triggers a full 12-queen vote. A request to issue an Article 50 watermarking passport triggers a 7-queen vote. A request to log a low-impact audit event triggers a 3-queen quick poll.</p>
+
+<h2>📜 Witness Records</h2>
+<p>Every council vote emits a <strong>witness record</strong> — a structured SIGIL that captures:</p>
+<ul style="color: #aaa; padding-left: 1.5rem;">
+  <li>The proposal hash and human-readable summary</li>
+  <li>Each queen's vote + reasoning (one-sentence justification)</li>
+  <li>The tally (for/against/abstain, percentages)</li>
+  <li>The decision (pass/fail + supermajority margin)</li>
+  <li>The witness signature (Ed25519 + PQC ML-DSA-65)</li>
+</ul>
+
+<p>The witness record is appended to the SIGIL chain. It is publicly verifiable. It is the audit-grade proof that a sovereign decision was made correctly, by the right quorum, with the right threshold. Regulators, citizens, and historians can replay every council decision back to the genesis block.</p>
+
+<p style="color: #fbbf24;">Reference: SOV3 Council v2.3.1 (MIT). Source: <code>~/clawd/sov3/bft/council.py</code></p>
+
+<h2>🎯 5 Key Takeaways</h2>
+<div class="takeaway"><h4>1. BFT means up to 4 queens can fail and the system still works</h4><p>n ≥ 3f + 1 = 12 ≥ 3(4) + 1. The mathematical bedrock of no single point of failure.</p></div>
+<div class="takeaway"><h4>2. 12 queens, 2/3 supermajority, three operating modes</h4><p>Quick (3), Standard (7), Full (12). The sensitivity classifier picks the mode. 2/3 majority binds.</p></div>
+<div class="takeaway"><h4>3. The 12 queens are not interchangeable</h4><p>Athena = reason. Themis = justice. Artemis = safety. Sophia = wisdom. Each holds a constitutional role.</p></div>
+<div class="takeaway"><h4>4. Witness records are SIGILs</h4><p>Every vote emits a witness. The SIGIL chain is the immutable audit trail of all council decisions.</p></div>
+<div class="takeaway"><h4>5. The 12-around-1 is alchemical, not arbitrary</h4><p>12 months, 12 zodiac, 12 Sephiroth — the 12-around-1 is the canonical sovereign topology across traditions.</p></div>
+
+<h2>📝 Module 4 Quiz</h2>
+<div class="quiz">
+  <h3>3 Questions</h3>
+
+  <div class="question">
+    <p>1. How many queens can be compromised and the BFT system still works?</p>
+    <label><input type="radio" name="q1"> A. 1</label>
+    <label><input type="radio" name="q1"> B. 2</label>
+    <label><input type="radio" name="q1"> C. 4</label>
+    <label><input type="radio" name="q1"> D. 6</label>
+    <div class="answer">✓ <strong>Answer: C. 4.</strong> n ≥ 3f + 1 means with n=12, f can be up to 4. 4 queens compromised → system still reaches consensus.</div>
+  </div>
+
+  <div class="question">
+    <p>2. What supermajority is required for council passage?</p>
+    <label><input type="radio" name="q2"> A. Simple majority (50%+1)</label>
+    <label><input type="radio" name="q2"> B. 2/3 supermajority</label>
+    <label><input type="radio" name="q2"> C. Unanimous</label>
+    <label><input type="radio" name="q2"> D. 3/4 supermajority</label>
+    <div class="answer">✓ <strong>Answer: B. 2/3 supermajority.</strong> The same mathematical regime as the Care Floor's 0.95 (19/20). Constitutional coherence.</div>
+  </div>
+
+  <div class="question">
+    <p>3. Which queen holds the "Wisdom" domain?</p>
+    <label><input type="radio" name="q3"> A. Athena</label>
+    <label><input type="radio" name="q3"> B. Hestia</label>
+    <label><input type="radio" name="q3"> C. Sophia</label>
+    <label><input type="radio" name="q3"> D. Nike</label>
+    <div class="answer">✓ <strong>Answer: C. Sophia.</strong> The 12th queen. Sophia = wisdom in Greek. Q12 holds the veto-by-wisdom role — even when 11 vote for, Sophia's wisdom can flag concern (though not single-handedly block).</div>
+  </div>
+
+  <button class="reveal-btn" onclick="document.querySelectorAll('.question').forEach(q => q.classList.add('show')); this.style.display='none';">Show Answers</button>
+</div>
+
+<div class="nav-bottom">
+  <a href="03-care-floor.html">← Module 3</a>
+  <a href="05-sigil-chain.html" class="next">Module 5: SIGIL Chain →</a>
+</div>
+
+<footer>
+  <p><strong>🐉 Sovereign AI 101 — Module 4: BFT 12-around-1 Council</strong></p>
+  <p>CSOAI Ltd (UK 16939677) · MIT license · 4 Jul 2026</p>
+  <p><a href="index.html">Course Overview</a> · <a href="/">csoai.org</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">BFT 12-around-1. 2/3 majority. Care Floor 0.95. Sovereign by construction.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Training Academy & Certification</title>
+<meta name="description" content="DEFONEOS Training Academy: 5-track certification program (Operator, Developer, Architect, Security, Commander). 47 modules. Hands-on labs. DEFONEOS-CERT credentials. BFT-governed.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--orange:#fb923c;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+h4{font-size:.9rem;color:var(--gold);margin:.8rem 0 .3rem}
+p{margin:.4rem 0;color:#cbd5e1}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:120px;flex:1;text-align:center}
+.stat-box .num{font-size:1.6rem;font-weight:700}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;margin:.75rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.6rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+.nav-bar{position:sticky;top:0;z-index:999;background:rgba(10,14,23,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(251,191,36,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.nav-bar a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+.nav-bar a:hover{color:var(--gold)}
+.nav-bar .brand{color:var(--gold);font-weight:bold;font-size:1rem;text-decoration:none}
+.track-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:.5rem 0;transition:border-color .2s}
+.track-card:hover{border-color:var(--gold)}
+.track-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.track-icon{font-size:1.5rem}
+.track-level{background:var(--gold);color:var(--bg);padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:700}
+.module{background:var(--bg3);border-radius:6px;padding:.8rem;margin:.4rem 0;font-size:.8rem}
+.module-header{display:flex;justify-content:space-between;align-items:center}
+.module-title{font-weight:600;color:var(--cyan)}
+.module-duration{color:#64748b;font-size:.75rem}
+.module-desc{color:#94a3b8;margin-top:.2rem;font-size:.75rem}
+.cert-badge{display:inline-flex;align-items:center;gap:.3rem;background:var(--bg3);border:1px solid var(--gold);border-radius:6px;padding:.3rem .6rem;margin:.2rem}
+.cert-badge .icon{font-size:1rem}
+.cert-badge .name{color:var(--gold);font-weight:600;font-size:.8rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.lab-step{display:flex;gap:.8rem;align-items:flex-start;margin:.4rem 0;font-size:.8rem}
+.lab-step .num{background:var(--green);color:var(--bg);font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;margin-top:2px}
+.lab-step .content{color:#94a3b8}
+.lab-step .content code{color:var(--cyan)}
+.timeline{position:relative;padding-left:2rem;margin:1rem 0}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:1rem;padding-left:1rem}
+.timeline-item::before{content:'';position:absolute;left:-1.4rem;top:4px;width:12px;height:12px;border-radius:50%;background:var(--cyan);border:2px solid var(--bg)}
+.timeline-item.done::before{background:var(--green)}
+.timeline-item.current::before{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.timeline-item .time{font-size:.7rem;color:#64748b}
+.timeline-item .title{font-weight:600;color:var(--fg)}
+.timeline-item .desc{font-size:.75rem;color:#94a3b8}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml">
+<meta property="og:title" content="DEFONEOS — Training Academy & Certification">
+<meta property="og:description" content="5-track certification: Operator, Developer, Architect, Security, Commander. 47 modules. Hands-on labs. DEFONEOS-CERT.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-training-cert.html">
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav-bar" role="navigation" aria-label="Main navigation">
+<a href="defoneos-index.html" class="brand">🐉 DEFONEOS</a>
+<a href="defoneos-demo.html">Demo</a>
+<a href="defoneos-architecture.html">Architecture</a>
+<a href="defoneos-training-cert.html" style="color:var(--gold)">Academy</a>
+<a href="defoneos-faq.html">FAQ</a>
+<a href="defoneos-pricing.html">Pricing</a>
+<a href="defoneos-index.html">All Pages</a>
+</nav>
+<div class="container">
+
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>Training Academy & Certification</h1>
+<p style="font-size:.8rem;color:var(--cyan)">5 tracks · 47 modules · 120 hours · Hands-on labs · DEFONEOS-CERT credentials · BFT-governed certification issuance</p></div>
+</div>
+<div>
+<span class="badge badge-gold">v1.0.0</span>
+<span class="badge badge-green">OPEN ENROLLMENT</span>
+</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num" style="color:var(--gold)">5</div><div class="label">Cert Tracks</div></div>
+<div class="stat-box"><div class="num" style="color:var(--green)">47</div><div class="label">Modules</div></div>
+<div class="stat-box"><div class="num" style="color:var(--cyan)">120h</div><div class="label">Total Duration</div></div>
+<div class="stat-box"><div class="num" style="color:var(--purple)">23</div><div class="label">Hands-on Labs</div></div>
+<div class="stat-box"><div class="num" style="color:var(--green)">5</div><div class="label">Cert Levels</div></div>
+<div class="stat-box"><div class="num" style="color:var(--gold)">£0</div><div class="label">Open Source</div></div>
+</div>
+
+<!-- CERTIFICATION OVERVIEW -->
+<h2>🎖️ Certification Tracks</h2>
+<div class="section">
+<p>DEFONEOS offers 5 certification tracks, from field operator to strategic commander. All certifications are BFT-council verified, SIGIL-anchored, and portable across UK defense and allied organizations.</p>
+
+<div class="cert-badge"><span class="icon">🥉</span><span class="name">DEFONEOS-CERT Operator (DFO-CO)</span></div>
+<div class="cert-badge"><span class="icon">🥈</span><span class="name">DEFONEOS-CERT Developer (DFO-CD)</span></div>
+<div class="cert-badge"><span class="icon">🥇</span><span class="name">DEFONEOS-CERT Architect (DFO-CA)</span></div>
+<div class="cert-badge"><span class="icon">🔐</span><span class="name">DEFONEOS-CERT Security (DFO-CS)</span></div>
+<div class="cert-badge"><span class="icon">⭐</span><span class="name">DEFONEOS-CERT Commander (DFO-CC)</span></div>
+</div>
+
+<!-- TRACK 1: OPERATOR -->
+<h2>📡 Track 1: DEFONEOS Operator (DFO-CO)</h2>
+<div class="track-card">
+<div class="track-header">
+<span class="track-icon">🥉</span>
+<span style="font-size:1.1rem;font-weight:600;color:var(--gold)">Operator Certification</span>
+<span class="track-level">LEVEL 1</span>
+<span class="badge badge-green">8 MODULES</span>
+<span class="badge badge-cyan">16 HOURS</span>
+</div>
+<p style="margin:.5rem 0;font-size:.85rem;color:#94a3b8">For field operators, ISR analysts, and mission specialists who use DEFONEOS to conduct operations. No programming required. Focus on real-time tool usage, COP management, and ISR tasking.</p>
+
+<h3>Prerequisites</h3>
+<p style="font-size:.8rem;color:#94a3b8">Basic computer literacy. UK BPSS clearance minimum. Familiarity with TAK/ATAK concepts preferred.</p>
+
+<h3>Modules</h3>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CO-01: DEFONEOS Overview & Mission</span><span class="module-duration">1.5h · Theory</span></div>
+<div class="module-desc">Architecture overview, 7-layer stack, mission context, UK sovereign design principles, red lines (kinetic/surveillance), BFT governance overview, SIGIL audit chain introduction.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CO-02: COP Operations (Cesium 3D Globe)</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">Navigating the Common Operating Picture. Layer management (satellite/AIS/ADS-B/sensor feeds). Entity tracking. Time slider. Measurement tools. Export COP snapshots for briefing.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CO-03: ISR Tasking & Detection Review</span><span class="module-duration">2h · Lab</span></div>
+<div class classmodule-desc">Tasking YOLOv8 ISR detections. Reviewing automated detections. Confidence threshold adjustment. False positive management. Sensor tasking orders via FreeTAKServer CoT.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CO-04: Multi-Sensor Fusion</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">Correlating detections across video/RF/AIS/ADS-B/satellite feeds. Fusion confidence scoring. Track lifecycle management. Intelligence reporting from fused tracks.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CO-05: C2 & Tasking via FreeTAKServer</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">Creating and managing CoT (Cursor on Target) events. Tasking orders. Team coordination. TAK client configuration. AAR (After Action Review) generation from SIGIL chain.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CO-06: Alert Management & Escalation</span><span class="module-duration">1.5h · Theory</span></div>
+<div class="module-desc">Configuring alert thresholds. Escalation chains. BFT council notifications. Red-line proximity alerts. Automated response protocols (within DEFONEOS-Charter rules).</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CO-07: SIGIL Audit & Reporting</span><span class="module-duration">1.5h · Lab</span></div>
+<div class="module-desc">Reading SIGIL chain events. Generating compliance reports (JSP 936). Exporting audit trails for regulators. Chain verification. Tamper detection.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CO-08: Practical Assessment</span><span class="module-duration">3.5h · Exam</span></div>
+<div class="module-desc">Live scenario: Yorkshire flood response. Operate DEFONEOS for 3-hour simulated mission. Task ISR, manage COP, generate AAR, export compliance pack. Pass = 80% competency.</div>
+</div>
+
+<h3>Assessment & Certification</h3>
+<p style="font-size:.8rem"><span class="badge badge-green">PRACTICAL</span> Hands-on scenario exam (80% pass) + <span class="badge badge-purple">THEORY</span> Written test 30 questions (75% pass). Certification valid 2 years. BFT-council co-signs DEFONEOS-CERT.</p>
+</div>
+
+<!-- TRACK 2: DEVELOPER -->
+<h2>💻 Track 2: DEFONEOS Developer (DFO-CD)</h2>
+<div class="track-card">
+<div class="track-header">
+<span class="track-icon">🥈</span>
+<span style="font-size:1.1rem;font-weight:600;color:var(--gold)">Developer Certification</span>
+<span class="track-level">LEVEL 2</span>
+<span class="badge badge-green">12 MODULES</span>
+<span class="badge badge-cyan">32 HOURS</span>
+</div>
+<p style="margin:.5rem 0;font-size:.85rem;color:#94a3b8">For software engineers building MCP servers, extending DEFONEOS capabilities, or integrating external systems. Python proficiency required.</p>
+
+<h3>Prerequisites</h3>
+<p style="font-size:.8rem;color:#94a3b8">Python 3.12+ proficiency. Git. Docker. REST API design. DFO-CO certification recommended.</p>
+
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-01: MCP Protocol Deep Dive</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">JSON-RPC 2.0 spec. MCP server lifecycle. Tool registration. Discovery handshake. Error handling. Federation topology. Building your first MCP server from scratch.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-02: Building MCP Servers (Mavis Pattern)</span><span class="module-duration">4h · Lab</span></div>
+<div class="module-desc">The 7-file slim MCP pattern (mavis). <code>server.py</code>, <code>tools.py</code>, <code>README.md</code>, <code>pyproject.toml</code>, <code>Dockerfile</code>, <code>docker-compose.yml</code>, <code>tests/</code>. Ship a complete MCP from zero to federation in one session.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-03: SIGIL Integration</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">Ed25519 signing. Chain append. Verification. How every MCP tool call produces a SIGIL receipt. Building auditable tools.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-04: YOLOv8 Fine-Tuning Pipeline</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">Dataset preparation (COCO format). 5-fold cross-validation. Training loop with Ultralytics. Export to ONNX/TensorRT/CoreML. Deployment to edge (Jetson Orin). mAP evaluation.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-05: Cesium Integration</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">Entity management on 3D globe. Custom data sources. CZML feeds. GeoJSON ingestion. Real-time track updates. Heatmap layers. COP export.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-06: FreeTAKServer Integration</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">CoT event schema. Creating/managing CoT events. Team channels. Data packages. TAK bridge to DEFONEOS MCP federation.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-07: REST API Development</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">FastAPI service layer. OAuth2 + JWT (Ed25519). WebSocket streams. Rate limiting (4-tier). OpenAPI generation. 87-endpoint DEFONEOS API.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-08: Testing (5-Layer Pyramid)</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">L0 Static (ruff+mypy+bandit). L1 Unit (pytest-xdist). L2 Property-based (hypothesis). L3 Contract (schemathesis). L4 E2E (playwright). 90.6% coverage target.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-09: Docker & Kubernetes Deployment</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">Distroless containers. Multi-arch builds (ARM64 + x86_64). RKE2 manifests. Helm charts. Health checks. Rolling updates.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-10: Edge Deployment (Jetson)</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">Jetson Orin NX/ Nano setup. JetPack 6.0. TensorRT INT8 quantization. Power management. Air-gap deployment. Offline SIGIL sync.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-11: CI/CD Pipeline (10-Gate)</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">GitHub Actions. 10-gate pipeline: lint → type-check → unit → integration → security scan → contract → E2E → build → deploy → verify. Auto-rollback.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CD-12: Capstone Project</span><span class="module-duration">4h · Project</span></div>
+<div class="module-desc">Build a complete new MCP server: register in federation, SIGIL-integrated, tested at 85%+ coverage, deployed to edge, documented. Reviewed by BFT council technical reviewers.</div>
+</div>
+</div>
+
+<!-- TRACK 3: ARCHITECT -->
+<h2>🏗️ Track 3: DEFONEOS Architect (DFO-CA)</h2>
+<div class="track-card">
+<div class="track-header">
+<span class="track-icon">🥇</span>
+<span style="font-size:1.1rem;font-weight:600;color:var(--gold)">Architect Certification</span>
+<span class="track-level">LEVEL 3</span>
+<span class="badge badge-green">9 MODULES</span>
+<span class="badge badge-cyan">24 HOURS</span>
+</div>
+<p style="margin:.5rem 0;font-size:.85rem;color:#94a3b8">For solution architects designing DEFONEOS deployments, integrating with enterprise systems, and defining operational architectures. Requires DFO-CD.</p>
+
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-01: 7-Layer Architecture Mastery</span><span class="module-duration">3h · Theory</span></div>
+<div class="module-desc">Deep dive into each of the 7 layers. Inter-layer contracts. Deployment topology design. Trade-off analysis (latency vs. coverage vs. cost).</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-02: Federation Design</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">Designing multi-domain MCP federations. Domain decomposition. Tool composition patterns. Federation scaling (single → 4-node → N-node).</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-03: Cloud Architecture (UK Sovereign)</span><span class="module-duration">2h · Theory</span></div>
+<div class="module-desc">5 UK sovereign cloud regions. Terraform IaC patterns. RKE2 cluster design. GPU pool management. Network segmentation. Disaster recovery.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-04: Edge Architecture</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">Field node design (Jetson Orin NX). Drone payload design (Orin Nano). Disconnected operations. SIGIL chain sync on reconnect. Power/thermal management.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-05: C2 Architecture (FreeTAKServer)</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">TAK server federation. CoT routing. Multi-team C2. Bridge to legacy systems (Link 16 simulation, JADC2 concepts). AAR architecture.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-06: Multi-Sensor Fusion Architecture</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">Sensor taxonomy. Fusion algorithms (JDL Level 0-5). Track management. Association rules. Confidence propagation. COP architecture.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-07: BFT Governance Architecture</span><span class="module-duration">2h · Theory</span></div>
+<div class="module-desc">33-agent council design. Quorum engineering. Byzantine tolerance math. Charter enforcement. DEFONEOS-SEAL issuance flow.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-08: Partner Integration Architecture</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">5 integration paths (MCP Federation, REST, WebSocket, C2 Bridge, SIGIL Sync). OAuth2 flows. SDK design. Onboarding patterns.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CA-09: Architecture Review Board</span><span class="module-duration">4h · Assessment</span></div>
+<div class="module-desc">Present a complete DEFONEOS deployment architecture for a real-world scenario (e.g., UK brigade-level ISR + C2). Defended before panel of 3 certified architects + 2 BFT council members.</div>
+</div>
+</div>
+
+<!-- TRACK 4: SECURITY -->
+<h2>🔐 Track 4: DEFONEOS Security (DFO-CS)</h2>
+<div class="track-card">
+<div class="track-header">
+<span class="track-icon">🔐</span>
+<span style="font-size:1.1rem;font-weight:600;color:var(--gold)">Security Certification</span>
+<span class="track-level">LEVEL 3</span>
+<span class="badge badge-green">10 MODULES</span>
+<span class="badge badge-cyan">28 HOURS</span>
+</div>
+<p style="margin:.5rem 0;font-size:.85rem;color:#94a3b8">For security professionals responsible for DEFONEOS hardening, compliance, and audit. Requires DFO-CD. UK SC clearance required for certification issuance.</p>
+
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-01: Zero-Trust Architecture</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">SPIFFE workload identity. mTLS all services. Service mesh (Istio). Network policies. Secrets in GPG-encrypted vault. Air-gap design.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-02: Ed25519 & PQC Cryptography</span><span class="module-duration">2h · Theory</span></div>
+<div class="module-desc">Ed25519 signing (SIGIL chain). PQC readiness: ML-DSA-65 (Dilithium), ML-KEM-768 (Kyber). Quantum threat timeline. Migration path.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-03: Morris-II Worm Defense</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">AI-agent worm propagation vectors. Prompt injection scanner. Tool-call sandboxing. SIGIL chain quarantine. Outbreak response playbooks.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-04: Supply Chain Security</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">SBOM generation (CycloneDX). Dependency scanning (pip-audit, safety). Container scanning (Trivy). Signed images (Cosign). Reproducible builds.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-05: JSP 936 Compliance Engineering</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">JSP 936 requirements decomposition. Auto-generation of compliance artifacts. Evidence collection from SIGIL chain. Regulator replay.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-06: 14-Framework Compliance Map</span><span class="module-duration">2h · Theory</span></div>
+<div class="module-desc">EU AI Act, UK AI Bill 2025, GDPR, DPA 2018, ISO 42001, ISO 27001, SOC 2, NIST CSF, JSP 936, JSP 440, JSP 604, National Security Act 2023, Cyber Essentials, AUKUS ITAR.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-07: Penetration Testing DEFONEOS</span><span class="module-duration">4h · Lab</span></div>
+<div class="module-desc">OWASP testing. API fuzzing. MCP protocol fuzzing. Prompt injection attempts. Chain tamper attempts. Privilege escalation. Report writing.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-08: Incident Response & Forensics</span><span class="module-duration">3h · Lab</span></div>
+<div class="module-desc">SIGIL chain forensics. Tamper detection. Timeline reconstruction. Evidence preservation. CISO escalation matrix (Green/Yellow/Orange/Red).</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-09: Air-Gap Security</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">Air-gap deployment procedures. Media transfer protocols. Virus scanning. Integrity verification. Compartment separation.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CS-10: Security Assessment</span><span class="module-duration">4h · Exam</span></div>
+<div class="module-desc">Hands-on: harden a DEFONEOS deployment from scratch. Pass all 6 security scanners (bandit/pip-audit/safety/ZAP/semgrep/Morris-II). Generate full JSP 936 compliance pack. Pass = 85%.</div>
+</div>
+</div>
+
+<!-- TRACK 5: COMMANDER -->
+<h2>⭐ Track 5: DEFONEOS Commander (DFO-CC)</h2>
+<div class="track-card">
+<div class="track-header">
+<span class="track-icon">⭐</span>
+<span style="font-size:1.1rem;font-weight:600;color:var(--gold)">Commander Certification</span>
+<span class="track-level">LEVEL 5</span>
+<span class="badge badge-green">8 MODULES</span>
+<span class="badge badge-cyan">20 HOURS</span>
+</div>
+<p style="margin:.5rem 0;font-size:.85rem;color:#94a3b8">For strategic leaders commanding DEFONEOS-enabled operations. Focus on decision-making, governance, ethics, and strategic capability employment. Requires DFO-CA + DFO-CS. UK SC clearance mandatory.</p>
+
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CC-01: Strategic Capability Employment</span><span class="module-duration">3h · Theory</span></div>
+<div class="module-desc">When to deploy DEFONEOS capabilities. ISR-to-decision cycles. Swarm employment doctrine. Fusion-driven intelligence. Competitive advantage vs. adversary systems (Palantir, CCP DORADO).</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CC-02: BFT Governance & Charter</span><span class="module-duration">2h · Theory</span></div>
+<div class="module-desc">The 33-agent council. Charter articles. Red lines (immutable). DEFONEOS-SEAL credential. How governance constrains and enables operations. Escalation protocols.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CC-03: Legal & Ethical Frameworks</span><span class="module-duration">3h · Theory</span></div>
+<div class="module-desc">International humanitarian law. UK AI Bill 2025. JSP 936 operational compliance. NATO AI Strategy. AUKUS principles. Distinction/proportionality/military necessity in AI-enabled operations.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CC-04: Multi-Domain Operations</span><span class="module-duration">2h · Theory</span></div>
+<div class="module-desc">DEFONEOS across land/sea/air/space/cyber. Sensor-to-shooter timelines (sensor-to-decision only — DEFONEOS is NOT a kinetic targeting system). Coalition interoperability.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CC-05: Decision Exercises (Wargaming)</span><span class="module-duration">4h · Lab</span></div>
+<div class="module-desc">3 scenario-based decision exercises: (1) Yorkshire flood response, (2) maritime ISR in the North Atlantic, (3) coalition peacekeeping ISR. Real-time DEFONEOS operation under pressure.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CC-06: After Action Review & Continuous Improvement</span><span class="module-duration">2h · Lab</span></div>
+<div class="module-desc">SIGIL-driven AAR. Performance metrics analysis. Lessons learned integration. Capability gap identification. Feedback to development pipeline.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CC-07: Partner & Coalition Integration</span><span class="module-duration">2h · Theory</span></div>
+<div class="module-desc">Five-Eyes interoperability. AUKUS data sharing. NATO STANAG compliance. Coalition SIGIL chain sharing. Sovereignty preservation in coalition ops.</div>
+</div>
+<div class="module">
+<div class="module-header"><span class="module-title">DFO-CC-08: Commander's Assessment</span><span class="module-duration">2h · Exam</span></div>
+<div class="module-desc">Oral board before 5 BFT council members + 1 external UK defense reviewer. Strategic scenario discussion. Ethical reasoning. Capability employment rationale. Pass = unanimous.</div>
+</div>
+</div>
+
+<!-- LEARNING PATH -->
+<h2>🗺️ Recommended Learning Path</h2>
+<div class="section">
+<div class="timeline">
+<div class="timeline-item done">
+<div class="time">Week 1-2</div>
+<div class="title">DFO-CO: Operator Certification</div>
+<div class="desc">Start here. Learn to USE DEFONEOS before building or commanding it. 16 hours. No prerequisites.</div>
+</div>
+<div class="timeline-item">
+<div class="time">Week 3-4</div>
+<div class="title">DFO-CD: Developer Certification</div>
+<div class="desc">Learn to BUILD. MCP servers, APIs, integrations, testing. 32 hours. Requires Python + DFO-CO.</div>
+</div>
+<div class="timeline-item current">
+<div class="time">Week 5-6</div>
+<div class="title">DFO-CA: Architect OR DFO-CS: Security</div>
+<div class="desc">Choose specialization. Architecture (24h) or Security (28h). Both require DFO-CD. Can pursue both.</div>
+</div>
+<div class="timeline-item">
+<div class="time">Week 7-8</div>
+<div class="title">DFO-CC: Commander Certification</div>
+<div class="desc">Strategic level. Requires DFO-CA + DFO-CS + SC clearance. 20 hours. Oral board assessment.</div>
+</div>
+<div class="timeline-item">
+<div class="time">Ongoing</div>
+<div class="title">Continuing Education</div>
+<div class="desc">Annual recertification. New module releases each DEFONEOS version. BFT-council verified CPD tracking.</div>
+</div>
+</div>
+</div>
+
+<!-- SAMPLE LAB -->
+<h2>🧪 Sample Lab: DFO-CD-02 — Build Your First MCP</h2>
+<div class="section">
+<h3>Lab Objective</h3>
+<p>Build a complete DEFONEOS MCP server from zero to federation in one 4-hour session.</p>
+
+<h3>Lab Steps</h3>
+<div class="lab-step">
+<div class="num">1</div>
+<div class="content"><strong>Scaffold</strong> — Create the 7-file Mavis pattern: <code>mkdir defoneos-weather-mcp && cd defoneos-weather-mcp</code>. Create <code>pyproject.toml</code>, <code>server.py</code>, <code>tools.py</code>, <code>README.md</code>, <code>Dockerfile</code>, <code>docker-compose.yml</code>, <code>tests/test_tools.py</code>.</div>
+</div>
+<div class="lab-step">
+<div class="num">2</div>
+<div class="content"><strong>Implement Tools</strong> — Write 3 tools: <code>get_weather(lat, lon)</code>, <code>get_wind_direction(lat, lon)</code>, <code>get_visibility(lat, lon)</code>. Each returns JSON + SIGIL receipt.</div>
+</div>
+<div class="lab-step">
+<div class="num">3</div>
+<div class="content"><strong>SIGIL Integration</strong> — Import <code>from defoneos.sigil import sign_and_log</code>. Wrap each tool call: <code>result = sign_and_log(tool_name, params, result)</code>. Every call is now auditable.</div>
+</div>
+<div class="lab-step">
+<div class="num">4</div>
+<div class="content"><strong>Test</strong> — Write pytest tests for all 3 tools. Use hypothesis for property-based tests (input ranges, output schema). Target 85%+ coverage. <code>pytest --cov=defoneos_weather_mcp --cov-report=term-missing</code></div>
+</div>
+<div class="lab-step">
+<div class="num">5</div>
+<div class="content"><strong>Dockerize</strong> — Distroless base image. Multi-stage build. ARM64 + x86_64. <code>docker buildx build --platform linux/arm64,linux/amd64 -t defoneos-weather-mcp:latest .</code></div>
+</div>
+<div class="lab-step">
+<div class="num">6</div>
+<div class="content"><strong>Register in Federation</strong> — <code>python -m defoneos.federation register --server defoneos-weather-mcp --port 8721</code>. Federation hub auto-discovers your 3 tools.</div>
+</div>
+<div class="lab-step">
+<div class="num">7</div>
+<div class="content"><strong>Verify</strong> — Call your tool through the federation: <code>curl -X POST http://localhost:3101/mcp -d '{"method":"tools/call","params":{"name":"get_weather","arguments":{"lat":53.8,"lon":-1.5}}}'</code>. Confirm SIGIL receipt in response.</div>
+</div>
+<div class="lab-step">
+<div class="num">8</div>
+<div class="content"><strong>Document</strong> — Write README with installation, tool descriptions, examples, SIGIL verification instructions. Submit for BFT technical review.</div>
+</div>
+</div>
+</div>
+
+<!-- CERTIFICATION PROCESS -->
+<h2>📋 Certification Process</h2>
+<div class="section">
+<h3>How Certification Works</h3>
+<table>
+<tr><th>Step</th><th>Action</th><th>Who</th><th>Time</th></tr>
+<tr><td>1</td><td>Complete all modules in track</td><td>Candidate (self-paced)</td><td>Track-dependent</td></tr>
+<tr><td>2</td><td>Pass practical assessment (hands-on scenario)</td><td>Candidate</td><td>2-4 hours</td></tr>
+<tr><td>3</td><td>Pass theory test (30-50 questions)</td><td>Candidate</td><td>1 hour</td></tr>
+<tr><td>4</td><td>Assessment reviewed by technical reviewers</td><td>5 BFT Technical Reviewers</td><td>48 hours</td></tr>
+<tr><td>5</td><td>Council vote on certification issuance</td><td>BFT-33 Council (quorum 23/33)</td><td>5 minutes</td></tr>
+<tr><td>6</td><td>DEFONEOS-CERT credential issued (Ed25519-signed)</td><td>System (auto on vote pass)</td><td>Instant</td></tr>
+<tr><td>7</td><td>Credential registered on SIGIL chain</td><td>System</td><td>Instant</td></tr>
+<tr><td>8</td><td>Candidate notified + credential portable</td><td>System</td><td>Instant</td></tr>
+</table>
+
+<h3>Credential Verification</h3>
+<pre># Anyone can verify a DEFONEOS-CERT credential:
+curl https://defoneos.vercel.app/api/v1/verify-cert?cert_id=DFO-CC-2026-0042
+
+# Response:
+{
+  "cert_id": "DFO-CC-2026-0042",
+  "holder": "[REDACTED - BPSS minimum]",
+  "track": "Commander",
+  "level": 5,
+  "issued": "2026-07-15T10:30:00Z",
+  "expires": "2028-07-15T10:30:00Z",
+  "bft_vote": {"for": 31, "against": 0, "abstain": 2, "quorum_met": true},
+  "sigil_ref": "S|cert-issue|DFO-CC-2026-0042|ed25519:8a4cc85da8dbba21...",
+  "valid": true
+}</pre>
+
+<h3>Recertification</h3>
+<p style="font-size:.8rem;color:#94a3b8">All DEFONEOS certifications are valid for 2 years. Recertification requires: (1) completion of delta modules for new versions, (2) passing refresher assessment, (3) BFT council re-vote. CPD tracking is automatic via SIGIL chain.</p>
+</div>
+
+<!-- DELIVERY MODES -->
+<h2>🎓 Delivery Modes</h2>
+<div class="section">
+<div class="grid-3">
+<div class="card" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem">
+<h4>📹 Online Self-Paced</h4>
+<p style="font-size:.8rem;color:#94a3b8">All 47 modules available as video + interactive labs. Free. Open source. Complete at your own pace. Hands-on labs via cloud sandbox (Jetson Orin simulator).</p>
+</div>
+<div class="card" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem">
+<h4>🏫 Instructor-Led</h4>
+<p style="font-size:.8rem;color:#94a3b8">5-day intensive courses. UK-based. Maximum 12 students per cohort. Hands-on with real Jetson Orin hardware. Delivered by DFO-CC certified instructors. £2,400/person.</p>
+</div>
+<div class="card" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem">
+<h4>🏕️ On-Site (Unit)</h4>
+<p style="font-size:.8rem;color:#94a3b8">Customized training at your unit/brigade HQ. Full deployment setup. Scenario-based exercises tailored to your operational context. Minimum 8 students. POA.</p>
+</div>
+</div>
+</div>
+
+<!-- FAQ -->
+<h2>❓ Certification FAQ</h2>
+<div class="section">
+<h3>Is DEFONEOS training free?</h3>
+<p style="font-size:.85rem;color:#94a3b8">Yes. All 47 modules are open source and free online. The DEFONEOS-CERT assessment has a £150 admin fee (covers BFT council compute + credential issuance). Instructor-led courses are £2,400/person.</p>
+
+<h3>Do I need security clearance?</h3>
+<p style="font-size:.85rem;color:#94a3b8">DFO-CO and DFO-CD: BPSS minimum. DFO-CA and DFO-CS: SC clearance required for certification issuance. DFO-CC: SC clearance mandatory, DV preferred for certain modules.</p>
+
+<h3>Is the certification recognized outside DEFONEOS?</h3>
+<p style="font-size:.85rem;color:#94a3b8">DEFONEOS-CERT is an open credential. The BFT-council verification and SIGIL chain anchoring provide audit-grade proof of competency. Recognition by UK MOD, NATO, and Five-Eyes partners is being pursued through the DASA and NATO DIANA channels.</p>
+
+<h3>Can I take modules out of order?</h3>
+<p style="font-size:.85rem;color:#94a3b8">Within a track, modules are sequential (each builds on the previous). You can take tracks in any order, but the recommended path is CO → CD → CA/CS → CC.</p>
+
+<h3>What happens if DEFONEOS updates?</h3>
+<p style="font-size:.85rem;color:#94a3b8">Each major version release adds delta modules. Certified professionals complete delta modules + refresher quiz to maintain certification. No full re-examination needed for minor versions.</p>
+</div>
+
+<footer>
+<p>🐉 DEFONEOS — UK Sovereign Public Services OS · Open Source · MIT + Apache 2.0 · BFT-33 Governed · SIGIL Ed25519 Audited</p>
+<p style="margin-top:.3rem">Academy v1.0.0 · Last updated: 6 Jul 2026 · <a href="defoneos-index.html" style="color:var(--gold)">All Pages</a> · <a href="defoneos-architecture.html" style="color:var(--gold)">Architecture</a></p>
+</footer>
+</div>
+</body>
+</html>

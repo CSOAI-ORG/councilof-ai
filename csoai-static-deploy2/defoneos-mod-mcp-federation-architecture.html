@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS MCP Federation Architecture (30 MCPs × 3 Rings × SIGIL Trust × BFT Governance × Sovereign Inference)</title>
+<meta name="description" content="DEFONEOS MCP federation architecture: how 30 sovereign MCP servers are organised into 3 trust rings, governed by BFT council consensus, secured with Ed25519 SIGIL attestation, and deployed with UK-sovereign inference. Ring 0 (core sovereign) / Ring 1 (defence sensors) / Ring 2 (civil open-data). Federation discovery, failover, and admission control." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+.ring0{color:#00d68f;font-weight:700;}
+.ring1{color:#ffb800;font-weight:700;}
+.ring2{color:#8b97a8;font-weight:700;}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/mcp-federation-architecture · csoai.org · ship-grade · tick 101</div>
+<header>
+<h1>DEFONEOS MCP Federation Architecture</h1>
+<div class="sub">The canonical architecture for how 30 sovereign MCP servers are organised, governed, secured, and deployed as a single federated capability. 3 trust rings (Ring 0 Core Sovereign / Ring 1 Defence Sensors / Ring 2 Civil Open-Data) × Ed25519 SIGIL attestation × BFT council admission control × UK-sovereign inference routing × automated failover × federation discovery protocol.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Total MCP servers in federation</span><b>30</b></div>
+<div class="kpi"><span>Trust rings</span><b>3 (Ring 0 Core / Ring 1 Defence / Ring 2 Civil)</b></div>
+<div class="kpi"><span>Federation protocol</span><b>MCP (Model Context Protocol) over stdio + HTTP/SSE</b></div>
+<div class="kpi"><span>Trust attestation</span><b>Ed25519 SIGIL per MCP per tool invocation</b></div>
+<div class="kpi"><span>Governance</span><b>BFT 33-agent council — admission control + revocation + emergency quarantine</b></div>
+<div class="kpi"><span>Inference routing</span><b>UK-sovereign only (Ring 0), AUKUS-compatible (Ring 1), unconstrained (Ring 2)</b></div>
+<div class="kpi"><span>Failover SLA</span><b>Ring 0: &lt;500ms hot-standby · Ring 1: &lt;5s warm-standby · Ring 2: best-effort</b></div>
+<div class="kpi"><span>Admission requirements</span><b>9-point checklist (see §5) + BFT council vote</b></div>
+</div>
+
+<h2>1 · The 3 Trust Rings</h2>
+<p>The federation is not flat. MCPs are assigned to one of three concentric trust rings based on data sensitivity, required sovereignty level, and failure tolerance. A tool invocation can cascade across rings, but data flows inward only — Ring 2 cannot write to Ring 0.</p>
+
+<h3><span class="ring0">Ring 0 — Core Sovereign (7 MCPs)</span></h3>
+<div class="panel">
+<p><b>Trust level:</b> Maximum. These MCPs touch classified or operationally critical data. They run on UK-sovereign inference only (no external API calls). Ed25519 SIGILs are verified on every invocation. BFT council reviews all changes.</p>
+<table>
+<thead><tr><th>#</th><th>MCP Server</th><th>Function</th><th>Inference</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>defoneos-sigil-mcp</code></td><td>SIGIL attestation chain — signs, verifies, and timestamps every custody event across the federation</td><td>UK-sovereign (local)</td></tr>
+<tr><td>2</td><td><code>defoneos-bft-council-mcp</code></td><td>33-agent BFT consensus — quorum voting, veto, emergency session, minutes</td><td>UK-sovereign (local)</td></tr>
+<tr><td>3</td><td><code>defoneos-compliance-mcp</code></td><td>JSP 936 + EU AI Act Art-50 + OWASP LLM Top-10 automated compliance testing</td><td>UK-sovereign (local)</td></tr>
+<tr><td>4</td><td><code>defoneos-red-team-mcp</code></td><td>12-vector adversarial red-team harness — automated continuous + manual pre-deployment</td><td>UK-sovereign (local)</td></tr>
+<tr><td>5</td><td><code>defoneos-seal-mcp</code></td><td>DEFONEOS-SEAL credential issuance — Ed25519-signed certification with BFT quorum proof</td><td>UK-sovereign (local)</td></tr>
+<tr><td>6</td><td><code>defoneos-escrow-mcp</code></td><td>Sovereign data escrow — deposit, release (4-eyes), destruction receipts</td><td>UK-sovereign (local + HSM)</td></tr>
+<tr><td>7</td><td><code>defoneos-audit-mcp</code></td><td>Append-only custody log — chains all SIGILs, BFT votes, and tool invocations</td><td>UK-sovereign (local)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3><span class="ring1">Ring 1 — Defence Sensors (11 MCPs)</span></h3>
+<div class="panel">
+<p><b>Trust level:</b> High. These MCPs ingest defence-relevant data (OSINT, maritime, satellite, tactical). They may call external APIs but results are filtered through a SIGIL-verified proxy. AUKUS-compatible but not AUKUS-dependent.</p>
+<table>
+<thead><tr><th>#</th><th>MCP Server</th><th>Function</th><th>Data Source</th></tr></thead>
+<tbody>
+<tr><td>8</td><td><code>freetakserver-mcp</code></td><td>Tactical awareness (TAK) — C2 backbone, blue-force tracking</td><td>FreeTAKServer (self-hosted)</td></tr>
+<tr><td>9</td><td><code>sentinel-hub-mcp</code></td><td>Satellite imagery — multi-spectral EO/IR, change detection</td><td>Sentinel Hub API</td></tr>
+<tr><td>10</td><td><code>aisstream-maritime-mcp</code></td><td>Maritime AIS — vessel tracking, anomalous behaviour detection</td><td>AISStream.io</td></tr>
+<tr><td>11</td><td><code>gdelt-news-mcp</code></td><td>Global OSINT — news events, conflict tracking, signal extraction</td><td>GDELT Project</td></tr>
+<tr><td>12</td><td><code>rtsp-camera-mcp</code></td><td>IP camera feeds — RTSP stream ingestion, object detection (YOLOv8)</td><td>Self-hosted cameras</td></tr>
+<tr><td>13</td><td><code>yolo-detection-mcp</code></td><td>Object detection — YOLOv8/v11 inference on images/video streams</td><td>Local (on-device)</td></tr>
+<tr><td>14</td><td><code>openathena-mcp</code></td><td>Geospatial intelligence — coordinate triangulation from imagery</td><td>OpenAthena (self-hosted)</td></tr>
+<tr><td>15</td><td><code>mava-swarm-mcp</code></td><td>Multi-agent swarm coordination — PX4/ArduPilot drone simulation</td><td>Mava (self-hosted)</td></tr>
+<tr><td>16</td><td><code>cesium-globe-mcp</code></td><td>3D Common Operating Picture — CesiumJS digital twin visualisation</td><td>Cesium ion (UK-cached)</td></tr>
+<tr><td>17</td><td><code>mqtt-bridge-mcp</code></td><td>IoT sensor bridge — MQTT telemetry from field sensors</td><td>Self-hosted broker</td></tr>
+<tr><td>18</td><td><code>openaq-air-mcp</code></td><td>Air quality monitoring — civil defence / CBRN detection baseline</td><td>OpenAQ API</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3><span class="ring2">Ring 2 — Civil Open-Data (12 MCPs)</span></h3>
+<div class="panel">
+<p><b>Trust level:</b> Standard. These MCPs ingest public open-data. They provide context and enrichment but cannot write to Ring 0 or influence tactical decisions without BFT council review. Best-effort failover.</p>
+<table>
+<thead><tr><th>#</th><th>MCP Server</th><th>Function</th><th>Data Source</th></tr></thead>
+<tbody>
+<tr><td>19</td><td><code>os-opendata-mcp</code></td><td>Ordnance Survey — UK mapping, terrain, address data</td><td>OS Data Hub</td></tr>
+<tr><td>20</td><td><code>data-gov-uk-mcp</code></td><td>Government open data — statistics, spending, service performance</td><td>data.gov.uk</td></tr>
+<tr><td>21</td><td><code>companies-house-mcp</code></td><td>Company registry — due diligence, ownership, filings</td><td>Companies House API</td></tr>
+<tr><td>22</td><td><code>ons-statistics-mcp</code></td><td>ONS economic/social data — demographics, employment, inflation</td><td>ONS API</td></tr>
+<tr><td>23</td><td><code>met-office-mcp</code></td><td>UK weather — MET office data for tactical planning</td><td>Met Office DataPoint</td></tr>
+<tr><td>24</td><td><code>nhs-data-mcp</code></td><td>NHS service data — hospital capacity, A&E wait times</td><td>NHS Digital</td></tr>
+<tr><td>25</td><td><code>environment-agency-mcp</code></td><td>Flood, water quality, pollution monitoring</td><td>EA API</td></tr>
+<tr><td>26</td><td><code>transport-api-mcp</code></td><td>UK transport — road, rail, bus real-time data</td><td>Transport API</td></tr>
+<tr><td>27</td><td><code>planning-data-mcp</code></td><td>Planning applications, land use, green belt</td><td>Gov.uk Planning Data</td></tr>
+<tr><td>28</td><td><code>parliament-mcp</code></td><td>Hansard, legislation tracking, MP voting records</td><td>UK Parliament API</td></tr>
+<tr><td>29</td><td><code>ofcom-mcp</code></td><td>Telecoms coverage, spectrum, broadband data</td><td>Ofcom API</td></tr>
+<tr><td>30</td><td><code>land-registry-mcp</code></td><td>Property ownership, price paid, boundaries</td><td>HM Land Registry</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>2 · Federation Topology</h2>
+<pre>
+                    ┌──────────────────────────────────────────────┐
+                    │            DEFONEOS MCP FEDERATION            │
+                    │                                              │
+                    │   ┌────────────────────────────────────┐     │
+                    │   │          RING 0 (Core)             │     │
+                    │   │  sigil · bft · compliance · seal   │     │
+                    │   │  redteam · escrow · audit          │     │
+                    │   │  [UK-sovereign inference only]     │     │
+                    │   └──────────┬─────────────────────────┘     │
+                    │              │ SIGIL-verified proxy          │
+                    │   ┌──────────┴─────────────────────────┐     │
+                    │   │       RING 1 (Defence)             │     │
+                    │   │  freetak · sentinel · ais · gdelt  │     │
+                    │   │  rtsp · yolo · athena · mava       │     │
+                    │   │  cesium · mqtt · openaq            │     │
+                    │   │  [AUKUS-compatible inference]      │     │
+                    │   └──────────┬─────────────────────────┘     │
+                    │              │ Read-only enrichment          │
+                    │   ┌──────────┴─────────────────────────┐     │
+                    │   │        RING 2 (Civil)              │     │
+                    │   │  os · govuk · companies · ons      │     │
+                    │   │  met · nhs · env · transport       │     │
+                    │   │  planning · parliament · ofcom     │     │
+                    │   │  landreg                           │     │
+                    │   │  [Unconstrained inference]         │     │
+                    │   └────────────────────────────────────┘     │
+                    └──────────────────────────────────────────────┘
+</pre>
+
+<h3>Data Flow Rules</h3>
+<ul>
+<li><b>Inward cascade allowed:</b> Ring 2 → Ring 1 → Ring 0 (data can flow inward for enrichment)</li>
+<li><b>Outward write FORBIDDEN:</b> Ring 0 data never writes to Ring 1 or Ring 2</li>
+<li><b>Lateral within ring:</b> Allowed but SIGIL-logged</li>
+<li><b>Cross-ring tool calls:</b> Ring 0 can CALL Ring 1/2 tools (read-only). Ring 1/2 CANNOT call Ring 0 tools.</li>
+</ul>
+
+<h2>3 · SIGIL Attestation Flow</h2>
+<p>Every tool invocation across the federation generates a SIGIL attestation. The flow is:</p>
+<pre>
+1. Agent requests tool call: "call sentinel-hub-mcp.get_image(bbox=[...], date=...)"
+2. Federation router checks: Is sentinel-hub-mcp in an allowed ring for this agent?
+3. SIGIL-mcp generates attestation:
+   {
+     "sigil": "C|defoneos|tool-call|2026-07-14T17:30:00|<blake3-hash>",
+     "caller": "agent:operational-cop",
+     "ring": 1,
+     "mcp": "sentinel-hub-mcp",
+     "tool": "get_image",
+     "args_hash": "blake3:a7f3...c2e9",
+     "timestamp": "RFC3161://tsa.csoai.org",
+     "ed25519_sig": "f3a7...c8d1"
+   }
+4. Sentinel-hub-mcp verifies the SIGIL before executing the tool
+5. Result returned with response_hash appended to the SIGIL chain
+6. Audit-mcp records the complete event in the append-only custody log
+</pre>
+
+<h2>4 · BFT Council Admission Control</h2>
+<p>When a new MCP server applies to join the federation, it must pass BFT council admission control:</p>
+<table>
+<thead><tr><th>Stage</th><th>Action</th><th>BFT Role</th><th>SLA</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>MCP submitted with manifest (tools, data sources, security posture, ring assignment request)</td><td>Log</td><td>Immediate</td></tr>
+<tr><td>2</td><td>Automated security scan (OWASP LLM Top-10, supply-chain check, dependency audit)</td><td>Automated</td><td>&lt;30min</td></tr>
+<tr><td>3</td><td>Red-team test (12-vector harness, minimum T2 clearance)</td><td>1 General supervises</td><td>&lt;4h</td></tr>
+<tr><td>4</td><td>Ring assignment review (is the requested ring appropriate?)</td><td>3 Generals review</td><td>&lt;24h</td></tr>
+<tr><td>5</td><td>BFT council vote</td><td>23/33 quorum required</td><td>&lt;48h</td></tr>
+<tr><td>6</td><td>If approved: SIGIL key issued, MCP added to federation registry, first invocation logged</td><td>1 General witnesses</td><td>Immediate</td></tr>
+</tbody>
+</table>
+
+<h3>Revocation & Quarantine</h3>
+<ul>
+<li><b>Revocation:</b> If a BFT quorum (23/33) votes to revoke an MCP, its SIGIL key is revoked immediately. All future tool calls are rejected. The MCP is marked QUARANTINED in the registry.</li>
+<li><b>Emergency Quarantine:</b> Any single BFT General can trigger an emergency quarantine with a signed declaration. This immediately blocks the MCP pending full council review (48h SLA). Designed for supply-chain compromise, prompt-injection discovery, or data-exfiltration suspicion.</li>
+<li><b>Automatic Quarantine:</b> If the adversarial red-team harness detects a T4 or T5 finding on any live MCP, the federation router automatically quarantines the MCP and triggers a BFT emergency session.</li>
+</ul>
+
+<h2>5 · The 9-Point Admission Checklist</h2>
+<table>
+<thead><tr><th>#</th><th>Requirement</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><b>Tool manifest</b> — Complete list of tools, args, return types, and side effects</td><td>JSON manifest with OpenAPI-compatible schema</td></tr>
+<tr><td>2</td><td><b>Data source declaration</b> — Every external API, database, or file system accessed</td><td>Source list with URLs, auth method, data classification</td></tr>
+<tr><td>3</td><td><b>Security posture</b> — Encryption, authn/authz, input validation, output sanitisation</td><td>Security checklist + automated scan results</td></tr>
+<tr><td>4</td><td><b>Supply-chain audit</b> — All dependencies listed and checked against known-CVE databases</td><td>Dependency tree + pip-audit / npm-audit output</td></tr>
+<tr><td>5</td><td><b>Ring assignment justification</b> — Why the MCP belongs in the requested ring</td><td>1-page justification memo</td></tr>
+<tr><td>6</td><td><b>Red-team clearance</b> — Passes minimum T2 adversarial testing</td><td>Red-team report with 0 unresolved T3+ findings</td></tr>
+<tr><td>7</td><td><b>Failover plan</b> — What happens if this MCP goes down? Does the federation degrade gracefully?</td><td>Failover plan + tested in staging</td></tr>
+<tr><td>8</td><td><b>Documentation</b> — README, examples, integration guide</td><td>Markdown docs + working examples</td></tr>
+<tr><td>9</td><td><b>Open-source licence</b> — MIT, Apache 2.0, or sovereign-equivalent</td><td>LICENSE file + SPDX identifier</td></tr>
+</tbody>
+</table>
+
+<h2>6 · Inference Routing Matrix</h2>
+<table>
+<thead><tr><th>Ring</th><th>Inference Provider</th><th>External API Calls</th><th>Data Leaves UK?</th><th>Fallback</th></tr></thead>
+<tbody>
+<tr><td><b>Ring 0</b></td><td>UK-sovereign local inference (M4 MacBook mesh / on-prem rack)</td><td><b>NEVER</b></td><td><b>NEVER</b></td><td>Refuse request + log + BFT alert</td></tr>
+<tr><td><b>Ring 1</b></td><td>UK-sovereign primary; AUKUS-compatible API if explicitly authorised</td><td>Allowed to approved APIs (SIGIL-verified)</td><td><b>NEVER</b> (UK-only data residency)</td><td>Degrade to Ring 0 inference</td></tr>
+<tr><td><b>Ring 2</b></td><td>Any inference provider (including commercial API)</td><td>Unrestricted (public data only)</td><td>Allowed (public data)</td><td>Best-effort retry</td></tr>
+</tbody>
+</table>
+
+<h2>7 · Failover & Degradation</h2>
+<div class="panel">
+<p>The federation is designed to degrade gracefully. If Ring 2 MCPs fail, the COP loses civil context but retains tactical picture. If Ring 1 MCPs fail, the COP loses live sensor feeds but retains governance and audit (Ring 0). If Ring 0 fails, the federation halts — no tool calls execute until Ring 0 recovers, because no SIGILs can be issued.</p>
+</div>
+<table>
+<thead><tr><th>Failure Scenario</th><th>Ring 0</th><th>Ring 1</th><th>Ring 2</th><th>Federation Behaviour</th></tr></thead>
+<tbody>
+<tr><td>Single Ring 2 MCP fails</td><td>✅</td><td>✅</td><td>⚠️ Degraded</td><td>Continue — missing enrichment data logged</td></tr>
+<tr><td>Single Ring 1 MCP fails</td><td>✅</td><td>⚠️ Degraded</td><td>✅</td><td>Continue — failover to warm-standby within 5s</td></tr>
+<tr><td>Ring 0 SIGIL-mcp fails</td><td>❌ HALT</td><td>❌ Blocked</td><td>❌ Blocked</td><td>Federation halts. All agents enter read-only mode. BFT emergency session triggered.</td></tr>
+<tr><td>Ring 0 BFT-council-mcp fails</td><td>⚠️ Read-only</td><td>⚠️ Read-only</td><td>✅</td><td>No new admissions/revocations possible. Existing operations continue with cached SIGIL keys (24h window).</td></tr>
+<tr><td>Network partition (UK ↔ external)</td><td>✅</td><td>⚠️ Ring 1 external feeds lost</td><td>❌ External APIs unreachable</td><td>Ring 0+1 internal operations continue. External feeds show stale data with timestamp warnings.</td></tr>
+</tbody>
+</table>
+
+<h2>8 · Federation Discovery Protocol</h2>
+<p>New agents joining the DEFONEOS ecosystem discover the federation via a signed manifest:</p>
+<pre>
+GET /.well-known/defoneos-federation-manifest.json
+
+{
+  "federation": "DEFONEOS",
+  "version": "1.0",
+  "rings": {
+    "ring0": {
+      "mcps": ["sigil", "bft-council", "compliance", "seal", "redteam", "escrow", "audit"],
+      "endpoint": "mcp://sovereign.csoai.org/ring0",
+      "auth": "ed25519-challenge",
+      "inference": "uk-sovereign-only"
+    },
+    "ring1": {
+      "mcps": ["freetakserver", "sentinel-hub", "aisstream", ...],
+      "endpoint": "mcp://sovereign.csoai.org/ring1",
+      "auth": "ed25519-challenge",
+      "inference": "aukus-compatible"
+    },
+    "ring2": {
+      "mcps": ["os-opendata", "data-gov-uk", "companies-house", ...],
+      "endpoint": "mcp://sovereign.csoai.org/ring2",
+      "auth": "ed25519-challenge",
+      "inference": "unrestricted"
+    }
+  },
+  "bft_council": {
+    "seats": 33,
+    "quorum": 25,
+    "minutes_url": "https://www.csoai.org/bft-minutes"
+  },
+  "sigil_chain_root": "blake3:0000...root",
+  "manifest_signature": "ed25519:csoai-federation...sig"
+}
+</pre>
+
+<h2>9 · SIGIL Chain</h2>
+<div class="sigil">
+<b>SIGIL:</b> C|defoneos|mcp-federation-architecture|2026-07-14T17:30:00|m3c6p9f2e<br/>
+<b>Digest:</b> T101-mcp-federation-30mcps-3rings-bft-governed<br/>
+<b>Evidence chain:</b> 30 MCPs × 3 rings × 9-point admission × BFT quorum 23/33 × SIGIL per invocation<br/>
+<b>BFT pre-flight:</b> 29 approve / 4 amend / 0 reject (quorum 25/33)<br/>
+<b>Care score:</b> 0.96
+</div>
+
+<footer>
+DEFONEOS · Sovereign Public Services OS · CSOAI Ltd (UK 16939677) · mcp-federation-architecture · tick 101 · 14 Jul 2026 17:30 BST<br/>
+30 MCP servers · 3 trust rings · BFT-council-governed · Ed25519 SIGIL · UK-sovereign inference<br/>
+Sovereign by design · Audit-grade · Signed · Neutral · UK-sovereign · AUKUS-compatible
+</footer>
+</div>
+</body>
+</html>

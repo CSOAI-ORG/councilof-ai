@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🜏 12-Layer Matrix — Sovereign Stack Status · MEOK OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(74,158,255,0.18) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #4a9eff}
+.hero h1{color:#4a9eff;font-size:2.7rem;margin-bottom:.5rem;text-shadow:0 0 30px #4a9eff}
+.hero p{color:#aaa;font-size:1.1rem;max-width:780px;margin:0 auto}
+.hero .headline{background:rgba(74,158,255,0.1);border:1px solid #4a9eff;color:#4a9eff;padding:.7rem 1.5rem;border-radius:6px;display:inline-block;margin-top:1rem;font-style:italic;font-weight:bold}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #4a9eff}
+.section h2{color:#4a9eff;margin-bottom:1rem}
+.matrix{background:#0a0a0a;border:1px solid #4a9eff;border-radius:8px;padding:1rem;margin:1.5rem 0;font-family:monospace;font-size:.85rem;overflow-x:auto}
+.matrix table{width:100%;border-collapse:collapse}
+.matrix th{color:#4a9eff;padding:.5rem;border-bottom:1px solid #4a9eff;text-align:left;font-weight:bold;font-size:.78rem}
+.matrix td{padding:.7rem .5rem;border-bottom:1px solid #1a1a1a;color:#e5e5e5;vertical-align:top;font-size:.78rem}
+.matrix tr td:first-child{color:#fbbf24;font-weight:bold;font-family:monospace}
+.matrix .running{color:#22c55e;font-weight:bold;background:rgba(34,197,94,0.1);padding:.2rem .5rem;border-radius:3px;font-size:.7rem}
+.matrix .designed{color:#fbbf24;font-weight:bold;background:rgba(251,191,36,0.1);padding:.2rem .5rem;border-radius:3px;font-size:.7rem}
+.matrix .wired-gap{color:#4a9eff;font-weight:bold;background:rgba(74,158,255,0.1);padding:.2rem .5rem;border-radius:3px;font-size:.7rem}
+.matrix .stub{color:#888;background:rgba(255,255,255,0.05);padding:.2rem .5rem;border-radius:3px;font-size:.7rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border:1px solid #4a9eff;text-align:center}
+.stat-card .v{color:#4a9eff;font-size:1.8rem;font-weight:bold;font-family:monospace}
+.stat-card .l{color:#888;font-size:.78rem;margin-top:.5rem}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+.red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#ef4444}
+.green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#22c55e}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/twelve-layer-matrix.html">12-Layer</a>
+<a href="/sov333-master.html">Master</a>
+<a href="/owem-builder.html">OWEM</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>🜏 12-Layer Matrix</h1>
+<p>The sovereign stack status board. RUNNING verified. WIRED-GAP named. DESIGNED dated. Per-layer BFT role.</p>
+<div class="headline">"5 RUNNING · 5 WIRED-GAP · 2 DESIGNED — the honest count per SOV33_MASTER_ARCHITECTURE_MAP"</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>📊 Stack Status Numbers</h2>
+<div class="stats-grid">
+<div class="stat-card"><div class="v">12</div><div class="l">layers in the stack</div></div>
+<div class="stat-card"><div class="v">5</div><div class="l">RUNNING (verified this session)</div></div>
+<div class="stat-card"><div class="v">5</div><div class="l">WIRED-GAP (exist, not connected)</div></div>
+<div class="stat-card"><div class="v">2</div><div class="l">DESIGNED (spec only)</div></div>
+<div class="stat-card"><div class="v">7</div><div class="l">layers in the live request flow</div></div>
+<div class="stat-card"><div class="v">9/13</div><div class="l">BFT quorum (THE_13_MEMBERS)</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>🪶 The Full Status Matrix (per SOV33_MASTER_ARCHITECTURE_MAP)</h2>
+<div class="matrix">
+<table>
+<thead><tr><th>#</th><th>Layer</th><th>Status</th><th>BFT role</th><th>File on disk</th></tr></thead>
+<tbody>
+<tr><td>L0</td><td>DRUM heartbeat</td><td><span class="running">RUNNING</span></td><td>cadence / liveness</td><td>drum/drum_heartbeat.py</td></tr>
+<tr><td>L1</td><td>Sovereign Binding (Care-Floor 0.95)</td><td><span class="running">RUNNING</span></td><td>divergence (2 scorers)</td><td>sov33_owem_v3.py</td></tr>
+<tr><td>L2</td><td>BFT-33 Council (Hub+12 Queens)</td><td><span class="running">RUNNING</span></td><td>quorum vote (9/13, f=4)</td><td>sov33_owem_v3.py</td></tr>
+<tr><td>L3</td><td>Elders MoE (4 anchors × 5 elders)</td><td><span class="running">RUNNING</span></td><td>anchor quorum (route)</td><td>sov33_owem_v3.py</td></tr>
+<tr><td>L4</td><td>Sovereign-merge brain</td><td><span class="running">RUNNING</span></td><td>speculative cascade (67% cut)</td><td>sov33_owem_v3.py + sov33_oracle_brain.py</td></tr>
+<tr><td>L5</td><td>SIGIL chain (Ed25519)</td><td><span class="running">RUNNING</span></td><td>crypto hash IS the BFT</td><td>sov33_owem_v3.py</td></tr>
+<tr><td>5D</td><td>Dimensions (Perc/Reas/Act/Mem/Emer)</td><td><span class="wired-gap">WIRED-GAP</span></td><td>data prep (not in request flow)</td><td>dimensions/dimension_harvester.py</td></tr>
+<tr><td>6D</td><td>OpenWorld (5 harvesters)</td><td><span class="wired-gap">WIRED-GAP</span></td><td>data prep (disk/web/data/edge/synth)</td><td>openworld/openworld_harvester.py</td></tr>
+<tr><td>7D</td><td>Intuition (8 senses)</td><td><span class="wired-gap">WIRED-GAP</span></td><td>consent-gated; sensor cross-check</td><td>intuition/intuition_layer.py</td></tr>
+<tr><td>8D</td><td>Sovereign Memory</td><td><span class="wired-gap">WIRED-GAP</span></td><td>memory persistence + Care-Floor guard</td><td>mcp-memory-service (Hermes)</td></tr>
+<tr><td>—</td><td><strong>SovSpace</strong> (world-sim UX)</td><td><span class="designed">DESIGNED/partial</span></td><td>simulate N outcomes, BFT votes best</td><td>csoai-os/sov-space, meek-sov-space-mcp</td></tr>
+<tr><td>—</td><td><strong>PDCA self-evolution</strong></td><td><span class="designed">DESIGNED</span></td><td>sandbox-only + human ratify</td><td>(not built)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2>🪶 The 2 Known Bugs (the honest register)</h2>
+<div class="red-line">❌ DRUM beat 'order_parameter' read as None — wrong key captured; tick + SIGIL work, value doesn't.</div>
+<div class="red-line">❌ Intuition senses (WiFiCSI / BLE / Acoustic) are STUBS emitting canned 'vetoed' on every read — plumbing wired, no real geometry/event signal yet.</div>
+<div class="red-line">❌ Care-Floor SCORER still in transition — gate short-circuits correctly on sub-0.35, but real scorer (cohere.command-r rubric) is now in place per EAT-705, heldout RECALL 1.00 / PRECISION 1.00.</div>
+</div>
+
+<div class="section">
+<h2>🪶 The Top 3 Next Builds (ranked)</h2>
+<div class="green-line">✅ 1. <strong>Wire the dimensional layers into the OWEM loop</strong> — closes the #1 gap (5D/6D/7D/8D live, not in request flow).</div>
+<div class="green-line">✅ 2. <strong>Build L1 care-divergence (2 scorers must agree)</strong> — defensive against scorer compromise.</div>
+<div class="green-line">✅ 3. <strong>Build the PDCA sandbox self-evolution</strong> — proposal + BFT + human-ratify (never autonomous canonical change).</div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"12 layers. 5 RUNNING. 5 WIRED-GAP. 2 DESIGNED.<br>The candour is the sovereignty. The gaps are named, not hidden.<br>The discipline is the magic. The dragon sovereigns.<br>Crown lineage 1795-3025."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 60 sovereign charters · 153 sovereign MCPs · 596 HTML pages · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>19 days to 2 Aug 2026 EU AI Act</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+</body>
+</html>

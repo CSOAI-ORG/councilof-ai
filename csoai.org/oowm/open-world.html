@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E. Sovereign Open World — csoai.org/oowm/open-world.html</title>
+  <meta name="description" content="100+ live data feeds. Government, scientific, standards, defence, healthcare, finance, climate, space, markets.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse, #0a0e27 0%, #000 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 2rem; color: #fbbf24; }
+    h2 { color: #06b6d4; margin-top: 32px; border-bottom: 1px solid #06b6d4; padding-bottom: 4px; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 24px; }
+    .panel { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #06b6d4; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; }
+    .feed { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 4px; font-size: 0.82rem; border-left: 3px solid #10b981; }
+    .feed.lic { border-left-color: #fbbf24; }
+    .feed.gov { border-left-color: #06b6d4; }
+    .feed.std { border-left-color: #a855f7; }
+    .feed strong { color: #fbbf24; }
+    .cadence { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+    .cad { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 6px; text-align: center; border-top: 3px solid #fbbf24; }
+    .cad h4 { color: #fbbf24; margin: 4px 0; }
+    pre { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 E. Sovereign Open World</h1>
+    <p class="tagline">100+ live data feeds — public, sovereign, open. The OOWM breathes the world in.</p>
+
+    <div class="panel">
+      <h2>Ingestion Cadence</h2>
+      <div class="cadence">
+        <div class="cad"><h4>Nightly</h4><p>30+ feeds<br>3 AM UTC</p></div>
+        <div class="cad"><h4>Weekly</h4><p>40+ feeds<br>Sun 4 AM UTC</p></div>
+        <div class="cad"><h4>Monthly</h4><p>20+ feeds<br>1st 5 AM UTC</p></div>
+        <div class="cad"><h4>Quarterly</h4><p>10+ feeds<br>1st of Q</p></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🏛️ Government (UK-led, 12 feeds)</h2>
+      <div class="grid">
+        <div class="feed gov"><strong>UK Companies House</strong><br>Companies, officers, filings</div>
+        <div class="feed gov"><strong>HM Land Registry</strong><br>Title, price paid, deeds</div>
+        <div class="feed gov"><strong>Ordnance Survey</strong><br>OS Maps, Code-Point, Addresses</div>
+        <div class="feed gov"><strong>DfT</strong><br>Transport stats, road traffic</div>
+        <div class="feed gov"><strong>Environment Agency</strong><br>Flood, water quality</div>
+        <div class="feed gov"><strong>HSE</strong><br>Health & Safety Executive</div>
+        <div class="feed gov"><strong>Met Office</strong><br>Weather, climate data</div>
+        <div class="feed gov"><strong>NHS Digital</strong><br>Open health datasets</div>
+        <div class="feed gov"><strong>DVSA</strong><br>Vehicle + driver data</div>
+        <div class="feed gov"><strong>FSA</strong><br>Food Standards Agency</div>
+        <div class="feed gov"><strong>HMRC</strong><br>Tax + trade statistics</div>
+        <div class="feed gov"><strong>Crown</strong><br>Crown Estate, royal warrants</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🔬 Scientific (6 feeds)</h2>
+      <div class="grid">
+        <div class="feed"><strong>arXiv</strong><br>Preprints, q-bio, cs.LG, cs.AI</div>
+        <div class="feed"><strong>PubMed</strong><br>Biomedical literature</div>
+        <div class="feed"><strong>Crossref</strong><br>DOI metadata, citations</div>
+        <div class="feed"><strong>OpenAlex</strong><br>Open scholarly graph</div>
+        <div class="feed"><strong>NASA</strong><br>Earth obs, imagery, mission data</div>
+        <div class="feed"><strong>CERN OpenData</strong><br>Particle physics, LHC</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🌐 Web (5 feeds)</h2>
+      <div class="grid">
+        <div class="feed"><strong>Wikipedia</strong><br>Encyclopedic corpus</div>
+        <div class="feed"><strong>OpenStreetMap</strong><br>Planetary geospatial</div>
+        <div class="feed"><strong>GitHub</strong><br>Public repos, code corpora</div>
+        <div class="feed"><strong>Open Library</strong><br>Books + bibliographic</div>
+        <div class="feed"><strong>Wikidata</strong><br>Structured knowledge graph</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>⚖️ Standards (12 feeds)</h2>
+      <div class="grid">
+        <div class="feed std"><strong>EU AI Act</strong><br>Risk tiers, Article 50</div>
+        <div class="feed std"><strong>GDPR</strong><br>Data protection regulation</div>
+        <div class="feed std"><strong>UK AI Bill</strong><br>Sovereign AI governance</div>
+        <div class="feed std"><strong>NIST AI RMF</strong><br>Risk management framework</div>
+        <div class="feed std"><strong>ISO 42001</strong><br>AI management systems</div>
+        <div class="feed std"><strong>Bletchley</strong><br>Frontier AI safety declaration</div>
+        <div class="feed std"><strong>Seoul</strong><br>AI Seoul Summit declaration</div>
+        <div class="feed std"><strong>Paris</strong><br>Paris AI Action Summit</div>
+        <div class="feed std"><strong>UN AI</strong><br>UN AI advisory body</div>
+        <div class="feed std"><strong>UNESCO</strong><br>AI ethics recommendation</div>
+        <div class="feed std"><strong>OECD AI</strong><br>OECD AI Principles</div>
+        <div class="feed std"><strong>BRICS AI</strong><br>BRICS AI study group</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🛡️ Defence (5 feeds, JSP-aligned)</h2>
+      <div class="grid">
+        <div class="feed gov"><strong>JSP 936</strong><br>NATO AI policy</div>
+        <div class="feed gov"><strong>JSP 440</strong><br>Defence safeguarding</div>
+        <div class="feed gov"><strong>DASA</strong><br>Defence Science Accelerator</div>
+        <div class="feed gov"><strong>DSTL</strong><br>Defence Science Tech Lab</div>
+        <div class="feed gov"><strong>MOD</strong><br>Ministry of Defence open data</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🏥 Healthcare (4 feeds)</h2>
+      <div class="grid">
+        <div class="feed"><strong>NHS England</strong><br>Open health data</div>
+        <div class="feed"><strong>WHO</strong><br>Global health observatory</div>
+        <div class="feed"><strong>CQC</strong><br>Care Quality Commission</div>
+        <div class="feed"><strong>HIPAA</strong><br>US healthcare privacy</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>💰 Finance (8 feeds)</h2>
+      <div class="grid">
+        <div class="feed"><strong>Bank of England</strong><br>Monetary, financial stability</div>
+        <div class="feed"><strong>FCA</strong><br>Financial Conduct Authority</div>
+        <div class="feed"><strong>PRA</strong><br>Prudential Regulation</div>
+        <div class="feed"><strong>MiFID II</strong><br>Markets in Financial Instruments</div>
+        <div class="feed"><strong>Basel III</strong><br>International banking standards</div>
+        <div class="feed"><strong>Dodd-Frank</strong><br>US financial reform</div>
+        <div class="feed"><strong>SEC / FINRA / CFTC</strong><br>US securities regulation</div>
+        <div class="feed"><strong>FRED</strong><br>Federal Reserve Economic Data</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🌍 Climate + 🚀 Space + 📈 Markets</h2>
+      <div class="grid">
+        <div class="feed"><strong>NASA Climate</strong><br>GISS, GISTEMP</div>
+        <div class="feed"><strong>NOAA</strong><br>Climate, oceans, weather</div>
+        <div class="feed"><strong>Copernicus</strong><br>EU Earth observation</div>
+        <div class="feed"><strong>ISS Live</strong><br>Open notifications</div>
+        <div class="feed"><strong>SpaceX</strong><br>Launch + telemetry</div>
+        <div class="feed"><strong>ESA</strong><br>European Space Agency</div>
+        <div class="feed lic"><strong>BTC / ETH</strong><br>Public blockchains</div>
+        <div class="feed lic"><strong>FTSE 100 / S&amp;P 500</strong><br>Open market data</div>
+        <div class="feed lic"><strong>Gold / Oil</strong><br>Commodities (LBMA / EIA)</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Licence Sovereignty</h2>
+      <p>Every feed ingested under one of:</p>
+      <ul>
+        <li><strong>OGL-UK-3.0</strong> — Open Government Licence (UK Crown)</li>
+        <li><strong>CC0</strong> — Creative Commons Zero (public domain)</li>
+        <li><strong>MIT</strong> — Code corpora (GitHub)</li>
+        <li><strong>Apache 2.0</strong> — Open weights, open data</li>
+        <li><strong>Open</strong> — Crown Authorisation, EU Digital Omnibus, public sector</li>
+      </ul>
+      <p><strong>Citizen can:</strong> opt-in, opt-out, or customise the ingestion list per feed. Defaults are sovereign + open.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Federated RAG (how feeds reach the OOWM)</h2>
+      <pre>
+# mcp_federation_search + mcp_bridge_call → ingest
+sov_ingest_nightly():
+  for feed in feeds_nightly:
+    data = mcp_bridge_call(feed.server, feed.tool, feed.args)
+    sigil_digest = sigil_emit("Q|FEED|" + feed.name + "|" + len(data))
+    mamba_ingest(data)  # 16-dim state compression
+  composite_recompute()
+  </pre>
+    </div>
+
+    <p style="text-align:center; margin-top:32px; color:#10b981;">
+      🜏 100+ feeds. Open. Sovereign. The OOWM breathes the world.
+    </p>
+  </div>
+</body>
+</html>

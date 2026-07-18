@@ -1,0 +1,38 @@
+{
+  "cycle_id": "EAT-20260714-044134",
+  "timestamp_utc": "2026-07-14T04:41:34.462488+00:00",
+  "checks": {
+    "1_health_http_200": true,
+    "2_ssh_meok_backend": "FAIL \u2014 connection timed out (port 22 unreachable from this host)",
+    "3_sov3_tools_count": "N/A \u2014 localhost:3101/mcp not listening on this host (only Claude 8766/49220 + Prisma MCP)",
+    "4_meok_os_3000": "FAIL \u2014 localhost:3000 not reachable on this host"
+  },
+  "counts": {
+    "html_pages_on_disk": 478,
+    "sprint_pages_live_logical": 60,
+    "sprint_ticks_completed": 99,
+    "sprint_phase": "EXPANSION_18_CREDENTIAL_CONSORTIUM_CAPABILITY_BUNDLE_SHIPPED",
+    "targets_hit": [
+      "30_mcps",
+      "50_pages",
+      "15_repos"
+    ]
+  },
+  "broken_links_scan": {
+    "scanned": 2533,
+    "broken": 6,
+    "note": "All 6 'broken' are inline data:image/svg+xml favicons \u2014 not real broken links, not patched"
+  },
+  "sitemap": {
+    "regenerated": true,
+    "urls_in_sitemap": 478,
+    "size_bytes": 83725
+  },
+  "deployment": {
+    "vercel_deploy_invoked": false,
+    "reason": "No new logical pages since tick 96 (sprint at tick 99, pages_live=60 stable); on-disk count is just sub-pages + live demos"
+  },
+  "sigil_sha256_16": "0ca60368597aa934",
+  "care_score": 0.93,
+  "emitted_by": "JEEVES/Hermes cron"
+}

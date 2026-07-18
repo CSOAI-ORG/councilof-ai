@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🪡 SOV33 Small OWEMs — Triangle + Cascade Topologies</title>
+<meta name="description" content="SOV33 small OWEMs — compressed sovereign substrate variants for edge and resource-constrained deployments. Same BFT council, same SIGIL chain, EU AI Act aligned.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1200px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.7rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.25rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.55rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.55rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .topology{display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--bg);border-radius:8px;margin:1rem 0;font-family:monospace}
+  .triangle{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;align-items:center;margin:1rem 0;text-align:center}
+  .triangle .vertex{background:var(--bg2);padding:.8rem;border-radius:6px;border:1px solid var(--accent2)}
+  .triangle .center{background:#1a0d20;padding:1rem;border-radius:8px;border:2px solid var(--accent);grid-column:2;text-align:center;font-weight:bold}
+  .cascade{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+  .brain{background:var(--bg2);padding:1.5rem;border-radius:8px;text-align:center;border:1px solid var(--rule)}
+  .brain.left{border-color:var(--accent2)}
+  .brain.right{border-color:var(--accent)}
+  pre{background:#0d1220;padding:.8rem;border-radius:6px;overflow-x:auto;font-size:.85em}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_SMALL_OWEMS.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🪡 SOV33 Small OWEMs — Triangle + Cascade</h1>
+  <p class="meta">The smaller OWEMs that grow into large OWEMs. Two topologies: 3-around-1 (governance) + 10/90 cascade (efficiency). 12 Jul 2026.</p>
+  <p>
+    <a href="SOV33_HERO.html">← SOV33 Hub</a> ·
+    <a href="SOV33_OWEM_EXPLAINER.html">OWEM Architecture</a> ·
+    <a href="SOV33_BFT33_COUNCIL.html">BFT-33 Council</a>
+  </p>
+</header>
+
+<h2>The Thesis (per Claude Code, MEOK Labs)</h2>
+
+<div class="card gold">
+  <blockquote>"Build your own AI — it grows with you. <strong>Small OWEMs grow into a large OWEM over time</strong> and other small OWEMs emerge. It's never the same, always changing."</blockquote>
+  <p class="meta">— <a href="#">SOV33_GROWTH_MODEL</a> · Sir Nicholas Templeman, 2026</p>
+</div>
+
+<p class="meta"><strong>Honest scope clarification</strong> (per CHARTER_OWEM_FOUR_SCOPE): "Small OWEM grows into a large OWEM" = the SAME substrate's small scope (personal memory/personality) accretes until it has large-scope reach (governance). NOT "small model grows into big model." Per the charter: never conflate size-routing with scope-reach.</p>
+
+<p>SOV33 doesn't try to be one giant model. Instead it has <em>multiple OWEMs at different scales</em>, each owning its own lane, with a governed escalation path between them.</p>
+
+<h2>The 2 Smaller-OWEM Topologies</h2>
+
+<div class="card">
+  <h3>1. Triangle (3-around-1) — governance topology</h3>
+  <p><strong>Three small OWEMs at the vertices</strong> + <strong>one large SOV33-cubed at the center</strong> as Queen/governor.</p>
+
+  <div class="triangle">
+    <div class="vertex"><strong>OWEM-1</strong><br><span class="meta">lineage=qwen3-30b<br>brains=Compliance,Defense,Voice</span></div>
+    <div class="vertex"><strong>OWEM-2</strong><br><span class="meta">lineage=llama3-70b<br>brains=Defense,Intuition,Voice</span></div>
+    <div class="vertex"><strong>OWEM-3</strong><br><span class="meta">lineage=mistral-12b<br>brains=Compliance,Intuition,Voice</span></div>
+    <div class="center" style="grid-column: 1 / span 3;">SOV33-CUBED CENTER (Queen/governor)</div>
+  </div>
+
+  <ul>
+    <li>Each small OWEM decides LOCALLY when confident (offline/cheap)</li>
+    <li>Escalates open-ended / out-of-lane work to the center</li>
+    <li>Triangle agreement is discounted by lineage ρ (measured)</li>
+    <li>3 identical lineages ≈ 1 effective vote (escalate)</li>
+    <li>3 diverse lineages ≈ 2.3 effective votes (commit locally)</li>
+    <li>Every cross-node message is SIGIL-signed</li>
+  </ul>
+
+  <p class="meta">Built by Claude Code: <code>sov33_triangle_owem.py</code>. Hardened in <a href="https://github.com/CSOAI-ORG/clawd/commit/b00c4f89">b00c4f89</a> to use MEASURED ρ (not heuristic).</p>
+</div>
+
+<div class="card">
+  <h3>2. Cascade (10/90) — efficiency topology</h3>
+  <p><strong>LEFT brain (small fast)</strong> handles 90% of traffic · <strong>RIGHT brain (large deep)</strong> called only for the hard 10%.</p>
+
+  <div class="cascade">
+    <div class="brain left">
+      <h3 style="margin:0">LEFT</h3>
+      <p class="meta">small fast model</p>
+      <p><strong>~90% of traffic</strong></p>
+      <p class="meta">handles easy/predictable queries</p>
+    </div>
+    <div class="brain right">
+      <h3 style="margin:0">RIGHT</h3>
+      <p class="meta">large deep model</p>
+      <p><strong>~10% of escalations</strong></p>
+      <p class="meta">handles hard/open-ended queries</p>
+    </div>
+  </div>
+
+  <ul>
+    <li>Difficulty estimator: regex signals + length factor</li>
+    <li>LEFT always runs first (conscious, fast, gates via OWEM)</li>
+    <li>RIGHT called only when difficulty > 0.5</li>
+    <li>Every hop is SIGIL-signed and Care-Floor gated</li>
+  </ul>
+
+  <p class="meta">Built by Claude Code: <code>sov33_cascade_router.py</code>. Honest efficiency: <em>aggregate big, active small, every hop signed</em>.</p>
+</div>
+
+<h2>Live Test</h2>
+
+<div class="grid2">
+  <div class="card">
+    <h3>Test Triangle OWEM</h3>
+    <input type="text" id="tri-q" value="Is the sovereign care floor at 0.95?" 
+      style="width:100%;padding:.7rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;font-family:inherit;margin:.5rem 0">
+    <select id="tri-lane" style="padding:.5rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;margin:.3rem 0">
+      <option value="Intuition">Lane: Intuition</option>
+      <option value="Compliance">Lane: Compliance</option>
+      <option value="Defense">Lane: Defense</option>
+      <option value="Voice">Lane: Voice</option>
+      <option value="Strategy">Lane: Strategy (will escalate)</option>
+    </select><br>
+    <input type="range" id="tri-diff" min="0" max="1" step="0.05" value="0.3" style="margin:.5rem 0">
+    <span class="meta">Difficulty: <span id="tri-diff-val">0.3</span></span><br>
+    <button onclick="testTriangle()" style="background:var(--accent);color:#0a0e1a;border:none;padding:.7rem 1.4rem;border-radius:6px;font-weight:bold;cursor:pointer">Route through Triangle →</button>
+    <div id="tri-out" style="margin-top:1rem"></div>
+  </div>
+
+  <div class="card">
+    <h3>Test Cascade Router</h3>
+    <input type="text" id="casc-q" value="What is Article 0?" 
+      style="width:100%;padding:.7rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;font-family:inherit;margin:.5rem 0">
+    <button onclick="testCascade()" style="background:var(--accent2);color:#0a0e1a;border:none;padding:.7rem 1.4rem;border-radius:6px;font-weight:bold;cursor:pointer">Compute difficulty →</button>
+    <div id="casc-out" style="margin-top:1rem"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/json-formatter-js@2.2.1/dist/json-formatter.umd.min.js"></script>
+<script>
+const API = 'http://localhost:8101';
+
+document.getElementById('tri-diff').addEventListener('input', e => {
+  document.getElementById('tri-diff-val').textContent = e.target.value;
+});
+
+async function testTriangle() {
+  const q = document.getElementById('tri-q').value;
+  const lane = document.getElementById('tri-lane').value;
+  const difficulty = parseFloat(document.getElementById('tri-diff').value);
+  const out = document.getElementById('tri-out');
+  out.innerHTML = 'Running triangle...';
+  try {
+    const r = await fetch(API + '/api/triangle', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: q, lane, difficulty, proposal: 'ALLOW'})
+    });
+    const d = await r.json();
+    const escClass = d.escalated ? 'warn' : 'sigil';
+    out.innerHTML = `
+      <p><span class="pill ${escClass}">RULING: ${d.ruling}</span> <span class="pill">N_eff: ${d.n_eff_votes}</span> <span class="pill">ρ: ${d.rho} (${d.rho_source})</span></p>
+      <table>
+        <tr><th>OWEM</th><th>Lineage</th><th>In-lane</th><th>Local</th><th>Verdict</th></tr>
+        ${d.small_owems.map(v => `<tr><td>${v.name}</td><td>${v.lineage}</td><td>${v.in_lane}</td><td>${v.local}</td><td>${v.verdict}</td></tr>`).join('')}
+      </table>
+      <p class="meta">SIGIL: <code>${d.sigil}</code></p>
+    `;
+  } catch (e) {
+    out.innerHTML = '<span class="pill warn">' + e.message + '</span>';
+  }
+}
+
+async function testCascade() {
+  const q = document.getElementById('casc-q').value;
+  const out = document.getElementById('casc-out');
+  out.innerHTML = 'Computing difficulty...';
+  try {
+    const r = await fetch(API + '/api/cascade', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: q})
+    });
+    const d = await r.json();
+    const decClass = d.escalated_to_right ? 'warn' : 'sigil';
+    out.innerHTML = `
+      <p><span class="pill ${decClass}">DECISION: ${d.decision}</span></p>
+      <p class="meta">Difficulty: ${d.difficulty} · ${d.rationale}</p>
+      <p class="meta">${d.note}</p>
+    `;
+  } catch (e) {
+    out.innerHTML = '<span class="pill warn">' + e.message + '</span>';
+  }
+}
+</script>
+
+<h2>The 6 Invariants (constant across all OWEM sizes)</h2>
+
+<ol>
+  <li><strong>Care-Floor 0.95</strong> — sub-floor content vetoed before any backend call</li>
+  <li><strong>Article 0</strong> — ISO fee-for-service only, never take equity</li>
+  <li><strong>12 Sovereign Pillars</strong> — every output charter-compliant</li>
+  <li><strong>BFT-33 quorum</strong> — 23/33 minimum for binding decisions</li>
+  <li><strong>Ed25519 SIGIL chain</strong> — every action hash-chained + signed</li>
+  <li><strong>Sovereign-bound</strong> — DID <code>did:csoai:nicholas-001</code> (CSOAI Ltd UK 16939677)</li>
+</ol>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🪡 SOV33 Small OWEMs</strong> · 12 Jul 2026 · 3-around-1 + 10/90 cascade · Claude Code MEOK Labs<br>
+  <a href=#=>Evidence base</a> · <a href="#">Growth Model</a><br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+</body>
+</html>

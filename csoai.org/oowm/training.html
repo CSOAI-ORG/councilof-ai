@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>I. OOWM Training — csoai.org/oowm/training.html</title>
+  <meta name="description" content="How the OOWM trains. 4 methods (supervised, self-supervised, RL, federated). 5 datasets. Sovereign composite improves.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse, #0a0e27 0%, #000 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2rem; color: #fbbf24; }
+    h2 { color: #06b6d4; margin-top: 32px; border-bottom: 1px solid #06b6d4; padding-bottom: 4px; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 24px; }
+    .panel { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #06b6d4; }
+    .panel.gold { border-left-color: #fbbf24; }
+    .panel.green { border-left-color: #10b981; }
+    .panel.purple { border-left-color: #a855f7; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+    .tile { background: rgba(0,0,0,0.4); padding: 14px; border-radius: 4px; font-size: 0.9rem; }
+    .tile strong { color: #fbbf24; }
+    pre { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 0.78rem; }
+    .data { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 16px 0; }
+    .ds { background: rgba(251,191,36,0.1); padding: 12px; border-radius: 6px; text-align: center; border: 1px solid #fbbf24; }
+    .ds h4 { color: #fbbf24; margin: 4px 0; }
+    .ds .n { font-size: 1.2rem; color: #10b981; }
+    .ds p { font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 I. OOWM Training</h1>
+    <p class="tagline">How the OOWM learns — 4 methods, 5 datasets, sovereign composite improving daily.</p>
+
+    <div class="panel">
+      <h2>The 4 Training Methods</h2>
+      <div class="grid">
+        <div class="tile">
+          <strong>1. Supervised (BFT council)</strong><br>
+          The 12 queens deliberate. The majority vote becomes the supervised label. Dissent preserved for self-supervised contrast. Cycle: weekly.
+          <pre>(input, majority_vote) → next-token-prediction
+loss = -log P(majority | input)</pre>
+        </div>
+        <div class="tile">
+          <strong>2. Self-supervised (Mamba-2 long context)</strong><br>
+          Next-state prediction. Mamba-2 SSM learns the 16-dim state dynamics from any-length context. Cycle: continuous.
+          <pre>L = ||state(t+1) − A·state(t) − B·x(t)||²</pre>
+        </div>
+        <div class="tile">
+          <strong>3. Reinforcement (Care Floor feedback)</strong><br>
+          Care Floor score = reward. Outputs &lt; 0.95 → negative reward. Outputs ≥ 0.95 → positive reward. PPO-style policy update.
+          <pre>r = care_score − 0.95  (centred)
+Δθ = ∇log π(a|s) · r</pre>
+        </div>
+        <div class="tile">
+          <strong>4. Federated (citizen contributions)</strong><br>
+          Citizens opt-in. Their i-character interactions are anonymised locally, gradients uploaded (never raw data). Aggregate via secure aggregation.
+          <pre>g_global = Σ (n_k / N) · g_k
+where g_k = local gradient (noise added)</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel gold">
+      <h2>The 5 Training Datasets</h2>
+      <div class="data">
+        <div class="ds">
+          <h4>Sovereign Corpus</h4>
+          <div class="n">30+ TB</div>
+          <p>60 Charters, 22 Hieroglyphs, 10 Sephiroth, 25 industries, vault</p>
+        </div>
+        <div class="ds">
+          <h4>SIGIL Chain</h4>
+          <div class="n">200+</div>
+          <p>Hash-chained actions, BFT votes, Care Floor events</p>
+        </div>
+        <div class="ds">
+          <h4>BFT Council</h4>
+          <div class="n">12-around-1</div>
+          <p>Deliberation transcripts, dissent logs, ratification outcomes</p>
+        </div>
+        <div class="ds">
+          <h4>Citizen Actions</h4>
+          <div class="n">∞</div>
+          <p>Anonymised, opt-in only, federated aggregation</p>
+        </div>
+        <div class="ds">
+          <h4>Open Weights</h4>
+          <div class="n">9 sources</div>
+          <p>Qwen3, Llama 3.1, DeepSeek-V3, Mistral, Phi-3, Gemma-2, Ornith, Falcon3, Yi-1.5</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel green">
+      <h2>Sovereign Composite Tracking (12 dimensions)</h2>
+      <pre>
+Dimension                    Weight    Source Dataset
+──────────────────────────────────────────────────────
+1. Care                       0.15      Care Floor feedback
+2. BFT Alignment              0.12      BFT council deliberation
+3. SIGIL Integrity            0.10      SIGIL chain
+4. Article 50                 0.10      Passport issuance log
+5. DORADO Sovereignty         0.08      Region-routing log
+6. PQC                        0.08      Key rotation events
+7. Charter Citation           0.08      Charter corpus
+8. Sephiroth Mapping          0.07      Kabbalistic corpus
+9. Industry Vertical          0.08      25 industries corpus
+10. Auth Provider Coverage    0.06      17 auth providers
+11. Fork Doctrine             0.04      Fork events
+12. Crown Lineage             0.04      Custodian audit log
+──────────────────────────────────────────────────────
+TOTAL                        1.00      Composite ∈ [0, 10]
+      </pre>
+      <p>Each dimension reweighted weekly via gradient descent on sovereign composite reward. The composite monotonically trends toward 10/10.</p>
+    </div>
+
+    <div class="panel purple">
+      <h2>22 Hieroglyph Mapping (training supervision)</h2>
+      <p>Each of the 22 Hebrew letters (Major Arcana 0–21) maps to a sovereign concept. The OOWM learns the mapping via contrastive loss:</p>
+      <pre>
+א (Aleph, 0)   → The Fool       → Initiation, sovereignty void
+ב (Beth, 1)    → The Magician    → MoE routing, will
+ג (Gimel, 2)   → The High Priestess → BFT deliberation
+ד (Daleth, 3)  → The Empress     → Care Floor 0.95
+ה (He, 4)      → The Emperor     → Crown Authorisation
+ו (Vav, 5)     → The Hierophant  → SIGIL chain
+ז (Zayin, 6)   → The Lovers      → Fork Doctrine
+ח (Cheth, 7)   → The Chariot     → DORADO 1-click
+ט (Teth, 8)    → Strength        → Care weighted above all
+י (Yod, 9)     → The Hermit      → Mamba-2 long memory
+כ (Kaph, 10)   → Wheel of Fortune → Revision engine
+ל (Lamed, 11)  → Justice         → Article 50 passport
+מ (Mem, 12)    → The Hanged Man  → Sovereign inversion
+נ (Nun, 13)    → Death           → Right to be forgotten
+ס (Samekh, 14) → Temperance      → 64-expert MoE balance
+ע (Ayin, 15)   → The Devil       → Misalignment detection
+פ (Pe, 16)     → The Tower       → Composite collapse trigger
+צ (Tsade, 17)  → The Star        → Hope, sovereign composite
+ק (Qoph, 18)   → The Moon        → Dream state, intuition
+ר (Resh, 19)   → The Sun         → Wisdom, maturity
+ש (Shin, 20)   → Judgement       → BFT 12-around-1
+ת (Tav, 21)    → The World       → OOWM as the stone
+      </pre>
+    </div>
+
+    <div class="panel">
+      <h2>Care Floor Monitoring (during training)</h2>
+      <ul>
+        <li>Every training batch evaluated against the Care Floor NN</li>
+        <li>Outputs &lt; 0.95 → batch rejected, re-trained with constraint</li>
+        <li>Care Floor never drops below 0.95 in production (SLA 99.99%)</li>
+        <li>BFT deliberation logged for every checkpoint decision</li>
+      </ul>
+    </div>
+
+    <p style="text-align:center; margin-top:32px; color:#10b981;">
+      🜏 4 methods. 5 datasets. 12 dimensions. 1 sovereign substrate.
+    </p>
+  </div>
+</body>
+</html>

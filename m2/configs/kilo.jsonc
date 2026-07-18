@@ -1,0 +1,57 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "permission": {
+    "read": {
+      "*": "allow"
+    },
+    "bash": {
+      "*": "allow",
+      "'spec_version': *": "allow",
+      "mkdir *": "allow",
+      "chmod *": "allow"
+    },
+    "external_directory": {
+      "/Users/iokfarm/m4/**": "allow",
+      "/Users/iokfarm/m4": "allow",
+      "/Users/iokfarm/m4/Desktop/**": "allow",
+      "/Users/iokfarm/m4/Documents/**": "allow",
+      "/Users/iokfarm/m4/Downloads/**": "allow",
+      "/tmp/*": "allow"
+    }
+  },
+  "mcp": {
+    "lovable": {
+      "type": "remote",
+      "url": "https://mcp.lovable.dev",
+      "oauth": {
+        "clientId": "6d465f583e1e4ce5801b1616f735670c"
+      },
+      "enabled": true
+    },
+    "m4-filesystem-csoai": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "/Users/iokfarm/m4/CSOAI-CORP", "/Users/iokfarm/m4/safetyofai", "/Users/iokfarm/m4/councilof-ai"],
+      "enabled": true
+    },
+    "m4-filesystem-safety-domains": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "/Users/iokfarm/m4/Desktop/CSOAI", "/Users/iokfarm/m4/Desktop/CSOAI 2", "/Users/iokfarm/m4/Desktop/MEOK CSOAI"],
+      "enabled": true
+    },
+    "m4-filesystem-ai-domains": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "/Users/iokfarm/m4/diyhelp.ai", "/Users/iokfarm/m4/loopfactory.ai", "/Users/iokfarm/m4/pokerhud.ai", "/Users/iokfarm/m4/suicidestop.ai", "/Users/iokfarm/m4/fishkeeper-ai", "/Users/iokfarm/m4/koikeeper-ai", "/Users/iokfarm/m4/industrial-hire-ai", "/Users/iokfarm/m4/industrial-domains", "/Users/iokfarm/m4/safetyofai-site"],
+      "enabled": true
+    },
+    "m4-filesystem-strategy": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "/Users/iokfarm/m4/Desktop/Kimi_Agent_Global Dominance Strategy", "/Users/iokfarm/m4/Desktop/jan - feb 2026", "/Users/iokfarm/m4/Desktop/MAY2026", "/Users/iokfarm/m4/grants"],
+      "enabled": true
+    },
+    "m4-filesystem-research": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "/Users/iokfarm/m4/CSOAI-Research-Institute", "/Users/iokfarm/m4/asisecurity-portal", "/Users/iokfarm/m4/templeman-opticians"],
+      "enabled": true
+    }
+  }
+}

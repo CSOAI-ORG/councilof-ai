@@ -1,0 +1,7 @@
+{
+  "id": "social-hn-show-hn-comment",
+  "prompt": "Write 3 high-signal Hacker News comment drafts to be posted in the first 60 minutes after the openpatent.ai Show HN post. Each comment must (a) be from a fictional but technically credible persona (an ex-USPTO examiner, a self-hosted-bitcoin hobbyist, an indie game dev), (b) answer a different likely HN objection (legal admissibility of Bitcoin OTS timestamps in 2025, MCP server security model, why the $10 tier doesn't get griefed by spam), (c) cite a specific technical detail (e.g. 'the OTS calendar fallback uses the agora.ots.xyz aggregator with 3-of-5 confirmations', 'the SHA-3/512 hash is committed in the document_hash field of /v1/disclosure', 'the MCP server exposes 33 tools across patentmcp, ipcastle, sovereign, and legal surfaces'), (d) end with a graceful pivot back to the waitlist CTA (openpatent.ai/waitlist). Each comment ≤180 words, plain prose, no marketing tone. Use DEFONEOS mythic voice. Return ONLY JSON: {comments:[3 strings], signature:string}.",
+  "max_tokens": 700,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "defensive"
+}

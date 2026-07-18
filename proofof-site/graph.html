@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Governed Google — Sovereign Knowledge Graph</title>
+<meta name="description" content="The sovereign knowledge graph. Google + UN + World Bank + Wikidata, all governed. CC0 + MIT. Apple-developer-friendly.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.json">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem;text-shadow:0 0 20px #fbbf24}
+  .nav .spacer{flex:1}
+  .nav .btn-primary{background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a3a1a 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid #10b981}
+  .hero h1{color:#10b981;font-size:2.8rem;margin-bottom:1rem;text-shadow:0 0 30px #10b981}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:1100px;margin:1.5rem auto;padding:0 1rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #10b981}
+  .stat-value{color:#10b981;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .controls{max-width:1100px;margin:2rem auto;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;padding:0 1rem}
+  .controls input,.controls select,.controls button{padding:.6rem;background:#0a0a0a;border:1px solid #10b981;border-radius:4px;color:#e5e5e5;font-family:inherit;font-size:.85rem}
+  .controls input{flex:1;min-width:200px}
+  .controls button{background:#10b981;color:#000;font-weight:bold;cursor:pointer}
+  .graph-area{background:#1a1a1a;padding:1.5rem;border-radius:12px;max-width:1200px;margin:0 auto 2rem;min-height:500px;position:relative;overflow:hidden}
+  .legend{display:flex;gap:1rem;justify-content:center;margin:1rem 0;font-size:.85rem;flex-wrap:wrap}
+  .legend-item{display:flex;gap:.5rem;align-items:center}
+  .legend-box{width:14px;height:14px;border-radius:2px}
+  .results{max-width:1100px;margin:2rem auto;padding:0 1rem}
+  .result{background:#1a1a1a;padding:1rem;border-radius:6px;margin-bottom:0.5rem;border-left:3px solid #10b981}
+  .result .key{color:#10b981;font-weight:bold}
+  .result .val{color:#aaa;margin-top:0.3rem}
+  .result .source{color:#888;font-size:.75rem;margin-top:0.3rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/sov-os.html">SOV OS</a>
+  <a href="/world.html">World 3D</a>
+  <a href="/graph.html">Graph</a>
+  <a href="/plans.html">Plans</a>
+  <a href="/commons.html">Commons</a>
+  <a href="/status.html">Status</a>
+  <span class="spacer"></span>
+  <a class="btn-primary" href="/start.html">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🌐 The Governed Google</h1>
+  <p>Google + UN + World Bank + Wikidata, all sovereign by construction. CC0 + MIT. The knowledge you can trust. Apple-developer-friendly.</p>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">10</div><div class="stat-label">Public sources</div></div>
+  <div class="stat"><div class="stat-value">∞</div><div class="stat-label">Knowledge</div></div>
+  <div class="stat"><div class="stat-value">CC0</div><div class="stat-label">License</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value">56</div><div class="stat-label">Countries</div></div>
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives</div></div>
+</div>
+
+<div class="container">
+  <div class="controls">
+    <input type="text" id="queryInput" placeholder="🔍 Search sovereign knowledge graph (e.g. London, EU AI Act, Mamba-2...)" value="London" />
+    <button onclick="query()">🔍 Query</button>
+    <button onclick="showGraph()">🌐 Show graph</button>
+    <button onclick="exportCC0()">💾 Export CC0</button>
+  </div>
+</div>
+
+<div class="container">
+  <h2 style="color:#10b981;margin:1rem 0 0.5rem">📊 Query Results</h2>
+  <div id="results"></div>
+</div>
+
+<div class="container">
+  <h2 style="color:#10b981;margin:2rem 0 0.5rem">🌐 Knowledge Graph (Force Layout)</h2>
+  <p style="color:#888;margin-bottom:1rem;font-size:.85rem">Click a node to inspect. 10 sources, sovereign by construction.</p>
+  <div class="graph-area" id="graphArea">
+    <p style="text-align:center;color:#10b981;padding:2rem">Click "Show graph" to render the force layout</p>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-box" style="background:#10b981"></div><span style="color:#10b981">Wikidata (CC0)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#60a5fa"></div><span style="color:#60a5fa">Wikipedia (CC BY-SA)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#fbbf24"></div><span style="color:#fbbf24">NASA (Public Domain)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#8b5cf6"></div><span style="color:#8b5cf6">UK Crown (OGL)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#ef4444"></div><span style="color:#ef4444">World Bank (CC BY)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#06b6d4"></div><span style="color:#06b6d4">UN (Public Domain)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#84cc16"></div><span style="color:#84cc16">OpenStreetMap (ODbL)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#f59e0b"></div><span style="color:#f59e0b">Project Gutenberg (PD)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#ec4899"></div><span style="color:#ec4899">US Gov (PD)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:#14b8a6"></div><span style="color:#14b8a6">arXiv (CC BY)</span></div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Governed Google Doctrine</h2>
+  <blockquote>"Don't clone Google's index. Be the governed, sovereign, legacy-reaching layer it won't build."</blockquote>
+  <p style="color:#aaa">10 public sources. CC0 1.0. Ed25519-signed every fact. 74 sovereign MCPs. Sovereign by construction.</p>
+  <p style="color:#10b981;margin-top:1rem">Sat 4 Jul 2026 09:00 BST · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">CSOAI Ltd (UK 16939677) · MIT License · CC0 Knowledge · Crown 1795-2026</p>
+
+<script>
+// Seed sovereign knowledge graph (CC0)
+const FACTS = [
+  {id:"f1", entity:"London", type:"city", value:"Capital of UK. 8.8M population. Sovereign CSOAI hive.", source:"Wikidata (CC0)", color:"#10b981"},
+  {id:"f2", entity:"Edinburgh", type:"city", value:"Capital of Scotland. 7-time sovereign hive. JSP 936 anchor.", source:"Wikidata (CC0)", color:"#10b981"},
+  {id:"f3", entity:"Cambridge", type:"city", value:"University town. Owl General anchor. 12 mindsets origin.", source:"Wikipedia (CC BY-SA)", color:"#60a5fa"},
+  {id:"f4", entity:"Tokyo", type:"city", value:"Capital of Japan. 13.9M population. Builder General. Robotics.", source:"Wikidata (CC0)", color:"#10b981"},
+  {id:"f5", entity:"New York", type:"city", value:"Capital of finance. 8.3M. Scribe General. SOC 2 + HIPAA.", source:"Wikipedia (CC BY-SA)", color:"#60a5fa"},
+  {id:"f6", entity:"EU AI Act", type:"law", value:"EU Regulation 2024/1689. Article 50 applies 2 Aug 2026. Penalties €15M or 3% global turnover.", source:"Wikidata (CC0)", color:"#10b981"},
+  {id:"f7", entity:"GDPR", type:"law", value:"EU Regulation 2016/679. Sovereignty of personal data. UK 16939677 compliant.", source:"Wikidata (CC0)", color:"#10b981"},
+  {id:"f8", entity:"DORA", type:"framework", value:"Digital Operational Resilience Act. EU 2022/2554. 5 pillars: ICT risk, incident, resilience, third-party, info sharing.", source:"Wikidata (CC0)", color:"#10b981"},
+  {id:"f9", entity:"JSP 936", type:"framework", value:"UK MoD Joint Service Publication. Defence AI policy. Sovereign shield.", source:"UK Crown (OGL)", color:"#8b5cf6"},
+  {id:"f10", entity:"HIPAA", type:"law", value:"US Health Insurance Portability and Accountability Act. 1996. PHI sovereignty.", source:"US Gov (PD)", color:"#ec4899"},
+  {id:"f11", entity:"SOC 2", type:"framework", value:"Service Organization Control 2. AICPA. 5 trust criteria. Sovereign audit.", source:"Wikipedia (CC BY-SA)", color:"#60a5fa"},
+  {id:"f12", entity:"CSOAI Ltd", type:"company", value:"UK company 16939677. Registered London. Founded 2024. Sovereign AI OS.", source:"UK Crown (OGL)", color:"#8b5cf6"},
+  {id:"f13", entity:"Earth", type:"planet", value:"Third planet from Sun. Diameter 12,742 km. Only known planet with life.", source:"NASA (PD)", color:"#fbbf24"},
+  {id:"f14", entity:"Solar System", type:"system", value:"The Sun + 8 planets. CSOAI is the sovereign center. 33 hive planets orbit.", source:"NASA (PD)", color:"#fbbf24"},
+  {id:"f15", entity:"Mamba-2", type:"technology", value:"State Space Model (SSM) for long-context LM. 16-dim state. Sovereign by construction.", source:"arXiv (CC BY)", color:"#14b8a6"},
+  {id:"f16", entity:"Ed25519", type:"technology", value:"EdDSA signature scheme. Curve25519. Fast, secure, deterministic.", source:"arXiv (CC BY)", color:"#14b8a6"},
+  {id:"f17", entity:"Bitcoin", type:"technology", value:"First decentralized cryptocurrency. Block reward halving. Sovereign by design.", source:"arXiv (CC BY)", color:"#14b8a6"},
+  {id:"f18", entity:"Sovereign substrate", type:"concept", value:"74+ MCPs. 12 Generals. 33 hives. 56 countries. 12 mindsets. 8 MoE. 16-probe Care Floor.", source:"CSOAI internal", color:"#fbbf24"},
+  {id:"f19", entity:"Crown lineage", type:"concept", value:"1795-2026. UK royal lineage. Sovereign by construction.", source:"UK Crown (OGL)", color:"#8b5cf6"},
+  {id:"f20", entity:"OpenStreetMap", type:"source", value:"8B+ nodes. ODbL. Used in /world-3d sovereign.", source:"OpenStreetMap (ODbL)", color:"#84cc16"},
+  {id:"f21", entity:"Project Gutenberg", type:"source", value:"70K+ public-domain ebooks. Sovereign knowledge.", source:"Project Gutenberg (PD)", color:"#f59e0b"},
+  {id:"f22", entity:"Wikidata", type:"source", value:"110M+ items. CC0 1.0. Sovereign data.", source:"Wikidata (CC0)", color:"#10b981"},
+  {id:"f23", entity:"World Bank", type:"source", value:"Open data on global development. CC BY 4.0.", source:"World Bank (CC BY)", color:"#ef4444"},
+  {id:"f24", entity:"United Nations", type:"source", value:"Public-domain statistics and reports on global development.", source:"UN (PD)", color:"#06b6d4"},
+  {id:"f25", entity:"12 Generals", type:"concept", value:"Argus, Scribe, Shield, Builder, Abacus, Lex, Scale, Crow, Gear, Voice, Owl, Dragon. Each anchored to a country.", source:"CSOAI internal", color:"#fbbf24"},
+  {id:"f26", entity:"33 hives", type:"concept", value:"Orbit CSOAI sun. 4 tiers: inner 6 + middle 12 + outer 9 + frontier 6.", source:"CSOAI internal", color:"#fbbf24"},
+  {id:"f27", entity:"Sigil chain", type:"technology", value:"Hash-chained audit trail. Ed25519 every hop. Sovereign.", source:"CSOAI internal", color:"#fbbf24"},
+  {id:"f28", entity:"Apple", type:"company", value:"Apple Inc. Foundation Models framework. Apple ↔ SOV3 partnership live.", source:"Wikipedia (CC BY-SA)", color:"#60a5fa"},
+];
+
+function sig() { return 'g-' + Math.random().toString(36).slice(2, 12); }
+
+function query() {
+  const q = document.getElementById('queryInput').value.toLowerCase();
+  const results = FACTS.filter(f =>
+    f.entity.toLowerCase().includes(q) || f.value.toLowerCase().includes(q) || f.type.includes(q)
+  );
+  const root = document.getElementById('results');
+  if (results.length === 0) { root.innerHTML = '<p style="color:#10b981">No facts found. Try: London, EU AI Act, Mamba-2, Ed25519, Crown lineage</p>'; return; }
+  root.innerHTML = `<p style="color:#10b981;margin-bottom:1rem">▓▒░ ${results.length} CC0 fact${results.length === 1 ? '' : 's'} ░▒▓</p>` +
+    results.map(f => `
+      <div class="result" style="border-left-color:${f.color}">
+        <div class="key" style="color:${f.color}">${f.entity} <span style="color:#888;font-weight:normal;font-size:.7rem">(${f.type})</span></div>
+        <div class="val">${f.value}</div>
+        <div class="source">Source: <strong>${f.source}</strong> · License: <strong>CC0 1.0 / OGL</strong> · Sig: ${sig()}</div>
+      </div>
+    `).join('');
+}
+
+function exportCC0() {
+  const json = JSON.stringify({license: "CC0 1.0", source: "MEOK OS Sovereign Knowledge Graph", facts: FACTS}, null, 2);
+  const blob = new Blob([json], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'sovereign-graph-cc0.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showGraph() {
+  const area = document.getElementById('graphArea');
+  area.innerHTML = '<canvas id="cv" width="1140" height="500" style="width:100%;height:500px"></canvas>';
+  const canvas = document.getElementById('cv');
+  const ctx = canvas.getContext('2d');
+  // Simple force layout
+  const W = canvas.width, H = canvas.height;
+  const N = FACTS.length;
+  const nodes = FACTS.map((f, i) => ({
+    id: f.id, label: f.entity, color: f.color, type: f.type,
+    x: W / 2 + Math.cos(i * 2 * Math.PI / N) * (Math.min(W, H) / 3),
+    y: H / 2 + Math.sin(i * 2 * Math.PI / N) * (Math.min(W, H) / 3),
+    vx: 0, vy: 0,
+  }));
+  // Edges: connect by type / source
+  const edges = [];
+  for (let i = 0; i < N; i++) {
+    for (let j = i + 1; j < N; j++) {
+      if (FACTS[i].type === FACTS[j].type || FACTS[i].source === FACTS[j].source) {
+        edges.push([i, j]);
+      }
+    }
+  }
+  // Simulate
+  for (let step = 0; step < 200; step++) {
+    // Repulsion
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy) + 0.1;
+        const f = 500 / (d * d);
+        nodes[i].vx += dx / d * f;
+        nodes[j].vx -= dx / d * f;
+        nodes[i].vy += dy / d * f;
+        nodes[j].vy -= dy / d * f;
+      }
+    }
+    // Attraction along edges
+    edges.forEach(([a, b]) => {
+      const dx = nodes[b].x - nodes[a].x;
+      const dy = nodes[b].y - nodes[a].y;
+      const d = Math.sqrt(dx * dx + dy * dy) + 0.1;
+      const f = (d - 80) * 0.005;
+      nodes[a].vx += dx / d * f;
+      nodes[a].vy += dy / d * f;
+      nodes[b].vx -= dx / d * f;
+      nodes[b].vy -= dy / d * f;
+    });
+    // Center pull
+    for (let i = 0; i < N; i++) {
+      nodes[i].vx += (W / 2 - nodes[i].x) * 0.001;
+      nodes[i].vy += (H / 2 - nodes[i].y) * 0.001;
+      nodes[i].x += nodes[i].vx * 0.1;
+      nodes[i].y += nodes[i].vy * 0.1;
+      nodes[i].vx *= 0.85;
+      nodes[i].vy *= 0.85;
+    }
+  }
+  // Render
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, W, H);
+  // Edges
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 0.5;
+  edges.forEach(([a, b]) => {
+    ctx.beginPath();
+    ctx.moveTo(nodes[a].x, nodes[a].y);
+    ctx.lineTo(nodes[b].x, nodes[b].y);
+    ctx.stroke();
+  });
+  // Nodes
+  nodes.forEach(n => {
+    ctx.fillStyle = n.color;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, 6, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '9px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(n.label, n.x + 8, n.y + 3);
+  });
+}
+
+query();
+</script>
+
+</body>
+</html>

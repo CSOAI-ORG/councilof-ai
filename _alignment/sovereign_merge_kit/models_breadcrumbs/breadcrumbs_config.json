@@ -1,0 +1,40 @@
+{
+  "version": "v1_breadcrumbs_2026-07-18",
+  "method": "dual-mask (drop outliers + drop small) + optional TIES",
+  "configs": [
+    {
+      "name": "crumbs_t10_b10_ties",
+      "top_k": 0.1,
+      "bottom_k": 0.1,
+      "use_ties": true,
+      "weights": [
+        0.5,
+        0.3,
+        0.2
+      ]
+    },
+    {
+      "name": "crumbs_t20_b10_ties",
+      "top_k": 0.2,
+      "bottom_k": 0.1,
+      "use_ties": true,
+      "weights": [
+        0.5,
+        0.3,
+        0.2
+      ]
+    },
+    {
+      "name": "crumbs_t10_b10_noties",
+      "top_k": 0.1,
+      "bottom_k": 0.1,
+      "use_ties": false,
+      "weights": [
+        0.5,
+        0.3,
+        0.2
+      ]
+    }
+  ],
+  "honest_register": "Reference impl. Sibling runs real sweep on Qwen3-4B Modal T4."
+}

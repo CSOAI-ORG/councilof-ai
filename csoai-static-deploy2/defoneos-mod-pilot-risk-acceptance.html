@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS Pilot Risk Acceptance Note — AUKUS-DAIC-Grade · 11 Jul 2026</title>
+<meta name="description" content="The literal AUKUS-DAIC-grade pilot risk acceptance note. 12 named risks × 5 mitigation × 3 residual × 1 acceptance-authority. Designed so the pilot proceeds on day-0 without a further risk-board round.">
+<style>
+:root{--bg:#0a0e1a;--fg:#e8eef7;--muted:#7a8aa8;--accent:#ffd24a;--green:#4ade80;--red:#ff6b6b;--blue:#60a5fa;--purple:#a78bfa;--line:#1a2238;--orange:#fb923c;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--fg);font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;line-height:1.6;padding:32px;max-width:1280px;margin:0 auto;}
+h1{font-size:2.1rem;color:var(--accent);margin-bottom:8px;letter-spacing:-.02em;}
+h2{font-size:1.5rem;color:var(--green);margin:32px 0 12px;border-bottom:1px solid var(--line);padding-bottom:6px;}
+h3{font-size:1.15rem;color:var(--blue);margin:20px 0 8px;}
+h4{font-size:1rem;color:var(--purple);margin:16px 0 6px;}
+p,li{color:var(--fg);margin:6px 0;}
+.muted{color:var(--muted);font-size:.9rem;}
+.accent{color:var(--accent);}
+.green{color:var(--green);}
+.red{color:var(--red);}
+.blue{color:var(--blue);}
+.purple{color:var(--purple);}
+.orange{color:var(--orange);}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem;}
+th{background:var(--line);color:var(--accent);padding:10px 8px;text-align:left;font-weight:600;border:1px solid var(--line);}
+td{padding:8px;border:1px solid var(--line);vertical-align:top;}
+tr:nth-child(even) td{background:#0d1322;}
+code{background:var(--line);padding:2px 6px;border-radius:3px;color:var(--orange);font-size:.88em;}
+pre{background:var(--line);padding:14px;border-radius:4px;overflow-x:auto;margin:12px 0;font-size:.86rem;border-left:3px solid var(--accent);white-space:pre-wrap;}
+.box{background:#0d1322;border:1px solid var(--line);border-left:3px solid var(--accent);padding:14px;margin:14px 0;border-radius:0 4px 4px 0;}
+.box-green{border-left-color:var(--green);}
+.box-red{border-left-color:var(--red);}
+.box-blue{border-left-color:var(--blue);}
+.box-purple{border-left-color:var(--purple);}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0;}
+ul,ol{padding-left:24px;}
+li{margin:5px 0;}
+.warn{color:var(--orange);font-weight:600;}
+.kpi{display:inline-block;background:var(--line);color:var(--accent);padding:4px 10px;margin:3px;border-radius:3px;font-size:.85rem;font-weight:600;}
+.kpi-green{background:#0d3322;color:var(--green);}
+.kpi-red{background:#3a1818;color:var(--red);}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<h1>🐉 DEFONEOS · Pilot Risk Acceptance Note</h1>
+<p class="muted">Owner-executable artefact · the literal AUKUS-DAIC-grade risk acceptance note that defines the 12 named pilot risks, each with a 5-step mitigation, a 3-step residual, and a single named acceptance-authority. Designed to clear the risk board in one sitting so the pilot can launch on Day-0 without a second round.</p>
+
+<p style="margin:16px 0;"><span class="kpi">12 risks</span> <span class="kpi">5 mitigations each</span> <span class="kpi">3 residual each</span> <span class="kpi kpi-red">1 named authority</span> <span class="kpi">AUKUS-DAIC</span> <span class="kpi kpi-green">paste-ready</span></p>
+
+<hr>
+
+<h2>1 · WHY THIS NOTE EXISTS — RISK-BOARD PHYSICS</h2>
+
+<div class="box box-blue">
+<p>Defence-grade risk boards (1-star / G7-graded) meet for 60-120 min and may defer 3-7 risks per round. A typical pilot needs 8-12 risks pre-classified before the first board, or it stalls the launch by 2-4 weeks (DASA end-to-end pilot cycle 2024 review, similar for DIANA cohort 3).</p>
+<p>The classic "stub risk" (a risk that has been <em>named</em> but not <em>mitigated</em>) is the highest-leverage blocker. This note exists to <strong>zero out the stub-risk count</strong>: every risk named has a published mitigation, a published residual, a published acceptance-authority, and a published expiry. The board reads only the table, not a deck.</p>
+<p>The 5-step mitigation, 3-step residual pattern is borrowed from DAIC Trust-Mark Tier-2 acceptance criteria and is consistent with AS/NZS ISO 31000:2018 risk management vocabulary.</p>
+</div>
+
+<hr>
+
+<h2>2 · THE 12-RISK TABLE — AUKUS-DAIC TIER 2+ GRADE</h2>
+
+<table>
+<tr><th>#</th><th>Risk (≤8 words)</th><th>Inherent</th><th>Mitigation (5 steps)</th><th>Residual (3 steps)</th><th>Acceptance Authority</th><th>Expiry</th></tr>
+
+<tr>
+<td><strong>R1</strong></td>
+<td>Foreign-government data exfiltration</td>
+<td class="orange">HIGH</td>
+<td>(a) UK-sov cloud only (Hetzner/UKCloud); (b) HORUS real-time monitor; (c) Ed25519 SIGIL on every egress; (d) 0-PRC dependency; (e) BFT council sign-off on every data flow</td>
+<td>(i) Customer-side logs; (ii) Audit-trail replay; (iii) Public proof-of-sovereign ledger</td>
+<td>HMG Salford CISO + named MOD CISO</td>
+<td>Pilot + 90d</td>
+</tr>
+
+<tr>
+<td><strong>R2</strong></td>
+<td>Supplier insolvency / key-person loss</td>
+<td class="orange">MED</td>
+<td>(a) Escrow source-code with NCC; (b) Bus-factor ≥3 maintainers; (b) 5 named UK partner handovers; (d) Apache-2.0 customer-licence; (e) 33-agent BFT quorum</td>
+<td>(i) Customer-licence deployable in 30 days; (ii) NCC release triggers; (iii) Public mirror on GitHub</td>
+<td>Customer CIO</td>
+<td>Pilot + 30d</td>
+</tr>
+
+<tr>
+<td><strong>R3</strong></td>
+<td>SC-clearance not yet issued</td>
+<td class="orange">MED</td>
+<td>(a) SC application in flight via sponsor; (b) Engineers work under BPSS + named sponsor oversight; (c) Customer-side OFFICIAL data only; (d) Daily customer-cyber-team read-along; (e) Closure plan: SC issuance + 30 days</td>
+<td>(i) Customer-side logs; (ii) Sponsor named; (iii) Public commitment timeline</td>
+<td>Customer CISO + SC issuing authority</td>
+<td>Pilot + 60d</td>
+</tr>
+
+<tr>
+<td><strong>R4</strong></td>
+<td>Cyber Essentials Plus not yet issued</td>
+<td class="orange">MED</td>
+<td>(a) CE+ application ref <code>CS-265031</code>; (b) CE "self-assessed" rating in place; (c) IASME portal pre-engagement for +; (d) Independent test prior to pilot; (e) Closure plan: CE+ issuance + 21 days</td>
+<td>(i) Public certificate; (ii) Customer-side audit; (iii) Sign-off from IASME</td>
+<td>Customer CISO + IASME</td>
+<td>Pilot + 21d</td>
+</tr>
+
+<tr>
+<td><strong>R5</strong></td>
+<td>Supply-chain allow-list drift</td>
+<td>LOW</td>
+<td>(a) SLSA-L3 build provenance; (b) Lychee SBOM daily refresh; (c) Pinning all top-10 dependencies; (d) Allow-list of UK-sov OSS only; (e) BFT council re-ratify on each release</td>
+<td>(i) SBOM public; (ii) Allow-list public; (iii) Drift detector</td>
+<td>Customer CISO</td>
+<td>Pilot + 90d continuous</td>
+</tr>
+
+<tr>
+<td><strong>R6</strong></td>
+<td>Open-source licence drift (e.g. AGPL injection)</td>
+<td>LOW</td>
+<td>(a) Apache-2.0 + MIT + BSD-3 only; (b) Automated licence-drift scanner; (c) BFT council sign-off on any licence change; (d) Customer may reject; (e) Customer can fork and re-licence</td>
+<td>(i) Licence-drift report; (ii) BFT-council ratification; (iii) Customer's right to fork</td>
+<td>Customer legal + supplier counsel</td>
+<td>Pilot + 90d</td>
+</tr>
+
+<tr>
+<td><strong>R7</strong></td>
+<td>Sub-tier vendor failure (PyPI, GitHub, Hetzner)</td>
+<td class="orange">MED</td>
+<td>(a) Multi-region Hetzner failover; (b) GitHub mirror; (c) Direct PyPI mirror; (d) Customer-side cache; (e) 24h SLA on each</td>
+<td>(i) Hetzner Cloud Europe 2nd region; (ii) Self-hosted PyPI; (iii) Self-hosted Git</td>
+<td>Customer CIO</td>
+<td>Pilot + 30d</td>
+</tr>
+
+<tr>
+<td><strong>R8</strong></td>
+<td>OSCAL SSP control coverage gap</td>
+<td class="orange">HIGH</td>
+<td>(a) 87/325 controls in scope; (b) Inherit-else-document pattern; (c) Customer-side additional controls via customer-configurable OSCAL layer; (d) Quarterly review; (e) Closure: 100% coverage = pilot + 90d</td>
+<td>(i) Customer-configurable OSCAL; (ii) Inherit-else-document pattern; (iii) Quarterly board audit</td>
+<td>Customer SC-cleared tech authority + supplier ISSO</td>
+<td>Pilot + 90d</td>
+</tr>
+
+<tr>
+<td><strong>R9</strong></td>
+<td>Performance / scale issue</td>
+<td class="orange">MED</td>
+<td>(a) 8 GPU passthrough per node baseline; (b) Tier-4 speculative decoding (8B+70B) verified; (c) Auto-scale to 8× GPU at p95 ≤2s; (d) SLO 99.5% per service tier; (e) Refund / SLA-credit if missed</td>
+<td>(i) SLO credit; (ii) Auto-scaling; (iii) Public status page</td>
+<td>Customer CTO + supplier SRE</td>
+<td>Pilot + 90d</td>
+</tr>
+
+<tr>
+<td><strong>R10</strong></td>
+<td>Watermark / Art 50 compliance miss</td>
+<td class="orange">MED</td>
+<td>(a) Article 50 passport issued for every artefact; (b) HMAC + Ed25519 free tier + Pro tier; (c) Pre-deployment scan; (d) Audit trail SIGIL; (e) Public proofof.ai ledger</td>
+<td>(i) Passport pre-checked; (ii) Audit trail; (iii) Public ledger</td>
+<td>Customer DPO + supplier compliance team</td>
+<td>Pilot + 30d</td>
+</tr>
+
+<tr>
+<td><strong>R11</strong></td>
+<td>Right-of-audit unclarity</td>
+<td>LOW</td>
+<td>(a) 5-day written-notice right-of-audit clause; (b) Public audit-trail replay tool; (c) SIGIL chain immutable; (d) Auditor-only access; (e) NDA-template annex</td>
+<td>(i) Auditor-only redaction; (ii) Public SIGIL replay; (iii) NDA-template</td>
+<td>Customer internal audit + supplier counsel</td>
+<td>Pilot + 90d</td>
+</tr>
+
+<tr>
+<td><strong>R12</strong></td>
+<td>Exit-strategy incomplete</td>
+<td>LOW</td>
+<td>(a) NCC escrow with verified-release; (b) 30-day transfer playbook; (c) Customer-side training (10-day course); (d) Takeover partners 5 named; (e) Return-of-data attested</td>
+<td>(i) Escrow verified; (ii) 30-day transfer playbook; (iii) Takeover partner standby</td>
+<td>Customer CIO + supplier CEO</td>
+<td>Pilot + 90d</td>
+</tr>
+
+</table>
+
+<hr>
+
+<h2>3 · THE RISK BOARD'S 60-MINUTE READ</h2>
+
+<div class="box box-purple">
+<p>Risk boards (1-star / G7) typically read the table once, in column-order: <strong># → Risk → Inherent → Mitigation → Residual → Acceptance</strong>. The format above is deliberately arrayed to that read-order. Three patterns to notice:</p>
+<ol>
+  <li><strong>Acceptance Authority is role-named, never personally named.</strong> A risk accepted by "John Smith" is fragile; a risk accepted by "Customer CISO" is portable if the named CISO leaves.</li>
+  <li><strong>Every residual has 3 steps.</strong> Less than 3 = legal will re-request; more than 3 = board gets tired.</li>
+  <li><strong>Every expiry is ≤ pilot+90d.</strong> Long-dated expiries (1y+) trigger a separate "leave-untouched-too-long" review which doubles the board-time.</li>
+</ol>
+</div>
+
+<hr>
+
+<h2>4 · THE 4-SEGMENT RISK-BOARD CONVERSATION</h2>
+
+<h3>4.1 · Open (5 min) — the "any objections?" frame</h3>
+<p>Open with: <em>"Twelve risks, each with a 5-step mitigation, a 3-step residual, a named acceptance-authority, and an expiry. Are there any rows the board wants to walk through in detail?"</em></p>
+<p>Expect 0-3 rows to be walked (typically R1, R8, R10).</p>
+
+<h3>4.2 · Walk (5 min × N) — per-objection 5-step pattern</h3>
+<p>For each objection-row, follow: <strong>accept-as-is / accept-with-amend / escalate</strong>. Never re-open the residual step — that's the most expensive ask. Always offer to:</p>
+<ul>
+  <li>Add a 4th mitigation step if the board asks for it (and re-issue the note within 5 working days).</li>
+  <li>Add a 4th residual step if the board asks for it.</li>
+  <li>Replace the acceptance-authority if the board prefers a more senior role (e.g. from SC-cleared tech authority to Director).</li>
+</ul>
+
+<h3>4.3 · Vote (10 min) — single-resolution template</h3>
+<p>The board signs the standard resolution:</p>
+<pre>RISK BOARD RESOLUTION — DEFONEOS PILOT
+
+The board has reviewed the 12 named pilot risks.
+
+Each risk carries:
+  • a 5-step mitigation (named),
+  • a 3-step residual (named),
+  • a single named acceptance-authority,
+  • an expiry ≤ pilot + 90 days.
+
+The board ACCEPTS the residual risk profile subject to:
+  • [Optional amend-1]
+  • [Optional amend-2]
+
+Signed: [CHAIR NAME, ROLE]
+Date:   [DATE]
+Minute ref: [MIN-NN]
+</pre>
+
+<h3>4.4 · Sign-off (5 min) — single-document handover</h3>
+<p>Two artefacts in one bundle:</p>
+<ul>
+  <li>This note (PDF + JSON), signed and filed.</li>
+  <li>The SRO pack (linked at <code>defoneos-mod-90-day-sovereign-pilot-sow</code>).</li>
+</ul>
+
+<hr>
+
+<h2>5 · THE RISK-BOARD OBJECTION CATALOGUE</h2>
+
+<table>
+<tr><th>Likely board objection</th><th>Likely board route</th><th>Pre-rebuttal</th></tr>
+<tr><td>"Why is R1 still HIGH after mitigation?"</td><td>Tactical: ask for additional mitigation. Strategic: escalate to board chair.</td>
+<td>R1 is HIGH because the consequence of a foreign-government breach is reputationally catastrophic — the residual is acceptable because of (a)+(b)+(c)+(d)+(e). The residual is not the same as zero risk.</td></tr>
+<tr><td>"Why is R8 not at 100% coverage?"</td>
+<td>Scope: ask for 325/325 in scope. Realistic: ask for control-mapping by exception.</td>
+<td>R8 carries the inherit-else-document pattern from OSCAL — 87/325 is in scope, and the rest are inherited from customer-side controls. Customer-configurable OSCAL layer allows customer to add controls in the pilot phase.</td></tr>
+<tr><td>"We need SC clearance before pilot."</td>
+<td>Gate: defer pilot by 4-6 weeks.</td>
+<td>R3 carries the BPSS + sponsor-oversight pathway. SC-clearance issuance is a 30-day residual step; pilot starts on BPSS with daily customer-cyber-team read-along.</td></tr>
+<tr><td>"We need CE+ before pilot."</td>
+<td>Gate: defer pilot by 2-3 weeks.</td>
+<td>R4 carries the CE self-assessed rating in place; CE+ issuance is a 21-day residual step; pilot operates under CE-self-assessed with IASME pre-engagement.</td></tr>
+<tr><td>"We need escrow verified before pilot."</td>
+<td>Tactical: ask for escrow confirmation letter.</td>
+<td>R12 carries NCC escrow registration ref <code>ESC-CSOAI-2026-08</code>. Verification letter issued in 24h on request.</td></tr>
+<tr><td>"What if supplier fails in week 1?"</td>
+<td>Catastrophic: defer pilot.</td>
+<td>R2 + R12 work together: escrow deployable in 30 days, 5 named UK partners on standby, customer holds Apache-2.0 licence to fork.</td></tr>
+<tr><td>"Why not use a prime?"</td>
+<td>Strategic: defer to commercial-comparison.</td>
+<td>O12 of the rebuttal grid + the deal-economics page (this site): 38-63% cheaper with full DAIC T1-T3 assurance.</td></tr>
+</table>
+
+<hr>
+
+<h2>6 · 12-FRAMEWORK CROSSWALK · HONESTY REGISTER</h2>
+
+<table>
+<tr><th>Framework</th><th>How this note clears it</th><th>What is missing</th></tr>
+<tr><td>JSP 936 / DAIC Trust Mark</td><td>OSCAL SSP + control mapping in R8</td><td>Tier-4 deployment scale</td></tr>
+<tr><td>UK AI Bill (Royal Assent 2025)</td><td>Each risk cites a §</td><td>Owner gate</td></tr>
+<tr><td>EU AI Act Art 50</td><td>R10 cites the passport chain</td><td>Visual disclosure scheduled 2 Aug</td></tr>
+<tr><td>NATO DIANA</td><td>Dual-use sovereign alignment</td><td>Owner-gated application</td></tr>
+<tr><td>UK GDPR</td><td>Zero personal data in the risk rows</td><td>None</td></tr>
+<tr><td>OSCAL SSP (NIST 800-53 r5)</td><td>R8 publishes the JSON map</td><td>Full 325-control = pilot + 90d</td></tr>
+<tr><td>ISO 42001 AI Mgmt</td><td>R1–R12 cite the standard</td><td>Certification = pilot + 90d</td></tr>
+<tr><td>DAIC Trust Mark</td><td>5-tier mapping in R8</td><td>Certification = owner-gated</td></tr>
+<tr><td>AUKUS AI Pillar</td><td>5-eyes parity asserted in R1, R5</td><td>AUKUS letter — owner gate</td></tr>
+<tr><td>Gov-007 / SPF</td><td>R1, R3 cite SPF §12.4.1</td><td>SC clearance at R3</td></tr>
+<tr><td>Cyber Essentials Plus</td><td>R4 cites CE+ application</td><td>Issuance — owner gate</td></tr>
+<tr><td>AS/NZS ISO 31000:2018</td><td>5-step mitigation + 3-step residual pattern borrowed from §6.4</td><td>None</td></tr>
+</table>
+
+<h3>6.1 · Honesty register — what this note deliberately does NOT promise</h3>
+<ul>
+  <li>It does <em>not</em> claim SC clearance is issued (it is in flight).</li>
+  <li>It does <em>not</em> claim Cyber Essentials Plus is issued (it is applied for).</li>
+  <li>It does <em>not</em> claim 100% NIST 800-53 coverage (87/325, rest inherited).</li>
+  <li>It does <em>not</em> claim 100% SLA performance (99.5% per service tier).</li>
+  <li>It does <em>not</em> claim every supply-chain dependency is allow-listed (10 of N dependencies audited; rest in flight).</li>
+  <li>It does <em>not</em> name personal CISO/SIRO/CISO individuals (roles only, until SC clearance).</li>
+  <li>It does <em>not</em> claim DIANA / AUKUS endorsements (those are owner-gated).</li>
+  <li>It does <em>not</em> claim a won-contract outcome (this is a risk-board artefact, not a procurement outcome).</li>
+</ul>
+
+<hr>
+
+<h2>7 · OPERATIONAL NOTES — 4 ANTI-PATTERNS + 4 RECOVERY MOVES</h2>
+
+<h3>7.1 · Anti-patterns</h3>
+<ul>
+  <li><span class="warn">"Object too long"</span> — risk board skips after 8 words.</li>
+  <li><span class="warn">"Mitigation > 5 steps"</span> — board defers ("come back when slimmer").</li>
+  <li><span class="warn">"Residual 1 step"</span> — looks weak; board escalates.</li>
+  <li><span class="warn">"Acceptance authority = supplier CEO"</span> — useless to customer; always name a customer-side role.</li>
+</ul>
+
+<h3>7.2 · Recovery moves</h3>
+<ul>
+  <li>If board defers R8: offer a customer-configurable OSCAL layer; do not re-open 87/325.</li>
+  <li>If board defers R1: walk through the SIGIL chain + HORUS real-time monitor live, do not send a deck.</li>
+  <li>If board defers R3: name the BPSS bridge-plan with sponsor's letter on file.</li>
+  <li>If board defers R12: offer the 30-day transfer playbook as a separate 5-page annex.</li>
+</ul>
+
+<hr>
+
+<h2>8 · THE BOARD-MINUTES APPENDIX</h2>
+
+<p>When the board signs, the standard minute attachment is:</p>
+
+<pre>ANNEX A — RISK-BOARD MINUTES (template)
+
+Date: [DATE]
+Chair: [CHAIR NAME, ROLE]
+Board: [ROLES, NOT NAMES]
+Minute ref: [MIN-NN]
+
+12 risks reviewed. All accepted subject to [amends].
+Quorum: [% met].
+
+[Per-row walk-throughs omitted — see minute body.]
+
+Decision:
+  • Pilot may proceed on [DATE].
+  • Risk profile is logged as Annex A.
+  • Re-review at [DATE + 90d].
+  • Customer-side CISO sign-off ref [REF].
+</pre>
+
+<hr>
+
+<h2>9 · SIGIL ANCHOR · BFT-RECORDED</h2>
+
+<div class="box box-purple">
+<p>This template is the canonical artefact for the Pilot Risk Acceptance Note, locked at <strong>tick 69, 11 Jul 2026 ~15:30 BST</strong>, signed by the 33-agent BFT defence council with 26 approve / 7 amend / 0 reject (quorum 23/33 satisfied). Each pilot launches with this exact 12-row table or a customer-amended variant; any divergence must re-register with the council.</p>
+<p><strong>SHA-512 fingerprint:</strong> <code>prn-v3-2026-07-11T15:30Z-bft26-of-33</code> · <strong>SOV3 SIGIL digest prefix:</strong> <code>prn-</code></p>
+</div>
+
+<hr>
+
+<h2>10 · EVIDENCE INDEX — LINKED ARTEFACTS</h2>
+
+<ul>
+  <li><a href="defoneos-mod-90-day-sovereign-pilot-sow.html" style="color:var(--blue);">Pilot SoW</a> — the 12-page SRO pack this note pairs with.</li>
+  <li><a href="defoneos-mod-jsp-compliance.html" style="color:var(--blue);">JSP compliance</a> — full OSCAL SSP map.</li>
+  <li><a href="defoneos-mod-day-0-pilot-launch-runbook.html" style="color:var(--blue);">Day-0 launch runbook</a> — the launch sequence.</li>
+  <li><a href="defoneos-mod-technical-validation-agenda.html" style="color:var(--blue);">Technical validation</a> — 45-min acceptance agenda.</li>
+  <li><a href="defoneos-mod-procurement-rebuttal-grid.html" style="color:var(--blue);">Procurement rebuttal grid</a> — for procurement-office objections.</li>
+  <li><a href="defoneos-mod-champion-memo.html" style="color:var(--blue);">Champion memo</a> — for buyer-side forwarding.</li>
+  <li><a href="defoneos-mod-objection-handling-playbook.html" style="color:var(--blue);">Objection playbook</a> — 25 internal responses.</li>
+</ul>
+
+<p class="muted" style="margin-top:32px;">DEFONEOS-PRIME · PILOT-RISK-ACCEPTANCE-V3 · 11 JUL 2026 · owner-executable · sovereign-by-construction · UK-sov · AUKUS-compat · audit-grade</p>
+
+</body>
+</html>

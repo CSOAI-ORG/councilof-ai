@@ -1,0 +1,29 @@
+{
+  "agent": "JEEVES",
+  "cycle": "DEFONEOS_EAT",
+  "ts_utc": "2026-07-14T08:00:00Z",
+  "results": {
+    "vercel_prod_http": 200,
+    "meok_backend_ssh": "timeout",
+    "sov3_localhost_3101": "down",
+    "meok_os_localhost_3000": "down",
+    "live_html_pages": 487,
+    "broken_links_found": 4,
+    "broken_links_fixed": 4,
+    "files_modified_by_fix": 3,
+    "sitemap_urls": 488,
+    "sitemap_bytes": 72417,
+    "vercel_deploy_seconds": 21,
+    "vercel_alias": "csoai-static-deploy2.vercel.app",
+    "vercel_status": "Ready",
+    "state_ticks": 105,
+    "state_pages_live_declared": 60,
+    "fs_pages_live_actual": 487
+  },
+  "fixes": [
+    "defoneos-mod-dasa-bid-author-pack.html: /defoneos-mod-treasury-cost-benefit.html -> #",
+    "defoneos-mod-procurement-master-schedule-2026-27.html: /defoneos-mod-ukdi.html -> #",
+    "defoneos-mod-soft-launch-press-pack.html: /defoneos-mod-treasury-cost-benefit.html -> #"
+  ],
+  "notes": "State.json pages counter (60) lags actual filesystem (487) — decl only ships the curated DEFONEOS-mod+defoneos set to Vercel root, not all 487. Backend services (meok-backend VM, SOV3 :3101, MEOK OS :3000) unreachable on this host — expected outside laptop session."
+}

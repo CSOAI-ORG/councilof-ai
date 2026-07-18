@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOV3 Pro — The Full Sovereign Stack — csoai.org/pro/</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(160deg,#0a0e27,#1e3a8a 50%,#0a0e27);color:#e2e8f0;padding:40px 20px;line-height:1.7}
+.container{max-width:1280px;margin:0 auto}
+.crest{font-size:5rem;text-align:center;margin-bottom:16px}
+h1{color:#fbbf24;font-size:3.2rem;text-align:center;text-shadow:0 0 16px rgba(251,191,36,.3);margin-bottom:8px}
+h2{color:#fbbf24;font-size:1.8rem;margin-top:32px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}
+h3{color:#10b981;margin-top:16px}
+.tagline{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:32px;font-size:1.15rem}
+.pill{display:inline-block;padding:3px 10px;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.4);border-radius:10px;color:#fbbf24;font-size:.78rem;font-weight:700;margin:0 4px 4px 0}
+.pill.green{border-color:rgba(16,185,129,.4);color:#10b981}
+.pill.cyan{border-color:rgba(6,182,212,.4);color:#06b6d4}
+.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:32px 0}
+.tier{background:rgba(0,0,0,.5);padding:32px;border-radius:12px;border:2px solid rgba(251,191,36,.3);position:relative}
+.tier.featured{border-color:#fbbf24;background:linear-gradient(135deg,rgba(251,191,36,.05),rgba(6,182,212,.05));transform:scale(1.02);box-shadow:0 0 32px rgba(251,191,36,.3)}
+.tier .badge{position:absolute;top:-12px;right:16px;background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:4px 12px;border-radius:12px;font-size:.75rem;font-weight:700}
+.tier h3{color:#fbbf24;font-size:1.4rem;margin-bottom:4px}
+.tier .tagline-tier{color:#94a3b8;font-size:.85rem;font-style:italic;margin-bottom:16px}
+.tier .price{font-size:2.8rem;font-weight:800;color:#fbbf24;margin:8px 0}
+.tier .price small{font-size:.9rem;font-weight:400;color:#94a3b8}
+.tier .price-detail{color:#94a3b8;font-size:.85rem;margin-bottom:16px}
+.tier ul{list-style:none;padding:0;margin:16px 0;text-align:left}
+.tier li{padding:4px 0;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.tier li::before{content:"✓ ";color:#10b981;font-weight:700}
+.tier .btn{display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;font-weight:700;border-radius:8px;text-decoration:none;font-size:1rem;margin-top:16px}
+.tier .btn-secondary{background:rgba(0,0,0,.5);color:#fbbf24;border:1px solid #fbbf24}
+.compare{margin:32px 0}
+.compare table{width:100%;border-collapse:collapse;font-size:.85rem}
+.compare th{background:rgba(251,191,36,.2);padding:8px;text-align:left;font-size:.85rem}
+.compare td{padding:8px;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem}
+.compare .yes{color:#10b981;font-weight:700}
+.compare .no{color:#94a3b8}
+.compare .best{color:#fbbf24;font-weight:700}
+.usage{margin:32px 0;background:rgba(0,0,0,.5);padding:24px;border-radius:12px;border:1px solid rgba(251,191,36,.3)}
+.usage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0}
+.usage-tier{background:rgba(0,0,0,.4);padding:16px;border-radius:8px;border:1px solid rgba(251,191,36,.2)}
+.usage-tier h4{color:#fbbf24;margin-bottom:8px;font-size:1rem}
+.usage-tier p{font-size:.85rem}
+.usage-tier .big{font-size:1.8rem;font-weight:800;color:#fbbf24}
+.faq{margin:32px 0}
+.faq-item{background:rgba(0,0,0,.4);padding:16px;border-radius:8px;margin:8px 0;border-left:4px solid #fbbf24}
+.faq-item h4{color:#fbbf24;margin-bottom:4px}
+.footer{text-align:center;padding:32px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.3);opacity:.85;font-size:.85rem}
+a{color:#10b981;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="crest">🜏</div>
+<h1>SOV3 Pro</h1>
+<p class="tagline">The full sovereign stack. Pro tier. Subscription + Pay-As-You-Go. Stripe checkout ready.</p>
+<p style="text-align:center">
+<span class="pill">Free Open Source Forever</span>
+<span class="pill green">$9 Citizen+ Subscription</span>
+<span class="pill cyan">$99 Enterprise</span>
+<span class="pill">Pay-As-You-Go $0.05/query</span>
+<span class="pill">Stripe</span>
+</p>
+
+<h2>💎 Choose Your Tier</h2>
+
+<div class="tier-grid">
+
+<div class="tier">
+<h3>Citizen</h3>
+<p class="tagline-tier">Build your own. Open source. Free forever.</p>
+<div class="price">$0<small>/forever</small></div>
+<p class="price-detail">Self-hosted on your hardware</p>
+<ul>
+<li>Unlimited queries (your compute)</li>
+<li>All 309 sovereign tools</li>
+<li>9 open-weights models (your pick)</li>
+<li>Care Floor 0.95 enforced</li>
+<li>BFT 12-around-1 Council</li>
+<li>SIGIL chain audit (verifiable)</li>
+<li>Article 50 watermarking</li>
+<li>DORADO 1-click EAST↔WEST</li>
+<li>PQC ML-DSA-65 (quantum-resistant)</li>
+<li>17 auth providers</li>
+<li>22 open protocols</li>
+<li>Fork Doctrine (MIT + CC0 + OSI)</li>
+<li>Community support (GitHub Discussions)</li>
+</ul>
+<a href="/install/" class="btn btn-secondary">⚡ 1-Command Install</a>
+</div>
+
+<div class="tier featured">
+<div class="badge">⭐ MOST POPULAR</div>
+<h3>Citizen+</h3>
+<p class="tagline-tier">Hosted sovereign substrate. Save 55% vs ChatGPT Plus.</p>
+<div class="price">$9<small>/month</small></div>
+<p class="price-detail">100,000 queries/month included<br>Then $0.05/query overage</p>
+<ul>
+<li><strong>Everything in Citizen</strong></li>
+<li>Hosted SOV3 substrate (managed)</li>
+<li>100,000 sovereign queries/month</li>
+<li>Priority access to new sovereign tools</li>
+<li>Apple Foundation Models Provider</li>
+<li>Sovereign composite analytics</li>
+<li>Article 50 passport verification API</li>
+<li>SIGIL audit API (programmatic access)</li>
+<li>White-label deployments</li>
+<li>Priority cron for sovereign jobs</li>
+<li>Email support (24h response)</li>
+<li>Quarterly sovereign health audit</li>
+</ul>
+<a href="/sovereign-auth/?plan=citizen-plus" class="btn">⚡ Start Now</a>
+</div>
+
+<div class="tier">
+<h3>Pro</h3>
+<p class="tagline-tier">For serious sovereign users. Best value.</p>
+<div class="price">$29<small>/month</small></div>
+<p class="price-detail">500,000 queries/month included<br>Then $0.04/query overage (20% off)</p>
+<ul>
+<li><strong>Everything in Citizen+</strong></li>
+<li>500,000 sovereign queries/month</li>
+<li>Multi-region substrate (UK + EU + US)</li>
+<li>Custom 12-around-1 BFT Council queens</li>
+<li>White-label i-character personalities</li>
+<li>Sovereign i-character export (full backup)</li>
+<li>Apple Business Manager MDM integration</li>
+<li>Sovereign Composite API + webhooks</li>
+<li>Article 50 passport at scale (10K/month)</li>
+<li>SIGIL chain explorer (full search)</li>
+<li>Custom DORADO rules (per region)</li>
+<li>Priority chat support (4h response)</li>
+<li>Monthly sovereign health audit</li>
+</ul>
+<a href="/sovereign-auth/?plan=pro" class="btn">⚡ Start Now</a>
+</div>
+
+<div class="tier">
+<h3>Enterprise</h3>
+<p class="tagline-tier">Defence-grade. UK sovereign. JSP 936 / Five Eyes.</p>
+<div class="price">$99<small>/seat/month</small></div>
+<p class="price-detail">Unlimited queries<br>Volume discount &gt;100 seats</p>
+<ul>
+<li><strong>Everything in Pro</strong></li>
+<li>Unlimited sovereign queries</li>
+<li>JSP 936 UK Defence compliant</li>
+<li>Five Eyes + AUKUS Pillar 2 compatible</li>
+<li>NHS Constitution + CQC aligned</li>
+<li>Dedicated sovereign substrate (single tenant)</li>
+<li>12-around-1 BFT with custom defence queens</li>
+<li>Defence-grade SIGIL audit (PQC + multi-region)</li>
+<li>Apple Business Manager MDM full deployment</li>
+<li>Citadel hardened runtime (TEE)</li>
+<li>Custom data residency (UK, EU, US, AU, IN)</li>
+<li>Custom sovereignty alignment rules</li>
+<li>24/7 sovereign support (1h response)</li>
+<li>Quarterly sovereign penetration test</li>
+<li>SLA 99.99% uptime</li>
+</ul>
+<a href="/sovereign-auth/?plan=enterprise" class="btn">⚡ Contact Sales</a>
+</div>
+
+</div>
+
+<h2>🜏 Tier Comparison — Every Feature, Every Tier</h2>
+
+<div class="compare">
+<table>
+<tr><th>Feature</th><th>Citizen<br><small>$0/forever</small></th><th>Citizen+<br><small>$9/mo</small></th><th>Pro<br><small>$29/mo</small></th><th>Enterprise<br><small>$99/seat</small></th></tr>
+
+<tr><th colspan="5" style="background:rgba(251,191,36,.1)">🌅 Core Substrate</th></tr>
+<tr><td>Sovereign substrate (UK soil)</td><td class="yes">✓ Self</td><td class="yes">✓ Hosted</td><td class="yes">✓ Hosted</td><td class="yes">✓ Dedicated</td></tr>
+<tr><td>Open-weights models</td><td class="yes">✓ 9 models</td><td class="yes">✓ 9 models</td><td class="yes">✓ 9 models</td><td class="yes">✓ 9 + custom</td></tr>
+<tr><td>Custom fine-tune</td><td class="yes">✓ BYO</td><td class="yes">✓ BYO</td><td class="yes">✓ BYO</td><td class="yes">✓ Hosted + BYO</td></tr>
+<tr><td>Care Floor 0.95 enforced</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>BFT 12-around-1 Council</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓ Custom queens</td></tr>
+<tr><td>SIGIL chain audit</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓ Defence-grade</td></tr>
+<tr><td>Article 50 watermarking</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>PQC ML-DSA-65 + ML-KEM-768</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓ Multi-region</td></tr>
+<tr><td>DORADO 1-click EAST↔WEST</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓ Custom</td><td class="yes">✓ Custom rules</td></tr>
+
+<tr><th colspan="5" style="background:rgba(6,182,212,.1)">🧠 Sovereign Tools</th></tr>
+<tr><td>MCP tools</td><td>309</td><td>309</td><td>309 + priority</td><td>309 + custom</td></tr>
+<tr><td>i-character personalities</td><td>1 default</td><td>3 templates</td><td>Custom</td><td>White-label</td></tr>
+<tr><td>Sovereign composite analytics</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓ + API</td><td class="yes">✓ + webhooks</td></tr>
+<tr><td>Article 50 passport API</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓ 10K/mo</td><td class="yes">✓ Unlimited</td></tr>
+<tr><td>SIGIL chain explorer</td><td class="yes">✓ View</td><td class="yes">✓ Full</td><td class="yes">✓ + Search</td><td class="yes">✓ + Custom</td></tr>
+
+<tr><th colspan="5" style="background:rgba(16,185,129,.1)">🔐 Auth & Security</th></tr>
+<tr><td>Auth providers</td><td>17</td><td>17</td><td>17 + custom OIDC</td><td>17 + SAML</td></tr>
+<tr><td>Apple Business Manager MDM</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓ Full deployment</td></tr>
+<tr><td>Citadel hardened runtime (TEE)</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>Custom data residency</td><td class="no">—</td><td>UK</td><td>UK + EU + US</td><td class="yes">✓ Any</td></tr>
+
+<tr><th colspan="5" style="background:rgba(168,85,247,.1)">📜 Compliance</th></tr>
+<tr><td>EU AI Act Article 50</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>GDPR 99 articles</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>UK GDPR + DPA 2018</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>JSP 936 UK Defence</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>Five Eyes + AUKUS Pillar 2</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>NHS Constitution + CQC</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>ISO 42001 + ISO 27001</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+
+<tr><th colspan="5" style="background:rgba(239,68,68,.1)">🛠️ Support</th></tr>
+<tr><td>Community (GitHub)</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>Email support</td><td class="no">—</td><td class="yes">24h</td><td class="yes">4h</td><td class="yes">1h</td></tr>
+<tr><td>Chat support</td><td class="no">—</td><td class="no">—</td><td class="yes">Priority</td><td class="yes">Priority</td></tr>
+<tr><td>24/7 sovereign support</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>SLA uptime</td><td class="no">—</td><td>99.5%</td><td>99.9%</td><td class="yes">99.99%</td></tr>
+<tr><td>Sovereign penetration test</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓ Quarterly</td></tr>
+<tr><td>Health audit</td><td class="no">—</td><td>Quarterly</td><td>Monthly</td><td class="yes">Continuous</td></tr>
+</table>
+</div>
+
+<h2>💰 Pay-As-You-Go (PAYG) — When You Don't Want a Subscription</h2>
+
+<p>For usage that exceeds your subscription tier, or for one-off projects:</p>
+
+<div class="usage">
+<div class="usage-grid">
+<div class="usage-tier">
+<h4>Citizen+ PAYG</h4>
+<div class="big">$0.05<small>/query</small></div>
+<p>After 100,000 monthly queries</p>
+</div>
+<div class="usage-tier">
+<h4>Pro PAYG</h4>
+<div class="big">$0.04<small>/query</small></div>
+<p>After 500,000 monthly queries (20% off)</p>
+</div>
+<div class="usage-tier">
+<h4>Volume Pricing</h4>
+<div class="big">$0.03<small>/query</small></div>
+<p>1M+ queries/month (custom quote)</p>
+</div>
+</div>
+
+<p style="margin-top:16px"><strong>Bulk packs (one-time purchase, never expire):</strong></p>
+<ul style="margin-left:24px;margin-top:8px">
+<li>10,000 queries: <strong>$400</strong> ($0.04/query — 20% off)</li>
+<li>50,000 queries: <strong>$1,750</strong> ($0.035/query — 30% off)</li>
+<li>100,000 queries: <strong>$3,000</strong> ($0.03/query — 40% off)</li>
+<li>1,000,000 queries: <strong>$25,000</strong> ($0.025/query — 50% off — contact sales)</li>
+</ul>
+</div>
+
+<h2>🆚 Market Comparison — Why SOV3 Pricing is Correct</h2>
+
+<div class="compare">
+<table>
+<tr><th>Provider</th><th>Free</th><th>Pro</th><th>Enterprise</th><th>Value vs SOV3</th></tr>
+<tr><td><strong>OpenAI ChatGPT</strong></td><td>$0 (limited)</td><td>$20/mo</td><td>Custom ($60+)</td><td><span class="no">Foreign API · No audit · No fork · No sovereign</span></td></tr>
+<tr><td><strong>Anthropic Claude</strong></td><td>$0 (limited)</td><td>$20/mo</td><td>Custom</td><td><span class="no">Foreign API · No sovereign · No PQC</span></td></tr>
+<tr><td><strong>Google Gemini</strong></td><td>$0 (limited)</td><td>$19.99/mo</td><td>Custom</td><td><span class="no">Foreign API · No Article 50</span></td></tr>
+<tr><td><strong>Perplexity Pro</strong></td><td>—</td><td>$20/mo</td><td>$40/seat</td><td><span class="no">Foreign API · No fork · No audit</span></td></tr>
+<tr><td><strong>Cursor</strong></td><td>$0 (limited)</td><td>$20/mo</td><td>$40/seat</td><td><span class="no">Code-only · No general AI</span></td></tr>
+<tr><td><strong>GitHub Copilot</strong></td><td>—</td><td>$10/mo</td><td>$39/seat</td><td><span class="no">Foreign API · Code-only</span></td></tr>
+<tr><td><strong>Microsoft Copilot</strong></td><td>—</td><td>$20/seat</td><td>$30/seat</td><td><span class="no">Foreign API · No sovereign</span></td></tr>
+<tr><td><strong>Apple Intelligence</strong></td><td>Free (iOS 18+)</td><td>—</td><td>—</td><td><span class="no">No third-party provider yet</span></td></tr>
+<tr style="background:rgba(251,191,36,.1)"><td><strong>SOV3 Citizen (US)</strong></td><td class="best">$0 forever</td><td>—</td><td>—</td><td class="best">✓ Sovereign + Forkable + Open Source</td></tr>
+<tr style="background:rgba(251,191,36,.1)"><td><strong>SOV3 Citizen+ (US)</strong></td><td>$0</td><td class="best">$9/mo</td><td>—</td><td class="best">55% cheaper + sovereign + fork</td></tr>
+<tr style="background:rgba(251,191,36,.1)"><td><strong>SOV3 Pro (US)</strong></td><td>—</td><td class="best">$29/mo</td><td>—</td><td class="best">Best value for sovereign users</td></tr>
+<tr style="background:rgba(251,191,36,.1)"><td><strong>SOV3 Enterprise</strong></td><td>—</td><td>—</td><td class="best">$99/seat</td><td class="best">5x cost but defence-grade + JSP 936 + PQC</td></tr>
+</table>
+</div>
+
+<h2>💳 Stripe Checkout — Pay with Confidence</h2>
+
+<p>All payments processed by Stripe. PCI-DSS Level 1. 256-bit TLS. UK/EU/US/Global.</p>
+
+<p><strong>Accepted cards:</strong> Visa · Mastercard · American Express · Discover · JCB · Diners Club · China UnionPay · Maestro · UK Direct Debit · SEPA · iDEAL · Bancontact · Sofort · Klarna · Afterpay · Apple Pay · Google Pay · Link</p>
+
+<p><strong>Annual billing:</strong> 20% off all paid tiers (Citizen+ $7.20/mo, Pro $23.20/mo, Enterprise $79.20/seat/mo)</p>
+
+<p><strong>Refund policy:</strong> 30-day money-back guarantee. No questions asked.</p>
+
+<p><strong>Cancel anytime:</strong> No long-term contracts. Cancel from your dashboard with one click.</p>
+
+<p><strong>Tax compliance:</strong> Stripe Tax. UK VAT + EU OSS + US sales tax automatically calculated.</p>
+
+<h2>❓ Frequently Asked Questions</h2>
+
+<div class="faq">
+<div class="faq-item">
+<h4>Is the Citizen tier really free forever?</h4>
+<p>Yes. The Citizen tier is the open-source SOV3 substrate. MIT licensed. You run it on your own hardware. We don't charge anything. The only cost is your hardware and your time. The substrate is yours to use, modify, fork, and sell.</p>
+</div>
+<div class="faq-item">
+<h4>Why is Citizen+ $9 instead of $20 like ChatGPT Plus?</h4>
+<p>Because SOV3 is sovereign-by-default. The data stays in the UK, the substrate is auditable, the SIGIL chain is public, the BFT Council deliberates, and the Care Floor is enforced. We don't have a foreign API cost to recoup, so we pass the savings on to you. Plus, you can cancel anytime and switch to Citizen (self-hosted).</p>
+</div>
+<div class="faq-item">
+<h4>What does the Enterprise tier's $99 cover?</h4>
+<p>Defence-grade sovereign infrastructure. JSP 936 UK Defence compliant. Five Eyes + AUKUS Pillar 2 compatible. NHS Constitution + CQC aligned. Citadel hardened runtime. 12-around-1 BFT with custom defence queens. PQC ML-DSA-65 + ML-KEM-768. Multi-region data residency. 24/7 sovereign support. 99.99% SLA. This is what banks, defence primes, healthcare systems, and government agencies need.</p>
+</div>
+<div class="faq-item">
+<h4>Can I use SOV3 for commercial purposes?</h4>
+<p>Yes. MIT license. Use SOV3 in your commercial products. Sell services built on top. Modify and rebrand. Sub-license. The only requirements are: include the original MIT license notice, and don't blame CSOAI Ltd for any damages. The fork is yours.</p>
+</div>
+<div class="faq-item">
+<h4>How does Pay-As-You-Go billing work?</h4>
+<p>If you exceed your monthly subscription queries, you get charged per query. Citizen+ $0.05/query. Pro $0.04/query (20% off). Volume pricing available for 1M+ queries. Bulk packs never expire. You can also pre-purchase a bulk pack to lock in lower rates.</p>
+</div>
+<div class="faq-item">
+<h4>What is Article 50 watermarking?</h4>
+<p>EU AI Act Article 50 requires AI-generated content to be watermarked. SOV3 issues a sovereign passport for every output — a JSON-LD document with the SHA-256, SIGIL reference, timestamp, and sovereign composite score. Verifiable at <a href="https://proofof.ai">proofof.ai</a>.</p>
+</div>
+<div class="faq-item">
+<h4>What is the Care Floor?</h4>
+<p>The Care Floor is a numerical threshold (0.95) below which no sovereign action may proceed. Care is a property of the architecture, not a promise of marketing. The substrate refuses — even when the citizen asks — to take actions that fall below the Care Floor.</p>
+</div>
+<div class="faq-item">
+<h4>Can I cancel anytime?</h4>
+<p>Yes. Cancel from your dashboard with one click. You retain access until the end of your billing period. No cancellation fees. No questions asked. 30-day money-back guarantee for first-time paid tier customers.</p>
+</div>
+<div class="faq-item">
+<h4>Do you offer annual billing?</h4>
+<p>Yes. Annual billing is 20% off all paid tiers. Citizen+ $7.20/mo (annual $86.40). Pro $23.20/mo (annual $278.40). Enterprise $79.20/seat/mo (annual $950.40/seat). Annual contracts are 12 months minimum.</p>
+</div>
+<div class="faq-item">
+<h4>What if I want to use SOV3 for a startup or non-profit?</h4>
+<p>Startups under 5 employees: Citizen tier (free). Non-profits: 50% off paid tiers (Citizen+ $4.50/mo, Pro $14.50/mo, Enterprise $49.50/seat). Educational institutions: 75% off (Citizen+ $2.25/mo, Pro $7.25/mo, Enterprise $24.75/seat). Email sovereign@meok.ai for verification.</p>
+</div>
+</div>
+
+<div class="footer">
+🜏 <strong>Sovereign Empire</strong> · <a href="/sovereign-auth/?plan=pro">Start Pro Now</a> · <a href="/install/">Build Your Own</a> · <a href="/charter/">Charter</a> · <a href="/sovereign-constitution-creed/">Creed</a><br>
+CSOAI Ltd · UK 16939677 · 4 July 2026 09:00 BST · MIT license · CC0 badge assets · OSI approved<br>
+Public. Auditable. Sovereign. Solve et Coagula.
+</div>
+
+</div>
+</body>
+</html>

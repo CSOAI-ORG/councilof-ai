@@ -1,0 +1,98 @@
+{
+  "name": "SOV33 Sovereign Brain 1.5B Pipeline",
+  "version": "2.0.0",
+  "ts_iso": "2026-07-14T05:10:41.828040+00:00",
+  "current": {
+    "base": "Qwen3-0.6B",
+    "params": 605000000,
+    "lora_rank": 32,
+    "trainable_params": 9175040,
+    "training_samples": 865,
+    "loss_reduction_pct": 57.7
+  },
+  "target": {
+    "base": "Qwen3-1.5B",
+    "params": 1500000000,
+    "lora_rank": 64,
+    "trainable_params_estimate": 30000000,
+    "training_samples": 2000,
+    "expected_loss_reduction_pct": 80
+  },
+  "stages": [
+    {
+      "stage": 1,
+      "name": "Sovereign Corpus Synthesis",
+      "description": "Aggregate 2000+ sovereign samples from all 4 OWEMs",
+      "output": "sov33_brain_1_5b_corpus.jsonl",
+      "duration_hr": 0.5
+    },
+    {
+      "stage": 2,
+      "name": "Qwen3-1.5B Download + Quantize (4-bit)",
+      "description": "Download base model, 4-bit quantize for memory",
+      "output": "~/.sovereign/cache/Qwen3-1.5B-4bit/",
+      "duration_hr": 0.5
+    },
+    {
+      "stage": 3,
+      "name": "LoRA Setup (rank=64, target Q+K+V+O+gate+up+down)",
+      "description": "Configure LoRA for all attention + MLP projections",
+      "output": "lora_config.json",
+      "duration_hr": 0.1
+    },
+    {
+      "stage": 4,
+      "name": "Training (2000 samples \u00d7 200 steps \u00d7 batch=4)",
+      "description": "QLoRA on sovereign corpus with AdamW, lr=1e-4",
+      "output": "adapter_model.safetensors (120MB)",
+      "duration_hr": 25.0
+    },
+    {
+      "stage": 5,
+      "name": "Merge Base + LoRA (full precision)",
+      "description": "merge_and_unload \u2192 1.5B merged model",
+      "output": "qwen3-sovereign-1.5b-merged/",
+      "duration_hr": 2.0
+    },
+    {
+      "stage": 6,
+      "name": "GGUF Conversion (Q4_K_M)",
+      "description": "Convert merged to GGUF Q4_K_M for Ollama",
+      "output": "qwen3-sov-1.5b-q4.gguf (1.0GB)",
+      "duration_hr": 1.0
+    },
+    {
+      "stage": 7,
+      "name": "Ollama Modelfile + Test",
+      "description": "Create Modelfile, test inference, benchmark",
+      "output": "Ollama ready + benchmark JSON",
+      "duration_hr": 1.0
+    },
+    {
+      "stage": 8,
+      "name": "Add to OWEM registry + deploy",
+      "description": "Register as \"sov33_brain_1_5b\" in 5 OWEMs",
+      "output": "SOV3_BRAIN_1_5B endpoint live",
+      "duration_hr": 0.5
+    }
+  ],
+  "total_duration_hr": 30.6,
+  "compute": {
+    "platform": "Kaggle T4 GPU (free)",
+    "free_tier_hr_per_week": 30,
+    "gpu_hr_needed": 30.6,
+    "fits_in": "1-2 weeks of free Kaggle"
+  },
+  "model_mix_3tier": {
+    "description": "Sovereign brain uses 3-tier model mix",
+    "tier1_sovereign": 0.7,
+    "tier2_qwen2.5": 0.2,
+    "tier3_ollama": 0.1
+  },
+  "expected_metrics": {
+    "latency_ms": 1500,
+    "quality_improvement_pct": 30,
+    "memory_footprint_gb": 3.5,
+    "kaggle_compatible": true
+  }
+}

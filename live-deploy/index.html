@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Live Status — MEOK AI Labs | Sigils + Events Stream</title>
+    <meta property="og:title" content="Live Status — MEOK AI Labs | Sigils + Events Stream">
+<meta name="description" content="Live SOV3 sigil stream, recent events, system health for the MEOK AI Labs keystone + 32 MCP fleet + 8 industry verticals.">
+  <link rel="canonical" href="https://meok.ai/live">
+  <style>
+    body { font-family: ui-monospace, SFMono-Regular, monospace; background: #0a0a14; color: #e8e4dc; padding: 1.5rem; max-width: 1100px; margin: 0 auto; line-height: 1.5; }
+    h1 { color: #c9a84c; font-size: 1.4rem; margin: 0 0 0.5rem; }
+    .status-bar { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+    .status { background: rgba(22,163,74,0.15); border: 1px solid #22c55e; padding: 0.5rem 1rem; border-radius: 0.4rem; font-weight: 700; color: #22c55e; }
+    .log { background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 0.4rem; font-size: 0.85rem; max-height: 600px; overflow-y: auto; }
+    .log .ts { color: #c9a84c; }
+    .log .sig { color: #22c55e; }
+    .log .warn { color: #f59e0b; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Live Status", "url": "https://meok.ai/live", "description": "Live SOV3 sigil stream, recent events, system health for the MEOK AI Labs keystone + 32 MCP fleet + 8 industry verticals."}</script>
+</head>
+<body>
+  <h1>🟢 MEOK Live — Sigils + Events Stream</h1>
+  <div class="status-bar">
+    <span class="status">ALL SYSTEMS OPERATIONAL</span>
+    <span style="color: #999; font-size: 0.85rem;">Last refresh: <span id="ts">just now</span> · auto-refresh every 30s</span>
+  </div>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">SOV3 Hub — Live Dashboard</h2>
+  <div class="log" id="sov3-dash">Loading...</div>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">Recent Sigils (last 10)</h2>
+  <div class="log" id="sigils-log">Loading...</div>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">Recent SOV3 Events (last 15)</h2>
+  <div class="log" id="events-log">Loading...</div>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">Static Sites Health</h2>
+  <div class="log" id="sites-log">Loading...</div>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">PyPI Packages</h2>
+  <div class="log" id="pypi-log">Loading...</div>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">Stripe Products</h2>
+  <div class="log" id="stripe-log">Loading...</div>
+
+  <script>
+    async function rpc(method, params = {}) {
+      const r = await fetch("http://localhost:3101/mcp", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: "x", method: "tools/call", params: { name: method, arguments: params } })
+      }).then(r => r.json()).catch(() => null);
+      if (!r || !r.result) return null;
+      try { return JSON.parse(r.result.content[0].text); } catch (e) { return null; }
+    }
+
+    async function refresh() {
+      document.getElementById("ts").textContent = new Date().toISOString().slice(0,19).replace("T"," ");
+
+      const d = await rpc("coord_get_dashboard");
+      if (d) {
+        document.getElementById("sov3-dash").innerHTML =
+          `agents: ${d.agents?.total} (${d.agents?.active} active, ${d.agents?.available} available) · ` +
+          `tasks: ${d.tasks?.completed} completed, ${d.tasks?.queued} queued, ${d.tasks?.in_progress} in progress · ` +
+          `locks: ${d.locks?.active} active`;
+      }
+
+      const sigs = await rpc("sigil_transcript");
+      if (sigs) {
+        const arr = sigs.sigils || sigs.transcript || [];
+        document.getElementById("sigils-log").innerHTML = arr.slice(-10).reverse().map(s =>
+          `<div><span class="ts">${(s.ts || s.timestamp || s.time || "").slice(0,19)}</span> <span class="sig">${(s.digest || s.sig || "").slice(0, 12)}...</span> ${(s.line || s.text || "").slice(0, 100)}</div>`
+        ).join("") || "(no sigils)";
+      }
+
+      if (d) {
+        document.getElementById("events-log").innerHTML = (d.recent_events || []).slice(0, 15).map(e =>
+          `<div><span class="ts">${(e.time || "").slice(0,19)}</span> <span class="sig">${e.type || ""}</span> by <span class="warn">${e.agent || ""}</span></div>`
+        ).join("") || "(no events)";
+      }
+
+      const sites = [
+        "meok.ai", "proofof.ai", "csoai.org", "meok-attestation-api.vercel.app",
+        "wowmcp-deploy.vercel.app", "compliance-meok-ai.vercel.app",
+        "hive-deploy.vercel.app", "industries-deploy.vercel.app",
+        "portfolio-deploy-orcin-three.vercel.app", "blog-deploy-azure.vercel.app",
+        "launch-deploy-murex.vercel.app", "changelog-deploy-xi.vercel.app",
+        "pricing-deploy-azure.vercel.app", "about-deploy-nine.vercel.app"
+      ];
+      const sitesHtml = [];
+      for (const s of sites) {
+        try {
+          const r = await fetch("https://" + s, { method: "HEAD", mode: "no-cors" });
+          sitesHtml.push(`<div><span class="sig">${s}</span> — <span class="sig">live</span></div>`);
+        } catch (e) {
+          sitesHtml.push(`<div><span class="warn">${s}</span> — <span class="warn">check</span></div>`);
+        }
+      }
+      document.getElementById("sites-log").innerHTML = sitesHtml.join("");
+
+      const py = ["eu-ai-act-compliance-mcp","meok-mcp-injection-scan-mcp","meok-governance-engine-mcp","meok-attestation-verify","meok-compliance-passport-mcp","meok-attestation-api"];
+      const pyHtml = [];
+      for (const p of py) {
+        try {
+          const r = await fetch("https://pypi.org/pypi/" + p + "/json");
+          if (r.ok) {
+            const d = await r.json();
+            pyHtml.push(`<div><span class="sig">${p}</span> v${d.info?.version} — <span class="sig">PyPI</span></div>`);
+          } else {
+            pyHtml.push(`<div><span class="sig">${p}</span> — <span class="warn">GitHub Releases only</span></div>`);
+          }
+        } catch (e) { pyHtml.push(`<div><span class="warn">${p}</span> — error</div>`); }
+      }
+      document.getElementById("pypi-log").innerHTML = pyHtml.join("");
+
+      const stripe = [
+        ["Pro £199/mo", "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t"],
+        ["Enterprise £1,499/mo", "https://buy.stripe.com/fZu5kF0xS8wy9wpeGY8k91s"],
+        ["48h Assessment £4,950", "https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m"],
+        ["Sovereign £29/mo", "https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S"],
+        ["Compliance Pro £79/mo", "https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T"],
+        ["Enterprise+ £1,499/mo", "https://buy.stripe.com/28E7sNdkEeUW5g96as8k91U"],
+        ["Article 50 Kit £999", "https://buy.stripe.com/fZu00l4O8fZ07oh0Q88k91V"],
+        ["LAUNCH50 £499", "https://buy.stripe.com/4gMcN7a8s6oq0ZTaqI8k91Z"],
+        ["Quick Kit £9", "https://buy.stripe.com/9B68wR6WgfZ0gYR8iA8k91W"],
+        ["Audit-Prep £4,950", "https://buy.stripe.com/28E6oJ94ofZ0aAt1Uc8k91X"],
+        ["Watchdog Cert £999", "https://buy.stripe.com/9B6dRb2G0eUWcIBaqI8k91Y"]
+      ];
+      document.getElementById("stripe-log").innerHTML = stripe.map(([n, u]) =>
+        `<div><span class="sig">${n}</span> — <a href="${u}" target="_blank" style="color: #c9a84c;">${u}</a></div>`
+      ).join("");
+    }
+
+    refresh();
+    setInterval(refresh, 30000);
+  </script>
+<div style="background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12)); border: 1px solid #c9a84c; border-radius: 0.5rem; padding: 1rem 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="margin: 0 0 0.3rem; font-weight: 700; color: #c9a84c;">📱 Install the MEOK App</p>
+  <p style="margin: 0 0 0.5rem; color: #666; font-size: 0.9rem;">iOS Safari, Android Chrome, macOS Safari/Chrome, Windows Edge, Linux Firefox. No app store needed.</p>
+  <a href="https://app-deploy.vercel.app" style="display: inline-block; background: #c9a84c; color: #111; padding: 0.5rem 1rem; border-radius: 0.4rem; text-decoration: none; font-weight: 700; font-size: 0.9rem;">Install MEOK App →</a>
+</div>
+</body>
+</html>

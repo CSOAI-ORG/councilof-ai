@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Proof of AI — Server Metering for MEOK MCP Fleet</title>
+<meta name="description" content="Live /verify endpoint for MEOK MCP servers. 200 free calls/day. Pay-as-you-go beyond that.">
+<link rel="canonical" href="https://proofof.ai/">
+<style>
+body{font:16px/1.6 -apple-system,sans-serif;background:#0a0a14;color:#e8e8f0;margin:0;padding:0}
+.container{max-width:920px;margin:0 auto;padding:48px 32px}
+h1{font-size:48px;margin:0 0 16px;background:linear-gradient(135deg,#5b21b6,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{margin-top:32px;color:#7c3aed}
+.hero{background:linear-gradient(135deg,#5b21b6,#7c3aed);padding:48px;border-radius:12px;text-align:center;margin:24px 0}
+.hero .big{font-size:96px;font-weight:800;color:#fff;line-height:1}
+.hero .label{color:rgba(255,255,255,0.85);font-size:14px;text-transform:uppercase;letter-spacing:0.1em;margin-top:8px}
+pre{background:#13132a;border:1px solid #1a1a2e;border-radius:6px;padding:16px 20px;overflow-x:auto;font:13px/1.5 monospace;color:#e8e8f0}
+a{color:#7c3aed;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Proof of AI</h1>
+<p style="font-size:18px;color:#8a8aa0;margin-bottom:24px">Server-side metering for the MEOK MCP fleet. 200 free calls/day. Pay-as-you-go beyond that.</p>
+
+<div class="hero">
+  <div class="big">200</div>
+  <div class="label">free /verify calls per day, no account needed</div>
+</div>
+
+<h2>How it works</h2>
+<pre><code>POST https://proofof.ai/verify
+Content-Type: application/json
+
+{"api_key": "your-key-or-empty", "tool": "audit-logger.add"}</code></pre>
+
+<p>Returns: <code>{"allowed": true, "tier": "free", "remaining": 199, "upgrade_url": "https://proofof.ai/pricing"}</code></p>
+
+<h2>Why</h2>
+<p>Every MEOK MCP server.py is wired with a <code>_server_meter_check()</code> function that calls /verify on every invocation. This lets us:</p>
+<ul>
+<li>Track usage per-tenant (for billing)</li>
+<li>Cap usage at 200 free calls/day (to prevent abuse)</li>
+<li>Hash-chain every call for audit trails (HMAC-signed)</li>
+<li>Provide real-time stats at <a href="https://proofof.ai/scorecard">/scorecard</a></li>
+</ul>
+
+<h2>Fail-open semantics</h2>
+<p>If /verify is unreachable or KV isn't configured, <code>_server_meter_check()</code> returns <code>allowed=True</code>. The local rate-limit in <code>_check_rate_limit()</code> is the safety net. We never block users because our metering is down.</p>
+
+<h2>Why 200/day</h2>
+<p>That covers the free tier of a typical individual user (5 calls/hour for 8 hours). For teams, the $99/month plan covers 100,000 calls.</p>
+
+<h2>Built by</h2>
+<p>MEOK AI Labs (CSOAI Ltd, UK Companies House 16939677). Solo founder Nick Templeman, Yorkshire UK.</p>
+
+<p style="margin-top:32px"><a href="https://meok.ai">meok.ai</a> · <a href="https://github.com/CSOAI-ORG">github.com/CSOAI-ORG</a> · <a href="https://meok.ai/fleet/">Fleet hub</a></p>
+
+</div>
+</body>
+</html>

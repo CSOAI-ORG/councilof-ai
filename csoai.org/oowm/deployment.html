@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>J. OOWM Deployment — csoai.org/oowm/deployment.html</title>
+  <meta name="description" content="How to deploy the OOWM. 1-command install. Docker, pip, npm, Apple FM Provider. 5 tiers, 4 pricing. 99.9% SLA.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse, #0a0e27 0%, #000 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2rem; color: #fbbf24; }
+    h2 { color: #06b6d4; margin-top: 32px; border-bottom: 1px solid #06b6d4; padding-bottom: 4px; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 24px; }
+    .panel { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #06b6d4; }
+    .panel.gold { border-left-color: #fbbf24; }
+    pre { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 0.78rem; color: #10b981; }
+    .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 16px 0; }
+    .tier { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 6px; text-align: center; border-top: 3px solid #fbbf24; }
+    .tier h4 { color: #fbbf24; margin: 0; }
+    .tier p { font-size: 0.78rem; margin: 4px 0; }
+    .price { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+    .plan { background: rgba(0,0,0,0.4); padding: 14px; border-radius: 6px; text-align: center; border-top: 3px solid #10b981; }
+    .plan .pp { font-size: 1.6rem; color: #fbbf24; font-weight: bold; }
+    .plan .nn { color: #06b6d4; font-size: 0.85rem; }
+    .plan ul { text-align: left; font-size: 0.78rem; padding-left: 16px; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 J. OOWM Deployment</h1>
+    <p class="tagline">1-command install · 5 runtime tiers · 4 pricing plans · 99.9% SLA · SIGIL + Article 50.</p>
+
+    <div class="panel">
+      <h2>1-Command Install</h2>
+      <pre>
+# macOS / Linux (citizen tier, free)
+curl -fsSL https://csoai.org/oowm/install.sh | bash
+
+# This installs:
+#   - SOV3small3 runtime (4 local models, 7 GB total)
+#   - sovereign-runtime (Python pip)
+#   - sovereign-mcp (Node.js)
+#   - sovereign-tui (TUI for keyboard-driven use)
+#   - sovereign-mobile (iOS + Android shells)
+#
+# First run:
+sov3 init --did=did:csoai:&lt;your-name&gt; --care-floor=0.95
+# SIGIL emitted. OOWM substrate activated.
+      </pre>
+    </div>
+
+    <div class="panel">
+      <h2>5 Runtime Tiers</h2>
+      <div class="grid">
+        <div class="tier">
+          <h4>Tier 0 — Edge</h4>
+          <p>2 GB RAM<br>Pi 5 / Jetson<br>SOV3small3<br>Offline-capable</p>
+        </div>
+        <div class="tier">
+          <h4>Tier 1 — Citizen</h4>
+          <p>8 GB RAM<br>Mac Mini<br>qwen3:0.6b +<br>qwen3:4b</p>
+        </div>
+        <div class="tier">
+          <h4>Tier 2 — Pro</h4>
+          <p>32 GB RAM<br>Mac Studio<br>qwen3:30b-a3b<br>MoE + Mamba-2</p>
+        </div>
+        <div class="tier">
+          <h4>Tier 3 — Enterprise</h4>
+          <p>128 GB+ RAM<br>GCP / Sovereign VM<br>Full MoE 64-expert<br>+ PQC + BFT</p>
+        </div>
+        <div class="tier">
+          <h4>Tier 4 — Empire</h4>
+          <p>Distributed<br>33 sovereign VMs<br>8 regions<br>+ Quantum batch</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Deployment Surfaces</h2>
+      <pre>
+# Docker
+docker pull csoai/oowm:latest
+docker run -d -p 3101:3101 \
+  -v ~/.sov3:/var/sov3 \
+  --name sov3 csoai/oowm:latest
+
+# Python pip
+pip install sovereign-oowm
+python -m sovereign_oowm.serve --port 3101
+
+# Node.js / npm
+npm install -g @csoai/oowm
+npx sov3 serve --port 3101
+
+# Apple Foundation Models Provider (iOS 26+, macOS 26+)
+sov3 deploy --provider=apple-foundation-models
+# Routes via Apple Intelligence on-device when available
+# Falls back to sovereign runtime when not
+
+# Sovereign TUI (keyboard-driven)
+brew install csoai/tap/sov3-tui
+sov3
+      </pre>
+    </div>
+
+    <div class="panel gold">
+      <h2>4 Pricing Tiers</h2>
+      <div class="price">
+        <div class="plan">
+          <h4>Citizen</h4>
+          <div class="pp">$0</div>
+          <div class="nn">/month</div>
+          <ul>
+            <li>SOV3small3 local</li>
+            <li>17 auth providers</li>
+            <li>Care Floor 0.95</li>
+            <li>Article 50 HMAC</li>
+            <li>Community SIGIL</li>
+          </ul>
+        </div>
+        <div class="plan">
+          <h4>Citizen+</h4>
+          <div class="pp">$9</div>
+          <div class="nn">/month</div>
+          <ul>
+            <li>Everything in Citizen</li>
+            <li>Apple FM Provider</li>
+            <li>Article 50 Ed25519</li>
+            <li>i-character clone</li>
+            <li>100 GB sovereign vault</li>
+          </ul>
+        </div>
+        <div class="plan">
+          <h4>Pro</h4>
+          <div class="pp">$29</div>
+          <div class="nn">/month</div>
+          <ul>
+            <li>Everything in Citizen+</li>
+            <li>qwen3:30b-a3b cloud</li>
+            <li>309 sovereign tools</li>
+            <li>10 forks / month</li>
+            <li>Priority BFT vote</li>
+          </ul>
+        </div>
+        <div class="plan">
+          <h4>Enterprise</h4>
+          <div class="pp">$99</div>
+          <div class="nn">/month</div>
+          <ul>
+            <li>Everything in Pro</li>
+            <li>Self-hosted Empire</li>
+            <li>SOC 2 + ISO 42001</li>
+            <li>99.9% SLA</li>
+            <li>Unlimited forks</li>
+            <li>White-label</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>SLA + Guarantees</h2>
+      <ul>
+        <li><strong>Uptime:</strong> 99.9% Enterprise (43.8 min/month max)</li>
+        <li><strong>Care Floor SLA:</strong> 99.99% outputs ≥ 0.95</li>
+        <li><strong>SIGIL chain integrity:</strong> 100% (zero forks in production)</li>
+        <li><strong>Article 50:</strong> 100% of AI outputs watermarked</li>
+        <li><strong>DORADO failover:</strong> &lt; 60 seconds region switch</li>
+        <li><strong>PQC rotation:</strong> 90-day cycle, ML-DSA-65 + ML-KEM-768</li>
+        <li><strong>Support:</strong> 24/7 for Enterprise, business hours for Pro, community for Citizen</li>
+      </ul>
+    </div>
+
+    <p style="text-align:center; margin-top:32px; color:#10b981;">
+      🜏 1 command. 5 tiers. 4 plans. 99.9% SLA. The OOWM ships.
+    </p>
+  </div>
+</body>
+</html>

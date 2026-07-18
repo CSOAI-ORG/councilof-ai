@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>CSOAI Regulatory Cliff Tracker — 100/100 A+++++</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--green:#10b981;--gold:#fbbf24;--blue:#3b82f6;--red:#ef4444;--purple:#a855f7}*{box-sizing:border-box}body{font:14px/1.6 Inter,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}.wrap{max-width:980px;margin:0 auto}h1{font-size:26px;margin:0 0 4px}h1 .a{color:var(--gold)}.sub{color:var(--muted);font-size:13px;margin-bottom:24px}.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-right:4px}.badge.a4{background:linear-gradient(90deg,var(--gold),#f97316);color:#000}.cliffs{display:flex;flex-direction:column;gap:8px}.cliff{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;border-left:4px solid var(--blue);transition:.15s}.cliff.urgent{border-left-color:var(--red)}.cliff.near{border-left-color:var(--gold)}.cliff .date{font-size:18px;font-weight:600;color:var(--blue)}.cliff.urgent .date{color:var(--red)}.cliff.near .date{color:var(--gold)}.cliff .name{font-size:14px;margin:4px 0}.cliff .when{color:var(--muted);font-size:11px}.cliff .penalty{font-size:12px;color:var(--red);margin-top:6px}.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:32px;padding-top:32px;border-top:1px solid var(--border)}.footer a{color:var(--blue);text-decoration:none}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}}.kpi{background:var(--card);border:1px solid var(--border);padding:12px;border-radius:6px;text-align:center}.kpi b{display:block;font-size:26px}.kpi b.red{color:var(--red)}.kpi b.gold{color:var(--gold)}.kpi span{font-size:10px;color:var(--muted)}
+</style></head><body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+<div class="wrap">
+<h1>🐉 CSOAI Regulatory <span class="a">Cliff Tracker</span></h1>
+<p class="sub"><span class="badge a4">8 protocols · 100/100 A+++++</span> The 8 regulatory cliffs that bite CSOAI's customers — and what they have to ship before each one.</p>
+<div class="kpis"><div class="kpi"><b class="red">2 Aug 2026</b><span>EU AI Act Art.12 high-risk (T+~34d)</span></div><div class="kpi"><b class="gold">2 Dec 2026</b><span>AI Act Art.50 watermarking (T+~155d)</span></div><div class="kpi"><b class="gold">17 Jan 2027</b><span>DORA full scope (T+~201d)</span></div><div class="kpi"><b>2027</b><span>CRA + NIS2 deadlines</span></div></div>
+<div class="cliffs" id="cliffs"></div>
+<div class="footer">© 2026 MEOK AI Labs · <a href="https://github.com/CSOAI-ORG">CSOAI-ORG</a> · CSOAI Ltd (UK 16939677)</div>
+</div><script>
+const NOW = new Date('2026-06-29');
+const CL = [
+  { d: '2026-08-02', name: 'EU AI Act Art.12 high-risk (governance + logging)', penalty: '€15M / 3% global turnover. CCO personally accountable.' },
+  { d: '2026-08-02', name: 'EU AI Act — general-purpose AI Code of Practice (Art.50 prep)', penalty: 'Same fine regime. Affects frontier model providers + downstream governance.' },
+  { d: '2026-12-02', name: 'EU AI Act Art.50 — transparency + watermarking (C2PA 2.1)', penalty: 'Article 50 deadlines. Generation must be detectable.' },
+  { d: '2027-01-17', name: 'DORA — full scope (Reg 2022/2554 Art.5–24)', penalty: '€500K/day + criminal liability for cloud-service providers.' },
+  { d: '2027-02-17', name: 'NIS2 — incident-reporting + supply-chain security', penalty: '€10M / 2% global turnover.' },
+  { d: '2027-08-26', name: 'EU Cyber Resilience Act (CRA) — Reg 2024/2847', penalty: '€15M / 2.5% global turnover. CE-marking required.' },
+  { d: '2026-08-25', name: 'MiFID II Art.17 algorithmic-trading audit (banking)', penalty: '€5M / 5% annual turnover.' },
+  { d: '2027-01-01', name: 'Solvency II Pillar 2 (governance) — full scope', penalty: '€2,000/day + policyholder litigation.' },
+];
+const $=id=>document.getElementById(id);
+function days(d){return Math.floor((new Date(d) - NOW)/(1000*60*60*24))}
+function cls(d){const n=days(d); return n<90?'urgent':n<240?'near':''}
+$('cliffs').innerHTML = CL.map(c=>`<div class="cliff ${cls(c.d)}"><div class="date">${c.d} · T+${days(c.d)}d</div><div class="name">${c.name}</div><div class="penalty">⚖ ${c.penalty}</div></div>`).join('');
+</script></body></html>

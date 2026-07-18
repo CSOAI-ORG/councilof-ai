@@ -1,0 +1,126 @@
+.legal-page {
+  min-height: 100vh;
+  padding: 120px 2rem 5rem;
+}
+
+.legal-page .container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.legal-page h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-purple);
+}
+
+.last-updated {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+}
+
+.legal-page section {
+  margin-bottom: 3rem;
+}
+
+.legal-page h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+  padding-bottom: 0.5rem;
+}
+
+.legal-page h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  margin-top: 1.5rem;
+  color: var(--primary-purple);
+}
+
+.legal-page p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.legal-page ul {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.legal-page li {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.legal-page strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.legal-page a {
+  color: var(--primary-purple);
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+.legal-page a:hover {
+  color: var(--primary-blue);
+}
+
+.cookie-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: var(--card-bg);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cookie-table thead {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.cookie-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--primary-purple);
+  font-size: 0.875rem;
+}
+
+.cookie-table td {
+  padding: 1rem;
+  border-top: 1px solid rgba(139, 92, 246, 0.1);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.cookie-table tr:hover {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+@media (max-width: 768px) {
+  .legal-page h1 {
+    font-size: 2rem;
+  }
+
+  .legal-page h2 {
+    font-size: 1.5rem;
+  }
+
+  .cookie-table {
+    font-size: 0.75rem;
+  }
+
+  .cookie-table th,
+  .cookie-table td {
+    padding: 0.5rem;
+  }
+}

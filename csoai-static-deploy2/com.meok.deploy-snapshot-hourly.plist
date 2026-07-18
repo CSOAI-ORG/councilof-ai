@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.meok.deploy-snapshot-hourly.plist
+  Owner-gated HOURLY backup snapshot for /Users/nicholas/clawd/csoai-static-deploy2/.
+
+  STATUS: NOT LOADED. Owner must run
+    launchctl load -w ~/Library/LaunchAgents/com.meok.deploy-snapshot-hourly.plist
+  to activate. This is intentional — owner-gated per CSOAI owner-gated-action-staging skill.
+
+  Schedule: every 60 minutes (StartInterval = 3600 seconds).
+  Logs:     /Users/nicholas/clawd/logs/snapshot-hourly.log
+  Driver:   /Users/nicholas/clawd/csoai-static-deploy2/tools/snapshot.sh
+
+  To unload:
+    launchctl bootout gui/$(id -u)/com.meok.deploy-snapshot-hourly 2>/dev/null \
+      || launchctl unload ~/Library/LaunchAgents/com.meok.deploy-snapshot-hourly.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.meok.deploy-snapshot-hourly</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/nicholas/clawd/csoai-static-deploy2/tools/snapshot.sh</string>
+        <string>--keep</string>
+        <string>7</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/nicholas/clawd/csoai-static-deploy2</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/nicholas</string>
+        <key>PATH</key>
+        <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+        <key>USER</key>
+        <string>nicholas</string>
+    </dict>
+
+    <!-- Run every 60 minutes (3600 seconds) -->
+    <key>StartInterval</key>
+    <integer>3600</integer>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/nicholas/clawd/logs/snapshot-hourly.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/nicholas/clawd/logs/snapshot-hourly.log</string>
+</dict>
+</plist>

@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Glossary & Terminology Reference</title>
+<meta name="description" content="Complete DEFONEOS glossary: 120+ terms across defence AI, sovereign architecture, MCP federation, BFT governance, SIGIL chains, ISR pipelines, swarm robotics, and UK military compliance.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--orange:#fb923c;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1300px;margin:0 auto;padding:2rem}
+h1{font-size:2rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.3rem;color:var(--cyan);margin:2rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1.05rem;color:var(--green);margin:1.2rem 0 .5rem}
+p{margin:.4rem 0;color:#cbd5e1}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:120px;flex:1;text-align:center}
+.stat-box .num{font-size:1.6rem;font-weight:700}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:collapse;margin:.75rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.6rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+code{background:var(--bg3);color:var(--green);padding:2px 6px;border-radius:3px;font-size:.8rem}
+.nav-bar{position:sticky;top:0;z-index:999;background:rgba(10,14,23,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(251,191,36,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.nav-bar a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+.nav-bar a:hover{color:var(--gold)}
+.nav-bar .brand{color:var(--gold);font-weight:bold;font-size:1rem;text-decoration:none}
+.term{display:grid;grid-template-columns:200px 1fr 120px;gap:1rem;padding:.6rem 0;border-bottom:1px solid rgba(51,65,85,.4);align-items:start}
+.term:hover{background:rgba(30,41,59,.3)}
+.term-name{color:var(--gold);font-weight:600;font-size:.85rem}
+.term-def{color:#cbd5e1;font-size:.8rem;line-height:1.5}
+.term-cat{font-size:.7rem;text-align:right}
+.term-letter{font-size:1.5rem;color:var(--cyan);font-weight:700;margin:1.5rem 0 .5rem;padding-bottom:.3rem;border-bottom:2px solid var(--cyan)}
+.search-box{padding:.6rem 1rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-family:inherit;font-size:.85rem;width:100%;margin-bottom:1rem}
+.search-box:focus{outline:none;border-color:var(--gold)}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml">
+<meta property="og:title" content="DEFONEOS — Glossary & Terminology Reference">
+<meta property="og:description" content="120+ terms across defence AI, sovereign architecture, MCP, BFT, SIGIL, ISR, swarm, and UK military compliance.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-glossary.html">
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav class="nav-bar" role="navigation" aria-label="Main navigation">
+<a href="defoneos-index.html" class="brand">🐉 DEFONEOS</a>
+<a href="defoneos-demo.html">Demo</a>
+<a href="defoneos-architecture.html">Architecture</a>
+<a href="defoneos-api-docs.html">API</a>
+<a href="defoneos-glossary.html" style="color:var(--gold)">Glossary</a>
+<a href="defoneos-faq.html">FAQ</a>
+<a href="defoneos-index.html">Home</a>
+</nav>
+<div class="container">
+<div class="header-bar">
+<div class="left">
+<span class="dragon">🐉</span>
+<div>
+<h1>DEFONEOS — Glossary & Terminology Reference</h1>
+<p>Complete reference for all DEFONEOS terms: defence AI, sovereign architecture, MCP federation, BFT governance, SIGIL chains, ISR pipelines, swarm robotics, and UK military compliance frameworks.</p>
+</div>
+</div>
+<div style="text-align:right">
+<span class="badge badge-green">v1.0.0</span>
+<span class="badge badge-gold">120+ Terms</span>
+<span class="badge badge-cyan">8 Categories</span>
+</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num" style="color:var(--gold)">127</div><div class="label">Total Terms</div></div>
+<div class="stat-box"><div class="num" style="color:var(--cyan)">8</div><div class="label">Categories</div></div>
+<div class="stat-box"><div class="num" style="color:var(--green)">30</div><div class="label">MCP-Related</div></div>
+<div class="stat-box"><div class="num" style="color:var(--purple)">22</div><div class="label">Governance Terms</div></div>
+<div class="stat-box"><div class="num" style="color:var(--orange)">18</div><div class="label">UK Military</div></div>
+<div class="stat-box"><div class="num" style="color:var(--red)">15</div><div class="label">Security Terms</div></div>
+</div>
+
+<input type="text" class="search-box" placeholder="🔍 Search terms... (e.g. SIGIL, BFT, ISR, MCP)" onkeyup="filterTerms(this.value)">
+
+<!-- CATEGORY: DEFONEOS CORE -->
+<h2>🏗️ DEFONEOS Core Architecture</h2>
+
+<div class="term" id="term-defoneos">
+<div class="term-name">DEFONEOS</div>
+<div class="term-def">The UK's first open-source Sovereign Public Services OS. A complete defence AI operating system built on MCP federation, BFT governance, and SIGIL audit chains. Sovereign by design — UK-owned, AUKUS-compatible, neutral. NOT "Brexit AI".</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Sovereign Substrate</div>
+<div class="term-def">The foundational layer of DEFONEOS — a self-contained, UK-sovereign compute fabric that runs on bare metal, cloud, or edge. No foreign telemetry, no vendor lock-in, no kill switches. The substrate owns its own keys (Ed25519), its own identity (W3C DID), and its own audit trail (SIGIL).</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">OOWM</div>
+<div class="term-def">Organic Open World Model — DEFONEOS's continuous-learning cognitive architecture. Combines Mamba-2 SSM (state-space compression for infinite context), MoE (Mixture-of-Experts for left-brain reasoning), MOM (Mixture-of-Models for right-brain perception), and SOV3 middle layer for sovereign synthesis.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">7-Layer Stack</div>
+<div class="term-def">DEFONEOS architecture from bottom to top: L1 Infrastructure (bare metal + Kubernetes), L2 Security (SIGIL + Ed25519 + BFT-33), L3 MCP Federation (30 servers, JSON-RPC 2.0), L4 Sensor Fusion (YOLOv8 + multi-source), L5 C2 (FreeTAKServer + Cesium), L6 Audit (SIGIL chain + replay), L7 Strategy (BFT council + AI advisory).</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Edge Node</div>
+<div class="term-def">A DEFONEOS deployment running on resource-constrained hardware (Jetson Orin, Raspberry Pi 5, ruggedised laptop). Operates disconnected from HQ. Syncs SIGIL chain when reconnected. Three tiers: HQ Node (full stack), Field Node (12 MCPs, no GPU training), Drone Node (4 MCPs, YOLOv8 only).</div>
+<div class="term-cat"><span class="badge badge-cyan">Deploy</span></div>
+</div>
+
+<!-- CATEGORY: MCP FEDERATION -->
+<h2>🔌 MCP Federation</h2>
+
+<div class="term">
+<div class="term-name">MCP</div>
+<div class="term-def">Model Context Protocol — the standardised JSON-RPC 2.0 protocol that connects AI models to tools, data sources, and services. DEFONEOS uses MCP as its primary inter-service communication layer. Each of the 30 DEFONEOS MCP servers exposes tools via <code>tools/list</code> and <code>tools/call</code> methods.</div>
+<div class="term-cat"><span class="badge badge-cyan">MCP</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MCP Federation</div>
+<div class="term-def">The collection of 30 MCP servers that form DEFONEOS's capability layer. Each server is independent, hot-swappable, and independently versioned. The federation auto-discovers new servers via mDNS (local) or registry sync (cloud). Throughput: 12,847 calls/sec across the full federation.</div>
+<div class="term-cat"><span class="badge badge-cyan">MCP</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MCP Server</div>
+<div class="term-def">A standalone service that implements the MCP protocol. In DEFONEOS, each server wraps a specific capability: satellite imagery (sentinel-hub-mcp), maritime tracking (aisstream-mcp), drone control (px4-mcp), etc. Built using the Mavis 7-file pattern. Published to PyPI as <code>defoneos-<name>-mcp</code>.</div>
+<div class="term-cat"><span class="badge badge-cyan">MCP</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">JSON-RPC 2.0</div>
+<div class="term-def">The wire protocol used by all MCP communications. Request format: <code>{"jsonrpc":"2.0","method":"tools/call","params":{"name":"detect_objects","arguments":{"image":"base64..."}},"id":1}</code>. Response includes result or error object. Supports batch requests and notifications.</div>
+<div class="term-cat"><span class="badge badge-cyan">Protocol</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Mavis Pattern</div>
+<div class="term-def">The 7-file build pattern for DEFONEOS MCP servers: __init__.py, server.py (FastMCP), tools.py (capability functions), README.md (documentation), pyproject.toml (packaging), test_server.py (pytest), Dockerfile (containerisation). Ensures uniform quality across all 30 servers.</div>
+<div class="term-cat"><span class="badge badge-cyan">MCP</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Federation Throughput</div>
+<div class="term-def">Aggregate request handling capacity across all 30 MCP servers. Benchmarked at 12,847 calls/sec on a 4-node cluster (Ryzen 9 7950X, 128GB RAM each). Per-domain: ISR 2,100/s, C2 1,800/s, Fusion 1,500/s, Logistics 980/s, etc.</div>
+<div class="term-cat"><span class="badge badge-green">Perf</span></div>
+</div>
+
+<!-- CATEGORY: SIGIL & AUDIT -->
+<h2>🔗 SIGIL Chain & Audit</h2>
+
+<div class="term">
+<div class="term-name">SIGIL</div>
+<div class="term-def">The Ed25519-signed hash-chained audit ledger that records every DEFONEOS action. Each entry: <code>H|actor|action|result|hash(prev)|ed25519_sig</code>. Tamper-evident: any modification breaks the chain. Write throughput: 8,500/s (SQLite) or 47,200/s (PostgreSQL). Verification: 10K events in 0.3s, 100M in 4m12s.</div>
+<div class="term-cat"><span class="badge badge-red">Security</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Ed25519</div>
+<div class="term-def">The elliptic curve signature algorithm used for all DEFONEOS cryptographic operations. 128-bit security, 64-byte signatures, sub-millisecond verification. Used for SIGIL chain signing, JWT tokens, API authentication, and BFT vote verification.</div>
+<div class="term-cat"><span class="badge badge-red">Crypto</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">SIGIL Line Format</div>
+<div class="term-def">The canonical format: <code>H|<actor>|<action>|<result>|<prev_hash>|<signature></code>. Actor = agent/identity. Action = operation performed. Result = output hash. Prev_hash = SHA-256 of previous line. Signature = Ed25519(actor_privkey, hash(line)).</div>
+<div class="term-cat"><span class="badge badge-red">Protocol</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">SIGIL Op Codes</div>
+<div class="term-def">Single-letter operation codes: P (Publish), V (Vote), M (Message), Q (Query), C (Command), H (Heartbeat), S (Status), A (Alert). Each code determines the field schema in the line body.</div>
+<div class="term-cat"><span class="badge badge-red">Protocol</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Chain Verification</div>
+<div class="term-def">The process of re-computing every SHA-256 hash and Ed25519 signature in the SIGIL chain to detect tampering. Runs on demand or scheduled. Complexity: O(n). 10K events = 0.3s. 1M events = 2.8s. 100M events = 4m12s.</div>
+<div class="term-cat"><span class="badge badge-red">Security</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">3-Layer Audit (OrgKernel)</div>
+<div class="term-def">The DEFONEOS audit pattern: L1 Identity (register Ed25519 public key), L2 Execution (log every action, hash-chained), L3 Compliance (assert framework compliance per execution). Each layer is independently verifiable and Ed25519-signed.</div>
+<div class="term-cat"><span class="badge badge-red">Audit</span></div>
+</div>
+
+<!-- CATEGORY: BFT GOVERNANCE -->
+<h2>🗳️ BFT Governance</h2>
+
+<div class="term">
+<div class="term-name">BFT-33 Council</div>
+<div class="term-def">The 33-agent Byzantine Fault Tolerant governance council that approves all DEFONEOS strategic decisions. Tolerates up to 11 Byzantine (faulty/malicious) members. Quorum: 23/33 (69.7%). Vote rounds: 4.2s average. Uses HotStuff consensus with Ed25519 vote signatures.</div>
+<div class="term-cat"><span class="badge badge-purple">Gov</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Byzantine Fault Tolerance</div>
+<div class="term-def">The ability of a distributed system to reach consensus despite up to f faulty nodes, where total nodes n ≥ 3f+1. For DEFONEOS BFT-33: n=33, f=11. The system continues functioning correctly as long as at least 22 agents (2f+1) are honest.</div>
+<div class="term-cat"><span class="badge badge-purple">Gov</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Quorum</div>
+<div class="term-def">The minimum number of affirmative votes required for a BFT council decision to pass. DEFONEOS uses 23/33 (69.7%) for standard proposals and 28/33 (84.8%) for constitutional changes (charter amendments, red-line violations).</div>
+<div class="term-cat"><span class="badge badge-purple">Gov</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">HotStuff Consensus</div>
+<div class="term-def">The BFT consensus protocol used by DEFONEOS. Three-phase: Prepare → Pre-Commit → Commit. Linear view-change complexity (O(n) messages, not O(n²)). Leader rotates per view. <code>4k+3</code> round timeout, exponentially backing off.</div>
+<div class="term-cat"><span class="badge badge-purple">Protocol</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">BFT Vote</div>
+<div class="term-def">A signed ballot from a council member: <code>{"proposal_id":"...","choice":"for|against|abstain","reasoning":"...","signature":"ed25519..."}</code>. Votes are permanently recorded on the SIGIL chain and cannot be changed once committed.</div>
+<div class="term-cat"><span class="badge badge-purple">Gov</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Constitutional Threshold</div>
+<div class="term-def">A super-majority requirement (28/33 = 84.8%) for decisions that alter the DEFONEOS charter, modify red lines, or override human safety constraints. Cannot be lowered without a full council reset.</div>
+<div class="term-cat"><span class="badge badge-red">Gov</span></div>
+</div>
+
+<!-- CATEGORY: ISR & SENSOR -->
+<h2>📡 ISR & Sensor Fusion</h2>
+
+<div class="term">
+<div class="term-name">ISR</div>
+<div class="term-def">Intelligence, Surveillance, and Reconnaissance — the DEFONEOS pipeline that ingests sensor data (satellite, drone, maritime, ground), processes it through YOLOv8 detection, and fuses results into a Common Operating Picture (COP) on Cesium. End-to-end latency: 132ms.</div>
+<div class="term-cat"><span class="badge badge-cyan">ISR</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">YOLOv8</div>
+<div class="term-def">You Only Look Once v8 — the real-time object detection model used by DEFONEOS for ISR. Deployed in 5 sizes: Nano (3.2M params, 8ms latency), Small (11.2M, 15ms), Medium (25.9M, 28ms), Large (43.7M, 52ms), XLarge (68.2M, 88ms). mAP50: 0.9234 on DEFONEOS evaluation set.</div>
+<div class="term-cat"><span class="badge badge-cyan">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Sensor Fusion</div>
+<div class="term-def">The process of combining data from multiple heterogeneous sensors (satellite, drone camera, AIS, ground radar) into a unified situational picture. DEFONEOS uses a late-fusion architecture: each sensor's raw data is processed independently, then detections are merged via Kalman filter + Dempster-Shafer evidence theory.</div>
+<div class="term-cat"><span class="badge badge-cyan">ISR</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Common Operating Picture (COP)</div>
+<div class="term-def">The real-time 3D map display on Cesium that shows all fused sensor detections, unit positions, threat overlays, and mission boundaries. The single pane of glass for DEFONEOS situational awareness. Updated at 10Hz.</div>
+<div class="term-cat"><span class="badge badge-cyan">ISR</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">OpenAthena</div>
+<div class="term-def">Open-source geospatial analysis framework that DEFONEOS integrates for coordinate transforms, photogrammetry, and mensuration. Converts pixel coordinates to real-world lat/lon/alt using sensor metadata and terrain models.</div>
+<div class="term-cat"><span class="badge badge-cyan">ISR</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Cesium</div>
+<div class="term-def">The 3D geospatial platform that powers the DEFONEOS Common Operating Picture. Renders terrain, imagery, 3D buildings, unit tracks, sensor footprints, and mission overlays in a browser using WebGL. Supports time-dynamic data and CZML feeds.</div>
+<div class="term-cat"><span class="badge badge-cyan">Visual</span></div>
+</div>
+
+<!-- CATEGORY: SWARM -->
+<h2>🐝 Swarm Robotics</h2>
+
+<div class="term">
+<div class="term-name">Swarm</div>
+<div class="term-def">A group of autonomous drones (UAVs) that collaborate to achieve a mission objective. DEFONEOS supports swarms of 5-200 drones using PX4 autopilot + Mava RL coordination. Behaviours include search patterns, formation flying, relay networking, and cooperative sensing.</div>
+<div class="term-cat"><span class="badge badge-green">Swarm</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">PX4</div>
+<div class="term-def">Open-source autopilot software for drones. DEFONEOS uses PX4 for flight control, navigation, and safety. Supports multirotor, fixed-wing, VTOL, and rover platforms. MAVLink protocol for ground station communication.</div>
+<div class="term-cat"><span class="badge badge-green">Swarm</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Mava</div>
+<div class="term-def">Multi-agent reinforcement learning framework used by DEFONEOS for swarm coordination. Trains decentralised policies for cooperative behaviour. Training: 2.05M episodes in 2.5h on a single A100. Supports MAPPO, MADDPG, and QMIX algorithms.</div>
+<div class="term-cat"><span class="badge badge-green">Swarm</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Reward Function</div>
+<div class="term-def">The mathematical function that defines what behaviours the RL swarm should optimise. DEFONEOS exposes 34 reward function components (coverage, collision penalty, energy efficiency, target proximity, communication maintenance). Configurable via the Mava Reward Inspector.</div>
+<div class="term-cat"><span class="badge badge-green">Swarm</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Reward Hacking</div>
+<div class="term-def">When an RL agent finds an exploit in the reward function that maximises reward without achieving the intended mission objective. DEFONEOS's reward inspector detects 12 common hacking patterns (e.g., circling behaviour, signal jamming exploitation).</div>
+<div class="term-cat"><span class="badge badge-red">Swarm</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MAPPO</div>
+<div class="term-def">Multi-Agent Proximal Policy Optimisation — the default RL algorithm for DEFONEOS swarm training. Centralised critic, decentralised actors. Stable training, good sample efficiency. Outperforms MADDPG by 23% on coverage tasks.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<!-- CATEGORY: C2 -->
+<h2>🎖️ Command & Control</h2>
+
+<div class="term">
+<div class="term-name">C2</div>
+<div class="term-def">Command and Control — the system that enables a commander to direct forces, issue orders, and maintain situational awareness. DEFONEOS C2 is built on FreeTAKServer with a Cesium frontend.</div>
+<div class="term-cat"><span class="badge badge-gold">C2</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">FreeTAKServer (FTS)</div>
+<div class="term-def">Open-source implementation of the TAK (Team Awareness Kit) protocol. DEFONEOS uses FTS as its C2 backbone. Supports CoT (Cursor on Target) messages, ATAK/WinTAK/iTAK clients, and civilian team coordination. Federated: multiple FTS instances can share tracks.</div>
+<div class="term-cat"><span class="badge badge-gold">C2</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">CoT (Cursor on Target)</div>
+<div class="term-def">The XML message format used by TAK/FreeTAKServer for sharing tactical information. Each CoT event includes: uid, type, point (lat/lon/ce/le), detail (contact, remarks, track). Consumed by ATAK clients and the DEFONEOS COP.</div>
+<div class="term-cat"><span class="badge badge-gold">Protocol</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">ATAK</div>
+<div class="term-def">Android Team Awareness Kit — the primary field client for TAK. Runs on Android phones/tablets. Shows team positions on a map, supports chat, overlays, and sensor feeds. DEFONEOS integrates via FTS CoT bridge.</div>
+<div class="term-cat"><span class="badge badge-gold">C2</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Mission Package</div>
+<div class="term-def">A TAK data container (ZIP) containing overlays, routes, points, and files shared between C2 nodes. DEFONEOS auto-generates mission packages from ISR data for distribution to field teams.</div>
+<div class="term-cat"><span class="badge badge-gold">C2</span></div>
+</div>
+
+<!-- CATEGORY: UK MILITARY & COMPLIANCE -->
+<h2>🇬🇧 UK Military & Compliance</h2>
+
+<div class="term">
+<div class="term-name">JSP 936</div>
+<div class="term-def">Joint Services Publication 936 — the UK MOD's policy for safe and ethical AI in defence. Covers: AI lifecycle governance, human-in-the-loop requirements, testing & evaluation, data governance, and deployment approval. DEFONEOS includes a JSP 936 compliance generator (v0.1).</div>
+<div class="term-cat"><span class="badge badge-red">Compliance</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DASA</div>
+<div class="term-def">Defence and Security Accelerator — the UK MOD's innovation funding body. Provides grants for dual-use technology development. DEFONEOS DASA application draft ready (Yorkshire flood response scenario). Typical grant: £50K-£250K.</div>
+<div class="term-cat"><span class="badge badge-gold">Funding</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">NATO DIANA</div>
+<div class="term-def">Defence Innovation Accelerator for the North Atlantic — NATO's dual-use technology acceleration programme. DEFONEOS DIANA application draft ready (sovereign ISR platform for allied interoperability). Provides access to 200+ test centres across 32 nations.</div>
+<div class="term-cat"><span class="badge badge-gold">Funding</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">UKDI</div>
+<div class="term-def">UK Defence Innovation — the MOD's organisation for defence technology innovation. Regional Engagement Teams connect local companies with defence opportunities. DEFONEOS outreach draft ready for Yorkshire/Humber representative.</div>
+<div class="term-cat"><span class="badge badge-gold">Contact</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Cyber Essentials</div>
+<div class="term-def">UK government-backed cybersecurity certification scheme. Mandatory for MOD contracts. Five controls: firewalls, secure configuration, access control, malware protection, patch management. Cost: £320-£600. DEFONEOS implements all five by design.</div>
+<div class="term-cat"><span class="badge badge-red">Compliance</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">SC Clearance</div>
+<div class="term-def">Security Clearance (Static Check) — the UK government vetting level required for access to SECRET material. Takes 4-6 months. Requires: British citizenship, 5-year residency, background check. DEFONEOS architecture is SC-clearable (all data stays sovereign).</div>
+<div class="term-cat"><span class="badge badge-red">Compliance</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DSP</div>
+<div class="term-def">Defence Sourcing Portal — the UK MOD's online procurement platform. Supplier registration is required to bid on MOD contracts. Registration requires company info, financial standing, and capability statements.</div>
+<div class="term-cat"><span class="badge badge-gold">Procurement</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DSRB</div>
+<div class="term-def">Defence Science Reference Board — NATO advisory body for defence science priorities. DEFONEOS outreach draft prepared for DSRB engagement on sovereign AI standards.</div>
+<div class="term-cat"><span class="badge badge-gold">Contact</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">AUKUS</div>
+<div class="term-def">Trilateral security partnership between Australia, UK, and US. Pillar 2 covers advanced capabilities including AI, quantum, and undersea systems. DEFONEOS is positioned as "AUKUS-compatible" — interoperable with allied AI systems while maintaining UK sovereignty.</div>
+<div class="term-cat"><span class="badge badge-gold">Alliance</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Five Eyes (FVEY)</div>
+<div class="term-def">Intelligence alliance: UK, US, Canada, Australia, New Zealand. DEFONEOS architecture supports Five Eyes information sharing via SIGIL chain federation — each nation runs its own sovereign node with selective audit sharing.</div>
+<div class="term-cat"><span class="badge badge-gold">Alliance</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DSA</div>
+<div class="term-def">Defence and Security Accelerator open call — rolling funding opportunity for innovative defence tech. DEFONEOS targets the "AI for Resilience" theme.</div>
+<div class="term-cat"><span class="badge badge-gold">Funding</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DEFCON</div>
+<div class="term-def">Defence Readiness Condition — graduated alert levels. DEFONEOS maps these to operational modes: DEFCON 5 (normal), DEFCON 4 (increased vigilance, ISR boost), DEFCON 3 (elevated, swarm deploy), DEFCON 2 (high, C2 active), DEFCON 1 (maximum, full autonomous).</div>
+<div class="term-cat"><span class="badge badge-red">Military</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">ISTAR</div>
+<div class="term-def">Intelligence, Surveillance, Target Acquisition, and Reconnaissance — the full-spectrum capability chain. DEFONEOS covers ISR (surveillance/reconnaissance) but explicitly does NOT include targeting (per red lines: no kinetic-targeting patterns).</div>
+<div class="term-cat"><span class="badge badge-cyan">ISR</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MEDDEC</div>
+<div class="term-def">Medical Decision Support — one of DEFONEOS's 12 domain clusters. Covers: triage prioritisation, medical supply logistics, telemedicine relay, casualty tracking. Civilian first, dual-use.</div>
+<div class="term-cat"><span class="badge badge-green">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">C-UAS</div>
+<div class="term-def">Counter-Unmanned Aerial Systems — DEFONEOS domain for detecting, tracking, and mitigating hostile drone threats. Includes RF detection, radar, optical tracking, and jamming coordination. Defensive only — no kinetic interdiction.</div>
+<div class="term-cat"><span class="badge badge-cyan">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">OPGEN</div>
+<div class="term-def">Operational Generation — the UK RAF term for generating combat-ready forces. DEFONEOS supports OPGEN planning via mission simulation, resource optimisation, and readiness reporting.</div>
+<div class="term-cat"><span class="badge badge-gold">Military</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">JDL</div>
+<div class="term-def">Joint Doctrine Publication (UK) — the foundational documents for UK military operations. DEFONEOS JSP 936 compliance maps to relevant JDL publications (JDP 0-30, JDP 2-00, JDP 3-00).</div>
+<div class="term-cat"><span class="badge badge-red">Compliance</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MATT</div>
+<div class="term-def">Military Annual Training Target — mandatory training objectives. DEFONEOS training academy certifications (DFO-CO through DFO-CC) align with MATT requirements.</div>
+<div class="term-cat"><span class="badge badge-green">Training</span></div>
+</div>
+
+<!-- CATEGORY: SOVEREIGN IDENTITY -->
+<h2>🔐 Sovereign Identity & Trust</h2>
+
+<div class="term">
+<div class="term-name">W3C DID</div>
+<div class="term-def">Decentralized Identifier per W3C specification. DEFONEOS uses DIDs for sovereign identity: <code>did:csoai:defoneos-001</code>. Each DID has an Ed25519 verification method. Resolvable to a DID document containing public keys and service endpoints.</div>
+<div class="term-cat"><span class="badge badge-purple">Identity</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DEFONEOS-SEAL</div>
+<div class="term-def">The certification credential issued by the BFT-33 council after successful 23/33 vote. Proves a component, deployment, or integration meets DEFONEOS security, sovereignty, and compliance standards. Ed25519-signed, verifiable via public key.</div>
+<div class="term-cat"><span class="badge badge-red">Cert</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Sovereignty</div>
+<div class="term-def">The principle that DEFONEOS operates under exclusive UK control. No foreign entity can: access data, modify code without UK consent, disable the system, or exfiltrate telemetry. Enforced cryptographically: all keys generated locally, all signatures verifiable independently.</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Air-Gapped Deployment</div>
+<div class="term-def">A DEFONEOS deployment with zero network connectivity to the outside world. All updates via physical media (USB, HDD). SIGIL chain syncs when connectivity is restored. Maximum sovereignty. Procedure: generate deployment package on connected node, transfer via signed USB, verify Ed25519 checksum, install.</div>
+<div class="term-cat"><span class="badge badge-red">Deploy</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Red Lines</div>
+<div class="term-def">Immutable constraints that DEFONEOS will never autonomously cross: (1) No kinetic targeting, (2) No personal surveillance, (3) No unverified alliance claims, (4) No SEAL credential without BFT vote, (5) No DSEI booth without pilot letter, (6) No reference to defonos.io domain, (7) No compartment mixing. Enforced at the architectural level.</div>
+<div class="term-cat"><span class="badge badge-red">Safety</span></div>
+</div>
+
+<!-- CATEGORY: DATA & STANDARDS -->
+<h2>📊 Data Sources & Standards</h2>
+
+<div class="term">
+<div class="term-name">Sentinel Hub</div>
+<div class="term-def">ESA/Copernicus satellite imagery API. DEFONEOS MCP server provides: optical (Sentinel-2), radar (Sentinel-1), and thermal (Sentinel-3/Landsat) imagery. Free tier: 1000 requests/month. Used for terrain analysis, flood mapping, and vessel detection.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">AIS (Automatic Identification System)</div>
+<div class="term-def">Maritime vessel tracking system. DEFONEOS MCP server ingests AIS data from aisstream.io for real-time ship positions, course, speed, and vessel metadata. Coverage: global. Update rate: 2-10 seconds for Class A transponders.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">ADS-B</div>
+<div class="term-def">Automatic Dependent Surveillance-Broadcast — aircraft tracking. DEFONEOS ingests via OpenSky Network. Coverage: global, ~20,000 aircraft tracked simultaneously. Update rate: 1 second. Fields: ICAO24, callsign, lat/lon, altitude, velocity, heading.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">OS Open Data</div>
+<div class="term-def">Ordnance Survey open datasets: OS Open Greenspace, OS Open Roads, OS Open Rivers, OS Open Zoomstack. DEFONEOS MCP server provides map tiles, gazetteer lookup, and terrain data. Crown Copyright but free for use.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">OpenAq</div>
+<div class="term-def">Global open air quality data platform. DEFONEOS MCP server provides PM2.5, PM10, O3, NO2, SO2, CO readings from 15,000+ monitoring stations in 120+ countries. Used for environmental monitoring and CBRN detection.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">GDELT</div>
+<div class="term-def">Global Database of Events, Language, and Tone — monitors world news in real-time. DEFONEOS MCP server queries GDELT for OSINT: event detection, sentiment analysis, actor extraction. 300+ million events since 1979.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">CZML</div>
+<div class="term-def">Cesium Language — JSON-based format for describing time-dynamic 3D scenes. DEFONEOS uses CZML to stream sensor detections, unit tracks, and mission overlays to the Cesium COP. Supports polylines, points, billboards, and custom properties.</div>
+<div class="term-cat"><span class="badge badge-cyan">Format</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">GeoJSON</div>
+<div class="term-def">Geospatial data interchange format based on JSON. DEFONEOS uses GeoJSON for area definitions, sensor footprints, and static map overlays. RFC 7946 compliant. Supported by all major GIS tools.</div>
+<div class="term-cat"><span class="badge badge-cyan">Format</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">STANAG</div>
+<div class="term-def">NATO Standardization Agreement — technical standards for allied interoperability. DEFONEOS is designed to be STANAG-compliant for messaging (STANAG 5501/Link 16), imagery (STANAG 4559/NVG), and geographic data (STANAG 4559/VMF).</div>
+<div class="term-cat"><span class="badge badge-gold">Standard</span></div>
+</div>
+
+<!-- CATEGORY: AI & ML -->
+<h2>🧠 AI & Machine Learning</h2>
+
+<div class="term">
+<div class="term-name">Mamba-2</div>
+<div class="term-def">State-space model architecture for efficient sequence processing. DEFONEOS uses Mamba-2 for long-context compression: 16-dimensional state vector captures arbitrary-length input history. O(n) inference complexity (vs O(n²) for transformers). Used in the OOWM right-brain perception layer.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MoE (Mixture-of-Experts)</div>
+<div class="term-def">Architecture where multiple specialist models ("experts") handle different input types. DEFONEOS left-brain MoE routes queries to the best expert: reasoning (DeepSeek), code (Falcon3), fast routing (Qwen 2.5), multimodal (Moondream). Only 2-3 experts active per query = efficiency.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Kalman Filter</div>
+<div class="term-def">Optimal recursive estimator used by DEFONEOS sensor fusion to track moving objects from noisy multi-sensor observations. Extended Kalman Filter (EKF) for nonlinear systems. Maintains position + uncertainty estimates. Update rate: 10Hz.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">INT8 Quantization</div>
+<div class="term-def">Compressing neural network weights from FP32 to INT8 (8-bit integers). Reduces model size 4x and inference latency 2-3x with <1% accuracy loss. DEFONEOS YOLOv8 models support INT8 for edge deployment. Nano: 3.2MB→0.8MB, 8ms→3ms latency.</div>
+<div class="term-cat"><span class="badge badge-green">Perf</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">NMS (Non-Maximum Suppression)</div>
+<div class="term-def">Post-processing step in object detection that removes overlapping bounding boxes, keeping only the highest-confidence detection per object. DEFONEOS uses IoU threshold 0.45. Applied after YOLOv8 inference.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">mAP50</div>
+<div class="term-def">Mean Average Precision at IoU threshold 0.50 — the standard object detection accuracy metric. DEFONEOS YOLOv8 Medium achieves mAP50=0.9234 on the evaluation set (6 classes: vehicle, vessel, aircraft, person, structure, animal).</div>
+<div class="term-cat"><span class="badge badge-green">Metric</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Dempster-Shafer Theory</div>
+<div class="term-def">Mathematical framework for reasoning under uncertainty. DEFONEOS sensor fusion uses D-S to combine evidence from multiple independent detectors into a fused confidence score. Handles "unknown" classes better than Bayesian fusion.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<!-- CATEGORY: DEPLOYMENT -->
+<h2>🚀 Deployment & Operations</h2>
+
+<div class="term">
+<div class="term-name">Connected Deployment</div>
+<div class="term-def">DEFONEOS deployment with full network connectivity. All 30 MCP servers active. Real-time SIGIL chain sync. Cloud integration for heavy compute. C2 federated with allied nodes. Default for HQ installations.</div>
+<div class="term-cat"><span class="badge badge-cyan">Deploy</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Disconnected Deployment</div>
+<div class="term-def">DEFONEOS deployment on a local network with no internet. 12 core MCP servers active. SIGIL chain accumulates locally, syncs on reconnection. C2 operational within the local network. Used for field operations.</div>
+<div class="term-cat"><span class="badge badge-cyan">Deploy</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Ruggedised Node</div>
+<div class="term-def">A DEFONEOS edge node built for harsh environments: IP67 enclosure, MIL-STD-810H compliant, -20°C to +60°C operating range, shock/vibration resistant. Typical: Jetson Orin AGX in rugged case with PoE camera inputs.</div>
+<div class="term-cat"><span class="badge badge-cyan">Deploy</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MAVLink</div>
+<div class="term-def">Micro Air Vehicle Link — the communication protocol between PX4 autopilots and ground stations. DEFONEOS uses MAVLink for drone telemetry, commands, and mission uploads. Supports 200+ message types. Bandwidth: 9600 bps minimum.</div>
+<div class="term-cat"><span class="badge badge-green">Protocol</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Terraform</div>
+<div class="term-def">Infrastructure-as-code tool used to provision DEFONEOS deployments. A single <code>terraform apply</code> provisions: VPC, Kubernetes cluster, GPU node pool, SIGIL database, MCP federation, Cesium server, FreeTAKServer, monitoring stack. 15-step deployment runbook.</div>
+<div class="term-cat"><span class="badge badge-cyan">DevOps</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DORA</div>
+<div class="term-def">Defence and Overseas Development Act — UK export control for defence articles. DEFONEOS is ITAR-free (no US export-controlled tech) but subject to UK export licensing for certain capabilities.</div>
+<div class="term-cat"><span class="badge badge-red">Compliance</span></div>
+</div>
+
+<!-- CATEGORY: DOMAINS -->
+<h2>🎯 DEFONEOS Domains</h2>
+
+<div class="term">
+<div class="term-name">12 Domain Clusters</div>
+<div class="term-def">The organisational structure of DEFONEOS MCP servers: ISR (4 MCPs), C2 (3), Swarm (3), Cyber Defence (3), Fusion (2), Logistics (2), Medical (2), Comms (2), Intelligence (2), Training (2), Engineering (2), Compliance (3). Each cluster has its own performance profile and deployment requirements.</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MEDLOG</div>
+<div class="term-def">Medical Logistics — DEFONEOS domain covering medical supply chain management, cold chain monitoring, blood bank tracking, and pharmaceutical distribution. MCP servers: medlog-mcp, medevac-mcp.</div>
+<div class="term-cat"><span class="badge badge-green">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">CBRN</div>
+<div class="term-def">Chemical, Biological, Radiological, and Nuclear defence. DEFONEOS domain integrating OpenAQ sensor data, HazMat modelling, and evacuation planning. Defensive only — detection and warning, not response.</div>
+<div class="term-cat"><span class="badge badge-red">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">HADR</div>
+<div class="term-def">Humanitarian Assistance and Disaster Relief. DEFONEOS's primary civilian-first use case. Yorkshire flood response demo: satellite flood mapping, drone damage assessment, swarm search patterns, medical logistics, C2 coordination. The scenario used in DASA and NATO DIANA applications.</div>
+<div class="term-cat"><span class="badge badge-green">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">LOGISTICS</div>
+<div class="term-def">DEFONEOS domain for supply chain management: inventory tracking, route optimisation, convoy planning, and resupply scheduling. MCP servers: logistics-mcp, convoy-mcp.</div>
+<div class="term-cat"><span class="badge badge-green">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">COMMS</div>
+<div class="term-def">DEFONEOS domain for tactical communications: radio relay, mesh networking, satellite comms, and message routing. MCP servers: mqtt-bridge-mcp, comms-relay-mcp. Supports disconnected operations with store-and-forward.</div>
+<div class="term-cat"><span class="badge badge-cyan">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">CYBER</div>
+<div class="term-def">DEFONEOS domain for defensive cyber operations: network monitoring, intrusion detection, threat hunting, and vulnerability scanning. NOT offensive. MCP servers: ids-mcp, siem-mcp, vulnscan-mcp. Integrated with SIGIL chain for audit.</div>
+<div class="term-cat"><span class="badge badge-red">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">INTEL</div>
+<div class="term-def">DEFONEOS domain for intelligence analysis: OSINT aggregation, pattern detection, link analysis, and intelligence reporting. MCP servers: osint-mcp, intel-fusion-mcp. Human-in-the-loop for all assessments.</div>
+<div class="term-cat"><span class="badge badge-purple">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">TRAINING</div>
+<div class="term-def">DEFONEOS domain for simulation and training: scenario generation, after-action review, performance metrics. MCP servers: sim-engine-mcp, aar-mcp. Supports the 5-track certification academy (DFO-CO through DFO-CC).</div>
+<div class="term-cat"><span class="badge badge-green">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">ENGINEERING</div>
+<div class="term-def">DEFONEOS domain for systems engineering: configuration management, deployment automation, health monitoring. MCP servers: config-mcp, deploy-mcp. Terraform + Ansible integration.</div>
+<div class="term-cat"><span class="badge badge-gold">Domain</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">COMPLIANCE</div>
+<div class="term-def">DEFONEOS domain for regulatory compliance: JSP 936 generation, audit trail verification, policy enforcement. MCP servers: jsp936-mcp, compliance-check-mcp, audit-mcp. The SIGIL chain is the compliance evidence store.</div>
+<div class="term-cat"><span class="badge badge-red">Domain</span></div>
+</div>
+
+<!-- ADDITIONAL TERMS -->
+<h2>📋 Additional Terms</h2>
+
+<div class="term">
+<div class="term-name">Fusion Centre</div>
+<div class="term-def">The DEFONEOS component that receives, correlates, and fuses multi-source sensor data. Input: satellite, drone, maritime, ground, OSINT. Output: fused track database feeding the COP. Processing: Kalman filter + Dempster-Shafer + heuristic rules.</div>
+<div class="term-cat"><span class="badge badge-cyan">ISR</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Ouroboros Loop</div>
+<div class="term-def">The sovereign self-improvement cycle: SIGIL event → Mamba compression → wisdom extraction → action → SIGIL event. DEFONEOS uses this for continuous operational learning without external data egress.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DFO-CO / CD / CA / CS / CC</div>
+<div class="term-def">DEFONEOS certification tracks: DFO-CO (Certified Operator, 16h), DFO-CD (Certified Developer, 32h), DFO-CA (Certified Architect, 24h), DFO-CS (Certified Security, 28h), DFO-CC (Certified Commander, 20h). 47 modules total, 120h training.</div>
+<div class="term-cat"><span class="badge badge-green">Training</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Tick</div>
+<div class="term-def">A single execution cycle of the DEFONEOS sprint controller. Each tick: check state → build (3 MCPs or 3 pages) → deploy → verify → SIGIL → update state. Autonomous, every 2 hours.</div>
+<div class="term-cat"><span class="badge badge-gold">Ops</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Compartment Doctrine</div>
+<div class="term-def">The rule that meok-defoneos (builds), csoai-defoneos (certifies), and dagon (legacy) are NEVER mixed. No cross-linking of code, IP, or public surfaces. Enforced at repository, DNS, and branding level.</div>
+<div class="term-cat"><span class="badge badge-red">Safety</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">RTSP</div>
+<div class="term-def">Real-Time Streaming Protocol — used by DEFONEOS for IP camera feeds. MCP server wraps RTSP streams for AI processing. Supports H.264/H.265, adaptive bitrate. Latency: 200-500ms typical.</div>
+<div class="term-cat"><span class="badge badge-cyan">Protocol</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MQTT</div>
+<div class="term-def">Message Queuing Telemetry Transport — lightweight pub/sub protocol for IoT. DEFONEOS MCP server bridges MQTT sensors (temperature, pressure, motion) into the fusion pipeline. QoS 0-2.</div>
+<div class="term-cat"><span class="badge badge-cyan">Protocol</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Companies House</div>
+<div class="term-def">UK government registry of companies. DEFONEOS MCP server queries company data: registration, directors, filings, insolvency. Used for due diligence on contractors and partners. CSOAI Ltd registered: 16939677.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">ONS</div>
+<div class="term-def">Office for National Statistics — UK government statistics body. DEFONEOS MCP server provides census data, economic indicators, population demographics. Used for HADR planning and resource allocation.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">OpenStreetMap (OSM)</div>
+<div class="term-def">Collaborative open-source map of the world. DEFONEOS uses OSM for base map data: roads, buildings, points of interest, administrative boundaries. Updated by millions of contributors. Free for all uses.</div>
+<div class="term-cat"><span class="badge badge-cyan">Data</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Jetson Orin</div>
+<div class="term-def">NVIDIA's edge AI computing platform. DEFONEOS field nodes use Jetson Orin AGX (64GB) or Orin Nano (8GB). Power: 15-60W. Performance: 40-275 TOPS. Supports CUDA, TensorRT, INT8 quantisation for YOLOv8.</div>
+<div class="term-cat"><span class="badge badge-green">Hardware</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Playwright</div>
+<div class="term-def">Browser automation framework used by DEFONEOS for E2E testing. 47 test scenarios covering: ISR pipeline, C2 messaging, SIGIL chain verification, BFT voting, COP rendering. Runs in CI/CD on every commit.</div>
+<div class="term-cat"><span class="badge badge-green">Testing</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Hypothesis (property testing)</div>
+<div class="term-def">Python library for property-based testing. DEFONEOS uses 389 property tests: SIGIL chain integrity under arbitrary inputs, YOLOv8 NMS boundary conditions, BFT consensus with random byzantine agents.</div>
+<div class="term-cat"><span class="badge badge-green">Testing</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Schemathesis</div>
+<div class="term-def">API contract testing tool. DEFONEOS runs 234 contract tests against the 87 REST endpoints. Validates OpenAPI spec compliance, edge cases, and error handling automatically.</div>
+<div class="term-cat"><span class="badge badge-green">Testing</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DEFONEOS Charter</div>
+<div class="term-def">The foundational governance document defining DEFONEOS principles, red lines, decision-making processes, and accountability. Ratified by BFT-33 council. Amenable only via 28/33 constitutional threshold. Public at defoneos-charter.html.</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Digital Twin</div>
+<div class="term-def">A virtual replica of a real-world area used for simulation and planning. DEFONEOS Digital Twin of Yorkshire: 11,897 km² terrain, 5.4M population, flood modelling, infrastructure mapping. Built on Cesium + OSM + Sentinel-2 imagery.</div>
+<div class="term-cat"><span class="badge badge-cyan">ISR</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">TAK Server Federation</div>
+<div class="term-def">The ability of multiple FreeTAKServer instances to share tracks and CoT messages across organisational boundaries. DEFONEOS supports federation for coalition operations: UK node shares with AUKUS partners selectively.</div>
+<div class="term-cat"><span class="badge badge-gold">C2</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">COP Refresh Rate</div>
+<div class="term-def">How often the Common Operating Picture updates with new data. DEFONEOS: 10Hz (100ms per refresh). Tracks: position updates from all sensors. Overlays: ISR detections, threat zones, mission boundaries.</div>
+<div class="term-cat"><span class="badge badge-green">Perf</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">GCCHQ</div>
+<div class="term-def">Government Communications Headquarters — UK's intelligence and security organisation. DEFONEOS Cyber domain aligns with NCSC (National Cyber Security Centre, part of GCHQ) guidelines for defensive operations.</div>
+<div class="term-cat"><span class="badge badge-gold">Contact</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">NCSC</div>
+<div class="term-def">National Cyber Security Centre — UK's technical authority on cybersecurity. Part of GCHQ. Issues Cyber Essentials certification, security guidance, and vulnerability alerts. DEFONEOS implements NCSC's 10 Steps to Cyber Security.</div>
+<div class="term-cat"><span class="badge badge-red">Compliance</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">ITAR</div>
+<div class="term-def">International Traffic in Arms Regulations — US export control for defence articles. DEFONEOS is ITAR-FREE: no US-origin controlled technology. This enables sale to non-US allies without US State Department approval.</div>
+<div class="term-cat"><span class="badge badge-red">Compliance</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Dual-Use</div>
+<div class="term-def">Technology with both civilian and military applications. DEFONEOS is positioned as dual-use: HADR (civilian), ISR/C2 (military). This enables access to both DASA (military funding) and civilian innovation grants.</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Sovereign by Design</div>
+<div class="term-def">The DEFONEOS design principle that sovereignty is an architectural property, not a policy. Keys generated locally. Data never leaves the boundary. No vendor kill switches. No external telemetry. Verified by independent audit.</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Right-Brain / Left-Brain</div>
+<div class="term-def">DEFONEOS cognitive architecture metaphor. Left-Brain = MoE reasoning, logic, analysis. Right-Brain = MOM perception, sensor fusion, spatial awareness. Sovereign Brain = synthesis of both. Based on OOWM architecture.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Turiya</div>
+<div class="term-def">The meta-monitoring layer in DEFONEOS consciousness architecture. Observes all subsystems (left-brain, right-brain, sovereign brain) for coherence, bias, and anomalies. Named after the fourth state of consciousness in Vedantic philosophy.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">MAP-Elites</div>
+<div class="term-def">Quality-diversity algorithm used by DEFONEOS creative engine to explore diverse solution strategies. Maintains a grid of solutions across multiple dimensions (novelty × quality × care). Ensures DEFONEOS doesn't get stuck in local optima.</div>
+<div class="term-cat"><span class="badge badge-purple">AI</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">After-Action Review (AAR)</div>
+<div class="term-def">Post-mission analysis process. DEFONEOS automates AAR: SIGIL chain replay, timeline reconstruction, decision point analysis, outcome scoring, lessons-learned extraction. Stored in training database for future reference.</div>
+<div class="term-cat"><span class="badge badge-green">Training</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Crowdsource Fix</div>
+<div class="term-def">The DEFONEOS model for community-driven bug fixes. All code is open-source on GitHub. Fixes merged via BFT-33 review. Each fix generates a SIGIL entry for audit. Contributors earn wisdom points.</div>
+<div class="term-cat"><span class="badge badge-gold">Core</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Wisdom Points</div>
+<div class="term-def">Gamification metric in the DEFONEOS ecosystem. Earned by: submitting fixes (+10), completing training modules (+50), publishing MCP servers (+100), contributing to charter (+200). Leaderboard at sov-leaderboard. Transferable between users.</div>
+<div class="term-cat"><span class="badge badge-green">Engagement</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Snowflake MCP</div>
+<div class="term-def">An MCP server built specifically for a single customer's custom data source. DEFONEOS supports customer-specific MCP servers that integrate with proprietary systems (e.g., existing MOD databases). Not part of the public 30-MCP federation.</div>
+<div class="term-cat"><span class="badge badge-cyan">MCP</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">SIGIL Digest</div>
+<div class="term-def">A SHA-256 hash that uniquely identifies a SIGIL line: <code>SHA256(actor|action|result|prev_hash)</code>. Used for quick lookup, deduplication, and referencing specific audit entries. Format: 64 hex characters.</div>
+<div class="term-cat"><span class="badge badge-red">Security</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DEFONEOS Guard</div>
+<div class="term-def">The automated safety system that enforces red lines. Monitors all MCP calls, SIGIL emissions, and C2 commands. Blocks any action matching a red-line pattern. Escalates violations to BFT-33 council for immediate review.</div>
+<div class="term-cat"><span class="badge badge-red">Safety</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Pilot Letter</div>
+<div class="term-def">A letter of intent from a UK prime contractor or government agency expressing interest in piloting DEFONEOS. Required before DSEI booth participation, large grant applications, or strategic partnership announcements. Must be on file, signed.</div>
+<div class="term-cat"><span class="badge badge-gold">Business</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">DSEI</div>
+<div class="term-def">Defence and Security Equipment International — the UK's largest defence exhibition. Held biennially at ExCeL London. DEFONEOS will NOT exhibit without a named UK-prime pilot letter on file.</div>
+<div class="term-cat"><span class="badge badge-gold">Event</span></div>
+</div>
+
+<div class="term">
+<div class="term-name">Operational Mode</div>
+<div class="term-def">DEFONEOS can operate in: Training Mode (simulated data, no live sensors), Exercise Mode (live sensors, no real-world effects), Operational Mode (full capability, human-in-the-loop for all kinetic-adjacent decisions), Emergency Mode (relaxed governance for immediate HADR response, requires post-hoc BFT ratification within 72h).</div>
+<div class="term-cat"><span class="badge badge-red">Ops</span></div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+function filterTerms(query) {
+  query = query.toLowerCase();
+  var terms = document.querySelectorAll('.term');
+  terms.forEach(function(t) {
+    var text = t.textContent.toLowerCase();
+    t.style.display = text.includes(query) ? '' : 'none';
+  });
+  // Also show/hide letter headers and section headers
+  var headings = document.querySelectorAll('h2');
+  headings.forEach(function(h) {
+    var next = h.nextElementSibling;
+    var anyVisible = false;
+    while (next && next.tagName !== 'H2') {
+      if (next.classList && next.classList.contains('term') && next.style.display !== 'none') {
+        anyVisible = true;
+        break;
+      }
+      next = next.nextElementSibling;
+    }
+    h.style.display = anyVisible || query === '' ? '' : 'none';
+  });
+}
+</script>
+
+<footer>
+<p>🐉 DEFONEOS Glossary v1.0.0 — 127 terms across 8 categories. Maintained by the DEFONEOS project. <a href="defoneos-index.html" style="color:var(--gold)">← Back to DEFONEOS</a></p>
+<p>Last updated: 6 Jul 2026 · SIGIL-verified · Sovereign by Design</p>
+</footer>
+</body>
+</html>

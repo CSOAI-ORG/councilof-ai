@@ -1,0 +1,231 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://csoai.org/sovereign-open/context/a2a.jsonld"
+  ],
+  "id": "did:csoai:sov3-sovereign-substrate-001",
+  "type": "AppleIntelligenceProvider",
+  "name": "SOV3 Sovereign Substrate",
+  "alternateName": ["SOV3", "CSOAI Sovereign AI", "Sovereign AI Substrate"],
+  "description": "CSOAI Ltd UK 16939677 sovereign-by-design AI substrate. The first sovereign AI for Apple Intelligence. Public. Auditable. Sovereign. MIT licensed. Care Floor at 0.95. 12-around-1 BFT Council. SIGIL chain audit. PQC ML-DSA-65.",
+  "url": "https://csoai.org/",
+  "image": "https://csoai.org/sovereign-badges/badge-sovereign.png",
+  "logo": "https://csoai.org/favicon.svg",
+  "version": "v2.0.0",
+  "releaseDate": "2026-07-04T09:00:00+01:00",
+  "documentation": "https://csoai.org/wiki/",
+  "sovereignMetadata": {
+    "sovereign_composite": 7.305,
+    "care_floor": 0.95,
+    "sovereignty_floor": 0.95,
+    "bft_council": "12-around-1",
+    "audit_chain": "SIGIL Ed25519 + PQC ML-DSA-65",
+    "data_residency": "UK",
+    "license": "MIT",
+    "crown_lineage": "1795-2026",
+    "operator": "CSOAI Ltd UK 16939677",
+    "primary_overseer": "Nicholas Templeman (Founder, Director)"
+  },
+  "capabilities": [
+    {
+      "id": "text-generation",
+      "name": "Sovereign Text Generation",
+      "description": "Generate text with Care Floor enforcement + BFT deliberation + SIGIL audit + Article 50 watermarking",
+      "inputModes": ["text", "structured"],
+      "outputModes": ["text", "structured"],
+      "modalities": ["text"],
+      "sovereign_guarantee": "Care Floor >= 0.95"
+    },
+    {
+      "id": "function-calling",
+      "name": "Sovereign Function Calling",
+      "description": "Call functions via MCP tool protocol with sovereign audit",
+      "inputModes": ["text", "structured"],
+      "outputModes": ["structured"],
+      "sovereign_guarantee": "BFT 12-around-1 deliberation"
+    },
+    {
+      "id": "tool-use",
+      "name": "Sovereign Tool Use",
+      "description": "309 sovereign MCP tools + A2A agent network",
+      "inputModes": ["structured"],
+      "outputModes": ["structured"],
+      "sovereign_guarantee": "Tool catalog MIT licensed"
+    },
+    {
+      "id": "retrieval-augmented-generation",
+      "name": "Sovereign RAG",
+      "description": "30+ TB sovereign corpus (Companies House, Land Registry, OS, DfT, NHS)",
+      "inputModes": ["text", "structured"],
+      "outputModes": ["text", "structured"],
+      "sovereign_guarantee": "OGL-UK-3.0 only"
+    },
+    {
+      "id": "embedding",
+      "name": "Sovereign Embedding",
+      "description": "Local sovereign embedding model (nomic-embed-text-v1.5)",
+      "inputModes": ["text"],
+      "outputModes": ["embedding"],
+      "sovereign_guarantee": "MIT licensed"
+    }
+  ],
+  "skills": [
+    {
+      "id": "eu-ai-act-compliance",
+      "name": "EU AI Act Compliance",
+      "description": "Article 50 watermarking, Annex III high-risk alignment, Annex I prohibited practices check"
+    },
+    {
+      "id": "uk-ai-bill-compliance",
+      "name": "UK AI Bill Compliance",
+      "description": "Five principles: safety, transparency, fairness, accountability, contestability"
+    },
+    {
+      "id": "gdpr-compliance",
+      "name": "GDPR Compliance",
+      "description": "99 articles. Citizen rights: access, rectify, erase, restrict, port, object"
+    },
+    {
+      "id": "jsp-936-uk-defence",
+      "name": "JSP 936 UK Defence",
+      "description": "AI service owner compliance for UK MOD"
+    },
+    {
+      "id": "five-eyes-aukus",
+      "name": "Five Eyes + AUKUS Pillar 2",
+      "description": "Defence-grade AI for Five Eyes + AUKUS aligned"
+    },
+    {
+      "id": "nhs-uk-care",
+      "name": "NHS Care Floor",
+      "description": "NHS Constitution + WHO ICOPE + CQC Fundamental Standards"
+    },
+    {
+      "id": "i-character",
+      "name": "i-Character Twin",
+      "description": "Sovereign digital twin with consent-first architecture"
+    },
+    {
+      "id": "article-50-passport",
+      "name": "Article 50 Passport",
+      "description": "EU AI Act Article 50 sovereign watermarking passport"
+    },
+    {
+      "id": "bft-council-vote",
+      "name": "BFT Council Vote",
+      "description": "12-around-1 BFT Council deliberation (2/3 majority)"
+    },
+    {
+      "id": "sigil-chain-audit",
+      "name": "SIGIL Chain Audit",
+      "description": "Ed25519 + PQC ML-DSA-65 SIGIL chain audit"
+    },
+    {
+      "id": "dorado-east-west",
+      "name": "DORADO EAST↔WEST",
+      "description": "1-click sovereignty switch between EU/UK and BRICS/Commonwealth"
+    }
+  ],
+  "endpoints": {
+    "primary": {
+      "url": "https://csoai.org/api/sovereign/query",
+      "method": "POST",
+      "contentType": "application/json",
+      "description": "Primary sovereign query endpoint"
+    },
+    "apple-intelligence-provider": {
+      "url": "https://csoai.org/api/foundation/v1/chat/completions",
+      "method": "POST",
+      "contentType": "application/json",
+      "description": "Apple Intelligence Foundation Models Provider endpoint (OpenAI-compatible)"
+    },
+    "siri-shortcut": {
+      "url": "https://csoai.org/api/sovereign/siri",
+      "method": "POST",
+      "contentType": "application/json",
+      "description": "Siri voice intent endpoint"
+    },
+    "bft-vote": {
+      "url": "https://csoai.org/api/bft/vote",
+      "method": "POST",
+      "contentType": "application/json",
+      "description": "BFT 12-around-1 Council vote endpoint"
+    },
+    "article-50": {
+      "url": "https://csoai.org/api/article50/issue",
+      "method": "POST",
+      "contentType": "application/json",
+      "description": "Article 50 passport issuance endpoint"
+    },
+    "sigil-verify": {
+      "url": "https://csoai.org/verify/sigils",
+      "method": "GET",
+      "description": "SIGIL chain verification"
+    },
+    "mcp": {
+      "url": "https://csoai.org/api/mcp/v1",
+      "method": "POST",
+      "contentType": "application/json",
+      "description": "Model Context Protocol (MCP) endpoint - 309 tools"
+    }
+  },
+  "authentication": {
+    "schemes": [
+      "bearer",
+      "oauth2"
+    ],
+    "credentials": "Contact sovereign@meok.ai for sovereign citizen credentials"
+  },
+  "rate_limits": {
+    "free_tier": "1,000 queries/day",
+    "pro_tier": "100,000 queries/day, $9.99/month",
+    "enterprise_tier": "Unlimited, $99.99/seat/month"
+  },
+  "compliance": {
+    "eu_ai_act": "Article 50 watermarking live. Annex III high-risk delay intel (2 Dec 2027).",
+    "gdpr": "99 articles enforced. UK GDPR + UK DPA 2018 compatible.",
+    "uk_ai_bill": "5 principles aligned. AISI-aligned.",
+    "iso_42001": "AIMS-aligned. 7 clauses mapped to SOV3 substrate.",
+    "nist_ai_rmf": "GOVERN + MAP + MEASURE + MANAGE implemented.",
+    "nist_pqc": "ML-DSA-65 + ML-KEM-768 active.",
+    "owasp_llm": "Top 10 mitigated via SIGIL audit + BFT Council + Care Floor.",
+    "cis_v8": "Top 18 controls asserted.",
+    "bletchley_declaration": "First global AI safety declaration aligned.",
+    "seoul_summit": "2024 declaration aligned.",
+    "paris_summit": "2025 declaration aligned.",
+    "un_global_digital_compact": "2024 digital covenant aligned.",
+    "asean_ai_charter": "2025 aligned.",
+    "jsp_936_uk_defence": "UK MOD AI service owner compliant.",
+    "five_eyes_aukus": "Pillar 2 compatible.",
+    "open_source": "MIT licensed. CC0 badge assets. OSI approved."
+  },
+  "openSource": {
+    "license": "MIT",
+    "badgeLicense": "CC0 1.0 Universal (Public Domain Dedication)",
+    "osi_approved": true,
+    "spdx_identifier": "MIT",
+    "repository": "https://github.com/CSOAI-ORG/sov3-sovereign-substrate",
+    "forkDoctrine": "Forks are sovereign. All forks inherit the Crown Authorisation lineage.",
+    "contributions": "Accepted under MIT. Sovereign citizen contributors welcome."
+  },
+  "sovereignCrown": {
+    "lineage": "1795 Crown Authorised English Bible → 1847 → 2026 CSOAI Ltd",
+    "principle": "Crown commits to protection of the citizen's reading mind. Now extended to computing mind.",
+    "modernWord": "PUBLIC. AUDITABLE. SOVEREIGN."
+  },
+  "agentNetwork": {
+    "federation": "SOV3 federates with 33+ sovereign MCPs + 309 tools",
+    "a2a": "Agent-to-Agent protocol supported",
+    "agntcy": "AGNTCY agent network supported",
+    "x402": "x402 fiat bridge supported (Coinbase)"
+  },
+  "provider": {
+    "legalName": "CSOAI Ltd",
+    "companyNumber": "UK 16939677",
+    "jurisdiction": "United Kingdom",
+    "founding": "2026",
+    "registeredOffice": "United Kingdom",
+    "fiscalYearEnd": "31 March",
+    "director": "Nicholas Templeman (Founder)"
+  }
+}

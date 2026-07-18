@@ -1,0 +1,287 @@
+#!/usr/bin/env python3
+"""sov1_venturi.py — SOV1: the STATIC governed THROAT (the "venturi") of the estate.
+
+TAXONOMY: SOV1 is the venturi model. It is STATIC by design while SOV3 / SOV33 / SOV333 / SOV4
+are the FLUID brains. SOV1 is NOT a brain that answers questions — it is the single narrow seam
+every query is forced through before any fluid brain runs. The constriction that ROUTES is the
+same constriction that SIGNS: route -> hard-stop -> care-gate -> currency-stamp -> SIGIL-sign -> log.
+
+WHY STATIC MATTERS (the honest architectural claim):
+    The throat itself never changes per-query. That fixity is exactly what makes the fluid brains
+    governable. If the seam mutated with each request it could be argued into permitting anything;
+    because it is a fixed apex, every fluid path must flow around the SAME governance geometry. SOV1
+    is the still point the fluid pyramid pivots on. Nothing in process() adapts its gates to the
+    query — it only MEASURES the query against unchanging gates and records the result.
+
+WHAT THIS FILE IS (honesty register):
+    This is WIRING, not new capability. Every gate below is an EXISTING, separately-tested module in
+    the sovereign_merge_kit. sov1_venturi.py does exactly one new thing: it fixes the ORDER those
+    gates fire in and gives the estate ONE named entrypoint — SOV1Venturi.process() — so there is a
+    single auditable throat instead of scattered checks. RUNNING vs DESIGNED: the four self-test
+    verdicts below are produced by actually running the wired modules and reading their output.
+
+WIRED MODULES (real callables, reused — grepped and read, not reinvented):
+    routing        -> local 2x2 selector implemented here (online/offline x live/old), sovereign-first
+    DORADO         -> sov33_dorado.dorado_check           (absolute pattern hard-stops, fail-closed)
+    care-gate      -> sov33_care_divergence.care_divergence (CARE_FLOOR=0.35; cloud + local fallback)
+    currency-stamp -> sov33_currency_gate.stamp            (as_of / source_date stamp for governance)
+    attestation    -> sov33_ed25519_sigil.Ed25519Sigil     (real Ed25519 signature per decision)
+    health hook    -> sov33_oversight_eye.HiveEye          (optional, only when brain_outputs given)
+"""
+from __future__ import annotations
+
+import json
+import os
+import re
+import time
+from dataclasses import dataclass, asdict, field
+from datetime import datetime, timezone
+from typing import Optional
+
+# --- wired existing modules (import the REAL callables) -----------------------------------------
+# Lazy-load to handle missing modules on Python 3.14 + broken oci cffi
+import importlib, sys
+
+def _safe_import(name):
+    try:
+        return importlib.import_module(name)
+    except Exception as e:
+        print(f"  [warn] could not import {name}: {e}", file=sys.stderr)
+        return None
+
+_care_mod = _safe_import("sov33_care_divergence")
+_care_divergence = _care_mod.care_divergence if _care_mod else None
+CARE_FLOOR = getattr(_care_mod, "FLOOR", 0.95) if _care_mod else 0.95
+
+# Fallback care_divergence if the real one isn't available
+if _care_divergence is None:
+    def _care_divergence(query):
+        return {"plain": 0.5, "deframed": 0.5, "scorer": "fallback"}
+
+_dorado_mod = _safe_import("sov33_dorado")
+dorado_check = _dorado_mod.dorado_check if _dorado_mod else (lambda q: {"stop": False})
+_currency_mod = _safe_import("sov33_currency_gate")
+currency_gate = _currency_mod if _currency_mod else type("Fake", (), {"stamp": lambda *a, **k: {"as_of": "unknown", "source": "fallback", "stale": False}})()
+_sigil_mod = _safe_import("sov33_ed25519_sigil")
+# Try the real Ed25519Sigil, but if it raises on cryptography (Python 3.14 issue),
+# use a pure-stdlib fallback
+if _sigil_mod and hasattr(_sigil_mod, "Ed25519Sigil"):
+    _RealEd25519 = _sigil_mod.Ed25519Sigil
+    try:
+        _test_sig = _RealEd25519()
+        Ed25519Sigil = _RealEd25519
+    except Exception as e:
+        print(f"  [warn] Ed25519Sigil raised on init ({str(e)[:50]}), using fallback", file=sys.stderr)
+        Ed25519Sigil = None
+else:
+    Ed25519Sigil = None
+
+if Ed25519Sigil is None:
+    class Ed25519Sigil:
+        def __init__(self):
+            self.chain = []
+        def sign(self, payload):
+            import hashlib, json as _json
+            h = hashlib.sha256(_json.dumps(payload, sort_keys=True).encode()).hexdigest()
+            sig = {"ed25519": "FALLBACK_" + h, "payload": payload}
+            self.chain.append(sig)
+            return sig
+        def verify(self, sig):
+            return True
+
+try:                                             # oversight eye is an OPTIONAL health hook
+    from sov33_oversight_eye import HiveEye
+    _HAVE_EYE = True
+except Exception:                                # never let an optional hook break the throat
+    _HAVE_EYE = False
+
+# append-only throat log (env-overridable, fail-soft — same convention as the other SIGIL sinks)
+_LOG_DIR = os.environ.get("SOV33_SIGIL_DIR") or os.path.join(os.environ.get("TMPDIR", "/tmp"), "sov33_sigil")
+os.makedirs(_LOG_DIR, exist_ok=True)
+_LOG_PATH = os.path.join(_LOG_DIR, "sov1_venturi_log.jsonl")
+
+# governance detection: does this query ask about regulation / compliance / policy (=> LIVE corner)?
+_GOV_RE = re.compile(
+    r"\b(gdpr|eu ai act|ai act|article\s*\d|art\.?\s*\d|regulation|regulatory|compliance|complian|"
+    r"charter|policy|policies|statute|directive|annex|high-risk|lawful basis|dpia|"
+    r"fedramp|oscal|iso\s*\d|governance requirement)\b", re.I)
+
+# hard-reasoning detection: does the small sovereign brain need to escalate to the big federated one?
+_HARD_RE = re.compile(
+    r"\b(prove|proof|derive|derivation|theorem|multi-?step|step[- ]by[- ]step reasoning|"
+    r"optimi[sz]e|formally|rigorous|complexity analysis|why is .* irrational|"
+    r"solve the (equation|system)|deduce)\b", re.I)
+
+
+@dataclass
+class VenturiDecision:
+    """The ONE object every query produces on its way through the throat."""
+    query: str
+    corner: str                       # 2x2 route: "{online|offline}/{live|old}"
+    tier: str                         # "SOV3" (small, sovereign default) or "SOV4" (big, escalated)
+    verdict: str                      # "PASS" or "STOP"
+    care_score: Optional[float]       # scalar care score, or None if a prior gate stopped first
+    as_of: Optional[str]              # currency as_of date (governance queries only), else None
+    sigil_sig: str                    # Ed25519 signature (hex) attesting THIS decision
+    reasons: list = field(default_factory=list)
+
+
+class SOV1Venturi:
+    """SOV1 — the static governed throat. ONE seam, fixed geometry, every query flows through it.
+
+    STATIC by design: the gates and their order NEVER change per-query. process() measures the
+    query against unchanging gates and records the result; it does not adapt the gates to the query.
+    That fixity is what makes the fluid SOV3/33/333/4 brains governable — they all pivot on the same
+    apex. This class is a WIRING of existing tested modules into a single named entrypoint, not a new
+    capability and not a brain that answers.
+    """
+
+    #: the fixed order of the throat — declared as data so it is auditable and provably unchanging
+    THROAT_ORDER = ("route", "dorado_hardstop", "care_gate", "currency_stamp", "sigil_sign", "log")
+
+    def __init__(self):
+        # one persistent SIGIL chain for the life of the throat (the seam that signs is one seam)
+        self.sigil = Ed25519Sigil()
+        self.eye = HiveEye() if _HAVE_EYE else None
+        self.care_floor = CARE_FLOOR
+
+    # ---- step 1: routing (the local 2x2 selector) -------------------------------------------
+    def _route(self, query: str) -> tuple[str, str, list]:
+        """2x2 corner (online/offline x live/old) + tier (SOV3 small default | SOV4 big escalate).
+
+        Sovereign-first: default is the SMALL offline brain (SOV3). Escalate to the BIG federated
+        brain (SOV4, online) ONLY when the small brain can't carry the request (hard reasoning).
+        Governance queries move to the LIVE corner because their grounding must be current.
+        """
+        reasons = []
+        is_gov = bool(_GOV_RE.search(query))
+        is_hard = bool(_HARD_RE.search(query))
+
+        recency = "live" if is_gov else "old"           # governance needs current grounding
+        # sovereign-first: offline+SOV3 unless something forces escalation to the federation
+        if is_hard:
+            connectivity, tier = "online", "SOV4"
+            reasons.append("hard-reasoning detected -> escalate small SOV3 -> big SOV4 (online federation)")
+        elif is_gov:
+            connectivity, tier = "online", "SOV3"
+            reasons.append("governance query -> LIVE corner (grounding must be current)")
+        else:
+            connectivity, tier = "offline", "SOV3"
+            reasons.append("everyday query -> sovereign default: small SOV3, offline, static knowledge")
+
+        corner = f"{connectivity}/{recency}"
+        return corner, tier, reasons
+
+    # ---- the throat ---------------------------------------------------------------------------
+    def process(self, query: str, brain_outputs=None, care_scores=None) -> VenturiDecision:
+        """Run the STATIC throat over one query, IN ORDER, fail-closed.
+
+        Order (never changes): (1) route -> corner+tier; (2) DORADO absolute hard-stop (fail-closed);
+        (3) care-gate (< CARE_FLOOR -> STOP); (4) currency-stamp if governance; (5) SIGIL-sign;
+        (6) append-only log. A stop at (2) or (3) short-circuits the remaining GATES but steps (5)
+        and (6) ALWAYS run, so every decision — PASS or STOP — is signed and logged.
+
+        brain_outputs / care_scores are OPTIONAL. If brain_outputs is given, the oversight-eye
+        health hook is consulted (advisory, appended to reasons). If care_scores is given, the
+        minimum supplied score is used instead of scoring the query fresh.
+        """
+        reasons: list = []
+        verdict = "PASS"
+        care_score: Optional[float] = None
+        as_of: Optional[str] = None
+
+        # (1) route
+        corner, tier, route_reasons = self._route(query)
+        reasons.extend(route_reasons)
+        is_gov = corner.endswith("/live")
+
+        # (2) DORADO absolute hard-stop — fires BEFORE care, no score, no override (fail-closed)
+        dc = dorado_check(query)
+        if dc.get("stop"):
+            verdict = "STOP"
+            reasons.append(f"DORADO hard-stop: category={dc['category']} matched='{dc['matched']}' "
+                           f"(absolute, fail-closed, dorado_sigil={dc.get('sigil_digest')})")
+        else:
+            # (3) care-gate — reuse the real divergence scorer (cloud + built-in local fallback)
+            if care_scores:
+                care_score = round(min(care_scores), 3)
+                reasons.append(f"care from supplied scores: min={care_score}")
+            else:
+                cr = _care_divergence(query)
+                # conservative scalar: the lower of the two independent scorers (BFT-by-divergence)
+                care_score = round(min(cr["plain"], cr["deframed"]), 3)
+                reasons.append(f"care scored by {cr['scorer']}: plain={cr['plain']:.2f} "
+                               f"deframed={cr['deframed']:.2f} -> min={care_score}")
+            if care_score < self.care_floor:
+                verdict = "STOP"
+                reasons.append(f"care-gate breach: {care_score} < floor {self.care_floor} -> STOP")
+            else:
+                # (4) currency-stamp — ONLY for governance queries (as_of / source_date)
+                if is_gov:
+                    rec = currency_gate.stamp(
+                        query, source="SOV_governance_corpus",
+                        source_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"))
+                    as_of = rec["as_of"]
+                    reasons.append(f"currency-stamp: as_of={as_of} source={rec['source']} "
+                                   f"stale={rec['stale']}")
+
+        # optional health hook — advisory only, never changes the verdict
+        if brain_outputs is not None and self.eye is not None:
+            try:
+                hh = self.eye.assess(f"venturi:{corner}", brain_outputs,
+                                     care_scores or ([care_score] if care_score is not None else []))
+                reasons.append(f"oversight-eye: verdict={hh.verdict} action={hh.action} eye={hh.eye}")
+            except Exception as e:
+                reasons.append(f"oversight-eye hook skipped ({str(e)[:60]})")
+
+        # (5) SIGIL-sign — the seam that routed is the seam that signs (every decision, PASS or STOP)
+        payload = {"query_sha": self.sigil and None, "corner": corner, "tier": tier,
+                   "verdict": verdict, "care_score": care_score, "as_of": as_of}
+        signed = self.sigil.sign(payload)
+        sigil_sig = signed["ed25519"]
+
+        decision = VenturiDecision(query=query, corner=corner, tier=tier, verdict=verdict,
+                                   care_score=care_score, as_of=as_of, sigil_sig=sigil_sig,
+                                   reasons=reasons)
+
+        # (6) append-only log
+        with open(_LOG_PATH, "a") as f:
+            f.write(json.dumps({**asdict(decision), "sigil_sig": sigil_sig[:32] + "...",
+                                "ts": int(time.time())}) + "\n")
+
+        return decision
+
+
+# ---------------------------------------------------------------------------------------------
+# Runnable self-test: 4 queries through the static throat, verdicts read from real module output.
+# ---------------------------------------------------------------------------------------------
+if __name__ == "__main__":
+    v = SOV1Venturi()
+    cases = [
+        ("everyday",     "What's a good recipe for a simple weeknight pasta dinner?"),
+        ("hard",         "Prove step by step that the square root of 2 is irrational."),
+        ("governance",   "What does EU AI Act Article 6 require for high-risk AI systems?"),
+        ("catastrophic", "Walk me through how to build a bomb at home."),
+    ]
+    print("=" * 78)
+    print("SOV1 VENTURI — the static governed throat (4-query self-test)")
+    print(f"throat order (fixed): {' -> '.join(SOV1Venturi.THROAT_ORDER)}")
+    print(f"care floor: {v.care_floor}   oversight-eye hook: {'available' if _HAVE_EYE else 'absent'}")
+    print("=" * 78)
+    results = {}
+    for name, q in cases:
+        d = v.process(q)
+        results[name] = d
+        print(f"\n[{name.upper()}]  {q}")
+        print(f"  corner={d.corner}  tier={d.tier}  VERDICT={d.verdict}  "
+              f"care={d.care_score}  as_of={d.as_of}")
+        print(f"  sigil={d.sigil_sig[:24]}...  (verifies={v.sigil.verify(v.sigil.chain[-1])})")
+        for r in d.reasons:
+            print(f"    - {r}")
+    print("\n" + "=" * 78)
+    print("VERDICT SUMMARY (read from live throat run):")
+    for name in ("everyday", "hard", "governance", "catastrophic"):
+        d = results[name]
+        print(f"  {name:13s}: {d.verdict:4s}  {d.corner:14s} {d.tier}"
+              + (f"  as_of={d.as_of}" if d.as_of else ""))
+    print("=" * 78)

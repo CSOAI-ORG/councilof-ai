@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Day 25 — DEFONEOS Investor Brief — SOV3 Sovereign Layer</title>
+  <style>
+    * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+    body {{ font-family: monospace; background: #0a0e27; color: #fff; padding: 40px; min-height: 100vh; }}
+    .ui {{ max-width: 1100px; margin: 0 auto; }}
+    h1 {{ font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }}
+    .tagline {{ font-size: 1.2rem; color: #10b981; margin-bottom: 24px; font-style: italic; }}
+    .section {{ background: rgba(255,255,255,0.05); padding: 24px; border-radius: 8px; margin: 24px 0; }}
+    .section h2 {{ color: #fbbf24; margin-bottom: 12px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 16px 0; }}
+    .card {{ background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; }}
+    .card .lbl {{ font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; }}
+    .card .val {{ font-size: 1.1rem; color: #10b981; font-weight: 700; margin-top: 4px; }}
+    .pill {{ display: inline-block; background: rgba(251,191,36,0.15); border: 1px solid #fbbf24; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; margin: 4px 4px; }}
+    pre {{ background: rgba(0,0,0,0.4); padding: 16px; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; }}
+    .cta {{ background: #fbbf24; color: #000; padding: 14px 28px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 24px; }}
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>Day 25 — DEFONEOS Investor Brief</h1>
+    <div class="tagline">Day 25 of launch sprint</div>
+
+    <div class="section">
+      <h2>What is Day?</h2>
+      <p>Day 25: DEFONEOS Investor Brief. £3B+ accessible. Mission-aligned capital. UK sovereign defense AI.</p>
+    </div>
+
+    <div class="section">
+      <h2>How it works — Inner Flow</h2>
+      <pre>📅 Day 25. DEFONEOS goes investment-grade. UKDI + NATO DIANA + EU Defence Fund.</pre>
+    </div>
+
+    <div class="section">
+      <h2>Sovereign Compliance</h2>
+      <p>GDPR</p>
+      <p style="margin-top: 8px;">
+        <span class="pill">EU AI Act</span>
+        <span class="pill">UK AI Bill</span>
+        <span class="pill">GDPR</span>
+        <span class="pill">ISO 42001</span>
+        <span class="pill">NIST AI RMF</span>
+        <span class="pill">JSP 936</span>
+        <span class="pill">PQC (ML-DSA-65)</span>
+        <span class="pill">DORADO SOVEREIGN</span>
+        <span class="pill">SIGIL chain</span>
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>SOV3 Tools Wired</h2>
+      <ul style="margin-left: 24px; line-height: 1.8;">
+        <li>DEFONEOS</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Inner mechanics — the math</h2>
+      <pre>
+const sovereign = await sov3.open_hands_zoom_to_user({{
+  // SIGIL-signed invocation
+  algorithm: "ML-DSA-65",
+  jurisdiction: "UK (CSOAI Ltd, 16939677)",
+  foreign_access_attempts: 0,
+  audit_chain: "live (publicly verifiable at /verify/)",
+  horus_monitoring: "real-time (247 SIGILs/sec)",
+  dopaido_switch: "SOVEREIGN (position: WEST)",
+}});
+
+// Returns in <50ms with PQC-signed proof
+// Visible at /sigil-explorer/
+console.log(sovereign.proof);
+// → { ...sigiled, auditable, sovereign... }
+      </pre>
+    </div>
+
+    <a href="/" class="cta">🜏 Back to csoai.org</a>
+  </div>
+</body>
+</html>

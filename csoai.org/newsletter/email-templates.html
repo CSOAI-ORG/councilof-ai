@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Templates — Sovereign</title>
+<style>body{font-family:monospace;background:#000;color:#0f0;padding:20px;white-space:pre-wrap;font-size:.85rem}</style>
+</head>
+<body>
+# EMAIL TEMPLATES — SOVEREIGN
+# ============================================================
+# 3 templates: SOV3 Sovereign, DEFONEOS Defence, MEOK Care
+# Each template supports: subject, preheader, hero, body, CTA, footer
+# SIGIL-signed at send time
+# ============================================================
+
+=== TEMPLATE 1: SOV3 SOVEREIGN ===============================
+SUBJECT: 🜏 SOV3 Sovereign — {{month_year}} — {{headline}}
+PREHEADER: One sovereign update per month. Care-tracked. Cancel anytime.
+
+HERO:
+  Background: linear-gradient(135deg, #fbbf24, #06b6d4)
+  Headline: "{{headline}}"
+  Subhead: "{{subhead}}"
+  Crown badge: 👑 Sovereign 100 verified
+
+BODY (markdown-friendly):
+  ## {{section_1_title}}
+  {{section_1_body}}
+
+  ## {{section_2_title}}
+  {{section_2_body}}
+
+  ## {{section_3_title}}
+  {{section_3_body}}
+
+CTA: {{cta_label}} → {{cta_url}}
+
+FOOTER:
+  You're receiving SOV3 Sovereign from csoai.org.
+  Care Floor 0.95 · SIGIL Ed25519 + PQC · Crown Lineage 1795–2026
+  Unsubscribe: {{unsub_url}}
+  SIGIL: C|SOV3|{{issue_id}}|care_floor_0.95|composite_7.305
+
+=== TEMPLATE 2: DEFONEOS DEFENCE =============================
+SUBJECT: 🛡️ DEFONEOS — {{month_year}} — {{headline}}
+PREHEADER: Defence-only intel. NATO STANAG · JSP 936 · BFT 12-around-1.
+
+HERO:
+  Background: linear-gradient(135deg, #10b981, #06b6d4)
+  Headline: "{{headline}}"
+  Subhead: "{{subhead}}"
+  Crown badge: 🛡️ DORADO multi-tenant
+
+BODY:
+  ## {{classification}} · {{date}}
+  {{threat_intel}}
+
+  ## NATO STANAG Alignment
+  {{stanag_section}}
+
+  ## JSP 936 Audit Trail
+  {{jsp936_section}}
+
+  ## Multi-Tenant + Multi-Region
+  {{deployment_section}}
+
+CTA: View classified intel → {{cta_url}}
+
+FOOTER:
+  DEFONEOS — defence-only distribution.
+  Class-of-service: sovereign / restricted
+  SIGIL: C|DEFONEOS|{{issue_id}}|jsp936_audited|nato_stanag_aligned
+
+=== TEMPLATE 3: MEOK CARE ====================================
+SUBJECT: 💝 MEOK Care — {{month_year}} — {{headline}}
+PREHEADER: Care-tracked governance. i-character twins. Family OS.
+
+HERO:
+  Background: linear-gradient(135deg, #fbbf24, #10b981)
+  Headline: "{{headline}}"
+  Subhead: "{{subhead}}"
+  Crown badge: 💝 Care Floor 0.95
+
+BODY:
+  ## {{care_topic_1}}
+  {{care_body_1}}
+
+  ## {{care_topic_2}}
+  {{care_body_2}}
+
+  ## {{care_topic_3}}
+  {{care_body_3}}
+
+CTA: Read more → {{cta_url}}
+
+FOOTER:
+  MEOK Care — gentle intelligence for sovereign families.
+  Care-tracked · Burnout-aware · Child-safe by default
+  SIGIL: C|MEOK|{{issue_id}}|care_floor_0.95|family_os_safe
+
+# ============================================================
+# USAGE:
+# 1. Pick template
+# 2. Fill placeholders
+# 3. Send via SOV3 mail daemon (HMAC + SIGIL auto-signed)
+# 4. Verify in /sovereign-os/sigil-explorer.html
+# ============================================================
+</body>
+</html>

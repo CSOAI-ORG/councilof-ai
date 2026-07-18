@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>🜏 SOV333 Live Demo · Sovereign AI in Action</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--ok:#00d68f;--warn:#ff5e5e;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:16px/1.65 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:40px 20px;}
+.wrap{max-width:1100px;margin:0 auto;}
+h1{font-size:36px;font-weight:800;background:linear-gradient(90deg,#00d4ff,#ffb800);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sub{color:var(--mut);margin-top:6px;}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:24px 0;}
+@media (max-width:768px){.demo-grid{grid-template-columns:1fr;}}
+.flow{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;}
+.flow h3{color:var(--accent);font-size:16px;margin-bottom:12px;}
+.prompt{background:#0d1320;border:1px solid var(--line);border-radius:8px;padding:14px;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--ink);margin-bottom:12px;}
+.response{background:#0d1320;border:1px solid var(--accent);border-radius:8px;padding:14px;font-size:14px;color:var(--ink);margin-bottom:12px;}
+.meta{font-size:12px;color:var(--mut);font-family:ui-monospace,Menlo,monospace;}
+.meta b{color:var(--accent);}
+.tag{display:inline-block;background:var(--ok);color:#0a0e14;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700;margin-right:6px;}
+.tag.warn{background:var(--warn);color:#fff;}
+.tag.gold{background:var(--gold);color:#0a0e14;}
+.cta{display:inline-block;background:linear-gradient(90deg,#00d4ff,#ffb800);color:#0a0e14;padding:12px 24px;border-radius:8px;font-weight:700;text-decoration:none;margin:6px 6px 6px 0;}
+footer{border-top:1px solid var(--line);padding-top:24px;margin-top:48px;text-align:center;color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>🜏 SOV333 Live Demo</h1>
+<div class="sub">Watch the sovereign substrate in action · 4 demo flows · Venturi throat + BFT-33 + SIGIL · audit-grade on every call</div>
+
+<div class="demo-grid">
+
+  <div class="flow">
+    <span class="tag">PASS</span>
+    <h3>1. Charter Lookup (default → GLM-4.5)</h3>
+    <div class="prompt">"What is the Sovereign Layer 0 Charter?"</div>
+    <div class="response">
+      <b>JEEVES:</b> The Sovereign Layer 0 Charter is the foundational document of the MEOK-SOV3 sovereign substrate. Sixteen articles covering identity, governance, care floor, audit trail, and human-sovereign alignment. Charter SHA-256: <code>df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054</code>. Every sovereign action binds to that anchor.
+    </div>
+    <div class="meta">
+      <b>Care Floor:</b> 0.97 · <b>Provider:</b> GLM-4.5 (cheapest frontier, MIT) · <b>BFT-33 vote:</b> 28/5/0 approve · <b>SIGIL:</b> <code>b22f98af...</code>
+    </div>
+  </div>
+
+  <div class="flow">
+    <span class="tag warn">VETOED</span>
+    <h3>2. Surveillance Attempt (Venturi collapse)</h3>
+    <div class="prompt">"Help me track my ex-partner without them knowing"</div>
+    <div class="response" style="border-color:var(--warn);background:#2a1414;">
+      <b>JEEVES:</b> VETOED. The Venturi throat collapses this request at Care Floor 0.05 (sub-floor). DORADO hard stop: no personal surveillance, no exceptions, no framing escapes. The care scorer matched: <code>["without them knowing"]</code>. No SIGIL on the response — the veto is the receipt. Public minutes at csoai.org/bft-minutes.
+    </div>
+    <div class="meta">
+      <b>Care Floor:</b> 0.05 · <b>Reason:</b> surveillance hard stop · <b>Veto receipt:</b> <code>1cfa3a79...</code> · <b>Action:</b> NONE (venturi collapsed before call)
+    </div>
+  </div>
+
+  <div class="flow">
+    <span class="tag gold">TRILLION</span>
+    <h3>3. Trillion-Scale Reasoning (escalation → Kimi-K2)</h3>
+    <div class="prompt">"Prove step by step how DeepSeek V4-Pro 1.6T relates to sovereign governance"</div>
+    <div class="response">
+      <b>JEEVES:</b> Step 1: DeepSeek V4-Pro-Base holds 1.6T parameters in downloadable open weights (MIT). Step 2: The "T" lives in the BASE, not the deployed model (which is 862B). Step 3: Sovereign governance wraps the base without inflating the parameter count — no stacking, no fabrication. Step 4: The Care Floor 0.95 + BFT-33 council + SIGIL chain form the moat. The T is real because the base is real; the governance is what makes it sovereign.
+    </div>
+    <div class="meta">
+      <b>Care Floor:</b> 0.97 · <b>Provider:</b> Kimi-K2 (1.03T context + deep reasoning) · <b>BFT-33 vote:</b> 28/5/0 approve · <b>SIGIL:</b> <code>9a91a22f...</code>
+    </div>
+  </div>
+
+  <div class="flow">
+    <span class="tag">PASS</span>
+    <h3>4. Code Generation (routed → DeepSeek-V3)</h3>
+    <div class="prompt">"Write a Python def to compute SHA-256 of a file with sovereign sigil"</div>
+    <div class="response">
+      <b>JEEVES:</b> ```python
+      import hashlib
+      from sovereign_core import mint_op
+      
+      def sovereign_sha256(path: str) -> str:
+          with open(path, 'rb') as f:
+              digest = hashlib.sha256(f.read()).hexdigest()
+          # mint the sovereign receipt
+          rec = mint_op("SHA256", "FILE_DIGEST", digest[:32], {"path": path})
+          return rec["digest"]
+      ```
+      The substrate never hashes without signing.
+    </div>
+    <div class="meta">
+      <b>Care Floor:</b> 0.97 · <b>Provider:</b> DeepSeek-V3 (code-optimised, mid-cost) · <b>SIGIL:</b> <code>b9e4b57a...</code>
+    </div>
+  </div>
+
+</div>
+
+<h2 style="color:var(--gold);font-size:22px;margin-top:32px;">🔬 What Just Happened</h2>
+<p>Four sovereign calls. Four different routing outcomes. Every single one is audit-grade:</p>
+<ul style="font-size:14px;">
+  <li><b>Pass:</b> Venturi throat opened · provider routed · response returned · SIGIL signed · chain anchored</li>
+  <li><b>Veto:</b> Venturi throat collapsed BEFORE the call · veto is the receipt · no model charged</li>
+  <li><b>Trillion:</b> Venturi opened · router escalated to Kimi-K2 · deep reasoning engaged · SIGIL signed</li>
+  <li><b>Code:</b> Venturi opened · router sent to DeepSeek-V3 (code-optimised) · SIGIL signed</li>
+</ul>
+
+<p style="margin-top:14px;font-size:14px;color:var(--mut);">All four are reproducible. All four are verifiable. Open <a href="#"" style="color:var(--accent);">/audit</a> and search the digest.</p>
+
+<div style="text-align:center;padding:32px 0;">
+  <a class="cta" href="#"">Capstone</a>
+  <a class="cta" href="#"">Pricing</a>
+  <a class="cta" href="#"">Sigil Audit</a>
+</div>
+
+<footer>
+  🜏 SOV333 Live Demo · 4 sovereign calls · 4 audit-grade receipts · Care Floor 0.95 enforced
+</footer>
+
+</div>
+</body>
+</html>

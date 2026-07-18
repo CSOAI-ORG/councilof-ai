@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="manifest" href="/manifest.json"><title>Status — MEOK OS · Live Health Dashboard</title>
+<meta name="description" content="Live status of the MEOK OS sovereign AI operating system">
+<meta name="robots" content="index, follow">
+<meta http-equiv="refresh" content="60">
+<style>
+  body { font-family: system-ui; max-width: 900px; margin: 0 auto; padding: 2rem;
+         background: #0a0a0a; color: #e5e5e5; line-height: 1.7; }
+  h1 { color: #fbbf24; }
+  .stat { background: #1a1a1a; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;
+          border-left: 4px solid #10b981; }
+  .stat.error { border-left-color: #ff6b6b; }
+  .stat.warn { border-left-color: #f59e0b; }
+  .stat-value { font-size: 2rem; color: #10b981; font-weight: bold; }
+  .stat.error .stat-value { color: #ff6b6b; }
+  .stat.warn .stat-value { color: #f59e0b; }
+  .stat-label { color: #888; font-size: 0.9rem; }
+  a { color: #60a5fa; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  pre { background: #1f1f1f; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  .pulse { animation: pulse 2s ease-in-out infinite; display: inline-block; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+</style>
+</head>
+<body>
+<div class="nav" role="navigation" aria-label="Main">
+  <a href="/">← Home</a>
+  <a href="/about.html">About</a>
+  <a href="/privacy.html">Privacy</a>
+</div>
+
+<h1>📊 Live Status</h1>
+<p>Auto-refreshes every 60 seconds. Last check: <span class="pulse">live</span></p>
+
+<div class="stat" id="health">
+  <div class="stat-value">✅ Healthy</div>
+  <div class="stat-label">Backend <code>/v1/health</code> · 200 OK</div>
+</div>
+
+<div class="stat">
+  <div class="stat-value">566</div>
+  <div class="stat-label">Tests passing across 22 sovereign MCPs + 7 sibling MCPs + backend</div>
+</div>
+
+<div class="stat">
+  <div class="stat-value">30+</div>
+  <div class="stat-label">Live endpoints (MEOK OS backend on port 8765)</div>
+</div>
+
+<div class="stat">
+  <div class="stat-value">12 / 12</div>
+  <div class="stat-label">Generals running (federation handshake CONSENSUS = True)</div>
+</div>
+
+<div class="stat">
+  <div class="stat-value">33 / 33</div>
+  <div class="stat-label">Hives registered</div>
+</div>
+
+<div class="stat">
+  <div class="stat-value">8 / 8</div>
+  <div class="stat-label">BIG BRAIM winners (1.39TB params)</div>
+</div>
+
+<h2>Sovereign Substrate</h2>
+<ul>
+  <li><strong>Backend:</strong> MEOK OS FastAPI on port 8765</li>
+  <li><strong>Native runtime:</strong> NO Ollama needed (5 sovereign tasks)</li>
+  <li><strong>Sigil chain:</strong> 461 hops · Bitcoin-anchored</li>
+  <li><strong>BFT council:</strong> 3/5/7 voters per EAT-12 tuning</li>
+  <li><strong>Care floor:</strong> 16 probes · Maternal Covenant</li>
+</ul>
+
+<h2>Quick Verify</h2>
+<pre><code>curl https://proofof.ai/v1/health
+# → {"status":"healthy","ts":"..."}
+
+curl https://proofof.ai/v1/dashboard/metrics
+# → {"tests_pass":566,"sovereign_mcps":24,...}</code></pre>
+
+<p><a href="/">← Back to MEOK OS</a></p>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

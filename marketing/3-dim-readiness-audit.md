@@ -1,0 +1,4 @@
+{
+  "response": "1. **EMAIL READINESS: 90%** - All drafts are staged and personalized with hooks, but final validation for email format and deliverability could be tested before sending.\n\n2. **PROSPECT READINESS: 85%** - Prospects are generally well-qualified with a good closing probability, but the presence of two high-risk accounts requires strategic consideration in outreach.\n\n3. **INDUSTRY READINESS: 80%** - Comprehensive industry verticals are covered with tailored content; however, the depth of analysis on emerging trends or regulatory changes could enhance relevance and engagement.",
+  "exit_code": 0
+}

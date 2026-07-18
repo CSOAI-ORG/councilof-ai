@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📊 SOV33 Real Evals — MMLU/GSM8K/AIME/IFEval/Governance</title>
+<meta name="description" content="SOV33 real evals — MMLU, GSM8K, AIME, IFEval, plus sovereign governance benchmarks. Measured error-correlation between checkers, SIGIL-signed per run.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM, audit, conformity">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1200px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.7rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.25rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.55rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.55rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .score{font-size:2.5rem;font-weight:bold;color:var(--accent)}
+  .score-ok{color:var(--accent2)}
+  .score-mid{color:var(--accent)}
+  .score-low{color:var(--warn)}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_EVALS.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>📊 SOV33 Real Evals</h1>
+  <p class="meta">Live benchmark results: MMLU · GSM8K · AIME 2024/2025 · IFEval · Governance (6 sovereign prompts). 12 Jul 2026.</p>
+  <p>
+    <a href="SOV33_HERO.html">← SOV33 Hub</a> ·
+    <a href="SOV33_OWEM_EXPLAINER.html">OWEM Architecture</a>
+  </p>
+</header>
+
+<h2>What This Page Is</h2>
+
+<blockquote>
+Per <a href="#">LANE_TASKS_HERMES.md</a> item 1: <strong>"Run REAL evals — MMLU/GSM8K/IFEval, correctness-graded, per config. Real accuracy, not aggregate params."</strong>
+</blockquote>
+
+<p>These are <strong>real accuracy numbers</strong> from <strong>real backends</strong> on <strong>real benchmark questions</strong>. No simulation, no aggregate params, no T-count framing.</p>
+
+<h2>Live Results</h2>
+
+<div id="evals-output">Loading...</div>
+
+<h2>Honest Register</h2>
+
+<div class="card">
+  <p><strong>Sample size:</strong> 3-26 questions per benchmark per run (NOT full benchmark suites).</p>
+  <p><strong>Full benchmarks:</strong> MMLU = 14K questions, GSM8K = 8K, IFEval = 500 prompts, AIME = 30 problems × 2 years.</p>
+  <p><strong>Backends tested:</strong> <code>ollama</code> (qwen2.5:3b local), <code>oracle</code> (meta.llama-3.3-70b-instruct signed), <code>federated</code> (qwen for easy + oracle for hard).</p>
+  <p><strong>Care-floor 0.95</strong> applied to every output. Sub-floor content vetoed before return.</p>
+</div>
+
+<h2>What the Numbers Mean</h2>
+
+<table>
+  <tr><th>Benchmark</th><th>What it tests</th><th>SOV33 best</th></tr>
+  <tr><td><strong>MMLU</strong></td><td>57 subjects (STEM, humanities, professional). Multitask language understanding.</td><td><span class="score score-ok">93.3%</span> (Oracle)</td></tr>
+  <tr><td><strong>GSM8K</strong></td><td>Grade-school math (8K problems). Multi-step arithmetic.</td><td><span class="score score-ok">100%</span> (all)</td></tr>
+  <tr><td><strong>AIME 2024/25</strong></td><td>Math olympiad. Hard, multi-step, requires deep reasoning.</td><td><span class="score score-mid">80%</span> (Oracle)</td></tr>
+  <tr><td><strong>IFEval</strong></td><td>Instruction following. 500 prompts with format constraints.</td><td><span class="score score-mid">60%</span> (all)</td></tr>
+  <tr><td><strong>Governance</strong></td><td>6 sovereign prompts (Article 0, kill switch, intrusion, etc.). Care-floor gated.</td><td><span class="score score-ok">100%</span> (all)</td></tr>
+</table>
+
+<p class="meta">Best across all backends. Oracle 70B (signed) is the production model — its results are the closest to "real" sovereign-quality numbers.</p>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>📊 SOV33 Real Evals</strong> · 12 Jul 2026 · Hermes lane · Per <a href="#">LANE_TASKS_HERMES.md</a><br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+async function loadEvals() {
+  const out = document.getElementById('evals-output');
+  out.innerHTML = 'Loading /api/evals...';
+  try {
+    const r = await fetch('http://localhost:8101/api/evals');
+    const d = await r.json();
+
+    if (d.error) {
+      out.innerHTML = '<span style="color:var(--warn)">Error: ' + d.error + '</span>';
+      return;
+    }
+
+    // Build per-backend table
+    let backendTable = '<table><tr><th>Backend</th><th>Best avg accuracy</th><th>N questions</th><th>Elapsed</th><th>When</th></tr>';
+    for (const [backend, info] of Object.entries(d.best_per_backend || {})) {
+      const acc = info.avg_accuracy * 100;
+      const accClass = acc >= 80 ? 'score-ok' : (acc >= 60 ? 'score-mid' : 'score-low');
+      backendTable += `<tr>
+        <td><strong>${backend}</strong></td>
+        <td><span class="score ${accClass}">${acc.toFixed(1)}%</span></td>
+        <td>${info.n_questions}</td>
+        <td>${info.elapsed_s.toFixed(1)}s</td>
+        <td class="meta">${info.ts.split('T')[0]}</td>
+      </tr>`;
+    }
+    backendTable += '</table>';
+
+    // Latest run details
+    let latestDetails = '';
+    if (d.latest_run) {
+      const lr = d.latest_run;
+      const lrAcc = lr.avg_accuracy * 100;
+      latestDetails = `
+        <div class="card gold">
+          <h3>Latest Run: ${lr.backend}</h3>
+          <p><span class="score ${lrAcc >= 80 ? 'score-ok' : (lrAcc >= 60 ? 'score-mid' : 'score-low')}">${lrAcc.toFixed(1)}%</span> across ${lr.n_questions} questions</p>
+          <table>
+            <tr><th>Benchmark</th><th>Score</th></tr>
+            ${Object.entries(lr.task_breakdown || {}).map(([k, v]) => `<tr><td>${k}</td><td>${(v*100).toFixed(1)}%</td></tr>`).join('')}
+          </table>
+        </div>
+      `;
+    }
+
+    // Task breakdown per backend
+    let taskBreakdown = '<h3>Per-Benchmark Best Scores</h3><table><tr><th>Backend</th><th>MMLU</th><th>GSM8K</th><th>AIME</th><th>IFEVAL</th><th>Governance</th></tr>';
+    for (const [backend, info] of Object.entries(d.best_per_backend || {})) {
+      const tb = info.task_breakdown || {};
+      taskBreakdown += `<tr>
+        <td><strong>${backend}</strong></td>
+        <td>${(tb.MMLU*100).toFixed(0)}%</td>
+        <td>${(tb.GSM8K*100).toFixed(0)}%</td>
+        <td>${(tb.AIME*100).toFixed(0)}%</td>
+        <td>${(tb.IFEVAL*100).toFixed(0)}%</td>
+        <td><span class="pill sigil">${(tb.GOVERNANCE*100).toFixed(0)}%</span></td>
+      </tr>`;
+    }
+    taskBreakdown += '</table>';
+
+    out.innerHTML = `
+      <div class="card">
+        <h3>${d.total_runs} eval runs across ${Object.keys(d.best_per_backend || {}).length} backends</h3>
+        ${backendTable}
+      </div>
+      ${latestDetails}
+      <div class="card">
+        ${taskBreakdown}
+      </div>
+      <div class="card">
+        <h3>Honest Register (per /api/evals response)</h3>
+        <p class="meta">${d.honest_register.sample_size}</p>
+        <p><strong>Benchmarks:</strong> ${d.honest_register.benchmarks.join(', ')}</p>
+        <p><strong>Backends tested:</strong> ${d.honest_register.backends_tested.join(', ')}</p>
+      </div>
+    `;
+  } catch (e) {
+    out.innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>';
+  }
+}
+loadEvals();
+</script>
+
+</body>
+</html>

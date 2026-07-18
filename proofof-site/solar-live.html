@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🪐 Solar Live — 33 Hive Planets Orbiting CSOAI Sun (real-time)</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px;overflow-x:hidden}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{padding:2rem;text-align:center;border-bottom:1px solid #fbbf24;background:radial-gradient(ellipse at center, #1a1f3a 0%, #02060f 70%)}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24}
+  .hero p{color:#aaa;font-size:1rem}
+  .sim-container{position:relative;width:100%;height:600px;background:radial-gradient(circle at center, #0a0e27 0%, #000 100%);overflow:hidden;margin:1rem 0}
+  .sun{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:radial-gradient(circle, #fbbf24 0%, #f59e0b 70%, transparent 100%);box-shadow:0 0 80px #fbbf24;animation:pulse 3s ease-in-out infinite;cursor:pointer}
+  @keyframes pulse{0%,100%{box-shadow:0 0 80px #fbbf24} 50%{box-shadow:0 0 120px #fbbf24, 0 0 200px #f59e0b}}
+  .orbit{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:1px solid rgba(251,191,36,0.15);border-radius:50%}
+  .planet{position:absolute;border-radius:50%;cursor:pointer;transition:transform .2s}
+  .planet:hover{transform:scale(2);z-index:10}
+  .planet-label{position:absolute;color:#fbbf24;font-size:0.7rem;background:rgba(0,0,0,0.7);padding:0.1rem 0.3rem;border-radius:3px;pointer-events:none;white-space:nowrap}
+  .legend{background:#1a1a1a;padding:1rem;border-radius:8px;margin:1rem auto;max-width:900px;display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;font-size:0.75rem}
+  .legend-item{text-align:center;padding:0.5rem}
+  .legend-item .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:0.5rem;vertical-align:middle}
+  .legend-item .name{color:#aaa}
+  .info-panel{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem auto;max-width:900px;font-family:monospace;font-size:0.85rem;color:#aaa;border-left:3px solid #fbbf24}
+  .info-panel .title{color:#fbbf24;font-weight:bold;font-size:1rem;margin-bottom:0.5rem}
+  .info-panel .key{color:#10b981}
+  .info-panel .val{color:#fbbf24}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1rem 0}
+  .stat-pill{background:rgba(251,191,36,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #fbbf24;color:#fbbf24;font-size:.85rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/world.html">World</a>
+  <a href="/solar-live.html">Solar Live</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🪐 Solar Live</h1>
+  <p>33 hive planets orbiting the CSOAI sun · 4 tiers · 6 regions · 12 Generals</p>
+  <div class="stats">
+    <div class="stat-pill">33 hives</div>
+    <div class="stat-pill">12 generals</div>
+    <div class="stat-pill">4 tiers</div>
+    <div class="stat-pill">6 regions</div>
+    <div class="stat-pill">7.305 composite</div>
+    <div class="stat-pill">Real-time orbit</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="sim-container" id="simContainer">
+    <div class="sun" onclick="showSun()"></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="dot" style="background:#fbbf24"></span><span class="name">Inner (6)</span></div>
+    <div class="legend-item"><span class="dot" style="background:#f59e0b"></span><span class="name">Middle (12)</span></div>
+    <div class="legend-item"><span class="dot" style="background:#a3e635"></span><span class="name">Outer (9)</span></div>
+    <div class="legend-item"><span class="dot" style="background:#fbbf24"></span><span class="name">Frontier (6)</span></div>
+  </div>
+
+  <div class="info-panel" id="infoPanel">
+    <div class="title">☀️ CSOAI Sun — Crown of Sovereignty</div>
+    <div><span class="key">Composite:</span> <span class="val">7.305 / 10</span></div>
+    <div><span class="key">Lineage:</span> <span class="val">1795-2026 (UK 16939677)</span></div>
+    <div><span class="key">Planets orbiting:</span> <span class="val">33 sovereign hives</span></div>
+    <div><span class="key">Generals:</span> <span class="val">12 queens (BFT 12-around-1)</span></div>
+    <div><span class="key">Cycle types:</span> <span class="val">4 (rotation, revolution, precession, resonance)</span></div>
+    <div style="margin-top:0.5rem;color:#10b981">Click any planet to inspect.</div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Solar Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">33 hives orbit the CSOAI sun. The dragon ships.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+// 33 hives with tier + tier_color + tier_radius
+const HIVES = [
+  // Inner (6) - close
+  {name:"London",tier:"inner",color:"#fbbf24",gen:"Argus",country:"UK",dist:1,period:1},
+  {name:"Cambridge",tier:"inner",color:"#fbbf24",gen:"Owl",country:"UK",dist:1.5,period:1.2},
+  {name:"Edinburgh",tier:"inner",color:"#fbbf24",gen:"Shield",country:"UK",dist:2,period:1.5},
+  {name:"York",tier:"inner",color:"#fbbf24",gen:"Scribe",country:"UK",dist:2.5,period:1.8},
+  {name:"Cardiff",tier:"inner",color:"#fbbf24",gen:"Voice",country:"UK",dist:3,period:2.1},
+  {name:"Belfast",tier:"inner",color:"#fbbf24",gen:"Crow",country:"UK",dist:3.5,period:2.4},
+  // Middle (12)
+  {name:"Dublin",tier:"middle",color:"#f59e0b",gen:"Voice",country:"IE",dist:5,period:3},
+  {name:"Paris",tier:"middle",color:"#f59e0b",gen:"Owl",country:"FR",dist:5.5,period:3.2},
+  {name:"Berlin",tier:"middle",color:"#f59e0b",gen:"Shield",country:"DE",dist:6,period:3.5},
+  {name:"Amsterdam",tier:"middle",color:"#f59e0b",gen:"Lex",country:"NL",dist:6.5,period:3.7},
+  {name:"Stockholm",tier:"middle",color:"#f59e0b",gen:"Scale",country:"SE",dist:7,period:4},
+  {name:"Helsinki",tier:"middle",color:"#f59e0b",gen:"Scribe",country:"FI",dist:7.5,period:4.2},
+  {name:"Madrid",tier:"middle",color:"#f59e0b",gen:"Voice",country:"ES",dist:8,period:4.5},
+  {name:"Rome",tier:"middle",color:"#f59e0b",gen:"Lex",country:"IT",dist:8.5,period:4.7},
+  {name:"Vienna",tier:"middle",color:"#f59e0b",gen:"Scale",country:"AT",dist:9,period:5},
+  {name:"Copenhagen",tier:"middle",color:"#f59e0b",gen:"Crow",country:"DK",dist:9.5,period:5.2},
+  {name:"Brussels",tier:"middle",color:"#f59e0b",gen:"Lex",country:"BE",dist:10,period:5.5},
+  {name:"Warsaw",tier:"middle",color:"#f59e0b",gen:"Crow",country:"PL",dist:10.5,period:5.7},
+  // Outer (9)
+  {name:"New York",tier:"outer",color:"#a3e635",gen:"Scribe",country:"US",dist:13,period:7},
+  {name:"SF",tier:"outer",color:"#a3e635",gen:"Builder",country:"US",dist:14,period:7.3},
+  {name:"Tokyo",tier:"outer",color:"#a3e635",gen:"Builder",country:"JP",dist:15,period:7.7},
+  {name:"Singapore",tier:"outer",color:"#a3e635",gen:"Abacus",country:"SG",dist:16,period:8},
+  {name:"Sydney",tier:"outer",color:"#a3e635",gen:"Voice",country:"AU",dist:17,period:8.3},
+  {name:"Mumbai",tier:"outer",color:"#a3e635",gen:"Crow",country:"IN",dist:18,period:8.7},
+  {name:"Dubai",tier:"outer",color:"#a3e635",gen:"Gear",country:"AE",dist:19,period:9},
+  {name:"Sao Paulo",tier:"outer",color:"#a3e635",gen:"Scale",country:"BR",dist:20,period:9.3},
+  {name:"Toronto",tier:"outer",color:"#a3e635",gen:"Lex",country:"CA",dist:21,period:9.7},
+  // Frontier (6)
+  {name:"Cape Town",tier:"frontier",color:"#fbbf24",gen:"Shield",country:"ZA",dist:24,period:11},
+  {name:"Reykjavik",tier:"frontier",color:"#fbbf24",gen:"Scale",country:"IS",dist:26,period:11.5},
+  {name:"Cairo",tier:"frontier",color:"#fbbf24",gen:"Lex",country:"EG",dist:28,period:12},
+  {name:"Nairobi",tier:"frontier",color:"#fbbf24",gen:"Crow",country:"KE",dist:30,period:12.5},
+  {name:"Bogota",tier:"frontier",color:"#fbbf24",gen:"Scribe",country:"CO",dist:32,period:13},
+  {name:"Lagos",tier:"frontier",color:"#fbbf24",gen:"Gear",country:"NG",dist:34,period:13.5},
+];
+
+const container = document.getElementById("simContainer");
+const SCALE = 10;  // 1 dist unit = 10px
+let t = 0;
+
+function createOrbits() {
+  // Draw orbit rings for each hive
+  HIVES.forEach((h, i) => {
+    const ring = document.createElement("div");
+    ring.className = "orbit";
+    const r = h.dist * SCALE;
+    ring.style.width = (r * 2) + "px";
+    ring.style.height = (r * 2) + "px";
+    container.appendChild(ring);
+  });
+}
+createOrbits();
+
+const planetEls = {};
+HIVES.forEach((h, i) => {
+  const p = document.createElement("div");
+  p.className = "planet";
+  p.style.background = h.color;
+  p.style.boxShadow = "0 0 8px " + h.color;
+  const size = h.tier === "frontier" ? 8 : h.tier === "outer" ? 10 : h.tier === "middle" ? 8 : 6;
+  p.style.width = size + "px";
+  p.style.height = size + "px";
+  p.onclick = () => showPlanet(h);
+  container.appendChild(p);
+
+  const lbl = document.createElement("div");
+  lbl.className = "planet-label";
+  lbl.textContent = h.name;
+  container.appendChild(lbl);
+  planetEls[h.name] = {el: p, lbl: lbl, hive: h};
+});
+
+function tick() {
+  t += 0.016;  // 60fps
+  HIVES.forEach((h) => {
+    const p = planetEls[h.name];
+    const omega = (2 * Math.PI) / Math.max(0.5, h.period);  // angular velocity
+    const angle = t * omega;
+    const r = h.dist * SCALE;
+    const cx = container.clientWidth / 2;
+    const cy = container.clientHeight / 2;
+    const x = cx + r * Math.cos(angle) - parseFloat(p.el.style.width) / 2;
+    const y = cy + r * Math.sin(angle * 0.5) - parseFloat(p.el.style.height) / 2;  // tilted
+    p.el.style.left = x + "px";
+    p.el.style.top = y + "px";
+    p.lbl.style.left = (x + 14) + "px";
+    p.lbl.style.top = y + "px";
+  });
+  requestAnimationFrame(tick);
+}
+tick();
+
+function showPlanet(h) {
+  document.getElementById("infoPanel").innerHTML = `
+    <div class="title">🪐 ${h.name} — ${h.country}</div>
+    <div><span class="key">Tier:</span> <span class="val">${h.tier}</span></div>
+    <div><span class="key">Lead General:</span> <span class="val">${h.gen}</span></div>
+    <div><span class="key">Distance from sun:</span> <span class="val">${h.dist} AU</span></div>
+    <div><span class="key">Orbital period:</span> <span class="val">${h.period} years</span></div>
+    <div><span class="key">Sovereign composite:</span> <span class="val">7.305</span></div>
+    <div><span class="key">Country:</span> <span class="val">${h.country}</span></div>
+    <div style="margin-top:0.5rem;color:#10b981">▓▒░ Hive ${h.name} sovereign. ${h.gen} leads. ░▒▓</div>
+  `;
+}
+
+function showSun() {
+  document.getElementById("infoPanel").innerHTML = `
+    <div class="title">☀️ CSOAI Sun — Crown of Sovereignty</div>
+    <div><span class="key">Composite:</span> <span class="val">7.305 / 10</span></div>
+    <div><span class="key">Lineage:</span> <span class="val">1795-2026 (UK 16939677)</span></div>
+    <div><span class="key">Planets orbiting:</span> <span class="val">33 sovereign hives</span></div>
+    <div><span class="key">Generals:</span> <span class="val">12 queens (BFT 12-around-1)</span></div>
+    <div><span class="key">Cycle types:</span> <span class="val">4 (rotation, revolution, precession, resonance)</span></div>
+    <div style="margin-top:0.5rem;color:#10b981">Click any planet to inspect.</div>
+  `;
+}
+</script>
+
+</body>
+</html>

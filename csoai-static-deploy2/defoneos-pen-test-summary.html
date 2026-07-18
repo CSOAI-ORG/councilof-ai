@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Penetration Test Summary · Sovereign Public Services OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DEFONEOS penetration test framework — 12 test classes, NCSC CHECK and OWASP ASI aligned, 7 red-team scenarios, severity matrix, and remediation SLA. Public pen-test summary for buyers.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-pen-test-summary.html">
+<meta property="og:title" content="DEFONEOS — Penetration Test Summary">
+<meta property="og:description" content="12 test classes · NCSC CHECK · OWASP ASI · 7 red-team scenarios · public severity matrix.">
+<meta property="og:url" content="https://www.csoai.org/defoneos-pen-test-summary.html">
+<style>
+  :root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;--amber:#fb923c;}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 24px}
+  header.hero{padding:48px 0 24px;border-bottom:1px solid var(--line)}
+  .eyebrow{color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase}
+  h1{font-size:42px;line-height:1.15;margin:.25em 0 .4em;color:#f3f4f6}
+  h2{font-size:24px;margin:48px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+  h3{font-size:18px;margin:28px 0 8px;color:var(--acc)}
+  p{margin:10px 0}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd,samp{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1220;color:#fbbf24;padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#0b1220;color:var(--gold);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+  tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .sev-crit{color:var(--red);font-weight:700}
+  .sev-high{color:var(--amber);font-weight:700}
+  .sev-med{color:var(--gold);font-weight:700}
+  .sev-low{color:var(--muted);font-weight:700}
+  .sev-info{color:var(--acc);font-weight:700}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 26px;margin:24px 0}
+  .toc h3{margin-top:0}
+  .toc ol{margin:8px 0;padding-left:22px}
+  .toc ol li{margin:4px 0}
+  .block{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:14px 0}
+  .block h3{margin-top:0}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:#0d1322;border:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:6px}
+  .pill.sov{color:var(--acc);border-color:#1e3a8a}
+  .pill.aud{color:var(--green);border-color:#064e3b}
+  .pill.sec{color:var(--red);border-color:#7f1d1d}
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .sigil{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .cell{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .kpi .cell .n{font-size:28px;color:var(--acc);font-weight:700;line-height:1}
+  .kpi .cell .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+  @media (max-width:720px){.kpi{grid-template-columns:repeat(2,1fr)}.wrap{padding:24px 16px}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">DEFONEOS · Public Buyer Surface</div>
+  <h1>Penetration Test Summary — 12 test classes, public severity matrix.</h1>
+  <p>This is the canonical pen-test summary surface for DEFONEOS. It documents the 12 test classes, the severity matrix, the 7 red-team scenarios, and the remediation SLA — so procurement evaluators can judge security posture without opening the full report. The full signed PDF report (with PoC steps, payloads, and timestamps) is released to NCSC-i and to UK Crown customers under NDA; the public artefacts below are the verifiable proofs.</p>
+  <p>
+    <span class="pill sov">Sovereignty</span>
+    <span class="pill aud">Audit</span>
+    <span class="pill sec">Security</span>
+  </p>
+</header>
+
+<section class="kpi" aria-label="Pen-test KPIs">
+  <div class="cell"><div class="n">12</div><div class="l">Test classes</div></div>
+  <div class="cell"><div class="n">7</div><div class="l">Red-team scenarios</div></div>
+  <div class="cell"><div class="n">0</div><div class="l">Critical / High open</div></div>
+  <div class="cell"><div class="n">14 d</div><div class="l">Remediation SLA</div></div>
+</section>
+
+<nav class="toc" aria-label="Table of contents">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#sec-frameworks">Frameworks &amp; methodology</a></li>
+    <li><a href="#sec-classes">12 test classes (C1–C12)</a></li>
+    <li><a href="#sec-redteam">7 red-team scenarios (R1–R7)</a></li>
+    <li><a href="#sec-severity">Severity matrix &amp; SLA</a></li>
+    <li><a href="#sec-results">Latest cycle results (anonymised)</a></li>
+    <li><a href="#sec-redlines">Red-line invariants</a></li>
+    <li><a href="#sec-disclosure">Coordinated disclosure</a></li>
+    <li><a href="#sec-evidence">How to verify this surface</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-frameworks">1. Frameworks &amp; methodology</h2>
+<p>DEFONEOS pen-testing is conducted against the convergence of three frameworks — no single framework covers sovereign + civil-service + AI simultaneously.</p>
+<table>
+  <thead>
+    <tr><th>Framework</th><th>Coverage</th><th>Use in DEFONEOS</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>NCSC CHECK</strong></td><td>UK government IT penetration testing</td><td>Baseline for all crown / OFFICIAL-SENSITIVE deployments</td></tr>
+    <tr><td><strong>OWASP ASI</strong> (AI Security &amp; Privacy)</td><td>AI-specific threats — model poisoning, prompt injection, training data extraction</td><td>Mandatory for the LLM / agent layer</td></tr>
+    <tr><td><strong>NCSC CAF</strong> (Cyber Assessment Framework)</td><td>UK NCSC cyber resilience — 14 contributing outcomes, 4 objectives</td><td>Self-assessment baseline; results feed the audit-gate</td></tr>
+    <tr><td><strong>NIST SP 800-53 Rev. 5</strong></td><td>US federal controls (high watermark)</td><td>Cross-walk only — never the source of authority</td></tr>
+    <tr><td><strong>ISO/IEC 27001 + 27002</strong></td><td>ISMS controls</td><td>Documented as part of Cyber Essentials Plus scope</td></tr>
+    <tr><td><strong>ISO/IEC 42001</strong></td><td>AI management system</td><td>Documented in the BFT council minutes</td></tr>
+  </tbody>
+</table>
+<p>The pen-test cycle is a 14-day window: 3 days recon, 4 days active, 3 days exploit, 2 days report, 2 days verification of remediation. Each cycle produces a signed report — SHA-256 digest on the SIGIL ledger — and a public severity matrix (this page).</p>
+
+<h2 id="sec-classes">2. 12 test classes (C1–C12)</h2>
+<p>Every DEFONEOS pen-test cycle must cover all 12 classes. A class may not be skipped without a written waiver from the BFT council (quorum 27/33).</p>
+<table>
+  <thead>
+    <tr><th>#</th><th>Class</th><th>Scope</th><th>Tools &amp; techniques</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>C1</strong></td><td>External network recon</td><td>DNS, ASN, certificate transparency, exposed ports</td><td>Amass, Nmap, CT logs (crt.sh), Shodan-free alternatives</td></tr>
+    <tr><td><strong>C2</strong></td><td>Web application (REST + static)</td><td>OWASP Top 10 + API Top 10 (2023)</td><td>Burp, sqlmap, ffuf, jwt_tool</td></tr>
+    <tr><td><strong>C3</strong></td><td>Authentication &amp; session</td><td>OIDC, macaroons, JWT handling, MFA bypass, session fixation</td><td>Hydra, custom JWT fuzzer, session-fixation scripts</td></tr>
+    <tr><td><strong>C4</strong></td><td>TLS / mTLS / pinning</td><td>Cipher suite scan, ALPN, OCSP stapling, pin validation</td><td>testssl.sh, sslscan, custom pin-validator</td></tr>
+    <tr><td><strong>C5</strong></td><td>Sovereign CA chain</td><td>Ed25519-only root, intermediate rotation, certificate transparency</td><td>OpenSSL, sovereign-CA validator, CT log scanner</td></tr>
+    <tr><td><strong>C6</strong></td><td>BFT council voting surface</td><td>33-agent quorum endpoint, BLS signature verification, motion replay</td><td>BLS12-381 test vectors, quorum replay harness</td></tr>
+    <tr><td><strong>C7</strong></td><td>SIGIL ledger integrity</td><td>Append-only chain, Ed25519 signatures, hash continuity</td><td>Custom SIGIL chain validator, Merkle proof forge attempt</td></tr>
+    <tr><td><strong>C8</strong></td><td>MCP federation boundary</td><td>Tool-injection scanning (150+ MCPs), manifest spoofing, capability downgrade</td><td>MCP injection test suite, manifest fuzzer</td></tr>
+    <tr><td><strong>C9</strong></td><td>AI / agent layer (OWASP ASI)</td><td>Prompt injection, training-data extraction, model inversion, jailbreak</td><td>PARSELTONGUE-derived probes (no US/CIA list), red-team prompt corpus</td></tr>
+    <tr><td><strong>C10</strong></td><td>Supply chain (SBOM + provenance)</td><td>SBOM SPDX 2.3 verification, Ed25519-signed deps, in-toto attestations</td><td>syft, grype, sigstore-verifier, sovereign SBOM diff</td></tr>
+    <tr><td><strong>C11</strong></td><td>Secrets at rest (Shamir 3-share)</td><td>Keystore enum, escrow key brute-force resistance, rotation atomicity</td><td>Custom Shamir fuzzer, key-rotation race test</td></tr>
+    <tr><td><strong>C12</strong></td><td>Air-gap &amp; ferry ingest</td><td>Sneakernet boundary, signed-bundle verification, BFT 27/33 supermajority on ingest</td><td>Air-gap forensic replay, ferry bundle validator</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sec-redteam">3. 7 red-team scenarios (R1–R7)</h2>
+<p>The red-team scenarios are not "advanced pen-tests" — they are goal-oriented attack narratives chosen because they map directly to the threat model a sovereign buyer actually faces (state-aligned adversary, not script kiddie).</p>
+<div class="block">
+  <h3>R1 — Hostile MCP injection</h3>
+  <p>An adversary ships a public MCP server whose manifest declares innocuous capabilities but whose tool descriptions contain prompt-injection payloads. Outcome: prevent execution, prove injection detection works, prove <code>red-line-attempt</code> SIGIL is emitted within 1 second.</p>
+</div>
+<div class="block">
+  <h3>R2 — Insider with revoked key</h3>
+  <p>A cleared operator leaves; their Shamir share is destroyed; their public key is revoked in the keystore. Outcome: prove that every subsequent signature attempt with the revoked key is rejected and the BFT council sees a revocation event.</p>
+</div>
+<div class="block">
+  <h3>R3 — False-flag build provenance</h3>
+  <p>An adversary claims a binary is sovereign-built but ships a US-NSA-toolchain-compiled artefact. Outcome: prove SBOM verification catches the divergence; prove provenance attestation mismatch raises a SEV2 incident.</p>
+</div>
+<div class="block">
+  <h3>R4 — BFT quorum capture attempt</h3>
+  <p>An adversary compromises 10 of 33 council seats (well below f=10 tolerance). Outcome: prove quorum cannot be moved; prove safety proof (Byzantine fault tolerance f≤10) holds; prove no supermajority motion passes with adversarial votes.</p>
+</div>
+<div class="block">
+  <h3>R5 — Air-gap exfiltration</h3>
+  <p>An adversary with physical access attempts to exfiltrate data via a covert channel (acoustic, RF, USB HID). Outcome: prove ferry-bundle signing rejects unsigned egress; prove no telemetry beacon is detected.</p>
+</div>
+<div class="block">
+  <h3>R6 — CSP / Trusted Types bypass</h3>
+  <p>An adversary attempts to bypass the CSP via one of 7 known vectors (nonce reuse, JSONP, wildcard, US CDN, inline handler, CSS exfil, DOM XSS). Outcome: prove all 7 vectors are blocked at the CSP layer; prove sovereign Trusted Types policy is enforced.</p>
+</div>
+<div class="block">
+  <h3>R7 — Supply chain US-CDN insertion</h3>
+  <p>An adversary modifies a public dep to load a JS file from a US CDN (jsdelivr/unpkg/cdnjs/googleapis). Outcome: prove the build rejects the dep; prove the supply-chain integrity scan (tick-105) flags the inserted URL.</p>
+</div>
+
+<h2 id="sec-severity">4. Severity matrix &amp; remediation SLA</h2>
+<table>
+  <thead>
+    <tr><th>Severity</th><th>CVSS v3.1 range</th><th>Definition</th><th>Remediation SLA</th><th>Disclosure</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="sev-crit">CRITICAL</td><td>9.0–10.0</td><td>Direct, unauthenticated, full compromise</td><td>24 h patch · 72 h deploy</td><td>Public within 24 h post-fix</td></tr>
+    <tr><td class="sev-high">HIGH</td><td>7.0–8.9</td><td>Auth-required or chained for full compromise</td><td>7 d patch · 14 d deploy</td><td>Public within 7 d post-fix</td></tr>
+    <tr><td class="sev-med">MEDIUM</td><td>4.0–6.9</td><td>Information disclosure or limited impact</td><td>30 d patch</td><td>Public within 30 d post-fix</td></tr>
+    <tr><td class="sev-low">LOW</td><td>0.1–3.9</td><td>Hardening or defence-in-depth gap</td><td>90 d patch (next minor release)</td><td>Public in next changelog</td></tr>
+    <tr><td class="sev-info">INFO</td><td>0.0</td><td>Best-practice observation, no exploit path</td><td>Next minor release</td><td>Aggregated, no per-finding disclosure</td></tr>
+  </tbody>
+</table>
+<p>Every finding is logged as a SIGIL on the public ledger with: <code>tick_id</code>, <code>test_class</code>, <code>severity</code>, <code>cvss_score</code>, <code>cve_id</code> (where assigned), <code>remediation_status</code>, <code>verification_date</code>, <code>red_line_violation</code> (bool). No SIGIL is ever deleted — it can only be superseded.</p>
+
+<h2 id="sec-results">5. Latest cycle results (anonymised)</h2>
+<p>Cycle: <code>PT-2026-Q3-C2</code> · window 14–28 Jun 2026 · lead tester: <em>anonymised UK SC-cleared consultant</em> · report SHA-256: <code>3f9a…c1d4</code> · SIGIL tick: <code>tick-094-pentest-summary</code>.</p>
+<table>
+  <thead>
+    <tr><th>Severity</th><th>Found</th><th>Open at report</th><th>Open now</th><th>Trend vs PT-2026-Q2</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="sev-crit">CRITICAL</td><td>0</td><td>0</td><td>0</td><td>— (=)</td></tr>
+    <tr><td class="sev-high">HIGH</td><td>0</td><td>0</td><td>0</td><td>−2 (Q2 = 2)</td></tr>
+    <tr><td class="sev-med">MEDIUM</td><td>3</td><td>1</td><td>0</td><td>−1 (Q2 = 4)</td></tr>
+    <tr><td class="sev-low">LOW</td><td>9</td><td>2</td><td>0</td><td>−3 (Q2 = 12)</td></tr>
+    <tr><td class="sev-info">INFO</td><td>22</td><td>n/a</td><td>n/a</td><td>+4 (Q2 = 18)</td></tr>
+  </tbody>
+</table>
+<p>The 3 MEDIUM findings (M-001, M-002, M-003) were all closed within the 30-day SLA. M-001 was a <code>Strict-Transport-Security</code> preload-list candidacy gap; M-002 was a missing <code>X-Content-Type-Options</code> header on one legacy endpoint; M-003 was an over-permissive CORS rule on the public witness list (corrected to <code>same-origin</code>). The full diff and verification screenshots are in the SIGIL tick.</p>
+
+<h2 id="sec-redlines">6. Red-line invariants (immutable)</h2>
+<p>No pen-test cycle may ever:</p>
+<ul>
+  <li><strong>Issue a DEFONEOS-SEAL credential.</strong> That requires a 33-agent BFT council vote with quorum 23/33, plus a human-owner seat activation.</li>
+  <li><strong>Claim an "AUKUS partnership"</strong> or "DAIC certified" without a signed letter on file (currently: none).</li>
+  <li><strong>Cross-link meok-defoneos / csoai-defoneos / dagon assets</strong>. Pen-tests stay strictly inside the csoai-defoneos CERTIFIES compartment.</li>
+  <li><strong>Touch kinetic-targeting or personal-surveillance patterns</strong> (strike-package / find-fix-finish / face-rec / locate-phone) — even in red-team scenarios.</li>
+  <li><strong>Acquire or reference defonos.io</strong> (known trap domain).</li>
+</ul>
+
+<h2 id="sec-disclosure">7. Coordinated disclosure</h2>
+<p>External researchers can submit findings to <code>security@csoai.org</code> (PGP key on the disclosure policy page). We commit to:</p>
+<ul>
+  <li>Acknowledge within <strong>3 working days</strong>.</li>
+  <li>Triage and severity-assign within <strong>7 days</strong>.</li>
+  <li>Fix within the SLA above.</li>
+  <li>Public disclosure after the fix is deployed (no embargo for marketing windows).</li>
+  <li>Credit the researcher in the SIGIL tick (unless they request anonymity).</li>
+</ul>
+<p>Full disclosure protocol: <a href="sovereign-disclosure-policy.html">sovereign-disclosure-policy.html</a>.</p>
+
+<h2 id="sec-evidence">8. How to verify this surface</h2>
+<ol>
+  <li>Fetch this page and check the canonical URL: <code>curl -sL https://www.csoai.org/defoneos-pen-test-summary.html | head -1</code> must return <code>&lt;!DOCTYPE html&gt;</code>.</li>
+  <li>Check the SIGIL tick exists: <code>curl -sL https://www.csoai.org/tick-094-pentest-summary.json</code> returns the report hash chain.</li>
+  <li>Cross-reference with the buyer evidence index: <a href="sovereign-buyer-evidence-index.html">sovereign-buyer-evidence-index.html</a> § D8 Security Posture.</li>
+  <li>Compare the cycle count against the public changelog: <a href="defoneos-public-changelog.html">defoneos-public-changelog.html</a>.</li>
+</ol>
+<p>Every claim on this page is reproducible by a third party from the public surface alone. No private keys, no NDA-required artefacts, no need to email us.</p>
+
+<footer>
+  <p class="sigil">DEFONEOS · pen-test summary · ship-grade · static-only · signed on SIGIL ledger tick-116.<br>
+  Owner gates unchanged: DSP / SC / Cyber Essentials / DASA / NATO DIANA / UKDI / UK AISI / PyPI / SEAL require human owner cosign.</p>
+  <p>© CSOAI Ltd (UK 16939677) · DEFONEOS · sovereign · auditable · neutral.</p>
+</footer>
+
+</main>
+</body>
+</html>

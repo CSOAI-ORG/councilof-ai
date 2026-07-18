@@ -1,0 +1,499 @@
+# =============================================================================
+# openpatent.ai — Sovereign Mesh (Layer 6)
+# deploy/ansible/playbook-sovereign-mesh.yml
+#
+# Bootstraps a single sovereign VM (one of us/eu/ap) to run the full
+# openpatent.ai runtime: wireguard overlay, cometbft consensus, api-gateway,
+# mcp-bridge, prometheus, node-exporter. Idempotent — re-running on an
+# already-bootstrapped host is a no-op.
+#
+# Run:
+#   cd deploy/ansible
+#   ansible-playbook -i inventory/sovereign-mesh.yml playbook-sovereign-mesh.yml
+#   ansible-playbook -i inventory/sovereign-mesh.yml playbook-sovereign-mesh.yml --limit sovereign-us
+# =============================================================================
+
+---
+- name: Bootstrap a sovereign mesh VM (us | eu | ap)
+  hosts: sovereign_mesh
+  become: true
+  gather_facts: true
+  serial: "30%"                       # roll one region at a time
+
+  vars:
+    mesh_subnet_cidr: "10.10.0.0/24"
+    mesh_wg_port: 51820
+    cometbft_version: "v0.38.10"
+    go_version: "1.22.5"
+    chain_id: "openpatent-sovereign-mesh-1"
+    block_time_ms: 11000
+    bft_threshold: 22
+    bft_council_size: 33
+
+    # Per-region wireguard addresses (populated by inventory / host_vars)
+    wg_address: "10.10.0.{{ wg_octet_last }}/32"
+    wg_octet_last: "20"               # overridden per host
+
+    # Persistent peers — the other two regions
+    persistent_peers: ""
+
+    # CometBFT home dir
+    cometbft_home: /var/lib/cometbft
+    cometbft_config_dir: /etc/cometbft/config
+    api_gateway_port: 3211
+    mcp_bridge_port: 3333
+    bft_council_port: 3215
+    prometheus_port: 9090
+    node_exporter_port: 9100
+
+  pre_tasks:
+    - name: "🐉 DEFONEOS — bootstrapping {{ inventory_hostname }}"
+      ansible.builtin.debug:
+        msg: >-
+          Sovereign mesh bootstrap — region={{ region | default('eu') }},
+          chain={{ chain_id }}, block_time={{ block_time_ms }}ms,
+          bft={{ bft_threshold }}/{{ bft_council_size }}
+
+    - name: Ensure /etc/cometbft exists
+      ansible.builtin.file:
+        path: "{{ cometbft_config_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+  tasks:
+    # -----------------------------------------------------------------------
+    # 1. apt update + security patches
+    # -----------------------------------------------------------------------
+    - name: apt update
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: apt upgrade (security)
+      ansible.builtin.apt:
+        upgrade: safe
+
+    - name: Install base packages
+      ansible.builtin.apt:
+        name:
+          - wireguard
+          - qrencode
+          - jq
+          - iptables-persistent
+          - curl
+          - ca-certificates
+          - gnupg
+          - lsb-release
+          - prometheus-node-exporter
+        state: present
+
+    # -----------------------------------------------------------------------
+    # 2. Install Go 1.22.5 (CometBFT build dep)
+    # -----------------------------------------------------------------------
+    - name: Check if Go is already installed
+      ansible.builtin.stat:
+        path: /usr/local/go/bin/go
+      register: go_binary
+
+    - name: Download Go {{ go_version }}
+      ansible.builtin.get_url:
+        url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: /tmp/go.tar.gz
+        mode: "0644"
+      when: not go_binary.stat.exists
+
+    - name: Extract Go to /usr/local
+      ansible.builtin.unarchive:
+        src: /tmp/go.tar.gz
+        dest: /usr/local
+        remote_src: true
+      when: not go_binary.stat.exists
+
+    - name: Symlink go in /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/local/go/bin/go
+        dest: /usr/local/bin/go
+        state: link
+        force: true
+      when: not go_binary.stat.exists
+
+    - name: Verify Go version
+      ansible.builtin.command: go version
+      register: go_version_output
+      changed_when: false
+
+    - name: Print Go version
+      ansible.builtin.debug:
+        var: go_version_output.stdout
+
+    # -----------------------------------------------------------------------
+    # 3. Build CometBFT from source
+    # -----------------------------------------------------------------------
+    - name: Check if cometbft is already installed
+      ansible.builtin.stat:
+        path: /usr/local/bin/cometbft
+      register: cometbft_binary
+
+    - name: Clone CometBFT
+      ansible.builtin.git:
+        repo: "https://github.com/cometbft/cometbft.git"
+        dest: /opt/cometbft-src
+        version: "{{ cometbft_version }}"
+        depth: 1
+      when: not cometbft_binary.stat.exists
+
+    - name: Build CometBFT
+      ansible.builtin.command:
+        cmd: go build -o /usr/local/bin/cometbft ./cmd/cometbft
+        chdir: /opt/cometbft-src
+        creates: /usr/local/bin/cometbft
+      environment:
+        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+        GOPATH: /root/go
+      when: not cometbft_binary.stat.exists
+
+    - name: Verify cometbft version
+      ansible.builtin.command: cometbft version
+      register: cometbft_version_output
+      changed_when: false
+
+    - name: Print cometbft version
+      ansible.builtin.debug:
+        var: cometbft_version_output.stdout
+
+    # -----------------------------------------------------------------------
+    # 4. Write CometBFT config.toml + genesis.json
+    # -----------------------------------------------------------------------
+    - name: Write cometbft config.toml
+      ansible.builtin.copy:
+        dest: "{{ cometbft_config_dir }}/config.toml"
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          # Sovereign Mesh — CometBFT config for {{ inventory_hostname }}
+          # Generated by ansible; do not edit by hand.
+
+          [rpc]
+          laddr = "tcp://0.0.0.0:26657"
+
+          [p2p]
+          laddr = "tcp://0.0.0.0:26656"
+          pex = false
+          seed_mode = false
+          persistent_peers = "{{ persistent_peers }}"
+          addr_book_strict = true
+          max_num_inbound_peers = 2
+          max_num_outbound_peers = 2
+
+          [consensus]
+          timeout_propose = "4s"
+          timeout_propose_delta = "500ms"
+          timeout_prevote = "1s"
+          timeout_precommit = "1s"
+          timeout_commit = "1s"
+          double_sign_check_height = 5
+
+          [mempool]
+          broadcast = true
+          wal_dir = "{{ cometbft_home }}/data/cs.wal"
+          size = 5000
+
+          [moniker]
+          moniker = "sovereign-{{ region | default('eu') }}"
+
+      notify: restart cometbft
+
+    - name: Write cometbft genesis.json
+      ansible.builtin.copy:
+        dest: "{{ cometbft_config_dir }}/genesis.json"
+        owner: root
+        group: root
+        mode: "0644"
+        content: "{{ cometbft_genesis | to_nice_json }}"
+      vars:
+        cometbft_genesis:
+          genesis_time: "2026-06-16T00:00:00Z"
+          chain_id: "{{ chain_id }}"
+          initial_height: "1"
+          consensus_params:
+            block:
+              time_iota_ms: "{{ block_time_ms }}"
+            evidence:
+              max_age_num_blocks: "100000"
+              max_age_duration: "172800000000000"
+            validator:
+              pub_key_types: ["ed25519"]
+          validators: "{{ cometbft_validators | default([]) }}"
+          app_hash: ""
+      notify: restart cometbft
+
+    - name: Ensure cometbft data dir
+      ansible.builtin.file:
+        path: "{{ cometbft_home }}/data"
+        state: directory
+        owner: root
+        group: root
+        mode: "0700"
+
+    # -----------------------------------------------------------------------
+    # 5. WireGuard overlay
+    # -----------------------------------------------------------------------
+    - name: Check for existing wg private key
+      ansible.builtin.stat:
+        path: /etc/wireguard/wg0.key
+      register: wg_priv
+
+    - name: Generate wireguard keypair
+      ansible.builtin.shell: |
+        umask 077
+        wg genkey | tee /etc/wireguard/wg0.key | wg pubkey > /etc/wireguard/wg0.pub
+      when: not wg_priv.stat.exists
+
+    - name: Read wg private key
+      ansible.builtin.slurp:
+        src: /etc/wireguard/wg0.key
+      register: wg_priv_slurp
+      no_log: true
+
+    - name: Read wg public key
+      ansible.builtin.slurp:
+        src: /etc/wireguard/wg0.pub
+      register: wg_pub_slurp
+
+    - name: Write wg0.conf
+      ansible.builtin.copy:
+        dest: /etc/wireguard/wg0.conf
+        owner: root
+        group: root
+        mode: "0600"
+        content: |
+          # Sovereign Mesh — WireGuard for {{ inventory_hostname }}
+          [Interface]
+          Address = {{ wg_address }}
+          ListenPort = {{ mesh_wg_port }}
+          PrivateKey = {{ wg_priv_slurp.content | b64decode | trim }}
+
+          # PersistentPeers configured by terraform / inventory
+          {{ wireguard_peers | default([]) | map('regex_replace', '^(.*)$', '[Peer]\\n# region: \\1\\n# PublicKey populated by inventory\\n') | join('\n') }}
+      notify: restart wireguard
+
+    - name: Enable wg-quick@wg0
+      ansible.builtin.systemd:
+        name: wg-quick@wg0
+        enabled: true
+        state: started
+
+    # -----------------------------------------------------------------------
+    # 6. iptables — default-deny, allow 22, 443, WG, metrics
+    # -----------------------------------------------------------------------
+    - name: Allow established + loopback
+      ansible.builtin.iptables:
+        chain: INPUT
+        ctstate: ESTABLISHED,RELATED
+        jump: ACCEPT
+        comment: "allow established"
+
+    - name: Allow loopback
+      ansible.builtin.iptables:
+        chain: INPUT
+        in_interface: lo
+        jump: ACCEPT
+        comment: "allow loopback"
+
+    - name: Allow SSH
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "22"
+        jump: ACCEPT
+        comment: "allow ssh"
+
+    - name: Allow HTTPS
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "443"
+        jump: ACCEPT
+        comment: "allow https"
+
+    - name: Allow WireGuard
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: udp
+        destination_port: "{{ mesh_wg_port }}"
+        jump: ACCEPT
+        comment: "allow wireguard"
+
+    - name: Allow API gateway
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "{{ api_gateway_port }}"
+        jump: ACCEPT
+        comment: "allow api-gateway"
+
+    - name: Allow MCP bridge
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "{{ mcp_bridge_port }}"
+        jump: ACCEPT
+        comment: "allow mcp-bridge"
+
+    - name: Allow BFT council
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "{{ bft_council_port }}"
+        jump: ACCEPT
+        comment: "allow bft-council"
+
+    - name: Allow node-exporter
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "{{ node_exporter_port }}"
+        jump: ACCEPT
+        comment: "allow node-exporter"
+
+    - name: Allow Prometheus
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "{{ prometheus_port }}"
+        jump: ACCEPT
+        comment: "allow prometheus"
+
+    - name: Allow CometBFT p2p + rpc
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: "{{ item }}"
+        jump: ACCEPT
+        comment: "allow cometbft {{ item }}"
+      loop:
+        - "26656"
+        - "26657"
+
+    - name: Default-deny INPUT (drop)
+      ansible.builtin.iptables:
+        chain: INPUT
+        policy: DROP
+
+    - name: Persist iptables rules
+      ansible.builtin.shell: |
+        netfilter-persistent save
+      changed_when: false
+
+    # -----------------------------------------------------------------------
+    # 7. Start the chain + health check
+    # -----------------------------------------------------------------------
+    - name: Install cometbft systemd unit
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/cometbft.service
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          [Unit]
+          Description=CometBFT sovereign mesh node ({{ inventory_hostname }})
+          After=network-online.target wg-quick@wg0.service
+          Wants=network-online.target
+          Requires=wg-quick@wg0.service
+
+          [Service]
+          User=root
+          ExecStart=/usr/local/bin/cometbft node --home {{ cometbft_home }} --config {{ cometbft_config_dir }}/config.toml
+          Restart=on-failure
+          RestartSec=5
+          LimitNOFILE=65536
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: restart cometbft
+
+    - name: Enable + start cometbft
+      ansible.builtin.systemd:
+        name: cometbft
+        daemon_reload: true
+        enabled: true
+        state: started
+
+    - name: Wait for cometbft RPC to come up
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:26657/status"
+        status_code: 200
+      register: cometbft_status
+      retries: 20
+      delay: 3
+      until: cometbft_status.status == 200
+
+    - name: Read sync_info
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:26657/status"
+        return_content: true
+      register: cometbft_sync
+      retries: 5
+      delay: 2
+      until: cometbft_sync.status == 200
+
+    - name: Print cometbft latest_block_height
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }}: latest_block_height={{
+           (cometbft_sync.content | from_json).result.sync_info.latest_block_height }}
+
+    # -----------------------------------------------------------------------
+    # 8. Prometheus local config
+    # -----------------------------------------------------------------------
+    - name: Install prometheus.yml
+      ansible.builtin.copy:
+        dest: /etc/prometheus/prometheus.yml
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          global:
+            scrape_interval: 15s
+          scrape_configs:
+            - job_name: node
+              static_configs:
+                - targets: ["127.0.0.1:{{ node_exporter_port }}"]
+            - job_name: cometbft
+              static_configs:
+                - targets: ["127.0.0.1:26660"]
+      notify: restart prometheus
+
+    - name: Enable prometheus
+      ansible.builtin.systemd:
+        name: prometheus
+        enabled: true
+        state: started
+      when: false  # prometheus is co-located; flip to true when installed
+
+  post_tasks:
+    - name: "✅ Sovereign mesh bootstrap complete — {{ inventory_hostname }}"
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }} is online: wireguard=10.10.0.{{ wg_octet_last }},
+          cometbft=http://{{ ansible_default_ipv4.address }}:26657, mesh=subnet={{ mesh_subnet_cidr }}
+
+  handlers:
+    - name: restart wireguard
+      ansible.builtin.systemd:
+        name: wg-quick@wg0
+        state: restarted
+
+    - name: restart cometbft
+      ansible.builtin.systemd:
+        name: cometbft
+        state: restarted
+        daemon_reload: true
+
+    - name: restart prometheus
+      ansible.builtin.systemd:
+        name: prometheus
+        state: restarted

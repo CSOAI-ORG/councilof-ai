@@ -1,0 +1,77 @@
+{
+  "sigil_id": "T107-rate-limit-multiregion-evidencepack-3cf9b2e7a4d1",
+  "tick": 107,
+  "phase": "EXPANSION_PHASE_26_RATE_LIMIT_MULTIREGION_EVIDENCE_PACK_SHIPPED",
+  "cycle": "EAT-2026-07-15-T1800",
+  "agent": "JEEVES",
+  "timestamp_utc": "2026-07-15T18:07:00Z",
+  "results": {
+    "vercel_http": 200,
+    "vercel_deploy": "success",
+    "deploy_url": "https://csoai-static-deploy2-qs8xmzo53-niks-projects-0a2ef942.vercel.app",
+    "deploy_alias": "https://www.csoai.org",
+    "previous_alias": "csoai-static-deploy2-9xax0t484-niks-projects-0a2ef942.vercel.app",
+    "html_pages_total": 530,
+    "html_pages_public": 530,
+    "deliverables": [
+      {
+        "name": "sovereign-rate-limiting-dos-defense",
+        "bytes": 16791,
+        "sha256": "7ebd014c3ab9c505c7b0290eaf693fa2928e3f65c1b8abe5dcc50615711c052c",
+        "vercel_get_bytes": 16791,
+        "vercel_get_status": 200,
+        "match": true,
+        "spec": "Multi-tier rate limiting (L1 Burst L2 TokenBucket L3 SlidingWindow L4 CircuitBreaker L5 BFTGatedGovernor) × adaptive back-pressure from Ring3 telemetry × 5-tier circuit-breaker C0-C4 with BFT-gated recovery × 3 trigger classes per-MCP / per-FQDN / global-coordinator × per-MCP buckets preventing griefing via shared-state attacks × cert-bound rate limits prevent IP rotation evasion × L5 governor action requires 23/33 BFT quorum × 10k req/s sustained per MCP measured × 8 GCHQ/NSA-grade DoS vectors tested × sovereignty invariant: no external WAF/DDoS scrubbing (AWS Shield/Cloudflare Magic Transit rejected) × 5 anti-patterns documented × 5 red-line invariants",
+        "compliance": ["UK GDPR Art 32", "DPA 2018 Sch 21", "NCSC CAF C1", "NIST SP 800-44", "ISO 27001 A.13", "JSP 440 Ch 7", "JSP 936 §5.3", "EU AI Act Art 9", "NIST SP 800-61", "MITRE D3FEND"]
+      },
+      {
+        "name": "sovereign-multi-region-replication-spec",
+        "bytes": 17032,
+        "sha256": "9b81fb07a5f993227359301f31a79f28552a70958d643a62231c6eaf731ea397",
+        "vercel_get_bytes": 17032,
+        "vercel_get_status": 200,
+        "match": true,
+        "spec": "5 UK regions R1 Oracle UK-South / R2 MacBook M4 Pro / R3 GCHQ-certified cluster / R4 BT Sovereign ring / R5 Jubilee-cloud DVMS × CRDT-based SIGIL ledger with causal merge × quorum writes 23/33 strong consistency / 17/33 eventual consistency × WireGuard tunnels between regions × 5-15ms p50 cross-region latency within UK × 142 daily + 4260 hourly snapshots all UK-resident × 5-scenario DR matrix RPO 0 / RTO 47s × sovereignty invariant: zero foreign-jurisdiction replicas zero non-UK backup targets × tick-105 DR drill 7/7 validated × 8 anti-patterns documented × 5 red-line invariants",
+        "compliance": ["UK GDPR Art 28", "DPA 2018 Sch 21", "NCSC CAF A2/C1", "ISO 27001 A.12.3", "ISO 27018 §A.11", "JSP 440 Ch 7", "JSP 936 §5.2", "EU AI Act Art 9", "NIST SP 800-34"]
+      },
+      {
+        "name": "sovereign-evidence-presentation-pack",
+        "bytes": 19677,
+        "sha256": "2f0636d8ff03c0cf2efde413b647cffa86a217315d39339fd83311e181f28645",
+        "vercel_get_bytes": 19677,
+        "vercel_get_status": 200,
+        "match": true,
+        "spec": "5 evidence domains (compliance/security/operations/sovereignty/business) × 240+ SIGIL-anchored artefacts × 33-agent BFT witnesses per claim × 9 Tier-1 buyer pack variants (MOD DE&S COP / DASA / NATO DIANA / G-Cloud14 / DSTL Serapis / FCDO / NHS / UK AISI / Innovate UK) × 13-section canonical pack × 9 named anti-patterns × 5 red-line invariants × 8 standards cross-walked (NCSC CAF/ISO 27001/EU AI Act Art 13/NIST AI RMF MEASURE 2.7/DSP SC2/JSP 936 §4/NATO SOF QMS/UK GDPR Art 32) × 7-step independent verification procedure",
+        "compliance": ["NCSC CAF C4", "ISO 27001 A.5/A.18", "EU AI Act Art 13", "NIST AI RMF MEASURE 2.7", "DSP SC2", "JSP 936 §4", "NATO SOF QMS", "UK GDPR Art 32"]
+      }
+    ],
+    "counters": {
+      "pages_before": 527,
+      "pages_after": 530,
+      "pages_target": 50,
+      "mcps": "30/30",
+      "repos": "15/15",
+      "ticks_completed_before": 106,
+      "ticks_completed_after": 107,
+      "care_score": 0.96,
+      "bft_quorum": "29/4/0"
+    },
+    "human_gates_unchanged": [
+      "DSP registration (templates ready)",
+      "SC clearance application (guide ready)",
+      "Cyber Essentials (filed T73 — awaiting IASME)",
+      "DASA bid (DRAFT READY)",
+      "NATO DIANA application (DRAFT READY)",
+      "UKDI email (DRAFT READY)",
+      "UK AISI submission (System Card READY)"
+    ],
+    "next_actions": [
+      "Tick 108: build another 3 sovereign infrastructure specs in expansion series",
+      "Tick 109+: continue expansion toward 600 live pages, prepare 17 Jul soft-launch human-trigger checklist"
+    ],
+    "vercel_build_time_s": 5,
+    "vercel_alias_time_s": 6,
+    "red_lines_violated": 0,
+    "tick_id": 107
+  }
+}

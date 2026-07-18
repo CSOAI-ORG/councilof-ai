@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign up — CSOAI</title>
+<meta name="description" content="Sign up for CSOAI. Free tier available.">
+<link rel="canonical" href="https://csoai.org/signup">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Inter, system-ui, sans-serif; }
+  .gradient-text { background: linear-gradient(135deg, #8b5cf6 0%, #c084fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+</style>
+
+</head>
+<body class="bg-[#0a0a14] text-slate-200">
+
+<nav class="border-b border-slate-800 bg-[#0a0a14]/80 backdrop-blur sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold bg-gradient-to-r from-violet-500 to-fuchsia-400 bg-clip-text text-transparent">CSOAI</a>
+    <div class="hidden md:flex gap-6 text-sm text-slate-300">
+      <a href="/pricing" class="hover:text-white">Pricing</a>
+      <a href="/partner" class="hover:text-white">Partners</a>
+      <a href="/enterprise" class="hover:text-white">Enterprise</a>
+      <a href="/signup" class="px-3 py-1.5 rounded bg-violet-600 hover:bg-violet-500 text-white">Sign up</a>
+    </div>
+    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden text-slate-300">☰</button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden px-4 pb-3 space-y-2 text-sm text-slate-300">
+    <a href="/pricing" class="block hover:text-white">Pricing</a>
+    <a href="/partner" class="block hover:text-white">Partners</a>
+    <a href="/enterprise" class="block hover:text-white">Enterprise</a>
+    <a href="/signup" class="block text-violet-400">Sign up</a>
+  </div>
+</nav>
+
+
+<section class="py-16 px-4">
+  <div class="max-w-md mx-auto bg-[#13132a] border border-slate-800 rounded-xl p-8">
+    <h1 class="text-2xl font-bold mb-2 gradient-text">Join CSOAI</h1>
+    <p class="text-slate-400 text-sm mb-6">Become a member, sponsor or certified organisation.</p>
+    <form class="space-y-4" onsubmit="event.preventDefault(); document.getElementById('signup-thanks').classList.remove('hidden');">
+      <div>
+        <label class="block text-sm text-slate-400 mb-1">Work email</label>
+        <input type="email" required placeholder="you@company.com" class="w-full px-3 py-2 bg-[#0a0a14] border border-slate-700 rounded text-slate-200 focus:outline-none focus:border-violet-500">
+      </div>
+      <div>
+        <label class="block text-sm text-slate-400 mb-1">Organisation</label>
+        <input type="text" placeholder="Acme AI" class="w-full px-3 py-2 bg-[#0a0a14] border border-slate-700 rounded text-slate-200 focus:outline-none focus:border-violet-500">
+      </div>
+      <div>
+        <label class="block text-sm text-slate-400 mb-1">Plan interest</label>
+        <select class="w-full px-3 py-2 bg-[#0a0a14] border border-slate-700 rounded text-slate-200 focus:outline-none focus:border-violet-500">
+          <option>Free / evaluation</option>
+          <option>Paid self-serve</option>
+          <option>Enterprise / custom</option>
+        </select>
+      </div>
+      <button type="submit" class="w-full px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium">Continue</button>
+    </form>
+    <div id="signup-thanks" class="hidden mt-4 p-3 rounded bg-green-900/30 border border-green-800 text-green-200 text-sm">Thanks. This is a demonstration form; no account is created yet. A human will follow up.</div>
+    <p class="text-slate-500 text-xs mt-4">By continuing you agree to the <a href="https://meok.ai/terms" class="text-violet-400 hover:underline">Terms of Service</a> and <a href="https://meok.ai/privacy" class="text-violet-400 hover:underline">Privacy Policy</a>.</p>
+  </div>
+</section>
+
+
+<footer class="border-t border-slate-800 py-10 mt-16">
+  <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm text-slate-400">
+    <div>
+      <div class="font-semibold text-slate-200 mb-2">CSOAI</div>
+      <p>Non-profit AI safety certification.</p>
+    </div>
+    <div>
+      <div class="font-semibold text-slate-200 mb-2">Product</div>
+      <a href="/pricing" class="block hover:text-white">Pricing</a>
+      <a href="/signup" class="block hover:text-white">Sign up</a>
+      <a href="/enterprise" class="block hover:text-white">Enterprise</a>
+    </div>
+    <div>
+      <div class="font-semibold text-slate-200 mb-2">Ecosystem</div>
+      <a href="https://meok.ai" class="block hover:text-white">MEOK.ai</a>
+      <a href="https://councilof.ai" class="block hover:text-white">Council of AI</a>
+      <a href="https://proofof.ai" class="block hover:text-white">Proof of AI</a>
+      <a href="https://csoai.org" class="block hover:text-white">CSOAI.org</a>
+    </div>
+    <div>
+      <div class="font-semibold text-slate-200 mb-2">Legal</div>
+      <a href="https://meok.ai/privacy" class="block hover:text-white">Privacy</a>
+      <a href="https://meok.ai/terms" class="block hover:text-white">Terms</a>
+      <p class="mt-2">UK Companies House 16939677</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

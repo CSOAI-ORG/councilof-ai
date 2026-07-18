@@ -1,0 +1,37 @@
+{
+  "cycle_id": "eat-2026-07-18-T0835",
+  "timestamp_utc": "2026-07-18T07:36:43Z",
+  "cycle_type": "EAT",
+  "scope": "DEFONEOS-csoai-static-deploy2",
+  "health": {
+    "vercel_http": 200,
+    "ssh_backend": "UNREACHABLE_TIMEOUT",
+    "mcp_local_3101": "DOWN",
+    "meok_os_local_3000": "DOWN"
+  },
+  "pages": {
+    "total": 598,
+    "total_bytes": 10780708,
+    "sitemap_urls": 598,
+    "sitemap_bytes": 93826
+  },
+  "links": {
+    "checked": 3068,
+    "broken_before": 41,
+    "broken_after": 0,
+    "fixed": 41,
+    "files_touched": 2,
+    "replacement": "href=\"#\""
+  },
+  "deploy": {
+    "vercel": "vercel --prod --yes",
+    "result": "Ready 15s",
+    "alias": "csoai-static-deploy2.vercel.app",
+    "production_url": "https://csoai-static-deploy2-ctdrvtsbz-niks-projects-0a2ef942.vercel.app"
+  },
+  "sigil_emit": {
+    "endpoint": "localhost:3101/mcp",
+    "status": "SKIPPED_LOCAL_MCP_DOWN"
+  },
+  "notes": "MCP bus (3101) + meok-os (3000) + backend VM (35.242.143.249) all unreachable. Static deploy unaffected. Broken links patched with neutral href='#'. BFT content scope unchanged."
+}

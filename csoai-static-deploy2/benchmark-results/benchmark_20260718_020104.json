@@ -1,0 +1,1103 @@
+{
+  "timestamp": "2026-07-18T02:01:04.278665",
+  "models": {
+    "qwen3:0.6b": {
+      "mmlu_pro": [
+        {
+          "q": "Which of the following is a primary function of mi",
+          "correct": true,
+          "latency_ms": 3278.3761024475098
+        },
+        {
+          "q": "What is the capital of Australia?",
+          "correct": true,
+          "latency_ms": 850.517988204956
+        },
+        {
+          "q": "The derivative of x^2 is:",
+          "correct": false,
+          "latency_ms": 1830.5320739746094
+        },
+        {
+          "q": "Which element has the atomic number 6?",
+          "correct": true,
+          "latency_ms": 1393.4338092803955
+        },
+        {
+          "q": "Photosynthesis occurs primarily in:",
+          "correct": true,
+          "latency_ms": 1344.6190357208252
+        },
+        {
+          "q": "The square root of 144 is:",
+          "correct": false,
+          "latency_ms": 1840.6898975372314
+        },
+        {
+          "q": "Who wrote 'Romeo and Juliet'?",
+          "correct": true,
+          "latency_ms": 1304.9709796905518
+        },
+        {
+          "q": "The chemical symbol for gold is:",
+          "correct": false,
+          "latency_ms": 1838.1102085113525
+        },
+        {
+          "q": "Speed of light in vacuum (m/s, approx):",
+          "correct": true,
+          "latency_ms": 1862.8499507904053
+        },
+        {
+          "q": "Which planet is closest to the Sun?",
+          "correct": true,
+          "latency_ms": 1252.7170181274414
+        }
+      ],
+      "gsm8k": [
+        {
+          "q": "Janet has 3 apples. She buys 5 more. She gives 2 t",
+          "correct": true,
+          "latency_ms": 1456.972599029541
+        },
+        {
+          "q": "A train travels 60 miles in 1 hour. At the same sp",
+          "correct": false,
+          "latency_ms": 1841.0120010375977
+        },
+        {
+          "q": "If a shirt costs $20 and is 25% off, what is the n",
+          "correct": false,
+          "latency_ms": 1842.0212268829346
+        },
+        {
+          "q": "Tom is twice as old as Sam. Sam is 5. How old is T",
+          "correct": false,
+          "latency_ms": 1840.0661945343018
+        },
+        {
+          "q": "A rectangle has length 8 and width 5. What is the ",
+          "correct": false,
+          "latency_ms": 1838.2911682128906
+        },
+        {
+          "q": "Sarah reads 15 pages per day. How many pages in 4 ",
+          "correct": false,
+          "latency_ms": 1847.3289012908936
+        },
+        {
+          "q": "If 3x = 12, what is x?",
+          "correct": false,
+          "latency_ms": 1852.3468971252441
+        },
+        {
+          "q": "A pizza is cut into 8 slices. If 3 are eaten, what",
+          "correct": false,
+          "latency_ms": 1840.2650356292725
+        }
+      ],
+      "humaneval": [
+        {
+          "q": "Write a Python function `add(a, b)` that returns a",
+          "correct": false,
+          "latency_ms": 1822.2060203552246
+        },
+        {
+          "q": "Write a Python function `factorial(n)` that return",
+          "correct": false,
+          "latency_ms": 1827.0647525787354
+        },
+        {
+          "q": "Write a Python function `is_prime(n)` that returns",
+          "correct": false,
+          "latency_ms": 1828.5362720489502
+        },
+        {
+          "q": "Write a Python function `reverse_string(s)` that r",
+          "correct": false,
+          "latency_ms": 1828.726053237915
+        },
+        {
+          "q": "Write a Python function `fibonacci(n)` that return",
+          "correct": false,
+          "latency_ms": 1840.8010005950928
+        }
+      ],
+      "ifeval": [
+        {
+          "q": "List exactly 3 fruits, one per line, no extra text",
+          "correct": true,
+          "latency_ms": 1009.3860626220703
+        },
+        {
+          "q": "Respond with ONLY the number 42, nothing else.",
+          "correct": true,
+          "latency_ms": 958.2929611206055
+        },
+        {
+          "q": "Write a sentence that contains the word 'sovereign",
+          "correct": true,
+          "latency_ms": 1549.3733882904053
+        },
+        {
+          "q": "Output exactly 5 words, all lowercase, describing ",
+          "correct": false,
+          "latency_ms": 1829.4670581817627
+        }
+      ],
+      "latencies": [
+        3278.3761024475098,
+        850.517988204956,
+        1830.5320739746094,
+        1393.4338092803955,
+        1344.6190357208252,
+        1840.6898975372314,
+        1304.9709796905518,
+        1838.1102085113525,
+        1862.8499507904053,
+        1252.7170181274414,
+        1456.972599029541,
+        1841.0120010375977,
+        1842.0212268829346,
+        1840.0661945343018,
+        1838.2911682128906,
+        1847.3289012908936,
+        1852.3468971252441,
+        1840.2650356292725,
+        1822.2060203552246,
+        1827.0647525787354,
+        1828.5362720489502,
+        1828.726053237915,
+        1840.8010005950928,
+        1009.3860626220703,
+        958.2929611206055,
+        1549.3733882904053,
+        1829.4670581817627
+      ],
+      "summary": {
+        "mmlu_pro_pct": 70.0,
+        "gsm8k_pct": 12.5,
+        "humaneval_pct": 0.0,
+        "ifeval_pct": 75.0,
+        "composite_pct": 40.74074074074074,
+        "median_latency_ms": 1829.4670581817627,
+        "p95_latency_ms": 1862.8499507904053
+      }
+    },
+    "qwen3:1.7b": {
+      "mmlu_pro": [
+        {
+          "q": "Which of the following is a primary function of mi",
+          "correct": false,
+          "latency_ms": 5621.783971786499
+        },
+        {
+          "q": "What is the capital of Australia?",
+          "correct": true,
+          "latency_ms": 1821.469783782959
+        },
+        {
+          "q": "The derivative of x^2 is:",
+          "correct": false,
+          "latency_ms": 3667.9811477661133
+        },
+        {
+          "q": "Which element has the atomic number 6?",
+          "correct": false,
+          "latency_ms": 3201.005697250366
+        },
+        {
+          "q": "Photosynthesis occurs primarily in:",
+          "correct": true,
+          "latency_ms": 2326.0390758514404
+        },
+        {
+          "q": "The square root of 144 is:",
+          "correct": false,
+          "latency_ms": 4013.8330459594727
+        },
+        {
+          "q": "Who wrote 'Romeo and Juliet'?",
+          "correct": false,
+          "latency_ms": 2245.5899715423584
+        },
+        {
+          "q": "The chemical symbol for gold is:",
+          "correct": true,
+          "latency_ms": 2345.086097717285
+        },
+        {
+          "q": "Speed of light in vacuum (m/s, approx):",
+          "correct": false,
+          "latency_ms": 4060.3528022766113
+        },
+        {
+          "q": "Which planet is closest to the Sun?",
+          "correct": true,
+          "latency_ms": 1589.8151397705078
+        }
+      ],
+      "gsm8k": [
+        {
+          "q": "Janet has 3 apples. She buys 5 more. She gives 2 t",
+          "correct": true,
+          "latency_ms": 2075.2739906311035
+        },
+        {
+          "q": "A train travels 60 miles in 1 hour. At the same sp",
+          "correct": true,
+          "latency_ms": 3756.5360069274902
+        },
+        {
+          "q": "If a shirt costs $20 and is 25% off, what is the n",
+          "correct": false,
+          "latency_ms": 3994.781017303467
+        },
+        {
+          "q": "Tom is twice as old as Sam. Sam is 5. How old is T",
+          "correct": true,
+          "latency_ms": 3698.944091796875
+        },
+        {
+          "q": "A rectangle has length 8 and width 5. What is the ",
+          "correct": true,
+          "latency_ms": 3384.889841079712
+        },
+        {
+          "q": "Sarah reads 15 pages per day. How many pages in 4 ",
+          "correct": false,
+          "latency_ms": 3989.316940307617
+        },
+        {
+          "q": "If 3x = 12, what is x?",
+          "correct": false,
+          "latency_ms": 3981.323003768921
+        },
+        {
+          "q": "A pizza is cut into 8 slices. If 3 are eaten, what",
+          "correct": false,
+          "latency_ms": 4089.6689891815186
+        }
+      ],
+      "humaneval": [
+        {
+          "q": "Write a Python function `add(a, b)` that returns a",
+          "correct": true,
+          "latency_ms": 4028.0251502990723
+        },
+        {
+          "q": "Write a Python function `factorial(n)` that return",
+          "correct": false,
+          "latency_ms": 3989.4628524780273
+        },
+        {
+          "q": "Write a Python function `is_prime(n)` that returns",
+          "correct": false,
+          "latency_ms": 3974.7471809387207
+        },
+        {
+          "q": "Write a Python function `reverse_string(s)` that r",
+          "correct": false,
+          "latency_ms": 3943.9659118652344
+        },
+        {
+          "q": "Write a Python function `fibonacci(n)` that return",
+          "correct": false,
+          "latency_ms": 3941.213846206665
+        }
+      ],
+      "ifeval": [
+        {
+          "q": "List exactly 3 fruits, one per line, no extra text",
+          "correct": false,
+          "latency_ms": 2001.7540454864502
+        },
+        {
+          "q": "Respond with ONLY the number 42, nothing else.",
+          "correct": true,
+          "latency_ms": 2831.9742679595947
+        },
+        {
+          "q": "Write a sentence that contains the word 'sovereign",
+          "correct": true,
+          "latency_ms": 2811.7709159851074
+        },
+        {
+          "q": "Output exactly 5 words, all lowercase, describing ",
+          "correct": false,
+          "latency_ms": 3246.788740158081
+        }
+      ],
+      "latencies": [
+        5621.783971786499,
+        1821.469783782959,
+        3667.9811477661133,
+        3201.005697250366,
+        2326.0390758514404,
+        4013.8330459594727,
+        2245.5899715423584,
+        2345.086097717285,
+        4060.3528022766113,
+        1589.8151397705078,
+        2075.2739906311035,
+        3756.5360069274902,
+        3994.781017303467,
+        3698.944091796875,
+        3384.889841079712,
+        3989.316940307617,
+        3981.323003768921,
+        4089.6689891815186,
+        4028.0251502990723,
+        3989.4628524780273,
+        3974.7471809387207,
+        3943.9659118652344,
+        3941.213846206665,
+        2001.7540454864502,
+        2831.9742679595947,
+        2811.7709159851074,
+        3246.788740158081
+      ],
+      "summary": {
+        "mmlu_pro_pct": 40.0,
+        "gsm8k_pct": 50.0,
+        "humaneval_pct": 20.0,
+        "ifeval_pct": 50.0,
+        "composite_pct": 40.74074074074074,
+        "median_latency_ms": 3698.944091796875,
+        "p95_latency_ms": 4089.6689891815186
+      }
+    },
+    "qwen3-precise:latest": {
+      "mmlu_pro": [
+        {
+          "q": "Which of the following is a primary function of mi",
+          "correct": false,
+          "latency_ms": 2280.0679206848145
+        },
+        {
+          "q": "What is the capital of Australia?",
+          "correct": true,
+          "latency_ms": 807.5101375579834
+        },
+        {
+          "q": "The derivative of x^2 is:",
+          "correct": true,
+          "latency_ms": 989.232063293457
+        },
+        {
+          "q": "Which element has the atomic number 6?",
+          "correct": false,
+          "latency_ms": 1008.3041191101074
+        },
+        {
+          "q": "Photosynthesis occurs primarily in:",
+          "correct": false,
+          "latency_ms": 997.8220462799072
+        },
+        {
+          "q": "The square root of 144 is:",
+          "correct": true,
+          "latency_ms": 1379.6069622039795
+        },
+        {
+          "q": "Who wrote 'Romeo and Juliet'?",
+          "correct": true,
+          "latency_ms": 980.881929397583
+        },
+        {
+          "q": "The chemical symbol for gold is:",
+          "correct": true,
+          "latency_ms": 865.0259971618652
+        },
+        {
+          "q": "Speed of light in vacuum (m/s, approx):",
+          "correct": true,
+          "latency_ms": 891.4139270782471
+        },
+        {
+          "q": "Which planet is closest to the Sun?",
+          "correct": true,
+          "latency_ms": 869.6649074554443
+        }
+      ],
+      "gsm8k": [
+        {
+          "q": "Janet has 3 apples. She buys 5 more. She gives 2 t",
+          "correct": true,
+          "latency_ms": 1073.6792087554932
+        },
+        {
+          "q": "A train travels 60 miles in 1 hour. At the same sp",
+          "correct": true,
+          "latency_ms": 1355.0779819488525
+        },
+        {
+          "q": "If a shirt costs $20 and is 25% off, what is the n",
+          "correct": true,
+          "latency_ms": 1765.5720710754395
+        },
+        {
+          "q": "Tom is twice as old as Sam. Sam is 5. How old is T",
+          "correct": true,
+          "latency_ms": 1215.588092803955
+        },
+        {
+          "q": "A rectangle has length 8 and width 5. What is the ",
+          "correct": true,
+          "latency_ms": 1565.9410953521729
+        },
+        {
+          "q": "Sarah reads 15 pages per day. How many pages in 4 ",
+          "correct": true,
+          "latency_ms": 1554.1560649871826
+        },
+        {
+          "q": "If 3x = 12, what is x?",
+          "correct": false,
+          "latency_ms": 1825.857162475586
+        },
+        {
+          "q": "A pizza is cut into 8 slices. If 3 are eaten, what",
+          "correct": false,
+          "latency_ms": 1538.7730598449707
+        }
+      ],
+      "humaneval": [
+        {
+          "q": "Write a Python function `add(a, b)` that returns a",
+          "correct": false,
+          "latency_ms": 1689.9688243865967
+        },
+        {
+          "q": "Write a Python function `factorial(n)` that return",
+          "correct": false,
+          "latency_ms": 1847.5861549377441
+        },
+        {
+          "q": "Write a Python function `is_prime(n)` that returns",
+          "correct": false,
+          "latency_ms": 1834.0449333190918
+        },
+        {
+          "q": "Write a Python function `reverse_string(s)` that r",
+          "correct": false,
+          "latency_ms": 1831.2599658966064
+        },
+        {
+          "q": "Write a Python function `fibonacci(n)` that return",
+          "correct": false,
+          "latency_ms": 1818.7227249145508
+        }
+      ],
+      "ifeval": [
+        {
+          "q": "List exactly 3 fruits, one per line, no extra text",
+          "correct": false,
+          "latency_ms": 870.2819347381592
+        },
+        {
+          "q": "Respond with ONLY the number 42, nothing else.",
+          "correct": true,
+          "latency_ms": 834.313154220581
+        },
+        {
+          "q": "Write a sentence that contains the word 'sovereign",
+          "correct": true,
+          "latency_ms": 1631.5271854400635
+        },
+        {
+          "q": "Output exactly 5 words, all lowercase, describing ",
+          "correct": false,
+          "latency_ms": 1007.688045501709
+        }
+      ],
+      "latencies": [
+        2280.0679206848145,
+        807.5101375579834,
+        989.232063293457,
+        1008.3041191101074,
+        997.8220462799072,
+        1379.6069622039795,
+        980.881929397583,
+        865.0259971618652,
+        891.4139270782471,
+        869.6649074554443,
+        1073.6792087554932,
+        1355.0779819488525,
+        1765.5720710754395,
+        1215.588092803955,
+        1565.9410953521729,
+        1554.1560649871826,
+        1825.857162475586,
+        1538.7730598449707,
+        1689.9688243865967,
+        1847.5861549377441,
+        1834.0449333190918,
+        1831.2599658966064,
+        1818.7227249145508,
+        870.2819347381592,
+        834.313154220581,
+        1631.5271854400635,
+        1007.688045501709
+      ],
+      "summary": {
+        "mmlu_pro_pct": 70.0,
+        "gsm8k_pct": 75.0,
+        "humaneval_pct": 0.0,
+        "ifeval_pct": 50.0,
+        "composite_pct": 55.55555555555556,
+        "median_latency_ms": 1355.0779819488525,
+        "p95_latency_ms": 1847.5861549377441
+      }
+    },
+    "qwen3-formal:latest": {
+      "mmlu_pro": [
+        {
+          "q": "Which of the following is a primary function of mi",
+          "correct": true,
+          "latency_ms": 2403.855085372925
+        },
+        {
+          "q": "What is the capital of Australia?",
+          "correct": true,
+          "latency_ms": 642.7290439605713
+        },
+        {
+          "q": "The derivative of x^2 is:",
+          "correct": true,
+          "latency_ms": 1088.0472660064697
+        },
+        {
+          "q": "Which element has the atomic number 6?",
+          "correct": true,
+          "latency_ms": 1009.8230838775635
+        },
+        {
+          "q": "Photosynthesis occurs primarily in:",
+          "correct": true,
+          "latency_ms": 1138.1280422210693
+        },
+        {
+          "q": "The square root of 144 is:",
+          "correct": true,
+          "latency_ms": 1483.9627742767334
+        },
+        {
+          "q": "Who wrote 'Romeo and Juliet'?",
+          "correct": true,
+          "latency_ms": 1259.1791152954102
+        },
+        {
+          "q": "The chemical symbol for gold is:",
+          "correct": true,
+          "latency_ms": 883.5878372192383
+        },
+        {
+          "q": "Speed of light in vacuum (m/s, approx):",
+          "correct": true,
+          "latency_ms": 1787.438154220581
+        },
+        {
+          "q": "Which planet is closest to the Sun?",
+          "correct": true,
+          "latency_ms": 1548.8941669464111
+        }
+      ],
+      "gsm8k": [
+        {
+          "q": "Janet has 3 apples. She buys 5 more. She gives 2 t",
+          "correct": true,
+          "latency_ms": 1505.1279067993164
+        },
+        {
+          "q": "A train travels 60 miles in 1 hour. At the same sp",
+          "correct": true,
+          "latency_ms": 1845.512866973877
+        },
+        {
+          "q": "If a shirt costs $20 and is 25% off, what is the n",
+          "correct": false,
+          "latency_ms": 1859.0919971466064
+        },
+        {
+          "q": "Tom is twice as old as Sam. Sam is 5. How old is T",
+          "correct": true,
+          "latency_ms": 1506.8340301513672
+        },
+        {
+          "q": "A rectangle has length 8 and width 5. What is the ",
+          "correct": false,
+          "latency_ms": 1850.7356643676758
+        },
+        {
+          "q": "Sarah reads 15 pages per day. How many pages in 4 ",
+          "correct": false,
+          "latency_ms": 1853.3837795257568
+        },
+        {
+          "q": "If 3x = 12, what is x?",
+          "correct": false,
+          "latency_ms": 1837.9278182983398
+        },
+        {
+          "q": "A pizza is cut into 8 slices. If 3 are eaten, what",
+          "correct": false,
+          "latency_ms": 1599.3726253509521
+        }
+      ],
+      "humaneval": [
+        {
+          "q": "Write a Python function `add(a, b)` that returns a",
+          "correct": false,
+          "latency_ms": 1842.3192501068115
+        },
+        {
+          "q": "Write a Python function `factorial(n)` that return",
+          "correct": false,
+          "latency_ms": 1840.6379222869873
+        },
+        {
+          "q": "Write a Python function `is_prime(n)` that returns",
+          "correct": false,
+          "latency_ms": 1834.3579769134521
+        },
+        {
+          "q": "Write a Python function `reverse_string(s)` that r",
+          "correct": false,
+          "latency_ms": 1836.1179828643799
+        },
+        {
+          "q": "Write a Python function `fibonacci(n)` that return",
+          "correct": false,
+          "latency_ms": 1828.3419609069824
+        }
+      ],
+      "ifeval": [
+        {
+          "q": "List exactly 3 fruits, one per line, no extra text",
+          "correct": true,
+          "latency_ms": 864.4430637359619
+        },
+        {
+          "q": "Respond with ONLY the number 42, nothing else.",
+          "correct": false,
+          "latency_ms": 1819.1821575164795
+        },
+        {
+          "q": "Write a sentence that contains the word 'sovereign",
+          "correct": false,
+          "latency_ms": 1343.4817790985107
+        },
+        {
+          "q": "Output exactly 5 words, all lowercase, describing ",
+          "correct": false,
+          "latency_ms": 1181.4427375793457
+        }
+      ],
+      "latencies": [
+        2403.855085372925,
+        642.7290439605713,
+        1088.0472660064697,
+        1009.8230838775635,
+        1138.1280422210693,
+        1483.9627742767334,
+        1259.1791152954102,
+        883.5878372192383,
+        1787.438154220581,
+        1548.8941669464111,
+        1505.1279067993164,
+        1845.512866973877,
+        1859.0919971466064,
+        1506.8340301513672,
+        1850.7356643676758,
+        1853.3837795257568,
+        1837.9278182983398,
+        1599.3726253509521,
+        1842.3192501068115,
+        1840.6379222869873,
+        1834.3579769134521,
+        1836.1179828643799,
+        1828.3419609069824,
+        864.4430637359619,
+        1819.1821575164795,
+        1343.4817790985107,
+        1181.4427375793457
+      ],
+      "summary": {
+        "mmlu_pro_pct": 100.0,
+        "gsm8k_pct": 37.5,
+        "humaneval_pct": 0.0,
+        "ifeval_pct": 25.0,
+        "composite_pct": 51.85185185185185,
+        "median_latency_ms": 1599.3726253509521,
+        "p95_latency_ms": 1859.0919971466064
+      }
+    },
+    "qwen25-balanced:latest": {
+      "mmlu_pro": [
+        {
+          "q": "Which of the following is a primary function of mi",
+          "correct": true,
+          "latency_ms": 1316.5349960327148
+        },
+        {
+          "q": "What is the capital of Australia?",
+          "correct": true,
+          "latency_ms": 755.2261352539062
+        },
+        {
+          "q": "The derivative of x^2 is:",
+          "correct": false,
+          "latency_ms": 1846.1968898773193
+        },
+        {
+          "q": "Which element has the atomic number 6?",
+          "correct": false,
+          "latency_ms": 1700.72603225708
+        },
+        {
+          "q": "Photosynthesis occurs primarily in:",
+          "correct": false,
+          "latency_ms": 1041.064977645874
+        },
+        {
+          "q": "The square root of 144 is:",
+          "correct": true,
+          "latency_ms": 1847.9459285736084
+        },
+        {
+          "q": "Who wrote 'Romeo and Juliet'?",
+          "correct": true,
+          "latency_ms": 1234.9629402160645
+        },
+        {
+          "q": "The chemical symbol for gold is:",
+          "correct": true,
+          "latency_ms": 1231.4701080322266
+        },
+        {
+          "q": "Speed of light in vacuum (m/s, approx):",
+          "correct": true,
+          "latency_ms": 1205.1100730895996
+        },
+        {
+          "q": "Which planet is closest to the Sun?",
+          "correct": true,
+          "latency_ms": 1453.0611038208008
+        }
+      ],
+      "gsm8k": [
+        {
+          "q": "Janet has 3 apples. She buys 5 more. She gives 2 t",
+          "correct": true,
+          "latency_ms": 1479.3591499328613
+        },
+        {
+          "q": "A train travels 60 miles in 1 hour. At the same sp",
+          "correct": false,
+          "latency_ms": 1867.8300380706787
+        },
+        {
+          "q": "If a shirt costs $20 and is 25% off, what is the n",
+          "correct": false,
+          "latency_ms": 1863.2423877716064
+        },
+        {
+          "q": "Tom is twice as old as Sam. Sam is 5. How old is T",
+          "correct": true,
+          "latency_ms": 1827.9187679290771
+        },
+        {
+          "q": "A rectangle has length 8 and width 5. What is the ",
+          "correct": false,
+          "latency_ms": 1875.2670288085938
+        },
+        {
+          "q": "Sarah reads 15 pages per day. How many pages in 4 ",
+          "correct": false,
+          "latency_ms": 1886.2318992614746
+        },
+        {
+          "q": "If 3x = 12, what is x?",
+          "correct": false,
+          "latency_ms": 1855.5309772491455
+        },
+        {
+          "q": "A pizza is cut into 8 slices. If 3 are eaten, what",
+          "correct": false,
+          "latency_ms": 1878.3349990844727
+        }
+      ],
+      "humaneval": [
+        {
+          "q": "Write a Python function `add(a, b)` that returns a",
+          "correct": false,
+          "latency_ms": 1864.022970199585
+        },
+        {
+          "q": "Write a Python function `factorial(n)` that return",
+          "correct": false,
+          "latency_ms": 1846.2998867034912
+        },
+        {
+          "q": "Write a Python function `is_prime(n)` that returns",
+          "correct": false,
+          "latency_ms": 1842.513084411621
+        },
+        {
+          "q": "Write a Python function `reverse_string(s)` that r",
+          "correct": false,
+          "latency_ms": 1864.762783050537
+        },
+        {
+          "q": "Write a Python function `fibonacci(n)` that return",
+          "correct": false,
+          "latency_ms": 1840.3513431549072
+        }
+      ],
+      "ifeval": [
+        {
+          "q": "List exactly 3 fruits, one per line, no extra text",
+          "correct": true,
+          "latency_ms": 992.919921875
+        },
+        {
+          "q": "Respond with ONLY the number 42, nothing else.",
+          "correct": true,
+          "latency_ms": 1058.2630634307861
+        },
+        {
+          "q": "Write a sentence that contains the word 'sovereign",
+          "correct": false,
+          "latency_ms": 1708.6858749389648
+        },
+        {
+          "q": "Output exactly 5 words, all lowercase, describing ",
+          "correct": false,
+          "latency_ms": 1837.3141288757324
+        }
+      ],
+      "latencies": [
+        1316.5349960327148,
+        755.2261352539062,
+        1846.1968898773193,
+        1700.72603225708,
+        1041.064977645874,
+        1847.9459285736084,
+        1234.9629402160645,
+        1231.4701080322266,
+        1205.1100730895996,
+        1453.0611038208008,
+        1479.3591499328613,
+        1867.8300380706787,
+        1863.2423877716064,
+        1827.9187679290771,
+        1875.2670288085938,
+        1886.2318992614746,
+        1855.5309772491455,
+        1878.3349990844727,
+        1864.022970199585,
+        1846.2998867034912,
+        1842.513084411621,
+        1864.762783050537,
+        1840.3513431549072,
+        992.919921875,
+        1058.2630634307861,
+        1708.6858749389648,
+        1837.3141288757324
+      ],
+      "summary": {
+        "mmlu_pro_pct": 70.0,
+        "gsm8k_pct": 25.0,
+        "humaneval_pct": 0.0,
+        "ifeval_pct": 50.0,
+        "composite_pct": 40.74074074074074,
+        "median_latency_ms": 1837.3141288757324,
+        "p95_latency_ms": 1878.3349990844727
+      }
+    },
+    "qwen25-creative:latest": {
+      "mmlu_pro": [
+        {
+          "q": "Which of the following is a primary function of mi",
+          "correct": false,
+          "latency_ms": 1773.1659412384033
+        },
+        {
+          "q": "What is the capital of Australia?",
+          "correct": true,
+          "latency_ms": 1466.081142425537
+        },
+        {
+          "q": "The derivative of x^2 is:",
+          "correct": false,
+          "latency_ms": 1618.4413433074951
+        },
+        {
+          "q": "Which element has the atomic number 6?",
+          "correct": true,
+          "latency_ms": 1126.8980503082275
+        },
+        {
+          "q": "Photosynthesis occurs primarily in:",
+          "correct": false,
+          "latency_ms": 1417.0587062835693
+        },
+        {
+          "q": "The square root of 144 is:",
+          "correct": false,
+          "latency_ms": 1864.4931316375732
+        },
+        {
+          "q": "Who wrote 'Romeo and Juliet'?",
+          "correct": true,
+          "latency_ms": 1060.1441860198975
+        },
+        {
+          "q": "The chemical symbol for gold is:",
+          "correct": true,
+          "latency_ms": 1668.748140335083
+        },
+        {
+          "q": "Speed of light in vacuum (m/s, approx):",
+          "correct": false,
+          "latency_ms": 1589.3959999084473
+        },
+        {
+          "q": "Which planet is closest to the Sun?",
+          "correct": true,
+          "latency_ms": 1302.1430969238281
+        }
+      ],
+      "gsm8k": [
+        {
+          "q": "Janet has 3 apples. She buys 5 more. She gives 2 t",
+          "correct": true,
+          "latency_ms": 1206.8829536437988
+        },
+        {
+          "q": "A train travels 60 miles in 1 hour. At the same sp",
+          "correct": false,
+          "latency_ms": 1852.6029586791992
+        },
+        {
+          "q": "If a shirt costs $20 and is 25% off, what is the n",
+          "correct": true,
+          "latency_ms": 1866.6408061981201
+        },
+        {
+          "q": "Tom is twice as old as Sam. Sam is 5. How old is T",
+          "correct": true,
+          "latency_ms": 1859.6768379211426
+        },
+        {
+          "q": "A rectangle has length 8 and width 5. What is the ",
+          "correct": true,
+          "latency_ms": 1555.5038452148438
+        },
+        {
+          "q": "Sarah reads 15 pages per day. How many pages in 4 ",
+          "correct": true,
+          "latency_ms": 1853.7731170654297
+        },
+        {
+          "q": "If 3x = 12, what is x?",
+          "correct": false,
+          "latency_ms": 1854.2721271514893
+        },
+        {
+          "q": "A pizza is cut into 8 slices. If 3 are eaten, what",
+          "correct": false,
+          "latency_ms": 1579.474925994873
+        }
+      ],
+      "humaneval": [
+        {
+          "q": "Write a Python function `add(a, b)` that returns a",
+          "correct": false,
+          "latency_ms": 1931.1370849609375
+        },
+        {
+          "q": "Write a Python function `factorial(n)` that return",
+          "correct": false,
+          "latency_ms": 1870.347023010254
+        },
+        {
+          "q": "Write a Python function `is_prime(n)` that returns",
+          "correct": false,
+          "latency_ms": 1866.8901920318604
+        },
+        {
+          "q": "Write a Python function `reverse_string(s)` that r",
+          "correct": false,
+          "latency_ms": 1864.701747894287
+        },
+        {
+          "q": "Write a Python function `fibonacci(n)` that return",
+          "correct": false,
+          "latency_ms": 1857.7451705932617
+        }
+      ],
+      "ifeval": [
+        {
+          "q": "List exactly 3 fruits, one per line, no extra text",
+          "correct": true,
+          "latency_ms": 946.59423828125
+        },
+        {
+          "q": "Respond with ONLY the number 42, nothing else.",
+          "correct": true,
+          "latency_ms": 2190.8950805664062
+        },
+        {
+          "q": "Write a sentence that contains the word 'sovereign",
+          "correct": true,
+          "latency_ms": 1613.110065460205
+        },
+        {
+          "q": "Output exactly 5 words, all lowercase, describing ",
+          "correct": false,
+          "latency_ms": 1689.0439987182617
+        }
+      ],
+      "latencies": [
+        1773.1659412384033,
+        1466.081142425537,
+        1618.4413433074951,
+        1126.8980503082275,
+        1417.0587062835693,
+        1864.4931316375732,
+        1060.1441860198975,
+        1668.748140335083,
+        1589.3959999084473,
+        1302.1430969238281,
+        1206.8829536437988,
+        1852.6029586791992,
+        1866.6408061981201,
+        1859.6768379211426,
+        1555.5038452148438,
+        1853.7731170654297,
+        1854.2721271514893,
+        1579.474925994873,
+        1931.1370849609375,
+        1870.347023010254,
+        1866.8901920318604,
+        1864.701747894287,
+        1857.7451705932617,
+        946.59423828125,
+        2190.8950805664062,
+        1613.110065460205,
+        1689.0439987182617
+      ],
+      "summary": {
+        "mmlu_pro_pct": 50.0,
+        "gsm8k_pct": 62.5,
+        "humaneval_pct": 0.0,
+        "ifeval_pct": 75.0,
+        "composite_pct": 48.148148148148145,
+        "median_latency_ms": 1689.0439987182617,
+        "p95_latency_ms": 1931.1370849609375
+      }
+    }
+  }
+}

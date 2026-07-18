@@ -1,0 +1,37 @@
+{
+  "demo1": {
+    "ruling": "ALLOW",
+    "escalated": false,
+    "n_local": 3
+  },
+  "demo2": {
+    "ruling": "CENTER_RESOLVE",
+    "escalated": true
+  },
+  "sweep": [
+    {
+      "config": "diverse-lineage  / offline=0.8",
+      "rho": 0.15,
+      "n_eff": 2.308,
+      "esc_rate": 0.7
+    },
+    {
+      "config": "diverse-lineage  / offline=0.5",
+      "rho": 0.15,
+      "n_eff": 2.308,
+      "esc_rate": 0.8
+    },
+    {
+      "config": "identical-lineage/ offline=0.8",
+      "rho": 0.9,
+      "n_eff": 1.071,
+      "esc_rate": 1.0
+    },
+    {
+      "config": "identical-lineage/ offline=0.5",
+      "rho": 0.9,
+      "n_eff": 1.071,
+      "esc_rate": 1.0
+    }
+  ]
+}

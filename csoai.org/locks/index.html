@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The 5 LOCK Monopoly — csoai.org/locks/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: monospace;
+      background: linear-gradient(180deg, #1e3a8a 0%, #0a0e27 80%);
+      color: #fff;
+      padding: 40px;
+      min-height: 100vh;
+    }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .lock-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin: 24px 0; }
+    .lock { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border-top: 4px solid #fbbf24; min-height: 280px; }
+    .lock .name { font-size: 1.3rem; font-weight: 700; color: #fbbf24; }
+    .lock .type { font-size: 0.75rem; opacity: 0.6; }
+    .lock .desc { font-size: 0.9rem; margin: 8px 0; }
+    .lock .metric { font-size: 1.1rem; font-weight: 700; color: #10b981; margin: 8px 0; }
+    .lock .unreplicable { color: #ef4444; font-weight: 700; font-size: 0.85rem; }
+    p { line-height: 1.6; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🔐 The 5 LOCK Monopoly</h1>
+    <p style="opacity: 0.7;">3 of these are compound locks — they cannot be replicated. That's the moat.</p>
+
+    <div class="lock-grid">
+      <div class="lock">
+        <div class="type">🔒 LOCK 1</div>
+        <div class="name">REX</div>
+        <div class="type" style="font-size: 1.1rem; color: #fbbf24; font-weight: 700;">Regulatory</div>
+        <p class="desc">10+ jurisdiction legal framework mapped. UK AI Bill + EU AI Act + US 35 USC 102 + EU eIDAS + China + more.</p>
+        <div class="metric">30 crosswalks</div>
+        <p class="unreplicable">UNREPLICABLE (years of legal work)</p>
+      </div>
+
+      <div class="lock">
+        <div class="type">🔒 LOCK 2</div>
+        <div class="name">ATLAS</div>
+        <div class="type" style="font-size: 1.1rem; color: #fbbf24; font-weight: 700;">Network</div>
+        <p class="desc">275+ MCP servers in the federation. 22 hive integrations. 30 crosswalks. 5 protocol bridges.</p>
+        <div class="metric">275+ MCPs</div>
+        <p class="unreplicable">UNREPLICABLE (network effects)</p>
+      </div>
+
+      <div class="lock">
+        <div class="type">🔒 LOCK 3</div>
+        <div class="name">NOVA</div>
+        <div class="type" style="font-size: 1.1rem; color: #fbbf24; font-weight: 700;">Namespace</div>
+        <p class="desc">27 .ai domain portfolio. industry power packs. Compound lock on the .ai TLD.</p>
+        <div class="metric">27 .ai domains</div>
+        <p class="unreplicable">UNREPLICABLE (TLD is gone)</p>
+      </div>
+
+      <div class="lock">
+        <div class="type">🔒 LOCK 4</div>
+        <div class="name">MARCUS</div>
+        <div class="type" style="font-size: 1.1rem; color: #fbbf24; font-weight: 700;">BFT</div>
+        <p class="desc">33-agent BFT council. 22/33 supermajority. Pickable size: 5 / 22 / 33 / 100 voters.</p>
+        <div class="metric">33 agents</div>
+        <p>Reproducible (but takes years to grow)</p>
+      </div>
+
+      <div class="lock">
+        <div class="type">🔒 LOCK 5</div>
+        <div class="name">SAGE</div>
+        <div class="type" style="font-size: 1.1rem; color: #fbbf24; font-weight: 700;">Data</div>
+        <p class="desc">Hash-chained audit trail. 49,127+ SIGIL receipts. 5,500+ Watchdog Certificates. Immutable.</p>
+        <div class="metric">49,127+ SIGILs</div>
+        <p>Reproducible (but takes years to grow)</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 32px; color: #fbbf24;">Why This is a Compound Monopoly</h2>
+    <p>Each LOCK strengthens the others:</p>
+    <ul style="line-height: 2; margin-left: 24px;">
+      <li>REX (regulatory) requires ATLAS (network) to deliver — no one can ship to 10+ jurisdictions without 275+ MCPs</li>
+      <li>ATLAS (network) requires NOVA (namespace) to anchor — without 27 .ai domains the network has no home</li>
+      <li>NOVA (namespace) requires MARCUS (BFT) to govern — domains need council approval to be valuable</li>
+      <li>MARCUS (BFT) requires SAGE (data) to validate — council needs immutable proof to decide</li>
+      <li>SAGE (data) requires REX (regulatory) to mean — audit trail needs legal framework to count</li>
+    </ul>
+
+    <p style="margin-top: 24px; font-size: 1.1rem; font-weight: 700; color: #10b981;">
+      Together: an unbeatable compound monopoly. £3B+ accessible, ZERO competitors.
+    </p>
+  </div>
+</body>
+</html>

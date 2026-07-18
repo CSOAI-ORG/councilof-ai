@@ -1,0 +1,122 @@
+{
+  "updated_at": "2026-05-27T16:50:00Z",
+  "host": "m2-sidekick",
+  "host_ip": "192.168.50.176",
+  "agents": [
+    {
+      "id": "kimi-m2-s007",
+      "name": "Kimi CLI",
+      "terminal": "ttys007",
+      "pid": 89608,
+      "type": "cli",
+      "framework": "kimi",
+      "status": "active",
+      "role": "mesh-orchestrator",
+      "capabilities": ["shell", "file-edit", "web-search", "code"],
+      "workspace": "/Users/iokfarm",
+      "since": "2026-05-27T16:14:00Z"
+    },
+    {
+      "id": "kilo-m2-s008",
+      "name": "Kilo Code",
+      "terminal": "ttys008",
+      "pid": 89088,
+      "type": "cli",
+      "framework": "kilocode",
+      "status": "active",
+      "role": "coding-assistant",
+      "capabilities": ["shell", "file-edit", "code"],
+      "workspace": "/Users/iokfarm",
+      "since": "2026-05-27T16:42:00Z"
+    },
+    {
+      "id": "gemini-m2-s004",
+      "name": "Gemini CLI",
+      "terminal": "ttys004",
+      "pid": 32911,
+      "type": "cli",
+      "framework": "gemini",
+      "status": "active",
+      "role": "general-assistant",
+      "capabilities": ["shell", "web-search", "multimodal"],
+      "workspace": "/Users/iokfarm",
+      "since": "2026-05-27T09:07:00Z"
+    },
+    {
+      "id": "hermes-m2-s006",
+      "name": "Hermes Agent",
+      "terminal": "ttys006",
+      "pid": 53282,
+      "type": "daemon",
+      "framework": "hermes",
+      "status": "active",
+      "role": "agent-orchestrator",
+      "capabilities": ["shell", "task-planning"],
+      "workspace": "/Users/iokfarm/.hermes",
+      "since": "2026-05-27T10:46:00Z"
+    },
+    {
+      "id": "jeeves-clawd",
+      "name": "Jeeves",
+      "terminal": null,
+      "pid": null,
+      "type": "persona",
+      "framework": "clawd",
+      "status": "configured",
+      "role": "digital-valet",
+      "capabilities": ["memory", "heartbeat", "cua-driver"],
+      "workspace": "/Users/iokfarm/clawd",
+      "since": "2026-01-27T00:00:00Z"
+    },
+    {
+      "id": "openclaw-m2",
+      "name": "OpenClaw",
+      "terminal": null,
+      "pid": null,
+      "type": "daemon",
+      "framework": "openclaw",
+      "status": "configured",
+      "role": "gateway-agent",
+      "capabilities": ["memory", "cron", "imessage", "whatsapp", "cua-driver"],
+      "workspace": "/Users/iokfarm/.openclaw",
+      "since": "2026-03-02T00:00:00Z"
+    },
+    {
+      "id": "agenticseek-m2",
+      "name": "AgenticSeek",
+      "terminal": null,
+      "pid": null,
+      "type": "api",
+      "framework": "agenticseek",
+      "status": "configured",
+      "role": "multi-agent-backend",
+      "capabilities": ["browser", "coder", "planner", "file"],
+      "workspace": "/Users/iokfarm/agenticSeek",
+      "port": 7777,
+      "since": "2025-11-17T00:00:00Z"
+    },
+    {
+      "id": "openmanus-m2",
+      "name": "OpenManus",
+      "terminal": null,
+      "pid": null,
+      "type": "api",
+      "framework": "openmanus",
+      "status": "configured",
+      "role": "open-source-agent",
+      "capabilities": ["browser", "coding"],
+      "workspace": "/Users/iokfarm/OpenManus",
+      "since": "2025-09-08T00:00:00Z"
+    }
+  ],
+  "mesh_nodes": [
+    {"id": "m4-local", "ip": "192.168.50.105", "role": "gateway-primary", "status": "online"},
+    {"id": "m2-sidekick", "ip": "192.168.50.176", "role": "edge-node", "status": "online"},
+    {"id": "vast-cloud", "ip": null, "role": "gpu-worker", "status": "online"},
+    {"id": "owl-alpha", "ip": null, "role": "openrouter-bridge", "status": "online"},
+    {"id": "deepseek-v4-flash", "ip": null, "role": "cloud-api", "status": "online"},
+    {"id": "gemma4-27b-free", "ip": null, "role": "cloud-api", "status": "online"},
+    {"id": "nemotron3-super", "ip": null, "role": "cloud-api", "status": "online"},
+    {"id": "openrouter-fallback", "ip": null, "role": "cloud-api", "status": "online"}
+  ]
+}

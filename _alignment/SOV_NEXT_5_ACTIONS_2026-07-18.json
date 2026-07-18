@@ -1,0 +1,81 @@
+{
+  "version": "v1_5_actions_2026-07-18",
+  "context": "Fresh deep sweep of 233 papers + every project on Mac",
+  "papers_sweeped": 233,
+  "papers_identified_in_families": 125,
+  "still_generic_title": 108,
+  "capabilities_in_literature": {
+    "agentic": 39,
+    "evaluation": 21,
+    "multimodal": 14,
+    "reasoning": 14,
+    "interpretability": 11,
+    "efficient inference": 8,
+    "safety": 6,
+    "data augmentation": 5,
+    "model merging": 4,
+    "training acceleration": 4
+  },
+  "actions": [
+    {
+      "rank": 1,
+      "name": "Quantize our 3 OWEMs to int4 (Qwen3.5 paper 2607.04244)",
+      "leverage": "HIGHEST",
+      "why": "Our 3 OWEM adapters at int4 \u2192 4x faster inference + ~75% memory reduction. Currently 33.60 MB each float32 \u2192 ~8.4 MB int4. Frees M2 RAM, enables concurrent serving.",
+      "file": "build /workspace/_alignment/sovereign_merge_kit/quantize_owems.py",
+      "command": "PYTHONPATH=\"\" ~/.sovereign/ml-venv/bin/python quantize_owems.py",
+      "output": "_alignment/sovereign_merge_kit/models/{sov3,charter,owned_v2}_int4.safetensors",
+      "cost": "$0.50 Modal T4 (or $0 on M2)",
+      "time": "20 min"
+    },
+    {
+      "rank": 2,
+      "name": "TIES-merge 3 OWEMs \u2192 SOV4_merged (paper 2607.11997)",
+      "leverage": "HIGH",
+      "why": "Combines sov3_student (governance) + charter (compliance) + owned_v2 (MoE/capacity) into ONE merged adapter. Sibling's overnight work noted TIES=all-zeros N>2 (use LINEAR >5), so we use LINEAR for our 3 adapters.",
+      "file": "build /workspace/_alignment/sovereign_merge_kit/ties_merge_owems.py",
+      "command": "PYTHONPATH=\"\" ~/.sovereign/ml-venv/bin/python ties_merge_owems.py",
+      "output": "_alignment/sovereign_merge_kit/models/sov4_merged_owem.safetensors",
+      "cost": "$0.50 Modal T4 (eval)",
+      "time": "30 min",
+      "lane": "Claude Science (sibling owns, consumed by Hermes)",
+      "status": "CONSUMED - sibling's result folded into architecture matrix"
+    },
+    {
+      "rank": 3,
+      "name": "Adopt UAV activations into our 3 OWEMs (paper 2605.25903 VERIFIED)",
+      "leverage": "MEDIUM-HIGH",
+      "why": "Already built the SIGNATURE endpoint (EAT-764). Now actually run it on real OWEM hidden states. Adds per-activation interpretability \u2014 closes auditability gap with REAL data, not stub.",
+      "file": "build /workspace/_alignment/sovereign_merge_kit/uav_signature_owem.py",
+      "command": "PYTHONPATH=\"\" ~/.sovereign/ml-venv/bin/python uav_signature_owem.py",
+      "output": "_alignment/sovereign_merge_kit/uav_signatures/{sov3,charter,owned_v2}_signature.json",
+      "cost": "$0 (M2 MPS)",
+      "time": "45 min"
+    },
+    {
+      "rank": 4,
+      "name": "Build Reasoning/CoT OWEM (14 papers, mostly TRIAGED-DROP)",
+      "leverage": "MEDIUM",
+      "why": "Current sov3_student = governance Q&A. A CoT-enhanced adapter handles multi-step reasoning questions (the 4 misses in sovereign-bench-30). Build via small distill on the 14 reasoning papers (after triage).",
+      "file": "build /workspace/_alignment/sovereign_merge_kit/owem_reasoning_distill.py",
+      "command": "PYTHONPATH=\"\" ~/.sovereign/ml-venv/bin/python owem_reasoning_distill.py",
+      "output": "_alignment/sovereign_merge_kit/models/sov3_reasoning_owem.safetensors",
+      "cost": "$1 Modal T4",
+      "time": "1 hour"
+    },
+    {
+      "rank": 5,
+      "name": "Add multimodal vision to SOV4 King (14 papers)",
+      "leverage": "MEDIUM",
+      "why": "Connect vision encoder (e.g. SigLIP) to our 0.5B-base + LoRA \u2192 sovereign image-binding care-floor. csoai.org already has vision surface, this makes SOV4 multimodal.",
+      "file": "build /workspace/_alignment/sovereign_merge_kit/multimodal_sov4.py",
+      "command": "PYTHONPATH=\"\" ~/.sovereign/ml-venv/bin/python multimodal_sov4.py",
+      "output": "_alignment/sovereign_merge_kit/models/sov4_vision_owem.safetensors",
+      "cost": "$5-10 Modal T4 (vision adapter training)",
+      "time": "2 hours"
+    }
+  ],
+  "total_compute_cost": "$7-12 Modal T4 over a day",
+  "all_actions_reproducible_on_oracle_a1": true,
+  "honest_register": "Some papers are TRIAGED-DROP (irrelevant) \u2014 we focus on TRIAGED-RELEVANT and VERIFIED only. Modal costs assume we have T4 quota."
+}

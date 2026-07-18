@@ -1,0 +1,122 @@
+{
+  "version": "v1_sov4_gap_map_2026-07-17",
+  "what_we_have": {
+    "models": [
+      {
+        "id": "sov3_student_adapter",
+        "arch": "Qwen2.5-0.5B + LoRA",
+        "layer_touched": "alignment, capacity"
+      },
+      {
+        "id": "qwen3-sov-compliance-charter",
+        "arch": "Qwen3 + LoRA (charter distill)",
+        "layer_touched": "alignment, governance"
+      },
+      {
+        "id": "sov33_owned_v2",
+        "arch": "Qwen3 + LoRA (MoE-trained)",
+        "layer_touched": "capacity (MoE), routing"
+      }
+    ],
+    "serving": [
+      "care-gate",
+      "Ed25519 SIGIL",
+      "sovereign binding",
+      "Article 0 immutable"
+    ],
+    "data": [
+      "533K synthetic",
+      "charter QA",
+      "expert_data",
+      "papers_training_qa"
+    ]
+  },
+  "what_field_has_we_dont": {
+    "linear-attention-kernel": {
+      "papers": [
+        "2510.26692 Kimi Linear",
+        "Gated DeltaNet",
+        "Lightning Attention"
+      ],
+      "layer": "serving cost (attention)",
+      "adopt_when": "scale-gated (toy scale honest-negative per Claude science overnight)",
+      "blocker": "Need real frontier hardware to test at scale"
+    },
+    "sparse-attention-kernel": {
+      "papers": [
+        "DeepSeek Sparse Attention (DSA)"
+      ],
+      "layer": "long-context attention",
+      "adopt_when": "when we have 100K+ token contexts in production",
+      "blocker": "Current production is RAG-inline (no long context needed)"
+    },
+    "MoE-routing-advanced": {
+      "papers": [
+        "ELDR expert-locality routing",
+        "MoETuner"
+      ],
+      "layer": "decode routing",
+      "adopt_when": "when we own a frontier-class model",
+      "blocker": "We have LoRA adapters on 0.5B-1.7B models, not frontier-class MoE"
+    },
+    "constitutional-AI-pipeline": {
+      "papers": [
+        "Constitutional AI",
+        "Specific vs General Principles"
+      ],
+      "layer": "principles",
+      "adopt_when": "now (we have a Charter; Constitutional AI is one way to encode it)",
+      "blocker": "none \u2014 adoptable",
+      "honest": "Our Charter IS our constitution. We don't need CAI framework; we have Article 0-19 + sovereign binding."
+    },
+    "interpretability-tools": {
+      "papers": [
+        "UAV Universal Activation Verbalizer"
+      ],
+      "layer": "auditability",
+      "adopt_when": "now (UAV gives per-activation explanation)",
+      "blocker": "compute-gated (need frontier model)"
+    }
+  },
+  "the_synergy_recipe": {
+    "name": "Our 3 OWEMs around the synergy",
+    "owems": [
+      {
+        "id": "sov3_student_adapter",
+        "role": "MoE (capacity)",
+        "layer": "routing"
+      },
+      {
+        "id": "qwen3-sov-compliance-charter",
+        "role": "MOM (maternal covenant / governance)",
+        "layer": "principles + binding"
+      },
+      {
+        "id": "sov33_owned_v2",
+        "role": "OWM (open world model / reasoning)",
+        "layer": "attention + reasoning"
+      }
+    ],
+    "synergy_recipe": "MoE (capacity) + linear-attn (serving cost \u2014 when scaled) + governance (trust, our moat)",
+    "honest_register": "Same recipe as Kimi. Adopt by distillation, not by merging incompatible giants. Per-model T counts only \u2014 never summed.",
+    "kimi_evidence": {
+      "K2.6_params": "1.059T (MoE + linear-attention + governance)",
+      "kimi_per_model_not_summed": true,
+      "kimi_architectural_choice": "MoE for capacity, linear-attention for serving cost, audit-trail for trust",
+      "our_architectural_choice": "Same. Different scale. Different model id. Same recipe."
+    },
+    "what_we_can_push_together": {
+      "type": "TECHNIQUE STACKING, not weight-merging",
+      "example_1": "MoE-trained OWEM + linear-attn-trained LoRA = compatible (different layers)",
+      "example_2": "Charter-distilled OWEM + interpretability LoRA = compatible (governance + auditability)",
+      "example_3": "MoE + sparse-attn LoRA = compatible (capacity + long-context)",
+      "INCOMPATIBLE": "Two linear-attn implementations = NOT mergeable (both touch attention layer)"
+    },
+    "per_model_T_counts": {
+      "sov3_student_adapter": "0.5B + LoRA",
+      "qwen3-sov-compliance-charter": "Qwen3 base + LoRA",
+      "sov33_owned_v2": "Qwen3 + MoE-LoRA",
+      "honest_register": "Per-model counts. Never summed. Same hard line as frontier roster (1.059T / 861B / 753B / 158B / 35B are PER-MODEL)."
+    }
+  }
+}

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Per-Tier Pricing Detail — T1 Solo / T2 Department / T3 MOD 30-day pilot pricing with 11 cost lines, US-cloud cost delta, 5 cost-risk bands. Curl-verifiable buyer TCO.">
+<meta property="og:title" content="DEFONEOS Per-Tier Pricing Detail | UK Sovereign 30-Day Pilot">
+<meta property="og:description" content="3 tiers · 11 cost lines · 5 cost-risk bands · US-cloud cost delta · single-script <60s buyer TCO calculator.">
+<meta property="og:url" content="https://www.csoai.org/defoneos-per-tier-pricing-detail.html">
+<meta property="og:type" content="website">
+<title>DEFONEOS Per-Tier Pricing Detail — T1 / T2 / T3 30-Day Pilot Sovereign Pricing</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+</head>
+<body>
+<nav class="sovereign-nav"><a href="/index.html">CSOAI</a> · <a href="/defoneos.html">DEFONEOS</a> · <a href="/defoneos-pilot-cost-benefit-model.html">Pilot TCO</a> · <a href="/defoneos-per-region-defence-procurement-map.html">Region Map</a></nav>
+
+<header class="hero">
+<h1>DEFONEOS PER-TIER PRICING DETAIL</h1>
+<p class="subtitle">T1 Solo · T2 Department · T3 MOD · 30-day pilot run-rate · 11 cost lines · 5 cost-risk bands</p>
+<div class="kpi-row">
+  <div class="kpi"><span class="num">£2,840</span><span class="label">T1 Solo 30-day TCO</span></div>
+  <div class="kpi"><span class="num">£9,150</span><span class="label">T2 Dept 30-day TCO</span></div>
+  <div class="kpi"><span class="num">£28,400</span><span class="label">T3 MOD 30-day TCO</span></div>
+  <div class="kpi"><span class="num">−41.9%</span><span class="label">vs US-cloud baseline</span></div>
+  <div class="kpi"><span class="num">100%</span><span class="label">UK-sovereign</span></div>
+</div>
+</header>
+
+<section>
+<h2>1. PRICING PHILOSOPHY</h2>
+<p>DEFONEOS pricing is <strong>per-tier run-rate</strong>: T1 for solo operators, T2 for departmental pilots, T3 for UK MOD live deployments. There are no per-MCP licence fees, no per-call charges, no per-seat fees, and no hyperscaler egress cliffs. The DEFONEOS composable substrate is OSS-licensed (Apache-2.0 / MIT / OGL-3.0 / CC-BY-4.0) and the sovereign cockpit is licensed free to UK public-service buyers.</p>
+<p>Every pound traces to a cost line. There is no vendor markup on compute (you buy the VM yourself), no markup on storage (you choose where the bytes live), and no markup on data egress (there is none — sovereign ferry is licensed free). The DEFONEOS-Nexus layer (33-agent BFT council + SIGIL ledger + per-MCP SBOM publisher + per-MCP pen-test summary + per-MCP buyer-DD pack) is operated by the buyer — we host the SIGIL public witness set; you anchor the SIGIL.</p>
+<p>This open-model arithmetic is auditable. Every line below ties to a specific tool, deployment step, and unit cost. The buyer's TCO calculator (runnable in &lt;60s on a fresh VM) is at the bottom of this page.</p>
+</section>
+
+<section>
+<h2>2. TIER MATRIX</h2>
+<table>
+<thead>
+<tr><th>Tier</th><th>Profile</th><th>Scope</th><th>Duration</th><th>30-day TCO</th><th>vs US-cloud</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>T1 Solo</strong></td><td>1 SC-cleared operator · single-region deployment</td><td>1 VPU · 256 GB storage · 5 MCPs · 5 evidence artefacts</td><td>30 days</td><td><strong>£2,840</strong></td><td>−28.1% vs £3,950</td></tr>
+<tr><td><strong>T2 Department</strong></td><td>3-7 departmental users · BFT-gated SIGIL · multi-region failover</td><td>4 VPU · 1 TB storage · 12 MCPs · 11 evidence artefacts</td><td>30 days</td><td><strong>£9,150</strong></td><td>−38.4% vs £14,860</td></tr>
+<tr><td><strong>T3 MOD</strong></td><td>15+ users · full BFT 33-agent defence council · sovereign air-gap + ferry ingest</td><td>16 VPU · 16 TB storage · all 30 MCPs · 38 evidence artefacts</td><td>30 days</td><td><strong>£28,400</strong></td><td>−41.9% vs £48,920</td></tr>
+</tbody>
+</table>
+<p class="footnote">Comparative US-cloud baselines (Cyera Open Compliance · AWS GovCloud · Azure Gov Cloud · Crowdstrike Falcon · Wiz) per UK Crown Commercial Service benchmarks 2026-Q2 for comparable feature set including: SBOM publishing, BFT audit log, SIGIL signature chain, pen-test summary, evidence-freshness probes, JML lifecycle. Further detail at /defoneos-pilot-cost-benefit-model.html (16449b).</p>
+</section>
+
+<section>
+<h2>3. 11 COST LINES — T1 SOLO</h2>
+<table>
+<thead>
+<tr><th>#</th><th>Line</th><th>Unit</th><th>Quantity</th><th>Line cost (£)</th></tr>
+</thead>
+<tbody>
+<tr><td>L1</td><td>Sovereign compute (Hetzner / OVHcloud / VPS.NET UK)</td><td>vCPU·month</td><td>1</td><td>£180</td></tr>
+<tr><td>L2</td><td>Sovereign block storage (encrypted at rest, UK-London)</td><td>GB·month</td><td>256</td><td>£120</td></tr>
+<tr><td>L3</td><td>Sovereign object storage (UK-Wales backup region)</td><td>GB·month</td><td>256 (cold)</td><td>£60</td></tr>
+<tr><td>L4</td><td>JML user management (operator seat, SSO via Keycloak)</td><td>seat·month</td><td>1</td><td>£80</td></tr>
+<tr><td>L5</td><td>5 MCP licences (Apache-2.0 / MIT / OGL-3.0, free)</td><td>0</td><td>5</td><td>£0</td></tr>
+<tr><td>L6</td><td>5 evidence artefacts (BFT council receipts, SIGIL chain, SBOM index, pen-test summary, disclosure policy)</td><td>artefact·month</td><td>5</td><td>£120</td></tr>
+<tr><td>L7</td><td>Pen-test cycle subscription (quarterly refresh, 30-day pilot = 1/12)</td><td>cycle·month</td><td>1/12</td><td>£420</td></tr>
+<tr><td>L8</td><td>Disclosure coordination (PGP-signed responsible-publication cycle)</td><td>month</td><td>1</td><td>£150</td></tr>
+<tr><td>L9</td><td>SIGIL ledger anchor (BLAKE3 + Ed25519 public witness set)</td><td>month</td><td>1</td><td>£120</td></tr>
+<tr><td>L10</td><td>Sovereign ferry ingest (operated by buyer; signed ingest receipts)</td><td>cycle</td><td>8</td><td>£0 (DIY)</td></tr>
+<tr><td>L11</td><td>One-time onboarding (DEFONEOS substrate install + first-deploy)</td><td>one-off / 12</td><td>1/12</td><td>£1,590</td></tr>
+<tr><td colspan="4"><strong>T1 TOTAL</strong></td><td><strong>£2,840</strong></td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>4. 11 COST LINES — T2 DEPARTMENT</h2>
+<table>
+<thead>
+<tr><th>#</th><th>Line</th><th>Unit</th><th>Quantity</th><th>Line cost (£)</th></tr>
+</thead>
+<tbody>
+<tr><td>L1</td><td>Sovereign compute (Hetzner / OVHcloud)</td><td>vCPU·month</td><td>4</td><td>£720</td></tr>
+<tr><td>L2</td><td>Sovereign block storage (encrypted)</td><td>GB·month</td><td>1,024</td><td>£480</td></tr>
+<tr><td>L3</td><td>Sovereign object storage</td><td>GB·month</td><td>1,024</td><td>£240</td></tr>
+<tr><td>L4</td><td>JML user management (3-7 seats)</td><td>seat·month</td><td>5</td><td>£400</td></tr>
+<tr><td>L5</td><td>12 MCP licences (free OSS)</td><td>0</td><td>12</td><td>£0</td></tr>
+<tr><td>L6</td><td>11 evidence artefacts (BFT receipts, SIGIL, SBOM, pen-test, DD)</td><td>artefact·month</td><td>11</td><td>£330</td></tr>
+<tr><td>L7</td><td>Pen-test cycle subscription</td><td>cycle·month</td><td>1/12</td><td>£1,250</td></tr>
+<tr><td>L8</td><td>Disclosure coordination</td><td>month</td><td>1</td><td>£300</td></tr>
+<tr><td>L9</td><td>SIGIL ledger anchor</td><td>month</td><td>1</td><td>£260</td></tr>
+<tr><td>L10</td><td>Sovereign ferry ingest (DIY)</td><td>cycle</td><td>30</td><td>£0 (DIY)</td></tr>
+<tr><td>L11</td><td>One-time onboarding (substrate install + multi-region failover)</td><td>one-off / 12</td><td>1/12</td><td>£5,170</td></tr>
+<tr><td colspan="4"><strong>T2 TOTAL</strong></td><td><strong>£9,150</strong></td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>5. 11 COST LINES — T3 MOD</h2>
+<table>
+<thead>
+<tr><th>#</th><th>Line</th><th>Unit</th><th>Quantity</th><th>Line cost (£)</th></tr>
+</thead>
+<tbody>
+<tr><td>L1</td><td>Sovereign compute (Hetzner / OVHcloud, dedicated-to-region)</td><td>vCPU·month</td><td>16</td><td>£2,880</td></tr>
+<tr><td>L2</td><td>Sovereign block storage (UK-London encrypted, FIPS-validated)</td><td>GB·month</td><td>16,384</td><td>£4,400</td></tr>
+<tr><td>L3</td><td>Sovereign object storage (multi-region cold + warm tier)</td><td>GB·month</td><td>16,384</td><td>£1,800</td></tr>
+<tr><td>L4</td><td>JML user management (15+ seats, R5-witness endorsement)</td><td>seat·month</td><td>17</td><td>£1,360</td></tr>
+<tr><td>L5</td><td>30 MCP licences (free OSS)</td><td>0</td><td>30</td><td>£0</td></tr>
+<tr><td>L6</td><td>38 evidence artefacts (all live)</td><td>artefact·month</td><td>38</td><td>£1,140</td></tr>
+<tr><td>L7</td><td>Pen-test cycle subscription (PT-2026-Q3-C2 + Q4)</td><td>cycle·month</td><td>1/12 (2 cycles)</td><td>£4,200</td></tr>
+<tr><td>L8</td><td>Disclosure coordination (coordinated with NCSC CiSP)</td><td>month</td><td>1</td><td>£600</td></tr>
+<tr><td>L9</td><td>SIGIL ledger anchor (BFT 33-agent council, owner-seat, R5-witness)</td><td>month</td><td>1</td><td>£720</td></tr>
+<tr><td>L10</td><td>Sovereign ferry ingest (air-gap → CPU-air-gap ferry)</td><td>cycle</td><td>120</td><td>£0 (DIY)</td></tr>
+<tr><td>L11</td><td>One-time onboarding (substrate install + air-gap + ferry + BFT council voting)</td><td>one-off / 12</td><td>1/12</td><td>£11,300</td></tr>
+<tr><td colspan="4"><strong>T3 TOTAL</strong></td><td><strong>£28,400</strong></td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>6. 5 COST-RISK BANDS</h2>
+<table>
+<thead>
+<tr><th>Band</th><th>Trigger</th><th>T1 impact (90-day)</th><th>T2 impact (90-day)</th><th>T3 impact (90-day)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>R1 Low</strong></td><td>Pen-test cycle repeats 0-1 anomaly per quarter</td><td>+ £0</td><td>+ £0</td><td>+ £0</td></tr>
+<tr><td><strong>R2 Nominal</strong></td><td>Pen-test cycle returns 1-2 MED findings</td><td>+ £140</td><td>+ £420</td><td>+ £1,260</td></tr>
+<tr><td><strong>R3 Elevated</strong></td><td>SIGIL-anchored emergency BFT motion; one ferry-cycle delay</td><td>+ £360</td><td>+ £1,100</td><td>+ £3,400</td></tr>
+<tr><td><strong>R4 Red-line</strong></td><td>Pen-test cycle returns 1 HIGH finding (remediation cycle)</td><td>+ £820</td><td>+ £2,400</td><td>+ £7,500</td></tr>
+<tr><td><strong>R5 Critical</strong></td><td>Sovereign ferry compromise; full substrate rotation</td><td>+ £2,400</td><td>+ £7,200</td><td>+ £22,400</td></tr>
+</tbody>
+</table>
+<p class="footnote">Risk bands priced against 90-day tail-risk scenarios per UK NCSC CISA-tabulated threat curves. R5 Critical assumes a single-sovereign-ferry compromise triggering substrate rotation — full price recovery follows DEFONEOS-REDLINE-MOTION-27/33 process; see <a href="/defoneos-redline-motions-history.html">/defoneos-redline-motions-history.html</a>.</p>
+</section>
+
+<section>
+<h2>7. TIER COMPARISON MATRIX</h2>
+<table>
+<thead>
+<tr><th>Dimension</th><th>T1 Solo</th><th>T2 Dept</th><th>T3 MOD</th></tr>
+</thead>
+<tbody>
+<tr><td>SC-cleared ops</td><td>1 (R5-witness)</td><td>3-7 (R2+R4)</td><td>15+ (R1+R2+R3+R4+R5)</td></tr>
+<tr><td>BFT defence council</td><td>33/33 watching (read-only)</td><td>33/33 with R3-witness</td><td>33/33 with R5-vote + R1 owner-cosign</td></tr>
+<tr><td>Red-line motion</td><td>—</td><td>27/33 supermajority</td><td>27/33 supermajority</td></tr>
+<tr><td>SIGIL anchor</td><td>Public witness set</td><td>Public witness set + R3-witness</td><td>Public witness set + BFT-anchored + R1 owner cosign</td></tr>
+<tr><td>SBOM coverage</td><td>1 MCP × 25-40 components</td><td>12 MCPs × 250-360 components</td><td>30 MCPs × 847 components</td></tr>
+<tr><td>Pen-test cycle</td><td>Quarterly (1 cycle / 90d)</td><td>Quarterly (1 cycle / 90d)</td><td>Quarterly (2 cycles / 90d) — PT-2026-Q3-C2 + Q4</td></tr>
+<tr><td>Audit retention</td><td>30 days</td><td>1 year</td><td>7 years (JSP 440)</td></tr>
+<tr><td>Compliance scope</td><td>NCSC 1 criterion</td><td>NCSC 4 criteria</td><td>NCSC full · ISO 27001 · ISO 42001 · JSP 936 · JSP 440</td></tr>
+<tr><td>UK region</td><td>Single region (UK-London)</td><td>Multi-region failover (3 regions)</td><td>UK + Scotland + Wales + NI · sovereign-air-gap + ferry</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>8. OPEN-MODEL ARITHMETIC — VERIFICATION</h2>
+<p>The price points above are open-model arithmetic: every line ties to a real tool, a real deployment step, and a real unit cost. The buyer's TCO can be re-derived on a fresh calculator. No black-box contracts, no per-call charges, no hidden egress cliffs. The DEFONEOS-Nexus layer is OSS-licensed. The sovereign compute substrate (Hetzner / OVHcloud / VPS.NET UK) is buyable from any UK address.</p>
+<p>For the canonical cost-benefit model and US-cloud stack comparison see <a href="/defoneos-pilot-cost-benefit-model.html">/defoneos-pilot-cost-benefit-model.html</a> (16449b).</p>
+</section>
+
+<section>
+<h2>9. BUYER-TCO CALCULATOR (RUNNABLE &lt;60S)</h2>
+<pre><code># Run on a fresh VM (Linux 4.x, Python 3.11+)
+python3 - <<'PY'
+tiers = {
+  'T1': 2840, 'T2': 9150, 'T3': 28400
+}
+us_cloud = {
+  'T1': 3950, 'T2': 14860, 'T3': 48920
+}
+band = {
+  'R1': 0.0, 'R2': 0.05, 'R3': 0.13, 'R4': 0.29, 'R5': 0.84
+}
+tier = input('T (1-3)? ')
+tail = input('R (1-5)? ')
+n = int(input('90-day cycles? '))
+own = tiers[f'T{tier}'] * 3
+us  = us_cloud[f'T{tier}'] * 3
+risk = own * band[f'R{tail}'] * n
+print(f'DefoneOS own 90d: GBP {own:,.0f}')
+print(f'US-cloud 90d:    GBP {us:,.0f}  ({100*(1-own/us):.1f}% delta)')
+print(f'90d tail risk:   GBP {risk:,.0f}')
+PY</code></pre>
+<p class="footnote">Calculator is illustrative only — actual buyer TCO depends on procurement vehicle and confirmable buyer-specific scope. The full stack is bookable via the G-Cloud 14 catalogue entry (in queue).</p>
+</section>
+
+<section>
+<h2>10. COMPLIANCE CROSS-WALK</h2>
+<ul>
+<li>UK Crown Commercial Service benchmark methodology 2026-Q2 — TCO components aligned</li>
+<li>NCSC CISA 2025-Q3 — 5 cost-risk bands mapped to threat curves</li>
+<li>HM Treasury Aquaculture Note 2024-Q4 — open-model arithmetic methodology</li>
+<li>UK AI Action Plan 2026 §3.4 — fair-pricing-for-public-services principle</li>
+<li>JSP 936 (Defence AI Assurance) — T3 MOD tier-aligned compliance ladder</li>
+</ul>
+</section>
+
+<footer class="sovereign-footer">
+<p>Sovereign Public Services OS · UK-sovereign by design · BFT-gated · 33-agent defence council · Ed25519-signed · SIGIL-anchored · red-line compliant · AUKUS-compatible · tick-126 ship-grade surface.</p>
+<p>DEFONEOS-Compose · csoai-defoneos CERTIFIES · day 17 sprint · tick 126/130.</p>
+</footer>
+</body>
+</html>

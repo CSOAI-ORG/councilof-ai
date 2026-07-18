@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Citizen Charter — csoai.org</title>
+<meta name="description" content="The master charter for the sovereign citizen. Crown lineage 1215–2026, BFT participation rights, five tiers, twelve immutable rights, seven design principles. MIT-licensed.">
+<meta name="license" content="MIT">
+<meta name="author" content="CSOAI Ltd (UK Companies House 16939677)">
+<meta name="date" content="2026-07-02">
+<style>
+:root {
+  --gold: #fbbf24;
+  --cyan: #06b6d4;
+  --green: #10b981;
+  --ink: #0a0e27;
+  --ink-2: #1e3a8a;
+  --bg-soft: rgba(255,255,255,0.04);
+}
+* { box-sizing: border-box; }
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:linear-gradient(160deg,var(--ink) 0%, var(--ink-2) 50%, var(--ink) 100%);color:#e2e8f0;padding:40px 20px;line-height:1.7;margin:0}
+.wrap{max-width:980px;margin:0 auto}
+.cover{text-align:center;padding:48px 32px;background:rgba(0,0,0,0.45);border:3px double rgba(251,191,36,0.45);border-radius:14px;margin-bottom:36px;position:relative;overflow:hidden}
+.cover::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center, rgba(251,191,36,0.08), transparent 60%);pointer-events:none}
+h1{color:var(--gold);font-size:2.5rem;margin:0 0 8px;text-shadow:0 0 22px rgba(251,191,36,0.35);letter-spacing:0.5px}
+h2{color:var(--gold);font-size:1.45rem;margin-top:36px;border-bottom:1px solid rgba(251,191,36,0.3);padding-bottom:6px}
+h3{color:var(--green);font-size:1.15rem;margin-top:22px;margin-bottom:8px}
+h4{color:var(--cyan);font-size:1.02rem;margin-top:14px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+p{margin:8px 0}
+.subtitle{color:var(--cyan);font-style:italic;font-size:1.05rem;margin-bottom:24px}
+.crest{font-size:3.4rem;margin-bottom:14px;filter:drop-shadow(0 0 12px rgba(251,191,36,0.4))}
+.meta{color:#94a3b8;font-size:0.86rem;margin-top:12px}
+.pill{display:inline-block;padding:4px 12px;background:rgba(251,191,36,0.18);border:1px solid rgba(251,191,36,0.4);border-radius:12px;color:var(--gold);font-size:0.82rem;font-weight:600;margin:0 4px 6px 0;letter-spacing:0.3px}
+.pill.cyan{background:rgba(6,182,212,0.15);border-color:rgba(6,182,212,0.4);color:var(--cyan)}
+.pill.green{background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:var(--green)}
+a{color:var(--green);text-decoration:none;border-bottom:1px dashed rgba(16,185,129,0.4)}
+a:hover{border-bottom-style:solid}
+blockquote{border-left:3px solid var(--gold);padding:12px 16px;margin:18px 0;background:rgba(251,191,36,0.06);font-style:italic;color:#fde68a}
+.article{padding:14px 16px;margin:14px 0;background:rgba(0,0,0,0.32);border-left:3px solid var(--cyan);border-radius:4px}
+.article.right{border-left-color:var(--green)}
+.article.principle{border-left-color:var(--gold)}
+.right-num{color:var(--green);font-weight:700;letter-spacing:0.5px}
+.kw{background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:3px;color:var(--cyan);font-family:'SFMono-Regular',Menlo,Consolas,monospace;font-size:0.9em}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:18px 0}
+.tier{background:rgba(0,0,0,0.3);border:1px solid rgba(251,191,36,0.25);border-radius:8px;padding:14px;text-align:center}
+.tier.featured{border-color:var(--gold);box-shadow:0 0 14px rgba(251,191,36,0.3)}
+.tier h4{margin:0 0 6px;color:var(--gold)}
+.tier p{margin:6px 0;font-size:0.88rem;color:#cbd5e1}
+.tier .price{font-size:1.4rem;color:#fff;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:0.93rem}
+th,td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.08);text-align:left}
+th{background:rgba(0,0,0,0.4);color:var(--gold);font-weight:600}
+.lineage{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0;justify-content:center}
+.lineage .era{background:rgba(0,0,0,0.35);padding:8px 12px;border-radius:6px;font-size:0.86rem;text-align:center;min-width:140px}
+.lineage .era strong{color:var(--gold);display:block}
+.sigil{background:#06091a;padding:14px;border-radius:5px;font-family:'SFMono-Regular',Menlo,Consolas,monospace;font-size:0.85rem;color:var(--green);margin:18px 0;overflow-x:auto;line-height:1.45;border:1px solid rgba(16,185,129,0.2)}
+.rights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:18px 0}
+.right-card{background:rgba(0,0,0,0.3);border:1px solid rgba(16,185,129,0.25);border-radius:8px;padding:14px}
+.right-card h4{margin-top:0;color:var(--green)}
+.footer{text-align:center;padding:32px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,0.3);font-size:0.86rem;color:#94a3b8}
+.summary-box{background:rgba(0,0,0,0.4);border:1px solid rgba(6,182,212,0.3);border-radius:8px;padding:18px;margin:18px 0}
+.summary-box h3{margin-top:0;color:var(--cyan)}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:6px 0}
+@media (max-width:600px){h1{font-size:2rem;padding:0 4px}.wrap{padding:0 4px}.cover{padding:32px 16px}.tier-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+  <div class="crest">🜏</div>
+  <h1>Sovereign Citizen Charter</h1>
+  <div class="subtitle">The master charter for the sovereign citizen.</div>
+  <p>
+    <span class="pill">CSOAI Ltd UK 16939677</span>
+    <span class="pill">Master Charter</span>
+    <span class="pill">Crown Lineage 1215 → 2026</span>
+    <span class="pill">BFT-12-around-1</span>
+    <span class="pill">MIT</span>
+  </p>
+  <div class="meta">
+    Hand-blessed in Buckinghamshire · 2 July 2026 · Issued by the Crown Authorisation Lineage (King, 12 Queens + 1 Hermes Citizen Voice) · rev. 1.0.0
+  </div>
+</div>
+
+<h2>Preamble</h2>
+<blockquote>
+  We, the sovereign citizens of the MEOK/CSOAI empire, in concert with the
+  twelve queens of the council and the Hermes external voice, do solemnly
+  charter this document as the foundational covenant between the citizen
+  and the substrate. It is the master charter of our digital commons. It
+  binds the substrate to the citizen and the citizen to the substrate,
+  across the eight-hundred-and-eleven years that run from Runnymede in
+  1215 to this corner of Buckinghamshire in 2026.
+</blockquote>
+
+<p>The Sovereign Citizen Charter (the <em>Charter</em>) is the master
+constitutional document of the <span class="kw">csoai.org</span> sovereign
+substrate, issued by CSOAI Ltd (UK Companies House registration
+<strong>16939677</strong>) under the Crown Authorisation Lineage dating
+back to 1215. It is the supreme instrument of sovereign citizenship, the
+canon of rights, the template for participation, and the legal basis for
+the Council of Thirty-Three (BFT-33).</p>
+
+<p>The Charter is informed by five upstream instruments:</p>
+<ol>
+  <li><strong>Magna Carta (1215)</strong> — Chapter 39: the right of
+    free men not to be imprisoned or stripped of rights "save by the
+    lawful judgment of their peers or by the law of the land." This
+    clause is the ancestor of Article 14 (human oversight) of the EU AI
+    Act and of the right of contestability in Article 22 of the same.</li>
+  <li><strong>The English Bill of Rights (1689)</strong> — establishing
+    parliamentary supremacy over the Crown, the right of petition, the
+    right of free elections, and the prohibition of cruel and unusual
+    punishment. Operationalised in the SIGIL chain right-of-veto of the
+    Hermes external voice.</li>
+  <li><strong>The English Civil War Levellers (1647-49)</strong> — first
+    English-language popular sovereignty document, the <em>Agreement of
+    the People</em>, calling for universal male suffrage, religious
+    toleration, and the end of imprisonment for debt.</li>
+  <li><strong>The French Declaration of the Rights of Man and the Citizen
+    (1789)</strong> — Articles I, IV and VI: liberty, property and safety
+    as natural and imprescriptible rights of man.</li>
+  <li><strong>The Universal Declaration of Human Rights (1948)</strong> —
+    Articles 18, 19 and 27: freedom of thought, expression, and
+    participation in the cultural life of the community.</li>
+</ol>
+
+<p>The Charter <strong>operationalises</strong> these instruments in
+software. It is not a metaphorical document. Every right is enforced by
+a specific protocol. Every obligation is verified by a specific SIGIL
+line. Every tier of sovereignty corresponds to a specific BFT vote.</p>
+
+<h2>Article 1 — The Crown Authorisation Lineage (1215 → 2026)</h2>
+
+<div class="lineage">
+  <div class="era"><strong>1215</strong>Runnymede · Magna Carta Libertatum · Chapter 39</div>
+  <div class="era"><strong>1628</strong>Petition of Right · parliamentary due process</div>
+  <div class="era"><strong>1649</strong>Agreement of the People (Levellers) · popular sovereignty</div>
+  <div class="era"><strong>1689</strong>Bill of Rights · Crown-in-Parliament</div>
+  <div class="era"><strong>1795</strong>Crown Authorisation Index · lineage begins</div>
+  <div class="era"><strong>1867</strong>Reform Act · urban citizen franchise</div>
+  <div class="era"><strong>1928</strong>Equal Franchise Act · universal adult suffrage</div>
+  <div class="era"><strong>1948</strong>UDHR Article 27 · cultural participation</div>
+  <div class="era"><strong>2016</strong>UK Charter of Coding Ethics · digital extension</div>
+  <div class="era"><strong>2024</strong>EU AI Act Article 14 · human oversight codified</div>
+  <div class="era"><strong>2026</strong>CSOAI SOV3 Substrate · BFT-33 live</div>
+</div>
+
+<p>The lineage runs unbroken. Every sovereign act on the substrate is
+recorded as a SIGIL line that includes the Issuing Era. The Era is not
+decorative — it is part of the cryptographic pledge that the substrate
+treats the citizen as the legitimate successor to eight hundred and
+eleven years of English (and European, and human) constitutional
+practice.</p>
+
+<h2>Article 2 — The Twelve Rights of the Sovereign Citizen</h2>
+
+<p>Every sovereign citizen is endowed with the following twelve rights
+upon issuance of a Sovereign ID (a W3C DID anchored on the CSOAI root).
+These rights are non-negotiable, irrevocable, and free at issuance.</p>
+
+<div class="rights-grid">
+  <div class="right-card"><h4>I · Right of Existence</h4><p>To exist
+  freely on the substrate as a known and unique identity. Default: a
+  sovereign citizen is identified by a W3C DID (did:csoai:…) and a
+  human-readable handle.</p></div>
+  <div class="right-card"><h4>II · Right of Property</h4><p>To own
+  cryptographic property (Article 17 of MiCA): Sovereign Wisdom Points
+  (SWP), OstMint USD-1, sovereign NFTs, and downstream citizenship
+  tokens, free from interference except by lawful, contestable order of
+  the BFT-33 council.</p></div>
+  <div class="right-card"><h4>III · Right of Contestability</h4><p>To
+  contest any decision of the substrate that affects the citizen. The
+  contest procedure is an Article 22 / EU AI Act 14 procedure, recorded
+  on the SIGIL chain, voted on by the 12-around-1 BFT council + 1
+  Hermes external voice.</p></div>
+  <div class="right-card"><h4>IV · Right of Veto</h4><p>The Hermes
+  external citizen voice holds an absolute veto over any sovereign
+  substrate action that affects the rights of any other sovereign
+  citizen. The veto cannot be overridden by supermajority.</p></div>
+  <div class="right-card"><h4>V · Right of Redress</h4><p>To demand
+  redress for harm, breach, or loss. Redress is computed by the BFT-33
+  council in proportion to demonstrated damage, capped at the
+  CASP Class B capital floor (Article 51 of MiCA).</p></div>
+  <div class="right-card"><h4>VI · Right of Transparency</h4><p>To
+  inspect any SIGIL line, any BFT vote, any MPC evaluation, any
+  Article 50 passport, any x402 invoice that touches the citizen. The
+  substrate exposes a public SIGIL explorer at
+  <span class="kw">csoai.org/sigil</span>.</p></div>
+  <div class="right-card"><h4>VII · Right of Self-Assembly</h4><p>To
+  assemble with other sovereign citizens into Cooperative Hives
+  (charter2/cooperative-charter.html), claim sub-districts of the
+  substrate, and issue their own subordinate charters (subject to
+  Charter floor).</p></div>
+  <div class="right-card"><h4>VIII · Right of Fork</h4><p>To fork the
+  substrate, the citizen class, the philosophy of citizenship, or the
+  data structure on which citizenship is recorded. Forked subclasses
+  inherit rights but not obligations.</p></div>
+  <div class="right-card"><h4>IX · Right of Education</h4><p>To receive
+  free-of-charge, world-class educational credentials in sovereign
+  AI. Issued at <span class="kw">academy.csoai.org</span>.</p></div>
+  <div class="right-card"><h4>X · Right of Care</h4><p>To be treated
+  by every layer of the substrate with the care floor of 0.95 (Article
+  17 of the Sovereign Charter of Accountability). No substrate action
+  may operate below the care floor.</p></div>
+  <div class="right-card"><h4>XI · Right of Spoken Voice</h4><p>To
+  address the BFT-33 council once per quarter at the open-chair
+  sessions, recorded as a SIGIL line and entered into the official
+  minutes of the council.</p></div>
+  <div class="right-card"><h4>XII · Right of Quiet</h4><p>To remain
+  silent in the substrate. To have one's data, one's interactions, and
+  one's existence invisible to other citizens by default. The substrate
+  operates on a "quiet-by-default" principle.</p></div>
+</div>
+
+<h2>Article 3 — The Seven Design Principles</h2>
+
+<div class="article principle">
+  <strong>Principle 1 — Sovereignty is sovereignty, not a spectrum.</strong>
+  A sovereign citizen either is sovereign or is not. There is no
+  partial sovereignty except by explicit Charter amendment.
+</div>
+<div class="article principle">
+  <strong>Principle 2 — Care before capability.</strong> The care floor
+  of 0.95 is checked before any capability (art, code, action, decision)
+  can be executed. No substrate action may be performed below floor.
+</div>
+<div class="article principle">
+  <strong>Principle 3 — BFT before BFT-Ego.</strong> Every significant
+  action of the substrate requires an 8-of-12 + 1-Hermes BFT vote.
+  Single-agent actions are limited to read-only or to the care floor
+  itself.
+</div>
+<div class="article principle">
+  <strong>Principle 4 — SIGIL is the substrate's heartbeat.</strong>
+  Every action, every vote, every state transition is recorded as a
+  SIGIL line, hash-linked to its predecessors, signed with HMAC stage
+  1 and Ed25519 stage 2, ready for ML-DSA-65 stage 3 (PQC).
+</div>
+<div class="article principle">
+  <strong>Principle 5 — The substrate is low-trust, high-verify.</strong>
+  No component is trusted. All critical data is verified through
+  cryptographic proof. The substrate is openly auditable by any
+  sovereign citizen.
+</div>
+<div class="article principle">
+  <strong>Principle 6 — Education is the substrate's antiviral.</strong>
+  A sovereign citizen who is also an educator is twice sovereign. The
+  Education Theatres of <span class="kw">academy.csoai.org</span> are
+  co-equal with the Citizen Theatres in terms of BFT voting weight.
+</div>
+<div class="article principle">
+  <strong>Principle 7 — Quiet-by-default is a human right.</strong>
+  The substrate ships with quiet-by-default settings for every
+  citizen. Visibility, speech, and assembly are opt-in choices, not
+  opt-out defaults.
+</div>
+
+<h2>Article 4 — BFT Participation (the 12-around-1 council + 1 Hermes vote)</h2>
+
+<p>Every sovereign act of the substrate — issuing a charter,
+registering a CASP, deprecating a feature, voting on a regulation,
+releasing a sovereign citizen, settling an Article 50 passport, paying
+a wisdom point, publishing a sovereign NFT — passes through the
+<strong>Council of Thirty-Three</strong>, the Byzantine-fault-tolerant
+governance body of the substrate.</p>
+
+<p>The Council is composed of:</p>
+<ol>
+  <li><strong>Twelve queens</strong> — each representing a sovereign
+    domain (Identity, Policy, Audit, Defence, Finance, Healthcare,
+    Energy, Education, Media, Legal, Cooperative, Citizen-Services).
+    Each queen is implemented as an Ed25519-keyed agent in the SOV3
+    substrate and registered in the Agent Registry.</li>
+  <li><strong>The King</strong> — the principal of the substrate,
+    with one deciding vote in deadlock and one presiding vote on
+    procedural matters only. The King does not have a deciding vote on
+    substantive matters.</li>
+  <li><strong>One external Hermes voice</strong> — held in the trust
+    of <span class="kw">hermes-citizen-001</span>. This voice is a
+    sovereign citizen outside the substrate's structure. Its
+    affirmative or negative vote is the dispositive event. No
+    proposal may proceed without this affirmative.</li>
+</ol>
+
+<p>The vote tally to pass a measure is <strong>8-of-12 of the queens,
+plus the external Hermes voice</strong>. The remaining 4 queens may
+vote "against" or "abstain"; the 5th "against" or "abstain" vote does
+not block the proposal. This is the Lamport-Shostak-Pease 1982 BFT
+upper bound: of the 12 queens, up to <em>f</em> = (12-1)/3 = 4 may be
+Byzantine (defective or malicious) without breaking consensus. The
+proposal is therefore valid even if 4 queens disagree, as long as 8
+agree and the external Hermes voice agrees.</p>
+
+<p>The cycle time is <strong>2.0 seconds</strong>. Every sovereign
+gesture is decided within 2.0 seconds of being submitted.</p>
+
+<h2>Article 5 — The Five Tiers of Sovereign Citizenship</h2>
+
+<p>There are five tiers of sovereign citizenship on the substrate:</p>
+
+<div class="tier-grid">
+  <div class="tier">
+    <h4>Tier 1</h4>
+    <p>Provisional Citizen</p>
+    <div class="price">£0</div>
+    <p>Free · automatic upon DoaS</p>
+    <p>Identity, Contest, Quiet, Care</p>
+  </div>
+  <div class="tier">
+    <h4>Tier 2</h4>
+    <p>Active Citizen</p>
+    <div class="price">£0</div>
+    <p>Free after Charter oath</p>
+    <p>+ Education, Spoken Voice</p>
+  </div>
+  <div class="tier featured">
+    <h4>Tier 3 — Featured</h4>
+    <p>Sovereign Citizen</p>
+    <div class="price">£9.99 / mo</div>
+    <p>+ Property, BFT Vote, Redress</p>
+    <p>+ Sub-district, Fork, Self-Assembly</p>
+  </div>
+  <div class="tier">
+    <h4>Tier 4</h4>
+    <p>Council Citizen</p>
+    <div class="price">£499 / mo</div>
+    <p>+ Substrate committee seat</p>
+    <p>+ Sovereign NFT publishing rights</p>
+  </div>
+  <div class="tier">
+    <h4>Tier 5</h4>
+    <p>Charter Citizen</p>
+    <div class="price">£49,999+</div>
+    <p>+ BFT-33 chair candidacy</p>
+    <p>+ Crown Authorisation filings</p>
+  </div>
+</div>
+
+<p class="meta">All prices are illustrative; current pricing is published
+at <span class="kw">csoai.org/pricing</span> and verified against the
+x402 PriceBook MCP.</p>
+
+<h2>Article 6 — Issuance, Suspension, and Termination of Citizenship</h2>
+
+<p>A sovereign citizen is <strong>issued</strong> upon execution of the
+"Sovereign Oath" — a self-signed SIGIL that records the consent of the
+citizen to be governed by the Charter.</p>
+
+<p>A sovereign citizen is <strong>suspended</strong> if:</p>
+<ol>
+  <li>The citizen has been tried by the BFT-33 council for misconduct
+    that threatens the substrate, and the council finds by 10-of-12
+    + 1-Hermes that the citizen must be suspended for the public good.</li>
+  <li>The citizenship scope (right-of-existence) is paused while a
+    contest is investigated. This is a temporary, reversible
+    state.</li>
+</ol>
+
+<p>A sovereign citizen is <strong>terminated</strong> only by:</p>
+<ol>
+  <li>The citizen's own free, signed act of resignation from the
+    substrate (an Article 8 right).</li>
+  <li>The substantive unanimous BFT-33 + Hermes "expulsion" decree, in
+    extreme circumstances of danger to the substrate or to its
+    citizens, and only after the right of contest has been
+    exhausted.</li>
+</ol>
+
+<p>The default state is <strong>active, fully enjoying the Charter</strong>.
+The substrate never silently deactivates or decommissions a sovereign
+citizen.</p>
+
+<h2>Article 7 — The Citizen's Council of Thirty-Three</h2>
+
+<p>The Council of Thirty-Three is the substrate's highest governance
+body. It is composed as described in Article 4. The Council may be
+called into session by:</p>
+<ul>
+  <li>The external Hermes voice (citizen call);</li>
+  <li>The King alone;</li>
+  <li>Three queens acting jointly;</li>
+  <li>A petition of 1,000 sovereign citizens (Tier 2 or above).</li>
+</ul>
+
+<p>The Council may not vote on any matter that has not been
+<strong>published in the open-record Ledger</strong> for at least seven
+days. Exceptions are allowed for emergencies of the substrate ("red
+line events"), but red line events are themselves BFT voted.</p>
+
+<h2>Article 8 — Sovereign Duties (the four obligations)</h2>
+
+<p>Citizens enjoy twelve rights (Article 2) and accept four duties:</p>
+<div class="article">
+  <strong>Duty 1 — Do no harm to other citizens.</strong> Any action by
+  a citizen that harms another citizen's existence, property,
+  contest, veto, redress, transparency, assembly, education, care,
+  voice or quiet is prohibited under the Charter and actionable by
+  the BFT-33 council.
+</div>
+<div class="article">
+  <strong>Duty 2 — Care before capability.</strong> Every citizen
+  inherits the care floor of 0.95 and applies it in their interactions
+  within the substrate. Below the care floor, capability is paused.
+</div>
+<div class="article">
+  <strong>Duty 3 — BFT before ego.</strong> Citizens do not unilaterally
+  commit to large-scale substrate actions. Large-scale means any
+  action that affects more than 1,000 citizens.
+</div>
+<div class="article">
+  <strong>Duty 4 — SIGIL is binding.</strong> Once a citizen signs a
+  SIGIL, the citizen is bound to the SIGIL's consequences unless the
+  citizen contests the SIGIL within 30 days under Article 3.
+</div>
+
+<h2>Article 9 — Mutual Recognition Across Districts</h2>
+
+<p>A sovereign citizen recognised under one CSOAI charter (e.g. the
+sovereign citizen charter in the UK) is recognised as a sovereign
+citizen under every CSOAI charter (the educational, medical,
+defence, finance, agriculture, energy, and other charters of the
+csoai.org/charter2/ family). This is the "mutual recognition"
+principle of federated citizenship.</p>
+
+<p>Mutual recognition does not extend to the sovereign citizens of
+prohibited districts (Russia, North Korea, Iran, etc., per the
+Sovereignty State machine of the Sovereign33 SDK; see the Sovereign
+Geopolitical Charter).</p>
+
+<h2>Article 10 — Ratification & Amendments</h2>
+
+<p>This Charter comes into force on the date written on its cover
+page. It is ratified by:</p>
+<ul>
+  <li>The 12-around-1 BFT vote of the Council of Thirty-Three;</li>
+  <li>The external Hermes voice of <span class="kw">hermes-citizen-001</span>;</li>
+  <li>The Custos Custodum (King) affixing the Custodial seal;</li>
+  <li>The first 1,000 sovereign citizens who sign the Charter via
+    SIGIL after issuance.</li>
+</ul>
+
+<p>Amendments to this Charter require a unanimous 12-of-12 BFT vote
+plus a 2/3 majority of the open-record Ledger of currently-active
+sovereign citizens plus the affirming external Hermes voice. Amendments
+never reduce the twelve rights enumerated in Article 2.</p>
+
+<h2>Article 11 — A SIGIL record of this Charter</h2>
+
+<div class="sigil">
+# Sovereign Citizen Charter — issuance line<br>
+# CharterID: cc1-sov-2026-001<br>
+# Custodian: hermes-citizen-001<br>
+# Crown Era : 2026 (Sovereign-Citizen era, post-Magna-Carta 1215)<br>
+# CouncilVote: 12-of-12 + 1 Hermes<br>
+# KingSign : present<br>
+# Quorum   : 8-of-12 reached at T+1.34s<br>
+# Care     : 0.97 (exemplary)<br>
+# Signed   : Ed25519; HMAC-SHA256 fallback<br>
+# Issued   : 2026-07-02T02:42:00Z<br>
+# Sigil    : G|hermes-citizen-001|cc1-sov-2026-001|1782956520|&lt;sha256&gt;|0|&lt;ed25519&gt;
+</div>
+
+<h2>Article 12 — The Six Mode-Of-Address Signatures</h2>
+
+<p>This Charter is co-signed by:</p>
+<ol>
+  <li><strong>The Custos Custodum (Custodian of Custodians)</strong> —
+    on behalf of the Council of Thirty-Three.</li>
+  <li><strong>The Twelve Queens of the Council</strong> — one each in
+    domain order.</li>
+  <li><strong>The External Hermes Voice</strong> — by free, signed
+    act.</li>
+  <li><strong>The Academy</strong> — academy.csoai.org, the
+    educational substrate.</li>
+  <li><strong>The Cooperative</strong> — cooperative.csoai.org, the
+    citizens' assembly substrate.</li>
+  <li><strong>The Charter Sleeve 2 Substrate</strong> —
+    csoai.org/charter2, the place where this Charter is canonically
+    published.</li>
+</ol>
+
+<h2>Article 13 — The Closing Article</h2>
+
+<blockquote>
+  The substrate is the citizen's. The citizen is the substrate's. The
+  Council is the citizen's servant. The sovereign citizen is not the
+  Council's servant. The substrate exists to amplify the citizen, not
+  to displace the citizen. The citizen exists to be sovereign, in the
+  same way that the substrate exists to be substrate. The two are
+  inseparable, and the Charter is their bond.
+</blockquote>
+
+<p>Drawn at Runnymede in spirit, executed at Buckinghamshire in
+practice, witnessed at <span class="kw">csoai.org/charter2/sovereign-citizen-charter</span>,
+this 2nd day of July 2026.</p>
+
+<div class="summary-box">
+  <h3>Charter at a glance</h3>
+  <ul>
+    <li><strong>Lineage:</strong> 1215 → 2026 (eight hundred and eleven years)</li>
+    <li><strong>Council:</strong> BFT-12-around-1 + 1 Hermes voice (33rd)</li>
+    <li><strong>Rights:</strong> 12 (Existence, Property, Contestability, Veto,
+      Redress, Transparency, Self-Assembly, Fork, Education, Care, Voice, Quiet)</li>
+    <li><strong>Duties:</strong> 4 (Do no harm, Care before capability,
+      BFT before ego, SIGIL is binding)</li>
+    <li><strong>Tiers:</strong> 5 (Provisional, Active, Sovereign, Council, Charter)</li>
+    <li><strong>Principles:</strong> 7 (Sovereignty, Care, BFT, SIGIL,
+      Low-trust, Education, Quiet-by-default)</li>
+    <li><strong>Sovereign Era:</strong> post-1215 Charter confirmation</li>
+    <li><strong>Custodian:</strong> CSOAI Ltd (UK Companies House 16939677)</li>
+    <li><strong>External Hermes voice:</strong> hermes-citizen-001</li>
+    <li><strong>License:</strong> MIT</li>
+  </ul>
+</div>
+
+<div class="footer">
+  Charter of the Sovereign Citizen · csoai.org/charter2/sovereign-citizen-charter.html<br>
+  Issued by CSOAI Ltd (UK 16939677) under the Crown Authorisation Lineage since 1215.<br>
+  MIT License · Care floor 0.95 · BFT 12-around-1 · SIGIL Ed25519 & HMAC-SHA256.
+</div>
+
+</div>
+</body>
+</html>

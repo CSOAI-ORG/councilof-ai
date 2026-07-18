@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌱 IoT Dashboard — iOK Farm + Koi Pond + Sensors</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; background: radial-gradient(ellipse at top, #0a1f15 0%, #020202 70%); color: #f8fafc; min-height: 100vh; padding: 40px 20px; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { color: #fbbf24; font-size: 2.2rem; font-weight: 900; margin-bottom: 8px; }
+  .sub { color: #94a3b8; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
+  .card { background: rgba(10,20,15,0.7); border: 1px solid rgba(74,222,128,0.3); border-radius: 12px; padding: 20px; }
+  .card h3 { color: #4ade80; margin-bottom: 8px; font-size: 1.1rem; }
+  .card .value { font-size: 2.5rem; font-weight: 900; color: #fbbf24; margin: 12px 0; }
+  .card .label { color: #94a3b8; font-size: 0.8rem; }
+  table { width: 100%; background: rgba(10,20,15,0.7); border-radius: 12px; padding: 16px; border-collapse: collapse; margin: 24px 0; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(74,222,128,0.2); }
+  th { color: #4ade80; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+  td { color: #cbd5e1; font-size: 0.9rem; }
+  td.green { color: #4ade80; }
+  td.gold { color: #fbbf24; }
+  .footnote { color: #64748b; font-size: 0.8rem; margin-top: 16px; text-align: center; }
+  h2 { color: #4ade80; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🌱 IoT Dashboard</h1>
+  <p class="sub">Live benchmark of the iOK Farm IoT stack (ponds, sensors, malamutes). Updated 28 Jun 2026.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Koi Pond Size</h3>
+      <div class="value">13×12m</div>
+      <div class="label">234,000 litres, 1.5m depth</div>
+      <div class="green">↗ 4 bead filters + 2 UVs</div>
+    </div>
+    <div class="card">
+      <h3>Pond Health</h3>
+      <div class="value">7.4 pH</div>
+      <div class="label">8.2 mg/L DO, 22.1°C, 12 koi</div>
+      <div class="green">↗ All within care floor</div>
+    </div>
+    <div class="card">
+      <h3>Malamutes Guarding</h3>
+      <div class="value">9</div>
+      <div class="label">Misty, Zeus, Luna, Storm, Puma, Kita, Lamb, Bear, Fang</div>
+      <div class="green">↗ 8 pets + 1 working malamute</div>
+    </div>
+    <div class="card">
+      <h3>Free Emergency Stop</h3>
+      <div class="value">100%</div>
+      <div class="label">No approval required (Maternal Covenant)</div>
+      <div class="green">↗ Pond-mother can halt all actuators</div>
+    </div>
+  </div>
+
+  <h2>IoT Devices (iOK Farm)</h2>
+  <table>
+    <thead><tr><th>Device</th><th>Type</th><th>Sensors</th><th>Actuators</th><th>Hive</th></tr></thead>
+    <tbody>
+      <tr><td>iok-pond-001</td><td>esp32</td><td>pH, DO, temp, humidity</td><td>9 (pumps, UVs, feeder, aerator, solenoid)</td><td>iok-pond-001</td></tr>
+      <tr><td>iok-tunnel-001</td><td>esp32</td><td>temp, humidity, soil_moisture, co2</td><td>3 (light, pump, fan)</td><td>iok-tunnel-001</td></tr>
+      <tr><td>iok-pond-camera-001</td><td>rpi</td><td>camera, motion</td><td>—</td><td>iok-pond-001</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Koi Care Floor (5 parameters, 0 violations)</h2>
+  <table>
+    <thead><tr><th>Parameter</th><th>Min</th><th>Max</th><th>Current</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>pH</td><td>6.5</td><td>8.5</td><td>7.4</td><td class="green">✓ within range</td></tr>
+      <tr><td>DO (mg/L)</td><td>5.0</td><td>12.0</td><td>8.2</td><td class="green">✓ within range</td></tr>
+      <tr><td>Temp (°C)</td><td>4</td><td>30</td><td>22.1</td><td class="green">✓ within range</td></tr>
+      <tr><td>Ammonia (mg/L)</td><td>0</td><td>0.02</td><td>0.001</td><td class="green">✓ within range</td></tr>
+      <tr><td>Nitrite (mg/L)</td><td>0</td><td>0.5</td><td>0.05</td><td class="green">✓ within range</td></tr>
+    </tbody>
+  </table>
+
+  <h2>IoT MCP Tool Stack</h2>
+  <table>
+    <thead><tr><th>Tool</th><th>Function</th><th>Tests</th></tr></thead>
+    <tbody>
+      <tr><td>sov_iot_register</td><td>Register a device</td><td class="green">✓</td></tr>
+      <tr><td>sov_iot_telemetry</td><td>Signed telemetry + care-floor alerts</td><td class="green">✓</td></tr>
+      <tr><td>sov_iot_actuate</td><td>BFT council approval required</td><td class="green">✓</td></tr>
+      <tr><td>sov_iot_emergency_stop</td><td>FREE (Maternal Covenant)</td><td class="green">✓</td></tr>
+      <tr><td>sov_pond_log</td><td>Koi pond care floor check</td><td class="green">✓</td></tr>
+      <tr><td>sov_pond_emergency</td><td>Auto water change on pH crash</td><td class="green">✓</td></tr>
+    </tbody>
+  </table>
+
+  <p class="footnote">All values from live tests run 28 Jun 2026 · verify at proofof.ai/iot/&lt;id&gt; or proofof.ai/pond/&lt;id&gt; · CSOAI Ltd (UK 16939677) · MIT</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,282 @@
+{
+  "name": "Stripe new subscription \u2192 5-email welcome sequence + Slack notify",
+  "nodes": [
+    {
+      "parameters": {
+        "events": [
+          "customer.subscription.created",
+          "checkout.session.completed"
+        ],
+        "options": {}
+      },
+      "id": "stripe-trigger",
+      "name": "Stripe webhook trigger",
+      "type": "n8n-nodes-base.stripeTrigger",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ],
+      "credentials": {
+        "stripeApi": {
+          "id": """",
+          "name": "Stripe Live"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "conditions": [
+            {
+              "id": "is-real-customer",
+              "leftValue": "={{$json.customer_email}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "filter-real",
+      "name": "Filter real customer",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "sales",
+        "text": "=\ud83c\udf89 NEW PAYING CUSTOMER\n*Product:* {{$json.product_name}}\n*Email:* {{$json.customer_email}}\n*Amount:* \u00a3{{$json.amount_total / 100}}\n*Subscription:* {{$json.recurring ? 'Yes \u2014 monthly' : 'One-time'}}\n*Stripe ID:* {{$json.id}}\n*Time:* {{$json.created}}\n\nNick \u2014 reach out within 24h with personal welcome."
+      },
+      "id": "slack-celebrate",
+      "name": "Slack \u2014 celebrate + notify",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        600,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "nicholas@csoai.org",
+        "toEmail": "={{$json.customer_email}}",
+        "subject": "=Welcome to {{$json.product_name}} \u2014 what happens next",
+        "html": "=<p>Hi {{$json.customer_name || 'there'}},</p>\n<p>Thank you for subscribing to <strong>{{$json.product_name}}</strong>. I'm Nicholas Templeman, solo UK founder of MEOK AI Labs. You'll hear from me directly \u2014 not a sales rep.</p>\n<p><strong>Next 24 hours:</strong></p>\n<ol>\n<li>Email with your subscription details + access links arrives within 1 hour</li>\n<li>I'll personally book your onboarding call within 24h</li>\n<li>If you don't hear from me by then, reply to this email \u2014 direct founder access</li>\n</ol>\n<p><strong>What's included in your subscription:</strong></p>\n<ul>\n<li>Pre-built compliance templates (delivered as ZIP within 1 hour)</li>\n<li>HMAC-signed quarterly self-attestations</li>\n<li>30-min/quarter live consult call</li>\n<li>Slack/email support for new regulatory updates</li>\n</ul>\n<p>If you want to chat sooner, my Calendly is <a href=\"https://cal.com/networknick\">cal.com/networknick</a> \u2014 pick any slot.</p>\n<p>Welcome aboard.</p>\n<p>\u2014 Nicholas Templeman<br>Founder, MEOK AI Labs<br>CSOAI LTD \u00b7 UK Companies House 16939677</p>"
+      },
+      "id": "welcome-email",
+      "name": "Welcome email (Day 0)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "days"
+      },
+      "id": "wait-1d",
+      "name": "Wait 1 day",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "nicholas@csoai.org",
+        "toEmail": "={{$json.customer_email}}",
+        "subject": "Quick check-in \u2014 your {{$json.product_name}} working well?",
+        "html": "=<p>Hi {{$json.customer_name || 'there'}},</p>\n<p>You subscribed yesterday \u2014 quick check that everything works.</p>\n<p>Three things to confirm:</p>\n<ol>\n<li>Did the welcome email + ZIP arrive?</li>\n<li>Have you booked your onboarding call yet? (<a href=\"https://cal.com/networknick\">cal.com/networknick</a>)</li>\n<li>Any specific question I can answer right now?</li>\n</ol>\n<p>Reply to this email \u2014 I read every one.</p>\n<p>\u2014 Nicholas</p>"
+      },
+      "id": "day1-checkin",
+      "name": "Day 1 check-in",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 6,
+        "unit": "days"
+      },
+      "id": "wait-6d",
+      "name": "Wait 6 days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "nicholas@csoai.org",
+        "toEmail": "={{$json.customer_email}}",
+        "subject": "Day 7 \u2014 first quarterly attestation cert ready when you are",
+        "html": "=<p>Hi,</p>\n<p>You've had {{$json.product_name}} for a week. Quick reminder of what's available:</p>\n<ul>\n<li><strong>First signed quarterly attestation</strong> \u2014 generated when you fill in the 6-section template (link in welcome email). Takes 20 min once you have your AI Tool Register populated.</li>\n<li><strong>Onboarding call</strong> \u2014 if not yet booked: <a href=\"https://cal.com/networknick\">cal.com/networknick</a></li>\n<li><strong>Slack channel</strong> \u2014 reply 'add me to slack' if you want direct access for ongoing questions</li>\n</ul>\n<p>Anything I can do to make this more useful?</p>\n<p>\u2014 Nicholas</p>"
+      },
+      "id": "day7-engage",
+      "name": "Day 7 engagement check",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 23,
+        "unit": "days"
+      },
+      "id": "wait-23d",
+      "name": "Wait 23 days (= day 30 from start)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "nicholas@csoai.org",
+        "toEmail": "={{$json.customer_email}}",
+        "subject": "Month 1 review \u2014 anything we should change?",
+        "html": "=<p>Hi,</p>\n<p>You've been with {{$json.product_name}} 30 days. I aim to make the second month better than the first.</p>\n<p>Three quick questions (reply with whatever):</p>\n<ol>\n<li>Was the first quarterly attestation useful in any specific decision/conversation?</li>\n<li>What's missing from the templates that you wish was in there?</li>\n<li>Would you recommend us to one other person? (If yes, intro = 30% rev share to you for life of the customer)</li>\n</ol>\n<p>If something hasn't worked, my apologies \u2014 say so and we'll fix it. 30-day money-back is still active if you want out.</p>\n<p>\u2014 Nicholas</p>"
+      },
+      "id": "day30-review",
+      "name": "Day 30 review request",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Stripe webhook trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter real customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter real customer": {
+      "main": [
+        [
+          {
+            "node": "Slack \u2014 celebrate + notify",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Welcome email (Day 0)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Welcome email (Day 0)": {
+      "main": [
+        [
+          {
+            "node": "Wait 1 day",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1 day": {
+      "main": [
+        [
+          {
+            "node": "Day 1 check-in",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Day 1 check-in": {
+      "main": [
+        [
+          {
+            "node": "Wait 6 days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 6 days": {
+      "main": [
+        [
+          {
+            "node": "Day 7 engagement check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Day 7 engagement check": {
+      "main": [
+        [
+          {
+            "node": "Wait 23 days (= day 30 from start)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 23 days (= day 30 from start)": {
+      "main": [
+        [
+          {
+            "node": "Day 30 review request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "_meok_notes": {
+    "purpose": "Onboard every new paying customer with founder-direct emails over the first 30 days. Reduces churn + drives referrals.",
+    "covers_all_meok_products": "Care Home Pack, Pro tier, Audit-Prep Bundle, Article 50 kit, NIS2-DE kit, Bias Detection, Transparency",
+    "expected_uplift": "30-day churn reduction by 20-40%; referrals from email 4 (Day 30) drive ~5-10% of compounding new revenue"
+  },
+  "id": "cfcfeda6-2670-414a-af1c-d8f7ad76a524",
+  "tags": []
+}

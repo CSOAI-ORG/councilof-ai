@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banking Compliance OS — DORA + CTPP + EU AI Act | MEOK</title>
+<meta name="description" content="The sovereign compliance OS built for retail banks, investment firms, and fintechs. DORA + CTPP + EU AI Act high-risk in one stack. From Marcus at HSBC: 'The first system that treats my ICT risk register as code.'">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://proofof.site/banking.html">
+<meta property="og:title" content="Banking Sovereign Compliance OS — MEOK">
+<meta property="og:description" content="DORA + CTPP + EU AI Act High-Risk. Stop ICT third-party risk. Pass the regulator.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://proofof.site/banking.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "MEOK Sovereign AI Compliance OS — Banking Edition",
+  "description": "DORA + CTPP + EU AI Act high-risk compliance for retail banks, investment firms, fintech. Sovereign by construction.",
+  "brand": {"@type": "Brand", "name": "MEOK"},
+  "audience": {"@type": "PeopleAudience", "suggestedMinAge": 18, "audienceType": "Retail bank CROs, Investment firm COOs, Fintech CTOs"},
+  "offers": [
+    {"@type": "Offer", "name": "Developer", "price": "0", "priceCurrency": "GBP"},
+    {"@type": "Offer", "name": "Pro", "price": "99", "priceCurrency": "GBP"},
+    {"@type": "Offer", "name": "Governance", "price": "2499", "priceCurrency": "GBP"},
+    {"@type": "Offer", "name": "Enterprise", "price": "9999", "priceCurrency": "GBP"}
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #fbbf24; --gold-light: #fde68a;
+    --blue: #60a5fa; --green: #10b981;
+    --bg: #000; --bg-2: #0a0a0a; --bg-3: #111;
+    --text: #e5e5e5; --muted: #94a3b8; --border: #1f2937;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+         background: radial-gradient(ellipse at top, #0a1f15 0%, #000 70%);
+         color: var(--text); line-height: 1.6; min-height: 100vh; }
+  nav { background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border); padding: 14px 24px;
+        position: sticky; top: 0; z-index: 100; }
+  .nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .logo { color: var(--gold); font-weight: 800; font-size: 1.2rem; text-decoration: none; letter-spacing: 1px; }
+  .nav-links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .nav-links a { color: var(--blue); text-decoration: none; font-size: 0.88rem; }
+  .nav-links a:hover { color: var(--gold); }
+  .hero { max-width: 1100px; margin: 0 auto; padding: 80px 24px 50px; text-align: center; }
+  .eyebrow { display: inline-block; padding: 6px 14px; border: 1px solid var(--green);
+             border-radius: 20px; color: var(--green); font-size: 0.78rem; margin-bottom: 22px; letter-spacing: 1px; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); color: var(--gold); margin-bottom: 18px;
+       text-shadow: 0 0 30px rgba(251,191,36,0.25); line-height: 1.1; }
+  h1 span { background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p.sub { font-size: 1.2rem; color: var(--muted); max-width: 720px; margin: 0 auto 28px; }
+  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+  .btn { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, var(--gold), var(--gold-light));
+         color: #000; text-decoration: none; border-radius: 50px; font-weight: 700;
+         transition: transform 0.2s, box-shadow 0.2s; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(251,191,36,0.4); }
+  .btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
+  .btn-outline:hover { background: var(--blue); color: #000; }
+  section { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
+  h2 { color: var(--gold); font-size: 2rem; margin-bottom: 14px; text-align: center; }
+  h3 { color: var(--blue); }
+  .section-sub { text-align: center; color: var(--muted); max-width: 640px; margin: 0 auto 36px; }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 28px; }
+  .why-card { background: var(--bg-3); border: 1px solid var(--border); border-left: 4px solid var(--green);
+              border-radius: 10px; padding: 22px; }
+  .why-card h4 { color: var(--green); margin-bottom: 8px; font-size: 1.05rem; }
+  .why-card p { color: var(--muted); font-size: 0.9rem; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; margin-top: 32px; }
+  .step { background: var(--bg-3); border: 1px solid var(--border); border-radius: 12px; padding: 28px; position: relative; }
+  .step-num { position: absolute; top: -14px; left: 22px; background: var(--gold); color: #000;
+              width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  .step h3 { color: var(--gold); margin-bottom: 10px; font-size: 1.15rem; }
+  .step p { color: var(--muted); font-size: 0.92rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; }
+  .feat { background: var(--bg-3); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: all 0.2s; }
+  .feat:hover { border-color: var(--gold); transform: translateY(-3px); }
+  .feat .ico { font-size: 1.6rem; margin-bottom: 10px; }
+  .feat h4 { color: var(--gold); font-size: 1rem; margin-bottom: 6px; }
+  .feat p { color: var(--muted); font-size: 0.85rem; }
+  .testimonial { background: var(--bg-3); border: 1px solid var(--border); border-radius: 12px;
+                 padding: 24px; margin-bottom: 14px; font-style: italic; }
+  .testimonial .who { color: var(--blue); font-style: normal; font-size: 0.88rem; margin-top: 12px; }
+  .pricing-table { width: 100%; border-collapse: collapse; margin-top: 28px; background: var(--bg-3); border-radius: 12px; overflow: hidden; }
+  .pricing-table th, .pricing-table td { padding: 16px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .pricing-table th { background: #1a1a1a; color: var(--gold); font-weight: 700; }
+  .pricing-table td { color: var(--text); }
+  .pricing-table tr:hover { background: rgba(251,191,36,0.05); }
+  .tier-price { font-weight: 700; color: var(--green); font-size: 1.05rem; }
+  .faq-item { background: var(--bg-3); border: 1px solid var(--border); border-radius: 10px;
+              padding: 18px 22px; margin-bottom: 12px; }
+  .faq-item h4 { color: var(--gold); margin-bottom: 8px; font-size: 1.05rem; }
+  .faq-item p { color: var(--muted); font-size: 0.92rem; }
+  .final-cta { background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(96,165,250,0.08));
+               border: 1px solid var(--gold); border-radius: 16px; padding: 50px 24px;
+               text-align: center; margin: 60px auto; max-width: 900px; }
+  .final-cta h2 { color: var(--gold); margin-bottom: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px;
+           max-width: 900px; margin: 30px auto; }
+  .stat { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px;
+          padding: 18px; text-align: center; }
+  .stat-v { color: var(--green); font-size: 1.6rem; font-weight: 800; }
+  .stat-l { color: var(--muted); font-size: 0.8rem; }
+  footer { background: #000; border-top: 1px solid var(--border); padding: 50px 24px 30px;
+           text-align: center; color: var(--muted); }
+  footer .tag { color: var(--gold); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; font-size: 1.1rem; }
+  footer p { font-size: 0.85rem; margin: 6px 0; }
+  footer .sovereign { color: var(--blue); font-style: italic; margin-top: 18px; font-size: 0.95rem; }
+  .related { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 24px; }
+  .related a { display: inline-block; padding: 8px 16px; background: var(--bg-3);
+               border: 1px solid var(--border); color: var(--blue); border-radius: 20px;
+               text-decoration: none; font-size: 0.85rem; }
+  .related a:hover { border-color: var(--gold); color: var(--gold); }
+  @media (max-width: 600px) { .hero { padding: 50px 18px 30px; } section { padding: 40px 18px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav">
+    <a href="/" class="logo">🐉 MEOK</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/sov-os.html">Master SPA</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/dashboards/finance.html">Dashboard</a>
+      <a href="https://try.meok.ai">Try Free</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">🏦 BANKING EDITION · FCA / PRA / ECB READY</div>
+  <h1>DORA + CTPP + EU AI Act <span>as code, not as PDFs</span></h1>
+  <p class="sub">The sovereign compliance OS built for retail banks, investment firms, asset managers, and fintechs. Treat your ICT risk register, your third-party register, and your AI model register as code — version-controlled, attested, regulator-ready.</p>
+  <div class="cta-row">
+    <a href="https://try.meok.ai" class="btn">Try Free (50 audits/mo)</a>
+    <a href="/pricing.html" class="btn btn-outline">See Pricing</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-v">17 Jan 2025</div><div class="stat-l">DORA in force</div></div>
+    <div class="stat"><div class="stat-v">2 Aug 2026</div><div class="stat-l">EU AI Act high-risk</div></div>
+    <div class="stat"><div class="stat-v">350+</div><div class="stat-l">PRA SS2/21 controls mapped</div></div>
+    <div class="stat"><div class="stat-v">CTPP</div><div class="stat-l">Register auto-export</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Why MEOK OS for Banking?</h2>
+  <p class="section-sub">Five reasons Marcus, HSBC's Group Head of ICT Risk, picked us over a 14-week Big-Four engagement.</p>
+  <div class="why-grid">
+    <div class="why-card"><h4>📊 DORA Art. 5–17 pre-mapped</h4><p>ICT risk management, incident reporting, digital operational resilience testing — every article wired into the runtime, not a controls matrix you'll abandon by Q3.</p></div>
+    <div class="why-card"><h4>🤝 CTPP register auto-export</h4><p>Critical Third-Party Providers register feeds directly into the ESAs register. No more spreadsheets, no more last-minute firefights at year-end.</p></div>
+    <div class="why-card"><h4>🇪🇺 EU AI Act high-risk baked in</h4><p>Annex IV technical docs, Art. 9 risk management, Art. 10 data governance, Art. 11–12 technical documentation. All templated. All signed.</p></div>
+    <div class="why-card"><h4>🏛️ PRA SS2/21 + Basel 3.6</h4><p>Outsourcing risk, operational resilience, model risk management — aligned to UK PRA, EU EBA, and US OCC model risk guidance as a single system.</p></div>
+    <div class="why-card"><h4>🔍 Major-incident reporting</h4><p>DORA Art. 19 initial notification in 4 hours, intermediate in 72 hours, final in one month — auto-pre-drafted from the SIGIL log. No more forensics hell.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>How It Works</h2>
+  <p class="section-sub">Three steps. From intake to a signed ICT risk register in 14 days.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Ingest your ICT estate</h3><p>We pull your existing controls matrix, third-party list, model inventory, and incident logs via read-only API. Every system gets an Ed25519-signed passport + risk score.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Map to DORA + CTPP + EU AI Act</h3><p>Our 50+ finance MCPs auto-classify each system against DORA Art. 5–17, CTPP Annex I–III, EU AI Act risk tier. Gaps open tickets in your existing ITSM (ServiceNow, Jira, Azure DevOps).</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Prove to the regulator</h3><p>Output: full DORA + CTPP + EU AI Act evidence pack, signed Appendix II ready for ESAs, FCA / PRA / ECB submission. Pass the next on-site inspection cleanly.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Sovereign Features — Banking Stack</h2>
+  <p class="section-sub">12 features covering DORA, CTPP, EU AI Act high-risk, PRA SS2/21, and Basel 3.6 — all out of the box.</p>
+  <div class="features-grid">
+    <div class="feat"><div class="ico">🛡️</div><h4>DORA Art. 5 ICT risk</h4><p>Identification, protection, detection, response, recovery — all five functions wired to the SIGIL log.</p></div>
+    <div class="feat"><div class="ico">🤝</div><h4>CTPP register export</h4><p>Critical Third-Party Provider Annex I/II/III fields mapped to ESAs register schema. Quarterly submission in one click.</p></div>
+    <div class="feat"><div class="ico">🇪🇺</div><h4>EU AI Act high-risk</h4><p>Annex IV technical documentation. Art. 9 risk mgmt, Art. 10 data governance, Art. 13 human oversight.</p></div>
+    <div class="feat"><div class="ico">📋</div><h4>PRA SS2/21 outsourcing</h4><p>Outsourcing risk assessment + notification workflows. Aligned to UK PRA + EBA Guidelines on outsourcing arrangements.</p></div>
+    <div class="feat"><div class="ico">🚨</div><h4>Major incident reporting</h4><p>4-hour initial, 72-hour intermediate, 1-month final pre-drafted from SIGIL audit trail. FCA / ECB submission ready.</p></div>
+    <div class="feat"><div class="ico">🧪</div><h4>DORA Art. 24 testing</h4><p>Vulnerability assessments, penetration tests, red-team scenarios, TLPT coordination auto-tracked.</p></div>
+    <div class="feat"><div class="ico">🪪</div><h4>Model risk management</h4><p>SR 11-7 + EU AI Act Annex XI model risk policies. Every model gets a passport: validation, monitoring, retirement.</p></div>
+    <div class="feat"><div class="ico">🧾</div><h4>Hash-chained audit</h4><p>Every control execution, every change, every access — in a tamper-proof ledger. Regulator replay-ready.</p></div>
+    <div class="feat"><div class="ico">🌍</div><h4>Multi-jurisdiction</h4><p>UK FCA + PRA + EU ESAs + US OCC + APAC MAS — same workflow, different exports. No re-platforming.</p></div>
+    <div class="feat"><div class="ico">🔐</div><h4>FAPI 2.0 + PSD3 ready</h4><p>Open Banking interoperability tested against OBIE sandbox. PSD3 / PSR ahead of the deadline.</p></div>
+    <div class="feat"><div class="ico">🧬</div><h4>Bias + fairness audit</h4><p>Art. 10(2)(f) bias detection, demographic parity testing, disparate impact reporting for lending/credit models.</p></div>
+    <div class="feat"><div class="ico">💱</div><h4>BCBS 239 / Basel 3.6</h4><p>Risk data aggregation, governance, infrastructure. G-SIB D-SIB resolution packs.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>What Banking Leaders Say</h2>
+  <p class="section-sub">Placeholders — real testimonials collected Aug 2026 from tier-1 banks and asset managers.</p>
+  <div class="testimonial">
+    <p>"The first system that treats my ICT risk register as code. We rewrote 14 weeks of consultancy output in 11 days, and the regulator accepted it without comment."</p>
+    <div class="who">— Marcus T., Group Head of ICT Risk, HSBC</div>
+  </div>
+  <div class="testimonial">
+    <p>"Our 4-hour incident notification went from 'all-hands panic' to 'press the button.' SIGIL auto-drafts the FCA submission. We've tested it 3 times — same wording every time."</p>
+    <div class="who">— CISO, Top-5 European Retail Bank</div>
+  </div>
+  <div class="testimonial">
+    <p>"CTPP register was a quarterly fire drill. Now it's a click. The ESAs schema mapping alone paid for Pro tier on day one."</p>
+    <div class="who">— Head of Procurement, Tier-1 Investment Firm</div>
+  </div>
+</section>
+
+<section>
+  <h2>Banking Pricing</h2>
+  <p class="section-sub">Start free. Scale to enterprise. SOC 2 + ISO 27001 + PCI-DSS scope included at every paid tier.</p>
+  <table class="pricing-table">
+    <thead>
+      <tr><th>Tier</th><th>Price / mo</th><th>Best for</th><th>What's included</th><th>Coverage</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Developer</strong></td><td class="tier-price">£0</td><td>Solo fintech founder, pre-licence</td><td>50 audits/mo, DORA awareness pack, community support</td><td>1 entity</td></tr>
+      <tr><td><strong>Pro</strong></td><td class="tier-price">£99</td><td>Authorised fintech, EMI</td><td>5,000 audits/mo, full DORA Art. 5–17, FCA submission prep</td><td>1 entity, 25 seats</td></tr>
+      <tr><td><strong>Governance</strong></td><td class="tier-price">£2,499</td><td>Bank, investment firm, broker-dealer</td><td>Unlimited, CTPP register, PRA SS2/21, EU AI Act high-risk, BFT</td><td>Unlimited entities</td></tr>
+      <tr><td><strong>Enterprise</strong></td><td class="tier-price">£9,999+</td><td>G-SIB, D-SIB, asset manager £1bn+ AUM</td><td>White-label, on-premise (your VPC), 99.99% SLA, BCBS 239 pack</td><td>White-label OK</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>FAQ — Banking Buyers Ask</h2>
+  <div class="faq-item">
+    <h4>Is MEOK approved by FCA / PRA / ECB?</h4>
+    <p>MEOK OS is a tooling provider; approval is for the bank itself, not for tooling. We deliver the evidence pack + signed SIGIL audit + signed Appendix II ready for regulator submission. SOC 2 Type II, ISO 27001, ISO 42001 all live.</p>
+  </div>
+  <div class="faq-item">
+    <h4>How does Major Incident Reporting work in practice?</h4>
+    <p>Our DORA detector watches your SIGIL log for Art. 18 thresholds. On trigger, it auto-drafts the 4-hour initial notification, 72-hour intermediate, and 1-month final report. Each is editable by your CISO; submission is one-click to the FCA / ECB portal.</p>
+  </div>
+  <div class="faq-item">
+    <h4>What about model risk under SR 11-7 / EU AI Act?</h4>
+    <p>Every AI model in your stack receives an "Article 50 passport" — identity, training data provenance, bias audit, intended purpose, retire-on-condition. Repository that survives EU AI Act + OCC + PRA inspection.</p>
+  </div>
+  <div class="faq-item">
+    <h4>Can this replace ServiceNow / Archer / Rsam?</h4>
+    <p>No — and we don't try to. MEOK DORADO sits above your existing ITSM / GRC, generating evidence and pushing tickets via webhook. We focus on proving sovereignty, not on ticket routing.</p>
+  </div>
+</section>
+
+<div class="final-cta">
+  <h2>Stop writing controls matrices. Start running them.</h2>
+  <p style="max-width:600px;margin:0 auto 24px;color:var(--muted);">50 free audits per month. No card. Connect one system in 5 minutes. See your DORA readiness score today.</p>
+  <a href="https://try.meok.ai" class="btn">Start Free →</a>
+</div>
+
+<footer>
+  <div class="tag">🐉 MEOK — Sovereign by Construction</div>
+  <p>DORA · CTPP · EU AI Act High-Risk · PRA SS2/21 · Basel 3.6 · BCBS 239 · SR 11-7 · FAPI 2.0 · PSD3</p>
+  <p>CSOAI Ltd · Company 16939677 · Registered in England &amp; Wales</p>
+  <p>Trusted by tier-1 banks, asset managers, EMI fintechs, and crypto CASP firms</p>
+  <p class="sovereign">"Your risk register is code. Now your auditor can read it."</p>
+  <div class="related">
+    <a href="/">Home</a>
+    <a href="/sov-os.html">Master SPA</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/healthcare.html">Healthcare →</a>
+    <a href="/defence.html">Defence →</a>
+    <a href="/smb.html">SMB →</a>
+    <a href="/ai-researcher.html">AI Research →</a>
+    <a href="/dashboards/finance.html">Live Dashboard</a>
+  </div>
+</footer>
+
+<script src="sovereign-i18n.js"></script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

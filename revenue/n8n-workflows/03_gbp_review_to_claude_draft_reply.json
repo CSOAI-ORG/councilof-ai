@@ -1,0 +1,117 @@
+{
+  "name": "Universal — Google Business Profile review → Claude-drafted reply (in inbox for human approve)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 4
+            }
+          ]
+        }
+      },
+      "id": "cron-poll",
+      "name": "Poll GBP every 4h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://mybusiness.googleapis.com/v4/accounts/{{$node['cred'].account_id}}/locations/{{$node['cred'].location_id}}/reviews",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "options": {}
+      },
+      "id": "fetch-reviews",
+      "name": "Fetch new GBP reviews",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 300],
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": """",
+          "name": "Google My Business — Templeman"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToFilter": "reviews",
+        "filterBy": "javascript",
+        "javascript": "=// Only return reviews not yet replied to AND newer than last cron run\n$input.first().json.reviews.filter(r => !r.reviewReply && new Date(r.createTime) > new Date(Date.now() - 4 * 60 * 60 * 1000))"
+      },
+      "id": "filter-new",
+      "name": "Filter to unreplied + new",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [600, 300]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-3-5-sonnet-20241022",
+          "mode": "id"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are the founder of {{$json.brand_name}} responding to a Google Business Profile review. Tone: warm, human, sincere — never corporate or scripted.\n\nReview details:\n- Reviewer name: {{$json.reviewer_name}}\n- Star rating: {{$json.star_rating}}\n- Review text: {{$json.comment}}\n\nDraft a reply that:\n1. Thanks them by name\n2. References ONE specific detail they mentioned (shows you actually read it)\n3. If they raised a concern, addresses it directly + apologises if appropriate\n4. If 5-star, simple thanks + invites them to bring family/friends in\n5. Keeps it under 60 words\n6. Signs off as 'Nicholas' or '{{$json.signature}}' — no title\n\nReturn ONLY the reply text, ready to paste.",
+              "role": "user"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 200,
+          "temperature": 0.7
+        }
+      },
+      "id": "claude-draft-reply",
+      "name": "Claude — draft review reply",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [800, 300],
+      "credentials": {
+        "anthropicApi": {
+          "id": """",
+          "name": "Anthropic Claude"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "no-reply@iokfarm.co.uk",
+        "toEmail": "nicholas@csoai.org",
+        "subject": "=📝 Review reply needed: {{$json.brand_name}} — {{$json.star_rating}}⭐ from {{$json.reviewer_name}}",
+        "html": "=<h2>{{$json.brand_name}} — Google review needs reply</h2>\n<p><strong>Reviewer:</strong> {{$json.reviewer_name}} · <strong>{{$json.star_rating}} ⭐</strong></p>\n<p><strong>Review text:</strong></p>\n<blockquote style=\"border-left: 3px solid #c9a84c; padding-left: 12px; margin: 8px 0;\">{{$json.comment}}</blockquote>\n<p><strong>Suggested reply (Claude-drafted):</strong></p>\n<blockquote style=\"border-left: 3px solid #1a1a2e; padding-left: 12px; margin: 8px 0;\">{{$json.draft_reply}}</blockquote>\n<p><strong>Action:</strong></p>\n<ol>\n<li>Edit if needed</li>\n<li>Paste in <a href=\"https://business.google.com/reviews\">business.google.com/reviews</a></li>\n<li>Aim to reply within 24h — fastest replies → highest GBP rank uplift</li>\n</ol>\n<p>Review URL: <a href=\"{{$json.review_url}}\">open review</a></p>"
+      },
+      "id": "email-draft-to-nick",
+      "name": "Email draft to Nick for review",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1000, 300],
+      "credentials": {
+        "smtp": {
+          "id": """",
+          "name": "iokfarm SMTP"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Poll GBP every 4h": {"main": [[{"node": "Fetch new GBP reviews", "type": "main", "index": 0}]]},
+    "Fetch new GBP reviews": {"main": [[{"node": "Filter to unreplied + new", "type": "main", "index": 0}]]},
+    "Filter to unreplied + new": {"main": [[{"node": "Claude — draft review reply", "type": "main", "index": 0}]]},
+    "Claude — draft review reply": {"main": [[{"node": "Email draft to Nick for review", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "_meok_notes": {
+    "purpose": "Detect new GBP reviews across all brand profiles, draft a reply via Claude, email it to Nick to approve + paste",
+    "deploy_one_per_brand": "Templeman Opticians, Tree-King, Randalls Crane Hire, WCR Grab Hire, iokfarm. Each gets its own GBP location_id + slight tone variation in the prompt.",
+    "expected_volume": "5-15 new reviews/month across 5 brand GBPs combined",
+    "expected_uplift": "Replies within 24h drive ~30% GBP rank uplift in 90 days. Claude drafts save Nick ~15 min per reply × 15 reviews/mo = ~3.75h/mo time saved."
+  }
+}

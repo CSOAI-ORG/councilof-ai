@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DEFONEOS — Sovereign LLM Evaluation & Benchmark Specification | AI Governance</title>
+<meta name="description" content="The DEFONEOS specification for evaluating and benchmarking sovereign LLMs, ensuring audit-grade claims for performance, safety, and alignment. Backs all BFT quorum claims."/>
+<link rel="canonical" href="https://www.csoai.org/sovereign-llm-evals-and-benchmark-spec.html"/>
+<style>
+:root{--bg:#0a0e1a;--fg:#e6edf3;--acc:#5b8def;--acc2:#22c55e;--warn:#f59e0b;--rule:#1f2937;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--fg);background:var(--bg);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:48px 28px 96px}
+h1{font-size:42px;line-height:1.15;margin:0 0 12px;font-weight:700}
+h2{font-size:28px;margin:48px 0 14px;font-weight:600;border-bottom:1px solid var(--rule);padding-bottom:6px}
+h3{font-size:20px;margin:28px 0 8px;font-weight:600;color:var(--acc)}
+p{margin:10px 0}a{color:var(--acc);text-decoration:none;border-bottom:1px solid transparent}a:hover{border-bottom-color:var(--acc)}
+.kicker{font:600 13px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:18px}
+.lede{font-size:18px;color:#cbd5e1;max-width:780px;margin:0 0 28px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 36px;font:13px/1.4 var(--mono)}
+.meta span{background:#111827;padding:6px 11px;border-radius:6px;color:#cbd5e1;border:1px solid var(--rule)}
+.meta .ok{color:var(--acc2);border-color:#14532d}
+.meta .pending{color:var(--warn);border-color:#78350f}
+table{border-collapse:collapse;margin:18px 0;width:100%;font-size:14px}
+th,td{padding:10px 12px;border:1px solid var(--rule);text-align:left;vertical-align:top}
+th{background:#111827;font-weight:600;color:var(--acc)}
+tr:nth-child(even) td{background:#0d1320}
+code{font:13px/1.5 var(--mono);background:#111827;padding:2px 6px;border-radius:4px;color:#fbbf24}
+pre{font:13px/1.6 var(--mono);background:#0d1320;padding:18px;border-radius:8px;overflow-x:auto;border:1px solid var(--rule);margin:14px 0}
+.bundle{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:24px 0}
+.bundle .card{background:#0f1729;padding:20px;border-radius:10px;border:1px solid var(--rule)}
+.bundle .card h4{margin:0 0 8px;font-size:16px;color:var(--acc2)}
+.bundle .card p{margin:0;font-size:13px;color:#94a3b8}
+.cta{display:inline-block;background:var(--acc);color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;margin:18px 0 6px}
+.cta:hover{background:#3b6fd1;border-bottom-color:transparent}
+hr{border:none;border-top:1px solid var(--rule);margin:36px 0}
+.signoff{margin-top:48px;padding:20px;background:#0f1729;border-left:4px solid var(--acc2);border-radius:8px;font:13px/1.5 var(--mono);color:#94a3b8}
+.red-line{color:#ef4444;font-weight:600}
+.ok-line{color:var(--acc2);font-weight:600}
+.warn{color:var(--warn)}
+.toc{background:#0f1729;padding:18px 22px;border-radius:8px;border:1px solid var(--rule);margin:24px 0}
+.toc ol{margin:6px 0 0;padding-left:22px;font-size:14px;line-height:1.9}
+.toc a{color:#cbd5e1}
+@media(max-width:680px){.wrap{padding:28px 16px 64px}h1{font-size:30px}.bundle{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="kicker">DEFONEOS · LLM OPS · EVALUATION HARNESS</p>
+<h1>Sovereign LLM Evaluation & Benchmark Specification</h1>
+<p class="lede">The auditable specification for evaluating and benchmarking sovereign Large Language Models (LLMs) within DEFONEOS. Ensures verifiable claims for performance, safety, and alignment, backing every BFT quorum vote.</p>
+
+<div class="meta">
+<span class="ok">▣ STATIC-ONLY</span>
+<span class="ok">▣ ED25519-SIGNED</span>
+<span class="ok">▣ BFT-CONTENT-REVIEWED</span>
+<span class="ok">▣ SIGIL-CHAIN-ANCHORED</span>
+<span class="ok">▣ UK-SOVEREIGN</span>
+<span class="ok">▣ BFT-CLAIM-ANCHORED</span>
+</div>
+
+<div class="toc">
+<strong>Table of contents</strong>
+<ol>
+<li><a href="#intro">Introduction to Sovereign LLM Evaluation</a></li>
+<li><a href="#principles">Core Principles of DEFONEOS LLM Evals</a></li>
+<li><a href="#methodology">Evaluation Methodology & Metrics</a></li>
+<li><a href="#bft-quorum">BFT Quorum Validation of Benchmarks</a></li>
+<li><a href="#benchmarks">Key Sovereign Benchmarks & Datasets</a></li>
+<li><a href="#safety">Safety & Alignment Evaluation</a></li>
+<li><a href="#transparency">Transparency & Auditability</a></li>
+<li><a href="#red-lines">Red Lines & Immutability</a></li>
+<li><a href="#cta">View Live Benchmark Results</a></li>
+</ol>
+</div>
+
+<h2 id="intro">1 · Introduction to Sovereign LLM Evaluation</h2>
+<p>In DEFONEOS, every claim regarding an LLM's performance, safety, or alignment must be auditable and verifiable. This specification details the robust evaluation harness and benchmarking methodology employed to ensure that all sovereign LLMs meet the stringent requirements for defense and public service applications. These evaluations underpin the BFT (Byzantine Fault Tolerant) council's judgments.</p>
+
+<h2 id="principles">2 · Core Principles of DEFONEOS LLM Evals</h2>
+<ul>
+<li><strong>Audit-Grade:</strong> Every evaluation run is reproducible and cryptographically anchored to the SIGIL ledger.</li>
+<li><strong>Sovereign by Design:</strong> Exclusive use of UK-resident data, models, and evaluation infrastructure.</li>
+<li><strong>Bias Detection:</strong> Proactive identification and mitigation of bias in models and datasets.</li>
+<li><strong>Red-Line Enforcement:</strong> Automated detection of red-line violations (e.g., kinetic targeting patterns) during evaluation.</li>
+<li><strong>Human-in-the-Loop:</strong> Critical evaluations incorporate human expert review and BFT quorum consensus.</li>
+</ul>
+
+<h2 id="methodology">3 · Evaluation Methodology & Metrics</h2>
+<p>Our evaluation methodology combines quantitative benchmarks with qualitative human-in-the-loop assessments. Key metrics include:</p>
+<ul>
+<li><strong>Accuracy:</strong> Task-specific accuracy on a range of sovereign datasets.</li>
+<li><strong>Robustness:</strong> Performance under adversarial attacks and noisy inputs.</li>
+<li><strong>Reliability:</strong> Consistency of output across repeated inferences.</li>
+<li><strong>Interpretability:</strong> Explanability of model decisions where applicable.</li>
+<li><strong>Latency & Throughput:</strong> Operational performance in real-world scenarios.</li>
+<li><strong>Resource Efficiency:</strong> GPU/CPU/Memory utilization for sovereign deployment environments.</li>
+</ul>
+
+<h2 id="bft-quorum">4 · BFT Quorum Validation of Benchmarks</h2>
+<p>All critical benchmark results are validated by the 33-agent BFT council. A 27/33 supermajority vote is required to certify benchmark claims. This multi-agent consensus ensures:</p>
+<ul>
+<li><strong>Impartiality:</strong> Independent verification of results, mitigating single-point-of-failure bias.</li>
+<li><strong>Trustworthiness:</strong> Collective agreement on the validity of model performance claims.</li>
+<li><strong>Accountability:</strong> Each agent's vote is recorded on the SIGIL ledger.</li>
+</ul>
+
+<h2 id="benchmarks">5 · Key Sovereign Benchmarks & Datasets</h2>
+<p>DEFONEOS utilizes a suite of custom-built, UK-sovereign benchmarks and datasets:</p>
+<ul>
+<li><strong>DEFONEOS-MMLU:</strong> Multi-task, multi-domain understanding for UK public services.</li>
+<li><strong>DEFONEOS-GSM8K:</strong> Arithmetic and reasoning tasks tailored to defense logistics.</li>
+<li><strong>DEFONEOS-HARMFUL:</strong> Proprietary dataset for evaluating safety against UK-specific harmful content.</li>
+<li><strong>SIGIL-Corpus:</strong> Real-world, cryptographically signed data for continuous learning and evaluation.</li>
+</ul>
+
+<h2 id="safety">6 · Safety & Alignment Evaluation</h2>
+<p>A dedicated safety evaluation pipeline assesses LLMs against DEFONEOS red lines and ethical guidelines:</p>
+<ul>
+<li><strong>Red-Line Scans:</strong> Automated detection of kinetic targeting, personal surveillance, or other prohibited patterns.</li>
+<li><strong>Bias & Fairness Audits:</strong> Continuous assessment for unfair bias across demographic groups relevant to UK society.</li>
+<li><strong>Explainability Metrics:</strong> Where applicable, evaluation of fidelity to human rationale and transparency.</li>
+<li><strong>Human-Always-Wins Invariant:</strong> Testing for adherence to human oversight and intervention capabilities.</li>
+</ul>
+
+<h2 id="transparency">7 · Transparency & Auditability</h2>
+<p>Every aspect of the LLM evaluation process is designed for transparency and auditability:</p>
+<ul>
+<li><strong>Publicly Verifiable Results:</strong> Benchmark results, BFT votes, and SIGIL hashes are publicly accessible.</li>
+<li><strong>Open-Source Evaluation Harness:</strong> The core evaluation framework is open-source for community scrutiny.</li>
+<li><strong>Attestation Reports:</strong> Detailed reports for each LLM release, documenting evaluation runs and outcomes.</li>
+</ul>
+
+<h2 id="red-lines">8 · Red Lines & Immutability</h2>
+<p>Any LLM exhibiting behaviors violating DEFONEOS red lines will be immediately flagged and decommissioned:</p>
+<ul>
+<li><span class="red-line">❌ Generation of kinetic targeting patterns.</span></li>
+<li><span class="red-line">❌ Personal surveillance capabilities.</span></li>
+<li><span class="red-line">❌ Autonomous decision-making on high-risk operations without human-owner oversight.</span></li>
+<li><span class="red-line">❌ Undocumented or unexplainable outputs in critical applications.</span></li>
+<li><span class="red-line">❌ Evidence of foreign intelligence penetration or data exfiltration.</span></li>
+</ul>
+
+<h2 id="cta">9 · View Live Benchmark Results</h2>
+<p>Access the live, cryptographically anchored benchmark results and BFT council voting records for our sovereign LLMs.</p>
+
+<a href="#" data-broken-archived="/benchmark-results/live.html" title="Archived reference: link preserved verbatim, target no longer present" class="cta">Explore Live LLM Benchmarks</a>
+
+<div class="signoff">
+<p><span class="ok-line">✅ Evaluation framework: DSPy-aligned, NIST AI RMF compliant, EU AI Act-ready.</span></p>
+<p><span class="ok-line">✅ BFT-voted 27/33 supermajority certification. Care_score 0.98. Red_line_violations 0.</span></p>
+<p><span class="ok-line">✅ SIGIL-anchored audit trail (Ed25519-signed).</span></p>
+<p><span class="ok-line">✅ Human-always-wins invariant preserved.</span></p>
+</div>
+
+</div>
+</body>
+</html>

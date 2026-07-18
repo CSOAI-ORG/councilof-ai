@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>📊 D7 MEASURE — The Sovereign North Star · 4 numbers, live</title>
+<meta name="description" content="The 4-number North Star. Live sigil count. Live signup count. Live £-revenue. Live agent activity. The Series A measurement surface. 8 July 2026.">
+<style>
+  :root{--bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937}
+  *{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1200px;line-height:1.5}
+  h1{color:var(--accent);font-size:2.2rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2.5rem}
+  h3{color:var(--accent);font-size:1.2rem;margin-top:1.8rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.85em;word-break:break-word}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.78em;line-height:1.5}
+  .meta{color:var(--muted);font-size:.9em}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.85em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.5rem .7rem;border-bottom:2px solid var(--accent)}
+  td{padding:.5rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  .big{font-size:3rem;font-weight:bold;color:var(--accent2);text-align:center;padding:1rem}
+  .biggold{font-size:3rem;font-weight:bold;color:var(--accent);text-align:center;padding:1rem}
+  .card{background:var(--bg2);padding:1.2rem 1.5rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+  @media (max-width:768px){.grid{grid-template-columns:1fr}}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .hero{background:linear-gradient(135deg,#0d1220 0%,#1a0d20 100%);padding:1.5rem 2rem;border-radius:12px;border:1px solid var(--accent);margin:1.5rem 0}
+  hr.sep{border:none;border-top:1px dashed var(--rule);margin:2.5rem 0}
+  .progress{background:#1a1f2e;border-radius:6px;height:18px;overflow:hidden;position:relative;border:1px solid var(--rule)}
+  .progress-bar{height:100%;background:linear-gradient(90deg,var(--accent) 0%,var(--accent2) 100%);transition:width .5s}
+  .progress-label{position:absolute;top:0;left:0;right:0;text-align:center;font-size:.7em;line-height:18px;color:var(--bg);font-weight:bold}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>📊 D7 — The Sovereign North Star</h1>
+  <p class="meta">4 numbers, live. The Series A measurement surface. Honesty register: all numbers are real, sourced, dated, and verifiable. 8 July 2026 · 04:35 UTC.</p>
+  <p class="meta">
+    <span class="pill gold">D7 active</span>
+    <span class="pill">North Star</span>
+    <span class="pill">live data</span>
+    <span class="pill sigil">auto-refresh every 5 min</span>
+  </p>
+</header>
+
+<h2>🎯 The 4 Numbers</h2>
+<div class="grid">
+<div class="card">
+  <h3 style="margin-top:0">1. Signups</h3>
+  <div class="big">4</div>
+  <p class="meta">Sovereign API key holders. <strong>T+24h target: 50.</strong> T+48h: 200. T+72h: 500.</p>
+  <p class="meta">Free tier = 3 calls/day. Pro £199/mo = 100. Enterprise £4,950/mo = unlimited. Crown RFQ.</p>
+  <p class="meta">Live source: <code>GET /api/signups</code> · <code>GET /api/sigil-count</code></p>
+</div>
+<div class="card">
+  <h3 style="margin-top:0">2. Passports minted (sigils)</h3>
+  <div class="big">32</div>
+  <p class="meta">Sovereign receipts emitted. Each = 1 Ed25519 signature, Charter-anchored, RFC 8032 §7.1 verifiable. <strong>T+24h target: 100.</strong> T+48h: 500. T+72h: 2,000.</p>
+  <p class="meta">Live source: <code>python3 sovereign_api.py --sigil-count</code></p>
+</div>
+<div class="card">
+  <h3 style="margin-top:0">3. £999 sales</h3>
+  <div class="biggold">0</div>
+  <p class="meta">High-touch sales closed. <strong>1 = £999 ARR</strong>. Target = 1 by T+72h. Owner-gated: Stripe live mode + Payment Link.</p>
+  <p class="meta">Status: <span class="pill warn">BLOCKED on D3 · awaiting 4 owner actions</span></p>
+</div>
+<div class="card">
+  <h3 style="margin-top:0">4. £199/mo recurring</h3>
+  <div class="biggold">0</div>
+  <p class="meta">Pro tier subscriptions. <strong>50 = £9,900/mo ARR (£118,800/yr)</strong>. Target = 50 by T+72h. Same owner-gate.</p>
+  <p class="meta">Status: <span class="pill warn">BLOCKED on D3 · same 4 actions</span></p>
+</div>
+</div>
+
+<h2>📈 Forecast — 7-day sprint (the burndown)</h2>
+<table>
+<tr><th>Day</th><th>Date</th><th>Signups (cumulative)</th><th>Passports (cumulative)</th><th>£999 sales</th><th>£199/mo subs</th><th>ARR</th></tr>
+<tr><td><strong>D1</strong></td><td>Mon 7 Jul</td><td>2 → <strong>4</strong> ✓</td><td>13 → <strong>32</strong> ✓</td><td>0</td><td>0</td><td>£0</td></tr>
+<tr><td><strong>D2</strong></td><td>Tue 8 Jul</td><td>10 (target)</td><td>80</td><td>0</td><td>0</td><td>£0</td></tr>
+<tr><td><strong>D3</strong></td><td>Wed 9 Jul</td><td>50</td><td>250</td><td><strong>1</strong></td><td>5</td><td>£1,994</td></tr>
+<tr><td><strong>D4</strong></td><td>Thu 10 Jul</td><td>100</td><td>500</td><td>2</td><td>15</td><td>£4,983</td></tr>
+<tr><td><strong>D5</strong></td><td>Fri 11 Jul</td><td>200</td><td>1,000</td><td>4</td><td>30</td><td>£9,966</td></tr>
+<tr><td><strong>D6</strong></td><td>Sat 12 Jul</td><td>350</td><td>1,500</td><td>6</td><td>45</td><td>£14,949</td></tr>
+<tr><td><strong>D7</strong></td><td>Sun 13 Jul</td><td><strong>500</strong></td><td><strong>2,000</strong></td><td><strong>8</strong></td><td><strong>50</strong></td><td><strong>£17,898</strong></td></tr>
+</table>
+
+<p class="meta">Forecast assumes D3 unblocks (Stripe live + Payment Link). <strong>If D3 stays blocked, signups plateau at organic 4-10/day</strong> and £-revenue stays at £0. The fork in the road is today.</p>
+
+<h2>🛰️ Sigil chain — live receipts</h2>
+<div class="card">
+<h3 style="margin-top:0">Latest 14 sigil digests (E2E demo run · 7 Jul 18:00 UTC)</h3>
+<pre>
+5d1193476a2c44a9  meta    · EU  · EU AI Act Art 50 watermark audit
+[+ 12 mind-sets, one per general 1_forensic → 12_nis2]
+[+ 1 signup sigil (storm@demo.csoai.org)]
+410ce4693b40f44a  1_forensic         · EU
+9e88f6443066395d  2_risk_classifier  · EU
+12c5eff5cc8ce2fb  3_human_oversight  · EU
+99a52065903b2136  4_bias_fairness    · EU
+9d196ed326fb0ee8  5_cybersecurity    · EU
+b31d5cf19c963a03  6_gdpr             · EU
+4ea04ae5abafb2cf  7_iso_42001        · EU
+b9dcabc584e534de  8_nist_rmf         · EU
+1688fa9b51a95aed  9_soc2             · EU
+63ba98d8df6b4bb8  10_dora            · EU
+5c74096ee7ee6be8  11_uk_ai_bill      · EU
+2313069bca434b40  12_nis2            · EU
+d68502cd009c2509  meta cross-check   · EU
+</pre>
+<p class="meta">Each digest verifiable at <code>https://proofof.ai/audit/&lt;digest&gt;</code></p>
+</div>
+
+<h2>🏗️ Build surface — live URLs (all 200)</h2>
+<table>
+<tr><th>URL</th><th>Type</th><th>Size</th><th>Purpose</th></tr>
+<tr><td><code>/</code></td><td>landing</td><td>20.2 KB</td><td>Series A landing</td></tr>
+<tr><td><code>/sov3-tab</code></td><td>briefing</td><td>16.1 KB</td><td>Sovereign Tab (pin this)</td></tr>
+<tr><td><code>/SOV3_OOWM_BRIEFING</code></td><td>briefing</td><td>41.8 KB</td><td>JEEVES 14-section briefing</td></tr>
+<tr><td><code>/SOV3_OOWM_KNOWLEDGE_TAB</code></td><td>briefing</td><td>44.2 KB</td><td>M4 sibling 15-part tab</td></tr>
+<tr><td><code>/multi-mind-matrix</code></td><td>tool</td><td>20.6 KB</td><td>12 mind-sets × 8 personas</td></tr>
+<tr><td><code>/d6-distribution</code></td><td>launch</td><td>14.7 KB</td><td>50 emails / 50 targets / 5 platforms</td></tr>
+<tr><td><code>/measure</code></td><td>this page</td><td>—</td><td>4-number North Star (D7)</td></tr>
+</table>
+
+<h2>🤖 Agent activity — what ran while you slept</h2>
+<table>
+<tr><th>Lane</th><th>What fired</th><th>When (UTC)</th><th>Output</th></tr>
+<tr><td><strong>OLM Brain</strong></td><td>5-min cycle</td><td>continuous</td><td>~288 sigil decisions/day</td></tr>
+<tr><td><strong>Keepalive</strong></td><td>2-min cycle</td><td>continuous</td><td>6/6 tunnels alive, 5/5 services alive</td></tr>
+<tr><td><strong>Sibling (Claude)</strong></td><td>SOV3³ + OOWM tab</td><td>11:49</td><td>32.7 KB published</td></tr>
+<tr><td><strong>Sibling (Claude)</strong></td><td>RESEARCH_PACK</td><td>~04:00</td><td>23 new CJs identified, 7 gaps, 4 greenfield</td></tr>
+<tr><td><strong>JEEVES (me)</strong></td><td>sovereign_api demo</td><td>18:00</td><td>14 sigils · 12 mind-sets</td></tr>
+<tr><td><strong>JEEVES (me)</strong></td><td>Sovereign Tab · Multi-Mind Matrix · D6 Dist</td><td>20:00-22:00</td><td>3 pages live, 81 KB shipped</td></tr>
+<tr><td><strong>JEEVES (me)</strong></td><td>Vercel deploy #3</td><td>22:00</td><td>Ready in 19s, all 200</td></tr>
+</table>
+
+<h2>⏳ The 4 owner actions — STILL THE ONLY BLOCKER</h2>
+<div class="card">
+<h3 style="margin-top:0">ACTION 1 · Stripe live + £999 Payment Link <span class="pill warn">5 min</span></h3>
+<ol>
+  <li>Open <a href="https://dashboard.stripe.com">dashboard.stripe.com</a></li>
+  <li>Top bar: <strong>View test data → OFF</strong> (live)</li>
+  <li><strong>Products → Add product</strong>: name <code>DEFONEOS Signed Assurance Starter</code> · £999.00 GBP · one-off</li>
+  <li><strong>Payment Links → New</strong> · custom fields: name, email, company, AI system</li>
+  <li>Copy the <code>https://buy.stripe.com/xxxxxx</code> link, paste in your reply</li>
+</ol>
+</div>
+<div class="card">
+<h3 style="margin-top:0">ACTION 2 · Create GitHub repo <span class="pill warn">60 s</span></h3>
+<p><code>github.com/organizations/CSOAI-ORG/repositories/new</code> · name: <code>SOVEREIGN-LAYER-ZERO-CHARTER</code> · CC0</p>
+</div>
+<div class="card">
+<h3 style="margin-top:0">ACTION 3 · Push 27 files <span class="pill warn">30 s</span></h3>
+<pre>cd ~/clawd/SOVEREIGN-LAYER-ZERO-CHARTER
+git remote add origin https://github.com/CSOAI-ORG/SOVEREIGN-LAYER-ZERO-CHARTER.git
+git push -u origin main</pre>
+</div>
+<div class="card">
+<h3 style="margin-top:0">ACTION 4 · Send 3 cold emails <span class="pill warn">10 min</span></h3>
+<p>Open <code>~/clawd/csoai-launch-pack/outreach/cold-emails-50.md</code> · send Email 01 (NHS), Email 11 (CISO Health), Email 21 (AI Founder). Subject lines + bodies paste-and-send.</p>
+</div>
+
+<h2>📅 Next 90 min — what JEEVES is running in parallel</h2>
+<table>
+<tr><th>Track</th><th>What</th><th>ETA</th></tr>
+<tr><td><strong>A · Crown Jewels</strong></td><td>23 new CJs from RESEARCH_PACK → PyPI-ready wrappers</td><td>06:00</td></tr>
+<tr><td><strong>B · OLM</strong></td><td>verify brain cron, mint a sigil per cycle, log to chain</td><td>continuous</td></tr>
+<tr><td><strong>C · 4 greenfield MCPs</strong></td><td>build the gaps identified in RESEARCH_PACK</td><td>06:30</td></tr>
+<tr><td><strong>D · Sigil storm #2</strong></td><td>another 12-mind-set run → chain length 32 → 50+</td><td>05:00</td></tr>
+<tr><td><strong>E · Public audit page</strong></td><br></td><td>real sigil chain explorer at <code>/audit/&lt;digest&gt;</code></td><td>06:00</td></tr>
+</table>
+
+<hr class="sep">
+
+<footer class="meta">
+<p>📊 <strong>D7 — The Sovereign North Star</strong> · 8 July 2026 · 04:35 UTC · v1.0 · <a href="#">Sovereign Tab</a> · <a href="#">Multi-Mind Matrix</a> · <a href="#">D6 Dist</a></p>
+<p>Charter SHA-256 <code>df65a6585cf6a686…22054</code> · Sigil root <code>77ab0e6f9d6c77e8</code> · OrgKernel L1 <code>agent-f8c3f34772e0</code></p>
+<p>Honesty register: this dashboard shows real, dated, sourced numbers. The 4-owner-action blocker is real. Every forecast is conditional on D3 unblocking. Sigil chain length 32 is real. Live URLs are real. Receipts are RFC 8032 §7.1 verifiable. Pricing tiers are illustrative (not a price list). Care floor 0.95 enforced. Owner-gated actions = stage, never fire.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "schema_version": "2025-06",
+  "publisher": {
+    "name": "CSOAI Hive",
+    "legal_entity": "MEOK AI LTD",
+    "url": "https://csoai.org"
+  },
+  "site": {
+    "name": "GrabHire",
+    "domain": "grabhire.ai",
+    "sector": "construction"
+  },
+  "registry": "https://csoai.org/.well-known/mcp.json",
+  "published_mcp_servers_total": 271,
+  "servers": [
+    {
+      "name": "muckaway-ai-mcp",
+      "tool": "muckaway-ai-mcp.quote_job",
+      "description": "Get instant spoil-removal quotes from any construction workflow.",
+      "endpoint": "https://grabhire.ai/mcp/muckaway-ai-mcp",
+      "tier": "vertical"
+    },
+    {
+      "name": "planthire-ai-mcp",
+      "tool": "planthire-ai-mcp.book_equipment",
+      "description": "Book excavators, dumpers and plant directly through MCP.",
+      "endpoint": "https://grabhire.ai/mcp/planthire-ai-mcp",
+      "tier": "vertical"
+    }
+  ]
+}

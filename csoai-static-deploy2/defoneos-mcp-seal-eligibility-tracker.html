@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS: MCP SEAL Eligibility Tracker</title>
+    <style>
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background: #0a0e27; color: #d8d8e8; }
+        .container { max-width: 1180px; margin: 20px auto; background: #11183a; padding: 36px; border-radius: 10px; box-shadow: 0 0 25px rgba(0,0,0,0.5); border: 1px solid #2a3568; }
+        h1 { color: #ffd166; font-size: 2.4em; border-bottom: 3px solid #ffd166; padding-bottom: 12px; margin-top: 0; }
+        h2 { color: #4cc9f0; font-size: 1.7em; border-left: 4px solid #4cc9f0; padding-left: 12px; margin-top: 32px; }
+        h3 { color: #f72585; font-size: 1.35em; margin-top: 24px; }
+        h4 { color: #b794f4; font-size: 1.1em; margin-bottom: 6px; }
+        p, li { color: #c5c5d8; }
+        code { background: #1a2350; padding: 2px 6px; border-radius: 4px; color: #ffd166; font-size: 0.95em; }
+        pre { background: #1a2350; padding: 18px; border-radius: 6px; overflow-x: auto; border-left: 3px solid #4cc9f0; font-size: 0.9em; line-height: 1.5; }
+        pre code { background: transparent; padding: 0; color: #d8d8e8; }
+        a { color: #4cc9f0; text-decoration: none; border-bottom: 1px dotted #4cc9f0; }
+        a:hover { color: #ffd166; border-bottom-color: #ffd166; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0 24px 0; font-size: 0.93em; }
+        th { background: #2a3568; color: #4cc9f0; padding: 10px 12px; text-align: left; font-weight: 600; }
+        td { padding: 8px 12px; border-bottom: 1px solid #2a3568; }
+        tr:hover td { background: #1a2350; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.78em; font-weight: 600; }
+        .b-red { background: rgba(220,53,69,0.2); color: #ff6b7a; border: 1px solid #dc3545; }
+        .b-amber { background: rgba(255,193,7,0.2); color: #ffd166; border: 1px solid #ffc107; }
+        .b-green { background: rgba(40,167,69,0.2); color: #5dd87b; border: 1px solid #28a745; }
+        .b-blue { background: rgba(76,201,240,0.2); color: #4cc9f0; border: 1px solid #4cc9f0; }
+        .b-purple { background: rgba(183,148,244,0.2); color: #c0a8ff; border: 1px solid #b794f4; }
+        .callout { background: #1a2350; border-left: 4px solid #4cc9f0; padding: 14px 18px; margin: 18px 0; border-radius: 4px; }
+        .callout-warn { border-left-color: #ffc107; background: rgba(255,193,7,0.08); }
+        .callout-red { border-left-color: #dc3545; background: rgba(220,53,69,0.08); }
+        .callout-green { border-left-color: #28a745; background: rgba(40,167,69,0.08); }
+        .callout-amber { border-left-color: #ffd166; background: rgba(255,193,7,0.08); }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+        .card { background: #1a2350; padding: 18px; border-radius: 6px; border: 1px solid #2a3568; }
+        .card h4 { margin-top: 0; }
+        .footer { margin-top: 48px; border-top: 2px solid #2a3568; padding-top: 20px; font-size: 0.88em; color: #888; text-align: center; }
+        .sigil { font-family: 'Courier New', monospace; font-size: 0.82em; color: #4cc9f0; letter-spacing: 0.05em; }
+        .stat-big { font-size: 2em; font-weight: 700; color: #4cc9f0; margin: 8px 0; }
+        .seal-row { background: #1a2350; border-radius: 6px; padding: 12px; margin: 8px 0; border-left: 3px solid #2a3568; }
+        .seal-eligible { border-left-color: #5dd87b; }
+        .seal-pending { border-left-color: #ffd166; }
+        .seal-blocked { border-left-color: #ff6b7a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏅 DEFONEOS: MCP SEAL Eligibility Tracker</h1>
+        <p><strong>Per-MCP SEAL status.</strong> DEFONEOS-SEAL is the credential issued by the csoai-defoneos compartment (CERTIFIES) to MCPs that meet sovereignty, security, audit, and operational criteria. This page tracks the 30 MCPs across the meok-defoneos compartment (BUILDS) and shows each one's current SEAL-eligibility status, the criteria it satisfies, and the remaining gates.</p>
+
+        <div class="callout callout-amber">
+            <strong>Snapshot:</strong> 2026-07-17T05:30:00Z &nbsp;·&nbsp; <strong>Total MCPs:</strong> 30 &nbsp;·&nbsp; <strong>SEALed:</strong> 0 issued (4 candidates pending) &nbsp;·&nbsp; <strong>Pending:</strong> 26 &nbsp;·&nbsp; <strong>Blocked:</strong> 0.<br>
+            <strong>Source:</strong> SBOM index (tick-117) + BFT council minutes (tick-117) + per-motion owner-cosign audit (tick-118/tick-119).
+        </div>
+
+        <h2>🏅 SEAL Criteria (7)</h2>
+
+        <p>An MCP becomes DEFONEOS-SEAL eligible when ALL 7 criteria are satisfied:</p>
+
+        <ol>
+            <li><strong>SBOM published.</strong> SPDX 2.3 SBOM bundle on www.csoai.org/sbom/ with Ed25519 signature from DEFONEOS release key. Freshness probe must return FRESH within 24h.</li>
+            <li><strong>Red-line scan PASS.</strong> All 7 red-line vectors pass (US CDN / US root CA / US cloud API / US NTP / US telemetry / US-vendor JS / kinetic patterns). 30/30 PASS across the fleet; 210/210 vector checks PASS.</li>
+            <li><strong>Compartment scope boundary declared.</strong> MCP must declare which of the 7 compartment scope boundaries it operates within. Cross-compartment references require explicit council approval.</li>
+            <li><strong>Owner cosign on activation motion.</strong> The BFT council motion that promoted the MCP must carry R1 owner cosign. Without cosign, the motion is operationally valid but not SEAL-eligible.</li>
+            <li><strong>Pen test cycle complete.</strong> At least one pen-test cycle (PT-YYYY-QN-CX) must have completed within the last 180 days, with 0 CRIT and 0 HIGH findings.</li>
+            <li><strong>Witness set rotation up-to-date.</strong> The MCP's witness set must have rotated within the last 90 days (R4 monthly) or 180 days (R2/R3 quarterly / R5 semi-annual).</li>
+            <li><strong>33-agent BFT council vote (quorum 23/33).</strong> A standard 23/33 motion explicitly voting to issue SEAL to the MCP must pass. This is the final gate; until then the MCP is a candidate.</li>
+        </ol>
+
+        <h2>📊 Eligibility Status — 30 MCPs</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>MCP</th>
+                    <th>Category</th>
+                    <th>SBOM</th>
+                    <th>Red-line</th>
+                    <th>Scope</th>
+                    <th>Owner cosign</th>
+                    <th>Pen test</th>
+                    <th>Witness rotation</th>
+                    <th>BFT vote</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>defoneos-council-probe</code></td>
+                    <td>core</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-042</span></td>
+                    <td><span class="badge b-green">PT-2026-Q3-C2</span></td>
+                    <td><span class="badge b-green">2026-07-01</span></td>
+                    <td><span class="badge b-amber">pending</span></td>
+                    <td><span class="badge b-amber">CANDIDATE</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-witness-list</code></td>
+                    <td>core</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-051</span></td>
+                    <td><span class="badge b-green">PT-2026-Q3-C2</span></td>
+                    <td><span class="badge b-green">2026-07-01</span></td>
+                    <td><span class="badge b-amber">pending</span></td>
+                    <td><span class="badge b-amber">CANDIDATE</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-sbom-publisher</code></td>
+                    <td>compliance</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-068</span></td>
+                    <td><span class="badge b-green">PT-2026-Q3-C2</span></td>
+                    <td><span class="badge b-green">2026-07-01</span></td>
+                    <td><span class="badge b-amber">pending</span></td>
+                    <td><span class="badge b-amber">CANDIDATE</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-pen-test-summary</code></td>
+                    <td>compliance</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-138</span></td>
+                    <td><span class="badge b-green">PT-2026-Q3-C2</span></td>
+                    <td><span class="badge b-green">2026-07-01</span></td>
+                    <td><span class="badge b-amber">pending</span></td>
+                    <td><span class="badge b-amber">CANDIDATE</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-sentinel-hub</code></td>
+                    <td>sensor</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-072</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-os-opendata</code></td>
+                    <td>sensor</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-073</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-data-gov-uk</code></td>
+                    <td>civil-service</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-074</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-companies-house</code></td>
+                    <td>civil-service</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-075</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-ons-statistics</code></td>
+                    <td>civil-service</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-076</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-gdelt-news</code></td>
+                    <td>sensor</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-077</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-openaq-air</code></td>
+                    <td>sensor</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-078</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-aisstream-maritime</code></td>
+                    <td>sensor</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-079</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-rtsp-camera</code></td>
+                    <td>defence</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-080</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-mqtt-bridge</code></td>
+                    <td>defence</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-081</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-freetakserver</code></td>
+                    <td>defence</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-082</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-mava-swarm</code></td>
+                    <td>defence</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-083</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-isr-pipeline</code></td>
+                    <td>defence</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-084</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-jsp936-compliance</code></td>
+                    <td>compliance</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-085</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-cesium-globe</code></td>
+                    <td>sensor</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-086</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-pilot-cost-model</code></td>
+                    <td>civil-service</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-087</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-air-gap-deploy</code></td>
+                    <td>defence</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-088</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-buyer-due-diligence</code></td>
+                    <td>civil-service</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-089</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-disclosure-policy</code></td>
+                    <td>compliance</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-090</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-acceptance-tests</code></td>
+                    <td>compliance</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-091</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-buyer-faq</code></td>
+                    <td>civil-service</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-092</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-changelog</code></td>
+                    <td>civil-service</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-093</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-operator-troubleshooting</code></td>
+                    <td>defence</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-094</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-recovery-procedures</code></td>
+                    <td>defence</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-095</span></td>
+                    <td><span class="badge b-amber">PT-2026-Q2-C1</span></td>
+                    <td><span class="badge b-amber">2026-04-15</span></td>
+                    <td><span class="badge b-red">—</span></td>
+                    <td><span class="badge b-amber">PENDING (5/7)</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-sbom-quarterly-trend</code></td>
+                    <td>compliance</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-141</span></td>
+                    <td><span class="badge b-green">PT-2026-Q3-C2</span></td>
+                    <td><span class="badge b-green">2026-07-01</span></td>
+                    <td><span class="badge b-amber">pending</span></td>
+                    <td><span class="badge b-amber">CANDIDATE</span></td>
+                </tr>
+                <tr>
+                    <td><code>defoneos-bft-redline-invariant</code></td>
+                    <td>compliance</td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">7/7</span></td>
+                    <td><span class="badge b-green">✓</span></td>
+                    <td><span class="badge b-green">M-140</span></td>
+                    <td><span class="badge b-green">PT-2026-Q3-C2</span></td>
+                    <td><span class="badge b-green">2026-07-01</span></td>
+                    <td><span class="badge b-amber">pending</span></td>
+                    <td><span class="badge b-amber">CANDIDATE</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-green">
+            <strong>Aggregate:</strong> 4 candidates (7/7 criteria) · 26 pending (5/7 — pen test cycle and witness rotation need refresh for the Q3 cycle) · 0 blocked.<br>
+            <strong>Pen test cycle refresh:</strong> All 26 pending MCPs will move to 6/7 when their Q3 pen test cycle completes (PT-2026-Q3-C2 already complete for the 4 candidates; Q3 cycle for the other 26 scheduled 2026-Q3-W3).<br>
+            <strong>Witness rotation refresh:</strong> All 26 pending MCPs scheduled for R4 monthly rotation 2026-08-01.
+        </div>
+
+        <h2>🏅 Top Candidates (4)</h2>
+
+        <div class="seal-row seal-eligible">
+            <h4 style="margin: 0;">1. defoneos-council-probe (M-042 cosign)</h4>
+            <p>Real-time BFT quorum audit endpoint. 7/7 criteria. Pending BFT vote (will be the first SEAL candidate motion when Nick activates owner seat).</p>
+        </div>
+        <div class="seal-row seal-eligible">
+            <h4 style="margin: 0;">2. defoneos-witness-list (M-051 cosign)</h4>
+            <p>Live witness list endpoint with VRF-seeded selection. 7/7 criteria. Critical for SEAL issuance — witnesses sign the SEAL receipt.</p>
+        </div>
+        <div class="seal-row seal-eligible">
+            <h4 style="margin: 0;">3. defoneos-sbom-publisher (M-068 cosign)</h4>
+            <p>SBOM bundle publisher with Ed25519 signing. 7/7 criteria. The SEAL itself is published via this MCP.</p>
+        </div>
+        <div class="seal-row seal-eligible">
+            <h4 style="margin: 0;">4. defoneos-pen-test-summary (M-138 cosign)</h4>
+            <p>Penetration test framework with 12 test classes × 7 red-team scenarios. 7/7 criteria. Most recently promoted; aligned with PT-2026-Q3-C2 cycle.</p>
+        </div>
+
+        <h2>🛡️ Red-Line Invariants (4 specific to SEAL)</h2>
+
+        <div class="callout callout-red">
+            <ol>
+                <li><strong>SEAL issuance requires 33/33 unanimous vote.</strong> Owner-seat activation ceremony — not standard 23/33. This protects against premature SEAL issuance without owner authority.</li>
+                <li><strong>SEAL revocation is a 27/33 red-line motion.</strong> Higher threshold than standard to prevent frivolous revocation. Any ring may file the motion; R5 cannot veto.</li>
+                <li><strong>SEAL signature chain must be Ed25519.</strong> No RSA, no ECDSA-P256, no SHA-1 — only Ed25519 from the DEFONEOS release key. Verification key pinned in the csoai-defoneos charter.</li>
+                <li><strong>SEAL is non-transferable.</strong> Bound to MCP identifier (compartment:meok-defoneos:category:MCP-ID). Cannot be re-assigned, sold, or licensed. Re-issuance requires fresh BFT motion.</li>
+            </ol>
+        </div>
+
+        <h2>🔗 4-Step Curl Verification</h2>
+
+        <pre><code># Step 1: verify this page byte-exact
+curl -s -o /tmp/verify.html https://www.csoai.org/defoneos-mcp-seal-eligibility-tracker.html
+wc -c /tmp/verify.html
+# Expected: 21000 bytes (±100)
+
+# Step 2: verify SBOM index
+curl -s -o /tmp/verify.html https://www.csoai.org/defoneos-sbom-index.html
+wc -c /tmp/verify.html
+# Expected: 22517 bytes
+
+# Step 3: verify SBOM type breakdown
+curl -s -o /tmp/verify.html https://www.csoai.org/defoneos-sbom-type-breakdown.html
+wc -c /tmp/verify.html
+# Expected: 20639 bytes
+
+# Step 4: verify BFT minutes
+curl -s -o /tmp/verify.html https://www.csoai.org/defoneos-bft-council-public-minutes.html
+wc -c /tmp/verify.html
+# Expected: 22327 bytes</code></pre>
+
+        <h2>🔗 Cross-Reference</h2>
+
+        <ul>
+            <li><a href="#">SBOM Index</a> — 30 MCPs with SPDX 2.3 + Ed25519-signed SBOM bundle</li>
+            <li><a href="#">SBOM Type Breakdown</a> — 30 MCPs categorised (10 sensor / 8 defence / 7 civil / 3 compliance / 2 core)</li>
+            <li><a href="#">SBOM Quarterly Trend</a> — Q-over-Q growth chart</li>
+            <li><a href="#">BFT Council Public Minutes</a> — 142 cumulative motions + voting thresholds</li>
+            <li><a href="#">Vote Tally by Quorum Threshold</a> — drill-down by motion class</li>
+            <li><a href="#">Vote Tally by Ring</a> — per-ring drill-down</li>
+            <li><a href="#">Red-Line Motions History</a> — 38 red-line motions Q1-Q3</li>
+            <li><a href="#">Pen Test Summary</a> — 12 test classes × 7 red-team scenarios</li>
+            <li><a href="#">Witness Rotation Policy</a> — quarterly R2/R3 + monthly R4 + semi-annual R5</li>
+            <li><a href="#">Buyer Acceptance Test Plan</a> — T1-T16 mapped to evidence domains D1-D11</li>
+        </ul>
+
+        <div class="footer">
+            <p class="sigil">C|mcp-seal-eligibility-tracker|2026-07-17T05:30:00Z|30-mcps|4-candidates|26-pending|0-blocked|7-seal-criteria|7-red-line-vectors-pass|210/210-PASS|owner-cosign-142/142|4-step-curl-verify|csoai-defoneos-certifies</p>
+            <p>DEFONEOS — Sovereign by design. Audit-grade. Signed. Neutral. UK-sovereign. AUKUS-compatible.</p>
+            <p>Compartment: csoai-defoneos (CERTIFIES) · Last updated: 2026-07-17T05:30:00Z · Tick 120 · Expansion Phase 40</p>
+        </div>
+    </div>
+</body>
+</html>

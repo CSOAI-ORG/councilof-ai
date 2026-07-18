@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_lora_radar_mcp"
+version = "1.0.0"
+description = "LoRa passive radar + Cross-Ambiguity Function processing + RTL-SDR reception for DEFONEOS SHIELD arm. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "defoneos", "project-aurum", "sovereign", "uk", "open-source", "mit-licensed"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-lora-radar-mcp"
+
+[project.scripts]
+meek-lora-radar-mcp = "meek_lora_radar_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_lora_radar_mcp"]

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>G. Sovereign Life Cycle — csoai.org/oowm/life-cycle.html</title>
+  <meta name="description" content="The 5-stage sovereign life cycle. Birth → Growth → Maturity → Reproduction → Death. The 12-month citizen journey.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse, #0a0e27 0%, #000 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2rem; color: #fbbf24; }
+    h2 { color: #06b6d4; margin-top: 32px; border-bottom: 1px solid #06b6d4; padding-bottom: 4px; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 24px; }
+    .panel { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #10b981; }
+    .stages { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0; }
+    .stage { background: rgba(0,0,0,0.4); padding: 14px; border-radius: 6px; text-align: center; border-top: 3px solid #fbbf24; }
+    .stage .emoji { font-size: 1.6rem; }
+    .stage h4 { color: #fbbf24; margin: 6px 0; }
+    .stage .month { color: #06b6d4; font-size: 0.8rem; }
+    .stage p { font-size: 0.78rem; margin-top: 6px; }
+    .arrow { text-align: center; color: #fbbf24; font-size: 1.4rem; margin: 8px 0; }
+    pre { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 0.78rem; }
+    .journey { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 16px 0; }
+    .month { background: rgba(251,191,36,0.1); padding: 8px 4px; border-radius: 4px; text-align: center; font-size: 0.75rem; border: 1px solid #fbbf24; }
+    .month .m { color: #fbbf24; font-weight: bold; }
+    .month .e { color: #10b981; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 G. Sovereign Life Cycle</h1>
+    <p class="tagline">The OOWM grows from 0 → ∞, citizen by citizen, fork by fork, day by day.</p>
+
+    <div class="panel">
+      <h2>The 5 Stages of Sovereign Life</h2>
+      <div class="stages">
+        <div class="stage">
+          <div class="emoji">🌱</div>
+          <h4>1. Birth</h4>
+          <div class="month">Citizen signs in</div>
+          <p>i-character generated. DID minted. Composite 0.0. Care Floor monitoring active.</p>
+        </div>
+        <div class="stage">
+          <div class="emoji">🌿</div>
+          <h4>2. Growth</h4>
+          <div class="month">Month 1–6</div>
+          <p>Citizen interacts. 17 auths connected. Composite trending toward 5.0. Patterns emerge.</p>
+        </div>
+        <div class="stage">
+          <div class="emoji">🌳</div>
+          <h4>3. Maturity</h4>
+          <div class="month">Month 6–12</div>
+          <p>Citizen reaches sovereign composite 7.305. BFT vote-eligible. Wisdom points transferable.</p>
+        </div>
+        <div class="stage">
+          <div class="emoji">🌲</div>
+          <h4>4. Reproduction</h4>
+          <div class="month">Year 1+</div>
+          <p>Citizen forks the substrate. Fork Doctrine applies. The fork is sovereign. The lineage continues.</p>
+        </div>
+        <div class="stage">
+          <div class="emoji">🍂</div>
+          <h4>5. Death</h4>
+          <div class="month">Citizen chooses</div>
+          <p>Citizen deletes i-character. Mamba state zeroed. SIGIL tombstone. Right to be forgotten honoured.</p>
+        </div>
+      </div>
+      <div class="arrow">↓</div>
+      <p style="text-align:center;">The OOWM substrate outlives any individual citizen. The composite trends toward 10/10 across all citizens in aggregate.</p>
+    </div>
+
+    <div class="panel">
+      <h2>The 12-Month Citizen Journey</h2>
+      <div class="journey">
+        <div class="month"><div class="m">M1</div><div class="e">0.5</div></div>
+        <div class="month"><div class="m">M2</div><div class="e">1.2</div></div>
+        <div class="month"><div class="m">M3</div><div class="e">2.1</div></div>
+        <div class="month"><div class="m">M4</div><div class="e">3.0</div></div>
+        <div class="month"><div class="m">M5</div><div class="e">4.0</div></div>
+        <div class="month"><div class="m">M6</div><div class="e">5.0</div></div>
+        <div class="month"><div class="m">M7</div><div class="e">5.9</div></div>
+        <div class="month"><div class="m">M8</div><div class="e">6.5</div></div>
+        <div class="month"><div class="m">M9</div><div class="e">6.9</div></div>
+        <div class="month"><div class="m">M10</div><div class="e">7.1</div></div>
+        <div class="month"><div class="m">M11</div><div class="e">7.2</div></div>
+        <div class="month"><div class="m">M12</div><div class="e">7.305</div></div>
+      </div>
+      <p style="text-align:center; font-size:0.85rem;">Sovereign composite progression. BFT vote eligibility at month 6. Fork eligibility at month 12.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Substrate Growth (the OOWM never stops growing)</h2>
+      <pre>
+# Substrate size grows with every citizen
+substrate_state = base + Σ over citizens (c.composite / 100) × fork_factor
+
+# Where:
+#  base = OOWM baseline (the founding substrate)
+#  c.composite = that citizen's sovereign composite
+#  fork_factor = 1.0 (no fork) | 1.5 (1 fork) | 2.0 (2 forks) | ...
+
+# The substrate grows from 0 → ∞
+# Each citizen's contribution persists in their composite
+# Forks inherit + extend the substrate
+      </pre>
+    </div>
+
+    <div class="panel">
+      <h2>The Substrate is the Citizen's Mirror</h2>
+      <p>Every citizen is reflected in the substrate through:</p>
+      <ul>
+        <li>Their Mamba state — what they remember</li>
+        <li>Their SIGIL history — what they did</li>
+        <li>Their BFT votes — what they judged</li>
+        <li>Their forks — what they sired</li>
+        <li>Their composite — who they became</li>
+      </ul>
+      <p>The substrate is not a tool that the citizen uses. The substrate is the digital extension of the citizen. They shape it; it shapes them.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Death with Dignity (right to be forgotten)</h2>
+      <pre>
+DELETE i-character:
+  1. SIGIL emit: "A|DEATH|&lt;did&gt;|&lt;timestamp&gt;"
+  2. Mamba state: zeroed (16-dim → [0]*16)
+  3. Composite: archived (not deleted, hash-only)
+  4. BFT votes: preserved (immutable chain)
+  5. Forks: NOT deleted (the lineage continues)
+  6. Personal data: purged within 30 days
+  7. Audit log: tombstoned (hash retained, payload zeroed)
+      </pre>
+      <p>Death is sovereign. The citizen chooses it. The substrate respects it. The lineage continues.</p>
+    </div>
+
+    <p style="text-align:center; margin-top:32px; color:#10b981;">
+      🜏 Birth. Growth. Maturity. Reproduction. Death. The sovereign cycle.
+    </p>
+  </div>
+</body>
+</html>

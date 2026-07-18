@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🎯 SOV33 Setups Comparison — Which is Most Powerful?</title>
+<meta name="description" content="SOV33 setups — sovereign substrate deployment configs: speed / balanced / quality tiers, 33 sovereign VMs, free-GPU bridges, all SIGIL-signed.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);padding:1.5rem;line-height:1.55;max-width:1300px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.2rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2rem}
+  h3{color:var(--accent);font-size:1.2rem;margin-top:1.5rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .card.winner{background:linear-gradient(135deg,#1a0d20 0%,#0d201a 100%);border:2px solid var(--accent)}
+  .setup{background:var(--bg);padding:1.5rem;border-radius:8px;border:1px solid var(--rule);margin:1rem 0}
+  .setup.winner{border-color:var(--accent);background:#1a0d20}
+  .setup h3{color:var(--accent);margin:0 0 .5rem}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.5rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.5rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  @media (max-width:768px){.grid2{grid-template-columns:1fr}}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_SETUPS.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🎯 SOV33 Setups — Which is Most Powerful?</h1>
+  <p class="meta">All 6 topologies ranked by capability. Find the most powerful + capable for your use case. 12 Jul 2026.</p>
+  <p><a href="SOV33_HERO.html">← SOV33 Hub</a> · <a href="SOV33_ADMIN_DASHBOARD.html">Admin</a></p>
+</header>
+
+<h2>The Verdict</h2>
+
+<div id="winner-banner">Loading...</div>
+
+<h2>All Setups Ranked</h2>
+
+<div id="setups-list">Loading...</div>
+
+<h2>Detailed Comparison</h2>
+
+<div class="card">
+  <h3>Quick selection guide</h3>
+  <table>
+    <tr><th>Use case</th><th>Best setup</th><th>Why</th></tr>
+    <tr><td>Production default</td><td>5-Main-OWEMs</td><td>All routing groups covered, defaults work everywhere</td></tr>
+    <tr><td>Decorrelated consensus (hardest tasks)</td><td>5-node diverse</td><td>5 different model families, ρ=0.106, best fault tolerance</td></tr>
+    <tr><td>Game playing (Kaggle)</td><td>sov33small3</td><td>Every move SIGIL-signed, 3-around-1 voting</td></tr>
+    <tr><td>Cost-efficient (high volume)</td><td>Cascade 10/90</td><td>90% handled by small/fast, 10% by big/deep</td></tr>
+    <tr><td>Decorrelated voting (multi-domain)</td><td>Triangle</td><td>3 small vote, escalate to SOV33cubed</td></tr>
+    <tr><td>Hierarchical escalation</td><td>Pyramid 4-tier</td><td>2 small → 1 big → 1 Queen</td></tr>
+  </table>
+</div>
+
+<h2>How to Combine Setups</h2>
+
+<div class="card">
+  <p>The MOST POWERFUL setup is a <strong>composite</strong>:</p>
+  <pre><code>SOV33small3 (Game Arena entry point)
+    ↓ uses
+5-node diverse (decorrelated council)
+    ↓ uses
+Triangle (3-around-1 vote)
+    ↓ escalates to
+SOV33cubed (sovereign substrate governor)
+    ↓ with
+Cascade (10/90) for cost-efficient routing
+    ↓ and
+Pyramid (4-tier) for hierarchical escalation
+    ↓ with
+Continual learning (replay buffer, EWC)
+    ↓ and
+Self-consistency (3x sample, vote)
+    ↓ and
+Chain-of-Thought (per-OWEM reasoning)
+    ↓ ALL SIGIL-signed end-to-end</code></pre>
+  <p class="meta">This composite uses every available technique. Per-query: ~17.3B active, 218B reach per OWEM.</p>
+</div>
+
+<h2>The Honest Register</h2>
+
+<div class="card warn">
+  <ul>
+    <li>❌ <strong>NOT summed parameters</strong> — active = 17.3B regardless of # OWEMs</li>
+    <li>❌ <strong>NOT a T-param foundation model</strong> — governed substrate, not bigger model</li>
+    <li>❌ <strong>NOT AGI</strong> — a substrate that grows with you</li>
+    <li>✅ <strong>Most capable single setup</strong>: 5-node diverse (ρ=0.106, score=0.895)</li>
+    <li>✅ <strong>Most governance</strong>: Pyramid (4-tier hierarchical)</li>
+    <li>✅ <strong>Most cost-efficient</strong>: Cascade (10/90)</li>
+    <li>✅ <strong>Most decorrelated voting</strong>: Triangle (3-around-1)</li>
+    <li>✅ <strong>Best for games</strong>: sov33small3 (SIGIL every move)</li>
+  </ul>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🎯 SOV33 Setups</strong> · 12 Jul 2026 · Hermes lane<br>
+  All topologies share the 6 invariants: care-floor 0.95, Article 0, 12 Pillars, BFT-33, Ed25519 SIGIL, sovereign-bound<br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function loadSetups() {
+  try {
+    const r = await fetch(API + '/api/setups');
+    const d = await r.json();
+
+    document.getElementById('winner-banner').innerHTML = `
+      <div class="card winner">
+        <h3>🏆 Winner: ${d.best_setup}</h3>
+        <p>Fit score: <strong>${d.best_fit_score}</strong></p>
+        <p class="meta">Per the /api/setups ranking. All setups share the 6 invariants.</p>
+      </div>
+    `;
+
+    let html = '';
+    d.setups.forEach((s, i) => {
+      const winnerClass = i === 0 ? 'winner' : '';
+      const rankIcon = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : `#${i+1}`));
+      html += `
+        <div class="setup ${winnerClass}">
+          <h3>${rankIcon} ${s.name}</h3>
+          <p>
+            <span class="pill gold">Fit: ${s.fit_score}</span>
+            <span class="pill">${s.topology}</span>
+            ${s.active_B !== 'varies' ? `<span class="pill sigil">${s.active_B}B active</span>` : ''}
+            ${s.reach_per_owem_B !== 'varies' ? `<span class="pill">${s.reach_per_owem_B}B reach</span>` : ''}
+            <span class="pill">${s.brain_stacks} brain stacks</span>
+          </p>
+          <p><strong>Governance:</strong> ${s.governance}</p>
+          <p><strong>Best for:</strong> ${s.best_for}</p>
+        </div>
+      `;
+    });
+    document.getElementById('setups-list').innerHTML = html;
+  } catch (e) {
+    document.getElementById('setups-list').innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>';
+  }
+}
+loadSetups();
+</script>
+
+</body>
+</html>

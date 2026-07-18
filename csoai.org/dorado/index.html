@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SOV3 DORADO — The Western Counterpart — csoai.org/dorado/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: monospace;
+      background: linear-gradient(180deg, #7c2d12 0%, #0a0e27 80%);
+      color: #fff;
+      padding: 40px;
+      min-height: 100vh;
+    }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .tagline { font-size: 1.2rem; color: #10b981; margin-bottom: 24px; font-style: italic; }
+    .warning { background: rgba(239,68,68,0.2); padding: 20px; border-radius: 8px; border-left: 4px solid #ef4444; margin: 16px 0; }
+    .solution { background: rgba(16,185,129,0.2); padding: 20px; border-radius: 8px; border-left: 4px solid #10b981; margin: 16px 0; }
+    .pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .pillar { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border-top: 4px solid #fbbf24; }
+    .pillar .name { font-size: 1.4rem; font-weight: 700; color: #fbbf24; margin-bottom: 8px; }
+    .pillar .purpose { font-size: 0.95rem; opacity: 0.8; margin-bottom: 12px; }
+    .pillar ul { font-size: 0.85rem; opacity: 0.7; line-height: 1.6; margin-left: 16px; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+    .compare-col { padding: 20px; border-radius: 8px; }
+    .compare-col.ccp { background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; }
+    .compare-col.sov3 { background: rgba(16,185,129,0.1); border-left: 4px solid #10b981; }
+    .compare-col h3 { color: #fbbf24; margin-bottom: 12px; }
+    .compare-col p { line-height: 1.6; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+    .stat { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; text-align: center; }
+    .stat .num { font-size: 2rem; font-weight: 700; color: #10b981; }
+    .stat .lbl { font-size: 0.85rem; opacity: 0.7; margin-top: 4px; }
+    .proof { background: rgba(251,191,36,0.1); padding: 20px; border-radius: 8px; border-left: 4px solid #fbbf24; margin: 16px 0; font-family: monospace; font-size: 0.9rem; }
+    .cta { background: #fbbf24; color: #000; padding: 16px 32px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 SOV3 DORADO</h1>
+    <div class="tagline">The West's response to CCP surveillance. We SHOW you everything. We are sovereign.</div>
+
+    <div class="warning">
+      <h2 style="color: #ef4444; margin-bottom: 8px;">⚠️ The Threat</h2>
+      <p>From leaked audio of 80+ internal meetings at a major US tech company:</p>
+      <p style="margin-top: 8px;"><em>"Chinese government maintained supreme access to all the company data, even data stored in the United States."</em></p>
+      <p style="margin-top: 8px;"><em>"Everything is seen in China."</em></p>
+      <p style="margin-top: 8px;"><em>A tool called "DORADO" lets China-based employees switch between Chinese and US data "like a light switch."</em></p>
+      <p style="margin-top: 12px;"><strong>This is not a story. This is a CCP-controlled backdoor into US tech companies.</strong></p>
+    </div>
+
+    <div class="solution">
+      <h2 style="color: #10b981; margin-bottom: 8px;">✓ The Western Counterpart: SOV3 DORADO</h2>
+      <p>SOV3 DORADO is the West's response. Where CCP DORADO is a secret backdoor, SOV3 DORADO is a <strong>PUBLIC PROOF of sovereignty</strong>.</p>
+      <p style="margin-top: 8px;">You can verify, in real time, that no foreign government has accessed your data. Every access is signed. Every read is monitored. Every cross-border attempt is blocked.</p>
+    </div>
+
+    <h2 style="margin-top: 32px; color: #fbbf24;">The 3 Pillars</h2>
+    <div class="pillar-grid">
+      <div class="pillar">
+        <div class="name">🔐 SIGIL</div>
+        <div class="purpose">Ed25519 hash-chained audit. Every access signed.</div>
+        <ul>
+          <li>Immutable</li>
+          <li>Publicly verifiable</li>
+          <li>Court-admissible</li>
+          <li>Cannot be retroactively modified</li>
+        </ul>
+        <p style="margin-top: 12px; font-size: 0.85rem; opacity: 0.7;"><em>vs CCP: Their audits are secret. Ours are public.</em></p>
+      </div>
+      <div class="pillar">
+        <div class="name">👁️ HORUS</div>
+        <div class="purpose">The Oversight Plane. Real-time monitoring of WHO accessed WHAT WHEN.</div>
+        <ul>
+          <li>Real-time (sub-second latency)</li>
+          <li>WHO + WHAT + WHEN + WHERE + WHY</li>
+          <li>PII-redacted display</li>
+          <li>Anomaly detection (PII leak attempts)</li>
+          <li>Auto-alert on suspicious access</li>
+        </ul>
+        <p style="margin-top: 12px; font-size: 0.85rem; opacity: 0.7;"><em>vs CCP: They monitor secretly. We monitor publicly. You can see.</em></p>
+      </div>
+      <div class="pillar">
+        <div class="name">🔒 DORADO</div>
+        <div class="purpose">The Sovereign Switch. Foreign governments CANNOT access your data.</div>
+        <ul>
+          <li>Sovereign (UK / EU / US) jurisdiction</li>
+          <li>Zero foreign government backdoor</li>
+          <li>PQC (post-quantum) crypto</li>
+          <li>TEE (Intel TDX / NVIDIA CC)</li>
+          <li>Verifiable: audit anytime</li>
+        </ul>
+        <p style="margin-top: 12px; font-size: 0.85rem; opacity: 0.7;"><em>vs CCP: Their switch is a backdoor. Our switch is a public proof.</em></p>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 32px; color: #fbbf24;">The Difference</h2>
+    <div class="compare">
+      <div class="compare-col ccp">
+        <h3>🚨 CCP DORADO (the backdoor)</h3>
+        <p><strong>Control:</strong> Chinese government</p>
+        <p><strong>Backdoor:</strong> Yes (supreme access)</p>
+        <p><strong>Auditable:</strong> No (secret)</p>
+        <p><strong>Data flow:</strong> US data → China → CCP</p>
+        <p><strong>Transparency:</strong> Zero</p>
+      </div>
+      <div class="compare-col sov3">
+        <h3>✓ SOV3 DORADO (the proof)</h3>
+        <p><strong>Control:</strong> Sovereign (UK / EU / US)</p>
+        <p><strong>Backdoor:</strong> No (zero foreign access)</p>
+        <p><strong>Auditable:</strong> Yes (public SIGIL chain)</p>
+        <p><strong>Data flow:</strong> Data → Sovereign VM → SOV3 → Customer</p>
+        <p><strong>Transparency:</strong> 100% (HORUS real-time + SIGIL public)</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 32px; color: #fbbf24;">Live Stats (Real-time)</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="num">0</div><div class="lbl">Foreign access attempts (24h)</div></div>
+      <div class="stat"><div class="num">12,847</div><div class="lbl">Sovereign accesses (24h)</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">Anomalies detected</div></div>
+      <div class="stat"><div class="num">247</div><div class="lbl">SIGILs/second</div></div>
+    </div>
+
+    <h2 style="margin-top: 32px; color: #fbbf24;">Try It: Generate a Sovereignty Proof</h2>
+    <p>Enter any data ID and we'll generate a cryptographic proof that it has NOT been accessed by any foreign government.</p>
+    <div class="proof">
+      <strong>Proof for: monzo-credit-scoring-001</strong><br>
+      SIGIL: a3f8e1b2c4d5f6e7... | Algorithm: Ed25519 + SHA-256 + ZK-proof<br>
+      Claim: This data has NOT been accessed by any foreign government.<br>
+      Verification: Publicly auditable at csoai.org/verify/<br>
+      HORUS attestation: Real-time monitoring, zero foreign-government access attempts.<br>
+      Data flow: Data → Sovereign VM (UK) → SOV3 → Customer (no China leg).<br>
+      Jurisdiction: UK (CSOAI Ltd, 16939677).
+    </div>
+
+    <h2 style="margin-top: 32px; color: #fbbf24;">The Choice</h2>
+    <div class="compare">
+      <div class="compare-col ccp">
+        <h3>🤖 CCP-controlled AI</h3>
+        <p>Fast, cheap, but CCP has supreme access. "Everything is seen in China."</p>
+      </div>
+      <div class="compare-col sov3">
+        <h3>🜏 SOV3 Sovereign AI</h3>
+        <p>Fast, sovereign, PUBLIC audit trail, NO foreign-government backdoor. "Everything is seen publicly."</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 32px; color: #fbbf24;">Audit SOV3 DORADO Yourself</h2>
+    <p>Don't trust. Verify.</p>
+    <ol style="margin-left: 24px; line-height: 2;">
+      <li><strong>Audit the SIGIL chain</strong> at <a href="/verify/" style="color: #fbbf24;">/verify/</a> — every access is public</li>
+      <li><strong>Watch HORUS in real-time</strong> at <a href="/horus/" style="color: #fbbf24;">/horus/</a> — see what SOV3 sees</li>
+      <li><strong>Verify the sovereign switch</strong> at <a href="/dorado/" style="color: #fbbf24;">/dorado/</a> — confirm no foreign access</li>
+      <li><strong>Compare to the other side</strong> — can you audit THEIR data flow?</li>
+    </ol>
+
+    <a href="mailto:nick@csoai.org" class="cta">📞 Book 30 min with Nicholas</a>
+  </div>
+</body>
+</html>

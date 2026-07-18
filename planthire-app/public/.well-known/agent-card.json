@@ -1,0 +1,16 @@
+{
+  "name": "PlantHire.ai Compliance Agent",
+  "description": "AI compliance for plant and equipment hire — CPCS card checks, maintenance scheduling, and hire contract compliance.",
+  "url": "https://planthire.ai",
+  "version": "1.0.0",
+  "provider": { "name": "MEOK AI Labs", "url": "https://meok.ai" },
+  "capabilities": { "streaming": true, "stateTransitionHistory": true },
+  "skills": [
+    { "id": "operator-competence", "name": "Operator Competence Checks", "description": "Verify CPCS, NPORS, and HSE cards for plant operators" },
+    { "id": "maintenance-scheduling", "name": "Maintenance Scheduling", "description": "Track LOLER, PUWER, and routine servicing" },
+    { "id": "hire-compliance", "name": "Hire Contract Compliance", "description": "Validate hire notes, rates, and conditions against CSOAI governance" }
+  ],
+  "pricing": { "pro": "£39/mo", "enterprise": "£149/mo" },
+  "mcp_endpoint": "https://planthire.ai/api/mcp",
+  "a2a_endpoint": "https://planthire.ai/api/a2a"
+}

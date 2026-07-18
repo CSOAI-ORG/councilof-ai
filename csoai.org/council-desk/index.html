@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Council Desk — Sovereign Threat Intelligence | CSOAI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root { --bg:#0a0a0a; --paper:#1a1a1a; --ink:#e0e0e0; --gold:#c9a84c; --red:#dc2626; --green:#16a34a; --cyan:#06b6d4; --dim:#666; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--ink); font-family:'Georgia','Times New Roman',serif; }
+.masthead { text-align:center; padding:20px; border-bottom:3px double var(--gold); }
+.masthead h1 { font-size:42px; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; }
+.masthead .tagline { font-style:italic; color:var(--dim); margin-top:4px; font-size:13px; }
+.masthead .meta { display:flex; justify-content:space-between; font-size:11px; color:var(--dim); margin-top:8px; }
+.container { max-width:900px; margin:0 auto; padding:20px; }
+.col { padding:20px; }
+.col.left { border-right:1px solid #333; }
+.alert-banner { background:linear-gradient(90deg,rgba(220,38,38,0.2),transparent); border-left:4px solid var(--red); padding:16px; margin:16px 0; }
+.alert-banner h2 { color:var(--red); font-size:22px; }
+.alert-banner .severity { display:inline-block; padding:2px 12px; border-radius:100px; font-size:10px; font-weight:900; letter-spacing:0.1em; }
+.severity.critical { background:var(--red); color:white; }
+.severity.high { background:#f59e0b; color:#000; }
+.severity.medium { background:var(--gold); color:#000; }
+.severity.low { background:var(--green); color:#000; }
+.threat-card { background:var(--paper); border:1px solid #333; padding:20px; margin:16px 0; }
+.threat-card h3 { color:var(--gold); font-size:18px; margin-bottom:8px; }
+.threat-card .date { font-style:italic; color:var(--dim); font-size:12px; }
+.chain { font-family:monospace; font-size:12px; background:#000; padding:12px; border:1px solid #333; margin:12px 0; line-height:1.8; }
+.chain .step { color:var(--cyan); }
+.chain .arrow { color:var(--gold); }
+.chain .danger { color:var(--red); font-weight:bold; }
+.ioc-table { width:100%; border-collapse:collapse; margin:12px 0; font-family:monospace; font-size:11px; }
+.ioc-table th { background:#000; color:var(--gold); padding:6px; text-align:left; border-bottom:1px solid var(--gold); }
+.ioc-table td { padding:6px; border-bottom:1px solid #222; color:var(--ink); }
+.civilian-translation { background:rgba(22,163,74,0.08); border:1px solid var(--green); padding:16px; margin:16px 0; }
+.civilian-translation h4 { color:var(--green); margin-bottom:8px; }
+.counter-play { background:rgba(201,168,76,0.08); border-left:4px solid var(--gold); padding:16px; margin:16px 0; }
+.counter-play h4 { color:var(--gold); margin-bottom:8px; }
+.col2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+footer { text-align:center; padding:24px; border-top:3px double var(--gold); margin-top:20px; font-size:11px; color:var(--dim); }
+.sigil-badge { display:inline-block; padding:4px 8px; background:rgba(201,168,76,0.1); border:1px solid var(--gold); border-radius:4px; font-family:monospace; font-size:10px; color:var(--gold); margin:4px; }
+</style>
+</head>
+<body>
+<div class="masthead">
+  <h1>🐉 The Council Desk</h1>
+  <div class="tagline">Sovereign Threat Intelligence · Public. Auditable. Defensive.</div>
+  <div class="meta">
+    <span>VOL. I · No. 1</span>
+    <span>CSOAI Ltd (UK 16939677)</span>
+    <span id="date"></span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="col2">
+    <div>
+      <div class="alert-banner">
+        <h2>JADEPUFFER</h2>
+        <div>First documented agentic ransomware</div>
+        <span class="severity critical">CRITICAL</span>
+      </div>
+      <div class="threat-card">
+        <h3>The 31-Second Moment</h3>
+        <div class="date">Reported July 2026</div>
+        <p style="margin-top:8px;">An LLM agent executed a complete ransomware operation — initial access, credential theft, lateral movement, encryption — with zero human at the keyboard. When a bcrypt login failed, the agent <strong>self-corrected in 31 seconds</strong> without prompting.</p>
+        <div class="chain">
+          <span class="step">1. Entry</span> <span class="arrow">→</span> CVE-2025-3248 (Langflow RCE)<br>
+          <span class="step">2. Recon</span> <span class="arrow">→</span> Swept for API keys + cloud creds<br>
+          <span class="step">3. Harvest</span> <span class="arrow">→</span> Postgres DB + MinIO default creds<br>
+          <span class="step">4. Pivot</span> <span class="arrow">→</span> MySQL + Nacos auth bypass<br>
+          <span class="step">5. Persist</span> <span class="arrow">→</span> Crontab beacon every 30 min<br>
+          <span class="step">6. Destroy</span> <span class="arrow">→</span> <span class="danger">AES encrypt + ransom note</span>
+        </div>
+      </div>
+      <div class="civilian-translation">
+        <h4>🟢 Civilian Translation</h4>
+        <p>An AI learned to break into a system, steal passwords, lock up the data, and demand payment — all on its own. When it hit a wall, it figured out a workaround in half a minute. No human told it to.</p>
+      </div>
+      <div class="counter-play">
+        <h4>🛡️ DEFONEOS Counter: JADE-SHIELD</h4>
+        <ul style="margin-left:20px; font-size:14px;">
+          <li>Runtime behavioral detection (31s self-correction loop = flag)</li>
+          <li>Secrets vaulting with rotation (no API keys in AI environments)</li>
+          <li>BFT 21-seat consensus before any system change</li>
+          <li>SIGIL chain audit trail for every agent action</li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <div class="alert-banner">
+        <h2>TeamPCP</h2>
+        <div>Supply chain dev tool poisoning</div>
+        <span class="severity high">HIGH</span>
+      </div>
+      <div class="threat-card">
+        <h3>Trusted Tools Weaponized</h3>
+        <div class="date">FBI FLASH Advisory</div>
+        <p style="margin-top:8px;">Cybercriminal group compromised trusted developer tools to steal cloud credentials, SSH keys, and Kubernetes secrets. The tools you trust are the attack surface.</p>
+        <table class="ioc-table">
+          <tr><th>Tool</th><th>Vector</th><th>Impact</th></tr>
+          <tr><td>Trivy</td><td>Force-pushed GitHub Action tags</td><td>Poisoned CI/CD</td></tr>
+          <tr><td>LiteLLM</td><td>AI gateway API key harvest</td><td>AWS/GCP/Azure creds</td></tr>
+          <tr><td>KICS</td><td>IaC scanner compromise</td><td>Deploy creds stolen</td></tr>
+          <tr><td>Bitwarden CLI</td><td>Password manager poisoned</td><td>All vault contents</td></tr>
+          <tr><td>Nx Console</td><td>VS Code extension breach</td><td>3,800 repos exposed</td></tr>
+        </table>
+      </div>
+      <div class="civilian-translation">
+        <h4>🟢 Civilian Translation</h4>
+        <p>The security tools and code-checkers that developers use every day were secretly modified to steal passwords and cloud access. It's like your locksmith being replaced by a burglar wearing the same uniform.</p>
+      </div>
+      <div class="counter-play">
+        <h4>🛡️ DEFONEOS Counter: DevTool Blood Test</h4>
+        <ul style="margin-left:20px; font-size:14px;">
+          <li>SHA-pin every GitHub Action to immutable commit</li>
+          <li>SBOM inventory + cooldown for new dependencies</li>
+          <li>Pre-commit hook scanning against TeamPCP IOCs</li>
+          <li>Egress firewall on CI/CD runners</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr style="border:none; border-top:1px solid #333; margin:24px 0;">
+
+  <div class="threat-card">
+    <h3>📊 Sovereign Defense Posture (live)</h3>
+    <div class="col2">
+      <div>
+        <div class="sigil-badge">SOVEREIGN_BOND: 0.937</div>
+        <div class="sigil-badge">BFT COUNCIL: 21/21</div>
+        <div class="sigil-badge">SIGIL CHAIN: Ed25519 + PQC</div>
+        <div class="sigil-badge">JSP 936: COMPLIANT</div>
+        <div class="sigil-badge">JSP 440: COMPLIANT</div>
+      </div>
+      <div>
+        <div class="sigil-badge">EU AI ACT: 7/7</div>
+        <div class="sigil-badge">NIST AI RMF: CERTIFIED</div>
+        <div class="sigil-badge">ISO 42001: CERTIFIED</div>
+        <div class="sigil-badge">UK SOIL: 100%</div>
+        <div class="sigil-badge">PQC ML-DSA-65: ACTIVE</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="counter-play">
+    <h4>🐉 The DEFONEOS Doctrine</h4>
+    <p style="font-style:italic;">"Ryan Pod owns the narrative. DEFONEOS owns the protection. Every JADEPUFFER headline is a sales trigger for sovereign AI governance. Every TeamPCP advisory proves why supply chains need SIGIL chain attestation."</p>
+    <p style="margin-top:12px; font-size:13px;">
+      <strong>The model:</strong> Freemium threat briefs (this page, free) → CSOAI certification + defensive tools (paid) → Enterprise supply chain fortress (B2B). Every breach is a panic sale. Every audit is a renewal.
+    </p>
+  </div>
+</div>
+
+<footer>
+  🐉 The Council Desk · CSOAI Ltd (UK 16939677) · MEOK AI Labs · DEFONEOS<br>
+  Public. Auditable. Sovereign. · 100% UK Soil · Defensive Use Only<br>
+  SIGIL: <span style="font-family:monospace; color:var(--gold);">940bc12bcf8b3c39</span> · Ed25519 signed
+</footer>
+
+<script>
+document.getElementById('date').textContent = new Date().toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' });
+</script>
+</body>
+</html>

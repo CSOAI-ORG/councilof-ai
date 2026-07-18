@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sovereign Kit — demo (paste-into-any-site)</title>
+<style>body{font-family:-apple-system,system-ui,sans-serif;background:#f5f0e6;color:#2a1a14;max-width:620px;margin:40px auto;padding:0 20px;line-height:1.6}code{background:#fffcf5;border:1px solid #eadfc6;padding:1px 6px;border-radius:5px}</style>
+</head><body>
+<h1>🐉 Sovereign Kit — live demo</h1>
+<p>This whole page is a plain HTML file. The Sovereign dock (bottom-right 🐉) and the ☰ sidebar
+were added by <b>one script tag</b>. Tap the orb and try: <i>"what governs a bank"</i>,
+<i>"take me to plans"</i>, or <i>"verify a badge"</i>. It reads this page + acts.</p>
+<p>Integration is exactly the two script tags below — that's all M2 pastes into CSOAI.</p>
+<h2 id="plans">Plans</h2><p>(the sidebar "Plans" link + the AI's <code>navigate</code> action jump here)</p>
+<h2 id="graph">Graph</h2><p>(demo section)</p>
+<script>
+window.SOVEREIGN_CONFIG = {
+  brand: 'CSOAI', accent: '#c9a84c', face: '🐉',
+  sections: [
+    { label:'Home', href:'#', icon:'🏠' },
+    { label:'Plans', href:'#plans', icon:'💎' },
+    { label:'Graph', href:'#graph', icon:'🕸️' },
+    { label:'Verify', href:'/verify.html', icon:'✓' }
+  ],
+  commands: { celebrate: () => alert('Sovereign ran your custom command ✓') }
+};
+</script>
+<script src="/sovereign-embed.js" defer></script>
+</body></html>

@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#08060c">
+<meta name="description" content="MEOK OS — Sovereign AI Operating System. OpenHandsUI for CSOAI. Every regulation is a temple. The world is at your feet.">
+<title>MEOK OS — Sovereign AI · The Regulation Temples</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #08060c;
+  --surface: #0d0a14;
+  --surface-2: #120e1c;
+  --surface-3: #1a1428;
+  --gold: #d4a853;
+  --gold-dim: #8a7035;
+  --gold-glow: rgba(212, 168, 83, 0.3);
+  --green: #22c55e;
+  --green-glow: rgba(34, 197, 94, 0.3);
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --red: #ef4444;
+  --cyan: #22d3ee;
+  --text: #f0ede6;
+  --text-dim: rgba(255, 255, 255, 0.45);
+  --text-dim-2: rgba(255, 255, 255, 0.25);
+  --border: rgba(212, 168, 83, 0.12);
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Space Grotesk', sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBE PANE (the world at the user's feet)
+   ═══════════════════════════════════════════════════════════════ */
+
+.globe-pane {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(212, 168, 83, 0.04), transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(96, 165, 250, 0.04), transparent 50%),
+    var(--bg);
+  overflow: hidden;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.4s ease;
+}
+
+.globe-pane.zoomed-in { transform: scale(2.5); opacity: 0.3; pointer-events: none; }
+
+/* CSS-only pseudo-3D globe */
+.globe {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(96, 165, 250, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(34, 211, 238, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, var(--surface) 0%, var(--bg) 60%);
+  box-shadow: 0 0 100px rgba(96, 165, 250, 0.1), inset 0 0 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.globe::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  transform: scaleY(0.1);
+}
+
+.globe::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  transform: scaleX(0.1);
+}
+
+/* Temples (regulation markers on the globe) */
+.temple {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  transform: rotate(-45deg);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 0 20px var(--gold-glow);
+  z-index: 5;
+  border: 1px solid var(--gold);
+}
+
+.temple::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--bg);
+  transform: rotate(45deg);
+}
+
+.temple::after {
+  content: attr(data-code);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--gold);
+  z-index: 6;
+}
+
+.temple:hover {
+  transform: rotate(-45deg) scale(1.4);
+  box-shadow: 0 0 40px var(--gold-glow), 0 0 60px var(--gold-glow);
+  z-index: 20;
+}
+
+.temple.active {
+  background: linear-gradient(135deg, var(--green), #16a34a);
+  border-color: var(--green);
+  box-shadow: 0 0 20px var(--green-glow);
+  animation: temple-pulse 2s ease-in-out infinite;
+}
+
+.temple.warning {
+  background: linear-gradient(135deg, var(--red), #b91c1c);
+  border-color: var(--red);
+}
+
+.temple.eu::before { background: var(--blue); }
+.temple.us::before { background: var(--purple); }
+.temple.apac::before { background: var(--cyan); }
+.temple.global::before { background: var(--gold); }
+
+@keyframes temple-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--gold-glow); }
+  50% { box-shadow: 0 0 40px var(--gold-glow), 0 0 60px var(--gold-glow); }
+}
+
+/* Temple hover label */
+.temple-label {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 10, 20, 0.95);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  transition: var(--transition);
+  pointer-events: none;
+  z-index: 30;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.temple-label .label-name { color: var(--gold); font-weight: 600; }
+.temple-label .label-meta { color: var(--text-dim); font-size: 9px; margin-top: 2px; }
+
+.temple:hover .temple-label { opacity: 1; top: 44px; }
+
+/* User's IP-based position */
+.user-marker {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  margin-top: -12px;
+  border-radius: 50%;
+  background: rgba(96, 165, 250, 0.2);
+  border: 2px solid var(--blue);
+  z-index: 4;
+  animation: user-marker-pulse 2s ease-in-out infinite;
+}
+
+.user-marker::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--blue);
+  animation: user-marker-ring 2s ease-in-out infinite;
+}
+
+@keyframes user-marker-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 0.3; }
+}
+
+@keyframes user-marker-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* DORADO bar (west → east click-through) */
+.dorado-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: rgba(13, 10, 20, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  z-index: 30;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.dorado-bar .dorado-arrow { color: var(--gold); font-size: 14px; }
+
+.dorado-step {
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: rgba(212, 168, 83, 0.05);
+  transition: var(--transition);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.dorado-step.active {
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.dorado-step:hover:not(.active) {
+  background: rgba(212, 168, 83, 0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TEMPLE OVERLAY (deep inside — frameworks, white papers, flows)
+   ═══════════════════════════════════════════════════════════════ */
+
+.temple-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 92vw;
+  max-width: 1200px;
+  max-height: 90vh;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), 0 0 120px var(--gold-glow);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.temple-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.temple-overlay-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+}
+
+.temple-overlay-title {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.temple-overlay-title .flag { font-size: 24px; }
+.temple-overlay-title .region { font-size: 11px; color: var(--text-dim); margin-left: 4px; }
+.temple-overlay-title .sov-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  background: rgba(212, 168, 83, 0.1);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  margin-left: 8px;
+}
+
+.temple-overlay-close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.temple-overlay-close:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.temple-overlay-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.temple-section {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.temple-section h3 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.temple-section h3 .icon { color: var(--gold); }
+
+.reg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reg-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.reg-item:hover {
+  border-color: var(--gold);
+  background: rgba(212, 168, 83, 0.05);
+}
+
+.reg-item .reg-name { color: var(--text); font-weight: 500; }
+.reg-item .reg-meta { color: var(--text-dim); font-size: 10px; }
+
+.workflow-graph {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.workflow-node {
+  padding: 8px 10px;
+  background: var(--bg);
+  border-left: 2px solid var(--gold);
+  border-radius: 4px;
+  color: var(--text);
+}
+
+.workflow-node.kind-actuator { border-left-color: var(--cyan); }
+.workflow-node.kind-decision { border-left-color: var(--purple); }
+.workflow-node.kind-evidence { border-left-color: var(--green); }
+
+.workflow-arrow {
+  color: var(--text-dim-2);
+  text-align: center;
+  font-size: 9px;
+  padding: 2px 0;
+}
+
+.workflow-node .node-id { color: var(--text-dim); font-size: 9px; }
+.workflow-node .node-label { color: var(--text); font-weight: 500; }
+
+/* ═══════════════════════════════════════════════════════════════
+   THE OS SHELL (LHS, center, RHS)
+   ═══════════════════════════════════════════════════════════════ */
+
+.os-shell {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  grid-template-rows: 60px 1fr 80px;
+  height: 100vh;
+  height: 100dvh;
+  pointer-events: none;
+}
+
+.os-shell > * { pointer-events: auto; }
+
+.os-topbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(13, 10, 20, 0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 20;
+}
+
+.os-topbar .logo {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.os-topbar .logo .marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green-glow);
+  animation: temple-pulse 2s ease-in-out infinite;
+}
+
+.os-topbar .breadcrumbs {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.os-topbar .breadcrumbs .crumb { color: var(--text); }
+.os-topbar .breadcrumbs .sep { color: var(--text-dim-2); }
+
+.os-topbar .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.os-topbar .icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.os-topbar .icon-btn:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.os-left {
+  grid-column: 1;
+  grid-row: 2 / 4;
+  background: rgba(13, 10, 20, 0.7);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.os-left h2 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 16px 0 8px;
+}
+
+.os-left h2:first-child { margin-top: 0; }
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.tool-tile {
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.tool-tile:hover {
+  border-color: var(--gold);
+  background: var(--surface-3);
+}
+
+.tool-tile.active {
+  border-color: var(--gold);
+  background: rgba(212, 168, 83, 0.1);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.tool-tile .tool-label {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+.tool-tile.active .tool-label { color: var(--gold); }
+
+.os-center {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  position: relative;
+}
+
+.sov-character {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, var(--gold-glow), transparent 60%),
+    radial-gradient(circle at 50% 50%, var(--surface-3), var(--bg));
+  border: 1px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  margin-bottom: 24px;
+  position: relative;
+  animation: sov-breathe 4s ease-in-out infinite;
+}
+
+@keyframes sov-breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--gold-glow); }
+  50% { transform: scale(1.05); box-shadow: 0 0 40px var(--gold-glow); }
+}
+
+.sov-greeting {
+  text-align: center;
+  font-family: var(--font-sans);
+  max-width: 480px;
+}
+
+.sov-greeting h1 {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.sov-greeting h1 .accent { color: var(--gold); font-weight: 500; }
+
+.sov-greeting p {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.sov-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.sov-suggestion {
+  padding: 8px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sov-suggestion:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212, 168, 83, 0.05);
+}
+
+.os-input {
+  grid-column: 2;
+  grid-row: 3;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13, 10, 20, 0.7);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+}
+
+.os-input input {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 12px 20px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.os-input input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.os-input button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.os-right {
+  grid-column: 3;
+  grid-row: 2 / 4;
+  background: rgba(13, 10, 20, 0.7);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.os-right h2 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 16px 0 8px;
+}
+
+.os-right h2:first-child { margin-top: 0; }
+
+.sig-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.sig-card .sig-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-dim);
+  padding: 2px 0;
+}
+
+.sig-card .sig-row .v { color: var(--text); }
+
+.sig-card .sig-status {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 4px var(--green-glow);
+  margin-right: 6px;
+}
+
+.council-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  margin: 2px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.council-pill.veto {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.council-pill.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212, 168, 83, 0.1);
+}
+
+.council-pill:hover { background: var(--surface-3); }
+
+/* PWA install prompt */
+.pwa-install {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+  z-index: 50;
+  display: none;
+  cursor: pointer;
+  box-shadow: 0 0 30px var(--gold-glow);
+}
+
+.pwa-install:hover { background: var(--surface-2); }
+
+.pwa-install.visible { display: block; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .os-shell { grid-template-columns: 220px 1fr 260px; }
+  .tool-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 800px) {
+  .os-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr auto 60px;
+  }
+  .os-left, .os-right { display: none; }
+  .os-center { grid-column: 1; }
+  .os-input { grid-column: 1; }
+  .dorado-bar { font-size: 10px; padding: 8px 12px; bottom: 100px; }
+  .temple-overlay-body { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .temple.active, .sov-character, .user-marker, .user-marker::after {
+    animation: none;
+  }
+}
+</style>
+</head>
+<body>
+<!-- CSOAI Layer-0 banner (8 protocols · 100/100 A+++++) -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:10002;background:linear-gradient(90deg,#fbbf24,#f97316);color:#000;text-align:center;padding:8px;font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif;border-bottom:2px solid #000">
+  <span style="font-size:16px;vertical-align:middle">🐉</span>
+  CSOAI Layer-0: <b>8 protocols · 100/100 A+++++ · bleeding edge · world-leading</b> ·
+  <a href="oscal-verifier.html" style="color:#000;text-decoration:underline">verify the 554-component OSCAL proof</a> ·
+  <a href="catapult.html" style="color:#000;text-decoration:underline">book the 30-min pilot call</a>
+</div>
+<style>body { padding-top: 46px !important; }</style>
+
+<!-- CSOAI Layer-0 banner (8 protocols · 100/100 A+++++) -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:10002;background:linear-gradient(90deg,#fbbf24,#f97316);color:#000;text-align:center;padding:8px;font-size:13px;font-weight:700;font-family:Inter,system-ui,sans-serif;border-bottom:2px solid #000">
+  <span style="font-size:16px;vertical-align:middle">🐉</span>  <!-- 🐉 -->
+  CSOAI Layer-0: <b>8 protocols · 100/100 A+++++ · bleeding edge · world-leading</b> ·
+  <a href="oscal-verifier.html" style="color:#000;text-decoration:underline">verify the 554-component OSCAL proof</a> ·
+  <a href="catapult.html" style="color:#000;text-decoration:underline">book the 30-min pilot call</a>
+</div>
+<style>body { padding-top: 46px !important; }</style>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     GLOBE PANE — the world at the user's feet
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="globe-pane" id="globePane">
+  <div class="globe" id="globe"></div>
+  <!-- Temples are injected by JS from TEMPLES data -->
+  <!-- User marker is also injected by JS once we have the IP -->
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     THE OS SHELL (LHS, center, RHS)
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="os-shell">
+
+  <!-- Topbar -->
+  <header class="os-topbar">
+    <div class="logo">
+      <span class="marker"></span>
+      <span>🐉 MEOK OS</span>
+      <span class="sov-badge">sovereign</span>
+    </div>
+    <nav class="breadcrumbs">
+      <span class="crumb">World</span>
+      <span class="sep">/</span>
+      <span class="crumb" id="bcRegion">—</span>
+      <span class="sep">/</span>
+      <span class="crumb" id="bcTemple">—</span>
+    </nav>
+    <div class="topbar-actions">
+      <button class="icon-btn" title="Settings" onclick="alert('Settings coming in v2.1')">⚙</button>
+      <button class="icon-btn" title="Help" onclick="alert('Sovereign is here. Try speaking.')">?</button>
+      <button class="icon-btn" title="User" onclick="alert('I-character (digital twin) coming in v2.1')">👤</button>
+    </div>
+  </header>
+
+  <!-- LHS — OS + tools (customizable) -->
+  <aside class="os-left">
+    <h2>OS · Tools</h2>
+    <div class="tool-grid" id="toolGrid">
+      <div class="tool-tile active" data-tool="chat" title="Chat to Sovereign">
+        <span>💬</span><span class="tool-label">Chat</span>
+      </div>
+      <div class="tool-tile" data-tool="search" title="Search the OLM">
+        <span>🔍</span><span class="tool-label">Search</span>
+      </div>
+      <div class="tool-tile" data-tool="compliance" title="EU AI Act scanner">
+        <span>🛡</span><span class="tool-label">AI Act</span>
+      </div>
+      <div class="tool-tile" data-tool="x402" title="x402 paywall (paid)">
+        <span>💎</span><span class="tool-label">x402</span>
+      </div>
+      <div class="tool-tile" data-tool="cascade" title="4-tier model cascade">
+        <span>🧬</span><span class="tool-label">Cascade</span>
+      </div>
+      <div class="tool-tile" data-tool="distill" title="Model distillation">
+        <span>⚗</span><span class="tool-label">Distill</span>
+      </div>
+      <div class="tool-tile" data-tool="sigstore" title="Sigstore transparency">
+        <span>📜</span><span class="tool-label">Sigstore</span>
+      </div>
+      <div class="tool-tile" data-tool="rag" title="Federated RAG">
+        <span>🧠</span><span class="tool-label">RAG</span>
+      </div>
+    </div>
+
+    <h2>Load SaaS over Globe</h2>
+    <div class="tool-grid" id="saasGrid">
+      <div class="tool-tile" data-saas="charts" title="Charts over the globe">
+        <span>📊</span><span class="tool-label">Charts</span>
+      </div>
+      <div class="tool-tile" data-saas="docs" title="Doc editor over the globe">
+        <span>📝</span><span class="tool-label">Docs</span>
+      </div>
+      <div class="tool-tile" data-saas="crm" title="CRM over the globe">
+        <span>👥</span><span class="tool-label">CRM</span>
+      </div>
+      <div class="tool-tile" data-saas="email" title="Email over the globe">
+        <span>📧</span><span class="tool-label">Mail</span>
+      </div>
+    </div>
+
+    <h2>Inner Flows</h2>
+    <div class="tool-grid" id="flowGrid">
+      <div class="tool-tile" data-flow="sovereign" title="Sovereign characters">
+        <span>👑</span><span class="tool-label">SOV</span>
+      </div>
+      <div class="tool-tile" data-flow="council" title="12-Queen council">
+        <span>👥</span><span class="tool-label">Council</span>
+      </div>
+      <div class="tool-tile" data-flow="defoneos" title="Defoneos secure stack">
+        <span>🛡</span><span class="tool-label">Defoneos</span>
+      </div>
+      <div class="tool-tile" data-flow="arcana" title="22 Major Arcana">
+        <span>✨</span><span class="tool-label">Arcana</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CENTER — sovereign character + chat -->
+  <main class="os-center">
+    <div class="sov-character">🐉</div>
+    <div class="sov-greeting">
+      <h1 id="greeting">Welcome to <span class="accent">MEOK OS</span></h1>
+      <p id="sovLine">Sovereign here. I can see you're connecting from <span id="userRegion">—</span>. I've zoomed the world to your region. Click any <span style="color:var(--gold)">temple</span> to enter. Or just ask me anything — I learn from every session.</p>
+      <div class="sov-suggestions" id="sovSuggestions">
+        <div class="sov-suggestion" onclick="sovSuggest('Tell me about EU AI Act Article 12')">EU AI Act Art. 12</div>
+        <div class="sov-suggestion" onclick="sovSuggest('What does the 4-tier cascade cost per call?')">Cascade pricing</div>
+        <div class="sov-suggestion" onclick="sovSuggest('Show me my home region's regulations')">My region</div>
+        <div class="sov-suggestion" onclick="sovSuggest('Build my i-character')">i-character</div>
+        <div class="sov-suggestion" onclick="sovSuggest('Run a cybersecurity check on me')">Cyber check</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Chat input -->
+  <div class="os-input">
+    <input type="text" id="chatInput" placeholder="Speak to Sovereign..." onkeydown="if(event.key==='Enter') sendChat()">
+    <button onclick="sendChat()">→</button>
+  </div>
+
+  <!-- RHS — sessions, tasks, council, BFT -->
+  <aside class="os-right">
+    <h2>Sovereign Right Side</h2>
+    <div class="sig-card">
+      <div class="sig-row"><span><span class="sig-status"></span>SOV3</span><span class="v" id="sov3Status">200 OK</span></div>
+      <div class="sig-row"><span>Meok-ai</span><span class="v" id="meokAiStatus">v2.0.0</span></div>
+      <div class="sig-row"><span>Hive</span><span class="v" id="hiveStatus">34 VMs</span></div>
+      <div class="sig-row"><span>Council</span><span class="v">13 nodes</span></div>
+      <div class="sig-row"><span>BFT</span><span class="v">f=4 q=9</span></div>
+    </div>
+
+    <h2>12-Queen Council</h2>
+    <div>
+      <span class="council-pill veto" title="VETO: harm blocks">V Sophia Care</span>
+      <span class="council-pill" title="Aurelian">IV Aurelian</span>
+      <span class="council-pill" title="Compliance">VIII Justitia</span>
+      <span class="council-pill" title="Finance">XVII Asteria</span>
+      <span class="council-pill" title="Domains">VII Dominion</span>
+      <span class="council-pill" title="Arcana">0 Aleph</span>
+      <span class="council-pill" title="Brain">IX Brain</span>
+      <span class="council-pill" title="Proactive">X Proactive</span>
+      <span class="council-pill" title="Bridges">VI Bridge</span>
+      <span class="council-pill" title="Distribution">XIX Distribution</span>
+      <span class="council-pill" title="Council">XI Council</span>
+      <span class="council-pill veto" title="VETO: CVE blocks">XVI Watch</span>
+    </div>
+
+    <h2>Sessions</h2>
+    <div class="sig-card">
+      <div class="sig-row"><span>Active</span><span class="v">1</span></div>
+      <div class="sig-row"><span>Total</span><span class="v">12</span></div>
+      <div class="sig-row"><span>Tasks</span><span class="v">8</span></div>
+    </div>
+
+    <h2>Mindsets</h2>
+    <div>
+      <span class="council-pill active">Sovereign</span>
+      <span class="council-pill">Care</span>
+      <span class="council-pill">Strategy</span>
+      <span class="council-pill">Compliance</span>
+      <span class="council-pill">Defense</span>
+    </div>
+
+    <h2>BFT Status</h2>
+    <div class="sig-card">
+      <div class="sig-row"><span>Quorum</span><span class="v">9 / 13</span></div>
+      <div class="sig-row"><span>Block</span><span class="v">2e9cd9b4</span></div>
+      <div class="sig-row"><span>Rounds</span><span class="v">496</span></div>
+    </div>
+  </aside>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     DORADO BAR — west → east click-through with heavy ontology
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="dorado-bar">
+  <span>DORADO</span>
+  <span class="dorado-step active" data-dorado-step="west">🌅 West</span>
+  <span class="dorado-arrow">→</span>
+  <span class="dorado-step" data-dorado-step="globe">🌐 Globe</span>
+  <span class="dorado-arrow">→</span>
+  <span class="dorado-step" data-dorado-step="temple">🛕 Temple</span>
+  <span class="dorado-arrow">→</span>
+  <span class="dorado-step" data-dorado-step="east">🌇 East</span>
+  <span class="dorado-step" onclick="cycleDorado()" title="Click to cycle west→east">↻</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TEMPLE OVERLAY (the deep-inside view)
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="temple-overlay" id="templeOverlay">
+  <div class="temple-overlay-header">
+    <div class="temple-overlay-title">
+      <span class="flag" id="overlayFlag">—</span>
+      <span id="overlayTitle">—</span>
+      <span class="region" id="overlayRegion">—</span>
+      <span class="sov-badge">sovereign</span>
+    </div>
+    <button class="temple-overlay-close" onclick="closeTemple()">×</button>
+  </div>
+  <div class="temple-overlay-body" id="overlayBody">
+    <!-- Sections injected by JS -->
+  </div>
+</div>
+
+<!-- PWA install prompt -->
+<div class="pwa-install" id="pwaInstall" onclick="installPWA()">
+  📱 Install MEOK OS as an app
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     THE TEMPLE DATA + INTERACTION
+     ═══════════════════════════════════════════════════════════════ -->
+<script>
+// ─── Temple data: every regulation is a temple at its real address ───
+const TEMPLES = [
+  // === EUROPE (EU) ===
+  { code: 'EU', name: 'European Union', region: 'eu', x: 50, y: 32, flag: '🇪🇺',
+    regulations: [
+      { name: 'EU AI Act', meta: '410 articles, 28 frameworks', status: 'active' },
+      { name: 'GDPR', meta: '99 articles, 7 principles', status: 'active' },
+      { name: 'DORA', meta: '5 pillars, ICT risk', status: 'active' },
+      { name: 'NIS2', meta: 'Article 21 measures', status: 'active' },
+      { name: 'CRA', meta: 'Cyber Resilience Act, Annex IV', status: 'active' },
+      { name: 'AI Liability Directive', meta: 'Presumption of fault', status: 'active' },
+      { name: 'Digital Services Act', meta: 'Article 14 risk assessment', status: 'active' },
+      { name: 'Digital Markets Act', meta: 'Gatekeeper obligations', status: 'active' },
+    ],
+    workflows: [
+      { kind: 'actuator', id: 'art9', label: 'Art. 9 — Risk Management System' },
+      { kind: 'arrow', id: 'a1', label: '↓' },
+      { kind: 'decision', id: 'art12', label: 'Art. 12 — Human Oversight' },
+      { kind: 'arrow', id: 'a2', label: '↓' },
+      { kind: 'evidence', id: 'sigil', label: 'Ed25519 SIGIL sign-off' },
+      { kind: 'arrow', id: 'a3', label: '↓' },
+      { kind: 'actuator', id: 'soc2', label: 'SOC 2 / ISO 42001 audit' },
+    ]
+  },
+  { code: 'UK', name: 'United Kingdom', region: 'eu', x: 47, y: 28, flag: '🇬🇧',
+    regulations: [
+      { name: 'UK AI Regulation', meta: '5 principles, pro-innovation' },
+      { name: 'UK GDPR', meta: '8 data subject rights' },
+      { name: 'Online Safety Act', meta: 'Risk assessment duties' },
+      { name: 'Defence AI Strategy 2025', meta: '£1B+ DTW funding' },
+      { name: 'ASGARD AI Framework', meta: '£180M, 26 companies' },
+    ],
+    workflows: [
+      { kind: 'actuator', id: 'uk1', label: 'UK AI Bill risk classification' },
+      { kind: 'arrow', id: 'a1', label: '↓' },
+      { kind: 'evidence', id: 'soc2', label: 'SIGIL attest + ICO register' },
+    ]
+  },
+  { code: 'US', name: 'United States', region: 'us', x: 22, y: 38, flag: '🇺🇸',
+    regulations: [
+      { name: 'NIST AI RMF 1.0', meta: 'GOVERN/MAP/MEASURE/MANAGE' },
+      { name: 'NIST CSF 2.0', meta: 'GOVERN pillar, 6 functions' },
+      { name: 'Executive Order 14110', meta: 'Frontier model safety' },
+      { name: 'Colorado AI Act', meta: 'High-risk AI, June 2026' },
+      { name: 'Texas AI Act', meta: 'Insurance AI, Sept 2025' },
+      { name: 'California AB 2013/3050', meta: 'Training data transparency' },
+      { name: 'NYC LL 144', meta: 'Hiring AI bias audit' },
+    ],
+    workflows: [
+      { kind: 'actuator', id: 'us1', label: 'NIST AI RMF profile' },
+      { kind: 'arrow', id: 'a1', label: '↓' },
+      { kind: 'decision', id: 'us2', label: 'Colorado/Texas applicability' },
+      { kind: 'arrow', id: 'a2', label: '↓' },
+      { kind: 'evidence', id: 'oscal', label: 'OSCAL Component Def' },
+    ]
+  },
+  { code: 'CA', name: 'Canada', region: 'us', x: 22, y: 30, flag: '🇨🇦',
+    regulations: [
+      { name: 'AIDA', meta: 'Artificial Intelligence + Data Act' },
+      { name: 'PIPEDA', meta: 'Personal Information Protection' },
+    ],
+    workflows: []
+  },
+  // === ASIA PACIFIC ===
+  { code: 'CN', name: 'China', region: 'apac', x: 78, y: 38, flag: '🇨🇳',
+    regulations: [
+      { name: '生成式AI管理办法', meta: 'Generative AI Measures, Aug 2023' },
+      { name: 'TC260 AI Safety', meta: 'Framework v1.0' },
+      { name: 'Algorithm Recommendation', meta: 'Filing required' },
+    ],
+    workflows: []
+  },
+  { code: 'JP', name: 'Japan', region: 'apac', x: 85, y: 36, flag: '🇯🇵',
+    regulations: [
+      { name: 'AI Promotion Act', meta: 'Risk-based, voluntary' },
+      { name: 'APPI', meta: 'Personal Information Protection' },
+    ],
+    workflows: []
+  },
+  { code: 'SG', name: 'Singapore', region: 'apac', x: 80, y: 56, flag: '🇸🇬',
+    regulations: [
+      { name: 'Model AI Governance Framework v2', meta: '9 governance dimensions' },
+      { name: 'PDPA', meta: 'Personal Data Protection Act' },
+    ],
+    workflows: []
+  },
+  // === GLOBAL ===
+  { code: 'UN', name: 'United Nations', region: 'global', x: 50, y: 50, flag: '🇺🇳',
+    regulations: [
+      { name: 'UN AI Advisory Body', meta: 'Interim Report Sept 2024' },
+      { name: 'UNESCO AI Ethics', meta: '193 member states' },
+      { name: 'UN HRC AI Resolution', meta: 'Right to privacy in AI' },
+    ],
+    workflows: []
+  },
+  { code: 'ISO', name: 'ISO Standards', region: 'global', x: 60, y: 22, flag: '🏛',
+    regulations: [
+      { name: 'ISO/IEC 42001', meta: 'AI Management System' },
+      { name: 'ISO/IEC 27001', meta: 'InfoSec' },
+      { name: 'ISO/IEC 23894', meta: 'AI Risk Management' },
+    ],
+    workflows: []
+  },
+  { code: 'IEEE', name: 'IEEE Standards', region: 'global', x: 70, y: 78, flag: '⚙',
+    regulations: [
+      { name: 'IEEE 7003-2024', meta: 'Algorithmic bias' },
+      { name: 'IEEE 7000-2024', meta: 'Ethical systems design' },
+    ],
+    workflows: []
+  },
+];
+
+// ─── Get user's IP region (mocked — real impl uses /api/geo) ───
+async function detectUserRegion() {
+  // Mock: pick a random EU country for demo
+  // Real: fetch from /api/geo or use cloudflare-ipcountry
+  return { code: 'UK', name: 'United Kingdom', region: 'eu', x: 47, y: 28 };
+}
+
+// ─── Render temples on the globe ───
+function renderTemples(userRegion) {
+  const globe = document.getElementById('globe');
+  TEMPLES.forEach(t => {
+    const el = document.createElement('div');
+    el.className = `temple ${t.region}`;
+    el.style.left = `${t.x}%`;
+    el.style.top = `${t.y}%`;
+    el.setAttribute('data-code', t.code);
+    el.onclick = () => openTemple(t);
+    const label = document.createElement('div');
+    label.className = 'temple-label';
+    label.innerHTML = `<div class="label-name">${t.name}</div><div class="label-meta">${t.regulations.length} regs</div>`;
+    el.appendChild(label);
+    globe.appendChild(el);
+  });
+  // User marker
+  if (userRegion) {
+    const marker = document.createElement('div');
+    marker.className = 'user-marker';
+    marker.style.left = `${userRegion.x}%`;
+    marker.style.top = `${userRegion.y}%`;
+    marker.title = `You: ${userRegion.name}`;
+    globe.appendChild(marker);
+    document.getElementById('userRegion').textContent = userRegion.name;
+    document.getElementById('bcRegion').textContent = userRegion.name;
+  }
+}
+
+// ─── Open temple overlay ───
+function openTemple(t) {
+  document.getElementById('overlayFlag').textContent = t.flag;
+  document.getElementById('overlayTitle').textContent = t.name;
+  document.getElementById('overlayRegion').textContent = `(${t.code})`;
+  document.getElementById('bcTemple').textContent = t.name;
+
+  const body = document.getElementById('overlayBody');
+  body.innerHTML = `
+    <div class="temple-section">
+      <h3><span class="icon">📜</span>Regulations & Frameworks</h3>
+      <div class="reg-list">
+        ${t.regulations.map(r => `
+          <div class="reg-item">
+            <span class="reg-name">${r.name}</span>
+            <span class="reg-meta">${r.meta}</span>
+          </div>
+        `).join('') || '<div class="reg-item"><span class="reg-name">No regulations catalogued yet</span></div>'}
+    </div>
+    <div class="temple-section">
+      <h3><span class="icon">⚙</span>Inner Flow / Workflow</h3>
+      <div class="workflow-graph">
+        ${t.workflows.length ? t.workflows.map(w => {
+          if (w.kind === 'arrow') {
+            return `<div class="workflow-arrow">${w.label}</div>`;
+          }
+          return `<div class="workflow-node kind-${w.kind}">
+            <div class="node-id">${w.id}</div>
+            <div class="node-label">${w.label}</div>
+          </div>`;
+        }).join('') : '<div style="color:var(--text-dim); font-family:var(--font-mono); font-size:11px;">Workflow being built. Ask Sovereign to draft one.</div>'}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('templeOverlay').classList.add('open');
+}
+
+function closeTemple() {
+  document.getElementById('templeOverlay').classList.remove('open');
+  document.getElementById('bcTemple').textContent = '—';
+}
+
+// ─── DORADO bar cycle ───
+const DORADO_STEPS = ['west', 'globe', 'temple', 'east'];
+let doradoIdx = 1;
+function cycleDorado() {
+  doradoIdx = (doradoIdx + 1) % DORADO_STEPS.length;
+  document.querySelectorAll('.dorado-step').forEach(el => el.classList.remove('active'));
+  const target = document.querySelector(`[data-dorado-step="${DORADO_STEPS[doradoIdx]}"]`);
+  if (target) target.classList.add('active');
+}
+document.querySelectorAll('.dorado-step').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.dorado-step').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+  });
+});
+
+// ─── Tool tile selection ───
+document.querySelectorAll('.tool-tile').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tool-tile').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const tool = t.dataset.tool || t.dataset.saas || t.dataset.flow;
+    if (tool) {
+      document.getElementById('sovLine').innerHTML = `<span class="accent">${tool}</span> loaded. Sovereign ready. What do you want to do?`;
+    }
+  });
+});
+
+// ─── Sovereign suggest ───
+function sovSuggest(prompt) {
+  document.getElementById('chatInput').value = prompt;
+  document.getElementById('chatInput').focus();
+}
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  document.getElementById('sovLine').innerHTML = `<span class="accent">You:</span> ${escapeHtml(text)}<br><br><span class="accent">Sovereign:</span> Acknowledged. ${generateSovReply(text)}`;
+  input.value = '';
+}
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function generateSovReply(q) {
+  const lq = q.toLowerCase();
+  if (lq.includes('article 12') || lq.includes('art 12') || lq.includes('art. 12'))
+    return 'EU AI Act Article 12 mandates human oversight of AI systems. I can scan your MCPs for compliance — open the EU temple and click Art. 12.';
+  if (lq.includes('cascade') || lq.includes('pricing') || lq.includes('cost'))
+    return '4-tier cascade: $0.005 (Tier 1) to $0.10 (Tier 4). Avg $0.011/call. At 10K calls/day = $40K/yr per customer. Click the Cascade tool.';
+  if (lq.includes('region') || lq.includes('where'))
+    return 'I\'ve auto-detected your IP region. Your temple marker is blue. Click any other temple to explore regulations in that jurisdiction.';
+  if (lq.includes('i-character') || lq.includes('avatar') || lq.includes('twin'))
+    return 'Your digital twin is being initialized. Pick a council queen to model yourself after, or auto-derive from your chat history.';
+  if (lq.includes('cyber') || lq.includes('security'))
+    return 'Running cybersecurity audit. All 302 MCPs patched to SDK 1.28+ (CVE-fix). Defoneos stack active. Crown jewels (OpenFang, ClawTeam, Inkog) integrated.';
+  return 'Acknowledged. Tell me more, or click a temple to explore.';
+}
+
+// ─── PWA install ───
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('pwaInstall').classList.add('visible');
+});
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById('pwaInstall').classList.remove('visible');
+    });
+  }
+}
+
+// i-character integration: read user ichar from localStorage
+function loadIchar() {
+  try {
+    const ichar = JSON.parse(localStorage.getItem('meok_ichar') || 'null');
+    return ichar;
+  } catch (e) { return null; }
+}
+
+function applyIcharToUI(ichar) {
+  if (!ichar) return;
+  const charEl = document.querySelector('.sov-character');
+  if (charEl) {
+    const queenEmojis = {
+      'queen-king': '👑', 'queen-strategy': '♑', 'queen-care': '💗',
+      'queen-compliance': '⚖', 'queen-finance': '⭐', 'queen-domain': '🛞',
+      'queen-arcana': '✨', 'queen-brain': '🧠', 'queen-proactive': '⚡',
+      'queen-bridge': '🌉', 'queen-distribution': '☀️', 'queen-council': '🦁',
+      'queen-watch': '🗼',
+    };
+    const emoji = queenEmojis[ichar.queen_model] || '🐉';
+    charEl.textContent = emoji;
+  }
+  const greetingEl = document.getElementById('greeting');
+  if (greetingEl && ichar.name) {
+    greetingEl.innerHTML = 'Welcome, <span class="accent">' + ichar.name + '</span>';
+  }
+  const sovLineEl = document.getElementById('sovLine');
+  if (sovLineEl && ichar.arcana_lens) {
+    sovLineEl.innerHTML = 'i-character: <span class="accent">' + (ichar.archetype || 'Sovereign') + '</span> · ' + (ichar.arcana_lens.name || '') + '. ' + (ichar.initial_message || 'Ready when you are.');
+  }
+  const bc = document.querySelector('.breadcrumbs');
+  if (bc && ichar.name) {
+    bc.innerHTML = '<span class="crumb">World</span><span class="sep">/</span><span class="crumb" id="bcRegion">—</span><span class="sep">/</span><span class="crumb" id="bcTemple">—</span><span class="sep">/</span><span class="crumb" style="color:var(--gold)">' + ichar.name + '</span>';
+  }
+}
+
+// Boot
+(async function boot() {
+  const userRegion = await detectUserRegion();
+  renderTemples(userRegion);
+  const ichar = loadIchar();
+  if (ichar) {
+    applyIcharToUI(ichar);
+  } else {
+    setTimeout(() => {
+      document.getElementById('sovLine').innerHTML = 'Sovereign here. I can see you\'re connecting from <span id="userRegion">' + userRegion.name + '</span>. <a href="v2-signup-wizard.html" style="color:var(--gold)">Create your i-character</a> to unlock your digital twin. Click any temple to enter.';
+    }, 500);
+    setTimeout(() => {
+      document.getElementById('greeting').innerHTML = 'Welcome, sovereign <span class="accent">' + userRegion.name + '</span>';
+    }, 500);
+  }
+})();
+
+// ─── Update live status (stub) ───
+setInterval(() => {
+  // In production, this polls /api/sov3/status
+  const el = document.getElementById('sov3Status');
+  if (Math.random() > 0.98) {
+    el.textContent = '...';
+  } else {
+    el.textContent = '200 OK';
+  }
+}, 5000);
+
+// Close overlay on escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeTemple();
+});
+</script>
+
+</body>
+</html>

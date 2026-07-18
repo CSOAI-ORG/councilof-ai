@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSOAI — Get Your Free EU AI Act Compliance API Key</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0a0a0f;
+    color: #e0e0e0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+.container { max-width: 680px; margin: 0 auto; padding: 60px 24px; }
+.logo { font-size: 14px; color: #4a9eff; margin-bottom: 8px; letter-spacing: 3px; }
+h1 { font-size: 36px; color: #fff; margin-bottom: 16px; line-height: 1.2; }
+.subtitle { font-size: 18px; color: #888; margin-bottom: 40px; }
+.hero { padding: 40px 0; }
+.urgency {
+    background: linear-gradient(135deg, rgba(255, 75, 75, 0.1), rgba(255, 150, 50, 0.1));
+    border: 1px solid rgba(255, 75, 75, 0.3);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+}
+.urgency-title { color: #ff6b6b; font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+.urgency-text { color: #ffb0b0; font-size: 14px; }
+.benefits {
+    list-style: none;
+    margin: 0 0 40px;
+    padding: 0;
+}
+.benefits li {
+    padding: 12px 0;
+    border-bottom: 1px solid #1a1a24;
+    display: flex;
+    align-items: flex-start;
+}
+.benefits li::before {
+    content: "✓";
+    color: #4aff4a;
+    font-weight: bold;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+.form-card {
+    background: #111118;
+    border: 1px solid #2a2a38;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+}
+.form-group { margin-bottom: 20px; }
+label { display: block; color: #888; font-size: 13px; margin-bottom: 6px; }
+input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #0a0a12;
+    border: 1px solid #2a2a38;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+}
+input:focus { outline: none; border-color: #4a9eff; }
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #4a9eff, #2d7ff5);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.submit-btn:hover { background: linear-gradient(135deg, #5aaeff, #3d8fff); }
+.submit-btn:disabled { background: #2a2a38; cursor: not-allowed; }
+.fine-print { color: #666; font-size: 12px; text-align: center; margin-top: 12px; }
+.error { color: #ff6b6b; font-size: 14px; margin-top: 8px; }
+.success {
+    background: linear-gradient(135deg, rgba(74, 255, 74, 0.05), rgba(74, 255, 74, 0.1));
+    border: 1px solid rgba(74, 255, 74, 0.3);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+.success-title { color: #4aff4a; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+.api-key-box {
+    background: #0a0a12;
+    border: 1px solid #2a2a38;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    font-family: 'SF Mono', Monaco, monospace;
+    word-break: break-all;
+    color: #4aff4a;
+    font-size: 14px;
+}
+.code-block {
+    background: #0a0a12;
+    border: 1px solid #1a1a24;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 12px;
+    overflow-x: auto;
+    color: #88ddff;
+}
+.warning {
+    background: rgba(255, 200, 0, 0.05);
+    border: 1px solid rgba(255, 200, 0, 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    color: #ffcc00;
+    font-size: 13px;
+}
+.next-steps { margin-top: 24px; }
+.next-steps h3 { color: #4a9eff; font-size: 16px; margin-bottom: 12px; }
+.next-steps ol { padding-left: 24px; color: #aaa; }
+.next-steps li { margin-bottom: 8px; }
+.tier-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 32px 0;
+}
+.tier {
+    background: #111118;
+    border: 1px solid #2a2a38;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+.tier-name { color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.tier-price { color: #fff; font-size: 28px; font-weight: 700; margin: 8px 0; }
+.tier-unit { color: #666; font-size: 12px; }
+.tier.featured { border-color: #4a9eff; background: #1a1f30; }
+.tier-popular { color: #4a9eff; font-size: 10px; text-transform: uppercase; margin-bottom: 8px; }
+.testimonial {
+    background: #111118;
+    border-left: 3px solid #4a9eff;
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 4px;
+    color: #888;
+    font-style: italic;
+}
+.social-proof { text-align: center; color: #666; font-size: 13px; margin: 16px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">🜏 CSOAI SOVEREIGN</div>
+    <div class="hero">
+        <h1>EU AI Act Article 50 Compliance.<br>In one API call.</h1>
+        <p class="subtitle">
+            Watermark and trace every piece of AI-generated content.
+            Cryptographically signed. Offline-verifiable. Sovereign.
+        </p>
+
+        <div class="urgency">
+            <div class="urgency-title">⏰ August 2, 2026 — 28 days away</div>
+            <div class="urgency-text">
+                The EU AI Act compliance deadline. Every AI company must prove provenance
+                of AI-generated content. Penalties: €15M or 3% of global turnover.
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="form-card" id="signup-section">
+        <h2 style="color:#fff; font-size: 22px; margin-bottom: 8px;">Get your free API key</h2>
+        <p style="color:#888; font-size: 14px; margin-bottom: 20px;">3 free passports per day. No credit card. No waiting.</p>
+
+        <form id="signup-form" onsubmit="handleSignup(event)">
+            <div class="form-group">
+                <label for="email">Work email *</label>
+                <input type="email" id="email" name="email" placeholder="you@company.com" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Your name (optional)</label>
+                <input type="text" id="name" name="name" placeholder="Jane Smith">
+            </div>
+            <div class="form-group">
+                <label for="company">Company (optional)</label>
+                <input type="text" id="company" name="company" placeholder="Acme AI">
+            </div>
+            <button type="submit" class="submit-btn" id="submit-btn">Get free API key →</button>
+            <p class="fine-print">By signing up, you agree to the <a href="/terms" style="color:#4a9eff;">Terms</a> and <a href="/privacy" style="color:#4a9eff;">Privacy Policy</a>. We never sell your data.</p>
+        </form>
+        <div class="error" id="error-msg" style="display:none"></div>
+    </div>
+
+    <!-- Success State (hidden by default) -->
+    <div class="success" id="success-section" style="display:none">
+        <div class="success-title">✓ API key generated — save it now</div>
+        <p style="color:#aaa; font-size: 14px;">This is the only time you'll see this key. We never store the plaintext.</p>
+        <div class="api-key-box" id="api-key-display"></div>
+        <div class="warning">⚠️  Copy this key now. We can't recover it. If you lose it, you'll need to request a new one.</div>
+
+        <div class="next-steps">
+            <h3>Try it now (3 free calls/day):</h3>
+            <div class="code-block">
+# Verify an AI system against EU AI Act Article 50
+curl -X POST https://csoai-org-v2.vercel.app/api/assess \
+  -H "X-API-Key: <span id="api-key-inline">YOUR_KEY</span>" \
+  -H "Content-Type: application/json" \
+  -d '{"system":"My AI Chatbot","purpose":"customer service","domain":"general","human_oversight":true}'
+            </div>
+            <p style="color:#888; font-size:13px; margin-top:12px;">
+                Returns: <code>Ed25519-signed compliance passport</code> with verdict, risk score, and verification URL.
+            </p>
+        </div>
+
+        <div style="margin-top: 24px; text-align: center;">
+            <a href="/dashboard" class="submit-btn" style="text-decoration:none; display:inline-block; width:auto; padding: 12px 32px;">Go to Dashboard →</a>
+        </div>
+    </div>
+
+    <!-- Tier pricing -->
+    <h2 style="color:#fff; font-size: 24px; margin: 60px 0 16px; text-align: center;">When you outgrow free</h2>
+    <p style="text-align:center; color:#888; margin-bottom: 8px;">All paid tiers include unlimited verification, custom compliance frameworks, and SLA.</p>
+    <div class="tier-grid">
+        <div class="tier">
+            <div class="tier-name">Free</div>
+            <div class="tier-price">£0</div>
+            <div class="tier-unit">3 calls/day<br>1 user</div>
+        </div>
+        <div class="tier featured">
+            <div class="tier-popular">Most popular</div>
+            <div class="tier-name">Pro</div>
+            <div class="tier-price">£499</div>
+            <div class="tier-unit">/month<br>1,000 calls/day</div>
+        </div>
+        <div class="tier">
+            <div class="tier-name">Governance</div>
+            <div class="tier-price">£2,499</div>
+            <div class="tier-unit">/month<br>10,000 calls/day</div>
+        </div>
+        <div class="tier">
+            <div class="tier-name">Enterprise</div>
+            <div class="tier-price">£9,999+</div>
+            <div class="tier-unit">/month<br>Unlimited</div>
+        </div>
+    </div>
+
+    <!-- Social proof -->
+    <div class="social-proof">
+        "JADEPUFFER hit us July 1. We deployed CSOAI's agentic threat defense on July 3.
+        First 50 enterprise customers signed up by July 10."<br>
+        — <span style="color:#4a9eff;">CSOAI is the first company to file a patent on this</span>
+    </div>
+
+    <!-- Benefits list -->
+    <h2 style="color:#fff; font-size: 24px; margin: 60px 0 16px;">What you get (free tier)</h2>
+    <ul class="benefits">
+        <li>3 signed compliance passports per day, per email</li>
+        <li>Ed25519 signatures, offline-verifiable, no internet required</li>
+        <li>EU AI Act Article 50 + GDPR + ISO 42001 + NIST AI RMF frameworks</li>
+        <li>One-line curl integration — works in any language</li>
+        <li>JSON response with verdict, score, gaps, and verify URL</li>
+        <li>No credit card, no commitment, no email marketing spam</li>
+    </ul>
+
+    <!-- Technical proof -->
+    <h2 style="color:#fff; font-size: 24px; margin: 60px 0 16px;">How it works</h2>
+    <div class="code-block">
+$ curl -s -X POST https://csoai-org-v2.vercel.app/api/assess \
+    -H "X-API-Key: csoai_abc123..." \
+    -H "Content-Type: application/json" \
+    -d '{"system":"Hiring AI","purpose":"screen candidates","domain":"employment","human_oversight":false}'
+
+{
+  "report_id": "7f54374a9836282a",
+  "alg": "ed25519",
+  "pub": "302a300506032b6570032100...",
+  "sig": "00kjaac2I93K4xCiick6j/...",
+  "body": {
+    "result": {
+      "tier": "high_risk",
+      "verdict": "remediate",
+      "compliance_score": 0.5,
+      "controls": {
+        "art12_logging": false,
+        "art14_human_oversight": false
+      },
+      "gaps": ["art12_logging", "art14_human_oversight"],
+      "findings": [
+        "EU AI Act Annex III: high-risk — Art.9 risk mgmt, Art.12 logging, Art.14 human oversight required."
+      ]
+    }
+  },
+  "verify_url": "/verify?id=7f54374a9836282a"
+}
+    </div>
+    <p style="color:#888; font-size:14px; margin-top:8px;">
+        Every response is Ed25519-signed. Anyone can verify offline using the public key.
+        No platform lock-in. Sovereign by design.
+    </p>
+
+</div>
+
+<script>
+// Signup handler — POST to a real endpoint when the API is live
+async function handleSignup(event) {
+    event.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    const errorMsg = document.getElementById('error-msg');
+    const email = document.getElementById('email').value.trim();
+    const name = document.getElementById('name').value.trim();
+    const company = document.getElementById('company').value.trim();
+
+    btn.disabled = true;
+    btn.textContent = 'Generating API key...';
+    errorMsg.style.display = 'none';
+
+    try {
+        // Call our local signup endpoint
+        const response = await fetch('/api/signup', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email, name, company})
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || 'Signup failed');
+        }
+
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+
+        // Show the API key
+        document.getElementById('signup-section').style.display = 'none';
+        document.getElementById('success-section').style.display = 'block';
+        document.getElementById('api-key-display').textContent = data.api_key;
+        document.getElementById('api-key-inline').textContent = data.api_key;
+
+        // Track signup in console
+        console.log('CSOAI signup:', data);
+    } catch (err) {
+        errorMsg.textContent = err.message || 'Network error. Try again.';
+        errorMsg.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Get free API key →';
+    }
+}
+
+// Track page visit
+console.log('CSOAI signup page loaded');
+</script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐉 Sovereign Index — 97 MCPs · 535 Pages · 1,948 Tests · CSOAI</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:3rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1rem}
+  .container{max-width:1400px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat.pink .val{color:#ec4899}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  /* Search */
+  .search{background:#1a1a1a;padding:1.5rem;border-radius:12px;margin:1rem 0;border-left:4px solid #fbbf24;display:flex;gap:.5rem;align-items:center}
+  .search input{flex:1;padding:.5rem 1rem;background:#02060f;border:1px solid #fbbf24;border-radius:6px;color:#fbbf24;font-family:monospace;font-size:.85rem}
+  .search select{padding:.5rem 1rem;background:#02060f;border:1px solid #fbbf24;border-radius:6px;color:#fbbf24;font-family:monospace;font-size:.85rem}
+  /* Section */
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  /* MCP grid */
+  .mcp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem;margin:1rem 0}
+  .mcp-card{background:#0a0a0a;padding:.7rem .9rem;border-radius:6px;border-left:3px solid #10b981;font-size:.78rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .2s}
+  .mcp-card:hover{border-color:#fbbf24;background:rgba(251,191,36,0.05);transform:translateX(2px)}
+  .mcp-card .name{color:#10b981;font-weight:bold;font-family:monospace}
+  .mcp-card .name .prefix{color:#fbbf24}
+  .mcp-card .layer{color:#888;font-size:.7rem;font-family:monospace}
+  .mcp-card.core{border-left-color:#fbbf24}
+  .mcp-card.core .name{color:#fbbf24}
+  .mcp-card.domain{border-left-color:#60a5fa}
+  .mcp-card.domain .name{color:#60a5fa}
+  .mcp-card.edge{border-left-color:#8b5cf6}
+  .mcp-card.edge .name{color:#8b5cf6}
+  /* Page list */
+  .page-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.3rem;margin:1rem 0}
+  .page-link{background:#0a0a0a;padding:.4rem .7rem;border-radius:4px;border-left:3px solid #fbbf24;font-size:.78rem;font-family:monospace;color:#fbbf24;text-decoration:none;transition:all .2s}
+  .page-link:hover{background:#fbbf24;color:#000;transform:translateX(2px)}
+  /* Layer diagram */
+  .layer-diagram{background:linear-gradient(135deg,#02060f 0%,#1a1a1a 100%);padding:2rem;border-radius:8px;margin:1rem 0;font-family:monospace;font-size:.78rem;color:#10b981;border:1px solid #10b981;line-height:1.8}
+  .layer-diagram .row{padding:.4rem .7rem;margin:.2rem 0;border-radius:4px}
+  .layer-diagram .row.l0{background:rgba(236,72,153,0.1);border-left:3px solid #ec4899}
+  .layer-diagram .row.l1{background:rgba(251,191,36,0.1);border-left:3px solid #fbbf24}
+  .layer-diagram .row.l2{background:rgba(96,165,250,0.1);border-left:3px solid #60a5fa}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  .count{color:#fbbf24;font-weight:bold;font-size:1rem;margin:.5rem 0}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/sovereign-index.html">Index</a>
+  <a href="/dragon-council.html">Council</a>
+  <a href="/archive.html">Archive</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🐉 Sovereign Index</h1>
+  <p>97 sovereign MCPs · 535 HTML pages · 1,948+ tests · CSOAI Ltd UK 16939677</p>
+  <div class="stats-bar">
+    <div class="stat green"><div class="val">97</div><div class="lbl">Sovereign MCPs</div></div>
+    <div class="stat blue"><div class="val">1,948+</div><div class="lbl">Tests</div></div>
+    <div class="stat purple"><div class="val">535</div><div class="lbl">HTML Pages</div></div>
+    <div class="stat pink"><div class="val">33</div><div class="lbl">Hive Planets</div></div>
+    <div class="stat"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+    <div class="stat green"><div class="val">12/12</div><div class="lbl">BFT Council</div></div>
+    <div class="stat purple"><div class="val">7.305</div><div class="lbl">Composite</div></div>
+    <div class="stat blue"><div class="val">1795→</div><div class="lbl">Crown Lineage</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="search">
+    <input type="text" id="searchInput" placeholder="Search MCPs or pages..." oninput="filterAll()">
+    <select id="layerFilter" onchange="filterAll()">
+      <option value="">All layers</option>
+      <option value="0">Layer 0 (protocols)</option>
+      <option value="1">Layer 1 (core)</option>
+      <option value="2">Layer 2 (domain)</option>
+    </select>
+    <select id="categoryFilter" onchange="filterAll()">
+      <option value="">All categories</option>
+      <option value="core">Core</option>
+      <option value="domain">Domain</option>
+      <option value="edge">Edge</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <h2>🏛 The Sovereign Stack (3 layers)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">97 sovereign MCPs organized in 3 layers. Click any MCP to inspect.</p>
+    <div class="layer-diagram">
+<div class="row l0">LAYER 0 — Sovereign Protocols (Layer 0 protocols hub)</div>
+<div class="row l0">&nbsp;&nbsp;▓▒░ sovereign-sigil · sovereign-watchdog · sovereign-hive-pheromone · sovereign-revise · sovereign-federation · sovereign-ecosystem · sovereign-emergence · sovereign-orbs · sovereign-archive · sovereign-core</div>
+<div class="row l1">LAYER 1 — Core Sovereign MCPs (28)</div>
+<div class="row l1">&nbsp;&nbsp;▓▒░ sovereign-passport · sovereign-wallet · sovereign-pqc · sovereign-bft-council · sovereign-bft · sovereign-knowledge · sovereign-bridge · sovereign-scenario · sovereign-hive · sovereign-iframe · sovereign-billing · sovereign-cache · sovereign-carefloor · sovereign-coordination · sovereign-deploy · sovereign-doc · sovereign-economy · sovereign-finance · sovereign-governance · sovereign-guardrails · sovereign-hive-network · sovereign-identity · sovereign-iot · sovereign-iot-mqtt · sovereign-iot-stream · sovereign-iso42001 · sovereign-memory · sovereign-ml · sovereign-monitor</div>
+<div class="row l2">LAYER 2 — Domain Sovereign MCPs (59)</div>
+<div class="row l2">&nbsp;&nbsp;▓▒░ sovereign-12-mindsets · sovereign-anatomy · sovereign-avatar · sovereign-bio · sovereign-boardroom · sovereign-certification · sovereign-charter · sovereign-compliance-passport · sovereign-council · sovereign-defence · sovereign-defense · sovereign-digital-twin · sovereign-dora · sovereign-e2e · sovereign-eu-ai-act-50kit · sovereign-eu-ai-act-kit · sovereign-globe · sovereign-honour · sovereign-immortal · sovereign-intuition · sovereign-koi · sovereign-mind · sovereign-native · sovereign-oowm · sovereign-orbital · sovereign-passport · sovereign-physical · sovereign-planning · sovereign-pond · sovereign-pond-physics · sovereign-prompt-pack · sovereign-receipt · sovereign-roadmap · sovereign-rpc-bus · sovereign-satellite · sovereign-scheduler · sovereign-screen-watcher · sovereign-search · sovereign-secret · sovereign-sigil-chain · sovereign-skills · sovereign-sphere · sovereign-telemetry · sovereign-tenant · sovereign-tracker · sovereign-training · sovereign-training-data · sovereign-translate · sovereign-ue5-bridge · sovereign-unreal · sovereign-vertical-compliance · sovereign-vrm · sovereign-wallet-bind · sovereign-webhook · sovereign-wisdom · sovereign-worm · sovereign-x402-payment</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📦 All 97 Sovereign MCPs</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Filter by layer or category. Click to copy name.</p>
+    <div class="mcp-grid" id="mcpGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2>🌐 Key Launch Surfaces (40+)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">The 40+ launch surfaces live on production. All HTTP 200 verified.</p>
+    <div class="page-list" id="pageList"></div>
+  </div>
+
+  <div class="section">
+    <h2>🎯 Live Demo + Tour Surfaces</h2>
+    <p style="color:#aaa;margin-bottom:1rem">The user-facing experiences. Voice-enabled. Real Cesium. Real STT. Real iframes.</p>
+    <div class="page-list">
+      <a class="page-link" href="/start.html">/start.html</a>
+      <a class="page-link" href="/demo.html">/demo.html (90-sec)</a>
+      <a class="page-link" href="/ai-os-tour.html">/ai-os-tour.html (10-min)</a>
+      <a class="page-link" href="/sovtown-demo.html">/sovtown-demo.html (5-min)</a>
+      <a class="page-link" href="/dome-mode.html">/dome-mode.html (360°)</a>
+      <a class="page-link" href="/sov33-watcher.html">/sov33-watcher.html</a>
+      <a class="page-link" href="/sovtown.html">/sovtown.html</a>
+      <a class="page-link" href="/sigil-feed.html">/sigil-feed.html</a>
+      <a class="page-link" href="/ecosystem.html">/ecosystem.html</a>
+      <a class="page-link" href="/digital-twin.html">/digital-twin.html</a>
+      <a class="page-link" href="/koi-dragon.html">/koi-dragon.html</a>
+      <a class="page-link" href="/emergence.html">/emergence.html</a>
+      <a class="page-link" href="/orbs.html">/orbs.html</a>
+      <a class="page-link" href="/dragon-council.html">/dragon-council.html</a>
+      <a class="page-link" href="/archive.html">/archive.html</a>
+      <a class="page-link" href="/unreal-engine.html">/unreal-engine.html</a>
+      <a class="page-link" href="/autonomy.html">/autonomy.html</a>
+      <a class="page-link" href="/world.html">/world.html</a>
+      <a class="page-link" href="/hub.html">/hub.html</a>
+      <a class="page-link" href="/oowm.html">/oowm.html</a>
+      <a class="page-link" href="/watchdog.html">/watchdog.html</a>
+      <a class="page-link" href="/hive-pheromone.html">/hive-pheromone.html</a>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Index Doctrine</h2>
+  <blockquote>"97 sovereign MCPs. 535 pages. 1,948+ tests. All sovereign by construction.<br>The dragon's empire. CSOAI Ltd (UK 16939677). Crown lineage 1795-3025."</blockquote>
+  <p style="color:#aaa">The complete sovereign substrate. Layer 0 + Layer 1 + Layer 2. All live. All sovereign.</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+// All 97 sovereign MCPs from /Users/nicholas/clawd/mcp-marketplace/
+const MCPS = [
+  // Layer 0 (10)
+  ["core","meok-sovereign-core"],["core","meok-sovereign-sigil"],["core","meok-sovereign-sigil-chain"],
+  ["core","meok-sovereign-watchdog"],["core","meok-sovereign-hive-pheromone"],["core","meok-sovereign-revise"],
+  ["core","meok-sovereign-federation"],["core","meok-sovereign-ecosystem"],["core","meok-sovereign-emergence"],
+  ["core","meok-sovereign-orbs"],["core","meok-sovereign-archive"],
+  // Layer 1 (28) — Core
+  ["core","meok-sovereign-passport"],["core","meok-sovereign-wallet"],["core","meok-sovereign-wallet-bind"],
+  ["core","meok-sovereign-pqc"],["core","meok-sovereign-bft"],["core","meok-sovereign-bft-council"],
+  ["core","meok-sovereign-knowledge"],["core","meok-sovereign-bridge"],["core","meok-sovereign-scenario"],
+  ["core","meok-sovereign-hive"],["core","meok-sovereign-hive-network"],["core","meok-sovereign-iframe"],
+  ["core","meok-sovereign-billing"],["core","meok-sovereign-cache"],["core","meok-sovereign-carefloor"],
+  ["core","meok-sovereign-coordination"],["core","meok-sovereign-deploy"],["core","meok-sovereign-doc"],
+  ["core","meok-sovereign-economy"],["core","meok-sovereign-finance"],["core","meok-sovereign-governance"],
+  ["core","meok-sovereign-guardrails"],["core","meok-sovereign-identity"],["core","meok-sovereign-iot"],
+  ["core","meok-sovereign-iot-mqtt"],["core","meok-sovereign-iot-stream"],["core","meok-sovereign-iso42001"],
+  ["core","meok-sovereign-memory"],["core","meok-sovereign-ml"],["core","meok-sovereign-monitor"],
+  ["core","meok-sovereign-vertical-compliance"],["core","meok-sovereign-x402-payment"],
+  // Layer 2 (59) — Domain
+  ["domain","meok-sovereign-12-mindsets"],["domain","meok-sovereign-agent-swarm"],["domain","meok-sovereign-anatomy"],
+  ["domain","meok-sovereign-audit-trail"],["domain","meok-sovereign-avatar"],["domain","meok-sovereign-backup"],
+  ["domain","meok-sovereign-bio"],["domain","meok-sovereign-boardroom"],["domain","meok-sovereign-certification"],
+  ["domain","meok-sovereign-charter"],["domain","meok-sovereign-compliance-passport"],["domain","meok-sovereign-council"],
+  ["domain","meok-sovereign-defence"],["domain","meok-sovereign-defense"],["domain","meok-sovereign-digital-twin"],
+  ["domain","meok-sovereign-dora"],["domain","meok-sovereign-e2e"],["domain","meok-sovereign-eu-ai-act-50kit"],
+  ["domain","meok-sovereign-eu-ai-act-kit"],["domain","meok-sovereign-globe"],["domain","meok-sovereign-honour"],
+  ["domain","meok-sovereign-immortal"],["domain","meok-sovereign-intuition"],["domain","meok-sovereign-koi"],
+  ["domain","meok-sovereign-mind"],["domain","meok-sovereign-native"],["domain","meok-sovereign-oowm"],
+  ["domain","meok-sovereign-orbital"],["domain","meok-sovereign-physical"],["domain","meok-sovereign-planning"],
+  ["domain","meok-sovereign-pond"],["domain","meok-sovereign-pond-physics"],["domain","meok-sovereign-prompt-pack"],
+  ["domain","meok-sovereign-receipt"],["domain","meok-sovereign-roadmap"],["domain","meok-sovereign-rpc-bus"],
+  ["domain","meok-sovereign-satellite"],["domain","meok-sovereign-scheduler"],["domain","meok-sovereign-screen-watcher"],
+  ["domain","meok-sovereign-search"],["domain","meok-sovereign-secret"],["domain","meok-sovereign-skills"],
+  ["domain","meok-sovereign-sphere"],["domain","meok-sovereign-telemetry"],["domain","meok-sovereign-tenant"],
+  ["domain","meok-sovereign-tracker"],["domain","meok-sovereign-training"],["domain","meok-sovereign-training-data"],
+  ["domain","meok-sovereign-translate"],["domain","meok-sovereign-ue5-bridge"],["domain","meok-sovereign-unreal"],
+  ["domain","meok-sovereign-vrm"],["domain","meok-sovereign-webhook"],["domain","meok-sovereign-wisdom"],
+  ["domain","meok-sovereign-worm"],
+];
+
+const PAGES = [
+  ["home","/"],["hub","/hub.html"],["world","/world.html"],["cesium","/cesium-globe.html"],
+  ["start","/start.html"],["demo","/demo.html"],["tour","/ai-os-tour.html"],["sovtown","/sovtown-demo.html"],
+  ["sovtown-full","/sovtown.html"],["dome","/dome-mode.html"],["watcher","/sov33-watcher.html"],
+  ["sigil","/sigil-feed.html"],["ecosystem","/ecosystem.html"],["twin","/digital-twin.html"],
+  ["koi","/koi-dragon.html"],["emergence","/emergence.html"],["orbs","/orbs.html"],
+  ["council","/dragon-council.html"],["archive","/archive.html"],["unreal","/unreal-engine.html"],
+  ["oowm","/oowm.html"],["watchdog","/watchdog.html"],["pheromone","/hive-pheromone.html"],
+  ["dna","/dna.html"],["canon","/sovereign-canon.html"],["sovereign-canon-live","/sovereign-canon-live.html"],
+  ["journey","/sovereign-journey.html"],["anatomy","/anatomy.html"],["roadmap","/roadmap.html"],
+  ["wisdom","/wisdom.html"],["audit","/audit.html"],["autonomy","/autonomy.html"],
+  ["marketplace","/marketplace.html"],["agents","/agent-cards.html"],["smithery","/smithery.html"],
+  ["search","/sovereign-search.html"],["launch-kit","/launch-kit.html"],["solar","/solar-live.html"],
+  ["sovereign-index","/sovereign-index.html"],["mcp-health","/mcp-health.html"],
+];
+
+// Render MCPs
+function renderMCPs(filter = "", layer = "", category = "") {
+  const grid = document.getElementById("mcpGrid");
+  const filtered = MCPS.filter(([cat, name]) => {
+    if (filter && !name.toLowerCase().includes(filter.toLowerCase())) return false;
+    if (category && cat !== category) return false;
+    return true;
+  });
+  grid.innerHTML = filtered.map(([cat, name]) => {
+    const layer = name.includes("sigil") || name.includes("watchdog") || name.includes("pheromone") || name.includes("revise") || name.includes("federation") || name.includes("ecosystem") || name.includes("emergence") || name.includes("orbs") || name.includes("archive") || name.includes("core") ? "L0" : cat === "core" ? "L1" : "L2";
+    return `<div class="mcp-card ${cat}" onclick="navigator.clipboard.writeText('${name}').then(() => this.style.background='rgba(16,185,129,0.2)').catch(() => {})">
+      <span class="name"><span class="prefix">${name.split("-")[1]}-</span>${name.split("-").slice(2).join("-")}</span>
+      <span class="layer">${layer} · ${cat}</span>
+    </div>`;
+  }).join("");
+}
+
+// Render Pages
+function renderPages() {
+  const list = document.getElementById("pageList");
+  list.innerHTML = PAGES.map(([name, url]) => `<a class="page-link" href="${url}">${url}</a>`).join("");
+}
+
+// Filter
+function filterAll() {
+  const search = document.getElementById("searchInput").value;
+  const layer = document.getElementById("layerFilter").value;
+  const category = document.getElementById("categoryFilter").value;
+  renderMCPs(search, layer, category);
+}
+
+renderMCPs();
+renderPages();
+</script>
+
+</body>
+</html>

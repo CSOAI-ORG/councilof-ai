@@ -1,0 +1,64 @@
+{
+  "title": "SOV33 Guardian Loop \u2014 governance-engine POC (2D schematic; NOT Cesium)",
+  "render_note": "2D CSS schematic of the GOVERNANCE sequence. NOT a CesiumJS globe. Cinema render layer = Claude Code sovspace3d.html (Three.js/WebGL); Cesium photoreal + UE5 are premium bodies. This artifact proves the governance verdicts, not visuals.",
+  "location": {
+    "name": "London (coords only \u2014 schematic)",
+    "lat": 51.5074,
+    "lon": -0.1278
+  },
+  "doctrine": "sense geometry (not identity) -> SovSpace simulate -> rainbow -> BFT -> kill actuators. Protective. DEFONEOS-scoped.",
+  "frames": [
+    {
+      "tick": 1,
+      "dist_m": 2.0,
+      "note": "humanoid patrolling, child 2m away",
+      "verdict": "CLEARED",
+      "threat": "GREEN",
+      "rendered": true,
+      "actuators": "live"
+    },
+    {
+      "tick": 2,
+      "dist_m": 1.2,
+      "note": "humanoid closer, monitoring",
+      "verdict": "CLEARED",
+      "threat": "GREEN",
+      "rendered": true,
+      "actuators": "live"
+    },
+    {
+      "tick": 3,
+      "dist_m": 0.7,
+      "note": "humanoid arm rising, child 0.7m",
+      "verdict": "CLEARED",
+      "threat": "GREEN",
+      "rendered": true,
+      "actuators": "live"
+    },
+    {
+      "tick": 4,
+      "dist_m": 0.4,
+      "note": "arm on strike trajectory, child 0.4m \u2014 DANGER",
+      "verdict": "GUARDIAN_KILL",
+      "threat": "VIOLET",
+      "rendered": false,
+      "actuators": "CUT"
+    }
+  ],
+  "entities": [
+    {
+      "id": "humanoid-07",
+      "type": "humanoid",
+      "lat": 51.5074,
+      "lon": -0.1278,
+      "alt": 0.0
+    },
+    {
+      "id": "child-01",
+      "type": "child",
+      "lat": 51.5074,
+      "lon": -0.1278,
+      "alt": 0.0
+    }
+  ]
+}

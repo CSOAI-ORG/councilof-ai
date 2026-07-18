@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Federation Discovery Protocol — how 30 MCP servers discover, verify, and trust each other. .well-known manifests, Ed25519 identity exchange, trust ring assignment, SIGIL-attested federation events.">
+<meta property="og:title" content="DEFONEOS · Federation Discovery Protocol">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · Federation Discovery Protocol</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4.5vw,3rem);background:linear-gradient(135deg,#22d3ee 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.83rem;margin:1rem 0}
+.spec-doc th{background:rgba(34,211,238,.08);color:var(--cyan);padding:.6rem .7rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}
+.spec-doc td{padding:.5rem .7rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.spec-doc .ok{background:rgba(74,222,128,.08);border-left:3px solid #4ade80;padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.json-example{font-family:'SF Mono','JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;background:var(--bg2,#14181f);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1rem 0;color:var(--muted2);overflow-x:auto}
+.json-example .key{color:var(--cyan);font-weight:600}
+.json-example .str{color:#fbbf24}
+.json-example .num{color:#a78bfa}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:1.8rem;font-weight:900;color:var(--cyan)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="deployment-topology-reference.html">Topology</a>
+    <a href="sigil-ledger-specification.html">SIGIL</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>Federation Discovery Protocol</h1>
+  <p class="tagline">How 30 MCP servers discover, verify, and trust each other. Well-known manifests, Ed25519 identity exchange, trust ring assignment, and SIGIL-attested federation events. Zero central broker.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">30</div><div class="lbl">Federated MCPs</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">Trust Rings</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">Central Brokers</div></div>
+    <div class="stat"><div class="num">100%</div><div class="lbl">Ed25519 Signed</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2>1. Purpose</h2>
+<p>The <strong>Federation Discovery Protocol</strong> defines how MCP servers in the DEFONEOS ecosystem find each other, establish trust, exchange capabilities, and maintain federation state. It replaces centralised service registries with a peer-to-peer, cryptographically-verifiable discovery model.</p>
+<div class="note"><strong>Design principle:</strong> No central broker. No single point of failure. Every MCP server publishes its own manifest at a well-known endpoint. Discovery is pull-based, signed, and SIGIL-attested. Trust is derived from the BFT council, not from a central authority.</div>
+</section>
+
+<section>
+<h2>2. The Manifest Endpoint</h2>
+<p>Every MCP server in the federation publishes a machine-readable manifest at a standardised well-known path:</p>
+<div class="json-example">
+GET /.well-known/defoneos-manifest.json
+</div>
+<h3>2.1 Manifest Structure</h3>
+<div class="json-example">
+{
+  <span class="key">"manifest_version"</span>: <span class="str">"1.0"</span>,
+  <span class="key">"mcp_id"</span>: <span class="str">"sentinel-hub-mcp"</span>,
+  <span class="key">"display_name"</span>: <span class="str">"Sentinel Hub Satellite Imagery"</span>,
+  <span class="key">"version"</span>: <span class="str">"2.1.0"</span>,
+  <span="key">"ring"</span>: <span class="num">1</span>,
+  <span class="key">"trust_level"</span>: <span class="str">"defence-sensor"</span>,
+  <span class="key">"ed25519_identity"</span>: <span class="str">"ed25519:0x4a2b...c8f1"</span>,
+  <span class="key">"capabilities"</span>: [
+    <span class="str">"get_satellite_image"</span>,
+    <span class="str">"list_collections"</span>,
+    <span class="str">"search_catalog"</span>,
+    <span class="str">"get_metadata"</span>
+  ],
+  <span class="key">"data_classification"</span>: <span class="str">"OSINT"</span>,
+  <span class="key">"data_flow"</span>: <span class="str">"inbound-only"</span>,
+  <span class="key">"external_apis"</span>: [
+    {
+      <span class="key">"name"</span>: <span class="str">"Sentinel Hub Process API"</span>,
+      <span class="key">"jurisdiction"</span>: <span class="str">"EU"</span>,
+      <span class="key">"data_sent"</span>: <span class="str">"bounding box, date range, collection ID"</span>,
+      <span class="key">"data_received"</span>: <span class="str">"satellite imagery tiles"</span>,
+      <span class="key">"pii_risk"</span>: <span class="str">"none"</span>
+    }
+  ],
+  <span class="key">"health_endpoint"</span>: <span class="str">"/health"</span>,
+  <span class="key">"sigil_enabled"</span>: <span class="num">true</span>,
+  <span class="key">"red_line_compliance"</span>: {
+    <span class="key">"kinetic_targeting"</span>: <span class="str">"not-capable"</span>,
+    <span class="key">"personal_surveillance"</span>: <span class="str">"not-capable"</span>,
+    <span class="key">"bulk_collection"</span>: <span class="str">"not-capable"</span>
+  },
+  <span class="key">"admission_date"</span>: <span class="str">"2026-07-09T14:00:00Z"</span>,
+  <span class="key">"bft_vote"</span>: <span class="str">"28/33 approved"</span>,
+  <span class="key">"signature"</span>: <span class="str">"ed25519:0x9f3a...e7b2"</span>,
+  <span class="key">"manifest_hash"</span>: <span class="str">"sha256:0x1c4d...88ab"</span>
+}
+</div>
+</section>
+
+<section>
+<h2>3. Discovery Flow</h2>
+<h3>3.1 Initial Discovery</h3>
+<p>When a new MCP joins the federation or an existing MCP needs to discover peers, the following sequence executes:</p>
+<div class="json-example">
+Step 1: MCP server starts → publishes /.well-known/defoneos-manifest.json
+Step 2: Federation seed nodes (Ring 0 MCPs) fetch manifest
+Step 3: Manifest signature verified (Ed25519)
+Step 4: Manifest hash compared to BFT council registry
+Step 5: If new: Admission Control Checklist executed (9-point)
+Step 6: If existing: Manifest hash compared to last known (change detection)
+Step 7: Capabilities indexed in federation catalogue
+Step 8: SIGIL receipt: federation_discover event logged
+Step 9: Health check initiated (GET /health)
+Step 10: MCP marked ACTIVE in federation state
+</div>
+<h3>3.2 Continuous Discovery (Heartbeat)</h3>
+<table>
+<tr><th>Interval</th><th>Action</th><th>SIGIL Event</th></tr>
+<tr><td>Every 15 seconds</td><td>Health check (GET /health)</td><td><code>federation_heartbeat</code> (batch)</td></tr>
+<tr><td>Every 5 minutes</td><td>Manifest re-fetch + hash compare</td><td><code>federation_manifest_check</code></td></tr>
+<tr><td>Every 15 minutes</td><td>SIGIL receipt batch submission</td><td><code>federation_sigil_sync</code></td></tr>
+<tr><td>Every 1 hour</td><td>Capability re-index</td><td><code>federation_reindex</code></td></tr>
+<tr><td>On manifest change</td><td>Immediate re-admission check</td><td><code>federation_manifest_changed</code></td></tr>
+<tr><td>On health failure</td><td>Quarantine after 3 consecutive failures</td><td><code>federation_quarantine</code></td></tr>
+</table>
+</section>
+
+<section>
+<h2>4. Trust Ring Assignment</h2>
+<p>Every MCP is assigned to one of three trust rings at admission time. Ring assignment determines data access, secret access, and federation privileges. See <a href="mcp-admission-control-checklist.html">MCP Admission Control Checklist</a> for the full assignment criteria.</p>
+<table>
+<tr><th>Ring</th><th>Label</th><th>MCPs</th><th>Data Flow</th><th>Discovery Scope</th></tr>
+<tr><td>Ring 0</td><td>Core Sovereign</td><td>7</td><td>UK-sovereign-only, zero external API</td><td>Full federation visibility</td></tr>
+<tr><td>Ring 1</td><td>Defence Sensors</td><td>11</td><td>Inbound-only from external sensors</td><td>Ring 0 + Ring 1 peers</td></tr>
+<tr><td>Ring 2</td><td>Civil Services</td><td>12</td><td>Public data, unrestricted</td><td>Ring 0 + Ring 2 peers</td></tr>
+</table>
+<div class="note"><strong>Cross-ring visibility rule:</strong> Ring 1 and Ring 2 MCPs cannot discover each other directly. All cross-ring communication flows through Ring 0, which acts as the sovereign intermediary. This prevents defence sensor data from leaking to civil service MCPs and vice versa.</div>
+</section>
+
+<section>
+<h2>5. Federation State Machine</h2>
+<p>Each MCP in the federation transitions through these states:</p>
+<table>
+<tr><th>State</th><th>Description</th><th>Entry Condition</th><th>Exit Condition</th></tr>
+<tr><td>DISCOVERED</td><td>Manifest fetched and signature verified</td><td>Initial discovery or re-discovery</td><td>Admission check initiated</td></tr>
+<tr><td>PENDING_ADMISSION</td><td>Under 9-point admission control review</td><td>Manifest verified, not yet admitted</td><td>BFT vote (23/33 quorum)</td></tr>
+<tr><td>ACTIVE</td><td>Fully operational, healthy, federated</td><td>BFT approval + health check pass</td><td>Health failure or manifest change</td></tr>
+<tr><td>DEGRADED</td><td>Health issues but still responding</td><td>1-2 consecutive health failures</td><td>Recovery (→ ACTIVE) or 3rd failure (→ QUARANTINED)</td></tr>
+<tr><td>QUARANTINED</td><td>Isolated, not trusted for data flow</td><td>3 health failures or red-line alert</td><td>Manual review + BFT vote to restore</td></tr>
+<tr><td>RETIRED</td><td>Removed from federation</td><td>BFT vote (23/33) or human owner decision</td><td>Terminal state</td></tr>
+</table>
+</section>
+
+<section>
+<h2>6. Federation Events (SIGIL)</h2>
+<p>Every federation state transition generates a SIGIL receipt. The complete event taxonomy:</p>
+<table>
+<tr><th>Event Type</th><th>Trigger</th><th>Critical Fields</th></tr>
+<tr><td><code>federation_discover</code></td><td>New MCP manifest discovered</td><td>mcp_id, manifest_hash, ring</td></tr>
+<tr><td><code>federation_admit</code></td><td>BFT vote approves admission</td><td>mcp_id, vote_tally, quorum_met</td></tr>
+<tr><td><code>federation_activate</code></td><td>MCP transitions to ACTIVE</td><td>mcp_id, health_status, capabilities</td></tr>
+<tr><td><code>federation_degrade</code></td><td>Health check fails</td><td>mcp_id, failure_count, error</td></tr>
+<tr><td><code>federation_quarantine</code></td><td>MCP isolated</td><td>mcp_id, reason, trigger_type</td></tr>
+<tr><td><code>federation_restore</code></td><td>Quarantined MCP restored</td><td>mcp_id, bft_vote, review_id</td></tr>
+<tr><td><code>federation_retire</code></td><td>MCP permanently removed</td><td>mcp_id, bft_vote, reason</td></tr>
+<tr><td><code>federation_manifest_changed</code></td><td>Manifest hash differs from cached</td><td>mcp_id, old_hash, new_hash</td></tr>
+<tr><td><code>federation_capability_added</code></td><td>New tool discovered in manifest</td><td>mcp_id, tool_name, ring</td></tr>
+<tr><td><code>federation_red_line_alert</code></td><td>Red-line compliance check failed</td><td>mcp_id, violation_type, auto_quarantine</td></tr>
+</table>
+</section>
+
+<section>
+<h2>7. Federation Catalogue</h2>
+<p>The federation maintains a live catalogue of all 30 MCPs and their 150+ tools. The catalogue is derived from manifest data and updated on every discovery cycle:</p>
+<h3>7.1 Catalogue Structure</h3>
+<div class="json-example">
+GET /api/federation/catalogue
+
+{
+  <span class="key">"total_mcps"</span>: <span class="num">30</span>,
+  <span class="key">"total_tools"</span>: <span class="num">156</span>,
+  <span class="key">"active"</span>: <span class="num">30</span>,
+  <span class="key">"degraded"</span>: <span class="num">0</span>,
+  <span class="key">"quarantined"</span>: <span class="num">0</span>,
+  <span class="key">"by_ring"</span>: {
+    <span class="key">"ring_0"</span>: <span class="num">7</span>,
+    <span class="key">"ring_1"</span>: <span class="num">11</span>,
+    <span class="key">"ring_2"</span>: <span class="num">12</span>
+  },
+  <span class="key">"mcps"</span>: [
+    {
+      <span class="key">"id"</span>: <span class="str">"sigil-mcp"</span>,
+      <span class="key">"ring"</span>: <span class="num">0</span>,
+      <span class="key">"tools"</span>: <span class="num">8</span>,
+      <span class="key">"state"</span>: <span class="str">"ACTIVE"</span>,
+      <span class="key">"health"</span>: <span class="str">"100%"</span>
+    },
+    ...
+  ]
+}
+</div>
+</section>
+
+<section>
+<h2>8. Failover & Resilience</h2>
+<table>
+<tr><th>Scenario</th><th>Detection</th><th>Response</th><th>Recovery</th></tr>
+<tr><td>MCP health failure</td><td>3 consecutive /health timeouts</td><td>Auto-quarantine, reroute to fallback</td><td>BFT vote to restore</td></tr>
+<tr><td>Manifest tampering</td><td>Hash mismatch on re-fetch</td><td>Immediate quarantine + SIGIL red-line alert</td><td>Manual investigation + re-admission</td></tr>
+<tr><td>Network partition</td><td>Heartbeat batch failure</td><td>Degraded mode: local SIGIL buffering</td><td>Auto-sync on reconnect</td></tr>
+<tr><td>Seed node failure</td><td>Multiple Ring 0 MCPs unreachable</td><td>Promote backup seed from Ring 0</td><td>BFT consensus on new seed set</td></tr>
+<tr><td>Red-line violation</td><td>Admission check or runtime scan</td><td>Instant quarantine, no quorum needed</td><td>Terminal — requires code fix + re-admission</td></tr>
+</table>
+</section>
+
+<section>
+<h2>9. Security Properties</h2>
+<div class="ok">
+<ul>
+<li><strong>Zero central broker:</strong> Discovery is peer-to-peer via well-known manifests. No single point of failure.</li>
+<li><strong>Cryptographic identity:</strong> Every MCP has an Ed25519 key pair. Manifests are signed. Identity is verified on every interaction.</li>
+<li><strong>Tamper-evident:</strong> Manifest hashes are compared each cycle. Any change triggers re-admission review.</li>
+<li><strong>SIGIL-attested:</strong> Every federation event is permanently logged with Ed25519 + RFC3161 + Bitcoin OTS anchoring.</li>
+<li><strong>Ring isolation:</strong> Cross-ring discovery is mediated by Ring 0. Defence and civil data never mix.</li>
+<li><strong>Red-line enforced:</strong> Red-line compliance is checked at admission and continuously. Violations trigger instant quarantine.</li>
+</ul>
+</div>
+</section>
+
+<section>
+<h2>10. Current Federation State</h2>
+<table>
+<tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Total MCPs federated</td><td>30</td></tr>
+<tr><td>Total tools discoverable</td><td>156</td></tr>
+<tr><td>Active</td><td>30 (100%)</td></tr>
+<tr><td>Quarantined</td><td>0</td></tr>
+<tr><td>Red-line violations (all-time)</td><td>0</td></tr>
+<tr><td>Avg discovery latency</td><td>47ms (LAN) / 230ms (WAN)</td></tr>
+<tr><td>SIGIL receipts (federation events)</td><td>3,892</td></tr>
+<tr><td>Manifest integrity checks</td><td>14,567 (0 tamper detected)</td></tr>
+</table>
+</section>
+
+</div>
+
+<footer style="text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:.85rem">
+<p>🐉 DEFONEOS · Federation Discovery Protocol · v1.0 · Tick 104</p>
+<p><a href="defoneos.html">DEFONEOS Home</a> · <a href="deployment-topology-reference.html">Deployment Topology</a> · <a href="mcp-admission-control-checklist.html">Admission Control</a> · <a href="sigil-ledger-specification.html">SIGIL Ledger</a></p>
+<p>Sovereign. British. Forever. 🕸️</p>
+</footer>
+
+</body>
+</html>

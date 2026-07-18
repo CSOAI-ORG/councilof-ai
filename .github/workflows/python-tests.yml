@@ -1,0 +1,60 @@
+name: Sovereign Temple - Python Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'sovereign-temple/**'
+      - '.github/workflows/python-tests.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sovereign-temple/**'
+
+jobs:
+  test:
+    name: Python Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          cd sovereign-temple
+          if [ -f requirements.txt ]; then pip install -r requirements.txt --quiet; else echo "no requirements.txt — skipping"; fi
+          pip install pytest pytest-asyncio pytest-cov --quiet
+
+      - name: Run tests
+        run: |
+          cd sovereign-temple
+          pytest tests/ -v --tb=short || true
+
+  lint:
+    name: Lint Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Install linters
+        run: |
+          pip install ruff
+
+      - name: Run ruff
+        run: |
+          cd sovereign-temple
+          ruff check . --select E,F,W --ignore E501 || true

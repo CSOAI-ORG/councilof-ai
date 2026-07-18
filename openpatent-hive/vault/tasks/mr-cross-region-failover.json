@@ -1,0 +1,7 @@
+{
+  "id": "mr-cross-region-failover",
+  "prompt": "Write a 350-word cross-region failover runbook for openpatent.ai. Cover: (1) the failure modes — full region outage (us-east1 down), partial degradation (BFT quorum lost in one region), latency spike (replication lag >10s), data corruption (a temple's local store diverges from the 22/33 canonical chain), (2) the decision tree — health check fails 3× in 30s → DNS geo-routing pulls the affected region from the pool → traffic re-routes to the next-healthy region within 60s, (3) the BFT quorum check — if the failed region held >11 of 33 validators, the remaining 22 must still achieve 22/33 in the surviving regions; if not, the chain halts and falls back to the 2-region mode where the HSM root signs an emergency checkpoint, (4) the data-recovery path — a fresh VM in the failed region is rebuilt from the IPFS pin-set + replay of the canonical chain from the most recent cross-region checkpoint, target RTO 15min, RPO 0 (zero data loss because BFT committed across all 3 regions), (5) the comms plan — status page update at T+0, T+5, T+15, customer email at T+30 if customer-impacting, (6) the postmortem template with 5-Whys, timeline, contributing factors. Use DEFENEOS mythic voice. Return ONLY JSON: {runbook:string, failure_modes:[4 strings], decision_tree:[4 strings], rto_minutes:int, rpo:string, comms_cadence:[3 strings], postmortem_sections:[5 strings]}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Operator Troubleshooting · Sovereign Public Services OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="12 named failure scenarios, 5-step escalation ladder, 14 common-error lookup. SOP for sovereign operators.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-operator-troubleshooting.html">
+<style>
+  :root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;--amber:#fbbf24;}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:32px 24px}
+  h1{font-size:36px;margin:.25em 0 .4em;color:#f3f4f6}
+  h2{font-size:22px;margin:36px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+  h3{font-size:17px;margin:24px 0 8px;color:var(--acc)}
+  p{margin:10px 0} a{color:var(--acc);text-decoration:none} a:hover{text-decoration:underline}
+  code{font:13px ui-monospace,monospace;background:#0b1220;color:#fbbf24;padding:2px 5px;border-radius:4px;border:1px solid var(--line)}
+  .scenario,.error{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin:12px 0}
+  .scenario h3{margin-top:0}
+  .sev{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:6px;font-weight:700}
+  .sev.s1{background:#7f1d1d;color:#fff}
+  .sev.s2{background:#9a3412;color:#fff}
+  .sev.s3{background:#78350f;color:var(--amber)}
+  .sev.s4{background:#1e3a8a;color:var(--acc)}
+  table{border-collapse:collapse;width:100%;margin:12px 0}
+  th,td{text-align:left;border:1px solid var(--line);padding:8px 10px;font-size:14px;vertical-align:top}
+  th{background:#0d1322;color:var(--acc)}
+  .ladder{counter-reset:ladder;list-style:none;padding:0;margin:12px 0}
+  .ladder li{counter-increment:ladder;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:8px 0;position:relative;padding-left:60px}
+  .ladder li::before{content:"L" counter(ladder);position:absolute;left:14px;top:14px;background:var(--acc);color:#0a0e1a;font-weight:800;padding:4px 8px;border-radius:4px;font-size:12px}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<div style="color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase">DEFONEOS · Operator Troubleshooting · Public Surface</div>
+<h1>Troubleshooting sovereign operations — 12 scenarios, 5-step ladder, 14 errors.</h1>
+<p>This page is the canonical troubleshooting surface for sovereign operators. Each scenario is a named failure mode with a 5-step escalation ladder. Each error code in the lookup table is resolved with a SIGIL-anchored recipe. <strong>No destructive action proceeds without human-owner cosign.</strong></p>
+
+<h2>Escalation ladder</h2>
+<ol class="ladder">
+<li><strong>L1 — operator self-serve</strong>. Try the recipe. Sign the action. SIGIL record.</li>
+<li><strong>L2 — operator + on-call witness</strong>. 2-of-2 signed action. SIGIL pair-record.</li>
+<li><strong>L3 — operator + on-call + quorum</strong>. BFT vote required (≥17/33 emergency threshold).</li>
+<li><strong>L4 — operator + owner cosign</strong>. Human-owner biometric-gated cosign required.</li>
+<li><strong>L5 — locked + page owner</strong>. Red-line flag. Owner wakes. Quorum 27/33 supermajority to recover.</li>
+</ol>
+
+<h2>12 named failure scenarios</h2>
+
+<div class="scenario">
+<h3>S1 · BFT_QUORUM_LOST <span class="sev s1">SEV1</span></h3>
+<p><strong>Symptom:</strong> SIGIL gap or quorum-drop alert; new motions cannot pass.</p>
+<p><strong>Step 1:</strong> Check BFT council pod status <code>kubectl get pods -n defoneos-bft</code>. Step 2: review witness quorum log. Step 3: if ≥10 witnesses down, page on-call L4. Step 4: trigger <a href="bft-council-emergency-session-protocol.html">emergency session protocol</a>. Step 5: BFT supermajority vote 27/33 — never reduce quorum below 23/33.</p>
+</div>
+
+<div class="scenario">
+<h3>S2 · SIGIL_GAP_DETECTED <span class="sev s2">SEV2</span></h3>
+<p><strong>Symptom:</strong> SIGIL sequence number skips. Sequence index mismatch.</p>
+<p><strong>Step 1:</strong> Read sequence index from <code>sigil-index.json</code>. Step 2: query last 10 SIGILs from witness. Step 3: identify gap entry. Step 4: if entry missing from 3-of-3 witnesses, treat as compromised; L3. Step 5: BFT supermajority to issue replacement SIGIL.</p>
+</div>
+
+<div class="scenario">
+<h3>S3 · RED_LINE_ATTEMPT <span class="sev s1">SEV1</span></h3>
+<p><strong>Symptom:</strong> Any agent or operator attempts a red-line action.</p>
+<p><strong>Step 1:</strong> Action is auto-rejected at policy layer. Step 2: SIGIL records the attempt (signed by anti-policy). Step 3: Notify human-owner within 5 minutes. Step 4: BFT supermajority vote 27/33 — owner-signed disclosure. Step 5: If pattern repeats, freeze agent-id pending investigation.</p>
+</div>
+
+<div class="scenario">
+<h3>S4 · KEY_ROTATION_FAILURE <span class="sev s2">SEV2</span></h3>
+<p><strong>Symptom:</strong> Shamir split generation fails; ring quorum unreachable.</p>
+<p><strong>Step 1:</strong> Check ring health. Step 2: degrade to 2-of-2 emergency. Step 3: trigger <a href="escrow-key-rotation-procedure.html">emergency rotation procedure</a>. Step 4: BFT quorum to ratify. Step 5: post-rotation SIGIL must be verified before service resumes.</p>
+</div>
+
+<div class="scenario">
+<h3>S5 · TLS_PINNING_MISMATCH <span class="sev s2">SEV2</span></h3>
+<p><strong>Symptom:</strong> SPKI / full-cert pin fails; agent refuses to connect.</p>
+<p><strong>Step 1:</strong> Read current pin set. Step 2: check rotation calendar. Step 3: if rotation due, push new pin via SIGIL ledger update. Step 4: 3-witness verification on pin update. Step 5: document in <a href="sovereign-tls-pinning-spec.html">pin rotation log</a>.</p>
+</div>
+
+<div class="scenario">
+<h3>S6 · MCP_ADMISSION_BLOCKED <span class="sev s3">SEV3</span></h3>
+<p><strong>Symptom:</strong> New MCP fails admission control.</p>
+<p><strong>Step 1:</strong> Read admission log. Step 2: identify failing check (SBOM, signature, owner, scope, capability, identity). Step 3: fix the failing check. Step 4: re-submit MCP. Step 5: SIGIL record admission event.</p>
+</div>
+
+<div class="scenario">
+<h3>S7 · SUPPLY_CHAIN_INTEGRITY_FLAG <span class="sev s2">SEV2</span></h3>
+<p><strong>Symptom:</strong> SBOM hash or Ed25519 SIGIL on a layer fails.</p>
+<p><strong>Step 1:</strong> Identify failing layer (L1 OS → L7 data). Step 2: suspend the layer. Step 3: query upstream registry. Step 4: if upstream signature diverges, treat as compromise. Step 5: BFT vote to roll back to prior known-good hash.</p>
+</div>
+
+<div class="scenario">
+<h3>S8 · INCIDENT_RESPONSE_TRIGGER <span class="sev s1">SEV1</span></h3>
+<p><strong>Symptom:</strong> External report · breach detection · CSP violation · forensics alert.</p>
+<p><strong>Step 1:</strong> Open SEV1 incident. Step 2: engage <a href="sovereign-incident-response-runbook.html">7-phase IR runbook</a>. Step 3: BFT containment vote (≥17/33 emergency threshold). Step 4: forensic capture (7-year retention). Step 5: post-incident review + BFT-ratified disclosure.</p>
+</div>
+
+<div class="scenario">
+<h3>S9 · DATA_ESCROW_HOLD <span class="sev s3">SEV3</span></h3>
+<p><strong>Symptom:</strong> Escrow release request denied by policy.</p>
+<p><strong>Step 1:</strong> Check escrow policy state. Step 2: verify legal warrant or owner-signed attestation. Step 3: 3-witness quorum. Step 4: ratify release SIGIL. Step 5: log release in <a href="sovereign-data-escrow-deployment-guide.html">escrow audit trail</a>.</p>
+</div>
+
+<div class="scenario">
+<h3>S10 · PROMPT_INJECTION_DETECTED <span class="sev s2">SEV2</span></h3>
+<p><strong>Symptom:</strong> Trusted Instruction Hierarchy detects instruction injection.</p>
+<p><strong>Step 1:</strong> Quarantine affected tool output. Step 2: log to <a href="sovereign-prompt-injection-defense-spec.html">defense spec</a>. Step 3: review 7 defense layers. Step 4: if injection reached L7, freeze model output. Step 5: BFT ratification + post-incident review.</p>
+</div>
+
+<div class="scenario">
+<h3>S11 · FEDERATION_DISCOVERY_FAILURE <span class="sev s3">SEV3</span></h3>
+<p><strong>Symptom:</strong> P2P manifest lookup fails; agent cannot find peer.</p>
+<p><strong>Step 1:</strong> Verify manifest signatures. Step 2: check 6-state lifecycle. Step 3: re-broadcast peer manifest. Step 4: 3-witness verification. Step 5: log in <a href="federation-discovery-protocol.html">federation log</a>.</p>
+</div>
+
+<div class="scenario">
+<h3>S12 · HUMAN_OVERRIDE_LOCKOUT <span class="sev s1">SEV1</span></h3>
+<p><strong>Symptom:</strong> Owner cannot cosign a red-line action.</p>
+<p><strong>Step 1:</strong> Verify biometric gate (Secure Enclave). Step 2: fallback identity path (key + PIN). Step 3: 3-of-3 emergency witnesses. Step 4: BFT supermajority to ratify. Step 5: post-event forensics + owner verification.</p>
+</div>
+
+<h2>14 common-error lookup</h2>
+<table>
+<thead><tr><th>Error code</th><th>Likely cause</th><th>Recipe</th></tr></thead>
+<tbody>
+<tr><td><code>SOVEREIGN_TOKEN_EXPIRED</code></td><td>Identity token TTL</td><td>Re-issue via <a href="sovereign-identity-attestation-spec.html">attestation spec</a></td></tr>
+<tr><td><code>WITNESS_QUORUM_UNREACHABLE</code></td><td>BFT drift</td><td>Run <a href="bft-council-emergency-session-protocol.html">emergency session</a></td></tr>
+<tr><td><code>SIGIL_HASH_MISMATCH</code></td><td>Ledger corruption</td><td>L4 escalate; freeze &amp; recover</td></tr>
+<tr><td><code>KEY_SHARE_NOT_PRESENT</code></td><td>Ring node down</td><td>Restore ring; rotate</td></tr>
+<tr><td><code>TLS_PIN_OUT_OF_DATE</code></td><td>Rotation missed</td><td>Push new pin via SIGIL</td></tr>
+<tr><td><code>MCP_ADMISSION_FAILED</code></td><td>Capability scope</td><td>Review <a href="mcp-admission-control-checklist.html">checklist</a></td></tr>
+<tr><td><code>DATA_RESIDENCY_VIOLATION</code></td><td>Foreign route detected</td><td>Block, log, L4 escalate</td></tr>
+<tr><td><code>ESCROW_RELEASE_DENIED</code></td><td>Missing warrant</td><td>Verify legal doc chain</td></tr>
+<tr><td><code>BFT_REDLINE_ATTEMPT</code></td><td>Auto-rejected</td><td>Owner-cosign + 27/33</td></tr>
+<tr><td><code>INFERENCE_FOREIGN_DETECTED</code></td><td>Non-sovereign model</td><td>Failover to sovereign model</td></tr>
+<tr><td><code>CSP_BYPASS_DETECTED</code></td><td>Inline handler etc.</td><td>Apply <a href="sovereign-csp-bypass-prevention-spec.html">CSP spec</a></td></tr>
+<tr><td><code>SCOPE_EXPANSION_BLOCKED</code></td><td>Agent overstep</td><td>Reduce scope, log</td></tr>
+<tr><td><code>SUPPLY_CHAIN_HASH_MISMATCH</code></td><td>SBOM drift</td><td>Rollback layer</td></tr>
+<tr><td><code>RED_LINE_DENIED</code></td><td>Quorum blocked</td><td>Owner-cosign path</td></tr>
+</tbody>
+</table>
+
+<footer>
+<p><strong>Sovereignty preservation:</strong> this page is itself a public surface. Every recipe above references a sovereign-tier specification. Operators must read the spec before taking a destructive step.</p>
+<p class="sigil">SIGIL · defoneos-operator-troubleshooting · tick_111_recov · 27838b · ed25519:hermes-jeeves</p>
+</footer>
+</main>
+</body>
+</html>

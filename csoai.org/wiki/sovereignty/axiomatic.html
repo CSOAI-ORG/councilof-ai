@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axiomatic Foundation - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/sovereignty/">sovereignty</a> / axiomatic</div>
+<h1>Axiomatic Foundation</h1>
+<p class="tagline">The five axioms that any sovereign AI system must satisfy.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>The <strong>Five Axioms</strong> of Sovereign AI are minimal, complete, and consistent properties that any system claiming sovereignty must satisfy. They are derived from CSOAI's <a href="/wiki/lineage/csoai-org-2026.html">Charter 2026</a> and codified as testable assertions in the SOV3 substrate.</p>
+
+<h2>The Five Axioms</h2>
+
+<h3>P1 — Lawful Control</h3>
+<p>The principal holds lawful, exclusive, and verifiable control over their data. Violations: a third party can read the data without principal's consent, or the principal cannot export their complete dataset on demand.</p>
+
+<h3>P2 — Cryptographic Identity</h3>
+<p>Every actor in the system (human, agent, organisation, jurisdiction) has a DID with a verifiable key. Violations: anonymous admin actions, shared credentials, keys stored in opaque cloud HSMs.</p>
+
+<h3>P3 — Cross-Jurisdiction Clarity</h3>
+<p>Every access attempt is classified as <code>SOVEREIGN</code>, <code>FOREIGN_APPROVED</code>, or <code>FOREIGN_BLOCKED</code> at the moment of request. Violations: cross-border data flows without explicit treaty or principal consent.</p>
+
+<h3>P4 — Multi-Stakeholder Governance</h3>
+<p>No single authority can unilaterally change the sovereignty properties of the system. Violations: a single vendor can revoke keys, change jurisdiction, or alter audit logs.</p>
+
+<h3>P5 — Public Auditability</h3>
+<p>Any principal can verify, via public cryptographic mechanisms, that the system is operating per its charter. Violations: closed-source runtime, private logging, opaque AI models.</p>
+
+<h2>Why Five?</h2>
+<p>Fewer than five and the system has gaps. More than five and the system is unfalsifiable — every new edge case becomes a new axiom. Five is the minimum complete set, derived by contrapositive analysis of the 2020 Schrems II decision, 2023 EU AI Act, and 2024 UK AI Bill.</p>
+
+<h2>Historical Context</h2>
+<p>The axiom structure mirrors Euclid's <em>Elements</em> (c. 300 BCE): minimal postulates from which the entire geometry can be derived. CSOAI's five axioms are the sovereign-equivalent: minimal postulates from which the entire sovereign architecture can be derived.</p>
+
+<h2>Technical Realisation</h2>
+<table>
+<tr><th>Axiom</th><th>Realised By</th></tr>
+<tr><td>P1 Lawful Control</td><td><a href="/wiki/architecture/dorado-1click.html">DORADO 1-click</a>, data export</td></tr>
+<tr><td>P2 Cryptographic Identity</td><td><a href="/wiki/cryptography/ed25519.html">Ed25519</a>, <a href="/wiki/cryptography/anchor.html">Anchor</a>, DIDs</td></tr>
+<tr><td>P3 Cross-Jurisdiction Clarity</td><td><a href="/wiki/sovereignty/foreign-vs-sovereign.html">Foreign vs Sovereign</a> classifier</td></tr>
+<tr><td>P4 Multi-Stakeholder Governance</td><td><a href="/wiki/council/12-around-1.html">12-around-1</a> BFT council</td></tr>
+<tr><td>P5 Public Auditability</td><td><a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a>, public explorer</td></tr>
+</table>
+
+<h2>Testable Specification</h2>
+<p>Each axiom is implemented as a test in the SOV3 test suite (<code>sov_oowm_test</code>). A system passes sovereignty audit only when all five axioms return <code>PASS</code>. The <a href="/wiki/sovereignty/checklist.html">Checklist</a> provides the human-readable version.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/sovereignty/principle.html">Principle</a></li>
+<li><a href="/wiki/sovereignty/specification.html">Specification</a></li>
+<li><a href="/wiki/sovereignty/checklist.html">Checklist</a></li>
+<li><a href="/wiki/lineage/csoai-org-2026.html">CSOAI 2026</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

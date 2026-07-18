@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_hybrid_roadmap_mcp"
+version = "1.0.0"
+description = "MEEK Hybrid Roadmap MCP — MOD existing open source + BUILD only the unique differentiators. 80/20 rule for the sovereign capillary humanoid. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "defoneos", "hybrid", "mod-vs-build", "open-source", "sovereign", "uk"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-hybrid-roadmap-mcp"
+
+[project.scripts]
+meek-hybrid-roadmap-mcp = "meek_hybrid_roadmap_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_hybrid_roadmap_mcp"]

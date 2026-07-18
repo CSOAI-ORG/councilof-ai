@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deepfake Detection &amp; Disclosure — MEOK Compliance Suite</title>
+<meta name="description" content="EU AI Act Article 50 deepfake requirements: detection, disclosure, labelling obligations. The 2 August 2026 cliff explained. Compliance guidance for deployers.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#0d0c18;color:#f0ece4;line-height:1.7;min-height:100vh}
+a{color:#c9a84c;text-decoration:none;transition:color .2s}
+a:hover,a:focus{color:#e8d28a;text-decoration:underline}
+.container{max-width:1000px;margin:0 auto;padding:0 1.5rem}
+.header{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 100%);border-bottom:2px solid rgba(201,168,76,.2);padding:1.25rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.logo{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.logo svg{flex-shrink:0}
+.logo span{color:#c9a84c}
+.logo .navy{color:#f0ece4}
+.header nav{display:flex;gap:1.25rem;font-size:.875rem;font-weight:500}
+.header nav a{color:#a098b0}
+.header nav a:hover{color:#c9a84c;text-decoration:none}
+.hero{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 50%,#0d0c18 100%);padding:5rem 0 3.5rem;text-align:center;border-bottom:1px solid rgba(201,168,76,.15)}
+.hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.02em}
+.hero h1 span{color:#c9a84c}
+.hero p{font-size:clamp(1rem,1.8vw,1.2rem);color:#b0a8c0;max-width:720px;margin:0 auto 1.75rem}
+.badge{display:inline-block;background:rgba(201,168,76,.12);color:#c9a84c;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(201,168,76,.25);margin-bottom:1.25rem}
+.urgency-badge{display:inline-block;background:rgba(255,80,80,.12);color:#ff6060;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(255,80,80,.3);margin-bottom:1.25rem}
+.cta-btn{display:inline-block;background:#c9a84c;color:#0d0c18;font-weight:700;font-size:.95rem;padding:.85rem 2rem;border-radius:8px;transition:all .2s;border:none;cursor:pointer}
+.cta-btn:hover{background:#e8d28a;color:#0d0c18;text-decoration:none;transform:translateY(-1px)}
+.cta-btn-outline{display:inline-block;background:transparent;color:#c9a84c;font-weight:600;font-size:.9rem;padding:.8rem 1.75rem;border-radius:8px;border:1.5px solid #c9a84c;transition:all .2s}
+.cta-btn-outline:hover{background:rgba(201,168,76,.1);text-decoration:none;transform:translateY(-1px)}
+.cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+section{padding:3.5rem 0}
+section h2{font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:700;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.01em}
+section h2 .gold{color:#c9a84c}
+section h3{font-size:1.2rem;font-weight:600;color:#c9a84c;margin:1.5rem 0 .6rem}
+section p,section li{color:#b0a8c0;font-size:.975rem}
+section p{margin-bottom:1rem}
+.card{background:linear-gradient(135deg,#13112a 0%,#1a1730 100%);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
+.card h3{margin-top:0}
+.card ul{list-style:none;padding-left:0}
+.card ul li{padding:.3rem 0 .3rem 1.5rem;position:relative}
+.card ul li::before{content:"▸";position:absolute;left:0;color:#c9a84c;font-weight:700}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:680px){.two-col{grid-template-columns:1fr}}
+.highlight{border-left:4px solid #c9a84c;background:rgba(201,168,76,.06);padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;margin:1.5rem 0}
+.highlight p:last-child{margin-bottom:0}
+.highlight strong{color:#c9a84c}
+.highlight-danger{border-left:4px solid #ff6060;background:rgba(255,80,80,.06);padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;margin:1.5rem 0}
+.highlight-danger p:last-child{margin-bottom:0}
+.highlight-danger strong{color:#ff6060}
+.cliff-countdown{text-align:center;padding:2rem;margin:1.5rem 0;border:2px solid #c9a84c;border-radius:12px;background:rgba(201,168,76,.06)}
+.cliff-countdown .date{font-size:2.2rem;font-weight:800;color:#c9a84c;letter-spacing:-.02em}
+.cliff-countdown .label{color:#807890;font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+.cliff-countdown .desc{color:#b0a8c0;margin-top:.75rem;font-size:.9rem}
+.faq-item{border-bottom:1px solid rgba(201,168,76,.1);padding:.5rem 0}
+.faq-item summary{padding:.85rem 0;font-weight:600;cursor:pointer;color:#f0ece4;font-size:1rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";color:#c9a84c;font-size:1.3rem;font-weight:400;transition:transform .2s}
+.faq-item[open] summary::after{content:"−"}
+.faq-item .answer{padding:0 0 1rem;color:#b0a8c0;font-size:.95rem}
+.faq-item .answer p{margin-bottom:.5rem}
+.faq-item .answer p:last-child{margin-bottom:0}
+.footer{background:linear-gradient(135deg,#0d0c18 0%,#0a0914 100%);border-top:1px solid rgba(201,168,76,.12);padding:2.5rem 0;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;margin-bottom:2rem}
+.footer h4{color:#c9a84c;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.footer ul{list-style:none}
+.footer li{margin-bottom:.4rem}
+.footer a{color:#807890;font-size:.85rem}
+.footer a:hover{color:#c9a84c}
+.footer-bottom{text-align:center;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,.08);color:#605870;font-size:.8rem}
+@media(max-width:600px){.header .container{flex-direction:column;text-align:center}.header nav{flex-wrap:wrap;justify-content:center}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does Article 50 say about deepfakes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 50(3) specifically requires that any AI-generated or manipulated image, audio, or video content that appreciably resembles real persons, objects, places, or events (a 'deepfake') must be clearly disclosed as artificially generated or manipulated. The disclosure must be prominent, persistent, and accessible to the end user before they engage with the content. This applies regardless of whether the content is harmful or benign."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does the deepfake disclosure requirement become enforceable?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The deepfake and AI-generated content transparency obligations under Article 50 become enforceable from 2 August 2026. This is the key compliance cliff for deployers. After this date, any deployer distributing AI-generated or manipulated content without proper labelling faces penalties of up to €15 million or 3% of annual worldwide turnover."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What content qualifies as a deepfake under the EU AI Act?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under Article 50, a deepfake is AI-generated or manipulated image, audio, or video content that appreciably resembles existing persons, objects, places, entities, or events. The key criterion is that it would falsely appear to a person to be authentic or truthful. This covers synthetic media, face swaps, voice clones, manipulated footage, and AI-generated scenes that mimic real locations or events."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are there any exceptions to the deepfake disclosure requirement?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Exceptions include: content that is clearly artistic, creative, or satirical in nature where the AI generation is obvious from context; content that has undergone substantial human editorial review and control; content lawfully created or processed for the purpose of preventing or detecting crime (including law enforcement investigations); and content where labelling would be technically impossible after reasonable efforts. However, these exceptions are narrowly construed and deployers bear the burden of proof."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the penalties for failing to disclose deepfakes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non-compliance with Article 50 deepfake disclosure obligations can result in administrative fines of up to €15 million or 3% of the undertaking's total annual worldwide turnover, whichever is higher. Regulators can also issue public warnings, order content removal, require corrective disclosures, and impose daily penalty payments for continuing violations. The penalty framework mirrors GDPR-style enforcement, with national data protection authorities empowered to investigate and sanction."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can MEOK help with deepfake compliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MEOK's Compliance Suite provides automated deepfake detection, content provenance verification (C2PA), and disclosure labelling for AI-generated audio, image, and video content. The MEOK Pro tier (£199/mo) includes real-time deepfake scanning, automatic disclosure overlay generation, and audit-ready compliance reporting. MEOK also offers a Deepfake Disclosure API that integrates into existing content pipelines for bulk labelling and detection."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="28" height="28" rx="6" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
+        <path d="M10 16 L14 20 L22 12" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div><span class="navy">MEOK</span> <span>Compliance</span></div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/article-50/">Article 50</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="urgency-badge">⚠️ Enforcement Countdown</span>
+    <h1>Deepfake <span>Detection &amp; Disclosure</span></h1>
+    <p>Article 50's deepfake transparency requirements — what deployers must do before the <strong>2 August 2026 enforcement cliff</strong>. Detection, disclosure, labelling, and compliance.</p>
+    <div class="cta-group">
+      <a href="https://proofof.ai" class="cta-btn">Audit Your Deepfake Risk →</a>
+      <a href="#cliff" class="cta-btn-outline">The 2 Aug 2026 Cliff</a>
+    </div>
+  </div>
+</section>
+
+<section id="cliff">
+  <div class="container">
+    <h2>The <span class="gold">Compliance Cliff</span></h2>
+
+    <div class="cliff-countdown">
+      <div class="label">Enforcement Date</div>
+      <div class="date">2 August 2026</div>
+      <div class="desc">From this date, all deployers of AI systems that generate or manipulate image, audio, or video content must have deepfake disclosure measures in place. Non-compliance means fines of up to <strong>€15 million or 3% of annual turnover</strong>.</div>
+    </div>
+
+    <div class="highlight-danger">
+      <strong>⏰ Act now:</strong> With enforcement beginning 2 August 2026, the window for implementing compliant deepfake detection and labelling systems is closing. Sprint 2 of the MEOK Compliance Suite begins 20 June 2026 — the time to prepare is now.
+    </div>
+
+    <div class="two-col" style="margin-top:2rem">
+      <div class="card">
+        <h3>What Must Be Disclosed</h3>
+        <ul>
+          <li>AI-generated video that resembles real people or events</li>
+          <li>AI-manipulated audio (voice clones, altered statements)</li>
+          <li>Synthetic images that appear photographic or documentary</li>
+          <li>AI-generated scenes mimicking real locations or objects</li>
+          <li>Any content falsely appearing authentic or truthful</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Who Must Disclose</h3>
+        <ul>
+          <li>Deployers distributing AI-generated content to EU end users</li>
+          <li>Social media platforms hosting AI-manipulated media</li>
+          <li>News and media organisations publishing synthetic content</li>
+          <li>Advertising and marketing teams using AI-generated assets</li>
+          <li>Any entity making deepfake content publicly available</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>Detection <span class="gold">Technologies</span></h2>
+    <p>Effective deepfake compliance requires both detection (knowing if content is AI-generated) and disclosure (labelling it appropriately). MEOK supports a multi-layered detection approach.</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>🔍 Forensic Detection</h3>
+        <ul>
+          <li>Frequency-domain artefact analysis (DCT, wavelet)</li>
+          <li>Facial inconsistency detection (eye reflection, blink patterns)</li>
+          <li>Audio spectral anomaly detection (formant irregularities)</li>
+          <li>JPEG ghost detection for manipulated regions</li>
+          <li>ELA (Error Level Analysis) for compressed edits</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🔐 Provenance-Based Detection</h3>
+        <ul>
+          <li>C2PA manifest verification and chain-of-custody</li>
+          <li>Digital signature validation against known issuers</li>
+          <li>Content credential verification (W3C VC)</li>
+          <li>Metadata consistency checks (EXIF/XMP cross-validation)</li>
+          <li>Blockchain anchor verification for high-value content</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:.5rem">
+      <div class="card">
+        <h3>🤖 ML-Based Detection</h3>
+        <ul>
+          <li>Deep learning classifiers trained on known generator outputs</li>
+          <li>GAN/ diffusion fingerprint matching</li>
+          <li>Semantic inconsistency detection (object-physics violations)</li>
+          <li>Generator attribution (identifying which AI model created it)</li>
+          <li>Multi-modal verification (audio-visual synchronisation)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>📋 Disclosure Labelling</h3>
+        <ul>
+          <li>Automated visible overlay generation (video + image)</li>
+          <li>Verbal disclosure injection for audio content</li>
+          <li>C2PA-compliant provenance assertion embedding</li>
+          <li>Pre-distribution compliance checks</li>
+          <li>Audit trail recording for regulatory inspection</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Legal Requirements <span class="gold">in Detail</span></h2>
+
+    <div class="card">
+      <h3>Article 50(3) — Deepfake Disclosure</h3>
+      <p>"Deployers of an AI system that generates or manipulates image, audio or video content constituting a deepfake shall disclose that the content has been artificially generated or manipulated."</p>
+      <p style="margin-top:1rem">The disclosure must be:</p>
+      <ul>
+        <li><strong>Prominent</strong> — clearly visible or audible, not hidden in terms of service or fine print</li>
+        <li><strong>Persistent</strong> — survives content sharing, copying, and basic transformations</li>
+        <li><strong>Accessible</strong> — understandable to the average end user, including those with disabilities</li>
+        <li><strong>Context-appropriate</strong> — proportionate to the content type and distribution channel</li>
+        <li><strong>Non-deceptive</strong> — not undermined by contradictory messaging or design choices</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Article 50(4) — Content Manipulation Disclosure</h3>
+      <p>"Deployers of an AI system that generates or manipulates text published with the purpose of informing the public on matters of public interest shall disclose that the text has been artificially generated or manipulated."</p>
+      <p style="margin-top:1rem">This extends beyond deepfakes to any AI-generated text used in public-interest communications, including press releases, government announcements, news articles, and public notices.</p>
+    </div>
+
+    <div class="highlight">
+      <strong>Note on exceptions:</strong> The EU AI Act provides limited exceptions for content that is clearly artistic, satirical, or fictional where the AI generation is obvious from context, and for authorised law enforcement activities. Deployers should not rely on exceptions without legal advice — the burden of proof rests on the deployer.
+    </div>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>Frequently Asked <span class="gold">Questions</span></h2>
+
+    <div class="faq-item">
+      <details>
+        <summary>What does Article 50 say about deepfakes?</summary>
+        <div class="answer">
+          <p>Article 50(3) specifically requires that any AI-generated or manipulated image, audio, or video content that appreciably resembles real persons, objects, places, or events (a "deepfake") must be clearly disclosed as artificially generated or manipulated. The disclosure must be prominent, persistent, and accessible to the end user before they engage with the content. This applies regardless of whether the content is harmful or benign.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>When does the deepfake disclosure requirement become enforceable?</summary>
+        <div class="answer">
+          <p>The deepfake and AI-generated content transparency obligations under Article 50 become enforceable from <strong>2 August 2026</strong>. This is the key compliance cliff for deployers. After this date, any deployer distributing AI-generated or manipulated content without proper labelling faces penalties of up to €15 million or 3% of annual worldwide turnover.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>What content qualifies as a deepfake under the EU AI Act?</summary>
+        <div class="answer">
+          <p>Under Article 50, a deepfake is AI-generated or manipulated image, audio, or video content that appreciably resembles existing persons, objects, places, entities, or events. The key criterion is that it would falsely appear to a person to be authentic or truthful. This covers synthetic media, face swaps, voice clones, manipulated footage, and AI-generated scenes that mimic real locations or events.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>Are there any exceptions to the deepfake disclosure requirement?</summary>
+        <div class="answer">
+          <p>Yes. Exceptions include: content that is clearly artistic, creative, or satirical in nature where the AI generation is obvious from context; content that has undergone substantial human editorial review and control; content lawfully created or processed for the purpose of preventing or detecting crime; and content where labelling would be technically impossible after reasonable efforts. However, these exceptions are narrowly construed and deployers bear the burden of proof.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>What are the penalties for failing to disclose deepfakes?</summary>
+        <div class="answer">
+          <p>Non-compliance with Article 50 deepfake disclosure obligations can result in administrative fines of up to €15 million or 3% of the undertaking's total annual worldwide turnover, whichever is higher. Regulators can also issue public warnings, order content removal, require corrective disclosures, and impose daily penalty payments for continuing violations.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>How can MEOK help with deepfake compliance?</summary>
+        <div class="answer">
+          <p>MEOK's Compliance Suite provides automated deepfake detection, content provenance verification (C2PA), and disclosure labelling for AI-generated audio, image, and video content. The MEOK Pro tier (£199/mo) includes real-time deepfake scanning, automatic disclosure overlay generation, and audit-ready compliance reporting.</p>
+          <p><a href="https://proofof.ai" style="color:#c9a84c;font-weight:600">→ Start your deepfake compliance audit with MEOK</a></p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://proofof.ai">MEOK Platform</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/article-50-kit">Article 50 Kit</a></li>
+          <li><a href="/compliance-suite">Compliance Suite</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/article-50/">Article 50 Hub</a></li>
+          <li><a href="/article-50/transparency.html">Transparency Guide</a></li>
+          <li><a href="/article-50/marking.html">Marking Spec</a></li>
+          <li><a href="/article-50/deepfake.html">Deepfake Detection</a></li>
+          <li><a href="/article-50/bot.html">Bot Disclosure</a></li>
+          <li><a href="/article-50/code-of-practice.html">Code of Practice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MEOK Compliance. All rights reserved. Part of the MEOK AI Governance Platform.</p>
+      <p style="margin-top:.25rem">EU AI Act compliance solutions — Article 50, 51, 52, 53, 55, and beyond.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

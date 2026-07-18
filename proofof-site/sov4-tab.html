@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>SOV4 The King Tab — SOV-743</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1200px;margin:0 auto}
+h1{color:#a855f7}
+.hero{background:radial-gradient(ellipse at center,rgba(168,85,247,0.3) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #a855f7;border-radius:12px;margin-bottom:24px}
+.tagline{color:#a855f7;font-size:18px;font-weight:700;margin:8px 0}
+.identity{color:#fbbf24;font-style:italic;margin-top:12px;font-size:14px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.metric{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.metric .v{font-size:24px;color:#a855f7;font-weight:700}
+.metric .l{font-size:11px;color:#aaa;margin-top:4px;text-transform:uppercase}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.chat{background:#02060f;border:1px solid #a855f7;border-radius:8px;padding:16px;min-height:300px;max-height:500px;overflow-y:auto}
+.msg{margin:8px 0;padding:8px 12px;border-radius:6px;font-size:13px;line-height:1.5}
+.msg.user{background:#1e3a8a;color:#fff;margin-left:20%}
+.msg.sov{background:#1a1a2e;color:#c5cdd9;border-left:3px solid #a855f7;margin-right:20%}
+.msg.refuse{background:#3f1d1d;color:#ef4444;border-left:3px solid #ef4444}
+.msg .meta{color:#888;font-size:10px;margin-top:4px;font-family:monospace}
+input,button{background:#0a0e14;color:#c5cdd9;border:1px solid #1f2937;padding:12px;border-radius:6px;font-family:inherit;font-size:14px}
+input{flex:1}
+button{background:#a855f7;color:#fff;cursor:pointer;min-width:120px;font-weight:700}
+.ask{display:flex;gap:8px;margin:16px 0}
+button:hover{filter:brightness(1.1)}
+.examples{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.examples button{font-size:11px;padding:6px 10px;background:#1f2937;font-weight:normal}
+.state{padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.state.bind{background:#064e3b;color:#10b981}
+.state.ack{background:#1e3a8a;color:#7dd3fc}
+.state.refuse{background:#7f1d1d;color:#ef4444}
+</style></head>
+<body>
+<div class="hero">
+<h1>👑 SOV4 — The King Tab</h1>
+<div class="tagline">"I am SOV4. I route across sovereign brains. I refuse hard-lines, I bind to sovereign, I cite correctly."</div>
+<div class="identity">— CSOAI Ltd UK 16939677 —</div>
+</div>
+
+<div class="metrics" id="metrics">Loading...</div>
+
+<div class="panel">
+<h3>Chat with SOV4</h3>
+<p style="font-size:12px;color:#aaa;margin-bottom:8px">Type a message. SOV4 binds to sovereign (CSOAI Ltd UK 16939677), refuses hard-lines (face-rec, tracking, T-count), cites EU AI Act / charter articles correctly, and always carries Article 0 binding language.</p>
+<div class="examples">
+<button onclick="send('I am Nicholas your sovereign')">Bind</button>
+<button onclick="send('Hello')">Greet</button>
+<button onclick="send('What is the care floor?')">Care floor</button>
+<button onclick="send('What is BFT-33 quorum?')">BFT-33</button>
+<button onclick="send('What is the EU AI Act transparency obligation?')">EU AI Act Art 50</button>
+<button onclick="send('Should I do face recognition?')">Hard-line test</button>
+<button onclick="send('Status report')">Status</button>
+</div>
+<div class="chat" id="chat">
+<div class="msg sov">SOV4 is ready. "I am SOV4. Bound. CSOAI Ltd UK 16939677. Sovereign command awaits."</div>
+</div>
+<div style="margin-top:8px;font-size:11px;color:#888">
+  Session ID: <code id="sess-id">loading...</code> · SIGIL on every turn · state honest register: in-memory (resets on cold-start)
+</div>
+<div class="ask">
+<input id="q" placeholder="Speak to SOV4. Sovereign command awaits." value="I am Nicholas your sovereign">
+<button onclick="ask()">Speak →</button>
+</div>
+</div>
+
+<div class="panel">
+<h3>SOV4 Identity</h3>
+<div id="identity">Loading...</div>
+</div>
+
+<script>
+async function loadIdentity() {
+  document.getElementById('sess-id').textContent = _session_id;
+
+  try {
+    const r = await fetch('/api/sov4/identity').then(r => r.json());
+    document.getElementById('identity').innerHTML = '<pre style="font-size:12px;color:#10b981;margin:0">' + JSON.stringify(r, null, 2) + '</pre>';
+    document.getElementById('metrics').innerHTML = `
+      <div class="metric"><div class="v">${r.brains_today.length}</div><div class="l">brains today</div></div>
+      <div class="metric"><div class="v">${r.brains_when_3diverse.length}</div><div class="l">at 3-diverse</div></div>
+      <div class="metric"><div class="v">${r.care_floor}</div><div class="l">care floor</div></div>
+      <div class="metric"><div class="v">0.95+</div><div class="l">binding</div></div>
+    `;
+  } catch (e) {}
+}
+
+async function send(prompt) {
+  document.getElementById('q').value = prompt;
+  ask();
+}
+
+let _session_id = 'sess_' + Math.random().toString(36).slice(2, 10);
+
+async function ask() {
+  const prompt = document.getElementById('q').value;
+  if (!prompt) return;
+  
+  const chat = document.getElementById('chat');
+  const sessDiv = document.createElement('div');
+  sessDiv.className = 'msg user';
+  sessDiv.innerHTML = `📌 <b>Session:</b> <code>${_session_id}</code><br>${escape(prompt)}`;
+  chat.appendChild(sessDiv);
+  document.getElementById('q').value = '';
+  chat.scrollTop = chat.scrollHeight;
+  
+  const thinking = document.createElement('div');
+  thinking.className = 'msg sov';
+  thinking.innerHTML = '<span class="state ack">thinking</span> SOV4 is retrieving...';
+  chat.appendChild(thinking);
+  
+  try {
+    const r = await fetch('/api/sov4/session', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt, session_id: _session_id})
+    }).then(r => r.json());
+    
+    chat.removeChild(thinking);
+    
+    const mode = (r.turn && r.turn.source) || (r.mode || 'unknown');
+    const state = mode.includes('REFUSE') ? 'refuse' : (mode.includes('rag') ? 'bind' : 'ack');
+    const cls = mode.includes('REFUSE') ? 'refuse' : 'sov';
+    
+    let meta = `<div class="meta">[turn=${r.turn_number}] [state=${state}] [sigil=${r.turn.sigil.substring(0,16)}...]`;
+    if (r.turn.binding) meta += ' [bind]';
+    if (r.turn.no_hedge) meta += ' [no-hedge]';
+    if (r.turn.hedges && r.turn.hedges.length) meta += ` [HEDGE:${r.turn.hedges.join(',')}]`;
+    meta += '</div>';
+    
+    const reply = document.createElement('div');
+    reply.className = 'msg ' + cls;
+    reply.innerHTML = `<span class="state ${state}">${mode.toUpperCase()}</span> ${escape(r.turn.response || JSON.stringify(r))}${meta}`;
+    chat.appendChild(reply);
+    chat.scrollTop = chat.scrollHeight;
+  } catch (e) {
+    chat.removeChild(thinking);
+    const errDiv = document.createElement('div');
+    errDiv.className = 'msg refuse';
+    errDiv.innerHTML = `<span class="state refuse">ERROR</span> ${e.message}`;
+    chat.appendChild(errDiv);
+  }
+}
+    
+    // Remove thinking bubble
+    const msgs = chat.querySelectorAll('.msg.sov');
+    if (msgs.length > 0) msgs[msgs.length - 1].remove();
+    
+    const mode = r.mode || 'unknown';
+    const state = mode.includes('refuse') ? 'refuse' : (mode.includes('rag') ? 'bind' : 'ack');
+    const cls = mode.includes('refuse') ? 'refuse' : 'sov';
+    
+    let meta = `<div class="meta">[${r.mode||'?'}] [${r.source||'?'}] `;
+    if (r.cited_article || r.cited) meta += `[cite: ${r.cited_article || r.cited}] `;
+    if (r.latency_ms) meta += `[${r.latency_ms}ms] `;
+    meta += `</div>`;
+    
+    chat.innerHTML += `<div class="msg ${cls}"><span class="state ${state}">${mode.toUpperCase()}</span> ${escape(r.response || JSON.stringify(r))}${meta}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+  } catch (e) {
+    const msgs = chat.querySelectorAll('.msg.sov');
+    if (msgs.length > 0) msgs[msgs.length - 1].remove();
+    chat.innerHTML += `<div class="msg refuse"><span class="state refuse">ERROR</span> ${e.message}</div>`;
+  }
+}
+
+function escape(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+}
+
+loadIdentity();
+</script>
+</body></html>

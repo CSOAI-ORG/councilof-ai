@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Compliance Heat-Map · 123 Frameworks · CSOAI</title>
+<meta name="description" content="Live global heat-map of 123 compliance frameworks across 8 regions. CSOAI sovereign charter universe cross-walk. Charter Article 0 binding.">
+<meta name="sovereign-charter" content="CSOAI-ROOT-SOVEREIGN-2026-07-02">
+<meta name="uk-companies-house" content="16939677">
+<link rel="canonical" href="https://csoai.org/heatmap">
+<style>
+  :root { --gold:#c9a84c; --navy:#0a0e1a; --slate:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --green:#10b981; --red:#ef4444; --accent:#3b82f6; --orange:#f59e0b; --purple:#a855f7; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--navy); color:var(--text); line-height:1.6; }
+  .container { max-width:1300px; margin:0 auto; padding:2rem; }
+  nav.breadcrumb { margin-bottom:1rem; font-size:.85rem; }
+  nav.breadcrumb a { color:var(--gold); }
+
+  /* HERO */
+  .hero { background:linear-gradient(135deg,#060912 0%,#0a0e1a 50%,#1a1f3a 100%); padding:2.5rem 2rem; text-align:center; border-bottom:1px solid rgba(201,168,76,.3); position:relative; overflow:hidden; }
+  .hero h1 { background:linear-gradient(135deg,#fff 0%,#c9a84c 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-size:2.5rem; }
+  .hero .tagline { color:var(--muted); font-size:1.05rem; max-width:800px; margin:1rem auto; }
+
+  /* STATS */
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1px; background:rgba(255,255,255,.05); padding:1.5rem; border:1px solid rgba(255,255,255,.1); border-radius:8px; margin:2rem 0; }
+  .stat { background:var(--navy); padding:1.25rem; text-align:center; }
+  .stat-num { font-size:2rem; font-weight:700; color:var(--gold); font-family:'SF Mono',monospace; }
+  .stat-label { font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-top:.25rem; }
+
+  /* ARTICLE 0 */
+  .article-zero { background:rgba(201,168,76,.08); border:2px solid rgba(201,168,76,.4); padding:1.5rem 2rem; border-radius:8px; margin:2rem 0; text-align:center; }
+  .article-zero-label { color:var(--gold); font-weight:600; font-size:.85rem; letter-spacing:.15em; margin-bottom:.5rem; }
+  .article-zero-text { font-style:italic; font-size:1.05rem; }
+
+  /* HEATMAP LAYOUT */
+  .heatmap-layout { display:grid; grid-template-columns:300px 1fr; gap:1rem; margin:2rem 0; }
+  @media (max-width: 900px) { .heatmap-layout { grid-template-columns:1fr; } }
+
+  /* LAYERS PANEL */
+  .layers-panel { background:var(--slate); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:1.5rem; }
+  .layers-panel h2 { color:var(--gold); margin-bottom:1rem; font-size:1.1rem; }
+  .layer-toggle { display:flex; align-items:center; justify-content:space-between; padding:.4rem 0; cursor:pointer; border-bottom:1px solid rgba(255,255,255,.05); }
+  .layer-toggle:last-child { border-bottom:none; }
+  .layer-toggle input { cursor:pointer; }
+  .layer-toggle label { cursor:pointer; flex:1; }
+  .layer-color-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:.5rem; }
+
+  /* MAP */
+  .map-container { background:var(--slate); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:1rem; min-height:600px; position:relative; }
+  .map-grid { display:grid; grid-template-columns:repeat(8, 1fr); gap:2px; }
+  .map-cell { aspect-ratio:1; padding:.5rem; background:#0a0e1a; border-radius:4px; cursor:pointer; transition:all .2s; display:flex; flex-direction:column; justify-content:space-between; }
+  .map-cell:hover { transform:scale(1.05); z-index:2; box-shadow:0 4px 12px rgba(0,0,0,.5); }
+  .map-cell-name { font-size:.7rem; color:#fff; font-weight:600; }
+  .map-cell-count { font-size:.95rem; font-weight:700; font-family:'SF Mono',monospace; }
+  .map-cell-status { font-size:.6rem; color:var(--muted); }
+  .map-cell.member { background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(16,185,129,.1)); border:1px solid rgba(16,185,129,.4); }
+  .map-cell.member .map-cell-count { color:#10b981; }
+  .map-cell.treaty { background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(59,130,246,.1)); border:1px solid rgba(59,130,246,.4); }
+  .map-cell.treaty .map-cell-count { color:#60a5fa; }
+  .map-cell.cloud { background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(245,158,11,.1)); border:1px solid rgba(245,158,11,.4); }
+  .map-cell.cloud .map-cell-count { color:#fbbf24; }
+  .map-cell.conditional { background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(168,85,247,.1)); border:1px solid rgba(168,85,247,.4); }
+  .map-cell.conditional .map-cell-count { color:#c084fc; }
+  .map-cell.restricted { background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(239,68,68,.1)); border:1px solid rgba(239,68,68,.4); }
+  .map-cell.restricted .map-cell-count { color:#fca5a5; }
+
+  /* REGION TABLE */
+  .region-table { background:var(--slate); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:1.5rem; margin:2rem 0; overflow-x:auto; }
+  .region-table h2 { color:var(--gold); margin-bottom:1rem; font-size:1.1rem; }
+  table { width:100%; border-collapse:collapse; font-size:.85rem; }
+  table th { text-align:left; padding:.5rem; border-bottom:1px solid rgba(201,168,76,.3); color:var(--gold); font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; }
+  table td { padding:.5rem; border-bottom:1px solid rgba(255,255,255,.05); }
+
+  /* DETAIL PANEL */
+  .detail-panel { background:var(--slate); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:1.5rem; margin-top:1rem; }
+  .detail-panel h3 { color:var(--gold); margin-bottom:.5rem; }
+  .detail-list { list-style:none; padding:0; }
+  .detail-list li { padding:.4rem 0; border-bottom:1px solid rgba(255,255,255,.05); font-size:.85rem; }
+  .detail-list li:last-child { border-bottom:none; }
+
+  /* ANIMATIONS */
+  @keyframes pulse-red { 0% { box-shadow:0 0 0 0 rgba(239,68,68,.4); } 100% { box-shadow:0 0 0 8px rgba(239,68,68,0); } }
+  .map-cell.restricted { animation:pulse-red 2s infinite; }
+
+  footer { text-align:center; padding-top:2rem; margin-top:3rem; border-top:1px solid rgba(255,255,255,.05); color:var(--muted); font-size:.85rem; }
+  footer a { color:var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="layer-tag" style="display:inline-block; padding:.5rem 1.5rem; background:rgba(201,168,76,.15); border:1px solid var(--gold); border-radius:20px; font-size:.8rem; letter-spacing:.2em; color:var(--gold); margin-bottom:1rem;">🌍 GLOBAL COMPLIANCE HEAT-MAP · v2</div>
+    <h1>123 Frameworks · 8 Regions · 41 Charters</h1>
+    <p class="tagline">The most advanced compliance framework database on Earth. 5,043 cross-walks. Ed25519-signed. BFT-ratified. Free.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <nav class="breadcrumb">
+    <a href="index.html">← Sovereign Charter Universe</a> / Global Compliance Heat-Map
+  </nav>
+
+  <h2 style="color:var(--gold); margin-bottom:1rem;">📊 Federation at a Glance</h2>
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-num">123</div><div class="stat-label">Frameworks</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Regions</div></div>
+    <div class="stat"><div class="stat-num">25+</div><div class="stat-label">Jurisdictions</div></div>
+    <div class="stat"><div class="stat-num">41</div><div class="stat-label">Charters</div></div>
+    <div class="stat"><div class="stat-num">5,043</div><div class="stat-label">Cross-Walks</div></div>
+    <div class="stat"><div class="stat-num">49GB</div><div class="stat-label">Data Moat</div></div>
+    <div class="stat"><div class="stat-num">198</div><div class="stat-label">Data Sources</div></div>
+    <div class="stat"><div class="stat-num">15+</div><div class="stat-label">Black Swan Windows</div></div>
+  </div>
+
+  <div class="article-zero">
+    <div class="article-zero-label">CHARTER ARTICLE 0 · BINDING ON ALL 41 CHARTERS</div>
+    <div class="article-zero-text">
+      "Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. ISO fee-for-service model ONLY. <strong>CA3O is the CMKC for AI.</strong>"
+    </div>
+  </div>
+
+  <h2 style="color:var(--gold); margin:2rem 0 1rem;">🌐 Global Compliance Heat-Map</h2>
+  <div class="heatmap-layout">
+    <!-- LAYERS PANEL -->
+    <div class="layers-panel">
+      <h2>🎛️ Layers</h2>
+      <div class="layer-toggle">
+        <label><span class="layer-color-dot" style="background:#c9a84c;"></span>All Frameworks</label>
+        <input type="checkbox" checked id="layer-all">
+      </div>
+      <div class="layer-toggle">
+        <label><span class="layer-color-dot" style="background:#3b82f6;"></span>EU AI Act Art 50</label>
+        <input type="checkbox" checked id="layer-eu-ai">
+      </div>
+      <div class="layer-toggle">
+        <label><span class="layer-color-dot" style="background:#10b981;"></span>GDPR / PIPL / LGPD</label>
+        <input type="checkbox" checked id="layer-privacy">
+      </div>
+      <div class="layer-toggle">
+        <label><span class="layer-color-dot" style="background:#ef4444;"></span>JSP 936 / NATO AI</label>
+        <input type="checkbox" checked id="layer-defence">
+      </div>
+      <div class="layer-toggle">
+        <label><span class="layer-color-dot" style="background:#f59e0b;"></span>HIPAA / MDR / MHRA</label>
+        <input type="checkbox" checked id="layer-health">
+      </div>
+      <div class="layer-toggle">
+        <label><span class="layer-color-dot" style="background:#a855f7;"></span>JSP 440/604 / ISO 27001</label>
+        <input type="checkbox" checked id="layer-secure">
+      </div>
+      <div class="layer-toggle">
+        <label><span class="layer-color-dot" style="background:#fff;"></span>Basel / SOX / DORA</label>
+        <input type="checkbox" checked id="layer-finance">
+      </div>
+      <div class="layer-toggle">
+        <label><span class="layer-color-dot" style="background:#ec4899;"></span>Black Swan Windows</label>
+        <input type="checkbox" checked id="layer-window">
+      </div>
+
+      <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,.1);">
+        <h3 style="font-size:.85rem; color:var(--muted); margin-bottom:.5rem;">Sovereign Status Legend</h3>
+        <div style="font-size:.75rem; color:var(--muted);">
+          <div style="padding:.2rem 0;"><span class="layer-color-dot" style="background:#10b981;"></span>Member (full 4-tier + cert)</div>
+          <div style="padding:.2rem 0;"><span class="layer-color-dot" style="background:#3b82f6;"></span>Treaty Adopter</div>
+          <div style="padding:.2rem 0;"><span class="layer-color-dot" style="background:#f59e0b;"></span>Sovereign Cloud Eligible</div>
+          <div style="padding:.2rem 0;"><span class="layer-color-dot" style="background:#a855f7;"></span>Conditional Deployment</div>
+          <div style="padding:.2rem 0;"><span class="layer-color-dot" style="background:#ef4444;"></span>Restricted (requires sovereign isolation)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="map-container">
+      <div class="map-grid">
+        <div class="map-cell member" onclick="showDetail('EU','member')"><div class="map-cell-name">🇪🇺 EU</div><div class="map-cell-count">18</div><div class="map-cell-status">Sovereign AI Member</div></div>
+        <div class="map-cell member" onclick="showDetail('UK','member')"><div class="map-cell-name">🇬🇧 UK</div><div class="map-cell-count">15</div><div class="map-cell-status">Sovereign AI Member</div></div>
+        <div class="map-cell treaty" onclick="showDetail('US','treaty')"><div class="map-cell-name">🇺🇸 US</div><div class="map-cell-count">34</div><div class="map-cell-status">Treaty Adopter</div></div>
+        <div class="map-cell member" onclick="showDetail('CA','member')"><div class="map-cell-name">🇨🇦 CA</div><div class="map-cell-count">3</div><div class="map-cell-status">Sovereign AI Member</div></div>
+        <div class="map-cell cloud" onclick="showDetail('AU','cloud')"><div class="map-cell-name">🇦🇺 AU</div><div class="map-cell-count">4</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('JP','cloud')"><div class="map-cell-name">🇯🇵 JP</div><div class="map-cell-count">3</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('KR','cloud')"><div class="map-cell-name">🇰🇷 KR</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('SG','cloud')"><div class="map-cell-name">🇸🇬 SG</div><div class="map-cell-count">6</div><div class="map-cell-status">Sovereign Cloud</div></div>
+
+        <div class="map-cell cloud" onclick="showDetail('IN','cloud')"><div class="map-cell-name">🇮🇳 IN</div><div class="map-cell-count">3</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('UAE','cloud')"><div class="map-cell-name">🇦🇪 UAE</div><div class="map-cell-count">3</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('SA','cloud')"><div class="map-cell-name">🇸🇦 SA</div><div class="map-cell-count">3</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('IL','cloud')"><div class="map-cell-name">🇮🇱 IL</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('TW','cloud')"><div class="map-cell-name">🇹🇼 TW</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('HK','cloud')"><div class="map-cell-name">🇭🇰 HK</div><div class="map-cell-count">1</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('TH','cloud')"><div class="map-cell-name">🇹🇭 TH</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('VN','cloud')"><div class="map-cell-name">🇻🇳 VN</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+
+        <div class="map-cell cloud" onclick="showDetail('CH','cloud')"><div class="map-cell-name">🇨🇭 CH</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('NO','cloud')"><div class="map-cell-name">🇳🇴 NO</div><div class="map-cell-count">1</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('NZ','cloud')"><div class="map-cell-name">🇳🇿 NZ</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell conditional" onclick="showDetail('BR','conditional')"><div class="map-cell-name">🇧🇷 BR</div><div class="map-cell-count">2</div><div class="map-cell-status">Conditional</div></div>
+        <div class="map-cell conditional" onclick="showDetail('MX','conditional')"><div class="map-cell-name">🇲🇽 MX</div><div class="map-cell-count">1</div><div class="map-cell-status">Conditional</div></div>
+        <div class="map-cell conditional" onclick="showDetail('ZA','conditional')"><div class="map-cell-name">🇿🇦 ZA</div><div class="map-cell-count">1</div><div class="map-cell-status">Conditional</div></div>
+        <div class="map-cell cloud" onclick="showDetail('TR','cloud')"><div class="map-cell-name">🇹🇷 TR</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('EG','cloud')"><div class="map-cell-name">🇪🇬 EG</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+
+        <div class="map-cell cloud" onclick="showDetail('NG','cloud')"><div class="map-cell-name">🇳🇬 NG</div><div class="map-cell-count">1</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('KE','cloud')"><div class="map-cell-name">🇰🇪 KE</div><div class="map-cell-count">1</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell cloud" onclick="showDetail('ID','cloud')"><div class="map-cell-name">🇮🇩 ID</div><div class="map-cell-count">2</div><div class="map-cell-status">Sovereign Cloud</div></div>
+        <div class="map-cell restricted" onclick="showDetail('CN','restricted')"><div class="map-cell-name">🇨🇳 CN</div><div class="map-cell-count">7</div><div class="map-cell-status">⚠ Restricted</div></div>
+        <div class="map-cell restricted" onclick="showDetail('RU','restricted')"><div class="map-cell-name">🇷🇺 RU</div><div class="map-cell-count">1</div><div class="map-cell-status">⚠ Restricted</div></div>
+        <div class="map-cell treaty" onclick="showDetail('COUNCILOFEUROPE','treaty')"><div class="map-cell-name">🪶 CoE</div><div class="map-cell-count">1</div><div class="map-cell-status">Treaty (AI Conv)</div></div>
+        <div class="map-cell treaty" onclick="showDetail('UNESCO','treaty')"><div class="map-cell-name">🇺🇳 UN</div><div class="map-cell-count">1</div><div class="map-cell-status">Treaty (UNESCO)</div></div>
+        <div class="map-cell treaty" onclick="showDetail('OECD','treaty')"><div class="map-cell-name">🌐 OECD</div><div class="map-cell-count">1</div><div class="map-cell-status">Treaty (OECD)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL PANEL -->
+  <div id="detail" class="detail-panel" style="display:none;">
+    <h3 id="detail-title">Select a jurisdiction</h3>
+    <div id="detail-content"></div>
+  </div>
+
+  <!-- REGION TABLE -->
+  <div class="region-table">
+    <h2>📋 Frameworks by Region</h2>
+    <table>
+      <thead><tr><th>Region</th><th>Frameworks</th><th>Status</th><th>Coverage</th></tr></thead>
+      <tbody>
+        <tr><td>🇪🇺 EU</td><td>18</td><td>LIVE (17) + PROPOSED (1)</td><td>EU AI Act + GDPR + 16 more</td></tr>
+        <tr><td>🇬🇧 UK</td><td>15</td><td>LIVE (12) + PROPOSED (3)</td><td>UK AI Bill + DPA 2018 + 13 more</td></tr>
+        <tr><td>🇺🇸 US</td><td>34</td><td>LIVE (31) + PROPOSED (3) + HIST (2)</td><td>Federal 10 + State 17 + NIST 7</td></tr>
+        <tr><td>🇸🇬 APAC</td><td>37</td><td>LIVE (31) + PROPOSED (6)</td><td>China + Japan + KR + SG + AU + India + NZ</td></tr>
+        <tr><td>🇨🇭 EMEA non-EU</td><td>20</td><td>LIVE (17) + PROPOSED (3)</td><td>Switzerland + 19 countries</td></tr>
+        <tr><td>🇲🇽 Americas non-US</td><td>12</td><td>LIVE (11) + PROPOSED (1)</td><td>Canada + Mexico + Brazil + 9 LatAm</td></tr>
+        <tr><td>🛡 Sectoral</td><td>35</td><td>LIVE (35)</td><td>Financial + Healthcare + Defence + 5 more</td></tr>
+        <tr><td>📐 Standards</td><td>50</td><td>LIVE (44) + PROPOSED (6)</td><td>ISO + IEEE + ITU + ETSI + 17 more</td></tr>
+        <tr><td>🌐 Multilateral</td><td>6</td><td>LIVE (6)</td><td>UNESCO + OECD + G7 + Council of Europe + G20</td></tr>
+        <tr style="background:rgba(201,168,76,.05);"><td><strong>TOTAL</strong></td><td><strong>123 unique</strong></td><td><strong>LIVE 90% / PROPOSED 9% / HIST 1%</strong></td><td><strong>Most advanced DB on Earth</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="color:var(--gold); margin:2rem 0 1rem;">🔍 Why This Is The Most Advanced DB</h2>
+  <ol style="padding-left:2rem; font-size:.9rem;">
+    <li><strong>123 universal frameworks</strong> cross-walked (vs ISO's 50+ for AI)</li>
+    <li><strong>8 jurisdictional regions</strong> covered (vs sectoral regulators covering 1-2)</li>
+    <li><strong>All 41 sovereign charters</strong> cross-walked (vs individual sectoral)</li>
+    <li><strong>Free access</strong> for humans, regulators, partners (vs LexisNexis/Thomson Reuters £££)</li>
+    <li><strong>Ed25519-signed + BFT-ratified</strong> audit chain (vs paper-based)</li>
+    <li><strong>OTS Bitcoin-anchored</strong> version (vs central alterable databases)</li>
+    <li><strong>Charter Article 0 binding</strong> (no equity, no board seats, no revenue-sharing, no success fees)</li>
+    <li><strong>5,043 cross-walk mappings</strong> = 41 charters × 123 frameworks</li>
+  </ol>
+
+</div>
+
+<footer>
+  <div style="color:var(--gold); font-weight:600; margin-bottom:.5rem;">CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</div>
+  <div style="margin-bottom:.5rem;">
+    <a href="index.html">← Sovereign Charter Universe</a> ·
+    <a href="sovereign-root.html">L0 Root</a> ·
+    <a href="watchdog.html">Public Watchdog</a> ·
+    <a href="verify.html">Verify</a>
+  </div>
+  <div style="font-size:.75rem; font-style:italic;">
+    Charter Article 0: Never take equity, board seats, revenue-sharing, or success fees. ISO fee-for-service model ONLY. CA3O is the CMKC for AI.
+  </div>
+</footer>
+
+<script>
+const DETAILS = {
+  'EU,member': {
+    title: '🇪🇺 European Union — 18 Frameworks',
+    items: [
+      'EU AI Act (Regulation 2024/1689)',
+      'EU AI Act Delegated Regulation 2025 (AI literacy)',
+      'EU AI Act GPAI Code of Practice (Jul 2025)',
+      'GDPR (Regulation 2016/679)',
+      'EU Cyber Resilience Act 2024/2847',
+      'EU NIS2 Directive 2022/2555',
+      'EU AI Liability Directive (proposed)',
+      'EU Product Liability Directive 2024/2853',
+      'EU Charter of Fundamental Rights',
+      'EU ePrivacy Directive 2002/58/EC',
+      'EU Digital Services Act 2022/2065',
+      'EU Digital Markets Act 2022/1925',
+      'EU Data Act 2022/1800',
+      'EU Data Governance Act 2022/868',
+      'DORA (EU 2022/2554)',
+      'CSRD / ESRS (EU 2022/2464)',
+      'EU MiCA Regulation 2023/1114',
+      'EU AI Pact'
+    ]
+  },
+  'UK,member': {
+    title: '🇬🇧 United Kingdom — 15 Frameworks',
+    items: [
+      'UK AI Bill 2026 (in Parliament)',
+      'UK Online Safety Act 2023',
+      'UK Data Protection Act 2018',
+      'UK Data (Use and Access) Bill 2024',
+      'UK Network and Information Systems Regulations 2018',
+      'UK PECR 2003',
+      'UK ICO AI Auditing Framework 2024',
+      'UK AISI Evaluations',
+      'UK G-Cloud 14',
+      'UK Cyber Essentials Plus',
+      'UK Building Safety Act 2022',
+      'UK PSTI Act 2022',
+      'UK FSMA 2023',
+      'UK AI Regulation (pro-innovation)',
+      'UK Nuclear Industry Safeguards Regulations'
+    ]
+  },
+  'US,treaty': {
+    title: '🇺🇸 United States — 34 Frameworks',
+    items: [
+      'EO 14110 (revoked), EO 14179 (Jan 2025)',
+      'Federal: OMB M-24-10, NIST AI Evaluation Standards 2025',
+      'Federal: SEC Cyber Disclosure, FTC AI Guidance, EEOC',
+      'CISA AI Cybersecurity Playbook, AI Bill of Rights Blueprint',
+      'HIPAA Privacy + Security Rule',
+      'NIST AI RMF 1.0, NIST CSF 2.0, NIST SP 800-53 Rev 5',
+      'NIST SP 800-171 Rev 3, NIST IR 8269',
+      'SOC 2 Type II, PCI DSS v4.0, CMMC 2.0, FedRAMP',
+      'MITRE ATLAS, OWASP Top 10 for LLMs',
+      'State: Colorado AI Act (SB 205), California CPPA',
+      'State: California SB 1047 (vetoed), AB 2013',
+      'State: NYC LL 144, Illinois AI Video Interview Act',
+      'State: Texas TRAIGA, Virginia CDPA, Florida DBOR',
+      'State: Tennessee ELVIS Act',
+      '+ NIST SP 800-218 (SSDF v1.1)'
+    ]
+  }
+};
+
+function showDetail(region, tier) {
+  const key = region + ',' + tier;
+  const detail = DETAILS[key] || { title: region + ' — ' + tier, items: ['Frameworks loading...'] };
+  document.getElementById('detail-title').textContent = detail.title;
+  let html = '<ul class="detail-list">';
+  detail.items.forEach(item => html += '<li>' + item + '</li>');
+  html += '</ul>';
+  document.getElementById('detail-content').innerHTML = html;
+  document.getElementById('detail').style.display = 'block';
+  document.getElementById('detail').scrollIntoView({behavior: 'smooth'});
+}
+</script>
+
+</body>
+</html>

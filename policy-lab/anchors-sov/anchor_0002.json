@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "schema": "anchor/dora/v1",
+  "label": "DORA Policy Lab EXP-001: automated vs manual incident reporting, signed+attestable episodes",
+  "ledger": "policy_lab_dora.jsonl",
+  "full_ledger_sha256": "f3595a2ee22b544b5b80930653e58baacafb50dd80adc0c2316b1143b5ee90a5",
+  "merkle": "sha256 domain-separated (0x00 leaf / 0x01 node), duplicate-last",
+  "attestable_root": "2db2e4a09f8bac90806493cb02aef3d3eb8c51c9728e30b0e10035902a890273",
+  "n_attestable": 13,
+  "n_total": 13,
+  "ts_first": "",
+  "ts_last": "",
+  "leaves": [
+    "c40699bd0556cd58193024fab546319bb8222caa7a78b2d644e7b93e70a3ff92",
+    "ca82c81407dedcb833a984bc441e5e1044e9958575a269addd49adc4df5946fb",
+    "d8179c6e49b5f82afad96195c07e61704df800d15cedf060c3aecf95113541d9",
+    "0e9234bd31904c03e173d001899b6a7df7dedb5e0a3b4e805c0524b4841ba1e5",
+    "d88a686e4b031b2fc7c983e7b1607fbaff745b1d196b10850f77b61d8ae60a29",
+    "51fc485bd0b84ab815209e466aaff103d7052effa41b3ef739397744780a452a",
+    "4db73f33cb95c1a7641e3f8dee5aae3c357962fe7ce624ec75e3b88b2697a7fa",
+    "3892bd2ab89683a4ffc83721770548447cd66013bf00ce69bd71426000501c04",
+    "1c40d16b7665342bd3752cd87b8271eb5a4090131f6961e520ed7ff0210f0c56",
+    "ba0afc90c32ad02aad3455a2a88000e6e2caf44705020e0710e6c2f282ef1664",
+    "d10ab6f689253c27701fac069636bcacca79418849782969678c876c29a89bbf",
+    "803430b7bee457f6e3282293e468c135a77a1bd1f53ebc6fbfb0533553169b55",
+    "680d5a62d11415506a1e838b3bd92dbf744f97ead7fc6d5f9809b4a437d999b3"
+  ],
+  "verdict_index": [
+    {
+      "i": 0,
+      "town": "A_treatment",
+      "incident_id": "EXP001-INC-000",
+      "latency_initial": 4,
+      "completeness_initial": 1.0,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 1,
+      "town": "B_control",
+      "incident_id": "EXP001-INC-000",
+      "latency_initial": 26,
+      "completeness_initial": 0.75,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 2,
+      "town": "A_treatment",
+      "incident_id": "EXP001-INC-001",
+      "latency_initial": 4,
+      "completeness_initial": 1.0,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 3,
+      "town": "B_control",
+      "incident_id": "EXP001-INC-001",
+      "latency_initial": 26,
+      "completeness_initial": 0.75,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 4,
+      "town": "A_treatment",
+      "incident_id": "EXP001-INC-002",
+      "latency_initial": 4,
+      "completeness_initial": 1.0,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 5,
+      "town": "B_control",
+      "incident_id": "EXP001-INC-002",
+      "latency_initial": 26,
+      "completeness_initial": 0.75,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 6,
+      "town": "A_treatment",
+      "incident_id": "EXP001-INC-003",
+      "latency_initial": 4,
+      "completeness_initial": 1.0,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 7,
+      "town": "B_control",
+      "incident_id": "EXP001-INC-003",
+      "latency_initial": null,
+      "completeness_initial": 0.0,
+      "false_negative": true,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 8,
+      "town": "A_treatment",
+      "incident_id": "EXP001-INC-004",
+      "latency_initial": null,
+      "completeness_initial": 0.0,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 9,
+      "town": "B_control",
+      "incident_id": "EXP001-INC-004",
+      "latency_initial": null,
+      "completeness_initial": 0.0,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 10,
+      "town": "A_treatment",
+      "incident_id": "EXP001-INC-005",
+      "latency_initial": 4,
+      "completeness_initial": 1.0,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 11,
+      "town": "B_control",
+      "incident_id": "EXP001-INC-005",
+      "latency_initial": 26,
+      "completeness_initial": 0.75,
+      "false_negative": false,
+      "false_positive": false,
+      "ts": 0
+    },
+    {
+      "i": 12,
+      "town": null,
+      "incident_id": null,
+      "latency_initial": null,
+      "completeness_initial": null,
+      "false_negative": null,
+      "false_positive": null,
+      "ts": null
+    }
+  ]
+}

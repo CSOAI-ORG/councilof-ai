@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Stack - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/sovereignty/">sovereignty</a> / sovereign-stack</div>
+<h1>The Sovereign Stack</h1>
+<p class="tagline">Seven layers from silicon to interface — vertically integrated, sovereignty at every seam.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p>The <strong>Sovereign Stack</strong> is CSOAI's vertically-integrated AI infrastructure, built so that no layer of the system depends on a non-sovereign intermediary. Sovereignty is enforced at every seam, from the silicon to the user interface.</p>
+
+<h2>The Seven Layers</h2>
+<table>
+<tr><th>#</th><th>Layer</th><th>Component</th><th>Sovereignty Mechanism</th></tr>
+<tr><td>0</td><td>Silicon</td><td>ARM/RISC-V CPUs, sovereign data centres</td><td>Audit-able supply chain, no foreign fab dependency</td></tr>
+<tr><td>1</td><td>Substrate</td><td>MEOK file system, SIGIL chain</td><td>Hash-chained, Ed25519-signed at the byte level</td></tr>
+<tr><td>2</td><td>Model</td><td>OOWM (Mamba-2 + MoE-64 + MOM)</td><td>Open-source weights, locally fine-tunable</td></tr>
+<tr><td>3</td><td>Governance</td><td>12-around-1 BFT council</td><td>Multi-stakeholder voting, no single point of authority</td></tr>
+<tr><td>4</td><td>Compliance</td><td>30-framework check, Article 50 passport</td><td>Automated, SIGIL-emitted, auditable</td></tr>
+<tr><td>5</td><td>Interface</td><td>MEOK OS, iOK Farm physical layer</td><td>On-device, sovereign UX</td></tr>
+<tr><td>6</td><td>Tunnels</td><td>MCP, A2A, x402, DID, JWT protocols</td><td>Federated, not centralised</td></tr>
+</table>
+
+<h2>Why Vertical Integration?</h2>
+<p>Horizontal AI stacks (model from OpenAI, storage from AWS, compute from Azure, governance from a third-party SaaS) cannot enforce sovereignty because each layer has a different sovereign. CSOAI's vertical integration means the same legal entity (CSOAI Ltd, UK 16939677) owns the audit chain from byte to button.</p>
+
+<h2>Historical Precedents</h2>
+<p>The vertical integration pattern is taken from the IBM System/360 era (1964) when IBM owned the chip, the operating system, the compiler, and the application layer. Apple (2007 onward) replicated this for the smartphone. CSOAI replicates it for sovereign AI in 2026.</p>
+
+<h2>Layer 0: Silicon</h2>
+<p>CSOAI prefers RISC-V over x86 because the ISA is open and auditable. Sovereign data centres are located in the eight sovereign realms. See <a href="/wiki/realms/">Realms</a>.</p>
+
+<h2>Layer 1: Substrate</h2>
+<p>MEOK is the operating substrate. Every byte is hash-chained to the SIGIL ledger. See <a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a>.</p>
+
+<h2>Layer 2: Model</h2>
+<p>OOWM is the central sovereign world-model: Mamba-2 long-context + Left MoE reasoning + Right MOM perception + SOV3 middle. See <a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a>.</p>
+
+<h2>Layer 3: Governance</h2>
+<p>12-around-1 BFT council. See <a href="/wiki/council/12-around-1.html">12-around-1</a>.</p>
+
+<h2>Layer 4: Compliance</h2>
+<p>30-framework check covers EU AI Act, GDPR, CRA, NIS2, ISO 42001, NIST AI RMF, UK AI Bill, AUKUS guidance. Article 50 passport covers watermarking. See <a href="/wiki/laws/">Laws</a>.</p>
+
+<h2>Layer 5: Interface</h2>
+<p>MEOK OS + iOK Farm physical layer. The interface is sovereign — no foreign telemetry is sent.</p>
+
+<h2>Layer 6: Tunnels</h2>
+<p>The seven protocols (MCP, A2A, x402, DID, JWT, ANP, AGNTCY) are sovereign because they are open specs, not proprietary APIs.</p>
+
+<h2>Modern Usage</h2>
+<p>CSOAI customers consume the Stack as Pro (£499/mo), Governance (£2,499/mo), or Enterprise (£9,999+/mo) tiers. White-label resale is permitted for sovereign governments.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/sovereignty/principle.html">Principle</a></li>
+<li><a href="/wiki/architecture/oowm-sandwich.html">OOWM Sandwich</a></li>
+<li><a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a></li>
+<li><a href="/wiki/council/12-around-1.html">12-around-1</a></li>
+<li><a href="/wiki/architecture/dorado-1click.html">DORADO 1-click</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

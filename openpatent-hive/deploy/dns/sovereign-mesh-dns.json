@@ -1,0 +1,33 @@
+{
+  "_voice": "DEFONEOS",
+  "zone": "openpatent.ai",
+  "registrar": "namecheap",
+  "manager": "cloudflare",
+  "expected_target_ipv4": "35.242.143.249",
+  "records": [
+    {
+      "name": "@",
+      "type": "A",
+      "value": "35.242.143.249",
+      "ttl": 300,
+      "purpose": "apex — openpatent.ai hero page + EU sovereign VM (home)",
+      "existing": true
+    },
+    {
+      "name": "sovereign-mesh",
+      "type": "A",
+      "value": "35.242.143.249",
+      "ttl": 300,
+      "purpose": "sovereign-mesh.openpatent.ai — geo-routed LB target (EU default; NA->US and AP->APAC once provisioned)",
+      "existing": false
+    },
+    {
+      "name": "keystone",
+      "type": "A",
+      "value": "35.242.143.249",
+      "ttl": 300,
+      "purpose": "keystone.openpatent.ai — cross-hive attestation + geo-routed LB target",
+      "existing": false
+    }
+  ]
+}

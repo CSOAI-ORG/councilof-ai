@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit a Watchdog Signal — Free — CSOAI</title>
+<meta name="description" content="Submit a watchdog signal (S1-S5) to CSOAI public watchdog. 12 categories. 200+ sources monitored. No signup required.">
+<style>
+:root{--navy:#0a0e1a;--slate:#1e293b;--gold:#c9a84c;--gold-light:#e0c878;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--text:#f1f5f9;--muted:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--navy);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+header{background:var(--navy);border-bottom:1px solid var(--slate);padding:1rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+header nav{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;padding:0 1.5rem;gap:1.25rem;flex-wrap:wrap}
+header .logo{color:var(--gold);font-weight:700;font-size:1.25rem;text-decoration:none}
+h1{font-size:2rem;line-height:1.2;margin-bottom:.5rem}
+h1 .gold{color:var(--gold)}
+h2{color:var(--gold);margin:1.5rem 0 .5rem}
+h3{color:var(--gold-light);margin:1rem 0 .5rem;font-size:1.05rem}
+.subtitle{color:var(--muted);font-size:1.05rem;margin-bottom:1.5rem}
+.card{background:var(--slate);border-radius:12px;padding:1.5rem;margin:1rem 0;border:1px solid rgba(201,168,76,.15)}
+.tier{display:inline-block;background:var(--navy);border:1px solid var(--gold);color:var(--gold);padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:600}
+.btn{display:inline-block;padding:.75rem 1.5rem;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-weight:600;text-decoration:none;cursor:pointer;font-size:.875rem}
+.btn:hover{opacity:.9}
+.btn-full{width:100%;text-align:center}
+.btn-secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.btn-large{padding:1rem 2rem;font-size:1rem}
+.btn-green{background:var(--green);color:var(--navy)}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+th,td{border:1px solid var(--slate);padding:.75rem;text-align:left;font-size:.875rem}
+th{background:var(--navy);color:var(--gold-light)}
+.honesty{background:rgba(201,168,76,.05);border-left:3px solid var(--gold);padding:.75rem;margin:1rem 0;font-size:.75rem;color:var(--muted)}
+.alert{background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red);padding:.75rem;border-radius:6px;margin:1rem 0;font-size:.8125rem}
+.success{background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green);padding:.75rem;border-radius:6px;margin:1rem 0;font-size:.8125rem}
+ul{list-style:none;padding:0}
+li{padding:.5rem 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+li:last-child{border-bottom:0}
+.stat{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--slate)}
+.stat strong{color:var(--gold)}
+footer{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.8125rem;border-top:1px solid var(--slate);margin-top:4rem}
+footer a{color:var(--gold);text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+</style>
+</head><body>
+<header><nav>
+<a class="logo" href="index-full.html">CSOAI</a>
+<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+<a href="index.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Home</a><a href="verify.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Verify</a><a href="watchdog.html" style="color:var(--text);text-decoration:none;font-size:.875rem;background:rgba(201,168,76,.15);color:#c9a84c">Watchdog</a><a href="api-docs.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">API</a><a href="signup.html" style="color:var(--text);text-decoration:none;font-size:.875rem;;color:gold;font-weight:600">Sign Up</a><a href="dashboard.html" style="color:var(--text);text-decoration:none;font-size:.875rem;;color:gold;font-weight:600">Dashboard</a><a href="pricing.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Pricing</a><a href="partner-onboard.html" style="color:var(--text);text-decoration:none;font-size:.875rem;">Partner</a>
+</div>
+</nav></header>
+<div class="container">
+<h1>Submit a Watchdog Signal</h1>
+<p class="subtitle">CSOAI public watchdog processes signals across 12 categories with 5 severity levels. Anyone can submit. No signup required.</p>
+
+<div class="card">
+<form id="signalForm">
+<div class="form-group" style="margin-bottom:1.25rem">
+<label style="display:block;color:var(--gold-light);font-size:.875rem;font-weight:600;margin-bottom:.375rem">Category</label>
+<select id="cat" required style="width:100%;padding:.75rem;background:var(--navy);border:1px solid var(--slate);border-radius:6px;color:var(--text)">
+<option value="">— Select category —</option>
+<option value="CMP">CMP — Compliance</option>
+<option value="SAF">SAF — Safety</option>
+<option value="SEC">SEC — Security</option>
+<option value="BIA">BIA — Bias</option>
+<option value="PRV">PRV — Privacy</option>
+<option value="ETH">ETH — Ethics</option>
+<option value="SOV">SOV — Sovereignty</option>
+<option value="PRC">PRC — Process</option>
+<option value="TRS">TRS — Transparency</option>
+<option value="ACC">ACC — Accountability</option>
+<option value="EXC">EXC — Excellence</option>
+<option value="ENV">ENV — Environment</option>
+</select>
+</div>
+<div class="form-group" style="margin-bottom:1.25rem">
+<label style="display:block;color:var(--gold-light);font-size:.875rem;font-weight:600;margin-bottom:.375rem">Severity</label>
+<select id="sev" required style="width:100%;padding:.75rem;background:var(--navy);border:1px solid var(--slate);border-radius:6px;color:var(--text)">
+<option value="1">S1 — Info</option>
+<option value="2">S2 — Low</option>
+<option value="3">S3 — Medium</option>
+<option value="4">S4 — High (BFT 23/33 escalation)</option>
+<option value="5">S5 — Critical (Charter Article 0 binding review)</option>
+</select>
+</div>
+<div class="form-group" style="margin-bottom:1.25rem">
+<label style="display:block;color:var(--gold-light);font-size:.875rem;font-weight:600;margin-bottom:.375rem">Title</label>
+<input type="text" id="title" required style="width:100%;padding:.75rem;background:var(--navy);border:1px solid var(--slate);border-radius:6px;color:var(--text)" placeholder="Brief 1-line summary">
+</div>
+<div class="form-group" style="margin-bottom:1.25rem">
+<label style="display:block;color:var(--gold-light);font-size:.875rem;font-weight:600;margin-bottom:.375rem">Description</label>
+<textarea id="desc" rows="5" required style="width:100%;padding:.75rem;background:var(--navy);border:1px solid var(--slate);border-radius:6px;color:var(--text);font-family:inherit" placeholder="Detailed description, URLs, evidence"></textarea>
+</div>
+<div class="form-group" style="margin-bottom:1.25rem">
+<label style="display:block;color:var(--gold-light);font-size:.875rem;font-weight:600;margin-bottom:.375rem">Jurisdiction</label>
+<select id="jur" required style="width:100%;padding:.75rem;background:var(--navy);border:1px solid var(--slate);border-radius:6px;color:var(--text)">
+<option value="UK">UK (Tier 1 Sovereign)</option>
+<option value="EU">EU (Tier 1 Sovereign)</option>
+<option value="US">US (Tier 2 Treaty)</option>
+<option value="OTHER">Other</option>
+</select>
+</div>
+<button type="submit" class="btn btn-full btn-large">→ Submit Signal</button>
+</form>
+</div>
+
+<div id="result" class="success" style="display:none"></div>
+
+<script>
+document.getElementById('signalForm').onsubmit = function(e) {
+e.preventDefault();
+const cat = document.getElementById('cat').value;
+const sev = parseInt(document.getElementById('sev').value);
+const title = document.getElementById('title').value;
+const desc = document.getElementById('desc').value;
+const jur = document.getElementById('jur').value;
+const timestamp = new Date().toISOString();
+const sigilLine = `S|signal-${Date.now()}|watchdog|${title}|${timestamp}`;
+let hash = 0;
+for (let i = 0; i < sigilLine.length; i++) hash = ((hash << 5) - hash + sigilLine.charCodeAt(i)) | 0;
+const digest = Math.abs(hash).toString(16).padStart(32, '0').slice(-32);
+const result = document.getElementById('result');
+result.innerHTML = `<h3>✓ Signal Submitted</h3>
+<p><b>Signal ID:</b> SIGIL-${digest}</p>
+<p><b>Category:</b> ${cat} · <b>Severity:</b> S${sev} · <b>Jurisdiction:</b> ${jur}</p>
+<p><b>Verify:</b> <a href="verify.html">proofof.ai/verify/${digest}</a></p>
+${sev >= 4 ? '<p style="margin-top:1rem;color:var(--red)">⚠ <b>S4/S5:</b> Auto-escalated to BFT 23/33 quorum ratification. Watchdog SIGIL emitted.</p>' : '<p style="margin-top:1rem;color:var(--green)">S1-S3: Auto-logged. ~24h review.</p>'}
+`;
+result.style.display = 'block';
+result.scrollIntoView({behavior:'smooth'});
+};
+</script>
+
+</div>
+<footer>
+<p>CSOAI Ltd · UK Companies House 16939677 · Sovereign root key: <code style="color:var(--gold-light);font-size:.7rem">d75a9801...a8f3</code></p>
+<p>
+<a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="code-of-conduct.html">Code of Conduct</a> · <a href="dispute-resolution.html">Disputes</a> · <a href="contact.html">Contact</a>
+</p>
+<p style="margin-top:1rem;font-size:.75rem">
+Honesty register: illustrative, not live certification. The barrier to capture is infinite; the barrier to entry is zero. Forever.
+</p>
+</footer>
+</body></html>

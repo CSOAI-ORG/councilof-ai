@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=64.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "meok-sovereign-sov33-companion-mcp"
+version = "1.0.0"
+description = "MEOK Sovereign SOV33 Companion MCP — 24-companion catalog adapter with care-floor + emergence lifecycle"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "labs@meok.ai"}]
+keywords = ["mcp", "sov33", "companion", "emergence", "care-floor", "sovereign", "lifecycle"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = ["mcp>=1.0.0", "pydantic>=2.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/CSOAI-ORG/meok-sovereign-sov33-companion-mcp"
+
+[tool.setuptools.packages.find]
+where = ["."]

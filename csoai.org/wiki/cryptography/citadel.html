@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citadel — sovereign.wiki</title>
+  <style>body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}ul{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}</style>
+</head>
+<body>
+  <div class="container">
+    <div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/cryptography/">cryptography</a> / citadel</div>
+    <h1>Citadel</h1>
+    <p class="tagline">The hardened runtime — every action mediated by the BFT Council.</p>
+    <div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+    <h2>What Citadel Is</h2>
+    <p>Citadel is a Linux container hardening profile for sovereign AI: no outbound network, read-only rootfs, signed-only ingress, every action mediated by the BFT Council. See <a href="anchor.html">the Anchor</a> for the keymaster.</p>
+
+    <h2>What It Is NOT</h2>
+    <p>Citadel is not a fully-verified microkernel. It is a pragmatic hardening layer built on top of standard seccomp + namespaces + capability dropping.</p>
+
+    <h2>How It Is Built</h2>
+    <ul>
+      <li>SOPS + age + Sigstore for secrets.</li>
+      <li>Cosign for image signing.</li>
+      <li>Kyverno for policy.</li>
+      <li>CIS v8 baseline for OS. See <a href="../laws/cis-v8.html">CIS v8</a>.</li>
+      <li>ISO 27001 + ISO 42001 management layer. See <a href="../laws/iso-42001.html">ISO 42001</a>.</li>
+    </ul>
+
+    <h2>Why "Citadel"?</h2>
+    <p>A citadel is a fortress inside a city. The city is the realm; the citadel is the AI; what lives inside is sovereign.</p>
+
+    <h2>Citadel + Anchor</h2>
+    <p>The Citadel is the wall; the <a href="anchor.html">Anchor</a> is the locked chamber inside. Together they make a system whose keys cannot leak even if the wall is pierced.</p>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="anchor.html">The Anchor</a></li>
+      <li><a href="rotation.html">90-day rotation</a></li>
+      <li><a href="sigil-chain.html">SIGIL chain</a></li>
+      <li><a href="../laws/cis-v8.html">CIS v8 baseline</a></li>
+      <li><a href="../laws/iso-42001.html">ISO 42001</a></li>
+    </ul>
+    <div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+  </div>
+</body>
+</html>

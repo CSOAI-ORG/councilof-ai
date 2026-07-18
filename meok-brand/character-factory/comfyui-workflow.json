@@ -1,0 +1,217 @@
+{
+  "last_node_id": 24,
+  "last_link_id": 35,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "Load3DModel",
+      "pos": [100, 100],
+      "size": [320, 100],
+      "inputs": [],
+      "outputs": [["MODEL", 0]],
+      "widgets_values": ["character_model.glb"]
+    },
+    {
+      "id": 2,
+      "type": "Render3DMultiView",
+      "pos": [500, 100],
+      "size": [320, 200],
+      "inputs": [["MODEL", 1, 0]],
+      "outputs": [["IMAGES", 0]],
+      "widgets_values": [
+        8,
+        512,
+        512,
+        "warm_studio",
+        0.8,
+        1.2,
+        true
+      ]
+    },
+    {
+      "id": 3,
+      "type": "ImageCompositeGrid",
+      "pos": [900, 100],
+      "size": [320, 150],
+      "inputs": [["IMAGES", 2, 0]],
+      "outputs": [["IMAGE", 0]],
+      "widgets_values": [4, 2, 16, "#F2ECE2"]
+    },
+    {
+      "id": 4,
+      "type": "SaveImage",
+      "pos": [1300, 100],
+      "size": [320, 100],
+      "inputs": [["IMAGE", 3, 0]],
+      "outputs": [],
+      "widgets_values": ["character_sheet", "ComfyUI"]
+    },
+    {
+      "id": 5,
+      "type": "PuLIDApply",
+      "pos": [500, 400],
+      "size": [320, 150],
+      "inputs": [
+        ["MODEL", 1, 0],
+        ["FACE_IMAGE", 6, 0]
+      ],
+      "outputs": [["MODEL", 0]],
+      "widgets_values": [1.0, 0.8, true]
+    },
+    {
+      "id": 6,
+      "type": "LoadImage",
+      "pos": [100, 400],
+      "size": [320, 100],
+      "inputs": [],
+      "outputs": [["IMAGE", 0]],
+      "widgets_values": ["reference_face.png", "image"]
+    },
+    {
+      "id": 7,
+      "type": "ControlNetApply",
+      "pos": [900, 400],
+      "size": [320, 150],
+      "inputs": [
+        ["CONDITIONING", 8, 0],
+        ["CONTROL_NET", 9, 0],
+        ["IMAGE", 10, 0]
+      ],
+      "outputs": [["CONDITIONING", 0]],
+      "widgets_values": [1.0, 0, 1]
+    },
+    {
+      "id": 8,
+      "type": "CLIPTextEncode",
+      "pos": [500, 650],
+      "size": [320, 100],
+      "inputs": [["CLIP", 11, 0]],
+      "outputs": [["CONDITIONING", 0]],
+      "widgets_values": [
+        "translucent geometric ceramic character, warm studio lighting, white background, 8k, subsurface scattering, MEOKSTYLE"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "ControlNetLoader",
+      "pos": [500, 800],
+      "size": [320, 100],
+      "inputs": [],
+      "outputs": [["CONTROL_NET", 0]],
+      "widgets_values": ["control_v11f1p_sd15_depth.pth"]
+    },
+    {
+      "id": 10,
+      "type": "DepthMapPreprocessor",
+      "pos": [100, 650],
+      "size": [320, 100],
+      "inputs": [["IMAGE", 6, 0]],
+      "outputs": [["IMAGE", 0]],
+      "widgets_values": [0.5]
+    },
+    {
+      "id": 11,
+      "type": "CheckpointLoaderSimple",
+      "pos": [100, 800],
+      "size": [320, 100],
+      "inputs": [],
+      "outputs": [["MODEL", 0], ["CLIP", 1], ["VAE", 2]],
+      "widgets_values": ["sdxl_base_1.0.safetensors"]
+    },
+    {
+      "id": 12,
+      "type": "KSampler",
+      "pos": [1300, 400],
+      "size": [320, 200],
+      "inputs": [
+        ["MODEL", 5, 0],
+        ["POSITIVE", 7, 0],
+        ["NEGATIVE", 13, 0],
+        ["LATENT_IMAGE", 14, 0]
+      ],
+      "outputs": [["LATENT", 0]],
+      "widgets_values": [
+        12345,
+        "randomize",
+        25,
+        7.0,
+        "euler_ancestral",
+        "normal",
+        1
+      ]
+    },
+    {
+      "id": 13,
+      "type": "CLIPTextEncode",
+      "pos": [900, 650],
+      "size": [320, 100],
+      "inputs": [["CLIP", 11, 0]],
+      "outputs": [["CONDITIONING", 0]],
+      "widgets_values": [
+        "blurry, low quality, distorted, text, watermark, signature, cropped, out of frame"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "EmptyLatentImage",
+      "pos": [900, 800],
+      "size": [320, 100],
+      "inputs": [],
+      "outputs": [["LATENT", 0]],
+      "widgets_values": [512, 512, 1]
+    },
+    {
+      "id": 15,
+      "type": "VAEDecode",
+      "pos": [1700, 400],
+      "size": [320, 100],
+      "inputs": [
+        ["SAMPLES", 12, 0],
+        ["VAE", 11, 2]
+      ],
+      "outputs": [["IMAGE", 0]],
+      "widgets_values": []
+    },
+    {
+      "id": 16,
+      "type": "SaveImage",
+      "pos": [2100, 400],
+      "size": [320, 100],
+      "inputs": [["IMAGE", 15, 0]],
+      "outputs": [],
+      "widgets_values": ["generated_character", "ComfyUI"]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "MODEL"],
+    [2, 2, 0, 3, 0, "IMAGES"],
+    [3, 3, 0, 4, 0, "IMAGE"],
+    [1, 1, 0, 5, 0, "MODEL"],
+    [6, 6, 0, 5, 1, "FACE_IMAGE"],
+    [5, 5, 0, 12, 0, "MODEL"],
+    [7, 7, 0, 12, 1, "POSITIVE"],
+    [13, 13, 0, 12, 2, "NEGATIVE"],
+    [14, 14, 0, 12, 3, "LATENT_IMAGE"],
+    [8, 8, 0, 7, 0, "CONDITIONING"],
+    [9, 9, 0, 7, 1, "CONTROL_NET"],
+    [10, 10, 0, 7, 2, "IMAGE"],
+    [6, 6, 0, 10, 0, "IMAGE"],
+    [11, 11, 0, 8, 0, "CLIP"],
+    [11, 11, 0, 13, 0, "CLIP"],
+    [11, 11, 2, 15, 1, "VAE"],
+    [12, 12, 0, 15, 0, "SAMPLES"],
+    [15, 15, 0, 16, 0, "IMAGE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "meok": {
+      "pipeline_version": "1.0.0",
+      "archetype_count": 7,
+      "render_views": 8,
+      "output_resolution": 512,
+      "style_preset": "MEOKSTYLE",
+      "lighting": "warm_studio"
+    }
+  }
+}

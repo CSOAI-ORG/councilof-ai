@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Press — CSOAI / MEOK</title>
+<style>
+:root{--bg:#0a0a0f;--fg:#e8e8ec;--accent:#00d4ff;--muted:#6b7280;--card:#12121a;--border:#1e1e2f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;max-width:900px;margin:0 auto;padding:2rem 1rem}
+header{text-align:center;padding:3rem 1rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+header h1{font-size:2.5rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem}
+header p{color:var(--muted);font-size:1.1rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:2rem 0}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;transition:transform .2s}
+.stat-card:hover{transform:translateY(-2px);border-color:var(--accent)}
+.stat-number{font-size:2rem;font-weight:700;color:var(--accent);display:block}
+.stat-label{font-size:0.875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.section{margin:2.5rem 0}
+.section h2{font-size:1.5rem;margin-bottom:1rem;color:var(--fg);border-left:3px solid var(--accent);padding-left:0.75rem}
+.release-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0;transition:all .2s}
+.release-card:hover{border-color:var(--accent)}
+.release-card h3{font-size:1.25rem;margin-bottom:0.5rem}
+.release-card .meta{color:var(--muted);font-size:0.875rem;margin-bottom:0.75rem}
+.release-card p{color:var(--muted);font-size:0.95rem}
+.release-card a{color:var(--accent);text-decoration:none;font-weight:500}
+.release-card a:hover{text-decoration:underline}
+.tag{display:inline-block;background:rgba(0,212,255,0.1);color:var(--accent);padding:0.25rem 0.75rem;border-radius:999px;font-size:0.75rem;font-weight:500;margin-right:0.5rem;margin-bottom:0.5rem}
+.contact{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);text-align:center;color:var(--muted)}
+.contact a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+<h1>CSOAI / MEOK Press</h1>
+<p>Building sovereign AI infrastructure. Open by default.</p>
+</header>
+
+<div class="stats">
+<div class="stat-card"><span class="stat-number">533</span><span class="stat-label">Public Repos</span></div>
+<div class="stat-card"><span class="stat-number">25</span><span class="stat-label">Private Repos</span></div>
+<div class="stat-card"><span class="stat-number">557</span><span class="stat-label">Total Repos</span></div>
+<div class="stat-card"><span class="stat-number">1,041</span><span class="stat-label">Sigils Minted</span></div>
+<div class="stat-card"><span class="stat-number">6,471</span><span class="stat-label">Attestation Certs</span></div>
+<div class="stat-card"><span class="stat-number">408</span><span class="stat-label">MCP Servers</span></div>
+</div>
+
+<div class="section">
+<h2>🚀 Latest Releases</h2>
+
+<div class="release-card">
+<h3>Sovereign Temple — Public v3</h3>
+<div class="meta">June 21, 2026 · MIT License</div>
+<p>Sanitized public release of our sovereign AI infrastructure. Sigil Bus, Ed25519 attestation, swarm coordination, A2A protocol, and 47 agent hives. <strong>No personal data.</strong> Built for the community.</p>
+<div style="margin-top:0.75rem">
+<a href="https://github.com/CSOAI-ORG/sovereign-temple" target="_blank">github.com/CSOAI-ORG/sovereign-temple</a>
+</div>
+</div>
+
+<div class="release-card">
+<h3>MEOK Attestation SDK — PyPI 3.1.0</h3>
+<div class="meta">June 20, 2026 · pip install meok-sdk</div>
+<p>Python SDK for cryptographic attestation, Ed25519 sigil verification, and multi-agent trust. Production-ready with 6,471+ certs on-chain.</p>
+<div style="margin-top:0.75rem">
+<a href="https://pypi.org/project/meok-sdk/" target="_blank">pypi.org/project/meok-sdk</a>
+</div>
+</div>
+
+<div class="release-card">
+<h3>HIVE 1 — Compliance Infrastructure</h3>
+<div class="meta">July 4, 2026 target · 51 MCP servers</div>
+<p>Full compliance attestation product for enterprise AI governance. 51 MCP servers, BFT council coordination, tri-brain architecture. Launching Independence Day.</p>
+<div style="margin-top:0.75rem">
+<a href="https://proofof.ai" target="_blank">proofof.ai</a>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>📰 Press Mentions</h2>
+<p style="color:var(--muted);padding:1rem 0">No press coverage yet. We're building in public. If you're writing about sovereign AI, multi-agent governance, or AI attestation, <a href="mailto:press@meok.ai">get in touch</a>.</p>
+</div>
+
+<div class="section">
+<h2>🔗 Links</h2>
+<div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem">
+<a href="https://github.com/CSOAI-ORG" class="tag" target="_blank">GitHub</a>
+<a href="https://proofof.ai" class="tag" target="_blank">ProofOf.AI</a>
+<a href="https://meok.ai" class="tag" target="_blank">MEOK.AI</a>
+<a href="https://csoai.org" class="tag" target="_blank">CSOAI.ORG</a>
+</div>
+</div>
+
+<div class="contact">
+<p>Press inquiries: <a href="mailto:press@meok.ai">press@meok.ai</a></p>
+<p style="margin-top:0.5rem;font-size:0.875rem">CSOAI Ltd · UK · Registered Company</p>
+</div>
+</body>
+</html>

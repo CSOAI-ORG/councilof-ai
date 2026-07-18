@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — SOV Town Simulation Engine — 47 AI Agents Wargaming</title>
+<meta name="description" content="DEFONEOS SOV Town Simulation Engine — 47 AI agents as RED TEAM, BLUE TEAM, WHITE CELL. Military wargaming on Cesium terrain. 1,000+ scenarios overnight. Auto-generate whitepapers. JSP 936 compliant. UK sovereign.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#1a0a2e);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.3);border-radius:12px;padding:1.5rem;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-2px);border-color:rgba(139,92,246,.6)}
+.card h3{color:#8b5cf6;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.btn{display:inline-block;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem .5rem 0 0;text-transform:uppercase;font-size:.85rem;text-decoration:none}
+.btn:hover{opacity:.9}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(139,92,246,.2);border-color:#8b5cf6;color:#8b5cf6;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(139,92,246,.15);color:#8b5cf6;font-size:.85rem;border-bottom:2px solid rgba(139,92,246,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem;transition:color .2s}
+.nav a:hover{color:#8b5cf6}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.status-active{color:#22c55e;font-weight:700}
+.status-pending{color:#f59e0b}
+.badge-red{background:rgba(239,68,68,.2);color:#ef4444;padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:700}
+.badge-blue{background:rgba(59,130,246,.2);color:#3b82f6;padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:700}
+.badge-white{background:rgba(168,162,158,.2);color:#a8a29e;padding:.25rem .75rem;border-radius:20px;font-size:.75rem;font-weight:700}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-sov-town.html" style="color:#8b5cf6;font-weight:700">🏘️ SOV Town</a>
+  <a href="defoneos-swarm.html">🦅 Swarm</a>
+  <a href="defoneos-cyber.html">🛡️ Cyber</a>
+  <a href="defoneos-digital-twin.html">🌐 Twin</a>
+</div>
+
+<h1>🏘️ SOV Town Simulation Engine</h1>
+<p class="tagline">47 AI agents as RED TEAM (adversary), BLUE TEAM (UK/NATO), WHITE CELL (governance). Wargame any country. Simulate any scenario. Auto-generate MOD-ready whitepapers. All Ed25519-signed. JSP 936 compliant.</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">⚔️ Wargaming</div>
+  <div class="tab" onclick="switchTab(1)">🧠 Agent Teams</div>
+  <div class="tab" onclick="switchTab(2)">📄 Whitepapers</div>
+  <div class="tab" onclick="switchTab(3)">🔐 Governance</div>
+  <div class="tab" onclick="switchTab(4)">🔧 MCP Tools</div>
+</div>
+
+<!-- TAB 0: Wargaming -->
+<div class="tab-content active">
+<h3 style="color:#8b5cf6">⚔️ Military Wargaming at Scale</h3>
+<div class="grid">
+  <div class="card"><h3>Any Country</h3><span class="stat">195</span><p>Load any nation's tech stack from OSINT. China, Russia, Iran, North Korea. Real equipment. Real doctrine. Real terrain via Cesium.</p></div>
+  <div class="card"><h3>Any Scenario</h3><span class="stat">1,000+</span><p>Vary terrain, force mix, weather (live Met Office), ROE, alliance structure. Run overnight. Wake up to results.</p></div>
+  <div class="card"><h3>Real Terrain</h3><span class="stat">Cesium</span><p>3D globe with real elevation. Yorkshire, Taiwan Strait, Baltic, South China Sea. Any location on Earth.</p></div>
+  <div class="card"><h3>Swarm Tactics</h3><span class="stat">Mava + PX4</span><p>Counter-drone swarm defense. 100+ drones. Reinforcement learning. Test EW, kinetic, cyber options.</p></div>
+</div>
+
+<table>
+<tr><th>Scenario Type</th><th>Agents</th><th>Runtime</th><th>Output</th></tr>
+<tr><td>China-Taiwan 2027 Drone Swarm Defense</td><td>47</td><td>8 hours</td><td>Whitepaper + Cesium replay</td></tr>
+<tr><td>UK Homeland Counter-Drone</td><td>33</td><td>4 hours</td><td>Gap analysis + MCP sensor map</td></tr>
+<tr><td>NATO Article 5 Baltic</td><td>47</td><td>12 hours</td><td>Force posture recommendations</td></tr>
+<tr><td>Cyber Defense Tabletop</td><td>25</td><td>2 hours</td><td>Attack graph + mitigation plan</td></tr>
+</table>
+</div>
+
+<!-- TAB 1: Agent Teams -->
+<div class="tab-content">
+<h3 style="color:#8b5cf6">🧠 47 AI Agent Teams</h3>
+<div class="grid">
+  <div class="card"><h3><span class="badge-red">RED TEAM</span> Adversary AI</h3><span class="stat">16 agents</span><p>Any country's tech stack. Palantir AIP, Anduril Lattice, Helsing Strike reverse-engineered. Generates realistic adversary behavior from OSINT doctrine.</p></div>
+  <div class="card"><h3><span class="badge-blue">BLUE TEAM</span> Friendly Forces</h3><span class="stat">19 agents</span><p>UK/NATO doctrine. DEFONEOS stack: FreeTAKServer, Mava, PX4, Cesium. Test defenses against adversary AI. Find gaps before real conflict.</p></div>
+  <div class="card"><h3><span class="badge-white">WHITE CELL</span> Governance</h3><span class="stat">12 agents</span><p>JSP 936 compliance. BFT Council votes on escalation. 30 crosswalks validated. Watchdog Certs on every run. Ed25519 chain of custody.</p></div>
+  <div class="card"><h3>🔄 Dynamic Swap</h3><span class="stat">0 bias</span><p>Agents can switch teams mid-simulation. Test "what if our AI was compromised?" Run blue-on-blue scenarios. True adversarial testing.</p></div>
+</div>
+</div>
+
+<!-- TAB 2: Whitepapers -->
+<div class="tab-content">
+<h3 style="color:#8b5cf6">📄 Auto-Generated Whitepapers</h3>
+<div class="grid">
+  <div class="card"><h3>MOD-Ready</h3><span class="stat">10 min</span><p>Auto-generated whitepapers from simulation results. Executive summary + charts + gap analysis + recommendations. Formatted for MOD submission.</p></div>
+  <div class="card"><h3>Charts & Graphs</h3><span class="stat">Auto</span><p>Force ratio charts. Loss-exchange ratios. Sensor coverage maps. Timeline visualisation. All auto-generated from simulation data.</p></div>
+  <div class="card"><h3>Sigil-Chained</h3><span class="stat">Ed25519</span><p>Every whitepaper is Ed25519-signed. Full chain of custody. Who ran it, when, on what data, with what results. Immutable audit trail.</p></div>
+  <div class="card"><h3>Competitor Analysis</h3><span class="stat">Palantir +</span><p>Red-team against Palantir AIP, Anduril Lattice, Helsing Strike. Find their weak points. Document your competitive advantage.</p></div>
+</div>
+</div>
+
+<!-- TAB 3: Governance -->
+<div class="tab-content">
+<h3 style="color:#8b5cf6">🔐 AI Governance on Every Decision</h3>
+<table>
+<tr><th>Check</th><th>Standard</th><th>Method</th></tr>
+<tr><td>Rules of Engagement</td><td>UK ROE (JSP 398)</td><td>BFT Council vote before escalation</td></tr>
+<tr><td>AI Safety</td><td>JSP 936</td><td>30 crosswalks validated per decision</td></tr>
+<tr><td>Audit Trail</td><td>Article 14 (EU AI Act)</td><td>Ed25519 Sigil chain on every run</td></tr>
+<tr><td>Adversarial Testing</td><td>OWASP ASI Top 10</td><td>PyRIT + Caldera + Garak red-team</td></tr>
+<tr><td>Supply Chain</td><td>CSOAI Watchdog Certs</td><td>Every open-source component verified</td></tr>
+<tr><td>Transparency</td><td>C2PA 2.0</td><td>Content provenance on all outputs</td></tr>
+</table>
+</div>
+
+<!-- TAB 4: MCP Tools -->
+<div class="tab-content">
+<h3 style="color:#8b5cf6">🔧 Supporting MCP Servers</h3>
+<div class="grid">
+  <div class="card"><h3>defoneos-swarm-mcp</h3><p>5 tools: init_swarm, deploy_drones, run_engagement, get_status, generate_tactics. Mava + PX4 integration. 10/10 tests.</p><a class="btn" href="https://github.com/CSOAI-ORG/defoneos-swarm-mcp">GitHub</a></div>
+  <div class="card"><h3>defoneos-cesium-mcp</h3><p>5 tools for 3D COP. Real-time entity streaming. TAK-compatible. 9/9 tests pass.</p></div>
+  <div class="card"><h3>defoneos-jsp936-mcp</h3><p>5 tools: audit_model, check_compliance, validate_supply_chain, generate_certificate, query_crosswalk. 14/14 tests.</p><a class="btn" href="https://pypi.org/project/defoneos-jsp936-mcp">PyPI</a></div>
+  <div class="card"><h3>defoneos-counterdrone-mcp</h3><p>5 tools: detect_drone, classify_threat, recommend_countermeasure, track_swarm, assess_vulnerability. 14/14 tests.</p></div>
+</div>
+</div>
+
+<div class="sigil">🐉 DEFONEOS SOV TOWN SIM ENGINE · SIGIL: 9c3b7a1f5d2e8f4b · UK SOVEREIGN · JSP 936 · OPEN SOURCE · TICK 5 · 5 JUL 2026</div>
+</div>
+
+<script>
+function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===n)});document.querySelectorAll('.tab-content').forEach((c,i)=>{c.classList.toggle('active',i===n)})}
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

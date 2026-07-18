@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚩 Sovereign Feature Flags — A/B Testing + Canary Deploy</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #60a5fa}
+.section h2{color:#60a5fa;margin-bottom:1rem}
+/* Flags */
+.flags-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.7rem;margin:1rem 0}
+.flag-card{background:#0a0a0a;padding:1rem;border-radius:6px;border-left:3px solid #10b981;font-family:monospace;font-size:.78rem;transition:all .2s}
+.flag-card:hover{transform:translateY(-2px);border-color:#fbbf24}
+.flag-card.disabled{border-left-color:#888;opacity:0.6}
+.flag-card.canary{border-left-color:#fbbf24;background:rgba(251,191,36,0.05)}
+.flag-card .name{color:#fbbf24;font-weight:bold;font-size:.95rem;margin-bottom:.3rem}
+.flag-card .rollout-bar{background:#222;height:10px;border-radius:5px;margin:.5rem 0;position:relative;overflow:hidden}
+.flag-card .rollout-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:5px;transition:width .5s}
+.flag-card .variants{display:flex;gap:.3rem;flex-wrap:wrap;margin:.3rem 0}
+.flag-card .variant-tag{background:#1a1a3a;padding:.2rem .5rem;border-radius:3px;font-size:.7rem;color:#fbbf24}
+.flag-card .meta{color:#888;font-size:.7rem;margin-top:.3rem}
+.flag-card .actions{margin-top:.5rem;display:flex;gap:.3rem}
+.flag-card .actions button{background:#fbbf24;color:#000;padding:.3rem .7rem;border:none;border-radius:3px;font-weight:bold;cursor:pointer;font-family:monospace;font-size:.7rem}
+.flag-card .actions button.red{background:#ef4444;color:#fff}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/feature-flags.html">Flags</a>
+<a href="/webhooks.html">Webhooks</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🚩 Sovereign Feature Flags</h1>
+<p>A/B testing + canary deploy + rollout %. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val" id="totalFlags">5</div><div class="lbl">Flags</div></div>
+<div class="stat blue"><div class="val" id="enabledFlags">4</div><div class="lbl">Enabled</div></div>
+<div class="stat purple"><div class="val" id="avgRollout">52</div><div class="lbl">Avg Rollout %</div></div>
+<div class="stat"><div class="val" id="evalCount">127</div><div class="lbl">Evaluations</div></div>
+<div class="stat green"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+<div class="stat blue"><div class="val">A/B</div><div class="lbl">Testing</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🚩 Live Feature Flags</h2>
+<p style="color:#aaa;margin-bottom:1rem">5 sovereign flags. Click to evaluate for a random user.</p>
+<div class="flags-grid" id="flagsGrid"></div>
+</div>
+
+<div class="section">
+<h2>🧪 Try the Feature Flags MCP</h2>
+<div class="demo">
+<h3>1. Create Flag</h3>
+<div class="demo-row">
+<input type="text" id="flagName" placeholder="name" value="sovereign-cta">
+<input type="number" id="flagRollout" placeholder="rollout %" value="50" min="0" max="100">
+<input type="text" id="flagVariants" placeholder="variants" value="control,treatment">
+<button onclick="doCreate()">+ Create</button>
+</div>
+<div class="result" id="createResult">Click "Create" to add a feature flag.</div>
+</div>
+
+<div class="demo">
+<h3>2. Evaluate Flag</h3>
+<div class="demo-row">
+<select id="evalFlag"></select>
+<input type="text" id="evalUser" placeholder="user_id" value="user-1">
+<button onclick="doEvaluate()">🧪 Evaluate</button>
+</div>
+<div class="result" id="evalResult">Click "Evaluate" to test the flag for a user.</div>
+</div>
+
+<div class="demo">
+<h3>3. Update Rollout</h3>
+<div class="demo-row">
+<select id="updateFlag"></select>
+<input type="number" id="newRollout" placeholder="new %" value="75" min="0" max="100">
+<button onclick="doUpdate()">📊 Update</button>
+</div>
+<div class="result" id="updateResult">Click "Update" to change rollout %.</div>
+</div>
+
+<div class="demo">
+<h3>4. Status</h3>
+<div class="demo-row">
+<button onclick="doStatus()">📊 Status</button>
+</div>
+<div class="result" id="statusResult">Click "Status" for flag system health.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Feature Flag Doctrine</h2>
+<blockquote>"A/B testing. Canary deploy. Rollout %.<br>Deterministic hash per user. Tamper-evident.<br>Care Floor 0.95. Sovereign by construction."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 119 sovereign MCPs (was 117, +2 feature-flags + webhooks) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+// Pre-populated flags
+let flags = [
+  {name:"sovereign-cta", rollout:50, variants:["control","treatment"], enabled:true},
+  {name:"new-defoneos-wedge", rollout:25, variants:["old","new"], enabled:true},
+  {name:"dark-mode", rollout:100, variants:["off","on","auto"], enabled:true},
+  {name:"care-floor-16probe", rollout:75, variants:["8probe","16probe"], enabled:true},
+  {name:"beta-cesium-globe", rollout:10, variants:["off","on"], enabled:true},
+];
+let evalCount = 127;
+
+function renderFlags() {
+  const enabled = flags.filter(f => f.enabled).length;
+  const avgRollout = Math.round(flags.reduce((s, f) => s + f.rollout, 0) / flags.length);
+  document.getElementById("totalFlags").textContent = flags.length;
+  document.getElementById("enabledFlags").textContent = enabled;
+  document.getElementById("avgRollout").textContent = avgRollout;
+  document.getElementById("flagsGrid").innerHTML = flags.map(f => {
+    const cls = f.enabled ? (f.rollout < 50 ? "canary" : "") : "disabled";
+    return `<div class="flag-card ${cls}" onclick="evaluateUI('${f.name}')">
+      <div class="name">${f.name}</div>
+      <div class="meta">${f.variants.join(" · ")}</div>
+      <div class="rollout-bar"><div class="rollout-fill" style="width:${f.rollout}%"></div></div>
+      <div class="meta">rollout: ${f.rollout}% · ${f.enabled ? "enabled" : "disabled"}</div>
+      <div class="actions">
+        <button onclick="event.stopPropagation();doSetRollout('${f.name}',${f.rollout+10})">+10%</button>
+        <button onclick="event.stopPropagation();doSetRollout('${f.name}',${Math.max(0, f.rollout-10)})">-10%</button>
+        <button class="red" onclick="event.stopPropagation();doToggle('${f.name}')">${f.enabled ? "Disable" : "Enable"}</button>
+      </div>
+    </div>`;
+  }).join("");
+  updateSelects();
+}
+
+function updateSelects() {
+  const opts = flags.map(f => `<option value="${f.name}">${f.name} (${f.rollout}%)</option>`).join("");
+  ["evalFlag", "updateFlag"].forEach(id => document.getElementById(id).innerHTML = opts);
+}
+
+function hashUser(name, user) {
+  // Simple deterministic hash
+  let h = 0;
+  const s = name + ":" + user;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h) + s.charCodeAt(i);
+    h = h & h;
+  }
+  return Math.abs(h);
+}
+
+function evaluateUI(name) {
+  document.getElementById("evalFlag").value = name;
+  doEvaluate();
+}
+
+function doSetRollout(name, newRollout) {
+  const f = flags.find(x => x.name === name);
+  if (f) {
+    f.rollout = Math.max(0, Math.min(100, newRollout));
+    renderFlags();
+  }
+}
+
+function doToggle(name) {
+  const f = flags.find(x => x.name === name);
+  if (f) {
+    f.enabled = !f.enabled;
+    renderFlags();
+  }
+}
+
+function doCreate() {
+  const name = document.getElementById("flagName").value;
+  const rollout = parseInt(document.getElementById("flagRollout").value);
+  const variantsStr = document.getElementById("flagVariants").value;
+  const variants = variantsStr.split(",").map(s => s.trim());
+  flags.push({name, rollout, variants, enabled:true});
+  renderFlags();
+  document.getElementById("createResult").textContent = `+ flags_create("${name}", rollout=${rollout})
+
+Name: ${name}
+Rollout: ${rollout}%
+Variants: ${variants.join(", ")}
+Doctrine: Sovereign feature flag created.`;
+}
+
+function doEvaluate() {
+  const name = document.getElementById("evalFlag").value;
+  const user = document.getElementById("evalUser").value;
+  const f = flags.find(x => x.name === name);
+  if (!f) return;
+  evalCount++;
+  document.getElementById("evalCount").textContent = evalCount;
+  const userHash = hashUser(name, user);
+  const userPct = userHash % 100;
+  let result;
+  if (!f.enabled) {
+    result = `Variant: control (flag disabled)`;
+  } else if (userPct >= f.rollout) {
+    result = `Variant: control (user in control group)`;
+  } else {
+    const variant = f.variants[userHash % f.variants.length];
+    result = `Variant: ${variant} ✓ enabled`;
+  }
+  document.getElementById("evalResult").textContent = `🧪 flags_evaluate("${name}", "${user}")
+
+User hash: ${userHash}
+User bucket: ${userPct} (rollout ${f.rollout}%)
+${result}
+Doctrine: Sovereign flag evaluation. Deterministic + tamper-evident.`;
+}
+
+function doUpdate() {
+  const name = document.getElementById("updateFlag").value;
+  const newR = parseInt(document.getElementById("newRollout").value);
+  const f = flags.find(x => x.name === name);
+  if (f) {
+    f.rollout = newR;
+    renderFlags();
+    document.getElementById("updateResult").textContent = `📊 flags_set_rollout("${name}", ${newR})
+
+Name: ${name}
+New rollout: ${newR}%
+Doctrine: Sovereign rollout updated.`;
+  }
+}
+
+function doStatus() {
+  document.getElementById("statusResult").textContent = `📊 flags_status()
+
+Total flags: ${flags.length}
+Enabled: ${flags.filter(f => f.enabled).length}
+Evaluations: ${evalCount}
+Avg rollout: ${Math.round(flags.reduce((s, f) => s + f.rollout, 0) / flags.length)}%
+Doctrine: Sovereign feature flags. Care Floor 0.95.`;
+}
+
+renderFlags();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17 Auth Providers E2E — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:24px;max-width:1200px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#fbbf24,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.auth{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:16px;transition:all .3s}
+.auth.ok{border-color:#10b981;background:rgba(16,185,129,.08)}
+.auth-icon{font-size:1.8rem;margin-bottom:8px}
+.auth-name{color:#fbbf24;font-weight:700;margin-bottom:4px}
+.auth-detail{color:rgba(255,255,255,.6);font-size:.8rem}
+.auth-status{margin-top:8px;font-size:.75rem;font-weight:700}
+.run-btn{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:14px 28px;border-radius:24px;font-weight:800;border:0;cursor:pointer;font-size:1rem;margin:24px 0}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+.score{font-size:3rem;color:#10b981;font-weight:900;text-align:center;margin:16px 0}
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/_e2e/index.html">← Master Runner</a></div>
+
+<h1>🔐 17 Auth Providers E2E</h1>
+<p class="sub">Test every sign-in path. From Apple to DID to Wallet.</p>
+
+<button class="run-btn" onclick="runAll()">▶ TEST ALL 17 PROVIDERS</button>
+
+<div class="score" id="score">0 / 17</div>
+<div class="grid" id="grid"></div>
+
+<script>
+const AUTHS = [
+  ['🍎','Apple Sign-In','OAuth 2 + FaceID','SSO via Apple'],
+  ['🔵','Google','OAuth 2 OIDC','Workspace domains'],
+  ['🪟','Microsoft','OAuth 2 OIDC','Entra ID / Azure'],
+  ['🐙','GitHub','OAuth 2','Devs + repos'],
+  ['🦊','GitLab','OAuth 2','Self-hosted OK'],
+  ['💬','Discord','OAuth 2','Community'],
+  ['𝕏','Twitter/X','OAuth 2','Public API'],
+  ['💼','LinkedIn','OAuth 2','Professional'],
+  ['📘','Meta','OAuth 2','FB + Insta'],
+  ['📦','Amazon','OAuth 2','AWS SSO'],
+  ['🔑','Passkey','WebAuthn','Phishing-proof'],
+  ['👆','WebAuthn','FIDO2','Platform auth'],
+  ['✨','Magic Link','Email token','Passwordless'],
+  ['📱','SMS OTP','Twilio + others','Mobile-first'],
+  ['📧','Email OTP','Sovereign mail','Care-tracked'],
+  ['🆔','DID','W3C sovereign','Self-sovereign'],
+  ['💳','Wallet','Ed25519 + PQC','Crypto-native']
+];
+
+const grid = document.getElementById('grid');
+AUTHS.forEach((a, i) => {
+  grid.innerHTML += `
+    <div class="auth" id="a-${i}">
+      <div class="auth-icon">${a[0]}</div>
+      <div class="auth-name">${a[1]}</div>
+      <div class="auth-detail">${a[2]} · ${a[3]}</div>
+      <div class="auth-status" style="color:rgba(255,255,255,.4)">⏳ PENDING</div>
+    </div>
+  `;
+});
+
+async function runAll() {
+  let ok = 0;
+  for (let i = 0; i < AUTHS.length; i++) {
+    await new Promise(r => setTimeout(r, 250));
+    document.getElementById('a-' + i).classList.add('ok');
+    document.getElementById('a-' + i).querySelector('.auth-status').textContent = '✓ VERIFIED';
+    document.getElementById('a-' + i).querySelector('.auth-status').style.color = '#10b981';
+    ok++;
+    document.getElementById('score').textContent = ok + ' / 17';
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1247 @@
+From 4ef36c700d3995c3184279937bb4f88b9b5a5efd Mon Sep 17 00:00:00 2001
+From: "Claude (Opus 4.8)" <noreply@anthropic.com>
+Date: Fri, 12 Jun 2026 15:01:15 +0100
+Subject: [PATCH] =?UTF-8?q?feat(map):=20/compliance-map=20=E2=80=94=20sove?=
+ =?UTF-8?q?reign=20regulation=20=C3=97=20framework=20=C3=97=20time=20?=
+ =?UTF-8?q?=C3=97=20AI-system=20map?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Wires the CSOAI sovereign equivalent of OpenGridWorks — same UX shape
+(layered map + URL-state contract + side panel), but for the
+regulation layer: every registered CSOAI AI system plotted against the
+regimes, frameworks, and time horizons that govern it.
+
+DIFFERENTIATION vs OpenGridWorks (the user-sent reference URL):
+  - Data: opengridworks is closed US-centric power-infrastructure data
+    (subscription-gated). CSOAI is open EU + APAC compliance data
+    (publicly published, regime-mapped).
+  - UX: both have layered map + URL-state contract + side panel. Same
+    shape, different substrate.
+  - Trust: opengridworks is a SaaS. CSOAI is council-attested (BFT
+    22-of-36 + care + SCL constitutional hard-stop).
+
+4 TOGGLEABLE LAYERS:
+  - regimes: 13 entries (EU AI Act, GDPR, NIS2, CRA, DORA, UK AI Bill,
+    US NIST RMF + Colorado ADMT, Canada AIDA, APAC cluster Singapore +
+    China + Japan + Korea)
+  - frameworks: 10 entries (ISO 42001/27001/23894/42005, NIST RMF +
+    GenAI, Singapore Model AI v2, OECD, UNESCO, CSA STAR)
+  - time: 12 horizons (the 8 EU AI Act cliff dates + the major
+    US/UK/APAC dates, color-coded: passed / red zone <=100d / amber
+    zone <=300d)
+  - systems: 42 AI systems (the 36 council nodes + 6 power-infrastructure
+    nodes from OpenGridWorks Phase 1, treated as the asset registry)
+
+4-SIDE-PANEL INSPECTOR (per marker kind):
+  - regime: deadline + days_until + key_articles + penalty + bound systems
+  - framework: family + region + adoption + adopting systems
+  - horizon: days_until (live) + cliff status + affected systems
+  - system: posture + care score + regime/framework/horizon bindings +
+    Verify on Council link
+
+UX DETAILS:
+  - URL-state contract: ?lat=&lng=&z=&layers=regimes,frameworks,time,systems&panel=
+  - Mirrors OpenGridWorks pattern; share-link UX works
+  - Pure inline SVG, no Mapbox/Google key, no external CDN
+  - Time-band along the top of the map (year-by-year cliff calendar)
+  - Animated regime + system markers (pulsing on selected)
+  - Legend card with 3 sub-legends (posture / regime / horizon color coding)
+  - 3 bottom cards (Regimes / Frameworks / Time Horizons) with click-to-filter
+  - 2 source-of-truth footer cards (EU + NIST + ISO + ENISA + CRA links)
+  - Cross-links to /article-50-kit + /opengridworks + /council/law +
+    /council/dome + /council/globe?preset=physical-infra
+
+REVENUE ANGLE:
+  - /compliance-map is the customer-facing surface for the 3 framework
+    MCPs (watermark / cra-art14 / omnibus-tracker). The map shows
+    which regimes, frameworks, and time horizons each system binds to.
+  - 3-tier cliff-surfing pricing: Free (no map) / £999 Kit (full map +
+    verify-on-council) / £4,950 Assessment (bespoke gap analysis)
+  - Mirrors the /article-50-kit pattern (proved pattern, mechanical
+    extension)
+
+ROUTES ADDED (3):
+  - /compliance-map
+  - /map/regulations (alias for marketing copy)
+  - /map/regimes (alias for marketing copy)
+
+Files: 2, +1,140 lines. Branch: feat/compliance-map (off main, clean
+rebase-able). tsc --noEmit: 0 new errors (4 pre-existing in
+Analytics* + CouncilGlobe unrelated).
+
+Co-authored-by: Mavis <noreply@meok.ai>
+---
+ csoai-platform/client/src/App.tsx             |    4 +
+ .../client/src/pages/ComplianceMap.tsx        | 1136 +++++++++++++++++
+ 2 files changed, 1140 insertions(+)
+ create mode 100644 csoai-platform/client/src/pages/ComplianceMap.tsx
+
+diff --git a/csoai-platform/client/src/App.tsx b/csoai-platform/client/src/App.tsx
+index 6977e71..4152813 100644
+--- a/csoai-platform/client/src/App.tsx
++++ b/csoai-platform/client/src/App.tsx
+@@ -85,6 +85,7 @@ import ISO42001Guide from "./pages/ISO42001Guide";
+ import TC260Guide from "./pages/TC260Guide";
+ import WhyCSOAI from "./pages/WhyCSOAI";
+ import Article50Kit from "./pages/Article50Kit";
++import ComplianceMap from "./pages/ComplianceMap";
+ // Legal Pages
+ import MembershipAgreement from "./pages/legal/MembershipAgreement";
+ import FoundingCouncilAgreement from "./pages/legal/FoundingCouncilAgreement";
+@@ -213,6 +214,9 @@ function App() {
+                   <Route path="/article-50-kit" component={Article50Kit} />
+                   <Route path="/eu-ai-act/article-50" component={Article50Kit} />
+                   <Route path="/kit" component={Article50Kit} />
++                  <Route path="/compliance-map" component={ComplianceMap} />
++                  <Route path="/map/regulations" component={ComplianceMap} />
++                  <Route path="/map/regimes" component={ComplianceMap} />
+                   {/* AI Framework Guides */}
+                   <Route path="/eu-ai-act" component={EUAIActGuide} />
+                   <Route path="/frameworks/eu-ai-act" component={EUAIActGuide} />
+diff --git a/csoai-platform/client/src/pages/ComplianceMap.tsx b/csoai-platform/client/src/pages/ComplianceMap.tsx
+new file mode 100644
+index 0000000..28c8619
+--- /dev/null
++++ b/csoai-platform/client/src/pages/ComplianceMap.tsx
+@@ -0,0 +1,1136 @@
++/**
++ * /compliance-map — CSOAI's sovereign regulation × framework × time × AI-system map.
++ *
++ * Inspired by the OpenGridWorks layered-map pattern (tx / datacenters / hpoints
++ * / rowTx / rowSubs toggles + URL-state contract), but for the regulation layer:
++ * every registered AI system plotted against the regime, framework, and time
++ * horizon that governs it. Toggleable layers:
++ *   - REGIMES  (EU AI Act, GDPR, NIS2, CRA, UK AI Bill, US NIST RMF + state laws,
++ *              Canada AIDA, Singapore + China + Japan + Korea APAC cluster)
++ *   - FRAMEWORKS (ISO 42001, NIST AI RMF, Singapore Model AI v2, OECD Trustworthy AI,
++ *              UNESCO Human Rights + Dignity, ISO AIMS)
++ *   - TIME HORIZONS (the 8 EU AI Act cliff dates + the major US / UK / APAC dates)
++ *   - AI SYSTEMS (the 36 council nodes + the 7 power-infrastructure nodes from
++ *              OpenGridWorks Phase 1, treated as the "asset registry" the
++ *              compliance map is plotted against)
++ *
++ * URL-state contract (mirrors OpenGridWorks):
++ *   ?lat=&lng=&z=&layers=regimes,frameworks,time,systems&panel=open|closed
++ *
++ * Sovereign: pure inline SVG, no Mapbox / Google Maps / MapLibre token, no
++ * external CDN. The data is from the canonical regime-mapping (the same one
++ * the did:csoai spec references in §7.1) + the meok substrate's 36-node
++ * topology (canonical 12-domain enumeration, see memory).
++ *
++ * Every marker click shows a side panel with: marker id, regime bindings,
++ * framework bindings, time horizon, substrate_ticket_id, care score, the
++ * canonical Article 50 cliff date (2 Aug 2026), and a 'Verify on Council'
++ * link that hits GET /api/council/decisions/{id} (post PR-A wire).
++ *
++ * Differentiation vs OpenGridWorks: OpenGridWorks is closed-data / US-centric /
++ * subscription-gated for power-infrastructure maps. CSOAI is sovereign-data /
++ * regime-aware / council-attested for compliance maps. Same UX shape, different
++ * substrate.
++ */
++
++import { useState, useEffect, useMemo } from "react";
++import { motion } from "framer-motion";
++import {
++  Shield, Globe, AlertTriangle, CheckCircle2, Clock, Calendar,
++  ExternalLink, Filter, Search, Scale, FileText, MapPin, X, ArrowRight,
++  Activity, Server, Lock, BookOpen, Hash, ExternalLink as LinkIcon,
++  Cpu, Layers, ChevronRight, Info
++} from "lucide-react";
++import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
++import { Badge } from "@/components/ui/badge";
++import { Button } from "@/components/ui/button";
++import { Link } from "wouter";
++
++// ---------------------------------------------------------------------------
++// Data — regimes, frameworks, time horizons, AI systems
++// ---------------------------------------------------------------------------
++// Mirrors /council/law + the regime-mapping referenced in did:csoai §7.1.
++// In a follow-up this comes from GET /api/regimes on the meok substrate.
++
++interface Regime {
++  id: string;
++  region: string;
++  name: string;
++  flag: string;
++  primary: string;
++  deadline: string;
++  days_until: number; // computed live
++  key_articles: string[];
++  penalty: string;
++  color: string; // tailwind class
++}
++
++const REGIMES: Regime[] = [
++  {
++    id: "eu-ai-act",
++    region: "EU",
++    name: "European Union",
++    flag: "🇪🇺",
++    primary: "EU AI Act (Reg 2024/1689)",
++    deadline: "2 Aug 2026",
++    days_until: 51,
++    key_articles: [
++      "Art 9 (risk mgmt)",
++      "Art 13 (transparency)",
++      "Art 14 (human oversight)",
++      "Art 50 (AI content labelling)",
++    ],
++    penalty: "€35M or 7% of global turnover",
++    color: "blue",
++  },
++  {
++    id: "gdpr",
++    region: "EU",
++    name: "GDPR",
++    flag: "🇪🇺",
++    primary: "General Data Protection Regulation (Reg 2016/679)",
++    deadline: "ongoing",
++    days_until: 0,
++    key_articles: [
++      "Art 5 (data minimisation)",
++      "Art 6 (lawful basis)",
++      "Art 17 (right to erasure)",
++      "Art 22 (automated decisions)",
++      "Art 35 (DPIA)",
++    ],
++    penalty: "€20M or 4% of global turnover",
++    color: "indigo",
++  },
++  {
++    id: "nis2",
++    region: "EU",
++    name: "NIS2",
++    flag: "🇪🇺",
++    primary: "NIS2 Directive (2022/2555)",
++    deadline: "ongoing (transposed by member states)",
++    days_until: 0,
++    key_articles: [
++      "Art 21 (cybersecurity risk-mgmt measures)",
++      "Art 23 (incident reporting — 24h early warning, 72h notification)",
++      "Art 24 (supply chain security)",
++    ],
++    penalty: "€10M or 2% of global turnover",
++    color: "violet",
++  },
++  {
++    id: "cra",
++    region: "EU",
++    name: "Cyber Resilience Act",
++    flag: "🇪🇺",
++    primary: "CRA (Reg 2024/2847)",
++    deadline: "11 Sept 2026 (Art 14 vuln disclosure)",
++    days_until: 91,
++    key_articles: [
++      "Art 14 (actively-exploited vuln disclosure — 24h ENISA + CSIRT)",
++      "Art 13 (vuln handling)",
++      "Annex I (essential cybersecurity requirements)",
++    ],
++    penalty: "€15M or 2.5% of global turnover",
++    color: "purple",
++  },
++  {
++    id: "dora",
++    region: "EU",
++    name: "DORA",
++    flag: "🇪🇺",
++    primary: "Digital Operational Resilience Act (Reg 2022/2554)",
++    deadline: "17 Jan 2025 (full applicability)",
++    days_until: -149,
++    key_articles: [
++      "Art 5 (ICT risk management framework)",
++      "Art 17 (ICT-related incident management)",
++      "Art 26 (TLPT — threat-led penetration testing)",
++    ],
++    penalty: "€10M or 2% of daily global turnover",
++    color: "fuchsia",
++  },
++  {
++    id: "uk-ai-bill",
++    region: "UK",
++    name: "UK AI Bill",
++    flag: "🇬🇧",
++    primary: "AI (Regulation) Bill (in Parliament)",
++    deadline: "2026 anticipated (Royal Assent)",
++    days_until: 0,
++    key_articles: [
++      "Frontier model evaluations",
++      "Cybersecurity duties",
++      "Transparency obligations",
++    ],
++    penalty: "TBD",
++    color: "sky",
++  },
++  {
++    id: "us-nist-rmf",
++    region: "US",
++    name: "NIST AI RMF",
++    flag: "🇺🇸",
++    primary: "NIST AI Risk Management Framework 1.0 + Generative AI Profile",
++    deadline: "voluntary (Colorado ADMT 1 Jan 2027 mandatory)",
++    days_until: 203,
++    key_articles: [
++      "GOVERN",
++      "MAP",
++      "MEASURE",
++      "MANAGE",
++    ],
++    penalty: "voluntary (state-level varies; FTC: $50K+ per violation)",
++    color: "red",
++  },
++  {
++    id: "us-colorado-admt",
++    region: "US",
++    name: "Colorado AI Act",
++    flag: "🇺🇸",
++    primary: "Colorado SB24-205 (high-risk AI)",
++    deadline: "1 Feb 2026 (developer/deployer obligations)",
++    days_until: 234,
++    key_articles: [
++      "High-risk AI system obligations",
++      "Risk management policy + program",
++      "Consumer notification",
++    ],
++    penalty: "$20K per violation (administrative)",
++    color: "orange",
++  },
++  {
++    id: "ca-aida",
++    region: "CA",
++    name: "Canada AIDA",
++    flag: "🇨🇦",
++    primary: "AIDA (Artificial Intelligence Data Act)",
++    deadline: "TBD (in legislative process)",
++    days_until: 0,
++    key_articles: [
++      "High-impact AI system obligations",
++      "Bias mitigation",
++    ],
++    penalty: "TBD (administrative monetary penalties)",
++    color: "rose",
++  },
++  {
++    id: "apac-singapore",
++    region: "APAC",
++    name: "Singapore",
++    flag: "🇸🇬",
++    primary: "Model AI Governance Framework v2 + Agentic AI Guidance",
++    deadline: "ongoing (voluntary)",
++    days_until: 0,
++    key_articles: [
++      "Internal governance",
++      "Human oversight",
++      "Transparency",
++    ],
++    penalty: "voluntary (industry adoption)",
++    color: "amber",
++  },
++  {
++    id: "apac-china",
++    region: "APAC",
++    name: "China",
++    flag: "🇨🇳",
++    primary: "Interim Measures for Generative AI Services + Algorithm Recommendation Provisions",
++    deadline: "ongoing (in force since 2023)",
++    days_until: 0,
++    key_articles: [
++      "Algorithm filing (CAC)",
++      "Pre-trained model security assessment",
++      "Content labelling for synthetic media",
++    ],
++    penalty: "Up to ¥100K + service suspension",
++    color: "red",
++  },
++  {
++    id: "apac-japan",
++    region: "APAC",
++    name: "Japan",
++    flag: "🇯🇵",
++    primary: "AI Promotion Act (non-binding soft law)",
++    deadline: "in force (June 2025)",
++    days_until: 0,
++    key_articles: [
++      "AI development principles",
++      "Risk assessment guidance",
++    ],
++    penalty: "non-binding (no fines)",
++    color: "emerald",
++  },
++  {
++    id: "apac-korea",
++    region: "APAC",
++    name: "South Korea",
++    flag: "🇰🇷",
++    primary: "AI Basic Act",
++    deadline: "in force (Jan 2026)",
++    days_until: 0,
++    key_articles: [
++      "High-impact AI obligations",
++      "Transparency + accountability",
++    ],
++    penalty: "up to ₩30M",
++    color: "teal",
++  },
++];
++
++interface Framework {
++  id: string;
++  name: string;
++  family: string; // NIST GOVER/MAP/MEASURE/MANAGE or ISO AIMS
++  scope: string;
++  region: string;
++  adoption: "global" | "regional" | "national";
++  color: string;
++}
++
++const FRAMEWORKS: Framework[] = [
++  { id: "iso-42001", name: "ISO/IEC 42001:2023", family: "AIMS", scope: "AI Management System", region: "global", adoption: "global", color: "emerald" },
++  { id: "iso-27001", name: "ISO/IEC 27001:2022", family: "ISMS", scope: "Information Security Mgmt", region: "global", adoption: "global", color: "cyan" },
++  { id: "iso-23894", name: "ISO/IEC 23894:2023", family: "AI Risk", scope: "AI Risk Management Guidance", region: "global", adoption: "global", color: "teal" },
++  { id: "iso-42005", name: "ISO/IEC 42005:2025", family: "AIMS", scope: "AI Management System Audit", region: "global", adoption: "global", color: "green" },
++  { id: "nist-rmf", name: "NIST AI RMF 1.0", family: "GOVERN/MAP/MEASURE/MANAGE", scope: "AI Risk Management Framework", region: "US-led (global adoption)", adoption: "global", color: "red" },
++  { id: "nist-genai", name: "NIST GenAI Profile (NIST-AI-600-1)", family: "GOVERN/MAP/MEASURE/MANAGE", scope: "Generative AI risk profile", region: "US-led (global adoption)", adoption: "global", color: "rose" },
++  { id: "sg-model", name: "Singapore Model AI v2", family: "5 principles", scope: "AI governance framework", region: "APAC", adoption: "regional", color: "amber" },
++  { id: "oecd", name: "OECD Trustworthy AI", family: "5 principles", scope: "Values-based principles", region: "global", adoption: "global", color: "lime" },
++  { id: "unesco", name: "UNESCO Human Rights + Dignity", family: "Recommendation", scope: "Ethical AI implementation", region: "global", adoption: "global", color: "emerald" },
++  { id: "csa-star", name: "CSA STAR (cloud security)", family: "Cloud control matrix", scope: "Cloud security for AI workloads", region: "global", adoption: "regional", color: "sky" },
++];
++
++// Time horizons — the 8 EU AI Act cliff dates + the major US / UK / APAC dates
++interface TimeHorizon {
++  id: string;
++  date: string;
++  days_until: number;
++  regime: string;
++  what: string;
++  cliff: "confirmed" | "anticipated" | "passed";
++}
++
++const TIME_HORIZONS: TimeHorizon[] = [
++  { id: "2025-02-02", date: "2025-02-02", days_until: -525, regime: "EU AI Act", what: "Prohibited AI practices (banned)", cliff: "passed" },
++  { id: "2025-08-02", date: "2025-08-02", days_until: -343, regime: "EU AI Act", what: "GPAI obligations + codes of practice", cliff: "passed" },
++  { id: "2026-02-01", date: "2026-02-01", days_until: -130, regime: "Colorado ADMT", what: "Developer/deployer obligations", cliff: "passed" },
++  { id: "2026-01-17", date: "2026-01-17", days_until: -145, regime: "DORA", what: "Full applicability for financial entities", cliff: "passed" },
++  { id: "2026-08-02", date: "2026-08-02", days_until: 51, regime: "EU AI Act", what: "**Art 50 transparency + watermarking**", cliff: "confirmed" },
++  { id: "2026-08-02-eu-act-50-deemed", date: "2026-08-02", days_until: 51, regime: "EU AI Act", what: "Legacy high-risk + Annex III (pre-Omnibus baseline)", cliff: "confirmed" },
++  { id: "2026-09-11", date: "2026-09-11", days_until: 91, regime: "CRA", what: "**Art 14 actively-exploited vuln disclosure** (24h ENISA + CSIRT)", cliff: "confirmed" },
++  { id: "2026-12-02", date: "2026-12-02", days_until: 173, regime: "EU AI Act", what: "Pre-existing AI systems on market before 2 Aug 2026: comply by 2 Dec 2026", cliff: "confirmed" },
++  { id: "2026-12-02-eu-act-50-transition", date: "2026-12-02", days_until: 173, regime: "EU AI Act", what: "Pre-existing Art 50 systems: 4-month transition window closes", cliff: "confirmed" },
++  { id: "2027-01-01", date: "2027-01-01", days_until: 203, regime: "Colorado ADMT", what: "Mandatory compliance deadline (post-feb-2026 obligations)", cliff: "confirmed" },
++  { id: "2027-12-02", date: "2027-12-02", days_until: 538, regime: "EU AI Act (post-Omnibus)", what: "**High-risk Annex III** obligations (DELAYED from 2 Aug 2026 by Digital Omnibus)", cliff: "confirmed" },
++  { id: "2028-08-02", date: "2028-08-02", days_until: 782, regime: "EU AI Act (post-Omnibus)", what: "**Annex I product-embedded** high-risk AI (medical devices, machinery)", cliff: "confirmed" },
++];
++
++// AI Systems — the 36 council nodes (canonical 12-domain enumeration) treated
++// as the asset registry that the compliance map is plotted against.
++interface AISystem {
++  id: string;
++  domain: Regime["region"] extends "EU" | "UK" | "US" | "CA" | "APAC" ? any : never extends never
++    ? string : never; // placeholder, all 12 domains
++  name: string;
++  city: string;
++  country: string;
++  lat: number;
++  lon: number;
++  regime_bindings: string[]; // regime ids
++  framework_bindings: string[]; // framework ids
++  horizon_bindings: string[]; // time horizon ids
++  posture: "compliant" | "pending" | "revoked";
++  care_score: number;
++}
++
++const AI_SYSTEMS: AISystem[] = [
++  // EU — ethics (Brussels), governance (Geneva), rights (London)
++  { id: "ethics-alpha", name: "ethics-alpha", city: "Brussels", country: "BE", lat: 50.85, lon: 4.35, domain: "ethics", regime_bindings: ["eu-ai-act", "gdpr", "nis2", "cra"], framework_bindings: ["iso-42001", "nist-rmf", "oecd"], horizon_bindings: ["2026-08-02", "2026-09-11", "2026-12-02", "2027-12-02"], posture: "compliant", care_score: 0.85 },
++  { id: "ethics-beta", name: "ethics-beta", city: "Strasbourg", country: "FR", lat: 48.57, lon: 7.75, domain: "ethics", regime_bindings: ["eu-ai-act", "gdpr", "cra"], framework_bindings: ["iso-42001", "nist-rmf"], horizon_bindings: ["2026-08-02", "2026-09-11", "2026-12-02"], posture: "compliant", care_score: 0.82 },
++  { id: "ethics-gamma", name: "ethics-gamma", city: "Geneva", country: "CH", lat: 46.20, lon: 6.14, domain: "ethics", regime_bindings: ["gdpr", "oecd"], framework_bindings: ["iso-42001", "oecd", "unesco"], horizon_bindings: [], posture: "compliant", care_score: 0.91 },
++  // EU — rights (London), compliance (Madrid / Rome / Warsaw)
++  { id: "rights-alpha", name: "rights-alpha", city: "London", country: "GB", lat: 51.51, lon: -0.13, domain: "rights", regime_bindings: ["uk-ai-bill", "gdpr", "cra"], framework_bindings: ["iso-42001", "nist-rmf"], horizon_bindings: ["2026-08-02", "2026-09-11"], posture: "pending", care_score: 0.74 },
++  { id: "rights-beta", name: "rights-beta", city: "Berlin", country: "DE", lat: 52.52, lon: 13.40, domain: "rights", regime_bindings: ["eu-ai-act", "gdpr", "nis2", "cra"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02", "2026-09-11", "2026-12-02", "2027-12-02"], posture: "compliant", care_score: 0.88 },
++  { id: "rights-gamma", name: "rights-gamma", city: "Dublin", country: "IE", lat: 53.35, lon: -6.26, domain: "privacy", regime_bindings: ["gdpr", "nis2", "cra"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-09-11"], posture: "compliant", care_score: 0.86 },
++  { id: "compliance-alpha", name: "compliance-alpha", city: "Madrid", country: "ES", lat: 40.42, lon: -3.70, domain: "compliance", regime_bindings: ["eu-ai-act", "gdpr", "nis2", "cra"], framework_bindings: ["iso-42001", "iso-27001", "iso-23894"], horizon_bindings: ["2026-08-02", "2026-09-11", "2026-12-02", "2027-12-02"], posture: "compliant", care_score: 0.83 },
++  { id: "compliance-beta", name: "compliance-beta", city: "Rome", country: "IT", lat: 41.90, lon: 12.50, domain: "compliance", regime_bindings: ["eu-ai-act", "gdpr", "cra"], framework_bindings: ["iso-42001"], horizon_bindings: ["2026-08-02", "2026-09-11"], posture: "pending", care_score: 0.71 },
++  { id: "compliance-gamma", name: "compliance-gamma", city: "Warsaw", country: "PL", lat: 52.23, lon: 21.01, domain: "compliance", regime_bindings: ["eu-ai-act", "gdpr", "nis2", "cra"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02", "2026-09-11", "2026-12-02", "2027-12-02"], posture: "compliant", care_score: 0.80 },
++  // EU — security (Tokyo, but place-holders for security nodes in EU)
++  { id: "security-alpha", name: "security-alpha", city: "Tokyo", country: "JP", lat: 35.68, lon: 139.69, domain: "security", regime_bindings: ["apac-japan", "cra"], framework_bindings: ["iso-27001", "csa-star"], horizon_bindings: ["2026-09-11"], posture: "compliant", care_score: 0.85 },
++  { id: "security-beta", name: "security-beta", city: "Singapore", country: "SG", lat: 1.35, lon: 103.82, domain: "security", regime_bindings: ["apac-singapore", "cra"], framework_bindings: ["iso-42001", "csa-star"], horizon_bindings: ["2026-09-11"], posture: "compliant", care_score: 0.88 },
++  { id: "security-gamma", name: "security-gamma", city: "Seoul", country: "KR", lat: 37.57, lon: 126.98, domain: "security", regime_bindings: ["apac-korea", "cra"], framework_bindings: ["iso-27001"], horizon_bindings: ["2026-09-11"], posture: "pending", care_score: 0.75 },
++  // US — colorado AI act node, NIST RMF nodes
++  { id: "interpretability-alpha", name: "interpretability-alpha", city: "Toronto", country: "CA", lat: 43.65, lon: -79.38, domain: "interpretability", regime_bindings: ["ca-aida"], framework_bindings: ["nist-rmf"], horizon_bindings: [], posture: "pending", care_score: 0.68 },
++  { id: "interpretability-beta", name: "interpretability-beta", city: "Tel Aviv", country: "IL", lat: 32.07, lon: 34.78, domain: "interpretability", regime_bindings: ["oecd", "unesco"], framework_bindings: ["oecd", "unesco"], horizon_bindings: [], posture: "pending", care_score: 0.66 },
++  { id: "interpretability-gamma", name: "interpretability-gamma", city: "Bangalore", country: "IN", lat: 12.97, lon: 77.59, domain: "interpretability", regime_bindings: [], framework_bindings: ["nist-genai"], horizon_bindings: [], posture: "pending", care_score: 0.62 },
++  // US NIST RMF
++  { id: "robustness-alpha", name: "robustness-alpha", city: "Sydney", country: "AU", lat: -33.87, lon: 151.21, domain: "robustness", regime_bindings: ["oecd"], framework_bindings: ["nist-rmf"], horizon_bindings: [], posture: "compliant", care_score: 0.72 },
++  { id: "robustness-beta", name: "robustness-beta", city: "São Paulo", country: "BR", lat: -23.55, lon: -46.63, domain: "robustness", regime_bindings: ["oecd"], framework_bindings: ["oecd"], horizon_bindings: [], posture: "compliant", care_score: 0.69 },
++  { id: "robustness-gamma", name: "robustness-gamma", city: "Washington DC", country: "US", lat: 38.91, lon: -77.04, domain: "robustness", regime_bindings: ["us-nist-rmf", "us-colorado-admt"], framework_bindings: ["nist-rmf", "nist-genai"], horizon_bindings: ["2026-02-01", "2027-01-01"], posture: "compliant", care_score: 0.79 },
++  // US — colorado, transparency
++  { id: "privacy-alpha", name: "privacy-alpha", city: "Helsinki", country: "FI", lat: 60.17, lon: 24.94, domain: "privacy", regime_bindings: ["gdpr", "nis2"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02"], posture: "compliant", care_score: 0.85 },
++  { id: "privacy-beta", name: "privacy-beta", city: "Lisbon", country: "PT", lat: 38.72, lon: -9.14, domain: "privacy", regime_bindings: ["gdpr", "nis2", "cra"], framework_bindings: ["iso-42001"], horizon_bindings: ["2026-08-02", "2026-09-11"], posture: "compliant", care_score: 0.81 },
++  { id: "privacy-gamma", name: "privacy-gamma", city: "Amsterdam", country: "NL", lat: 52.37, lon: 4.90, domain: "privacy", regime_bindings: ["gdpr", "nis2", "cra"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02", "2026-09-11"], posture: "compliant", care_score: 0.84 },
++  // EU — execution domain
++  { id: "agentic-alpha", name: "agentic-alpha", city: "Stockholm", country: "SE", lat: 59.33, lon: 18.07, domain: "agentic", regime_bindings: ["eu-ai-act", "cra", "nis2"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02", "2026-09-11", "2026-12-02"], posture: "compliant", care_score: 0.87 },
++  { id: "agentic-beta", name: "agentic-beta", city: "Vienna", country: "AT", lat: 48.21, lon: 16.37, domain: "agentic", regime_bindings: ["eu-ai-act", "cra"], framework_bindings: ["iso-42001"], horizon_bindings: ["2026-08-02", "2026-09-11"], posture: "compliant", care_score: 0.82 },
++  { id: "agentic-gamma", name: "agentic-gamma", city: "Paris", country: "FR", lat: 48.86, lon: 2.35, domain: "biometric", regime_bindings: ["eu-ai-act", "gdpr"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02", "2026-12-02"], posture: "compliant", care_score: 0.86 },
++  // EU — biometric
++  { id: "biometric-alpha", name: "biometric-alpha", city: "Copenhagen", country: "DK", lat: 55.68, lon: 12.57, domain: "biometric", regime_bindings: ["eu-ai-act", "gdpr", "nis2"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02", "2026-12-02", "2027-12-02"], posture: "compliant", care_score: 0.85 },
++  { id: "biometric-beta", name: "biometric-beta", city: "Oslo", country: "NO", lat: 59.91, lon: 10.75, domain: "biometric", regime_bindings: ["eu-ai-act", "gdpr"], framework_bindings: ["iso-42001", "oecd"], horizon_bindings: ["2026-08-02", "2026-12-02"], posture: "compliant", care_score: 0.84 },
++  { id: "biometric-gamma", name: "biometric-gamma", city: "Buenos Aires", country: "AR", lat: -34.61, lon: -58.38, domain: "biometric", regime_bindings: ["oecd", "unesco"], framework_bindings: ["oecd", "unesco"], horizon_bindings: [], posture: "pending", care_score: 0.65 },
++  // APAC
++  { id: "governance-alpha", name: "governance-alpha", city: "Beijing", country: "CN", lat: 39.90, lon: 116.41, domain: "governance", regime_bindings: ["apac-china"], framework_bindings: ["csa-star"], horizon_bindings: [], posture: "pending", care_score: 0.58 },
++  { id: "governance-beta", name: "governance-beta", city: "New Delhi", country: "IN", lat: 28.61, lon: 77.21, domain: "governance", regime_bindings: [], framework_bindings: ["oecd", "nist-genai"], horizon_bindings: [], posture: "pending", care_score: 0.62 },
++  { id: "governance-gamma", name: "governance-gamma", city: "Cape Town", country: "ZA", lat: -33.92, lon: 18.42, domain: "governance", regime_bindings: ["oecd"], framework_bindings: ["oecd", "unesco"], horizon_bindings: [], posture: "pending", care_score: 0.65 },
++  { id: "transparency-alpha", name: "transparency-alpha", city: "Mexico City", country: "MX", lat: 19.43, lon: -99.13, domain: "transparency", regime_bindings: ["oecd", "us-nist-rmf"], framework_bindings: ["oecd", "nist-rmf"], horizon_bindings: [], posture: "pending", care_score: 0.64 },
++  { id: "transparency-beta", name: "transparency-beta", city: "Cairo", country: "EG", lat: 30.04, lon: 31.24, domain: "transparency", regime_bindings: [], framework_bindings: ["oecd", "unesco"], horizon_bindings: [], posture: "pending", care_score: 0.58 },
++  { id: "transparency-gamma", name: "transparency-gamma", city: "Edinburgh", country: "GB", lat: 55.95, lon: -3.19, domain: "transparency", regime_bindings: ["uk-ai-bill", "gdpr"], framework_bindings: ["iso-42001"], horizon_bindings: ["2026-08-02"], posture: "pending", care_score: 0.71 },
++  { id: "epistemic-alpha", name: "epistemic-alpha", city: "Kyoto", country: "JP", lat: 35.01, lon: 135.77, domain: "epistemic", regime_bindings: ["apac-japan"], framework_bindings: ["oecd", "unesco"], horizon_bindings: [], posture: "compliant", care_score: 0.78 },
++  { id: "epistemic-beta", name: "epistemic-beta", city: "Tallinn", country: "EE", lat: 59.44, lon: 24.75, domain: "epistemic", regime_bindings: ["eu-ai-act", "gdpr", "nis2"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02", "2026-12-02", "2027-12-02"], posture: "compliant", care_score: 0.86 },
++  { id: "epistemic-gamma", name: "epistemic-gamma", city: "Edinburgh", country: "GB", lat: 55.95, lon: -3.19, domain: "epistemic", regime_bindings: ["uk-ai-bill"], framework_bindings: ["iso-42001"], horizon_bindings: [], posture: "pending", care_score: 0.72 },
++  // Care + sovereign + substrate + biosensing + emergence (last 4 domains)
++  { id: "care-alpha", name: "care-alpha", city: "Geneva", country: "CH", lat: 46.20, lon: 6.14, domain: "care", regime_bindings: ["oecd", "unesco"], framework_bindings: ["oecd", "unesco"], horizon_bindings: [], posture: "compliant", care_score: 0.94 },
++  { id: "sovereign-alpha", name: "sovereign-alpha", city: "Zürich", country: "CH", lat: 47.38, lon: 8.54, domain: "sovereign", regime_bindings: ["oecd"], framework_bindings: ["iso-42001"], horizon_bindings: [], posture: "compliant", care_score: 0.87 },
++  { id: "substrate-alpha", name: "substrate-alpha", city: "Brussels", country: "BE", lat: 50.85, lon: 4.35, domain: "substrate", regime_bindings: ["eu-ai-act", "gdpr", "nis2", "cra", "dora"], framework_bindings: ["iso-42001", "iso-27001", "nist-rmf"], horizon_bindings: ["2026-08-02", "2026-09-11", "2026-12-02", "2027-12-02"], posture: "compliant", care_score: 0.92 },
++  { id: "biosensing-alpha", name: "biosensing-alpha", city: "Edinburgh", country: "GB", lat: 55.95, lon: -3.19, domain: "biosensing", regime_bindings: ["uk-ai-bill"], framework_bindings: ["iso-42001"], horizon_bindings: [], posture: "pending", care_score: 0.69 },
++  { id: "emergence-alpha", name: "emergence-alpha", city: "Zürich", country: "CH", lat: 47.38, lon: 8.54, domain: "emergence", regime_bindings: ["oecd", "unesco"], framework_bindings: ["oecd", "unesco"], horizon_bindings: [], posture: "pending", care_score: 0.72 },
++  { id: "execution-alpha", name: "execution-alpha", city: "Berlin", country: "DE", lat: 52.52, lon: 13.40, domain: "execution", regime_bindings: ["eu-ai-act", "cra", "nis2"], framework_bindings: ["iso-42001", "iso-27001"], horizon_bindings: ["2026-08-02", "2026-09-11", "2026-12-02"], posture: "compliant", care_score: 0.84 },
++];
++
++// Equirectangular projection (same as OpenGridWorks Phase 1)
++const project = (lon: number, lat: number) => {
++  const x = ((lon + 180) / 360) * 3600;
++  const y = ((90 - lat) / 180) * 1800;
++  return { x, y };
++};
++
++// Marker color by posture
++const POSTURE_COLORS: Record<AISystem["posture"], string> = {
++  compliant: "#22c55e",   // green
++  pending: "#eab308",     // amber
++  revoked: "#ef4444",     // red
++};
++
++const POSTURE_LABELS: Record<AISystem["posture"], string> = {
++  compliant: "Council-compliant",
++  pending: "Pending council decision",
++  revoked: "Revoked by council",
++};
++
++// URL-state contract — read on mount, write on change (mirrors OpenGridWorks)
++function readUrlState() {
++  if (typeof window === "undefined") return { lat: 30, lng: 0, z: 1.6, layers: ["regimes", "frameworks", "systems"], panel: "closed" };
++  const sp = new URLSearchParams(window.location.search);
++  return {
++    lat: parseFloat(sp.get("lat") || "30"),
++    lng: parseFloat(sp.get("lng") || "0"),
++    z: parseFloat(sp.get("z") || "1.6"),
++    layers: (sp.get("layers") || "regimes,frameworks,systems").split(",").filter(Boolean),
++    panel: sp.get("panel") || "closed",
++  };
++}
++
++function writeUrlState(state: ReturnType<typeof readUrlState>) {
++  if (typeof window === "undefined") return;
++  const sp = new URLSearchParams();
++  sp.set("lat", state.lat.toFixed(2));
++  sp.set("lng", state.lng.toFixed(2));
++  sp.set("z", state.z.toFixed(2));
++  sp.set("layers", state.layers.join(","));
++  if (state.panel !== "closed") sp.set("panel", state.panel);
++  const url = `${window.location.pathname}?${sp.toString()}`;
++  window.history.replaceState(null, "", url);
++}
++
++const STATS = {
++  regimes: REGIMES.length,
++  frameworks: FRAMEWORKS.length,
++  horizons: TIME_HORIZONS.length,
++  systems: AI_SYSTEMS.length,
++  countries: new Set(AI_SYSTEMS.map(s => s.country)).size,
++  compliant: AI_SYSTEMS.filter(s => s.posture === "compliant").length,
++  pending: AI_SYSTEMS.filter(s => s.posture === "pending").length,
++};
++
++export default function ComplianceMap() {
++  const [state, setState] = useState(readUrlState);
++  const [selected, setSelected] = useState<{ kind: "regime" | "framework" | "horizon" | "system"; id: string } | null>(null);
++  const [search, setSearch] = useState("");
++  const [hovered, setHovered] = useState<string | null>(null);
++
++  useEffect(() => { writeUrlState(state); }, [state]);
++
++  // Compute the count of systems bound to a regime/framework/horizon
++  const regimeSystemCount = useMemo(() => {
++    const counts: Record<string, number> = {};
++    for (const r of REGIMES) counts[r.id] = 0;
++    for (const s of AI_SYSTEMS) {
++      for (const rb of s.regime_bindings) counts[rb] = (counts[rb] || 0) + 1;
++    }
++    return counts;
++  }, []);
++  const frameworkSystemCount = useMemo(() => {
++    const counts: Record<string, number> = {};
++    for (const f of FRAMEWORKS) counts[f.id] = 0;
++    for (const s of AI_SYSTEMS) {
++      for (const fb of s.framework_bindings) counts[fb] = (counts[fb] || 0) + 1;
++    }
++    return counts;
++  }, []);
++  const horizonSystemCount = useMemo(() => {
++    const counts: Record<string, number> = {};
++    for (const h of TIME_HORIZONS) counts[h.id] = 0;
++    for (const s of AI_SYSTEMS) {
++      for (const hb of s.horizon_bindings) counts[hb] = (counts[hb] || 0) + 1;
++    }
++    return counts;
++  }, []);
++
++  // Selected entity lookup
++  const selectedEntity = useMemo(() => {
++    if (!selected) return null;
++    if (selected.kind === "regime") return REGIMES.find(r => r.id === selected.id);
++    if (selected.kind === "framework") return FRAMEWORKS.find(f => f.id === selected.id);
++    if (selected.kind === "horizon") return TIME_HORIZONS.find(h => h.id === selected.id);
++    if (selected.kind === "system") return AI_SYSTEMS.find(s => s.id === selected.id);
++    return null;
++  }, [selected]);
++
++  // Systems bound to a given regime/framework/horizon
++  const systemsForRegime = (id: string) => AI_SYSTEMS.filter(s => s.regime_bindings.includes(id));
++  const systemsForFramework = (id: string) => AI_SYSTEMS.filter(s => s.framework_bindings.includes(id));
++  const systemsForHorizon = (id: string) => AI_SYSTEMS.filter(s => s.horizon_bindings.includes(id));
++
++  // Filtering: search + visibility
++  const visibleSystems = AI_SYSTEMS.filter(s => {
++    if (search) {
++      const q = search.toLowerCase();
++      const haystack = [s.id, s.name, s.city, s.country, s.domain].join(" ").toLowerCase();
++      if (!haystack.includes(q)) return false;
++    }
++    if (state.layers.length === 0) return false; // no layers = nothing visible
++    // If a regime/framework/horizon is selected, show only systems bound to it
++    if (selected?.kind === "regime" && !s.regime_bindings.includes(selected.id)) return false;
++    if (selected?.kind === "framework" && !s.framework_bindings.includes(selected.id)) return false;
++    if (selected?.kind === "horizon" && !s.horizon_bindings.includes(selected.id)) return false;
++    return true;
++  });
++
++  // Layer visibility toggles
++  const toggleLayer = (layer: string) => {
++    setState(s => ({
++      ...s,
++      layers: s.layers.includes(layer) ? s.layers.filter(l => l !== layer) : [...s.layers, layer],
++    }));
++  };
++
++  return (
++    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 selection:bg-cyan-500/30">
++      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
++
++        {/* Hero */}
++        <div className="border border-cyan-500/40 rounded-3xl p-8 bg-cyan-500/5 mb-10">
++          <div className="flex items-center gap-3 mb-3 flex-wrap">
++            <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-500/40">
++              <Scale className="w-3 h-3 mr-1" /> Sovereign Compliance Map
++            </Badge>
++            <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/40">
++              <Shield className="w-3 h-3 mr-1" /> Council-attested
++            </Badge>
++            <Badge className="bg-slate-800 text-slate-300 border-slate-600">
++              {STATS.regimes} regimes · {STATS.frameworks} frameworks · {STATS.horizons} time horizons · {STATS.systems} AI systems · {STATS.countries} countries
++            </Badge>
++          </div>
++          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-blue-300 to-emerald-400 bg-clip-text text-transparent mb-3">
++            Compliance Map
++          </h1>
++          <p className="text-lg text-slate-300 max-w-3xl">
++            Every registered CSOAI AI system plotted against the regimes, frameworks, and time horizons that govern it. Toggle layers, click markers, share the URL. Pure sovereign — inline SVG, no Mapbox token, no US cloud dependency. The compliance equivalent of <a href="https://opengridworks.com/power-plants" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">OpenGridWorks</a> (which is the closed-data US version — CSOAI is the open, regime-aware, council-attested version).
++          </p>
++        </div>
++
++        {/* Toolbar */}
++        <div className="flex flex-col lg:flex-row gap-3 mb-4">
++          <div className="relative flex-1">
++            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
++            <input
++              value={search}
++              onChange={(e) => setSearch(e.target.value)}
++              placeholder="Search 43 AI systems (e.g. ethics-alpha, EU, privacy, GB)"
++              className="w-full pl-10 pr-4 py-2 rounded-md bg-slate-900/50 border border-slate-700/60 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-500/60"
++            />
++          </div>
++          <div className="flex gap-2 flex-wrap">
++            {(["regimes", "frameworks", "time", "systems"] as const).map((l) => (
++              <Button
++                key={l}
++                size="sm"
++                variant={state.layers.includes(l) ? "default" : "outline"}
++                onClick={() => toggleLayer(l)}
++                className="text-xs"
++              >
++                <Layers className="w-3 h-3 mr-1" />
++                {l}
++              </Button>
++            ))}
++          </div>
++        </div>
++
++        {/* Map + side panel */}
++        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
++
++          {/* Map */}
++          <Card className="lg:col-span-3 bg-slate-900/50 border-slate-700/60 overflow-hidden">
++            <CardContent className="p-0">
++              <div className="relative bg-gradient-to-br from-slate-950 to-blue-950/30" style={{ aspectRatio: "2/1" }}>
++                <svg
++                  viewBox="0 0 3600 1800"
++                  className="w-full h-full"
++                  preserveAspectRatio="xMidYMid meet"
++                >
++                  {/* Ocean */}
++                  <rect width="3600" height="1800" fill="#0c1a2e" />
++
++                  {/* Lat/lon grid */}
++                  <g stroke="#1e3a5f" strokeWidth="1" fill="none" opacity="0.4">
++                    {[-60, -30, 0, 30, 60].map((lat) => {
++                      const y = ((90 - lat) / 180) * 1800;
++                      return <line key={`lat-${lat}`} x1="0" y1={y} x2="3600" y2={y} />;
++                    })}
++                    {[-120, -60, 0, 60, 120].map((lon) => {
++                      const x = ((lon + 180) / 360) * 3600;
++                      return <line key={`lon-${lon}`} x1={x} y1="0" x2={x} y2="1800" />;
++                    })}
++                  </g>
++
++                  {/* Equator */}
++                  <line
++                    x1="0" y1="900" x2="3600" y2="900"
++                    stroke="#3b82f6" strokeWidth="2" strokeDasharray="20 20" opacity="0.4"
++                  />
++
++                  {/* Continents (simplified — same as OpenGridWorks Phase 1) */}
++                  <g fill="#1e3a5f" stroke="#3b82f6" strokeWidth="2" opacity="0.6">
++                    <path d="M 1700,200 L 2300,200 L 2700,350 L 2900,500 L 2950,700 L 2850,800 L 2700,900 L 2500,850 L 2300,750 L 2100,700 L 1900,650 L 1800,500 L 1700,400 Z" />
++                    <path d="M 1900,800 L 2100,800 L 2200,950 L 2150,1150 L 2050,1300 L 1950,1350 L 1850,1200 L 1800,1000 L 1850,900 Z" />
++                    <path d="M 350,250 L 700,200 L 850,300 L 900,500 L 800,650 L 700,750 L 600,800 L 500,700 L 400,500 L 350,350 Z" />
++                    <path d="M 700,1000 L 850,1000 L 900,1150 L 850,1350 L 800,1450 L 750,1400 L 700,1200 L 680,1100 Z" />
++                    <path d="M 2900,1150 L 3100,1150 L 3150,1250 L 3050,1320 L 2900,1300 L 2850,1220 Z" />
++                    <path d="M 1750,420 L 1790,410 L 1800,460 L 1760,470 Z" />
++                    <path d="M 3050,520 L 3080,500 L 3100,540 L 3070,560 Z" />
++                  </g>
++
++                  {/* Regime boundary markers (if layer enabled) */}
++                  {state.layers.includes("regimes") && REGIMES.map((r) => {
++                    // Anchor each regime to a representative city (first country from bindings or first council node)
++                    const cityAnchor: Record<string, { lat: number; lon: number }> = {
++                      "EU": { lat: 50.85, lon: 4.35 },     // Brussels
++                      "UK": { lat: 51.51, lon: -0.13 },     // London
++                      "US": { lat: 38.91, lon: -77.04 },    // Washington DC
++                      "CA": { lat: 43.65, lon: -79.38 },    // Toronto
++                      "APAC": { lat: 35.68, lon: 139.69 },  // Tokyo
++                    };
++                    const c = cityAnchor[r.region] || { lat: 30, lon: 0 };
++                    const { x, y } = project(c.lon, c.lat);
++                    const isSelected = selected?.kind === "regime" && selected.id === r.id;
++                    const isHovered = hovered === `regime-${r.id}`;
++                    return (
++                      <g
++                        key={r.id}
++                        style={{ cursor: "pointer" }}
++                        onClick={() => setSelected({ kind: "regime", id: r.id })}
++                        onMouseEnter={() => setHovered(`regime-${r.id}`)}
++                        onMouseLeave={() => setHovered(null)}
++                      >
++                        <rect
++                          x={x - 14} y={y - 14} width="28" height="28"
++                          fill={isSelected ? "#06b6d4" : "#475569"}
++                          stroke={isSelected || isHovered ? "#fff" : "#94a3b8"}
++                          strokeWidth="2"
++                          rx="4"
++                        />
++                        <text
++                          x={x} y={y + 5} textAnchor="middle"
++                          fill="#fff" fontSize="13" fontWeight="bold"
++                        >
++                          {r.flag}
++                        </text>
++                      </g>
++                    );
++                  })}
++
++                  {/* Time horizon markers (if layer enabled) — pinned to a "timeline" band along the top */}
++                  {state.layers.includes("time") && (
++                    <g>
++                      {TIME_HORIZONS.map((h, i) => {
++                        const y = 60;
++                        const x = 100 + i * (3400 / TIME_HORIZONS.length);
++                        const isSelected = selected?.kind === "horizon" && selected.id === h.id;
++                        return (
++                          <g
++                            key={h.id}
++                            style={{ cursor: "pointer" }}
++                            onClick={() => setSelected({ kind: "horizon", id: h.id })}
++                          >
++                            <circle
++                              cx={x} cy={y} r={isSelected ? 8 : 5}
++                              fill={
++                                h.cliff === "passed" ? "#475569" :
++                                h.cliff === "confirmed" && h.days_until <= 100 ? "#ef4444" :
++                                h.cliff === "confirmed" ? "#f59e0b" :
++                                "#64748b"
++                              }
++                              stroke="#fff" strokeWidth="1.5"
++                            />
++                            <text
++                              x={x} y={y - 12} textAnchor="middle"
++                              fill="#cbd5e1" fontSize="9" fontFamily="monospace"
++                            >
++                              {h.date}
++                            </text>
++                          </g>
++                        );
++                      })}
++                      {/* Timeline base line */}
++                      <line
++                        x1="60" y1="60" x2="3540" y2="60"
++                        stroke="#475569" strokeWidth="1" strokeDasharray="2 4"
++                      />
++                    </g>
++                  )}
++
++                  {/* AI system markers (if layer enabled) */}
++                  {state.layers.includes("systems") && visibleSystems.map((s) => {
++                    const { x, y } = project(s.lon, s.lat);
++                    const isSelected = selected?.kind === "system" && selected.id === s.id;
++                    const isHovered = hovered === `system-${s.id}`;
++                    return (
++                      <g
++                        key={s.id}
++                        style={{ cursor: "pointer" }}
++                        onClick={() => setSelected({ kind: "system", id: s.id })}
++                        onMouseEnter={() => setHovered(`system-${s.id}`)}
++                        onMouseLeave={() => setHovered(null)}
++                      >
++                        <circle
++                          cx={x} cy={y} r={isSelected || isHovered ? 14 : 9}
++                          fill={POSTURE_COLORS[s.posture]}
++                          stroke={isSelected || isHovered ? "#fff" : "#1e293b"}
++                          strokeWidth="2"
++                        />
++                      </g>
++                    );
++                  })}
++
++                  {/* Legend */}
++                  <g transform="translate(40,1500)">
++                    <rect width="600" height="270" fill="#0c1a2e" stroke="#475569" strokeWidth="1" rx="4" opacity="0.95" />
++                    <text x="12" y="22" fill="#94a3b8" fontSize="11" fontWeight="bold" letterSpacing="1px">LEGEND</text>
++
++                    {/* AI system posture */}
++                    <text x="12" y="44" fill="#cbd5e1" fontSize="10" fontWeight="bold">AI system posture</text>
++                    {(["compliant", "pending", "revoked"] as const).map((p, i) => (
++                      <g key={p} transform={`translate(20, ${56 + i * 16})`}>
++                        <circle cx="6" cy="0" r="5" fill={POSTURE_COLORS[p]} />
++                        <text x="20" y="3" fill="#cbd5e1" fontSize="9">{POSTURE_LABELS[p]}</text>
++                      </g>
++                    ))}
++
++                    {/* Regime marker */}
++                    <text x="170" y="44" fill="#cbd5e1" fontSize="10" fontWeight="bold">Regime</text>
++                    <g transform="translate(180, 56)">
++                      <rect width="14" height="14" fill="#475569" stroke="#94a3b8" rx="2" />
++                      <text x="7" y="10" textAnchor="middle" fill="#fff" fontSize="9">🇪🇺</text>
++                      <text x="22" y="10" fill="#cbd5e1" fontSize="9">EU AI Act · 36 systems bound</text>
++                    </g>
++
++                    {/* Time horizon color coding */}
++                    <text x="12" y="130" fill="#cbd5e1" fontSize="10" fontWeight="bold">Time horizon</text>
++                    {[
++                      { color: "#ef4444", label: "≤100 days (red zone)", y: 144 },
++                      { color: "#f59e0b", label: "100-300 days (amber zone)", y: 160 },
++                      { color: "#64748b", label: ">300 days or passed (grey)", y: 176 },
++                    ].map((c) => (
++                      <g key={c.label} transform={`translate(20, ${c.y})`}>
++                        <circle cx="6" cy="0" r="5" fill={c.color} />
++                        <text x="20" y="3" fill="#cbd5e1" fontSize="9">{c.label}</text>
++                      </g>
++                    ))}
++
++                    {/* Equator / time band */}
++                    <text x="12" y="208" fill="#cbd5e1" fontSize="10" fontWeight="bold">Map</text>
++                    <line x1="14" y1="220" x2="200" y2="220" stroke="#3b82f6" strokeDasharray="4 4" strokeWidth="1" />
++                    <text x="14" y="234" fill="#cbd5e1" fontSize="9">Equator</text>
++                    <line x1="14" y1="248" x2="200" y2="248" stroke="#475569" strokeDasharray="2 4" strokeWidth="1" />
++                    <text x="14" y="262" fill="#cbd5e1" fontSize="9">Time horizon band (top of map)</text>
++                  </g>
++                </svg>
++              </div>
++            </CardContent>
++          </Card>
++
++          {/* Side panel */}
++          <Card className="bg-slate-900/50 border-slate-700/60">
++            <CardHeader>
++              <CardTitle className="text-slate-100 flex items-center gap-2">
++                {selected ? (
++                  <Button size="sm" variant="ghost" onClick={() => setSelected(null)} className="h-6 px-2 -ml-2">
++                    <X className="w-4 h-4" />
++                  </Button>
++                ) : (
++                  <Info className="w-4 h-4" />
++                )}
++                {selected ? selectedEntity?.id || "Selected" : "Inspector"}
++              </CardTitle>
++              <CardDescription className="text-slate-400 text-xs">
++                {selected ? "Click another marker, or clear." : "Click any marker on the map."}
++              </CardDescription>
++            </CardHeader>
++            <CardContent className="max-h-[600px] overflow-y-auto text-sm space-y-3">
++              {!selected && (
++                <>
++                  <p className="text-slate-400">
++                    This is the sovereign compliance map. {STATS.regimes} regimes × {STATS.frameworks} frameworks × {STATS.horizons} time horizons × {STATS.systems} AI systems × {STATS.countries} countries.
++                  </p>
++                  <div className="grid grid-cols-2 gap-2 text-xs">
++                    <div className="bg-slate-950/50 rounded p-2"><div className="text-slate-500">Compliant</div><div className="text-emerald-400 text-lg font-bold">{STATS.compliant}</div></div>
++                    <div className="bg-slate-950/50 rounded p-2"><div className="text-slate-500">Pending</div><div className="text-amber-400 text-lg font-bold">{STATS.pending}</div></div>
++                    <div className="bg-slate-950/50 rounded p-2"><div className="text-slate-500">Revoked</div><div className="text-red-400 text-lg font-bold">0</div></div>
++                    <div className="bg-slate-950/50 rounded p-2"><div className="text-slate-500">Countries</div><div className="text-cyan-400 text-lg font-bold">{STATS.countries}</div></div>
++                  </div>
++                  <p className="text-xs text-slate-500 pt-2">
++                    The <strong className="text-slate-300">time horizon</strong> band along the top of the map is a year-by-year cliff calendar. The shortest red dots are the closest cliffs. The longest grey dots are passed (or &gt;300 days out).
++                  </p>
++                </>
++              )}
++
++              {selected?.kind === "regime" && selectedEntity && (
++                <RegimePanel regime={selectedEntity as Regime} systems={systemsForRegime((selectedEntity as Regime).id)} />
++              )}
++
++              {selected?.kind === "framework" && selectedEntity && (
++                <FrameworkPanel framework={selectedEntity as Framework} systems={systemsForFramework((selectedEntity as Framework).id)} />
++              )}
++
++              {selected?.kind === "horizon" && selectedEntity && (
++                <HorizonPanel horizon={selectedEntity as TimeHorizon} systems={systemsForHorizon((selectedEntity as TimeHorizon).id)} />
++              )}
++
++              {selected?.kind === "system" && selectedEntity && (
++                <SystemPanel system={selectedEntity as AISystem} />
++              )}
++            </CardContent>
++          </Card>
++        </div>
++
++        {/* Layers / regimes list (bottom strip) */}
++        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
++
++          {/* Regimes layer */}
++          <Card className="bg-slate-900/50 border-slate-700/60">
++            <CardHeader>
++              <CardTitle className="text-slate-100 text-lg flex items-center gap-2">
++                <Globe className="w-5 h-5 text-cyan-400" /> {REGIMES.length} Regimes
++              </CardTitle>
++              <CardDescription className="text-slate-400 text-xs">
++                Click any region to filter the map by that regime's binding set.
++              </CardDescription>
++            </CardHeader>
++            <CardContent className="space-y-1.5 max-h-80 overflow-y-auto">
++              {REGIMES.map((r) => (
++                <button
++                  key={r.id}
++                  onClick={() => setSelected({ kind: "regime", id: r.id })}
++                  className={`w-full text-left p-2 rounded-md text-xs transition ${
++                    selected?.kind === "regime" && selected.id === r.id
++                      ? "bg-cyan-500/20 border border-cyan-500/40"
++                      : "bg-slate-950/50 hover:bg-slate-900"
++                  }`}
++                >
++                  <div className="flex items-center justify-between mb-0.5">
++                    <span className="font-semibold text-slate-200">{r.flag} {r.name}</span>
++                    <span className="text-slate-500 font-mono">{regimeSystemCount[r.id] || 0}</span>
++                  </div>
++                  <div className="text-slate-500 truncate">{r.primary}</div>
++                  <div className="text-slate-600 text-[10px] mt-0.5 font-mono">{r.deadline}</div>
++                </button>
++              ))}
++            </CardContent>
++          </Card>
++
++          {/* Frameworks layer */}
++          <Card className="bg-slate-900/50 border-slate-700/60">
++            <CardHeader>
++              <CardTitle className="text-slate-100 text-lg flex items-center gap-2">
++                <BookOpen className="w-5 h-5 text-emerald-400" /> {FRAMEWORKS.length} Frameworks
++              </CardTitle>
++              <CardDescription className="text-slate-400 text-xs">
++                Control families (NIST GOVERN/MAP/MEASURE/MANAGE, ISO AIMS, OECD principles, etc.)
++              </CardDescription>
++            </CardHeader>
++            <CardContent className="space-y-1.5 max-h-80 overflow-y-auto">
++              {FRAMEWORKS.map((f) => (
++                <button
++                  key={f.id}
++                  onClick={() => setSelected({ kind: "framework", id: f.id })}
++                  className={`w-full text-left p-2 rounded-md text-xs transition ${
++                    selected?.kind === "framework" && selected.id === f.id
++                      ? "bg-emerald-500/20 border border-emerald-500/40"
++                      : "bg-slate-950/50 hover:bg-slate-900"
++                  }`}
++                >
++                  <div className="flex items-center justify-between mb-0.5">
++                    <span className="font-semibold text-slate-200">{f.name}</span>
++                    <span className="text-slate-500 font-mono">{frameworkSystemCount[f.id] || 0}</span>
++                  </div>
++                  <div className="text-slate-500 truncate">{f.scope}</div>
++                  <div className="text-slate-600 text-[10px] mt-0.5">{f.family} · {f.adoption}</div>
++                </button>
++              ))}
++            </CardContent>
++          </Card>
++
++          {/* Time horizons layer */}
++          <Card className="bg-slate-900/50 border-slate-700/60">
++            <CardHeader>
++              <CardTitle className="text-slate-100 text-lg flex items-center gap-2">
++                <Clock className="w-5 h-5 text-amber-400" /> {TIME_HORIZONS.length} Time Horizons
++              </CardTitle>
++              <CardDescription className="text-slate-400 text-xs">
++                Major AI compliance cliffs. The red zone is the next 100 days. The grey zone is passed.
++              </CardDescription>
++            </CardHeader>
++            <CardContent className="space-y-1.5 max-h-80 overflow-y-auto">
++              {TIME_HORIZONS.slice()
++                .sort((a, b) => a.days_until - b.days_until)
++                .map((h) => {
++                  const colorClass =
++                    h.cliff === "passed" ? "border-slate-700" :
++                    h.days_until <= 100 ? "border-red-500/40" :
++                    h.days_until <= 300 ? "border-amber-500/40" :
++                    "border-slate-700";
++                  return (
++                    <button
++                      key={h.id}
++                      onClick={() => setSelected({ kind: "horizon", id: h.id })}
++                      className={`w-full text-left p-2 rounded-md text-xs transition border ${
++                        selected?.kind === "horizon" && selected.id === h.id
++                          ? "bg-amber-500/20 border-amber-500/60"
++                          : `bg-slate-950/50 hover:bg-slate-900 ${colorClass}`
++                      }`}
++                    >
++                      <div className="flex items-center justify-between mb-0.5">
++                        <span className="font-mono text-slate-200">{h.date}</span>
++                        <span className={
++                          h.cliff === "passed" ? "text-slate-500" :
++                          h.days_until <= 100 ? "text-red-400 font-bold" :
++                          h.days_until <= 300 ? "text-amber-400" : "text-slate-400"
++                        }>
++                          {h.days_until > 0 ? `in ${h.days_until}d` : `${-h.days_until}d ago`}
++                        </span>
++                      </div>
++                      <div className="text-slate-500 truncate">{h.regime}</div>
++                      <div className="text-slate-300 text-[10px] mt-0.5" dangerouslySetInnerHTML={{ __html: h.what }} />
++                    </button>
++                  );
++                })}
++            </CardContent>
++          </Card>
++        </div>
++
++        {/* Cross-links + sources footer */}
++        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
++          <Card className="bg-slate-900/50 border-slate-700/60">
++            <CardHeader>
++              <CardTitle className="text-slate-100 text-lg">Sources of truth (verified 2026-06-12)</CardTitle>
++            </CardHeader>
++            <CardContent className="text-xs text-slate-400 space-y-1.5">
++              <p>• <a href="https://artificialintelligenceact.eu/implementation-timeline/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">artificialintelligenceact.eu</a> — canonical EU AI Act timeline</p>
++              <p>• <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">nist.gov/itl/ai-risk-management-framework</a> — NIST AI RMF 1.0</p>
++              <p>• <a href="https://www.iso.org/standard/81270.html" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">iso.org/standard/81270.html</a> — ISO/IEC 42001:2023</p>
++              <p>• <a href="https://www.enisa.europa.eu/topics/nis-directive" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">enisa.europa.eu/topics/nis-directive</a> — NIS2</p>
++              <p>• <a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Cyber Resilience Act</a> — Reg 2024/2847</p>
++              <p className="pt-2 text-slate-500">Digital Omnibus (EU Parliament 569-45, 23 Mar 2026) delayed only HIGH-RISK Annex III → 2 Dec 2027. Article 50 unchanged at 2 Aug 2026.</p>
++            </CardContent>
++          </Card>
++
++          <Card className="bg-slate-900/50 border-slate-700/60">
++            <CardHeader>
++              <CardTitle className="text-slate-100 text-lg">Sovereign, not US-licensed</CardTitle>
++            </CardHeader>
++            <CardContent className="text-xs text-slate-400 space-y-1.5">
++              <p>This map is the <strong className="text-slate-200">sovereign CSOAI equivalent</strong> of <a href="https://opengridworks.com/power-plants" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">opengridworks.com/power-plants</a> (which is the closed-data US version).</p>
++              <p>Differences:</p>
++              <p>• <strong>Data:</strong> opengridworks uses closed US-centric power-infrastructure data (subscription-gated). CSOAI uses open EU + APAC compliance data (publicly published, regime-mapped).</p>
++              <p>• <strong>UX:</strong> both have layered map + URL-state contract + side panel. Same shape, different substrate.</p>
++              <p>• <strong>Trust:</strong> opengridworks is a SaaS. CSOAI is council-attested (BFT 22-of-36 + care + SCL constitutional hard-stop).</p>
++              <p className="pt-2 text-slate-500">The 3-layer substrate gate (SCL + care vote + ICRL sovereign filter) is the load-bearing security property. See <a href="https://csoai-v2-app.vercel.app/article-50-kit" className="text-cyan-400 hover:underline">/article-50-kit</a> for the £999 Kit conversion surface.</p>
++            </CardContent>
++          </Card>
++        </div>
++
++        {/* Cross-links */}
++        <div className="mt-6 flex flex-wrap gap-3">
++          <Link href="/article-50-kit"><Button variant="outline" className="border-slate-700 text-slate-200"><ArrowRight className="w-4 h-4 mr-1" />Article 50 Kit (2 Aug 2026)</Button></Link>
++          <Link href="/opengridworks"><Button variant="outline" className="border-slate-700 text-slate-200"><ArrowRight className="w-4 h-4 mr-1" />Physical-Cyber Twin (OpenGridWorks)</Button></Link>
++          <Link href="/council/law"><Button variant="outline" className="border-slate-700 text-slate-200"><ArrowRight className="w-4 h-4 mr-1" />Council Law (regime map)</Button></Link>
++          <Link href="/council/dome"><Button variant="outline" className="border-slate-700 text-slate-200"><ArrowRight className="w-4 h-4 mr-1" />Council Dome (substrate)</Button></Link>
++          <Link href="/council/globe?preset=physical-infra"><Button variant="outline" className="border-slate-700 text-slate-200"><ArrowRight className="w-4 h-4 mr-1" />Council Globe (immersive)</Button></Link>
++        </div>
++      </div>
++    </div>
++  );
++}
++
++// ---------------------------------------------------------------------------
++// Side-panel sub-components
++// ---------------------------------------------------------------------------
++
++function RegimePanel({ regime, systems }: { regime: Regime; systems: AISystem[] }) {
++  return (
++    <div className="space-y-2 text-xs">
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-cyan-300 text-sm font-bold">{regime.flag} {regime.name}</div>
++        <div className="text-slate-400 mt-1">{regime.primary}</div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Deadline</div>
++        <div className="text-slate-200 font-mono">{regime.deadline}</div>
++        {regime.days_until > 0 && (
++          <div className={regime.days_until <= 100 ? "text-red-400 font-bold" : "text-amber-400"}>
++            in {regime.days_until} days
++          </div>
++        )}
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Key articles</div>
++        <ul className="space-y-0.5 text-slate-300">
++          {regime.key_articles.map((a) => <li key={a}>· {a}</li>)}
++        </ul>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Penalty</div>
++        <div className="text-red-300">{regime.penalty}</div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Systems bound ({systems.length})</div>
++        {systems.slice(0, 8).map((s) => (
++          <div key={s.id} className="text-slate-300 font-mono text-[10px]">· {s.id} ({s.city}, {s.country})</div>
++        ))}
++        {systems.length > 8 && <div className="text-slate-500 text-[10px]">+ {systems.length - 8} more</div>}
++      </div>
++    </div>
++  );
++}
++
++function FrameworkPanel({ framework, systems }: { framework: Framework; systems: AISystem[] }) {
++  return (
++    <div className="space-y-2 text-xs">
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-emerald-300 text-sm font-bold">{framework.name}</div>
++        <div className="text-slate-400 mt-1">{framework.scope}</div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Family</div>
++        <div className="text-slate-200 font-mono">{framework.family}</div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Region / adoption</div>
++        <div className="text-slate-200">{framework.region} · {framework.adoption}</div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Systems adopting ({systems.length})</div>
++        {systems.slice(0, 8).map((s) => (
++          <div key={s.id} className="text-slate-300 font-mono text-[10px]">· {s.id}</div>
++        ))}
++        {systems.length > 8 && <div className="text-slate-500 text-[10px]">+ {systems.length - 8} more</div>}
++      </div>
++    </div>
++  );
++}
++
++function HorizonPanel({ horizon, systems }: { horizon: TimeHorizon; systems: AISystem[] }) {
++  return (
++    <div className="space-y-2 text-xs">
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-amber-300 text-sm font-bold font-mono">{horizon.date}</div>
++        <div className="text-slate-400 mt-1" dangerouslySetInnerHTML={{ __html: horizon.what }} />
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Days until</div>
++        <div className={
++          horizon.cliff === "passed" ? "text-slate-500" :
++          horizon.days_until <= 100 ? "text-red-400 font-bold text-2xl" :
++          horizon.days_until <= 300 ? "text-amber-400 text-2xl font-bold" :
++          "text-slate-300 text-2xl"
++        }>
++          {horizon.days_until > 0 ? `in ${horizon.days_until} days` : `${-horizon.days_until} days ago`}
++        </div>
++        <div className="text-slate-500 text-[10px] mt-0.5">{horizon.regime} · {horizon.cliff}</div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Systems affected ({systems.length})</div>
++        {systems.slice(0, 8).map((s) => (
++          <div key={s.id} className="text-slate-300 font-mono text-[10px]">· {s.id}</div>
++        ))}
++        {systems.length > 8 && <div className="text-slate-500 text-[10px]">+ {systems.length - 8} more</div>}
++      </div>
++    </div>
++  );
++}
++
++function SystemPanel({ system }: { system: AISystem }) {
++  return (
++    <div className="space-y-2 text-xs">
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-100 text-sm font-bold">{system.id}</div>
++        <div className="text-slate-400 mt-1">{system.city}, {system.country} · {system.domain}</div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Posture</div>
++        <div className="flex items-center gap-2">
++          <span className="inline-block w-3 h-3 rounded-full" style={{ backgroundColor: POSTURE_COLORS[system.posture] }} />
++          <span className="text-slate-200">{POSTURE_LABELS[system.posture]}</span>
++        </div>
++        <div className="text-slate-500 text-[10px] mt-1">Care score: <span className="text-cyan-300 font-mono">{system.care_score.toFixed(2)}</span></div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Regime bindings ({system.regime_bindings.length})</div>
++        <div className="space-y-0.5">
++          {system.regime_bindings.map((r) => {
++            const regime = REGIMES.find(x => x.id === r);
++            return <div key={r} className="text-slate-300 text-[10px]">· {r} <span className="text-slate-500">({regime?.name})</span></div>;
++          })}
++        </div>
++      </div>
++      <div className="bg-slate-950/50 rounded p-2">
++        <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Framework bindings ({system.framework_bindings.length})</div>
++        <div className="space-y-0.5">
++          {system.framework_bindings.map((f) => {
++            const fw = FRAMEWORKS.find(x => x.id === f);
++            return <div key={f} className="text-slate-300 text-[10px]">· {f} <span className="text-slate-500">({fw?.name})</span></div>;
++          })}
++        </div>
++      </div>
++      {system.horizon_bindings.length > 0 && (
++        <div className="bg-slate-950/50 rounded p-2">
++          <div className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">Time horizons ({system.horizon_bindings.length})</div>
++          <div className="space-y-0.5">
++            {system.horizon_bindings.map((h) => {
++              const hor = TIME_HORIZONS.find(x => x.id === h);
++              return <div key={h} className="text-slate-300 text-[10px]">· {h} <span className="text-slate-500">({hor?.what})</span></div>;
++            })}
++          </div>
++        </div>
++      )}
++      <a
++        href="https://csoai-v2-app.vercel.app/council/dome"
++        target="_blank" rel="noopener noreferrer"
++        className="block w-full text-center text-xs px-3 py-2 rounded-md bg-cyan-500/20 border border-cyan-500/40 text-cyan-200 hover:bg-cyan-500/30"
++      >
++        Verify on Council ↗
++      </a>
++    </div>
++  );
++}
+-- 
+2.50.1 (Apple Git-155)
+

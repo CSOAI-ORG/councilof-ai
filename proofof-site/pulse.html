@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 Sovereign Pulse — Live System Heartbeat</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px;margin:0;height:100vh;overflow:hidden}
+  .nav{background:rgba(2,6,15,0.95);padding:0.5rem 1rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3)}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.8rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:.95rem}
+  .nav .spacer{flex:1}
+  .container{display:grid;grid-template-rows:1fr auto;height:calc(100vh - 50px)}
+  /* Pulse display */
+  .pulse-stage{position:relative;background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .heart-container{position:relative;width:300px;height:300px}
+  .heart{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:8rem;filter:drop-shadow(0 0 30px #ef4444);animation:heartbeat 1s ease-in-out infinite}
+  @keyframes heartbeat{0%{transform:translate(-50%,-50%) scale(1)}15%{transform:translate(-50%,-50%) scale(1.15)}30%{transform:translate(-50%,-50%) scale(1)}45%{transform:translate(-50%,-50%) scale(1.1)}100%{transform:translate(-50%,-50%) scale(1)}}
+  .heart-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:2px solid #ef4444;border-radius:50%;opacity:0.5;animation:heart-ring 2s ease-out infinite}
+  @keyframes heart-ring{0%{width:100px;height:100px;opacity:0.8}100%{width:600px;height:600px;opacity:0}}
+  /* BPM display */
+  .bpm-display{position:absolute;top:1rem;left:1rem;background:rgba(2,6,15,0.85);padding:1rem;border-radius:8px;border-left:3px solid #10b981;z-index:10;backdrop-filter:blur(4px)}
+  .bpm-display .val{color:#10b981;font-size:3rem;font-weight:bold;font-family:monospace}
+  .bpm-display .lbl{color:#888;font-size:.7rem}
+  .bpm-display .status{color:#fbbf24;font-size:.85rem;margin-top:.3rem}
+  /* Stats sidebar */
+  .stats-sidebar{position:absolute;top:1rem;right:1rem;background:rgba(2,6,15,0.85);padding:1rem;border-radius:8px;border-left:3px solid #fbbf24;z-index:10;min-width:240px;backdrop-filter:blur(4px)}
+  .stats-sidebar h3{color:#fbbf24;font-size:.8rem;margin-bottom:.5rem}
+  .stats-sidebar .stat-row{display:flex;justify-content:space-between;padding:.3rem 0;font-size:.75rem;border-bottom:1px dotted #222}
+  .stats-sidebar .stat-row .k{color:#888}
+  .stats-sidebar .stat-row .v{color:#10b981;font-weight:bold;font-family:monospace}
+  /* Bottom panel */
+  .bottom-panel{background:rgba(2,6,15,0.95);border-top:1px solid #10b981;padding:1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-height:240px;overflow-y:auto}
+  .panel{background:#0a0a0a;padding:.7rem;border-radius:6px;border:1px solid #10b981}
+  .panel h4{color:#10b981;font-size:.8rem;margin-bottom:.5rem}
+  .panel-row{display:flex;gap:.3rem;align-items:center;margin:.3rem 0;flex-wrap:wrap}
+  .panel-row input,.panel-row select,.panel-row button{padding:.3rem .5rem;background:#02060f;border:1px solid #fbbf24;border-radius:3px;color:#fbbf24;font-family:monospace;font-size:.7rem;flex:1;min-width:60px}
+  .panel-row button{background:#fbbf24;color:#000;cursor:pointer;font-weight:bold}
+  .panel-result{background:#02060f;padding:.4rem;border-radius:3px;margin-top:.3rem;font-family:monospace;font-size:.65rem;color:#10b981;max-height:80px;overflow-y:auto}
+  /* Waveform */
+  .waveform{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);width:90%;height:80px;background:rgba(0,0,0,0.5);border:1px solid #10b981;border-radius:6px;overflow:hidden}
+  .wave{position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 19px,rgba(16,185,129,0.05) 19px,rgba(16,185,129,0.05) 20px)}
+  .pulse-line{position:absolute;top:50%;height:2px;background:linear-gradient(90deg,transparent 0,#10b981 20%,transparent 50%,#10b981 80%,transparent 100%);width:100%;animation:pulse-scan 2s linear infinite}
+  @keyframes pulse-scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/pulse.html">Pulse</a>
+  <a href="/experiments.html">Experiments</a>
+  <a href="/api-health.html">Health</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<div class="container">
+  <div class="pulse-stage">
+    <!-- BPM Display -->
+    <div class="bpm-display">
+      <div class="val" id="bpmVal">60.0</div>
+      <div class="lbl">BPM · sovereign pulse</div>
+      <div class="status" id="statusVal">STRONG</div>
+    </div>
+
+    <!-- Heart with rings -->
+    <div class="heart-container">
+      <div class="heart">❤️</div>
+      <div class="heart-ring"></div>
+      <div class="heart-ring" style="animation-delay:0.5s"></div>
+      <div class="heart-ring" style="animation-delay:1s"></div>
+    </div>
+
+    <!-- Waveform -->
+    <div class="waveform">
+      <div class="wave"></div>
+      <div class="pulse-line"></div>
+    </div>
+
+    <!-- Stats Sidebar -->
+    <div class="stats-sidebar">
+      <h3>📊 Pulse Statistics</h3>
+      <div class="stat-row"><span class="k">Total beats:</span><span class="v" id="totalBeats">0</span></div>
+      <div class="stat-row"><span class="k">Uptime:</span><span class="v" id="uptime">0s</span></div>
+      <div class="stat-row"><span class="k">Last beat:</span><span class="v" id="lastBeat">—</span></div>
+      <div class="stat-row"><span class="k">Care Floor:</span><span class="v">0.95</span></div>
+      <div class="stat-row"><span class="k">Compliant:</span><span class="v" id="compliance">100%</span></div>
+      <div class="stat-row"><span class="k">Rhythm:</span><span class="v" id="rhythmQuality">PERFECT</span></div>
+    </div>
+  </div>
+
+  <div class="bottom-panel">
+    <div class="panel">
+      <h4>💓 Record Pulse</h4>
+      <div class="panel-row">
+        <input type="number" id="pulseCare" placeholder="care" value="0.95" step="0.01" min="0" max="1">
+        <input type="text" id="pulseAction" placeholder="action" value="sovereign">
+        <button onclick="recordPulse()">💓 Beat</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h4>📊 BPM (window)</h4>
+      <div class="panel-row">
+        <input type="number" id="bpmWindow" placeholder="window sec" value="60" min="1" max="3600">
+        <button onclick="getBPM()">📊 Measure</button>
+      </div>
+      <div class="panel-result" id="bpmResult">Click "Measure" to get BPM.</div>
+    </div>
+    <div class="panel">
+      <h4>🎵 Rhythm</h4>
+      <div class="panel-row">
+        <button onclick="getRhythm()">🎵 Check</button>
+      </div>
+      <div class="panel-result" id="rhythmResult">Click "Check" for rhythm.</div>
+    </div>
+    <div class="panel">
+      <h4>📜 Pulse History</h4>
+      <div class="panel-row">
+        <input type="number" id="histLimit" placeholder="limit" value="10" min="1" max="100">
+        <button onclick="getHistory()">📜 Get</button>
+      </div>
+      <div class="panel-result" id="historyResult">Click "Get" for history.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let pulses = [];
+let t0 = Date.now();
+let totalBeats = 0;
+let lastBeatTime = null;
+let compliance = 1.0;
+
+function updateStats() {
+  document.getElementById("totalBeats").textContent = totalBeats;
+  const elapsed = Math.floor((Date.now() - t0) / 1000);
+  document.getElementById("uptime").textContent = elapsed + "s";
+  if (lastBeatTime) {
+    const since = Math.floor((Date.now() - lastBeatTime) / 1000);
+    document.getElementById("lastBeat").textContent = since + "s ago";
+  }
+  // Update compliance
+  if (pulses.length > 0) {
+    const compliant = pulses.filter(p => p.compliant).length;
+    compliance = compliant / pulses.length;
+    document.getElementById("compliance").textContent = Math.round(compliance * 100) + "%";
+  }
+  // Update BPM
+  const recent = pulses.filter(p => Date.now() - p.ts < 60000);
+  const bpm = (recent.length / 1).toFixed(1);
+  document.getElementById("bpmVal").textContent = bpm;
+  // Update rhythm quality
+  if (compliance >= 0.99) document.getElementById("rhythmQuality").textContent = "PERFECT";
+  else if (compliance >= 0.95) document.getElementById("rhythmQuality").textContent = "STRONG";
+  else if (compliance >= 0.9) document.getElementById("rhythmQuality").textContent = "STEADY";
+  else if (compliance >= 0.8) document.getElementById("rhythmQuality").textContent = "IRREGULAR";
+  else document.getElementById("rhythmQuality").textContent = "WEAK";
+  document.getElementById("statusVal").textContent = document.getElementById("rhythmQuality").textContent;
+}
+
+function recordPulse() {
+  const care = parseFloat(document.getElementById("pulseCare").value);
+  const action = document.getElementById("pulseAction").value;
+  pulses.push({
+    ts: Date.now(),
+    care_floor: care,
+    action: action,
+    compliant: care >= 0.95,
+  });
+  if (pulses.length > 1000) pulses.shift();
+  totalBeats++;
+  lastBeatTime = Date.now();
+  updateStats();
+}
+
+function getBPM() {
+  const window = parseInt(document.getElementById("bpmWindow").value);
+  const recent = pulses.filter(p => Date.now() - p.ts < window * 1000);
+  const bpm = ((recent.length / window) * 60).toFixed(2);
+  document.getElementById("bpmResult").textContent = `📊 pulse_bpm(window=${window}s)\n\nBPM: ${bpm}\nPulses: ${recent.length}\nWindow: ${window}s\nDoctrine: Sovereign heartbeat.`;
+}
+
+function getRhythm() {
+  if (pulses.length === 0) {
+    document.getElementById("rhythmResult").textContent = "No pulses yet";
+    return;
+  }
+  const compliant = pulses.filter(p => p.compliant).length;
+  const total = pulses.length;
+  const rate = (compliant / total).toFixed(4);
+  const quality = compliance >= 0.99 ? "PERFECT" : compliance >= 0.95 ? "STRONG" : compliance >= 0.9 ? "STEADY" : compliance >= 0.8 ? "IRREGULAR" : "WEAK";
+  document.getElementById("rhythmResult").textContent = `🎵 pulse_rhythm()\n\nTotal: ${total}\nCompliant: ${compliant}\nRate: ${rate}\nQuality: ${quality}\nDoctrine: Sovereign pulse.`;
+}
+
+function getHistory() {
+  const limit = parseInt(document.getElementById("histLimit").value);
+  const recent = pulses.slice(-limit);
+  document.getElementById("historyResult").textContent = `📜 pulse_history(limit=${limit})\n\n${recent.map(p => `  ${new Date(p.ts).toLocaleTimeString()} · ${p.action} · ${p.compliant ? '✓' : '✗'}`).join('\n')}`;
+}
+
+// Update every second
+setInterval(updateStats, 1000);
+
+// Pre-populate with 60 pulses (1 per second for the last minute)
+for (let i = 0; i < 60; i++) {
+  pulses.push({
+    ts: Date.now() - (60 - i) * 1000,
+    care_floor: 0.95,
+    action: "sovereign_pulse",
+    compliant: true,
+  });
+  totalBeats++;
+}
+lastBeatTime = pulses[pulses.length - 1].ts;
+updateStats();
+</script>
+
+</body>
+</html>

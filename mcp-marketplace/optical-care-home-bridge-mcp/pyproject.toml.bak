@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "optical-care-home-bridge-mcp"
+version = "1.0.2"
+readme = "README.md"
+description = "Bridge between domiciliary optometry visits + care-home governance. Handles consent capacity (Mental Capacity Act), GOS 6 eligibility, post-visit care plan update sync."
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "hello@meok.ai"}]
+keywords = ["domiciliary-optometry", "care-home", "mental-capacity", "gos-6", "consent", "uk", "mcp", "mcp-server", "model-context-protocol", "uk-compliance"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = ["mcp>=1.0.0"]
+
+[project.urls]
+Homepage = "https://meok.ai"
+Repository = "https://github.com/CSOAI-ORG/optical-care-home-bridge-mcp"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+only-include = ["server.py"]
+
+[project.scripts]
+optical-care-home-bridge-mcp = "server:main"

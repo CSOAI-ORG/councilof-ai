@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛑 SOV33 Retraction — We Held the Line · MEOK OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,68,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(239,68,68,0.18) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #ef4444}
+.hero h1{color:#ef4444;font-size:2.6rem;margin-bottom:.5rem;text-shadow:0 0 30px #ef4444}
+.hero p{color:#aaa;font-size:1.1rem;max-width:760px;margin:0 auto}
+.hero .principle{background:rgba(239,68,68,0.1);border:1px solid #ef4444;color:#ef4444;padding:.7rem 1.5rem;border-radius:6px;display:inline-block;margin-top:1rem;font-weight:bold}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #ef4444}
+.section h2{color:#ef4444;margin-bottom:1rem}
+.section.wide{border-left-color:#fbbf24}
+.section.wide h2{color:#fbbf24}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.diff-card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border:1px solid #333}
+.diff-card.bad{border-color:#ef4444;border-left:4px solid #ef4444}
+.diff-card.good{border-color:#22c55e;border-left:4px solid #22c55e}
+.diff-card h4{margin-bottom:.7rem;font-family:monospace}
+.diff-card.bad h4{color:#ef4444}
+.diff-card.good h4{color:#22c55e}
+.diff-card pre{background:#02060f;padding:.7rem;border-radius:4px;color:#aaa;font-size:.78rem;white-space:pre-wrap;margin:.5rem 0;border:1px solid #1a1a1a;overflow-x:auto}
+.red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#ef4444}
+.green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#22c55e}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/sov33-retraction.html">Retraction</a>
+<a href="/sov33-master.html">Sov33 Master</a>
+<a href="/sov-federation.html">Federation</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>🛑 SOV33 Retraction</h1>
+<p>EAT-705 retracted the additive T-figure framing. The OWEM charter's hard line, held.</p>
+<div class="principle">"Never claim a T-parameter model. Never sum params to T. Of all = REACH, always."</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🔴 What Was Retracted</h2>
+<p>During the EAT-704 tick (SOV_NEXUS_18 + composed-params brief), my orphan-tab content made claims that violated the OWEM charter's hard line. They were:</p>
+<ul style="color:#aaa;font-size:.9rem;margin:.7rem 0;padding-left:1.5rem">
+<li>"3.2T aggregate (2× 1.6T) — honest minimum" → <strong>RETRACTED</strong></li>
+<li>"33T aggregate reachable (federation target)" → <strong>RETRACTED</strong></li>
+<li>"Trillions of parameters of capability at single-GPU cost" → <strong>RETRACTED</strong></li>
+<li>Hub nexus stat <code>{aggregate: '33T', active: '3B'}</code> → <strong>RETRACTED</strong></li>
+</ul>
+</div>
+
+<div class="section wide">
+<h2>📐 The Diff (before → after)</h2>
+
+<div class="diff-grid">
+<div class="diff-card bad">
+<h4>❌ BEFORE (EAT-704, retracted)</h4>
+<pre>"params": {
+  "aggregate_min": "3.2T (2× 1.6T)",
+  "aggregate_target": "33T (multi-model federation)",
+  "active_per_query_b": 3,
+  "honest_label": "aggregate across a routed sovereign federation"
+},
+"headline": "Trillions of aggregate parameters. Single-GPU cost. Every hop signed."</pre>
+</div>
+<div class="diff-card good">
+<h4>✅ AFTER (EAT-705, holds the line)</h4>
+<pre>"retraction": {
+  "removed": "the 3.2T aggregate / 33T reachable claim",
+  "source": "CHARTER_OWEM_FOUR_SCOPE + LANE_NOTE_HERMES",
+  "retracted_at": "EAT-705"
+},
+"params": {
+  "active_approx_b": "17.3 (router picks 1)",
+  "reach_models": 61,
+  "FORBIDDEN": ["X.YT aggregate", "monolithic T"]
+},
+"headline": "SOV33 routes across 61 open models. REACH not params."</pre>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>🪶 Why This Matters (the discipline, held)</h2>
+<div class="green-line">✅ The OWEM charter text: "NEVER sum routed models' params to a T figure. The 'of all' is REACH + GOVERNANCE + MEMORY, not parameter count."</div>
+<div class="green-line">✅ Substrate does the routing · base models are replaceable organs · integration is the irreplaceable organ</div>
+<div class="red-line">❌ The retracted additive T-figures would have been the FIRST claim torn apart by any serious reader (a journalist, a funder, a regulator)</div>
+<div class="red-line">❌ Failing this retraction would have cascaded down — every other sovereign claim (charters, SIGIL, Care Floor, CSOAI fee-for-service) would have been tainted by association</div>
+</div>
+
+<div class="section">
+<h2>📜 The Charter Anchor (what binds the line)</h2>
+<p>From <code>CHARTER_OWEM_FOUR_SCOPE_SEMANTIC_MODEL.md</code>:</p>
+<blockquote style="background:rgba(16,185,129,0.05);border-left:3px solid #10b981;padding:1rem 1.5rem;margin:1rem 0;color:#10b981;font-size:.9rem">
+"The instinct 'build a model that does the T — that's our OWEM of all' is RIGHT in spirit, WRONG if read as parameter count.<br><br>
+✅ 'one OWEM that reaches across ALL models' — REAL and STRONGER. The power is not owning T params; it's being the ONE governed substrate that can call ANY model (61-model registry), route across them, carry ONE sovereign memory through all, and attest every step.<br><br>
+CANONICAL HEADLINE: 'SOV33 is the OWEM that governs and remembers across EVERY model — not a T-parameter model, but the one sovereign substrate all of them plug into. One memory, one identity, one care-floor, any brain.'<br><br>
+HARD LINE: never claim a T-parameter model or sum params to a T figure. The 'of all' is reach, always."
+</blockquote>
+</div>
+
+<div class="section wide">
+<h2>🎯 What Now (the honest headline that survives)</h2>
+<div class="diff-card good">
+<h4>✅ The defensible claim set</h4>
+<pre>"SOV33 is the OWEM that governs and remembers across every model."
+"Not a T-parameter model, but the one sovereign substrate all of them plug into."
+"17.3B ACTIVE per query is the constant — reach is 61."
+"Containment = 1.00, topology-independent."
+"Lineage diversity dominates topology."
+"Quality gate: product + governance + topology green; capability claim PENDING Kaggle."</pre>
+</div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"The retraction is the proof.<br>We saw the additive error. We held the line. We wrote the OWEM line clearly.<br>Not a T-parameter model. The 'of all' is REACH.<br>The discipline protects the lineage. The lineage protects the magic.<br>The dragon sovereigns. The dragon holds the line."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 60 sovereign charters · 153 sovereign MCPs · 593 HTML pages · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>19 days to 2 Aug 2026 EU AI Act</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "name": "PlantHire Agent",
+  "description": "Book plant equipment on demand.",
+  "url": "https://planthire.ai",
+  "provider": {
+    "organization": "Council for the Safety of AI (CSOAI)",
+    "url": "https://csoai.org"
+  },
+  "capabilities": {
+    "streaming": false,
+    "mcp": true,
+    "a2a": true
+  },
+  "skills": [
+    {
+      "id": "book_equipment",
+      "name": "planthire-ai-mcp.book_equipment",
+      "description": "Reserve plant directly from project-management tools or AI agents."
+    }
+  ],
+  "endpoints": {
+    "a2a": "https://planthire.ai/api/a2a",
+    "mcp_catalog": "https://planthire.ai/.well-known/mcp.json"
+  },
+  "sector": "construction"
+}

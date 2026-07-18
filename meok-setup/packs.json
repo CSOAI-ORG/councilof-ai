@@ -1,0 +1,93 @@
+{
+  "governance": {
+    "description": "EU AI Act, GDPR, ISO 27001, NIS2, DORA compliance",
+    "servers": [
+      "eu-ai-act-compliance-mcp",
+      "gdpr-compliance-ai-mcp",
+      "iso-27001-ai-mcp",
+      "iso-42001-ai-mcp",
+      "nis2-compliance-mcp",
+      "dora-compliance-mcp",
+      "cra-compliance-mcp",
+      "ai-bom-mcp",
+      "ai-incident-reporting-mcp",
+      "dora-nis2-crosswalk-mcp",
+      "uk-ai-bill-compliance-mcp",
+      "watermarking-authenticity-mcp",
+      "bias-detection-mcp"
+    ]
+  },
+  "healthcare": {
+    "description": "HIPAA, FHIR, SaMD, clinical AI governance",
+    "servers": [
+      "hipaa-compliance-mcp",
+      "healthcare-ai-governance-mcp",
+      "fhir-compliance-mcp",
+      "fda-samd-mcp",
+      "mdr-medical-device-mcp"
+    ]
+  },
+  "finance": {
+    "description": "Basel, MiFID II, AML, MiCA, DORA financial",
+    "servers": [
+      "basel-ai-overlay-mcp",
+      "mifid-ii-ai-mcp",
+      "aml-ai-mcp",
+      "mica-crypto-mcp"
+    ]
+  },
+  "security": {
+    "description": "OWASP, MITRE ATLAS, vulnerability scanning",
+    "servers": [
+      "owasp-agentic-mcp",
+      "mitre-atlas-mcp",
+      "mitre-attack-mcp",
+      "security-scanner-mcp",
+      "cisa-kev-mcp",
+      "sbom-cyclonedx-mcp",
+      "slsa-supply-chain-mcp",
+      "sigstore-cosign-mcp"
+    ]
+  },
+  "a2a": {
+    "description": "Agent-to-agent governance: policy, audit, rate limit, handoff, prompt injection, data residency",
+    "servers": [
+      "agent-policy-enforcement-mcp",
+      "agent-audit-logger-mcp",
+      "agent-rate-limiter-mcp",
+      "agent-handoff-certified-mcp",
+      "agent-prompt-injection-firewall-mcp",
+      "agent-data-residency-mcp"
+    ]
+  },
+  "trade": {
+    "description": "UK trade: haulage, skip hire, BIM, NRSWA, CHAS, crane, concrete pump",
+    "servers": [
+      "haulage-uk-compliance-mcp",
+      "skip-hire-ai-mcp",
+      "construction-iso-19650-mcp",
+      "nrswa-ai-mcp",
+      "chas-elite-prep-mcp",
+      "crane-hire-cpcs-mcp",
+      "concrete-pump-cpa-mcp"
+    ]
+  },
+  "industry": {
+    "description": "MiCA crypto, MDR/IVDR, FDA SaMD, COPPA/FERPA, Basel, MiFID II, AML",
+    "servers": [
+      "mica-crypto-mcp",
+      "mdr-medical-device-mcp",
+      "fda-samd-mcp",
+      "coppa-ferpa-mcp",
+      "basel-ai-overlay-mcp",
+      "mifid-ii-ai-mcp",
+      "aml-ai-mcp",
+      "fsa-food-safety-mcp",
+      "cobol-bridge-mcp"
+    ]
+  },
+  "all": {
+    "description": "All MEOK compliance MCP servers",
+    "servers": ["*"]
+  }
+}

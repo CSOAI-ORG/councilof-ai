@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>ai.csoai.sov3</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/bash</string>
+		<string>-c</string>
+		<string>cd /Users/nicholas/clawd/sovereign-temple &amp;&amp; exec /Users/nicholas/clawd/sovereign-temple/.venv/bin/gunicorn sovereign-mcp-server:app --worker-class uvicorn.workers.UvicornWorker --workers 2 --bind 127.0.0.1:3101 --max-requests 1000 --max-requests-jitter 50 --timeout 120 --graceful-timeout 30 --access-logfile /tmp/sov3-access.log --error-logfile /tmp/sov3-error.log --log-level info</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.sov3.stderr.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/nicholas/clawd/.hive/logs/ai.csoai.sov3.stdout.log</string>
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+	<key>WorkingDirectory</key>
+	<string>/Users/nicholas/clawd</string>
+</dict>
+</plist>

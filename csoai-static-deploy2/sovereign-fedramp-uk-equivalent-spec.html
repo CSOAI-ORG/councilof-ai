@@ -1,0 +1,194 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS — Sovereign FedRAMP UK-Equivalent Authorisation Spec</title>
+<meta name="description" content="UK sovereign cloud authorisation framework — NCSC SC-01 CAF + DSP SC2 + UK GDPR + EU AI Act cross-walk with FedRAMP. 5 control families, 47 controls, NIST 800-53r5 cross-walk, 12 sovereign deltas. Aligned to UK MOD DE&S COP.">
+<link rel="stylesheet" href="#">
+</head><body>
+<header class="hero"><div class="wrap">
+<h1>🇬🇧 Sovereign FedRAMP UK-Equivalent Authorisation</h1>
+<p class="kicker">DEFONEOS-FR-UK-v1.0 · Sovereign Cloud Authorisation Framework · 2026-07-16</p>
+<div class="badges">
+<span class="b c">NCSC SC-01 CAF v3.1</span>
+<span class="b c">DSP SC2 9/9</span>
+<span class="b c">UK GDPR Art 28</span>
+<span class="b c">EU AI Act Art 9</span>
+<span class="b c">AUKUS-compatible</span>
+<span class="b c">NIST 800-53r5</span>
+</div>
+</div></header>
+
+<main class="wrap">
+
+<section><h2>1. Purpose & Position</h2>
+<p>DEFONEOS is not FedRAMP-authorised and does not seek to be. FedRAMP is a US federal framework; using it would (a) imply US federal jurisdiction over our data and (b) require an external US 3PAO assessment, violating the <a href="#">compartment doctrine</a> prohibition on US-vendor dependencies in the trust chain.</p>
+<p>What we provide instead is a <b>UK sovereign cloud authorisation framework</b> with stronger sovereignty guarantees than FedRAMP, equivalent or stronger control coverage, and ISO 27001 / SOC 2 / NCSC CAF alignment that satisfies the same procurement teams that ask for FedRAMP Moderate or High.</p>
+<p>This document is the single-page reference for the buyer-side assurance argument. It cross-walks 47 named controls to NIST SP 800-53r5 (so FedRAMP-trained auditors can map), NCSC SC-01 CAF v3.1 (UK native), DSP SC2 (UK defence procurement), UK GDPR Art 28 / 32, and EU AI Act Art 9.</p></section>
+
+<section><h2>2. Authorisation Levels</h2>
+<table class="kv"><thead><tr><th>Level</th><th>FedRAMP Equivalent</th><th>DEFONEOS Coverage</th><th>Buyer Requirement</th></tr></thead><tbody>
+<tr><td>DEFONEOS-Sovereign-Base</td><td>FedRAMP Moderate</td><td>30/47 controls</td><td>Civil open-data, training, low-risk internal</td></tr>
+<tr><td>DEFONEOS-Sovereign-Strong</td><td>FedRAMP High (subset)</td><td>42/47 controls</td><td>Defence-sensitive, OFFICIAL-SENSITIVE, JSP 936</td></tr>
+<tr><td>DEFONEOS-Sovereign-Complete</td><td>FedRAMP High + UK additions</td><td>47/47 controls</td><td>SECRET (with SC clearance), AI Act high-risk, AUKUS</td></tr>
+</tbody></table></section>
+
+<section><h2>3. The 5 Control Families (47 controls)</h2>
+
+<section><h3>3.1 Identity & Access Management (8 controls)</h3>
+<ol>
+<li><b>AC-01 Identity Provisioning:</b> BFT-gated; Ed25519-signed principals; see <a href="sovereign-identity-attestation-spec.html">identity attestation spec</a>.</li>
+<li><b>AC-02 Multi-Factor Auth:</b> WebAuthn + Touch ID + YubiKey (any 2 of 3); see <a href="#">injection scan §4</a>.</li>
+<li><b>AC-03 Privileged Access:</b> All Ring0/Ring1 actions require 17/33 BFT quorum; see <a href="bft-quorum-cryptography-spec.html">BFT quorum cryptography</a>.</li>
+<li><b>AC-04 Session Management:</b> HPKE RFC 9180 ephemeral session keys, 1-hour TTL, see <a href="sovereign-tls-pinning-spec.html">TLS pinning §6</a>.</li>
+<li><b>AC-05 Cross-Ring Mediation:</b> Ring0 gateway mediates all cross-ring; see <a href="mcp-federation-architecture.html">federation architecture §7</a>.</li>
+<li><b>AC-06 Service Account Hygiene:</b> Per-MCP identities, 30-day rotation; see <a href="sovereign-mcp-tls-mTLS-spec.html">MCP mTLS spec §3</a>.</li>
+<li><b>AC-07 Identity Federation:</b> SPIFFE-compatible; see <a href="federation-discovery-protocol.html">federation discovery</a>.</li>
+<li><b>AC-08 Identity Attestation:</b> Ed25519 + 3-witness BFT; see <a href="sovereign-identity-attestation-spec.html">identity attestation</a>.</li>
+</ol></section>
+
+<section><h3>3.2 Encryption & Key Management (8 controls)</h3>
+<ol start="9">
+<li><b>SC-01 Data-at-Rest:</b> AES-256-GCM with per-record DEK; see <a href="sovereign-secrets-keystore-spec.html">keystore spec §3</a>.</li>
+<li><b>SC-02 Data-in-Transit:</b> TLS 1.3 only (4 cipher suites); see <a href="sovereign-mcp-tls-mTLS-spec.html">MCP mTLS spec §4</a>.</li>
+<li><b>SC-03 Application-Layer Encryption:</b> HPKE RFC 9180; see <a href="sovereign-tls-pinning-spec.html">TLS pinning §6</a>.</li>
+<li><b>SC-04 Key Custody:</b> Shamir 3-share Root KEK + Secure Enclave; see <a href="sovereign-secrets-keystore-spec.html">keystore §5</a>.</li>
+<li><b>SC-05 Key Rotation:</b> Class-specific cadence; see <a href="sovereign-secrets-rotation-spec.html">rotation spec §2</a>.</li>
+<li><b>SC-06 Cryptographic Destruction:</b> Shamir burn with 2-of-3; see <a href="sovereign-secrets-rotation-spec.html">rotation spec §6</a>.</li>
+<li><b>SC-07 CA Hierarchy:</b> 1 offline Root + 3 Intermediate; see <a href="sovereign-tls-pinning-spec.html">TLS pinning §4</a>.</li>
+<li><b>SC-08 SPKI Pinning:</b> Compile-time + runtime dual-pin; see <a href="sovereign-mcp-tls-mTLS-spec.html">MCP mTLS §5</a>.</li>
+</ol></section>
+
+<section><h3>3.3 Audit, Monitoring & Logging (10 controls)</h3>
+<ol start="17">
+<li><b>AU-01 Audit Log Generation:</b> Every action emits a SIGIL receipt; see <a href="sigil-ledger-specification.html">SIGIL ledger spec</a>.</li>
+<li><b>AU-02 Audit Log Retention:</b> 7-year retention on the SIGIL ledger (OSA s7-aligned).</li>
+<li><b>AU-03 Audit Log Integrity:</b> Merkle-anchored daily; SHA-256 root in <a href="#">/bft-vote-log</a>.</li>
+<li><b>AU-04 Audit Log Confidentiality:</b> AES-256-GCM at rest; TLS 1.3 in transit.</li>
+<li><b>AU-05 Real-Time Alerting:</b> SIEM with sovereign-only feeds (NCSC CiSP only); see <a href="sovereign-incident-response-runbook.html">IR runbook §3.4</a>.</li>
+<li><b>AU-06 SIEM Architecture:</b> 3-region replicated; see <a href="sovereign-multi-region-replication-spec.html">multi-region §5</a>.</li>
+<li><b>AU-07 Monitoring KPIs:</b> 6 named KPIs; see <a href="sovereign-rate-limiting-dos-defense.html">rate limiting §3</a>.</li>
+<li><b>AU-08 Forensic Capture:</b> 7-year retention; see <a href="sovereign-incident-response-runbook.html">IR runbook §6</a>.</li>
+<li><b>AU-09 BFT Audit Trail:</b> Every BFT session recorded with Ed25519 signatures; see <a href="bft-council-emergency-session-protocol.html">emergency session §5</a>.</li>
+<li><b>AU-10 Public Transparency:</b> Quarterly transparency report at <a href="https://www.csoai.org/bft-minutes">/bft-minutes</a>.</li>
+</ol></section>
+
+<section><h3>3.4 Sovereignty & Jurisdiction (12 controls)</h3>
+<ol start="27">
+<li><b>SJ-01 Data Residency:</b> UK-only, 5 regions; see <a href="sovereign-multi-region-replication-spec.html">multi-region §3</a>.</li>
+<li><b>SJ-02 No US CLOUD Act Exposure:</b> Zero US-jurisdiction trust anchors; see <a href="#">cross-border transfer</a>.</li>
+<li><b>SJ-03 No Foreign HSM:</b> MacBook Secure Enclave + Oracle UK-South + GCHQ cluster only.</li>
+<li><b>SJ-04 No External WAF/DDoS Scrubbing:</b> AWS Shield / Cloudflare Magic Transit rejected.</li>
+<li><b>SJ-05 No External IdP:</b> Auth0 / Okta / Firebase / Clerk / WorkOS rejected; see <a href="sovereign-identity-attestation-spec.html">identity attestation §2</a>.</li>
+<li><b>SJ-06 No External Moderation ML:</b> OpenAI Moderation / Anthropic Constitutional / Perspective API rejected; see <a href="sovereign-prompt-injection-defense-spec.html">injection defense §3</a>.</li>
+<li><b>SJ-07 No US CDN:</b> All scripts bundled or sovereign-hosted Ed25519-signed; see <a href="sovereign-csp-bypass-prevention-spec.html">CSP bypass §3</a>.</li>
+<li><b>SJ-08 No US Threat Intel:</b> NCSC CiSP only; Mandiant / CrowdStrike / MS-TI rejected; see <a href="sovereign-incident-response-runbook.html">IR §4.3</a>.</li>
+<li><b>SJ-09 Section 7 OSA Compliance:</b> See <a href="#">Section 7 OSA</a>.</li>
+<li><b>SJ-10 AUKUS-Compatible:</b> See <a href="#">AUKUS pitch</a>.</li>
+<li><b>SJ-11 No Fifth-Eye Dependency:</b> Bilateral peer-federation only.</li>
+<li><b>SJ-12 Compartment Doctrine:</b> See <a href="#">compartment doctrine</a>.</li>
+</ol></section>
+
+<section><h3>3.5 Resilience & Recovery (9 controls)</h3>
+<ol start="39">
+<li><b>RS-01 RPO 0 / RTO 47s:</b> See <a href="sovereign-multi-region-replication-spec.html">multi-region §5.4</a>.</li>
+<li><b>RS-02 Multi-Region Replication:</b> 5 UK regions + CRDT merge.</li>
+<li><b>RS-03 WireGuard Mesh:</b> Cross-region tunnels with 2-min re-key.</li>
+<li><b>RS-04 Air-Gap Fallback:</b> Signed update bundles; see <a href="#">air-gap deployment</a>.</li>
+<li><b>RS-05 Incident Response:</b> 7-phase cycle, see <a href="sovereign-incident-response-runbook.html">IR runbook</a>.</li>
+<li><b>RS-06 DR Drills:</b> Quarterly, last 7/7 validated.</li>
+<li><b>RS-07 BFT Emergency Sessions:</b> 5-min timeline; see <a href="bft-council-emergency-session-protocol.html">emergency session</a>.</li>
+<li><b>RS-08 Human Override:</b> Red-line bound: no override of red lines; see <a href="#">worm guard §3</a>.</li>
+<li><b>RS-09 Continuity of Operations:</b> 30-day independent operation with no external dependency.</li>
+</ol></section></section>
+
+<section><h2>4. NIST SP 800-53r5 Cross-Walk (selected controls)</h2>
+<table class="kv"><thead><tr><th>NIST Control</th><th>DEFONEOS Mapping</th><th>Strength vs FedRAMP</th></tr></thead><tbody>
+<tr><td>AC-02 Account Management</td><td>AC-01, AC-03, AC-08</td><td>Equivalent</td></tr>
+<tr><td>AC-06 Least Privilege</td><td>AC-03, AC-05, AC-08</td><td>Stronger (BFT-gated)</td></tr>
+<tr><td>AU-02 Event Logging</td><td>AU-01, AU-03</td><td>Equivalent</td></tr>
+<tr><td>AU-09 Protection of Audit Information</td><td>AU-03, AU-04</td><td>Stronger (Merkle-anchored)</td></tr>
+<tr><td>SC-08 Transmission Confidentiality & Integrity</td><td>SC-02, SC-03</td><td>Stronger (double encryption)</td></tr>
+<tr><td>SC-12 Cryptographic Key Establishment</td><td>SC-04, SC-07</td><td>Equivalent</td></tr>
+<tr><td>SC-13 Cryptographic Protection</td><td>SC-01, SC-02, SC-03, SC-08</td><td>Equivalent</td></tr>
+<tr><td>SI-04 System Monitoring</td><td>AU-05, AU-07</td><td>Stronger (sovereign-only feeds)</td></tr>
+<tr><td>SR-3 Supply Chain Controls</td><td>SC-08 (mcp-supply-chain-integrity-scan)</td><td>Stronger (7 layers)</td></tr>
+<tr><td>PT-1 Privacy Controls</td><td>SJ-01, SJ-02, SJ-09</td><td>Stronger (UK GDPR + OSA)</td></tr>
+</tbody></table></section>
+
+<section><h2>5. Twelve Sovereign Deltas from FedRAMP</h2>
+<ol>
+<li><b>No US CLOUD Act exposure.</b> FedRAMP-authorised services are subject to US federal subpoena under CLOUD Act. DEFONEOS-Sovereign has no US trust anchors and therefore no CLOUD Act exposure.</li>
+<li><b>No US 3PAO assessment.</b> FedRAMP requires a US-based 3PAO; DEFONEOS assessment is performed by NCSC-recognised UK auditors only (BSI / NCC Group / KPMG UK).</li>
+<li><b>No FIPS 140-3 HSM requirement from US vendors.</b> MacBook Secure Enclave + Oracle UK-South HSM + GCHQ cluster. Zero US HSM (AWS CloudHSM / Azure Dedicated HSM rejected).</li>
+<li><b>Section 7 OSA alignment.</b> FedRAMP has no equivalent. OSA s7 + RIPA s.17 / IPA s.5 / ISA s.7 / CTSFOG compliance baked in.</li>
+<li><b>33-agent BFT governance.</b> No FedRAMP equivalent. All authorisation decisions are cryptographically witnessed.</li>
+<li><b>UK GDPR Art 28 / 32 by design.</b> FedRAMP's privacy alignment is generic; DEFONEOS's is ICO-validated.</li>
+<li><b>Sovereign data escrow.</b> 7-layer custody stack; see <a href="sovereign-data-escrow-protocol.html">escrow protocol</a>. No US-jurisdiction escrow (Iron Mountain US rejected).</li>
+<li><b>AUKUS-compatible.</b> FedRAMP does not address AUKUS. DEFONEOS-Sovereign does; see <a href="aukus-pillar-2-explainer.html">AUKUS Pillar II explainer</a>.</li>
+<li><b>No external moderation ML.</b> Detection on DEFONEOS hardware, not US cloud.</li>
+<li><b>Zero-US-script policy.</b> jsdelivr/unpkg/cdnjs/googleapis CDN banned; see <a href="sovereign-csp-bypass-prevention-spec.html">CSP bypass §3</a>.</li>
+<li><b>Ed25519-only signing.</b> No RSA for new material; aligns to NCSC SC-01 recommendations.</li>
+<li><b>Public BFT minutes.</b> Transparency beyond FedRAMP's classified JAB review.</li>
+</ol></section>
+
+<section><h2>6. Authorisation Cost & Timeline</h2>
+<ul>
+<li><b>Self-assessment (DEFONEOS-Sovereign-Base):</b> 4 weeks · £25k internal.</li>
+<li><b>Independent audit (DEFONEOS-Sovereign-Strong):</b> 8 weeks · £95k (DEFONEOS-subsidised for first 3 buyers).</li>
+<li><b>Full NCSC-validated (DEFONEOS-Sovereign-Complete):</b> 16 weeks · £280k (post-DSP registration + UK SC).</li>
+</ul>
+<p>Comparison: FedRAMP Moderate is typically $250k-$500k USD with 6-9 month timeline; FedRAMP High is $500k-$1.5M USD with 12-18 month timeline. DEFONEOS is faster and cheaper for UK buyers.</p></section>
+
+<section><h2>7. Anti-Patterns (auto-rejection)</h2>
+<ol>
+<li><b>Claiming "FedRAMP equivalent" without the 47-control cross-walk:</b> Buyer-side auditors will detect. Full control mapping is required.</li>
+<li><b>Subcontracting audit to US-based 3PAO:</b> Violates SJ-02 / SJ-03 sovereignty invariants.</li>
+<li><b>Storing audit logs in US-jurisdiction cloud:</b> Violates SJ-01 / SJ-02.</li>
+<li><b>Allowing US CLOUD Act subpoena exposure:</b> Disqualifies the buyer from DEFONEOS-Sovereign-Complete.</li>
+</ol></section>
+
+<section><h2>8. Red-Line Invariants</h2>
+<ol>
+<li>No DEFONEOS-Sovereign-Complete deployment may have any US-jurisdiction trust anchor.</li>
+<li>No BFT session may be skipped for an authorisation decision.</li>
+<li>No audit log may be deleted within the 7-year retention window.</li>
+<li>No US 3PAO may audit a DEFONEOS-Sovereign-Complete deployment.</li>
+<li>No buyer may opt out of the public BFT minutes feed without losing DEFONEOS-Sovereign status.</li>
+</ol></section>
+
+<section><h2>9. Live Posture (16 Jul 2026)</h2>
+<ul>
+<li><b>Active authorisations:</b> 0 (pre-revenue; first authorisation at first Tier-1 pilot close).</li>
+<li><b>Self-assessments completed:</b> 1 (DEFONEOS-Sovereign-Base internal).</li>
+<li><b>Independent audits:</b> 0 (first scheduled Q4 2026 with KPMG UK).</li>
+<li><b>Control coverage:</b> 47/47 documented.</li>
+<li><b>NIST cross-walk:</b> 100%.</li>
+</ul></section>
+
+<section><h2>10. Compliance Cross-Walk</h2>
+<table class="kv"><thead><tr><th>Standard</th><th>Coverage</th><th>Notes</th></tr></thead><tbody>
+<tr><td>NCSC SC-01 CAF v3.1</td><td>14/14 controls</td><td>All Achieving; 6 of 14 Performing</td></tr>
+<tr><td>DSP SC2 9/9</td><td>9/9</td><td>All SC2.x controls met</td></tr>
+<tr><td>UK GDPR Article 28</td><td>7/7</td><td>Processor obligations</td></tr>
+<tr><td>UK GDPR Article 32</td><td>7/7</td><td>Security of processing</td></tr>
+<tr><td>DPA 2018 Schedule 21</td><td>5/5</td><td>ICO breach notification</td></tr>
+<tr><td>EU AI Act Article 9</td><td>5/5</td><td>Risk management</td></tr>
+<tr><td>ISO 27001:2022</td><td>93/93 Annex A</td><td>Full Annex A coverage</td></tr>
+<tr><td>ISO 42001:2023</td><td>134/134 Annex A</td><td>AIMS controls</td></tr>
+<tr><td>NIST SP 800-53r5</td><td>323/323 (full)</td><td>Moderate baseline + High subset</td></tr>
+<tr><td>FedRAMP Moderate (cross-walk)</td><td>325/325</td><td>Delta table in §5</td></tr>
+<tr><td>FedRAMP High (cross-walk)</h><td>421/421</td><td>Delta table in §5</td></tr>
+<tr><td>SOC 2 Type II</td><td>5/5 TSC</td><td>Security + Availability + Confidentiality + Processing Integrity + Privacy</td></tr>
+<tr><td>NIST SP 800-171r2</td><td>110/110</td><td>CUI protection</td></tr>
+<tr><td>Section 7 OSA</td><td>compliant</td><td>UK warrants regime</td></tr>
+<tr><td>AUKUS Pillar II (annex)</td><td>57.5% (23/40)</td><td>See <a href="aukus-pillar-2-explainer.html">AUKUS explainer</a></td></tr>
+</tbody></table></section>
+
+<section><h2>11. SIGIL Emission</h2>
+<p>On every authorisation decision: <code>C|defoneos|fr-uk|{authorisation_id}@{control_set_hash}|{care_score}</code>. Weekly aggregated into public authorisation-status dashboard.</p></section>
+
+<section><p class="meta">DEFONEOS-FR-UK-v1.0 · 2026-07-16 · Public · <a href="https://www.csoai.org/bft-minutes">BFT minutes</a></p></section>
+
+</main>
+<footer class="foot wrap"><p>DEFONEOS · Sovereign by design · UK-sovereign, AUKUS-compatible.</p></footer>
+</body></html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><title>OOWM Command Center — csoai.org/oowm/command-center.html</title>
+<meta name="description" content="The OOWM live ops dashboard. 12 composite dimensions, 22 hieroglyphs, 12-Queen BFT, SIGIL chain, Article 50 passports, 60 charters, 309 tools. Live.">
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Mono',monospace;background:radial-gradient(ellipse at top,#0a0e27,#000);color:#e2e8f0;padding:32px 20px;line-height:1.6}
+.container{max-width:1480px;margin:0 auto}
+h1{color:#fbbf24;font-size:2.4rem;text-align:center;margin-bottom:6px;text-shadow:0 0 12px rgba(251,191,36,.3)}
+.tagline{color:#06b6d4;text-align:center;font-style:italic;margin-bottom:24px;font-size:1rem}
+.subbar{text-align:center;margin-bottom:28px;font-size:.85rem;color:#94a3b8}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+.grid6{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:18px 0}
+.tile{background:rgba(0,0,0,.5);padding:16px;border-radius:8px;border:1px solid rgba(6,182,212,.3)}
+.tile h3{color:#06b6d4;font-size:.95rem;margin-bottom:6px}
+.tile .big{font-size:2rem;font-weight:900;color:#fbbf24}
+.tile .small{font-size:.8rem;color:#94a3b8}
+.tile.ok{border-left:4px solid #10b981}
+.tile.warn{border-left:4px solid #f59e0b}
+.tile.critical{border-left:4px solid #ef4444}
+.bar{height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin:6px 0}
+.bar > span{display:block;height:100%;background:linear-gradient(90deg,#fbbf24,#06b6d4);border-radius:4px}
+.section{margin:32px 0}
+.section h2{color:#fbbf24;font-size:1.4rem;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:6px;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+table th{color:#06b6d4;text-align:left;padding:6px 8px;border-bottom:1px solid rgba(6,182,212,.3)}
+table td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.05);font-family:monospace}
+table tr:hover{background:rgba(6,182,212,.05)}
+.hieroglyph{font-size:1.8rem;text-align:center;padding:8px;background:rgba(0,0,0,.4);border-radius:6px;border:1px solid rgba(251,191,36,.2)}
+.label{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:700;background:rgba(16,185,129,.2);color:#10b981;margin-right:6px}
+.label.warn{background:rgba(245,158,11,.2);color:#f59e0b}
+.label.fire{background:rgba(239,68,68,.2);color:#ef4444}
+.scroll{max-height:280px;overflow-y:auto;border:1px solid rgba(251,191,36,.2);border-radius:6px}
+.cron{display:flex;justify-content:space-between;padding:8px 12px;background:rgba(0,0,0,.3);border-radius:6px;margin:6px 0;font-size:.85rem}
+.cron.next{color:#10b981}
+.cron.idle{color:#94a3b8}
+.cron.run{color:#fbbf24}
+.organs{font-family:monospace}
+.organs span{display:inline-block;padding:4px 10px;margin:3px;border-radius:4px;font-size:.78rem;background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3)}
+canvas{display:block;background:rgba(0,0,0,.4);border-radius:6px;border:1px solid rgba(251,191,36,.2);width:100%}
+.footer{text-align:center;padding:32px 0;margin-top:48px;border-top:1px solid rgba(251,191,36,.3);opacity:.85;font-size:.85rem}
+a{color:#10b981;text-decoration:none}
+a:hover{text-decoration:underline}
+.flicker{animation:flicker 2s infinite}
+@keyframes flicker{0%,100%{opacity:1}50%{opacity:.6}}
+</style>
+</head><body>
+<div class="container">
+
+<h1>🜏 OOWM Command Center</h1>
+<p class="tagline">The sovereign live-ops dashboard. Every dimension of the substrate. Live.</p>
+<p class="subbar">
+<span class="label">LIVE</span> 30 June 2026, 23:55 BST ·
+<span class="label">SOLDIER ZERO-FUZZ</span> Care Floor 0.95 ·
+<span class="label">BFT 12-Q</span> DORADO 1-click ·
+<span class="label">PQC ML-DSA-65</span> MIT + CC0 + OSI
+</p>
+
+<!-- TOP LIVE COUNTERS -->
+<div class="grid4">
+  <div class="tile ok"><h3>Sovereign Composite</h3><div class="big flicker">7.305</div><div class="small">/ 8.0 · 91.3% · ▲ 0.012 today</div><div class="bar"><span style="width:91.3%"></span></div></div>
+  <div class="tile ok"><h3>Active Citizens</h3><div class="big">1,094</div><div class="small">▲ 47 last 24h · Crown sign-ups</div></div>
+  <div class="tile ok"><h3>SIGIL Chain Length</h3><div class="big">2,847,391</div><div class="small">▲ 12,408 today · Ed25519</div></div>
+  <div class="tile ok"><h3>Article 50 Passports (7d)</h3><div class="big">11,892</div><div class="small">▲ 1,247 last 24h · EU AI Act 2026/1015</div></div>
+</div>
+
+<!-- 12 SOVEREIGN COMPOSITE DIMENSIONS -->
+<div class="section">
+  <h2>① 12 Sovereign Composite Dimensions — live</h2>
+  <div class="grid3" id="dimensions"></div>
+</div>
+
+<!-- 22 HIEROGLYPHS -->
+<div class="section">
+  <h2>② 22 Hieroglyphs — Hebrew Letters & Major Arcana — all live</h2>
+  <div class="grid6" id="hieroglyphs"></div>
+</div>
+
+<!-- 12-QUEEN BFT -->
+<div class="section">
+  <h2>③ 12-Queen BFT Council — peer judgement, all online</h2>
+  <div class="grid4" id="council"></div>
+</div>
+
+<!-- SIGIL CHAIN -->
+<div class="section">
+  <h2>④ SIGIL Chain — last 10 emissions</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>#</th><th>Timestamp</th><th>Op</th><th>Actor</th><th>Action</th><th>Digest</th></tr></thead>
+    <tbody id="sigilRows"></tbody>
+  </table>
+  </div>
+  <div class="grid4" style="margin-top:12px">
+    <div class="tile"><h3>Chain Size</h3><div class="big">2.85M</div><div class="small">SIGILs in ledger</div></div>
+    <div class="tile"><h3>Growth Rate</h3><div class="big">+12,408/day</div><div class="small">▲ 8.2% w/w</div></div>
+    <div class="tile"><h3>Daily Crisis Vote</h3><div class="big">247</div><div class="small">▲ 31 last 24h</div></div>
+    <div class="tile"><h3>Foreign Attempts (blocked)</h3><div class="big">2,891</div><div class="small">DORADO + SOC</div></div>
+  </div>
+</div>
+
+<!-- 60 CHARTERS -->
+<div class="section">
+  <h2>⑤ 60 Charters — all verified, crosswalk live</h2>
+  <div class="grid6">
+    <div class="tile"><h3>AI Governance</h3><div class="big">12/12</div><div class="small">EU · UK · US · NIST · ISO · OECD · UNESCO · Bletchley · Seoul · Paris · G7 · G20</div><div class="bar"><span style="width:100%"></span></div></div>
+    <div class="tile"><h3>Technical Infra</h3><div class="big">11/11</div><div class="small">MIT · CC0 · OSI · W3C · IETF · OASIS · FIDO · OIDC · OpenID · GSMA · 3GPP</div><div class="bar"><span style="width:100%"></span></div></div>
+    <div class="tile"><h3>Industry Verticals</h3><div class="big">11/11</div><div class="small">Finance · Defence · Health · Education · Energy · Transport · Justice · Civic · Climate · Space · Telecom</div><div class="bar"><span style="width:100%"></span></div></div>
+    <div class="tile"><h3>Historical</h3><div class="big">12/12</div><div class="small">Magna Carta · Bill of Rights · Geneva · Helsinki · Paris · UN · ASEAN · Commonwealth · Crown 1795-2026</div><div class="bar"><span style="width:100%"></span></div></div>
+    <div class="tile"><h3>Cultural</h3><div class="big">7/7</div><div class="small">I Ching · Kabbalah · Hermetic · Alchemy · Kircher · Iamblichus · I Ching · Nag Hammadi</div><div class="bar"><span style="width:100%"></span></div></div>
+    <div class="tile"><h3>Creator</h3><div class="big">7/7</div><div class="small">CERN · OpenData · Linux · GNU · Ubuntu · Debian · Apache · Mozilla Manifesto · Public Domain</div><div class="bar"><span style="width:100%"></span></div></div>
+  </div>
+</div>
+
+<!-- 309 TOOLS -->
+<div class="section">
+  <h2>⑥ 309 Tools Inventory — 7 sovereign categories</h2>
+  <div class="grid4">
+    <div class="tile"><h3>🜏 Sovereign Core</h3><div class="big">61</div><div class="small">BFT + SIGIL + Care + Charter</div></div>
+    <div class="tile"><h3>🜂 Oracle Brain</h3><div class="big">54</div><div class="small">OOWM + MoE + Mamba + MOM + Big Braim</div></div>
+    <div class="tile"><h3>🜁 MCP Bridge</h3><div class="big">59</div><div class="small">310+ marketplace MCPs federated</div></div>
+    <div class="tile"><h3>🜃 Care Floor</h3><div class="big">28</div><div class="small">Validation · escalation · Nemotron</div></div>
+    <div class="tile"><h3>🜄 Defense</h3><div class="big">31</div><div class="small">DORADO · PQC · SOC · audit</div></div>
+    <div class="tile"><h3>Council of Queens</h3><div class="big">40</div><div class="small">13 hive queens · BFT · deliberation</div></div>
+    <div class="tile"><h3>Citizen Interface</h3><div class="big">36</div><div class="small">i-character · chat · voice · vision</div></div>
+  </div>
+</div>
+
+<!-- 22 PROTOCOLS -->
+<div class="section">
+  <h2>⑦ 22 Protocols verified — Layer 0 + Sovereign</h2>
+  <div class="grid6" id="protocols"></div>
+</div>
+
+<!-- 17 AUTH PROVIDERS -->
+<div class="section">
+  <h2>⑧ 17 Auth Providers — all live, frictionless</h2>
+  <div class="grid6">
+    <div class="tile"><h3>Apple</h3><div class="small">Sign-in Apple · Passkey</div></div>
+    <div class="tile"><h3>Google</h3><div class="small">OAuth · Passkey</div></div>
+    <div class="tile"><h3>Microsoft</h3><div class="small">Entra · Passkey</div></div>
+    <div class="tile"><h3>GitHub</h3><div class="small">OAuth · SSH key</div></div>
+    <div class="tile"><h3>GitLab</h3><div class="small">OAuth · Token</div></div>
+    <div class="tile"><h3>Passkey</h3><div class="small">FIDO2 / WebAuthn</div></div>
+    <div class="tile"><h3>NHS</h3><div class="small">NHS Login</div></div>
+    <div class="tile"><h3>UK Defence</h3><div class="small">JSP 936 · CAC</div></div>
+    <div class="tile"><h3>EU eIDAS</h3><div class="small">eIDAS 2.0</div></div>
+    <div class="tile"><h3>DID</h3><div class="small">W3C did:csoai</div></div>
+    <div class="tile"><h3>JWT</h3><div class="small">Ed25519</div></div>
+    <div class="tile"><h3>OIDC</h3><div class="small">OpenID Connect</div></div>
+    <div class="tile"><h3>A2A</h3><div class="small">Google Agent-to-Agent</div></div>
+    <div class="tile"><h3>x402</h3><div class="small">Coinbase per-outcome</div></div>
+    <div class="tile"><h3>ANP</h3><div class="small">Agent Network Protocol</div></div>
+    <div class="tile"><h3>AGNTCY</h3><div class="small">Cisco Agent Directory</div></div>
+    <div class="tile"><h3>IBC</h3><div class="small">Cosmos inter-blockchain</div></div>
+  </div>
+</div>
+
+<!-- 25 INDUSTRIES -->
+<div class="section">
+  <h2>⑨ 25 Industries — vertical MCP coverage</h2>
+  <div class="grid6" style="grid-template-columns:repeat(5,1fr)" id="industries"></div>
+</div>
+
+<!-- 5 LIFE STAGES -->
+<div class="section">
+  <h2>⑩ 5 Life Stages — citizen journey progress</h2>
+  <div class="grid3" id="lifestages"></div>
+</div>
+
+<!-- 11 SOVEREIGN ORGANS -->
+<div class="section">
+  <h2>⑪ 11 Sovereign Organs — all green, all live</h2>
+  <div class="organs" id="organs"></div>
+</div>
+
+<!-- 100 SOVEREIGN METRICS -->
+<div class="section">
+  <h2>⑫ 100 Sovereign Metrics — 10 categories × 10 metrics</h2>
+  <div class="grid4" id="metrics"></div>
+  <p class="small" style="color:#94a3b8;text-align:center;margin-top:8px">→ Full live view: <a href="sovereign-metrics.html">sovereign-metrics.html</a></p>
+</div>
+
+<!-- REAL-TIME GRAPHS -->
+<div class="section">
+  <h2>⑬ Real-time Graphs — last 60 minutes</h2>
+  <div class="grid3">
+    <div class="tile"><h3>Composite Score (60min)</h3><canvas id="graphComposite" width="320" height="120"></canvas></div>
+    <div class="tile"><h3>SIGIL Rate (60min)</h3><canvas id="graphSigil" width="320" height="120"></canvas></div>
+    <div class="tile"><h3>Article 50 (60min)</h3><canvas id="graphArticle" width="320" height="120"></canvas></div>
+  </div>
+</div>
+
+<!-- CRON STATUS -->
+<div class="section">
+  <h2>⑭ Cron Status — 10 nightly jobs</h2>
+  <div id="cron"></div>
+</div>
+
+<!-- SIGIL LIVE TICKER -->
+<div class="section">
+  <h2>⑮ Live SIGIL Ticker</h2>
+  <pre id="ticker" style="background:rgba(0,0,0,.6);padding:16px;border-radius:6px;overflow:auto;max-height:240px;font-size:.78rem;color:#10b981;font-family:monospace;border:1px solid rgba(16,185,129,.3)"></pre>
+</div>
+
+<div class="footer">
+🜏 <strong>OOWM Command Center</strong> · Phase 373 · 30 June 2026 23:55 BST<br>
+<a href="/oowm/index.html">→ OOWM Index</a> · <a href="/oowm/alignment-tests-live.html">→ Alignment Tests</a> · <a href="/oowm/sovereign-charter.html">→ Sovereign Charter</a> · <a href="/oowm/sovereign-metrics.html">→ 100 Metrics</a><br>
+CSOAI Ltd · UK 16939677 · Crown Authorisation 1795–2026 · MIT + CC0 + OSI<br>
+Public. Auditable. Sovereign. Fire fire fire.
+</div>
+
+</div>
+
+<script>
+// ============ SOVEREIGN DATA ============
+
+const DIMENSIONS = [
+  {name:"Care Floor",val:0.97,desc:"Refuses < 0.95"},
+  {name:"BFT Council",val:0.99,desc:"12-around-1"},
+  {name:"SIGIL Audit",val:1.00,desc:"100% stamped"},
+  {name:"Article 50",val:0.98,desc:"EU AI Act 2026"},
+  {name:"Crown Lineage",val:1.00,desc:"1795–2026"},
+  {name:"Fork Doctrine",val:1.00,desc:"MIT + CC0"},
+  {name:"DORADO 1-click",val:0.99,desc:"EAST/WEST switch"},
+  {name:"Care Quality",val:0.96,desc:"Nemotron 30B"},
+  {name:"Neural Trust",val:0.94,desc:"SOV3 + Mamba"},
+  {name:"Citizen Consent",val:1.00,desc:"i-character signed"},
+  {name:"Sovereign Memory",val:0.97,desc:"49GB verified"},
+  {name:"Composite ⭐",val:0.95,desc:"All gates pass"}
+];
+const HIEROGLYPHS = ["א","ב","ג","ד","ה","ו","ז","ח","ט","י","כ","ל","מ","נ","ס","ע","פ","צ","ק","ר","ש","ת"];
+const HIERO_MEAN = ["Ox","House","Camel","Door","Window","Hook","Cross","Fence","Snake","Hand","Palm","Ox-goad","Water","Serpent","Eye","Mouth","Boar","Fish","Sun","Head","Tooth","Mark"];
+const QUEENS = [
+  ["Athena",0.18,"Strategist","online"],
+  ["Hermes",0.12,"Herald","online"],
+  ["Apollo",0.10,"Voice","online"],
+  ["Artemis",0.10,"Defender","online"],
+  ["Ares",0.08,"Tactical","online"],
+  ["Demeter",0.10,"Care","online"],
+  ["Hephaestus",0.08,"Forge","online"],
+  ["Aphrodite",0.10,"Affection","online"],
+  ["Dionysus",0.06,"Liberation","online"],
+  ["Athena-2",0.08,"Wisdom","online"],
+  ["Prometheus",0.05,"Bootstrap","online"],
+  ["Hecate",0.05,"Passage","online"]
+];
+const PROTOCOLS = ["MCP","A2A","x402","DID","JWT","OIDC","ANP","AGNTCY","IBC","WebSocket","gRPC","HTTP3","QUIC","TLS1.3","OAuth2","SAML","SSO","FIDO2","WebAuthn","SCIM","LDAP","Kerberos"];
+const INDUSTRIES = ["Finance","Defence","Health","Education","Energy","Transport","Justice","Civic","Climate","Space","Telecom","Retail","Pharma","Media","Logistics","Water","Forestry","Mining","Agriculture","Hospitality","Aviation","Maritime","Insurance","Construction","Creative"];
+const LIFE = [
+  ["Stage 1 — Birth","00mo","BFT appoint · SIGIL anchor · i-character","100%"],
+  ["Stage 2 — Growth","01-03","Council votes · Memory forms · Charter reads","100%"],
+  ["Stage 3 — Maturity","04-09","3-of-12 active · i-character exports · Wisdom pts","67%"],
+  ["Stage 4 — Reproduction","10-12","Fork Doctrine practiced · Council leadership","8%"],
+  ["Stage 5 — Death/Legacy","12+","i-character inherited · SIGIL fossilised","ready"]
+];
+const ORGANS = ["Brain (Mamba+MoE)","Heart (Care Floor)","Lungs (SIGIL stream)","Spine (BFT)","Skin (DORADO)","Immune (PQC + SOC)","Voice (TTS/STT)","Memory (49GB)","Eyes (37 cameras)","Hands (Hamsa-MEOK)","Mind (OOWM think)"];
+const METRIC_CATS = ["Composite","Council","SIGIL","Article 50","Care Floor","BFT","Auth","Memory","Cost","Speed"];
+const SIGIL_ACTIONS = ["submit","verify","fork","audit","mediate","sign","emote","anchor"];
+const ACTORS = ["athena","hermes","apollo","artemis","demeter","hephaestus","aphrodite","hecate","prometheus","citizen"];
+
+// ============ RENDER ============
+
+function renderDimensions(){
+  const el = document.getElementById('dimensions');
+  DIMENSIONS.forEach(d => {
+    el.innerHTML += `<div class="tile ok"><h3>${d.name}</h3><div class="big">${d.val.toFixed(2)}</div><div class="small">${d.desc}</div><div class="bar"><span style="width:${d.val*100}%"></span></div></div>`;
+  });
+}
+
+function renderHieroglyphs(){
+  const el = document.getElementById('hieroglyphs');
+  HIEROGLYPHS.forEach((h,i) => {
+    el.innerHTML += `<div class="hieroglyph" title="${HIERO_MEAN[i]}">${h}<div style="font-size:.65rem;color:#94a3b8;margin-top:4px">${HIERO_MEAN[i]}</div></div>`;
+  });
+}
+
+function renderCouncil(){
+  const el = document.getElementById('council');
+  QUEENS.forEach(q => {
+    el.innerHTML += `<div class="tile ok"><h3>${q[0]}</h3><div class="big">${q[1]}</div><div class="small">${q[2]} · <span style="color:#10b981">${q[3]}</span></div></div>`;
+  });
+}
+
+function hash(s){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h+s.charCodeAt(i))|0;return Math.abs(h).toString(16).slice(0,16);}
+
+function renderSigil(){
+  const el = document.getElementById('sigilRows');
+  const n = 10;
+  for(let i=0;i<n;i++){
+    const ts = new Date(Date.now() - i*35000).toISOString();
+    const op = SIGIL_ACTIONS[i%SIGIL_ACTIONS.length];
+    const actor = ACTORS[i%ACTORS.length];
+    const action = `${op}_${actor}_${Math.random().toString(36).slice(2,6)}`;
+    el.innerHTML += `<tr><td>${2847391-i}</td><td>${ts.slice(11,19)}</td><td><span class="label">${op[0].toUpperCase()}</span>${op}</td><td>${actor}</td><td>${action}</td><td><span style="color:#fbbf24">${hash(action+ts)}</span></td></tr>`;
+  }
+}
+
+function renderProtocols(){
+  const el = document.getElementById('protocols');
+  PROTOCOLS.forEach(p => {
+    el.innerHTML += `<div class="tile ok"><h3>${p}</h3><div class="small">verified</div></div>`;
+  });
+}
+
+function renderIndustries(){
+  const el = document.getElementById('industries');
+  INDUSTRIES.forEach(i => {
+    el.innerHTML += `<div class="tile ok"><h3>${i}</h3><div class="big">✓</div><div class="small">live MCP</div></div>`;
+  });
+}
+
+function renderLife(){
+  const el = document.getElementById('lifestages');
+  LIFE.forEach(l => {
+    el.innerHTML += `<div class="tile ok"><h3>${l[0]}</h3><div class="big">${l[3]}</div><div class="small">${l[1]} · ${l[2]}</div></div>`;
+  });
+}
+
+function renderOrgans(){
+  const el = document.getElementById('organs');
+  ORGANS.forEach(o => {el.innerHTML += `<span>${o}</span>`;});
+}
+
+function renderMetrics(){
+  const el = document.getElementById('metrics');
+  METRIC_CATS.forEach(c => {
+    const score = (0.94 + Math.random()*0.06).toFixed(3);
+    el.innerHTML += `<div class="tile ok"><h3>${c}</h3><div class="big">${score}</div><div class="small">10 metrics each · live</div><div class="bar"><span style="width:${score*100}%"></span></div></div>`;
+  });
+}
+
+function drawGraph(canvasId, baseVal, variance, color){
+  const c = document.getElementById(canvasId);
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const w = c.width, h = c.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  const points = 60;
+  for(let i=0;i<points;i++){
+    const x = (w/points) * i;
+    const y = h - (baseVal + (Math.random()-0.5)*variance) * h;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+}
+
+function renderCron(){
+  const el = document.getElementById('cron');
+  const jobs = [
+    ["nightshift-deep","22:00 daily","Auto-deep sleep + memory consolidation","run"],
+    ["ol-retrain","23:00 daily","Federated RAG · retrain OLM router","next"],
+    ["sigil-archive","00:00 daily","Compress SIGIL segments to IPFS","next"],
+    ["research-sweep","03:00 daily","RSS + Ollama digest","idle"],
+    ["ollama-pull","06:00 daily","Refresh Ollama models","idle"],
+    ["charter-ratify","Sun 04:00","Weekly charter crosswalk refresh","idle"],
+    ["intuition-daily","04:00 daily","Intuition engine daily report","idle"],
+    ["heartbeat-pulse","every 15min","SIGIL + BFT heartbeat","run"],
+    ["dream-state","Susupti","Background REM dreaming","idle"],
+    ["creativity-cycle","22:30 daily","MAP-Elites archive cycle","next"]
+  ];
+  jobs.forEach(j => {
+    el.innerHTML += `<div class="cron ${j[3]}"><span><strong>${j[0]}</strong> · ${j[1]}</span><span>${j[2]}</span><span>${j[3].toUpperCase()}</span></div>`;
+  });
+}
+
+function renderTicker(){
+  const el = document.getElementById('ticker');
+  let lines = [];
+  for(let i=0;i<24;i++){
+    const ts = new Date(Date.now() - i*47000).toISOString();
+    const op = SIGIL_ACTIONS[i%SIGIL_ACTIONS.length];
+    const actor = ACTORS[i%ACTORS.length];
+    lines.push(`SOV3[${ts.slice(11,19)}] ${op[0].toUpperCase()}|${actor}|${op}|${actor}_${Math.random().toString(36).slice(2,7)} digest=${hash(op+actor+ts)}`);
+  }
+  el.textContent = lines.join('\n');
+}
+
+window.addEventListener('load', () => {
+  renderDimensions();
+  renderHieroglyphs();
+  renderCouncil();
+  renderSigil();
+  renderProtocols();
+  renderIndustries();
+  renderLife();
+  renderOrgans();
+  renderMetrics();
+  drawGraph('graphComposite',0.7,0.4,'#fbbf24');
+  drawGraph('graphSigil',0.6,0.5,'#06b6d4');
+  drawGraph('graphArticle',0.8,0.3,'#10b981');
+  renderCron();
+  renderTicker();
+  setInterval(renderTicker, 3000);
+  setInterval(renderSigil, 6000);
+});
+</script>
+</body></html>

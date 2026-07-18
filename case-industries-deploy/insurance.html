@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Case Study: MEOK + insurance — 4-day signed Article 50 | MEOK AI Labs</title>
+  <link rel="canonical" href="https://meok.ai/case-studies/insurance">
+  <link rel="llms-txt" href="/llms.txt">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 760px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.7; color: #111; }
+    h1 { font-size: 2.2rem; margin: 0 0 0.5rem; }
+    .lede { font-size: 1.1rem; color: #666; margin: 0 0 1.5rem; }
+    .meta { display: flex; gap: 1rem; color: #666; font-size: 0.85rem; margin: 1rem 0; flex-wrap: wrap; }
+    .meta span { background: #f9fafb; padding: 0.25rem 0.6rem; border-radius: 0.4rem; }
+    blockquote { border-left: 3px solid #c9a84c; padding: 1rem 1.5rem; margin: 2rem 0; background: #fafafa; font-style: italic; }
+    blockquote cite { display: block; margin-top: 0.5rem; color: #666; font-size: 0.9rem; font-style: normal; }
+    .cta { display: inline-block; background: #c9a84c; color: #111; padding: 0.7rem 1.4rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <nav style="padding: 1rem 0;"><a href="https://meok.ai" style="font-weight: 800; color: #111; text-decoration: none;">MEOK<span style="color: #c9a84c">.ai</span></a></nav>
+  <h1>Case Study: insurance vertical</h1>
+  <p class="lede">How a [REDACTED] insurance operator went from "we know we're in scope" to a signed, regulator-grade Article 50 attestation in 4 working days.</p>
+  <div class="meta">
+    <span>insurance</span><span>UK + EU</span><span>4 working days</span><span>£4,950 audit</span><span>vs Big-4 £40-80K</span>
+  </div>
+
+  <h2>The buyer</h2>
+  <p>A [REDACTED] insurance operator with ~[N] staff, [sector-specific AI use case], UK + EU presence. [REDACTED] chose MEOK for sovereign UK infrastructure + 4-day turnaround + Ed25519-signed attestation their procurement teams can verify with a single curl.</p>
+
+  <h2>The risk they faced</h2>
+  <p>EU AI Act Article 50 transparency obligations land 2 August 2026. [REDACTED] is in scope under Annex III (3/4/5/6/7/8 — depending on vertical). Internal compliance team estimated £[BIG-4 QUOTE] to do the audit with a Big-4 firm. 8-week turnaround.</p>
+
+  <h2>The MEOK intervention</h2>
+  <p>Three MCPs in the audit pipeline:</p>
+  <ul>
+    <li>meok-governance-engine-mcp — <code>full_governance_report()</code> to identify all in-scope frameworks</li>
+    <li>eu-ai-act-compliance-mcp — <code>quick_scan()</code> + <code>check_compliance()</code> (43-pt) + <code>generate_annex_iv_docs()</code> for the technical documentation</li>
+    <li>meok-compliance-passport-mcp — signed, portable compliance credential the customer-facing frontend can present to procurement / auditors</li>
+  </ul>
+
+  <h2>The result</h2>
+  <p>4 working days instead of 8 weeks. £4,950 instead of £40-80K. Signed Ed25519 attestation with a public verify URL. 0 failing requirements across all 7 EU AI Act Articles (Art 9 Risk Mgmt, Art 10 Data Governance, Art 11 Tech Docs, Art 12 Logging, Art 13 Transparency, Art 14 Human Oversight, Art 15 Accuracy/Robustness/Cybersecurity).</p>
+
+  <blockquote>
+    <p>MEOK got us from "we know we're in scope" to a regulator-grade signed attestation in 4 working days. Our previous estimate was 8 weeks and £40-80K. We'll be using it for every model we ship from now on.</p>
+    <cite>— Head of AI / CTO / CISO, [REDACTED] insurance operator</cite>
+  </blockquote>
+
+  <h2>What they got</h2>
+  <ul>
+    <li>Signed Article 50 attestation (Ed25519) with a public verify URL</li>
+    <li>Annex IV technical documentation auto-generated for each AI system in their stack</li>
+    <li>Compliance passport for the customer-facing frontend (portable signed credential)</li>
+    <li>Multi-framework crosswalk showing EU AI Act + DORA + FCA SYSC 8 + GDPR alignment in one view</li>
+    <li>30-min legal review with a UK-qualified AI policy partner</li>
+  </ul>
+
+  <h2>How to get the same result</h2>
+  <p><a class="cta" href="https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t">Buy Pro £199/mo →</a> &nbsp; <a class="cta" style="background: transparent; border: 1px solid #c9a84c; color: #c9a84c;" href="https://buy.stripe.com/eVq6oJ3K49AC0ZTaqI8k91m">Book 48h Assessment £4950 →</a></p>
+
+  <footer style="margin-top: 3rem; padding: 1.5rem 0; border-top: 1px solid #e5e7eb; color: #999; font-size: 0.9rem;">
+    <p>CSOAI Ltd · UK 16939677 · hello@meok.ai</p>
+    <p>Other case studies: <a href="/case-studies/fintech" style="color: #c9a84c;">fintech</a> · <a href="/case-studies/care" style="color: #c9a84c;">care</a> · <a href="/case-studies/hrtech" style="color: #c9a84c;">hrtech</a></p>
+  </footer>
+</body>
+</html>

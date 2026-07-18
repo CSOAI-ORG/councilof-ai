@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Always-on supervisor for hive-bridge. Install:
+    cp com.meok.hivebridge.plist ~/Library/LaunchAgents/
+    launchctl load -w ~/Library/LaunchAgents/com.meok.hivebridge.plist
+  KeepAlive restarts it on crash/login (mirrors the guardian pattern, but the
+  start.sh singleton lock prevents pile-ups).
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>            <string>com.meok.hivebridge</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/nicholas/clawd/hive-bridge/start.sh</string>
+  </array>
+  <key>RunAtLoad</key>        <true/>
+  <key>KeepAlive</key>        <true/>
+  <key>ThrottleInterval</key> <integer>30</integer>
+  <key>StandardOutPath</key>  <string>/tmp/hive-bridge.out</string>
+  <key>StandardErrorPath</key><string>/tmp/hive-bridge.err</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/Users/nicholas/.local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+</dict>
+</plist>

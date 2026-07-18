@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sovereign on Siri — hands-free on any iPhone</title>
+<meta name="description" content="Talk to your sovereign AI character hands-free through Siri — no app store, works on any iPhone in 60 seconds. Your data stays yours; every reply is governed.">
+<style>
+:root{--bg:#f4f1ea;--card:#fffdf8;--ink:#1a1712;--dim:#6b6355;--gold:#b8912f;--line:#e6dfd0;--ink2:#2a2620}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:38px 20px 90px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em}
+.brand .m{width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800}
+h1{font-size:31px;line-height:1.14;letter-spacing:-.02em;margin:26px 0 8px}
+h1 .g{color:var(--gold)}
+.sub{color:var(--dim);font-size:16px;max-width:60ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:18px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.step{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+.card h3{margin:2px 0 10px;font-size:18px}
+.card p{color:var(--dim);margin:6px 0 12px}
+ol{margin:6px 0 0;padding-left:20px}
+ol li{margin:9px 0;color:var(--ink2)}
+code,.kbd{background:#efe9db;border:1px solid var(--line);border-radius:6px;padding:1px 7px;font:12.5px ui-monospace,Menlo,monospace;color:var(--ink)}
+pre{background:#1c1a16;color:#f0ead9;border-radius:10px;padding:13px 15px;overflow-x:auto;font:12px/1.55 ui-monospace,Menlo,monospace;margin:8px 0 0;white-space:pre}
+.row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+button.copy{background:var(--ink);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:13px}
+a{color:var(--gold)}
+.foot{color:var(--dim);font-size:13px;margin-top:24px;border-top:1px solid var(--line);padding-top:16px}
+.q{background:#efe9db;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px;color:var(--ink2);margin:6px 0}
+</style></head><body><div class="wrap">
+<div class="brand"><span class="m">M</span> MEOK · sovereign</div>
+
+<h1>“Hey Siri, <span class="g">ask my Sovereign</span>.”</h1>
+<p class="sub">Talk to your sovereign AI character hands-free on <b>any iPhone</b> — no app store, built in about a minute. Siri passes your words to your governed character and speaks the answer back. Your data stays yours; every reply is care-floored.</p>
+
+<div class="card">
+  <div class="step">build it · ~60 seconds (Shortcuts app, already on your iPhone)</div>
+  <h3>Make the “Ask my Sovereign” shortcut</h3>
+  <ol>
+    <li>Open <b>Shortcuts</b> → tap <span class="kbd">+</span> → <b>Add Action</b>.</li>
+    <li>Add <b>“Dictate Text”</b> (or “Ask for Input”) — this is what you say.</li>
+    <li>Add <b>“Get Contents of URL”</b>, set it to:
+      <pre id="url">https://os.meok.ai/api/chat</pre>
+      Method <code>POST</code> · Header <code>Content-Type: application/json</code> · Request Body → <b>JSON</b>:
+      <pre id="body">{
+  "message": [Dictated Text],
+  "persona": "You are my Sovereign — warm, brief, honest. My data stays mine.",
+  "register": "plain"
+}</pre>
+      <span class="q">In the JSON, tap the <b>message</b> value and pick the <b>Dictated Text</b> variable.</span>
+    </li>
+    <li>Add <b>“Get Dictionary Value”</b> → Key <code>response</code>.</li>
+    <li>Add <b>“Speak Text”</b> (feed it the Dictionary Value). Optionally also “Show” it.</li>
+    <li>Name it <b>“Ask my Sovereign”</b>. Done — now say <b>“Hey Siri, Ask my Sovereign.”</b></li>
+  </ol>
+  <div class="row"><button class="copy" data-copy="url">Copy URL</button><button class="copy" data-copy="body">Copy JSON body</button></div>
+</div>
+
+<div class="card">
+  <div class="step">make it more aware (optional)</div>
+  <h3>Give your Sovereign mobile context</h3>
+  <p>Siri can hand your character live context so it answers about <i>your</i> world — all on-device, only what you add:</p>
+  <ol>
+    <li><b>Location</b> — add “Get Current Location” → include it in the message (“I'm near [Location], …”).</li>
+    <li><b>Clipboard</b> — add “Get Clipboard” → “About this: [Clipboard]”.</li>
+    <li><b>Calendar / reminders</b> — add “Find Calendar Events” → let it plan your day.</li>
+  </ol>
+  <p>Each is a Shortcuts action you drop in before “Get Contents of URL”. The character sees only what you pass — sovereign by default.</p>
+</div>
+
+<div class="foot">
+  <p><b>Two paths, honest:</b> this Shortcut works on any iPhone <i>today</i> with zero install. The <b>deep</b> native integration (system-wide App Intents, on-device Apple Foundation model, always-listening) ships as the MEOK iOS app — that one needs Apple review. Same character either way. To take your Sovereign into Claude as an MCP, see <a href="/connect.html">/connect.html</a>; onto any website, <a href="/embed.html">/embed.html</a>. Governed under the Sovereign Charter + CSOAI AI Governance.</p>
+</div>
+</div>
+<script>
+document.querySelectorAll('button.copy').forEach(b=>b.onclick=async()=>{
+  const t=document.getElementById(b.dataset.copy).textContent;
+  try{await navigator.clipboard.writeText(t);const o=b.textContent;b.textContent='Copied ✓';setTimeout(()=>b.textContent=o,1400);}catch(e){}
+});
+</script></body></html>

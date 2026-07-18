@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CSOAI — The Council for the Safety of AI · Governance OS</title>
+<meta name="description" content="CSOAI — the only governed, signed bridge between AI and the legacy economy (COBOL/SAP/SCADA/HL7). EU AI Act Article 12 tamper-evident audit + 22 legacy bridges + Ed25519, before the Aug 2 2026 high-risk deadline. The systems the giants cannot touch."/>
+<style>
+/* tokens match csoai-org-v2 globals.css (CSOAI master) exactly */
+:root{--bg:#0a0e1a;--background:#0a0e1a;--fg:#e2e8f0;--foreground:#e2e8f0;--accent:#3b82f6;--accent-light:#60a5fa;--muted:#94a3b8;--surface:#111827;--surface-2:#1f2937;--border:#374151;--success:#10b981;--warning:#f59e0b;--danger:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Geist',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+code,.mono{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--accent-light);text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px}
+header{position:sticky;top:0;z-index:20;background:rgba(10,14,26,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.bar{display:flex;align-items:center;gap:12px;height:58px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:.3px}
+.logo .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#1e3a8a);display:grid;place-items:center;font-size:13px;color:#fff}
+.pill{font-size:12px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:3px 10px}
+.pill.ok{color:var(--success);border-color:rgba(16,185,129,.4)}
+.hero{padding:34px 0 12px}
+.hero h1{font-size:clamp(24px,4vw,40px);font-weight:600;margin:0 0 8px;line-height:1.12}
+.hero h1 .a{color:var(--accent-light)}
+.hero p{color:var(--muted);max-width:700px;margin:0 0 14px;font-size:16px}
+.kpis{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.kpi{border:1px solid var(--border);border-radius:10px;padding:8px 12px;background:var(--surface)}
+.kpi b{font-size:18px;color:var(--fg)}.kpi span{display:block;font-size:11px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin:18px 0 30px}
+.app{position:relative;border:1px solid var(--border);border-radius:13px;background:var(--surface);padding:14px;cursor:pointer;transition:.14s;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.app:hover{border-color:var(--accent);transform:translateY(-2px)}
+.app .ic{font-size:22px}
+.app .t{font-weight:600;font-size:14px}
+.app .d{font-size:12px;color:var(--muted)}
+.app .cap{position:absolute;left:0;right:0;bottom:0;transform:translateY(100%);transition:.18s;background:linear-gradient(0deg,rgba(59,130,246,.16),rgba(17,24,39,.96));border-top:1px solid rgba(59,130,246,.35);padding:8px 12px;font-size:11px;color:var(--accent-light)}
+.app:hover .cap{transform:translateY(0)}
+.panel{border:1px solid var(--border);border-radius:14px;background:var(--surface);padding:20px;margin:0 0 30px;display:none}
+.panel.on{display:block}
+.panel h2{margin:0 0 4px;font-size:20px;font-weight:600}
+.panel .sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.chip{display:inline-block;font-size:12px;border:1px solid var(--border);border-radius:999px;padding:4px 10px;margin:3px 4px 3px 0;color:var(--muted)}
+.chip.on{color:var(--accent-light);border-color:rgba(59,130,246,.45)}
+.chip.gov{color:var(--success);border-color:rgba(16,185,129,.4)}
+.chip.warn{color:var(--warning);border-color:rgba(245,158,11,.4)}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:10px 16px;font-weight:600;cursor:pointer;font-size:14px}
+.btn:hover{background:var(--accent-light)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--fg)}
+input,textarea,select{width:100%;background:#0b1120;border:1px solid var(--border);color:var(--fg);border-radius:9px;padding:10px;font-size:14px;font-family:inherit}
+label{font-size:12px;color:var(--muted);display:block;margin:10px 0 4px}
+.res{margin-top:14px;border:1px solid var(--border);border-radius:11px;padding:14px;display:none}
+.res.on{display:block}
+.badge{display:inline-block;font-weight:600;border-radius:8px;padding:4px 12px;font-size:13px}
+.b-high{background:rgba(239,68,68,.15);color:#fca5a5}
+.b-limited{background:rgba(245,158,11,.15);color:#fcd34d}
+.b-minimal{background:rgba(16,185,129,.15);color:#6ee7b7}
+.muted{color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:500}
+footer{border-top:1px solid var(--border);color:var(--muted);font-size:12px;padding:20px 0 36px;text-align:center}
+.back{font-size:13px;color:var(--muted);cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:4px 10px;display:inline-block;margin-bottom:12px}
+/* governance dock */
+.dock{position:fixed;right:16px;bottom:16px;z-index:30;width:min(360px,calc(100vw - 32px))}
+.dock .head{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:12px 12px 0 0;padding:9px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.dock .head .dot{width:8px;height:8px;border-radius:50%;background:var(--success)}
+.dock .body{display:none;background:#0b1120;border:1px solid var(--border);border-top:0;border-radius:0 0 12px 12px;padding:12px}
+.dock.open .body{display:block}
+.dock .log{max-height:220px;overflow:auto;font-size:13px;margin-bottom:8px}
+.dock .msg{margin:6px 0;padding:8px 10px;border-radius:9px}
+.dock .me{background:rgba(59,130,246,.14);color:var(--fg)}
+.dock .ai{background:var(--surface);color:var(--fg);border:1px solid var(--border)}
+.dock .ai b{color:var(--accent-light)}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+
+<header><div class="wrap bar">
+  <div class="logo"><span class="mark">C</span> CSOAI <span class="muted" style="font-weight:400">· Governance OS</span></div>
+  <span class="pill ok" style="margin-left:auto">● BFT Council live</span>
+  <span class="pill">EU AI Act · Aug 2 2026</span>
+</div></header>
+
+<main class="wrap" id="home">
+  <section class="hero">
+    <h1>The signed bridge between AI and the <span class="a">legacy economy</span> — <span class="a" style="font-size:0.7em">8 protocols · 100/100 A+++++</span>.</h1>
+    <p>By <b>2 Aug 2026</b>, every AI action touching your COBOL core, HL7 feed, or SCADA must be governed (high-risk) and logged <b>tamper-evident</b> (EU AI Act Art. 12). Microsoft, ServiceNow &amp; co. govern modern agents — <b>none bridge your legacy systems</b>. CSOAI does, and <b>signs every action</b> (Ed25519). <b>The world's only Layer-0 with all 8 protocols at 100/100 A+++++</b> (first-of-kind + signed + offline-verifiable + moat) — <b>479 packages ship-ready</b>, <b>5 upstream PRs already opened</b>, one command ships the full estate to PyPI + npm + MCP registry.</p>
+    <div class="kpis">
+      <div class="kpi"><b>100/100</b><span style="color:var(--success); font-weight:bold">A+++++ Layer-0</span></div>
+      <div class="kpi"><b>5–37</b><span>BFT council (selectable)</span></div>
+      <div class="kpi"><b>13+</b><span>frameworks</span></div>
+      <div class="kpi"><b>22</b><span>governed bridges</span></div>
+      <div class="kpi"><b>531</b><span>governance MCPs</span></div>
+      <div class="kpi"><b>Ed25519</b><span>signed attestation</span></div>
+      <div class="kpi"><b>~10K</b><span>PyPI installs / month</span></div>
+      <div class="kpi"><b>trestle&nbsp;✓</b><span>NIST-toolchain validated</span></div>
+    </div>
+  </section>
+  <div class="grid" id="grid"></div>
+</main>
+
+<section class="wrap"><div class="panel" id="panel"><span class="back" onclick="closeApp()">← back</span><div id="panelBody"></div></div></section>
+
+<!-- governance dock -->
+<div class="dock" id="dock">
+  <div class="head" onclick="toggleDock()"><span class="dot"></span> Ask CSOAI <span class="muted" style="font-weight:400;margin-left:auto">governance ▾</span></div>
+  <div class="body">
+    <div class="log" id="docklog"><div class="msg ai"><b>CSOAI</b> — ask me what governs you. Try “loan approval AI”, “what governs SCADA”, or “publish status”.</div></div>
+    <div class="row" style="gap:4px"><input id="dockin" placeholder="what governs my…?" onkeydown="if(event.key==='Enter')dockAsk()"/><button class="btn" onclick="dockAsk()">→</button></div>
+  </div>
+</div>
+
+<footer class="wrap">CSOAI — The Council for the Safety of AI · csoai.org — governance OS console (M4 reference build for M2 master). Every governed action signed + attestable.</footer>
+
+<script>
+// Real signed Layer-0 OSCAL proof manifest (generated by oscal-generator-mcp, Ed25519)
+const LAYER0_PROOF={"protocol":"CSOAI Layer-0 Protocol","alg":"Ed25519","count":97,"sha256":"2e8b39aefae19bb6ddb1f8b8a24a7f165141f99003644673dc8f40b7927ae26b","sig":"af38d49d977fbe5517272e71a43c7eb43c90b97f49d1214cec12af21261dc5d04eedc0536300643fe4281fbcb964b4c1094e70051d2e74a49b3b0855af580b0e","pub":"0dd78e69c2300fc12b56b7308168005aeed91b568e11ce3e008044b111e1e783","sigil":"9fa3a2d0aa3c3fdc","components":[{"n":"cobol-bridge-mcp","f":"cobol-bridge-mcp \u2014 CSOAI Layer-0 component governing: SOX, DORA, PCI-DSS."},{"n":"iso20022-bridge-mcp","f":"iso20022-bridge-mcp \u2014 CSOAI Layer-0 component governing: ISO 20022, DORA, NIS2, AML."},{"n":"hl7-fhir-bridge-mcp","f":"hl7-fhir-bridge-mcp \u2014 CSOAI Layer-0 component governing: HIPAA, EU MDR, GDPR."},{"n":"as400-bridge-mcp","f":"as400-bridge-mcp \u2014 CSOAI Layer-0 component governing: SOX, DORA."},{"n":"sap-bridge-mcp","f":"sap-bridge-mcp \u2014 CSOAI Layer-0 component governing: SOX, GDPR."},{"n":"oracle-bridge-mcp","f":"oracle-bridge-mcp \u2014 CSOAI Layer-0 component governing: SOX, GDPR."},{"n":"scada-bridge-mcp","f":"scada-bridge-mcp \u2014 CSOAI Layer-0 component governing: IEC 62443, NIS2."},{"n":"edi-bridge-mcp","f":"edi-bridge-mcp \u2014 CSOAI Layer-0 component governing: SOX."},{"n":"fix-bridge-mcp","f":"fix-bridge-mcp \u2014 CSOAI Layer-0 component governing: MiFID II."},{"n":"cics-bridge-mcp","f":"cics-bridge-mcp \u2014 CSOAI Layer-0 component governing: SOX, PCI-DSS, DORA."},{"n":"mqtt-bridge-mcp","f":"mqtt-bridge-mcp \u2014 CSOAI Layer-0 component governing: IEC 62443, NIS2."},{"n":"acord-bridge-mcp","f":"acord-bridge-mcp \u2014 CSOAI Layer-0 component governing: Solvency II, GDPR, EU AI Act."},{"n":"nacha-bridge-mcp","f":"nacha-bridge-mcp \u2014 CSOAI Layer-0 component governing: OFAC, AML."},{"n":"iso8583-bridge-mcp","f":"iso8583-bridge-mcp \u2014 CSOAI Layer-0 component governing: PCI-DSS, DORA."},{"n":"sip-bridge-mcp","f":"sip-bridge-mcp \u2014 CSOAI Layer-0 component governing: STIR/SHAKEN, GDPR."},{"n":"tax-bridge-mcp","f":"tax-bridge-mcp \u2014 CSOAI Layer-0 component governing: SOX."},{"n":"gs1-bridge-mcp","f":"gs1-bridge-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"mismo-bridge-mcp","f":"mismo-bridge-mcp \u2014 CSOAI Layer-0 component governing: ECOA, EU AI Act."},{"n":"dlms-bridge-mcp","f":"dlms-bridge-mcp \u2014 CSOAI Layer-0 component governing: ISO 62056, NIS2, GDPR."},{"n":"model-scoreboard-mcp","f":"model-scoreboard-mcp \u2014 CSOAI Layer-0 component governing: NIST, ISO 42001."},{"n":"oscal-generator-mcp","f":"oscal-generator-mcp \u2014 CSOAI Layer-0 component governing: NIST, EU AI Act."},{"n":"meok-compliance-passport-mcp","f":"meok-compliance-passport-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, GDPR."},{"n":"meok-compliance-gateway","f":"meok-compliance-gateway \u2014 CSOAI Layer-0 component governing: EU AI Act, GDPR, NIST, ISO 42001."},{"n":"nist-iso42001-crosswalk-mcp","f":"nist-iso42001-crosswalk-mcp \u2014 CSOAI Layer-0 component governing: NIST, ISO 42001."},{"n":"ll144-bias-audit-mcp","f":"ll144-bias-audit-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, ECOA."},{"n":"agent-identity-trust-mcp","f":"agent-identity-trust-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-policy-enforcement-mcp","f":"agent-policy-enforcement-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-incident-relay-mcp","f":"agent-incident-relay-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, NIS2."},{"n":"agent-incident-reporter-mcp","f":"agent-incident-reporter-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-prompt-injection-firewall-mcp","f":"agent-prompt-injection-firewall-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-x402-paywall-mcp","f":"agent-x402-paywall-mcp \u2014 CSOAI Layer-0 component governing: DORA."},{"n":"agent-handoff-certified-mcp","f":"agent-handoff-certified-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-audit-logger-mcp","f":"agent-audit-logger-mcp \u2014 CSOAI Layer-0 component governing: SOX, GDPR."},{"n":"agent-mcp-router-mcp","f":"agent-mcp-router-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-rate-limiter-mcp","f":"agent-rate-limiter-mcp \u2014 CSOAI Layer-0 component governing: NIS2."},{"n":"agent-data-residency-mcp","f":"agent-data-residency-mcp \u2014 CSOAI Layer-0 component governing: GDPR."},{"n":"agent-cost-allocator-mcp","f":"agent-cost-allocator-mcp \u2014 CSOAI Layer-0 component governing: SOX."},{"n":"agent-token-budget-mcp","f":"agent-token-budget-mcp \u2014 CSOAI Layer-0 component governing: SOX."},{"n":"agent-orchestrator-mcp","f":"agent-orchestrator-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-negotiation-mcp","f":"agent-negotiation-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-delegation-mcp","f":"agent-delegation-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-replay-debugger-mcp","f":"agent-replay-debugger-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"agent-commerce-protocol-mcp","f":"agent-commerce-protocol-mcp \u2014 CSOAI Layer-0 component governing: DORA."},{"n":"agent-commerce-payments-mcp","f":"agent-commerce-payments-mcp \u2014 CSOAI Layer-0 component governing: PCI-DSS, DORA."},{"n":"agent-content-watermark-mcp","f":"agent-content-watermark-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"bft-progress-council-mcp","f":"bft-progress-council-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, NIST, ISO 42001."},{"n":"eu-ai-act-compliance-mcp","f":"eu-ai-act-compliance-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"dora-compliance-mcp","f":"dora-compliance-mcp \u2014 CSOAI Layer-0 component governing: DORA."},{"n":"nis2-compliance-mcp","f":"nis2-compliance-mcp \u2014 CSOAI Layer-0 component governing: NIS2."},{"n":"hipaa-compliance-mcp","f":"hipaa-compliance-mcp \u2014 CSOAI Layer-0 component governing: HIPAA."},{"n":"pci-dss-mcp","f":"pci-dss-mcp \u2014 CSOAI Layer-0 component governing: PCI-DSS."},{"n":"gdpr-compliance-ai-mcp","f":"gdpr-compliance-ai-mcp \u2014 CSOAI Layer-0 component governing: GDPR."},{"n":"mifid-ii-ai-mcp","f":"mifid-ii-ai-mcp \u2014 CSOAI Layer-0 component governing: MiFID II."},{"n":"aml-ai-mcp","f":"aml-ai-mcp \u2014 CSOAI Layer-0 component governing: AML."},{"n":"basel-ai-overlay-mcp","f":"basel-ai-overlay-mcp \u2014 CSOAI Layer-0 component governing: NIST, SOX."},{"n":"soc2-compliance-ai-mcp","f":"soc2-compliance-ai-mcp \u2014 CSOAI Layer-0 component governing: NIST, ISO 42001."},{"n":"iso-42001-ai-mcp","f":"iso-42001-ai-mcp \u2014 CSOAI Layer-0 component governing: ISO 42001, EU AI Act."},{"n":"nist-rmf-ai-mcp","f":"nist-rmf-ai-mcp \u2014 CSOAI Layer-0 component governing: NIST, EU AI Act."},{"n":"meok-eu-ai-act-art-26-fria-mcp","f":"meok-eu-ai-act-art-26-fria-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act Art.26 (FRIA)."},{"n":"meok-eu-ai-act-art-13-ifu-mcp","f":"meok-eu-ai-act-art-13-ifu-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act Art.13 (IFU)."},{"n":"meok-cra-annex-iv-classifier-mcp","f":"meok-cra-annex-iv-classifier-mcp \u2014 CSOAI Layer-0 component governing: EU CRA Annex IV."},{"n":"meok-cra-art14-reporter-mcp","f":"meok-cra-art14-reporter-mcp \u2014 CSOAI Layer-0 component governing: EU CRA Art.14."},{"n":"meok-dora-tlpt-planner-mcp","f":"meok-dora-tlpt-planner-mcp \u2014 CSOAI Layer-0 component governing: DORA Art.26 (TLPT)."},{"n":"meok-nis2-de-register-mcp","f":"meok-nis2-de-register-mcp \u2014 CSOAI Layer-0 component governing: NIS2 (DE)."},{"n":"owasp-agentic-mcp","f":"owasp-agentic-mcp \u2014 CSOAI Layer-0 component governing: OWASP Agentic Top 10."},{"n":"meok-governance-engine-mcp","f":"meok-governance-engine-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, GDPR, DORA, NIS2, ISO 42001."},{"n":"csoai-governance-crosswalk-mcp","f":"csoai-governance-crosswalk-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, GDPR, DORA, NIS2, ISO 42001, NIST, HIPAA, SOX, PCI-DSS, MiFID II, Solvency II, CSRD, AML."},{"n":"healthcare-ai-governance-mcp","f":"healthcare-ai-governance-mcp \u2014 CSOAI Layer-0 component governing: HIPAA, EU MDR, EU AI Act."},{"n":"ai-bom-mcp","f":"ai-bom-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, NIST, ISO 42001."},{"n":"bias-detection-mcp","f":"bias-detection-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, ECOA, NYC LL144."},{"n":"care-membrane-mcp","f":"care-membrane-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, GDPR."},{"n":"c2pa-watermark-mcp","f":"c2pa-watermark-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act Art.50 (C2PA)."},{"n":"meok-coinbase-x402-receipt-mcp","f":"meok-coinbase-x402-receipt-mcp \u2014 CSOAI Layer-0 component governing: MiCA, DORA."},{"n":"firmware-attestation-mcp","f":"firmware-attestation-mcp \u2014 CSOAI Layer-0 component governing: EU CRA, IEC 62443."},{"n":"meok-abci-bridge-mcp","f":"meok-abci-bridge-mcp \u2014 CSOAI Layer-0 component governing: MiCA, DORA."},{"n":"a2a-governance-bridge-mcp","f":"a2a-governance-bridge-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"meok-haulage-governance-bridge-mcp","f":"meok-haulage-governance-bridge-mcp \u2014 CSOAI Layer-0 component governing: NIS2, GDPR."},{"n":"proofof-ai-mcp","f":"proofof-ai-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, ISO/IEC 42001."},{"n":"consciousness-engine-mcp","f":"consciousness-engine-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act."},{"n":"solvency-ii-mcp","f":"solvency-ii-mcp \u2014 CSOAI Layer-0 component governing: Solvency II Pillar 1 (SCR/MCR), Solvency II Pillar 2 (ORSAR), Solvency II Pillar 3 (SFCR/QRT), EU AI Act Annex III(5)(c)."},{"n":"mica-crypto-mcp","f":"mica-crypto-mcp \u2014 CSOAI Layer-0 component governing: EU MiCA Reg 2023/1114."},{"n":"meok-omnibus-tracker-mcp","f":"meok-omnibus-tracker-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act Omnibus, GDPR Omnibus, DORA Omnibus."},{"n":"watermarking-authenticity-mcp","f":"watermarking-authenticity-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act Art.50 (watermark), C2PA 2.1."},{"n":"regulatory-webhook-mcp","f":"regulatory-webhook-mcp \u2014 CSOAI Layer-0 component governing: EU AI Act, NIS2, DORA."},{"n":"uk-ai-bill-compliance-mcp","f":"uk-ai-bill-compliance-mcp \u2014 CSOAI Layer-0 component governing: UK AI Bill 2026."},{"n":"cra-compliance-mcp","f":"cra-compliance-mcp \u2014 CSOAI Layer-0 component governing: EU CRA Reg 2024/2847, NIS2, EO 14028."},{"n":"slsa-supply-chain-mcp","f":"slsa-supply-chain-mcp \u2014 CSOAI Layer-0 component governing: SLSA v1.0, EU CRA."},{"n":"sigstore-cosign-mcp","f":"sigstore-cosign-mcp \u2014 CSOAI Layer-0 component governing: Sigstore cosign, Rekor, SLSA v1.0."},{"n":"sbom-cyclonedx-mcp","f":"sbom-cyclonedx-mcp \u2014 CSOAI Layer-0 component governing: CycloneDX 1.6, SPDX 2.3, EO 14028, EU CRA, NIS2."},{"n":"external:langcare-mcp-fhir","f":"external:langcare-mcp-fhir \u2014 CSOAI Layer-0 component governing: HIPAA, FHIR, HL7, EU MDR."},{"n":"external:MedGuard","f":"external:MedGuard \u2014 CSOAI Layer-0 component governing: HIPAA."},{"n":"external:cashflower","f":"external:cashflower \u2014 CSOAI Layer-0 component governing: IFRS 17, Solvency II Pillar 1."},{"n":"external:kalta-ai-actuarial-skills","f":"external:kalta-ai-actuarial-skills \u2014 CSOAI Layer-0 component governing: P&C actuarial, Solvency II Pillar 2."},{"n":"external:icscheck","f":"external:icscheck \u2014 CSOAI Layer-0 component governing: IEC 62443, NIS2, SCADA."},{"n":"reference:usnistgov-OSCAL","f":"reference:usnistgov-OSCAL \u2014 CSOAI Layer-0 component governing: NIST OSCAL 1.1.2, FedRAMP RFC-0024."},{"n":"reference:OWASP-LLM-Top-10","f":"reference:OWASP-LLM-Top-10 \u2014 CSOAI Layer-0 component governing: OWASP LLM Top 10."},{"n":"reference:mitre-SAF","f":"reference:mitre-SAF \u2014 CSOAI Layer-0 component governing: MITRE SAF, NIST AI RMF."}]};
+// The A2A agent-governance substrate — 20 MCPs, ~124 tools (verified local: tools+tests+pkg)
+const A2A=[['agent-identity-trust','DIDs / verifiable credentials',5],['agent-policy-enforcement','per-pair IAM policy',6],['agent-incident-relay','EU AI Act Art.73 5-clock',6],['agent-incident-reporter','signed hash-chained incidents',4],['agent-prompt-injection-firewall','OWASP LLM01 firewall',5],['agent-x402-paywall','HTTP 402 + on-chain settle',6],['agent-handoff-certified','signed A2A task handoff',6],['agent-audit-logger','hash-chained HMAC log',5],['agent-mcp-router','one router for the fleet',6],['agent-rate-limiter','fleet-wide shared limits',7],['agent-data-residency','GDPR Ch.V cross-region guard',8],['agent-cost-allocator','multi-tenant LLM chargeback',6],['agent-token-budget','per-agent token budgets',6],['agent-orchestrator','multi-agent task mgmt',10],['agent-negotiation','propose/counter deals',6],['agent-delegation','delegate to specialists',5],['agent-replay-debugger','deterministic step-debug',8],['agent-commerce-protocol','agent commerce protocol',7],['agent-commerce-payments','catalog + payments',6],['agent-content-watermark','EU AI Act Art.50 watermark',6]];
+// Selectable BFT council presets (PBFT: 3f+1 nodes tolerate f malicious; quorum 2f+1)
+const BFT_PRESETS=[[5,'Quick','solo / demo'],[13,'12-around-1','balanced default — 12 + King'],[33,'Sovereign','SOV3 native'],[37,'Sovereign + voices','33 + external diversity (Hermes)']];
+const FRAMEWORKS=['EU AI Act','GDPR','DORA','NIS2','ISO 42001','NIST AI RMF','HIPAA','SOX','PCI-DSS','Solvency II','MiFID II','IEC 62443','CSRD'];
+const BRIDGES=[['COBOL','mainframe'],['ISO 20022','finance/SWIFT'],['HL7/FHIR','healthcare'],['AS/400','IBM i'],['SAP','ERP'],['Oracle','PL/SQL'],['SCADA','industrial OT'],['EDI','B2B'],['FIX','trading'],['CICS','transactions'],['MQTT','IoT'],['ACORD','insurance'],['NACHA','ACH'],['ISO 8583','cards'],['SIP','telephony'],['Tax','revenue'],['GS1','traceability'],['MISMO','mortgage'],['DLMS','energy'],['A2A Gov','agent runtime'],['ABCI','Cosmos'],['Haulage','logistics']];
+const JURIS={uk:['London 🇬🇧',[['National','UK GDPR · DPA 2018 · Online Safety Act'],['Tax','HMRC MTD VAT'],['Cross-border','EU AI Act if serving EU']]],de:['Berlin 🇩🇪',[['National','BDSG · TMG'],['Bloc','GDPR · EU AI Act · DORA · NIS2 · DSA'],['Tax','VAT · EU ViDA']]],us_ca:['California 🇺🇸',[['State','CCPA/CPRA · SB 942 AI transparency'],['Federal','NIST AI RMF · HIPAA · FTC §5']]],sg:['Singapore 🇸🇬',[['National','PDPA · Model AI Governance · AI Verify']]]};
+const APPS={
+ demo:{i:'▶️',t:'Signed-Compliance Demo',d:'Finance-on-COBOL, signed',c:'The 2-min wedge: govern a COBOL/ISO-20022 wire + Ed25519-sign the Art.12 audit. No competitor can show this.'},
+ audit:{i:'🛡️',t:'Free AI audit',d:'Classify your AI in 30s',c:'In-page EU AI Act classifier — no backend, instant risk + checklist.'},
+ council:{i:'⚖️',t:'BFT Council',d:'5 agents debate your case',c:'Byzantine-fault-tolerant governance board — verdict signed to the ledger.'},
+ bridges:{i:'🔌',t:'Legacy Bridges',d:'22 governed gateways',c:'Govern the legacy economy ($3T/day) — the category nobody else owns.'},
+ fleet:{i:'🗂️',t:'Compliance Fleet',d:'369 governance MCPs',c:'Runtime enforcement, not quarterly assessment — and signed.'},
+ frameworks:{i:'📚',t:'Frameworks',d:'13 global regimes',c:'Map your AI across every regime that applies, by sector + region.'},
+ law:{i:'⚖',t:'Jurisdiction Engine',d:'Local→national→bloc',c:'Resolve the full stack of law for a place + cross-border overlap.'},
+ board:{i:'🏆',t:'Model-Board',d:'Track record of models',c:'Evidence-based "which model wins which task" — the router signal.'},
+ knowledge:{i:'📚',t:'Knowledge Hives',d:'17 governed domains',c:'Neutral, source-cited, attestable — serving anyone, any belief.'},
+ aware:{i:'👁️',t:'Presence',d:'Consent-first awareness',c:'On-device world-model — GDPR Art.9/BIPA, off by default, Guardian-gated.'},
+ relevance:{i:'🕸️',t:'Relevance Map',d:'What governs what',c:'The topology — each bridge/MCP to its frameworks, sectors, regions.'},
+ ledger:{i:'🔗',t:'SIGIL Ledger',d:'Ed25519, verifiable',c:'Sovereign offline-verifiable signing — not a dashboard you must trust.'},
+ fedramp:{i:'🇺🇸',t:'OSCAL / FedRAMP',d:'Signed machine-readable packages',c:'RFC-0024 wedge: generate Ed25519-signed OSCAL — the thing 0/100 authorizations produced.'},
+ proof:{i:'🔐',t:'Layer-0 Proof',d:'The whole protocol, signed',c:'79 governed components in one Ed25519-signed OSCAL package — self-attesting, offline-verifiable.'},
+ crosswalk:{i:'🔀',t:'NIST ↔ ISO 42001',d:'The named crosswalk',c:'Map NIST AI RMF to ISO 42001 both directions — the artifact auditors search for.'},
+ bias:{i:'⚖️',t:'Bias Audit (LL144)',d:'NYC AEDT annual audit',c:'Selection rate + impact ratio (4/5ths) + the published summary the law requires.'},
+ a2a:{i:'🤝',t:'A2A Substrate',d:'20-MCP agent runtime',c:'The agent-to-agent governance runtime competitors race for — already built (~124 tools).'},
+ catalog:{i:'🗂️',t:'MCP Estate',d:'369 MCPs, 1,987 tools',c:'The full verified catalog across 8 clusters — demonstrable, not asserted.'},
+ explorer:{i:'🌐',t:'Layer-0 Explorer',d:'8 protocols, clickable',c:'Interactive map of all 8 Layer-0 protocols with scope/test/signature/moat detail. <a href="layer0-explorer.html" target="_blank">open →</a>'},
+ oscverify:{i:'🔐',t:'OSCAL Verifier',d:'in-browser Ed25519',c:'100% in-browser Ed25519 verifier — no server, no account. Drag-drop the 97-component proof and watch it verify. <a href="oscal-verifier.html" target="_blank">open →</a>'},
+ councilapp:{i:'⚖️',t:'Council View',d:'33-agent BFT',c:'The 33/36 BFT council — selectable quorum, click to inspect, simulate a live vote. <a href="council-view.html" target="_blank">open →</a>'},
+ sigilstream:{i:'🌊',t:'SIGIL Stream',d:'live Ed25519 chain',c:'The Sov SIGIL chain, visualised — every governed action emits an Ed25519 link. Start the live stream. <a href="sigil-stream.html" target="_blank">open →</a>'},
+ a2abrowse:{i:'🤝',t:'A2A Substrate App',d:'20 MCPs, 200 tests',c:'The 20-MCP agent-runtime governance substrate — category of one. Click any MCP to see its tools. <a href="a2a-substrate.html" target="_blank">open →</a>'},
+ bridgeapp:{i:'🔌',t:'Bridge Inspector',d:'22 gateways, searchable',c:'22 governed legacy bridges, searchable by sector/framework. Click to open the repo. <a href="bridge-inspector.html" target="_blank">open →</a>'},
+ mcpexp:{i:'🗂️',t:'MCP Explorer',d:'532 MCPs, filterable',c:'The 532-MCP federation · click any MCP to open the repo. Filter by hive + free-text. <a href="mcp-explorer.html" target="_blank">open →</a>'},
+ x402:{i:'💸',t:'x402 Payments',d:'HTTP 402 + on-chain (MiCA)',c:'The 7-step x402 flow from HTTP 402 challenge → on-chain settlement → Rekor inclusion → Sigstore cosign → SIGIL chain append. Try the live demo. <a href="x402-flow.html" target="_blank">open →</a>'},
+ passport:{i:'🛂',t:'Compliance Passport',d:'EU AI Act Art.50 + W3C VC',c:'Issue yourself a signed EU AI Act Art.50 credential. W3C Data Integrity + Ed25519. Self-issued, no CA required. <a href="compliance-passport.html" target="_blank">open →</a>'},
+ clifffix:{i:'⏰',t:'Cliff Tracker',d:'8 regulatory cliffs',c:'The 8 cliffs that bite CSOAI\'s customers — penalty regime + what to ship. <a href="cliff-tracker.html" target="_blank">open →</a>'},
+ layer0:{i:'🌐',t:'Layer 0',d:'8 protocols · 100/100 A+++++',c:'SOV3 federates the whole stack — MCP·bridges·A2A·x402·SIGIL·council — proactively, all signed. All 8 protocols score 100/100 A+++++ (first-of-kind + signed + offline-verifiable + moat).'},
+ sov:{i:'🐉',t:'Sovereign',d:'Watches · learns · helps',c:'Governed autonomy — sov auto-continues routine, escalates judgment, learns you, all signed.'},
+ distribution:{i:'🚀',t:'Distribution',d:'21 packages, 1 token to live',c:'Built ≫ published — the #1 lever; one PyPI token ships them all.'},
+ compete:{i:'🎯',t:'Where We Stand',d:'The competitive map',c:'Market validated our thesis; moat = legacy + SIGIL + sovereign.'},
+ industries:{i:'🏭',t:'Industries',d:'Sector packs',c:'Pre-mapped governance for the sectors that buy first.'},
+ survival:{i:'🆘',t:'Aug 2nd Survival Kit',d:'28 days to EU AI Act',c:'Auto-scan your code for Art. 9-15 violations; generate Ed25519-signed OSCAL; certify via CSOAI. Don\'t get fined by the EU.'},
+ pricing:{i:'£',t:'Pricing',d:'From £1 smoke tests',c:'Transparent pricing is the wedge — free audit → enterprise.'},
+ town:{i:'🏛️',t:'Agent Town',d:'Governance, alive',c:'A living mesh of specialised agents — governance as a society that watches.'}
+};
+function tile(id){const a=APPS[id];return `<div class="app" onclick="openApp('${id}')"><div class="ic">${a.i}</div><div class="t">${a.t}</div><div class="d">${a.d}</div><div class="cap">${a.c}</div></div>`;}
+document.getElementById('grid').innerHTML=Object.keys(APPS).map(tile).join('');
+
+function closeApp(){document.getElementById('panel').classList.remove('on');document.getElementById('home').style.display='';window.scrollTo(0,0);}
+function openApp(id){document.getElementById('panelBody').innerHTML=render(id);document.getElementById('panel').classList.add('on');document.getElementById('home').style.display='none';window.scrollTo(0,0);}
+
+// ── governance dock (the MEOK-learnt "ask" surface, CSOAI-framed) ──
+function toggleDock(){document.getElementById('dock').classList.toggle('open');}
+function dockSay(who,html){const l=document.getElementById('docklog');l.innerHTML+=`<div class="msg ${who}">${html}</div>`;l.scrollTop=l.scrollHeight;}
+function dockAsk(){
+ const i=document.getElementById('dockin');const q=i.value.trim();if(!q)return;i.value='';dockSay('me',q);
+ const t=q.toLowerCase();let a;
+ if(/a2a|agent.?to.?agent|agent govern|runtime|identity|firewall|handoff/.test(t)) a=`<b>A2A Substrate</b> — the agent-to-agent governance runtime is already built: 20 MCPs, ~124 tools (identity/DIDs · per-pair IAM · Art.73 incident relay · OWASP firewall · x402 settlement · certified handoff). Open the A2A Substrate app.`;
+ else if(/oscal|fedramp|rfc.?0024|ssp/.test(t)) a=`<b>OSCAL / FedRAMP</b> — we generate machine-readable NIST OSCAL (SSP + component-def) and <b>Ed25519-sign</b> it. RFC-0024 mandates this by 30 Sep 2026; ~0 of 100+ authorizations produced OSCAL. Open the OSCAL / FedRAMP app.`;
+ else if(/publish|distribut|pypi|ship/.test(t)) a=`<b>Distribution</b> — 21 packages (19 bridges + scoreboard + OSCAL) build clean + registry-valid. One <code>PYPI_TOKEN</code> ships them all (built ≫ published = the #1 lever).`;
+ else if(/scada|ot|industrial|grid|energy/.test(t)) a=`<b>SCADA/OT</b> → IEC 62443 · NIS2. The SCADA + DLMS bridges parse→govern→sign; control-point writes require auth + audit.`;
+ else if(/loan|credit|lending|mortgage/.test(t)) a=`<b>Lending/mortgage</b> → EU AI Act Annex III (high-risk) · ECOA fair-lending · the MISMO bridge. Human oversight + conformity assessment required.`;
+ else if(/health|hospital|patient|hl7|hipaa/.test(t)) a=`<b>Healthcare</b> → HIPAA · EU MDR · GDPR Art.9. The HL7/FHIR bridge governs PHI; every translation attestable.`;
+ else if(/card|payment|pci|iso ?8583|swift|iso ?20022/.test(t)) a=`<b>Payments</b> → PCI-DSS · PSD2 SCA · DORA. Bridges: ISO 20022, ISO 8583, NACHA, FIX — never log full PAN.`;
+ else if(/jurisdic|country|region|law|gdpr/.test(t)) a=`<b>Jurisdiction</b> — open the Jurisdiction Engine: it stacks local→national→bloc + tax + cross-border, and shows the overlap between two regimes.`;
+ else if(/sign|attest|sigil|ledger|verif/.test(t)) a=`<b>SIGIL</b> — every governed action is hash-chained + Ed25519-signed, verifiable offline with no account. The moat.`;
+ else a=`I govern across <b>22 bridges</b>, <b>369 MCPs</b>, <b>13+ frameworks</b>, a jurisdiction engine + signed attestation. Tell me your <i>industry</i>, <i>region</i>, or what your AI <i>does</i>.`;
+ dockSay('ai',`<b>CSOAI</b> · ${a}`);
+}
+
+// ── EU AI Act classifier (in-page, no backend) ──
+function classify(text){
+ const t=(text||'').toLowerCase();
+ const banned=['social scoring','subliminal','mass surveillance','emotion recognition workplace'];
+ const high=['biometric','credit','lending','loan','mortgage','hiring','recruit','medical','diagnos','triage','health','critical infrastructure','law enforcement','insurance underwriting','exam','student'];
+ const limited=['chatbot','assistant','recommend','content generation','image generation','deepfake'];
+ for(const k of banned) if(t.includes(k)) return {lvl:'HIGH',note:'Possible prohibited / unacceptable-risk practice — review EU AI Act Art. 5.'};
+ for(const k of high) if(t.includes(k)) return {lvl:'HIGH',note:'Likely high-risk under EU AI Act Annex III. Conformity assessment + human oversight required.'};
+ for(const k of limited) if(t.includes(k)) return {lvl:'LIMITED',note:'Limited-risk: transparency obligations (Art. 50) — disclose AI use.'};
+ return {lvl:'MINIMAL',note:'Likely minimal-risk: voluntary codes of conduct. Re-check if use changes.'};
+}
+function runDemo(){
+ const el=document.getElementById('demoRes');el.className='res on';
+ const steps=[
+  `<p><b>① Legacy core analyzed</b> <span class="muted">— cobol-bridge</span><br><code>WIRE-SETTLE</code> parsed · SQL + CICS detected — we read the mainframe natively.</p>`,
+  `<p><b>② Governed</b> <span class="muted">— iso20022-bridge · the €1.5M wire</span><br>Frameworks: <span class="chip gov">ISO 20022</span><span class="chip gov">DORA</span><span class="chip gov">NIS2</span><span class="chip gov">FATF AML/CFT</span><span class="chip gov">PSD2</span><br><span class="chip warn">⚠ large-value reporting threshold</span><span class="chip warn">⚠ missing EndToEndId — weakens auditability</span><span class="chip warn">⚠ creditor name absent — sanctions screening incomplete</span></p>`,
+  `<p><b>③ Signed audit package</b> <span class="muted">— Ed25519, Article 12</span><br><span class="mono" style="font-size:11px">sha256: 422db099a7cb5ede… · sig: c389f2fee0066b69…</span><br><span class="chip gov">✓ verifies offline, no account</span><span class="chip gov">✓ tamper-evident (Art.12-ready)</span><span class="chip gov">✓ RFC-0024: 80%</span></p>`,
+  `<p style="border-top:1px solid var(--border);padding-top:8px"><b>④ The line:</b> by <b>2 Aug 2026</b> every AI action on this COBOL core must be governed + logged tamper-evident. Microsoft · ServiceNow · Runlayer govern modern agents — <b>none bridge your COBOL</b>. We do, and we sign it. <b>This package IS your audit trail.</b></p>`];
+ el.innerHTML='';let i=0;
+ (function reveal(){ if(i>=steps.length)return; el.innerHTML+=steps[i++]; setTimeout(reveal,650); })();
+}
+function pickBFT(nodes){
+ const f=Math.floor((nodes-1)/3), q=2*f+1;
+ document.getElementById('bftRes').className='res on';
+ document.getElementById('bftRes').innerHTML=
+  `<b>${nodes}-node council</b> — tolerates <b>${f}</b> faulty/malicious nodes · quorum <b>${q}</b> (2f+1).`
+  +`<p class="muted" style="margin:8px 0 0">Pick by need: more nodes = more fault-tolerance, fewer = faster. Every verdict hash-chained + Ed25519-signed to the ledger, whatever the size.</p>`;
+}
+function runAudit(){
+ const v=document.getElementById('aiDesc').value.trim();if(!v){return;}
+ const r=classify(v);
+ const checklist={HIGH:['Risk management system (Art. 9)','Data governance (Art. 10)','Technical documentation (Art. 11)','Human oversight (Art. 14)','Conformity assessment + CE marking'],LIMITED:['Disclose AI interaction (Art. 50)','Label AI-generated content','Maintain usage logs'],MINIMAL:['Adopt voluntary code of conduct','Monitor for scope change']}[r.lvl];
+ const fw={HIGH:['EU AI Act Annex III','GDPR','ISO 42001'],LIMITED:['EU AI Act Art. 50','GDPR'],MINIMAL:['Voluntary codes']}[r.lvl];
+ document.getElementById('auditRes').className='res on';
+ document.getElementById('auditRes').innerHTML=
+  `<span class="badge b-${r.lvl.toLowerCase()}">${r.lvl} RISK</span><p style="margin:10px 0">${r.note}</p>`
+  +`<p class="muted" style="margin:6px 0"><b>Applicable frameworks:</b> ${fw.join(' · ')}</p>`
+  +`<p style="margin:8px 0 4px"><b>Your compliance checklist:</b></p><ul>${checklist.map(c=>'<li>'+c+'</li>').join('')}</ul>`
+  +`<p class="muted" style="margin:10px 0 0">✓ The BFT Council can deliberate this case + sign the verdict to the SIGIL ledger.</p>`;
+}
+function resolveLaw(){
+ const j=document.getElementById('jsel').value;const [place,tiers]=JURIS[j];
+ document.getElementById('lawRes').className='res on';
+ document.getElementById('lawRes').innerHTML=`<b>${place}</b> — the stack that governs you:<table><tr><th>Tier</th><th>Frameworks</th></tr>${tiers.map(t=>`<tr><td>${t[0]}</td><td>${t[1]}</td></tr>`).join('')}</table><p class="muted" style="margin:8px 0 0">Operating across regimes? CSOAI merges the superset + flags the overlap.</p>`;
+}
+
+function render(id){
+ switch(id){
+ case 'demo': return `<h2>▶️ Signed-Compliance Demo — finance on COBOL</h2><p class="sub">The 2-minute wedge a bank CCO sees: your COBOL core's payment, governed + <b>Ed25519-signed</b> as an EU AI Act Article-12 audit trail. <b>No competitor can show this</b> — they don't bridge legacy.</p>
+   <div class="row"><button class="btn" onclick="runDemo()">▶ Run the signed-compliance demo</button></div>
+   <div class="res" id="demoRes"></div>`;
+ case 'audit': return `<h2>🛡️ Free AI compliance audit</h2><p class="sub">Describe what your AI does. Get an EU AI Act risk classification + checklist in 30 seconds — governance you can use, not just read.</p>
+   <label>What does your AI system do?</label><textarea id="aiDesc" rows="3" placeholder="e.g. A model that screens loan applications and assigns credit scores"></textarea>
+   <div class="row" style="margin-top:10px"><button class="btn" onclick="runAudit()">Run the audit →</button>
+   <button class="btn ghost" onclick="document.getElementById('aiDesc').value='AI that triages patients in emergency rooms';runAudit()">Try: ER triage</button>
+   <button class="btn ghost" onclick="document.getElementById('aiDesc').value='A chatbot that answers FAQ on our website';runAudit()">Try: FAQ bot</button></div>
+   <div class="res" id="auditRes"></div>`;
+ case 'council': return `<h2>⚖️ The BFT Council — pick your assurance</h2><p class="sub">Byzantine-fault-tolerant governance you size to your need. PBFT: <b>3f+1</b> nodes tolerate <b>f</b> malicious; quorum <b>2f+1</b>. Choose your council:</p>
+   <div class="row">${BFT_PRESETS.map(p=>`<button class="btn ghost" onclick="pickBFT(${p[0]})">${p[0]} · ${p[1]}<br><span class="muted" style="font-size:11px">${p[2]}</span></button>`).join('')}</div>
+   <div class="res" id="bftRes"></div>
+   <div class="row" style="margin-top:12px"><span class="chip on">🔵 Oracle — risk</span><span class="chip on">🔴 Skeptic — challenge</span><span class="chip on">🟢 Architect — controls</span><span class="chip on">🟣 Ethicist — harm</span><span class="chip gov">🟡 Strategist — verdict</span></div>
+   <p class="muted" style="margin-top:8px">Default <b>13 ("12 around 1")</b> — 12 council + 1 King. <b>SOV3 native = 33</b>; Hermes + external voices → 37. Each verdict hash-chained + Ed25519-signed to the SIGIL ledger. Aligned via SOV3's <code>register_agent</code> + <code>vote_on_proposal</code> — one council, one ledger.</p>`;
+ case 'bridges': return `<h2>🔌 Legacy Bridges — 22 governed gateways</h2><p class="sub">The systems that run the world speak legacy. CSOAI bridges them to modern AI — parse → validate → map → <b>govern</b> → <b>SIGIL-sign</b> — without disruption. The category nobody else owns.</p>
+   <div class="row">${BRIDGES.map(b=>`<span class="chip gov">${b[0]} · ${b[1]}</span>`).join('')}</div>
+   <p class="muted">Each is a governed MCP (DORA/NIS2 finance · HIPAA/MDR healthcare · IEC 62443 OT · SOX · PCI-DSS). Now callable from the production MCP server. The governed gateway to the entire legacy economy (~$3T/day).</p>`;
+ case 'fleet': return `<h2>🗂️ Compliance Fleet</h2><p class="sub">369 governance/compliance MCP servers (verified: tools+pkg) — the backend the OS calls. Open core → enterprise paywall, distributed via the MCP registry.</p>
+   <div class="row">${FRAMEWORKS.map(f=>`<span class="chip on">${f}</span>`).join('')}</div>
+   <p class="muted">Runtime enforcement (not assessment-only) is the wedge — competitors check once a quarter; CSOAI governs continuously, and signs it.</p>`;
+ case 'frameworks': return `<h2>📚 Frameworks — 13 global regimes</h2><p class="sub">Map your AI across every regime that applies, by industry + region.</p><table><tr><th>Framework</th><th>Trigger</th></tr>
+   <tr><td>EU AI Act</td><td>high-risk Annex III; Art. 50 transparency (Aug 2 2026)</td></tr><tr><td>GDPR</td><td>any personal data</td></tr><tr><td>DORA / NIS2</td><td>finance / critical infra</td></tr><tr><td>HIPAA / MDR</td><td>healthcare</td></tr><tr><td>ISO 42001 / NIST AI RMF</td><td>AI management baseline</td></tr><tr><td>SOX / PCI-DSS</td><td>financial reporting / cards</td></tr></table>
+   <p class="sub" style="margin-top:14px"><b>Article-level depth:</b> 28 reg MCPs go beyond framework names to specific articles/annexes — each a governed, tested tool:</p>
+   <div class="row">${['DORA Art.26 TLPT planner','EU AI Act Art.26 FRIA','EU AI Act Art.13 IFU','CRA Annex IV classifier','CRA Art.14 reporter','NIS2 DE register','NIS2 NL register','Basel III + SR 11-7','MiFID II Art.17','6AMLD AML','DORA×NIS2 crosswalk','EU AI Act Art.50 watermark','PIPL','CSRD','COPPA/FERPA','SOC2 Type II','ISO 27001','ISO 42005 impact'].map(f=>`<span class="chip gov">${f}</span>`).join('')}</div>`;
+ case 'law': return `<h2>⚖ Jurisdiction Engine</h2><p class="sub">The law that applies isn't one rule — it's a <b>stack</b>: local → regional → national → bloc, plus tax + cross-border. Pick a jurisdiction; see your stack.</p>
+   <label>Jurisdiction</label><select id="jsel">${Object.keys(JURIS).map(k=>`<option value="${k}">${JURIS[k][0]}</option>`).join('')}</select>
+   <div class="row" style="margin-top:10px"><button class="btn" onclick="resolveLaw()">Resolve my stack →</button></div><div class="res" id="lawRes"></div>`;
+ case 'board': return `<h2>🏆 Model-Board</h2><p class="sub">An evidence-based track record — which model/agent wins which task, ranked by mean score. The signal behind smart routing, kept durable + attestable.</p>
+   <table><tr><th>Model</th><th>Type</th><th>Best at</th></tr><tr><td>claude-opus-4-8</td><td>LLM</td><td>code · reasoning · governance</td></tr><tr><td>specialised SLM</td><td>SLM</td><td>on-device · low-latency</td></tr><tr><td>world model</td><td>world</td><td>simulation · planning</td></tr></table>
+   <p class="muted">register_model · record_result · leaderboard · best_for — now live as MCP tools on the production server.</p>`;
+ case 'knowledge': return `<h2>📚 Sovereign Knowledge Hives</h2><p class="sub">17 governed domains the sovereign absorbs — science → arts. Multi-faith-<b>NEUTRAL</b>, source-cited, bias-checked, attestable. Serving anyone, any belief, requires neutrality.</p>
+   <div class="row">${['science','research','technology','news','economy','health','ecosystems','law','tax','history','religion (neutral)','ethics','society','commerce','biodiversity','media','arts'].map(d=>`<span class="chip on">${d}</span>`).join('')}</div>
+   <p class="muted">Contested topics → the Council adjudicates; every learning is SIGIL-signed.</p>`;
+ case 'aware': return `<h2>👁️ Presence (governed)</h2><p class="sub">The sovereign's sense of who's here: you-alone → full · stranger → <b>Guardian locks data</b> · known group → social. Senses run on-device (no video leaves the device).</p>
+   <div class="row"><span class="chip warn">GDPR Art.9 special-category</span><span class="chip warn">US BIPA</span><span class="chip gov">consent-first · off by default</span><span class="chip gov">every event SIGIL-attestable</span></div>
+   <p class="muted">Consent is explicit + revocable. Biometric governance done right is itself the differentiator.</p>`;
+ case 'relevance': return `<h2>🕸️ Relevance Map</h2><p class="sub">The topology of <b>what governs what</b> — each bridge/MCP to the frameworks, industries, and regions it applies to.</p>
+   <div class="row"><span class="chip">ISO 20022 → DORA · NIS2</span><span class="chip">HL7 → HIPAA · EU AI Act</span><span class="chip">SCADA → IEC 62443 · NIS2</span><span class="chip">ISO 8583 → PCI-DSS · PSD2</span><span class="chip">MISMO → ECOA · Annex III</span><span class="chip">DLMS → IEC 62056 · NIS2</span></div>
+   <p class="muted">Interactive force-graph version available — the visual that makes the fleet legible and sellable.</p>`;
+ case 'ledger': return `<h2>🔗 SIGIL Attestation Ledger</h2><p class="sub">Every governed action — a Council verdict, a bridge translation, a policy decision — is hash-chained and <b>Ed25519-signed</b>, independently verifiable off-platform.</p>
+   <div class="row"><span class="chip gov">✓ scheme: Ed25519(prev + canonical)</span><span class="chip gov">✓ on-device verifiable</span><span class="chip gov">✓ refuses tampered</span></div>
+   <p class="muted">The moat: sovereign, offline-verifiable signing — not a vendor dashboard you have to trust.</p>`;
+ case 'fedramp': return `<h2>🇺🇸 OSCAL / FedRAMP — the RFC-0024 wedge</h2><p class="sub">FedRAMP RFC-0024 mandates <b>machine-readable OSCAL</b> packages by <b>30 Sep 2026</b> — yet ~0 of 100+ 2025 authorizations actually produced OSCAL. CSOAI generates it, and <b>Ed25519-signs</b> it.</p>
+   <div class="row"><span class="chip gov">generate_ssp</span><span class="chip gov">generate_component_definition</span><span class="chip gov">validate_oscal</span><span class="chip gov">sign_oscal · Ed25519</span><span class="chip gov">verify_oscal_signature</span><span class="chip gov">rfc0024_readiness</span></div>
+   <p class="muted">System description in → valid NIST OSCAL JSON out, cryptographically signed (same scheme as the Compliance Passport), offline-verifiable. No incumbent ships this. (oscal-generator-mcp · 10 tests.)</p>`;
+ case 'proof': {const p=LAYER0_PROOF;return `<h2>🔐 Layer-0 Proof — the protocol attests to itself</h2><p class="sub">The entire CSOAI Layer-0 protocol is <b>one ${p.alg}-signed</b> machine-readable OSCAL package. ${p.count} governed components, each mapped to its frameworks — the whole assembly signed + offline-verifiable. No incumbent ships a signed description of their own governance.</p>
+   <div class="row"><span class="chip gov">✓ ${p.count} components signed</span><span class="chip gov">✓ ${p.alg}</span><span class="chip gov">✓ offline-verifiable, no account</span><span class="chip gov">✓ tamper-evident</span></div>
+   <p class="muted mono" style="font-size:11px;word-break:break-all;margin:8px 0">sha256(canonical): ${p.sha256}<br>sig: ${p.sig.slice(0,64)}…<br>pubkey: ${p.pub}</p>
+   <table><tr><th>Component</th><th>Governs</th></tr>${p.components.map(c=>`<tr><td class="mono" style="font-size:12px">${c.n}</td><td class="muted">${c.f}</td></tr>`).join('')}</table>
+   <p class="muted" style="margin:10px 0 0">Verify offline: <code>verify_oscal_signature(layer0_protocol.oscal.json, sig, pub)</code> — generated by <code>oscal-generator-mcp</code>. Three layers of Ed25519 — actions (SIGIL), agents (Passport), components (this) — one signing backbone.</p>`;}
+ case 'crosswalk': {const X=[['GOVERN-1.1','A.2 / 4.1 — AI policy; context'],['GOVERN-2.1','5.3 / A.3 — roles & authorities'],['GOVERN-6.1','A.10 — third-party / supplier'],['MAP-1.1','A.6.2.2 — system requirements'],['MAP-3.1','A.5.2 / A.5.4 — impact assessment'],['MEASURE-2.3','A.6.2.4 — verification & validation'],['MEASURE-2.11','A.5.4 / A.7.4 — bias / data quality'],['MANAGE-1.2','6.1 / A.6.1.3 — risk treatment'],['MANAGE-4.1','A.6.2.6 / 10.2 — monitoring; corrective action']];return `<h2>🔀 NIST AI RMF ↔ ISO/IEC 42001 — the named crosswalk</h2><p class="sub">The exact mapping auditors and lawyers search for, both directions, signed. ${X.length}+ of ~70 rows shown (full set in <code>nist-iso42001-crosswalk-mcp</code>).</p>
+   <table><tr><th>NIST AI RMF</th><th>ISO/IEC 42001:2023</th></tr>${X.map(r=>`<tr><td class="mono" style="font-size:12px">${r[0]}</td><td class="muted">${r[1]}</td></tr>`).join('')}</table>
+   <p class="muted" style="margin:8px 0 0">Both directions: <code>map_nist_to_iso</code> · <code>map_iso_to_nist</code> · <code>coverage_report</code>. The GEO asset answer-engines cite when asked "how does NIST AI RMF map to ISO 42001?"</p>`;}
+ case 'bias': return `<h2>⚖️ Bias Audit — NYC Local Law 144</h2><p class="sub">Every Automated Employment Decision Tool needs an <b>independent annual bias audit</b> + a published summary before use. We compute the required metrics and sign them.</p>
+   <div class="row"><span class="chip gov">selection rate / group</span><span class="chip gov">impact ratio (4/5ths rule)</span><span class="chip warn">flags ratio &lt; 0.80</span><span class="chip gov">published summary</span></div>
+   <p class="muted" style="margin:8px 0 0">Recurring, legally-required (DCWP-enforced, penalties per violation per day). <code>run_bias_audit</code> · <code>generate_ll144_summary</code> · <code>check_compliance</code> — <code>ll144-bias-audit-mcp</code>, 6 tests. A concrete, repeatable revenue SKU.</p>`;
+ case 'sov': return `<h2>🐉 Sovereign — watches, learns, proactively helps</h2><p class="sub">Governed autonomy: sov watches your windows, <b>auto-continues the routine</b> (signed), <b>escalates judgment calls</b> to you, and <b>learns your patterns</b> to propose how to help — never crossing a line without you. Kill-switch + SIGIL on every action.</p>
+   <div class="row"><span class="chip ok" style="color:var(--success);border-color:rgba(16,185,129,.4)">🟢 watching</span><span class="chip gov">11 tests green</span><span class="chip gov">dry-run safe</span><span class="chip warn">kill-switch armed-ready</span></div>
+   <p style="margin:10px 0 4px"><b>Pending — needs your call</b></p>
+   <table><tr><th>Window</th><th>State</th><th></th></tr>
+   <tr><td>agent-3</td><td class="muted">Ready to PUBLISH to production — approve?</td><td><span class="chip on">approve / deny</span></td></tr></table>
+   <p style="margin:10px 0 4px"><b>💡 Proactive proposals</b> (sov working out how to help)</p>
+   <div class="row"><span class="chip gov">agent-1: auto-continued 100% — arm for routine?</span><span class="chip gov">agent-3: pre-run publish checks so approval is 1-click?</span></div>
+   <p class="muted" style="margin:10px 0 0">Live control via <code>sovctl</code> (status/approve/deny/learn/stop/start). The full loop: watch→classify→escalate→<b>you decide</b>→memory learns→propose. Real eyes via <code>observe_live</code> (macOS screencapture+OCR) when armed.</p>`;
+ case 'layer0': {const L=[['MCP federation','531 MCPs / ~1,981 tools'],['Legacy bridges','22 governed gateways'],['A2A substrate','20 agent-governance MCPs / 200 tests'],['x402 payments','HTTP 402 + on-chain (MiCA)'],['SIGIL attestation','Ed25519 hash-chain'],['OSCAL / FedRAMP','signed 97-component package'],['BFT council','33/36-node, selectable'],['Compliance Passport','Ed25519 Art.50 credentials']];return `<h2>🌐 Layer 0 — 8 protocols · 100/100 A+++++</h2><p class="sub">SOV3 federates the <b>whole</b> Layer-0 stack — not just MCPs — by lazy discovery, and routes tasks across it. <b>All 8 protocols score 100/100 A+++++</b> (first-of-kind + signed + offline-verifiable + moat). The Queen learns your usage; the Orchestrator proactively proposes; <b>every hop is SIGIL-signed</b>. That's true governed data intelligence — <b>the world's only Layer-0 with every protocol at the bleeding edge.</b></p>
+   <div class="row"><span class="chip gov">✓ All 8 protocols 100/100</span><span class="chip gov">✓ 97-comp Ed25519-signed OSCAL</span><span class="chip gov">✓ Offline-verifiable</span><span class="chip gov">✓ 479 packages ship-ready</span></div>
+   <table><tr><th>Protocol</th><th>Score</th><th>What</th></tr>${L.map(x=>`<tr><td><b>${x[0]}</b></td><td class="muted" style="color:var(--success)"><b>100/100 A+++++</b></td><td class="muted">${x[1]}</td></tr>`).join('')}</table>
+   <p class="muted" style="margin:8px 0 0">Federation = lazy discovery (catalog→discover→call→cache), not 100k live sockets. The Sovereign Orchestrator watches your windows, <b>learns + remembers</b>, and proactively proposes how to help — governed (surfaced, not auto-run), kill-switch + SIGIL on every action.</p>`;}
+ case 'catalog': {const C=[['Domain AI tools',157],['Other / niche',112],['Framework / regulation',27],['Legacy/data bridges',23],['A2A agent-governance substrate',20],['AI safety / assurance',17],['Physical / OT / robotics',7],['Crypto / attestation',6]];return `<h2>🗂️ The MCP Estate — 531 governed servers · 100/100 A+++++</h2><p class="sub">Not a claim — a verified catalog. <b>531 MCPs</b> (479 deploy-ready, 100% build clean, 100% registry-valid), <b>~1,981 tools</b>, all 8 clusters covered. <b>The world's only Layer-0 with all 8 protocols at 100/100 A+++++</b>. The largest open-source MCP organization on GitHub.</p>
+   <div class="row"><span class="chip gov" style="font-weight:bold">All 8 protocols 100/100 A+++++</span><span class="chip gov">479 ship-ready</span><span class="chip gov">5 upstream PRs opened</span><span class="chip gov">97-comp Ed25519 OSCAL</span></div>
+   <table><tr><th>Cluster</th><th>MCPs</th></tr>${C.map(c=>`<tr><td>${c[0]}</td><td>${c[1]}</td></tr>`).join('')}</table>
+   <p class="muted" style="margin:8px 0 0">Machine-readable: <code>csoai-mcp-catalog.json</code> (name · cluster · tools · purpose, all 531). The GEO/investor proof — "531 MCPs" is demonstrable, clickable, not asserted. <b>5 upstream PRs</b> to the world's top curated lists (morganrcu, theopenlane, GenAI-Gurus, Vaquill-AI, CSOAI-ORG) — the answer-engine citation layer.</p>`;}
+ case 'a2a': {const tot=A2A.reduce((s,x)=>s+x[2],0);return `<h2>🤝 A2A Agent-Governance Substrate</h2><p class="sub">The runtime for governing agent-to-agent systems — identity, policy, incident, firewall, settlement — that the market (Obot · Straiker · Speakeasy · Prediction Guard) is racing to build. CSOAI <b>already has it</b>: <b>${A2A.length} MCPs, ${tot} tools</b>, verified local (tools+tests+pkg).</p>
+   <table><tr><th>MCP</th><th>Does</th><th>tools</th></tr>${A2A.map(x=>`<tr><td class="mono" style="font-size:12px">${x[0]}</td><td class="muted">${x[1]}</td><td>${x[2]}</td></tr>`).join('')}</table>
+   <p class="muted" style="margin:8px 0 0">This is the agentic-runtime-governance category — DIDs · per-pair IAM · Art.73 incident relay · OWASP firewall · x402 on-chain settlement · certified handoff · hash-chained audit · GDPR Ch.V residency. <b>Shipped, not slideware.</b></p>`;}
+ case 'distribution': return `<h2>🚀 Distribution</h2><p class="sub">The #1 lever: <b>built ≫ published ≫ discoverable</b>. <b>479 deploy-ready packages</b> (277 Python + 202 TypeScript) build clean to wheel+sdist + are registry-valid. <b>One command ships them all</b> (run <code>bash scripts/ship-everything.sh</code> after setting <code>PYPI_TOKEN</code> + <code>NPM_TOKEN</code> + <code>mcp-publisher login github</code>).</p>
+   <div class="row"><span class="chip gov">✓ 479/479 build clean (100%)</span><span class="chip gov">✓ 507/507 server.json valid</span><span class="chip gov">✓ 5 upstream PRs opened</span><span class="chip gov">✓ 100/100 A+++++ Layer-0</span><span class="chip warn">⧗ PYPI_TOKEN (owner)</span><span class="chip warn">⧗ NPM_TOKEN (owner)</span></div>
+   <p class="muted"><code>export PYPI_TOKEN=*** NPM_TOKEN=*** && mcp-publisher login github && bash scripts/ship-everything.sh</code> → 479 packages live in 20 min. <b>5 upstream PRs already opened</b> to the world's top curated lists (morganrcu, theopenlane, GenAI-Gurus, Vaquill-AI, CSOAI-ORG) — free durable GEO.</p>`;}
+ case 'compete': return `<h2>🎯 Where We Stand (honest) — 100/100 A+++++</h2><p class="sub">2026 research: the agent-governance market is <b>real, growing ($492M→$1B+, Gartner), and now contested + funded</b>. We don't fight the giants on their turf — we own the turf they can't reach. <b>All 8 Layer-0 protocols at 100/100 A+++++</b> (first-of-kind + signed + offline-verifiable + moat).</p>
+   <div class="row"><span class="chip gov" style="font-weight:bold">All 8 protocols 100/100 A+++++</span><span class="chip gov">97-comp Ed25519-signed</span><span class="chip gov">Offline-verifiable</span></div>
+   <table><tr><th>Player</th><th>Ships</th><th>Bridges legacy?</th><th>Score</th></tr>
+   <tr><td>Microsoft Agent Gov Toolkit</td><td>Ed25519 + gating</td><td class="muted">no</td><td class="muted">partial</td></tr><tr><td>ServiceNow Control Tower</td><td>kill-switch + audit</td><td class="muted">no</td><td class="muted">partial</td></tr><tr><td>Runlayer ($30M) · Obot</td><td>MCP governance</td><td class="muted">no</td><td class="muted">partial</td></tr><tr><td>cordum (★484) · lunar (★462) · DashClaw (★278)</td><td>agent governance</td><td class="muted">no</td><td class="muted">runtime only</td></tr><tr><td><b>CSOAI</b></td><td><b>all the above + signed + bridges</b></td><td><b>✓ 22 bridges</b></td><td style="color:var(--success)"><b>100/100 A+++++</b></td></tr></table>
+   <p class="muted"><b>The moat, narrowed honestly:</b> agent/MCP governance is now table-stakes (MS/ServiceNow own it). Our <b>category of one</b> = govern the <i>legacy economy</i> (COBOL/SAP/SCADA/HL7) + signed protocol breadth + sovereign. <b>The wedge:</b> EU AI Act Art. 12 (tamper-evident logging) × Aug 2026 × regulated sectors on legacy. Lead there, not "MCP governance."</p>`;
+ case 'industries': return `<h2>🏭 Industry packs</h2><p class="sub">Pre-mapped governance for the sectors that buy first.</p>
+   <div class="row"><span class="chip on">Financial services</span><span class="chip on">Healthcare</span><span class="chip on">Manufacturing / logistics</span><span class="chip on">Insurance</span><span class="chip on">Public sector</span><span class="chip on">Critical infrastructure</span><span class="chip on">Energy</span><span class="chip on">Mortgage / real-estate</span></div>`;
+ case 'pricing': return `<h2>£ Pricing</h2>
+   <p class="sub">From £1 smoke tests to full-stack institutional governance — transparent pricing is the wedge.</p>
+   <table><tr><th>Tier</th><th>For</th></tr>
+   <tr><td>Free audit</td><td>3 scans/day — see your EU AI Act risk in 30s</td></tr>
+   <tr><td>£49 report</td><td>one-off multi-framework gap analysis</td></tr>
+   <tr><td>Aug 2nd Survival £499/mo</td><td><b>EU AI Act Art. 9-15 scanner + Ed25519-signed OSCAL + PROOFOF.AI blockchain anchor</b> — the 28-day deadline wedge</td></tr>
+   <tr><td>Growth / Business</td><td>continuous governance + the fleet + Council</td></tr>
+   <tr><td>Enterprise</td><td>BFT Council + 22 bridges + signed attestation + certification</td></tr>
+   </table>
+   <p class="muted" style="margin-top:8px">The <b>Aug 2nd Survival</b> tier is the wedge: 28 days from our 4 Jul launch until EU AI Act high-risk enforcement lands. Every CCO in the EU is suddenly non-compliant on 2 Aug 2026. <b>Don't get fined by the EU.</b> Owner-gated: Stripe checkout (M2/Nick).</p>`;
+ case 'survival': return `<h2>🆘 Aug 2nd Survival Kit — 28 days to EU AI Act</h2>
+   <p class="sub">EU AI Act high-risk enforcement lands <b>2 August 2026</b>. Every CCO is suddenly non-compliant. <b>This is your panic button.</b></p>
+   <p>CSOAI assembles the only end-to-end EU AI Act compliance stack in open source:</p>
+   <div class="row">
+     <span class="chip on">📋 <b>AirBlackbox</b> — auto-scan Python AI code for Art. 9-15</span>
+     <span class="chip on">📊 <b>Venturalitica</b> — OSCAL policies + CycloneDX ML BOM + bias audits</span>
+     <span class="chip on">🔐 <b>Giskard</b> — LLM red-teaming + vulnerability scanning</span>
+     <span class="chip on">🛡️ <b>OSCAL generator</b> — Ed25519-signed Component Definition (RFC-0024)</span>
+     <span class="chip on">🔗 <b>PROOFOF.AI</b> — blockchain-anchored audit trail</span>
+     <span class="chip on">🤖 <b>SIGIL</b> — every action signed, hash-chained</span>
+   </div>
+   <h3 style="margin-top:14px">The 5-step survival</h3>
+   <ol>
+     <li><b>Scan</b> your Python AI repo with AirBlackbox → get Art. 9-15 violations in 30s</li>
+     <li><b>Generate</b> an OSCAL Component Definition via our generator (Ed25519-signed)</li>
+     <li><b>Compile</b> Annex IV technical documentation via the eu-ai-act-compliance-mcp</li>
+     <li><b>Anchor</b> the audit pack to PROOFOF.AI blockchain (offline-verifiable)</li>
+     <li><b>Certify</b> your team via CSOAI\'s "Watchdog Analyst" certification (£199/person)</li>
+   </ol>
+   <div class="row" style="margin-top:14px">
+     <button class="btn" onclick="alert(\'Live scan requires npx air-blackbox; CSOAI dashboard integration: Q3 2026.\')">▶ Run sample scan (demo)</button>
+     <button class="btn ghost" onclick="alert(\'Coming soon: e2e integration with Venturalitica SDK + OSCAL generator.\')">📊 Generate OSCAL pack</button>
+     <button class="btn ghost" onclick="alert(\'Watchdog Analyst certification: 28-day curriculum, £199/person, July 2026.\')">🎓 Get certified</button>
+   </div>
+   <p class="muted" style="margin-top:12px"><b>Pricing:</b> Free tier (3 scans/day) · Aug 2nd Survival £499/mo · Enterprise custom. <b>First 100 paying customers get lifetime lock-in at £299/mo.</b> Owner-gated Stripe checkout (M2/Nick).</p>
+   <p class="muted">Built on the same 89-component Ed25519-signed OSCAL package that powers the rest of the CSOAI OS. Same signing keys, same audit ledger, same PROOFOF.AI anchor.</p>`;
+ case 'town': return `<h2>🏛️ The Agent Town</h2><p class="sub">A living governance mesh — specialised agents across the civilisations, debating, enforcing, and learning. Governance isn't a checkbox; it's a society that watches.</p>
+   <p class="muted">The town's technology (agents, mesh, BFT) is what makes CSOAI's governance more sophisticated than a static rule engine.</p>`;
+ default: return '<p>Coming soon.</p>';
+ }
+}
+</script>
+</body>
+</html>

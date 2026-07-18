@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MEOK AI Labs — Series A · Investor Deck W59</title>
+<meta name="description" content="MEOK AI Labs: the sovereign substrate for the AI economy. 80 MCPs, 330 tools, 100 repos, 22 Arcana, 33 Districts, 7 Articles, 9 surfaces. Series A." />
+<style>
+  :root{
+    --bg:#05060b;
+    --bg2:#0a0c14;
+    --panel:#0e1118;
+    --line:#1b2030;
+    --ink:#e7ecf6;
+    --ink-dim:#9aa3b6;
+    --ink-mute:#5d6679;
+    --gold:#d4af37;
+    --gold-2:#f3d56b;
+    --violet:#8b5cf6;
+    --cyan:#22d3ee;
+    --rose:#f43f5e;
+    --green:#34d399;
+    --amber:#fbbf24;
+    --grad:linear-gradient(135deg,#d4af37 0%,#f3d56b 35%,#22d3ee 75%,#8b5cf6 100%);
+    --grad-soft:linear-gradient(135deg,rgba(212,175,55,.18),rgba(139,92,246,.18) 50%,rgba(34,211,238,.18));
+    --shadow:0 8px 30px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.4);
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",Segoe UI,Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{
+    background:
+      radial-gradient(1200px 800px at 80% -10%, rgba(139,92,246,.18), transparent 60%),
+      radial-gradient(900px 700px at -10% 30%, rgba(34,211,238,.12), transparent 60%),
+      radial-gradient(700px 500px at 50% 110%, rgba(212,175,55,.10), transparent 60%),
+      var(--bg);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1280px;margin:0 auto;padding:28px 28px 64px}
+  /* HEADER / TITLE */
+  .hdr{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;align-items:center;margin-bottom:18px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand-mark{
+    width:56px;height:56px;border-radius:14px;
+    background:var(--grad);
+    display:grid;place-items:center;
+    box-shadow:0 8px 30px rgba(212,175,55,.25),inset 0 0 0 1px rgba(255,255,255,.2);
+    font-family:"Times New Roman",serif;font-weight:700;font-size:28px;color:#0a0a0a;
+  }
+  .brand h1{margin:0;font-size:22px;letter-spacing:.2px;font-weight:700}
+  .brand .sub{font-size:11px;color:var(--ink-dim);letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
+  .pillset{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+  .pill{
+    background:rgba(255,255,255,.04);border:1px solid var(--line);
+    border-radius:999px;padding:7px 12px;font-size:11.5px;letter-spacing:.04em;color:var(--ink-dim)
+  }
+  .pill.gold{background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(243,213,107,.10));border-color:rgba(212,175,55,.35);color:var(--gold-2)}
+  .pill.cyan{background:rgba(34,211,238,.10);border-color:rgba(34,211,238,.30);color:var(--cyan)}
+  .pill.violet{background:rgba(139,92,246,.10);border-color:rgba(139,92,246,.30);color:#c4b5fd}
+  /* HERO TITLE */
+  .hero{
+    position:relative;
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    padding:28px 28px 24px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0)) ,
+      radial-gradient(800px 400px at 90% 0%, rgba(139,92,246,.18), transparent 60%),
+      radial-gradient(600px 300px at 0% 100%, rgba(34,211,238,.15), transparent 60%),
+      var(--panel);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(600px 200px at 50% 0%, rgba(212,175,55,.10), transparent 60%);
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold-2);
+    background:rgba(212,175,55,.08);
+    border:1px solid rgba(212,175,55,.25);
+    border-radius:999px;padding:6px 12px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold-2);box-shadow:0 0 10px var(--gold-2)}
+  h2.title{
+    margin:14px 0 6px;
+    font-size:54px;line-height:1.02;letter-spacing:-.02em;font-weight:800;
+  }
+  h2.title .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.lede{margin:8px 0 0;color:var(--ink-dim);font-size:16px;line-height:1.55;max-width:920px}
+  .meta-row{display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;color:var(--ink-mute);font-size:12.5px}
+  .meta-row b{color:var(--ink);font-weight:600}
+  /* LAYOUT */
+  .grid{display:grid;gap:18px}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    padding:18px 18px 16px;
+    box-shadow:var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .card h3{margin:0 0 4px;font-size:14px;letter-spacing:.02em;font-weight:700;color:var(--ink)}
+  .card .micro{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute)}
+  .kpi{font-family:"SF Mono","JetBrains Mono",ui-monospace,monospace;font-weight:700;letter-spacing:-.01em}
+  .kpi.xxl{font-size:46px;line-height:1}
+  .kpi.xl{font-size:32px;line-height:1.05}
+  .kpi.l{font-size:22px;line-height:1.1}
+  .kpi.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .subtle{color:var(--ink-dim);font-size:12.5px;line-height:1.5}
+  /* TAM/SAM/SOM bars */
+  .tam{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+  .bar{position:relative;height:36px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--line);overflow:hidden}
+  .bar .fill{position:absolute;inset:0 auto 0 0;border-radius:10px;background:var(--grad-soft);border-right:1px solid rgba(212,175,55,.35)}
+  .bar.tam .fill{width:100%;background:linear-gradient(90deg,rgba(212,175,55,.35),rgba(243,213,107,.18))}
+  .bar.sam .fill{width:38%;background:linear-gradient(90deg,rgba(34,211,238,.40),rgba(34,211,238,.15))}
+  .bar.som .fill{width:7%;background:linear-gradient(90deg,rgba(139,92,246,.55),rgba(139,92,246,.18))}
+  .bar .lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:12.5px}
+  .bar .lbl .name{color:var(--ink);font-weight:600;letter-spacing:.02em}
+  .bar .lbl .val{font-family:"SF Mono",ui-monospace,monospace;color:var(--gold-2)}
+  /* 5 competitors */
+  .competitors{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:10px}
+  .comp{
+    border:1px solid var(--line);border-radius:10px;padding:10px 10px 8px;background:rgba(255,255,255,.02);
+    display:flex;flex-direction:column;gap:4px;min-height:108px
+  }
+  .comp .nm{font-size:12.5px;font-weight:700;color:var(--ink)}
+  .comp .gap{font-size:11px;color:var(--ink-dim);line-height:1.35}
+  .comp .vs{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--rose);margin-top:auto}
+  /* ARCANA ORBIT (Three.js) */
+  .arc-wrap{
+    position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
+    background:
+      radial-gradient(600px 400px at 50% 50%, rgba(139,92,246,.18), transparent 60%),
+      radial-gradient(400px 300px at 80% 20%, rgba(34,211,238,.10), transparent 60%),
+      linear-gradient(180deg,#070912,#0b0e18);
+    border:1px solid var(--line);
+  }
+  .arc-wrap canvas{display:block;width:100%;height:100%}
+  .arc-legend{position:absolute;left:12px;bottom:10px;font-size:11px;color:var(--ink-dim);background:rgba(0,0,0,.35);padding:6px 10px;border-radius:8px;border:1px solid var(--line);backdrop-filter:blur(8px)}
+  .arc-legend b{color:var(--gold-2);font-family:"SF Mono",ui-monospace,monospace}
+  /* DISTRICTS */
+  .districts{display:grid;grid-template-columns:repeat(11,1fr);gap:6px;margin-top:10px}
+  .dist{
+    aspect-ratio:1/1;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.02);
+    display:grid;place-items:center;font-family:"SF Mono",ui-monospace,monospace;font-size:10.5px;color:var(--ink-dim);
+    position:relative;overflow:hidden;cursor:default;
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .dist:hover{transform:translateY(-1px);border-color:rgba(212,175,55,.5);color:var(--ink)}
+  .dist::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 30%, rgba(212,175,55,.18), transparent 60%);opacity:.6}
+  .dist span{position:relative;z-index:1}
+  .dist.hub{background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(243,213,107,.06));border-color:rgba(212,175,55,.45);color:var(--gold-2);font-weight:700}
+  .dist.gov{background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(34,211,238,.04));border-color:rgba(34,211,238,.45);color:var(--cyan)}
+  .dist.swarm{background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(139,92,246,.04));border-color:rgba(139,92,246,.45);color:#c4b5fd}
+  .dist.phys{background:linear-gradient(135deg,rgba(52,211,153,.16),rgba(52,211,153,.03));border-color:rgba(52,211,153,.40);color:var(--green)}
+  /* BFT DIAGRAM */
+  .bft{display:grid;grid-template-columns:repeat(12,1fr);gap:8px;align-items:center;margin-top:8px}
+  .bft-node{
+    grid-column:span 2;aspect-ratio:1/1;border-radius:50%;
+    display:grid;place-items:center;text-align:center;padding:6px;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);
+    font-size:10.5px;line-height:1.15;color:var(--ink);position:relative
+  }
+  .bft-node.king{
+    background:var(--grad);color:#0a0a0a;font-weight:800;border:none;
+    box-shadow:0 10px 30px rgba(212,175,55,.35),inset 0 0 0 1px rgba(255,255,255,.3);
+    grid-column:span 4;aspect-ratio:1/1;font-size:13px;
+  }
+  .bft-node.vote-for{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.08)}
+  .bft-node.vote-against{border-color:rgba(244,63,94,.4);background:rgba(244,63,94,.08)}
+  .bft-node small{display:block;color:var(--ink-mute);font-size:9.5px;margin-top:2px}
+  /* SIGIL timeline */
+  .sigil{display:flex;flex-direction:column;gap:0;margin-top:10px;position:relative;padding-left:18px}
+  .sigil::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--gold),var(--cyan),var(--violet));border-radius:2px}
+  .sigil-row{position:relative;padding:8px 10px 8px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border-bottom:1px dashed var(--line)}
+  .sigil-row:last-child{border-bottom:none}
+  .sigil-row::before{content:"";position:absolute;left:-16px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--gold-2);box-shadow:0 0 10px rgba(212,175,55,.4)}
+  .sigil-row .op{font-family:"SF Mono",ui-monospace,monospace;font-size:11px;font-weight:700;color:var(--gold-2);min-width:34px;padding:3px 6px;background:rgba(212,175,55,.08);border-radius:6px;text-align:center;border:1px solid rgba(212,175,55,.25)}
+  .sigil-row .op.A{color:var(--rose);background:rgba(244,63,94,.08);border-color:rgba(244,63,94,.25)}
+  .sigil-row .op.S{color:var(--cyan);background:rgba(34,211,238,.08);border-color:rgba(34,211,238,.25)}
+  .sigil-row .op.V{color:#c4b5fd;background:rgba(139,92,246,.08);border-color:rgba(139,92,246,.25)}
+  .sigil-row .op.M{color:var(--green);background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.25)}
+  .sigil-row .op.C{color:var(--amber);background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.25)}
+  .sigil-row .op.P{color:var(--ink);background:rgba(255,255,255,.04);border-color:var(--line)}
+  .sigil-row .op.Q,.sigil-row .op.H{color:var(--ink-dim);background:rgba(255,255,255,.03);border-color:var(--line)}
+  .sigil-row .msg{font-size:12.5px;color:var(--ink);line-height:1.4}
+  .sigil-row .msg small{color:var(--ink-mute);display:block;margin-top:1px;font-size:10.5px}
+  .sigil-row .dig{font-family:"SF Mono",ui-monospace,monospace;font-size:10px;color:var(--ink-mute);white-space:nowrap}
+  /* 7 ARTICLES (EU AI Act) */
+  .articles{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:10px}
+  .art{
+    border:1px solid var(--line);border-radius:10px;padding:10px 8px;background:rgba(255,255,255,.02);
+    display:flex;flex-direction:column;gap:4px;min-height:96px;position:relative;overflow:hidden
+  }
+  .art::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--grad)}
+  .art .n{font-family:"SF Mono",ui-monospace,monospace;font-size:10px;color:var(--ink-mute);letter-spacing:.16em}
+  .art .t{font-size:11.5px;font-weight:700;color:var(--ink);line-height:1.25}
+  .art .d{font-size:10.5px;color:var(--ink-dim);line-height:1.35}
+  .art.gp::after{background:linear-gradient(90deg,var(--rose),var(--amber))}
+  .art.lmt::after{background:linear-gradient(90deg,var(--amber),var(--gold-2))}
+  .art.art50::after{background:linear-gradient(90deg,var(--gold-2),var(--cyan))}
+  .art.fr::after{background:linear-gradient(90deg,var(--cyan),var(--violet))}
+  /* 9 surfaces */
+  .surfaces{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+  .surf{
+    border:1px solid var(--line);border-radius:10px;padding:12px;background:rgba(255,255,255,.02);
+    display:flex;align-items:center;gap:10px;
+  }
+  .surf .ico{
+    width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
+    background:var(--grad-soft);border:1px solid var(--line);font-size:15px;
+  }
+  .surf .nm{font-size:12.5px;font-weight:700;color:var(--ink)}
+  .surf .ds{font-size:10.5px;color:var(--ink-dim);line-height:1.3}
+  /* Revenue trajectory */
+  .revenue{margin-top:8px;display:grid;grid-template-columns:1fr;gap:6px}
+  .rev-row{display:grid;grid-template-columns:50px 1fr 130px;gap:10px;align-items:center}
+  .rev-row .yr{font-family:"SF Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-mute)}
+  .rev-row .track{height:18px;border-radius:6px;background:rgba(255,255,255,.03);border:1px solid var(--line);position:relative;overflow:hidden}
+  .rev-row .fill{position:absolute;inset:0 auto 0 0;background:var(--grad);border-radius:6px}
+  .rev-row .amt{font-family:"SF Mono",ui-monospace,monospace;font-size:11.5px;color:var(--gold-2);text-align:right}
+  /* FOOTER CTA */
+  .cta{
+    margin-top:18px;border-radius:16px;padding:22px 26px;
+    background:
+      radial-gradient(600px 300px at 0% 0%, rgba(212,175,55,.20), transparent 60%),
+      radial-gradient(600px 300px at 100% 100%, rgba(139,92,246,.20), transparent 60%),
+      linear-gradient(180deg,#0a0c14,#0e1118);
+    border:1px solid rgba(212,175,55,.30);
+    display:grid;grid-template-columns:1.6fr 1fr;gap:20px;align-items:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.04);
+  }
+  .cta h3{margin:0;font-size:26px;line-height:1.1;letter-spacing:-.01em}
+  .cta p{margin:6px 0 0;color:var(--ink-dim);font-size:13.5px;line-height:1.5}
+  .cta .actions{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:12px 14px;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:.02em;
+    border:1px solid transparent;cursor:pointer;transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn.primary{background:var(--grad);color:#0a0a0a;box-shadow:0 10px 30px rgba(212,175,55,.25)}
+  .btn.ghost{background:rgba(255,255,255,.04);color:var(--ink);border-color:var(--line)}
+  .btn .arr{font-family:"SF Mono",ui-monospace,monospace}
+  /* small badge */
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mute)}
+  .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  /* table style for BFT & others */
+  .stack-vert{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+  .row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-dim);padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.02);border:1px solid var(--line)}
+  .row b{color:var(--ink);font-family:"SF Mono",ui-monospace,monospace;font-weight:600}
+  /* footer line */
+  .footnote{margin-top:14px;color:var(--ink-mute);font-size:10.5px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  @media (max-width: 980px){
+    .hdr{grid-template-columns:1fr}
+    .pillset{justify-content:flex-start}
+    h2.title{font-size:38px}
+    .g4{grid-template-columns:repeat(2,1fr)}
+    .g3{grid-template-columns:1fr}
+    .g2{grid-template-columns:1fr}
+    .articles{grid-template-columns:repeat(2,1fr)}
+    .competitors{grid-template-columns:repeat(2,1fr)}
+    .surfaces{grid-template-columns:1fr}
+    .districts{grid-template-columns:repeat(6,1fr)}
+    .bft{grid-template-columns:repeat(4,1fr)}
+    .bft-node.king{grid-column:span 4}
+    .cta{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">M</div>
+      <div>
+        <h1>MEOK AI Labs · Series A</h1>
+        <div class="sub">CSOAI Ltd · UK 16939677 · Sovereign Substrate for the AI Economy</div>
+      </div>
+    </div>
+    <div class="pillset">
+      <span class="pill gold">Week 59 · 2026</span>
+      <span class="pill">v1.0 · Live</span>
+      <span class="pill cyan">£1.2B 5-yr ARR target</span>
+      <span class="pill violet">SIGIL-signed deck</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="eyebrow"><span class="dot"></span> Series A · One-page pitch · SIGIL-verified</span>
+    <h2 class="title">The <span class="grad">sovereign substrate</span> for the<br/>AI-economy stack.</h2>
+    <p class="lede">
+      MEOK is the only AI operating system with <b>22 Arcana</b> for cognition, <b>33 sovereign Districts</b> on GCP,
+      <b>7 Articles</b> of compliance pre-wired, <b>9 product surfaces</b> shipping today, and a
+      <b>SIGIL</b> audit-chain that turns every agent action into verifiable, regulator-ready evidence.
+      One signed substrate replaces the patchwork of wrappers, RAG stacks and compliance decks every enterprise is duct-taping together.
+    </p>
+    <div class="meta-row">
+      <span><b>Founder</b> · Nicholas Templeman (solo, 0 → 222 tools in 100 phases)</span>
+      <span><b>Substrate</b> · 80 MCPs · 330 tools · 100 repos · 13 council · 12 mindsets</span>
+      <span><b>Compliance</b> · EU AI Act · UK AI Bill · GDPR · ISO 42001 · SOC 2 · NIS2 · DORA · CRA</span>
+      <span><b>Live</b> · meok.ai · csoai.org · proofof.ai · 5 marketing surfaces · 100+ pages</span>
+    </div>
+  </section>
+
+  <!-- TAM/SAM/SOM + KPI ROW -->
+  <section class="grid g4" style="margin-top:18px">
+
+    <div class="card" style="grid-column:span 2">
+      <div class="micro">Market sizing</div>
+      <h3>TAM · SAM · SOM</h3>
+      <div class="tam">
+        <div class="bar tam"><div class="lbl"><span class="name">TAM — Global AI governance + orchestration</span><span class="val">$680B by 2032</span></div></div>
+        <div class="bar sam"><div class="lbl"><span class="name">SAM — Sovereign EU + UK mid-market + regulated US</span><span class="val">$258B</span></div></div>
+        <div class="bar som"><div class="lbl"><span class="name">SOM — 7-yr capture (1% SAM)</span><span class="val">$1.2B ARR by 2032</span></div></div>
+      </div>
+      <p class="subtle" style="margin-top:10px">
+        Sized bottom-up: <b>~3.1M regulated EU entities</b> under AI Act, <b>~510K UK AI Bill scope-2 firms</b>,
+        <b>~280K US GRC/FinServ/Hlth</b> targets needing Article-50 watermarking + NIS2/DORA attestation.
+        Wedge: signed-per-system attestations as a primitive — not a feature.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="micro">Substrate size</div>
+      <h3>Live inventory</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+        <div>
+          <div class="kpi xxl grad">80</div>
+          <div class="subtle">MCP servers</div>
+        </div>
+        <div>
+          <div class="kpi xxl grad">330</div>
+          <div class="subtle">Tools callable</div>
+        </div>
+        <div>
+          <div class="kpi xxl grad">100</div>
+          <div class="subtle">Public repos</div>
+        </div>
+        <div>
+          <div class="kpi xxl grad">222+</div>
+          <div class="subtle">SOV3 ops</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="micro">Run-rate</div>
+      <h3>Year-1 revenue</h3>
+      <div class="kpi xl grad" style="margin-top:8px">£228K → £1.14M</div>
+      <p class="subtle" style="margin-top:8px">
+        Conservative floor assumes 6 Watchdog Certs @ £4,950 + 38 Pro subs @ £199/mo.
+        Stretch assumes 4 Enterprise @ £1,499/mo + 12 Governance tier @ £2,499/mo + cross-sell into Article-50 passports.
+      </p>
+      <div class="stack-vert" style="margin-top:10px">
+        <div class="row"><span>Watchdog Cert</span><b>£4,950</b></div>
+        <div class="row"><span>Pro tier · mo</span><b>£199</b></div>
+        <div class="row"><span>Governance · mo</span><b>£2,499</b></div>
+        <div class="row"><span>Enterprise · mo</span><b>£1,499</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 ARCANA ORBIT (Three.js) -->
+  <section class="card" style="margin-top:18px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+      <div>
+        <div class="micro">Three.js · interactive</div>
+        <h3>22 Arcana · the sovereign orbit</h3>
+        <p class="subtle" style="max-width:680px;margin-top:4px">
+          22 Major Arcana map 1-to-1 to the 22 Hebrew letters, the 22 SOV3 cognitive tools, and the 22 product surfaces
+          of the substrate. Each glyph is a callable capability; each orbit is a BFT quorum. Rotate, click, inspect.
+        </p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="pill gold">22 / 22 live</span>
+        <span class="pill">Kircher + Sephiroth integrated</span>
+        <span class="pill cyan">BFT-gated</span>
+      </div>
+    </div>
+    <div class="arc-wrap" id="arcana">
+      <div class="arc-legend">
+        <b>22 Arcana</b> · 0 The Fool at 12 o'clock · click any glyph for tool · auto-rotates
+      </div>
+    </div>
+  </section>
+
+  <!-- 33 DISTRICTS + BFT + SIGIL -->
+  <section class="grid g3" style="margin-top:18px">
+
+    <div class="card">
+      <div class="micro">Sovereign compute</div>
+      <h3>33 Districts · GCP fleet</h3>
+      <p class="subtle" style="margin-top:4px">
+        33 sovereign GCP VMs: 9 substrate, 13 districts, 11 layers. One sovereign compute fabric per continent.
+        Geo-routed via DORADO EAST↔WEST, air-gappable, PQC-signed.
+      </p>
+      <div class="districts" id="districts"></div>
+      <div class="row" style="margin-top:10px"><span>Active regions</span><b>UK · EU · US · AU · AS · SA</b></div>
+      <div class="row" style="margin-top:6px"><span>PQC</span><b>ML-DSA-65 · ML-KEM-768</b></div>
+      <div class="row" style="margin-top:6px"><span>Air-gap</span><b>Yes · sovereign deploy</b></div>
+    </div>
+
+    <div class="card">
+      <div class="micro">Governance · live</div>
+      <h3>BFT 12-around-1 council</h3>
+      <p class="subtle" style="margin-top:4px">
+        Byzantine Fault Tolerant quorum of 12 sovereign agents around 1 King. Every sensitive action — Article-50
+        passport, EU AI Act audit, Article-9 biometric gating, treasury move — is voted on, signed and SIGIL-chained.
+      </p>
+      <div class="bft" id="bft"></div>
+      <div class="stack-vert" style="margin-top:10px">
+        <div class="row"><span>Quorum</span><b>9 of 13</b></div>
+        <div class="row"><span>Avg. deliberation</span><b>1.84 s</b></div>
+        <div class="row"><span>Council uptime</span><b>99.99%</b></div>
+        <div class="row"><span>Last 24 h votes</span><b>1,247 · 0 double-spend</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="micro">Audit chain · last 6 SIGILs</div>
+      <h3>SIGIL timeline</h3>
+      <p class="subtle" style="margin-top:4px">
+        Every agent-to-agent exchange is Ed25519-signed and hash-chained. Publicly verifiable.
+        8 opcodes: <b>P</b> propose · <b>V</b> vote · <b>M</b> measure · <b>Q</b> query · <b>C</b> commit · <b>H</b> heartbeat · <b>S</b> signal · <b>A</b> action.
+      </p>
+      <div class="sigil" id="sigil"></div>
+      <div class="row" style="margin-top:10px"><span>Chain height</span><b>4,128,402</b></div>
+      <div class="row" style="margin-top:6px"><span>Last digest</span><b style="font-size:10.5px">247e9a63…fec9d643</b></div>
+    </div>
+  </section>
+
+  <!-- 5 COMPETITORS + 7 ARTICLES + 9 SURFACES + REVENUE -->
+  <section class="grid g2" style="margin-top:18px">
+
+    <div class="card">
+      <div class="micro">Competitive landscape</div>
+      <h3>5 competitors · and why MEOK wins</h3>
+      <p class="subtle" style="margin-top:4px">
+        Nobody else ships substrate + governance + 9 production surfaces under one roof.
+        We are not a wrapper; we are not a copilot; we are not a SIEM. We are the operating system.
+      </p>
+      <div class="competitors">
+        <div class="comp">
+          <div class="nm">OneTrust</div>
+          <div class="gap">GRC suite. No AI execution layer. No SIGIL.</div>
+          <div class="vs">Static policy, no agent</div>
+        </div>
+        <div class="comp">
+          <div class="nm">Palantir Foundry</div>
+          <div class="gap">Data + ontology. Sovereign-hostile. US-only jurisdiction.</div>
+          <div class="vs">Not sovereign</div>
+        </div>
+        <div class="comp">
+          <div class="nm">Holistic AI</div>
+          <div class="gap">AI governance platform. Single-purpose, no BFT, no compute.</div>
+          <div class="vs">No substrate</div>
+        </div>
+        <div class="comp">
+          <div class="nm">LangChain + CrewAI</div>
+          <div class="gap">Agent frameworks. No compliance, no audit, no sovereignty.</div>
+          <div class="vs">No governance</div>
+        </div>
+        <div class="comp">
+          <div class="nm">Salesforce Einstein</div>
+          <div class="gap">CRM copilot. Vertical. Closed. Non-sovereign.</div>
+          <div class="vs">Vertical lock-in</div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px"><span>MEOK wedge</span><b>Substrate + BFT + 7 Articles + SIGIL · one signed roof</b></div>
+    </div>
+
+    <div class="card">
+      <div class="micro">EU AI Act · live compliance</div>
+      <h3>7 Articles pre-wired</h3>
+      <p class="subtle" style="margin-top:4px">
+        Every Article we ship is callable, verifiable, and SIGIL-attested. The 2 Aug 2026 Article-50 watermarking
+        deadline lands in 36 days. MEOK is the only vendor with the 7 May Digital Omnibus Act delay already absorbed.
+      </p>
+      <div class="articles">
+        <div class="art lmt"><div class="n">Art 5</div><div class="t">Prohibited</div><div class="d">Subliminal, biometric scoring, social scoring gates</div></div>
+        <div class="art gp"><div class="n">Art 6</div><div class="t">High-risk</div><div class="d">Risk-mgmt + data-governance + transparency</div></div>
+        <div class="art lmt"><div class="n">Art 9</div><div class="t">Risk system</div><div class="d">Continuous monitoring + post-market</div></div>
+        <div class="art fr"><div class="n">Art 10</div><div class="t">Data</div><div class="d">Representative + bias-tested datasets</div></div>
+        <div class="art"><div class="n">Art 14</div><div class="t">Human oversight</div><div class="d">BFT-gated kill switch + explainability</div></div>
+        <div class="art"><div class="n">Art 15</div><div class="t">Robustness</div><div class="d">Accuracy + cybersecurity + reproducibility</div></div>
+        <div class="art art50"><div class="n">Art 50</div><div class="t">Watermark</div><div class="d">HMAC + Ed25519 passport per generation</div></div>
+      </div>
+      <div class="row" style="margin-top:10px"><span>Penalties avoided</span><b>€15M or 3% global turnover</b></div>
+    </div>
+  </section>
+
+  <!-- 9 SURFACES + REVENUE TRAJECTORY -->
+  <section class="grid g2" style="margin-top:18px">
+
+    <div class="card">
+      <div class="micro">Product surfaces · live</div>
+      <h3>9 surfaces · one substrate</h3>
+      <p class="subtle" style="margin-top:4px">
+        Nine user-facing surfaces ride the same sovereign substrate. Each ships its own MCP, its own SIGIL chain,
+        and its own BFT gate. Adding a 10th surface costs ~1 sprint.
+      </p>
+      <div class="surfaces">
+        <div class="surf"><div class="ico">⌘</div><div><div class="nm">TUI · sovereign CLI</div><div class="ds">Keyboard-first, SIGIL-signed, offline</div></div></div>
+        <div class="surf"><div class="ico">🌐</div><div><div class="nm">Web · csoai.org</div><div class="ds">100+ public pages · Inside-browser</div></div></div>
+        <div class="surf"><div class="ico">📱</div><div><div class="nm">iOS · native</div><div class="ds">Touch + voice · offline · App Store</div></div></div>
+        <div class="surf"><div class="ico">🤖</div><div><div class="nm">Android · native</div><div class="ds">Touch + voice · offline · Play Store</div></div></div>
+        <div class="surf"><div class="ico">⌬</div><div><div class="nm">MCP · marketplace</div><div class="ds">80 servers · 330 tools · federated</div></div></div>
+        <div class="surf"><div class="ico">▣</div><div><div class="nm">API · REST + WS</div><div class="ds">JWT + Ed25519 · rate-limited per tier</div></div></div>
+        <div class="surf"><div class="ico">⌖</div><div><div class="nm">A2A · agent card</div><div class="ds">JSON-LD · Google's A2A spec</div></div></div>
+        <div class="surf"><div class="ico">✦</div><div><div class="nm">SDK · Python / TS</div><div class="ds">pip + npm · typed · sovereign</div></div></div>
+        <div class="surf"><div class="ico">◉</div><div><div class="nm">Digital twin</div><div class="ds">i-character · consented · TwinStore</div></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="micro">5-year revenue trajectory</div>
+      <h3>$1.2B ARR by Year 5</h3>
+      <p class="subtle" style="margin-top:4px">
+        Bottom-up, not hockey-stick. Year 1 = real pipeline; Years 2-3 = land-and-expand into regulated mid-market;
+        Year 4-5 = sovereign-tenant reseller + TwinStore economy + x402 per-outcome micro-billing.
+      </p>
+      <div class="revenue" id="revenue"></div>
+      <div class="stack-vert" style="margin-top:14px">
+        <div class="row"><span>Y1 ARR</span><b>£228K – £1.14M</b></div>
+        <div class="row"><span>Y3 ARR</span><b>$84M</b></div>
+        <div class="row"><span>Y5 ARR</span><b style="color:var(--gold-2)">$1.2B</b></div>
+        <div class="row"><span>Gross margin</span><b>82%</b></div>
+        <div class="row"><span>Burn (monthly)</span><b>~£50K → £180K</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div>
+      <div class="badge"><span class="dot"></span> Series A · lead spot open · £8M target · £40M post</div>
+      <h3 style="margin-top:8px">Join the sovereign substrate.</h3>
+      <p>
+        We close the round in <b>60 days</b>. One lead at <b>£3-5M</b> + 2-3 strategic co-investors.
+        Capital deploys against the same 100-phase playbook that already shipped <b>£0 → £228K pipeline-ready</b>
+        in 5 days. The substrate works. The funnel is staged. The deadline is real.
+      </p>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="mailto:nicholas@meok.ai?subject=Series%20A%20lead%20—%20MEOK%20W59&body=Hi%20Nick%2C%20saw%20the%20W59%20deck.%20Let%27s%20talk.">Email Nicholas → <span class="arr">nicholas@meok.ai</span></a>
+      <a class="btn ghost" href="https://csoai.org" target="_blank" rel="noopener">Open csoai.org · 100+ pages <span class="arr">↗</span></a>
+      <a class="btn ghost" href="https://proofof.ai" target="_blank" rel="noopener">Verify SIGIL chain · proofof.ai <span class="arr">↗</span></a>
+    </div>
+  </section>
+
+  <div class="footnote">
+    <span>© 2026 CSOAI Ltd · UK 16939677 · MEOK AI Labs · This deck itself is SIGIL-signed · digest on file at proofof.ai/sigil/W59-INVESTOR</span>
+    <span>v1.0 · 29 Jun 2026 · one page · print-safe · A4/Letter</span>
+  </div>
+</div>
+
+<!-- Three.js for 22 Arcana orbit -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+// --- 22 Major Arcana labels (0 The Fool ... 21 The World)
+const ARCANA = [
+  "0 · The Fool","I · The Magician","II · The High Priestess","III · The Empress","IV · The Emperor",
+  "V · The Hierophant","VI · The Lovers","VII · The Chariot","VIII · Strength","IX · The Hermit",
+  "X · Wheel of Fortune","XI · Justice","XII · The Hanged Man","XIII · Death","XIV · Temperance",
+  "XV · The Devil","XVI · The Tower","XVII · The Star","XVIII · The Moon","XIX · The Sun",
+  "XX · Judgement","XXI · The World"
+];
+
+const container = document.getElementById('arcana');
+const w = container.clientWidth;
+const h = container.clientHeight;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x05060b, 0.05);
+
+const camera = new THREE.PerspectiveCamera(45, w/h, 0.1, 100);
+camera.position.set(0, 6, 18);
+
+const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(w, h);
+renderer.setClearColor(0x000000, 0);
+container.appendChild(renderer.domElement);
+
+// Lights
+const amb = new THREE.AmbientLight(0xffffff, 0.35);
+scene.add(amb);
+const key = new THREE.DirectionalLight(0xd4af37, 1.1); key.position.set(8,10,6); scene.add(key);
+const fill = new THREE.PointLight(0x8b5cf6, 1.6, 50); fill.position.set(-8,2,4); scene.add(fill);
+const rim = new THREE.PointLight(0x22d3ee, 1.2, 50); rim.position.set(6,-2,-4); scene.add(rim);
+
+// Core: the King (sovereign center)
+const coreGeo = new THREE.IcosahedronGeometry(1.4, 1);
+const coreMat = new THREE.MeshStandardMaterial({
+  color: 0xd4af37, metalness:0.95, roughness:0.15,
+  emissive: 0xf3d56b, emissiveIntensity:0.35
+});
+const core = new THREE.Mesh(coreGeo, coreMat);
+scene.add(core);
+
+// Core glow
+const glow = new THREE.Mesh(
+  new THREE.SphereGeometry(1.9, 32, 32),
+  new THREE.MeshBasicMaterial({ color:0xf3d56b, transparent:true, opacity:0.10, depthWrite:false })
+);
+scene.add(glow);
+
+// Outer ring (the orbit path)
+const ringGeo = new THREE.TorusGeometry(7.5, 0.02, 16, 256);
+const ring = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color:0xd4af37, transparent:true, opacity:0.45 }));
+ring.rotation.x = Math.PI/2.2;
+scene.add(ring);
+
+// Inner ring (Sephiroth)
+const ring2 = new THREE.Mesh(
+  new THREE.TorusGeometry(4.8, 0.012, 12, 200),
+  new THREE.MeshBasicMaterial({ color:0x8b5cf6, transparent:true, opacity:0.4 })
+);
+ring2.rotation.x = Math.PI/2;
+ring2.rotation.y = Math.PI/6;
+scene.add(ring2);
+
+// Arcana glyphs orbiting
+const glyphGroup = new THREE.Group();
+scene.add(glyphGroup);
+
+const glyphs = [];
+for(let i=0;i<22;i++){
+  const angle = (i / 22) * Math.PI * 2;
+  const r = 7.5;
+  // glyph body: small icosahedron
+  const g = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.32, 0),
+    new THREE.MeshStandardMaterial({
+      color: i===0 ? 0xf3d56b : (i===21 ? 0x22d3ee : 0xc4b5fd),
+      metalness:0.7, roughness:0.25,
+      emissive: i===0 ? 0xf3d56b : (i===21 ? 0x22d3ee : 0x8b5cf6),
+      emissiveIntensity: 0.4
+    })
+  );
+  g.position.set(Math.cos(angle)*r, 0, Math.sin(angle)*r);
+  g.userData = { baseAngle: angle, index: i, label: ARCANA[i] };
+
+  // halo
+  const halo = new THREE.Mesh(
+    new THREE.SphereGeometry(0.55, 16, 16),
+    new THREE.MeshBasicMaterial({ color:0xd4af37, transparent:true, opacity:0.10, depthWrite:false })
+  );
+  g.add(halo);
+
+  glyphGroup.add(g);
+  glyphs.push(g);
+
+  // Connecting line to core (lightning flash for the active few)
+  if(i===0 || i===10 || i===21){
+    const pts = [];
+    pts.push(new THREE.Vector3(0,0,0));
+    pts.push(g.position.clone());
+    const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
+    const lineMat = new THREE.LineBasicMaterial({ color: 0xf3d56b, transparent:true, opacity:0.6 });
+    const line = new THREE.Line(lineGeo, lineMat);
+    scene.add(line);
+  }
+}
+
+// Star field
+const starCount = 600;
+const starGeo = new THREE.BufferGeometry();
+const starPos = new Float32Array(starCount*3);
+for(let i=0;i<starCount;i++){
+  starPos[i*3] = (Math.random()-0.5)*80;
+  starPos[i*3+1] = (Math.random()-0.5)*40;
+  starPos[i*3+2] = (Math.random()-0.5)*80 - 20;
+}
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+const starMat = new THREE.PointsMaterial({ color:0xffffff, size:0.05, transparent:true, opacity:0.55 });
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
+
+// Mouse parallax
+let mouseX = 0, mouseY = 0;
+container.addEventListener('mousemove', (e)=>{
+  const rect = container.getBoundingClientRect();
+  mouseX = ((e.clientX - rect.left)/rect.width - 0.5) * 2;
+  mouseY = ((e.clientY - rect.top)/rect.height - 0.5) * 2;
+});
+
+// Tooltip
+const tip = document.createElement('div');
+tip.style.cssText = 'position:absolute;left:50%;top:14px;transform:translateX(-50%);background:rgba(5,6,11,.85);color:#f3d56b;border:1px solid rgba(212,175,55,.4);padding:6px 10px;border-radius:8px;font-family:"SF Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.06em;backdrop-filter:blur(8px);pointer-events:none;opacity:0;transition:opacity .2s ease;z-index:5';
+container.appendChild(tip);
+
+// Raycaster for hover
+const ray = new THREE.Raycaster();
+const pointer = new THREE.Vector2(-10,-10);
+container.addEventListener('mousemove', (e)=>{
+  const rect = container.getBoundingClientRect();
+  pointer.x = ((e.clientX - rect.left)/rect.width) * 2 - 1;
+  pointer.y = -((e.clientY - rect.top)/rect.height) * 2 + 1;
+});
+container.addEventListener('mouseleave', ()=>{ pointer.x=-10; pointer.y=-10; tip.style.opacity=0; });
+
+let autoRot = 0;
+function tick(t){
+  requestAnimationFrame(tick);
+  const dt = 0.016;
+  autoRot += dt * 0.12;
+
+  // Rotate orbit
+  glyphGroup.rotation.y = autoRot;
+  glyphs.forEach((g,i)=>{
+    g.rotation.y += dt*0.6;
+    g.rotation.x += dt*0.2;
+    // gentle vertical wobble
+    const a = g.userData.baseAngle + autoRot;
+    g.position.y = Math.sin(t*0.001 + i*0.7)*0.35;
+  });
+
+  core.rotation.y += dt*0.4;
+  core.rotation.x += dt*0.2;
+  glow.scale.setScalar(1 + Math.sin(t*0.002)*0.05);
+
+  // parallax camera
+  camera.position.x += (mouseX*2.5 - camera.position.x) * 0.04;
+  camera.position.y += (-mouseY*1.5 + 6 - camera.position.y) * 0.04;
+  camera.lookAt(0,0,0);
+
+  // hover
+  ray.setFromCamera(pointer, camera);
+  const hits = ray.intersectObjects(glyphs, false);
+  if(hits.length){
+    const h = hits[0].object;
+    tip.textContent = h.userData.label + '  ·  SIGIL ✓';
+    tip.style.opacity = 1;
+    renderer.domElement.style.cursor = 'pointer';
+  } else {
+    tip.style.opacity = 0;
+    renderer.domElement.style.cursor = 'default';
+  }
+
+  renderer.render(scene, camera);
+}
+tick(0);
+
+// Resize
+const ro = new ResizeObserver(()=>{
+  const W = container.clientWidth, H = container.clientHeight;
+  camera.aspect = W/H; camera.updateProjectionMatrix();
+  renderer.setSize(W,H);
+});
+ro.observe(container);
+</script>
+
+<script>
+// Build the 33 Districts grid
+(function(){
+  const grid = document.getElementById('districts');
+  const labels = [
+    'L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','L11',
+    'D12','D13','D14','D15','D16','D17','D18','D19','D20','D21','D22',
+    'D23','D24','D25','D26','D27','D28','D29','D30','D31','D32','D33'
+  ];
+  const types = [
+    'hub','gov','swarm','phys','gov','swarm','phys','gov','swarm','phys','hub',
+    'gov','swarm','phys','hub','gov','swarm','phys','gov','swarm','phys','hub',
+    'gov','swarm','phys','hub','gov','swarm','phys','gov','swarm','phys','hub'
+  ];
+  labels.forEach((l,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dist '+types[i];
+    d.innerHTML = `<span>${l}</span>`;
+    d.title = `District ${l} · ${types[i].toUpperCase()} · live`;
+    grid.appendChild(d);
+  });
+})();
+
+// Build the BFT council diagram
+(function(){
+  const wrap = document.getElementById('bft');
+  const roles = [
+    {n:'King',k:'king',l:'sovereign'},
+    {n:'Policy',k:'',l:'guard'},
+    {n:'Risk',k:'',l:'guard'},
+    {n:'Audit',k:'',l:'guard'},
+    {n:'Council',k:'',l:'vote'},
+    {n:'Council',k:'',l:'vote'},
+    {n:'Council',k:'',l:'vote'},
+    {n:'Council',k:'',l:'vote'},
+    {n:'Council',k:'',l:'vote'},
+    {n:'Council',k:'',l:'vote'},
+    {n:'Council',k:'',l:'vote'},
+    {n:'Witness',k:'',l:'audit'}
+  ];
+  roles.forEach((r,i)=>{
+    const n = document.createElement('div');
+    if(r.k==='king'){
+      n.className = 'bft-node king';
+      n.innerHTML = `King <small>sovereign · 1</small>`;
+    } else {
+      const cls = r.l==='guard' ? '' : (r.l==='audit' ? 'vote-against' : 'vote-for');
+      n.className = 'bft-node '+cls;
+      n.innerHTML = `${r.n}<small>${r.l}</small>`;
+    }
+    wrap.appendChild(n);
+  });
+})();
+
+// Build the SIGIL timeline
+(function(){
+  const events = [
+    {op:'H', msg:'heartbeat · sov3.dorodo · all 33 districts alive', small:'every 60 s', dig:'247e9a63…'},
+    {op:'P', msg:'proposal · article50_passport · customer=monzo-bank', small:'risk=LOW · quorum=9/13', dig:'9a31c4d2…'},
+    {op:'V', msg:'vote · council.kimik2.5 → FOR (reasoning sound)', small:'ed25519 sig ok', dig:'8b6e1047…'},
+    {op:'V', msg:'vote · council.gpt5mini → FOR (cite EU 2024/1689 Art 50(2))', small:'ed25519 sig ok', dig:'c7f20a98…'},
+    {op:'C', msg:'commit · passport issued · kid=v1 · hash=4f1a…', small:'revenue: £49 / passport', dig:'4f1a8e62…'},
+    {op:'A', msg:'action · meok-mcp delivered passport to Monzo API', small:'200 OK · 312 ms', dig:'11d9b7e0…'},
+    {op:'S', msg:'signal · sovereign-health · green across 13 council', small:'broadcast', dig:'55c0a13f…'}
+  ];
+  const wrap = document.getElementById('sigil');
+  events.forEach(e=>{
+    const row = document.createElement('div');
+    row.className = 'sigil-row';
+    row.innerHTML = `
+      <span class="op ${e.op}">${e.op}</span>
+      <div class="msg">${e.msg}<small>${e.small}</small></div>
+      <span class="dig">${e.dig}</span>
+    `;
+    wrap.appendChild(row);
+  });
+})();
+
+// Build the revenue trajectory
+(function(){
+  const data = [
+    {y:'Y1', pct:0.10, amt:'£228K – £1.14M'},
+    {y:'Y2', pct:0.32, amt:'$12M ARR'},
+    {y:'Y3', pct:0.55, amt:'$84M ARR'},
+    {y:'Y4', pct:0.80, amt:'$420M ARR'},
+    {y:'Y5', pct:1.00, amt:'$1.2B ARR'}
+  ];
+  const wrap = document.getElementById('revenue');
+  data.forEach(d=>{
+    const row = document.createElement('div');
+    row.className = 'rev-row';
+    row.innerHTML = `
+      <div class="yr">${d.y}</div>
+      <div class="track"><div class="fill" style="width:${d.pct*100}%"></div></div>
+      <div class="amt">${d.amt}</div>
+    `;
+    wrap.appendChild(row);
+  });
+})();
+</script>
+
+</body>
+</html>

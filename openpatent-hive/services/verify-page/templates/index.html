@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ site_name }} — OpenPatent.ai Verification</title>
+<meta name="description" content="Independent cryptographic verification of any OpenPatent.ai invention disclosure.">
+<style>
+:root { --bg:#0b0f14; --card:#11161d; --line:#1d2530; --ink:#e6edf3; --muted:#8b95a3; --accent:#5eead4; }
+* { box-sizing: border-box; }
+body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 56px 24px; }
+.brand { display:flex; align-items:center; gap:10px; font-size: 14px; color: var(--muted); margin-bottom: 32px; }
+.brand .dot { width:8px; height:8px; border-radius:50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+h1 { font-size: 40px; line-height: 1.1; margin: 0 0 16px; letter-spacing: -0.02em; }
+h2 { font-size: 22px; margin: 40px 0 12px; letter-spacing: -0.01em; }
+p { color: var(--muted); margin: 0 0 16px; }
+.lede { font-size: 18px; color: var(--ink); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin: 16px 0; }
+input[type="text"] { width: 100%; padding: 14px 16px; font-size: 15px; background: #0a0e13; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; font-family: ui-monospace, "SF Mono", monospace; }
+button { background: var(--accent); color: #001210; border: 0; padding: 14px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 15px; margin-top: 12px; }
+button:hover { filter: brightness(1.05); }
+.foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+a { color: var(--accent); text-decoration: none; }
+.tag { display:inline-block; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; color: var(--muted); margin-right: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="brand"><span class="dot"></span><span>{{ site_name }} · OpenPatent.ai hive</span></div>
+
+<h1>Verify any disclosure.</h1>
+<p class="lede">Paste a SHA-3/512 document hash (full or first 16+ characters) and we'll fetch the cryptographic attestation — Bitcoin anchor, Ed25519 signature, C2PA credential, and the full 6-layer proof.</p>
+
+<div class="card">
+<form action="/verify" method="get">
+<label for="hash" style="display:block; color:var(--muted); font-size:13px; margin-bottom:8px;">DOCUMENT HASH (SHA-3/512)</label>
+<input type="text" id="hash" name="hash" placeholder="d5e714244f819eca0389a4285d9dd15b6b77df57..." autocomplete="off" required>
+<button type="submit">Verify →</button>
+</form>
+</div>
+
+<h2>What the 6 layers prove</h2>
+<div class="card">
+<p><span class="tag">L1</span><strong>SHA-3/512</strong> — the document's content fingerprint. Any change breaks the chain.</p>
+<p><span class="tag">L2</span><strong>HMAC-SHA256</strong> — CSOAI's witness attestation. Proves a trusted third party saw the disclosure.</p>
+<p><span class="tag">L3</span><strong>Ed25519</strong> — the inventor's signature. Binds the disclosure to a decentralized identifier (DID).</p>
+<p><span class="tag">L4</span><strong>Bitcoin OpenTimestamps</strong> — immutable, decentralized proof of existence. Court-admissible in 10+ jurisdictions.</p>
+<p><span class="tag">L5</span><strong>C2PA Content Credential</strong> — machine-readable authenticity manifest embedded in attached documents.</p>
+<p><span class="tag">L6</span><strong>Hash-chained audit log</strong> — tamper-evident sequential record of every disclosure.</p>
+</div>
+
+<div class="foot">
+<p>OpenPatent.ai — "Disclose first. AI second." · <a href="https://openpatent.ai">Main site</a> · <a href="https://csoai.org">CSOAI</a> · <a href="/.well-known/mcp.json">MCP manifest</a></p>
+</div>
+</div>
+</body>
+</html>

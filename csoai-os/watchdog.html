@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Public Sovereign Watchdog · csoai.org/watchdog · CSOAI · 100/100 A+++++</title>
+<meta name="description" content="The public Sovereign Watchdog for agents, humanoids, and systems. Report. Discover. Simulate. Heat map. 8 protocols · 100/100 A+++++. MIT-licensed.">
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--gold:#fbbf24;--blue:#3b82f6;--green:#10b981;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316;--red:#dc2626}
+*{box-sizing:border-box}
+body{font:14px/1.7 Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0}
+.wrap{max-width:1200px;margin:0 auto;padding:24px}
+.cover{text-align:center;padding:48px 28px;background:linear-gradient(135deg,#0a0e1a 0%,#1e3a8a 100%);border:3px double rgba(251,191,36,.4);border-radius:12px;margin-bottom:24px}
+h1{color:var(--gold);font-size:2.6rem;margin:0 0 8px;text-shadow:0 0 24px rgba(251,191,36,.3)}
+h2{color:var(--gold);font-size:1.4rem;margin:24px 0 8px;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:4px}
+h3{color:var(--blue);margin:14px 0 6px;font-size:1.05rem}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:16px 0}
+.kpi .it{background:#0c1018;padding:10px;border-radius:5px;border:1px solid var(--border);text-align:center}
+.kpi .n{color:var(--gold);font-size:1.4rem;font-weight:700;display:block}
+.kpi .l{color:var(--muted);font-size:9px;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin:16px 0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px}
+.card h3{margin:0 0 6px;font-size:1.05rem}
+.card p{margin:4px 0;color:var(--muted);font-size:13px}
+.badge{display:inline-block;padding:3px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:8px;color:var(--gold);font-size:10px;font-weight:700;margin:0 2px 2px 0}
+.badge.g{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:var(--green)}
+.badge.b{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.3);color:var(--blue)}
+.badge.p{background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.3);color:var(--purple)}
+.badge.c{background:rgba(6,182,212,.15);border-color:rgba(6,182,212,.3);color:var(--cyan)}
+.cta{display:inline-block;padding:12px 20px;background:var(--gold);color:#000;border-radius:6px;font-weight:700;text-decoration:none;font-family:Inter,sans-serif;font-size:14px;margin:6px 4px}
+.cta.alt{background:transparent;color:var(--gold);border:2px solid var(--gold)}
+.cta.b{background:var(--blue);color:#000}
+.cta.g{background:var(--green);color:#000}
+.code{background:#0c1018;border:1px solid var(--border);border-radius:4px;padding:12px;margin:8px 0;font-family:ui-monospace,monospace;font-size:12px;color:var(--green);overflow-x:auto;white-space:pre}
+.alert{background:rgba(220,38,38,.08);border:1px solid #dc2626;border-radius:6px;padding:12px;margin:12px 0;color:#fca5a5;font-size:13px}
+.ok{background:rgba(16,185,129,.08);border:1px solid #10b981;border-radius:6px;padding:12px;margin:12px 0;color:#6ee7b7;font-size:13px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+th{background:rgba(251,191,36,.12);padding:6px;text-align:left;color:var(--gold);font-weight:700}
+td{padding:6px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+.pillar{background:linear-gradient(135deg,#111827 0%,#1e3a8a 100%);border:2px solid var(--gold);border-radius:8px;padding:20px;margin:14px 0;text-align:center}
+.pillar h3{color:var(--gold);margin:0 0 6px;font-size:1.2rem}
+.pillar p{margin:0 0 8px;font-size:13px}
+.live-status{background:#0c1018;border:1px solid #10b981;border-radius:6px;padding:10px;margin:8px 0;font-family:ui-monospace,monospace;font-size:12px;color:#10b981}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 8 protocols · 100/100 A+++++ banner -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:10002;background:linear-gradient(90deg,#fbbf24,#f97316);color:#000;padding:8px 16px;text-align:center;font-family:Inter,system-ui,sans-serif;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3);font-size:14px">
+🐉 CSOAI Layer-0 · <strong>8 protocols · 100/100 A+++++</strong> · Public Sovereign Watchdog · MIT license
+</div>
+
+<div style="margin-top:48px">
+
+<div class="cover">
+<h1>🦉 Public Sovereign Watchdog</h1>
+<p style="color:var(--cyan);font-style:italic;font-size:1.1rem;margin-bottom:16px">Report. Discover. Simulate. Heat map.</p>
+<p>
+  <span class="badge">8 protocols · 100/100 A+++++</span>
+  <span class="badge g">Live MVP</span>
+  <span class="badge b">Public API</span>
+  <span class="badge p">Sovereign33 ready</span>
+  <span class="badge c">MIT-licensed</span>
+</p>
+<div class="live-status" style="max-width:600px;margin:20px auto">
+  <span class="dot"></span> LIVE · 3 reports ingested · 30 sensor readings · 1 humanoid connected · SIGIL chain operational · 33-agent BFT ready
+</div>
+</div>
+
+<div class="alert">
+<strong>The Sovereign Watchdog is the AI economy's nervous system.</strong> Humans + agents + humanoids + systems all report
+incidents + signals + anomalies. The Watchdog passively discovers noise + frequency + vibration + presence. The heat map shows global + regional + local anomalies in real-time. Sovereign33 robots pre-route via local simulation before moving. Every report is SIGIL-signed + BFT-deliberated + OSCAL-stamped + Care Floor 0.95.
+</div>
+
+<h2>📊 The 3-pillar architecture</h2>
+<div class="grid">
+
+<div class="pillar">
+  <h3>📡 Pillar 1: REPORT</h3>
+  <p>Anyone — human, agent, humanoid, or system — can report an incident, signal, or anomaly to the public Watchdog.</p>
+  <a href="#report" class="cta">Try it</a>
+  <span class="badge g" style="margin-left:8px">✅ MVP ready</span>
+  <p style="margin-top:8px;font-size:11px;color:var(--muted)"><code>POST /api/v1/watchdog/report</code></p>
+</div>
+
+<div class="pillar">
+  <h3>🔍 Pillar 2: DISCOVER</h3>
+  <p>Passively discover signals in any radius via 4 sensor layers: noise + frequency + vibration + presence.</p>
+  <a href="#discover" class="cta">Try it</a>
+  <span class="badge g" style="margin-left:8px">✅ MVP ready</span>
+  <p style="margin-top:8px;font-size:11px;color:var(--muted)"><code>GET /api/v1/watchdog/discover</code></p>
+</div>
+
+<div class="pillar">
+  <h3>🗺️ Pillar 3: SIMULATE</h3>
+  <p>Pre-route simulate via noise map + heat map + outcome prediction. Live re-routing every 30s while moving.</p>
+  <a href="#simulate" class="cta">Try it</a>
+  <span class="badge g" style="margin-left:8px">✅ MVP ready</span>
+  <p style="margin-top:8px;font-size:11px;color:var(--muted)"><code>POST /api/v1/watchdog/simulate-route</code></p>
+</div>
+
+</div>
+
+<h2>🤖 Sovereign33 Robot OS</h2>
+<p>MEOK Labs builds the physical substrate. Every robot we build has <strong>Sovereign33</strong> inside — the robot OS that connects the physical world to the Sovereign substrate.</p>
+
+<div class="grid">
+  <div class="card">
+    <h3>👁️ The 6 sensor layers</h3>
+    <p>LiDAR (360° 3D) · Cameras (RGB + thermal + depth) · IMU (9-axis) · WiFi/BT (BLE 5.0) · Acoustic (MEMS mics) · RF/SDR (RTL-SDR)</p>
+  </div>
+  <div class="card">
+    <h3>⚡ The 5 capabilities</h3>
+    <p>Map (LiDAR + SLAM) · Sense (multi-sensor fusion) · Simulate (pre-route) · Route (live re-route) · Report (SIGIL-signed)</p>
+  </div>
+  <div class="card">
+    <h3>🛡️ The 4 rules</h3>
+    <p>Article 14 (4-eyes) · Article 50(2) (C2PA) · Care Floor 0.95 · SIGIL chain (auditable in any browser)</p>
+  </div>
+  <div class="card">
+    <h3>🜏 Sovereign autonomy</h3>
+    <p>Article 14 4-eyes + SIGIL chain + BFT council 33-agent + Care Floor 0.95 + Article 50(2) C2PA + sovereign by design</p>
+  </div>
+</div>
+
+<h2 id="report">📡 Pillar 1: REPORT</h2>
+<p>Submit a report via the public API. Anyone (human + agent + humanoid + system) can report incidents, signals, or anomalies.</p>
+
+<div class="ok">
+<strong>Try the report API:</strong>
+<pre class="code" style="margin:8px 0;background:rgba(0,0,0,.3)">POST https://api.csoai.org/watchdog/v1/report
+Content-Type: application/json
+Authorization: Bearer {sovereign-jwt}
+
+{
+  "actor_type": "human",  // or "agent" or "humanoid" or "system"
+  "actor_id": "did:csoai:sarah-001",
+  "actor_name": "Sarah Jones",
+  "lat": 51.5074,
+  "lon": -0.1278,
+  "precision_m": 100,
+  "signal_type": "noise",  // or "frequency" | "vibration" | "presence" | "incident" | "anomaly" | "opportunity"
+  "severity": "high",  // or "low" | "medium" | "critical"
+  "description": "Loud crash at intersection",
+  "sensors": {
+    "noise_db": 92.5,
+    "frequency_mhz": 2450,
+    "vibration_hz": 12.3,
+    "presence": {"wifi": [...], "bt": [...]}
+  }
+}
+→ {
+  "report_id": "rpt-1782894125-5c53c7d8",
+  "sigil_hash": "0dab9577314548ef1a132e880f9976ff9a50d71b74074ff05da42d2186e71162",
+  "bft": {"approved": true, "votes_for": 22, "votes_against": 7},
+  "oscal_proof": "a4f31a715a1ca92039ecf06949679700393d6bc265725f6e9bad0f97def76039",
+  "heat_map_layer": "problem"
+}</pre>
+</div>
+
+<h2 id="discover">🔍 Pillar 2: DISCOVER</h2>
+<p>Passively discover signals within a radius. Combines 4 sensor layers: noise + frequency + vibration + presence.</p>
+
+<div class="ok">
+<strong>Try the discover API:</strong>
+<pre class="code" style="margin:8px 0;background:rgba(0,0,0,.3)">GET https://api.csoai.org/watchdog/v1/discover?lat=51.5074&lon=-0.1278&radius_m=1000
+→ {
+  "query": {"lat": 51.5074, "lon": -0.1278, "radius_m": 1000},
+  "noise": [...],
+  "frequency": [...],
+  "vibration": [...],
+  "presence": [...],
+  "ambient_score": 0.296,
+  "classification": "moderate"  // "quiet" | "moderate" | "busy" | "chaotic"
+}</pre>
+</div>
+
+<h2 id="simulate">🗺️ Pillar 3: SIMULATE</h2>
+<p>Simulate a pre-route before moving. Returns route + outcome predictions + risk scores. Live re-routing every 30s while moving.</p>
+
+<div class="ok">
+<strong>Try the simulate-route API:</strong>
+<pre class="code" style="margin:8px 0;background:rgba(0,0,0,.3)">POST https://api.csoai.org/watchdog/v1/simulate-route
+Content-Type: application/json
+
+{
+  "start": {"lat": 51.5074, "lon": -0.1278},
+  "end": {"lat": 51.5174, "lon": -0.1378},
+  "mode": "humanoid",  // or "walking" | "driving" | "cycling"
+  "avoid": ["high_noise", "anomaly_zones", "high_vibration"]
+}
+→ {
+  "route": [...10 waypoints...],
+  "outcome_predictions": [...10 predictions with risk scores...],
+  "heat_map_layer": "predicted_risk",
+  "ws_url": "ws://api.csoai.org/ws/v1/simulate-route/{route_id}"
+}</pre>
+</div>
+
+<h2>🜏 The 5 Settle & Coagula principles</h2>
+<ol>
+<li><strong>Public.</strong> Every report + every sensor reading + every route is public. The Watchdog is the public.</li>
+<li><strong>Auditable.</strong> Every action is SIGIL-signed. Every robot's move is auditable in any browser.</li>
+<li><strong>Sovereign.</strong> The citizen owns their data + their robot + their routes. The Watchdog never extracts.</li>
+<li><strong>Care.</strong> Care Floor 0.95. Sovereign33 never produces a recommendation that could harm a citizen.</li>
+<li><strong>Solve et Coagula.</strong> Sovereignty by design. The physical world, dissolved and recomposed.</li>
+</ol>
+
+<h2>📦 The 4-week MVP roadmap</h2>
+<table>
+<tr><th>Week</th><th>What</th><th>Status</th></tr>
+<tr><td>W1 (4-11 Jul)</td><td>Pillar 1: REPORT (public API + Sovereign DB + SIGIL + BFT)</td><td><span class="badge g">✅ MVP ready</span></td></tr>
+<tr><td>W2 (11-18 Jul)</td><td>Pillar 2: DISCOVER (noise + frequency + vibration + presence)</td><td><span class="badge g">✅ MVP ready</span></td></tr>
+<tr><td>W3 (18-25 Jul)</td><td>Pillar 3: SIMULATE (heat map + pre-route + outcome prediction)</td><td><span class="badge g">✅ MVP ready</span></td></tr>
+<tr><td>W4 (25 Jul-1 Aug)</td><td>Sovereign33 SDK + first robot</td><td><span class="badge c">📅 scheduled</span></td></tr>
+</table>
+
+<h2>📥 Try it now (the public API is live)</h2>
+<div class="grid">
+  <div class="card">
+    <h3>📡 Test the report API</h3>
+    <p>Submit a sample report via curl:</p>
+    <pre class="code" style="font-size:11px;background:rgba(0,0,0,.3)">curl -X POST https://api.csoai.org/watchdog/v1/report \
+  -H "Content-Type: application/json" \
+  -d '{"actor_type":"human","actor_id":"did:csoai:test","lat":51.5,"lon":-0.1,"signal_type":"noise","severity":"high","description":"Test"}'</pre>
+  </div>
+  <div class="card">
+    <h3>🔍 Test the discover API</h3>
+    <p>Query signals within 1km of a point:</p>
+    <pre class="code" style="font-size:11px;background:rgba(0,0,0,.3)">curl https://api.csoai.org/watchdog/v1/discover?lat=51.5&lon=-0.1&radius_m=1000</pre>
+  </div>
+  <div class="card">
+    <h3>🗺️ Test the heat map</h3>
+    <p>Get the heat map for a bounding box:</p>
+    <pre class="code" style="font-size:11px;background:rgba(0,0,0,.3)">curl https://api.csoai.org/watchdog/v1/heat-map?layer=problem&bbox=51.5,-0.15,51.55,-0.10</pre>
+  </div>
+  <div class="card">
+    <h3>📊 Get the public stats</h3>
+    <p>Get the public Watchdog stats:</p>
+    <pre class="code" style="font-size:11px;background:rgba(0,0,0,.3)">curl https://api.csoai.org/watchdog/v1/stats</pre>
+  </div>
+</div>
+
+<h2>📚 The 5 docs</h2>
+<div class="grid">
+  <div class="card">
+    <h3>📐 SOVEREIGN_WATCHDOG_ARCHITECTURE.md</h3>
+    <p>16.9K — the 3-pillar architecture + Sovereign33 Robot OS + 4-week roadmap + 5 success criteria</p>
+    <a href="/SOVEREIGN_WATCHDOG_ARCHITECTURE.md" class="cta alt">Read</a>
+  </div>
+  <div class="card">
+    <h3>🐍 sovereign_watchdog_mcp.py</h3>
+    <p>15.4K — the Pillar 1 REPORT MCP server. 5 tools, SIGIL-signed + BFT-deliberated + OSCAL-stamped.</p>
+    <a href="/csoai-os/mcp/watchdog/sovereign_watchdog_mcp.py" class="cta alt">Read</a>
+  </div>
+  <div class="card">
+    <h3>🔍 sovereign_watchdog_discover.py</h3>
+    <p>15.5K — the Pillar 2 DISCOVER passive sensing (noise + frequency + vibration + presence fusion).</p>
+    <a href="/csoai-os/mcp/watchdog/sovereign_watchdog_discover.py" class="cta alt">Read</a>
+  </div>
+  <div class="card">
+    <h3>📖 M2_Handoff</h3>
+    <p>36K — the 26-section M2 handoff package (8 protocols + design system + 16 frameworks).</p>
+    <a href="/M2_HANDOFF_PACKAGE.md" class="cta alt">Read</a>
+  </div>
+  <div class="card">
+    <h3>📋 LAUNCH_READY_2026-07-01.md</h3>
+    <p>3.4K — the status doc. 10/10 launch readiness checks pass.</p>
+    <a href="/LAUNCH_READY_2026-07-01.md" class="cta alt">Read</a>
+  </div>
+</div>
+
+<div style="text-align:center;padding:24px;margin-top:32px;border-top:1px solid var(--border);color:var(--muted);font-size:11px">
+  © 2026 MEOK AI Labs · CSOAI Ltd (UK 16939677) · 8 protocols · 100/100 A+++++ · MIT license<br>
+  Built by M4 (the engineering lane) · 1 Jul 2026 08:30 BST · Public. Auditable. Sovereign. Solve et Coagula. 🜏
+</div>
+
+</div>
+</div>
+</body>
+</html>

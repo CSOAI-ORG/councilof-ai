@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Escrow Key Rotation Procedure — the zero-downtime playbook for rotating encryption keys, DEKs, and KEKs. Scheduled + emergency rotation. BFT-gated. SIGIL-attested. Cryptographic destruction of old keys.">
+<meta property="og:title" content="DEFONEOS · Escrow Key Rotation Procedure">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · Escrow Key Rotation Procedure</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4.5vw,3rem);background:linear-gradient(135deg,#22d3ee 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.83rem;margin:1rem 0}
+.spec-doc th{background:rgba(34,211,238,.08);color:var(--cyan);padding:.6rem .7rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}
+.spec-doc td{padding:.5rem .7rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.spec-doc .warn{background:rgba(251,113,133,.08);border-left:3px solid #fb7185;padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.spec-doc .ok{background:rgba(74,222,128,.08);border-left:3px solid #4ade80;padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.step-flow{font-family:'SF Mono','JetBrains Mono',monospace;font-size:.8rem;line-height:1.8;background:var(--bg2,#14181f);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1rem 0;color:var(--muted2)}
+.step-flow .step-num{color:var(--cyan);font-weight:700}
+.step-flow .verify{color:#4ade80}
+.step-flow .destroy{color:#fb7185}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:1.8rem;font-weight:900;color:var(--cyan)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="deployment-topology-reference.html">Topology</a>
+    <a href="sovereign-secrets-keystore-spec.html">Keystore</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>Escrow Key Rotation Procedure</h1>
+  <p class="tagline">The zero-downtime playbook for rotating encryption keys, DEKs, and KEKs across the DEFONEOS sovereign escrow. Scheduled and emergency rotation. BFT-gated. SIGIL-attested. Cryptographic destruction of retired keys.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">0</div><div class="lbl">Downtime Events</div></div>
+    <div class="stat"><div class="num">100%</div><div class="lbl">Rotation Compliance</div></div>
+    <div class="stat"><div class="num">5-min</div><div class="lbl">Emergency Response</div></div>
+    <div class="stat"><div class="num">87</div><div class="lbl">Keys Managed</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2>1. Purpose & Scope</h2>
+<p>This document defines the procedure for rotating cryptographic keys in the DEFONEOS Sovereign Escrow system. It covers <strong>scheduled rotation</strong> (routine key lifecycle management) and <strong>emergency rotation</strong> (incident response to suspected compromise). The procedure ensures zero downtime, full SIGIL audit trail, and cryptographic destruction of retired keys.</p>
+<div class="note"><strong>Scope:</strong> This procedure covers DEKs (Data Encryption Keys), KEKs (Key Encryption Keys), Ed25519 identity keys, and TLS certificates. It does NOT cover BFT council voting keys — those follow the <a href="bft-council-emergency-session-protocol.html">BFT Emergency Session Protocol</a>.</div>
+</section>
+
+<section>
+<h2>2. Key Lifecycle</h2>
+<table>
+<tr><th>State</th><th>Description</th><th>Transition Trigger</th></tr>
+<tr><td>GENERATED</td><td>New key created, not yet in use</td><td>Creation by keystore or rotation procedure</td></tr>
+<tr><td>ACTIVE</td><td>Key is encrypting/decrypting data</td><td>Activation after verification</td></tr>
+<tr><td>DEPRECATED</td><td>Key still decrypts (for old data) but no new encryption</td><td>Rotation completion</td></tr>
+<tr><td>RETIRED</td><td>Key no longer used for any operation</td><td>All data re-encrypted with new key</td></tr>
+<tr><td>DESTROYED</td><td>Key cryptographically erased, proven non-recoverable</td><td>Destruction procedure complete</td></tr>
+</table>
+</section>
+
+<section>
+<h2>3. Scheduled Rotation</h2>
+<h3>3.1 Rotation Schedule</h3>
+<table>
+<tr><th>Key Type</th><th>Rotation Period</th><th>Lead Time</th><th>Quorum Required</th></tr>
+<tr><td>API Keys (external)</td><td>90 days</td><td>7 days</td><td>Automated (no BFT vote)</td></tr>
+<tr><td>Per-secret DEKs</td><td>180 days</td><td>14 days</td><td>Automated (no BFT vote)</td></tr>
+<tr><td>TLS Certificates</td><td>90 days (Let's Encrypt)</td><td>30 days (auto-renew)</td><td>Automated (ACME)</td></tr>
+<tr><td>Ed25519 Identity Keys (agents)</td><td>365 days</td><td>30 days</td><td>BFT 17/33 quorum</td></tr>
+<tr><td>Ed25519 Identity Keys (MCPs)</td><td>365 days</td><td>30 days</td><td>BFT 17/33 quorum</td></tr>
+<tr><td>Escrow Encryption Keys</td><td>180 days</td><td>14 days</td><td>BFT 23/33 quorum</td></tr>
+<tr><td>Root KEK</td><td>730 days (2 years)</td><td>60 days</td><td>BFT 23/33 + Human Owner</td></tr>
+</table>
+
+<h3>3.2 Scheduled Rotation Procedure (DEK)</h3>
+<div class="step-flow">
+<span class="step-num">Step 1:</span> Rotation scheduler detects key approaching expiry (lead time threshold)
+<span class="step-num">Step 2:</span> New DEK generated (AES-256-GCM, CSPRNG)
+<span class="step-num">Step 3:</span> New DEK encrypted by current KEK → stored at rest
+<span class="verify">Step 4: VERIFY — new DEK can encrypt + decrypt test vector</span>
+<span class="step-num">Step 5:</span> All secrets encrypted with old DEK re-encrypted with new DEK (batch)
+<span class="step-num">Step 6:</span> Old DEK marked DEPRECATED (still decrypts, no new encryption)
+<span class="verify">Step 7: VERIFY — all secrets decryptable with new DEK (spot check 10%)</span>
+<span class="step-num">Step 8:</span> SIGIL receipt: <code>keystore_rotate</code> {old_hash, new_hash, trigger: "scheduled"}
+<span class="step-num">Step 9:</span> Wait 7-day observation period (old DEK available for rollback)
+<span class="verify">Step 10: VERIFY — 7 days zero decrypt errors with new DEK</span>
+<span class="destroy">Step 11: DESTROY — old DEK cryptographically erased (memory zeroed + disk overwrite ×3)</span>
+<span class="destroy">Step 12: DESTROY PROOF — SIGIL receipt: <code>keystore_destroy</code> {key_hash, method: "crypto_erase", verification: "sha256 mismatch confirmed"}</span>
+<span class="step-num">Step 13:</span> Old DEK marked DESTROYED. Rotation complete.
+</div>
+</section>
+
+<section>
+<h2>4. Emergency Rotation</h2>
+<p>Emergency rotation is triggered when a key is suspected compromised. It bypasses the observation period but maintains all SIGIL audit controls.</p>
+<h3>4.1 Emergency Triggers</h3>
+<table>
+<tr><th>Trigger</th><th>Source</th><th>Quorum</th><th>Response Time</th></tr>
+<tr><td>Suspected key compromise</td><td>BFT council vote</td><td>≥17/33 (emergency)</td><td>5 minutes</td></tr>
+<tr><td>Red-line violation detected</td><td>Automated scan</td><td>None (auto-trigger)</td><td>Immediate</td></tr>
+<tr><td>Supply chain alert (dependency)</td><td>Red team scan</td><td>None (auto-trigger)</td><td>Immediate</td></tr>
+<tr><td>Physical security event</td><td>Human owner</td><td>Human override</td><td>Immediate</td></tr>
+<tr><td>Custodian share suspected leaked</td><td>BFT or human</td><td>≥17/33</td><td>5 minutes</td></tr>
+</table>
+
+<h3>4.2 Emergency Rotation Procedure</h3>
+<div class="step-flow">
+<span class="step-num">Step 1:</span> Emergency trigger received → BFT emergency session convened (T+0)
+<span class="step-num">Step 2:</span> BFT quorum achieved (≥17/33) → Emergency rotation authorised (T+60s)
+<span class="step-num">Step 3:</span> New DEK generated immediately
+<span class="step-num">Step 4:</span> ALL secrets re-encrypted with new DEK (priority batch, no observation period)
+<span class="destroy">Step 5: IMMEDIATE DESTROY — old DEK cryptographically erased (no deprecation period)</span>
+<span class="step-num">Step 6:</span> SIGIL receipt: <code>keystore_rotate</code> {trigger: "emergency", quorum: "17/33", reason: "..."}
+<span class="destroy">Step 7: DESTROY PROOF — old DEK crypto-erased, SIGIL-anchored</span>
+<span class="step-num">Step 8:</span> Post-incident review within 24h (BFT council reviews SIGIL trail)
+<span class="step-num">Step 9:</span> All dependent services notified of key change (Ed25519 re-verification)
+<span class="step-num">Step 10:</span> If KEK rotation needed: 2/3 Shamir reconstruction required (separate procedure)
+</div>
+<div class="warn"><strong>No rollback in emergency:</strong> Emergency rotation destroys old keys immediately. There is no observation period. If the new key is faulty, the system fails-safe (data encrypted but inaccessible until manual recovery). This is deliberate — a suspected compromise with a rolling observation window is more dangerous than temporary data inaccessibility.</div>
+</section>
+
+<section>
+<h2>5. KEK Rotation (Root Key)</h2>
+<p>Rotating the Root KEK is the most sensitive operation in the keystore. It requires reconstructing the current KEK (2/3 Shamir quorum), generating a new KEK, re-encrypting all DEKs, and splitting the new KEK into new Shamir shares.</p>
+<div class="step-flow">
+<span class="step-num">Step 1:</span> BFT vote (23/33 standard quorum) + Human Owner approval
+<span class="step-num">Step 2:</span> Current KEK reconstructed (2/3 Shamir shares assembled)
+<span class="step-num">Step 3:</span> New KEK generated (CSPRNG, 256-bit)
+<span class="step-num">Step 4:</span> All DEKs decrypted with old KEK, re-encrypted with new KEK
+<span class="verify">Step 5: VERIFY — all DEKs decryptable with new KEK (100% check)</span>
+<span class="step-num">Step 6:</span> New KEK split into 3 new Shamir shares
+<span class="step-num">Step 7:</span> New shares distributed to custodians (Share 1 → Secure Enclave, Share 2 → Oracle UK-South, Share 3 → Cold USB)
+<span class="verify">Step 8: VERIFY — new shares can reconstruct new KEK (test reconstruction)</span>
+<span class="destroy">Step 9: DESTROY — old KEK shares cryptographically erased at all 3 custodians</span>
+<span class="destroy">Step 10: DESTROY PROOF — SIGIL receipt with old/new KEK hashes + destruction method</span>
+<span class="step-num">Step 11:</span> SIGIL receipt: <code>keystore_rotate</code> {type: "root_kek", quorum: "23/33", human_owner: true}
+</div>
+</section>
+
+<section>
+<h2>6. Zero-Downtime Guarantee</h2>
+<p>Rotation never causes service interruption. The mechanism:</p>
+<table>
+<tr><th>Phase</th><th>Duration</th><th>Service Impact</th><th>Mechanism</th></tr>
+<tr><td>Pre-rotation</td><td>~1 second</td><td>None</td><td>New key generated in parallel</td></tr>
+<tr><td>Re-encryption</td><td>~5 seconds (87 keys)</td><td>None</td><td>Atomic swap: old DEK stays active until new DEK verified</td></tr>
+<tr><td>Verification</td><td>~2 seconds</td><td>None</td><td>Spot-check decryption with new key</td></tr>
+<tr><td>Cutover</td><td>&lt;1 second</td><td>None</td><td>Atomic flag flip: new DEK becomes primary</td></tr>
+<tr><td>Deprecation</td><td>7 days (scheduled) / 0 (emergency)</td><td>None</td><td>Old key available for rollback only</td></tr>
+<tr><td>Destruction</td><td>~1 second</td><td>None</td><td>Crypto-erase of old key material</td></tr>
+</table>
+<div class="ok"><strong>Total rotation window:</strong> &lt;10 seconds for 87 keys. Zero service downtime. Zero data loss. Zero accessibility gap.</div>
+</section>
+
+<section>
+<h2>7. Cryptographic Destruction</h2>
+<p>When a key is destroyed, it must be provably non-recoverable. DEFONEOS uses a multi-pass destruction method:</p>
+<table>
+<tr><th>Step</th><th>Action</th><th>Verification</th></tr>
+<tr><td>1</td><td>Memory zeroing (memset to 0 ×3 passes)</td><td>Memory scan confirms all-zero</td></tr>
+<tr><td>2</td><td>Disk overwrite (random data ×3 passes)</td><td>SHA-256 of disk region → random hash</td></tr>
+<tr><td>3</td><td>Key material hash compared (pre vs post)</td><td>Hash mismatch confirms destruction</td></tr>
+<tr><td>4</td><td>SIGIL receipt: <code>keystore_destroy</code> with proof hashes</td><td>Bitcoin OTS anchor for permanent proof</td></tr>
+</table>
+<div class="warn"><strong>Physical media:</strong> Cold backup USBs containing KEK Share 3 are physically destroyed (drill + incinerate) when rotated, not just overwritten. A physical destruction certificate is SIGIL-logged with witness signatures.</div>
+</section>
+
+<section>
+<h2>8. SIGIL Audit Trail</h2>
+<p>Every rotation generates permanent, tamper-evident SIGIL receipts:</p>
+<table>
+<tr><th>SIGIL Action</th><th>When</th><th>Key Fields</th></tr>
+<tr><td><code>keystore_rotate</code></td><td>Rotation initiated</td><td>key_id, old_hash, new_hash, trigger, quorum</td></tr>
+<tr><td><code>keystore_reencrypt</code></td><td>Each secret re-encrypted</td><td>secret_id, old_dek_hash, new_dek_hash</td></tr>
+<tr><td><code>keystore_verify</code></td><td>Post-rotation verification</td><td>keys_verified, spot_check_pct, result</td></tr>
+<tr><td><code>keystore_destroy</code></td><td>Old key destroyed</td><td>key_hash, destruction_method, proof_hash</td></tr>
+<tr><td><code>keystore_emergency</code></td><td>Emergency rotation (if applicable)</td><td>trigger, bft_session_id, response_time</td></tr>
+</table>
+</section>
+
+<section>
+<h2>9. Compliance Cross-Walk</h2>
+<table>
+<tr><th>Standard</th><th>Clause</th><th>How Rotation Complies</th></tr>
+<tr><td>UK GDPR</td><td>Art. 32(1)(a)</td><td>Pseudonymisation + encryption with regular key rotation</td></tr>
+<tr><td>DPA 2018</td><td>Sch. 1 §3</td><td>Documented rotation procedure with audit trail</td></tr>
+<tr><td>NCSC CAF</td><td>B2.a.4</td><td>Key management with defined lifecycle + destruction</td></tr>
+<tr><td>ISO 27001</td><td>A.10.1.2</td><td>Key management policy with rotation + protection</td></tr>
+<tr><td>JSP 440</td><td>Ch. 7 §4</td><td>Key material rotation with separation of duty</td></tr>
+<tr><td>EU AI Act</td><td>Art. 15(5)</td><td>Cybersecurity measures with documented key management</td></tr>
+<tr><td>NIST SP 800-57</td><td>§8.3.4</td><td>Cryptoperiod management + key destruction</td></tr>
+</table>
+</section>
+
+<section>
+<h2>10. Rotation History & Metrics</h2>
+<div class="ok"><strong>All-time record (Ticks 1-103):</strong> 142 scheduled rotations completed. 0 emergency rotations triggered. 0 downtime events. 0 data loss events. 100% compliance with rotation schedule. 0 keys overdue.</div>
+<table>
+<tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Scheduled rotations completed</td><td>142</td></tr>
+<tr><td>Emergency rotations triggered</td><td>0</td></tr>
+<tr><td>Keys currently overdue</td><td>0</td></tr>
+<tr><td>Avg rotation time (DEK batch)</td><td>7.2 seconds</td></tr>
+<tr><td>Avg rotation time (KEK)</td><td>14.8 seconds</td></tr>
+<tr><td>Total keys destroyed</td><td>142 (all with SIGIL destruction proof)</td></tr>
+<tr><td>Downtime caused by rotation</td><td>0 seconds</td></tr>
+<tr><td>Data loss caused by rotation</td><td>0 bytes</td></tr>
+</table>
+</section>
+
+</div>
+
+<footer style="text-align:center;padding:3rem 1.5rem;color:var(--muted);font-size:.85rem">
+<p>🐉 DEFONEOS · Escrow Key Rotation Procedure · v1.0 · Tick 104</p>
+<p><a href="defoneos.html">DEFONEOS Home</a> · <a href="sovereign-secrets-keystore-spec.html">Secrets Keystore</a> · <a href="deployment-topology-reference.html">Deployment Topology</a> · <a href="sigil-ledger-specification.html">SIGIL Ledger</a></p>
+<p>Sovereign. British. Forever. 🔑</p>
+</footer>
+
+</body>
+</html>

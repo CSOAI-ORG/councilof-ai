@@ -1,0 +1,7 @@
+{
+  "id": "mr-terraform-module",
+  "prompt": "Write a 350-word Terraform module design for the openpatent.ai 3-region sovereign-temple stack. Cover: (1) the module layout — modules/sovereign_temple/ (the reusable regional stack), modules/cometbft_mesh/ (the cross-region BFT layer), modules/dns_geo/ (the geo-routing layer), root main.tf that composes them × 3 regions, (2) the sovereign_temple module inputs (region, vpc_cidr, validator_count=11, kms_key_id, hsm_partition_label) and outputs (vm_ips, bft_validator_ids, s3_bucket_arns, kms_key_arn), (3) the cometbft_mesh module inputs (regions, peer_connection_ids, bft_threshold=22) and outputs (genesis_hash, peer_addresses, light_client_urls), (4) the dns_geo module inputs (domain, region_health_check_ids, routing_policy) and outputs (cname, latency_records), (5) the state management — 1 remote state file per region in GCS with object-lock, state locking via DynamoDB-equivalent (Firestore), (6) the CI gate — tofu plan on every PR, tofu apply gated on 22/33 BFT supermajority signature, (7) the destroy protection — prevent_destroy=true on all sovereign_temple resources, deletion_protection on Cloud SQL. Use DEFENEOS mythic voice. Return ONLY JSON: {layout:[4 strings], inputs_sovereign_temple:[5 strings], outputs_sovereign_temple:[4 strings], inputs_cometbft_mesh:[3 strings], inputs_dns_geo:[3 strings], state_backend:string, ci_gate:string, destroy_protection:[2 strings]}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07 — Mac Deploy — Sovereign Blog</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.7;padding:32px;max-width:760px;margin:0 auto}h1{font-size:2.4rem;background:linear-gradient(135deg,#fbbf24,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.meta{color:#06b6d4;font-style:italic;margin-bottom:24px;font-size:.9rem}.lead{font-size:1.15rem;color:#10b981;border-left:3px solid #10b981;padding-left:14px;margin-bottom:32px;font-style:italic}h2{color:#fbbf24;font-size:1.4rem;margin:24px 0 12px;border-bottom:1px solid rgba(251,191,36,.3);padding-bottom:6px}p{color:rgba(255,255,255,.9);margin-bottom:14px}code,pre{background:rgba(0,0,0,.4);padding:8px 12px;border-radius:6px;color:#10b981;font-family:monospace;font-size:.85rem;display:block;margin:8px 0;overflow-x:auto}.spec{background:rgba(16,185,129,.08);border:1px solid #10b981;border-radius:8px;padding:16px;margin:16px 0}.spec-num{font-size:2rem;color:#10b981;font-weight:900}.cta{display:block;background:linear-gradient(135deg,#fbbf24,#10b981);color:#000;padding:14px 24px;border-radius:24px;text-decoration:none;font-weight:800;text-align:center;margin:24px 0}.nav-bar{display:flex;gap:12px;margin-bottom:24px}.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}.tag{display:inline-block;background:rgba(251,191,36,.15);color:#fbbf24;padding:4px 10px;border-radius:12px;font-size:.75rem;margin-right:6px}</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/blog/">← Blog</a> <a href="/sovereign-os/launchpad.html">Launchpad</a></div>
+
+<h1>💻 Sovereign on Mac: $0/month, 100% Sovereign</h1>
+<div class="meta"><span class="tag">deploy</span><span class="tag">mac</span><span class="tag">sovereignty</span> · 6 min read · 4 Jul 2026</div>
+
+<p class="lead">Four local models. 7GB total. Zero cloud calls. Zero monthly fees. 100% sovereign. This is what a fork looks like when it lands on your Mac.</p>
+
+<h2>Why Mac?</h2>
+
+<p>Apple Silicon (M1/M2/M3/M4) is the perfect substrate for sovereign AI: unified memory, on-device neural engine, no telemetry, no cloud. The Mac is the new sovereign stack.</p>
+
+<h2>The 4 Models</h2>
+
+<div class="spec"><div class="spec-num">4.7GB</div><strong>llama3.1:8b</strong> — general reasoning. Sovereign composite core.</div>
+<div class="spec"><div class="spec-num">1.9GB</div><strong>qwen2.5:3b</strong> — fast routing. OLM router model.</div>
+<div class="spec"><div class="spec-num">274MB</div><strong>nomic-embed-text</strong> — embeddings. Vault search.</div>
+<div class="spec"><div class="spec-num">1.7GB</div><strong>moondream</strong> — vision. Right brain.</div>
+
+<h2>The Install</h2>
+
+<pre># 1. Install Ollama
+brew install ollama
+
+# 2. Pull SOV3small3 (the 4-model stack)
+ollama pull llama3.1:8b
+ollama pull qwen2.5:3b
+ollama pull nomic-embed-text
+ollama pull moondream
+
+# 3. Clone the sovereign substrate
+git clone https://github.com/CSOAI-ORG/sov3-sovereign.git
+cd sov3-sovereign
+
+# 4. Build
+make sovereign
+
+# 5. Run
+./sov3 sovereign shell</pre>
+
+<h2>What You Get</h2>
+
+<p>A sovereign OS that runs entirely on your Mac. No cloud calls. No telemetry. No subscription. The fork doctrine gives you the entire stack, MIT-licensed, forever.</p>
+
+<a class="cta" href="/sovereign-os/launchpad.html">Launch on Mac →</a>
+
+</body>
+</html>

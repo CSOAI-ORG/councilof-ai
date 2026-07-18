@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Escalation Runbook — 14-day SEV-1..4 Recovery with Named Owner</title>
+<meta name="description" content="The escalation runbook for DEFONEOS buyers — SEV-1 through SEV-4 definitions, response SLAs, named owners, 14-day recovery procedures, SIGIL-anchored post-mortem. v1.0 12 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.code{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--mute)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+.kpi .box{margin:0;text-align:center}
+.kpi b{display:block;font-size:22px;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · Escalation Runbook · v1.0</div>
+<div><span class="tag">12 Jul 2026</span> <span class="tag">SEV-1..4 · 14-day recovery · Named owner</span></div>
+</header>
+
+<h1>14-day SEV-1 to SEV-4 recovery — with named owner at every step.</h1>
+<p class="muted">Companion to <code>defoneos-mod-customer-success-scorecard.html</code> (where escalations are triggered) and <code>defoneos-mod-churn-prevention.html</code> (when SEV-1 triggers churn risk). This runbook is the named-owner playbook for any escalation that opens against a DEFONEOS buyer. Every step has a person, a deadline, and a SIGIL receipt.</p>
+
+<div class="kpi">
+<div class="box"><b>4</b><span class="muted">Severity tiers</span></div>
+<div class="box"><b>14 d</b><span class="muted">Max recovery window</span></div>
+<div class="box"><b>9</b><span class="muted">Steps per severity</span></div>
+<div class="box"><b>SIGIL</b><span class="muted">Receipt at each step</span></div>
+</div>
+
+<h2>1. SEV definitions — the four-tier taxonomy</h2>
+<table>
+<tr><th>Severity</th><th>Definition</th><th>Examples</th></tr>
+<tr><td>SEV-1</td><td>Critical. Material breach, renewal intent at risk, or safety-of-life implication.</td><td>Production outage &gt; 4h, material security incident, data loss, regulatory finding requiring customer notification, champion resignation.</td></tr>
+<tr><td>SEV-2</td><td>Degraded. Value-realisation KPI missed or governance breach; not yet material breach.</td><td>SIGIL pipeline down &gt; 48h, audit overdue on a regulated framework, named operator certification expired &gt; 30d, two consecutive missed QBRs.</td></tr>
+<tr><td>SEV-3</td><td>Risk. Delivery or adoption KPI at risk; no current value impact.</td><td>Patch lead time &gt; 30d for non-emergency advisory, F1 signal at red for 2 consecutive weeks, named expansion workload delayed.</td></tr>
+<tr><td>SEV-4</td><td>Advisory. Minor concern, no impact on value, logged for tracking.</td><td>Single help-desk ticket with no pattern, single missed quarterly check-in, documentation gap.</td></tr>
+</table>
+
+<h2>2. Response SLAs</h2>
+<table>
+<tr><th>Severity</th><th>Acknowledge</th><th>Triage</th><th>Containment</th><th>Resolution target</th><th>Post-mortem</th></tr>
+<tr><td>SEV-1</td><td>≤ 1 hour</td><td>≤ 4 hours</td><td>≤ 24 hours</td><td>≤ 14 days</td><td>≤ 21 days</td></tr>
+<tr><td>SEV-2</td><td>≤ 4 hours</td><td>≤ 24 hours</td><td>≤ 5 business days</td><td>≤ 14 days</td><td>≤ 21 days</td></tr>
+<tr><td>SEV-3</td><td>≤ 1 business day</td><td>≤ 5 business days</td><td>n/a (no containment)</td><td>≤ 30 days</td><td>Not required (logged)</td></tr>
+<tr><td>SEV-4</td><td>≤ 5 business days</td><td>≤ 10 business days</td><td>n/a</td><td>≤ 90 days</td><td>Not required</td></tr>
+</table>
+
+<h2>3. SEV-1 — Critical, 14-day recovery</h2>
+<div class="box">
+<p><b>Step 1 — Detect &amp; acknowledge (≤ 1 hour)</b></p>
+<ol>
+<li>Detection source: 24/7 incident line, observability alert, buyer call, CSOAI internal detection.</li>
+<li>Acknowledge by named CSOAI on-call engineer within 1 hour; create incident record in escalation ledger.</li>
+<li>SIGIL receipt: incident ID + timestamp.</li>
+</ol>
+<p><b>Step 2 — Triage &amp; declare (≤ 4 hours)</b></p>
+<ol>
+<li>On-call engineer + buyer SC officer agree on SEV tier.</li>
+<li>If SEV-1: CSOAI CEO + buyer executive sponsor notified within 4 hours; executive-to-executive call within 6 hours.</li>
+<li>War room established (bridge call + shared doc); both parties' technical authorities in the room.</li>
+<li>SIGIL receipt: SEV tier declaration + named owner + war-room bridge.</li>
+</ol>
+<p><b>Step 3 — Containment (≤ 24 hours)</b></p>
+<ol>
+<li>Scope the affected workloads, operators, data.</li>
+<li>Apply immediate mitigation (power-cycle affected nodes, failover to redundant plane, isolate at network switch).</li>
+<li>Preserve forensic artefacts (memory dump, disk image, network state) with write-blocker.</li>
+<li>SIGIL receipt: containment actions + forensic chain-of-custody.</li>
+</ol>
+<p><b>Step 4 — Root-cause investigation (≤ 5 business days)</b></p>
+<ol>
+<li>Engineering team + buyer technical authority investigate; daily standups; shared working doc.</li>
+<li>Identify root cause; classify (CSOAI / buyer / third-party / environmental).</li>
+<li>Propose remediation: hot-fix patch, configuration change, process change, or rebuild.</li>
+<li>SIGIL receipt: root cause + remediation proposal.</li>
+</ol>
+<p><b>Step 5 — Remediation delivery (≤ 10 business days)</b></p>
+<ol>
+<li>Deliver remediation via the appropriate channel: emergency advisory (air-gap: sneakernet), config change (signed), or rebuild.</li>
+<li>Buyer applies in test environment; validates against 240-test gate.</li>
+<li>Buyer applies in production; CSOAI engineer on-call for 48-hour stabilisation window.</li>
+<li>SIGIL receipt: remediation applied + validation results.</li>
+</ol>
+<p><b>Step 6 — Restoration confirmation (≤ 12 business days)</b></p>
+<ol>
+<li>Buyer confirms all production workloads restored; observability green for 72 hours.</li>
+<li>Buyer + CSOAI counter-sign restoration confirmation.</li>
+<li>SIGIL receipt: restoration confirmation + counter-signature.</li>
+</ol>
+<p><b>Step 7 — Post-mortem (≤ 21 business days)</b></p>
+<ol>
+<li>Joint post-mortem document: timeline, root cause, contributing factors, what went well, what didn't, action register.</li>
+<li>Action register: each named action has owner, deadline, success criterion.</li>
+<li>SIGIL receipt: post-mortem + action register.</li>
+</ol>
+<p><b>Step 8 — Process improvement (≤ 14 days after post-mortem)</b></p>
+<ol>
+<li>Action register actions are tracked in the CSOAI engineering backlog + the buyer's change plan.</li>
+<li>Status reported at next QBR.</li>
+</ol>
+<p><b>Step 9 — Escalation closure (≤ 14 days after post-mortem)</b></p>
+<ol>
+<li>All action register items closed or scheduled.</li>
+<li>Closure counter-signed by CSOAI CS lead + buyer executive sponsor.</li>
+<li>SEV-1 closed in escalation ledger; SIGIL receipt of closure.</li>
+</ol>
+</div>
+
+<h2>4. SEV-2 — Degraded, 14-day recovery (9 steps, condensed)</h2>
+<ol>
+<li><b>Acknowledge (≤ 4 hr)</b> — named CS lead; incident record; SIGIL receipt.</li>
+<li><b>Triage (≤ 24 hr)</b> — CS lead + buyer ops lead agree on tier; CSOAI CRO + buyer CIO notified.</li>
+<li><b>Recovery plan (≤ 5 bd)</b> — joint plan with named owner, deadline, success criterion.</li>
+<li><b>Recovery delivery (≤ 10 bd)</b> — execute plan; buyer validates.</li>
+<li><b>Confirmation (≤ 12 bd)</b> — buyer + CSOAI counter-sign restoration.</li>
+<li><b>Post-mortem (≤ 21 bd)</b> — joint document with action register.</li>
+<li><b>Process improvement</b> — tracked in backlog + QBR.</li>
+<li><b>Closure counter-sign</b> — CSOAI CS lead + buyer CIO.</li>
+<li><b>SIGIL receipt of closure</b>.</li>
+</ol>
+
+<h2>5. SEV-3 — Risk, 30-day resolution (lighter-weight)</h2>
+<div class="box">
+<p>SEV-3 escalations do not require a war room or executive notification, but they do require a named owner and a deadline. They are tracked in the weekly scorecard and the next QBR.</p>
+<ol>
+<li><b>Acknowledge (≤ 1 bd)</b> — CS lead; incident record; SIGIL receipt.</li>
+<li><b>Triage (≤ 5 bd)</b> — CS lead + buyer ops lead; agree on plan.</li>
+<li><b>Resolution plan (≤ 10 bd)</b> — joint plan with named owner + deadline.</li>
+<li><b>Resolution delivery (≤ 20 bd)</b> — execute plan; verify.</li>
+<li><b>Confirmation (≤ 25 bd)</b> — buyer counter-signs resolution.</li>
+<li><b>Closure (≤ 30 bd)</b> — SIGIL receipt.</li>
+<li><b>Logged in next QBR</b> — under "open escalations" agenda item.</li>
+</ol>
+</div>
+
+<h2>6. SEV-4 — Advisory, 90-day resolution (lightest-weight)</h2>
+<ol>
+<li><b>Acknowledge (≤ 5 bd)</b> — CS lead; logged in scorecard.</li>
+<li><b>Plan (≤ 10 bd)</b> — joint plan if needed.</li>
+<li><b>Resolution (≤ 90 d)</b> — bundled into normal operational cadence.</li>
+<li><b>Closure</b> — at next QBR.</li>
+</ol>
+
+<h2>7. The named-owner matrix</h2>
+<table>
+<tr><th>Severity</th><th>CSOAI owner</th><th>Buyer owner</th><th>CSOAI escalation</th><th>Buyer escalation</th></tr>
+<tr><td>SEV-1</td><td>On-call engineer (named in escalation ledger)</td><td>Buyer SC officer</td><td>CSOAI CEO</td><td>Buyer executive sponsor</td></tr>
+<tr><td>SEV-2</td><td>CS lead</td><td>Buyer ops lead</td><td>CSOAI CRO</td><td>Buyer CIO</td></tr>
+<tr><td>SEV-3</td><td>CS lead</td><td>Buyer ops lead</td><td>CSOAI CS VP</td><td>Buyer ops manager</td></tr>
+<tr><td>SEV-4</td><td>CS lead</td><td>Buyer ops lead</td><td>None required</td><td>None required</td></tr>
+</table>
+
+<h2>8. The 24/7 incident line</h2>
+<p class="muted">The 24/7 incident line is contracted to all DEFONEOS pilot customers (per Schedule 2 of <code>defoneos-mod-contract-award-letter.html</code>). The number is in the deployment binder issued at SoW signature.</p>
+<div class="code">DEFONEOS 24/7 INCIDENT LINE
+  Primary:   +44 [redacted — in deployment binder]
+  Backup:    +44 [redacted — in deployment binder]
+  Email:     incident@defoneos.org  (PGP-signed receipt auto-issued)
+  Portal:    https://defoneos.org/incident  (SIGIL-anchored ticket creation)
+
+Response time by tier:
+  SEV-1: phone answered live, ≤ 3 rings, 24/7/365
+  SEV-2: phone answered ≤ 30 sec, 24/7/365
+  SEV-3: phone answered ≤ 5 min, business hours UK; ticket system 24/7
+  SEV-4: ticket system only; response within 5 business days</div>
+
+<h2>9. The escalation ledger</h2>
+<p class="muted">The escalation ledger is the SIGIL-anchored record of every escalation across all DEFONEOS customers. Each entry contains:</p>
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td>Incident ID</td><td>SIGIL-anchored unique identifier (e.g. <code>INC-2026-0712-001</code>)</td></tr>
+<tr><td>Buyer</td><td>Buyer entity + contract reference</td></tr>
+<tr><td>SEV tier</td><td>1, 2, 3, or 4 (re-classifiable)</td></tr>
+<tr><td>Detected at</td><td>ISO 8601 timestamp + detection source</td></tr>
+<tr><td>Acknowledged at</td><td>ISO 8601 timestamp + named owner</td></tr>
+<tr><td>Current status</td><td>OPEN / CONTAINED / RECOVERING / RESOLVED / CLOSED</td></tr>
+<tr><td>Current step</td><td>Which step in the runbook (1-9)</td></tr>
+<tr><td>Root cause</td><td>One-sentence classification (CSOAI / buyer / third-party / environmental)</td></tr>
+<tr><td>Affected workloads</td><td>List of buyer workloads impacted</td></tr>
+<tr><td>Resolution target</td><td>Date by which resolution is committed</td></tr>
+<tr><td>Closure SIGIL receipt</td><td>Hash + chain reference</td></tr>
+</table>
+
+<h2>10. What this runbook is NOT</h2>
+<ul>
+<li>NOT a 24/7 support SLA in the commercial sense — the SLA is in Schedule 2 of the contract; this runbook is the operational playbook.</li>
+<li>NOT a crisis-management process — that lives at the executive level (CSOAI CEO + buyer executive sponsor); this runbook is operational.</li>
+<li>NOT a replacement for the buyer's internal incident response — the buyer runs their own incident response; this runbook coordinates CSOAI's contribution.</li>
+<li>NOT a substitute for the post-mortem — every SEV-1 and SEV-2 must have a written post-mortem counter-signed within 21 days.</li>
+</ul>
+
+<h2>11. Cross-walk to DEFONEOS pack</h2>
+<ul>
+<li><b>30-60-90 plan</b> — <code>defoneos-mod-30-60-90-customer.html</code></li>
+<li><b>Scorecard</b> — <code>defoneos-mod-customer-success-scorecard.html</code></li>
+<li><b>QBR template</b> — <code>defoneos-mod-quarterly-review.html</code></li>
+<li><b>Churn prevention</b> — <code>defoneos-mod-churn-prevention.html</code></li>
+<li><b>Air-gap deployment guide</b> — <code>defoneos-mod-air-gap-deployment-guide.html</code> (incident response without internet)</li>
+</ul>
+
+<h2>12. Honesty register</h2>
+<div class="box">
+<ol>
+<li>The SEV tier definitions are CSOAI defaults; buyers may classify differently internally (e.g. P1/P2/P3/P4) and CSOAI adopts the buyer's classification when communicating.</li>
+<li>The 14-day recovery window is the maximum contractual target; observed pilot-deployment SEV-1 resolutions have been 3-9 days.</li>
+<li>The 24/7 incident line response times are contractual in Schedule 2; breach of these SLAs is a material breach.</li>
+<li>The escalation ledger is retained for the duration of the contract plus 7 years per UK GDPR and commercial record retention.</li>
+<li>Air-gapped buyers may have adjusted escalation procedures; see <code>defoneos-mod-air-gap-deployment-guide.html</code> §8 for the no-internet IR procedure.</li>
+</ol>
+</div>
+
+<footer>
+DEFONEOS · Escalation Runbook · v1.0 · 12 Jul 2026 · CSOAI Ltd (UK Co. 16939677) · Companion to <code>defoneos-mod-customer-success-scorecard.html</code>
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "version": "v1_dare_ties_2026-07-18",
+  "method": "DARE (random drop + rescale) + TIES (trim + sign-elect + disjoint-merge)",
+  "configs": [
+    {
+      "name": "dare_ties_d03_p00",
+      "density": 0.3,
+      "drop_p": 0.0,
+      "weights": [
+        0.5,
+        0.3,
+        0.2
+      ]
+    },
+    {
+      "name": "dare_ties_d03_p50",
+      "density": 0.3,
+      "drop_p": 0.5,
+      "weights": [
+        0.5,
+        0.3,
+        0.2
+      ]
+    },
+    {
+      "name": "dare_ties_d03_p90",
+      "density": 0.3,
+      "drop_p": 0.9,
+      "weights": [
+        0.5,
+        0.3,
+        0.2
+      ]
+    },
+    {
+      "name": "dare_ties_d05_p50",
+      "density": 0.5,
+      "drop_p": 0.5,
+      "weights": [
+        0.5,
+        0.3,
+        0.2
+      ]
+    }
+  ],
+  "honest_register": "Reference impl, not paper-original CUDA. Toy scale (0.5B base, 3 LoRAs). Sibling runs the real sweep on Qwen3-4B Modal T4.",
+  "next_step": "Run tierbench_lite.py on each config to measure quality vs linear TIES (already done: 0.180 mean on charter+sov3 linear merge)."
+}

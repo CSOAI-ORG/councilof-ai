@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_sov3_cube_synthesis_mcp"
+version = "1.0.0"
+description = "MEEK SOV3-Cube Synthesis MCP — the 3³ = 27 dimensional brand architecture. The cube of 3. The trinity of sovereignty. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "sov3", "cube", "trinity", "27", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://csoai.org"
+Repository = "https://github.com/CSOAI-ORG/meek-sov3-cube-synthesis-mcp"
+
+[project.scripts]
+meek-sov3-cube-synthesis-mcp = "meek_sov3_cube_synthesis_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_sov3_cube_synthesis_mcp"]

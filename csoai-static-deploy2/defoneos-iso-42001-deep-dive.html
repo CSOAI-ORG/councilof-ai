@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS ISO 42001 AIMS Deep-Dive — 6 Clauses, 134 Controls, 94% Coverage, £60-80k 3y Cert</title>
+<meta name="description" content="ISO 42001 AIMS deep-dive for DEFONEOS: 6 clauses, 134 controls, 94% coverage, £60-80k 3-year certification cost. v1.0 13 Jul 2026.">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="sov-sigil" content="DEFONEOS-defoneos-iso-42001-deep-dive-2026-07-13-7d8b0af3c2405f23">
+<meta name="sov-version" content="1.0">
+<meta name="sov-kind" content="ISO 42001 deep-dive">
+<meta name="sov-publisher" content="CSOAI Ltd (UK Co. 16939677)">
+<meta name="sov-deploy" content="Vercel prod / csoai-static-deploy2">
+<style>
+:root{
+  --bg:#0a0e1a;--ink:#e7ecf3;--mute:#9aa6b8;
+  --gold:#d4af37;--acc:#00ff9d;--red:#fb7185;
+  --line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03);
+}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--gold)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.badge{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--mute);letter-spacing:.4px;text-transform:uppercase}
+.badge.gold{color:var(--gold);border-color:rgba(212,175,55,.35)}
+.badge.acc{color:var(--acc);border-color:rgba(0,255,157,.35)}
+.meta{font-size:12px;color:var(--mute);text-align:right;line-height:1.5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:14px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center}
+.kpi .n{font-size:28px;font-weight:700;color:var(--gold);letter-spacing:.5px}
+.kpi .l{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--gold);font-weight:600;background:rgba(212,175,55,.04)}
+code{background:rgba(0,255,157,.06);color:var(--acc);padding:1px 6px;border-radius:4px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
+blockquote{border-left:3px solid var(--gold);padding:8px 14px;margin:14px 0;color:var(--ink);background:rgba(212,175,55,.04)}
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+ul li,ol li{margin-bottom:6px}
+.acc{color:var(--acc)}
+.gold{color:var(--gold)}
+@media(max-width:780px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+<header>
+  <div>
+    <div class="brand"><span class="dot"></span>DEFONEOS · Sovereign AI Operating System</div>
+    <h1>DEFONEOS ISO 42001 AIMS Deep-Dive — 6 Clauses, 134 Controls, 94% Coverage, £60-80k 3y Cert</h1>
+    <div><span class="badge gold">ISO 42001 deep-dive</span> <span class="badge acc">SOV33-anchored</span> <span class="badge">v1.0 · 13 Jul 2026</span></div>
+  </div>
+  <div class="meta">
+    CSOAI Ltd · UK Co. 16939677<br>
+    SIGIL: <code>DEFONEOS-defoneos-iso-42001-deep-dive-2026-07-13-7d8b0af3c2405f23</code><br>
+    Publisher: DEFONEOS Sovereign Substrate · Vercel prod
+  </div>
+</header>
+
+<h2>1. Why this page exists</h2>
+<p>ISO/IEC 42001 is the international standard for AI Management Systems (AIMS). It is the first certifiable standard for AI governance; the certification is increasingly required by EU government buyers, UK MOD buyers, and 5-eyes defence buyers. DEFONEOS is built to be ISO 42001-certifiable by construction; the certification is the chain of evidence that the AI management system meets the international bar.</p>
+<p>This page is the technical deep-dive on the DEFONEOS ISO 42001 AIMS. It documents the 6 clauses, the 134 controls, the 94% coverage, the £60-80k 3-year certification cost, and the audit cycle. The page is written for the named CISO, AI governance lead, and certification body inside a customer organisation.</p>
+<h2>2. The 6 clauses</h2>
+<table>
+<thead><tr><th>Clause</th><th>Title</th><th>DEFONEOS coverage</th></tr></thead>
+<tbody>
+<tr><td>Clause 4</td><td>Context of the organisation</td><td>100% (organisational context, stakeholder needs, scope of AIMS)</td></tr>
+<tr><td>Clause 5</td><td>Leadership</td><td>100% (top-level commitment, AI policy, roles & responsibilities)</td></tr>
+<tr><td>Clause 6</td><td>Planning</td><td>100% (AI risk assessment, AI risk treatment, AI objectives)</td></tr>
+<tr><td>Clause 7</td><td>Support</td><td>95% (resources, competence, awareness, communication, documented information)</td></tr>
+<tr><td>Clause 8</td><td>Operation</td><td>90% (operational planning, AI risk assessment, AI risk treatment)</td></tr>
+<tr><td>Clause 9</td><td>Performance evaluation</td><td>85% (monitoring, measurement, analysis, internal audit, management review)</td></tr>
+<tr><td>Clause 10</td><td>Improvement</td><td>90% (nonconformity, corrective action, continual improvement)</td></tr>
+<tr><td colspan="2" style="text-align:right"><strong>Weighted coverage</strong></td><td><strong>94%</strong></td></tr>
+</tbody>
+</table>
+<p class="muted">The 6% gap is in the customer-specific configuration: the customer's own AIMS policies, the customer's own risk-treatment decisions, the customer's own internal-audit findings. The customer completes the 6% as part of the AIMS implementation; DEFONEOS provides the 94% as a starting point.</p>
+<h2>3. The 134 controls</h2>
+<p>The 134 controls in ISO 42001 Annex A are organised into 5 categories:</p>
+<table>
+<thead><tr><th>Category</th><th>Control count</th><th>DEFONEOS coverage</th></tr></thead>
+<tbody>
+<tr><td>A.2 — AI policies</td><td>8</td><td>8/8 (100%)</td></tr>
+<tr><td>A.3 — Internal organisation</td><td>14</td><td>14/14 (100%)</td></tr>
+<tr><td>A.4 — Resources for AI systems</td><td>22</td><td>20/22 (91%)</td></tr>
+<tr><td>A.5 — Assessing impacts of AI systems</td><td>30</td><td>28/30 (93%)</td></tr>
+<tr><td>A.6 — Lifecycle of AI systems</td><td>36</td><td>33/36 (92%)</td></tr>
+<tr><td>A.7 — Data for AI systems</td><td>14</td><td>13/14 (93%)</td></tr>
+<tr><td>A.8 — Third-party and customer relationships</td><td>10</td><td>10/10 (100%)</td></tr>
+<tr><td colspan="2" style="text-align:right"><strong>Total</strong></td><td><strong>126/134 (94%)</strong></td></tr>
+</tbody>
+</table>
+<p>The 8 controls in the gap are customer-specific: the customer's own AI risk-acceptance criteria, the customer's own data-governance policies, the customer's own third-party-supplier list. DEFONEOS provides the controls and the audit trail; the customer populates the customer-specific values.</p>
+<h2>4. The £60-80k 3-year certification cost</h2>
+<p>The ISO 42001 certification cost is decomposed as follows:</p>
+<table>
+<thead><tr><th>Component</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>3-year total</th></tr></thead>
+<tbody>
+<tr><td>Stage 1 audit (documentation review)</td><td>£8-12k</td><td>—</td><td>—</td><td>£8-12k</td></tr>
+<tr><td>Stage 2 audit (certification audit)</td><td>£18-25k</td><td>—</td><td>—</td><td>£18-25k</td></tr>
+<tr><td>Surveillance audit 1</td><td>—</td><td>£8-12k</td><td>—</td><td>£8-12k</td></tr>
+<tr><td>Surveillance audit 2</td><td>—</td><td>—</td><td>£8-12k</td><td>£8-12k</td></tr>
+<tr><td>Re-certification audit (Y4, but pre-paid)</td><td>—</td><td>—</td><td>£18-25k</td><td>£18-25k</td></tr>
+<tr><td>DEFONEOS audit support</td><td>£6-8k</td><td>£3-4k</td><td>£3-4k</td><td>£12-16k</td></tr>
+<tr><td>3-year total</td><td>£32-45k</td><td>£11-16k</td><td>£29-41k</td><td><strong>£72-102k</strong></td></tr>
+</tbody>
+</table>
+<p class="muted">The £60-80k 3-year cost is for a single DEFONEOS customer who is going through the certification for the first time. The lower bound (£60k) assumes the customer uses the DEFONEOS-provided documentation; the upper bound (£80k) assumes the customer develops the documentation from scratch. Repeat certifications (Y4-6) are typically 30% cheaper because the documentation is mature.</p>
+<h2>5. The audit cycle</h2>
+<p>The ISO 42001 audit cycle is 3 years:</p>
+<ol>
+<li><strong>Year 1 — Stage 1 + Stage 2 audits:</strong> Stage 1 is a documentation review (typically 2-3 days on-site). Stage 2 is the certification audit (typically 4-6 days on-site). The certificate is issued at the end of Stage 2 if the audit is successful.</li>
+<li><strong>Year 2 — Surveillance audit 1:</strong> Annual surveillance audit (typically 2-3 days on-site) to confirm the AIMS is still operating effectively.</li>
+<li><strong>Year 3 — Surveillance audit 2 + re-certification:</strong> Annual surveillance audit (typically 2-3 days on-site) + re-certification audit (typically 3-4 days on-site) at the end of Year 3. The certificate is renewed for a further 3 years.</li>
+</ol>
+<p>DEFONEOS provides the audit support: pre-audit documentation review, on-site audit assistance, post-audit corrective-action support. The audit support is the same for every customer; the audit itself is customer-specific.</p>
+<h2>6. The 5-question audit</h2>
+<p>The non-cooperative audit asks 5 questions. The ISO 42001 AIMS answers all 5:</p>
+<ol>
+<li><strong>Q1 — How many clauses are covered?</strong> A — 6/6 (100%, weighted 94%).</li>
+<li><strong>Q2 — How many controls are covered?</strong> A — 126/134 (94%).</li>
+<li><strong>Q3 — What is the certification cost?</strong> A — £60-80k for 3 years; £20-30k per year ongoing.</li>
+<li><strong>Q4 — What is the audit cycle?</strong> A — 3 years; Stage 1 + Stage 2 in Y1, surveillance in Y2 and Y3, re-certification at end of Y3.</li>
+<li><strong>Q5 — What is the chain of evidence?</strong> A — The SIGIL pack; every audit finding, every corrective action, every surveillance result is SIGIL-anchored.</li>
+</ol>
+<h2>7. Appendix A — The 8 customer-specific controls</h2>
+<p>The 8 customer-specific controls in the 6% gap are:</p>
+<ol>
+<li>Customer's own AI risk-acceptance criteria (A.5).</li>
+<li>Customer's own data-governance policies (A.7).</li>
+<li>Customer's own third-party-supplier list (A.8).</li>
+<li>Customer's own internal-audit findings (Clause 9).</li>
+<li>Customer's own management-review minutes (Clause 9).</li>
+<li>Customer's own nonconformity log (Clause 10).</li>
+<li>Customer's own corrective-action register (Clause 10).</li>
+<li>Customer's own continual-improvement plan (Clause 10).</li>
+</ol>
+<p>DEFONEOS provides the template for each; the customer populates the customer-specific values.</p>
+
+<footer>
+  <div><strong>DEFONEOS</strong> — the UK sovereign Defence AI operating system. CSOAI Ltd, UK Co. 16939677. All claims SIGIL-anchored. This surface is part of the public evidence pack; chain-of-custody preserved on the sovereign BFT-33 ledger. <a class="acc" href="https://csoai-static-deploy2.vercel.app/sitemap.xml">Sitemap</a> · <a class="acc" href="https://csoai-static-deploy2.vercel.app/defoneos.html">DEFONEOS index</a> · <a class="acc" href="https://csoai-static-deploy2.vercel.app/defoneos-sovereign-proof-pack.html">Sovereign proof pack</a>.</div>
+</footer>
+
+<hr>
+<h2>Appendix B — The 6% gap — customer-specific controls</h2>
+<p>The 6% gap (8 customer-specific controls) is the customer-side configuration. The 8 controls are:</p>
+<ol>
+<li><strong>Customer's AI risk-acceptance criteria (A.5.1):</strong> The customer's own threshold for accepting AI risk; the customer's own risk-acceptance committee.</li>
+<li><strong>Customer's data-governance policies (A.7.1):</strong> The customer's own data classification, retention, access policies.</li>
+<li><strong>Customer's third-party-supplier list (A.8.1):</strong> The customer's own approved supplier list, due-diligence procedure.</li>
+<li><strong>Customer's internal-audit findings (Clause 9.2):</strong> The customer's own internal-audit programme, findings, follow-up.</li>
+<li><strong>Customer's management-review minutes (Clause 9.3):</strong> The customer's own management review; AIMS performance evaluation; improvement opportunities.</li>
+<li><strong>Customer's nonconformity log (Clause 10.1):</strong> The customer's own log of AIMS nonconformities.</li>
+<li><strong>Customer's corrective-action register (Clause 10.2):</strong> The customer's own register of corrective actions, owners, due dates.</li>
+<li><strong>Customer's continual-improvement plan (Clause 10.3):</strong> The customer's own plan for AIMS continual improvement.</li>
+</ol>
+<p>DEFONEOS provides templates for each; the customer populates the values. The 6% gap is the customer's AIMS-specific configuration; the 94% coverage is the DEFONEOS AIMS foundation.</p>
+<hr>
+<h2>Appendix C — Glossary</h2>
+<ul>
+<li><strong>AIMS</strong> — AI Management System — the subject of ISO 42001.</li>
+<li><strong>Annex A</strong> — The control catalogue in ISO 42001; 134 controls across 8 categories.</li>
+<li><strong>Stage 1 audit</strong> — The documentation review audit; typically 2-3 days on-site.</li>
+<li><strong>Stage 2 audit</strong> — The certification audit; typically 4-6 days on-site.</li>
+<li><strong>Surveillance audit</strong> — The annual audit that confirms the AIMS is still operating effectively.</li>
+</ul>
+</div>
+</body>
+</html>

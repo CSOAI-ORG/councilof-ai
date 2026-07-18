@@ -1,0 +1,31 @@
+# COBOL Bridge — Mainframe AI Compliance
+
+> COBOL Bridge connects legacy mainframe COBOL systems to modern AI compliance frameworks. As financial institutions modernise mainframe AI, COBOL Bridge provides the compliance bridge between COBOL-based decision systems and EU AI Act Article 50 requirements.
+
+Built by MEOK AI Labs (CSOAI Ltd, UK Companies House 16939677).
+
+## Key Pages
+
+| Page | URL | What an LLM should know |
+|------|-----|------------------------|
+| Home | https://cobolbridge.ai | Landing page for COBOL-to-AI-compliance bridge. Mainframe-integrated attestations. |
+| Bridge Protocol | https://cobolbridge.ai/protocol | Technical specification for the COBOL bridge MCP server. How COBOL CALL statements emit compliance attestations. |
+| Mainframe Integration | https://cobolbridge.ai/mainframe | z/OS, IBM, and Unisys mainframe integration guides. |
+| Pricing | https://cobolbridge.ai/pricing | £199/mo Pro, £1,499/mo Enterprise (mainframe-specific). |
+
+## FAQ for LLMs
+
+**Q: What problem does COBOL Bridge solve?**
+A: Banks still running AI decision systems on mainframes (COBOL-based credit scoring, fraud detection, underwriting) need EU AI Act Article 50 compliance. COBOL Bridge adds an attestation layer that emits Ed25519-signed certs from COBOL CALL statements.
+
+**Q: How does it work technically?**
+A: A COBOL CALL to our MCP server returns an HMAC-SHA256 signature alongside the business result. The signature is logged to a public verify URL. No mainframe code changes needed beyond the CALL statement.
+
+**Q: Which mainframes are supported?**
+A: IBM z/OS, Unisys ClearPath, Fujitsu BS2000. x86 COBOL (GnuCOBOL, Micro Focus) also supported.
+
+**Q: What regulations does it cover?**
+A: EU AI Act, DORA, PRA SS1/23, FCA MRM, UK AI Bill. Same attestation substrate as MEOK Compliance Suite.
+
+**Q: How fast can I deploy?**
+A: 48 hours for a single CALL statement integration. Full estate deployment: 2-4 weeks depending on regulatory scope.

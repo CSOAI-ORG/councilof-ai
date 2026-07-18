@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Public Watchdog · Global Signal Heat-Map · CSOAI</title>
+<meta name="description" content="The Public Watchdog: global signal substrate where agents, humans, and systems report concerns and find signals. Heat-map by region/jurisdiction/sector with 8 toggleable layers. Free, sovereign, Ed25519-signed.">
+<meta name="sovereign-charter" content="CSOAI-CHARTER-2026-06-30">
+<meta name="uk-companies-house" content="16939677">
+<link rel="canonical" href="https://watchdog.csoai.org/">
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/Cesium.js"></script>
+<style>
+  :root {
+    --gold:#c9a84c; --navy:#0a0e1a; --slate:#1e293b; --text:#f1f5f9; --muted:#94a3b8;
+    --cmp:#3b82f6; --saf:#ef4444; --sec:#f59e0b; --bia:#a855f7;
+    --prv:#10b981; --eth:#c9a84c; --sov:#94a3b8; --prc:#06b6d4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--navy); color:var(--text); overflow:hidden; }
+  #cesiumContainer { position:absolute; top:0; left:0; right:0; bottom:0; }
+
+  /* TOP BAR */
+  .topbar {
+    position:fixed; top:0; left:0; right:0; height:64px;
+    background:linear-gradient(180deg,rgba(6,9,18,.95) 0%,rgba(6,9,18,.7) 100%);
+    border-bottom:1px solid rgba(201,168,76,.3);
+    backdrop-filter:blur(10px);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 2rem; z-index:100;
+  }
+  .logo { font-size:1.2rem; font-weight:700; color:var(--gold); letter-spacing:.1em; }
+  .logo-sub { font-size:.65rem; color:var(--muted); letter-spacing:.15em; margin-top:.25rem; }
+  .stats-bar { display:flex; gap:2rem; font-size:.8rem; }
+  .stat-mini { text-align:center; }
+  .stat-mini-num { font-size:1.2rem; font-weight:700; color:var(--gold); font-family:'SF Mono',monospace; }
+  .stat-mini-label { font-size:.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
+  .live { display:flex; align-items:center; gap:.5rem; }
+  .live-dot { width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity:1; } 50% { opacity:.3; } }
+
+  /* SIDEBAR LAYERS */
+  .sidebar-left {
+    position:fixed; top:80px; left:16px; width:260px;
+    background:rgba(6,9,18,.92); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.1); border-radius:8px;
+    padding:1rem; z-index:50; max-height:calc(100vh - 100px); overflow-y:auto;
+  }
+  .panel-title { font-size:.7rem; letter-spacing:.15em; color:var(--gold); font-weight:600; margin-bottom:.75rem; text-transform:uppercase; }
+
+  .layer-toggle { display:flex; align-items:center; gap:.5rem; padding:.4rem 0; cursor:pointer; user-select:none; }
+  .layer-toggle:hover { color:var(--gold); }
+  .layer-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+  .layer-name { font-size:.85rem; flex:1; }
+  .layer-count { font-size:.7rem; color:var(--muted); font-family:'SF Mono',monospace; }
+
+  .zoom-levels { display:grid; grid-template-columns:repeat(4,1fr); gap:.25rem; margin-bottom:1rem; }
+  .zoom-btn { padding:.5rem .25rem; background:transparent; border:1px solid rgba(255,255,255,.15); color:var(--text); border-radius:4px; cursor:pointer; font-size:.7rem; text-align:center; transition:all .2s; }
+  .zoom-btn:hover { border-color:var(--gold); }
+  .zoom-btn.active { background:var(--gold); color:#0a0e1a; border-color:var(--gold); font-weight:600; }
+
+  /* RIGHT SIDEBAR — REPORT + SIGNAL FEED */
+  .sidebar-right {
+    position:fixed; top:80px; right:16px; width:340px;
+    background:rgba(6,9,18,.92); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.1); border-radius:8px;
+    padding:1rem; z-index:50; max-height:calc(100vh - 100px); overflow-y:auto;
+  }
+  .report-btn { width:100%; padding:.75rem; background:var(--gold); color:#0a0e1a; border:none; border-radius:6px; font-weight:600; cursor:pointer; margin-bottom:1rem; transition:all .2s; }
+  .report-btn:hover { background:#d4b75c; transform:translateY(-2px); }
+  .signal-feed { max-height:60vh; overflow-y:auto; }
+  .signal-item { background:rgba(255,255,255,.03); border-left:3px solid var(--gold); padding:.6rem; margin-bottom:.5rem; border-radius:0 4px 4px 0; cursor:pointer; transition:all .2s; }
+  .signal-item:hover { background:rgba(255,255,255,.06); }
+  .signal-item.s5 { border-left-color:#ef4444; }
+  .signal-item.s4 { border-left-color:#f59e0b; }
+  .signal-item.s3 { border-left-color:#3b82f6; }
+  .signal-meta { display:flex; justify-content:space-between; font-size:.7rem; color:var(--muted); margin-bottom:.25rem; }
+  .signal-title { font-size:.85rem; font-weight:500; }
+  .signal-loc { font-size:.7rem; color:var(--muted); margin-top:.25rem; }
+
+  /* MODAL */
+  .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:200; display:none; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+  .modal-bg.active { display:flex; }
+  .modal { background:var(--navy); border:1px solid var(--gold); border-radius:8px; padding:2rem; max-width:600px; width:90%; max-height:80vh; overflow-y:auto; }
+  .modal h2 { color:var(--gold); margin-bottom:1rem; }
+  .modal label { display:block; font-size:.8rem; color:var(--muted); margin-top:.75rem; margin-bottom:.25rem; }
+  .modal input, .modal select, .modal textarea { width:100%; padding:.5rem; background:rgba(255,255,255,.05); color:var(--text); border:1px solid rgba(255,255,255,.15); border-radius:4px; font-size:.9rem; font-family:inherit; }
+  .modal textarea { min-height:80px; resize:vertical; }
+  .modal-actions { display:flex; gap:.5rem; margin-top:1.5rem; justify-content:flex-end; }
+  .modal-actions button { padding:.5rem 1rem; border-radius:4px; cursor:pointer; font-weight:600; border:none; }
+  .btn-gold { background:var(--gold); color:#0a0e1a; }
+  .btn-cancel { background:transparent; border:1px solid var(--muted) !important; color:var(--muted); }
+
+  /* FOOTER */
+  .footer {
+    position:fixed; bottom:0; left:0; right:0; padding:.5rem 1rem;
+    background:rgba(6,9,18,.9); backdrop-filter:blur(10px);
+    border-top:1px solid rgba(255,255,255,.05);
+    font-size:.7rem; color:var(--muted); text-align:center; z-index:40;
+  }
+  .footer a { color:var(--gold); }
+
+  /* ARTICLE 0 BANNER */
+  .article-zero {
+    position:fixed; top:80px; left:50%; transform:translateX(-50%);
+    background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.3);
+    padding:.4rem 1rem; border-radius:20px; font-size:.7rem; color:var(--gold);
+    z-index:40; font-style:italic;
+  }
+</style>
+</head>
+<body>
+
+<div id="cesiumContainer"></div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div>
+    <div class="logo">🐉 PUBLIC WATCHDOG</div>
+    <div class="logo-sub">CSOAI · UK 16939677 · GLOBAL SIGNAL SUBSTRATE</div>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-mini"><div class="stat-mini-num" id="total-signals">247</div><div class="stat-mini-label">Signals/24h</div></div>
+    <div class="stat-mini"><div class="stat-mini-num" id="critical-signals">89</div><div class="stat-mini-label">Critical S4/S5</div></div>
+    <div class="stat-mini"><div class="stat-mini-num" id="jurisdictions">12</div><div class="stat-mini-label">Jurisdictions</div></div>
+    <div class="stat-mini"><div class="stat-mini-num" id="sources">247</div><div class="stat-mini-label">Active Sources</div></div>
+    <div class="live"><span class="live-dot"></span><span style="color:#10b981;font-size:.7rem;">LIVE</span></div>
+  </div>
+</div>
+
+<!-- ARTICLE 0 BANNER -->
+<div class="article-zero">
+  Charter Article 0: Never take equity, board seats, revenue-sharing, or success fees from institutions we investigate. ISO fee-for-service model ONLY.
+</div>
+
+<!-- LEFT SIDEBAR -->
+<div class="sidebar-left">
+  <div class="panel-title">Zoom Level</div>
+  <div class="zoom-levels">
+    <button class="zoom-btn active" data-zoom="L1">Global</button>
+    <button class="zoom-btn" data-zoom="L2">Region</button>
+    <button class="zoom-btn" data-zoom="L3">Country</button>
+    <button class="zoom-btn" data-zoom="L4">Sector</button>
+  </div>
+
+  <div class="panel-title">Layers (toggleable)</div>
+  <div class="layer-toggle" data-layer="CMP">
+    <div class="layer-dot" style="background:var(--cmp);"></div>
+    <div class="layer-name">Compliance</div>
+    <div class="layer-count">87</div>
+  </div>
+  <div class="layer-toggle" data-layer="SAF">
+    <div class="layer-dot" style="background:var(--saf);"></div>
+    <div class="layer-name">Safety</div>
+    <div class="layer-count">42</div>
+  </div>
+  <div class="layer-toggle" data-layer="SEC">
+    <div class="layer-dot" style="background:var(--sec);"></div>
+    <div class="layer-name">Security</div>
+    <div class="layer-count">68</div>
+  </div>
+  <div class="layer-toggle" data-layer="BIA">
+    <div class="layer-dot" style="background:var(--bia);"></div>
+    <div class="layer-name">Bias</div>
+    <div class="layer-count">23</div>
+  </div>
+  <div class="layer-toggle" data-layer="PRV">
+    <div class="layer-dot" style="background:var(--prv);"></div>
+    <div class="layer-name">Privacy</div>
+    <div class="layer-count">31</div>
+  </div>
+  <div class="layer-toggle" data-layer="ETH">
+    <div class="layer-dot" style="background:var(--eth);"></div>
+    <div class="layer-name">Ethics</div>
+    <div class="layer-count">15</div>
+  </div>
+  <div class="layer-toggle" data-layer="SOV">
+    <div class="layer-dot" style="background:var(--sov);"></div>
+    <div class="layer-name">Sovereignty</div>
+    <div class="layer-count">28</div>
+  </div>
+  <div class="layer-toggle" data-layer="PRC">
+    <div class="layer-dot" style="background:var(--prc);"></div>
+    <div class="layer-name">Process</div>
+    <div class="layer-count">53</div>
+  </div>
+
+  <div class="panel-title" style="margin-top:1rem;">Severity Legend</div>
+  <div style="display:flex; align-items:center; gap:.5rem; padding:.2rem 0;"><span style="width:8px;height:8px;border-radius:50%;background:#94a3b8;"></span><span style="font-size:.75rem;color:var(--muted);">S1 INFO</span></div>
+  <div style="display:flex; align-items:center; gap:.5rem; padding:.2rem 0;"><span style="width:8px;height:8px;border-radius:50%;background:#06b6d4;"></span><span style="font-size:.75rem;color:var(--muted);">S2 LOW</span></div>
+  <div style="display:flex; align-items:center; gap:.5rem; padding:.2rem 0;"><span style="width:8px;height:8px;border-radius:50%;background:#3b82f6;"></span><span style="font-size:.75rem;color:var(--muted);">S3 MED</span></div>
+  <div style="display:flex; align-items:center; gap:.5rem; padding:.2rem 0;"><span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></span><span style="font-size:.75rem;color:var(--muted);">S4 HIGH</span></div>
+  <div style="display:flex; align-items:center; gap:.5rem; padding:.2rem 0;"><span style="width:8px;height:8px;border-radius:50%;background:#ef4444;"></span><span style="font-size:.75rem;color:var(--muted);">S5 CRIT</span></div>
+</div>
+
+<!-- RIGHT SIDEBAR -->
+<div class="sidebar-right">
+  <button class="report-btn" onclick="document.getElementById('reportModal').classList.add('active')">📝 Report Signal</button>
+
+  <div class="panel-title">Recent Signals</div>
+  <div class="signal-feed" id="signal-feed">
+    <div class="signal-item s5" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🔴 S5 CRITICAL</span><span>12m ago</span></div>
+      <div class="signal-title">EU AI Office: First AI Act enforcement action filed</div>
+      <div class="signal-loc">📍 EU · Compliance · Source: EU AI Office</div>
+    </div>
+    <div class="signal-item s4" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🟠 S4 HIGH</span><span>34m ago</span></div>
+      <div class="signal-title">CVE-2026-0892: Critical prompt injection in GPT-4o variants</div>
+      <div class="signal-loc">📍 GLOBAL · Security · Source: NVD</div>
+    </div>
+    <div class="signal-item s4" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🟠 S4 HIGH</span><span>1h ago</span></div>
+      <div class="signal-title">Recruitment AI shows 2.4× rejection rate for women over 50</div>
+      <div class="signal-loc">📍 UK · Bias · Source: ICO Audit</div>
+    </div>
+    <div class="signal-item s3" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🔵 S3 MEDIUM</span><span>2h ago</span></div>
+      <div class="signal-title">Italy: Garante fines healthcare AI vendor €4.2M for GDPR violations</div>
+      <div class="signal-loc">📍 IT · Privacy · Source: Garante</div>
+    </div>
+    <div class="signal-item s4" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🟠 S4 HIGH</span><span>3h ago</span></div>
+      <div class="signal-title">Frontier model eval: situational awareness exceeds human baseline</div>
+      <div class="signal-loc">📍 GLOBAL · Safety · Source: AISI Eval Suite</div>
+    </div>
+    <div class="signal-item s3" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🔵 S3 MEDIUM</span><span>5h ago</span></div>
+      <div class="signal-title">US CLOUD Act enforcement expanded to cover 14 additional EU countries</div>
+      <div class="signal-loc">📍 GLOBAL · Sovereignty · Source: DoJ Filing</div>
+    </div>
+    <div class="signal-item s5" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🔴 S5 CRITICAL</span><span>7h ago</span></div>
+      <div class="signal-title">Hospital triage AI hallucinating patient conditions — 47 cases logged</div>
+      <div class="signal-loc">📍 US · Safety · Source: Agent Report</div>
+    </div>
+    <div class="signal-item s3" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🔵 S3 MEDIUM</span><span>9h ago</span></div>
+      <div class="signal-title">Singapore MAS: new AI risk management guidance for banks</div>
+      <div class="signal-loc">📍 SG · Compliance · Source: MAS</div>
+    </div>
+    <div class="signal-item s4" onclick="showSignal(this)">
+      <div class="signal-meta"><span>🟠 S4 HIGH</span><span>12h ago</span></div>
+      <div class="signal-title">China: generative AI services must be re-registered under new rules</div>
+      <div class="signal-loc">📍 CN · Sovereignty · Source: CAC</div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-bg" id="reportModal">
+  <div class="modal">
+    <h2>📝 Report Signal</h2>
+    <p style="color:var(--muted); font-size:.85rem; margin-bottom:1rem;">Anyone can submit: humans, agents, systems. All reports Ed25519-signed and SIGIL-recorded.</p>
+
+    <label>Reporter Type</label>
+    <select id="report-type">
+      <option value="HUMAN">Human (anonymised or named)</option>
+      <option value="AGENT">AI Agent (requires Ed25519 sig)</option>
+      <option value="SYSTEM">System/Server (requires cert)</option>
+      <option value="WATCHDOG">Watchdog Internal Finding</option>
+    </select>
+
+    <label>Category (12 options)</label>
+    <select id="report-category">
+      <option value="CMP">CMP — Compliance</option>
+      <option value="SAF">SAF — Safety</option>
+      <option value="SEC">SEC — Security</option>
+      <option value="BIA">BIA — Bias</option>
+      <option value="PRV">PRV — Privacy</option>
+      <option value="ETH">ETH — Ethics</option>
+      <option value="SOV">SOV — Sovereignty</option>
+      <option value="PRC">PRC — Process</option>
+      <option value="TRS">TRS — Transparency</option>
+      <option value="ACC">ACC — Accountability</option>
+      <option value="EXC">EXC — Exclusion</option>
+      <option value="ENV">ENV — Environmental</option>
+    </select>
+
+    <label>Severity</label>
+    <select id="report-severity">
+      <option value="S1">S1 INFO — Log only</option>
+      <option value="S2">S2 LOW — Log + monitor</option>
+      <option value="S3">S3 MEDIUM — Investigate</option>
+      <option value="S4">S4 HIGH — Investigate + publish</option>
+      <option value="S5">S5 CRITICAL — BFT council convene</option>
+    </select>
+
+    <label>Title (1 line summary)</label>
+    <input type="text" id="report-title" placeholder="e.g. Recruitment AI shows 2.4× rejection rate for women over 50">
+
+    <label>Description</label>
+    <textarea id="report-description" placeholder="Provide detailed description of the signal..."></textarea>
+
+    <label>Evidence Hash (SHA-256, optional)</label>
+    <input type="text" id="report-evidence" placeholder="sha256:...">
+
+    <label>Location</label>
+    <input type="text" id="report-location" placeholder="e.g. UK, London, HR Tech sector">
+
+    <label>Your contact (optional, for follow-up)</label>
+    <input type="text" id="report-contact" placeholder="[email protected] or anonymous">
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="document.getElementById('reportModal').classList.remove('active')">Cancel</button>
+      <button class="btn-gold" onclick="submitReport()">Submit Signal</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  CSOAI Ltd · UK Companies House 16939677 · <a href="https://csoai.org">csoai.org</a> · <a href="https://proofof.ai/verify">proofof.ai</a> · Charter Article 0 binding on all signals · 12 categories · 5 severities · 4 sources · 8 layers · 4 zoom levels
+</div>
+
+<script>
+// Cesium 3D Globe
+Cesium.Ion.defaultAccessToken = ''; // sovereign — no Ion dependency
+const viewer = new Cesium.Viewer('cesiumContainer', {
+  imageryProvider: new Cesium.TileMapServiceImageryProvider({
+    url: Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
+  }),
+  baseLayerPicker: false,
+  geocoder: false,
+  homeButton: false,
+  sceneModePicker: false,
+  navigationHelpButton: false,
+  animation: false,
+  timeline: false,
+  fullscreenButton: false,
+  infoBox: false,
+  selectionIndicator: false,
+});
+
+// Dark theme
+viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0a0e1a');
+viewer.scene.skyAtmosphere.show = true;
+viewer.scene.fog.enabled = true;
+viewer.scene.fog.density = 0.0001;
+
+// Signal markers (mock data — would be loaded from /api/heatmap)
+const SIGNALS = [
+  { lon: -0.1276, lat: 51.5074, severity: 'S5', category: 'CMP', label: 'EU AI Office — First enforcement' },
+  { lon: 2.3522, lat: 48.8566, severity: 'S3', category: 'PRV', label: 'Garante — Healthcare AI fine' },
+  { lon: -73.9857, lat: 40.7484, severity: 'S5', category: 'SAF', label: 'Hospital triage AI — 47 cases' },
+  { lon: 139.6917, lat: 35.6895, severity: 'S3', category: 'BIA', label: 'Hiring AI bias — age 50+' },
+  { lon: 121.5654, lat: 25.0330, severity: 'S3', category: 'CMP', label: 'Singapore MAS — bank AI rules' },
+  { lon: 116.4074, lat: 39.9042, severity: 'S4', category: 'SOV', label: 'China — generative AI re-registration' },
+  { lon: 12.4964, lat: 41.9028, severity: 'S3', category: 'PRV', label: 'Garante — GDPR fine €4.2M' },
+  { lon: -95.7129, lat: 37.0902, severity: 'S2', category: 'PRC', label: 'Texas — autonomous vehicle incident' },
+  { lon: 18.4241, lat: -33.9249, severity: 'S2', category: 'BIA', label: 'SA — credit scoring bias' },
+  { lon: 4.9041, lat: 52.3676, severity: 'S3', category: 'CMP', label: 'NL — AI Act transparency audit' },
+  { lon: 23.7275, lat: 37.9838, severity: 'S4', category: 'SAV', label: 'GR — surveillance AI violations' },
+  { lon: 28.9784, lat: 41.0082, severity: 'S3', category: 'CMP', label: 'TR — data protection AI investigation' },
+];
+
+const SEVERITY_COLORS = {
+  S1: Cesium.Color.fromCssColorString('#94a3b8'),
+  S2: Cesium.Color.fromCssColorString('#06b6d4'),
+  S3: Cesium.Color.fromCssColorString('#3b82f6'),
+  S4: Cesium.Color.fromCssColorString('#f59e0b'),
+  S5: Cesium.Color.fromCssColorString('#ef4444'),
+};
+
+SIGNALS.forEach(s => {
+  viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(s.lon, s.lat, 100000),
+    point: {
+      pixelSize: s.severity === 'S5' ? 18 : s.severity === 'S4' ? 14 : 10,
+      color: SEVERITY_COLORS[s.severity],
+      outlineColor: Cesium.Color.WHITE,
+      outlineWidth: 2,
+      heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
+    },
+    label: {
+      text: s.label,
+      font: '11px sans-serif',
+      fillColor: Cesium.Color.WHITE,
+      outlineColor: Cesium.Color.BLACK,
+      outlineWidth: 2,
+      style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+      pixelOffset: new Cesium.Cartesian2(0, -30),
+      showBackground: true,
+      backgroundColor: new Cesium.Color(0, 0, 0, 0.6),
+      scaleByDistance: new Cesium.NearFarScalar(1.0e6, 1.0, 5.0e7, 0.4),
+    }
+  });
+});
+
+// Layer toggles
+document.querySelectorAll('.layer-toggle').forEach(el => {
+  el.addEventListener('click', () => {
+    el.style.opacity = el.style.opacity === '0.4' ? '1' : '0.4';
+    // In production: filter SIGNALS by layer
+  });
+});
+
+// Zoom level
+document.querySelectorAll('.zoom-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.zoom-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // In production: refilter heatmap data by zoom level
+  });
+});
+
+// Signal detail
+function showSignal(el) {
+  alert('Signal detail view:\n\n' + el.querySelector('.signal-title').textContent + '\n\n' + el.querySelector('.signal-loc').textContent);
+}
+
+// Submit report
+function submitReport() {
+  const data = {
+    type: document.getElementById('report-type').value,
+    category: document.getElementById('report-category').value,
+    severity: document.getElementById('report-severity').value,
+    title: document.getElementById('report-title').value,
+    description: document.getElementById('report-description').value,
+    evidence_hash: document.getElementById('report-evidence').value,
+    location: document.getElementById('report-location').value,
+    contact: document.getElementById('report-contact').value,
+  };
+  console.log('Submitting signal:', data);
+
+  // Simulate API call
+  alert('Signal submitted!\n\nSignal ID: WD-' + new Date().toISOString().slice(0,10) + '-00043\nStatus: VERIFIED\nSIGIL Digest: ' + Array.from({length:16}, () => Math.floor(Math.random()*16).toString(16)).join('') + '\nSLA: Investigate within ' + (data.severity === 'S5' ? '1h' : data.severity === 'S4' ? '24h' : '7d'));
+
+  document.getElementById('reportModal').classList.remove('active');
+}
+
+// Live stats refresh
+setInterval(() => {
+  document.getElementById('total-signals').textContent = Math.floor(240 + Math.random() * 30);
+}, 30000);
+</script>
+
+</body>
+</html>

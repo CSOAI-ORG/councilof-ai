@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meok-bio-lookup-mcp"
+version = "0.1.0"
+description = "MEOK Labs biomedical literature + trial lookup MCP. Real PubMed E-utilities (NCBI) + ClinicalTrials.gov v2, Ed25519-signed receipts, hermetic-friendly (live calls in tools, but every test runs offline)."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [
+  {name = "MEOK AI Labs (CSOAI LTD)", email = "csoai@meok.ai"},
+]
+keywords = [
+  "pubmed",
+  "ncbi",
+  "eutils",
+  "clinicaltrials-gov",
+  "biomedical",
+  "research",
+  "mcp",
+  "meok",
+  "ed25519",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Healthcare Industry",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = [
+  "cryptography>=42.0.0",
+  "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+[project.scripts]
+meok-bio-lookup-mcp = "meok_bio_lookup_mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/meok-ai-labs/meok-bio-lookup-mcp"
+Repository = "https://github.com/meok-ai-labs/meok-bio-lookup-mcp"
+Issues = "https://github.com/meok-ai-labs/meok-bio-lookup-mcp/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["meok_bio_lookup_mcp*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q --tb=short"

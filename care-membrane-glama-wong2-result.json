@@ -1,0 +1,77 @@
+{
+  "task": "Submit care-membrane-mcp to Glama registry AND wong2/mcp-list",
+  "date": "2026-06-14",
+  "operator_github_account": "CSOAI-ORG",
+  "package": {
+    "name": "care-membrane-mcp",
+    "version_claimed_live": "1.0.11",
+    "pypi_url": "https://pypi.org/project/care-membrane-mcp/",
+    "github_repo": "https://github.com/CSOAI-ORG/care-membrane-mcp",
+    "github_repo_status": "exists, public, confirmed via gh search"
+  },
+  "artifacts_on_disk": {
+    "glama-ready.json": "/Users/nicholas/clawd/mcp-marketplace/care-membrane-mcp/glama-ready.json",
+    "glama.json": "/Users/nicholas/clawd/mcp-marketplace/care-membrane-mcp/glama.json",
+    "llms.txt": "/Users/nicholas/clawd/mcp-marketplace/care-membrane-mcp/llms.txt"
+  },
+  "targets": [
+    {
+      "name": "glama-ai/registry",
+      "status": "BLOCKED",
+      "reason": "Repository does not exist on GitHub (HTTP 404 from gh api, GraphQL 'Could not resolve', curl 404). Glama-ai org has only 3 public repos (tool-definition-quality-score, lightport, rjsf-validator-cfworker); none is a registry. Glama manages its MCP registry via web UI at https://glama.ai/mcp/servers.",
+      "pr_opened": false,
+      "pr_url": null,
+      "fork_attempted": false,
+      "fork_url": null,
+      "commands_run": [
+        "gh repo view glama-ai/registry 2>&1",
+        "gh api repos/glama-ai/registry",
+        "gh api users/glama-ai",
+        "gh api users/glama-ai/repos (equiv via gh repo list glama-ai)",
+        "curl -sI https://github.com/glama-ai/registry"
+      ],
+      "evidence": {
+        "gh_repo_view": "GraphQL: Could not resolve to a Repository with the name 'glama-ai/registry'. (repository)",
+        "gh_api": "{\"message\":\"Not Found\",\"status\":\"404\"}",
+        "curl": "HTTP/2 404"
+      },
+      "recommended_alternative": "Manual submission via Glama web UI: https://glama.ai/mcp/servers (out of scope of PR-only task brief)."
+    },
+    {
+      "name": "wong2/mcp-list",
+      "status": "BLOCKED",
+      "reason": "Repository does not exist on GitHub (HTTP 404). Successor repo wong2/awesome-mcp-servers exists, but its README explicitly states: 'We do not accept PRs. Please submit your MCP on the website: https://mcpservers.org/submit'. Upstream policy blocks the PR path.",
+      "pr_opened": false,
+      "pr_url": null,
+      "fork_attempted": false,
+      "fork_url": null,
+      "commands_run": [
+        "gh repo view wong2/mcp-list 2>&1",
+        "gh api repos/wong2/mcp-list",
+        "gh api users/wong2",
+        "gh search repos 'mcp-list' --limit 30",
+        "gh repo view wong2/awesome-mcp-servers --json name,description,isPrivate,defaultBranchRef",
+        "gh api repos/wong2/awesome-mcp-servers/contents/README.md",
+        "curl -sI https://github.com/wong2/mcp-list"
+      ],
+      "evidence": {
+        "gh_repo_view": "GraphQL: Could not resolve to a Repository with the name 'wong2/mcp-list'. (repository)",
+        "gh_api": "{\"message\":\"Not Found\",\"status\":\"404\"}",
+        "curl": "HTTP/2 404",
+        "successor_readme_excerpt": "# Awesome MCP Servers\n\n> [!NOTE]\n> We do not accept PRs. Please submit your MCP on the website: https://mcpservers.org/submit"
+      },
+      "recommended_alternative": "Manual submission via the official web form: https://mcpservers.org/submit (out of scope of PR-only task brief)."
+    }
+  ],
+  "summary": {
+    "prs_opened": 0,
+    "prs_blocked": 2,
+    "fake_pr_urls": [],
+    "honest_pr_urls": [],
+    "outcome": "Both target registries are upstream-blocked for the GitHub-PR submission path. No forks, no PRs, no fake URLs. Artifacts are on disk and ready for manual web-form submission if the operator chooses to do that separately."
+  },
+  "files_written": [
+    "/Users/nicholas/clawd/CARE_MEMBRANE_GLAMA_WONG2_PUSH_2026-06-14.md",
+    "/Users/nicholas/clawd/care-membrane-glama-wong2-result.json"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "@openpatent/mcp-server",
+  "version": "1.3.0",
+  "description": "openpatent-mcp — 6-layer cryptographic invention disclosure for AI agents. 'Disclose First. AI Second.'",
+  "homepage": "https://openpatent.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CSOAI-ORG/openpatent-mcp.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "openpatent",
+    "patent",
+    "disclosure",
+    "blockchain",
+    "ai-safety",
+    "sovereignty",
+    "csoai"
+  ],
+  "type": "module",
+  "bin": {
+    "openpatent-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "node test/smoke.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0",
+    "tsx": "^4.19.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "CSOAI <founder@csoai.org>",
+  "publisher": "csoai-org"
+}

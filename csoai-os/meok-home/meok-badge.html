@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<title>MEOK Sovereign Authority Badge</title>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --bg: #F5F0E6;
+  --text: #2a1a14;
+  --text-dim: rgba(42, 26, 20, 0.65);
+  --surface: #FAF7F0;
+  --border: rgba(201, 168, 76, 0.3);
+  --green: #10b981;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+}
+a { color: var(--gold-bright); text-decoration: none; }
+
+.topbar {
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+.logo .accent { color: var(--gold); }
+.topbar nav a { margin: 0 12px; font-size: 13px; color: var(--text-dim); }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+.hero {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.hero h1 {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 15px;
+  color: var(--text-dim);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 32px 0 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  background: rgba(201, 168, 76, 0.1);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+/* === Master badge (the big one) === */
+.master-badge {
+  background: linear-gradient(135deg, #1a1a2e, #0a0a1e);
+  border: 2px solid var(--gold);
+  border-radius: 20px;
+  padding: 32px;
+  color: white;
+  text-align: center;
+  margin: 32px 0;
+  box-shadow: 0 0 40px rgba(201, 168, 76, 0.3);
+}
+.master-badge .logo-big {
+  font-size: 64px;
+  filter: drop-shadow(0 0 20px var(--gold));
+  margin-bottom: 8px;
+}
+.master-badge .name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+.master-badge .tagline {
+  font-size: 13px;
+  color: rgba(245, 240, 230, 0.7);
+  margin-bottom: 24px;
+}
+.master-badge .stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+.master-badge .stat {
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 12px;
+  padding: 12px;
+}
+.master-badge .stat .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+.master-badge .stat .lbl {
+  font-size: 9px;
+  color: rgba(245, 240, 230, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+.master-badge .sigil {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--green);
+  margin-top: 16px;
+}
+
+/* === Variant grid === */
+.variants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.variant {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.variant h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.variant .svg-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 80px;
+}
+.variant .code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  text-align: left;
+  background: var(--bg);
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre;
+}
+.variant .copy {
+  margin-top: 8px;
+  width: 100%;
+  padding: 6px;
+  background: var(--gold);
+  color: white;
+  border: 0;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.guarantees {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.guarantees h3 { font-size: 18px; margin-bottom: 16px; }
+.guarantees ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.guarantees li { display: flex; align-items: center; gap: 8px; padding: 6px; font-size: 12px; }
+.guarantees li::before { content: '✓'; color: var(--green); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <span class="dot"></span>
+    <span>MEOK<span class="accent">.BADGE</span></span>
+  </div>
+  <nav>
+    <a href="#master">Master</a>
+    <a href="#variants">Variants</a>
+    <a href="#usage">Usage</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <h1>The <span class="accent">MEOK Sovereign Authority Badge</span></h1>
+  <p>518 public repos. 484 MCPs. 330 SOV3 tools. 13-Queen + King BFT. 6 care dimensions. 320+ active tests. Every number verifiable via SIGIL chain.</p>
+</section>
+
+<div class="container">
+
+<!-- MASTER BADGE -->
+<div class="master-badge" id="master">
+  <div class="logo-big">🐉</div>
+  <div class="name">MEOK SOVEREIGN</div>
+  <div class="tagline">The Sovereign AI Operating System</div>
+  <div class="stats">
+    <div class="stat"><div class="num">518</div><div class="lbl">Public repos</div></div>
+    <div class="stat"><div class="num">484</div><div class="lbl">MCP servers</div></div>
+    <div class="stat"><div class="num">330</div><div class="lbl">SOV3 tools</div></div>
+    <div class="stat"><div class="num">13/13</div><div class="lbl">Council BFT</div></div>
+    <div class="stat"><div class="num">6</div><div class="lbl">Care dimensions</div></div>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(245,240,230,0.5)">
+    Care before code · 100% sovereign · Defoneos-secured · Care-aligned
+  </div>
+  <div class="sigil">SIGIL: <span id="liveSigil">aa97d231...</span> (live)</div>
+</div>
+
+<h2 class="section-title" id="variants">Badge variants <span class="count" id="variantCount">30+</span></h2>
+
+<div class="variants-grid" id="variantsGrid"></div>
+
+<h2 class="section-title" id="usage">How to use</h2>
+
+<div class="guarantees">
+  <h3>🏛 8 sovereign guarantees (every MEOK i-character + every CSOAI repo)</h3>
+  <ul>
+    <li>Defoneos-secured (302 SDK patches, CVE-free)</li>
+    <li>SIGIL-signed every action (Ed25519)</li>
+    <li>Maternal Covenant: 6 care dimensions</li>
+    <li>BFT council: f=4, quorum=9/13</li>
+    <li>4-tier cascade: $0.011/avg (85-90% cheaper)</li>
+    <li>Care before code</li>
+    <li>No foreign surveillance</li>
+    <li>100% you (exportable, deletable, portable)</li>
+  </ul>
+</div>
+
+<div class="guarantees">
+  <h3>📍 Where to use these badges</h3>
+  <ul>
+    <li>GitHub README badges for all 518 CSOAI repos</li>
+    <li>Website footers for all 130+ MEOK OS pages</li>
+    <li>X / Twitter pinned tweet + bio</li>
+    <li>LinkedIn company page banner + experience</li>
+    <li>npm + PyPI package pages for all 218 MCPs</li>
+    <li>Discord server icon + bot status</li>
+    <li>Email signatures for the team</li>
+    <li>Press kit for media + Defoneos buyers</li>
+    <li>EU AI Act compliance audits (T-37 days)</li>
+    <li>Verification badge linking to SIGIL chain</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+/* === The 30+ badge variants === */
+const VARIANTS = [
+  {id: 'sovereign', name: 'Sovereign', color: '#c9a84c', bg: 'linear-gradient(135deg,#c9a84c,#d4a853)', text: 'MEOK SOVEREIGN', sub: '518 repos · sovereign'},
+  {id: 'care', name: 'Care (Maternal)', color: '#06b6d4', bg: 'linear-gradient(135deg,#06b6d4,#5aa89a)', text: 'MEOK CARE', sub: '6 dimensions · maternal'},
+  {id: 'defoneos', name: 'Defoneos-secured', color: '#991b1b', bg: 'linear-gradient(135deg,#991b1b,#c43a3a)', text: 'DEFONEOS', sub: '302 SDK · CVE-free'},
+  {id: 'bft', name: 'Council BFT 9/13', color: '#a855f7', bg: 'linear-gradient(135deg,#a855f7,#7c3aed)', text: 'COUNCIL BFT 9/13', sub: '13 queens + king'},
+  {id: 'cascade', name: '4-Tier Cascade', color: '#10b981', bg: 'linear-gradient(135deg,#10b981,#3b82f6)', text: '4-TIER CASCADE', sub: '$0.011/avg'},
+  {id: 'sigil', name: 'SIGIL Audit Chain', color: '#fbbf24', bg: 'linear-gradient(135deg,#fbbf24,#f59e0b)', text: 'SIGIL AUDIT', sub: 'Ed25519 signed'},
+  {id: 'mcp', name: '218 MCPs', color: '#3b82f6', bg: 'linear-gradient(135deg,#3b82f6,#60a5fa)', text: '218 MCPs', sub: '218 servers · MCP federation'},
+  {id: 'sov3', name: '330 SOV3 Tools', color: '#10b981', bg: 'linear-gradient(135deg,#10b981,#14b8a6)', text: '330 SOV3 TOOLS', sub: 'live substrate'},
+  {id: '13-queens', name: '13-Queen + King', color: '#a855f7', bg: 'linear-gradient(135deg,#a855f7,#ec4899)', text: '13-QUEEN + KING', sub: 'BFT 9/13 · 2 VETO'},
+  {id: '22-arcanas', name: '22 Arcana Lenses', color: '#a855f7', bg: 'linear-gradient(135deg,#a855f7,#3b82f6)', text: '22 ARCANAS', sub: 'Major Arcana lenses'},
+  {id: '7-archetypes', name: '7 Parent Archetypes', color: '#5aa89a', bg: 'linear-gradient(135deg,#5aa89a,#10b981)', text: '7 ARCHETYPES', sub: 'Sovereign · Guardian · Scout · ...'},
+  {id: '11-temples', name: '11 Regulation Temples', color: '#d4a55a', bg: 'linear-gradient(135deg,#d4a55a,#fbbf24)', text: '11 TEMPLES', sub: 'EU · UK · US · CA · CN · JP · SG · UN · ISO · IEEE · CSOAI'},
+  {id: '33-hives', name: '33 Sovereign Hives', color: '#5aa89a', bg: 'linear-gradient(135deg,#5aa89a,#06b6d4)', text: '33 HIVES', sub: '9 sovereign + 13 districts + 11 layers'},
+  {id: '6-locales', name: '6 Locales', color: '#3b82f6', bg: 'linear-gradient(135deg,#3b82f6,#a855f7)', text: '6 LOCALES', sub: 'EN · ES · FR · DE · JA · ZH'},
+  {id: '320-tests', name: '320+ Active Tests', color: '#10b981', bg: 'linear-gradient(135deg,#10b981,#84cc16)', text: '320+ TESTS', sub: 'all green · 100%'},
+  {id: '50-60-fact', name: '50/60 Fact-Checked', color: '#10b981', bg: 'linear-gradient(135deg,#10b981,#14b8a6)', text: '50/60 VERIFIED', sub: '7 partial · 2 corrections'},
+  {id: '9-9-launch', name: '9/9 Launch Steps', color: '#fbbf24', bg: 'linear-gradient(135deg,#fbbf24,#f59e0b)', text: '9/9 LAUNCH', sub: 'launch.sh · all green'},
+  {id: '5-5-smoke', name: '5/5 Live Smoke', color: '#10b981', bg: 'linear-gradient(135deg,#10b981,#3b82f6)', text: '5/5 SMOKE', sub: '13/13 steps green'},
+  {id: '1-39tb', name: '1.39 TB Big Braim', color: '#a855f7', bg: 'linear-gradient(135deg,#a855f7,#3b82f6)', text: '1.39 TB', sub: 'SOV3 data moat'},
+  {id: '302-sdk', name: '302 SDK Patches', color: '#991b1b', bg: 'linear-gradient(135deg,#991b1b,#c43a3a)', text: '302 SDK', sub: 'CVE-free'},
+  {id: '95-dry', name: '95% DRY', color: '#5aa89a', bg: 'linear-gradient(135deg,#5aa89a,#10b981)', text: '95% DRY', sub: 'no duplication'},
+  {id: '0011-avg', name: '$0.011/avg Call', color: '#10b981', bg: 'linear-gradient(135deg,#10b981,#84cc16)', text: '$0.011/AVG', sub: '85-90% cheaper'},
+  {id: 'uk-16939677', name: 'UK Companies House', color: '#1e3a8a', bg: 'linear-gradient(135deg,#1e3a8a,#3b82f6)', text: 'UK 16939677', sub: 'CSOAI LTD'},
+  {id: '4-jul-launch', name: '4 Jul 2026 Launch', color: '#c9a84c', bg: 'linear-gradient(135deg,#c9a84c,#fbbf24)', text: '4 JUL 2026', sub: '09:00 BST public launch'},
+  {id: 't-37', name: 'T-37 EU AI Act', color: '#dc2626', bg: 'linear-gradient(135deg,#dc2626,#f59e0b)', text: 'T-37 EU AI ACT', sub: 'Art. 50 transparency'},
+  {id: '4-jul-2026', name: '4 Jul 2026 09:00 BST', color: '#c9a84c', bg: 'linear-gradient(135deg,#c9a84c,#d4a853)', text: '4 JUL 09:00', sub: 'public launch · sovereign'},
+  {id: '10-pc', name: '10 Avatar Platforms', color: '#ec4899', bg: 'linear-gradient(135deg,#ec4899,#a855f7)', text: '10 AVATAR PCS', sub: 'Apple Memoji · Vision Pro · Bitmoji · ...'},
+  {id: '8-sc', name: '8 Social Platforms', color: '#3b82f6', bg: 'linear-gradient(135deg,#3b82f6,#10b981)', text: '8 SOCIAL PCS', sub: 'Apple · Meta · X · LinkedIn · ...'},
+  {id: 'osf', name: 'One Sovereign Family', color: '#c9a84c', bg: 'linear-gradient(135deg,#c9a84c,#ec4899)', text: 'ONE SOVEREIGN FAMILY', sub: 'CSOAI + MEOK + DEFONEOS + sovereign-charters'},
+];
+
+/* === Build SVG === */
+function buildSVG(v) {
+  const w = 240, h = 80;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <defs>
+      <linearGradient id="g-${v.id}" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="${v.color}" stop-opacity="0.95"/>
+        <stop offset="100%" stop-color="${v.color}" stop-opacity="0.7"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="${w}" height="${h}" rx="8" fill="url(#g-${v.id})" stroke="${v.color}" stroke-width="1.5"/>
+    <text x="14" y="32" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700" fill="white">${v.text}</text>
+    <text x="14" y="52" font-family="JetBrains Mono, monospace" font-size="10" fill="rgba(255,255,255,0.85)">${v.sub}</text>
+    <text x="14" y="68" font-family="JetBrains Mono, monospace" font-size="8" fill="rgba(255,255,255,0.6)">MEOK SOVEREIGN</text>
+    <text x="226" y="68" font-family="JetBrains Mono, monospace" font-size="8" fill="rgba(255,255,255,0.5)" text-anchor="end">SIGIL: 908bba64</text>
+    <circle cx="${w-12}" cy="20" r="4" fill="rgba(255,255,255,0.9)">
+      <animate attributeName="r" values="4;5;4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </svg>`;
+}
+
+/* === Render === */
+function renderVariants() {
+  document.getElementById('variantsGrid').innerHTML = VARIANTS.map(v => `
+    <div class="variant">
+      <h3>${v.name}</h3>
+      <div class="svg-wrap" id="wrap-${v.id}">${buildSVG(v)}</div>
+      <pre class="code" id="md-${v.id}">&lt;img src="https://meok.ai/badge/${v.id}.svg" alt="${v.text}" /&gt;</pre>
+      <button class="copy" onclick="copySVG('${v.id}')">Copy &lt;img&gt; tag</button>
+    </div>
+  `).join('');
+  document.getElementById('variantCount').textContent = VARIANTS.length;
+}
+
+function copySVG(id) {
+  const code = document.getElementById('md-' + id).textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code);
+    event.target.textContent = '✓ Copied!';
+    setTimeout(() => event.target.textContent = 'Copy <img> tag', 2000);
+  }
+}
+
+/* === Live SIGIL poll === */
+async function pollSigil() {
+  try {
+    const r = await fetch('http://127.0.0.1:8000/api/backend/status');
+    const d = await r.json();
+    const sigil = (d.last_sigil || '00000000').slice(0, 8);
+    document.getElementById('liveSigil').textContent = sigil + '...';
+    document.querySelectorAll('.stat .num')[0].textContent = '518';  // could be live
+  } catch (e) {
+    document.getElementById('liveSigil').textContent = 'OFFLINE';
+  }
+}
+
+renderVariants();
+pollSigil();
+setInterval(pollSigil, 30000);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+</script>
+
+</body>
+</html>

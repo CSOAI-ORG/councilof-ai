@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=64.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "meok-sovereign-shared-core"
+version = "1.0.0"
+description = "MEOK Sovereign Shared Core — SOV33³ substrate helpers (care-floor, BFT-33, Ed25519 SIGIL, A2A card, Article 50 passport)"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "labs@meok.ai"}]
+keywords = ["mcp", "sov33", "sovereign", "care-floor", "bft", "sigil", "ed25519", "a2a", "article-50"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "cryptography>=41.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/CSOAI-ORG/meok-sovereign-shared-core"
+
+[tool.setuptools.packages.find]
+where = ["."]

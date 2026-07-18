@@ -1,0 +1,59 @@
+{
+  "ts": "2026-07-16T03:02:33.065749+00:00",
+  "roster": [
+    {
+      "name": "Kimi-K2",
+      "params_T": 1.03,
+      "license": "check (vendor: Moonshot)",
+      "host_GPUs_int4": 7,
+      "path1_api": "kimi native API + NVIDIA NIM",
+      "path1_reachable_today": true,
+      "path2_modal_dollars_per_hr_est": "~$15-25"
+    },
+    {
+      "name": "DeepSeek-V3",
+      "params_B": 684,
+      "license": "DeepSeek (research-friendly)",
+      "host_GPUs_int4": 5,
+      "path1_api": "DeepSeek native API + NVIDIA NIM",
+      "path1_reachable_today": true,
+      "path2_modal_dollars_per_hr_est": "~$10-18"
+    },
+    {
+      "name": "GLM-4.5",
+      "params_B": 358,
+      "license": "MIT  \u2190 cleanest license, cheapest frontier host",
+      "host_GPUs_int4": 3,
+      "path1_api": "GLM native API + NVIDIA NIM",
+      "path1_reachable_today": true,
+      "path2_modal_dollars_per_hr_est": "~$6-12 (cheapest *frontier* host)"
+    }
+  ],
+  "fork": "PATH 1 (CALL today) vs PATH 2 (HOST Modal)",
+  "path1_shim": {
+    "name": "sov33_path1_shim.py",
+    "purpose": "govern top-3 frontier models via API, zero GPU spend",
+    "components": [
+      "1. Care-gate wrapper (Venturi throat, Care Floor 0.95)",
+      "2. SIGIL Ed25519 signer on every response",
+      "3. Provider router (NVIDIA NIM / DeepSeek / Kimi / GLM)",
+      "4. Fallback chain: GLM-4.5 (cheapest) \u2192 DeepSeek-V3 \u2192 Kimi-K2",
+      "5. BFT-33 vote on every sovereign action (council decides which provider)",
+      "6. Audit trail: provider, model, prompt_hash, response_hash, sigil, ts"
+    ],
+    "cost_per_M_tokens": {
+      "GLM-4.5": "$0.15-0.50",
+      "DeepSeek-V3": "$0.50-1.00",
+      "Kimi-K2": "$1.00-2.00",
+      "NVIDIA NIM": "per-request, varies"
+    },
+    "providers_reachable_today": {
+      "NVIDIA NIM": "CONNECTED (per settled map)",
+      "DeepSeek API": "needs key (Sir to add)",
+      "Kimi API": "needs key (Sir to add)",
+      "GLM API": "needs key (Sir to add)"
+    }
+  },
+  "charter": "df65a6585cf6a686cbfd881f56c04447056e2551e7c04db57a80543521022054",
+  "care_floor": 0.95
+}

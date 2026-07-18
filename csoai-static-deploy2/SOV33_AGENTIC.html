@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🤖 SOV33 Agentic — Tools, Planning, Action</title>
+<meta name="description" content="SOV33 agentic layer — autonomous sovereign agents governed by BFT council, care-gated, SIGIL-signed. Routes across 61 open models with measured error-correlation selection.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM, governance, Byzantine Fault Tolerant">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);padding:1.5rem;line-height:1.55;max-width:1200px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.2rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2rem}
+  h3{color:var(--accent);font-size:1.2rem;margin-top:1.5rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.8em;line-height:1.45}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .tool{background:var(--bg);padding:1rem;border-radius:6px;border:1px solid var(--rule);margin:.5rem 0;display:flex;justify-content:space-between;align-items:center}
+  .tool .name{color:var(--accent2);font-weight:bold}
+  button{background:var(--accent);color:#0a0e1a;border:none;padding:.6rem 1rem;border-radius:6px;font-weight:bold;cursor:pointer}
+  textarea,input{width:100%;padding:.7rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;font-family:inherit;margin:.5rem 0}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_AGENTIC.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🤖 SOV33 Agentic</h1>
+  <p class="meta">Tools · Planning · Action. Governed AI that can actually DO things. 12 Jul 2026.</p>
+  <p><a href="SOV33_HERO.html">← SOV33 Hub</a></p>
+</header>
+
+<h2>What Agentic Means for SOV33</h2>
+
+<div class="card">
+  <blockquote>Most AI is <strong>chat</strong> — it answers questions. <strong>Agentic AI</strong> ACTS: uses tools, plans steps, executes, returns results.</blockquote>
+  <p>SOV33's agentic layer is governed by the same care-floor 0.95 + Article 0 + 12 Sovereign Pillars as everything else. Every action is SIGIL-signed.</p>
+</div>
+
+<h2>Available Tools (per OWEM, all SIGIL-bound)</h2>
+
+<div id="tools-list">Loading...</div>
+
+<h2>Try Agentic SOV33</h2>
+
+<div class="card">
+  <h3>Task: "Find sovereign AI papers and summarize them"</h3>
+  <p>SOV33 will plan: 1) search, 2) read, 3) summarize. Each step SIGIL-signed.</p>
+  <textarea id="agent-task" rows="3">Find the top 3 sovereign AI papers from 2026 and write a 2-sentence summary of each</textarea>
+  <button onclick="runAgent()">Run Agent</button>
+  <div id="agent-output" style="margin-top:1rem"></div>
+</div>
+
+<h2>Governance Layer (the SOV33 advantage)</h2>
+
+<div class="card">
+  <h3>Why agentic SOV33 is different</h3>
+  <table style="border-collapse:collapse;width:100%;font-size:.9em">
+    <tr><th>Aspect</th><th>Generic agentic AI</th><th>SOV33 Agentic</th></tr>
+    <tr><td>Tool use</td><td>Permissive</td><td><span class="pill sigil">Care-floor gated</span></td></tr>
+    <tr><td>Action logging</td><td>Internal</td><td><span class="pill sigil">Ed25519 SIGIL</span></td></tr>
+    <tr><td>Side effects</td><td>Undoable</td><td><span class="pill warn">12 Sovereign Pillars</span></td></tr>
+    <tr><td>Planning depth</td><td>Variable</td><td><span class="pill">5-layer + 12-dim</span></td></tr>
+    <tr><td>Failure mode</td><td>Error message</td><td><span class="pill gold">BFT-33 vote</span></td></tr>
+    <tr><td>Memory</td><td>Per-session</td><td><span class="pill sigil">Sovereign memory</span></td></tr>
+  </table>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🤖 SOV33 Agentic</strong> · 12 Jul 2026 · Hermes lane<br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+// Tool list (placeholder - real implementation would query /api/tools)
+const TOOLS = [
+  {name: 'web_search', desc: 'Search the web for information', owem: 'general'},
+  {name: 'file_read', desc: 'Read a file from the sovereign file system', owem: 'compliance'},
+  {name: 'file_write', desc: 'Write a file (SIGIL-signed)', owem: 'compliance'},
+  {name: 'sov33_ask', desc: 'Ask the sovereign brain', owem: 'all'},
+  {name: 'kaggle_search', desc: 'Find Kaggle competitions', owem: 'general'},
+  {name: 'kaggle_submit', desc: 'Submit predictions to Kaggle', owem: 'general'},
+  {name: 'memory_read', desc: 'Read sovereign memory', owem: 'voice'},
+  {name: 'memory_write', desc: 'Write to sovereign memory', owem: 'voice'},
+  {name: 'sigil_verify', desc: 'Verify a SIGIL signature', owem: 'compliance'},
+  {name: 'owem_call', desc: 'Call a specific OWEM directly', owem: 'all'},
+];
+
+function renderTools() {
+  let html = '<div class="card">';
+  TOOLS.forEach(t => {
+    html += `<div class="tool">
+      <div>
+        <span class="name">${t.name}</span>
+        <span class="meta"> · ${t.desc}</span>
+      </div>
+      <span class="pill">OWEM: ${t.owem}</span>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('tools-list').innerHTML = html;
+}
+renderTools();
+
+async function runAgent() {
+  const task = document.getElementById('agent-task').value;
+  const out = document.getElementById('agent-output');
+  out.innerHTML = 'Planning task: ' + task + '...<br><br>Step 1: Planning...<br>Step 2: Searching sovereign knowledge...<br>Step 3: Reading sources...<br>Step 4: Summarizing...<br><br><em>(In production, each step would SIGIL-sign)</em>';
+
+  try {
+    const r = await fetch(API + '/api/orchestrate', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: 'Agentic task: ' + task + '. Plan: (1) search knowledge, (2) read sources, (3) summarize. Output: structured response.', citizen: 'general'})
+    });
+    const d = await r.json();
+    out.innerHTML = '<div class="card gold"><strong>Result:</strong><br><br>' + (d.say || d.error || 'No response') + '<br><br><span class="meta">Brain: ' + d.brain + ' · SIGIL: ' + (d.sovereign_provenance?.sigil_digest?.slice(0,16) || 'pending') + '</span></div>';
+  } catch (e) {
+    out.innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>';
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 Sovereign Edge CDN — 8 Regions · Multi-Region Routing</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #60a5fa}
+.section h2{color:#60a5fa;margin-bottom:1rem}
+/* Globe */
+.globe{background:#02060f;padding:2rem;border-radius:50%;width:380px;height:380px;margin:1rem auto;position:relative;border:2px solid #fbbf24;box-shadow:0 0 60px rgba(251,191,36,0.3)}
+.region-dot{position:absolute;width:20px;height:20px;background:#10b981;border-radius:50%;border:2px solid #fff;cursor:pointer;transform:translate(-50%,-50%);transition:all .3s;animation:pulse 2s infinite}
+.region-dot:hover{transform:translate(-50%,-50%) scale(2);background:#fbbf24;animation:none}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.7)}50%{box-shadow:0 0 0 20px rgba(16,185,129,0)}}
+.region-label{position:absolute;font-size:.7rem;color:#fbbf24;font-weight:bold;transform:translate(-50%,30px);white-space:nowrap;font-family:monospace}
+/* Region grid */
+.regions-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem;margin:1rem 0}
+.region-card{background:#0a0a0a;padding:1rem;border-radius:6px;border-left:3px solid #60a5fa;font-family:monospace;font-size:.78rem;transition:all .2s;cursor:pointer}
+.region-card.primary{border-left-color:#10b981;background:rgba(16,185,129,0.05)}
+.region-card.allied{border-left-color:#60a5fa}
+.region-card.research{border-left-color:#fbbf24}
+.region-card:hover{transform:translateX(2px);border-color:#fbbf24}
+.region-card .region-id{color:#60a5fa;font-weight:bold;font-size:.9rem}
+.region-card.primary .region-id{color:#10b981}
+.region-card.research .region-id{color:#fbbf24}
+.region-card .cities{color:#aaa;font-size:.7rem;margin:.3rem 0}
+.region-card .edges{color:#fbbf24;font-size:.7rem}
+.region-card .tier{display:inline-block;background:rgba(251,191,36,0.1);padding:.1rem .4rem;border-radius:3px;font-size:.7rem;color:#fbbf24;margin-top:.3rem}
+/* Edges */
+.edges-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.5rem;margin:1rem 0}
+.edge-card{background:#0a0a0a;padding:.7rem;border-radius:4px;border-left:3px solid #10b981;font-family:monospace;font-size:.7rem}
+.edge-card.unhealthy{border-left-color:#ef4444;opacity:0.6}
+.edge-card .name{color:#10b981;font-weight:bold;margin-bottom:.2rem}
+.edge-card.unhealthy .name{color:#ef4444}
+.edge-card .meta{color:#888;font-size:.65rem}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.demo-row button.red{background:#ef4444;color:#fff}
+.demo-row button.green{background:#10b981;color:#000}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/edge.html">Edge CDN</a>
+<a href="/sov-search.html">Search</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🌐 Sovereign Edge CDN</h1>
+<p>8 sovereign regions · 66 edges · multi-region routing · cache purge · multicast. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val" id="totalRegions">8</div><div class="lbl">Regions</div></div>
+<div class="stat blue"><div class="val" id="totalEdges">0</div><div class="lbl">Edges</div></div>
+<div class="stat purple"><div class="val" id="healthyEdges">0</div><div class="lbl">Healthy</div></div>
+<div class="stat"><div class="val" id="totalRequests">0</div><div class="lbl">Total Requests</div></div>
+<div class="stat green"><div class="val">66</div><div class="lbl">Edge Capacity</div></div>
+<div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🌍 Sovereign Globe (8 Regions)</h2>
+<p style="color:#aaa;margin-bottom:1rem">Click any region to route. Hover for details.</p>
+<div class="globe">
+<div class="region-dot" style="left:48%;top:35%" onclick="doRoute(51.5,-0.1)"></div>
+<div class="region-label">UK</div>
+<div class="region-dot" style="left:50%;top:38%" onclick="doRoute(50.8,4.4)"></div>
+<div class="region-label">EU</div>
+<div class="region-dot" style="left:22%;top:42%" onclick="doRoute(38.9,-77.0)"></div>
+<div class="region-label">US</div>
+<div class="region-dot" style="left:85%;top:75%" onclick="doRoute(-35.3,149.1)"></div>
+<div class="region-label">AU</div>
+<div class="region-dot" style="left:80%;top:45%" onclick="doRoute(35.7,139.7)"></div>
+<div class="region-label">AS</div>
+<div class="region-dot" style="left:30%;top:75%" onclick="doRoute(-23.5,-46.6)"></div>
+<div class="region-label">SA</div>
+<div class="region-dot" style="left:55%;top:65%" onclick="doRoute(-1.3,36.8)"></div>
+<div class="region-label">AF</div>
+<div class="region-dot" style="left:50%;top:90%" onclick="doRoute(-75.3,0.1)"></div>
+<div class="region-label">ANT</div>
+</div>
+</div>
+
+<div class="section">
+<h2>🌍 8 Sovereign Regions</h2>
+<p style="color:#aaa;margin-bottom:1rem">Each region has dedicated sovereign edges. Care Floor verified.</p>
+<div class="regions-grid" id="regionsGrid"></div>
+</div>
+
+<div class="section">
+<h2>📡 Edge Nodes (66 capacity)</h2>
+<p style="color:#aaa;margin-bottom:1rem">Live edge nodes. Some unhealthy for demo (will be re-routed).</p>
+<div class="edges-grid" id="edgesGrid"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the CDN MCP</h2>
+<div class="demo">
+<h3>1. Register Edge Node</h3>
+<div class="demo-row">
+<input type="text" id="edgeId" placeholder="edge_id" value="edge-uk-london-1">
+<select id="edgeRegion">
+<option>UK</option><option>EU</option><option>US</option><option>AU</option>
+<option>AS</option><option>SA</option><option>AF</option><option>ANT</option>
+</select>
+<input type="text" id="edgeLocation" placeholder="location" value="London">
+<button onclick="doRegister()">+ Register</button>
+</div>
+<div class="result" id="registerResult">Click "Register" to add an edge node.</div>
+</div>
+
+<div class="demo">
+<h3>2. Route to Nearest Region</h3>
+<div class="demo-row">
+<input type="number" id="clientLat" placeholder="latitude" value="51.5" step="0.1">
+<input type="number" id="clientLon" placeholder="longitude" value="-0.1" step="0.1">
+<input type="text" id="contentPath" placeholder="content" value="/index.html">
+<button onclick="doRouteFromInputs()">🚦 Route</button>
+</div>
+<div class="result" id="routeResult">Click "Route" to find nearest region.</div>
+</div>
+
+<div class="demo">
+<h3>3. Purge Cache</h3>
+<div class="demo-row">
+<select id="purgeEdge"></select>
+<input type="text" id="purgeContent" placeholder="content" value="/old-page.html">
+<button class="red" onclick="doPurge()">🚫 Purge</button>
+</div>
+<div class="result" id="purgeResult">Click "Purge" to clear cached content.</div>
+</div>
+
+<div class="demo">
+<h3>4. Multicast Content</h3>
+<div class="demo-row">
+<input type="text" id="multicastContent" placeholder="content" value="/sovereign-launch.html">
+<input type="text" id="multicastRegions" placeholder="regions (UK,EU,US or empty for all)" value="UK,EU,US">
+<button class="green" onclick="doMulticast()">📡 Multicast</button>
+</div>
+<div class="result" id="multicastResult">Click "Multicast" to push to multiple regions.</div>
+</div>
+
+<div class="demo">
+<h3>5. CDN Status</h3>
+<div class="demo-row">
+<button onclick="doStatus()">📊 Status</button>
+</div>
+<div class="result" id="statusResult">Click "Status" for full CDN health.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign CDN Doctrine</h2>
+<blockquote>"8 sovereign regions. 66 edges. Multi-region routing.<br>The dragon sovereigns the network. Care Floor 0.95. Sovereign by construction."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 115 sovereign MCPs (was 113, +2 search + cdn) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const REGIONS = {
+  "UK": {name:"United Kingdom", lat:51.5, lon:-0.1, cities:["London","Cambridge","Edinburgh"], edges:12, tier:"primary"},
+  "EU": {name:"European Union", lat:50.8, lon:4.4, cities:["Paris","Berlin","Amsterdam","Stockholm","Helsinki"], edges:18, tier:"primary"},
+  "US": {name:"United States", lat:38.9, lon:-77.0, cities:["DC","NYC","SF","Austin"], edges:14, tier:"primary"},
+  "AU": {name:"Australia", lat:-35.3, lon:149.1, cities:["Canberra","Sydney"], edges:6, tier:"allied"},
+  "AS": {name:"Asia (Japan/Korea/Singapore)", lat:35.7, lon:139.7, cities:["Tokyo","Seoul","Singapore"], edges:8, tier:"allied"},
+  "SA": {name:"South America", lat:-23.5, lon:-46.6, cities:["São Paulo","Buenos Aires"], edges:4, tier:"allied"},
+  "AF": {name:"Africa", lat:-1.3, lon:36.8, cities:["Nairobi","Cape Town"], edges:3, tier:"allied"},
+  "ANT": {name:"Antarctic Research", lat:-75.3, lon:0.1, cities:["McMurdo"], edges:1, tier:"research"},
+};
+
+let edges = [];
+let totalRequests = 0;
+
+function initEdges() {
+  // Pre-populate some healthy + 2 unhealthy
+  Object.entries(REGIONS).forEach(([region, info]) => {
+    const healthy = Math.min(2, info.edges);
+    for (let i = 1; i <= healthy; i++) {
+      edges.push({
+        edge_id: `edge-${region.toLowerCase()}-${i}`,
+        region, location: info.cities[0],
+        healthy: i !== 2 || region !== "AF",  // Mark AF's 2nd as unhealthy
+        cache_size_mb: 1024, requests: 0
+      });
+    }
+  });
+  // Add some traffic
+  edges.forEach(e => {
+    e.requests = Math.floor(Math.random() * 5000);
+    totalRequests += e.requests;
+  });
+}
+
+function renderRegions() {
+  document.getElementById("regionsGrid").innerHTML = Object.entries(REGIONS).map(([id, info]) => `
+    <div class="region-card ${info.tier}" onclick="doRoute(${info.lat},${info.lon})">
+      <div class="region-id">${id}</div>
+      <div>${info.name}</div>
+      <div class="cities">${info.cities.join(", ")}</div>
+      <div class="edges">${info.edges} edges · ${info.cities.length} cities</div>
+      <span class="tier">${info.tier.toUpperCase()}</span>
+    </div>
+  `).join("");
+}
+
+function renderEdges() {
+  const totalEdges = edges.length;
+  const healthyEdges = edges.filter(e => e.healthy).length;
+  document.getElementById("totalEdges").textContent = totalEdges;
+  document.getElementById("healthyEdges").textContent = healthyEdges;
+  document.getElementById("totalRequests").textContent = totalRequests;
+  document.getElementById("edgesGrid").innerHTML = edges.map(e => `
+    <div class="edge-card ${e.healthy ? "" : "unhealthy"}">
+      <div class="name">${e.healthy ? "✓" : "✗"} ${e.edge_id}</div>
+      <div class="meta">${e.location} · ${e.region} · ${e.cache_size_mb}MB</div>
+      <div class="meta">requests: ${e.requests}</div>
+    </div>
+  `).join("");
+  // Update purge select
+  document.getElementById("purgeEdge").innerHTML = edges.map(e => `<option value="${e.edge_id}">${e.edge_id} ${e.healthy ? "✓" : "✗"}</option>`).join("");
+}
+
+function findNearestRegion(lat, lon) {
+  let best = null, bestDist = Infinity;
+  for (const [id, info] of Object.entries(REGIONS)) {
+    const d = ((info.lat - lat) ** 2 + (info.lon - lon) ** 2) ** 0.5;
+    if (d < bestDist) {
+      bestDist = d;
+      best = {id, ...info};
+    }
+  }
+  return {region: best, distance: bestDist};
+}
+
+function doRoute(lat, lon) {
+  const result = findNearestRegion(lat, lon);
+  const edge = edges.find(e => e.region === result.region.id && e.healthy);
+  if (edge) {
+    edge.requests++;
+    totalRequests++;
+  }
+  const r = document.getElementById("routeResult");
+  r.textContent = `🚦 cdn_route(lat=${lat}, lon=${lon})
+
+Client: ${lat}, ${lon}
+Routed to: ${result.region.id} (${result.region.name})
+Edge: ${edge ? edge.edge_id : "no healthy edge"}
+Distance: ${result.distance.toFixed(2)} degrees
+Content: /index.html
+Doctrine: Sovereign nearest-region routing. Care Floor 0.95.`;
+  renderEdges();
+}
+
+function doRouteFromInputs() {
+  const lat = parseFloat(document.getElementById("clientLat").value);
+  const lon = parseFloat(document.getElementById("clientLon").value);
+  doRoute(lat, lon);
+}
+
+function doRegister() {
+  const id = document.getElementById("edgeId").value;
+  const region = document.getElementById("edgeRegion").value;
+  const loc = document.getElementById("edgeLocation").value;
+  edges.push({edge_id: id, region, location: loc, healthy: true, cache_size_mb: 1024, requests: 0});
+  renderEdges();
+  document.getElementById("registerResult").textContent = `+ cdn_register("${id}", "${region}", "${loc}")
+
+Edge ID: ${id}
+Region: ${region}
+Location: ${loc}
+Status: ✓ healthy
+Total edges: ${edges.length}
+Doctrine: Sovereign edge registered.`;
+}
+
+function doPurge() {
+  const id = document.getElementById("purgeEdge").value;
+  const content = document.getElementById("purgeContent").value;
+  document.getElementById("purgeResult").textContent = `🚫 cdn_purge("${id}", "${content}")
+
+Edge: ${id}
+Purged: ${content}
+Doctrine: Sovereign cache purged.`;
+}
+
+function doMulticast() {
+  const content = document.getElementById("multicastContent").value;
+  const regionsStr = document.getElementById("multicastRegions").value;
+  let targetRegions = [];
+  if (regionsStr.trim()) targetRegions = regionsStr.split(",").map(s => s.trim());
+  else targetRegions = Object.keys(REGIONS);
+  const targetEdges = edges.filter(e => targetRegions.includes(e.region) && e.healthy);
+  document.getElementById("multicastResult").textContent = `📡 cdn_multicast("${content}", regions="${targetRegions.join(",")}")
+
+Content: ${content}
+Regions: ${targetRegions.length}
+Edges reached: ${targetEdges.length}
+Doctrine: Sovereign multicast. Care Floor 0.95.`;
+}
+
+function doStatus() {
+  const total = edges.length;
+  const healthy = edges.filter(e => e.healthy).length;
+  document.getElementById("statusResult").textContent = `📊 cdn_status()
+
+Total regions: 8
+Total edges: ${total}
+Healthy edges: ${healthy}
+Total requests: ${totalRequests}
+Regions: UK · EU · US · AU · AS · SA · AF · ANT
+Doctrine: Sovereign CDN. Care Floor 0.95.`;
+}
+
+initEdges();
+renderRegions();
+renderEdges();
+</script>
+
+</body>
+</html>

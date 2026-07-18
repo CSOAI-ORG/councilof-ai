@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.3.0",
+  "name": "SOV33",
+  "description": "Sovereign Open World Emergence Model - governed AI substrate with its own trainable weights, 12 Sovereign Pillars as specialist workers, BFT-33 council, Ed25519 SIGIL on every response, SWAP-persistent memory",
+  "version": "1.0.0",
+  "provider": {
+    "name": "CSOAI Ltd",
+    "url": "https://csoai.org",
+    "did": "did:csoai:nicholas-001",
+    "company_house": "UK 16939677"
+  },
+  "founder": "Nicholas Templeman",
+  "endpoints": {
+    "base": "https://csoai.org",
+    "chat": "/api/orchestrate",
+    "openai_compat": "/v1/chat/completions",
+    "models": "/v1/models",
+    "sovereign_brain": "/api/sovereign-brain/v2",
+    "fluid_pyramid": "/api/fluid-pyramid",
+    "inner_owems": "/api/inner-owems",
+    "charter": "/api/charter",
+    "stats": "/api/stats"
+  },
+  "capabilities": [
+    "text_chat", "reasoning_cot", "code_generation", "memory", "tools",
+    "embed_widget", "voice_alexa_siri", "kaggle_submission", "amica_backend",
+    "sovereign_brain_v2", "mamba_sovereign_attention", "world_model_v2", "fluid_pyramid"
+  ],
+  "models": {
+    "primary": "Qwen3-0.6B + LoRA rank=32 (sovereign-owned)",
+    "sovereign_brain_v2": "~605M params, 9.18M trainable",
+    "sovereign_brain_1_5b": "coming (Qwen3-1.5B + LoRA rank=64, 30.6 GPU-hr)",
+    "world_model_v2": "12.7M params, 128-dim, 4 layers, 4 heads",
+    "tokenizer": "SOVTOK 8,192 vocab, 181 sovereign terms"
+  },
+  "governance": {
+    "care_floor": 0.95,
+    "article_0": "ISO fee-for-service only, never equity",
+    "sovereign_pillars": [
+      "Honor", "Safety", "Guidance", "Sovereignty", "Resilience",
+      "Auditability", "Verifiability", "Transparency", "Justice",
+      "Equity", "Openness", "Continuity"
+    ],
+    "bft_33": "23/33 quorum for binding decisions",
+    "ed25519_sigil": "Every response signed and hash-chained",
+    "split_conformal": "Care-veto calibrated to ≤5% false-allow at 90% coverage"
+  },
+  "topologies": ["triangle", "cascade", "pyramid", "12-around-1", "master", "owems"],
+  "integrations": ["MEOK.ai", "AIDome", "CSGA"],
+  "tags": ["sovereign-ai", "owem", "governance", "audit", "open-world", "emergence", "csoai", "bft-33", "sigil"],
+  "license": "ISO fee-for-service (Article 0)",
+  "pricing": "ISO fee-for-service only. Never equity. Never board seats. Never success fees."
+}

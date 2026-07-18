@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DEFONEOS ULTIMATE — 4-Tier Sovereign Defence | CSOAI-ORG</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root { --navy: #0a1a2f; --gold: #c9a84c; --green: #16a34a; --red: #dc2626; --cyan: #06b6d4; --bg: #02060f; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, monospace, system-ui, sans-serif; background: var(--bg); color: white; overflow: hidden; }
+canvas { display: block; }
+.ui { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+.hud { position: absolute; padding: 16px; font-family: 'SF Mono', monospace; font-size: 12px; }
+.hud.tl { top: 0; left: 0; }
+.hud.tr { top: 0; right: 0; text-align: right; }
+.hud.bl { bottom: 0; left: 0; }
+.hud.br { bottom: 0; right: 0; text-align: right; }
+.label { color: var(--gold); font-size: 10px; letter-spacing: 0.3em; margin-bottom: 4px; }
+.value { color: white; font-size: 24px; font-weight: 900; }
+.sub { color: rgba(255,255,255,0.5); font-size: 11px; margin-top: 4px; }
+.green { color: var(--green); }
+.red { color: var(--red); }
+.cyan { color: var(--cyan); }
+.hud.tr .row { margin-bottom: 16px; }
+.hud.bl .row { display: flex; gap: 8px; margin-bottom: 4px; }
+.hud.bl .pill { background: rgba(201,168,76,0.1); border: 1px solid var(--gold); border-radius: 100px; padding: 4px 12px; font-size: 10px; }
+.hud.center { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: auto; }
+.title { font-size: 72px; font-weight: 900; letter-spacing: -0.04em; background: linear-gradient(135deg, #16a34a 0%, #c9a84c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.subtitle { font-size: 14px; color: var(--gold); letter-spacing: 0.2em; margin-bottom: 24px; }
+.cta { display: inline-block; background: var(--green); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 14px; margin: 8px; }
+.cta.gold { background: var(--gold); color: var(--navy); }
+.scanline { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent 0%, var(--green) 50%, transparent 100%); animation: scan 3s linear infinite; pointer-events: none; z-index: 20; }
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="scanline"></div>
+<div class="ui">
+  <div class="hud tl">
+    <div class="label">DEFONEOS // TIER MATRIX</div>
+    <div class="value">DEFENCE AI OS</div>
+    <div class="sub">JSP 440 · JSP 936 · CSOAI UK 16939677</div>
+  </div>
+  <div class="hud tr">
+    <div class="row"><div class="label">EDGE TIER</div><div class="value green">1.0ms</div><div class="sub">AKIDA 16 TOPS · SOV3small3 7GB</div></div>
+    <div class="row"><div class="label">FOG TIER</div><div class="value cyan">42ms</div><div class="sub">RTX 6000 · 1.39TB BIG BRAIM</div></div>
+    <div class="row"><div class="label">CLOUD TIER</div><div class="value">89ms</div><div class="sub">GCP sovereign · 49GB data</div></div>
+    <div class="row"><div class="label">SOVEREIGN TIER</div><div class="value red">0.937</div><div class="sub">DORADO · PQC ML-DSA-65</div></div>
+  </div>
+  <div class="hud bl">
+    <div class="row"><div class="pill">● ALL 4 TIERS LIVE</div><div class="pill">8 PRODUCTS</div><div class="pill">33 BFT</div><div class="pill">330 TOOLS</div></div>
+    <div class="row"><div class="pill">COGNITION</div><div class="pill">SENTRY</div><div class="pill">EYE</div><div class="pill">SHIELD</div></div>
+    <div class="row"><div class="pill">SWARM</div><div class="pill">GUARD</div><div class="pill">CORE</div><div class="pill">SIM</div></div>
+  </div>
+  <div class="hud br">
+    <div class="row"><span class="green">● SOVEREIGN</span></div>
+    <div class="row">SIGIL: <span class="cyan">2aa7a7c92cabf9c8</span></div>
+    <div class="row">DORADO: <span class="green">SOVEREIGN (EAST→WEST)</span></div>
+    <div class="row">BFT: <span class="green">21/21 quorum</span></div>
+    <div class="row">HORUS: <span class="green">● REALTIME</span></div>
+  </div>
+  <div class="hud center">
+    <div class="title">DEFONEOS</div>
+    <div class="subtitle">4-TIER SOVEREIGN DEFENCE ARCHITECTURE</div>
+    <a class="cta" href="https://meok.ai/defoneos" target="_blank">→ MEOK.AI/DEFONEOS</a>
+    <a class="cta gold" href="/install.html">→ INSTALL SOV3</a>
+  </div>
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 500);
+camera.position.set(15, 10, 25);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.3;
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.7, 0.4, 0.2));
+composer.addPass(new OutputPass());
+
+const tierColors = [0x16a34a, 0x4ade80, 0x06b6d4, 0x8b5cf6];
+const tierNames = ['Edge', 'Fog', 'Cloud', 'Sovereign'];
+const tierMeshes = [];
+for (let i = 0; i < 4; i++) {
+  const r = 5 - i * 0.8;
+  const group = new THREE.Group();
+  const sphere = new THREE.Mesh(
+    new THREE.OctahedronGeometry(r, 2),
+    new THREE.MeshPhysicalMaterial({
+      color: tierColors[i],
+      emissive: tierColors[i],
+      emissiveIntensity: 0.4,
+      metalness: 0.9,
+      roughness: 0.1,
+      transparent: true,
+      opacity: 0.7,
+      wireframe: i < 3,
+    })
+  );
+  group.add(sphere);
+  group.position.set((i - 1.5) * 8, 0, 0);
+  tierMeshes.push(group);
+  scene.add(group);
+}
+
+for (let i = 0; i < 8; i++) {
+  const angle = (i / 8) * Math.PI * 2;
+  const r = 12;
+  const product = new THREE.Mesh(
+    new THREE.DodecahedronGeometry(0.5, 0),
+    new THREE.MeshBasicMaterial({ color: 0xc9a84c, wireframe: true, transparent: true, opacity: 0.7 })
+  );
+  product.position.set(Math.cos(angle) * r, Math.sin(angle * 2) * 3, Math.sin(angle) * r);
+  scene.add(product);
+}
+
+for (let i = 0; i < 200; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const r = 15 + Math.random() * 10;
+  const star = new THREE.Mesh(
+    new THREE.SphereGeometry(0.02, 4, 4),
+    new THREE.MeshBasicMaterial({ color: 0xc9a84c })
+  );
+  star.position.set(Math.cos(angle) * r, (Math.random() - 0.5) * 20, Math.sin(angle) * r);
+  scene.add(star);
+}
+
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  tierMeshes.forEach((m, i) => {
+    m.rotation.y = t * (0.2 + i * 0.1);
+    m.rotation.x = t * 0.1;
+  });
+  controls.update();
+  composer.render();
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+});
+
+console.log('🐉 DEFONEOS ULTIMATE: 4-tier architecture + UnrealBloom + 8 products + 200 stars');
+</script>
+</body>
+</html>

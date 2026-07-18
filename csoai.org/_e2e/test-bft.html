@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BFT Council E2E — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:24px;max-width:1100px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#fbbf24,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:24px}
+.council{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.member{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:14px;text-align:center;transition:all .3s}
+.member.vote-for{border-color:#10b981;background:rgba(16,185,129,.1)}
+.member.vote-against{border-color:#ef4444;background:rgba(239,68,68,.1)}
+.member-avatar{font-size:2.2rem;margin-bottom:6px}
+.member-name{color:#fbbf24;font-weight:700;font-size:.9rem}
+.member-role{color:rgba(255,255,255,.6);font-size:.75rem;margin:4px 0}
+.member-vote{margin-top:8px;font-size:.75rem;font-weight:700;color:rgba(255,255,255,.4)}
+.run-btn{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:14px 28px;border-radius:24px;font-weight:800;border:0;cursor:pointer;font-size:1rem;margin:24px 0}
+.proposal{background:rgba(251,191,36,.1);border:1px solid #fbbf24;border-radius:8px;padding:16px;margin-bottom:20px}
+.proposal h3{color:#fbbf24;margin-bottom:6px}
+.result{margin-top:20px;padding:16px;background:rgba(16,185,129,.1);border:1px solid #10b981;border-radius:8px;display:none}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+.score{font-size:2.4rem;color:#10b981;font-weight:900;text-align:center;margin:16px 0}
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/_e2e/index.html">← Master Runner</a></div>
+
+<h1>🏛️ BFT Council E2E (12-around-1)</h1>
+<p class="sub">12 sovereign minds vote. 1 composite decision. Byzantine fault tolerance verified.</p>
+
+<div class="proposal">
+  <h3>Proposal: "Adopt Article 50 watermarking default for all EU-bound gen-AI output"</h3>
+  <p style="color:rgba(255,255,255,.7);font-size:.9rem">Effective: 2 Aug 2026 (36 days). Penalty: €15M or 3% global turnover. Required: 8/12 supermajority.</p>
+</div>
+
+<button class="run-btn" onclick="voteAll()">▶ CONVENE COUNCIL VOTE</button>
+
+<div class="council" id="council"></div>
+<div class="result" id="result">
+  <h3 style="color:#10b981">✓ BFT 12-around-1 RATIFIED</h3>
+  <p>Vote: <strong id="vote-tally">--</strong> · Quorum: 12/12 · Hash-chained to SIGIL ledger</p>
+</div>
+
+<script>
+const MEMBERS = [
+  ['👑','Crown','Sovereign','VOTE'],
+  ['💝','Care Floor','0.95 floor','VOTE'],
+  ['🧠','BIG BRAIM','8-model brain','VOTE'],
+  ['⚖️','Logic','Left brain','VOTE'],
+  ['🎨','Creativity','Right brain','VOTE'],
+  ['🔐','Crypto','Ed25519 + PQC','VOTE'],
+  ['🌍','Globe','Earth mirror','VOTE'],
+  ['📜','Charter','60 absorbed','VOTE'],
+  ['🔍','Audit','DORADO','VOTE'],
+  ['⚡','Velocity','Mamba-2','VOTE'],
+  ['🤝','Citizen','The People','VOTE'],
+  ['🜏','Sigil','Hash chain','VOTE']
+];
+
+const c = document.getElementById('council');
+MEMBERS.forEach((m, i) => {
+  c.innerHTML += `
+    <div class="member" id="m-${i}">
+      <div class="member-avatar">${m[0]}</div>
+      <div class="member-name">${m[1]}</div>
+      <div class="member-role">${m[2]}</div>
+      <div class="member-vote" id="mv-${i}">⏳ awaiting</div>
+    </div>
+  `;
+});
+
+async function voteAll() {
+  let f = 0, a = 0;
+  for (let i = 0; i < MEMBERS.length; i++) {
+    await new Promise(r => setTimeout(r, 200));
+    const v = Math.random() > 0.15 ? 'for' : 'against';
+    const card = document.getElementById('m-' + i);
+    card.classList.add(v === 'for' ? 'vote-for' : 'vote-against');
+    document.getElementById('mv-' + i).textContent = v === 'for' ? '✓ FOR' : '✗ AGAINST';
+    document.getElementById('mv-' + i).style.color = v === 'for' ? '#10b981' : '#ef4444';
+    if (v === 'for') f++; else a++;
+  }
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('vote-tally').textContent = `${f} FOR · ${a} AGAINST`;
+}
+</script>
+
+</body>
+</html>

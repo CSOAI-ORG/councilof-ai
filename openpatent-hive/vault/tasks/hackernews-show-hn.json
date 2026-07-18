@@ -1,0 +1,7 @@
+{
+  "id": "hackernews-show-hn",
+  "prompt": "Write 1 Show HN post for openpatent.ai. Title ≤80 chars, body 250-400 words. Must (a) explain the AI-idea-theft problem in one paragraph, (b) describe the 6-layer cryptographic disclosure stack (SHA-3/512, HMAC, Ed25519, Bitcoin OTS, C2PA, hash-chained audit), (c) mention the $10 starting tier, (d) list 3 concrete technical asks for feedback (latency on the OTS calendar fallback, schema design for the waitlist table, MCP tool design for the demo endpoint), (e) link the repo + API docs + waitlist. Use DEFONEOS mythic voice. Return ONLY JSON: {title:string, body:string, signature:string}.",
+  "max_tokens": 600,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "defensive"
+}

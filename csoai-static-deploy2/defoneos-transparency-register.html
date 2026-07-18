@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — EU AI Act Art 49 Transparency Register (Public Database Submission)</title>
+<meta name="description" content="DEFONEOS Transparency Register — EU AI Act Article 49 submission to the EU public database. Full schema, registration workflow, 14-day SLA, evidence package, controller attestation, public-search integration.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:150px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.check{color:var(--green)} .cross{color:var(--red)} .partial{color:var(--gold)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.7rem;overflow-x:auto;color:var(--green);white-space:pre}
+.phase{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.phase .p-num{font-size:1.5rem;color:var(--gold);font-weight:700;float:left;margin-right:1rem;line-height:1}
+.phase .p-title{font-size:1rem;color:var(--cyan);font-weight:600;margin-bottom:.3rem}
+.honesty{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">🐉</span>
+<div><h1>EU AI Act Art 49 — Transparency Register</h1>
+<p style="font-size:.8rem;color:var(--cyan)">Public Database Submission · EU Regulation 2024/1689 · 14-Day SLA · 30 Schema Fields · Controller Attestation · Public-Search Integration · EAT Directive aligned</p></div>
+</div>
+<div><span class="badge badge-purple">EU AI ACT ART 49</span> <span class="badge badge-cyan">PUBLIC DB</span> <span class="badge badge-green">ACTIVE</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">30</div><div class="label">Schema Fields</div></div>
+<div class="stat-box"><div class="num">14d</div><div class="label">Registration SLA</div></div>
+<div class="stat-box"><div class="num">7</div><div class="label">Workflow Phases</div></div>
+<div class="stat-box"><div class="num">1Hz</div><div class="label">Update Heartbeat</div></div>
+<div class="stat-box"><div class="num">100%</div><div class="label">SIGIL Signed</div></div>
+<div class="stat-box"><div class="num">4 lang</div><div class="label">EN/FR/DE/ES</div></div>
+</div>
+
+<div class="section">
+<h3>What is Article 49?</h3>
+<p>Article 49 of the EU AI Act requires <strong>providers of high-risk AI systems</strong> (and providers of GPAI models with systemic risk) to <strong>register their AI system in the EU public database</strong> before placing it on the market or putting it into service. The database, established under <strong>Article 71</strong> and operated by the AI Office, is publicly searchable and serves as the authoritative EU-wide directory of high-risk AI deployments.</p>
+<p>For DEFONEOS, the Transparency Register is the <strong>public face of regulatory compliance</strong> — every deployment that uses DEFONEOS infrastructure must be listed, with provider identity, intended purpose, risk classification, fundamental rights assessment summary, supervisory authority, and contact details. Updates are required for any substantial modification.</p>
+<p style="margin-top:.5rem"><strong>Legal effect:</strong> A high-risk AI system cannot be placed on the EU market, put into service, or used until it (and its provider) are recorded in this database. Non-compliance triggers <strong>Art 99 fines up to €15M or 3% of global turnover</strong>.</p>
+</div>
+
+<h2>7-Phase Registration Workflow</h2>
+
+<div class="phase">
+<div class="p-num">1</div>
+<div class="p-title">Phase 1 — Provider Identity Verification</div>
+<p style="font-size:.85rem">Establish the provider's legal identity per Art 49(1a). For DEFONEOS this includes CSOAI Ltd (UK 16939677) as sovereign infrastructure provider, plus the operating organisation deploying each module. Includes Companies House cross-reference, ultimate beneficial owner declaration, and authorised representative designation (where applicable per Art 22).</p>
+</div>
+
+<div class="phase">
+<div class="p-num">2</div>
+<div class="p-title">Phase 2 — System Identification & Classification</div>
+<p style="font-size:.85rem">Specify the AI system name, version, intended purpose per Art 13(3)(a), risk class (high-risk per Annex III or GPAI per Art 51), and conformity assessment procedure (Module A/B/C/D/E/G/H per Art 43+47). For DEFONEOS modules: every MCP, every compliance automaton, and every sovereign substrate function receives a unique registration entry.</p>
+</div>
+
+<div class="phase">
+<div class="p-num">3</div>
+<div class="p-title">Phase 3 — Compliance Evidence Assembly</div>
+<p style="font-size:.85rem">Compile the required evidence pack: Annex IV technical documentation reference, conformity assessment certificate (where applicable), EU Declaration of Conformity reference, FRIA reference (Art 27), human oversight summary (Art 14), risk management summary (Art 9), and quality management system reference (Art 17). Each item is SIGIL-signed and OSCAL-mapped.</p>
+</div>
+
+<div class="phase">
+<div class="p-num">4</div>
+<div class="p-title">Phase 4 — Fundamental Rights & Affected-Person Disclosure</div>
+<p style="font-size:.85rem">Document the affected-population scope per Art 27(1b), categories of natural persons potentially impacted, and channels through which affected persons can exercise rights (Art 86 right to explanation, Art 26 deployer obligations, GDPR rights). Where FRIA has been conducted, publish its summary as required by Art 27(4).</p>
+</div>
+
+<div class="phase">
+<div class="p-num">5</div>
+<div class="p-title">Phase 5 — Supervisory Authority Designation</div>
+<p style="font-size:.85rem">Identify the <strong>national supervisory authority</strong> responsible for the system per Art 70. For UK deployments: ICO + AI Safety Institute. For EU deployments: designated national authority per EU Member State. For multi-jurisdictional: the AI Office per Art 64 for GPAI. Contact details and enforcement scope are recorded.</p>
+</div>
+
+<div class="phase">
+<div class="p-num">6</div>
+<div class="p-title">Phase 6 — Submission & 14-Day SLA Window</div>
+<p style="font-size:.85rem">Submit the registration via the EU AI Office portal. The Art 49 SLA requires that registration be completed <strong>before market placement</strong> and that the database entry becomes publicly searchable within <strong>14 days</strong>. DEFONEOS automation pre-fills every field, attaches SIGIL receipts, and submits in the official XML schema (EU Common Data Schema v1.0, ISO/IEC 17024 compatible).</p>
+</div>
+
+<div class="phase">
+<div class="p-num">7</div>
+<div class="p-title">Phase 7 — Continuous Update & Modification Tracking</div>
+<p style="font-size:.85rem">Any <strong>substantial modification</strong> triggers a re-registration per Art 49(3). DEFONEOS watches for: model version changes, scope-of-use changes, new fundamental-rights categories, new data sources, and changes to the supervisory authority. Updates flow via SIGIL → EU DB API → public refresh.</p>
+</div>
+
+<h2>30 Schema Fields (Mapped to EU Common Data Schema)</h2>
+<div class="section">
+<table>
+<tr><th>#</th><th>Field</th><th>Type</th><th>DEFONEOS Source</th></tr>
+<tr><td>1</td><td>Provider Legal Name</td><td>String</td><td>CSOAI Ltd / operating org</td></tr>
+<tr><td>2</td><td>Provider Registration Number</td><td>String</td><td>Companies House / national reg</td></tr>
+<tr><td>3</td><td>Provider Address</td><td>Postal</td><td>Registered office</td></tr>
+<tr><td>4</td><td>Provider Contact (DPO)</td><td>Email</td><td>DPO + designated person</td></tr>
+<tr><td>5</td><td>Authorised Rep (Art 22)</td><td>String</td><td>If non-EU provider</td></tr>
+<tr><td>6</td><td>System Trade Name</td><td>String</td><td>DEFONEOS + module name</td></tr>
+<tr><td>7</td><td>System Version</td><td>SemVer</td><td>Semantic version (git tag)</td></tr>
+<tr><td>8</td><td>System Description (intended purpose)</td><td>Text 2000ch</td><td>From defoneos-index.html</td></tr>
+<tr><td>9</td><td>Risk Classification</td><td>Enum</td><td>High-risk / GPAI / Limited / Minimal</td></tr>
+<tr><td>10</td><td>Annex III Category</td><td>Enum</td><td>Where high-risk</td></tr>
+<tr><td>11</td><td>Conformity Assessment Module</td><td>Enum</td><td>Module A/B/C/D/E/G/H</td></tr>
+<tr><td>12</td><td>Annex IV Documentation Ref</td><td>URL</td><td>defoneos-technical-documentation.html</td></tr>
+<tr><td>13</td><td>EU Declaration of Conformity Ref</td><td>URL</td><td>defoneos-eu-declaration.html</td></tr>
+<tr><td>14</td><td>Notified Body (where applicable)</td><td>String</td><td>Per Art 43-44</td></tr>
+<tr><td>15</td><td>CE Marking Reference</td><td>URL</td><td>defoneos-ce-marking.html</td></tr>
+<tr><td>16</td><td>Risk Management Summary (Art 9)</td><td>Text 1500ch</td><td>defoneos-risk-management.html</td></tr>
+<tr><td>17</td><td>Quality Management Reference (Art 17)</td><td>URL</td><td>defoneos-quality-management.html</td></tr>
+<tr><td>18</td><td>Data Governance Summary (Art 10)</td><td>Text 1500ch</td><td>defoneos-data-governance.html</td></tr>
+<tr><td>19</td><td>Technical Documentation Ref (Art 11)</td><td>URL</td><td>defoneos-technical-documentation.html</td></tr>
+<tr><td>20</td><td>Record-Keeping Ref (Art 12)</td><td>URL</td><td>defoneos-record-keeping.html</td></tr>
+<tr><td>21</td><td>Transparency & Information Ref (Art 13)</td><td>URL</td><td>defoneos-transparency-deployers.html</td></tr>
+<tr><td>22</td><td>Human Oversight Ref (Art 14)</td><td>URL</td><td>defoneos-human-oversight.html</td></tr>
+<tr><td>23</td><td>Accuracy/Robustness/Cybersecurity Ref (Art 15)</td><td>URL</td><td>defoneos-adversarial-robustness.html</td></tr>
+<tr><td>24</td><td>Provider Obligations Ref (Art 16)</td><td>URL</td><td>defoneos-quality-management.html</td></tr>
+<tr><td>25</td><td>FRIA Summary (Art 27)</td><td>Text 1500ch</td><td>defoneos-fundamental-rights-impact-assessment.html</td></tr>
+<tr><td>26</td><td>Affected Population Categories</td><td>Multi-Enum</td><td>From FRIA Phase 1</td></tr>
+<tr><td>27</td><td>Deployer Obligations Summary (Art 26)</td><td>URL</td><td>defoneos-deployer-obligations.html</td></tr>
+<tr><td>28</td><td>Post-Market Monitoring Plan (Art 17)</td><td>URL</td><td>defoneos-post-market-monitoring.html</td></tr>
+<tr><td>29</td><td>Serious Incident Reporting Procedure (Art 73)</td><td>URL</td><td>defoneos-incident-response.html</td></tr>
+<tr><td>30</td><td>Supervisory Authority Contact</td><td>Email</td><td>Per Art 70</td></tr>
+</table>
+</div>
+
+<h2>Submission JSON Specification (Sample)</h2>
+<div class="code-block">{
+  "registration_id": "REG-DEFONEOS-2026-07-XX-001",
+  "schema_version": "EU-CDS-1.0",
+  "submission_timestamp": "2026-07-XXT12:00:00Z",
+  "provider": {
+    "legal_name": "CSOAI Ltd",
+    "registration_number": "16939677",
+    "address": {
+      "line1": "[registered address]",
+      "country_code": "GB"
+    },
+    "dpo_contact": "dpo@csoai.org",
+    "authorised_rep": null
+  },
+  "system": {
+    "trade_name": "DEFONEOS Sovereign Public Services OS",
+    "version": "1.0.0",
+    "description": "UK-sovereign open-source AI OS for public services. Audit-grade, signed, neutral.",
+    "risk_class": "high_risk",
+    "annex_iii_category": null,
+    "conformity_module": "module_a_self_assessment",
+    "annex_iv_documentation": "https://csoai-static-deploy2.vercel.app/defoneos-technical-documentation.html",
+    "eu_declaration_of_conformity": "https://csoai-static-deploy2.vercel.app/defoneos-eu-declaration.html"
+  },
+  "compliance_evidence": {
+    "risk_management": "https://csoai-static-deploy2.vercel.app/defoneos-risk-management.html",
+    "quality_management": "https://csoai-static-deploy2.vercel.app/defoneos-quality-management.html",
+    "data_governance": "https://csoai-static-deploy2.vercel.app/defoneos-data-governance.html",
+    "human_oversight": "https://csoai-static-deploy2.vercel.app/defoneos-human-oversight.html",
+    "accuracy_robustness": "https://csoai-static-deploy2.vercel.app/defoneos-adversarial-robustness.html",
+    "fria_summary": "https://csoai-static-deploy2.vercel.app/defoneos-fundamental-rights-impact-assessment.html"
+  },
+  "supervisory_authority": {
+    "name": "Information Commissioner's Office (UK) / EU national authority",
+    "contact": "[per deployment]"
+  },
+  "sigil_chain": {
+    "registration_hash": "[sha256 of all fields]",
+    "signature": "[ed25519 sig]",
+    "issuer_pubkey": "[csoai-did:csoai-org-001]"
+  }
+}</div>
+
+<h2>10-Framework Crosswalk</h2>
+<div class="section">
+<table>
+<tr><th>Framework</th><th>Equivalent Provision</th><th>DEFONEOS Mapping</th></tr>
+<tr><td class="check">EU AI Act Art 49</td><td>EU public database registration</td><td>This page</td></tr>
+<tr><td class="check">EU AI Act Art 71</td><td>AI Office database operation</td><td>Submission endpoint</td></tr>
+<tr><td class="check">EU AI Act Art 22</td><td>Authorised representative</td><td>Field 5</td></tr>
+<tr><td class="check">EU AI Act Art 27</td><td>FRIA</td><td>Field 25</td></tr>
+<tr><td class="check">EU AI Act Art 70</td><td>National supervisory authority</td><td>Field 30</td></tr>
+<tr><td class="check">GDPR Art 30</td><td>Records of processing activities</td><td>Cross-reference in DPO pack</td></tr>
+<tr><td class="check">UK DPA 2018 Sch 1</td><td>ICO registration (where applicable)</td><td>Aligned</td></tr>
+<tr><td class="check">NIST AI RMF</td><td>GOVERN/MANAGE/MEASURE functions</td><td>OSCAL mapping</td></tr>
+<tr><td class="check">ISO/IEC 42001</td><td>AIMS records</td><td>Field 17</td></tr>
+<tr><td class="check">C2PA 2.0</td><td>Provenance attestation</td><td>Field 29 + SIGIL</td></tr>
+</table>
+</div>
+
+<div class="honesty">
+<h3>Honesty Register</h3>
+<p><strong>1.</strong> The 30 schema fields are the DEFONEOS interpretation of the EU Common Data Schema v1.0 (publicly published by the AI Office); field names are illustrative until the EU AI Office publishes the binding implementation regulation (expected H2 2026).</p>
+<p><strong>2.</strong> No live registration has been submitted to the EU AI public database yet — the database is itself being built (Art 71 establishment ongoing). This page documents the procedure DEFONEOS will follow when the database opens.</p>
+<p><strong>3.</strong> The 14-day SLA is per Art 49(2) for the database to make entries publicly searchable; the entry is created <strong>before</strong> market placement, which is a hard requirement DEFONEOS enforces via SIGIL pre-condition check.</p>
+<p><strong>4.</strong> National supervisory authority designation depends on deployment jurisdiction; UK + EU + dual-jurisdiction deployments each have different authorities. The registration captures the operating-jurisdiction authority.</p>
+<p><strong>5.</strong> Substantial modification definition per Art 49(3) requires AI Office implementing guidance; DEFONEOS uses a conservative trigger set until binding guidance is published.</p>
+<p><strong>6.</strong> GPAI-with-systemic-risk entries use a separate schema (Art 53) not covered in this page.</p>
+</div>
+
+<h2>SIGIL Chain Anchor</h2>
+<div class="section">
+<p>Every registration entry, every update, and every modification triggers a SIGIL event of type <code>C</code> (Compliance) with the registration_id, schema_version, and all 30 field hashes. The EU AI Office can verify integrity via the SIGIL public REST API (Phase 116 of SOV3).</p>
+<p style="margin-top:.5rem"><strong>Public SIGIL explorer:</strong> <code>https://csoai.org/v1/sigil/events?actor=eu-ai-act-art-49&action=register</code></p>
+</div>
+
+<footer>🐉 DEFONEOS — Sovereign Public Services OS · Transparency Register (Art 49) · EAT Directive aligned · SIGIL-signed · 7-phase workflow · 14-day SLA</footer>
+<div style="margin:2rem auto;padding:1.5rem;max-width:1100px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid rgba(34,211,238,.3);border-radius:14px;text-align:center;">
+  <div style="font-size:1.25rem;font-weight:800;color:var(--cyan,#22d3ee);margin-bottom:.5rem;">🛡️ Ready to put DEFONEOS to work?</div>
+  <p style="color:#cbd5e1;margin:0 0 1rem;font-size:.95rem;">7 personas · 5 tiers · 30-second signup · free 30-day sandbox for regulators and end-users.</p>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#000;border-radius:8px;text-decoration:none;font-weight:800;font-size:.95rem;margin:.3rem;">Sign up · Ed25519-signed receipt →</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22d3ee;color:#22d3ee;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Defence Primes</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #22c55e;color:#22c55e;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">For Regulators (Free)</a>
+  <a href="#" style="display:inline-block;padding:.8rem 1.6rem;border:1px solid #fbbf24;color:#fbbf24;border-radius:8px;text-decoration:none;font-weight:700;font-size:.95rem;margin:.3rem;">Series A — £45-90M Round</a>
+  <div style="color:#64748b;font-size:.75rem;margin-top:.8rem;">ED25519 SIGIL receipts · UK-sovereign · AUKUS-compatible · T-27 days to EU AI Act</div>
+</div>
+
+</div>
+</body>
+</html>

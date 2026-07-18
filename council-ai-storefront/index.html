@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<title>Council of AI — The Governance Layer for AI Agents | BFT Council Substrate</title>
+<meta name="description" content="The Governance Layer for AI Agents. BFT council substrate where 5 LLMs vote on every response with dissent visible and HMAC-signed audit evidence. 47 MEOK MCPs across 8 protocols. £499–£1,499/mo. By MEOK AI Labs.">
+<meta name="author" content="Nicholas Templeman / MEOK AI Labs (CSOAI LTD · UK Companies House 16939677)">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Council of AI — BFT Council Substrate">
+<meta property="og:description" content="5 LLMs vote · dissent visible · HMAC-signed. 47 MEOK MCPs across 8 protocols. £499/mo per substrate or £14,990/mo Universe.">
+<meta property="og:url" content="https://councilof.ai">
+<meta property="og:image" content="https://meok.ai/api/og?title=Council+of+AI+%E2%80%94+BFT+Substrate&desc=5+LLMs+vote+%C2%B7+dissent+visible+%C2%B7+HMAC-signed">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://councilof.ai">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://councilof.ai/#org",
+      "name": "Council of AI",
+      "url": "https://councilof.ai",
+      "logo": "https://meok.ai/brand/csoai-robot.png",
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "MEOK AI Labs",
+        "legalName": "CSOAI LTD",
+        "url": "https://meok.ai",
+        "identifier": "UK Companies House 16939677"
+      },
+      "founder": {
+        "@type": "Person",
+        "name": "Nicholas Templeman",
+        "url": "https://meok.ai/about",
+        "sameAs": [
+          "https://github.com/CSOAI-ORG",
+          "https://pypi.org/user/MEOK_AI_Labs/",
+          "https://www.npmjs.com/~meok-ai"
+        ]
+      },
+      "email": "nicholas@meok.ai",
+      "sameAs": [
+        "https://meok.ai",
+        "https://github.com/CSOAI-ORG",
+        "https://twitter.com/meok_ai",
+        "https://registry.modelcontextprotocol.io"
+      ]
+    },
+    {
+      "@type": "Product",
+      "name": "BFT Council Substrate",
+      "brand": { "@type": "Brand", "name": "MEOK AI Labs" },
+      "description": "Byzantine Fault Tolerant council that runs 5 LLMs in parallel per response with dissent visible and the whole exchange HMAC-signed for audit evidence.",
+      "offers": [
+        { "@type": "Offer", "price": "499", "priceCurrency": "GBP", "name": "Per Substrate Pack", "url": "https://buy.stripe.com/5kQdRbcgAbIK8sl56o8k91x" },
+        { "@type": "Offer", "price": "1499", "priceCurrency": "GBP", "name": "Council Universe (all packs)", "url": "https://buy.stripe.com/6oUcN7fsM5km38156o8k91y" },
+        { "@type": "Offer", "price": "4990", "priceCurrency": "GBP", "name": "Council Defence", "url": "https://buy.stripe.com/8x23cx3K4146381aqI8k91z" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is a BFT Council?", "acceptedAnswer": { "@type": "Answer", "text": "Byzantine Fault Tolerant council means 5 different LLMs vote on every response. Disagreements are surfaced to the user, not hidden. The whole exchange is HMAC-signed for EU AI Act Article 12 audit evidence." } },
+        { "@type": "Question", "name": "How does this fit MEOK's 47 MCPs?", "acceptedAnswer": { "@type": "Answer", "text": "Council of AI is the meta-substrate that bundles the per-domain MEOK substrates: A2A (12 agent primitives), Governance (10 compliance MCPs), Cybersec (6), COBOL (5 tools, 220B-line market), Industry (8), Trade (3), DevTools (8). Pick the pack(s) you need; the BFT council layer is shared." } },
+        { "@type": "Question", "name": "Why councilof.ai not meok.ai?", "acceptedAnswer": { "@type": "Answer", "text": "councilof.ai is the product domain for the Council substrate; meok.ai is the parent brand + catalogue. Both operated by MEOK AI Labs (CSOAI LTD, UK Companies House 16939677)." } }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',Inter,sans-serif;background:#0d0c18;color:#f5f0e8;line-height:1.55}
+  .container{max-width:1040px;margin:0 auto;padding:3rem 1.5rem}
+  .hero{padding:3rem 2.4rem;background:linear-gradient(135deg,#1a1a2e 0%,#0d0c18 100%);border-radius:24px;margin-bottom:2.4rem;border:1px solid rgba(201,168,76,0.18);position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-50%;right:-20%;width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,0.08) 0%,transparent 70%);pointer-events:none}
+  .hero-visual{position:absolute;right:2rem;top:50%;transform:translateY(-50%);width:180px;height:180px;opacity:0.15}
+  @media(max-width:768px){.hero-visual{display:none}}
+  .badge{display:inline-block;padding:5px 14px;background:rgba(123,196,127,0.18);color:#7BC47F;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;margin-bottom:14px}
+  h1{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:900;letter-spacing:-0.02em;line-height:1.05;margin-bottom:18px}
+  h1 .gold{color:#c9a84c}
+  .lede{font-size:1.1rem;color:rgba(245,240,232,0.7);line-height:1.6;margin-bottom:26px;max-width:740px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+  .btn{display:inline-block;padding:13px 26px;text-decoration:none;font-weight:800;border-radius:12px;font-size:14px;border:none;cursor:pointer}
+  .btn-primary{background:#c9a84c;color:#1a1a2e}
+  .btn-secondary{background:transparent;color:#f5f0e8;border:1px solid rgba(245,240,232,0.25)}
+  .btn-quiet{background:transparent;color:rgba(245,240,232,0.65);border:1px solid rgba(245,240,232,0.15)}
+  .section{margin-bottom:2.4rem;padding:1.8rem 2rem;background:rgba(255,255,255,0.03);border-radius:16px;border:1px solid rgba(255,255,255,0.06)}
+  .section h2{font-size:1.5rem;font-weight:900;margin-bottom:14px}
+  .section p{color:rgba(245,240,232,0.78);font-size:15px;line-height:1.6;margin-bottom:12px}
+  .grid{display:grid;gap:14px}
+  .grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .pack{padding:1.2rem 1.4rem;background:rgba(0,0,0,0.3);border-radius:12px;border:1px solid rgba(255,255,255,0.07);transition:all .25s;position:relative}
+  .pack:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+  .pack-icon{font-size:2rem;margin-bottom:8px;opacity:0.9}
+  .pack-eyebrow{font-size:11px;font-weight:800;color:#c9a84c;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px}
+  .pack h3{font-size:1.05rem;font-weight:800;margin-bottom:6px}
+  .pack .price{font-size:.95rem;color:#7BC47F;font-weight:700;margin-bottom:8px}
+  .pack p{font-size:13px;color:rgba(245,240,232,0.7);margin:0;line-height:1.5}
+  .pack a{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;color:#c9a84c;text-decoration:none}
+  .trust-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding:1rem 1.4rem;background:rgba(0,0,0,0.3);border-radius:10px;font-size:13px;color:rgba(245,240,232,0.6);margin-bottom:24px}
+  .trust-row strong{color:#f5f0e8}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:0.7rem 1rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+  th{font-weight:800;color:#c9a84c;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;background:rgba(0,0,0,0.2)}
+  td{color:rgba(245,240,232,0.85)}
+  .footer{text-align:center;color:rgba(245,240,232,0.5);font-size:12px;padding:2rem 0;line-height:1.6}
+  .footer strong{color:rgba(245,240,232,0.7)}
+</style>
+</head>
+<body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,0.1);background:rgba(26,26,46,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#fff;">Council of AI</span>
+        <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
+<div class="container">
+
+<!-- Hero -->
+   <div class="hero">
+    <svg class="hero-visual" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="80" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="100" cy="100" r="60" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="100" cy="100" r="40" stroke="#c9a84c" stroke-width="0.5" opacity="0.5"/>
+      <circle cx="100" cy="20" r="6" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="100" cy="180" r="6" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="20" cy="100" r="6" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="180" cy="100" r="6" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="43" cy="43" r="6" fill="#c9a84c" opacity="0.6"/>
+      <circle cx="157" cy="157" r="6" fill="#c9a84c" opacity="0.6"/>
+      <line x1="100" y1="20" x2="43" y2="43" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <line x1="43" y1="43" x2="20" y2="100" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <line x1="20" y1="100" x2="43" y2="157" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <line x1="43" y1="157" x2="100" y2="180" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <line x1="100" y1="180" x2="157" y2="157" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <line x1="157" y1="157" x2="180" y2="100" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <line x1="180" y1="100" x2="157" y2="43" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <line x1="157" y1="43" x2="100" y2="20" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="100" cy="100" r="12" fill="#c9a84c" opacity="0.8"/>
+    </svg>
+     <div class="badge">The Governance Layer for AI Agents</div>
+     <h1>
+       <span class="gold">Govern AI agents at scale.</span><br/>
+       Audit-ready decisions.<br/>
+       Visible dissent.
+     </h1>
+     <p class="lede">
+       Council of AI is the <strong>Governance Layer for AI Agents</strong> — a BFT council substrate where 5 LLMs vote on every response with disagreement visible and the whole exchange HMAC-signed for EU AI Act Article 12 audit evidence. <strong>BFT Council voting</strong> is our core technology feature, running 47 MIT-licensed compliance MCPs across 8 agent-interop protocols. Linux-Foundation-governed A2A spine; MIT licence on source.
+     </p>
+     <div class="cta-row">
+       <a class="btn btn-primary" href="https://buy.stripe.com/6oUcN7fsM5km38156o8k91y">Council Universe £1,499/mo →</a>
+       <a class="btn btn-secondary" href="https://meok.ai/a2a">A2A Pack £499/mo →</a>
+       <a class="btn btn-quiet" href="https://meok.ai/anthropic-registry">Browse the 47 MCPs →</a>
+     </div>
+   </div>
+
+  <!-- Trust band -->
+  <div class="trust-row">
+    <span><strong>294</strong> servers in the official MCP Registry</span>
+    <span>·</span>
+    <span><strong>8</strong> agent-interop protocols</span>
+    <span>·</span>
+    <span><strong>30+</strong> regulatory frameworks</span>
+    <span>·</span>
+    <span><strong>MIT</strong> source</span>
+    <span>·</span>
+    <span><strong>HMAC-signed</strong> attestations</span>
+    <span>·</span>
+    <span>By MEOK AI Labs (CSOAI LTD · CH <strong>16939677</strong>)</span>
+  </div>
+
+  <!-- What the council does -->
+  <div class="section">
+    <h2>Why a council, not a single model</h2>
+    <p>
+      Every existing AI shell shows one answer from one model. <strong style="color:#c9a84c">Council of AI shows 5 LLMs voting per response</strong>, with the dissent visible. When 3 of 5 agree, you see that. When the vote splits 3-2, you see that. When the 2 disagree on Article 50 vs Article 73, you see that.
+    </p>
+    <p>
+      Why this matters: EU regulators are starting to enforce AI Act Article 14 (human oversight) and Article 12 (audit log keeping). DORA Article 17 wants incident reporting. "The LLM said so" is not a defensible audit trail. <strong>"The 5-LLM council voted 4-1 with the dissent recorded and HMAC-signed at verify.meok.ai"</strong> — that is.
+    </p>
+  </div>
+
+  <!-- Packs -->
+  <div class="section">
+    <h2>5 specialty packs in the Council</h2>
+    <p>Each pack is a substrate of MEOK MCPs you can buy alone, or bundle as the Universe (all 47 MCPs · 500K calls/month · £1,499/mo).</p>
+
+    <div class="grid grid-3">
+      <div class="pack">
+        <div class="pack-icon">🤝</div>
+        <div class="pack-eyebrow">Pack 1 · 12 MCPs</div>
+        <h3>A2A Substrate</h3>
+        <div class="price">£499/mo · PAYG £0.0002/call</div>
+        <p>Identity → trust → policy → firewall → rate-limit → handoff → audit → governance bridge. Multi-protocol bridges to MCP / A2A / IBM ACP / Stripe ACP / AP2 / x402.</p>
+        <a href="https://meok.ai/a2a">See A2A Substrate →</a>
+      </div>
+
+      <div class="pack">
+        <div class="pack-icon">🏛️</div>
+        <div class="pack-eyebrow">Pack 2 · 10 MCPs</div>
+        <h3>Governance Substrate</h3>
+        <div class="price">£499/mo · ISO 42001/42005</div>
+        <p>EU AI Act + DORA + NIS2 + CRA + UK AI Bill + AI-BOM + bias + watermarking + DORA×NIS2 crosswalk + AI incident reporting. 5-clock incident chain.</p>
+        <a href="https://meok.ai/governance">See Governance Substrate →</a>
+      </div>
+
+      <div class="pack">
+        <div class="pack-icon">🛡️</div>
+        <div class="pack-eyebrow">Pack 3 · 6 MCPs</div>
+        <h3>Cybersec Substrate</h3>
+        <div class="price">£199/mo</div>
+        <p>SBOM CycloneDX + MITRE ATT&amp;CK + MITRE ATLAS + CISA KEV + SLSA + Sigstore. EO 14028, NIS2 Article 21, EU CRA Annex I.</p>
+        <a href="https://buy.stripe.com/6oUcN7fsM5km38156o8k91y">Buy Cybersec £199/mo →</a>
+      </div>
+
+      <div class="pack">
+        <div class="pack-icon">🏦</div>
+        <div class="pack-eyebrow">Pack 4 · 5 tools</div>
+        <h3>COBOL Substrate <span style="color:#7BC47F">NEW</span></h3>
+        <div class="price">£999/mo · Pro · 220B-line market</div>
+        <p>Copybook Parser + CICS Bridge + JCL Scanner + COBOL-Coder-14B transpiler (73.95% compile success vs GPT-4o 41.8%) + governance crosswalk. Banks, insurance, government, defence.</p>
+        <a href="https://meok.ai/cobol">See COBOL Substrate →</a>
+      </div>
+
+      <div class="pack">
+        <div class="pack-icon">🏭</div>
+        <div class="pack-eyebrow">Pack 5 · 8 MCPs</div>
+        <h3>Industry Substrate</h3>
+        <div class="price">£299/mo</div>
+        <p>MiCA + FSA Food Safety + MDR + FDA SaMD + COPPA/FERPA + Basel III + MiFID II + AML/KYC. Sector-specific compliance.</p>
+        <a href="https://meok.ai/anthropic-registry">Browse industry MCPs →</a>
+      </div>
+
+      <div class="pack" style="border:2px solid #c9a84c;position:relative">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:3px 12px;background:#c9a84c;color:#1a1a2e;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase">Best value</div>
+        <div class="pack-icon">🌌</div>
+        <div class="pack-eyebrow">All 5 packs · 47 MCPs</div>
+        <h3>Council Universe</h3>
+        <div class="price">£1,499/mo · 500K calls</div>
+        <p>Every pack included. 99.9% SLA target. Unified api.meok.ai endpoint. Per-call PAYG above 500K. Dedicated support. For multi-substrate compliance teams.</p>
+        <a href="https://buy.stripe.com/6oUcN7fsM5km38156o8k91y" style="color:#c9a84c">Subscribe Universe →</a>
+      </div>
+    </div>
+  </div>
+
+<!-- Pricing table -->
+   <div class="section">
+     <h2>3 Simple Tiers</h2>
+     <table>
+       <thead>
+         <tr><th>Tier</th><th>Price</th><th>What's included</th><th>Buy</th></tr>
+       </thead>
+       <tbody>
+         <tr><td><strong>Free</strong></td><td>£0</td><td>Self-host any of 47 MCPs via uvx — MIT</td><td><a style="color:#c9a84c" href="https://github.com/CSOAI-ORG">GitHub →</a></td></tr>
+         <tr><td><strong>Pro</strong></td><td>£1,499/mo</td><td>All 47 MCPs · 500K calls/month · BFT council · multi-protocol</td><td><a style="color:#c9a84c" href="https://buy.stripe.com/6oUcN7fsM5km38156o8k91y">Subscribe →</a></td></tr>
+         <tr><td><strong>Enterprise</strong></td><td>£4,990/mo</td><td>Pro + on-prem deployment + dedicated CSM + reseller rights</td><td><a style="color:#c9a84c" href="https://buy.stripe.com/6oUcN7fsM5km38156o8k91y">Contact →</a></td></tr>
+       </tbody>
+     </table>
+   </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <h2>FAQ</h2>
+    <details style="margin-bottom:10px;padding:0.9rem 1.2rem;background:rgba(0,0,0,0.2);border-radius:10px"><summary style="cursor:pointer;font-weight:700">What is a BFT Council?</summary><p style="margin-top:10px;font-size:13px">Byzantine Fault Tolerant council = 5 different LLMs vote on every response. Disagreements are surfaced to the user, not hidden behind a "confidence score". The whole exchange is HMAC-signed for EU AI Act Article 12 audit evidence.</p></details>
+    <details style="margin-bottom:10px;padding:0.9rem 1.2rem;background:rgba(0,0,0,0.2);border-radius:10px"><summary style="cursor:pointer;font-weight:700">How does this differ from meok.ai?</summary><p style="margin-top:10px;font-size:13px">meok.ai is the parent brand + the catalogue of 47 MCPs. councilof.ai is the product domain for the Council substrate that runs them all behind a BFT layer. Same legal entity (CSOAI LTD), same MIT source, different audience.</p></details>
+    <details style="margin-bottom:10px;padding:0.9rem 1.2rem;background:rgba(0,0,0,0.2);border-radius:10px"><summary style="cursor:pointer;font-weight:700">What about the previous Council of AI storefront?</summary><p style="margin-top:10px;font-size:13px">Council of AI launched in April 2026 as a compliance storefront. We've reframed it around BFT council voting after seeing demand for visible-disagreement evidence from EU regulated buyers. Existing customers' £29 / £79 / £499 subscriptions and signing keys are unchanged; the page just leads with the council positioning now.</p></details>
+    <details style="margin-bottom:10px;padding:0.9rem 1.2rem;background:rgba(0,0,0,0.2);border-radius:10px"><summary style="cursor:pointer;font-weight:700">Is this just an ensemble?</summary><p style="margin-top:10px;font-size:13px">Technically yes. The unique bit is making the disagreement visible per response (not hidden behind a "confidence score"), HMAC-signing the whole council vote into the audit chain, and shipping it as a substrate that runs <em>under</em> any client (Claude Desktop, Cursor, Windsurf, custom MCP/A2A agents).</p></details>
+    <details style="margin-bottom:10px;padding:0.9rem 1.2rem;background:rgba(0,0,0,0.2);border-radius:10px"><summary style="cursor:pointer;font-weight:700">Who's behind this?</summary><p style="margin-top:10px;font-size:13px">Founder + sole engineer: <strong>Nicholas Templeman</strong>. Solo, building from Lincolnshire UK. CSOAI LTD, UK Companies House <strong>16939677</strong>. 26 PyPI packages with <strong>6,798 monthly installs</strong>, 91 commits to the public COBOL-bridge repo — all single-contributor verifiable on GitHub.</p></details>
+  </div>
+
+<div class="footer">
+     Council of AI is a product of <strong>MEOK AI Labs</strong> (trading name of <strong>CSOAI LTD</strong>, UK Companies House <strong>16939677</strong>). Founder: <a style="color:#c9a84c" href="mailto:nicholas@meok.ai">Nicholas Templeman</a>. MIT source · Python Apache 2.0 · Not legal advice. <br/>
+     See also: <a style="color:rgba(245,240,232,0.7)" href="https://meok.ai">meok.ai</a> · <a style="color:rgba(245,240,232,0.7)" href="https://meok.ai/protocols">protocols matrix</a> · <a style="color:rgba(245,240,232,0.7)" href="https://meok.ai/a2a">A2A</a> · <a style="color:rgba(245,240,232,0.7)" href="https://meok.ai/governance">Governance</a> · <a style="color:rgba(245,240,232,0.7)" href="https://meok.ai/cobol">COBOL</a> · <a style="color:rgba(245,240,232,0.7)" href="https://csoai.org">CSOAI LTD legal</a>
+   </div>
+
+</div>
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid rgba(255,255,255,0.1);background:transparent;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#fff;">Council of AI by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:rgba(255,255,255,0.7);opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
+</body>
+</html>

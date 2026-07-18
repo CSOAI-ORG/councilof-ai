@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article 50 Compliance Suite — MEOK</title>
+<meta name="description" content="Complete Article 50 compliance hub for the EU AI Act. Two-layer marking, deepfake disclosure, bot interaction transparency, and Code of Practice alignment.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#0d0c18;color:#f0ece4;line-height:1.7;min-height:100vh}
+a{color:#c9a84c;text-decoration:none;transition:color .2s}
+a:hover,a:focus{color:#e8d28a;text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+.header{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 100%);border-bottom:2px solid rgba(201,168,76,.2);padding:1.25rem 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.header .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.logo{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.logo svg{flex-shrink:0}
+.logo span{color:#c9a84c}
+.logo .navy{color:#f0ece4}
+.header nav{display:flex;gap:1.25rem;font-size:.875rem;font-weight:500}
+.header nav a{color:#a098b0}
+.header nav a:hover{color:#c9a84c;text-decoration:none}
+/* hero */
+.hero{background:linear-gradient(135deg,#0d0c18 0%,#1a1730 50%,#0d0c18 100%);padding:6rem 0 4rem;text-align:center;border-bottom:1px solid rgba(201,168,76,.15);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 40%,rgba(201,168,76,.04) 0%,transparent 60%);pointer-events:none}
+.hero h1{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;color:#f0ece4;margin-bottom:1rem;letter-spacing:-.02em;position:relative}
+.hero h1 span{color:#c9a84c}
+.hero .subtitle{font-size:clamp(1rem,1.8vw,1.2rem);color:#b0a8c0;max-width:680px;margin:0 auto 1rem;position:relative}
+.hero .deadline{display:inline-block;background:rgba(255,80,80,.10);color:#ff6060;font-size:.8rem;font-weight:700;padding:.5rem 1.25rem;border-radius:100px;border:1px solid rgba(255,80,80,.2);margin-bottom:1.5rem;position:relative}
+.badge{display:inline-block;background:rgba(201,168,76,.12);color:#c9a84c;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(201,168,76,.25);margin-bottom:1.25rem}
+.cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative}
+.cta-btn{display:inline-block;background:#c9a84c;color:#0d0c18;font-weight:700;font-size:.95rem;padding:.9rem 2.25rem;border-radius:8px;transition:all .2s;border:none;cursor:pointer}
+.cta-btn:hover{background:#e8d28a;color:#0d0c18;text-decoration:none;transform:translateY(-1px)}
+.cta-btn-outline{display:inline-block;background:transparent;color:#c9a84c;font-weight:600;font-size:.9rem;padding:.85rem 2rem;border-radius:8px;border:1.5px solid #c9a84c;transition:all .2s}
+.cta-btn-outline:hover{background:rgba(201,168,76,.1);text-decoration:none;transform:translateY(-1px)}
+/* sections */
+section{padding:3.5rem 0}
+section h2{font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:700;color:#f0ece4;margin-bottom:.75rem;letter-spacing:-.01em;text-align:center}
+section h2 .gold{color:#c9a84c}
+section > p.section-desc{text-align:center;color:#807890;max-width:600px;margin:0 auto 2rem;font-size:.95rem}
+/* guide cards */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:1rem}
+.guide-card{background:linear-gradient(135deg,#13112a 0%,#1a1730 100%);border:1px solid rgba(201,168,76,.12);border-radius:12px;padding:2rem;transition:border-color .2s,transform .2s;display:flex;flex-direction:column}
+.guide-card:hover{border-color:#c9a84c;transform:translateY(-2px)}
+.guide-card .card-icon{font-size:2rem;margin-bottom:.75rem}
+.guide-card h3{font-size:1.1rem;font-weight:700;color:#f0ece4;margin-bottom:.5rem}
+.guide-card h3 .gold{color:#c9a84c}
+.guide-card p{color:#807890;font-size:.9rem;margin-bottom:1rem;flex:1}
+.guide-card .card-link{color:#c9a84c;font-weight:600;font-size:.85rem;display:inline-flex;align-items:center;gap:.4rem}
+.guide-card .card-link:hover{color:#e8d28a;text-decoration:none}
+.guide-card .card-link::after{content:"→";transition:transform .2s}
+.guide-card .card-link:hover::after{transform:translateX(3px)}
+/* compliance challenge */
+.challenge{background:rgba(201,168,76,.03);border-radius:12px;padding:2rem;margin:1.5rem 0;border:1px solid rgba(201,168,76,.1)}
+.challenge h3{color:#c9a84c;font-size:1.1rem;margin-bottom:.75rem}
+.challenge ul{list-style:none;padding-left:0;display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem}
+.challenge ul li{padding:.4rem 0 .4rem 1.5rem;position:relative;color:#b0a8c0;font-size:.9rem}
+.challenge ul li::before{content:"▸";position:absolute;left:0;color:#c9a84c;font-weight:700}
+@media(max-width:600px){.challenge ul{grid-template-columns:1fr}}
+/* pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem}
+@media(max-width:800px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}}
+.pricing-card{background:linear-gradient(135deg,#13112a 0%,#1a1730 100%);border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:2rem;text-align:center;display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
+.pricing-card:hover{border-color:#c9a84c;transform:translateY(-2px)}
+.pricing-card.featured{border-color:#c9a84c;position:relative}
+.pricing-card.featured::before{content:"Most Popular";position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#c9a84c;color:#0d0c18;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:.3rem 1rem;border-radius:100px}
+.pricing-card .tier-name{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:#807890;font-weight:700;margin-bottom:.5rem}
+.pricing-card .price{font-size:2.2rem;font-weight:800;color:#c9a84c;margin:.25rem 0}
+.pricing-card .price-sub{color:#605870;font-size:.85rem;margin-bottom:1rem}
+.pricing-card ul{list-style:none;padding-left:0;text-align:left;margin:1rem 0 1.5rem;flex:1}
+.pricing-card ul li{padding:.35rem 0 .35rem 1.5rem;position:relative;color:#b0a8c0;font-size:.85rem}
+.pricing-card ul li::before{content:"✓";position:absolute;left:0;color:#c9a84c;font-weight:700}
+.pricing-card .cta-btn{width:100%;text-align:center}
+/* why meok */
+.feature-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:1rem}
+.feature-item{text-align:center;padding:1.5rem}
+.feature-item .fi-icon{font-size:2rem;margin-bottom:.5rem}
+.feature-item h4{color:#c9a84c;font-size:.9rem;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+.feature-item p{color:#807890;font-size:.85rem}
+/* footer */
+.footer{background:linear-gradient(135deg,#0d0c18 0%,#0a0914 100%);border-top:1px solid rgba(201,168,76,.12);padding:3rem 0;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;margin-bottom:2rem}
+.footer h4{color:#c9a84c;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.footer ul{list-style:none}
+.footer li{margin-bottom:.4rem}
+.footer a{color:#807890;font-size:.85rem}
+.footer a:hover{color:#c9a84c}
+.footer-bottom{text-align:center;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,.08);color:#605870;font-size:.8rem}
+@media(max-width:600px){.header .container{flex-direction:column;text-align:center}.header nav{flex-wrap:wrap;justify-content:center}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Article 50 Compliance Suite — MEOK",
+  "description": "Complete EU AI Act Article 50 compliance hub. Two-layer AI output marking, deepfake disclosure, bot interaction transparency, and Code of Practice alignment.",
+  "provider": {
+    "@type": "Organization",
+    "name": "MEOK Compliance",
+    "url": "https://proofof.ai"
+  },
+  "about": {
+    "@type": "Thing",
+    "name": "EU AI Act Article 50",
+    "description": "Transparency obligations for AI-generated content under the EU AI Act"
+  }
+}
+</script>
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="28" height="28" rx="6" stroke="#c9a84c" stroke-width="2.5" fill="none"/>
+        <path d="M10 16 L14 20 L22 12" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div><span class="navy">MEOK</span> <span>Compliance</span></div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/article-50/" style="color:#c9a84c">Article 50</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="badge">EU AI Act Compliance</span>
+    <div class="deadline">⚠️ Enforcement begins 2 August 2026</div>
+    <h1>Article 50 <span>Compliance Suite</span></h1>
+    <p class="subtitle">The EU AI Act's transparency requirements for AI-generated content are coming into force. MEOK provides the complete toolkit for Article 50 compliance — visible labels, machine-readable markings, deepfake disclosure, and bot interaction transparency.</p>
+    <div class="cta-group">
+      <a href="https://proofof.ai" class="cta-btn">Start Your Compliance Audit →</a>
+      <a href="#guides" class="cta-btn-outline">Explore the Guides</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>The <span class="gold">Compliance Challenge</span></h2>
+    <p class="section-desc">Article 50 introduces six distinct obligations that affect every organisation deploying AI systems that generate or interact with content.</p>
+
+    <div class="challenge">
+      <h3>Six Obligations, One Deadline</h3>
+      <ul>
+        <li>Visible labelling of AI-generated outputs</li>
+        <li>Machine-readable metadata marking</li>
+        <li>Deepfake disclosure for image, audio, video</li>
+        <li>AI text disclosure for public-interest content</li>
+        <li>Bot interaction disclosure (chatbots, voice, avatars)</li>
+        <li>Code of Practice compliance documentation</li>
+      </ul>
+    </div>
+
+    <div class="challenge" style="margin-top:1rem">
+      <h3>Why Act Now?</h3>
+      <ul>
+        <li><strong>2 Aug 2026</strong> — enforcement deadline for deployers</li>
+        <li><strong>€15M or 3%</strong> — maximum turnover penalty</li>
+        <li><strong>C2PA &amp; W3C</strong> — technical standards now mandatory</li>
+        <li><strong>First-mover advantage</strong> — regulatory goodwill &amp; market differentiation</li>
+        <li><strong>Sprint 2 starts 20 Jun 2026</strong> — prepare now, comply later</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="guides" style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>Compliance <span class="gold">Guides</span></h2>
+    <p class="section-desc">Five deep-dive guides covering every aspect of Article 50 compliance. Each guide includes actionable implementation advice, technical specifications, and regulatory analysis.</p>
+
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="card-icon">🔍</div>
+        <h3>Transparency <span class="gold">Requirements</span></h3>
+        <p>The two-layer marking system explained — visible labels for humans and machine-readable markers for automated systems. Scope, responsibilities, and exceptions under Article 50.</p>
+        <a href="/article-50/transparency.html" class="card-link">Read the Guide</a>
+      </div>
+
+      <div class="guide-card">
+        <div class="card-icon">⚙️</div>
+        <h3>Technical <span class="gold">Marking Spec</span></h3>
+        <p>Full technical specification for AI output labelling: C2PA, XMP, IPTC, digital signatures, watermarking. Standards-compliant formats for every content type.</p>
+        <a href="/article-50/marking.html" class="card-link">Read the Spec</a>
+      </div>
+
+      <div class="guide-card">
+        <div class="card-icon">🎭</div>
+        <h3>Deepfake <span class="gold">Detection</span></h3>
+        <p>Deepfake disclosure requirements under Article 50(3). The 2 August 2026 enforcement cliff, detection technologies, and compliance labelling obligations.</p>
+        <a href="/article-50/deepfake.html" class="card-link">Read the Guide</a>
+      </div>
+
+      <div class="guide-card">
+        <div class="card-icon">💬</div>
+        <h3>Bot Interaction <span class="gold">Disclosure</span></h3>
+        <p>When AI systems interact with humans, they must disclose they are AI. Requirements for chatbots, voice assistants, and AI avatars under Article 50(1).</p>
+        <a href="/article-50/bot.html" class="card-link">Read the Guide</a>
+      </div>
+
+      <div class="guide-card">
+        <div class="card-icon">📋</div>
+        <h3>Code of Practice <span class="gold">2nd Draft</span></h3>
+        <p>First-mover analysis of the EU AI Office's Code of Practice 2nd draft. What changed, what it means for deployers, and how to prepare for final enforcement.</p>
+        <a href="/article-50/code-of-practice.html" class="card-link">Read the Analysis</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Choose Your <span class="gold">Compliance Tier</span></h2>
+    <p class="section-desc">MEOK offers scalable compliance solutions for every stage of your EU AI Act journey.</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="tier-name">Starter</div>
+        <div class="price">Free</div>
+        <div class="price-sub">per workspace</div>
+        <ul>
+          <li>Article 50 compliance checklist</li>
+          <li>Basic visible labelling templates</li>
+          <li>FAQ JSON-LD generation</li>
+          <li>Static compliance documentation</li>
+          <li>Community support</li>
+        </ul>
+        <a href="https://proofof.ai" class="cta-btn-outline" style="width:100%">Get Started Free</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="tier-name">Pro</div>
+        <div class="price">£199</div>
+        <div class="price-sub">per workspace / month</div>
+        <ul>
+          <li>C2PA provenance metadata embedding</li>
+          <li>W3C &amp; XMP machine-readable marking</li>
+          <li>Digital signature generation (Ed25519)</li>
+          <li>Visible AI label automation</li>
+          <li>Audio frequency-domain watermarking</li>
+          <li>Compliance audit logs &amp; reports</li>
+          <li>REST API for CI/CD integration</li>
+          <li>Custom labelling policy engine</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="https://proofof.ai" class="cta-btn">Subscribe to Pro →</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="tier-name">Enterprise</div>
+        <div class="price">Custom</div>
+        <div class="price-sub">per organisation</div>
+        <ul>
+          <li>Everything in Pro, plus:</li>
+          <li>Multi-workspace compliance dashboard</li>
+          <li>Advanced deepfake detection engine</li>
+          <li>Custom C2PA credential issuance</li>
+          <li>Dedicated compliance engineer</li>
+          <li>On-premise deployment option</li>
+          <li>SLA-backed uptime guarantee</li>
+          <li>Regulatory audit support</li>
+          <li>Bespoke policy development</li>
+        </ul>
+        <a href="https://proofof.ai" class="cta-btn-outline" style="width:100%">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:rgba(201,168,76,.03)">
+  <div class="container">
+    <h2>Why <span class="gold">MEOK?</span></h2>
+    <p class="section-desc">Purpose-built for EU AI Act compliance, not a bolt-on solution.</p>
+
+    <div class="feature-row">
+      <div class="feature-item">
+        <div class="fi-icon">📜</div>
+        <h4>Standards-Compliant</h4>
+        <p>C2PA 2.1, W3C Web Annotation, XMP, IPTC — we implement the formats the regulators recognise.</p>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">🔄</div>
+        <h4>Automated Pipeline</h4>
+        <p>API-first design integrates directly into your CI/CD. No manual steps, no human error.</p>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">🛡️</div>
+        <h4>Audit-Ready</h4>
+        <p>Tamper-evident audit logs and automatic transparency reports. Ready for regulatory inspection.</p>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">📈</div>
+        <h4>Always Updated</h4>
+        <p>We track every Code of Practice draft and regulatory update. Your compliance evolves with the rules.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="text-align:center">
+    <h2>Ready to <span class="gold">Comply?</span></h2>
+    <p style="color:#b0a8c0;max-width:520px;margin:0 auto 2rem">Sprint 2 starts 20 June 2026. Be ready before the 2 August 2026 enforcement cliff. Start your compliance audit today.</p>
+    <div class="cta-group">
+      <a href="https://proofof.ai" class="cta-btn">Start Free Audit →</a>
+      <a href="/contact" class="cta-btn-outline">Talk to Compliance Team</a>
+    </div>
+    <p style="color:#605870;font-size:.8rem;margin-top:1rem">No credit card required for Starter tier. Pro tier includes 14-day free trial.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="https://proofof.ai">MEOK Platform</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/article-50-kit">Article 50 Kit</a></li>
+          <li><a href="/compliance-suite">Compliance Suite</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/article-50/">Article 50 Hub</a></li>
+          <li><a href="/article-50/transparency.html">Transparency Guide</a></li>
+          <li><a href="/article-50/marking.html">Marking Spec</a></li>
+          <li><a href="/article-50/deepfake.html">Deepfake Detection</a></li>
+          <li><a href="/article-50/bot.html">Bot Disclosure</a></li>
+          <li><a href="/article-50/code-of-practice.html">Code of Practice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MEOK Compliance. All rights reserved. Part of the MEOK AI Governance Platform.</p>
+      <p style="margin-top:.25rem">EU AI Act compliance solutions — Article 50, 51, 52, 53, 55, and beyond.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

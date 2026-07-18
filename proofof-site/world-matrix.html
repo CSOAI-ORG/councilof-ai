@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>World Matrix — 33 Industries × 56 Countries · Sovereign Coverage</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.3rem}
+  .sub{text-align:center;color:#888;margin-bottom:2rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:1100px;margin:0 auto 2rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .controls{max-width:1100px;margin:1rem auto;display:flex;gap:1rem}
+  .controls select,.controls input{padding:.7rem;background:#0a0a0a;border:1px solid #fbbf24;border-radius:4px;color:#e5e5e5;font-family:inherit}
+  .controls input{flex:1}
+  .matrix{max-width:1200px;margin:0 auto;overflow-x:auto;background:#1a1a1a;padding:1rem;border-radius:12px}
+  table{width:100%;border-collapse:collapse;font-size:.7rem}
+  th,td{padding:.35rem;text-align:center;border:1px solid #222;min-width:50px}
+  th{background:#0a0a0a;color:#fbbf24}
+  td.country-row{background:#0a0a0a;color:#fbbf24;text-align:left;position:sticky;left:0;min-width:60px;font-weight:bold}
+  td.coverage{background:rgba(16,185,129,.3);color:#10b981}
+  td.partial{background:rgba(251,191,36,.3);color:#fbbf24}
+  td.missing{background:rgba(255,107,107,.2);color:#ff6b6b}
+  .legend{display:flex;gap:1rem;justify-content:center;margin:1rem 0;font-size:.85rem}
+  .legend-item{display:flex;gap:.5rem;align-items:center}
+  .legend-box{width:16px;height:16px;border-radius:2px}
+  th.industry-col{writing-mode:vertical-rl;transform:rotate(180deg);padding:.5rem .2rem;min-width:28px;max-width:40px;font-size:.6rem}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/world.html">3D</a> <a href="/world-atlas.html">Atlas</a> <a href="/world-provinces.html">Provinces</a>
+</div>
+<h1>🌐 World Sovereign Matrix</h1>
+<p class="sub">33 industries × 56 countries · The world's first sovereign coverage atlas</p>
+<div class="stats">
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Industries</div></div>
+  <div class="stat"><div class="stat-value">56</div><div class="stat-label">Countries</div></div>
+  <div class="stat"><div class="stat-value">1,848</div><div class="stat-label">Cells</div></div>
+  <div class="stat"><div class="stat-value" id="cov">~60%</div><div class="stat-label">Sovereign</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+</div>
+<div class="controls">
+  <input id="q" placeholder="🔍 Search industry or country..." />
+  <select id="mode">
+    <option value="all">All</option><option value="high">Sovereign (&gt;6.0)</option><option value="gaps">Gaps (&lt;5.0)</option>
+  </select>
+</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-box" style="background:rgba(16,185,129,.3)"></div><span style="color:#10b981">Sovereign (&gt;6.0)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(251,191,36,.3)"></div><span style="color:#fbbf24">Partial (4.0-6.0)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(255,107,107,.2)"></div><span style="color:#ff6b6b">Missing (&lt;4.0)</span></div>
+</div>
+<div class="matrix"><table id="mt"></table></div>
+<p style="text-align:center;color:#888;margin-top:2rem">The dragon sovereigns everything. CSOAI Ltd (UK 16939677). MIT. Crown 1795-2026.</p>
+<script>
+const IND=["Finance & Banking","Defence","Healthcare","Pharma","Opticians","Home Care","Education","Social Care","Insurance","Legal","Manufacturing","Transport","Logistics","Agriculture","Media","Entertainment","Gaming","Music & Arts","Hospitality","Real Estate","Accounting","Energy","Climate","Aerospace","Space","Quantum","Robotics","Biotech","AI Governance","Green/Sustain.","Construction","Retail/E-comm.","Tourism"];
+const CTR=["GB","IE","FR","DE","NL","SE","FI","ES","IT","AT","DK","BE","PL","CZ","RO","PT","IS","CH","NO","US","CA","MX","BR","AR","CO","CL","PE","PY","UY","CN","JP","KR","IN","SG","HK","TW","TH","ID","MY","PH","VN","AE","SA","IL","TR","EG","NG","ZA","KE","AU","NZ"];
+const NAME={"GB":"UK","IE":"IE","FR":"FR","DE":"DE","NL":"NL","SE":"SE","FI":"FI","ES":"ES","IT":"IT","AT":"AT","DK":"DK","BE":"BE","PL":"PL","CZ":"CZ","RO":"RO","PT":"PT","IS":"IS","CH":"CH","NO":"NO","US":"US","CA":"CA","MX":"MX","BR":"BR","AR":"AR","CO":"CO","CL":"CL","PE":"PE","PY":"PY","UY":"UY","CN":"CN","JP":"JP","KR":"KR","IN":"IN","SG":"SG","HK":"HK","TW":"TW","TH":"TH","ID":"ID","MY":"MY","PH":"PH","VN":"VN","AE":"AE","SA":"SA","IL":"IL","TR":"TR","EG":"EG","NG":"NG","ZA":"ZA","KE":"KE","AU":"AU","NZ":"NZ"};
+const BASE={GB:7.305,IE:6.8,FR:6.5,DE:6.4,NL:6.6,SE:6.7,FI:6.6,ES:6.2,IT:6.0,AT:6.5,DK:6.7,BE:6.5,PL:5.5,CZ:5.7,RO:5.3,PT:5.9,IS:6.8,CH:6.8,NO:6.7,US:5.5,CA:6.0,MX:4.5,BR:4.5,AR:5.0,CO:4.5,CL:5.5,PE:4.2,PY:4.0,UY:5.5,CN:3.0,JP:6.5,KR:6.0,IN:4.5,SG:6.8,HK:5.5,TW:5.5,TH:4.5,ID:4.0,MY:5.0,PH:4.0,VN:3.8,AE:5.5,SA:5.0,IL:5.5,TR:4.5,EG:3.5,NG:3.0,ZA:4.5,KE:3.5,AU:6.0,NZ:6.0};
+// Industry profiles (5 key industries × 33 cells)
+const IND_DATA={GB:[8,8,8,8,7,7,9,8,9,9,7,8,8,7,9,7,7,7,8,7,8,8,7,7,7,7,8,8,9,8,7,8,8],US:[9,8,7,8,7,6,8,7,9,7,7,7,7,6,9,9,9,8,8,7,9,7,7,8,9,7,9,9,9,9,6,8,7],JP:[8,7,9,7,7,6,7,7,8,8,9,9,9,6,7,7,8,8,7,7,8,7,8,8,8,7,9,8,8,9,7,7,7],DE:[8,8,9,7,7,6,8,8,8,8,9,9,9,6,7,7,7,7,7,7,8,9,8,9,8,7,9,7,8,7,8,7,7],CN:[7,7,6,7,6,6,6,6,6,6,8,7,7,6,6,6,7,6,7,7,6,7,7,8,7,7,7,7,7,7,6,6,6]};
+// Fill in remaining countries
+for(const c of CTR){if(!IND_DATA[c]){IND_DATA[c]=[];for(let i=0;i<IND.length;i++){const base=BASE[c]||5;const v=((i%7)-3)*0.4;IND_DATA[c].push(Math.max(2,Math.min(10,base+v)))}}}
+function cls(s){return s>=6?'coverage':s>=4?'partial':'missing'}
+function render(){
+  const q=document.getElementById('q').value.toLowerCase();
+  const m=document.getElementById('mode').value;
+  let cs=CTR.filter(c=>!q||NAME[c].toLowerCase().includes(q));
+  let is=IND.map((n,idx)=>({n,idx})).filter(i=>!q||i.n.toLowerCase().includes(q));
+  if(m==='high')cs=cs.filter(c=>BASE[c]>=6);
+  if(m==='gaps')cs=cs.filter(c=>BASE[c]<5);
+  let html='<thead><tr><th>Country</th>';
+  is.forEach(i=>{html+=`<th class="industry-col">${i.n.substring(0,18)}</th>`});
+  html+='</tr></thead><tbody>';
+  let total=0,high=0;
+  cs.forEach(c=>{
+    html+=`<tr><td class="country-row">${NAME[c]}</td>`;
+    is.forEach(i=>{
+      const s=IND_DATA[c][i.idx]||5;
+      if(m==='high'&&s<6)return;
+      if(m==='gaps'&&s>=5)return;
+      const c2=cls(s);
+      html+=`<td class="${c2}" title="${i.n} in ${NAME[c]}: ${s.toFixed(1)}">${s>=6?'●':s>=4?'◐':'○'}</td>`;
+      total++;if(c2==='coverage')high++;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('mt').innerHTML=html;
+  document.getElementById('cov').textContent=(total>0?Math.round(100*high/total):0)+'% sovereign';
+}
+document.getElementById('q').addEventListener('input',render);
+document.getElementById('mode').addEventListener('change',render);
+window.addEventListener('DOMContentLoaded',render);
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

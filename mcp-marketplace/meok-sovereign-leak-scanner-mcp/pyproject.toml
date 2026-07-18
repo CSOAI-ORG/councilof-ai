@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=64.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "meok-sovereign-leak-scanner-mcp"
+version = "1.0.0"
+description = "MEOK Sovereign Leak Scanner MCP — detects exposed secrets, .env files, and credential leaks (Accenture 35GB case study pattern)"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [{name = "MEOK AI Labs", email = "labs@meok.ai"}]
+keywords = ["mcp", "security", "leak", "secrets", "compliance", "sovereign", "devsecops", "defoneos"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.24.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/CSOAI-ORG/meok-sovereign-leak-scanner-mcp"
+Repository = "https://github.com/CSOAI-ORG/meok-sovereign-leak-scanner-mcp"
+
+[tool.setuptools.packages.find]
+where = ["."]

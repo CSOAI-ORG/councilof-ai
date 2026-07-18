@@ -1,0 +1,31 @@
+{
+  "teachers": [
+    {
+      "name": "deepseek_v3",
+      "family": "deepseek"
+    },
+    {
+      "name": "kimi_k2_6",
+      "family": "kimi"
+    },
+    {
+      "name": "mimo_v2_5_pro",
+      "family": "mimo"
+    },
+    {
+      "name": "qwen3_235b",
+      "family": "qwen"
+    },
+    {
+      "name": "mistral_large_123b",
+      "family": "mistral"
+    }
+  ],
+  "n_teacher_lineages": 5,
+  "prompts_source": "/Users/nicholas/clawd/_alignment/sovereign_merge_kit/expert_data/compliance.jsonl",
+  "n_prompts": 801,
+  "governed_selection": "cross-lineage agreement picks target; care-floor rejects unsafe teacher answers",
+  "honest_note": "teacher answers = distillation SIGNAL not gold ground-truth; license = sovereign-safe only",
+  "dry_run": true,
+  "status": "PLAN_ONLY (no teacher endpoints queried; run with --live on a GPU host)"
+}

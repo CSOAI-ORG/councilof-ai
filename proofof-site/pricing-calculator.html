@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>💰 Pricing Calculator — MEOK OS</title>
+<meta name="description" content="Interactive pricing calculator for MEOK OS sovereign AI compliance. Estimate your monthly cost based on audits, seats, and frameworks.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.5rem; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 2rem; }
+  .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; margin: 0 auto; }
+  .inputs { background: #1a1a1a; padding: 2rem; border-radius: 12px; }
+  .output { background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%); padding: 2rem; border-radius: 12px; border: 2px solid #fbbf24; text-align: center; }
+  .input-group { margin-bottom: 1.5rem; }
+  .input-group label { display: block; color: #fbbf24; margin-bottom: 0.5rem; font-weight: bold; }
+  .input-group input, .input-group select { width: 100%; padding: 0.75rem; background: #0a0a0a; border: 2px solid #333; border-radius: 8px; color: #e5e5e5; font-family: monospace; font-size: 1rem; }
+  .input-group input:focus, .input-group select:focus { outline: none; border-color: #fbbf24; }
+  .input-group .help { color: #888; font-size: 0.85rem; margin-top: 0.25rem; }
+  .slider-group { background: #0a0a0a; padding: 1rem; border-radius: 8px; }
+  .slider-group input[type="range"] { width: 100%; margin-top: 0.5rem; }
+  .slider-value { color: #fbbf24; font-weight: bold; }
+  .breakdown { text-align: left; background: #0a0a0a; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+  .breakdown-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #333; }
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-label { color: #888; }
+  .breakdown-value { color: #fbbf24; font-weight: bold; }
+  .total { font-size: 3rem; color: #10b981; font-weight: bold; margin: 1.5rem 0; }
+  .tier-name { color: #fbbf24; font-size: 1.5rem; font-weight: bold; }
+  .savings { color: #10b981; margin: 0.5rem 0; }
+  .compare { display: flex; gap: 1rem; margin-top: 1.5rem; }
+  .compare-item { flex: 1; background: #0a0a0a; padding: 1rem; border-radius: 8px; }
+  .compare-name { color: #888; font-size: 0.85rem; }
+  .compare-price { color: #888; font-size: 1.5rem; text-decoration: line-through; }
+  .cta { display: block; background: #fbbf24; color: #000; padding: 1.5rem; border-radius: 8px; text-align: center; font-weight: bold; font-size: 1.2rem; margin-top: 1.5rem; text-decoration: none; }
+  @media (max-width: 800px) { .calc { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/pricing.html">Pricing</a>
+  <a href="/sov-os.html">SOV OS</a>
+</div>
+
+<h1>💰 Pricing Calculator</h1>
+<p class="subtitle">Estimate your monthly MEOK OS cost</p>
+
+<div class="calc">
+  <div class="inputs">
+    <div class="input-group">
+      <label>Audits per month</label>
+      <div class="slider-group">
+        <input type="range" id="audits" min="0" max="10000" value="100" oninput="calculate()">
+        <div class="slider-value"><span id="audits-val">100</span> audits/mo</div>
+      </div>
+    </div>
+    <div class="input-group">
+      <label>Seats (users)</label>
+      <div class="slider-group">
+        <input type="range" id="seats" min="1" max="500" value="5" oninput="calculate()">
+        <div class="slider-value"><span id="seats-val">5</span> seats</div>
+      </div>
+    </div>
+    <div class="input-group">
+      <label>Frameworks needed</label>
+      <select id="frameworks" onchange="calculate()">
+        <option value="1">1 framework (e.g. SOC 2 only)</option>
+        <option value="3" selected>3 frameworks (e.g. EU AI Act + GDPR + SOC 2)</option>
+        <option value="6">6 frameworks (e.g. all EU)</option>
+        <option value="12" selected>All 12 frameworks</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Currency</label>
+      <select id="currency" onchange="calculate()">
+        <option value="USD" selected>USD ($)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+        <option value="JPY">JPY (¥)</option>
+        <option value="CNY">CNY (¥)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Deployment</label>
+      <select id="deployment" onchange="calculate()">
+        <option value="cloud">Cloud (managed)</option>
+        <option value="hybrid">Hybrid (cloud + on-prem)</option>
+        <option value="onprem">On-Prem (self-hosted)</option>
+        <option value="airgap">Air-Gap (GovCloud)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="output">
+    <div class="tier-name" id="tier-name">Pro</div>
+    <div class="total" id="total">$99/mo</div>
+    <div class="savings" id="savings">Save $301/mo vs Vanta</div>
+
+    <div class="breakdown">
+      <div class="breakdown-row">
+        <span class="breakdown-label">Base price</span>
+        <span class="breakdown-value" id="base">$99/mo</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Extra audits</span>
+        <span class="breakdown-value" id="extra-audits">$0/mo</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Extra seats</span>
+        <span class="breakdown-value" id="extra-seats">$0/mo</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Frameworks</span>
+        <span class="breakdown-value" id="frameworks-cost">$0/mo</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Deployment</span>
+        <span class="breakdown-value" id="deployment-cost">$0/mo</span>
+      </div>
+    </div>
+
+    <div class="compare">
+      <div class="compare-item">
+        <div class="compare-name">Vanta</div>
+        <div class="compare-price" id="vanta-price">$400/mo</div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-name">Drata</div>
+        <div class="compare-price" id="drata-price">$300/mo</div>
+      </div>
+    </div>
+
+    <a href="/signup.html" class="cta">Get started →</a>
+  </div>
+</div>
+
+<script>
+const CURRENCY_SYMBOLS = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', CNY: '¥' };
+const CURRENCY_RATES = { USD: 1, EUR: 0.92, GBP: 0.79, JPY: 156, CNY: 7.25 };
+
+function calculate() {
+  const audits = parseInt(document.getElementById('audits').value);
+  const seats = parseInt(document.getElementById('seats').value);
+  const frameworks = parseInt(document.getElementById('frameworks').value);
+  const currency = document.getElementById('currency').value;
+  const deployment = document.getElementById('deployment').value;
+  const sym = CURRENCY_SYMBOLS[currency];
+  const rate = CURRENCY_RATES[currency];
+
+  document.getElementById('audits-val').textContent = audits;
+  document.getElementById('seats-val').textContent = seats;
+
+  // Determine tier
+  let tier, base, auditLimit, seatLimit;
+  if (audits <= 100 && seats <= 5) {
+    tier = 'Free';
+    base = 0;
+    auditLimit = 100;
+    seatLimit = 5;
+  } else if (audits <= 10000 && seats <= 50) {
+    tier = 'Pro';
+    base = 99;
+    auditLimit = 10000;
+    seatLimit = 50;
+  } else if (audits <= 100000 && seats <= 200) {
+    tier = 'Governance';
+    base = 2499;
+    auditLimit = 100000;
+    seatLimit = 200;
+  } else {
+    tier = 'Enterprise';
+    base = 9999;
+    auditLimit = Infinity;
+    seatLimit = Infinity;
+  }
+  // Adjust base by frameworks
+  let frameworkCost = 0;
+  if (frameworks === 6) frameworkCost = 0;  // Included in Pro
+  if (frameworks === 12) frameworkCost = 0;  // Included in Pro
+  // Adjust base by deployment
+  let deployCost = 0;
+  if (deployment === 'hybrid') deployCost = 500;
+  if (deployment === 'onprem') deployCost = 1500;
+  if (deployment === 'airgap') deployCost = 3000;
+  // Extra audits
+  let extraAudits = 0;
+  if (audits > auditLimit) extraAudits = (audits - auditLimit) * 0.10;
+  // Extra seats
+  let extraSeats = 0;
+  if (seats > seatLimit) extraSeats = (seats - seatLimit) * 20;
+  const total = (base + frameworkCost + deployCost + extraAudits + extraSeats) * rate;
+  // Format
+  const fmt = currency === 'JPY' ? Math.round(total).toLocaleString() : total.toFixed(0);
+  // Savings vs Vanta
+  const vanta = 400 * rate;
+  const drata = 300 * rate;
+  const savings = Math.max(0, vanta - total);
+  document.getElementById('tier-name').textContent = tier;
+  document.getElementById('total').textContent = `${sym}${fmt}/mo`;
+  document.getElementById('savings').textContent = `Save ${sym}${savings.toFixed(0)}/mo vs Vanta`;
+  document.getElementById('base').textContent = `${sym}${(base * rate).toFixed(0)}/mo`;
+  document.getElementById('extra-audits').textContent = `${sym}${(extraAudits * rate).toFixed(0)}/mo`;
+  document.getElementById('extra-seats').textContent = `${sym}${(extraSeats * rate).toFixed(0)}/mo`;
+  document.getElementById('frameworks-cost').textContent = `${sym}${(frameworkCost * rate).toFixed(0)}/mo`;
+  document.getElementById('deployment-cost').textContent = `${sym}${(deployCost * rate).toFixed(0)}/mo`;
+  document.getElementById('vanta-price').textContent = `${sym}${vanta.toFixed(0)}/mo`;
+  document.getElementById('drata-price').textContent = `${sym}${drata.toFixed(0)}/mo`;
+}
+calculate();
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

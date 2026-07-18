@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RTL Test — Arabic / Hebrew — csoai.org</title>
+<meta name="description" content="Right-to-left layout test for Arabic and Hebrew sovereign surfaces." />
+<style>
+  :root { --bg:#0a0a0a; --fg:#f6f6f6; --gold:#d4af37; --line:#2a2a2a; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: 'Noto Naskh Arabic', 'Noto Serif Hebrew', 'Amiri', serif; background:var(--bg); color:var(--fg); line-height:1.7; }
+  header, main, footer { max-width: 980px; margin: 0 auto; padding: 24px; }
+  header { border-bottom: 1px solid var(--line); }
+  h1 { color: var(--gold); margin: 0 0 6px 0; font-size: 1.8rem; }
+  h2 { color: var(--gold); margin-top: 28px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .card { border: 1px solid var(--line); padding: 16px; border-radius: 8px; background:#111; }
+  .meta { color:#9a9a9a; font-size: 0.9rem; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:999px; background:var(--gold); color:#000; font-weight:600; font-size:0.8rem; }
+  table { width:100%; border-collapse: collapse; margin-top: 10px; }
+  td, th { border:1px solid var(--line); padding:8px; text-align: start; }
+  .rtl-note { background:#1a140a; border-right: 4px solid var(--gold); padding:12px; margin: 16px 0; }
+  [dir="rtl"] .rtl-note { border-right: 4px solid var(--gold); border-left: none; }
+  .num { font-feature-settings: "tnum"; }
+  .small { font-size:0.85rem; color:#bbb; }
+  footer { border-top:1px solid var(--line); margin-top: 32px; font-size:0.85rem; color:#aaa; }
+  ul { padding-inline-start: 1.2em; }
+  .nav { display:flex; gap:14px; flex-wrap:wrap; }
+  .nav a { color:var(--gold); text-decoration:none; }
+  .arrow { font-size:1.4em; }
+</style>
+</head>
+<body>
+<header>
+  <div class="pill">اختبار من اليمين إلى اليسار</div>
+  <h1 dir="rtl">اختبار تخطيط من اليمين إلى اليسار</h1>
+  <p class="meta" dir="rtl">صفحة اختبار لـ CSOAI — للعربية (<code>ar</code>) والعبرية (<code>he</code>) على مستوى csoai.org. تتحقق هذه الصفحة من أن التخطيط، الجداول، التنقل، والأرقام تعمل بشكل صحيح في وضع RTL.</p>
+  <nav class="nav">
+    <a href="#ar">العربية</a>
+    <a href="#he">עברית</a>
+    <a href="#numbers">أرقام</a>
+    <a href="#table">جدول</a>
+    <a href="../i18n/index.html">↩ Picker</a>
+  </nav>
+</header>
+
+<main>
+  <section id="ar" lang="ar" dir="rtl">
+    <h2>الفقرة بالعربية</h2>
+    <p>
+      إن الذكاء الاصطناعي السيادي ليس ترفاً، بل هو ضرورة. حين تُصدر هيئة معتمدة جواز سفر مائي وفق المادة 50 من قانون الاتحاد الأوروبي للذكاء الاصطناعي، فإن كل أثر صادر عن النظام يحمل توقيعاً تشفيرياً يمكن لأي كان التحقق منه دون الاعتماد على سحابة أجنبية. هذه هي السيادة بمعناها العملي.
+    </p>
+    <p class="small">
+      المادة 50 — وضع العلامات المائية على المحتوى المُولَّد بالذكاء الاصطناعي — تدخل حيِّز التنفيذ في <span class="num">٢ آب ٢٠٢٦</span>، أي بعد <span class="num">٣٦</span> يوماً من اليوم، بغرامات تصل إلى <span class="num">١٥ مليون يورو</span> أو <span class="num">٣٪</span> من رقم المعاملات العالمي، أيهما أعلى.
+    </p>
+  </section>
+
+  <section id="he" lang="he" dir="rtl">
+    <h2>פסקה בעברית</h2>
+    <p>
+      בינה מלאכותית ריבונית אינה מותרות – היא הכרח. כאשר גוף מוסמך מנפיק דרכון סימן מים לפי סעיף 50 לחוק האיחוד האירופי לבינה מלאכותית, כל פלט של המערכת נושא חתימה קריפטוגרפית שכל אחד יכול לאמת ללא תלות בענן זר. זוהי ריבונות במובנה המעשי.
+    </p>
+    <p class="small">
+      סעיף 50 – סימון מים על תוכן שנוצר על-ידי בינה מלאכותית – נכנס לתוקף ב־<span class="num">2 באוגוסט 2026</span>, כלומר בעוד <span class="num">36</span> ימים, עם קנסות של עד <span class="num">15 מיליון אירו</span> או <span class="num">3%</span> מהמחזור העולמי, לפי הגבוה מביניהם.
+    </p>
+  </section>
+
+  <section id="numbers">
+    <h2>Numbers in RTL — אמת מספרים</h2>
+    <p class="meta" dir="rtl">في النص العربي، تُكتب الأرقام أحياناً بالأرقام العربية الفارسية (٠١٢٣٤٥٦٧٨٩) وأحياناً بالأرقام اللاتينية. كلا الوضعين يجب أن يعملا. يتم التحقق من الميزات الرقمية <code>tnum</code> في وضع RTL.</p>
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Latin</th><th>Eastern Arabic</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Days to Art. 50</td><td class="num">36</td><td class="num">٣٦</td></tr>
+        <tr><td>Penalty cap (€)</td><td class="num">15,000,000</td><td class="num">١٥٬٠٠٠٬٠٠٠</td></tr>
+        <tr><td>Charter articles</td><td class="num">52</td><td class="num">٥٢</td></tr>
+        <tr><td>Sephiroth</td><td class="num">10</td><td class="num">١٠</td></tr>
+        <tr><td>Districts</td><td class="num">33</td><td class="num">٣٣</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="table">
+    <h2 dir="rtl">جدول التنقل — RTL nav sanity</h2>
+    <div class="grid">
+      <div class="card" dir="rtl">
+        <h3>الرئيسية</h3>
+        <p>الصفحة الرئيسية لـ CSOAI — هيئة معتمدة في المملكة المتحدة.</p>
+        <p class="small"><span class="arrow">↩</span> يعود إلى /i18n/index.html</p>
+      </div>
+      <div class="card" dir="rtl">
+        <h3>نظام التشغيل السيادي</h3>
+        <p>Sovereign OS — مثبت بأمر واحد، بلا قياس عن بُعد، ولا سحابة أجنبية.</p>
+      </div>
+      <div class="card" dir="rtl">
+        <h3>المساعدة</h3>
+        <p>دعم باللغة العربية ٢٤/٧. القنوات: matrix، signal، البريد الإلكتروني الموقع.</p>
+      </div>
+      <div class="card" dir="rtl">
+        <h3 dir="rtl">قانوني</h3>
+        <p>الهيئة مسجلة في المملكة المتحدة. تخضع لقانون المملكة المتحدة وقانون الاتحاد الأوروبي المنطبق.</p>
+      </div>
+    </div>
+    <div class="rtl-note" dir="rtl">
+      هذه الصفحة تتحقق من: (1) اتجاه النص <code>dir="rtl"</code>، (2) علامات الترقيم المعكوسة، (3) أرقام عربية شرقية، (4) الجداول في وضع RTL، (5) التنقل في وضع RTL.
+    </div>
+  </section>
+
+  <section>
+    <h2>Bidi sanity — embedded Latin in RTL</h2>
+    <p dir="rtl">
+      جرّب أيضاً النص المختلط: <span dir="ltr">CSOAI-ORG</span> هو المُصدِر، و <span dir="ltr">proofof.ai</span> هو المُحقِّق العام. الأرقام مثل <span dir="ltr">2 Aug 2026</span> يجب أن تظهر بترتيب LTR داخل النص العربي.
+    </p>
+    <p dir="rtl" lang="he">
+      נסה גם טקסט מעורב: <span dir="ltr">CSOAI-ORG</span> הוא המנפיק, ו <span dir="ltr">proofof.ai</span> הוא המאמת הציבורי. מספרים כמו <span dir="ltr">2 באוגוסט 2026</span> צריכים להופיע בסדר LTR בתוך טקסט עברי.
+    </p>
+  </section>
+</main>
+
+<footer>
+  <p dir="rtl">CSOAI — مجلس سلامة الذكاء الاصطناعي — صفحة اختبار RTL.</p>
+  <p class="small">Built 2026-06-29 · Verified at /Users/nicholas/clawd/csoai.org/i18n/rtl-test.html</p>
+</footer>
+</body>
+</html>

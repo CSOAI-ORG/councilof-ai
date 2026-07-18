@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSOAI — Sovereign World Engine Demo</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0a0a0f;
+    color: #e0e0e0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+}
+.app { display: flex; height: 100vh; }
+.sidebar {
+    width: 380px;
+    background: #111118;
+    border-right: 1px solid #222;
+    padding: 24px;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+.main { flex: 1; position: relative; overflow: hidden; }
+.canvas-container {
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at center, #0d1b2a 0%, #050510 100%);
+    position: relative;
+}
+.logo { font-size: 14px; color: #888; margin-bottom: 4px; letter-spacing: 2px; }
+h1 { font-size: 20px; margin-bottom: 20px; color: #fff; }
+h2 { font-size: 14px; margin: 20px 0 8px; color: #4a9eff; text-transform: uppercase; letter-spacing: 1px; }
+.tool-btn {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    background: #1a1a24;
+    border: 1px solid #2a2a38;
+    border-radius: 8px;
+    color: #e0e0e0;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+.tool-btn:hover { background: #25252f; border-color: #4a9eff; }
+.tool-btn .cmd { color: #4a9eff; font-family: monospace; font-size: 12px; }
+.tool-btn .desc { color: #666; font-size: 12px; margin-top: 4px; }
+.prompt-input {
+    width: 100%;
+    padding: 12px;
+    background: #0a0a12;
+    border: 1px solid #2a2a38;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.prompt-input:focus { outline: none; border-color: #4a9eff; }
+.send-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4a9eff;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+}
+.send-btn:hover { background: #3a8eef; }
+.send-btn:disabled { background: #2a2a38; cursor: not-allowed; }
+.actors-list { list-style: none; }
+.actors-list li {
+    padding: 8px 12px;
+    background: #0a0a12;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-family: monospace;
+    display: flex;
+    justify-content: space-between;
+}
+.actor-type { color: #4a9eff; }
+.actor-id { color: #666; }
+.sigil-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #1a3a1a;
+    color: #4aff4a;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: monospace;
+}
+.scene-info { font-size: 12px; color: #666; font-family: monospace; line-height: 1.6; }
+.status-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 12px 24px;
+    background: #111118;
+    border-top: 1px solid #222;
+    font-family: monospace;
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+}
+.bft-indicator { color: #4aff4a; }
+#sigil-feed {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: rgba(17,17,24,0.9);
+    border: 1px solid #2a2a38;
+    border-radius: 8px;
+    padding: 12px;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+.sigil-entry {
+    font-family: monospace;
+    font-size: 11px;
+    padding: 4px 0;
+    border-bottom: 1px solid #1a1a24;
+    color: #888;
+}
+.sigil-entry .hash { color: #4a9eff; }
+.sigil-entry .op { color: #ffaa4a; }
+@media (max-width: 768px) {
+    .app { flex-direction: column; }
+    .sidebar { width: 100%; height: 40vh; }
+    #sigil-feed { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+    <div class="sidebar">
+        <div class="logo">🜏 CSOAI SOVEREIGN</div>
+        <h1>World Engine Demo</h1>
+        <div class="scene-info" id="scene-info">No scene created. Click "Create Scene" to start.</div>
+
+        <h2>Natural Language</h2>
+        <input type="text" class="prompt-input" id="prompt" placeholder="Build a sovereign facility with perimeter sensors..." value="Build a sovereign AI facility with DEFONEOS perimeter sensors">
+        <button class="send-btn" onclick="executePrompt()">Execute via MCP</button>
+
+        <h2>MCP Tools</h2>
+        <button class="tool-btn" onclick="createScene()">
+            <div class="cmd">sovworld_create_scene()</div>
+            <div class="desc">Create a sovereign 3D world scene</div>
+        </button>
+        <button class="tool-btn" onclick="addActor('facility', '100,0,0')">
+            <div class="cmd">sovworld_add_actor("facility")</div>
+            <div class="desc">Add a sovereign AI facility building</div>
+        </button>
+        <button class="tool-btn" onclick="addActor('sensor', '0,50,0')">
+            <div class="cmd">sovworld_add_actor("sensor")</div>
+            <div class="desc">Add a DEFONEOS perimeter sensor</div>
+        </button>
+        <button class="tool-btn" onclick="addActor('radar', '0,0,100')">
+            <div class="cmd">sovworld_add_actor("radar")</div>
+            <div class="desc">Add a PLFM phased-array radar</div>
+        </button>
+        <button class="tool-btn" onclick="addActor('drone', '50,100,50')">
+            <div class="cmd">sovworld_add_actor("drone")</div>
+            <div class="desc">Add a surveillance drone</div>
+        </button>
+        <button class="tool-btn" onclick="loadTiles()">
+            <div class="cmd">sovworld_load_tiles("cesium-osgb")</div>
+            <div class="desc">Load OS 3D terrain tiles</div>
+        </button>
+        <button class="tool-btn" onclick="renderFrame()">
+            <div class="cmd">sovworld_render_frame()</div>
+            <div class="desc">Render current scene (camera fly)</div>
+        </button>
+
+        <h2>Scene Actors (<span id="actor-count">0</span>)</h2>
+        <ul class="actors-list" id="actors-list">
+            <li style="color:#444">No actors yet</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="canvas-container" id="canvas-container">
+            <div id="sigil-feed">
+                <div style="color:#4a9eff;font-size:12px;margin-bottom:8px;">🜏 SIGIL LEDGER (live)</div>
+                <div id="sigil-entries"></div>
+            </div>
+            <canvas id="world-canvas" style="width:100%;height:100%;display:block;"></canvas>
+        </div>
+        <div class="status-bar">
+            <div>Scene: <span id="scene-id-display">none</span> | Actors: <span id="actor-count-2">0</span></div>
+            <div class="bft-indicator">● BFT: 200/200 voters online | SIGIL: <span id="sigil-count">0</span> entries</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ─── SOVEREIGN WORLD ENGINE — client-side simulation of the MCP ───
+// This demonstrates the SOV3 agent → UE 5.8 MCP → 3D world pipeline
+// for investor demos. The real version connects to http://127.0.0.1:8000/mcp
+
+let scene = null;
+let actors = [];
+let sigils = [];
+let actorIdCounter = 0;
+
+// ─── Ed25519-style signing (simulated for demo) ───
+function sign(data) {
+    const hash = Array.from(data).reduce((a,c) => ((a<<5)-a)+c.charCodeAt(0), 0);
+    const hex = Math.abs(hash).toString(16).padStart(16,'0');
+    return hex + Array.from({length:48},()=>"0123456789abcdef"[Math.floor(Math.random()*16)]).join('');
+}
+
+// ─── SIGIL emission ───
+function emitSigil(op, fields) {
+    const ts = new Date().toISOString();
+    const payload = JSON.stringify({op, ...fields});
+    const prevHash = sigils.length > 0 ? sigils[sigils.length-1].hash : 'GENESIS';
+    const hash = sign(prevHash + payload);
+    sigils.push({ts, op, hash: hash.substring(0,16), prevHash: prevHash.substring(0,8)});
+    renderSigils();
+}
+
+// ─── MCP Tool: create_scene ───
+function createScene() {
+    const sceneId = 'sov-scene-' + Date.now().toString(36);
+    scene = { id: sceneId, bounds: '10000x10000x2000', actors: [], tiles: null };
+    actors = [];
+    actorIdCounter = 0;
+    emitSigil('CREATE_SCENE', {scene_id: sceneId});
+    updateUI();
+    drawScene();
+    return { scene_id: sceneId, status: 'created', care_floor: 0.95 };
+}
+
+// ─── MCP Tool: add_actor ───
+function addActor(type, location) {
+    if (!scene) { createScene(); }
+    actorIdCounter++;
+    const actorId = `actor-${actorIdCounter}`;
+    const actor = { id: actorId, type, location: location.split(',').map(Number), scale: [1,1,1] };
+    actors.push(actor);
+    scene.actors.push(actor);
+    emitSigil('ADD_ACTOR', {actor_id: actorId, type, location});
+    updateUI();
+    drawScene();
+    return { actor_id: actorId, type, status: 'added', sigil_signed: true };
+}
+
+// ─── MCP Tool: load_tiles ───
+function loadTiles() {
+    if (!scene) { createScene(); }
+    scene.tiles = 'cesium-osgb';
+    emitSigil('LOAD_TILES', {source: 'cesium-osgb', zoom: 12});
+    updateUI();
+    drawScene();
+    return { tiles_loaded: true, source: 'OS 3D地形' };
+}
+
+// ─── MCP Tool: render_frame ───
+function renderFrame() {
+    if (!scene) return {error: 'No scene'};
+    emitSigil('RENDER_FRAME', {camera: '51.5,-0.1,1000m'});
+    drawScene();
+    return { rendered: true, actors: actors.length };
+}
+
+// ─── Natural language → MCP tool calls ───
+function executePrompt() {
+    const prompt = document.getElementById('prompt').value.toLowerCase();
+    emitSigil('AGENT_PROMPT', {text: prompt.substring(0, 40)});
+
+    if (!scene) createScene();
+
+    // Simple NL → tool mapping (real version uses SOV3 LLM routing)
+    if (prompt.includes('facility') || prompt.includes('building') || prompt.includes('基地') || prompt.includes('设施')) {
+        addActor('facility', '100,0,0');
+    }
+    if (prompt.includes('sensor') || prompt.includes('传感器')) {
+        addActor('sensor', '0,50,0');
+        addActor('sensor', '0,-50,0');
+        addActor('sensor', '50,0,0');
+    }
+    if (prompt.includes('radar') || prompt.includes('雷达')) {
+        addActor('radar', '0,0,100');
+    }
+    if (prompt.includes('drone') || prompt.includes('无人机')) {
+        addActor('drone', '50,100,50');
+    }
+    if (prompt.includes('perimeter') || prompt.includes('defoneos') || prompt.includes('周边')) {
+        // Build a perimeter of sensors
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            addActor('sensor', `${Math.cos(angle)*150|0},${Math.sin(angle)*150|0},0`);
+        }
+    }
+    if (prompt.includes('terrain') || prompt.includes('3d') || prompt.includes('tiles')) {
+        loadTiles();
+    }
+    renderFrame();
+}
+
+// ─── 3D Rendering (Canvas 2D projection) ───
+function drawScene() {
+    const canvas = document.getElementById('world-canvas');
+    const container = document.getElementById('canvas-container');
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+    const ctx = canvas.getContext('2d');
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    // Clear
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Grid floor (perspective)
+    ctx.strokeStyle = 'rgba(74, 158, 255, 0.15)';
+    ctx.lineWidth = 1;
+    const gridSize = 50;
+    for (let i = -10; i <= 10; i++) {
+        // X lines
+        ctx.beginPath();
+        ctx.moveTo(cx + i * gridSize, cy - 200);
+        ctx.lineTo(cx + i * gridSize * 0.3, cy + 200);
+        ctx.stroke();
+        // Z lines
+        ctx.beginPath();
+        ctx.moveTo(cx - 300, cy + i * 20);
+        ctx.lineTo(cx + 300, cy + i * 20);
+        ctx.stroke();
+    }
+
+    // Draw actors
+    const typeColors = {
+        facility: '#4a9eff', sensor: '#4aff4a', radar: '#ffaa4a',
+        drone: '#ff4a4a', building: '#9affff', default: '#aaaaaa'
+    };
+    const typeIcons = {
+        facility: '🏢', sensor: '📡', radar: '🎯', drone: '🚁', default: '⬢'
+    };
+
+    actors.forEach((actor, i) => {
+        const [x, y, z] = actor.location;
+        // Project 3D to 2D (simple perspective)
+        const scale = 1 + (z / 200) * 0.5;
+        const px = cx + x * 1.5;
+        const py = cy + y * 0.8 - z * 0.5;
+        const color = typeColors[actor.type] || typeColors.default;
+        const icon = typeIcons[actor.type] || typeIcons.default;
+
+        // Glow
+        const grad = ctx.createRadialGradient(px, py, 0, px, py, 30 * scale);
+        grad.addColorStop(0, color + '80');
+        grad.addColorStop(1, color + '00');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(px, py, 30 * scale, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Core
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(px, py, 8 * scale, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label
+        ctx.fillStyle = color;
+        ctx.font = `${10 * scale}px monospace`;
+        ctx.fillText(`${actor.id}`, px + 12, py - 8);
+        ctx.fillStyle = '#666';
+        ctx.font = `${9 * scale}px monospace`;
+        ctx.fillText(`${actor.type}`, px + 12, py + 4);
+    });
+
+    // Title overlay
+    if (scene) {
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.font = 'bold 24px -apple-system';
+        ctx.fillText('🜏 Sovereign World Engine', 24, 40);
+        ctx.fillStyle = '#666';
+        ctx.font = '14px monospace';
+        ctx.fillText(`Scene: ${scene.id} | ${actors.length} actors | BFT governed | Ed25519 signed`, 24, 64);
+    }
+}
+
+// ─── UI Updates ───
+function updateUI() {
+    document.getElementById('scene-info').innerHTML = scene ?
+        `<strong>Scene ID:</strong> ${scene.id}<br>
+         <strong>Bounds:</strong> ${scene.bounds}<br>
+         <strong>Actors:</strong> ${actors.length}<br>
+         <strong>Tiles:</strong> ${scene.tiles || 'none'}<br>
+         <strong>Care Floor:</strong> 0.95 (enforced)` :
+        'No scene created.';
+    document.getElementById('scene-id-display').textContent = scene ? scene.id.substring(0, 20) : 'none';
+    document.getElementById('actor-count').textContent = actors.length;
+    document.getElementById('actor-count-2').textContent = actors.length;
+    document.getElementById('sigil-count').textContent = sigils.length;
+
+    const list = document.getElementById('actors-list');
+    list.innerHTML = actors.length === 0 ?
+        '<li style="color:#444">No actors yet</li>' :
+        actors.map(a => `<li>
+            <span><span class="actor-type">${a.type}</span> <span class="actor-id">${a.id}</span></span>
+            <span class="sigil-badge">✓ signed</span>
+        </li>`).join('');
+}
+
+function renderSigils() {
+    const feed = document.getElementById('sigil-entries');
+    const recent = sigils.slice(-8).reverse();
+    feed.innerHTML = recent.map(s =>
+        `<div class="sigil-entry">
+            <span class="op">${s.op}</span>
+            <span class="hash">${s.hash}</span><br>
+            <span style="color:#555;font-size:10px">prev: ${s.prevHash}</span>
+        </div>`
+    ).join('');
+}
+
+// ─── Init ───
+window.addEventListener('resize', drawScene);
+
+// Auto-create scene on load for immediate visual impact
+setTimeout(() => {
+    createScene();
+    executePrompt();
+}, 500);
+</script>
+</body>
+</html>

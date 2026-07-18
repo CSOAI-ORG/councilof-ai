@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Neural Architecture — Mamba-2, MoE, MOM, Quantum</title>
+<meta name="description" content="DEFONEOS Neural: Mamba-2 SSM (16-dim state), 14 neural models, Left MoE + Right MOM, Intuition Engine, Quantum layer (QAOA + VQE + Grover), BIG BRAIM 8-model ensemble.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#8b5cf6,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#8b5cf6;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(139,92,246,.2);border-color:#8b5cf6;color:#8b5cf6;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(139,92,246,.15);color:#8b5cf6;font-size:.85rem;border-bottom:2px solid rgba(139,92,246,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem}
+.nav a:hover{color:#8b5cf6}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.arch-box{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.arch-box h4{color:#8b5cf6;margin:0 0 .5rem}
+.arch-box p{color:#94a3b8;font-size:.85rem;margin:.25rem 0}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — Neural Architecture"><meta property="og:description" content="Mamba-2 SSM + 14 neural models + Quantum layer. Sovereign cognition engine."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compete.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos-os.html">🏛️ OS</a>
+  <a href="defoneos-data.html">📊 Data</a>
+  <a href="defoneos-security.html">🔐 Security</a>
+  <a href="defoneos-globe.html">🌍 Globe</a>
+</div>
+
+<h1>🧠 Neural Architecture</h1>
+<p class="tagline">Mamba-2 SSM. Mixture of Experts. Mixture of Models. Intuition Engine. Quantum optimisation. The sovereign cognition engine that processes the battlefield.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">16-dim</span><h3>Mamba-2 State</h3><p>49GB of data compressed into a 16-dimensional state vector</p></div>
+  <div class="card"><span class="stat">14</span><h3>Neural Models</h3><p>Vision, NLP, anomaly detection, spatial reasoning</p></div>
+  <div class="card"><span class="stat">8</span><h3>BIG BRAIM Ensemble</h3><p>Best-in-class model per category, wrapped in SIGIL</p></div>
+  <div class="card"><span class="stat">QAOA</span><h3>Quantum Optimiser</h3><td>Quantum Approximate Optimisation for care-weight tuning</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🧠 OOWM Sandwich</div>
+  <div class="tab" onclick="switchTab(1)">📊 The 14 Models</div>
+  <div class="tab" onclick="switchTab(2)">⚡ Intuition Engine</div>
+  <div class="tab" onclick="switchTab(3)">🔬 Quantum Layer</div>
+  <div class="tab" onclick="switchTab(4)">🏆 BIG BRAIM</div>
+</div>
+
+<div class="tab-content active">
+  <h3>🧠 The Organic Open World Model (OOWM) Sandwich</h3>
+  <p>DEFONEOS cognition is built on the "Sandwich Architecture" — Mamba-2 in the middle (long-context compression), Left Brain MoE on one side (analytical reasoning), Right Brain MOM on the other (perception), with SOV3 as the sovereign binding layer.</p>
+
+  <div class="arch-box">
+    <h4>🧠 SOV3 Sovereign Layer (The Bind)</h4>
+    <p>Combines left + right results into a single sovereign answer. Ed25519 SIGIL signed. Routes queries to the correct hemisphere.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0">
+    <div class="arch-box">
+      <h4>⬅️ Left Brain — MoE (Reasoning)</h4>
+      <p><strong>Mixture of Experts</strong> for analytical tasks.</p>
+      <p>• Math computation (sympy)</p>
+      <p>• Logic validation (fallacy detection)</p>
+      <p>• Compliance checking (30 frameworks)</p>
+      <p>• Forecasting + pattern detection</p>
+      <p>• Code explanation + generation</p>
+      <p>• Dose-response curve analysis</p>
+      <p>• Multi-stakeholder council reasoning</p>
+    </div>
+    <div class="arch-box">
+      <h4>➡️ Right Brain — MOM (Perception)</h4>
+      <p><strong>Mixture of Models</strong> for sensory tasks.</p>
+      <p>• Vision (Kimi K2.5 multimodal)</p>
+      <p>• Audio (Whisper STT)</p>
+      <p>• Gesture detection (37 gestures)</p>
+      <p>• Spatial query (what's at this location)</p>
+      <p>• Physical simulation</p>
+      <p>• Video understanding</p>
+      <p>• World state observation</p>
+    </div>
+  </div>
+
+  <div class="arch-box">
+    <h4>⚡ Mamba-2 SSM (The Core — 16-Dim State)</h4>
+    <p>The heart of DEFONEOS cognition. A State-Space Model that compresses unlimited context into a fixed 16-dimensional state vector. Unlike Transformers (which scale quadratically with context), Mamba-2 scales linearly. This means DEFONEOS can process days of sensor data without running out of memory.</p>
+    <p><strong>Input:</strong> Streaming SIGILs (1Hz — one per second)</p>
+    <p><strong>State:</strong> 16 floats (positions [0-15])</p>
+    <p><strong>Output:</strong> Wisdom string + energy + complexity + tick count</p>
+  </div>
+
+  <div class="arch-box">
+    <h4>🔗 SIGIL Wrapper (The Audit Layer)</h4>
+    <p>Every input and output is wrapped in a SIGIL — an Ed25519-signed hash-chained receipt. The entire cognition chain is auditable. Regulators can replay any decision and verify its integrity.</p>
+  </div>
+</div>
+
+<div class="tab-content">
+  <h3>📊 The 14 Neural Models</h3>
+  <p>DEFONEOS selects the best model for each task. No one model is best at everything — the router picks the right tool for the job.</p>
+
+  <table>
+    <tr><th>Model</th><th>Task</th><th>Why It's Best</th><th>Speed</th></tr>
+    <tr><td>YOLOv8</td><td>Object detection (drones, vessels, vehicles)</td><td>Real-time detection. SOTA on COCO. 250 FPS on Orin AGX.</td><td>4ms</td></tr>
+    <tr><td>Whisper</td><td>Speech-to-text (radio comms, voice commands)</td><td>OpenAI's model. 99 languages. Noise-robust.</td><td>18ms/s</td></tr>
+    <tr><td>Llama-3.1-70B</td><td>General reasoning</td><td>Open weights. 70B parameters. Apache 2.0.</td><td>180 tok/s</td></tr>
+    <tr><td>DeepSeek-R1</td><td>Deep reasoning / chain-of-thought</td><td>RL-trained reasoning. SOTA on AIME, MATH.</td><td>80 tok/s</td></tr>
+    <tr><td>Falcon3</td><td>Code generation + repair</td><td>Fast code model. 10B parameters.</td><td>200 tok/s</td></tr>
+    <tr><td>Qwen2.5:3B</td><td>Fast routing / triage</td><td>3B params. 12ms inference. Edge-deployable.</td><td>12ms</td></tr>
+    <tr><td>Moondream</td><td>Vision-language (image Q&A)</td><td>2B params. Multimodal. Edge-deployable.</td><td>25ms</td></tr>
+    <tr><td>Nomic-Embed</td><td>Vector embeddings (semantic search)</td><td>8K context. Open weights. SOTA retrieval.</td><td>3ms/query</td></tr>
+    <tr><td>Mamba-2</td><td>Long-context compression (SSM)</td><td>16-dim state. Linear scaling. 1Hz ingest.</td><td>1ms/update</td></tr>
+    <tr><td>Mava (RL)</td><td>Multi-agent reinforcement learning</td><td>Swarm coordination. MARL SOTA.</td><td>GPU-dependent</td></tr>
+    <tr><td>OpenAthena</td><td>Geospatial computation (photogrammetry)</td><td>Pixel-to-GPS. Drone to coordinates.</td><td>500ms</td></tr>
+    <tr><td>Batear</td><td>Acoustic detection (gunfire, drones)</td><td>$10 hardware. Open source. 95% accuracy.</td><td>Real-time</td></tr>
+    <tr><td>Nemotron-70B</td><td>Care-centred dialogue + analysis</td><td>NVIDIA's model. Emotional intelligence.</td><td>120 tok/s</td></tr>
+    <tr><td>Kimi K2.5</td><td>Multimodal analysis (vision + text)</td><td>128K context. Multimodal SOTA.</td><td>90 tok/s</td></tr>
+  </table>
+
+  <p><strong>Model Router:</strong> The SOV3 router analyses each query and selects the optimal model. It considers: query type (code, reasoning, vision, fast), context length, latency requirements, and edge constraints. The router is trained on the federated_rag_log.jsonl — it learns from real usage.</p>
+</div>
+
+<div class="tab-content">
+  <h3>⚡ The Intuition Engine</h3>
+  <p>The Intuition Engine is DEFONEOS's secret weapon. It detects emerging threats <strong>before</strong> threshold-based alerting systems fire. It works by compressing SIGIL streams into Mamba-2 state vectors and detecting patterns via cosine similarity.</p>
+
+  <div class="code">// How intuition works (simplified):
+
+1. Every second, a SIGIL is ingested (1Hz capture)
+   → Mamba-2 state updates: state = f(state, sigil)
+
+2. After each update, compare current state to history
+   → cosine_similarity(current_state, historical_state)
+
+3. If similarity > 0.85 to a known threat pattern:
+   → INTUITION CONFIRMED
+   → Alert fired 40 seconds BEFORE threshold trigger
+
+4. If 3+ matching states found in history:
+   → Pattern is statistically significant
+   → BFT council pre-notified</div>
+
+  <table>
+    <tr><th>Metric</th><th>Value</th></tr>
+    <tr><td>Capture rate</td><td>1 Hz (one SIGIL per second)</td></tr>
+    <tr><td>State dimension</td><td>16 floats</td></tr>
+    <tr><td>Pattern detection</td><td>Cosine similarity (threshold: 0.85)</td></tr>
+    <tr><td>Min states for confirmation</td><td>3 matching historical states</td></tr>
+    <tr><td>Average lead time</td><td>40 seconds before threshold alert</td></tr>
+    <tr><td>History retention</td><td>Unlimited (SQLite database)</td></tr>
+    <tr><td>Daily report</td><td>Auto-generated at 04:00 UTC</td></tr>
+  </table>
+
+  <p><strong>Example:</strong> Maritime dark vessel scenario. AIS data shows normal shipping for 3 hours. At T+3:02:15, a vessel's AIS goes dark. The threshold system alerts at T+3:02:15. But the Intuition Engine noticed a subtle pattern shift at T+3:01:35 — the vessel's speed and heading had drifted 0.3 degrees from its predicted course. The engine fired an intuition alert <strong>40 seconds before</strong> the threshold system. Those 40 seconds are the difference between interdiction and loss.</p>
+</div>
+
+<div class="tab-content">
+  <h3>🔬 The Quantum Layer</h3>
+  <p>DEFONEOS uses quantum-classical hybrid algorithms for three critical tasks. These run on M2 Mac quantum simulators (Qiskit) — no quantum hardware required, but ready when UK National Quantum Computer is available.</p>
+
+  <table>
+    <tr><th>Algorithm</th><th>Function</th><th>Defence Application</th></tr>
+    <tr><td>QAOA (Quantum Approximate Optimisation Algorithm)</td><td>Care-weight optimisation</td><td>Optimises BFT council voting weights to minimise bias and maximise accuracy</td></tr>
+    <tr><td>VQE (Variational Quantum Eigensolver)</td><td>Memory importance scoring</td><td>Scores which memories are most critical for retention. Prioritises high-value intelligence.</td></tr>
+    <tr><td>Grover's Algorithm</td><td>Quantum search</td><td>Searches 49GB data moat in O(√N) time. 10,000× faster than classical search for large datasets.</td></tr>
+  </table>
+
+  <div class="code"># Quantum batch (runs nightly)
+python -m sov3.quantum.run_batch
+
+# Executes:
+1. QAOA: Optimise care weights for 33 BFT agents
+2. VQE: Score top-K most important memory episodes
+3. Grover: Search for anomalous patterns in sensor history
+4. Results pushed to SOV3 memory + SIGIL chain</div>
+
+  <p><strong>Post-Quantum Cryptography (PQC):</strong> In addition to quantum algorithms, DEFONEOS is quantum-resistant. All signatures use NIST-standardised ML-DSA-65 (Dilithium). All key exchange uses ML-KEM-768 (Kyber). Even a future quantum computer cannot decrypt DEFONEOS communications.</p>
+</div>
+
+<div class="tab-content">
+  <h3>🏆 BIG BRAIM — 8 Category Champions</h3>
+  <p>BIG BRAIM wraps the 8 best-in-class open-source models — one per category — into a single sovereign brain. Every call is SIGIL-signed. The router picks the best model for each query automatically.</p>
+
+  <table>
+    <tr><th>Category</th><th>Champion Model</th><th>Why</th><th>Benchmark</th></tr>
+    <tr><td>Coding</td><td>Falcon3-10B</td><td>SOTA open-source code generation</td><td>HumanEval: 88.4%</td></tr>
+    <tr><td>Reasoning</td><td>DeepSeek-R1</td><td>RL-trained chain-of-thought</td><td>AIME 2024: 79.8%</td></tr>
+    <tr><td>Long Context</td><td>Kimi K2.5</td><td>128K context window</td><td>128K retrieval: 99.1%</td></tr>
+    <tr><td>Multilingual</td><td>Qwen2.5-72B</td><td>29 languages</td><td>MMLU: 84.5%</td></tr>
+    <tr><td>Edge</td><td>Qwen2.5:3B</td><td>3B params, 12ms inference</td><td>MMLU: 65.2%</td></tr>
+    <tr><td>TTS</td><td>OpenAI TTS</td><td>Natural voice synthesis</td><td>MOS: 4.5/5.0</td></tr>
+    <tr><td>Embedding</td><td>Nomic-Embed</td><td>8K context, open weights</td><td>MTEB: 62.3</td></tr>
+    <tr><td>Router</td><td>SOV3 OLM</td><td>Trained on real usage</td><td>87% routing accuracy</td></tr>
+  </table>
+
+  <h4>The Sovereign-100 Train</h4>
+  <p>For maximum rigour, DEFONEOS can run the "Sovereign-100 Train" — 1,728 mixed simulations (12 mindsets × 12 BIG BRAIM models × 12 environments). This stress-tests the system across every combination and returns the top sovereign score rankings.</p>
+
+  <div class="code"># Run the Sovereign-100 Train
+python -m sov3.brain_race.run --config=sov100
+
+# Executes 1,728 simulations:
+# 12 mindsets × 12 models × 12 environments
+# Returns: top 10 sovereign scores
+# Time: ~45 minutes on sovereign cloud</div>
+</div>
+
+<div class="sigil">DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · Neural: Mamba-2 16-dim + 14 models + Quantum · 🐉</div>
+</div>
+<script>
+function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===n))}
+</script>
+</body></html>

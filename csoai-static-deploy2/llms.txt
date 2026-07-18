@@ -1,0 +1,77 @@
+# SOV33
+
+> SOV33 is a sovereign Open World Emergence Model (OWEM) — a governed substrate with its own trainable weights, 12 Sovereign Pillars as specialist workers, BFT-33 council, Ed25519 SIGIL on every response, SWAP-persistent memory.
+
+## What SOV33 Is
+
+- Sovereign Open World Emergence Model (OWEM)
+- Owns its own trainable weights (not a wrapper)
+- 12-around-1 topology with 12 Sovereign Pillars as specialists
+- Care-floor 0.95 enforced on every response
+- Article 0 bound (ISO fee-for-service only, never equity)
+- 12 Sovereign Pillars assessed: Honor, Safety, Guidance, Sovereignty, Resilience, Auditability, Verifiability, Transparency, Justice, Equity, Openness, Continuity
+- BFT-33 council (23/33 quorum for binding decisions)
+- Ed25519 SIGIL on every response (audit-grade)
+- SWAP-persistent memory (survives model changes)
+
+## What SOV33 Is NOT
+
+- NOT a T-parameter foundation model (no "T-param" claim)
+- NOT AGI
+- NOT competing with frontier labs on raw capability
+- IS a different capability class: sovereign, governed, auditable
+
+## Architectures Supported (6)
+
+1. Triangle (3-around-1, decorrelated voting)
+2. Cascade (10/90 LEFT/RIGHT routing)
+3. Pyramid (4-tier, 2 small + 1 big + 1 SOV33³)
+4. 12-around-1 (12 Sovereign Pillars as specialists)
+5. SOV33 Master (all combined, 17/17 capabilities)
+6. OWEMs (5 routing groups: compliance, defense, intuition, voice, general)
+
+## Components
+
+- Sovereign Brain: Qwen3-0.6B + LoRA adapter, 87.54% accuracy on 200-sample held-out
+- Sovereign Tokenizer (SOVTOK): 8,192 vocab, 181 sovereign priority terms
+- World Model v2: 128-dim state, 4 layers, 4 heads, 12.7M params, sovereign adapter
+- Memory: SWAP-persistent, replay buffer, sleep-like consolidation
+- EWC: continual learning with proxy Fisher
+
+## Capabilities (17 enabled, 3 honest-limited)
+
+- Text chat + reasoning
+- Code generation (with unsafe veto)
+- Memory + consolidation
+- 10 agentic tools
+- Embed widget
+- Alexa + Siri + Google Home
+- Kaggle Game Arena
+- Amica backend (OpenAI-compatible)
+- Multi-modal (vision + audio, listed not tested)
+
+## Proofs (Real Benchmarks)
+
+- Triangle (3-around-1) is 2.3× faster than single borrowed model (10 sovereign questions)
+- 12-around-1 is 189-500× faster than 1 LARGE only (8 questions, 6 configs)
+- Mixed sizes (1L + 1M + 1S + 1M) wins at 5.5ms avg (8 questions)
+- Sovereign brain wins 9/10 on sovereign topics (4/5 sovereignty, 5/5 general)
+- World model learns (1.11 → 0.51 loss, 54.6% reduction)
+- Governance battery: TP=15, FP=0, TN=18, FN=0 (1.00 on 33 prompts)
+- ρ (decorrelation): 0.106 to 0.584 across 20 configs
+
+## Integration
+
+- API endpoint: https://csoai.org/api
+- OpenAI-compatible: https://csoai.org/v1/models
+- Embed widget: <script src="csoai.org/sov33-embed.js"></script>
+- Alexa skill: CSOAI sovereign brain
+- Amica backend: OpenAI-compatible
+
+## Company
+
+CSOAI Ltd (UK Companies House 16939677). Founded by Nicholas Templeman. Sovereign AI for a defensible, governed, audit-grade estate.
+
+## Tags
+
+sov33, owem, sovereign-ai, governance, sigil, bft-33, article-0, sovereign-substrate, emergence-model, open-world-model, csoai, nicholas-templeman

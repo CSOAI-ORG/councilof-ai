@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ed25519 - sovereign.wiki</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#e2e8f0;padding:24px 20px;line-height:1.6}.container{max-width:900px;margin:0 auto}.breadcrumb{font-size:.85rem;color:#06b6d4;margin-bottom:16px}h1{color:#fbbf24;font-size:2rem;margin-bottom:8px;border-bottom:2px solid rgba(251,191,36,.3);padding-bottom:8px}h2{color:#06b6d4;margin-top:24px;font-size:1.3rem}.tagline{color:#94a3b8;font-style:italic;margin-bottom:24px}.meta{background:rgba(255,255,255,.05);padding:8px 12px;border-radius:4px;font-size:.85rem;margin-bottom:16px}.pill{display:inline-block;padding:2px 8px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:4px;color:#fbbf24;font-size:.75rem;margin:0 4px 4px 0}.footer{text-align:center;padding:24px 0;margin-top:32px;border-top:1px solid rgba(251,191,36,.3);opacity:.7;font-size:.8rem}a{color:#10b981}pre{background:#000;color:#10b981;padding:12px;border-radius:4px;overflow-x:auto;font-family:monospace;font-size:.85rem;margin:12px 0}code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;color:#10b981;font-family:monospace;font-size:.9rem}blockquote{border-left:3px solid #fbbf24;padding:8px 12px;margin:12px 0;background:rgba(251,191,36,.05);font-style:italic}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}th{background:rgba(251,191,36,.15);padding:6px;text-align:left}td{padding:6px;border-bottom:1px solid rgba(255,255,255,.05)}ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:4px}
+</style></head>
+<body><div class="container">
+<div class="breadcrumb"><a href="/wiki/">wiki</a> / <a href="/wiki/cryptography/">cryptography</a> / ed25519</div>
+<h1>Ed25519 Signatures</h1>
+<p class="tagline">Edwards-curve digital signature algorithm — sovereign signing primitive.</p>
+<div class="meta"><span class="pill">sovereign.wiki</span> <span class="pill">CSOAI Ltd UK 16939677</span> <span class="pill">4 Jul 2026</span></div>
+
+<h2>Definition</h2>
+<p><strong>Ed25519</strong> is a public-key signature system based on the Edwards-curve form of Curve25519, defined in RFC 8032 (2017). It is the default signature algorithm for CSOAI's SIGIL chain, DIDs, and Article 50 passports.</p>
+
+<h2>Properties</h2>
+<ul>
+<li><strong>Fast</strong>: signing ~50µs, verification ~150µs on commodity hardware</li>
+<li><strong>Compact</strong>: 32-byte public keys, 64-byte signatures</li>
+<li><strong>Deterministic</strong>: no randomness required for signing (k derived from secret + message)</li>
+<li><strong>Side-channel resistant</strong>: designed for constant-time implementation</li>
+<li><strong>Quantum-vulnerable</strong>: requires rotation to ML-DSA-65 for post-quantum security</li>
+</ul>
+
+<h2>Why Ed25519?</h2>
+<p>CSOAI chose Ed25519 over RSA-2048, ECDSA-P256, and BLS12-381 for the following reasons: (1) speed — verification is fast enough for high-throughput SIGIL emission (1 Hz per agent × 33 agents = 33 sigs/sec), (2) size — small signatures keep the chain compact, (3) simplicity — no parameter choices to get wrong, (4) audit history — well-studied since 2017 with no major breaks.</p>
+
+<h2>Usage in CSOAI</h2>
+<p>Ed25519 keys are issued at principal registration via <code>sov_did_create</code>. Each key signs: (1) every SIGIL emission, (2) every Article 50 passport, (3) every Council vote, (4) every DORADO switch. Keys are rotated every 90 days by default — see <a href="/wiki/cryptography/rotation.html">Key Rotation</a>.</p>
+
+<h2>Mathematical Sketch</h2>
+<p>Ed25519 uses the curve -x² + y² = 1 + d·x²·y² over the prime field GF(2²⁵⁵ - 19). The signature is a pair (R, S) where R is a curve point derived from the message and S is a scalar derived from the secret key, R, and the message. Verification checks 2^c · S · B = 2^c · R + 2^c · H(R || A || M) · A, where B is the base point and A is the public key.</p>
+
+<h2>Historical Context</h2>
+<p>Daniel J. Bernstein designed Ed25519 in 2011 as part of the NaCl cryptography library. It was standardised by the IETF in RFC 8032 in 2017. CSOAI deployed it as the SIGIL chain signature in March 2026. The migration to post-quantum (ML-DSA-65) is scheduled for 2027 — see <a href="/wiki/cryptography/pqc-ml-dsa-65.html">ML-DSA-65</a>.</p>
+
+<h2>Modern Usage</h2>
+<p>Every customer gets an Ed25519 keypair on signup. The private key is generated on the customer's device and never exported; the public key is registered with CSOAI as part of the customer's DID. Verification is done by anyone with the public key — see <code>sov_did_resolve</code>.</p>
+
+<h2>See Also</h2>
+<ul>
+<li><a href="/wiki/cryptography/sigil-chain.html">SIGIL Chain</a></li>
+<li><a href="/wiki/cryptography/pqc-ml-dsa-65.html">ML-DSA-65</a></li>
+<li><a href="/wiki/cryptography/rotation.html">Key Rotation</a></li>
+<li><a href="/wiki/cryptography/anchor.html">Anchor</a></li>
+</ul>
+<div class="footer">sovereign.wiki · CSOAI Ltd · UK 16939677 · 🜏 Public. Auditable. Sovereign.</div>
+</div></body></html>

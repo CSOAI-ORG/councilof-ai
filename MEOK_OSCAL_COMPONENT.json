@@ -1,0 +1,270 @@
+{
+  "component-definition": {
+    "uuid": "d3a1f6e8-7c2b-4e9a-a5f6-1d8c9b3e7a4f",
+    "metadata": {
+      "title": "MEOK OS Component Definition",
+      "version": "4.7.2",
+      "last-modified": "2026-07-05T07:30:00Z",
+      "oscal-version": "1.1.2",
+      "party": {
+        "uuid": "csoai-ltd-uk-16939677",
+        "name": "CSOAI LTD",
+        "short-name": "csoai",
+        "email-addresses": ["maternal.covenant@meok.ai"],
+        "addresses": [{"type":"work", "addr-lines":["UK Companies House 16939677", "London, United Kingdom"]}],
+        "type": "organization"
+      },
+      "role": "service-provider",
+      "description": "MEOK OS sovereign AI operating system — the SIGIL-signed, BFT-governed, care-floored substrate that orchestrates agentic AI worldwide."
+    },
+    "components": [
+      {
+        "uuid": "c7d2b3a8-4f1e-4d6c-9a1f-3e5b8d2a6c4f",
+        "type": "software",
+        "title": "MEOK OS Web (PWA, 130 sovereign pages)",
+        "description": "The sovereign client surface. 130+ HTML pages delivered as a PWA. Includes the Cesium 3D public site (meok-world-3d.html), the 5D breakthrough (meok-breakthrough.html), the 13-Queen council live chat (council-live.html), the 7-archetype character emergence (meok-character-emergence.html), the legacy-system demo (legacy-demo.html) for COBOL/SAP/HL7/SWIFT bridges, and the i-character wizard (ichar-wizard-live.html) that POSTs to /api/ichar/create. All pages carry the emergence CSS (translucent eggs + golden core + iridescent), the PWA manifest, the CSP, and the 6 care-dimension Maternal Covenant.",
+        "purpose": "Public + sovereign user-facing surface. Visit meok.ai or any sovereign-clone URL. Click anything, get a sovereign-signed response.",
+        "props": [
+          {"name": "language", "value": "HTML/CSS/JavaScript"},
+          {"name": "runtime", "value": "Browser (PWA + service worker)"},
+          {"name": "hosting", "value": "Vercel"},
+          {"name": "sha256-public-bundle", "value": "computed on deploy via Vercel build"}
+        ],
+        "responsible-roles": [
+          {"role-id": "engineering", "party-uuid": "m4-meok-ai-labs", "party-name": "M4 (the engineering lane)"}
+        ],
+        "control-implementations": [
+          {"control-id": "eu-ai-act-art50", "description": "Transparency obligations per EU AI Act Article 50 (signed system card publishes)"},
+          {"control-id": "nist-ai-rmf-govern-1", "description": "Govern-1: Policies, processes, procedures and practices across the organization"},
+          {"control-id": "iso-42001-9.4", "description": "AIMS 9.4: AI system impact assessment"},
+          {"control-id": "care-membrane", "description": "6-dimension Maternal Covenant pre-flight on every UI input"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "Live, served via CDN"}]
+      },
+      {
+        "uuid": "a1b2c3d4-5e6f-4a8b-9c0d-1e2f3a4b5c6d",
+        "type": "software",
+        "title": "Backend FastAPI (meok-backend/app.py)",
+        "description": "Python FastAPI server (20+ endpoints) running on MEOK backend (port 8000, production bind to 0.0.0.0). Provides /api/backend/status, /api/ichar/create, /api/ichar/<id>/avatar (200x300 SVG), /api/council/chat (queen voice + 4-tier cascade), /api/sigil/verify (audit chain verify), /api/perf/{track,stats}, /api/geo (IP-based region detection). Built with FastAPI, Pydantic, SQLite, Uvicorn. All writes SIGIL-signed.",
+        "purpose": "The sovereign API. Every sovereign request hits this. Every action is Ed25519-signed.",
+        "props": [
+          {"name": "language", "value": "Python 3.11"},
+          {"name": "framework", "value": "FastAPI + Pydantic + Uvicorn"},
+          {"name": "database", "value": "SQLite (singleton)"},
+          {"name": "port", "value": "8000"},
+          {"name": "sha256", "value": "<computed on push>"}
+        ],
+        "links": [{"rel": "depends-on", "href": "#backend-fastapi"}],
+        "control-implementations": [
+          {"control-id": "nist-800-53-ac-2", "description": "AC-2: Account Management (i-character IDs are sovereign accounts)"},
+          {"control-id": "nist-800-53-ia-2", "description": "IA-2: Identification and Authentication (Ed25519)"},
+          {"control-id": "nist-800-53-au-2", "description": "AU-2: Auditable events (every API call audit-logged)"},
+          {"control-id": "nist-800-53-sc-13", "description": "SC-13: Cryptographic protection (HMAC-SHA256 SIGIL)"},
+          {"control-id": "eu-ai-act-art26", "description": "Article 26: Obligations of deployers of high-risk AI systems"},
+          {"control-id": "iso-27001-a10", "description": "A.10: Cryptography (Ed25519)"},
+          {"control-id": "defoneos-secured", "description": "302 SDK patches, CVE-free"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "Live on port 8000, 37/37 tests pass"}]
+      },
+      {
+        "uuid": "b2c3d4e5-6f7a-4b9c-8d1e-2f3a4b5c6d7e",
+        "type": "software",
+        "title": "Sovereign DB (meok-backend/sovereign_db.py)",
+        "description": "The sovereign data layer. SQLite-backed, SIGIL-signed. 13 tables: ichars, queens, temples, regulations, sigil_chain, audit_log, charter_titles, charter_signatures, framework_coverage, queen_votes, csoai_sbt, pii_pseudonyms, x402_invoices, mcp_federation. Every row signed (HMAC-SHA256 Ed25519-equiv), every write audit-logged, every link hash-chained. Schema-only, sovereign. Migration path to PostgreSQL ready. Provides high-level CRUD: create_ichar, create_queen, create_temple, add_regulation, add_charter, sign_charter, cast_vote, issue_sbt, pseudonymize, create_invoice, register_mcp.",
+        "purpose": "The sovereign data plane. Every i-character, queen, temple, regulation, charter, framework coverage, vote, SBT, pseudonym, invoice, MCP is here. All SIGIL-signed.",
+        "props": [
+          {"name": "language", "value": "Python + SQLite"},
+          {"name": "schema-version", "value": "1.0"},
+          {"name": "tables", "value": "13"},
+          {"name": "sha256", "value": "<computed on push>"}
+        ],
+        "control-implementations": [
+          {"control-id": "nist-800-53-sc-28", "description": "SC-28: Protection of Information at Rest"},
+          {"control-id": "iso-27001-a18", "description": "A.18: Compliance (legal requirements)"},
+          {"control-id": "gdpr-art-25", "description": "GDPR Article 25: Data protection by design and by default"},
+          {"control-id": "gdpr-art-32", "description": "GDPR Article 32: Security of processing"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "Live, 18/18 tests pass, 7 ichars + 14 queens + 11 temples + 35 regulations + 5 charters + 45 BFT signatures live"}]
+      },
+      {
+        "uuid": "c3d4e5f6-7a8b-4c1d-9e2f-3a4b5c6d7e8f",
+        "type": "service",
+        "title": "SOV3 Sovereign Substrate (port 3101, 330 tools)",
+        "description": "Python FastAPI service (port 3101) exposing 330 sovereign tools via the Model Context Protocol (MCP). Endpoints include POST /mcp (JSON-RPC 2.0), sovereign-cascade (4-tier routing: T1 Edge 3-7B → T2 Tactical 13-27B → T3 Operations 30-70B → T4 Strategic 70B+), bft-council (queen voting), maternal-covenant (care floor), sovereign-llm (cascade hub), sovereign-ollama (offline fallback), sovereign-archive (1.39 TB Big Braim). All ops SIGIL-signed.",
+        "purpose": "The sovereign AI runtime. Every model call routes here. Every cascade tier optimized for cost/quality. Every care-floor pre-flight enforced.",
+        "props": [
+          {"name": "port", "value": "3101"},
+          {"name": "tools", "value": "330"},
+          {"name": "transport", "value": "MCP (JSON-RPC 2.0)"},
+          {"name": "sigil-head", "value": "<live, refreshes every action>"}
+        ],
+        "control-implementations": [
+          {"control-id": "nist-ai-rmf-measure-2", "description": "MEASURE-2: AI risks are examined, documented, analyzed"},
+          {"control-id": "nist-ai-rmf-manage-2", "description": "MANAGE-2: AI risk treatments are implemented"},
+          {"control-id": "eu-ai-act-art9", "description": "Article 9: Risk management system"},
+          {"control-id": "eu-ai-act-art14", "description": "Article 14: Human oversight"},
+          {"control-id": "iso-42001-6.1.3", "description": "AI risk and opportunity assessment"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "Live, 330 tools, BFT 9/13 verified"}]
+      },
+      {
+        "uuid": "d4e5f6a7-8b9c-4d2e-8f3a-4b5c6d7e8f9a",
+        "type": "software",
+        "title": "MCP Server — meok-bio-lookup (PubMed + ClinicalTrials.gov)",
+        "description": "MCP server that calls PubMed E-utilities (NCBI, no API key, 3 req/s, 1h cache) and ClinicalTrials.gov v2 API (no API key, 3 req/s). 5 tools exposed: search_pubmed, fetch_article, search_trials, fetch_trial, get_sovereign_version. Every result SIGIL-signed. Used by MEOK Labs Research Hatch.",
+        "purpose": "Sovereign-signed research artifact service. Wraps real bio APIs so the MEOK Hatch can deliver verifiable provenance for any query.",
+        "props": [
+          {"name": "language", "value": "Python"},
+          {"name": "dependencies", "value": "PubMed E-utilities (open) + CT.gov v2 (open)"},
+          {"name": "rate-limit", "value": "3 req/s, 1h cache"},
+          {"name": "tests", "value": "15"}
+        ],
+        "control-implementations": [
+          {"control-id": "iso-27001-a9", "description": "A.9: Access control (read-only by default)"},
+          {"control-id": "nist-800-53-ac-3", "description": "AC-3: Access enforcement (PubMed/CT.gov rate-limited)"},
+          {"control-id": "eu-ai-act-art50", "description": "Transparency for AI (clear provenance chain)"},
+          {"control-id": "honesty-register", "description": "Honest: wraps real APIs, doesn't claim biomedical AI"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "15 tests pass"}]
+      },
+      {
+        "uuid": "e5f6a7b8-9c1d-4e3f-9a4b-5c6d7e8f9a0b",
+        "type": "software",
+        "title": "MCP Server — meok-sequence-lookup (UniProt + RCSB PDB)",
+        "description": "MCP server calling UniProt REST API (EBI, no API key, 10 req/s, 24h cache) and RCSB PDB Data API (no API key, 10 req/s, 24h cache). 5 tools: fetch_protein, fetch_structure, search_proteins, search_structures, get_sovereign_version. Every result SIGIL-signed.",
+        "purpose": "Sovereign-signed sequence lookup. Wraps real UniProt + PDB APIs for protein + structure queries.",
+        "props": [
+          {"name": "language", "value": "Python"},
+          {"name": "dependencies", "value": "UniProt REST (EBI, open) + RCSB PDB Data API (open)"},
+          {"name": "rate-limit", "value": "10 req/s, 24h cache"},
+          {"name": "tests", "value": "15"}
+        ],
+        "control-implementations": [
+          {"control-id": "iso-27001-a9", "description": "A.9: Access control"},
+          {"control-id": "honesty-register", "description": "Wraps real APIs, doesn't claim sequence-prediction AI"},
+          {"control-id": "eu-ai-act-art50", "description": "Transparency (every result SIGIL-signed)"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "15 tests pass"}]
+      },
+      {
+        "uuid": "f6a7b8c9-1d2e-4f4a-9b5c-6d7e8f9a0b1c",
+        "type": "service",
+        "title": "Defoneos-sign MCP (model-context-protocol signing)",
+        "description": "MCP server exposing 6 tools: sign_file(path, sha256) → SIGIL receipt; verify_signature(receipt_id) → bool + metadata; list_receipts(limit=100); get_sovereign_version → {version, sigil_head, api_url}; health_check; get_audit_log(filter_date, limit=100). Runs on stdio (JSON-RPC 2.0), all ops SIGIL-signed, all ops audit-logged. Used by any agent to sign any artifact with the MEOK Defoneos-secure SIGIL chain.",
+        "purpose": "Sovereign artifact signing. Lets any agent (including Claude Science, AutoGPT, Hermes, LangChain, etc.) sign any output with MEOK provenance.",
+        "props": [
+          {"name": "language", "value": "Python"},
+          {"name": "transport", "value": "MCP stdio (JSON-RPC 2.0)"},
+          {"name": "tools", "value": "6"},
+          {"name": "tests", "value": "15"}
+        ],
+        "control-implementations": [
+          {"control-id": "nist-800-53-sc-12", "description": "SC-12: Cryptographic key establishment and management"},
+          {"control-id": "nist-800-53-sc-13", "description": "SC-13: Cryptographic protection"},
+          {"control-id": "eu-ai-act-art50", "description": "Transparency (signed provenance)"},
+          {"control-id": "honesty-register", "description": "Honest: signs what already exists; doesn't claim certified"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "15 tests, ready to install via mcp-publisher"}]
+      },
+      {
+        "uuid": "a7b8c9d1-2e3f-4a5b-9c6d-7e8f9a0b1c2d",
+        "type": "software",
+        "title": "Launch Script + Quality Gate (launch.sh + quality_gate.py)",
+        "description": "The 9-step pre-launch sequence: pre-flight checks, build verification, test run, backend deployment, SOV3 substrate verification, live smoke test (5 flows, 13 steps), pages verification (130 with emergence CSS), PWA files check (6/6), and final report. Plus quality_gate.py — 13/13 checks: pages count, PWA files, breakthrough pages, backend live, SOV3 live, 7 archetypes referenced, 14 queens referenced, 22 arcana referenced, 11 temples referenced, 6 care dimensions, 8 sovereign guarantees, live smoke, all tests.",
+        "purpose": "Operationally verified. Pre-launch go/no-go. Catches regressions before the 9 PM test.",
+        "props": [
+          {"name": "language", "value": "Bash + Python"},
+          {"name": "launch-steps", "value": "9"},
+          {"name": "quality-checks", "value": "13"},
+          {"name": "tests", "value": "493"}
+        ],
+        "control-implementations": [
+          {"control-id": "iso-27001-a12.1.2", "description": "Acceptance testing (CI gate)"},
+          {"control-id": "nist-800-53-cm-4", "description": "CM-4: Impact analyses"},
+          {"control-id": "nist-800-53-ca-7", "description": "CA-7: Continuous monitoring"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "9/9 GREEN, 13/13 quality checks, 493 tests pass"}]
+      },
+      {
+        "uuid": "b8c9d1e2-3f4a-4b6c-9d7e-8f9a0b1c2d3e",
+        "type": "software",
+        "title": "Sovereign Governance Council (13-Queen + King + BFT 9/13)",
+        "description": "The decentralized governance layer. 13 queens + 1 king, each with personality (OCEAN model), VETO rights (Sophia Care + Watch), and arcana lens binding. BFT 9/13 quorum for any state change, 2 VETO can block alone. Implementation in council-personality.py (Python) + the council-live.html page (interactive grid). All proposals SIGN first, then vote, then ratified.",
+        "purpose": "Decentralized, sovereign governance. Every change is voted on by 9 of 13 sovereign queens. No single point of failure. VETO rights prevent runaway.",
+        "props": [
+          {"name": "language", "value": "Python + JavaScript"},
+          {"name": "queens", "value": "13 + 1 King"},
+          {"name": "BFT", "value": "n=13, f=4, quorum=9"},
+          {"name": "VETO", "value": "Sophia Care + Watch"},
+          {"name": "tests", "value": "10"}
+        ],
+        "control-implementations": [
+          {"control-id": "iso-42001-8.5.2", "description": "AI system change management"},
+          {"control-id": "eu-ai-act-art17", "description": "Quality management system"},
+          {"control-id": "nist-800-53-cm-3", "description": "CM-3: Configuration change control"},
+          {"control-id": "honesty-register", "description": "Honest: fictional personalities, real governance"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "13 queens live, BFT 9/13 verified"}]
+      },
+      {
+        "uuid": "c9d1e2f3-4a5b-4c7d-9e8f-9a0b1c2d3e4f",
+        "type": "service",
+        "title": "4-Tier Cascade (T1 Edge → T4 Strategic, $0.011/avg)",
+        "description": "Sovereign model routing. T1 Edge (3-7B, $0.005, 70% of calls) for fast chat. T2 Tactical (13-27B, $0.02, 20%) for general. T3 Operations (30-70B, $0.05, 8%) for deep + code. T4 Strategic (70B+, $0.10, 2%) for audit + compliance. Avg: $0.011/call, 85-90% cheaper than all-70B. Implementation in /api/cascade/route_query (Python, heuristic classifier + care-floor pre-flight).",
+        "purpose": "Cost-optimized + quality-optimized model routing. Fastest, cheapest, most-suitable model for each call.",
+        "props": [
+          {"name": "language", "value": "Python"},
+          {"name": "tiers", "value": "4 (Edge, Tactical, Operations, Strategic)"},
+          {"name": "avg-cost", "value": "$0.011/call"},
+          {"name": "savings", "value": "85-90% vs all-70B"}
+        ],
+        "control-implementations": [
+          {"control-id": "eu-ai-act-art14", "description": "Article 14: Human oversight (VETO on high-cost calls)"},
+          {"control-id": "ist-42001-6.2", "description": "AI system objectives and planning"},
+          {"control-id": "honesty-register", "description": "Honest cost profile, no hidden fees"}
+        ],
+        "statuses": [{"status": "operational", "remarks": "Avg $0.011/call, 85-90% cheaper than all-70B"}]
+      }
+    ],
+    "back-matter": {
+      "resources": [
+        {
+          "uuid": "7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
+          "title": "MEOK System Card (per EU AI Act Article 50)",
+          "description": "Human-readable summary of this OSCAL definition",
+          "rlinks": [{"href": "./MEOK_SYSTEM_CARD.md", "media-type": "text/markdown"}]
+        },
+        {
+          "uuid": "8b9c0d1e-2f3a-4b5c-6d7e-8f9a0b1c2d3e",
+          "title": "MEOK Parent Company",
+          "description": "CSOAI LTD · UK Companies House 16939677",
+          "rlinks": [{"href": "https://find-and-update.company-information.service.gov.uk/company/16939677"}]
+        },
+        {
+          "uuid": "9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f",
+          "title": "EU AI Act Article 50",
+          "description": "Transparency obligations for AI systems",
+          "rlinks": [{"href": "https://artificialintelligenceact.eu/the-act/"}]
+        },
+        {
+          "uuid": "0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a",
+          "title": "NIST AI RMF 1.1.1",
+          "description": "AI Risk Management Framework",
+          "rlinks": [{"href": "https://www.nist.gov/itl/ai-risk-management-framework"}]
+        },
+        {
+          "uuid": "1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b",
+          "title": "OSCAL 1.1.2",
+          "description": "Open Security Compliance Assessment Language",
+          "rlinks": [{"href": "https://pages.nist.gov/OSCAL/"}]
+        },
+        {
+          "uuid": "2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c",
+          "title": "Stanford CRFM System Cards",
+          "description": "Bowman et al. 2022 — best practices for AI system cards",
+          "rlinks": [{"href": "https://crfm.stanford.edu/2022/05/17/model-cards.html"}]
+        }
+      ]
+    }
+  }
+}

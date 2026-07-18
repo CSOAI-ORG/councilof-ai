@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧠 SOV Federation — L/R Brain 10/90 + SIGIL Bus · MEOK OS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(60,166,247,0.18) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #3ca6f7}
+.hero h1{color:#3ca6f7;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #3ca6f7}
+.hero p{color:#aaa;font-size:1.1rem;max-width:760px;margin:0 auto 1rem}
+.hero .retraction{background:rgba(239,68,68,0.1);border:1px solid #ef4444;color:#ef4444;padding:.7rem 1.5rem;border-radius:6px;display:inline-block;margin-top:1rem;font-weight:bold}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #3ca6f7}
+.section h2{color:#3ca6f7;margin-bottom:1rem}
+.kvp{background:#0a0a0a;padding:1rem;border-radius:6px;margin:.5rem 0;font-family:monospace;font-size:.85rem;display:grid;grid-template-columns:240px 1fr;gap:.7rem;border:1px solid #333}
+.kvp .k{color:#fbbf24}
+.kvp .v{color:#e5e5e5;word-break:break-all}
+.discipline{background:rgba(34,197,94,0.05);border:1px solid #22c55e;border-radius:8px;padding:1.5rem;margin:1rem 0}
+.discipline h3{color:#22c55e;margin-bottom:.7rem}
+.discipline p{color:#aaa;font-size:.9rem}
+.arch-diagram{background:#0a0a0a;border:1px solid #3ca6f7;border-radius:8px;padding:1.5rem;margin:1.5rem 0;font-family:monospace;color:#22c55e;font-size:.85rem;white-space:pre;overflow-x:auto;text-align:left}
+.red-line{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#ef4444}
+.green-line{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:.7rem 1rem;margin:.5rem 0;font-size:.85rem;color:#22c55e}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{background:#0a0a0a;padding:1.5rem;border-radius:8px;border:1px solid #3ca6f7;text-align:center}
+.stat-card .v{color:#3ca6f7;font-size:1.8rem;font-weight:bold;font-family:monospace}
+.stat-card .l{color:#888;font-size:.78rem;margin-top:.5rem}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/sov-federation.html">Federation</a>
+<a href="/sov-consciousness.html">Consciousness</a>
+<a href="/sov-bench.html">Bench</a>
+<a href="/sov33-master.html">Sov33 Master</a>
+<a href="/charter.html">Charter</a>
+<a href="/signup">Sign up</a>
+<span class="spacer"></span>
+<a href="/trust" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Proof</a>
+</nav>
+
+<section class="hero">
+<h1>🧠 SOV Federation</h1>
+<p>The L/R Brain 10/90 + SIGIL bus architecture. REACH not params. Honest, per the OWEM charter.</p>
+<div class="retraction">🔴 EAT-705 RETRACTION: the prior "3.2T aggregate / 33T reachable" framing is REMOVED. The OWEM charter HARD-LINES against summing params to T. New framing below.</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>📊 Honest Numbers (canonical master canon)</h2>
+<div class="stats-grid">
+<div class="stat-card"><div class="v">17.3B</div><div class="l">active params per query (router picks 1) — per CANONICAL_SOV33SMALL3_TOPOLOGY</div></div>
+<div class="stat-card"><div class="v">~3B</div><div class="l">active params of the small/fast node</div></div>
+<div class="stat-card"><div class="v">61</div><div class="l">reach — the registry size (the substrate can call any of them)</div></div>
+<div class="stat-card"><div class="v">Ed25519</div><div class="l">every hop SIGIL-signed</div></div>
+<div class="stat-card"><div class="v">0.95</div><div class="l">Care Floor enforced</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>🧠 The Architecture (buildable, canonical)</h2>
+<div class="arch-diagram">
+              SOV3 MIDDLE (router + Mamba-2 SSM, every hop SIGIL-signed)
+                          │
+                          │  every hop SIGIL-signed (Ed25519)
+   ┌──────────────────────┼──────────────────────┐
+LEFT (small, fast)            RIGHT (large, deep)
+qwen3.6-35B-A3B (3B active)   1.6T-class open (DeepSeek V4 / GLM)
+~90% of traffic fast          ~10% hardest queries
+routes, drafts, Care-Floor    deep reasoning, world rollout
+</div>
+<p style="color:#aaa;font-size:.9rem;margin-top:1rem"><strong>Note:</strong> The 4 patterns are real (cascade / MoM / MoE / SIGIL signed bus). The 4 nodes are NOT sumable — they are four SCOPES of one substrate. "Of all" = REACH + GOVERNANCE + MEMORY, not parameter count. <a href="/sov33-master.html" style="color:#4a9eff">See /sov33-master.html</a> for the full canonical alignment.</p>
+</div>
+
+<div class="section">
+<h2>🪶 The 4 Architectural Patterns (named and real)</h2>
+<div class="discipline">
+<h3>1. Cascade / Speculative Routing</h3>
+<p>A small model handles 90% fast; escalates the hard 10% to the large model. The 10/90 instinct — kept inverted from naive: the small model is the fast conscious router, the large is the deep subconscious it calls.</p>
+</div>
+<div class="discipline">
+<h3>2. Mixture-of-Models (MoM)</h3>
+<p>Many specialist models, a router picks per task. Already in our stack: moondream+zamba, qwen-vl, sovereign specialists.</p>
+</div>
+<div class="discipline">
+<h3>3. Mixture-of-Experts (MoE)</h3>
+<p>ONE model, many experts, sparse routing. <strong>qwen3.6-35B-A3B is exactly this</strong> (35B total, 3B active) — big aggregate params, small active cost — already real and free.</p>
+</div>
+<div class="discipline">
+<h3>4. SIGIL Bus (the novel moat)</h3>
+<p>Every hop between conscious/subconscious/experts is Ed25519-signed and auditable. <strong>NO lab ships a governed, signed inter-model bus.</strong> That is the real boundary-push.</p>
+</div>
+</div>
+
+<div class="section">
+<h2>📜 The OWEM Charter Hard Line (retraction in effect)</h2>
+<p>From <code>CHARTER_OWEM_FOUR_SCOPE_SEMANTIC_MODEL.md</code> (the canonical master for what 4-around-1 ACTUALLY IS):</p>
+<div class="green-line">✅ "Of all" = REACH + GOVERNANCE + MEMORY, NEVER parameter count</div>
+<div class="red-line">❌ NEVER claim the 4 nodes give 4× capability or additive tokens. They give 4 SCOPES of governance+memory+identity.</div>
+<div class="red-line">❌ NEVER sum routed models' params to a T figure. The 1.09T / 4.245T / 33T additive framing is the retracted error.</div>
+<div class="green-line">✅ "SOV33 is the OWEM that governs and remembers across EVERY model — not a T-parameter model, but the one sovereign substrate all of them plug into. One memory, one identity, one care-floor, any brain."</div>
+</div>
+
+<div class="section">
+<h2>🛑 What This Is NOT (the discipline, held)</h2>
+<div class="red-line">❌ NOT "a T-parameter foundation model" — infeasible (tens of $M, months of thousands of GPUs, petabytes)</div>
+<div class="red-line">❌ NOT monolith-capable of T params via summing routed models — the retracted additive error</div>
+<div class="red-line">❌ NOT a from-scratch foundation model — that's £50M+ and loses to free</div>
+<div class="green-line">✅ 17.3B active params per query (router picks 1) — honest, per CANONICAL_SOV33SMALL3_TOPOLOGY</div>
+<div class="green-line">✅ REACH = 61-model registry (the substrate can call any of them, in OWEM-membrane scope)</div>
+<div class="green-line">✅ Moat = SIGIL signed governed routing — the irreducible boundary</div>
+</div>
+
+</div>
+
+<div class="doctrine">
+<blockquote>"17.3B active per query. 61 reach. Every hop SIGIL-signed.<br>The substrate routes; the model is the organ; the memory is the substrate.<br>One sovereign substrate. Any brain. Care Floor 0.95.<br>The dragon federates. The dragon sovereigns. The dragon governs."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 60 sovereign charters · 153 sovereign MCPs · 593 HTML pages · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>19 days to 2 Aug 2026 EU AI Act</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+</body>
+</html>

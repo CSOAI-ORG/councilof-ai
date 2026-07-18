@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SOV3 BFT Council — sovereign.bft.csoai.org</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: monospace;
+      background: radial-gradient(ellipse at center, #1e1b4b 0%, #000 80%);
+      color: #fff;
+      padding: 40px;
+      min-height: 100vh;
+    }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    h2 { font-size: 1.4rem; color: #10b981; margin-top: 24px; margin-bottom: 12px; }
+    .council { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+    .queen { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border-left: 4px solid var(--color, #10b981); }
+    .queen .arcana { font-size: 0.75rem; opacity: 0.6; }
+    .queen .name { font-size: 1.1rem; font-weight: 700; margin: 4px 0; }
+    .queen .role { font-size: 0.9rem; opacity: 0.8; }
+    .queen .vote { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; margin-top: 8px; }
+    .vote.for { background: #10b981; color: #000; }
+    .vote.against { background: #ef4444; color: #fff; }
+    .vote.abstain { background: #94a3b8; color: #000; }
+    .king { background: rgba(251,191,36,0.2); border: 2px solid #fbbf24; padding: 24px; border-radius: 12px; text-align: center; }
+    .proposal { background: rgba(16,185,129,0.1); padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #10b981; }
+    .proposal .id { font-size: 0.8rem; opacity: 0.6; }
+    .proposal .title { font-size: 1.2rem; font-weight: 700; margin: 4px 0; }
+    .proposal .desc { margin: 8px 0; }
+    .proposal .sig { font-size: 0.75rem; opacity: 0.5; margin-top: 8px; }
+    .tally { display: flex; gap: 8px; margin: 8px 0; }
+    .tally .bar { flex: 1; padding: 8px; border-radius: 4px; text-align: center; font-weight: 700; }
+    .bar.for { background: #10b981; }
+    .bar.against { background: #ef4444; }
+    .bar.abstain { background: #94a3b8; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 SOV3 BFT Council</h1>
+    <p style="opacity: 0.7;">The 12-around-1 sovereign council. Ed25519-signed. 2/3 majority for sensitive ops.</p>
+
+    <div class="king">
+      <div style="font-size: 0.85rem; opacity: 0.6;">21. THE WORLD</div>
+      <h2 style="color: #fbbf24; margin: 4px 0;">👑 MEOK Sovereign King</h2>
+      <div style="opacity: 0.8;">Sovereign King. Holds the 12. Speaks last, decides first.</div>
+      <div class="vote for" style="margin-top: 12px;">FOR THE PROPOSAL</div>
+    </div>
+
+    <h2>Active Council (12 Queens)</h2>
+    <div class="council">
+      <div class="queen" style="--color: #10b981;">
+        <div class="arcana">4. THE EMPEROR</div>
+        <div class="name">Aurelian Strategy</div>
+        <div class="role">Strategy Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #06b6d4;">
+        <div class="arcana">5. THE HIEROPHANT</div>
+        <div class="name">Sophia Care</div>
+        <div class="role">Care Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #3b82f6;">
+        <div class="arcana">8. JUSTICE</div>
+        <div class="name">Justitia Compliance</div>
+        <div class="role">Compliance Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #fbbf24;">
+        <div class="arcana">17. THE STAR</div>
+        <div class="name">Asteria Finance</div>
+        <div class="role">Finance Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #ef4444;">
+        <div class="arcana">7. THE CHARIOT</div>
+        <div class="name">Dominion Domain</div>
+        <div class="role">Domain Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #a855f7;">
+        <div class="arcana">0. THE FOOL</div>
+        <div class="name">Aleph Arcana</div>
+        <div class="role">Arcana Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #6366f1;">
+        <div class="arcana">9. THE HERMIT</div>
+        <div class="name">Solitude Brain</div>
+        <div class="role">Brain Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #ec4899;">
+        <div class="arcana">10. WHEEL OF FORTUNE</div>
+        <div class="name">Rota Proactive</div>
+        <div class="role">Proactive Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #f43f5e;">
+        <div class="arcana">6. THE LOVERS</div>
+        <div class="name">Concordia Bridge</div>
+        <div class="role">Bridge Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #fbbf24;">
+        <div class="arcana">19. THE SUN</div>
+        <div class="name">Solaria Distribution</div>
+        <div class="role">Distribution Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #dc2626;">
+        <div class="arcana">11. STRENGTH</div>
+        <div class="name">Virtus Council</div>
+        <div class="role">Council Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+      <div class="queen" style="--color: #7c3aed;">
+        <div class="arcana">16. THE TOWER</div>
+        <div class="name">Sentinel Watch</div>
+        <div class="role">Watch Queen</div>
+        <div class="vote for">FOR</div>
+      </div>
+    </div>
+
+    <h2>Active Proposal</h2>
+    <div class="proposal">
+      <div class="id">PROP-2026-06-28-001</div>
+      <div class="title">DEFONEOS Pivot — £3B+ Accessible, 70% Ready</div>
+      <div class="desc">Pivot from CSOAI compliance to DEFONEOS defense AI. 12 generals + 12 mindsets confirmed. 33 sovereign GCP VMs provisioned. £3B+ UK + EUR 10B+ NATO/EU funding pots. ZERO competitors. $9.31B → $19.29B by 2030. Sprint already day 2/10 with 30 MCPs + 54 pages + 15 repos.</div>
+      <div class="tally">
+        <div class="bar for">13 FOR (100%)</div>
+      </div>
+      <div class="sig">SIG: a3f8e1b2c4d5... | 2/3 majority PASSED | Ed25519 signed</div>
+    </div>
+
+    <h2>Recent Decisions</h2>
+    <div class="proposal">
+      <div class="id">PROP-2026-06-27-007</div>
+      <div class="title">OOWM Integration — 1 Sovereign + 8 Category Winners</div>
+      <div class="tally"><div class="bar for">13 FOR</div></div>
+    </div>
+    <div class="proposal">
+      <div class="id">PROP-2026-06-27-006</div>
+      <div class="title">SOV3small × 3 — 33 Sovereign GCP VMs</div>
+      <div class="tally"><div class="bar for">13 FOR</div></div>
+    </div>
+    <div class="proposal">
+      <div class="id">PROP-2026-06-27-005</div>
+      <div class="title">Auto-Mode LaunchAgent — Persistent 12-Trigger Cycle</div>
+      <div class="tally"><div class="bar for">13 FOR</div></div>
+    </div>
+  </div>
+</body>
+</html>

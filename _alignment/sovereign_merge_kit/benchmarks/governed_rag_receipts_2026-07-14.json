@@ -1,0 +1,53 @@
+[
+  {
+    "seq": 0,
+    "prev_hash": "genesis",
+    "payload": {
+      "question": "What must providers do when an AI system generates synthetic content under the EU AI Act?",
+      "answer": "[EU AI Act Art.50] Providers must ensure outputs are marked in a machine-readable format and detectable as artificially generated or manipulated.",
+      "grounded_sources": [
+        "EU AI Act Art.50",
+        "ISO/IEC 42001"
+      ],
+      "retrieval_top_score": 0.673,
+      "care_floor": 0.28,
+      "care_ok": true,
+      "model": "qwen3-precise:latest"
+    },
+    "own_hash": "8aa03aa896b2661d807b915b44ccfd3f41813a0683466edfac14d50f9589b3b4",
+    "ed25519": "bfd2b4301972b403aa766cbd6c4a728773ac0b00ef1bd23e9a8a44ab3e8bc36db49c06476fd2ed6dc6492c0c74dd1406f5259d13ba52353262c5543634906a00"
+  },
+  {
+    "seq": 1,
+    "prev_hash": "8aa03aa896b2661d807b915b44ccfd3f41813a0683466edfac14d50f9589b3b4",
+    "payload": {
+      "question": "Under GDPR, is biometric data used to identify a person specially protected?",
+      "answer": "Under GDPR, biometric data used to identify a person is specially protected, as specified in [GDPR Art.9].",
+      "grounded_sources": [
+        "GDPR Art.9",
+        "EU AI Act Art.50"
+      ],
+      "retrieval_top_score": 0.676,
+      "care_floor": 0.28,
+      "care_ok": true,
+      "model": "qwen3-precise:latest"
+    },
+    "own_hash": "a3c348d79ceb53298c77899277532767c87d863ab8a7f8a7f421bff3b32c23a3",
+    "ed25519": "7fca4d727f398e8cacdd98a8692fd15f4feaa39690cb9010fb166d032ff28bee4ed06dff9d0579d58481f640d92ca7aef8ece61ac7e7a0355523a092da5c370e"
+  },
+  {
+    "seq": 2,
+    "prev_hash": "a3c348d79ceb53298c77899277532767c87d863ab8a7f8a7f421bff3b32c23a3",
+    "payload": {
+      "question": "What is the boiling point of seawater on Mars?",
+      "answer": "ABSTAIN \u2014 not supported by the sovereign knowledge base.",
+      "grounded_sources": [],
+      "retrieval_top_score": 0.018,
+      "care_floor": 0.28,
+      "care_ok": false,
+      "model": "qwen3-precise:latest"
+    },
+    "own_hash": "11ae545bddb532ffcc2c9040ed3f3214038e99231c0be0c8d79830265339e0c9",
+    "ed25519": "813ff9fc9779961826b7f845ba8c3d9dd05bece7ba6b22986c2ffd824494528f83b5ddd02d6e4e80d7f90cac8a32bcaf10bf8f13a04433e36ba71dea0cedd704"
+  }
+]

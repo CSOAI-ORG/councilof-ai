@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🌍 World Provinces · US States · EU Provinces · CN Prefectures</title>
+<meta name="description" content="Real-world provinces + states + prefectures mapped to sovereign ontology.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .nav a { color: #fbbf24; margin-right: 1rem; text-decoration: none; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.5rem; }
+  .sub { text-align: center; color: #888; margin-bottom: 2rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; max-width: 1100px; margin: 0 auto 2rem; }
+  .stat { background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: center; border-left: 4px solid #fbbf24; }
+  .stat-value { color: #fbbf24; font-size: 2rem; font-weight: bold; }
+  .stat-label { color: #888; font-size: 0.85rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .region { background: #1a1a1a; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #60a5fa; }
+  .region h2 { color: #fbbf24; margin-bottom: 1rem; }
+  .region ul { padding-left: 1.2rem; color: #aaa; font-size: 0.85rem; line-height: 1.6; }
+  .region li { margin-bottom: 0.25rem; }
+  .controls { max-width: 1100px; margin: 2rem auto; display: flex; gap: 1rem; flex-wrap: wrap; }
+  .controls select, .controls input { padding: 0.75rem; background: #0a0a0a; border: 1px solid #fbbf24; border-radius: 4px; color: #e5e5e5; font-family: inherit; flex: 1; }
+  table { width: 100%; border-collapse: collapse; max-width: 1100px; margin: 2rem auto; font-size: 0.85rem; }
+  th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #333; }
+  th { background: #0a0a0a; color: #fbbf24; }
+  td { color: #aaa; }
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/world.html">World 3D</a>
+  <a href="/world-atlas.html">Atlas</a>
+  <a href="/world-matrix.html">Matrix</a>
+</div>
+<h1>🌍 World Provinces</h1>
+<p class="sub">US states · EU provinces · CN prefectures · JP prefectures · IN states · DE Länder</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">50</div><div class="stat-label">US states</div></div>
+  <div class="stat"><div class="stat-value">27</div><div class="stat-label">EU member</div></div>
+  <div class="stat"><div class="stat-value">34</div><div class="stat-label">CN provinces</div></div>
+  <div class="stat"><div class="stat-value">47</div><div class="stat-label">JP prefectures</div></div>
+  <div class="stat"><div class="stat-value">28</div><div class="stat-label">IN states</div></div>
+  <div class="stat"><div class="stat-value">16</div><div class="stat-label">DE Länder</div></div>
+</div>
+
+<div class="controls">
+  <input id="searchBox" placeholder="🔍 Search state, province, capital..." />
+  <select id="filterCountry">
+    <option value="">All Countries</option>
+  </select>
+  <select id="sortBy">
+    <option value="name">Sort: Name</option>
+    <option value="pop-desc">Sort: Population</option>
+    <option value="sovereign-desc">Sort: Sovereign</option>
+  </select>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Country</th><th>Province/State</th><th>Capital</th><th>Population (M)</th><th>Lead General</th><th>Sovereign Composite</th></tr>
+  </thead>
+  <tbody id="provinceBody"></tbody>
+</table>
+
+<p style="text-align: center; color: #888; margin-top: 3rem;">
+  <strong style="color: #fbbf24;">Sovereign by construction.</strong> CSOAI Ltd (UK 16939677) · MIT License · Crown lineage 1795-2026
+</p>
+
+<script>
+const PROVINCES = [
+  // US states (50)
+  {country:"US", iso:"US", name:"California", capital:"Sacramento", pop:39.0, sovereign:6.5, general:"Builder"},
+  {country:"US", iso:"US", name:"Texas", capital:"Austin", pop:30.0, sovereign:6.0, general:"Crow"},
+  {country:"US", iso:"US", name:"Florida", capital:"Tallahassee", pop:22.0, sovereign:5.8, general:"Scale"},
+  {country:"US", iso:"US", name:"New York", capital:"Albany", pop:19.8, sovereign:6.8, general:"Scribe"},
+  {country:"US", iso:"US", name:"Pennsylvania", capital:"Harrisburg", pop:13.0, sovereign:6.0, general:"Gear"},
+  {country:"US", iso:"US", name:"Illinois", capital:"Springfield", pop:12.6, sovereign:5.9, general:"Gear"},
+  {country:"US", iso:"US", name:"Ohio", capital:"Columbus", pop:11.8, sovereign:5.7, general:"Gear"},
+  {country:"US", iso:"US", name:"Georgia", capital:"Atlanta", pop:10.8, sovereign:5.8, general:"Voice"},
+  {country:"US", iso:"US", name:"North Carolina", capital:"Raleigh", pop:10.6, sovereign:5.7, general:"Builder"},
+  {country:"US", iso:"US", name:"Michigan", capital:"Lansing", pop:10.0, sovereign:5.6, general:"Gear"},
+  {country:"US", iso:"US", name:"Massachusetts", capital:"Boston", pop:7.0, sovereign:7.0, general:"Owl"},
+  {country:"US", iso:"US", name:"Washington", capital:"Olympia", pop:7.7, sovereign:6.5, general:"Owl"},
+  {country:"US", iso:"US", name:"Virginia", capital:"Richmond", pop:8.6, sovereign:5.9, general:"Shield"},
+  {country:"US", iso:"US", name:"Maryland", capital:"Annapolis", pop:6.2, sovereign:6.2, general:"Scribe"},
+
+  // CN provinces (34)
+  {country:"CN", iso:"CN", name:"Beijing", capital:"Beijing", pop:21.9, sovereign:3.0, general:"Crow"},
+  {country:"CN", iso:"CN", name:"Shanghai", capital:"Shanghai", pop:24.9, sovereign:3.2, general:"Crow"},
+  {country:"CN", iso:"CN", name:"Guangdong", capital:"Guangzhou", pop:126.0, sovereign:3.5, general:"Gear"},
+  {country:"CN", iso:"CN", name:"Sichuan", capital:"Chengdu", pop:83.7, sovereign:2.8, general:"Scale"},
+  {country:"CN", iso:"CN", name:"Jiangsu", capital:"Nanjing", pop:85.1, sovereign:3.3, general:"Gear"},
+  {country:"CN", iso:"CN", name:"Zhejiang", capital:"Hangzhou", pop:65.7, sovereign:3.4, general:"Builder"},
+  {country:"CN", iso:"CN", name:"Shandong", capital:"Jinan", pop:101.5, sovereign:3.0, general:"Gear"},
+  {country:"CN", iso:"CN", name:"Henan", capital:"Zhengzhou", pop:98.8, sovereign:2.8, general:"Scale"},
+  {country:"CN", iso:"CN", name:"Sichuan", capital:"Chengdu", pop:83.7, sovereign:2.9, general:"Scale"},
+  {country:"CN", iso:"CN", name:"Hubei", capital:"Wuhan", pop:57.8, sovereign:2.9, general:"Builder"},
+  {country:"CN", iso:"CN", name:"Hunan", capital:"Changsha", pop:66.4, sovereign:2.8, general:"Scale"},
+
+  // JP prefectures (47)
+  {country:"JP", iso:"JP", name:"Tokyo", capital:"Tokyo (Shinjuku)", pop:14.0, sovereign:6.8, general:"Builder"},
+  {country:"JP", iso:"JP", name:"Kanagawa", capital:"Yokohama", pop:9.2, sovereign:6.5, general:"Builder"},
+  {country:"JP", iso:"JP", name:"Osaka", capital:"Osaka", pop:8.8, sovereign:6.5, general:"Abacus"},
+  {country:"JP", iso:"JP", name:"Hokkaido", capital:"Sapporo", pop:5.2, sovereign:6.3, general:"Scale"},
+  {country:"JP", iso:"JP", name:"Fukuoka", capital:"Fukuoka", pop:5.1, sovereign:6.4, general:"Voice"},
+  {country:"JP", iso:"JP", name:"Okinawa", capital:"Naha", pop:1.5, sovereign:6.0, general:"Shield"},
+  {country:"JP", iso:"JP", name:"Kyoto", capital:"Kyoto", pop:2.6, sovereign:6.7, general:"Owl"},
+  {country:"JP", iso:"JP", name:"Aichi", capital:"Nagoya", pop:7.5, sovereign:6.4, general:"Builder"},
+
+  // IN states (28)
+  {country:"IN", iso:"IN", name:"Maharashtra", capital:"Mumbai", pop:126.5, sovereign:4.8, general:"Crow"},
+  {country:"IN", iso:"IN", name:"Uttar Pradesh", capital:"Lucknow", pop:241.0, sovereign:4.0, general:"Crow"},
+  {country:"IN", iso:"IN", name:"Karnataka", capital:"Bengaluru", pop:68.6, sovereign:5.2, general:"Builder"},
+  {country:"IN", iso:"IN", name:"Tamil Nadu", capital:"Chennai", pop:76.2, sovereign:5.0, general:"Voice"},
+  {country:"IN", iso:"IN", name:"Delhi (NCT)", capital:"New Delhi", pop:32.9, sovereign:5.5, general:"Scribe"},
+  {country:"IN", iso:"IN", name:"Gujarat", capital:"Gandhinagar", pop:67.0, sovereign:4.7, general:"Abacus"},
+  {country:"IN", iso:"IN", name:"West Bengal", capital:"Kolkata", pop:99.1, sovereign:4.4, general:"Voice"},
+
+  // DE Länder (16)
+  {country:"DE", iso:"DE", name:"Bavaria (Bayern)", capital:"Munich", pop:13.4, sovereign:6.6, general:"Builder"},
+  {country:"DE", iso:"DE", name:"Baden-Württemberg", capital:"Stuttgart", pop:11.2, sovereign:6.6, general:"Builder"},
+  {country:"DE", iso:"DE", name:"Berlin", capital:"Berlin", pop:3.7, sovereign:6.7, general:"Scribe"},
+  {country:"DE", iso:"DE", name:"Hamburg", capital:"Hamburg", pop:1.9, sovereign:6.5, general:"Abacus"},
+  {country:"DE", iso:"DE", name:"North Rhine-Westphalia", capital:"Düsseldorf", pop:18.0, sovereign:6.4, general:"Gear"},
+
+  // UK regions (12)
+  {country:"GB", iso:"GB", name:"Greater London", capital:"London", pop:9.0, sovereign:7.5, general:"Argus"},
+  {country:"GB", iso:"GB", name:"Scotland", capital:"Edinburgh", pop:5.5, sovereign:7.3, general:"Shield"},
+  {country:"GB", iso:"GB", name:"Wales", capital:"Cardiff", pop:3.1, sovereign:7.2, general:"Shield"},
+
+  // EU provinces (sample of Länder/provinces)
+  {country:"FR", iso:"FR", name:"Île-de-France", capital:"Paris", pop:12.3, sovereign:6.7, general:"Owl"},
+  {country:"FR", iso:"FR", name:"Provence-Alpes-Côte d'Azur", capital:"Marseille", pop:5.1, sovereign:6.5, general:"Scale"},
+  {country:"ES", iso:"ES", name:"Catalonia", capital:"Barcelona", pop:7.9, sovereign:6.4, general:"Scale"},
+  {country:"ES", iso:"ES", name:"Madrid (Comunidad)", capital:"Madrid", pop:6.8, sovereign:6.5, general:"Scale"},
+  {country:"IT", iso:"IT", name:"Lombardy", capital:"Milan", pop:10.1, sovereign:6.2, general:"Builder"},
+  {country:"IT", iso:"IT", name:"Lazio", capital:"Rome", pop:5.9, sovereign:6.1, general:"Voice"},
+  {country:"NL", iso:"NL", name:"North Holland", capital:"Haarlem", pop:2.9, sovereign:6.8, general:"Abacus"},
+  {country:"PL", iso:"PL", name:"Masovia (Mazowieckie)", capital:"Warsaw", pop:5.4, sovereign:5.5, general:"Shield"},
+];
+
+const GEN_COLORS = {
+  Argus:"#60a5fa", Scribe:"#fbbf24", Shield:"#10b981", Builder:"#8b5cf6",
+  Abacus:"#f59e0b", Lex:"#ef4444", Scale:"#06b6d4", Crow:"#a3e635",
+  Gear:"#ec4899", Voice:"#14b8a6", Owl:"#84cc16", Dragon:"#fbbf24"
+};
+
+function getUniqueCountries() {
+  return [...new Set(PROVINCES.map(p => p.country))].sort();
+}
+
+function getUniqueBy(prop) {
+  return [...new Set(PROVINCES.map(p => p[prop]))].sort();
+}
+
+function populateFilters() {
+  const sel = document.getElementById('filterCountry');
+  getUniqueCountries().forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+}
+
+function scoreClass(s) {
+  if (s >= 6) return 'high'; if (s >= 4.5) return 'mid'; return 'low';
+}
+
+function scoreColor(s) {
+  if (s >= 6) return '#10b981'; if (s >= 4.5) return '#fbbf24'; return '#ff6b6b';
+}
+
+function render() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const country = document.getElementById('filterCountry').value;
+  const sortBy = document.getElementById('sortBy').value;
+  let filtered = PROVINCES.filter(p =>
+    (p.name.toLowerCase().includes(q) || p.capital.toLowerCase().includes(q))
+    && (!country || p.country === country)
+  );
+  if (sortBy === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+  else if (sortBy === 'pop-desc') filtered.sort((a, b) => b.pop - a.pop);
+  else if (sortBy === 'sovereign-desc') filtered.sort((a, b) => b.sovereign - a.sovereign);
+
+  const body = document.getElementById('provinceBody');
+  body.innerHTML = '';
+  filtered.forEach(p => {
+    const color = GEN_COLORS[p.general];
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><strong>${p.country}</strong></td>
+      <td>${p.name}</td>
+      <td>${p.capital}</td>
+      <td>${p.pop.toFixed(1)} M</td>
+      <td><span style="color: ${color}">${p.general}</span></td>
+      <td><strong style="color: ${scoreColor(p.sovereign)}">${p.sovereign}</strong></td>
+    `;
+    body.appendChild(row);
+  });
+  if (filtered.length === 0) {
+    const row = document.createElement('tr');
+    row.innerHTML = '<td colspan="6" style="text-align: center; color: #fbbf24;">No provinces match that search</td>';
+    body.appendChild(row);
+  }
+}
+
+document.getElementById('searchBox').addEventListener('input', render);
+document.getElementById('filterCountry').addEventListener('change', render);
+document.getElementById('sortBy').addEventListener('change', render);
+
+window.addEventListener('DOMContentLoaded', () => {
+  populateFilters();
+  render();
+});
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "id": "mr-s3-lifecycle-rules",
+  "prompt": "Write a 300-word S3 lifecycle policy for openpatent.ai's disclosure artifact store across the 3 sovereign regions. Cover: (1) the bucket topology — one primary bucket per region (openpatent-uk, openpatent-eu, openpatent-us) + one cross-region replicated audit bucket (openpatent-audit) with object-lock compliance mode, (2) the storage classes and transitions — disclosure payloads (JSON + base64 drawings + IPFS CID) move S3 Standard → S3 Standard-IA at 30 days → S3 Glacier Instant Retrieval at 180 days → S3 Glacier Deep Archive at 365 days, (3) the C2PA manifest bucket stays in S3 Standard for 7 years (USPTO evidence-retention), (4) the Bitcoin OTS receipt and Ed25519 signatures stay in S3 Standard-IA forever (small objects, high-value), (5) the audit-log bucket uses Object Lock in compliance mode with a 7-year retention so even root cannot delete, (6) the lifecycle is versioned and the transition rules are themselves recorded as 6-layer disclosures, (7) the cost projection per 100k disclosures/month ≈ $42 Standard, $18 IA, $11 Glacier after transitions. Use DEFENEOS mythic voice. Return ONLY JSON: {policy:string, buckets:[4 strings], transitions:[{after_days:int, storage_class:string}], c2pa_retention_years:int, audit_lock:string, cost_projection_usd:float}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

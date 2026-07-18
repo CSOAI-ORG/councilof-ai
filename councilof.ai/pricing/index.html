@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing — CouncilOf</title>
+  <meta name="description" content="Transparent pricing for councilof.ai. 3 tiers (Free, Pro, Enterprise) with EU AI Act compliance baked in. Stripe-checkout in 30 seconds.">
+  <link rel="canonical" href="https://councilof.ai/pricing">
+  <meta name="theme-color" content="#c9a84c">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pricing — CouncilOf">
+  <meta property="og:description" content="Transparent pricing for councilof.ai. EU AI Act compliance in 3 tiers.">
+  <meta property="og:url" content="https://councilof.ai/pricing">
+  <meta property="og:site_name" content="CouncilOf.ai">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pricing — CouncilOf">
+  <meta name="twitter:description" content="EU AI Act compliance in 3 tiers.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Crect%20width=%2264%22%20height=%2264%22%20rx=%2214%22%20fill=%22%23c9a84c%22/%3E%3Ctext%20x=%2232%22%20y=%2245%22%20font-family=%22Inter%2CArial%2Csans-serif%22%20font-size=%2238%22%20font-weight=%22800%22%20text-anchor=%22middle%22%20fill=%22%23070b14%22%3EC%3C/text%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "What is included in the Free tier?", "acceptedAnswer": {"@type": "Answer", "text": "5-minute BFT Governance Council scorecard, top-3 gap summary, email PDF report. No credit card required."}},
+      {"@type": "Question", "name": "What's the difference between Pro and Enterprise?", "acceptedAnswer": {"@type": "Answer", "text": "Pro is per-entity, single sign-on, unlimited re-scans. Enterprise adds multi-entity, SSO/SLA, auditor-ready exports, and MCP access."}},
+      {"@type": "Question", "name": "How does this relate to the EU AI Act?", "acceptedAnswer": {"@type": "Answer", "text": "Every tier maps to the EU AI Act 2 Aug 2026 cliff. The Watchdog Cert add-on (£4,950) issues a signed Ed25519+HMAC-SHA256 attestation for the regulator."}},
+      {"@type": "Question", "name": "Can I cancel anytime?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — Pro and Enterprise are month-to-month, no annual lock-in. The Article 50 Kit is a one-time purchase."}},
+      {"@type": "Question", "name": "Who pays for the MCP server?", "acceptedAnswer": {"@type": "Answer", "text": "Pro and Enterprise include MCP access. Free users can read our public agent card at llms.txt."}}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CouncilOf",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, MCP, API",
+    "offers": [
+      {"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "GBP", "description": "5-minute scorecard + email PDF"},
+      {"@type": "Offer", "name": "Pro", "price": "29", "priceCurrency": "GBP", "description": "Full BFT Governance Council with unlimited re-scans and EU AI Act Article 50 mapping"},
+      {"@type": "Offer", "name": "Enterprise", "price": "199", "priceCurrency": "GBP", "description": "Multi-entity + MCP + Watchdog Cert eligible"},
+      {"@type": "Offer", "name": "Watchdog Cert", "price": "4950", "priceCurrency": "GBP", "description": "One-time, signed Ed25519+HMAC-SHA256 attestation"}
+    ],
+    "featureList": ["EU AI Act mapping", "MCP server", "Audit trail", "Evidence vault"]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #c9a84c; --accent2: #e0c068; --glow: 201,168,76; }
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.011em; background: #070b14; color: #f5f5f5; margin: 0; }
+    h1, h2, h3 { letter-spacing: -0.025em; }
+    h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.05; }
+    .text-gold { color: var(--accent); }
+    .bg-gold { background-image: linear-gradient(135deg, var(--accent), var(--accent2)) !important; color: #070b14; box-shadow: 0 10px 28px -10px rgba(var(--glow), 0.6); }
+    a.bg-gold, button.bg-gold { transition: transform .2s ease, filter .2s ease; }
+    a.bg-gold:hover, button.bg-gold:hover { transform: translateY(-2px); filter: brightness(1.06); }
+    nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(7,11,20,0.72); border-bottom: 1px solid #26263a; padding: 16px 24px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .tier { background: #111827; border: 1px solid #26263a; border-radius: 12px; padding: 24px; }
+    .tier.featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .tier h3 { margin: 0 0 12px; }
+    .price { font-size: 2.2rem; font-weight: 800; margin: 8px 0 4px; }
+    .btn { display: block; width: 100%; padding: 14px; border-radius: 10px; font-weight: 700; text-align: center; text-decoration: none; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+      <a href="/" style="font-size: 1.4rem; font-weight: 800; text-decoration: none; color: #f5f5f5;">CouncilOf<span class="text-gold">.ai</span></a>
+      <div style="display: flex; gap: 18px; font-size: 0.9rem;">
+        <a href="/pricing/" style="color: #aaa; text-decoration: none;">Pricing</a>
+        <a href="/partner/" style="color: #aaa; text-decoration: none;">Partner</a>
+        <a href="/enterprise/" style="color: #aaa; text-decoration: none;">Enterprise</a>
+        <a href="/signup/" style="color: #aaa; text-decoration: none;">Signup</a>
+        <a href="/connect/mcp" style="color: #aaa; text-decoration: none;">Connect via MCP</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 style="text-align: center; margin: 60px 0 12px;">Simple, transparent pricing</h1>
+    <p style="color: #aaa; text-align: center; font-size: 1.1rem;">BFT Governance Council · EU AI Act ready · 30-second checkout</p>
+
+    <div class="grid3" style="margin: 40px 0;">
+      <div class="tier">
+        <h3 class="text-gold">Free</h3>
+        <div class="price">£0</div>
+        <p style="color: #aaa; font-size: 0.9rem;">5-minute BFT Governance Council scorecard, top-3 gaps, email PDF</p>
+        <a href="/signup/?plan=free" class="btn" style="background: #26263a; color: #f5f5f5;">Get free score</a>
+        <p style="color: #888; font-size: 0.8rem; margin-top: 12px;">No credit card</p>
+      </div>
+      <div class="tier featured">
+        <h3 class="text-gold">Pro · Most popular</h3>
+        <div class="price">£29<span style="font-size: 0.9rem; color: #aaa;">/mo</span></div>
+        <p style="color: #aaa; font-size: 0.9rem;">Full BFT Governance Council, MCP access, evidence vault</p>
+        <a href="https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S" class="btn bg-gold">Start Pro · £29/mo</a>
+        <p style="color: #888; font-size: 0.8rem; margin-top: 12px;">Month-to-month</p>
+      </div>
+      <div class="tier">
+        <h3>Enterprise</h3>
+        <div class="price">£199<span style="font-size: 0.9rem; color: #aaa;">/mo</span></div>
+        <p style="color: #aaa; font-size: 0.9rem;">Multi-entity, SSO, MCP + API quotas</p>
+        <a href="https://buy.stripe.com/eVq14p1BWcMO4c59mE8k91T" class="btn" style="background: #26263a; color: #f5f5f5;">Start Enterprise · £199/mo</a>
+        <p style="color: #888; font-size: 0.8rem; margin-top: 12px;">Watchdog Cert eligible</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 40px;">Compare features</h2>
+    <div style="overflow-x: auto; margin-top: 16px;">
+      <table style="width: 100%; font-size: 0.9rem; border-collapse: collapse;">
+        <thead>
+          <tr style="text-align: left; color: #aaa; border-bottom: 1px solid #26263a;">
+            <th style="padding: 12px 8px;">Feature</th>
+            <th style="padding: 12px 8px; text-align: center;">Free</th>
+            <th style="padding: 12px 8px; text-align: center; color: #c9a84c;">Pro £29</th>
+            <th style="padding: 12px 8px; text-align: center;">Enterprise £199</th>
+          </tr>
+        </thead>
+        <tbody style="color: #ccc;">
+          <tr style="border-bottom: 1px solid #26263a;"><td style="padding: 12px 8px;">BFT Governance Council scorecard</td><td style="padding: 12px 8px; text-align: center;">5-min</td><td style="padding: 12px 8px; text-align: center;">Full</td><td style="padding: 12px 8px; text-align: center;">Multi-entity</td></tr>
+          <tr style="border-bottom: 1px solid #26263a;"><td style="padding: 12px 8px;">EU AI Act Article 50 mapping</td><td style="padding: 12px 8px; text-align: center;">—</td><td style="padding: 12px 8px; text-align: center;">✓</td><td style="padding: 12px 8px; text-align: center;">✓</td></tr>
+          <tr style="border-bottom: 1px solid #26263a;"><td style="padding: 12px 8px;">Remediation playbooks</td><td style="padding: 12px 8px; text-align: center;">—</td><td style="padding: 12px 8px; text-align: center;">✓</td><td style="padding: 12px 8px; text-align: center;">✓</td></tr>
+          <tr style="border-bottom: 1px solid #26263a;"><td style="padding: 12px 8px;">Evidence vault (signed)</td><td style="padding: 12px 8px; text-align: center;">—</td><td style="padding: 12px 8px; text-align: center;">✓</td><td style="padding: 12px 8px; text-align: center;">✓</td></tr>
+          <tr style="border-bottom: 1px solid #26263a;"><td style="padding: 12px 8px;">MCP server access</td><td style="padding: 12px 8px; text-align: center;">Read-only</td><td style="padding: 12px 8px; text-align: center;">✓</td><td style="padding: 12px 8px; text-align: center;">✓</td></tr>
+          <tr style="border-bottom: 1px solid #26263a;"><td style="padding: 12px 8px;">SSO / SAML</td><td style="padding: 12px 8px; text-align: center;">—</td><td style="padding: 12px 8px; text-align: center;">—</td><td style="padding: 12px 8px; text-align: center;">✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="text-align: center; margin: 40px 0;">
+      <a href="https://buy.stripe.com/9B67sNeoIcMObEx56o8k91S" class="btn bg-gold" style="max-width: 360px; margin: 0 auto;">Start Pro · £29/mo</a>
+    </div>
+  </div>
+
+  <footer style="border-top: 1px solid #26263a; padding: 24px; color: #888; font-size: 0.85rem;">
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+      <span>© 2026 CouncilOf.ai · MEOK AI Labs · CSOAI Ltd UK 16939677</span>
+      <span><a href="https://meok.ai/privacy" style="color: #888;">Privacy</a> · <a href="https://meok.ai/terms" style="color: #888;">Terms</a></span>
+    </div>
+  </footer>
+</body>
+</html>

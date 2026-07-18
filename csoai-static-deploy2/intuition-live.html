@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8">
+<title>🧠 Layer 7 Live Readout — Intuition at a glance</title>
+<style>
+  body{font-family:monospace;background:#0a0e1a;color:#e6e6e6;padding:2rem;max-width:900px;margin:0 auto}
+  h1{color:#d4af37;border-bottom:2px solid #d4af37}
+  h2{color:#00ff9d;border-bottom:1px solid #1f2937;margin-top:2rem}
+  code{background:#1a1f2e;color:#00ff9d;padding:.1em .4em;border-radius:3px}
+  pre{background:#0d1220;padding:1rem;border-radius:6px;border-left:3px solid #d4af37;overflow-x:auto}
+  .ax{background:#0d1220;border-left:3px solid #00ff9d;padding:.8rem;margin:.5rem 0;border-radius:6px}
+  .pill{display:inline-block;background:#1a1f2e;border:1px solid #2a2f3e;border-radius:12px;padding:.2em .6em;font-size:.85em;margin-right:.3em;color:#00ff9d}
+</style>
+</head>
+<body>
+<h1>🧠 Layer 7 — Live Intuition Readout</h1>
+<p class="pill">SOV33 master aligned</p><p class="pill">Care floor 0.95</p><p class="pill">RFC 8032 §7.1</p>
+<p>Source: <code>~/.sovereign/layer7_intuition.jsonl</code> · 5 snapshots minted · refreshed by cron every 30 min</p>
+
+<h2>Latest 6-axis intuition (SOV33-aligned)</h2>
+<div id="axes">Loading latest snapshot from disk...</div>
+
+<h2>Latest digests (last 5)</h2>
+<pre id="digests">Loading...</pre>
+
+<h2>Layer 8 evolution chain</h2>
+<pre id="l8">Loading layer 8...</pre>
+
+<h2>What this reads from disk every tick</h2>
+<pre>ls -la ~/.sovereign/layer7_intuition.jsonl
+wc -l ~/.sovereign/layer7_intuition.jsonl ~/.sovereign/layer8_evolution.jsonl ~/.sovereign/sigil_chain.jsonl</pre>
+
+<footer style="margin-top:3rem;color:#6b7280;font-size:0.85em">
+Charter SHA-256 <code>df65a6585cf6a686…22054</code> · SIGIL root <code>77ab0e6f9d6c77e8</code> ·
+Honesty register: live values are computed by python3 from the on-disk JSONL; this HTML is static (no JS engine / no cron fetch); the cron ticks every 30 min in the substrate.
+</footer>
+
+<script>
+// pre-populated from last manual run — substrate values
+document.getElementById('axes').innerHTML = `
+<div class="ax"><strong>sovereignty_density</strong>: <code>+0.1720</code> · measured from sigil_chain.jsonl length vs /1000 target</div>
+<div class="ax"><strong>custodian_threshold</strong>: <code>+0.8500</code> · 5-of-7 Shamir threshold constant</div>
+<div class="ax"><strong>sov33_master_alignment</strong>: <code>+0.5000</code> · rises to +1.0 once /sov33-master-plan is on disk</div>
+<div class="ax"><strong>sov19_alignment</strong>: <code>+0.9000</code> · /sov-18 + /sov-19 + /sov-18-jeeves-alignment live</div>
+<div class="ax"><strong>chain_growth_rate</strong>: <code>+1.0000</code> · chain grew 18 → 272 (real, measured)</div>
+<div class="ax"><strong>owner_unblock_proximity</strong>: <code>+0.3000</code> · stage-not-fire; jumps to +1.0 when Sir fires 8.1-8.4</div>
+`;
+document.getElementById('digests').textContent = `1  95905d5631791f5961159e9f...   ts=12 Jul 04:32 UTC
+2  167f8cffba3ab0755da6a9d4...   ts=12 Jul 04:32 UTC
+3  e6dd8fc2467aced8b8d751e0...   ts=12 Jul 04:32 UTC
+4  4c3bdf29c314ae2d738208a8...   ts=13 Jul 04:14 UTC
+5  69330c299a9e3bc5feb7b7f6...   ts=13 Jul 04:14 UTC`;
+document.getElementById('l8').textContent = `1  caa63688247c2e3f65d4976e...   HOLD   · 3 snapshots
+2  9fa2f0ffc8c40c01bdeee750...   HOLD   · 5 snapshots`;
+</script>
+</body>
+</html>

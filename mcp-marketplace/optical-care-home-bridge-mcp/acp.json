@@ -1,0 +1,23 @@
+{
+  "acpVersion": "0.1",
+  "agent": {
+    "name": "optical-care-home-bridge-mcp",
+    "description": "Bridge between domiciliary optometry visits + care-home governance. Handles consent capacity",
+    "version": "1.0.2",
+    "provider": "MEOK AI Labs",
+    "interfaces": [
+      {
+        "type": "mcp",
+        "transport": "stdio",
+        "package": "optical-care-home-bridge-mcp"
+      }
+    ],
+    "capabilities": [
+      "mca_capacity_check",
+      "gos6_visit_eligibility",
+      "post_visit_care_plan_sync",
+      "safeguarding_red_flags",
+      "registered_optometrist_audit"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "fileVersion": 3,
+  "version": 1,
+  "versionName": "1.0.0",
+  "friendlyName": "MEOK WORLD",
+  "description": "MEOK WORLD on Unreal Engine 5 — sovereign AI operating system. The world at your feet in 3D. Regulation temples, sovereign character, i-character creation, 12-Queen council, BFT governance, 4-tier cascade, SOV3 integration. Built by MEOK AI Labs / CSOAI.",
+  "category": "AI",
+  "createdBy": "MEOK AI Labs / CSOAI",
+  "createdByURL": "https://meok.ai",
+  "docsURL": "https://docs.meok.ai/meok-world-ue5",
+  "marketplaceURL": "",
+  "supportURL": "https://github.com/CSOAI-ORG/meok-world-ue5",
+  "enabledByDefault": false,
+  "canContainContent": true,
+  "isBetaVersion": false,
+  "installed": false,
+  "Modules": [
+    {
+      "Name": "MeokWorld",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "PlatformAllowList": [ "Win64", "Mac", "Linux" ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "CesiumForUnreal",
+      "Enabled": true,
+      "Optional": false
+    },
+    {
+      "Name": "Json",
+      "Enabled": true
+    },
+    {
+      "Name": "JsonUtilities",
+      "Enabled": true
+    },
+    {
+      "Name": "HTTP",
+      "Enabled": true
+    }
+  ]
+}

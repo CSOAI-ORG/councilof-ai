@@ -1,0 +1,520 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>DEFONEOS Integration Hub — Connect Any System to the Sovereign Defence AI OS</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0f;color:#f8fafc;padding:2rem;line-height:1.7;max-width:1100px;margin:0 auto}h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}h2{color:#22d3ee;margin:2rem 0 .5rem;font-size:1.5rem;border-bottom:1px solid rgba(34,211,238,.2);padding-bottom:.3rem}h3{color:#a78bfa;margin:1.2rem 0 .3rem;font-size:1.1rem}h4{color:#f59e0b;margin:.8rem 0 .2rem}p{margin:.4rem 0;color:#cbd5e1}pre{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;color:#22c55e;font-size:.85rem;margin:1rem 0;overflow-x:auto}code{background:rgba(34,211,238,.1);padding:.15rem .4rem;border-radius:4px;font-size:.85rem;color:#4ade80}.stack-diagram{text-align:center;background:rgba(255,255,255,.02);border:1px solid rgba(34,211,238,.15);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.stack-layer{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:.6rem 1rem;margin:.4rem auto;max-width:500px;font-size:.85rem;color:#e2e8f0}.stack-layer .label{color:#22d3ee;font-weight:bold}.stack-arrow{color:#64748b;font-size:1.2rem}.protocol-badge{display:inline-block;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);border-radius:4px;padding:.15rem .5rem;font-size:.7rem;color:#a78bfa;margin:.2rem}.integration-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.2rem;margin:.8rem 0}.integration-card h4{color:#22d3ee;margin:0 0 .3rem;font-size:1rem}.integration-card .status{font-size:.75rem;font-weight:bold;padding:.15rem .5rem;border-radius:4px;display:inline-block;float:right}.status.live{background:rgba(34,197,94,.15);color:#22c55e}.status.ready{background:rgba(234,179,8,.15);color:#eab308}.status.planned{background:rgba(168,85,247,.15);color:#a78bfa}table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}th{background:rgba(34,211,238,.1);color:#22d3ee;padding:.6rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}td{padding:.5rem .6rem;border-bottom:1px solid rgba(255,255,255,.05);color:#cbd5e1}tr:hover td{background:rgba(34,211,238,.03)}ul{padding-left:1.5rem;margin:.5rem 0}li{margin:.2rem 0;color:#cbd5e1}.step{background:rgba(255,255,255,.03);border-left:3px solid #22d3ee;border-radius:0 8px 8px 0;padding:.8rem 1.2rem;margin:.6rem 0}.step-num{color:#22d3ee;font-weight:bold;font-size:.8rem;text-transform:uppercase;letter-spacing:1px}.endpoint-box{background:rgba(0,0,0,.3);border-radius:8px;padding:.5rem .8rem;margin:.4rem 0;font-family:monospace;font-size:.85rem}.endpoint-box .method{font-weight:bold;color:#22c55e;display:inline-block;width:60px}</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS Integration Hub — Connect Any System"><meta property="og:description" content="Complete integration guide: MCP protocol, A2A, Cesium globe, FreeTAKServer, Mava swarm, Ollama, Layer 0 protocols, SDK examples."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS Integration Hub — Connect any sensor, system, or platform to the UK's sovereign defence AI OS. MCP protocol, A2A federation, Cesium globe, FreeTAKServer, Mava swarm, 15 integration guides."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-integrate.html"></head><body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Index</a><a href="defoneos-100.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">100</a><a href="defoneos-knowledge.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Knowledge</a><a href="defoneos-integrate.html" style="color:#22d3ee;text-decoration:none;font-size:.85rem;font-weight:bold">Integrate</a><a href="defoneos-api-playground.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">API</a></nav>
+
+<h1>DEFONEOS Integration Hub</h1>
+<p><strong>Everything connected. Frontend → SaaS → Backend → Edge → Cloud → Data → Protocols. Connect any sensor, system, or platform in under 30 minutes.</strong></p>
+
+<h2>🏗️ System Topology</h2>
+
+<div class="stack-diagram">
+<div class="stack-layer"><span class="label">L7 PRESENTATION</span> — Vercel CDN (183 pages, HTTP/3)</div>
+<div class="stack-arrow">↕ HTTPS / REST</div>
+<div class="stack-layer"><span class="label">L6 APPLICATION</span> — SOV3 Hub :3101 (188+ tools, OLM router)</div>
+<div class="stack-arrow">↕ MCP Protocol (JSON-RPC 2.0)</div>
+<div class="stack-layer"><span class="label">L5 GOVERNANCE</span> — BFT Council :3200 (33 agents, HotStuff)</div>
+<div class="stack-arrow">↕ SIGIL Chain (Ed25519 signed)</div>
+<div class="stack-layer"><span class="label">L4 AUDIT</span> — OrgKernel 3-Layer (L1 Identity → L2 Execution → L3 Compliance)</div>
+<div class="stack-arrow">↕ Internal bus</div>
+<div class="stack-layer"><span class="label">L3 SECURITY</span> — DORADO (PQC, SOC, bot detector, foreign-access)</div>
+<div class="stack-arrow">↕ MCP Protocol</div>
+<div class="stack-layer"><span class="label">L2 SENSOR</span> — 30 MCP Servers (ISR, Cyber, Compliance, Data)</div>
+<div class="stack-arrow">↕ API / CSV / JSON / WebSocket / gRPC</div>
+<div class="stack-layer"><span class="label">L1 SUBSTRATE</span> — GCP VM (49GB) + M2 Edge (Ollama) + M4 (Inference)</div>
+<div class="stack-arrow">↕ Layer 0 Protocols</div>
+<div class="stack-layer" style="max-width:600px"><span class="label">LAYER 0</span>:
+<span class="protocol-badge">MCP</span>
+<span class="protocol-badge">A2A</span>
+<span class="protocol-badge">x402</span>
+<span class="protocol-badge">DID</span>
+<span class="protocol-badge">SIGIL</span>
+<span class="protocol-badge">HTTP/3</span>
+<span class="protocol-badge">WebSocket</span>
+<span class="protocol-badge">gRPC</span>
+<span class="protocol-badge">Matrix</span>
+<span class="protocol-badge">IPFS</span>
+<span class="protocol-badge">IBC</span>
+<span class="protocol-badge">OIDC</span>
+</div>
+</div>
+
+<h2>🔌 Integration Guides — 15 Systems</h2>
+
+<div class="integration-card">
+<h4>1. MCP Protocol (JSON-RPC 2.0) <span class="status live">LIVE</span></h4>
+<p>The primary integration protocol. Every tool in DEFONEOS is exposed via MCP (Model Context Protocol). JSON-RPC 2.0 over HTTP.</p>
+<h4>Quick Connect</h4>
+<pre>
+# List all 188+ tools
+curl -X POST localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+
+# Call a tool
+curl -X POST localhost:3101/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"sigil_emit","arguments":{"line":"C|operator|sov3|integration test"}}}'
+</pre>
+<p><strong>Auth:</strong> Bearer token (production) / none (local). <strong>Rate limit:</strong> 100 req/min (free), 1000/min (Pro), unlimited (Enterprise).</p>
+</div>
+
+<div class="integration-card">
+<h4>2. CesiumJS 3D Globe <span class="status live">LIVE</span></h4>
+<p>The Common Operating Picture (COP) renders on CesiumJS — 3D globe with real-time sensor tracks, vessel positions, drone paths, threat zones, and weather overlays.</p>
+<h4>Wiring sensor data to Cesium:</h4>
+<pre>
+// 1. Fetch tracks from DEFONEOS MCP
+const tracks = await fetch('http://localhost:3101/mcp', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    jsonrpc: '2.0', id: 1,
+    method: 'tools/call',
+    params: {name: 'aisstream_maritime_get_vessels', arguments: {bbox: [-2, 51, 0, 53]}}
+  })
+}).then(r => r.json());
+
+// 2. Render on Cesium
+tracks.forEach(v => {
+  viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(v.lon, v.lat),
+    point: {pixelSize: 8, color: v.threat ? Cesium.Color.RED : Cesium.Color.GREEN},
+    label: {text: v.name, font: '12px sans-serif'}
+  });
+});
+</pre>
+<p><strong>Supported overlays:</strong> AIS vessels, ADS-B aircraft, satellite imagery (Sentinel), weather radar, drone tracks, threat zones, geofences, unit positions.</p>
+</div>
+
+<div class="integration-card">
+<h4>3. FreeTAKServer (Tactical Data Links) <span class="status ready">READY</span></h4>
+<p>FreeTAKServer provides TAK-compatible tactical data links (CoT — Cursor on Target). DEFONEOS bridges CoT messages to MCP and vice versa.</p>
+<h4>Architecture:</h4>
+<pre>
+FreeTAKServer (CoT XML)
+    ↕ Python bridge (defoneos-fts-bridge)
+SOV3 Hub :3101 (MCP JSON-RPC)
+    ↕ MCP protocol
+CesiumJS 3D COP (visual rendering)
+</pre>
+<h4>Install bridge:</h4>
+<pre>
+pip install defoneos-fts-bridge
+python -m defoneos_fts_bridge --fts-host localhost:8087 --sov3-host localhost:3101
+</pre>
+<p><strong>Supported CoT types:</strong> friendly positions (a-f-G), hostile tracks (a-h-H), sensor readings (a-u-S), emergency alerts (b-e-m).</p>
+</div>
+
+<div class="integration-card">
+<h4>4. Mava Swarm Coordination <span class="status ready">READY</span></h4>
+<p>Mava provides decentralized multi-agent swarm coordination. DEFONEOS exposes Mava tasks via MCP for centralized oversight.</p>
+<h4>Launch a drone swarm simulation:</h4>
+<pre>
+# Via MCP
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "mava_swarm_deploy",
+    "arguments": {
+      "mission": "perimeter_patrol",
+      "drones": 8,
+      "pattern": "grid_search",
+      "area": [50.0, -2.0, 51.0, -1.0],
+      "altitude_m": 120
+    }
+  }
+}'
+</pre>
+<p><strong>Patterns:</strong> grid search, perimeter patrol, convergent search, escort, intercept. <strong>Simulator:</strong> PX4 SITL + jMAVSim.</p>
+</div>
+
+<div class="integration-card">
+<h4>5. Ollama (Local AI Inference) <span class="status live">LIVE</span></h4>
+<p>Ollama provides on-device LLM inference. DEFONEOS uses it for sovereign, air-gapped AI — no external API calls, no data leaves the machine.</p>
+<h4>Install models:</h4>
+<pre>
+# Install Ollama
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Pull models (DEFONEOS recommended set)
+ollama pull qwen2.5:3b        # Fast routing (edge)
+ollama pull deepseek-r1:8b     # Reasoning
+ollama pull llama3.1:8b        # General purpose
+ollama pull nomic-embed-text   # Embeddings
+ollama pull moondream          # Vision (ISR imagery)
+
+# Configure DEFONEOS to use local Ollama
+export OLLAMA_HOST=http://localhost:11434
+export SOV3_INFERENCE=ollama
+</pre>
+<p><strong>Edge deployment:</strong> 7 GB total for 4 models — runs on M2 Mac Mini, Raspberry Pi 5 (8GB), or ruggedized field laptop.</p>
+</div>
+
+<div class="integration-card">
+<h4>6. Sentinel Hub (Satellite Imagery) <span class="status live">LIVE</span></h4>
+<p>Sentinel Hub provides free Copernicus satellite imagery. DEFONEOS MCP wraps the API for NDVI, flood detection, and change analysis.</p>
+<h4>Request a flood detection scan:</h4>
+<pre>
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "sentinel_hub_flood_detect",
+    "arguments": {
+      "bbox": [-2.5, 51.0, -1.5, 51.5],
+      "date_from": "2026-07-01",
+      "date_to": "2026-07-04",
+      "threshold": 0.3
+    }
+  }
+}'
+</pre>
+<p><strong>Outputs:</strong> GeoJSON flood polygons, NDWI raster, before/after comparison tiles. <strong>Update frequency:</strong> Sentinel-1 (every 6 days, radar — works through clouds), Sentinel-2 (every 5 days, optical).</p>
+</div>
+
+<div class="integration-card">
+<h4>7. AISStream.io (Maritime Tracking) <span class="status live">LIVE</span></h4>
+<p>Real-time AIS vessel positions via WebSocket. DEFONEOS MCP subscribes, filters, and flags anomalies (dark vessels, zone violations).</p>
+<h4>Detect dark vessels (AIS off, RF detected):</h4>
+<pre>
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "aisstream_detect_dark_vessels",
+    "arguments": {
+      "area": "english_channel",
+      "rf_sensor": "rf_sensor_01",
+      "min_confidence": 0.7
+    }
+  }
+}'
+</pre>
+<p><strong>Anomaly types:</strong> AIS gap + RF detection (dark vessel), AIS spoofing (position mismatch), loitering, zone violation, speed anomaly, destination mismatch.</p>
+</div>
+
+<div class="integration-card">
+<h4>8. RTSP IP Cameras (Visual ISR) <span class="status live">LIVE</span></h4>
+<p>Connect any RTSP-compatible IP camera. DEFONEOS MCP captures frames, runs YOLOv8 object detection, and feeds results to the Cesium COP.</p>
+<h4>Register a camera:</h4>
+<pre>
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "rtsp_camera_register",
+    "arguments": {
+      "camera_id": "perimeter-cam-01",
+      "url": "rtsp://10.0.0.50:554/stream1",
+      "location": [51.0, -2.0, 50],
+      "detection_model": "yolov8n",
+      "classes": ["person", "vehicle", "drone"],
+      "min_confidence": 0.5,
+      "capture_interval_s": 2
+    }
+  }
+}'
+</pre>
+<p><strong>Detection classes:</strong> person, vehicle, drone, weapon, fire, smoke, animal. <strong>Frame processing:</strong> 2-10 second intervals (configurable). <strong>Edge inference:</strong> YOLOv8n on Ollama/M2 = 30+ FPS.</p>
+</div>
+
+<div class="integration-card">
+<h4>9. MQTT IoT Bridge <span class="status live">LIVE</span></h4>
+<p>Connect IoT sensors via MQTT. DEFONEOS MCP subscribes to topics, transforms messages, and routes to the appropriate domain module.</p>
+<h4>Bridge a sensor network:</h4>
+<pre>
+# Start the MQTT bridge MCP
+python -m mqtt_bridge_mcp \
+  --broker tcp://10.0.0.100:1883 \
+  --topics "sensors/+/temperature,sensors/+/humidity,sensors/+/motion" \
+  --route temperature → civil_resilience \
+  --route motion → security_alert
+
+# Query latest readings via MCP
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "mqtt_bridge_get_readings",
+    "arguments": {"topic": "sensors/building_a/temperature", "last_n": 100}
+  }
+}'
+</pre>
+</div>
+
+<div class="integration-card">
+<h4>10. A2A Protocol (Agent-to-Agent) <span class="status ready">READY</span></h4>
+<p>Google's Agent-to-Agent protocol for inter-system federation. DEFONEOS exposes an A2A Agent Card (JSON-LD) and accepts tasks from remote A2A agents.</p>
+<h4>Fetch DEFONEOS Agent Card:</h4>
+<div class="endpoint-box"><span class="method">GET</span>/.well-known/agent.json</div>
+<h4>Submit a task to DEFONEOS from another system:</h4>
+<pre>
+curl -X POST https://defoneos.csoai.org/a2a/task \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Scan sector alpha-7 for dark vessels",
+    "skill_id": "maritime-isr",
+    "arguments": {"sector": "alpha-7", "timeout_s": 300}
+  }'
+</pre>
+<p><strong>Supported skills:</strong> <code>eu-ai-act-compliance</code>, <code>maritime-isr</code>, <code>counter-drone</code>, <code>cyber-threat-detect</code>, <code>bft-governance</code>, <code>article-50-watermarking</code>.</p>
+</div>
+
+<div class="integration-card">
+<h4>11. PostgreSQL (Data Store) <span class="status live">LIVE</span></h4>
+<p>DEFONEOS uses PostgreSQL for persistent memory, SIGIL chain storage, and the knowledge graph. Every MCP can read/write to the shared DB.</p>
+<h4>Schema (simplified):</h4>
+<pre>
+-- SIGIL chain
+CREATE TABLE sigil_entries (
+  id SERIAL PRIMARY KEY,
+  entry_text TEXT NOT NULL,
+  hash VARCHAR(64) NOT NULL UNIQUE,
+  prev_hash VARCHAR(64),
+  signature TEXT NOT NULL,
+  actor VARCHAR(100) NOT NULL,
+  timestamp TIMESTAMPTZ DEFAULT NOW(),
+  verified BOOLEAN DEFAULT true
+);
+
+-- Memory episodes
+CREATE TABLE memory_episodes (
+  id SERIAL PRIMARY KEY,
+  content TEXT NOT NULL,
+  source_agent VARCHAR(100),
+  memory_type VARCHAR(50),
+  care_weight FLOAT DEFAULT 0.5,
+  tags TEXT[],
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Sensor tracks
+CREATE TABLE sensor_tracks (
+  id SERIAL PRIMARY KEY,
+  track_type VARCHAR(50),  -- vessel, aircraft, drone, vehicle
+  lat FLOAT, lon FLOAT, alt FLOAT,
+  speed FLOAT, heading FLOAT,
+  confidence FLOAT,
+  source VARCHAR(100),
+  detected_at TIMESTAMPTZ DEFAULT NOW()
+);
+</pre>
+</div>
+
+<div class="integration-card">
+<h4>12. GitHub Actions (CI/CD) <span class="status live">LIVE</span></h4>
+<p>Every DEFONEOS MCP runs through CI/CD: lint, test, build, publish to PyPI on tag.</p>
+<h4>.github/workflows/mcp-publish.yml</h4>
+<pre>
+name: Publish MCP to PyPI
+on:
+  push:
+    tags: ['v*']
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install build twine
+      - run: python -m build
+      - run: twine upload dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+</pre>
+</div>
+
+<div class="integration-card">
+<h4>13. GDELT OSINT (Global News Events) <span class="status live">LIVE</span></h4>
+<p>GDELT monitors global news in real-time. DEFONEOS MCP filters for conflict events, sentiment shifts, and emerging threats.</p>
+<h4>Monitor a region for conflict escalation:</h4>
+<pre>
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "gdelt_conflict_monitor",
+    "arguments": {
+      "region": "eastern_europe",
+      "event_codes": ["14", "17", "18", "19", "20"],
+      "last_hours": 24,
+      "min_goldstein": -5
+    }
+  }
+}'
+</pre>
+<p><strong>Goldstein scale:</strong> -10 (extreme conflict) to +10 (cooperation). <strong>CAMEO event codes:</strong> 14 (protest), 17 (coerce), 18 (assault), 19 (fight), 20 (mass violence).</p>
+</div>
+
+<div class="integration-card">
+<h4>14. UK Open Data (OGL Sources) <span class="status live">LIVE</span></h4>
+<p>5 MCP servers wrap UK government open data APIs. All OGL v3 licensed — free to use, share, and adapt.</p>
+<table>
+<tr><th>MCP</th><th>Source</th><th>API</th><th>Auth</th></tr>
+<tr><td><code>os-opendata</code></td><td>Ordnance Survey</td><td>OS Data Hub</td><td>API key (free)</td></tr>
+<tr><td><code>companies-house</code></td><td>Companies House</td><td>REST API</td><td>API key (free)</td></tr>
+<tr><td><code>ons-statistics</code></td><td>Office for National Statistics</td><td>REST API</td><td>None</td></tr>
+<tr><td><code>data-gov-uk</code></td><td>data.gov.uk</td><td>CKAN API</td><td>None</td></tr>
+<tr><td><code>met-office</code></td><td>Met Office</td><td>DataPoint API</td><td>API key (free)</td></tr>
+</table>
+</div>
+
+<div class="integration-card">
+<h4>15. Matrix Protocol (Secure Messaging) <span class="status planned">PLANNED</span></h4>
+<p>DEFONEOS can send alerts and reports to Matrix rooms for secure, federated team communication. End-to-end encrypted.</p>
+<h4>Planned integration:</h4>
+<pre>
+# Alert configuration (planned)
+[defoneos.matrix]
+enabled = true
+homeserver = "https://matrix.csoai.org"
+room_id = "!defoneos-alerts:csoai.org"
+alert_level = "high"  # minimum level to post
+e2e = true
+</pre>
+</div>
+
+<h2>📋 Layer 0 Protocol Stack</h2>
+
+<p>DEFONEOS communicates through 12 Layer 0 protocols. Every protocol is open-standard, vendor-neutral, and sovereign-compatible.</p>
+
+<table>
+<tr><th>Protocol</th><th>Use</th><th>Port</th><th>Status</th></tr>
+<tr><td><strong>MCP</strong> (Model Context Protocol)</td><td>Tool discovery + execution</td><td>:3101</td><td>✅ Live</td></tr>
+<tr><td><strong>A2A</strong> (Agent-to-Agent)</td><td>Inter-agent federation</td><td>:3101/a2a</td><td>✅ Live</td></tr>
+<tr><td><strong>x402</strong> (Coinbase)</td><td>Per-outcome invoicing</td><td>:3101/x402</td><td>✅ Live</td></tr>
+<tr><td><strong>DID</strong> (W3C Decentralized ID)</td><td>Agent identity</td><td>:3101/did</td><td>✅ Live</td></tr>
+<tr><td><strong>SIGIL</strong> (Signed chain)</td><td>Audit ledger</td><td>:3101/sigil</td><td>✅ Live</td></tr>
+<tr><td><strong>HTTP/3</strong></td><td>Page delivery</td><td>:443</td><td>✅ Live (Vercel)</td></tr>
+<tr><td><strong>WebSocket</strong></td><td>Real-time streams</td><td>:3101/ws</td><td>✅ Live</td></tr>
+<tr><td><strong>gRPC</strong></td><td>High-perf RPC</td><td>:9090</td><td>✅ Live</td></tr>
+<tr><td><strong>Matrix</strong></td><td>Secure messaging</td><td>:8448</td><td>🟡 Planned</td></tr>
+<tr><td><strong>IPFS</strong></td><td>Content addressing</td><td>:4001</td><td>🟡 Planned</td></tr>
+<tr><td><strong>IBC</strong></td><td>Inter-blockchain</td><td>—</td><td>🟡 Planned</td></tr>
+<tr><td><strong>OIDC</strong></td><td>Federated auth</td><td>:3101/oidc</td><td>✅ Live</td></tr>
+</table>
+
+<h2>🚀 Quick Start: Connect Your System in 30 Minutes</h2>
+
+<div class="step">
+<div class="step-num">Step 1 — Install DEFONEOS (5 min)</div>
+<pre>
+git clone https://github.com/CSOAI-ORG/defoneos.git
+cd defoneos
+pip install -r requirements.txt
+python -m sov3.hub --port 3101
+</pre>
+</div>
+
+<div class="step">
+<div class="step-num">Step 2 — Generate Your Identity (2 min)</div>
+<pre>
+python -m defoneos.identity --generate
+# Saves Ed25519 keypair to ~/.defoneos/identity.json
+# Registers on the SIGIL chain (L1 OrgKernel)
+</pre>
+</div>
+
+<div class="step">
+<div class="step-num">Step 3 — Connect Your Sensor (10 min)</div>
+<pre>
+# Example: Connect an RTSP camera
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "rtsp_camera_register",
+    "arguments": {
+      "camera_id": "my-camera",
+      "url": "rtsp://YOUR_CAMERA_IP:554/stream",
+      "location": [YOUR_LAT, YOUR_LON, 0],
+      "detection_model": "yolov8n"
+    }
+  }
+}'
+</pre>
+</div>
+
+<div class="step">
+<div class="step-num">Step 4 — View on Cesium Globe (5 min)</div>
+<pre>
+# Open the COP
+open https://csoai-static-deploy2.vercel.app/defoneos-demo.html
+
+# Or embed in your app
+&lt;script src="https://cesium.com/cesium/cesium/&gt;&lt;/script&gt;
+&lt;script src="https://csoai-static-deploy2.vercel.app/js/defoneos-cesium.js"&gt;&lt;/script&gt;
+&lt;div id="cesiumContainer"&gt;&lt;/div&gt;
+&lt;script&gt;DEFONEOS.init("cesiumContainer", {hub: "http://localhost:3101"})&lt;/script&gt;
+</pre>
+</div>
+
+<div class="step">
+<div class="step-num">Step 5 — Send First SIGIL (2 min)</div>
+<pre>
+curl -X POST localhost:3101/mcp -H "Content-Type: application/json" -d '{
+  "jsonrpc": "2.0", "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "sigil_emit",
+    "arguments": {"line": "C|my-org|sov3|first integration complete — system online"}
+  }
+}'
+# Your action is now permanently recorded in the audit chain.
+</pre>
+</div>
+
+<div class="step">
+<div class="step-num">Step 6 — Join the BFT Council (6 min)</div>
+<pre>
+# Register as a council observer
+python -m defoneos.council --register \
+  --name "my-org-observer" \
+  --role observer \
+  --key ~/.defoneos/identity.json
+
+# Submit your first proposal
+python -m defoneos.council --propose \
+  "Increase ISR coverage in sector 7" \
+  --type standard
+</pre>
+</div>
+
+<h2>🔐 Authentication & Authorization</h2>
+
+<table>
+<tr><th>Deployment</th><th>Auth Method</th><th>Tokens</th><th>Notes</th></tr>
+<tr><td>Local dev</td><td>None</td><td>—</td><td>localhost only, no auth needed</td></tr>
+<tr><td>Production</td><td>Bearer token</td><td>Ed25519-signed JWT</td><td>24h expiry, refresh via OIDC</td></tr>
+<tr><td>Air-gapped</td><td>Client cert</td><td>mTLS + smartcard</td><td>SC-level clearance required</td></tr>
+<tr><td>Coalition</td><td>Federated OIDC</td><td>Cross-domain trust</td><td>Per-nation identity provider</td></tr>
+</table>
+
+<h2>📊 Rate Limits</h2>
+
+<table>
+<tr><th>Tier</th><th>Requests/min</th><th>Concurrent</th><th>Tools</th><th>Price</th></tr>
+<tr><td>Open Source</td><td>100</td><td>5</td><td>All 188+</td><td>£0</td></tr>
+<tr><td>Pro</td><td>1,000</td><td>20</td><td>All + priority queue</td><td>£499/mo</td></tr>
+<tr><td>Governance</td><td>5,000</td><td>50</td><td>All + BFT managed</td><td>£2,499/mo</td></tr>
+<tr><td>Enterprise</td><td>Unlimited</td><td>Unlimited</td><td>All + dedicated VM</td><td>£9,999+/mo</td></tr>
+</table>
+
+<h2>❓ Integration FAQ</h2>
+
+<h4>Q: Can I use DEFONEOS with my existing TAK system?</h4>
+<p>A: Yes. FreeTAKServer bridge translates CoT XML ↔ MCP JSON. Your existing TAK clients (ATAK, WinTAK, iTAK) see DEFONEOS as another TAK endpoint.</p>
+
+<h4>Q: Do I need a GPU for the AI models?</h4>
+<p>A: No. Ollama runs quantized models on CPU. An M2 Mac handles 4 models at 10+ tokens/sec. For ISR (YOLOv8), the Neural Engine on Apple Silicon provides 30+ FPS inference.</p>
+
+<h4>Q: How do I add a custom sensor?</h4>
+<p>A: Build an MCP server that wraps your sensor's API. Use the Mavis pattern (7-file slim package). Submit via PR. <code>pip install mavis-mcp-template</code> to scaffold.</p>
+
+<h4>Q: Can DEFONEOS integrate with NATO systems?</h4>
+<p>A: Coalition mode supports STANAG- compliant data exchange (Link 16/VMF translation via bridge), A2A protocol for agent federation, and federated BFT for multi-nation governance. AUKUS Pillar 2 compatible.</p>
+
+<h4>Q: What's the minimum deployment?</h4>
+<p>A: A single Raspberry Pi 5 (8GB) running Ollama + 5 core MCPs + PostgreSQL. That's sovereign AI in your pocket for £80.</p>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-knowledge.html" style="color:#22d3ee;text-decoration:none">Knowledge</a> · <a href="defoneos-api-playground.html" style="color:#22d3ee;text-decoration:none">API</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a> · <a href="defoneos-threat-model.html" style="color:#22d3ee;text-decoration:none">Threat Model</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

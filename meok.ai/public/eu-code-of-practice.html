@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EU AI Act Code of Practice — MEOK Compliance Suite</title>
+  <meta name="description" content="First-mover compliance with the EU AI Act Code of Practice deadline 2 Aug 2026. MEOK delivers transparency marking, risk management, and human oversight for sovereign AI operators.">
+  <link rel="canonical" href="https://meok.ai/eu-code-of-practice">
+
+  <!-- FAQPage Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the EU AI Act Code of Practice?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The EU AI Act Code of Practice, effective 2 August 2026, sets binding requirements for operators of general-purpose AI models. It mandates transparency marking (Article 50), risk management (Articles 9–15), and human oversight (Article 14) to ensure safe, accountable AI deployment across the European Union."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Who does the Code of Practice apply to?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Any organisation that provides, deploys, or uses general-purpose AI models within the EU — including sovereign AI operators, enterprise AI teams, and independent developers — must comply by 2 August 2026 or face regulatory action."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is transparency marking under Article 50?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Transparency marking requires operators to clearly label AI-generated content, disclose the use of AI in user-facing interactions, and maintain records of model outputs so that end-users can always distinguish AI-generated material from human-created content."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does MEOK Compliance Suite offer for free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "MEOK's Free tier provides keystone compliance certificates — including transparency attestations, risk-classification memos, and oversight checklists — at up to 3 per day at no cost. It is the fastest way to begin your EU AI Act compliance journey."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do MEOK Pro attestations work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "MEOK Pro at £199 per month delivers signed, legally-framed attestation documents with cryptographic proof-of-issuance. Each attestation is timestamped, tamper-evident, and structured to satisfy regulatory audit requirements under the EU AI Act Code of Practice."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is included in MEOK Enterprise full compliance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "MEOK Enterprise at £1,499 per month provides end-to-end compliance infrastructure: unlimited signed attestations, custom risk-management frameworks, dedicated compliance officer portal, API access for automated compliance workflows, team role-based access control, priority legal review SLA, and onboarding support for your entire AI estate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the deadline for the Code of Practice?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The EU AI Act Code of Practice takes full effect on 2 August 2026. Organisations operating general-purpose AI models in the EU must achieve compliance by this date. MEOK recommends beginning the compliance process at least 90 days before the deadline."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Product Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "MEOK Compliance Suite — EU AI Act Code of Practice",
+    "description": "First-mover compliance infrastructure for the EU AI Act Code of Practice deadline. Transparency marking, risk management, and human oversight attestations for sovereign AI operators.",
+    "brand": {
+      "@type": "Brand",
+      "name": "MEOK"
+    },
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free Keystone Certs",
+        "description": "Up to 3 keystone compliance certificates per day — transparency attestations, risk memos, and oversight checklists at no cost.",
+        "price": "0",
+        "priceCurrency": "GBP",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/OnlineOnly",
+        "url": "https://proofof.ai",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "MEOK Free Keystone Certificates",
+          "description": "Essential compliance documentation for smaller AI operators and individual developers."
+        }
+      },
+      {
+        "@type": "Offer",
+        "name": "Pro Attestations",
+        "description": "Signed, legally-framed compliance attestations with cryptographic proof-of-issuance and audit-grade documentation.",
+        "price": "199",
+        "priceCurrency": "GBP",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/OnlineOnly",
+        "url": "https://proofof.ai",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "MEOK Pro Attestations",
+          "description": "Cryptographically-signed compliance attestations suitable for regulatory audit and due diligence."
+        }
+      },
+      {
+        "@type": "Offer",
+        "name": "Enterprise Full Compliance",
+        "description": "End-to-end compliance infrastructure: unlimited attestations, custom frameworks, API access, dedicated portal, and priority SLAs.",
+        "price": "1499",
+        "priceCurrency": "GBP",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/OnlineOnly",
+        "url": "https://proofof.ai",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "MEOK Enterprise Full Compliance",
+          "description": "Comprehensive compliance infrastructure for large AI operators with multiple models and complex deployment environments."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background-color: #0d0c18;
+      color: #ffffff;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; }
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+    h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+    h3 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); }
+    p  { font-size: clamp(0.95rem, 1.5vw, 1.125rem); color: #c0c0d0; }
+    a  { color: #c9a84c; text-decoration: none; transition: color 0.2s; }
+    a:hover, a:focus { color: #dfc06a; text-decoration: underline; }
+    a:focus-visible { outline: 2px solid #c9a84c; outline-offset: 2px; }
+    .gold { color: #c9a84c; }
+    .text-muted { color: #8888a0; }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+    section { padding: 4rem 0; }
+    @media (max-width: 768px) { section { padding: 2.5rem 0; } }
+
+    /* ===== HEADER / NAV ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 12, 24, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+    }
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+    .logo { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; }
+    .logo a { color: #ffffff; }
+    .logo a:hover { text-decoration: none; color: #c9a84c; }
+    .logo .gold { color: #c9a84c; }
+    nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-left: 1.5rem;
+      color: #c0c0d0;
+    }
+    nav a:hover { color: #c9a84c; text-decoration: none; }
+    @media (max-width: 640px) {
+      nav a { margin-left: 1rem; font-size: 0.8rem; }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 6rem 0 5rem;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: 50%;
+      width: 80%;
+      height: 120%;
+      background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .hero .deadline-badge {
+      display: inline-block;
+      background: rgba(201, 168, 76, 0.12);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: #c9a84c;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 { margin-bottom: 1rem; }
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto 1.5rem;
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+    }
+    .hero .countdown {
+      color: #c9a84c;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-group { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.25s;
+      border: none;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+    .btn-primary {
+      background: #c9a84c;
+      color: #0d0c18;
+    }
+    .btn-primary:hover, .btn-primary:focus {
+      background: #dfc06a;
+      color: #0d0c18;
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
+    }
+    .btn-outline {
+      background: transparent;
+      color: #c9a84c;
+      border: 1px solid #c9a84c;
+    }
+    .btn-outline:hover, .btn-outline:focus {
+      background: rgba(201, 168, 76, 0.1);
+      color: #dfc06a;
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+    .btn-sm {
+      padding: 0.55rem 1.35rem;
+      font-size: 0.85rem;
+    }
+
+    /* ===== SECTION TITLES ===== */
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #c9a84c;
+      margin-bottom: 0.5rem;
+    }
+    .section-title { margin-bottom: 0.75rem; }
+    .section-subtitle {
+      max-width: 600px;
+      margin-bottom: 2.5rem;
+      color: #8888a0;
+    }
+
+    /* ===== REQUIREMENTS GRID ===== */
+    .requirements-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 768px) { .requirements-grid { grid-template-columns: 1fr; } }
+    .req-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .req-card:hover {
+      border-color: rgba(201, 168, 76, 0.3);
+      transform: translateY(-2px);
+    }
+    .req-card .icon {
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(201, 168, 76, 0.1);
+      border-radius: 10px;
+      margin-bottom: 1.25rem;
+      font-size: 1.4rem;
+    }
+    .req-card h3 { margin-bottom: 0.6rem; }
+    .req-card p { font-size: 0.9rem; }
+
+    /* ===== PRICING CARDS ===== */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+    @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; } }
+    .pricing-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 2.25rem 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .pricing-card:hover {
+      border-color: rgba(201, 168, 76, 0.3);
+      transform: translateY(-2px);
+    }
+    .pricing-card.featured {
+      border-color: rgba(201, 168, 76, 0.4);
+      background: rgba(201, 168, 76, 0.04);
+      position: relative;
+    }
+    .pricing-card.featured::after {
+      content: 'MOST POPULAR';
+      position: absolute;
+      top: -0.75rem;
+      right: 1.5rem;
+      background: #c9a84c;
+      color: #0d0c18;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+    }
+    .pricing-card h3 { margin-bottom: 0.3rem; }
+    .pricing-card .price {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #c9a84c;
+      margin-bottom: 0.2rem;
+    }
+    .pricing-card .price-sub {
+      font-size: 0.85rem;
+      color: #8888a0;
+      margin-bottom: 1.5rem;
+    }
+    .pricing-card ul {
+      list-style: none;
+      margin-bottom: 1.75rem;
+      flex: 1;
+    }
+    .pricing-card li {
+      padding: 0.4rem 0;
+      font-size: 0.875rem;
+      color: #c0c0d0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .pricing-card li::before {
+      content: '✓';
+      color: #c9a84c;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .pricing-card .btn { align-self: flex-start; }
+    .pricing-footnote {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #8888a0;
+      text-align: center;
+    }
+
+    /* ===== WHY SECTION ===== */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .why-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 1.75rem;
+    }
+    .why-item h4 { margin-bottom: 0.5rem; font-size: 1.05rem; }
+    .why-item p { font-size: 0.875rem; }
+
+    /* ===== CTA SECTION ===== */
+    .cta-section {
+      text-align: center;
+      background: linear-gradient(180deg, rgba(201, 168, 76, 0.04) 0%, transparent 100%);
+      border-top: 1px solid rgba(201, 168, 76, 0.1);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    }
+    .cta-section h2 { margin-bottom: 0.75rem; }
+    .cta-section p { max-width: 560px; margin: 0 auto 2rem; }
+
+    /* ===== FAQ ===== */
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1.25rem 0;
+    }
+    .faq-item:first-of-type { border-top: 1px solid rgba(255, 255, 255, 0.06); }
+    .faq-question {
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .faq-question:hover { color: #c9a84c; }
+    .faq-question .toggle {
+      flex-shrink: 0;
+      font-size: 1.2rem;
+      color: #c9a84c;
+      transition: transform 0.3s;
+    }
+    .faq-item.open .faq-question .toggle { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.3s ease;
+      color: #c0c0d0;
+      font-size: 0.925rem;
+      line-height: 1.65;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 600px;
+      padding-top: 0.75rem;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 2.5rem 0;
+      margin-top: auto;
+    }
+    footer .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    footer .copyright { font-size: 0.8rem; color: #555568; }
+    footer nav a { margin-left: 1.25rem; }
+    footer nav a:first-child { margin-left: 0; }
+    @media (max-width: 640px) {
+      footer .container { flex-direction: column; text-align: center; }
+      footer nav a { margin: 0 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="container">
+      <div class="logo"><a href="https://meok.ai"><span class="gold">M</span>EOK</a></div>
+      <nav>
+        <a href="/article-50-kit">Article&nbsp;50&nbsp;Kit</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="deadline-badge">⏱ Deadline: 2 August 2026</div>
+      <h1>EU AI Act <span class="gold">Code of Practice</span><br>First-Mover Compliance</h1>
+      <p>
+        The EU Code of Practice for general-purpose AI takes full effect on <strong>2 August 2026</strong>.
+        Operators must demonstrate transparency marking, risk management, and human oversight —
+        or face regulatory action. MEOK is the sovereign compliance infrastructure that gets you there first.
+      </p>
+      <div class="countdown" id="countdown">Calculating time remaining…</div>
+      <div class="btn-group">
+        <a href="https://proofof.ai" class="btn btn-primary">Start Free Compliance →</a>
+        <a href="#pricing" class="btn btn-outline">See Plans</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== REQUIREMENTS ===== -->
+  <section id="requirements">
+    <div class="container">
+      <div class="section-label">What the Code Requires</div>
+      <h2 class="section-title">Three Pillars of Compliance</h2>
+      <p class="section-subtitle">The Code of Practice codifies three binding requirements for all general-purpose AI operators in the EU. Each must be documented, attested, and maintained.</p>
+      <div class="requirements-grid">
+        <div class="req-card">
+          <div class="icon">🏷️</div>
+          <h3>Transparency Marking</h3>
+          <p>AI-generated content must be clearly labelled. Operators must disclose AI use in user-facing interactions, maintain output records, and ensure end-users can always distinguish synthetic from human-created material — in line with Article&nbsp;50.</p>
+        </div>
+        <div class="req-card">
+          <div class="icon">🛡️</div>
+          <h3>Risk Management</h3>
+          <p>A systematic risk framework covering model evaluation, bias testing, incident reporting, and continuous monitoring. Operators must classify risk levels, document mitigation measures, and conduct periodic reviews — per Articles&nbsp;9–15.</p>
+        </div>
+        <div class="req-card">
+          <div class="icon">👁️</div>
+          <h3>Human Oversight</h3>
+          <p>Meaningful human control over AI outputs, including override mechanisms, escalation workflows, and clear accountability structures. Operators must designate responsible persons and maintain audit trails — as mandated by Article&nbsp;14.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING / COMPLIANCE SUITE ===== -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-label">MEOK Compliance Suite</div>
+      <h2 class="section-title">How We Help You Comply</h2>
+      <p class="section-subtitle">From keystone certificates to enterprise-grade compliance infrastructure — every plan covers all three Code of Practice pillars.</p>
+      <div class="pricing-grid">
+        <!-- Free -->
+        <div class="pricing-card">
+          <h3>Free</h3>
+          <div class="price">£0</div>
+          <div class="price-sub">Keystone Certificates</div>
+          <ul>
+            <li>Transparency attestation certificates</li>
+            <li>Risk-classification memos</li>
+            <li>Human oversight checklists</li>
+            <li>Up to 3 certificates per day</li>
+            <li>Instant download (PDF)</li>
+            <li>No credit card required</li>
+          </ul>
+          <a href="https://proofof.ai" class="btn btn-outline btn-sm">Get Started Free</a>
+        </div>
+        <!-- Pro -->
+        <div class="pricing-card featured">
+          <h3>Pro</h3>
+          <div class="price">£199</div>
+          <div class="price-sub">per month — Attestations</div>
+          <ul>
+            <li>Signed, legally-framed attestation docs</li>
+            <li>Cryptographic proof-of-issuance</li>
+            <li>Timestamped &amp; tamper-evident seals</li>
+            <li>Audit-grade documentation bundle</li>
+            <li>Unlimited certificate generation</li>
+            <li>Priority email support</li>
+          </ul>
+          <a href="https://proofof.ai" class="btn btn-primary btn-sm">Start Pro →</a>
+        </div>
+        <!-- Enterprise -->
+        <div class="pricing-card">
+          <h3>Enterprise</h3>
+          <div class="price">£1,499</div>
+          <div class="price-sub">per month — Full Compliance</div>
+          <ul>
+            <li>Everything in Pro, plus:</li>
+            <li>Custom risk-management frameworks</li>
+            <li>Dedicated compliance officer portal</li>
+            <li>API access for automated workflows</li>
+            <li>Team role-based access control (RBAC)</li>
+            <li>Priority legal review SLA (24h)</li>
+            <li>Onboarding &amp; migration support</li>
+          </ul>
+          <a href="https://proofof.ai" class="btn btn-outline btn-sm">Contact Sales</a>
+        </div>
+      </div>
+      <p class="pricing-footnote">All tiers cover transparency marking, risk management, and human oversight. Upgrade anytime. VAT may apply.</p>
+    </div>
+  </section>
+
+  <!-- ===== WHY MEOK ===== -->
+  <section>
+    <div class="container">
+      <div class="section-label">Why MEOK</div>
+      <h2 class="section-title">Built for Sovereign AI Operators</h2>
+      <p class="section-subtitle">MEOK is the independent EU AI Act compliance layer — purpose-built for operators who need speed, auditability, and zero vendor lock-in.</p>
+      <div class="why-grid">
+        <div class="why-item">
+          <h4>⚡ First-Mover Advantage</h4>
+          <p>Start generating compliance artefacts today, not after the deadline. Every day of attestation history strengthens your audit position.</p>
+        </div>
+        <div class="why-item">
+          <h4>🔐 Cryptographically Verifiable</h4>
+          <p>Pro and Enterprise attestations are signed with tamper-evident seals — regulators can independently verify authenticity without contacting you.</p>
+        </div>
+        <div class="why-item">
+          <h4>📋 Audit-Ready Documentation</h4>
+          <p>Every certificate and attestation is structured to satisfy EU AI Act evidentiary standards. Export full compliance bundles on demand.</p>
+        </div>
+        <div class="why-item">
+          <h4>🏛️ Sovereign &amp; Independent</h4>
+          <p>MEOK is not a Big Tech platform. We are an independent compliance infrastructure provider built for European AI sovereignty.</p>
+        </div>
+        <div class="why-item">
+          <h4>📈 Scales With Your AI Estate</h4>
+          <p>From a single model to hundreds of deployments — Free, Pro, and Enterprise tiers grow with your compliance needs.</p>
+        </div>
+        <div class="why-item">
+          <h4>🤝 Legal &amp; Technical Expertise</h4>
+          <p>Our frameworks are developed in consultation with EU AI Act legal specialists and technical auditors. You get both in one platform.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>The Clock Is Ticking — <span class="gold">2 August 2026</span></h2>
+      <p>Don't wait for the deadline to discover gaps in your compliance posture. MEOK gives you a documented, auditable head start — starting at zero cost.</p>
+      <div class="btn-group">
+        <a href="https://proofof.ai" class="btn btn-primary">Start Free Compliance →</a>
+        <a href="/pricing" class="btn btn-outline">Compare Plans</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">Everything you need to know about the EU AI Act Code of Practice and how MEOK helps you comply.</p>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <span>What is the EU AI Act Code of Practice?</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            The EU AI Act Code of Practice, effective 2 August 2026, sets binding requirements for operators of general-purpose AI models. It mandates transparency marking (Article 50), risk management (Articles 9–15), and human oversight (Article 14) to ensure safe, accountable AI deployment across the European Union.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <span>Who does the Code of Practice apply to?</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            Any organisation that provides, deploys, or uses general-purpose AI models within the EU — including sovereign AI operators, enterprise AI teams, and independent developers — must comply by 2 August 2026 or face regulatory action.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <span>What is transparency marking under Article 50?</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            Transparency marking requires operators to clearly label AI-generated content, disclose the use of AI in user-facing interactions, and maintain records of model outputs so that end-users can always distinguish AI-generated material from human-created content.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <span>What does MEOK Compliance Suite offer for free?</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            MEOK's Free tier provides keystone compliance certificates — including transparency attestations, risk-classification memos, and oversight checklists — at up to 3 per day at no cost. It is the fastest way to begin your EU AI Act compliance journey.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <span>How do MEOK Pro attestations work?</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            MEOK Pro at £199 per month delivers signed, legally-framed attestation documents with cryptographic proof-of-issuance. Each attestation is timestamped, tamper-evident, and structured to satisfy regulatory audit requirements under the EU AI Act Code of Practice.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <span>What is included in MEOK Enterprise full compliance?</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            MEOK Enterprise at £1,499 per month provides end-to-end compliance infrastructure: unlimited signed attestations, custom risk-management frameworks, dedicated compliance officer portal, API access for automated compliance workflows, team role-based access control, priority legal review SLA, and onboarding support for your entire AI estate.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <span>What is the deadline for the Code of Practice?</span>
+            <span class="toggle">+</span>
+          </div>
+          <div class="faq-answer">
+            The EU AI Act Code of Practice takes full effect on 2 August 2026. Organisations operating general-purpose AI models in the EU must achieve compliance by this date. MEOK recommends beginning the compliance process at least 90 days before the deadline.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container">
+      <div class="copyright">© 2026 MEOK. Sovereign AI compliance infrastructure.</div>
+      <nav>
+        <a href="/article-50-kit">Article 50 Kit</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ===== COUNTDOWN & FAQ INTERACTION ===== -->
+  <script>
+    (function() {
+      // --- Countdown timer ---
+      (function updateCountdown() {
+        var el = document.getElementById('countdown');
+        if (!el) return;
+        var deadline = new Date('2026-08-02T00:00:00Z').getTime();
+        var now = Date.now();
+        var diff = deadline - now;
+        if (diff <= 0) {
+          el.textContent = '⏰ Deadline reached — is your compliance in order?';
+          return;
+        }
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        var minutes = Math.floor((diff / (1000 * 60)) % 60);
+        var seconds = Math.floor((diff / 1000) % 60);
+        el.textContent = days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's remaining';
+        setTimeout(updateCountdown, 1000);
+      })();
+
+      // --- FAQ accordion ---
+      var questions = document.querySelectorAll('.faq-question');
+      questions.forEach(function(q) {
+        q.addEventListener('click', function() {
+          var item = this.parentElement;
+          var open = item.classList.contains('open');
+          // Close all open items
+          document.querySelectorAll('.faq-item.open').forEach(function(el) {
+            el.classList.remove('open');
+            el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          });
+          if (!open) {
+            item.classList.add('open');
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+        q.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

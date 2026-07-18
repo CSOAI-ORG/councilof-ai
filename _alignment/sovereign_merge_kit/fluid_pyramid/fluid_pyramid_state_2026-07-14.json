@@ -1,0 +1,479 @@
+{
+  "capstone": {
+    "layer": 0,
+    "name": "SOV3 CAPSTONE",
+    "role": "biggest model, all rotate around it",
+    "models": [
+      "sov_brain_v2",
+      "oracle_70b",
+      "qwen3-4b"
+    ],
+    "shape": "pyramid_top",
+    "pressure": 1.0,
+    "velocity": 1.0,
+    "fluid": true,
+    "rotates": true
+  },
+  "layers": [
+    {
+      "id": 12,
+      "name": "Prove",
+      "letter": "P",
+      "role": "Audit, attest, prove correctness",
+      "inner_owem": "sov_proof_owem",
+      "model_mix": {
+        "sov_brain_v2": 0.5,
+        "sov3_small": 0.5
+      },
+      "state": {
+        "pressure": 0.85,
+        "velocity": 0.95
+      },
+      "fluid": true,
+      "frameworks": [
+        "BFT-33",
+        "SIGIL"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Optimize",
+      "letter": "O",
+      "role": "Optimize performance, route decisions",
+      "inner_owem": "sov_optimizer_owem",
+      "model_mix": {
+        "sov_brain_v2": 0.7,
+        "qwen2.5:3b": 0.3
+      },
+      "state": {
+        "pressure": 0.8,
+        "velocity": 0.9
+      },
+      "fluid": true,
+      "frameworks": [
+        "cascade",
+        "rho_measurement"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Navigate",
+      "letter": "N",
+      "role": "Navigate complex queries, multi-step",
+      "inner_owem": "sov_navigator_owem",
+      "model_mix": {
+        "sov_brain_v2": 0.8,
+        "qwen3-0.6b": 0.2
+      },
+      "state": {
+        "pressure": 0.75,
+        "velocity": 0.85
+      },
+      "fluid": true,
+      "frameworks": [
+        "PDCA",
+        "self-consistency"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Mature",
+      "letter": "M",
+      "role": "Mature responses, refine quality",
+      "inner_owem": "sov_maturity_owem",
+      "model_mix": {
+        "sov_brain_v2": 0.6,
+        "sov3_small": 0.4
+      },
+      "state": {
+        "pressure": 0.7,
+        "velocity": 0.8
+      },
+      "fluid": true,
+      "frameworks": [
+        "reflection",
+        "Venturi"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Log",
+      "letter": "L",
+      "role": "Log, audit trail, SIGIL chain",
+      "inner_owem": "sov_logger_owem",
+      "model_mix": {
+        "qwen2.5:3b": 1.0
+      },
+      "state": {
+        "pressure": 0.5,
+        "velocity": 1.0
+      },
+      "fluid": false,
+      "frameworks": [
+        "Ed25519",
+        "hash_chain"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Key",
+      "letter": "K",
+      "role": "Encryption, keys, capability passports",
+      "inner_owem": "sov_keymaster_owem",
+      "model_mix": {
+        "qwen2.5:3b": 0.8,
+        "sov_brain_v2": 0.2
+      },
+      "state": {
+        "pressure": 0.4,
+        "velocity": 0.95
+      },
+      "fluid": false,
+      "frameworks": [
+        "Ed25519",
+        "AES-256"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Join",
+      "letter": "J",
+      "role": "Join layers, harmonize, fan-in",
+      "inner_owem": "sov_joiner_owem",
+      "model_mix": {
+        "sov_brain_v2": 0.5,
+        "qwen3-0.6b": 0.5
+      },
+      "state": {
+        "pressure": 0.65,
+        "velocity": 0.85
+      },
+      "fluid": true,
+      "frameworks": [
+        "cascade",
+        "master_router"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Inherit",
+      "letter": "I",
+      "role": "Inherit from parent layers, knowledge transfer",
+      "inner_owem": "sov_inherit_owem",
+      "model_mix": {
+        "sov_brain_v2": 0.9,
+        "sov3_small": 0.1
+      },
+      "state": {
+        "pressure": 0.6,
+        "velocity": 0.7
+      },
+      "fluid": true,
+      "frameworks": [
+        "EWC",
+        "replay_buffer"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Hash",
+      "letter": "H",
+      "role": "Hash content, SIGIL stamping",
+      "inner_owem": "sov_hash_owem",
+      "model_mix": {
+        "qwen2.5:3b": 1.0
+      },
+      "state": {
+        "pressure": 0.3,
+        "velocity": 1.0
+      },
+      "fluid": false,
+      "frameworks": [
+        "Ed25519",
+        "SHA-256"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Govern",
+      "letter": "G",
+      "role": "Govern via 12 Pillars, Article 0, BFT",
+      "inner_owem": "sov_govern_owem",
+      "model_mix": {
+        "sov_brain_v2": 0.7,
+        "qwen2.5:3b": 0.3
+      },
+      "state": {
+        "pressure": 0.7174999999999999,
+        "velocity": 0.8400000000000001
+      },
+      "fluid": true,
+      "frameworks": [
+        "12 Pillars",
+        "Article 0",
+        "BFT-33"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Federate",
+      "letter": "F",
+      "role": "Federate across OWEMs, master combine",
+      "inner_owem": "sov_federate_owem",
+      "model_mix": {
+        "sov_brain_v2": 0.8,
+        "qwen3-0.6b": 0.2
+      },
+      "state": {
+        "pressure": 0.55,
+        "velocity": 0.85
+      },
+      "fluid": true,
+      "frameworks": [
+        "master_router",
+        "SOV33_Master"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Evaluate",
+      "letter": "E",
+      "role": "Evaluate, ground, foundation",
+      "inner_owem": "sov_evaluator_owem",
+      "model_mix": {
+        "qwen3-0.6b": 0.9,
+        "sov_brain_v2": 0.1
+      },
+      "state": {
+        "pressure": 0.8,
+        "velocity": 0.6
+      },
+      "fluid": true,
+      "frameworks": [
+        "training",
+        "EWC",
+        "replay_buffer"
+      ]
+    }
+  ],
+  "alphabet": {
+    "A": {
+      "name": "Assess",
+      "frameworks": [
+        "world_model",
+        "evaluation"
+      ],
+      "pulse": 1.0
+    },
+    "B": {
+      "name": "Build",
+      "frameworks": [
+        "training",
+        "QLoRA"
+      ],
+      "pulse": 0.9
+    },
+    "C": {
+      "name": "Calibrate",
+      "frameworks": [
+        "split_conformal",
+        "venturi"
+      ],
+      "pulse": 0.8
+    },
+    "D": {
+      "name": "Deploy",
+      "frameworks": [
+        "governance",
+        "BFT-33"
+      ],
+      "pulse": 0.95
+    },
+    "E": {
+      "name": "Evaluate",
+      "frameworks": [
+        "rho_measurement",
+        "metrics"
+      ],
+      "pulse": 0.7
+    },
+    "F": {
+      "name": "Federate",
+      "frameworks": [
+        "master_router",
+        "OWEM_mixer"
+      ],
+      "pulse": 0.85
+    },
+    "G": {
+      "name": "Govern",
+      "frameworks": [
+        "12_Pillars",
+        "Article_0",
+        "BFT-33"
+      ],
+      "pulse": 1.0
+    },
+    "H": {
+      "name": "Hash",
+      "frameworks": [
+        "Ed25519",
+        "SHA-256"
+      ],
+      "pulse": 0.6
+    },
+    "I": {
+      "name": "Inherit",
+      "frameworks": [
+        "EWC",
+        "replay_buffer"
+      ],
+      "pulse": 0.7
+    },
+    "J": {
+      "name": "Join",
+      "frameworks": [
+        "cascade",
+        "master_router"
+      ],
+      "pulse": 0.85
+    },
+    "K": {
+      "name": "Key",
+      "frameworks": [
+        "Ed25519",
+        "AES-256",
+        "W3C_DID"
+      ],
+      "pulse": 0.5
+    },
+    "L": {
+      "name": "Log",
+      "frameworks": [
+        "Ed25519",
+        "hash_chain",
+        "audit"
+      ],
+      "pulse": 0.7
+    },
+    "M": {
+      "name": "Mature",
+      "frameworks": [
+        "reflection",
+        "Venturi"
+      ],
+      "pulse": 0.8
+    },
+    "N": {
+      "name": "Navigate",
+      "frameworks": [
+        "PDCA",
+        "self-consistency"
+      ],
+      "pulse": 0.85
+    },
+    "O": {
+      "name": "Optimize",
+      "frameworks": [
+        "cascade",
+        "rho_measurement"
+      ],
+      "pulse": 0.9
+    },
+    "P": {
+      "name": "Prove",
+      "frameworks": [
+        "BFT-33",
+        "SIGIL",
+        "conformal"
+      ],
+      "pulse": 0.95
+    }
+  },
+  "inner_owems": {
+    "sov_90_10": {
+      "mix": {
+        "sov_brain_v2": 0.9,
+        "qwen3-0.6b": 0.1
+      },
+      "best_for": "high-trust sovereign answers",
+      "rank": "90/10"
+    },
+    "sov_80_20": {
+      "mix": {
+        "sov_brain_v2": 0.8,
+        "qwen2.5:3b": 0.2
+      },
+      "best_for": "general sovereign",
+      "rank": "80/20"
+    },
+    "sov_70_30": {
+      "mix": {
+        "sov_brain_v2": 0.7,
+        "qwen3-0.6b": 0.3
+      },
+      "best_for": "balanced",
+      "rank": "70/30"
+    },
+    "sov_60_40": {
+      "mix": {
+        "sov_brain_v2": 0.6,
+        "qwen2.5:3b": 0.4
+      },
+      "best_for": "cost-sensitive",
+      "rank": "60/40"
+    },
+    "sov_50_50": {
+      "mix": {
+        "sov_brain_v2": 0.5,
+        "qwen3-0.6b": 0.5
+      },
+      "best_for": "maximum diversity",
+      "rank": "50/50"
+    },
+    "sov_3way": {
+      "mix": {
+        "sov_brain_v2": 0.5,
+        "qwen3-0.6b": 0.3,
+        "qwen2.5:3b": 0.2
+      },
+      "best_for": "3-lineage diversity",
+      "rank": "50/30/20"
+    },
+    "sov_brain_only": {
+      "mix": {
+        "sov_brain_v2": 1.0
+      },
+      "best_for": "sovereign-specific",
+      "rank": "100/0"
+    },
+    "ollama_heavy": {
+      "mix": {
+        "qwen2.5:3b": 0.6,
+        "qwen3-0.6b": 0.4
+      },
+      "best_for": "speed",
+      "rank": "60/40"
+    },
+    "sov_master_heavy": {
+      "mix": {
+        "sov3_master": 0.7,
+        "sov_brain_v2": 0.3
+      },
+      "best_for": "master orchestration",
+      "rank": "70/30"
+    },
+    "hybrid_drum": {
+      "mix": {
+        "sov_brain_v2": 0.4,
+        "qwen3-0.6b": 0.3,
+        "qwen2.5:3b": 0.3
+      },
+      "best_for": "drum/harmony balance",
+      "rank": "40/30/30"
+    }
+  },
+  "drum_beat": 0.0,
+  "harmony": 1.0,
+  "ts_iso": "2026-07-14T05:04:50.857879+00:00"
+}

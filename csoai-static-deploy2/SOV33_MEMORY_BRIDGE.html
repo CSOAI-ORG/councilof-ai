@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🧠 SOV33 Memory Bridge — BYO-Context, Cross-Platform</title>
+<meta name="description" content="SOV33 memory bridge — the federated memory substrate connecting sovereign agents across ticks, handoffs, sessions, and SIGIL receipts. Long-context, owner-controlled.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM, long-context">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1100px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.7rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.25rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.82em;line-height:1.45}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .meta{color:var(--muted);font-size:.9em}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  textarea{width:100%;padding:.7rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;font-family:inherit;font-size:.9em;min-height:80px}
+  button{background:var(--accent);color:#0a0e1a;border:none;padding:.7rem 1.4rem;border-radius:6px;font-weight:bold;cursor:pointer}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_MEMORY_BRIDGE.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🧠 SOV33 Memory Bridge</h1>
+  <p class="meta">Cross-platform memory-bridge shim (FULLSTACK_MASTER §B). BYO-context, NOT platform-locked. 12 Jul 2026.</p>
+  <p><a href="SOV33_HERO.html">← SOV33 Hub</a> · <a href="SOV33_INDEX.html">Index</a></p>
+</header>
+
+<h2>What This Is</h2>
+
+<div class="card">
+  <blockquote>Per <a href=#=>FULLSTACK_MASTER</a> §B: <strong>"MISSING: the cross-platform memory-bridge shim — a thin adapter that injects SOV33 memory as context into a Claude/ChatGPT session (MCP or system-prompt preamble) and writes the turn back."</strong></blockquote>
+  <p>The bridge reads the SOV33 sovereign memory store (40+ entries), searches by query, and returns a formatted context block ready for system-prompt injection into ANY AI platform.</p>
+</div>
+
+<h2>How It Works</h2>
+
+<div class="card">
+  <ol>
+    <li><strong>User opens Claude/ChatGPT/any platform</strong></li>
+    <li><strong>Bridge injects SOV33 memory as system-prompt</strong> — the character remembers its prior sovereign context</li>
+    <li><strong>User talks to the character</strong> — same identity, same memories, same care-floor, same governance</li>
+    <li><strong>Bridge writes the turn back to SOV33</strong> — memory grows</li>
+    <li><strong>Next session</strong> — character still remembers (memory is substrate, not model)</li>
+  </ol>
+</div>
+
+<h2>Live Demo</h2>
+
+<div class="card">
+  <h3>Query the sovereign memory</h3>
+  <input type="text" id="mq" value="Article 0 sovereign charter" style="width:100%;padding:.7rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;font-family:inherit;margin:.5rem 0">
+  <label class="meta">Top-k memories: <input type="number" id="mk" value="5" min="1" max="20" style="width:60px;background:var(--bg);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:.3rem;margin:0 .5rem"></label>
+  <button onclick="queryMemory()">Query /api/memory →</button>
+  <div id="memory-result" style="margin-top:1rem"></div>
+</div>
+
+<h3>Write-back (turn → memory)</h3>
+
+<div class="card">
+  <p>Turns from any platform can be written back to sovereign memory:</p>
+  <textarea id="wb-content" placeholder="New memory content...">SOV33: Memory bridge demo - cross-platform memory works. SIGIL signed.</textarea>
+  <input type="text" id="wb-tags" value="bridge,demo,2026" style="width:100%;padding:.5rem;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:6px;font-family:inherit;margin:.5rem 0">
+  <button onclick="writeBack()">Write to /api/memory →</button>
+  <div id="wb-result" style="margin-top:1rem"></div>
+</div>
+
+<h2>Memory Stats (live)</h2>
+<div id="memory-stats"></div>
+
+<h2>The Bridge Code (4KB Python)</h2>
+
+<pre><code>import sys, json
+sys.path.insert(0, '/Users/nicholas/clawd/_alignment/sovereign_merge_kit')
+from sov33_memory_bridge import format_context, write_back
+
+# Read: inject into any platform's system prompt
+ctx = format_context("Article 0 sovereign", top_k=5)
+# → returns formatted string ready for system_prompt injection
+
+# Write: turn → memory
+write_back(content="User said hello", tags=["greeting"], source="claude-code")</code></pre>
+
+<h2>Why This Is Sovereign (not just portable)</h2>
+
+<div class="card gold">
+  <ul>
+    <li><strong>Memory is in SOV33, not the model</strong> — swap models, memory persists (proven structural)</li>
+    <li><strong>Every entry SIGIL-signed</strong> — audit-grade provenance for every memory</li>
+    <li><strong>Care-floor 0.95 binding</strong> — memories written under governance</li>
+    <li><strong>Article 0 binding</strong> — memories cannot be sold/transferred to non-sovereign</li>
+    <li><strong>BYO-context</strong> — you bring your context into any platform, they keep their data</li>
+  </ul>
+</div>
+
+<h2>The Honest Limits</h2>
+
+<div class="card warn">
+  <ul>
+    <li><strong>Keyword search</strong> — not semantic embeddings (yet). Simple word match.</li>
+    <li><strong>40 entries</strong> — small corpus. Will grow as turns are written back.</li>
+    <li><strong>Local file</strong> — single-machine. Federation of memories across machines is DESIGN.</li>
+    <li><strong>No platform-specific adapter</strong> — this is the substrate. Claude Code owns the Claude Desktop MCP adapter (their lane).</li>
+  </ul>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🧠 SOV33 Memory Bridge</strong> · 12 Jul 2026 · Hermes lane · §B of <a href=#=>FULLSTACK_MASTER</a><br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function queryMemory() {
+  const q = document.getElementById('mq').value;
+  const k = parseInt(document.getElementById('mk').value);
+  const out = document.getElementById('memory-result');
+  out.innerHTML = 'Querying sovereign memory...';
+  try {
+    const r = await fetch(API + '/api/memory', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({query: q, top_k: k})
+    });
+    const d = await r.json();
+    if (d.error) { out.innerHTML = '<span style="color:var(--warn)">' + d.error + '</span>'; return; }
+    out.innerHTML = `
+      <div style="background:var(--bg);padding:1rem;border-radius:6px;border-left:3px solid var(--accent2);margin-top:.5rem">
+        <p><strong>${d.num_matches} matches</strong> for "${q}"</p>
+        <pre style="background:#0a0e1a;padding:.8rem;border-radius:4px;overflow-x:auto;font-size:.8em;white-space:pre-wrap">${d.context || '(no matches above score threshold)'}</pre>
+      </div>
+    `;
+  } catch (e) { out.innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>'; }
+}
+
+async function writeBack() {
+  const content = document.getElementById('wb-content').value;
+  const tags = document.getElementById('wb-tags').value.split(',').map(t => t.trim());
+  const out = document.getElementById('wb-result');
+  out.innerHTML = 'Writing to sovereign memory...';
+  try {
+    const r = await fetch(API + '/api/memory', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({write_back: {content, tags, source: 'bridge-demo'}})
+    });
+    const d = await r.json();
+    out.innerHTML = `
+      <div style="background:var(--bg);padding:1rem;border-radius:6px;border-left:3px solid var(--accent2);margin-top:.5rem">
+        <p class="meta">Memory written. SIGIL: <code>${d.sigil_digest || '?'}</code></p>
+        <p class="meta">${d.ts || ''}</p>
+      </div>
+    `;
+  } catch (e) { out.innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>'; }
+}
+
+async function loadStats() {
+  try {
+    const r = await fetch(API + '/api/memory');
+    const d = await r.json();
+    const stats = document.getElementById('memory-stats');
+    stats.innerHTML = `
+      <div class="card">
+        <p><strong>${d.total_entries}</strong> sovereign memories</p>
+        <p><strong>${d.sources.length}</strong> sources: ${d.sources.join(', ')}</p>
+        <p><strong>${d.recent_tags.length}</strong> recent tags: ${d.recent_tags.slice(0, 10).join(', ')}</p>
+        <p class="meta">Article 0 bound: ${d.article_0_bound} · Care floor: ${d.care_floor}</p>
+      </div>
+    `;
+  } catch (e) {}
+}
+loadStats();
+</script>
+
+</body>
+</html>

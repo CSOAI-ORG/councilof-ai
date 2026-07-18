@@ -1,0 +1,19 @@
+{
+  "brains": {
+    "qwen_moe": 0.8275862068965517,
+    "bamba_ssm": 0.7241379310344828
+  },
+  "rho": -0.07747247335011404,
+  "best_single_acc": 0.8275862068965517,
+  "best_brain": "qwen_moe",
+  "fused_acc_CONFIDENCE_ROUTED": 0.6896551724137931,
+  "fusion_gain_vs_best_single": -0.1379,
+  "oracle_ceiling": 0.9655172413793104,
+  "oracle_headroom": 0.1379,
+  "n_disagreement_items": 11,
+  "confidence_routed_correct_on_disagreements": "3/11",
+  "max_new_tokens": 96,
+  "n_items": 29,
+  "VERDICT": "NO emergence yet: confidence routing did not beat best single (gain<=0)",
+  "NOTE": "Both brains SAME token budget (no confound). Confidence = mean token logprob, z-normalized per brain. Fuser picks more-confident brain per item. fusion_gain>0 => real emergence from routing."
+}

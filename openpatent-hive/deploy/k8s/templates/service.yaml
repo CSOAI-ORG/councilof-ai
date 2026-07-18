@@ -1,0 +1,89 @@
+# openpatent.ai — Sovereign Hive · Services
+# ─────────────────────────────────────────────────────────────────────
+# Renders one ClusterIP Service per deployment, plus headless services
+# for the two StatefulSets (postgres, ipfs) so they get stable DNS
+# records (pod-0.postgres, pod-0.ipfs).
+#
+# Prometheus can scrape these Service objects' endpoints to discover
+# the /metrics endpoint on every pod.  The annotations on the pods
+# (set in deployment.yaml) drive the scrape config.
+
+{{- range $svc := .Values.services }}
+{{- if eq $svc.kind "stateless" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $svc.name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ $svc.name }}
+    app.kubernetes.io/name: {{ $svc.name }}
+    app.kubernetes.io/part-of: openpatent-hive
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: {{ $svc.port | quote }}
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ $svc.name }}
+  ports:
+    - name: http
+      port: {{ $svc.port }}
+      targetPort: http
+      protocol: TCP
+{{- end }}
+{{- end }}
+
+{{- if .Values.stateful.postgres.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgres
+    app.kubernetes.io/part-of: openpatent-hive
+spec:
+  # Headless service — gives the StatefulSet pod a stable DNS A-record
+  # (postgres-0.postgres.openpatent.svc.cluster.local) for clients that
+  # need to address a specific replica.  ClusterIP: None disables
+  # virtual-IP load-balancing.
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: postgres
+  ports:
+    - name: postgres
+      port: {{ .Values.stateful.postgres.port }}
+      targetPort: postgres
+      protocol: TCP
+{{- end }}
+
+{{- if .Values.stateful.ipfs.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ipfs
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: ipfs
+    app.kubernetes.io/part-of: openpatent-hive
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: ipfs
+  ports:
+    - name: api
+      port: {{ .Values.stateful.ipfs.apiPort }}
+      targetPort: api
+      protocol: TCP
+    - name: gateway
+      port: {{ .Values.stateful.ipfs.gatewayPort }}
+      targetPort: gateway
+      protocol: TCP
+{{- end }}

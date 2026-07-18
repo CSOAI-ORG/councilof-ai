@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧬 Sovereign Substrate DNA — 12 Dimensions of Sovereignty</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:1rem;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a3a1a 50%,#02060f 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid #10b981}
+  .hero h1{color:#10b981;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #10b981}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1.5rem}
+  .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+  .dna{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem auto;max-width:1100px}
+  .dna h2{color:#10b981;margin-bottom:1rem;text-align:center;font-size:1.5rem}
+  .helix{position:relative;width:100%;height:600px;margin:2rem auto;overflow:hidden}
+  .dna-strand{position:absolute;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}
+  .base-pair{position:relative;width:300px;height:40px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+  .base{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:bold;cursor:pointer;box-shadow:0 0 12px currentColor;transition:transform .2s;position:relative;z-index:2;background:rgba(0,0,0,0.5);border:2px solid}
+  .base:hover{transform:scale(1.3);z-index:10}
+  .base-left{border-color:#10b981;color:#10b981}
+  .base-right{border-color:#fbbf24;color:#fbbf24}
+  .bond{position:absolute;top:50%;left:32px;right:32px;height:2px;background:linear-gradient(90deg,#10b981 0%,#fbbf24 100%);z-index:1}
+  .backbone{position:absolute;width:2px;height:100%;background:#60a5fa;top:0;left:50%;transform:translateX(-50%);z-index:0}
+  .legend{max-width:1200px;margin:0 auto}
+  .dims{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin:2rem auto;max-width:1200px}
+  .dim{background:#1a1a1a;padding:1.5rem;border-radius:12px;border-left:4px solid #10b981}
+  .dim h3{color:#10b981;margin-bottom:0.3rem}
+  .dim .symbol{color:#fbbf24;font-family:monospace;font-size:1.3rem;margin-bottom:0.3rem}
+  .dim p{color:#aaa;font-size:.85rem;line-height:1.5}
+  .dim .level{background:#0a0a0a;height:6px;border-radius:3px;margin-top:0.5rem;overflow:hidden}
+  .dim .level .fill{height:100%;background:linear-gradient(90deg,#10b981,#fbbf24)}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/oowm.html">OOWM</a>
+  <a href="/sovereign-canon.html">Canon</a>
+  <a href="/autonomy.html">Autonomy</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🧬 Sovereign Substrate DNA</h1>
+  <p>12 dimensions of sovereignty · Crown lineage 1795-2026 · Mamba-2 16-dim state</p>
+</section>
+
+<div class="container">
+  <div class="dna">
+    <h2>🧬 The Sovereign Double Helix — 12 Base Pairs</h2>
+    <p style="color:#aaa;text-align:center;margin-bottom:1rem">Each base pair is a sovereign dimension. The strands are MIT (left, code) and CC0 (right, knowledge).</p>
+    <div class="helix">
+      <div class="backbone"></div>
+      <div class="dna-strand" id="helix"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <h2 style="text-align:center;color:#10b981;margin:2rem 0 1rem;font-size:1.8rem">🧪 The 12 Sovereign Dimensions</h2>
+  <p style="text-align:center;color:#888;margin-bottom:1rem">Each dimension has a symbol, a name, and a level (0-1). Hover for detail.</p>
+  <div class="dims" id="dims"></div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign DNA</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">12 dimensions. MIT + CC0. Crown lineage 1795-2026. Sovereign by construction.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 78 sovereign MCPs · 1,572+ tests · 33 hive planets</p>
+</div>
+
+<script>
+const DIMS = [
+  {id:1, sym:"C", name:"Care Floor", level:0.95, desc:"16-probe validation. Non-negotiable. Refuses any action < 0.95.", color:"#10b981"},
+  {id:2, sym:"B", name:"BFT 12-around-1", level:0.92, desc:"Byzantine Fault Tolerant council. 12 voters. Smaller councils vote better.", color:"#8b5cf6"},
+  {id:3, sym:"S", name:"SIGIL Chain", level:0.98, desc:"Ed25519 hash-chained. Bitcoin-anchored. Regulator-grade audit.", color:"#60a5fa"},
+  {id:4, sym:"A", name:"Article 50", level:0.88, desc:"EU AI Act 2 Aug 2026. Watermarking. €15M or 3% global turnover.", color:"#10b981"},
+  {id:5, sym:"D", name:"DORADO 1-click", level:0.94, desc:"Citizen chooses sovereignty. EAST/WEST. UK-resident by default.", color:"#ec4899"},
+  {id:6, sym:"K", name:"Crown 1795-2026", level:1.00, desc:"UK royal lineage. Sovereign authorisation. The anchor.", color:"#fbbf24"},
+  {id:7, sym:"F", name:"Fork Doctrine", level:0.96, desc:"Forks are sovereign. CC0 + MIT + OSI. Anti-surveillance. Anti-lockin.", color:"#ef4444"},
+  {id:8, sym:"O", name:"Open Standards", level:0.93, desc:"MCP + A2A + DID + W3C. 22 protocols. Apple-developer-friendly.", color:"#06b6d4"},
+  {id:9, sym:"P", name:"PQC ML-DSA-65", level:0.90, desc:"Post-quantum crypto. Dilithium + Kyber. Quantum-safe. Apple Secure Enclave.", color:"#84cc16"},
+  {id:10,sym:"M", name:"Mamba-2 SSD", level:0.85, desc:"State Space Model. 16-dim state. O(1) memory. Long context.", color:"#a3e635"},
+  {id:11,sym:"G", name:"12-Queen BFT", level:0.88, desc:"12 sovereign domains. Argus, Scribe, Shield, Builder, Abacus, Lex, Scale, Crow, Gear, Voice, Owl, Dragon.", color:"#f59e0b"},
+  {id:12,sym:"S", name:"Sovereign Composite", level:7.305/10, desc:"The 12-dim sovereign composite. 7.305. Trending toward 10.", color:"#fbbf24"},
+];
+
+// Render helix
+const helix = document.getElementById('helix');
+const cx = 50;  // center x%
+DIMS.forEach((d, i) => {
+  const y = (i + 0.5) * (100 / DIMS.length);
+  const angle = (i / DIMS.length) * Math.PI * 4;  // 2 full turns
+  const leftX = cx - 18 + Math.cos(angle) * 12;
+  const rightX = cx + 18 - Math.cos(angle) * 12;
+  const pair = document.createElement('div');
+  pair.className = 'base-pair';
+  pair.style.top = `${y}%`;
+  pair.style.transform = 'translateY(-50%)';
+  pair.style.position = 'absolute';
+  pair.innerHTML = `
+    <div class="bond"></div>
+    <div class="base base-left" style="border-color:${d.color};color:${d.color};left:0;position:absolute;transform:translateX(${leftX - 16}px)" title="${d.name} (${(d.level*100).toFixed(0)}%)">${d.sym}</div>
+    <div class="base base-right" style="border-color:${d.color};color:${d.color};right:0;position:absolute;transform:translateX(${16 - rightX}px)" title="${d.name} (${(d.level*100).toFixed(0)}%)">${d.sym}</div>
+  `;
+  helix.appendChild(pair);
+});
+
+// Render dimensions
+const dimsRoot = document.getElementById('dims');
+DIMS.forEach(d => {
+  const div = document.createElement('div');
+  div.className = 'dim';
+  div.style.borderLeftColor = d.color;
+  div.innerHTML = `
+    <h3>${d.id}. ${d.name}</h3>
+    <div class="symbol">${d.sym}</div>
+    <p>${d.desc}</p>
+    <div class="level"><div class="fill" style="width:${d.level * 100}%;background:${d.color}"></div></div>
+    <div style="color:#888;font-size:.7rem;margin-top:0.3rem">Level: ${(d.level * 100).toFixed(0)}%</div>
+  `;
+  dimsRoot.appendChild(div);
+});
+</script>
+
+</body>
+</html>

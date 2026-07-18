@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cera Care EU AI Act Compliance — CSOAI-ORG</title>
+  <meta name="description" content="Cera Care care home AI compliance with EU AI Act. The Digital Omnibus Act delays Annex III 16 months, but Article 50 still applies in 36 days.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(135deg, #0f2027 0%, #1a3a4a 50%, #0d2c3e 100%); color: #fff; min-height: 100vh; line-height: 1.6; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+    h1 { font-size: 2.5rem; color: #10b981; margin-bottom: 16px; }
+    h2 { font-size: 1.5rem; color: #6ee7b7; margin: 32px 0 16px; border-bottom: 1px solid rgba(16,185,129,0.3); padding-bottom: 8px; }
+    .urgency { background: linear-gradient(135deg, #7c2d12, #b91c1c); border: 2px solid #fbbf24; padding: 24px; border-radius: 12px; margin: 24px 0; text-align: center; }
+    .urgency h2 { color: #fbbf24; border: none; margin: 0 0 12px; }
+    .demo { background: #0c2230; border-radius: 12px; padding: 24px; margin: 24px 0; }
+    pre { color: #a7f3d0; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap; line-height: 1.5; }
+    .btn { display: inline-block; background: #10b981; color: #fff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; margin: 8px; }
+    .btn-urgent { background: linear-gradient(90deg, #f59e0b, #dc2626); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
+    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; }
+    .card h3 { color: #10b981; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cera Care — EU AI Act Compliance</h1>
+    <p>The care home AI systems Monzo operates fall under EU AI Act Annex III Area 5 (Essential Private Services — care planning + medication monitoring).</p>
+
+    <div class="urgency">
+      <h2>🔥 36 Days to Article 50 — 523 Days to Annex III</h2>
+      <p><strong>2 Aug 2026:</strong> Article 50 transparency + watermarking (NOT delayed)</p>
+      <p><strong>2 Dec 2027:</strong> Annex III high-risk (DELAYED 16 months)</p>
+    </div>
+
+    <h2>What your AI systems need</h2>
+    <div class="grid">
+      <div class="card"><h3>📜 Article 50 transparency</h3><p>Disclose AI interaction. Watermark AI-generated outputs as machine-readable C2PA. Sign with Ed25519.</p></div>
+      <div class="card"><h3>⚖️ Article 9 risk management</h3><p>Continuous risk mgmt system. Documented across the AI lifecycle.</p></div>
+      <div class="card"><h3>📊 Article 10 data governance</h3><p>Training data quality. Bias detection. Dataset documentation.</p></div>
+      <div class="card"><h3>📁 Article 11 + Annex IV</h3><p>Technical documentation. 9 sections covering system design, data, performance, oversight.</p></div>
+      <div class="card"><h3>🔍 Article 12 logging</h3><p>Automatic logging of events. Audit trail over the AI lifecycle.</p></div>
+      <div class="card"><h3>👁️ Article 14 human oversight</h3><p>Human-in-the-loop. Effective oversight by natural persons.</p></div>
+    </div>
+
+    <h2>Live demo: 1 API call to check compliance</h2>
+    <div class="demo">
+      <pre>POST http://localhost:3101/mcp
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "params": {
+    "name": "eu-ai-act-compliance-mcp.quick_scan",
+    "arguments": {
+      "system_name": "Monzo Credit Scoring AI v3.2",
+      "use_case": "care planning + medication monitoring",
+      "deploying_to": ["GB", "DE", "FR", "NL", "IE", "ES"]
+    }
+  }
+}
+
+→ risk_level: "high-risk"
+→ deadline: "2 December 2027 (delayed from Aug 2026 by EU Digital Omnibus Act)"
+→ matched_areas: ["Annex III Area 6: Essential Private Services (social services)"]
+→ top_3_obligations: [
+    "Art 9 risk mgmt (continuous)",
+    "Art 10 data governance",
+    "Art 12 logging (audit trail)"
+  ]
+→ passport_available: true</pre>
+    </div>
+
+    <h2>The 16-month runway</h2>
+    <p>The 7 May 2026 EU Digital Omnibus Act political agreement delayed Annex III from 2 Aug 2026 to <strong>2 Dec 2027</strong>. You have <strong>523 days</strong> to build the compliance system properly — not 37.</p>
+
+    <p>But Article 50 still applies in 36 days. Get the watermarking passport now.</p>
+
+    <h2>3-step action plan for Monzo</h2>
+    <p><strong>Step 1 (NOW):</strong> Issue Article 50 passports for every customer-facing AI output. <a href="/article-50-passport/" class="btn">£79/mo Pro →</a></p>
+    <p><strong>Step 2 (Q3-Q4 2026):</strong> Build the OrgKernel 3-layer audit pattern. L1 identity (Ed25519), L2 execution (hash-chained), L3 compliance (Articles 9-15).</p>
+    <p><strong>Step 3 (Q1-Q4 2027):</strong> Federate with 19 published MCPs. Connect to proofof.ai for verification. Issue CSOAI-ORG compliance passports.</p>
+
+    <div style="text-align: center; margin: 40px 0;">
+      <a href="/article-50-passport/" class="btn btn-urgent">🔥 Get Article 50 Passport — £79/mo</a>
+      <a href="/content/omnibus-delay/" class="btn">📜 Read Full Analysis</a>
+      <a href="/pricing" class="btn">💎 See All Pricing</a>
+    </div>
+
+    <p style="text-align: center; margin-top: 40px; opacity: 0.7;">
+      CSOAI-ORG · 19 published MCPs · sovereign substrate v2.0.0 · Apache-2.0
+    </p>
+  </div>
+</body>
+</html>

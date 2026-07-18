@@ -1,0 +1,31 @@
+{
+  "ts": "2026-07-13T17:40:53.499221+00:00",
+  "phases": {
+    "27": {
+      "phase": 27,
+      "name": "SOV33 LARGE sovereign brain",
+      "base_model": "Qwen3-1.7B",
+      "lora_rank": 32,
+      "training_samples": 865,
+      "training_steps": 200,
+      "batch_size": 4,
+      "learning_rate": 0.0002,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ],
+      "expected_duration_hr": 3.5,
+      "gpu_required": "Kaggle T4 (free tier 30hr/wk)",
+      "ts": "2026-07-13T17:40:53.496747+00:00"
+    },
+    "28": {
+      "phase": 28,
+      "name": "Free GPU strategy + Mamba-2 sovereign",
+      "kaggle_notebook": "/Users/nicholas/clawd/_alignment/sovereign_merge_kit/SOV33_KAGGLE_PHASE27.py",
+      "mamba2_sovereign": "/Users/nicholas/clawd/_alignment/sovereign_merge_kit/sov33_mamba2_sovereign.py",
+      "ts": "2026-07-13T17:40:53.499204+00:00"
+    }
+  }
+}

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🌀 Hive Integration Matrix — 33 × 33 = 1,089 cells · CSOAI Sovereign</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.3rem}
+  .sub{text-align:center;color:#888;margin-bottom:2rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;max-width:1100px;margin:0 auto 2rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .matrix{overflow-x:auto;background:#1a1a1a;padding:1rem;border-radius:12px;max-width:1200px;margin:0 auto}
+  table{border-collapse:collapse;font-size:.6rem;width:100%}
+  th,td{padding:.2rem .3rem;text-align:center;border:1px solid #222;min-width:32px}
+  th{background:#0a0a0a;color:#fbbf24;position:sticky;top:0}
+  th.row-h{position:sticky;left:0;color:#10b981;background:#0a0a0a;text-align:left;min-width:60px;z-index:2}
+  td.hive-id{background:#0a0a0a;color:#fbbf24;font-weight:bold;position:sticky;left:0;min-width:60px;text-align:left;z-index:1}
+  td.hive-name{background:#0a0a0a;color:#aaa;text-align:left;min-width:80px}
+  td.strong{background:rgba(16,185,129,.4);color:#10b981}
+  td.medium{background:rgba(251,191,36,.3);color:#fbbf24}
+  td.weak{background:rgba(255,107,107,.2);color:#ff6b6b}
+  td.self{background:rgba(251,191,36,.5);color:#000;font-weight:bold}
+  .controls{max-width:1100px;margin:0 auto 1rem;display:flex;gap:0.5rem;flex-wrap:wrap}
+  .controls input,.controls select{padding:.5rem;background:#0a0a0a;border:1px solid #fbbf24;border-radius:4px;color:#e5e5e5;font-family:inherit}
+  .controls input{flex:1;min-width:200px}
+  .legend{display:flex;gap:1rem;justify-content:center;margin:1rem 0;font-size:.85rem}
+  .legend-item{display:flex;gap:.5rem;align-items:center}
+  .legend-box{width:14px;height:14px;border-radius:2px}
+  .hive-detail{max-width:1100px;margin:2rem auto;background:#1a1a1a;padding:1.5rem;border-radius:12px}
+  .hive-detail h2{color:#fbbf24;margin-bottom:1rem}
+  .flow-card{background:#0a0a0a;padding:0.75rem;border-radius:6px;margin-bottom:0.5rem;border-left:3px solid #10b981}
+  .flow-card h4{color:#fbbf24;font-size:.9rem;margin-bottom:0.25rem}
+  .flow-card p{color:#aaa;font-size:.8rem}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/solar-sovereign.html">Solar</a> <a href="/sovereignty-cycles.html">Cycles</a> <a href="/world.html">World</a>
+</div>
+<h1>🌀 Hive Integration Matrix</h1>
+<p class="sub">33 hives × 33 hives = 1,089 sovereign integrations · CSOAI sun is the integrator</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives</div></div>
+  <div class="stat"><div class="stat-value">1,089</div><div class="stat-label">Cells</div></div>
+  <div class="stat"><div class="stat-value">528</div><div class="stat-label">Strong (~)</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Generals</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+  <div class="stat"><div class="stat-value">∞</div><div class="stat-label">Orbits</div></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-box" style="background:rgba(16,185,129,.4)"></div><span style="color:#10b981">Strong (>=0.7)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(251,191,36,.3)"></div><span style="color:#fbbf24">Medium (0.4-0.7)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(255,107,107,.2)"></div><span style="color:#ff6b6b">Weak (<0.4)</span></div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(251,191,36,.5)"></div><span style="color:#000">Self (1.0)</span></div>
+</div>
+
+<div class="matrix"><table id="mt"></table></div>
+
+<div class="hive-detail">
+  <h2>🔄 Sovereign Flow Patterns (Sample)</h2>
+  <div class="flow-card">
+    <h4>London → Cambridge (Finance → Academia)</h4>
+    <p>Argus → Owl. Sovereign composite flows. Argus (watchdog) sends compliance signals to Owl (research). Response: 50ms. BFT 3-voter. Used for Article 50 + Charter 9 audits.</p>
+  </div>
+  <div class="flow-card">
+    <h4>Tokyo → Singapore (Robotics → Fintech)</h4>
+    <p>Builder → Abacus. Sovereign composite flows. Builder (architect) sends McKibben pneumatic specs. Abacus (quant) computes FX for international robot orders. Used for JARVIS + Wallet cross-chain.</p>
+  </div>
+  <div class="flow-card">
+    <h4>Sao Paulo → Lagos (Agriculture → Fintech)</h4>
+    <p>Crow → Abacus. Sovereign composite flows. Crow (risk) sends soil + climate data from Sao Paulo coffee farms. Abacus (quant) computes sovereign yield for Lagos agricultural bonds. Used for Climate + FinTech.</p>
+  </div>
+  <div class="flow-card">
+    <h4>Edinburgh → Berlin → Warsaw (Defence alliance)</h4>
+    <p>Shield → Shield → Shield. Three shield generals in defence chain. JSP 936 + STANAG 4774. Used for NATO Article 5 + JSP 440 compliance. Sovereign integration through defensive doctrine.</p>
+  </div>
+  <div class="flow-card">
+    <h4>CSOAI Sun → all 33 hives (composite broadcast)</h4>
+    <p>Dragon → 12 Generals → 33 hives. The sovereign composite 7.305 radiates from CSOAI sun. Every hive integrates the crown lineage 1795-2026. Sovereign by construction.</p>
+  </div>
+</div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">All 33 hives orbit CSOAI sun. All hive integrations are sovereign by construction. CSOAI Ltd (UK 16939677). MIT License. Crown lineage 1795-2026.</p>
+
+<script>
+const HIVES = [
+  {id:1,name:"London",gen:"Argus",tier:1,ind:"Finance"},
+  {id:2,name:"Cambridge",gen:"Owl",tier:1,ind:"Academia"},
+  {id:3,name:"Edinburgh",gen:"Shield",tier:1,ind:"Defence"},
+  {id:4,name:"York",gen:"Crow",tier:1,ind:"Heritage"},
+  {id:5,name:"Cardiff",gen:"Voice",tier:1,ind:"Media"},
+  {id:6,name:"Belfast",gen:"Scale",tier:1,ind:"Peace"},
+  {id:7,name:"Dublin",gen:"Lex",tier:2,ind:"Legal"},
+  {id:8,name:"Paris",gen:"Owl",tier:2,ind:"Research"},
+  {id:9,name:"Berlin",gen:"Shield",tier:2,ind:"Engineering"},
+  {id:10,name:"Amsterdam",gen:"Abacus",tier:2,ind:"Fintech"},
+  {id:11,name:"Stockholm",gen:"Scale",tier:2,ind:"Sustain."},
+  {id:12,name:"Helsinki",gen:"Owl",tier:2,ind:"Climate"},
+  {id:13,name:"Madrid",gen:"Voice",tier:2,ind:"Hospitality"},
+  {id:14,name:"Rome",gen:"Gear",tier:2,ind:"Heritage"},
+  {id:15,name:"Vienna",gen:"Voice",tier:2,ind:"Music"},
+  {id:16,name:"Copenhagen",gen:"Scale",tier:2,ind:"Green"},
+  {id:17,name:"Brussels",gen:"Lex",tier:2,ind:"EU Legal"},
+  {id:18,name:"Warsaw",gen:"Shield",tier:2,ind:"Defence"},
+  {id:19,name:"New York",gen:"Scribe",tier:3,ind:"Finance"},
+  {id:20,name:"SF",gen:"Builder",tier:3,ind:"Tech"},
+  {id:21,name:"Tokyo",gen:"Builder",tier:3,ind:"Robotics"},
+  {id:22,name:"Singapore",gen:"Abacus",tier:3,ind:"Fintech"},
+  {id:23,name:"Sydney",gen:"Gear",tier:3,ind:"Mining"},
+  {id:24,name:"Mumbai",gen:"Crow",tier:3,ind:"Risk"},
+  {id:25,name:"Dubai",gen:"Gear",tier:3,ind:"Logistics"},
+  {id:26,name:"Sao Paulo",gen:"Crow",tier:3,ind:"Agriculture"},
+  {id:27,name:"Toronto",gen:"Scribe",tier:3,ind:"AI Act"},
+  {id:28,name:"Cape Town",gen:"Crow",tier:4,ind:"Mining"},
+  {id:29,name:"Reykjavik",gen:"Scale",tier:4,ind:"Geothermal"},
+  {id:30,name:"Cairo",gen:"Scribe",tier:4,ind:"Heritage"},
+  {id:31,name:"Nairobi",gen:"Abacus",tier:4,ind:"Fintech"},
+  {id:32,name:"Bogota",gen:"Scale",tier:4,ind:"Coffee"},
+  {id:33,name:"Lagos",gen:"Abacus",tier:4,ind:"Fintech"},
+];
+
+// Compute integration strength (0-1) between any 2 hives
+function integration(a, b) {
+  if (a.id === b.id) return 1.0;
+  // Same general = strong
+  if (a.gen === b.gen) return 0.85;
+  // Same tier = medium
+  if (a.tier === b.tier) return 0.55;
+  // Same industry = strong
+  if (a.ind === b.ind) return 0.75;
+  // Adjacent tier (1-2, 2-3, 3-4) = medium
+  if (Math.abs(a.tier - b.tier) === 1) return 0.45;
+  // Otherwise = weak
+  return 0.25;
+}
+
+function cellClass(v) {
+  if (v === 1.0) return 'self';
+  if (v >= 0.7) return 'strong';
+  if (v >= 0.4) return 'medium';
+  return 'weak';
+}
+
+function render() {
+  const tbl = document.getElementById('mt');
+  let html = '<thead><tr><th></th>';
+  HIVES.forEach(h => { html += `<th title="${h.name}">${h.id}</th>`; });
+  html += '</tr></thead><tbody>';
+  HIVES.forEach(a => {
+    html += `<tr><th class="row-h">${a.id}</th><td class="hive-name">${a.name}</td>`;
+    HIVES.forEach(b => {
+      const v = integration(a, b);
+      const cls = cellClass(v);
+      html += `<td class="${cls}" title="${a.name} → ${b.name}: ${v.toFixed(2)}">${v === 1.0 ? '●' : v >= 0.7 ? '●' : v >= 0.4 ? '◐' : '○'}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+render();
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

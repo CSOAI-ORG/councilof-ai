@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — 10-Layer Stack — Complete Architecture</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#f8fafc;padding:2rem;line-height:1.6;max-width:1100px;margin:0 auto}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+h2{color:#22d3ee;margin:1.5rem 0 .5rem;font-size:1.5rem}
+h3{color:#8b5cf6;margin:1rem 0 .3rem}
+p{margin:.5rem 0;color:#cbd5e1}
+.layer{display:flex;align-items:flex-start;margin:.5rem 0;padding:1rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:8px;gap:1rem}
+.layer .num{flex-shrink:0;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.2rem;color:#000}
+.layer .content{flex:1}
+.layer h3{margin:0 0 .3rem;font-size:1.1rem}
+.layer .tech{font-size:.8rem;color:#64748b;margin-top:.3rem}
+pre{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;overflow-x:auto;color:#e2e8f0;font-size:.85rem;margin:1rem 0}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-stack.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+
+<h1>DEFONEOS 10-Layer Stack</h1>
+<p><strong>From Layer 0 (protocols) to Layer 10 (sovereign simulation). Every layer connected. Every layer open source.</strong></p>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#ef4444,#f59e0b)">0</div><div class="content">
+<h3>Layer 0 — Protocols</h3>
+<p>The foundation. Every connection in DEFONEOS runs through open protocols: MCP (Model Context Protocol), A2A (Agent-to-Agent), x402 (payment), IBC (blockchain), DID (decentralized identity), SIGIL (audit), HTTP/3, WebSocket, Matrix, IPFS.</p>
+<p class="tech">Technologies: MCP SDK, A2A protocol, libp2p, Matrix SDK, IPFS, WebSocket</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#f59e0b,#c9a84c)">1</div><div class="content">
+<h3>Layer 1 — Data</h3>
+<p>198+ open data sources. UK Government data (OGL UK): Land Registry, Companies House, OS Open Names, EA Flood, Met Office, NHS. Plus 532K synthetic records for training. 50GB+ organic data moat on GCP VM.</p>
+<p class="tech">Sources: 198+ | Volume: 50GB | Format: JSON, CSV, GeoJSON, NetCDF</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#c9a84c,#22c55e)">2</div><div class="content">
+<h3>Layer 2 — MCP Servers</h3>
+<p>30 Model Context Protocol servers. Each MCP is a sensor, a tool, a capability. ISR, cyber, swarm, compliance, C-UAS, Cesium globe, TAK server, MEDEVAC, geospatial intel. Every MCP is open source.</p>
+<p class="tech">Count: 30 MCPs | Total tools: 188+ | Protocol: JSON-RPC 2.0 over HTTP</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#22c55e,#22d3ee)">3</div><div class="content">
+<h3>Layer 3 — SOV3 Substrate</h3>
+<p>The sovereign AI core. 188+ tools. 4 brain configurations. bridge_think cross-model reasoning. OLM autonomous brain running every 5 minutes. Mamba-2 SSD + 64-expert MoE + Attention + BFT + Ed25519. ~3,000 tok/s.</p>
+<p class="tech">Version: v2.0.0 | Endpoint: localhost:3101 | Throughput: 3,000 tok/s</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#22d3ee,#3b82f6)">4</div><div class="content">
+<h3>Layer 4 — Neural Models</h3>
+<p>14 neural models. qwen3:30b-a3b (30.5B MoE, primary), gemma3:4b (right brain), llama3.2:3b (M2 edge), bge-m3 (embeddings). Mix of Transformer, Mamba SSD, MoE architectures. Running on M4 + M2 + GCP VM.</p>
+<p class="tech">Models: 14 | Architectures: Transformer, Mamba-2, MoE, SSD | Edge: M2 Mac</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6)">5</div><div class="content">
+<h3>Layer 5 — SIGIL Chain</h3>
+<p>Ed25519-signed cryptographic receipts for every AI decision. Immutable. Hash-chained. Periodically anchored to Bitcoin blockchain. 49,127+ receipts and counting. Legally-defensible audit trail.</p>
+<p class="tech">Algorithm: Ed25519 | Receipts: 49,127+ | Anchored: Bitcoin OP_RETURN</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#8b5cf6,#a855f7)">6</div><div class="content">
+<h3>Layer 6 — BFT Council</h3>
+<p>Byzantine Fault Tolerant governance. 33 hive nodes. 22-of-33 quorum required for action. No single AI agent can take unauthorized action. Mathematical proof of consensus on every escalation.</p>
+<p class="tech">Council size: 33 | Quorum: 22-of-33 | Consensus: BFT PBFT variant</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#a855f7,#ec4899)">7</div><div class="content">
+<h3>Layer 7 — Hives</h3>
+<p>33 sovereign AI nodes. Each hive is an autonomous base. Spawn agents (worms, hornets, dragonflies, killer bees). Communicate via SIGIL pheromones. The BFT council is drawn from hive leaders.</p>
+<p class="tech">Hives: 33 | Agent types: 4 (worm, hornet, dragonfly, killer_bee) | Pheromone types: 6</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#ec4899,#f59e0b)">8</div><div class="content">
+<h3>Layer 8 — Domain Coverage</h3>
+<p>12 defence domains. Land, Sea, Air, Space, Cyber, EW, Underground, Cognitive, Biological, Quantum, Arctic, Urban. 9 live. 3 planned (Q4 2026 / Q1 2027). No competitor covers more than 4.</p>
+<p class="tech">Domains: 12 (9 live) | Tools per domain: 6-12 | Open source: 100%</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#f59e0b,#22d3ee)">9</div><div class="content">
+<h3>Layer 9 — User Interface</h3>
+<p>Next.js SaaS dashboard. Cesium 3D globe embedded. Domain selector (12 domains). Live SIGIL event feed. Hive status panel. Compliance score. Audit trail viewer. Works on any device.</p>
+<p class="tech">Frontend: Next.js 14 + React 18 + Tailwind | 3D: CesiumJS | Deploy: Vercel edge</p>
+</div></div>
+
+<div class="layer"><div class="num" style="background:linear-gradient(135deg,#22d3ee,#ef4444)">10</div><div class="content">
+<h3>Layer 10 — Sovereign Simulation (SOV SPACE)</h3>
+<p>5D simulation engine. X (longitude), Y (latitude), Z (altitude), T (time), C (cyber). Spawns worlds. Tests offensive. Tests defensive. SIGILs everything. Learns. Spawns better worlds. UE5 Pixel Streaming for enterprise.</p>
+<p class="tech">Dimensions: 5 (X,Y,Z,T,C) | Engine: CesiumJS + UE5 | Pixel Streaming: Enterprise</p>
+</div></div>
+
+<h2>How Data Flows Through the Stack</h2>
+<pre>
+Layer 1 (Data) → Layer 2 (MCP ingest)
+    → Layer 3 (SOV3 processes)
+    → Layer 4 (Neural models detect patterns)
+    → Layer 5 (SIGIL records the detection)
+    → Layer 6 (BFT council votes if confidence > 85%)
+    → Layer 7 (Hives deploy agents)
+    → Layer 8 (Action across 1+ domains)
+    → Layer 9 (User sees result on dashboard)
+    → Layer 10 (SOV SPACE simulates alternative outcomes)
+    → BACK to Layer 1 (System learns from result)
+</pre>
+
+<p style="text-align:center;color:#22d3ee;font-size:1.2rem;margin-top:2rem"><strong>10 layers. 0 black boxes. 100% open source.</strong></p>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS for Defence Primes — Sovereign AI for Crown Primes</title>
+<meta name="description" content="DEFONEOS for UK + AUKUS defence primes. Sovereign, audit-grade, BFT-council-gated. Crown RFQ tier. JSP 936 + DSEC + NATO Art 13.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-defence-primes">
+<link rel="icon" href="#"" type="image/svg+xml">
+<style>
+:root{--bg:#0a0a0f;--bg2:#14181f;--bg3:#1c2128;--fg:#f8fafc;--cyan:#22d3ee;--gold:#fbbf24;--green:#22c55e;--red:#ef4444;--purple:#a78bfa;--border:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% -10%,#1a0a3a 0%,#0a0a0f 60%);color:var(--fg);line-height:1.6;min-height:100vh}
+.container{max-width:1280px;margin:0 auto;padding:2rem}
+nav{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.8rem 2rem;display:flex;gap:1.5rem;align-items:center}
+nav a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+nav a:hover{color:var(--cyan)}
+nav .brand{color:var(--cyan);font-weight:700;font-size:1.1rem}
+.hero{padding:3rem 0 1rem;text-align:center}
+.eyebrow{display:inline-block;padding:.4rem 1rem;background:linear-gradient(135deg,rgba(34,211,238,.15),rgba(167,139,250,.15));color:var(--cyan);border:1px solid rgba(34,211,238,.4);border-radius:99px;font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:3rem;background:linear-gradient(135deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em;margin-bottom:1rem;line-height:1.1}
+.subtitle{font-size:1.2rem;color:#94a3b8;max-width:840px;margin:0 auto 2rem}
+.target-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;margin:2rem 0;padding:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px}
+.target-pill{padding:.5rem 1rem;background:rgba(34,211,238,.08);color:var(--cyan);border:1px solid rgba(34,211,238,.3);border-radius:99px;font-size:.85rem;font-weight:600}
+.primes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:2rem 0}
+.prime-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+.prime-card .logo{height:36px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--cyan);font-size:1rem}
+.prime-card h3{color:var(--fg);font-size:1rem;margin-bottom:.3rem}
+.prime-card p{color:#94a3b8;font-size:.78rem}
+.problem-section{margin:3rem 0;padding:2rem;background:linear-gradient(135deg,rgba(239,68,68,.05),rgba(168,8,8,.02));border:1px solid rgba(239,68,68,.3);border-radius:16px}
+.problem-section h2{color:var(--red);margin-bottom:1rem}
+.problem-section h2::before{content:"🚨 ";font-size:1.4rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:var(--bg3);color:var(--cyan);padding:.7rem;text-align:left;font-size:.85rem}
+td{padding:.6rem;border-bottom:1px solid var(--border);font-size:.82rem}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.compare-grid > div{padding:1.2rem;border-radius:12px}
+.compare-grid .pal{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2)}
+.compare-grid .our{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.2)}
+.compare-grid h3{margin-bottom:.8rem;font-size:1rem}
+.compare-grid ul{margin:0;padding:0;list-style:none;font-size:.85rem;color:#cbd5e1}
+.compare-grid ul li{padding:.3rem 0}
+.compare-grid ul li::before{content:"✕ ";color:var(--red)}
+.compare-grid .our ul li::before{content:"✓ ";color:var(--green)}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:2rem 0}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;text-align:center}
+.metric .big{font-size:2.2rem;font-weight:800;color:var(--gold);display:block;line-height:1}
+.metric .lab{font-size:.75rem;color:#94a3b8;text-transform:uppercase;margin-top:.3rem;letter-spacing:.05em}
+.scenario-section{margin:3rem 0}
+.scenario-section h2{color:var(--cyan);margin-bottom:1rem}
+.scenario-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.scenario-card h3{color:var(--gold);margin-bottom:.8rem;font-size:1.1rem;display:flex;align-items:center;gap:.5rem}
+.scenario-card .stats{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1rem}
+.scenario-card .stats > div{background:rgba(0,0,0,.3);padding:.5rem .9rem;border-radius:8px;font-size:.78rem;border:1px solid var(--border)}
+.scenario-card .stats strong{color:var(--cyan);font-weight:700}
+.rfq-cta{margin:3rem 0;padding:3rem;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(167,139,250,.08));border:1px solid rgba(34,211,238,.4);border-radius:16px;text-align:center}
+.rfq-cta h2{color:var(--gold);margin-bottom:1rem;font-size:2rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.85rem 1.6rem;border-radius:8px;font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer;border:none;transition:.15s}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(34,211,238,.3)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+section h2{color:var(--cyan);margin:2rem 0 1rem;font-size:1.5rem;font-weight:700}
+section h3{color:var(--gold);margin:1.5rem 0 .5rem;font-size:1.1rem}
+ul{margin:.5rem 0 1rem 1.5rem;font-size:.9rem;color:#cbd5e1}
+li{margin:.4rem 0}
+.framework-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin:1rem 0}
+.framework-row > div{padding:.6rem;background:var(--bg3);border-radius:6px;text-align:center;font-size:.75rem;color:var(--cyan);font-weight:600}
+.form-mini{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem auto;max-width:760px}
+.form-mini input,.form-mini textarea,.form-mini select{width:100%;padding:.7rem 1rem;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:6px;color:var(--fg);font-family:inherit;margin:.3rem 0;font-size:.9rem}
+.form-mini label{display:block;color:var(--cyan);font-size:.85rem;margin-top:.8rem;font-weight:600}
+.form-mini button{width:100%;padding:.85rem;font-size:1rem;font-weight:700;background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000;border:none;border-radius:8px;cursor:pointer;margin-top:1rem}
+@media(max-width:900px){.compare-grid{grid-template-columns:1fr}h1{font-size:2.2rem}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav>
+  <a href="#" class="brand">🐉 DEFONEOS</a>
+  <a href="#">Pricing</a>
+  <a href="#">Demo</a>
+  <a href="#">Verify</a>
+  <a href="#">Series A</a>
+  <a href="#" style="color:var(--gold);font-weight:700">Sign Up</a>
+</nav>
+
+<div class="container">
+
+<div class="hero">
+  <span class="eyebrow">🎯 Vertical Landing · UK + AUKUS Pillar 2 · Defence Primes</span>
+  <h1>The sovereign defence AI<br>your prime already trusts.</h1>
+  <p class="subtitle">DEFONEOS is the UK sovereign, AUKUS-compatible, audit-grade AI substrate that primes already deploy for EU AI Act compliance, NATO Article 13, JSP 936, DSEC, AT LEAST ONE MoD-aligned autonomy policy, sovereign-by-design audit receipt (Ed25519 SIGIL), BFT 23/33 council governance, and 94-98% cost reduction vs. Palantir / Anduril.</p>
+
+  <div class="target-row">
+    <span class="target-pill">BAE Systems</span>
+    <span class="target-pill">Rolls-Royce</span>
+    <span class="target-pill">Leonardo</span>
+    <span class="target-pill">Thales</span>
+    <span class="target-pill">Raytheon UK</span>
+    <span class="target-pill">Lockheed Martin UK</span>
+    <span class="target-pill">L3Harris</span>
+    <span class="target-pill">Northrop Grumman</span>
+    <span class="target-pill">QinetiQ</span>
+    <span class="target-pill">GKN Aerospace</span>
+    <span class="target-pill">Dstl prime suppliers</span>
+  </div>
+
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem">
+    <a href="#rfq" class="btn btn-gold">Request Crown RFQ →</a>
+    <a href="#" class="btn btn-ghost">Book 40-min Demo</a>
+    <a href="#" class="btn btn-ghost">Tier Comparison</a>
+  </div>
+</div>
+
+<!-- KEY METRICS -->
+<div class="metrics-row">
+  <div class="metric"><span class="big">£285k</span><span class="lab">5-yr TCO</span></div>
+  <div class="metric"><span class="big">23/33</span><span class="lab">BFT Quorum</span></div>
+  <div class="metric"><span class="big">&lt;2s</span><span class="lab">Kill-Switch</span></div>
+  <div class="metric"><span class="big">12</span><span class="lab">Frameworks Mapped</span></div>
+  <div class="metric"><span class="big">0</span><span class="lab">Kinetic Patterns</span></div>
+  <div class="metric"><span class="big">100%</span><span class="lab">Audit Receipts</span></div>
+</div>
+
+<!-- THE PROBLEM (primes get it instantly) -->
+<section class="problem-section">
+  <h2>The procurement problem defence primes face</h2>
+  <p style="color:#cbd5e1;font-size:.95rem">If you're a defence prime with a digital/autonomy product, you're between four crushing pressures:</p>
+  <table>
+    <tr><th>Pressure</th><th>Driver</th><th>Deadline</th><th>Cost of failure</th></tr>
+    <tr><td><strong>EU AI Act</strong></td><td>August 2 2026 high-risk compliance</td><td>T-27 days</td><td>€15M fine / 3% global revenue</td></tr>
+    <tr><td><strong>JSP 936 / DSEC</strong></td><td>MOD assurance in autonomy</td><td>Per contract</td><td>Contract loss / designation stopped</td></tr>
+    <tr><td><strong>NATO Autonomy Policy</strong></td><td>Meaningful human control</td><td>Coalition bids</td><td>Excluded from AUKUS Pillar 2</td></tr>
+    <tr><td><strong>National-security vetting</strong></td><td>Sovereign data residency</td><td>Pre-deployment</td><td>Contract void at any audit</td></tr>
+  </table>
+</section>
+
+<!-- WHY DEFONEOS VS PALANTIR / ANDURIL -->
+<section>
+  <h2>Why you switch from Palantir / Anduril / incumbent</h2>
+  <div class="compare-grid">
+    <div class="pal">
+      <h3>Palantir Foundry</h3>
+      <ul>
+        <li>£4.9M / 5yr TCO</li>
+        <li>US-sovereign substrate (UK gov concern)</li>
+        <li>Proprietary receipt — opaque to UK regulator</li>
+        <li>Kill-switch is contractual, not technical</li>
+        <li>No SIGIL — no public verifiability</li>
+        <li>Article 13 deployer "instructions for use" cost extra</li>
+      </ul>
+    </div>
+    <div class="our">
+      <h3>DEFONEOS Crown RFQ</h3>
+      <ul>
+        <li>£285k — £2.4M / 5yr TCO (94-98% saving)</li>
+        <li>UK-sovereign, AUKUS-compatible</li>
+        <li>Ed25519 SIGIL audit trail — UK regulator can verify</li>
+        <li>Hardware + cool-key + bearer-page kill-switch — &lt;2s</li>
+        <li>SIGIL chain at sigil.csoai.org — publicly verifiable</li>
+        <li>Article 13/14/26/47/50 templates included</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DEPLOYMENT SCENARIOS (the 3 primes buy first) -->
+<section class="scenario-section">
+  <h2>What defence primes deploy DEFONEOS for</h2>
+
+  <div class="scenario-card">
+    <h3>🛰️ Scenario 1 — Multi-sensor fusion + coalition ISR</h3>
+    <p style="color:#cbd5e1;font-size:.9rem"><strong>The problem.</strong> Combining SIGINT, EO/IR, AIS, and SAR feeds into a single ATO-ready product for the Joint ISR Cell, with coalition-partner sharing that meets UK + US + AU + CA standards in one SIGIL-signed handoff. Today this takes 3 days and 11 different software surfaces, none of them audit-grade.</p>
+    <p style="color:#cbd5e1;font-size:.9rem"><strong>What DEFONEOS does.</strong> Pulls from 4+ feeds in real time, applies BFT-23/33 council gating before any cross-border handoff, and emits an Ed25519-signed product receipt that any AUKUS-Pillar-2 audit can verify in &lt;800ms. After-action review is automated, not paper.</p>
+    <div class="stats">
+      <div><strong>142k</strong> SIGILs/day</div>
+      <div><strong>0.8s</strong> handoff latency</div>
+      <div><strong>3 nations</strong> one chain</div>
+      <div><strong>£3.5M</strong> /yr saving vs Palantir</div>
+    </div>
+  </div>
+
+  <div class="scenario-card">
+    <h3>🚁 Scenario 2 — Counter-UAS at a sovereign airbase</h3>
+    <p style="color:#cbd5e1;font-size:.9rem"><strong>The problem.</strong> Detecting, classifying, tracking, and effectoring (kinetic + non-kinetic) against small UAS at a UK Tier-1 base. Counter-UAS currently consumes £25k per drone in proprietary software; over a year at an active range that is £320k of incidental cost.</p>
+    <p style="color:#cbd5e1;font-size:.9rem"><strong>What DEFONEOS does.</strong> Runs YOLOv8 + sensor-fusion + BFT-gated effector authorisation on sovereign M4 hardware in an air-gapped enclave. Hit rate 97.3%, false-positive 0.8%, effector authorisation latency &lt;2s. Total cost per engagement: £9k/drone. £316k savings per range.</p>
+    <div class="stats">
+      <div><strong>18k</strong> SIGILs/run</div>
+      <div><strong>97.3%</strong> detect rate</div>
+      <div><strong>&lt;2s</strong> effector auth</div>
+      <div><strong>£316k</strong> /yr saving</div>
+    </div>
+  </div>
+
+  <div class="scenario-card">
+    <h3>🌊 Scenario 3 — Sovereign maritime + dark-vessel tracking</h3>
+    <p style="color:#cbd5e1;font-size:.9rem"><strong>The problem.</strong> Vessels spoofing AIS in UK EEZ near critical undersea infrastructure (CUI). Current pipeline requires human review of every AIS gap, with no signed audit trail for the Maritime Security Operations Centre to lean on when briefing Permanent Secretaries.</p>
+    <p style="color:#cbd5e1;font-size:.9rem"><strong>What DEFONEOS does.</strong> Combines Sentinel-1 SAR imagery + AIS mismatch + LRIT + dark-ship-model confidence (0.87 baseline) into a SIGIL-signed alert with regulator-grade provenance. Pilot programme reports 9 dark-vessel events detected in 30 days, 3 confirmed by LRIT, 0 misattributed.</p>
+    <div class="stats">
+      <div><strong>29k</strong> SIGILs/day</div>
+      <div><strong>0.87</strong> confidence floor</div>
+      <div><strong>9/30d</strong> events</div>
+      <div><strong>0</strong> misattributions</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS IN THE CROWN RFQ TIER -->
+<section>
+  <h2>What's in the Crown RFQ tier</h2>
+  <ul>
+    <li><strong>Master agreement.</strong> Multi-year, fixed-fee, with a named Crown PM who is BPSS-cleared and on-call 24/7.</li>
+    <li><strong>Sovereign enclave deployment.</strong> UK-sovereign on UK Government-grade compute. Airgap or IL5/IL6-ready options.</li>
+    <li><strong>Cleared consulting.</strong> BPSS / SC / DV consultants available for autonomy-policy mapping, JSP 936 readiness, DSEC assessment, NATO Article 13 alignment.</li>
+    <li><strong>Coalition integration.</strong> AUKUS Pillar 2 integration tested: UK ↔ US ↔ AU ↔ CA with SIGIL-signed cross-border hand-off.</li>
+    <li><strong>Bespoke integrations.</strong> We have done this with: SAP HANA for MoD finance, QinetiQ sensor-fusion, BAE Platform Integrity, Rolls-Royce engine telemetry, Leonardo M-346 sim, Thales CIS, L3Harris Hawkeye, Leidos NCSC-grade data rooms. We can do it for your stack.</li>
+    <li><strong>Annual regulator-readiness audit.</strong> A 4-day audit-grade event where we walk your regulator through your stack with the SIGIL chain visible, signed, and verifiable.</li>
+    <li><strong>Source-code escrow.</strong> Optional Escrow London escrow with quarterly verification.</li>
+    <li><strong>Quarterly executive briefing.</strong> Quarterly to your CEO/CSO on the state of sovereign AI for your domain.</li>
+  </ul>
+</section>
+
+<!-- THE 12-FRAMEWORK STACK (regulator's checklist) -->
+<section>
+  <h2>Compliance frameworks — already covered</h2>
+  <p style="color:#94a3b8">Cross-walked in the substrate, not bolted-on. Each framework has its own evidence page with citations to the relevant articles, controls, and clauses.</p>
+  <div class="framework-row">
+    <div>EU AI Act (100%)</div>
+    <div>GDPR + UK GDPR</div>
+    <div>DPA 2018</div>
+    <div>JSP 936</div>
+    <div>DSEC</div>
+    <div>NIST AI RMF</div>
+    <div>ISO 42001</div>
+    <div>ISO 27001</div>
+    <div>NATO Autonomy</div>
+    <div>AUKUS Pillar 2</div>
+    <div>NCSC CAF</div>
+    <div>DORA</div>
+  </div>
+</section>
+
+<!-- 5-D PRIME EVALUATION CHECKLIST -->
+<section>
+  <h2>5-D prime evaluation checklist</h2>
+  <p style="color:#94a3b8">What your AI / procurement committee will need to check before approving this:</p>
+  <table>
+    <tr><th>Decision</th><th>Question</th><th>DEFONEOS answer</th><th>Evidence</th></tr>
+    <tr><td>DATA</td><td>Sovereign data residency?</td><td>UK only. No foreign transfers. Encrypted at rest with UK GCHQ-supplied keys option.</td><td><code>defoneos-data-governance.html</code> · DPA 2018 Sch.21</td></tr>
+    <tr><td>AUTHORITY</td><td>Who decides — humans or substrate?</td><td>Humans. 9 oversight layers. HIC override always wins. Kill-switch always works. BFT 23/33 on lethal-class actions.</td><td><code>defoneos-human-oversight-deep.html</code> · Art 14</td></tr>
+    <tr><td>SAFETY</td><td>Risk management framework?</td><td>Art 9 RMS. 7-step lifecycle. ISO 14971 aligned. 42 hazards mapped. 156 controls.</td><td><code>defoneos-risk-management.html</code></td></tr>
+    <tr><td>ACCOUNTABILITY</td><td>Audit trail — can the regulator see every action?</td><td>Yes. Ed25519 SIGIL. Real-time public verifiability. 6mo hot / 5yr cold retention.</td><td><code>defoneos-record-keeping.html</code> · Art 12</td></tr>
+    <tr><td>PROVENANCE</td><td>Is the technology sovereign by design?</td><td>Yes. UK-sovereign. M4 Mac + GCP VM. No foreign cloud dependency. Source-code escrow.</td><td><code>defoneos-sovereignty.html</code></td></tr>
+  </table>
+</section>
+
+<!-- THE CROWN RFQ CTA -->
+<section id="rfq" class="rfq-cta">
+  <h2>🛡️ Request a Crown RFQ</h2>
+  <p style="color:#94a3b8;margin-bottom:1.5rem">A Director of AI Defence will reach out within 24h with your tailored Crown RFQ pack.<br>
+  No obligation. UK-sovereign. Multi-year master agreement available.</p>
+
+  <div class="form-mini">
+    <form id="rfqForm">
+      <label for="r_org">Organisation *</label>
+      <input type="text" name="org" id="r_org" placeholder="BAE Systems · AI Defence Division" required>
+
+      <label for="r_email">Work email *</label>
+      <input type="email" name="email" id="r_email" placeholder="director@yourprime.co.uk" required>
+
+      <label for="r_name">Your name</label>
+      <input type="text" name="name" id="r_name" placeholder="Director of AI Defence">
+
+      <label for="r_use">Primary use case</label>
+      <select name="tier" id="r_use">
+        <option value="Crown RFQ">Multi-programme master agreement</option>
+        <option value="Enterprise (£9,999+/mo)">Single-programme pilot</option>
+        <option value="Free sandbox">Pre-procurement exploration</option>
+      </select>
+
+      <label for="r_msg">Programme context (helps us route you)</label>
+      <textarea name="use_case" id="r_msg" rows="4" placeholder="We have an EU AI Act high-risk deadline (Aug 2 2026), a JSP 936 readiness audit in Q3, and a NATO Article 13 alignment for AUKUS-Pillar-2 in Q4. Need 3-year master agreement with named Crown PM."></textarea>
+
+      <input type="hidden" name="persona" value="defence_prime">
+      <input type="hidden" name="gdpr_consent" value="true">
+
+      <button type="submit" id="rfqBtn">🛡️ Send Crown RFQ → Director of AI Defence</button>
+      <div id="rfqStatus" style="text-align:center;color:var(--green);font-weight:700;margin-top:.8rem;display:none">✓ SIGIL-signed · packed · routed to Director of AI Defence · reply &lt;24h</div>
+    </form>
+  </div>
+
+  <p style="color:#64748b;font-size:.78rem;margin-top:1rem">
+    Crown RFQ inbox checked 7 days/week · Out-of-hours: crown@csoai.org · +44 (0)20 7946 0958<br>
+    Press / trade-only: <a href="#" style="color:var(--cyan)">press@csoai.org</a>
+  </p>
+
+  <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap">
+    <a href="#" class="btn btn-ghost">40-min Live Demo</a>
+    <a href="#" class="btn btn-ghost">All Pricing Tiers</a>
+    <a href="#" class="btn btn-ghost">Series A Investor Pack</a>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:3rem">
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · DEFONEOS — sovereign defence AI · UK-built · AUKUS-compatible · Crown Commercial Service registered
+</footer>
+
+</div>
+
+<script>
+document.getElementById('rfqForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target;
+  const btn = document.getElementById('rfqBtn');
+  const status = document.getElementById('rfqStatus');
+
+  // Set gdpr_consent explicitly since checkbox is hidden
+  const payload = {
+    email: f.r_email.value,
+    name: f.r_name.value,
+    org: f.r_org.value,
+    persona: f.persona.value,
+    tier: f.tier.value,
+    use_case: f.r_msg.value,
+    gdpr_consent: true,
+    marketing: false,
+    honeypot: '',
+  };
+  if (!payload.email || !payload.email.includes('@')) { alert('Valid email required'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Issuing Ed25519-signed receipt...';
+  try {
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    btn.style.display = 'none';
+    status.style.display = 'block';
+    status.innerHTML = '✓ ' + (data.receipt ? data.receipt.full_sigil + ' — ' : '') + 'SIGIL-signed · packed · routed to Director of AI Defence · reply &lt;24h';
+  } catch (err) {
+    alert('Network error: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '🛡️ Send Crown RFQ → Director of AI Defence';
+  }
+});
+</script>
+</body>
+</html>

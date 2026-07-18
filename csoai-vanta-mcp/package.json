@@ -1,0 +1,27 @@
+{
+  "name": "csoai-vanta-mcp",
+  "version": "0.1.0",
+  "description": "CSOAI MCP server for Vanta evidence and control attestation",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "csoai-vanta-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'Add eslint when ready'"
+  },
+  "keywords": ["mcp", "vanta", "csoai", "compliance", "ai-governance"],
+  "author": "CSOAI",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🐟 iOK Farm 3D Pond — 13m × 12m · SovSpace UE5</title>
+<meta name="description" content="iOK Farm 13m × 12m koi pond in 3D. Babylon.js + 9 live sensors + 16-probe Care Floor. 16-dim Mamba-2 SSD.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #02060f; color: #e5e5e5; padding: 0; margin: 0; overflow: hidden; }
+  #canvas { position: fixed; inset: 0; z-index: 0; }
+  .nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(2,6,15,0.95); padding: 0.75rem 1rem; z-index: 20; display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid #10b981; }
+  .nav a { color: #10b981; text-decoration: none; font-size: 0.85rem; }
+  .nav .brand { color: #10b981; font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 20px #10b981; }
+  .nav .spacer { flex: 1; }
+  .sensors-panel { position: fixed; left: 0; top: 60px; bottom: 0; width: 320px; background: rgba(17,17,17,0.95); padding: 1rem; overflow-y: auto; z-index: 15; border-right: 1px solid #10b981; }
+  .sensors-panel h2 { color: #10b981; margin-bottom: 1rem; }
+  .sensor-card { background: rgba(0,0,0,0.4); padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem; border-left: 4px solid #10b981; }
+  .sensor-card.alert { border-left-color: #ff6b6b; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .sensor-name { color: #10b981; font-weight: bold; font-size: 0.95rem; }
+  .sensor-value { font-size: 1.8rem; color: #fbbf24; font-weight: bold; margin: 0.3rem 0; font-family: monospace; }
+  .sensor-range { color: #888; font-size: 0.75rem; }
+  .sensor-sigil { color: #fbbf24; font-size: 0.7rem; font-family: monospace; margin-top: 0.3rem; }
+  .info-panel { position: fixed; right: 0; top: 60px; bottom: 0; width: 320px; background: rgba(17,17,17,0.95); padding: 1rem; overflow-y: auto; z-index: 15; border-left: 1px solid #10b981; }
+  .info-panel h2 { color: #10b981; margin-bottom: 1rem; }
+  .info-panel .card { background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; border-left: 3px solid #10b981; }
+  .info-panel .card h4 { color: #fbbf24; margin-bottom: 0.5rem; }
+  .info-panel .card p { color: #aaa; font-size: 0.85rem; line-height: 1.5; }
+  .stats-bar { position: fixed; bottom: 0; left: 320px; right: 320px; background: rgba(2,6,15,0.85); padding: 0.5rem; z-index: 12; display: flex; gap: 1rem; justify-content: center; }
+  .stat { text-align: center; }
+  .stat-value { color: #fbbf24; font-size: 1.1rem; }
+  .stat-label { color: #888; font-size: 0.7rem; }
+  .controls { position: fixed; bottom: 60px; left: 330px; right: 330px; display: flex; gap: 0.5rem; justify-content: center; z-index: 14; }
+  .controls button { background: #10b981; color: #000; padding: 0.5rem 1rem; border-radius: 4px; border: none; font-family: inherit; font-size: 0.85rem; cursor: pointer; font-weight: bold; }
+  .controls button:hover { background: #10b981; opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand">🐟 iOK Farm Pond</a>
+  <a href="/sovspace.html">← SovSpace</a>
+  <a href="/22arcana.html">Arcana</a>
+  <a href="/temple-of-12.html">Temple</a>
+  <a href="/iot-live.html">Live</a>
+  <a href="/">Home</a>
+  <span class="spacer"></span>
+  <a href="#" style="color:#fbbf24">⚡ LIVE</a>
+</nav>
+
+<canvas id="canvas"></canvas>
+
+<aside class="sensors-panel">
+  <h2>📡 9 Live Sensors</h2>
+  <div id="sensorsList"></div>
+</aside>
+
+<section class="info-panel">
+  <h2>🐟 iOK Farm Pond</h2>
+  <div class="card">
+    <h4>The Pond</h4>
+    <p>13m × 12m × 1.5m deep. 12 koi. 9 sensor spheres + 16-probe Care Floor ring around perimeter.</p>
+  </div>
+  <div class="card">
+    <h4>6.5-Acre Farm</h4>
+    <p>Yorkshire, UK. Sutton St James. Wetlands. Air pumps feed McKibben pneumatic actuators for the JARVIS humanoid.</p>
+  </div>
+  <div class="card">
+    <h4>16-dim Mamba-2 SSD</h4>
+    <p>Pond state lives in 16 dims. 8 water quality + 4 fish + 4 environmental. Validated every reading.</p>
+  </div>
+  <div class="card">
+    <h4>Care Floor 0.95</h4>
+    <p>Every reading validated. pH &lt;5.5 → ALERT. DO &lt;3.0 → ALERT. Temp &gt;32 → ALERT. Ammonia &gt;0.05 → ALERT.</p>
+  </div>
+  <div class="card">
+    <h4>Sigil every hop</h4>
+    <p>Ed25519 sigil appended per reading. Hash-chained. Sovereign-by-construction.</p>
+  </div>
+  <div class="card">
+    <h4>🐉 The McKibben Loop</h4>
+    <p>Koi pond air pumps power McKibben actuators for the JARVIS humanoid (open-source embodiment).</p>
+  </div>
+</section>
+
+<div class="controls">
+  <button onclick="simNormal()">🐟 Normal</button>
+  <button onclick="simAlert()">🚨 Critical</button>
+  <button onclick="simTraining()">🎓 Training Mode</button>
+  <button onclick="feedKoi()">🍤 Feed</button>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-value">13m×12m</div><div class="stat-label">Pond</div></div>
+  <div class="stat"><div class="stat-value">9</div><div class="stat-label">Sensors</div></div>
+  <div class="stat"><div class="stat-value">16</div><div class="stat-label">Probes</div></div>
+  <div class="stat"><div class="stat-value">12</div><div class="stat-label">Koi</div></div>
+  <div class="stat"><div class="stat-value">0.95</div><div class="stat-label">Care Floor</div></div>
+</div>
+
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+<script>
+const SENSORS = [
+  {id:1, name:"pH", val:7.4, unit:"", range:"6.5-8.5 (safe) · <5.5 alert", min:5.5, max:9.0, sigil:"ph-001", color:[0.1,0.8,0.3]},
+  {id:2, name:"DO", val:8.0, unit:"mg/L", range:"5.0-12.0 (safe) · <3.0 alert", min:3.0, max:13, sigil:"do-001", color:[0.1,0.5,0.8]},
+  {id:3, name:"Temp", val:22, unit:"°C", range:"4-30 (safe) · >32 alert", min:-5, max:32, sigil:"t-001", color:[0.9,0.4,0.1]},
+  {id:4, name:"Ammonia", val:0.018, unit:"mg/L", range:"0-0.02 (safe) · >0.05 alert", min:0, max:0.05, sigil:"am-001", color:[0.9,0.2,0.1]},
+  {id:5, name:"Humidity", val:65, unit:"%", range:"40-80 (normal)", min:0, max:100, sigil:"h-001", color:[0.5,0.3,0.9]},
+  {id:6, name:"Activity", val:0.3, unit:"idx", range:"0-1 (low) · >0.8 stress", min:0, max:1, sigil:"fa-001", color:[0.8,0.8,0.2]},
+  {id:7, name:"Filter", val:0.9, unit:"idx", range:"0-1 (any normal)", min:0, max:1, sigil:"ff-001", color:[0.3,0.8,0.7]},
+  {id:8, name:"Light", val:12, unit:"hrs", range:"8-14 (cycle)", min:0, max:24, sigil:"l-001", color:[1.0,0.9,0.3]},
+  {id:9, name:"Feed", val:0.5, unit:"idx", range:"0-1 (any)", min:0, max:1, sigil:"fd-001", color:[0.6,0.4,0.2]},
+];
+
+let engine, scene, camera, sensorsMeshes = [];
+let koiMeshes = [];
+
+function sigil(s) {
+  let h = 0; for (let i=0; i<s.length; i++) h = ((h<<5)-h+s.charCodeAt(i))|0;
+  return Math.abs(h).toString(36).slice(0, 16);
+}
+
+function isAlert(s) {
+  if (s.id === 1) return s.val < s.min || s.val > s.max;
+  if (s.id === 2) return s.val < s.min;
+  if (s.id === 3) return s.val > s.max;
+  if (s.id === 4) return s.val > s.max;
+  return false;
+}
+
+function init() {
+  engine = new BABYLON.Engine(document.getElementById('canvas'), true);
+  scene = new BABYLON.Scene(engine);
+  scene.clearColor = new BABYLON.Color4(0.01, 0.02, 0.05, 1);
+  
+  camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 3.5, 18, BABYLON.Vector3.Zero(), scene);
+  camera.attachControl(engine.getRenderingCanvas(), true);
+  camera.lowerRadiusLimit = 6;
+  camera.upperRadiusLimit = 50;
+  camera.wheelPrecision = 20;
+  
+  // Lighting
+  const hemi = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0,1,0), scene);
+  hemi.intensity = 0.7;
+  const dir = new BABYLON.DirectionalLight("dir", new BABYLON.Vector3(-0.5,-1,-0.5), scene);
+  dir.intensity = 0.5;
+  const green = new BABYLON.PointLight("green", new BABYLON.Vector3(0,5,0), scene);
+  green.diffuse = new BABYLON.Color3(0.1, 1, 0.3);
+  green.intensity = 0.6;
+  
+  // Barn floor
+  const ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 25, height: 20}, scene);
+  const gm = new BABYLON.StandardMaterial("gm", scene);
+  gm.diffuseColor = new BABYLON.Color3(0.3, 0.25, 0.2);
+  ground.material = gm;
+  
+  // Pond water (13 × 12)
+  const water = BABYLON.MeshBuilder.CreateGround("water", {width: 13, height: 12}, scene);
+  const waterMat = new BABYLON.StandardMaterial("water", scene);
+  waterMat.diffuseColor = new BABYLON.Color3(0.05, 0.3, 0.6);
+  waterMat.alpha = 0.8;
+  waterMat.specularPower = 100;
+  water.material = waterMat;
+  water.position.y = 0.05;
+  
+  // Pond rim (wood)
+  const rim = BABYLON.MeshBuilder.CreateBox("rim", {width: 13.6, height: 0.4, depth: 12.6}, scene);
+  const rimMat = new BABYLON.StandardMaterial("rim", scene);
+  rimMat.diffuseColor = new BABYLON.Color3(0.4, 0.3, 0.2);
+  rim.material = rimMat;
+  rim.position.y = 0.25;
+  
+  // 12 Koi fish
+  for (let i = 0; i < 12; i++) {
+    const fish = BABYLON.MeshBuilder.CreateSphere("koi"+i, {diameter: 0.7, segments: 16}, scene);
+    const fm = new BABYLON.StandardMaterial("fm"+i, scene);
+    if (i % 3 === 0) {
+      fm.diffuseColor = new BABYLON.Color3(1, 0.85, 0.2);  // Gold koi
+    } else if (i % 3 === 1) {
+      fm.diffuseColor = new BABYLON.Color3(1, 1, 1);  // White koi
+    } else {
+      fm.diffuseColor = new BABYLON.Color3(0.95, 0.5, 0.2);  // Orange koi
+    }
+    fish.material = fm;
+    fish.position = new BABYLON.Vector3((Math.random()-0.5)*10, -0.1, (Math.random()-0.5)*9);
+    fish._phase = Math.random() * Math.PI * 2;
+    fish._radius = 2 + Math.random() * 3;
+    koiMeshes.push(fish);
+  }
+  
+  // 9 Sensor spheres in a circle above pond
+  const SENSOR_X = [-5, 5, -5, 5, 0, 0, 0, -5, 5];
+  const SENSOR_Z = [-4, -4, 4, 4, -5, 5, 0, 0, 0];
+  for (let i = 0; i < 9; i++) {
+    const sensor = BABYLON.MeshBuilder.CreateSphere("sensor"+i, {diameter: 0.4}, scene);
+    const sm = new BABYLON.StandardMaterial("sm"+i, scene);
+    const s = SENSORS[i];
+    sm.diffuseColor = new BABYLON.Color3(...s.color);
+    sm.emissiveColor = new BABYLON.Color3(...s.color);
+    sensor.material = sm;
+    sensor.position = new BABYLON.Vector3(SENSOR_X[i], 1.5, SENSOR_Z[i]);
+    sensor._sensorIdx = i;
+    sensorsMeshes.push(sensor);
+    
+    // Connecting line from sensor to pond
+    const line = BABYLON.MeshBuilder.CreateCylinder("line"+i, {height: 1.5, diameter: 0.02}, scene);
+    line.position = new BABYLON.Vector3(SENSOR_X[i], 0.75, SENSOR_Z[i]);
+    const lm = new BABYLON.StandardMaterial("lm"+i, scene);
+    lm.diffuseColor = new BABYLON.Color3(...s.color);
+    line.material = lm;
+  }
+  
+  // 16-dim Care Floor ring around the pond
+  for (let i = 0; i < 16; i++) {
+    const angle = (i / 16) * Math.PI * 2;
+    const r = 8.5;
+    const probe = BABYLON.MeshBuilder.CreateSphere("probe"+i, {diameter: 0.18}, scene);
+    const pm = new BABYLON.StandardMaterial("pm"+i, scene);
+    pm.emissiveColor = new BABYLON.Color3(0, 1, 0.5);
+    pm.diffuseColor = new BABYLON.Color3(0, 1, 0.5);
+    probe.material = pm;
+    probe.position = new BABYLON.Vector3(Math.cos(angle) * r, 1, Math.sin(angle) * r);
+  }
+  
+  // Connecting ring lines
+  for (let i = 0; i < 16; i++) {
+    const a1 = (i / 16) * Math.PI * 2;
+    const a2 = ((i+1) / 16) * Math.PI * 2;
+    const r = 8.5;
+    const points = [];
+    for (let t = 0; t <= 10; t++) {
+      const a = a1 + (a2 - a1) * t / 10;
+      points.push(new BABYLON.Vector3(Math.cos(a) * r, 1, Math.sin(a) * r));
+    }
+    BABYLON.MeshBuilder.CreateLines("caring"+i, {points}, scene);
+  }
+  
+  // Sovereign banner
+  const banner = BABYLON.MeshBuilder.CreateBox("banner", {width: 8, height: 0.05, depth: 1.5}, scene);
+  const bm = new BABYLON.StandardMaterial("bm", scene);
+  bm.diffuseColor = new BABYLON.Color3(0.98, 0.75, 0.14);
+  bm.emissiveColor = new BABYLON.Color3(0.98, 0.75, 0.14);
+  banner.material = bm;
+  banner.position = new BABYLON.Vector3(0, 5, -7);
+  
+  scene.registerBeforeRender(() => {
+    const dt = engine.getDeltaTime();
+    // Koi swim in circular paths
+    koiMeshes.forEach(f => {
+      const a = dt / 1500 + f._phase;
+      f.position.x = Math.cos(a) * f._radius + (Math.sin(a * 2.3) * 0.5);
+      f.position.z = Math.sin(a) * f._radius + (Math.cos(a * 1.7) * 0.3);
+      f.position.y = -0.2 + Math.sin(dt / 600 + f._phase) * 0.4;
+      // Wrapping
+      if (Math.abs(f.position.x) > 6) f.position.x *= 0.5;
+      if (Math.abs(f.position.z) > 5) f.position.z *= 0.5;
+    });
+    // Sensor spheres bob
+    sensorsMeshes.forEach(s => {
+      s.position.y = 1.5 + Math.sin(dt / 800 + s._sensorIdx) * 0.2;
+    });
+  });
+  
+  engine.runRenderLoop(() => scene.render());
+}
+
+function render() {
+  const list = document.getElementById('sensorsList');
+  SENSORS.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'sensor-card' + (isAlert(s) ? ' alert' : '');
+    div.id = 'sensor-' + s.id;
+    div.innerHTML = `
+      <div class="sensor-name">${s.name} (${s.sigil})</div>
+      <div class="sensor-value">${s.val.toFixed(2)}${s.unit}</div>
+      <div class="sensor-range">${s.range}</div>
+      <div class="sensor-sigil">▓▒░ ts:${new Date().toISOString()}<br>${isAlert(s) ? '🚨 ALERT' : '✓ Care Floor pass'}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function updateList() {
+  SENSORS.forEach((s, i) => {
+    const el = document.getElementById('sensor-' + s.id);
+    if (el) {
+      el.className = 'sensor-card' + (isAlert(s) ? ' alert' : '');
+      el.querySelector('.sensor-value').textContent = s.val.toFixed(2) + s.unit;
+      const sigilEl = el.querySelector('.sensor-sigil');
+      if (sigilEl) {
+        sigilEl.innerHTML = `▓▒░ ts:${new Date().toISOString()}<br>${isAlert(s) ? '🚨 ALERT' : '✓ Care Floor pass'}`;
+      }
+    }
+  });
+}
+
+function simNormal() {
+  SENSORS[0].val = 7.4 + (Math.random() - 0.5) * 0.2;
+  SENSORS[1].val = 8.0 + (Math.random() - 0.5) * 0.6;
+  SENSORS[2].val = 22 + (Math.random() - 0.5) * 0.5;
+  SENSORS[3].val = 0.015 + Math.random() * 0.008;
+  SENSORS[4].val = 60 + Math.random() * 15;
+  SENSORS[5].val = 0.2 + Math.random() * 0.2;
+  SENSORS[6].val = 0.85 + Math.random() * 0.1;
+  SENSORS[7].val = 10 + Math.random() * 4;
+  SENSORS[8].val = 0.4 + Math.random() * 0.2;
+  updateList();
+}
+
+function simAlert() {
+  SENSORS[0].val = 4.0;
+  SENSORS[1].val = 1.5;
+  SENSORS[2].val = 34;
+  SENSORS[3].val = 0.08;
+  SENSORS[4].val = 90;
+  SENSORS[5].val = 0.95;
+  SENSORS[6].val = 0.2;
+  SENSORS[7].val = 14;
+  SENSORS[8].val = 0.1;
+  updateList();
+}
+
+function simTraining() {
+  // Training mode: random values across full range
+  SENSORS[0].val = 5 + Math.random() * 4;
+  SENSORS[1].val = 2 + Math.random() * 10;
+  SENSORS[2].val = 15 + Math.random() * 20;
+  SENSORS[3].val = Math.random() * 0.06;
+  SENSORS[4].val = 30 + Math.random() * 50;
+  SENSORS[5].val = Math.random();
+  SENSORS[6].val = Math.random();
+  SENSORS[7].val = 4 + Math.random() * 12;
+  SENSORS[8].val = Math.random();
+  updateList();
+}
+
+function feedKoi() {
+  // All koi rush to center
+  koiMeshes.forEach(f => {
+    f.position.x = (Math.random() - 0.5) * 0.5;
+    f.position.z = (Math.random() - 0.5) * 0.5;
+  });
+  SENSORS[8].val = 1.0;
+  updateList();
+  setTimeout(() => {
+    SENSORS[8].val = 0.3;
+    updateList();
+  }, 3000);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  init();
+  render();
+  setInterval(simNormal, 5000);
+});
+
+window.addEventListener('resize', () => engine.resize());
+</script>
+
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

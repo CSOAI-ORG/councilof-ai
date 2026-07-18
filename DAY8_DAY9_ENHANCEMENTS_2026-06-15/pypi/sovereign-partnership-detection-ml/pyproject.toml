@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sovereign-partnership-detection-ml"
+version = "0.1.0"
+description = "Sovereign sovereign-partnership-detection-ml"
+requires-python = ">=3.9"
+license = {text = "CC0-1.0"}
+
+[tool.setuptools]
+packages = ["sovereign-partnership-detection-ml"]
+
+[tool.setuptools.package-data]
+sovereign-partnership-detection-ml = ["*.pkl"]

@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MEOK Earth — Live 3D C2</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#04060d;font-family:ui-monospace,Menlo,monospace;overflow:hidden}
+  #map{position:absolute;inset:0}
+  .maplibregl-ctrl-attrib{font-size:9px;opacity:.45}
+  .hud{position:absolute;inset:0;pointer-events:none;z-index:5}
+  .tint{position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,transparent,rgba(6,14,34,.32));mix-blend-mode:multiply}
+  .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(80,140,255,.03) 0 2px,transparent 2px 4px)}
+  .vig{position:absolute;inset:0;box-shadow:inset 0 0 200px rgba(2,8,22,.85)}
+  .topbar{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;padding:9px 14px;background:linear-gradient(180deg,rgba(8,16,40,.82),transparent);color:#8fb6ff;font-size:12px;letter-spacing:.05em}
+  .dot{width:9px;height:9px;border-radius:50%;background:#39d98a;box-shadow:0 0 9px #39d98a;animation:p 1.4s infinite}
+  @keyframes p{50%{opacity:.35}}
+  .tag{margin-left:auto;color:#c9a84c;border:1px solid #6b5a2e;padding:2px 8px;border-radius:4px;font-size:10px;letter-spacing:.14em}
+  .corner{position:absolute;width:26px;height:26px;border:2px solid rgba(143,182,255,.5)}
+  .tl{top:42px;left:10px;border-right:0;border-bottom:0}.tr{top:42px;right:10px;border-left:0;border-bottom:0}
+  .bl{bottom:78px;left:10px;border-right:0;border-top:0}.br{bottom:78px;right:10px;border-left:0;border-top:0}
+  .reticle{position:absolute;top:50%;left:50%;width:46px;height:46px;transform:translate(-50%,-50%);opacity:.45}
+  .reticle:before,.reticle:after{content:'';position:absolute;background:rgba(143,182,255,.7)}
+  .reticle:before{top:50%;left:0;right:0;height:1px}.reticle:after{left:50%;top:0;bottom:0;width:1px}
+  .botbar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:10px 14px;background:linear-gradient(0deg,rgba(8,16,40,.88),transparent);color:#5f7fb5;font-size:11px;flex-wrap:wrap}
+  .botbar b{color:#cfe0ff}
+  .nodes{position:absolute;top:50px;right:12px;width:186px;background:rgba(8,16,40,.7);border:1px solid #1c2b4d;border-radius:9px;padding:9px 11px;color:#9fc0ff;font-size:11px;pointer-events:auto;max-height:60vh;overflow:auto}
+  .nodes h4{margin:0 0 7px;color:#c9a84c;font-size:10px;letter-spacing:.12em}
+  .nrow{display:flex;align-items:center;gap:7px;padding:4px 0;cursor:pointer;border-bottom:1px solid rgba(143,182,255,.08)}
+  .nrow:hover{color:#fff}.sdot{width:7px;height:7px;border-radius:50%;flex:none}
+  .marker{width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 10px currentColor;cursor:pointer}
+  .ctrls{position:absolute;left:12px;bottom:78px;display:flex;flex-direction:column;gap:6px;pointer-events:auto}
+  .ctrls button{font:11px ui-monospace,monospace;color:#cfe0ff;background:rgba(40,70,140,.45);border:1px solid #2c4a86;padding:5px 9px;border-radius:6px;cursor:pointer;letter-spacing:.04em}
+  .ctrls button:hover{background:rgba(60,100,190,.6)}
+  .boot{position:absolute;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;background:#04060d;color:#8fb6ff;font-size:13px;letter-spacing:.2em;transition:opacity .8s}
+  .boot.off{opacity:0;pointer-events:none}
+</style></head><body>
+<div id="map"></div>
+<div class="hud">
+  <div class="topbar"><span class="dot"></span><b style="color:#cfe0ff">MEOK EARTH</b> · LIVE 3D C2 <span id="coord">51.5072°N 0.1276°W</span><span class="tag">SOVEREIGN · UNCLASSIFIED</span></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="reticle"></div><div class="scan"></div><div class="tint"></div><div class="vig"></div>
+  <div class="nodes" id="nodelist"><h4>◢ SOVEREIGN NETWORK</h4><div id="nrows">loading…</div></div>
+  <div class="ctrls">
+    <button onclick="MEOK.tilt()">⟲ TILT</button>
+    <button onclick="MEOK.orbit()">◷ ORBIT</button>
+    <button onclick="MEOK.top()">▤ TOP-DOWN</button>
+  </div>
+  <div class="botbar"><span>ALT <b id="alt">—</b></span><span>HDG <b id="hdg">—</b></span><span>PITCH <b id="pit">—</b></span><span style="margin-left:auto">satellite © Esri · terrain AWS — <b>free, no key</b></span></div>
+</div>
+<div class="boot" id="boot">◢ ACQUIRING SATELLITE LINK…</div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const STATUS_COLOR={governed:'#c9a84c',watch:'#e9a93c',flagged:'#d9756a'};
+// All-raster style: satellite imagery + terrain DEM. No vector worker → bulletproof, free, no key.
+const map=new maplibregl.Map({
+  container:'map', maxPitch:85, antialias:true, center:[-0.1276,51.5072], zoom:13.2, pitch:68, bearing:-22,
+  style:{ version:8, glyphs:'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+    sources:{
+      sat:{ type:'raster', tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize:256, maxzoom:19, attribution:'© Esri · Maxar · Earthstar Geographics' },
+      dem:{ type:'raster-dem', tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'], tileSize:256, encoding:'terrarium', maxzoom:14 }
+    },
+    layers:[ {id:'bg',type:'background',paint:{'background-color':'#04060d'}}, {id:'sat',type:'raster',source:'sat'} ]
+  }
+});
+map.dragRotate.enable(); map.touchZoomRotate.enableRotation();
+let _orbit=null;
+const MEOK={
+  tilt(){ map.easeTo({pitch: map.getPitch()>45?25:72, duration:1200}); },
+  top(){ if(_orbit){cancelAnimationFrame(_orbit);_orbit=null;} map.easeTo({pitch:0,bearing:0,duration:1400}); },
+  orbit(){ if(_orbit){cancelAnimationFrame(_orbit);_orbit=null;return;} (function spin(){ map.setBearing(map.getBearing()+0.13); _orbit=requestAnimationFrame(spin); })(); },
+  flyTo(lon,lat,name){ if(_orbit){cancelAnimationFrame(_orbit);_orbit=null;} map.flyTo({center:[lon,lat],zoom:15.5,pitch:70,bearing:Math.random()*60-30,duration:4200,essential:true}); }
+};
+window.MEOK=MEOK; window._map=map;
+// Commands from the parent OS (the guided tour): fly to a point, scan a radius, zoom out.
+MEOK.flyC=function(lat,lon,zoom){ if(_orbit){cancelAnimationFrame(_orbit);_orbit=null;} map.flyTo({center:[lon,lat],zoom:zoom||11,pitch:55,bearing:0,duration:3600,essential:true}); };
+MEOK.scan=function(mi){ let s=document.getElementById('scanfx'); if(!s){ s=document.createElement('div'); s.id='scanfx'; s.innerHTML='<div class="scanring"></div><div class="scanlbl"></div>'; document.body.appendChild(s); const st=document.createElement('style'); st.textContent='#scanfx{position:fixed;inset:0;pointer-events:none;z-index:50;display:flex;align-items:center;justify-content:center}.scanring{width:40px;height:40px;border:2px solid rgba(201,168,76,.9);border-radius:50%;animation:scanpulse 2.6s ease-out}.scanlbl{position:absolute;bottom:14%;color:#f0e6cf;font:700 12px ui-monospace,monospace;letter-spacing:.12em;background:rgba(12,10,7,.7);padding:5px 12px;border-radius:999px;border:1px solid rgba(201,168,76,.5)}@keyframes scanpulse{0%{width:20px;height:20px;opacity:.95}100%{width:78vmin;height:78vmin;opacity:0}}'; document.head.appendChild(st); }
+  s.style.display='flex'; const ring=s.querySelector('.scanring'); ring.style.animation='none'; void ring.offsetWidth; ring.style.animation='scanpulse 2.6s ease-out'; s.querySelector('.scanlbl').textContent='◎ SCANNING '+(mi||10)+'-MILE RADIUS · ALL LAYERS'; clearTimeout(MEOK._st); MEOK._st=setTimeout(function(){ if(s) s.style.display='none'; },2800); };
+// Redirection arcs — visualise "abundance not extraction": surplus/data/aid flowing
+// from where there's plenty to where it's needed, signed + governed. Great-circle-ish curve.
+MEOK._arcs={type:'FeatureCollection',features:[]};
+function _curve(a,b){ const n=48,out=[]; for(let i=0;i<=n;i++){ const t=i/n; const lon=a[0]+(b[0]-a[0])*t, lat=a[1]+(b[1]-a[1])*t; const lift=Math.sin(t*Math.PI); out.push([lon, lat+lift*Math.min(6,Math.hypot(b[0]-a[0],b[1]-a[1])*0.18)]); } return out; }
+MEOK.arc=function(from,to,label){ try{ if(!map.getSource('sov-arcs')){ map.addSource('sov-arcs',{type:'geojson',data:MEOK._arcs}); map.addLayer({id:'sov-arcs-glow',type:'line',source:'sov-arcs',paint:{'line-color':'#ffe08a','line-width':8,'line-opacity':0.22,'line-blur':7}}); map.addLayer({id:'sov-arcs-l',type:'line',source:'sov-arcs',paint:{'line-color':'#c9a84c','line-width':2.4,'line-opacity':0.9,'line-blur':1.2}});
+      if(!MEOK._pulse){ let t=0; (function pulse(){ t+=0.05; try{ if(map.getLayer('sov-arcs-glow')) map.setPaintProperty('sov-arcs-glow','line-opacity',0.16+0.16*(1+Math.sin(t))/2); if(map.getLayer('sov-arcs-l')) map.setPaintProperty('sov-arcs-l','line-width',2.2+0.8*(1+Math.sin(t))/2); }catch(e){} MEOK._pulse=requestAnimationFrame(pulse); })(); } }
+    MEOK._arcs.features.push({type:'Feature',properties:{label:label||''},geometry:{type:'LineString',coordinates:_curve([from[1],from[0]],[to[1],to[0]])}}); map.getSource('sov-arcs').setData(MEOK._arcs);
+    const mk=function(ll,cls){ const el=document.createElement('div'); el.className='marker'; el.style.cssText='width:12px;height:12px;color:#c9a84c;background:#c9a84c'; new maplibregl.Marker({element:el}).setLngLat([ll[1],ll[0]]).addTo(map); };
+    mk(from); mk(to);
+    const mid=[(from[1]+to[1])/2,(from[0]+to[0])/2+2]; if(label){ const p=document.createElement('div'); p.style.cssText='background:rgba(12,10,7,.82);color:#f0e6cf;font:600 11px ui-monospace,monospace;padding:3px 8px;border-radius:6px;border:1px solid rgba(201,168,76,.5);white-space:nowrap'; p.textContent=label; new maplibregl.Marker({element:p}).setLngLat(mid).addTo(map); }
+  }catch(e){} };
+MEOK.clearArcs=function(){ try{ MEOK._arcs.features=[]; if(map.getSource('sov-arcs')) map.getSource('sov-arcs').setData(MEOK._arcs); if(MEOK._pulse){ cancelAnimationFrame(MEOK._pulse); MEOK._pulse=null; } }catch(e){} };
+// A location info card pinned on the globe — real, local, relevant to where we flew.
+MEOK.card=function(html){ let c=document.getElementById('loccard'); if(!c){ c=document.createElement('div'); c.id='loccard'; c.style.cssText='position:fixed;left:16px;bottom:16px;z-index:60;max-width:280px;background:rgba(14,11,8,.92);color:#efe6d4;border:1px solid rgba(201,168,76,.55);border-radius:14px;padding:12px 14px;font:500 12.5px Space Grotesk,system-ui,sans-serif;box-shadow:0 12px 34px rgba(0,0,0,.45);line-height:1.45'; document.body.appendChild(c); } c.innerHTML=html; c.style.display='block'; };
+window.addEventListener('message',function(ev){ var d=ev.data||{}; if(d.type!=='meok-cmd') return; try{ if(d.cmd==='fly') MEOK.flyC(d.lat,d.lon,d.zoom); else if(d.cmd==='scan') MEOK.scan(d.radiusMi); else if(d.cmd==='top') MEOK.top(); else if(d.cmd==='arc') MEOK.arc(d.from,d.to,d.label); else if(d.cmd==='clearArcs') MEOK.clearArcs(); else if(d.cmd==='card') MEOK.card(d.html); else if(d.cmd==='orbit') MEOK.orbit(); }catch(e){} });
+function readout(){ const c=map.getCenter();
+  document.getElementById('coord').textContent=Math.abs(c.lat).toFixed(4)+'°'+(c.lat>=0?'N':'S')+' '+Math.abs(c.lng).toFixed(4)+'°'+(c.lng>=0?'E':'W');
+  document.getElementById('alt').textContent='Z'+map.getZoom().toFixed(1);
+  document.getElementById('hdg').textContent=((map.getBearing()+360)%360).toFixed(0)+'°';
+  document.getElementById('pit').textContent=map.getPitch().toFixed(0)+'°'; }
+map.on('move',readout); readout();
+map.on('error',e=>{ try{ console.warn('MAP ERROR:', e&&e.error&&e.error.message); }catch(_){} });
+let _ready=false;
+function ready(){ if(_ready)return; _ready=true;
+  try{ map.setTerrain({source:'dem', exaggeration:1.35}); }catch(e){ console.warn('terrain skip',e.message); }
+  try{ map.setSky&&map.setSky({'sky-color':'#0a1a3a','horizon-color':'#16335f','fog-color':'#0a1530','sky-horizon-blend':0.6,'horizon-fog-blend':0.5,'fog-ground-blend':0.4}); }catch(e){}
+  document.getElementById('boot').classList.add('off');
+  map.flyTo({center:[-0.1276,51.5072],zoom:15.6,pitch:72,bearing:28,duration:6000,essential:true});
+  fetch('/api/nodes').then(r=>r.json()).then(d=>{ const rows=document.getElementById('nrows'); rows.innerHTML='';
+    // pick a node → fly the camera AND tell the parent OS so the Sovereign explains it in chat
+    const pick=(n)=>{ MEOK.flyTo(n.lon,n.lat,n.name); try{ if(window.parent&&window.parent!==window) window.parent.postMessage({type:'meok-node',node:n},'*'); }catch(e){} };
+    (d.nodes||[]).forEach(n=>{ const col=STATUS_COLOR[n.status]||'#c9a84c';
+      const el=document.createElement('div'); el.className='marker'; el.style.color=col; el.style.background=col;
+      el.title=n.name+' — '+(n.role||''); el.onclick=()=>pick(n);
+      new maplibregl.Marker({element:el}).setLngLat([n.lon,n.lat]).addTo(map);
+      const rr=document.createElement('div'); rr.className='nrow'; rr.onclick=()=>pick(n);
+      rr.innerHTML='<span class="sdot" style="background:'+col+'"></span><b>'+n.name+'</b>'; rows.appendChild(rr); });
+  }).catch(()=>{ document.getElementById('nrows').textContent='network offline'; });
+}
+map.on('load', ready); map.on('idle', ready); setTimeout(ready, 3000);
+</script></body></html>

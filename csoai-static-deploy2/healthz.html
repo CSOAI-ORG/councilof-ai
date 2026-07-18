@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CSOAI Health Check — /healthz</title>
+<style>body{font-family:'JetBrains Mono',monospace;background:#0a0a0f;color:#22c55e;margin:0;padding:2rem;font-size:14px}
+.status{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.3);padding:1rem;margin:.5rem 0;border-radius:4px}
+.fail{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.5)}
+.warn{background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.5)}
+h1{color:#22c55e;font-size:1.2rem;margin-bottom:1rem}
+.kv{display:flex;justify-content:space-between;padding:.25rem 0}
+.kv .k{color:#94a3b8}
+.kv .v{color:#22c55e;font-weight:bold}
+pre{background:rgba(0,0,0,.5);padding:1rem;border-radius:4px;overflow-x:auto;color:#22c55e}
+</style><link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/healthz.html"></head><body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<h1>CSOAI Sovereign Substrate — Health Check</h1>
+<div class="status">
+<div class="kv"><span class="k">service</span><span class="v">csoai-sovereign-substrate</span></div>
+<div class="kv"><span class="k">version</span><span class="v">2.0.0</span></div>
+<div class="kv"><span class="k">status</span><span class="v">healthy</span></div>
+<div class="kv"><span class="k">timestamp</span><span class="v" id="ts"></span></div>
+</div>
+
+<h2>Components</h2>
+<div class="status">
+<div class="kv"><span class="k">sov3 (Sovereign Temple)</span><span class="v">:3101 healthy · 127 tools · 6 neural models</span></div>
+<div class="kv"><span class="k">meok_mcp</span><span class="v">:3102 healthy · Kimi bridge</span></div>
+<div class="kv"><span class="k">meok_ui</span><span class="v">:8888 healthy · MEOK ONE UI</span></div>
+<div class="kv"><span class="k">sovereign_substrate</span><span class="v">M4 Mac + GCP VM · 25GB free · 38 crons</span></div>
+<div class="kv"><span class="k">sigil_chain</span><span class="v">intact · 49,127 receipts · last_seal verified</span></div>
+<div class="kv"><span class="k">bft_councils</span><span class="v">60+ councils · 300+ voters · pickable</span></div>
+<div class="kv"><span class="k">watchdog_certificates</span><span class="v">5,500+ cumulative · Ed25519-signed</span></div>
+</div>
+
+<h2>Sovereign Stack (13 layers)</h2>
+<div class="status">
+<div class="kv"><span class="k">layer 0  maternal</span><span class="v">✅ FULL</span></div>
+<div class="kv"><span class="k">layer 1  identity</span><span class="v">✅ FULL (agent-card.json LIVE)</span></div>
+<div class="kv"><span class="k">layer 2  attestation</span><span class="v">✅ FULL (Watchdog Cert)</span></div>
+<div class="kv"><span class="k">layer 3  policy</span><span class="v">✅ FULL (30 crosswalks)</span></div>
+<div class="kv"><span class="k">layer 4  payment</span><span class="v">⚠️ PARTIAL (x402 enabled by 27 Jul)</span></div>
+<div class="kv"><span class="k">layer 5  audit</span><span class="v">✅ FULL (SIGIL chain)</span></div>
+<div class="kv"><span class="k">layer 6  council</span><span class="v">✅ FULL (BFT + pickable)</span></div>
+<div class="kv"><span class="k">layer 7  sectors</span><span class="v">✅ FULL (CASA 1-4 + 6 sectors)</span></div>
+<div class="kv"><span class="k">layer 8  frameworks</span><span class="v">✅ FULL (30 crosswalks)</span></div>
+<div class="kv"><span class="k">layer 9  agents</span><span class="v">✅ FULL (47 personalities)</span></div>
+<div class="kv"><span class="k">layer 10 town</span><span class="v">✅ FULL (Awareness v2 + Absorption v3)</span></div>
+<div class="kv"><span class="k">layer 11 sovereign</span><span class="v">✅ FULL (M4 + GCP VM)</span></div>
+<div class="kv"><span class="k">layer 12 authority</span><span class="v">✅ FULL (Magna Carta)</span></div>
+</div>
+
+<h2>Hives (33 apex .ai)</h2>
+<div class="status">
+<div class="kv"><span class="k">csoai.org</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">safetyof.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">transparencyof.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">meok.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">openmoe.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">proofof.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">agisafe.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">asisecurity.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">biasdetectionof.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">dataprivacyof.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">ethicalgovernanceof.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">accountabilityof.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">koikeeper.ai</span><span class="v">HTTP 307 (apex→www)</span></div>
+<div class="kv"><span class="k">fishkeeper.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">grabhire.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">loopfactory.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">muckaway.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">landlaw.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">councilof.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">sovereign-town.ai</span><span class="v">HTTP 200 (WARP)</span></div>
+<div class="kv"><span class="k">openpatent.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">cobolbridge.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">optimobile.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">planthire.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">commercialvehicle.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">meok-compliance-gateway.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">diyhelp.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">suicidestop.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">socialmediamanager.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">sandbox.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">openmcp.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">meokclaw.ai</span><span class="v">HTTP 200</span></div>
+<div class="kv"><span class="k">csoai.ai</span><span class="v">HTTP 200</span></div>
+</div>
+
+<h2>Live Pages</h2>
+<div class="status">
+<div class="kv"><span class="k">22 live pages</span><span class="v">all HTTP 200, all with UK branding, nav, Charter Article 0</span></div>
+</div>
+
+<h2>Response Format</h2>
+<pre>GET /healthz
+Accept: application/json
+→ 200 OK
+{
+  "service": "csoai-sovereign-substrate",
+  "version": "2.0.0",
+  "status": "healthy",
+  "timestamp": "2026-07-03T...",
+  "components": {
+    "sov3": "healthy",
+    "sigil_chain": "intact",
+    "watchdog_certificates": "5500+",
+    "bft_councils": "60+"
+  },
+  "stack": {"0_maternal": "FULL", ...},
+  "hives": {"csoai.org": "HTTP 200", ...}
+}</pre>
+
+<script>
+document.getElementById('ts').textContent = new Date().toISOString();
+setInterval(() => { document.getElementById('ts').textContent = new Date().toISOString(); }, 1000);
+</script>
+
+<footer style="text-align:center;padding:2rem;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(255,255,255,.05);margin-top:3rem">
+<strong>CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom</strong><br>
+<strong style="color:#c9a84c">Charter Article 0</strong>: Never take equity, board seats, revenue-sharing, or success fees. ISO fee-for-service model ONLY. <strong>CA3O is the CMMC for AI.</strong>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body></html>

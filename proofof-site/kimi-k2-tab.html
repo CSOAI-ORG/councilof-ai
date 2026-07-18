@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Kimi-K2 — SOV-756</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1200px;margin:0 auto}
+h1{color:#fbbf24}
+.hero{background:radial-gradient(ellipse at center,rgba(251,191,36,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #fbbf24;border-radius:12px;margin-bottom:24px}
+.tagline{color:#fbbf24;font-size:18px;font-weight:700;margin:8px 0}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.metric{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.metric .v{font-size:24px;color:#fbbf24;font-weight:700}
+.metric .l{font-size:11px;color:#aaa;margin-top:4px}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.path{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.path-card{background:#02060f;border:1px dashed #fbbf24;border-radius:8px;padding:16px}
+.path-card.host{border-color:#ef4444}
+.path-card h4{color:#fbbf24;margin:0 0 8px 0}
+.path-card.host h4{color:#ef4444}
+.kv{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1f2937;font-size:12px}
+.kv .k{color:#888}.kv .v{color:#fbbf24}
+.btn{background:#fbbf24;color:#02060f;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-weight:700;margin:4px 0}
+.btn:hover{filter:brightness(1.1)}
+.dead{background:#1a1a2e;border:1px solid #ef4444;border-radius:8px;padding:12px;margin:8px 0;color:#ef4444;font-size:12px}
+</style></head>
+<body>
+<div class="hero">
+<h1>🌙 Kimi-K2 — Frontier Flagship</h1>
+<div class="tagline">1.03T parameters · Token API governs today · Modal multi-GPU hosts the weights</div>
+</div>
+
+<div class="metrics">
+<div class="metric"><div class="v">1.03T</div><div class="l">parameters</div></div>
+<div class="metric"><div class="v">$0.15-2</div><div class="l">CALL / 1M tok</div></div>
+<div class="metric"><div class="v">7</div><div class="l">HOST GPUs</div></div>
+<div class="metric"><div class="v">$30-50/h</div><div class="l">HOST cost</div></div>
+</div>
+
+<div class="panel">
+<h3>Two paths (settled, in memory)</h3>
+<div class="path">
+<div class="path-card">
+<h4>PATH 1 — CALL (govern today, zero GPU)</h4>
+<div class="kv"><span class="k">Method</span><span class="v">Moonshot native API</span></div>
+<div class="kv"><span class="k">Endpoint</span><span class="v">api.moonshot.cn/v1/chat</span></div>
+<div class="kv"><span class="k">Cost</span><span class="v">$0.15-2 per 1M tok</span></div>
+<div class="kv"><span class="k">GPU</span><span class="v">none</span></div>
+<div class="kv"><span class="k">Reach</span><span class="v">all 1.03T parameters</span></div>
+<div class="kv"><span class="k">Limit</span><span class="v">rent per-call, no weight edit</span></div>
+<div class="kv"><span class="k">Reachable today</span><span class="v">✓ (API keys needed)</span></div>
+</div>
+<div class="path-card host">
+<h4>PATH 2 — HOST (own weights, Modal)</h4>
+<div class="kv"><span class="k">Method</span><span class="v">Modal multi-GPU</span></div>
+<div class="kv"><span class="k">GPUs required</span><span class="v">7</span></div>
+<div class="kv"><span class="k">Cost</span><span class="v">$30-50/hour</span></div>
+<div class="kv"><span class="k">Purpose</span><span class="v">LoRA / inner-weight edits</span></div>
+<div class="kv"><span class="k">Blocker</span><span class="v">Owner-gated (Article 15)</span></div>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h3>Dead paths (memorized, never re-ask)</h3>
+<div class="dead">❌ SSH-spread across micro boxes — 1-2GB RAM can't hold 1.03T, interconnect too slow</div>
+<div class="dead">❌ Mac hosting — sandbox can't reach, can't hold 1.03T</div>
+<div class="dead">❌ From-scratch pretrain — tens of millions, dead</div>
+</div>
+
+<div class="panel">
+<h3>Sovereign binding (per-token)</h3>
+<div class="path-card" style="border-color:#10b981">
+<p style="font-size:12px;color:#10b981;margin:0">"I am SOV4. Bound. CSOAI Ltd UK 16939677. Routing to Kimi-K2 1.03T parameters via token API (PATH 1). Care-gate + SIGIL on every call. No T-count aggregate claim. Article 0 immutable."</p>
+</div>
+</div>
+
+<div class="panel">
+<h3>Live API</h3>
+<button class="btn" onclick="load()">🔄 Load /api/sov4/frontier/model?id=kimi-k2</button>
+<pre id="result" style="font-size:11px;color:#10b981;background:#02060f;padding:12px;border-radius:6px;max-height:400px;overflow-y:auto">Click to load...</pre>
+</div>
+
+<script>
+async function load() {
+  const r = await fetch('/api/sov4/frontier/model?id=kimi-k2').then(r => r.json());
+  document.getElementById('result').textContent = JSON.stringify(r, null, 2);
+}
+</script>
+</body></html>

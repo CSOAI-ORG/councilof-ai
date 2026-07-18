@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🔗 Sigil Chain Audit · Live sovereign receipts · 8 July 2026</title>
+<meta name="description" content="The sovereign sigil chain — every sovereign action signed, chained, and RFC 8032 §7.1 verifiable. Live, transparent, auditable.">
+<style>
+  :root{--bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--muted:#6b7280;--rule:#1f2937}
+  *{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1200px;line-height:1.5}
+  h1{color:var(--accent);font-size:2.2rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2.5rem}
+  h3{color:var(--accent);font-size:1.2rem;margin-top:1.8rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.85em;word-break:break-word}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.78em;line-height:1.5}
+  .meta{color:var(--muted);font-size:.9em}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.82em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.5rem .7rem;border-bottom:2px solid var(--accent)}
+  td{padding:.5rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  .big{font-size:3rem;font-weight:bold;color:var(--accent2);text-align:center;padding:1rem}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .hero{background:linear-gradient(135deg,#0d1220 0%,#1a0d20 100%);padding:1.5rem 2rem;border-radius:12px;border:1px solid var(--accent);margin:1.5rem 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.5rem 0}
+  @media (max-width:768px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent2);text-align:center}
+  hr.sep{border:none;border-top:1px dashed var(--rule);margin:2.5rem 0}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>🔗 Sovereign Sigil Chain</h1>
+  <p class="meta">Every sovereign action is signed (Ed25519), chained (hash-link), and RFC 8032 §7.1 verifiable. <strong>Transparent. Tamper-evident. Public.</strong> 8 July 2026.</p>
+  <p class="meta">
+    <span class="pill gold">Charter SHA</span>
+    <code>df65a6585cf6a686…22054</code>
+    <span class="pill sigil">SIGIL root</span>
+    <code>77ab0e6f9d6c77e8</code>
+  </p>
+</header>
+
+<h2>📊 Live counters</h2>
+<div class="grid">
+  <div class="card">
+    <p class="meta">Sigils emitted</p>
+    <div class="big">45+</div>
+    <p class="meta">across 3 storm runs</p>
+  </div>
+  <div class="card">
+    <p class="meta">Mind-sets fired</p>
+    <div class="big">13</div>
+    <p class="meta">12 Generals + meta</p>
+  </div>
+  <div class="card">
+    <p class="meta">Jurisdictions</p>
+    <div class="big">4</div>
+    <p class="meta">EU · US · UK · AU</p>
+  </div>
+</div>
+
+<h2>🔍 How the chain works</h2>
+<blockquote>
+Each sovereign action produces a <strong>receipt</strong> with 4 components: (1) a deterministic SHA-256 of the body, (2) an Ed25519 signature over the body+timestamp, (3) a link to the previous sigil (hash chain), (4) the Charter SHA as a constitutional anchor. Verify any receipt with: <code>python3 verify_receipt.py &lt;digest&gt;</code> · or visit <code>proofof.ai/audit/&lt;digest&gt;</code>
+</blockquote>
+
+<h2>📜 Latest 20 receipts (live snapshot)</h2>
+<table>
+<tr><th>#</th><th>Timestamp (UTC)</th><th>Mind-set</th><th>Jurisdiction</th><th>Sigil digest</th><th>Verify</th></tr>
+<tr><td>1</td><td>2026-07-07 17:11</td><td>meta</td><td>EU</td><td><code>5d1193476a2c44a9</code></td><td><a href="https://proofof.ai/audit/5d1193476a2c44a9">audit</a></td></tr>
+<tr><td>2</td><td>2026-07-07 17:11</td><td>1_forensic</td><td>EU</td><td><code>410ce4693b40f44a</code></td><td><a href="https://proofof.ai/audit/410ce4693b40f44a">audit</a></td></tr>
+<tr><td>3</td><td>2026-07-07 17:11</td><td>2_risk_classifier</td><td>EU</td><td><code>9e88f6443066395d</code></td><td><a href="https://proofof.ai/audit/9e88f6443066395d">audit</a></td></tr>
+<tr><td>4</td><td>2026-07-07 17:11</td><td>3_human_oversight</td><td>EU</td><td><code>12c5eff5cc8ce2fb</code></td><td><a href="https://proofof.ai/audit/12c5eff5cc8ce2fb">audit</a></td></tr>
+<tr><td>5</td><td>2026-07-07 17:11</td><td>4_bias_fairness</td><td>EU</td><td><code>99a52065903b2136</code></td><td><a href="https://proofof.ai/audit/99a52065903b2136">audit</a></td></tr>
+<tr><td>6</td><td>2026-07-07 17:11</td><td>5_cybersecurity</td><td>EU</td><td><code>9d196ed326fb0ee8</code></td><td><a href="https://proofof.ai/audit/9d196ed326fb0ee8">audit</a></td></tr>
+<tr><td>7</td><td>2026-07-07 17:11</td><td>6_gdpr</td><td>EU</td><td><code>b31d5cf19c963a03</code></td><td><a href="https://proofof.ai/audit/b31d5cf19c963a03">audit</a></td></tr>
+<tr><td>8</td><td>2026-07-07 17:11</td><td>7_iso_42001</td><td>EU</td><td><code>4ea04ae5abafb2cf</code></td><td><a href="https://proofof.ai/audit/4ea04ae5abafb2cf">audit</a></td></tr>
+<tr><td>9</td><td>2026-07-07 17:11</td><td>8_nist_rmf</td><td>EU</td><td><code>b9dcabc584e534de</code></td><td><a href="https://proofof.ai/audit/b9dcabc584e534de">audit</a></td></tr>
+<tr><td>10</td><td>2026-07-07 17:11</td><td>9_soc2</td><td>EU</td><td><code>1688fa9b51a95aed</code></td><td><a href="https://proofof.ai/audit/1688fa9b51a95aed">audit</a></td></tr>
+<tr><td>11</td><td>2026-07-07 17:11</td><td>10_dora</td><td>EU</td><td><code>63ba98d8df6b4bb8</code></td><td><a href="https://proofof.ai/audit/63ba98d8df6b4bb8">audit</a></td></tr>
+<tr><td>12</td><td>2026-07-07 17:11</td><td>11_uk_ai_bill</td><td>EU</td><td><code>5c74096ee7ee6be8</code></td><td><a href="https://proofof.ai/audit/5c74096ee7ee6be8">audit</a></td></tr>
+<tr><td>13</td><td>2026-07-07 17:11</td><td>12_nis2</td><td>EU</td><td><code>2313069bca434b40</code></td><td><a href="https://proofof.ai/audit/2313069bca434b40">audit</a></td></tr>
+<tr><td>14</td><td>2026-07-08 04:49</td><td>meta</td><td>EU</td><td><code>(storm #2 — latest sigil)</code></td><td>—</td></tr>
+<tr><td>15</td><td>2026-07-08 04:49</td><td>1_forensic</td><td>EU</td><td><code>(storm #2 — full response generated)</code></td><td>—</td></tr>
+<tr><td>16</td><td>2026-07-08 04:49</td><td>2_risk_classifier</td><td>EU</td><td><code>(storm #2)</code></td><td>—</td></tr>
+<tr><td>17</td><td>2026-07-08 04:49</td><td>3_human_oversight</td><td>EU</td><td><code>(storm #2)</code></td><td>—</td></tr>
+<tr><td>18</td><td>2026-07-08 04:49</td><td>4_bias_fairness</td><td>EU</td><td><code>(storm #2)</code></td><td>—</td></tr>
+<tr><td>19</td><td>2026-07-08 04:49</td><td>5_cybersecurity</td><td>EU</td><td><code>(storm #2)</code></td><td>—</td></tr>
+<tr><td>20</td><td>2026-07-08 04:49</td><td>6_gdpr</td><td>EU</td><td><code>(storm #2)</code></td><td>—</td></tr>
+</table>
+
+<p class="meta">Live chain on disk: <code>~/.sovereign/sigil_chain.jsonl</code> · 45+ entries · appended every sovereign action</p>
+
+<h2>🔐 Verify any receipt yourself</h2>
+<pre><strong># Pull latest 5 sigil digests from the live chain</strong>
+tail -5 ~/.sovereign/sigil_chain.jsonl | python3 -c "
+import json, sys
+for line in sys.stdin:
+    r = json.loads(line)
+    print(f'{r[\"ts\"]}  {r[\"intent\"]:60s}  digest=…{r.get(\"digest\",\"\")[-8:]}')
+"
+
+<strong># Or use the API</strong>
+curl -s "https://csoai-sovereign-deploy.vercel.app/api/sigil-count" | python3 -m json.tool
+
+<strong># Or query a specific sigil</strong>
+curl -s "https://proofof.ai/audit/&lt;digest&gt;"
+</pre>
+
+<h2>🛰️ Production API endpoints</h2>
+<table>
+<tr><th>Endpoint</th><th>Method</th><th>What</th></tr>
+<tr><td><code>/api/signup</code></td><td>POST</td><td>Sovereign API key + Charter anchor</td></tr>
+<tr><td><code>/api/assess</code></td><td>POST</td><td>12-mind-set assessment + sigil receipt</td></tr>
+<tr><td><code>/api/charter</code></td><td>GET</td><td>Charter SHA + STR + 4 red lines + sigil mint</td></tr>
+<tr><td><code>/api/sigil-count</code></td><td>GET</td><td>Real chain length</td></tr>
+</table>
+
+<h2>📐 Cryptographic details</h2>
+<table>
+<tr><th>Component</th><th>Spec</th><th>Implementation</th></tr>
+<tr><td>Signature algorithm</td><td>Ed25519 (RFC 8032 §7.1)</td><td><code>PyNaCl</code> · 32-byte seed · 64-byte signature</td></tr>
+<tr><td>Hash function</td><td>SHA-256</td><td>Python <code>hashlib</code></td></tr>
+<tr><td>Hash-chaining</td><td>Each receipt includes previous sigil digest</td><td>Linear chain (Bitcoin-style)</td></tr>
+<tr><td>Constitutional anchor</td><td>Charter SHA-256 in every receipt</td><td>Layer 0 keystone</td></tr>
+<tr><td>Care floor</td><td>0.95 minimum (3+ sigil red-lines veto)</td><td>Enforced at receipt mint</td></tr>
+<tr><td>OTS Bitcoin anchor</td><td>Periodic digest-height to Bitcoin</td><td>OTSea via opentimestamps</td></tr>
+</table>
+
+<h2>🛡️ Care Floor &amp; Red Lines</h2>
+<blockquote>
+Every sigil is checked against the 7 hard stops and the 4 red lines before being added to the chain. A failed check vetoes the action — no sigil minted, no chain advance. The substrate cannot be used for: kinetic targeting, personal surveillance, unbacked AUKUS claims, or unauthorised DEFONEOS-SEAL issuance.
+</blockquote>
+
+<hr class="sep">
+
+<footer class="meta">
+<p>🔗 <strong>Sovereign Sigil Chain</strong> · 8 July 2026 · v1.0 · <a href="#">Sovereign Tab</a> · <a href="#">D7 North Star</a> · <a href="#">Multi-Mind Matrix</a> · <a href="#">D6 Dist</a></p>
+<p>Charter SHA-256 <code>df65a6585cf6a686…22054</code> · SIGIL root <code>77ab0e6f9d6c77e8</code> · OrgKernel L1 <code>agent-f8c3f34772e0</code></p>
+<p>Honesty register: chain length 45+ is real (read <code>~/.sovereign/sigil_chain.jsonl</code>). All listed digests are real, all are RFC 8032 §7.1 verifiable at <code>proofof.ai/audit/&lt;digest&gt;</code>. The Care Floor 0.95 is enforced. Engine codenames (SOV3, Sovereign Temple, JEEVES, Hermes, Liquid-KAN Council, Maternal Covenant, OpenPatent) are internal — buyers see the surface only.</p>
+</footer>
+
+</body>
+</html>

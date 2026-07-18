@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🌀 SOV33 Mamba-2 Sovereign Attention — Phase 3</title>
+<meta name="description" content="SOV33 Mamba-2 layer — the long-context state-space memory substrate. Compresses any-length context into a 16-dim state vector for sovereign agentic reasoning.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM, long-context">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);padding:1.5rem;line-height:1.55;max-width:1300px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;text-align:center}
+  h2{color:var(--accent2);font-size:1.5rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.95em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.85em;line-height:1.45;white-space:pre-wrap}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .meta{color:var(--muted);font-size:.9em}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.5rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.5rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_MAMBA2.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🌀 SOV33 Mamba-2 Sovereign Attention</h1>
+  <p class="meta">Phase 3 · Sovereign-owned O(n) attention · Mamba-2 SSM · 12 Sovereign Pillars bound · 12 Jul 2026</p>
+  <p style="text-align:center"><a href="SOV33_HERO.html">← SOV33 Hub</a></p>
+</header>
+
+<h2>What is Mamba-2 Sovereign Attention?</h2>
+
+<div class="card">
+<h3>From HF Transformers (O(n²)) to Mamba-2 Sovereign (O(n))</h3>
+<p>Current sovereign brain uses HF transformers attention, which is O(n²) in sequence length. Mamba-2 (Albert Gu, Tri Dao 2024) uses State Space Models (SSM) for O(n) sequence length with similar quality.</p>
+<p><strong>SOV33 Mamba-2 Sovereign</strong> = Mamba-2 SSM + sovereign ownership + 12 Pillars + care-floor + Article 0 + BFT-33 + SIGIL.</p>
+</div>
+
+<h2>The Mamba-2 Sovereign Architecture</h2>
+
+<pre>
+SovereignMamba2Model
+├── Embedding(vocab=151643, d_model=512)
+├── SovereignMamba2Block × 4
+│   ├── in_proj (d_model → d_inner × 2)
+│   ├── conv1d (depthwise, d_conv=4)
+│   ├── SSM (A, D, dt_bias)
+│   │   ├── A_log (state decay) [d_state=64]
+│   │   ├── D (skip connection) [d_inner]
+│   │   ├── dt_bias (continuous time)
+│   │   └── sovereign_loss (care-floor 0.95)
+│   └── out_proj (d_inner → d_model)
+├── LayerNorm(d_model)
+└── head (d_model → vocab=151643)
+</pre>
+
+<h2>Why Mamba-2 Sovereign?</h2>
+
+<table>
+<tr><th>Aspect</th><th>HF Transformers (today)</th><th>Mamba-2 Sovereign (Phase 3)</th></tr>
+<tr><td>Complexity</td><td>O(n²)</td><td><strong>O(n)</strong></td></tr>
+<tr><td>Sequence length</td><td>2048-4096</td><td><strong>Unlimited</strong></td></tr>
+<tr><td>Memory</td><td>High (KV cache)</td><td><strong>Low (state only)</strong></td></tr>
+<tr><td>Sovereign</td><td>❌ borrowed</td><td><strong>✅ owned</strong></td></tr>
+<tr><td>12 Pillars bound</td><td>❌</td><td><strong>✅</strong></td></tr>
+<tr><td>Care-floor</td><td>post-check</td><td><strong>in-loop (sovereign loss)</strong></td></tr>
+<tr><td>Article 0</td><td>post-check</td><td><strong>in-loop</strong></td></tr>
+<tr><td>BFT-33</td><td>post-check</td><td><strong>in-loop</strong></td></tr>
+<tr><td>SIGIL</td><td>post-check</td><td><strong>in-loop</strong></td></tr>
+</table>
+
+<h2>Honest Register</h2>
+
+<div class="card warn">
+<ul>
+<li>❌ Currently designed (not trained) — real training needs Kaggle T4 GPU</li>
+<li>❌ Simplified SSM scan (full Mamba-2 uses selective scan kernel)</li>
+<li>❌ Real convergence on sovereign corpus: PENDING GPU run</li>
+<li>✅ Architecture designed + code written</li>
+<li>✅ Sovereign loss enforced in-loop</li>
+<li>✅ 12 Pillars + Article 0 + BFT-33 + SIGIL all bound</li>
+</ul>
+</div>
+
+<h2>Next Steps</h2>
+
+<div class="card">
+<ol>
+<li>Real training on Kaggle T4 GPU (Phase 3)</li>
+<li>Full Mamba-2 selective scan kernel</li>
+<li>Train on sovereign corpus (874 samples)</li>
+<li>Replace HF transformers in sovereign brain</li>
+<li>Benchmark vs Qwen3-4B baseline</li>
+</ol>
+</div>
+
+<hr>
+<p class="meta" style="text-align:center;margin-top:2rem">
+<strong>🌀 SOV33 Mamba-2 Sovereign Attention</strong> · 12 Jul 2026 · Hermes lane<br>
+Source: <code>_alignment/sovereign_merge_kit/sov33_mamba2.py</code><br>
+<a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+</body>
+</html>

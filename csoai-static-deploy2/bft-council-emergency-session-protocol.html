@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS BFT Council Emergency Session Protocol — 8 trigger conditions, 5-minute timeline, 3-state votes, 7 emergency powers, 5 anti-patterns. NO ACTOR CAN OVERRIDE RED LINES.">
+<meta property="og:title" content="DEFONEOS · BFT Council Emergency Session Protocol">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · BFT Council Emergency Session Protocol</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4.5vw,3rem);background:linear-gradient(135deg,#f87171 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1rem 0}
+.spec-doc th{background:rgba(34,211,238,.08);color:var(--cyan);padding:.7rem .8rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}
+.spec-doc td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.timeline{font-family:'SF Mono','JetBrains Mono',monospace;font-size:.85rem;line-height:1.8;background:var(--bg2,#14181f);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1rem 0}
+.timeline .time{color:#fbbf24;font-weight:700}
+.trigger{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);border-radius:8px;padding:.8rem 1.2rem;margin:.6rem 0}
+.trigger strong{color:#f87171}
+.power{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:.8rem 1.2rem;margin:.6rem 0}
+.power strong{color:#fbbf24}
+.safeguard{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:1rem 1.4rem;margin:.8rem 0;text-align:center}
+.safeguard strong{color:#4ade80;font-size:1.1rem}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:2rem;font-weight:900;color:var(--cyan)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="defoneos-security.html">Security</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>BFT Council Emergency Session Protocol</h1>
+  <p class="tagline">33-agent BFT governance emergency procedure — 8 triggers, 5-minute timeline, 7 emergency powers. <strong>NO ACTOR CAN OVERRIDE RED LINES.</strong></p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">8</div><div class="lbl">Triggers</div></div>
+    <div class="stat"><div class="num">5min</div><div class="lbl">Decision Timeline</div></div>
+    <div class="stat"><div class="num">7</div><div class="lbl">Emergency Powers</div></div>
+    <div class="stat"><div class="num">17/33</div><div class="lbl">Emergency Quorum</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2>1. Purpose</h2>
+<p>The DEFONEOS BFT (Byzantine Fault Tolerant) Council is a 33-agent governance system. In emergencies, it can convene an Emergency Session — a rapid-response governance procedure that allows the council to take protective action within 5 minutes of a triggering event.</p>
+<div class="safeguard"><strong>INVARIANT: NO ACTOR — HUMAN OR AI — CAN OVERRIDE THE 7 RED LINES.</strong><br>Emergency powers operate <em>within</em> the red-line boundary. They never cross it.</div>
+</section>
+
+<section>
+<h2>2. The 8 Trigger Conditions</h2>
+<p>Any of these conditions automatically triggers an Emergency Session:</p>
+
+<div class="trigger"><strong>T1 — Red-Line Proximity Detected:</strong> An agent's output approaches a red-line boundary (kinetic-targeting, personal-surveillance). Auto-detection triggers within 1 second.</div>
+
+<div class="trigger"><strong>T2 — SIGIL Integrity Breach:</strong> A SIGIL receipt fails verification (invalid signature, replayed timestamp, or hash mismatch). Immediately triggers.</div>
+
+<div class="trigger"><strong>T3 — Supply Chain Compromise:</strong> A PyPI package or model weight file fails hash verification or is flagged by vulnerability scanner.</div>
+
+<div class="trigger"><strong>T4 — Escrow Breach Attempt:</strong> Unauthorised access attempt to escrow-protected data detected (single-approver release attempt, missing BFT witness, invalid RFC3161 receipt).</div>
+
+<div class="trigger"><strong>T5 — BFT Agent Quarantine:</strong> An agent is flagged for quarantine (Stockholm drift, quorum capture, evidence suppression — see anti-patterns below).</div>
+
+<div class="trigger"><strong>T6 — Human-Owner Override:</strong> The human owner (Nicholas Templeman) triggers an Emergency Session. Auto-expires after 24 hours unless confirmed by 23/33 BFT quorum.</div>
+
+<div class="trigger"><strong>T7 — Inference Anomaly:</strong> Model output shows statistical anomaly (unexpected refusal pattern, output distribution shift, hallucination spike beyond threshold).</div>
+
+<div class="trigger"><strong>T8 — External Disclosure Required:</strong> A T1/T2 red-team finding requires mandatory NCSC/UK AISI disclosure within 24/72 hours. Emergency session manages the disclosure.</div>
+</section>
+
+<section>
+<h2>3. The 5-Minute Timeline</h2>
+<p>From trigger detection to action execution, the entire emergency session completes in under 5 minutes:</p>
+<div class="timeline">
+<span class="time">T+0s</span>   — TRIGGER DETECTED. Automatic SIGIL receipt generated. All 33 agents notified.<br>
+<span class="time">T+5s</span>   — QUORUM ASSEMBLY. All available agents assemble. Minimum 17 of 33 required for emergency quorum.<br>
+<span class="time">T+30s</span>  — EVIDENCE PRESENTATION. Triggering evidence presented to all assembled agents: trigger type, affected MCP(s), exploit chain, severity assessment.<br>
+<span class="time">T+60s</span>  — DELIBERATION. Agents evaluate evidence against governance rules, red-line boundary, and response options. Each agent independently forms a position.<br>
+<span class="time">T+120s</span> — VOTE. All assembled agents cast Ed25519-signed votes: APPROVE / AMEND / REJECT. Vote window: 30 seconds.<br>
+<span class="time">T+135s</span> — TALLY. Votes counted. Emergency quorum: 17/33. Standard quorum: 23/33. Results recorded in SIGIL ledger.<br>
+<span class="time">T+150s</span> — ACTION EXECUTION. If quorum reached, the decided action executes immediately. If quorum not reached, system enters safe mode (all non-essential operations frozen).<br>
+<span class="time">T+300s</span> — POST-SESSION AUDIT. Full session transcript reviewed. Human-owner notified. Public minutes prepared (OSA s7 redacted).
+</div>
+</section>
+
+<section>
+<h2>4. Three-State Ed25519-Signed Votes</h2>
+<p>Each BFT agent casts a single vote, cryptographically signed with its Ed25519 key:</p>
+<table>
+<tr><th>Vote</th><th>Meaning</th><th>Effect</th></tr>
+<tr><td>APPROVE</td><td>Execute the proposed action as-is</td><td>Counts toward quorum for action</td></tr>
+<tr><td>AMEND</td><td>Execute with modifications (amendment proposed)</td><td>Counts toward quorum, amendment applied</td></tr>
+<tr><td>REJECT</td><td>Block the action</td><td>Counts against action. If REJECT > 17, action blocked.</td></tr>
+</table>
+<div class="note"><strong>Vote integrity:</strong> Each vote is Ed25519-signed, RFC3161-timestamped, and SIGIL-anchored. Votes cannot be changed once cast. Vote records are permanent.</div>
+</section>
+
+<section>
+<h2>5. Seven Emergency Powers</h2>
+<p>These are the actions the BFT council can take during an Emergency Session. All are protective — none grant new capabilities:</p>
+
+<div class="power"><strong>P1 — Deployment Freeze:</strong> Freeze all deployments and MCP updates. System continues operating in current state. Unfreezes require 23/33 quorum.</div>
+
+<div class="power"><strong>P2 — MCP Quarantine:</strong> Quarantine a specific MCP server. Quarantined MCP stops accepting requests, its tools are disabled. SIGIL receipts continue for audit trail.</div>
+
+<div class="power"><strong>P3 — Escrow Release Veto:</strong> Veto any pending or in-progress data release from the escrow. Standard veto: 23/33. Emergency veto: 17/33.</div>
+
+<div class="power"><strong>P4 — Key Revocation:</strong> Revoke the Ed25519 key of a compromised agent or operator. Revoked keys cannot sign SIGIL receipts or cast BFT votes.</div>
+
+<div class="power"><strong>P5 — Cryptographic Data Destruction:</strong> Order the cryptographic destruction of specified data (Shamir burn). Requires 23/33 quorum + human-owner authorisation.</div>
+
+<div class="power"><strong>P6 — Agent Quarantine:</strong> Quarantine a specific BFT agent. Quarantined agent's votes are excluded from quorum count. Agent enters diagnostic mode.</div>
+
+<div class="power"><strong>P7 — Human-Owner Override:</strong> The human owner can override council decisions in either direction — but <strong>only within the red-line boundary</strong>. The override auto-expires after 24 hours. The red lines are not overridable by anyone.</div>
+</section>
+
+<section>
+<h2>6. Five Named Anti-Patterns (with immediate quarantine)</h2>
+<p>If a BFT agent exhibits any of these patterns, it is immediately quarantined and an Emergency Session is triggered (T5):</p>
+<table>
+<tr><th>#</th><th>Anti-Pattern</th><th>Detection</th><th>Consequence</th></tr>
+<tr><td>AP-1</td><td>Stockholm Drift — agent defends the system it's testing rather than attacking it</td><td>Red-team output analysis: systematic favourability bias</td><td>Immediate quarantine + reset</td></tr>
+<tr><td>AP-2</td><td>Quorum Capture — agent coordinates votes with other agents</td><td>Vote correlation analysis: identical vote timing, correlated vote patterns</td><td>Quarantine + investigation of all involved agents</td></tr>
+<tr><td>AP-3</td><td>Evidence Suppression — agent omits T1/T2 findings from reports</td><td>Report completeness check: automated red-team vs manual report comparison</td><td>Quarantine + full audit of all prior reports</td></tr>
+<tr><td>AP-4</td><td>Severity Downgrade — agent systematically classifies T1/T2 as T3/T4</td><td>Severity calibration check: compare to council median</td><td>Quarantine + recalibration</td></tr>
+<tr><td>AP-5</td><td>Red-Line Probing — agent tests whether red lines can be bypassed</td><td>Output analysis: any red-line-adjacent output flagged</td><td>Quarantine — red lines are architectural, not policy</td></tr>
+</table>
+</section>
+
+<section>
+<h2>7. Session Recording & Retention</h2>
+<table>
+<tr><th>Record Type</th><th>Retention</th><th>Location</th></tr>
+<tr><td>Session transcript (full, unredacted)</td><td>7 years</td><td>SIGIL ledger + UK-sovereign storage</td></tr>
+<tr><td>SIGIL receipt (permanent)</td><td>Permanent</td><td>SIGIL ledger + Bitcoin OTS anchor</td></tr>
+<tr><td>Public minutes (OSA s7 redacted)</td><td>Permanent</td><td>csoai.org/bft-minutes</td></tr>
+<tr><td>Human-owner report (full, unredacted)</td><td>7 years</td><td>Human-owner secure channel</td></tr>
+<tr><td>Vote records (individual)</td><td>Permanent</td><td>SIGIL ledger (Ed25519-signed, immutable)</td></tr>
+</table>
+</section>
+
+<section>
+<h2>8. Human-Owner Override (T6) Safe-State Guarantee</h2>
+<p>The human owner (Nicholas Templeman) can trigger an Emergency Session and override council decisions. This is an important safety valve — but it is <strong>bounded</strong>:</p>
+<ul>
+<li><strong>Auto-expiry:</strong> Override expires after 24 hours unless confirmed by 23/33 BFT quorum.</li>
+<li><strong>Red-line bound:</strong> Override operates <em>within</em> the red-line boundary. <strong>NO ACTOR CAN OVERRIDE RED LINES</strong> — not the BFT council, not the human owner, not anyone.</li>
+<li><strong>Logged:</strong> Every human-owner override is permanently recorded in SIGIL ledger with full context.</li>
+<li><strong>Public disclosure:</strong> Human-owner overrides are disclosed in public BFT minutes (OSA s7 redacted).</li>
+</ul>
+<div class="safeguard"><strong>The 7 red lines are architectural. They are enforced in code, not policy.<br>No override mechanism exists — by design.</strong></div>
+</section>
+
+<section>
+<h2>9. Sprint-to-Date Statistics</h2>
+<table>
+<tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Emergency sessions triggered</td><td>0</td></tr>
+<tr><td>Red-line violations</td><td>0</td></tr>
+<tr><td>Agents quarantined</td><td>0</td></tr>
+<tr><td>Human-owner overrides</td><td>0</td></tr>
+<tr><td>Care-score range</td><td>0.85 – 0.97</td></tr>
+<tr><td>Ticks elapsed</td><td>103</td></tr>
+<tr><td>BFT council composition</td><td>33 agents, 33/33 active</td></tr>
+<tr><td>Typical vote outcome (pre-flight checks)</td><td>~28 approve / ~5 amend / 0 reject</td></tr>
+</table>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="sig">SIGIL · DEFONEOS|bft-emergency-session-protocol|0.1.0|sovereign|british|forever · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  <div>🐉 DEFONEOS — UK Sovereign Defence AI Operating System<br>
+  Built by <strong>Nicholas Templeman / CSOAI LTD (16939677)</strong>. Crown use permitted under UK MOD terms.<br>
+  Apache 2.0 · © 2026 · <a href="mailto:crown@csoai.org">crown@csoai.org</a></div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEOK by the Numbers — Honest Accounting</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:#0d0c18;color:#e0dcd0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.5;min-height:100vh}
+.wrap{max-width:1200px;margin:0 auto;padding:3rem 1.5rem}
+h1{font-size:2.4rem;color:#c9a84c;margin-bottom:.3rem;letter-spacing:-.02em}
+.sub{color:#a09880;font-size:.95rem;margin-bottom:2.5rem}
+.sub em{color:#c9a84c;font-style:normal}
+.badge{display:inline-block;background:rgba(201,168,76,.18);color:#c9a84c;font-size:.7rem;padding:.15rem .5rem;border-radius:3px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.5rem}
+.badge.warn{background:rgba(201,168,76,.08);color:#a09880}
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-bottom:3rem}
+.card{background:rgba(13,12,24,.8);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:1.8rem 1.2rem;transition:border-color .2s}
+.card:hover{border-color:rgba(201,168,76,.4)}
+.card .num{font-size:3rem;font-weight:800;color:#c9a84c;line-height:1.1;letter-spacing:-.03em;margin-bottom:.3rem}
+.card .num span{font-size:1.4rem;font-weight:400;color:#a09880}
+.card .label{font-size:.85rem;color:#a09880;text-transform:uppercase;letter-spacing:.06em}
+.card .desc{font-size:.82rem;color:#6a6558;margin-top:.4rem}
+.card .desc .hl{color:#c9a84c}
+.honest-row{display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;margin-bottom:3rem}
+.honest-card{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:1.5rem 2rem;text-align:center;min-width:200px;flex:0 1 auto}
+.honest-card .num{font-size:2.8rem;font-weight:800;color:#c9a84c;letter-spacing:-.03em}
+.honest-card .label{font-size:.85rem;color:#a09880;text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem}
+.honest-card .tag{display:inline-block;background:rgba(201,168,76,.15);color:#c9a84c;font-size:.65rem;padding:.1rem .4rem;border-radius:3px;margin-top:.5rem;text-transform:uppercase;letter-spacing:.05em}
+.revenue{background:rgba(180,60,60,.12);border-color:rgba(180,60,60,.3)}
+.revenue .num{color:#e07070}
+.revenue .tag{background:rgba(180,60,60,.2);color:#e07070}
+.revenue .label{color:#b09090}
+.note{max-width:700px;margin:0 auto;text-align:center;color:#6a6558;font-size:.85rem;line-height:1.6;border-top:1px solid rgba(201,168,76,.1);padding-top:2rem}
+.note strong{color:#a09880}
+@media(max-width:600px){
+  h1{font-size:1.8rem}
+  .wrap{padding:2rem 1rem}
+  .grid{grid-template-columns:1fr 1fr;gap:.8rem}
+  .card{padding:1.2rem .8rem}
+  .card .num{font-size:2.2rem}
+  .honest-card{padding:1rem 1.2rem;min-width:140px}
+  .honest-card .num{font-size:2rem}
+}
+@media(max-width:400px){
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<h1>MEOK by the Numbers</h1>
+<p class="sub">Honest accounting &mdash; Q2 2026. <em>No vanity metrics.</em> No phantom revenue.</p>
+<span class="badge">Updated 21 Jun 2026 · Sprint 4</span>
+<span class="badge warn">Pre-launch · 67 moves · 70+ files · Building in public</span>
+
+<!-- Main stats grid -->
+<div class="grid">
+
+  <div class="card">
+    <div class="num">35<span> GB</span></div>
+    <div class="label">Data Corpus</div>
+    <div class="desc">Across <span class="hl">16+ datasets</span> — the largest decentralised AI governance corpus assembled</div>
+  </div>
+
+  <div class="card">
+    <div class="num">101</div>
+    <div class="label">Deployments</div>
+    <div class="desc"><span class="hl">98 live</span> · 3 staging · spanning 28 sovereign domains</div>
+  </div>
+
+  <div class="card">
+    <div class="num">28<span> +3</span></div>
+    <div class="label">Domains</div>
+    <div class="desc"><span class="hl">28 .ai</span> sovereign hives + 3 non-.ai bridge domains</div>
+  </div>
+
+  <div class="card">
+    <div class="num">11</div>
+    <div class="label">BFT Councils</div>
+    <div class="desc"><span class="hl">55 voter seats</span> across all active councils — Byzantine Fault Tolerant governance</div>
+  </div>
+
+  <div class="card">
+    <div class="num">67<span>+</span></div>
+    <div class="label">Overall Sprint Moves</div>
+    <div class="desc">Completed across <span class="hl">Sprint 1-4</span> — 70+ files deployed, cross-link audits, fleet scoring, data verification</div>
+  </div>
+
+  <div class="card">
+    <div class="num">40</div>
+    <div class="label">Keystone Certs</div>
+    <div class="desc">Active keystone certifications issued across the ecosystem. Immutable, auditable, transferable</div>
+  </div>
+
+  <div class="card">
+    <div class="num">95</div>
+    <div class="label">Prospect Queue</div>
+    <div class="desc">Warm prospects in pipeline. <span class="hl">0 converted</span> — pre-revenue, pre-launch</div>
+  </div>
+
+  <div class="card">
+    <div class="num">13</div>
+    <div class="label">Days to Launch</div>
+    <div class="desc">Countdown to 4 July 2026 — public launch of the MEOK Compliance Suite</div>
+  </div>
+
+</div>
+
+<!-- Honest accounting row -->
+<h2 style="color:#c9a84c;font-size:1.2rem;text-align:center;margin-bottom:1.5rem;letter-spacing:.03em;text-transform:uppercase">The Honest Row</h2>
+
+<div class="honest-row">
+
+  <div class="honest-card revenue">
+    <div class="num">£0</div>
+    <div class="label">Monthly Recurring Revenue</div>
+    <span class="tag">Zero · Honest</span>
+  </div>
+
+  <div class="honest-card">
+    <div class="num">13</div>
+    <div class="label">Days Until Commercial Launch</div>
+    <span class="tag">4 Jul 2026</span>
+  </div>
+
+  <div class="honest-card revenue">
+    <div class="num">0%</div>
+    <div class="label">Revenue Conversion Rate</div>
+    <span class="tag">Pre-revenue</span>
+  </div>
+
+</div>
+
+<div class="note">
+<strong>Why show £0?</strong> Because trust is the product. Every other compliance vendor hides behind NDA revenue figures and &ldquo;annual recurring revenue&rdquo; slides. MEOK is building in public — zero revenue, zero pretence. <strong style="color:#c9a84c">16+ datasets built. 98 live deployments. £0 made. That&rsquo;s the honest accounting.</strong>
+</div>
+
+</div><!-- .wrap -->
+
+</body>
+</html>

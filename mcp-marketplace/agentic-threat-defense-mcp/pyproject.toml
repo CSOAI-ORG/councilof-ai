@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "agentic-threat-defense-mcp"
+version = "1.0.0"
+description = "Defense against JADEPUFFER (first agentic ransomware) and TeamPCP (supply chain poisoning) — July 2026"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+agentic-threat-defense = "agentic_threat_defense_mcp.server:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agentic_threat_defense_mcp*"]

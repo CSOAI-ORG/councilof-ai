@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Open Hands OS — The Sovereign AI OS — meok.ai</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: radial-gradient(ellipse at center, #0a0e27 0%, #000 80%); color: #fff; padding: 0; min-height: 100vh; display: flex; }
+    /* R H BAR */
+    .rh-bar { width: 80px; background: rgba(0,0,0,0.8); border-left: 2px solid #fbbf24; padding: 16px 8px; display: flex; flex-direction: column; gap: 12px; }
+    .rh-bar .icon { width: 64px; height: 64px; background: rgba(251,191,36,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; }
+    .rh-bar .icon:hover { background: rgba(251,191,36,0.3); }
+    .rh-bar .sovereign { background: rgba(16,185,129,0.2); border: 1px solid #10b981; }
+    /* L H SIDE */
+    .lh-side { width: 240px; background: rgba(0,0,0,0.6); padding: 16px; overflow-y: auto; }
+    .lh-side h3 { color: #fbbf24; font-size: 0.85rem; margin: 16px 0 8px; }
+    .lh-side .item { padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+    .lh-side .item:hover { background: rgba(251,191,36,0.1); }
+    /* CENTER */
+    .center { flex: 1; display: flex; flex-direction: column; }
+    .chat { flex: 1; padding: 24px; overflow-y: auto; }
+    .chat .msg { margin: 16px 0; max-width: 80%; }
+    .chat .msg.user { margin-left: auto; background: rgba(59,130,246,0.2); padding: 12px 16px; border-radius: 12px; }
+    .chat .msg.ai { background: rgba(16,185,129,0.1); padding: 12px 16px; border-radius: 12px; border-left: 3px solid #10b981; }
+    .chat .msg.ai .sigil { color: #fbbf24; font-size: 0.7rem; margin-top: 8px; }
+    .chat .msg.ai .model { color: #06b6d4; font-size: 0.7rem; }
+    .input-bar { padding: 16px; background: rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 8px; }
+    .input-bar input { flex: 1; padding: 12px 16px; background: rgba(0,0,0,0.5); border: 1px solid rgba(251,191,36,0.3); color: #fff; font-family: monospace; border-radius: 8px; }
+    .input-bar button { padding: 12px 24px; background: #fbbf24; color: #000; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    h1 { color: #fbbf24; font-size: 1.5rem; margin-bottom: 16px; }
+    .status { padding: 8px 12px; background: rgba(16,185,129,0.1); border-radius: 4px; font-size: 0.75rem; margin-bottom: 16px; }
+    .status span { color: #10b981; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <!-- R H BAR: Sovereign -->
+  <div class="rh-bar">
+    <div class="icon sovereign" title="SOV3 Sovereign">🜏</div>
+    <div class="icon" title="Brain (L/R/S)">🧠</div>
+    <div class="icon" title="Mindset (12)">⚖️</div>
+    <div class="icon" title="BFT Council">👑</div>
+    <div class="icon" title="SIGIL Chain">🔐</div>
+    <div class="icon" title="DORADO Switch (WEST)">🔒</div>
+    <div class="icon" title="DEFONEOS">⚔️</div>
+    <div class="icon" title="Sovereignty Proof">✓</div>
+    <div class="icon" title="Auto-mode">⚡</div>
+    <div class="icon" title="Intuition">💡</div>
+  </div>
+
+  <!-- L H SIDE: Customizable UI -->
+  <div class="lh-side">
+    <h3>WORKSPACE</h3>
+    <div class="item">💬 Chat (active)</div>
+    <div class="item">📂 Sessions</div>
+    <div class="item">✅ Tasks</div>
+    <div class="item">🔧 Tools (253)</div>
+    <div class="item">🗄️ Vaults (1,405)</div>
+    <div class="item">🧩 MCPs (275+)</div>
+    <div class="item">⚙️ Workflows</div>
+    <div class="item">🌍 World</div>
+    <div class="item">💡 Insights</div>
+    <div class="item">⚙️ Settings</div>
+
+    <h3>OVERLAYS</h3>
+    <div class="item">🜏 MEOK OS</div>
+    <div class="item">✓ CSOAI OS</div>
+    <div class="item">⚔️ DEFONEOS</div>
+    <div class="item">🏛️ 33 Sovereign Hives</div>
+    <div class="item">📦 100+ SAAS</div>
+    <div class="item">🌐 Globe (regulations)</div>
+
+    <h3>SOVEREIGNTY</h3>
+    <div class="status">
+      <div>Position: <span>WEST (UK Sovereign)</span></div>
+      <div>DORADO: <span>SOVEREIGN</span></div>
+      <div>PQC: <span>ML-DSA-65</span></div>
+      <div>Region: <span>UK-LON</span></div>
+      <div>Cert: <span>ISO 42001 LIVE</span></div>
+      <div>Foreign attempts: <span>0</span></div>
+    </div>
+  </div>
+
+  <!-- CENTER: LLM Chat -->
+  <div class="center">
+    <div class="chat">
+      <h1>🜏 Open Hands OS — The Sovereign AI OS</h1>
+      <div class="status">
+        Welcome, Nick. Your digital twin <strong>i-character-Nick-Templeman</strong> is live. You're in <strong>UK-LON</strong>.
+        DORADO is <strong>SOVEREIGN (WEST)</strong>. SIGIL chain has <strong>12,847</strong> events. <strong>0</strong> foreign attempts.
+        <strong>BIG BRAIM</strong> is ready (8 category winners). <strong>DEFONEOS</strong> is loaded (defense grade).
+        The minute you logged in, we started working it out for you.
+      </div>
+
+      <div class="msg user">
+        Hello Open Hands. What can you do for me today?
+      </div>
+      <div class="msg ai">
+        <div class="model">🧠 Routed to: DeepSeek R1 (reasoning, MIT, 2029 Elo)</div>
+        <p>Hello Nick. Welcome to the sovereign AI OS.</p>
+        <p style="margin-top: 8px;"><strong>10 things I can do right now:</strong></p>
+        <ol style="margin-left: 24px; margin-top: 8px; line-height: 1.8;">
+          <li><strong>Audit Monzo's compliance</strong> → routes to <code>eu-ai-act-compliance-mcp.quick_scan</code></li>
+          <li><strong>Issue Article 50 Watermarking Passport</strong> → <code>article50_passport.issue</code></li>
+          <li><strong>Switch to DEFONEOS</strong> → defense-grade sandboxed environment</li>
+          <li><strong>Show all regulations in your region</strong> → globe zooms to UK</li>
+          <li><strong>Build a sovereign workflow</strong> → drag-and-drop on L H side</li>
+          <li><strong>Ask the BFT council</strong> → 1 King + 12 Queens deliberate</li>
+          <li><strong>Generate wisdom from intuition</strong> → 16-dim Mamba state</li>
+          <li><strong>Find documents in vault</strong> → 1,405 files indexed</li>
+          <li><strong>Switch DORADO EAST ↔ WEST</strong> → 1-click with ontology</li>
+          <li><strong>Run a federated RAG</strong> → 275+ MCPs at once</li>
+        </ol>
+        <p style="margin-top: 12px;">All SIGIL-signed. All sovereign. All auditable. What would you like to do?</p>
+        <div class="sigil">SIGIL: a3f8e1b2c4d5f6e7... | Ed25519 | VERIFIED | Sovereign (UK)</div>
+      </div>
+    </div>
+
+    <div class="input-bar">
+      <input type="text" placeholder="Talk to SOV3 sovereign (auto-routes to BIG BRAIM)...">
+      <button>Send ⚡</button>
+    </div>
+  </div>
+</body>
+</html>

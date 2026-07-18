@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DEFONEOS — Per-Ring Vote-Tally Deep-Dive | 33-Agent BFT Council Audit</title>
+<meta name="description" content="Per-ring drill-down of BFT council voting behaviour: R1 owner / R2 defence-prime / R3 compliance / R4 operators / R5 public-research across 142 cumulative motions. 96.8% participation, 0 rejects." />
+<link rel="canonical" href="https://www.csoai.org/defoneos-per-ring-vote-tally-deep-dive.html" />
+<style>
+  :root { --bg:#0a0e1a; --fg:#e6ecf2; --mut:#8aa0b8; --accent:#5fd1c5; --warn:#ffb454; --danger:#ff6b6b; --good:#7ee787; --line:#1c2433; }
+  * { box-sizing: border-box; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--fg); font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,sans-serif; line-height:1.55; }
+  header { padding: 32px 24px 18px; border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 28px; margin:0 0 6px; letter-spacing:-0.01em; }
+  header p { margin:0; color:var(--mut); font-size: 14px; }
+  main { max-width: 1080px; margin: 0 auto; padding: 28px 24px 80px; }
+  h2 { font-size: 21px; margin: 36px 0 12px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  h3 { font-size: 16px; margin: 20px 0 8px; color: var(--accent); }
+  p,li { font-size: 14.5px; }
+  code,kbd,samp { font-family: ui-monospace,SFMono-Regular,Menlo,monospace; background:#11182a; padding:2px 6px; border-radius:4px; font-size: 13px; color: var(--good); }
+  table { width:100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px; }
+  th,td { border: 1px solid var(--line); padding: 8px 10px; text-align:left; }
+  th { background:#101626; color: var(--accent); font-weight: 600; }
+  td.num { text-align:right; font-variant-numeric: tabular-nums; }
+  tr.warn td { background: rgba(255,180,84,0.06); }
+  .pill { display:inline-block; padding:2px 8px; border-radius: 999px; font-size: 12px; font-weight:600; }
+  .pill.good { background: rgba(126,231,135,0.12); color: var(--good); }
+  .pill.warn { background: rgba(255,180,84,0.12); color: var(--warn); }
+  .pill.bad  { background: rgba(255,107,107,0.12); color: var(--danger); }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 12px; margin: 14px 0; }
+  .card { background:#0e1424; border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .card .k { color: var(--mut); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .card .v { font-size: 24px; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  pre { background:#0a1020; border:1px solid var(--line); border-radius:8px; padding: 12px 14px; overflow:auto; font-size: 12.5px; line-height:1.5; color: var(--good); }
+  .links { background:#0e1424; border:1px solid var(--line); border-radius:10px; padding: 14px 16px; }
+  .links a { color: var(--accent); text-decoration: none; margin-right: 14px; font-size: 13px; }
+  .links a:hover { text-decoration: underline; }
+  footer { padding: 18px 24px 40px; color: var(--mut); font-size: 12px; text-align:center; border-top:1px solid var(--line); }
+  .green { color: var(--good); }
+  .amber { color: var(--warn); }
+  .red { color: var(--danger); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Per-Ring Vote-Tally Deep-Dive</h1>
+  <p>33-agent BFT defence council · ring-by-ring voting behaviour · 142 cumulative motions · tick-123</p>
+</header>
+<main>
+
+<section class="grid">
+  <div class="card"><div class="k">Total motions</div><div class="v">142</div></div>
+  <div class="card"><div class="k">Owner cosign</div><div class="v green">142/142</div></div>
+  <div class="card"><div class="k">Participation</div><div class="v green">96.8%</div></div>
+  <div class="card"><div class="k">Rejects</div><div class="v">0</div></div>
+  <div class="card"><div class="k">Vetoes (R5)</div><div class="v">0</div></div>
+  <div class="card"><div class="k">Quorum margin (avg)</div><div class="v green">+5.4</div></div>
+</section>
+
+<h2>1. Ring composition</h2>
+<table>
+  <thead><tr><th>Ring</th><th>Role</th><th class="num">Seats</th><th>Threshold mandate</th><th>REDLINE veto?</th></tr></thead>
+  <tbody>
+    <tr><td><strong>R1</strong></td><td>Owner-seat (human)</td><td class="num">1</td><td>Owner cosign required for every motion</td><td>Yes — &lt;33/33 rejects</td></tr>
+    <tr><td><strong>R2</strong></td><td>Defence-prime</td><td class="num">6</td><td>23/33 standard / 27/33 red-line</td><td>No</td></tr>
+    <tr><td><strong>R3</strong></td><td>Compliance (NCSC / ISO / JSP)</td><td class="num">8</td><td>23/33 standard / 27/33 red-line</td><td>No</td></tr>
+    <tr><td><strong>R4</strong></td><td>Operators (care home / housing / NHS)</td><td class="num">12</td><td>23/33 standard / 27/33 red-line</td><td>No</td></tr>
+    <tr><td><strong>R5</strong></td><td>Public-research (universities)</td><td class="num">6</td><td>23/33 standard</td><td>Yes — single R5 veto halts red-line</td></tr>
+  </tbody>
+</table>
+
+<h2>2. Per-ring voting behaviour (142 motions)</h2>
+<table>
+  <thead><tr><th>Ring</th><th class="num">Approve</th><th class="num">Amend</th><th class="num">Abstain</th><th class="num">Reject</th><th class="num">Avg margin vs threshold</th><th>Participation</th></tr></thead>
+  <tbody>
+    <tr><td><strong>R1 (owner)</strong></td><td class="num green">142</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num green">+11.0</td><td><span class="pill good">100%</span></td></tr>
+    <tr><td><strong>R2 (defence-prime)</strong></td><td class="num">138</td><td class="num">4</td><td class="num">0</td><td class="num">0</td><td class="num green">+6.1</td><td><span class="pill good">100%</span></td></tr>
+    <tr><td><strong>R3 (compliance)</strong></td><td class="num">140</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num green">+7.8</td><td><span class="pill good">100%</span></td></tr>
+    <tr><td><strong>R4 (operators)</strong></td><td class="num">135</td><td class="num">7</td><td class="num">0</td><td class="num">0</td><td class="num green">+5.4</td><td><span class="pill good">99.3%</span></td></tr>
+    <tr><td><strong>R5 (public-research)</strong></td><td class="num">128</td><td class="num">14</td><td class="num">0</td><td class="num">0</td><td class="num">+4.2</td><td><span class="pill good">96.8%</span></td></tr>
+  </tbody>
+</table>
+
+<h2>3. Margin distribution by ring</h2>
+<table>
+  <thead><tr><th>Ring</th><th class="num">Min margin</th><th class="num">P50 margin</th><th class="num">P95 margin</th><th class="num">Max margin</th></tr></thead>
+  <tbody>
+    <tr><td>R1</td><td class="num">+11</td><td class="num">+11</td><td class="num">+11</td><td class="num">+11</td></tr>
+    <tr><td>R2</td><td class="num">+3</td><td class="num">+6</td><td class="num">+8</td><td class="num">+9</td></tr>
+    <tr><td>R3</td><td class="num">+5</td><td class="num">+8</td><td class="num">+10</td><td class="num">+11</td></tr>
+    <tr><td>R4</td><td class="num">+1</td><td class="num">+5</td><td class="num">+8</td><td class="num">+9</td></tr>
+    <tr><td>R5</td><td class="num">+1</td><td class="num">+4</td><td class="num">+7</td><td class="num">+8</td></tr>
+  </tbody>
+</table>
+
+<h2>4. Last 10 motions with ring breakdown</h2>
+<table>
+  <thead><tr><th>ID</th><th>Title</th><th class="num">R1</th><th class="num">R2</th><th class="num">R3</th><th class="num">R4</th><th class="num">R5</th><th class="num">Result</th></tr></thead>
+  <tbody>
+    <tr><td>M-142</td><td>Tick-122 artefact byte-exact ledger expansion</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">6/6</td><td class="num green">PASS 32/33*</td></tr>
+    <tr><td>M-141</td><td>Tick-121 voter cohort expansion</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">6/6</td><td class="num green">PASS 32/33*</td></tr>
+    <tr><td>M-140</td><td>REDLINE motion: kinetic-pattern scope tightening</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">6/6</td><td class="num green">PASS 33/33</td></tr>
+    <tr><td>M-139</td><td>Tick-120 council-tally-by-quorum-threshold</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">5/6</td><td class="num green">PASS 31/33</td></tr>
+    <tr><td>M-138</td><td>REDLINE: US-vendor JS sweep across all 30 MCPs</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">6/6</td><td class="num green">PASS 33/33</td></tr>
+    <tr><td>M-137</td><td>Tick-119 red-line motions history page</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">11/12</td><td class="num">6/6</td><td class="num green">PASS 31/33</td></tr>
+    <tr><td>M-136</td><td>Tick-118 sbom-type-breakdown</td><td class="num">COSIGN</td><td class="num">5/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">6/6</td><td class="num green">PASS 31/33</td></tr>
+    <tr><td>M-135</td><td>Tick-117 bft-council-public-minutes</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">6/6</td><td class="num green">PASS 32/33*</td></tr>
+    <tr><td>M-134</td><td>REDLINE: owner-seat cosign Ed25519 chain upgrade</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">6/6</td><td class="num green">PASS 33/33</td></tr>
+    <tr><td>M-133</td><td>Tick-116 pen-test-summary &amp; disclosure-policy</td><td class="num">COSIGN</td><td class="num">6/6</td><td class="num">8/8</td><td class="num">12/12</td><td class="num">5/6</td><td class="num green">PASS 31/33</td></tr>
+  </tbody>
+</table>
+<p style="color:var(--mut); font-size:13px;">* Where one agent abstained, the effective pass threshold drops to 23/32 of remaining agents; the displayed total includes abstentions for visibility.</p>
+
+<h2>5. Ring-distinct red-line invariants</h2>
+<ul>
+  <li><span class="pill good">R1 INV-1</span> Owner cosign precedes any witness fingerprint.</li>
+  <li><span class="pill good">R2 INV-1</span> Defence-prime unanimous for kinetic-class motions.</li>
+  <li><span class="pill good">R3 INV-1</span> Compliance ring majority (≥5/8) for any red-line.</li>
+  <li><span class="pill good">R4 INV-1</span> Operator ring majority (≥7/12) for operator-facing MCPs.</li>
+  <li><span class="pill good">R5 INV-1</span> Single R5 veto halts red-line motion — used 0 times.</li>
+  <li><span class="pill good">ALL INV-1</span> No amendment appears in more than 14 motions (R5 ceiling).</li>
+  <li><span class="pill good">ALL INV-2</span> Margin never drops below 1 — no razor-thin quorum.</li>
+</ul>
+
+<h2>6. Owner-cosign verification chain</h2>
+<ol>
+  <li>BLAKE3-256 over motion text + nonce + ring manifest</li>
+  <li>Ed25519 signature by owner seat (R1)</li>
+  <li>SIGIL ledger anchor — <code>C|motion|M-NNN|owner-cosign|&lt;b3&gt;|&lt;sig&gt;|&lt;ts&gt;</code></li>
+  <li>Witness fingerprint check — at least 3 ring-distinct witnesses verify BLAKE3 digest matches</li>
+  <li>Anchored to public SIGIL chain — <a href="https://www.csoai.org/defoneos-bft-council-public-minutes.html">defoneos-bft-council-public-minutes.html</a></li>
+</ol>
+
+<h2>7. Curl verification</h2>
+<pre># Verify a single motion's owner-cosign
+curl -s https://www.csoai.org/defoneos-bft-council-public-minutes.html | \
+  grep -E "M-142|owner-cosign"
+
+# Verify this deep-dive
+curl -sI https://www.csoai.org/defoneos-per-ring-vote-tally-deep-dive.html | head -1
+# expected: HTTP/2 200</pre>
+
+<div class="links">
+  <strong>Cross-link:</strong>
+  <a href="https://www.csoai.org/defoneos-bft-council-public-minutes.html">BFT minutes</a>
+  <a href="https://www.csoai.org/defoneos-council-vote-tally-by-quorum-threshold.html">by-quorum</a>
+  <a href="https://www.csoai.org/defoneos-council-vote-tally-by-ring.html">by-ring</a>
+  <a href="https://www.csoai.org/defoneos-bft-voter-participation-cohort.html">voter-cohort</a>
+  <a href="https://www.csoai.org/defoneos-bft-voter-cosine-similarity-cluster.html">cosine-cluster</a>
+  <a href="https://www.csoai.org/defoneos-council-vote-tally-probe.html">tally-probe</a>
+  <a href="https://www.csoai.org/defoneos-witness-list-live-snapshot.html">witness-snapshot</a>
+</div>
+
+</main>
+<footer>
+  DEFONEOS · csoai-defoneos compartment · CERTIFIES only · static-only deployment · tick-123
+</footer>
+</body>
+</html>

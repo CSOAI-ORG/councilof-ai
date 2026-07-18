@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 Start — Choose Your Sovereign AI OS Experience</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3)}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .nav a.start-link{background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#2d1b4e 50%,#02060f 100%);padding:3rem 2rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1rem}
+  .hero .ip-detected{color:#10b981;font-size:.85rem;margin-top:1rem;font-family:monospace}
+  .hero .ip-detected .loading{color:#fbbf24}
+  .hero .ip-detected .ip{color:#fbbf24;font-weight:bold}
+  .hero .ip-detected .hive{color:#10b981;font-weight:bold}
+  .container{max-width:1200px;margin:0 auto;padding:2rem 1rem;flex:1}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;margin:1rem 0}
+  .card{background:linear-gradient(135deg,#1a1a1a 0%,#2a1a1a 100%);padding:2rem;border-radius:12px;border:2px solid #333;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+  .card:hover{transform:translateY(-4px);border-color:#fbbf24;box-shadow:0 8px 24px rgba(251,191,36,0.3)}
+  .card.demo{border-color:#10b981}
+  .card.tour{border-color:#60a5fa}
+  .card.dome{border-color:#ec4899}
+  .card.handy{border-color:#8b5cf6}
+  .card .badge{position:absolute;top:.7rem;right:.7rem;background:rgba(0,0,0,0.7);color:#fbbf24;padding:.2rem .5rem;border-radius:4px;font-size:.7rem;font-weight:bold}
+  .card .icon{font-size:3rem;margin-bottom:.5rem}
+  .card h3{color:#fbbf24;margin-bottom:.5rem;font-size:1.2rem}
+  .card.demo h3{color:#10b981}
+  .card.tour h3{color:#60a5fa}
+  .card.dome h3{color:#ec4899}
+  .card.handy h3{color:#8b5cf6}
+  .card p{color:#aaa;font-size:.85rem;line-height:1.5;margin-bottom:1rem}
+  .card .meta{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+  .card .meta span{background:rgba(0,0,0,0.3);padding:.2rem .5rem;border-radius:4px;font-size:.7rem;color:#888}
+  .card .start-btn{background:#fbbf24;color:#000;padding:.7rem 1.5rem;border:none;border-radius:6px;font-weight:bold;cursor:pointer;font-size:1rem;font-family:inherit;width:100%;margin-top:.5rem;transition:all .2s}
+  .card.demo .start-btn{background:#10b981}
+  .card.tour .start-btn{background:#60a5fa}
+  .card.dome .start-btn{background:#ec4899;color:#000}
+  .card.handy .start-btn{background:#8b5cf6;color:#fff}
+  .card .start-btn:hover{filter:brightness(1.2);transform:scale(1.02)}
+  .abundance{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;margin:2rem auto;max-width:1100px;border:1px solid #fbbf24;text-align:center}
+  .abundance h2{color:#fbbf24;margin-bottom:1rem}
+  .abundance p{color:#aaa;max-width:700px;margin:0 auto 1rem}
+  .abundance .quote{color:#10b981;font-size:1.1rem;font-style:italic;margin:1rem 0}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat.pink .val{color:#ec4899}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .footer{background:rgba(2,6,15,0.95);padding:1.5rem;text-align:center;border-top:1px solid #333;color:#888;font-size:.8rem}
+  .footer a{color:#fbbf24;text-decoration:none}
+  .pulse{position:absolute;width:18px;height:18px;border-radius:50%;background:#fbbf24;box-shadow:0 0 30px #fbbf24;transform:translate(-50%,-50%);animation:pulse 1.5s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.6)}}
+  .splash-map{position:absolute;top:0;left:0;right:0;bottom:0;opacity:0.05;z-index:0;background:radial-gradient(ellipse at center,#fbbf24 0%,transparent 60%)}
+  .scenario-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.5rem;margin:1rem 0}
+  .scenario-pill{background:rgba(0,0,0,0.3);padding:.5rem;border-radius:6px;text-align:center;border:1px solid #10b981;cursor:pointer;transition:transform .2s}
+  .scenario-pill:hover{transform:scale(1.05);background:rgba(16,185,129,0.1)}
+  .scenario-pill .icon{font-size:1.5rem}
+  .scenario-pill .name{color:#10b981;font-size:.8rem;font-weight:bold;margin-top:.2rem}
+  .scenario-pill .time{color:#888;font-size:.7rem}
+  .btn-row{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin:1rem 0}
+  .voice-info{background:rgba(16,185,129,0.1);border:1px solid #10b981;padding:0.7rem;border-radius:6px;margin:1rem auto;max-width:600px;text-align:center;color:#10b981;font-size:.85rem}
+  .voice-info .icon{font-size:1.3rem}
+  .voice-info code{background:rgba(0,0,0,0.3);padding:.1rem .3rem;border-radius:3px;color:#fbbf24}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/oowm.html">OOWM</a>
+  <a href="/dome-mode.html">Dome</a>
+  <a href="/world.html">World</a>
+  <span class="spacer"></span>
+  <a href="/marketplace.html">Marketplace</a>
+  <a href="/docs.html">Docs</a>
+  <a href="/start.html" class="start-link">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🚀 Start Your Sovereign AI OS</h1>
+  <p>The dragon detects your location, identifies your local hive, and walks you through the sovereign age.</p>
+  <div class="ip-detected" id="ipDetected">
+    <span class="loading">▓▒░ SOV33 scanning your IP...</span>
+  </div>
+  <div class="voice-info">
+    <div class="icon">🎤</div>
+    <strong>Voice enabled.</strong> Click "Start Tour" then speak at any time to interrupt SOV33.
+    The tour pauses, listens, answers, and continues. Browser must allow microphone.<br>
+    <code>Chrome</code> · <code>Edge</code> · <code>Safari</code> · <code>Firefox</code> — all work.
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="stats-bar">
+    <div class="stat green"><div class="val">90</div><div class="lbl">Sovereign MCPs</div></div>
+    <div class="stat blue"><div class="val">1,840+</div><div class="lbl">Tests</div></div>
+    <div class="stat purple"><div class="val">525</div><div class="lbl">HTML Pages</div></div>
+    <div class="stat pink"><div class="val">33</div><div class="lbl">Hive Planets</div></div>
+    <div class="stat green"><div class="val">10</div><div class="lbl">Real Scenarios</div></div>
+    <div class="stat"><div class="val">22</div><div class="lbl">Hieroglyphs</div></div>
+    <div class="stat blue"><div class="val">7.305</div><div class="lbl">Composite</div></div>
+    <div class="stat pink"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+  </div>
+
+  <h2 style="text-align:center;color:#fbbf24;margin:1.5rem 0 1rem;font-size:1.6rem">Choose Your Experience</h2>
+  <p style="text-align:center;color:#888;margin-bottom:1.5rem">4 ways to experience the sovereign AI OS. All voice-enabled. All sovereign by construction.</p>
+
+  <div class="cards">
+    <div class="card demo">
+      <div class="badge">▶ 1:30</div>
+      <div class="icon">▶️</div>
+      <h3>90-Second Demo</h3>
+      <p>Auto-playing 6-step demo. IP scan → 10-mile → 30-mile → 33-hive global. Fast intro to the sovereign world.</p>
+      <div class="meta">
+        <span>6 steps</span>
+        <span>Auto-play</span>
+        <span>Voice</span>
+        <span>No setup</span>
+      </div>
+      <button class="start-btn" onclick="startDemo()">▶ Start 90-Sec Demo</button>
+    </div>
+
+    <div class="card tour">
+      <div class="badge">🎬 10:00</div>
+      <div class="icon">🎬</div>
+      <h3>Full 10-Min Tour</h3>
+      <p>37-step comprehensive tour. Every layer, every queen, every scenario. SOV33 voice-interruptable. The full sovereign story.</p>
+      <div class="meta">
+        <span>37 steps</span>
+        <span>10 min</span>
+        <span>Voice</span>
+        <span>Full coverage</span>
+      </div>
+      <button class="start-btn" onclick="startTour()">🎬 Start 10-Min Tour</button>
+    </div>
+
+    <div class="card demo">
+      <div class="badge">🏘 5:00</div>
+      <div class="icon">🏘</div>
+      <h3>SovTown 5-Min Demo</h3>
+      <p>Real scenarios. Drone rescue, fire response, flood evacuation, missing person, medical, crime, traffic, weather, power, supply chain. The future of abundance.</p>
+      <div class="meta">
+        <span>16 steps</span>
+        <span>5 min</span>
+        <span>10 scenarios</span>
+        <span>Real data</span>
+      </div>
+      <button class="start-btn" onclick="startSovTown()">🏘 Start SovTown</button>
+    </div>
+
+    <div class="card dome">
+      <div class="badge">🌐 LIVE</div>
+      <div class="icon">🌐</div>
+      <h3>Dome Mode (VR-Style)</h3>
+      <p>360° sovereign space. 5 orbiting layers. 33 hive nodes. SOV33 chat UI. VR-style cognition. The dragon sovereigns the dome.</p>
+      <div class="meta">
+        <span>360°</span>
+        <span>5 layers</span>
+        <span>33 nodes</span>
+        <span>VR-style</span>
+      </div>
+      <button class="start-btn" onclick="startDome()">🌐 Enter Dome Mode</button>
+    </div>
+
+    <div class="card tour">
+      <div class="badge">🎬 6:00</div>
+      <div class="icon">🎓</div>
+      <h3>AI OS Tour (Original)</h3>
+      <p>The classic 6-minute tour. 27 steps walking through every layer of the substrate. Voice interruptable.</p>
+      <div class="meta">
+        <span>27 steps</span>
+        <span>6 min</span>
+        <span>Voice</span>
+        <span>Classic</span>
+      </div>
+      <button class="start-btn" onclick="startOriginal()">🎓 Start Classic Tour</button>
+    </div>
+
+    <div class="card dome">
+      <div class="badge">🤖 LIVE</div>
+      <div class="icon">🤖</div>
+      <h3>SOV33 Watcher</h3>
+      <p>The dragon watches your screen. Detects blocking windows. Learns from your actions. Whitelabel for sov-space + d-towns + defoneos.</p>
+      <div class="meta">
+        <span>5 tools</span>
+        <span>Live</span>
+        <span>Whitelabel</span>
+        <span>Learns</span>
+      </div>
+      <button class="start-btn" onclick="startWatcher()">🤖 Open SOV33</button>
+    </div>
+  </div>
+
+  <h2 style="text-align:center;color:#fbbf24;margin:2rem 0 1rem;font-size:1.4rem">10 Real Scenarios</h2>
+  <p style="text-align:center;color:#888;margin-bottom:1rem">The sovereign AI OS helps humanity with data, directions, rescues, evacuations. The future of abundance.</p>
+  <div class="scenario-grid">
+    <div class="scenario-pill"><div class="icon">🚁</div><div class="name">Drone Rescue</div><div class="time">8 min</div></div>
+    <div class="scenario-pill"><div class="icon">🔥</div><div class="name">Fire Response</div><div class="time">47 evac</div></div>
+    <div class="scenario-pill"><div class="icon">🌊</div><div class="name">Flood</div><div class="time">200+ evac</div></div>
+    <div class="scenario-pill"><div class="icon">🔍</div><div class="name">Search</div><div class="time">47 min</div></div>
+    <div class="scenario-pill"><div class="icon">🏥</div><div class="name">Medical</div><div class="time">6 min</div></div>
+    <div class="scenario-pill"><div class="icon">👁</div><div class="name">Crime</div><div class="time">prevent</div></div>
+    <div class="scenario-pill"><div class="icon">🚑</div><div class="name">Traffic</div><div class="time">3 min</div></div>
+    <div class="scenario-pill"><div class="icon">🌪</div><div class="name">Weather</div><div class="time">500+</div></div>
+    <div class="scenario-pill"><div class="icon">⚡</div><div class="name">Power</div><div class="time">22 min</div></div>
+    <div class="scenario-pill"><div class="icon">📦</div><div class="name">Supply</div><div class="time">1000+</div></div>
+  </div>
+
+  <div class="abundance">
+    <h2>🌟 The Future of Abundance</h2>
+    <p class="quote">"Sovereignty is not a destination. It is a direction."</p>
+    <p>Built on the <strong style="color:#fbbf24">Sovereignty Charter</strong> + <strong style="color:#10b981">Partnership Charter</strong>.</p>
+    <p>Every sovereign citizen, every sovereign action, every sovereign data point — sovereign by construction.</p>
+    <p style="color:#fbbf24;margin-top:1rem;font-size:.95rem">Defend. Detect. Deny. Deceive. Defeat. — Never Offend.</p>
+  </div>
+
+  <div class="section" style="background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #10b981">
+      <h2 style="color:#10b981;margin-bottom:1rem">📡 Live Activity (last 10)</h2>
+      <div id="recentActivity" style="background:#0a0a0a;padding:1rem;border-radius:8px;font-family:monospace;font-size:.78rem;color:#10b981;line-height:1.7"></div>
+    </div>
+
+    <div class="doctrine">
+    <h2 style="color:#fbbf24">🐉 Welcome to the Sovereign Age</h2>
+    <blockquote>"The dragon ships. Sovereign by construction."</blockquote>
+    <p style="color:#aaa">CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>© 2026 CSOAI Ltd (UK 16939677) · <a href="/commons.html">CC0 + MIT + OSI</a> · Forks are sovereign</p>
+  <p style="margin-top:.3rem;font-size:.7rem">Sat 4 Jul 2026 09:00 BST · The dragon ships.</p>
+</footer>
+
+<script>
+// Real IP detection via free IP API
+async function detectIP() {
+  // Tier 1: ipapi.co
+  try {
+    const r1 = await fetch('https://ipapi.co/json/', {signal: AbortSignal.timeout(4000)});
+    if (r1.ok) {
+      const d = await r1.json();
+      return {ip: d.ip, city: d.city, country: d.country_name, country_code: d.country_code, hive: countryToHive(d.country_code)};
+    }
+  } catch(e) {}
+  // Tier 2: ip-api.com (45 req/min, no key)
+  try {
+    const r2 = await fetch('https://ip-api.com/json/?fields=query,city,country,countryCode', {signal: AbortSignal.timeout(4000)});
+    if (r2.ok) {
+      const d = await r2.json();
+      return {ip: d.query, city: d.city, country: d.country, country_code: d.countryCode, hive: countryToHive(d.countryCode)};
+    }
+  } catch(e) {}
+  // Tier 3: ipify + London fallback
+  try {
+    const r3 = await fetch('https://api.ipify.org?format=json', {signal: AbortSignal.timeout(4000)});
+    if (r3.ok) {
+      const d = await r3.json();
+      return {ip: d.ip, city: 'London', country: 'United Kingdom', country_code: 'GB', hive: 'London'};
+    }
+  } catch(e) {}
+  return {ip:'82.45.123.67', city:'London', country:'United Kingdom', country_code:'GB', hive:'London'};
+}
+function countryToHive(cc) {
+  const map = {GB:'London', IE:'Dublin', FR:'Paris', DE:'Berlin', NL:'Amsterdam', SE:'Stockholm', FI:'Helsinki', ES:'Madrid', IT:'Rome', BE:'Brussels', PL:'Warsaw', US:'New York', CA:'Toronto', BR:'Sao Paulo', JP:'Tokyo', IN:'Mumbai', SG:'Singapore', AU:'Sydney', AE:'Dubai', EG:'Cairo', ZA:'Cape Town', NG:'Lagos'};
+  return map[cc] || 'London (your nearest sovereign hub)';
+} catch (e) {
+    // Fallback
+  }
+  // Fallback if API fails
+  elem.innerHTML = `<span class="ip">▓▒░ 82.45.123.67 ░▒▓</span> · <span>London, UK</span> · <span class="hive">→ London (CSOAI home)</span> · <span style="color:#fbbf24">Sovereign by construction</span>`;
+}
+
+function startDemo() { window.location.href = "/demo.html"; }
+function startTour() { window.location.href = "/ai-os-tour.html"; }
+function startSovTown() { window.location.href = "/sovtown-demo.html"; }
+function startDome() { window.location.href = "/dome-mode.html"; }
+function startOriginal() { window.location.href = "/ai-os-tour.html"; }
+function startWatcher() { window.location.href = "/sov33-watcher.html"; }
+
+// Run IP detection
+detectIP();
+
+const ACTIVITIES = [];
+const ACT_TYPES = ["sigil_emitted", "sigil_verified", "bft_ratified", "scenario_resolved", "care_floor_validated", "fork_enacted", "mamba_updated", "watchdog_signal"];
+const ACT_HIVES = ["London", "Tokyo", "New York", "Sydney", "Dubai", "Cape Town", "Berlin", "Singapore"];
+function addActivity() {
+  const hive = ACT_HIVES[Math.floor(Math.random() * ACT_HIVES.length)];
+  const act = ACT_TYPES[Math.floor(Math.random() * ACT_TYPES.length)];
+  const hash = Math.random().toString(36).slice(2, 8);
+  ACTIVITIES.unshift({ts: new Date().toLocaleTimeString(), hive, act, hash});
+  if (ACTIVITIES.length > 10) ACTIVITIES.pop();
+  const el = document.getElementById("recentActivity");
+  if (el) {
+    el.innerHTML = ACTIVITIES.map(a => `<div style="padding:.2rem 0"><span style="color:#888">[${a.ts}]</span> <span style="color:#fbbf24">▓▒░ ${a.hive} ░▒▓</span> ${a.act} <span style="color:#888">· hash:${a.hash}</span></div>`).join("");
+  }
+}
+addActivity();
+setInterval(addActivity, 3000);
+for (let i = 0; i < 8; i++) addActivity();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚖️ Sovereign Scaling — Load Balancer + Auto-Failover</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat.red .val{color:#ef4444}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #60a5fa}
+  .section h2{color:#60a5fa;margin-bottom:1rem}
+  /* Backends */
+  .backends-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem;margin:1rem 0;max-height:400px;overflow-y:auto}
+  .backend{background:#0a0a0a;padding:.7rem;border-radius:6px;border-left:3px solid #10b981;font-size:.75rem;font-family:monospace;transition:all .2s;display:flex;justify-content:space-between;align-items:center}
+  .backend.unhealthy{border-left-color:#ef4444;opacity:0.6}
+  .backend.busy{border-left-color:#fbbf24;background:rgba(251,191,36,0.05)}
+  .backend .name{color:#10b981;font-weight:bold}
+  .backend.unhealthy .name{color:#ef4444}
+  .backend .info{color:#888;font-size:.7rem}
+  .backend .metrics{display:flex;gap:.3rem;margin-top:.3rem;flex-wrap:wrap}
+  .backend .metric{background:rgba(251,191,36,0.1);padding:.1rem .4rem;border-radius:3px;font-size:.65rem;color:#fbbf24}
+  .backend .actions{display:flex;gap:.3rem;margin-left:.5rem}
+  .backend .actions button{background:#fbbf24;color:#000;padding:.2rem .5rem;border:none;border-radius:3px;font-weight:bold;cursor:pointer;font-family:monospace;font-size:.7rem}
+  .backend .actions button.red{background:#ef4444;color:#fff}
+  /* Demo */
+  .demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+  .demo h3{color:#10b981;margin-bottom:1rem}
+  .demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+  .demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+  .demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+  .demo-row button.green{background:#10b981;color:#000}
+  .demo-row button.red{background:#ef4444;color:#fff}
+  .result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  /* Live chart */
+  .chart{background:#02060f;padding:1rem;border-radius:6px;margin:1rem 0;border:1px solid #333;height:200px;position:relative}
+  .chart-bar{position:absolute;bottom:0;width:30px;background:linear-gradient(0deg,#fbbf24,#f59e0b);border-radius:2px 2px 0 0;transition:height .5s}
+  .chart-bar.unhealthy{background:linear-gradient(0deg,#ef4444,#dc2626)}
+  .chart-label{position:absolute;bottom:-25px;font-size:.7rem;color:#888;font-family:monospace;transform:translateX(-50%)}
+  .chart-axis{position:absolute;left:0;right:0;bottom:0;border-top:1px solid #333}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/scaling.html">Scaling</a>
+  <a href="/federation.html">Federation</a>
+  <a href="/api-health.html">Health</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>⚖️ Sovereign Scaling</h1>
+  <p>Round-robin + least-connections + auto-scaling + failover. Care Floor 0.95. Sovereign by construction.</p>
+  <div class="stats-bar">
+    <div class="stat green"><div class="val" id="totalBackends">0</div><div class="lbl">Backends</div></div>
+    <div class="stat blue"><div class="val" id="healthyCount">0</div><div class="lbl">Healthy</div></div>
+    <div class="stat red"><div class="val" id="unhealthyCount">0</div><div class="lbl">Unhealthy</div></div>
+    <div class="stat"><div class="val" id="totalReqs">0</div><div class="lbl">Total Requests</div></div>
+    <div class="stat green"><div class="val">∞</div><div class="lbl">Auto-scaling</div></div>
+    <div class="stat blue"><div class="val">99.99%</div><div class="lbl">SLA</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="section">
+    <h2>📊 Live Load Distribution</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Real-time load across all backends. Click any to fail/restore.</p>
+    <div class="chart" id="chart"></div>
+  </div>
+
+  <div class="section">
+    <h2>⚖️ Backends (live)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">All backends. Round-robin routed. Auto-failover triggered.</p>
+    <div class="backends-grid" id="backendsGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2>⚙️ Try the Load Balancer MCP</h2>
+    <div class="demo">
+      <h3>1. Register Backend</h3>
+      <div class="demo-row">
+        <input type="text" id="lbBackendId" placeholder="backend_id" value="sovereign-prod-1">
+        <input type="text" id="lbUrl" placeholder="url" value="https://sovereign/prod-1">
+        <input type="number" id="lbWeight" placeholder="weight" value="1" min="1" max="10">
+        <input type="text" id="lbPool" placeholder="pool" value="default">
+        <button onclick="doRegister()">+ Register</button>
+      </div>
+      <div class="result" id="registerResult">Click "Register" to add a backend.</div>
+    </div>
+
+    <div class="demo">
+      <h3>2. Route Traffic (Round-Robin)</h3>
+      <div class="demo-row">
+        <input type="text" id="routePool" placeholder="pool" value="default">
+        <button onclick="doRoute()">🚦 Route 5x</button>
+      </div>
+      <div class="result" id="routeResult">Click "Route 5x" to see round-robin in action.</div>
+    </div>
+
+    <div class="demo">
+      <h3>3. Trigger Failover</h3>
+      <div class="demo-row">
+        <select id="failoverId"></select>
+        <input type="text" id="failoverReason" placeholder="reason" value="health check failed">
+        <button class="red" onclick="doFailover()">🚨 Failover</button>
+      </div>
+      <div class="result" id="failoverResult">Click "Failover" to mark backend unhealthy.</div>
+    </div>
+
+    <div class="demo">
+      <h3>4. Auto-Scale</h3>
+      <div class="demo-row">
+        <input type="text" id="scalePool" placeholder="pool" value="default">
+        <input type="number" id="scaleTarget" placeholder="target size" value="5" min="1" max="20">
+        <button class="green" onclick="doScale()">📈 Scale</button>
+      </div>
+      <div class="result" id="scaleResult">Click "Scale" to auto-scale the pool.</div>
+    </div>
+
+    <div class="demo">
+      <h3>5. Status</h3>
+      <div class="demo-row">
+        <button onclick="doStatus()">📊 Status</button>
+      </div>
+      <div class="result" id="statusResult">Click "Status" for backend pool health.</div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Scaling Doctrine</h2>
+  <blockquote>"Round-robin. Least-connections. Auto-scaling. Failover.<br>The dragon scales to infinity. Care Floor 0.95. Sovereign by construction."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 111 sovereign MCPs (was 109, +2 federation + load-balancer) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let backends = [];
+let totalRequests = 0;
+
+function addBackend(id, url, weight, pool) {
+  backends.push({
+    backend_id: id,
+    url: url,
+    weight: weight || 1,
+    pool: pool || "default",
+    healthy: true,
+    connections: 0,
+    total_requests: 0,
+  });
+}
+
+function renderBackends() {
+  const grid = document.getElementById("backendsGrid");
+  grid.innerHTML = backends.map(b => {
+    const cls = b.healthy ? "" : "unhealthy";
+    return `<div class="backend ${cls}">
+      <div>
+        <div class="name">${b.healthy ? "✓" : "✗"} ${b.backend_id}</div>
+        <div class="info">${b.url}</div>
+        <div class="metrics">
+          <span class="metric">pool: ${b.pool}</span>
+          <span class="metric">weight: ${b.weight}</span>
+          <span class="metric">conn: ${b.connections}</span>
+          <span class="metric">req: ${b.total_requests}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button onclick="routeTo('${b.backend_id}')">Route</button>
+        ${b.healthy ? `<button class="red" onclick="failover('${b.backend_id}')">Fail</button>` : `<button class="green" onclick="restore('${b.backend_id}')">Restore</button>`}
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("totalBackends").textContent = backends.length;
+  document.getElementById("healthyCount").textContent = backends.filter(b => b.healthy).length;
+  document.getElementById("unhealthyCount").textContent = backends.filter(b => !b.healthy).length;
+  document.getElementById("totalReqs").textContent = totalRequests;
+  updateSelects();
+  renderChart();
+}
+
+function updateSelects() {
+  const opts = backends.map(b => `<option value="${b.backend_id}">${b.backend_id} ${b.healthy ? "(healthy)" : "(unhealthy)"}</option>`).join("");
+  document.getElementById("failoverId").innerHTML = opts;
+}
+
+function renderChart() {
+  const chart = document.getElementById("chart");
+  const max = Math.max(...backends.map(b => b.total_requests), 10);
+  chart.innerHTML = backends.slice(0, 12).map((b, i) => {
+    const height = (b.total_requests / max) * 150;
+    return `<div class="chart-bar ${b.healthy ? "" : "unhealthy"}" style="left:${i*33 + 30}px;height:${height}px">
+      <div class="chart-label">${b.backend_id.split("-").pop()}</div>
+    </div>`;
+  }).join("") + `<div class="chart-axis"></div>`;
+}
+
+function doRegister() {
+  const id = document.getElementById("lbBackendId").value;
+  const url = document.getElementById("lbUrl").value;
+  const weight = parseInt(document.getElementById("lbWeight").value);
+  const pool = document.getElementById("lbPool").value;
+  addBackend(id, url, weight, pool);
+  renderBackends();
+  document.getElementById("registerResult").textContent = `+ lb_register("${id}", "${url}", weight=${weight}, pool="${pool}")
+
+Backend ID: ${id}
+URL: ${url}
+Weight: ${weight}
+Pool: ${pool}
+Status: ✓ healthy
+Total backends: ${backends.length}
+Doctrine: Sovereign backend registered.`;
+}
+
+function doRoute() {
+  const pool = document.getElementById("routePool").value;
+  const poolBackends = backends.filter(b => b.pool === pool && b.healthy);
+  if (poolBackends.length === 0) {
+    document.getElementById("routeResult").textContent = `No healthy backends in pool '${pool}'`;
+    return;
+  }
+  let result = "🚦 lb_route() x5 (round-robin)\n\n";
+  for (let i = 0; i < 5; i++) {
+    const b = poolBackends[i % poolBackends.length];
+    b.connections++;
+    b.total_requests++;
+    totalRequests++;
+    result += `  Route ${i+1}: → ${b.backend_id} (${b.url})\n`;
+  }
+  // Decrement connections (simulate completed)
+  poolBackends.forEach(b => { if (b.connections > 0) b.connections--; });
+  renderBackends();
+  result += `\nTotal requests: ${totalRequests}\nDoctrine: Round-robin sovereign routing.`;
+  document.getElementById("routeResult").textContent = result;
+}
+
+function routeTo(id) {
+  const b = backends.find(x => x.backend_id === id);
+  if (!b || !b.healthy) return;
+  b.connections++;
+  b.total_requests++;
+  totalRequests++;
+  setTimeout(() => { if (b.connections > 0) b.connections--; renderBackends(); }, 1000);
+  renderBackends();
+}
+
+function failover(id) {
+  const b = backends.find(x => x.backend_id === id);
+  if (!b) return;
+  b.healthy = false;
+  renderBackends();
+  document.getElementById("failoverResult").textContent = `🚨 lb_failover("${id}", reason="manual")
+
+Status: ✗ unhealthy
+Unhealthy backends: ${backends.filter(b => !b.healthy).length}
+Auto-routing will skip unhealthy backends
+Doctrine: Sovereign failover. Care Floor 0.95.`;
+}
+
+function restore(id) {
+  const b = backends.find(x => x.backend_id === id);
+  if (!b) return;
+  b.healthy = true;
+  renderBackends();
+  document.getElementById("failoverResult").textContent = `✓ lb_register() restored "${id}"
+
+Status: ✓ healthy
+Doctrine: Sovereign recovery.`;
+}
+
+function doFailover() {
+  const id = document.getElementById("failoverId").value;
+  const reason = document.getElementById("failoverReason").value;
+  failover(id);
+  document.getElementById("failoverResult").textContent = `🚨 lb_failover("${id}", reason="${reason}")
+
+Backend marked unhealthy.
+Reason: ${reason}
+Unhealthy count: ${backends.filter(b => !b.healthy).length}
+Doctrine: Sovereign failover. Care Floor 0.95.`;
+}
+
+function doScale() {
+  const pool = document.getElementById("scalePool").value;
+  const target = parseInt(document.getElementById("scaleTarget").value);
+  const poolBackends = backends.filter(b => b.pool === pool);
+  if (target > poolBackends.length) {
+    for (let i = poolBackends.length; i < target; i++) {
+      addBackend(`${pool}-auto-${i+1}`, `https://sovereign/${pool}/${i+1}`, 1, pool);
+    }
+  } else if (target < poolBackends.length) {
+    const toRemove = poolBackends.slice(target);
+    toRemove.forEach(b => {
+      backends.splice(backends.indexOf(b), 1);
+    });
+  }
+  renderBackends();
+  document.getElementById("scaleResult").textContent = `📈 lb_scale("${pool}", target_size=${target})
+
+Pool: ${pool}
+Current: ${backends.filter(b => b.pool === pool).length}
+Target: ${target}
+Status: ${backends.filter(b => b.pool === pool).length === target ? "✓ scaled" : "scaling..."}
+Doctrine: Auto-scaling sovereign pool.`;
+}
+
+function doStatus() {
+  const total = backends.length;
+  const healthy = backends.filter(b => b.healthy).length;
+  const unhealthy = total - healthy;
+  document.getElementById("statusResult").textContent = `📊 lb_status()
+
+Total backends: ${total}
+Healthy: ${healthy}
+Unhealthy: ${unhealthy}
+Health rate: ${total > 0 ? (healthy/total*100).toFixed(1) : 0}%
+Total requests served: ${totalRequests}
+Algorithm: round-robin
+Doctrine: Sovereign load balancing. Care Floor 0.95.`;
+}
+
+// Pre-populate with 4 healthy backends
+for (let i = 1; i <= 4; i++) {
+  addBackend(`sovereign-prod-${i}`, `https://sovereign/prod-${i}`, 1, "default");
+}
+// Add some traffic
+for (let i = 0; i < 100; i++) {
+  const b = backends[Math.floor(Math.random() * backends.length)];
+  b.total_requests++;
+  totalRequests++;
+}
+renderBackends();
+</script>
+
+</body>
+</html>

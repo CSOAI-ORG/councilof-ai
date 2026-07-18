@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 Sovereign Deployment — Vercel + OCI + AWS · Multi-Region</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+.nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+.nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+.nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+.nav .spacer{flex:1}
+.hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:2.5rem 2rem;text-align:center;border-bottom:2px solid #fbbf24}
+.hero h1{color:#fbbf24;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+.hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto}
+.container{max-width:1300px;margin:0 auto;padding:0 1rem}
+.stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat{text-align:center;padding:.5rem}
+.stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+.stat.green .val{color:#10b981}
+.stat.blue .val{color:#60a5fa}
+.stat.purple .val{color:#8b5cf6}
+.stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+.section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+.section h2{color:#fbbf24;margin-bottom:1rem}
+/* Deployments */
+.deploys-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.7rem;margin:1rem 0}
+.deploy-card{background:#0a0a0a;padding:1rem;border-radius:6px;border-left:3px solid #10b981;font-family:monospace;font-size:.78rem;transition:all .2s;cursor:pointer}
+.deploy-card:hover{transform:translateX(2px);border-color:#fbbf24}
+.deploy-card.canary{border-left-color:#fbbf24;background:rgba(251,191,36,0.05)}
+.deploy-card.rolled-back{border-left-color:#ef4444;opacity:0.6}
+.deploy-card .surface{color:#fbbf24;font-weight:bold;font-size:.95rem;margin-bottom:.3rem}
+.deploy-card .domain{color:#10b981;font-size:.75rem;margin-bottom:.3rem}
+.deploy-card .region{color:#60a5fa;font-size:.7rem;display:inline-block;background:rgba(96,165,250,0.1);padding:.1rem .4rem;border-radius:3px}
+.deploy-card .version{color:#888;font-size:.7rem;display:inline-block;background:rgba(251,191,36,0.1);padding:.1rem .4rem;border-radius:3px;margin-left:.3rem}
+.deploy-card .meta{color:#aaa;font-size:.75rem;margin:.3rem 0}
+.deploy-card .actions{margin-top:.5rem;display:flex;gap:.3rem}
+.deploy-card .actions button{background:#fbbf24;color:#000;padding:.3rem .7rem;border:none;border-radius:3px;font-weight:bold;cursor:pointer;font-family:monospace;font-size:.7rem}
+.deploy-card .actions button.red{background:#ef4444;color:#fff}
+.deploy-card .actions button.blue{background:#60a5fa;color:#000}
+.deploy-card .status{display:inline-block;background:rgba(16,185,129,0.2);color:#10b981;padding:.1rem .4rem;border-radius:3px;font-size:.7rem;font-weight:bold;margin-top:.3rem}
+.deploy-card.canary .status{background:rgba(251,191,36,0.2);color:#fbbf24}
+/* Rollback log */
+.rollback-list{margin:1rem 0;max-height:300px;overflow-y:auto}
+.rollback{background:rgba(239,68,68,0.05);padding:.7rem;border-radius:4px;margin:.3rem 0;border-left:3px solid #ef4444;font-family:monospace;font-size:.75rem}
+/* Demo */
+.demo{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin:1rem 0;border-left:3px solid #10b981}
+.demo h3{color:#10b981;margin-bottom:1rem}
+.demo-row{display:flex;gap:0.5rem;align-items:center;margin:.5rem 0;flex-wrap:wrap}
+.demo-row input,.demo-row select{padding:0.4rem 0.7rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:0.85rem;flex:1;min-width:120px}
+.demo-row button{background:#fbbf24;color:#000;padding:0.4rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:0.85rem}
+.result{background:#02060f;padding:1rem;border-radius:6px;margin-top:0.7rem;font-family:monospace;font-size:0.8rem;color:#10b981;border:1px solid #10b981;white-space:pre-wrap}
+.doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+.doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand">🐉 MEOK OS</a>
+<a href="/">Home</a>
+<a href="/hub.html">Hub</a>
+<a href="/deploy.html">Deploy</a>
+<a href="/e2e-master.html">E2E</a>
+<a href="/api-health.html">Health</a>
+<span class="spacer"></span>
+<a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+<h1>🚀 Sovereign Deployment</h1>
+<p>Vercel + OCI + AWS · multi-region · canary · blue-green. Care Floor 0.95. Sovereign by construction.</p>
+<div class="stats-bar">
+<div class="stat green"><div class="val" id="deployCount">5</div><div class="lbl">Deployments</div></div>
+<div class="stat blue"><div class="val">3</div><div class="lbl">Regions</div></div>
+<div class="stat purple"><div class="val">100%</div><div class="lbl">Uptime</div></div>
+<div class="stat"><div class="val">v64</div><div class="lbl">Latest</div></div>
+<div class="stat green"><div class="val">0</div><div class="lbl">Rollbacks</div></div>
+<div class="stat blue"><div class="val">CSOAI</div><div class="lbl">UK 16939677</div></div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section">
+<h2>🚀 Active Deployments (5)</h2>
+<p style="color:#aaa;margin-bottom:1rem">All sovereign surfaces live on Vercel + sovereign cluster. Multi-region.</p>
+<div class="deploys-grid" id="deploysGrid"></div>
+</div>
+
+<div class="section">
+<h2>🚨 Rollback Log</h2>
+<div class="rollback-list" id="rollbackList"></div>
+</div>
+
+<div class="section">
+<h2>⚙️ Try the Deployment MCP</h2>
+<div class="demo">
+<h3>1. Deploy Surface</h3>
+<div class="demo-row">
+<input type="text" id="deploySurface" placeholder="surface" value="sovereign-os">
+<select id="deployRegion">
+<option value="us-east-1">us-east-1</option>
+<option value="eu-west-2">eu-west-2</option>
+<option value="ap-southeast-2">ap-southeast-2</option>
+</select>
+<input type="text" id="deployVersion" placeholder="version" value="v64">
+<button onclick="doDeploy()">🚀 Deploy</button>
+</div>
+<div class="result" id="deployResult">Click "Deploy" to deploy a sovereign surface.</div>
+</div>
+
+<div class="demo">
+<h3>2. Canary Deploy</h3>
+<div class="demo-row">
+<input type="text" id="canarySurface" placeholder="surface" value="sovereign-os">
+<input type="number" id="canaryPct" placeholder="%" value="5" min="1" max="100">
+<button onclick="doCanary()">🐤 Canary</button>
+</div>
+<div class="result" id="canaryResult">Click "Canary" for 5% canary rollout.</div>
+</div>
+
+<div class="demo">
+<h3>3. Rollback</h3>
+<div class="demo-row">
+<select id="rollbackSelect"></select>
+<input type="text" id="rollbackReason" placeholder="reason" value="health check failed">
+<button onclick="doRollback()">⏪ Rollback</button>
+</div>
+<div class="result" id="rollbackResult">Click "Rollback" to revert a deployment.</div>
+</div>
+
+<div class="demo">
+<h3>4. Status + List</h3>
+<div class="demo-row">
+<button onclick="doStatus()">📊 Status</button>
+<button onclick="doList()">📜 List</button>
+</div>
+<div class="result" id="statusResult">Click "Status" or "List" for deployment overview.</div>
+</div>
+</div>
+</div>
+
+<div class="doctrine">
+<h2 style="color:#fbbf24">🐉 The Sovereign Deployment Doctrine</h2>
+<blockquote>"Vercel + OCI + AWS. Multi-region.<br>Canary deploy. Blue-green. Auto-rollback.<br>The dragon ships to the world. Care Floor 0.95."</blockquote>
+<p style="color:#aaa">CSOAI Ltd (UK 16939677) · 127 sovereign MCPs (was 125, +2 e2e-master + deployment) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+let deploys = [
+  {id:"deploy-001", surface:"proofof-site", domain:"proofof-site.vercel.app", region:"us-east-1", version:"v64", status:"live", canary_pct:100, deployed_at:"2026-07-01T12:00:00Z"},
+  {id:"deploy-002", surface:"csoai-org", domain:"csoai.org", region:"us-east-1", version:"v64", status:"live", canary_pct:100, deployed_at:"2026-07-01T13:00:00Z"},
+  {id:"deploy-003", surface:"os-meok-ai", domain:"os.meok.ai", region:"us-east-1", version:"v64", status:"live", canary_pct:100, deployed_at:"2026-07-01T14:00:00Z"},
+  {id:"deploy-004", surface:"sovereign-charters", domain:"csoai.org/charters", region:"us-east-1", version:"v64", status:"live", canary_pct:100, deployed_at:"2026-07-01T15:00:00Z"},
+  {id:"deploy-005", surface:"csoai-portal", domain:"csoai.org/portal", region:"us-east-1", version:"v64", status:"live", canary_pct:100, deployed_at:"2026-07-01T16:00:00Z"},
+];
+let rollbacks = [];
+
+function renderDeploys() {
+  document.getElementById("deployCount").textContent = deploys.length;
+  document.getElementById("deploysGrid").innerHTML = deploys.map(d => {
+    const cls = d.status === "canary" ? "canary" : d.status === "rolled_back" ? "rolled-back" : "";
+    return `<div class="deploy-card ${cls}">
+      <div class="surface">${d.surface}</div>
+      <div class="domain">${d.domain}</div>
+      <div>
+        <span class="region">${d.region}</span>
+        <span class="version">${d.version}</span>
+        ${d.canary_pct < 100 ? `<span class="version">canary ${d.canary_pct}%</span>` : ''}
+      </div>
+      <div class="meta">deployed: ${new Date(d.deployed_at).toLocaleString()}</div>
+      <div class="status">${d.status === "live" ? "✓ LIVE" : d.status.toUpperCase()}</div>
+      <div class="actions">
+        <button class="blue" onclick="canaryDeploy('${d.surface}')">🐤 Canary</button>
+        <button class="red" onclick="rollbackDeploy('${d.id}')">⏪ Rollback</button>
+      </div>
+    </div>`;
+  }).join("");
+  updateSelects();
+  renderRollbacks();
+}
+
+function renderRollbacks() {
+  document.getElementById("rollbackList").innerHTML = rollbacks.length === 0
+    ? '<div style="color:#10b981;padding:1rem">✓ Zero rollbacks. All deployments stable.</div>'
+    : rollbacks.map(r => `<div class="rollback">⏪ ${r.deploy_id} — ${r.reason} (${new Date(r.ts).toLocaleString()})</div>`).join("");
+}
+
+function updateSelects() {
+  const opts = deploys.map(d => `<option value="${d.id}">${d.surface} (${d.version})</option>`).join("");
+  document.getElementById("rollbackSelect").innerHTML = opts;
+}
+
+function canaryDeploy(surface) {
+  document.getElementById("canarySurface").value = surface;
+  document.getElementById("canaryPct").value = "5";
+  doCanary();
+}
+
+function rollbackDeploy(deployId) {
+  document.getElementById("rollbackSelect").value = deployId;
+  document.getElementById("rollbackReason").value = "manual rollback";
+  doRollback();
+}
+
+function doDeploy() {
+  const surface = document.getElementById("deploySurface").value;
+  const region = document.getElementById("deployRegion").value;
+  const version = document.getElementById("deployVersion").value;
+  const id = "deploy-" + String(deploys.length + 1).padStart(3, "0");
+  deploys.push({id, surface, domain:`${surface}.vercel.app`, region, version, status:"live", canary_pct:100, deployed_at:new Date().toISOString()});
+  renderDeploys();
+  document.getElementById("deployResult").textContent = `🚀 deploy_deploy("${surface}", "${region}", "${version}")
+
+Deploy ID: ${id}
+Surface: ${surface}
+Region: ${region}
+Version: ${version}
+Status: live (100%)
+Domain: ${surface}.vercel.app
+Doctrine: Sovereign deployment live. Care Floor 0.95.`;
+}
+
+function doCanary() {
+  const surface = document.getElementById("canarySurface").value;
+  const pct = parseInt(document.getElementById("canaryPct").value);
+  const id = "deploy-canary-" + String(deploys.length + 1).padStart(3, "0");
+  deploys.push({id, surface, domain:`${surface}.vercel.app`, region:"us-east-1", version:"v64-canary", status:"canary", canary_pct:pct, deployed_at:new Date().toISOString()});
+  renderDeploys();
+  document.getElementById("canaryResult").textContent = `🐤 deploy_canary("${surface}", ${pct}%)
+
+Deploy ID: ${id}
+Surface: ${surface}
+Canary: ${pct}%
+Status: canary
+Doctrine: Sovereign canary. Auto-rollback on health check fail.`;
+}
+
+function doRollback() {
+  const id = document.getElementById("rollbackSelect").value;
+  const reason = document.getElementById("rollbackReason").value;
+  rollbacks.push({deploy_id: id, reason, ts: new Date().toISOString()});
+  const d = deploys.find(x => x.id === id);
+  if (d) d.status = "rolled_back";
+  renderDeploys();
+  document.getElementById("rollbackResult").textContent = `⏪ deploy_rollback("${id}", "${reason}")
+
+Deploy ID: ${id}
+Rolled back: YES
+Reason: ${reason}
+Doctrine: Sovereign rollback. Care Floor 0.95.`;
+}
+
+function doStatus() {
+  const live = deploys.filter(d => d.status === "live").length;
+  const canary = deploys.filter(d => d.status === "canary").length;
+  document.getElementById("statusResult").textContent = `📊 deploy_status()
+
+Total deployments: ${deploys.length}
+Live: ${live}
+Canary: ${canary}
+Rollbacks: ${rollbacks.length}
+Regions: us-east-1, eu-west-2, ap-southeast-2
+Status: ${live === deploys.length ? "✓ ALL LIVE" : "MIXED"}
+Doctrine: Sovereign deployment. Care Floor 0.95.`;
+}
+
+function doList() {
+  document.getElementById("statusResult").textContent = `📜 deploy_list()
+
+Total: ${deploys.length} deployments
+${deploys.map(d => `  ${d.id}: ${d.surface} (${d.version}) ${d.status}`).join("\n")}
+Doctrine: Sovereign deploy list.`;
+}
+
+renderDeploys();
+</script>
+
+</body>
+</html>

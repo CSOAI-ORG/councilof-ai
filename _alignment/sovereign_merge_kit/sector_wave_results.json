@@ -1,0 +1,72 @@
+{
+  "governance": {
+    "sector": "governance",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 277,
+    "n_heldout": 48,
+    "before_overlap": 0.2139,
+    "after_overlap": 0.243,
+    "gain": 0.0291,
+    "verdict": "GO"
+  },
+  "defense": {
+    "sector": "defense",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 1008,
+    "n_heldout": 177,
+    "before_overlap": 0.2105,
+    "after_overlap": 0.3633,
+    "gain": 0.1528,
+    "verdict": "GO"
+  },
+  "intuition": {
+    "sector": "intuition",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 914,
+    "n_heldout": 161,
+    "before_overlap": 0.052,
+    "after_overlap": 0.8566,
+    "gain": 0.8046,
+    "verdict": "GO"
+  },
+  "voice": {
+    "sector": "voice",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 234,
+    "n_heldout": 41,
+    "before_overlap": 0.1161,
+    "after_overlap": 0.2327,
+    "gain": 0.1166,
+    "verdict": "GO"
+  },
+  "judgment": {
+    "sector": "judgment",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 1096,
+    "n_heldout": 193,
+    "before_overlap": 0.0732,
+    "after_overlap": 0.739,
+    "gain": 0.6658,
+    "verdict": "GO"
+  },
+  "openworld": {
+    "sector": "openworld",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 76,
+    "n_heldout": 13,
+    "before_overlap": 0.1022,
+    "after_overlap": 0.9263,
+    "gain": 0.8241,
+    "verdict": "GO"
+  },
+  "reasoning": {
+    "sector": "reasoning",
+    "base": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_train": 81,
+    "n_heldout": 14,
+    "before_overlap": 0.1945,
+    "after_overlap": 0.93,
+    "gain": 0.7355,
+    "verdict": "GO"
+  }
+}

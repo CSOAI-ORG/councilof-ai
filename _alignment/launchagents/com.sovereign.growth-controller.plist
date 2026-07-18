@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.sovereign.growth-controller</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/nicholas/.sovereign/ml-venv/bin/python</string>
+        <string>/Users/nicholas/clawd/_alignment/sovereign_merge_kit/sov33_growth_controller.py</string>
+        <string>--quiet</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>300</integer>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/sov33-growth-controller.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/sov33-growth-controller.err</string>
+    <key>WorkingDirectory</key>
+    <string>/Users/nicholas/clawd</string>
+</dict>
+</plist>

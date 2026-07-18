@@ -1,0 +1,243 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* GTS GrabHire Design System - Professional Industrial Aesthetic */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* GTS Brand Colors */
+    --primary: 0 0% 48%;             /* Brand Gray (from logo) - #7A7A7A */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 0 0% 48%;
+
+    --radius: 0.5rem;
+
+    /* GTS Custom Brand Colors - Navy, Yellow, White Only */
+    --gts-yellow: 51 100% 50%;       /* #FFD700 */
+    --gts-navy: 0 0% 48%;            /* Brand Gray from logo - #7A7A7A */
+    --gts-dark: 222.2 84% 4.9%;     /* #0F172A */
+    --gts-white: 0 0% 100%;          /* Pure White */
+    --gts-success: 142 76% 36%;      /* Success Green for checkmarks */
+    --gts-green: 142 76% 36%;        /* Alias for gts-success - will be removed */
+    
+    /* Background Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--gts-navy)), hsl(var(--gts-dark)));
+    --gradient-cta: linear-gradient(135deg, hsl(var(--gts-yellow)), hsl(51 95% 45%));
+    --gradient-section: linear-gradient(180deg, hsl(0 0% 98%), hsl(0 0% 100%));
+    
+    /* Professional Shadows */
+    --shadow-card: 0 4px 6px -1px hsl(var(--gts-navy) / 0.1), 0 2px 4px -2px hsl(var(--gts-navy) / 0.1);
+    --shadow-hover: 0 20px 25px -5px hsl(var(--gts-navy) / 0.1), 0 10px 10px -5px hsl(var(--gts-navy) / 0.04);
+    --shadow-glow: 0 0 20px hsl(var(--gts-yellow) / 0.3);
+    
+    /* Smooth Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-['Inter','system-ui','sans-serif'];
+  }
+}
+
+@layer components {
+  /* GTS Button Variants */
+  .btn-primary {
+    @apply bg-[hsl(var(--gts-yellow))] hover:bg-[hsl(51_95%_45%)] text-[hsl(var(--gts-dark))] font-semibold px-6 py-3 rounded-lg shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-hover)] transition-[var(--transition-smooth)] hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-[hsl(var(--gts-yellow))] text-[hsl(var(--gts-yellow))] hover:bg-[hsl(var(--gts-yellow))] hover:text-[hsl(var(--gts-dark))] font-semibold px-6 py-3 rounded-lg transition-[var(--transition-smooth)];
+  }
+  
+  .btn-outline-white {
+    @apply bg-transparent border-2 border-white text-white hover:bg-white hover:text-[hsl(var(--gts-dark))] font-semibold px-6 py-3 rounded-lg transition-[var(--transition-smooth)];
+  }
+
+  /* Navigation Styles */
+  .nav-link {
+    @apply text-[hsl(var(--gts-yellow))] hover:text-[hsl(var(--gts-yellow))] font-medium transition-[var(--transition-smooth)] relative;
+  }
+  
+  .nav-link.active {
+    @apply text-[hsl(var(--gts-yellow))];
+  }
+  
+  .nav-link::after {
+    @apply content-[''] absolute w-full scale-x-0 h-0.5 bottom-0 left-0 bg-[hsl(var(--gts-yellow))] origin-bottom-right transition-transform duration-300;
+  }
+  
+  .nav-link:hover::after {
+    @apply scale-x-100 origin-bottom-left;
+  }
+
+  /* Card Styles */
+  .card-hover {
+    @apply transition-[var(--transition-smooth)] hover:shadow-[var(--shadow-hover)] hover:-translate-y-2 cursor-pointer;
+  }
+  
+  .service-icon {
+    @apply transition-[var(--transition-bounce)] group-hover:scale-110 group-hover:text-white;
+  }
+
+  /* Section Styles */
+  .section-padding {
+    @apply py-16 md:py-20;
+  }
+  
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  .cta-gradient {
+    background: var(--gradient-cta);
+  }
+  
+  .section-gradient {
+    background: var(--gradient-section);
+  }
+
+  /* Form Styles */
+  .form-input {
+    @apply w-full p-4 border border-border rounded-lg focus:ring-2 focus:ring-[hsl(var(--gts-yellow))] focus:border-transparent transition-[var(--transition-smooth)];
+  }
+  
+  .form-input:focus {
+    @apply shadow-lg transform scale-[1.02];
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-foreground mb-2;
+  }
+  
+  /* Enhanced loading states */
+  .loading-state {
+    @apply animate-pulse bg-muted rounded;
+  }
+  
+  /* Micro-interactions */
+  .micro-bounce:hover {
+    animation: micro-bounce 0.3s ease-in-out;
+  }
+  
+  @keyframes micro-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Animation Classes */
+  .fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

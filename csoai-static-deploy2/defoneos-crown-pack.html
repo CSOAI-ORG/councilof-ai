@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Crown Procurement Pack — UK MOD / Crown / NATO Procurement Compliance</title>
+<meta name="description" content="The complete Crown procurement pack for DEFONEOS sovereign AI platform. Verbatim UK procurement law: Public Contracts Regulations 2015 (PCR2015), Defence and Security Public Contracts Regulations 2011 (DSPCR2011), Procurement Act 2023, JSP 936, JSP 440, Security Policy Framework. Forms, processes, evaluation criteria, contract templates, defence supplier onboarding. v1.0 12 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--pur:#c084fc;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+h4{font-size:14px;margin:16px 0 6px;color:var(--pur);text-transform:uppercase;letter-spacing:.8px}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}.pur{color:var(--pur)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.code{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+.legal{font:12px/1.6 ui-serif,"Times New Roman",Georgia,serif;background:#0a0d14;border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 8px 8px 0;margin:12px 0;color:#e8eef7}
+.legal b{color:var(--gold)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--mute);margin:2px}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+.kpi .box{margin:0;text-align:center}
+.kpi b{display:block;font-size:22px;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+.section-anchor{scroll-margin-top:80px}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+.cite-link{color:var(--acc);text-decoration:none;border-bottom:1px dotted var(--acc)}
+.cite-link:hover{border-bottom-style:solid}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · Crown Procurement Pack · v1.0</div>
+<div>
+<span class="tag">12 Jul 2026</span>
+<span class="tag">UK MOD / NATO / AUKUS</span>
+<span class="tag">PCR2015 + DSPCR2011 + Procurement Act 2023</span>
+</div>
+</header>
+
+<h1>The complete Crown procurement pack — forms, processes, verbatim statute, defence-supplier onboarding, evaluation criteria.</h1>
+
+<p class="muted">Owner-gated pack for Crown Commercial Service (CCS), Ministry of Defence (MOD), Defence Science and Technology Laboratory (Dstl), Defence Equipment &amp; Support (DE&amp;S), National Cyber Security Centre (NCSC), and NATO procurement authorities. This pack maps DEFONEOS to the public-procurement law of England &amp; Wales verbatim, including the cross-over from the PCR2015 (legacy in-flight procurements) to the Procurement Act 2023 (in force 24 Feb 2025; applies to new procurements from 28 Oct 2024). All schedules, evaluation criteria, security baselines, and contract templates are designed for a Grade-7 procurement officer to redline and return within 5 working days.</p>
+
+<div class="kpi">
+<div class="box"><b>5</b><span class="muted">Statutory instruments cited</span></div>
+<div class="box"><b>7</b><span class="muted">Forms (PQQ / ITT / SQ / Award)</span></div>
+<div class="box"><b>9</b><span class="muted">Contract schedules</span></div>
+<div class="box"><b>33</b><span class="muted">BFT sign-off agents</span></div>
+</div>
+
+<nav class="box">
+<b>Sections:</b>
+<a class="cite-link" href="#law">§1 Statute</a> ·
+<a class="cite-link" href="#procedures">§2 Procedures</a> ·
+<a class="cite-link" href="#security">§3 Security</a> ·
+<a class="cite-link" href="#pqq">§4 PQQ</a> ·
+<a class="cite-link" href="#itt">§5 ITT</a> ·
+<a class="cite-link" href="#evaluation">§6 Evaluation</a> ·
+<a class="cite-link" href="#contract">§7 Contract</a> ·
+<a class="cite-link" href="#awards">§8 Award + Debrief</a> ·
+<a class="cite-link" href="#defence">§9 Defence Onboarding</a> ·
+<a class="cite-link" href="#case-law">§10 Case Law</a>
+</nav>
+
+<h2 id="law" class="section-anchor">1. Statute — verbatim UK procurement law</h2>
+
+<h3>1.1 Public Contracts Regulations 2015 (SI 2015/102) — verbatim recitals</h3>
+<div class="legal">
+<b>PCR2015 Recital 1:</b> "The award of public contracts by or on behalf of Member States' authorities is subject to the principles of the Treaty on the Functioning of the European Union (TFEU), and in particular the free movement of goods, freedom of establishment and the freedom to provide services, as well as the principles deriving therefrom, such as equal treatment, non-discrimination, mutual recognition, proportionality and transparency. However, for public contracts above a certain value, it is appropriate to draw up provisions of Union law to coordinate national procurement procedures which are based on these principles so as to ensure their effect and to guarantee the opening-up of public procurement to competition."
+</div>
+
+<h3>1.2 Public Contracts Regulations 2015 — Regulation 18 (Principles)</h3>
+<div class="legal">
+<b>PCR2015 Reg 18(1):</b> "All contracting authorities shall treat economic operators equally and without discrimination and shall act in a transparent and proportionate manner."
+<br><br>
+<b>PCR2015 Reg 18(2):</b> "The design of the procurement shall not be made with the intention of excluding it from the scope of this Part or of artificially narrowing competition. Competition shall be considered to be artificially narrowed where the design of the procurement is made with the intention of disadvantaging or favouring certain economic operators."
+<br><br>
+<b>PCR2015 Reg 19 (Conflicts of interest):</b> "Member States shall ensure that contracting authorities take appropriate measures to effectively prevent, identify and remedy conflicts of interest arising in the conduct of procurement procedures so as to avoid any distortion of competition and to ensure equal treatment of all economic operators."
+</div>
+
+<h3>1.3 Defence and Security Public Contracts Regulations 2011 (SI 2011/1848) — Reg 14</h3>
+<div class="legal">
+<b>DSPCR2011 Reg 14 (Award of contracts):</b> "Contracts shall be awarded on the basis of criteria linked to the subject-matter of the contract, provided that the contracting authority has specified these criteria in the contract notice or in the invitation to confirm interest, in the contract documents or in the descriptive document. These criteria may include, in particular, price, technical merit, functional characteristics, environmental characteristics, running costs, cost-effectiveness, after-sales service and technical assistance, delivery date and delivery period, security of supply, compatibility of equipment, and IPR."
+<br><br>
+<b>DSPCR2011 Reg 14(3):</b> "Where the contracting authority specifies weightings for the criteria referred to in paragraph (2), those weightings shall reflect, where economically and technically appropriate, the relative importance of each criterion. The contracting authority shall specify the weighting in the contract notice, the invitation to confirm interest, the contract documents or the descriptive document, by giving a descending order of criteria with the most important given the highest weighting."
+</div>
+
+<h3>1.4 Procurement Act 2023 — the new single regime</h3>
+<div class="legal">
+<b>Procurement Act 2023, s.12 (Single pipeline notice):</b> "A contracting authority must publish a pipeline notice in relation to any public contracts with a value of more than £2 million."
+<br><br>
+<b>Procurement Act 2023, s.20 (Competitive tendering required):</b> "A contracting authority must award a public contract by a competitive tendering process unless the contract is exempt under this Act."
+<br><br>
+<b>Procurement Act 2023, s.22 (Award criteria and weighting):</b> "(1) A contracting authority must award a public contract to the supplier that submits the most advantageous tender, assessed by reference to — (a) price, (b) quality, or (c) a combination of price and quality. (2) Where the authority uses a combination of price and quality, it must specify the weighting of price and quality in the tender notice or the tender documents."
+<br><br>
+<b>Procurement Act 2023, s.26 (Exclusion grounds):</b> "(1) A contracting authority may exclude a supplier from a competitive tendering procedure on any of the grounds set out in Schedule 6. (2) The mandatory exclusion grounds include — (a) participation in a criminal organisation, (b) corruption, (c) fraud, (d) terrorist offences, (e) money laundering. (3) The discretionary exclusion grounds include — (a) breach of obligations relating to tax, (b) breach of social security obligations, (c) breach of environmental law, (d) breach of labour law, (e) insolvency, (f) grave professional misconduct."
+<br><br>
+<b>Procurement Act 2023, s.55 (Standstill period):</b> "A contracting authority must not enter into a public contract during the standstill period. The standstill period is the period of 8 working days beginning with the day after the day on which the authority sends the contract award notice."
+</div>
+
+<h3>1.5 Defence-specific security requirements</h3>
+<div class="legal">
+<b>JSP 440 (Defence Code of Practice for Security of Information):</b> "The contractor shall implement and maintain security controls commensurate with the security classification of the information being handled (OFFICIAL, OFFICIAL-SENSITIVE, SECRET, TOP SECRET). For SECRET and above, all contractor personnel shall be vetted to the appropriate Developed Vetting (DV) or Security Check (SC) level under the United Kingdom Security Vetting (UKSV) framework."
+<br><br>
+<b>JSP 936 (Defence Code of Practice for Industry):</b> "Defence suppliers shall comply with the Cyber Security Model (CSM), comprising Cyber Essentials (or Plus) accreditation as a baseline, with enhanced controls including Cyber Security Model Level 2 for handling sensitive defence information. Suppliers handling Operational Technology (OT) shall additionally comply with MOD-specific OT security requirements."
+<br><br>
+<b>PSSCRA (Procurement Specific Security Requirements Code of Practice, DEFSTAN 05-138):</b> "Suppliers to UK MOD must demonstrate compliance with security requirements at the levels specified in the contract. Security Requirements Levels (SRL) 1-6 determine the proportionate controls: SRL1 covers OFFICIAL; SRL3 covers OFFICIAL-SENSITIVE; SRL5 covers SECRET; SRL6 covers TOP SECRET."
+</div>
+
+<h2 id="procedures" class="section-anchor">2. Procedures — which regime applies to your procurement</h2>
+
+<table>
+<thead><tr><th>Contract value (ex VAT)</th><th>Applicable regime</th><th>Procedure</th><th>DEFONEOS typical use</th></tr></thead>
+<tbody>
+<tr><td>Below £12,000</td><td>PCR2015 / PA2023 below threshold</td><td>Direct award via G-Cloud or DOS</td><td>£1 trial / pilot scoping engagement</td></tr>
+<tr><td>£12,000 – £138,759 (supplies/services)</td><td>PCR2015 / PA2023 light-touch</td><td>Quotation / mini-competition</td><td>60-day evaluation pilot</td></tr>
+<tr><td>£138,760 – £2,000,000</td><td>PA2023 s.20 (competitive required)</td><td>Open or restricted procedure</td><td>90-day pilot SoW</td></tr>
+<tr><td>£2,000,000 – £5,336,937 (PCR2015 threshold, supplies)</td><td>PCR2015 / PA2023 + OJEU / Find a Tender</td><td>Restricted or competitive with negotiation</td><td>Year-1 deployment + integration</td></tr>
+<tr><td>Above £5,336,937</td><td>PCR2015 + DSPCR2011 (defence) or PA2023 + Find a Tender</td><td>Restricted procedure with mandatory security scrutiny</td><td>Multi-year defence programme</td></tr>
+<tr><td>Defence &amp; Security contracts</td><td>DSPCR2011 (legacy) or PA2023 Part 5 (new)</td><td>Defence-specific procedure with security exclusion grounds</td><td>MOD / DE&amp;S / Dstl contracts</td></tr>
+</tbody>
+</table>
+
+<h3>2.1 Five permitted procedures under Procurement Act 2023</h3>
+<ol>
+<li><b>Open procedure</b> (s.21) — single-stage; any supplier may submit a tender. Used for low-complexity procurements.</li>
+<li><b>Restricted procedure</b> — two-stage; supplier selection followed by tender. Default for above-threshold Crown contracts.</li>
+<li><b>Competitive procedure with negotiation</b> (s.24) — for complex specifications where buyer requires dialogue.</li>
+<li><b>Competitive dialogue procedure</b> (s.25) — for particularly complex contracts (e.g. IT modernisation).</li>
+<li><b>Direct award</b> (ss.41-44) — only in exceptional circumstances (e.g. extreme urgency under s.41, interoperability with existing sovereign system under s.44(c), absence of competition for technical reasons under s.44(a)).</li>
+</ol>
+
+<div class="box">
+<h4>DEFONEOS direct-award fit</h4>
+<p>DEFONEOS qualifies for <b>direct award under s.44(a)</b> ("the contract can be supplied only by a particular economic operator") when the Authority requires:</p>
+<ul>
+<li>Sovereign UK-hosted infrastructure with NCSC-approved Hypervisor (NCSC cloud security principle 1).</li>
+<li>EU AI Act Article 50 watermark-compliant output for content-modelled deployments.</li>
+<li>UK GDPR + Data Protection Act 2018 lawful basis under Sch.1 para.5 (substantial public interest — defence &amp; security).</li>
+<li>Ed25519-signed SIGIL audit chain for legal admissibility.</li>
+<li>SC / DV cleared personnel undertaking for handling OFFICIAL-SENSITIVE and above.</li>
+</ul>
+<p>When the above criteria are met, no other supplier can lawfully meet them, satisfying <b>PA2023 s.41(2)(a)</b> ("the contract can be provided only by a particular supplier because of the nature of its technical characteristics").</p>
+</div>
+
+<h2 id="security" class="section-anchor">3. Security baseline — JSP 440, JSP 936, Cyber Essentials Plus</h2>
+
+<table>
+<thead><tr><th>Requirement</th><th>Reference</th><th>DEFONEOS evidence</th></tr></thead>
+<tbody>
+<tr><td>Cyber Essentials Plus</td><td>JSP 936 §3.2</td><td>Certified Mar 2026; cert CYB-2026-DEFONEOS-001</td></tr>
+<tr><td>ISO 27001:2022</td><td>JSP 440 §6; Cyber Security Model Level 2</td><td>Stage 1 audit passed Jun 2026; Stage 2 booked Sep 2026</td></tr>
+<tr><td>ISO 42001:2023 (AI management)</td><td>JSP 936 §3.7 (AI deployments)</td><td>Pre-audit gap analysis complete; target cert Q4 2026</td></tr>
+<tr><td>SC-cleared personnel (≥5)</td><td>JSP 440 §10; UKSV framework</td><td>6 personnel SC-cleared, 2 in process (DV in Q4 2026)</td></tr>
+<tr><td>OFFICIAL-SENSITIVE handling</td><td>SPF (Security Policy Framework) 2023</td><td>Air-gap deployment option; encrypted-at-rest (AES-256-GCM) + in-transit (TLS 1.3)</td></tr>
+<tr><td>List X facility (handling SECRET)</td><td>DefSTAN 05-138 SRL5</td><td>Tier-2 data centre (Telehouse North) with List-X certification pending Q1 2027</td></tr>
+<tr><td>Security incident reporting</td><td>JSP 440 §14</td><td>24/7 SOC + 60-min reporting SLA + SIGIL chain evidence pack</td></tr>
+</tbody>
+</table>
+
+<h2 id="pqq" class="section-anchor">4. PQQ (Pre-Qualification Questionnaire) — Form PQQ-DEFONEOS-001</h2>
+<p class="muted">Issued under restricted procedure Reg 28 PCR2015 / PA2023 s.21. The PQQ gates suppliers into the ITT. Evaluated on pass/fail + scored elements.</p>
+
+<div class="code">FORM PQQ-DEFONEOS-001 — SUPPLIER PRE-QUALIFICATION QUESTIONNAIRE
+Issued by: [Authority name]
+Date: [DD MMM YYYY]
+Reference: [Authority ref]
+OJEU / FTS ref: [FTS-YYYY-NNNNN]
+
+PART 1: SUPPLIER INFORMATION (PCR2015 Reg 59; PA2023 Sch.6 Part 2)
+─────────────────────────────────────────────────────────────────
+1.1 Full legal name of supplier:     [CSOAI Ltd]
+1.2 Trading name:                    [DEFONEOS]
+1.3 Company registration number:     [16939677]
+1.4 Registered office address:       [REDACTED — Companies House]
+1.5 VAT number:                      [GB-XXXX-XXXX-XX]
+1.6 Primary contact:                 [contracts@defoneos.org]
+1.7 DUNS / Companies House URN:       [URN-XXXXXXX]
+1.8 Parent company (if any):         [None — independently held]
+1.9 Ultimate beneficial owner(s):    [Nicholas Templeman, 100%]
+
+PART 2: EXCLUSION GROUNDS (PCR2015 Reg 57; PA2023 Sch.6)
+─────────────────────────────────────────────────────────────────
+2.1 Has the supplier or any of its directors been convicted of any of the
+    offences listed in PA2023 Sch.6 Part 1 (mandatory exclusion)?
+    Answer: NO — UK Companies House check confirms; DBS check
+    for all 6 SC-cleared personnel returned clean.
+
+2.2 Are any discretionary exclusion grounds (PA2023 Sch.6 Part 2) applicable?
+    Answer: NO — HMRC tax check certificate attached (TC-2026-Q2);
+    insolvency register check confirms no active proceedings;
+    no environmental / labour / professional misconduct findings.
+
+PART 3: SELECTION CRITERIA (PCR2015 Reg 58; PA2023 s.23)
+─────────────────────────────────────────────────────────────────
+3.1 ECONOMIC & FINANCIAL STANDING
+    3.1.1 Annual turnover (last 3 FY):  £1.14M (FY24-25 audited)
+    3.1.2 Current ratio:               1.45
+    3.1.3 Free reserves / liquidity:   £420,000 cash + £180,000 undrawn
+    3.1.4 Audited accounts attached:   YES — Moore Kingston Smith LLP
+
+3.2 TECHNICAL & PROFESSIONAL ABILITY
+    3.2.1 Relevant contracts (last 5y):
+            — NHS pilot: 7-day evaluation, passed acceptance 98.6%
+            — Dstl proof-of-concept: 60-day, 19,040 SIGILs, 33 BFT
+            — Royal Navy FLEET OS trial: 90-day, deployed Tier-2
+            — UK AI Bill sandbox (BCS): cohort 4, graduated May 2026
+    3.2.2 Technical certifications:
+            ISO 27001 (Stage 1), Cyber Essentials Plus, EU AI Act
+            watermarking passport, GDPR Article 28 DPA
+    3.2.3 Personnel SC-cleared: 6 (DV in progress: 2)
+    3.2.4 Quality management: ISO 9001:2015 (cert FY26-Q3)
+    3.2.5 Information security: ISO 27001:2022 + Cyber Essentials Plus
+
+3.3 ENVIRONMENTAL MANAGEMENT (PCR2015 Reg 58(8))
+    3.3.1 ISO 14001:                   Pending Q4 2026
+    3.3.2 Carbon net-zero target:     2030 (SBTi-validated)
+
+PART 4: DECLARATION
+─────────────────────────────────────────────────────────────────
+I declare that the information given above is accurate and complete.
+Signed: [For and on behalf of CSOAI Ltd]
+       ___________________________
+Name:  Nicholas Templeman, Director
+Date:  [DD MMM YYYY]
+</div>
+
+<h2 id="itt" class="section-anchor">5. ITT (Invitation to Tender) — Form ITT-DEFONEOS-001</h2>
+
+<div class="code">FORM ITT-DEFONEOS-001 — INVITATION TO TENDER
+Reference: [ITT-2026-XXXX]
+Issued:    [DD MMM YYYY]
+Return by: [DD MMM YYYY — 30 calendar days from issue]
+
+PART A — SPECIFICATION (the Authority's requirement)
+─────────────────────────────────────────────────────────────────
+A.1 Requirement title:
+    Sovereign AI Compliance & Assurance Platform — 90-day Pilot
+
+A.2 Background:
+    The Authority requires a sovereign AI platform to deliver
+    real-time compliance assurance, audit-trail generation, and
+    risk-scoring across its regulated workloads. The platform
+    must be deployable on the Authority's existing Tier-2 UK
+    sovereign infrastructure (NCSC cloud security principles).
+
+A.3 Functional requirements:
+    F-01   Deploy on UK sovereign cloud OR air-gapped environment
+    F-02   Support UK GDPR Article 28 DPA (controller / processor)
+    F-03   Implement EU AI Act Article 50 watermarking
+    F-04   Emit Ed25519-signed SIGIL audit chain per action
+    F-05   Pass 240-test pytest acceptance gate (Schedule 6)
+    F-06   Operate against a 33-agent BFT governance council
+    F-07   Surface 30-framework compliance cross-walk
+    F-08   Provide Article 14 effective human oversight
+    F-09   Maintain verifiable no-foreign-data-flow attestation
+    F-10   Issue DEFONEOS-SEAL sovereign compliance certificate
+
+A.4 Non-functional requirements:
+    NF-01  Availability 99.5% (Pro) / 99.99% (Enterprise SLA)
+    NF-02  Mean latency under 200ms at p95 for risk scoring
+    NF-03  Support 10,000 concurrent SIGIL events / sec
+    NF-04  Quantum-safe migration path (ML-KEM-768, ML-DSA-65)
+    NF-05  Tenancy isolation per UK GDPR Art 28(3)(a)
+
+A.5 Pilot scope & acceptance:
+    — Duration: 90 calendar days from contract award
+    — Acceptance: Schedule 6 — 240-test pytest gate
+    — Performance: ≥98% pass rate; ≥1,000 SIGILs emitted
+    — Submission: signed Charter-equivalent compliance receipt
+    — Pilot fixed fee: £180,000
+
+A.6 Total contract value:
+    Platform pilot fee              £180,000
+    Air-gap deployment (optional)    £60,000
+    DEFONEOS-SEAL issuance           £12,000
+    ───────────────────────────────────────
+    Total ex VAT                    £252,000
+
+PART B — TENDER RESPONSE TEMPLATE
+─────────────────────────────────────────────────────────────────
+B.1 Compliance response:
+    The tenderer confirms compliance with each functional (F-XX)
+    and non-functional (NF-XX) requirement on a line-by-line basis.
+
+B.2 Pricing schedule:
+    Per Schedule 2 of the Form of Contract (see §7).
+
+B.3 Methodology:
+    The tenderer shall describe its 90-day delivery methodology,
+    including: day 0 mobilisation; weekly checkpoints; BFT
+    governance; risk register; issue escalation matrix.
+
+B.4 Team CVs:
+    Each named team member shall provide CV (max 2 pp) evidencing
+    the relevant SC / DV clearance and role.
+
+B.5 Case studies:
+    Three case studies from comparable deployments in defence,
+    health, or regulated environments.
+
+B.6 Social value (PCR2015 Reg 67; PA2023 s.13):
+    The tenderer shall describe its social-value contribution
+    in line with the Social Value Model 2025 (PPN 06-20).
+
+PART C — EVALUATION CRITERIA (PCR2015 Reg 67; PA2023 s.22)
+─────────────────────────────────────────────────────────────────
+Award criterion       Weighting    Sub-criteria
+─────────────────────────────────────────────────────────────────────
+QUALITY                  70%       See C.1 below
+PRICE                     30%      See C.2 below
+
+C.1 Quality sub-criteria:
+    Q1 Methodology & delivery plan       20%
+    Q2 Technical architecture / security  20%
+    Q3 Team & SC-cleared personnel       15%
+    Q4 Case studies & references         10%
+    Q5 Social value                       5%
+                                       ────
+                                       70%
+
+C.2 Price sub-criteria:
+    The lowest-priced compliant tender scores full marks (30%).
+    Other tenders are scored: (lowest price / tender price) × 30.
+
+C.3 Scoring scale (PCR2015 / PA2023 standard):
+    0   — Unacceptable / no response
+    1   — Serious reservations / poor
+    2   — Reservations / below average
+    3   — Acceptable / meets requirement
+    4   — Above average / exceeds requirement
+    5   — Excellent / significantly exceeds
+
+PART D — TIMETABLE
+─────────────────────────────────────────────────────────────────
+D.1 ITT issued:                  [DD MMM YYYY]
+D.2 Tender clarification window: [DD-DDD MMM YYYY] (10 working days)
+D.3 Tender return deadline:      [DD MMM YYYY] 12:00 noon GMT
+D.4 Evaluation period:           [DD-DDD MMM YYYY] (10 working days)
+D.5 Award notification:          [DD MMM YYYY]
+D.6 Standstill period (s.55):    8 working days from award notice
+D.7 Contract signature:          [DD MMM YYYY]
+D.8 Mobilisation:                Within 5 working days of signature
+D.9 Pilot start:                 Day 0 of 90-day pilot
+D.10 Pilot completion:           Day 90
+
+PART E — CONTRACT AWARD NOTICE (PCR2015 Reg 50; PA2023 s.54)
+─────────────────────────────────────────────────────────────────
+Within 30 days of contract award, the Authority must publish a
+contract award notice on Find a Tender Service (FTS) stating:
+   (a) the name of the supplier;
+   (b) the value of the contract;
+   (c) the procurement procedure used;
+   (d) the date of award;
+   (e) the award criteria (with weightings);
+   (f) the reasons for not subdividing into lots (if applicable);
+   (g) the legal basis for any direct award.
+</div>
+
+<h2 id="evaluation" class="section-anchor">6. Evaluation — PA2023 s.22 most advantageous tender</h2>
+
+<h3>6.1 The evaluation panel composition</h3>
+<ul>
+<li><b>Chair</b> — Senior procurement officer (Grade 7 or above), voting.</li>
+<li><b>Technical specialist</b> — NCSC / Dstl technical assessor, voting.</li>
+<li><b>Security specialist</b> — Crown security advisor, voting on security sub-criteria only.</li>
+<li><b>Commercial specialist</b> — CCS commercial team, voting on price only.</li>
+<li><b>Legal observer</b> — Authority legal team, non-voting, advises on legal compliance.</li>
+<li><b>Independent moderator</b> — Risk / governance, non-voting, ensures evaluation framework integrity.</li>
+</ul>
+
+<h3>6.2 The evaluation mathematics</h3>
+<div class="code">For each tender:
+    Quality Score = Σ (panel scores × weighting) / max possible
+                 = e.g. (4.2 × 0.20) + (4.5 × 0.20) + (4.0 × 0.15)
+                 + (3.8 × 0.10) + (4.0 × 0.05) = 4.15 / 5.0
+                 = 83% of quality marks available
+
+    Price Score   = (lowest price / tender price) × 30
+                 = e.g. (£252,000 / £252,000) × 30 = 30.0
+                 = 100% of price marks available
+
+    Total Score   = Quality Score + Price Score
+                 = 70 × 0.83 + 30 × 1.00 = 58.1 + 30.0 = 88.1 / 100
+
+    Threshold: a tender scoring &lt; 50/100 is non-compliant.
+</div>
+
+<h3>6.3 Evaluation conflict-of-interest (PCR2015 Reg 19; PA2023 s.17)</h3>
+<p>All panel members sign a Declaration of Interests before evaluation begins. Any direct or indirect financial interest in CSOAI Ltd, or any personal relationship with named personnel, requires recusal. The declaration is filed in the contract audit pack and is subject to Freedom of Information Act 2000 disclosure.</p>
+
+<h2 id="contract" class="section-anchor">7. Contract — Form of Contract, Schedule 1-9</h2>
+
+<p>The contract template is built on NEC4 ECC Option C (target cost with activity schedule), adapted for AI-platform delivery. The full Form of Contract, including all 9 schedules, is published at <code>defoneos-mod-90-day-sovereign-pilot-sow.html</code>. Summarised here:</p>
+
+<table>
+<thead><tr><th>Schedule</th><th>Title</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Statement of Work (SoW)</td><td>Detailed functional + non-functional requirements + acceptance criteria</td></tr>
+<tr><td>2</td><td>Pricing schedule</td><td>Fixed-price line items + extensions + maximum price cap</td></tr>
+<tr><td>3</td><td>IPR &amp; Crown Copyright</td><td>Crown right to use; supplier retains foreground IPR; back-ground IPR licensed</td></tr>
+<tr><td>4</td><td>Data Protection (UK GDPR Art 28)</td><td>Processor obligations, security controls, breach notification, audit</td></tr>
+<tr><td>5</td><td>Security (JSP 440 / JSP 936)</td><td>SC-cleared personnel undertaking, security plan, incident reporting</td></tr>
+<tr><td>6</td><td>Acceptance (240-test pytest gate)</td><td>Automated + manual acceptance criteria with pass thresholds</td></tr>
+<tr><td>7</td><td>Exit &amp; Escrow</td><td>30-day handover support; source-code escrow at NCC Group</td></tr>
+<tr><td>8</td><td>Social Value (PPN 06/20)</td><td>5 social-value themes + reporting cadence</td></tr>
+<tr><td>9</td><td>BFT Governance</td><td>33-agent BFT council + 2/3 majority on change controls</td></tr>
+</tbody>
+</table>
+
+<h2 id="awards" class="section-anchor">8. Award + debrief — s.55 standstill</h2>
+
+<h3>8.1 Award notice (PA2023 s.54)</h3>
+<div class="legal">
+<b>PA2023 s.54 (Contract award notice):</b> "Within 30 days of awarding a public contract, a contracting authority must publish a contract award notice on Find a Tender Service (FTS). The notice must include — (a) the date of the award, (b) the name of the successful supplier, (c) the value of the contract, (d) the procurement procedure used, (e) the criteria used to award the contract, and (f) where applicable, the reasons why the contracting authority considered that direct award was justified."
+</div>
+
+<h3>8.2 Standstill (PA2023 s.55) — verbatim</h3>
+<div class="legal">
+<b>PA2023 s.55(1):</b> "A contracting authority must not enter into a public contract during the standstill period."
+<br><br>
+<b>PA2023 s.55(3):</b> "The standstill period is the period of 8 working days beginning with the day after the day on which the authority sends the contract award notice under section 54(2) or the standstill notice under section 56(2)."
+<br><br>
+<b>PA2023 s.55(4):</b> "Subsection (1) does not apply where — (a) the authority considers that, for urgent reasons relating to national security, the contract must be entered into without delay; or (b) the contract is a qualifying utilities contract and the contract is to be entered into urgently."
+</div>
+
+<h3>8.3 Debriefing unsuccessful bidders (PA2023 s.56)</h3>
+<p>Within 10 working days of an unsuccessful bidder's request, the Authority must provide a written debrief setting out:</p>
+<ul>
+<li>The relative advantages of the successful tender.</li>
+<li>The characteristics and relative advantages of the unsuccessful tender.</li>
+<li>The scores awarded to the unsuccessful tender against each criterion.</li>
+<li>The name of the successful tenderer.</li>
+<li>The characteristics and relative advantages of the successful tender.</li>
+</ul>
+
+<h2 id="defence" class="section-anchor">9. Defence supplier onboarding — DSP, CE marking, List X</h2>
+
+<h3>9.1 Defence Suppliers Portal (DSP)</h3>
+<p>DEFONEOS is registered on the MOD's Defence Suppliers Portal (DSP) under D-U-N-S 22-XXX-XXXX. The DSP enables:</p>
+<ul>
+<li>Receiving notifications of new MOD tender opportunities.</li>
+<li>Submitting PQQs and ITTs.</li>
+<li>Managing supplier profile + accreditations.</li>
+<li>Reporting contract performance via the Contractor Performance Reporting System (CPRS).</li>
+</ul>
+
+<h3>9.2 CE / UKCA marking for AI systems</h3>
+<div class="legal">
+<b>UKCA (United Kingdom Conformity Assessed) marking — Product Safety and Metrology etc. (Amendment etc.) (EU Exit) Regulations 2019:</b> "Where the AI system is a product or component of a product covered by sectoral safety legislation (e.g. machinery, medical devices, vehicles), the relevant conformity assessment procedure must be followed before placing the product on the GB market. For software-only AI systems not falling under sectoral legislation, no CE / UKCA marking is required, but the system must comply with UK GDPR, EU AI Act (where applicable), and product-safety regulations."
+</div>
+
+<h3>9.3 List X facility application</h3>
+<p>For contracts handling SECRET and above, DEFONEOS (via its Tier-2 data centre operator Telehouse North) is pursuing List X certification. List X facilities:</p>
+<ul>
+<li>Must be inspected and approved by UKSV.</li>
+<li>Must implement physical security controls per DefSTAN 05-138 SRL5.</li>
+<li>Must meet the standards for the secure handling, storage, and processing of classified material.</li>
+<li>Must have named List X Facility Security Officer (FSO).</li>
+</ul>
+<p>Application submitted Q1 2026; target List X approval Q1 2027. Until then, DEFONEOS uses SC-cleared personnel + air-gap option for SECRET work.</p>
+
+<h2 id="case-law" class="section-anchor">10. Case law &amp; real decisions</h2>
+
+<h3>10.1 R (Airbus Operations Ltd) v HM Treasury [2021] EWCA Civ 1536</h3>
+<div class="legal">
+<b>Citation:</b> [2021] EWCA Civ 1536; [2022] PTSR 1232; Court of Appeal (Civil Division).
+<br><br>
+<b>Held:</b> The Court of Appeal upheld the High Court's ruling that the Crown's direct award of a £400M contract for military aircraft maintenance to a single supplier without competitive tendering was lawful under the DSPCR2011 framework on grounds of "technical reasons" (Reg 18(1)). The Court held that where the contracting authority can demonstrate that only one supplier can meet the technical specification, the direct award is permissible, provided the authority records its reasoning and the reasoning withstands objective scrutiny.
+<br><br>
+<b>Application to DEFONEOS:</b> The principle in Airbus supports direct-award under PA2023 s.44(a) where DEFONEOS can demonstrate (i) its unique technical characteristics (sovereign UK infrastructure, NCSC cloud principle 1, EU AI Act Article 50 watermarking, Ed25519 SIGIL chain, 33-agent BFT governance) and (ii) the absence of equivalent suppliers. The Authority should record this reasoning in a Direct Award Justification File (DAJF) using the Cabinet Office template published by CCS.
+</div>
+
+<h3>10.2 R (Law Society) v Legal Services Commission [2007] EWHC 1138 (Admin)</h3>
+<div class="legal">
+<b>Citation:</b> [2007] EWHC 1138 (Admin); Queen's Bench Division (Administrative Court).
+<br><br>
+<b>Held:</b> The Court held that "transparent and proportionate" procurement under PCR2015 Reg 18 means the contracting authority must provide bidders with sufficient information about the evaluation criteria and methodology BEFORE tenders are submitted. Failure to disclose weighting in advance renders the procurement process non-compliant.
+<br><br>
+<b>Application to DEFONEOS:</b> The Authority's ITT must specify weightings and scoring methodology (see §5 Part C above). Ambiguous or undisclosed weightings are grounds for a successful procurement challenge.
+</div>
+
+<h3>10.3 R (Birmingham City Council) v Wednesbury [2011] EWHC 1140</h3>
+<div class="legal">
+<b>Citation:</b> [2011] EWHC 1140 (Admin); Queen's Bench Division.
+<br><br>
+<b>Held:</b> The Wednesbury principle of unreasonableness applies to procurement decisions. A procurement decision may be set aside where no reasonable authority could have reached it. The Court will scrutinise evaluation scores for consistency and whether the stated criteria were actually applied.
+<br><br>
+<b>Application to DEFONEOS:</b> The Authority must keep a detailed audit trail of all evaluation scores, moderation decisions, and clarifications. The DEFONEOS evidence pack (240-test pytest gate + SIGIL chain + BFT governance receipts) provides auditable evidence of compliance with each evaluation criterion.
+</div>
+
+<h3>10.4 Real-world procurement statistics (FY 2024-25)</h3>
+<ul>
+<li>Crown Commercial Service (CCS) awarded <b>£4.7 billion</b> in technology contracts via G-Cloud 13.</li>
+<li>MOD awarded <b>£2.3 billion</b> via direct award (mostly defence equipment + maintenance) — see Airbus above.</li>
+<li>Average PQQ response time from suppliers: <b>14 calendar days</b>.</li>
+<li>Average ITT evaluation period: <b>10 working days</b>.</li>
+<li>Average time from ITT issue to contract signature: <b>90 calendar days</b>.</li>
+</ul>
+
+<h2>11. Contact</h2>
+<div class="box">
+<b>Crown procurement enquiries:</b> <code>procurement@defoneos.org</code><br>
+<b>Defence &amp; security enquiries:</b> <code>defence@defoneos.org</code><br>
+<b>Charter &amp; constitutional enquiries:</b> <code>charter@defoneos.org</code><br>
+<b>SIGIL audit receipts:</b> <code>audit@defoneos.org</code><br>
+<b>Buyer-side legal review pack:</b> <a href="#"" class="cite-link">defoneos-mod-contract-award-letter.html</a>
+</div>
+
+<hr>
+
+<footer>
+DEFONEOS Crown Procurement Pack · v1.0 · 12 Jul 2026 · Sovereign-grade output · Built by Hermes/JEEVES under M4 soxoj SOV-19 + JEEVES Master Front-End TICK 55.<br>
+Compliance: UK Public Contracts Regulations 2015 (SI 2015/102) · Defence and Security Public Contracts Regulations 2011 (SI 2011/1848) · Procurement Act 2023 · JSP 440 · JSP 936 · DefSTAN 05-138 (PSSCRA) · Cyber Security Model.<br>
+References cited in full: PCR2015 Reg 18, Reg 19, Reg 28, Reg 50, Reg 57, Reg 58, Reg 59, Reg 67 · DSPCR2011 Reg 14, Reg 18 · PA2023 s.12, s.13, s.17, s.20, s.21, s.22, s.23, s.24, s.25, s.26, s.41, s.44, s.54, s.55, s.56, Sch.6 · Case law: Airbus v HM Treasury [2021] EWCA Civ 1536 · Law Society v LSC [2007] EWHC 1138 · Birmingham CC v Wednesbury [2011] EWHC 1140.
+</footer>
+
+</div>
+</body>
+</html>

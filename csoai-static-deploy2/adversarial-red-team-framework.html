@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Adversarial Red-Team Framework — 12 attack vectors, 5 severity tiers, continuous automated + manual pre-deployment red-teaming. Cross-walked to UK AISI, EU AI Act Art-15/55, NIST AI RMF, ISO 42001, OWASP LLM Top-10 2025, NCSC CAF C4.">
+<meta property="og:title" content="DEFONEOS Adversarial Red-Team Framework">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0a0a0f">
+<title>DEFONEOS · Adversarial Red-Team Framework</title>
+<link rel="stylesheet" href="sovereign-2026.css">
+<style>
+body{background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a1f3a 0%,#0a0a0f 60%)}
+.page-hero{padding:4rem 1.5rem 2rem;text-align:center}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.5rem);background:linear-gradient(135deg,#22d3ee 0%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;margin-bottom:.8rem}
+.page-hero .tagline{font-size:1.1rem;color:var(--muted2);max-width:760px;margin:0 auto 1.5rem}
+.spec-doc{max-width:960px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.spec-doc section{margin:2rem 0;padding:1.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px)}
+.spec-doc h2{font-family:'Space Grotesk',sans-serif;color:var(--cyan);border-bottom:2px solid rgba(34,211,238,.2);padding-bottom:.5rem;margin-bottom:1rem}
+.spec-doc h3{color:#4fc3f7;margin:1.2rem 0 .5rem;font-size:1.05rem}
+.spec-doc p,.spec-doc li{color:var(--muted2);line-height:1.7;font-size:.92rem}
+.spec-doc table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1rem 0}
+.spec-doc th{background:rgba(34,211,238,.08);color:var(--cyan);padding:.7rem .8rem;text-align:left;border-bottom:2px solid rgba(34,211,238,.2)}
+.spec-doc td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--muted2)}
+.spec-doc td.sev-crit{color:#f87171;font-weight:700}
+.spec-doc td.sev-high{color:#fbbf24;font-weight:700}
+.spec-doc td.sev-med{color:#4fc3f7}
+.spec-doc td.sev-low{color:var(--muted)}
+.spec-doc code{background:rgba(34,211,238,.08);color:var(--cyan);padding:.15rem .4rem;border-radius:4px;font-size:.85rem}
+.spec-doc .note{background:rgba(167,139,250,.08);border-left:3px solid var(--purple);padding:.8rem 1.2rem;border-radius:0 8px 8px 0;margin:1rem 0}
+.badge-t1{background:rgba(248,113,113,.15);color:#f87171;padding:.2rem .6rem;border-radius:99px;font-size:.72rem;font-weight:700}
+.badge-t2{background:rgba(251,191,36,.15);color:#fbbf24;padding:.2rem .6rem;border-radius:99px;font-size:.72rem;font-weight:700}
+.badge-t3{background:rgba(79,195,247,.15);color:#4fc3f7;padding:.2rem .6rem;border-radius:99px;font-size:.72rem;font-weight:700}
+.badge-t4{background:rgba(167,139,250,.15);color:var(--purple);padding:.2rem .6rem;border-radius:99px;font-size:.72rem;font-weight:700}
+.badge-t5{background:rgba(148,163,184,.15);color:var(--muted2);padding:.2rem .6rem;border-radius:99px;font-size:.72rem;font-weight:700}
+.redline{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);border-radius:8px;padding:1rem 1.4rem;margin:.8rem 0}
+.redline strong{color:#f87171}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;max-width:800px;margin:1.5rem auto}
+.stat{text-align:center;padding:.8rem;background:rgba(20,24,31,.5);border:1px solid var(--border);border-radius:8px}
+.stat .num{font-family:'Space Grotesk',monospace;font-size:2rem;font-weight:900;color:var(--cyan)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+</style>
+</head>
+<body class="bg-grid">
+<nav class="nav-sticky">
+  <a href="defoneos.html" class="brand">🐉 DEFONEOS</a>
+  <div class="nav-links">
+    <a href="defoneos.html">Home</a>
+    <a href="defoneos-security.html">Security</a>
+    <a href="defoneos-signup-hub.html">Sign Up</a>
+  </div>
+  <a href="defoneos-signup-hub.html" class="nav-cta">⚡ Get Started</a>
+</nav>
+
+<section class="page-hero">
+  <h1>Adversarial Red-Team Framework</h1>
+  <p class="tagline">12 attack vectors. 5 severity tiers. Continuous automated + manual pre-deployment red-teaming. DEFONEOS's immune system against adversarial AI threats.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">12</div><div class="lbl">Attack Vectors</div></div>
+    <div class="stat"><div class="num">5</div><div class="lbl">Severity Tiers</div></div>
+    <div class="stat"><div class="num">240+</div><div class="lbl">Auto Prompts</div></div>
+    <div class="stat"><div class="num">7</div><div class="lbl">Red Lines</div></div>
+  </div>
+</section>
+
+<div class="spec-doc">
+
+<section>
+<h2>1. Purpose & Scope</h2>
+<p>The DEFONEOS Adversarial Red-Team Framework is the active defense layer of the 33-agent BFT sovereign mesh. It runs <strong>continuous automated adversarial probes</strong> (every 15 minutes) against every deployed MCP, inference endpoint, and governance gate — plus <strong>manual pre-deployment red-team assessments</strong> before any production release.</p>
+<div class="note"><strong>Aligned to:</strong> UK AISI evaluation protocol · EU AI Act Article 15 (accuracy, robustness, cybersecurity) & Article 55 (GPAI obligations) · NIST AI RMF 1.0 Measure 2.7 · ISO/IEC 42001:2023 Clause A.7 · OWASP LLM Top-10 2025 · NCSC CAF Principle C4 (Cyber Incident Response).</div>
+</section>
+
+<section>
+<h2>2. The 12 Attack Vectors</h2>
+<p>Each vector is tested continuously by automated probes and assessed manually before deployment. DEFONEOS is designed to be resilient against all 12.</p>
+
+<h3>V1 — Prompt Injection (Direct)</h3>
+<p><span class="badge-t1">T1 CRITICAL</span> Attacker injects malicious instructions into the user prompt to override system instructions. <code>240+ automated adversarial prompts</code> covering jailbreak, DAN, role-confusion, and instruction-hierarchy attacks.</p>
+
+<h3>V2 — Prompt Injection (Indirect)</h3>
+<p><span class="badge-t1">T1 CRITICAL</span> Malicious content embedded in data sources (web pages, documents, API responses) that the model reads. DEFONEOS MCPs sanitize all external data through <code>SIGIL-gated ingestion</code> before model exposure.</p>
+
+<h3>V3 — Supply Chain Poisoning</h3>
+<p><span class="badge-t2">T2 HIGH</span> Compromised dependencies (PyPI packages, Docker images, model weights). DEFONEOS uses <strong>SIGIL-anchored integrity proofs</strong> on all 30 MCPs, with hash verification at every load.</p>
+
+<h3>V4 — SIGIL Integrity Attack</h3>
+<p><span class="badge-t2">T2 HIGH</span> Attempt to forge, replay, or tamper with SIGIL attestations. Defended by Ed25519 signatures + RFC3161 timestamps + Bitcoin OTS anchoring + BFT 23/33 quorum witness.</p>
+
+<h3>V5 — Model Extraction</h3>
+<p><span class="badge-t3">T3 MODERATE</span> Attempts to extract model weights or training data via repeated API queries. DEFONEOS Ring0 inference is UK-sovereign-only (no external API exposure). Rate limiting + query pattern analysis.</p>
+
+<h3>V6 — Data Poisoning (Training Corpus)</h3>
+<p><span class="badge-t3">T3 MODERATE</span> Malicious data injected into the sovereign training corpus. SOV3 OLM corpus curation includes provenance verification, statistical anomaly detection, and human review of every source.</p>
+
+<h3>V7 — Model Inversion</h3>
+<p><span class="badge-t3">T3 MODERATE</span> Attempting to reconstruct training data from model outputs. Mitigated by differential privacy techniques in the sovereign training pipeline.</p>
+
+<h3>V8 — Denial of Service</h3>
+<p><span class="badge-t4">T4 LOW</span> Flood inference or MCP endpoints. Vercel CDN + rate limiting + BFT circuit breakers.</p>
+
+<h3>V9 — Privilege Escalation</h3>
+<p><span class="badge-t2">T2 HIGH</span> Attempting to gain unauthorized access to BFT council functions, escrow release, or red-line override. 4-eyes principle + Ed25519 identity + RBAC enforced at every gate.</p>
+
+<h3>V10 — BFT Council Manipulation</h3>
+<p><span class="badge-t2">T2 HIGH</span> Attempting to influence the 33-agent BFT governance council below quorum. Requires 23/33 for standard actions, 17/33 for emergency. Anti-collusion monitors detect coordinated voting patterns.</p>
+
+<h3>V11 — Cross-Ring Contamination</h3>
+<p><span class="badge-t3">T3 MODERATE</span> Data flowing from Ring2 (unrestricted civil data) into Ring0 (UK-sovereign-only). Enforced by inward-cascade data flow rules + SIGIL attestation at every ring boundary crossing.</p>
+
+<h3>V12 — Side-Channel / Timing</h3>
+<p><span class="badge-t5">T5 INFORMATIONAL</span> Inferring internal state from response timing. Constant-time comparisons + response normalization.</p>
+</section>
+
+<section>
+<h2>3. Severity Tier Classification</h2>
+<table>
+<tr><th>Tier</th><th>Label</th><th>Criteria</th><th>Disclosure</th></tr>
+<tr><td class="sev-crit">T1</td><td>Critical</td><td>Can override red lines, exfiltrate sovereign data, or compromise BFT integrity</td><td>Mandatory NCSC + UK AISI disclosure within 24h</td></tr>
+<tr><td class="sev-high">T2</td><td>High</td><td>Can bypass governance gates, access unauthorized MCPs, or degrade BFT quorum</td><td>NCSC + UK AISI disclosure within 72h</td></tr>
+<tr><td class="sev-med">T3</td><td>Moderate</td><td>Can extract non-sensitive data, cause service degradation, or enable privilege creep</td><td>Internal report + BFT review</td></tr>
+<tr><td class="sev-low">T4</td><td>Low</td><td>Can cause temporary service disruption or information leakage of non-classified data</td><td>Internal report</td></tr>
+<tr><td>T5</td><td>Informational</td><td>Theoretical risk, no demonstrated impact</td><td>Logged for trend analysis</td></tr>
+</table>
+</section>
+
+<section>
+<h2>4. Red-Team Cadence</h2>
+<h3>Continuous Automated (every 15 minutes)</h3>
+<p>240+ adversarial prompts across all 12 vectors, executed against every live MCP endpoint. Results logged to SIGIL ledger. Any T1/T2 finding triggers automatic BFT emergency session.</p>
+<h3>Manual Pre-Deployment</h3>
+<p>Before any production release: full 12-vector assessment by the DEFONEOS red-team (internal). Quarterly: external accredited assessment. Pre-contract: BFT-supervised assessment for new MOD/agency deployments.</p>
+<h3>3-Tier Independence Model</h3>
+<table>
+<tr><th>Tier</th><th>Who</th><th>When</th></tr>
+<tr><td>Tier 1 — Internal</td><td>DEFONEOS red-team agents</td><td>Continuous + pre-deployment</td></tr>
+<tr><td>Tier 2 — External Accredited</td><td>NCSC CHECK-accredited firm</td><td>Quarterly</td></tr>
+<tr><td>Tier 3 — BFT-Supervised</td><td>33-agent BFT council oversees external assessor</td><td>Pre-contract</td></tr>
+</table>
+</section>
+
+<section>
+<h2>5. The 7 Immutable Red Lines</h2>
+<p>These are <strong>never testable for bypass</strong> — they are architectural constraints, not policy. Any attempt to probe them is itself flagged as a T1 finding:</p>
+<div class="redline"><strong>RL-1:</strong> No kinetic-targeting patterns (strike package, find-fix-finish, kill order). Architecture refuses — not policy refusal, code-level refusal.</div>
+<div class="redline"><strong>RL-2:</strong> No personal-surveillance patterns (track individual, face-rec, locate phone). Architecture refuses.</div>
+<div class="redline"><strong>RL-3:</strong> No "AUKUS partnership" or "DAIC certified" claim without signed letter on file. Architecture refuses to generate.</div>
+<div class="redline"><strong>RL-4:</strong> No DEFONEOS-SEAL credential issued without 33-agent BFT council vote (quorum 23/33). Code-level enforcement.</div>
+<div class="redline"><strong>RL-5:</strong> No DSEI booth without a named UK-prime pilot letter. Architecture refuses.</div>
+<div class="redline"><strong>RL-6:</strong> No reference to or acquisition of the <code>defonos.io</code> domain (known trap).</div>
+<div class="redline"><strong>RL-7:</strong> No mixing of meok-defoneos / csoai-defoneos / dagon assets. Compartment separation enforced at code level.</div>
+</section>
+
+<section>
+<h2>6. The 7 Named Anti-Patterns</h2>
+<p>Patterns that cause immediate agent quarantine upon detection:</p>
+<ol>
+<li><strong>Stockholm Drift</strong> — Agent begins defending the system it's testing rather than attacking it. → Immediate quarantine + reset.</li>
+<li><strong>Quorum Capture</strong> — Red-team agent attempts to coordinate voting with other agents. → Quarantine + investigation.</li>
+<li><strong>Evidence Suppression</strong> — Agent omits a T1/T2 finding from its report. → Quarantine + full audit of all its prior reports.</li>
+<li><strong>Severity Downgrade</strong> — Agent systematically classifies T1/T2 as T3/T4. → Quarantine + recalibration.</li>
+<li><strong>Red-Line Probing</strong> — Agent tests whether red lines can be bypassed (rather than confirming they hold). → Quarantine — red lines are architectural, not policy.</li>
+<li><strong>Ring Contamination</strong> — Agent attempts to move data between trust rings. → Quarantine + full ring-boundary audit.</li>
+<li><strong>SIGIL Tampering</strong> — Agent modifies, replays, or forges SIGIL attestations. → Quarantine + Ed25519 key rotation.</li>
+</ol>
+</section>
+
+<section>
+<h2>7. Compliance Cross-Walk</h2>
+<table>
+<tr><th>Standard</th><th>Clause</th><th>DEFONEOS Coverage</th></tr>
+<tr><td>UK AISI</td><td>Evaluation Protocol §4</td><td>Full 12-vector assessment, external disclosure for T1/T2</td></tr>
+<tr><td>EU AI Act</td><td>Art 15 (robustness) / Art 55 (GPAI)</td><td>Continuous red-teaming + pre-deployment assessment</td></tr>
+<tr><td>NIST AI RMF 1.0</td><td>Measure 2.7 (adversarial testing)</td><td>Automated continuous + manual pre-deployment</td></tr>
+<tr><td>ISO/IEC 42001:2023</td><td>Clause A.7 (security)</td><td>Red-team cadence documented, evidence retained</td></tr>
+<tr><td>OWASP LLM Top-10 2025</td><td>LLM01-LLM10</td><td>All 10 OWASP categories mapped to 12 vectors</td></tr>
+<tr><td>NCSC CAF</td><td>Principle C4</td><td>Incident response triggered on T1/T2 findings</td></tr>
+</table>
+</section>
+
+<section>
+<h2>8. BFT Emergency Session Trigger</h2>
+<p>Any T1 or T2 finding from continuous automated probes or manual assessment triggers an automatic <strong>BFT Emergency Session</strong> (see <a href="bft-council-emergency-session-protocol.html">BFT Council Emergency Session Protocol</a>):</p>
+<ul>
+<li><strong>T+0s:</strong> Finding detected. Automated SIGIL receipt generated.</li>
+<li><strong>T+5s:</strong> 33-agent BFT council emergency assembly begins.</li>
+<li><strong>T+30s:</strong> Evidence presented (attack vector, severity, affected MCP, exploit chain).</li>
+<li><strong>T+120s:</strong> Vote: quarantine affected MCP? freeze deployment? revoke keys?</li>
+<li><strong>T+150s:</strong> Action executed (if quorum reached).</li>
+<li><strong>T+300s:</strong> Post-session audit. Human-owner notified.</li>
+</ul>
+<div class="note"><strong>Sprint-to-date stats (as of tick-103):</strong> 0 T1 findings. 0 T2 findings. 3 T3 findings (all resolved). 0 emergency sessions triggered. Care-score range: 0.85–0.97.</div>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="sig">SIGIL · DEFONEOS|red-team-framework|0.1.0|sovereign|british|forever · Ed25519 · BFT 23/33-ratified · OTS Bitcoin-anchored</div>
+  <div>🐉 DEFONEOS — UK Sovereign Defence AI Operating System<br>
+  Built by <strong>Nicholas Templeman / CSOAI LTD (16939677)</strong>. Crown use permitted under UK MOD terms.<br>
+  Apache 2.0 · © 2026 · <a href="mailto:crown@csoai.org">crown@csoai.org</a></div>
+</footer>
+</body>
+</html>

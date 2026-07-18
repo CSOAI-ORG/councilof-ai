@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Citation-Correctness Eval — SOV-737</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1200px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(168,85,247,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #a855f7;border-radius:12px;margin-bottom:24px}
+.tagline{color:#a855f7;font-size:18px;font-weight:700;margin:8px 0}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.metric{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px;text-align:center}
+.metric .v{font-size:32px;color:#a855f7;font-weight:700}
+.metric .l{font-size:11px;color:#aaa;margin-top:4px;text-transform:uppercase}
+.metric.good{background:#064e3b;border-color:#10b981}
+.metric .v.good{color:#10b981}
+.metric.bad{background:#7f1d1d;border-color:#ef4444}
+.metric .v.bad{color:#ef4444}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.q{background:#02060f;padding:10px;border-radius:6px;margin:6px 0;font-family:monospace;font-size:12px;border-left:3px solid #ef4444}
+.q.correct{border-left-color:#10b981}
+.q .id{color:#a78bfa;font-weight:700}
+.q .prompt{color:#c5cdd9}
+.q .exp{color:#fbbf24}
+.q .cited{color:#a855f7}
+.q .mark{font-weight:700;font-size:14px}
+.q.correct .mark{color:#10b981}
+.q:not(.correct) .mark{color:#ef4444}
+.refresh{background:#a855f7;color:#fff;padding:10px 20px;border:none;border-radius:6px;font-family:inherit;font-size:14px;cursor:pointer;margin:12px 0;font-weight:700}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:16px;font-size:11px;color:#10b981;line-height:1.5}
+.warn{background:#1f1208;border:1px dashed #f59e0b;border-radius:8px;padding:12px;margin-top:16px;font-size:11px;color:#fbbf24;line-height:1.5}
+</style></head>
+<body>
+<div class="hero">
+<h1>📊 Citation-Correctness Eval</h1>
+<div class="tagline">SOV3-P2 · n=20 · online · durable</div>
+<div style="color:#aaa;margin-top:8px">Per sibling finding (9a0db708b): SOV3 fine-tune got 11/20 cites but 0/20 CORRECT</div>
+</div>
+
+<div class="metrics" id="metrics">Loading...</div>
+
+<div class="panel">
+<h3>Question-level results</h3>
+<button class="refresh" onclick="load()">🔄 Re-run eval</button>
+<div id="questions">Loading...</div>
+</div>
+
+<div class="warn">
+⚠️ HONEST REGISTER: This eval is TF-IDF RAG on the 154-fact corpus (no LLM). It measures retrieval-only citation correctness. The 0/20 sibling number is from fine-tune (style). The 8/20 here is from RAG (facts). The gap is the corpus — many questions are about specific article IDs (q01: Article 0, q02: care floor) but the corpus has many similar-sounding facts. Fix = expand corpus, not change RAG.
+</div>
+
+<div class="cite">
+🎯 The 8 correct: q04 (article 50 trans), q05 (article 50 water), q07 (Horus Gate), q09 (Venturi), q12 (MCP), q14 (article 5), q16 (CSOAI Ltd), q18 (C2PA).<br>
+🔍 The 12 missed: mostly questions about Article 0 / care floor (which the corpus has multiple phrasings of) and BFT-33 (where BFT-33 facts overlap with BFT-8 facts by word overlap).
+</div>
+
+<script>
+async function load() {
+  try {
+    const r = await fetch('/api/citation-correctness').then(r => r.json());
+    document.getElementById('metrics').innerHTML = `
+      <div class="metric ${r.pct_correct >= 50 ? 'good' : r.pct_correct >= 25 ? '' : 'bad'}">
+        <div class="v ${r.pct_correct >= 50 ? 'good' : r.pct_correct >= 25 ? '' : 'bad'}">${r.pct_correct}%</div>
+        <div class="l">correctly cited</div>
+      </div>
+      <div class="metric"><div class="v">${r.correct}</div><div class="l">correct</div></div>
+      <div class="metric"><div class="v">${r.n_questions - r.correct}</div><div class="l">missed</div></div>
+      <div class="metric"><div class="v">${r.n_questions}</div><div class="l">total</div></div>
+    `;
+    document.getElementById('questions').innerHTML = r.results.map(q => `
+      <div class="q ${q.correct ? 'correct' : ''}">
+        <span class="mark">${q.correct ? '✓' : '✗'}</span>
+        <span class="id">${q.q_id}</span> ·
+        <span class="prompt">${q.question}</span>
+        <br>
+        <span class="exp">expected=${q.expected}</span> · <span class="cited">cited=${q.cited}</span>
+      </div>
+    `).join('');
+  } catch (e) {
+    document.getElementById('questions').innerHTML = '⚠️ ' + e.message;
+  }
+}
+load();
+setInterval(load, 30000);
+</script>
+</body></html>

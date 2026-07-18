@@ -1,0 +1,3172 @@
+{
+  "generated_at": "2026-06-14T04:30:43.376182+00:00",
+  "generated_by": "hive_triage.py",
+  "source_inventory": "/Users/nicholas/clawd/_TABS/_inventory/GITHUB_INVENTORY_2026-06-07.md",
+  "source_manifest": "/Users/nicholas/clawd/MCP_DEPLOYMENT_MANIFEST.json",
+  "total_repos": 419,
+  "hive_count": 10,
+  "hives": [
+    "meok-keystone",
+    "meok-governance-engine",
+    "meok-compliance-gateway",
+    "meok-api-gateway",
+    "meok-distribution",
+    "meok-consumer",
+    "meok-verticals",
+    "meok-aquaculture",
+    "meok-research",
+    "meok-templeman-opticians"
+  ],
+  "explicit_assignments": {
+    "meok-attestation-api": "meok-keystone",
+    "meok-attestation-verify": "meok-keystone",
+    "sovereign-temple": "meok-keystone",
+    "meok-ai": "meok-keystone",
+    "OPENMOE": "meok-keystone",
+    "clawd-workspace": "meok-keystone",
+    "bft-progress-council-mcp": "meok-keystone",
+    "consciousness-engine-mcp": "meok-keystone",
+    "creativity-engine-mcp": "meok-keystone",
+    "gods-eye-geospatial-mcp": "meok-keystone",
+    "gods-eye": "meok-keystone",
+    "meok-agent-zero": "meok-keystone",
+    "meok-neural-learning": "meok-keystone",
+    "homebrew-meokclaw": "meok-keystone",
+    "templeman-opticians-site": "meok-templeman-opticians",
+    "blizzard-wow-mcp": "meok-gaming-hive",
+    "mmoagent-mcp": "meok-gaming-hive",
+    "evergame-hive-mcp": "meok-gaming-hive",
+    "gaming-ai": "meok-consumer",
+    "invoice-generator-ai-mcp": "meok-consumer",
+    "oneos-education": "meok-consumer",
+    "voice-audio-mcp": "meok-consumer",
+    "fishkeeper": "meok-aquaculture",
+    "koikeeper": "meok-aquaculture",
+    "test-fishkeeper": "meok-aquaculture",
+    "fishkeeper-ai": "meok-aquaculture",
+    "industrial-domains": "meok-verticals",
+    "industrial-hire-ai": "meok-verticals",
+    "wcr-grab-hire": "meok-verticals",
+    "pokerhud": "meok-verticals",
+    "diyhelp": "meok-verticals",
+    "suicidestop": "meok-verticals",
+    "asisecurity-portal": "meok-verticals",
+    "bmcc-cyber": "meok-verticals",
+    "loopfactory": "meok-verticals",
+    "templeman-opticians": "meok-templeman-opticians",
+    "family-guardian": "meok-templeman-opticians",
+    "maternal-covenant": "meok-templeman-opticians",
+    "families": "meok-templeman-opticians",
+    "care-homes": "meok-templeman-opticians",
+    "faith": "meok-templeman-opticians",
+    "compassion": "meok-templeman-opticians",
+    "character-factory": "meok-templeman-opticians",
+    "characters": "meok-templeman-opticians",
+    "companions": "meok-templeman-opticians",
+    "birth": "meok-templeman-opticians",
+    "birth-ceremony": "meok-templeman-opticians",
+    "family": "meok-templeman-opticians",
+    "for-families": "meok-templeman-opticians",
+    "maternal": "meok-templeman-opticians"
+  },
+  "severed_repos_never_touched": [
+    "CSGA-CORP",
+    "csga-platform",
+    "Terranova",
+    "terranova-platform"
+  ],
+  "rule_hits": {
+    "cli-builder": 1,
+    "clinical-trials": 1,
+    "clipboard-ai": 1,
+    "healthcare-ai-governance": 1,
+    "healthcare-fhir": 1,
+    "lib2b": 1,
+    "meok-cli": 1,
+    "cra-art14": 1,
+    "meok-integrations": 1,
+    "omnibus-tracker": 1,
+    "meok-sdk": 3,
+    "meok-setup": 1,
+    "meok-skills": 1,
+    "meok-slack": 1,
+    "meok-teams": 1,
+    "meok-vscode": 1,
+    "watermark-attest": 1,
+    "openmcp": 1,
+    "patient-safety": 1,
+    "web-research": 1,
+    "^CSOAI$": 1,
+    "^MEOK-LABS$": 1,
+    "^open$": 1,
+    "a2a-govern": 1,
+    "audit-log": 1,
+    "agent-handoff": 1,
+    "agent-policy": 1,
+    "agent-rate-limit": 1,
+    "^ai-": 1,
+    "ai-self-audit": 1,
+    "awesome-meok": 1,
+    "ca3o": 1,
+    "casa-": 1,
+    "cobol": 2,
+    "councilof": 1,
+    "csoai": 4,
+    "\\bdora\\b": 3,
+    "drone-airspace": 1,
+    "iso-42001": 1,
+    "iso-42005": 1,
+    "ap2-mandate": 1,
+    "^meok-": 19,
+    "x402-receipt": 1,
+    "meok-compliance-gateway": 1,
+    "cra-annex": 1,
+    "meok-eu-ai": 4,
+    "proofof-ai": 2,
+    "safetyof": 1,
+    "-mcp$": 59,
+    "agent-content-watermark": 1,
+    "agent-data-residency": 1,
+    "agent-incident": 1,
+    "agriculture-robotics": 1,
+    "ai-incident": 1,
+    "airspace-monitor": 1,
+    "-ai-mcp$": 129,
+    "^care-": 2,
+    "\\bcra\\b": 1,
+    "eu-ai-act": 1,
+    "hipaa": 1,
+    "pci-dss": 1,
+    "sbom-": 1,
+    "-ai$": 1,
+    "yaml-ai-mcp": 1,
+    "accessibility": 1,
+    "accounting": 1,
+    "ad-copy-ai": 1,
+    "agent-commerce": 2,
+    "agent-cost": 1,
+    "agent-prompt-injection": 1,
+    "ascii-art": 1,
+    "blockchain-ai": 1,
+    "code-executor": 1,
+    "code-review": 1,
+    "config-validator": 1,
+    "contract-review": 1,
+    "csv-analytics": 2,
+    "^education": 1,
+    "explainability": 1,
+    "fishkeeper": 1,
+    "iso-27001": 1,
+    "keyword-extractor": 1,
+    "abci-bridge": 1,
+    "muckaway": 2,
+    "music-production": 1,
+    "password-ai": 1,
+    "pet-care": 1,
+    "qidi-printer": 1,
+    "rag-knowledge": 2,
+    "real-estate": 2,
+    "regex-ai": 1,
+    "resume-parser": 1,
+    "self-healing": 1,
+    "sleep-tracker": 1,
+    "sql-builder": 1,
+    "survey-builder": 1,
+    "^.github$": 1,
+    "^domain-sales": 1,
+    "^github-api$": 1,
+    "agriculture-ai": 1,
+    "ai-economy-infra": 2,
+    "^api$": 1,
+    "autonomous-vehicles": 2,
+    "aws-cloud": 1,
+    "biometrics": 1,
+    "brave-search": 1,
+    "^clawd$": 1,
+    "construction-ai": 1,
+    "^context7": 1,
+    "data-classification": 1,
+    "digital-human": 1,
+    "docker-compose": 1,
+    "dsrb-defence": 1,
+    "employment-ai": 1,
+    "energy-ai": 1,
+    "fetch-http": 1,
+    "filesystem-ops": 1,
+    "financial-ai": 1,
+    "git-operations": 1,
+    "gitlab-api": 1,
+    "google-drive": 1,
+    "^healthcare-": 1,
+    "insurance-ai": 1,
+    "json-transformer": 1,
+    "law-enforcement": 1,
+    "legal-?tech": 1,
+    "linear-issues": 1,
+    "maritime": 1,
+    "mcp-distributor": 1,
+    "mcp-servers": 1,
+    "media-ads": 1,
+    "media-advertising": 1,
+    "memory-graph": 1,
+    "meok-shared-infrastructure": 1,
+    "mining": 1,
+    "notion-workspace": 1,
+    "playwright": 1,
+    "pmcp-gateway": 1,
+    "policy-eng": 1,
+    "postgres": 1,
+    "puppeteer": 1,
+    "quantranet": 1,
+    "red-team": 1,
+    "retail-ai": 1,
+    "secure-comms": 1,
+    "sentry": 1,
+    "sequential-thinking": 1,
+    "slack-messaging": 1,
+    "smart-cities": 1,
+    "space-ai": 1,
+    "sports-analytics": 1,
+    "sqlite": 1,
+    "telecom": 1,
+    "threat-intelligence": 1,
+    "time-zones": 1,
+    "travel-hospitality": 1,
+    "vercel-deploy": 1,
+    "vulnerability-scan": 1
+  },
+  "hive_distribution": {
+    "meok-consumer": 9,
+    "meok-keystone": 14,
+    "meok-templeman-opticians": 3,
+    "meok-distribution": 23,
+    "meok-compliance-gateway": 64,
+    "meok-api-gateway": 267,
+    "meok-governance-engine": 16,
+    "meok-aquaculture": 4,
+    "meok-verticals": 11,
+    "meok-research": 8
+  },
+  "fallback_count": 7,
+  "manifest_present": 202,
+  "assignments": [
+    {
+      "repo": "invoice-generator-ai-mcp",
+      "section": "MEOK ONE \u2014 consumer OS \u2014 3",
+      "hive": "meok-consumer",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "oneos-education",
+      "section": "MEOK ONE \u2014 consumer OS \u2014 3",
+      "hive": "meok-consumer",
+      "in_manifest": false
+    },
+    {
+      "repo": "voice-audio-mcp",
+      "section": "MEOK ONE \u2014 consumer OS \u2014 3",
+      "hive": "meok-consumer",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "OPENMOE",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "bft-progress-council-mcp",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "clawd-workspace",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "consciousness-engine-mcp",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "creativity-engine-mcp",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "gods-eye-geospatial-mcp",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "homebrew-meokclaw",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-agent-zero",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-ai",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-neural-learning",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "sovereign-temple",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "templeman-opticians-site",
+      "section": "OLM / Learning / Agents \u2014 12",
+      "hive": "meok-templeman-opticians",
+      "in_manifest": false
+    },
+    {
+      "repo": "cli-builder-ai-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "clinical-trials-ai-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "clipboard-ai-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "healthcare-ai-governance-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "healthcare-fhir-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "lib2b",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-cli",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-cra-art14-reporter-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-integrations",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-omnibus-tracker-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-sdk-go",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-sdk-python",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-sdk-typescript",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-setup",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-skills",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-slack-app",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-teams-app",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-vscode-extension",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-watermark-attest-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "openmcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "optimobile-practice-hub",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "patient-safety-ai-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "web-research-mcp",
+      "section": "MEOK Distribution (SDK/CLI/apps) \u2014 23",
+      "hive": "meok-distribution",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "CSOAI",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "MEOK-LABS",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "Open",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "a2a-governance-bridge-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "agent-audit-logger-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-handoff-certified-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-policy-enforcement-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-rate-limiter-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "ai-governance",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "ai-self-audit-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "awesome-meok",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "ca3o-certification",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "casa-certification",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "cobol-bridge-substrate",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "councilof-ai",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "csoai-dashboard",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "csoai-governance",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "csoai-governance-crosswalk-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "csoai-org",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "dora-nis2-crosswalk-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "drone-airspace-governance-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-governance-engine",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "iso-42001-ai-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "iso-42005-impact-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-ap2-mandate-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-api-gateway",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-attestation-api",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-attestation-verify",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-coinbase-x402-receipt-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-compliance-gateway",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-cra-annex-iv-classifier-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-dora-tlpt-planner-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-eu-ai-act-art-13-ifu-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-eu-ai-act-art-26-fria-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-eu-aia-art-9-rms-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-fria-generator-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-governance-engine-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "meok-governance-smithery",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-stripe-acp-checkout-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "proofof-ai",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "proofof-ai-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "proofofai",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "safetyofai",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "slsa-supply-chain-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "trust-chain-mcp",
+      "section": "CSOAI Governance + attestation \u2014 44",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "agent-content-watermark-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-data-residency-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-incident-relay-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "agriculture-robotics-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "ai-incident-reporting-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "airspace-monitor-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "aml-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "api-tester-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "canada-aida-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "care-home-cqc-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-templeman-opticians",
+      "in_manifest": false
+    },
+    {
+      "repo": "compliance-audit",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "concrete-pump-cpa-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "construction-iso-19650-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "cra-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "crane-hire-cpcs-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "csrd-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "devops-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "dora-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "eu-ai-act-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "fda-samd-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "flight-logger-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "fsa-food-safety-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "gdpr-compliance-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "haulage-deploy",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "haulage-uk-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "hipaa-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "hr-management-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "incident-response",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "legal-document-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "license-checker-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "llm-compliance-comparison-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "mcp-spec-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-nis2-de-register-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-nis2-nl-register-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "mica-crypto-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "mifid-ii-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "nis2-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "nrswa-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "pci-dss-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "photography-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "regulatory-webhook-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "sbom-cyclonedx-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "skip-hire-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "soc2-compliance-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "supply-chain-ai",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "supply-chain-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "uk-ai-act-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "uk-ai-bill-compliance-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "watermarking-authenticity-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "yaml-ai-mcp",
+      "section": "MCP Fleet \u2014 compliance \u2014 50",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "accessibility-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "accounting-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "ad-copy-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "agent-commerce-payments-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "agent-commerce-protocol-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-cost-allocator-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-delegation-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "agent-identity-trust-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "agent-mcp-router-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-negotiation-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "agent-orchestrator-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "agent-prompt-injection-firewall-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-replay-debugger-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-token-budget-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "agent-x402-paywall-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "ai-bom-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "ai-gateway-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "ai-ops-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "api-docs-generator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "ascii-art-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "backup-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "basel-ai-overlay-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "bias-detection-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "blockchain-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "blockchain-verification-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "budget-planner-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "calendar-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "care-membrane-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-templeman-opticians",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "changelog-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "chas-elite-prep-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "churn-predictor-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "ci-cd-generator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "cisa-kev-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "citation-finder-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "cobol-bridge-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "code-executor-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "code-reviewer-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "color-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "commit-message-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "competitor-monitor-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "compression-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "config-validator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "content-calendar-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "content-registry-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "contract-review-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "coppa-ferpa-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "credential-manager-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "crm-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "cron-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "crypto-tracker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "csv-analytics-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "csv-tools-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "currency-converter-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "customer-support-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "cybersecurity-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "data-science-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "database-universal-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "dataprivacy-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "date-calculator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "deepfake-detector-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "dependency-updater-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "diff-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "docker-helper-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "dockerfile-generator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "document-comparison-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "ecommerce-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "education-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-consumer",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "email-automation-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "email-validator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "emoji-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "encoder-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "env-manager-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "eudi-wallet-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "event-planning-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "expense-tracker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "explainability-report-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "faker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "feedback-analyzer-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "file-organizer-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "fishkeeper-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-aquaculture",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "fitness-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "flashcard-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "focus-timer-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "gardening-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "geolocation-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "git-helper-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "grammar-fix-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "habit-tracker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "hash-utils-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "health-check-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "html-parser-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "hydration-reminder-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "icon-generator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "image-metadata-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "insurance-verification-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "inventory-management-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "ip-network-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "iso-27001-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "job-description-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "json-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "jwt-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "keyword-extractor-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "korea-ai-basic-act-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "landlaw-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "lead-scoring-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "linkedin-outreach-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "logistics-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "lorem-ipsum-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "markdown-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "marketing-analytics-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "math-solver-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "mdr-medical-device-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meal-planner-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "meditation-guide-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "meeting-summarizer-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "memory-search-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "meok-aaif-agent-card-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-abci-bridge-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-agents-md-lint-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-c2pa-durable-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-eat-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-eu-aigc-icon-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-libp2p-agent-mesh-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-mcp-cardgen-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-mcp-hardening-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-mcp-injection-scan-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-mcp-test-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-tier-auth",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-w3c-tdm-rights-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-x402-wrap-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "mitre-atlas-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "mitre-attack-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "mock-server-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "mortgage-calculator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "muckaway-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-verticals",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "muckaway-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "music-production-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-consumer",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "nist-rmf-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "note-taking-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "notification-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "nutrition-tracker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "oasf-agent-directory-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "optometry-ai-safety-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "otp-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "owasp-agentic-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "password-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "pdf-document-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "pdf-merge-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "pdf-tools-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "performance-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "personal-finance-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "pet-care-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-consumer",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "plagiarism-checker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "planthire-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "pomodoro-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "price-tracker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "project-management-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "qidi-printer-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-consumer",
+      "in_manifest": false
+    },
+    {
+      "repo": "qr-code-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "quiz-generator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "rag-knowledge-graph-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "rag-knowledge-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "readme-generator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "real-estate-listing-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "recipe-finder-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "recruitment-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "regex-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "restaurant-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "resume-parser-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "risk-assessment-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "robotics-control-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "scam-detector-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "schema-validator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "security-scanner-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "self-healing-infrastructure-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "sentiment-analysis-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "seo-checker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "sigstore-cosign-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "slack-enterprise-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "sleep-tracker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-consumer",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "slugify-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "social-media-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "sql-builder-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "stock-analyzer-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "string-utils-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "stripe-billing-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "subscription-tracker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "summarizer-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "survey-builder-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "tax-calculator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "test-case-generator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "text-stats-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "time-tracker-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "tone-rewriter-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "translation-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "translator-pro-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "unit-converter-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "url-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "uuid-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "validator-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "vector-knowledge-graph-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "video-editing-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "weather-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "webhook-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "workout-planner-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "writing-assistant-ai-mcp",
+      "section": "MCP Fleet \u2014 utility/A2A \u2014 206",
+      "hive": "meok-api-gateway",
+      "in_manifest": true,
+      "manifest_hive": "none",
+      "manifest_language": "python"
+    },
+    {
+      "repo": "industrial-domains",
+      "section": "Verticals (trade/industry) \u2014 3",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "industrial-hire-ai",
+      "section": "Verticals (trade/industry) \u2014 3",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "wcr-grab-hire",
+      "section": "Verticals (trade/industry) \u2014 3",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "fishkeeper",
+      "section": "Aquaculture \u2014 3",
+      "hive": "meok-aquaculture",
+      "in_manifest": false
+    },
+    {
+      "repo": "koikeeper",
+      "section": "Aquaculture \u2014 3",
+      "hive": "meok-aquaculture",
+      "in_manifest": false
+    },
+    {
+      "repo": "test-fishkeeper",
+      "section": "Aquaculture \u2014 3",
+      "hive": "meok-aquaculture",
+      "in_manifest": false
+    },
+    {
+      "repo": ".github",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "asisecurity-portal",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "bmcc-cyber",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "diyhelp",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "domain-sales",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "github-api",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "loopfactory",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "pokerhud",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "suicidestop",
+      "section": "Standalone domain products \u2014 9",
+      "hive": "meok-verticals",
+      "in_manifest": false
+    },
+    {
+      "repo": "agriculture-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-research",
+      "in_manifest": false
+    },
+    {
+      "repo": "ai-economy-infra",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-research",
+      "in_manifest": false
+    },
+    {
+      "repo": "ai-economy-infrastructure",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-research",
+      "in_manifest": false
+    },
+    {
+      "repo": "api",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "autonomous-vehicles",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-research",
+      "in_manifest": false
+    },
+    {
+      "repo": "autonomous-vehicles-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-research",
+      "in_manifest": false
+    },
+    {
+      "repo": "aws-cloud",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-research",
+      "in_manifest": false
+    },
+    {
+      "repo": "biometrics-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "brave-search",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "clawd",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-keystone",
+      "in_manifest": false
+    },
+    {
+      "repo": "cloud-security",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "construction-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "context7-docs",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-research",
+      "in_manifest": false
+    },
+    {
+      "repo": "csv-analytics",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "data-classification",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "digital-human-library",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-research",
+      "in_manifest": false
+    },
+    {
+      "repo": "docker-compose",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "dsrb-defence",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "employment-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "energy-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "fetch-http",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "filesystem-ops",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "financial-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "gaming-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-consumer",
+      "in_manifest": false
+    },
+    {
+      "repo": "git-operations",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "gitlab-api",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "google-drive",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "healthcare-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "insurance-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "json-transformer",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "law-enforcement-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "legal-tech-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "linear-issues",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "maritime-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "mcp-distributor",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "mcp-servers",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "media-ads-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "media-advertising-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "memory-graph",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "meok-shared-infrastructure",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "mining-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "notion-workspace",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "playwright-browser",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "pmcp-gateway",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "policy-engine",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-governance-engine",
+      "in_manifest": false
+    },
+    {
+      "repo": "postgres-db",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "puppeteer-headless",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "quantranet-pqc",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "real-estate-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "red-team-ops",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "retail-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "secure-comms",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "sentry-monitoring",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "sequential-thinking",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "slack-messaging",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-distribution",
+      "in_manifest": false
+    },
+    {
+      "repo": "smart-cities-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "space-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "sports-analytics-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "sqlite-db",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "telecom-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "thn-global",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "threat-intelligence",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "time-zones",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "travel-hospitality-ai",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "vercel-deploy",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-api-gateway",
+      "in_manifest": false
+    },
+    {
+      "repo": "vulnerability-scanner",
+      "section": "UNCATEGORISED \u2014 66",
+      "hive": "meok-compliance-gateway",
+      "in_manifest": false
+    }
+  ]
+}

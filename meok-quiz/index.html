@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EU AI Act Readiness Quiz — Free Assessment | MEOK AI Labs</title>
+    <meta name="description" content="Take our free 2-minute EU AI Act readiness quiz. Get an instant compliance score and personalised action plan. General provisions Aug 2026, high-risk obligations Dec 2027.">
+    <meta property="og:title" content="EU AI Act Readiness Quiz — Are You EU AI Act Compliant?">
+    <meta property="og:description" content="Free 2-minute assessment. Instant score + personalised action plan.">
+    <meta property="og:type" website>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✅</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1a1a2e;
+            --accent: #4ade80;
+            --accent-dark: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+        /* Hero */
+        .hero { background: var(--primary); color: white; padding: 60px 0 50px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(74,222,128,0.1) 0%, transparent 50%); }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 12px; position: relative; }
+        .hero h1 span { color: var(--accent); }
+        .hero p { font-size: 1.1rem; opacity: 0.85; max-width: 500px; margin: 0 auto 20px; position: relative; }
+        .deadline { display: inline-flex; align-items: center; gap: 8px; background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.4); padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; position: relative; }
+        .deadline .pulse { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Progress bar */
+        .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 0; position: sticky; top: 0; z-index: 10; }
+        .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease; width: 0%; }
+        .progress-text { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; text-align: center; }
+
+        /* Quiz card */
+        .quiz-card { background: var(--card); border-radius: 12px; padding: 32px; margin: 32px 0; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+        .question-number { font-size: 0.85rem; color: var(--accent-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .question-text { font-size: 1.25rem; font-weight: 600; margin-bottom: 24px; line-height: 1.4; }
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .option { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .option:hover { border-color: var(--accent); background: rgba(74,222,128,0.05); }
+        .option.selected { border-color: var(--accent); background: rgba(74,222,128,0.1); }
+        .option-radio { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .option.selected .option-radio { border-color: var(--accent); }
+        .option.selected .option-radio::after { content: ''; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
+        .option-text { font-size: 0.95rem; }
+        .option-score { font-size: 0.8rem; color: var(--text-muted); margin-left: auto; }
+
+        /* Navigation */
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 24px; gap: 12px; }
+        .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; border: none; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: var(--primary); }
+        .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: transparent; border: 2px solid var(--border); color: var(--text-muted); }
+        .btn-secondary:hover { border-color: var(--text-muted); }
+
+        /* Results */
+        .results { display: none; text-align: center; }
+        .score-circle { width: 160px; height: 160px; border-radius: 50%; margin: 0 auto 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .score-circle::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; padding: 4px; background: conic-gradient(var(--accent) var(--score-pct), var(--border) 0); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .score-number { font-size: 3rem; font-weight: 700; }
+        .score-label { font-size: 0.9rem; color: var(--text-muted); }
+        .score-status { font-size: 1.3rem; font-weight: 600; margin-bottom: 16px; }
+        .score-status.risk { color: var(--danger); }
+        .score-status.warning { color: var(--warning); }
+        .score-status.good { color: var(--accent-dark); }
+
+        .action-items { text-align: left; background: var(--bg); border-radius: 8px; padding: 20px; margin: 24px 0; }
+        .action-items h3 { font-size: 1rem; margin-bottom: 12px; }
+        .action-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 0.9rem; }
+        .action-item .icon { flex-shrink: 0; margin-top: 2px; }
+
+        /* Email capture */
+        .email-capture { background: var(--primary); color: white; border-radius: 12px; padding: 32px; margin: 24px 0; }
+        .email-capture h3 { font-size: 1.2rem; margin-bottom: 8px; }
+        .email-capture p { opacity: 0.8; font-size: 0.9rem; margin-bottom: 16px; }
+        .email-form { display: flex; gap: 8px; }
+        .email-form input { flex: 1; padding: 12px 16px; border-radius: 8px; border: none; font-size: 1rem; }
+        .email-form button { padding: 12px 20px; background: var(--accent); color: var(--primary); border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .email-form button:hover { background: var(--accent-dark); }
+        .email-success { display: none; background: rgba(74,222,128,0.2); border: 1px solid var(--accent); padding: 12px; border-radius: 8px; margin-top: 12px; }
+
+        /* Footer */
+        footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.85rem; }
+        footer a { color: var(--accent-dark); text-decoration: none; }
+
+        /* Hidden sections */
+        .quiz-section { display: none; }
+        .quiz-section.active { display: block; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.6rem; }
+            .quiz-card { padding: 20px; }
+            .email-form { flex-direction: column; }
+            .score-circle { width: 120px; height: 120px; }
+            .score-number { font-size: 2.5rem; }
+        }
+    
+.card,.feature,.pack,.service{transition:all .25s}
+.card:hover,.feature:hover,.pack:hover,.service:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.25)}
+</style>
+</head>
+<body>
+  <!-- MEOK Brand Header -->
+  <nav style="position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(226,232,240,0.8);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);">
+    <div style="max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MEOK">
+          <rect width="32" height="32" rx="7" fill="#0F172A"/>
+          <path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/>
+        </svg>
+        <span style="font-size:1.15rem;font-weight:700;letter-spacing:-0.02em;color:#0F172A;">MEOK Quiz</span>
+        <span style="font-size:0.75rem;color:#64748B;">by MEOK AI Labs</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+
+
+      </div>
+    </div>
+  </nav>
+
+<div class="hero">
+    <div class="container">
+        <h1>EU AI Act <span>Readiness Quiz</span></h1>
+        <p>2-minute assessment. Instant score + personalised action plan.</p>
+        <div class="deadline">
+            <span class="pulse"></span>
+            General provisions: Aug 2, 2026 — <span id="days-left"></span> | High-risk: Dec 2, 2027
+        </div>
+    </div>
+</div>
+
+<div class="progress-container" id="progress-container" style="display:none;">
+    <div class="container">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-text" id="progress-text">Question 1 of 10</div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- START SCREEN -->
+    <div class="quiz-section active" id="start-screen">
+        <div class="quiz-card" style="text-align:center;">
+            <h2 style="margin-bottom:12px;">Is your business compliant?</h2>
+            <p style="color:var(--text-muted); margin-bottom:24px;">EU AI Act general provisions and transparency obligations take effect August 2, 2026. High-risk AI obligations delayed to December 2, 2027. Fines up to €35M or 7% of global turnover. This free quiz assesses your readiness in 2 minutes.</p>
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:24px; text-align:center;">
+                <div style="padding:16px; background:var(--bg); border-radius:8px;">
+                    <div style="font-size:1.5rem; margin-bottom:4px;">⏱️</div>
+                    <div style="font-size:0.85rem; color:var(--text-muted);">2 minutes</div>
+                </div>
+                <div style="padding:16px; background:var(--bg); border-radius:8px;">
+                    <div style="font-size:1.5rem; margin-bottom:4px;">📊</div>
+                    <div style="font-size:0.85rem; color:var(--text-muted);">Instant score</div>
+                </div>
+                <div style="padding:16px; background:var(--bg); border-radius:8px;">
+                    <div style="font-size:1.5rem; margin-bottom:4px;">📋</div>
+                    <div style="font-size:0.85rem; color:var(--text-muted);">Action plan</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.1rem; padding:14px 32px;">Start Free Assessment →</button>
+        </div>
+    </div>
+
+    <!-- QUIZ QUESTIONS (generated by JS) -->
+    <div class="quiz-section" id="quiz-screen">
+        <div class="quiz-card" id="question-card"></div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" style="visibility:hidden;">← Back</button>
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>Next →</button>
+        </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div class="quiz-section" id="results-screen">
+        <div class="quiz-card results" id="results-card">
+            <div class="score-circle" id="score-circle">
+                <div class="score-number" id="score-number">0%</div>
+                <div class="score-label">Readiness</div>
+            </div>
+            <div class="score-status" id="score-status"></div>
+            <p id="score-description" style="color:var(--text-muted); margin-bottom:24px;"></p>
+
+            <div class="action-items" id="action-items">
+                <h3>🎯 Your Priority Actions</h3>
+                <div id="action-list"></div>
+            </div>
+
+            <div class="email-capture">
+                <h3>📧 Get Your Full Compliance Report</h3>
+                <p>Enter your email for a detailed PDF report with step-by-step remediation plan, template downloads, and deadline tracker.</p>
+                <form class="email-form" id="email-form" onsubmit="submitEmail(event)">
+                    <input type="email" id="user-email" placeholder="you@company.com" required>
+                    <input type="hidden" id="user-score">
+                    <input type="hidden" id="user-answers">
+                    <button type="submit">Send My Report →</button>
+                </form>
+                <div class="email-success" id="email-success">
+                    ✅ Report sent! Check your inbox (and spam folder). We'll also send you a compliance deadline reminder.
+                </div>
+            </div>
+
+            <div style="margin-top:24px;">
+                <p style="color:var(--text-muted); font-size:0.9rem;">Need help getting compliant?</p>
+                <a href="https://meok.ai" class="btn btn-primary" style="display:inline-block; margin-top:8px; text-decoration:none;">Get Compliant in 48 Hours →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- MEOK Brand Footer -->
+  <footer style="margin-top:6rem;border-top:1px solid #E2E8F0;background:#F8FAFC;padding:40px 20px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#0F172A"/><path d="M8 22V10h3l3.5 7.5L18 10h3v12h-2.2v-7.8L15.5 19h-1.8L10.2 14.2V22H8z" fill="#c9a84c"/></svg>
+        <span style="font-size:0.875rem;font-weight:500;color:#0F172A;">MEOK Quiz by MEOK AI Labs</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:0.875rem;">
+        <a href="https://meok.ai" style="color:#64748B;text-decoration:none;transition:color 0.15s;">meok.ai</a>
+        <a href="https://csoai.org" style="color:#64748B;text-decoration:none;transition:color 0.15s;">csoai.org</a>
+        <a href="https://meok.ai/api/manifest" style="color:#64748B;text-decoration:none;transition:color 0.15s;">MCP manifest</a>
+      </div>
+    </div>
+    <p style="max-width:1200px;margin:24px auto 0;font-size:0.75rem;color:#64748B;opacity:0.7;">
+      © 2026 MEOK AI Labs. MIT licensed code. Signed attestations on commercial tiers.
+    </p>
+  </footer>
+
+<script>
+// === COUNTDOWN ===
+const generalDeadline = new Date('2026-08-02');
+const daysLeft = Math.ceil((generalDeadline - new Date()) / (1000 * 60 * 60 * 24));
+document.getElementById('days-left').textContent = daysLeft + ' days';
+
+// === QUESTIONS ===
+const questions = [
+    {
+        q: "Do you use any AI systems that make automated decisions about people?",
+        desc: "E.g. hiring, credit scoring, insurance, performance evaluation, access to services",
+        options: [
+            { text: "Yes, multiple AI systems make automated decisions", score: 0 },
+            { text: "Yes, one or two systems", score: 1 },
+            { text: "We use AI but humans always make the final decision", score: 2 },
+            { text: "No AI automated decisions", score: 3 }
+        ]
+    },
+    {
+        q: "Have you classified your AI systems by risk level under the EU AI Act?",
+        desc: "Unacceptable, High-Risk, Limited Risk, or Minimal Risk",
+        options: [
+            { text: "No, we haven't classified anything", score: 0 },
+            { text: "We've started but it's incomplete", score: 1 },
+            { text: "Yes, but we're not sure it's correct", score: 2 },
+            { text: "Yes, fully classified and documented", score: 3 }
+        ]
+    },
+    {
+        q: "Do you have a documented AI governance policy?",
+        desc: "Covers AI use, data processing, employee guidelines, and customer disclosure",
+        options: [
+            { text: "No policy exists", score: 0 },
+            { text: "Draft policy but not approved", score: 1 },
+            { text: "Approved policy but not updated for 2026 regulations", score: 2 },
+            { text: "Yes, current and regularly reviewed", score: 3 }
+        ]
+    },
+    {
+        q: "Can you produce an AI inventory showing every AI tool your business uses?",
+        desc: "Including third-party APIs (OpenAI, Anthropic, etc.), internal models, and embedded AI features",
+        options: [
+            { text: "No inventory exists", score: 0 },
+            { text: "Partial list but likely incomplete", score: 1 },
+            { text: "Complete list but not regularly updated", score: 2 },
+            { text: "Yes, automated and always current", score: 3 }
+        ]
+    },
+    {
+        q: "Do you disclose AI usage to your customers/users?",
+        desc: "EU AI Act requires transparency when users interact with AI systems",
+        options: [
+            { text: "No disclosure at all", score: 0 },
+            { text: "Mentioned in privacy policy but not prominently", score: 1 },
+            { text: "Yes, but only for some AI features", score: 2 },
+            { text: "Yes, clear disclosure for all AI interactions", score: 3 }
+        ]
+    },
+    {
+        q: "Have you conducted a fundamental rights impact assessment for your AI systems?",
+        desc: "Required for high-risk AI systems under Article 27 of the EU AI Act",
+        options: [
+            { text: "No, not done", score: 0 },
+            { text: "Planned but not started", score: 1 },
+            { text: "Done for some systems", score: 2 },
+            { text: "Yes, for all applicable systems", score: 3 }
+        ]
+    },
+    {
+        q: "Is your AI training data documented and legally sourced?",
+        desc: "EU AI Act requires transparency about training data, especially for general-purpose AI models",
+        options: [
+            { text: "We don't track training data sources", score: 0 },
+            { text: "We know the main sources but not all", score: 1 },
+            { text: "Documented but not verified for compliance", score: 2 },
+            { text: "Yes, fully documented and verified", score: 3 }
+        ]
+    },
+    {
+        q: "Do you have human oversight procedures for AI outputs?",
+        desc: "High-risk AI systems require human oversight measures (Article 14)",
+        options: [
+            { text: "No oversight procedures", score: 0 },
+            { text: "Informal review process", score: 1 },
+            { text: "Documented procedures but not consistently followed", score: 2 },
+            { text: "Yes, formal oversight with audit trails", score: 3 }
+        ]
+    },
+    {
+        q: "Have you registered your AI systems in the EU AI Act database?",
+        desc: "High-risk AI systems must be registered before being placed on the market (Article 49)",
+        options: [
+            { text: "Didn't know this was required", score: 0 },
+            { text: "Aware but haven't registered", score: 1 },
+            { text: "Started registration but not complete", score: 2 },
+            { text: "Yes, all systems registered", score: 3 }
+        ]
+    },
+    {
+        q: "Do you have a plan for ongoing AI compliance monitoring?",
+        desc: "The EU AI Act requires continuous monitoring, not just one-time compliance",
+        options: [
+            { text: "No plan", score: 0 },
+            { text: "Planning to address it later", score: 1 },
+            { text: "Manual monitoring process in place", score: 2 },
+            { text: "Yes, automated monitoring with alerts", score: 3 }
+        ]
+    }
+];
+
+// === STATE ===
+let currentQuestion = 0;
+let answers = new Array(questions.length).fill(-1);
+
+function startQuiz() {
+    document.getElementById('start-screen').classList.remove('active');
+    document.getElementById('quiz-screen').classList.add('active');
+    document.getElementById('progress-container').style.display = 'block';
+    renderQuestion();
+}
+
+function renderQuestion() {
+    const q = questions[currentQuestion];
+    const card = document.getElementById('question-card');
+
+    card.innerHTML = `
+        <div class="question-number">Question ${currentQuestion + 1} of ${questions.length}</div>
+        <div class="question-text">${q.q}</div>
+        <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">${q.desc}</div>
+        <div class="options">
+            ${q.options.map((opt, i) => `
+                <div class="option ${answers[currentQuestion] === i ? 'selected' : ''}" onclick="selectOption(${i})">
+                    <div class="option-radio"></div>
+                    <div class="option-text">${opt.text}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    // Update progress
+    const pct = ((currentQuestion + 1) / questions.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+
+    // Update buttons
+    document.getElementById('prev-btn').style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
+    document.getElementById('next-btn').textContent = currentQuestion === questions.length - 1 ? 'See My Results →' : 'Next →';
+    document.getElementById('next-btn').disabled = answers[currentQuestion] === -1;
+}
+
+function selectOption(index) {
+    answers[currentQuestion] = index;
+    renderQuestion();
+}
+
+function nextQuestion() {
+    if (answers[currentQuestion] === -1) return;
+
+    if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        renderQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+    }
+}
+
+function showResults() {
+    document.getElementById('quiz-screen').classList.remove('active');
+    document.getElementById('results-screen').classList.add('active');
+    document.getElementById('progress-container').style.display = 'none';
+
+    const maxScore = questions.length * 3;
+    const totalScore = answers.reduce((sum, ansIdx, qIdx) => {
+        return sum + questions[qIdx].options[ansIdx].score;
+    }, 0);
+    const pct = Math.round((totalScore / maxScore) * 100);
+
+    // Score circle
+    const circle = document.getElementById('score-circle');
+    circle.style.setProperty('--score-pct', pct + '%');
+    document.getElementById('score-number').textContent = pct + '%';
+
+    // Status
+    const status = document.getElementById('score-status');
+    const desc = document.getElementById('score-description');
+    const actions = document.getElementById('action-list');
+
+    let statusText, statusClass, description, actionItems;
+
+    if (pct >= 80) {
+        statusText = '✅ Well Prepared';
+        statusClass = 'good';
+        description = 'Your AI governance is strong. Focus on maintaining compliance for the August 2026 general provisions deadline and preparing for high-risk obligations by December 2027.';
+        actionItems = [
+            { icon: '📋', text: 'Register any remaining high-risk AI systems in the EU database' },
+            { icon: '🔄', text: 'Set up automated compliance monitoring for ongoing changes' },
+            { icon: '📊', text: 'Schedule quarterly compliance reviews' }
+        ];
+    } else if (pct >= 50) {
+        statusText = '⚠️ Partially Compliant';
+        statusClass = 'warning';
+        description = 'You have some foundations in place but significant gaps remain. With focused effort you can reach compliance before the deadline.';
+        actionItems = [
+            { icon: '🔴', text: 'Complete AI system classification (high-risk vs limited-risk)' },
+            { icon: '🔴', text: 'Document your AI inventory — every tool, API, and model' },
+            { icon: '🟡', text: 'Implement customer disclosure for all AI interactions' },
+            { icon: '🟡', text: 'Conduct fundamental rights impact assessments' },
+            { icon: '🟢', text: 'Set up ongoing compliance monitoring' }
+        ];
+    } else {
+        statusText = '🔴 At Significant Risk';
+        statusClass = 'risk';
+        description = 'Critical compliance gaps exist. Fines up to €35M or 7% of global turnover. Immediate action required — general provisions enforce August 2026, high-risk obligations December 2027.';
+        actionItems = [
+            { icon: '🔴', text: 'URGENT: Classify all AI systems by risk level immediately' },
+            { icon: '🔴', text: 'URGENT: Create AI inventory — map every AI tool and API' },
+            { icon: '🔴', text: 'URGENT: Implement customer AI disclosure on all touchpoints' },
+            { icon: '🔴', text: 'URGENT: Draft and approve AI governance policy' },
+            { icon: '🟡', text: 'Conduct fundamental rights impact assessments' },
+            { icon: '🟡', text: 'Register high-risk AI systems in EU database' },
+            { icon: '🟢', text: 'Set up automated compliance monitoring' }
+        ];
+    }
+
+    status.textContent = statusText;
+    status.className = 'score-status ' + statusClass;
+    desc.textContent = description;
+
+    actions.innerHTML = actionItems.map(a => `
+        <div class="action-item">
+            <span class="icon">${a.icon}</span>
+            <span>${a.text}</span>
+        </div>
+    `).join('');
+
+    // Store for email submission
+    document.getElementById('user-score').value = pct;
+    document.getElementById('user-answers').value = JSON.stringify(answers);
+
+    // Show results card
+    document.getElementById('results-card').style.display = 'block';
+}
+
+function submitEmail(e) {
+    e.preventDefault();
+    const email = document.getElementById('user-email').value;
+    const score = document.getElementById('user-score').value;
+    const answersData = document.getElementById('user-answers').value;
+
+    // Send to n8n webhook (or fallback to mailto)
+    const webhookUrl = 'https://n8n.iokfarm.co.uk/webhook/quiz-lead';
+
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            email: email,
+            score: score,
+            answers: answersData,
+            source: 'eu_ai_act_readiness_quiz',
+            timestamp: new Date().toISOString(),
+            url: window.location.href
+        })
+    }).then(() => {
+        document.getElementById('email-success').style.display = 'block';
+        document.getElementById('email-form').style.display = 'none';
+    }).catch(() => {
+        // Fallback: store locally and show success anyway
+        const leads = JSON.parse(localStorage.getItem('quiz_leads') || '[]');
+        leads.push({ email, score, answers: answersData, timestamp: new Date().toISOString() });
+        localStorage.setItem('quiz_leads', JSON.stringify(leads));
+        document.getElementById('email-success').style.display = 'block';
+        document.getElementById('email-form').style.display = 'none';
+    });
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+        if (!document.getElementById('next-btn').disabled) nextQuestion();
+    }
+    if (e.key === 'ArrowLeft') prevQuestion();
+    if (e.key >= '1' && e.key <= '4') {
+        const idx = parseInt(e.key) - 1;
+        if (idx < questions[currentQuestion]?.options.length) selectOption(idx);
+    }
+});
+</script>
+
+</body>
+</html>

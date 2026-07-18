@@ -1,0 +1,78 @@
+{
+  "sigil_id": "sigil-eat-EAT-2026-07-15-T0915",
+  "cycle": "EAT-2026-07-15-T0915",
+  "timestamp_utc": "2026-07-15T09:15:03Z",
+  "eater": "JEEVES (Hermes Agent)",
+  "tick": 105,
+  "checks": {
+    "1_vercel_http": {
+      "url": "https://csoai-static-deploy2.vercel.app/",
+      "status": 200,
+      "size_bytes": 20152,
+      "time_s": 0.195255,
+      "result": "PASS"
+    },
+    "2_meok_backend_ssh": {
+      "host": "meok-backend (35.242.143.249:22)",
+      "result": "FAIL \u2014 connection timed out (5s ConnectTimeout)",
+      "severity": "MEDIUM",
+      "note": "VM unreachable from cron host; expected for non-Vercel infra during hosted cron"
+    },
+    "3_sov3_mcp_localhost_3101": {
+      "url": "http://localhost:3101/mcp",
+      "result": "FAIL \u2014 connection refused (HTTP 000, exit 7)",
+      "severity": "MEDIUM",
+      "note": "MCP server not running in this session; SIGIL emitted via file ledger"
+    },
+    "4_meok_os_localhost_3000": {
+      "url": "http://localhost:3000/",
+      "result": "FAIL \u2014 connection refused (HTTP 000)",
+      "severity": "MEDIUM",
+      "note": "MEOK OS not running in this session"
+    },
+    "5_html_pages_count": {
+      "disk_html": 525,
+      "result": "PASS"
+    },
+    "6_broken_links_scan": {
+      "hrefs_checked": 5801,
+      "unique_targets": null,
+      "truly_broken": 0,
+      "result": "PASS \u2014 site is clean"
+    },
+    "7_fix_broken_links": {
+      "action": "skipped \u2014 0 broken links found"
+    },
+    "8_sitemap_reconcile": {
+      "sitemap_urls": 525,
+      "disk_html": 525,
+      "in_sitemap_not_disk": 0,
+      "in_disk_not_sitemap": 0,
+      "result": "PASS \u2014 perfect parity"
+    },
+    "9_deploy_vercel": {
+      "decision": "SKIP \u2014 no new pages since tick-105 (sitemap==disk==525)",
+      "note": "Deploy was already completed at 07:11Z this morning (alias bq2cs8k05); site is current"
+    },
+    "10_sigil_emit": {
+      "transport": "FILE_LEDGER (SOV3 :3101 not reachable)",
+      "path": "/Users/nicholas/clawd/csoai-static-deploy2/.eat-sigils/sigil-eat-EAT-2026-07-15-T0915.json",
+      "result": "WRITTEN"
+    }
+  },
+  "site_inventory": {
+    "html_pages": 525,
+    "sitemap_urls": 525,
+    "tick": 105,
+    "last_deploy_alias": "bq2cs8k05 (07:11Z 2026-07-15)",
+    "site_url": "https://csoai-static-deploy2.vercel.app/",
+    "canonical_alias": "https://www.csoai.org/"
+  },
+  "red_lines_violated": 0,
+  "next_actions": [
+    "Bring meok-backend VM online before next cycle (SSH timed out)",
+    "Start SOV3 MCP server (:3101) so SIGIL can emit via live transport",
+    "Monitor tick-106 from upstream MEOK pipeline; deploy when new pages appear"
+  ],
+  "receipt_sha256": "6e004e8c00abf6ab27b1440d8cbdf8d95c7491a9db775d71e72fcfc20d5be65d"
+}

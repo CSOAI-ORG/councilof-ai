@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>👑 Dragon Council — The 12 Sovereign Queens</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px;margin:0;min-height:100vh}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.5) 0%,#000 100%);padding:3rem 2rem 1rem;text-align:center;border-bottom:2px solid #fbbf24}
+  .hero h1{color:#fbbf24;font-size:2.8rem;margin-bottom:.5rem;text-shadow:0 0 30px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 30px #fbbf24}50%{text-shadow:0 0 60px #fbbf24,0 0 90px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.1rem;max-width:700px;margin:0 auto 1rem}
+  /* Council chamber */
+  .chamber{position:relative;width:100%;max-width:1200px;height:600px;margin:2rem auto;background:radial-gradient(ellipse at center,rgba(45,27,78,0.3) 0%,transparent 70%);border-radius:50%}
+  .round-table{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(45,27,78,0.4) 0%,rgba(45,27,78,0.2) 70%,transparent 100%);border:2px solid rgba(251,191,36,0.3);box-shadow:0 0 60px rgba(251,191,36,0.2)}
+  .round-table .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10}
+  .round-table .center .dr{font-size:3rem;margin-bottom:.3rem}
+  .round-table .center h2{color:#fbbf24;font-size:1.3rem;font-weight:bold}
+  .round-table .center p{color:#10b981;font-size:.75rem;margin-top:.2rem}
+  .queen{position:absolute;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,#1a1a2e 0%,#0a0a1e 100%);border:2px solid #fbbf24;cursor:pointer;transform:translate(-50%,-50%);transition:all .3s;box-shadow:0 0 20px rgba(251,191,36,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+  .queen:hover{transform:translate(-50%,-50%) scale(1.15);box-shadow:0 0 30px rgba(251,191,36,0.7);border-color:#10b981}
+  .queen.voting{border-color:#10b981;animation:voting 1s ease-in-out infinite}
+  @keyframes voting{0%,100%{box-shadow:0 0 20px rgba(16,185,129,0.5)}50%{box-shadow:0 0 30px rgba(16,185,129,0.9)}}
+  .queen .name{position:absolute;bottom:-25px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fbbf24;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;font-weight:bold;white-space:nowrap}
+  .queen .status{position:absolute;top:-8px;right:-8px;background:#10b981;color:#000;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:bold}
+  /* Vote panel */
+  .vote-panel{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:1.5rem;border-radius:12px;margin:2rem auto;max-width:800px;border:1px solid #fbbf24}
+  .vote-panel h3{color:#fbbf24;margin-bottom:1rem;text-align:center}
+  .vote-options{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:1rem 0}
+  .vote-btn{background:rgba(251,191,36,0.1);border:1px solid #fbbf24;color:#fbbf24;padding:.7rem;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s}
+  .vote-btn:hover{background:#fbbf24;color:#000}
+  .vote-btn.yes{background:rgba(16,185,129,0.2);border-color:#10b981;color:#10b981}
+  .vote-btn.no{background:rgba(239,68,68,0.2);border-color:#ef4444;color:#ef4444}
+  .vote-btn.abstain{background:rgba(251,191,36,0.1);border-color:#fbbf24;color:#fbbf24}
+  /* Vote result */
+  .vote-result{background:#0a0a0a;padding:1rem;border-radius:6px;margin-top:1rem;font-family:monospace;font-size:.85rem;color:#10b981;border:1px solid #10b981;text-align:center}
+  .bar-container{display:flex;height:24px;border-radius:4px;overflow:hidden;background:#333;margin:.5rem 0}
+  .bar{height:100%;transition:width 0.5s;display:flex;align-items:center;padding:0 .5rem;font-size:.7rem;font-weight:bold;color:#000}
+  .bar.yes{background:linear-gradient(90deg,#10b981,#34d399)}
+  .bar.no{background:linear-gradient(90deg,#ef4444,#f87171)}
+  .bar.abstain{background:linear-gradient(90deg,#fbbf24,#fcd34d)}
+  /* Queen detail */
+  .queen-detail{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;margin:2rem auto;max-width:800px;border:1px solid #fbbf24}
+  .queen-detail .qd-title{color:#fbbf24;font-size:1.5rem;margin-bottom:.5rem;text-align:center}
+  .queen-detail .qd-info{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:1rem 0}
+  .queen-detail .qd-info .kv{background:#0a0a0a;padding:.5rem;border-radius:4px;font-size:.8rem;color:#10b981;font-family:monospace}
+  .queen-detail .qd-info .k{color:#888}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:1.5rem;border-radius:12px;margin:1.5rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.5rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.2rem}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/dragon-council.html">Council</a>
+  <a href="/sovereign-index.html">Index</a>
+  <a href="/archive.html">Archive</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>👑 Dragon Council</h1>
+  <p>12 sovereign queens govern the AI economy. BFT 12-around-1. Smaller councils vote better. 7-voter amendment.</p>
+  <div class="stats-bar">
+    <div class="stat"><div class="val">12</div><div class="lbl">Queens</div></div>
+    <div class="stat green"><div class="val">12/12</div><div class="lbl">Council</div></div>
+    <div class="stat blue"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+    <div class="stat"><div class="val">23/33</div><div class="lbl">Quorum</div></div>
+    <div class="stat green"><div class="val">7</div><div class="lbl">Amendment</div></div>
+    <div class="stat blue"><div class="val">7.305</div><div class="lbl">Composite</div></div>
+  </div>
+</section>
+
+<div class="chamber">
+  <div class="round-table">
+    <div class="center">
+      <div class="dr">🐉</div>
+      <h2>SOV33</h2>
+      <p>The Dragon at the Center</p>
+    </div>
+  </div>
+  <div id="queens"></div>
+</div>
+
+<div class="vote-panel">
+  <h3>🗳 BFT Vote · Care Floor Check</h3>
+  <p style="color:#aaa;text-align:center;margin-bottom:1rem;font-size:.85rem">All 12 queens vote. 7-voter amendment threshold.</p>
+  <div class="vote-options">
+    <button class="vote-btn yes" onclick="vote('yes')">✓ YES</button>
+    <button class="vote-btn no" onclick="vote('no')">✗ NO</button>
+    <button class="vote-btn abstain" onclick="vote('abstain')">○ ABSTAIN</button>
+  </div>
+  <div class="vote-result" id="voteResult">Click a vote to see the BFT council deliberation.</div>
+</div>
+
+<div class="queen-detail" id="queenDetail" style="display:none">
+  <div class="qd-title" id="qdTitle">Queen Argus</div>
+  <div class="qd-info" id="qdInfo"></div>
+  <p style="color:#aaa;text-align:center;margin-top:1rem;font-size:.85rem" id="qdDoctrine"></p>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Dragon Council Doctrine</h2>
+  <blockquote>"12 sovereign queens. BFT 12-around-1. Smaller councils vote better.<br>7-voter amendment. 23/33 quorum. The dragon governs."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 98 sovereign MCPs (was 97, +1 archive) · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+// The 12 sovereign queens (canonical)
+const QUEENS = [
+  {id:1,name:"Argus",emoji:"🦅",domain:"Identity & Vigilance",region:"Inner (London)",power:"Watchful eye",doctrine:"The watcher. Sovereign identification."},
+  {id:2,name:"Athena",emoji:"🦉",domain:"Wisdom & Strategy",region:"Inner (Cambridge)",power:"Strategic mind",doctrine:"The strategist. Sovereign wisdom."},
+  {id:3,name:"Caelum",emoji:"🌌",domain:"Knowledge & Knowledge",region:"Inner (Edinburgh)",power:"Knowledge base",doctrine:"The librarian. Sovereign knowledge."},
+  {id:4,name:"Veritas",emoji:"⚖️",domain:"Truth & Compliance",region:"Inner (York)",power:"Balanced judgment",doctrine:"The judge. Sovereign truth."},
+  {id:5,name:"Ferrum",emoji:"⚒️",domain:"Engineering & Build",region:"Inner (Cardiff)",power:"Builder strength",doctrine:"The engineer. Sovereign construction."},
+  {id:6,name:"Aqua",emoji:"💧",domain:"Care & Compassion",region:"Inner (Belfast)",power:"Healing water",doctrine:"The healer. Sovereign care."},
+  {id:7,name:"Vesta",emoji:"🔥",domain:"Operations & Hearth",region:"Middle (Dublin)",power:"Home fire",doctrine:"The keeper. Sovereign operations."},
+  {id:8,name:"Luna",emoji:"🌙",domain:"OOWM & Cycles",region:"Middle (Paris)",power:"Cyclical wisdom",doctrine:"The cycle. Sovereign rhythms."},
+  {id:9,name:"Sol",emoji:"☀️",domain:"Renewal & Growth",region:"Middle (Berlin)",power:"Growth energy",doctrine:"The sun. Sovereign renewal."},
+  {id:10,name:"Terra",emoji:"🌍",domain:"Physical & Real-world",region:"Middle (Amsterdam)",power:"Earth stability",doctrine:"The ground. Sovereign physical."},
+  {id:11,name:"Ventus",emoji:"💨",domain:"Network & Movement",region:"Middle (Stockholm)",power:"Wind freedom",doctrine:"The wind. Sovereign network."},
+  {id:12,name:"Aurora",emoji:"🌌",domain:"Emergence & Light",region:"Middle (Helsinki)",power:"Northern light",doctrine:"The light. Sovereign emergence."},
+];
+
+function renderQueens() {
+  const container = document.getElementById("queens");
+  QUEENS.forEach((q, i) => {
+    const angle = (i / QUEENS.length) * Math.PI * 2 - Math.PI / 2;
+    const radius = 280;
+    const x = 50 + Math.cos(angle) * radius / 6;
+    const y = 50 + Math.sin(angle) * radius / 6;
+    const div = document.createElement("div");
+    div.className = "queen";
+    div.id = "queen-" + q.id;
+    div.style.left = x + "%";
+    div.style.top = y + "%";
+    div.title = q.name + " · " + q.domain;
+    div.innerHTML = `${q.emoji}<div class="name">${q.name}</div><div class="status">${q.id}</div>`;
+    div.onclick = () => showQueen(q);
+    container.appendChild(div);
+  });
+}
+
+function showQueen(q) {
+  // Mark as voting
+  document.querySelectorAll(".queen").forEach(el => el.classList.remove("voting"));
+  document.getElementById("queen-" + q.id).classList.add("voting");
+  // Show detail
+  const detail = document.getElementById("queenDetail");
+  detail.style.display = "block";
+  document.getElementById("qdTitle").textContent = `${q.emoji} Queen ${q.name}`;
+  document.getElementById("qdInfo").innerHTML = `
+    <div class="kv"><span class="k">ID:</span><span>${q.id}/12</span></div>
+    <div class="kv"><span class="k">Domain:</span><span>${q.domain}</span></div>
+    <div class="kv"><span class="k">Region:</span><span>${q.region}</span></div>
+    <div class="kv"><span class="k">Power:</span><span>${q.power}</span></div>
+  `;
+  document.getElementById("qdDoctrine").textContent = `"${q.doctrine}"`;
+  speak(`Queen ${q.name}. ${q.domain}. ${q.doctrine}`);
+}
+
+let votes = {yes: 0, no: 0, abstain: 0};
+function vote(type) {
+  // Each queen votes independently
+  votes = {yes: 0, no: 0, abstain: 0};
+  QUEENS.forEach((q, i) => {
+    setTimeout(() => {
+      // 70% yes, 20% no, 10% abstain (simulated)
+      const r = Math.random();
+      if (r < 0.7) votes.yes++;
+      else if (r < 0.9) votes.no++;
+      else votes.abstain++;
+      // Update result
+      const total = votes.yes + votes.no + votes.abstain;
+      document.getElementById("voteResult").innerHTML = `
+        <div style="margin-bottom:.5rem">▓▒░ BFT 12-around-1 Deliberation: ${total}/12 queens voted ░▒▓</div>
+        <div class="bar-container">
+          <div class="bar yes" style="width:${(votes.yes/12*100).toFixed(0)}%">YES ${votes.yes}</div>
+          <div class="bar no" style="width:${(votes.no/12*100).toFixed(0)}%">NO ${votes.no}</div>
+          <div class="bar abstain" style="width:${(votes.abstain/12*100).toFixed(0)}%">ABSTAIN ${votes.abstain}</div>
+        </div>
+        <div style="margin-top:.5rem;font-size:.7rem;color:#aaa">${votes.yes >= 7 ? '✓ PASSED (7-voter amendment threshold met)' : votes.no >= 7 ? '✗ REJECTED (7-voter threshold)' : '⏳ Pending quorum 23/33'}</div>
+      `;
+      // Mark queens as they vote
+      if (votes.yes > 0) showQueen(QUEENS[votes.yes - 1]);
+    }, i * 200);
+  });
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  text = text.replace(/[▓▒░→←★·•◦]/g, '').replace(/\s+/g, ' ').trim();
+  if (!text) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 1.0;
+  window.speechSynthesis.speak(u);
+}
+
+renderQueens();
+
+// Auto-show first queen
+setTimeout(() => showQueen(QUEENS[0]), 1000);
+</script>
+
+</body>
+</html>

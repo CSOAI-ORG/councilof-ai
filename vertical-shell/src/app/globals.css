@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #06070e;
+  --color-foreground: #e2e4e9;
+  --color-card: #0d0f17;
+  --color-card-foreground: #e2e4e9;
+  --color-accent: #141723;
+  --color-accent-foreground: #e2e4e9;
+  --color-border: #1a1d2a;
+  --color-muted-foreground: #878b9b;
+  --color-brand-300: #60a5fa;
+  --color-brand-400: #3b82f6;
+  --color-brand-500: #2563eb;
+  --color-brand-600: #1d4ed8;
+  --color-brand-700: #1e40af;
+  --color-safety-300: #34d399;
+  --color-safety-400: #10b981;
+  --color-safety-500: #059669;
+  --font-sans: var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--font-geist-mono, ui-monospace, monospace);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+.gradient-mesh {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(37, 99, 235, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(29, 78, 216, 0.05) 0%, transparent 50%);
+}
+
+.gradient-brand {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%);
+}
+
+.glass {
+  background: rgba(6, 7, 14, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}

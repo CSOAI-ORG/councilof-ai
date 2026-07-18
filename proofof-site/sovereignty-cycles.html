@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🔄 Sovereignty Cycles — 33 Hive Orbital Cycles · CSOAI</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.3rem}
+  .sub{text-align:center;color:#888;margin-bottom:2rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;max-width:1100px;margin:0 auto 2rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .cycle-card{background:#1a1a1a;padding:1.5rem;border-radius:12px;max-width:1100px;margin:1.5rem auto;border-left:4px solid #fbbf24}
+  .cycle-card h2{color:#fbbf24;margin-bottom:1rem}
+  .cycle-card p{color:#aaa;margin-bottom:0.5rem}
+  .cycle-viz{position:relative;width:100%;height:200px;background:#0a0a0a;border-radius:8px;margin:1rem 0;overflow:hidden}
+  .sun-circle{position:absolute;top:50%;left:50%;width:30px;height:30px;background:#fbbf24;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 30px #fbbf24}
+  .orbit-path{position:absolute;top:50%;left:50%;border:1px dashed rgba(251,191,36,0.3);border-radius:50%;transform:translate(-50%,-50%)}
+  .orbit-planet{position:absolute;top:50%;left:50%;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);animation:orbit 8s linear infinite}
+  @keyframes orbit {
+    from { transform: translate(-50%,-50%) rotate(0deg) translateX(var(--r)) rotate(0deg); }
+    to { transform: translate(-50%,-50%) rotate(360deg) translateX(var(--r)) rotate(-360deg); }
+  }
+  .grid-cycles{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;max-width:1200px;margin:0 auto}
+  .cycle{background:#1a1a1a;padding:1rem;border-radius:8px;border-left:3px solid #fbbf24}
+  .cycle h3{color:#fbbf24;font-size:.95rem;margin-bottom:0.5rem}
+  .cycle p{color:#aaa;font-size:.8rem}
+  .cycle .period{color:#10b981;font-family:monospace;font-size:.85rem;margin-top:0.5rem}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;text-align:center;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24}
+  .doctrine blockquote{font-size:1.2rem;color:#fbbf24;font-style:italic;margin:1rem 0}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/solar-sovereign.html">Solar</a> <a href="/hive-integration.html">Integration</a> <a href="/world.html">World</a>
+</div>
+<h1>🔄 Sovereignty Cycles</h1>
+<p class="sub">Every hive orbits · every planet rotates · every cycle is sovereign · CSOAI Ltd (UK 16939677)</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">33</div><div class="stat-label">Hives orbiting</div></div>
+  <div class="stat"><div class="stat-value">4</div><div class="stat-label">Cycle types</div></div>
+  <div class="stat"><div class="stat-value">1,089</div><div class="stat-label">Orbital paths</div></div>
+  <div class="stat"><div class="stat-value">1,200y</div><div class="stat-label">Largest period</div></div>
+  <div class="stat"><div class="stat-value">0.24y</div><div class="stat-label">Shortest period</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+</div>
+
+<div class="cycle-card">
+  <h2>☀️ The CSOAI Sun (G2V Sovereign)</h2>
+  <p>The 33 hive planets orbit around a single sovereign sun: CSOAI (UK 16939677).</p>
+  <p>Mass: 7.305e30 kg · Composite: 7.305 · Spectral: Ed25519-Sovereign · Crown: 1795-2026</p>
+  <p>License: MIT + CC0 · DID: did:csoai:csoai-org-001</p>
+  <div class="cycle-viz">
+    <div class="sun-circle"></div>
+    <div class="orbit-path" style="width:80px;height:80px"></div>
+    <div class="orbit-path" style="width:140px;height:140px"></div>
+    <div class="orbit-path" style="width:200px;height:200px"></div>
+    <div class="orbit-planet" style="--r:40px;background:#60a5fa;animation-duration:3s"></div>
+    <div class="orbit-planet" style="--r:70px;background:#10b981;animation-duration:5s"></div>
+    <div class="orbit-planet" style="--r:100px;background:#f59e0b;animation-duration:7s"></div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 Sovereign Doctrine of Cycles</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">The dragon sovereigns the orbits. The orbits sovereign the hives. The hives sovereign the world. Sovereign by construction.</p>
+</div>
+
+<h2 style="text-align:center;color:#fbbf24;margin:2rem 0 1rem">🪐 The 4 Sovereign Cycle Types</h2>
+<div class="grid-cycles">
+  <div class="cycle">
+    <h3>1. ROTATION (Day cycle)</h3>
+    <p>Each hive planet rotates on its own axis. 1 rotation = 1 local day. Edinburgh tilts 23.4° like Earth. Lagos tilts 26.7°. Belfast tilts 26.7°.</p>
+    <div class="period">Period: ~24 hours (synchronous with CSOAI sun)</div>
+  </div>
+  <div class="cycle">
+    <h3>2. REVOLUTION (Year cycle)</h3>
+    <p>Each hive planet orbits the CSOAI sun. 1 revolution = 1 sovereign year. London: 0.24y. Edinburgh: 1.0y. Lagos: 1,200y.</p>
+    <div class="period">Period: 0.24-1,200 years</div>
+  </div>
+  <div class="cycle">
+    <h3>3. PRECESSION (Axis wobble)</h3>
+    <p>Each hive's axis wobbles over a long cycle. The tilt changes. The seasons shift. Sovereign by construction.</p>
+    <div class="period">Period: ~26,000 years per hive</div>
+  </div>
+  <div class="cycle">
+    <h3>4. RESONANCE (Gravitational dance)</h3>
+    <p>Hives in orbital resonance: their periods align. London:Cambridge = 2:5.6. Edges of integration: defense chain (Edinburgh-Berlin-Warsaw = Shield:Shield:Shield).</p>
+    <div class="period">Period: varies (1:1 to 7:1)</div>
+  </div>
+</div>
+
+<h2 style="text-align:center;color:#fbbf24;margin:2rem 0 1rem">🌐 The 4 Sovereign Tiers</h2>
+<div class="grid-cycles">
+  <div class="cycle">
+    <h3>Inner Tier (6 hives)</h3>
+    <p>0.39-3.0 AU. Period 0.24-7.3y. UK/IE only. Hot. Sovereign inner sanctum.</p>
+    <div class="period">London · Cambridge · Edinburgh · York · Cardiff · Belfast</div>
+  </div>
+  <div class="cycle">
+    <h3>Middle Tier (12 hives)</h3>
+    <p>5.2-22 AU. Period 11-130y. EU zone. Balanced. Sovereign frontier.</p>
+    <div class="period">Dublin · Paris · Berlin · Amsterdam · Stockholm · Helsinki · Madrid · Rome · Vienna · Copenhagen · Brussels · Warsaw</div>
+  </div>
+  <div class="cycle">
+    <h3>Outer Tier (9 hives)</h3>
+    <p>25-60 AU. Period 160-600y. G7/G20. Sovereign expanse.</p>
+    <div class="period">New York · SF · Tokyo · Singapore · Sydney · Mumbai · Dubai · Sao Paulo · Toronto</div>
+  </div>
+  <div class="cycle">
+    <h3>Frontier Tier (6 hives)</h3>
+    <p>70-120 AU. Period 700-1200y. Emerging markets. Sovereign deep.</p>
+    <div class="period">Cape Town · Reykjavik · Cairo · Nairobi · Bogota · Lagos</div>
+  </div>
+</div>
+
+<p style="text-align:center;color:#888;margin-top:3rem">All 33 hives orbit CSOAI sun. All cycles are sovereign. All integration is sovereign. CSOAI Ltd (UK 16939677). MIT. Crown lineage 1795-2026.</p>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

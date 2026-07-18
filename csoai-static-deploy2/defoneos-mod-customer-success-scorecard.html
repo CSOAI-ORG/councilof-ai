@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEFONEOS Customer Success Scorecard — Rolling SIGIL-Anchored Health Metric</title>
+<meta name="description" content="The rolling customer success scorecard for DEFONEOS buyers — weekly health scoring, red/amber/green thresholds, named interventions, SIGIL-anchored audit trail. v1.0 12 Jul 2026.">
+<style>
+:root{--bg:#07090f;--ink:#e7ecf3;--mute:#9aa6b8;--acc:#66d9ef;--gold:#f5c451;--grn:#5eead4;--red:#fb7185;--line:rgba(255,255,255,.08);--card:rgba(255,255,255,.03)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.5px}
+.brand .dot{width:10px;height:10px;background:var(--acc);border-radius:50%;box-shadow:0 0 16px var(--acc)}
+h1{font-size:30px;line-height:1.2;margin:6px 0 8px}
+h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:22px 0 8px;color:var(--gold)}
+p,li{color:var(--ink)}
+.muted{color:var(--mute)}
+.acc{color:var(--acc)}.gold{color:var(--gold)}.grn{color:var(--grn)}.red{color:var(--red)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+.code{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0f17;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#dfe7f3}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#0c1119;color:var(--gold);font-weight:600}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--mute)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 24px}
+.kpi .box{margin:0;text-align:center}
+.kpi b{display:block;font-size:22px;color:var(--acc)}
+ol li,ul li{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="wrap">
+
+<header>
+<div class="brand"><span class="dot"></span> DEFONEOS · Customer Success Scorecard · v1.0</div>
+<div><span class="tag">12 Jul 2026</span> <span class="tag">CS · Health metric · SIGIL · Renewal input</span></div>
+</header>
+
+<h1>Rolling customer health scorecard — weekly, SIGIL-anchored, audit-trail-grade.</h1>
+<p class="muted">Companion to <code>defoneos-mod-30-60-90-customer.html</code> (the 30-60-90 KPI gates) and <code>defoneos-mod-quarterly-review.html</code> (QBR cadence). The scorecard is the CS lead's working artefact for tracking customer health on a weekly basis, between QBRs. It is the primary input to the renewal-readiness score at Day 90 and the renewal-readiness signal at every subsequent QBR.</p>
+
+<div class="kpi">
+<div class="box"><b>Weekly</b><span class="muted">Cadence</span></div>
+<div class="box"><b>15</b><span class="muted">Signals tracked</span></div>
+<div class="box"><b>4</b><span class="muted">Health tiers</span></div>
+<div class="box"><b>SIGIL</b><span class="muted">Audit trail</span></div>
+</div>
+
+<h2>1. Why a weekly scorecard (and not just QBR KPIs)</h2>
+<div class="box">
+<p>QBR KPIs are quarterly. Customer health changes weekly. A buyer who is going to churn at Day 270 will start showing signals at Day 200 — six months too early for a QBR, two months too early for a quarterly KPI dashboard. The weekly scorecard is the early-warning system.</p>
+<p class="gold">The scorecard tracks 15 signals across five families. The signals are observable, measurable, and resistant to gaming. The score is computed weekly by CSOAI and shared with the buyer's named CS lead contact every Monday at 09:00 UK time.</p>
+</div>
+
+<h2>2. The five signal families</h2>
+<table>
+<tr><th>Family</th><th>Signals</th><th>Weight</th><th>Rationale</th></tr>
+<tr><td>F1 — Product usage</td><td>4 signals (workloads, sessions, operators active, API calls)</td><td>30%</td><td>Most predictive of renewal intent</td></tr>
+<tr><td>F2 — Operator health</td><td>3 signals (certification currency, help-desk tickets, escalations)</td><td>20%</td><td>Indicates whether the buyer is investing in the relationship</td></tr>
+<tr><td>F3 — Compliance posture</td><td>3 signals (audit currency, SIGIL freshness, patch lead time)</td><td>20%</td><td>Indicates whether the buyer is keeping the system healthy</td></tr>
+<tr><td>F4 — Commercial health</td><td>2 signals (payment cadence, contract amendment velocity)</td><td>15%</td><td>Indicates whether commercial friction is building</td></tr>
+<tr><td>F5 — Relationship health</td><td>3 signals (QBR attendance, exec sponsor calls, named reference participation)</td><td>15%</td><td>Indicates whether the relationship is being nurtured</td></tr>
+</table>
+
+<h2>3. The 15 signals — measurement</h2>
+<table>
+<tr><th>#</th><th>Signal</th><th>Source</th><th>Measurement</th><th>Healthy range</th></tr>
+<tr><td>F1.1</td><td>Production workloads on DEFONEOS</td><td>DEFONEOS observability</td><td>Count, rolling 7-day</td><td>≥ prior count</td></tr>
+<tr><td>F1.2</td><td>Sessions per day</td><td>DEFONEOS observability</td><td>Median over rolling 7-day</td><td>≥ 80% of QBR-baseline</td></tr>
+<tr><td>F1.3</td><td>Operators active (weekly)</td><td>DEFONEOS observability</td><td>Distinct operators in rolling 7-day</td><td>≥ 80% of trained count</td></tr>
+<tr><td>F1.4</td><td>API calls per day</td><td>DEFONEOS API gateway</td><td>Median over rolling 7-day</td><td>≥ 60% of QBR-baseline</td></tr>
+<tr><td>F2.1</td><td>Operator certification currency</td><td>DEFONEOS Academy</td><td>% of operators with current cert</td><td>≥ 90%</td></tr>
+<tr><td>F2.2</td><td>Help-desk tickets opened (weekly)</td><td>Support system</td><td>Count, rolling 7-day</td><td>≤ 5 per operator</td></tr>
+<tr><td>F2.3</td><td>Open escalations</td><td>CSOAI escalation ledger</td><td>Count, unresolved</td><td>0 SEV-1/2; ≤ 2 SEV-3</td></tr>
+<tr><td>F3.1</td><td>Audit currency (12-framework)</td><td>Compliance ledger</td><td>Days since last audit, per framework</td><td>≤ audit currency period</td></tr>
+<tr><td>F3.2</td><td>SIGIL receipt freshness</td><td>SIGIL chain</td><td>Hours since last receipt</td><td>≤ 24h from system event</td></tr>
+<tr><td>F3.3</td><td>Patch lead time (advisory→deployed)</td><td>Patch ledger</td><td>Median, rolling 30-day</td><td>≤ 14 days</td></tr>
+<tr><td>F4.1</td><td>Payment cadence</td><td>Finance ledger</td><td>Days past invoice due date</td><td>0 days</td></tr>
+<tr><td>F4.2</td><td>Contract amendment velocity</td><td>Legal ledger</td><td>Days to counter-sign amendments</td><td>≤ 30 days</td></tr>
+<tr><td>F5.1</td><td>QBR attendance (named attendees)</td><td>QBR minutes</td><td>% of named attendees present</td><td>≥ 80%</td></tr>
+<tr><td>F5.2</td><td>Executive sponsor calls held</td><td>Executive ledger</td><td>Count per quarter</td><td>≥ 1 per quarter</td></tr>
+<tr><td>F5.3</td><td>Reference participation</td><td>Reference ledger</td><td>Calls accepted / requested</td><td>≥ 75%</td></tr>
+</table>
+
+<h2>4. Scoring — per-signal RAG</h2>
+<p class="muted">Each signal is scored green, amber, or red based on its healthy range. The per-family score is computed as the weighted average of the family's signal RAGs.</p>
+<table>
+<tr><th>RAG</th><th>Criterion</th><th>Score contribution</th></tr>
+<tr><td>Green</td><td>Within healthy range</td><td>1.0</td></tr>
+<tr><td>Amber</td><td>Within 20% of healthy range</td><td>0.5</td></tr>
+<tr><td>Red</td><td>Below 80% of healthy range, or breached threshold</td><td>0.0</td></tr>
+</table>
+
+<h2>5. Overall score and tier</h2>
+<div class="code">overall_score =
+    (0.30 * family_F1_score) +
+    (0.20 * family_F2_score) +
+    (0.20 * family_F3_score) +
+    (0.15 * family_F4_score) +
+    (0.15 * family_F5_score)
+
+Tier mapping:
+  >= 0.85  HEALTHY       — no intervention needed
+  0.70–0.84 WATCH        — CS lead proactive check-in within 14 days
+  0.50–0.69 AT_RISK      — escalation to AE + named intervention within 7 days
+  < 0.50    CRITICAL      — SEV-1 escalation; churn-prevention playbook activated</div>
+
+<h2>6. Named interventions</h2>
+<table>
+<tr><th>Trigger</th><th>Intervention</th><th>Owner</th><th>Deadline</th></tr>
+<tr><td>Any F1 signal drops to red</td><td>Usage deep-dive with buyer ops lead</td><td>CS lead</td><td>7 days</td></tr>
+<tr><td>F2.1 certification currency &lt; 90%</td><td>Targeted re-certification campaign</td><td>CS lead + Academy</td><td>14 days</td></tr>
+<tr><td>F2.2 tickets per operator &gt; 5/wk</td><td>Pattern analysis; root-cause review</td><td>CS lead + engineering</td><td>14 days</td></tr>
+<tr><td>F2.3 any SEV-1 or SEV-2 open &gt; 5 bd</td><td>Escalation to CRO</td><td>CS lead</td><td>24 hours</td></tr>
+<tr><td>F3.1 audit overdue on any framework</td><td>Audit cadence review with buyer compliance</td><td>Compliance lead</td><td>14 days</td></tr>
+<tr><td>F3.2 SIGIL freshness &gt; 24h</td><td>SIGIL pipeline review</td><td>Engineering + SC officer</td><td>48 hours</td></tr>
+<tr><td>F3.3 patch lead time &gt; 14 d</td><td>Patch pipeline review with buyer ops</td><td>Engineering</td><td>14 days</td></tr>
+<tr><td>F4.1 any invoice overdue</td><td>Finance outreach to buyer AP</td><td>CRO + buyer finance</td><td>5 days</td></tr>
+<tr><td>F4.2 amendment velocity &gt; 30 d</td><td>Legal cadence review</td><td>Legal + buyer legal</td><td>14 days</td></tr>
+<tr><td>F5.1 QBR attendance &lt; 80%</td><td>Calendar review with buyer exec sponsor</td><td>AE + exec sponsor</td><td>Next QBR</td></tr>
+<tr><td>F5.2 exec sponsor calls missed</td><td>Re-schedule + relationship review</td><td>CSOAI CEO</td><td>14 days</td></tr>
+<tr><td>F5.3 reference participation &lt; 75%</td><td>Reference cadence review</td><td>Marketing + CS lead</td><td>30 days</td></tr>
+</table>
+
+<h2>7. Weekly scorecard template</h2>
+<div class="code">DEFONEOS CUSTOMER SUCCESS SCORECARD
+Week ending:           [YYYY-MM-DD]
+Buyer:                 [Name]
+Contract year:         [Y]
+CS lead:               [Name]
+
+Family scores (this week, prior week, delta):
+  F1 — Product usage:        [0.XX]  [0.YY]  [+/- 0.ZZ]
+  F2 — Operator health:       [0.XX]  [0.YY]  [+/- 0.ZZ]
+  F3 — Compliance posture:    [0.XX]  [0.YY]  [+/- 0.ZZ]
+  F4 — Commercial health:     [0.XX]  [0.YY]  [+/- 0.ZZ]
+  F5 — Relationship health:   [0.XX]  [0.YY]  [+/- 0.ZZ]
+
+Overall score:         [0.XX]  Tier: [HEALTHY | WATCH | AT_RISK | CRITICAL]
+
+Signals at amber or red this week:
+  [F#.N] [signal name] — [value] — [brief narrative]
+  ...
+
+Named interventions triggered:
+  [F#.N] [intervention] — owner [X] — deadline [YYYY-MM-DD]
+  ...
+
+Renewal-readiness signal (forward 90 days):
+  [HIGH | MEDIUM | LOW | AT RISK] — confidence [X%]
+
+SIGIL receipt:
+  Digest: [hash]
+  Counter-sign: CSOAI CS lead, Buyer CS lead
+  Timestamp: [ISO 8601]</div>
+
+<h2>8. The SIGIL audit trail</h2>
+<p class="muted">Every weekly scorecard is counter-signed by the CSOAI CS lead and the buyer's named CS lead contact, and recorded as a SIGIL receipt. The SIGIL chain is the audit trail — it proves what the score was, when it was computed, and what interventions were triggered. This is the artefact that the buyer's auditor, the buyer's compliance officer, or the buyer's board can request.</p>
+<ol>
+<li>SIGIL chain reference — every weekly scorecard has a unique chain reference (e.g. <code>sigil://defoneos/cs-scorecard/buyer-X/2026-W28</code>).</li>
+<li>Digest — SHA-256 of the scorecard content, signed by CSOAI HSM key.</li>
+<li>Counter-signature — buyer's CS lead counter-signs within 5 business days; rejection triggers a joint review.</li>
+<li>Retention — the SIGIL chain is retained for the duration of the contract plus 7 years (UK GDPR + commercial record retention).</li>
+</ol>
+
+<h2>9. The scorecard is NOT the renewal-readiness score</h2>
+<div class="box">
+<p>The scorecard is the <b>leading indicator</b>; the renewal-readiness score is the <b>lagging indicator</b>. The scorecard predicts; the renewal-readiness score confirms.</p>
+<ol>
+<li>Scorecard tier HEALTHY / WATCH → renewal-readiness tier HIGH / MEDIUM (typical).</li>
+<li>Scorecard tier AT_RISK → renewal-readiness tier MEDIUM / LOW (typical).</li>
+<li>Scorecard tier CRITICAL → renewal-readiness tier LOW / AT RISK (typical).</li>
+</ol>
+<p>But the relationship is not deterministic. A buyer in CRITICAL scorecard tier can recover to HIGH renewal-readiness if the AE and CS lead execute the named interventions within the deadlines.</p>
+</div>
+
+<h2>10. What the scorecard is NOT</h2>
+<ul>
+<li>NOT a customer-satisfaction survey (NPS) — the scorecard tracks behaviour, not opinion.</li>
+<li>NOT a QBR artefact — the scorecard is weekly; the QBR is quarterly.</li>
+<li>NOT a renewal contract — the scorecard is the input to the renewal conversation, not the renewal itself.</li>
+<li>NOT a billing artefact — the scorecard does not affect pricing or invoicing.</li>
+</ul>
+
+<h2>11. Cross-walk to DEFONEOS pack</h2>
+<ul>
+<li><b>30-60-90 plan</b> — <code>defoneos-mod-30-60-90-customer.html</code></li>
+<li><b>QBR template</b> — <code>defoneos-mod-quarterly-review.html</code></li>
+<li><b>Renewal negotiation</b> — <code>defoneos-mod-renewal-negotiation.html</code></li>
+<li><b>Churn prevention</b> — <code>defoneos-mod-churn-prevention.html</code></li>
+<li><b>Escalation runbook</b> — <code>defoneos-mod-escalation-runbook.html</code></li>
+<li><b>Compliance suite</b> — <code>defoneos-compliance-suite.html</code></li>
+</ul>
+
+<h2>12. Honesty register</h2>
+<div class="box">
+<ol>
+<li>The 15 signals are calibrated against three pilot deployments; the weights may need re-calibration as more data accumulates.</li>
+<li>The score is computed by CSOAI; the buyer sees the score and the underlying signals but does not control the weighting.</li>
+<li>The 80% / 60% / 90% healthy-range thresholds are CSOAI defaults; buyers with stricter internal thresholds should request adjusted thresholds.</li>
+<li>SIGIL freshness (F3.2) assumes the buyer's site has a working SIGIL pipeline; air-gapped deployments may need adjusted thresholds — see <code>defoneos-mod-air-gap-deployment-guide.html</code>.</li>
+<li>The scorecard does not capture qualitative signals (e.g. champion leaving the buyer organisation); these are tracked separately via the CS lead's relationship notes.</li>
+</ol>
+</div>
+
+<footer>
+DEFONEOS · Customer Success Scorecard · v1.0 · 12 Jul 2026 · CSOAI Ltd (UK Co. 16939677) · Companion to <code>defoneos-mod-30-60-90-customer.html</code>
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "id": "conversion-demo-to-disclosure",
+  "prompt": "Write the conversion-optimization A/B test prompt for the demo → first-disclosure funnel step in openpatent.ai. The funnel: (1) post-demo followup email with /v1/disclosure API key, (2) sample-disclosure playground (paste-a-GDD form), (3) 90-second disclosure of a real artifact, (4) $29 starter charge → /v1/disclosure receipt, (5) BFT council notification at the $149+ tier. Optimize step 1→2: 3 micro-tests on the followup email (with/without the playground, with/without a 5-min loom, with/without a $149 discount). Optimize step 2→3: 4 micro-tests on the playground (default sample vs empty-paste vs template-library, single-step vs 3-step wizard, with/without C2PA preview, with/without Bitcoin OTS countdown). Optimize step 3→4: 3 micro-tests on the checkout (one-click $29, with/without jurisdictional add-on, with/without auto-renewal). Optimize step 4→5: 2 micro-tests on the BFT upsell. State primary metric and a hypothesis with expected lift %. Use DEFONEOS mythic voice. Return ONLY JSON: {followup_microtests:[3 strings], playground_microtests:[4 strings], checkout_microtests:[3 strings], upsell_microtests:[2 strings], primary_metrics:[4 strings], hypotheses:[12 strings], signature:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

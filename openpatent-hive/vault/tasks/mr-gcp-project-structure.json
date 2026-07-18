@@ -1,0 +1,7 @@
+{
+  "id": "mr-gcp-project-structure",
+  "prompt": "Write a 350-word GCP project + folder structure for openpatent.ai's 3-region deployment. Cover: (1) the org node (csoai-ltd-uk) with 4 folders — 00-platform (shared services: secrets, logging, monitoring), 10-prod-uk-london, 20-prod-eu-frankfurt, 30-prod-us-east1, (2) one project per region (openpatent-prod-uk, openpatent-prod-eu, openpatent-prod-us) plus the shared project (openpatent-prod-shared) for the global load-balancer, the cross-region KMS, the global IP, (3) the IAM model — one google-group per project (openpatent-prod-uk-admins@l, etc.), 3 service accounts per region (vm-identity, bft-validator, replication-agent) with least-privilege roles, (4) the VPC Service Controls perimeter around all 4 projects to prevent data exfiltration to unmanaged devices, (5) the org policy constraints — restrict allowed VM machine types to the curated list, restrict allowed regions to the 3 sovereign regions, require CMEK for all storage, (6) the billing — one billing account, budget alerts at 50%/90%/100% of $8k/mo, (7) the audit logs sink to BigQuery (openpatent-audit.global) with 7-year retention. Use DEFENEOS mythic voice. Return ONLY JSON: {org:string, folders:[4 strings], projects:[4 strings], iam_groups:[3 strings], service_accounts:[3 strings], vpc_sc_perimeter:string, org_policies:[4 strings], monthly_budget_usd:int}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

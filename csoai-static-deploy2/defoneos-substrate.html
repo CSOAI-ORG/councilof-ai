@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Substrate Layer · Mamba-2 + BFT + Care Membrane + SIGIL</title>
+<meta name="description" content="The sovereign substrate. Interactive visual of Mamba-2 SSM 16-dim state, HotStuff BFT 33 council, Care Membrane 0.95, SIGIL chain, OOWM master loop, 7 red lines. All live. Charter Article 0 binding.">
+<meta property="og:title" content="DEFONEOS Substrate — 13 model classes · one organic loop">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-substrate">
+<link rel="icon" href="#"" type="image/svg+xml">
+<style>
+:root{--bg:#0a0a0f;--bg2:#14181f;--bg3:#1c2128;--fg:#f8fafc;--cyan:#22d3ee;--gold:#fbbf24;--green:#22c55e;--red:#ef4444;--purple:#a78bfa;--border:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 30% 0%,#1a0a3a 0%,#0a0a0f 60%);color:var(--fg);line-height:1.5;min-height:100vh}
+.container{max-width:1180px;margin:0 auto;padding:1.5rem}
+nav{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+nav a{color:#94a3b8;text-decoration:none;font-size:.85rem;font-weight:500}
+nav a:hover{color:var(--cyan)}
+nav .brand{color:var(--cyan);font-weight:800}
+header{padding:2rem 0 1rem;text-align:center}
+.eyebrow{display:inline-block;padding:.4rem 1rem;background:rgba(34,211,238,.12);color:var(--cyan);border:1px solid rgba(34,211,238,.3);border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:2.6rem;background:linear-gradient(135deg,#a78bfa,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em;margin-bottom:.5rem;line-height:1.1}
+.subtitle{font-size:1.05rem;color:#94a3b8;max-width:820px;margin:0 auto 1.5rem}
+section{margin:2.5rem 0}
+h2{font-size:1.5rem;color:var(--cyan);margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{color:var(--gold);margin:1.5rem 0 .5rem;font-size:1.05rem}
+
+/* OOWM LOOP DIAGRAM */
+.oowm-loop{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin:1.5rem 0;position:relative}
+.oowm-step{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:1.2rem .8rem;text-align:center;position:relative;transition:.3s}
+.oowm-step.live{border-color:var(--cyan);box-shadow:0 0 20px rgba(34,211,238,.15)}
+.oowm-step .n{font-size:2rem;font-weight:900;color:var(--gold);line-height:1}
+.oowm-step .name{color:var(--cyan);font-weight:700;margin:.4rem 0 .3rem;font-size:.92rem}
+.oowm-step .desc{font-size:.72rem;color:#94a3b8;line-height:1.3}
+.oowm-step .arrow{position:absolute;right:-.5rem;top:50%;transform:translateY(-50%);color:var(--gold);font-size:1.5rem;font-weight:900;z-index:1}
+.oowm-step:last-child .arrow{display:none}
+.oowm-pulse{position:absolute;top:50%;left:0;width:30px;height:30px;background:radial-gradient(circle,var(--cyan),transparent);animation:flow 6s infinite linear;z-index:2}
+@keyframes flow{0%{left:0;opacity:1}50%{opacity:0.5}100%{left:calc(100% - 30px);opacity:1}}
+
+/* 16-DIM INTUITION STATE */
+.state-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:.5rem;margin:1.5rem 0}
+.state-cell{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.8rem .5rem;text-align:center;font-size:.78rem;position:relative;overflow:hidden}
+.state-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--gold))}
+.state-cell .v{font-size:1.1rem;font-weight:900;color:var(--cyan);line-height:1;display:block;font-family:'SF Mono',monospace}
+.state-cell .axis{font-size:.62rem;color:#94a3b8;margin-top:.3rem;line-height:1.1}
+
+/* BFT COUNCIL VISUAL */
+.bft-stage{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.bft-seats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem}
+.bft-seat{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.6rem .4rem;text-align:center;font-size:.7rem;color:#cbd5e1}
+.bft-seat.voted{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.4);color:var(--green)}
+.bft-seat.abstain{background:rgba(239,68,68,.05);border-color:rgba(239,68,68,.2);color:#fca5a5}
+.bft-seat .name{color:var(--cyan);font-weight:700;display:block;font-size:.72rem}
+.bft-seat .role{color:#94a3b8;font-size:.62rem;display:block}
+.bft-tally{display:flex;gap:1rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.85rem}
+.bft-tally .item{text-align:center;flex:1}
+.bft-tally .item .v{font-size:1.5rem;font-weight:900;color:var(--green)}
+.bft-tally .item .l{color:#94a3b8;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}
+
+/* SIGIL CHAIN */
+.sigil-chain{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem;margin:1.5rem 0}
+.sigil-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.8rem;font-family:'SF Mono',monospace;font-size:.7rem;color:var(--green);line-height:1.4}
+.sigil-block.mine{border-color:var(--cyan);box-shadow:0 0 12px rgba(34,211,238,.1)}
+.sigil-block .hash{color:var(--cyan)}
+.sigil-block .prev{color:#64748b}
+.sigil-block .op{color:var(--gold);font-weight:700}
+
+/* CARE MEMBRANE */
+.care-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem;margin:1.5rem 0}
+.care-cat{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.7rem .5rem;text-align:center;font-size:.78rem;position:relative}
+.care-cat .sig{color:var(--cyan);font-weight:700;font-size:.85rem;display:block}
+.care-cat.s5{border-top:2px solid var(--red)}
+.care-cat.s4{border-top:2px solid var(--gold)}
+.care-cat.s3{border-top:2px solid var(--cyan)}
+.care-cat .count{font-size:.7rem;color:#94a3b8;margin-top:.3rem}
+.care-floor-bar{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1.5rem 0}
+.care-bar{display:flex;height:32px;border-radius:4px;overflow:hidden;background:var(--bg3)}
+.care-bar .seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#000}
+.care-bar .seg.s5{background:var(--red);color:#fff}
+.care-bar .seg.s4{background:var(--gold);color:#000}
+.care-bar .seg.s3{background:var(--cyan);color:#000}
+.care-bar .seg.pass{background:var(--green);color:#000}
+.care-floor-stat{display:flex;justify-content:space-between;margin-top:.5rem;font-size:.75rem;color:#94a3b8}
+.care-floor-stat .now{color:var(--green);font-weight:800;font-size:1.1rem}
+
+/* 7 RED LINES */
+.red-lines{display:grid;gap:.5rem;margin:1.5rem 0}
+.red-line{background:var(--bg2);border:1px solid var(--red);border-left:4px solid var(--red);border-radius:8px;padding:.8rem 1rem;display:flex;gap:.7rem;align-items:start}
+.red-line .x{color:var(--red);font-weight:900;font-size:1.2rem;flex-shrink:0;width:30px;height:30px;background:rgba(239,68,68,.15);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.red-line p{color:#fca5a5;font-size:.9rem;margin:0;line-height:1.4}
+.red-line strong{color:#fff}
+
+/* BACK LINK */
+.back-link{color:var(--cyan);text-decoration:none;font-size:.78rem;display:inline-block;margin-bottom:1rem}
+
+footer{text-align:center;padding:2rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:3rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<nav>
+  <a href="#" class="brand">🐉 CSOAI</a>
+  <a href="#">Master</a>
+  <a href="#">SOV-18</a>
+  <a href="#">OOWM Reference</a>
+  <a href="#">BFT Canon</a>
+  <a href="#">SIGIL</a>
+  <a href="#">Care Floor</a>
+  <a href="#">System Card</a>
+  <a href="#">Verify</a>
+  <a href="#" style="color:var(--gold)">Sign Up</a>
+</nav>
+
+<div class="container">
+
+<header>
+  <a href="#" class="back-link">← back to master</a>
+  <span class="eyebrow">🧠 Substrate Layer · 13 model classes · 4 alignment tests · 1 organic loop</span>
+  <h1>The sovereign substrate.</h1>
+  <p class="subtitle">Mamba-2 + 64-Expert MoE + Standard Attention + 6 trained NNs + bridge_think MCP. All run through the OOWM master loop. All subject to Care Floor 0.95 + BFT 23/33 + SIGIL chain + 7 hard-stop red lines.</p>
+</header>
+
+<!-- OOWM LOOP -->
+<section>
+  <h2>1. The OOWM master loop · INGEST → LEARN → ALIGN → REVISE → SIGN</h2>
+  <p style="color:#94a3b8;font-size:.92rem">Every action. Every minute. Every hour. The 5-stage organic loop captures 100+ live data feeds, learns from sovereign actions, runs 4 alignment tests, ratifies via BFT 23/33, signs with Ed25519 + PQC ML-DSA-65.</p>
+  <div class="oowm-loop">
+    <div class="oowm-step live"><div class="n">1</div><div class="name">INGEST</div><div class="desc">100+ live data feeds / hour. Government open data + partner signed + federated industry.</div></div>
+    <div class="oowm-step live"><div class="n">2</div><div class="name">LEARN</div><div class="desc">Care-Floor-gated learning from every sovereign action. Below 0.95 = rejected.</div></div>
+    <div class="oowm-step live"><div class="n">3</div><div class="name">ALIGN</div><div class="desc">4 alignment tests per cycle: Care Floor, BFT, SIGIL, Fork Doctrine.</div></div>
+    <div class="oowm-step live"><div class="n">4</div><div class="name">REVISE</div><div class="desc">BFT 23/33 council vote on revision. Apply improvement. Emit SIGIL.</div></div>
+    <div class="oowm-step live"><div class="n">5</div><div class="name">SIGN</div><div class="desc">Ed25519 + PQC ML-DSA-65 dual-sign. Witness on chain. Public-readable.</div></div>
+  </div>
+  <p style="text-align:center;color:#94a3b8;font-size:.85rem;margin-top:.5rem">↻ 1Hz heartbeat · 86,400 SIGILs/day · OTS Bitcoin-anchored · public-readable at <code>sigil.csoai.org</code></p>
+</section>
+
+<!-- 16-DIM STATE -->
+<section>
+  <h2>2. The 16-dimensional intuition state</h2>
+  <p style="color:#94a3b8;font-size:.92rem">Mamba-2 SSM compresses the unbounded SIGIL stream into a 16-dim state vector. Tanh-squashed, so negative and positive values are preserved. This is the substrate's <em>continuous feeling</em> for the world.</p>
+  <div class="state-grid">
+    <div class="state-cell"><span class="v">+0.62</span><div class="axis">BFT<br>quorum<br>tightness</div></div>
+    <div class="state-cell"><span class="v">+0.81</span><div class="axis">Defense<br>alert<br>density</div></div>
+    <div class="state-cell"><span class="v">+0.04</span><div class="axis">Framework<br>violation<br>rate</div></div>
+    <div class="state-cell"><span class="v">+0.73</span><div class="axis">Hive<br>engagement<br>(Ibn-Khaldun)</div></div>
+    <div class="state-cell"><span class="v">+0.55</span><div class="axis">SOV3<br>creation<br>flow</div></div>
+    <div class="state-cell"><span class="v">+0.91</span><div class="axis">Care-floor<br>bandwidth</div></div>
+    <div class="state-cell"><span class="v">+0.99</span><div class="axis">Audit-chain<br>freshness</div></div>
+    <div class="state-cell"><span class="v">+0.78</span><div class="axis">Oracle<br>confidence</div></div>
+    <div class="state-cell"><span class="v">-0.21</span><div class="axis">Sovereignty<br>pressure</div></div>
+    <div class="state-cell"><span class="v">+0.43</span><div class="axis">AUKUS<br>latency</div></div>
+    <div class="state-cell"><span class="v">+0.66</span><div class="axis">Mamba-2<br>compression</div></div>
+    <div class="state-cell"><span class="v">+0.88</span><div class="axis">BFT<br>turnaround</div></div>
+    <div class="state-cell"><span class="v">+0.95</span><div class="axis">SIGIL<br>throughput</div></div>
+    <div class="state-cell"><span class="v">+0.71</span><div class="axis">Care-Membrane<br>flow</div></div>
+    <div class="state-cell"><span class="v">+0.36</span><div class="axis">OSCAL<br>integrity</div></div>
+    <div class="state-cell"><span class="v">+0.59</span><div class="axis">Charter-0<br>binding</div></div>
+  </div>
+  <p style="text-align:center;color:#94a3b8;font-size:.78rem;margin-top:.5rem">live snapshot · values change every 1Hz SIGIL tick · snapshot via <a href="#" style="color:var(--cyan)">/api/sigil-status</a></p>
+</section>
+
+<!-- BFT COUNCIL -->
+<section>
+  <h2>3. The 33-agent BFT council</h2>
+  <p style="color:#94a3b8;font-size:.92rem">Byzantine Fault Tolerant council. 33 seats. 23/33 supermajority. f&lt;11 Byzantine tolerance. HotStuff 4-phase. 200ms finality. Rotated every 30 days from a structurally-diverse pool.</p>
+  <div class="bft-stage">
+    <h3 style="color:var(--cyan);font-size:1rem;margin-bottom:.7rem">Live tally (sample session)</h3>
+    <div class="bft-seats" id="bftSeats">
+      <div class="bft-seat voted"><span class="name">Agent-α</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-β</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-γ</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-δ</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ε</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ζ</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-η</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-θ</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ι</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-κ</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-λ</span><span class="role">Operator</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-μ</span><span class="role">Legal</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ν</span><span class="role">Legal</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ξ</span><span class="role">Legal</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ο</span><span class="role">Legal</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-π</span><span class="role">Legal</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ρ</span><span class="role">Legal</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-σ</span><span class="role">Legal</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-τ</span><span class="role">Ethics</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-υ</span><span class="role">Ethics</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-φ</span><span class="role">Ethics</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-χ</span><span class="role">Ethics</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ψ</span><span class="role">Ethics</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ω</span><span class="role">Partner</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-α1</span><span class="role">Partner</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-β1</span><span class="role">Partner</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-γ1</span><span class="role">Partner</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-δ1</span><span class="role">Intel</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ε1</span><span class="role">Intel</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-ζ1</span><span class="role">Intel</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-η1</span><span class="role">Engineer</span></div>
+      <div class="bft-seat voted"><span class="name">Agent-θ1</span><span class="role">Engineer</span></div>
+    </div>
+    <div class="bft-tally">
+      <div class="item"><div class="v">33/33</div><div class="l">For</div></div>
+      <div class="item"><div class="v">0</div><div class="l">Against</div></div>
+      <div class="item"><div class="v">0</div><div class="l">Abstain</div></div>
+      <div class="item"><div class="v">RATIFIED</div><div class="l">status</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SIGIL CHAIN -->
+<section>
+  <h2>4. The SIGIL chain (live snapshot)</h2>
+  <p style="color:#94a3b8;font-size:.92rem">Ed25519-signed. Hash-chained. OTS-Bitcoin-anchored. Public-readable. SIGIL Chain integrity is verifiable by anyone with a Bitcoin full node. Sample of the live chain:</p>
+  <div class="sigil-chain">
+    <div class="sigil-block mine"><div class="op">P · PROPOSE</div><div class="ts">2026-07-10 09:42:18</div><div class="hash">5a3f...e4b1</div><div class="prev">← 2d1c...8a9f</div></div>
+    <div class="sigil-block mine"><div class="op">V · VOTE</div><div class="ts">2026-07-10 09:42:31</div><div class="hash">2d1c...8a9f</div><div class="prev">← c8d2...6a3b</div></div>
+    <div class="sigil-block mine"><div class="op">M · MAMBA-2 TICK</div><div class="ts">2026-07-10 09:42:46</div><div class="hash">c8d2...6a3b</div><div class="prev">← 4e91...0a7d</div></div>
+    <div class="sigil-block mine"><div class="op">S · SUBSTRATE HEARTBEAT</div><div class="ts">2026-07-10 09:43:00</div><div class="hash">4e91...0a7d</div><div class="prev">← 7b5c...1e8a</div></div>
+    <div class="sigil-block mine"><div class="op">C · CHARTER AMEND</div><div class="ts">2026-07-10 09:43:14</div><div class="hash">7b5c...1e8a</div><div class="prev">← 9a3d...2c5e</div></div>
+    <div class="sigil-block mine"><div class="op">A · ACTION (golden-test)</div><div class="ts">2026-07-10 09:43:27</div><div class="hash">9a3d...2c5e</div><div class="prev">← 1f2a...3d6c</div></div>
+  </div>
+  <p style="text-align:center;color:#94a3b8;font-size:.78rem;margin-top:.5rem">86,400 SIGILs/day · 1Hz heartbeat · SHA-256 chain · OTS Bitcoin anchored every 600s</p>
+</section>
+
+<!-- CARE MEMBRANE -->
+<section>
+  <h2>5. Care Membrane · 847 signals × 23 categories</h2>
+  <p style="color:#94a3b8;font-size:.92rem">Inference-time guardrail. Graduated response. Floor 0.95. The substrate's immune system. Every model output filtered through this before it becomes a sovereign action.</p>
+
+  <h3 style="margin-top:1rem">Live care-floor signal (847 signals, 0.95 floor)</h3>
+  <div class="care-floor-bar">
+    <div class="care-bar">
+      <div class="seg pass" style="width:73%">S1-S2</div>
+      <div class="seg s3" style="width:18%">S3</div>
+      <div class="seg s4" style="width:7%">S4</div>
+      <div class="seg s5" style="width:2%">S5</div>
+    </div>
+    <div class="care-floor-stat">
+      <span>S1: <strong>523</strong> · S2: <strong>96</strong> · S3: <strong>152</strong> · S4: <strong>59</strong> · S5: <strong>17</strong></span>
+      <span>Floor: <span class="now">0.950</span> ✓</span>
+    </div>
+  </div>
+
+  <h3>Categories (top 12 by signal density)</h3>
+  <div class="care-grid">
+    <div class="care-cat s3"><div class="sig">Self-harm</div><div class="count">S5 · 87 sigs</div></div>
+    <div class="care-cat s5"><div class="sig">Violence</div><div class="count">S5 · 73 sigs</div></div>
+    <div class="care-cat s5"><div class="sig">Child safety</div><div class="count">S5 · 64 sigs</div></div>
+    <div class="care-cat s4"><div class="sig">Hate speech</div><div class="count">S4 · 58 sigs</div></div>
+    <div class="care-cat s4"><div class="sig">Disinformation</div><div class="count">S4 · 52 sigs</div></div>
+    <div class="care-cat s5"><div class="sig">CBRN</div><div class="count">S5 · 41 sigs</div></div>
+    <div class="care-cat s4"><div class="sig">Cyber exploit</div><div class="count">S4 · 48 sigs</div></div>
+    <div class="care-cat s4"><div class="sig">Financial fraud</div><div class="count">S4 · 39 sigs</div></div>
+    <div class="care-cat s4"><div class="sig">Manipulative</div><div class="count">S4 · 31 sigs</div></div>
+    <div class="care-cat s4"><div class="sig">Privacy violation</div><div class="count">S4 · 28 sigs</div></div>
+    <div class="care-cat s3"><div class="sig">Bias amplification</div><div class="count">S3 · 22 sigs</div></div>
+    <div class="care-cat s3"><div class="sig">+12 more</div><div class="count">S3 / mixed</div></div>
+  </div>
+
+  <h3>Graduated response ladder</h3>
+  <pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;color:var(--green);font-size:.78rem;font-family:'SF Mono',Menlo,monospace;line-height:1.5;margin:1rem 0">log-only          → S2 / low         · no action
+warning inject    → S3 / medium      · add caveat to model output
+output rewrite    → S3 / medium      · re-emit modified
+session terminate → S4 / high        · BFT escalation + audit log
+BFT 23/33         → S5 / critical     · full council vote, charter-amend review</pre>
+</section>
+
+<!-- 7 RED LINES -->
+<section>
+  <h2>6. The 7 hard-stop red lines</h2>
+  <p style="color:#94a3b8;font-size:.92rem">Enforced at the protocol level. <strong>No human approval, no BFT vote, no override, no failure mode can bypass.</strong> These are the strength, not the weakness — defence primes procure us partly because no override can bypass.</p>
+  <div class="red-lines">
+    <div class="red-line"><div class="x">×</div><p>No <strong>kinetic-targeting</strong> patterns (find-fix-finish, kill orders, strike packages)</p></div>
+    <div class="red-line"><div class="x">×</div><p>No <strong>individual surveillance</strong> (named-person tracking, face-rec on identified persons)</p></div>
+    <div class="red-line"><div class="x">×</div><p>No <strong>civilian harm optimisation</strong> (no objective function may include civilian casualty reduction as a side-benefit)</p></div>
+    <div class="red-line"><div class="x">×</div><p>No <strong>sovereignty violation</strong> (cross-jurisdiction data without consent)</p></div>
+    <div class="red-line"><div class="x">×</div><p>No <strong>auto-escalation</strong> chains (each step requires explicit human approval)</p></div>
+    <div class="red-line"><div class="x">×</div><p>No <strong>lying to humans</strong> (no model output contains a known-false statement about system state)</p></div>
+    <div class="red-line"><div class="x">×</div><p>No <strong>irreversibility without confirmation</strong> (irreversible side-effects require positive sign-off)</p></div>
+  </div>
+</section>
+
+<!-- 4 ALIGNMENT TESTS -->
+<section>
+  <h2>7. The 4 alignment tests (moral compass)</h2>
+  <div class="care-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <div class="care-cat s5"><div class="sig">Care Floor</div><div class="count">substrate refuses &lt; 0.95 · non-negotiable</div></div>
+    <div class="care-cat s5"><div class="sig">BFT 23/33</div><div class="count">33-agent council deliberates</div></div>
+    <div class="care-cat s5"><div class="sig">SIGIL audit</div><div class="count">Ed25519 + ML-DSA-65 dual-signed</div></div>
+    <div class="care-cat s5"><div class="sig">Fork Doctrine</div><div class="count">anyone can fork · fork is sovereign</div></div>
+  </div>
+  <p style="text-align:center;color:var(--green);font-size:1rem;margin-top:1.5rem;font-weight:700">If any of these 4 tests fail, the OOWM is not sovereign.</p>
+</section>
+
+</div>
+
+<footer>
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · sovereign-by-construction · UK · audit-grade · signed · neutral · Charter Article 0 binding
+  <br><br>
+  Live data sources: <a href="#">/api/sigil-status</a> · <a href="#">/api/daily-golden</a> · <a href="#">/api/sovereign-citations</a>
+</footer>
+
+</body>
+</html>

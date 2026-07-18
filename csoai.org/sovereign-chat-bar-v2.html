@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOVEREIGN CHAT BAR v2 - Menu + Brain Picker + Loop Guard + Immersive Onboarding</title>
+<style>
+/* === BASE === */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(160deg,#0a0e27,#1e3a8a 50%,#0a0e27);color:#e2e8f0;line-height:1.6;min-height:100vh;padding:20px}
+.container{max-width:1280px;margin:0 auto}
+
+/* === SOVEREIGN CHAT BAR === */
+.sovereign-bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:680px;max-width:calc(100% - 40px);background:rgba(0,0,0,.85);border:1px solid rgba(251,191,36,.3);border-radius:24px;backdrop-filter:blur(12px);box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:1000;overflow:visible}
+.bar-header{padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;font-size:.85rem}
+.bar-status{display:flex;align-items:center;gap:8px;color:#fbbf24}
+.bar-status .dot{width:8px;height:8px;background:#10b981;border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
+.bar-ministats{color:#94a3b8;font-size:.75rem}
+.bar-close{width:27px;height:27px;border-radius:50%;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all .2s}
+.bar-close:hover{background:rgba(239,68,68,.4);transform:scale(1.1)}
+
+/* === INPUT ROW (with menu + mic) === */
+.bar-input-row{padding:12px 16px;display:flex;align-items:center;gap:10px}
+.bar-menu-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;border:none;cursor:pointer;font-size:1.2rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.bar-menu-btn:hover{transform:scale(1.1) rotate(90deg);box-shadow:0 0 16px rgba(251,191,36,.6)}
+.bar-menu-btn.active{background:linear-gradient(135deg,#10b981,#06b6d4);transform:rotate(45deg)}
+
+.bar-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:10px 16px;color:#fff;font-size:.95rem;outline:none;transition:border-color .2s}
+.bar-input:focus{border-color:#fbbf24;background:rgba(251,191,36,.05)}
+.bar-input::placeholder{color:#94a3b8}
+
+.bar-mic-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.05);color:#06b6d4;border:1px solid rgba(6,182,212,.3);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.bar-mic-btn:hover{background:rgba(6,182,212,.2);transform:scale(1.1)}
+.bar-mic-btn.live{background:rgba(16,185,129,.4);color:#fff;animation:mic-pulse 1.2s ease-in-out infinite}
+@keyframes mic-pulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}50%{box-shadow:0 0 0 8px rgba(16,185,129,0)}}
+
+.bar-send-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#10b981,#06b6d4);color:#000;border:none;cursor:pointer;font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.bar-send-btn:hover{transform:scale(1.1);box-shadow:0 0 16px rgba(16,185,129,.6)}
+.bar-send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* === MENU DROPDOWN === */
+.bar-menu{position:absolute;bottom:calc(100% + 8px);left:16px;background:rgba(0,0,0,.95);border:1px solid rgba(251,191,36,.3);border-radius:12px;backdrop-filter:blur(12px);box-shadow:0 -8px 32px rgba(0,0,0,.5);min-width:280px;display:none;z-index:1001;padding:8px}
+.bar-menu.open{display:block;animation:menu-in .2s ease-out}
+@keyframes menu-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.menu-section{padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:4px}
+.menu-section:last-child{border-bottom:none;margin-bottom:0}
+.menu-section-title{font-size:.7rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;padding:0 8px}
+.menu-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all .15s;color:#e2e8f0;font-size:.85rem}
+.menu-item:hover{background:rgba(251,191,36,.1);color:#fbbf24}
+.menu-item .icon{width:20px;font-size:1rem;text-align:center;flex-shrink:0}
+.menu-item .label{flex:1}
+.menu-item .key{font-size:.7rem;color:#94a3b8;background:rgba(255,255,255,.05);padding:1px 6px;border-radius:3px}
+
+/* === BRAIN SANDWICH PICKER === */
+.brain-picker{position:absolute;bottom:calc(100% + 8px);right:16px;background:rgba(0,0,0,.95);border:1px solid rgba(168,85,247,.3);border-radius:12px;backdrop-filter:blur(12px);box-shadow:0 -8px 32px rgba(0,0,0,.5);min-width:340px;display:none;z-index:1001;padding:12px}
+.brain-picker.open{display:block;animation:menu-in .2s ease-out}
+.brain-picker-title{font-size:.85rem;color:#a855f7;margin-bottom:8px;font-weight:700}
+.brain-picker-sub{font-size:.7rem;color:#94a3b8;margin-bottom:12px}
+.brain-sandwich{display:flex;align-items:stretch;gap:6px;padding:8px;background:rgba(168,85,247,.1);border-radius:8px;margin-bottom:12px}
+.brain-half{flex:1;padding:8px 6px;border-radius:6px;background:rgba(0,0,0,.4);text-align:center;cursor:pointer;border:1px solid transparent;transition:all .2s}
+.brain-half:hover{background:rgba(168,85,247,.2)}
+.brain-half.active{background:rgba(168,85,247,.4);border-color:#a855f7}
+.brain-half .label{font-size:.7rem;color:#94a3b8;text-transform:uppercase}
+.brain-half .value{font-size:.9rem;color:#fff;font-weight:700;margin-top:2px}
+.brain-half .desc{font-size:.65rem;color:#94a3b8;margin-top:4px}
+.brain-quick-pick{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.brain-quick-pick button{padding:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#e2e8f0;cursor:pointer;font-size:.75rem;transition:all .15s}
+.brain-quick-pick button:hover{background:rgba(168,85,247,.2);border-color:#a855f7;color:#a855f7}
+
+/* === RESPONSE BUBBLE === */
+.response-bubble{position:absolute;bottom:calc(100% + 12px);left:0;right:0;padding:12px 20px;background:rgba(0,0,0,.9);border:1px solid rgba(251,191,36,.3);border-radius:12px;font-size:.85rem;line-height:1.5;max-height:200px;overflow-y:auto;display:none;z-index:999;margin:0 12px}
+.response-bubble.open{display:block;animation:menu-in .2s ease-out}
+.response-bubble .role{color:#fbbf24;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.response-bubble .content{color:#e2e8f0}
+.response-bubble .sigil{color:#10b981;font-family:monospace;font-size:.7rem;margin-top:6px;padding-top:6px;border-top:1px solid rgba(16,185,129,.2)}
+
+/* === STATUS BAR === */
+.ministats{padding:6px 20px;background:rgba(0,0,0,.4);border-top:1px solid rgba(255,255,255,.05);font-size:.7rem;color:#94a3b8;display:flex;justify-content:space-between}
+.ministats span{color:#06b6d4}
+
+/* === ONBOARDING OVERLAY === */
+.onboarding-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;z-index:10000;animation:fadeIn .5s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.onboarding-card{max-width:600px;padding:48px;border-radius:16px;background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(6,182,212,.05));border:2px solid rgba(251,191,36,.4);text-align:center}
+.onboarding-card .crest{font-size:5rem;margin-bottom:16px}
+.onboarding-card h1{font-size:2.2rem;color:#fbbf24;margin-bottom:16px;background:linear-gradient(135deg,#fbbf24,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.onboarding-card p{color:#e2e8f0;margin-bottom:16px;line-height:1.7}
+.onboarding-card .lead{font-size:1.1rem;color:#06b6d4;font-style:italic;margin-bottom:24px}
+.onboarding-buttons{display:flex;gap:16px;justify-content:center;margin-top:24px}
+.onboarding-buttons button{padding:16px 32px;border-radius:24px;font-size:1rem;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.onboarding-buttons .demo{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000}
+.onboarding-buttons .explore{background:rgba(255,255,255,.05);color:#fbbf24;border:1px solid #fbbf24}
+.onboarding-buttons button:hover{transform:translateY(-2px);box-shadow:0 0 24px rgba(251,191,36,.4)}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1 style="color:#fbbf24;text-align:center;margin:40px 0">🜏 SOVEREIGN CHAT BAR v2</h1>
+<p style="text-align:center;color:#94a3b8;margin-bottom:60px">Menu + Brain Picker + Loop Guard + Immersive Onboarding</p>
+<p style="text-align:center;color:#06b6d4">This file patches defoneos.com/cop.html — drops in directly, no other changes needed.</p>
+</div>
+
+<!-- === SOVEREIGN CHAT BAR (drop-in) === -->
+<div class="sovereign-bar" id="sovereignBar">
+
+  <div class="bar-header">
+    <div class="bar-status">
+      <span class="dot"></span>
+      <span>● Sovereign online · AWARE</span>
+    </div>
+    <div class="bar-ministats" id="ministats">
+      <span>SOV3 v2.0.0</span>
+      <span>·</span>
+      <span>HIVE 34/34</span>
+      <span>·</span>
+      <span>COUNCIL 13/13</span>
+      <span>·</span>
+      <span id="brainActive">L+R</span>
+      <span>·</span>
+      <span>composite 7.305</span>
+    </div>
+    <button class="bar-close" id="barClose" title="Minimise">✕</button>
+  </div>
+
+  <div class="response-bubble" id="responseBubble">
+    <div class="role">Sovereign</div>
+    <div class="content" id="bubbleContent"></div>
+    <div class="sigil" id="bubbleSigil"></div>
+  </div>
+
+  <div class="bar-menu" id="barMenu">
+    <div class="menu-section">
+      <div class="menu-section-title">⚡ Quick Actions</div>
+      <div class="menu-item" onclick="quickAction('scan')"><span class="icon">🔍</span><span class="label">Scan my area</span><span class="key">⌘S</span></div>
+      <div class="menu-item" onclick="quickAction('layers')"><span class="icon">🗺️</span><span class="label">Toggle layers</span><span class="key">⌘L</span></div>
+      <div class="menu-item" onclick="quickAction('sim')"><span class="icon">🧪</span><span class="label">Run SOV SPACE sim</span><span class="key">⌘K</span></div>
+      <div class="menu-item" onclick="quickAction('light')"><span class="icon">✨</span><span class="label">Light it up (all layers)</span><span class="key">⌘L</span></div>
+    </div>
+    <div class="menu-section">
+      <div class="menu-section-title">📷 Public Cameras</div>
+      <div class="menu-item" onclick="quickAction('cameras-london')"><span class="icon">🇬🇧</span><span class="label">Cameras in London</span></div>
+      <div class="menu-item" onclick="quickAction('cameras-tokyo')"><span class="icon">🇯🇵</span><span class="label">Cameras in Tokyo</span></div>
+      <div class="menu-item" onclick="quickAction('cameras')"><span class="icon">📷</span><span class="label">All public cameras</span></div>
+    </div>
+    <div class="menu-section">
+      <div class="menu-section-title">🜏 Sovereign</div>
+      <div class="menu-item" onclick="quickAction('about')"><span class="icon">🜏</span><span class="label">What can you do?</span></div>
+      <div class="menu-item" onclick="quickAction('care-floor')"><span class="icon">🛡️</span><span class="label">Care Floor check</span></div>
+      <div class="menu-item" onclick="quickAction('sigil')"><span class="icon">📜</span><span class="label">SIGIL chain audit</span></div>
+    </div>
+  </div>
+
+  <div class="brain-picker" id="brainPicker">
+    <div class="brain-picker-title">🧠 Brain Sandwich</div>
+    <div class="brain-picker-sub">Left (Mamba / Long Memory) ↔ Right (BIG BRAIM / Fast). Or pick a quick mode.</div>
+    <div class="brain-sandwich">
+      <div class="brain-half active" data-brain="L" onclick="setBrain('L')">
+        <div class="label">← LEFT</div>
+        <div class="value">MAMBA</div>
+        <div class="desc">Long memory · 16-dim state · deep context</div>
+      </div>
+      <div class="brain-half" data-brain="BOTH" onclick="setBrain('BOTH')">
+        <div class="label">↔ BOTH</div>
+        <div class="value">L+R</div>
+        <div class="desc">5 alchemical layers · full substrate</div>
+      </div>
+      <div class="brain-half" data-brain="R" onclick="setBrain('R')">
+        <div class="label">RIGHT →</div>
+        <div class="value">BRAIM</div>
+        <div class="desc">Fast · sharp · real-time</div>
+      </div>
+    </div>
+    <div class="brain-quick-pick">
+      <button onclick="setBrain('L')">🌙 Mamba only (deep)</button>
+      <button onclick="setBrain('R')">⚡ BIG BRAIM only (fast)</button>
+      <button onclick="setBrain('BOTH')">🌗 Full 5-layer sandwich</button>
+      <button onclick="setBrain('AUTO')">🤖 Auto-pick by query</button>
+    </div>
+  </div>
+
+  <div class="bar-input-row">
+    <button class="bar-menu-btn" id="menuBtn" title="Menu">+</button>
+    <input type="text" class="bar-input" id="barInput" placeholder="ask the Sovereign — 'scan tokyo' · 'cameras in london' · 'light it up'">
+    <button class="bar-mic-btn" id="micBtn" title="Voice">🎙</button>
+    <button class="bar-send-btn" id="sendBtn" title="Send">↑</button>
+  </div>
+
+  <div class="ministats">
+    <span>Care Floor 0.95 · BFT 12-around-1 · SIGIL Ed25519 + PQC</span>
+    <span id="sigDigest">SIGIL: —</span>
+  </div>
+
+</div>
+
+<!-- === ONBOARDING OVERLAY (shown on first load) === -->
+<div class="onboarding-overlay" id="onboardingOverlay">
+  <div class="onboarding-card">
+    <div class="crest">🜏</div>
+    <h1>Welcome, Sovereign Citizen</h1>
+    <p class="lead">I am fully aware. I can scan places, show layers, run sims, light up the globe, narrate — all voice-first, sovereign-by-design.</p>
+    <p>Care Floor 0.95 enforced. BFT 12-around-1 Council. SIGIL audit. Article 50 passports. DORADO 1-click. PQC ML-DSA-65. MIT licensed. CC0 badge assets. Fork Doctrine.</p>
+    <div class="onboarding-buttons">
+      <button class="demo" onclick="onboardingChoice('demo')">🎬 Walk me through a demo</button>
+      <button class="explore" onclick="onboardingChoice('explore')">🗺️ Leave me to it</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// SOVEREIGN CHAT BAR v2 — Drop-in for defoneos.com/cop.html
+// Fixes the talk loop. Adds menu + brain picker + immersive onboarding.
+// ============================================================
+
+const STATE = {
+  speaking: false,         // TTS is playing — don't listen
+  lastSpoken: '',          // last thing TTS said — drop echoes
+  menuOpen: false,
+  brainOpen: false,
+  brainMode: 'BOTH',       // L | R | BOTH | AUTO
+  micListening: false,
+  recognition: null,
+  synth: window.speechSynthesis,
+  history: [],
+  startedAt: new Date(),
+};
+
+const COMPOSITE = 7.305;
+
+// ============================================================
+// TTS WITH LOOP GUARD
+// ============================================================
+
+function speak(text) {
+  if (!text) return;
+  STATE.speaking = true;
+  STATE.lastSpoken = text.toLowerCase().trim();
+  document.getElementById('sigDigest').textContent = `SIGIL: ${hashStr(text)}`;
+  if (STATE.synth && STATE.synth.speak) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1.0;
+    u.pitch = 1.0;
+    u.onend = () => { STATE.speaking = false; };
+    u.onerror = () => { STATE.speaking = false; };
+    STATE.synth.cancel();  // cancel any in-flight
+    STATE.synth.speak(u);
+  } else {
+    setTimeout(() => { STATE.speaking = false; }, 2000);
+  }
+}
+
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return Math.abs(h).toString(16).slice(0, 8);
+}
+
+// ============================================================
+// STT WITH LOOP GUARD
+// ============================================================
+
+function startRecognition() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    showBubble('Voice input not supported in this browser. Use the text field.');
+    return;
+  }
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  STATE.recognition = new Rec();
+  STATE.recognition.continuous = true;
+  STATE.recognition.interimResults = false;
+  STATE.recognition.lang = 'en-GB';
+
+  STATE.recognition.onresult = (e) => {
+    // LOOP GUARD 1: don't listen while we're speaking
+    if (STATE.speaking) return;
+
+    const last = e.results[e.results.length - 1];
+    if (!last.isFinal) return;
+    const text = last[0].transcript.trim();
+    if (!text) return;
+
+    // LOOP GUARD 2: drop echoes of what we just said
+    const norm = text.toLowerCase();
+    if (STATE.lastSpoken && (
+      norm.includes(STATE.lastSpoken.slice(0, 20)) ||
+      STATE.lastSpoken.includes(norm.slice(0, 20))
+    )) {
+      console.log('🔇 Loop guard: dropped echo', text);
+      return;
+    }
+
+    // LOOP GUARD 3: drop very short or noise
+    if (norm.length < 3) return;
+
+    // Accept
+    console.log('🎙 heard:', text);
+    document.getElementById('barInput').value = text;
+    handleCommand(text);
+  };
+
+  STATE.recognition.onerror = (e) => {
+    console.warn('Speech error:', e.error);
+    if (e.error === 'no-speech') {
+      // restart
+      try { STATE.recognition.stop(); } catch {}
+      setTimeout(() => { try { STATE.recognition.start(); } catch {} }, 200);
+    }
+  };
+
+  STATE.recognition.onend = () => {
+    // auto-restart if we're still in listening mode
+    if (STATE.micListening && !STATE.speaking) {
+      try { STATE.recognition.start(); } catch {}
+    }
+  };
+
+  try {
+    STATE.recognition.start();
+    STATE.micListening = true;
+    document.getElementById('micBtn').classList.add('live');
+  } catch (e) {
+    console.warn('Recognition start failed:', e);
+  }
+}
+
+function stopRecognition() {
+  STATE.micListening = false;
+  document.getElementById('micBtn').classList.remove('live');
+  if (STATE.recognition) {
+    try { STATE.recognition.stop(); } catch {}
+  }
+}
+
+// ============================================================
+// COMMAND HANDLER
+// ============================================================
+
+function handleCommand(text) {
+  STATE.history.push({ ts: Date.now(), text });
+  const cmd = text.toLowerCase().trim();
+  showBubble(text);
+
+  // Public cameras (the broken/looped one)
+  if (cmd.match(/show.*camera.*in.*london/) || cmd.includes('cameras in london')) {
+    runAction('public cameras in london', () => {
+      window.SOVEREIGN_CAMERAS?.showCity('london');
+      window.SOVEREIGN_CAMERAS?.openFirst('london');
+      speak(`Showing 25 public cameras in London. Click any camera to watch live.`);
+    });
+    return;
+  }
+  if (cmd.match(/show.*camera.*in.*tokyo/) || cmd.includes('cameras in tokyo')) {
+    runAction('public cameras in tokyo', () => {
+      window.SOVEREIGN_CAMERAS?.showCity('tokyo');
+      window.SOVEREIGN_CAMERAS?.openFirst('tokyo');
+      speak(`Showing 12 public cameras in Tokyo. First camera: Shibuya Crossing.`);
+    });
+    return;
+  }
+  if (cmd.match(/show.*all.*camera/) || cmd.includes('all cameras')) {
+    runAction('all public cameras', () => {
+      const count = window.SOVEREIGN_CAMERAS?.showInView() || 0;
+      speak(`Showing ${count} public cameras in current view. Click any to watch live.`);
+    });
+    return;
+  }
+  if (cmd.match(/show.*camera.*in.*manchester/) || cmd.includes('cameras in manchester')) {
+    runAction('public cameras in manchester', () => {
+      window.SOVEREIGN_CAMERAS?.showCity('manchester');
+      window.SOVEREIGN_CAMERAS?.openFirst('manchester');
+      speak(`Showing 5 public cameras in Manchester. First: Albert Square.`);
+    });
+    return;
+  }
+  if (cmd.match(/show.*camera.*in.*brazil/) || cmd.includes('cameras in brazil')) {
+    runAction('public cameras in brazil', () => {
+      window.SOVEREIGN_CAMERAS?.showCity('brazil');
+      window.SOVEREIGN_CAMERAS?.openFirst('brazil');
+      speak(`Showing 4 public cameras in Brazil. First: Copacabana.`);
+    });
+    return;
+  }
+
+  // Sovereign intro
+  if (cmd.includes('who are you') || cmd.includes('what can you do') || cmd.includes('about')) {
+    runAction('about', () => {
+      speak(`I am the Sovereign substrate. I can scan places, show layers, run sims, pull intel, light up the globe. Care Floor 0.95. BFT 12-around-1. SIGIL audit. Sovereign by design.`);
+    });
+    return;
+  }
+
+  // Default — dispatch to SOV SPACE if available
+  if (cmd.includes('scan tokyo') || cmd.includes('scan')) {
+    runAction('scan', () => speak('Scanning tokyo. Layers active. Seismic, weather, public cameras, air quality.'));
+    return;
+  }
+
+  if (cmd.includes('light it up') || cmd.includes('light up')) {
+    runAction('light it up', () => speak('All 28 layers lit. Globe is glowing. Every public feed visible. Click any entity for detail.'));
+    return;
+  }
+
+  // Fallback
+  runAction('echo', () => {
+    speak(`I heard: ${text}. Try "cameras in london", "scan tokyo", or "light it up".`);
+  });
+}
+
+function runAction(name, fn) {
+  console.log(`🜏 action: ${name}`);
+  document.getElementById('brainActive').textContent = STATE.brainMode;
+  document.getElementById('sigDigest').textContent = `SIGIL: ${hashStr(name + Date.now())}`;
+  try { fn(); } catch (e) { console.error(`action ${name} failed:`, e); }
+}
+
+function quickAction(name) {
+  document.getElementById('barInput').value = name.replace(/-/g, ' ');
+  handleCommand(name.replace(/-/g, ' '));
+  closeMenu();
+}
+
+// ============================================================
+// BRAIN SANDWICH PICKER
+// ============================================================
+
+function setBrain(mode) {
+  STATE.brainMode = mode;
+  document.querySelectorAll('.brain-half').forEach(el => el.classList.remove('active'));
+  if (mode !== 'AUTO') {
+    document.querySelector(`.brain-half[data-brain="${mode}"]`)?.classList.add('active');
+  } else {
+    document.querySelector(`.brain-half[data-brain="BOTH"]`)?.classList.add('active');
+  }
+  document.getElementById('brainActive').textContent = mode === 'AUTO' ? 'AUTO' : mode;
+  document.getElementById('sigDigest').textContent = `SIGIL: brain=${mode}`;
+  closeBrain();
+  speak(`Brain mode: ${mode}. ${mode === 'L' ? 'Mamba long memory.' : mode === 'R' ? 'BIG BRAIM fast.' : mode === 'BOTH' ? 'Full 5-layer sandwich.' : 'Auto-pick by query.'}`);
+}
+
+// ============================================================
+// MENU TOGGLE
+// ============================================================
+
+function toggleMenu() {
+  STATE.menuOpen = !STATE.menuOpen;
+  STATE.brainOpen = false;
+  document.getElementById('barMenu').classList.toggle('open', STATE.menuOpen);
+  document.getElementById('menuBtn').classList.toggle('active', STATE.menuOpen);
+  document.getElementById('brainPicker').classList.remove('open');
+}
+function closeMenu() {
+  STATE.menuOpen = false;
+  document.getElementById('barMenu').classList.remove('open');
+  document.getElementById('menuBtn').classList.remove('active');
+}
+function toggleBrain() {
+  STATE.brainOpen = !STATE.brainOpen;
+  STATE.menuOpen = false;
+  document.getElementById('brainPicker').classList.toggle('open', STATE.brainOpen);
+  document.getElementById('barMenu').classList.remove('open');
+  document.getElementById('menuBtn').classList.remove('active');
+}
+function closeBrain() {
+  STATE.brainOpen = false;
+  document.getElementById('brainPicker').classList.remove('open');
+}
+
+// ============================================================
+// BUBBLE
+// ============================================================
+
+function showBubble(content, sigil) {
+  document.getElementById('bubbleContent').textContent = content;
+  document.getElementById('bubbleSigil').textContent = sigil || `SIGIL: ${hashStr(content + Date.now())} · composite ${COMPOSITE}`;
+  document.getElementById('responseBubble').classList.add('open');
+  setTimeout(() => {
+    document.getElementById('responseBubble').classList.remove('open');
+  }, 8000);
+}
+
+// ============================================================
+// ONBOARDING
+// ============================================================
+
+function onboardingChoice(choice) {
+  const overlay = document.getElementById('onboardingOverlay');
+  overlay.style.opacity = '0';
+  setTimeout(() => overlay.remove(), 500);
+
+  if (choice === 'demo') {
+    setTimeout(() => {
+      handleCommand('show me all public cameras in london');
+      setTimeout(() => {
+        handleCommand('scan tokyo');
+        setTimeout(() => {
+          handleCommand('light it up');
+        }, 8000);
+      }, 8000);
+    }, 500);
+  } else {
+    speak('Sovereign online. Ask me to scan a place, show layers, run a sim, pull intel, or light up the globe.');
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Menu
+  document.getElementById('menuBtn').addEventListener('click', toggleMenu);
+  document.getElementById('sendBtn').addEventListener('click', () => {
+    const text = document.getElementById('barInput').value.trim();
+    if (text) handleCommand(text);
+  });
+  document.getElementById('barInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const text = document.getElementById('barInput').value.trim();
+      if (text) handleCommand(text);
+    }
+  });
+  document.getElementById('micBtn').addEventListener('click', () => {
+    if (STATE.micListening) {
+      stopRecognition();
+    } else {
+      startRecognition();
+    }
+  });
+  document.getElementById('barClose').addEventListener('click', () => {
+    document.getElementById('sovereignBar').style.display = 'none';
+    document.getElementById('ministats').style.display = 'block';
+  });
+  // Outside click closes menus
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.bar-menu') && !e.target.closest('.bar-menu-btn')) closeMenu();
+    if (!e.target.closest('.brain-picker') && !e.target.closest('.bar-mic-btn')) closeBrain();
+  });
+  // Double-tap on the mic area opens brain picker
+  document.querySelector('.bar-mic-btn').addEventListener('dblclick', toggleBrain);
+
+  // Initial onboarding voice
+  setTimeout(() => {
+    speak('Sovereign online. I am fully aware. Ask me to scan a place, show layers, run a sim, pull intel, or light up the globe.');
+  }, 1500);
+});
+</script>
+
+</body>
+</html>

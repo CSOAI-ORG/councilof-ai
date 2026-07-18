@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — MEDEVAC Routing — AI Battlefield Casualty Evacuation</title>
+<meta name="description" content="DEFONEOS MEDEVAC Routing — AI-powered battlefield medical evacuation. Triage casualties, find nearest facilities, assess landing zones, generate TAK feeds. Cesium + SOV3 + FreeTAKServer. JSP 936 compliant. UK sovereign.">
+<style>
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a0a0f,#1a0a0a);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#ef4444,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:1.5rem;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-2px);border-color:rgba(239,68,68,.6)}
+.card h3{color:#ef4444;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.btn{display:inline-block;background:linear-gradient(135deg,#ef4444,#f59e0b);color:#0a0a0f;padding:.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin:.5rem .5rem 0 0;text-transform:uppercase;font-size:.85rem;text-decoration:none}
+.btn:hover{opacity:.9}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(239,68,68,.2);border-color:#ef4444;color:#ef4444;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(239,68,68,.15);color:#ef4444;font-size:.85rem;border-bottom:2px solid rgba(239,68,68,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.nav{text-align:center;margin-bottom:1.5rem}
+.nav a{color:#94a3b8;text-decoration:none;margin:0 .75rem;font-size:.85rem;transition:color .2s}
+.nav a:hover{color:#ef4444}
+.sigil{text-align:center;color:#475569;font-size:.75rem;margin-top:2rem;font-family:monospace}
+.status-active{color:#22c55e;font-weight:700}
+.triage-p1{color:#ef4444;font-weight:800}
+.triage-p2{color:#f59e0b;font-weight:800}
+.triage-p3{color:#22c55e;font-weight:800}
+.triage-p4{color:#6b7280;font-weight:800}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<div class="wrap">
+
+<div class="nav">
+  <a href="defoneos.html">🏠 DEFONEOS</a>
+  <a href="defoneos-isr-pipeline.html">🛰️ ISR</a>
+  <a href="defoneos-swarm.html">🦅 Swarm</a>
+  <a href="defoneos-sensor-layer.html">📡 Sensors</a>
+  <a href="defoneos-medevac.html" style="color:#ef4444;font-weight:700">🚁 MEDEVAC</a>
+</div>
+
+<h1>🚁 MEDEVAC Routing</h1>
+<p class="tagline">AI-powered battlefield medical evacuation — SMART Triage, nearest facility routing, landing zone assessment, TAK integration. Cesium + SOV3 + FreeTAKServer. 23/23 tests pass. UK sovereign.</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">🏥 Triage</div>
+  <div class="tab" onclick="switchTab(1)">🗺️ Routing</div>
+  <div class="tab" onclick="switchTab(2)">🛬 Landing Zones</div>
+  <div class="tab" onclick="switchTab(3)">📡 TAK Feed</div>
+  <div class="tab" onclick="switchTab(4)">🔧 MCP Tools</div>
+</div>
+
+<!-- TAB 0: Triage -->
+<div class="tab-content active">
+<h3 style="color:#ef4444">🏥 AI-Powered SMART Triage</h3>
+<div class="grid">
+  <div class="card"><h3><span class="triage-p1">P1 — Immediate</span></h3><span class="stat">&lt;15 min</span><p>Life-threatening. Airway compromise, tension pneumothorax, massive haemorrhage. Requires immediate MEDEVAC. Golden hour compliance.</p></div>
+  <div class="card"><h3><span class="triage-p2">P2 — Urgent</span></h3><span class="stat">&lt;2 hours</span><p>Serious but stable. Fractures, burns &lt;20%, controlled bleeding. Surgical intervention needed within 2 hours. Continuous monitoring.</p></div>
+  <div class="card"><h3><span class="triage-p3">P3 — Delayed</span></h3><span class="stat">&lt;24 hours</span><p>Walking wounded. Minor injuries. Can self-evacuate or wait. Reassess every 4 hours. Track deterioration.</p></div>
+  <div class="card"><h3><span class="triage-p4">P4 — Expectant</span></h3><span class="stat">Comfort care</span><p>Injuries incompatible with life given available resources. Massive head trauma, 90%+ burns. Palliative. Reassess if resources improve.</p></div>
+</div>
+
+<table>
+<tr><th>Triage</th><th>Criteria (AI-assessed)</th><th>Response</th><th>Asset</th></tr>
+<tr><td><span class="triage-p1">P1</span></td><td>Airway, breathing, circulation failure. GCS &lt;8. Massive haemorrhage.</td><td>&lt;15 min MEDEVAC</td><td>MERT / MERT-E</td></tr>
+<tr><td><span class="triage-p2">P2</span></td><td>Serious but compensated. GCS 9-12. Controlled bleeding.</td><td>&lt;2 hour CASEVAC</td><td>Protected ambulance</td></tr>
+<tr><td><span class="triage-p3">P3</span></td><td>Minor injuries. GCS 13-15. Ambulatory.</td><td>&lt;24 hour delayed</td><td>Standard ambulance</td></tr>
+<tr><td><span class="triage-p4">P4</span></td><td>Non-survivable. GCS 3. Catastrophic brain injury.</td><td>Palliative care</td><td>Comfort only</td></tr>
+</table>
+</div>
+
+<!-- TAB 1: Routing -->
+<div class="tab-content">
+<h3 style="color:#ef4444">🗺️ AI Route Optimisation</h3>
+<div class="grid">
+  <div class="card"><h3>Nearest Facility</h3><span class="stat">5 factors</span><p>Distance, bed capacity, surgical capability, blood products, specialist teams. Weighted multi-criteria decision. Updated in real-time.</p></div>
+  <div class="card"><h3>Terrain-Aware</h3><span class="stat">30m DEM</span><p>SRTM terrain data. Avoids obstacles. Finds concealed routes. Accounts for threat zones. Cesium 3D visualisation.</p></div>
+  <div class="card"><h3>Weather-Safe</h3><span class="stat">Met Office</span><p>Live weather via MCP. Wind limits (Puma: 45 kts, Chinook: 60 kts). Visibility minima. Icing conditions. Lightning risk.</p></div>
+  <div class="card"><h3>Threat-Avoidant</h3><span class="stat">Dynamic</span><p>Routes around known threat zones. SAM rings, MANPADS envelopes, contested airspace. Updated from ISR pipeline in real-time.</p></div>
+</div>
+</div>
+
+<!-- TAB 2: Landing Zones -->
+<div class="tab-content">
+<h3 style="color:#ef4444">🛬 Landing Zone Assessment</h3>
+<div class="grid">
+  <div class="card"><h3>Surface Analysis</h3><span class="stat">6 factors</span><p>Surface type (grass, tarmac, sand, water, mud), slope (&lt;7° for Chinook), obstacles (power lines, trees, buildings), size, approach path, elevation.</p></div>
+  <div class="card"><h3>Automated Scoring</h3><span class="stat">0-100</span><p>Weighted composite: surface × slope × obstacles × approach. &gt;70 = Suitable. 50-70 = Marginal. &lt;50 = Unsuitable. Real-time satellite imagery.</p></div>
+  <div class="card"><h3>Multi-Aircraft</h3><span class="stat">5 types</span><p>Chinook (30m×30m), Puma (20m×20m), Wildcat (15m×15m), Apache (20m×20m), UAV VTOL (5m×5m). Different requirements per type.</p></div>
+  <div class="card"><h3>Day/Night</h3><span class="stat">NVG-rated</span><p>Night Vision Goggle compatibility. Ambient light assessment. Moon phase. IR marking requirements. Civilian hazard lighting.</p></div>
+</div>
+</div>
+
+<!-- TAB 3: TAK Feed -->
+<div class="tab-content">
+<h3 style="color:#ef4444">📡 TAK Integration</h3>
+<div class="grid">
+  <div class="card"><h3>CoT Messages</h3><span class="stat">Cursor-on-Target</span><p>Real-time MEDEVAC requests as CoT v2.0 messages. Compatible with ATAK, WinTAK, WebTAK. Standard NATO format.</p></div>
+  <div class="card"><h3>9-Line MEDEVAC</h3><span class="stat">Auto-filled</span><p>AI pre-fills 9-line MEDEVAC request. Location, radio freq, casualties by precedence, special equipment, security, marking, nationality, NBC.</p></div>
+  <div class="card"><h3>Blue Force Tracking</h3><span class="stat">Live</span><p>MEDEVAC asset tracking on Cesium. Route, ETA, fuel state, patient status. Shared with CASEVAC coordination cell.</p></div>
+  <div class="card"><h3>Hospital Status</h3><span class="stat">NHS + Role 1-4</span><p>Bed capacity, surgical teams, blood products, CT scanner availability. Updated every 15 min via MCP. NHS + military Role 1-4 facilities.</p></div>
+</div>
+</div>
+
+<!-- TAB 4: MCP Tools -->
+<div class="tab-content">
+<h3 style="color:#ef4444">🔧 MCP Tools — defoneos-medevac-mcp (5 tools)</h3>
+<div class="grid">
+  <div class="card"><h3>find_nearest_facility</h3><p>Multi-criteria facility search. Distance, capability, capacity, blood products, specialist teams. Returns ranked list with routes.</p><a class="btn" href="https://github.com/CSOAI-ORG/defoneos-medevac-mcp">GitHub</a></div>
+  <div class="card"><h3>triage_casualties</h3><p>AI triage using SMART protocol. P1/P2/P3/P4 classification. Vital signs input. GCS calculation. Output: priority-ordered list.</p><a class="btn" href="https://pypi.org/project/defoneos-medevac-mcp">PyPI</a></div>
+  <div class="card"><h3>generate_casevac_report</h3><p>Auto-generates 9-line MEDEVAC + MIST report. Mechanism, Injuries, Signs, Treatment. NATO-standard format. PDF output.</p></div>
+  <div class="card"><h3>assess_landing_zone</h3><p>6-factor LZ assessment. Surface, slope, obstacles, size, approach, elevation. Scoring 0-100. Suitable/Marginal/Unsuitable.</p></div>
+  <div class="card"><h3>tak_medevac_feed</h3><p>Streams MEDEVAC CoT messages to FreeTAKServer. Real-time asset tracking. Hospital bed status updates. 9-line generation.</p></div>
+</div>
+<table>
+<tr><th>MCP Server</th><th>Tools</th><th>Tests</th><th>Status</th></tr>
+<tr><td>defoneos-medevac-mcp</td><td>5 tools</td><td>23/23 pass</td><td class="status-active">✅ LIVE — MCP #30</td></tr>
+<tr><td>defoneos-isr-mcp</td><td>5 tools</td><td>13/13 pass</td><td class="status-active">✅ LIVE</td></tr>
+<tr><td>defoneos-cesium-mcp</td><td>5 tools</td><td>9/9 pass</td><td class="status-active">✅ LIVE</td></tr>
+<tr><td>metoffice-weather-mcp</td><td>3 tools</td><td>All pass</td><td class="status-active">✅ LIVE</td></tr>
+</table>
+</div>
+
+<div class="sigil">🐉 DEFONEOS MEDEVAC ROUTING · SIGIL: 2d7f4a9e1c5b8f6d · UK SOVEREIGN · JSP 936 · OPEN SOURCE · TICK 5 · 5 JUL 2026</div>
+</div>
+
+<script>
+function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===n)});document.querySelectorAll('.tab-content').forEach((c,i)=>{c.classList.toggle('active',i===n)})}
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

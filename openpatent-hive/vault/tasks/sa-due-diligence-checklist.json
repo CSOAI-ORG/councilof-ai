@@ -1,0 +1,7 @@
+{
+  "id": "sa-due-diligence-checklist",
+  "prompt": "Write a 25-item due-diligence checklist for a Tier-1 VC conducting Series A diligence on openpatent.ai. Organize into 6 categories. Each item: 1-line description, the artifact the company must produce, the SLA in days. Categories: (A) Corporate (5 items — Companies House filings, CSOAI Ltd UK certificate, board minutes, subsidiary structure, IP assignment chain), (B) IP & Tech (6 items — patent search on 6-layer method, open-source license audit, CometBFT fork compliance, third-party API contracts, MCP tool IP, code escrow), (C) Financial (4 items — 24mo P&L, MRR cohort, gross margin by tier, AR/AP aging), (D) Legal (4 items — customer TOS, privacy policy GDPR/UK-GDPR/CCPA, BFT council ToS, IP infringement scan), (E) Security & Compliance (4 items — SOC2 Type 1 roadmap, pen-test report, KMS architecture, incident log), (F) Market & Customer (2 items — 10 customer reference calls, churn analysis). Use DEFENEOS mythic voice. Return ONLY JSON: {categories:[{name:string, items:[{item:string, artifact:string, sla_days:int}]}]}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔮 Sovereign Orbs + Water Data Transfer</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px;margin:0;overflow:hidden;height:100vh}
+  .nav{background:rgba(2,6,15,0.95);padding:0.5rem 1rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3)}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.8rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:.95rem}
+  .nav .spacer{flex:1}
+  .container{display:grid;grid-template-rows:1fr auto;height:calc(100vh - 50px)}
+  /* Ocean */
+  .ocean{position:relative;background:linear-gradient(180deg,#0a0e27 0%,#001f3f 50%,#02060f 100%);overflow:hidden}
+  .wave{position:absolute;left:0;right:0;height:100%;background:linear-gradient(180deg,transparent 0%,rgba(96,165,250,0.05) 30%,rgba(96,165,250,0.1) 70%,rgba(96,165,250,0.2) 100%);animation:wave-flow 8s linear infinite}
+  @keyframes wave-flow{0%{transform:translateY(-30%)}100%{transform:translateY(30%)}}
+  /* Orbs */
+  .orb{position:absolute;width:80px;height:80px;border-radius:50%;box-shadow:0 0 30px currentColor;cursor:pointer;transition:transform .3s, box-shadow .3s;z-index:5;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:bold;color:#000}
+  .orb:hover{transform:scale(1.15);box-shadow:0 0 50px currentColor}
+  .orb .orb-info{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+  .orb:hover .orb-info{opacity:1}
+  .orb .water{position:absolute;top:-15px;right:-15px;background:rgba(96,165,250,0.9);color:#fff;border-radius:50%;width:28px;height:28px;font-size:.7rem;display:flex;align-items:center;justify-content:center;font-weight:bold;border:2px solid #fff}
+  .orb.t1{background:radial-gradient(circle,#fbbf24 0%,#f59e0b 100%)}
+  .orb.t2{background:radial-gradient(circle,#60a5fa 0%,#3b82f6 100%);color:#fff}
+  .orb.t3{background:radial-gradient(circle,#10b981 0%,#059669 100%)}
+  .orb.t4{background:radial-gradient(circle,#8b5cf6 0%,#7c3aed 100%);color:#fff}
+  .orb.t5{background:radial-gradient(circle,#ec4899 0%,#db2777 100%);color:#fff}
+  /* Channels (lines between orbs) */
+  .channel{position:absolute;height:2px;background:linear-gradient(90deg,transparent 0%,rgba(96,165,250,0.5) 50%,transparent 100%);transform-origin:0 50%;z-index:1;pointer-events:none}
+  .channel.active{background:linear-gradient(90deg,transparent 0%,#10b981 50%,transparent 100%);animation:channel-flow 2s linear infinite}
+  @keyframes channel-flow{0%{opacity:0.3}50%{opacity:1}100%{opacity:0.3}}
+  .water-particle{position:absolute;width:8px;height:8px;border-radius:50%;background:#60a5fa;box-shadow:0 0 8px #60a5fa;z-index:4}
+  /* Control panel */
+  .control-panel{background:rgba(2,6,15,0.95);border-top:1px solid #10b981;padding:1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-height:280px;overflow-y:auto}
+  .panel{background:#0a0a0a;padding:1rem;border-radius:6px;border:1px solid #10b981}
+  .panel h4{color:#10b981;font-size:.85rem;margin-bottom:.5rem}
+  .panel input,.panel select,.panel button{margin:.2rem 0;padding:.3rem .5rem;background:#02060f;border:1px solid #fbbf24;border-radius:4px;color:#fbbf24;font-family:monospace;font-size:.75rem;width:100%}
+  .panel button{background:#fbbf24;color:#000;cursor:pointer;font-weight:bold;border:none}
+  .panel button:hover{background:#10b981;color:#000}
+  .panel .result{background:#02060f;padding:.5rem;border-radius:4px;margin-top:.5rem;font-family:monospace;font-size:.7rem;color:#10b981;max-height:100px;overflow-y:auto}
+  /* Stats */
+  .stats-bar{position:absolute;top:1rem;left:1rem;background:rgba(2,6,15,0.85);padding:.7rem;border-radius:8px;border-left:3px solid #10b981;z-index:30;font-size:.7rem;backdrop-filter:blur(4px)}
+  .stats-bar .kv{display:flex;justify-content:space-between;padding:.15rem 0}
+  .stats-bar .k{color:#888}
+  .stats-bar .v{color:#fbbf24;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/orbs.html">Orbs</a>
+  <a href="/koi-dragon.html">Koi Dragon</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<div class="container">
+  <div class="ocean" id="ocean">
+    <div class="wave"></div>
+
+    <div class="stats-bar">
+      <div class="kv"><span class="k">Orbs:</span><span class="v" id="orbCount">5</span></div>
+      <div class="kv"><span class="k">Channels:</span><span class="v" id="chCount">0</span></div>
+      <div class="kv"><span class="k">Water total:</span><span class="v" id="waterTotal">3000</span></div>
+      <div class="kv"><span class="k">Transfers:</span><span class="v" id="transferCount">0</span></div>
+    </div>
+  </div>
+
+  <div class="control-panel">
+    <div class="panel">
+      <h4>🔮 Create Orb</h4>
+      <input type="text" id="orbName" placeholder="name" value="Hive-7">
+      <select id="orbType">
+        <option value="hive">hive</option>
+        <option value="sub-hive">sub-hive</option>
+        <option value="twin">twin</option>
+        <option value="archive">archive</option>
+        <option value="edge">edge</option>
+      </select>
+      <input type="number" id="orbWater" placeholder="water" value="500">
+      <button onclick="createOrb()">+ Create Orb</button>
+    </div>
+
+    <div class="panel">
+      <h4>💧 Transfer Water (data)</h4>
+      <select id="fromOrb"></select>
+      <select id="toOrb"></select>
+      <input type="number" id="transferAmount" placeholder="amount" value="100">
+      <button onclick="transferWater()">→ Transfer</button>
+    </div>
+
+    <div class="panel">
+      <h4>🔗 Connect Orbs</h4>
+      <select id="connA"></select>
+      <select id="connB"></select>
+      <button onclick="connectOrbs()">⚡ Connect</button>
+    </div>
+
+    <div class="panel">
+      <h4>🔍 Inspect Orb</h4>
+      <select id="insOrb"></select>
+      <button onclick="inspectOrb()">🔍 Inspect</button>
+      <div class="result" id="inspectResult">Select an orb to inspect.</div>
+    </div>
+
+    <div class="panel">
+      <h4>📊 Status</h4>
+      <button onclick="getStatus()">📊 Get Status</button>
+      <div class="result" id="statusResult">Orbs network status.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Initial orbs (5 sovereign orbs already in the system)
+const INITIAL_ORBS = [
+  {id:"orb-london",name:"London Hive",type:"hive",x:25,y:40,water:1000,color:"t1"},
+  {id:"orb-twin",name:"Digital Twin",type:"twin",x:50,y:60,water:500,color:"t2"},
+  {id:"orb-archive",name:"UK Archive",type:"archive",x:75,y:30,water:800,color:"t3"},
+  {id:"orb-edge",name:"Public Watchdog",type:"edge",x:15,y:70,water:400,color:"t4"},
+  {id:"orb-edge2",name:"Sigil Chain",type:"edge",x:85,y:75,water:300,color:"t5"},
+];
+
+let orbs = [...INITIAL_ORBS];
+let channels = [];
+let transfers = [];
+let orbIdCounter = 100;
+
+function renderOrbs() {
+  const ocean = document.getElementById("ocean");
+  // Clear existing orbs + channels
+  ocean.querySelectorAll(".orb, .channel, .water-particle").forEach(el => el.remove());
+  // Render orbs
+  orbs.forEach(o => {
+    const div = document.createElement("div");
+    div.className = "orb " + o.color;
+    div.id = o.id;
+    div.style.left = o.x + "%";
+    div.style.top = o.y + "%";
+    div.style.transform = "translate(-50%,-50%)";
+    div.innerHTML = `${o.name.charAt(0)}<div class="water">${Math.round(o.water)}</div><div class="orb-info">${o.name} · ${o.type} · ${Math.round(o.water)} water</div>`;
+    ocean.appendChild(div);
+  });
+  // Render channels
+  channels.forEach(c => {
+    const a = orbs.find(o => o.id === c.a);
+    const b = orbs.find(o => o.id === c.b);
+    if (!a || !b) return;
+    const ax = (a.x / 100) * ocean.offsetWidth;
+    const ay = (a.y / 100) * ocean.offsetHeight;
+    const bx = (b.x / 100) * ocean.offsetWidth;
+    const by = (b.y / 100) * ocean.offsetHeight;
+    const dx = bx - ax, dy = by - ay;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+    const line = document.createElement("div");
+    line.className = "channel active";
+    line.style.left = a.x + "%";
+    line.style.top = a.y + "%";
+    line.style.width = len + "px";
+    line.style.transform = `rotate(${angle}deg)`;
+    ocean.appendChild(line);
+  });
+  updateSelects();
+  updateStats();
+}
+
+function updateSelects() {
+  const options = orbs.map(o => `<option value="${o.id}">${o.name} (${Math.round(o.water)})</option>`).join("");
+  ["fromOrb","toOrb","connA","connB","insOrb"].forEach(id => {
+    document.getElementById(id).innerHTML = options;
+  });
+}
+
+function updateStats() {
+  document.getElementById("orbCount").textContent = orbs.length;
+  document.getElementById("chCount").textContent = channels.length;
+  document.getElementById("transferCount").textContent = transfers.length;
+  document.getElementById("waterTotal").textContent = Math.round(orbs.reduce((s,o) => s + o.water, 0));
+}
+
+function createOrb() {
+  const name = document.getElementById("orbName").value;
+  const type = document.getElementById("orbType").value;
+  const water = parseFloat(document.getElementById("orbWater").value);
+  orbIdCounter++;
+  const id = "orb-" + orbIdCounter;
+  const colorMap = {hive:"t1","sub-hive":"t2",twin:"t3",archive:"t4",edge:"t5"};
+  const colors = ["t1","t2","t3","t4","t5"];
+  orbs.push({
+    id, name, type, water,
+    x: 20 + Math.random() * 60,
+    y: 20 + Math.random() * 60,
+    color: colorMap[type] || colors[orbIdCounter % 5],
+  });
+  logResult(`🔮 orb_create("${name}", type=${type}, water=${water}) → ${id} created`);
+  renderOrbs();
+}
+
+function transferWater() {
+  const a = document.getElementById("fromOrb").value;
+  const b = document.getElementById("toOrb").value;
+  const amount = parseFloat(document.getElementById("transferAmount").value);
+  if (a === b) return;
+  const orbA = orbs.find(o => o.id === a);
+  const orbB = orbs.find(o => o.id === b);
+  if (!orbA || !orbB || orbA.water < amount) return;
+  orbA.water -= amount;
+  orbB.water += amount;
+  transfers.push({from: a, to: b, amount});
+  // Animate water particle
+  animateWaterParticle(orbA, orbB, amount);
+  logResult(`💧 orb_transfer(${a}, ${b}, ${amount}) → ${orbA.name} now ${Math.round(orbA.water)}, ${orbB.name} now ${Math.round(orbB.water)}`);
+  renderOrbs();
+}
+
+function animateWaterParticle(fromOrb, toOrb, amount) {
+  const ocean = document.getElementById("ocean");
+  const dx = (toOrb.x - fromOrb.x) / 30;
+  const dy = (toOrb.y - fromOrb.y) / 30;
+  for (let i = 0; i < Math.min(amount / 20, 5); i++) {
+    const p = document.createElement("div");
+    p.className = "water-particle";
+    p.style.left = fromOrb.x + "%";
+    p.style.top = fromOrb.y + "%";
+    p.style.transform = "translate(-50%,-50%)";
+    ocean.appendChild(p);
+    setTimeout(() => {
+      let frame = 0;
+      const interval = setInterval(() => {
+        frame++;
+        const x = parseFloat(p.style.left) + dx;
+        const y = parseFloat(p.style.top) + dy;
+        p.style.left = x + "%";
+        p.style.top = y + "%";
+        p.style.opacity = 1 - frame / 30;
+        if (frame >= 30) { clearInterval(interval); p.remove(); }
+      }, 30);
+    }, i * 100);
+  }
+}
+
+function connectOrbs() {
+  const a = document.getElementById("connA").value;
+  const b = document.getElementById("connB").value;
+  if (a === b) return;
+  channels.push({a, b});
+  logResult(`🔗 orb_connect(${a}, ${b}) → channel opened`);
+  renderOrbs();
+}
+
+function inspectOrb() {
+  const id = document.getElementById("insOrb").value;
+  const o = orbs.find(x => x.id === id);
+  if (!o) return;
+  document.getElementById("inspectResult").textContent = `🔍 orb_inspect(${id})\n\n${o.name} · ${o.type}\nWater: ${Math.round(o.water)}\nPosition: ${o.x.toFixed(0)}%, ${o.y.toFixed(0)}%`;
+}
+
+function getStatus() {
+  const total = orbs.reduce((s,o) => s + o.water, 0);
+  document.getElementById("statusResult").textContent = `📊 orb_status()\n\nOrbs: ${orbs.length}\nChannels: ${channels.length}\nTransfers: ${transfers.length}\nTotal water: ${Math.round(total)} units\nDoctrine: The orbs network governs the AI economy.`;
+}
+
+function logResult(msg) {
+  const ocean = document.getElementById("ocean");
+  const div = document.createElement("div");
+  div.style.cssText = "position:absolute;bottom:1rem;left:1rem;background:rgba(0,0,0,0.85);color:#10b981;padding:.5rem .7rem;border-radius:6px;font-family:monospace;font-size:.75rem;z-index:30;max-width:380px;opacity:0;transition:opacity .5s;border:1px solid #10b981";
+  div.textContent = msg;
+  ocean.appendChild(div);
+  setTimeout(() => { div.style.opacity = 1; }, 50);
+  setTimeout(() => { div.style.opacity = 0; setTimeout(() => div.remove(), 500); }, 5000);
+}
+
+// Initial render
+renderOrbs();
+
+// Auto-connect a few orbs
+setTimeout(() => {
+  if (orbs.length >= 2) {
+    channels.push({a: orbs[0].id, b: orbs[1].id});
+    channels.push({a: orbs[1].id, b: orbs[2].id});
+    renderOrbs();
+  }
+}, 500);
+
+// Intro message
+setTimeout(() => {
+  logResult("🔮 Sovereign Orbs v1.0. 5 initial orbs loaded. Water = data. Channels = connections. Sovereign by construction.");
+}, 1500);
+</script>
+
+</body>
+</html>

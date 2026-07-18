@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — ISR Pipeline — Noise → Intuition → Intelligence</title>
+<meta name="description" content="The DEFONEOS ISR Pipeline: 198+ sensor sources → Mamba-2 state compression → intuition engine → BFT council decision. 7-stage kill chain. Sub-40s lead time.">
+<style>
+body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(135deg,#0a0a0f,#0a1628);color:#f8fafc;margin:0;padding:0;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:.5rem}
+.tagline{color:#94a3b8;text-align:center;margin-bottom:2rem;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:1.5rem;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{color:#22d3ee;margin:0 0 .5rem;font-size:1.1rem}
+.card p{color:#94a3b8;font-size:.9rem;margin:0}
+.card .stat{font-size:2rem;font-weight:800;color:#f8fafc;display:block;margin:.5rem 0}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.5rem;flex-wrap:wrap}
+.tab{padding:.75rem 1.5rem;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px 8px 0 0;cursor:pointer;color:#94a3b8;font-size:.9rem;transition:all .2s}
+.tab.active{background:rgba(34,211,238,.2);border-color:#22d3ee;color:#22d3ee;font-weight:700}
+.tab-content{display:none;padding:1.5rem;background:rgba(255,255,255,.03);border-radius:0 12px 12px 12px;border:1px solid rgba(255,255,255,.08)}
+.tab-content.active{display:block}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{text-align:left;padding:.75rem;background:rgba(34,211,238,.15);color:#22d3ee;font-size:.85rem;border-bottom:2px solid rgba(34,211,238,.3)}
+td{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#cbd5e1}
+.stage{display:flex;align-items:flex-start;margin:1rem 0;gap:1rem;padding:1rem;background:rgba(255,255,255,.03);border-left:4px solid #22d3ee;border-radius:0 12px 12px 0}
+.stage-num{background:rgba(34,211,238,.2);border:2px solid #22d3ee;border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#22d3ee;flex-shrink:0;font-size:1.2rem}
+.stage-body h4{color:#f8fafc;margin:0 0 .25rem;font-size:1.05rem}
+.stage-body p{color:#94a3b8;font-size:.85rem;margin:0}
+.code{background:rgba(0,0,0,.4);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:1rem;color:#22c55e;font-size:.8rem;font-family:monospace;margin:1rem 0;overflow-x:auto;white-space:pre}
+.nav-section{text-align:center;margin-bottom:1.5rem}
+.nav-section a{color:#94a3b8;text-decoration:none;margin:0 .5rem;font-size:.85rem;padding:.3rem .7rem;border-radius:6px;background:rgba(255,255,255,.05)}
+.nav-section a:hover{color:#22d3ee;background:rgba(34,211,238,.1)}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — ISR Pipeline"><meta property="og:description" content="198+ sources → Mamba-2 → intuition → BFT. Sub-40s lead time on emerging threats."><meta property="og:type" content="website"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-pipeline.html"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compete.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a></nav>
+<div class="wrap">
+
+<div class="nav-section">
+  <a href="defoneos-os.html">🏛️ OS</a>
+  <a href="defoneos-sov3.html">🧠 SOV3</a>
+  <a href="defoneos-data.html">📊 Data</a>
+  <a href="defoneos-neural.html">⚡ Neural</a>
+</div>
+
+<h1>📡 The ISR Intelligence Pipeline</h1>
+<p class="tagline">198 sensor sources → Mamba-2 state compression → intuition emergence → BFT council decision → SIGIL-signed action. Seven stages. Sub-40-second lead time on emerging threats.</p>
+
+<div class="grid">
+  <div class="card"><span class="stat">198+</span><h3>Sensor Sources</h3><p>Satellite, AIS, ADS-B, OSINT, IoT, social, radio — all ingested simultaneously</p></div>
+  <div class="card"><span class="stat">7</span><h3>Pipeline Stages</h3><p>Noise → Filter → Frequency → Correlate → Intuition → Council → Action</p></div>
+  <div class="card"><span class="stat">40s</span><h3>Lead Time</h3><p>Average time from first signal to confirmed intuition — before conscious analysis</p></div>
+  <div class="card"><span class="stat">O(1)</span><h3>Memory Per Step</h3><p>Mamba-2 SSM compresses all history into a fixed 16-dim state vector</p></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">📡 The 7 Stages</div>
+  <div class="tab" onclick="switchTab(1)">🗂️ Sensor Sources</div>
+  <div class="tab" onclick="switchTab(2)">🔄 Kill Chain Mapping</div>
+  <div class="tab" onclick="switchTab(3)">📊 Data Flow Diagram</div>
+  <div class="tab" onclick="switchTab(4)">⚙️ Configuration</div>
+</div>
+
+<!-- TAB 0: 7 Stages -->
+<div class="tab-content active">
+  <h3>📡 The 7-Stage ISR Pipeline</h3>
+  <p>Raw multi-domain sensor data enters at Stage 1. By Stage 7, a SIGIL-signed action has been taken. The pipeline runs 24/7, processing 198+ streams in parallel. No human bottleneck until the final action authorisation.</p>
+
+  <div class="stage">
+    <div class="stage-num">1</div>
+    <div class="stage-body">
+      <h4>NOISE — Multi-Domain Ingestion (30 MCP servers, 198+ sources)</h4>
+      <p>Every signal, every sensor, every feed. Satellite imagery (Sentinel-Hub), maritime AIS (aisstream.io), aircraft ADS-B, OSINT (GDELT), air quality (OpenAQ), government data (data.gov.uk, ONS, Companies House), IoT (MQTT bridges), IP cameras (RTSP), radio frequency, social media. All ingested via 30 MCP servers running in parallel. Zero data leaves UK sovereign infrastructure.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">2</div>
+    <div class="stage-body">
+      <h4>FILTER — Signal Extraction & Normalisation</h4>
+      <p>Raw noise is filtered through domain-specific experts. PII redacted (GDPR). Duplicates removed. Timestamps normalised to UTC. Geospatial coordinates converted to MGRS. Each signal tagged with source, confidence, and timestamp before entering the state vector.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">3</div>
+    <div class="stage-body">
+      <h4>FREQUENCY — Pattern Emergence (14 Neural Models)</h4>
+      <p>14 neural models process all filtered signals simultaneously. Each model looks for different patterns: temporal clustering, spatial anomalies, cross-domain correlations, behavioural baselines, frequency shifts. The Mamba-2 state-space model compresses the entire signal history into a 16-dimensional state vector at each timestep.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">4</div>
+    <div class="stage-body">
+      <h4>CORRELATE — Cross-Domain Fusion</h4>
+      <p>The intelligence fusion layer. Signals from disparate domains are cross-correlated. AIS anomaly + satellite imagery change + OSINT keyword spike = correlated event. The Mamba-2 state vector captures these correlations even when no single signal would trigger an alert in isolation.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">5</div>
+    <div class="stage-body">
+      <h4>INTUITION — Pre-Conscious Detection</h4>
+      <p>The system FEELS something is wrong before it can explain why. When the 16-dim state vector shifts beyond a cosine similarity threshold (Δ > 0.85), a "hunch" is flagged. If 3+ consecutive states match the pattern, intuition is confirmed. This gives operators a 40-second lead time — the pattern is detected before conscious analysis can articulate the threat.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">6</div>
+    <div class="stage-body">
+      <h4>COUNCIL — BFT Deliberation (22-of-33 Quorum)</h4>
+      <p>Confirmed intuitions are escalated to the 33-node BFT council. Each node evaluates from its specialisation: charter compliance, security, data sovereignty, ethics, mission priority, intelligence correlation. 22-of-33 must agree before action is authorised. Every vote is SIGIL-emitted for audit.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">7</div>
+    <div class="stage-body">
+      <h4>ACTION — SIGIL-Signed Execution + Learning</h4>
+      <p>Approved actions are executed. Every action generates an Ed25519-signed SIGIL receipt on the hash chain. Results are fed back into the system — the Mamba-2 state updates, the MoE experts learn, the council's decision quality improves. The pipeline gets smarter with every cycle.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 1: Sensor Sources -->
+<div class="tab-content">
+  <h3>🗂️ The 30 MCP Sensor Layer — 198+ Live Data Sources</h3>
+  <p>DEFONEOS doesn't buy data from foreign intelligence brokers. It ingests from 30 open-source and sovereign MCP servers, each wrapping a live data feed. All processing happens on UK infrastructure.</p>
+
+  <table>
+    <tr><th>MCP Server</th><th>Domain</th><th>Feed</th><th>Update Rate</th></tr>
+    <tr><td><code>sentinel-hub-mcp</code></td><td>Satellite</td><td>Sentinel-1/2/3, Landsat, MODIS imagery</td><td>Every orbit (~90 min)</td></tr>
+    <tr><td><code>os-opendata-mcp</code></td><td>Geospatial</td><td>Ordnance Survey MasterMap, terrain, roads</td><td>Daily</td></tr>
+    <tr><td><code>data-gov-uk-mcp</code></td><td>Government</td><td>Government open data (transport, health, environment)</td><td>Hourly</td></tr>
+    <tr><td><code>companies-house-mcp</code></td><target="_blank">Corporate Intel</td><td>UK company filings, directorships, PSCs</td><td>Daily</td></tr>
+    <tr><td><code>ons-statistics-mcp</code></td><td>Demographics</td><td>ONS census, economic indicators, population data</td><td>Daily</td></tr>
+    <tr><td><code>gdelt-news-mcp</code></td><td>OSINT</td><td>GDELT global news events (3,000+ sources)</td><td>Every 15 min</td></tr>
+    <tr><td><code>openaq-air-mcp</code></td><td>Environmental</td><td>Global air quality monitoring (PM2.5, NO2, O3)</td><td>Hourly</td></tr>
+    <tr><td><code>aisstream-maritime-mcp</code></td><td>Maritime</td><td>Global AIS vessel positions (real-time)</td><td>Continuous</td></tr>
+    <tr><td><code>adsb-aircraft-mcp</code></td><td>Aerospace</td><td>Global aircraft ADS-B transponder feeds</td><td>Continuous</td></tr>
+    <tr><td><code>rtsp-camera-mcp</code></td><td>Visual</td><td>IP camera / RTSP stream ingestion + YOLOv8 detection</td><td>Per frame</td></tr>
+    <tr><td><code>mqtt-bridge-mcp</code></td><td>IoT</td><td>MQTT sensor networks (temperature, pressure, motion)</td><td>Per event</td></tr>
+    <tr><td><code>openmeteo-weather-mcp</code></td><td>Meteorology</td><td>Open-Meteo weather forecasts + historical data</td><td>Hourly</td></tr>
+    <tr><td><code>openstreetmap-mcp</code></td><td>Mapping</td><td>OSM tiles, routing, POIs, infrastructure</td><td>On demand</td></tr>
+    <tr><td><code>earthquake-usgs-mcp</code></td><td>Seismic</td><td>USGS global earthquake monitoring</td><td>Continuous</td></tr>
+    <tr><td><code>nhs-trust-mcp</code></td><td>Healthcare</td><td>NHS Trust locations, capacity, services</td><td>Daily</td></tr>
+    <tr><td><code>defoneos-counterdrone-mcp</code></td><td>C-UAS</td><td>RF detection + Batear acoustic sensor integration</td><td>Continuous</td></tr>
+    <tr><td><code>defoneos-freetak-mcp</code></td><td>C2</td><td>FreeTAKServer CoT (Cursor on Target) protocol bridge</td><td>Per event</td></tr>
+    <tr><td><code>defoneos-medevac-mcp</code></td><td>Medical</td><td>MEDEVAC routing, casualty triage, hospital capacity</td><td>On demand</td></tr>
+    <tr><td><code>defoneos-jsp936-mcp</code></td><td>Compliance</td><td>JSP 936 compliance assertion + certificate generation</td><td>Per action</td></tr>
+    <tr><td><code>defoneos-cyber-mcp</code></td><td>Cyber</td><td>Threat detection, vulnerability scanning, STRIDE</td><td>Continuous</td></tr>
+  </table>
+  <p style="color:#94a3b8;font-size:.85rem;margin-top:1rem">+ 10 more MCP servers covering logistics, supply chain, edge computing, quantum tools, and civil service integration.</p>
+</div>
+
+<!-- TAB 2: Kill Chain Mapping -->
+<div class="tab-content">
+  <h3>🔄 Mapping the Pipeline to the Intelligence Kill Chain</h3>
+  <p>The DEFONEOS ISR pipeline maps directly to the standard intelligence cycle and the F2E2D2 kill chain — but compressed from hours to seconds through automation.</p>
+
+  <table>
+    <tr><th>Traditional Stage</th><th>Traditional Time</th><th>DEFONEOS Stage</th><th>DEFONEOS Time</th><th>Speedup</th></tr>
+    <tr><td>Find (sensor tasking)</td><td>30-60 min</td><td>Stage 1-2: NOISE → FILTER</td><td>&lt;1s (always-on)</td><td>1800x</td></tr>
+    <tr><td>Fix (geolocation)</td><td>5-15 min</td><td>Stage 3: FREQUENCY (auto-geo)</td><td>&lt;2s</td><td>300x</td></tr>
+    <tr><td>Track (monitoring)</td><td>Continuous (manual)</td><td>Stage 3-4: Mamba-2 state tracking</td><td>Continuous (automated)</td><td>—</td></tr>
+    <tr><td>Target (identification)</td><td>10-30 min</td><td>Stage 4-5: CORRELATE → INTUITION</td><td>&lt;10s</td><td>180x</td></tr>
+    <tr><td>Engage (decision)</td><td>15-45 min (chain of cmd)</td><td>Stage 6: BFT COUNCIL</td><td>&lt;30s</td><td>60x</td></tr>
+    <tr><td>Assess (BDA)</td><td>30-60 min</td><td>Stage 7: ACTION + learning loop</td><td>&lt;5s</td><td>360x</td></tr>
+  </table>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">Total Cycle Time Comparison</h4>
+  <div class="grid">
+    <div class="card" style="border-color:rgba(239,68,68,.4)">
+      <span class="stat" style="color:#ef4444">90-210 min</span>
+      <h3>Traditional Kill Chain</h3>
+      <p>Manual tasking → human analysis → chain of command → manual BDA</p>
+    </div>
+    <div class="card">
+      <span class="stat" style="color:#22c55e">48 sec</span>
+      <h3>DEFONEOS Pipeline</h3>
+      <p>Always-on ingest → automated fusion → BFT council → SIGIL action</p>
+    </div>
+  </div>
+
+  <div class="code">
+  TRADITIONAL:  ████████████████████████████████████████ 90-210 min
+  DEFONEOS:     █ 48 seconds
+                                                ▲
+                                        180-260x faster
+  </div>
+</div>
+
+<!-- TAB 3: Data Flow -->
+<div class="tab-content">
+  <h3>📊 Full Data Flow Architecture</h3>
+  <p>The pipeline runs continuously. Here is exactly how data flows from sensor to action:</p>
+
+  <div class="code">
+  ┌────────────────────────────────────────────────────────────────┐
+  │                    SENSOR LAYER (30 MCPs)                      │
+  │  🛰️ Sentinel  📡 AIS  ✈️ ADS-B  📰 GDELT  🌫️ OpenAQ  📹 RTSP  │
+  │  🏛️ Gov.uk   📊 ONS   🏢 Co.House  🌦️ Weather  🌍 OSM  ...    │
+  └─────────────────────────┬──────────────────────────────────────┘
+                            │ 198+ streams, parallel
+                            ▼
+  ┌────────────────────────────────────────────────────────────────┐
+  │              FILTER & NORMALISE (per-domain experts)           │
+  │  PII redaction (GDPR) · Dedup · UTC normalise · MGRS convert   │
+  └─────────────────────────┬──────────────────────────────────────┘
+                            │ structured signals
+                            ▼
+  ┌────────────────────────────────────────────────────────────────┐
+  │           FREQUENCY — 14 Neural Models + Mamba-2 SSM           │
+  │                                                                │
+  │  ┌──────────────────────────────────────────────┐              │
+  │  │     Mamba-2 State Vector (16-dimensional)     │              │
+  │  │  [0.73, -0.12, 0.91, 0.34, -0.56, 0.88, ...] │              │
+  │  │  O(1) memory per timestep · infinite context  │              │
+  │  └──────────────────┬───────────────────────────┘              │
+  │                     │ cosine_similarity check                   │
+  │                     ▼                                          │
+  │              Δ(state_t, state_t-1) > 0.85?                     │
+  └─────────────────────────┬──────────────────────────────────────┘
+                            │ if YES → hunch flagged
+                            │ if 3+ matches → intuition confirmed
+                            ▼
+  ┌────────────────────────────────────────────────────────────────┐
+  │              COUNCIL — 33-Node BFT Deliberation                │
+  │                                                                │
+  │  🏛️ Charter  🔐 Security  📊 Data  ⚖️ Ethics  🎯 Mission      │
+  │     ✓ FOR      ✓ FOR      ✓ FOR     ✓ FOR      ✓ FOR          │
+  │  📡 Intel    📦 Logistics  🏥 Medical  💻 Cyber  ...           │
+  │     ✓ FOR      ○ ABSTAIN    ✓ FOR      ✓ FOR                  │
+  │                                                                │
+  │  TALLY: 28 FOR / 2 AGAINST / 3 ABSTAIN → QUORUM MET ✓         │
+  └─────────────────────────┬──────────────────────────────────────┘
+                            │ SIGIL emission (Ed25519 signed)
+                            ▼
+  ┌────────────────────────────────────────────────────────────────┐
+  │        ACTION — Execute + Learn + Audit                        │
+  │  → Action taken (deploy, alert, route, report)                 │
+  │  → SIGIL receipt emitted to hash chain                         │
+  │  → JSP 936 compliance assertion attached                      │
+  │  → Result fed back to Mamba-2 state (learning loop)            │
+  │  → Council decision quality tracked over time                  │
+  └────────────────────────────────────────────────────────────────┘
+  </div>
+</div>
+
+<!-- TAB 4: Configuration -->
+<div class="tab-content">
+  <h3>⚙️ Pipeline Configuration</h3>
+  <p>The pipeline is fully configurable. Sensitivity, thresholds, and council rules can be tuned per deployment.</p>
+
+  <table>
+    <tr><th>Parameter</th><th>Default</th><th>Range</th><th>Description</th></tr>
+    <tr><td><code>intuition_threshold</code></td><td>0.85</td><td>0.5–0.99</td><td>Cosine similarity delta for hunch detection</td></tr>
+    <tr><td><code>intuition_confirm_matches</code></td><td>3</td><td>1–10</td><td>Consecutive matching states to confirm intuition</td></tr>
+    <tr><td><code>bft_quorum</code></td><td>22</td><td>17–33</td><td>Council votes required to pass (out of 33)</td></tr>
+    <tr><td><code>bft_timeout</code></td><td>30s</td><td>5–120s</td><td>Max deliberation time before forced vote</td></tr>
+    <tr><td><code>mcp_ingest_parallel</code></td><td>30</td><td>1–60</td><td>Number of MCP servers polled in parallel</td></tr>
+    <tr><td><code>mamba_state_dim</code></td><td>16</td><td>8–128</td><td>State vector dimensions (higher = more nuance, slower)</td></tr>
+    <tr><td><code>pii_redaction</code></td><td>strict</td><td>strict/standard/off</td><td>GDPR PII redaction level on ingest</td></tr>
+    <tr><td><code>airgap_mode</code></td><td>false</td><td>true/false</td><td>Disable all external MCPs — local sensors only</td></tr>
+    <tr><td><code>sigil_auto_emit</code></td><td>true</td><td>true/false</td><td>Automatically SIGIL every action (audit requirement)</td></tr>
+  </table>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">Example: Air-Gap Deployment Configuration</h4>
+  <div class="code">
+  # defoneos_pipeline_config.yaml
+  pipeline:
+    intuition_threshold: 0.90      # higher = fewer false positives
+    intuition_confirm_matches: 5   # require 5 consecutive matches
+    bft_quorum: 25                 # require 25-of-33 (stricter)
+    bft_timeout: 60                # allow more deliberation time
+    
+  ingest:
+    airgap_mode: true              # no external network
+    mcp_servers:                   # local sensors only
+      - rtsp-camera-mcp           # base perimeter cameras
+      - mqtt-bridge-mcp           # local IoT sensors
+      - defoneos-counterdrone-mcp # local RF + acoustic
+      - defoneos-freetak-mcp      # local C2 backbone
+    
+  compliance:
+    sigil_auto_emit: true          # mandatory for audit
+    pii_redaction: strict          # GDPR + JSP 440
+    frameworks: [jsp936, jsp440, eu_ai_act]
+  </div>
+
+  <h4 style="color:#22d3ee;margin-top:1.5rem">Edge Deployment (Jetson Orin)</h4>
+  <div class="code">
+  # Minimum viable pipeline on Jetson Orin Nano (8GB)
+  pipeline:
+    mamba_state_dim: 8             # reduced state for edge
+    mcp_ingest_parallel: 5         # fewer parallel feeds
+    bft_quorum: 17                 # minimum BFT quorum
+    
+  models:
+    active: [local_only]           # 4 on-device models, 7GB total
+    max_latency_ms: 100            # sub-100ms response required
+  </div>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem">
+<p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-os.html" style="color:#22d3ee;text-decoration:none">OS</a> · <a href="defoneos-sov3.html" style="color:#22d3ee;text-decoration:none">SOV3</a> · <a href="defoneos-data.html" style="color:#22d3ee;text-decoration:none">Data</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a></p>
+<p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p>
+</footer>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style>
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button>
+<script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}});function switchTab(n){var tabs=document.querySelectorAll(".tab");var contents=document.querySelectorAll(".tab-content");tabs.forEach(function(t,i){t.classList.toggle("active",i===n)});contents.forEach(function(c,i){c.classList.toggle("active",i===n)})}</script>
+</body></html>

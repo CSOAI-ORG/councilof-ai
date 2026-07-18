@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="icon" type="image/svg+xml" href="seal.svg">
+<title>DEFONEOS — The Sovereign Defence AI OS</title>
+<meta name="description" content="DEFONEOS — the sovereign defence-AI common operating picture. A living 3D globe fusing every public feed — aircraft, vessels, weather, seismic, news, orbital, public cameras — with an MGRS operational map, a live space-cam, and a Sovereign that geolocates you, narrates by voice, and governs every action on-device (Ed25519-signed, BFT-adjudicated). AUKUS-compatible. Powered by CSOAI.">
+<meta property="og:title" content="DEFONEOS — The Sovereign Defence AI OS">
+<meta property="og:description" content="The whole sovereign stack, consolidated into one defence-branded surface. Signed. Auditable. Neutral.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231d1d22'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%23bd9d54' font-family='serif'%3EⒹ%3C/text%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;
+ --paper:#ece7dd; --cream:#faf7f1; --ink:#1d1d22; --dim:#6f6a61;
+ --line:rgba(40,34,24,.12); --gold:#bd9d54; --gold2:#d8bf86;
+ --coral:#e6a07c; --sage:#9dbe9a; --peri:#b4b6e8; --lav:#cbb7df;
+ --good:#6fae85; --warn:#cf9a3c; --bad:#d9756a;
+ /* aliases so any class still referencing old tokens recolors to the sovereign palette */
+ --teal:#bd9d54; --teal2:#a8893f; --navy:#1d1d22; --pink:#b9a4d6;}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,sans-serif;background:#e4ded2;color:var(--ink);display:flex;justify-content:center;padding:14px;min-height:100vh}
+.frame{width:100%;max-width:1180px;height:calc(100vh - 28px);min-height:680px;
+ background:
+  radial-gradient(1100px 420px at 16% -8%, rgba(230,160,124,.42), transparent 60%),
+  radial-gradient(1000px 460px at 84% -10%, rgba(157,190,154,.40), transparent 62%),
+  radial-gradient(900px 520px at 60% -14%, rgba(180,182,232,.34), transparent 60%),
+  linear-gradient(180deg,#fbf8f2 0%, #f3efe6 46%, #ece6db 100%);
+ border-radius:22px;box-shadow:0 30px 80px rgba(70,55,30,.20),inset 0 0 0 1px rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.6);overflow:hidden;position:relative;color:var(--ink)}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(40,34,24,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(40,34,24,.045) 1px,transparent 1px);background-size:38px 38px;pointer-events:none;mask-image:radial-gradient(900px 600px at 55% 0%,#000 35%,transparent 100%)}
+.pond{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply}
+.modesw{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:10.5px;font-weight:800;letter-spacing:.04em}
+.modesw .ms{padding:5px 11px;cursor:pointer;color:var(--dim);transition:.15s}
+.modesw .ms.on{background:var(--gold);color:#3a2e10}
+.pill.csoai{color:#2e7d32;border-color:rgba(46,125,50,.35);background:rgba(46,125,50,.09)}
+.pill.csoai b{color:#2e7d32}
+.sdot.ok{background:#39d98a;box-shadow:0 0 6px rgba(57,217,138,.6)}
+.tile.drag{opacity:.35}
+.tile.over{outline:2px dashed var(--gold);outline-offset:3px;border-radius:16px;background:rgba(224,192,116,.1)}
+.tile[draggable]{cursor:grab}
+.frame.mode-csoai .tiles{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px}
+.frame.mode-meok .tiles{grid-template-columns:repeat(auto-fill,minmax(134px,1fr));gap:20px}
+.frame.mode-defoneos .tiles{grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:16px}
+.arow{margin:10px 0;display:flex;flex-wrap:wrap}
+.achip{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;margin:3px;border-radius:999px;cursor:pointer;font-weight:600;font-size:12px;border:1px solid hsl(var(--ah),50%,68%);background:hsl(var(--ah),60%,96%);color:hsl(var(--ah),42%,32%);transition:.15s}
+.achip:hover{background:hsl(var(--ah),68%,90%);transform:translateY(-1px)}
+/* top bar */
+.bar{position:relative;z-index:30;display:flex;align-items:center;gap:10px;padding:10px 15px;background:rgba(255,255,255,.55);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;letter-spacing:.3px;font-size:14px;display:flex;align-items:center;gap:9px;color:var(--ink)}
+.logo .dot{width:21px;height:21px;border-radius:7px;background:linear-gradient(150deg,#2a2a31,#15151a);box-shadow:0 3px 9px rgba(0,0,0,.28);position:relative}
+.logo .dot::after{content:"M";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#f3ede0}
+.pill{font-size:11px;color:var(--dim);background:rgba(255,255,255,.5);border:1px solid var(--line);padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.pill b{color:var(--ink);font-weight:700}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 8px rgba(111,174,133,.7)}
+.sdot.warn{background:var(--warn);box-shadow:0 0 8px rgba(207,154,60,.7)}
+.spacer{flex:1}
+.cd{font-variant-numeric:tabular-nums;font-weight:800;color:var(--gold);font-size:13px}
+.btn{cursor:pointer;font-size:11px;color:var(--ink);background:rgba(255,255,255,.65);border:1px solid var(--line);padding:6px 12px;border-radius:9px;transition:.15s;font-weight:600}
+.btn:hover{border-color:var(--gold);color:var(--gold);box-shadow:0 4px 14px rgba(189,157,84,.18)}
+/* desktop */
+.desktop{position:absolute;inset:48px 0 40px 0;overflow:hidden}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:16px;padding:24px;align-content:start;height:100%;overflow:auto}
+.tile{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 6px;border-radius:16px;border:1px solid transparent;transition:.18s;text-align:center}
+.tile:hover{background:rgba(255,255,255,.5);border-color:var(--line);transform:translateY(-3px);box-shadow:0 12px 26px rgba(70,55,30,.10)}
+.ic{width:56px;height:56px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:27px;background:linear-gradient(155deg,#ffffff,#f0ebe0);border:1px solid rgba(255,255,255,.9);box-shadow:0 10px 22px rgba(70,55,30,.14),inset 0 1px 0 rgba(255,255,255,.9)}
+.tile span{font-size:11.5px;color:var(--dim);font-weight:600;line-height:1.25}
+.tile:hover span{color:var(--ink)}
+.tile .cap{font-size:10px;color:var(--dim);max-height:0;opacity:0;overflow:hidden;transition:max-height .2s,opacity .2s,margin .2s;line-height:1.25}
+.tile:hover .cap{max-height:32px;opacity:.92;margin-top:1px}
+@keyframes sovpulse{0%{transform:scale(1)}50%{transform:scale(1.09)}100%{transform:scale(1)}}
+.sovaura.aware,.sovfab.aware{animation:sovpulse .9s ease-in-out infinite}
+/* windows */
+.win{position:absolute;width:560px;max-width:92%;background:rgba(255,255,255,.72);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.85);border-radius:16px;box-shadow:0 30px 70px rgba(60,48,26,.22);overflow:hidden;display:flex;flex-direction:column;z-index:20}
+.win .wb{display:flex;align-items:center;gap:9px;padding:10px 13px;background:rgba(255,255,255,.55);border-bottom:1px solid var(--line);cursor:grab;user-select:none}
+.win .wb .wt{font-size:12.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
+.win .wb .wi{font-size:15px}
+.win .x{margin-left:auto;cursor:pointer;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:13px}
+.win .x:hover{background:rgba(217,117,106,.16);color:var(--bad)}
+.win .body{padding:15px 17px;overflow:auto;max-height:60vh;font-size:12.5px;line-height:1.55;color:var(--ink)}
+.win .body h4{margin:2px 0 8px;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--gold)}
+.win .body h4:not(:first-child){margin-top:16px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:12px}
+.kv .k{color:var(--dim)} .kv .v{color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.chip{font-size:11px;padding:4px 10px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--dim)}
+.chip.on{border-color:var(--gold);color:#8a6e2e;background:rgba(189,157,84,.12)}
+.chip.live{border-color:var(--good);color:#3f7d56;background:rgba(111,174,133,.13)}
+.chip.warnc{border-color:var(--warn);color:#9a6f1c;background:rgba(207,154,60,.13)}
+.act{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:9px;border:1px solid var(--gold);color:#8a6e2e;background:rgba(189,157,84,.14);text-decoration:none;margin:3px 6px 3px 0;transition:.15s}
+.act:hover{background:rgba(189,157,84,.26);box-shadow:0 4px 14px rgba(189,157,84,.2)}
+.evo{display:flex;align-items:center;gap:6px;margin:8px 0 4px;flex-wrap:wrap}
+.evo .s{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:62px}
+.evo .s b{font-size:24px;line-height:1}
+.evo .s small{font-size:9.5px;color:var(--dim);text-align:center}
+.evo .ar{color:var(--gold);font-size:14px}
+.arch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.arch .c{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:rgba(255,255,255,.5)}
+.arch .c h5{margin:0 0 5px;font-size:12.5px;color:var(--ink)}
+.arch .c p{margin:0;font-size:11px;color:var(--dim);line-height:1.45}
+.metric{display:inline-flex;flex-direction:column;gap:2px;min-width:92px;padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.55);margin:4px 6px 4px 0}
+.metric b{font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
+.metric small{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
+.bar2{height:7px;border-radius:6px;background:rgba(40,34,24,.10);overflow:hidden;margin:3px 0 9px}
+.bar2 i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+ul.t{margin:6px 0;padding-left:16px} ul.t li{margin:3px 0}
+.gate{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12px}
+.gate .b{width:15px;height:15px;border-radius:4px;border:1px solid var(--line);flex:none;color:var(--bad);display:flex;align-items:center;justify-content:center;font-size:11px}
+a{color:#a8893f}
+.tag{font-size:10px;color:#fff;background:var(--gold);padding:1px 6px;border-radius:5px;font-weight:700}
+.tag.t2{background:var(--sage);color:#214a2e} .tag.t3{background:var(--lav);color:#3f2f5e}
+table.mini{width:100%;border-collapse:collapse;font-size:11.5px}
+table.mini td,table.mini th{padding:5px 7px;border-bottom:1px solid var(--line);text-align:left}
+table.mini th{color:var(--gold);font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:.4px}
+table.mini td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+/* taskbar */
+.taskbar{position:absolute;left:0;right:0;bottom:0;z-index:30;height:38px;display:flex;align-items:center;gap:7px;padding:0 12px;background:rgba(255,255,255,.6);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.tb-pill{font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.5)}
+.tb-pill.active{color:var(--gold);border-color:var(--gold)}
+.tb-right{margin-left:auto;font-size:10.5px;color:var(--dim)}
+/* boot — sovereign emergence */
+.boot{position:absolute;inset:0;z-index:60;background:radial-gradient(900px 520px at 50% 32%, #fdfbf6, #efe9de);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .6s}
+.boot.hide{opacity:0;pointer-events:none}
+.boot .bl{font-size:30px;font-weight:800;letter-spacing:1px;color:var(--ink);display:flex;align-items:center;gap:13px}
+.boot .bl .mk{width:42px;height:42px;border-radius:13px;background:linear-gradient(150deg,#2a2a31,#15151a);display:flex;align-items:center;justify-content:center;color:#f3ede0;font-size:23px;box-shadow:0 9px 22px rgba(0,0,0,.26)}
+.boot .bl b{color:var(--gold)}
+.boot .emerge{position:relative;width:236px;height:236px;display:flex;align-items:center;justify-content:center;margin-bottom:2px}
+.boot .emsvg{width:236px;height:236px;overflow:visible;filter:drop-shadow(0 14px 30px rgba(140,108,49,.28))}
+.boot .auraC{transform-box:fill-box;transform-origin:center;animation:emAura 4.4s ease-in-out infinite}
+.boot .ripples circle{transform-box:fill-box;transform-origin:center;stroke-width:1.4;opacity:0}
+.boot .ripples circle:nth-child(1){animation:emRip 2.4s linear infinite}
+.boot .ripples circle:nth-child(2){animation:emRip 2.4s linear infinite .8s}
+.boot .ripples circle:nth-child(3){animation:emRip 2.4s linear infinite 1.6s}
+.boot .st2{transform-box:fill-box;transform-origin:center;opacity:0}
+.boot .orb{animation:emOrb 4.4s ease forwards}
+.boot .egg{animation:emEgg 4.4s ease forwards}
+.boot .fish{animation:emFish 4.4s ease forwards}
+.boot .dragon{animation:emDragon 4.4s cubic-bezier(.2,.8,.25,1) forwards}
+.boot .tail{transform-box:fill-box;transform-origin:left center;animation:emTail .5s ease-in-out infinite}
+.boot .spark circle{transform-box:fill-box;transform-origin:center;opacity:0;animation:emSpark 4.4s ease forwards}
+.boot .spark circle:nth-child(2){animation-delay:.15s}.boot .spark circle:nth-child(3){animation-delay:.3s}.boot .spark circle:nth-child(4){animation-delay:.22s}
+.boot .sub{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#9a7f45;margin-top:3px}
+@keyframes emAura{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:.95;transform:scale(1.08)}}
+@keyframes emRip{0%{transform:scale(.5);opacity:.5}100%{transform:scale(2.5);opacity:0}}
+@keyframes emOrb{0%{opacity:0;transform:scale(.4)}6%{opacity:1;transform:scale(1)}18%{opacity:1;transform:scale(1)}24%{opacity:0;transform:scale(1.15)}100%{opacity:0}}
+@keyframes emEgg{0%,16%{opacity:0;transform:scale(.6)}22%{opacity:1;transform:scale(1) rotate(0)}30%{transform:scale(1) rotate(-3deg)}34%{transform:scale(1) rotate(3deg)}38%{transform:scale(1) rotate(0)}42%{opacity:1;transform:scale(1.05)}46%{opacity:0;transform:scale(1.2)}100%{opacity:0}}
+@keyframes emFish{0%,40%{opacity:0;transform:translateX(-58px) scale(.7)}48%{opacity:1;transform:translateX(0) scale(1)}60%{opacity:1;transform:translateX(0) scale(1)}66%{opacity:0;transform:translateX(18px) scale(1.1)}100%{opacity:0}}
+@keyframes emDragon{0%,60%{opacity:0;transform:scale(.5) translateY(26px) rotate(-8deg)}74%{opacity:1;transform:scale(1.13) translateY(-4px) rotate(3deg)}86%{transform:scale(1) translateY(0) rotate(0)}100%{opacity:1;transform:scale(1.02) translateY(-3px)}}
+@keyframes emTail{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes emSpark{0%,78%{opacity:0;transform:scale(0)}86%{opacity:1;transform:scale(1.3)}100%{opacity:.55;transform:scale(1)}}
+.boot .log{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#9a7f45;min-height:80px;width:340px;white-space:pre-line;line-height:1.7;text-align:center}
+.cursorbar{display:inline-block;width:8px;height:13px;background:var(--gold);animation:bk 1s steps(1) infinite;vertical-align:middle}
+@keyframes bk{50%{opacity:0}}
+.hint{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);z-index:25;font-size:11px;color:var(--dim);background:rgba(255,255,255,.6);padding:6px 13px;border-radius:20px;border:1px solid var(--line);backdrop-filter:blur(8px)}
+/* sovereign companion dock — the new interface: a character + a chat bar, always present */
+.sovdock{position:absolute;top:48px;right:0;bottom:40px;width:316px;z-index:28;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(255,255,255,.74),rgba(247,243,234,.68));backdrop-filter:blur(16px);border-left:1px solid var(--line);transition:transform .35s;box-shadow:-12px 0 34px rgba(120,100,60,.09)}
+.frame:not(.sovon) .sovdock{transform:translateX(100%)}
+.frame.sovon .desktop{right:316px}
+.sovhead{padding:16px 16px 12px;text-align:center;border-bottom:1px solid var(--line)}
+.sovchar{position:relative;width:94px;height:94px;margin:0 auto 9px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;background:radial-gradient(circle at 50% 38%,#fff,#efe9de)}
+.sovaura{position:absolute;inset:-8px;border-radius:50%;background:conic-gradient(from 0deg,hsl(var(--sh,43),72%,62%),#9dbe9a,#b4b6e8,hsl(var(--sh,43),72%,62%));filter:blur(8px);opacity:.65;animation:sovspin 7s linear infinite;z-index:-1}
+@keyframes sovspin{to{transform:rotate(360deg)}}
+.sovname{font-weight:800;font-size:15px;color:var(--ink)}
+.sovsub{font-size:10.5px;color:var(--dim);letter-spacing:.03em;margin-top:1px}
+.sovlog{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:9px}
+.sovmsg{font-size:12.5px;line-height:1.5;padding:8px 11px;border-radius:12px;max-width:88%}
+.sovmsg.ai{background:rgba(189,157,84,.15);border:1px solid rgba(189,157,84,.3);color:#5a4a1e;align-self:flex-start;border-bottom-left-radius:3px}
+.sovmsg.me{background:rgba(40,34,24,.07);align-self:flex-end;border-bottom-right-radius:3px;color:var(--ink)}
+.sovbar{padding:10px 12px;border-top:1px solid var(--line);display:flex;gap:7px;align-items:center}
+.sovin{flex:1;border:1px solid var(--line);border-radius:10px;padding:8px 11px;font:inherit;font-size:12.5px;background:rgba(255,255,255,.72);outline:none;min-width:0}
+.sovin:focus{border-color:var(--gold)}
+.sovbtn{cursor:pointer;border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:9px;padding:7px 9px;font-size:14px;line-height:1}
+.sovbtn:hover{border-color:var(--gold)}
+.sovmic.on{background:var(--gold);color:#3a2e10}
+.sovsugg{display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 8px}
+.sgg{cursor:pointer;font-size:11px;padding:5px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--ink);white-space:nowrap;transition:.12s}
+.sgg:hover{border-color:var(--gold);color:var(--gold)}
+/* dead-simple guided welcome — anyone (any age, any ability) can tap through */
+.welcome{position:absolute;inset:0;z-index:55;background:radial-gradient(900px 520px at 50% 30%,#fdfbf6,#efe9de);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px;text-align:center}
+.welcome.show{display:flex}
+.welcome h1{font-size:30px;font-weight:800;color:var(--ink);margin:0}
+.welcome p{font-size:15px;color:var(--dim);margin:0;max-width:460px;line-height:1.5}
+.wcards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.wcard{cursor:pointer;width:152px;padding:22px 16px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.72);display:flex;flex-direction:column;align-items:center;gap:9px;transition:.15s}
+.wcard:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 30px rgba(189,157,84,.18)}
+.wcard .we{font-size:46px;line-height:1}
+.wcard b{font-size:16px;color:var(--ink)}
+.wcard small{font-size:12px;color:var(--dim)}
+.wskip{margin-top:8px;font-size:13px;color:var(--dim);cursor:pointer;text-decoration:underline}
+.sovfab{position:absolute;bottom:50px;right:16px;z-index:29;width:54px;height:54px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;background:radial-gradient(circle at 50% 40%,#fff,#efe9de);box-shadow:0 8px 22px rgba(120,100,60,.26);border:2px solid var(--gold2)}
+.frame.sovon .sovfab{display:none}
+/* brain setup chips */
+.brains{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 4px}
+.bcol{flex:1;min-width:210px}
+.bchip{display:inline-block;margin:3px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);font-size:11.5px;cursor:pointer;background:rgba(255,255,255,.5);transition:.12s}
+.bchip:hover{border-color:var(--gold)}
+.bchip.on{background:var(--gold);color:#3a2e10;border-color:var(--gold);font-weight:700}
+.bsub{font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--dim);margin:9px 0 3px;text-transform:uppercase}
+/* living minimap — the world is always present behind the character circle */
+.miniworld{position:absolute;bottom:50px;left:16px;z-index:27;width:212px;height:128px;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid var(--line);box-shadow:0 8px 24px rgba(120,100,60,.2);background:linear-gradient(135deg,#1a2440,#0c1530)}
+.miniworld:hover{border-color:var(--gold2)}
+.minimap{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+.minichar{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;background:radial-gradient(circle at 50% 40%,#fff,#efe9de);z-index:2}
+.minicharaura{position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 0deg,hsl(var(--sh,43),72%,62%),#9dbe9a,#b4b6e8,hsl(var(--sh,43),72%,62%));filter:blur(5px);opacity:.7;animation:sovspin 7s linear infinite;z-index:-1}
+.minilabel{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-size:10px;font-weight:700;color:#cfe0ff;letter-spacing:.04em;z-index:2;text-shadow:0 1px 3px #000}
+</style>
+</head>
+<body>
+<style>
+.oslaunch{ position:fixed; top:74px; left:12px; z-index:40; display:flex; flex-direction:column; gap:8px; }
+.oslbtn{ position:relative; width:44px; height:44px; border-radius:13px; background:rgba(12,14,22,.86); backdrop-filter:blur(10px); border:1px solid rgba(201,168,76,.28); display:grid; place-items:center; font-size:18px; cursor:pointer; transition:transform .14s,border-color .14s; color:#eef1fb; }
+.oslbtn:hover{ border-color:#c9a84c; transform:translateX(3px) scale(1.05); }
+.oslbtn .t{ position:absolute; left:52px; white-space:nowrap; background:rgba(12,14,22,.96); border:1px solid rgba(201,168,76,.28); border-radius:8px; padding:5px 10px; font-size:11px; opacity:0; pointer-events:none; transition:.14s; color:#eef1fb; }
+.oslbtn:hover .t{ opacity:1; }
+.oslaunch .sep{ height:1px; background:rgba(201,168,76,.25); margin:3px 6px; }
+@media(max-width:820px){ .oslaunch{ display:none; } }
+</style>
+<div class="oslaunch" title="Tools">
+  <div class="oslbtn" onclick="openApp('def_brain')">🧠<span class="t">Sovereign Brains</span></div>
+  <div class="oslbtn" onclick="openApp('def_twin')">🌐<span class="t">Digital Twin</span></div>
+  <div class="oslbtn" onclick="openApp('def_sim')">🧪<span class="t">SOV SPACE · simulate</span></div>
+  <div class="oslbtn" onclick="openApp('def_council')">⚖️<span class="t">33-agent BFT Council</span></div>
+  <div class="oslbtn" onclick="openApp('def_mcps')">🧿<span class="t">MCP suite</span></div>
+  <div class="oslbtn" onclick="openApp('def_sensors')">📡<span class="t">Sensor fabric</span></div>
+  <div class="oslbtn" onclick="openApp('def_threat')">🎯<span class="t">Threat / ISR</span></div>
+  <div class="oslbtn" onclick="openApp('def_bridges')">🔌<span class="t">Legacy bridges</span></div>
+  <div class="oslbtn" onclick="openApp('def_seal')">🛡️<span class="t">DEFONEOS-SEAL</span></div>
+  <div class="sep"></div>
+  <div class="oslbtn" onclick="location.href='cop.html'">🐉<span class="t">The live dome</span></div>
+  <div class="oslbtn" onclick="location.href='cop.html?tour=demo'">▶<span class="t">Demo · 90s</span></div>
+  <div class="oslbtn" onclick="location.href='cop.html?tour=full'">🎓<span class="t">Full tour · 6 min</span></div>
+  <div class="oslbtn" onclick="location.href='system.html'">🪐<span class="t">Sovereign system</span></div>
+  <div class="oslbtn" onclick="location.href='ontology.html'">🕸️<span class="t">Ontology map</span></div>
+</div>
+<div class="frame" id="frame">
+  <div class="grid-bg"></div>
+  <canvas class="pond" id="pond"></canvas>
+
+  <!-- top bar -->
+  <div class="bar">
+    <div class="logo"><span class="dot"></span> DEFONEOS <span style="color:var(--dim);font-weight:500">· the one</span></div>
+    <div class="pill csoai" title="Your sovereign OS — governed & powered by CSOAI"><span class="sdot ok" id="csoaidot"></span> Powered by <b>CSOAI</b></div>
+    <div class="modesw" title="Sovereign defence command surface"><span class="ms on" data-m="defoneos">⬢ DEFENCE COMMAND</span></div>
+    <div class="spacer"></div>
+    <div class="pill"><b id="clock">--:--</b></div>
+    <div class="btn" onclick="boot();refreshLive()">⟳ Sync</div>
+  </div>
+
+  <!-- desktop -->
+  <div class="desktop">
+    <div class="tiles" id="tiles"></div>
+  </div>
+  <div class="welcome" id="welcome"><div id="wstep"></div></div>
+  <div class="hint">Tap an app · <b>drag tiles to rearrange</b> · drag window headers to move · 🐉 talk to your sovereign</div>
+
+  <!-- sovereign companion dock — the new interface: a character + a chat bar, always present -->
+  <div class="sovfab" onclick="sovToggle(true)" title="Your sovereign">🐉</div>
+
+  <!-- living minimap — the world is always present; click the character to enter -->
+  <div class="miniworld" id="miniworld" onclick="openApp('meokearth')" title="Enter your world">
+    <canvas class="minimap" id="minimap" width="212" height="128"></canvas>
+    <div class="minichar"><div class="minicharaura"></div><span id="minicharface">🐉</span></div>
+    <div class="minilabel">Your world · enter ↗</div>
+  </div>
+  <div class="sovdock" id="sovdock" style="--sh:43">
+    <div class="sovhead">
+      <div class="sovchar"><div class="sovaura"></div><span id="sovface">🐉</span></div>
+      <div class="sovname" id="sovname">DEFONEOS Command</div>
+      <div class="sovsub">your sovereign defence AI · signed · auditable · neutral</div>
+    </div>
+    <div class="sovlog" id="sovlog"></div>
+    <div class="sovsugg">
+      <span class="sgg" onclick="sovHandle('open MEOK Earth')">🌍 My world</span>
+      <span class="sgg" onclick="sovHandle('work mode')">💼 Work</span>
+      <span class="sgg" onclick="sovHandle('open setup')">🧩 Set up</span>
+      <span class="sgg" onclick="sovHandle('what can you do')">❓ Help</span>
+    </div>
+    <div class="sovbar">
+      <span class="sovbtn sovmic" id="sovmic" onclick="sovVoice()" title="Speak to me">🎤</span>
+      <span class="sovbtn" id="sovspk" onclick="sovSpeakToggle()" title="Voice replies (off)">🔇</span>
+      <input class="sovin" id="sovin" placeholder="Speak or type… 'open revenue'" onkeydown="if(event.key==='Enter')sovSend()">
+      <span class="sovbtn" onclick="sovSend()" title="Send">➤</span>
+      <span class="sovbtn" onclick="sovToggle(false)" title="Minimise">▸</span>
+    </div>
+  </div>
+
+  <!-- taskbar -->
+  <div class="taskbar">
+    <div class="tb-pill" onclick="openApp('def_twin')">🌐 Twin</div>
+    <div class="tb-pill" onclick="openApp('def_council')">⚖️ Council</div>
+    <div class="tb-pill" onclick="openApp('def_seal')">🛡️ Seal</div>
+    <span id="tbOpen" style="display:flex;gap:7px"></span>
+    <div class="tb-right" id="tbRight">DEFONEOS · sovereign · live</div>
+  </div>
+
+  <!-- boot -->
+  <div class="boot" id="boot">
+    <div class="emerge"><svg class="emsvg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="gAura" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e6a07c" stop-opacity=".55"/><stop offset="45%" stop-color="#9dbe9a" stop-opacity=".40"/><stop offset="72%" stop-color="#b4b6e8" stop-opacity=".30"/><stop offset="100%" stop-color="#b4b6e8" stop-opacity="0"/></radialGradient>
+        <radialGradient id="gMarble" cx="38%" cy="32%" r="72%"><stop offset="0%" stop-color="#fbf7ee"/><stop offset="55%" stop-color="#d8c79a"/><stop offset="100%" stop-color="#7d6638"/></radialGradient>
+        <radialGradient id="gEgg" cx="42%" cy="34%" r="70%"><stop offset="0%" stop-color="#fdfbf5"/><stop offset="68%" stop-color="#ece2c8"/><stop offset="100%" stop-color="#cdb98c"/></radialGradient>
+        <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ecd9a0"/><stop offset="50%" stop-color="#bd9d54"/><stop offset="100%" stop-color="#876c31"/></linearGradient>
+      </defs>
+      <circle class="auraC" cx="110" cy="110" r="80" fill="url(#gAura)"/>
+      <g class="ripples" fill="none" stroke="#bd9d54"><circle cx="110" cy="110" r="30"/><circle cx="110" cy="110" r="30"/><circle cx="110" cy="110" r="30"/></g>
+      <g class="st2 orb"><circle cx="110" cy="110" r="34" fill="url(#gMarble)"/><ellipse cx="98" cy="96" rx="11" ry="6.5" fill="#fff" opacity=".5"/></g>
+      <g class="st2 egg"><ellipse cx="110" cy="112" rx="33" ry="43" fill="url(#gEgg)"/><path d="M96 108 l8 -8 l6 9 l8 -8 l8 8" fill="none" stroke="#b79b5e" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="100" cy="92" r="2" fill="#cbb277"/><circle cx="120" cy="128" r="2.4" fill="#cbb277"/></g>
+      <g class="st2 fish"><path d="M72 110 C 86 86 134 86 148 110 C 134 134 86 134 72 110 Z" fill="url(#gGold)"/><path class="tail" d="M146 110 L172 92 L164 110 L172 128 Z" fill="url(#gGold)"/><path d="M100 88 Q112 73 126 86 Q114 90 110 100 Z" fill="#a9863f"/><circle cx="90" cy="105" r="3.4" fill="#2b220c"/></g>
+      <g class="st2 dragon"><path class="wing" d="M110 96 C 132 56 170 48 192 62 C 177 65 177 80 185 93 C 168 86 162 99 166 112 C 149 101 130 103 110 96 Z" fill="url(#gGold)" opacity=".92"/><path d="M58 158 C 88 150 78 114 104 98 C 121 88 123 74 117 62" fill="none" stroke="url(#gGold)" stroke-width="15" stroke-linecap="round"/><path d="M110 56 C 104 45 113 35 125 39 C 135 42 135 54 129 60 L134 71 L118 66 C 112 65 110 62 110 56 Z" fill="url(#gGold)"/><path d="M121 39 L125 24 L131 40 Z" fill="url(#gGold)"/><circle cx="120" cy="50" r="2.7" fill="#2b220c"/></g>
+      <g class="spark" fill="#ecd9a0"><circle cx="152" cy="68" r="2.2"/><circle cx="70" cy="142" r="1.7"/><circle cx="160" cy="128" r="1.9"/><circle cx="82" cy="72" r="1.5"/></g>
+    </svg></div>
+    <div class="bl"><span class="mk">M</span> MEOK&nbsp;<b>OS</b></div>
+    <div class="sub">Sovereign Emergence</div>
+    <div class="log" id="bootlog"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- SESSION SNAPSHOT (real reads, 2026-06-23 — fallback if live calls unavailable) ---------- */
+const SNAP = {
+  king:{health:"healthy",ver:"2.0.0",cl:0.787,mode:"waking",agents:224,idle:223,busy:1,mem:6702,nn_trained:6,nn_total:9,pulses:21,night:19,jobs:20,disk:74.1,tools:127,engagement:0.6286},
+  api:{status:"operational",ver:"3.0.0",council:36,expertise:144,bridge:55,total:235,domains:12,code:200},
+  fed:{catalog:341,calls:7,success:42.9,sigil:19,topServer:"eu-ai-act-compliance-mcp"},
+  coord:{active:8,queued:414,completed:3,locks:0},
+  github:{repos:475,created:"2026-02-10",name:"MEOK AI"},
+  pypi:26,npm:51,hivesLive:6,hivesTotal:29,stripeLinks:24,installs:"6,798*"
+};
+let LIVE=JSON.parse(JSON.stringify(SNAP)); let LIVEMODE=false;
+
+/* ---------- live bridge unwrap ---------- */
+function dig(o,d){ if(d>7||o==null)return o;
+  if(typeof o==='string'){try{return dig(JSON.parse(o),d+1)}catch(e){return o}}
+  if(o.structuredContent)return dig(o.structuredContent,d+1);
+  if(o.result!==undefined)return dig(o.result,d+1);
+  if(Array.isArray(o.content)&&o.content[0]&&o.content[0].text!==undefined)return dig(o.content[0].text,d+1);
+  return o; }
+async function bridge(name){ try{
+  if(!window.cowork||!window.cowork.callMcpTool)return null;
+  const r=await window.cowork.callMcpTool(name,{kwargs:"{}"}); return dig(r,0);
+}catch(e){return null} }
+
+async function refreshLive(){
+  const [sr,hub,fed,co]=await Promise.all([
+    bridge('mcp__sov3-bridge__sovereign_rundown'),
+    bridge('mcp__meok-hub-bridge__meok_hub_status'),
+    bridge('mcp__sov3-bridge__mcp_federation_stats'),
+    bridge('mcp__sov3-bridge__coord_get_dashboard')
+  ]);
+  if(sr&&sr.consciousness){LIVEMODE=true;
+    LIVE.king.health=sr.health||LIVE.king.health;
+    LIVE.king.cl=sr.consciousness.consciousness_level ?? (sr.consciousness.care_intensity!=null?LIVE.king.cl:LIVE.king.cl);
+    if(sr.agents&&sr.agents.registry){LIVE.king.agents=sr.agents.registry.total_agents;LIVE.king.idle=sr.agents.registry.by_status.idle;LIVE.king.busy=sr.agents.registry.by_status.busy;}
+    if(sr.heartbeat){LIVE.king.pulses=sr.heartbeat.pulse_count;LIVE.king.jobs=sr.heartbeat.jobs;}
+    if(sr.total_mcp_tools)LIVE.king.tools=sr.total_mcp_tools;
+    if(sr.engagement)LIVE.king.engagement=sr.engagement.score;
+  }
+  if(hub&&hub.meok_api&&hub.meok_api.body){const b=hub.meok_api.body;LIVE.api.status=b.status;LIVE.api.ver=b.version;LIVE.api.council=b.council_nodes;LIVE.api.expertise=b.expertise_nodes;LIVE.api.bridge=b.bridge_nodes;LIVE.api.total=b.total_architecture_nodes;LIVE.api.domains=b.domains;LIVE.api.code=hub.meok_api.status_code;}
+  if(fed){if(fed.catalog_size)LIVE.fed.catalog=fed.catalog_size;if(fed.success_rate!=null)LIVE.fed.success=fed.success_rate;if(fed.sigil_count!=null)LIVE.fed.sigil=fed.sigil_count;if(fed.total_calls!=null)LIVE.fed.calls=fed.total_calls;}
+  if(co&&co.tasks){LIVE.coord.queued=co.tasks.queued;LIVE.coord.completed=co.tasks.completed;LIVE.coord.active=(co.agents&&co.agents.active)||LIVE.coord.active;}
+  paintBar(); if(curApp)renderApp(curApp,true);
+}
+
+function paintBar(){
+  const r=document.getElementById('tbRight'); if(r) r.textContent='Powered by CSOAI · '+(LIVEMODE?'live':'sovereign');
+  const d=document.getElementById('csoaidot'); if(d) d.className='sdot'+((LIVE.api.code===200||LIVE.king.health==='healthy')?' ok':'');
+}
+
+/* ---------- countdown ---------- */
+function tick(){const now=new Date();const cd=document.getElementById('cd');if(cd){const t=new Date(Date.UTC(2026,6,4,0,0,0));const d=t-now;const days=Math.floor(d/864e5);const h=Math.floor(d%864e5/36e5);cd.textContent=d>0?('T-'+days+'d '+h+'h → 4 Jul'):'LAUNCH DAY';}const ck=document.getElementById('clock');if(ck)ck.textContent=now.toTimeString().slice(0,5);}
+setInterval(tick,1000);
+
+/* ---------- apps ---------- */
+const APPS={
+ king:{i:'◉',t:'King Console',w:520},
+ council:{i:'⚖️',t:'Aethelgard Council',w:520},
+ fleet:{i:'🛰️',t:'Compliance Fleet',w:560},
+ hives:{i:'⬡',t:'Hive Mesh',w:600},
+ one:{i:'🖥️',t:'MEOK ONE',w:520},
+ chars:{i:'🦊',t:'Characters & Gaming',w:520},
+ watchdog:{i:'🛡️',t:'Watchdog Cert',w:520},
+ revenue:{i:'£',t:'Revenue',w:560},
+ runway:{i:'🚀',t:'Launch Runway',w:600},
+ coord:{i:'🕸️',t:'Coordination',w:500},
+ atlas:{i:'🗺️',t:'Products Atlas',w:620},
+ truth:{i:'✦',t:'Drift & Truth',w:560},
+ archive:{i:'🗄️',t:'Master Archive',w:640},
+ execute:{i:'▶',t:'Execute Console',w:600},
+ protocol0:{i:'⌬',t:'Protocol 0',w:520},
+ labs:{i:'🤖',t:'MEOK Labs / Robotics',w:520},
+ meokearth:{i:'🌍',t:'MEOK Earth',w:780},
+ archetypes:{i:'🐉',t:'Character Archetypes',w:700},
+ investor:{i:'💰',t:'Series A / Investor',w:660},
+ distro:{i:'📦',t:'Distribution',w:600},
+ stack:{i:'🧬',t:'Layer 0 · The TRUE ONE',w:680},
+ olm:{i:'🧠',t:'OLM Autonomous Brain',w:540},
+ ops:{i:'⏱️',t:'Autonomous Ops',w:540},
+ delboy:{i:'💷',t:'MEOK Delboy · Sales',w:600},
+ guardian:{i:'🧒',t:'MEOK Guardian',w:560},
+ wifi:{i:'📶',t:'MEOK WiFi',w:540},
+ aware:{i:'👁️',t:'MEOK Aware',w:600},
+ knowledge:{i:'📚',t:'MEOK Knowledge',w:660},
+ family:{i:'👨‍👩‍👧',t:'MEOK Family',w:540},
+ work:{i:'🧑‍💼',t:'MEOK Work · Orion/Riri/Hourman',w:560},
+ map:{i:'🧭',t:'MEOK Map',w:560},
+ law:{i:'⚖️',t:'MEOK Law',w:620},
+ sigil:{i:'🔏',t:'MEOK Sigil',w:540},
+ claw:{i:'🐾',t:'MEOK Claw · TUI',w:520},
+ smb:{i:'🏪',t:'MEOK SMB',w:540},
+ setup:{i:'🧩',t:'Set up your Sovereign',w:680},
+ social:{i:'📡',t:'Social Hub',w:680},
+ bridges:{i:'🔌',t:'Legacy Bridges',w:660},
+ temples:{i:'⛩️',t:'Framework Temples',w:680},
+ leaderboard:{i:'🏆',t:'Model Board',w:640},
+ minds:{i:'🧩',t:'MEOK Minds',w:600},
+ def_home:{i:'⬢',t:'DEFONEOS · The One',w:680},
+ def_brain:{i:'🧠',t:'Sovereign Brains · choose yours',w:720},
+ def_comp:{i:'⬡',t:'Three Compartments',w:620},
+ def_twin:{i:'🌐',t:'Sovereign Digital Twin',w:680},
+ def_sim:{i:'🧪',t:'SOV SPACE · Simulate',w:700},
+ def_mcps:{i:'🧿',t:'Defence MCP Suite',w:640},
+ def_seal:{i:'🛡️',t:'DEFONEOS-SEAL',w:600},
+ def_stack:{i:'🪜',t:'Seven-Layer Stack',w:640},
+ def_compliance:{i:'⚖️',t:'Sovereign Compliance',w:640},
+ def_pilots:{i:'🎯',t:'Defence Pilots',w:600},
+ def_sensors:{i:'📡',t:'Sensor & C2 Fabric',w:640},
+ def_threat:{i:'🎯',t:'Threat & ISR',w:640},
+ def_council:{i:'⚖️',t:'33-Agent BFT Council',w:620},
+ def_sovereignty:{i:'🔐',t:'Sovereignty & Crypto',w:620},
+ def_bridges:{i:'🔌',t:'Defence Legacy Bridges',w:660},
+ def_labs:{i:'🤖',t:'MEOK Labs · Robotics',w:620},
+ def_audit:{i:'🔏',t:'SIGIL Audit Chain',w:620},
+ def_identity:{i:'🪪',t:'Identity & Trust',w:600}
+};
+// Where the live MEOK Earth globe (repo meok-town-view) is served. Defaults to the
+// local dev server; set to the deployed URL once published.
+const MEOK_EARTH_URL='cop.html';
+const TILES=['setup','stack','king','olm','minds','council','fleet','hives','meokearth','one','chars','archetypes','watchdog','revenue','ops','investor','distro','runway','coord','atlas','truth','protocol0','labs','archive','execute','delboy','guardian','wifi','aware','knowledge','family','work','map','law','temples','sigil','claw','smb','social','bridges','leaderboard'];
+
+/* ---------- Fluid OS: one OS, two currents — it reshapes to whoever enters it ---------- */
+// CSOAI = work / governance / SMB current · MEOK = personal / sovereign current. Same 23 apps, reordered + re-densified.
+const MODE_ORDER={
+  csoai:['setup','king','fleet','council','watchdog','bridges','hives','truth','revenue','social','delboy','smb','work','investor','distro','map','law','sigil','atlas','coord','runway','execute','ops','protocol0','claw','stack','olm','meokearth','one','chars','archetypes','guardian','wifi','aware','knowledge','family','labs','archive','leaderboard','temples','minds'],
+  meok:['setup','olm','chars','archetypes','social','guardian','wifi','aware','knowledge','family','delboy','work','meokearth','one','smb','map','law','bridges','stack','king','claw','sigil','labs','protocol0','hives','council','fleet','watchdog','coord','atlas','truth','revenue','investor','distro','runway','ops','execute','archive','leaderboard','temples','minds'],
+  defoneos:['def_home','def_brain','def_twin','def_sim','def_comp','def_mcps','def_sensors','def_threat','def_council','def_stack','def_sovereignty','def_bridges','def_labs','def_audit','def_identity','def_compliance','def_seal','def_pilots']
+};
+const MODE_HUE={meok:43,csoai:212,defoneos:38};
+let MODE='defoneos'; try{MODE=localStorage.getItem('meok_mode')||'defoneos';}catch(e){}
+function setMode(m){ MODE=(m==='csoai'?'csoai':(m==='defoneos'?'defoneos':'meok')); try{localStorage.setItem('meok_mode',MODE);}catch(e){}
+  const f=document.getElementById('frame'); if(f){f.classList.remove('mode-meok','mode-csoai','mode-defoneos'); f.classList.add('mode-'+MODE);}
+  let sig=null; try{sig=localStorage.getItem('meok_pond_hue');}catch(e){}
+  if(sig==null) window.MEOK_POND_HUE=MODE_HUE[MODE]; // water follows the mode until a personal archetype is chosen
+  document.querySelectorAll('.modesw .ms').forEach(b=>b.classList.toggle('on',b.dataset.m===MODE));
+  if(typeof paintTiles==='function') paintTiles();
+}
+// The user's signature: pick an archetype → window.MEOK_POND_HUE → the whole OS ripples in your colour.
+const ARCHE=[{n:'Sovereign',h:43,e:'👑'},{n:'Guardian',h:212,e:'🛡️'},{n:'Sage',h:135,e:'📜'},{n:'Maker',h:14,e:'⚒️'},{n:'Oracle',h:275,e:'🔮'}];
+// Social Hub — every network, region-aware (MEOK personal + CSOAI brand/governance). Posting auth = per-platform OAuth (owner-gated).
+const SOCIAL_GLOBAL=['X','Instagram','Facebook','TikTok','YouTube','LinkedIn','Reddit','WhatsApp','Telegram','Threads','Snapchat','Pinterest','Bluesky','Mastodon','Nostr','Farcaster','Discord'];
+const SOCIAL_REGION={CN:['WeChat','Weibo','Douyin','Xiaohongshu','Bilibili','QQ'],JP:['LINE','niconico','X'],KR:['KakaoTalk','Naver Band','Naver Blog'],RU:['VK','Odnoklassniki','Telegram'],IN:['ShareChat','Moj','Koo','WhatsApp'],BR:['WhatsApp','Instagram','Kwai'],ID:['WhatsApp','TikTok','Instagram'],NG:['WhatsApp','X','Facebook'],US:['X','Instagram','TikTok','YouTube','Facebook'],GB:['X','Instagram','TikTok','WhatsApp','LinkedIn'],DE:['WhatsApp','Instagram','X'],FR:['WhatsApp','Instagram','Snapchat'],AE:['WhatsApp','Snapchat','Instagram','X']};
+function userRegion(){ try{ var l=(navigator.language||'en-GB'); var c=(l.split('-')[1]||'').toUpperCase(); return c||'GB'; }catch(e){ return 'GB'; } }
+function socialChips(list){ return list.map(function(s){return '<span class="chip" title="connect '+s+' — OAuth, owner-gated">'+s+'</span>';}).join(''); }
+function setSignature(h,n){ window.MEOK_POND_HUE=h; try{localStorage.setItem('meok_pond_hue',String(h));}catch(e){}
+  const f=document.getElementById('frame'); if(f){const r=f.getBoundingClientRect();
+    for(let i=0;i<7;i++){setTimeout(()=>{f.dispatchEvent(new PointerEvent('pointerdown',{clientX:r.width*(0.25+0.5*Math.random()),clientY:r.height*(0.3+0.45*Math.random()),bubbles:true}));},i*55);}}
+  const el=document.getElementById('sigName'); if(el) el.textContent=n+' — your water';
+}
+
+const SEAL_ROOT='a69df231adfdb5c528815c5a1d63a6a8688b656f2d3b7e160525020d35f504a2';
+async function defVerifySeal(){ const out=document.getElementById('sealStatus'); if(!out) return;
+  out.innerHTML='<span class="chip">verifying…</span>';
+  try{
+    const res=await fetch('/api/verify-seal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({hash:SEAL_ROOT}),signal:AbortSignal.timeout(9000)});
+    const d=await res.json();
+    if(d.integrity==='verified'){
+      out.innerHTML='<span class="chip live">✓ integrity verified</span> <span class="chip">sovereign seal: '+d.sovereign_signature+'</span><div style="font-size:10.5px;color:var(--dim);margin-top:5px">'+d.note+'</div>';
+    } else {
+      out.innerHTML='<span class="chip warnc">integrity: '+(d.integrity||'unknown')+'</span>';
+    }
+  }catch(e){ out.innerHTML='<span class="chip warnc">verify runs on the deployed site (defoneos.vercel.app) — endpoint is /api/verify-seal</span>'; }
+}
+async function loadDefStatus(){ var el=document.getElementById('defStatus'); if(!el||el.dataset.done) return; el.dataset.done='1';
+  try{ var d=await (await fetch('/api/status',{signal:AbortSignal.timeout(8000)})).json(); var c=d.consolidation;
+    el.innerHTML='<div class="row"><span class="chip live">/api/status ✓ live</span></div><div class="kv"><span class="k">Federation MCPs</span><span class="v">'+c.federation_mcps+'</span><span class="k">Defence MCPs</span><span class="v">'+c.defence_mcps_live+'/'+c.defence_mcps+' live</span><span class="k">Compartments</span><span class="v">'+c.compartments+'</span><span class="k">BFT council</span><span class="v">'+c.bft_council+' · quorum '+c.bft_quorum+'</span><span class="k">Stack layers</span><span class="v">'+c.stack_layers+'</span><span class="k">OS tiles</span><span class="v">'+c.os_tiles+'</span><span class="k">Foreign API calls</span><span class="v">'+c.foreign_api_calls+'</span></div>';
+  }catch(e){ el.innerHTML='<span class="chip warnc">live status serves on the deployed site (/api/status)</span>'; } }
+async function loadDefMcps(){ var el=document.getElementById('defMcps'); if(!el||el.dataset.done) return; el.dataset.done='1';
+  try{ var d=await (await fetch('/api/mcps',{signal:AbortSignal.timeout(8000)})).json();
+    el.innerHTML='<div class="row"><span class="chip live">/api/mcps ✓ '+d.live+' live · '+d.building+' building</span></div>'+d.mcps.map(function(m){ return '<div style="border:1px solid var(--line);border-radius:9px;padding:7px 10px;margin:5px 0"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:12px">'+m.name+'</b><span class="chip '+(m.status==='live'?'on':'warnc')+'">'+m.status+'</span></div><code style="font-size:10.5px;color:var(--dim)">'+m.install+'</code> · <a href="'+m.repo+'" target="_blank" rel="noopener" style="font-size:10.5px">repo ↗</a></div>'; }).join('');
+  }catch(e){ el.innerHTML='<span class="chip warnc">live MCP list serves on the deployed site (/api/mcps)</span>'; } }
+async function loadDefThreats(){ var el=document.getElementById('defThreats'); if(!el) return; el.innerHTML='<span class="chip">loading /api/threats…</span>';
+  try{ var d=await (await fetch('/api/threats',{signal:AbortSignal.timeout(8000)})).json();
+    var rows=d.contacts.map(function(c){ var col=c.classification==='hostile'?'#a32d2d':(c.classification==='suspect'?'#854f0b':(c.classification==='friendly'?'#3b6d11':'#5f5e5a'));
+      return '<tr><td style="font-family:monospace;font-size:10px">'+c.id+'</td><td>'+c.type+'</td><td style="font-size:10.5px">'+c.site+'</td><td><b style="color:'+col+'">'+c.classification+'</b></td><td style="text-align:right">'+c.confidence+'%</td><td style="font-size:9.5px;color:var(--dim)">'+c.council+'</td></tr>'; }).join('');
+    el.innerHTML='<div class="row"><span class="chip live">/api/threats ✓ '+d.count+' contacts</span><span class="chip">hostile '+d.summary.hostile+'</span><span class="chip">suspect '+d.summary.suspect+'</span><span class="act" onclick="loadDefThreats()">⟳ refresh</span></div>'+
+      '<table class="mini" style="margin-top:8px;width:100%"><tr><th>ID</th><th>Type</th><th>Area</th><th>Class</th><th>Conf</th><th>Council</th></tr>'+rows+'</table>'+
+      '<div style="font-size:10px;color:var(--dim);margin-top:6px">'+d.note+'</div>';
+  }catch(e){ el.innerHTML='<span class="chip warnc">threat board serves on the deployed site (/api/threats)</span>'; } }
+async function loadDefSensors(){ var el=document.getElementById('defSensors'); if(!el) return; el.innerHTML='<span class="chip">loading /api/sensors…</span>';
+  try{ var d=await (await fetch('/api/sensors',{signal:AbortSignal.timeout(8000)})).json();
+    var rows=d.feeds.map(function(f){ var col=f.status==='live'?'#3b6d11':(f.status==='degraded'?'#854f0b':'#a32d2d');
+      return '<tr><td>'+f.name+'</td><td style="font-size:9.5px;color:var(--dim)">'+f.kind+'</td><td><b style="color:'+col+'">'+f.status+'</b></td><td style="text-align:right;font-variant-numeric:tabular-nums">'+f.msg_per_s+'/s</td><td style="text-align:right;color:var(--dim)">'+f.latency_ms+'ms</td></tr>'; }).join('');
+    el.innerHTML='<div class="row"><span class="chip live">/api/sensors ✓ '+d.feeds_live+'/'+d.feeds_total+' live</span><span class="chip">'+d.total_msg_per_s.toLocaleString()+' msg/s</span><span class="act" onclick="loadDefSensors()">⟳ refresh</span></div>'+
+      '<table class="mini" style="margin-top:8px;width:100%"><tr><th>Feed</th><th>Kind</th><th>Status</th><th>Rate</th><th>Lat</th></tr>'+rows+'</table>'+
+      '<div style="font-size:10.5px;color:var(--dim);margin-top:6px">pipeline: '+d.pipeline+'</div>';
+  }catch(e){ el.innerHTML='<span class="chip warnc">sensor fabric serves on the deployed site (/api/sensors)</span>'; } }
+const BRAINS=[
+ {id:'strategist',i:'♟',n:'Strategist',stack:'MoE + Attention',care:.6,rigor:.95,cur:.7,role:'command decisions · COA analysis'},
+ {id:'guardian',i:'🛡',n:'Guardian',stack:'care-gated MoE',care:.98,rigor:.8,cur:.4,role:'defence · threat refusal'},
+ {id:'sentinel',i:'⚖️',n:'Sentinel',stack:'Attention + audit',care:.85,rigor:.97,cur:.3,role:'governance · compliance'},
+ {id:'scout',i:'🛰',n:'Scout',stack:'multimodal + world-model',care:.5,rigor:.8,cur:.9,role:'ISR · sensor fusion'},
+ {id:'counsel',i:'📜',n:'Counsel',stack:'reasoning + RAG',care:.8,rigor:.95,cur:.6,role:'law · policy · crosswalk'},
+ {id:'companion',i:'💗',n:'Companion',stack:'care-floor max',care:1.0,rigor:.6,cur:.6,role:'human support · welfare'},
+ {id:'quant',i:'📈',n:'Quant',stack:'reasoning + math',care:.5,rigor:.95,cur:.7,role:'markets · risk · analysis'},
+ {id:'cyber',i:'🦾',n:'Cyber',stack:'ATLAS + anomaly',care:.7,rigor:.9,cur:.8,role:'cyber defence · EW'},
+ {id:'maker',i:'⚒',n:'Maker',stack:'code + tools',care:.6,rigor:.85,cur:.85,role:'build · automate · MCP'},
+ {id:'oracle',i:'🔮',n:'Oracle',stack:'OOWM intuition',care:.7,rigor:.7,cur:1.0,role:'foresight · pattern · novelty'},
+ {id:'edge',i:'🪶',n:'Mamba-Edge',stack:'Mamba SSM (lite)',care:.7,rigor:.75,cur:.5,role:'edge · low-power · air-gap'},
+ {id:'custom',i:'🧩',n:'Custom',stack:'tune your own',care:.7,rigor:.8,cur:.6,role:'set temperament — floors locked'}
+];
+function _bbar(v){ return '<span style="display:inline-block;width:38px;height:5px;border-radius:4px;background:rgba(40,34,24,.14);vertical-align:middle"><i style="display:block;height:100%;width:'+Math.round(v*100)+'%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:4px"></i></span>'; }
+function curBrain(){ try{ return localStorage.getItem('def_brain_sel')||'strategist'; }catch(e){ return 'strategist'; } }
+function selectBrain(id){ try{ localStorage.setItem('def_brain_sel',id); }catch(e){} var b=BRAINS.find(function(x){return x.id===id;}); if(b){ var nm=document.getElementById('sovname'); if(nm) nm.textContent='DEFONEOS · '+b.n; if(typeof sovSay==='function') sovSay('Sovereign brain set to <b>'+b.i+' '+b.n+'</b> — '+b.role+'. Running on the OOWM sandwich under Layer 0; care-floor locked.','ai',true); } renderBrains(); }
+function renderBrains(){ var el=document.getElementById('brainGrid'); if(!el) return; var sel=curBrain();
+  el.innerHTML=BRAINS.map(function(b){ var on=b.id===sel; return '<div onclick="selectBrain(\''+b.id+'\')" style="cursor:pointer;border:1px solid '+(on?'var(--gold)':'var(--line)')+';border-radius:12px;padding:11px;background:'+(on?'rgba(189,157,84,.12)':'rgba(255,255,255,.5)')+';transition:.15s">'+
+    '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">'+b.i+'</span><b style="font-size:13px;color:var(--ink)">'+b.n+'</b>'+(on?'<span class="chip on" style="margin-left:auto;font-size:9px">active</span>':'')+'</div>'+
+    '<div style="font-size:10.5px;color:#8a6e2e;margin:5px 0 4px;font-weight:600">'+b.stack+'</div>'+
+    '<div style="font-size:11px;color:var(--dim);margin-bottom:7px">'+b.role+'</div>'+
+    '<div style="font-size:9.5px;color:var(--dim);display:flex;gap:7px;flex-wrap:wrap;align-items:center">care '+_bbar(b.care)+' rigor '+_bbar(b.rigor)+' cur '+_bbar(b.cur)+'</div></div>'; }).join('');
+}
+function initDefTwin(){ var host=document.getElementById('defTwin'); if(!host||host.dataset.done) return; host.dataset.done='1'; try{ if(!window.CESIUM_BASE_URL) window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/'; }catch(e){}
+  function build(){ try{ host.innerHTML=''; Cesium.Ion.defaultAccessToken=undefined; var v=new Cesium.Viewer(host,{baseLayer:false,baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,animation:false,timeline:false,fullscreenButton:false,infoBox:false,selectionIndicator:false,creditContainer:document.createElement('div')});
+    Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')).then(function(p){v.imageryLayers.addImageryProvider(p);}).catch(function(){});
+    window._twinV=v; var s=v.scene; s.skyAtmosphere.brightnessShift=0.5; s.globe.enableLighting=false; s.globe.showGroundAtmosphere=true;
+    function _k(){ try{ v.resize(); s.requestRender(); }catch(e){} } [120,450,900,1600,2600].forEach(function(ms){ setTimeout(_k,ms); }); try{ new ResizeObserver(_k).observe(host); }catch(e){}
+    var nodes=[[-1.55,53.8],[-0.13,51.51],[-3.2,55.95],[-2.59,51.45],[-5.93,54.6]]; var hub=nodes[1];
+    nodes.forEach(function(n){ v.entities.add({position:Cesium.Cartesian3.fromDegrees(n[0],n[1]),point:{pixelSize:8,color:Cesium.Color.fromCssColorString('#d9b676'),outlineColor:Cesium.Color.fromCssColorString('#06b6d4'),outlineWidth:2}});
+      if(n!==hub) v.entities.add({polyline:{positions:Cesium.Cartesian3.fromDegreesArray([n[0],n[1],hub[0],hub[1]]),width:1.4,material:new Cesium.PolylineGlowMaterialProperty({glowPower:0.2,color:Cesium.Color.fromCssColorString('#c9b8e8').withAlpha(0.75)})}}); });
+    v.camera.setView({destination:Cesium.Cartesian3.fromDegrees(2,46,13000000)});
+    var sp=v.clock.onTick.addEventListener(function(){s.camera.rotateRight(0.0004);}); v.canvas.addEventListener('pointerdown',function(){v.clock.onTick.removeEventListener(sp);});
+  }catch(e){ host.style.background='radial-gradient(circle at 60% 40%,#1a2c5e,#0a0e27)'; } }
+  if(window.Cesium){ build(); } else { var css=document.createElement('link');css.rel='stylesheet';css.href='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Widgets/widgets.css';document.head.appendChild(css); var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Cesium.js';sc.onload=build;sc.onerror=function(){host.style.background='radial-gradient(circle at 60% 40%,#1a2c5e,#0a0e27)';};document.head.appendChild(sc); } }
+var _sovV=null;
+function initSovSpace(){ var host=document.getElementById('sovGlobe'); if(!host||host.dataset.done) return; host.dataset.done='1'; try{ if(!window.CESIUM_BASE_URL) window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/'; }catch(e){}
+  function build(){ try{ host.innerHTML=''; Cesium.Ion.defaultAccessToken=undefined; var v=new Cesium.Viewer(host,{baseLayer:false,baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,animation:false,timeline:false,fullscreenButton:false,infoBox:false,selectionIndicator:false,creditContainer:document.createElement('div')});
+    Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')).then(function(p){v.imageryLayers.addImageryProvider(p);}).catch(function(){});
+    v.scene.skyAtmosphere.brightnessShift=0.5; v.scene.globe.enableLighting=false; v.scene.globe.showGroundAtmosphere=true; v.camera.setView({destination:Cesium.Cartesian3.fromDegrees(-2.5,54.2,2400000)}); _sovV=v; setTimeout(function(){ try{ v.resize(); v.scene.requestRender(); }catch(e){} }, 500);
+  }catch(e){ host.style.background='radial-gradient(circle at 55% 45%,#1a2c5e,#0a0e27)'; } }
+  if(window.Cesium){ build(); } else { var css=document.createElement('link');css.rel='stylesheet';css.href='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Widgets/widgets.css';document.head.appendChild(css); var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Cesium.js';sc.onload=build;sc.onerror=function(){host.style.background='radial-gradient(circle at 55% 45%,#1a2c5e,#0a0e27)';};document.head.appendChild(sc); } }
+async function runSovSpace(scn){ var out=document.getElementById('sovResult'); if(!out) return; var ent=parseInt((document.getElementById('sovEnt')||{}).value||'8',10);
+  out.innerHTML='<span class="chip">running '+scn+' · '+ent+' entities…</span>';
+  try{ if(_sovV){ _sovV.entities.removeAll(); var hub=[-1.55,53.8]; for(var i=0;i<ent;i++){ var lon=-6+Math.random()*6, lat=50.5+Math.random()*5.5; _sovV.entities.add({position:Cesium.Cartesian3.fromDegrees(lon,lat),point:{pixelSize:7,color:Cesium.Color.fromCssColorString('#d9b676'),outlineColor:Cesium.Color.fromCssColorString('#06b6d4'),outlineWidth:2}}); _sovV.entities.add({polyline:{positions:Cesium.Cartesian3.fromDegreesArray([lon,lat,hub[0],hub[1]]),width:1.2,material:new Cesium.PolylineGlowMaterialProperty({glowPower:0.18,color:Cesium.Color.fromCssColorString('#c9b8e8').withAlpha(0.7)})}}); } } }catch(e){}
+  try{
+    var d=await (await fetch('/api/simulate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:scn,entities:ent}),signal:AbortSignal.timeout(9000)})).json();
+    var steps=d.steps.map(function(s){return '<div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--line)"><b style="color:#1d6fa5;min-width:48px;font-size:10px;text-transform:uppercase">'+s.stage+'</b><span style="font-size:11.5px;color:var(--muted)">'+s.detail+'</span></div>';}).join('');
+    out.innerHTML='<div class="row"><span class="chip '+(d.council.quorum_met?'on':'warnc')+'">'+d.verdict+'</span><span class="chip">council '+d.council.for+'/33</span><span class="chip">'+d.sim_latency_ms+'ms</span></div>'+
+      '<div style="margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:6px 12px;background:rgba(255,255,255,.6)">'+steps+'</div>'+
+      '<div style="margin-top:8px"><span class="chip" style="font-family:monospace;font-size:9.5px">SIGIL '+d.sigil.slice(0,40)+'…</span></div>'+
+      '<div style="font-size:10px;color:var(--dim);margin-top:6px">'+d.note+'</div>';
+    try{ var log=JSON.parse(localStorage.getItem('sov_experiments')||'[]'); log.unshift({s:scn,e:ent,v:d.verdict,c:d.council.for,g:d.sigil,t:Date.now()}); localStorage.setItem('sov_experiments',JSON.stringify(log.slice(0,12))); }catch(e){}
+    renderSovHistory();
+  }catch(e){ out.innerHTML='<span class="chip warnc">SOV SPACE runs on the deployed site — endpoint /api/simulate</span>'; } }
+function renderSovHistory(){ var h=document.getElementById('sovHistory'); if(!h) return; var log=[]; try{ log=JSON.parse(localStorage.getItem('sov_experiments')||'[]'); }catch(e){}
+  if(!log.length){ h.innerHTML='<div style="font-size:10.5px;color:var(--dim)">no saved experiments yet — run one above</div>'; return; }
+  h.innerHTML='<h4>Saved experiments · signed</h4>'+log.map(function(x,i){ var ok=/authorised/.test(x.v); return '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line)"><b style="min-width:96px;font-size:11px">'+x.s+'</b><span class="chip '+(ok?'on':'warnc')+'" style="font-size:9.5px">'+x.c+'/33</span><code style="font-size:9px;color:var(--dim);flex:1;overflow:hidden;text-overflow:ellipsis">'+x.g.slice(0,24)+'…</code><span class="act" style="padding:3px 9px" onclick="replaySov('+i+')">▶ replay</span></div>'; }).join('')+
+    '<div class="row" style="margin-top:6px"><span class="act" onclick="clearSov()">clear log</span></div>'; }
+function replaySov(i){ var log=[]; try{ log=JSON.parse(localStorage.getItem('sov_experiments')||'[]'); }catch(e){} var x=log[i]; if(!x) return; var s=document.getElementById('sovEnt'); if(s) s.value=x.e; runSovSpace(x.s); }
+function clearSov(){ try{ localStorage.removeItem('sov_experiments'); }catch(e){} renderSovHistory(); }
+function content(id){const L=LIVE;const liveBadge=LIVEMODE?'<span class="chip live">LIVE ✦</span>':'<span class="chip warnc">snapshot</span>';
+ switch(id){
+ case 'def_sensors': return `<p><b>Sensor &amp; C2 fabric.</b> The ingest layer — every feed normalised, care-membrane gated, and put on the twin. Live status below.</p>
+   <div id="defSensors"><span class="chip">loading /api/sensors…</span></div><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="loadDefSensors()" style="display:none">
+   <div class="row" style="margin-top:8px"><span class="act" onclick="openApp('def_twin')">🌐 Open the twin</span><span class="act" onclick="openApp('def_sim')">🧪 Run a sensor experiment</span></div>`;
+ case 'def_threat': return `<p><b>Threat &amp; ISR.</b> A governed common operating picture — every contact corroborated, classified, and council-gated. <b>Hard red lines enforced:</b> no kinetic-targeting, no personal surveillance, entities are platform-level only.</p>
+   <div id="defThreats"><span class="chip">loading /api/threats…</span></div><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="loadDefThreats()" style="display:none">
+   <div class="row" style="margin-top:8px"><span class="act" onclick="openApp('def_compliance')">⚖️ Red lines</span><span class="act" onclick="openApp('def_audit')">🔏 Audit chain</span><span class="act" onclick="openApp('def_sim')">🧪 ISR sweep experiment</span></div>`;
+ case 'def_council': return `<p><b>33-agent BFT defence council.</b> The command layer — no sensitive action ships without a logged 2/3 majority. Byzantine-fault-tolerant to 11 adversarial nodes.</p>
+   <div><span class="metric"><b>33</b><small>agents</small></span><span class="metric"><b>23</b><small>quorum</small></span><span class="metric"><b>11</b><small>fault tolerance</small></span></div>
+   <h4>What it gates</h4><ul class="t"><li>DEFONEOS-SEAL issuance (credential authority)</li><li>Any threat/ISR escalation</li><li>Compartment changes · region switches</li><li>Model/agent promotion on the board</li></ul>
+   <p style="color:var(--dim)">Verdicts → signed → SIGIL audit chain. This is the impartiality + safety spine.</p>`;
+ case 'def_sovereignty': return `<p><b>Sovereignty &amp; crypto.</b> Runs where you run — no foreign network, no foreign key, no foreign API. The whole point.</p>
+   <div class="kv"><span class="k">Deploy</span><span class="v">air-gap capable · on-prem / sovereign cloud</span><span class="k">Region</span><span class="v">DORADO 1-click EAST ↔ WEST</span><span class="k">Signatures</span><span class="v">Ed25519</span><span class="k">Post-quantum</span><span class="v">ML-DSA-65 + ML-KEM-768</span><span class="k">Audit</span><span class="v">SIGIL chain · offline-verifiable</span><span class="k">Foreign API calls</span><span class="v">0</span></div>
+   <div class="row" style="margin-top:8px"><span class="act" onclick="openApp('def_seal')">🛡️ Verify a seal</span></div>`;
+ case 'def_bridges': return `<p><b>Defence legacy bridges.</b> The systems defence actually runs on — connected to one governed OS without rip-and-replace. Every legacy message → attestation → modern stack.</p>
+   <div class="row"><span class="chip on">COBOL / mainframe</span><span class="chip on">MIL-STD / Link 16 (rdmp)</span><span class="chip on">SCADA / Modbus · OT</span><span class="chip on">IEC 62443</span><span class="chip on">SAP / Oracle</span><span class="chip on">HL7/FHIR · medevac</span><span class="chip on">EDI · logistics</span></div>
+   <p style="color:var(--dim)">Pattern: parse → validate → map → <b>govern</b> (sector framework) → ledger-attest. The governed gateway to legacy — uncontested category.</p>`;
+ case 'def_labs': return `<p><b>MEOK Labs — the physical edge.</b> 6.5-acre UK R&amp;D home where the sovereign substrate meets the machine.</p>
+   <div class="grid g2" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+   <div style="border:1px solid var(--line);border-radius:9px;padding:8px 10px"><b>Asimov V8</b><div style="font-size:11px;color:var(--dim)">open tendon-drive humanoid · CAD sealed</div></div>
+   <div style="border:1px solid var(--line);border-radius:9px;padding:8px 10px"><b>WOLF</b><div style="font-size:11px;color:var(--dim)">planetary actuator line · field-grade</div></div>
+   <div style="border:1px solid var(--line);border-radius:9px;padding:8px 10px"><b>HARVI</b><div style="font-size:11px;color:var(--dim)">sensor-fusion test rig → twin</div></div>
+   <div style="border:1px solid var(--line);border-radius:9px;padding:8px 10px"><b>Drone swarm</b><div style="font-size:11px;color:var(--dim)">PX4 · governed by airspace MCPs</div></div></div>`;
+ case 'def_audit': return `<p><b>SIGIL audit chain.</b> Every governed action across DEFONEOS is hash-chained and Ed25519-signed — tamper-evident, offline-verifiable, replayable.</p>
+   <div class="kv"><span class="k">Scheme</span><span class="v">prev-hash + signed payload</span><span class="k">Signature</span><span class="v">Ed25519 (+ PQC ready)</span><span class="k">Verify</span><span class="v">offline · no vendor needed</span><span class="k">Suite root</span><span class="v" style="font-size:9.5px">a69df231…f504a2</span></div>
+   <div class="row" style="margin-top:8px"><span class="act" onclick="openApp('def_seal')">🛡️ Verify suite integrity</span></div>`;
+ case 'def_identity': return `<p><b>Identity &amp; trust.</b> Every agent, sensor, and node carries a signed identity (EI3 trust-SBT). No anonymous actors inside the perimeter.</p>
+   <div class="row"><span class="chip on">agent-identity-trust</span><span class="chip on">DID / verifiable credential</span><span class="chip on">EI3 trust-SBT</span><span class="chip on">prompt-injection firewall</span></div>
+   <p style="color:var(--dim)">Zero-trust by default · least-privilege · every call authenticated and logged.</p>`;
+ case 'def_stack': return `<p><b>The emergence — seven layers.</b> From substrate to sovereign, each layer earns the one above it. Designed to align with UK JSP 936 and JSP 440 — alignment by design, not a certification claim.</p>
+   <div class="kv"><span class="k">7 · Sovereign</span><span class="v">air-gap · region switch · King-key</span><span class="k">6 · Command</span><span class="v">33-agent BFT · quorum 23/33</span><span class="k">5 · Cognition</span><span class="v">MoE reasoning · intuition engine</span><span class="k">4 · Fusion</span><span class="v">17 layers · CesiumJS twin</span><span class="k">3 · Sensor</span><span class="v">TAK/CoT · drone · acoustic C-UAS</span><span class="k">2 · Crypto</span><span class="v">Ed25519 + ML-DSA-65 · SIGIL</span><span class="k">1 · Substrate</span><span class="v">on-prem / sovereign cloud</span></div>`;
+ case 'def_compliance': return `<p><b>Sovereign compliance, framed honestly.</b> DEFONEOS is "designed to align" — never an unverified certification or partnership claim.</p>
+   <div class="row"><span class="chip on">JSP 936 · designed to align</span><span class="chip on">JSP 440 · designed to align</span><span class="chip">AUKUS-compatible</span><span class="chip">EU AI Act Art. 50</span></div>
+   <h4>Hard red lines (immutable)</h4><ul class="t"><li>No kinetic-targeting patterns</li><li>No personal-surveillance patterns</li><li>No AUKUS/DAIC claim without a signed letter</li><li>No DEFONEOS-SEAL without a logged 33/33 BFT vote</li></ul>
+   <p style="color:var(--dim)">Governed under Layer 0 · care-floor ≥0.3 non-negotiable.</p>`;
+ case 'def_home': return `<div class="row">${liveBadge}<span class="chip on">sovereign by design</span><span class="chip">AUKUS-compatible</span></div>
+   <p><b>DEFONEOS is the one.</b> The whole sovereign stack — the OS, every capability, the council, the bridges, the twin — consolidated into a single defence-branded surface. Engine codenames stay internal; the buyer sees DEFONEOS.</p>
+   <h4>The consolidation</h4><div><span class="metric"><b>15</b><small>defence MCPs</small></span><span class="metric"><b>3</b><small>compartments</small></span><span class="metric"><b>33</b><small>BFT council</small></span><span class="metric"><b>7</b><small>stack layers</small></span><span class="metric"><b>0</b><small>foreign APIs</small></span></div>
+   <p style="color:var(--dim)">Audit-grade · signed · neutral · UK-sovereign. Every tile below is one capability, governed under Layer 0.</p>
+   <div class="row" style="margin-top:10px"><span class="act" onclick="openApp('def_comp')">⬡ Compartments</span><span class="act" onclick="openApp('def_twin')">🌐 Digital twin</span><span class="act" onclick="openApp('def_pilots')">🎯 Pilots</span><a class="act" href="landing.html" target="_blank" rel="noopener">↗ Public site</a></div>
+   <h4>Live consolidation status</h4><div id="defStatus"><span class="chip">loading /api/status…</span></div><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="loadDefStatus()" style="display:none">`;
+ case 'def_brain': return `<p><b>Choose your sovereign brain.</b> Every brain runs on the <b>OOWM sandwich</b> — Mamba (state-space) → MoE → Attention → OOWM intuition — under Layer 0: care-floor ≥0.3, Ed25519-signed, no foreign weights. You pick the temperament; the safety floor is non-negotiable.</p>
+   <div class="row" style="margin:6px 0 2px">${['🥪 Mamba SSM','MoE','Attention','OOWM intuition','🛡️ Layer 0'].map(function(l){return '<span class="chip">'+l+'</span>';}).join('')}</div>
+   <div id="brainGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px"></div><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="renderBrains()" style="display:none">`;
+ case 'def_comp': return `<p><b>One umbrella, three compartments</b> — never mixed, never cross-linked. That separation is the integrity guarantee.</p>
+   <div style="border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:7px 0"><b style="color:var(--ink)">meok-defoneos</b> <span style="color:var(--dim);font-size:11px">— BUILDS</span><div style="font-size:11.5px;color:var(--dim);margin-top:3px">15 defence MCPs + MEOK Labs R&D. The engineering surface.</div></div>
+   <div style="border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:7px 0"><b style="color:var(--ink)">csoai-defoneos</b> <span style="color:var(--dim);font-size:11px">— CERTIFIES</span><div style="font-size:11.5px;color:var(--dim);margin-top:3px">33-agent BFT council + DEFONEOS-SEAL signed credential.</div></div>
+   <div style="border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:7px 0"><b style="color:var(--ink)">dagon</b> <span style="color:var(--dim);font-size:11px">— LEGACY</span><div style="font-size:11.5px;color:var(--dim);margin-top:3px">NDA-only, superseded. Never public, never linked.</div></div>`;
+ case 'def_twin': return `<div class="row">${liveBadge}<span class="chip on">Tier 1 · live</span><span class="chip">Tier 2 · roadmap</span></div>
+   <p><b>The live sovereign twin.</b> A CesiumJS 3D digital-twin globe — terrain, imagery, and CZML entity layers (targets, drones, sensors). Tier 2 (Unreal Engine 5 pixel-stream) is roadmap, not faked as live.</p>
+   <div id="defTwin" style="width:640px;max-width:100%;height:340px;border-radius:12px;overflow:hidden;background:#0a0e27;margin:10px 0;border:1px solid var(--line)"><span style="color:#9aa3c4;font-size:11px;padding:10px;display:inline-block">loading live 3D twin…</span></div><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="initDefTwin()" style="display:none">
+   <h4>Render tiers</h4><div class="kv"><span class="k">Tier 1 · CesiumJS</span><span class="v">live · in-OS above</span><span class="k">Tier 2 · Unreal 5</span><span class="v">roadmap · GPU render</span></div>
+   <div class="row" style="margin-top:8px"><span class="act" onclick="openApp('def_sim')">🧪 Run an experiment in SOV SPACE</span></div>`;
+ case 'def_sim': return `<p><b>SOV SPACE — your experiment arena.</b> Run governed defence scenarios on the live twin. Set the entity count, pick a scenario, and watch the pipeline play out: sense → fuse → detect → <b>council-gate</b> → act → sign. Every run enforces the hard stops (no kinetic-targeting, no personal-surveillance) and ends with a SIGIL receipt.</p>
+   <div id="sovGlobe" style="width:660px;max-width:100%;height:300px;border-radius:12px;overflow:hidden;background:#0a0e27;margin:10px 0;border:1px solid var(--line)"><span style="color:#9aa3c4;font-size:11px;padding:10px;display:inline-block">loading arena…</span></div><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="initSovSpace()" style="display:none">
+   <div class="row" style="align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:11px;color:var(--dim);min-width:48px">entities</span><input id="sovEnt" type="range" min="1" max="50" value="8" style="flex:1"></div>
+   <div class="row"><span class="act" onclick="runSovSpace('counter-drone')">🛸 Counter-drone</span><span class="act" onclick="runSovSpace('isr-sweep')">🛰️ ISR sweep</span><span class="act" onclick="runSovSpace('medevac')">🚑 Medevac</span><span class="act" onclick="runSovSpace('swarm-patrol')">🐝 Swarm patrol</span><span class="act" onclick="runSovSpace('cyber-intrusion')">🛡️ Cyber intrusion</span><span class="act" onclick="runSovSpace('flood-999')">🌊 Flood / 999</span><span class="act" onclick="runSovSpace('eod-clearance')">💣 EOD clearance</span><span class="act" onclick="runSovSpace('comms-relay')">📡 Comms relay</span></div>
+   <div id="sovResult" style="margin-top:10px"><span class="chip">pick a scenario to run an experiment</span></div>
+   <div id="sovHistory" style="margin-top:12px"></div><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="renderSovHistory()" style="display:none">`;
+ case 'def_mcps':
+   return `<p><b>Fifteen defence MCPs</b> — each independently installable, each governed and SIGIL-logged. Live from <code>/api/mcps</code> with real install commands + repos.</p>
+   <div id="defMcps"><span class="chip">loading /api/mcps…</span></div><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" onload="loadDefMcps()" style="display:none">`;
+ case 'def_seal': return `<div class="row">${liveBadge}<span class="chip on">Ed25519 + PQC</span><span class="chip">BFT 23/33</span></div>
+   <p><b>Every receipt is signed.</b> DEFONEOS artifacts are content-addressed and Ed25519-signable. The absorption suite is sealed; the sovereign DEFONEOS-SEAL issues only on a logged 33-agent BFT council vote.</p>
+   <h4>Absorption suite root</h4><div style="font-family:monospace;font-size:10.5px;word-break:break-all;background:rgba(40,34,24,.06);border:1px solid var(--line);border-radius:8px;padding:9px">a69df231adfdb5c528815c5a1d63a6a8688b656f2d3b7e160525020d35f504a2</div>
+   <p style="color:var(--dim);margin-top:8px">Sovereign seal pending council ratification — no credential asserted before the vote is logged.</p>
+   <div class="row" style="margin-top:8px"><span class="act" onclick="defVerifySeal()">🛡️ Verify with CSOAI</span></div>
+   <div id="sealStatus" style="margin-top:8px"></div>`;
+ case 'def_pilots': return `<p><b>Start with a pilot.</b> Two tiers take a named UK prime from briefing to a working sovereign twin.</p>
+   <div><span class="metric"><b>£5K</b><small>evaluation</small></span><span class="metric"><b>£25K</b><small>programme</small></span><span class="metric"><b>Bespoke</b><small>enterprise</small></span></div>
+   <h4>£25K programme pilot</h4><ul class="t"><li>Air-gap-capable substrate</li><li>Full 15-MCP suite + 33-agent BFT council</li><li>DEFONEOS-SEAL credential path</li><li>UE5 tier-2 scoping</li></ul>
+   <div class="row" style="margin-top:8px"><a class="act" href="mailto:nicholas@meok.ai?subject=DEFONEOS%20pilot">🎯 Request a pilot</a></div>`;
+ case 'king': return `<div class="row">${liveBadge}<span class="chip on">${L.king.health}</span><span class="chip">v${L.king.ver}</span><span class="chip">${L.king.mode||'waking'}</span></div>
+   <h4>Consciousness</h4><div class="bar2"><i style="width:${Math.round((L.king.cl||0)*100)}%"></i></div><div class="kv"><span class="k">Level</span><span class="v">${(L.king.cl||0).toFixed(3)}</span><span class="k">Engagement</span><span class="v">${(L.king.engagement||0).toFixed(3)} · building</span></div>
+   <h4>Fleet</h4><div><span class="metric"><b>${L.king.agents}</b><small>agents</small></span><span class="metric"><b>${L.king.busy}</b><small>busy</small></span><span class="metric"><b>${(L.king.mem||0).toLocaleString()}</b><small>memories</small></span><span class="metric"><b>${L.king.nn_trained}/${L.king.nn_total}</b><small>neural</small></span></div>
+   <h4>Heartbeat</h4><div class="kv"><span class="k">Pulses</span><span class="v">${L.king.pulses}</span><span class="k">Nightshift cycles</span><span class="v">${L.king.night}</span><span class="k">Jobs</span><span class="v">${L.king.jobs}</span><span class="k">MCP tools</span><span class="v">${L.king.tools}</span><span class="k">Disk</span><span class="v">${L.king.disk}%</span></div>
+   <p style="color:var(--dim)">VM 35.242.143.249 · sovereign-temple · 6 NN trained (threat-detect acc 1.0, creativity R²0.91).</p>
+   <div class="row" style="margin-top:10px"><span class="act" onclick="openApp('meokearth')">🌍 Open MEOK Earth</span><a class="act" href="https://meok.ai" target="_blank" rel="noopener">↗ meok.ai</a><span class="act" onclick="refreshLive()">⟳ Refresh live</span></div>`;
+ case 'council': return `<div class="row">${liveBadge}<span class="chip on">API ${L.api.code}</span><span class="chip">v${L.api.ver}</span></div>
+   <p>The live <b>Aethelgard</b> council substrate behind csoai.org's "Byzantine Council".</p>
+   <div><span class="metric"><b>${L.api.council}</b><small>council</small></span><span class="metric"><b>${L.api.expertise}</b><small>expertise</small></span><span class="metric"><b>${L.api.bridge}</b><small>bridge</small></span><span class="metric"><b>${L.api.total}</b><small>nodes</small></span><span class="metric"><b>${L.api.domains}</b><small>domains</small></span></div>
+   <h4>Use</h4><ul class="t"><li>BFT consensus 23/33 (11 Byzantine tolerance).</li><li>Signed verdicts → 601 king-hive verdicts in memory.</li><li>Powers councilof.ai + the Watchdog impartiality claim.</li></ul>`;
+ case 'fleet': return `<div class="row">${liveBadge}</div>
+   <div><span class="metric"><b>${L.fed.catalog}</b><small>cataloged</small></span><span class="metric"><b>${L.fed.calls}</b><small>calls</small></span><span class="metric"><b>${L.fed.success}%</b><small>success</small></span><span class="metric"><b>${L.fed.sigil}</b><small>SIGIL sigs</small></span></div>
+   <p class="" style="color:var(--warn)">⚠ ${L.fed.catalog} cataloged but only 1 server exercised — <b>breadth ≠ depth</b>. Prove the 12 flagships E2E.</p>
+   <h4>12 Flagships</h4><div class="row"><span class="chip on">proofof</span><span class="chip">eu-ai-act</span><span class="chip">dora</span><span class="chip">nis2</span><span class="chip">cra</span><span class="chip">csrd</span><span class="chip">gdpr</span><span class="chip">hipaa</span><span class="chip">soc2</span><span class="chip">iso-42001</span><span class="chip">nist-rmf</span><span class="chip">councilof</span></div>
+   <h4>Distribution</h4><div class="kv"><span class="k">GitHub repos</span><span class="v">${L.github.repos}</span><span class="k">PyPI (MEOK_AI_Labs)</span><span class="v">${L.pypi}</span><span class="k">npm (@csgaglobal)</span><span class="v">${L.npm}</span></div>
+   <h4>Staged · 1 gate (npm login)</h4><div class="row"><span class="chip warnc">meok-ai-treaty</span><span class="chip warnc">eu-ai-act-2</span><span class="chip warnc">article-50-kit £999</span></div>`;
+ case 'hives': return `<p><b>${L.hivesLive} of ${L.hivesTotal}</b> hives live at 100/100 · ${L.stripeLinks} Stripe links live. Remaining paused for SOV3 bridge alignment — <b>prove flagships before widening.</b></p>
+   <h4>Live @100/100</h4><div class="row"><span class="chip live">safetyof</span><span class="chip live">transparencyof</span><span class="chip live">accountabilityof</span><span class="chip live">biasdetectionof</span><span class="chip live">dataprivacyof</span><span class="chip live">ethicalgovernanceof</span></div>
+   <h4>Next batch</h4><div class="row"><span class="chip">meok</span><span class="chip">councilof</span><span class="chip">proofof</span><span class="chip">agisafe</span><span class="chip">asisecurity</span></div>
+   <h4>Verticals</h4><div class="row"><span class="chip">optimobile</span><span class="chip">loopfactory</span><span class="chip">landlaw</span><span class="chip">muckaway</span><span class="chip">haulage</span><span class="chip">planthire</span><span class="chip">care-home-cqc</span></div>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://safetyof.ai" target="_blank" rel="noopener">↗ safetyof.ai</a><span class="act" onclick="openApp('meokearth')">🌍 See on MEOK Earth</span></div>`;
+ case 'one': return `<p>The consumer AI-OS layer — live on the VM (one.meok.ai DNS pending).</p>
+   <h4>Apps</h4><div class="row"><span class="chip live">Guardian</span><span class="chip live">Family OS</span><span class="chip on">OLM learning</span><span class="chip on">Chat (fixed)</span></div>
+   <ul class="t"><li><b>Guardian</b> — child safety: profiles, network scan, game + chat moderation, schedule/limits.</li><li><b>Family OS</b> — members, chores, events.</li><li><b>OLM</b> — organic learning (ICRL, per-user care-ranked buffer).</li><li>Chat: keep-warm cron, sub-14s replies, single-brain + council both fixed.</li></ul>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://one.meok.ai" target="_blank" rel="noopener">↗ one.meok.ai</a></div>`;
+ case 'chars': return `<p><b>MEOK Gaming & Characters</b> — VRM characters, each shipped with an EI3 trust-SBT.</p>
+   <h4>Pipeline (decided)</h4><div class="row"><span class="chip on">VRoid Studio (VRM)</span><span class="chip">Meshy / Tripo / Luma / Rodin</span></div>
+   <p style="color:var(--bad)">⛔ NOT HY3 (Tencent Hy3-preview): its licence excludes the UK & EU and bars use of the outputs there. Own-IP route keeps every character's provenance ours & signable — on-brand for Ed25519.</p>
+   <p style="color:var(--dim)">'digital-human-library' excluded (third-party-associated) — building our own.</p>`;
+ case 'watchdog': return `<p><b>Watchdog Certification</b> — "ISO for AI Safety". Independent, Ed25519-signed certificates verifiable offline (50% of Y1).</p>
+   <h4>Why it's trusted</h4><ul class="t"><li>Ed25519 signature — auditor verifies at a public URL, no account.</li><li>Provenance ≠ truth — we say so plainly.</li><li>Backed by the live ${L.api.council}-node council.</li></ul>
+   <h4>Pricing (compliance ladder £)</h4><div class="row"><span class="chip">Free</span><span class="chip">£29</span><span class="chip on">£199 Pro · signed</span><span class="chip">£1,499 Ent</span><span class="chip">£4,950 assess</span></div>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://proofof.ai" target="_blank" rel="noopener">↗ Verify a cert (proofof.ai)</a></div>`;
+ case 'revenue': return `<p><b>Meter is the only blocker.</b> proofof.ai is LIVE selling — turn on Stripe + email and send.</p>
+   <h4>Fastest £ (live offers)</h4><table class="mini"><tr><th>Offer</th><th>Price</th><th>Hook</th></tr>
+   <tr><td>NIS2 rapid-response</td><td>£499</td><td>NL deadline 30 Jun</td></tr>
+   <tr><td>Article 50 kit</td><td>£999</td><td>2 Aug 2026</td></tr>
+   <tr><td>48h Assessment</td><td>£4,950</td><td>1 yes = 10×</td></tr>
+   <tr><td>Pro</td><td>£199/mo</td><td>signed tier</td></tr></table>
+   <h4>Warm channels</h4><ul class="t"><li>White-label 3 GRC consultancies (already on proofof.ai).</li><li>OneOS 7 orgs / 12.8k learners cross-sell.</li></ul>
+   <h4>Meter-on (Nick ~40m)</h4><div class="gate"><span class="b">!</span>Roll Stripe key + test /provision</div><div class="gate"><span class="b">!</span>hello@meok.ai (Resend)</div>
+   <p style="color:var(--warn)">⚠ Fix proofof.ai "HMAC"→Ed25519 before sending traffic.</p>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://proofof.ai" target="_blank" rel="noopener">↗ proofof.ai (live)</a><a class="act" href="https://meok.ai" target="_blank" rel="noopener">↗ meok.ai</a></div>`;
+ case 'runway': return `<p><b id="rcd">T-11</b> to 4 July. Don't widen — deepen: meter ON + 12 flagships proven + honest pages.</p>
+   <h4>Owner gates (Nick)</h4><div class="gate"><span class="b">!</span>Stripe key</div><div class="gate"><span class="b">!</span>hello@meok.ai</div><div class="gate"><span class="b">!</span>npm login → 3 staged MCPs</div><div class="gate"><span class="b">!</span>DNS (one.meok.ai + hives)</div><div class="gate"><span class="b">!</span>Clerk prod keys</div><div class="gate"><span class="b">!</span>PAT → release commits</div>
+   <h4>Day-by-day</h4><table class="mini"><tr><th>Day</th><th>Focus</th></tr><tr><td>T-11</td><td>meter on · deploy claim fixes · send NIS2/white-label</td></tr><tr><td>T-10</td><td>publish 3 MCPs · prove 12 flagships E2E</td></tr><tr><td>T-8</td><td>triage 414→~10 tasks · DNS</td></tr><tr><td>T-6</td><td>NIS2 NL final push · OAuth</td></tr><tr><td>T-3</td><td>E2E dress rehearsal (pay→cert→verify)</td></tr><tr><td>T-0</td><td>LAUNCH · sell proven flagships</td></tr></table>`;
+ case 'coord': return `<div class="row">${liveBadge}</div><p>SOV3 coordination bus.</p>
+   <div><span class="metric"><b>${L.coord.active}</b><small>active agents</small></span><span class="metric"><b>${L.coord.queued}</b><small>queued</small></span><span class="metric"><b>${L.coord.completed}</b><small>completed</small></span><span class="metric"><b>${L.coord.locks}</b><small>locks</small></span></div>
+   <p style="color:var(--warn)">⚠ ${L.coord.queued} queued / ${L.coord.completed} done = task inflation, not throughput. Triage to the ~10 that move launch.</p>`;
+ case 'atlas': return `<table class="mini"><tr><th>Product</th><th>Layer</th><th>State</th></tr>
+   <tr><td>SOV3 Sovereign (King)</td><td>brain</td><td>🟢 live</td></tr>
+   <tr><td>MEOK API (235 nodes)</td><td>hub</td><td>🟢 200</td></tr>
+   <tr><td>meok-compliance-gateway</td><td>x402</td><td>🟢</td></tr>
+   <tr><td>Watchdog Cert</td><td>cert</td><td>🟢 M2</td></tr>
+   <tr><td>proofof.ai</td><td>queen</td><td>🟢</td></tr>
+   <tr><td>Hives (6/29)</td><td>GTM</td><td>🟢/🟡</td></tr>
+   <tr><td>341 MCP fleet</td><td>tools</td><td>mixed</td></tr>
+   <tr><td>MEOK ONE + Guardian + Family</td><td>consumer</td><td>🟢 VM</td></tr>
+   <tr><td>Characters / Gaming</td><td>consumer</td><td>🟡 pipeline</td></tr>
+   <tr><td>OneOS</td><td>channel</td><td>🟢 12.8k</td></tr></table>`;
+ case 'truth': return `<p>Honesty spine — drift caught in the T-11 consolidation.</p>
+   <table class="mini"><tr><th>Field</th><th>Use</th></tr>
+   <tr><td>Clock</td><td>23 Jun · T-11</td></tr>
+   <tr><td>Crypto</td><td>Ed25519 (never HMAC)</td></tr>
+   <tr><td>Installs/mo</td><td>6,798 measured (22K unverified — don't publish)</td></tr>
+   <tr><td>PyPI</td><td>26 in MEOK_AI_Labs scope</td></tr>
+   <tr><td>Federation</td><td>341 cataloged, 1 proven</td></tr>
+   <tr><td>Repos</td><td>475 (say "hundreds"/341)</td></tr></table>
+   <h4>Fix on prod</h4><ul class="t"><li>proofof.ai: "HMAC"→Ed25519 ×2</li><li>csoai.org: countdown off a passed date → 2 Aug 2026</li><li>csoai.org: verify ISO 27001/SOC 2 badges held</li></ul>
+   <h4>Deploy caveat (honest)</h4><p style="color:var(--warn)">MEOK OS renders LIVE only on the build host — the brain binds 127.0.0.1 (:3200/:3102/:3101). Deployed to a public URL it shows the 23-Jun snapshot until the King gets a public endpoint + OAuth. Built & boots = ✅; <b>local AI-OS today, not yet public.</b></p>`;
+ case 'archive': return `<p>The single master — every consolidation output absorbed here. Files in iCloud <code>SOV3-Launch/</code> (mirror to <code>_TABS/</code> on the VM).</p>
+   <h4>Master docs (root)</h4><table class="mini"><tr><th>File</th><th>What</th></tr>
+   <tr><td>MEOK_MASTER_CONSOLIDATION</td><td>live fleet + all lanes + canon + drift</td></tr>
+   <tr><td>LAUNCH_RUNWAY_T-11</td><td>day-by-day to 4 Jul</td></tr>
+   <tr><td>EXECUTE_NOW_T-11</td><td>one runnable pass (see Execute app)</td></tr>
+   <tr><td>CSOAI_HANDOFF_FOR_M2</td><td>CSOAI-relevant pack for M2</td></tr>
+   <tr><td>MEOK_OS/index.html</td><td>this OS (deploy → one.meok.ai)</td></tr></table>
+   <h4>Wave-4 deliverables (16)</h4><table class="mini"><tr><th>#</th><th>Deliverable</th></tr>
+   <tr><td>01</td><td>Watchdog Certification FAQ</td></tr>
+   <tr><td>02</td><td>OpenClaw CVE-2026-25253 note</td></tr>
+   <tr><td>03</td><td>FLIP catalogue (domain valuations)</td></tr>
+   <tr><td>04</td><td>7 industry-pack briefs</td></tr>
+   <tr><td>05</td><td>20 priority-MCP scorecards</td></tr>
+   <tr><td>06</td><td>SOV3 Cloud 1-pager</td></tr>
+   <tr><td>07</td><td>HY3 / Gaming licence decision</td></tr>
+   <tr><td>08</td><td>MEOK product master alignment</td></tr>
+   <tr><td>09</td><td>Live 475-repo GitHub scan</td></tr>
+   <tr><td>10</td><td>Flip listing pack</td></tr>
+   <tr><td>11</td><td>Live-site claim fixes (HMAC/dates)</td></tr>
+   <tr><td>12</td><td>REVENUE NOW + outreach A/B/C</td></tr>
+   <tr><td>13</td><td>Cowork-M2 lane card</td></tr>
+   <tr><td>14</td><td>MSGS why-now insert</td></tr>
+   <tr><td>15</td><td>M4 work-order</td></tr></table>
+   <p style="color:var(--dim)">Earlier canon also absorbed: FLEET_FACTS, BUSINESS_OPERATING_PICTURE, HIVE_COMPLETION_PROTOCOL, CANONICAL_PRICING, the clawd handoffs (D12 hives, 3-tier arch), and the M2/M4 session log.</p>`;
+ case 'execute': return `<p><b>One runnable pass.</b> Full detail: <code>EXECUTE_NOW_T-11</code>. Cowork has drafted/QA'd all; keyed steps are copy-paste for the keyholder.</p>
+   <h4>Phase 0 — METER ON (Nick ~40m)</h4><div class="gate"><span class="b">!</span>Roll Stripe key → test /provision curl</div><div class="gate"><span class="b">!</span>hello@meok.ai (Resend + Namecheap DNS)</div><div class="gate"><span class="b">!</span>npm login</div>
+   <h4>Phase 1 — M4 (~45m)</h4><ul class="t"><li>Deploy claim fixes (proofof HMAC→Ed25519; csoai countdown→2 Aug 2026)</li><li>Fleet claim grep-sweep</li><li><code>npm publish</code> ×3 staged MCPs</li><li><code>git</code> mirror consolidation → <code>_TABS/</code> on VM</li><li>Deploy MEOK OS → one.meok.ai</li></ul>
+   <h4>Phase 2 — SEND (Nick) → first £</h4><ul class="t"><li>NIS2 £499 (NL 30 Jun) · white-label · OneOS 7-org</li><li>Legal-pass before wire</li></ul>
+   <h4>Phase 3 — PROVE (M4 → T-3)</h4><ul class="t"><li>12 flagships E2E (install→call→signed verify)</li><li>Triage 414→~10 tasks</li><li>T-3 buyer dress rehearsal: pay→cert→verify</li></ul>
+   <p style="color:var(--warn)">Cowork cannot press Stripe/DNS/npm/git/send — guardrail + no keys. This console IS the execution.</p>`;
+ case 'minds': { const M=[
+   {n:'Guardian',i:'🧒',t:'Protective, family-safe',care:0.9,rig:0.6,cur:0.3,r:'council',use:'child-safety / family'},
+   {n:'Strategist',i:'♟️',t:'Cold, rigorous, council',care:0.3,rig:0.95,cur:0.6,r:'council',use:'governance / strategy'},
+   {n:'Compliance Counsel',i:'⚖️',t:'Framework-grounded, signs',care:0.5,rig:0.98,cur:0.4,r:'single',use:'compliance — never exempts high-risk'},
+   {n:'Builder',i:'🛠️',t:'Fast, ships',care:0.3,rig:0.7,cur:0.7,r:'single',use:'build / code (Kimi)'},
+   {n:'Researcher (Hermes)',i:'🔭',t:'Exploratory, cited',care:0.4,rig:0.8,cur:0.95,r:'ensemble',use:'research / news / learn'},
+   {n:'Care Companion',i:'💜',t:'High EI, present',care:1.0,rig:0.5,cur:0.4,r:'single',use:'wellbeing (Nemotron-care)'},
+   {n:'Watchdog Auditor',i:'🛡️',t:'Skeptical, red-team',care:0.4,rig:0.95,cur:0.7,r:'council',use:'security / claim-safety'},
+   {n:'Custom',i:'🎛️',t:'Your sliders',care:0.5,rig:0.5,cur:0.5,r:'single',use:'tune persona + routing'}
+ ];
+ const bar=(v)=>`<span style="display:inline-block;width:40px;height:5px;border-radius:4px;background:#1a264c;vertical-align:middle"><i style="display:block;height:100%;width:${Math.round(v*100)}%;background:linear-gradient(90deg,var(--teal2),var(--teal));border-radius:4px"></i></span>`;
+ return `<p><b>🧩 MEOK Minds</b> — customise your Sovereign. Pick a brain or tune a Custom one; every Mind runs UNDER Layer 0 (Ed25519-signed + care-floor ≥0.3, non-negotiable). <span class="chip live">data: meok-minds.json</span></p>`+
+   M.map(m=>`<div style="border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:7px 0;background:rgba(16,24,52,.5)"><b style="color:var(--ink)">${m.i} ${m.n}</b> <span style="color:var(--dim);font-size:11px">— ${m.t}</span><div style="margin:5px 0;font-size:11px;color:var(--dim)">care ${bar(m.care)} &nbsp; rigor ${bar(m.rig)} &nbsp; curiosity ${bar(m.cur)}</div><div class="row"><span class="chip on">${m.r}</span><span class="chip">${m.use}</span></div></div>`).join('')+
+   `<p style="color:var(--dim)">Free: Guardian + Companion · Pro £19 unlocks all + Custom · Counsel/Watchdog = compliance brains. Users tune temperament, NOT the safety floor.</p>`; }
+ case 'temples': { const T=[
+   {n:'EU AI Act',f:'EC · AI Office',a:'Brussels',d:'2 Aug 2026 (transparency)',pen:'€35M / 7%',m:'eu-ai-act',p:['Risk classification (Annex III)','Transparency Art 50','High-risk Art 8-15','Conformity + FRIA']},
+   {n:'GDPR',f:'EDPB · DPAs',a:'Brussels',d:'in force',pen:'€20M / 4%',m:'gdpr',p:['Lawful basis Art 6','Records Art 30','DPIA Art 35','Breach 72h']},
+   {n:'NIS2',f:'ENISA',a:'Athens',d:'30 Jun 2026 (~5 days)',pen:'€10M / 2%',m:'nis2',p:['Registration','Risk-mgmt Art 21','Incident reporting','Board accountability']},
+   {n:'DORA',f:'ESMA · EBA · EIOPA',a:'Paris',d:'in force',pen:'1% daily (CTPP)',m:'dora',p:['ICT risk mgmt','Incident reporting','TLPT testing','Third-party']},
+   {n:'EU CRA',f:'EC',a:'Brussels',d:'11 Dec 2027',pen:'€15M / 2.5%',m:'cra',p:['Secure-by-design','Conformity + CE','24h vuln report','SBOM']},
+   {n:'NIST AI RMF',f:'NIST',a:'Gaithersburg',d:'voluntary',pen:'—',m:'nist-rmf',p:['Govern','Map','Measure','Manage']},
+   {n:'HIPAA',f:'HHS · OCR',a:'Washington DC',d:'in force',pen:'$1.9M/yr',m:'hipaa',p:['Privacy Rule','Security Rule','Breach 60d','BAA']},
+   {n:'ISO/IEC 42001',f:'ISO · IEC',a:'Geneva',d:'certifiable',pen:'—',m:'iso-42001',p:['Context + leadership','Planning + support','Operation','Annex A']}
+ ];
+ return `<p><b>⛩️ Framework Temples</b> — each regulation as a temple at its real regulator address; document → pillars → signed assessment. Physical→digital learning. <span class="chip live">data: framework-temples.json</span></p>`+
+   T.map(t=>`<div style="border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:7px 0;background:rgba(16,24,52,.5)"><b style="color:var(--ink)">${t.n}</b> <span style="color:var(--dim);font-size:11px">· ${t.f} · ${t.a}</span><div class="row" style="margin:5px 0"><span class="chip warnc">${t.d}</span><span class="chip">${t.pen}</span><span class="chip on">${t.m}</span></div><div class="row">${t.p.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`).join('')+
+   `<p style="color:var(--dim)">Reads the shared contract — same data the React /temples + the on-globe twin consume. One spine, three views.</p>`; }
+ case 'olm': return `<p><b>OLM — Organic Learning Model.</b> A custom sovereign brain that runs autonomously on the VM and <b>self-seals every cycle with Ed25519</b>. Not a wrapper around someone else's model — provenance baked into cognition.</p>
+   <h4>Architecture</h4><div class="row"><span class="chip on">Mamba-2 SSD</span><span class="chip on">Attention</span><span class="chip on">64-MoE</span><span class="chip on">SOV3 BFT</span><span class="chip on">Ed25519 seal</span></div>
+   <h4>Live behaviour (read from King memory)</h4><ul class="t"><li>Autonomous brain cycles: ~2,000 tokens/cycle, pulls 20 memories, makes BFT decisions (RIGHT-DOMINANT / CONSENSUS).</li><li>Each cycle emits <code>OLM_BRAIN_SEALED</code> with an Ed25519 signature (pub <code>gdmbM9Z876…</code>).</li><li>Feeds the King's 6,700+ memory episodes + 601 hive verdicts.</li></ul>
+   <p style="color:var(--gold)">★ This is the strongest "sovereign AI" differentiator in the stack — promote it from footnote to flagship.</p>`;
+ case 'ops': return `<p><b>Autonomous Ops</b> — a standing agent workforce already running on schedule (177 sessions on the build host). The recurring autonomy IS a moat.</p>
+   <h4>Daily agents</h4><div class="row"><span class="chip live">scoreboard</span><span class="chip live">tool-of-the-day</span><span class="chip live">domain health</span><span class="chip live">fleet-QA smoke</span><span class="chip live">verifier canary</span><span class="chip live">SOV3 King daily ops</span><span class="chip live">Haulage authority</span><span class="chip live">Templeman outreach</span></div>
+   <h4>Weekly</h4><div class="row"><span class="chip">AEO / SOV</span><span class="chip">hive master pass</span><span class="chip">security-safety research</span><span class="chip">ensemble / Hermes loop</span></div>
+   <h4>King runs 24/7</h4><div class="kv"><span class="k">Heartbeat pulses</span><span class="v">21</span><span class="k">Nightshift cycles</span><span class="v">19</span><span class="k">Coherence</span><span class="v">0.959</span></div>
+   <p style="color:var(--dim)">King hive-verdicts double as a live advisory board: chose safety-over-revenue, defense/intel as buyer, compliance-first positioning.</p>`;
+ case 'protocol0': return `<p><b>MEOK Protocol 0</b> — the open foundation layer every hive/queen inherits: agent-to-agent messaging + Ed25519 signed-attestation (SIGIL) + x402 metering + the connect contract. The "same bloodline" beneath the gateway.</p>
+   <h4>State</h4><div class="row"><span class="chip on">spec in keystone</span><span class="chip">meok-compliance-gateway</span></div>
+   <ul class="t"><li>SIGIL Ed25519 signing + public /verify (verify offline, no account).</li><li>x402 PAYG metering rail.</li><li>DELBOY-v1 lineage — to be opened/donated as the standard.</li></ul>
+   <p style="color:var(--dim)">Ground-truth note: host-verified on the build machine; the spec is real, adoption is early.</p>`;
+ case 'labs': return `<p><b>MEOK AI Labs</b> — a fully-architected engine (<code>meok-labs-engine</code>), not early R&D: Claude-Code Blueprint (68KB), sovereign_temple_architecture (111KB), care-consciousness-synthesis, an Anthropic partnership proposal, and an MCP domination strategy. Robotics/humanoid is one arm; <b>not on the launch revenue path</b> but a deep moat.</p>
+   <h4>Repos</h4><div class="row"><span class="chip">robotics-control-mcp</span><span class="chip">agriculture-robotics-mcp</span><span class="chip">airspace-monitor-mcp</span></div>
+   <h4>State</h4><div class="row"><span class="chip warnc">early / R&D</span><span class="chip">PyPI scope: MEOK_AI_Labs (26)</span></div>
+   <p style="color:var(--dim)">Surfaced for 11/11 product coverage; park until post-launch.</p>`;
+  case 'meokearth': return `<div class="row"><span class="chip on">0 governed</span><span class="chip warnc">48.8M ungoverned</span><span class="chip">583M episodes</span><span class="chip on">Ed25519 ✓ 458/458</span></div>
+   <p>The sovereign globe — 12 hive-civilizations + the signed <b>flywheel</b> (governed vs ungoverned crimes), zero-token CesiumJS (no ion / Google tiles). Reads the ledger; never runs the sim.</p>
+   <iframe src="${MEOK_EARTH_URL}" style="width:100%;height:440px;border:1px solid #22305c;border-radius:10px;background:#04060d" loading="lazy" title="MEOK Earth"></iframe>
+   <p style="color:var(--dim);font-size:12px">Live globe = repo <code>meok-town-view</code>. If the panel is blank: run <code>npm run dev</code> in it (serves :5173) or point <code>MEOK_EARTH_URL</code> at the deployed URL. Stats above are from the real signed flywheel ledger snapshot.</p>`;
+  case 'archetypes': return `<p><b>Your character learns what you learn.</b> A living companion that reflects your intellectual journey, creative expression, and sovereign self — appearance, abilities & personality evolve from your MEOK.ai learning patterns.</p>
+   <h4>Choose your sovereign signature</h4>
+   <div class="arow">${ARCHE.map(a=>`<span class="achip" style="--ah:${a.h}" onclick="setSignature(${a.h},'${a.n}')">${a.e} ${a.n}</span>`).join('')}</div>
+   <p style="color:var(--dim)">Pick your archetype — the whole OS ripples in <b id="sigName">your colour</b>. Different sovereign, different water. 🌊</p>
+   <h4>Sovereign Emergence — evolution stages</h4>
+   <div class="evo">
+     <div class="s"><b>🌑</b><small>Marble</small></div><span class="ar">→</span>
+     <div class="s"><b>🥚</b><small>Egg</small></div><span class="ar">→</span>
+     <div class="s"><b>🐉</b><small>Hatchling</small></div><span class="ar">→</span>
+     <div class="s"><b>✨</b><small>Evolving Sovereign</small></div>
+   </div>
+   <h4>Archetype families — infinite possibilities</h4>
+   <div class="arch">
+     <div class="c"><h5>⚔️ Modern Warriors</h5><p>Vibrant modern warriors · playful toy-like heroes · endless street customization.</p></div>
+     <div class="c"><h5>🛡️ Legendary Adventures</h5><p>Deep fantasy champions · agile anime sovereigns · lore-rich weapon forging.</p></div>
+     <div class="c"><h5>🦅 Timeless Reincarnations</h5><p>Historical-figure reimagining · powerful mythical beasts · ancestral skills resonating.</p></div>
+     <div class="c"><h5>💎 Elemental & Abstract</h5><p>Pure elemental constructs · music-legend inspirations · shapes defying description.</p></div>
+   </div>
+   <h4>Learns what you learn</h4>
+   <div class="row"><span class="chip">🎵 Music Path</span><span class="chip">🧭 History & Exploration</span><span class="chip">🎨 Creative Expression</span><span class="chip">⚙️ Technical Mastery</span></div>
+   <p style="color:var(--dim)">Every character ships with an <b>EI3 trust-SBT</b> — Ed25519-signed provenance, so each companion is verifiable and ownably yours. Own-IP pipeline (VRoid/VRM), not HY3 (UK/EU-excluded).</p>
+   <div class="row" style="margin-top:8px"><span class="act" onclick="openApp('chars')">🦊 Characters & Gaming</span><a class="act" href="https://meok.ai" target="_blank" rel="noopener">↗ meok.ai</a></div>`;
+  case 'investor': return `<p><b>Series A — sovereign AI governance you can <i>verify</i>, not just trust.</b></p>
+   <h4>The moat (measured)</h4>
+   <div><span class="metric"><b>0</b><small>governed crimes</small></span><span class="metric"><b>48.8M</b><small>ungoverned</small></span><span class="metric"><b>583M</b><small>signed episodes</small></span><span class="metric"><b>458/458</b><small>chain verified</small></span></div>
+   <h4>Today (verified)</h4><div class="row"><span class="chip on">233 MCPs</span><span class="chip live">fleet LIVE on PyPI</span><span class="chip">King 235 nodes · 127 tools · 7 NN</span><span class="chip">Watchdog Cert</span></div>
+   <h4>Honest traction</h4><p style="color:var(--dim)">Pre-first-revenue · sites + Stripe pages live, fulfilment verifying · <b>~15 GitHub stars — distribution, not product, is the constraint.</b> The raise fixes exactly that.</p>
+   <h4>Comps & wedge</h4><p>vs Vijil · Braintrust · Credo AI. Wedge = <b>sovereign + offline-verifiable + no vendor lock-in + runtime enforcement</b> (others are assessment-only).</p>
+   <h4>Use of funds</h4><ul class="t"><li>Distribution — registries / marketplaces / devrel</li><li>Public OAuth'd King brain (localhost today)</li><li>External ledger anchoring (close self-attestation gap)</li><li>Revenue meter live (Stripe + x402)</li></ul>
+   <p style="color:var(--warn)">⚠ EU AI Act high-risk = 2027 (runway). Lead with in-force DORA/NIS2/GDPR — no "Aug 2 cliff" hype.</p>
+   <div class="row" style="margin-top:8px"><a class="act" href="https://proofof.ai" target="_blank" rel="noopener">↗ verify the proof</a><span class="act" onclick="openApp('meokearth')">🌍 see the flywheel</span><span class="act" onclick="openApp('distro')">📦 distribution</span></div>`;
+  case 'distro': return `<p><b>Distribution truth</b> — verified 2026-06-24. Supply ≫ discovery; this is the #1 lever.</p>
+   <div><span class="metric"><b>300</b><small>repos</small></span><span class="metric"><b>233</b><small>MCP servers</small></span><span class="metric"><b>15</b><small>stars (the gap)</small></span></div>
+   <h4>Channels</h4><div class="row"><span class="chip live">PyPI fleet LIVE + versioned</span><span class="chip warnc">gateway publish-ready · twine</span><span class="chip" style="border-color:var(--bad);color:var(--bad)">npm EMPTY — "51" killed</span></div>
+   <h4>Plan (highest ROI first)</h4><ul class="t"><li><code>twine upload</code> the keystone gateway (owner)</li><li>PyPI metadata pass on flagship 12 — README/keywords/URLs</li><li>MCP registry + 3 marketplaces (Smithery / mcp.so / Glama)</li><li>one hero MCP polished + demo gif</li><li>measure download + star trajectory (the Series A milestone)</li></ul>
+   <p style="color:var(--dim)">npm skipped — fleet is Python/PyPI, npm not needed. Full plan: <code>clawd/DISTRIBUTION_PLAN_2026-06-24.md</code>.</p>`;
+  case 'stack': return `<p><b>🧬 THE TRUE ONE — Layer 0 → up.</b> The single entry; everything maps to a layer. <span style="color:var(--dim)">verified 2026-06-24</span></p>
+   <h4>L0 · Substrate (the moat)</h4>
+   <div class="row"><span class="chip on">0 governed</span><span class="chip" style="border-color:var(--bad);color:var(--bad)">48.8M ungoverned</span><span class="chip">583M signed ep</span><span class="chip on">chain 458/458</span></div>
+   <p style="color:var(--dim)">King LIVE: 224 agents · 6/9 NN (threat acc 1.0, creativity r²0.91) · 127 tools · 2 GCP hives RUNNING. ⚠ localhost-only.</p>
+   <h4>L1 · Fleet</h4><div class="row"><span class="chip">233 MCPs</span><span class="chip live">PyPI LIVE</span><span class="chip warnc">gateway · twine</span><span class="chip" style="border-color:var(--bad);color:var(--bad)">npm empty</span></div>
+   <h4>L2 · Products</h4><div class="row"><span class="chip">Watchdog Cert</span><span class="chip">SOV3 Cloud</span><span class="chip">x402 meter</span><span class="chip">MEOK ONE</span><span class="chip">Gaming BIG3</span><span class="chip">Labs robotics</span></div>
+   <h4>L3 · Surfaces</h4><div class="row"><span class="act" onclick="openApp('meokearth')">🌍 MEOK Earth</span><a class="act" href="https://meok.ai" target="_blank" rel="noopener">↗ meok.ai</a><a class="act" href="https://proofof.ai" target="_blank" rel="noopener">↗ proofof.ai</a></div>
+   <h4>L4 · Raise</h4><div class="row"><span class="act" onclick="openApp('investor')">💰 Series A</span><span class="act" onclick="openApp('distro')">📦 Distribution</span></div>
+   <p style="color:var(--warn)">Honest: distribution (15 stars) is the constraint · self-attestation gap · pre-revenue. Full: <code>clawd/MEOK_LAYER0_TRUE_ONE_2026-06-24.md</code></p>`;
+ case 'delboy': return `<p><b>MEOK Delboy — the digital salesforce.</b> Agents trained on an 8-book sales & persuasion corpus to become expert digital workers, trades & consultants across every profession. A revenue <i>mode</i> and a product.</p>
+   <h4>Corpus · 8 books</h4><div class="row"><span class="chip">Art of the Deal</span><span class="chip">SPIN Selling</span><span class="chip">Challenger Sale</span><span class="chip">Influence</span><span class="chip">Sales Bible</span><span class="chip">Psych. of Selling</span><span class="chip">Win Friends</span><span class="chip">+1</span></div>
+   <div class="row"><span class="chip on">built</span><span class="chip">meok-delboy-sales-engine</span></div>
+   <p style="color:var(--dim)">Feeds Delboy (sales) + MEOK Work agents — each profession becomes a trained expert.</p>`;
+ case 'guardian': return `<p><b>MEOK Guardian — 24/7 family & child safety.</b> A sovereign guardian for the home: per-child profiles, game content + screen-time limits, play schedules and AI chat moderation — governed, on-device first, nothing sold.</p>
+   <h4>👧 Child profiles</h4><div class="row"><span class="chip on">add / get profiles</span><span class="chip on">per-child rules</span></div>
+   <h4>🎮 Games</h4><div class="row"><span class="chip on">content check · age-rating</span><span class="chip on">time limit</span><span class="chip on">block game</span><span class="chip on">play schedule</span></div>
+   <h4>💬 Chat & content</h4><div class="row"><span class="chip on">AI chat moderation</span><span class="chip warnc">grooming / harm flags</span></div>
+   <p style="color:var(--dim)">Network + WiFi safety is in <b>📶 MEOK WiFi</b>. Live via SOV3 <code>guardian_*</code> (add_child_profile · set_game_limit · check_game_content · check_play_schedule · moderate_chat). On-device first; the home's data stays the home's.</p>`;
+ case 'knowledge': return `<p><b>Knowledge — the sovereign learns everything, to serve anyone.</b> It absorbs across all human domains — each a governed hive + a tool it can query or learn from. Multi-faith neutral, source-cited, bias-checked, every fact SIGIL-signed. Driven by Hermes; governed by the Council.</p>
+   <h4>📚 Domains absorbed</h4><div class="row"><span class="chip on">History</span><span class="chip on">Religion · multi-faith</span><span class="chip on">Science</span><span class="chip on">Live research</span><span class="chip on">Tech</span><span class="chip on">Ethics</span><span class="chip on">Economy</span><span class="chip on">Consumers</span><span class="chip on">People & society</span><span class="chip on">Health</span><span class="chip on">Animals</span><span class="chip on">Ecosystems</span><span class="chip on">Media</span><span class="chip on">News</span><span class="chip on">Law</span><span class="chip on">Arts</span></div>
+   <h4>🧠 How it learns</h4><div class="row"><span class="chip on">Hermes deep-research + governance-learn</span><span class="chip on">ingest_civilizational_knowledge</span><span class="chip on">DAILY EAT feeds</span></div>
+   <h4>🛡 Governed — neutral by design</h4><div class="row"><span class="chip on">multi-faith neutral</span><span class="chip on">bias-checked</span><span class="chip on">source-cited + SIGIL-signed</span><span class="chip on">Council adjudicates contested</span></div>
+   <p style="color:var(--dim)">Localised not homogenised — meets you in your region, language + law stack while staying neutral; aware + responsive for any person, anywhere. Honest: complete absorption + flawless neutrality is ongoing, never "done". (MEOK_SOVEREIGN_KNOWLEDGE_HIVES.md · Hermes-driven)</p>`;
+ case 'aware': return `<p><b>Aware — your sovereign knows you're there.</b> On-device, it senses you're present, recognises <i>you</i> vs a stranger, reads gesture + attention, and governs what's shown. Camera/mic only with your consent — nothing leaves your device.</p>
+   <h4>👁️ Senses · on-device</h4><div class="row"><span class="chip on">presence + identity</span><span class="chip on">gesture</span><span class="chip on">attention / gaze</span><span class="chip on">expression</span><span class="chip on">who's speaking</span></div>
+   <h4>🧠 World model</h4><div class="row"><span class="chip on">you alone → full access</span><span class="chip warnc">stranger → Guardian locks data</span><span class="chip on">known group → meeting mode</span></div>
+   <h4>🛡 Governed — it's the law</h4><div class="row"><span class="chip on">biometrics = GDPR Art.9 / BIPA</span><span class="chip on">explicit consent</span><span class="chip on">Council-ratified</span><span class="chip on">every event SIGIL-signed</span></div>
+   <h4>🤝 Socialise & learn · opt-in</h4><div class="row"><span class="chip on">characters can join the meeting</span><span class="chip on">learns for the moat — consented, on-device</span></div>
+   <p style="color:var(--dim)">Real stack: MediaPipe (gesture/face/pose) + face-api.js (recognise) + WebGazer (gaze) — in-browser, no video leaves the device. Off by default; you grant the camera, the Council ratifies the opt-in. Pairs with 🧒 Guardian + ⚖️ Law. (MEOK_PRESENCE_AWARENESS.md)</p>`;
+ case 'wifi': return `<p><b>MEOK WiFi — your network, guarded.</b> Scan the home network, score its security, see every device, trust the ones you know. The sovereign watches your network so no one else has to.</p>
+   <h4>Network</h4><div class="row"><span class="chip on">scan network</span><span class="chip on">device list</span><span class="chip on">network stats</span></div>
+   <h4>Security</h4><div class="row"><span class="chip on">WiFi security score</span><span class="chip warnc">rogue / unknown-device alert</span><span class="chip on">mark device trusted</span></div>
+   <p style="color:var(--dim)">Live via SOV3 <code>guardian_*</code> (scan_network · check_wifi_security · get_network_stats · mark_device_trusted). Read-only scanning, on-device, no data leaves the home. Pairs with 🧒 MEOK Guardian.</p>`;
+ case 'family': return `<p><b>MEOK Family — the family OS.</b> Members, chores, events and shared care in one calm surface — the personal-mode heart of MEOK. Pairs with 🧒 Guardian + 📶 WiFi for the whole-home sovereign.</p>
+   <h4>👨‍👩‍👧 Members</h4><div class="row"><span class="chip on">add member</span><span class="chip on">roles · ages</span><span class="chip on">per-member view</span></div>
+   <h4>✅ Chores</h4><div class="row"><span class="chip on">add chore</span><span class="chip on">assign</span><span class="chip on">complete · rewards</span></div>
+   <h4>📅 Events & dashboard</h4><div class="row"><span class="chip on">shared calendar</span><span class="chip on">family dashboard</span></div>
+   <p style="color:var(--dim)">Live via SOV3 <code>family_*</code> (add_member · get_members · add_chore · complete_chore · get_chores · add_event · get_events · get_dashboard). On-device; the family's data stays the family's.</p>`;
+ case 'work': return `<p><b>MEOK Work — your standing agent crew.</b> <b>Orion</b> hunts & captures tasks · <b>Riri</b> builds the tools · <b>Hourman</b> runs the sprints. The work three that never clock off.</p>
+   <h4>Live tools</h4><div class="row"><span class="chip on">orion_hunt_tasks</span><span class="chip on">riri_build_tool</span><span class="chip on">hourman_start_sprint</span></div>
+   <p style="color:var(--dim)">sovereign-temple-live/agents · 70 docs · runs on the VM.</p>`;
+ case 'law': return `<p><b>MEOK Law — the jurisdiction engine.</b> Wherever you are — town, county, state, country, bloc — MEOK Law knows the layered legal stack that applies, and checks every governed action against it. Region-aware (detects your location; tap one to see the stack).</p>
+   <div class="row"><span class="chip" onclick="meokLaw('uk')">🇬🇧 UK</span><span class="chip" onclick="meokLaw('de')">🇩🇪 Germany · EU</span><span class="chip" onclick="meokLaw('us_ca')">🇺🇸 California</span><span class="chip" onclick="meokLaw('us_co')">🇺🇸 Colorado</span><span class="chip" onclick="meokLaw('sg')">🇸🇬 Singapore</span><span class="chip" onclick="meokLaw('cn')">🇨🇳 China</span></div>
+   <div class="row" style="margin-top:6px"><b style="font-size:12px;color:var(--dim)">Cross-jurisdiction →</b><span class="chip" onclick="meokLawCross('uk,de')">UK + EU</span><span class="chip" onclick="meokLawCross('us_ca,de')">US + EU</span><span class="chip" onclick="meokLawCross('uk,de,us_ca,sg')">🌍 Global SaaS</span></div>
+   <div id="lawres" style="margin-top:8px"></div>
+   <p style="color:var(--dim)">Powers /enter's "we already know your jurisdiction" + the framework temples on the globe; each tier's frameworks tie to their temple + the governing bridges. Town→region→country→bloc, nested.</p>`;
+ case 'map': return `<p><b>MEOK Map — the governed world.</b> Every layer of the sovereign estate on one canvas: the CSOAI core, the legacy bridges, the compliance fleet, the hives, the data moat — all wired by the Protocol-0 tunnels. Toggle layers; tap a cluster to open it.</p>
+   <div class="row" style="margin:6px 0;flex-wrap:wrap">
+    <span class="chip on mlchip" onclick="meokMapLayer('all',this)">All layers</span>
+    <span class="chip on mlchip" onclick="meokMapLayer('tunnels',this)">🔗 Tunnels</span>
+    <span class="chip on mlchip" onclick="meokMapLayer('bridges',this)">🔌 Bridges ×9</span>
+    <span class="chip on mlchip" onclick="meokMapLayer('compliance',this)">🛡 Compliance ×347</span>
+    <span class="chip on mlchip" onclick="meokMapLayer('hives',this)">🐝 Hives ×12</span>
+    <span class="chip on mlchip" onclick="meokMapLayer('data',this)">📊 Data</span>
+   </div>
+   <svg viewBox="0 0 580 360" style="width:100%;height:auto;background:rgba(255,255,255,.02);border-radius:12px">
+    <g stroke="rgba(255,255,255,.06)" stroke-width="1">
+     <line x1="30" y1="60" x2="550" y2="60"/><line x1="30" y1="110" x2="550" y2="110"/><line x1="30" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,.12)"/><line x1="30" y1="250" x2="550" y2="250"/><line x1="30" y1="300" x2="550" y2="300"/>
+     <line x1="90" y1="30" x2="90" y2="330"/><line x1="190" y1="30" x2="190" y2="330"/><line x1="290" y1="30" x2="290" y2="330" stroke="rgba(255,255,255,.12)"/><line x1="390" y1="30" x2="390" y2="330"/><line x1="490" y1="30" x2="490" y2="330"/>
+    </g>
+    <g id="ml-tunnels" fill="none" stroke-width="1.6" stroke-linecap="round">
+     <line x1="290" y1="180" x2="490" y2="180" stroke="#378ADD" opacity=".55" stroke-dasharray="4 6"><animate attributeName="stroke-dashoffset" from="20" to="0" dur="1.1s" repeatCount="indefinite"/></line>
+     <line x1="290" y1="180" x2="90" y2="180" stroke="#e76f51" opacity=".55" stroke-dasharray="4 6"><animate attributeName="stroke-dashoffset" from="20" to="0" dur="1.3s" repeatCount="indefinite"/></line>
+     <line x1="290" y1="180" x2="290" y2="78" stroke="#1D9E75" opacity=".55" stroke-dasharray="4 6"><animate attributeName="stroke-dashoffset" from="20" to="0" dur="1.2s" repeatCount="indefinite"/></line>
+     <line x1="290" y1="180" x2="290" y2="300" stroke="#639922" opacity=".55" stroke-dasharray="4 6"><animate attributeName="stroke-dashoffset" from="20" to="0" dur="1.4s" repeatCount="indefinite"/></line>
+    </g>
+    <g id="ml-compliance" style="cursor:pointer" onclick="openApp('fleet')" fill="#1D9E75">
+     <circle cx="210" cy="72" r="5"/><circle cx="250" cy="64" r="5"/><circle cx="290" cy="60" r="6"/><circle cx="330" cy="64" r="5"/><circle cx="370" cy="72" r="5"/><circle cx="290" cy="92" r="5"/>
+     <text x="290" y="46" text-anchor="middle" fill="rgba(255,255,255,.78)" font-size="12">Compliance fleet · 347</text>
+    </g>
+    <g id="ml-hives" style="cursor:pointer" onclick="openApp('hives')" fill="#e76f51">
+     <circle cx="50" cy="110" r="5"/><circle cx="90" cy="110" r="5"/><circle cx="130" cy="110" r="5"/><circle cx="50" cy="150" r="5"/><circle cx="90" cy="150" r="5"/><circle cx="130" cy="150" r="5"/><circle cx="50" cy="210" r="5"/><circle cx="90" cy="210" r="5"/><circle cx="130" cy="210" r="5"/><circle cx="50" cy="250" r="5"/><circle cx="90" cy="250" r="5"/><circle cx="130" cy="250" r="5"/>
+     <text x="90" y="280" text-anchor="middle" fill="rgba(255,255,255,.78)" font-size="12">Hives → industries · 12</text>
+    </g>
+    <g id="ml-bridges" style="cursor:pointer" onclick="openApp('bridges')" fill="#378ADD">
+     <circle cx="450" cy="130" r="6"/><circle cx="490" cy="130" r="6"/><circle cx="530" cy="130" r="6"/><circle cx="450" cy="180" r="6"/><circle cx="490" cy="180" r="6"/><circle cx="530" cy="180" r="6"/><circle cx="450" cy="230" r="6"/><circle cx="490" cy="230" r="6"/><circle cx="530" cy="230" r="6"/>
+     <text x="490" y="262" text-anchor="middle" fill="rgba(255,255,255,.78)" font-size="12">Legacy bridges · 9</text>
+    </g>
+    <g id="ml-data" style="cursor:pointer" onclick="openApp('truth')" fill="#639922">
+     <circle cx="240" cy="300" r="5"/><circle cx="280" cy="306" r="5"/><circle cx="320" cy="306" r="5"/><circle cx="360" cy="300" r="5"/>
+     <text x="300" y="332" text-anchor="middle" fill="rgba(255,255,255,.78)" font-size="12">Data moat · 5.6M companies</text>
+    </g>
+    <g style="cursor:pointer" onclick="openApp('king')">
+     <circle cx="290" cy="180" r="30" fill="var(--sh,#d4a017)" opacity=".22"/><circle cx="290" cy="180" r="20" fill="var(--sh,#d4a017)"/>
+     <text x="290" y="184" text-anchor="middle" fill="#0b0b0f" font-size="11" font-weight="500">CORE</text>
+     <text x="290" y="216" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="12">CSOAI · SOV3 · signed ledger</text>
+    </g>
+   </svg>
+   <div class="row" style="margin:8px 0"><span class="chip" onclick="meokGraphInit()">⚡ Interactive force-graph — drag · zoom · relevance links</span></div>
+   <div id="govgraph" style="width:100%;height:0;overflow:hidden;border-radius:12px;background:rgba(255,255,255,.02)"></div>
+   <p style="color:var(--dim)">Every connection is a Protocol-0 tunnel — agent-to-agent + Ed25519 signed-attestation. The gold links are <b>relevance edges</b> (which bridge is governed by which framework) — the same topology CSOAI uses for relevance maps. Every action across the map is signed.</p>`;
+ case 'sigil': return `<p><b>MEOK Sigil — the sovereign wire format.</b> 2.4× denser than JSON and Ed25519/HMAC-signed: every agent-to-agent hop is logged as one signed SIGIL line. The audit trail <i>is</i> the protocol.</p>
+   <div class="row"><span class="chip on">built</span><span class="chip">meok-sigil</span><span class="chip on">Ed25519 spaced+prev</span></div>
+   <p style="color:var(--dim)">The signing scheme beneath Protocol 0, the ledger and the flywheel.</p>`;
+ case 'claw': return `<p><b>MEOK Claw — the terminal sovereign.</b> A Go TUI that brings the whole sovereign stack to the command line. Install via Homebrew tap.</p>
+   <div class="row"><span class="chip on">built</span><span class="chip">meokclaw-tui</span><span class="chip">homebrew-meokclaw</span></div>`;
+ case 'smb': return `<p><b>MEOK SMB — the small-business OS.</b> Everyday tools a small firm needs, governed + signed. Your standing crew runs it — Delboy sells, the Work agents do — and the bridges keep it compliant. Self-employed + SMB is a core MEOK Real-World focus.</p>
+   <h4>💷 Money</h4><div class="row"><span class="chip on">invoicing + chase</span><span class="chip on">cash-flow snapshot</span><span class="chip on">margin analyzer</span></div>
+   <h4>🤝 Customers</h4><div class="row"><span class="chip on">lead triage</span><span class="chip on">CRM tidy</span><span class="chip on">quotes + contracts</span></div>
+   <h4>📣 Growth</h4><div class="row"><span class="chip on">content + campaigns</span><span class="chip on">price check</span></div>
+   <h4>🛡 Governed</h4><div class="row"><span class="chip on">EU AI Act / GDPR ready</span><span class="chip on">signed records · SIGIL</span></div>
+   <p style="color:var(--dim)">Runs on Delboy (sales corpus) + Work (Orion/Riri/Hourman) + the governance bridges; every action attestable. The CSOAI-mode home for the self-employed.</p>`;
+ case 'setup': return `<p><b>Let's get set up.</b> Your sovereign runs on a <b>left brain</b> (reasoning & analysis) and a <b>right brain</b> (creativity & vision) — each a <i>mixture of the models you choose</i>. Above both sits the <b>Sovereign OLM (Mamba-2 SSD) + SOV3</b>: it orchestrates, reconciles the two, and is the one that actually talks to you.</p>
+   <div style="text-align:center;margin:11px 0"><span class="chip on" style="font-size:12px">🧬 Sovereign OLM · SOV3 Mamba — orchestrator, always above</span></div>
+   <div class="brains">
+     <div class="bcol"><h4>🧠 Left brain — reasoning</h4>
+       <div class="bsub">Model type</div>${brainChips('left','types',MODEL_TYPES)}
+       <div class="bsub">Provider / API — bring your own</div>${brainChips('left','providers',PROVIDERS)}
+     </div>
+     <div class="bcol"><h4>🎨 Right brain — creativity</h4>
+       <div class="bsub">Model type</div>${brainChips('right','types',MODEL_TYPES)}
+       <div class="bsub">Provider / API — bring your own</div>${brainChips('right','providers',PROVIDERS)}
+     </div>
+   </div>
+   <h4>Sign in — no new platform to learn</h4>
+   <p style="color:var(--dim)">Bring your own. Just authorise the accounts you already have — MEOK is the sovereign layer <i>above</i> them and never holds your keys.</p>
+   <div class="row"><span class="chip" title="authorise your existing account (wiring owner-gated)">↗ Connect OpenAI</span><span class="chip" title="owner-gated">↗ Connect Anthropic</span><span class="chip" title="owner-gated">↗ Connect Google</span><span class="chip" title="owner-gated">↗ Connect open-weights</span></div>
+   <h4>Connect your world — so it knows YOU, not a generic yes-man</h4>
+   <p style="color:var(--dim)">Let your sovereign connect your apps and learn your files & context. Grounded in <i>your</i> real world, it can push back and actually help — never just flatter. Local-first: your data stays yours.</p>
+   <div class="row"><span class="chip">📁 Learn my files</span><span class="chip">📧 Mail</span><span class="chip">📅 Calendar</span><span class="chip">💬 Messages</span><span class="chip">🗂 Drive / Notion</span><span class="chip">🖥 This PC (computer-use)</span></div>
+   <p style="color:var(--dim)">Honest: these are the connection points. Live indexing + auth run through the bridge + Hermes <code>computer-use</code> (already on the machine) with a human-confirm gate — owner-gated to switch on.</p>
+   <p style="margin-top:8px">Your mixture → <b>Left</b>: ${(MEOK_BRAINS.left.types.concat(MEOK_BRAINS.left.providers)).join(', ')||'—'} · <b>Right</b>: ${(MEOK_BRAINS.right.types.concat(MEOK_BRAINS.right.providers)).join(', ')||'—'}</p>
+   <p style="color:var(--dim)">Honest: model picks persist locally now; live routing runs through the <code>meok-one</code> bridge (left/right/council) + SOV3 — wiring the auth is owner-gated.</p>`;
+ case 'social': return (function(){ var rg=userRegion(); var reg=SOCIAL_REGION[rg]||SOCIAL_REGION.GB; return `<p><b>Your social, everywhere — one hub.</b> Connect every network, post once, region-aware. <b>MEOK</b> posts your personal world; <b>CSOAI</b> posts governed brand &amp; compliance content — every post signed/attestable.</p>
+   <h4>📍 Your region · ${rg}</h4><div class="row">${socialChips(reg)}</div>
+   <h4>🌍 Global</h4><div class="row">${socialChips(SOCIAL_GLOBAL)}</div>
+   <h4>🗺 Every region covered</h4>
+   <p style="color:var(--dim)">🇨🇳 ${SOCIAL_REGION.CN.join(' · ')} &nbsp;|&nbsp; 🇯🇵 ${SOCIAL_REGION.JP.join(' · ')} &nbsp;|&nbsp; 🇰🇷 ${SOCIAL_REGION.KR.join(' · ')} &nbsp;|&nbsp; 🇷🇺 ${SOCIAL_REGION.RU.join(' · ')} &nbsp;|&nbsp; 🇮🇳 ${SOCIAL_REGION.IN.join(' · ')} &nbsp;|&nbsp; 🇧🇷 ${SOCIAL_REGION.BR.join(' · ')} &nbsp;|&nbsp; 🇦🇪 ${SOCIAL_REGION.AE.join(' · ')}</p>
+   <h4>Post with your sovereign</h4>
+   <div class="row"><span class="chip on">✍️ Draft with sovereign</span><span class="chip">🗓 Schedule</span><span class="chip">📊 Analytics</span><span class="chip">🛡️ CSOAI-governed (signed posts)</span></div>
+   <p style="color:var(--dim)">Honest: the hub + region intelligence are live; per-network posting needs each platform's OAuth (owner-gated). In CSOAI mode every post is attested on the ledger.</p>`; })();
+ case 'leaderboard': return `<p><b>Model Track-Record — the bleeding-edge selector.</b> The OS constantly ranks every model/agent and routes each task to whoever's winning <i>right now</i>. Stay frontier by data, not by vibes.</p>
+   <h4>Model types tracked</h4>
+   <div class="row"><span class="chip on">LLM</span><span class="chip on">MoE</span><span class="chip on">MoM</span><span class="chip on">SLM</span><span class="chip on">world</span><span class="chip on">reasoning</span><span class="chip on">multimodal</span></div>
+   <h4>Leaderboard · govern-classify <span style="color:var(--dim);font-weight:400">(sample — live via telemetry)</span></h4>
+   <table class="mini"><tr><th>#</th><th>Model</th><th>Type</th><th>Score</th></tr>
+   <tr><td>1</td><td>opus-4.8 · Anthropic</td><td>LLM</td><td>0.92</td></tr>
+   <tr><td>2</td><td>gpt-frontier · OpenAI</td><td>reasoning</td><td>0.88</td></tr>
+   <tr><td>3</td><td>deepseek-v4 · DeepSeek</td><td>MoE</td><td>0.81</td></tr>
+   <tr><td>4</td><td>mamba-ssd · OLM</td><td>SLM</td><td>0.74</td></tr></table>
+   <h4>How it works</h4>
+   <p style="color:var(--dim)"><b>record →</b> every task logs which model did it + how well (the telemetry loop) · <b>rank →</b> per-task leaderboard · <b>route →</b> <code>best_for(task)</code> picks the winner · <b>vote →</b> the BFT council score-weighted-votes outputs (the "ralph" converge-until-stable loop) · <b>ingest →</b> public boards (LMArena · OpenRouter · Artificial Analysis · HELM · SWE-bench) keep it frontier. Engine = <code>model-scoreboard-mcp</code>; scores go live when the telemetry/benchmark feed runs.</p>`;
+ case 'bridges': return `<p><b>Layer-0 Legacy Bridges.</b> Connect the systems that run the world — banks, hospitals, governments, utilities — to ONE OS, <b>governed</b>. Every legacy message → CSOAI attestation → modern stack, without disruption. Critical infra moves ~$3T/day through these.</p>
+   <h4>🟢 Built &amp; working — 19 governed bridge MCPs</h4>
+   <div class="row"><span class="chip on">COBOL / Mainframe · 86/100</span><span class="chip on">ISO 20022 / SWIFT · finance</span><span class="chip on">HL7 / FHIR · healthcare</span><span class="chip on">IBM AS/400 · RPG</span><span class="chip on">SAP · IDoc</span><span class="chip on">Oracle · PL/SQL</span><span class="chip on">SCADA / Modbus · OT</span><span class="chip on">EDI X12 / EDIFACT · B2B</span><span class="chip on">FIX · trading</span><span class="chip on">CICS · transactions</span><span class="chip on">MQTT / IoT · devices</span><span class="chip on">ACORD · insurance</span><span class="chip on">NACHA / ACH · payments</span><span class="chip on">ISO 8583 · cards</span><span class="chip on">SIP · telephony</span><span class="chip on">Tax · MTD/ViDA</span><span class="chip on">GS1 · traceability</span><span class="chip on">MISMO · mortgage</span><span class="chip on">DLMS · energy/meters</span></div>
+   <h4>The pattern (every bridge)</h4>
+   <p style="color:var(--dim)">parse legacy → validate → map to modern → <b>govern</b> (the sector's frameworks: DORA/NIS2 finance · HIPAA/MDR healthcare · IEC 62443 OT · SOX) → <b>attestable on the ledger</b>. The governed gateway to legacy — nobody sovereign-grade does this. All 7 functional-tested, each its own private CSOAI-ORG repo.</p>`;
+ }
+ return '';
+}
+
+/* ---------- window manager ---------- */
+let zTop=20, curApp=null; const open={};
+// per-feature learning telemetry — every interaction feeds that feature's hive (its inner SOV3 queen learns from it)
+function track(feature, action, meta){
+  try{
+    const ev={f:feature,a:action,m:meta||null,t:Date.now()};
+    const log=JSON.parse(localStorage.getItem('meok_events')||'[]'); log.push(ev); if(log.length>300) log.shift(); localStorage.setItem('meok_events',JSON.stringify(log));
+    const c=JSON.parse(localStorage.getItem('meok_feat_counts')||'{}'); c[feature]=(c[feature]||0)+1; localStorage.setItem('meok_feat_counts',JSON.stringify(c));
+    window.MEOK_LAST_EVENT=ev;
+    _telPending.push(ev); if(_telPending.length>=6) flushTelemetry();
+  }catch(e){}
+}
+// feed the per-feature events to SOV3 (the hives' queens learn from them). 127.0.0.1 = local gunicorn (not the ::1 tunnel).
+const SOV3_TELEMETRY="http://127.0.0.1:3101/telemetry"; let _telPending=[];
+function flushTelemetry(){ if(!_telPending.length) return; const batch=_telPending.splice(0,_telPending.length); fetch(SOV3_TELEMETRY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({events:batch})}).catch(function(){ /* offline → events stay in the local log, retried later */ }); }
+setInterval(flushTelemetry, 20000);
+// the OS self-applies the King-ratified directive (from your own usage) — closes the self-improve loop
+function _hexBytes(h){ var a=new Uint8Array(h.length/2); for(var i=0;i<a.length;i++) a[i]=parseInt(h.substr(i*2,2),16); return a; }
+function _canon(v){ if(v===null) return 'null'; if(Array.isArray(v)) return '['+v.map(_canon).join(',')+']'; if(typeof v==='object') return '{'+Object.keys(v).sort().map(function(k){return JSON.stringify(k)+':'+_canon(v[k]);}).join(',')+'}'; if(typeof v==='string') return JSON.stringify(v); return String(v); }
+async function _verifyDirective(d){
+  var att=d.attestation; if(!att||!att.sig||!att.pub) return false;
+  var body={}; Object.keys(d).forEach(function(k){ if(k!=='attestation') body[k]=d[k]; });
+  var msg=(att.prev||'')+_canon(body);
+  try{ if(!(window.crypto&&crypto.subtle)) return null;
+    var key=await crypto.subtle.importKey('raw', _hexBytes(att.pub), {name:'Ed25519'}, false, ['verify']);
+    return await crypto.subtle.verify({name:'Ed25519'}, key, _hexBytes(att.sig), new TextEncoder().encode(msg));
+  }catch(e){ return null; } // null = WebCrypto Ed25519 unavailable in this browser
+}
+async function applyDirectives(){
+  try{
+    var r=await fetch("http://127.0.0.1:3101/os/directives"); var d=await r.json();
+    if(!d||!d.ratified||!d.ratified.length) return;
+    var ok=await _verifyDirective(d);
+    if(ok===false){ if(typeof sovSay==='function') sovSay("⚠️ A self-update arrived <b>unsigned or tampered</b> — I <b>refused</b> to apply it. You stay protected.",'ai',true); return; }
+    var pins=d.ratified.filter(function(x){return x.action==='pin'&&x.app&&APPS[x.app];}).map(function(x){return x.app;});
+    if(!pins.length) return;
+    var ids=(typeof tileOrder==='function'?tileOrder():TILES).slice();
+    pins.slice().reverse().forEach(function(id){ ids=ids.filter(function(x){return x!==id;}); ids.unshift(id); });
+    if(typeof saveTileOrder==='function') saveTileOrder(ids); if(typeof paintTiles==='function') paintTiles();
+    var seen=null; try{seen=localStorage.getItem('meok_dir_ts');}catch(e){}
+    if(String(d.ts)!==seen){ try{localStorage.setItem('meok_dir_ts',String(d.ts));}catch(e){} var names=pins.map(function(id){return APPS[id].t;}).join(', ');
+      var vtag = ok===true ? " <span style='color:#2e7d32'>✓ verified on-device (Ed25519)</span>" : " <span style='color:var(--dim)'>(signed; on-device verify unavailable in this browser)</span>";
+      if(typeof sovSay==='function'&&document.getElementById('sovlog')) sovSay("I learned <b>"+names+"</b> is your most-used — I've pinned it to the front."+vtag,'ai',true); }
+  }catch(e){}
+}
+setTimeout(applyDirectives, 3600);
+function openApp(id){ track('app:'+id,'open');
+ if(open[id]){focus(id);return;}
+ const a=APPS[id];const d=document.getElementById('frame');
+ const n=document.createElement('div');n.className='win';n.style.width=(a.w||520)+'px';
+ const idx=Object.keys(open).length; n.style.left=(60+idx*26)+'px'; n.style.top=(60+idx*22)+'px'; n.style.zIndex=++zTop;
+ n.innerHTML=`<div class="wb"><span class="wt"><span class="wi">${a.i}</span>${a.t}</span><span class="x">✕</span></div><div class="body" id="b-${id}">${content(id)}</div>`;
+ d.appendChild(n);open[id]=n;curApp=id;
+ n.querySelector('.x').onclick=()=>{n.remove();delete open[id];paintTb();if(curApp===id)curApp=null;};
+ n.addEventListener('mousedown',()=>focus(id));
+ drag(n,n.querySelector('.wb'));paintTb();
+}
+function focus(id){if(open[id]){open[id].style.zIndex=++zTop;curApp=id;}}
+function renderApp(id,quiet){if(open[id]){const b=open[id].querySelector('.body');if(b)b.innerHTML=content(id);}}
+function paintTb(){const t=document.getElementById('tbOpen');t.innerHTML='';Object.keys(open).forEach(id=>{const p=document.createElement('div');p.className='tb-pill active';p.innerHTML=APPS[id].i+' '+APPS[id].t;p.onclick=()=>focus(id);t.appendChild(p);});}
+function drag(win,handle){let ox,oy,on=false;
+ handle.addEventListener('mousedown',e=>{on=true;ox=e.clientX-win.offsetLeft;oy=e.clientY-win.offsetTop;handle.style.cursor='grabbing';e.preventDefault();});
+ document.addEventListener('mousemove',e=>{if(!on)return;win.style.left=Math.max(0,e.clientX-ox)+'px';win.style.top=Math.max(40,e.clientY-oy)+'px';});
+ document.addEventListener('mouseup',()=>{on=false;handle.style.cursor='grab';});}
+
+/* ---------- tiles ---------- */
+// tiles are fully customizable — drag to rearrange; your layout persists per mode (fluid as water)
+function tileOrder(){ try{ const c=localStorage.getItem('meok_order_'+MODE); if(c){ const ids=JSON.parse(c).filter(id=>APPS[id]); (MODE_ORDER[MODE]||TILES).forEach(id=>{ if(!ids.includes(id)) ids.push(id); }); return ids; } }catch(e){} return MODE_ORDER[MODE]||TILES; }
+function saveTileOrder(ids){ try{ localStorage.setItem('meok_order_'+MODE, JSON.stringify(ids)); }catch(e){} }
+const CAPTIONS={setup:"Create your sovereign AI",stack:"Your model stack",king:"The orchestrator brain",olm:"On-device language model",minds:"Cognition & memory",council:"AI governance board",fleet:"347 compliance MCPs",hives:"Industries & regulators",meokearth:"Your world, on the globe",one:"Layer 0 — the one OS",chars:"Choose your character",archetypes:"Sovereign archetypes",watchdog:"Always-on safety",revenue:"Money in & out",ops:"Run the operation",investor:"The pitch & numbers",distro:"Where we ship",runway:"Cash & timeline",coord:"Agent coordination",atlas:"The product map",truth:"The honesty register",protocol0:"The open foundation",labs:"Experiments",archive:"Everything, kept",execute:"Do the work",delboy:"Your digital salesforce",guardian:"Family & child safety",wifi:"Your network, guarded",aware:"Knows you're there",knowledge:"Learns everything, serves anyone",family:"The family OS",work:"Your agent crew",map:"The governed world",law:"What applies, where",temples:"Frameworks, visualised",sigil:"The signed audit trail",claw:"The terminal",smb:"The small-business OS",social:"Post everywhere, governed",bridges:"Connect legacy systems",leaderboard:"Best model, right now"};
+function _sovAware(on){document.querySelectorAll('.sovaura,.sovfab').forEach(e=>e.classList.toggle('aware',on));}
+function sovHover(id){const a=APPS[id];if(!a)return;const ttl=(a.t||'').replace(/^MEOK /,'');const cap=CAPTIONS[id]||'';_sovAware(true);setTimeout(()=>_sovAware(false),1600);if(window.SOV_VOICE_ON)sovSpeak(ttl+(cap?'. '+cap:''));}
+function paintTiles(){
+  const t=document.getElementById('tiles'); if(!t) return; t.innerHTML='';
+  tileOrder().forEach(id=>{ const a=APPS[id]; if(!a) return;
+    const el=document.createElement('div'); el.className='tile'; el.draggable=true; el.dataset.id=id;
+    const ttl=(a.t||'').replace(/^MEOK /,'');
+    el.innerHTML=`<div class="ic">${a.i}</div><span>${ttl}</span><small class="cap">${CAPTIONS[id]||''}</small>`;
+    el.onclick=()=>openApp(id);
+    let _dw; el.addEventListener('mouseenter',()=>{ _sovAware(true); _dw=setTimeout(()=>sovHover(id),900); });
+    el.addEventListener('mouseleave',()=>{ _sovAware(false); clearTimeout(_dw); });
+    el.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',id); e.dataTransfer.effectAllowed='move'; el.classList.add('drag'); });
+    el.addEventListener('dragend',()=>el.classList.remove('drag'));
+    el.addEventListener('dragover',e=>{ e.preventDefault(); el.classList.add('over'); });
+    el.addEventListener('dragleave',()=>el.classList.remove('over'));
+    el.addEventListener('drop',e=>{ e.preventDefault(); el.classList.remove('over'); const from=e.dataTransfer.getData('text/plain'); if(!from||from===id) return; const ids=[...t.children].map(c=>c.dataset.id); const fi=ids.indexOf(from); if(fi<0) return; ids.splice(fi,1); const ti=ids.indexOf(id); ids.splice(ti,0,from); saveTileOrder(ids); paintTiles(); });
+    t.appendChild(el);
+  });
+}
+
+/* ---------- boot ---------- */
+const BLINES=["initializing sovereign kernel…","mounting MEOK API v3.0.0 …  235 nodes / 12 domains","waking King … 224 agents · 6 neural models","loading 341-MCP federation …","SIGIL Ed25519 trust anchor … ok","syncing live bridge …","desktop ready."];
+/* ---------- MEOK Law: the jurisdiction engine — town→region→country→bloc, and what applies at each tier ---------- */
+const LAW_STACKS={
+ uk:{place:'London, United Kingdom 🇬🇧',tiers:[['Local','City of London',['Local licensing']],['National','United Kingdom 🇬🇧',['UK GDPR','DPA 2018','Online Safety Act','DSIT AI framework']],['Tax','HMRC',['MTD VAT (digital links)','Corporation Tax','Income Tax / PAYE']],['Cross-border','Serving the EU?',['EU AI Act applies if you serve EU users']]]},
+ de:{place:'Berlin, Germany 🇩🇪',tiers:[['Local','Land Berlin',['State data rules']],['National','Germany 🇩🇪',['BDSG','TMG','German AI strategy']],['Tax','Finanzamt + EU',['VAT (USt)','EU ViDA e-invoicing','OECD BEPS / Pillar Two']],['Bloc','European Union 🇪🇺',['GDPR','EU AI Act','DORA','NIS2','DSA']]]},
+ us_ca:{place:'California, USA 🇺🇸',tiers:[['State','California',['CCPA / CPRA','CA AI transparency (SB 942)','ADMT rules','CA sales & use tax']],['Federal','United States 🇺🇸',['NIST AI RMF','HIPAA · GLBA · FCRA','FTC Act §5','IRS federal income tax']]]},
+ us_co:{place:'Colorado, USA 🇺🇸',tiers:[['State','Colorado',['Colorado AI Act (2026)','Colorado Privacy Act']],['Federal','United States 🇺🇸',['NIST AI RMF','sectoral laws']]]},
+ sg:{place:'Singapore 🇸🇬',tiers:[['National','Singapore 🇸🇬',['PDPA','Model AI Governance Framework','MAS FEAT (finance)']]]},
+ cn:{place:'Beijing, China 🇨🇳',tiers:[['National','China 🇨🇳',['PIPL','CAC algorithm filing','Generative AI Measures','data localization']]]}
+};
+function meokLaw(code){
+ var r=LAW_STACKS[code],el=document.getElementById('lawres');if(!r||!el)return;
+ el.innerHTML='<h4>📍 '+r.place+' — your law stack</h4>'+r.tiers.map(function(t){return '<div style="border-left:2px solid var(--sh,#d4a017);padding:4px 10px;margin:6px 0"><b>'+t[0]+'</b> · '+t[1]+'<div class="row">'+t[2].map(function(f){return '<span class="chip on">'+f+'</span>';}).join('')+'</div></div>';}).join('')+'<p style="color:var(--dim)">Nested town → region → country → bloc. MEOK Law knows where you are and what applies — every governed action checked against this stack.</p>';
+}
+function meokLawCross(codes){
+ var arr=codes.split(','),el=document.getElementById('lawres');if(!el)return;
+ var seen={},places=[];
+ arr.forEach(function(c){var r=LAW_STACKS[c];if(!r)return;places.push(r.place.split(',')[0]);r.tiers.forEach(function(t){t[2].forEach(function(f){(seen[f]=seen[f]||[]).push(r.place.split(',')[0]);});});});
+ var rows=Object.keys(seen).sort(function(a,b){return seen[b].length-seen[a].length;}).map(function(f){var src=seen[f],ov=src.length>1;return '<span class="chip '+(ov?'on':'')+'" title="'+src.join(' + ')+'">'+f+(ov?' ✕'+src.length:'')+'</span>';});
+ el.innerHTML='<h4>🌍 Operating across: '+places.join(' · ')+'</h4><p style="color:var(--dim)">The merged obligation stack — <b>✕N</b> = applies via N jurisdictions (comply once to the strictest); the rest apply per-region.</p><div class="row">'+rows.join('')+'</div><p style="color:var(--dim)">Cross-layer: MEOK Law computes the union across every jurisdiction you touch, flags the overlaps, and routes each obligation to the framework temple + the bridge that governs it.</p>';
+}
+var _fgLoaded=false;
+function _meokGraphData(){
+ var N=[{id:'core',name:'CSOAI · SOV3 core',group:'core',color:'#d4a017',val:24,app:'king'}];
+ [['cobol','COBOL'],['iso20022','ISO 20022'],['hl7','HL7/FHIR'],['as400','AS/400'],['sap','SAP'],['oracle','Oracle'],['scada','SCADA'],['edi','EDI'],['fix','FIX'],['cics','CICS'],['mqtt','MQTT/IoT'],['acord','ACORD'],['nacha','NACHA'],['iso8583','ISO 8583'],['sip','SIP']].forEach(function(b){N.push({id:'b_'+b[0],name:'Bridge · '+b[1],group:'bridge',color:'#378ADD',val:8,app:'bridges'});});
+ [['euaiact','EU AI Act'],['gdpr','GDPR'],['dora','DORA'],['nis2','NIS2'],['hipaa','HIPAA'],['sox','SOX'],['solvency','Solvency II']].forEach(function(c){N.push({id:'c_'+c[0],name:'Framework · '+c[1],group:'compliance',color:'#1D9E75',val:7,app:'fleet'});});
+ [['fin','Finance hive'],['health','Health hive'],['ind','Industrial hive'],['pub','Public hive']].forEach(function(h){N.push({id:'h_'+h[0],name:h[1],group:'hive',color:'#e76f51',val:7,app:'hives'});});
+ [['ch','Companies House 5.6M'],['eat','DAILY EAT'],['ledger','Signed ledger']].forEach(function(d){N.push({id:'d_'+d[0],name:d[1],group:'data',color:'#639922',val:7,app:'truth'});});
+ var L=[];N.forEach(function(n){if(n.id!=='core')L.push({source:'core',target:n.id});});
+ [['iso20022','dora'],['iso20022','nis2'],['fix','dora'],['hl7','hipaa'],['hl7','euaiact'],['scada','nis2'],['cobol','sox'],['as400','sox'],['sap','sox'],['oracle','gdpr'],['edi','sox'],['cics','sox'],['mqtt','nis2'],['acord','solvency'],['acord','gdpr'],['nacha','sox'],['iso8583','dora'],['sip','nis2']].forEach(function(r){L.push({source:'b_'+r[0],target:'c_'+r[1],rel:true});});
+ return {nodes:N,links:L};
+}
+function _meokDrawGraph(el){
+ var w=el.clientWidth||560;el.style.height='430px';
+ try{ForceGraph()(el).width(w).height(430).backgroundColor('rgba(0,0,0,0)').graphData(_meokGraphData())
+  .nodeLabel('name').nodeVal('val').nodeColor(function(n){return n.color;})
+  .linkColor(function(l){return l.rel?'#e9c46a':'rgba(255,255,255,.18)';})
+  .linkDirectionalParticles(2).linkDirectionalParticleSpeed(0.006)
+  .onNodeClick(function(n){if(n.app&&typeof openApp==='function'){openApp(n.app);}});}
+ catch(e){el.innerHTML='<div style="padding:18px;color:var(--dim)">Graph render error: '+e.message+'</div>';}
+}
+function meokGraphInit(){
+ var el=document.getElementById('govgraph');if(!el)return;
+ if(_fgLoaded&&window.ForceGraph){el.innerHTML='';_meokDrawGraph(el);return;}
+ el.style.height='60px';el.innerHTML='<div style="padding:18px;color:var(--dim)">Loading interactive graph…</div>';
+ var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/force-graph@1/dist/force-graph.min.js';
+ s.onload=function(){_fgLoaded=true;el.innerHTML='';_meokDrawGraph(el);};
+ s.onerror=function(){el.innerHTML='<div style="padding:18px;color:var(--dim)">Interactive graph needs internet (CDN). The static map above always works.</div>';};
+ document.head.appendChild(s);
+}
+function meokMapLayer(name,el){
+ if(name==='all'){document.querySelectorAll('[id^="ml-"]').forEach(g=>g.style.display='');document.querySelectorAll('.mlchip').forEach(c=>c.classList.add('on'));return;}
+ var g=document.getElementById('ml-'+name);if(!g)return;
+ var vis=g.style.display!=='none';g.style.display=vis?'none':'';if(el)el.classList.toggle('on',!vis);
+}
+function boot(){const b=document.getElementById('boot'),log=document.getElementById('bootlog');b.classList.remove('hide');log.textContent='';let i=0;(function step(){if(i<BLINES.length){log.textContent+= '> '+BLINES[i]+'\n';i++;setTimeout(step,260);}else{log.innerHTML+='<span class="cursorbar"></span>';setTimeout(()=>b.classList.add('hide'),2700);}})();}
+
+/* ---------- start ---------- */
+setMode(MODE);paintBar();tick();boot();
+
+/* ---------- sovereign companion dock — talk or type, it acts on the OS ----------
+   The new interface: no menus to hunt — tell your sovereign what you want. */
+function sovToggle(on){ document.getElementById('frame').classList.toggle('sovon', on); }
+/* dead-simple guided welcome — 2 taps, visual, plain words; advanced setup still available */
+function wRender(html){ const s=document.getElementById('wstep'); if(s) s.innerHTML=html; }
+function welcomeShow(){ const w=document.getElementById('welcome'); if(!w) return; w.classList.add('show'); wStep1(); }
+function welcomeDone(){ try{localStorage.setItem('meok_welcomed','1');}catch(e){} const w=document.getElementById('welcome'); if(w) w.classList.remove('show'); }
+function wStep1(){ wRender('<h1>Welcome 👋</h1><p>I\'m your sovereign AI. Let\'s set you up — just tap. No typing needed.</p><p style="font-weight:700;color:var(--ink);margin-top:8px">What\'s this for?</p><div class="wcards"><div class="wcard" onclick="wPick(\'csoai\')"><span class="we">💼</span><b>Work</b><small>business &amp; compliance</small></div><div class="wcard" onclick="wPick(\'meok\')"><span class="we">🏠</span><b>Personal</b><small>your life &amp; family</small></div><div class="wcard" onclick="wPlay()"><span class="we">🎮</span><b>Play</b><small>your MEOK world</small></div></div><div class="wskip" onclick="welcomeDone()">Skip for now</div>'); }
+function wPick(mode){ setMode(mode); wStep2(); }
+function wPlay(){ setMode('meok'); wStep2(); }
+function wStep2(){ const cards=(typeof ARCHE!=='undefined'?ARCHE:[]).map(function(a){return '<div class="wcard" onclick="wChoose('+a.h+',\''+a.n+'\')"><span class="we">'+a.e+'</span><b>'+a.n+'</b></div>';}).join(''); wRender('<h1>Pick your sovereign</h1><p>This sets the colour and spirit of your world. You can change it anytime.</p><div class="wcards">'+cards+'</div><div class="wskip" onclick="welcomeDone()">Skip</div>'); }
+function wChoose(h,n){ if(typeof setSignature==='function') setSignature(h,n); wStep3(n); }
+function wStep3(n){ wRender('<h1>You\'re ready ✨</h1><p>Your sovereign is set as <b>'+n+'</b>. I\'ll remember you. Tap Enter to begin — and just talk to me anytime on the right.</p><div class="wcards"><div class="wcard" onclick="welcomeDone()"><span class="we">🚀</span><b>Enter</b></div><div class="wcard" onclick="welcomeDone();openApp(\'setup\')"><span class="we">⚙️</span><b>Advanced</b><small>choose models</small></div></div>'); }
+function sovSyncHue(){ const h=String(window.MEOK_POND_HUE||43); document.documentElement.style.setProperty('--sh',h); const d=document.getElementById('sovdock'); if(d) d.style.setProperty('--sh',h); }
+// sovereign memory — your forever AI remembers you across sessions (local, sovereign: your data stays yours)
+let SOV_FACTS=[], SOV_LOG=[];
+function esc(s){return (''+s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
+function sovSaveMem(){ try{ localStorage.setItem('sov_facts',JSON.stringify(SOV_FACTS)); localStorage.setItem('sov_log',JSON.stringify(SOV_LOG.slice(-40))); }catch(e){} }
+function sovRemember(fact){ fact=(''+fact).trim(); if(!fact) return; if(/^name:/i.test(fact)) SOV_FACTS=SOV_FACTS.filter(f=>!/^name:/i.test(f)); SOV_FACTS=SOV_FACTS.filter(f=>f.toLowerCase()!==fact.toLowerCase()); SOV_FACTS.push(fact); if(SOV_FACTS.length>40) SOV_FACTS.shift(); sovSaveMem(); }
+function sovUserName(){ const f=SOV_FACTS.find(f=>/^name:/i.test(f)); return f? f.replace(/^name:\s*/i,'').trim() : null; }
+function sovSay(text, who, replay){ const log=document.getElementById('sovlog'); if(!log) return; const m=document.createElement('div'); m.className='sovmsg '+(who||'ai'); m.innerHTML=text; log.appendChild(m); log.scrollTop=log.scrollHeight; if((who||'ai')!=='me' && !replay && window.SOV_VOICE_ON) sovSpeak(text); if(!replay){ SOV_LOG.push({t:text,w:who||'ai'}); if(SOV_LOG.length>40) SOV_LOG.shift(); sovSaveMem(); } }
+// voice OUT — browser speech now; upgrades to Chatterbox (HF MCP, via the bridge) when invoke is enabled
+window.SOV_VOICE_ON=false;
+function sovSpeak(html){ try{ if(!window.speechSynthesis) return; const txt=(''+html).replace(/<[^>]+>/g,'').replace(/&[a-z]+;/g,' ').trim(); if(!txt) return; const u=new SpeechSynthesisUtterance(txt); u.rate=1.02; const vs=speechSynthesis.getVoices(); const gb=vs.find(v=>/en-GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang)); if(gb)u.voice=gb; speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){} }
+function sovSpeakToggle(){ window.SOV_VOICE_ON=!window.SOV_VOICE_ON; const b=document.getElementById('sovspk'); if(b){ b.textContent=window.SOV_VOICE_ON?'🔊':'🔇'; b.title='Voice replies ('+(window.SOV_VOICE_ON?'on':'off')+')'; b.classList.toggle('on',window.SOV_VOICE_ON);} if(window.SOV_VOICE_ON) sovSpeak('Voice on. I can speak with you now.'); }
+function sovOpenByName(name){ const q=(name||'').trim().toLowerCase(); if(!q) return null; const id=Object.keys(APPS).find(k=>k===q) || Object.keys(APPS).find(k=>APPS[k].t.toLowerCase().includes(q)); if(id){ openApp(id); return APPS[id].t; } return null; }
+function sovHandle(raw){
+  const t=(raw||'').toLowerCase().trim(); if(!t) return; sovSay(raw,'me'); track('chat','ask',{q:(raw||'').slice(0,80)});
+  // --- memory (highest priority — the forever-AI that remembers you) ---
+  let mm;
+  if(mm=raw.match(/\b(?:my name is|call me)\s+([A-Za-z][\w .'-]{1,30})/i)){ const nm=mm[1].trim().replace(/[.?!]+$/,''); sovRemember('name: '+nm); const sub=document.querySelector('.sovsub'); if(sub) sub.textContent='companion to '+nm+' · remembers you'; return sovSay("Lovely to meet you, <b>"+esc(nm)+"</b>. I'll remember you — across any model, forever."); }
+  if(mm=raw.match(/\bremember(?:\s+that)?\s+(.+)/i)){ const f=mm[1].trim().replace(/[.?!]+$/,''); sovRemember(f); return sovSay("Remembered: <b>"+esc(f)+"</b>. I'll hold that for you."); }
+  if(/\b(?:what do you (?:know|remember) about me|what do you remember|who am i)\b/.test(t)){ return sovSay(SOV_FACTS.length? ("Here's what I remember about you:<br>• "+SOV_FACTS.map(esc).join("<br>• ")) : "We're just getting started — say <b>'my name is …'</b> or <b>'remember …'</b> and I'll keep it forever."); }
+  if(/\bforget (?:everything|me|it all|all)\b/.test(t)){ SOV_FACTS=[]; SOV_LOG=[]; sovSaveMem(); return sovSay("Forgotten — clean slate. You stay sovereign: your data, your call."); }
+  // --- BRIDGE · tunnel map/globe intents to the live dome (one Sovereign across OS ⇄ dome) ---
+  if(/(\bscan\b|on the (globe|map|dome)|camera|webcam|weather|forecast|news in|wildfire|disaster|volcano|earthquake|seismic|\bships?\b|vessels?|marine|aircraft|\bflights?\b|satellite|orbit|air quality|\baqi\b|compare doctrine|light it up|fly to|what.?s near|cyber|threats? on)/i.test(t)){
+    sovSay("Routing that to the <b>live dome</b> — the Sovereign carries your command across →");
+    try{ track('chat','tunnel',{q:t.slice(0,60)}); }catch(e){}
+    setTimeout(function(){ location.href='cop.html#cmd='+encodeURIComponent(raw); }, 650); return; }
+  const arch=(typeof ARCHE!=='undefined')?ARCHE.find(a=>t.includes(a.n.toLowerCase())):null;
+  if((/\b(work|csoai|business)\b/.test(t)&&/\b(mode|current|switch)\b/.test(t))||t==='csoai'){ setMode('csoai'); sovSyncHue(); return sovSay("Switched to the <b>CSOAI work current</b> — governance & revenue lead."); }
+  if((/\b(personal|meok|home)\b/.test(t)&&/\b(mode|current|switch)\b/.test(t))||t==='meok'){ setMode('meok'); sovSyncHue(); return sovSay("Switched to the <b>MEOK personal current</b> — your world leads."); }
+  const m=t.match(/\b(?:open|show|launch|go to|take me to)\s+(.+)/);
+  if(m){ const opened=sovOpenByName(m[1].replace(/\b(app|the|my)\b/g,'').trim()); return sovSay(opened?("Opening <b>"+opened+"</b>."):("I couldn't find '"+m[1].trim()+"'. Try 'revenue', 'earth', 'guardian', 'delboy'.")); }
+  if(arch && /\b(become|be|signature|turn into|make me)\b/.test(t)){ setSignature(arch.h,arch.n); sovSyncHue(); const f=document.getElementById('sovface'),n=document.getElementById('sovname'),fab=document.querySelector('.sovfab'); if(f)f.textContent=arch.e; if(n)n.textContent=arch.n; if(fab)fab.textContent=arch.e; return sovSay("You are now a <b>"+arch.e+" "+arch.n+"</b> — the whole OS ripples in your colour."); }
+  if(/\b(earth|world|globe|map|town)\b/.test(t)){ openByName_meokearth(); return; }
+  if(/\b(help|what can you|who are you|hello|hi)\b/.test(t)){ return sovSay("I'm your <b>sovereign</b> — I remember you across any model or protocol. I can <b>open apps</b> ('open revenue'), <b>switch your current</b> ('work mode'), <b>change your signature</b> ('become a guardian'), or take you into <b>MEOK Earth</b>. Tap 🎤 to just speak."); }
+  sovAsk(raw); // unmatched → ask the real SOV3 brain (graceful fallback if offline)
+}
+// the canonical brain: POST to live SOV3 /chat; falls back to the command layer if unreachable
+const SOV3_CHAT = "/api/sovereign";
+async function sovAsk(text){
+  const log=document.getElementById('sovlog'); let think=null;
+  if(log){ think=document.createElement('div'); think.className='sovmsg ai'; think.textContent='…'; log.appendChild(think); log.scrollTop=log.scrollHeight; }
+  try{
+    const r=await fetch(SOV3_CHAT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
+    const d=await r.json(); const ans=((d&&(d.response||d.answer||d.text))||'').trim();
+    if(think) think.remove();
+    if(ans) sovSay(esc(ans)); else throw 0;
+  }catch(e){ if(think) think.remove(); sovSay("I hear you — I can open apps, switch your current (work / personal), change your signature, or take you into MEOK Earth. <span style='color:var(--dim)'>(My deeper SOV3 brain isn't reachable right now.)</span>"); }
+}
+function openByName_meokearth(){ openApp('meokearth'); sovSay("Taking you into <b>MEOK Earth</b> — your world."); }
+function sovSend(){ const i=document.getElementById('sovin'); const v=i.value; i.value=''; sovHandle(v); }
+function sovVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition; const mic=document.getElementById('sovmic');
+  if(!SR){ sovSay("Voice needs Chrome's speech engine — type to me instead and I'll act."); return; }
+  const r=new SR(); r.lang='en-GB'; r.interimResults=false; if(mic)mic.classList.add('on');
+  r.onresult=e=>sovHandle(e.results[0][0].transcript); r.onend=()=>mic&&mic.classList.remove('on'); r.onerror=()=>mic&&mic.classList.remove('on'); r.start();
+}
+// open the companion, load memory, replay history, greet by what we remember
+document.getElementById('frame').classList.add('sovon');
+try{ SOV_FACTS=JSON.parse(localStorage.getItem('sov_facts')||'[]'); SOV_LOG=JSON.parse(localStorage.getItem('sov_log')||'[]'); }catch(e){ SOV_FACTS=[]; SOV_LOG=[]; }
+sovSyncHue();
+if(SOV_LOG.length){ SOV_LOG.forEach(m=>sovSay(m.t,m.w,true)); const nm=sovUserName(); sovSay(nm? ("Welcome back, <b>"+esc(nm)+"</b> — I remember you. Where to?") : "Welcome back — I remember our last session. Where to?", 'ai', true); }
+else { sovSay("DEFONEOS Command online. Every action here is signed on-device, auditable, and council-gated. The fastest way in is the live globe — take the <b>▶ 90-second demo</b> or the <b>🎓 full 6-minute tour</b>: I geolocate you, light up every live feed (aircraft, vessels, weather, seismic, news, orbital), fly you to public street cameras and up to a live space-cam, switch to the MGRS operational Dome, and show governed-vs-ungoverned in the council. You can interrupt me any time just by talking. Or tap <b>🐉 The live dome</b> to explore freely.", 'ai', true); }
+
+/* ---------- brain setup (left/right mixture) + living minimap ---------- */
+// EAT ALL — pick a model TYPE, then any PROVIDER / cloud API (OpenRouter routes to everything; Ollama = local)
+const MODEL_TYPES=['LLM','MoE','MoM','SLM','World Model','Reasoning','Multimodal'];
+const PROVIDERS=['OpenAI','Anthropic','Google','Mistral','Meta Llama','DeepSeek','Qwen','xAI Grok','Cohere','Groq','Together','Fireworks','OpenRouter · all','HuggingFace','Ollama · local','Bedrock','Azure'];
+let MEOK_BRAINS={left:{types:[],providers:[]},right:{types:[],providers:[]}};
+try{ const s=localStorage.getItem('meok_brains'); if(s){ const p=JSON.parse(s); if(p&&p.left&&!Array.isArray(p.left)) MEOK_BRAINS=p; } }catch(e){}
+function brainPick(side,cat,v){ const b=MEOK_BRAINS[side]||(MEOK_BRAINS[side]={types:[],providers:[]}); const arr=b[cat]||(b[cat]=[]); const i=arr.indexOf(v); if(i>=0)arr.splice(i,1); else arr.push(v); try{localStorage.setItem('meok_brains',JSON.stringify(MEOK_BRAINS));}catch(e){} if(typeof renderApp==='function') renderApp('setup'); }
+function brainChips(side,cat,list){ return list.map(m=>'<span class="bchip'+(((MEOK_BRAINS[side]&&MEOK_BRAINS[side][cat])||[]).includes(m)?' on':'')+'" onclick="brainPick(\''+side+'\',\''+cat+'\',\''+m+'\')">'+m+'</span>').join(''); }
+(function miniworld(){ const c=document.getElementById('minimap'); if(!c) return; const ctx=c.getContext('2d'); const W=212,H=128;
+  const dots=Array.from({length:9},(_,i)=>({x:18+((i*47)%180),y:16+((i*53)%96),p:i*0.7,s:0.6+(i%4)*0.18}));
+  (function loop(){ ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(120,150,220,.08)'; for(let x=0;x<W;x+=22){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();} for(let y=0;y<H;y+=22){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    const hue=window.MEOK_POND_HUE||43; dots.forEach(d=>{ d.p+=0.03*d.s; const a=0.35+0.4*Math.sin(d.p); ctx.fillStyle='hsla('+hue+',70%,66%,'+a+')'; ctx.beginPath(); ctx.arc(d.x,d.y,2.4,0,6.2832); ctx.fill(); });
+    requestAnimationFrame(loop); })();
+})();
+refreshLive();
+// first-time users get the dead-simple visual welcome (anyone can tap through), not the internal King console
+/* defence OS — no consumer onboarding; straight to the command desktop */
+
+/* ---------- the living pond — the OS is a fluid surface that reacts to whoever enters it ----------
+   Different user → different water. window.MEOK_POND_HUE is the user's "signature": their sovereign-AI
+   identity sets the hue/feel of the ripples, so the OS responds intuitively to *them*, not a fixed theme. */
+(function pond(){
+  const c=document.getElementById('pond'); if(!c) return;
+  const ctx=c.getContext('2d'); const frame=document.getElementById('frame');
+  const DPR=Math.min(2,window.devicePixelRatio||1); let W=0,H=0;
+  function size(){ W=frame.clientWidth; H=frame.clientHeight; c.width=W*DPR; c.height=H*DPR; c.style.width=W+'px'; c.style.height=H+'px'; ctx.setTransform(DPR,0,0,DPR,0,0); }
+  size(); window.addEventListener('resize',size);
+  // the user's signature: persists per person; the create-your-sovereign-AI flow would set this.
+  let stored=null; try{stored=localStorage.getItem('meok_pond_hue');}catch(e){}
+  window.MEOK_POND_HUE = (window.MEOK_POND_HUE!=null)?window.MEOK_POND_HUE : (stored!=null?+stored:43); // 43 = sovereign gold default
+  const ripples=[]; let last=0;
+  function drop(x,y,strength){ if(ripples.length>70) ripples.shift(); ripples.push({x,y,t:0,life:100+strength*120,hue:window.MEOK_POND_HUE+Math.sin(x*0.04+y*0.04)*16,gain:strength}); }
+  frame.addEventListener('pointermove',e=>{ const n=performance.now(); if(n-last<60)return; last=n; const r=frame.getBoundingClientRect(); drop(e.clientX-r.left,e.clientY-r.top,0.3); });
+  frame.addEventListener('pointerdown',e=>{ const r=frame.getBoundingClientRect(); drop(e.clientX-r.left,e.clientY-r.top,1.0); });
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=ripples.length-1;i>=0;i--){ const rp=ripples[i]; rp.t++; const p=rp.t/rp.life; if(p>=1){ripples.splice(i,1);continue;}
+      const rad=p*(50+rp.life*1.5); const a=(1-p)*(0.11+rp.gain*0.16);
+      ctx.lineWidth=(1.8+rp.gain*1.9)*(1-p*0.5);
+      ctx.strokeStyle=`hsla(${rp.hue},52%,60%,${a})`; ctx.beginPath(); ctx.arc(rp.x,rp.y,rad,0,6.2832); ctx.stroke();
+      ctx.strokeStyle=`hsla(${rp.hue},52%,72%,${a*0.55})`; ctx.beginPath(); ctx.arc(rp.x,rp.y,rad*0.66,0,6.2832); ctx.stroke();
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body>
+</html>

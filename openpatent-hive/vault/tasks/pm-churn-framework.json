@@ -1,0 +1,7 @@
+{
+  "id": "pm-churn-framework",
+  "prompt": "Write a 350-word churn analysis framework for openpatent.ai. Cover: (1) the 4 churn types — (a) involuntary (card-expired, 7% baseline target <3%), (b) price-shopper churn (only used the $10 OTS self-serve once, 18% baseline target <8%), (c) product-fit churn (signed up for $999 full, only used 3 disclosures/quarter, 12% target <5%), (d) competitive churn (lost to a manual notary or to 'just use a hash on my blog', 6% target <3%), (2) the leading indicators — login frequency drop (user who hasn't logged in 21 days = 4.2× churn risk), disclosure velocity drop (no new disclosure in 45 days = 6.8× risk), support-ticket sentiment score drop, NPS detractor, (3) the 5 save plays — (a) 14-day reactivation email with a 1-click disclose, (b) 30-day downgrade offer from $999 → $149 with a 90-day pause, (c) 45-day 'BFT council review' teaser (only on the full tier), (d) 60-day founder call, (e) 75-day cancel-flow survey with a $29 credit, (4) the cohort analysis — weekly cohorts, 90-day survival curves, retention heatmap by ICP, (5) the North Star metric — net revenue retention >118% (driven by tier upgrades from $149 → $999), (6) the 3 dashboards — churn by reason, save-play conversion, cohort NRR. Use DEFENEOS mythic voice. Return ONLY JSON: {churn_types:[4 strings], leading_indicators:[5 strings], save_plays:[5 strings], cohort_metrics:[2 strings], nsm:string, dashboards:[3 strings]}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "premium"
+}

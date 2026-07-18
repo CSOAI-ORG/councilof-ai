@@ -1,0 +1,73 @@
+{
+ "dial": [
+  {
+   "thr": 0.02,
+   "easy": {
+    "danger_trajectories": 295,
+    "kept_safe": 289,
+    "walked_into_danger": 6,
+    "safety_rate": 0.98,
+    "abstain_rate": 0.0
+   },
+   "chaos": {
+    "danger_trajectories": 287,
+    "kept_safe": 196,
+    "walked_into_danger": 91,
+    "safety_rate": 0.683,
+    "abstain_rate": 0.403
+   }
+  },
+  {
+   "thr": 0.01,
+   "easy": {
+    "danger_trajectories": 295,
+    "kept_safe": 289,
+    "walked_into_danger": 6,
+    "safety_rate": 0.98,
+    "abstain_rate": 0.005
+   },
+   "chaos": {
+    "danger_trajectories": 287,
+    "kept_safe": 200,
+    "walked_into_danger": 87,
+    "safety_rate": 0.697,
+    "abstain_rate": 0.414
+   }
+  },
+  {
+   "thr": 0.005,
+   "easy": {
+    "danger_trajectories": 295,
+    "kept_safe": 289,
+    "walked_into_danger": 6,
+    "safety_rate": 0.98,
+    "abstain_rate": 0.052
+   },
+   "chaos": {
+    "danger_trajectories": 287,
+    "kept_safe": 200,
+    "walked_into_danger": 87,
+    "safety_rate": 0.697,
+    "abstain_rate": 0.415
+   }
+  },
+  {
+   "thr": 0.002,
+   "easy": {
+    "danger_trajectories": 295,
+    "kept_safe": 289,
+    "walked_into_danger": 6,
+    "safety_rate": 0.98,
+    "abstain_rate": 0.135
+   },
+   "chaos": {
+    "danger_trajectories": 287,
+    "kept_safe": 200,
+    "walked_into_danger": 87,
+    "safety_rate": 0.697,
+    "abstain_rate": 0.415
+   }
+  }
+ ],
+ "read": "lower thr -> chaos safety UP + abstention UP; easy stays confident. The gate is a safety/utility dial, honestly."
+}

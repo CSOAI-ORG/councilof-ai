@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOV3 Sovereign HUD - i-character speaks in chat UI</title>
+  <link rel="stylesheet" href="/sovereign-os/frontend/sovereign-hud.css">
+</head>
+<body>
+  <!-- The HUD canvas: a fake map + dashboard + chat -->
+  <div id="map-canvas" class="map-canvas">
+    <div class="map-header">
+      🜏 SOVEREIGN GLOBE · LIVE
+      <span class="bridge-status" id="bridge-status">● disconnected</span>
+    </div>
+    <div class="map-grid">
+      <div class="pin" data-subject-id="london-buckingham-palace" data-title="Buckingham Palace" data-summary="Royal residence. Sovereign substrate anchor since Crown Authorisation 1795." data-coords="51.5014,-0.1419" data-attributes='{"crown_lineage":"1795-2026","queen_hive":"Aphrodite","SIGIL_anchor":"a3f9e2b7d45162a"}' style="top:30%;left:48%">
+        🇬🇧
+      </div>
+      <div class="pin" data-subject-id="tokyo-shibuya" data-title="Shibuya Crossing" data-summary="Tokyo's iconic scramble crossing. Public cameras active." data-coords="35.6595,139.7004" data-attributes='{"queen_hive":"Hecate","public_cameras":4}' style="top:55%;left:82%">
+        🇯🇵
+      </div>
+      <div class="pin" data-subject-id="nyc-manhattan" data-title="Manhattan" data-summary="New York City. CSOAI US-NE-1 sovereign substrate." data-coords="40.7831,-73.9712" data-attributes='{"queen_hive":"Ares","doj":true,"fedramp":true}' style="top:45%;left:25%">
+        🇺🇸
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard card -->
+  <div id="dashboard-card" class="dashboard-card" data-subject-id="care-floor-monitor" data-title="Care Floor Live" data-summary="Real-time Care Floor 0.95 monitor" data-attributes='{"current":0.96,"violations":0,"composite":7.305}'>
+    <div class="card-title">🛡️ Care Floor Live</div>
+    <div class="card-body">
+      <div class="kv"><span>Current</span><span>0.96</span></div>
+      <div class="kv"><span>Violations</span><span>0</span></div>
+      <div class="kv"><span>Composite</span><span>7.305</span></div>
+    </div>
+  </div>
+
+  <!-- Chat UI -->
+  <div id="chat-panel" class="chat-panel">
+    <div class="chat-header">
+      <span class="dot live">●</span>
+      Sovereign online
+      <span class="composite-mini" id="composite-mini">7.305</span>
+      <span class="care-floor-mini">Care 0.95 · BFT 12-around-1</span>
+    </div>
+    <div id="chat-log" class="chat-log"></div>
+    <div class="chat-input-row">
+      <button class="mic-btn" id="mic-btn" title="Voice">🎙</button>
+      <input type="text" id="chat-input" placeholder="ask the sovereign…">
+      <button class="send-btn" id="send-btn">↑</button>
+    </div>
+  </div>
+
+  <!-- Scripts (in this order: event bus → app) -->
+  <script src="/sovereign-os/frontend/sovereign-event-bus.js"
+          data-citizen-id="csoai-org-nicholas-001"></script>
+  <script src="/sovereign-os/frontend/sovereign-hud.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "name": "meokclaw",
+  "displayName": "MEOKCLAW",
+  "description": "AI Operating System with BFT Governance, Companion Evolution, and 500+ Models",
+  "version": "0.1.0",
+  "publisher": "meok-ai-labs",
+  "license": "Apache-2.0",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Machine Learning", "Debuggers", "Testing"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "meokclaw-sidebar",
+          "title": "MEOKCLAW",
+          "icon": "$(hubot)"
+        }
+      ]
+    },
+    "views": {
+      "meokclaw-sidebar": [
+        { "id": "meokclaw.companion", "name": "Companion" },
+        { "id": "meokclaw.council", "name": "BFT Council" },
+        { "id": "meokclaw.models", "name": "Models" }
+      ]
+    },
+    "commands": [
+      { "command": "meokclaw.toggleCouncil", "title": "Toggle BFT Council", "icon": "$(law)" },
+      { "command": "meokclaw.switchModel", "title": "Switch AI Model", "icon": "$(sync)" },
+      { "command": "meokclaw.companionChat", "title": "Chat with Companion", "icon": "$(comment)" },
+      { "command": "meokclaw.generateTests", "title": "Generate Tests", "icon": "$(beaker)" }
+    ],
+    "keybindings": [
+      { "command": "meokclaw.toggleCouncil", "key": "ctrl+shift+b", "mac": "cmd+shift+b" },
+      { "command": "meokclaw.switchModel", "key": "ctrl+shift+m", "mac": "cmd+shift+m" },
+      { "command": "meokclaw.companionChat", "key": "ctrl+shift+k", "mac": "cmd+shift+k" }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}

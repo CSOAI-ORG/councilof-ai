@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pricing \u2014 MEOK AI Labs | Pro \u00a3199/mo, Enterprise \u00a31,499/mo, 48h Assessment \u00a35,000",
+    "version": "1.0.0",
+    "description": "MEOK pricing: Free \u00a30/mo, Pro \u00a3199/mo, Enterprise \u00a31,499/mo, 48h Assessment \u00a35,000, Article 50 Kit \u00a3999, Watchdog Cert \u00a34,950. Sovereign UK. 100% EU AI Act + UK AI Bill compliance. 49 days to Article 50.",
+    "contact": {
+      "url": "https://meok.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://meok.ai/pricing"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Landing page",
+        "responses": {
+          "200": {
+            "description": "HTML landing page"
+          }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "LLM discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain LLM context"
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "summary": "Robots discovery file",
+        "responses": {
+          "200": {
+            "description": "text/plain robots rules"
+          }
+        }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "summary": "Sitemap",
+        "responses": {
+          "200": {
+            "description": "application/xml sitemap"
+          }
+        }
+      }
+    }
+  }
+}

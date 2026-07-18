@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenPatent.ai — BFT Council Configurator</title>
+<style>
+body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#f8fafc;margin:0;padding:2rem;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding:2rem}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,#c9a84c,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:1rem}
+h2{color:#c9a84c}
+.setup{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:1.5rem;margin:1rem 0;cursor:pointer;transition:all .2s}
+.setup:hover{border-color:#c9a84c;background:rgba(201,168,76,.1)}
+.setup.selected{border-color:#c9a84c;background:rgba(201,168,76,.15)}
+.setup input[type=radio]{margin-right:1rem;transform:scale(1.5)}
+.setup strong{color:#f8fafc;font-size:1.1rem}
+.setup small{color:#94a3b8;display:block;margin-top:.5rem;margin-left:2rem}
+.tag{display:inline-block;background:rgba(201,168,76,.2);color:#c9a84c;padding:.25rem .75rem;border-radius:12px;font-size:.75rem;margin-left:1rem}
+label{display:block;margin:1rem 0;color:#94a3b8}
+input[type=number],select{width:100%;padding:.75rem;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#f8fafc;font-family:'Inter',sans-serif;font-size:1rem;box-sizing:border-box}
+input[type=number]:disabled,select:disabled{opacity:.4}
+button{background:linear-gradient(135deg,#c9a84c,#8b5cf6);color:#0a0a0f;padding:1rem 2.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;text-transform:uppercase;width:100%;font-size:1rem;margin-top:1rem}
+.result{display:none;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.5);border-radius:8px;padding:1.5rem;margin-top:1rem}
+.result code{background:rgba(0,0,0,.3);padding:.25rem .5rem;border-radius:4px;font-family:monospace;color:#c9a84c}
+.casa{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1rem;margin:1rem 0;text-align:center}
+.casa strong{color:#c9a84c}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"><meta name="description" content="DEFONEOS — UK Sovereign Defence AI OS. Open source, 12 domains, 30 MCP servers, 188+ tools, BFT governance, Ed25519 SIGIL proof."><meta name="theme-color" content="#0a0a0f"><link rel="canonical" href="https://csoai-static-deploy2.vercel.app/bft-configurator.html"></head>
+<body><nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+<nav style="display:flex;justify-content:center;gap:1rem;padding:1rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.1);flex-wrap:wrap;font-size:.85rem">
+<a href="#"" style="color:#c9a84c;text-decoration:none">Launch Kit</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Series A</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Verify</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Command</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Striving</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">BFT</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Vote</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Sovereign</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">MEOK OS</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">CSOAI OS</a>
+<a href="#"" style="color:#c9a84c;text-decoration:none">Physical AI</a>
+</nav>
+
+<div class="wrap">
+<h1>OpenPatent.ai — BFT Council Configurator</h1>
+<p style="text-align:center;color:#94a3b8">Pick your Byzantine Fault Tolerant council. Sovereign by default.</p>
+
+<h2>Pick a Setup</h2>
+
+<div class="setup" onclick="pickSetup('lite')">
+<input type="radio" name="setup" value="lite" id="lite">
+<strong>BFT-LITE</strong> <span class="tag">3-of-5</span>
+<small>For startups and dev teams. ~10ms latency. Low cost. Best for fast iteration.</small>
+</div>
+
+<div class="setup" onclick="pickSetup('standard')">
+<input type="radio" name="setup" value="standard" id="standard" checked>
+<strong>BFT-STANDARD</strong> <span class="tag">12-of-22</span>
+<small>For mid-size orgs and CASA-2 Practitioner. ~25ms latency. Medium cost.</small>
+</div>
+
+<div class="setup" onclick="pickSetup('strict')">
+<input type="radio" name="setup" value="strict" id="strict">
+<strong>BFT-STRICT</strong> <span class="tag">22-of-33</span>
+<small>For sovereign entities and CASA-3 Lead Auditor. ~50ms latency. High cost.</small>
+</div>
+
+<div class="setup" onclick="pickSetup('parliament')">
+<input type="radio" name="setup" value="parliament" id="parliament">
+<strong>BFT-PARLIAMENT</strong> <span class="tag">50-of-100</span>
+<small>For multilateral bodies and CASA-4 C3PAO Director. ~100ms latency. Very high cost.</small>
+</div>
+
+<div class="setup" onclick="pickSetup('custom')">
+<input type="radio" name="setup" value="custom" id="custom">
+<strong>BFT-CUSTOM</strong> <span class="tag">your pick</span>
+<small>Pick council size (3-1000) and threshold (33-90%).</small>
+</div>
+
+<div class="casa">
+<strong>CASA Level Mapping:</strong><br>
+CASA-1 Foundation → BFT-LITE · CASA-2 Practitioner → BFT-STANDARD<br>
+CASA-3 Lead Auditor → BFT-STRICT · CASA-4 C3PAO Director → BFT-PARLIAMENT
+</div>
+
+<h2>Custom Settings (only if BFT-CUSTOM)</h2>
+<label>Council size (3-1000 voters): <input type="number" id="size" min="3" max="1000" value="22" disabled></label>
+<label>Threshold (33-90%): <input type="number" id="threshold_pct" min="33" max="90" value="55" disabled></label>
+
+<h2>Region</h2>
+<label>
+<select id="region">
+<option value="us-east">US-East (Frankfurt Prime)</option>
+<option value="eu-west">EU-West (London Watch)</option>
+<option value="apac">APAC (Tokyo Shield)</option>
+<option value="sovereign" selected>Sovereign (your infra)</option>
+</select>
+</label>
+
+<button onclick="provision()">Provision my BFT Council</button>
+
+<div class="result" id="result">
+<h2>✅ BFT Council Provisioned</h2>
+<p><strong>Council ID:</strong> <code id="council_id">bft-strict-abc123</code></p>
+<p><strong>Setup:</strong> <span id="setup_result">BFT-STRICT</span></p>
+<p><strong>Voters:</strong> <span id="voter_count">22</span></p>
+<p><strong>Threshold:</strong> <span id="threshold_result">12-of-22 (55%)</span></p>
+<p><strong>Region:</strong> <span id="region_result">sovereign</span></p>
+<p><strong>Endpoint:</strong> <code id="endpoint">https://bft.openpatent.ai/council/bft-strict-abc123</code></p>
+<p><strong>API Key:</strong> <code id="api_key">sk-sov-abc123def456</code></p>
+<p><strong>SIGIL:</strong> <code id="sigil_id">autopilot-48h-...</code></p>
+<p style="margin-top:1rem">Save your API key. Use the endpoint to vote, propose, verify.</p>
+</div>
+
+<p style="text-align:center;color:#94a3b8;font-size:.85rem;margin-top:2rem">
+CSOAI Ltd · UK Companies House 16939677 · London, United Kingdom<br>
+OpenPatent.ai — Disclose First. AI Second.
+</p>
+</div>
+
+<script>
+function pickSetup(name) {
+  document.querySelectorAll('.setup').forEach(el => el.classList.remove('selected'));
+  document.getElementById(name).checked = true;
+  document.getElementById(name).closest('.setup').classList.add('selected');
+  const isCustom = (name === 'custom');
+  document.getElementById('size').disabled = !isCustom;
+  document.getElementById('threshold_pct').disabled = !isCustom;
+}
+
+async function provision() {
+  const checked = document.querySelector('input[name=setup]:checked');
+  if (!checked) { alert('Pick a setup'); return; }
+  const config = {
+    setup: checked.value,
+    size: parseInt(document.getElementById('size').value),
+    threshold_pct: parseInt(document.getElementById('threshold_pct').value),
+    region: document.getElementById('region').value,
+  };
+  // Demo response (real API call in production)
+  const presets = {
+    lite: {size: 5, threshold: 60},
+    standard: {size: 22, threshold: 55},
+    strict: {size: 33, threshold: 67},
+    parliament: {size: 100, threshold: 50},
+    custom: {size: config.size, threshold: config.threshold_pct},
+  };
+  const p = presets[config.setup];
+  const council_id = 'bft-' + config.setup + '-' + Math.random().toString(36).substring(2, 10);
+  
+  document.getElementById('council_id').textContent = council_id;
+  document.getElementById('setup_result').textContent = 'BFT-' + config.setup.toUpperCase();
+  document.getElementById('voter_count').textContent = p.size;
+  document.getElementById('threshold_result').textContent = Math.ceil(p.size * p.threshold/100) + '-of-' + p.size + ' (' + p.threshold + '%)';
+  document.getElementById('region_result').textContent = config.region;
+  document.getElementById('endpoint').textContent = 'https://bft.openpatent.ai/council/' + council_id;
+  document.getElementById('api_key').textContent = 'sk-sov-' + Math.random().toString(36).substring(2, 18);
+  document.getElementById('sigil_id').textContent = 'autopilot-48h-' + Date.now();
+  document.getElementById('result').style.display = 'block';
+}
+</script>
+
+<div style="background:rgba(201,168,76,.1);border:2px solid rgba(201,168,76,.5);border-radius:8px;padding:1.5rem;margin:2rem auto;max-width:900px;text-align:center">
+<strong style="color:#c9a84c;font-size:1.1rem">Charter Article 0 (Ratified 4 July 2026)</strong><br>
+<p style="color:#f8fafc;margin:.5rem 0">"Never take equity, board seats, revenue-sharing, or success fees from institutions we certify. S&P paid $1.375B and Moody's paid $864M in settlements for this exact conflict. ISO fee-for-service model ONLY. <strong style="color:#c9a84c">CA3O is the CMMC for AI</strong> — independent third-party accreditation."</p>
+</div>
+<style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "date": "2026-06-25",
+  "spec": "Google A2A Protocol - Linux Foundation",
+  "spec_url": "https://a2a-protocol.org/",
+  "count": 47,
+  "agent_cards": [
+    {
+      "name": "Sovereign",
+      "url": "https://sov3.csoai.org/agents/sovereign",
+      "version": "1.0",
+      "capabilities": {"streaming": true, "pushNotifications": true, "stateTransitionHistory": true},
+      "authentication": {"schemes": ["ed25519", "did:csoai"]},
+      "skills": [
+        {"id": "audit", "name": "Audit Trail", "description": "Cryptographic SIGIL chain emissions"},
+        {"id": "policy", "name": "Policy Bus", "description": "PDCA runtime, 30-framework crosswalk"},
+        {"id": "council", "name": "BFT Council", "description": "Multi-stakeholder voting"}
+      ]
+    },
+    {
+      "name": "Editor",
+      "url": "https://sov3.csoai.org/agents/editor",
+      "skills": [{"id": "publish", "name": "csoai.org Editor", "description": "Document archival and publishing"}]
+    },
+    {
+      "name": "Pond-Mother",
+      "url": "https://sov3.csoai.org/agents/pond-mother",
+      "skills": [{"id": "hatch", "name": "Birth Ceremony", "description": "Hatch AI agent personalities"}]
+    },
+    {
+      "name": "Archivist",
+      "url": "https://sov3.csoai.org/agents/archivist",
+      "skills": [{"id": "memory", "name": "Memory Layer", "description": "Episodic + reflective memory"}]
+    }
+  ]
+}

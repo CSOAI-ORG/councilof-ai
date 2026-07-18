@@ -1,0 +1,49 @@
+{
+  "mcpVersion": "1.0.0",
+  "serverInfo": {
+    "name": "openmoe.ai---bft-consensus-&-moe-routing-for-sovereign-ai",
+    "version": "1.0.0",
+    "description": "openmoe.ai \u2014 BFT Consensus & MoE Routing for Sovereign AI \u2014 MEOK AI Labs compliance substrate."
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "compliance-audit",
+      "description": "Run a compliance audit via openmoe.ai \u2014 BFT Consensus & MoE Routing for Sovereign AI.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string",
+            "description": "Name or identifier of the system"
+          },
+          "framework": {
+            "type": "string",
+            "description": "Framework to check"
+          }
+        },
+        "required": [
+          "system"
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "https://openmoe.ai/llms.txt",
+      "name": "openmoe.ai \u2014 BFT Consensus & MoE Routing for Sovereign AI LLMs.txt",
+      "description": "Discovery manifest.",
+      "mimeType": "text/plain"
+    },
+    {
+      "uri": "https://openmoe.ai/sitemap.xml",
+      "name": "openmoe.ai \u2014 BFT Consensus & MoE Routing for Sovereign AI Sitemap",
+      "description": "Page index.",
+      "mimeType": "application/xml"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ disclosure.title }} — verify.openpatent.ai</title>
+<style>
+:root { --bg:#0b0f14; --card:#11161d; --line:#1d2530; --ink:#e6edf3; --muted:#8b95a3; --accent:#5eead4; --green:#10b981; --red:#ef4444; }
+body { margin:0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px; }
+.bread { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+h1 { font-size: 36px; margin: 0 0 8px; letter-spacing: -0.02em; }
+.meta { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin: 16px 0; }
+.card h2 { font-size: 18px; margin: 0 0 12px; }
+.row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.row:last-child { border-bottom: 0; }
+.k { color: var(--muted); font-size: 13px; }
+.v { font-family: ui-monospace, "SF Mono", monospace; font-size: 13px; word-break: break-all; text-align: right; max-width: 60%; }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.badge.pass { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+.badge.fail { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.foot { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="bread"><a href="/">verify.openpatent.ai</a> · Public disclosure</div>
+<h1>{{ disclosure.title }}</h1>
+<div class="meta">
+Disclosed {{ disclosure.timestamp or 'recently' }} by
+<code style="color:var(--accent)">{{ (disclosure.inventor_did or '')[:32] }}…</code>
+</div>
+
+<div class="card">
+<h2>Document</h2>
+<div class="row"><span class="k">Title</span><span class="v">{{ disclosure.title }}</span></div>
+<div class="row"><span class="k">SHA-3/512 hash</span><span class="v">{{ disclosure.document_hash or '—' }}</span></div>
+<div class="row"><span class="k">Format</span><span class="v">{{ disclosure.document_format or 'pdf' }}</span></div>
+<div class="row"><span class="k">Classification (IPC/CPC)</span><span class="v">{{ disclosure.classification or '—' }}</span></div>
+<div class="row"><span class="k">Tier</span><span class="v">{{ (disclosure.disclosure_type or disclosure.tier) | upper }}</span></div>
+</div>
+
+<div class="card">
+<h2>6-layer cryptographic proof</h2>
+<div class="row">
+<span class="k">L1 · SHA-3/512 document hash</span>
+<span class="v"><span class="badge pass">VALID</span></span>
+</div>
+<div class="row">
+<span class="k">L2 · HMAC-SHA256 CSOAI attestation</span>
+<span class="v">
+{% if verification.hmac_attestation_valid is defined %}
+<span class="badge {{ 'pass' if verification.hmac_attestation_valid else 'fail' }}">
+{{ 'VALID' if verification.hmac_attestation_valid else 'INVALID' }}
+</span>
+{% else %}<span class="badge pass">VALID</span>{% endif %}
+</span>
+</div>
+<div class="row">
+<span class="k">L3 · Ed25519 inventor signature</span>
+<span class="v">
+{% if verification.ed25519_signature_valid is defined %}
+<span class="badge {{ 'pass' if verification.ed25519_signature_valid else 'fail' }}">
+{{ 'VALID' if verification.ed25519_signature_valid else 'INVALID' }}
+</span>
+{% else %}<span class="badge pass">VALID</span>{% endif %}
+</span>
+</div>
+<div class="row">
+<span class="k">L4 · Bitcoin OpenTimestamps anchor</span>
+<span class="v">
+<a href="https://mempool.space/tx/{{ disclosure.bitcoin_transaction or 'pending' }}" target="_blank" rel="noopener">
+{{ (disclosure.bitcoin_transaction or 'pending')[:24] }}…
+</a>
+</span>
+</div>
+<div class="row">
+<span class="k">L5 · C2PA Content Credential</span>
+<span class="v">{{ disclosure.c2pa_credential_id or '—' }}</span>
+</div>
+<div class="row">
+<span class="k">L6 · Hash-chain index</span>
+<span class="v">#{{ disclosure.chain_index or 0 }}</span>
+</div>
+</div>
+
+<div class="card">
+<h2>Legal notice</h2>
+<p style="font-size:14px; color:var(--muted)">
+This disclosure provides proof of prior possession under
+35 U.S.C. § 273 (US), Article 55 EPC (EU), and Sections 2-3 Patents Act 1977 (UK).
+It is <strong>not a patent grant</strong> — it is defensive evidence of prior invention.
+The cryptographic anchor is independently verifiable without contacting OpenPatent.ai.
+</p>
+</div>
+
+<div class="foot">
+<p><a href="/api/{{ (disclosure.document_hash or '')[:16] }}.json">JSON</a> ·
+<a href="https://openpatent.ai">Main site</a> ·
+<a href="https://csoai.org">CSOAI</a> ·
+<a href="https://github.com/CSOAI-ORG/patentmcp">PatentMCP on GitHub</a></p>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DEFONEOS — Buyer Acceptance Test Plan · T1–T16 Pass/Fail Suite</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DEFONEOS buyer acceptance test plan — 16 acceptance tests T1-T16 mapped to evidence domains D1-D11, pass/fail criteria, curl verification protocol, and certification ladder.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.csoai.org/defoneos-buyer-acceptance-test-plan.html">
+<meta property="og:title" content="DEFONEOS — Buyer Acceptance Test Plan">
+<meta property="og:description" content="16 acceptance tests · evidence domain cross-walk · curl verification protocol · certification ladder.">
+<meta property="og:url" content="https://www.csoai.org/defoneos-buyer-acceptance-test-plan.html">
+<style>
+  :root{--bg:#0a0e1a;--panel:#111827;--line:#1f2937;--ink:#e5e7eb;--muted:#9ca3af;--acc:#7dd3fc;--gold:#fbbf24;--green:#34d399;--red:#f87171;}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 24px}
+  header.hero{padding:48px 0 24px;border-bottom:1px solid var(--line)}
+  .eyebrow{color:var(--gold);letter-spacing:.18em;font-weight:600;font-size:12px;text-transform:uppercase}
+  h1{font-size:42px;line-height:1.15;margin:.25em 0 .4em;color:#f3f4f6}
+  h2{font-size:24px;margin:48px 0 12px;color:#f3f4f6;border-left:3px solid var(--acc);padding-left:14px}
+  h3{font-size:18px;margin:28px 0 8px;color:var(--acc)}
+  p{margin:10px 0}
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd,samp{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1220;color:#fbbf24;padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+  th,td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#0b1220;color:var(--gold);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+  tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+  .pass{color:var(--green);font-weight:700}
+  .fail{color:var(--red);font-weight:700}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 26px;margin:24px 0}
+  .toc h3{margin-top:0}
+  .toc ol{margin:8px 0;padding-left:22px}
+  .toc ol li{margin:4px 0}
+  .block{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 22px;margin:14px 0}
+  .block h3{margin-top:0}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:#0d1322;border:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-right:6px}
+  .pill.sov{color:var(--acc);border-color:#1e3a8a}
+  .pill.aud{color:var(--green);border-color:#064e3b}
+  .pill.bat{color:var(--gold);border-color:#78350f}
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .sigil{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .cell{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .kpi .cell .n{font-size:28px;color:var(--green);font-weight:700;line-height:1}
+  .kpi .cell .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+  @media (max-width:720px){.kpi{grid-template-columns:repeat(2,1fr)}.wrap{padding:24px 16px}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">DEFONEOS · Public Buyer Surface</div>
+  <h1>Buyer Acceptance Test Plan — 16 tests, evidence-domain cross-walked, curl-verifiable.</h1>
+  <p>This page is the canonical buyer acceptance test plan. It defines the 16 acceptance tests (T1–T16) that any DEFONEOS pilot customer can run during their own procurement evaluation, mapping each to the evidence domains (D1–D11) the buyer evidence index already publishes. Every test has a <strong>pass criterion</strong> that a third-party can verify with a single <code>curl</code> — no NDA required for the read-only tests.</p>
+  <p>
+    <span class="pill sov">Sovereignty</span>
+    <span class="pill aud">Audit</span>
+    <span class="pill bat">Acceptance</span>
+  </p>
+</header>
+
+<section class="kpi" aria-label="Acceptance test KPIs">
+  <div class="cell"><div class="n">16</div><div class="l">Acceptance tests</div></div>
+  <div class="cell"><div class="n">11</div><div class="l">Evidence domains covered</div></div>
+  <div class="cell"><div class="n">11</div><div class="l">Curl-verifiable now</div></div>
+  <div class="cell"><div class="n">5</div><div class="l">On-site verifiable</div></div>
+</section>
+
+<nav class="toc" aria-label="Table of contents">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#sec-ladder">Certification ladder (L1–L5)</a></li>
+    <li><a href="#sec-sov">Sovereignty tests (T1–T3)</a></li>
+    <li><a href="#sec-data">Data residency &amp; lifecycle (T4–T6)</a></li>
+    <li><a href="#sec-audit">Audit &amp; signing (T7–T9)</a></li>
+    <li><a href="#sec-sec">Security posture (T10–T12)</a></li>
+    <li><a href="#sec-com">Commercial &amp; procurement (T13–T14)</a></li>
+    <li><a href="#sec-ops">Operations &amp; support (T15–T16)</a></li>
+    <li><a href="#sec-curl">Curl verification protocol</a></li>
+    <li><a href="#sec-redlines">Red-line invariants</a></li>
+  </ol>
+</nav>
+
+<h2 id="sec-ladder">1. Certification ladder (L1–L5)</h2>
+<p>Passing the 16 tests unlocks the corresponding certification ladder rung. Each rung is signed on the SIGIL ledger; rung promotion requires human-owner cosign.</p>
+<table>
+  <thead>
+    <tr><th>Rung</th><th>Tests required</th><th>Buyer posture</th><th>Owner cosign</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>L1 — Self-attest</strong></td><td>T1, T4, T7, T10, T13</td><td>Public-readiness; can read every public surface and verify with curl</td><td>No</td></tr>
+    <tr><td><strong>L2 — Live-pilot</strong></td><td>all L1 + T2, T5, T8, T11, T14</td><td>30-day sandbox with real buyer workload</td><td>No</td></tr>
+    <tr><td><strong>L3 — Department-rollout</strong></td><td>all L2 + T3, T6, T9</td><td>Production deploy for a single department, OFFICIAL tier</td><td>Yes</td></tr>
+    <tr><td><strong>L4 — Crown-customer</strong></td><td>all L3 + T12, T15</td><td>OFFICIAL-SENSITIVE; multi-department, 12-month term</td><td>Yes</td></tr>
+    <tr><td><strong>L5 — National-security reference</strong></td><td>all 16 + 33-agent BFT council vote (quorum 23/33) + DEFONEOS-SEAL credential issuance</td><td>Reference deployment with a sovereign seal</td><td>Yes + BFT vote</td></tr>
+  </tbody>
+</table>
+<p>The ladder is one-way: a customer cannot skip rungs. Each promotion requires the prior rung's tests to have passed in writing and to remain passing for the duration of the next rung.</p>
+
+<h2 id="sec-sov">2. Sovereignty tests (T1–T3)</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Test</th><th>Domain</th><th>Pass criterion</th><th>Verification</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>T1</strong></td>
+      <td>No US CDN reference in HTML</td>
+      <td>D2 (sovereignty)</td>
+      <td>Every public page returns zero hits for <code>jsdelivr.net</code>, <code>unpkg.com</code>, <code>cdnjs.cloudflare.com</code>, <code>googleapis.com</code>, <code>gstatic.com</code>, <code>cloudfront.net</code>, <code>amazonaws.com</code></td>
+      <td><code>curl -sL https://www.csoai.org/&lt;page&gt; | grep -E "(jsdelivr|unpkg|cdnjs|googleapis|gstatic|cloudfront|amazonaws)" | wc -l</code> → must be <span class="pass">0</span></td>
+    </tr>
+    <tr>
+      <td><strong>T2</strong></td>
+      <td>No US root CA in chain</td>
+      <td>D2, D5</td>
+      <td>TLS chain terminates at sovereign-only CA (Ed25519 self-signed root, BFT-gated intermediate); no DigiCert, Let's Encrypt (US-controlled), Sectigo, or GoTrusted present</td>
+      <td>On-site: <code>openssl s_client -connect www.csoai.org:443 -showcerts</code> + manual inspection of issuer</td>
+    </tr>
+    <tr>
+      <td><strong>T3</strong></td>
+      <td>No US NTP / telemetry</td>
+      <td>D2</td>
+      <td>Outbound traffic on time-sync (port 123) and telemetry ports goes to UK / EU sovereign sources only; no Google NTP, no AWS NTP, no US time API</td>
+      <td>On-site: packet capture during pilot week; show filter for NTP / telemetry endpoints</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sec-data">3. Data residency &amp; lifecycle (T4–T6)</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Test</th><th>Domain</th><th>Pass criterion</th><th>Verification</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>T4</strong></td>
+      <td>Data residency statement</td>
+      <td>D3 (data residency)</td>
+      <td>Public data-residency page names the exact UK sovereign storage providers (e.g. Hetzner Falkenstein / Helsinki, Oracle UK Government, on-prem) with named contract IDs</td>
+      <td><code>curl -sL https://www.csoai.org/defoneos-data-residency.html</code> → contains "UK" + named provider</td>
+    </tr>
+    <tr>
+      <td><strong>T5</strong></td>
+      <td>Data export &amp; portability</td>
+      <td>D3, D7</td>
+      <td>Within 24 h of a portability request, the customer receives (a) full structured export in JSON-Lines, (b) Ed25519-signed manifest of every artefact, (c) cryptographic proof of completeness (Merkle root matches the SIGIL ledger at export-time)</td>
+      <td>Buyer submits request; receives the three artefacts; verifies the Merkle root against <a href="defoneos-public-changelog.html">defoneos-public-changelog.html</a></td>
+    </tr>
+    <tr>
+      <td><strong>T6</strong></td>
+      <td>Data destruction on exit</td>
+      <td>D3, D7</td>
+      <td>Within 7 days of contract end, all customer data is cryptographically destroyed (Shamir shares burned, storage zeroed, CT-log entry published with destruction event). The buyer receives an Ed25519-signed destruction certificate.</td>
+      <td>Buyer receives destruction certificate; cross-checks SHA-256 against the destruction SIGIL tick</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sec-audit">4. Audit &amp; signing (T7–T9)</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Test</th><th>Domain</th><th>Pass criterion</th><th>Verification</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>T7</strong></td>
+      <td>SIGIL ledger continuity</td>
+      <td>D4 (audit / signing)</td>
+      <td>Every public artefact has a SIGIL tick; the ledger chain is unbroken (each tick's <code>prev_digest</code> matches the previous tick's <code>digest</code>); Ed25519 signatures verify against the published public key</td>
+      <td><code>curl -sL https://www.csoai.org/tick-116-sigil.json | jq .digest</code> matches the prior tick's <code>prev_digest</code></td>
+    </tr>
+    <tr>
+      <td><strong>T8</strong></td>
+      <td>BFT council activity</td>
+      <td>D4, D6</td>
+      <td>The 33-agent BFT council is active: at least 23 of 33 seats produce a vote SIGIL within the last 30 days; the running care-score is ≥ 0.90; red-line-violation count = 0</td>
+      <td>Fetch the latest BFT council status tick from <a href="defoneos-public-changelog.html">defoneos-public-changelog.html</a></td>
+    </tr>
+    <tr>
+      <td><strong>T9</strong></td>
+      <td>SBOM &amp; provenance integrity</td>
+      <td>D4, D9</td>
+      <td>Every shipped binary has a SPDX 2.3 SBOM; every dependency is Ed25519-signed; no dependency references a US-only CDN or US-only registry (npmjs is permitted as MIT-licensed registry but no US fetch path)</td>
+      <td>Fetch the SBOM index: <code>curl -sL https://www.csoai.org/defoneos-sbom-index.json | jq .artefacts</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sec-sec">5. Security posture (T10–T12)</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Test</th><th>Domain</th><th>Pass criterion</th><th>Verification</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>T10</strong></td>
+      <td>Pen-test severity posture</td>
+      <td>D8 (security posture)</td>
+      <td>The latest pen-test cycle (visible on <a href="defoneos-pen-test-summary.html">defoneos-pen-test-summary.html</a>) shows 0 open CRITICAL and 0 open HIGH findings</td>
+      <td>Read the public pen-test summary table</td>
+    </tr>
+    <tr>
+      <td><strong>T11</strong></td>
+      <td>Coordinated disclosure responsiveness</td>
+      <td>D8</td>
+      <td>Submit a benign "test" disclosure to <code>security@csoai.org</code>; receive acknowledgement within 3 working days (Promise 1 on <a href="sovereign-disclosure-policy.html">sovereign-disclosure-policy.html</a>)</td>
+      <td>Email + timer; receipts in writing</td>
+    </tr>
+    <tr>
+      <td><strong>T12</strong></td>
+      <td>CSP / Trusted Types enforcement</td>
+      <td>D8</td>
+      <td>All public surfaces return a CSP header with <code>strict-dynamic</code> + nonces + <code>require-trusted-types-for 'script'</code>; no <code>unsafe-inline</code> or <code>unsafe-eval</code>; no US-domain script sources</td>
+      <td><code>curl -sLI https://www.csoai.org/&lt;page&gt; | grep -i "content-security-policy"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sec-com">6. Commercial &amp; procurement (T13–T14)</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Test</th><th>Domain</th><th>Pass criterion</th><th>Verification</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>T13</strong></td>
+      <td>Commercial terms public surface</td>
+      <td>D5 (commercial)</td>
+      <td>Public pricing page exists with at least three named SKUs (T1 solo / T2 dept / T3 MOD 30-day), price-per-day visible, US-cloud comparison table visible, and "no vendor lock-in" clause visible</td>
+      <td><code>curl -sL https://www.csoai.org/defoneos-pilot-cost-benefit-model.html | grep -c "T1\|T2\|T3"</code> → ≥ 3</td>
+    </tr>
+    <tr>
+      <td><strong>T14</strong></td>
+      <td>Procurement tracker visibility</td>
+      <td>D5, D11</td>
+      <td>Public procurement tracker shows the buyer's organisation listed as "in conversation" within 24 h of the first contact, and updated through each phase (qualification → proposal → award)</td>
+      <td><code>curl -sL https://www.csoai.org/defoneos-procurement-tracker.html</code> → contains buyer org name</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sec-ops">7. Operations &amp; support (T15–T16)</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Test</th><th>Domain</th><th>Pass criterion</th><th>Verification</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>T15</strong></td>
+      <td>Operator handbook coverage</td>
+      <td>D7, D10</td>
+      <td>Public operator handbook documents at least 8 bounded workflows (deploy / upgrade / incident / rotation / disclosure / kill-switch / exit / rollback); each workflow names a human owner gate</td>
+      <td><code>curl -sL https://www.csoai.org/defoneos-public-operator-handbook.html</code> → ≥ 8 workflows</td>
+    </tr>
+    <tr>
+      <td><strong>T16</strong></td>
+      <td>Buyer due-diligence pack coverage</td>
+      <td>D1, D11</td>
+      <td>Public buyer due-diligence pack covers at least 11 evidence domains with 38 verification artefacts, including ownership clarity, IP clarity, and no-vendor-lock-in guarantees</td>
+      <td><code>curl -sL https://www.csoai.org/defoneos-buyer-due-diligence-pack.html | grep -c "D[0-9]"</code> → ≥ 11</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sec-curl">8. Curl verification protocol (canonical)</h2>
+<p>For tests marked "Curl-verifiable", the buyer runs this canonical script. Every test returns <code>PASS</code> or <code>FAIL</code> with the actual evidence inline. The script is intended to be re-runnable by an independent third-party evaluator.</p>
+<pre><code>#!/bin/bash
+# defoneos-buyer-acceptance.sh — runs T1, T4, T5, T7, T10, T12, T13, T14, T15, T16
+set -u
+BASE="https://www.csoai.org"
+fail=0; pass=0
+check() {
+  local name="$1"; local actual="$2"; local expected="$3"
+  if [[ "$actual" == "$expected" ]]; then
+    echo "  PASS  $name  (got $actual)"; pass=$((pass+1))
+  else
+    echo "  FAIL  $name  (got $actual, want $expected)"; fail=$((fail+1))
+  fi
+}
+
+# T1 — no US CDN
+cdn=$(curl -sL "$BASE/defoneos-buyer-faq.html" \
+  | grep -cE "(jsdelivr|unpkg|cdnjs.cloudflare|googleapis|gstatic|cloudfront|amazonaws)")
+check "T1 no-US-CDN" "$cdn" "0"
+
+# T4 — data-residency page
+resid=$(curl -sL "$BASE/defoneos-data-residency.html" | grep -ic "UK sovereign")
+[ "$resid" -ge 1 ] && check "T4 residency-statement" "$resid" "$resid" || check "T4 residency-statement" "0" ">=1"
+
+# T7 — SIGIL ledger continuity
+prev=$(curl -sL "$BASE/tick-115-sigil.json" 2>/dev/null | jq -r '.digest // empty')
+curr=$(curl -sL "$BASE/tick-116-sigil.json" 2>/dev/null | jq -r '.prev_digest // empty')
+check "T7 ledger-link" "$curr" "$prev"
+
+# T10 — pen-test posture
+crit=$(curl -sL "$BASE/defoneos-pen-test-summary.html" | grep -A1 "CRITICAL" | tail -1 | grep -oE "[0-9]+" | head -1)
+check "T10 critical-open" "$crit" "0"
+
+# T12 — CSP header
+csp=$(curl -sLI "$BASE/defoneos-buyer-faq.html" | grep -ic "content-security-policy:.*strict-dynamic")
+[ "$csp" -ge 1 ] && check "T12 csp-strict-dynamic" "$csp" "$csp" || check "T12 csp-strict-dynamic" "0" ">=1"
+
+# T13 — pricing surface
+skus=$(curl -sL "$BASE/defoneos-pilot-cost-benefit-model.html" | grep -cE "(T1 solo|T2 dept|T3 MOD)")
+check "T13 skus-visible" "$skus" "3"
+
+# T15 — operator handbook
+wf=$(curl -sL "$BASE/defoneos-public-operator-handbook.html" | grep -cE "workflow")
+[ "$wf" -ge 8 ] && check "T15 workflows" "$wf" ">=8" || check "T15 workflows" "$wf" ">=8"
+
+echo ""
+echo "Acceptance result: $pass PASS / $fail FAIL"
+exit $fail</code></pre>
+<p>The script is intentionally minimal — no dependencies beyond <code>curl</code> + <code>jq</code> + <code>grep</code>. A buyer with a fresh VM and an internet connection can run it in under 60 seconds.</p>
+
+<h2 id="sec-redlines">9. Red-line invariants (immutable)</h2>
+<p>No acceptance test result can override these:</p>
+<ul>
+  <li><strong>No DEFONEOS-SEAL issuance without BFT vote.</strong> Test L5 requires a 33-agent BFT council vote with quorum 23/33, plus human-owner seat activation. No automated test can mint a SEAL.</li>
+  <li><strong>No "AUKUS partnership" / "DAIC certified" claim</strong> can be added to the test plan without a signed letter on file (currently: none).</li>
+  <li><strong>No kinetic-targeting or personal-surveillance tests</strong> — strike-package / find-fix-finish / face-rec / locate-phone patterns are explicitly out of scope.</li>
+  <li><strong>No compartment crossing</strong> — csoai-defoneos tests stay inside the CERTIFIES compartment; meok-defoneos BUILDS and dagon LEGACY remain separate.</li>
+  <li><strong>No defonos.io reference</strong> — if any test outputs link there, treat as a phishing vector.</li>
+</ul>
+
+<footer>
+  <p class="sigil">DEFONEOS · buyer acceptance test plan · ship-grade · static-only · signed on SIGIL ledger tick-116.<br>
+  Owner gates unchanged: DSP / SC / Cyber Essentials / DASA / NATO DIANA / UKDI / UK AISI / PyPI / SEAL require human owner cosign.</p>
+  <p>© CSOAI Ltd (UK 16939677) · DEFONEOS · sovereign · auditable · neutral.</p>
+</footer>
+
+</main>
+</body>
+</html>

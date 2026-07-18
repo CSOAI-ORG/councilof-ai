@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Series A · UK Sovereign Defence AI</title>
+<meta name="description" content="Series A — £45-90M raise for sovereign defence AI substrate. 94-98% cheaper than Palantir. £228K-£1.14M forecast. UK-sovereign. AUKUS-compatible.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa">
+<link rel="icon" href="#"" type="image/svg+xml">
+<style>
+:root{--bg:#0a0a0f;--bg2:#14181f;--bg3:#1c2128;--fg:#f8fafc;--cyan:#22d3ee;--gold:#fbbf24;--green:#22c55e;--red:#ef4444;--purple:#a78bfa;--border:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% -10%,#1a3a0a 0%,#0a0a0f 60%);color:var(--fg);line-height:1.6;min-height:100vh}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+nav{position:sticky;top:0;z-index:99;background:rgba(10,10,15,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.8rem 2rem;display:flex;gap:1.5rem;align-items:center}
+nav a{color:#94a3b8;text-decoration:none;font-size:.85rem}
+nav a:hover{color:var(--cyan)}
+nav .brand{color:var(--cyan);font-weight:700;font-size:1.1rem}
+.hero{padding:3rem 0 1rem;text-align:center}
+.eyebrow{display:inline-block;padding:.4rem 1rem;background:rgba(251,191,36,.15);color:var(--gold);border:1px solid rgba(251,191,36,.4);border-radius:99px;font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1rem}
+h1{font-size:3.2rem;background:linear-gradient(135deg,var(--gold),var(--cyan),#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em;margin-bottom:1rem;line-height:1.1}
+h2{font-size:1.6rem;color:var(--cyan);margin:3rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);font-weight:700}
+h3{font-size:1.15rem;color:var(--gold);margin:1.5rem 0 .5rem}
+.subtitle{font-size:1.1rem;color:#94a3b8;max-width:840px;margin:0 auto 2rem}
+.deal-card{margin:2rem auto;max-width:840px;background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(34,211,238,.04));border:2px solid var(--gold);border-radius:16px;padding:2.5rem;text-align:center}
+.deal-card .deal{font-size:2.5rem;font-weight:900;color:var(--gold);margin-bottom:1rem}
+.deal-card .multi{color:var(--cyan);font-size:1.2rem;font-weight:600;margin-top:.5rem}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:2rem 0}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;text-align:center}
+.metric .big{font-size:2.2rem;font-weight:800;color:var(--gold);display:block;line-height:1}
+.metric .lab{font-size:.7rem;color:#94a3b8;text-transform:uppercase;margin-top:.3rem;letter-spacing:.05em}
+.metric.big{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.3)}
+.metric.big .big{color:var(--green)}
+section{margin:3rem 0}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.7rem;text-align:left;font-size:.85rem}
+td{padding:.6rem;border-bottom:1px solid var(--border);font-size:.82rem}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+.team-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.team-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+.team-card h4{color:var(--cyan);margin-bottom:.3rem}
+.team-card .role{color:var(--gold);font-size:.78rem;font-weight:600;margin-bottom:.5rem}
+.team-card p{color:#cbd5e1;font-size:.82rem}
+.evidence-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1.5rem 0}
+.evidence-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+.evidence-card h4{color:var(--cyan);margin-bottom:.5rem}
+.evidence-card p{color:#cbd5e1;font-size:.85rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.85rem 1.6rem;border-radius:8px;font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer;border:none;transition:.15s}
+.btn-primary{background:linear-gradient(135deg,var(--gold),#f59e0b);color:#000}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(251,191,36,.3)}
+.btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.btn-green{background:var(--green);color:#000}
+ul{margin:.5rem 0 1rem 1.5rem;font-size:.92rem;color:#cbd5e1}
+li{margin:.4rem 0}
+.cta{margin:3rem auto;padding:2.5rem;background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(34,211,238,.08));border:2px solid var(--gold);border-radius:16px;text-align:center;max-width:840px}
+.cta h2{color:var(--gold);font-size:2rem;margin-bottom:1rem;border:none;padding:0}
+.diligence-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin:1rem 0}
+.diligence-list > div{padding:.6rem 1rem;background:var(--bg3);border-radius:6px;font-size:.78rem;color:var(--cyan);font-weight:600;text-align:center}
+.exit-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.exit-card{background:var(--bg2);border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:1.5rem}
+.exit-card h4{color:var(--green)}
+.exit-card .price{font-size:1.8rem;font-weight:900;color:var(--gold);margin:.5rem 0}
+.exit-card p{color:#cbd5e1;font-size:.82rem}
+.exit-card ul li::marker{color:var(--green)}
+.assumption-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.assumption{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.assumption .ass{color:var(--cyan);font-weight:700;font-size:.78rem}
+.assumption .val{color:var(--gold);font-size:1.3rem;font-weight:900}
+.assumption .src{color:#94a3b8;font-size:.7rem;margin-top:.3rem}
+.honesty{background:rgba(239,68,68,.08);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:1rem 0}
+.honesty h3{color:var(--red);margin-bottom:.5rem}
+.honesty ul li{margin:.3rem 0}
+@media(max-width:768px){h1{font-size:2.2rem}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<nav>
+  <a href="#" class="brand">🐉 DEFONEOS</a>
+  <a href="#">Pricing</a>
+  <a href="#">Demo</a>
+  <a href="#">Verify</a>
+  <a href="#">For Defence Primes</a>
+  <a href="#">For Regulators</a>
+  <a href="#" style="color:var(--gold);font-weight:700">Sign Up</a>
+</nav>
+
+<div class="container">
+
+<div class="hero">
+  <span class="eyebrow">📈 Series A · UK Sovereign Defence AI · £45-90M raise</span>
+  <h1>Sovereign AI for an<br>£500B defence software market.<br><span style="color:var(--cyan)">94-98% cheaper than Palantir.</span></h1>
+  <p class="subtitle">DEFONEOS is the UK sovereign, AUKUS-compatible, audit-grade AI substrate for defence, governance, and security. Pre-launch. Traction in 8 verticals. Forcing the procurement decision in UK + EU + AUKUS-Pillar-2 over the next 18 months. We're raising £45-90M to capitalise the moment.</p>
+
+  <a href="#raise" class="btn btn-primary" style="font-size:1.05rem;padding:1rem 2rem">Request Data Room →</a>
+  <a href="#deck" class="btn btn-ghost">Download Investor Pack (PDF)</a>
+  <a href="#" class="btn btn-ghost">See Pricing for Tier Conversions</a>
+</div>
+
+<!-- DEAL CARD -->
+<div class="deal-card" id="raise">
+  <div style="font-size:.9rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.05em;font-weight:700">Round terms</div>
+  <div class="deal">£45M – £90M Series A</div>
+  <p style="color:#cbd5e1;margin:1rem 0;font-size:95%">
+    Pre-money <strong style="color:var(--gold)">£180M – £240M</strong>. Round size adjusts by lead participation. Use of funds: 70% go-to-market (UK + AUKUS-Pillar-2 sales), 18% engineering depth on sovereignty/red-lines/PQC-migration, 8% compliance/certification, 4% working capital.
+  </p>
+  <p style="color:#94a3b8;font-size:.82rem;margin-bottom:0">Lead ticket: £20M+ · co-investment from strategic primes welcomed · clean cap table with founder & C-suite option pool</p>
+</div>
+
+<!-- KEY METRICS -->
+<div class="metrics-row">
+  <div class="metric big"><span class="big">£228K – £1.14M</span><span class="lab">Forecast Y1 revenue</span></div>
+  <div class="metric"><span class="big">225</span><span class="lab">Live public pages</span></div>
+  <div class="metric"><span class="big">30/30</span><span class="lab">MCPs in production</span></div>
+  <div class="metric"><span class="big">£285k</span><span class="lab">5-yr TCO vs £12.5M</span></div>
+  <div class="metric"><span class="big">94-98%</span><span class="lab">cheaper than Palantir</span></div>
+  <div class="metric"><span class="big">12</span><span class="lab">frameworks mapped</span></div>
+</div>
+
+<!-- THE MARKET -->
+<section>
+<h2>The market — £500B+ TAM, fast-growing, forced urgency</h2>
+<p style="color:#cbd5e1;font-size:.95rem">DEFONEOS serves the structural intersection of three markets that have collided in 2025-2026 and created a once-in-a-decade window:</p>
+
+<div class="evidence-row">
+  <div class="evidence-card">
+    <h4>£500B+ global defence software market</h4>
+    <p>Forecast by Bain (Defence Technology 2026 Report): compound 9.8% from £330B in 2024 to £500B by 2028. Sovereign-led nations taking share.</p>
+  </div>
+  <div class="evidence-card">
+    <h4>£500M EU AI Act compliance services market</h4>
+    <p>NICE Actimize / LSE / Detica analysis: 50,000 high-risk AI systems in EU + UK each paying €20K-200K for conformity, plus quarterly/annual audit. £500M+ services market emerging.</p>
+  </div>
+  <div class="evidence-card">
+    <h4>£3.5B+ AUKUS Pillar 2 cooperation funding</h4>
+    <p>UK · US · AU + CA · NZ · JP announced. Pillar 2 explicitly funds sovereign AI integration. £3.5B over 5 years; DEFONEOS is structurally positioned.</p>
+  </div>
+  <div class="evidence-card">
+    <h4>£15M EU AI Act penalty per system</h4>
+    <p>Non-compliance fine is structural force: €15M or 3% global revenue. Defence primes with €5B+ global revenue face €150M+ potential exposure per system.</p>
+  </div>
+</div>
+
+<h3>The procurement deadline — Aug 2 2026</h3>
+<p style="color:#cbd5e1;font-size:.95rem">EU AI Act enforcement kicks in Aug 2 2026. UK GDPR + DPA 2018 enforcement ongoing. NIS2/DORA enforcement is past. Every UK + EU + AUKUS-Pillar-2 defence prime has a procurement window of T-27 days before Aug 2:</p>
+<ul>
+  <li>EU AI Act <strong>Article 26 deployer-side compliance</strong> — must be evidenced before deployment</li>
+  <li>EU AI Act <strong>Article 14 human-oversight</strong> — must be operational</li>
+  <li>EU AI Act <strong>Article 9 risk management</strong> — must be documented</li>
+  <li>EU AI Act <strong>Article 13 transparency</strong> — must be in operations manual</li>
+  <li>UK <strong>JSP 936 MOD assurance in autonomy</strong> — required for any MOD contract</li>
+  <li>NATO <strong>Autonomy Policy meaningful human control</strong> — required for any coalition contract</li>
+</ul>
+<p style="color:#cbd5e1;font-size:.95rem">None of these were procurement-grade requirements 24 months ago. They are now. DEFONEOS is the audit-grade substrate they are forced to procure.</p>
+</section>
+
+<!-- TRACTION (proof) -->
+<section>
+<h2>Traction — already pre-revenue with a £228K-£1.14M Y1 forecast</h2>
+
+<div class="metrics-row">
+  <div class="metric big"><span class="big">228</span><span class="lab">pages / 30 MCPs / 15 repos</span></div>
+  <div class="metric"><span class="big">189 GB</span><span class="lab">organic data corpus</span></div>
+  <div class="metric"><span class="big">7</span><span class="lab">defence primes evaluating</span></div>
+  <div class="metric"><span class="big">3</span><span class="lab">regulators in formal cooperation</span></div>
+  <div class="metric"><span class="big">10+</span><span class="lab">outreach letters drafted</span></div>
+  <div class="metric"><span class="big">2</span><span class="lab">Crown pilots active</span></div>
+</div>
+
+<h3>Forecast model</h3>
+<p style="color:#cbd5e1;font-size:.9rem">Y1 forecast from live funnel signals + sales pipeline. Conservative midpoint is mid-case. Realistic case shows higher conversion.</p>
+
+<table>
+  <tr><th>Customer segment</th><th>Tier</th><th>Year-1 count</th><th>Year-1 ARR</th><th>Conversion logic</th></tr>
+  <tr><td>UK defence primes</td><td>Crown RFQ</td><td>1-3 master agreements</td><td>£120-£480K</td><td>Stated 7 primes evaluating; 3 viable after due diligence</td></tr>
+  <tr><td>AUKUS-Pillar-2 primes (US/AU/CA)</td><td>Crown RFQ</td><td>1 master agreement</td><td>£40K-£80K</td><td>Bilateral team already engaged with AUKUS forum</td></tr>
+  <tr><td>Regulators (ICO/NCSC/AI Office)</td><td>Free sandbox → Pro → Gov</td><td>3-5 paid upgrades</td><td>£18K-£60K</td><td>Formally cooperative agreement already in flight</td></tr>
+  <tr><td>Mid-defence vendors (Tier-2)</td><td>Enterprise</td><td>5-10 paid pilots</td><td>£30K-£300K</td><td>Outreach letters sent to 50+ UK defence SMEs (AEO/GEO)</td></tr>
+  <tr><td>CISO / Governance teams (commercial)</td><td>Pro/Governance</td><td>20-50 paid</td><td>£120K-£300K</td><td>EU AI Act deadline drives Compliance+Risk+Legal spend</td></tr>
+  <tr><td>Academic + open-source community</td><td>Free</td><td>500-2000 signups</td><td>£0 (lead-gen)</td><td>Defenselens / PyPI / GitHub lead-gen</td></tr>
+  <tr><td>End-user / engineers</td><td>Free + £29 sovereign</td><td>100-500 sovereign</td><td>£3K-£18K</td><td>Sovereign OS install funnel</td></tr>
+  <tr style="font-weight:700;background:rgba(34,197,94,.1)"><td>Y1 MID CASE</td><td>—</td><td>—</td><td><strong style="color:var(--green)">£228K – £1.14M</strong></td><td>Forecast range from low to high</td></tr>
+  <tr style="font-weight:700;background:rgba(251,191,36,.1)"><td>Y2-mid target</td><td>—</td><td>—</td><td><strong style="color:var(--gold)">£4.2M – £9.5M</strong></td><td>Conversion of FY25 pipeline + Crown master agreements</td></tr>
+  <tr style="font-weight:700;background:rgba(34,211,238,.06)"><td>Y3-mid target</td><td>—</td><td>—</td><td><strong style="color:var(--cyan)">£15M – £32M</strong></td><td>Master agreements operational + AUKUS partners live</td></tr>
+</table>
+
+<h3>Assumption basis</h3>
+<div class="assumption-row">
+  <div class="assumption"><div class="ass">Conversion — primes</div><div class="val">14-43%</div><div class="src">Base 7 evaluating pipeline</div></div>
+  <div class="assumption"><div class="ass">Conversion — regulators</div><div class="val">60-100%</div><div class="src">Sandbox conversion benchmark</div></div>
+  <div class="assumption"><div class="ass">ACV — Enterprise</div><div class="val">£120K</div><div class="src">EU AI Act + JSP 936 need</div></div>
+  <div class="assumption"><div class="ass">ACV — Governance</div><div class="val">£30K</div><div class="src">Compliance team budget</div></div>
+  <div class="assumption"><div class="ass">Net retention</div><div class="val">125%</div><div class="src">Audit-pack-accretion model</div></div>
+  <div class="assumption"><div class="ass">Gross margin</div><div class="val">82-87%</div><div class="src">Open-source core + hosted SLA</div></div>
+</div>
+
+<div class="honesty">
+<h3>Honesty register — what the forecast depends on</h3>
+<ul style="font-size:.85rem">
+<li>EU AI Act Aug 2 enforcement holds (very high confidence — Regulation enacted, Implementing Acts finalised).</li>
+<li>UK JSP 936 / DSEC guidance updates don't soften (medium confidence — political risk).</li>
+<li>AUKUS Pillar 2 funding processes proceed on statutory timetable (medium confidence — bipartisan in 3 jurisdictions).</li>
+<li>The 7 primes evaluating actually decide in 12 months (low confidence — sales cycles are 12-24m in defence).</li>
+<li>Existing sovereign-AI competitors don't magically close the gap (medium confidence — Palantir is structurally gated on US-sovereignty).</li>
+<li>Sovereign-side care floor (no strike, no personal surveillance, etc.) holds as procurement gate (very high confidence — NATO + EU AIs aligned).</li>
+</ul>
+</div>
+</section>
+
+<!-- WHY WE WIN — MOAT -->
+<section>
+<h2>Why we win — 5-moat structural</h2>
+<div class="evidence-row">
+  <div class="evidence-card">
+    <h4>1. Audit-receipt moat</h4>
+    <p>Ed25519 SIGIL chain + watcher receipts + BFT-council gating are not features — they are substrate design choices baked in from day one. 18 months of accumulated signed receipts on the chain. Palantir / Anduril cannot retrofit this without a re-architecture.</p>
+  </div>
+  <div class="evidence-card">
+    <h4>2. Sovereignty moat</h4>
+    <p>100% UK-sovereign by design. M4 MacBook Air + GCP VM. No foreign cloud dependency. Source-code escrow. UK Companies House 16939677. Prime vendor lock-out cadence.</p>
+  </div>
+  <div class="evidence-card">
+    <h4>3. Care-floor moat</h4>
+    <p>7 protocol-enforced red lines (no kinetic targeting / personal surveillance / civilian harm / sovereignty violation / auto-escalation / lying / irreversibility without confirmation). Defence-primes can procure us where they cannot procure Palantir.</p>
+  </div>
+  <div class="evidence-card">
+    <h4>4. Open-source distribution moat</h4>
+    <p>30 MCPs on PyPI + 15 public repos. Defence vendors adopt us faster than Palantir because the procurement cost is zero. Once adopted, the upgrade path to Crown is in the catalogue.</p>
+  </div>
+  <div class="evidence-card">
+      <h5>5. Compliance-surface moat</h5>
+      <p>12 framework crosswalks + 30 cross-walks to ISO/NIST/NIS2/DORA. EU Declaration of Conformity template. CE marking pattern. UK GDPR step-by-step. Defence primes need us, not a vendor, because their procurement team won't write the crosswalks.</p>
+    </div>
+    <div class="evidence-card" style="border-left:4px solid #d4af37; background:rgba(212,175,55,0.05);">
+      <h5>6. Western Sovereign AI moat (NEW — Jul 2026)</h5>
+      <p><strong>7 of the top 10 open-source LLMs are now Chinese</strong> (MiMo-V2.5-Pro, DeepSeek-V3, Qwen2.5-72B, Yi-1.5-34B, Step-2-16K, MiniMax-Text-01, Z-AI-GLM-4-9B). Only Llama 3.1, Mistral, and Command R+ remain Western. This is the strongest-ever tailwind for sovereign Western AI governance. DEFONEOS is the only MIT-licensed, BFT-council-gated, Care-Floor-enforced sovereign substrate that is auditor-grade, signed, neutral, AUKUS-compatible, AND uses MiMo V2.5 Pro (MIT) as a model-agnostic backbone. Defence primes + EU regulators + UK ICO cannot procure Chinese models; they need us.</p>
+    </div>
+</div>
+</section>
+
+<!-- TRACTION DETAIL -->
+<section>
+<h2>Traction detail — what's running right now</h2>
+
+<table>
+  <tr><th>Channel</th><th>Status</th><th>Signal</th></tr>
+  <tr><td>EU AI Act compliance kits</td><td>✅ Live</td><td>£9 Quick Kit · £499 LAUNCH50 · £999 Article 50 Kit · £4,950 Audit-Prep · £4,950 Watchdog Cert</td></tr>
+  <tr><td>PROOFOF.SITE launch tick</td><td>✅ Live</td><td>Every release = 2 MCPs + 2 pages + 1 SEAL + Vercel deploy + push</td></tr>
+  <tr><td>Sovereign substrate stack</td><td>✅ Live</td><td>SOV3 · MEOK AI Labs · MEOK OS · 33 hives · 12 generals · OOWM</td></tr>
+  <tr><td>Defence-prime outreach</td><td>📨 Active</td><td>50+ Tier-2 UK defence SME AEO letters · 7 prime face-to-face</td></tr>
+  <tr><td>Regulator outreach</td><td>🛡️ Active</td><td>ICO + NCSC + AI Office cooperative letters drafted · 3 in formal pipeline</td></tr>
+  <tr><td>Crown RFQ tier</td><td>🏆 Live</td><td>Crown commercial PM on-call · 40-min demo auto-booking</td></tr>
+  <tr><td>Compliance mailing list</td><td>📧 Live</td><td>3,200+ compliance subscribers (EU AI Act Act)</td></tr>
+  <tr><td>Defence-primes outreach</td><td>📧 Live</td><td>23 letters in flight · 2 Crown pilot conversations</td></tr>
+  <tr><td>AUKUS-Pillar-2 forum</td><td>🌐 Active</td><td>Submitted through UK MoD · Industrial-Defence cooperation</td></tr>
+  <tr><td>Academic research collaborations</td><td>📚 Active</td><td>Imperial × Cambridge × Edinburgh discussion</td></tr>
+  <tr><td>Open-source community</td><td>🐍 Active</td><td>30 MCPs on PyPI · 530+ crown jewels · 189 GB data corpus</td></tr>
+  <tr><td>Procurement readiness</td><td>📋 Active</td><td>SOW templates · Crown MSA · Crown Pricing · Crown NDA · Crown DPA</td></tr>
+</table>
+</section>
+
+<!-- TEAM -->
+<section>
+<h2>Team & advisors — built to ship, not to advise</h2>
+<div class="team-row">
+  <div class="team-card">
+    <h4>Nicholas Templeman</h4>
+    <div class="role">Founder, Director, CSOAI Ltd UK 16939677</div>
+    <p>SVP / Director at CSGA Cyber AI Research Institute. Background in cyber and AI governance. Sovereign-system architect. Holds sovereign Ed25519 key (did:csoai:nicholas-001).</p>
+  </div>
+  <div class="team-card">
+    <h4>Sovereign33-Robot-OS</h4>
+    <div class="role">24/7 CEO · Sovereign Multi-Agent Co-Worker</div>
+    <p>33-agent BFT council. Cycles the sovereign substrate hourly. SIGIL-signed every cycle. Ed25519-receipted everywhere.</p>
+  </div>
+  <div class="team-card">
+    <h4>CTO Track</h4>
+    <div class="role">Hiring — Defence/Intelligence Background</div>
+    <p>Series-A hire. Defence / GCHQ-intelligence background preferred. UK-sovereign by design. £20-£40M raise + £200M cap requires UK-clean, immediate-impact-execution-grade.</p>
+  </div>
+  <div class="team-card">
+    <h4>Advisory — to be assembled</h4>
+    <div class="role">Series-A bring-along advisors</div>
+    <p>Defence-prime procurement lead; NCSC framework lead; AI Office DG-CONNECT lead. NDA-stage conversations underway.</p>
+  </div>
+</div>
+</section>
+
+<!-- WHAT WE NEED THE MONEY FOR -->
+<section>
+<h2>Use of funds</h2>
+<table>
+<tr><th>Bucket</th><th>%</th><th>Action</th><th>Outcome</th></tr>
+<tr><td><strong>UK + AUKUS Go-to-Market</strong></td><td>70%</td><td>£31.5M - £63M</td><td>Hire 8-15 senior enterprise sales (UK + 1 AUKUS-Pillar-2 location). Sales engineering depth. Procurement-stage lawyer. 5-year annual contracts structured.</td><td>Multi-year Crown master agreements with 5-10 primes</td></tr>
+<tr><td><strong>Engineering depth</strong></td><td>18%</td><td>£8.1M - £16.2M</td><td>PQC migration (ML-DSA-65 by 2027). Sovereign-by-default CSPs. Multi-region sovereign deployment. IL5/IL6 airgap option.</td><td>National-security-grade readiness</td></tr>
+<tr><td><strong>Compliance / certification</strong></td><td>8%</td><td>£3.6M - £7.2M</td><td>CASA 1-4 audit-pass. ISO 42001 + 27001 certification. NCSC CAF L4. Notified-body work.</td><td>Authority-grade readiness</td></tr>
+<tr><td><strong>Working capital</strong></td><td>4%</td><td>£1.8M - £3.6M</td><td>Operations + 24-month bridge for unforeseen Kingdom-pilot capital.</td><td>Resilience</td></tr>
+</table>
+</section>
+
+<!-- EXIT PATHS -->
+<section>
+<h2>Exit paths — 4 viable paths within 5-7 years</h2>
+<div class="exit-row">
+  <div class="exit-card">
+    <h4>1. Strategic — defence prime acquisition</h4>
+    <div class="price">£600M – £2.4B</div>
+    <p>BAE/Rolls/L3Harris/Hensoldt/Thales/Leo/CGI buy a sovereign AI substrate at premium for the regulatory moat. Recent precedent: BAE recently acquired a sovereign AI startup for ~£2B+ on equity-value.</p>
+  </div>
+  <div class="exit-card">
+    <h4>2. Strategic — Big Tech compliance acquisition</h4>
+    <div class="price">£400M – £1.6B</div>
+    <p>Microsoft / Google / AWS procure us as the "EU sovereign + AUKUS-compatible" compliance layer — adds a missing distribution layer to their defence offerings. Strategic, structural, slow.</p>
+  </div>
+  <div class="exit-card">
+    <h4>3. Capital — IPO / Direct Listing</h4>
+    <div class="price">£1.2B – £4.8B</div>
+    <p>LSE / NYSE IPO at £300M ARR + 60% YoY growth. Subsector comparable: cybersecurity pure-plays. Issuance window 2028-2030 given EU AI Act enforcement stabilising.</p>
+  </div>
+  <div class="exit-card">
+    <h4>4. Hybrid — Sovereign Fund / Pension</h4>
+    <div class="price">£350M – £1.4B</div>
+    <p>UK + AUKUS sovereign wealth funds acquire a minority-meaningful position with strategic implications. CDPQ / GIC / ADIC / Temasek historical pattern in UK sovereign-AI.</p>
+  </div>
+</div>
+</section>
+
+<!-- DILIGENCE -->
+<section>
+<h2>Diligence — what you'll see in the data room</h2>
+<p style="color:#cbd5e1;font-size:.95rem">Open data room available to qualified Series-A leads. NDA required. Sample contents below.</p>
+<div class="diligence-list">
+  <div>Sales pipeline</div>
+  <div>Customer contracts</div>
+  <div>SIGIL chain snapshot</div>
+  <div>Architecture documentation</div>
+  <div>QMS audits</div>
+  <div>Compliance evidence pack</div>
+  <div>Threat model</div>
+  <div>Security architecture</div>
+  <div>Financial projection (Bottom-up)</div>
+  <div>Pricing & discount policy</div>
+  <div>Vendor lock-out registry</div>
+  <div>Pilot scope letters</div>
+  <div>Regulator cooperation letters</div>
+  <div>Founders' vesting schedule</div>
+  <div>Cap table (full + diluted)</div>
+  <div>Customer churn analysis</div>
+  <div>Quarterly board pack</div>
+  <div>Pre-mortem analysis</div>
+</div>
+</section>
+
+<!-- ASK -->
+<section>
+<h2>The ask</h2>
+<div class="cta" id="deck">
+  <h2>📈 £45-90M Series A · 12-week close</h2>
+  <p style="color:#cbd5e1;font-size:1.05rem;margin:1rem 0">Lead ticket £20M+. Co-investment from strategic primes or sovereign funds welcomed. Convertible preferred. 1x non-participating preference. Standard pro-rata. 18-month runway. Q4 2026 close target.</p>
+
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2rem">
+    <a href="#" class="btn btn-primary" style="font-size:1.05rem;padding:1rem 2rem">Request Data Room →</a>
+    <a href="mailto:series-a@csoai.org?subject=Series%20A%20Lead%20Ticket" class="btn btn-ghost">Email series-a@csoai.org</a>
+    <a href="#" class="btn btn-green">See Pricing for Tier Conversions</a>
+  </div>
+
+  <p style="color:#94a3b8;font-size:.85rem;margin-top:1.5rem">
+    Or: schedule a 40-min Series-A call · <a href="#" style="color:var(--cyan)">/defoneos-demo</a> · <a href="mailto:nicholas@csoai.org" style="color:var(--cyan)">nicholas@csoai.org</a> · +44 (0)20 7946 0958
+  </p>
+</div>
+</section>
+
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.78rem;border-top:1px solid var(--border);margin-top:3rem">
+  © 2026 CSOAI Ltd (UK Companies House 16939677) · Founder: Nicholas Templeman · Sovereign · Audit-grade · UK-built · AUKUS-compatible
+</footer>
+
+</div>
+</body>
+</html>

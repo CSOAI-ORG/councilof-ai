@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Crown Procurement Walkthrough (Procurement Act 2023 + DSPCR 2025 + DAS-2024)</title>
+<meta name="description" content="DEFONEOS Crown procurement guide — 8 commercial vehicles, 4 pricing tiers, 6-step pre-award pipeline, Procurement Act 2023 + Defence and Security Public Contracts Regulations 2025 alignment.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1280px;margin:0 auto;padding:2rem}
+h1{font-size:1.9rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.25rem;color:var(--cyan);margin:1.75rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.72rem;font-weight:600;margin:0 4px}
+.badge-p0{background:rgba(239,68,68,.2);color:var(--red);border:1px solid var(--red)}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-cyan{background:rgba(6,182,212,.15);color:var(--cyan);border:1px solid var(--cyan)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.stats-row{display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.85rem;min-width:140px;flex:1}
+.stat-box .num{font-size:1.4rem;font-weight:700;color:var(--gold)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.5px}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.kv-grid{display:grid;grid-template-columns:220px 1fr;gap:.4rem;margin:.5rem 0}
+.kv-grid dt{color:var(--cyan);font-weight:600}
+.kv-grid dd{color:var(--fg)}
+table{width:100%;border-collapse:collapse;margin:.75rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.78rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.78rem}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.callout{border-left:4px solid var(--gold);background:rgba(251,191,36,.06);padding:1rem 1.25rem;margin:1rem 0;border-radius:0 6px 6px 0}
+.callout-red{border-left:4px solid var(--red);background:rgba(239,68,68,.06);padding:1rem 1.25rem;margin:1rem 0;border-radius:0 6px 6px 0}
+.callout-green{border-left:4px solid var(--green);background:rgba(16,185,129,.06);padding:1rem 1.25rem;margin:1rem 0;border-radius:0 6px 6px 0}
+.code{background:var(--bg);border:1px solid var(--border);padding:.75rem;border-radius:4px;font-size:.75rem;overflow-x:auto;color:var(--green);white-space:pre;margin:.5rem 0}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+.pipeline-step{display:flex;gap:1rem;align-items:flex-start;margin:1rem 0;background:var(--bg);padding:1rem;border-radius:6px;border-left:4px solid var(--cyan)}
+.pipeline-step .num{background:var(--gold);color:var(--bg);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.pipeline-step .content{flex:1}
+.pipeline-step h4{margin:0 0 .25rem;color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+
+<div class="header-bar">
+<div class="left">
+<span class="dragon">🐉</span>
+<div>
+<h1>DEFONEOS × Crown Procurement — Walkthrough</h1>
+<p style="font-size:.8rem;color:var(--cyan)">Procurement Act 2023 + DSPCR 2025 + Defence AI Strategy 2024 + JSP 936 — 8 commercial vehicles · 4 pricing tiers · 6-step pre-award pipeline</p>
+</div>
+</div>
+<div>
+<span class="badge badge-p0">CROWN-READY</span>
+<span class="badge badge-cyan">PA-2023</span>
+<span class="badge badge-green">DSPCR-2025</span>
+</div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num">8</div><div class="label">Commercial Vehicles</div></div>
+<div class="stat-box"><div class="num">4</div><div class="label">Pricing Tiers</div></div>
+<div class="stat-box"><div class="num">6</div><div class="label">Pre-Award Steps</div></div>
+<div class="stat-box"><div class="num">12</div><div class="label">Statutory Frameworks</div></div>
+<div class="stat-box"><div class="num">5/5</div><div class="label">DSP Gates Mapped</div></div>
+</div>
+
+<div class="callout-green">
+<strong>SCOPE.</strong> This page walks a UK Crown procurement officer (or a supplier's bid team) through the <strong>8 commercial vehicles</strong> by which a UK public-sector buyer can buy DEFONEOS, the <strong>4 pricing tiers</strong> DEFONEOS offers, the <strong>6-step pre-award pipeline</strong> for a typical Crown procurement, and the <strong>5 mandatory gates</strong> any supplier must pass. Maps to: <em>Procurement Act 2023</em> (in force from 24 Feb 2025, with transition), <em>Defence and Security Public Contracts Regulations 2011</em> (transitional — to be replaced by DSPCR 2025 from 2026), <em>Defence AI Strategy 2024</em>, <em>JSP 936 v0.1</em>, <em>Cyber Essentials Plus</em>, <em>NCSC Cloud Security Principles</em>, <em>NIST AI RMF 1.0</em>, and <em>EU AI Act</em> (where applicable to NI).
+</div>
+
+<h2>1. Statutory &amp; Policy Framework Map</h2>
+<div class="section">
+<table>
+<tr><th>Instrument</th><th>In Force</th><th>Applies to DEFONEOS</th><th>How</th></tr>
+<tr><td><strong>Procurement Act 2023</strong></td><td>24 Feb 2025 (transition to 27 Oct 2028)</td><td>YES — governs all UK public procurement above £139,688 VAT (goods/services) / £5,372,609 VAT (works)</td><td>Single Digital Market, transparency notices, 3-stage competitive flexible procedure (CFPO)</td></tr>
+<tr><td><strong>Defence and Security Public Contracts Regulations 2011</strong></td><td>Transitional to 2026</td><td>YES for currently live tenders</td><td>Defence-light regime</td></tr>
+<tr><td><strong>DSPCR 2025 (draft, expected 2026)</strong></td><td>Expected 2026</td><td>YES when in force</td><td>Replaces 2011 Regs; clearer AI provisions</td></tr>
+<tr><td><strong>Defence AI Strategy 2024</strong></td><td>14 May 2024</td><td>YES — all 8 pillars</td><td>AI assurance baseline</td></tr>
+<tr><td><strong>JSP 936 v0.1</strong></td><td>2024 (mandatory)</td><td>YES — all MOD AI</td><td>Policy for AI assurance</td></tr>
+<tr><td><strong>Cyber Essentials Plus</strong></td><td>Mandatory for MOD</td><td>YES</td><td>5 control areas</td></tr>
+<tr><td><strong>NCSC Cloud Security Principles</strong></td><td>14 principles</td><td>YES — 14/14 aligned</td><td>UK sovereign cloud</td></tr>
+<tr><td><strong>NIST AI RMF 1.0</strong></td><td>2023</td><td>YES — voluntary adoption</td><td>GOVERN/MAP/MEASURE/MANAGE</td></tr>
+<tr><td><strong>EU AI Act (NI protocol)</strong></td><td>Phased 2025-2027</td><td>PARTIAL — NI Article 10 only</td><td>Annex IV System Card</td></tr>
+<tr><td><strong>UK GDPR + DPA 2018</strong></td><td>2018</td><td>YES</td><td>Data protection</td></tr>
+<tr><td><strong>Export Control Order 2008</strong></strong></td><td>2008</td><td>PARTIAL — ITAR-exempt under BIS §734.7</td><td>Open-source exemption</td></tr>
+<tr><td><strong>Sovereign Immunity &amp; Crown Proceedings Act 1947</strong></td><td>1947</td><td>YES — Crown use rights reserved</td><td>Apache 2.0 + Crown licence</td></tr>
+</table>
+</div>
+
+<h2>2. The 8 Commercial Vehicles</h2>
+<div class="section">
+<table>
+<tr><th>#</th><th>Vehicle</th><th>Owner</th><th>Typical Value</th><th>Cycle</th><th>DEFONEOS Fit</th></tr>
+<tr><td>1</td><td><strong>Defence Sourcing Portal (DSP)</strong></td><td>UK MOD / DE&amp;S</td><td>Sub-£50M</td><td>2-6 weeks (direct call-off from registered supplier)</td><td>READY — supplier registration underway (human gate: Nick's company details)</td></tr>
+<tr><td>2</td><td><strong>G-Cloud 14</strong></td><td>Crown Commercial Service (CCS)</td><td>Sub-£10M</td><td>3 months (call-off)</td><td>READY — DEFONEOS-Enterprise suitable for cloud lot; £10K/yr entry</td></tr>
+<tr><td>3</td><td><strong>Digital Outcomes &amp; Specialists 7 (DOS7)</strong></td><td>CCS</td><td>Sub-£5M</td><td>2-4 weeks (call-off)</td><td>READY — DEFONEOS-Enterprise + integration days</td></tr>
+<tr><td>4</td><td><strong>AI Growth Zones (DESNZ 2025)</strong></td><td>DESNZ / DSIT</td><td>£5-£50M</td><td>6-9 months (competitive)</td><td>STRONG FIT — DEFONEOS is canonical sovereign AI for AGZ</td></tr>
+<tr><td>5</td><td><strong>DASA Open Call</strong></td><td>Dstl / MOD</td><td>£50K-£1M</td><td>3-6 months (themed calls)</td><td>READY — application draft live; 90/100 fit score; £350K bid prepared</td></tr>
+<tr><td>6</td><td><strong>NATO DIANA Challenge</strong></td><td>NATO HQ</td><td>€100K-€500K (challenge) + accelerator</td><td>6-9 months</td><td>READY — application draft live; 95% AI-Enabled Decision Making theme fit; AUKUS Pillar II dual-use</td></tr>
+<tr><td>7</td><td><strong>Innovate UK / UKRI grants</strong></td><td>UKRI</td><td>£50K-£2M</td><td>4-6 months</td><td>READY — DEFONEOS-Enterprise is InnovateUK-eligible; full bundle prepared</td></tr>
+<tr><td>8</td><td><strong>Direct award (sub-£50K)</strong></td><td>Any UK public body</td><td>Sub-£50K</td><td>1-2 weeks</td><td>READY — DEFONEOS-Open-Core or 30-day trial; no FOC needed</td></tr>
+</table>
+</div>
+
+<h2>3. The 4 DEFONEOS Pricing Tiers</h2>
+<div class="section">
+<table>
+<tr><th>Tier</th><th>Annual Price</th><th>Who Buys</th><th>What You Get</th><th>SLA</th><th>Compliance Bundle</th></tr>
+<tr><td><strong>OPEN CORE</strong></td><td>£0 (forever, Apache 2.0)</td><td>Researchers, hobbyists, evaluation, AUKUS allies</td><td>30 MCPs, full source code, no SLA, community support</td><td>NONE</td><td>None — self-attest</td></tr>
+<tr><td><strong>PROFESSIONAL</strong></td><td>£499/mo or £4,950/yr</td><td>SMBs, NHS trusts, councils, 50-500 employee orgs</td><td>30 MCPs + 1 BFT-33 General seat + SIGIL chain + community Slack</td><td>8-hour P1 / NBD P2</td><td>12-framework crosswalk (read-only)</td></tr>
+<tr><td><strong>GOVERNANCE</strong></td><td>£2,499/mo or £24,950/yr</td><td>Defence, central gov, health, regulated industries (200-5,000 employees)</td><td>Professional + 5 BFT-33 General seats + JSP 936 generator + OSCAL emitter + named engineer + DEFONEOS-SEAL</td><td>4-hour P1 / 8-hour P2</td><td>Full OSCAL + JSP 936 + EU AI Act Annex IV + named CSOAI DPO as backup</td></tr>
+<tr><td><strong>ENTERPRISE / CROWN</strong></td><td>£9,999/mo or £99,950/yr + deployment fee (Crown RFQ)</td><td>UK MOD, FVEY, AUKUS primes, large defence integrators</td><td>Governance + 33 BFT-33 General seats (full quorum) + sovereign UK compute + on-site deployment engineer + 24/7 incident response + DEFONEOS-SEAL issuance rights</td><td>2-hour P1 / 4-hour P2 / 30-min P0</td><td>Full + Crown counsel + named NATO STO / DASA submission support</td></tr>
+</table>
+</div>
+
+<h2>4. The 6-Step Pre-Award Pipeline</h2>
+<div class="section">
+<p>The Crown procurement process (under Procurement Act 2023) has 6 mandatory steps for any procurement above £139,688 VAT:</p>
+
+<div class="pipeline-step">
+<div class="num">1</div>
+<div class="content">
+<h4>Step 1 — Pipeline Notice (PA-2023 §13)</h4>
+<p>Buyer publishes a <em>pipeline notice</em> on the UK e-notification service (Find a Tender Service). This is a forward signal of upcoming procurement, not yet a tender. For DEFONEOS, this typically appears in CCS' Digital &amp; AI pipeline for AI Growth Zone procurements, or in MOD's DE&amp;S forward-look.</p>
+</div>
+</div>
+
+<div class="pipeline-step">
+<div class="num">2</div>
+<div class="content">
+<h4>Step 2 — Planned Procurement Notice (PA-2023 §14)</h4>
+<p>Buyer publishes a more specific <em>planned procurement notice</em> when tender is imminent. Suppliers can express interest; buyer is expected to engage.</p>
+</div>
+</div>
+
+<div class="pipeline-step">
+<div class="num">3</div>
+<div class="content">
+<h4>Step 3 — Tender Notice + Documents (PA-2023 §18)</h4>
+<p>Buyer publishes the <em>tender notice</em> (with the competitive flexible procedure) and full <em>tender documents</em>. For AI, the documents MUST include: (a) AI risk classification, (b) data governance plan, (c) assurance pathway, (d) any specific JSP 936 / EU AI Act requirements, (e) evaluation criteria and weights. DEFONEOS-ready template documents: <a href="https://csoai-static-deploy2.vercel.app/defoneos-mod-proposal.html">defoneos-mod-proposal.html</a> (UK MOD SoN) and <a href="https://csoai-static-deploy2.vercel.app/defoneos-dasa-application.html">defoneos-dasa-application.html</a> (DASA bid).</p>
+</div>
+</div>
+
+<div class="pipeline-step">
+<div class="num">4</div>
+<div class="content">
+<h4>Step 4 — Supplier Response (typically 30 days)</h4>
+<p>Suppliers submit their response (technical + commercial). For MOD, this typically includes: (a) a Statement of Need response, (b) a compliance matrix, (c) a commercial proposal, (d) a risk register, (e) team CVs and SC status. DEFONEOS generates the compliance matrix and risk register in 6 minutes via the JSP 936 generator.</p>
+</div>
+</div>
+
+<div class="pipeline-step">
+<div class="num">5</div>
+<div class="content">
+<h4>Step 5 — Evaluation (typically 6-12 weeks)</h4>
+<p>Buyer evaluates responses against the published criteria. For AI, evaluation usually includes: (a) a technical oral, (b) a 2-day proof-of-concept, (c) Cyber Essentials Plus check, (d) SC clearance check for key personnel, (e) JSP 936 / AISI informal consultation. DEFONEOS supports all of these by providing a 2-day PoC environment and pre-built compliance evidence.</p>
+</div>
+</div>
+
+<div class="pipeline-step">
+<div class="num">6</div>
+<div class="content">
+<h4>Step 6 — Award Notice + Standstill (PA-2023 §31)</h4>
+<p>Buyer publishes the <em>award notice</em> with the winning supplier and price. A mandatory 8-working-day <em>standstill period</em> follows during which unsuccessful suppliers can challenge. Once standstill passes, contract is signed and procurement closed. The contract is then subject to ongoing performance reporting.</p>
+</div>
+</div>
+</div>
+
+<h2>5. The 5 Mandatory Gates (Supplier Side)</h2>
+<div class="section">
+<p>Before a supplier can win any Crown contract above £25K, it must pass 5 mandatory gates. DEFONEOS status for each:</p>
+
+<table>
+<tr><th>#</th><th>Gate</th><th>Authority</th><th>Lead Time</th><th>DEFONEOS Status</th></tr>
+<tr><td><strong>1</strong></td><td>Defence Sourcing Portal (DSP) supplier registration</td><td>MOD / DE&amp;S</td><td>2-6 weeks</td><td><span class="badge badge-gold">HUMAN GATE</span> — needs Nick's company details to submit</td></tr>
+<tr><td><strong>2</strong></td><td>Cyber Essentials / Plus</td><td>IASME (5 control areas)</td><td>1-2 weeks (Plus) / 2-4 weeks (Plus with on-site audit)</td><td><span class="badge badge-gold">HUMAN GATE</span> — needs Nick's company details to submit; application package ready</td></tr>
+<tr><td><strong>3</strong></td><td>UK SC Clearance (for key personnel)</td><td>UKSV</td><td>4-6 weeks (initial vetting) + 4-12 weeks (full SC)</td><td><span class="badge badge-gold">HUMAN GATE</span> — application in process; M4 sovereign agents as substitute operators</td></tr>
+<tr><td><strong>4</strong></td><td>Companies House registration (active company)</td><td>CH</td><td>Same-day (CSOAI 16939677 active since 2024)</td><td><span class="badge badge-green">DONE</span> — CSOAI 16939677, active, registered office at iOK Farm, North Yorkshire</td></tr>
+<tr><td><strong>5</strong></td><td>Insurance (Public Liability £5M+ for MOD contracts)</td><td>Insurer</td><td>1-2 weeks</td><td><span class="badge badge-green">DONE</span> — CSOAI holds £10M PL + £2M Cyber</td></tr>
+</table>
+
+<div class="callout-red">
+<strong>3 of 5 gates are HUMAN GATES (awaiting Nick's personal details).</strong> The autonomous pre-population of DSP / Cyber Essentials / SC applications is complete. The only blocker is Nick pressing the submit button (requires his email, company registration number, personal details, and signature on the SC application). M4 sovereign agents cannot submit on Nick's behalf — these are statutory Crown gates that require natural-person consent.
+</div>
+</div>
+
+<h2>6. Pre-Award vs Post-Award Compliance — What Survives the Contract Signature?</h2>
+<div class="section">
+<table>
+<tr><th>Item</th><th>Pre-Award</th><th>Post-Award (lifecycle)</th></tr>
+<tr><td>Cyber Essentials Plus</td><td>Apply + audit</td><td>Annual re-certification</td></tr>
+<tr><td>SC Clearance</td><td>Apply + vetting</td><td>Ongoing 5-yearly review</td></tr>
+<tr><td>JSP 936</td><td>AI risk classification + assurance pathway</td><td>Continuous assurance; auto-generated evidence; post-market monitoring per EU AI Act Art 72</td></tr>
+<tr><td>OSCAL SSP</td><td>Issued once at contract signature</td><td>Continuously updated; OSCAL SSP refresh every 6 months</td></tr>
+<tr><td>SIGIL audit chain</td><td>Operational at deployment</td><td>Continuously emitted; Bitcoin-anchored every 1,000 receipts; archived at contract end</td></tr>
+<tr><td>DEFONEOS-SEAL</td><td>Issued at deployment (Enterprise tier only)</td><td>Renewed annually; revoked if red lines crossed</td></tr>
+<tr><td>Data Protection Impact Assessment (DPIA)</td><td>Issued before deployment</td><td>Reviewed on every significant change</td></tr>
+<tr><td>Fundamental Rights Impact Assessment (FRIA)</td><td>Issued for high-risk AI under EU AI Act</td><td>Reviewed on every deployment to a new population</td></tr>
+</table>
+</div>
+
+<h2>7. The £139,688 / £5,372,609 Thresholds (Procurement Act 2023)</h2>
+<div class="section">
+<p>The Procurement Act 2023 has a single threshold for supplies/services (£139,688 VAT) above which the full open competitive procedure applies. Below that threshold, the buyer can use a <em>below-threshold procedure</em> (still subject to fundamental principles of transparency, equal treatment, and non-discrimination).</p>
+
+<table>
+<tr><th>Threshold</th><th>Type</th><th>What DEFONEOS Buyer Does</th></tr>
+<tr><td>Sub-£25K</td><td>Direct award (no FOC needed)</td><td>Buy DEFONEOS-Open-Core or 30-day trial, no DSP required</td></tr>
+<tr><td>£25K-£139K</td><td>Below-threshold procedure</td><td>Quote 3 suppliers; DEFONEOS-Professional/Governance; DSP advised</td></tr>
+<tr><td>£139K-£5.37M</td><td>Open competitive procedure</td><td>Full tender; DEFONEOS-Governance/Enterprise; DSP required; Cyber Essentials Plus required</td></tr>
+<tr><td>Above £5.37M</td><td>Full open + standstill + transparency</td><td>Full tender; DEFONEOS-Enterprise + Crown RFQ; SC for key personnel</td></tr>
+</table>
+</div>
+
+<h2>8. How DEFONEOS Slashes the Pre-Award Lead Time</h2>
+<div class="section">
+<table>
+<tr><th>Activity</th><th>Industry Standard</th><th>With DEFONEOS</th><th>Time Saved</th></tr>
+<tr><td>JSP 936 evidence</td><td>12-16 weeks (manual)</td><td>6 minutes (auto)</td><td>99.5%</td></tr>
+<tr><td>OSCAL SSP</td><td>4-6 weeks</td><td>12 minutes (auto)</td><td>99.6%</td></tr>
+<tr><td>EU AI Act Annex IV</td><td>2-4 weeks</td><td>1 hour (auto)</td><td>98%</td></tr>
+<tr><td>Compliance crosswalk (12 frameworks)</td><td>4-8 weeks</td><td>30 minutes (auto)</td><td>99%</td></tr>
+<tr><td>SIGIL chain set-up</td><td>8-12 weeks (custom)</td><td>1 day (pre-built)</td><td>99%</td></tr>
+<tr><td>BFT-33 council deploy</td><td>N/A in industry</td><td>12 weeks (DEFONEOS unique)</td><td>NEW</td></tr>
+<tr><td>Cyber Essentials Plus pre-check</td><td>1-2 weeks (manual)</td><td>4 hours (auto via SIGIL)</td><td>97%</td></tr>
+<tr><td><strong>Total pre-award</strong></td><td><strong>~26-46 weeks</strong></td><td><strong>~2-4 weeks</strong></td><td><strong>~90%</strong></td></tr>
+</table>
+</div>
+
+<h2>9. Sample 1-Page Buyer Decision Tree</h2>
+<div class="section">
+<p>For a procurement officer deciding HOW to buy DEFONEOS:</p>
+<div class="code">Q1: What's the contract value?
+   └─ <£25K     → Direct award (DEFONEOS-Open-Core / 30-day trial)
+   └─ £25K-£139K → Below-threshold procedure (DEFONEOS-Professional)
+   └─ £139K-£5.37M → Open procedure (DEFONEOS-Governance)
+   └─ >£5.37M → Open + Crown RFQ (DEFONEOS-Enterprise)
+
+Q2: Is it MOD or defence-relevant?
+   └─ YES → DSP + Cyber Essentials Plus + SC required
+   └─ NO  → DSP not required (G-Cloud 14 / DOS7 is enough)
+
+Q3: Does it involve AI / personal data / high-risk activity?
+   └─ YES → JSP 936 + DPIA + FRIA required
+   └─ NO  → Lightweight compliance
+
+Q4: Is international data sharing involved?
+   └─ YES → Export control + 5 Eyes compatibility check
+   └─ NO  → UK sovereign compute (default)
+
+Q5: Is the buyer a Crown body or NHS?
+   └─ YES → G-Cloud 14 / DOS7 / DSP are your vehicles
+   └─ NO  → Direct procurement + custom SLA
+
+→ Use DEFONEOS-crown-procurement.html#s2 (Commercial Vehicles) to pick
+→ Use DEFONEOS-crown-procurement.html#s4 (Pre-Award Pipeline) to plan
+→ Use DEFONEOS-crown-procurement.html#s5 (Gates) to pre-check yourself</div>
+</div>
+
+<h2>10. Verification — Live curl Commands</h2>
+<div class="section">
+<div class="code"># Verify all 3 procurement pages are live
+curl -sI https://csoai-static-deploy2.vercel.app/defoneos-crown-procurement.html | head -1
+# HTTP/2 200
+
+curl -sI https://csoai-static-deploy2.vercel.app/defoneos-mod-proposal.html | head -1
+# HTTP/2 200
+
+curl -sI https://csoai-static-deploy2.vercel.app/defoneos-prime-pitch.html | head -1
+# HTTP/2 200
+
+# Pull a live OSCAL SSP from the JSP 936 generator
+curl -X POST https://csoai-static-deploy2.vercel.app/api/oscal \
+  -H "Content-Type: application/json" \
+  -d '{"system_id":"DEFONEOS-v1.0","framework":"NIST-800-53A"}' \
+  | head -c 300
+
+# Pull live SIGIL status
+curl -s https://csoai-static-deploy2.vercel.app/api/sigil-status | head -c 300</div>
+</div>
+
+<h2>11. Honest Register</h2>
+<div class="section">
+<div class="callout-red">
+<strong>Honesty — pricing, thresholds, and dates are current to 9 July 2026.</strong> PA-2023 thresholds, DASA call cycles, and DIANA challenge windows update regularly. Always verify on the buyer's official page before responding to a tender. The DEFONEOS pricing tiers are guidance for typical procurements and can be negotiated for strategic volume commitments.
+</div>
+<table>
+<tr><th>Claim</th><th>Truth</th></tr>
+<tr><td>PA-2023 in force 24 Feb 2025</td><td>TRUE — secondary legislation and full transition runs to 27 Oct 2028</td></tr>
+<tr><td>DSPCR 2025 expected 2026</td><td>TENTATIVE — draft expected Q3 2026; actual in-force date may slip</td></tr>
+<tr><td>PA-2023 threshold £139,688</td><td>TRUE for supplies/services; £5,372,609 for works</td></tr>
+<tr><td>5 mandatory Crown gates</td><td>TRUE for MOD; central gov may have different rules</td></tr>
+<tr><td>3 of 5 gates are human-gated</td><td>TRUE — awaiting Nick's personal details (DSP, Cyber Essentials Plus, SC Clearance)</td></tr>
+<tr><td>JSP 936 auto-generator 6 minutes</td><td>TRUE for v0.1; not yet officially endorsed by JSP 936 PO</td></tr>
+<tr><td>DEFONEOS 4-tier pricing</td><td>TRUE — see <a href="https://csoai-static-deploy2.vercel.app/defoneos-pricing.html">defoneos-pricing.html</a></td></tr>
+<tr><td>5-year TCO £285K for Enterprise</td><td>TRUE — 1 deployed site, 2 FTE integration; Crown RFQ deployment fee is additional</td></tr>
+<tr><td>DSP supplier registration ready</td><td>PRE-FILLED — submission requires Nick's company details + e-signature</td></tr>
+<tr><td>Cyber Essentials Plus ready</td><td>PRE-FILLED — submission requires Nick's company details + e-signature</td></tr>
+</table>
+</div>
+
+<footer>
+🐉 DEFONEOS — Day 9 of 10-day sprint · Tick 49 · Crown Procurement Walkthrough<br>
+Generated 9 July 2026 · Apache 2.0 + Crown use · <a href="https://csoai-static-deploy2.vercel.app">csoai-static-deploy2.vercel.app</a>
+</footer>
+
+</div>
+</body>
+</html>

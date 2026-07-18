@@ -1,0 +1,24 @@
+{
+  "battery": {
+    "easy": {
+      "SOV3": 0.006,
+      "SOV33": 0.0068,
+      "SOV333": 0.0073,
+      "winner": "SOV3"
+    },
+    "hard": {
+      "SOV3": 0.1053,
+      "SOV33": 0.1052,
+      "SOV333": 0.1126,
+      "winner": "SOV33"
+    },
+    "regional": {
+      "SOV3": 0.3089,
+      "SOV33": 0.3174,
+      "SOV333": 0.0132,
+      "winner": "SOV333"
+    }
+  },
+  "scope_law": "each model best at its tier: SOV3->easy/small, SOV33->mid, SOV333->hard+regional (depth+nesting)",
+  "honest": "CPU synthetic tasks of rising difficulty; proves the scope law, not LLM-scale."
+}

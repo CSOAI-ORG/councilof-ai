@@ -1,0 +1,7 @@
+{
+  "id": "mr-geo-routing-dns",
+  "prompt": "Write a 300-word geo-routing DNS plan for openpatent.ai and its 27 .ai subdomains across 3 sovereign regions (UK-london, EU-frankfurt, US-east1). Cover: (1) the Route 53 / Cloudflare load-balancer policy — geolocation by default, latency-based fallback, health-check failover (3 consecutive 200s = healthy, 3 consecutive 5xx = unhealthy), (2) the IP-anycast announcement so a single A record resolves to the closest healthy temple, (3) the TLS termination at the edge (TLS 1.3, OCSP stapling, HSTS preload) and the re-encrypt to the regional backend, (4) the jurisdiction-aware routing for /v1/disclosure — clients in EU jurisdiction always hit EU-frankfurt (GDPR data-residency), UK clients always hit UK-london (UK Patents Act 1977 s.2), US clients default to US-east1 with fallback to UK, (5) the 3xx redirect to the canonical regional origin for the verify.openpatent.ai page. Use DEFENEOS mythic voice. Return ONLY JSON: {plan:string, dns_provider:string, routing_policy:string, health_check:string, tls_profile:string, jurisdiction_rules:[3 strings], canonical_redirect:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "enterprise"
+}

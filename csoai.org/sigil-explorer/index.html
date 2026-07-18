@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SIGIL Public Explorer — csoai.org/sigil-explorer/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: radial-gradient(ellipse at center, #0a0e27 0%, #000 80%); color: #10b981; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1400px; margin: 0 auto; }
+    h1 { font-size: 2.5rem; color: #fbbf24; margin-bottom: 8px; }
+    .controls { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .controls input, .controls select, .controls button { padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #10b981; color: #10b981; font-family: monospace; border-radius: 4px; margin: 4px; }
+    .controls button { background: #fbbf24; color: #000; font-weight: 700; cursor: pointer; }
+    .chain { background: rgba(0,0,0,0.5); border-radius: 8px; padding: 16px; max-height: 700px; overflow-y: auto; }
+    .block { padding: 12px; margin: 8px 0; border-radius: 4px; background: rgba(255,255,255,0.03); border-left: 4px solid #10b981; }
+    .block.foreign { border-left-color: #ef4444; background: rgba(239,68,68,0.1); }
+    .block.alert { border-left-color: #fbbf24; background: rgba(251,191,36,0.1); }
+    .block .hash { color: #fbbf24; font-size: 0.8rem; }
+    .block .ts { opacity: 0.6; font-size: 0.8rem; }
+    .block .prev { opacity: 0.4; font-size: 0.7rem; }
+    .block .actor { color: #06b6d4; font-weight: 700; }
+    .block .action { color: #10b981; }
+    .block .target { color: #a855f7; }
+    .block .foreign-tag { color: #ef4444; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🔐 SIGIL Public Explorer</h1>
+    <p>Every action SOV3 takes. Every access. Every read. Every write. Hash-chained. Public. Auditable.</p>
+
+    <div class="controls">
+      <label>Hours: <input type="number" id="hours" value="24" min="1" max="168"></label>
+      <label>Actor filter: <input type="text" id="actor" placeholder="e.g. SOV3.DORADO"></label>
+      <label>Action filter: <input type="text" id="action" placeholder="e.g. audit"></label>
+      <label><input type="checkbox" id="show_foreign"> Show foreign attempts</label>
+      <button onclick="loadEvents()">Refresh</button>
+    </div>
+
+    <h2 style="color: #fbbf24; margin-top: 24px;">Live Chain (last 100 events)</h2>
+    <div class="chain" id="chain">
+      <div class="block">
+        <div class="ts">2026-06-28 12:11:33.234</div>
+        <div class="actor">SOV3.DORADO</div>
+        <span class="action">audit_check</span> →
+        <span class="target">monzo-credit-scoring-001</span>
+        <div class="hash">SIGIL: a3f8e1b2c4d5f6e7...</div>
+        <div class="prev">PREV: 9b8a7c6d5e4f3a2b...</div>
+      </div>
+      <div class="block foreign">
+        <div class="ts">2026-06-28 12:11:18.872</div>
+        <div class="actor">ATTACKER_202</div>
+        <span class="action">access_attempt</span> →
+        <span class="target">monzo-credit-scoring-001</span>
+        <span class="foreign-tag">[FOREIGN ATTEMPT — BLOCKED]</span>
+        <div class="hash">SIGIL: 5a6b7c8d9e0f1a2b...</div>
+        <div class="prev">PREV: 1c2d3e4f5a6b7c8d...</div>
+      </div>
+      <div class="block">
+        <div class="ts">2026-06-28 12:10:55.123</div>
+        <div class="actor">SOV3.BIG_BRAIM</div>
+        <span class="action">route_query</span> →
+        <span class="target">monzo-credit-scoring-001</span>
+        <div class="hash">SIGIL: 0f1e2d3c4b5a6978...</div>
+        <div class="prev">PREV: 3c4d5e6f7a8b9c0d...</div>
+      </div>
+      <div class="block foreign">
+        <div class="ts">2026-06-28 12:10:30.456</div>
+        <div class="actor">ATTACKER_203</div>
+        <span class="action">data_exfil_attempt</span> →
+        <span class="target">cera-care-elderly-001</span>
+        <span class="foreign-tag">[FOREIGN ATTEMPT — BLOCKED]</span>
+        <div class="hash">SIGIL: 8e9f0a1b2c3d4e5f...</div>
+        <div class="prev">PREV: 2b3c4d5e6f7a8b9c...</div>
+      </div>
+      <div class="block">
+        <div class="ts">2026-06-28 12:10:15.789</div>
+        <div class="actor">SOV3.ARTICLE_50</div>
+        <span class="action">issue_passport</span> →
+        <span class="target">monzo-credit-scoring-001</span>
+        <div class="hash">SIGIL: 4d5e6f7a8b9c0d1e...</div>
+        <div class="prev">PREV: 6f7a8b9c0d1e2f3a...</div>
+      </div>
+      <div class="block">
+        <div class="ts">2026-06-28 12:09:42.012</div>
+        <div class="actor">SOV3.ORGKERNEL</div>
+        <span class="action">register_agent</span> →
+        <span class="target">monzo-credit-scoring-001</span>
+        <div class="hash">SIGIL: 7a8b9c0d1e2f3a4b...</div>
+        <div class="prev">PREV: 9c0d1e2f3a4b5c6d...</div>
+      </div>
+      <div class="block">
+        <div class="ts">2026-06-28 12:09:18.345</div>
+        <div class="actor">SOV3.INTUITION</div>
+        <span class="action">broadcast_wisdom</span> →
+        <span class="target">all-agents</span>
+        <div class="hash">SIGIL: 5c6d7e8f9a0b1c2d...</div>
+        <div class="prev">PREV: 1e2f3a4b5c6d7e8f...</div>
+      </div>
+      <div class="block">
+        <div class="ts">2026-06-28 12:08:55.678</div>
+        <div class="actor">SOV3.BFT</div>
+        <span class="action">council_vote</span> →
+        <span class="target">PROP-2026-06-28-001</span>
+        <div class="hash">SIGIL: 3a4b5c6d7e8f9a0b...</div>
+        <div class="prev">PREV: 7e8f9a0b1c2d3e4f...</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 24px; opacity: 0.7; font-style: italic;">This is the West's response. Public. Auditable. Sovereign. The DORADO switch is in SOVEREIGN position.</p>
+  </div>
+
+  <script>
+    function loadEvents() {
+      // In real impl, would fetch from /sov_sigil_explorer
+      location.reload();
+    }
+  </script>
+</body>
+</html>

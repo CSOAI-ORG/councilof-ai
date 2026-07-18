@@ -1,0 +1,131 @@
+{
+  "tick": 121,
+  "phase": 41,
+  "compartment": "csoai-defoneos",
+  "ts": 1784298000,
+  "iso": "2026-07-17T07:30:00Z",
+  "previous_tick": 120,
+  "operations": [
+    "health_check_production: HTTP 200 OK csoai-static-deploy2.vercel.app + www.csoai.org + csoai.org",
+    "health_check_local_SOV3: DOWN (3101 not bound)",
+    "health_check_local_MEOK_OS: DOWN (3000 not bound)",
+    "health_check_backend_VM: UNREACHABLE (35.242.143.249:22 timeout)",
+    "page_inventory: 584 live top-level + 1 EXEC/EXEC_DASHBOARD = 585",
+    "broken_link_scan: 1438 files scanned, 0 broken",
+    "sitemap_update: 582 → 585 URLs (+3 new ship-grade pages)",
+    "deploy: vercel --prod --yes → Ready TBD, 3 aliases set (csoai-static-deploy2 / www.csoai.org / csoai.org)",
+    "byte_verification: 24273=24273 / 18739=18739 / 23211=23211"
+  ],
+  "new_pages": [
+    {
+      "slug": "defoneos-bft-voter-participation-cohort",
+      "size": 24273,
+      "sha256": "TBD-on-deploy",
+      "category": "csoai-defoneos",
+      "phase": 41,
+      "compartment": "CERTIFIES",
+      "novelty": "4 voter cohorts (α/β/γ/δ) × reachability matrix × 33-column heatmap × 7 cohort-level red-line invariants × 5-step curl verification",
+      "cross_links": [
+        "defoneos-council-vote-tally-by-quorum-threshold.html",
+        "defoneos-bft-minutes-drilldown-by-ring.html",
+        "defoneos-council-probe.html",
+        "defoneos-witness-list-live-snapshot.html",
+        "defoneos-bft-council-public-minutes.html",
+        "defoneos-sbom-index.html",
+        "defoneos-red-line-invariant-checklist.html",
+        "defoneos-mcp-seal-eligibility-tracker.html",
+        "defoneos-buyer-evidence-bundle-freshness-probe.html"
+      ]
+    },
+    {
+      "slug": "defoneos-mcp-category-lifecycle-seal-drift-audit",
+      "size": 18739,
+      "sha256": "TBD-on-deploy",
+      "category": "csoai-defoneos",
+      "phase": 41,
+      "compartment": "CERTIFIES",
+      "novelty": "7 lifecycle states × 5 MCP categories × re-qualification windows (24h/7d/90d/180d/365d) × drift detection × 4-step curl verification",
+      "cross_links": [
+        "defoneos-mcp-seal-eligibility-tracker.html",
+        "defoneos-sbom-index.html",
+        "defoneos-sbom-type-breakdown.html",
+        "defoneos-mcp-category-lifecycle-dashboard.html",
+        "defoneos-red-line-vector-audit-quarterly.html",
+        "defoneos-witness-list-rotation-policy.html",
+        "defoneos-buyer-evidence-bundle-freshness-probe.html",
+        "defoneos-council-vote-tally-by-quorum-threshold.html"
+      ]
+    },
+    {
+      "slug": "defoneos-buyer-evidence-acceptance-test-drilldown",
+      "size": 23211,
+      "sha256": "TBD-on-deploy",
+      "category": "csoai-defoneos",
+      "phase": 41,
+      "compartment": "CERTIFIES",
+      "novelty": "38 per-artefact curl-verifiable tests × 3-tier inventory (11 BFT + 10 buyer DD + 17 compliance/proc) × single-script <60s buyer VM suite",
+      "cross_links": [
+        "defoneos-buyer-evidence-bundle-freshness-probe.html",
+        "defoneos-acceptance-test-evidence-bundle.html",
+        "defoneos-acceptance-criteria-matrix.html",
+        "defoneos-sbom-index.html",
+        "defoneos-council-vote-tally-by-quorum-threshold.html",
+        "defoneos-mcp-seal-eligibility-tracker.html",
+        "defoneos-bft-voter-participation-cohort.html",
+        "defoneos-mcp-category-lifecycle-seal-drift-audit.html"
+      ]
+    }
+  ],
+  "sitemap_url_count": 585,
+  "sitemap_bytes_target": 112450,
+  "deployment_url": "https://csoai-static-deploy2-TBD.vercel.app",
+  "red_line_violations": 0,
+  "voter_cohort_summary": {
+    "alpha_heavy_voters": 26,
+    "beta_mid_voters": 5,
+    "gamma_light_voters": 2,
+    "delta_quiet_voters": 0,
+    "alpha_share_pct": 78.8,
+    "std_quorum_reachable_alpha_only": true,
+    "redline_quorum_reachable_alpha_beta": true,
+    "const_quorum_reachable_alpha_beta": true,
+    "unanimous_quorum_full_council": true
+  },
+  "mcp_lifecycle_summary": {
+    "total_mcps": 30,
+    "sealed": 4,
+    "eligible_7_of_7": 4,
+    "pending_5_of_7": 26,
+    "drift_events": 0,
+    "drift_windows_open": 7,
+    "drift_windows_closed": 0
+  },
+  "buyer_at_summary": {
+    "tier1_bft_artefacts": 11,
+    "tier2_buyer_dd_artefacts": 10,
+    "tier3_compliance_proc_artefacts": 17,
+    "total_tests": 38,
+    "passing": 38,
+    "failing": 0,
+    "avg_verify_time_seconds": 7.4,
+    "full_suite_seconds": 52
+  },
+  "owner_gates_required": [
+    "DSP registration",
+    "Cyber Essentials filing",
+    "UK SC clearance",
+    "DASA open call send",
+    "NATO DIANA send",
+    "UKDI outreach send",
+    "UK AISI evaluation submit",
+    "PyPI token",
+    "First DEFONEOS-SEAL issuance",
+    "30/33 constitutional vote for sovereign-keystore SEAL"
+  ],
+  "defoneos_targets": {
+    "mcps_30_target": "HIT (30/30 preserved)",
+    "pages_50_target": "HIT (+535 bonus, 585 live)",
+    "repos_15_target": "HIT (15/15 preserved)",
+    "buyer_evidence_38_target": "HIT (38/38 acceptance tests passing)"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "assessment-results": {
+    "uuid": "4d8b9c12-3e5f-4a2b-9c8e-7d6f1a2b3c4d",
+    "metadata": {
+      "title": "MEOK Assurance Radar Stage-0 Assessment",
+      "published": "2026-07-11T00:00:00Z",
+      "last-modified": "2026-07-11T00:00:00Z",
+      "version": "1.0.0",
+      "oscal-version": "1.1.2",
+      "party": [
+        {
+          "uuid": "csoai-org-001",
+          "type": "organization",
+          "name": "CSOAI LTD",
+          "short-name": "CSOAI",
+          "props": [
+            { "name": "company-number", "value": "UK 16939677" },
+            { "name": "jurisdiction", "value": "England & Wales" }
+          ],
+          "addresses": [
+            {
+              "addr-lines": ["Yorkshire, United Kingdom"]
+            }
+          ]
+        },
+        {
+          "uuid": "nicholas-001",
+          "type": "person",
+          "name": "Nicholas Templeman",
+          "props": [
+            { "name": "role", "value": "Founder, Sovereign AI Architect" }
+          ]
+        }
+      ],
+      "responsible-parties": [
+        {
+          "role-id": "provider",
+          "party-uuids": ["csoai-org-001"]
+        }
+      ],
+      "props": [
+        { "name": "assessment-type", "value": "stage-0-firmware" },
+        { "name": "device-class", "value": "iot-mmwave-radar-presence-sensor" },
+        { "name": "intended-use", "value": "care-gated indoor presence + micro-motion sensing" }
+      ]
+    },
+    "import-ap": {
+      "href": "#meok-radar-stage0",
+      "remarks": "Stage-0 component definition (also published at /meok-labs/radar/MEOK_AssuranceRadar_System_Card.yaml)"
+    },
+    "control-objectives": {
+      "control-objectives": [
+        {
+          "id": "obj-secure-boot",
+          "uuid": "obj-001-secure-boot",
+          "description": "Device boots only signed firmware. No unsigned firmware accepted at boot."
+        },
+        {
+          "id": "obj-signed-telemetry",
+          "uuid": "obj-002-signed-telemetry",
+          "description": "Every telemetry frame is signed (Ed25519, RFC-8785 JCS canonical) before transmission."
+        },
+        {
+          "id": "obj-tamper-cap",
+          "uuid": "obj-003-tamper-cap",
+          "description": "Physical tamper cap triggers physical-key reset on enclosure breach; logs to chain."
+        },
+        {
+          "id": "obj-care-floor-policy",
+          "uuid": "obj-004-care-floor-policy",
+          "description": "Sensing policy gated by SOV3 Maternal Covenant: no personal biometric ID, only spatial presence + motion."
+        },
+        {
+          "id": "obj-key-rotation",
+          "uuid": "obj-005-key-rotation",
+          "description": "Ed25519 signing key rotates every 90 days; old key retired with hash-chained retirement record."
+        },
+        {
+          "id": "obj-audit-trail",
+          "uuid": "obj-006-audit-trail",
+          "description": "All POSTs append-only on UK soil (35.242.143.249); SHA-512 audit chain; GDPR Article 30 record."
+        },
+        {
+          "id": "obj-radio-compliance",
+          "uuid": "obj-007-radio-compliance",
+          "description": "24GHz mmWave operation per UK IR-2030 + ETSI EN 302 858-1 (CE); FCC 15.249 (US, gated)."
+        }
+      ]
+    },
+    "assessment-activities": [
+      {
+        "uuid": "act-001",
+        "type": "action",
+        "title": "Firmware signing chain test",
+        "description": "Offline verifier test battery (verify_test.py): synthesize 33-byte LD2450 frame, canonical-JSON, sign with Ed25519, verify, tamper-test, wrong-key-test, 100-frame batch. All 4 must pass before bench-test.",
+        "props": [
+          { "name": "test-artifact", "value": "meok-labs/radar/verify_test.py" }
+        ]
+      },
+      {
+        "uuid": "act-002",
+        "type": "action",
+        "title": "Care-floor policy validation",
+        "description": "Validate care_membrane against SOV3 charter set: no biometric identity, no track individuals, no surveillance patterns. Care-Floor 0.95 enforced at /api/verify.",
+        "props": [
+          { "name": "policy-tool", "value": "care-membrane-mcp" },
+          { "name": "policy-version", "value": "1.0.0" }
+        ]
+      },
+      {
+        "uuid": "act-003",
+        "type": "action",
+        "title": "Audit chain integration",
+        "description": "Wire POST to UK-soil keystone: SHA-512 chain appended, 33-agent BFT signature on chain ops.",
+        "props": [
+          { "name": "endpoint", "value": "https://csoai.org/api/verify" },
+          { "name": "chain", "value": "sha512:append-only" }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "uuid": "find-001",
+        "title": "Offline signing chain verified",
+        "description": "Round-trip Ed25519 sign+verify: PASS. Tamper correctly caught: PASS. Wrong-key correctly rejected: PASS. 100-frame batch: 100/100 verified.",
+        "target": {
+          "type": "objective-id",
+          "target-id": "obj-002-signed-telemetry"
+        },
+        "props": [
+          { "name": "test-result", "value": "pass", "ns": "https://csoai.org/ns/oscal" },
+          { "name": "test-frames", "value": "100", "ns": "https://csoai.org/ns/oscal" }
+        ]
+      },
+      {
+        "uuid": "find-002",
+        "title": "Care-floor validated",
+        "description": "Care-Membrane validated the radar's sensing policy against the SOV3 Maternal Covenant. No biometric identity, no individual tracking, no surveillance patterns. Care-Floor 0.95 enforced. PASS.",
+        "target": {
+          "type": "objective-id",
+          "target-id": "obj-004-care-floor-policy"
+        },
+        "props": [
+          { "name": "test-result", "value": "pass", "ns": "https://csoai.org/ns/oscal" },
+          { "name": "care-floor", "value": "0.95", "ns": "https://csoai.org/ns/oscal" }
+        ]
+      },
+      {
+        "uuid": "find-003",
+        "title": "Stage-0 firmware: bench test pending",
+        "description": "Hardware bench test pending printer-side assembly. Stage-0 firmware is offline-verified. Real bench test (LD2450 plugged into ESP32, captured frames vs. synthesized) is gated on Nick assembling the BOM.",
+        "target": {
+          "type": "objective-id",
+          "target-id": "obj-secure-boot"
+        },
+        "props": [
+          { "name": "test-result", "value": "pending-bench", "ns": "https://csoai.org/ns/oscal" }
+        ]
+      }
+    ],
+    "remarks": "This OSCAL assessment-results document pairs with the System Card YAML (MEOK_AssuranceRadar_System_Card.yaml) for a complete Stage-0 deliverable. Stage-0 = offline-verified firmware + signed-telemetry. Stage-1 = bench-tested with physical LD2450 sensor. Stage-2 = deployed at IOK Farm for the care-gated farm-robot pipeline. The care-gating (no individual tracking) is what makes this a care-gate sensor, not a surveillance sensor — it's the differentiator from any off-the-shelf radar."
+  }
+}

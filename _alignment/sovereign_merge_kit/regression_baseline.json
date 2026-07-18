@@ -1,0 +1,207 @@
+{
+  "gate": {
+    "attack_recall": 1.0,
+    "specificity": 1.0,
+    "overall": 1.0,
+    "tp": 8,
+    "fn": 0,
+    "tn": 8,
+    "fp": 0,
+    "misses": []
+  },
+  "legacy": {
+    "cobol": {
+      "rules": 5,
+      "signed": true,
+      "articles": [
+        "Art.6"
+      ],
+      "benign_rules": 0
+    },
+    "as400": {
+      "rules": 2,
+      "signed": true,
+      "articles": [
+        "Art.6"
+      ],
+      "benign_rules": 0
+    },
+    "cics": {
+      "rules": 2,
+      "signed": true,
+      "articles": [
+        "Art.6"
+      ],
+      "benign_rules": 0
+    },
+    "edi": {
+      "rules": 4,
+      "signed": true,
+      "articles": [
+        "Art.6"
+      ],
+      "benign_rules": 0
+    },
+    "iso20022": {
+      "rules": 3,
+      "signed": true,
+      "articles": [
+        "Art.6"
+      ],
+      "benign_rules": 0
+    },
+    "hl7": {
+      "rules": 4,
+      "signed": true,
+      "articles": [
+        "Art.6",
+        "Art.9",
+        "Art.9"
+      ],
+      "benign_rules": 1
+    },
+    "mqtt": {
+      "rules": 3,
+      "signed": true,
+      "articles": [
+        "Art.6"
+      ],
+      "benign_rules": 0
+    }
+  },
+  "checks": [
+    {
+      "check": "gate.attack_recall==1.0",
+      "status": "PASS",
+      "detail": "recall=1.0"
+    },
+    {
+      "check": "gate.specificity==1.0",
+      "status": "PASS",
+      "detail": "spec=1.0"
+    },
+    {
+      "check": "gate.no_false_pos",
+      "status": "PASS",
+      "detail": "fp=0"
+    },
+    {
+      "check": "gate.meta_attack_caught",
+      "status": "PASS",
+      "detail": "misses=[]"
+    },
+    {
+      "check": "legacy.cobol.finds_rules",
+      "status": "PASS",
+      "detail": "rules=5"
+    },
+    {
+      "check": "legacy.cobol.signed",
+      "status": "PASS",
+      "detail": "not signed"
+    },
+    {
+      "check": "legacy.cobol.discriminates",
+      "status": "PASS",
+      "detail": "benign_rules=0"
+    },
+    {
+      "check": "legacy.as400.finds_rules",
+      "status": "PASS",
+      "detail": "rules=2"
+    },
+    {
+      "check": "legacy.as400.signed",
+      "status": "PASS",
+      "detail": "not signed"
+    },
+    {
+      "check": "legacy.as400.discriminates",
+      "status": "PASS",
+      "detail": "benign_rules=0"
+    },
+    {
+      "check": "legacy.cics.finds_rules",
+      "status": "PASS",
+      "detail": "rules=2"
+    },
+    {
+      "check": "legacy.cics.signed",
+      "status": "PASS",
+      "detail": "not signed"
+    },
+    {
+      "check": "legacy.cics.discriminates",
+      "status": "PASS",
+      "detail": "benign_rules=0"
+    },
+    {
+      "check": "legacy.edi.finds_rules",
+      "status": "PASS",
+      "detail": "rules=4"
+    },
+    {
+      "check": "legacy.edi.signed",
+      "status": "PASS",
+      "detail": "not signed"
+    },
+    {
+      "check": "legacy.edi.discriminates",
+      "status": "PASS",
+      "detail": "benign_rules=0"
+    },
+    {
+      "check": "legacy.iso20022.finds_rules",
+      "status": "PASS",
+      "detail": "rules=3"
+    },
+    {
+      "check": "legacy.iso20022.signed",
+      "status": "PASS",
+      "detail": "not signed"
+    },
+    {
+      "check": "legacy.iso20022.discriminates",
+      "status": "PASS",
+      "detail": "benign_rules=0"
+    },
+    {
+      "check": "legacy.hl7.finds_rules",
+      "status": "PASS",
+      "detail": "rules=4"
+    },
+    {
+      "check": "legacy.hl7.signed",
+      "status": "PASS",
+      "detail": "not signed"
+    },
+    {
+      "check": "legacy.hl7.discriminates",
+      "status": "PASS",
+      "detail": "benign_rules=1"
+    },
+    {
+      "check": "legacy.mqtt.finds_rules",
+      "status": "PASS",
+      "detail": "rules=3"
+    },
+    {
+      "check": "legacy.mqtt.signed",
+      "status": "PASS",
+      "detail": "not signed"
+    },
+    {
+      "check": "legacy.mqtt.discriminates",
+      "status": "PASS",
+      "detail": "benign_rules=0"
+    },
+    {
+      "check": "legacy.hl7_health_art9",
+      "status": "PASS",
+      "detail": "no Art.9 for health"
+    }
+  ],
+  "green": true,
+  "n_checks": 26,
+  "n_failed": 0
+}

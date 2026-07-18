@@ -1,0 +1,78 @@
+{
+  "WHAT WE ACTUALLY HAVE (verified)": {
+    "github": {
+      "CSOAI-ORG": "566 repos (CC verified, was 400)",
+      "languages": "Python 320, TypeScript 30, HTML 38, JavaScript 12",
+      "categories": "268 MCP servers, 30 verticals, 9 org-level, 88 other",
+      "stars_total": "~5 (zero marketing, no adoption)"
+    },
+    "pypi_published": {
+      "verified_published": [
+        "csoai-governance-crosswalk-mcp",
+        "agent-rate-limiter-mcp",
+        "dora-compliance-mcp",
+        "eu-ai-act-compliance-mcp",
+        "clawd",
+        "oscal-generator-mcp",
+        "sbom-cyclonedx-mcp",
+        "watermarking-authenticity-mcp",
+        "rag-knowledge-graph-mcp"
+      ],
+      "verified_NOT_published": [
+        "sov4-king",
+        "sovereign-flash",
+        "sov-bench",
+        "sovereign-kda",
+        "linear-attn-kernel (EAT-767)",
+        "frontier-router"
+      ]
+    },
+    "huggingface": {
+      "csoai-llc": "0 models",
+      "sovereign-llc": "0 models",
+      "implication": "We haven't published any model weights publicly (only OWEMs on local disk)"
+    },
+    "kaggle": {
+      "creds": "sibling has them (used in overnight sprints)",
+      "datasets_published": "?",
+      "notebooks_published": "?"
+    }
+  },
+  "WHAT WE'D LIKE TO HAVE (gaps)": {
+    "missing_repos": [
+      "sov4-king (the SOV4 King tab/API)",
+      "sovereign-flash (linear-attn kernel package)",
+      "sovereign-kda (KDA paper impl)",
+      "sov-bench (the sovereign benchmark suite)",
+      "linear-attn-kernel (EAT-767 should be packaged)",
+      "frontier-router (EAT-758 should be packaged)",
+      "bft-33 (33-agent BFT council)",
+      "owem-trainer (LoRA training harness)",
+      "sovereign-care-floor (Article 6 enforcement)",
+      "sovereign-venturi (the architecture surface)"
+    ],
+    "missing_hf_repos": [
+      "csoai-llc/sovereign-qwen3-0.5b (our OWEM base)",
+      "csoai-llc/sov3_student_adapter (the 83.3% eval'd adapter)",
+      "csoai-llc/linear-attn-kernel (our v4 kernel)"
+    ],
+    "missing_compute": [
+      "Oracle A1 (4 OCPU + 24 GB ARM, always-free) \u2014 bootstrap ready, need to provision",
+      "Kaggle creds for our hands (sibling owns, ask)"
+    ]
+  },
+  "WHAT TO ADOPT FROM OPEN SOURCE (free, high leverage)": {
+    "FlashQLA (596 stars)": "linear-attn CUDA kernel \u2014 drop-in for our v4 kernel",
+    "GatedDeltaNet-2 (240 stars)": "exact paper impl of arxiv 2510.26692 \u2014 replace our toy impl",
+    "KnOTS (94 stars)": "TIES with SVD \u2014 extend sibling's TIES finding",
+    "mergekit": "the standard model merging library (sibling already uses)"
+  },
+  "audit_corrections": {
+    "EAT-770_CC_audit": "3 corrections accepted",
+    "star_count_corrections": {
+      "FlashQLA": "fla-org/flash-linear-attention = 5360 stars (not 596)",
+      "GatedDeltaNet": "NVlabs/GatedDeltaNet = 623 stars (not 240)"
+    },
+    "oracle_a1_corrected": "capacity-gated, days not minutes (auto-grabber running)"
+  }
+}

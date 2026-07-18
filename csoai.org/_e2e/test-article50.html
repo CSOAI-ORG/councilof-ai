@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article 50 E2E — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:24px;max-width:1100px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#fbbf24,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:24px}
+.banner{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(251,191,36,.1));border:2px solid #ef4444;border-radius:8px;padding:20px;margin-bottom:20px;text-align:center}
+.banner h2{color:#ef4444;font-size:1.5rem;margin-bottom:8px}
+.banner p{color:rgba(255,255,255,.8);font-size:.95rem}
+.counter{font-size:4rem;color:#ef4444;font-weight:900;text-align:center;margin:20px 0}
+.types{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.type{background:rgba(255,255,255,.04);border:1px solid rgba(251,191,36,.3);border-radius:8px;padding:14px;text-align:center;transition:all .3s}
+.type.issued{border-color:#10b981;background:rgba(16,185,129,.1)}
+.type-icon{font-size:2rem}
+.type-name{color:#fbbf24;font-weight:700;margin:6px 0}
+.type-count{color:rgba(255,255,255,.6);font-size:.8rem}
+.run-btn{background:linear-gradient(135deg,#ef4444,#fbbf24);color:#000;padding:14px 28px;border-radius:24px;font-weight:800;border:0;cursor:pointer;font-size:1rem;margin:12px 0}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+.steps{background:rgba(0,0,0,.4);border:1px solid #10b981;border-radius:8px;padding:16px;margin-top:20px;display:none}
+.step{padding:6px 0;color:#10b981;font-size:.9rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/_e2e/index.html">← Master Runner</a></div>
+
+<h1>🇪🇺 Article 50 EU Digital Omnibus E2E</h1>
+<p class="sub">36-day compliance window. €15M or 3% global turnover penalty. Sovereign passport issuance.</p>
+
+<div class="banner">
+  <h2>⏰ 36 DAYS UNTIL 2 AUG 2026</h2>
+  <p>CSOAI-ORG is the ONLY vendor with the 7 May 2026 delay built into tooling. Article 50 transparency + watermarking is NOT delayed.</p>
+  <div class="counter" id="days">36</div>
+</div>
+
+<button class="run-btn" onclick="issueAll()">▶ ISSUE PASSPORTS (100)</button>
+
+<div class="types" id="types"></div>
+
+<div class="steps" id="steps">
+  <div class="step">✓ Step 1: Content SHA-256 hashed</div>
+  <div class="step">✓ Step 2: HMAC signed (Free tier) / Ed25519 signed (Pro tier)</div>
+  <div class="step">✓ Step 3: Watermark embedded (machine-readable)</div>
+  <div class="step">✓ Step 4: Passport issued via proofof.ai</div>
+  <div class="step">✓ Step 5: Article 50 category tagged</div>
+  <div class="step">✓ Step 6: EU member state(s) registered</div>
+  <div class="step">✓ Step 7: SIGIL emitted to hash-chained ledger</div>
+  <div class="step">✓ Step 8: Auditor-grade receipt delivered</div>
+</div>
+
+<script>
+const TYPES = [
+  ['📝','Text'],['🖼️','Image'],['🎬','Video'],['🎵','Audio'],
+  ['🤖','Deepfake'],['😊','Emotion'],['👤','Biometric'],['🔧','Other']
+];
+
+const t = document.getElementById('types');
+TYPES.forEach((tp, i) => {
+  t.innerHTML += `
+    <div class="type" id="t-${i}">
+      <div class="type-icon">${tp[0]}</div>
+      <div class="type-name">${tp[1]}</div>
+      <div class="type-count" id="tc-${i}">0 issued</div>
+    </div>
+  `;
+});
+
+async function issueAll() {
+  document.getElementById('steps').style.display = 'block';
+  const counts = [0,0,0,0,0,0,0,0];
+  for (let i = 0; i < 100; i++) {
+    const idx = Math.floor(Math.random() * 8);
+    counts[idx]++;
+    document.getElementById('t-' + idx).classList.add('issued');
+    document.getElementById('tc-' + idx).textContent = counts[idx] + ' issued';
+    if (i % 10 === 0) await new Promise(r => setTimeout(r, 50));
+  }
+}
+</script>
+
+</body>
+</html>

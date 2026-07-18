@@ -1,0 +1,14 @@
+{
+ "model": "qwen2.5:3b",
+ "provider": "Ollama localhost:11434",
+ "battery_size": 65,
+ "pass_count": 21,
+ "pass_rate": 0.3231,
+ "wall_time_min": "~5 (split across runs)",
+ "per_aggregate_bucket": {
+  "tasks 0-9 (simple scenarios)": "8/10 pass = 80%",
+  "tasks 10-39 (mid-complexity)": "13/30 pass = 43%",
+  "tasks 40-64 (sigil/audit vocabulary)": "0/25 pass = 0%"
+ },
+ "note": "Base pass rate on qwen2.5:3b without sovereign merge. Tasks 40-64 require sovereign vocabulary (ed25519, audit, care floor, allow) that the model lacks without fine-tuning."
+}

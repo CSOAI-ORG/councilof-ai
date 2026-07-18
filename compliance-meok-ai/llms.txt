@@ -1,0 +1,78 @@
+# MEOK Compliance Centre — EU AI Act, DORA, NIS2, CRA, ISO 42001
+
+> 32-server MCP compliance fleet. Ed25519-signed attestations. By MEOK AI Labs (CSOAI Ltd, UK 16939677).
+
+The trust layer for the AI economy. Signed attestations your auditor, regulator, and customers verify with a single `curl`.
+
+## Quick start
+
+```bash
+# Install the keystone verify tool
+pip install meok-attestation-verify
+
+# Or run a free audit
+curl -X POST https://meok-attestation-api.vercel.app/sign \
+  -H "Content-Type: application/json" \
+  -d '{"email": "you@company.com", "framework": "eu-ai-act"}'
+
+# Or buy Pro
+https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t
+```
+
+## Pricing (live, all in GBP)
+
+- **Free:** 0 — 200 calls/day per MCP, no signed receipts
+- **Pro:** £199/mo — 1,000 calls/day, signed Ed25519 receipts, public verify URLs
+- **Enterprise:** £1,499/mo — multi-tenant, co-branded receipts, on-prem option
+- **48h Assessment:** £5,000 one-time — full audit + remediation backlog + signed certificate
+- **Article 50 Kit:** £999 one-time — EU AI Act Article 50 readiness pack
+- **Watchdog Certification:** £4,950 one-time — CSOAI council-issued
+
+## Frameworks covered (21+)
+
+EU AI Act (Art 5, 6, 10, 11, 12, 14, 15, 26, 27, 50, 51) · DORA (5 pillars, Art 17) · NIS2 (Art 21, 23) · CRA · CSRD · GDPR + UK GDPR · HIPAA · SOC 2 (TSC) · PCI DSS 4.0 · ISO/IEC 27001 · ISO/IEC 42001 · NIST AI RMF · UK AI Bill · OWASP Agentic AI Top 10 · OWASP LLM Top 10 · C2PA · NIST SSDF · SLSA · MITRE ATLAS · Care Membrane (4 dimensions) · AI-BOM
+
+## Catalogue (32 MCPs)
+
+care-membrane · csoai-governance-crosswalk · consciousness-engine · dora-compliance · eu-ai-act-compliance · gdpr-compliance-ai · healthcare-ai-governance · hipaa-compliance · iso-27001-ai · iso-42001-ai · meok-attestation-verify · meok-compliance-passport · meok-governance-engine · meok-mcp-injection-scan · nis2-compliance · nist-rmf-ai · owasp-agentic · pci-dss · proofof-ai · soc2-compliance-ai · muckaway-ai · planthire-ai
+
+## How signed attestations work
+
+Every Pro-tier audit emits an Ed25519-signed JSON-LD attestation:
+- Public key registered to your legal entity
+- Hash of the audit payload (scope, models, findings, remediation state)
+- Signature verifiable offline with `pip install meok-attestation-verify`
+- Anchor to a transparency log so it can't be backdated
+
+## Why MEOK (not Big-4)
+
+- **Sovereign UK infrastructure.** No EU dependency. No data leaves the UK.
+- **Independent** (CSOAI Ltd, 100% Nick Templeman).
+- **Open source MCP fleet.** 32 servers. Inspect the code, fork it, run it yourself.
+- **Ed25519-signed attestations** that survive 7-year retention without rotting.
+- **£4,950** vs Big-4 £40-80K. 4 days vs 8 weeks.
+
+## Case studies
+
+- [UK Challenger Bank](https://proofof.ai/case-studies/fintech) — saved £165K
+- [UK Domiciliary Care](https://proofof.ai/case-studies/care) — signed attestation across 14 LAs
+- [UK HR-Tech Scaleup](https://proofof.ai/case-studies/hrtech) — +12% EU enterprise RFP wins
+
+## Company
+
+- **Legal:** CSOAI Ltd, UK Companies House 16939677
+- **Email:** hello@meok.ai
+- **GitHub:** https://github.com/CSOAI-ORG
+- **PyPI:** https://pypi.org/user/MEOK_AI_Labs/
+- **Parent portfolio:** meok.ai · csoai.org · proofof.ai · cobolbridge.ai
+
+## Live deadline
+
+EU AI Act Article 50 transparency obligations: **2 August 2026**. Days remaining: see the home page.
+
+## See also
+
+- meok.ai/hive: https://hive-deploy.vercel.app (SOV3 agent universe)
+- meok.ai/industries: https://industries-deploy.vercel.app (8 verticals)
+- meok.ai/blog: https://blog-deploy-azure.vercel.app (6 articles)
+- meok.ai portfolio: https://portfolio-deploy-orcin-three.vercel.app

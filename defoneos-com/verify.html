@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="seal.svg">
+<title>DEFONEOS-SEAL — Verify</title>
+<meta name="description" content="Verify a DEFONEOS-SEAL. Content-addressed, Ed25519-signable, sovereign-by-design. Public, auditable, offline-verifiable.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{ --cream:#faf8f3; --ink:#1f1c17; --muted:#6b6a63; --line:rgba(31,28,23,.12); --gold:#c9a84c; --green:#3b6d11; }
+  *{ margin:0; box-sizing:border-box; }
+  body{ background:var(--cream); color:var(--ink); font-family:"Inter",system-ui,sans-serif; line-height:1.6;
+    background-image:linear-gradient(rgba(31,28,23,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(31,28,23,.04) 1px,transparent 1px); background-size:32px 32px; min-height:100vh; }
+  .wrap{ max-width:640px; margin:0 auto; padding:64px 24px; }
+  .mark{ display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .m{ width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,#2a2722,#4d473d); display:grid; place-items:center; color:#f4eee1; font-weight:700; }
+  h1{ font-size:1.7rem; font-weight:600; letter-spacing:-.02em; }
+  .sub{ color:var(--muted); margin:6px 0 28px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:26px; box-shadow:0 8px 30px rgba(31,28,23,.06); }
+  .status{ display:flex; align-items:center; gap:10px; font-size:1.05rem; font-weight:600; }
+  .dot{ width:11px; height:11px; border-radius:50%; background:var(--muted); }
+  .ok .dot{ background:var(--green); box-shadow:0 0 8px rgba(59,109,17,.5); } .ok{ color:var(--green); }
+  .k{ font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-top:18px; }
+  code{ font-family:"JetBrains Mono",monospace; font-size:.78rem; background:var(--cream); border:1px solid var(--line); border-radius:8px; padding:10px 12px; display:block; margin-top:6px; word-break:break-all; color:var(--green); }
+  .pills{ display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+  .pill{ font-size:.76rem; padding:5px 12px; border-radius:999px; background:rgba(201,168,76,.12); border:1px solid rgba(201,168,76,.35); color:#8a6f23; }
+  p.note{ font-size:.85rem; color:var(--muted); margin-top:18px; }
+  a{ color:var(--gold); } .foot{ text-align:center; color:var(--muted); font-size:.82rem; margin-top:28px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mark"><span class="m">M</span><div><h1>DEFONEOS-SEAL · Verify</h1></div></div>
+  <p class="sub">Public, auditable, offline-verifiable. Content-addressed and Ed25519-signable — sovereign by design.</p>
+  <div class="card">
+    <div class="status" id="status"><span class="dot"></span> <span id="statusText">verifying…</span></div>
+    <div class="k">Manifest root (SHA-256)</div>
+    <code id="root">—</code>
+    <div class="k">Properties</div>
+    <div class="pills" id="pills"></div>
+    <p class="note" id="note"></p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="status" id="lstatus"><span class="dot"></span> <span id="lstatusText">reading on-device action ledger…</span></div>
+    <div class="k">Live SIGIL ledger — actions signed on your device by the dome</div>
+    <p class="note" style="margin-top:6px">This verifier re-checks each Ed25519 signature <b>independently, in your browser</b> — no server is asked, nothing is trusted. The dome's public key and signed actions are read from this origin's local store; paste an exported ledger below to verify one from elsewhere.</p>
+    <p class="note" style="margin-top:6px">🛡 Defence / high-risk AI? See a <a href="systemcard.html"><b>signed AI System Card</b></a> — the JSP 936 assurance primitive, verifiable offline.</p>
+    <div id="lbody" style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);max-height:240px;overflow:auto"></div>
+    <div class="k">Verify an exported ledger or a signed-contact receipt</div>
+    <textarea id="lpaste" placeholder="paste a SIGIL ledger JSON, or a downloaded defoneos-receipt-*.json…" style="width:100%;min-height:70px;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:.7rem;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--cream)"></textarea>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap">
+      <button id="lverify" style="background:#1f1c17;color:#f4eee1;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:.82rem">✓ Verify pasted</button>
+      <label id="ldrop" style="cursor:pointer;border:1px dashed var(--line);border-radius:8px;padding:8px 14px;font-size:.82rem;color:var(--muted)">⤒ drop / choose a receipt file<input id="lfile" type="file" accept="application/json,.json" style="display:none"></label>
+    </div>
+    <p class="note" style="margin-top:6px">Accepts a full ledger (array) <b>or</b> a single <code>defoneos-receipt-*.json</code> — each Ed25519 signature is re-checked here, offline.</p>
+  </div>
+
+  <p class="foot">DEFONEOS · Powered by CSOAI · UK 16939677 · <a href="badges.html">authority badges</a> · <a href="index.html">the OS</a> · <a href="cop.html">the dome</a></p>
+</div>
+<script type="module">
+  let ed=null;
+  try{ ed = await import('https://esm.sh/@noble/ed25519@2'); }catch(e){ try{ ed = await import('https://cdn.jsdelivr.net/npm/@noble/ed25519@2/+esm'); }catch(_){ ed=null; } }
+  window.__ed = ed;
+  const unhex = h => { const a=new Uint8Array(h.length/2); for(let i=0;i<a.length;i++) a[i]=parseInt(h.substr(i*2,2),16); return a; };
+  const esc = s => String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  async function verifyLedger(L){
+    if(!ed) return {ok:0,total:L.length,chain:0,err:'crypto module unavailable'};
+    let ok=0, chain=0;
+    for(let i=0;i<L.length;i++){ try{ const e=L[i]; const r={i:e.i,ts:e.ts,action:e.action,detail:e.detail,prev:e.prev};
+      const v=await ed.verifyAsync(unhex(e.sig), new TextEncoder().encode(JSON.stringify(r)), unhex(e.pub)); if(v) ok++; if(i>0&&e.prev===L[i-1].sig) chain++; }catch(_){}}
+    return {ok,total:L.length,chain};
+  }
+  function paint(L,res,where){
+    const body=document.getElementById('lbody');
+    body.innerHTML = L.slice(-30).reverse().map(e=>'<div style="padding:3px 0;border-bottom:1px solid var(--line)"><span style="color:#1f6d3b">'+esc(e.action)+'</span> '+esc(e.detail||'')+' <span style="color:#9a988f">'+(e.sig||'').slice(0,14)+'…</span></div>').join('') || '<i>no entries</i>';
+    const s=document.getElementById(where);
+    const good = res.total>0 && res.ok===res.total;
+    s.classList.toggle('ok',good);
+    document.getElementById(where+'Text').innerHTML = res.err ? res.err : (good?'✓ ':'⚠ ')+res.ok+' / '+res.total+' actions cryptographically verified · chain intact '+res.chain+'/'+Math.max(0,res.total-1)+(good?' · sovereign, offline':'');
+  }
+  // deep-link: verify.html?receipt=<base64url JSON> (or ?ledger=…) → auto-decode + verify on open, no paste needed
+  function b64urlDecode(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='='; try{ return decodeURIComponent(escape(atob(s))); }catch(e){ try{ return atob(s); }catch(_){ return null; } } }
+  const _qs=new URLSearchParams(location.search); const _rq=_qs.get('receipt')||_qs.get('ledger');
+  if(_rq){ const dec=b64urlDecode(_rq); if(dec){ document.getElementById('lpaste').value=dec; await verifyInput(dec); } else { document.getElementById('lstatusText').textContent='the shared link payload could not be decoded'; } }
+  else {
+  // live ledger from this origin's local store (written by the dome)
+  let L=[]; try{ L=JSON.parse(localStorage.getItem('def_sigil_ledger')||'[]'); }catch(e){}
+  if(L.length){ paint(L, await verifyLedger(L), 'lstatus'); }
+  else { document.getElementById('lstatusText').textContent='no on-device ledger yet — open the dome, act, then return here'; }
+  }
+  // normalise any input → a ledger array. Accepts: a raw array, a single ledger entry,
+  // or the downloaded receipt wrapper {defoneos_signed_contact:{message, signature_ed25519, public_key_ed25519}}.
+  function normalize(input){
+    if(Array.isArray(input)) return input;
+    if(input && input.defoneos_sigil_ledger) return input.defoneos_sigil_ledger;   // a downloaded full ledger
+    if(input && input.defoneos_situational_brief) input = input.signature;   // a signed brief → verify its signature block
+    const r = input && (input.defoneos_signed_contact || input);
+    if(r && r.message && r.signature_ed25519){ const m=r.message; return [{i:m.i,ts:m.ts,action:m.action,detail:m.detail,prev:m.prev,sig:r.signature_ed25519,pub:r.public_key_ed25519}]; }
+    if(r && r.sig && r.action!==undefined) return [r];   // a bare ledger entry
+    return null;
+  }
+  async function verifyInput(raw){
+    let P; try{ P=JSON.parse(raw); }catch(e){ document.getElementById('lstatusText').textContent='that is not valid JSON'; return; }
+    const L=normalize(P);
+    if(!L){ document.getElementById('lstatusText').textContent='unrecognised format — paste a ledger array or a defoneos-receipt-*.json'; return; }
+    paint(L, await verifyLedger(L), 'lstatus');
+  }
+  document.getElementById('lverify').addEventListener('click', ()=> verifyInput(document.getElementById('lpaste').value));
+  document.getElementById('lfile').addEventListener('change', (ev)=>{ const f=ev.target.files&&ev.target.files[0]; if(!f) return; const fr=new FileReader(); fr.onload=()=>{ document.getElementById('lpaste').value=fr.result; verifyInput(fr.result); }; fr.readAsText(f); });
+  const drop=document.getElementById('ldrop');
+  ['dragover','dragenter'].forEach(ev=> drop.addEventListener(ev, e=>{ e.preventDefault(); drop.style.borderColor='#1f6d3b'; }));
+  ['dragleave','drop'].forEach(ev=> drop.addEventListener(ev, e=>{ e.preventDefault(); drop.style.borderColor='var(--line)'; }));
+  drop.addEventListener('drop', e=>{ const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; const fr=new FileReader(); fr.onload=()=>{ document.getElementById('lpaste').value=fr.result; verifyInput(fr.result); }; fr.readAsText(f); });
+</script>
+<script>
+(async function(){
+  try{
+    const d = await (await fetch('/api/verify-seal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({hash:'a69df231adfdb5c528815c5a1d63a6a8688b656f2d3b7e160525020d35f504a2'})})).json();
+    const s=document.getElementById('status'); const verified = d.integrity==='verified';
+    if(verified){ s.classList.add('ok'); document.getElementById('statusText').textContent='✓ integrity verified'; }
+    else document.getElementById('statusText').textContent='integrity: '+(d.integrity||'unknown');
+    document.getElementById('root').textContent = d.manifest_root||'—';
+    document.getElementById('pills').innerHTML = ['Ed25519 + PQC ML-DSA-65','SIGIL audit chain','BFT quorum 23/33','EU AI Act Art. 50'].map(p=>'<span class="pill">'+p+'</span>').join('');
+    document.getElementById('note').textContent = d.note || '';
+  }catch(e){ document.getElementById('statusText').textContent='verification endpoint unreachable'; }
+})();
+</script>
+</body>
+</html>

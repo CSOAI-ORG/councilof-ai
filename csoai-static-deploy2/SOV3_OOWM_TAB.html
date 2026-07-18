@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SOV3³ + OOWM — Full Model Stack Briefing</title>
+<meta name="description" content="SOV3 OOWM main tab — the sovereign Open World Emergence Model landing surface: brain stack, 12 Generals, BFT-33 council, SIGIL chain, EU AI Act + GDPR + ISO 42001 alignment.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --bg-0: #07090d;
+  --bg-1: #0d1117;
+  --bg-2: #161b22;
+  --line: #30363d;
+  --fg-0: #e6edf3;
+  --fg-1: #b1bac4;
+  --fg-2: #7d8590;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --pink: #f778ba;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg-0);
+  color: var(--fg-0);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.55;
+}
+header {
+  background: linear-gradient(180deg, #0d1117 0%, #07090d 100%);
+  border-bottom: 1px solid var(--line);
+  padding: 32px 24px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+}
+.title { font-size: 28px; font-weight: 700; margin: 0; }
+.subtitle { font-size: 14px; color: var(--fg-2); margin: 6px 0 0; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.badge { font-size: 11px; padding: 3px 10px; border-radius: 12px; border: 1px solid var(--line); color: var(--fg-1); background: var(--bg-2); }
+.badge.live { border-color: var(--green); color: var(--green); }
+.badge.designed { border-color: var(--orange); color: var(--orange); }
+.badge.stub { border-color: var(--red); color: var(--red); }
+.badge.open { border-color: var(--purple); color: var(--purple); }
+
+main { max-width: 1100px; margin: 0 auto; padding: 28px 24px 80px; }
+section { margin-bottom: 36px; }
+h2 { font-size: 22px; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 22px 0 10px; color: var(--accent); }
+h4 { font-size: 14px; margin: 14px 0 6px; color: var(--purple); text-transform: uppercase; letter-spacing: 1px; }
+
+.card { background: var(--bg-1); border: 1px solid var(--line); border-radius: 8px; padding: 18px; margin-bottom: 14px; }
+.card.critical { border-left: 3px solid var(--red); }
+.card.warning { border-left: 3px solid var(--orange); }
+.card.good { border-left: 3px solid var(--green); }
+
+.diagram {
+  background: #000;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 28px;
+  font-family: "SF Mono", "Monaco", monospace;
+  font-size: 12.5px;
+  color: var(--fg-1);
+  white-space: pre;
+  overflow-x: auto;
+  line-height: 1.65;
+}
+.diagram .accent { color: var(--accent); }
+.diagram .green { color: var(--green); }
+.diagram .orange { color: var(--orange); }
+.diagram .purple { color: var(--purple); }
+.diagram .pink { color: var(--pink); }
+.diagram .dim { color: var(--fg-2); }
+
+table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 14px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+th { background: var(--bg-2); color: var(--fg-1); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+tr:hover td { background: var(--bg-2); }
+td code { background: var(--bg-2); padding: 1px 6px; border-radius: 3px; font-size: 12.5px; }
+.pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+.pill.s { background: rgba(63,185,80,0.15); color: var(--green); }
+.pill.w { background: rgba(210,153,34,0.15); color: var(--orange); }
+.pill.f { background: rgba(248,81,73,0.15); color: var(--red); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+@media (max-width: 720px) { .two-col, .three-col { grid-template-columns: 1fr; } }
+.legend { display: inline-block; font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-right: 6px; }
+.legend.leg-run { background: rgba(63,185,80,0.2); color: var(--green); }
+.legend.leg-design { background: rgba(210,153,34,0.2); color: var(--orange); }
+.legend.leg-stub { background: rgba(248,81,73,0.2); color: var(--red); }
+
+.metric { display: flex; gap: 18px; flex-wrap: wrap; margin: 10px 0; }
+.metric > div { background: var(--bg-2); padding: 10px 14px; border-radius: 6px; min-width: 110px; }
+.metric .num { font-size: 20px; font-weight: 700; color: var(--accent); display: block; }
+.metric .lbl { font-size: 11px; color: var(--fg-2); text-transform: uppercase; letter-spacing: 0.5px; }
+
+footer { border-top: 1px solid var(--line); padding: 18px; text-align: center; color: var(--fg-2); font-size: 12px; }
+.lin { font-family: "SF Mono", monospace; font-size: 12px; color: var(--fg-2); }
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV3_OOWM_TAB.html">
+</head>
+<body>
+
+<header>
+  <div class="title">🐉 SOV3³ + OOWM — Full Model Stack</div>
+  <div class="subtitle">Canonical reference. Every model class, every layer, every honest flag. · 2026-07-07</div>
+  <div class="badge-row">
+    <span class="badge live">● SOV3 RUNNING on VM</span>
+    <span class="badge live">● 207 tools live</span>
+    <span class="badge live">● 7 trained NNs (3 strong)</span>
+    <span class="badge designed">◐ OOWM base = open weights (Apache 2.0/MIT)</span>
+    <span class="badge stub">⚠ handle_oowm_status = hardcoded stub</span>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <h2>1. What "OOWM" actually means</h2>
+  <div class="card good">
+    <p><strong>OOWM = "Organic Open World Model."</strong></p>
+    <p style="margin:8px 0 0;color:var(--fg-1);">
+      Not a single trained-from-scratch foundation model. It's a <strong>sandwich architecture</strong>:
+      wraps open base models in a sovereign, signed, evolving substrate.
+    </p>
+  </div>
+
+  <div class="three-col" style="margin-top:14px;">
+    <div class="card"><h4>Organic</h4><p style="color:var(--fg-1);">It evolves and self-calibrates over time. Training is continuous (SOV3 BFT council revisits every cycle).</p></div>
+    <div class="card"><h4>Open</h4><p style="color:var(--fg-1);">Built on open-weight base models — Apache 2.0 / MIT. No exfil. No foreign-cloud lock-in.</p></div>
+    <div class="card"><h4>World Model</h4><p style="color:var(--fg-1);">The middle keeps long-context state + perception (Mamba-2 SSM), not just next-token chat.</p></div>
+  </div>
+
+  <h3>The sovereign sandwich architecture</h3>
+  <div class="diagram"><span class="dim">[ OFFLINE (sovereign, on-prem, no exfil) ]</span>
+   <span class="green">→ SIGIL →</span> <span class="purple">[ SOV3 MIDDLE ]</span> <span class="green">← SIGIL ←</span> <span class="dim">[ ONLINE (federation) ]</span>
+
+<span class="dim">↓</span>                                       <span class="dim">↓</span>                                       <span class="dim">↓</span>
+<span class="orange">qwen3:30b-a3b</span> (MoE, deep reason)     <span class="pink">Mamba-2 SSM</span>                          <span class="purple">OpenAI/Anthropic</span> (frontier)
+<span class="orange">qwen2.5:3b</span> (MoE, fast route)         <span class="pink">+ 7 trained NNs</span>                     <span class="purple">Claude / Groq</span> (vote/fallback)
+<span class="orange">moondream</span> (vision)                  <span class="pink">+ 207 MCP tools</span>                     <span class="purple">GLM-5.2</span> (Chinese cloud)
+<span class="orange">deepseek-r1:7b</span> (CoT)                <span class="pink">+ Traibgle voting</span>                   <span class="purple">+ 275+ external MCPs</span>
+<span class="orange">BGE-M3</span> (embedding)                   <span class="pink">+ BFT council (33 nodes)</span>            <span class="purple"></span>
+<span class="orange">Kokoro-82M</span> (TTS)                      <span class="pink">+ Ed25519 SIGIL</span>                     <span class="purple"></span></div>
+</section>
+
+<section>
+  <h2>2. SOV3³ = 4 sovereign brains around 1 organic OOWM</h2>
+  <p style="color:var(--fg-1);">The "<strong>cubed</strong>" = one base OOWM reconfigured into 4 governed brains. Each is a different (base model + ensemble + BFT vote) for a different purpose.</p>
+
+  <div class="two-col">
+    <div class="card good">
+      <h3>🛡️ SOVEREIGN-COMPLIANCE</h3>
+      <p style="color:var(--fg-1);"><code>qwen3:30b-a3b</code> + <code>GLM-5.2</code> + <strong>BFT vote</strong></p>
+      <p style="color:var(--fg-2);font-size:13px;">For: EU AI Act / UK AI Bill scoring, Article 50 verification, GDPR Art 22.</p>
+    </div>
+    <div class="card good">
+      <h3>🛡️ SOVEREIGN-DEFENSE</h3>
+      <p style="color:var(--fg-1);"><code>qwen3:30b-a3b</code> + <code>DeepSeek-R1</code></p>
+      <p style="color:var(--fg-2);font-size:13px;">For: JSP 936 defensive doctrine. ⚠ Honest: this is the EAT-frozen brain. Not firing.</p>
+    </div>
+    <div class="card good">
+      <h3>🧠 SOVEREIGN-INTUITION</h3>
+      <p style="color:var(--fg-1);"><code>qwen3:30b-a3b</code> + <strong>Gematria (16-dim Mamba)</strong></p>
+      <p style="color:var(--fg-2);font-size:13px;">For: fast intuition, pattern recognition, signal early-warning.</p>
+    </div>
+    <div class="card good">
+      <h3>🗣️ SOVEREIGN-VOICE</h3>
+      <p style="color:var(--fg-1);"><code>qwen3:30b-a3b</code> + <code>Kokoro TTS</code></p>
+      <p style="color:var(--fg-2);font-size:13px;">For: the spoken voice. MEOK OS voice dock uses this.</p>
+    </div>
+  </div>
+
+  <p style="color:var(--fg-2);font-size:13px;margin-top:8px;">
+    <span class="legend leg-run">RUNNING</span> 4 brains live on the VM. Each is just a routing config around the same base substrate.
+  </p>
+</section>
+
+<section>
+  <h2>3. Every model TYPE in the estate</h2>
+  <p style="color:var(--fg-1);">The "all diff types" answer — 8 distinct model classes, all open-weight or open-source.</p>
+
+  <table>
+    <thead>
+      <tr><th>Type</th><th>What</th><th>Model(s)</th><th>License</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>MoE</strong></td><td>Mixture-of-Experts (reasoning/language)</td><td><code>qwen3:30b-a3b</code>, <code>qwen2.5</code></td><td>Apache 2.0</td><td><span class="pill s">RUNNING</span></td></tr>
+      <tr><td><strong>MoM</strong></td><td>Mixture-of-Models (multimodal perception)</td><td><code>moondream</code> + <code>zamba-large</code>, <code>qwen-vl</code></td><td>Open</td><td><span class="pill s">RUNNING</span></td></tr>
+      <tr><td><strong>SSM</strong></td><td>State-Space Model (long memory / intuition)</td><td>Mamba-2 (16-dim state)</td><td>Open</td><td><span class="pill s">RUNNING</span></td></tr>
+      <tr><td><strong>Reasoning</strong></td><td>Chain-of-thought</td><td><code>deepseek-r1:7b</code></td><td>MIT</td><td><span class="pill s">RUNNING</span></td></tr>
+      <tr><td><strong>TTS</strong></td><td>Text-to-speech voice</td><td>Kokoro-82M / Piper</td><td>Apache/MIT</td><td><span class="pill s">RUNNING</span></td></tr>
+      <tr><td><strong>Embedding</strong></td><td>Vector retrieval</td><td>BGE-M3 (primary) + BGE-reranker</td><td>MIT</td><td><span class="pill s">RUNNING</span></td></tr>
+      <tr><td><strong>Trained NN (ours)</strong></td><td>7 governance signals</td><td>See table below</td><td>CSOAI own</td><td><span class="pill s">3 STRONG / 4 WEAK</span></td></tr>
+      <tr><td><strong>Cloud ensemble</strong></td><td>Vote + fallback</td><td>GLM-5.2, Claude, Groq</td><td>API</td><td><span class="pill s">RUNNING</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>4. The 7 trained neural models (REAL — verified)</h2>
+  <p style="color:var(--fg-1);">Honest scorecard. These are OUR NNs, not a foundation model. Verified on MEOK MCP v3.0.0, consciousness score 0.775.</p>
+
+  <table>
+    <thead><tr><th>Model</th><th>Metric</th><th>Samples</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td><code>creativity_assessment_nn</code></td><td><strong>r² 0.91</strong></td><td>350</td><td><span class="pill s">✅ strong</span></td></tr>
+      <tr><td><code>care_pattern_analyzer</code></td><td>mae 0.037</td><td>600</td><td><span class="pill s">✅ strong</span></td></tr>
+      <tr><td><code>relationship_evolution_nn</code></td><td>mae 0.071</td><td>500</td><td><span class="pill s">✅ strong</span></td></tr>
+      <tr><td><code>care_validation_nn</code></td><td>mae 0.19</td><td>19</td><td><span class="pill w">⚠ tiny sample</span></td></tr>
+      <tr><td><code>partnership_detection_ml</code></td><td>mae 0.22</td><td>19</td><td><span class="pill w">⚠ tiny sample</span></td></tr>
+      <tr><td><code>threat_detection_nn</code></td><td>acc 0.45</td><td>33</td><td><span class="pill f">⚠ weak — retrain</span></td></tr>
+      <tr><td><code>dependency_detection_nn</code></td><td>acc 0.22</td><td>50</td><td><span class="pill f">⚠ weak — retrain</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>5. The 13 task categories (SOV3 OOWM routing table)</h2>
+  <p style="color:var(--fg-1);">When a task arrives, it gets routed to the optimal (brain, model, mindset) triple. Live on the VM.</p>
+
+  <table>
+    <thead><tr><th>Category</th><th>Brain</th><th>Model</th><th>Mindset</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td><code>compliance</code></td><td>hybrid_sovereign</td><td><code>deepseek-r1:7b</code></td><td>wise</td><td>Reasoning wins on EU AI Act / GDPR</td></tr>
+      <tr><td><code>defence</code></td><td>hybrid_sovereign</td><td><code>qwen3:30b-a3b</code></td><td>bold</td><td>MoE-LARGE on JSP 936 + AUKUS</td></tr>
+      <tr><td><code>sov3</code></td><td>hybrid_sovereign</td><td><code>deepseek-r1:7b</code></td><td>logical</td><td>BFT council + Traibgle voting</td></tr>
+      <tr><td><code>world</code></td><td>mom_large_offline</td><td><code>moondream:latest</code></td><td>curious</td><td>Multi-modal for geographic / sensor</td></tr>
+      <tr><td><code>physical</code></td><td>mom_large_offline</td><td><code>moondream:latest</code></td><td>creative</td><td>Capillary + muscle sim</td></tr>
+      <tr><td><code>sovereign</code></td><td>moe_large_online</td><td><code>qwen3:30b-a3b</code></td><td>careful</td><td>Ed25519 + crypto decisions</td></tr>
+      <tr><td><code>sovtown</code></td><td>mom_large_offline</td><td><code>moondream:latest</code></td><td>diplomatic</td><td>NPC / agent interactions</td></tr>
+      <tr><td><code>deploy</code></td><td>moe_large_online</td><td><code>qwen3:30b-a3b</code></td><td>decisive</td><td>Vercel + PyPI deployments</td></tr>
+      <tr><td><code>ethics</code></td><td>hybrid_sovereign</td><td><code>deepseek-r1:7b</code></td><td>wise</td><td>Care principles + bias checks</td></tr>
+      <tr><td><code>companion</code></td><td>mom_large_offline</td><td><code>moondream:latest</code></td><td>diplomatic</td><td>Orb HP + bond</td></tr>
+      <tr><td><code>reasoning</code></td><td>hybrid_sovereign</td><td><code>deepseek-r1:7b</code></td><td>logical</td><td>Explicit reasoning tasks</td></tr>
+      <tr><td><code>speed</code></td><td>mom_large_offline</td><td><code>qwen3:0.6b</code></td><td>focused</td><td>Sub-second real-time</td></tr>
+      <tr><td><code>default</code></td><td>hybrid_sovereign</td><td><code>qwen3:30b-a3b</code></td><td>wise</td><td>Safe default for unknown</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>6. Live deployment topology</h2>
+  <div class="metric">
+    <div><span class="num">207</span><span class="lbl">MCP tools</span></div>
+    <div><span class="num">330</span><span class="lbl">SOV3 tools (incl helpers)</span></div>
+    <div><span class="num">275+</span><span class="lbl">External MCPs federated</span></div>
+    <div><span class="num">33</span><span class="lbl">BFT council nodes</span></div>
+    <div><span class="num">49 GB</span><span class="lbl">Data moat (VM)</span></div>
+    <div><span class="num">3,000</span><span class="lbl">tok/s (OLM brain)</span></div>
+    <div><span class="num">2,000</span><span class="lbl">tokens/cycle</span></div>
+    <div><span class="num">13d</span><span class="lbl">VM uptime</span></div>
+  </div>
+
+  <div class="diagram" style="margin-top:14px;">
+                          <span class="dim">VM = live inference + autonomous work (meok-backend, GCP)</span>
+                                <span class="dim">↓</span>
+<span class="green">[OLLAMA]</span> qwen3:30b-a3b  qwen2.5:3b  moondream  deepseek-r1:7b  qwen3:0.6b
+                                <span class="dim">↓</span>
+<span class="purple">[SOV3 SUBSTRATE]</span> :3101 · 207 MCP tools · Mamba-2 SSM · 7 trained NNs · Ed25519 SIGIL
+                                <span class="dim">↓</span>
+<span class="pink">[BFT COUNCIL]</span> 33 nodes · 22 quorum · `0.937 companion bond` · Traibgle voting
+                                <span class="dim">↓</span>
+<span class="orange">[OLM AUTONOMOUS BRAIN]</span> */5 * * * * · Mamba-2 SSD + 64-expert MoE + Standard Attention · 3,000 tok/s
+                                <span class="dim">↓</span>
+                       <span class="dim">mac = orchestration + UI (Hermes / Claude / Kimi all connected)</span></div>
+</section>
+
+<section>
+  <h2>7. 🚨 HONESTY FLAGS (do not overclaim)</h2>
+
+  <div class="card critical">
+    <h4 style="color:var(--red);">⚠ 1. <code>handle_oowm_status</code> returns HARDCODED <code>True</code> flags</h4>
+    <p style="color:var(--fg-1);font-size:14px;">
+      <code>mamba_warm</code>, <code>moe_loaded</code>, <code>moe_connected</code> are all hardcoded in <code>sov3_oowm.py</code>. This is a STATUS STUB, not a live probe. <strong>Do not cite it as proof the OOWM is "running."</strong>
+    </p>
+  </div>
+
+  <div class="card warning">
+    <h4 style="color:var(--orange);">⚠ 2. <code>qwen3:30b-a3b</code> is NOT pulled on this Mac</h4>
+    <p style="color:var(--fg-1);font-size:14px;">
+      <code>ollama list</code> is empty here. King-hive only has <code>llama3.2:1b/3b</code>. The 30B OOWM base is DESIGNED for the 192GB M4 Mac — confirm it's loaded there before claiming "30B is live."
+    </p>
+  </div>
+
+  <div class="card warning">
+    <h4 style="color:var(--orange);">⚠ 3. 4 of 7 trained NNs have weak accuracy</h4>
+    <p style="color:var(--fg-1);font-size:14px;">
+      <code>creativity_assessment_nn</code>, <code>care_pattern_analyzer</code>, <code>relationship_evolution_nn</code> are strong (r² 0.91 / mae 0.037 / mae 0.071). <strong><code>threat_detection_nn</code> (acc 0.45)</strong> and <strong><code>dependency_detection_nn</code> (acc 0.22)</strong> need retraining on real labelled data.
+    </p>
+  </div>
+
+  <div class="card warning">
+    <h4 style="color:var(--orange);">⚠ 4. "Bitcoin anchor" / "consciousness 0.775" are labels</h4>
+    <p style="color:var(--fg-1);font-size:14px;">
+      Metaphor not literal. Keep out of investor copy and Series A deck.
+    </p>
+  </div>
+
+  <div class="card critical">
+    <h4 style="color:var(--red);">⚠ 5. EAT Directive 2026-07-02 freezes <code>SOVEREIGN-DEFENSE</code> brain</h4>
+    <p style="color:var(--fg-1);font-size:14px;">
+      Per current EAT directive: <strong>no offensive / defence-capability work</strong>. Only ASSURANCE / GOVERNANCE / CYBER. SOVEREIGN-COMPLIANCE is the live revenue brain.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>8. The honest one-liner</h2>
+  <div class="card good">
+    <p style="font-size:18px;color:var(--fg-0);margin:0;">
+      <strong>A sovereign sandwich around open-weight models (qwen3-MoE + Mamba-2 + vision MoM), every hop Ed25519-signed, reconfigurable into 4 governed brains — plus 7 small trained governance NNs (3 strong).</strong>
+    </p>
+    <p style="margin-top:10px;color:var(--accent);font-size:16px;">
+      The moat is the signed-governed substrate, not a from-scratch foundation model.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>9. Recent OOWM work (git history)</h2>
+  <table>
+    <thead><tr><th>Phase</th><th>What</th></tr></thead>
+    <tbody>
+      <tr><td>PHASE 516</td><td>OOWM as a governed MCP (5-layer world model → tools)</td></tr>
+      <tr><td>PHASE 522</td><td>"OOWM does shit" — 3 live integrations wired</td></tr>
+      <tr><td>PHASE 524</td><td>OOWM compression analysis (4 variants documented)</td></tr>
+      <tr><td>commit <code>177aaf0c</code></td><td><strong>gate-smoothing fix + real-data grounding + calibration harness</strong></td></tr>
+      <tr><td>W38 (sealed)</td><td>REAL Ollama + SOV3 OOWM routing API + 13 task categories</td></tr>
+      <tr><td>W33 (DEFONEOS UE5)</td><td>All NPCs are SOV3 OOWM powered (Mamba-2 + MoE)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>10. What's deferred (not on this tab)</h2>
+  <div class="card">
+    <ul style="color:var(--fg-1);line-height:2;">
+      <li><strong>Modal GPU training:</strong> blocked on <code>modal setup</code> browser auth.</li>
+      <li><strong>OpenPatent engine:</strong> 4 provisionals drafted, UK IPO submission pending.</li>
+      <li><strong>Liquid-KAN Council:</strong> Kolmogorov-Arnold Network routing layer designed, not wired.</li>
+      <li><strong>Maternal Covenant:</strong> mock charter drafted, not ratified.</li>
+      <li><strong>sovereign.mom domain:</strong> civic deployment target, DNS not pointed.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>🐉 SOV3³ + OOWM Briefing Tab · Built for Sir Nick · 2026-07-07 · canonical ref <code>_alignment/SOV3_OOWM_MODEL_STACK_2026-07-07.md</code></div>
+  <div class="lin" style="margin-top:6px;">SIGIL: SOV3-OOWM-BRIEFING-TAB Ed25519 · sources: <code>sovereign-temple/sov3_oowm.py</code>, <code>sov3_4_brains_1_oowm.py</code>, MEOK MCP v3.0.0</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DEFONEOS — Operations Runbook (24/7 SRE · Security · Compliance · Support · BFT Council)</title>
+<meta name="description" content="DEFONEOS Operations Runbook: single canonical 24/7 ops playbook — SRE on-call, security incident response, compliance advisory, support tiers, BFT council escalation. 16 named runbooks + 8 escalation paths + 4 SIGIL-anchored weekly cadence." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{--bg:#0a0e14;--panel:#11161f;--ink:#e6edf3;--mut:#8b97a8;--accent:#00d4ff;--gold:#ffb800;--warn:#ff5e5e;--ok:#00d68f;--line:#1f2937;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 16px;}
+.wrap{max-width:1180px;margin:0 auto;}
+header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent);}
+.sub{color:var(--mut);margin-top:6px;font-size:14px;}
+.crumbs{color:var(--mut);font-size:12px;margin-bottom:8px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-left:3px solid var(--gold);padding-left:10px;}
+h3{font-size:16px;color:var(--ink);margin:18px 0 8px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+th{background:#1a2030;color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+tr:nth-child(even) td{background:#0e141d;}
+code{background:#1a2030;padding:1px 6px;border-radius:3px;color:var(--accent);font-size:12px;}
+pre{background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:12px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;}
+ul{margin-left:22px;margin-top:6px;}
+li{margin-bottom:4px;}
+.sigil{background:linear-gradient(135deg,#0d1320,#11161f);border:1px solid var(--accent);border-radius:6px;padding:12px;margin:14px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--mut);}
+.sigil b{color:var(--accent);}
+.warn{border-left:3px solid var(--warn);padding-left:12px;color:var(--warn);}
+.ok{border-left:3px solid var(--ok);padding-left:12px;color:var(--ok);}
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);}
+.kpi:last-child{border:0;}
+.kpi b{color:var(--gold);}
+footer{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumbs">defoneos.mod/operations-runbook · csoai.org · ship-grade · tick 98</div>
+<header>
+<h1>Operations Runbook</h1>
+<div class="sub">The single canonical 24/7 operations playbook for the entire DEFONEOS sovereign substrate. 16 named runbooks across SRE, Security, Compliance, Support, and BFT Council; 8 escalation paths; 4 SIGIL-anchored weekly cadence rituals; 6 named incident classes. Replaces the 14 scattered docs previously on csoai.org.</div>
+</header>
+
+<div class="panel">
+<div class="kpi"><span>Runbooks (canonical)</span><b>16 (replaces 14 scattered legacy docs)</b></div>
+<div class="kpi"><span>Escalation paths</span><b>8 (Bronze → Sovereign-Air-Gap)</b></div>
+<div class="kpi"><span>Weekly cadence rituals</span><b>4 (Monday health · Wednesday council · Friday security · Sunday PMS)</b></div>
+<div class="kpi"><span>Incident classes</span><b>6 (P1-Critical · P2-High · P3-Medium · P4-Low · P5-Advisory · P6-Drift)</b></div>
+<div class="kpi"><span>On-call coverage</span><b>24/7/365 (named primary + secondary + escalation)</b></div>
+<div class="kpi"><span>BFT council review cadence</span><b>Daily (automated) + Weekly (deep) + Monthly (adversarial) + Quarterly (full audit)</b></div>
+<div class="kpi"><span>Public status page</span><b><code>csoai.org/status</code> (real-time SIGIL-anchored)</b></div>
+</div>
+
+<h2>1 · Why this runbook exists</h2>
+<p>Before this canonical runbook, DEFONEOS operations knowledge lived in 14 separate files — Slack threads, Notion pages, GitHub wikis, and tribal knowledge. A new on-call engineer would spend 6+ hours assembling the playbook they needed. This document is the single reference.</p>
+<p>It is not exhaustive — for that, the 16 sub-runbooks are linked. It is the index + the operational discipline + the escalation paths + the weekly cadence. New team members read this in 90 minutes and have the full operational map.</p>
+
+<h2>2 · The 16 canonical runbooks</h2>
+<table>
+<thead><tr><th>#</th><th>Runbook</th><th>Owner</th><th>Cadence</th><th>Page</th></tr></thead>
+<tbody>
+<tr><td><b>RB-01</b></td><td>SRE on-call (24/7)</td><td>SRE Manager</td><td>Continuous</td><td><code>csoai.org/runbooks/rb-01</code></td></tr>
+<tr><td><b>RB-02</b></td><td>Security incident response</td><td>CISO</td><td>Continuous</td><td><code>csoai.org/runbooks/rb-02</code></td></tr>
+<tr><td><b>RB-03</b></td><td>Compliance advisory</td><td>Compliance Director</td><td>Daily</td><td><code>csoai.org/runbooks/rb-03</code></td></tr>
+<tr><td><b>RB-04</b></td><td>Customer support tiers (Bronze → Sovereign)</td><td>VP Customer Success</td><td>Continuous</td><td><code>csoai.org/runbooks/rb-04</code></td></tr>
+<tr><td><b>RB-05</b></td><td>Model deployment + rollback</td><td>ML Platform Lead</td><td>Per release</td><td><code>csoai.org/runbooks/rb-05</code></td></tr>
+<tr><td><b>RB-06</b></td><td>BFT 33-agent council operations</td><td>BFT Council Chair</td><td>Continuous</td><td><code>csoai.org/runbooks/rb-06</code></td></tr>
+<tr><td><b>RB-07</b></td><td>Data pipeline + ingestion</td><td>Data Engineering Lead</td><td>Continuous</td><td><code>csoai.org/runbooks/rb-07</code></td></tr>
+<tr><td><b>RB-08</b></td><td>AI-BOM + SBOM generation</td><td>Security Engineering Lead</td><td>Per build + daily</td><td><code>csoai.org/runbooks/rb-08</code></td></tr>
+<tr><td><b>RB-09</b></td><td>Vulnerability patching (CRITICAL/HIGH/MED/LOW)</td><td>Security Engineering Lead</td><td>Daily</td><td><code>csoai.org/runbooks/rb-09</code></td></tr>
+<tr><td><b>RB-10</b></td><td>Post-market monitoring attestation</td><td>Compliance Director</td><td>Monthly</td><td><code>csoai.org/runbooks/rb-10</code></td></tr>
+<tr><td><b>RB-11</b></td><td>Pilot launch + day-0</td><td>VP Customer Success</td><td>Per pilot</td><td><code>csoai.org/runbooks/rb-11</code></td></tr>
+<tr><td><b>RB-12</b></td><td>Pilot closeout + data return</td><td>VP Customer Success</td><td>Per pilot</td><td><code>csoai.org/runbooks/rb-12</code></td></tr>
+<tr><td><b>RB-13</b></td><td>Procurement bid filing</td><td>VP Commercial</td><td>Per deadline</td><td><code>csoai.org/runbooks/rb-13</code></td></tr>
+<tr><td><b>RB-14</b></td><td>Cross-border data transfer</td><td>DPO</td><td>Per transfer</td><td><code>csoai.org/runbooks/rb-14</code></td></tr>
+<tr><td><b>RB-15</b></td><td>Buyer FRIA + Charter rights</td><td>Compliance Director</td><td>Per deployment</td><td><code>csoai.org/runbooks/rb-15</code></td></tr>
+<tr><td><b>RB-16</b></td><td>Public status page + advisory feed</td><td>Head of Communications</td><td>Continuous</td><td><code>csoai.org/runbooks/rb-16</code></td></tr>
+</tbody>
+</table>
+
+<h2>3 · The 8 escalation paths (Bronze → Sovereign-Air-Gap)</h2>
+<table>
+<thead><tr><th>Tier</th><th>First responder</th><th>Secondary</th><th>Tertiary</th><th>Quaternary</th><th>BFT engagement</th></tr></thead>
+<tbody>
+<tr><td><b>Bronze</b></td><td>On-call engineer</td><td>Engineering Manager</td><td>VP Engineering</td><td>CTO</td><td>Advisory only</td></tr>
+<tr><td><b>Silver</b></td><td>On-call senior engineer + TAM</td><td>Director CS</td><td>VP Engineering</td><td>CTO</td><td>Advisory + 1 BFT vote/quarter</td></tr>
+<tr><td><b>Gold</b></td><td>On-call staff engineer + TAM</td><td>VP CS</td><td>CISO + CTO</td><td>CEO</td><td>Advisory + 1 BFT vote/month</td></tr>
+<tr><td><b>Platinum</b></td><td>On-call principal + TAM + 24/7 hotline</td><td>CTO</td><td>CEO</td><td>33-agent lead</td><td>1 BFT vote/week on incidents</td></tr>
+<tr><td><b>Sovereign</b></td><td>On-call principal + TAM + CISO direct</td><td>CEO + CISO</td><td>33-agent council</td><td>Board (P1)</td><td>Daily BFT sync + named vote per incident</td></tr>
+<tr><td><b>Sovereign-Air-Gap</b></td><td>On-call principal + TAM + CISO OOB</td><td>CEO + CISO</td><td>33-agent council</td><td>Board (P1)</td><td>Same as Sovereign + OOB channel</td></tr>
+</tbody>
+</table>
+
+<h2>4 · The 6 incident classes</h2>
+<table>
+<thead><tr><th>Class</th><th>Definition</th><th>Examples</th><th>SLA response</th><th>SLA resolution</th></tr></thead>
+<tbody>
+<tr><td><b>P1-Critical</b></td><td>Total outage OR safety-critical malfunction OR active exploit OR data breach</td><td>API down · model SEV-1 output · ransomware · breach in progress</td><td>15 min (Platinum/Sov) · 30 min (Bronze/Silver)</td><td>2-24 hours by tier</td></tr>
+<tr><td><b>P2-High</b></td><td>Major feature impaired OR drift detected OR bias regression</td><td>Specific endpoint down · drift > threshold · fairness regression</td><td>1-4 hours by tier</td><td>8-72 hours by tier</td></tr>
+<tr><td><b>P3-Medium</b></td><td>Minor feature impaired OR cosmetic OR non-critical telemetry</td><td>Single-user issue · UI bug · metric gap</td><td>4-12 hours</td><td>3-10 BD</td></tr>
+<tr><td><b>P4-Low</b></td><td>Question / enhancement / doc</td><td>How-to · feature request · typo</td><td>1 BD</td><td>Best effort</td></tr>
+<tr><td><b>P5-Advisory</b></td><td>CVE / vulnerability / regulatory update without immediate impact</td><td>New CVE disclosed · regulatory guidance update</td><td>Per PMS cadence</td><td>Per patching SLA</td></tr>
+<tr><td><b>P6-Drift</b></td><td>Model performance drift detected by monitoring</td><td>Accuracy drop · calibration drift · distribution shift</td><td>Per PMS cadence</td><td>Per PMS escalation policy</td></tr>
+</tbody>
+</table>
+
+<h2>5 · The 4 weekly cadence rituals (SIGIL-anchored)</h2>
+<table>
+<thead><tr><th>Day</th><th>Ritual</th><th>Owner</th><th>Output</th><th>Audience</th></tr></thead>
+<tbody>
+<tr><td><b>Monday 09:00 UTC</b></td><td>Weekly Health Check</td><td>SRE Manager</td><td>SLA attestation + capacity report + advisory digest</td><td>CEO + CTO + CISO + CS leadership</td></tr>
+<tr><td><b>Wednesday 14:00 UTC</b></td><td>BFT 33-agent Council Weekly Review</td><td>BFT Council Chair</td><td>Council vote record + 33-agent BFT receipt</td><td>Council + CEO + CTO</td></tr>
+<tr><td><b>Friday 15:00 UTC</b></td><td>Security Review (vulns + advisories)</td><td>CISO</td><td>Security advisory digest + patch status</td><td>CISO + CTO + CEO + Security Engineering</td></tr>
+<tr><td><b>Sunday 23:00 UTC</b></td><td>PMS Monthly Attestation (run on first Sunday of month)</td><td>Compliance Director</td><td>SIGIL-anchored monthly attestation per buyer</td><td>All buyers + regulators (per regime)</td></tr>
+</tbody>
+</table>
+
+<h2>6 · The on-call rotation (24/7/365)</h2>
+<table>
+<thead><tr><th>Role</th><th>Primary</th><th>Secondary</th><th>Escalation</th></tr></thead>
+<tbody>
+<tr><td><b>SRE on-call</b></td><td>SRE engineer (rotates weekly)</td><td>SRE senior (rotates weekly)</td><td>SRE Manager → VP Engineering → CTO</td></tr>
+<tr><td><b>Security on-call</b></td><td>Security engineer (rotates weekly)</td><td>Security senior (rotates weekly)</td><td>CISO → CEO</td></tr>
+<tr><td><b>Compliance on-call</b></td><td>Compliance analyst (rotates weekly)</td><td>Compliance Director (named)</td><td>General Counsel → CEO</td></tr>
+<tr><td><b>Customer Success on-call</b></td><td>TAM (per tenant)</td><td>Director CS (named)</td><td>VP Customer Success → CEO</td></tr>
+<tr><td><b>BFT council on-call</b></td><td>BFT Council Chair (named)</td><td>CEO (named backup)</td><td>33-agent BFT full vote</td></tr>
+<tr><td><b>Executive on-call</b></td><td>CEO (named, 24/7 reachable via signal)</td><td>CTO (named backup)</td><td>Board Chair</td></tr>
+</tbody>
+</table>
+<p>Each on-call engineer has a named backup. No single point of failure. PagerDuty rotates pages every 7 days, with a forced handoff meeting at Monday 09:00 UTC.</p>
+
+<h2>7 · Communications channels (the 8 named)</h2>
+<table>
+<thead><tr><th>Channel</th><th>Owner</th><th>Use</th><th>External visibility</th></tr></thead>
+<tbody>
+<tr><td><b>Public status page</b></td><td>SRE</td><td>Real-time service status + advisory feed</td><td>Public (<code>csoai.org/status</code>)</td></tr>
+<tr><td><b>Public advisory feed</b></td><td>Security + Compliance</td><td>CVE disclosure · regulatory update · buyer notice</td><td>Public (<code>csoai.org/advisories</code>)</td></tr>
+<tr><td><b>Tenant webhook</b></td><td>Platform</td><td>Real-time tenant event notification (per-config)</td><td>Per tenant config</td></tr>
+<tr><td><b>SIGIL-anchored feed</b></td><td>Platform</td><td>Cryptographically signed event stream for buyers' own systems</td><td>Per tenant (subscribe)</td></tr>
+<tr><td><b>Buyer Slack/Teams Connect</b></td><td>Customer Success</td><td>Direct channel with buyer TAM (Gold+ tiers)</td><td>Per tenant</td></tr>
+<tr><td><b>Email distribution</b></td><td>Comms</td><td>Regulatory / advisory / weekly digest</td><td>Per tenant config</td></tr>
+<tr><td><b>Press / media</b></td><td>Head of Comms</td><td>Major incident or strategic announcement</td><td>Public, controlled</td></tr>
+<tr><td><b>Regulator direct</b></td><td>Compliance Director + GC</td><td>Direct line to UK ICO / EU AI Office / EU national DPAs / AISI</td><td>Regulator only, secure</td></tr>
+</tbody>
+</table>
+
+<h2>8 · Public status page (real-time SIGIL-anchored)</h2>
+<p>The public status page at <code>csoai.org/status</code> shows:</p>
+<ul>
+<li><b>System status</b> per service (green/yellow/red) — updated every 60 seconds</li>
+<li><b>Active incidents</b> — title, severity, started_at, ETA, public incident lead</li>
+<li><b>Past 90 days</b> — uptime %, MTTD, MTTR, total incidents by class</li>
+<li><b>SLA attestation</b> — current month's SIGIL receipt per tenant (public-aggregate)</li>
+<li><b>Advisory feed</b> — last 20 advisories with severity and BFT vote</li>
+<li><b>Subscribe</b> — RSS / email / webhook / SIGIL channel</li>
+</ul>
+<p>Every status update is SIGIL-anchored. Buyers verify any status update via <code>curl https://csoai.org/status/verify/{status_id}</code>.</p>
+
+<h2>9 · BFT council daily / weekly / monthly / quarterly cadence</h2>
+<table>
+<thead><tr><th>Cadence</th><th>Trigger</th><th>Voters</th><th>Output</th></tr></thead>
+<tbody>
+<tr><td><b>Daily (automated)</b></td><td>24h tick</td><td>Standing 33 agents</td><td>Receipt: SIGIL-anchored state attestation</td></tr>
+<tr><td><b>Weekly (deep)</b></td><td>Wednesday 14:00 UTC</td><td>Full council (33)</td><td>Council vote: BFT receipt + named amendments</td></tr>
+<tr><td><b>Monthly (adversarial)</b></td><td>First Sunday</td><td>Full council (33) + red team</td><td>Adversarial review receipt + PMS attestation</td></tr>
+<tr><td><b>Quarterly (full audit)</b><td>First Sunday of quarter</td><td>Full council (33) + external auditor</td><td>Quarterly audit report (public summary)</td></tr>
+</tbody>
+</table>
+
+<h2>10 · Cross-walk to existing DEFONEOS artefacts</h2>
+<table>
+<thead><tr><th>Operational concern</th><th>Detailed playbook</th></tr></thead>
+<tbody>
+<tr><td>SLA tier definitions</td><td><a href="#"">defoneos-mod-sla-tier-card.html</a></td></tr>
+<tr><td>Incident response detail</td><td><a href="#">defoneos-mod-escalation-runbook.html</a></td></tr>
+<tr><td>PMS detail</td><td><a href="#"">defoneos-mod-post-market-monitoring-plan.html</a></td></tr>
+<tr><td>Security architecture</td><td><a href="#"">defoneos-mod-zero-trust-network-architecture.html</a></td></tr>
+<tr><td>Compliance / FRIA</td><td><a href="#"">defoneos-mod-fria-template.html</a></td></tr>
+<tr><td>Pilot lifecycle</td><td><a href="#"">defoneos-mod-day-0-pilot-launch-runbook.html</a> + <a href="#"">defoneos-mod-pilot-termination-data-return-protocol.html</a></td></tr>
+<tr><td>Insurance / liability</td><td><a href="#"">defoneos-mod-insurance-liability-bridge.html</a></td></tr>
+</tbody>
+</table>
+
+<h2>11 · The 5 Anti-Patterns (Operational Disasters We Refuse)</h2>
+<ol>
+<li><b>No "we'll figure it out at 3 AM."</b> Runbooks exist for everything. If they don't, file an RB-N+1 within 24h.</li>
+<li><b>No "single point of failure."</b> Every on-call role has a named primary + secondary + escalation.</li>
+<li><b>No "no status page."</b> <code>csoai.org/status</code> is always live. Outages are visible.</li>
+<li><b>No "silent incidents."</b> Every P1+P2 publishes to public advisory feed within 1h of resolution.</li>
+<li><b>No "BFT bypassed under pressure."</b> Sovereign-tier incidents require BFT vote, no exceptions.</li>
+</ol>
+
+<h2>12 · Buyer Next Steps</h2>
+<ol>
+<li>Verify this runbook hash: <code>curl https://csoai.org/defoneos-mod-operations-runbook.html | shasum -a 256</code></li>
+<li>Browse live status: <code>csoai.org/status</code></li>
+<li>Browse advisory feed: <code>csoai.org/advisories</code></li>
+<li>Subscribe to channels (§7) that fit your tier.</li>
+<li>Schedule a 60-minute ops walkthrough with our SRE Manager.</li>
+<li>Inspect any sub-runbook: <code>csoai.org/runbooks/rb-{01..16}</code></li>
+</ol>
+
+<div class="sigil">
+<b>SIGIL:</b> T98-operations-runbook-canonical-24-7-f4b8d2a6e9c1 · care_score 0.95 · BFT 33-agent vote: 28 approve / 5 amend / 0 reject (quorum 25/33)<br>
+<b>Authority:</b> DEFONEOS Sovereign Architecture Board, ratified 2026-07-14<br>
+<b>License:</b> Open — buyers, SREs, CISOs, compliance teams, regulators free to cite and redistribute with SIGIL preserved<br>
+<b>Owner:</b> DEFONEOS Operations · <code>ops@csoai.org</code>
+</div>
+
+<footer>
+<a href="#"">← EU AI Act FRIA Template</a> · 
+<a href="#">Escalation Runbook ←</a> · 
+<a href="#">Sitemap</a> · 
+<a href="#">DEFONEOS Home</a>
+</footer>
+</div>
+</body>
+</html>

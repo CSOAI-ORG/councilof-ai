@@ -1,0 +1,38 @@
+{
+  "sigil_id": "EAT-SIGIL-20260716T123307Z",
+  "cycle": "EAT-2026-07-16T12:30:08Z",
+  "actor": "JEEVES",
+  "compartment": "csoai-defoneos",
+  "issued_at": "2026-07-16T12:33:07Z",
+  "endpoint_status": "localhost:3101/mcp DOWN — fallback to local SIGIL archive",
+  "body_sha256": "c480a1a26e1e6bdc50b6dfc191108bd28c8c9de06ed81874626ee3f70ea87745",
+  "payload": {
+  "tool": "sigil_emit",
+  "params": {
+    "cycle": "EAT-2026-07-16T12:30Z",
+    "actor": "JEEVES",
+    "compartment": "csoai-defoneos",
+    "summary": "DEFONEOS EAT cycle tick-115. Production: HTTP 200 (20152b). VM meok-backend unreachable on 35.242.143.249:22 (SSH timeout). Local MCP :3101 and MEOK OS :3000 both DOWN. Live HTML: 554 (was 539 in prior state → +15 new). Sitemap rebuilt 554 URLs, base upgraded to www.csoai.org, 109039b (was 90918b / 555 URLs csoai-static-deploy2.vercel.app base). Broken-link scan: 0 broken across 3681 local hrefs. Deploy DEFERRED awaiting owner approval (15 new pages + sitemap refresh). Red lines: none crossed."
+  }
+},
+  "metrics": {
+    "production_http": 200,
+    "production_bytes": 20152,
+    "live_html_count": 554,
+    "new_pages_since_last_cycle": 15,
+    "broken_links": 0,
+    "broken_unique_targets": 0,
+    "sitemap_urls_new": 554,
+    "sitemap_bytes_new": 109039,
+    "sitemap_urls_old": 555,
+    "sitemap_bytes_old": 90918,
+    "deploy_status": "DEFERRED awaiting owner approval",
+    "vm_meok_backend": "UNREACHABLE (ssh 35.242.143.249:22 timeout)",
+    "local_mcp_3101": "DOWN",
+    "local_meok_3000": "DOWN"
+  },
+  "red_lines_crossed": [],
+  "owner_gates_pending": [
+    "vercel --prod --yes (15 new pages + sitemap refresh)"
+  ]
+}

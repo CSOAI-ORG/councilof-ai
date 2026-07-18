@@ -1,0 +1,20 @@
+[project]
+name = "meok-sovereign-carefloor-mcp"
+version = "1.0.0"
+description = "Sovereign Care Floor MCP - 16-probe Maternal Covenant + 16-dim Mamba-2 state validation. Every state must pass all 16 probes to be sovereign."
+requires-python = ">=3.10"
+dependencies = []
+authors = [
+    {name = "CSOAI Ltd (UK 16939677)", email = "nicholas@csoai.org"},
+]
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

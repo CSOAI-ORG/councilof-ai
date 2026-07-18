@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<meta name="description" content="MEOK WORLD — Sovereign AI Operating System. 218 MCPs, 33 sovereign VMs, 12-Queen council, 4-tier cascade. The world is at your feet.">
+<meta name="keywords" content="MEOK, CSOAI, SOV3, sovereign AI, MCP servers, EU AI Act, regulation temples, 12-Queen council, BFT">
+<title>__TITLE__ · MEOK WORLD</title>
+<meta property="og:title" content="__TITLE__ · MEOK WORLD">
+<meta property="og:description" content="__DESCRIPTION__">
+<meta property="og:image" content="https://meok.ai/api/og">
+<meta property="og:url" content="https://meok.ai/__SLUG__">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@meok_ai">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#c9a84c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MEOK WORLD">
+<link rel="apple-touch-icon" href="/icons/icon-192.svg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MEOK WORLD">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>__STYLES__</style>
+<style>
+/* i18n locale switcher */
+.locale-switcher { position: relative; display: inline-block; margin-right: 12px; }
+.locale-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--text, #e4e4e7);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font: 500 12px/1 'Space Grotesk', system-ui, sans-serif;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: background .15s ease, border-color .15s ease;
+}
+.locale-btn:hover { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.55); }
+.locale-caret { font-size: 10px; opacity: .8; }
+.locale-menu {
+  position: absolute; right: 0; top: calc(100% + 6px);
+  margin: 0; padding: 4px;
+  list-style: none;
+  background: rgba(20,20,28,0.96);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 8px;
+  min-width: 168px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+}
+.locale-menu[hidden] { display: none; }
+.locale-menu li {
+  padding: 8px 10px; border-radius: 6px;
+  font: 500 13px/1.2 'Space Grotesk', system-ui, sans-serif;
+  color: #e4e4e7; cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+}
+.locale-menu li:hover { background: rgba(201,168,76,0.18); color: var(--gold, #c9a84c); }
+.locale-menu li[aria-selected="true"] { background: rgba(201,168,76,0.22); color: var(--gold, #c9a84c); }
+@media (max-width: 720px) { .locale-switcher { display: none; } }
+</style>
+</head>
+<body>
+<div class="csoai-layer0-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:1.2rem">🐉</span><strong style="color:#22d3ee;font-size:.9rem">DEFONEOS</strong><span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em">Layer-0 · 8 Protocols · 100/100 A+++++</span></div><div style="display:flex;gap:.8rem;flex-wrap:wrap"><a href="index.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Home</a><a href="https://csoai-static-deploy2.vercel.app/" style="color:#94a3b8;text-decoration:none;font-size:.75rem">3D Globe</a><a href="https://csoai-static-deploy2.vercel.app/defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.75rem">Series A</a></div></div>
+
+
+<!-- TOPBAR (shared) -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="logo">
+      <span class="dot"></span>
+      <span>MEOK<span class="accent">.WORLD</span></span>
+    </a>
+    <nav>
+      <a href="/" __HOME_ACTIVE__>Home</a>
+      <a href="/csoai-os/v2-temple-os.html" __OS_ACTIVE__>OS</a>
+      <a href="/council" __COUNCIL_ACTIVE__>Council</a>
+      <a href="/mcp" __MCP_ACTIVE__>MCPs</a>
+      <a href="/temples" __TEMPLES_ACTIVE__>Temples</a>
+      <a href="/research" __RESEARCH_ACTIVE__>Research</a>
+      <a href="/blog" __BLOG_ACTIVE__>Blog</a>
+      <a href="/about" __ABOUT_ACTIVE__>About</a>
+    </nav>
+    <div class="cta">
+      <!-- i18n locale switcher (desktop) -->
+      <div class="locale-switcher" id="localeSwitcher" aria-label="Change language">
+        <button class="locale-btn" id="localeBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <span id="localeBtnLabel">🌐 EN</span>
+          <span class="locale-caret">▾</span>
+        </button>
+        <ul class="locale-menu" id="localeMenu" role="listbox" hidden>
+          <li role="option" data-locale="en"><span>🇬🇧</span> English</li>
+          <li role="option" data-locale="es"><span>🇪🇸</span> Español</li>
+          <li role="option" data-locale="fr"><span>🇫🇷</span> Français</li>
+          <li role="option" data-locale="de"><span>🇩🇪</span> Deutsch</li>
+          <li role="option" data-locale="ja"><span>🇯🇵</span> 日本語</li>
+          <li role="option" data-locale="zh"><span>🇨🇳</span> 中文</li>
+        </ul>
+      </div>
+      <a class="login" href="/login" data-i18n="nav.login">Log in</a>
+      <a class="start" href="/csoai-os/v2-signup-wizard.html" data-i18n="nav.start_free">Start free →</a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE CONTENT -->
+<main class="page">
+__CONTENT__
+</main>
+
+<!-- FOOTER (shared) -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <span class="dot"></span>
+        <span>MEOK<span class="accent">.WORLD</span></span>
+      </div>
+      <p>MEOK AI Labs · CSOAI Ltd · UK Companies House 16939677. Built with care. Sovereign, auditable, public.</p>
+    </div>
+    <div>
+      <h4>Universe</h4>
+      <ul>
+        <li><a href="/universe">MEOK Universe</a></li>
+        <li><a href="/town">Town</a></li>
+        <li><a href="/dome">DOME</a></li>
+        <li><a href="/go">MEOK GO</a></li>
+        <li><a href="/ar">MEOK AR</a></li>
+        <li><a href="/characters">Characters</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>OS</h4>
+      <ul>
+        <li><a href="/csoai-os/v2-temple-os.html">Sovereign OS</a></li>
+        <li><a href="/csoai-os/v2-signup-wizard.html">i-character</a></li>
+        <li><a href="/council">Council</a></li>
+        <li><a href="/research">Research</a></li>
+        <li><a href="/os/any-llm">Any LLM</a></li>
+        <li><a href="/guardian">Guardian</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/press">Press</a></li>
+        <li><a href="/roadmap">Roadmap</a></li>
+        <li><a href="/careers">Careers</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Portfolio</h4>
+      <ul>
+        <li><a href="https://csoai.org">CSOAI</a></li>
+        <li><a href="https://www.cobolbridge.ai">COBOL Bridge</a></li>
+        <li><a href="https://proofof.ai">ProofOf.AI</a></li>
+        <li><a href="/ai-act">Compliance Centre</a></li>
+        <li><a href="https://github.com/CSOAI-ORG">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 MEOK AI LABS · CSOAI LTD · UK Companies House <strong style="color: var(--gold);">16939677</strong> · Registered in England & Wales.</span>
+    <div class="legal">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/cookies">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<!-- LIVE STATUS BAR (shared) -->
+<div class="status-bar" id="statusBar">
+  <div class="status-bar-inner">
+    <div class="status-item"><span class="dot"></span><span>SOV3</span><span class="v">200 OK</span></div>
+    <div class="status-item"><span>Hive</span><span class="v" id="statusHive">34/34</span></div>
+    <div class="status-item"><span>Council</span><span class="v">13/13</span></div>
+    <div class="status-item"><span>BFT</span><span class="v">9/13</span></div>
+    <div class="status-item"><span>MCPs</span><span class="v" id="statusMcps">218</span></div>
+    <div class="status-item"><span>EU AI Act</span><span class="v">T-37</span></div>
+  </div>
+</div>
+
+<script>
+// Live backend polling (shared across all pages)
+async function pollStatus() {
+  try {
+    const r = await fetch('/api/backend/status').catch(() => null);
+    if (r && r.ok) {
+      const j = await r.json();
+      if (j.hive) document.getElementById('statusHive').textContent = j.hive;
+      if (j.mcps) document.getElementById('statusMcps').textContent = j.mcps;
+    }
+  } catch (e) {}
+}
+pollStatus();
+setInterval(pollStatus, 30000);
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
+</script>
+
+<!-- i18n: locale loader + switcher -->
+<script>
+(function(){
+  var SUPPORTED = ["en","es","fr","de","ja","zh"];
+  var DEFAULT = "en";
+  var FLAG = {en:"🇬🇧",es:"🇪🇸",fr:"🇫🇷",de:"🇩🇪",ja:"🇯🇵",zh:"🇨🇳"};
+  var STORAGE_KEY = "meok_locale";
+
+  // Resolve locale: URL ?lang=xx > localStorage > browser > default
+  function resolveLocale(){
+    try {
+      var q = new URLSearchParams(window.location.search).get("lang");
+      if (q && SUPPORTED.indexOf(q) >= 0) return q;
+    } catch(e) {}
+    try {
+      var s = localStorage.getItem(STORAGE_KEY);
+      if (s && SUPPORTED.indexOf(s) >= 0) return s;
+    } catch(e) {}
+    var nav = (navigator.language || "en").toLowerCase().slice(0,2);
+    return SUPPORTED.indexOf(nav) >= 0 ? nav : DEFAULT;
+  }
+
+  // Walk dotted path "nav.login" inside a nested object
+  function get(obj, path){
+    return path.split(".").reduce(function(o,k){
+      return (o && o[k] !== undefined) ? o[k] : null;
+    }, obj);
+  }
+
+  function applyTranslations(strings){
+    if (!strings) return;
+    var nodes = document.querySelectorAll("[data-i18n]");
+    nodes.forEach(function(n){
+      var key = n.getAttribute("data-i18n");
+      var val = get(strings, key);
+      if (typeof val === "string") n.textContent = val;
+    });
+    // Also translate elements by data-i18n-attr (e.g., data-i18n-attr="placeholder:nav.start_free")
+    var attrNodes = document.querySelectorAll("[data-i18n-attr]");
+    attrNodes.forEach(function(n){
+      n.getAttribute("data-i18n-attr").split(";").forEach(function(pair){
+        var p = pair.split(":");
+        if (p.length === 2) {
+          var v = get(strings, p[1]);
+          if (typeof v === "string") n.setAttribute(p[0], v);
+        }
+      });
+    });
+    // Update <html lang>
+    var meta = strings._meta || {};
+    if (meta.locale) document.documentElement.setAttribute("lang", meta.locale);
+    if (meta.dir) document.documentElement.setAttribute("dir", meta.dir);
+  }
+
+  function setButton(loc){
+    var btn = document.getElementById("localeBtnLabel");
+    if (btn) btn.textContent = (FLAG[loc] || "🌐") + " " + loc.toUpperCase();
+    var items = document.querySelectorAll("#localeMenu li");
+    items.forEach(function(li){
+      li.setAttribute("aria-selected", li.getAttribute("data-locale") === loc ? "true" : "false");
+    });
+  }
+
+  function loadLocale(loc, cb){
+    var url = "/csoai-os/i18n/" + loc + ".json";
+    fetch(url, {cache: "no-cache"})
+      .then(function(r){ if (!r.ok) throw new Error("locale load failed " + loc); return r.json(); })
+      .then(function(strings){
+        try { localStorage.setItem(STORAGE_KEY, loc); } catch(e) {}
+        applyTranslations(strings);
+        setButton(loc);
+        if (cb) cb(loc, strings);
+        // Notify other in-page i18n consumers
+        window.dispatchEvent(new CustomEvent("meok:locale", {detail: {locale: loc, strings: strings}}));
+      })
+      .catch(function(err){
+        console.warn("[i18n] could not load", loc, err);
+        if (loc !== DEFAULT) loadLocale(DEFAULT, cb);
+      });
+  }
+
+  function wireSwitcher(loc){
+    var btn = document.getElementById("localeBtn");
+    var menu = document.getElementById("localeMenu");
+    if (!btn || !menu) return;
+    btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      var open = menu.hasAttribute("hidden");
+      if (open) { menu.removeAttribute("hidden"); btn.setAttribute("aria-expanded","true"); }
+      else { menu.setAttribute("hidden",""); btn.setAttribute("aria-expanded","false"); }
+    });
+    document.addEventListener("click", function(){
+      if (!menu.hasAttribute("hidden")) {
+        menu.setAttribute("hidden","");
+        btn.setAttribute("aria-expanded","false");
+      }
+    });
+    menu.querySelectorAll("li[data-locale]").forEach(function(li){
+      li.addEventListener("click", function(e){
+        e.stopPropagation();
+        var next = li.getAttribute("data-locale");
+        loadLocale(next);
+        menu.setAttribute("hidden","");
+        btn.setAttribute("aria-expanded","false");
+      });
+    });
+    setButton(loc);
+  }
+
+  // Boot
+  var loc = resolveLocale();
+  // Expose for any in-page consumers (wizard, chat, etc.)
+  window.MEOK_I18N = {
+    locale: function(){ return loc; },
+    setLocale: function(next){ if (SUPPORTED.indexOf(next) >= 0) loadLocale(next); },
+    t: function(path, fallback){
+      var s = (window.MEOK_I18N._strings) || {};
+      return get(s, path) || fallback || path;
+    },
+    supported: SUPPORTED.slice()
+  };
+  loadLocale(loc, function(l, s){ window.MEOK_I18N._strings = s; });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function(){ wireSwitcher(loc); });
+  } else {
+    wireSwitcher(loc);
+  }
+})();
+</script>
+</body>
+</html>

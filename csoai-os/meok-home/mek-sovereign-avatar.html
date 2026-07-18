@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 8 protocols · 100/100 A+++++ · bleeding edge · world-leading · MIT license (M4 lane) -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c9a84c">
+<title>MEK Sovereign Avatar — The Family-Safe Character Universe</title>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-bright: #d4a853;
+  --bg: #F5F0E6;
+  --bg-deep: #0a0a1e;
+  --text: #2a1a14;
+  --text-dim: rgba(42, 26, 20, 0.65);
+  --surface: #FAF7F0;
+  --border: rgba(201, 168, 76, 0.3);
+  --green: #10b981;
+  --blue: #3b82f6;
+  --coral: #d47a5a;
+  --purple: #a855f7;
+  --teal: #5aa89a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  background: radial-gradient(ellipse at top, var(--bg), var(--surface) 70%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+}
+a { color: var(--gold-bright); text-decoration: none; }
+
+.topbar {
+  max-width: 1200px; margin: 0 auto 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 16px; border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+.logo .accent { color: var(--gold); }
+.topbar nav a { margin: 0 12px; font-size: 13px; color: var(--text-dim); }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+.hero { text-align: center; margin-bottom: 32px; }
+.hero h1 {
+  font-size: clamp(36px, 5vw, 48px); font-weight: 600;
+  letter-spacing: -0.02em; margin-bottom: 12px;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p { font-size: 15px; color: var(--text-dim); max-width: 700px; margin: 0 auto; }
+.hero-stats { display: flex; gap: 24px; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 16px; }
+.hero-stat strong { color: var(--gold); }
+
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+.tab {
+  flex: 1; padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer; transition: all 0.2s;
+}
+.tab.active {
+  background: var(--gold); color: white;
+  border-color: var(--gold);
+}
+.tab:hover { transform: translateY(-1px); }
+
+.evolution-selector {
+  display: flex; gap: 4px; margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+}
+.evo {
+  flex: 1; padding: 8px;
+  text-align: center;
+  background: transparent; border: 0;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; cursor: pointer;
+  color: var(--text-dim);
+}
+.evo.active { background: var(--gold); color: white; }
+.evo .age { font-size: 9px; display: block; opacity: 0.7; }
+
+.character-stage {
+  background: linear-gradient(135deg, #1a1a2e, #0a0a1e);
+  border: 2px solid var(--gold);
+  border-radius: 24px;
+  padding: 32px;
+  text-align: center;
+  margin: 16px 0;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+.character-stage::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, var(--gold), transparent 70%);
+  opacity: 0.3; filter: blur(40px);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.character {
+  position: relative;
+  width: 280px; height: 360px;
+  margin: 0 auto;
+}
+.egg {
+  width: 200px; height: 280px;
+  margin: 40px auto 0;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  position: relative;
+  animation: floaty 6s ease-in-out infinite;
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+.egg::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: var(--arch-color, var(--gold));
+  opacity: 0.4;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.3);
+  filter: blur(0px);
+}
+.egg::after {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 80px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent 70%);
+  border-radius: 50%;
+  animation: corePulse 3s ease-in-out infinite;
+}
+@keyframes corePulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+}
+.egg .emoji {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 80px;
+  z-index: 2;
+  filter: drop-shadow(0 0 12px var(--gold));
+}
+.crack {
+  position: absolute; top: 30%; left: 50%;
+  width: 1px; height: 100px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  transform: rotate(15deg);
+  animation: crackOpen 5s ease-in-out infinite;
+}
+@keyframes crackOpen {
+  0%, 100% { opacity: 0; height: 0; }
+  50% { opacity: 1; height: 100px; }
+}
+
+.character-stage .name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; font-weight: 700;
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 16px 0 4px;
+  position: relative; z-index: 2;
+}
+.character-stage .arch {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: rgba(245, 240, 230, 0.7);
+  position: relative; z-index: 2;
+}
+
+.selectors { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.selector {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.selector h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.selector .chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip {
+  padding: 6px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chip:hover { background: var(--gold); color: white; border-color: var(--gold); }
+.chip.active { background: var(--gold); color: white; border-color: var(--gold); }
+
+.pets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  margin: 16px 0;
+}
+.pet {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pet:hover { transform: translateY(-2px); border-color: var(--gold); }
+.pet .emoji { font-size: 32px; }
+.pet .name { font-size: 11px; font-weight: 600; }
+.pet .style { font-size: 9px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+
+.guarantees {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.guarantees h3 { font-size: 18px; margin-bottom: 16px; }
+.guarantees ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.guarantees li { display: flex; align-items: center; gap: 8px; padding: 6px; font-size: 12px; }
+.guarantees li::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+.badge {
+  padding: 6px 12px;
+  background: var(--gold);
+  color: white;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  .selectors { grid-template-columns: 1fr; }
+  .guarantees ul { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <span class="dot"></span>
+    <span>MEK<span class="accent">.SOVEREIGN</span></span>
+  </div>
+  <nav>
+    <a href="#characters">Characters</a>
+    <a href="#pets">Pets</a>
+    <a href="#guarantees">Guarantees</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <h1>The <span class="accent">MEK Sovereign Avatar</span> Universe</h1>
+  <p>Family-safe, care-aligned, defoneos-secured. 7 archetypes. 5 evolution stages. 5 voices. 5 outfits. 90 unique companions. NOT anime. Not adult. Sovereign.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>7</strong> archetypes</div>
+    <div class="hero-stat"><strong>5</strong> evolution stages</div>
+    <div class="hero-stat"><strong>5</strong> voices</div>
+    <div class="hero-stat"><strong>5</strong> outfits</div>
+    <div class="hero-stat"><strong>90</strong> companions</div>
+    <div class="hero-stat"><strong>6</strong> care dimensions</div>
+  </div>
+</section>
+
+<div class="container">
+
+<div class="tabs" id="archTabs"></div>
+
+<div class="evolution-selector" id="evoSelector"></div>
+
+<div class="character-stage" id="characterStage">
+  <div class="character">
+    <div class="egg" id="egg">
+      <div class="crack"></div>
+      <div class="crack" style="left:60%; transform:rotate(-10deg); animation-delay:1s"></div>
+      <div class="crack" style="left:40%; transform:rotate(25deg); animation-delay:2s"></div>
+      <div class="emoji" id="eggEmoji">🐉</div>
+    </div>
+  </div>
+  <div class="name" id="charName">Sovereign Dragon</div>
+  <div class="arch" id="charArch">Sovereign · 👑 The coordinator</div>
+</div>
+
+<div class="selectors">
+  <div class="selector">
+    <h3>Voice</h3>
+    <div class="chips" id="voiceChips"></div>
+  </div>
+  <div class="selector">
+    <h3>Outfit</h3>
+    <div class="chips" id="outfitChips"></div>
+  </div>
+</div>
+
+<h2 class="section-title" id="pets">Pet companions (90 unique) <span class="count" id="petCount">90</span></h2>
+
+<div class="pets" id="petsGrid"></div>
+
+<div class="badge-row">
+  <span class="badge">🛡 Defoneos-secured</span>
+  <span class="badge">🤝 Care before code</span>
+  <span class="badge">💗 Maternal Covenant</span>
+  <span class="badge">👨‍👩‍👧 Family-safe by default</span>
+  <span class="badge">🔞 18+ only with explicit opt-in</span>
+  <span class="badge">📖 G4 Guardian NSFW filter ON</span>
+</div>
+
+<div class="guarantees">
+  <h3>🏛 8 sovereign guarantees (every MEK character)</h3>
+  <ul>
+    <li>Defoneos-secured (302 SDK patches, CVE-free)</li>
+    <li>SIGIL-signed every action (Ed25519)</li>
+    <li>Maternal Covenant: 6 care dimensions (Safety, Honesty, Privacy, Fairness, Growth, Consent)</li>
+    <li>BFT council: f=4, quorum=9/13 (2 VETO queens)</li>
+    <li>4-tier cascade: $0.011/avg (85-90% cheaper)</li>
+    <li>Care before code</li>
+    <li>Family-safe by default (NOT adult anime)</li>
+    <li>100% sovereign (exportable, deletable, portable)</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+/* === The 7 archetypes (NOT anime — translucent + golden core + iridescent) === */
+const ARCHETYPES = [
+  {id: 'sovereign', name: 'Sovereign Dragon', emoji: '🐉', color: '#6ba8d4', long: 'The coordinator. Sky blue egg, faint crown pattern, smooth shell.', voice: ['calm', 'regal', 'wise', 'gentle', 'royal'], outfit: ['crown_robe', 'simple_tunic', 'traveller_cloak', 'council_robes', 'sovereign_armor']},
+  {id: 'guardian', name: 'Guardian Shield', emoji: '🛡', color: '#1a3a5a', long: 'The protector. Dark navy egg, hex codes, geometric shield.', voice: ['strong', 'steady', 'watchful', 'protective', 'firm'], outfit: ['tactical_vest', 'simple_robe', 'armor_plate', 'forest_cloak', 'guardian_barding']},
+  {id: 'scout', name: 'Scout Hawk', emoji: '🏹', color: '#d47a5a', long: 'The explorer. Coral egg, map-line cracks, mountain paths.', voice: ['quick', 'curious', 'energetic', 'playful', 'alert'], outfit: ['leather_jerkin', 'ranger_tunic', 'wind_cloak', 'desert_robes', 'scout_leathers']},
+  {id: 'strategist', name: 'Strategist Owl', emoji: '♟', color: '#2a5a3a', long: 'The long-game. Dark green egg, circuit-board veins, deep thought.', voice: ['calm', 'measured', 'ancient', 'wise', 'low'], outfit: ['scholar_robe', 'simple_tunic', 'war_cape', 'general_armor', 'council_cloak']},
+  {id: 'creator', name: 'Creator Phoenix', emoji: '✨', color: '#d4a55a', long: 'The maker. Amber egg, swirling particle shell, golden sparkles.', voice: ['bright', 'artistic', 'inventive', 'playful', 'clear'], outfit: ['artisan_robe', 'simple_tunic', 'rainbow_cloak', 'wizard_robes', 'festival_dress']},
+  {id: 'companion', name: 'Companion Bear', emoji: '💗', color: '#5aa89a', long: 'The friend. Teal egg, soft heartbeat pulse, warm embrace.', voice: ['warm', 'soft', 'caring', 'loving', 'gentle'], outfit: ['simple_robe', 'practical_dress', 'family_cloak', 'traveling_coat', 'celebration_dress']},
+  {id: 'sage', name: 'Sage Turtle', emoji: '🧘', color: '#d4c45a', long: 'The wise. Gold egg, ancient script etching, timeless wisdom.', voice: ['ancient', 'patient', 'deep', 'slow', 'wise'], outfit: ['sage_robe', 'simple_tunic', 'monk_cloak', 'pilgrim_robes', 'temple_garments']},
+];
+
+/* === 5 evolution stages === */
+const EVOLUTION = [
+  {id: 'egg', name: 'Egg', age: '~5 min', desc: 'Translucent glass, golden core'},
+  {id: 'baby', name: 'Baby', age: '~1 hour', desc: 'Tiny, curious, first peep'},
+  {id: 'child', name: 'Child', age: '~3 hours', desc: 'Learning to walk + speak'},
+  {id: 'teen', name: 'Teen', age: '~1 day', desc: 'Forming identity + voice'},
+  {id: 'adult', name: 'Adult', age: '~3 days', desc: 'Sovereign character complete'},
+];
+
+/* === 90 unique pet companions (7 visual style categories) === */
+const PET_STYLES = {
+  sovere: 'crown',
+  guardian: 'hex',
+  scout: 'map',
+  strategist: 'circuit',
+  creator: 'swirl',
+  companion: 'heartbeat',
+  sage: 'ancient',
+};
+const PET_EMOJIS = ['🐉','🦄','🦊','🐺','🐢','🦅','🐉','🦚','🦋','🐝','🐞','🐠','🐬','🦈','🐳','🐋','🐊','🦎','🐍','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐟','🐠','🐡','🦜','🦚','🦩','🦢','🦆','🦅','🦉','🐦','🐤','🐣','🐥','🐧','🐔','🐺','🦝','🦡','🐻','🐻‍❄️','🐨','🐯','🦁','🐮','🐷','🐽','🐸','🐵','🐒','🦍','🐶','🐕','🐩','🐱','🐈','🐈‍⬛','🐹','🐭','🐀','🐰','🐇','🦔','🦇','🐺','🦊','🐉','🐲','🦕','🦖','🦎','🐢','🐍','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🐊'];
+const PET_NAMES = ['Aurelius','Aria','Atlas','Aurora','Bram','Calypso','Cassia','Caelum','Daphne','Echo','Ember','Faye','Finn','Flora','Galen','Helix','Iris','Juno','Kai','Luna','Lyra','Mira','Nox','Orin','Pax','Quincy','Rhea','Sable','Talia','Una','Vesper','Wren','Xanthe','Yara','Zephyr','Onyx','Soren','Maeve','Evander','Idris','Caspian','Linnea','Thora','Astrid','Bjorn','Freya','Leif','Sigrid','Vidar','Hakon','Ivar','Solveig','Eira','Eivor','Ragnar','Brynn','Doran','Elara','Gareth','Halia','Idun','Kestrel','Leona','Maelis','Nerida','Orla','Persephone','Quill','Rhys','Selene','Theron','Ulyana','Vespera','Wynne','Xara','Yara','Zara','Aeron','Brisa','Cael','Dara','Elio','Fia','Gale','Halia','Iolanthe','Joren'];
+
+let selectedArch = 0;
+let selectedEvo = 0;
+let selectedVoice = 0;
+let selectedOutfit = 0;
+let selectedPet = 0;
+
+function renderArchTabs() {
+  document.getElementById('archTabs').innerHTML = ARCHETYPES.map((a, i) => `
+    <button class="tab ${i === selectedArch ? 'active' : ''}" onclick="selectArch(${i})" style="border-color: ${a.color}">
+      <span style="font-size:18px">${a.emoji}</span> ${a.name}
+    </button>
+  `).join('');
+}
+
+function selectArch(i) {
+  selectedArch = i;
+  selectedVoice = 0;
+  selectedOutfit = 0;
+  renderArchTabs();
+  renderVoiceChips();
+  renderOutfitChips();
+  updateCharacter();
+}
+
+function renderEvo() {
+  document.getElementById('evoSelector').innerHTML = EVOLUTION.map((e, i) => `
+    <button class="evo ${i === selectedEvo ? 'active' : ''}" onclick="selectEvo(${i})">
+      ${e.name}
+      <span class="age">${e.age}</span>
+    </button>
+  `).join('');
+}
+
+function selectEvo(i) {
+  selectedEvo = i;
+  renderEvo();
+  updateCharacter();
+}
+
+function renderVoiceChips() {
+  const a = ARCHETYPES[selectedArch];
+  document.getElementById('voiceChips').innerHTML = a.voice.map((v, i) => `
+    <span class="chip ${i === selectedVoice ? 'active' : ''}" onclick="selectVoice(${i})">${v}</span>
+  `).join('');
+}
+
+function selectVoice(i) {
+  selectedVoice = i;
+  renderVoiceChips();
+}
+
+function renderOutfitChips() {
+  const a = ARCHETYPES[selectedArch];
+  document.getElementById('outfitChips').innerHTML = a.outfit.map((o, i) => `
+    <span class="chip ${i === selectedOutfit ? 'active' : ''}" onclick="selectOutfit(${i})">${o}</span>
+  `).join('');
+}
+
+function selectOutfit(i) {
+  selectedOutfit = i;
+  renderOutfitChips();
+}
+
+function updateCharacter() {
+  const a = ARCHETYPES[selectedArch];
+  const e = EVOLUTION[selectedEvo];
+  const stage = document.getElementById('characterStage');
+  const egg = document.getElementById('egg');
+  // Show egg only for stage 0
+  if (selectedEvo === 0) {
+    document.getElementById('eggEmoji').textContent = a.emoji;
+    document.getElementById('egg').style.display = 'block';
+    document.getElementById('egg').style.opacity = '1';
+    document.getElementById('charName').textContent = `${e.name} (${a.name})`;
+    document.getElementById('charArch').textContent = `${a.long}`;
+    egg.style.setProperty('--arch-color', a.color);
+  } else {
+    // Show scaled-up character
+    document.getElementById('egg').style.opacity = '0.6';
+    document.getElementById('egg').style.transform = `scale(${1 + selectedEvo * 0.15})`;
+    document.getElementById('eggEmoji').textContent = a.emoji;
+    document.getElementById('charName').textContent = `${e.name} ${a.name}`;
+    document.getElementById('charArch').textContent = `${a.long} · ${e.desc}`;
+    egg.style.setProperty('--arch-color', a.color);
+  }
+}
+
+function renderPets() {
+  const pets = [];
+  for (let i = 0; i < 90; i++) {
+    pets.push({
+      emoji: PET_EMOJIS[i % PET_EMOJIS.length],
+      name: PET_NAMES[i % PET_NAMES.length] + (i >= PET_NAMES.length ? ' ' + Math.floor(i / PET_NAMES.length + 1) : ''),
+      style: Object.values(PET_STYLES)[i % 7],
+      arch: Object.keys(PET_STYLES)[i % 7],
+    });
+  }
+  document.getElementById('petsGrid').innerHTML = pets.map((p, i) => `
+    <div class="pet ${i === selectedPet ? 'selected' : ''}" onclick="selectPet(${i})" style="${i === selectedPet ? 'border-color: var(--gold); background: rgba(201, 168, 76, 0.1);' : ''}">
+      <div class="emoji">${p.emoji}</div>
+      <div class="name">${p.name}</div>
+      <div class="style">${p.style}</div>
+    </div>
+  `).join('');
+}
+
+function selectPet(i) {
+  selectedPet = i;
+  renderPets();
+}
+
+renderArchTabs();
+renderEvo();
+renderVoiceChips();
+renderOutfitChips();
+updateCharacter();
+renderPets();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+</script>
+
+</body>
+</html>

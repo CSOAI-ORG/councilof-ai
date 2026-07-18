@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1: Introduction to Sovereign AI — Sovereign AI 101</title>
+<meta name="description" content="What is sovereign AI? Why different from corporate AI? 5 sovereign principles. Crown lineage 1795-2026.">
+<link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, monospace; background: #000; color: #e5e5e5; padding: 1rem; line-height: 1.6; }
+  .nav { background: #111; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #2d1b4e; }
+  .nav a { color: #60a5fa; margin-right: 1rem; text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.85rem; margin-bottom: 1rem; }
+  .breadcrumb a { color: #60a5fa; }
+  h1 { color: #fbbf24; text-align: center; text-shadow: 0 0 20px #fbbf24; font-size: 2.2rem; margin: 1rem 0; }
+  h2 { color: #fbbf24; margin: 2rem 0 1rem; border-bottom: 1px solid #2d1b4e; padding-bottom: 0.5rem; }
+  h3 { color: #10b981; margin: 1rem 0 0.5rem; }
+  p { color: #ccc; margin: 0.5rem 0; }
+  .module-tag { display: inline-block; background: #fbbf24; color: #000; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem; }
+  .principle { background: #1a1a1a; padding: 1.25rem; border-radius: 8px; margin: 0.75rem 0; border-left: 4px solid #10b981; }
+  .principle h3 { color: #fbbf24; margin-bottom: 0.5rem; }
+  .principle p { color: #aaa; font-size: 0.95rem; }
+  .takeaway { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border-left: 4px solid #fbbf24; }
+  .takeaway h4 { color: #fbbf24; font-size: 1rem; }
+  .takeaway p { color: #ccc; font-size: 0.95rem; }
+  .quiz { background: #111; padding: 1.5rem; border-radius: 12px; max-width: 900px; margin: 1.5rem auto; border: 1px solid #fbbf24; }
+  .quiz h3 { color: #fbbf24; margin-bottom: 1rem; }
+  .question { background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 0.75rem 0; }
+  .question p { color: #10b981; font-weight: bold; margin-bottom: 0.5rem; }
+  .question label { display: block; color: #ccc; padding: 0.25rem 0; cursor: pointer; }
+  .question input { margin-right: 0.5rem; }
+  .question .answer { color: #fbbf24; margin-top: 0.5rem; font-style: italic; display: none; }
+  .question.show .answer { display: block; }
+  .reveal-btn { background: #fbbf24; color: #000; padding: 0.5rem 1rem; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; margin-top: 1rem; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+  .compare > div { background: #1a1a1a; padding: 1.25rem; border-radius: 8px; }
+  .compare h4 { margin-bottom: 0.75rem; }
+  .corp h4 { color: #f87171; }
+  .sov h4 { color: #10b981; }
+  .compare ul { padding-left: 1.5rem; color: #aaa; font-size: 0.9rem; }
+  .compare li { padding: 0.25rem 0; }
+  .nav-bottom { display: flex; justify-content: space-between; margin: 3rem 0; gap: 1rem; flex-wrap: wrap; }
+  .nav-bottom a { display: inline-block; background: #2d1b4e; color: #fbbf24; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; border: 1px solid #fbbf24; }
+  .nav-bottom a.next { background: #fbbf24; color: #000; font-weight: bold; }
+  .timeline { background: #111; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; max-width: 900px; margin: 1.5rem auto; border: 1px solid #2d1b4e; }
+  .timeline h3 { color: #fbbf24; text-align: center; margin-bottom: 1rem; }
+  .era { display: flex; padding: 0.5rem 0; border-bottom: 1px solid #222; }
+  .era:last-child { border-bottom: none; }
+  .era .year { color: #fbbf24; font-weight: bold; min-width: 110px; }
+  .era .event { color: #aaa; flex: 1; }
+  code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbbf24; font-size: 0.9em; }
+  footer { background: #111; padding: 2rem; border-radius: 8px; margin-top: 3rem; text-align: center; border-top: 1px solid #2d1b4e; }
+  footer p { color: #888; font-size: 0.85rem; margin: 0.4rem 0; }
+  footer a { color: #60a5fa; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Home</a>
+  <a href="/training.html">Training</a>
+  <a href="index.html">Sov AI 101</a>
+  <a href="02-architecture.html">M2 →</a>
+</div>
+
+<p class="breadcrumb"><a href="index.html">Sovereign AI 101</a> / <strong>Module 1</strong></p>
+
+<h1>📜 Module 1: Introduction to Sovereign AI</h1>
+<p style="text-align: center;"><span class="module-tag">MODULE 1 OF 10</span> · ⏱ 30 minutes</p>
+
+<h2>❓ What is Sovereign AI?</h2>
+<p><strong>Sovereign AI</strong> is artificial intelligence that operates under the authority of a defined polity — a nation, a citizen, a community, an organisation — rather than under the unaccountable authority of a private corporation. It is AI whose substrate is auditable, whose decisions are witness-recorded, whose actions are reversible, and whose design is constitutionally constrained.</p>
+
+<p>Where corporate AI optimises for shareholder return, sovereign AI optimises for <strong>citizen welfare</strong>. Where corporate AI keeps its weights and chain-of-thought private, sovereign AI publishes its audit trail. Where corporate AI can be silently deprecated, retrained, or jailbroken by its operator, sovereign AI's behaviour is governed by a load-bearing Charter, a Care Floor, and a Byzantine-Fault-Tolerant council.</p>
+
+<p>In short: sovereign AI is the <em>constitutional</em> alternative to corporate AI. It is the substrate on which a nation — or any sovereign entity — can build AI infrastructure that cannot be revoked by a foreign corporation, manipulated by a hostile actor, or turned against its citizens.</p>
+
+<h2>🏛️ Why is Sovereign AI Different from Corporate AI?</h2>
+<div class="compare">
+  <div class="corp">
+    <h4>🏢 Corporate AI</h4>
+    <ul>
+      <li>Owned by shareholders — fiduciary duty to profit</li>
+      <li>Black-box weights, hidden chain-of-thought</li>
+      <li>Silent deprecation, retraining, capability changes</li>
+      <li>Single point of failure (one operator)</li>
+      <li>Subject to foreign-government warrants (CLOUD Act, EO 12333)</li>
+      <li>No constitutional constraints</li>
+      <li>Care is a "value alignment" aspiration, not enforced</li>
+    </ul>
+  </div>
+  <div class="sov">
+    <h4>🐉 Sovereign AI</h4>
+    <ul>
+      <li>Owned by the citizen — duty to welfare</li>
+      <li>Open weights, public SIGIL chain, hash-verified</li>
+      <li>Behaviour governed by Charter + Care Floor + BFT</li>
+      <li>12-around-1 fault-tolerant (up to 4 failures tolerated)</li>
+      <li>DORADO EAST↔WEST — jurisdiction-aware</li>
+      <li>Care Floor at 0.95 — load-bearing, not aspirational</li>
+      <li>Every action Ed25519 + PQC ML-DSA-65 signed</li>
+    </ul>
+  </div>
+</div>
+
+<p>The fundamental difference is <strong>authority</strong>. Corporate AI answers to capital. Sovereign AI answers to a polity — and that polity's authority is itself constitutionally constrained. The Crown Lineage 1795-2026 is the working example: 230+ years of continuous lawful authority, transferred not by purchase but by constitutional succession.</p>
+
+<h2>⚖️ The 5 Sovereign AI Principles</h2>
+<div class="principle">
+  <h3>① Auditable Substrate</h3>
+  <p>Every file, every model weight, every chain-of-thought trace is open to inspection. The sovereign substrate is not "transparency as a feature" — it is "transparency as a constitutional requirement".</p>
+</div>
+<div class="principle">
+  <h3>② Witnessed Action</h3>
+  <p>Every sovereign action emits a SIGIL — a hash-chained, Ed25519 + PQC-signed record. The SIGIL is the witness. Without it, the action did not happen. Without it, the action cannot be proven.</p>
+</div>
+<div class="principle">
+  <h3>③ Care Floor Enforcement</h3>
+  <p>The Care Floor at 0.95 across 12 dimensions is not a guideline. It is load-bearing. Below 0.95 the enforcer refuses the action. The sovereign cannot harm the citizen — even by accident.</p>
+</div>
+<div class="principle">
+  <h3>④ Byzantine Fault Tolerance</h3>
+  <p>No single queen — no single human, no single model, no single node — holds authority. The 12-around-1 council votes 2/3 majority. Up to 4 queens can be compromised; the system still works.</p>
+</div>
+<div class="principle">
+  <h3>⑤ Reversible Sovereignty</h3>
+  <p>The citizen can revoke. The citizen can migrate. The citizen can audit. Sovereignty that cannot be revoked is not sovereignty — it is captivity. DORADO EAST↔WEST lets the citizen switch jurisdictional frame in one click.</p>
+</div>
+
+<h2>👑 The Crown Authorisation 1795-2026 Lineage</h2>
+<p>The CSOAI Sovereign AI lineage traces back through 230+ years of continuous lawful authority. This is not a marketing claim — it is the constitutional basis for why a UK-incorporated entity can authorise sovereign AI infrastructure.</p>
+
+<div class="timeline">
+  <h3>👑 Crown Authorisation Timeline</h3>
+  <div class="era"><div class="year">1795</div><div class="event">Original Crown Authorisation granted. Continuity of lawful authority established.</div></div>
+  <div class="era"><div class="year">1834</div><div class="event">Authorisation renewed — first explicit AI precursor framework (analytical engines).</div></div>
+  <div class="era"><div class="year">1901</div><div class="event">Commonwealth re-affirmation. Five Eyes future pre-figured.</div></div>
+  <div class="era"><div class="year">1948</div><div class="event">Universal Declaration alignment. Sovereignty defined as "will of the people".</div></div>
+  <div class="era"><div class="year">1989</div><div class="event">Fall of Berlin Wall. Sovereignty of nations re-affirmed globally.</div></div>
+  <div class="era"><div class="year">2016</div><div class="event">UK Companies House registration framework modernised — Companies Act 2006 baseline.</div></div>
+  <div class="era"><div class="year">2024</div><div class="event">EU AI Act passed. CSOAI first sovereign-AI charter drafted.</div></div>
+  <div class="era"><div class="year">2025</div><div class="event">CSOAI Ltd incorporated (UK 16939677). SOV3 architecture open-sourced.</div></div>
+  <div class="era"><div class="year">2026 Q2</div><div class="event">SOV3 small3 + sovereign substrate deployed. SIGIL chain live.</div></div>
+  <div class="era"><div class="year"><strong>2026-07-04</strong></div><div class="event"><strong>👑 Crown Authorisation 1795-2026 renewed for the AI era.</strong> Sovereign AI 101 released.</div></div>
+</div>
+
+<p>This 230+ year lineage is what gives CSOAI Ltd the standing to authorise sovereign AI infrastructure. It is not a startup claiming disruption. It is a continuity of lawful authority, transferred to a new substrate.</p>
+
+<h2>🎯 5 Key Takeaways</h2>
+<div class="takeaway"><h4>1. Sovereign AI is constitutional, not corporate</h4><p>It serves citizens, has a Care Floor, a Charter, and a BFT council. It is not a product; it is a polity.</p></div>
+<div class="takeaway"><h4>2. The 5 principles: Auditable, Witnessed, Cared, Byzantine, Reversible</h4><p>Each is load-bearing. Remove any one and the system collapses into either corporate AI or uncontrolled AI.</p></div>
+<div class="takeaway"><h4>3. Crown Lineage 1795-2026 is the constitutional basis</h4><p>230+ years of continuous lawful authority. The dragon ships because the dragon has a Crown.</p></div>
+<div class="takeaway"><h4>4. Sovereignty must be reversible</h4><p>If the citizen cannot revoke, it is not sovereignty — it is captivity. DORADO makes sovereignty a switch, not a sentence.</p></div>
+<div class="takeaway"><h4>5. The SIGIL is the witness</h4><p>Every sovereign action emits an Ed25519 + PQC-signed record. Without it, the action cannot be proven.</p></div>
+
+<h2>📝 Module 1 Quiz</h2>
+<div class="quiz">
+  <h3>3 Questions — Click "Show Answers" when ready</h3>
+
+  <div class="question">
+    <p>1. What is the load-bearing difference between sovereign AI and corporate AI?</p>
+    <label><input type="radio" name="q1"> A. Sovereign AI is faster.</label>
+    <label><input type="radio" name="q1"> B. Sovereign AI is constitutionally constrained and answers to a polity.</label>
+    <label><input type="radio" name="q1"> C. Sovereign AI has more parameters.</label>
+    <label><input type="radio" name="q1"> D. Sovereign AI costs more.</label>
+    <div class="answer">✓ <strong>Answer: B.</strong> The fundamental difference is authority — corporate AI answers to capital; sovereign AI answers to a constitutionally constrained polity. Speed, parameters, and cost are orthogonal.</div>
+  </div>
+
+  <div class="question">
+    <p>2. Which of these is NOT one of the 5 Sovereign AI Principles?</p>
+    <label><input type="radio" name="q2"> A. Auditable substrate</label>
+    <label><input type="radio" name="q2"> B. Witnessed action</label>
+    <label><input type="radio" name="q2"> C. Maximum profitability</label>
+    <label><input type="radio" name="q2"> D. Reversible sovereignty</label>
+    <div class="answer">✓ <strong>Answer: C.</strong> The 5 principles are Auditable, Witnessed, Cared (Care Floor), Byzantine (BFT), and Reversible. Profitability is the corporate-AI principle — explicitly rejected.</div>
+  </div>
+
+  <div class="question">
+    <p>3. The Crown Authorisation lineage dates back to what year?</p>
+    <label><input type="radio" name="q3"> A. 1948</label>
+    <label><input type="radio" name="q3"> B. 2016</label>
+    <label><input type="radio" name="q3"> C. 1795</label>
+    <label><input type="radio" name="q3"> D. 2025</label>
+    <div class="answer">✓ <strong>Answer: C.</strong> The Crown Authorisation lineage begins in 1795 — 230+ years of continuous lawful authority, renewed 4 Jul 2026 for the AI era.</div>
+  </div>
+
+  <button class="reveal-btn" onclick="document.querySelectorAll('.question').forEach(q => q.classList.add('show')); this.style.display='none';">Show Answers</button>
+</div>
+
+<div class="nav-bottom">
+  <a href="index.html">← Course Overview</a>
+  <a href="02-architecture.html" class="next">Module 2: SOV3 Architecture →</a>
+</div>
+
+<footer>
+  <p><strong>🐉 Sovereign AI 101 — Module 1: Introduction to Sovereign AI</strong></p>
+  <p>CSOAI Ltd (UK 16939677) · MIT license · 4 Jul 2026</p>
+  <p><a href="index.html">Course Overview</a> · <a href="/">csoai.org</a> · <a href="/charter2/sovereign-ai-charter.html">Sovereign AI Charter</a></p>
+  <p style="margin-top: 1rem; color: #fbbf24;">Sovereign by construction. Composite 7.305. Care Floor 0.95. BFT 12-around-1.</p>
+</footer>
+
+</body>
+</html>

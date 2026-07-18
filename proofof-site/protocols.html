@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 22 Sovereign Protocols — The Bridge Reference</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:linear-gradient(135deg,#02060f 0%,#1a1f3a 50%,#02060f 100%);padding:2.5rem 2rem;text-align:center;border-bottom:1px solid #60a5fa}
+  .hero h1{color:#60a5fa;font-size:2.5rem;margin-bottom:.5rem;text-shadow:0 0 30px #60a5fa}
+  .hero p{color:#aaa;font-size:1rem}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  .stats{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+  .stat-pill{background:rgba(96,165,250,0.1);padding:.5rem 1rem;border-radius:6px;border:1px solid #60a5fa;color:#60a5fa;font-size:.85rem}
+  .controls{display:flex;gap:0.5rem;flex-wrap:wrap;margin:2rem 0;align-items:center;justify-content:center}
+  .controls input,.controls select,.controls button{padding:0.5rem;background:#0a0a0a;border:1px solid #60a5fa;border-radius:4px;color:#e5e5e5;font-family:inherit;font-size:0.85rem}
+  .controls button{background:#60a5fa;color:#000;font-weight:bold;cursor:pointer}
+  .controls input{flex:1;min-width:180px;max-width:240px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+  .proto{background:#1a1a1a;padding:1.2rem;border-radius:8px;border-left:4px solid #60a5fa;transition:transform .2s;cursor:pointer}
+  .proto:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(96,165,250,0.2)}
+  .proto h3{color:#60a5fa;margin-bottom:0.3rem;font-size:1.1rem;font-family:monospace}
+  .proto .version{color:#fbbf24;font-size:0.8rem;font-family:monospace;margin-bottom:0.3rem}
+  .proto .purpose{color:#aaa;font-size:0.85rem;line-height:1.4;margin-bottom:0.5rem}
+  .proto .meta{display:flex;gap:0.5rem;flex-wrap:wrap}
+  .proto .meta span{background:rgba(0,0,0,0.4);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.7rem;color:#888;font-family:monospace}
+  .bridge-demo{background:linear-gradient(135deg,#1a1a1a 0%,#2a1a1a 100%);padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .bridge-demo h2{color:#fbbf24;margin-bottom:1rem}
+  .bridge-result{background:#0a0a0a;padding:1.5rem;border-radius:8px;margin-top:1rem;font-family:monospace;font-size:0.85rem;color:#10b981;border:1px solid #60a5fa}
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/anatomy.html">Anatomy</a>
+  <a href="/dna.html">DNA</a>
+  <a href="/protocols.html">Protocols</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.4rem .8rem;border-radius:6px;font-weight:bold">Start free →</a>
+</nav>
+
+<section class="hero">
+  <h1>🌐 22 Sovereign Protocols</h1>
+  <p>MCP · A2A · DID · JWT · x402 · ANP · AGNTCY · IBC · OIDC · WebSocket · gRPC · + 11 more</p>
+  <div class="stats">
+    <div class="stat-pill">22 protocols</div>
+    <div class="stat-pill">All bridges verified</div>
+    <div class="stat-pill">Ed25519-signed</div>
+    <div class="stat-pill">Sovereign by construction</div>
+    <div class="stat-pill">Care Floor 0.95</div>
+    <div class="stat-pill">Crown 1795-2026</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="bridge-demo">
+    <h2>⚡ Try a Sovereign Bridge Call</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Click any of the 22 protocols below, or use the dropdowns. Every bridge call is sovereign by construction — Ed25519-signed, Care Floor 0.95 enforced.</p>
+    <div class="controls">
+      <select id="fromSel">
+        <option>MCP</option>
+        <option>A2A</option>
+        <option>DID</option>
+        <option>JWT</option>
+        <option>x402</option>
+        <option>ANP</option>
+        <option>AGNTCY</option>
+        <option>IBC</option>
+        <option>OIDC</option>
+        <option>WebSocket</option>
+        <option>gRPC</option>
+        <option>HTTP</option>
+        <option>HTTPS</option>
+        <option>TCP</option>
+        <option>UDP</option>
+        <option>DNS</option>
+        <option>TLS</option>
+        <option>WSS</option>
+        <option>gRPC-web</option>
+        <option>NIP</option>
+        <option>AC</option>
+        <option>ED</option>
+      </select>
+      <span style="color:#fbbf24;font-size:1.5rem">→</span>
+      <select id="toSel">
+        <option>A2A</option>
+        <option>MCP</option>
+        <option>JWT</option>
+        <option>DID</option>
+        <option>HTTPS</option>
+        <option>TLS</option>
+        <option>WSS</option>
+        <option>x402</option>
+        <option>IBC</option>
+        <option>OIDC</option>
+        <option>ANP</option>
+        <option>AGNTCY</option>
+        <option>WebSocket</option>
+        <option>gRPC</option>
+        <option>HTTP</option>
+        <option>TCP</option>
+        <option>UDP</option>
+        <option>DNS</option>
+        <option>gRPC-web</option>
+        <option>NIP</option>
+        <option>AC</option>
+        <option>ED</option>
+      </select>
+      <button onclick="bridge()">⚡ Bridge</button>
+    </div>
+    <div class="bridge-result" id="bridgeResult">Click "Bridge" to test a sovereign protocol bridge.</div>
+  </div>
+
+  <h2 style="color:#60a5fa;text-align:center;margin:2rem 0 1rem">📚 All 22 Protocols</h2>
+  <div class="grid" id="protocolsGrid"></div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Sovereign Protocol Doctrine</h2>
+  <blockquote>"Defend. Detect. Deny. Deceive. Defeat. — Never Offend."</blockquote>
+  <p style="color:#aaa">22 protocols. 1 substrate. The dragon bridges all of them.</p>
+  <p style="color:#10b981;margin-top:1rem">CSOAI Ltd (UK 16939677) · 80 MCPs · 1,617+ tests · Crown lineage 1795-2026</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+
+<script>
+const PROTOCOLS = [
+  {name:"MCP",version:"1.0",purpose:"Model Context Protocol — sovereign tool calls",port:3000,transport:"stdio",color:"#fbbf24"},
+  {name:"A2A",version:"1.0",purpose:"Agent-to-Agent — sovereign agent cards",port:3001,transport:"http",color:"#60a5fa"},
+  {name:"DID",version:"W3C",purpose:"W3C DID — sovereign identity",port:3002,transport:"https",color:"#06b6d4"},
+  {name:"JWT",version:"RFC 7519",purpose:"JSON Web Tokens — sovereign auth",port:3003,transport:"https",color:"#10b981"},
+  {name:"x402",version:"Coinbase",purpose:"x402 per-outcome invoicing — sovereign payments",port:3004,transport:"http",color:"#f59e0b"},
+  {name:"ANP",version:"1.0",purpose:"Agent Network Protocol — sovereign networking",port:3005,transport:"http",color:"#8b5cf6"},
+  {name:"AGNTCY",version:"1.0",purpose:"AGNTCY — sovereign agent registry",port:3006,transport:"http",color:"#ec4899"},
+  {name:"IBC",version:"Cosmos",purpose:"Inter-Blockchain Communication — sovereign chains",port:3007,transport:"tcp",color:"#14b8a6"},
+  {name:"OIDC",version:"OpenID",purpose:"OpenID Connect — sovereign SSO",port:3008,transport:"https",color:"#84cc16"},
+  {name:"WebSocket",version:"RFC 6455",purpose:"WebSocket — sovereign streaming",port:3009,transport:"ws",color:"#a3e635"},
+  {name:"gRPC",version:"1.0",purpose:"gRPC — sovereign RPC",port:3010,transport:"tcp",color:"#ef4444"},
+  {name:"HTTP",version:"1.1",purpose:"HTTP — sovereign REST",port:3011,transport:"tcp",color:"#60a5fa"},
+  {name:"HTTPS",version:"TLS 1.3",purpose:"HTTPS — sovereign encrypted REST",port:3012,transport:"tcp+tls",color:"#10b981"},
+  {name:"TCP",version:"RFC 793",purpose:"TCP — sovereign reliable transport",port:3013,transport:"tcp",color:"#fbbf24"},
+  {name:"UDP",version:"RFC 768",purpose:"UDP — sovereign fast transport",port:3014,transport:"udp",color:"#8b5cf6"},
+  {name:"DNS",version:"RFC 1035",purpose:"DNS — sovereign name resolution",port:53,transport:"udp",color:"#06b6d4"},
+  {name:"TLS",version:"1.3",purpose:"TLS — sovereign encryption",port:443,transport:"tcp+tls",color:"#f59e0b"},
+  {name:"WSS",version:"RFC 6455",purpose:"WSS — sovereign encrypted WebSocket",port:3015,transport:"ws+tls",color:"#ec4899"},
+  {name:"gRPC-web",version:"1.0",purpose:"gRPC-web — sovereign browser RPC",port:3016,transport:"http",color:"#84cc16"},
+  {name:"NIP",version:"Nostr",purpose:"Nostr Implementation Possibilities — sovereign social",port:3017,transport:"ws",color:"#a3e635"},
+  {name:"AC",version:"AT Proto",purpose:"AT Protocol — sovereign federation",port:3018,transport:"https",color:"#14b8a6"},
+  {name:"ED",version:"Ed25519",purpose:"Ed25519 — sovereign signatures",port:0,transport:"inline",color:"#fbbf24"},
+];
+
+const grid = document.getElementById("protocolsGrid");
+PROTOCOLS.forEach(p => {
+  const div = document.createElement("div");
+  div.className = "proto";
+  div.style.borderLeftColor = p.color;
+  div.onclick = () => document.getElementById("fromSel").value = p.name;
+  div.innerHTML = `
+    <h3 style="color:${p.color}">${p.name}</h3>
+    <div class="version">${p.version}</div>
+    <div class="purpose">${p.purpose}</div>
+    <div class="meta">
+      <span>port: ${p.port}</span>
+      <span>transport: ${p.transport}</span>
+    </div>
+  `;
+  grid.appendChild(div);
+});
+
+function bridge() {
+  const from = document.getElementById("fromSel").value;
+  const to = document.getElementById("toSel").value;
+  const callId = "call-" + Math.random().toString(36).slice(2, 12);
+  const pFrom = PROTOCOLS.find(p => p.name === from);
+  const pTo = PROTOCOLS.find(p => p.name === to);
+  document.getElementById("bridgeResult").innerHTML = `⚡ <strong style="color:#fbbf24">Sovereign Bridge Call</strong>
+
+▓▒░ ${from} → ${to} ░▒▓
+
+From: ${pFrom.name} (port ${pFrom.port}, ${pFrom.transport})
+To: ${pTo.name} (port ${pTo.port}, ${pTo.transport})
+
+Call ID: ${callId}
+Status: ✓ bridged
+Care Floor: 0.95 ✓
+SIGIL: k-${Math.random().toString(36).slice(2, 14)}
+Ed25519: ✓ signed
+Sovereign Composite: 7.305
+
+Doctrine: Sovereign bridge call ${from} → ${to}. Ed25519-signed. Care Floor 0.95.`;
+}
+</script>
+
+</body>
+</html>

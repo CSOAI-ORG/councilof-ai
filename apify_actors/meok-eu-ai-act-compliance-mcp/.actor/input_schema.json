@@ -1,0 +1,22 @@
+{
+  "title": "MEOK MCP Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "query": {
+      "title": "Query",
+      "type": "string",
+      "description": "Plain-text query or system description",
+      "editor": "textfield"
+    },
+    "operation": {
+      "title": "Operation",
+      "type": "string",
+      "description": "Operation mode",
+      "editor": "select",
+      "enum": ["default", "audit", "validate", "classify", "report"],
+      "default": "default"
+    }
+  },
+  "required": ["query"]
+}

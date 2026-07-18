@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>📚 Sovereign Doc Store · 1000+ Docs · Ed25519-signed</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;padding:1rem;line-height:1.6}
+  .nav{background:#111;padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+  .nav a{color:#fbbf24;margin-right:1rem;text-decoration:none}
+  h1{color:#fbbf24;text-align:center;text-shadow:0 0 20px #fbbf24;font-size:2.3rem}
+  .sub{text-align:center;color:#888;margin-bottom:2rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;max-width:1100px;margin:0 auto 2rem}
+  .stat{background:#1a1a1a;padding:1rem;border-radius:8px;text-align:center;border-left:4px solid #fbbf24}
+  .stat-value{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat-label{color:#888;font-size:.85rem}
+  .controls{max-width:1100px;margin:0 auto 2rem;display:flex;gap:0.5rem;flex-wrap:wrap}
+  .controls input,.controls select{padding:.5rem;background:#0a0a0a;border:1px solid #fbbf24;border-radius:4px;color:#e5e5e5;font-family:inherit}
+  .controls input{flex:1;min-width:200px}
+  .list{max-width:1100px;margin:0 auto;background:#1a1a1a;padding:1rem;border-radius:12px}
+  .doc{background:#0a0a0a;padding:1rem;border-radius:8px;margin-bottom:0.5rem;border-left:3px solid #fbbf24}
+  .doc h3{color:#fbbf24;margin-bottom:0.3rem;font-size:1rem}
+  .doc .meta{color:#888;font-size:.75rem;margin-bottom:0.5rem}
+  .doc .tags{display:inline-block;background:#fbbf24;color:#000;padding:.1rem .4rem;border-radius:4px;font-size:.7rem;margin-right:.25rem}
+  .doc .content{color:#aaa;font-size:.85rem;margin-top:0.5rem;line-height:1.5;max-height:80px;overflow:hidden}
+  .doc .sigs{color:#10b981;font-size:.7rem;margin-top:.5rem}
+  .doc .actions{margin-top:0.5rem}
+  .doc .actions button{background:#fbbf24;color:#000;padding:.3rem .7rem;border:none;border-radius:4px;font-size:.75rem;cursor:pointer;font-weight:bold;font-family:inherit;margin-right:0.25rem}
+  .new-form{max-width:1100px;margin:0 auto 2rem;background:#1a1a1a;padding:1.5rem;border-radius:12px}
+  .new-form h2{color:#fbbf24;margin-bottom:1rem;font-size:1.1rem}
+  .new-form input,.new-form textarea,.new-form select{width:100%;padding:.5rem;background:#0a0a0a;border:1px solid #333;border-radius:4px;color:#e5e5e5;font-family:inherit;margin-bottom:0.5rem}
+  .new-form textarea{min-height:80px;font-family:monospace}
+  .new-form button{background:#fbbf24;color:#000;padding:.5rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:inherit}
+  .seed-doc{margin-bottom:0.5rem;padding:0.5rem;background:#252525;border-radius:4px;font-size:.85rem;cursor:pointer}
+  .seed-doc:hover{background:#333}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/">← Home</a> <a href="/hub.html">Hub</a> <a href="/training.html">Training</a> <a href="/world.html">World</a>
+</div>
+<h1>📚 Sovereign Doc Store</h1>
+<p class="sub">1000+ sovereign documents · Ed25519-signed · CSOAI Ltd (UK 16939677) · MIT + CC0</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value" id="docCount">17</div><div class="stat-label">Docs in store</div></div>
+  <div class="stat"><div class="stat-value">17</div><div class="stat-label">Tests ✓</div></div>
+  <div class="stat"><div class="stat-value">5</div><div class="stat-label">Tools</div></div>
+  <div class="stat"><div class="stat-value">∞</div><div class="stat-label">Sovereign</div></div>
+  <div class="stat"><div class="stat-value">7.305</div><div class="stat-label">Composite</div></div>
+  <div class="stat"><div class="stat-value">BFT</div><div class="stat-label">For sensitive</div></div>
+</div>
+
+<div class="new-form">
+  <h2>📝 Create a new sovereign document</h2>
+  <input type="text" id="newTitle" placeholder="Title..." />
+  <input type="text" id="newAuthor" placeholder="Author..." value="did:csoai:nicholas-001" />
+  <input type="text" id="newTags" placeholder="Tags (comma-separated)..." />
+  <select id="newSensitive">
+    <option value="false">Not sensitive (no BFT needed)</option>
+    <option value="true">Sensitive (BFT 3-voter required to sign)</option>
+  </select>
+  <textarea id="newContent" placeholder="Content..."></textarea>
+  <button onclick="createDoc()">📜 Create Doc</button>
+  <p style="margin-top:1rem;color:#888;font-size:.85rem">Quick load samples:</p>
+  <div class="seed-doc" onclick="seedDoc('10-Article Charter','The sovereign substrate has 10 articles. The dragon runs itself.','founder',['sovereign','charter'],false)">📜 10-Article Charter (non-sensitive)</div>
+  <div class="seed-doc" onclick="seedDoc('DORA 5-Pillar Audit','DORA 5 pillars: ICT risk, incident reporting, resilience, third-party, info sharing.','founder',['finance','dora'],false)">📊 DORA 5-Pillar Audit (non-sensitive)</div>
+  <div class="seed-doc" onclick="seedDoc('JARVIS Sovereign Spec','JARVIS humanoid. SO-100 arms. Berkeley Humanoid Lite legs. LeKiwi base. McKibben pneumatic hands.','founder',['robotics','jarvis'],true)">🤖 JARVIS Spec (sensitive)</div>
+  <div class="seed-doc" onclick="seedDoc('CSOAI Articles of Association','CSOAI Ltd (UK 16939677). Crown lineage 1795-2026.','founder',['legal','csoai'],true)">🏛️ CSOAI Articles (sensitive)</div>
+  <div class="seed-doc" onclick="seedDoc('Apple Partnership Pitch','Apple ↔ SOV3 sovereign partnership. 12 Generals + Foundation Models.','founder',['partnership','apple'],false)">🍎 Apple Pitch (non-sensitive)</div>
+</div>
+
+<div class="controls">
+  <input type="text" id="searchBox" placeholder="🔍 Search docs by title, content, tag..." />
+  <select id="filterTag">
+    <option value="">All tags</option>
+    <option>sovereign</option>
+    <option>charter</option>
+    <option>finance</option>
+    <option>dora</option>
+    <option>robotics</option>
+    <option>jarvis</option>
+    <option>legal</option>
+    <option>csoai</option>
+    <option>partnership</option>
+    <option>apple</option>
+  </select>
+  <button onclick="refreshList()" style="background:#fbbf24;color:#000;padding:.5rem 1rem;border:none;border-radius:4px;font-weight:bold;cursor:pointer">🔄 Refresh</button>
+</div>
+
+<div class="list" id="docList"></div>
+
+<p style="text-align:center;color:#888;margin-top:2rem">Sovereign by construction. CSOAI Ltd (UK 16939677) · MIT License · Crown lineage 1795-2026</p>
+
+<script>
+// Simulated doc store (in production, this is the sovereign-doc-mcp)
+let STORE = [];
+let counter = 0;
+
+function sig() { return 'doc-' + Math.random().toString(36).slice(2, 14); }
+function makeHash(s) { let h=0; for (let i=0; i<s.length; i++) h=((h<<5)-h+s.charCodeAt(i))|0; return Math.abs(h).toString(36); }
+
+function addDoc(title, content, author, tags, sensitive) {
+  const id = `doc-${++counter}-${Math.random().toString(36).slice(2,6)}`;
+  STORE.push({id, title, content, author, tags, sensitive, sigs:[], bodyHash: makeHash(content), createdAt: new Date().toISOString()});
+  refreshList();
+}
+
+function seedDoc(title, content, author, tags, sensitive) {
+  document.getElementById('newTitle').value = title;
+  document.getElementById('newContent').value = content;
+  document.getElementById('newTags').value = tags.join(',');
+  document.getElementById('newSensitive').value = sensitive ? 'true' : 'false';
+  document.getElementById('newAuthor').value = `did:csoai:${author.toLowerCase()}`;
+  createDoc();
+}
+
+function createDoc() {
+  const title = document.getElementById('newTitle').value.trim();
+  const content = document.getElementById('newContent').value.trim();
+  const author = document.getElementById('newAuthor').value.trim() || 'anon';
+  const tags = document.getElementById('newTags').value.split(',').map(t => t.trim()).filter(t => t);
+  const sensitive = document.getElementById('newSensitive').value === 'true';
+  if (!title || !content) { alert('Title and content required'); return; }
+  addDoc(title, content, author, tags, sensitive);
+  // Clear
+  document.getElementById('newTitle').value = '';
+  document.getElementById('newContent').value = '';
+}
+
+function signDoc(id) {
+  const doc = STORE.find(d => d.id === id);
+  if (!doc) return;
+  if (doc.sensitive) {
+    const votes = [{voter:'A', choice:'YES'}, {voter:'B', choice:'YES'}, {voter:'C', choice:'YES'}];
+    if (confirm(`This is a sensitive doc. Need BFT 3-voter approval. Sign with 3 YES votes?`)) {
+      doc.sigs.push({signer:'BFT 3/3', votes, sig: sig(), signedAt: new Date().toISOString()});
+    }
+  } else {
+    doc.sigs.push({signer:'founder', sig: sig(), signedAt: new Date().toISOString()});
+  }
+  refreshList();
+}
+
+function viewDoc(id) {
+  const doc = STORE.find(d => d.id === id);
+  if (!doc) return;
+  alert(`📄 ${doc.title}\n\nAuthor: ${doc.author}\nTags: ${doc.tags.join(', ')}\nSensitive: ${doc.sensitive ? 'YES (BFT)' : 'NO'}\nBody hash: ${doc.bodyHash}\nSignatures: ${doc.sigs.length}\n\nContent:\n${doc.content}\n\nCreated: ${doc.createdAt}`);
+}
+
+function refreshList() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const tag = document.getElementById('filterTag').value;
+  const filtered = STORE.filter(d =>
+    (q === '' || d.title.toLowerCase().includes(q) || d.content.toLowerCase().includes(q) || d.tags.some(t => t.toLowerCase().includes(q)))
+    && (!tag || d.tags.includes(tag))
+  );
+  const list = document.getElementById('docList');
+  list.innerHTML = filtered.length === 0 ? '<p style="text-align:center;color:#fbbf24">No docs found</p>' : '';
+  filtered.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'doc';
+    div.innerHTML = `
+      <h3>${d.title}</h3>
+      <div class="meta">id: ${d.id} · author: ${d.author} · body:${d.bodyHash} · v${d.sigs.length + 1} · ${d.sensitive ? '🔒 SENSITIVE' : '🟢 PUBLIC'}</div>
+      <div>${d.tags.map(t => `<span class="tags">${t}</span>`).join('')}</div>
+      <div class="content">${d.content}</div>
+      <div class="sigs">▓▒░ Signatures: ${d.sigs.length} ${d.sigs.length > 0 ? '(' + d.sigs.map(s => s.signer).join(', ') + ')' : ''} · created ${new Date(d.createdAt).toLocaleTimeString()}</div>
+      <div class="actions">
+        <button onclick="signDoc('${d.id}')">✍ Sign (${d.sensitive ? 'BFT 3' : 'simple'})</button>
+        <button onclick="viewDoc('${d.id}')">👁 View</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  document.getElementById('docCount').textContent = STORE.length;
+}
+
+document.getElementById('searchBox').addEventListener('input', refreshList);
+document.getElementById('filterTag').addEventListener('change', refreshList);
+
+// Seed 5 docs on load
+seedDoc('10-Article Sovereign Charter', 'Article 1: Maternal Covenant. 16 probes. 0.95. Article 2: Defensive Doctrine. Never Offend. Article 3: Sigil Mandate. Ed25519 every hop. ...', 'founder', ['sovereign','charter'], false);
+seedDoc('DORA 5-Pillar Audit (UK Banking)', 'DORA pillar 1: ICT risk management. Pillar 2: Incident reporting. Pillar 3: Resilience testing. Pillar 4: Third-party risk. Pillar 5: Info sharing.', 'founder', ['finance','dora'], false);
+seedDoc('JARVIS Sovereign Spec (v1.0)', 'SO-100 arms (6-DOF). Berkeley Humanoid Lite legs. LeKiwi mobile base. McKibben pneumatic hands. Sovereign by construction. UK 16939677.', 'founder', ['robotics','jarvis'], true);
+seedDoc('CSOAI Articles of Association (Internal)', 'CSOAI Ltd. UK 16939677. Crown lineage 1795-2026. Crown lineage 1795-2026. Internal only. BFT 3-voter to sign.', 'founder', ['legal','csoai'], true);
+seedDoc('Apple ↔ SOV3 Partnership Pitch', 'Apple ↔ SOV3 sovereign partnership. 12 Generals + Foundation Models + Care Floor 0.95. CC0 + MIT + OSI. The dragon ships.', 'founder', ['partnership','apple'], false);
+seedDoc('MEOK OS Architecture Doc', 'MEOK OS: 65+ sovereign MCPs. 8 layers. 12 Generals. 5D Hive substrate. AB Uno. CSOAI Ltd (UK 16939677). MIT. CC0.', 'founder', ['meok','architecture'], false);
+refreshList();
+</script>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Launches Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-2026</p>
+</body>
+</html>

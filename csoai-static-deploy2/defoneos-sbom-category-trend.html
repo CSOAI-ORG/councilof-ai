@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFONEOS: SBOM Category Trend</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #1a1a2e; color: #e0e0e0; }
+        .container { max-width: 900px; margin: auto; background-color: #16213e; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); }
+        h1, h2, h3 { color: #e94560; margin-bottom: 15px; }
+        h1 { font-size: 2.5em; border-bottom: 2px solid #e94560; padding-bottom: 10px; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; }
+        p { margin-bottom: 10px; }
+        ul { list-style-type: disc; margin-left: 20px; margin-bottom: 10px; }
+        li { margin-bottom: 5px; }
+        code { background-color: #0f3460; padding: 2px 4px; border-radius: 4px; color: #e0e0e0; }
+        pre { background-color: #0f3460; padding: 15px; border-radius: 6px; overflow-x: auto; margin-bottom: 15px; }
+        a { color: #533483; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .footer { margin-top: 40px; border-top: 1px solid #e94560; padding-top: 20px; font-size: 0.9em; text-align: center; color: #999; }
+        .sigil { font-family: 'Courier New', monospace; font-size: 0.8em; color: #888; }
+        .chart-placeholder { background-color: #0f3460; height: 300px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; border-radius: 6px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DEFONEOS: SBOM Category Trend Analysis</h1>
+        <p>This page provides a dynamic trend analysis of the Software Bill of Materials (SBOMs) across DEFONEOS MCP categories, highlighting shifts in component dependencies, risk profiles, and sovereign boundary adherence over time. This ensures continuous compliance and strategic oversight of the entire software supply chain.</p>
+
+        <h2>SBOM Categorisation</h2>
+        <p>Each of the 30 DEFONEOS MCPs is categorised based on its primary function and domain:</p>
+        <ul>
+            <li><strong>Sensor MCPs:</strong> (10 total) - e.g., `sentinel-hub-mcp`, `openaq-air-mcp`.</li>
+            <li><strong>Defence MCPs:</strong> (8 total) - e.g., `free-tak-server-mcp`, `yolov8-isr-mcp`.</li>
+            <li><strong>Civil Service MCPs:</strong> (7 total) - e.g., `data-gov-uk-mcp`, `companies-house-mcp`.</li>
+            <li><strong>Compliance MCPs:</strong> (3 total) - e.g., `jsp936-compliance-mcp`, `iso27001-audit-mcp`.</li>
+            <li><strong>Core Infrastructure MCPs:</strong> (2 total) - e.g., `sigil-chain-mcp`, `bft-quorum-mcp`.</li>
+        </ul>
+
+        <h2>Trend Analysis: Key Metrics</h2>
+        <p>The following metrics are continuously tracked to identify trends and potential vulnerabilities:</p>
+        <ul>
+            <li><strong>Component Density:</strong> Changes in the number of open-source and proprietary components.</li>
+            <li><strong>Risk Profile Evolution:</strong> Shifts in overall CVSS scores and criticality assessments across categories.</li>
+            <li><strong>US-Dependency Scan:</strong> Longitudinal analysis of US-origin component dependencies across 7 vectors (CDN, Root CA, Cloud API, NTP, Telemetry, JS, Kinetic Patterns). Goal: 0 FAIL.</li>
+            <li><strong>SEAL-Eligibility:</strong> Tracking the progress of MCPs towards DEFONEOS-SEAL certification.</li>
+        </ul>
+
+        <div class="chart-placeholder">
+            [ Placeholder for dynamic SBOM Category Trend Chart (e.g., using D3.js or Chart.js) ]
+            <br>
+            Showing: Component Count by Category over Time, US-Dependency Score, SEAL Progress.
+        </div>
+        <p><em>Note: Dynamic chart data and rendering will be integrated in future iterations, drawing directly from the live SBOM registry.</em></p>
+
+        <h2>Accessing Historical SBOM Data</h2>
+        <p>For in-depth analysis, historical SBOM bundles for each MCP are available via the SBOM index:</p>
+        <pre><code>curl -s https://www.csoai.org/defoneos-sbom-index.html</code></pre>
+
+        <div class="footer">
+            <p>DEFONEOS Sovereign AI OS - A CSOAI.org Initiative</p>
+            <p class="sigil">SIGIL: SBOM-CATEGORY-TREND-V1.0-20260717-T119-BUILD</p>
+            <p>For further details, refer to the <a href="defoneos-sbom-index.html">SBOM Index</a> and <a href="#">Supply Chain Scan</a>.</p>
+        </div>
+    </div>
+</body>
+</html>

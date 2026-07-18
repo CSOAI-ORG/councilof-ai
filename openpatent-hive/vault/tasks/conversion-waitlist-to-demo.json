@@ -1,0 +1,7 @@
+{
+  "id": "conversion-waitlist-to-demo",
+  "prompt": "Write the conversion-optimization A/B test prompt for the waitlist → demo funnel step in openpatent.ai. The funnel: (1) openpatent.ai/waitlist (email + role + jurisdiction), (2) confirmation email with calendar link, (3) 15-min sovereign-partner demo, (4) /v1/disclosure handoff with HMAC + Ed25519 onboarding. Optimize step 1→2: 5 micro-tests (each ≤60 words) targeting: (a) the hero copy, (b) the form-field count (currently 3: email, role, jurisdiction — test 1 vs 2 vs 4 fields), (c) the social-proof placement, (d) the trust-signal row (5 testimonials vs BFT stats vs jurisdictional coverage), (e) the post-submit confirmation copy. Optimize step 2→3: 3 micro-tests on the confirmation email (subject line, send-time, calendar-link copy). Optimize step 3→4: 3 micro-tests on the demo handoff (live vs async, with/without sample disclosure, with/without pricing reveal). State primary metric for each step and a hypothesis with expected lift %. Use DEFONEOS mythic voice. Return ONLY JSON: {waitlist_microtests:[5 strings], email_microtests:[3 strings], demo_microtests:[3 strings], primary_metrics:[3 strings], hypotheses:[11 strings], signature:string}.",
+  "max_tokens": 800,
+  "providers": ["openai", "openrouter", "openai-pro"],
+  "tier": "defensive"
+}

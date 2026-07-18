@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A. Sovereign Learning Layer — OOWM — csoai.org/oowm/learning.html</title>
+  <meta name="description" content="The sovereign learning engine. OOWM ingests 100+ live feeds, learns from BFT council, SIGIL chain, sovereign corpus, citizen actions, Apple FM, DEFONEOS.">
+  <style>
+    body { font-family: 'SF Mono', monospace; background: radial-gradient(ellipse, #0a0e27 0%, #000 100%); color: #fff; padding: 40px; min-height: 100vh; }
+    .ui { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 2rem; color: #fbbf24; }
+    h2 { color: #06b6d4; margin-top: 32px; border-bottom: 1px solid #06b6d4; padding-bottom: 4px; }
+    h3 { color: #10b981; }
+    .tagline { color: #06b6d4; font-style: italic; margin-bottom: 24px; }
+    .panel { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #fbbf24; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+    .tile { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 4px; font-size: 0.9rem; }
+    .tile strong { color: #fbbf24; }
+    pre { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 0.8rem; }
+    .formula { background: rgba(251,191,36,0.1); padding: 12px; border-radius: 4px; font-family: monospace; margin: 8px 0; color: #fbbf24; }
+    ul { line-height: 1.8; }
+  </style>
+</head>
+<body>
+  <div class="ui">
+    <h1>🜏 A. Sovereign Learning Layer</h1>
+    <p class="tagline">The brain that grows — OOWM learns from every signal in the sovereign universe.</p>
+
+    <div class="panel">
+      <h2>What the OOWM Ingests (100+ live feeds daily)</h2>
+      <div class="grid">
+        <div class="tile"><strong>33-Agent BFT Council</strong><br>Deliberation transcripts, votes, dissent logs, ratification outcomes. 12-around-1 consensus on every sovereign decision.</div>
+        <div class="tile"><strong>200+ SIGIL Emissions</strong><br>Ed25519 + PQC ML-DSA-65 hash-chained events. Every citizen action, BFT vote, care-floor check, fork, and revision.</div>
+        <div class="tile"><strong>30+ TB Sovereign Corpus</strong><br>Curated from 60 Charters, 22 Hieroglyphs, 10 Sephiroth, 25 Industries, 33 districts, sovereign-temple + meok-engine.</div>
+        <div class="tile"><strong>Citizen Actions</strong><br>Opt-in anonymised signals from i-characters: questions answered, plans executed, decisions delegated.</div>
+        <div class="tile"><strong>Apple Foundation Models</strong><br>Feedback from Apple Intelligence integration. Latency, intent correctness, on-device vs server-routed outcomes.</div>
+        <div class="tile"><strong>DEFONEOS Sensor Fabric</strong><br>Edge telemetry: PX4 drones, FreeTAKServer C2, OpenAthena geo, Batear acoustic. Real-world ground truth.</div>
+        <div class="tile"><strong>Government Feeds</strong><br>UK Companies House, Land Registry, OS, DfT, EA, HSE, Met Office, NHS, DVSA, FSA, HMRC, Crown.</div>
+        <div class="tile"><strong>Scientific + Web</strong><br>arXiv, PubMed, Crossref, OpenAlex, NASA, NOAA, CERN, Wikipedia, OpenStreetMap, GitHub, Open Library.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>The 3 Architecture Layers (the brain)</h2>
+      <h3>1. Mamba-2 Long Memory</h3>
+      <p>State-space compression. Any-length context → 16-dim state vector. Per ZAMBA (Zyphra 2024). <span style="color:#fbbf24;">Persistent across sessions.</span></p>
+      <div class="formula">state(t+1) = A · state(t) + B · x(t) ;  y(t) = C · state(t) + D · x(t)  ;  state ∈ ℝ¹⁶</div>
+
+      <h3>2. 64-Expert MoE (Mixture of Experts)</h3>
+      <p>Task routing. Each citizen query hits the top-k experts (k=4). Sparse activation = low inference cost, high capacity. Trained on 25 industry verticals + 22 hieroglyphs.</p>
+      <div class="formula">P(expert_i | x) = softmax(W_g · x)  ;  y = Σ_{i ∈ top-k} P_i · Expert_i(x)</div>
+
+      <h3>3. Standard Attention (planning)</h3>
+      <p>For multi-step reasoning, BFT council deliberation, and planning horizons &gt; 7 steps. 32K context. FlashAttention-2. RoPE positional encoding.</p>
+
+      <h3>4. Sovereign Layer (governance)</h3>
+      <p>The wrapper. Every token tagged with: BFT vote id, SIGIL digest, Article 50 passport, Care Floor score, DORADO region, citizen DID.</p>
+    </div>
+
+    <div class="panel">
+      <h2>The Sovereign Composite (the score that grows)</h2>
+      <p>The OOWM's composite evolves toward 10/10. 12 dimensions, 22 hieroglyph mappings:</p>
+      <pre>
+Sovereign Composite = w₁·Care + w₂·BFT + w₃·SIGIL + w₄·Article50
+                    + w₅·DORADO + w₆·PQC + w₇·Charter + w₈·Sephiroth
+                    + w₉·Industry + w₁₀·Auth + w₁₁·Fork + w₁₂·Crown
+       where Σwᵢ = 1.0, optimised nightly on SIGIL feedback.
+      </pre>
+      <p>Current live value: <strong style="color:#fbbf24;">7.305</strong> (target: 10.0). Auto-retrained nightly at 03:00 UTC via the cron.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Learning Triggers (when the OOWM learns)</h2>
+      <ul>
+        <li><strong>Hourly:</strong> SIGIL burst → Mamba state update</li>
+        <li><strong>Daily 03:00 UTC:</strong> OLM router retrain + composite recompute</li>
+        <li><strong>Weekly:</strong> BFT council weights rebalanced by deliberation accuracy</li>
+        <li><strong>Monthly:</strong> MoE expert pruning + new expert synthesis from 25 industries</li>
+        <li><strong>Quarterly:</strong> Full corpus ingest from sovereign sources</li>
+        <li><strong>On citizen feedback:</strong> Care Floor violation → immediate weight update</li>
+        <li><strong>On BFT vote:</strong> Dissent log → expert specialisation signal</li>
+        <li><strong>On fork:</strong> Fork Doctrine → branch weights forked, parent + child both grow</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h2>What the OOWM Forgets (privacy by design)</h2>
+      <ul>
+        <li>Personal identifiers → hashed at edge before reaching the OOWM</li>
+        <li>Citizen i-character content → stays on citizen's device (DID-scoped)</li>
+        <li>SIGIL chain keeps hashes, not payloads (zero-knowledge by default)</li>
+        <li>Right-to-be-forgotten: DELETE citizen → Mamba state zeroed, SIGIL digest tombstoned</li>
+      </ul>
+    </div>
+
+    <p style="text-align:center; margin-top:32px; color:#10b981;">
+      🜏 The brain grows. The composite evolves. The substrate is alive.
+    </p>
+  </div>
+</body>
+</html>

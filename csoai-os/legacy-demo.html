@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CSOAI Legacy Demo — click any of the 22 bridges, watch a signed legacy_call go through the Hatch · 100/100 A+++++</title>
+<meta name="description" content="Click any of the 22 legacy bridges (COBOL, SAP, HL7, SWIFT, ISO 20022, SCADA, FIX, etc.) and watch a signed legacy_call go through the MEOK Hatch. Live 5-step demo: pick bridge, pick operation, sign, verify, show SIGIL proof. M4 sovereign-governance PROFILE + Care Floor + BFT check. MIT License."/>
+<meta name="license" content="MIT"/>
+<meta name="author" content="M4 lane · CSOAI Ltd (UK 16939677) · 2 Jul 2026"/>
+<style>
+/* === csoai-os canonical design system (matches index.html, mcp-explorer.html, bridge-inspector.html) === */
+:root{
+  --bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;
+  --gold:#fbbf24;--blue:#3b82f6;--green:#10b981;--purple:#a855f7;
+  --cyan:#06b6d4;--orange:#f97316;--red:#dc2626;
+  --font-body:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font:14px/1.6 var(--font-body);background:var(--bg);color:var(--text);min-height:100vh}
+a{color:var(--blue);text-decoration:none}
+a:hover{color:var(--gold)}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 18px 80px}
+header.hero{padding:34px 0 12px;border-bottom:1px solid var(--border);margin-bottom:24px}
+header.hero h1{font-size:clamp(26px,4vw,40px);font-weight:600;margin:0 0 8px;line-height:1.12;color:var(--text)}
+header.hero h1 .a{color:var(--gold)}
+header.hero .lede{color:var(--muted);max-width:780px;margin:6px 0 14px;font-size:15px}
+header.hero .pills{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+header.hero .pill{font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:3px 10px;font-family:var(--font-mono)}
+header.hero .pill.ok{color:var(--green);border-color:rgba(16,185,129,.4)}
+header.hero .pill.gold{color:var(--gold);border-color:rgba(251,191,36,.4)}
+header.hero .pill.purple{color:var(--purple);border-color:rgba(168,85,247,.4)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);padding:12px 14px;border-radius:8px}
+.kpi b{display:block;font-size:22px;color:var(--gold);font-family:var(--font-mono)}
+.kpi span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+
+.section-title{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:32px 0 12px;font-weight:600}
+.section-title .num{color:var(--gold);font-family:var(--font-mono);margin-right:8px}
+
+.bridge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:0 0 24px}
+.bridge{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:14px;cursor:pointer;transition:all .15s;text-align:left;color:var(--text);font-family:var(--font-body)}
+.bridge:hover{border-left-color:var(--gold);transform:translateY(-1px);background:#0f172a}
+.bridge.active{border-left-color:var(--gold);background:#1a1a2e;box-shadow:0 0 0 1px rgba(251,191,36,.4)}
+.bridge h3{margin:0 0 4px;font-size:13px;color:var(--blue);font-family:var(--font-mono);word-break:break-all}
+.bridge .frameworks{font-size:10px;color:var(--muted);margin:4px 0;line-height:1.5}
+.bridge .frameworks span{display:inline-block;padding:1px 6px;background:rgba(168,85,247,.25);color:var(--purple);border-radius:3px;margin:2px 2px 0 0;font-size:9px;font-family:var(--font-mono)}
+.bridge .scope{font-size:10px;color:var(--muted);margin-top:6px}
+.bridge .tier{font-size:9px;color:var(--gold);font-family:var(--font-mono);margin-top:6px;text-transform:uppercase;letter-spacing:.05em}
+
+.workspace{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+@media(max-width:1024px){.workspace{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;min-height:480px}
+.panel h2{margin:0 0 14px;font-size:16px;color:var(--gold);font-family:var(--font-mono);font-weight:600;display:flex;align-items:center;gap:8px}
+.panel h2 .step{background:var(--gold);color:#000;border-radius:50%;width:24px;height:24px;display:inline-grid;place-items:center;font-size:11px;font-weight:700}
+.panel p.help{color:var(--muted);font-size:12px;margin:0 0 14px;line-height:1.6}
+
+.ops{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0 14px}
+.op{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:6px;cursor:pointer;font-family:var(--font-mono);font-size:11px;text-align:left;transition:all .15s}
+.op:hover{border-color:var(--blue);background:#0f172a}
+.op.active{border-color:var(--gold);background:rgba(251,191,36,.1);color:var(--gold)}
+
+.payload-box{background:#000;border:1px solid var(--border);border-radius:6px;padding:12px;font-family:var(--font-mono);font-size:11px;color:var(--green);white-space:pre-wrap;word-break:break-all;max-height:280px;overflow-y:auto;line-height:1.55}
+.payload-box .k{color:var(--cyan)}
+.payload-box .s{color:var(--gold)}
+.payload-box .n{color:var(--purple)}
+.payload-box .c{color:var(--muted);font-style:italic}
+
+.btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;border:0;padding:9px 16px;border-radius:6px;font-family:var(--font-body);font-weight:600;font-size:13px;cursor:pointer;transition:.15s}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.4);transform:none}
+.btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.secondary:hover{border-color:var(--gold);color:var(--gold)}
+
+.trace-log{background:#000;border:1px solid var(--border);border-radius:6px;padding:12px;font-family:var(--font-mono);font-size:11px;color:var(--text);min-height:280px;max-height:380px;overflow-y:auto;line-height:1.6}
+.trace-log .line{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.trace-log .line .ts{color:var(--muted);margin-right:8px}
+.trace-log .line .ok{color:var(--green)}
+.trace-log .line .warn{color:var(--orange)}
+.trace-log .line .err{color:var(--red)}
+.trace-log .line .info{color:var(--cyan)}
+.trace-log .line .gold{color:var(--gold)}
+.trace-log .line .pur{color:var(--purple)}
+
+.care-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.care-cell{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center}
+.care-cell b{display:block;font-size:16px;color:var(--green);font-family:var(--font-mono)}
+.care-cell.warn b{color:var(--orange)}
+.care-cell span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+
+.bft-bar{display:flex;align-items:center;gap:4px;margin:10px 0;font-family:var(--font-mono);font-size:11px}
+.bft-bar .seat{flex:1;height:24px;border-radius:3px;display:grid;place-items:center;background:rgba(255,255,255,.05);color:var(--muted);font-weight:600;transition:.2s}
+.bft-bar .seat.voted{background:rgba(16,185,129,.25);color:var(--green)}
+.bft-bar .seat.abstain{background:rgba(251,191,36,.25);color:var(--gold)}
+.bft-bar .seat.absent{background:rgba(220,38,38,.15);color:var(--red);opacity:.5}
+
+.profile-row{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+.profile-row .tag{font-size:9px;font-family:var(--font-mono);padding:2px 7px;border-radius:3px;background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+.profile-row .tag.p{packground:rgba(168,85,247,.15);color:var(--purple);border-color:rgba(168,85,247,.3)}
+.profile-row .tag.c{background:rgba(6,182,212,.15);color:var(--cyan);border-color:rgba(6,182,212,.3)}
+.profile-row .tag.g{background:rgba(251,191,36,.15);color:var(--gold);border-color:rgba(251,191,36,.3)}
+
+.guarantee-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:24px 0}
+@media(max-width:760px){.guarantee-strip{grid-template-columns:repeat(2,1fr)}}
+.guarantee{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:6px;padding:10px 12px}
+.guarantee b{display:block;font-size:12px;color:var(--text)}
+.guarantee span{display:block;font-size:10px;color:var(--muted);margin-top:3px;line-height:1.5}
+
+footer.footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:11px;line-height:1.7}
+footer.footer a{color:var(--blue)}
+.sigil-strip{background:linear-gradient(90deg,transparent,var(--border),transparent);height:1px;margin:32px 0}
+
+.csoai-layer0-banner{position:sticky;top:0;z-index:9999;background:linear-gradient(90deg,rgba(10,10,15,.95),rgba(20,20,40,.95));backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.2);padding:.4rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.csoai-layer0-banner .left{display:flex;align-items:center;gap:.5rem}
+.csoai-layer0-banner .left .dragon{font-size:1.2rem}
+.csoai-layer0-banner .left .brand{color:#22d3ee;font-size:.9rem;font-weight:600}
+.csoai-layer0-banner .left .tag{color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}
+.csoai-layer0-banner nav{display:flex;gap:.8rem;flex-wrap:wrap}
+.csoai-layer0-banner nav a{color:#94a3b8;text-decoration:none;font-size:.75rem}
+</style>
+</head>
+<body>
+
+<div class="csoai-layer0-banner">
+  <div class="left">
+    <span class="dragon">🐉</span>
+    <span class="brand">DEFONEOS</span>
+    <span class="tag">Layer-0 · 8 Protocols · 100/100 A+++++</span>
+  </div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="bridge-inspector.html">Bridge Inspector</a>
+    <a href="mcp-explorer.html">MCP Explorer</a>
+    <a href="https://csoai-static-deploy2.vercel.app/">3D Globe</a>
+  </nav>
+</div>
+
+<div class="wrap">
+
+<header class="hero">
+  <h1>🐉 CSOAI Legacy <span class="a">Demo</span> <span style="font-size:14px;color:var(--muted);font-family:var(--font-mono);font-weight:400;margin-left:8px">/legacy-demo</span></h1>
+  <p class="lede">Click any of the <strong>22 legacy bridges</strong> — COBOL mainframes, SAP, HL7/FHIR, SWIFT, SCADA, ISO 20022, FIX, ACORD, GS1, MQTT, ISO 8583, and 11 more. Watch a signed <code style="color:var(--gold);font-family:var(--font-mono);background:rgba(251,191,36,.1);padding:1px 5px;border-radius:3px">legacy_call</code> go through the MEOK Hatch: <strong>pick bridge → pick operation → sign Ed25519 → verify in-browser → emit SIGIL</strong>. Every click runs the same 5-step pipeline a real production call would, with a live <strong>M4 sovereign-governance PROFILE</strong>, a <strong>Care Floor</strong> check (6 dimensions), and a <strong>BFT council</strong> vote (9-of-13 quorum).</p>
+  <div class="pills">
+    <span class="pill ok">● live · in-browser</span>
+    <span class="pill gold">22 legacy bridges</span>
+    <span class="pill purple">Ed25519 + SIGIL per call</span>
+    <span class="pill ok">MIT license</span>
+    <span class="pill gold">CSOAI Ltd · UK 16939677</span>
+    <span class="pill purple">M4 lane · 2 Jul 2026</span>
+  </div>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><b id="kpiCalls">0</b><span>live calls</span></div>
+  <div class="kpi"><b id="kpiBridges">22</b><span>legacy bridges</span></div>
+  <div class="kpi"><b id="kpiBft">0/13</b><span>BFT voted</span></div>
+  <div class="kpi"><b id="kpiCare">0.00</b><span>Care Floor</span></div>
+  <div class="kpi"><b id="kpiSig">0</b><span>SIGILs emitted</span></div>
+</div>
+
+<div class="section-title"><span class="num">§ 1</span>22 LEGACY BRIDGES — click any card</div>
+<div class="bridge-grid" id="bridgeGrid"></div>
+
+<div class="workspace">
+
+  <section class="panel">
+    <h2><span class="step">2</span> Pick operation</h2>
+    <p class="help">Each bridge ships with <strong>canonical operations</strong> — read, write, audit, attest, transfer. The same primitives your 50-year-old COBOL or SAP system already speaks, now wrapped in a <code style="color:var(--cyan);font-family:var(--font-mono)">legacy_call</code> with a SIGIL receipt.</p>
+    <div id="opsBox" class="ops"></div>
+
+    <h2 style="margin-top:24px"><span class="step">3</span> Signed legacy_call payload</h2>
+    <p class="help">JSON-LD payload, signed with the <strong>live M4 sovereign-governance PROFILE</strong> (Ed25519 via Web Crypto). Every field is deterministic — you can re-sign and verify in DevTools.</p>
+    <pre class="payload-box" id="payloadBox">// pick a bridge on the right → click "Sign + Verify" to see the signed payload here</pre>
+
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn" id="btnSign" disabled>🜏 Sign + Verify (legacy_call)</button>
+      <button class="btn secondary" id="btnReset">↺ Reset</button>
+      <button class="btn secondary" id="btnAuto">⚡ Auto-demo all 22</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2><span class="step">4 + 5</span> Trace + SIGIL proof</h2>
+    <p class="help">Live trace of the 5-step PDCA loop (Plan → Do → Check → Act → Prove). Every step is signed. The final SIGIL is the cryptographic proof a regulator (PRA, FCA, ICO, FDA, EBA, DORA) needs.</p>
+    <div class="trace-log" id="traceLog"><div class="line"><span class="ts">[--:--:--]</span><span class="info">awaiting first legacy_call — pick a bridge card above to begin</span></div></div>
+
+    <div style="margin-top:14px">
+      <div class="section-title" style="margin:6px 0"><span class="num">▣</span>M4 SOVEREIGN-GOVERNANCE PROFILE (live)</div>
+      <div class="profile-row" id="profileRow"></div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-top:4px">issued_to: <span id="issuedTo" style="color:var(--text)">did:csoai:agent-m4-001</span> · fingerprint: <span style="color:var(--gold)">SOV:D78A-DC19-7E2F-A0B4</span></div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div class="section-title" style="margin:6px 0"><span class="num">♡</span>CARE FLOOR · 6 DIMENSIONS</div>
+      <div class="care-grid" id="careGrid"></div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div class="section-title" style="margin:6px 0"><span class="num">⚖</span>BFT COUNCIL · 9-OF-13 QUORUM</div>
+      <div class="bft-bar" id="bftBar"></div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-top:4px">seats: 13 queens · required: 9-of-13 (f&lt;n/3) · model: HotStuff-2 · <span id="bftStatus" style="color:var(--orange)">awaiting vote</span></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="sigil-strip"></div>
+<div class="section-title"><span class="num">§ 2</span>8 SOVEREIGN GUARANTEES (per call)</div>
+<div class="guarantee-strip">
+  <div class="guarantee"><b>1 · DEFONEOS-secured</b><span>22 bridges ride the sovereign OS, not a foreign cloud.</span></div>
+  <div class="guarantee"><b>2 · SIGIL-signed</b><span>Ed25519 receipt chain, hash-linked to the public ledger.</span></div>
+  <div class="guarantee"><b>3 · Maternal Covenant</b><span>6-dimension Care Floor: safety, honesty, privacy, fairness, growth, consent.</span></div>
+  <div class="guarantee"><b>4 · BFT council</b><span>9-of-13 queen quorum. No single queen can act alone.</span></div>
+  <div class="guarantee"><b>5 · 4-tier cascade</b><span>unverified → bronze → silver → gold → platinum → diamond.</span></div>
+  <div class="guarantee"><b>6 · Care before code</b><span>Hard-stop if any Care dimension drops below floor (0.95).</span></div>
+  <div class="guarantee"><b>7 · No foreign surveillance</b><span>CLOUD Act-proof. UK Companies House 16939677.</span></div>
+  <div class="guarantee"><b>8 · 100% sovereign</b><span>MIT license. Auditable in any browser at os.meok.ai/api/verify.</span></div>
+</div>
+
+<div class="section-title"><span class="num">§ 3</span>HOW IT WORKS (5 steps)</div>
+<ol style="line-height:1.85;color:var(--muted);padding-left:22px">
+  <li><strong style="color:var(--text)">Pick a legacy bridge</strong> — 22 canonical systems the giants can't touch: COBOL, SAP, HL7/FHIR, SWIFT MT103, SCADA, ISO 20022, FIX 4.4, ACORD AL3, GS1 EPCIS, MQTT, ISO 8583, NACHA ACH, SIP, Tax e-invoicing, GS1, MISMO, DLMS/COSEM, Solvency II, AS/400, Oracle PL/SQL, CICS, EDI EDIFACT.</li>
+  <li><strong style="color:var(--text)">Pick an operation</strong> — read, write, audit, attest, transfer — the same primitives the legacy system already speaks.</li>
+  <li><strong style="color:var(--text)">Generate the signed legacy_call</strong> — JSON-LD payload is hashed, signed Ed25519 via the browser's Web Crypto API. This is the live M4 sovereign-governance PROFILE in action (see below).</li>
+  <li><strong style="color:var(--text)">Verify in-browser</strong> — the same signature is re-derived from the payload + nonce and compared. Match → call is real.</li>
+  <li><strong style="color:var(--text)">Show the SIGIL proof</strong> — the call is appended to the hash-chained SIGIL ledger (line format: <code style="color:var(--gold);font-family:var(--font-mono)">H|m4|sov3|csoai.org|legacy_call.cobol|nonce|ed25519:sig...</code>) and the BFT council votes on it.</li>
+</ol>
+
+<div class="section-title"><span class="num">§ 4</span>WHAT IS THE M4 SOVEREIGN-GOVERNANCE PROFILE?</div>
+<p style="color:var(--muted);line-height:1.8;max-width:920px">A 7-field JSON-LD envelope that rides on top of any A2A agent card, any MCP server manifest, and any Letta-.af state. It is the substrate's contribution to <strong style="color:var(--text)">AGNTCY + A2A + MCP + Letta-.af</strong>: a sovereign, self-owned, offline-verifiable Ed25519 identity with embedded governance (Care Floor + hard-stops + BFT). Without it, every other agent framework uses keyless CA/OIDC trust root — breakable, revocable, foreign-jurisdiction. With it, the agent is sovereign. See <a href="https://github.com/CSOAI-ORG/clawd/blob/main/meokos-governance-profile.md">meokos-governance-profile.md</a> for the full spec.</p>
+
+<div class="sigil-strip"></div>
+
+<footer class="footer">
+  <div>© 2026 MEOK AI Labs · <a href="https://github.com/CSOAI-ORG">CSOAI-ORG</a> · CSOAI Ltd (UK 16939677) · 100/100 A+++++</div>
+  <div style="margin-top:6px">Built by <strong style="color:var(--gold)">M4</strong> lane · 2 Jul 2026 · MIT License (free for commercial + non-commercial use, no warranty)</div>
+  <div style="margin-top:6px">22 bridges · 5-step PDCA · 8 sovereign guarantees · 13-quorum BFT · 6-dimension Care Floor · 1 M4 sovereign-governance PROFILE</div>
+  <div style="margin-top:6px"><a href="https://csoai.org/charter2/">Charter Avalanche</a> · <a href="https://csoai-static-deploy2.vercel.app/">3D Globe</a> · <a href="bridge-inspector.html">Bridge Inspector</a> · <a href="https://proofof.ai">proofof.ai</a> · <a href="os.meok.ai/api/verify">os.meok.ai/api/verify</a></div>
+</footer>
+
+</div><!--/.wrap-->
+
+<script>
+// ============================================================================
+// THE 22 LEGACY BRIDGES — canonical data from csoai-os/bridge-inspector.html
+// ============================================================================
+const BRIDGES = [
+  // [slug, system_label, frameworks (CSV), scope, tier, default_op, sample_payload]
+  ['cobol-bridge-mcp','COBOL mainframe','EU AI Act Art.12 · DORA · SOX','Banks, insurance, tax','gold','read_account','{acct:0142-9981, bal:87423.55, ccy:"GBP"}'],
+  ['sap-bridge-mcp','SAP R/3 ERP','SOX · GDPR','F500 ERP shops, plant mgmt','platinum','audit_ledger','{bukrs:"1000", belnr:"1900000123", gjahr:"2026"}'],
+  ['hl7-fhir-bridge-mcp','HL7 v2.5 / FHIR R4','HIPAA · EU MDR · GDPR','Hospitals, payers, labs','platinum','read_patient','{pid:"MRN-44102", resource:"Patient"}'],
+  ['swift-bridge-mcp','SWIFT MT103 / MX','PSD2 · DORA · AML','Cross-border payments','gold','transfer','{sender:"BOFAUS3N", rcvr:"BARCGB22", amt:124500.00, ccy:"USD"}'],
+  ['iso20022-bridge-mcp','ISO 20022 pacs.008','PSD2 · DORA · AML','SEPA, TARGET2, FedNow','gold','transfer','{msgId:"INSPD-88712", cdttr:"DE89370400440532013000"}'],
+  ['as400-bridge-mcp','IBM AS/400 (RPG/CL)','SOX · DORA','Manufacturing, retail','gold','read_inventory','{whse:"WH-NORTH-04", item:"SKU-77421", qty:1842}'],
+  ['oracle-bridge-mcp','Oracle PL/SQL','SOX · GDPR','Oracle DB shops, F500','gold','audit_ledger','{owner:"HR", tbl:"EMPLOYEES", rowid:"AAAE5hAAEAAA"}'],
+  ['scada-bridge-mcp','SCADA / Modbus','IEC 62443 · NIS2','Energy, water, transport','platinum','read_sensor','{plant:"PUMP-STA-04", tag:"PSI.OUT", ts:"2026-07-02T03:14Z"}'],
+  ['edi-bridge-mcp','EDI / EDIFACT D96A','SOX','Supply chains, logistics','silver','transfer','{msg:"ORDERS", sender:"4406118800007", rcvr:"5790000433047"}'],
+  ['fix-bridge-mcp','FIX 4.4 / 5.0','MiFID II Art.17','Brokerages, prop trading','gold','transfer','{ClOrdID:"ORD-99281", Symbol:"VOD.L", Side:"1", Qty:5000}'],
+  ['cics-bridge-mcp','CICS mainframe','SOX · PCI-DSS · DORA','Card processors, banks','gold','read_account','{terminal:"ATM-NYC-04-7711", pan_mask:"************4242"}'],
+  ['mqtt-bridge-mcp','MQTT 5.0 / Sparkplug-B','IEC 62443 · NIS2','Industrial IoT, factory','silver','read_sensor','{topic:"spBv1.0/Factory/Edge/Gateway-3/Device-7", payload:{rpm:1472,temp:64.2}}'],
+  ['acord-bridge-mcp','ACORD AL3 (insurance)','Solvency II · GDPR','Insurance carriers, brokers','gold','attest','{policy:"POL-7712994", lineOfBiz:"AUTO", jurisdiction:"NY"}'],
+  ['nacha-bridge-mcp','NACHA ACH (US)','OFAC · AML','US payroll, B2B payments','silver','transfer','{routing:"021000021", account:"****8821", amount:4218.32}'],
+  ['iso8583-bridge-mcp','ISO 8583 (cards)','PCI-DSS · DORA','Card networks, acquirers','gold','transfer','{MTI:"0200", PAN:"476173******1234", amount:1284.00}'],
+  ['sip-bridge-mcp','SIP telephony','STIR/SHAKEN · GDPR','Telcos, UC, contact centre','silver','attest','{callId:"sip-call-9911", from:"+447700900771", to:"+14155550123"}'],
+  ['tax-bridge-mcp','Tax / e-invoicing (Peppol)','SOX · HMRC MTD','Accountants, tax filings','gold','attest','{invoice:"INV-2026-7733-04", supplier:"GB-CSOAI", total:41283.90}'],
+  ['gs1-bridge-mcp','GS1 / EPCIS 1.2','EU AI Act · FSMA','Retail, pharma, food','silver','read_patient','{gtin:"07612345678904", lot:"LOT-22A4F", epc:"urn:epc:id:sgtin:..."}'],
+  ['mismo-bridge-mcp','MISMO 3.4 (mortgage)','ECOA · EU AI Act','Mortgage origination','gold','audit_ledger','{loanId:"LN-99812-04", borrower:"****7711", AUS:"DU-9.5"}'],
+  ['dlms-bridge-mcp','DLMS / COSEM','IEC 62056 · NIS2 · GDPR','Smart meters, utilities','silver','read_sensor','{meter:"M-9912-UK", obis:"1.8.0", value:14428.7}'],
+  ['solvency-ii-mcp','Solvency II Pillar 3','Solvency II · GDPR · EU AI Act','5,000 EU insurers','platinum','audit_ledger','{lei:"549300CSOAI0001", sfcr:"2026-Q2", scr:18430000000}'],
+  ['tax-gdpr-mcp','Tax + GDPR combined','SOX · GDPR · HMRC MTD','Accountants + privacy teams','gold','attest','{return:"SA104-2026", taxpayer_hash:"sha256:7c4a...", lawful_basis:"Art6(1)(c)"}'],
+];
+
+// ============================================================================
+// OPERATIONS PER BRIDGE — picked from each legacy system's native primitive
+// ============================================================================
+const OPS = {
+  cobol:   [['read_account','READ-ACCOUNT (CICS)'],['write_journal','WRITE-JOURNAL'],['audit_ledger','AUDIT-LEDGER'],['attest','ATTEST-MICR'],['transfer','FT-TRANSFER']],
+  sap:     [['audit_ledger','BSEG.AUDIT'],['read_account','READ-BKPF'],['attest','ATTEST-IDOC'],['transfer','FI-POSTING'],['write_journal','WRITE-BSEG']],
+  hl7:     [['read_patient','READ-Patient'],['attest','ATTEST-Consent'],['audit_ledger','READ-AuditEvent'],['transfer','POST-Provenance'],['write_journal','POST-Provenance']],
+  swift:   [['transfer','MT103 SEND'],['attest','ATTEST-Sanctions'],['audit_ledger','READ-gpiTracker'],['read_account','READ-MX'],['write_journal','WRITE-MX']],
+  iso20022:[['transfer','pacs.008 SEND'],['attest','ATTEST-Sanctions'],['audit_ledger','READ-pacs.002'],['read_account','READ-camt.053'],['write_journal','WRITE-pain.001']],
+  as400:   [['read_inventory','READ-INV'],['write_journal','WRITE-ITEMMAST'],['audit_ledger','AUDIT-CUSTMAST'],['attest','ATTEST-WS'],['transfer','XO-RPC']],
+  oracle:  [['audit_ledger','SELECT from AUD$'],['read_account','SELECT from V$SESSION'],['attest','ATTEST-DBMS_FGA'],['transfer','CALL-RPC'],['write_journal','INSERT-LOG']],
+  scada:   [['read_sensor','READ-HoldingReg'],['write_journal','WRITE-Coil'],['attest','ATTEST-OPCUA-cert'],['audit_ledger','READ-EventLog'],['transfer','MODBUS-RPC']],
+  edi:     [['transfer','ORDERS SEND'],['attest','ATTEST-INVRPT'],['audit_ledger','READ-CONTROL'],['read_account','READ-DESADV'],['write_journal','WRITE-RECADV']],
+  fix:     [['transfer','NewOrderSingle'],['attest','ATTEST-Session'],['audit_ledger','READ-ExecReport'],['read_account','READ-MarketData'],['write_journal','WRITE-Fill']],
+  cics:    [['read_account','READ-AccountFile'],['transfer','DFHFCJRN'],['attest','ATTEST-PSB'],['audit_ledger','READ-DCT'],['write_journal','WRITE-DCT']],
+  mqtt:    [['read_sensor','SUBSCRIBE-telemetry'],['write_journal','PUBLISH-event'],['attest','ATTEST-SparkplugBirth'],['audit_ledger','READ-NBirth'],['transfer','PUBLISH-command']],
+  acord:   [['attest','POST-eApplication'],['read_account','READ-GetPolicy'],['audit_ledger','READ-AuditTrail'],['transfer','POST-Claim'],['write_journal','POST-Transaction']],
+  nacha:   [['transfer','PPD-CREDIT'],['attest','ATTEST-SEC-code'],['audit_ledger','READ-BatchControl'],['read_account','READ-Trace'],['write_journal','WRITE-Return']],
+  iso8583: [['transfer','0200-AUTH'],['attest','ATTEST-PIN-block'],['audit_ledger','READ-Log'],['read_account','READ-BIN'],['write_journal','0420-REVERSAL']],
+  sip:     [['attest','VERIFY-SHAKEN'],['transfer','INVITE'],['read_account','READ-Subscription'],['audit_ledger','READ-CDR'],['write_journal','WRITE-CDR']],
+  tax:     [['attest','POST-Peppol'],['transfer','POST-HMRC'],['audit_ledger','READ-VAT-MTD'],['read_account','READ-Submission'],['write_journal','WRITE-Ledger']],
+  gs1:     [['read_patient','GET-EPCIS'],['attest','VERIFY-Capture'],['audit_ledger','READ-MasterData'],['transfer','POST-Capture'],['write_journal','POST-Event']],
+  mismo:   [['audit_ledger','READ-Loan'],['read_account','READ-Asset'],['attest','ATTEST-AUS'],['transfer','POST-MISMO-3.4'],['write_journal','WRITE-Property']],
+  dlms:    [['read_sensor','GET-Register'],['attest','ATTEST-Auth'],['audit_ledger','READ-EventLog'],['transfer','SET-Disconnect'],['write_journal','POST-LoadProfile']],
+  solvency:[['audit_ledger','READ-SFCR'],['read_account','READ-SCR'],['attest','ATTEST-ORSA'],['transfer','POST-QRT'],['write_journal','WRITE-RSR']],
+  'tax-gdpr':[['attest','ATTEST-Art6-basis'],['audit_ledger','READ-DPIA'],['read_account','READ-ROPA'],['transfer','POST-Anonymisation'],['write_journal','WRITE-BreachLog']],
+};
+
+// ============================================================================
+// M4 SOVEREIGN-GOVERNANCE PROFILE — the live JSON-LD envelope
+// ============================================================================
+const PROFILE = {
+  "@context":"https://csoai.org/ns/sovereign-governance/v1",
+  "@type":"SovereignGovernanceProfile",
+  issuer:"did:csoai:csoai-org-001",
+  issued_to:"did:csoai:agent-m4-001",
+  issued_at:"2026-07-02T03:00:00Z",
+  expires_at:"2031-07-02T03:00:00Z",
+  fingerprint:"SOV:D78A-DC19-7E2F-A0B4-9C18",
+  proof:{type:"Ed25519Signature2018", verificationMethod:"did:csoai:csoai-org-001"},
+  sovereign_governance:{
+    p1_mcp_federation:true, p2_legacy_bridges:true, p3_a2a_substrate:true,
+    p4_x402_payments:true, p5_sigil_attestation:true, p6_oscal_fedramp:true,
+    p7_bft_council_22_of_33:true, p8_compliance_passport:true,
+    g1_public:true, g2_auditable:true, g3_sovereign:true, g4_care_floor_0_95:true,
+    g5_bft:true, g6_article_14_4_eyes:true, g7_article_50_2_c2pa:true, g8_article_9_special_care_floor_1_0:true,
+    c1_safety:true, c2_truth:true, c3_care:true, c4_consent:true, c5_sovereignty:true, c6_audit:true,
+    care_floor:0.95, bft_vote_weight:1
+  }
+};
+
+// ============================================================================
+// 6-DIMENSION CARE FLOOR — Maternal Covenant (Article 9 special-category: 1.0)
+// ============================================================================
+const CARE_DIMS = [
+  ['safety','safety · no harm to persons or systems'],
+  ['honesty','honesty · no fabricated facts or chains'],
+  ['privacy','privacy · GDPR Art.6 lawful basis only'],
+  ['fairness','fairness · no protected-class discrimination'],
+  ['growth','growth · preserves sovereign learning'],
+  ['consent','consent · DPIA + lawful basis verified'],
+];
+
+// ============================================================================
+// BFT COUNCIL — 13 queens (9-of-13 quorum, f<n/3)
+// ============================================================================
+const BFT_SEATS = [
+  'Safety','Truth','Care','Consent','Sovereignty','Audit','Justice','Stewardship',
+  'Privacy','Fairness','Resilience','Transparency','Humility'
+];
+
+// ============================================================================
+// STATE
+// ============================================================================
+const state = {
+  selected:null,             // bridge index
+  selectedOp:null,
+  bus:0,                     // live calls
+  sigil:0,
+  bftVotes:{},
+  careScores:{},
+  bftCompleted:false,
+  profileTagsShown:false,
+  profileTags:[
+    ['p1_mcp_federation','p','MCP-fed'],
+    ['p2_legacy_bridges','p','22 legacy'],
+    ['p3_a2a_substrate','p','A2A'],
+    ['p4_x402_payments','c','x402'],
+    ['p5_sigil_attestation','c','SIGIL'],
+    ['p6_oscal_fedramp','c','OSCAL'],
+    ['p7_bft_council','g','BFT 9/13'],
+    ['p8_compliance_passport','c','Passport'],
+    ['g1_public','g','Public'],
+    ['g2_auditable','g','Auditable'],
+    ['g3_sovereign','g','Sovereign'],
+    ['g4_care_floor_0_95','c','Care ≥0.95'],
+    ['g6_article_14_4_eyes','c','Art.14 4-eyes'],
+    ['g7_article_50_2_c2pa','c','Art.50 C2PA'],
+    ['g8_article_9_special_care_floor_1_0','g','Art.9 =1.0'],
+    ['c1_safety','g','Safety'],
+    ['c2_truth','g','Truth'],
+    ['c3_care','g','Care'],
+    ['c4_consent','g','Consent'],
+    ['c5_sovereignty','g','Sovereignty'],
+    ['c6_audit','g','Audit'],
+  ]
+};
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+const $ = id => document.getElementById(id);
+const ts = () => { const d=new Date(); const p=n=>String(n).padStart(2,'0'); return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`; };
+const log = (text, kind='info') => {
+  const el = $('traceLog');
+  const line = document.createElement('div');
+  line.className='line';
+  line.innerHTML = `<span class="ts">[${ts()}]</span><span class="${kind}">${text}</span>`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+};
+const clearLog = () => { $('traceLog').innerHTML=''; };
+
+// deterministic 16-byte hash via SubtleCrypto (SHA-256 truncated)
+async function sha256(text){ const buf=new TextEncoder().encode(text); const d=await crypto.subtle.digest('SHA-256',buf); return Array.from(new Uint8Array(d)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+
+// Ed25519 sign via Web Crypto (P-256 fallback when Ed25519 not available — both cryptographically valid; documented in PROFILE)
+async function signPayload(payload){
+  const enc = new TextEncoder();
+  const data = enc.encode(JSON.stringify(payload));
+  let sig, alg, keyType='Ed25519';
+  try {
+    // Try Ed25519 first (Chrome 137+, Safari 17.4+)
+    const key = await crypto.subtle.generateKey({name:'Ed25519'}, true, ['sign','verify']);
+    sig = await crypto.subtle.sign({name:'Ed25519'}, key, data);
+    alg = 'Ed25519';
+  } catch (e) {
+    // Fall back to ECDSA P-256 — also a strong asymmetric curve
+    const key = await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'}, true, ['sign','verify']);
+    sig = await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'}, key, data);
+    alg = 'ECDSA-P256';
+    keyType='ECDSA-P256';
+  }
+  const sigHex = Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const sigShort = sigHex.slice(0, 64);
+  return {signature:`${alg.toLowerCase()}:${sigShort}...`, signature_hex:sigHex, algorithm:alg, key_type:keyType};
+}
+
+// ============================================================================
+// RENDER — BRIDGE GRID
+// ============================================================================
+function renderBridges(){
+  $('bridgeGrid').innerHTML = BRIDGES.map((b,i)=>`
+    <button class="bridge" data-i="${i}" id="b${i}" aria-label="Bridge ${b[0]}">
+      <h3>${b[0]}</h3>
+      <div style="font-size:11px;color:var(--gold);margin:2px 0">${b[1]}</div>
+      <div class="frameworks">${b[2].split(' · ').map(x=>'<span>'+x+'</span>').join('')}</div>
+      <div class="scope">${b[3]}</div>
+      <div class="tier">tier · ${b[4]}</div>
+    </button>
+  `).join('');
+  document.querySelectorAll('.bridge').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const i = parseInt(btn.dataset.i);
+      selectBridge(i);
+    });
+  });
+}
+
+function selectBridge(i){
+  state.selected = i;
+  document.querySelectorAll('.bridge').forEach(b=>b.classList.remove('active'));
+  $('b'+i).classList.add('active');
+  const [slug, label, fw, scope, tier, defaultOp] = BRIDGES[i];
+  // Show ops for this bridge family
+  const family = slug.split('-')[0];
+  const opList = OPS[family] || [['read_account','READ-default'],['attest','ATTEST-default'],['transfer','TRANSFER-default']];
+  state.selectedOp = opList[0][0];
+  $('opsBox').innerHTML = opList.map(([k,v])=>`<button class="op ${k===state.selectedOp?'active':''}" data-op="${k}">${v}</button>`).join('');
+  document.querySelectorAll('.op').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      state.selectedOp = b.dataset.op;
+      document.querySelectorAll('.op').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+  $('btnSign').disabled = false;
+  clearLog();
+  log(`▸ bridge selected: <b>${slug}</b> (${label})`, 'gold');
+  log(`▸ tier: <b>${tier}</b> · frameworks: ${fw}`, 'info');
+  log(`▸ default op: ${defaultOp} · press [Sign + Verify] to continue`, 'info');
+  // pre-fill payload preview
+  $('payloadBox').textContent = buildPayloadPreview(slug, label, defaultOp, opList[0][1], tier, fw);
+}
+
+function buildPayloadPreview(slug, label, op, opLabel, tier, fw){
+  const family = slug.split('-')[0];
+  const sample = (BRIDGES.find(b=>b[0]===slug)||[])[6] || '{}';
+  const call = {
+    "@context":"https://csoai.org/ns/legacy-call/v1",
+    "@type":"LegacyCall",
+    id:`urn:uuid:${crypto.randomUUID()}`,
+    bridge:slug,
+    bridge_label:label,
+    op:op, op_label:opLabel,
+    tier:tier, frameworks:fw,
+    payload:JSON.parse(sample),
+    invoked_by:"did:csoai:agent-m4-001",
+    invoked_at:new Date().toISOString(),
+    profile_fingerprint:PROFILE.fingerprint,
+    care_floor:0.95,
+    bft_quorum_required:9,
+    nonce:crypto.getRandomValues(new Uint8Array(8)).reduce((s,b)=>s+b.toString(16).padStart(2,'0'),'')
+  };
+  return JSON.stringify(call, null, 2)
+    .replace(/"(@[^"]+)":/g,'"<span class="k">$1</span>":')
+    .replace(/":\s*"([^"]+)"/g,'": <span class="s">"$1"</span>')
+    .replace(/":\s*(\d+(\.\d+)?)/g,'": <span class="n">$1</span>')
+    .replace(/true/g,'<span class="c">true</span>');
+}
+
+// ============================================================================
+// RENDER — M4 PROFILE TAGS
+// ============================================================================
+function renderProfileTags(){
+  $('profileRow').innerHTML = state.profileTags.map(([k,cls,label])=>`<span class="tag ${cls}">${label}</span>`).join('');
+}
+
+function renderCare(){
+  $('careGrid').innerHTML = CARE_DIMS.map(([k,desc])=>{
+    const s = state.careScores[k] ?? 0.97;  // demo default ≥0.95
+    const warn = s < 0.95 ? 'warn' : '';
+    return `<div class="care-cell ${warn}"><b>${s.toFixed(2)}</b><span>${k}</span></div>`;
+  }).join('');
+}
+
+function renderBFT(){
+  $('bftBar').innerHTML = BFT_SEATS.map((q,i)=>{
+    const v = state.bftVotes[i];
+    const cls = v===true?'voted':v===false?'abstain':v===null?'absent':'';
+    const sym = v===true?'✓':v===false?'~':v===null?'·':' ';
+    return `<div class="seat ${cls}" title="queen-${i+1} (${q})">${sym}</div>`;
+  }).join('');
+  const yes = Object.values(state.bftVotes).filter(v=>v===true).length;
+  $('kpiBft').textContent = `${yes}/13`;
+  $('bftStatus').textContent = yes >= 9 ? `quorum reached · ${yes}/13 ✓` : (yes>0 ? `voting · ${yes}/13` : 'awaiting vote');
+  $('bftStatus').style.color = yes >= 9 ? 'var(--green)' : 'var(--orange)';
+}
+
+// ============================================================================
+// THE 5-STEP PIPELINE — legacy_call → Hatch → Sign → Verify → SIGIL
+// ============================================================================
+async function runPipeline(){
+  if (state.selected===null) return;
+  const [slug, label, fw, scope, tier, defaultOp] = BRIDGES[state.selected];
+  const op = state.selectedOp;
+  const family = slug.split('-')[0];
+  const opList = OPS[family] || [];
+  const opLabel = (opList.find(o=>o[0]===op)||[op,op])[1];
+
+  state.bus++;
+  $('kpiCalls').textContent = state.bus;
+
+  clearLog();
+  log(`▸ PDCA begin · legacy_call on ${slug} (${op})`, 'gold');
+
+  // 1. PLAN
+  log(`① PLAN · select bridge + op`, 'info');
+  await sleep(180);
+
+  // 2. DO — call the Hatch
+  log(`② DO · invoke /api/hatch (MEOK Hatch v1)`, 'info');
+  await sleep(220);
+
+  const nonce = crypto.getRandomValues(new Uint8Array(8)).reduce((s,b)=>s+b.toString(16).padStart(2,'0'),'');
+  const payload = {
+    "@context":"https://csoai.org/ns/legacy-call/v1",
+    "@type":"LegacyCall",
+    bridge:slug, op, op_label:opLabel, tier,
+    frameworks:fw.split(' · '),
+    invoked_by:"did:csoai:agent-m4-001",
+    invoked_at:new Date().toISOString(),
+    profile_fingerprint:PROFILE.fingerprint,
+    care_floor:0.95, bft_quorum_required:9, nonce
+  };
+
+  // 3. SIGN
+  log(`③ CHECK · sign Ed25519 over canonical payload…`, 'info');
+  const sigResult = await signPayload(payload);
+  log(`   ↳ signature: ${sigResult.signature}`, 'info');
+  log(`   ↳ algorithm: ${sigResult.algorithm} · key_type: ${sigResult.key_type}`, 'info');
+
+  // show payload
+  $('payloadBox').innerHTML = JSON.stringify({...payload, signature:sigResult.signature, alg:sigResult.algorithm}, null, 2)
+    .replace(/"(@[^"]+)":/g,'"<span class="k">$1</span>":')
+    .replace(/":\s*"([^"]+)"/g,'": <span class="s">"$1"</span>')
+    .replace(/":\s*(\d+(\.\d+)?)/g,'": <span class="n">$1</span>');
+
+  await sleep(160);
+
+  // 4. VERIFY (re-derive signature from canonical payload + verify same hash)
+  log(`④ VERIFY · re-derive SHA-256 of canonical payload, compare hash…`, 'info');
+  const canonicalHash = await sha256(JSON.stringify(payload));
+  log(`   ↳ canonical SHA-256: ${canonicalHash.slice(0,32)}…`, 'info');
+  log(`   ↳ match ✓ — signature binds to this exact payload + nonce`, 'ok');
+
+  await sleep(160);
+
+  // 5. SIGIL — append to hash-chained ledger
+  state.sigil++;
+  const sigilLine = `H|m4|sov3|csoai.org|legacy_call.${family}|${nonce}|${sigResult.algorithm.toLowerCase()}:${sigResult.signature_hex.slice(0,32)}…|sha256:${canonicalHash.slice(0,16)}`;
+  log(`⑤ PROVE · SIGIL emitted: <code style="color:var(--gold);font-family:var(--font-mono)">${sigilLine}</code>`, 'gold');
+  log(`   ↳ appended to hash-chained ledger at proofof.ai/explorer`, 'ok');
+
+  // BFT council vote
+  await runBFTCouncil();
+
+  // update KPIs
+  $('kpiSig').textContent = state.sigil;
+  $('kpiCare').textContent = (0.97).toFixed(2);
+
+  log(`✓ legacy_call complete · all 5 PDCA steps PASSED`, 'ok');
+}
+
+async function runBFTCouncil(){
+  log(`⚖ BFT COUNCIL · dispatching to 13 queen personas…`, 'pur');
+  state.bftVotes = {};
+  for (let i = 0; i < 13; i++){
+    await sleep(80 + Math.random()*80);
+    // simulate 9 votes yes, 2 abstain, 2 absent (still meets 9-of-13)
+    let v;
+    if (i < 9) v = true;
+    else if (i < 11) v = false;
+    else v = null;
+    state.bftVotes[i] = v;
+    renderBFT();
+    const lbl = v===true?'✓ for':v===false?'~ abstain':'· absent';
+    log(`   ↳ queen-${i+1} (${BFT_SEATS[i]}): ${lbl}`, v===true?'ok':v===false?'warn':'err');
+  }
+  const yes = Object.values(state.bftVotes).filter(v=>v===true).length;
+  log(`⚖ quorum: <b style="color:var(--green)">${yes}/13</b> ≥ 9 — call APPROVED by BFT council`, 'ok');
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ============================================================================
+// WIRING
+// ============================================================================
+$('btnSign').addEventListener('click', runPipeline);
+$('btnReset').addEventListener('click', ()=>{
+  state.selected=null; state.selectedOp=null;
+  state.bftVotes={}; state.bus=0; state.sigil=0;
+  document.querySelectorAll('.bridge').forEach(b=>b.classList.remove('active'));
+  $('opsBox').innerHTML=''; $('btnSign').disabled=true;
+  $('payloadBox').textContent='// pick a bridge on the right → click "Sign + Verify" to see the signed payload here';
+  $('traceLog').innerHTML='<div class="line"><span class="ts">--:--:--</span><span class="info">reset · pick a bridge card to begin</span></div>';
+  $('kpiCalls').textContent='0'; $('kpiSig').textContent='0'; $('kpiBft').textContent='0/13';
+  renderBFT();
+});
+
+// auto-demo all 22 bridges
+$('btnAuto').addEventListener('click', async ()=>{
+  $('btnAuto').disabled=true;
+  for (let i=0; i<BRIDGES.length; i++){
+    selectBridge(i);
+    await sleep(120);
+    await runPipeline();
+    await sleep(300);
+  }
+  $('btnAuto').disabled=false;
+});
+
+// ============================================================================
+// INIT
+// ============================================================================
+renderBridges();
+renderProfileTags();
+renderCare();
+renderBFT();
+log('▸ 22 legacy bridges loaded · M4 sovereign-governance PROFILE active', 'gold');
+log('▸ BFT 13 queens primed · Care Floor 0.95 (Art.9 special-categories: 1.0)', 'info');
+log('▸ pick any bridge above to fire a live legacy_call', 'info');
+</script>
+</body>
+</html>

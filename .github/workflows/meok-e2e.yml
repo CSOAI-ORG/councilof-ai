@@ -1,0 +1,56 @@
+name: MEOK OS — E2E matrix
+
+# Guards os.meok.ai: fast API smoke on every push; full Playwright matrix nightly + on demand.
+on:
+  push:
+    branches: [ "**" ]
+    paths: [ "meok-os-deploy/**" ]
+  schedule:
+    - cron: "0 6 * * *"      # nightly 06:00 UTC — full matrix vs live prod
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Base URL to test"
+        default: "https://os.meok.ai"
+
+env:
+  BASE_URL: ${{ github.event.inputs.base_url || 'https://os.meok.ai' }}
+
+jobs:
+  smoke:
+    name: API smoke (fast)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run API smoke suite
+        run: bash meok-os-deploy/e2e/smoke.sh "$BASE_URL"
+
+  playwright:
+    name: Visual · responsive · apps · cross-browser
+    runs-on: ubuntu-latest
+    if: github.event_name != 'push'   # heavy: nightly + manual only, not every push
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Install Playwright + browsers
+        working-directory: meok-os-deploy/e2e
+        run: |
+          npm init -y >/dev/null 2>&1 || true
+          npm i playwright@latest --no-audit --no-fund
+          npx playwright install --with-deps chromium webkit firefox
+      - name: Visual/interaction
+        working-directory: meok-os-deploy/e2e
+        run: node visual.cjs "$BASE_URL"
+      - name: Responsive (all pages × mobile+tablet)
+        working-directory: meok-os-deploy/e2e
+        run: node responsive.cjs "$BASE_URL"
+      - name: All 39 apps
+        working-directory: meok-os-deploy/e2e
+        run: node apps.cjs "$BASE_URL"
+      - name: Real user-journey (functional)
+        working-directory: meok-os-deploy/e2e
+        run: node journey.cjs "$BASE_URL"
+      - name: Cross-browser (WebKit + Firefox)
+        working-directory: meok-os-deploy/e2e
+        run: node xbrowser.cjs "$BASE_URL"

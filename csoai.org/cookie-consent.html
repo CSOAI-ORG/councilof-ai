@@ -1,0 +1,36 @@
+# Cookie consent banner — sovereign
+# Place this snippet just before </body> in every public page
+
+<script>
+(function() {
+  // SOV3 sovereign cookie consent
+  var CONSENT_KEY = 'sov3_consent';
+  var consent = localStorage.getItem(CONSENT_KEY);
+  if (consent) return; // already consented
+
+  var banner = document.createElement('div');
+  banner.id = 'sov3-cookie-banner';
+  banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,39,0.95);color:#fff;padding:20px;z-index:99999;border-top:2px solid #fbbf24;font-family:monospace;';
+  banner.innerHTML = '' +
+    '<div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">' +
+    '  <div style="flex:1;min-width:300px;">' +
+    '    <strong style="color:#fbbf24;">🜏 Sovereign cookie consent</strong><br>' +
+    '    <span style="font-size:0.85rem;opacity:0.85;">We use minimal cookies for sovereign analytics. SIGIL chain audit. No foreign tracking.</span>' +
+    '  </div>' +
+    '  <div style="display:flex;gap:8px;">' +
+    '    <button id="sov3-cookie-accept" style="background:#10b981;color:#fff;border:none;padding:8px 16px;cursor:pointer;border-radius:4px;">Accept</button>' +
+    '    <button id="sov3-cookie-decline" style="background:transparent;color:#06b6d4;border:1px solid #06b6d4;padding:8px 16px;cursor:pointer;border-radius:4px;">Decline</button>' +
+    '  </div>' +
+    '</div>';
+  document.body.appendChild(banner);
+
+  document.getElementById('sov3-cookie-accept').onclick = function() {
+    localStorage.setItem(CONSENT_KEY, JSON.stringify({analytics: true, ts: Date.now()}));
+    banner.remove();
+  };
+  document.getElementById('sov3-cookie-decline').onclick = function() {
+    localStorage.setItem(CONSENT_KEY, JSON.stringify({analytics: false, ts: Date.now()}));
+    banner.remove();
+  };
+})();
+</script>

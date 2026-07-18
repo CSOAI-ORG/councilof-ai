@@ -1,0 +1,40 @@
+name: Publish to Smithery
+
+on:
+  release:
+    types: [published]
+
+permissions: {}
+
+jobs:
+  publish:
+    name: Publish MCP Server to Smithery
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      attestations: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+
+      - name: Publish to Smithery
+        id: smithery_publish
+        env:
+          SMITHERY_API_KEY: ${{ secrets.SMITHERY_API_KEY }}
+        run: |
+          npx @smithery/cli mcp publish "https://github.com/${{ github.repository }}" -n nicholastempleman/${{ github.event.repository.name }} --json
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@520d128f165991a6c774bcb264f323e3d70747f4 # v2.2.0
+        with:
+          subject-name: ${{ github.repository }}
+          subject-digest: sha256:${{ github.sha }}
+          push-to-registry: false

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+
+[project]
+name = "meek_design_bom_mcp"
+version = "1.0.0"
+description = "MEEK Design BOM MCP — generates the Bill of Materials for orbs + spine + humanoid + finds suppliers. CRITICAL. MIT-licensed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "MEOK AI Labs", email = "nicholas@csoai.org"}]
+keywords = ["mcp", "meek", "defoneos", "project-aurum", "design", "manufacturing", "3d-printing", "sovereign", "uk", "open-source"]
+classifiers = ["Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = ["mcp>=1.0.0", "numpy>=1.24"]
+
+[project.urls]
+Homepage = "https://meok.ai/os"
+Repository = "https://github.com/CSOAI-ORG/meek-design-bom-mcp"
+
+[project.scripts]
+meek-design-bom-mcp = "meek_design_bom_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["meek_design_bom_mcp"]

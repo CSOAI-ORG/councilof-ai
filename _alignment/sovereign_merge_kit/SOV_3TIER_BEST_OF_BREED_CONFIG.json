@@ -1,0 +1,71 @@
+{
+  "principle": "Framework 101: best-of-breed primitive per aspect, sized into 3 tiers. Selection only - training is GPU-gated.",
+  "tiers": {
+    "sov3_small": {
+      "base": "Qwen3-0.6B (Apache-2.0)",
+      "runs_on": "MacBook via MLX no-GPU",
+      "role": "public, edge, free tier"
+    },
+    "sov33_medium": {
+      "base": "Qwen3-4B / AgentWorld-35B-A3B",
+      "runs_on": "128GB Mac or cloud",
+      "role": "founder build tier"
+    },
+    "sov333_large": {
+      "base": "DeepSeek-V4 / GLM-5.2 (wrapped)",
+      "runs_on": "hosted / Colibri-streamed",
+      "role": "full-T governed"
+    }
+  },
+  "per_aspect_best_of_breed": {
+    "world_model": {
+      "pick": "JEPA (facebookresearch/jepa)",
+      "status": "RUN toy-scale owem-world; real = wire JEPA arch [GPU]"
+    },
+    "reasoning": {
+      "pick": "DeepSeek-R1 distillation",
+      "status": "LEAD - distill target, needs GPU"
+    },
+    "moe_arch": {
+      "pick": "DeepSeek-V3/V4 (103K stars)",
+      "status": "parity via wrap [GPU]"
+    },
+    "rag_embeddings": {
+      "pick": "BAAI/bge-m3 (35M dl)",
+      "status": "GAP - adopt as sovereign RAG embed (CPU-addable)"
+    },
+    "merge": {
+      "pick": "MergeKit TIES",
+      "status": "RUN config ready (sov33_merge_recipe.yml)"
+    },
+    "streaming": {
+      "pick": "Colibri SSD expert-stream",
+      "status": "RUN mechanism; real weights [GPU]"
+    },
+    "safety": {
+      "pick": "care-floor + conformal veto (ours)",
+      "status": "RUN - SOV leads"
+    },
+    "attestation": {
+      "pick": "Ed25519 SIGIL (ours)",
+      "status": "RUN - SOV leads"
+    },
+    "memory": {
+      "pick": "governed SIGIL-chained bridge (ours)",
+      "status": "RUN - SOV differentiator"
+    }
+  },
+  "honest": "Each 'pick' is a real best-of-breed from the 1,627-model survey. Wiring the CPU-addable ones (BGE-M3 RAG, merge config) is doable now; the GPU-gated ones (JEPA arch at scale, R1 distill, real MoE weights) need the hardware. NO model was trained or 'eaten' - this is the selection layer of Framework 101.",
+  "survey_evidence_verified_2026-07-14": {
+    "source_read": "research/SOV33_TOP100_SUMMARY_2026-07-14.md (opened + reconciled)",
+    "corroboration": {
+      "bge-m3": "#2 top-100 (35M dl) \u2014 RAG embeddings; 12 hits in intel",
+      "Qwen3-0.6B": "#6 top-100 (27M dl) \u2014 SOV3 base",
+      "DeepSeek-R1": "#7 top-100 (8.9M dl, 13K likes) \u2014 reasoning; 129 hits",
+      "DeepSeek-V3": "103K GitHub stars \u2014 MoE arch; 55 hits",
+      "JEPA": "facebookresearch/jepa listed under World Models; 153 hits",
+      "MergeKit": "present in intel; 10 hits"
+    },
+    "honest_note": "picks reconciled against the summary AFTER an auditor flagged the earlier claim was unverified in-window; the leaderboard JSON has a nested schema my quick scan didn't parse (0 entries) but the .md summary confirms every pick."
+  }
+}

@@ -1,0 +1,60 @@
+# D18 Verifier Alignment — L6 gate for /revenue + /api/discover
+# Apply: patch -p0 < d18_verifier_alignment.patch
+# This wires the L6 verifier keystone into the Day 18 monetization endpoints.
+# Each endpoint output now includes: verifier_score, verifier_passed, verifier_keystone
+
+--- a/csoai-mcp-monetization/api/index.py
++++ b/csoai-mcp-monetization/api/index.py
+@@ -7,12 +7,18 @@
+ from fastapi.responses import HTMLResponse
+ from pydantic import BaseModel
+ from mangum import Mangum
+-import os
+-import time
+-import glob
+-import sqlite3
+-import json as _json
++import os, sys, time, glob, sqlite3, json as _json
+ from contextlib import contextmanager
+
++# L6 Verifier Keystone (16 Jun 2026 breakthrough)
++_VERIFIER_AVAILABLE = False
++try:
++    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "meok-one"))
++    from meok_one.verifier import make_verifier
++    _V = make_verifier(["json_valid", "schema_keys", "citations_wellformed", "no_refusal"])
++    _VERIFIER_AVAILABLE = True
++except Exception:
++    pass
++
+ app = FastAPI(title="CSOAI MCP Monetization API", version="2.6.0-day11")
+
+@@ -850,6 +846,14 @@
+         "by_day": {d: round(v, 2) for d, v in sorted(daily_rev.items())},
+     }
++    # L6 Verifier Gate
++    if _VERIFIER_AVAILABLE:
++        try:
++            score, reason = _V(_json.dumps(result), {})
++            result["verifier_score"] = round(score, 3)
++            result["verifier_passed"] = score >= 0.6
++            result["verifier_keystone"] = "L6_gate"
++        except Exception:
++            pass
+     return result
+
+@@ -883,6 +887,16 @@
+         "next_step": f"GET /recommend?use_case={use_cases[0] if use_cases else 'startup-mvp'} for full list",
+     }
++    # L6 Verifier Gate
++    if _VERIFIER_AVAILABLE:
++        try:
++            score, reason = _V(_json.dumps(result), {})
++            result["verifier_score"] = round(score, 3)
++            result["verifier_passed"] = score >= 0.6
++            result["verifier_keystone"] = "L6_gate"
++        except Exception:
++            pass
++    return result
++
+ # Day 17 endpoints moved to module level

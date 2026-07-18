@@ -1,0 +1,79 @@
+{
+  "issued_utc": "2026-06-16T05:20:00+00:00",
+  "issuer": "MEOK AI Labs",
+  "keystone": "https://meok-attestation-api.vercel.app",
+  "tier": "free",
+  "warm_intro_dossiers": [
+    {
+      "rank": 1,
+      "target": "Monzo",
+      "email": "press@monzo.com",
+      "entity": "monzo-ml-credit-v3",
+      "regulation": "EU-AI-Act-Article-50",
+      "cert_id": "MEOK-EUAIAC-4A8CD071EFFB",
+      "score_percent": 0.0,
+      "tier": "free",
+      "rationale": "ML credit-scoring model is in-scope of EU AI Act Article 50 (2 Aug 2026). High-risk credit decisioning.",
+      "draft_file": "01_MONZO.txt",
+      "ask": "15-min call to discuss Monzo's Article 50 readiness before 2 Aug",
+      "price_target": "£199/mo Pro (or £999 Article 50 Kit)"
+    },
+    {
+      "rank": 2,
+      "target": "Cera Care",
+      "email": "hello@cera-care.co.uk",
+      "entity": "cera-care-allocator-v2",
+      "regulation": "EU-AI-Act-Article-50",
+      "cert_id": "MEOK-EUAIAC-A87A8A434788",
+      "score_percent": 0.0,
+      "tier": "free",
+      "rationale": "Care-coordination AI is in-scope of EU AI Act Article 50. CQC and ICO are watching.",
+      "draft_file": "02_CERA.txt",
+      "ask": "15-min call to demo care-membrane-mcp",
+      "price_target": "£1,495 onboarding special (first 5 social-care providers)"
+    },
+    {
+      "rank": 3,
+      "target": "Accurx",
+      "email": "hello@accurx.com",
+      "entity": "accurx-clinical-messaging",
+      "regulation": "EU-AI-Act-Article-50",
+      "cert_id": "MEOK-EUAIAC-A23AD19FA535",
+      "score_percent": 0.0,
+      "tier": "free",
+      "rationale": "Clinical messaging + AI triage sits at NHS DTAC + MHRA SaMD + EU AI Act Article 50 intersection.",
+      "draft_file": "03_ACCURX.txt",
+      "ask": "15-min call before 2 Aug",
+      "price_target": "£199/mo Pro (or £999 Article 50 Kit)"
+    },
+    {
+      "rank": 4,
+      "target": "Onfido",
+      "email": "press@onfido.com",
+      "entity": "onfido-biometric-v3",
+      "regulation": "EU-AI-Act-Article-50",
+      "cert_id": "MEOK-EUAIAC-1F45F6C81472",
+      "score_percent": 0.0,
+      "tier": "free",
+      "rationale": "Biometric identity verification faces EU AI Act + NIST FRVT/TOP-10 + UK ICO biometric guidance.",
+      "draft_file": "04_ONFIDO.txt",
+      "ask": "15-min call this week",
+      "price_target": "£1,499/mo Enterprise (BFT-council-backed)"
+    },
+    {
+      "rank": 5,
+      "target": "Faculty AI",
+      "email": "hello@faculty.ai",
+      "entity": "faculty-frontier-safety-eval",
+      "regulation": "EU-AI-Act-Article-50",
+      "cert_id": "MEOK-EUAIAC-F3756E8EEFE4",
+      "score_percent": 0.0,
+      "tier": "free",
+      "rationale": "AISI-aligned frontier safety work needs sovereign UK attestation distinct from US-cloud providers.",
+      "draft_file": "05_FACULTY.txt",
+      "ask": "15-min call this week",
+      "price_target": "£1,499/mo Enterprise"
+    }
+  ],
+  "notes": "All 5 certs are FREE tier (UNVERIFIED). They are sufficient as warm-intro lead magnets. Pro/Enterprise tiers unlock verifiable Ed25519 signatures + public verify URLs that auditors can independently validate. The cert_id is the unique identifier; verify endpoints at https://meok-attestation-api.vercel.app/verify/<cert_id> are Pro-only."
+}

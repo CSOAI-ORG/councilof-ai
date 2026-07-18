@@ -1,0 +1,46 @@
+# CSOAI.org robots.txt
+# Public. Auditable. Sovereign. · 100% UK soil
+
+User-agent: *
+Allow: /
+
+# AI Crawlers - EXPLICITLY ALLOWED
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sensitive areas
+Disallow: /api/internal/
+Disallow: /admin/
+Disallow: /.well-known/private/
+Disallow: /tmp/
+Disallow: /*.log$
+Disallow: /*.secret$
+
+# Sitemap
+Sitemap: https://csoai.org/sitemap.xml
+
+# AI Agent discovery
+# LLMs.txt: https://csoai.org/llms.txt
+# Agent card: https://csoai.org/agent.json
+# AEO/GEO canonical: https://csoai.org/ai.txt

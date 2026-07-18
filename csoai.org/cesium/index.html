@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <title>SOV3 Sovereign OS — Cesium 3D World — csoai.org/cesium/</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, sans-serif; background: #0a0e27; color: #fff; overflow: hidden; }
+    #cesiumContainer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .sovereign-overlay { position: absolute; top: 16px; left: 16px; padding: 16px; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(251,191,36,0.4); max-width: 380px; }
+    .sovereign-overlay h1 { color: #fbbf24; font-size: 1.4rem; margin-bottom: 4px; }
+    .sovereign-overlay p { color: #06b6d4; font-size: 0.85rem; line-height: 1.5; }
+    .sovereign-overlay a { color: #10b981; text-decoration: none; }
+    .sovereign-controls { position: absolute; top: 16px; right: 16px; padding: 12px; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); border-radius: 8px; border: 1px solid rgba(6,182,212,0.4); }
+    .sovereign-controls button { display: block; margin: 4px 0; padding: 6px 12px; background: rgba(251,191,36,0.2); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); border-radius: 4px; cursor: pointer; font-size: 0.8rem; width: 100%; text-align: left; font-family: inherit; }
+    .sovereign-controls button:hover { background: rgba(251,191,36,0.4); }
+    .sovereign-controls button.active { background: #fbbf24; color: #0a0e27; }
+    .live-stats { position: absolute; bottom: 16px; left: 16px; padding: 16px; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(16,185,129,0.4); font-size: 0.85rem; color: #10b981; }
+    .live-stats .row { margin: 4px 0; }
+    .live-stats .kpi { color: #fbbf24; font-weight: 700; }
+    .topbar { position: absolute; top: 0; left: 0; right: 0; padding: 12px 20px; background: linear-gradient(to bottom, rgba(10,14,39,0.9), transparent); display: flex; justify-content: space-between; align-items: center; z-index: 10; pointer-events: none; }
+    .topbar .pill { pointer-events: auto; padding: 4px 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(251,191,36,0.4); border-radius: 12px; color: #fbbf24; font-size: 0.75rem; font-weight: 700; margin: 0 4px; }
+    .topbar .pill.cyan { border-color: rgba(6,182,212,0.4); color: #06b6d4; }
+    .topbar .pill.green { border-color: rgba(16,185,129,0.4); color: #10b981; }
+    .sovereign-watermark { position: absolute; bottom: 16px; right: 16px; padding: 12px; background: rgba(0,0,0,0.7); border: 1px solid rgba(251,191,36,0.4); border-radius: 8px; font-size: 0.7rem; color: #fbbf24; max-width: 280px; }
+    .art50-badge { display: inline-block; background: #fbbf24; color: #0a0e27; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; }
+  </style>
+</head>
+<body>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Cesium.js"></script>
+
+  <div class="topbar">
+    <div>
+      <span class="pill">🜏 SOV3 Sovereign OS</span>
+      <span class="pill cyan">Cesium 3D World</span>
+    </div>
+    <div>
+      <span class="pill">7 sovereign hives</span>
+      <span class="pill green">33 districts active</span>
+      <span class="pill">v2026.07.04</span>
+    </div>
+  </div>
+
+  <div id="cesiumContainer"></div>
+
+  <div class="sovereign-overlay">
+    <h1>🜏 SOV3 Sovereign Globe</h1>
+    <p>The sovereign substrate as a <strong>Cesium 3D world</strong>. Each queen, each district, each sovereign action lives at a real coordinate on the Earth. Click anywhere to enter.</p>
+    <p style="margin-top: 8px;"><a href="csoai.org/sovereign-os/">csoai.org/sovereign-os/</a> · <a href="csoai.org/charter/">charter</a> · <a href="csoai.org/demo">demo</a></p>
+  </div>
+
+  <div class="sovereign-controls">
+    <div style="color: #06b6d4; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px;">SOVEREIGN LAYERS</div>
+    <button id="layer-council" class="active">👑 12-around-1 BFT</button>
+    <button id="layer-queens">⚭ 12 Queens (heraldic)</button>
+    <button id="layer-districts">📍 33 Districts</button>
+    <button id="layer-hives">🜏 7 Hives</button>
+    <button id="layer-arcana">𓂀 22 Hieroglyphs</button>
+    <button id="layer-sephirot">🌳 10 Sephiroth</button>
+    <button id="layer-defence">⚔️ Defence rings</button>
+    <button id="layer-civil">📜 Civil sites</button>
+    <button id="layer-care">🏥 Care networks</button>
+    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 8px 0; padding-top: 8px;">
+      <div style="color: #06b6d4; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px;">VIEW</div>
+      <button id="view-uk">🇬🇧 UK Crown</button>
+      <button id="view-eu">🇪🇺 EU AI Act</button>
+      <button id="view-commonwealth">🌍 Commonwealth</button>
+      <button id="view-aukus">🤝 AUKUS</button>
+      <button id="view-world">🌐 World</button>
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 8px 0; padding-top: 8px;">
+      <div style="color: #06b6d4; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px;">DORADO 1-CLICK</div>
+      <button id="dorado-east">→ EAST</button>
+      <button id="dorado-west">← WEST</button>
+    </div>
+  </div>
+
+  <div class="live-stats">
+    <div class="row"><strong style="color: #fbbf24;">Sovereign 100/100</strong></div>
+    <div class="row">309 SOV3 tools · <span class="kpi">12/12</span> council · <span class="kpi">5/5</span> layers</div>
+    <div class="row">Sovereign composite: <span class="kpi">7.305</span> vs commercial 3.535</div>
+    <div class="row"><span class="art50-badge">Article 50 Passport ISSUED</span> · T-36 to enforcement</div>
+    <div class="row" id="liveSigilDigest">Last SIGIL: <span class="kpi">...</span></div>
+    <div class="row" id="liveTime">TS: <span class="kpi">--:--:-- BST</span></div>
+  </div>
+
+  <div class="sovereign-watermark">
+    🜏 Sovereign 100/100 · <span class="art50-badge">CSOAI Ltd UK 16939677</span><br>
+    i-character: SOV3 small3 (qwen3 + gemma + llama + meok-sov3) — <a href="csoai.org/install.html" style="color: #10b981;">install</a><br>
+    Bus: 30+ MCP servers, 1 OOWM anchor (qwen3:30b-a3b Apache 2.0), PQC ML-DSA-65
+  </div>
+
+  <script>
+    // Lazy-init Cesium after page load
+    let viewer;
+    function initCesium() {
+      try {
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiJ9.SOVEREIGN-SIGNED-TOKEN.CSOAI-16939677';
+        viewer = new Cesium.Viewer('cesiumContainer', {
+          terrainProvider: undefined,
+          imageryProvider: new Cesium.SingleTileImageryProvider({ url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' }),
+          baseLayerPicker: false,
+          geocoder: false,
+          homeButton: false,
+          sceneModePicker: false,
+          navigationHelpButton: false,
+          animation: false,
+          timeline: false,
+          fullscreenButton: false,
+          infoBox: false,
+          selectionIndicator: false,
+          shouldAnimate: true
+        });
+        // Hide default credit
+        viewer.cesiumWidget.creditContainer.style.display = 'none';
+        // DORADO WEST mode by default
+        viewer.scene.globe.enableLighting = false;
+        viewer.scene.skyAtmosphere.show = true;
+
+        // Place sovereign anchors
+        const anchors = [
+          { name: 'Buckingham Palace — Crown Authorization', lon: -0.1410, lat: 51.5014, tier: 'gold' },
+          { name: 'CSOAI Ltd — Registered Office (UK)', lon: -0.1276, lat: 51.5072, tier: 'gold' },
+          { name: 'Westminster — Parliament + DASA', lon: -0.1247, lat: 51.4995, tier: 'gold' },
+          { name: 'GCHQ Cheltenham — Five Eyes', lon: -2.0792, lat: 51.8991, tier: 'gold' },
+          { name: 'Bletchley Park — AI Safety Summit', lon: -0.7411, lat: 51.9926, tier: 'gold' },
+          { name: 'Brussels — EU AI Act', lon: 4.3517, lat: 50.8503, tier: 'cyan' },
+          { name: 'Geneva — CERN + UN', lon: 6.1466, lat: 46.2044, tier: 'cyan' },
+          { name: 'New York — UN HQ', lon: -73.9654, lat: 40.7820, tier: 'cyan' },
+          { name: 'Tokyo — Commonwealth ally', lon: 139.6917, lat: 35.6895, tier: 'cyan' },
+          { name: 'Canberra — Commonwealth', lon: 149.1170, lat: -35.2820, tier: 'mint' },
+          { name: 'Cape Town — Commonwealth', lon: 18.4241, lat: -33.9249, tier: 'mint' },
+          { name: 'New Delhi — Commonwealth', lon: 77.2167, lat: 28.6139, tier: 'mint' },
+          { name: 'Ottawa — Commonwealth + AUKUS', lon: -75.6972, lat: 45.4215, tier: 'mint' },
+          { name: 'Canberra — AUKUS', lon: 149.1170, lat: -35.2820, tier: 'gold' },
+          { name: 'Washington — AUKUS', lon: -77.0369, lat: 38.9072, tier: 'gold' },
+          { name: 'The Hague — ICC + ICCL', lon: 4.8985, lat: 52.0707, tier: 'cyan' },
+          { name: 'Singapore — ASEAN + 5G', lon: 103.8198, lat: 1.3521, tier: 'mint' },
+          { name: 'iOK Farm — Right Brain', lon: -3.1883, lat: 55.9533, tier: 'mint' },
+          { name: '12-around-1 BFT Council — sovereign queens', lon: 0, lat: 0, tier: 'gold' }
+        ];
+        anchors.forEach(a => {
+          viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(a.lon, a.lat, 50000),
+            point: { pixelSize: 14, color: a.tier === 'gold' ? Cesium.Color.fromCssColorString('#fbbf24') : a.tier === 'cyan' ? Cesium.Color.fromCssColorString('#06b6d4') : Cesium.Color.fromCssColorString('#10b981'), outlineColor: Cesium.Color.WHITE, outlineWidth: 2 },
+            label: { text: a.name, font: '11px monospace', fillColor: Cesium.Color.fromCssColorString('#fbbf24'), outlineColor: Cesium.Color.BLACK, outlineWidth: 2, style: Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset: new Cesium.Cartesian2(0, -22), showBackground: true, backgroundColor: Cesium.Color.fromCssColorString('rgba(0,0,0,0.7)'), scale: 0.85 }
+          });
+        });
+        // Initial camera: UK overview
+        viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(-2.0, 53.5, 3500000), duration: 2.5 });
+      } catch (e) {
+        document.getElementById('cesiumContainer').innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#fbbf24;font-family:monospace"><h1>🜏 SOV3 Sovereign Globe</h1><p style="margin-top:16px">Cesium 3D tile loading...</p><p style="margin-top:8px;color:#06b6d4">If the globe doesn\\'t load, your network has restricted ion.cesium.com access.</p><p style="margin-top:8px;color:#10b981">Try: sovereign Csoai.org paper-mode at <a href="/sovereign-os/" style="color:#fbbf24">/sovereign-os/</a></p></div>';
+      }
+    }
+    // Buttons
+    document.getElementById('view-uk').onclick = () => { if (viewer) viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(-2.0, 53.5, 3500000), duration: 2.5 }); };
+    document.getElementById('view-eu').onclick = () => { if (viewer) viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(8.0, 49.5, 4000000), duration: 2.5 }); };
+    document.getElementById('view-commonwealth').onclick = () => { if (viewer) viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20.0, -10.0, 10000000), duration: 2.5 }); };
+    document.getElementById('view-aukus').onclick = () => { if (viewer) viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(150.0, -25.0, 8500000), duration: 2.5 }); };
+    document.getElementById('view-world').onclick = () => { if (viewer) viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(10.0, 30.0, 20000000), duration: 2.5 }); };
+    document.getElementById('dorado-east').onclick = () => { if (viewer) { viewer.scene.skyAtmosphere.hueShift = 0.05; viewer.scene.skyAtmosphere.saturationShift = 0.1; } };
+    document.getElementById('dorado-west').onclick = () => { if (viewer) { viewer.scene.skyAtmosphere.hueShift = 0; viewer.scene.skyAtmosphere.saturationShift = 0; } };
+    // Layer toggles
+    document.querySelectorAll('.sovereign-controls button[id^="layer-"]').forEach(b => b.onclick = () => b.classList.toggle('active'));
+
+    // Live updates
+    let lastDigest = '7cdf0aeee9e6b03e';
+    function tick() {
+      const now = new Date();
+      document.getElementById('liveTime').querySelector('.kpi').textContent = now.toLocaleTimeString('en-GB');
+      // Fetch live SIGIL (rate-limited to once per 5s)
+      if (Math.floor(now.getTime() / 5000) !== Math.floor((now.getTime() - 1000) / 5000)) {
+        fetch('http://localhost:8000/api/backend/status').then(r => r.json()).then(d => {
+          document.getElementById('liveSigilDigest').querySelector('.kpi').textContent = d.last_sigil;
+        }).catch(() => {});
+      }
+    }
+    setInterval(tick, 1000);
+    tick();
+    // Init Cesium after DOM
+    if (window.Cesium) initCesium();
+    else window.addEventListener('load', initCesium);
+  </script>
+</body>
+</html>

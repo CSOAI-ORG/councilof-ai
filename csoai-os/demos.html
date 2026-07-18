@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>CSOAI Demo Video Player — 3 × 2-min videos</title>
+<meta name="description" content="3 live demo videos: COBOL wire-settlement + signed Art.12 audit. BFT 33-council vote. In-browser OSCAL verifier. 100/100 A+++++ offline-verifiable.">
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--border:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--gold:#fbbf24;--blue:#3b82f6;--green:#10b981;--purple:#a855f7}*{box-sizing:border-box}body{font:14px/1.6 Inter,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}.wrap{max-width:980px;margin:0 auto}h1{font-size:28px;margin:0 0 4px}h1 .a{color:var(--gold)}.sub{color:var(--muted);font-size:13px;margin-bottom:24px}.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600}.badge.a4{background:linear-gradient(90deg,var(--gold),#f97316);color:#000}.stage{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0;margin:24px 0;position:relative;overflow:hidden;aspect-ratio:16/9;max-height:540px;background:#000;display:flex;align-items:center;justify-content:center}.stage video{width:100%;height:100%;object-fit:contain}.stage .placeholder{padding:60px 24px;text-align:center;color:var(--muted)}.stage .placeholder .big{font-size:64px;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}@media(max-width:720px){.grid{grid-template-columns:1fr}}.card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px;cursor:pointer;transition:.15s;border-top:3px solid var(--blue)}.card.active{border-top-color:var(--gold);background:#1a1108}.card h3{margin:0 0 4px;font-size:14px;color:var(--text)}.card small{font-size:10px;color:var(--muted)}button{background:var(--gold);color:#000;border:0;padding:8px 14px;border-radius:4px;font-weight:600;cursor:pointer;margin:8px 0}.footer{text-align:center;color:var(--muted);font-size:10px;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
+</style></head>
+<body><div class="wrap">
+
+<h1>🎬 CSOAI Live Demos</h1>
+<p class="sub"><span class="badge a4">8 protocols · 100/100 A+++++</span> 3 × 2-min videos · all real CSOAI infrastructure · offline-verifiable proofs</p>
+
+<div class="stage" id="stage">
+  <div class="placeholder">
+    <div class="big">🎬</div>
+    <h2>3 Demos, 2 Minutes Each</h2>
+    <p>Pick a video from the cards below to start.</p>
+    <p>Each demonstrates a real CSOAI capability: COBOL→audit, BFT council, OSCAL verifier.</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card active" id="card-1" onclick="play(1)">
+    <h3>1. COBOL wire + signed Art.12 audit</h3>
+    <small>2:00 · cobol-bridge-demo.mp4 · Tue 30 Jun</small>
+  </div>
+  <div class="card" id="card-2" onclick="play(2)">
+    <h3>2. BFT 33-council vote simulation</h3>
+    <small>2:00 · bft-council-demo.mp4 · Tue 30 Jun</small>
+  </div>
+  <div class="card" id="card-3" onclick="play(3)">
+    <h3>3. In-browser OSCAL verifier</h3>
+    <small>2:00 · oscal-verifier-demo.mp4 · Wed 1 Jul</small>
+  </div>
+</div>
+
+<p>Each video is a real run on a real CSOAI service. No mocks. The OSCAL demo is 100% in-browser — open DevTools and watch zero network calls.</p>
+
+<a href="catapult.html" class="sub" style="display:block;margin-top:16px">← back to catapult</a>
+
+<div class="footer">© 2026 MEOK AI Labs · CSOAI Ltd (UK 16939677) · <a href="https://github.com/CSOAI-ORG">github.com/CSOAI-ORG</a> · Layer-0 A+++++ · 100/100</div>
+
+</div>
+<script>
+const VIDEOS = {
+  1: 'assets/cobol-bridge-demo.mp4',
+  2: 'assets/bft-council-demo.mp4',
+  3: 'assets/oscal-verifier-demo.mp4',
+};
+function play(n) {
+  // Highlight active card
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('card-' + i).classList.remove('active');
+  }
+  document.getElementById('card-' + n).classList.add('active');
+  // Render video
+  const stage = document.getElementById('stage');
+  stage.innerHTML = '<video controls autoplay src="' + VIDEOS[n] + '" poster=""></video>';
+}
+</script>
+</body></html>

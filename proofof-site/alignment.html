@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐉 THE ALIGNMENT — Sovereign + DEFONEOS · CSOAI · Sat 4 Jul 2026 09:00 BST</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,system-ui,monospace;background:#02060f;color:#e5e5e5;line-height:1.6;padding-bottom:80px}
+  .nav{background:rgba(2,6,15,0.95);padding:0.75rem 1rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(251,191,36,0.3);position:sticky;top:0;z-index:10}
+  .nav a{color:#fbbf24;text-decoration:none;font-size:.85rem}
+  .nav .brand{color:#fbbf24;font-weight:bold;font-size:1.1rem}
+  .nav .spacer{flex:1}
+  .hero{background:radial-gradient(ellipse at center,rgba(45,27,78,0.4) 0%,#000 100%);padding:4rem 2rem;text-align:center;border-bottom:2px solid #fbbf24;position:relative;overflow:hidden}
+  .hero h1{color:#fbbf24;font-size:3rem;margin-bottom:.5rem;text-shadow:0 0 50px #fbbf24;animation:hero-glow 3s ease-in-out infinite}
+  @keyframes hero-glow{0%,100%{text-shadow:0 0 50px #fbbf24}50%{text-shadow:0 0 100px #fbbf24,0 0 150px #f59e0b}}
+  .hero p{color:#aaa;font-size:1.2rem;max-width:800px;margin:0 auto 1rem}
+  .container{max-width:1300px;margin:0 auto;padding:0 1rem}
+  /* Two-pillar layout */
+  .two-pillars{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem 0}
+  .pillar{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;border:2px solid;position:relative;overflow:hidden}
+  .pillar.sovereign{border-color:#fbbf24}
+  .pillar.defoneos{border-color:#10b981}
+  .pillar .pillar-header{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
+  .pillar .pillar-header .icon{font-size:2.5rem}
+  .pillar h2{color:inherit;margin:0;font-size:1.5rem}
+  .pillar.sovereign h2{color:#fbbf24}
+  .pillar.defoneos h2{color:#10b981}
+  .pillar .pillar-tag{display:inline-block;background:rgba(255,255,255,0.1);padding:.2rem .5rem;border-radius:4px;font-size:.65rem;color:#aaa;margin-left:.5rem}
+  .pillar p{color:#aaa;font-size:.85rem;margin-bottom:1rem}
+  .pillar ul{list-style:none;padding:0;margin-bottom:1rem}
+  .pillar ul li{padding:.3rem 0;color:#aaa;font-size:.78rem;border-bottom:1px dotted #222}
+  .pillar ul li strong{color:#fbbf24}
+  .pillar.defoneos ul li strong{color:#10b981}
+  .pillar .pillar-link{display:inline-block;background:#fbbf24;color:#000;padding:.5rem 1rem;border-radius:6px;text-decoration:none;font-weight:bold;font-size:.8rem;margin:.3rem .3rem 0 0}
+  .pillar.defoneos .pillar-link{background:#10b981}
+  /* Stats */
+  .stats-bar{background:linear-gradient(135deg,#1a1a1a 0%,#1a3a1a 100%);padding:2rem;border-radius:12px;margin:2rem auto;max-width:1100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+  .stat{text-align:center;padding:.5rem}
+  .stat .val{color:#fbbf24;font-size:1.8rem;font-weight:bold}
+  .stat.green .val{color:#10b981}
+  .stat.blue .val{color:#60a5fa}
+  .stat.purple .val{color:#8b5cf6}
+  .stat.pink .val{color:#ec4899}
+  .stat .lbl{color:#888;font-size:.7rem;margin-top:.3rem}
+  /* Section */
+  .section{background:#1a1a1a;padding:2rem;border-radius:12px;margin:2rem 0;border-left:4px solid #fbbf24}
+  .section.green{border-left-color:#10b981}
+  .section h2{color:#fbbf24;margin-bottom:1rem}
+  .section.green h2{color:#10b981}
+  /* Quick links */
+  .quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.5rem;margin:1rem 0}
+  .quick-links a{background:#0a0a0a;padding:.7rem;border-radius:6px;border-left:3px solid #fbbf24;color:#fbbf24;text-decoration:none;font-size:.78rem;font-family:monospace;transition:all .2s;display:block}
+  .quick-links a:hover{background:#fbbf24;color:#000;transform:translateX(2px)}
+  .quick-links a.green{border-left-color:#10b981}
+  .quick-links a.green:hover{background:#10b981;color:#000}
+  /* Unified */
+  .unified{background:linear-gradient(135deg,#1a1a1a 0%,#0a3a2e 100%);padding:2rem;border-radius:12px;margin:2rem 0;border:2px solid #fbbf24}
+  .unified h2{color:#fbbf24;margin-bottom:1rem;text-align:center}
+  .unified-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+  .flow-step{background:rgba(0,0,0,0.5);padding:1rem;border-radius:8px;text-align:center;border:1px solid #10b981}
+  .flow-step .num{color:#10b981;font-size:1.5rem;font-weight:bold;margin-bottom:.3rem}
+  .flow-step h4{color:#fbbf24;font-size:.85rem;margin-bottom:.3rem}
+  .flow-step p{color:#aaa;font-size:.7rem}
+  .flow-arrow{text-align:center;color:#10b981;font-size:1.5rem;margin:.5rem 0}
+  /* Doctrine */
+  .doctrine{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:2rem;border-radius:12px;max-width:1100px;margin:2rem auto;border:1px solid #fbbf24;text-align:center}
+  .doctrine blockquote{font-size:1.3rem;color:#fbbf24;font-style:italic;margin:1rem 0;font-weight:bold;line-height:1.5}
+  /* Countdown */
+  .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:800px;margin:2rem auto}
+  .cd-unit{background:linear-gradient(135deg,#1a1a1a 0%,#2d1b4e 100%);padding:1.2rem;border-radius:12px;text-align:center;border:1px solid #fbbf24}
+  .cd-unit .val{color:#fbbf24;font-size:2.5rem;font-weight:bold;font-family:monospace}
+  .cd-unit .lbl{color:#888;font-size:.7rem;margin-top:.3rem}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand">🐉 MEOK OS</a>
+  <a href="/">Home</a>
+  <a href="/hub.html">Hub</a>
+  <a href="/alignment.html">Alignment</a>
+  <a href="/launch.html">Launch</a>
+  <a href="/sovereign-index.html">Index</a>
+  <a href="/api-health.html">Health</a>
+  <span class="spacer"></span>
+  <a href="/start.html" style="background:#fbbf24;color:#000;padding:.3rem 0.7rem;border-radius:6px;font-weight:bold">Start</a>
+</nav>
+
+<section class="hero">
+  <h1>🐉 THE ALIGNMENT</h1>
+  <p>Sovereign substrate + DEFONEOS defence AI. One empire. One doctrine. One dragon.</p>
+  <p style="color:#10b981;font-size:1rem;font-weight:bold;margin-top:1rem">Live in 2 days · Sat 4 Jul 2026 09:00 BST</p>
+  <div class="countdown" id="countdown">
+    <div class="cd-unit"><div class="val" id="cdDays">2</div><div class="lbl">Days</div></div>
+    <div class="cd-unit"><div class="val" id="cdHours">0</div><div class="lbl">Hours</div></div>
+    <div class="cd-unit"><div class="val" id="cdMinutes">0</div><div class="lbl">Minutes</div></div>
+    <div class="cd-unit"><div class="val" id="cdSeconds">0</div><div class="lbl">Seconds</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="stats-bar">
+    <div class="stat"><div class="val">102</div><div class="lbl">Sovereign MCPs</div></div>
+    <div class="stat green"><div class="val">2,000+</div><div class="lbl">Tests</div></div>
+    <div class="stat blue"><div class="val">115</div><div class="lbl">HTML Pages</div></div>
+    <div class="stat purple"><div class="val">33</div><div class="lbl">Hive Planets</div></div>
+    <div class="stat pink"><div class="val">12</div><div class="lbl">Dragon Queens</div></div>
+    <div class="stat green"><div class="val">DEFONEOS</div><div class="lbl">Aligned</div></div>
+    <div class="stat"><div class="val">0.95</div><div class="lbl">Care Floor</div></div>
+    <div class="stat blue"><div class="val">100%</div><div class="lbl">Sovereign</div></div>
+  </div>
+
+  <div class="two-pillars">
+    <div class="pillar sovereign">
+      <div class="pillar-header">
+        <span class="icon">🐉</span>
+        <div>
+          <h2>The Sovereign Substrate</h2>
+          <span class="pillar-tag">proofof-site.vercel.app</span>
+        </div>
+      </div>
+      <p>The complete sovereign AI economy substrate. 102 sovereign MCPs. 115 HTML pages. MIT + CC0. The koi fish dragon doctrine.</p>
+      <ul>
+        <li><strong>102 sovereign MCPs</strong> (Layer 0/1/2) · 3 layers of protocols</li>
+        <li><strong>115 HTML pages</strong> on production · All HTTP 200</li>
+        <li><strong>12 dragon queens</strong> · BFT 12-around-1</li>
+        <li><strong>33 hive planets</strong> · sovereign federation</li>
+        <li><strong>5 emergence cycles</strong> (rise → renewal) · 1000 years</li>
+        <li><strong>22 hieroglyphs</strong> · Major Arcana ontology</li>
+        <li><strong>10 real scenarios</strong> (drone rescue, fire, flood, etc.)</li>
+        <li><strong>Crown lineage 1795-3025</strong> · 1230 years</li>
+        <li><strong>Care Floor 0.95</strong> · BFT 12-around-1 · SIGIL Ed25519</li>
+        <li><strong>Fork Doctrine</strong> · CC0 + MIT + OSI · Sovereign by construction</li>
+      </ul>
+      <a class="pillar-link" href="/sovereign-index.html">→ Sovereign Index</a>
+      <a class="pillar-link" href="/dragon-council.html">→ Dragon Council</a>
+      <a class="pillar-link" href="/koi-dragon.html">→ Koi Dragon</a>
+      <a class="pillar-link" href="/archive.html">→ Crown Lineage</a>
+    </div>
+
+    <div class="pillar defoneos">
+      <div class="pillar-header">
+        <span class="icon">🛰</span>
+        <div>
+          <h2>DEFONEOS Defence AI</h2>
+          <span class="pillar-tag">os.meok.ai</span>
+        </div>
+      </div>
+      <p>The sovereign defence AI wedge. The Alan Turing Institute's documented gap in JSP 936 assurance — closed. Live signed AI System Card 1:1 with the official DAIC/ATI template.</p>
+      <ul>
+        <li><strong>Signed AI System Card</strong> · 1:1 DAIC/ATI Turing template</li>
+        <li><strong>Signed Card Registry</strong> · closes the "no central store" gap</li>
+        <li><strong>Offline verifier</strong> · tamper-evident, Ed25519</li>
+        <li><strong>JSP 936 assurance</strong> · 12 claims adversarially verified 3-0</li>
+        <li><strong>£11M AI Assurance Fund</strong> · Spring 2026 · DASA / DIANA routes</li>
+        <li><strong>UK-first</strong> · EU AI Act slipped to Dec 2027</li>
+        <li><strong>3 GTM docs</strong> · DASA / DIANA / Turing drafts</li>
+        <li><strong>77 case studies</strong> · Yorkshire flood, C-UAS, swarm SAR</li>
+        <li><strong>5 layer doctrine</strong> · SIGIL + BFT + Care Floor + Fork + Crown</li>
+        <li><strong>Wedge + design-partner</strong> · not sell-tomorrow</li>
+      </ul>
+      <a class="pillar-link" href="https://os.meok.ai/systemcard.html" target="_blank">→ System Card</a>
+      <a class="pillar-link" href="https://os.meok.ai/registry.html" target="_blank">→ Registry</a>
+      <a class="pillar-link" href="https://os.meok.ai/verify.html" target="_blank">→ Verifier</a>
+      <a class="pillar-link" href="/DEFONEOS_EU_UK_GTM_2026-07-01.md">→ GTM Doc</a>
+    </div>
+  </div>
+
+  <div class="unified">
+    <h2>🌐 The Unified Flow (Sovereign + DEFONEOS)</h2>
+    <p style="color:#aaa;text-align:center;margin-bottom:1rem">How the sovereign substrate powers the DEFONEOS wedge.</p>
+    <div class="unified-flow">
+      <div class="flow-step">
+        <div class="num">1</div>
+        <h4>Citizen signs in</h4>
+        <p>Passport MCP (W3C DID) · Care Floor 0.95</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="num">2</div>
+        <h4>Identity sovereign</h4>
+        <p>Wallet MCP (BFT 3-voter) · PQC ML-DSA-65</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="num">3</div>
+        <h4>SIGIL audit</h4>
+        <p>SIGIL MCP (Ed25519) · hash-chained</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="num">4</div>
+        <h4>BFT 12-around-1</h4>
+        <p>Council MCP · 12 sovereign queens</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="num">5</div>
+        <h4>DEFONEOS System Card signed</h4>
+        <p>System Card MCP · 1:1 DAIC/ATI</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="num">6</div>
+        <h4>Registry published</h4>
+        <p>Registry MCP · sovereign index</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="num">7</div>
+        <h4>Verified forever</h4>
+        <p>Verify MCP · offline · tamper-evident</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🐉 Top 20 Sovereign Surfaces (proofof-site)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">All live. All HTTP 200. All sovereign.</p>
+    <div class="quick-links">
+      <a href="/start.html">/start.html — Entry point</a>
+      <a href="/hub.html">/hub.html — Sovereign Hub</a>
+      <a href="/launch.html">/launch.html — 3 stones in place</a>
+      <a href="/alignment.html">/alignment.html — Sovereign + DEFONEOS</a>
+      <a href="/sovereign-index.html">/sovereign-index.html — Master index (102 MCPs)</a>
+      <a href="/sovereign-canon-live.html">/sovereign-canon-live.html — 10 articles + 9 rights</a>
+      <a href="/sovereign-journey.html">/sovereign-journey.html — 9-step ceremony</a>
+      <a href="/demo.html">/demo.html — 90-sec Cesium</a>
+      <a href="/ai-os-tour.html">/ai-os-tour.html — 10-min full tour</a>
+      <a href="/sovtown-demo.html">/sovtown-demo.html — 5-min scenarios</a>
+      <a href="/dome-mode.html">/dome-mode.html — 360° VR</a>
+      <a href="/sov33-watcher.html">/sov33-watcher.html — Screen watcher</a>
+      <a href="/sovtown.html">/sovtown.html — City simulator</a>
+      <a href="/sigil-feed.html">/sigil-feed.html — Live SIGIL</a>
+      <a href="/ecosystem.html">/ecosystem.html — Layer 0 hub</a>
+      <a href="/digital-twin.html">/digital-twin.html — UK real-world twin</a>
+      <a href="/koi-dragon.html">/koi-dragon.html — 1000-year doctrine</a>
+      <a href="/dragon-council.html">/dragon-council.html — 12 queens</a>
+      <a href="/archive.html">/archive.html — Crown lineage 1795-3025</a>
+      <a href="/unreal-engine.html">/unreal-engine.html — Cesium 3D bridge</a>
+    </div>
+  </div>
+
+  <div class="section green">
+    <h2>🛰 Top 10 DEFONEOS Surfaces (os.meok.ai)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">All live. All signed. All sovereign by construction.</p>
+    <div class="quick-links">
+      <a class="green" href="https://os.meok.ai/systemcard.html" target="_blank">/systemcard.html — Signed AI System Card (1:1 DAIC/ATI)</a>
+      <a class="green" href="https://os.meok.ai/registry.html" target="_blank">/registry.html — Signed card registry</a>
+      <a class="green" href="https://os.meok.ai/verify.html" target="_blank">/verify.html — Offline verifier</a>
+      <a class="green" href="/DEFONEOS_EU_UK_GTM_2026-07-01.md">/DEFONEOS_EU_UK_GTM_2026-07-01.md — GTM verdict</a>
+      <a class="green" href="/DEFONEOS_DASA_OPENCALL_2026-07-01.md">/DEFONEOS_DASA_OPENCALL_2026-07-01.md — DASA draft</a>
+      <a class="green" href="/DEFONEOS_DIANA_APPLICATION_2026-07-01.md">/DEFONEOS_DIANA_APPLICATION_2026-07-01.md — DIANA app</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🎯 The 4 Launch Phases (Aligned)</h2>
+    <p style="color:#aaa;margin-bottom:1rem">Both pillars run on the same doctrine. Both ship together.</p>
+    <div class="unified-flow">
+      <div class="flow-step" style="border-color:#10b981">
+        <div class="num">1</div>
+        <h4>THEORY (2024) ✓</h4>
+        <p>Sovereign Substrate v1.0 · DEFONEOS wedge designed</p>
+      </div>
+      <div class="flow-step" style="border-color:#10b981">
+        <div class="num">2</div>
+        <h4>DEMO (2026 Q1-Q2) ✓</h4>
+        <p>102 MCPs · 115 pages · DEFONEOS GTM verified 3-0</p>
+      </div>
+      <div class="flow-step" style="border-color:#fbbf24">
+        <div class="num">3</div>
+        <h4>LAUNCH (4 Jul 2026)</h4>
+        <p>Sovereign + DEFONEOS ship together</p>
+      </div>
+      <div class="flow-step" style="border-color:#60a5fa">
+        <div class="num">4</div>
+        <h4>SCALE (2026 Q4-2027)</h4>
+        <p>1000+ citizens · 10000+ sovereign MCPs</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doctrine">
+  <h2 style="color:#fbbf24">🐉 The Unified Doctrine</h2>
+  <blockquote>"The sovereign substrate sovereigns the AI economy.<br>The DEFONEOS wedge proves it in defence AI.<br>One empire. One doctrine. One dragon.<br>Sovereign by construction."</blockquote>
+  <p style="color:#aaa">CSOAI Ltd (UK 16939677) · 102 sovereign MCPs · DEFONEOS · Crown lineage 1795-3025</p>
+</div>
+
+<p style="text-align:center;color:#fbbf24;margin:2rem 0 0.5rem;font-size:.85rem;padding:0.5rem;background:rgba(251,191,36,0.05);border-radius:6px">🐉 <strong>Sat 4 Jul 2026 09:00 BST</strong> · CSOAI Ltd (UK 16939677) · Crown lineage 1795-3025</p>
+
+<script>
+const LAUNCH = new Date("2026-07-04T09:00:00+01:00").getTime();
+function updateCountdown() {
+  const diff = LAUNCH - Date.now();
+  if (diff < 0) {
+    document.getElementById("cdDays").textContent = "🐉";
+    document.getElementById("cdHours").textContent = "LIVE";
+    return;
+  }
+  document.getElementById("cdDays").textContent = Math.floor(diff / 86400000);
+  document.getElementById("cdHours").textContent = Math.floor((diff % 86400000) / 3600000);
+  document.getElementById("cdMinutes").textContent = Math.floor((diff % 3600000) / 60000);
+  document.getElementById("cdSeconds").textContent = Math.floor((diff % 60000) / 1000);
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>

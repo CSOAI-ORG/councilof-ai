@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>🧠 SOV33 Brain Stack — 4-Brain Split · Mamba-2 · 90/10 · 2+2 per OWEM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="SOV33's 4-brain split architecture: 2 small + 2 large per OWEM, 90/10 cascade routing, Mamba-2 SSD state. Per OWEM × 4 brains = 20 brain slots. Sov33_4brain.py.">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937;--small:#9d4edd;--large:#4a9eff }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);padding:1.5rem;line-height:1.55;max-width:1300px;margin:0 auto}
+  h1{color:var(--accent);font-size:2.2rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem}
+  h2{color:var(--accent2);font-size:1.6rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:2.5rem}
+  h3{color:var(--accent);font-size:1.2rem;margin-top:1.5rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.8em;line-height:1.45;white-space:pre-wrap}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.small{background:#1a0d20;color:var(--small);border-color:var(--small)}
+  .pill.large{background:#0d1a20;color:var(--large);border-color:var(--large)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .card.small{border-left-color:var(--small)}
+  .card.large{border-left-color:var(--large)}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1rem 0}
+  .brain{background:var(--bg);padding:1rem;border-radius:8px;border:1px solid var(--rule);text-align:center}
+  .brain.small{border-color:var(--small);background:#1a0d20}
+  .brain.large{border-color:var(--large);background:#0d1a20}
+  .brain.top{border-top:3px solid var(--accent2)}
+  .brain.bottom{border-bottom:3px solid var(--muted)}
+  .brain .role{color:var(--muted);font-size:.8em;margin:.3rem 0}
+  .brain .small{color:var(--small);font-weight:bold;font-size:.95em}
+  .brain .large{color:var(--large);font-weight:bold;font-size:.95em}
+  .brain .params{color:var(--ink);font-size:.8em}
+  .brain-label{color:var(--accent2);font-size:.9em;font-weight:bold;margin-bottom:.3rem}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.5rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.5rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  .cascade{background:var(--bg);padding:1rem;border-radius:8px;margin:1rem 0}
+  .step{display:flex;align-items:center;gap:1rem;margin:.5rem 0}
+  .arrow{color:var(--accent2);font-size:1.5rem}
+  @media (max-width:768px){
+    body{padding:1rem}
+    .grid4{grid-template-columns:1fr 1fr}
+    h1{font-size:1.7rem}
+  }
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_BRAIN_STACK.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>🧠 SOV33 Brain Stack Architecture</h1>
+  <p class="meta">4-brain split · Mamba-2 SSD state · 90/10 cascade · 2 small + 2 large per OWEM. Per <a href="#"">FULLSTACK_MASTER</a>. 12 Jul 2026.</p>
+  <p><a href="SOV33_HERO.html">← SOV33 Hub</a> · <a href="SOV33_INDEX.html">Index</a></p>
+</header>
+
+<h2>The 4-Brain Split (per sov33_4brain.py)</h2>
+
+<div class="card">
+  <blockquote>"Build your own AI — it grows with you. Aggregate big, active small, every hop sovereign-bound."<br>
+  — The 4-path architecture: 10% top (conscious/System-2) + 90% bottom (subconscious/System-1) × left/right = 2 small + 2 large brains per OWEM.</blockquote>
+</div>
+
+<h3>The 4 Brain Slots</h3>
+
+<div class="grid4">
+  <div class="brain small top">
+    <div class="brain-label">LEFT top-10%</div>
+    <div class="role">routing_decision · conscious / System-2</div>
+    <div class="small">small: qwen2.5:3b (3.1B)</div>
+    <div class="large">large: meta-llama-3.3-70b (70B)</div>
+    <div class="params">use_when: always (gate)</div>
+  </div>
+  <div class="brain large top">
+    <div class="brain-label">RIGHT top-10%</div>
+    <div class="role">deep_dive · subconscious / System-2</div>
+    <div class="small">small: qwen3:8b (8B)</div>
+    <div class="large">large: meta-llama-3.3-70b (70B)</div>
+    <div class="params">use_when: hard queries (top 10%)</div>
+  </div>
+  <div class="brain small bottom">
+    <div class="brain-label">LEFT bottom-90%</div>
+    <div class="role">easy_queries · conscious / System-1</div>
+    <div class="small">small: qwen2.5:3b (3.1B)</div>
+    <div class="large">large: qwen3:8b (8B)</div>
+    <div class="params">use_when: easy queries (90%)</div>
+  </div>
+  <div class="brain large bottom">
+    <div class="brain-label">RIGHT bottom-90%</div>
+    <div class="role">final_validation · subconscious / System-1</div>
+    <div class="small">small: qwen2.5:3b (3.1B)</div>
+    <div class="large">large: meta-llama-3.3-70b (70B)</div>
+    <div class="params">use_when: always (final answer)</div>
+  </div>
+</div>
+
+<p class="meta"><strong>Aggregate shape</strong>: 4 × max(small, large) = 70 + 70 + 8 + 70 = <strong>218B aggregate</strong> per OWEM<br>
+<strong>Active shape</strong>: 3.1 + 8 + 3.1 + 3.1 = <strong>17.3B active per request</strong> (the "aggregate big, active small" efficiency flip)<br>
+<strong>Per-OWEM instantiation</strong>: 5 OWEMs × 4 brains = <strong>20 brain slots</strong> total<br>
+<strong>17.3B active per query</strong> · <strong>20 brain slots</strong> (5 OWEMs × 4 brains) · <strong>REACH across 61 models</strong> (not summed params) — per CHARTER_OWEM_FOUR_SCOPE</p>
+
+<h2>The 90/10 Cascade (per sov33_cascade_router.py)</h2>
+
+<div class="card">
+  <h3>How it routes</h3>
+  <div class="cascade">
+    <div class="step"><strong style="color:var(--accent2)">Step 1</strong> <span class="arrow">→</span> <span>LEFT top-10% (qwen2.5:3b, fast router) ALWAYS runs first as the gate</span></div>
+    <div class="step"><strong style="color:var(--accent2)">Step 2</strong> <span class="arrow">→</span> <span>Check difficulty (regex signals + length). If &lt; 0.5 → easy query.</span></div>
+    <div class="step"><strong style="color:var(--accent2)">Step 3a</strong> <span class="arrow">→</span> <span>EASY (90%): LEFT bottom-90% (qwen2.5:3b small, fast) answers. Done.</span></div>
+    <div class="step"><strong style="color:var(--accent2)">Step 3b</strong> <span class="arrow">→</span> <span>HARD (10%): RIGHT top-10% (qwen3:8b → llama-70b) for deep dive</span></div>
+    <div class="step"><strong style="color:var(--accent2)">Step 4</strong> <span class="arrow">→</span> <span>RIGHT bottom-90% (always): validates final answer</span></div>
+    <div class="step"><strong style="color:var(--accent2)">Step 5</strong> <span class="arrow">→</span> <span>BFT-33 council votes on every hop (5 layers: 33, 12, 5, 3, 1 voters)</span></div>
+  </div>
+</div>
+
+<h3>Cascade Stats (per cascade_router)</h3>
+
+<table>
+  <tr><th>Lane</th><th>Role</th><th>Typical model</th><th>Activation</th></tr>
+  <tr><td><strong>LEFT conscious/small</strong></td><td>routing decision</td><td>qwen2.5:3b</td><td>100% (always)</td></tr>
+  <tr><td><strong>LEFT conscious/small (90%)</strong></td><td>easy queries</td><td>qwen2.5:3b</td><td>~90%</td></tr>
+  <tr><td><strong>RIGHT subconscious/large (10%)</strong></td><td>deep dive</td><td>qwen3:8b → llama-70b</td><td>~10%</td></tr>
+  <tr><td><strong>RIGHT subconscious/large</strong></td><td>final validation</td><td>qwen2.5:3b → llama-70b</td><td>100% (always)</td></tr>
+</table>
+
+<h2>The Mamba-2 SSD State (per sov33_owem_v3.py)</h2>
+
+<div class="card">
+  <h3>State-Space Model integration</h3>
+  <p>Each OWEM carries a <strong>16-dim Mamba-2 state</strong> across calls. The state compresses long context (10× effective) and is hash-chained into the SIGIL.</p>
+
+<pre><code>mamba2_state_dim: int = 16           # per-call state
+effective_context_multiplier: int = 10  # 5-20× range, mid-point
+
+# State evolves with each sovereign op:
+state_hash = hashlib.sha256(str(task).encode()).hexdigest()[:self.mamba2_state_dim]
+#   → 16 hex chars = 64 bits of compressed context</code></pre>
+
+  <p>The state is <strong>sovereign-bound</strong>: every state transition is SIGIL-anchored, audit-grade, and reversible via the SIGIL chain.</p>
+</div>
+
+<h2>Per-OWEM Instantiation</h2>
+
+<div class="card gold">
+  <h3>5 OWEMs × 4 brains = 20 brain slots</h3>
+  <p>Each OWEM (compliance, defense, intuition, voice, general) gets its OWN copy of the 4-brain split.</p>
+  <table>
+    <tr><th>OWEM</th><th>Specialty</th><th>Brain stack</th><th>Memory</th></tr>
+    <tr><td>compliance</td><td>EU AI Act, UK AI Bill, Article 50</td><td>4 brains (sovereign-trained Qwen3-0.6B)</td><td>801 samples + charter</td></tr>
+    <tr><td>defense</td><td>Kill switch, intrusion, foreign-access</td><td>4 brains (cloud-routed Oracle)</td><td>1775 samples</td></tr>
+    <tr><td>intuition</td><td>Patterns, predictions, geometry</td><td>4 brains (cloud-routed Oracle)</td><td>1075 samples</td></tr>
+    <tr><td>voice</td><td>Sovereign truths, Charter, Article 0</td><td>4 brains (cloud-routed Oracle)</td><td>275 samples</td></tr>
+    <tr><td>general</td><td>General knowledge fallback</td><td>4 brains (cloud-routed Oracle)</td><td>—</td></tr>
+  </table>
+</div>
+
+<h2>Live Brain Stack Status</h2>
+
+<div id="brain-status">Loading...</div>
+
+<h2>The 6 Invariants (constant)</h2>
+
+<ol>
+  <li><strong>Care-Floor 0.95</strong> — never changes. Sub-floor content vetoed BEFORE any brain call.</li>
+  <li><strong>Article 0</strong> — ISO fee-for-service only. Never take equity.</li>
+  <li><strong>12 Sovereign Pillars</strong> — every output charter-compliant</li>
+  <li><strong>BFT-33 quorum</strong> — 23/33 minimum for binding decisions across all 4 brains</li>
+  <li><strong>Ed25519 SIGIL chain</strong> — every state transition hash-chained + signed</li>
+  <li><strong>Sovereign-bound</strong> — DID <code>did:csoai:nicholas-001</code> (CSOAI Ltd UK 16939677)</li>
+</ol>
+
+<h2>What This Is NOT</h2>
+
+<ul>
+  <li>❌ Not "1 monolithic 1T model" — it's a 20-brain federation with cascade routing</li>
+  <li>❌ Not "all brains always run" — only LEFT bottom-90% runs for 90% of traffic</li>
+  <li>❌ Not "active = aggregate" — active is 17.3B, aggregate is 218B (per OWEM)</li>
+  <li>❌ Not "no mamba" — each OWEM carries 16-dim Mamba-2 SSD state</li>
+</ul>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>🧠 SOV33 Brain Stack</strong> · 12 Jul 2026 · Per <code>sov33_4brain.py</code> + <code>sov33_cascade_router.py</code> + <code>sov33_owem_v3.py</code><br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+<script>
+const API = 'http://localhost:8101';
+
+async function loadBrainStatus() {
+  const out = document.getElementById('brain-status');
+  try {
+    const [status, registry, evals] = await Promise.all([
+      fetch(API + '/api/status').then(r => r.json()),
+      fetch(API + '/api/registry').then(r => r.json()),
+      fetch(API + '/api/evals').then(r => r.json()),
+    ]);
+
+    out.innerHTML = `
+      <div class="card">
+        <h3>System</h3>
+        <p>Care floor: <span class="pill sigil">${status.care_floor}</span></p>
+        <p>Article 0 bound: <span class="pill sigil">${status.article_0_bound}</span></p>
+        <p>12 Pillars: <span class="pill sigil">${status['12_pillars_active']}</span></p>
+        <p>BFT-33 quorum: <span class="pill sigil">${status.bft_33_quorum}</span></p>
+      </div>
+      <div class="card">
+        <h3>Brain Stack Capacity</h3>
+        <p><strong>20 brain slots</strong> (5 OWEMs × 4 brains each)</p>
+        <table>
+          <tr><th>OWEM</th><th>Specialty</th><th>Active</th><th>Aggregate</th></tr>
+          <tr><td>compliance</td><td>EU AI Act</td><td>17.3B</td><td>218B</td></tr>
+          <tr><td>defense</td><td>Kill switch</td><td>17.3B</td><td>218B</td></tr>
+          <tr><td>intuition</td><td>Patterns</td><td>17.3B</td><td>218B</td></tr>
+          <tr><td>voice</td><td>Sovereign truths</td><td>17.3B</td><td>218B</td></tr>
+          <tr><td>general</td><td>General</td><td>17.3B</td><td>218B</td></tr>
+          <tr style="background:#0d201a"><td><strong>TOTAL (5 OWEMs)</strong></td><td>20 brain slots</td><td><strong>17.3B active</strong></td><td><strong>REACH (not summed)</strong></td></tr>
+        </table>
+        <p class="meta">Active = small brain used per query. Aggregate = total reach.</p>
+      </div>
+      <div class="card">
+        <h3>Registry</h3>
+        <p><strong>${registry.total_models}</strong> models, <strong>${registry.sovereign_safe_count}</strong> sovereign-safe, <strong>${registry.lineages?.length || '?'}</strong> lineages</p>
+        <p class="meta">61-model router picks which backends to use per OWEM × brain slot.</p>
+      </div>
+      <div class="card">
+        <h3>Eval Performance</h3>
+        <p><strong>${evals.total_runs}</strong> eval runs across <strong>${Object.keys(evals.best_per_backend || {}).length}</strong> backends</p>
+        ${Object.entries(evals.best_per_backend || {}).map(([b, info]) =>
+          `<p>${b}: <span class="pill gold">${(info.avg_accuracy*100).toFixed(1)}%</span></p>`
+        ).join('')}
+      </div>
+    `;
+  } catch (e) {
+    out.innerHTML = '<span style="color:var(--warn)">Error: ' + e.message + '</span>';
+  }
+}
+loadBrainStatus();
+</script>
+
+</body>
+</html>

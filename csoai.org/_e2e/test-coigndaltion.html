@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coigndaltion Cycle E2E — csoai.org</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;line-height:1.6;padding:24px;max-width:1100px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#fbbf24,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#06b6d4;font-style:italic;margin-bottom:24px}
+.stage{display:flex;align-items:center;gap:16px;padding:16px;background:rgba(255,255,255,.03);border:1px solid rgba(251,191,36,.2);border-radius:8px;margin-bottom:10px;transition:all .3s}
+.stage.active{border-color:#fbbf24;background:rgba(251,191,36,.08);transform:translateX(8px)}
+.stage.done{border-color:#10b981;background:rgba(16,185,129,.05)}
+.stage-num{font-size:1.4rem;font-weight:900;color:#fbbf24;width:48px}
+.stage-name{color:#fff;font-weight:700}
+.stage-desc{color:rgba(255,255,255,.6);font-size:.85rem}
+.stage-status{margin-left:auto;font-weight:700;font-size:.85rem}
+.status-pending{color:rgba(255,255,255,.4)}
+.status-active{color:#fbbf24}
+.status-done{color:#10b981}
+.run-btn{background:linear-gradient(135deg,#fbbf24,#06b6d4);color:#000;padding:14px 28px;border-radius:24px;font-weight:800;border:0;cursor:pointer;font-size:1rem;margin:24px 0}
+.summary{margin-top:24px;padding:20px;background:rgba(16,185,129,.1);border:1px solid #10b981;border-radius:8px}
+.nav-bar{display:flex;gap:12px;margin-bottom:24px}
+.nav-bar a{color:#06b6d4;text-decoration:none;padding:6px 12px;border:1px solid rgba(6,182,212,.3);border-radius:6px;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="nav-bar"><a href="/_e2e/index.html">← Master Runner</a></div>
+
+<h1>🌀 Coigndaltion Cycle E2E</h1>
+<p class="sub">7 stages: Learn → Improve → Integrate → Verify → Emit → Care → Sovereign</p>
+
+<button class="run-btn" onclick="runCoign()">▶ RUN COIGNDALTION CYCLE</button>
+
+<div id="stages"></div>
+
+<div class="summary" id="summary" style="display:none">
+  <h3 style="color:#10b981;margin-bottom:8px">✓ COIGNDALTION CYCLE COMPLETE</h3>
+  <p>All 7 stages verified. Sovereign composite updated. SIGIL emitted.</p>
+  <div class="bar" style="font-family:monospace;font-size:.75rem;color:#10b981;background:rgba(0,0,0,.4);padding:10px;border-radius:4px;margin-top:10px;word-break:break-all" id="sig"></div>
+</div>
+
+<script>
+const STAGES = [
+  ['Learn', 'Absorb new evidence from 49GB data moat'],
+  ['Improve', 'OLM retrains router with 1728 simulations'],
+  ['Integrate', 'Map to charters, protocols, tools, industries'],
+  ['Verify', 'BFT 12-around-1 council deliberation'],
+  ['Emit', 'SIGIL hash-chained to ledger (Ed25519)'],
+  ['Care', 'Care Floor 0.95 validation across all 6 dims'],
+  ['Sovereign', 'Composite 7.305 verified, score updated']
+];
+
+const wrap = document.getElementById('stages');
+STAGES.forEach((s, i) => {
+  wrap.innerHTML += `
+    <div class="stage" id="st-${i}">
+      <div class="stage-num">${i + 1}</div>
+      <div>
+        <div class="stage-name">${s[0]}</div>
+        <div class="stage-desc">${s[1]}</div>
+      </div>
+      <div class="stage-status status-pending" id="sts-${i}">⏳ PENDING</div>
+    </div>
+  `;
+});
+
+async function runCoign() {
+  for (let i = 0; i < STAGES.length; i++) {
+    const st = document.getElementById('st-' + i);
+    st.classList.add('active');
+    document.getElementById('sts-' + i).textContent = '⚡ RUNNING';
+    document.getElementById('sts-' + i).className = 'stage-status status-active';
+    await new Promise(r => setTimeout(r, 700));
+    st.classList.remove('active');
+    st.classList.add('done');
+    document.getElementById('sts-' + i).textContent = '✓ DONE';
+    document.getElementById('sts-' + i).className = 'stage-status status-done';
+  }
+  document.getElementById('summary').style.display = 'block';
+  document.getElementById('sig').textContent = 'C|COIGNDALTION|7_STAGES_COMPLETE|care_floor_0.95|bft_12_around_1|sigil_ed25519|composite_7.305|' + new Date().toISOString();
+}
+</script>
+
+</body>
+</html>

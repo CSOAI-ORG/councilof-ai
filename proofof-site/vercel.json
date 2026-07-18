@@ -1,0 +1,580 @@
+{
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.{html,json,xml}",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/openapi.json",
+      "dest": "openapi.json"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "sitemap.xml"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "manifest.json"
+    },
+    {
+      "src": "/api/signup",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/waitlist",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/feedback",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/assess",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/stats",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/charter",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/health",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/nexus",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/tabs",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/trio",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/bench",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/federation",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/topology",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/world-models",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov333-stack",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovspace",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/jspace-instrument",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/owem-build",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/jspace/read",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/jspace/write",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/jspace/ask",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/jspace/control",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/jspace/swap",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/jspace/detect",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/bft-council",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/bft-council/tally",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/bft33",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/bft33/tally",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/owem5x4x3",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/intake",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/intake/score",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/benchmarks/standard",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovspace/spawn",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovspace/observe",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovspace/state",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/layer0",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/layer0/state",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/continual/log",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/continual/stats",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/continual/run",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/guardrails/state",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/guardrails/check",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovereign-facts-v2",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/rag/facts",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/rag/ask",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/horus-gate",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/venturi-pyramid",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/rainbow-security",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/mcp-stateless",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/horizon-3k",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/c2pa-manifest",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/model-optimize",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/training-dashboard",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/training-stats",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/shared-core",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/owem-bridge",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov33-companion",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/auto-bft33",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/rag-augmented",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/compliance-owem",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovereign-model",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovereign-ask",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/real-benchmarks",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovereign-bench",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/continual/pool",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovereign-ask-real",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovereign-readme",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sovereign-stats",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/citation-correctness",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4-rag",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4-citation",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/hardline-test",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/identity",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/on-hermes",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/3-diverse",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/session",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/session/history",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/citation-compare",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4-router",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4-registry",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/care-floor",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/care-floor/batch",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/sovereign-bench-30",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/session/score",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/session/finalize",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/session/pool-stats",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier/model",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier/call",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier/call-all",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier/host",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier/decide",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier/auto",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier/bench",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/frontier/sigil-chain",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/technique-clusters",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/owem-registry",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/owem-activation-probe",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/attention-signature",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/venturi-throat",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/venturi-trace",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/linear-attn-kernel",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/multimodal-vision",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/owem-tierbench",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/owem-default",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/owem-ask",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/bft-33-vote",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov1/venturi",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/maternal-covenant",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/swarm",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/risk-model",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/catalog",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/alignment-tax",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/computer-use",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/honey",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/families",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/sov4/federation",
+      "dest": "api/index.py"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow, max-image-preview:large"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "Content-Security-Policy-Report-Only",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.vercel-scripts.com https://va.vercel-scripts.com https://buy.stripe.com https://js.stripe.com https://checkout.stripe.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: wss:; frame-src 'self' https://buy.stripe.com https://js.stripe.com https://checkout.stripe.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://buy.stripe.com https://checkout.stripe.com; upgrade-insecure-requests"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}

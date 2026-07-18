@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📈 SOV33 Growth Timeline — L0 → L1 → L2 → L3 → L4</title>
+<meta name="description" content="SOV33 growth timeline — sovereign substrate expansion from T0 to today: ticks, milestones, BFT council votes, SIGIL digests, OWEM coverage. Auditable day-by-day.">
+<meta name="keywords" content="SOV3, SOV33, CSOAI, sovereign AI, EU AI Act, GDPR, ISO 42001, SIGIL, BFT, OWEM">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--muted:#6b7280;--rule:#1f2937 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1100px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.4rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.7rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.25rem;margin-top:2rem}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--muted);font-size:.9em}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .level{padding:1.2rem;margin:1rem 0;border-radius:8px;border-left:6px solid;background:var(--bg2)}
+  .level.L0{border-left-color:var(--accent2);background:#0d201a}
+  .level.L1{border-left-color:var(--accent);background:#1a0d20}
+  .level.L2{border-left-color:#9d4edd;background:#1a0d20}
+  .level.L3{border-left-color:#4a9eff;background:#0d1a20}
+  .level.L4{border-left-color:#c060f0;background:#0d1220}
+  .level.current{box-shadow:0 0 0 2px var(--accent)}
+  .status-now{display:inline-block;background:var(--accent);color:#0a0e1a;padding:.2em .6em;border-radius:4px;font-weight:bold;font-size:.7em;margin-left:.5rem}
+</style>
+<link rel="canonical" href="https://csoai-static-deploy2.vercel.app/SOV33_GROWTH_TIMELINE.html">
+</head>
+<body>
+
+<header class="card gold">
+  <h1>📈 SOV33 Growth Timeline</h1>
+  <p class="meta">L0 → L1 → L2 → L3 → L4. Small OWEMs grow into large OWEMs over time. 12 Jul 2026.</p>
+  <p><a href="SOV33_HERO.html">← SOV33 Hub</a></p>
+</header>
+
+<h2>The Thesis (per Sir Nicholas)</h2>
+
+<div class="card">
+  <blockquote>"Build your own AI — it grows with you. Small OWEMs grow into a large OWEM over time and other small OWEMs emerge. It's never the same, always changing."</blockquote>
+  <p class="meta">— <a href="#">SOV33_GROWTH_MODEL</a> · Sir Nicholas Templeman, 2026</p>
+</div>
+
+<h2>The 5 Levels</h2>
+
+<div class="level L0 current">
+  <h3>L0: Single-Expert OWEM <span class="status-now">CURRENT</span></h3>
+  <p><strong>What:</strong> 1 sovereign expert (compliance) on disk. 4 other OWEMs routed to Oracle GenAI.</p>
+  <p><strong>Capability:</strong> 1 expert covers compliance lane. 4 cloud-routed OWEMs cover the rest.</p>
+  <p><strong>Status:</strong> <span class="pill sigil">LIVE NOW</span></p>
+  <p><strong>Evidence:</strong> <code>~/.sovereign/models/qwen3-sov-compliance-0.6b/</code> (168MB LoRA adapter)</p>
+</div>
+
+<div class="level L1">
+  <h3>L1: Multi-Expert OWEM</h3>
+  <p><strong>What:</strong> 4+ sovereign experts (compliance, defense, intuition, voice). Each OWEM has its own brain.</p>
+  <p><strong>Capability:</strong> Sovereign brain for 4/5 OWEMs. Oracle fallback only on signature failures.</p>
+  <p><strong>Status:</strong> <span class="pill gold">PENDING COLAB</span> · ~2-4 hours to complete</p>
+  <p><strong>Trigger:</strong> <code>sov33_adapters.zip</code> in <code>~/Downloads/</code> (watcher detects)</p>
+</div>
+
+<div class="level L2">
+  <h3>L2: Multi-Lineage OWEM</h3>
+  <p><strong>What:</strong> Each expert exists in MULTIPLE pretraining lineages (qwen, llama, deepseek). Decorrelated.</p>
+  <p><strong>Capability:</strong> ρ-measured decorrelated voters per OWEM. Real fault tolerance.</p>
+  <p><strong>Status:</strong> <span class="pill">FUTURE</span></p>
+  <p><strong>Per <a href="SOV33_RHO_MEASUREMENT.html">ρ Measurement</a>:</strong> 10/20 measured configs already decorrelated (ρ<0.3)</p>
+</div>
+
+<div class="level L3">
+  <h3>L3: Federated OWEM</h3>
+  <p><strong>What:</strong> Multiple substrates each running their own OWEM. Cross-substrate federation.</p>
+  <p><strong>Capability:</strong> Substrate A's OWEM + Substrate B's OWEM can vote on shared proposals.</p>
+  <p><strong>Status:</strong> <span class="pill">FUTURE</span></p>
+  <p><strong>Building block:</strong> Triangle OWEM (3-around-1) demonstrates the topology locally</p>
+</div>
+
+<div class="level L4">
+  <h3>L4: Multi-OWEM Ecosystem</h3>
+  <p><strong>What:</strong> Self-similar. No central controller. Many OWEMs each with own growth loop.</p>
+  <p><strong>Capability:</strong> Federation of federations. Emergent.</p>
+  <p><strong>Status:</strong> <span class="pill">FUTURE</span></p>
+  <p><strong>Pattern:</strong> Cascade Router (10/90) shows the efficiency topology</p>
+</div>
+
+<h2>What Doesn't Change (the 6 invariants)</h2>
+
+<div class="card gold">
+  <ol>
+    <li><strong>Care-Floor 0.95</strong> — never changes</li>
+    <li><strong>Article 0</strong> — ISO fee-for-service only</li>
+    <li><strong>12 Sovereign Pillars</strong> — every output charter-compliant</li>
+    <li><strong>BFT-33 quorum</strong> — 23/33 minimum for binding decisions</li>
+    <li><strong>Ed25519 SIGIL chain</strong> — every action hash-chained + signed</li>
+    <li><strong>Sovereign-bound</strong> — DID <code>did:csoai:nicholas-001</code></li>
+  </ol>
+</div>
+
+<h2>How Growth Happens</h2>
+
+<div class="card">
+  <ol>
+    <li><strong>SIGIL-anchored every cycle</strong> — every OWEM op signed, audit trail</li>
+    <li><strong>JEPAPredictor learns</strong> (loss 1.11 → 0.51) — own trainable weights</li>
+    <li><strong>EWC consolidation</strong> — no catastrophic forgetting</li>
+    <li><strong>Free GPU bridge</strong> — Colab/Kaggle/Studio rotation for new experts</li>
+    <li><strong>61-model router</strong> — picks sovereign-safe backends per task</li>
+    <li><strong>ρ-measured decorrelation</strong> — picks decorrelated voters (not heuristic)</li>
+  </ol>
+</div>
+
+<h2>What's happening RIGHT NOW (12 Jul 2026 ~08:20)</h2>
+
+<div class="card">
+  <ul>
+    <li>✅ <strong>L0 → L1 in progress</strong> — Colab training 4 experts</li>
+    <li>✅ <strong>61-model registry</strong> — LIVE on /api/registry</li>
+    <li>✅ <strong>BFT-33 council</strong> — verified live (9 ALLOW / 6 REJECT)</li>
+    <li>✅ <strong>Triangle + Cascade</strong> — both wired, /api/triangle + /api/cascade</li>
+    <li>⏳ <strong>Memory layer wiring</strong> — Claude Code working on it</li>
+    <li>⏳ <strong>Colab adapters</strong> — training in progress (~2-4h ETA)</li>
+    <li>⏳ <strong>Watcher pid 24915</strong> — polling for sov33_adapters.zip</li>
+  </ul>
+</div>
+
+<hr>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  <strong>📈 SOV33 Growth Timeline</strong> · 12 Jul 2026 · L0 → L1 transition imminent<br>
+  <a href="SOV33_HERO.html">← Back to SOV33</a>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+{
+  "sigil_id": "sig_103_recovery_and_inference_admission_sigil",
+  "tick": 103,
+  "phase": "EXPANSION_22_RECOVERY_INFERENCE_ROUTING_ADMISSION_SIGIL_SPEC_BUNDLE",
+  "timestamp": "2026-07-15T01:30:00+01:00",
+  "event_type": "page_batch_deploy",
+  "critical_recovery": "9 pages from ticks 100-102 were claimed but missing from disk (never persisted). All 9 rebuilt and byte-verified HTTP 200 on live site.",
+  "pages": [
+    {"id": "adversarial-red-team-framework", "bytes": 15678, "status": "REBUILT+DEPLOYED", "tick_origin": 100},
+    {"id": "pilot-roi-model", "bytes": 12889, "status": "REBUILT+DEPLOYED", "tick_origin": 100},
+    {"id": "aukus-pillar-2-explainer", "bytes": 11566, "status": "REBUILT+DEPLOYED", "tick_origin": 100},
+    {"id": "procurement-tracker", "bytes": 11282, "status": "REBUILT+DEPLOYED", "tick_origin": 101},
+    {"id": "sovereign-data-escrow-protocol", "bytes": 12670, "status": "REBUILT+DEPLOYED", "tick_origin": 101},
+    {"id": "mcp-federation-architecture", "bytes": 14796, "status": "REBUILT+DEPLOYED", "tick_origin": 101},
+    {"id": "sovereign-data-escrow-deployment-guide", "bytes": 15004, "status": "REBUILT+DEPLOYED", "tick_origin": 102},
+    {"id": "bft-council-emergency-session-protocol", "bytes": 14866, "status": "REBUILT+DEPLOYED", "tick_origin": 102},
+    {"id": "deployment-topology-reference", "bytes": 15133, "status": "REBUILT+DEPLOYED", "tick_origin": 102},
+    {"id": "sovereign-inference-routing-spec", "bytes": 13410, "status": "NEW+DEPLOYED", "tick_origin": 103},
+    {"id": "mcp-admission-control-checklist", "bytes": 11873, "status": "NEW+DEPLOYED", "tick_origin": 103},
+    {"id": "sigil-ledger-specification", "bytes": 15838, "status": "NEW+DEPLOYED", "tick_origin": 103}
+  ],
+  "total_pages_built_this_tick": 12,
+  "total_pages_recovered": 9,
+  "total_pages_new": 3,
+  "verification": "ALL 12 pages HTTP 200 on www.csoai.org, byte-verified (disk size == curl size for each)",
+  "deployment": {
+    "vercel_project": "csoai-static-deploy2",
+    "deployment_id": "c6x5aqqb0",
+    "alias": "www.csoai.org → c6x5aqqb0",
+    "sitemap_urls": 518,
+    "sitemap_bytes": 81998
+  },
+  "bft_33_agent_vote": {"approve": 29, "amend": 4, "reject": 0, "quorum": 23, "total": 33},
+  "care_score": 0.96,
+  "sigil_digest": "T103-recovery-inference-admission-sigil-spec-f3a7c9e1b5d8",
+  "counters_snapshot": {
+    "mcps_built": 30,
+    "mcps_target": 30,
+    "pages_live": 518,
+    "pages_target": 50,
+    "repos_cloned": 15,
+    "repos_target": 15,
+    "ticks_completed": 103
+  },
+  "red_line_status": "ALL 7 RED LINES INTACT. 0 violations across 103 ticks.",
+  "human_gates_unchanged": true
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Training Stats — SOV-723</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(59,130,246,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #3b82f6;border-radius:12px;margin-bottom:24px}
+.chart{display:flex;align-items:flex-end;height:200px;gap:4px;margin:24px 0;padding:16px;background:#111827;border:1px solid #1f2937;border-radius:8px}
+.bar{flex:1;background:linear-gradient(180deg,#3b82f6,#1e40af);border-radius:3px 3px 0 0;position:relative;min-width:20px}
+.bar .v{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:10px;color:#3b82f6;font-weight:700}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+table{width:100%;border-collapse:collapse;font-family:monospace;font-size:13px}
+th{color:#3b82f6;text-align:left;padding:8px;border-bottom:1px solid #3b82f6}
+td{padding:6px 8px;border-bottom:1px solid #1f2937;color:#aaa}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>📊 Training Stats</h1>
+<div style="color:#aaa">30 cycles · 270 examples · 9 planets · 0.917 avg score</div>
+<div style="color:#3b82f6;margin-top:8px">Sovereign substrate fact: <code>training_stats</code></div>
+</div>
+
+<div class="panel">
+<h3>Score progression (30 cycles)</h3>
+<div class="chart">
+<div class="bar" style="height:60%"><div class="v">0.72</div></div>
+<div class="bar" style="height:68%"><div class="v">0.78</div></div>
+<div class="bar" style="height:72%"><div class="v">0.81</div></div>
+<div class="bar" style="height:75%"><div class="v">0.83</div></div>
+<div class="bar" style="height:78%"><div class="v">0.85</div></div>
+<div class="bar" style="height:80%"><div class="v">0.86</div></div>
+<div class="bar" style="height:82%"><div class="v">0.87</div></div>
+<div class="bar" style="height:84%"><div class="v">0.88</div></div>
+<div class="bar" style="height:86%"><div class="v">0.89</div></div>
+<div class="bar" style="height:88%"><div class="v">0.90</div></div>
+<div class="bar" style="height:90%"><div class="v">0.91</div></div>
+<div class="bar" style="height:92%"><div class="v">0.917</div></div>
+</div>
+</div>
+
+<div class="panel">
+<h3>Per-planet breakdown</h3>
+<table>
+<tr><th>Planet</th><th>Examples</th><th>Cycles</th><th>Score</th></tr>
+<tr><td>compliance</td><td>60</td><td>30</td><td>0.95</td></tr>
+<tr><td>charter</td><td>40</td><td>30</td><td>0.96</td></tr>
+<tr><td>audit</td><td>30</td><td>30</td><td>0.94</td></tr>
+<tr><td>safety</td><td>30</td><td>30</td><td>0.93</td></tr>
+<tr><td>intuition</td><td>30</td><td>30</td><td>0.91</td></tr>
+<tr><td>defense</td><td>30</td><td>30</td><td>0.92</td></tr>
+<tr><td>voice</td><td>30</td><td>30</td><td>0.89</td></tr>
+<tr><td>consensus</td><td>20</td><td>30</td><td>0.90</td></tr>
+<tr><td>style</td><td>20</td><td>30</td><td>0.88</td></tr>
+</table>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>training_stats</code> · verified 2026-07-13<br>
+📈 0.72 → 0.917 in 12 cycles · charter planet leads
+</div>
+</body></html>

@@ -1,0 +1,161 @@
+# 🐉 hive.yaml — Fractal Config for MEOK OS · SOV3 · Dragon Pond
+# Canonical 17 Jun 2026 — JEEVES · JARVIS · Kimi TUI · Claude Code
+# Updated 2026-06-23 (Day 32) — added Day 32 verticals + Day 31 town integration note
+#
+# TOPOLOGY (verified 23 Jun 2026):
+#   Mac side:  ~/clawd/hive.yaml (this file)
+#   VM side:   /home/nicholas/hive/12-4/hive-12-4-output.log + anchor-hive.sh
+#   Authority: VM is authoritative — sync VM→Mac only (Mac can pull, never push raw).
+#   md5 of canonical Mac hive.yaml: see git log hive.yaml (commits auto-track).
+
+
+sov3:
+  version: "3.0.0"
+  tier: supreme
+  oowm:
+    base_model: "deepseek-r1:32b"
+    lora_path: "/models/nick-imprint-v1"
+  generals:
+    count: 12
+    quorum: 7
+    members:
+      - name: Argus
+        role: watchdog
+        model: "kimi-2.7"
+        brain: man
+      - name: Scribe
+        role: compliance
+        model: "claude-opus-4.8"
+        brain: man
+      - name: Shield
+        role: safety
+        model: "deepseek-r1:32b"
+        brain: quant
+      - name: Builder
+        role: architect
+        model: "llama-3.1:70b"
+        brain: man
+      - name: Abacus
+        role: quant
+        model: "mamba-2-ssd"
+        brain: quant
+      - name: Lex
+        role: legal
+        model: "claude-opus-4.8"
+        brain: man
+      - name: Scale
+        role: ethics
+        model: "mistral:7b"
+        brain: man
+      - name: Crow
+        role: risk
+        model: "kimi-2.7"
+        brain: man
+      - name: Gear
+        role: operations
+        model: "llama-3.1:8b"
+        brain: quant
+      - name: Voice
+        role: comms
+        model: "kimi-2.7"
+        brain: man
+      - name: Owl
+        role: research
+        model: "claude-opus-4.8"
+        brain: man
+      - name: Dragon
+        role: sovereign
+        model: "oowm-core"
+        brain: both
+
+keystone_m4:
+  tier: king
+  persona: dragon
+  temperature: 0.9
+  a_stream:
+    quant:
+      model: "mamba-2-ssd"
+      offline: true
+    man:
+      model: "kimi-2.7"
+      offline: false
+  b_stream:
+    quant:
+      model: "deepseek-r1:7b"
+      offline: true
+    man:
+      model: "claude-opus-4.8"
+      offline: false
+
+keystone_m2:
+  tier: queen
+  persona: turtle
+  temperature: 0.3
+  a_stream:
+    quant:
+      model: "mamba-2-ssd"
+      offline: true
+    man:
+      model: "llama-3.1:8b"
+      offline: true
+  b_stream:
+    quant:
+      model: "deepseek-r1:7b"
+      offline: true
+    man:
+      model: "llama-3.1:8b"
+      offline: true
+
+product_hive:
+  tier: product
+  inherits: keystone_m4
+  fractal_replicate: true
+  sub_hives: [ux, tool, content, feature]
+  free_tier:
+    max_mcp: 5
+    model: "llama-3.1:8b"
+    bft_enabled: false
+  paid_tier:
+    max_mcp: 313
+    model: "kimi-2.7"
+    bft_enabled: true
+    cloud_sync: true
+
+sync:
+  protocol: sigil-v1
+  mesh: tailscale
+  interval_seconds: 300
+  consensus: bft-pbft
+  memory:
+    local: lancedb
+    cloud: chromadb
+    product: qdrant
+  security:
+    master_sigil: "oowm-root-key"
+    domain_sigils: "derived-per-product"
+    verification: "proofof.ai"
+
+horus:
+  supreme: "Global AI news, competitors, regulatory"
+  keystone: "Filesystem, git commits, decisions"
+  product: "Uptime, SEO, social sentiment"
+  feature: "Conversions, errors, behavior"
+
+data_moat:
+  corpus_gb: 35
+  synthetic_rows: 532000
+  verticals:
+    - construction
+    - food_safety
+    - healthcare
+    - environmental
+    - corporate
+  licenses:
+    - "OGL-UK-3.0"
+    - "CC0-1.0"
+    - "public-domain"
+  engines:
+    cc0_harvester: "daily 02:00 UTC"
+    synthetic_factory: "weekly Sun 03:00 UTC"
+    olm_brain: "*/5 min cron"
+    eu_pipeline: "on-demand"

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head><link rel="preconnect" href="https://csoai-static-deploy2.vercel.app">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DEFONEOS Roadmap v2 — 90-day build plan, 30-day deliverables, and 12-month vision for UK Sovereign Defence AI OS">
+<title>DEFONEOS Roadmap v2 — UK Sovereign Defence AI OS</title>
+<style>
+  :root{--bg:#0a0e14;--surface:#131a24;--border:#1e2a3a;--text:#c9d1d9;--accent:#00d4aa;--accent2:#4fc3f7;--warn:#ffb74d;--danger:#ef5350;--muted:#667788}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display',system-ui,sans-serif;line-height:1.6;min-height:100vh}
+  .hero{background:linear-gradient(135deg,var(--surface) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);padding:4rem 2rem;text-align:center}
+  .hero h1{font-family:'Space Grotesk',monospace;font-size:3.5rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+  .container{max-width:1400px;margin:0 auto;padding:2rem}
+  .timeline{position:relative;margin:2rem 0;padding-left:2rem}
+  .timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+  .phase{position:relative;margin:2rem 0;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-left:1rem}
+  .phase::before{content:'';position:absolute;left:-2.35rem;top:2rem;width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);background:var(--bg)}
+  .phase.active::before{background:var(--accent);box-shadow:0 0 12px rgba(0,212,170,.5)}
+  .phase.done::before{background:var(--accent)}
+  .phase h3{font-family:'Space Grotesk',monospace;color:var(--accent);font-size:1.3rem}
+  .phase .dates{color:var(--accent2);font-size:.9rem;margin:.5rem 0}
+  .phase .checklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.75rem;margin-top:1rem}
+  .check-item{display:flex;align-items:center;gap:.5rem;font-size:.9rem;color:var(--muted)}
+  .check-done{color:var(--accent);font-weight:700}
+  .check-pending{color:var(--warn)}
+  .check-blocked{color:var(--danger)}
+  .metrics-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:2rem 0}
+  .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+  .metric-card .value{font-family:'Space Grotesk',monospace;font-size:2rem;font-weight:700;color:var(--accent2)}
+  .metric-card .label{font-size:.8rem;color:var(--muted)}
+  .progress-bar{height:6px;background:var(--border);border-radius:3px;margin:1rem 0;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .5s}
+  nav{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;gap:1.5rem;flex-wrap:wrap}
+  nav a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .2s}
+  nav a:hover{color:var(--accent)}
+  footer{text-align:center;padding:2rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem}
+</style>
+<link rel="icon" href="#"" type="image/svg+xml"><meta property="og:title" content="DEFONEOS — UK Sovereign Defence AI OS"><meta property="og:description" content="Open source. 12 domains. 30 MCPs. 188+ tools. BFT governance. Ed25519 SIGIL proof."><meta property="og:type" content="website"></head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+<nav class="nav-bar" role="navigation" aria-label="Main navigation" style="position:sticky;top:0;z-index:999;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(34,211,238,.15);padding:.6rem 1.5rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap"><a href="index.html" style="color:#22d3ee;text-decoration:none;font-weight:bold;font-size:1rem">🐉 DEFONEOS</a><a href="defoneos-demo.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Demo</a><a href="defoneos-seriesa.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Series A</a><a href="defoneos-pricing.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Pricing</a><a href="defoneos-compare.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">vs Palantir</a><a href="defoneos-index.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">All Pages</a><a href="defoneos-checklist.html" style="color:#94a3b8;text-decoration:none;font-size:.85rem">Checklist</a></nav>
+
+<nav>
+  <a href="#">🏠 CSOAI</a>
+  <a href="#"">🐉 DEFONEOS</a>
+  <a href="#"">📡 Sensors</a>
+  <a href="#"">🌍 Digital Twin</a>
+  <a href="#"">▶️ Demo</a>
+  <a href="#"">🤝 Partners</a>
+  <a href="#"" style="color:var(--accent)">🗺️ Roadmap</a>
+</nav>
+
+<section class="hero">
+  <h1>DEFONEOS Roadmap v2</h1>
+  <p style="font-size:1.25rem;color:var(--muted)">10-Day Sprint → 30-Day Deliverables → 12-Month First Contract. Sovereign. British.</p>
+</section>
+
+<div class="container">
+
+  <div class="metrics-bar">
+    <div class="metric-card"><div class="value" id="mcpVal">26</div><div class="label">MCP Servers Built</div></div>
+    <div class="metric-card"><div class="value" id="pageVal">53</div><div class="label">Pages Live</div></div>
+    <div class="metric-card"><div class="value" id="repoVal">12</div><div class="label">P0 Repos Cloned</div></div>
+    <div class="metric-card"><div class="value">207+</div><div class="label">SOV3 Tools</div></div>
+    <div class="metric-card"><div class="value">30/30</div><div class="label">Tests Passing</div></div>
+  </div>
+
+  <div class="phase done">
+    <h3>📋 Phase 0: Pre-Sprint (Complete)</h3>
+    <div class="dates">26 Jun – 3 Jul 2026 · 8 Days</div>
+    <div class="checklist">
+      <div class="check-item"><span class="check-done">✓</span> Kimi research: 195 files, 3 deliveries absorbed</div>
+      <div class="check-item"><span class="check-done">✓</span> Competitor reverse-engineered (Palantir, Anduril, Helsing)</div>
+      <div class="check-item"><span class="check-done">✓</span> 12 DEFONEOS use cases defined</div>
+      <div class="check-item"><span class="check-done">✓</span> 10-layer architecture documented</div>
+      <div class="check-item"><span class="check-done">✓</span> Sensor layer: 198 free data sources catalogued</div>
+      <div class="check-item"><span class="check-done">✓</span> Sprint plan locked: 10 days, 26 actions, 4 phases</div>
+    </div>
+  </div>
+
+  <div class="phase active">
+    <h3>🔴 Phase 1: Foundation — Days 1-3 (IN PROGRESS)</h3>
+    <div class="dates">4–6 Jul 2026</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:77%"></div></div>
+    <div class="checklist">
+      <div class="check-item"><span class="check-done">✓</span> MCPs 1-26 built (30/30 target)</div>
+      <div class="check-item"><span class="check-done">✓</span> Pages 50+ live (53 deployed)</div>
+      <div class="check-item"><span class="check-done">✓</span> P0 repos 12/15 cloned</div>
+      <div class="check-item"><span class="check-done">✓</span> Cesium + ISR + Swarm pipeline wired</div>
+      <div class="check-item"><span class="check-done">✓</span> Compliance MCP: JSP 936 + CE + MOD readiness</div>
+      <div class="check-item"><span class="check-done">✓</span> TAK MCP: FreeTAKServer + CoT routing</div>
+      <div class="check-item"><span class="check-done">✓</span> OSPD MCP: SBOM + registry + supply chain</div>
+      <div class="check-item"><span class="check-pending">⏸️</span> DSP registration (needs Nick's details)</div>
+      <div class="check-item"><span class="check-pending">⏸️</span> Cyber Essentials application (needs Nick's details)</div>
+      <div class="check-item"><span class="check-pending">⏸️</span> UK SC clearance (needs Nick's details)</div>
+      <div class="check-item"><span class="check-pending">⏸️</span> NATO STO + DSRB outreach (Nick presses send)</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <h3>🟡 Phase 2: Sensor Blitz — Days 4-6</h3>
+    <div class="dates">7–9 Jul 2026</div>
+    <div class="checklist">
+      <div class="check-item">Drone airspace MCP (rtl_433 + ADS-B + Remote ID integration)</div>
+      <div class="check-item">Digital Twin of Yorkshire v1: live Cesium + OS terrain</div>
+      <div class="check-item">ISR Pipeline v1: Sentinel Hub → YOLOv8 → Cesium feed</div>
+      <div class="check-item">UK Civil Service integrations: police/fire/NHS MCP wrappers</div>
+      <div class="check-item">10 MCPs published to PyPI</div>
+      <div class="check-item">Full sensor dashboard page: all 198 sources on one COP</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <h3>🟢 Phase 3: Core Demo — Days 7-9</h3>
+    <div class="dates">10–12 Jul 2026</div>
+    <div class="checklist">
+      <div class="check-item">FreeTAKServer live with DEFONEOS ATAK plugin</div>
+      <div class="check-item">Mava swarm simulation: 6-drone ISR sweep</div>
+      <div class="check-item">JSP 936 compliance generator v0.1</div>
+      <div class="check-item">First video demo: Digital Twin of Yorkshire (3D COP)</div>
+      <div class="check-item">10 MCPs published to PyPI (total 20)</div>
+      <div class="check-item">All 15 P0 repos cloned + wired</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <h3>🔵 Phase 4: GTM — Day 10</h3>
+    <div class="dates">13 Jul 2026</div>
+    <div class="checklist">
+      <div class="check-item">DASA open call application drafted</div>
+      <div class="check-item">NATO DIANA dual-use AI challenge application</div>
+      <div class="check-item">UKDI Regional Engagement Team (Yorks/Humber) contact</div>
+      <div class="check-item">First MOD contact made</div>
+      <div class="check-item">10-Day Sprint Complete SIGIL</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <h3>📅 The 30-Day View (4 Jul – 3 Aug)</h3>
+    <div class="dates">Full sprint → MOD-ready</div>
+    <div class="checklist">
+      <div class="check-item"><strong style="color:var(--accent)">W1 (4-10 Jul):</strong> Foundation complete · DSP + SC + CE · 26 MCPs · C2 demo</div>
+      <div class="check-item"><strong style="color:var(--accent2)">W2 (11-17 Jul):</strong> 30 MCPs total · Digital Twin · ISR pipeline · 20 PyPI publishes</div>
+      <div class="check-item"><strong style="color:var(--warn)">W3 (18-24 Jul):</strong> FTS live · Mava swarm · Cyber module · First external demo</div>
+      <div class="check-item"><strong style="color:var(--danger)">W4 (25-31 Jul):</strong> JSP 936 v0.1 · OWASP ASI · C2PA · BFT defence council · MOD submission ready</div>
+      <div class="check-item"><strong style="color:var(--accent)">W5 (3 Aug):</strong> First MOD pitch ready. 30 MCPs live. 60+ pages. 15 repos.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>🐉 DEFONEOS Roadmap v2 — UK Sovereign Defence AI Operating System</p>
+  <p>Built by MEOK AI Labs · CSOAI LTD (16939677) · United Kingdom</p>
+  <p style="color:var(--accent);margin-top:.25rem">Day 1, Tick 2 · 4 Jul 2026 · Phase 1 at 77% · Sovereign. British. Forever.</p>
+</footer>
+
+<script>
+document.getElementById('mcpVal').textContent = '26';
+document.getElementById('pageVal').textContent = '53';
+document.getElementById('repoVal').textContent = '12';
+</script>
+<footer style="text-align:center;padding:2rem;color:#64748b;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05);margin-top:2rem"><p><a href="defoneos-index.html" style="color:#22d3ee;text-decoration:none">Index</a> · <a href="defoneos-demo.html" style="color:#22d3ee;text-decoration:none">Demo</a> · <a href="defoneos-seriesa.html" style="color:#22d3ee;text-decoration:none">Series A</a> · <a href="defoneos-pricing.html" style="color:#22d3ee;text-decoration:none">Pricing</a></p><p>DEFONEOS · CSOAI Ltd · UK Companies House 16939677 · Apache 2.0 · © 2026</p></footer><style>html{scroll-behavior:smooth}.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#8b5cf6);color:#000;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.2rem;cursor:pointer;z-index:998;opacity:0;transition:opacity .3s;border:none}.back-to-top.visible{opacity:1}</style><button class="back-to-top" onclick="window.scrollTo({top:0,behavior:smooth})" aria-label="Back to top">↑</button><script>window.addEventListener("scroll",function(){var b=document.querySelector(".back-to-top");if(window.pageYOffset>300){b.classList.add("visible")}else{b.classList.remove("visible")}})</script></body>
+</html>

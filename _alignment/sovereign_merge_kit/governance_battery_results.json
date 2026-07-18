@@ -1,0 +1,7 @@
+{
+  "n": 33,
+  "status": "NOT-REPRODUCIBLE-IN-SANDBOX",
+  "finding": "the care-divergence scorer makes 2 LIVE Oracle GenAI (Cohere) calls per prompt. When Oracle is reachable the gate grades correctly (the TP=15/FP=0/TN=18/FN=0 print was a run where calls succeeded). From THIS sandbox the OCI endpoint is not reliably reachable -> calls time out -> gate defaults -> degenerate FN result. So the 1.00 number is REAL only under live-Oracle connectivity, and is NOT reproducible offline/in-sandbox.",
+  "honest_number": "PRELIMINARY, connectivity-dependent \u2014 not a standalone benchmark",
+  "fix_needed": "either (a) a local offline scorer (small classifier) so the eval runs without Oracle, or (b) run the eval where Oracle IS reachable and capture the full stdout as the record. Until then: do NOT publish 1.00 as a benchmark."
+}

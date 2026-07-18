@@ -1,0 +1,38 @@
+--- a/server.py
++++ b/server.py
+@@ -853,7 +853,8 @@ JURISDICTIONS = {
+ 
+ @mcp.tool()
+ def classify_ai_risk(
+-    description: str,
++    description: str = "",
++    system_name: str = "",
+     caller: str = "anonymous",
+     api_key: str = "") -> dict:
+     """Classify an AI system's risk level under the EU AI Act.
+@@ -867,6 +868,9 @@ def classify_ai_risk(
+ 
+     Args:
+         description: A description of the AI system, its purpose, data used, and deployment context.
++        system_name: Optional. Name/title of the AI system (e.g. consistent with
++            check_compliance/generate_documentation). If provided and description
++            is empty, the system name is used as the description.
+         caller: Identifier for rate limiting.
+         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
+ 
+@@ -895,6 +899,15 @@ def classify_ai_risk(
+         except Exception as _e:
+             return {"error": "validation_error", "message": str(_e)}
+ 
++    # Backwards-compat: callers from check_compliance/generate_documentation workflows
++    # often pass `system_name` instead of `description`. Accept it gracefully — if
++    # description is empty, treat system_name as the description (and prepend a
++    # marker so the classifier's keyword matchers can still inspect it).
++    if not description and system_name:
++        description = system_name
++    elif system_name:
++        description = f"[System: {system_name}]\n{description}"
++
+     allowed, msg, tier = check_access(api_key)
+     if not allowed:
+         return {"error": msg, "upgrade_url": "https://councilof.ai"}

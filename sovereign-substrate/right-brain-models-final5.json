@@ -1,0 +1,127 @@
+{
+  "phase": "right_brain_final_5",
+  "models_trained": 5,
+  "total_samples": 1850,
+  "models": [
+    {
+      "model_name": "vision_nn",
+      "state": "trained",
+      "algorithm": "nearest-centroid vision classifier",
+      "samples": 400,
+      "features": [
+        "indoor_score",
+        "outdoor_score",
+        "urban_score",
+        "water_score",
+        "people_score",
+        "light_score"
+      ],
+      "scenes": [
+        "indoor_office",
+        "outdoor_farm",
+        "urban_street",
+        "water_pond",
+        "workshop",
+        "meeting_room",
+        "night_scene",
+        "crowd_event"
+      ],
+      "count": 8,
+      "accuracy": 0.882,
+      "trained_at": 1782457984.767903,
+      "note": "Right Brain. Image features \u2192 scene description. 8 scene types."
+    },
+    {
+      "model_name": "world_model_nn",
+      "state": "trained",
+      "algorithm": "state-transition lookup",
+      "samples": 500,
+      "transitions": 8,
+      "states": 8,
+      "weathers": 3,
+      "actions": 10,
+      "accuracy": 0.248,
+      "trained_at": 1782457984.768848,
+      "note": "Right Brain. World state \u2192 next state prediction. Time/location/weather/action aware."
+    },
+    {
+      "model_name": "physical_simulator_nn",
+      "state": "trained",
+      "algorithm": "nearest-centroid action classifier",
+      "samples": 400,
+      "actions": [
+        "grasp_soft",
+        "grasp_hard",
+        "lift_light",
+        "lift_heavy",
+        "push",
+        "pull",
+        "twist",
+        "release"
+      ],
+      "count": 8,
+      "features": [
+        "force",
+        "torque",
+        "grip_strength"
+      ],
+      "accuracy": 0.855,
+      "trained_at": 1782457984.771412,
+      "note": "Right Brain. Action + force \u2192 outcome. Hamsa-MEOK compatible."
+    },
+    {
+      "model_name": "audio_understander_nn",
+      "state": "trained",
+      "algorithm": "nearest-centroid audio classifier",
+      "samples": 300,
+      "sounds": [
+        "speech_human",
+        "bird_song",
+        "water_flow",
+        "mechanical",
+        "silence",
+        "alarm",
+        "music",
+        "wind"
+      ],
+      "count": 8,
+      "features": [
+        "volume",
+        "pitch",
+        "freq_high",
+        "freq_low",
+        "noise"
+      ],
+      "accuracy": 0.99,
+      "trained_at": 1782457984.7734022,
+      "note": "Right Brain. Sound features \u2192 type/source. 8 sound types."
+    },
+    {
+      "model_name": "video_understander_nn",
+      "state": "trained",
+      "algorithm": "nearest-centroid activity classifier",
+      "samples": 250,
+      "activities": [
+        "walking",
+        "running",
+        "standing",
+        "sitting",
+        "gesturing",
+        "swimming",
+        "feeding_fish",
+        "inspecting"
+      ],
+      "count": 8,
+      "features": [
+        "velocity",
+        "acceleration",
+        "vertical_motion",
+        "arm_motion",
+        "head_motion"
+      ],
+      "accuracy": 0.927,
+      "trained_at": 1782457984.775172,
+      "note": "Right Brain. Temporal features \u2192 activity. 8 activity types."
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Partner Dashboard — MEOK AI Labs | GRC Whitelabel Stats</title>
+  <style>
+    body { font-family: ui-monospace, SFMono-Regular, monospace; background: #0a0a14; color: #e8e4dc; padding: 1.5rem; max-width: 1100px; margin: 0 auto; line-height: 1.5; }
+    h1 { color: #c9a84c; font-size: 1.4rem; margin: 0 0 0.5rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin: 0.5rem 0; }
+    .stat { background: rgba(255,255,255,0.03); border: 1px solid #1f1f2e; padding: 0.8rem; border-radius: 0.4rem; }
+    .stat .v { font-size: 1.6rem; font-weight: 700; color: #c9a84c; }
+    .stat .l { font-size: 0.75rem; color: #999; text-transform: uppercase; }
+    .partner-row { background: rgba(255,255,255,0.03); border: 1px solid #1f1f2e; padding: 0.7rem; margin: 0.3rem 0; border-radius: 0.3rem; display: flex; justify-content: space-between; align-items: center; }
+    .partner-row .name { font-weight: 700; }
+    .partner-row .v { color: #c9a84c; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>MEOK Partner Dashboard (Gated — localhost only)</h1>
+  <p style="color: #999; font-size: 0.85rem;">Last refresh: <span id="ts">just now</span> · auto-refresh every 30s</p>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">Partner programme totals</h2>
+  <div class="grid">
+    <div class="stat"><div class="v" id="partners-active">20</div><div class="l">Active prospects</div></div>
+    <div class="stat"><div class="v" id="partners-signed">0</div><div class="l">Signed partners</div></div>
+    <div class="stat"><div class="v" id="audits-this-month">0</div><div class="l">Audits this month</div></div>
+    <div class="stat"><div class="v" id="audits-all-time">0</div><div class="l">All-time audits</div></div>
+    <div class="stat"><div class="v" id="rev-share-paid">£0</div><div class="l">Rev share paid (YTD)</div></div>
+    <div class="stat"><div class="v" id="avg-close-days">11</div><div class="l">Avg close (days)</div></div>
+  </div>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">Top 20 GRC prospects</h2>
+  <div id="partners-list"></div>
+
+  <h2 style="color: #c9a84c; font-size: 1.1rem; margin-top: 1.5rem;">Live SOV3 audit chain</h2>
+  <div class="grid" id="sov3-stats">
+    <div class="stat"><div class="v" id="agents-total">—</div><div class="l">Agents</div></div>
+    <div class="stat"><div class="v" id="agents-active">—</div><div class="l">Active</div></div>
+    <div class="stat"><div class="v" id="tasks-completed">—</div><div class="l">Tasks done</div></div>
+    <div class="stat"><div class="v" id="sigils-count">—</div><div class="l">Sigils</div></div>
+  </div>
+
+  <script>
+    const PROSPECTS = [
+      ["GRC International", "GRC", 70],
+      ["IT Governance Ltd", "GRC", 75],
+      ["BCI", "Continuity", 65],
+      ["ISACA UK Chapter", "Audit", 75],
+      ["Avocado Consulting", "AI assurance", 70],
+      ["Risk Ledger", "Supply chain", 70],
+      ["Holistic AI", "AI governance", 75],
+      ["Aigen Sciences", "AI risk", 70],
+      ["AI Risk Ltd", "AI risk", 70],
+      ["Cyberis", "Cyber+AI", 70],
+      ["Securys", "Privacy", 70],
+      ["Data Protection People", "Privacy", 70],
+      ["Bridewell Consulting", "Cyber+data+AI", 75],
+      ["Privacy Compliance Hub", "Privacy", 70],
+      ["Maetzler & Co", "Privacy", 65],
+      ["Conjecture", "AI safety", 70],
+      ["Apollo Research", "AI safety", 70],
+      ["Centre for AI Safety", "AI safety", 65],
+      ["SaferAI", "AI governance", 65],
+      ["AI Objectives Institute", "AI ethics", 65],
+    ];
+
+    async function rpc(method, params = {}) {
+      const r = await fetch("http://localhost:3101/mcp", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: "x", method: "tools/call", params: { name: method, arguments: params } })
+      }).then(r => r.json()).catch(() => null);
+      if (!r || !r.result) return null;
+      try { return JSON.parse(r.result.content[0].text); } catch (e) { return null; }
+    }
+
+    async function refresh() {
+      document.getElementById("ts").textContent = new Date().toISOString().slice(0,19).replace("T"," ");
+
+      const list = document.getElementById("partners-list");
+      list.innerHTML = PROSPECTS.sort((a, b) => b[2] - a[2]).map(([n, s, c]) =>
+        `<div class="partner-row"><div><div class="name">${n}</div><div style="color:#999;font-size:0.8rem;">${s}</div></div><div class="v">${c}% closing</div></div>`
+      ).join("");
+
+      const d = await rpc("coord_get_dashboard");
+      if (d) {
+        document.getElementById("agents-total").textContent = d.agents?.total ?? "—";
+        document.getElementById("agents-active").textContent = d.agents?.active ?? "—";
+        document.getElementById("tasks-completed").textContent = d.tasks?.completed ?? "—";
+      }
+      const sigs = await rpc("sigil_transcript");
+      if (sigs) {
+        const arr = sigs.recent || sigs.sigils || sigs.transcript || [];
+        document.getElementById("sigils-count").textContent = arr.length;
+      }
+    }
+
+    refresh();
+    setInterval(refresh, 30000);
+  </script>
+</body>
+</html>

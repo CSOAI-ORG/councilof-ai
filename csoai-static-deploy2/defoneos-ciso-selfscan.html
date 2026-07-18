@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS — Gods-Eye CISO Self-Scan</title>
+<meta name="description" content="DEFONEOS autonomous security posture self-scan. Gods-Eye CISO: continuous vulnerability scanning, attack surface mapping, compliance drift detection, real-time SIGIL audit.">
+<style>
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1e293b;--fg:#e2e8f0;--gold:#fbbf24;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--purple:#a78bfa;--orange:#f97316;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:14px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:2rem}
+h1{font-size:1.8rem;color:var(--gold);margin-bottom:.5rem;font-weight:700}
+h2{font-size:1.2rem;color:var(--cyan);margin:1.5rem 0 .75rem;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h3{font-size:1rem;color:var(--green);margin:1rem 0 .5rem}
+p{margin-bottom:.75rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin:0 4px}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.badge-gold{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid var(--gold)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.badge-orange{background:rgba(249,115,22,.15);color:var(--orange);border:1px solid var(--orange)}
+.header-bar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:2px solid var(--gold);margin-bottom:1.5rem}
+.header-bar .left{display:flex;align-items:center;gap:1rem}
+.header-bar .dragon{font-size:2rem}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.stats-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;min-width:140px;flex:1;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .num.green{color:var(--green)}
+.stat-box .num.red{color:var(--red)}
+.stat-box .label{font-size:.7rem;color:var(--cyan);text-transform:uppercase}
+table{width:100%;border-collapse:collapse;margin:.5rem 0}
+th{background:var(--bg3);color:var(--gold);padding:.5rem;text-align:left;font-size:.8rem;border:1px solid var(--border)}
+td{padding:.5rem;border:1px solid var(--border);font-size:.8rem;vertical-align:top}
+tr:nth-child(even){background:rgba(30,41,59,.5)}
+.check{color:var(--green)} .cross{color:var(--red)} .partial{color:var(--gold)}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1rem;margin:.5rem 0;font-size:.7rem;overflow-x:auto;color:var(--green);white-space:pre}
+.scan-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-bottom:.75rem}
+.scan-card.critical{border-left:4px solid var(--red)}
+.scan-card.high{border-left:4px solid var(--orange)}
+.scan-card.medium{border-left:4px solid var(--gold)}
+.scan-card.low{border-left:4px solid var(--cyan)}
+.scan-card.info{border-left:4px solid var(--green)}
+.scan-card .scan-name{font-size:.9rem;font-weight:600;color:var(--cyan)}
+.scan-card .scan-desc{font-size:.75rem;color:var(--fg);margin:.25rem 0}
+.scan-card .scan-result{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
+.eye-chart{display:flex;gap:2px;justify-content:center;margin:1rem 0}
+.eye-chart .seg{width:30px;height:8px;border-radius:2px}
+.eye-chart .seg.green{background:var(--green)}
+.eye-chart .seg.gold{background:var(--gold)}
+.eye-chart .seg.red{background:var(--red)}
+footer{text-align:center;padding:2rem 0;color:var(--cyan);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+<div class="container">
+<div class="header-bar">
+<div class="left"><span class="dragon">👁️</span>
+<div><h1>Gods-Eye CISO Self-Scan</h1>
+<p style="font-size:.8rem;color:var(--cyan)">Autonomous security posture monitoring · 14 scan vectors · 5-min cycle · SIGIL-signed results</p></div>
+</div>
+<div><span class="badge badge-green">SCAN ACTIVE</span> <span class="badge badge-purple">AUTO 5-MIN</span></div>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="num green">0</div><div class="label">Critical Findings</div></div>
+<div class="stat-box"><div class="num green">0</div><div class="label">High Findings</div></div>
+<div class="stat-box"><div class="num">3</div><div class="label">Medium Findings</div></div>
+<div class="stat-box"><div class="num">7</div><div class="label">Low Findings</div></div>
+<div class="stat-box"><div class="num green">14</div><div class="label">Scanners Running</div></div>
+<div class="stat-box"><div class="num">351K</div><div class="label">SIGIL Receipts Scanned</div></div>
+</div>
+
+<div class="section">
+<h3>👁️ What is Gods-Eye CISO?</h3>
+<p>Gods-Eye is DEFONEOS's autonomous security self-scan system — a 14-vector continuous monitoring capability that runs every 5 minutes and generates SIGIL-signed posture reports. It is the security layer of the BFT-33 council's oversight function. Gods-Eye does <strong>not</strong> take action — it observes, scores, and alerts. All remediation requires human authorization or BFT-33 vote.</p>
+<div class="eye-chart">
+<div class="seg green"></div><div class="seg green"></div><div class="seg green"></div><div class="seg green"></div><div class="seg green"></div>
+<div class="seg green"></div><div class="seg green"></div><div class="seg green"></div><div class="seg green"></div><div class="seg green"></div>
+<div class="seg gold"></div><div class="seg gold"></div><div class="seg gold"></div><div class="seg red"></div><div class="seg red"></div>
+<div class="seg green"></div><div class="seg green"></div><div class="seg green"></div><div class="seg green"></div><div class="seg green"></div>
+</div>
+<p style="text-align:center;font-size:.7rem;color:var(--cyan)">14 vectors × 20 segments = 280 checks per scan cycle. Green = pass · Gold = warning · Red = fail</p>
+</div>
+
+<h2>🔍 The 14 Scan Vectors</h2>
+
+<div class="scan-card critical">
+<div class="scan-name">1. SIGIL Chain Integrity</div>
+<div class="scan-desc">Verifies the SHA-256 hash chain and Ed25519 signatures on every SIGIL receipt. Detects tampering, fork attempts, missing entries.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">351,247 receipts verified · 0 tampering detected · Chain hash matches genesis</span></div>
+</div>
+
+<div class="scan-card high">
+<div class="scan-name">2. MCP Fleet Health</div>
+<div class="scan-desc">Checks all 30 MCP servers are responding, authenticated, and returning expected tool schemas. Detects missing tools, schema drift, unauthorized access.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">30/30 MCPs responding · 222/222 tools verified · 0 schema drift</span></div>
+</div>
+
+<div class="scan-card high">
+<div class="scan-name">3. BFT-33 Council Liveness</div>
+<div class="scan-desc">Pings all 33 BFT council nodes. Verifies consensus protocol is healthy. Detects Byzantine nodes, Sybil attempts, network partitions.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">33/33 nodes alive · 0 Byzantine detected · Consensus round 4.2s avg</span></div>
+</div>
+
+<div class="scan-card high">
+<div class="scan-name">4. Red Line Integrity</div>
+<div class="scan-desc">Verifies all 7 immutable red lines are enforced. Checks that pattern firewall is active, BFT veto is armed, kill switch is responsive, compartment isolation is intact.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">7/7 red lines enforced · Kill switch &lt;100ms · 0 override attempts</span></div>
+</div>
+
+<div class="scan-card high">
+<div class="scan-name">5. Dependency Vulnerability Scan</div>
+<div class="scan-desc">Runs pip-audit, npm-audit, safety, and trivy against all dependencies. Checks for known CVEs in the software supply chain.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">0 critical CVEs · 0 high CVEs · 3 medium (tracked in POA&M) · 7 low</span></div>
+</div>
+
+<div class="scan-card high">
+<div class="scan-name">6. Model Integrity Verification</div>
+<div class="scan-desc">SHA-256 hash verification on all deployed model weights. Ed25519 signature check on model provenance. Detects model poisoning, unauthorized swaps.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">14 models verified · All hashes match · 0 unauthorized modifications</span></div>
+</div>
+
+<div class="scan-card high">
+<div class="scan-name">7. Morris-II Worm Scanner (Aegis Gate)</div>
+<div class="scan-desc">Scans all MCP inputs and outputs for prompt injection, adversarial payloads, and worm propagation patterns. Uses the Aegis Gate pattern-matching engine.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">12,847 calls scanned · 0 injection detected · 0 worm patterns · 3 quarantined (false positives)</span></div>
+</div>
+
+<div class="scan-card medium">
+<div class="scan-name">8. Static Code Analysis</div>
+<div class="scan-desc">Runs ruff (lint), mypy (type check), and bandit (security) on all Python code. Identifies code quality issues, type errors, and security anti-patterns.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">48 checks · 0 errors · 2 warnings (tracked) · 0 security issues</span></div>
+</div>
+
+<div class="scan-card medium">
+<div class="scan-name">9. Container Image Scan</div>
+<div class="scan-desc">Trivy scan on all Docker images. Checks for OS-level vulnerabilities, misconfigurations, exposed secrets.</div>
+<div class="scan-result"><span class="badge badge-gold">WARN</span> <span style="font-size:.75rem">12 images scanned · 0 critical · 2 medium (base image updates available) · 5 low</span></div>
+</div>
+
+<div class="scan-card medium">
+<div class="scan-name">10. Network Exposure Map</div>
+<div class="scan-desc">Maps all listening ports, external endpoints, and API surfaces. Identifies unexpected exposure, unauthorized services.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">87 endpoints mapped · 0 unauthorized · All behind auth · 0 unexpected ports</span></div>
+</div>
+
+<div class="scan-card medium">
+<div class="scan-name">11. Secret Scanning</div>
+<div class="scan-desc">Scans code, configs, and environment for leaked API keys, tokens, passwords. Uses trivy + custom regex patterns.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">0 secrets detected · Sovereign secrets vault intact · Ed25519 verified</span></div>
+</div>
+
+<div class="scan-card low">
+<div class="scan-name">12. Test Suite Regression</div>
+<div class="scan-desc">Runs the full test suite (1,012 unit + 389 property + 234 contract + 47 E2E). Detects test failures, coverage regression.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">1,682 tests · 1,682 passed · 0 failed · 90.6% coverage maintained</span></div>
+</div>
+
+<div class="scan-card low">
+<div class="scan-name">13. Compliance Drift Detection</div>
+<div class="scan-desc">Compares live system state against OSCAL catalog. Detects configuration drift, control regressions, new gaps.</div>
+<div class="scan-result"><span class="badge badge-green">PASS</span> <span style="font-size:.75rem">108 controls enforced · 0 regressions · POA&M items tracked · SSP auto-regenerated</span></div>
+</div>
+
+<div class="scan-card low">
+<div class="scan-name">14. PQC Readiness Check</div>
+<div class="scan-desc">Verifies post-quantum cryptography migration status. Checks for quantum-vulnerable algorithms (RSA, ECDSA) in use.</div>
+<div class="scan-result"><span class="badge badge-gold">WARN</span> <span style="font-size:.75rem">Ed25519 in use (quantum-resistant per NIST) · ML-DSA-65 ready for deployment · ML-KEM-768 ready · 0 RSA/ECDSA in critical paths</span></div>
+</div>
+
+<h2>📊 Scan Summary</h2>
+<div class="section">
+<table>
+<tr><th>Severity</th><th>Count</th><th>Action</th><th>SLA</th></tr>
+<tr><td><span class="badge badge-red">Critical</span></td><td>0</td><td>Immediate BFT-33 emergency session</td><td>N/A</td></tr>
+<tr><td><span class="badge badge-orange">High</span></td><td>0</td><td>Human alert + BFT notification</td><td>N/A</td></tr>
+<tr><td><span class="badge badge-gold">Medium</span></td><td>3</td><td>Logged to POA&M, tracked to resolution</td><td>30 days</td></tr>
+<tr><td><span class="badge badge-purple">Low</span></td><td>7</td><td>Logged, addressed in normal cycle</td><td>90 days</td></tr>
+<tr style="font-weight:bold;background:var(--bg3)"><td>TOTAL</td><td>10</td><td>0 critical/high · posture: <span class="badge badge-green">SECURE</span></td><td>—</td></tr>
+</table>
+</div>
+
+<h2>⚡ Automated Response Playbook</h2>
+<div class="section">
+<table>
+<tr><th>Trigger</th><th>Severity</th><th>Automated Response</th><th>Human Action</th></tr>
+<tr><td>SIGIL chain tampering detected</td><td><span class="badge badge-red">Critical</span></td><td>Freeze all MCP writes · BFT-33 emergency session · Kill switch armed · SIGIL evidence package generated</td><td>Human review within 1hr</td></tr>
+<tr><td>Red line violation attempted</td><td><span class="badge badge-red">Critical</span></td><td>Immediate block · Kill switch triggered (&lt;100ms) · Compartment isolated · Evidence sealed</td><td>Incident response within 1hr</td></tr>
+<tr><td>BFT Byzantine node detected</td><td><span class="badge badge-red">Critical</span></td><td>Node ejected from consensus · Quorum recalculated · Alert all nodes · Evidence logged</td><td>Node investigation</td></tr>
+<tr><td>Model weight mismatch</td><td><span class="badge badge-red">Critical</span></td><td>Model unload · System degraded mode · Quarantine suspected weights · BFT notification</td><td>Forensic analysis</td></tr>
+<tr><td>Morris-II injection detected</td><td><span class="badge badge-orange">High</span></td><td>Payload quarantined · Source blocked · Aegis Gate pattern updated · Alert SOC</td><td>Pattern review</td></tr>
+<tr><td>MCP schema drift</td><td><span class="badge badge-orange">High</span></td><td>MCP quarantined · BFT notification · Rollback to last known-good version</td><td>Schema investigation</td></tr>
+<tr><td>Container vulnerability found</td><td><span class="badge badge-gold">Medium</span></td><td>Logged to POA&M · Update scheduled · Tracked to resolution</td><td>30-day remediation</td></tr>
+<tr><td>Compliance control regression</td><td><span class="badge badge-gold">Medium</span></td><td>POA&M updated · SSP flagged · BFT council notified</td><td>30-day remediation</td></tr>
+</table>
+</div>
+
+<h2>📜 SIGIL-Signed Scan Report (Example)</h2>
+<div class="section">
+<div class="code-block">{
+  "scan_id": "gods-eye-2026-07-06T09:30:00Z",
+  "scanner": "DEFONEOS Gods-Eye CISO v1.0",
+  "timestamp": "2026-07-06T09:30:00Z",
+  "cycle": "5-minute",
+  "vectors_scanned": 14,
+  "total_checks": 280,
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 3,
+    "low": 7
+  },
+  "posture": "SECURE",
+  "bft_notification": false,
+  "details": {
+    "sigil_chain": { "status": "PASS", "receipts_verified": 351247, "tampering": 0 },
+    "mcp_fleet": { "status": "PASS", "mcps_alive": 30, "tools_verified": 222 },
+    "bft_council": { "status": "PASS", "nodes_alive": 33, "byzantine": 0 },
+    "red_lines": { "status": "PASS", "enforced": 7, "violations": 0 },
+    "dependency_scan": { "status": "PASS", "critical_cves": 0, "high_cves": 0 },
+    "model_integrity": { "status": "PASS", "models_verified": 14, "mismatches": 0 },
+    "morris_ii_scan": { "status": "PASS", "calls_scanned": 12847, "injections": 0 },
+    "static_analysis": { "status": "PASS", "errors": 0, "warnings": 2 },
+    "container_scan": { "status": "WARN", "medium": 2, "low": 5 },
+    "network_map": { "status": "PASS", "endpoints": 87, "unauthorized": 0 },
+    "secret_scan": { "status": "PASS", "secrets_found": 0 },
+    "test_suite": { "status": "PASS", "tests": 1682, "passed": 1682 },
+    "compliance_drift": { "status": "PASS", "regressions": 0 },
+    "pqc_readiness": { "status": "WARN", "note": "Ed25519 quantum-resistant, PQC migration ready" }
+  },
+  "signature": {
+    "algorithm": "Ed25519",
+    "public_key": "defoneos-gods-eye-ciso",
+    "signature": "7e3f8c2a1b4d6e9f0c3a5b7d2e4f1a6c9b8d5e3f2a1c4b6d9e7f0a3c5b8d2e1f",
+    "prev_hash": "a4f7c3e9b2d1f8a6e5c4b3d2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3",
+    "chain_hash": "b5e8d4f0c3e2a9b7f6d5c4b3a2e1f0d9c8b7a6e5f4d3c2b1a09f8e7d6c5b4a4"
+  }
+}</div>
+</div>
+
+<h2>📈 30-Day Posture Trend</h2>
+<div class="section">
+<table>
+<tr><th>Date</th><th>Critical</th><th>High</th><th>Medium</th><th>Low</th><th>Posture</th><th>SIGIL Ref</th></tr>
+<tr><td>2026-07-06</td><td>0</td><td>0</td><td>3</td><td>7</td><td><span class="badge badge-green">SECURE</span></td><td>gods-eye-20260706</td></tr>
+<tr><td>2026-07-05</td><td>0</td><td>0</td><td>3</td><td>8</td><td><span class="badge badge-green">SECURE</span></td><td>gods-eye-20260705</td></tr>
+<tr><td>2026-07-04</td><td>0</td><td>0</td><td>4</td><td>9</td><td><span class="badge badge-green">SECURE</span></td><td>gods-eye-20260704</td></tr>
+<tr><td>2026-07-03</td><td>0</td><td>1</td><td>4</td><td>10</td><td><span class="badge badge-gold">ELEVATED</span></td><td>gods-eye-20260703</td></tr>
+<tr><td>2026-07-02</td><td>0</td><td>1</td><td>5</td><td>11</td><td><span class="badge badge-gold">ELEVATED</span></td><td>gods-eye-20260702</td></tr>
+<tr><td>2026-07-01</td><td>0</td><td>0</td><td>5</td><td>12</td><td><span class="badge badge-green">SECURE</span></td><td>gods-eye-20260701</td></tr>
+<tr><td>2026-06-30</td><td>0</td><td>0</td><td>6</td><td>13</td><td><span class="badge badge-green">SECURE</span></td><td>gods-eye-20260630</td></tr>
+</table>
+<p style="font-size:.8rem;color:var(--cyan);margin-top:.5rem">30-day trend: Medium findings decreasing (6→3), Low findings decreasing (13→7). No Critical findings in 30 days. One High finding on 2-3 Jul (dependency CVE, auto-patched). Posture improving.</p>
+</div>
+
+<div class="section">
+<h3>🔒 Honesty Register</h3>
+<div style="background:rgba(239,68,68,.05);border:1px solid var(--red);border-radius:8px;padding:1rem;margin:.5rem 0">
+<p style="font-size:.8rem"><strong>These scan results are illustrative.</strong> DEFONEOS has not been deployed in a live operational environment. The Gods-Eye CISO scanner is designed and specified but has not run against a real adversarial environment. The posture trend reflects the design-time target, not operational evidence. The scan results shown here represent the expected output once deployed — not historical fact. Provenance ≠ truth. Assurance ≠ certification.</p>
+</div>
+</div>
+
+<footer>
+👁️ DEFONEOS — Gods-Eye CISO · 14 vectors · 5-min cycle · SIGIL-signed · CSOAI Ltd (UK 16939677)<br>
+Autonomous monitoring. Human-authorized remediation. Zero trust. Zero blind spots.
+</footer>
+</div>
+</body>
+</html>

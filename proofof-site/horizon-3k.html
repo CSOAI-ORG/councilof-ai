@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Horizon 3K — SOV-722</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0e14;color:#c5cdd9;font-family:ui-monospace,SFMono-Regular,monospace;margin:0;padding:24px;max-width:1100px;margin:0 auto}
+h1{color:#7dd3fc}
+.hero{background:radial-gradient(ellipse at center,rgba(59,130,246,0.2) 0%,#000 100%);padding:32px;text-align:center;border-bottom:2px solid #3b82f6;border-radius:12px;margin-bottom:24px}
+.horizon{font-size:96px;color:#3b82f6;font-weight:700;margin:16px 0}
+.sub{color:#aaa;font-size:18px}
+.segments{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+.seg{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;text-align:center}
+.seg .v{font-size:32px;color:#3b82f6;font-weight:700}
+.seg .l{font-size:11px;color:#aaa;margin-top:6px;text-transform:uppercase}
+.panel{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:20px;margin:16px 0}
+.panel h3{color:#a78bfa;margin:0 0 12px 0}
+.timeline{display:flex;justify-content:space-between;margin:24px 0;padding:0 8px}
+.tl-step{flex:1;text-align:center;font-size:11px;color:#aaa;position:relative}
+.tl-step::after{content:'';position:absolute;top:50%;right:-50%;width:100%;height:2px;background:#3b82f6;z-index:-1}
+.tl-step:last-child::after{display:none}
+.tl-dot{width:14px;height:14px;border-radius:50%;background:#3b82f6;margin:0 auto 6px;border:3px solid #0a0e14}
+.cite{background:#052e16;border:1px dashed #10b981;border-radius:8px;padding:12px;margin-top:24px;font-size:11px;color:#10b981}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>🔭 Horizon 3K</h1>
+<div class="horizon">3,000</div>
+<div class="sub">EU vendors in the 3-year sovereign horizon</div>
+<div style="color:#aaa;margin-top:8px">Sovereign substrate fact: <code>horizon_3k</code></div>
+</div>
+
+<div class="segments">
+<div class="seg"><div class="v">1,200</div><div class="l">SMB</div></div>
+<div class="seg"><div class="v">1,500</div><div class="l">Mid-market</div></div>
+<div class="seg"><div class="v">300</div><div class="l">Enterprise</div></div>
+</div>
+
+<div class="panel">
+<h3>The 3-year horizon (2026 → 2029)</h3>
+<p style="font-size:13px;line-height:1.6">The EU AI Act (2 Aug 2026) creates a regulatory pull. Of the ~3,000 EU vendors in scope for Article 50 (transparency + watermarking), the sovereign substrate can serve as the compliance backbone for <b>all 3,000</b> by 2029.</p>
+<div class="timeline">
+<div class="tl-step"><div class="tl-dot"></div>2026<br>Act live</div>
+<div class="tl-step"><div class="tl-dot"></div>2027<br>1k onboard</div>
+<div class="tl-step"><div class="tl-dot"></div>2028<br>2k onboard</div>
+<div class="tl-step"><div class="tl-dot"></div>2029<br>3k onboard</div>
+</div>
+</div>
+
+<div class="panel">
+<h3>Honest register</h3>
+<p style="font-size:13px;line-height:1.6">3,000 is a <b>target</b>, not a forecast. It assumes (1) EU AI Act enforcement begins as scheduled, (2) sovereign substrate ships all 23 API endpoints + care floor + BFT-33, (3) Stripe live-flip happens (owner-gated), (4) competition doesn't out-ship. Each is documented as a risk.</p>
+</div>
+
+<div class="cite">
+📜 Source: <code>api/rag/facts</code> · <code>horizon_3k</code> · verified 2026-07-13<br>
+🔭 Target (not forecast) — assumptions documented per Article 0
+</div>
+</body></html>

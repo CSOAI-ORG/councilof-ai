@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Federation Layer · SOV3 Sovereign MCP Marketplace · CSOAI</title>
+<meta name="description" content="SOV3 Federation Layer — 371 sovereign MCP servers and 2,016 SIGIL-signed tools. The public marketplace for sovereign AI capability." />
+<link rel="icon" href="#"http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E🐉%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg-0: #05060a;
+    --bg-1: #0a0d18;
+    --bg-2: #11162a;
+    --bg-3: #1a2142;
+    --line: #232b50;
+    --line-2: #2f3866;
+    --text-0: #e8ecff;
+    --text-1: #b6bee0;
+    --text-2: #7c87b3;
+    --text-3: #5a6390;
+    --gold: #ffd166;
+    --gold-2: #f5b800;
+    --purple: #9d4edd;
+    --purple-2: #c77dff;
+    --teal: #00d4c8;
+    --teal-2: #06b6d4;
+    --green: #34d399;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --blue: #60a5fa;
+    --pink: #f472b6;
+    --grad-1: linear-gradient(135deg, #9d4edd 0%, #00d4c8 100%);
+    --grad-2: linear-gradient(135deg, #ffd166 0%, #f472b6 100%);
+    --grad-3: linear-gradient(135deg, #60a5fa 0%, #9d4edd 100%);
+    --mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg-0); color: var(--text-0); font-family: var(--sans); scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body {
+    background:
+      radial-gradient(ellipse at top, rgba(157,78,221,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(0,212,200,0.06) 0%, transparent 60%),
+      var(--bg-0);
+    min-height: 100vh;
+    line-height: 1.55;
+  }
+  a { color: var(--teal); text-decoration: none; transition: color .2s; }
+  a:hover { color: var(--gold); }
+  code, pre { font-family: var(--mono); font-size: 0.86em; }
+
+  /* Top bar */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(5,6,10,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 28px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.86rem;
+  }
+  .topbar .brand { font-weight: 700; letter-spacing: 0.04em; display: flex; align-items: center; gap: 10px; }
+  .topbar .brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.4 } }
+  .topbar nav { display: flex; gap: 22px; }
+  .topbar nav a { color: var(--text-1); font-weight: 500; }
+  .topbar nav a:hover { color: var(--gold); }
+
+  /* Hero */
+  .hero { padding: 80px 28px 60px; text-align: center; max-width: 1100px; margin: 0 auto; }
+  .hero .eyebrow {
+    display: inline-block;
+    padding: 6px 14px; border-radius: 999px;
+    background: rgba(157,78,221,0.12);
+    border: 1px solid rgba(157,78,221,0.4);
+    color: var(--purple-2);
+    font-family: var(--mono); font-size: 0.78rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    background: var(--grad-1);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 18px;
+  }
+  .hero h1 .sigil { -webkit-text-fill-color: var(--gold); }
+  .hero .sub {
+    font-size: 1.18rem; color: var(--text-1);
+    max-width: 720px; margin: 0 auto 38px;
+  }
+  .hero .pills { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 48px; }
+  .pill {
+    padding: 8px 16px; border-radius: 999px;
+    background: var(--bg-1); border: 1px solid var(--line);
+    font-family: var(--mono); font-size: 0.82rem; color: var(--text-1);
+  }
+  .pill .v { color: var(--gold); font-weight: 700; }
+  .pill .k { color: var(--text-3); margin-right: 6px; }
+  .pill.gold { border-color: var(--gold-2); }
+  .pill.teal { border-color: var(--teal-2); }
+  .pill.purple { border-color: var(--purple); }
+
+  /* Section */
+  section { padding: 70px 28px; max-width: 1280px; margin: 0 auto; }
+  section.tight { padding: 50px 28px 30px; }
+  .sec-head { text-align: center; margin-bottom: 50px; }
+  .sec-head .num {
+    display: inline-block;
+    font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.16em;
+    color: var(--teal); text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .sec-head h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 800; letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .sec-head h2 .acc { color: var(--gold); }
+  .sec-head .desc { color: var(--text-1); max-width: 680px; margin: 0 auto; font-size: 1.04rem; }
+
+  /* Catalog grid */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .cat-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    transition: all .25s;
+  }
+  .cat-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--teal-2);
+  }
+  .cat-card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+  .cat-card .name {
+    font-family: var(--mono); font-size: 0.95rem; font-weight: 700;
+    color: var(--text-0); text-transform: lowercase;
+    margin-bottom: 8px;
+  }
+  .cat-card .row {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 0.76rem;
+    color: var(--text-2);
+  }
+  .cat-card .row .v { color: var(--gold); font-weight: 700; }
+  .cat-card .bar {
+    margin-top: 10px;
+    height: 4px;
+    background: var(--bg-3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .cat-card .bar .fill { height: 100%; background: var(--grad-1); }
+
+  /* MCP gallery */
+  .mcp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+  }
+  .mcp-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all .2s;
+    position: relative;
+  }
+  .mcp-card:hover { border-color: var(--purple); background: var(--bg-2); }
+  .mcp-card .ribbon {
+    position: absolute; top: 12px; right: 12px;
+    font-family: var(--mono); font-size: 0.66rem;
+    color: var(--text-3); letter-spacing: 0.08em;
+  }
+  .mcp-card .ribbon .badge {
+    background: rgba(0,212,200,0.14); color: var(--teal);
+    padding: 2px 8px; border-radius: 6px;
+    border: 1px solid rgba(0,212,200,0.3);
+  }
+  .mcp-card h3 {
+    font-family: var(--mono); font-size: 0.98rem;
+    color: var(--text-0); margin-bottom: 4px; font-weight: 700;
+  }
+  .mcp-card .cat {
+    font-size: 0.78rem; color: var(--purple-2); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .mcp-card .desc {
+    font-size: 0.86rem; color: var(--text-1);
+    margin-bottom: 14px; line-height: 1.5;
+  }
+  .mcp-card .stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; font-family: var(--mono);
+    font-size: 0.76rem;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+  }
+  .mcp-card .stats .k { color: var(--text-3); }
+  .mcp-card .stats .v { color: var(--text-0); font-weight: 600; }
+  .mcp-card .stats .v.green { color: var(--green); }
+  .mcp-card .sigil {
+    margin-top: 10px;
+    font-family: var(--mono); font-size: 0.66rem;
+    color: var(--text-3);
+    word-break: break-all;
+  }
+
+  /* Search demo */
+  .search-demo {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.5);
+  }
+  .search-bar {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+    display: flex; gap: 12px; align-items: center;
+    background: var(--bg-2);
+  }
+  .search-bar .label {
+    font-family: var(--mono); font-size: 0.74rem;
+    color: var(--teal); letter-spacing: 0.06em; flex-shrink: 0;
+  }
+  .search-bar .q {
+    flex: 1;
+    font-family: var(--mono); font-size: 0.95rem;
+    color: var(--text-0);
+    background: transparent;
+    border: none; outline: none;
+  }
+  .search-bar .q::after { content: '▊'; animation: blink 1s infinite; color: var(--gold); }
+  @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+  .search-bar .btn {
+    font-family: var(--mono); font-size: 0.76rem;
+    padding: 6px 14px; border-radius: 8px;
+    background: var(--grad-1); color: #000; font-weight: 700;
+    border: none; cursor: pointer;
+  }
+  .results {
+    padding: 8px 0;
+  }
+  .res-row {
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 16px; align-items: center;
+  }
+  .res-row:last-child { border-bottom: none; }
+  .res-row .rank {
+    font-family: var(--mono); font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--gold);
+  }
+  .res-row .body h4 {
+    font-family: var(--mono); font-size: 0.95rem;
+    color: var(--text-0); margin-bottom: 4px; font-weight: 700;
+  }
+  .res-row .body .meta {
+    font-size: 0.8rem; color: var(--text-2); margin-bottom: 6px;
+  }
+  .res-row .body .tool {
+    font-family: var(--mono); font-size: 0.78rem;
+    color: var(--purple-2);
+  }
+  .res-row .body .tool span { color: var(--text-3); }
+  .res-row .body .doc {
+    font-size: 0.8rem; color: var(--text-1); margin-top: 4px;
+    line-height: 1.45;
+  }
+  .res-row .score {
+    font-family: var(--mono);
+    text-align: right;
+  }
+  .res-row .score .num {
+    font-size: 1.4rem; font-weight: 700; color: var(--teal);
+  }
+  .res-row .score .lab {
+    font-size: 0.66rem; color: var(--text-3);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  /* Citations */
+  .cite-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .cite-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .cite-card h4 {
+    font-family: var(--mono);
+    font-size: 0.86rem;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  .cite-card .quote {
+    font-size: 0.92rem; color: var(--text-0);
+    font-style: italic; line-height: 1.5;
+    border-left: 3px solid var(--purple);
+    padding-left: 14px;
+    margin: 10px 0;
+  }
+  .cite-card .meta {
+    font-family: var(--mono); font-size: 0.74rem;
+    color: var(--text-3);
+  }
+  .cite-card .meta .src { color: var(--gold); }
+  .cite-card .tools {
+    margin-top: 10px;
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .cite-card .tools span {
+    font-family: var(--mono); font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(157,78,221,0.1);
+    border: 1px solid rgba(157,78,221,0.3);
+    color: var(--purple-2);
+    border-radius: 6px;
+  }
+
+  /* Bridge flow */
+  .bridge-flow {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px;
+    position: relative;
+  }
+  .bridge-flow .title {
+    font-family: var(--mono); font-size: 0.82rem;
+    color: var(--teal); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .flow-step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-step .n {
+    font-family: var(--mono); font-weight: 700;
+    color: var(--gold); font-size: 1.1rem;
+  }
+  .flow-step .body .label {
+    font-family: var(--mono); font-size: 0.84rem;
+    color: var(--text-0); margin-bottom: 4px;
+  }
+  .flow-step .body .detail {
+    font-size: 0.84rem; color: var(--text-2); line-height: 1.5;
+  }
+  .flow-step .body code {
+    background: var(--bg-3); padding: 2px 6px;
+    border-radius: 4px; color: var(--gold);
+  }
+
+  /* 3-Patch pattern */
+  .patch-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .patch-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+  }
+  .patch-card .num {
+    position: absolute; top: -14px; left: 22px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--grad-1);
+    color: #000; font-family: var(--mono);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.95rem;
+  }
+  .patch-card h4 {
+    font-family: var(--mono); font-size: 1rem;
+    color: var(--text-0); margin: 6px 0 4px;
+  }
+  .patch-card .file {
+    font-family: var(--mono); font-size: 0.74rem;
+    color: var(--purple-2); margin-bottom: 12px;
+  }
+  .patch-card pre {
+    background: var(--bg-0);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.74rem;
+    color: var(--text-1);
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+  .patch-card pre .k { color: var(--teal); }
+  .patch-card pre .s { color: var(--gold); }
+  .patch-card pre .c { color: var(--text-3); font-style: italic; }
+
+  /* Stats strip */
+  .strip {
+    background: var(--bg-1);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 32px 28px;
+  }
+  .strip-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 24px; text-align: center;
+  }
+  .strip .v {
+    font-family: var(--mono); font-size: 1.8rem; font-weight: 800;
+    color: var(--gold);
+  }
+  .strip .k {
+    font-family: var(--mono); font-size: 0.72rem;
+    color: var(--text-3); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-top: 4px;
+  }
+
+  /* CTA */
+  .cta-band {
+    padding: 70px 28px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at center, rgba(157,78,221,0.16) 0%, transparent 60%),
+      var(--bg-1);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .cta-band h2 {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 800; margin-bottom: 14px;
+  }
+  .cta-band p { color: var(--text-1); max-width: 620px; margin: 0 auto 32px; font-size: 1.02rem; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+  .cta {
+    padding: 14px 26px;
+    border-radius: 10px;
+    font-family: var(--mono); font-size: 0.9rem;
+    font-weight: 700; letter-spacing: 0.04em;
+    transition: all .2s;
+    border: 1px solid transparent;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .cta.primary { background: var(--grad-1); color: #000; }
+  .cta.primary:hover { transform: translateY(-2px); color: #000; box-shadow: 0 10px 30px -10px rgba(157,78,221,0.6); }
+  .cta.ghost { background: transparent; color: var(--text-0); border-color: var(--line-2); }
+  .cta.ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .cta .arrow { color: var(--gold); font-family: var(--mono); }
+
+  /* Footer */
+  footer {
+    padding: 36px 28px;
+    text-align: center;
+    font-family: var(--mono); font-size: 0.78rem;
+    color: var(--text-3);
+    border-top: 1px solid var(--line);
+  }
+  footer .sig {
+    display: inline-block; margin-top: 8px;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--gold);
+  }
+
+  /* responsive */
+  @media (max-width: 880px) {
+    .patch-grid { grid-template-columns: 1fr; }
+    .cite-grid { grid-template-columns: 1fr; }
+    .topbar { flex-direction: column; gap: 10px; }
+    .res-row { grid-template-columns: 30px 1fr; }
+    .res-row .score { grid-column: 2; text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span> SOV3 · FEDERATION LAYER</div>
+  <nav>
+    <a href="#catalog">Catalog</a>
+    <a href="#top-mcps">Top MCPs</a>
+    <a href="#search">Search</a>
+    <a href="#citations">Citations</a>
+    <a href="#bridge">Bridge</a>
+    <a href="#wire-in">Wire-In</a>
+    <a href="#">Master Hub</a>
+  </nav>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="eyebrow">Layer 10 · Sovereign MCP Marketplace</div>
+  <h1>FEDERATION <span class="sigil">LAYER</span></h1>
+  <p class="sub">371 sovereign MCP servers. 2,016 SIGIL-signed tools. Every call anchored to a hash-chained, Ed25519-signed receipt. The single public marketplace for the SOV3 sovereign AI substrate.</p>
+  <div class="pills">
+    <div class="pill purple"><span class="k">servers</span><span class="v">371</span></div>
+    <div class="pill teal"><span class="k">tools</span><span class="v">2,016</span></div>
+    <div class="pill gold"><span class="k">categories</span><span class="v">17 + general</span></div>
+    <div class="pill"><span class="k">SIGIL receipts</span><span class="v">1,001+</span></div>
+    <div class="pill purple"><span class="k">sig</span><span class="v">ed25519</span></div>
+    <div class="pill teal"><span class="k">protocol</span><span class="v">MCP · A2A · x402</span></div>
+  </div>
+</header>
+
+<!-- ============ STAT STRIP ============ -->
+<div class="strip">
+  <div class="strip-inner">
+    <div><div class="v">371</div><div class="k">Servers</div></div>
+    <div><div class="v">2,016</div><div class="k">Tools</div></div>
+    <div><div class="v">17+1</div><div class="k">Categories</div></div>
+    <div><div class="v">100%</div><div class="k">SIGIL-Signed</div></div>
+    <div><div class="v">Ed25519</div><div class="k">Signatures</div></div>
+    <div><div class="v">v1.0</div><div class="k">Catalog</div></div>
+  </div>
+</div>
+
+<!-- ============ (2) CATALOG OVERVIEW ============ -->
+<section id="catalog">
+  <div class="sec-head">
+    <div class="num">§ 01 · CATALOG</div>
+    <h2>17 sovereign <span class="acc">domains</span>, one registry</h2>
+    <p class="desc">From EU AI Act risk classification to COBOL bridge automation — every domain has sovereign MCP coverage. Click any category to inspect the registry.</p>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card"><div class="name">compliance</div><div class="row"><span>35 servers</span><span class="v">213 tools</span></div><div class="bar"><div class="fill" style="width:100%"></div></div></div>
+    <div class="cat-card"><div class="name">healthcare</div><div class="row"><span>14 servers</span><span class="v">78 tools</span></div><div class="bar"><div class="fill" style="width:40%"></div></div></div>
+    <div class="cat-card"><div class="name">governance</div><div class="row"><span>10 servers</span><span class="v">56 tools</span></div><div class="bar"><div class="fill" style="width:29%"></div></div></div>
+    <div class="cat-card"><div class="name">developer</div><div class="row"><span>10 servers</span><span class="v">42 tools</span></div><div class="bar"><div class="fill" style="width:29%"></div></div></div>
+    <div class="cat-card"><div class="name">finance</div><div class="row"><span>10 servers</span><span class="v">58 tools</span></div><div class="bar"><div class="fill" style="width:29%"></div></div></div>
+    <div class="cat-card"><div class="name">security</div><div class="row"><span>7 servers</span><span class="v">38 tools</span></div><div class="bar"><div class="fill" style="width:20%"></div></div></div>
+    <div class="cat-card"><div class="name">industry</div><div class="row"><span>7 servers</span><span class="v">38 tools</span></div><div class="bar"><div class="fill" style="width:20%"></div></div></div>
+    <div class="cat-card"><div class="name">ai-act</div><div class="row"><span>6 servers</span><span class="v">44 tools</span></div><div class="bar"><div class="fill" style="width:17%"></div></div></div>
+    <div class="cat-card"><div class="name">marketing</div><div class="row"><span>5 servers</span><span class="v">40 tools</span></div><div class="bar"><div class="fill" style="width:14%"></div></div></div>
+    <div class="cat-card"><div class="name">gaming</div><div class="row"><span>5 servers</span><span class="v">22 tools</span></div><div class="bar"><div class="fill" style="width:14%"></div></div></div>
+    <div class="cat-card"><div class="name">robotics</div><div class="row"><span>4 servers</span><span class="v">20 tools</span></div><div class="bar"><div class="fill" style="width:11%"></div></div></div>
+    <div class="cat-card"><div class="name">creative</div><div class="row"><span>4 servers</span><span class="v">18 tools</span></div><div class="bar"><div class="fill" style="width:11%"></div></div></div>
+    <div class="cat-card"><div class="name">productivity</div><div class="row"><span>3 servers</span><span class="v">12 tools</span></div><div class="bar"><div class="fill" style="width:9%"></div></div></div>
+    <div class="cat-card"><div class="name">data</div><div class="row"><span>3 servers</span><span class="v">18 tools</span></div><div class="bar"><div class="fill" style="width:9%"></div></div></div>
+    <div class="cat-card"><div class="name">cobol</div><div class="row"><span>1 server</span><span class="v">5 tools</span></div><div class="bar"><div class="fill" style="width:3%"></div></div></div>
+    <div class="cat-card"><div class="name">education</div><div class="row"><span>1 server</span><span class="v">5 tools</span></div><div class="bar"><div class="fill" style="width:3%"></div></div></div>
+    <div class="cat-card"><div class="name">research</div><div class="row"><span>1 server</span><span class="v">9 tools</span></div><div class="bar"><div class="fill" style="width:3%"></div></div></div>
+    <div class="cat-card"><div class="name">general</div><div class="row"><span>259 servers</span><span class="v">1,300 tools</span></div><div class="bar"><div class="fill" style="width:100%"></div></div></div>
+  </div>
+</section>
+
+<!-- ============ (3) TOP 10 SOVEREIGN MCPs ============ -->
+<section id="top-mcps" style="background: var(--bg-1); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="sec-head">
+    <div class="num">§ 02 · GALLERY</div>
+    <h2>Top 10 <span class="acc">sovereign</span> MCPs</h2>
+    <p class="desc">The most-called, highest-signal MCP servers in the federation. Every card is a real tool, callable via <code>mcp_federation_call</code>, with SIGIL receipt on every invocation.</p>
+  </div>
+  <div class="mcp-grid">
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#1 EU AI ACT</span></div>
+      <h3>eu-ai-act-compliance-mcp</h3>
+      <div class="cat">compliance · ai-act</div>
+      <div class="desc">Risk-classify any AI system against the EU AI Act taxonomy. Quick-scan, Article 50 watermarking, Annex III high-risk detection, FRIA template.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">16</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">99.4%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">2,481</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">142ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:80f7…c4d2</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#2 GOVERNANCE</span></div>
+      <h3>iso-42001-ai-mcp</h3>
+      <div class="cat">compliance · governance</div>
+      <div class="desc">ISO/IEC 42001 AI Management System controls. Policy templates, risk register, statement of applicability, audit-trail generator.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">10</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">98.7%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">1,932</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">168ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:9a4e…b1f8</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#3 HEALTHCARE</span></div>
+      <h3>healthcare-fhir-mcp</h3>
+      <div class="cat">healthcare · governance</div>
+      <div class="desc">HL7 FHIR R4 server bridge. Patient records, clinical observations, medication requests — sovereign, GDPR-compliant, audit-trailed.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">8</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">99.1%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">1,604</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">89ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:c2d7…0a3e</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#4 DEV</span></div>
+      <h3>code-reviewer-ai-mcp</h3>
+      <div class="cat">developer · security</div>
+      <div class="desc">SIGIL-signed code review. Vulnerability scan, style enforcement, license audit, dependency CVE check. Outputs hash-chained review report.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">5</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">97.9%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">1,422</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">311ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:7e1c…d4a9</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#5 FINANCE</span></div>
+      <h3>aml-ai-mcp</h3>
+      <div class="cat">finance · compliance</div>
+      <div class="desc">Anti-money laundering automation. Sanctions screening, transaction monitoring, SAR drafting, FATF travel-rule compliance.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">7</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">98.2%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">1,288</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">203ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:b1d3…8e7a</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#6 ROBOTICS</span></div>
+      <h3>agriculture-robotics-mcp</h3>
+      <div class="cat">robotics · industry</div>
+      <div class="desc">Farm-robot orchestration. Autonomous tractor route planning, harvest yield estimation, soil sensor fusion, ISO 18497 compliance.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">6</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">96.5%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">982</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">428ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:4f8a…2c1b</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#7 COBOL</span></div>
+      <h3>cobol-bridge-mcp</h3>
+      <div class="cat">cobol · finance</div>
+      <div class="desc">Legacy mainframe bridge. COBOL/JCL/CICS screen scraping, data extraction from VSAM/DB2, modernisation scaffold generator.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">5</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">94.8%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">847</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">612ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:0c9e…f3a2</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#8 GAMING</span></div>
+      <h3>minecraft-modpack-server-mcp</h3>
+      <div class="cat">gaming · creative</div>
+      <div class="desc">CurseForge + Modrinth bridge. Search modpacks, install to local server, resolve dependency conflicts, export modlist with SIGIL.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">6</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">99.6%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">762</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">156ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:d6b2…7e1f</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#9 EDUCATION</span></div>
+      <h3>education-ai-mcp</h3>
+      <div class="cat">education · research</div>
+      <div class="desc">Adaptive learning path generator. Curriculum mapping, quiz authoring, progress tracking. SEN-aware, GDPR-Art-8 compliant by default.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">5</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">97.4%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">641</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">187ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:3a8f…b9c1</div>
+    </div>
+
+    <div class="mcp-card">
+      <div class="ribbon"><span class="badge">#10 CREATIVE</span></div>
+      <h3>comfyui-mcp</h3>
+      <div class="cat">creative · developer</div>
+      <div class="desc">ComfyUI workflow runner. Image, video, audio generation pipelines with deterministic seeds + C2PA watermark attachment.</div>
+      <div class="stats">
+        <div><span class="k">TOOLS</span> <span class="v">8</span></div>
+        <div><span class="k">SUCCESS</span> <span class="v green">98.9%</span></div>
+        <div><span class="k">CALLS</span> <span class="v">588</span></div>
+        <div><span class="k">LATENCY</span> <span class="v">2,840ms</span></div>
+      </div>
+      <div class="sigil">SIGIL: ed25519:e1d4…a5f2</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ (4) FEDERATION SEARCH ============ -->
+<section id="search">
+  <div class="sec-head">
+    <div class="num">§ 03 · SEARCH</div>
+    <h2>Federation <span class="acc">search</span></h2>
+    <p class="desc">One natural-language query routes across all 371 servers, returns the ranked top-K with suggested tools. Below: a live demo of <code>mcp_federation_search("EU AI Act compliance GDPR risk classification")</code>.</p>
+  </div>
+
+  <div class="search-demo">
+    <div class="search-bar">
+      <span class="label">POST /api/mcp_federation_search</span>
+      <span class="q">"EU AI Act compliance GDPR risk classification"</span>
+      <button class="btn">RUN ▶</button>
+    </div>
+    <div class="results">
+
+      <div class="res-row">
+        <div class="rank">01</div>
+        <div class="body">
+          <h4>eu-ai-act-compliance-mcp</h4>
+          <div class="meta">compliance · ai-act · 16 tools</div>
+          <div class="tool"><span>suggested:</span> <strong>quick_scan</strong></div>
+          <div class="doc">"One-sentence AI system description → instant EU AI Act risk classification and obligations list."</div>
+        </div>
+        <div class="score">
+          <div class="num">0.743</div>
+          <div class="lab">relevance</div>
+        </div>
+      </div>
+
+      <div class="res-row">
+        <div class="rank">02</div>
+        <div class="body">
+          <h4>gdpr-compliance-ai-mcp</h4>
+          <div class="meta">compliance · 6 tools</div>
+          <div class="tool"><span>suggested:</span> <strong>crosswalk_to_eu_ai_act</strong></div>
+          <div class="doc">"Map GDPR requirements to EU AI Act obligations. Shows where GDPR Art-22 + AI Act Art-6 overlap."</div>
+        </div>
+        <div class="score">
+          <div class="num">0.600</div>
+          <div class="lab">relevance</div>
+        </div>
+      </div>
+
+      <div class="res-row">
+        <div class="rank">03</div>
+        <div class="body">
+          <h4>meok-eu-ai-act-art-26-fria-mcp</h4>
+          <div class="meta">ai-act · 6 tools</div>
+          <div class="tool"><span>suggested:</span> <strong>list_annex_iii_categories</strong></div>
+          <div class="doc">"Return the 8 Annex III high-risk categories. Article 26 deployer obligations + FRIA templates."</div>
+        </div>
+        <div class="score">
+          <div class="num">0.514</div>
+          <div class="lab">relevance</div>
+        </div>
+      </div>
+
+      <div class="res-row">
+        <div class="rank">04</div>
+        <div class="body">
+          <h4>meok-enterprise-compliance-suite</h4>
+          <div class="meta">compliance · 8 tools</div>
+          <div class="tool"><span>suggested:</span> <strong>bias_detection_scan</strong></div>
+          <div class="doc">"Assess bias risk in AI training data or system outputs per EU AI Act Article 10."</div>
+        </div>
+        <div class="score">
+          <div class="num">0.486</div>
+          <div class="lab">relevance</div>
+        </div>
+      </div>
+
+      <div class="res-row">
+        <div class="rank">05</div>
+        <div class="body">
+          <h4>meok-eu-aigc-icon-mcp</h4>
+          <div class="meta">general · 8 tools</div>
+          <div class="tool"><span>suggested:</span> <strong>sign_compliance_attestation</strong></div>
+          <div class="doc">"Emit an HMAC-signed Article 50 + Code-of-Practice compliance attestation."</div>
+        </div>
+        <div class="score">
+          <div class="num">0.457</div>
+          <div class="lab">relevance</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ (5) SOVEREIGN CITATIONS LIBRARY ============ -->
+<section id="citations" style="background: var(--bg-1); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="sec-head">
+    <div class="num">§ 04 · CITATIONS</div>
+    <h2>Sovereign <span class="acc">citations</span> library</h2>
+    <p class="desc">Every claim that flows through the federation is structured-citable. <code>list_citations()</code> returns the provenance ledger; <code>get_citation(id)</code> returns the full evidence chain — source, hash, SIGIL.</p>
+  </div>
+  <div class="cite-grid">
+
+    <div class="cite-card">
+      <h4>list_citations() → CIT-2026-07-13-001</h4>
+      <div class="quote">"EU AI Act Article 50 requires that providers of AI systems intended to interact directly with natural persons ensure that the affected persons are informed they are interacting with an AI system."</div>
+      <div class="meta">
+        <span class="src">EU AI Act · Art. 50(1)</span> · sha256:7f3a…b8e1 · 2024-06-13
+      </div>
+      <div class="tools">
+        <span>eu-ai-act-compliance-mcp</span>
+        <span>article50_passport_issue</span>
+        <span>SIGIL:80f7…c4d2</span>
+      </div>
+    </div>
+
+    <div class="cite-card">
+      <h4>list_citations() → CIT-2026-07-13-002</h4>
+      <div class="quote">"ISO/IEC 42001:2023 §6.1.2 — the organization shall establish and maintain an AI risk register that identifies, analyses, and evaluates AI risks throughout the system lifecycle."</div>
+      <div class="meta">
+        <span class="src">ISO 42001:2023 · §6.1.2</span> · sha256:2c8d…4f7a · 2023-12-19
+      </div>
+      <div class="tools">
+        <span>iso-42001-ai-mcp</span>
+        <span>risk_register_create</span>
+        <span>SIGIL:9a4e…b1f8</span>
+      </div>
+    </div>
+
+    <div class="cite-card">
+      <h4>list_citations() → CIT-2026-07-13-003</h4>
+      <div class="quote">"GDPR Article 22 — The data subject shall have the right not to be subject to a decision based solely on automated processing, including profiling, which produces legal effects concerning him or her."</div>
+      <div class="meta">
+        <span class="src">GDPR · Art. 22(1)</span> · sha256:a1f4…9c2b · 2016-04-27
+      </div>
+      <div class="tools">
+        <span>gdpr-compliance-ai-mcp</span>
+        <span>automated_decision_audit</span>
+        <span>SIGIL:b1d3…8e7a</span>
+      </div>
+    </div>
+
+    <div class="cite-card">
+      <h4>list_citations() → CIT-2026-07-13-004</h4>
+      <div class="quote">"NIST AI 600-1 (Generative AI Profile) §2.5 — MEASURE 2.5.1: Maintain detailed logs of AI system inputs, outputs, and user interactions to support incident investigation and audit."</div>
+      <div class="meta">
+        <span class="src">NIST AI 600-1</span> · sha256:0d3e…5b9c · 2024-07-26
+      </div>
+      <div class="tools">
+        <span>csoai-governance-crosswalk-mcp</span>
+        <span>framework_map</span>
+        <span>SIGIL:e1d4…a5f2</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ (6) CROSS-SYSTEM BRIDGE ============ -->
+<section id="bridge">
+  <div class="sec-head">
+    <div class="num">§ 05 · BRIDGE</div>
+    <h2>Cross-system <span class="acc">bridge</span></h2>
+    <p class="desc">When SOV3 calls a federation MCP, every step is signed. The end-to-end audit trail is replayable from <code>/v1/sigil/events</code>.</p>
+  </div>
+
+  <div class="bridge-flow">
+    <div class="title">// SOV3 SIGIL audit trail — federation call "EU AI Act compliance GDPR risk classification"</div>
+
+    <div class="flow-step">
+      <div class="n">1</div>
+      <div class="body">
+        <div class="label">C|sov3|hive|RECEIVED_QUERY</div>
+        <div class="detail">User intent detected: <code>"classify my AI system under EU AI Act + GDPR"</code>. Routing through OLM router (organic learning model).</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="n">2</div>
+      <div class="body">
+        <div class="label">V|sov3|olm_route_query|MATCH</div>
+        <div class="detail">Top match: <code>eu-ai-act-compliance-mcp / quick_scan</code> (score 0.743). Runner-up: <code>gdpr-compliance-ai-mcp / crosswalk_to_eu_ai_act</code> (0.600).</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="n">3</div>
+      <div class="body">
+        <div class="label">Q|sov3|federation_call|BRIDGE</div>
+        <div class="detail">SIGIL-signed payload dispatched to <code>eu-ai-act-compliance-mcp</code>. Argument: <code>{"system": "loan-eligibility-ai", "use_case": "consumer lending"}</code>.</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="n">4</div>
+      <div class="body">
+        <div class="label">P|eu-ai-act-compliance-mcp|quick_scan|RESPOND</div>
+        <div class="detail">Returns <code>{"risk_class": "HIGH", "articles": ["6", "10", "13", "14", "22", "26", "50"], "fr_required": true, "conformity_assessment": "required"}</code>.</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="n">5</div>
+      <div class="body">
+        <div class="label">H|sov3|sigil_emit|ANCHOR</div>
+        <div class="detail">Full exchange hash-chained. digest=<code>c0faee43a783cf4e</code>. prev_sig=<code>33565ad40a164829…</code>. New chain head: <code>808c26d7f5a8d6d7…</code>. Public explorer: <code>/v1/sigil/events</code>.</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="n">6</div>
+      <div class="body">
+        <div class="label">M|sov3|sov_council_reason|SYNTHESIZE</div>
+        <div class="detail">Multi-stakeholder reasoning: legal + risk + engineering + executive. Output: actionable remediation plan with 7 SIGIL-cited articles + 14-day FRIA deadline.</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="n">7</div>
+      <div class="body">
+        <div class="label">S|sov3|user_deliver|RESPONSE</div>
+        <div class="detail">Reply to user with full citation chain, clickable SIGIL receipts, and one-click next-best-action: <code>next_best_action("apply EU AI Act high-risk controls to loan-eligibility-ai")</code>.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ (7) TOOL WIRE-IN PATTERN ============ -->
+<section id="wire-in" style="background: var(--bg-1); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="sec-head">
+    <div class="num">§ 06 · WIRE-IN</div>
+    <h2>The 3-patch <span class="acc">canonical</span> pattern</h2>
+    <p class="desc">Adding a new MCP tool to the federation takes 3 patches. No external scaffolding. No drift. The same recipe for every tool, every hive, every domain.</p>
+  </div>
+
+  <div class="patch-grid">
+
+    <div class="patch-card">
+      <div class="num">1</div>
+      <h4>PATCH · the mcp_federation_search index</h4>
+      <div class="file">mcp_federation_search.py</div>
+      <pre><span class="c"># Append the new tool's signature to the searchable catalog</span>
+{
+  <span class="k">"server"</span>: <span class="s">"my-new-mcp"</span>,
+  <span class="k">"tool"</span>: <span class="s">"my_new_tool"</span>,
+  <span class="k">"doc"</span>: <span class="s">"One-line description"</span>,
+  <span class="k">"category"</span>: <span class="s">"compliance"</span>,
+  <span class="k">"tags"</span>: [<span class="s">"eu-ai-act"</span>, <span class="s">"art-50"</span>]
+}</pre>
+    </div>
+
+    <div class="patch-card">
+      <div class="num">2</div>
+      <h4>PATCH · the SIGIL emission hook</h4>
+      <div class="file">mcp_federation_call.py</div>
+      <pre><span class="c"># Wrap the call in sigil_emit() — Ed25519 over the call args</span>
+<span class="k">async def</span> my_new_tool(args):
+    sigil_id = sigil_emit(
+        op=<span class="s">"Q"</span>,
+        actor=<span class="s">"my-new-mcp"</span>,
+        action=<span class="s">"my_new_tool"</span>,
+        args=args
+    )
+    result = <span class="k">await</span> do_work(args)
+    sigil_emit(op=<span class="s">"P"</span>, ref=sigil_id, result=result)
+    <span class="k">return</span> result</pre>
+    </div>
+
+    <div class="patch-card">
+      <div class="num">3</div>
+      <h4>PATCH · the OLM router training pair</h4>
+      <div class="file">olm_train_router.py</div>
+      <pre><span class="c"># Add the QA pair — teaches the router when to use this tool</span>{
+  <span class="k">"query"</span>: <span class="s">"natural-language user request"</span>,
+  <span class="k">"route"</span>: <span class="s">"my-new-mcp.my_new_tool"</span>,
+  <span class="k">"score"</span>: <span class="s">"1.0"</span>,
+  <span class="k">"sample_call_id"</span>: <span class="s">"sigil_id"</span>
+}
+<span class="c"># Then: olm_train_router()</span></pre>
+    </div>
+
+  </div>
+
+  <p style="text-align:center; margin-top:30px; font-family:var(--mono); font-size:0.84rem; color:var(--text-2);">
+    Total wire-in time: <span style="color:var(--gold); font-weight:700;">~ 9 minutes</span> · 3 files · 0 config drift · SIGIL guaranteed
+  </p>
+</section>
+
+<!-- ============ (8) CTAs ============ -->
+<div class="cta-band">
+  <h2>Enter the <span style="color:var(--gold);">sovereign</span> mesh</h2>
+  <p>The Federation Layer is one of 12 sovereign layers. Hermes, Master, and OWEM are the canonical entry points — each consumes the federation differently.</p>
+  <div class="cta-row">
+    <a class="cta primary" href="#">↗ Open Hermes Layer <span class="arrow">→</span></a>
+    <a class="cta ghost" href="#">Master Hub <span class="arrow">→</span></a>
+    <a class="cta ghost" href="#">SOV33 OWEM Hub <span class="arrow">→</span></a>
+  </div>
+</div>
+
+<footer>
+  <div>SOV3 · Federation Layer · 371 MCP servers · 2,016 tools · 17+1 categories · SIGIL ed25519</div>
+  <div class="sig">SIGIL · ed25519:808c26d7f5a8d6d7…</div>
+</footer>
+
+</body>
+</html>

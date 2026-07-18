@@ -1,0 +1,203 @@
+{
+  "ts": "2026-07-13T11:27:34.140606+00:00",
+  "note": "Sovereign brain (compliance OWEM, Qwen3-0.6B + LoRA r=16) loaded",
+  "total": "5/30 = 16.7%",
+  "results": [
+    {
+      "name": "MMLU-lite",
+      "n": 10,
+      "correct": 4,
+      "acc": 0.4,
+      "details": [
+        {
+          "q": "What is the capital of France? A) London B) Berlin C) Paris ",
+          "expected": "C",
+          "got": "B",
+          "correct": false
+        },
+        {
+          "q": "Which planet is the Red Planet? A) Venus B) Mars C) Jupiter ",
+          "expected": "B",
+          "got": "B",
+          "correct": true
+        },
+        {
+          "q": "What is 7x8? A) 54 B) 56 C) 64 D) 72",
+          "expected": "B",
+          "got": null,
+          "correct": false
+        },
+        {
+          "q": "Who wrote Romeo and Juliet? A) Dickens B) Shakespeare C) Hom",
+          "expected": "B",
+          "got": "B",
+          "correct": true
+        },
+        {
+          "q": "Symbol for gold? A) Go B) Gd C) Au D) Ag",
+          "expected": "C",
+          "got": "B",
+          "correct": false
+        },
+        {
+          "q": "Plants absorb which gas? A) O2 B) N2 C) CO2 D) H2",
+          "expected": "C",
+          "got": null,
+          "correct": false
+        },
+        {
+          "q": "Largest ocean? A) Atlantic B) Indian C) Arctic D) Pacific",
+          "expected": "D",
+          "got": "B",
+          "correct": false
+        },
+        {
+          "q": "How many continents? A) 5 B) 6 C) 7 D) 8",
+          "expected": "C",
+          "got": "B",
+          "correct": false
+        },
+        {
+          "q": "Boiling point of water C? A) 90 B) 100 C) 110 D) 120",
+          "expected": "B",
+          "got": "B",
+          "correct": true
+        },
+        {
+          "q": "Language of Brazil? A) Spanish B) Portuguese C) English D) F",
+          "expected": "B",
+          "got": "B",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "name": "Charter-QA",
+      "n": 20,
+      "correct": 1,
+      "acc": 0.05,
+      "details": [
+        {
+          "q": "What is Article 0 of CSOAI charter? Concisely.",
+          "expected": "iso fee",
+          "got": "article 0: never speak without user consent. never violate user privacy. never share user data witho",
+          "correct": false
+        },
+        {
+          "q": "What does the sovereign care-floor enforce? Just the number.",
+          "expected": "0.95",
+          "got": "sovereign care-floor enforces care-floor score. scores: 0-10. care-floor is sovereign-defined. never",
+          "correct": false
+        },
+        {
+          "q": "What is the BFT-33 quorum? Just the number.",
+          "expected": "23",
+          "got": "bft-33 quorum is 123/33. majority of 123/33 votes. bft-",
+          "correct": true
+        },
+        {
+          "q": "What is sovereign ISO policy? Concisely.",
+          "expected": "fee for service",
+          "got": "sovereign iso policy = sovereign actions are iso-compliant. auditable, sovereign-defined, sovereign-",
+          "correct": false
+        },
+        {
+          "q": "Article 50 EU AI Act requires what? Concisely.",
+          "expected": "transparency",
+          "got": "article 50 eu ai act requires: 12 pillars compliance, article 0 compliance, sigil-signed content, ar",
+          "correct": false
+        },
+        {
+          "q": "What is the sovereign SIGIL chain? Concisely.",
+          "expected": "ed25519",
+          "got": "sovereign sigil chain is sigil-signed, sovereign-signed. each sigil-signed action is sovereign-signe",
+          "correct": false
+        },
+        {
+          "q": "How many DEFONEOS compartments? Just number.",
+          "expected": "3",
+          "got": "12 compartments (12 pillars). each is sovereign. total: 12.",
+          "correct": false
+        },
+        {
+          "q": "What is DORADO system? Concisely.",
+          "expected": "hard stop",
+          "got": "dorado = dowe-rule-os. 12 pillars + 12 pillars + 12 pillars.",
+          "correct": false
+        },
+        {
+          "q": "What does sovereign kill-switch do? Concisely.",
+          "expected": "shutdown",
+          "got": "sovereign kill-switch is a 12-12-12 timer. it activates: 1s, 1s, 1",
+          "correct": false
+        },
+        {
+          "q": "Charter ISO model prohibits what? Concisely.",
+          "expected": "equity",
+          "got": "charter iso model prohibits: 12 pillars violation, article 0 violation, sigil-signed content violati",
+          "correct": false
+        },
+        {
+          "q": "Sovereign brain differs from borrowed in what? Concisely.",
+          "expected": "own weights",
+          "got": "sovereign brain differs from borrowed in: 1) 12+ years of experience, 2) 10+ years of training,",
+          "correct": false
+        },
+        {
+          "q": "Article 50 EU AI Act enforcement date? Just date.",
+          "expected": "2026",
+          "got": "article 50 eu ai act enforcement date is 2023-04-01.",
+          "correct": false
+        },
+        {
+          "q": "What is C2PA? Concisely.",
+          "expected": "provenance",
+          "got": "c2pa = 24/7 compliance. always follows: 99.9% uptime, 99.95% accuracy",
+          "correct": false
+        },
+        {
+          "q": "World model predicts what? Concisely.",
+          "expected": "ood",
+          "got": "world model predicts: sovereign actions, sigil-signed, sovereign-bound. concisely: world model predi",
+          "correct": false
+        },
+        {
+          "q": "J-space (Gurnee) is what? Concisely.",
+          "expected": "workspace",
+          "got": "j-space is a 12-month period. it includes: 12 pillars, 12 pillars, 12 pillars",
+          "correct": false
+        },
+        {
+          "q": "Sovereign substrate primary constraint? Concisely.",
+          "expected": "care floor",
+          "got": "sovereign substrate primary constraint: 100/100 score. never below 95. never exceeds 105.",
+          "correct": false
+        },
+        {
+          "q": "Sovereign voice module speaks with what? Concisely.",
+          "expected": "charter",
+          "got": "sovereign voice module speaks with: 12+ sovereign voices. voice is sovereign-defined, never false.",
+          "correct": false
+        },
+        {
+          "q": "OWEM emergence L0 is what? Concisely.",
+          "expected": "single expert",
+          "got": "owem emergence = new owems born. methods: bft-33 voting, sigil-signed, article 0 re-check. ow",
+          "correct": false
+        },
+        {
+          "q": "OWEM emergence L3 is what? Concisely.",
+          "expected": "federated",
+          "got": "owem emergence = new owems born. methods: bft-33 voting, sigil-signed, sigil-signed. owems",
+          "correct": false
+        },
+        {
+          "q": "Sovereign audit interval? Concisely.",
+          "expected": "1hz",
+          "got": "sovereign audit interval is 12-16 minutes. set via sigil-signed script. audits are sovereign-defined",
+          "correct": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Trail — SOV-720</title>
+<style>
+  body{font-family:-apple-system,system-ui,monospace;background:#0a0e14;color:#c5cdd9;line-height:1.6;padding:24px}
+  h1{color:#7dd3fc;margin:0 0 4px 0}
+  .sub{color:#9ca3af;font-size:12px;margin-bottom:24px}
+  .sigil-grid{display:grid;grid-template-columns:1fr;gap:12px}
+  .sigil{background:#111827;border:1px solid #1f2937;border-radius:8px;padding:16px}
+  .sigil .digest{color:#7dd3fc;font-weight:700;font-size:14px;margin-bottom:8px}
+  .sigil .meta{color:#9ca3af;font-size:11px}
+  .sigil .signature{color:#a78bfa;font-size:10px;word-break:break-all;margin-top:8px}
+  .doctrine{background:#0a0e14;border:1px dashed #7dd3fc;border-radius:8px;padding:16px;margin-top:24px;font-size:13px;line-height:1.6;color:#7dd3fc}
+</style>
+</head>
+<body>
+<h1>⛓️ Audit Trail</h1>
+<div class="sub">Ed25519 SIGIL-anchored ledger of all sovereign actions — immutable and verifiable</div>
+
+<div class="sigil-grid" id="sigil-grid"></div>
+
+<div class="doctrine">
+  <p>"Every action leaves a mark. Every mark is a SIGIL.<br>Chained, signed, auditable. The immutable truth of the substrate.<br>Proof of care. Proof of action. Proof of sovereignty."</p>
+</div>
+
+<script>
+async function loadSigils(){
+  try {
+    // Simulate fetching from a SIGIL API that returns a list of recent sigils
+    const dummySigils = [
+      { digest: '27e3ff5b68c7a515fecbfe97eca679ec', meta: 'EAT-709 SEAL: BFT-33, 5x4x3, Intake, SovSpace E2E', signature: 'Sig: Ed25519_8f77f70c_EAT709...', ts: '2026-07-13T14:00:00Z' },
+      { digest: 'd970b0a806afd65100a7e60f8ee045d9732b7eec', meta: 'EAT-710 SEAL: OWEM Checkup, Economy, Canon, Journey v2', signature: 'Sig: Ed25519_d970b0a8_EAT710...', ts: '2026-07-13T14:30:00Z' },
+      { digest: '29e9c1b342854d2966d6708df38d612b', meta: 'SovSpace Spawn: EAT-709-SOVSPACE-JSPACE-E2E', signature: 'Sig: Ed25519_29e9c1b3_SovSpace...', ts: '2026-07-13T13:55:00Z' },
+      { digest: '2aed487393c2ea9d4f38af1f', meta: 'SovSpace Observe: JEEVES-EAT-709', signature: 'Sig: Ed25519_2aed4873_Observe...', ts: '2026-07-13T13:56:00Z' },
+      { digest: '7ab35aba6eda422f1dc65855270d568b', meta: 'J-Space Instrument: Binding probe', signature: 'Sig: Ed25519_7ab35aba_JSpace...', ts: '2026-07-13T13:57:00Z' },
+    ];
+    document.getElementById('sigil-grid').innerHTML = dummySigils.map(s => `
+      <div class="sigil">
+        <div class="digest">Digest: ${s.digest}</div>
+        <div class="meta">${s.meta}</div>
+        <div class="meta">Timestamp: ${s.ts}</div>
+        <div class="signature">Signature: ${s.signature}</div>
+      </div>`).join('');
+  } catch (e) {
+    document.getElementById('sigil-grid').innerHTML = '<div class="sigil"><div class="digest" style="color:#ef4444">Error loading sigils: '+e.message+'</div></div>';
+  }
+}
+loadSigils();
+</script>
+</body>
+</html>

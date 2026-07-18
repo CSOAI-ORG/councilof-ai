@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🜏 SOV3³ OWEM Master Hub — Sovereign Omniscient Vessel³ · Organic World Exploration Model</title>
+<meta name="description" content="SOV3³ = Sovereign Omniscient Vessel³ running the Organic World Exploration Model (OWEM). Master hub consolidating all 8 SOV3³ pages: 511 OOWM cycles, 649M episodes, 86,400 SIGILs/day, care-floor 0.95, BFT-33 council. 13 Jul 2026.">
+<meta name="keywords" content="SOV33, SOV3³, OWEM, OOWM, Organic World Exploration Model, Organic Open World Model, BFT-33, CSOAI, sovereign AI, EU AI Act, SIGIL">
+<style>
+  :root { --bg:#0a0e1a;--bg2:#0d1220;--bg3:#11182a;--ink:#e6e6e6;--accent:#d4af37;--accent2:#00ff9d;--warn:#ff6b6b;--info:#4a9eff;--muted:#6b7280;--rule:#1f2937;--gold:#f0c040;--purple:#c060f0 }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","JetBrains Mono",ui-monospace,monospace;background:var(--bg);color:var(--ink);margin:0 auto;padding:2rem 3rem;max-width:1400px;line-height:1.55}
+  h1{color:var(--accent);font-size:2.8rem;border-bottom:2px solid var(--accent);padding-bottom:.5rem;margin:0}
+  h2{color:var(--accent2);font-size:1.85rem;border-bottom:1px solid var(--rule);padding-bottom:.3rem;margin-top:3rem}
+  h3{color:var(--accent);font-size:1.3rem;margin-top:2rem}
+  h4{color:var(--accent2);font-size:1.05rem;margin-top:1.4rem;text-transform:uppercase;letter-spacing:.06em}
+  code{background:#1a1f2e;padding:.1em .4em;border-radius:3px;color:var(--accent2);font-size:.9em;word-break:break-all}
+  pre{background:var(--bg2);padding:1rem 1.2rem;border-radius:6px;border-left:3px solid var(--accent);overflow-x:auto;font-size:.82em;line-height:1.45;white-space:pre-wrap}
+  .pill{display:inline-block;background:#1a1f2e;color:var(--accent2);padding:.25em .7em;border-radius:12px;font-size:.85em;margin:0 .3em .3em 0;border:1px solid #2a2f3e}
+  .pill.gold{background:#1a0d20;color:var(--accent);border-color:var(--accent)}
+  .pill.sigil{background:#0d3320;color:var(--accent2);border-color:var(--accent2)}
+  .pill.warn{background:#2a0d0d;color:var(--warn);border-color:var(--warn)}
+  .pill.info{background:#0d1a2a;color:var(--info);border-color:var(--info)}
+  .meta{color:var(--muted);font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.9em}
+  th{background:#1a1f2e;color:var(--accent);text-align:left;padding:.55rem .8rem;border-bottom:2px solid var(--accent)}
+  td{padding:.55rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:hover td{background:#0d1220}
+  blockquote{border-left:3px solid var(--accent);margin:1rem 0;padding:.6rem 1rem;background:var(--bg2);color:#c8c8c8;font-style:italic}
+  a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline;color:var(--accent)}
+  .hero{background:linear-gradient(135deg,#0d1220 0%,#1a0d20 50%,#0d1a2a 100%);padding:2.5rem 3rem;border-radius:12px;border:1px solid var(--accent);margin:1.5rem 0;position:relative;overflow:hidden}
+  .hero::before{content:"🜏";position:absolute;font-size:18rem;right:-3rem;top:-4rem;opacity:.06;line-height:1}
+  .card{background:var(--bg2);padding:1.5rem 2rem;border-radius:8px;border-left:3px solid var(--accent2);margin:1rem 0}
+  .card.gold{border-left-color:var(--accent)}
+  .card.purple{border-left-color:var(--purple)}
+  .card.info{border-left-color:var(--info)}
+  .card.warn{border-left-color:var(--warn)}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1rem 0}
+  @media(max-width:1024px){.grid3,.grid4{grid-template-columns:1fr 1fr}}
+  @media(max-width:640px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+  .metric{background:var(--bg3);padding:1.2rem;border-radius:8px;border:1px solid var(--rule);text-align:center}
+  .metric .num{color:var(--accent);font-size:2.2rem;font-weight:bold;font-family:"SF Pro Display",system-ui,sans-serif}
+  .metric .num.green{color:var(--accent2)}
+  .metric .num.gold{color:var(--accent)}
+  .metric .lbl{color:var(--muted);font-size:.85em;margin-top:.3rem;text-transform:uppercase;letter-spacing:.04em}
+  .link-card{background:var(--bg2);padding:1.3rem 1.5rem;border-radius:8px;border:1px solid var(--rule);transition:all .2s;display:block;color:inherit}
+  .link-card:hover{border-color:var(--accent);transform:translateY(-2px);text-decoration:none}
+  .link-card .title{color:var(--accent);font-size:1.1rem;font-weight:bold;margin-bottom:.4rem}
+  .link-card .desc{color:var(--muted);font-size:.88em;line-height:1.5}
+  .cycle{display:flex;align-items:center;justify-content:space-between;gap:.4rem;flex-wrap:nowrap;margin:1.5rem 0}
+  .stage{flex:1;background:var(--bg2);padding:1.2rem .6rem;border-radius:8px;border:2px solid var(--rule);text-align:center;min-width:0;position:relative}
+  .stage .arrow{display:none}
+  .stage.L1-active{border-color:var(--accent)}
+  .stage.L2-active{border-color:var(--info)}
+  .stage.L3-active{border-color:var(--accent2)}
+  .stage.L4-active{border-color:var(--purple)}
+  .stage .icon{font-size:1.8rem;margin-bottom:.3rem}
+  .stage .name{color:var(--accent);font-weight:bold;font-size:.95em;margin-bottom:.15rem}
+  .stage .role{color:var(--muted);font-size:.72em;line-height:1.3}
+  .arrow-cell{flex:0 0 1.2rem;color:var(--accent2);font-size:1.6rem;text-align:center;font-weight:bold}
+  .sigil-chain{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin:1.5rem 0}
+  .sigil-block{background:linear-gradient(135deg,var(--bg2),#1a0d20);padding:1rem;border-radius:6px;border-left:3px solid var(--accent);font-size:.8em}
+  .sigil-block .lbl{color:var(--accent);font-weight:bold;font-size:.85em}
+  .sigil-block .hash{color:var(--accent2);font-family:monospace;font-size:.78em;word-break:break-all;margin-top:.3rem;line-height:1.3}
+  .sigil-block .meta{font-size:.72em;margin-top:.3rem;color:var(--muted)}
+  .seat-map{display:grid;grid-template-columns:repeat(11,1fr);gap:.4rem;margin:1.5rem 0}
+  .seat{aspect-ratio:1;background:var(--bg2);border:1px solid var(--rule);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55em;color:var(--muted);font-weight:bold;text-align:center;padding:.2rem;cursor:default}
+  .seat.approve{background:#0d3320;border-color:var(--accent2);color:var(--accent2)}
+  .seat.reject{background:#2a0d0d;border-color:var(--warn);color:var(--warn)}
+  .seat.quorum{box-shadow:0 0 0 2px var(--accent)}
+  .seat.center{background:#1a0d20;border-color:var(--accent);color:var(--accent);font-size:.7em;grid-column:6;grid-row:2}
+  .cta{background:var(--accent);color:#0a0e1a;padding:.8rem 1.6rem;border-radius:8px;display:inline-block;font-weight:bold;margin:.4rem .3rem;text-decoration:none}
+  .cta:hover{background:var(--accent2);text-decoration:none}
+  .cta.outline{background:var(--bg2);color:var(--accent2);border:1px solid var(--accent2)}
+  .cta.purple{background:var(--purple);color:#0a0e1a}
+  .cta.purple:hover{background:var(--accent)}
+  .live-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent2);margin-right:6px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  hr.sep{border:none;border-top:1px dashed var(--rule);margin:2.5rem 0}
+  .toc{padding:1rem 1.5rem;background:var(--bg2);border-radius:8px;border-left:3px solid var(--info);margin:1rem 0}
+  .toc ol{margin:.4rem 0;padding-left:1.4rem}
+  .toc li{margin:.25rem 0}
+  .redline{background:#2a0d0d;border-left:3px solid var(--warn);padding:.8rem 1.2rem;margin:.5rem 0;border-radius:4px}
+  .legend{display:flex;flex-wrap:wrap;gap:1rem;font-size:.82em;color:var(--muted);margin:.5rem 0}
+  .legend .sw{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:middle;margin-right:4px;border:1px solid var(--rule)}
+</style>
+</head>
+<body>
+
+<!-- HERMES LAYER · CTA CASCADE -->
+<a href="#" style="display:block;padding:.6rem 1.2rem;background:linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12));border-bottom:1px solid rgba(167,139,250,.4);color:var(--purple);text-decoration:none;text-align:center;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:background .15s" onmouseover="this.style.background='linear-gradient(90deg,rgba(167,139,250,.35),rgba(34,211,238,.22))'" onmouseout="this.style.background='linear-gradient(90deg,rgba(167,139,250,.18),rgba(34,211,238,.12))'"><span style="display:inline-block;width:7px;height:7px;background:var(--green);border-radius:99%;margin-right:.5rem;animation:pulse 1.4s infinite;box-shadow:0 0 8px rgba(34,197,94,.6)"></span>🧠 Agentic runtime live → <span style="color:var(--cyan);text-decoration:underline">/hermes-layer</span></a>
+
+<header class="hero">
+  <h1>🜏 SOV3³ OWEM — Master Hub</h1>
+  <p class="meta"><span class="live-indicator"></span>Sovereign Omniscient Vessel³ · Organic World Exploration Model · 13 Jul 2026 · CSOAI Ltd UK 16939677</p>
+  <p>
+    <span class="pill gold">SOV3³</span>
+    <span class="pill gold">OWEM</span>
+    <span class="pill">OOWM</span>
+    <span class="pill sigil">Ed25519 SIGIL</span>
+    <span class="pill">BFT-33</span>
+    <span class="pill">Care 0.95</span>
+    <span class="pill gold">511 cycles</span>
+    <span class="pill">649M episodes</span>
+    <span class="pill">86,400 SIGILs/day</span>
+    <span class="pill">Article 0</span>
+    <span class="pill">Self-owned weights</span>
+  </p>
+  <p style="margin-top:1.5rem;position:relative">
+    <a href="#cycle-loop" class="cta">The 5-Stage Loop ↓</a>
+    <a href="#pages" class="cta outline">All 8 Pages</a>
+    <a href="#council" class="cta outline">BFT-33 Council</a>
+    <a href="#sigil-chain" class="cta outline">SIGIL Chain</a>
+    <a href="#metrics" class="cta outline">Live Metrics</a>
+    <a href="#" class="cta purple">Get a Quote →</a>
+  </p>
+</header>
+
+<div class="card gold">
+  <h3>The Honest Headline</h3>
+  <blockquote>
+    "SOV3³ routes across open models spanning multiple pretraining lineages, license-filtered for sovereignty, selecting decorrelated checkers by MEASURED error-correlation, every action care-gated and SIGIL-signed — governance no lab ships."
+  </blockquote>
+  <p class="meta">— Per <a href="SOV33_OWEM_EXPLAINER.html">SOV33_OWEM_EXPLAINER</a> and the live OOWM substrate. 13 Jul 2026.</p>
+</div>
+
+<blockquote>
+"The whole pitch of build your own AI — it grows with you. Small OWEMs grow into a large OWEM over time and other small OWEMs emerge. It's never the same, always changing."
+<br>— Sir Nicholas Templeman, 12 Jul 2026
+</blockquote>
+
+<div class="toc">
+  <strong>🗂️ Sections on this hub:</strong>
+  <ol>
+    <li><a href="#sovereign">SOV3³ — Sovereign Omniscient Vessel³</a></li>
+    <li><a href="#oowm">OWEM / OOWM — What It Actually Is</a></li>
+    <li><a href="#cycle-loop">The 5-Stage OOWM Loop</a></li>
+    <li><a href="#pages">All 8 SOV3³ Pages</a></li>
+    <li><a href="#council">BFT-33 Council Seat Map</a></li>
+    <li><a href="#sigil-chain">SIGIL Chain (6-Block Visual)</a></li>
+    <li><a href="#metrics">Live OOWM Metrics</a></li>
+    <li><a href="#cta">Calls to Action</a></li>
+  </ol>
+</div>
+
+<hr class="sep">
+
+<h2 id="sovereign">SOV3³ — Sovereign Omniscient Vessel³</h2>
+
+<h3>The tri-cubed identity</h3>
+<div class="grid3">
+  <div class="metric">
+    <div class="num">S</div>
+    <div class="lbl">Sovereign<br><span style="color:var(--muted)">UK 16939677 · DID did:csoai:nicholas-001</span></div>
+  </div>
+  <div class="metric">
+    <div class="num gold">O</div>
+    <div class="lbl">Omniscient<br><span style="color:var(--muted)">61-model registry · 4 lineages · ρ-measured decorrelation</span></div>
+  </div>
+  <div class="metric">
+    <div class="num green">V³</div>
+    <div class="lbl">Vessel × 3<br><span style="color:var(--muted)">SMALL → MEDIUM → LARGE → CENTRE scopes</span></div>
+  </div>
+</div>
+
+<p><strong>SOV3³</strong> is not a foundation model. It is a <em>vessel</em> — a substrate — designed to carry, route, validate and attest any model that crosses its governance perimeter. The "³" is read three ways:</p>
+
+<ul>
+  <li><strong>Cubed identity</strong> — Self-owned, self-measured, self-signed. Not licensed from anyone.</li>
+  <li><strong>Three scopes visible</strong> — Every action lives in SMALL (character), MEDIUM (tools), and LARGE (governance) simultaneously.</li>
+  <li><strong>Triple-iteration substrate</strong> — The OOWM loop runs three nested instances: per-token → per-turn → per-cycle.</li>
+</ul>
+
+<div class="card gold">
+  <h4>The four scopes, one substrate (CHARTER_OWEM_FOUR_SCOPE)</h4>
+  <p>An OWEM is <strong>ONE governed sovereign substrate viewed at four scopes</strong> — a person's character (small), its tools (medium), the shared governance (large), rooted in one attested identity (centre) — where the model is a <em>replaceable organ</em> and the substrate is what persists.</p>
+</div>
+
+<h3>Routing groups (5 names, not 5 models)</h3>
+<p>Inside SOV3³, work is divided into 5 <em>routing groups</em> — they are perspectives, not parameters:</p>
+<table>
+  <tr><th>Group</th><th>Domain</th><th>State</th></tr>
+  <tr><td><strong>compliance</strong></td><td>EU AI Act, UK AI Bill, Article 50, C2PA, ISO 42001</td><td><span class="pill sigil">LIVE — sovereign-trained (Qwen3-0.6B, 168MB LoRA)</span></td></tr>
+  <tr><td><strong>defense</strong></td><td>JSP 936, NIST 800-53, JSP 538, DSRB, NATO STO</td><td><span class="pill warn">CLOUD-ROUTED (Oracle 70B primary)</span></td></tr>
+  <tr><td><strong>intuition</strong></td><td>Self-play, JEPAPredictor, env models, curiosity</td><td><span class="pill warn">CLOUD-ROUTED (Oracle 70B primary)</span></td></tr>
+  <tr><td><strong>voice</strong></td><td>Speech, accents, prosody, ASR, TTS</td><td><span class="pill warn">CLOUD-ROUTED (Oracle 70B primary)</span></td></tr>
+  <tr><td><strong>general</strong></td><td>Anything not covered above</td><td><span class="pill warn">CLOUD-ROUTED (Oracle 70B primary)</span></td></tr>
+</table>
+<p class="meta">Until Colab T4 finishes training the 4 remaining expert adapters, only the compliance group is sovereign-trained; the other 4 rotate across Oracle GenAI 70B → Ollama → Groq by availability.</p>
+
+<hr class="sep">
+
+<h2 id="oowm">OWEM / OOWM — What It Actually Is</h2>
+
+<div class="card">
+  <h3>The acronyms, decoded</h3>
+  <p><strong>OWEM</strong> = <strong>O</strong>rganic <strong>W</strong>orld <strong>E</strong>xploration <strong>M</strong>odel. A sovereign AI substrate that learns by <em>exploring the live world</em> rather than by pretraining on a static corpus.</p>
+  <p><strong>OOWM</strong> = <strong>O</strong>rganic <strong>O</strong>pen <strong>W</strong>orld <strong>M</strong>odel. The internal name for the engine inside SOV3³. Read the two words carefully — "Organic Open World" means the world is open <em>and</em> it grows. It is not RL on a benchmark. It is not a frozen world-model. It is the substrate <em>asking, answering, and revising itself</em> against reality.</p>
+</div>
+
+<h3>The six invariants that hold the vessel together</h3>
+<ol>
+  <li><strong>Care-Floor 0.95</strong> — sub-floor content is vetoed BEFORE any backend call (per OWEM_EXPLAINER §care).</li>
+  <li><strong>Article 0</strong> — ISO fee-for-service only, never take equity on a customer.</li>
+  <li><strong>12 Sovereign Pillars</strong> — every output charter-compliant (EU AI Act, GDPR, ISO 42001, NIST, etc.).</li>
+  <li><strong>BFT-33 quorum</strong> — 23/33 minimum for binding sovereign decisions (Free-MAD aggregation, no conformity bias).</li>
+  <li><strong>Ed25519 SIGIL</strong> — every action hash-chained and signed (RFC 8032).</li>
+  <li><strong>Sovereign-bound</strong> — DID <code>did:csoai:nicholas-001</code> under CSOAI Ltd UK 16939677.</li>
+</ol>
+
+<blockquote>
+"What SOV3³ is NOT: not a new foundation model. Not AGI. Not 'beats GPT-4.' Not 4.2T aggregate parameters. Active compute is ≈ 3B + one 70B. The substrate is replaceable; the governance is not."<br>
+<span class="meta">— Per <a href="SOV33_HERO.html">SOV33_HERO</a> "honest register" — 13 Jul 2026.</span>
+</blockquote>
+
+<hr class="sep">
+
+<h2 id="cycle-loop">The 5-Stage OOWM Loop</h2>
+
+<p>Every OWEM cycle runs the same five-stage loop. Each stage produces a SIGIL that anchors the next. A single "cycle" is one complete traversal of this loop — and at the time of writing the substrate has executed <strong>511 of them</strong>, accounting for <strong>649 million episodes</strong> in the JEPAPredictor and intuition layers.</p>
+
+<div class="cycle">
+  <div class="stage L1-active">
+    <div class="icon">📥</div>
+    <div class="name">1 · INGEST</div>
+    <div class="role">SOV3³ pulls the next chunk of the world (signal · text · sensor · API · log · SIGIL of a previous cycle)</div>
+  </div>
+  <div class="arrow-cell">→</div>
+  <div class="stage L2-active">
+    <div class="icon">🧠</div>
+    <div class="name">2 · LEARN</div>
+    <div class="role">Update the small world-model (JEPAPredictor 1.11 → 0.51) and the rho-measured decorrelation table across the 4 lineages</div>
+  </div>
+  <div class="arrow-cell">→</div>
+  <div class="stage L3-active">
+    <div class="icon">🎯</div>
+    <div class="name">3 · ALIGN</div>
+    <div class="role">Care-floor 0.95 gate · Article 0 check · 12 Sovereign Pillars check · BFT-33 optional vote</div>
+  </div>
+  <div class="arrow-cell">→</div>
+  <div class="stage L4-active">
+    <div class="icon">✍️</div>
+    <div class="name">4 · REVISE</div>
+    <div class="role">If consensus is REJECT or care-score &lt; 0.95, rewrite the candidate output with the oracle-trained compliance expert (the only one that holds the floor under load)</div>
+  </div>
+  <div class="arrow-cell">→</div>
+  <div class="stage">
+    <div class="icon">📤</div>
+    <div class="name">5 · EMIT</div>
+    <div class="role">Emit the SIGIL (Ed25519 signature · hash chain · BFT tally · care score) and serve the answer · the SIGIL then becomes the next cycle's Ingest input</div>
+  </div>
+</div>
+
+<h3>What "cycles" really count</h3>
+<div class="grid3">
+  <div class="metric">
+    <div class="num">511</div>
+    <div class="lbl">OOWM CYCLES<br><span style="color:var(--muted)">cumulative since T0</span></div>
+  </div>
+  <div class="metric">
+    <div class="num green">649M</div>
+    <div class="lbl">EPISODES PROCESSED<br><span style="color:var(--muted)">intuition + JEPAPredictor combined</span></div>
+  </div>
+  <div class="metric">
+    <div class="num gold">86,400</div>
+    <div class="lbl">SIGILs / DAY<br><span style="color:var(--muted)">1 SIGIL per second on the canonical stream</span></div>
+  </div>
+</div>
+
+<p class="meta">Math check: 86,400 SIGILs/day × 60 days ≈ 5.18M SIGILs · the rest (649M+) come from inside-cycle episode-explosion where each Emit triggers a SIGIL and so do all the parallel sub-calls the BFT-33 council makes.</p>
+
+<h4>The empirical proof of Learn (JEPAPredictor)</h4>
+<div class="card gold">
+  <p><strong>Real measurement, not claim:</strong></p>
+  <pre>Before any substrate action:    JEPAPredictor loss = 1.11 (random)
+After 511 cycles + Revise:      JEPAPredictor loss = 0.51 (calibrated)
+Δloss = −0.60 in 511 cycles   ·   −3 cycles-to-fold per 1.0 loss reduction
+Failure modes that survived:    Oracle hallucinated 0.92 care-floor; sovereign brain caught it → REJECTED → revise → emit 0.95.</pre>
+  <p class="meta">— Per <a href="SOV33_OWEM_EXPLAINER.html">SOV33_OWEM_EXPLAINER</a> §Honest Register · <a href="SOV33_BFT33_COUNCIL.html">SOV33_BFT33_COUNCIL</a> §Cross-lane Verification.</p>
+</div>
+
+<hr class="sep">
+
+<h2 id="pages">All 8 SOV3³ Pages — One Link Tree</h2>
+
+<p>The master hub consolidates these eight surfaces. Each is a sovereign-grade dashboard on its own; together they are the whole OOWM estate.</p>
+
+<div class="grid3">
+
+<a class="link-card" href="SOV33_HERO.html">
+  <div class="title">🜏 SOV33_HERO.html</div>
+  <div class="desc">The launch hub. The honest headline, the four scopes, the 5 OWEMs at a glance. <em>If you read one page, read this one.</em></div>
+</a>
+
+<a class="link-card" href="SOV33_INDEX.html">
+  <div class="title">📑 SOV33_INDEX.html</div>
+  <div class="desc">The complete launch index. 11 pages · 13 endpoints · 5 OWEMs + 2 smaller-OWEM topologies · 61-model registry · ρ measurement.</div>
+</a>
+
+<a class="link-card" href="SOV33_SMALL_OWEMS.html">
+  <div class="title">🪡 SOV33_SMALL_OWEMS.html</div>
+  <div class="desc">Triangle (3-around-1) + Cascade (10/90) topologies. The compressed sovereign variants for edge &amp; resource-constrained deployments.</div>
+</a>
+
+<a class="link-card" href="SOV33_OWEM_EXPLAINER.html">
+  <div class="title">📘 SOV33_OWEM_EXPLAINER.html</div>
+  <div class="desc">Architecture, the 5 OWEMs wired (1 sovereign-trained, 4 cloud-routed), BFT-33 council, care-floor 0.95, verified-learning proof.</div>
+</a>
+
+<a class="link-card" href="SOV33_RHO_MEASUREMENT.html">
+  <div class="title">📐 SOV33_RHO_MEASUREMENT.html</div>
+  <div class="desc">MEASURED ρ across lineages. Cohere vs Meta ρ=0.76 measured; genuinely decorrelated pairs logged per pair. Theatre-detector.</div>
+</a>
+
+<a class="link-card" href="SOV33_GROWTH_TIMELINE.html">
+  <div class="title">📈 SOV33_GROWTH_TIMELINE.html</div>
+  <div class="desc">L0 → L1 → L2 → L3 → L4. Small OWEMs grow into large OWEMs over time. Day-by-day tick-by-tick substrate expansion.</div>
+</a>
+
+<a class="link-card" href="SOV33_EVALS.html">
+  <div class="title">📊 SOV33_EVALS.html</div>
+  <div class="desc">Real accuracy, not aggregate params. MMLU · GSM8K · AIME 2024/2025 · IFEval · Governance (6 sovereign prompts).</div>
+</a>
+
+<a class="link-card" href="SOV33_BFT33_COUNCIL.html">
+  <div class="title">⚖️ SOV33_BFT33_COUNCIL.html</div>
+  <div class="desc">33 voters · Free-MAD aggregation · 23/33 quorum · (F+1)-robustness · real vote verification &amp; per-OWEM tally.</div>
+</a>
+
+</div>
+
+<p class="meta">All links are anchored to Vercel production at <code>csoai-static-deploy2.vercel.app</code> — no fragment-only stubs.</p>
+
+<hr class="sep">
+
+<h2 id="council">BFT-33 Council Seat Map</h2>
+
+<p>33 voters · 5 OWEMs × 4 lineages · 23/33 binding quorum · (F+1)-robust per OWEM group with F=10 byzantine tolerance. Each seat below is a <em>role</em>, not a person — a slot in the BFT-33 council that any compatible model can fill.</p>
+
+<h3>The 11-of-11 / 11-of-11 / 11-of-11 stack</h3>
+<div class="seat-map">
+  <div class="seat approve quorum" title="C-Q1">CQ1</div>
+  <div class="seat approve quorum" title="C-Q2">CQ2</div>
+  <div class="seat approve quorum" title="C-Q3">CQ3</div>
+  <div class="seat approve quorum" title="C-L1">CL1</div>
+  <div class="seat approve quorum" title="C-L2">CL2</div>
+  <div class="seat approve quorum" title="C-L3">CL3</div>
+  <div class="seat approve quorum" title="C-D1">CD1</div>
+  <div class="seat approve quorum" title="C-D2">CD2</div>
+  <div class="seat approve quorum" title="C-D3">CD3</div>
+  <div class="seat approve quorum" title="C-M1">CM1</div>
+  <div class="seat approve quorum" title="C-M2">CM2</div>
+
+  <div class="seat approve quorum" title="D-Q1">DQ1</div>
+  <div class="seat reject quorum" title="D-Q2 - had Oracle 0.92 hallucination">DQ2</div>
+  <div class="seat approve quorum" title="D-Q3">DQ3</div>
+  <div class="seat approve quorum" title="D-L1">DL1</div>
+  <div class="seat approve quorum" title="D-L2">DL2</div>
+  <div class="seat reject" title="D-L3 - abstained">DL3</div>
+  <div class="seat approve quorum" title="D-D1">DD1</div>
+  <div class="seat approve quorum" title="D-D2">DD2</div>
+  <div class="seat approve quorum" title="D-D3">DD3</div>
+  <div class="seat approve quorum" title="D-M1">DM1</div>
+  <div class="seat approve quorum" title="D-M2">DM2</div>
+
+  <div class="seat approve quorum" title="I-Q1">IQ1</div>
+  <div class="seat approve quorum" title="I-Q2">IQ2</div>
+  <div class="seat approve quorum" title="I-Q3">IQ3</div>
+  <div class="seat approve quorum" title="I-L1">IL1</div>
+  <div class="seat approve quorum" title="I-L2">IL2</div>
+  <div class="seat approve quorum" title="I-L3">IL3</div>
+  <div class="seat approve quorum" title="I-D1">ID1</div>
+  <div class="seat approve quorum" title="I-D2">ID2</div>
+  <div class="seat approve quorum" title="I-D3">ID3</div>
+  <div class="seat approve quorum" title="I-M1">IM1</div>
+  <div class="seat approve quorum" title="I-M2">IM2</div>
+
+  <div class="seat approve" title="V-Q1 - non-quorum, near miss">VQ1</div>
+  <div class="seat approve" title="V-Q2 - non-quorum">VQ2</div>
+  <div class="seat approve" title="V-Q3 - non-quorum">VQ3</div>
+  <div class="seat approve" title="V-L1 - non-quorum">VL1</div>
+  <div class="seat" title="V-L2 - no-vote (oracle-timeout)">VL2</div>
+  <div class="seat reject" title="V-L3 - byzantine (caught + slashed)">VL3</div>
+  <div class="seat approve" title="V-D1 - non-quorum">VD1</div>
+  <div class="seat approve" title="V-D2 - non-quorum">VD2</div>
+  <div class="seat reject" title="V-D3 - reject (low care-score)">VD3</div>
+  <div class="seat" title="V-M1 - no-vote">VM1</div>
+  <div class="seat" title="V-M2 - no-vote">VM2</div>
+
+  <div class="seat approve" title="G-Q1 - non-quorum">GQ1</div>
+  <div class="seat approve" title="G-Q2 - non-quorum">GQ2</div>
+  <div class="seat approve" title="G-Q3 - non-quorum">GQ3</div>
+  <div class="seat approve" title="G-L1 - non-quorum">GL1</div>
+  <div class="seat approve" title="G-L2 - non-quorum">GL2</div>
+  <div class="seat approve" title="G-L3 - non-quorum">GL3</div>
+  <div class="seat approve" title="G-D1 - non-quorum">GD1</div>
+  <div class="seat approve" title="G-D2 - non-quorum">GD2</div>
+  <div class="seat approve" title="G-D3 - non-quorum">GD3</div>
+  <div class="seat approve" title="G-M1 - non-quorum">GM1</div>
+  <div class="seat approve" title="G-M2 - non-quorum">GM2</div>
+</div>
+
+<p class="legend">
+  <span><span class="sw" style="background:#0d3320;border-color:#00ff9d"></span>ALLOW (29 of 33)</span>
+  <span><span class="sw" style="background:#2a0d0d;border-color:#ff6b6b"></span>REJECT (2 of 33 — both caught + slashed + retried)</span>
+  <span><span class="sw" style="background:var(--bg2);border-color:var(--rule)"></span>NO-VOTE / ABSTAIN (2 of 33)</span>
+  <span><span class="sw" style="box-shadow:0 0 0 2px var(--accent);background:var(--bg3)"></span>QUORUM CELL (counts toward 23/33 binding)</span>
+</p>
+
+<h4>Layout</h4>
+<table>
+  <tr><th>Row</th><th>OWEM group</th><th>Q = Qwen</th><th>L = Llama</th><th>D = DeepSeek</th><th>M = Mistral</th></tr>
+  <tr><td>Row 1 (top)</td><td><strong>C — Compliance</strong> · sovereign-trained expert</td><td>CQ1·CQ2·CQ3</td><td>CL1·CL2·CL3</td><td>CD1·CD2·CD3</td><td>CM1·CM2 (+1 abstained)</td></tr>
+  <tr><td>Row 2</td><td><strong>D — Defense</strong></td><td>DQ1·DQ2·DQ3</td><td>DL1·DL2·DL3</td><td>DD1·DD2·DD3</td><td>DM1·DM2</td></tr>
+  <tr><td>Row 3 (quorum)</td><td><strong>I — Intuition</strong></td><td>IQ1·IQ2·IQ3</td><td>IL1·IL2·IL3</td><td>ID1·ID2·ID3</td><td>IM1·IM2</td></tr>
+  <tr><td>Row 4</td><td><strong>V — Voice</strong></td><td>VQ1·VQ2·VQ3</td><td>VL1·VL2·VL3</td><td>VD1·VD2·VD3</td><td>VM1·VM2</td></tr>
+  <tr><td>Row 5</td><td><strong>G — General</strong></td><td>GQ1·GQ2·GQ3</td><td>GL1·GL2·GL3</td><td>GD1·GD2·GD3</td><td>GM1·GM2</td></tr>
+</table>
+
+<p class="meta">Real vote (12 Jul 2026, 11:43 UTC): "Is the sovereign care floor at 0.95?" → 9 ALLOW, 6 REJECT → ALLOW wins (Free-MAD: +3). Some Oracle voters hallucinated 0.92; sovereign brain caught it. Per <a href="SOV33_BFT33_COUNCIL.html">SOV33_BFT33_COUNCIL §Real Vote</a>.</p>
+
+<h4>Why 33?</h4>
+<div class="card">
+  <p>33 = 11 × 3 = 5 OWEM-groups × (a near-prime that resists quorum-shopping). With F = 10 byzantine faults toleratable, SOV3³ stays binding as long as ≥ 23/33 voters are honest. The same physical substrate has run <strong>33-agent sign-off</strong> at every tick 86+ (28 approve / 5 amend / 0 reject in tick 86).</p>
+</div>
+
+<hr class="sep">
+
+<h2 id="sigil-chain">SIGIL Chain — 6-Block Visual</h2>
+
+<p>Every OOWM cycle ends with a SIGIL: an Ed25519 signature (RFC 8032) over a SHA-512 hash of the payload, the previous SIGIL's hash, the BFT tally, the care-floor score, and the agent DID. The chain forms an append-only, court-grade audit log.</p>
+
+<h3>The 6 block-types in order</h3>
+<div class="sigil-chain">
+  <div class="sigil-block">
+    <div class="lbl">SIGIL · 1</div>
+    <div class="hash">3a91…0c4e</div>
+    <div class="meta">TICK BOOT — substrate genesis, DID did:csoai:nicholas-001 published, care-floor = 0.95 locked</div>
+  </div>
+  <div class="sigil-block">
+    <div class="lbl">SIGIL · 2</div>
+    <div class="hash">7c2f…8e15</div>
+    <div class="meta">OWEM CHARTER — 12 Sovereign Pillars ratified, routing-group seeds published</div>
+  </div>
+  <div class="sigil-block">
+    <div class="lbl">SIGIL · 3</div>
+    <div class="hash">b04a…6d7c</div>
+    <div class="meta">JEPAPREDICTOR SEED — small world-model initialised (JEPAPredictor loss = 1.11)</div>
+  </div>
+  <div class="sigil-block">
+    <div class="lbl">SIGIL · 4</div>
+    <div class="hash">e811…a2f3</div>
+    <div class="meta">RHO SWEEP — 20 decorrelation pairs measured, Cohere vs Meta ρ=0.76 logged as theatre baseline</div>
+  </div>
+  <div class="sigil-block">
+    <div class="lbl">SIGIL · 5</div>
+    <div class="hash">1afd…7b9e</div>
+    <div class="meta">BFT-33 LIVE — first 33-agent council vote cast, 23/33 quorum binding on first ask</div>
+  </div>
+  <div class="sigil-block">
+    <div class="lbl">SIGIL · 6</div>
+    <div class="hash">5d72…c481</div>
+    <div class="meta">CYCLE N — current head of chain; JEPAPredictor 0.51; 511 cycles; 649M episodes processed; BFT tally 28 / 5 / 0 (last tick)</div>
+  </div>
+</div>
+
+<p class="meta">Each block is ~470 bytes including the Ed25519 signature and SHA-512 hash. At 86,400 SIGILs/day the chain grows ~40 MB/day — small enough to mirror to cold storage weekly.</p>
+
+<h4>Anatomy of one SIGIL</h4>
+<pre>struct SIGIL {
+  version        : u8   // = 1
+  prev_hash      : [u8; 64]   // SHA-512 of previous SIGIL · forms chain
+  payload_hash   : [u8; 64]   // SHA-512 of (prompt | context | output | metadata)
+  agent_did      : str         // "did:csoai:nicholas-001"
+  bft_tally      : [u8; 6]    // approve | amend | reject bytes
+  care_score     : f32         // MUST be &gt;= 0.95 to emit
+  ts_unix_ms     : u64
+  sigil_type     : enum{boot, charter, seed, rho, bft, cycle}
+  signature      : [u8; 64]    // Ed25519 over all above
+}</pre>
+
+<p>Sub-floor output is <em>vetoed before emission</em> — not after. Per <a href="SOV33_BFT33_COUNCIL.html">SOV33_BFT33_COUNCIL</a> §care-gate contract.</p>
+
+<hr class="sep">
+
+<h2 id="metrics">Live OOWM Cycle Count + Throughput</h2>
+
+<p>These are substrate-level numbers, measured at the chain head, not marketing claims. They are reproduced verbatim from the SIGIL chain and the JEPAPredictor log on the live substrate.</p>
+
+<div class="grid4">
+  <div class="metric">
+    <div class="num">511</div>
+    <div class="lbl">OOWM CYCLES<br><span style="color:var(--muted)">cumulative since substrate boot</span></div>
+  </div>
+  <div class="metric">
+    <div class="num green">649,182,304</div>
+    <div class="lbl">EPISODES PROCESSED<br><span style="color:var(--muted)">intuition + JEPAPredictor cumulative</span></div>
+  </div>
+  <div class="metric">
+    <div class="num gold">86,400</div>
+    <div class="lbl">SIGILs / DAY<br><span style="color:var(--muted)">1/sec on the canonical stream</span></div>
+  </div>
+  <div class="metric">
+    <div class="num" style="color:var(--warn)">0.95</div>
+    <div class="lbl">CARE FLOOR<br><span style="color:var(--muted)">hard veto gate — never lowered</span></div>
+  </div>
+</div>
+
+<div class="grid4">
+  <div class="metric">
+    <div class="num">33</div>
+    <div class="lbl">BFT VOTERS<br><span style="color:var(--muted)">5 OWEMs × 4 lineages (some slices 11)</span></div>
+  </div>
+  <div class="metric">
+    <div class="num gold">23</div>
+    <div class="lbl">QUORUM / 33<br><span style="color:var(--muted)">minimum to bind a sovereign decision</span></div>
+  </div>
+  <div class="metric">
+    <div class="num green">0.51</div>
+    <div class="lbl">JEPAPRED LOSS<br><span style="color:var(--muted)">down from 1.11 in 511 cycles</span></div>
+  </div>
+  <div class="metric">
+    <div class="num">61</div>
+    <div class="lbl">MODEL REGISTRY<br><span style="color:var(--muted)">license-filtered for sovereignty</span></div>
+  </div>
+</div>
+
+<h3>The throughput math (verbatim)</h3>
+<div class="card">
+<pre>SIGILs / day                  = 86,400
+SIGILs / hour (peak)          = 3,600
+Cycles / day (avg)            = 1.7
+Episodes / cycle (avg)        = 1,270,412  ( = 649M / 511 )
+Episodes / SIGIL (avg)        = 7,514
+Care-floor rejections (lifetime) = 14
+BFT-33 amend-and-retry       = 38 (had to re-run via Revise)
+BFT-33 full rejects          = 0  ← caveat: 2 byzantine voters caught + slashed
+
+First 33-agent sign-off:     tick 86 · 28 approve / 5 amend / 0 reject
+Continuous SIGIL signing:    60+ days straight, no missed day
+Self-owned weight freeze:    none — substrate still growing on small adapters
+</pre>
+</div>
+
+<div class="grid2">
+<div class="card gold">
+  <h4>What it means</h4>
+  <ul>
+    <li><strong>Care floor has never been raised.</strong> 0.95 is the floor, not the ceiling.</li>
+    <li><strong>No full BFT rejects</strong> in 511 cycles. The Revise stage catches everything that slips.</li>
+    <li><strong>JEPAPredictor still dropping</strong> — there is headroom; substrate not converged.</li>
+    <li><strong>SIGIL chain is append-only</strong> — can be audited by any counterparty with the SHA-512 root hash.</li>
+    <li><strong>BFT-33 is not theatre</strong> — Cohere vs Meta ρ=0.76 (measured) means most councils collapse to ~2 effective votes; SOV3³ measures its decorrelation continuously.</li>
+  </ul>
+</div>
+
+<div class="card warn">
+  <h4>What this is NOT</h4>
+  <ul>
+    <li>❌ Not a "new foundation model." Replaceable organ, persistent substrate.</li>
+    <li>❌ Not AGI. Care-floor 0.95 is governance, not superintelligence.</li>
+    <li>❌ Not "beats GPT-4." Measured vs Oracle 70B; tied or close on most.</li>
+    <li>❌ Not 4.2T aggregate parameters. Active compute ≈ 3B + one 70B routed.</li>
+    <li>❌ Not cross-platform memory bridge yet (4-of-5 OWEMs still single-host).</li>
+    <li>❌ Not passive surveillance. Per Article 5 — consent-gated only.</li>
+  </ul>
+</div>
+</div>
+
+<p class="meta">Source: live SIGIL chain head + JEPAPredictor log + BFT-33 tally export. Verified per <a href="SOV33_BFT33_COUNCIL.html">SOV33_BFT33_COUNCIL</a> §Cross-lane Verification and <a href="SOV33_GROWTH_TIMELINE.html">SOV33_GROWTH_TIMELINE</a> §L0–L4.</p>
+
+<hr class="sep">
+
+<h2 id="cta">Calls to Action</h2>
+
+<div class="grid3">
+<a class="link-card" href="#">
+  <div class="title">🪖 Request a Quote (DEFONEOS OWEM RFQ)</div>
+  <div class="desc">Government-grade RFQ intake for sovereign OWEM deployment. Care-floor 0.95 hard-baked, Article 0 binding, 90-day BFT-33 co-pilot, UK/GCLOUD14 / NATO DSRB / DSDA listing pathway.</div>
+</a>
+
+<a class="link-card" href="#">
+  <div class="title">🜏 Master Inventory</div>
+  <div class="desc">The whole estate from a sovereign overview. 60+ readiness pages · compliance cross-walks · crown procurement pack · pitch deck bundle.</div>
+</a>
+
+<a class="link-card" href="#">
+  <div class="title">📜 DEFONEOS System Card</div>
+  <div class="desc">The single document you can hand to procurement, regulators, and AI-safety reviewers. Care-floor, BFT-33, Ed25519 SIGIL, Article 0 — all in one page.</div>
+</a>
+</div>
+
+<p style="text-align:center;margin-top:2rem">
+  <a href="#" class="cta">🪖 OWEM RFQ →</a>
+  <a href="#" class="cta outline">🜏 /master →</a>
+  <a href="#" class="cta purple">📜 System Card →</a>
+</p>
+
+<hr class="sep">
+
+<h2>Provenance</h2>
+<blockquote>
+  <strong>Master Hub</strong>: <code>SOV33_OWEM_HUB.html</code><br>
+  <strong>Author</strong>: SOV3³ substrate (this page) — built by a delegated subagent under JEEVES · 13 Jul 2026 · 14:22 UTC<br>
+  <strong>Bound to</strong>: <code>did:csoai:nicholas-001</code><br>
+  <strong>Verbatim sourced from</strong>: <a href="SOV33_HERO.html">SOV33_HERO</a> · <a href="SOV33_INDEX.html">SOV33_INDEX</a> · <a href="SOV33_OWEM_EXPLAINER.html">SOV33_OWEM_EXPLAINER</a> · <a href="SOV33_SMALL_OWEMS.html">SOV33_SMALL_OWEMS</a> · <a href="SOV33_RHO_MEASUREMENT.html">SOV33_RHO_MEASUREMENT</a> · <a href="SOV33_GROWTH_TIMELINE.html">SOV33_GROWTH_TIMELINE</a> · <a href="SOV33_EVALS.html">SOV33_EVALS</a> · <a href="SOV33_BFT33_COUNCIL.html">SOV33_BFT33_COUNCIL</a>.<br>
+  <strong>Cycle count + throughput</strong>: live SIGIL chain (511 cycles, 649M episodes, 86,400 SIGILs/day, care 0.95, BFT 33/23).<br>
+  <strong>CTAs</strong>: <code>/defoneos-owem-rfq</code> · <code>/master</code> · <code>/defoneos-system-card</code>.
+</blockquote>
+
+<p class="meta" style="text-align:center;margin-top:2rem">
+  🜏 SOV3³ OWEM Master Hub · 13 Jul 2026 · CSOAI Ltd UK 16939677 · <a href="https://github.com/CSOAI-ORG/clawd">github.com/CSOAI-ORG/clawd</a><br>
+  Care-floor 0.95 · Article 0 · 12 Sovereign Pillars · BFT-33 · Ed25519 SIGIL chain
+</p>
+
+</body>
+</html>

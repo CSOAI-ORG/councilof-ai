@@ -1,0 +1,115 @@
+{
+  "description": "Stacking is allowed when techniques touch DIFFERENT layers (no layer collision). Merging incompatible weights is NOT allowed. Composition = sum of compatible layers, not sum of incompatible parameters.",
+  "compatible_stacks": [
+    {
+      "stack_name": "Kimi's own recipe (adoptable)",
+      "stack": [
+        "MoE-routing",
+        "linear-attention",
+        "governance"
+      ],
+      "layers_touched": [
+        "capacity (routing)",
+        "serving cost (attention)",
+        "trust (binding)"
+      ],
+      "adoptable": true,
+      "evidenced_by": [
+        {
+          "paper": "2510.26692",
+          "title": "Kimi Linear (linear-attention)",
+          "layer": "serving cost"
+        },
+        {
+          "paper": "DeepSeek-V3",
+          "title": "DeepSeek-V3 Technical Report",
+          "layer": "MoE capacity"
+        },
+        {
+          "paper": "Qwen3",
+          "title": "Qwen3 Technical Report",
+          "layer": "MoE + alignment"
+        }
+      ],
+      "honest_register": "Adopt by distillation (per Claude science overnight). Not by merging 2.8T weights."
+    },
+    {
+      "stack_name": "DeepSeek serving stack",
+      "stack": [
+        "MoE-serving",
+        "MoE-routing",
+        "sparse-attention"
+      ],
+      "layers_touched": [
+        "decode routing",
+        "expert placement",
+        "long-context attention"
+      ],
+      "adoptable": true,
+      "evidenced_by": [
+        {
+          "paper": "DeepSeek-V3",
+          "title": "Technical Report"
+        },
+        {
+          "paper": "DSA",
+          "title": "DeepSeek Sparse Attention"
+        },
+        {
+          "paper": "ELDR",
+          "title": "Expert-Locality-Aware Decode Routing"
+        }
+      ]
+    },
+    {
+      "stack_name": "Sovereign binding stack (our recipe)",
+      "stack": [
+        "alignment/CAI",
+        "interpretability",
+        "data-curation",
+        "guardrails"
+      ],
+      "layers_touched": [
+        "principles",
+        "auditability",
+        "input quality",
+        "output safety"
+      ],
+      "adoptable": true,
+      "evidenced_by": [
+        {
+          "paper": "Constitutional AI",
+          "title": "Constitutional AI: Harmlessness from AI Feedback"
+        },
+        {
+          "paper": "UAV",
+          "title": "Universal Activation Verbalizer"
+        },
+        {
+          "paper": "CuratorKIT",
+          "title": "CuratorKIT"
+        }
+      ],
+      "honest_register": "This IS the gap none of the frontier labs ship \u2014 governance + attestation. Our moat."
+    }
+  ],
+  "incompatible_to_merge": [
+    {
+      "stack_name": "Two trillion-class weights",
+      "stack": [
+        "K2.6 1.059T (MoE)",
+        "K3 2.8T (MoE)"
+      ],
+      "incompatible_reason": "Both touch the MoE-routing layer AND capacity layer. Merging two 2.8T giants' weights is NOT buildable from what we hold (titles only, no weights/code).",
+      "honest_register": "Cannot merge what we don't hold. This is a hard line, not a deferral."
+    },
+    {
+      "stack_name": "Two linear-attention implementations",
+      "stack": [
+        "KDA (Moonshot)",
+        "Gated DeltaNet (Qwen)"
+      ],
+      "incompatible_reason": "Both touch the linear-attention layer. Slot-in replacement (one or the other), not merge."
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEFONEOS GTM Launch Kit — Go-to-Market Playbook</title>
+<meta name="description" content="Complete go-to-market launch kit for DEFONEOS UK Sovereign Defence AI OS. 7 outreach vectors, buying committee map, channel strategy, and 30-day execution plan.">
+<style>
+:root{--bg:#0a0e17;--surface:#111827;--border:#1e3a5f;--accent:#00d4ff;--accent2:#7c3aed;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--text:#e2e8f0;--muted:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.7;padding:2rem;max-width:1200px;margin:0 auto}
+h1{font-size:2.5rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem}
+h2{color:var(--accent);font-size:1.5rem;margin:2.5rem 0 1rem;border-bottom:1px solid var(--border);padding-bottom:0.5rem}
+h3{color:var(--accent2);font-size:1.2rem;margin:1.5rem 0 0.5rem}
+.subtitle{color:var(--muted);font-size:1.1rem;margin-bottom:2rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0}
+.highlight{border-left:3px solid var(--accent);padding-left:1rem;margin:1rem 0}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.8rem;font-weight:600;margin:2px}
+.badge-p0{background:rgba(239,68,68,0.2);color:var(--red)}
+.badge-p1{background:rgba(245,158,11,0.2);color:var(--amber)}
+.badge-p2{background:rgba(16,185,129,0.2);color:var(--green)}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:var(--surface);color:var(--accent);text-align:left;padding:0.75rem;border:1px solid var(--border)}
+td{padding:0.75rem;border:1px solid var(--border)}
+tr:nth-child(even){background:rgba(255,255,255,0.02)}
+.vector-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem;margin:1rem 0}
+.vector-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;position:relative;overflow:hidden}
+.vector-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.vector-num{font-size:2rem;font-weight:800;color:var(--accent);opacity:0.3;position:absolute;top:0.5rem;right:1rem}
+.vector-title{font-size:1.1rem;font-weight:700;color:var(--accent);margin-bottom:0.5rem}
+ul,ol{padding-left:1.5rem;margin:0.5rem 0}
+li{margin:0.3rem 0}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1rem 0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+.kpi-value{font-size:2rem;font-weight:800;color:var(--accent)}
+.kpi-label{font-size:0.85rem;color:var(--muted);margin-top:0.25rem}
+.timeline{position:relative;padding-left:2rem;margin:1rem 0}
+.timeline::before{content:'';position:absolute;left:0.5rem;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin:1.5rem 0}
+.timeline-item::before{content:'';position:absolute;left:-1.65rem;top:0.5rem;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.timeline-day{font-weight:700;color:var(--accent)}
+code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.9rem;color:var(--accent)}
+footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem;text-align:center}
+@media(max-width:768px){body{padding:1rem}h1{font-size:1.8rem}.vector-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="article50-banner" data-marker="ARTICLE_50_BANNER">EU AI Act Article 50 — 20 days to seal | <a href="#">Get passport</a></div>
+
+
+<h1>DEFONEOS GTM Launch Kit</h1>
+<p class="subtitle">Go-to-Market Playbook — 7 Outreach Vectors · Buying Committee Map · 30-Day Channel Strategy</p>
+
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-value">7</div><div class="kpi-label">Outreach Vectors</div></div>
+<div class="kpi"><div class="kpi-value">30</div><div class="kpi-label">MCP Servers Live</div></div>
+<div class="kpi"><div class="kpi-value">59</div><div class="kpi-label">Public Pages</div></div>
+<div class="kpi"><div class="kpi-value">15</div><div class="kpi-label">OS Repos Cloned</div></div>
+</div>
+
+<h2>1 · Buying Committee Map</h2>
+<p>Every MOD/UK defence procurement involves 4-7 decision-makers. Map them before you outreach.</p>
+
+<table>
+<thead><tr><th>Role</th><th>Title (typical)</th><th>Cares About</th><th>DEFONEOS Angle</th><th>Access Vector</th></tr></thead>
+<tbody>
+<tr><td><strong>End User</strong></td><td>SO2/SO1 Analyst, Ops Officer</td><td>Time-to-insight, UI, data fusion</td><td>Cesium 3D COP, real-time sensor feeds</td><td>Demo video, pilot</td></tr>
+<tr><td><strong>Technical Authority</strong></td><td>CTO / Chief Engineer / DCDT</td><td>Architecture, security, integration</td><td>MCP federation, air-gap deploy, OWASP</td><td>Technical Validation Agenda</td></tr>
+<tr><td><strong>Compliance</strong></td><td>SIRO / IA Officer / JSP 936 Lead</td><td>JSP 936, Cyber Essentials, SC</td><td>SIGIL receipts, provenance chain</td><td>Compliance Passport</td></tr>
+<tr><td><strong>Budget Holder</strong></td><td>DE&amp;S SRO / Programme Manager</td><td>Value for money, delivery risk</td><td>Open-source = no licence lock-in</td><td>Pilot Evidence Pack</td></tr>
+<tr><td><strong>Policy / Legal</strong></td><td>MOD Policy / DSAO</td><td>Sovereignty, data residency</td><td>UK-sovereign, AUKUS-compatible</td><td>Sovereign Pitch</td></tr>
+<tr><td><strong>Innovation Scout</strong></td><td>DASA PM / NATO DIANA Liaison</td><td>TRL, dual-use, ecosystem</td><td>30 MCPs, 15 repos, open-source</td><td>DASA/DIANA application</td></tr>
+<tr><td><strong>Industry Partner</strong></td><td>Prime SI / Tier-2 integrator</td><td>Subcontract fit, margin, delivery</td><td>MCP integration API, partner programme</td><td>Referral Partner Letter</td></tr>
+</tbody>
+</table>
+
+<div class="highlight">
+<strong>Rule:</strong> Never contact the budget holder first. Build ground-up: End User → Technical → Compliance → Budget. Each touchpoint arms the next conversation.
+</div>
+
+<h2>2 · The 7 Outreach Vectors</h2>
+
+<div class="vector-grid">
+
+<div class="vector-card">
+<div class="vector-num">1</div>
+<div class="vector-title">DASA Open Call</div>
+<p>Defence and Security Accelerator. Up to £500K for Phase 1.</p>
+<ul>
+<li>Application draft READY at <code>defoneos-dasa-application.html</code></li>
+<li>Focus: Sovereign AI operating system for defence data fusion</li>
+<li>Category: Open Call Innovation Focus Area (AI/ML for defence)</li>
+<li>Timeline: Rolling submissions, 4-6 week turnaround</li>
+<li>Gate: Nick must submit via DASA portal</li>
+</ul>
+<span class="badge badge-p0">P0 — SUBMIT TODAY</span>
+</div>
+
+<div class="vector-card">
+<div class="vector-num">2</div>
+<div class="vector-title">NATO DIANA</div>
+<p>NATO's Defence Innovation Accelerator. Dual-use AI challenge.</p>
+<ul>
+<li>Application draft READY at <code>defoneos-nato-diana.html</code></li>
+<li>Focus: Sovereign AI OS compatible with NATO interoperability standards</li>
+<li>Advantage: Open-source = NATO allies can inspect &amp; deploy</li>
+<li>Timeline: Annual cohort, next intake Q3/Q4 2026</li>
+<li>Gate: Nick must submit via DIANA portal</li>
+</ul>
+<span class="badge badge-p0">P0 — SUBMIT THIS WEEK</span>
+</div>
+
+<div class="vector-card">
+<div class="vector-num">3</div>
+<div class="vector-title">UKDI Regional Engagement</div>
+<p>UK Defence &amp; Security Intelligence — Regional team for Yorkshire/Humber.</p>
+<ul>
+<li>Email draft READY at <code>defoneos-mod-ukdi.html</code></li>
+<li>Angle: Yorkshire-based defence AI startup, 30 open-source MCPs, seeking pilot</li>
+<li>Ask: Intro to DE&amp;S programme manager for data fusion capability</li>
+<li>Gate: Nick must press send</li>
+</ul>
+<span class="badge badge-p0">P0 — SEND TODAY</span>
+</div>
+
+<div class="vector-card">
+<div class="vector-num">4</div>
+<div class="vector-title">NATO STO + DSRB</div>
+<p>NATO Science &amp; Technology Organisation. Defence Science Research Board.</p>
+<ul>
+<li>Outreach emails already drafted</li>
+<li>Angle: MCP-based sensor fusion for multi-domain operations</li>
+<li>Ask: Research collaboration / Technology demonstrator slot</li>
+<li>Gate: Nick must press send</li>
+</ul>
+<span class="badge badge-p1">P1 — SEND THIS WEEK</span>
+</div>
+
+<div class="vector-card">
+<div class="vector-num">5</div>
+<div class="vector-title">Prime SI Partnerships</div>
+<ol>
+<li>BAE Systems Applied Intelligence</li>
+<li>Leonardo UK (Edinburgh)</li>
+<li>Thales UK</li>
+<li>QinetiQ</li>
+<li>Babcock International</li>
+</ol>
+<ul>
+<li>Use <code>defoneos-mod-referral-partner-letter.html</code></li>
+<li>Angle: Subcontract AI capability, MCP integration, open-source flexibility</li>
+<li>Gate: Nick must personalise and send</li>
+</ul>
+<span class="badge badge-p1">P1 — WEEK 2</span>
+</div>
+
+<div class="vector-card">
+<div class="vector-num">6</div>
+<div class="vector-title">Defence Press &amp; Events</div>
+<ul>
+<li>DSEI 2025 (Sep, London) — pitch for Innovation Showcase</li>
+<li>Defence Online / UK Defence Journal — press release</li>
+<li>LinkedIn thought leadership — weekly sovereign AI posts</li>
+<li>DSIT AI Safety roundtable — apply for seat</li>
+<li>RUSI events — attend and network</li>
+</ul>
+<span class="badge badge-p1">P1 — ONGOING</span>
+</div>
+
+<div class="vector-card">
+<div class="vector-num">7</div>
+<div class="vector-title">Civil Service AI</div>
+<ul>
+<li>Government Digital Service (GDS) — AI procurement framework</li>
+<li>Central Digital &amp; Data Office (CDDO) — AI strategy team</li>
+<li>Crown Commercial Service — G-Cloud listing</li>
+<li>Office for AI — policy team engagement</li>
+</ul>
+<span class="badge badge-p2">P2 — MONTH 2</span>
+</div>
+
+</div>
+
+<h2>3 · 30-Day Execution Timeline</h2>
+
+<div class="timeline">
+
+<div class="timeline-item">
+<div class="timeline-day">Day 10 (TODAY — 13 Jul)</div>
+<ul>
+<li>Submit DASA Open Call application</li>
+<li>Submit NATO DIANA application</li>
+<li>Send UKDI Regional Engagement email</li>
+<li>Publish GTM Launch Kit (this page)</li>
+</ul>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-day">Days 11-14 (14-17 Jul)</div>
+<ul>
+<li>Send NATO STO + DSRB outreach emails</li>
+<li>Send first 2 Prime SI partner letters</li>
+<li>Publish 7-vector outreach tracker dashboard</li>
+<li>First LinkedIn thought leadership post</li>
+</ul>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-day">Days 15-21 (18-24 Jul)</div>
+<ul>
+<li>Follow up DASA (if no response)</li>
+<li>Technical Validation Agenda → interested TAs</li>
+<li>Pilot Evidence Pack → budget holders</li>
+<li>DSEI Innovation Showcase application</li>
+<li>G-Cloud initial enquiry</li>
+</ul>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-day">Days 22-30 (25 Jul - 3 Aug)</div>
+<ul>
+<li>First MOD meeting / demo</li>
+<li>NATO STO follow-up</li>
+<li>Press release: DEFONEOS launch</li>
+<li>33-agent BFT council operational</li>
+<li>First DEFONEOS-SEAL credential issued</li>
+</ul>
+</div>
+
+</div>
+
+<h2>4 · Outreach Templates (Pre-Built)</h2>
+
+<table>
+<thead><tr><th>Template</th><th>Target</th><th>Status</th><th>File</th></tr></thead>
+<tbody>
+<tr><td>DASA Application</td><td>DASA PM</td><td>✅ DRAFT READY</td><td><code>defoneos-dasa-application.html</code></td></tr>
+<tr><td>NATO DIANA</td><td>DIANA Selection Board</td><td>✅ DRAFT READY</td><td><code>defoneos-nato-diana.html</code></td></tr>
+<tr><td>UKDI Email</td><td>Yorkshire/Humber Rep</td><td>✅ DRAFT READY</td><td><code>defoneos-mod-ukdi.html</code></td></tr>
+<tr><td>System Card</td><td>UK AISI</td><td>✅ READY</td><td><code>defoneos-system-card.html</code></td></tr>
+<tr><td>Referral Partner Letter</td><td>Prime SIs</td><td>✅ READY</td><td><code>defoneos-mod-referral-partner-letter.html</code></td></tr>
+<tr><td>Proposal Pack</td><td>Any Buyer</td><td>✅ READY</td><td><code>defoneos-mod-proposal-pack.html</code></td></tr>
+<tr><td>Pilot Evidence Pack</td><td>Budget Holders</td><td>✅ READY</td><td><code>defoneos-mod-pilot-evidence-pack.html</code></td></tr>
+<tr><td>SC Clearance Guide</td><td>Nick (self)</td><td>✅ GUIDE</td><td><code>defoneos-sc-clearance.html</code></td></tr>
+</tbody>
+</table>
+
+<h2>5 · Success Metrics (30-Day)</h2>
+
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-value">3+</div><div class="kpi-label">Grant Applications</div></div>
+<div class="kpi"><div class="kpi-value">5+</div><div class="kpi-label">Outreach Emails Sent</div></div>
+<div class="kpi"><div class="kpi-value">1</div><div class="kpi-label">First MOD Meeting</div></div>
+<div class="kpi"><div class="kpi-value">1</div><div class="kpi-label">Pilot Agreement</div></div>
+</div>
+
+<h2>6 · Risk Register</h2>
+
+<table>
+<thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td>No response from DASA</td><td>Medium</td><td>High</td><td>Follow up at 2 weeks; parallel with DIANA</td></tr>
+<tr><td>SC clearance delays (4-6 weeks)</td><td>High</td><td>High</td><td>Start NOW; build non-classified demos meanwhile</td></tr>
+<tr><td>Cyber Essentials delay</td><td>Medium</td><td>Medium</td><td>IASME fast-track; pre-built evidence</td></tr>
+<tr><td>Prime SIs not interested</td><td>Medium</td><td>Medium</td><td>Go direct to MOD via DASA; partner with smaller SIs</td></tr>
+<tr><td>Competitor ships similar</td><td>Low</td><td>High</td><td>Open-source moat; SIGIL provenance; first-mover on MCPs</td></tr>
+</tbody>
+</table>
+
+<footer>
+DEFONEOS GTM Launch Kit · Tick 88 · 13 Jul 2026<br>
+C|launch|gtm-kit|7-vector outreach + buying committee + 30-day plan<br>
+UK Sovereign · Open-Source · Audit-Grade · AUKUS-Compatible
+</footer>
+
+</body>
+</html>
